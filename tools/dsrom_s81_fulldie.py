@@ -3064,6 +3064,25 @@ def build_r8(variant=None):
             master = 'dsfd_sp_ctrl' + ('_src' if CTRL_ROLE == 'source' else '_h' if CTRL_ROLE == 'head' else '')
             slab(n, centre_area[n], x_sp, yy, cw, master=master)
             notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
+        elif n == 'wfc_hard' and WFC_KIT:
+            # mtp-wfc 2026-10-10 (--wfc-kit): the slab holds the kit's CLOSED elements as their own masters (die tops
+            # place no std-cell rows): tokpipe core (SOURCE on the source die, STG elsewhere), the link bridge, the
+            # VM / core transport and (SOURCE) the token store, side by side W -> E with WFC_HALO gaps, each at its
+            # closed outline; wired by WFC_KIT_BUSES (exact element ports; rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv)
+            src_ = WFC_ROLE == 'source'
+            parts = [('wfc', 'ot_dsrom_wfc_tokpipe_src' if src_ else 'ot_dsrom_wfc_tokpipe_stg',
+                      WFC_SRC_UM if src_ else WFC_STG_UM), ('wfc_vmx', 'dsfd_wfc_vmx', WFC_VMX_UM),
+                     ('wfc_lnk', 'dsfd_wfc_lnk', WFC_LNK_UM)] + ([('wfc_tok', 'dsfd_wfc_tok_hard', WFC_TOK_UM)] if src_ else [])
+            xk = up(x_sp + WFC_HALO, GX)
+            for nm_, ms_, (w_, h_) in parts:
+                it = Inst(f'sp_{nm_}', ms_, xk, up(yy + WFC_HALO, GY), up(w_, GX), up(h_, GY), kind='hub', region='spine',
+                          domain='serial_0p9' if nm_ == 'wfc_vmx' else 'stream_1p2')
+                insts.append(it); hub[nm_] = it
+                xk = up(xk + it.w + WFC_HALO, GX)
+            assert xk <= x_sp + cw + 1e-6, ('WFC kit wider than the hub column', xk - x_sp, cw)
+            notes.append('MTP-WFC --wfc-kit (%s): %s in a %.2f um slab, %.1f um of the %.1f um hub column'
+                         % (WFC_ROLE, ' + '.join(f'{ms_} {w_:.1f}x{h_:.1f}' for _, ms_, (w_, h_) in parts),
+                            WFC_SLAB_H, xk - x_sp, cw))
         elif n == 'wfc_hard':
             slab('wfc', centre_area[n], x_sp, yy, cw, master='dsfd_wfc')
             notes.append('MTP-DIE --wfc-hard: dsfd_wfc = closed SOURCE ot_dsrom_wfc_tokpipe_src %s um (910e67c7b) + closed '
@@ -3589,6 +3608,7 @@ def buses_r8(m):
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
+            (wfc_kit_buses(WFC_ROLE, 'host' in hub) if 'wfc_lnk' in hub else ()) + \
             (MTP_SEQ_BUSES if 'mtp' in hub else ()) + \
             (P2_BUSES if 'p2' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
@@ -3709,6 +3729,35 @@ NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a rel
 WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f_vm'),
              ('collective', 'wfc', 514, 't_wfc', 'f_collective'), ('wfc', 'collective', 514, 't_collective', 'f_wfc'),
              ('wfc', 'capture', 64, 't_capture', 'f_wfc'), ('capture', 'wfc', 64, 't_wfc', 'f_capture'))
+# mtp-wfc 2026-10-10 (--wfc-kit): exact element ports of the WFC kit (rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv; every grant /
+# ready is its own reverse bus).  Die-facing: collective <-> lnk link (valid + {last, data} 514, grant 1 back) both ways,
+# VM <-> vmx (t_swv/t_swd 528 + t_srv/t_srd 16 = 544 out; f_swr f_swa f_srr 3 + f_srq 513 = 516 in), capture <-> vmx
+# (t_ks 53, f_kd 54), SOURCE only: host -> tok cfg f_c 55 and core -> host committed token {valid,user,pos,id} 53.
+# Intra-kit: core <-> lnk (in/out link 514 + ready 1 each), core <-> vmx (VM write 528, read req 16, read data 512,
+# core start 53, core done 54), vmx -> lnk VM credit 1, lnk -> tok DRAFT 513, core <-> tok prompt read 36 / 22.
+def wfc_kit_buses(role, host):
+    b = [('collective', 'wfc_lnk', 514, 't_wfc', 'f_li'), ('wfc_lnk', 'collective', 1, 't_lir', 'f_wfcg'),
+         ('wfc_lnk', 'collective', 514, 't_lo', 'f_wfc'), ('collective', 'wfc_lnk', 1, 't_wfcg', 'f_lor'),
+         ('wfc_vmx', 'vm', 544, 't_sw_sr', 'f_wfc'), ('vm', 'wfc_vmx', 516, 't_wfc', 'f_sw_sr'),
+         ('wfc_vmx', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc_vmx', 54, 't_wfc', 'f_kd'),
+         ('wfc_lnk', 'wfc', 514, 't_wi', 'f_in'), ('wfc', 'wfc_lnk', 1, 't_in_ready', 'f_wig'),
+         ('wfc', 'wfc_lnk', 514, 't_out', 'f_wo'), ('wfc_lnk', 'wfc', 1, 't_wog', 'f_out_ready'),
+         ('wfc', 'wfc_vmx', 529, 't_vm_w', 'f_vw'), ('wfc', 'wfc_vmx', 16, 't_vm_r', 'f_vr'),
+         ('wfc_vmx', 'wfc', 512, 't_vq', 'f_vm_rq'), ('wfc', 'wfc_vmx', 53, 't_core_start', 'f_cs'),
+         ('wfc_vmx', 'wfc', 54, 't_cd', 'f_core_done'), ('wfc_vmx', 'wfc_lnk', 1, 't_vc', 'f_vc')]
+    if role == 'source':
+        b += [('wfc_lnk', 'wfc_tok', 513, 't_dw', 'f_dw'), ('wfc', 'wfc_tok', 36, 't_pr', 'f_pr'),
+              ('wfc_tok', 'wfc', 22, 't_pr', 'f_pr_q'), ('wfc_tok', 'wfc', 52, 't_cfg', 'f_cfg')]
+        if host:
+            b += [('host', 'wfc_tok', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
+    return tuple(b)
+
+
+WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
+WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
+WFC_VMX_UM = (248.4, 241.92)    #   dsfd_wfc_vmx contract outline (prd-c39e235bb-o292-r2 CLOSED)
+WFC_LNK_UM = (216.0, 151.2)     #   dsfd_wfc_lnk (b-0cd6caa1b CLOSED)
+WFC_TOK_UM = (108.0, 108.0)     #   dsfd_wfc_tok_hard (e829cb457-r2 CLOSED; dsfd_wfc_tok contract outline)
 # sequencer (mtp-lead 2026-10-09, native binding): widths from the ACTUAL dsfd_mtp_seq wrapper ports
 # (rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv, NW 21 / USER_W 10 / FLIT 512; each grant port = data + valid + grant):
 #   capture -> mtp   RESULT flit f_rv/f_rd/t_rg                                  512 + 2 = 514
@@ -5821,6 +5870,9 @@ def die_options(ap):
                     help='MTP-DIE: bound, wired WFC slab (dsfd_wfc) on every layer-class STAGE die (layer and layer1; '
                     'not draft dies) instead of the scan-die-only soft reservation; default WFC_HARD_DEFAULT (off '
                     'until the SOURCE HARD partner closes)')
+    ap.add_argument('--wfc-kit', action='store_true',
+                    help='mtp-wfc 2026-10-10: with --wfc-hard, place the WFC kit closed elements (tokpipe core, lnk, '
+                    'vmx, tok on the source die) as their own masters in the WFC slab, wired at exact ports')
     ap.add_argument('--mtp-seq', action=argparse.BooleanOptionalAction, default=None,
                     help='MTP-DIE: head die ot_dsrom_mtp_seq slab (dsfd_mtp_seq) between capture and collective, '
                     'wired; default MTP_SEQ_DEFAULT (ON since mtp-lead 2026-10-09: dsfd_mtp_seq CLOSED c67a71fe5); '
@@ -5875,7 +5927,9 @@ def apply_options(a):
     global PQ_PLACE, FIELD_MARGIN
     # MTP-DIE option binding (0544fca2c; dropped by a later merge, which made --wfc-hard / --mtp-seq / --mtp-links
     # silent no-ops: restored by mtp-draftdie 2026-10-09, test_s81_mtp_options_bind guards it)
-    global WFC_HARD, MTP_SEQ, MTP_SEQ_MM2, MTP_LINKS, DRAFT_SIDE
+    global WFC_HARD, MTP_SEQ, MTP_SEQ_MM2, MTP_LINKS, DRAFT_SIDE, WFC_KIT, WFC_ROLE
+    WFC_KIT = bool(getattr(a, 'wfc_kit', False))
+    WFC_ROLE = 'source' if getattr(a, 'ctrl_role', 'layer') == 'source' else 'stage'
     ws, ms = getattr(a, 'wfc_hard', None), getattr(a, 'mtp_seq', None)
     WFC_HARD = WFC_HARD_DEFAULT if ws is None else bool(ws)
     MTP_SEQ = MTP_SEQ_DEFAULT if ms is None else bool(ms)
