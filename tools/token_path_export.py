@@ -290,6 +290,10 @@ Q_LINK = dict(rmsnorm1="VM -> SU", qkv="VM -> tile band broadcast (tree)", qknor
 
 
 KVD = "results/arch/qwen_kv_die_20261009/reprice.json"
+# qwen-1010/a 2026-10-10: r22ko4 (option 4) is the Qwen ROM plan of record; FEC base +100 a collective (bound +240)
+O4P = "results/arch/qwen_kv_die_20261009/reprice_o4.json"
+O4 = json.loads((ROOT / O4P).read_text()) if (ROOT / O4P).exists() else None
+O4_FEC = 100
 
 
 EXACTNESS_QWEN_ROM = 'stationed-exact on L0-L2 (option-4 masters); die closure pending (2026-10-10): the option-4 actual masters (seq_su_bi ICUT+VRL, ctlm_i, SU stations + endpoint counter) are token-exact on the L0-L2 chain at r22ko4 relays 16/16/16 with the sequencer <-> VM AR read bus and a round-trip-sized read queue (main 6359dc7dc; XMUT and VRL-1 mutants fail); plan of record r22ko4 = 4,908.6 tok/s typical at FEC +100 cycles per all-reduce (4,714.2 at FEC +240) until the FEC term is pinned'
@@ -406,12 +410,29 @@ def qwen(kv=None):
                 for k, ln in TOKEN_KV:
                     adders.append(dict(item=k, cycles=ln["effect"]["AR"], grade="measured" if ln["status"] == "measured" else "priced",
                                        record=ln["source"][0]["file"], note="per-token KV-path constant, placed on the cold layer"))
-            if kv and oid == "residual" and kv.get("split_structure"):
+            if kv and oid == "residual" and kv.get("split_structure") and O4 is not None:
+                # qwen-1010/a 2026-10-10: plan of record r22ko4 (option-4 control plane): the split stations as measured +
+                # the option-4 masters' relay term (L0-L2 stationed-exact chain vs s22ml7) in place of the r22k issue relays
+                sp = kv["split_structure"]["stations_only"]
+                ot = O4["o4_relay_term"]
+                adders = list(adders) + [dict(item="rom_split_stations_and_option4_control_plane",
+                                              cycles=sp["l0"] + ot["L0"] if L == 0 else sp["layer"] + ot["layer"], grade="measured",
+                                              record=O4P, note="ROM-die split stations (token-exact) + the option-4 actual masters "
+                                                               "(seq_su_bi + ctlm_i, r22ko4 relays 16/16/16) measured on the stationed "
+                                                               "L0-L2 chain vs s22ml7; charged on the layer's last op")]
+            elif kv and oid == "residual" and kv.get("split_structure"):
                 sp = kv["split_structure"]
                 adders = list(adders) + [dict(item="rom_split_stations_and_issue_relays", cycles=sp["l0_delta"] if L == 0 else sp["layer_delta"],
                                               grade="measured", record=sp["source"][1],
                                               note="ROM-die split structure (pin stations + compensation + SU ML) + the r22k issue / status relays, "
                                                    "L0-L2 chain vs base (token-exact + split_relays.json); charged on the layer's last op")]
+            if kv and O4 is not None and oid in ("allreduce1", "allreduce2"):
+                adders = list(adders) + [
+                    dict(item="board_leg_fec", cycles=O4_FEC, grade="priced",
+                         record="budget audit qrom_ar_link_fec (DS RS(544,514) rule; bound +240 = HBM 0.2 us rule)",
+                         note="board-SerDes FEC per all-reduce: half of each TP4 ring is a board leg; base +100, bound +240"),
+                    dict(item="seq_vm_ar_path", cycles=O4["vm_ar"]["stages_r22ko4"], grade="priced", record=O4P + " vm_ar",
+                         note="sequencer <-> VM all-reduce word path relays (r22ko4 1 / 1 / 2), once per all-reduce")]
             li = Q_LINK[oid] if i else ("embedding row -> VM" if L == 0 else "layer hand-off (registered, 1 cycle)")
             deps = [prev_group_last] if i == 0 else None
             n = d.add(f"{g}.{oid}", lab, g, cls, cyc,
@@ -456,6 +477,10 @@ def qwen(kv=None):
                         per_user_cost_vs_tp4_pct=kv["per_user_cost"]["vs_tp4_pct"], die_pair_mm2=kv["silicon"]["pair_mm2"],
                         interposer_reticles=kv["silicon"]["interposer_reticles"],
                         measured_cycles=None, priced_cycles=None)
+        if O4 is not None:
+            headline.update(basis=f"{O4P} (plan of record r22ko4: option-4 control plane, stationed-exact masters; FEC +{O4_FEC} "
+                                  f"a collective) over {KVD}", source=O4P + " cases.typical",
+                            fec_bound_tok_s=round(1.2e9 / (total + 72 * (240 - O4_FEC)), 1), fec_cycles_per_allreduce=[O4_FEC, 240])
         notes = ["EXACTNESS: " + EXACTNESS_QWEN_ROM + ".",
                  f"COST: {kv['per_user_cost']['statement']} (reprice.json per_user_cost / silicon).",
                  "Owner decision 2026-10-09: ROM die + KV die pair; attention (near-HBM row engines) on the KV die; only q, the "
