@@ -21,12 +21,12 @@
   "graph": "qwen_rom.json",
   "per_user": {
    "AR": {
-    "value": 4817.9,
+    "value": 4810.9,
     "unit": "tok/s",
     "grade": "derived",
     "source": "results/arch/token_path_20261009/qwen_rom.json totals.tok_s_published <- results/arch/qwen_kv_die_20261009/reprice.json headline",
-    "note": "249,070 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1806 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 171201.0, 'apportioned': 60696.0, 'priced': 17173.0}); range [4803.3, 4819.4] (PHY latency best/worst)",
-    "vs_tp4_single_die": -0.0052
+    "note": "249,431 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1814 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 171561.0, 'apportioned': 60696.0, 'priced': 17174.0}); range [4801.9, 4818.0] (PHY latency best/worst)",
+    "vs_tp4_single_die": -0.0067
    },
    "MTP": {
     "value": null,
@@ -59,14 +59,14 @@
     "note": "generator floorplan (placement legal); reticle margin 87.7 mm2"
    },
    "kv_die_mm2": {
-    "value": 164.9,
+    "value": 182.6,
     "unit": "mm2",
     "grade": "derived",
     "source": "results/arch/qwen_kv_die_20261009/kv_die/plan.json die_mm2",
     "note": "generator floorplan; OpenROAD placement legal"
    },
    "pair_mm2": {
-    "value": 935.3,
+    "value": 952.9,
     "unit": "mm2",
     "grade": "derived",
     "source": "results/arch/qwen_kv_die_20261009/rom_r22k.json + results/arch/qwen_kv_die_20261009/kv_die/plan.json"
@@ -85,13 +85,13 @@
     "note": "4 a KV die (KV, embedding)"
    },
    "logic_mm2": {
-    "value": 3741.1,
+    "value": 3811.7,
     "unit": "mm2",
     "grade": "derived",
     "source": "4 x pair"
    },
    "total_silicon_mm2": {
-    "value": 21165.1,
+    "value": 21235.7,
     "unit": "mm2",
     "grade": "derived",
     "source": "logic + stacks x 1089 mm2 (results/arch/energy_silicon_measured/energy_silicon.json convention)"
@@ -99,11 +99,11 @@
   },
   "power": {
    "static_w": {
-    "value": 203.2,
+    "value": 203.1,
     "unit": "W",
     "grade": "modelled",
     "source": "results/arch/energy_silicon_measured/energy_silicon.json qwen_8k.rom.terms.static + KV-die new logic",
-    "note": "200.0 W uarch static (4 dies, ungated clock) + 3.2 W for 50.5 mm2 of new KV-die logic at the same 62.8 mW/mm2 (aggregators, host SerDes, UCIe, sequencer, host, PLL); the moved PHY / controller / row-engine / landing / CDC blocks are already in the 4-die static"
+    "note": "200.0 W uarch static (4 dies, ungated clock) + 3.1 W for 49.8 mm2 of new KV-die logic at the same 62.8 mW/mm2 (aggregators, host SerDes, UCIe, sequencer, host, PLL); the moved PHY / controller / row-engine / landing / CDC blocks are already in the 4-die static"
    },
    "dynamic_j_per_token": {
     "value": 0.07659,
@@ -113,7 +113,7 @@
     "note": "uarch model; UCIe crossing energy (~0.3 MB a token at sub-pJ/bit) is below its resolution"
    },
    "batch1_w": {
-    "value": 572.2,
+    "value": 571.6,
     "unit": "W",
     "grade": "modelled",
     "source": "static + dyn x per-user rate"
@@ -134,7 +134,7 @@
   },
   "efficiency": {
    "per_user_tok_s_per_kw": {
-    "value": 8420.4,
+    "value": 8416.6,
     "unit": "tok/s per kW (batch 1)",
     "grade": "modelled",
     "source": "per-user / batch1_w"
@@ -165,8 +165,8 @@
    },
    "usd_per_user_tok_s": {
     "value": [
-     11.62,
-     22.83
+     11.64,
+     22.86
     ],
     "unit": "USD per (tok/s) at batch 1",
     "grade": "assumed",
@@ -445,20 +445,54 @@
     ],
     "graph": "hbm_ds.json",
     "graph_mtp": "hbm_ds_mtp.json",
+    "graph_note": "Historical unified composition retained; current AR uses the approved G20/G21/G22 record-path price. MTP adds that path's delta once to the charged historical verify-step composition.",
     "per_user": {
      "AR": {
-      "value": 1716.3,
+      "value": 1747.5,
       "unit": "tok/s",
-      "grade": "derived",
-      "source": "results/arch/token_path_20261009/hbm_ds.json totals.tok_s_published <- results/arch/reprice_20261008/reprice.json hbm_ds.upper.after",
-      "note": "unified composition (RTL-contract levers) + 10-08 re-price upper bound; by grade {'measured': 321354.0, 'measured+vendor': 200710.7, 'priced': 180469.8, 'modelled': 47700.0, 'lever': -51058.8}; generic die: DS is the default mode (closed blocks stay valid), fork cost 0 measured so far (/home/ubuntu/claude-takeover-20261007/hbm-forks.log 05:24 RQ-HF-7 (one-beat INT8: zero added cycles, DS cycle-identical)); the fmt3 adapter's modelled bound is 343-2,744 cycles (<= 0.4 %) if not bypass-matched (claude/hbm-generic-20261009 01f643326 results/arch/hbm_generic_20261009/plan.json (die_fit R25G 798.49 mm2 measured with tools/hbm_accel_die_fp.py; branch, planning record))"
+      "grade": "modelled",
+      "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22.tok_s",
+      "note": "approved G20/G21 gather path (2 slots per gather) and G22 row-sharded HC; modelled on the fixed RTL. Today's RTL service-time ratios give 1279.3 tok/s at full DMA bandwidth; the hardware bandwidth implementation remains required. The separate token graph retains the historical unified composition."
      },
      "MTP": {
-      "value": 3699.9,
+      "value": 3344.8,
       "unit": "tok/s",
-      "grade": "derived",
-      "source": "results/arch/token_path_20261009/hbm_ds_mtp.json totals.tok_s_published",
-      "note": "DSpark gamma 5, tau 4.159; expert union and spec-state commit partial"
+      "grade": "modelled",
+      "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22.delta_cycles + results/arch/token_path_20261009/hbm_ds_mtp.json totals.step_cycles",
+      "note": "DSpark gamma 5, tau 4.159; approved gather delta 143235.0 cycles charged once per verify pass on the charged composition 1348889.6 cycles; modelled on the fixed RTL. Today's RTL ratios give 2862.6 tok/s. No native verify program is compiled."
+     }
+    },
+    "rtl_calibration": {
+     "grade": "modelled",
+     "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json; results/arch/hgi_sim_20261009/e2e_calibration.json",
+     "note": "Partial component sensitivity; DS SU/SFU remain uncalibrated, and calibrated peers are bench vehicles. No full-token RTL measurement. DMA is priced at full bandwidth, with >=90% bandwidth an implementation acceptance gate.",
+     "AR": {
+      "value": 1279.3,
+      "unit": "tok/s",
+      "grade": "modelled",
+      "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22_current_rtl_ratios.tok_s"
+     },
+     "MTP": {
+      "value": 2862.6,
+      "unit": "tok/s",
+      "grade": "modelled",
+      "source": "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json result.approved_path_c2_g22_current_rtl_ratios.delta_cycles + results/arch/token_path_20261009/hbm_ds_mtp.json totals.step_cycles"
+     },
+     "charged_mtp_basis_cycles": 1348889.6,
+     "approved_delta_per_verify": 143235.0,
+     "calibrated_delta_per_verify": 394546.2,
+     "native_AR": {
+      "value": 1508.9,
+      "unit": "tok/s",
+      "grade": "modelled",
+      "source": "results/arch/hgi_sim_20261009/e2e_calibration.json result.sensitivity.ds_1M.current_rtl_dma_full_bw_tok_s",
+      "note": "original native program; does not implement the approved gather path"
+     },
+     "ratios": {
+      "COLL.ALL_GATHER": 2.26,
+      "FUSED.QDQ_FP8": 15.875,
+      "COLL.GROUP_REDUCE_MCAST": 0.909,
+      "IDX.TOPK": 4.477
      }
     },
     "sequencer_retiming": {
@@ -567,20 +601,20 @@
      },
      "batch1_w": {
       "AR": {
-       "value": 11875.9,
+       "value": 11921.5,
        "unit": "W",
        "grade": "modelled",
        "source": "static + switches + dyn x per-user"
       },
       "MTP": {
-       "value": 12661.0,
+       "value": 12344.9,
        "unit": "W",
        "grade": "modelled",
        "source": "static + switches + dyn x per-user"
       }
      },
      "wall_w": {
-      "value": 15705.0,
+      "value": 15312.9,
       "unit": "W",
       "grade": "derived",
       "source": "MTP batch-1 W x wall factor 1.2404"
@@ -589,13 +623,13 @@
     "efficiency": {
      "per_user_tok_s_per_kw": {
       "AR": {
-       "value": 144.52,
+       "value": 146.58,
        "unit": "tok/s per kW",
        "grade": "modelled",
        "source": "per-user / batch1_w"
       },
       "MTP": {
-       "value": 292.23,
+       "value": 270.95,
        "unit": "tok/s per kW",
        "grade": "modelled",
        "source": "per-user / batch1_w"
@@ -621,8 +655,8 @@
      },
      "usd_per_user_tok_s": {
       "value": [
-       324.33,
-       324.33
+       358.77,
+       358.77
       ],
       "unit": "USD per (tok/s) at batch 1",
       "grade": "assumed",
@@ -642,11 +676,11 @@
     "graph_note": "no token-path graph yet (export target qwen_hbm not defined); the rate is the HGI-1 simulator's",
     "per_user": {
      "AR": {
-      "value": 951.0,
+      "value": 953.8,
       "unit": "tok/s",
       "grade": "modelled",
-      "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191.json result.S2.tok_s",
-      "note": "pathfinding simulator on 4 r25 dies, TP4, INT8 fmt3 at the MEASURED SM issue (64 codes/cycle/SM, 2 beats a 128-code line: SM-issue bound); 1,261,770 cycles; CP entries estimates; dense 1,024-bit lines adopted (0 % alone); one-beat INT8 (RQ-HF-7, REJECTED: NO_FIT, results/rtl/hbm_forks_20261009/int8_relayout_study.json) would give 1300.6 (results/arch/hgi_sim_20261009/qwen_int8_packing.json)",
+      "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json result.S2.tok_s",
+      "note": "pathfinding simulator on 4 r25 dies, TP4, INT8 fmt3 at the MEASURED SM issue (64 codes/cycle/SM, 2 beats a 128-code line: SM-issue bound); 1,258,136 cycles; CP entries estimates; dense 1,024-bit lines adopted (0 % alone); one-beat INT8 (RQ-HF-7, REJECTED: NO_FIT, results/rtl/hbm_forks_20261009/int8_relayout_study.json) would give 1300.6 (results/arch/hgi_sim_20261009/qwen_int8_packing.json)",
       "one_beat_int8": 1300.6
      },
      "MTP": {
@@ -899,6 +933,23 @@
       ]
      }
     },
+    "rtl_calibration": {
+     "grade": "modelled",
+     "source": "results/arch/hgi_sim_20261009/e2e_calibration.json",
+     "note": "Reduced-reference service-time sensitivity (SU N64/M64/LV7 vs production N1024/M256); full D1 stage/drain remains unmeasured. DMA stays at full bandwidth. Modelled on the fixed RTL; current RTL measures slower.",
+     "AR": {
+      "value": 892.8,
+      "unit": "tok/s",
+      "grade": "modelled",
+      "source": "results/arch/hgi_sim_20261009/e2e_calibration.json result.sensitivity.qwen_P8191.current_rtl_dma_full_bw_tok_s"
+     },
+     "MTP": {
+      "value": 1260.4,
+      "unit": "tok/s",
+      "grade": "modelled",
+      "source": "results/arch/hgi_sim_20261009/e2e_calibration.json result.sensitivity.dflash_b16.current_rtl_dma_full_bw.tok_s_tau_8_01"
+     }
+    },
     "aggregate": {
      "value": [
       16254,
@@ -956,13 +1007,13 @@
       "note": "transferred from the Qwen HBM tile die (same HBM-streamed weight path)"
      },
      "batch1_w": {
-      "value": 867.0,
+      "value": 868.9,
       "unit": "W",
       "grade": "modelled",
       "source": "static + dyn x per-user"
      },
      "wall_w": {
-      "value": 1075.5,
+      "value": 1077.8,
       "unit": "W",
       "grade": "derived",
       "source": "x wall factor 1.2404"
@@ -970,7 +1021,7 @@
     },
     "efficiency": {
      "per_user_tok_s_per_kw": {
-      "value": 1096.84,
+      "value": 1097.67,
       "unit": "tok/s per kW",
       "grade": "modelled",
       "source": "per-user / batch1_w"
@@ -989,8 +1040,8 @@
      },
      "usd_per_user_tok_s": {
       "value": [
-       52.58,
-       52.58
+       52.42,
+       52.42
       ],
       "unit": "USD per (tok/s) at batch 1",
       "grade": "assumed",
@@ -1083,22 +1134,22 @@
    "target": "Qwen ROM (ROM + KV die)",
    "model": "Qwen3-8B 8K",
    "mode": "AR",
-   "per_user": 4817.9,
+   "per_user": 4810.9,
    "aggregate": 25362,
    "dies": 8,
    "stacks": 16,
    "power_w": 2145.6,
-   "tok_s_per_kw_b1": 8420.4,
+   "tok_s_per_kw_b1": 8416.6,
    "capex": [
     56000,
     110000
    ],
    "gpu": 1175,
    "served": 55,
-   "vs_gpu_batch1": 4.1,
-   "vs_served_median": 87.6,
+   "vs_gpu_batch1": 4.09,
+   "vs_served_median": 87.5,
    "gpu_same_mode": 230,
-   "vs_gpu_same_mode": 20.95
+   "vs_gpu_same_mode": 20.92
   },
   {
    "target": "DS ROM (S81 + Engram HBM)",
@@ -1146,57 +1197,57 @@
    "target": "HBM accelerator (generic die)",
    "model": "DeepSeek-V4.1-Flash 1M",
    "mode": "AR",
-   "per_user": 1716.3,
+   "per_user": 1747.5,
    "aggregate": null,
    "dies": 96,
    "stacks": 384,
-   "power_w": 11875.9,
-   "tok_s_per_kw_b1": 144.52,
+   "power_w": 11921.5,
+   "tok_s_per_kw_b1": 146.58,
    "capex": [
     1200000,
     1200000
    ],
    "gpu": 873.63,
    "served": 88.5,
-   "vs_gpu_batch1": 1.96,
-   "vs_served_median": 19.4,
+   "vs_gpu_batch1": 2.0,
+   "vs_served_median": 19.7,
    "gpu_same_mode": 203,
-   "vs_gpu_same_mode": 8.45
+   "vs_gpu_same_mode": 8.61
   },
   {
    "target": "HBM accelerator (generic die)",
    "model": "DeepSeek-V4.1-Flash 1M",
    "mode": "MTP",
-   "per_user": 3699.9,
+   "per_user": 3344.8,
    "aggregate": null,
    "dies": 96,
    "stacks": 384,
-   "power_w": 12661.0,
-   "tok_s_per_kw_b1": 292.23,
+   "power_w": 12344.9,
+   "tok_s_per_kw_b1": 270.95,
    "capex": [
     1200000,
     1200000
    ],
    "gpu": 873.63,
    "served": 88.5,
-   "vs_gpu_batch1": 4.24,
-   "vs_served_median": 41.8,
+   "vs_gpu_batch1": 3.83,
+   "vs_served_median": 37.8,
    "gpu_same_mode": 873.63,
-   "vs_gpu_same_mode": 4.24
+   "vs_gpu_same_mode": 3.83
   },
   {
    "target": "HBM accelerator (generic die)",
    "model": "Qwen3-8B 8K",
    "mode": "AR",
-   "per_user": 951.0,
+   "per_user": 953.8,
    "aggregate": [
     16254,
     25169
    ],
    "dies": 4,
    "stacks": 16,
-   "power_w": 867.0,
-   "tok_s_per_kw_b1": 1096.84,
+   "power_w": 868.9,
+   "tok_s_per_kw_b1": 1097.67,
    "capex": [
     50000,
     50000
@@ -1206,7 +1257,7 @@
    "vs_gpu_batch1": 0.81,
    "vs_served_median": 17.3,
    "gpu_same_mode": 230,
-   "vs_gpu_same_mode": 4.13
+   "vs_gpu_same_mode": 4.15
   },
   {
    "target": "HBM accelerator (generic die)",
@@ -1233,7 +1284,7 @@
  "changes": [
   {
    "item": "Qwen KV die",
-   "effect": "Qwen ROM per user 5,492.7 -> 4,817.9 tok/s (-0.52 %); pair 935.3 mm2; 8 dies",
+   "effect": "Qwen ROM per user 5,492.7 -> 4,810.9 tok/s (-0.67 %); pair 952.9 mm2; 8 dies",
    "grade": "derived",
    "source": "results/arch/qwen_kv_die_20261009/reprice.json"
   },
@@ -1251,9 +1302,9 @@
   },
   {
    "item": "HBM generic die",
-   "effect": "Qwen3-8B on r25 TP4 INT8: 951.0 tok/s (pathfinding simulator, SM-issue bound; one-beat INT8 1300.6 rejected NO_FIT); DS unchanged (default mode, fork cost 0 measured so far); DS sequencer re-timing kept as a sensitivity",
+   "effect": "Qwen3-8B on r25 TP4 INT8: 953.8 tok/s (pathfinding simulator, SM-issue bound; one-beat INT8 1300.6 rejected NO_FIT); DS uses the approved gather + G22 path; partial measured-unit sensitivity is recorded separately; DMA stays at full bandwidth",
    "grade": "modelled",
-   "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191.json; results/arch/hgi_sim_20261009/ds_native_timing_1M.json"
+   "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json; results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json; results/arch/hgi_sim_20261009/e2e_calibration.json"
   },
   {
    "item": "Qwen3-8B DFlash on the generic die",
@@ -1263,7 +1314,7 @@
   },
   {
    "item": "BF decision",
-   "effect": "pending 21:30 PT; HALF_PHL stays the headline, full-rate rows in ds_rom.bf_variants",
+   "effect": "full-rate BF closure pending; HALF_PHL stays the headline, full-rate rows in ds_rom.bf_variants",
    "grade": "derived",
    "source": "results/arch/reprice_20261008/reprice.json"
   },
@@ -1287,7 +1338,7 @@
   }
  ],
  "pending": [
-  "BF decision (21:30 PT): switch the DS ROM headline to the chosen BF row and re-run this tool",
+  "BF full-rate closure: switch the DS ROM headline to the chosen BF row and re-run this tool",
   "KV-die stream: GRT / STA of the ROM r22k and KV die (chain on EPYC1); the near-HBM attention elements are not closed",
   "HBM forks: fmt3 adapter bypass match, sequencer C2 measured costs; one-beat INT8 closed (NO_FIT)",
   "Qwen-HBM DFlash: SM multi-slot issue (G18, hbm-forks) and CTL.TOKX (cmdproc); a qwen_hbm token-path graph",
@@ -1300,10 +1351,12 @@
   "results/arch/engram_20261008/design.json": "3fcba3d9efed464c",
   "results/arch/hgi_sim_20261009/dflash/dflash_timing.json": "6dcf28d7dad75f95",
   "results/arch/hgi_sim_20261009/ds_native_timing_1M.json": "e450ac5078c587a6",
+  "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json": "f194fee9cb2ce931",
+  "results/arch/hgi_sim_20261009/e2e_calibration.json": "296587ed82cc0803",
   "results/arch/hgi_sim_20261009/qwen_int8_packing.json": "18a9adb55a6943ce",
-  "results/arch/hgi_sim_20261009/qwen_timing_P8191.json": "95dc2ad9567bc8c3",
-  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "13ea1db4de5a89fd",
-  "results/arch/qwen_kv_die_20261009/reprice.json": "673521a4b0b5f94e",
+  "results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json": "f82f0eb7dcd30ad7",
+  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "c4d011c21ee69461",
+  "results/arch/qwen_kv_die_20261009/reprice.json": "d132d462ee1402cc",
   "results/arch/qwen_kv_die_20261009/rom_r22k.json": "1f7d306ec9136948",
   "results/arch/qwen_tp8_vs_sysdie_20261009/result.json": "664409499b753a7d",
   "results/arch/reprice_20261008/reprice.json": "16c586162e2c61cc",

@@ -50,10 +50,12 @@ ECON = "results/uarch/economics.json"
 ARCH = "configs/hardware/architectures.json"
 RACK = "results/arch/v41_rack.json"
 REG = "results/external/registry.json"
-HQT = "results/arch/hgi_sim_20261009/qwen_timing_P8191.json"
+HQT = "results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json"
 HQP = "results/arch/hgi_sim_20261009/qwen_int8_packing.json"
 HQD = "results/arch/hgi_sim_20261009/dflash/dflash_timing.json"
 HDT = "results/arch/hgi_sim_20261009/ds_native_timing_1M.json"   # the spec-conformant native record stream
+HCA = "results/arch/hgi_sim_20261009/e2e_calibration.json"
+HAPP = "results/arch/hgi_sim_20261009/ds_sw_seq_pricing.json"
 MAP = "results/uarch/dsrom_s81_mixed1792_mapping_20261007"
 HBM_GENERIC = ("claude/hbm-generic-20261009 01f643326 results/arch/hbm_generic_20261009/plan.json (die_fit R25G "
                "798.49 mm2 measured with tools/hbm_accel_die_fp.py; branch, planning record)")
@@ -352,7 +354,19 @@ def hbm(E, wall):
     qp = J(HQP)
     qd = J(HQD)
     tp8 = J(TP8)
-    ar, mtp = g["totals"]["tok_s_published"], gm["totals"]["tok_s_published"]
+    approved = J(HAPP)["result"]
+    calibration = J(HCA)["result"]["sensitivity"]
+    approved_fixed = approved["approved_path_c2_g22"]
+    approved_current = approved["approved_path_c2_g22_current_rtl_ratios"]
+    if approved_fixed["n_races"] or approved_current["n_races"]:
+        raise ValueError("approved HBM path contains schedule races")
+    ar = approved_fixed["tok_s"]
+    # Charge the approved gather delta relative to native S2 once per verify pass.
+    # Keep the native S2-S0 CP effect as the existing separate sensitivity.
+    mtp_step = gm["totals"]["step_cycles"]
+    mtp_tau = gm["totals"]["tau"]
+    mtp = r1(mtp_tau * CLK / (mtp_step + approved_fixed["delta_cycles"]))
+    mtp_current = r1(mtp_tau * CLK / (mtp_step + approved_current["delta_cycles"]))
     cyc = g["totals"]["cycles"]
     dies, stacks, switches = 96, 384, 8
     die_mm2 = 798.49
@@ -390,13 +404,34 @@ def hbm(E, wall):
     ds_block = dict(
         id="hbm_ds", model="DeepSeek-V4.1-Flash", context="1M (position 1,048,575)", modes=["AR", "MTP"],
         graph="hbm_ds.json", graph_mtp="hbm_ds_mtp.json",
+        graph_note="Historical unified composition retained; current AR uses the approved G20/G21/G22 record-path price. "
+                   "MTP adds that path's delta once to the charged historical verify-step composition.",
         per_user=dict(
-            AR=f(ar, "tok/s", "derived", "results/arch/token_path_20261009/hbm_ds.json totals.tok_s_published <- "
-                 f"{REPRICE} hbm_ds.upper.after", note=f"unified composition (RTL-contract levers) + 10-08 re-price upper bound; by grade "
-                 f"{g['totals']['by_grade']}; generic die: DS is the default mode (closed blocks stay valid), fork cost 0 measured "
-                 f"so far ({HBM_FORKS}); the fmt3 adapter's modelled bound is 343-2,744 cycles (<= 0.4 %) if not bypass-matched ({HBM_GENERIC})"),
-            MTP=f(mtp, "tok/s", "derived", "results/arch/token_path_20261009/hbm_ds_mtp.json totals.tok_s_published",
-                  note="DSpark gamma 5, tau 4.159; expert union and spec-state commit partial")),
+            AR=f(ar, "tok/s", "modelled", f"{HAPP} result.approved_path_c2_g22.tok_s",
+                 note="approved G20/G21 gather path (2 slots per gather) and G22 row-sharded HC; modelled on the fixed RTL. "
+                      f"Today's RTL service-time ratios give {approved_current['tok_s']} tok/s at full DMA bandwidth; "
+                      "the hardware bandwidth implementation remains required. The separate token graph retains the "
+                      "historical unified composition."),
+            MTP=f(mtp, "tok/s", "modelled", f"{HAPP} result.approved_path_c2_g22.delta_cycles + "
+                  "results/arch/token_path_20261009/hbm_ds_mtp.json totals.step_cycles",
+                  note=f"DSpark gamma 5, tau {mtp_tau}; approved gather delta {approved_fixed['delta_cycles']} cycles "
+                       f"charged once per verify pass on the charged composition {mtp_step} cycles; modelled on the fixed RTL. "
+                       f"Today's RTL ratios give {mtp_current} tok/s. No native verify program is compiled.")),
+        rtl_calibration=dict(
+            grade="modelled", source=f"{HAPP}; {HCA}",
+            note="Partial component sensitivity; DS SU/SFU remain uncalibrated, and calibrated peers are bench vehicles. No full-token RTL measurement. DMA is "
+                 "priced at full bandwidth, with >=90% bandwidth an implementation acceptance gate.",
+            AR=f(approved_current["tok_s"], "tok/s", "modelled",
+                 f"{HAPP} result.approved_path_c2_g22_current_rtl_ratios.tok_s"),
+            MTP=f(mtp_current, "tok/s", "modelled", f"{HAPP} result.approved_path_c2_g22_current_rtl_ratios.delta_cycles + "
+                  "results/arch/token_path_20261009/hbm_ds_mtp.json totals.step_cycles"),
+            charged_mtp_basis_cycles=mtp_step,
+            approved_delta_per_verify=approved_fixed["delta_cycles"],
+            calibrated_delta_per_verify=approved_current["delta_cycles"],
+            native_AR=f(calibration["ds_1M"]["current_rtl_dma_full_bw_tok_s"], "tok/s", "modelled",
+                        f"{HCA} result.sensitivity.ds_1M.current_rtl_dma_full_bw_tok_s",
+                        note="original native program; does not implement the approved gather path"),
+            ratios=approved["rtl_ratios_applied"]),
         sequencer_retiming=dict(
             grade="modelled", source=f"{HDT} result (the bit-exact native HGI-1 program, rank 0, CP modelled; unit costs walk-priced, "
                                      "CP entries ESTIMATES)",
@@ -448,6 +483,14 @@ def hbm(E, wall):
                        f"if every slot re-issues, block 16 falls to {next(r for r in qd['table'] if r['B'] == 16 and r['sm_mode'] == 'reissue' and not r['one_beat_int8'] and r['tau_kind'] == 'published')['tok_s']})",
                   table=[{k: r[k] for k in ("B", "sm_mode", "one_beat_int8", "tau_kind", "tau", "step_cycles", "tok_s", "vs_ar")}
                          for r in qd["table"]])),
+        rtl_calibration=dict(
+            grade="modelled", source=HCA,
+            note="Reduced-reference service-time sensitivity (SU N64/M64/LV7 vs production N1024/M256); full D1 stage/drain remains unmeasured. DMA stays at full bandwidth. "
+                 "Modelled on the fixed RTL; current RTL measures slower.",
+            AR=f(calibration["qwen_P8191"]["current_rtl_dma_full_bw_tok_s"], "tok/s", "modelled",
+                 f"{HCA} result.sensitivity.qwen_P8191.current_rtl_dma_full_bw_tok_s"),
+            MTP=f(calibration["dflash_b16"]["current_rtl_dma_full_bw"]["tok_s_tau_8_01"], "tok/s", "modelled",
+                  f"{HCA} result.sensitivity.dflash_b16.current_rtl_dma_full_bw.tok_s_tau_8_01")),
         aggregate=f(pl_agg, "tok/s [low, high]", "modelled", f"{HBM_GENERIC} qwen.aggregate_tp4.aggregate_estimate_tok_s",
                     note="KV-stream and SU-occupancy ceilings; SM compute at batch not checked"),
         dies=dict(total=f(q_dies, "dies", "derived", "TP4 (owner 10-09 qwen-on-r25-unified)"),
@@ -547,6 +590,28 @@ def fmt(v, nd=1):
     return f"{v:,.{nd}f}" if isinstance(v, float) else f"{v:,}"
 
 
+def calibration_table(S, annotation=None):
+    """Expose fixed-price estimates beside the partial component-measured sensitivity."""
+    lines = ["", "HBM estimates use fixed RTL prices. The partial measured-unit sensitivity applies measured service-time "
+             "ratios analytically; DeepSeek SU/SFU remain uncalibrated. Qwen SU/SFU ratios use a reduced reference "
+             "vehicle (N64/M64/LV7 rather than production N1024/M256); full D1 stage/drain is unmeasured. DMA stays at full bandwidth in both columns "
+             "and must measure at least 90% bandwidth before adoption. No full-token RTL rate is established.", "",
+             "| HBM workload | Mode | Fixed RTL (tok/s) | Partial measured-unit sensitivity (tok/s) |",
+             "|---|---|---:|---:|"]
+    for target in S["hbm"]["targets"]:
+        for mode in ("AR", "MTP"):
+            fixed = target["per_user"][mode]["value"]
+            current = target["rtl_calibration"][mode]["value"]
+            suffix = ""
+            if annotation:
+                path = f"hbm.targets[id={target['id']}]"
+                suffix = " " + annotation(current, f"{path}.rtl_calibration.{mode}.value",
+                                            f"{target['id']} {mode} partial RTL sensitivity")
+                suffix += " " + annotation(fixed, f"{path}.per_user.{mode}.value", f"{target['id']} {mode} fixed RTL")
+            lines.append(f"| {target['model']} | {mode} | {fixed:,.1f} | {current:,.1f} |{suffix}")
+    return lines
+
+
 def readme(S):
     L = ["# Token path and system numbers, 2026-10-09", "",
          "Generated by `tools/token_path_systems.py`; do not edit. The per-token critical-path graphs (`qwen_rom.json`, `ds_rom*.json`, "
@@ -560,6 +625,7 @@ def readme(S):
         L.append(f"| {r['target']} | {r['model']} | {r['mode']} | {fmt(r['per_user'])} | {fmt(r['aggregate'], 0)} | {r['dies']:,} | "
                  f"{r['stacks']:,} | {fmt(r['power_w'], 0)} | {fmt(r['tok_s_per_kw_b1'])} | {fmt(r['capex'], 0)} | "
                  f"{r['vs_gpu_batch1']:.2f} | {r['vs_gpu_same_mode']:.2f} | {r['vs_served_median']:.1f} |")
+    L += calibration_table(S)
     L += ["", "n/c: not composed. Power: Qwen rows are the modelled instance power (saturated for the ROM, batch 1 for the HBM die); "
           "the DS ROM row is the rack's chip power with every die at the busiest die's saturated power (an upper bound); the HBM DS rows "
           "are batch-1 power including 8 switches. GPU batch 1: Qwen 1 × B200 + DFlash (1,175); DeepSeek 4 × GB300 + DSpark (873.6, "
@@ -639,6 +705,7 @@ def doc_section(S):
             a.append(ann(st, stp, f"{tag} stacks"))
             a.append(ann(round(pw), pwp, f"{tag} power"))
         L.append("| " + " | ".join(cells) + " | " + " ".join(a))
+    L += calibration_table(S, ann)
     gq, gd = G["qwen"], G["ds"]
     L += ["",
           f"The per-user rate is 1 / the critical-path latency of one token (or of one speculative step divided by τ). "
@@ -720,12 +787,11 @@ def build_systems():
              f"{d['dies']['stacks']['value']} stacks / {d['power']['chips_w']['value'] / 1e3:,.2f} kW chips (85-stage rack: 440 / 484 / 38.75)",
              grade="derived", source="tools/dsrom_array_v2.py"),
         dict(item="HBM generic die", effect=f"Qwen3-8B on r25 TP4 INT8: {h['targets'][1]['per_user']['AR']['value']} tok/s (pathfinding "
-             f"simulator, SM-issue bound; one-beat INT8 {h['targets'][1]['per_user']['AR']['one_beat_int8']} rejected NO_FIT); DS unchanged (default mode, fork "
-             "cost 0 measured so far); DS sequencer re-timing kept as a sensitivity", grade="modelled", source=f"{HQT}; {HDT}"),
+             f"simulator, SM-issue bound; one-beat INT8 {h['targets'][1]['per_user']['AR']['one_beat_int8']} rejected NO_FIT); DS uses the approved gather + G22 path; partial measured-unit sensitivity is recorded separately; DMA stays at full bandwidth", grade="modelled", source=f"{HQT}; {HAPP}; {HCA}"),
         dict(item="Qwen3-8B DFlash on the generic die", effect=f"block 16 {h['targets'][1]['per_user']['MTP']['value']} tok/s at the "
              "published tau 8.01 (one compiled step: draft + 2-pass verify + accept, bit-exact in hgi_sim; no hardware added; "
              "open: SM multi-slot issue G18, CTL.TOKX)", grade="modelled", source=HQD),
-        dict(item="BF decision", effect="pending 21:30 PT; HALF_PHL stays the headline, full-rate rows in ds_rom.bf_variants", grade="derived", source=REPRICE),
+        dict(item="BF decision", effect="full-rate BF closure pending; HALF_PHL stays the headline, full-rate rows in ds_rom.bf_variants", grade="derived", source=REPRICE),
         *mtp_charge_changes(),
         dict(item="replica-fold / keep fixes", effect="0 cycles (synthesis attribute only: (* keep *) copies survive opt_merge)",
              grade="measured", source="main 0d3958d56, 816a3bec0, 54e3f8f9c"),
@@ -733,14 +799,14 @@ def build_systems():
              "OpenRouter medians DS 88.5 / Qwen 55", grade="third-party", source=REG),
     ]
     S["pending"] = [
-        "BF decision (21:30 PT): switch the DS ROM headline to the chosen BF row and re-run this tool",
+        "BF full-rate closure: switch the DS ROM headline to the chosen BF row and re-run this tool",
         "KV-die stream: GRT / STA of the ROM r22k and KV die (chain on EPYC1); the near-HBM attention elements are not closed",
         "HBM forks: fmt3 adapter bypass match, sequencer C2 measured costs; one-beat INT8 closed (NO_FIT)",
         "Qwen-HBM DFlash: SM multi-slot issue (G18, hbm-forks) and CTL.TOKX (cmdproc); a qwen_hbm token-path graph",
         "DS ROM 1,792 power pass (per-die W is the busiest saturated die for every die)",
         "HBM accelerator batch / union / credit calendar (no aggregate is composed)",
     ]
-    ins = sorted({KVD, KVROM, KVPLAN, TP8, ENGRAM, REPRICE, ES, ECON, ARCH, RACK, REG, HQT, HQP, HQD, HDT,
+    ins = sorted({KVD, KVROM, KVPLAN, TP8, ENGRAM, REPRICE, ES, ECON, ARCH, RACK, REG, HQT, HQP, HQD, HDT, HCA, HAPP,
                   "results/arch/token_path_20261008/qwen_rom.json"})
     S["inputs"] = {p: sha(p) for p in ins}
     (OUT / "systems.json").write_text(json.dumps(S, indent=1) + "\n")
