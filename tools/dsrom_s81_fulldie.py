@@ -1344,6 +1344,7 @@ def legality(m):
 # side of its driver (r3 hop relays g_rt_*_8a_y1: 776-906 um backwards, 860 ps of GRT wire).  `check` exits 3 on a FAIL.
 MARGIN_RELAY_KINDS = ('stn', 'sstn', 'rly', 'hstn', 'rstg', 'pqstn')
 SS_REACH_UM = 504.0
+TT_REACH_UM = 674.0             # TT wire fit 261 ps + 0.76 ps/um within 833.333 - 60 ps (reported, option B)
 
 
 def margin_lint(m):
@@ -1352,8 +1353,14 @@ def margin_lint(m):
     # s81-gen 2026-10-09: data buses only.  Clock trunks / resets / column clock trees fan out from sp_collective (the
     # PLL) to every station's ck: as 'segments' they gave 52,988 false 9-13 mm reach violations on the layer1 die.
     data = [b for b in m['buses'] if b[1] not in HOP_SKIP]
-    return FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
-                          edges=os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1')
+    edges = os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1'
+    out = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=edges)
+    # s81-gen 2026-10-10: the sign-off corner is TT (owner option B); the SS 504 um verdict above stays the gate, and the
+    # TT reach (833.333 - 60 ps setup unc. = 261 ps + 0.76 ps/um x L -> 674 um) is reported beside it
+    tt = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=TT_REACH_UM, edges=edges, limit=5)
+    out['tt'] = dict(reach_um=TT_REACH_UM, reach_violations=tt['reach_violations'], verdict_reach='PASS' if not tt['reach_violations'] else 'FAIL',
+                     max_um=max((r['um'] for r in out['reach_examples']), default=0.0))
+    return out
 
 
 def write_def_floorplan(m, path):
@@ -3077,7 +3084,7 @@ def build_r8(variant=None):
                 insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
         else:
-            slab(n, centre_area[n], x_sp, yy, slab_w.get(n, cw), dom='serial_0p9' if n == 'vm' else 'stream_1p2',
+            slab(n, centre_area[n], up(x_sp + (cw - slab_w.get(n, cw)) / 2, GX), yy, slab_w.get(n, cw), dom='serial_0p9' if n == 'vm' else 'stream_1p2',
                  master='dsfd_host' if n == 'host' else None)
         yy += up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) + SPINE_GAP
     slab('su_n', su_area - su_lo, x_sp, yy, cw, dom='serial_0p9')
@@ -3222,6 +3229,15 @@ def _corridors(m):
         stripN=(g['x_lw'] + LINK_COL + 4.32, g['y_top'] + 4.32, g['x_le'] - 4.32, H - g['band_depth'] - 4.32),
         gapS=(m['gap_x'][0] + 4.32, 20.0, m['gap_x'][1] - 4.32, g['y_f'] - 4.32),
         gapN=(m['gap_x'][0] + 4.32, g['y_top'] + 4.32, m['gap_x'][1] - 4.32, H - 20.0))
+    if COLL_SPLIT3:
+        # --coll-split3: the collective slab (1,371.8 um) is narrower than the hub column; the column remainder beside it
+        # is free for the link / hub chains' first stations (KE0t had no spot at the slab's E face)
+        c_ = m['hub']['collective']
+        x0c, x1c = g['x_sp'], g['x_sp'] + (SPINE_W8 - VCH8) / 2
+        if c_.x - x0c > 30.0:
+            cor['collW'] = (x0c + 4.32, c_.y, c_.x - 4.32, c_.y + c_.h)
+        if x1c - (c_.x + c_.w) > 30.0:
+            cor['collE'] = (c_.x + c_.w + 4.32, c_.y, x1c - 4.32, c_.y + c_.h)
     if 'eng' in m['hub']:
         # layer1e: the SE service slot around eng_SE is free (no svc_SE): its stations / pin relays stand there and climb
         # into stripS (l1e check: the last VM -> eng hop had no box near eng_SE, 1,181.5 um segment)
@@ -4470,7 +4486,8 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         CH8.bus(name, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
         m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0)
         return
-    sts = CH8.run(name, [bits], path, [cor['vch']], path[0], reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
+    sts = CH8.run(name, [bits], path, [cor['vch']] + [cor[k_] for k_ in ('collE', 'collW') if k_ in cor], path[0],
+                  reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)   # collE/W: --coll-split3 column remainder
     prev = (A.name, pa)
     for k, (it, s_, hop) in enumerate(sts):
         it.kind, it.domain = 'hstn', A.domain

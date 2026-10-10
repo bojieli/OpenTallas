@@ -39,7 +39,9 @@ MARGIN = 21.6
 R = 8                           # row engines a stack (near-HBM gate R = 8: 1,824 cycles at ctx 8192)
 RENG = (531.36, 1998.0)         # re-cut D row engine: ~529 k um2 cells (synth: _e 310 k measured + D's 512-adder
                                 # bank 207 k + level / node registers 19 k - E's X / out words 12 k) at <= 0.50 (was r17b 328.32)
-ASTK_W = 777.6                  # stack aggregator column (q registers, exp, Z / P.V trees): ASSUMED ~3 mm2 cells at 0.5
+ASTK_W = 220.32                  # stack aggregator (re-cut D) MEASURED: 8 exp quads 314 k + Z tree 99 k + P.V tree (levels 4-7) 288 k
+                                # + node staging / q broadcast ~73 k um2 cells at 0.50 + score / e memories as SRAM macros (786 k b,
+                                # ~0.19 mm2) over the 4-engine height 7,992 um (synth4; was 777.6 ASSUMED)
 LAND_W = 172.8                  # KV landing column: 8 x 32 crossbar, 8 KV merges, emb strip (ASSUMED; r21c qfd_kvc 96.7)
 UCIE = ('ot_qkvd_ucie_x64_phy', 777.6, 777.6)
 SERDES = ('ot_qfd_serdes_112g_x12_phy', 2400.0, 1512.0)
@@ -621,8 +623,8 @@ set phy_cells {}
 foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
 if {[llength $phy_cells]} {
   define_pdn_grid -macro -cells $phy_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {phy}
-  add_pdn_stripe -grid {phy} -layer {M8} -width {0.48} -pitch {2.88} -offset {1.0}
-  add_pdn_stripe -grid {phy} -layer {M9} -width {0.48} -pitch {2.88} -offset {1.0}
+  add_pdn_stripe -grid {phy} -layer {M8} -width {0.48} -pitch {10.88} -offset {1.0}
+  add_pdn_stripe -grid {phy} -layer {M9} -width {0.48} -pitch {10.88} -offset {1.0}
   add_pdn_connect -grid {phy} -layers {M4 M8}
   add_pdn_connect -grid {phy} -layers {M8 M9}
 }

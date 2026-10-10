@@ -21,13 +21,17 @@ def ref(d):
     A, B, O = d['eff'][0], d['eff'][1], d['eff'][4]
     opnd = C.fld(h, 'opnd', C.UOP)
     K, no = d['n'][0], d['n'][4]
-    if (C.fld(h, 'unit', C.UOP) != 10 or C.fld(h, 'op', C.UOP) != 0 or (opnd & 0b10011) != 0b10011
+    op, r0 = C.fld(h, 'op', C.UOP), C.fld(h, 'imm_a', C.UOP)
+    bad_n = (no != 24 if op == 0 else (no == 0 or no > 24 or r0 > 23 or r0 + no > 24) if op == 1
+             else (no != 24 or K != 24))
+    if (C.fld(h, 'unit', C.UOP) != 10 or op > 2 or (opnd & 0b10011) != 0b10011
             or C.fld(A, 'space') != 1 or C.fld(O, 'space') != 1 or C.fld(B, 'space') != 0 or K == 0 or K % 8
-            or K >= 1 << 18 or no != 24 or C.fld(B, 'base') & 31):
+            or K >= 1 << 18 or bad_n or C.fld(B, 'base') & 31):
         return 2 << 229
     nf = struct.unpack('<I', struct.pack('<f', float(K)))[0]
     f = [(1, 1), (24, 5), (K // 8, 18), (1, 1), (nf, 32), (EPS, 32), (0, 16), (C.fld(A, 'base'), 18),
-         (C.fld(B, 'base') >> 5, 35), (24 * K // 8, 24), (C.fld(O, 'base'), 18)]
+         (C.fld(B, 'base') >> 5, 35), (24 * K // 8, 24), (C.fld(O, 'base'), 18), (op, 2), (r0 if op == 1 else 0, 5),
+         (no, 5)]
     w, sh = 0, 0
     for v, b in f:
         w |= (v & ((1 << b) - 1)) << sh
@@ -35,12 +39,12 @@ def ref(d):
     return w
 
 
-def rec(K, A_base=0, B_base=0x5_0000_0000, O_base=200000, n_o=24, unit=10, op=0, sa=1, sb=0, so=1, opnd=0b10011):
+def rec(K, A_base=0, B_base=0x5_0000_0000, O_base=200000, n_o=24, unit=10, op=0, sa=1, sb=0, so=1, opnd=0b10011, imm_a=0):
     A = C.SV.mdesc(space=sa, base=A_base, n=K, m=1)
     B = C.SV.mdesc(space=sb, fmt=1, base=B_base, n=1)
     O = C.SV.mdesc(space=so, base=O_base, n=n_o)
     eff = [A, B, 0, 0, O, 0, 0]
-    return dict(hdr=C.SV.header(unit, op, opnd=opnd), eff=[e if opnd >> j & 1 else 0 for j, e in enumerate(eff)],
+    return dict(hdr=C.SV.header(unit, op, opnd=opnd, imm_a=imm_a), eff=[e if opnd >> j & 1 else 0 for j, e in enumerate(eff)],
                 n=[K, 0, 0, 0, n_o, 0, 0])
 
 
@@ -64,7 +68,11 @@ def main():
     # DS V4.1-Flash: HC = 4 copies x D 4,096 (h = 16,384 FP32 words), the attn / ffn mixes of every layer
     add(0, [rec(4 * 4096, A_base=0, B_base=0x5_0000_0000 + 0x40000 * L, O_base=100000 + 24 * (L % 2)) for L in range(8)]
         + [rec(8), rec(4 * 7168, A_base=4096), rec((1 << 18) - 8)])
-    for d in [rec(4096, unit=2), rec(4096, op=1), rec(4096, sa=0), rec(4096, sb=1), rec(4096, so=0), rec(4100),
+    # G22: HC_MIX_ROWS (row slices of the even-split gather) and HC_MIX_POST
+    add(0, [rec(4 * 5120, op=1, imm_a=r0, n_o=nr) for r0, nr in ((0, 1), (3, 1), (23, 1), (0, 24), (5, 7))]
+        + [rec(24, op=2, n_o=24, A_base=48)])
+    for d in [rec(4096, unit=2), rec(4096, op=3), rec(4096, op=1, imm_a=20, n_o=5), rec(4096, op=1, n_o=0),
+              rec(4096, op=1, imm_a=24, n_o=1), rec(32, op=2), rec(24, op=2, n_o=4), rec(4096, sa=0), rec(4096, sb=1), rec(4096, so=0), rec(4100),
               rec(0), rec(4096, n_o=20), rec(4096, B_base=0x5_0000_0010), rec(4096, opnd=0b10001), rec(1 << 18)]:
         add(2, [d])
     (out / 'hc_rec.mem').write_text(''.join(C.hexw(r, 938) + '\n' for r in recs))

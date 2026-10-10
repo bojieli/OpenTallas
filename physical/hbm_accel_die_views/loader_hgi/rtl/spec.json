@@ -87,10 +87,33 @@
     "lcp": "die:t_hgi_cp[0:419]",
     "cpl": "die:f_hgi_cp[0:222]",
     "lq": "die:qSW[0:346]+qSE[0:346]+qNW[0:346]+qNE[0:346]",
-    "lr": "die:rSW[0:293]+rSE[0:293]+rNW[0:293]+rNE[0:293]"
+    "lr": "die:rSW[0:293]+rSE[0:293]+rNW[0:293]+rNE[0:293]",
+    "dma_rec": "cfg",
+    "dma_ret": "fold",
+    "dma_vmq": "fold",
+    "dma_vmr": "cfg"
    }
   }
  ],
  "kept_out_regs": true,
- "face_stages": 5
+ "face_stages": 5,
+ "replaced_when_hgi": "dma",
+ "ties": {
+  "ld.dma_rec": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_ret": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_vmq": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  },
+  "ld.dma_vmr": {
+   "class": "by_design",
+   "reason": "no DMA record bus on this die variant ('dma' not in hgi_dispatch): the DMA unit idles"
+  }
+ }
 }

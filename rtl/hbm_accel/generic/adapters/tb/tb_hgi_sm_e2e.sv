@@ -101,13 +101,14 @@ module tb_hgi_sm_e2e;
             {r0, nr, vi0, nvi, ve0, nve} = casem[c];
             rst_n = 0; repeat (4) @(posedge clk); rst_n = 1; repeat (4) @(posedge clk);
             for (j = 0; j < nvi; j = j + 1) vm_req(1'b1, vmim[vi0 + j][63:32], vmim[vi0 + j][31:0], qd);
+            $display("case %0d: %0d x words loaded at cycle %0d", c, nvi, cyc); $fflush;
             k = 0; nf = 0;
             @(negedge clk); cur = recm[r0]; rec_v = 1;
             t = 0; while (!rec_rdy && t < 1000) begin @(negedge clk); t = t + 1; end
             @(posedge clk); t0 = cyc; #0.1 rec_v = 0;
             t = 0; while (k < nr && nf == 0 && t < 400000) begin @(posedge clk); t = t + 1; end
             if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d faults %0d (x_fault %0d pub_fault %0d)", c, k, nf, x_fault, pub_fault); errors = errors + 1; end
-            $display("case %0d: record -> retire %0d cycles", c, cyc - t0);
+            $display("case %0d: record -> retire %0d cycles", c, cyc - t0); $fflush;
             for (j = 0; j < nve; j = j + 1) begin
                 vm_req(1'b0, vmem[ve0 + j][63:32], 0, qd);
                 if (qd !== vmem[ve0 + j][31:0]) begin

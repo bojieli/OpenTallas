@@ -6,6 +6,11 @@
 // when it is staged; a 4-deep descriptor FIFO {write, step, lane, part, last read, last write, final, tag} pairs the
 // in-order responses with their requests.  Every response is accepted the cycle it arrives (rsp_r = 1).
 // MUTANT 4 (ordering): responses are paired with the NEWEST descriptor instead of the oldest -> must FAIL.
+// hgi-takeover 2026-10-09 (route hgi_quant_vm_pd5x-b62dd7a1c post-place TT -2,027 ps / 21,521 endpoints): (1) the
+// port reset reached 20k D / recovery pins (ready = ... && rst_n fed the 1,024-bit lane clear): the block now runs on a
+// registered reset (async assert, 2-flop release, rn); (2) cmd lands in a registered station before it fans out to the
+// 1,024 lane / header / descriptor registers (+1 cycle a record); (3) the shape check's span multiplies are registered
+// before the compares (validation 2 cycles, +1 a record).  Added: +2 cycles a record (r3: +2 more, a 4-stage shape check), no other change.
 module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  input wire clk,rst_n,input wire [1408:0] cmd,
  output wire ready,output reg done,output reg fault,output wire drained,
@@ -14,9 +19,14 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  input wire provider_fault
 );
  localparam PW=$clog2(DEPTH),CW=$clog2(DEPTH+1);
- wire [127:0] incoming_header=cmd[1+:128];
- wire [255:0] ca=cmd[385+:256],co=cmd[1153+:256];
- reg [255:0] a,o;reg validating;
+ // registered reset: async assert, release two edges after rst_n
+ reg [1:0] rq; always @(posedge clk or negedge rst_n) if(!rst_n) rq<=2'b00; else rq<={rq[0],1'b1};
+ wire rn=rq[1];
+ // command station: the record is captured once, then fans out
+ reg cq_v; reg [1408:0] cq;
+ wire [127:0] incoming_header=cq[1+:128];
+ wire [255:0] ca=cq[385+:256],co=cq[1153+:256];
+ reg [255:0] a,o;reg validating; reg val2, val3, val4; reg [63:0] aspan_q,ospan_q;
  wire [127:0] ch=header;
  reg busy,bad;
  reg seat_v;reg [336:0] seat;
@@ -36,7 +46,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg [CW-1:0] reserved,queued;
  reg [511:0] result[0:DEPTH-1];
  wire vo,qfault,decode_fault;wire [511:0] y;
- ot_hgi_quant_decode quant(.clk(clk),.rst_n(rst_n),.v(launch),
+ ot_hgi_quant_decode quant(.clk(clk),.rst_n(rn),.v(launch),
  .generic_enable(1'b1),.legacy_fp4(1'b0),.header(header),.x(x),
  .vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault));
  wire [15:0] air=a[5]?16'd0:(a[135:120]==0?16'd1:a[135:120]);
@@ -44,18 +54,20 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [63:0] aspan=(a[87:68]-20'd1)*{32'd0,a[119:88]}+(a[67:48]-20'd1)*{48'd0,air};
  wire [63:0] ospan=(o[87:68]-20'd1)*{32'd0,o[119:88]}+(o[67:48]-20'd1)*{48'd0,oir};
  wire same_geometry=a[47:8]==o[47:8] && air==oir && a[119:88]==o[119:88];
- wire shape_ok=ch[127:124]==4 && ch[123:118]>=4 && ch[123:118]<=6 &&
+ // shape check in 4 registered stages (route fe1ab05af: ch -> shape_ok -> busy still -1,054 ps over the block's spread):
+ //   v1 spans (multiplies) | v2 field checks + end addresses (adds) | v3 the compares -> shape_q | v4 act on shape_q
+ wire fields_ok=ch[127:124]==4 && ch[123:118]>=4 && ch[123:118]<=6 &&
  ch[99:93]==7'b0010001 && !ch[92] &&
  (ch[123:118]!=6 || ch[71:64]==16) && a[1:0]==1 && o[1:0]==1 &&
  a[4:2]==0 && (o[4:2]==0 || o[4:2]==1) && !o[5] &&
  a[87:68]!=0 && a[87:68]==o[87:68] && a[67:48]!=0 && a[67:48]==o[67:48] &&
- (ch[123:118]==6 ? a[51:48]==0 : a[52:48]==0) &&
- ({24'd0,a[47:8]}+aspan<64'd262144) && ({24'd0,o[47:8]}+ospan<64'd262144) &&
+ (ch[123:118]==6 ? a[51:48]==0 : a[52:48]==0);
+ reg fields_q, same_q, nalias_q, shape_q; reg [63:0] aend_q, oend_q;
  // In-place identical geometry is safe only when rows do not alias each other.
- (!same_geometry || o[87:68]==1 || o[119:88]>(o[67:48]-20'd1)*{16'd0,oir}) &&
- (same_geometry || ({24'd0,a[47:8]}+aspan<o[47:8]) ||
- ({24'd0,o[47:8]}+ospan<a[47:8]));
- assign ready=ENABLE&&rst_n&&!busy;
+ wire shape_ok=fields_q && (aend_q<64'd262144) && (oend_q<64'd262144) &&
+ (!same_q || nalias_q) && (same_q || (aend_q<{24'd0,o[47:8]}) || (oend_q<{24'd0,a[47:8]}));
+ reg [63:0] orow_q;
+ assign ready=ENABLE&&rn&&!busy&&!cq_v;
  // ---------------------------------------------------------------- in-flight descriptors (in request order)
  localparam integer DW=1+4+3+6+1+1+1+16;
  reg [DW-1:0] pd [0:3]; reg [1:0] pd_h,pd_t; reg [2:0] pd_n; reg [DW-1:0] seat_d;
@@ -64,7 +76,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire reads_done=read_row==m;
  wire write_offer=queued!=0 && (reads_done || (reserved>=DEPTH && MUTANT!=3));
  wire read_offer=!reads_done && (read_part!=0 || (reserved<DEPTH || MUTANT==3));
- assign req_v=ENABLE&&rst_n&&seat_v&&!bad;
+ assign req_v=ENABLE&&rn&&seat_v&&!bad;
  wire [31:0] word_addr=write_offer?write_addr:read_addr;
  wire burst_write=wi==1 && write_addr[2:0]==0 && n-write_col>=8 && 32-write_part>=8;
  wire burst_read=ri==1 && read_addr[2:0]==0 && n-read_col>=8 && 32-read_part>=8;
@@ -78,7 +90,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  end
  wire [31:0] write_mask=burst_write?32'hffffffff:(32'hf<<(write_addr[2:0]*4));
  assign req=seat;
- assign rsp_r=ENABLE&&rst_n;                     // never back-pressured: one response a cycle is processed
+ assign rsp_r=ENABLE&&rn;                     // never back-pressured: one response a cycle is processed
  wire take_req=req_v&&req_r,take_rsp=response_v;
  // the descriptor this response belongs to (MUTANT 4: the newest one)
  wire [DW-1:0] dsc=(MUTANT==4)?pd[pd_t-2'd1]:pd[pd_h];
@@ -87,7 +99,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire reply_ok=response[272:257]==d_tag && response[256]==d_we;
  // staging the next request (the seat is free, or is being taken this cycle) while fewer than 4 are in flight
  // (req_r is NOT in this cone: the boundary stays registered -- a seat is restaged the cycle after it is taken)
- wire stage=busy&&!validating&&!bad&&!launch&&(write_offer||read_offer)&&!seat_v&&pd_n<3'd4;
+ wire stage=busy&&!validating&&!val2&&!val3&&!val4&&!bad&&!launch&&(write_offer||read_offer)&&!seat_v&&pd_n<3'd4;
  wire s_last_read=!write_offer&&(read_part+offer_step==32 || read_col+offer_step==n);
  wire s_last_write=write_offer&&(write_part+offer_step==32 || write_col+offer_step==n);
  wire s_final=s_last_write&&write_row+1==m&&write_col+offer_step==n;
@@ -95,8 +107,10 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire retire_write=take_rsp&&reply_ok&&d_we&&d_lastw&&!bad;
  wire [PW-1:0] head_next=head==DEPTH-1?0:head+1;
  wire [PW-1:0] tail_next=tail==DEPTH-1?0:tail+1;
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin
+ always @(posedge clk or negedge rn)begin
+  if(!rn)begin
+   cq_v<=0;cq<=0;val2<=0;val3<=0;val4<=0;aspan_q<=0;ospan_q<=0;orow_q<=0;
+   fields_q<=0;same_q<=0;nalias_q<=0;shape_q<=0;aend_q<=0;oend_q<=0;
    a<=0;o<=0;validating<=0;busy<=0;bad<=0;seat_v<=0;seat<=0;response_v<=0;response<=0;header<=0;n<=0;m<=0;
    abase<=0;obase<=0;read_row<=0;read_col<=0;write_row<=0;write_col<=0;
    read_addr<=0;write_addr<=0;read_rowbase<=0;write_rowbase<=0;rs<=0;ws<=0;ri<=0;wi<=0;
@@ -105,8 +119,10 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    launch<=0;head<=0;tail<=0;reserved<=0;queued<=0;done<=0;fault<=0;pd_h<=0;pd_t<=0;pd_n<=0;
   end else begin
    done<=0;launch<=0;
-   response_v<=rsp_v; if(rsp_v) response<=rsp;
-   if(ready&&cmd[0])begin
+   response_v<=rsp_v; response<=rsp;          // no enable: rsp_v drives one flop (IO -636 was rsp_v -> 273 enables)
+   cq_v<=0;
+   if(ready&&cmd[0])begin cq_v<=1;cq<=cmd;end
+   if(cq_v)begin
     a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0;
     n<=ca[67:48];m<=ca[87:68];abase<=ca[39:8];obase<=co[39:8];
     read_addr<=ca[39:8];write_addr<=co[39:8];read_rowbase<=ca[39:8];write_rowbase<=co[39:8];
@@ -116,11 +132,21 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;
     reserved<=0;queued<=0;head<=0;tail<=0;
    end
-   if(busy&&validating)begin
-    validating<=0;
-    if(!shape_ok)begin bad<=1;fault<=1;busy<=0;done<=1;end
+   if(busy&&validating)begin                  // validation 1: the span products
+    validating<=0;val2<=1;
+    aspan_q<=aspan;ospan_q<=ospan;orow_q<=(o[67:48]-20'd1)*{16'd0,oir};
    end
-   if(busy&&!validating)begin
+   if(busy&&val2)begin                        // validation 2: field checks, end addresses
+    val2<=0;val3<=1;
+    fields_q<=fields_ok;same_q<=same_geometry;nalias_q<=(o[87:68]==1 || o[119:88]>orow_q);
+    aend_q<={24'd0,a[47:8]}+aspan_q;oend_q<={24'd0,o[47:8]}+ospan_q;
+   end
+   if(busy&&val3)begin val3<=0;val4<=1;shape_q<=shape_ok;end   // validation 3: the compares
+   if(busy&&val4)begin                        // validation 4: act
+    val4<=0;
+    if(!shape_q)begin bad<=1;fault<=1;busy<=0;done<=1;end
+   end
+   if(busy&&!validating&&!val2&&!val3&&!val4)begin
     if(take_req&&!stage)seat_v<=0;
     if(bad)seat_v<=0;
     if(provider_fault||decode_fault)begin bad<=1;fault<=1;end
@@ -182,9 +208,9 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  // A beat's first read response clears the lanes it does not write (the next beat's reads may be in flight while the
  // previous beat is being launched: the clear happens at the response, never at the request).
  for(genvar lane=0;lane<32;lane=lane+1)begin:g_input_lane
-  always @(posedge clk or negedge rst_n)begin
-   if(!rst_n)x[lane*32+:32]<=0;
-   else if(ready&&cmd[0])x[lane*32+:32]<=0;
+  always @(posedge clk or negedge rn)begin
+   if(!rn)x[lane*32+:32]<=0;
+   else if(cq_v)x[lane*32+:32]<=0;
    else if(take_rsp&&reply_ok&&!d_we&&!bad)begin
     if(d_step==8 && lane>=d_part && lane<d_part+8)
       x[lane*32+:32]<=response[(lane-d_part)*32+:32];

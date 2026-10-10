@@ -539,6 +539,12 @@ MTP_HGI_WH, ARGMAX_HGI_WH = (286.56, 200.88), (180.0, 140.0)
 ARGMAX_HGI_IN = (('in_v', 1), ('in_last', 1), ('in_bias_en', 1), ('in_mask', 8), ('in_vals', 256), ('in_bias', 256))
 ARGMAX_HGI_OUT = (('out_v', 1), ('out_idx', 18), ('out_nan', 1), ('fault', 1), ('out_range_fault', 1), ('out_value', 32))
 R25GM = _hgi_mtp(R25G)
+# hgi-takeover 2026-10-09 (hgi-e2e DIE GAP): the generic die as an HGI-1 machine on the closing views (R25GP): the single
+# CP (ot_hgi_cp_die) with every record unit on a die record bus (tools/hgi_die_dispatch.py: sm / att inside the CP block,
+# su / sfu / hc at the SW quarter, dma beside the loader, coll, quant, idx, argmax in the MTP slot), the HGI VM with 8
+# packet clients, and the MTP slot (hgi_mtp_native + the dispatched ARGMAX unit hfd_hgi_am)
+HGI_FULL = ['argmax', 'cp', 'coll', 'quant', 'idx', 'sm', 'su', 'sfu', 'att', 'dma', 'hc']
+R25GPH = dict(_hgi_mtp(R25GP), hgi_dispatch=HGI_FULL, router_exact=True)
 R25G4M = _hgi_mtp(R25G4)       # same on the qualified 4 x 2 SM grid (full network build)
 if _mtp_generic_closed():
     R25G, R25G4 = R25GM, R25G4M
@@ -1743,6 +1749,13 @@ def apply_splits(m, specs, lattice=None):
                     ck_centre(mst, sp_)
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
+        # mtp-lead 2026-10-10 (design standard 2026-10-09, svc --fc practice): a band's face clock taps (cks / ckn / cke /
+        # ckw in its own pin record) ride the parent's ck net: die clock leaves balanced by the die tree.  The offset each
+        # leaf needs (the band's tap source latency) is recorded in m['clock_leaf_offsets'] (from <record dir>/fc_taps.json
+        # when the band's route has measured it, else PENDING), as for the svc segments.
+        fc_taps_ = {bn: [p_ for p_ in ('cks', 'ckn', 'cke', 'ckw') if p_ in recs[bn]['ports']] for bn, _ in bands}
+        fct_ = (ROOT / rel).parent / 'fc_taps.json'
+        fc_off_ = json.loads(fct_.read_text()) if fct_.exists() else {}
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
         # mtp-lead 2026-10-09: a band's own new ports (e.g. MX1 f_am) can carry a die bus addressed to the parent
         owner.update({pn_: bn for bn, b in bands for pn_ in b.get('new_ports', {}) if pn_ not in ('ck', 'rst')})
@@ -1784,6 +1797,8 @@ def apply_splits(m, specs, lattice=None):
                     e2.append((inst, port))
                 elif port in ('ck', 'rst'):
                     e2 += [(repl[inst][bn], port) for bn, _ in bands]
+                    if port == 'ck':
+                        e2 += [(repl[inst][bn], tp) for bn, _ in bands for tp in fc_taps_[bn]]
                 else:
                     assert port in owner, (parent, port)
                     e2.append((repl[inst][owner[port]], port))
@@ -1799,6 +1814,15 @@ def apply_splits(m, specs, lattice=None):
             if getattr(v_, 'name', None) in repl:
                 hub[k_] = next(i for i in new_insts if i.name == repl[v_.name][bands[-1][0]])
         m.setdefault('splits', {})[parent] = dict(record=rel, bands=[bn for bn, _ in bands], instances=sorted(repl))
+        for pin_, names in repl.items():
+            for bn, nm in names.items():
+                for tp in fc_taps_[bn]:
+                    o_ = (fc_off_.get(bn) or {}).get(tp)
+                    net_ = next((b_[0] for b_ in nb if (nm, 'ck') in b_[3]), None)
+                    m.setdefault('clock_leaf_offsets', []).append(dict(
+                        net=net_, inst=nm, master=bn, pin=tp, ref_pin='ck', offset_ps=o_['ps'] if o_ else None,
+                        source=o_['source'] if o_ else None, status='resolved' if o_ else
+                        'PENDING: tap source latency not measured yet (band route not closed)'))
 
 
 def _bundle_pack(mst, sp_, order, k):
@@ -2024,7 +2048,7 @@ def apply_splits_x(m, rel):
                                   status='resolved' if lat else 'PENDING: no set_clock_latency -source on this pin in the '
                                   'segment timing model yet (segment not closed)'))
     if rows_:
-        m['clock_leaf_offsets'] = rows_
+        m.setdefault('clock_leaf_offsets', []).extend(rows_)   # mtp-lead: keep the cmdproc bands' rows
 
 
 # ------------------------------------------------------------------------------------------------ station masters
@@ -3955,7 +3979,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gp=R25GP, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gp=R25GP, r25gph=R25GPH, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

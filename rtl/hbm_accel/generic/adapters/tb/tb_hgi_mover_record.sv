@@ -46,7 +46,7 @@ module tb_hgi_mover_record;
     reg [31:0] hbm [longint];
     integer klat = -1, q; reg pend = 0, pwe; reg [36:0] pa; reg [255:0] pd; reg [31:0] ps;
     always @(posedge clk) begin
-        k_rsp_v <= 0; k_req_rdy <= !pend && ($random(seed) & 1);
+        k_rsp_v <= 0;
         if (rst_n && k_req_v && k_req_rdy && !pend) begin
             pend = 1; pwe = k_req_we; pa = k_addr; pd = k_wd; ps = k_ws; klat = 2 + ($random(seed) & 7);
             if (k_addr[4:0] != 0) begin $display("ERR kport address not sector aligned"); errors = errors + 1; end
@@ -62,6 +62,9 @@ module tb_hgi_mover_record;
             end
             k_rsp_v <= 1; k_rsp_we <= pwe; pend = 0;
         end
+        // ready from the state AFTER this edge's accept (hgi-takeover: a request issued the cycle after an accept was
+        // shown ready but dropped -- the serial mover never issued back to back)
+        k_req_rdy <= !pend && ($random(seed) & 1);
     end
     task automatic vm_req(input we, input [31:0] word, input [31:0] data, output [31:0] qd);
         integer tw;

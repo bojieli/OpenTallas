@@ -56,7 +56,7 @@ module dsfd_sp_collective (
         .bw_v(s_bw_v), .bw_d(s_bw_d), .bw_cr(s_bw_cr), .bw_flt(s_bw_flt),
         .lo3_v(s_lo3_v), .lo3_r(s_lo3_r), .lo3_d(s_lo3_d), .li3_v(s_li3_v), .li3_r(s_li3_r), .li3_d(s_li3_d),
         .lo7_v(s_lo7_v), .lo7_r(s_lo7_r), .lo7_d(s_lo7_d), .li7_v(s_li7_v), .li7_r(s_li7_r), .li7_d(s_li7_d), .flt_d(s_fltd));
-    dsfd_coll_ct u_ct (.ck(pll_stream), .rs(rst_stream),
+    dsfd_coll_ct #(.LR(`ifdef OT_S81PH_COLL_CTLR 1 `else 0 `endif)) u_ct (.ck(pll_stream), .rs(rst_stream),
         .wlo_v(lo_v[3]), .wlo_r(lo_r[3]), .wlo_d(lo_d[3*553 +: 553]), .wli_v(li_v[3]), .wli_r(li_r[3]), .wli_d(li_d[3*553 +: 553]), .wflt(flt[9 +: 3]),
         .elo_v(lo_v[7]), .elo_r(lo_r[7]), .elo_d(lo_d[7*553 +: 553]), .eli_v(li_v[7]), .eli_r(li_r[7]), .eli_d(li_d[7*553 +: 553]), .eflt(flt[21 +: 3]),
         .lo3_v(s_lo3_v), .lo3_r(s_lo3_r), .lo3_d(s_lo3_d), .li3_v(s_li3_v), .li3_r(s_li3_r), .li3_d(s_li3_d),

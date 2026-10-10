@@ -89,6 +89,16 @@ def main():
         rec = mx1_rec.get(p)
         rb = rec.get('bits') if isinstance(rec, dict) else (rec[1] if isinstance(rec, (list, tuple)) else None)
         chk(f'mx1 ports.json {p}', rb == mx1[p][1], dict(record=rb, rtl=mx1[p][1]))
+    # mtp-lead 2026-10-10: MX1 face clock taps (design standard 2026-10-09): every tap is an MX1 RTL + record port, rides the
+    # die clock net with MX1's ck, and has a clock-leaf offset row (resolved or PENDING) in the die clock plan
+    mx1_inst = [i.name for i in m['insts'] if i.master == 'hfd_cmdproc_s_mtp_native_mx1']
+    ck_nets = [b_ for b_ in m['buses'] if any(i in mx1_inst and pp == 'ck' for i, pp in b_[3])]
+    offs = {(r['inst'], r['pin']) for r in m.get('clock_leaf_offsets', [])}
+    for tp in ('cks', 'ckn', 'cke', 'ckw'):
+        chk(f'mx1 face tap {tp}: RTL + record port', tp in mx1 and tp in mx1_rec, dict(rtl=tp in mx1, record=tp in mx1_rec))
+        for i in mx1_inst:
+            chk(f'mx1 face tap {i}.{tp} on the die ck net', any((i, tp) in b_[3] for b_ in ck_nets), [b_[0] for b_ in ck_nets])
+            chk(f'mx1 face tap {i}.{tp} clock-leaf offset row', (i, tp) in offs, 'clock_leaf_offsets')
     gm = generic_model(ROOT)
     for name, grp in gm['groups'].items():
         lsb = 0

@@ -545,6 +545,24 @@ def ioref_insertion(j):
     return (float(v), "calibrate CK_SS_MEAN") if isinstance(v, (int, float)) else None
 
 
+PORT_CLOCK_RE = re.compile(r"clocked by ([^\s)]+)")
+
+
+def port_clock(kind):
+    """the clock named in an STA start/end point kind ('(input port clocked by ot_lb_v_pclk)'), else None"""
+    m = PORT_CLOCK_RE.search(kind or "")
+    return m.group(1) if m else None
+
+
+def calibrated_clock(j):
+    """the clock whose insertion the calibrate measured (spec stages.calibrate.clock, default core_clk); None without a
+    calibrate stage"""
+    cal = (((j or {}).get("spec") or {}).get("stages") or {}).get("calibrate")
+    if not isinstance(cal, dict):
+        return "core_clk" if ioref_insertion(j) else None
+    return cal.get("clock") or "core_clk"
+
+
 def ioref_rejudge(b, j):
     """DRV6 (review-0725, coordinator APPROVED 2026-10-09): the post-CTS setup gate judged IO paths against the virtual
     clock's IDEAL latency (an assumed insertion), not the IO reference: hbm_coll_port2_rows hm0-bal was early-failed at
@@ -557,12 +575,20 @@ def ioref_rejudge(b, j):
     if not any(p.get("vlat_launch") is not None or p.get("vlat_capture") is not None for p in paths):
         return None
     ref = ioref_insertion(j)
+    cal = calibrated_clock(j)
     out, refs = [], set()
     for p in paths:
         s = p["slack_ps"]
-        m, src = ref if ref else ((p.get("flop_ck_ps"), "path register clock arrival") if p.get("flop_ck_ps") is not None
-                                  else (None, None))
         inp, outp = "input port" in (p.get("start_kind") or ""), "output port" in (p.get("end_kind") or "")
+        # TWO-CLOCK (cont-takeover 2026-10-10): the measured insertion is the CALIBRATED clock's (core_clk).  An IO path
+        # of another, uncalibrated clock group (the TU port's pclk IO) is judged at its own register clock arrival:
+        # re-timing it at the core insertion moved pclk IO to 72-81 ps instead of ~840 ps.
+        pclk = port_clock(p.get("start_kind") if inp else p.get("end_kind"))
+        own = ref is None or (pclk is not None and cal is not None and cal not in pclk)
+        m, src = (ref if not own else
+                  ((p.get("flop_ck_ps"), "path register clock arrival" + (f" ({pclk}: not the calibrated {cal})"
+                                                                          if ref is not None else ""))
+                   if p.get("flop_ck_ps") is not None else (None, None)))
         if m is not None and inp != outp:
             if outp and p.get("vlat_capture") is not None:
                 s = s + (m - p["vlat_capture"]); refs.add(src)
@@ -739,9 +765,25 @@ def redundant(j, jobs, closed, any_variant=False):
     return None, False
 
 
+# DIE-RUN EXEMPTION (drive-0849 2026-10-09, coordinator URGENT): die-level routes (full-die GRT/DRT, hours per congestion
+# iteration with one log line each) are never killed, cancelled or early-failed by this scan.  "hung" stays a CPU-tick
+# judgement (tree_cpu over 5 s, HUNG_CPU) -- log silence alone never kills.
+DIE_RUN_RE = re.compile(r"^(qfd_dietop_|dieev_|de2_|die_|dsrom_s81.*_die|r25gp|hbm_r25gp|qwen_r22k)")
+
+
+def is_die_run(j):
+    sp = j.get("spec") or {}
+    return bool(sp.get("die_level")) or bool(DIE_RUN_RE.search(j.get("name", ""))) or \
+        any(x in (j.get("run") or "") for x in ("/die-evidence", "/kv-die/"))
+
+
 def diagnose(j, o, hist, jobs, closed, now):
     d = dict(name=j["name"], host=j.get("host"), status=j["status"], stage=j.get("stage_key"),
              block=j["spec"].get("block"), owner=j["spec"].get("owner"), action="let_run", why=[])
+    if is_die_run(j):
+        d["why"].append("die-level run: exempt from stuck/hung/early-fail actions")
+        d["kind"] = "die_exempt"
+        return d
     if not o or o.get("error"):
         d["why"].append(f"probe failed: {(o or {}).get('error', 'no data')}")
         return d

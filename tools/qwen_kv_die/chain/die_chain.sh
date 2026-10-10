@@ -11,7 +11,7 @@ H=$(dirname $(readlink -f $0))
 C=$R/case_$DIE; G=$R/grt_$DIE          # unique dir names: run_case.sh / dietop_run.sh name containers after them
 ADMIT=/srv/opentallas-scratch/admit.sh
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
-case $DIE in kv) P1=20; P2=40; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
+case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null)"
 $ADMIT $P1 -- $H/run_case.sh $C run.tcl run.log 16 $((P1+40))
 grep -q OT_LEGAL $C/run.log || { say "REAL CASE FAIL ($C/run.log)"; exit 1; }

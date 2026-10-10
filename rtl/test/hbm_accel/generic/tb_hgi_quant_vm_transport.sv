@@ -177,6 +177,8 @@ module tb_hgi_quant_vm_transport;
    cases=cases+1;
   end
   @(negedge clk);rst_n=0;repeat(3)@(negedge clk);rst_n=1;#0.01;
+  if(ready||req_v)$fatal(1,"ready before the registered reset released");   // hgi-takeover: rn = rst_n + 2 edges
+  repeat(3)@(negedge clk);
   if(!ready||req_v||!drained)$fatal(1,"cold reset leftovers");
   $display("PASS QUANT_TRANSPORT cases=%0d words=%0d arbitraryCPstall ACKdelay tail16/48 illegalUE",cases,nwords);$finish;
  end

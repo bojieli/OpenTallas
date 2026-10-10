@@ -47,7 +47,12 @@ module tb_hgi_sm_record;
         .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(1'b0), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q),
         .pub_p(pub_p), .pub_done(pub_done), .pub_fault(1'b0), .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd),
-        .sm_ret(sm_ret));
+        .sm_ret(sm_ret), .sm_cg_en(cg_en));
+    // coarse clock gate: every start / descriptor beat must leave with the gate open
+    wire cg_en; integer cgq, cg_err = 0;
+    always @(posedge clk) for (cgq = 0; cgq < NSM; cgq = cgq + 1)
+        if ((sm_cmd[cgq*CW] || sm_cmd[cgq*CW + 48]) && !cg_en) begin
+            if (cg_err < 5) $display("ERR SM %0d command with sm_cg_en low", cgq); cg_err = cg_err + 1; end
     // ---- legacy-mode identity
     reg [NSM*CW-1:0] lgc; reg [NSM*4-1:0] lgr; wire [NSM*CW-1:0] l_cmd; wire [NSM*4-1:0] l_ret; integer q, lock_n = 0;
     wire l_rdy, l_done, l_fault;
@@ -161,6 +166,7 @@ module tb_hgi_sm_record;
             end
         end
         $display("summary: %0d records run on 32 stub SMs, %0d negatives refused, %0d legacy identity cycles", runs, negs, lock_n);
+        errors = errors + cg_err;
         if (errors == 0) $display("HGI_SM PASS"); else $display("HGI_SM FAIL errors=%0d", errors);
         $finish;
     end

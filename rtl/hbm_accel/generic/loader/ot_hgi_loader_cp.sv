@@ -79,12 +79,16 @@ module ot_hgi_loader_cp #(
     // CP link fields
     wire c_db_taken = cpl[0], c_cpl_v = cpl[1];
     wire c_freq_v = cpl[113]; wire [39:0] c_freq_a = cpl[153:114];
-    reg pend_fetch; reg [36:0] fetch_a;
+    // F5 (hgi-e2e): the record-ring fetch is a 4-entry request queue (the CP holds 4 credits; f_req_ack = a request
+    // accepted by the memory lane returns one) feeding lane 1 back to back; responses return in order, any number in
+    // flight (the sequencer bounds them: NOS 48).  Was: one request until its data, a second request faulted.
+    localparam integer FQD = 4;
+    reg [36:0] fq [0:FQD-1]; reg [1:0] fq_h, fq_t; reg [2:0] fq_n;
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             lb_v <= 1'b0; lr_v <= 1'b0; db_pend <= 1'b0; cq_n <= 3'd0; cq_h <= 2'd0; cq_t <= 2'd0; lcp <= 419'd0;
-            m_req_v <= 1'b0; pend_fetch <= 1'b0; fault <= 1'b0;
+            m_req_v <= 1'b0; fq_h <= 2'd0; fq_t <= 2'd0; fq_n <= 3'd0; fault <= 1'b0;
             d_tok <= 18'd0; d_pos <= 20'd0; d_job <= 32'd0; d_gen <= 4'd0; d_ent <= 2'd0; d_ncol <= 4'd0;
         end else begin
             lcp[0] <= 1'b0; lcp[71] <= 1'b0; lcp[148] <= 1'b0; lcp[406] <= 1'b0;   // pulses
@@ -139,13 +143,20 @@ module ot_hgi_loader_cp #(
                 if (pop) begin cq_h <= cq_h + 2'd1; lcp[148] <= 1'b1; end      // cpl_ack: the CP may send the next
                 cq_n <= cq_n + push - pop;
             end
-            // record-ring fetch: one in flight on memory lane 1
-            if (c_freq_v) begin
-                if (pend_fetch || |c_freq_a[39:37]) fault <= 1'b1;
-                pend_fetch <= 1'b1; m_req_v <= 1'b1; m_req_addr <= c_freq_a[36:0];
+            // record-ring fetch: request queue -> memory lane 1 (one request register, refilled the cycle it is taken)
+            begin : fetch
+                reg take, pop_; take = m_req_v && m_req_rdy; pop_ = 1'b0;
+                if (take) lcp[406] <= 1'b1;                                      // f_req_ack: a credit back to the CP
+                if ((!m_req_v || take) && fq_n != 3'd0) begin
+                    m_req_v <= 1'b1; m_req_addr <= fq[fq_h]; fq_h <= fq_h + 2'd1; pop_ = 1'b1;
+                end else if (take) m_req_v <= 1'b0;
+                if (c_freq_v) begin
+                    if ((fq_n == FQD && !pop_) || |c_freq_a[39:37]) fault <= 1'b1;   // credit overrun / address
+                    fq[fq_t] <= c_freq_a[36:0]; fq_t <= fq_t + 2'd1;
+                end
+                fq_n <= fq_n + {2'd0, c_freq_v} - {2'd0, pop_};
             end
-            if (m_req_v && m_req_rdy) begin m_req_v <= 1'b0; lcp[406] <= 1'b1; end   // f_req_ack
-            if (m_rsp_v) begin lcp[149] <= 1'b1; lcp[405:150] <= m_rsp_data; pend_fetch <= 1'b0; end
+            if (m_rsp_v) begin lcp[149] <= 1'b1; lcp[405:150] <= m_rsp_data; end
             else lcp[149] <= 1'b0;
         end
     end
