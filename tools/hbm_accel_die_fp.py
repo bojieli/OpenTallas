@@ -1753,7 +1753,7 @@ def apply_splits(m, specs, lattice=None):
         # ckw in its own pin record) ride the parent's ck net: die clock leaves balanced by the die tree.  The offset each
         # leaf needs (the band's tap source latency) is recorded in m['clock_leaf_offsets'] (from <record dir>/fc_taps.json
         # when the band's route has measured it, else PENDING), as for the svc segments.
-        fc_taps_ = {bn: [p_ for p_ in ('cks', 'ckn', 'cke', 'ckw') if p_ in recs[bn]['ports']] for bn, _ in bands}
+        fc_taps_ = {bn: [p_ for p_ in ('cks', 'ckn', 'cke', 'ckw', 'cke0', 'cke1', 'ckw0', 'ckw1') if p_ in recs[bn]['ports']] for bn, _ in bands}
         fct_ = (ROOT / rel).parent / 'fc_taps.json'
         fc_off_ = json.loads(fct_.read_text()) if fct_.exists() else {}
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}

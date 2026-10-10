@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.mx1.face_tile_candidate.v1",
+  "prior_source": "96ee08233",
+  "root_cause": "fc8 IO_CONSTRAINTS rendered only four face clocks; all5401 prior data/reset/clock contract pins were absent from that Tcl and automatically placed",
+  "corrective_actions": [
+    "render all5409 current contract pins (5405 baseline+4tile leaves) from committed ports.json",
+    "four86.4um E/W face station tiles with leaves at43.2/129.6um",
+    "pin FFs and cross-root lockups/captures own legal pin seats",
+    "separate related generated face clocks; core_clk calibration excludes face clock source latency"
+  ],
+  "dry_run": {
+    "scope": "fc8 calibration ODB, not tile route or signoff",
+    "actual_pin_stations": 4524,
+    "max_pin_distance_um": 20.748,
+    "core_clock_sinks": 8796,
+    "face_clock_sinks": {
+      "s": 516,
+      "n": 195,
+      "e": 890,
+      "w": 888
+    }
+  },
+  "exactness_gate": "hbm_mx1_regb_gate.py --local-reset --tile-clocks; positives and mutants",
+  "route_required": true,
+  "no_performance_credit": true,
+  "parameters": {
+    "TILECLK": 1,
+    "LOCALRST": 1
+  },
+  "default_parameters": {
+    "TILECLK": 0,
+    "LOCALRST": 0
+  },
+  "unresolved_obligations": [
+    "full-shape timing of each source-root falling-edge lockup to receiving root",
+    "actual local face-tree insertion added to source latency; no clock budget inferred from mixed-root extrema",
+    "publication/export of measured fc_taps.json to parent die clock_leaf_offsets after closure"
+  ],
+  "evidence_sha256": {
+    "model.json": "05b7175cd71e487a83ea05cbef8ed98d71f4c4038d5048588b6626b69b49ebaf",
+    "pin_seat_dryrun.tsv": "9f7228f6b61ecdce81b04e72430939bdf9a2628feaee01283fa69a896f7d3a58",
+    "fc8_related_root_counts.txt": "5145c2ed587fdb64712cc4997262caef89c7505fc18e00cc3af172b1033b829e",
+    "pin_seat_dryrun.txt": "705b2c17e5489fe1b67746b443384eefa9eb7148f0be4fcdb5affea35c83c584"
+  }
+}

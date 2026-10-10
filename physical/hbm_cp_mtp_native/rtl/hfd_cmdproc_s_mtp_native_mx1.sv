@@ -50,10 +50,11 @@
 // lockstep-equal to hfd_cmdproc_s, tb_hfd_cmdproc_s_fc_lockstep).  The taps are die clock leaves balanced by the die tree
 // (tools/hbm_accel_die_fp.py: they ride the band's ck net, clock_leaf_offsets).  The AR instance stays `ar` (no generate
 // wrapper): its macro ar.u_cpS.g_on.u_cmem keeps the name macro_place.tcl places (fc6/fc7 died on g_ar_fc.ar...).
-module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0, parameter integer LOCALRST=0)(
+module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0, parameter integer LOCALRST=0, parameter integer TILECLK=0)(
  inout wire [826:0] cSE,cSW,
  input wire [0:0] ck,rst,
  input wire [0:0] cks,ckn,cke,ckw,
+ input wire [0:0] cke0,cke1,ckw0,ckw1,
  input wire [340:0] f_loader,input wire [63:0] f_router,
  output wire [63:0] t_su_SE,t_su_SW,
  input wire [15:0] xb,output wire [146:0] xl,output wire [15:0] xt,
@@ -69,7 +70,7 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
  input wire [682:0] x_hgi_argmax_rec,output wire [2:0] x_hgi_argmax_ret,
  output wire [682:0] t_hgi_argmax,input wire [2:0] f_hgi_argmax
 );
- hfd_cmdproc_s_fc ar(.cks(cks),.ckn(ckn),.cke(cke),.ckw(ckw),.cSE(cSE),.cSW(cSW),.ck(ck),.rst(rst),
+ hfd_cmdproc_s_fc #(.TILECLK(TILECLK)) ar(.cke0(cke0),.cke1(cke1),.ckw0(ckw0),.ckw1(ckw1),.cks(cks),.ckn(ckn),.cke(cke),.ckw(ckw),.cSE(cSE),.cSW(cSW),.ck(ck),.rst(rst),
   .f_loader(f_loader),.f_router(f_router),.t_su_SE(t_su_SE),.t_su_SW(t_su_SW),
   .xb(xb),.xl(xl),.xt(xt));
  generate if (REGB == 0) begin: g_direct

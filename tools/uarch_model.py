@@ -15293,3 +15293,9 @@ def hbm_mx1_local_reset_model():
     """Zero-cycle MX1 reset replicas, sized before implementing the opt-in RTL."""
     from tools.hbm_mx1_local_reset_model import model
     return model()
+
+
+def hbm_mx1_face_tile_clock_model():
+    """Actual E/W pin-span partition and physical root-clock obligations."""
+    from tools.hbm_mx1_local_reset_model import face_tile_model
+    return face_tile_model()

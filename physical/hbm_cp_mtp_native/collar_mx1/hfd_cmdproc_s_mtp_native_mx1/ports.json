@@ -44077,6 +44077,98 @@
           351.048
         ]
       ]
+    },
+    "cke0": {
+      "bits": 1,
+      "layer": "M6",
+      "face": "E",
+      "pins": [
+        [
+          "cke0[0]",
+          "M6",
+          1399.464,
+          43.188,
+          1399.656,
+          43.212
+        ]
+      ],
+      "dir_segments": [
+        [
+          0,
+          1,
+          "in"
+        ]
+      ],
+      "direction": "input"
+    },
+    "cke1": {
+      "bits": 1,
+      "layer": "M6",
+      "face": "E",
+      "pins": [
+        [
+          "cke1[0]",
+          "M6",
+          1399.464,
+          129.588,
+          1399.656,
+          129.612
+        ]
+      ],
+      "dir_segments": [
+        [
+          0,
+          1,
+          "in"
+        ]
+      ],
+      "direction": "input"
+    },
+    "ckw0": {
+      "bits": 1,
+      "layer": "M6",
+      "face": "W",
+      "pins": [
+        [
+          "ckw0[0]",
+          "M6",
+          0.0,
+          43.188,
+          0.192,
+          43.212
+        ]
+      ],
+      "dir_segments": [
+        [
+          0,
+          1,
+          "in"
+        ]
+      ],
+      "direction": "input"
+    },
+    "ckw1": {
+      "bits": 1,
+      "layer": "M6",
+      "face": "W",
+      "pins": [
+        [
+          "ckw1[0]",
+          "M6",
+          0.0,
+          129.588,
+          0.192,
+          129.612
+        ]
+      ],
+      "dir_segments": [
+        [
+          0,
+          1,
+          "in"
+        ]
+      ],
+      "direction": "input"
     }
   },
   "generator": {

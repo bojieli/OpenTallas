@@ -218,6 +218,30 @@
           "direction": "input",
           "edge": "left",
           "role": "W-face die clock leaf (face clock tap, design standard 2026-10-09): rides the band ck net; AR pin flops of this face"
+        },
+        "cke0": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "right",
+          "role": "bounded86.4um side-station tile die clock leaf; source latency equal measured interior insertion"
+        },
+        "cke1": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "right",
+          "role": "bounded86.4um side-station tile die clock leaf; source latency equal measured interior insertion"
+        },
+        "ckw0": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "left",
+          "role": "bounded86.4um side-station tile die clock leaf; source latency equal measured interior insertion"
+        },
+        "ckw1": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "left",
+          "role": "bounded86.4um side-station tile die clock leaf; source latency equal measured interior insertion"
         }
       },
       "source_port_record": "physical/hbm_cp_mtp_native/collar_mx1/hfd_cmdproc_s_mtp_native_mx1/ports.json"
