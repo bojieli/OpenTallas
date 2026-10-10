@@ -74,7 +74,11 @@ module ot_qwen_die_cdc_ch #(
     wire        x_issue;                  // RXP: a word leaves the receive buffer into the read pipeline
     wire        pop = (RXP != 0) ? x_issue : (!ib_empty && af_ready);
     reg         cr_q, wf_q;
-    wire        x_wr = iv_q && !ib_full;
+    // RXP >= 2 (sys-takeover 2026-10-10; qfd_emb_far92_rxp_a TT -385.7: iw -> ib_full / ib_empty compares -> x_wr / x_issue ->
+    // 128 x 523 write enables / one-hot read shifts, 17-20 lv): the write takes every pin-flop valid (the sender's credits
+    // make a full buffer illegal; that stays a sticky fault, wf_q) and issue uses a registered non-empty flag.
+    reg         ne_q;
+    wire        x_wr = (RXP >= 2) ? iv_q : (iv_q && !ib_full);
     wire [W-1:0] x_af_d;                  // RXP: staging-FIFO head -> async FIFO
     wire         x_af_v, x_af_pop;
     generate if (RXP == 0) begin : g_ibw
@@ -111,7 +115,7 @@ module ot_qwen_die_cdc_ch #(
 `else
         wire room = ({1'b0, sn} + v1 + v2) < SD;
 `endif
-        assign x_issue = !ib_empty && room;
+        assign x_issue = ((RXP >= 2) ? ne_q : !ib_empty) && room;
         // per-entry W-bit select mask from the slice copies (bit b of entry k = roh[b / G][k])
         wire [W-1:0] ohm [0:IBUF-1];
         genvar gb, gm;
@@ -152,9 +156,15 @@ module ot_qwen_die_cdc_ch #(
             end
     end endgenerate
     always @(posedge wclk or negedge wr_n)
-        if (!wr_n) begin iw <= 0; ir <= 0; cr_q <= 1'b0; wf_q <= 1'b0; end
+        if (!wr_n) begin iw <= 0; ir <= 0; cr_q <= 1'b0; wf_q <= 1'b0; ne_q <= 1'b0; end
         else begin
-            if (iv_q && !ib_full) iw <= iw + 1'b1;
+            if (x_wr) iw <= iw + 1'b1;
+            // the occupancy after this edge, non-zero (iw - ir next): exact, not conservative
+`ifdef OT_CDC_RXP_MUT_NESTALE
+            ne_q <= (iw != ir);                            // mutant: the flag lags the edge's own write / issue
+`else
+            ne_q <= ((iw + (x_wr ? 1'b1 : 1'b0)) != (ir + (pop ? 1'b1 : 1'b0)));
+`endif
             if (pop) ir <= ir + 1'b1;
             cr_q <= pop;
             wf_q <= wf_q | (iv_q && ib_full);

@@ -28,7 +28,9 @@ module ot_qfd_link_far #(
 `endif
     // RXP (sys-takeover, opt-in): receive buffer with one-hot pointers and a registered 2-stage read (ot_qwen_die_cdc_ch
     // RXP; qfd_emb_far92_afw TT -557: ir -> 128:1 x 523-b receive mux).  Default from `OT_QFD_FAR_RXP (bench) else 0.
-`ifdef OT_QFD_FAR_RXP
+`ifdef OT_QFD_FAR_RXP2
+    parameter integer RXP = 2    // RXP 2 (sys-takeover 2026-10-10): + ot_qwen_die_cdc_ch RXP 2, data registers loaded on the class bit
+`elsif OT_QFD_FAR_RXP
     parameter integer RXP = 1
 `else
     parameter integer RXP = 0
@@ -94,7 +96,10 @@ module ot_qfd_link_far #(
             e_v <= fwd && o_emb; k_v <= fwd && !o_emb;
             // RXP: separate enables so synthesis cannot merge e_d / k_d into one flop driving both the emb (top) and the KV
             // (bottom) pins of the 1.4-mm strip (qfd_emb_far92_afw reg->out e_d[399] -> kv_o[400] -586 ps)
-            if (RXP != 0) begin if (fwd && o_emb) e_d <= oh; if (fwd && !o_emb) k_d <= oh; end
+            // RXP >= 2: the data registers load on the head's class bit alone (one 8:1 mux bit), not the credit / compare
+            // term fwd (qfd_emb_far92_rxp_a orr -> k_d 18 lv); e_v / k_v still mark the transfer
+            if (RXP >= 2) begin if (o_emb) e_d <= oh; if (!o_emb) k_d <= oh; end
+            else if (RXP != 0) begin if (fwd && o_emb) e_d <= oh; if (fwd && !o_emb) k_d <= oh; end
             else if (fwd) begin e_d <= oh; k_d <= oh; end
             ec <= ec - ((fwd && o_emb) ? 1'b1 : 1'b0) + (e_cr ? 1'b1 : 1'b0);
             kc <= kc - ((fwd && !o_emb) ? 1'b1 : 1'b0) + (k_cr ? 1'b1 : 1'b0);
