@@ -28,6 +28,9 @@ module ot_qkvd_layer_tb #(
     parameter integer DROP_AT = 300,
     parameter [31:0]  SCALE  = 32'h3DB504F3,
     parameter integer W      = 528,
+    parameter integer HBMT   = 0,      // qwen-1010/b: 1 = rows timed by ot_qkvd_hbm_timed_stack (timed HBM3E, REFpb) per stack
+    parameter integer HBMT_SLOT = 64,  //   reorder slots per engine
+    parameter integer HBMT_PULLIN = 0, //   REFpb pull-in (model PULLIN)
     parameter integer E      = 4 * R
 ) (
     input  wire              clk,
@@ -57,6 +60,11 @@ module ot_qkvd_layer_tb #(
     output wire [E-1:0]      req_v,
     output wire [E-1:0]      req_g,
     output wire [13*E-1:0]   req_t,
+    output wire [E-1:0]      hrow_rdy,     // HBMT: row of engine x is back (in request order) -> the harness drives it
+    output wire [E-1:0]      hrow_v,
+    output wire [E-1:0]      hrow_g,
+    output wire [13*E-1:0]   hrow_t,
+    output wire [3:0]        hrow_fault,
     input  wire [E-1:0]      rsp_valid,
     input  wire [E*HD*8-1:0] rsp_data,
     output wire              kvw_v,
@@ -199,4 +207,16 @@ module ot_qkvd_layer_tb #(
     assign faults[3] = |af;
     assign a_start_o = a_start;
     assign a_out_valid_o = a_ov;
+    // qwen-1010/b 2026-10-10: the timed HBM3E stacks (HBMT = 1); HBMT = 0 leaves the harness's idealised model in charge
+    genvar hs;
+    generate if (HBMT) begin : g_hbmt
+        for (hs = 0; hs < 4; hs = hs + 1) begin : g_s
+            ot_qkvd_hbm_timed_stack #(.R(R), .NSLOT(HBMT_SLOT), .PULLIN(HBMT_PULLIN)) u_hs (.clk(clk), .rst_n(rst_n),
+                .rq_v(req_valid[R*hs +: R]), .rq_vv(req_v[R*hs +: R]), .rq_g(req_g[R*hs +: R]), .rq_t(req_t[13*R*hs +: 13*R]),
+                .row_rdy(hrow_rdy[R*hs +: R]), .row_vv(hrow_v[R*hs +: R]), .row_g(hrow_g[R*hs +: R]),
+                .row_t(hrow_t[13*R*hs +: 13*R]), .fault(hrow_fault[hs]));
+        end
+    end else begin : g_nohbmt
+        assign hrow_rdy = '0; assign hrow_v = '0; assign hrow_g = '0; assign hrow_t = '0; assign hrow_fault = '0;
+    end endgenerate
 endmodule

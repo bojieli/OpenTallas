@@ -14,8 +14,11 @@ for spec in 8192:normal 8192:peaky 8191:mixed 4097:flat 2048:wide 129:tiny 1:nor
 done
 # builds: base + mutants
 ML="0"; [ "$MUTS" = 1 ] && ML="0 1 2 3 4 5 6 7 8"
+# qwen-1010/b 2026-10-10: env HBMT=1 -> rows timed by the timed HBM3E stacks (HBMT_SLOT reorder slots, HBMT_PULLIN), the
+# runs pass hbmt=1 to the harness; PHASES="o1 o2 .." adds 8192_normal runs started o cycles later (refresh phase)
+HB=""; RA=""; [ "${HBMT:-0}" = 1 ] && HB="-GHBMT=1 -GHBMT_SLOT=${HBMT_SLOT:-64} -GHBMT_PULLIN=${HBMT_PULLIN:-0}" && RA="16 750 400000 1"
 for m in $ML; do
-  STACK=${STACK:-p} LFB=${LFB:-4} LBD=${LBD:-2} ND=${ND:-1} bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL $( [ $m = 1 -o $m = 4 -o $m = 6 ] && echo -GTIGHT=1 ) $( [ $m = 7 -o $m = 8 ] && echo -GKVL_STALL=400 ) -GMUT=$( [ $m = 6 -o $m = 8 ] && echo 0 || echo $m ) > $OUT/log/build$m.log 2>&1 &
+  STACK=${STACK:-p} LFB=${LFB:-4} LBD=${LBD:-2} ND=${ND:-1} bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL $( [ $m = 1 -o $m = 4 -o $m = 6 ] && echo -GTIGHT=1 ) $( [ $m = 7 -o $m = 8 ] && echo -GKVL_STALL=400 ) -GMUT=$( [ $m = 6 -o $m = 8 ] && echo 0 || echo $m ) $HB > $OUT/log/build$m.log 2>&1 &
 done
 wait
 echo "built $(date)" >> $OUT/STATUS
@@ -23,15 +26,19 @@ res=$OUT/results.jsonl; : > $res
 for d in $OUT/v/*/; do
   n=$(basename $d)
   for st in 0 1; do
-    r=$($OUT/b0/Vtb $d $st 2>$OUT/log/base_${n}_s$st.err); rc=$?
+    r=$($OUT/b0/Vtb $d $st $RA 2>$OUT/log/base_${n}_s$st.err); rc=$?
     echo "{\"run\": \"base\", \"vec\": \"$n\", \"rc\": $rc, \"res\": ${r:-null}}" >> $res
   done
 done
 V=$OUT/v/8192_normal
+for o in ${PHASES:-}; do
+  r=$($OUT/b0/Vtb $V 0 ${RA:-16 750 400000 0} $o 2>$OUT/log/base_ph$o.err); rc=$?
+  echo "{\"run\": \"phase\", \"vec\": \"8192_normal\", \"ofs\": $o, \"rc\": $rc, \"res\": ${r:-null}}" >> $res
+done
 for m in $ML; do
   [ $m = 0 ] && continue
   st=0; [ $m = 1 -o $m = 4 -o $m = 6 ] && st=1      # 6 = the base RTL in the TIGHT (credit-stress) sizing; 8 = the base RTL with the posted rows stalled 400 cycles (fence)
-  r=$($OUT/b$m/Vtb $V $st 2>$OUT/log/mut${m}.err); rc=$?
+  r=$($OUT/b$m/Vtb $V $st $RA 2>$OUT/log/mut${m}.err); rc=$?
   echo "{\"run\": \"mut$m\", \"vec\": \"8192_normal\", \"rc\": $rc, \"res\": ${r:-null}}" >> $res
 done
 echo "done $(date)" >> $OUT/STATUS
