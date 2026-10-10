@@ -63,7 +63,7 @@ module ot_hgi_seq #(
     input  wire          f_rsp_v,
     input  wire [255:0]  f_rsp_data,
     // VM read port (I tables, the END token): one outstanding, in order
-    output reg           vr_v,
+    output wire          vr_v,
     input  wire          vr_rdy,
     output reg  [17:0]   vr_addr,
     input  wire          vr_rsp_v,
@@ -320,6 +320,14 @@ module ot_hgi_seq #(
         eff_desc[M_BASE +: 40] = a[39:0];
         eff_desc[M_N +: 20] = n[19:0];
     endfunction
+    // ------------------------------------------------------------------ VM read request (timing pass 6)
+    // vr_rdy -> the FSM's vr_v write chain was -182 ps at the route SDC (-44 at the routed IO reference): the FSM sets
+    // vr_vr (with a vr_new pulse) and never clears it on the handshake; vr_tk marks the request taken (vr_rdy enters one
+    // OR gate), vr_v = vr_vr & ~vr_tk.  A new request clears vr_tk one edge after it is issued (+1 cycle a VM read).
+    assign vr_v = vr_vr & ~vr_tk;
+    always @(posedge clk or negedge rn)
+        if (!rn) vr_tk <= 1'b0;
+        else vr_tk <= vr_new ? (vr_v & vr_rdy) : (vr_tk | (vr_v & vr_rdy));
     // ------------------------------------------------------------------ main FSM
     integer k;
     wire [15:0] u_acc = u_v & u_rdy;
@@ -382,6 +390,7 @@ module ot_hgi_seq #(
     // fetch requests leave through a 2-entry FIFO (registered boundary: f_req_rdy only pops it); inflight counts
     // requests PUSHED and not yet answered (every pushed request is sent and answered; a new doorbell drops them)
     reg [39:0] rqf [0:1]; reg rqh; reg [1:0] rqn;
+    wire [1:0] rqn_m1 = rqn - 2'd1, rqn_p1 = rqn + 2'd1;
     assign f_req_v = (rqn != 2'd0);
     assign f_req_addr = rqf[rqh];
     // timing pass 5: the ring-room compare registered (frp -> used -> push -> faddr_n was -208 ps): room_q is the room
@@ -397,7 +406,7 @@ module ot_hgi_seq #(
         else begin
             if (rq_push) rqf[rqh ^ (rqn != 2'd0)] <= faddr;
             if (rq_pop) rqh <= ~rqh;
-            rqn <= rqn + (rq_push ? 2'd1 : 2'd0) - (rq_pop ? 2'd1 : 2'd0);
+            rqn <= rq_pop ? (rq_push ? rqn : rqn_m1) : (rq_push ? rqn_p1 : rqn);   // f_req_rdy only selects
         end
     wire [4:0] fl_after = (rq_push && !f_rsp_v_r) ? infl_p1 : (!rq_push && f_rsp_v_r) ? infl_m1 : inflight;
     wire       is_ctl = (h_unit == 4'd0);
@@ -475,17 +484,18 @@ module ot_hgi_seq #(
     task advance(input [RB:0] n);
         begin rp <= rp + n; if (depth == 2'd0) frp <= rp + n; end
     endtask
+    reg vr_vr, vr_new, vr_tk;             // VM read request register / issue pulse / taken flag (see below)
     task cpa_put(input [1:0] c, input [15:0] v);
         case (c) 2'd0: acc[15:0] <= v; 2'd1: acc[31:16] <= v; 2'd2: acc[47:32] <= v; default: acc[63:48] <= v; endcase
     endtask
     task fault3;
         begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_vr <= 16'd0;
-              vr_v <= 1'b0; end
+              vr_vr <= 1'b0; end
     endtask
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             st <= S_IDLE; clr_q <= 1'b0; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0;
-            depth <= 0; Lc <= 0; L1c <= 0; u_vr <= 16'd0; vr_v <= 1'b0; rpipe_v <= 2'b00; dv_cnt <= 4'd0; m3v <= 1'b0;
+            depth <= 0; Lc <= 0; L1c <= 0; u_vr <= 16'd0; vr_vr <= 1'b0; vr_new <= 1'b0; rpipe_v <= 2'b00; dv_cnt <= 4'd0; m3v <= 1'b0;
             cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; iq_cnt <= 3'd6; faddr <= 0; faddr_n <= 40'd32; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
@@ -504,6 +514,7 @@ module ot_hgi_seq #(
             if (dv_cnt != 4'd8) dv_cnt <= dv_cnt + 4'd1;
             if (iq_cnt != 3'd6) iq_cnt <= iq_cnt + 3'd1;   // the indexed-read address pipe settles 6 edges after ieff
             // ---- fetch requests (valid held until ready)
+            vr_new <= 1'b0;
             if (rq_push) begin faddr <= faddr_n; faddr_n <= faddr_n + 40'd32; end
             // ---- fetch responses -> ring (one sector a response)
             if (f_rsp_v_r) begin
@@ -513,7 +524,7 @@ module ot_hgi_seq #(
             // ---- ring read pipe (address registered, sector registered: a word lands two edges after its issue)
             rpipe_v <= {rpipe_v[0], 1'b0}; rpipe_k1 <= rpipe_k0;
             if (|(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL) begin
-                st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_vr <= 0; vr_v <= 1'b0; fetching <= 1'b0;
+                st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_vr <= 0; vr_vr <= 1'b0; fetching <= 1'b0;
             end else case (st)
                 S_IDLE: if (db_pend) begin
                     token <= dbq_token; pos <= dbq_pos; cpl_job <= dbq_job; cpl_gen <= dbq_gen; cpl_pos <= dbq_pos;
@@ -674,12 +685,12 @@ module ot_hgi_seq #(
                 end
                 S_IDX: if (aj == 3'd7) begin
                         if (is_end) begin
-                            vr_v <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; st <= S_ENDRD;
+                            vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; st <= S_ENDRD;
                         end else if (is_tokx) begin                 // A[0] = k, then A[1..k]: k completion beats
                             if ({3'd0, d_desc[M_BASE +: 18]} + 21'd17 > 21'h40000) fault3;
                             else begin
                                 tk_base <= d_desc[M_BASE +: 18]; tk_i <= 5'd0; tk_k <= 1'b1; tk_pos <= pos;
-                                vr_v <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; st <= S_TOKX;
+                                vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; st <= S_TOKX;
                             end
                         end else begin
                             d_hdr <= h; d_pos1 <= pos1_q; d_pslot1 <= p1; d_L <= Lc; d_L1 <= L1c;
@@ -690,11 +701,10 @@ module ot_hgi_seq #(
                         acc <= pacc[aj]; acs <= pacc[aj]; acx <= 64'd0; dc_q <= dr[aj];
                         if (pend_x[aj]) begin
                             if (iax_bad) fault3;
-                            else begin vr_v <= 1'b1; vr_addr <= iax_a; ix <= 3'd1; end
+                            else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= iax_a; ix <= 3'd1; end
                         end else ix <= 3'd3;
                     end
                     3'd1: begin
-                        if (vr_v && vr_rdy) vr_v <= 1'b0;
                         if (vr_rsp_v_r) begin
                             mcand <= {37'd0, dc_q[M_DMUL +: 27]}; mplier <= vr_rsp_data_r; ash <= 6'd0; ix <= 3'd2;
                         end
@@ -705,10 +715,9 @@ module ot_hgi_seq #(
                     3'd7: ix <= 3'd3;
                     3'd3: if (pend_n[aj]) begin
                             if (ian_bad) fault3;
-                            else begin vr_v <= 1'b1; vr_addr <= ian_a; ix <= 3'd4; end
+                            else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= ian_a; ix <= 3'd4; end
                         end else ix <= 3'd5;
                     3'd4: begin
-                        if (vr_v && vr_rdy) vr_v <= 1'b0;
                         if (vr_rsp_v_r) begin
                             if (vr_rsp_data_r[31:21] != 11'd0) fault3;
                             else begin pn[aj] <= vr_rsp_data_r[20:0]; ix <= 3'd5; end
@@ -727,7 +736,6 @@ module ot_hgi_seq #(
                 S_ADV: begin advance(hq_rlen); st <= S_DEC; end
                 S_DRAIN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) begin advance(hq_rlen); st <= S_DEC; end
                 S_ENDRD: begin
-                    if (vr_v && vr_rdy) vr_v <= 1'b0;
                     if (vr_rsp_v_r) begin
                         st <= S_CPL; fetching <= 1'b0; cpl_pos <= pos;
                         cpl_token <= vr_rsp_data_r[17:0];
@@ -737,13 +745,12 @@ module ot_hgi_seq #(
                 // CTL.TOKX (HGI-1 7.4, Q-MTP-1): A = U32 [1 + ncol], A[0] = k (1 <= k <= ncol), A[1 .. k] = the committed
                 // tokens; each becomes a completion beat {token A[i], pos + i - 1, status 0} (cpl_tokx) before END
                 S_TOKX: begin
-                    if (vr_v && vr_rdy) vr_v <= 1'b0;
                     if (vr_rsp_v_r) begin
                         if (tk_k) begin
                             if (vr_rsp_data_r == 32'd0 || vr_rsp_data_r > {28'd0, ncol}) fault3;
                             else begin
                                 tk_k <= 1'b0; tk_n <= vr_rsp_data_r[4:0]; tk_i <= 5'd1;
-                                vr_v <= 1'b1; vr_addr <= tk_base + 18'd1;
+                                vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= tk_base + 18'd1;
                             end
                         end else if (vr_rsp_data_r[31:18] != 14'd0 || vr_rsp_data_r[17:0] >= cfg_vocab_r) fault3;
                         else begin
@@ -755,7 +762,7 @@ module ot_hgi_seq #(
                     tk_pos <= tk_pos + 20'd1;
                     if (tk_i == tk_n) begin advance(hq_rlen); st <= S_DEC; end
                     else begin
-                        tk_i <= tk_i + 5'd1; vr_v <= 1'b1; st <= S_TOKX;
+                        tk_i <= tk_i + 5'd1; vr_vr <= 1'b1; vr_new <= 1'b1; st <= S_TOKX;
 `ifdef OT_HGI_SEQ_MUT_TOKX
                         vr_addr <= tk_base + {13'd0, tk_i};       // NEGATIVE CONTROL: the token address does not advance
 `else
