@@ -1,0 +1,19 @@
+{
+  "observed_at": "2026-10-10T05:41:58.149670-07:00",
+  "active_daemon_pid": 1712330,
+  "daemon_source": "/home/ubuntu/wt-codex-closure-daemon-20261010r/tools/closure_loop/closure_loop.py",
+  "source_sha256": "a5dcbee68e67d75603351370f013ad82e4c14a87f157939500fe7b98dc8acec5",
+  "hold_hooks": {
+    "stage_dispatch": 3620,
+    "adoption_held": 3805,
+    "do_verdict": 3858,
+    "export_publish": 4341
+  },
+  "held_jobs": [
+    "hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm10-96ee08233-tc",
+    "hfd_cmdproc_s_mtp_native_mx1_rb-fc8-hm25-96ee08233-tc",
+    "hfd_cmdproc_s_mtp_native_mx1_rb-lrst1-hm10-f670f540e-tc",
+    "hfd_cmdproc_s_mtp_native_mx1_rb-ft3-hm10-45ba54810-tc"
+  ],
+  "policy": "existing holds honored across new daemon; live stage can finish; no verdict/collect/export/commit/publish until actual pin eligibility"
+}
