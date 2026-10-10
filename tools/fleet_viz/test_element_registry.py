@@ -72,6 +72,7 @@ class RegistryTest(unittest.TestCase):
             model.option_b = lambda: ({}, {}); model.revoked_jobs = lambda: {}; model.superseded = lambda: {}
             model.registry = lambda: ({}, [])
             model.overrides_path = model.repo / 'overrides.json'; model.ovk = (None, {})
+            model.superseded_path = model.repo / 'superseded'; model.revoked_path = model.repo / 'revoked'
             def job(name, block, status, owner='Codex:t4'):
                 return Elements.reduce(dict(name=name, status=status, spec=dict(block=block, owner=owner),
                                             metrics=dict(setup_corner='tt', ss_ps=1, ff_ps=1, drc=0)))
@@ -100,6 +101,10 @@ class RegistryTest(unittest.TestCase):
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertEqual(rows['hfd_tap']['category'], 'first trial in flight')   # the master instance is required too
             jobs[2] = job('l0', 'hfd_tap', 'CLOSED')
+            model.superseded = lambda: {'ot_hbm_x': dict(by='ot_hbm_x_wide1036', reason='t')}
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(rows['ot_hbm_x_wide1036']['category'], 'first trial in flight')   # unfolded, still open
+            model.superseded = lambda: {}
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertTrue(rows['hfd_tap']['category'].startswith('closed'))   # every instance closed
 
