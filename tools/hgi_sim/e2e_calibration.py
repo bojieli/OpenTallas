@@ -29,6 +29,14 @@ OPEN_DEFECTS = {"COLL": "F3 whole-row gathers + F4 PFMAX 64 (die build faults; P
                 "DMA": "F6 mover boot-path rate (one element / 4 edges + a kport round trip a sector miss)",
                 "CP": "F5 one 32 B fetch sector in flight"}
 
+CAD18_VEHICLE_LIMITS = {
+    "source": "cad18afa7: rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv and tb_hgi_e2e.sv",
+    "SU_SFU": "reference vec N64/M64/LV7 with direct fixed-latency DPI VM; model uses N1024/M256. "
+              "Ratios are reduced-vehicle sensitivity, not production-width measured costs. The D1 peer's "
+              "local operand staging and result drain are absent from this vehicle.",
+    "token": "SM/ATT/HC remain replay stubs; this is not a full-production-unit token timing measurement"
+}
+
 
 def service(records):
     """per real record: RTL service time = retire - max(dispatch, the same unit's previous retire) (the queueing behind
@@ -79,6 +87,14 @@ def scaled(base_cost, k):
     return cf
 
 
+def coverage(recs, k):
+    """Service-ratio replay is only calibrated for operations present in this vehicle's RTL report."""
+    ops = {f"{r.unit}.{r.op}" for r in recs if r.unit != "CTL"}
+    return dict(measured_ops=sorted(ops & k.keys()), uncalibrated_ops=sorted(ops - k.keys()),
+                scope="measured unit-service ratios replayed on the modelled token; uncalibrated operations "
+                      "retain their model costs (not a measured whole-token rate)")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path)
@@ -90,6 +106,8 @@ def main():
     reports = sorted(a.reports) if a.reports else sorted(ROOT.glob("results/rtl/hgi_e2e_*/runs/*/report.json"))
     rt, runs = ratios(reports)
     res = dict(runs=runs, per_unit=rt, open_defects=OPEN_DEFECTS)
+    if any("e2e_reports_cad18afa7" in str(p) for p in reports):
+        res["calibration_vehicle_limits"] = CAD18_VEHICLE_LIMITS
     # sensitivity: today's RTL ratios applied to the whole tokens
     sens = {}
     if a.ds_program:
@@ -105,7 +123,8 @@ def main():
         k = {u: v["ds_L0"]["ratio"] for u, v in rt.items() if "ds_L0" in v}
         s0 = T.schedule(recs, DT.POS, "S2", cost_fn=cf)["total_cycles"]
         s1 = T.schedule(recs, DT.POS, "S2", cost_fn=scaled(cf, k))["total_cycles"]
-        sens["ds_1M"] = dict(scale=k, fixed_rtl_cycles=round(s0, 1), fixed_rtl_tok_s=round(1.2e9 / s0, 1),
+        sens["ds_1M"] = dict(scale=k, calibration_coverage=coverage(recs, k),
+                             fixed_rtl_cycles=round(s0, 1), fixed_rtl_tok_s=round(1.2e9 / s0, 1),
                              current_rtl_cycles=round(s1, 1), current_rtl_tok_s=round(1.2e9 / s1, 1))
     from hgi_sim import qwen_compiler as QC
     cfg = json.loads((ROOT / "compiler/models/qwen3-8b/config.json").read_text())
@@ -113,12 +132,15 @@ def main():
     k = {u: v["qwen_L0"]["ratio"] for u, v in rt.items() if "qwen_L0" in v}
     s0 = T.schedule(qrecs, 8191, "S2")["total_cycles"]
     s1 = T.schedule(qrecs, 8191, "S2", cost_fn=scaled(T.cost, k))["total_cycles"]
-    sens["qwen_P8191"] = dict(scale=k, fixed_rtl_cycles=round(s0, 1), fixed_rtl_tok_s=round(1.2e9 / s0, 1),
+    sens["qwen_P8191"] = dict(scale=k, calibration_coverage=coverage(qrecs, k),
+                              fixed_rtl_cycles=round(s0, 1), fixed_rtl_tok_s=round(1.2e9 / s0, 1),
                               current_rtl_cycles=round(s1, 1), current_rtl_tok_s=round(1.2e9 / s1, 1))
     # variants with DMA at full bandwidth (hgi-takeover is building the wide bank-parallel DMA -> VM write port)
     for key, veh in (("ds_1M", "ds_L0"), ("qwen_P8191", "qwen_L0")):
         if key in sens:
             sens[key]["scale_dma_full_bw"] = {u: x for u, x in sens[key]["scale"].items() if not u.startswith("DMA.")}
+            sens[key]["dma_full_bw_assumption"] = "DMA service ratios omitted: full-bandwidth successor budget, " \
+                                                  "not a measured DMA result"
     kq = sens["qwen_P8191"]["scale_dma_full_bw"]
     s2 = T.schedule(qrecs, 8191, "S2", cost_fn=scaled(T.cost, kq))["total_cycles"]
     sens["qwen_P8191"].update(current_rtl_dma_full_bw_cycles=round(s2, 1),
@@ -139,7 +161,8 @@ def main():
         for nm, kk in (("fixed_rtl", {}), ("current_rtl_dma_full_bw", kq),
                        ("current_rtl", sens["qwen_P8191"]["scale"])):
             st = T.schedule(drecs, 8192 - 16, "S2", cost_fn=scaled(base, kk))["total_cycles"]
-            out[nm] = dict(step_cycles=round(st, 1), tok_s_tau_8_01=round(8.01 * 1.2e9 / st, 1))
+            out[nm] = dict(step_cycles=round(st, 1), tok_s_tau_8_01=round(8.01 * 1.2e9 / st, 1),
+                           calibration_coverage=coverage(drecs, kk))
         sens["dflash_b16"] = out
     res["sensitivity"] = sens
     res["reading"] = ("ratios > 1 are the RTL's extra cycles over the simulator's price on the same records; the HBM "
