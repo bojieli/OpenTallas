@@ -76,6 +76,70 @@ class TransportTest(unittest.TestCase):
             self.assertEqual(C.ssh('host', 'side_effect').returncode, 255)
             self.assertEqual(call.call_count, 1)
 
+    def test_explicit_refusal_retries_once_with_lease_and_payload(self):
+        from contextlib import contextmanager
+        refused = subprocess.CompletedProcess([], 255, '',
+            'mux_client_request_session: session request failed: Session open refused by peer\n')
+        for payload in (None, 'stdin payload'):
+            held = []
+            @contextmanager
+            def lease(host):
+                held.append(True)
+                try:
+                    yield ['ssh', '-o', 'ControlMaster=auto', host]
+                finally:
+                    held.clear()
+            calls = []
+            def run(cmd, **kwargs):
+                self.assertTrue(held)
+                calls.append((cmd, kwargs))
+                return refused if len(calls) == 1 else subprocess.CompletedProcess(cmd, 0, 'done', '')
+            with patch.object(C, 'transport_command', side_effect=lease), patch.object(C, 'sh', side_effect=run):
+                self.assertEqual(C.ssh('host', 'side_effect', input=payload, timeout=77, check=True).stdout, 'done')
+            self.assertEqual(len(calls), 2)
+            self.assertIn('ControlMaster=no', calls[1][0])
+            self.assertIn('ControlPath=none', calls[1][0])
+            self.assertNotIn('ProxyCommand=false', calls[1][0])
+            self.assertEqual(calls[0][1]['input'], calls[1][1]['input'])
+            self.assertEqual(calls[1][1]['timeout'], 77)
+            self.assertFalse(held)
+
+    def test_fallback_failure_is_not_retried(self):
+        refused = subprocess.CompletedProcess([], 255, '',
+            'mux_client_request_session: session request failed: Session open refused by peer')
+        with patch.object(T, '_ensure_master', return_value=['ssh', 'host']), patch.object(C, 'sh', return_value=refused) as call:
+            self.assertEqual(C.ssh('host', 'side_effect').returncode, 255)
+            self.assertEqual(call.call_count, 2)
+
+    def test_timeout_and_nonmux_errors_never_replay(self):
+        refusal = 'mux_client_request_session: session request failed: Session open refused by peer'
+        cases = [subprocess.TimeoutExpired('ssh', 77), OSError('unavailable'),
+                 subprocess.CompletedProcess([], 255, '', 'Connection timed out'),
+                 subprocess.CompletedProcess([], 255, '', 'Connection reset by peer'),
+                 subprocess.CompletedProcess([], 255, 'remote began', refusal),
+                 subprocess.CompletedProcess([], 1, '', refusal),
+                 subprocess.CompletedProcess([], 255, '', refusal + '\nConnection closed')]
+        for result in cases:
+            with self.subTest(result=result):
+                with patch.object(T, '_ensure_master', return_value=['ssh', 'host']), patch.object(C, 'sh') as call:
+                    if isinstance(result, Exception):
+                        call.side_effect = result
+                        with self.assertRaises(type(result)):
+                            C.ssh('host', 'side_effect')
+                    else:
+                        call.return_value = result
+                        self.assertIs(C.ssh('host', 'side_effect'), result)
+                    self.assertEqual(call.call_count, 1)
+
+    def test_checked_fallback_preserves_remote_error(self):
+        refused = subprocess.CompletedProcess([], 255, '',
+            'mux_client_request_session: session request failed: Session open refused by peer')
+        failed = subprocess.CompletedProcess([], 17, '', 'remote command failed')
+        with patch.object(T, '_ensure_master', return_value=['ssh', 'host']), patch.object(C, 'sh', side_effect=[refused, failed]) as call:
+            with self.assertRaisesRegex(RuntimeError, 'rc=17'):
+                C.ssh('host', 'side_effect', check=True)
+            self.assertEqual(call.call_count, 2)
+
     def test_external_process_leases_block_ninth_channel(self):
         key = hashlib.sha256(b'host').hexdigest()[:20]
         leases = [(self.root / f'{key}.{n}.lease').open('a') for n in range(8)]

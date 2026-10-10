@@ -1,7 +1,8 @@
 """Private multiplexed fleet transport; eight channels against measured MaxSessions=10.
 
-A lost master fails the current operation, never replays it. The next operation
-reconnects under the master lock. File leases also cover reconcile/CLI processes.
+A lost master fails the current operation, never replays it. An explicit mux
+session-open refusal permits one fresh connection because no remote session opened.
+The next operation reconnects under the master lock. File leases also cover reconcile/CLI processes.
 Authentication and host-key policy remain the user's existing SSH configuration.
 """
 from contextlib import contextmanager
@@ -37,6 +38,18 @@ def _options(socket):
     return ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15",
             "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", "-o", "ControlPersist=1800",
             "-o", f"ControlPath={socket}"]
+
+
+def session_open_refused(result):
+    """Only this pre-session rejection proves a remote command did not start."""
+    return (result.returncode == 255 and not result.stdout
+            and (result.stderr or "").strip() ==
+            "mux_client_request_session: session request failed: Session open refused by peer")
+
+
+def direct_command(host):
+    """Fresh connection prefix; the caller must retain its existing channel lease."""
+    return _options("none") + ["-o", "ControlMaster=no", host]
 
 
 def _ensure_master(host, root, key):

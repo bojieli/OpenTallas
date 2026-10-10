@@ -56,7 +56,7 @@ import time
 import traceback
 from pathlib import Path
 
-from ssh_transport import command as transport_command
+from ssh_transport import command as transport_command, direct_command, session_open_refused
 from source_archive import build_archive, repo_path
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
@@ -172,9 +172,18 @@ def ssh(host, script, timeout=120, check=False, input=None):
         return sh(["bash", "-c", script], timeout=timeout, check=check, input=input)
     try:
         with transport_command(host) as base:
-            if input is None:
-                return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
-            return sh(base + [script], timeout=timeout, check=check, input=input)
+            remote = "bash -s" if input is None else script
+            payload = script if input is None else input
+            # Inspect only a completed SSH result.  Timeouts/disconnects may have executed
+            # the command and must never be replayed.  Keep this same channel lease and
+            # caller admission while bypassing only an explicit unopened mux session.
+            r = sh(base + [remote], timeout=timeout, check=False, input=payload)
+            if session_open_refused(r):
+                r = sh(direct_command(host) + [remote], timeout=timeout, check=False, input=payload)
+            if check and r.returncode:
+                raise RuntimeError(f"ssh command failed rc={r.returncode} on {host}\n"
+                                   f"{r.stdout[-1500:]}\n{r.stderr[-1500:]}")
+            return r
     except RuntimeError as e:
         # an unreachable host (ssh master refused, e.g. PVE1 kex reset 2026-10-08 00:50) is an rc=255 ssh failure that
         # every caller already handles, not a daemon crash (the daemon crash-looped on the toolchain probe for ~45 min)
