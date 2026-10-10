@@ -69,6 +69,12 @@ module ot_qfd_crom_lbuf #(
     output reg               fault,
     output reg  [1:0]        fault_code
 );
+    //: context pin flops (stage / token / position and position + 1 registered: the prefetch decisions start at flops)
+    reg  [LW-1:0]  stage_q;
+    reg  [NW-1:0]  tpos_q, tpos1_q;
+    reg            tok_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) tok_q <= 1'b0; else tok_q <= tok_start;
+    always @(posedge clk) begin stage_q <= stage; tpos_q <= tpos; tpos1_q <= tpos + 1'b1; end
     localparam integer RB = 8;                 // local row bits (>= 148)
     localparam [2:0] K_ZERO = 3'd0, K_QSC = 3'd1, K_WIDE = 3'd2, K_NARROW = 3'd3, K_BAD = 3'd4;
     localparam [LW-1:0] S_HEAD = HEAD;
@@ -76,7 +82,7 @@ module ot_qfd_crom_lbuf #(
                         A_END = END, A_HN = HEAD_N;
 
     // ---- residency ----------------------------------------------------------------------------------------------
-    reg [LW-1:0]   tag_n [0:1];                // stage held by narrow bank 0 / 1
+    reg [LW-1:0]   tag_n [0:1];                // stage_q held by narrow bank 0 / 1
     reg [1:0]      val_n;
     reg            val_f;                      // bank F holds HEAD
     reg [NW-1:0]   tag_r [0:1];                // rope rows held
@@ -84,25 +90,31 @@ module ot_qfd_crom_lbuf #(
     function automatic [0:0] par(input [LW-1:0] s);
         par = s[0];
     endfunction
-    wire res_stage = (stage == S_HEAD) ? val_f : (val_n[par(stage)] && tag_n[par(stage)] == stage);
-    wire res_rope  = (val_r[0] && tag_r[0] == tpos) || (val_r[1] && tag_r[1] == tpos);
-    assign st_rdy = res_stage && (stage != 0 || res_rope);
+    wire res_stage = (stage_q == S_HEAD) ? val_f : (val_n[par(stage_q)] && tag_n[par(stage_q)] == stage_q);
+    wire res_rope  = (val_r[0] && tag_r[0] == tpos_q) || (val_r[1] && tag_r[1] == tpos_q);
+    //: st_rdy leaves from a flop (the SU-side controller samples it at a stage start)
+    //: (qualified by the stage it was computed for, so a stage change is never answered by the previous stage's flag)
+    reg st_rdy_r;
+    reg [LW-1:0] st_rdy_s;
+    always @(posedge clk or negedge rst_n) if (!rst_n) st_rdy_r <= 1'b0; else st_rdy_r <= res_stage && (stage_q != 0 || res_rope);
+    always @(posedge clk) st_rdy_s <= stage_q;
+    assign st_rdy = st_rdy_r && (st_rdy_s == stage);
 
-    // ---- prefetcher: one fill at a time (a stage's narrow rows, the HEAD rows, or one rope row) -------------------
+    // ---- prefetcher: one fill at a time (a stage_q's narrow rows, the HEAD rows, or one rope row) -------------------
     localparam [1:0] F_NONE = 2'd0, F_STAGE = 2'd1, F_HEADB = 2'd2, F_ROPE = 2'd3;
     reg  [1:0]     f_kind;
-    reg  [LW-1:0]  f_st;                       // stage being filled
+    reg  [LW-1:0]  f_st;                       // stage_q being filled
     reg  [NW-1:0]  f_pos;                      // rope row being filled
     reg            f_slot;                     // rope slot being filled
     reg  [RB-1:0]  f_r;                        // next row to request
     reg  [RB-1:0]  f_n;                        // rows to request
     reg  [RB:0]    f_out;                      // requests in flight
     reg            busy;
-    reg            pend_rope;                  // a stage-0 fill wants rope(rp_pos) after it
+    reg            pend_rope;                  // a stage_q-0 fill wants rope(rp_pos) after it
     reg  [NW-1:0]  rp_pos;
-    wire [LW-1:0]  nxt = (stage == S_HEAD) ? {LW{1'b0}} : (stage == HEAD - 1) ? S_HEAD : stage + 1'b1;
+    wire [LW-1:0]  nxt = (stage_q == S_HEAD) ? {LW{1'b0}} : (stage_q == HEAD - 1) ? S_HEAD : stage_q + 1'b1;
     wire nxt_res = (nxt == S_HEAD) ? val_f : (val_n[par(nxt)] && tag_n[par(nxt)] == nxt);
-    wire nxt_rope_res = (val_r[0] && tag_r[0] == tpos + 1'b1) || (val_r[1] && tag_r[1] == tpos + 1'b1);
+    wire nxt_rope_res = (val_r[0] && tag_r[0] == tpos1_q) || (val_r[1] && tag_r[1] == tpos1_q);
     reg  tok_pend;
     // the request row's layer-local address (lane l adds l)
     function automatic [AW-1:0] row_addr(input [1:0] k, input [RB-1:0] r, input [NW-1:0] p);
@@ -126,7 +138,7 @@ module ot_qfd_crom_lbuf #(
             pend_rope <= 1'b0; tok_pend <= 1'b0;
         end else begin
             f_re <= {SW{issue}};
-            if (tok_start) tok_pend <= 1'b1;
+            if (tok_q) tok_pend <= 1'b1;
             if (issue) f_r <= f_r + 1'b1;
             f_out <= f_out + (issue ? 1'b1 : 1'b0) - (rv_done ? 1'b1 : 1'b0);
             // a fill completes when every row was requested and answered
@@ -139,27 +151,27 @@ module ot_qfd_crom_lbuf #(
                     default: ;
                 endcase
             end else if (!busy) begin
-                // choose the next fill: the token's own stage 0 / rope first, then the next stage, then the next rope
+                // choose the next fill: the token's own stage_q 0 / rope first, then the next stage_q, then the next rope
                 if (tok_pend && !(val_n[par(0)] && tag_n[par(0)] == 0)) begin
                     busy <= 1'b1; f_kind <= F_STAGE; f_st <= 0; f_r <= 0; f_n <= NWIN;
                     val_n[par(0)] <= 1'b0; tag_n[par(0)] <= 0;
                 end else if (tok_pend && !res_rope) begin
-                    busy <= 1'b1; f_kind <= F_ROPE; f_pos <= tpos; f_r <= 0; f_n <= 1;
-                    f_slot <= (val_r[0] && tag_r[0] != tpos) ? 1'b1 : 1'b0;      // keep the other row
-                    val_r[(val_r[0] && tag_r[0] != tpos) ? 1 : 0] <= 1'b0;
-                    tag_r[(val_r[0] && tag_r[0] != tpos) ? 1 : 0] <= tpos;
+                    busy <= 1'b1; f_kind <= F_ROPE; f_pos <= tpos_q; f_r <= 0; f_n <= 1;
+                    f_slot <= (val_r[0] && tag_r[0] != tpos_q) ? 1'b1 : 1'b0;      // keep the other row
+                    val_r[(val_r[0] && tag_r[0] != tpos_q) ? 1 : 0] <= 1'b0;
+                    tag_r[(val_r[0] && tag_r[0] != tpos_q) ? 1 : 0] <= tpos_q;
                 end else if (!nxt_res) begin
                     tok_pend <= 1'b0;
                     busy <= 1'b1; f_st <= nxt; f_r <= 0;
                     if (nxt == S_HEAD) begin f_kind <= F_HEADB; f_n <= NHD; val_f <= 1'b0; end
                     else begin f_kind <= F_STAGE; f_n <= NWIN; val_n[par(nxt)] <= 1'b0; tag_n[par(nxt)] <= nxt; end
-                end else if (stage == S_HEAD && !nxt_rope_res) begin
+                end else if (stage_q == S_HEAD && !nxt_rope_res) begin
                     tok_pend <= 1'b0;
-                    busy <= 1'b1; f_kind <= F_ROPE; f_pos <= tpos + 1'b1; f_r <= 0; f_n <= 1;
+                    busy <= 1'b1; f_kind <= F_ROPE; f_pos <= tpos1_q; f_r <= 0; f_n <= 1;
                     // replace the rope row that is not the current token's
-                    f_slot <= (val_r[0] && tag_r[0] == tpos) ? 1'b1 : 1'b0;
-                    val_r[(val_r[0] && tag_r[0] == tpos) ? 1 : 0] <= 1'b0;
-                    tag_r[(val_r[0] && tag_r[0] == tpos) ? 1 : 0] <= tpos + 1'b1;
+                    f_slot <= (val_r[0] && tag_r[0] == tpos_q) ? 1'b1 : 1'b0;
+                    val_r[(val_r[0] && tag_r[0] == tpos_q) ? 1 : 0] <= 1'b0;
+                    tag_r[(val_r[0] && tag_r[0] == tpos_q) ? 1 : 0] <= tpos1_q;
                 end else tok_pend <= 1'b0;
             end
         end

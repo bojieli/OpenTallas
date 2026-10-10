@@ -410,7 +410,7 @@ def main():
 # plus every non-issue port of ot_qfd_tt_ctl (bands / VM / port elements / lanes) unchanged.
 TT_PARAMS = dict(W=16, IL=8, AW=24, NW=18, GT=6144, TG=4, SMIN=7, SMAX=11, TCUT=7, XD=105, XVM=15, ORD=7, ACC_LAT=7,
                  TREE_LAT=7, MUL_LAT=6, FAST_ISSUE=1, KV_PREP=3, SCALE_LAT=6, IS=1, OS=1, LANDED=1, BAND=1, LNK=0,
-                 CLNK=0, AMR=1, SPRE=1)
+                 CLNK=0, AMR=1, SPRE=2)
 
 
 def emit_tt_ctlm() -> str:
