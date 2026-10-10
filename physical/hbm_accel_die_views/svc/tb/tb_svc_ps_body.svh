@@ -50,6 +50,7 @@
       for (j = 0; j < 8; j = j + 1) begin x = x ^ (x << 13); x = x ^ (x >> 17); x = x ^ (x << 5); f[j*32 +: 32] = x ^ a; end
     end
   endfunction
+  integer wait_cycles;
   integer seed = 20261006;
   // per-PC queue of reads: (addr, len, tag, issue time)
   reg [29:0] qa [0:31][0:15]; reg [3:0] ql [0:31][0:15]; reg [16:0] qt [0:31][0:15]; integer qh [0:31], qn [0:31];
@@ -285,6 +286,15 @@
     repeat (64) @(negedge ck);
     if (iko !== 1024'd0) $fatal(1, "IK reset baseline must be zero before requests");
     bench_ready = 1;
+`ifdef OT_SVC_VLT
+    // Same bounded completion predicate for compiled simulator (named fork disable unsupported).
+    wait_cycles = 0;
+    while (!(ne >= 48 && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want && sent[0] + sent[1] + sent[2] + sent[3] + sent[4] + sent[5] + sent[6] + sent[7] == 8 * NREQ) && wait_cycles < 1200000) begin @(posedge ck); wait_cycles = wait_cycles + 1; end
+    if (wait_cycles == 1200000) begin
+      $display("ERR timeout lines %0d/%0d kv %0d/%0d ik %0d/%0d e %0d", done_lines, want_lines, kv_got, kv_want, ik_got, ik_want, ne);
+      $display("ERR PS streams %0d rows %0d/%0d kd %0d busy %0d", ps_n, ps_rows, ps_want, ps_kd, ps_busy); err = err + 1;
+    end else repeat (50) @(posedge ck);
+`else
     fork : wait_done
       begin
         wait (ne >= 48 && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want &&
@@ -296,6 +306,7 @@
           want_lines, kv_got, kv_want, ik_got, ik_want, ne); $display("ERR PS streams %0d rows %0d/%0d kd %0d busy %0d", ps_n, ps_rows,
           ps_want, ps_kd, ps_busy); err = err + 1; disable wait_done; end
     join
+`endif
     $display("SVC_BENCH lines=%0d kv=%0d ik=%0d e=%0d ps_streams=%0d ps_rows=%0d ps_kd=%0d errors=%0d", done_lines, kv_got,
              ik_got, ne, ps_n, ps_rows, ps_kd, err);
     if (err != 0 || done_lines == 0) $fatal(1, "SVC_BENCH FAIL");
