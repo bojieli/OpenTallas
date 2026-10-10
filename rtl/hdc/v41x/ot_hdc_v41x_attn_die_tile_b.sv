@@ -26,10 +26,28 @@ module ot_attn_bpipe #(
     input  wire [W-1:0] d,
     output wire [W-1:0] q
 );
-    localparam integer NB = (W + 543) / 544;
+    // hbm-phys-1010 [att]: a pipe of <= 136 bits (the quad-result words) uses the right-sized 136-bit banks
+    // (ot_attn_bank_{sn,ew}136): in a 544 bank it routed 408 dead spare wires every hop (the hi half's SE merge corner:
+    // 42.8 k of its 103 k GRT-overflow net mentions were those spares).  Wider pipes keep the 544 banks.
+    localparam integer CW = (W <= 136) ? 136 : 544;
+    localparam integer NB = (W + CW - 1) / CW;
     genvar s, c;
+    // (both branches name the banks gn.g_s[s].g_c[c].g_{sn,ew}.u_b, so every floorplan keeps its macro names)
     generate if (N == 0) begin : g0
         assign q = d;
+    end else if (CW == 136) begin : gn
+        wire [CW-1:0] st [0:N];
+        assign st[0] = {{(CW-W){1'b0}}, d};
+        for (s = 0; s < N; s = s + 1) begin : g_s
+            for (c = 0; c < 1; c = c + 1) begin : g_c
+                if ((s == 0 && EW0 != 0) || (s == N - 1 && EWN != 0) || ((EWM >> s) & 1)) begin : g_ew
+                    ot_attn_bank_ew136 u_b (.clk(clk), .d(st[s]), .q(st[s+1]));
+                end else begin : g_sn
+                    ot_attn_bank_sn136 u_b (.clk(clk), .d(st[s]), .q(st[s+1]));
+                end
+            end
+        end
+        assign q = st[N][W-1:0];
     end else begin : gn
         wire [NB*544-1:0] st [0:N];
         assign st[0] = {{(NB*544-W){1'b0}}, d};
@@ -140,11 +158,27 @@ module hfd_attn_tile_b #(
     // CG-qualified boundary: the fixed word represents all16 heads. A partial
     // arrival is an explicit transaction fault, never a stale head's arithmetic.
     // Idle oflt/oy are held by gated producers and are consumed only under valid.
-    wire coherent_v = &gov;
-    wire [RW-1:0] loc_r = (CG != 0) ?
-        {(|gov), coherent_v ? oy : 512'd0, coherent_v ? oflt : 16'hffff} :
-        {gov[0], oy, oflt};
+    wire [RW-1:0] loc_r;
+    ot_attn_res_guard #(.CG(CG)) u_guard (.gov(gov), .oy(oy), .oflt(oflt), .w(loc_r));
     wire loc_v = loc_r[RW-1], chn_v = chn_r[RW-1];
     wire [RW-1:0] mrg = loc_v ? {loc_r[RW-1:16], loc_r[15:0] | {16{chn_v}}} : chn_r;
     ot_attn_bpipe #(.W(RW), .N(1), .EW0(1), .EWN(1)) u_oo (.clk(clk), .d(mrg), .q(o));
+endmodule
+
+// ---------------------------------------------------------------------------
+// hbm-phys-1010 [att] (hgi-e2e audit item 1): the one result-word boundary of the 16 heads, shared by hfd_attn_tile_b,
+// hfd_attn_half_hi and the bench quad set ot_attn_tile_m6h1x.  CG 0 (ungated quads, every head registers its datapath
+// every cycle): the word rides head 0's valid, as before.  CG 1 (gated quads hold oy / oflt while their valid is low):
+// the word is valid when ANY head is valid; it carries the heads' oy / oflt only when ALL 16 are valid together
+// (the quads wake on one broadcast, so a coherent result is the only legal one); a partial arrival (a quad late,
+// early or masked) is a transaction FAULT -- every oflt set, oy zero -- never a held head's stale value.
+// ---------------------------------------------------------------------------
+module ot_attn_res_guard #(parameter integer CG = 0) (
+    input  wire [15:0]  gov,
+    input  wire [511:0] oy,
+    input  wire [15:0]  oflt,
+    output wire [528:0] w
+);
+    wire coherent_v = &gov;
+    assign w = (CG != 0) ? {(|gov), coherent_v ? oy : 512'd0, coherent_v ? oflt : 16'hffff} : {gov[0], oy, oflt};
 endmodule

@@ -6,3 +6,10 @@ endmodule
 (* blackbox *)
 module ot_attn_bank_ew544 (input wire clk, input wire [543:0] d, output wire [543:0] q);
 endmodule
+// hbm-phys-1010 [att]: the 136-bit result-pipe banks (views physical/hbm_attn_tile_r/bank/ot_attn_bank_{sn,ew}136)
+(* blackbox *)
+module ot_attn_bank_sn136 (input wire clk, input wire [135:0] d, output wire [135:0] q);
+endmodule
+(* blackbox *)
+module ot_attn_bank_ew136 (input wire clk, input wire [135:0] d, output wire [135:0] q);
+endmodule

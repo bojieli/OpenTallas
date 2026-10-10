@@ -159,10 +159,8 @@ module hfd_attn_half_hi #(
     // CG-qualified boundary: the fixed word represents all16 heads. A partial
     // arrival is an explicit transaction fault, never a stale head's arithmetic.
     // Idle oflt/oy are held by gated producers and are consumed only under valid.
-    wire coherent_v = &gov;
-    wire [RW-1:0] loc_r = (CG != 0) ?
-        {(|gov), coherent_v ? oy : 512'd0, coherent_v ? oflt : 16'hffff} :
-        {gov[0], oy, oflt};
+    wire [RW-1:0] loc_r;
+    ot_attn_res_guard #(.CG(CG)) u_guard (.gov(gov), .oy(oy), .oflt(oflt), .w(loc_r));
     wire loc_v = loc_r[RW-1], chn_v = chn_r[RW-1];
     wire [RW-1:0] mrg = loc_v ? {loc_r[RW-1:16], loc_r[15:0] | {16{chn_v}}} : chn_r;
     ot_attn_bpipe #(.W(RW), .N(1), .EW0(1), .EWN(1)) u_oo (.clk(clk), .d(mrg), .q(o));

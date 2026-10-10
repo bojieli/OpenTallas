@@ -302,7 +302,10 @@ endmodule
 // The H16 tile as four quads (function; each quad is the hardened element, the packet's fan-out to the four quads
 // is the enclosing tile's / die's distribution)
 module ot_attn_tile_m6h1x #(
-    parameter integer CG = 0, parameter integer HOLD = 256, parameter integer MUT_CG = 0   // redesign-hbm: quad gating (bench)
+    parameter integer CG = 0, parameter integer HOLD = 256, parameter integer MUT_CG = 0,  // redesign-hbm: quad gating (bench)
+    // hbm-phys-1010 [att]: MUT_Q >= 0 applies MUT_CG to that ONE quad only (one quad wakes late, the others on time);
+    // GUARD: the result word through the die's ot_attn_res_guard (default = CG, as hfd_attn_tile_b / hfd_attn_half_hi)
+    parameter integer MUT_Q = -1, parameter integer GUARD = CG
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -320,19 +323,21 @@ module ot_attn_tile_m6h1x #(
     output wire [15:0]   oflt
 );
     genvar q, l;
-    wire [15:0] gov;
+    wire [15:0] gov, gof;
+    wire [511:0] goy;
     generate for (q = 0; q < 4; q = q + 1) begin : g_q
         localparam integer GB = (q / 2) * 8 + (q % 2) * 2;     // 0, 2, 8, 10
         wire [3:0]   qv, qf;
         wire [127:0] qy;
-        ot_attn_tile_m6h1q #(.CG(CG), .HOLD(HOLD), .MUT_CG(MUT_CG)) u_q (.clk(clk), .rst_n(rst_n), .qgid(GB[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+        ot_attn_tile_m6h1q #(.CG(CG), .HOLD(HOLD), .MUT_CG((MUT_Q < 0 || MUT_Q == q) ? MUT_CG : 0)) u_q (.clk(clk),
+            .rst_n(rst_n), .qgid(GB[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
             .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .gov(qv), .oy(qy), .oflt(qf));
         for (l = 0; l < 4; l = l + 1) begin : g_l
             localparam integer G = GB + 4 * (l / 2) + (l % 2);
-            assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
+            assign {gov[G], gof[G], goy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
         end
     end endgenerate
-    assign ov = gov[0];
+    ot_attn_res_guard #(.CG(GUARD)) u_guard (.gov(gov), .oy(goy), .oflt(gof), .w({ov, oy, oflt}));
 endmodule
 
 // ---------------------------------------------------------------------------
