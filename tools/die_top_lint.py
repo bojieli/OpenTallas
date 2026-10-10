@@ -120,9 +120,14 @@ QWEN_R21C = dict(QWEN_R21B, emb_hbm=True)
 # the bottom of spine column M (tools/qwen_kv_die/rom_r22k.py, results/arch/qwen_kv_die_20261009/CONTRACT.md)
 from qwen_kv_die import rom_r22k as _R22K   # noqa: E402
 QWEN_R22K = dict(QWEN_R21C, before_relays=_R22K.surgery)
+# r22kcs (die-evidence-2 2026-10-09, opt-in): r22k with the CLOSED compact sequencer (259.2 x 333.36) + the constant ROM
+# as its own frame inside the old constants+sequencer reservation (rom_r22k._compact_seq)
+QWEN_R22KCS = dict(QWEN_R21C, before_relays=_R22K.surgery_cs)
+R22K_FAMILY = ('r22k', 'r22kcs')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
-                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K}
+                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K,
+                'r22kcs': QWEN_R22KCS}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -1055,7 +1060,7 @@ def real_lefs(die):
     if die == 'qwen_kv':
         return (QPHY_LEF, KV_UCIE_LEF, KV_SERDES_LEF)
     if die == 'qwen_rom':
-        return (QPHY_LEF, KV_UCIE_LEF) if QWEN_RECIPE == 'r22k' else (QPHY_LEF,)
+        return (QPHY_LEF, KV_UCIE_LEF) if QWEN_RECIPE in R22K_FAMILY else (QPHY_LEF,)
     return (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF) + ((S.HEAD_A_LEF, S.HEAD_B_LEF) if S.HEAD_BUNDLES else ())
 
 
@@ -2190,7 +2195,7 @@ def margin(die, m):
             return S.margin_lint(m)
         if die == 'hbm':
             return H.margin_lint(m)
-        if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE == 'r22k'):
+        if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE in R22K_FAMILY):
             import fp_margin_lint as FPL
             return FPL.die_margin(m['insts'], [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
                                   {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
@@ -2330,7 +2335,7 @@ def main(argv=None):
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
-                                                              'r21c', 'r22k'])
+                                                              'r21c', 'r22k', 'r22kcs'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '
