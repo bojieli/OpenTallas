@@ -221,7 +221,8 @@ module ot_qwen_w12_matvec_part #(
     // level copy (released two edges after rst_n, assert still asynchronous): the level copy drove every tree adder's
     // reset flops through 13 buffer levels (rp1pcl-hm0).  0 cycles.
     parameter integer LRST = 0,
-    parameter integer TMUT = 0           // 2: one tree adder's reset copy never released (bench mutant, LRST 3)
+    parameter integer TMUT = 0,          // 2: one tree adder's reset copy never released (bench mutant, LRST 3)
+    parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -830,7 +831,7 @@ end endgenerate
                     ot_hdc_fadd u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
                                        sum[32*LI +: 32], f1);
                 end else begin : g_ladd
-                    ot_qwen_w12_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
+                    ot_qwen_w12_ladd #(.LAT(ACC_LAT), .ANR(ANR)) u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
                                                        sum[32*LI +: 32], f1);
                 end
                 ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_l), .d(sum[32*LI +: 32]), .q(fb_pre));
@@ -899,7 +900,7 @@ end endgenerate
                 end else begin : g_rl
                     assign rst_a = rst_t[lv];
                 end
-                ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_a, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+                ot_qwen_w12_tadd #(.LAT(TREE_LAT), .ANR(ANR)) u_add (clk, rst_a, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
                 if (ALWAYS) begin : g_a
@@ -1258,7 +1259,7 @@ endmodule
 
 // ot_qwen_w12_ladd #(LAT): ot_hdc_fp32_add_lat (bit-identical to ot_hdc_qadd / ot_hdc_fadd) with the qadd port
 // shape: fault = a valid result's err.
-module ot_qwen_w12_ladd #(parameter integer LAT = 7) (
+module ot_qwen_w12_ladd #(parameter integer LAT = 7, parameter integer ANR = 0) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -1269,13 +1270,19 @@ module ot_qwen_w12_ladd #(parameter integer LAT = 7) (
 );
     wire [1:0] err;
     wire vo;
-    ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
-                                        .valid_out(vo));
+    // ANR = 1 (hardcore-1010 D): ot_hdc_fp32_add_lat_nr (valid-only cut resets + HSPLIT), bit-identical
+    generate if (ANR != 0) begin : g_nr
+        ot_hdc_fp32_add_lat_nr #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                               .valid_out(vo));
+    end else begin : g_r
+        ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                            .valid_out(vo));
+    end endgenerate
     assign fault = vo && (err != 2'd0);
 endmodule
 
 // The split-tree pair adder: ot_hdc_qadd at LAT 3 (the legacy netlist), else ot_qwen_w12_ladd #(LAT).
-module ot_qwen_w12_tadd #(parameter integer LAT = 3) (
+module ot_qwen_w12_tadd #(parameter integer LAT = 3, parameter integer ANR = 0) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -1287,7 +1294,7 @@ module ot_qwen_w12_tadd #(parameter integer LAT = 3) (
     generate if (LAT == 3) begin : g_q
         ot_hdc_qadd u (clk, rst_n, v, a, b, y, fault);
     end else begin : g_l
-        ot_qwen_w12_ladd #(.LAT(LAT)) u (clk, rst_n, v, a, b, y, fault);
+        ot_qwen_w12_ladd #(.LAT(LAT), .ANR(ANR)) u (clk, rst_n, v, a, b, y, fault);
     end endgenerate
 endmodule
 
