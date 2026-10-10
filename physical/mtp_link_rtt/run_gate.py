@@ -24,7 +24,7 @@ def main():
     # Evaluate only the named unified model function; avoids importing unrelated model datasets.
     tree=ast.parse((ROOT/'tools/uarch_model.py').read_text());node=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='dsrom_mtp_grant_rtt_model')
     ns={'DFF_UM2':.2916};exec(compile(ast.Module(body=[node],type_ignores=[]),'unified_model','exec'),ns)
-    pairs=[(0,0),(5,5),(9,9),(5,9),(9,5)]
+    pairs=[(0,0),(5,5),(9,9),(5,9),(9,5),(5,6),(6,7),(9,10),(10,9)]
     models=[ns[node.name](f,r) for f,r in pairs];(a.out/'model.json').write_text(json.dumps(models,indent=2)+'\n')
     rows=[run(a.out,f,r,s,1) for f,r in pairs for s in (0,1)]
     rows += [run(a.out,f,r,s,1,stress=0) for f,r in pairs for s in (0,1)]

@@ -77,5 +77,7 @@
  "cycles_added": "0 new receiver stages; source-accept to consume forward_hops+2=11 cycles, reservationhistory21, full-rate FIFOdepth22. Parent/native wrapper binding pending.",
  "merge_target": "main",
  "route_hold_corners": "mm",
- "route_hold_margin_ns": 0.01
+ "route_hold_margin_ns": 0.01,
+ "enabled": false,
+ "superseded_reason": "Regenerated head631 actual worst9forward10return requires H22/D23; preserve all older source/evidence."
 }
