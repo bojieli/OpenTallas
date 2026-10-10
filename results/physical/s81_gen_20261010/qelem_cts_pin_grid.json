@@ -1,0 +1,144 @@
+{
+  "schema": "opentallas.actual-def-pin-origin.v1",
+  "source_sha256": "2adf3bd4c3b673a8a006a214c5a37a5eb30bad5f36463137c76b3d81950741ed",
+  "size_nm": [
+    510840,
+    221400
+  ],
+  "signal_pin_shapes": 739,
+  "placement_status_pin_counts": {
+    "FIXED": 0,
+    "PLACED": 739
+  },
+  "allow_placed": true,
+  "qualification_scope": "CTS_PREFLIGHT_NOT_FINAL_ADOPTION",
+  "orientations": {
+    "R0": {
+      "axes": {
+        "x": {
+          "constraints": [
+            [
+              "M5",
+              0,
+              48
+            ]
+          ],
+          "period_nm": 48,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "compatible": true
+        },
+        "y": {
+          "constraints": [],
+          "period_nm": 1,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "compatible": true
+        }
+      },
+      "compatible": true
+    },
+    "MY": {
+      "axes": {
+        "x": {
+          "constraints": [
+            [
+              "M5",
+              0,
+              48
+            ]
+          ],
+          "period_nm": 48,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "compatible": true
+        },
+        "y": {
+          "constraints": [],
+          "period_nm": 1,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "compatible": true
+        }
+      },
+      "compatible": true
+    },
+    "MX": {
+      "axes": {
+        "x": {
+          "constraints": [
+            [
+              "M5",
+              0,
+              48
+            ]
+          ],
+          "period_nm": 48,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "compatible": true
+        },
+        "y": {
+          "constraints": [],
+          "period_nm": 1,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "compatible": true
+        }
+      },
+      "compatible": true
+    },
+    "R180": {
+      "axes": {
+        "x": {
+          "constraints": [
+            [
+              "M5",
+              0,
+              48
+            ]
+          ],
+          "period_nm": 48,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "compatible": true
+        },
+        "y": {
+          "constraints": [],
+          "period_nm": 1,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "compatible": true
+        }
+      },
+      "compatible": true
+    }
+  },
+  "source_commit": "e82a88082598d5167b94ae485c8a600a1d9dde59",
+  "input_odb_sha256": "0c965705766c03de5e7691b5c8aa5f558a4baf16d5ab897daf4585711e962108",
+  "checker_commit": "a0390fd32",
+  "checker_path": "tools/qwen_kv_die/pin_grid_gate.py",
+  "actual_x1_pin_count": 266,
+  "actual_x1_x_nm": [
+    439980,
+    465420
+  ],
+  "actual_x1_y_nm": 42,
+  "primitive_preflight_receipt": "qelem_primitive_my_preflight.json",
+  "hardview_orientation_qualified": false,
+  "remaining": [
+    "Actual placed die origin obeys0 mod48nm X",
+    "Final routed pin and primitive mirror gate",
+    "Power/grid/track and top-level abstract symmetry",
+    "Actual context clock and extracted timing"
+  ],
+  "bulk_def_remote": "ot-epyc4:/srv/opentallas-scratch/codex/qelem-mirror-audit-20261010/qelem_cts.def"
+}
