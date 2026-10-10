@@ -44,6 +44,8 @@ module ot_hgi_coll_record #(
     output reg  [7:0]    ep_mcast_group_size,
     output reg           ep_mcast_all,
     output reg  [3:0]    ep_gsz,
+    output reg           ep_byp,         // exact gather bypass (ALL_GATHER, ARGMAX_MERGE)
+    output reg           ep_amx,         // ARGMAX_MERGE: the delivered flits fold to one token (ot_hgi_coll_amerge)
     output reg  [15:0]   ep_pf,
     output reg           ep_go,
     input  wire          ep_start_ready,
@@ -103,11 +105,17 @@ module ot_hgi_coll_record #(
     wire [25:0] a_rowbits = n_a_q * a_bits;
     wire [16:0] a_rowwords = (a_rowbits + 26'd511) >> 9;
     wire        pf_bad = (n_a_q[3:0] != 4'd0) || (n_a_q == 21'd0) || (n_a_q[20:4] > 17'hFFFF);
+    // ALL_GATHER (bypass): pf = A row bits / 512 in any element format; a partial flit or an empty row faults
+    wire        pfg_bad = (a_rowbits[8:0] != 9'd0) || (n_a_q == 21'd0) || (a_rowwords > 17'hFFFF);
+    // endpoint rank = the die's position on the 96-rank TU fabric (die mod 96: groups of 1..8 stay aligned)
+    wire [7:0]  rank96 = (die_q >= 8'd192) ? die_q - 8'd192 : (die_q >= 8'd96) ? die_q - 8'd96 : die_q;
+    // GROUP_REDUCE_MCAST: the endpoint's gsz is the reduction sub-group s (2 / 4 / 8), the outer group is G
+    wire [3:0]  sub_gsz = (dc_sub == 8'd2) ? 4'd1 : (dc_sub == 8'd4) ? 4'd2 : 4'd3;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; dc_cmd_v <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
             ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_start_v <= 1'b0; rf_done_r <= 1'b0;
-            ep_rank <= 8'd0; ep_mcast_group_size <= 8'd96; ep_mcast_all <= 1'b0; ep_gsz <= 4'hF; ep_pf <= 16'd0;
+            ep_rank <= 8'd0; ep_mcast_group_size <= 8'd96; ep_mcast_all <= 1'b0; ep_gsz <= 4'hF; ep_pf <= 16'd0; ep_byp <= 1'b0; ep_amx <= 1'b0;
             ep_a_base <= 40'd0; ep_o_base <= 40'd0;
             rf_group_size <= 8'd96; rf_owner_block <= 8'd8; rf_destinations <= 8'd0; rf_row_count <= 21'd0;
             rf_row_words <= 16'd0; rf_context_rows <= 32'd0;
@@ -125,16 +133,33 @@ module ot_hgi_coll_record #(
                         if (dc_op == 6'd0 || dc_op == 6'd4) begin
                             if (pf_bad) begin rec_fault <= 1'b1; st <= S_HALT; end
                             else begin
-                                ep_rank <= dc_rank; ep_gsz <= dc_gsz; ep_mcast_all <= (dc_op == 6'd4);
-                                ep_mcast_group_size <= dc_g;
+                                ep_rank <= rank96; ep_gsz <= (dc_op == 6'd4) ? sub_gsz : dc_gsz; ep_mcast_all <= (dc_op == 6'd4);
+                                ep_mcast_group_size <= dc_g; ep_byp <= 1'b0; ep_amx <= 1'b0;
                                 ep_pf <= MUT_PF ? n_a_q[15:0] : n_a_q[19:4];
+                                ep_a_base <= a_q[47:8]; ep_o_base <= o_base_q; st <= S_EPGO;
+                            end
+                        end else if (dc_op == 6'd1) begin   // ALL_GATHER: exact bypass over the group (G = 96: outer group)
+                            if (pfg_bad) begin rec_fault <= 1'b1; st <= S_HALT; end
+                            else begin
+                                ep_rank <= rank96; ep_byp <= 1'b1; ep_amx <= 1'b0;
+                                ep_gsz <= (dc_g == 8'd96) ? 4'd3 : dc_gsz; ep_mcast_all <= (dc_g == 8'd96);
+                                ep_mcast_group_size <= dc_g;
+                                ep_pf <= MUT_PF ? n_a_q[15:0] : a_rowwords[15:0];
                                 ep_a_base <= a_q[47:8]; ep_o_base <= o_base_q; st <= S_EPGO;
                             end
                         end else if (dc_op == 6'd5) begin
                             rf_group_size <= dc_g; rf_owner_block <= dc_blk; rf_destinations <= dc_dest;
                             rf_row_count <= dc_rows; rf_row_words <= a_rowwords[15:0];
                             rf_context_rows <= {12'd0, a_q[87:68]}; rf_start_v <= 1'b1; st <= S_RFGO;
-                        end else begin rec_fault <= 1'b1; st <= S_HALT; end   // ops 1-3: no backend installed
+                        end else if (dc_op == 6'd3) begin   // ARGMAX_MERGE: A = {value FP32, id U32}: one flit a rank
+                            if (n_a_q != 21'd2) begin rec_fault <= 1'b1; st <= S_HALT; end
+                            else begin
+                                ep_rank <= rank96; ep_byp <= 1'b1; ep_amx <= 1'b1;
+                                ep_gsz <= (dc_g == 8'd96) ? 4'd3 : dc_gsz; ep_mcast_all <= (dc_g == 8'd96);
+                                ep_mcast_group_size <= dc_g; ep_pf <= 16'd1;
+                                ep_a_base <= a_q[47:8]; ep_o_base <= o_base_q; st <= S_EPGO;
+                            end
+                        end else begin rec_fault <= 1'b1; st <= S_HALT; end   // op 2 (TOPK_MERGE): merge stage not installed yet
                     end
                 S_EPGO: if (in_ep_fault) begin rec_fault <= 1'b1; st <= S_HALT; end
                     else if (in_ep_ready) begin

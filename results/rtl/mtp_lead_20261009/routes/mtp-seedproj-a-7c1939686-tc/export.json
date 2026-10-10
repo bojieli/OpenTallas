@@ -1,0 +1,63 @@
+{
+  "name": "ot_dsrom_mtp_seed_ctl",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/routes/mtp_seedproj_a_7c1939686_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/routes/mtp_seedproj_a_7c1939686_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/routes/mtp_seedproj_a_7c1939686_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/routes/mtp_seedproj_a_7c1939686_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/routes/mtp_seedproj_a_7c1939686_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/routes/mtp_seedproj_a_7c1939686_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/routes/mtp_seedproj_a_7c1939686_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedproj-a-7c1939686-tc/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_dsrom_mtp_seed_ctl.lef": "62815b2b4e20ed4bd8a1a1e8facdb5c9df59ae6265bf14bd33ee0cf962283cd8",
+    "ot_dsrom_mtp_seed_ctl_ff.lib": "fe8fa3e04b43d7c0ff74fd4906811f40069fb1edaf05e6cde6b6469caa9476a8",
+    "ot_dsrom_mtp_seed_ctl_ss.lib": "288e6931969151dd199e3d55a6ec8db536da8991c54ce27aa7da93dda7fc70a1"
+  },
+  "ok": true
+}

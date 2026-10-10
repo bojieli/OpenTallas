@@ -111,6 +111,15 @@ class Die:
         self.vm = np.zeros(VM_WORDS, dtype=np.uint32)
         self.hbm = hbm
         self.dyn = [0] * 32
+        self.streams = {}            # STREAM id -> FIFO of pushed element vectors (credit-ordered producer -> consumer)
+        self.stream_seen = {}        # STREAM id -> the last vector pushed (simulator-side visibility for checkers)
+
+
+# STREAM ids by wiring (spec 2.4: fixed by the die's wiring).  PROVISIONAL table (hbm-sim -> hgi-takeover): a STREAM
+# descriptor's base is the stream id; the producer's O and the consumer's A must name the wired pair.
+STREAM_WIRING = {0: ("SM", "SU"),           # SM results into the SU lane registers
+                 1: ("SU", "ARGMAX"),       # SU reduction output into the argmax unit (hb_su_red_mtp_am)
+                 2: ("SM", "ARGMAX")}       # the LM-head matvec into the argmax unit
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -196,7 +205,27 @@ class Machine:
     def vm_read(self, d, die, L, no=None, ni=None):
         return die.vm[self.vm_addrs(d, die, L, no, ni)].view(F)
 
+    def stream_push(self, d, die, vals):
+        sid = d.base
+        if sid not in STREAM_WIRING or self.cur is None or STREAM_WIRING[sid][0] != self.cur.unit:
+            raise Fault(3, f"STREAM {sid}: not a wired output of unit {getattr(self.cur, 'unit', None)}")
+        v = np.asarray(vals, dtype=F).reshape(-1).copy()
+        die.streams[sid] = np.concatenate([die.streams.get(sid, np.zeros(0, F)), v])   # an element FIFO
+        die.stream_seen[sid] = v
+
+    def stream_pop(self, d, die, n):
+        sid = d.base
+        if sid not in STREAM_WIRING or self.cur is None or STREAM_WIRING[sid][1] != self.cur.unit:
+            raise Fault(3, f"STREAM {sid}: not a wired input of unit {getattr(self.cur, 'unit', None)}")
+        q = die.streams.get(sid, np.zeros(0, F))
+        if q.size < n:
+            raise Fault(3, f"STREAM {sid}: consumer reads {n} elements, {q.size} queued (underrun)")
+        die.streams[sid] = q[n:]
+        return q[:n]
+
     def vm_write(self, d, die, L, vals, no=None, ni=None):
+        if d.space == "STREAM":
+            return self.stream_push(d, die, vals)
         a = self.vm_addrs(d, die, L, no, ni)
         die.vm[a] = np.asarray(vals, dtype=F).reshape(-1).view(np.uint32)
 
@@ -241,6 +270,9 @@ class Machine:
             die.hbm.writes += n * es
 
     def read(self, d, die, L, no=None, ni=None):
+        if d.space == "STREAM":
+            _, n, m, _, _ = self.eff(d, die, L)
+            return self.stream_pop(d, die, (no if no is not None else m) * (ni if ni is not None else n))
         if d.space == "VM":
             return self.vm_read(d, die, L, no, ni)
         if d.space == "HBM":
@@ -432,6 +464,9 @@ def u_sm_matvec(M: Machine, r: Rec, L):
 
 def u_coll_all_reduce(M: Machine, r: Rec, L):
     for grp in M.groups():
+        if len(grp) not in (1, 2, 4, 8):
+            raise Fault(3, f"E_RANGE: ALL_REDUCE_SUM over a group of {len(grp)} (legal 1, 2, 4, 8; G = 96 reduces "
+                           "as GROUP_REDUCE_MCAST s = 8, GX11)")
         tot = A.pairwise([M.read(M.rec_of(d, r).desc["A"], d, L) for d in grp])
         for d in grp:
             M.vm_write(M.rec_of(d, r).desc["O"], d, L, tot)
@@ -544,7 +579,7 @@ def _write_row(M, o, die, L, h, vals):
 
 
 # -- IDX.TOPK, COLL gather / reduce / row gather, DMA.KVWB_DS, FUSED.QDQ (spec 6.7) ----------------------------------
-TOPK_ASC = 1 << 12              # PROVISIONAL reading G15 (records.SPEC_GAPS): ids in ascending id order
+TOPK_ASC = 1 << 12              # G15 (spec c80ed5d7c): param[12] order = 1 -> ids in ascending id order, k <= 8 only
 
 
 def topk_ids(v, k, asc=False):
@@ -560,6 +595,8 @@ def u_idx_topk(M: Machine, r: Rec, L):
     k = r.param & 0xFFF
     if not 1 <= k <= 2048:
         raise Fault(3, "TOPK k outside 1..2048")
+    if r.param & TOPK_ASC and k > 8:
+        raise Fault(3, "E_RANGE: TOPK order = 1 (ascending id) is legal for k <= 8 only (G15)")
     for die in M.dies:
         a = r.desc["A"]
         _, n, m, _, _ = M.eff(a, die, L)
@@ -574,6 +611,100 @@ def u_idx_topk(M: Machine, r: Rec, L):
             if rr is not None:
                 rb, _, _, rst, rist = M.eff(rr, die, L)
                 die.vm[rb + row * rst + np.arange(k) * rist] = v[row][ids].astype(F).view(np.uint32)
+
+
+# -- IDX.INDEX (G18): one DS indexer frame; COLL.TOPK_MERGE from VM -------------------------------------------------
+INDEX_BLOCK = 8                  # keys are sharded by rank in blocks of 8 (the candidate block)
+
+
+def index_owned(rank, n, G):
+    """Global ids of the keys < n owned by `rank` of a G-rank group (blocks of INDEX_BLOCK, round robin), and the
+    owned blocks."""
+    blocks = np.arange(rank, -(-n // INDEX_BLOCK), G)
+    idx = (blocks[:, None] * INDEX_BLOCK + np.arange(INDEX_BLOCK)[None, :]).reshape(-1)
+    return idx[idx < n], blocks
+
+
+def u_idx_index(M: Machine, r: Rec, L):
+    """IDX.INDEX: param [11:0] k, [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer.  A = post-RoPE query
+    (ih heads x ihd, FP32), B = scaled head weights (ih BF16 values in FP32 words), C = keep table (keep_en: row 0
+    block ids U32, row 1 values FP32; listed blocks with value > -inf are kept, G18a), O = local top-k ids (ascending),
+    R = their values (FP32), D = candidate table (cand_en: row 0 block ids, row 1 block maxima; D.n candidates).
+    The keys are the indexer engine's key store (M.index_keys(die, layer, ids) -> FP4-grid key rows).  Arithmetic:
+    hdc_golden_v41 (the shipped indexer): FP4 query quantiser, block-dot scores, relu x weight, row reduce, BF16."""
+    import hdc_golden_v41 as GV
+    k, cand_en, keep_en = r.param & 0xFFF, (r.param >> 12) & 1, (r.param >> 13) & 1
+    n, layer = r.imm_a, r.imm_b
+    G_ = M.cfg["coll_group_size"]
+    if True:
+        for die in M.dies:                              # (run per die or per group: the rank is the die's)
+            q_ = die.rank % G_
+            rd = M.rec_of(die, r)
+            ih = rd.desc["B"].n
+            q = M.read(rd.desc["A"], die, L).astype(F).reshape(ih, -1)
+            w = M.read(rd.desc["B"], die, L).astype(F)
+            qf = np.stack([GV.qdq_fp4_e8m0(q[h]) for h in range(ih)])
+            idx, blocks = index_owned(q_, n, G_)
+            keys = M.index_keys(die, layer, idx)
+            score = A.to_bf16(GV.dots_q4(qf, keys))
+            terms = A.to_bf16(A.mul(np.maximum(score, F(0)), w[:, None]))
+            v = A.to_bf16(GV.reduce_rows(terms.T, cls="idx")).astype(np.float64)
+            if cand_en:
+                bs = np.full(len(blocks), -np.inf)
+                np.maximum.at(bs, np.searchsorted(blocks, idx // INDEX_BLOCK), v)
+                bs[blocks == (n - 1) // INDEX_BLOCK] = np.inf          # the newest block is pinned
+                d = rd.desc["D"]
+                db, dn, _, dst, _ = M.eff(d, die, L)
+                kc = min(dn, len(blocks))
+                order = np.lexsort((blocks, -bs))[:kc]
+                if kc != dn:
+                    raise Fault(3, f"INDEX D.n {dn} > owned blocks {len(blocks)}")
+                die.vm[db:db + kc] = blocks[order].astype(np.uint32)
+                die.vm[db + dst:db + dst + kc] = bs[order].astype(F).view(np.uint32)
+            if keep_en:
+                c = rd.desc["C"]
+                cb, cn, _, cst, _ = M.eff(c, die, L)
+                ids, vals = die.vm[cb:cb + cn].astype(np.int64), die.vm[cb + cst:cb + cst + cn].view(F)
+                kept = set(int(b_) for b_, x in zip(ids, vals) if x > -np.inf)
+                keep = np.array([int(i) // INDEX_BLOCK in kept for i in idx], dtype=bool)
+                v = np.where(keep, v, -np.inf)
+            die.index_last = (idx, v.copy())                     # (checker's view of the scores, after the mask)
+            kk = min(k, len(idx))
+            sel = np.lexsort((idx, -v))[:kk]
+            o = rd.desc["O"]
+            ob, on, _, _, _ = M.eff(o, die, L)
+            if on != kk:
+                raise Fault(3, f"INDEX O.n {on} != local top-k {kk}")
+            order = sel[np.argsort(idx[sel], kind="stable")]           # ids in ascending id order
+            die.vm[ob:ob + on] = idx[order].astype(np.uint32)
+            if "R" in rd.desc:
+                M.vm_write(rd.desc["R"], die, L, v[order].astype(F))
+
+
+def u_coll_topk_merge(M: Machine, r: Rec, L):
+    """COLL.TOPK_MERGE (G18): from VM, A = local values, B = their ids (n each, per die); the group's top imm_a by
+    descending value, ties to the lowest id; O = the ids in ascending id order, R (optional) = their values.  The
+    contributions move through the collective's exact gather (bypass) path."""
+    for grp in M.groups():
+        vs, ids = [], []
+        for d in grp:
+            rd = M.rec_of(d, r)
+            vs.append(M.read(rd.desc["A"], d, L).astype(np.float64))
+            b0, n_, _, _, _ = M.eff(rd.desc["B"], d, L)
+            ids.append(d.vm[b0:b0 + n_].astype(np.int64))
+        v, i = np.concatenate(vs), np.concatenate(ids)
+        if np.isnan(v).any():
+            raise Fault(1, "TOPK_MERGE: NaN value")
+        top = np.lexsort((i, -v))[:r.imm_a]
+        top = top[np.argsort(i[top], kind="stable")]
+        for d in grp:
+            rd = M.rec_of(d, r)
+            ob, on, _, _, _ = M.eff(rd.desc["O"], d, L)
+            if on != len(top):
+                raise Fault(3, f"TOPK_MERGE O.n {on} != {len(top)}")
+            d.vm[ob:ob + on] = i[top].astype(np.uint32)
+            if "R" in rd.desc:
+                M.vm_write(rd.desc["R"], d, L, v[top].astype(F))
 
 
 def u_coll_all_gather(M: Machine, r: Rec, L):
@@ -622,6 +753,11 @@ def u_coll_row_gather(M: Machine, r: Rec, L):
         ib, n_i, _, _, iist = M.eff(i_d, d0, L)
         k = r.imm_a or n_i
         ids = d0.vm[ib + np.arange(k) * iist].astype(np.int64)
+        # bypass gather (hgi-die-gaps round 4): each owner reads its rows in list order, padded to the group's
+        # maximum owned count, then one exact gather pass; the counts are recorded for the timing model
+        owned = np.bincount((ids // B) % G, minlength=G)
+        getattr(M, "row_gather_stats", []).append(dict(tag=r.tag, k=int(k), G=G, max_owned=int(owned.max()),
+                                                       mean_owned=round(float(owned.mean()), 3)))
         rows = []
         for i in ids:
             owner = grp[(i // B) % G]
@@ -683,6 +819,8 @@ def u_su_vop(M: Machine, r: Rec, L):
             d = r.desc.get(k)
             if d is None:
                 return np.zeros(no * ni, dtype=F), None
+            if d.space == "STREAM":
+                return M.read(d, die, L, no, ni), None
             if d.space == "VM":
                 if f["b_half"] and k in ("B", "D"):        # b / d inner index i >> 1 (adjacent-pair tables)
                     base, _, _, st, ist = M.eff(d, die, L)
@@ -776,6 +914,7 @@ def _write_red(M, rd, die, L, vals):
 
 UNITS = {("DMA", "LOAD"): u_dma_load, ("DMA", "STORE"): u_dma_store, ("DMA", "FENCE"): u_dma_fence,
          ("SM", "MATVEC"): u_sm_matvec, ("COLL", "ALL_REDUCE_SUM"): u_coll_all_reduce,
+         ("IDX", "INDEX"): u_idx_index, ("COLL", "TOPK_MERGE"): u_coll_topk_merge,
          ("ARGMAX", "LOCAL"): u_argmax_local, ("COLL", "ARGMAX_MERGE"): u_coll_argmax_merge,
          ("FUSED", "ROW_NORM"): u_row_norm, ("SFU", "GLU"): u_glu, ("ATT", "QK"): u_att_qk, ("ATT", "PV"): u_att_pv,
          ("SU", "VOP"): u_su_vop, ("IDX", "TOPK"): u_idx_topk, ("COLL", "ALL_GATHER"): u_coll_all_gather,

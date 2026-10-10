@@ -8,8 +8,9 @@
   "GENERIC": "other models (generic interface)"
  },
  "provisional": [
-  "IDX.TOPK param[12] = 1: ids in ascending id order (open gap G15; DS router / index order)"
+  "IDX.INDEX keep_en C / cand_en D as [ids | values] tables (open gap G18a; the spec text says a keep bitmap)"
  ],
+ "engine_state": "a die entry's engine_state.index_keys = the indexer key store (layer, global ids, FP4-grid key rows as FP32) that IDX.INDEX scores (spec 6.7: the die's index keys)",
  "not_covered": [
   "CF-SFX (FUSED.SOFTMAX is not bound yet; the SU fallback is)",
   "CF-SM format 3 (hbm-forks owns the fmt3 adapter; SM.MATVEC fmt 3 vectors: CF-IDXD and the Qwen token)",
@@ -552,28 +553,53 @@
    "sha256": "839c0ba03e2615ebbe3beb3d622faa287d05fc5152dfaa74c5cfe2777f49520f"
   },
   {
+   "id": "coll_all_reduce_g96_rejected",
+   "row": "CF-COLL",
+   "mode": "DS",
+   "file": "cf-coll__coll_all_reduce_g96_rejected.json",
+   "what": "ALL_REDUCE_SUM with G = 96 FAULTS with E_RANGE (status 3): legal groups 1, 2, 4, 8 (GX11)",
+   "status": 3,
+   "mutants": [
+    "g96_accepted"
+   ],
+   "sha256": "dc272b37e40f20a748f59d5c958ce08305a71cbea6f220670b58b169c5b64875"
+  },
+  {
+   "id": "coll_topk_merge_vm_g96",
+   "row": "CF-COLL",
+   "mode": "DS",
+   "file": "cf-coll__coll_topk_merge_vm_g96.json",
+   "what": "COLL.TOPK_MERGE from VM (G18): A = 8 local values, B = their ids on each of 96 ranks; the top 32 by descending value, ties to the lowest id (a 3-way tie, a -inf rank); O = ids ascending, R = their values",
+   "status": 0,
+   "mutants": [
+    "ties_high_id",
+    "score_order"
+   ],
+   "sha256": "902f758afb863aed29c949c1832c85292f3216db0b3f0f1f51dac8a905ee6365"
+  },
+  {
    "id": "topk_k6_n384_m1_asc",
    "row": "CF-TOPK",
    "mode": "DS",
    "file": "cf-topk__topk_k6_n384_m1_asc.json",
-   "what": "IDX.TOPK k = 6 over 1 row(s) of 384; ties to the lowest index; ids in ASCENDING ID order (param[12], open gap G15: the DS router / index order)",
+   "what": "IDX.TOPK k = 6 over 1 row(s) of 384; ties to the lowest index; ids in ASCENDING ID order (param[12] order = 1, legal for k <= 8: the DS router top-6, G15)",
    "status": 0,
    "mutants": [
     "tie_high"
    ],
-   "sha256": "f160e4e2d3f4dc5e887479814f641371e9ffb3a289102f32798b02a4f9eadaef"
+   "sha256": "323ef55ce152a8ea7178cf0a53098256bf1d826280b11b7b05c0f462524751bd"
   },
   {
    "id": "topk_k512_n4096_m1_asc",
    "row": "CF-TOPK",
    "mode": "DS",
    "file": "cf-topk__topk_k512_n4096_m1_asc.json",
-   "what": "IDX.TOPK k = 512 over 1 row(s) of 4096; ties to the lowest index; ids in ASCENDING ID order (param[12], open gap G15: the DS router / index order)",
-   "status": 0,
+   "what": "IDX.TOPK k = 512 with order = 1 (ascending id) FAULTS with E_RANGE (status 3): order 1 is legal for k <= 8 only (G15, spec c80ed5d7c); the DS index top-512 is IDX.INDEX",
+   "status": 3,
    "mutants": [
-    "tie_high"
+    "order_unchecked"
    ],
-   "sha256": "e3c1285612deaec5bac7bd002c9bea4c2801146606cf9529d0e1e767a69e8af2"
+   "sha256": "ea8cf6df3c467ecabba85aa36715aefc1efbcd644bb9acfdeea7b04e8dfc01be"
   },
   {
    "id": "topk_k1_n64_m3",
@@ -624,6 +650,30 @@
    "sha256": "c54258de05556f2ed7147ec29bfc70db253b7fb367a964427c8a435cfdb2baf9"
   },
   {
+   "id": "topk_k8_n128_m1_asc",
+   "row": "CF-TOPK",
+   "mode": "GENERIC",
+   "file": "cf-topk__topk_k8_n128_m1_asc.json",
+   "what": "IDX.TOPK k = 8 over 1 row(s) of 128; ties to the lowest index; ids in ASCENDING ID order (param[12] order = 1, legal for k <= 8: the DS router top-6, G15)",
+   "status": 0,
+   "mutants": [
+    "tie_high"
+   ],
+   "sha256": "9f6b82101e3e64252454adeaacd94c9cc351cc83c22965a61e93224ba4bdd3c6"
+  },
+  {
+   "id": "topk_k9_n128_m1_asc",
+   "row": "CF-TOPK",
+   "mode": "GENERIC",
+   "file": "cf-topk__topk_k9_n128_m1_asc.json",
+   "what": "IDX.TOPK k = 9 with order = 1 (ascending id) FAULTS with E_RANGE (status 3): order 1 is legal for k <= 8 only (G15, spec c80ed5d7c); the DS index top-512 is IDX.INDEX",
+   "status": 3,
+   "mutants": [
+    "order_unchecked"
+   ],
+   "sha256": "de654d0a0e823ba60a80db2fb32751c85cd6134f5cf4d307e06e31168f525e59"
+  },
+  {
    "id": "topk_nan_fails_closed",
    "row": "CF-TOPK",
    "mode": "GENERIC",
@@ -632,6 +682,45 @@
    "status": 1,
    "mutants": [],
    "sha256": "dadf8a60bdebd78b136fac9f85ed41336015315b723ce49fffb9f230eedabb93"
+  },
+  {
+   "id": "index_frame_l20_cand",
+   "row": "CF-INDEX",
+   "mode": "DS",
+   "file": "cf-index__index_frame_l20_cand.json",
+   "what": "IDX.INDEX (G18), n = 4,613 keys, 32 heads x 128: the layer-20 frame on rank 0 (owns the newest, partial block 576: pinned +inf): local top-16 + the 4 best candidate blocks",
+   "status": 0,
+   "mutants": [
+    "score_order",
+    "n_decoded_high"
+   ],
+   "sha256": "d39590cf0f0a9156a66e87675ffa7313e387582b528c73f9d23c4b28e50c78fb"
+  },
+  {
+   "id": "index_frame_keep",
+   "row": "CF-INDEX",
+   "mode": "DS",
+   "file": "cf-index__index_frame_keep.json",
+   "what": "IDX.INDEX (G18), n = 4,613 keys, 32 heads x 128: a layer-24 frame on rank 37 with the keep table (blocks 37, 229 kept; 421 listed with -inf: not kept; 999 not owned): masked scores, local top-16",
+   "status": 0,
+   "mutants": [
+    "score_order",
+    "keep_ignored",
+    "ninf_kept"
+   ],
+   "sha256": "1971e47c8dd694de2e800aa057bbba30e3906fe848a92395d445885cdf8b16fa"
+  },
+  {
+   "id": "index_frame_all",
+   "row": "CF-INDEX",
+   "mode": "DS",
+   "file": "cf-index__index_frame_all.json",
+   "what": "IDX.INDEX (G18), n = 4,613 keys, 32 heads x 128: k = 64 above the 48 owned keys: O = all 48 ids ascending",
+   "status": 0,
+   "mutants": [
+    "score_order"
+   ],
+   "sha256": "363a108fad628a3599eb03003af118ea193ecef2218555eb16bb44354bf5aba1"
   },
   {
    "id": "argmax_id_151935",
@@ -1053,11 +1142,11 @@
   }
  ],
  "sources": {
-  "hgi_sim/conformance.py": "b6364e645d679610fac8bee9450e22ed60b1ddf2343e21394e628babc1a65fd1",
-  "hgi_sim/machine.py": "fda6ac1ac11d692dec443690cdb438213c5701f9a3f91b9d0c9f4d1c25b5eeae",
-  "hgi_sim/records.py": "b19a0301076521589a2d60bb2fce9e97ccf3fd4028c80a7d4be0c44fc9a49a73",
+  "hgi_sim/conformance.py": "d95017877191c79646397bfd70d9818d0a15d729f1aae01f078eba386cb2f174",
+  "hgi_sim/machine.py": "043dca7cfbd0a9f7a23f05c5575ba5c475f5e1db2cf4682e2a0fb576cab7eed2",
+  "hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
   "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
-  "hbm_generic_iface.py": "4e4ab02ab9fa10fc83b887eae9909dcaf536d61b79cadba62c904255de4aa0a7",
+  "hbm_generic_iface.py": "51d62acbcc860b3a0a3dbc762b434017a78dee2eae3f126aa25ad3f370461af9",
   "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
  }
 }

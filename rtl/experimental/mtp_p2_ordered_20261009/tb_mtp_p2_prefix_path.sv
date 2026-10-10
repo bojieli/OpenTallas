@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_mtp_p2_prefix_path;
+module tb_mtp_p2_prefix_path #(parameter integer REGB=1, parameter integer MUT=0);
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0,sv=0,abort=0;wire sr,done,fault,corrected;
  reg [73:0] identity=74'h12345678;reg [26:0] ids={9'd127,9'd65,9'd3};
@@ -8,7 +8,7 @@ module tb_mtp_p2_prefix_path;
  wire ov,olast;reg ordy=0;wire [511:0] out;wire [73:0] oid;wire [6:0] ow;
  reg [31:0] inputs[0:3839],gold[0:1279];
  integer cycles=0,received=0,w,l,tail_hold=0;reg [511:0] held_tail;reg tail_seen=0;
- ot_mtp_p2_prefix_path #(.ENABLE(1)) dut(.clk(clk),.rst_n(rst_n),
+ ot_mtp_p2_prefix_path #(.ENABLE(1),.REGB(REGB),.MUT_COPY_FIRST(MUT==1),.MUT_ORDER(MUT==2)) dut(.clk(clk),.rst_n(rst_n),
  .start_v(sv),.start_r(sr),.start_identity(identity),.start_ids(ids),
  .in_v(iv),.in_r(ir),.in_identity(itag),.in_expert(ie),.in_shared(ish),
  .in_last(ilast),.in_word(iw),.in_data(data),.out_v(ov),.out_r(ordy),

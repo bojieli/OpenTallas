@@ -18,7 +18,7 @@ UNITS = {
     'quant':  (4, 'quant', 'AO', ()),                 # FUSED.QDQ_* (A in, O out; scale in-band)
     'coll':   (6, 'coll', 'AOI', (('die_id', 8),)),  # COLL.*: A local, O result, I selected row ids; die id strap (seq rank)
     'argmax': (7, 'mtp', 'AO', ()),                   # ARGMAX.LOCAL (imm_a in the header); ot_hgi_argmax18_m in hfd_mtp
-    'idx':    (9, 'hgi_idx', 'ABOR', ()),             # IDX unit body ot_hgi_idx_unit (TOPK v1) in its own low spine slot
+    'idx':    (9, 'hgi_idx', 'ABCDOR', (('pos', 20), ('die_id', 8))),   # IDX unit ot_hgi_idx_unit: TOPK + INDEX frames (G18)
 }
 RETURN_FIELDS = [('ready', 1), ('done', 1), ('fault', 1)]
 # units that decode a static MD field (coll: word 46 coll_group_size) get the 40-bit config station bus
@@ -31,7 +31,8 @@ VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
 HGI_VM_SLOT = (1399.656, 885.6)        # 64 macros 174.7 x 70.5 um on a 7 x 10 grid with 2.16 um halos (1,261 x 758 um) + logic
 HGI_IDX_SLOT = (640.008, 600.48)        # Codex TOPK K2048 slot (175,534 um2 core) + VM stream engines
 LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
-LCP_BITS, CPL_BITS = 415, 514           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
+LCP_BITS, CPL_BITS = 419, 222
+QID = dict(SW=0, NW=1, SE=2, NE=3)       # hfd_su inject-ownership strap values           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
 
 
 def fields(unit):
@@ -51,10 +52,12 @@ def layout(fs):
     return rows, off
 
 
-def model(hub, units, reach_um=504.0):
+def model(hub, units, reach_um=504.0, unit_block=None):
     rows = []
+    unit_block = unit_block or {}     # mtp-lead: variant 'hgi_unit_block' (e.g. argmax -> 'mtp_am' in a split slot)
     for u in [x for x in units if x in UNITS]:
         code, blk, desc, _ = UNITS[u]
+        blk = unit_block.get(u, blk)
         if blk not in hub:
             raise ValueError(f'hgi_dispatch: hub block {blk} for unit {u} not on this die')
         cmd, cbits = layout(fields(u))
@@ -97,11 +100,13 @@ def variant(base, units):
     """base variant dict + hgi_dispatch + the cmdproc ECO pins."""
     v = dict(base, hgi_dispatch=list(units))
     ex = {k: dict(x) for k, x in (base.get('split_extra_ports') or {}).items()}
-    ex.setdefault('hfd_cmdproc', {}).update(split_extra_ports(units))
+    alias = base.get('cp_band_alias') or {}     # mtp-lead: a replaced CP band (e.g. the MX1 south view) keeps the plan
+    ex.setdefault('hfd_cmdproc', {}).update({k: (alias.get(t[0], t[0]),) + tuple(t[1:])
+                                             for k, t in split_extra_ports(units).items()})
     v['split_extra_ports'] = ex
     if 'cp' in units:
         # hgi-takeover die gap 4: ONE command-processor block (ot_hgi_cp_die) instead of the legacy N / S split; the
-        # loader <-> CP link (lcp 415 / cpl 514) replaces the legacy program-store bus; the loader memory lanes carry
+        # loader <-> CP link (lcp 419 / cpl 222) replaces the legacy program-store bus; the loader memory lanes carry
         # the native service protocol (lq 346 / lr 293 per stack, ot_hfd_loader_kport)
         v['split_masters'] = {k: x for k, x in (base.get('split_masters') or {}).items() if k != 'hfd_cmdproc'}
         v['split_extra_ports'] = {k: x for k, x in v['split_extra_ports'].items() if k != 'hfd_cmdproc'}
@@ -122,7 +127,7 @@ def variant(base, units):
 
 def install(m, buses, paths, units):
     hub = m['hub']
-    rec = model(hub, units)
+    rec = model(hub, units, unit_block=(m.get('variant') or {}).get('hgi_unit_block'))
     names = {b[0] for b in buses}
     cp = hub['cmdproc'].name
     for r in rec['units']:
@@ -140,6 +145,11 @@ def install(m, buses, paths, units):
                 if f'su_{q}' in hub:
                     name = f'hgi_vmaddr_{q}'
                     buses.append((name, 'hub', 80, [(peer, f't_hgi_vmaddr_{q}'), (hub[f'su_{q}'].name, 'f_hgi_vmaddr')]))
+                    paths[name] = [name]
+                    # inject-ownership strap (hbm-forks 504aba259): quarter qid drives inject flit i iff i mod 4 == qid;
+                    # tied per instance (SW 0, NW 1, SE 2, NE 3), pins su/rtl/strap_pins.tcl
+                    name = f'hgi_qid_{q}'
+                    buses.append((name, f'strap:{QID[q]}', 2, [(hub[f"su_{q}"].name, 'qid')]))
                     paths[name] = [name]
         if r['unit'] in CFG_UNITS:
             name = f"hgi_cfg_{r['unit']}"

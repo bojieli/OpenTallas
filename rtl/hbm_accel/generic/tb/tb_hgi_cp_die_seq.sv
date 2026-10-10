@@ -17,7 +17,7 @@ module tb_hgi_cp_die_seq;
     reg s_awvalid = 0, s_wvalid = 0, s_bready = 1, s_arvalid = 0, s_rready = 1; reg [11:0] s_awaddr = 0, s_araddr = 0;
     reg [31:0] s_wdata = 0; wire s_awready, s_wready, s_bvalid, s_arready, s_rvalid; wire [31:0] s_rdata;
     wire c_awvalid, c_wvalid, c_arvalid, c_bready, c_rready; wire [11:0] c_awaddr, c_araddr; wire [31:0] c_wdata; wire [3:0] c_wstrb;
-    wire [414:0] lcp; wire [513:0] cplk; wire m_req_v; wire [36:0] m_req_addr; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data;
+    wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data;
     wire lfault;
     ot_hgi_loader_cp ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hf), .s_bvalid(s_bvalid), .s_bready(s_bready),
@@ -27,7 +27,7 @@ module tb_hgi_cp_die_seq;
         .c_araddr(c_araddr), .c_rvalid(1'b0), .c_rready(c_rready), .c_rdata(32'd0), .lcp(lcp), .cpl(cplk),
         .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
-    wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1236:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
+    wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
     wire [15:0] ux_v; reg [15:0] ux_rdy = 0, ux_done = 0, ux_fault = 0; reg [2:0] coll_ret = 3'b001, quant_ret = 3'b001;
     ot_hgi_cp_die #(.USE_MACRO(0), .MUT(MUT)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret), .idx_rec(idx_rec), .idx_ret(idx_ret),
@@ -42,7 +42,7 @@ module tb_hgi_cp_die_seq;
         ux_done = u_done & ~16'h0250; ux_fault = u_fault & ~16'h0250;
         coll_ret = {u_fault[6], u_done[6], 1'b1}; quant_ret = {u_fault[4], u_done[4], 1'b1}; idx_ret = {u_fault[9], u_done[9], 1'b1};
     end
-    reg [31:0] tks [0:NCASE*16-1];
+    reg [63:0] tks [0:NCASE*16-1];
     task automatic axw(input [11:0] a, input [31:0] d);
         begin @(negedge clk); s_awvalid = 1; s_wvalid = 1; s_awaddr = a; s_wdata = d;
             @(posedge clk); while (!(s_awready && s_wready)) @(posedge clk); @(negedge clk); s_awvalid = 0; s_wvalid = 0;
@@ -181,11 +181,7 @@ module tb_hgi_cp_die_seq;
         if (coll_rec[0]) begin if (!check_coll || coll_rec !== exp_coll) begin $display("FAIL coll record bus"); fails = fails + 1; end check_coll = 0; end
         if (quant_rec[0]) begin if (!check_quant || quant_rec !== exp_quant) begin $display("FAIL quant record bus"); fails = fails + 1; end check_quant = 0; end
     end
-    integer c, n0, t, a; reg [17:0] c_tok; reg [3:0] c_st; reg [4:0] c_nt; reg [287:0] c_toks;
-    function automatic toks_ok(input integer cc);
-        integer q; begin toks_ok = 1;
-            for (q = 0; q < 16; q = q + 1) if (c_toks[q*18 +: 18] !== tks[cc*16 + q][17:0]) toks_ok = 0; end
-    endfunction
+    integer c, n0, t, a, nbeat, tbad; reg [17:0] c_tok; reg [3:0] c_st; reg c_tx; reg [19:0] c_pos;
     initial begin
         for (k = 0; k < 16; k = k + 1) begin outst[k] = 0; pn[k] = 0; end
         for (a = 0; a < 262144; a = a + 1) vm[a] = 0;
@@ -206,21 +202,29 @@ module tb_hgi_cp_die_seq;
             n0 = nd; ei = cfg[c*12 + 10] * 11;
             if (nd != cfg[c*12 + 10]) begin $display("FAIL case %0d starts at dispatch %0d, expected %0d", c, nd, cfg[c*12 + 10]);
                 fails = fails + 1; nd = cfg[c*12 + 10]; n0 = nd; end
-            axw(12'hC00, cfg[c*12 + 1]); axw(12'hC04, cfg[c*12 + 2]); axw(12'hC08, 32'h1234); axw(12'hC0C, 32'h5);
+            axw(12'hC00, cfg[c*12 + 1]); axw(12'hC04, cfg[c*12 + 2]); axw(12'hC08, 32'h1234); axw(12'hC0C, {20'd0, cfg[c*12 + 11][11:8], 8'h05});   // ncol, entry 0, gen 5
             axw(12'hC10, 1);
-            t = 0; rd = 0; while (rd[10:8] == 0 && t < 400000) begin axr(12'hC20); t = t + 1; end
-            if (rd[10:8] == 0) begin $display("FAIL case %0d: no completion (dispatches %0d)", c, nd - n0); fails = fails + 1; end
-            else begin
-                axr(12'hC40); c_tok = rd[17:0]; axr(12'hC4C); c_st = rd[7:4]; c_nt = rd[12:8];
-                for (a = 0; a < 16; a = a + 1) begin axr(12'hCC0 + 4 * a); c_toks[a*18 +: 18] = rd[17:0]; end
-                axr(12'hC50);
-                if (c_tok !== cfg[c*12 + 7][17:0] || c_st !== cfg[c*12 + 8][3:0] || nd - n0 !== cfg[c*12 + 6]) begin
-                    $display("FAIL case %0d: token %0d/%0d status %0d/%0d dispatches %0d/%0d", c, c_tok, cfg[c*12 + 7],
-                             c_st, cfg[c*12 + 8], nd - n0, cfg[c*12 + 6]); fails = fails + 1;
-                end else if (c_nt !== cfg[c*12 + 11][4:0] || (c_st == 0 && !toks_ok(c))) begin
-                    $display("FAIL case %0d: TOKX ntok %0d/%0d or tokens", c, c_nt, cfg[c*12 + 11]); fails = fails + 1;
-                end else $display("SEQ-DIE case %0d: %0d dispatches, token %0d status %0d", c, nd - n0, c_tok, c_st);
+            // completions through the host window: CTL.TOKX beats (0xC4C bit 8) {token, pos + i - 1, status 0}, then END
+            nbeat = 0; tbad = 0; c_tx = 1;
+            while (c_tx) begin
+                t = 0; rd = 0; while (rd[10:8] == 0 && t < 400000) begin axr(12'hC20); t = t + 1; end
+                if (rd[10:8] == 0) begin c_tx = 0; c_st = 4'hE; end
+                else begin
+                    axr(12'hC40); c_tok = rd[17:0]; axr(12'hC44); c_pos = rd[19:0]; axr(12'hC4C); c_st = rd[7:4]; c_tx = rd[8];
+                    axr(12'hC50);
+                    if (c_tx) begin
+                        if (nbeat >= 16 || c_tok !== tks[c*16 + nbeat][49:32] || c_pos !== tks[c*16 + nbeat][19:0] || c_st !== 0) tbad = 1;
+                        nbeat = nbeat + 1;
+                    end
+                end
             end
+            if (c_st == 4'hE) begin $display("FAIL case %0d: no completion (dispatches %0d)", c, nd - n0); fails = fails + 1; end
+            else if (c_tok !== cfg[c*12 + 7][17:0] || c_st !== cfg[c*12 + 8][3:0] || nd - n0 !== cfg[c*12 + 6]) begin
+                $display("FAIL case %0d: token %0d/%0d status %0d/%0d dispatches %0d/%0d", c, c_tok, cfg[c*12 + 7],
+                         c_st, cfg[c*12 + 8], nd - n0, cfg[c*12 + 6]); fails = fails + 1;
+            end else if (tbad || nbeat !== cfg[c*12 + 11][4:0]) begin
+                $display("FAIL case %0d: TOKX beats %0d/%0d or token/pos", c, nbeat, cfg[c*12 + 11][4:0]); fails = fails + 1;
+            end else $display("SEQ-DIE case %0d: %0d dispatches, token %0d status %0d tokx %0d", c, nd - n0, c_tok, c_st, nbeat);
             t = 0; while (busy && t < 2000) begin @(negedge clk); t = t + 1; end
             nd = cfg[c*12 + 10] + cfg[c*12 + 6];
         end

@@ -1348,7 +1348,12 @@ SS_REACH_UM = 504.0
 
 def margin_lint(m):
     import fp_margin_lint as FPL
-    return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM)
+    # s81-gen: per-segment walk (the per-chain walk ran > 5 h on the S81 layer1 die; same tests, same verdict)
+    # s81-gen 2026-10-09: data buses only.  Clock trunks / resets / column clock trees fan out from sp_collective (the
+    # PLL) to every station's ck: as 'segments' they gave 52,988 false 9-13 mm reach violations on the layer1 die.
+    data = [b for b in m['buses'] if b[1] not in HOP_SKIP]
+    return FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
+                          edges=os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1')
 
 
 def write_def_floorplan(m, path):
@@ -3011,9 +3016,9 @@ def build_r8(variant=None):
             notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
         elif n == 'wfc_hard':
             slab('wfc', centre_area[n], x_sp, yy, cw, master='dsfd_wfc')
-            notes.append('MTP-DIE --wfc-hard: dsfd_wfc = ot_rom_pkg_ctrl_wfc src (r24, 78,190.7 um2 routed outline) + '
-                         'stg (r11, 35,941.7 um2) in a %.2f um slab (real need 0.114 mm2 of %.3f mm2 gross)'
-                         % (WFC_SLAB_H, centre_area[n]))
+            notes.append('MTP-DIE --wfc-hard: dsfd_wfc = closed SOURCE ot_dsrom_wfc_tokpipe_src %s um (910e67c7b) + closed '
+                         'STG tokpipe %s um (9f7a7f35e) in a %.2f um slab (%.3f mm2 gross)'
+                         % (WFC_SRC_UM, WFC_STG_UM, WFC_SLAB_H, centre_area[n]))
         elif n == 'p2':
             slab('p2', centre_area[n], x_sp, yy, cw, master='dsfd_p2')
             notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
@@ -3123,6 +3128,8 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
+    variant.update(host=HOST_SLAB, ctrl_rq=CTRL_RQ, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+                   wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     layer1e='Engram home layer die, 2 HBM3E stacks (8 of the rack: '
@@ -3180,6 +3187,12 @@ def _corridors(m):
         stripN=(g['x_lw'] + LINK_COL + 4.32, g['y_top'] + 4.32, g['x_le'] - 4.32, H - g['band_depth'] - 4.32),
         gapS=(m['gap_x'][0] + 4.32, 20.0, m['gap_x'][1] - 4.32, g['y_f'] - 4.32),
         gapN=(m['gap_x'][0] + 4.32, g['y_top'] + 4.32, m['gap_x'][1] - 4.32, H - 20.0))
+    if 'eng' in m['hub']:
+        # layer1e: the SE service slot around eng_SE is free (no svc_SE): its stations / pin relays stand there and climb
+        # into stripS (l1e check: the last VM -> eng hop had no box near eng_SE, 1,181.5 um segment)
+        e_ = m['hub']['eng']
+        cor['engS'] = (e_.x - (PHY_W - e_.w) / 2 + 4.32, e_.y,
+                       e_.x + e_.w + (PHY_W - e_.w) / 2 - 4.32, g['band_depth'] + 4.32)
     for t, c in enumerate(g['ch_y']):
         cor[f'ch{t}'] = (g['x_lw'] + LINK_COL + 4.32, c + 4.32, g['x_le'] - 4.32, c + chh(t) - 4.32 - CF_WH[1] - 2.16)
     return cor
@@ -3686,18 +3699,24 @@ DRAFT_IMAGE = dict(tool='tools/dsrom_mtp_draft_images.py', layout='rowpack whole
                    storage_pairs=1792, words_per_die=13762560, words_capacity=1792 * 8192, fill=0.9375,
                    images_per_side=4, note='8 distinct images (side x rank) serve the 40 dies (5 row replicas)')
 # MTP defaults (mtp-lead 2026-10-09).  MTP_SEQ_DEFAULT: the head-die sequencer is ON (dsfd_mtp_seq CLOSED c67a71fe5
-# SS +52.37 / FF +5.76).  WFC_HARD_DEFAULT: OFF until the WFC kit is complete: HARD wfc_tok CLOSED, STG tokpipe CLOSED,
-# SOURCE HARD partner mtp-wfc-src-hard-binding-5b11f631f-tc-cx still routing.  FLIP: set WFC_HARD_DEFAULT = True
-# when that job is CLOSED (TT >= 0 / FF >= 0 / DRC 0) -- the only change needed; then regenerate the layer1 / scan
-# die records (tools/s81/s81_dies_recipe.py) and the m221pq die evidence chain.
-WFC_HARD_DEFAULT = False
+# SS +52.37 / FF +5.76).  WFC_HARD_DEFAULT: ON since the WFC kit is complete (mtp-draftdie 2026-10-09 evening): SOURCE
+# HARD partner mtp-wfc-src-hard-mxb-910e67c7b-tc-cx CLOSED TT +152.31 / FF +4.02 / DRC 0 (view
+# physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_src, DIEAREA 293.734 x 293.734 um), STG tokpipe
+# mtp-wfc-stg-tokpipe-9f7a7f35e-tc CLOSED (DIEAREA 190.41 x 190.41 um), HARD wfc_tok, wfc_lnk, wfc_vmx closed.
+# --no-wfc-hard reproduces the pre-MTP stage dies (soft reservation on the scan die only).
+WFC_HARD_DEFAULT = True
 MTP_SEQ_DEFAULT = True
 WFC_HARD = False                # --wfc-hard: the wavefront controller (ot_rom_pkg_ctrl_wfc, src r24 + stg r11 CLOSED) as a
                                 #   BOUND slab on EVERY layer-class die (layer AND layer1: every stage needs it; the soft
                                 #   0.456 mm2 reservation sat on the 4-stack scan die only), wired to VM / capture /
                                 #   collective (link in / out), sized from the routed outlines (src 78,190.7 + stg
                                 #   35,941.7 um2 side by side, 17.28 um halos)
-WFC_SLAB_H = 231.12             #   slab height: both blocks at 196.56 um tall (src 398 x 196.56, stg 183 x 196.56) + halos
+WFC_SRC_UM = (293.734, 293.734)  #   closed SOURCE ot_dsrom_wfc_tokpipe_src (mtp-wfc-src-hard-mxb-910e67c7b-tc-cx DEF DIEAREA)
+WFC_STG_UM = (190.41, 190.41)    #   closed STG tokpipe (mtp-wfc-stg-tokpipe-9f7a7f35e-tc DEF DIEAREA)
+WFC_HALO = 17.28
+#   slab height: the two closed blocks side by side (src + stg + 3 halos = 535.98 um wide of the 1,728 um hub column),
+#   the taller (SOURCE) + 2 halos, on the GY grid (was 231.12 from the r24 / r11 outlines 398 x 196.56 / 183 x 196.56)
+WFC_SLAB_H = round(math.ceil((max(WFC_SRC_UM[1], WFC_STG_UM[1]) + 2 * WFC_HALO) / 2.16 - 1e-9) * 2.16, 3)
 MTP_SEQ = False                 # --mtp-seq: head die: ot_dsrom_mtp_seq (accept NSLOT 8 / NW 17 + draft-chain FSM + acc_n /
                                 #   squash word + position / epoch counter + Markov embed lookup control) slab between
                                 #   capture and collective, wired to capture (argmax tokens), collective (token return /
@@ -3843,6 +3862,7 @@ def _bank_nets(m):
 
 
 PATH_PICK = os.environ.get('OT_S81_PATH_PICK', '0') == '1'
+HOPDBG = os.environ.get('OT_S81_HOPDBG', '')
 # --relay-tt-reach UM (s81-gen 2026-10-09): option-B sign-off is TT setup (owner 10-07).  A relay / station with no legal box
 # inside the SS-derived reach (HOP_R_CC 410 um: the frame / corridor is 100 % packed, m221pq_r4c rt_0_8a_y1) takes the
 # nearest legal box within the TT reach instead (real relay, counted in hop_fix.pad_fallback.tt_reach and listed by name in
@@ -4064,23 +4084,34 @@ def _hop_fix(m, P):
                 cands = _hop_paths(a, b, cor)
                 rects = list(cor.values())
                 order = [cands[0]] + sorted(cands[1:], key=lambda p_: (-round(_corr_frac(p_, rects), 2), _poly_len(p_)))
+                # A candidate is CLEAN when every station places within both reaches (no relaxed / TT tier: those
+                # stations fall behind the path, e.g. a vertical leg through the field where boxes exist only in the
+                # tier channels; layer1e VM -> eng_SE ended 1,164 um short).  First clean candidate wins; if none is
+                # clean, the placeable one with the fewest relaxed stations (default L on ties).
                 n0 = n
+                best = None
                 for j_, cand in enumerate(order):
                     n_c = n0 if j_ == 0 else max(n0, math.ceil(_poly_len(cand) / (R - 20.0) - 1e-9) - 1)
                     pos_c = stations_at(cand, n_c)
-                    cur_, ok = a, True
+                    cur_, ok, rc_ = a, True, {}
                     for k in range(len(pos_c)):
-                        pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, {}, [])
+                        pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, rc_, [])
                         if pl_ is None:
                             ok = False
                             break
                         cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
-                    if ok:
-                        if j_:
-                            path, n = cand, n_c
-                            kind_ = 'vfirst' if len(cand) == 3 else 'z'
-                            rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
+                    if not ok:
+                        continue
+                    bad = sum(v for k_, v in rc_.items() if k_ in ('nxt_relaxed', 'relaxed_die', 'tt_reach'))
+                    if best is None or bad < best[0]:
+                        best = (bad, j_, cand, n_c)
+                    if bad == 0:
                         break
+                if best is not None and best[1]:
+                    _, j_, cand, n_c = best
+                    path, n = cand, n_c
+                    kind_ = 'vfirst' if len(cand) == 3 else 'z'
+                    rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
             Lp = _poly_len(path)
             pos = stations_at(path, n)
             n = len(pos)
@@ -4089,6 +4120,9 @@ def _hop_fix(m, P):
             tt_ = m.setdefault('tt_reach_relays', [])
             for k in range(n):
                 pl, (cx, cy), dch, horiz, w_, h_, NR = find(k, n, path, pos, cur, rec['pad_fallback'], tt_)
+                if HOPDBG and bid.startswith(HOPDBG):     # OT_S81_HOPDBG=<bus prefix>: per-station trace (stderr)
+                    print('HOPDBG', bid, e, k, n, [tuple(round(v, 1) for v in q) for q in path], round(pos[k], 1),
+                          (round(cx, 1), round(cy, 1)), pl, dict(rec['pad_fallback']), file=sys.stderr)
                 assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:

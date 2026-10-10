@@ -4,7 +4,11 @@
 // Three complete expert rows drain in ascending selected-ID order, then shared.
 // Each SRAM flit is eight SECDED72 words. The consumer MUST correct/decode and
 // reject UE before arithmetic; sink_abort poisons this transaction on that path.
-module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0, parameter integer PRIMARY_SHARED=0) (
+// mtp-lead 2026-10-09 (P2 route EARLY_FAIL_SETUP -1,003 / -96): SB_REG=1 gates with a registered state_bad (detection
+// still sets fault directly; the gating reacts one cycle later), ACC_REG=1 registers the accepted beat before the SECDED
+// encoders (+1 cycle from accept to write/complete).  Both default 0: the original logic.
+module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0, parameter integer PRIMARY_SHARED=0,
+  parameter integer SB_REG=0, parameter integer ACC_REG=0) (
   input wire clk, rst_n,
   input wire start_v, output wire start_r,
   input wire [73:0] start_identity, // {frame3,rank2,stage2,epoch4,position21,user10,transaction32}
@@ -64,13 +68,18 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
       (wp!=wp_copy)||(rp!=rp_copy)||(pending!=pending_copy)||(pending_meta!=pending_meta_copy)||
       (count[0]!=count_copy[0])||(count[1]!=count_copy[1])||
       (count[2]!=count_copy[2])||(count[3]!=count_copy[3]);
+    reg state_bad_q;
+    wire sbad=SB_REG?state_bad_q:state_bad;
+    reg [3:0] acc_bank_q, acc_last_q;
+    reg [511:0] acc_data_q[0:3];
+    reg [6:0] acc_word_q[0:3];
     wire queue_bad=(queue_meta[rp[2:0]]!=queue_meta_copy[rp[2:0]]);
     wire [3:0] occupancy=wp-rp;
-    wire issue=busy&&!fault&&!state_bad&&!all_issued&&
+    wire issue=busy&&!fault&&!sbad&&!all_issued&&
       complete[read_bank]&&(occupancy+pending<8);
     wire pop=out_v&&out_r;
-    assign start_r=!busy&&!fault&&!state_bad;
-    assign out_v=busy&&!fault&&!state_bad&&(wp!=rp)&&!queue_bad;
+    assign start_r=!busy&&!fault&&!sbad;
+    assign out_v=busy&&!fault&&!sbad&&(wp!=rp)&&!queue_bad;
     assign out_secded=queue[rp[2:0]];
     assign out_word=queue_meta[rp[2:0]][6:0];
     assign out_shared=queue_meta[rp[2:0]][8:7]==3;
@@ -91,7 +100,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
         valid_identity[l]=(in_identity[74*l+:74]==identity);
         // Two input lanes may write different row banks simultaneously. Lane0
         // wins a bank conflict; the other producer holds its full beat.
-        in_r[l]=busy&&!fault&&!state_bad&&
+        in_r[l]=busy&&!fault&&!sbad&&
           !(l==1&&in_v[0]&&in_r[0]&&target[0]==target[1]);
         if(in_v[l]&&in_r[l]&&valid_identity[l]&&valid_expert[l]&&
            count[target[l]]<80&&lane_word[l]==count[target[l]]&&in_last[l]==(lane_word[l]==79)) begin
@@ -107,7 +116,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     for(genvar bank=0;bank<BANKS;bank=bank+1) begin: banks
       for(genvar slice=0;slice<8;slice=slice+1) begin: codes
         ot_secded_enc #(.K(64),.R(8)) enc(.clk(clk),
-          .d(accepted_data[bank][64*slice+:64]),.q(encoded[bank][72*slice+:72]));
+          .d(ACC_REG?acc_data_q[bank][64*slice+:64]:accepted_data[bank][64*slice+:64]),.q(encoded[bank][72*slice+:72]));
       end
       wire [767:0] macro_word={192'd0,encoded[bank]};
       for(genvar macro_index=0;macro_index<3;macro_index=macro_index+1) begin: macros
@@ -126,11 +135,18 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
         read_word<=0;read_word_copy<=0;all_issued<=0;all_issued_copy<=0;
         wp<=0;rp<=0;wp_copy<=0;rp_copy<=0;pending<=0;pending_copy<=0;
         pending_meta<=0;pending_meta_copy<=0;wr_commit<=0;wr_commit_last<=0;
-        wr_address<=0;done<=0;fault<=0;
+        wr_address<=0;done<=0;fault<=0;state_bad_q<=0;acc_bank_q<=0;acc_last_q<=0;
+        for(sb=0;sb<4;sb=sb+1) begin acc_data_q[sb]<=0;acc_word_q[sb]<=0;end
         for(sb=0;sb<4;sb=sb+1) begin count[sb]<=0;count_copy[sb]<=0;end
       end else begin
-        done<=0;wr_commit<=accept_bank;wr_commit_last<=accept_last;
-        for(sb=0;sb<4;sb=sb+1) wr_address[7*sb+:7]<=accepted_word[sb];
+        done<=0;state_bad_q<=state_bad;
+        if(ACC_REG) begin
+          acc_bank_q<=accept_bank;acc_last_q<=accept_last;wr_commit<=acc_bank_q;wr_commit_last<=acc_last_q;
+          for(sb=0;sb<4;sb=sb+1) begin acc_data_q[sb]<=accepted_data[sb];acc_word_q[sb]<=accepted_word[sb];wr_address[7*sb+:7]<=acc_word_q[sb];end
+        end else begin
+          wr_commit<=accept_bank;wr_commit_last<=accept_last;
+          for(sb=0;sb<4;sb=sb+1) wr_address[7*sb+:7]<=accepted_word[sb];
+        end
         if(state_bad||sink_abort||(busy&&wp!=rp&&queue_bad)) fault<=1;
         for(si=0;si<2;si=si+1) if(in_v[si]&&in_r[si]&&
           (!valid_identity[si]||!valid_expert[si]||count[target[si]]>=80||lane_word[si]!=count[target[si]]||
@@ -148,7 +164,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
             else begin read_bank<=read_bank+1;read_bank_copy<=read_bank_copy+1;end
           end else begin read_word<=read_word+1;read_word_copy<=read_word_copy+1;end
         end
-        if(pending&&!fault&&!state_bad) begin
+        if(pending&&!fault&&!sbad) begin
           queue[wp[2:0]]<=bank_q[pending_meta[8:7]][575:0];
           queue_meta[wp[2:0]]<=pending_meta;queue_meta_copy[wp[2:0]]<=pending_meta_copy;
           wp<=wp+1;wp_copy<=wp_copy+1;
@@ -164,7 +180,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
             ids<=start_ids;ids_copy<=start_ids;complete<=0;complete_copy<=0;
             read_bank<=MUT_ORDER?1:0;read_bank_copy<=MUT_ORDER?1:0;read_word<=0;read_word_copy<=0;
             all_issued<=0;all_issued_copy<=0;wp<=0;rp<=0;wp_copy<=0;rp_copy<=0;
-            pending<=0;pending_copy<=0;wr_commit<=0;wr_commit_last<=0;
+            pending<=0;pending_copy<=0;wr_commit<=0;wr_commit_last<=0;acc_bank_q<=0;acc_last_q<=0;
             for(sb=0;sb<4;sb=sb+1) begin count[sb]<=0;count_copy[sb]<=0;end
           end
         end

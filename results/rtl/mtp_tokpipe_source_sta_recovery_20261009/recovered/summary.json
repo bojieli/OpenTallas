@@ -1,0 +1,267 @@
+{
+  "source": "9f7a7f35e",
+  "parser_recovery": "PASS same original routed objects; unsupported redundant --macros removed from STA invocation only; time7:29.33 rc0",
+  "full_modes": {
+    "TT": {
+      "block": {
+        "setup_wns_ps": 102.8,
+        "hold_wns_ps": -7.9,
+        "failing_setup": 0,
+        "failing_hold": 2,
+        "worst_max_path": [
+          "u_wfc.rst_q$_DFF_PN0_",
+          "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+        ],
+        "worst_max_path_slack_ps": 102.8,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "u_wfc.g_link_reg.u_tx.d[126]$_DFF_P_",
+          "out_data[126]"
+        ],
+        "worst_min_path_slack_ps": -7.9,
+        "worst_min_path_group": "io_clk"
+      },
+      "incontext": {
+        "setup_wns_ps": 102.8,
+        "hold_wns_ps": 43.7,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "u_wfc.rst_q$_DFF_PN0_",
+          "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+        ],
+        "worst_max_path_slack_ps": 102.8,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_rdp.m_p[134]$_DFF_P_",
+          "u_wfc.g_wf.eng.g_rec_sram.m_q[0][134]$_DFF_P_"
+        ],
+        "worst_min_path_slack_ps": 43.7,
+        "worst_min_path_group": "core_clk"
+      },
+      "reg2reg": {
+        "setup_wns_ps": 102.8,
+        "hold_wns_ps": 43.7,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "u_wfc.rst_q$_DFF_PN0_",
+          "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+        ],
+        "worst_max_path_slack_ps": 102.8,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_rdp.m_p[134]$_DFF_P_",
+          "u_wfc.g_wf.eng.g_rec_sram.m_q[0][134]$_DFF_P_"
+        ],
+        "worst_min_path_slack_ps": 43.7,
+        "worst_min_path_group": "core_clk"
+      },
+      "region": {
+        "setup_wns_ps": 102.8,
+        "hold_wns_ps": -57.4,
+        "failing_setup": 0,
+        "failing_hold": 781,
+        "worst_max_path": [
+          "u_wfc.rst_q$_DFF_PN0_",
+          "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+        ],
+        "worst_max_path_slack_ps": 102.8,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "in_data[208]",
+          "u_wfc.g_link_reg.u_rx.pd[208]$_DFF_P_"
+        ],
+        "worst_min_path_slack_ps": -57.4,
+        "worst_min_path_group": "core_clk"
+      },
+      "die150": {
+        "setup_wns_ps": 102.8,
+        "hold_wns_ps": -62.0,
+        "failing_setup": 0,
+        "failing_hold": 938,
+        "worst_max_path": [
+          "u_wfc.rst_q$_DFF_PN0_",
+          "u_wfc.g_wf.eng.g_rec_sram.g_bank[0].g_col[1].g_cc.rcc[12]$_SDFF_PP0_"
+        ],
+        "worst_max_path_slack_ps": 102.8,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "vm_rq[25]",
+          "u_wfc.g_txq_slice.g_s[0].qd[3][25]$_DFFE_PP_"
+        ],
+        "worst_min_path_slack_ps": -62.0,
+        "worst_min_path_group": "core_clk"
+      }
+    },
+    "FF": {
+      "block": {
+        "setup_wns_ps": 159.9,
+        "hold_wns_ps": -103.3,
+        "failing_setup": 0,
+        "failing_hold": 1226,
+        "worst_max_path": [
+          "vm_rq[100]",
+          "u_wfc.g_txq_slice.g_s[3].qd[1][4]$_DFFE_PP_"
+        ],
+        "worst_max_path_slack_ps": 159.9,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "u_wfc.g_link_reg.u_tx.d[126]$_DFF_P_",
+          "out_data[126]"
+        ],
+        "worst_min_path_slack_ps": -103.3,
+        "worst_min_path_group": "io_clk"
+      },
+      "incontext": {
+        "setup_wns_ps": 267.3,
+        "hold_wns_ps": 20.4,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "u_wfc.g_link_reg.u_rx.cnt[1]$_SDFF_PN0_",
+          "u_wfc.g_vm_reg.wd_q[508]$_DFF_P_"
+        ],
+        "worst_max_path_slack_ps": 267.3,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "u_wfc.g_txq_slice.g_s[8].qd[0][4]$_DFFE_PP_",
+          "u_wfc.g_link_reg.u_tx.d[260]$_DFF_P_"
+        ],
+        "worst_min_path_slack_ps": 20.4,
+        "worst_min_path_group": "core_clk"
+      },
+      "reg2reg": {
+        "setup_wns_ps": 267.3,
+        "hold_wns_ps": 20.4,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "u_wfc.g_link_reg.u_rx.cnt[1]$_SDFF_PN0_",
+          "u_wfc.g_vm_reg.wd_q[508]$_DFF_P_"
+        ],
+        "worst_max_path_slack_ps": 267.3,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "u_wfc.g_txq_slice.g_s[8].qd[0][4]$_DFFE_PP_",
+          "u_wfc.g_link_reg.u_tx.d[260]$_DFF_P_"
+        ],
+        "worst_min_path_slack_ps": 20.4,
+        "worst_min_path_group": "core_clk"
+      },
+      "region": {
+        "setup_wns_ps": 243.0,
+        "hold_wns_ps": -67.6,
+        "failing_setup": 0,
+        "failing_hold": 1021,
+        "worst_max_path": [
+          "in_data[187]",
+          "u_wfc.g_link_reg.u_rx.pd[187]$_DFF_P_"
+        ],
+        "worst_max_path_slack_ps": 243.0,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "in_data[182]",
+          "u_wfc.g_link_reg.u_rx.pd[182]$_DFF_P_"
+        ],
+        "worst_min_path_slack_ps": -67.6,
+        "worst_min_path_group": "core_clk"
+      },
+      "die150": {
+        "setup_wns_ps": 235.3,
+        "hold_wns_ps": -69.3,
+        "failing_setup": 0,
+        "failing_hold": 2880,
+        "worst_max_path": [
+          "vm_rq[100]",
+          "u_wfc.g_txq_slice.g_s[3].qd[1][4]$_DFFE_PP_"
+        ],
+        "worst_max_path_slack_ps": 235.3,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "vm_rq[31]",
+          "u_wfc.g_txq_slice.g_s[0].qd[1][31]$_DFFE_PP_"
+        ],
+        "worst_min_path_slack_ps": -69.3,
+        "worst_min_path_group": "core_clk"
+      }
+    }
+  },
+  "macro": {
+    "master": "ot_sram_1r1w_512x128_m4_r2c2",
+    "count": 4,
+    "views": {
+      "ot_sram_1r1w_512x128_m4_r2c2_ff.lib": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063",
+      "ot_sram_1r1w_512x128_m4_r2c2_ss.lib": "f5f58120a3076a8bd999ab6ccfca8f57de49b985f74473f25fe69a3797f5f8cd",
+      "ot_sram_1r1w_512x128_m4_r2c2_tt.lib": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1"
+    },
+    "timing": {
+      "ff": {
+        "clk_to_q_ps": 346.0436643943168,
+        "setup_ps": 24.694771075555558,
+        "hold_ps": 19.67222053777778,
+        "min_period_ps": 318.03307739804444
+      },
+      "ss": {
+        "clk_to_q_ps": 524.0724742442052,
+        "setup_ps": 39.800541169166664,
+        "hold_ps": 30.074020584583334,
+        "min_period_ps": 480.3331843324704
+      },
+      "tt": {
+        "clk_to_q_ps": 415.19529909991155,
+        "setup_ps": 28.256178771111113,
+        "hold_ps": 21.600259385555557,
+        "min_period_ps": 380.88584645675326
+      }
+    },
+    "qualification": "Actual existing SRAM corner libraries read by instsrc; SHA matched remote9f TT/FF/SS .libs, not blackbox. Mutable SRAM protection unchanged."
+  },
+  "electrical": {
+    "TT": {
+      "slew": 3,
+      "cap": 0,
+      "fanout": 0,
+      "violations": [
+        {
+          "bit": 71,
+          "slew_ps": 354.68,
+          "limit_ps": 320
+        },
+        {
+          "bit": 74,
+          "slew_ps": 323.3,
+          "limit_ps": 320
+        },
+        {
+          "bit": 50,
+          "slew_ps": 320.57,
+          "limit_ps": 320
+        }
+      ],
+      "pins": "u_wfc.g_wf.eng.g_rec_sram.g_bank[1].g_col[1].u_m/w_mask_in[...]"
+    },
+    "FF": {
+      "done": true,
+      "violators": {
+        "slew": 3,
+        "capacitance": 0,
+        "fanout": 0
+      }
+    },
+    "SS_sensitivity": {
+      "done": true,
+      "violators": {
+        "slew": 1009,
+        "capacitance": 0,
+        "fanout": 0
+      }
+    }
+  },
+  "verdict": "UNQUALIFIED: real TT electrical failures and FF region/die150 input hold gaps. Block FF-103.3 retained original estimated IO-clock view; contractual all4 modes retained, minFF-69.3. No hold/ECO, reroute, newRTL or constraint relaxation. Claude decision required for electrical repair before source-specific verified-context FF repair.",
+  "artifacts_sha256": {
+    "6_final.odb": "c45bcfaa16bbfe28123eacf0b412b4cc3c8ffc345fff456f3369d55612a36345",
+    "6_final.sdc": "333f997e04844994567f7c366ff16eefae1c0e63cfb40cee1f96e4b84d1e3656",
+    "6_final.spef": "3030595d6ffe9a738d9ceb1cbb99c69ac6c18249a33af1c0b8d14068746db17c"
+  }
+}

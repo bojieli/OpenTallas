@@ -8,11 +8,13 @@ The legacy records are untouched.   python3 tools/hbm_forks_attn_half_ps.py
 """
 import json
 import shutil
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC, DST = ROOT / 'physical/hbm_attn_tile_r/half', ROOT / 'physical/hbm_attn_tile_r/half_ps'
 X0, PITCH = 1062.0, 0.192
+HI_ROWS = 7                    # hi outline 673.92 -> 689.04 um (strip 90.0 -> 105.12 um)
 
 
 def main():
@@ -21,6 +23,15 @@ def main():
         if d.exists():
             shutil.rmtree(d)
         shutil.copytree(SRC / m, d)
+    # hi: the bottom E-W strip widened by HI_ROWS x 2.16 um (coordinator 2026-10-09: widen, no floorplan-lint waiver;
+    # 7 cuts were 3-5 % short of tracks at 673.92); lo, the seam and every x unchanged (asserted by the placer)
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        subprocess.run([sys.executable, str(ROOT / 'tools/hbm_attn_half_tile_place.py'), '--out', td,
+                        '--hi-channel-rows', str(HI_ROWS)], check=True, stdout=subprocess.DEVNULL)
+        for f in Path(td, 'hfd_attn_half_hi').iterdir():
+            shutil.copy(f, DST / 'hfd_attn_half_hi' / f.name)
     lo = DST / 'hfd_attn_half_lo'
     r = json.loads((lo / 'ports.json').read_text())
     x1 = round(X0 + 1101 * PITCH, 3)
@@ -39,7 +50,7 @@ def main():
         add += (f'place_macro -macro_name {{u_pks.gn.g_s\\[0\\].g_c\\[{c}\\].g_sn.u_b}} -location {{{x:.3f} 0.024}} '
                 '-orientation R0 -exact\n')
     # stage 0's third bank and stages 1-4 (5 stages x 3 banks: 1,102 b > 2 x 544), slots chosen free of every macro
-    for s_, x, y0 in ((1, 570.36, 94.488), (2, 799.7, 308.712), (3, 955.22, 542.984), (4, 799.7, 735.912)):
+    for s_, x, y0 in ((1, 800.016, 94.488), (2, 800.016, 308.712), (3, 948.432, 522.984), (4, 800.016, 735.912)):   # 0.048 grid, u_pk row offsets
         for c in range(2):     # bank 2 (bits 1,088-1,101: the forwarded clocks, unused past the pin) is swept
             add += (f'place_macro -macro_name {{u_pks.gn.g_s\\[{s_}\\].g_c\\[{c}\\].g_sn.u_b}} '
                     f'-location {{{x:.3f} {y0 + 13.968 * c:.3f}}} -orientation R0 -exact\n')

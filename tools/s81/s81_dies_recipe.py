@@ -52,10 +52,18 @@ OUT = ROOT / 'results/rtl/dsrom_s81_fulldie_20261004/s81dies'
 LAYER1 = 'results/rtl/dsrom_s81_fulldie_20261004/m221pq/options.txt'
 
 
+LAYER1_FULL = 'results/physical/s81_gen_20261009/s81_layer1_full.opts'
+
+
 def _layer1_opts():
-    o = (ROOT / LAYER1).read_text().split()
+    """mtp-draftdie 2026-10-09: the s81-gen FULL layer1 recipe (r3 options + --face-pin-inset --host --wfc-hard
+    --nxt-reach --path-pick --hop-r-cc 500 --relay-tt-reach 600 --ctrl-rq; GEN_DONE + PLACE rc=0 on the die-evidence-2
+    chain).  The earlier base (r3 + --nxt-reach --host only) failed in _hop_fix on every die drawn from it: the frame_0
+    relay rt_0_8a_y1 (773.7 um hop at the 410 um common-clock reach; --hop-r-cc 500 clears it) and the 20 mm hw_SW host
+    chain (no box on the default L; --path-pick takes a corridor path)."""
+    o = (ROOT / LAYER1_FULL).read_text().split()
     i = o.index('--die')
-    return o[:i] + o[i + 2:] + ['--nxt-reach', '--host']   # r4b: r3 options + --nxt-reach; + dsfd_host (TA-17)
+    return o[:i] + o[i + 2:]
 
 
 def _sub(o, k, v=None):

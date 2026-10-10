@@ -18,6 +18,7 @@ test -f $SRC/$V/lane/$lane/$lane.lef && test -f $SRC/$V/rtl/macro_place.tcl || {
 # the lane is a liberty black box in the route: its parameter overrides (hc: ML 5 / AL 5, fixed in the hardened lane)
 # are dropped from the route copy of the wrapper; lint and the bench keep the committed wrapper with them
 mkdir -p $SRC/.views/$lab; sed -E 's/ #\(\.[A-Za-z]+\([0-9]+\)(, \.[A-Za-z]+\([0-9]+\))*\) u_lane_/ u_lane_/' $SRC/$V/rtl/$m.sv > $SRC/.views/$lab/$m.sv
+[ -f $SRC/$V/rtl/strap_pins.tcl ] && export IOAPP=$V/rtl/strap_pins.tcl
 MACROS="$lane=$V/lane/$lane" PDN=${PDNQ:-physical/hbm_accel_die_views/su/pdn_quarter.tcl} MAXL=M7 \
   bash $SRC/physical/hbm_accel_die_views/common/route_view.sh $lab $m .views/$lab/$m.sv \
   --orfs-var MACRO_PLACEMENT_TCL=/src/$V/rtl/macro_place.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --clock-period-ns ${CP:-0.77} --io-delay-fraction 0.4 "$@"
