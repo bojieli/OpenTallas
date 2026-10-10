@@ -13,4 +13,7 @@ set dbu [[ord::get_db_block] getDbUnitsPerMicron]
 set cy [expr {([$die yMin]+[$die yMax])/2.0/$dbu}]
 set cy [expr {0.016 + round(($cy - 0.016) / 0.064) * 0.064}]
 exclude_io_pin_region -region [format "left:%.3f-%.3f" [expr {$cy - 1.0}] [expr {$cy + 1.0}]]
-place_pin -pin_name clk -layer M6 -location [list 0 $cy] -pin_size {0.288 0.288}
+# lane_pk2 a7228d510 (on-grid clock pin) left DRC 2 'Rect Only' on M6 clk: the 0.288-um square pin + the router's
+# 0.032-um M6 track wire into it formed a non-rectangular M6 polygon.  The pin is now ONE M6 track wide (0.032, the
+# signal-pin width) so the pin and its track wire merge into a rectangle.
+place_pin -pin_name clk -layer M6 -location [list 0 $cy] -pin_size {0.288 0.032}
