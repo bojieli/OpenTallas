@@ -12,7 +12,7 @@ module tb_hgi_dma_front;
     reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_done, mv_fault;
     wire [NS*51-1:0] dq; reg [NS-1:0] dq_rdy = 0; reg [NIN*270-1:0] dd = 0; wire [NIN-1:0] dd_cr;
     wire [32*280-1:0] wl; reg [31:0] wl_done = 0;
-    ot_hgi_dma_front #(.NS(NS), .NL(NL), .SBIT(SBIT), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v),
+    ot_hgi_dma_front #(.NS(NS), .NL(NL), .SBIT(SBIT), .STACK_BYTES(36'(SB)), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v),
         .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
         .wl(wl), .wl_done(wl_done));
     // ---- memories

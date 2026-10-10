@@ -20,14 +20,15 @@
 //   X  per bank a rotating-priority pick among the lanes (each lane's K slots sit in K consecutive banks) -> VM wide
 //      lane = the bank (32 destination sectors a cycle);
 //   done when every destination sector's wide write is acknowledged.
-//   Fault (sticky until reset): a request run crossing a stack, an svc fault beat, a beat without a credit.
+//   Fault (sticky until reset): a request run crossing a stack or ending beyond STACK_BYTES, an svc fault beat, a beat without a credit.
 // Rate: NS x NL source sectors a cycle in (the svc lane rate), 32 destination sectors a cycle out (the VM port is the cap).
 // MUT (bench): 1 BF16 halves mirrored within the sector: must FAIL; 2 a tag freed 8 beats early: must FAIL.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_front #(
     parameter integer NS = 4,
     parameter integer NL = 8,
-    parameter integer SBIT = 35,          // stack select = HBM byte address [SBIT+1:SBIT]
+    parameter integer SBIT = 35,          // stack select = HBM byte address [SBIT+1:SBIT] (ot_hbm_loader_kport_address)
+    parameter [35:0] STACK_BYTES = 36'd22500000000,   // a run must end inside its stack's capacity
     parameter integer MUT = 0
 ) (
     input  wire                  clk,
@@ -188,7 +189,8 @@ module ot_hgi_dma_front #(
                 rn = (rem > 24'd256) ? 9'd256 : rem[8:0];
                 e = a + {19'd0, rn, 5'd0} - 37'd1;
                 st = a[SBIT +: 2];
-                if (e[SBIT +: 2] != st) mv_fault <= 1'b1;
+                if (e[SBIT +: 2] != st || ({1'b0, a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, rn, 5'd0}) > (SBIT+1)'(STACK_BYTES))
+                    mv_fault <= 1'b1;
                 else if (!dq[st*51 + 50] || dq_rdy[st]) begin
                     dq[st*51 +: 51] <= {1'b1, ft[3:0], rn, a};
                     tag_busy[ft[3:0]] <= 1'b1;
