@@ -15460,3 +15460,9 @@ def hgi_quant_serial_shape_model(records_per_token=80):
         token_added_cycles=21*records_per_token,
         token_latency='+21cycles per quant record, compose actual dispatch count; no payload throughput change',
         physical_qualified=False, exact_gate='existing458transportcases+mutants and product/range edgecases')
+
+
+def s81_bf_tcg_pinlat_model():
+    """Size the exact clock-lockup + tile-clock full-rate BF combination."""
+    from uarch_model_s81_bf_pinlat import model
+    return model()
