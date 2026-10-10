@@ -25,10 +25,10 @@
    "projection_w": {
     "none_r05": 395.0,
     "none_r15": 395.0,
-    "smatt_r05": 187.0,
-    "smatt_r15": 208.9,
-    "all_r05": 142.1,
-    "all_r15": 168.7
+    "smatt_r05": 180.2,
+    "smatt_r15": 192.1,
+    "all_r05": 135.3,
+    "all_r15": 151.9
    }
   },
   "qwen3_8b_P8191": {
@@ -52,10 +52,10 @@
    "projection_w": {
     "none_r05": 460.1,
     "none_r15": 460.1,
-    "smatt_r05": 337.2,
-    "smatt_r15": 350.2,
-    "all_r05": 282.2,
-    "all_r15": 301.0
+    "smatt_r05": 330.6,
+    "smatt_r15": 333.8,
+    "all_r05": 275.6,
+    "all_r15": 284.6
    }
   },
   "envelope_max": {
@@ -79,16 +79,28 @@
    "projection_w": {
     "none_r05": 470.6,
     "none_r15": 470.6,
-    "smatt_r05": 347.8,
-    "smatt_r15": 360.7,
-    "all_r05": 304.2,
-    "all_r15": 321.8
+    "smatt_r05": 341.2,
+    "smatt_r15": 344.3,
+    "all_r05": 297.7,
+    "all_r15": 305.4
    }
+  }
+ },
+ "measured_gated_floors": {
+  "attn_hgrp": {
+   "gated_idle_w": 2.124867205566261e-05,
+   "source": "hgrp leaf leakage (its clock pin is driven by the routed gated quad's ICG; ICG off = no clock activity in the leaf): hbm_r25gp_power.json blocks.attn_hgrp.leak_w"
+  },
+  "attn_quad": {
+   "a20_w": 0.023715609684586525,
+   "a00_w": 0.010014754720032215,
+   "g00_w": 0.009918383322656155,
+   "source": "OpenSTA report_power (die-evidence-2 r25gp_block_power.tcl + g00 = ICG ENA case 0) on hbm_attn_quad_cg-c891a57cf-tc-hm01-grta-cl 6_final (spef), EPYC4 /srv/opentallas-scratch/claude/r25gp-power/cg/out/attn_quad_cg.kv; the quad's HC flops stay on the raw clock by design"
   }
  },
  "verdict": {
   "built_scenario": "smatt",
-  "envelope_max_w_high_residual": 360.7,
+  "envelope_max_w_high_residual": 344.3,
   "limit_w": 474.56,
   "passes": true,
   "note": "the peak in-phase a20 point (613.5 W) assumes every unit busy at once, which the measured workloads never do; gating changes the duty-mix point, not a20"
