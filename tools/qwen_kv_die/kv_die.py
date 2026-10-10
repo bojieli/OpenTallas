@@ -164,6 +164,10 @@ BINDINGS['qkd_cdc_wleaf'] = dict(module='ot_qwen_stream4_cdc_pc', file='rtl/hdc/
                wr=['w_room', 'wd_v', 'wd_tag'], cf=['c_fault'], clk=['clk'], hclk=['hclk'],
                c_arst_n=['c_arst_n'], h_arst_n=['h_arst_n']), classed={})
 
+BINDINGS['qkd_kvwq_ctl_bin'] = copy.deepcopy(BINDINGS['qkd_kvwq_ctl'])
+BINDINGS['qkd_kvwq_ctl_bin'].update(module='ot_qkvd_kv_wq_ctl_binary',
+    file='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv', parameters=dict(FLANE_BINARY=1))
+
 
 def _write_tiles(m, add):
     """Opt-in candidate.  Closed ctl/leaf tiles; the explicit OR encoder remains unclosed.
@@ -184,9 +188,9 @@ def _write_tiles(m, add):
         land = by[f'land_{st}']
         x = m['geo']['x_land'] + 86.4 + GX if side == 'W' else m['die']['w'] - m['geo']['x_land'] - 86.4 - GX - 172.8
         y = up(land.y + (land.h - 518.4)/2, GY)
-        add(f'wctl_{st}', 'qkd_kvwq_ctl', x, y, 172.8-SHAVE, 518.4-SHAVE,
+        add(f'wctl_{st}', 'qkd_kvwq_ctl_bin' if m['geo'].get('kv_wq_binary') else 'qkd_kvwq_ctl', x, y, 172.8-SHAVE, 518.4-SHAVE,
             'R0' if side == 'W' else 'MY', 'kv_write_ctl', 'strip')
-        for g in range(4):
+        for g in range(0 if m['geo'].get('kv_wq_binary') else 4):
             ex = x if side == 'W' else x + 172.8 - 43.2
             add(f'wenc_{st}_{g}', 'qkd_kvwq_lane_encoder', ex, y - (g+1)*45.36, 43.2-SHAVE, 43.2-SHAVE,
                 'R0' if side == 'W' else 'MY', 'kv_write_encoder_unclosed', 'strip')
@@ -220,9 +224,12 @@ def _write_buses(m):
         for g in range(4):
             enc = f'wenc_{st}_{g}'
             chain = [f'wleaf_{st}_{8*g+i}' for i in range(7, -1, -1)]
-            buses += [(f'wfeed_{st}_{g}', 'spine_local', 298, [(ctl, f'f{g}'), (enc, 'a')]),
-                      (f'wencoded_{st}_{g}', 'spine_local', 293, [(enc, 'b'), (chain[0], 'c')]),
-                      (f'wret_{st}_{g}', 'spine_local', 2, [(chain[0], 'dp'), (ctl, f'r{g}')])]
+            if m['geo'].get('kv_wq_binary'):
+                buses.append((f'wencoded_{st}_{g}', 'spine_local', 293, [(ctl, f'f{g}'), (chain[0], 'c')]))
+            else:
+                buses += [(f'wfeed_{st}_{g}', 'spine_local', 298, [(ctl, f'f{g}'), (enc, 'a')]),
+                          (f'wencoded_{st}_{g}', 'spine_local', 293, [(enc, 'b'), (chain[0], 'c')])]
+            buses.append((f'wret_{st}_{g}', 'spine_local', 2, [(chain[0], 'dp'), (ctl, f'r{g}')]))
             for a, b in zip(chain, chain[1:]):
                 buses += [(f'wchain_{a}', 'spine_local', 293, [(a, 'n'), (b, 'c')]),
                           (f'wback_{a}', 'spine_local', 2, [(b, 'dp'), (a, 'dn')])]
@@ -292,7 +299,8 @@ def _band(T, side, Wk):
     return out, dy
 
 
-def build(r=R, kv_wq_leaves=False):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False):
+    kv_wq_leaves = kv_wq_leaves or kv_wq_binary
     T = tpl()
     I = T['insts']
     stack_h = I['ctrl_WS']['h']
@@ -360,7 +368,7 @@ def build(r=R, kv_wq_leaves=False):
     tw, th = FRAMES['qkd_host']
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     m['geo'] = dict(x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
-                    ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, leaf_shift=leaf_shift)
+                    ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, leaf_shift=leaf_shift)
     if kv_wq_leaves:
         _write_tiles(m, add)
     _buses(m, T, r)
@@ -583,6 +591,10 @@ def masters(m, k=1, port_bits=None):
     for bid, cl, bits, eps in m['buses']:
         for inst, port in eps:
             used.setdefault(by[inst].master, {})[port.lstrip('*')] = max(bits, used.get(by[inst].master, {}).get(port.lstrip('*'), 0))
+    if m['geo'].get('kv_wq_binary'):
+        # Physical eight-bit lane port survives; only its low3 pins enter the bus.
+        for g in range(4):
+            used['qkd_kvwq_ctl_bin'][f'f{g}'] = 298
     M = {}
     tmap = dict(qkd_ctrl='qfd_ctrl', qkd_cdc='qfd_cdc', qkd_land='qfd_kvc')
     if m['geo'].get('kv_wq_leaves'):
@@ -725,7 +737,13 @@ _BASE_PORT_WIDTHS = F.port_widths
 
 
 def port_widths(m, k=1):
-    return _BASE_PORT_WIDTHS(m, k)
+    widths = _BASE_PORT_WIDTHS(m, k)
+    if m['geo'].get('kv_wq_binary'):
+        if k != 1:
+            raise ValueError('binary ctl requires full-width pin mapping')
+        for g in range(4):
+            widths[('qkd_kvwq_ctl_bin', f'f{g}')] = 298
+    return widths
 
 
 def write_netlist(m, k, path, top='qkd_die'):
@@ -737,6 +755,19 @@ def write_netlist(m, k, path, top='qkd_die'):
     # These constants are die-top straps, not muxes or a second CDC writer.
     p = Path(path)
     txt = p.read_text()
+    if m['geo'].get('kv_wq_binary'):
+        unused = []
+        for st in STACKS:
+            for g in range(4):
+                net = f'n_wencoded_{st}_{g}'
+                u = f'ctl_lane_high5_unused_{st}_{g}'
+                unused.append(f'  wire [4:0] {u};')
+                before = f'.f{g}({net})'
+                after = f'.f{g}({{{net}[292:284], {u}, {net}[283:0]}})'
+                if before not in txt:
+                    raise ValueError(f'binary ctl group port missing: {st}/{g}')
+                txt = txt.replace(before, after, 1)
+        txt = txt.replace(f'module {top} ();', f'module {top} ();\n' + '\n'.join(unused), 1)
     ties = [f"  assign n_{bid} = 3'd{lane};" for bid, lane in m['wq_straps'].items()]
     ties += [f"  assign n_wtail_{st}_{g} = 2'b00;" for st in STACKS for g in range(4)]
     txt = txt.replace('endmodule', '\n'.join(ties) + '\nendmodule', 1)
@@ -744,6 +775,8 @@ def write_netlist(m, k, path, top='qkd_die'):
     # Explicit nine OR2-equivalent gates a group; no silent 8-bit/3-bit rename.
     # This module is functional composition RTL only.  The die physical abstract
     # remains UNQUALIFIED until this encoder closes at SS/FF in context.
+    if m['geo'].get('kv_wq_binary'):
+        return
     p.with_name('kv_wq_lane_encoder.sv').write_text("""module qkd_kvwq_lane_encoder(input wire [297:0] a, output wire [292:0] b);
   wire [7:0] oh = a[288:281];
   wire [2:0] lane = {oh[4]|oh[5]|oh[6]|oh[7], oh[2]|oh[3]|oh[6]|oh[7], oh[1]|oh[3]|oh[5]|oh[7]};
@@ -837,10 +870,12 @@ def main(argv=None):
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--r', type=int, default=R)
     ap.add_argument('--kv-wq-leaves', action='store_true', help='candidate per-PC write leaves; encoder closure still owed')
+    ap.add_argument('--kv-wq-binary', action='store_true', help='plan-only binary ctl candidate; needs its own routed closure')
     a = ap.parse_args(argv)
+    a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.kv_wq_leaves:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
-    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves)
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary)
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))
@@ -851,16 +886,16 @@ def main(argv=None):
     rec['masters_abstract'] = {n: dict(w=round(mm.w, 3), h=round(mm.h, 3), ports=len(mm.order)) for n, mm in M.items()}
     rec['strict_ports'] = strict_ports(M)
     if a.kv_wq_leaves:
-        rec['kv_wq_candidate'] = dict(adopted=False, leaves=128, control_tiles=4, encoder_tiles=16,
-            encoder='3 OR4 per group; matches ot_qkvd_kv_wq_leaves exactly; SS/FF context closure owed',
-            gate='BLOCKED_ENCODER_PHYSICAL_CLOSURE', chain_order='PC 8*g+7 through 8*g N-to-S, lane strap PC%8',
+        rec['kv_wq_candidate'] = dict(adopted=False, leaves=128, control_tiles=4, encoder_tiles=0 if a.kv_wq_binary else 16,
+            encoder='binary low3/high5zero inside successor ctl' if a.kv_wq_binary else '3 OR4 per group; matches ot_qkvd_kv_wq_leaves exactly',
+            gate='BLOCKED_BINARY_CTL_PHYSICAL_CLOSURE' if a.kv_wq_binary else 'BLOCKED_ENCODER_PHYSICAL_CLOSURE', chain_order='PC 8*g+7 through 8*g N-to-S, lane strap PC%8',
             cdc_ci_slices=dict(wi=[0,290], wr=[290,11], cf=[301,1]),
             chain_hop_cycles=dict(feed=2, done=1), relay_cycles=m['relay_stages'],
             controller_group_slices={g: dict(f_v=[g,1], f_d=[256*g,256], f_sec=[24*g,24],
                                              f_lane=[8*g,8], f_tag=[9*g,9], r_v=[g,1], r_bad=[g,1]) for g in range(4)},
-            physical_gate='closed leaf/ctl pin shapes and context SS/FF must replace candidate abstracts',
-            encoder_sizing=dict(or4_per_group=3, or2_equivalent_total=144,
-                                reserved_frame_mm2=round(16*43.2*43.2/1e6,6), measured_cell_area=None))
+            physical_gate='closed leaf/ctl pin shapes must replace candidate abstracts; optionB TT>=0 FF>=0 DRC0 with SS reach sensitivity',
+            encoder_sizing=dict(or4_per_group=0 if a.kv_wq_binary else 3, or2_equivalent_total=0 if a.kv_wq_binary else 144,
+                                reserved_frame_mm2=0 if a.kv_wq_binary else round(16*43.2*43.2/1e6,6), measured_cell_area=None))
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'plan.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
     (a.out / 'insts.json').write_text(json.dumps([i.d() for i in m['insts']]) + '\n')
