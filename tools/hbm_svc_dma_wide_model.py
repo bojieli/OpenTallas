@@ -12,13 +12,19 @@ def wide_model(lanes=32, tag_bits=6, sectors_per_request=256, native_latency=104
     stacks=4; pcs=32; hz=1.2e9
     sustained=3.8e12/hz;nominal=4e12/hz;target=.9*nominal
     peak=stacks*lanes*32
-    write_commit=3;read_publication=5;seam_captures=2
-    fill=native_latency+request_hops+write_commit+read_publication+data_hops+seam_captures
+    write_commit=3;read_publication=5;cache_publication_overhead=2;seam_captures=2
+    # Actual cache API allocates one sector/bank record per accepted edge.
+    # Every 1..4-record burst must be fully allocated before native issue.
+    allocation_cycles=4
+    # Existing registered ot_secded encoder1/decoder2, to bind in successor.
+    ingress_protection_cycles=3
+    fill=(native_latency+request_hops+allocation_cycles+ingress_protection_cycles+
+          write_commit+read_publication+cache_publication_overhead+data_hops+seam_captures)
     descriptor_cycles=sectors_per_request/lanes
     required_windows=math.ceil(fill/descriptor_cycles)
     tag_count=1<<tag_bits
     # Credit is reserved at read launch, before registered publication.
-    rtt=read_publication+data_hops+credit_hops+seam_captures
+    rtt=read_publication+cache_publication_overhead+data_hops+credit_hops+seam_captures
     credits=1<<math.ceil(math.log2(rtt))
     lease_count=1<<math.ceil(math.log2(math.ceil(native_latency/4)+1))
     width=lanes*(256+2+tag_bits+8)+1+tag_bits+9+37+lanes+1
@@ -85,6 +91,12 @@ def wide_model(lanes=32, tag_bits=6, sectors_per_request=256, native_latency=104
         initial_credits=credits,credit_RTT_cycles_budget=rtt,
         SRAM_write_commit_cycles=write_commit,
         SRAM_read_publication_cycles=read_publication,
+        distributed_cache_publication_overhead_cycles=cache_publication_overhead,
+        distributed_cache_visible_cycles=read_publication+cache_publication_overhead,
+        native_burst_metadata_allocation_cycles_worst_case=allocation_cycles,
+        native_burst_all_sector_records_reserved_before_issue=True,
+        planned_ingress_SECDED_encoder_decoder_cycles=ingress_protection_cycles,
+        ingress_protected_successor_implemented=False,
         interface_seam_capture_cycles=seam_captures,
         credit_reservation_point='cache_read_launch_before_registered_publication',
         source_to_first_data_fill_cycles_budget=fill,
