@@ -261,9 +261,12 @@ def _write_buses(m):
                 leaf = f'wleaf_{st}_{pc}'
                 m['wq_straps'][f'wlane_{st}_{pc}'] = pc % 8
                 buses.append((f'wlane_{st}_{pc}', 'constant', 3, [(leaf, 'lane')]))
-        for kind, srcport, dstport in [('clock_trunk', f'pll_{st}', 'ck'), ('reset', f'rso_{st}', 'rst_n')]:
-            buses.append((f'wq_{kind}_{st}', kind, 1, [('pll', srcport)] +
-                          [(f'wleaf_{st}_{pc}', dstport) for pc in range(32)] + [(ctl, dstport)]))
+        # qwen-1010/b 2026-10-10: the leaves and the controller join the stack's own core clock trunk and reset (one net
+        # per PLL output; a second net on pll_<st> / rso_<st> was a duplicate port binding in die_top_lint)
+        for bname, dstport in ((f'clk_core_{st}', 'ck'), (f'rst_core_{st}', 'rst_n')):
+            k_ = next(i for i, b in enumerate(buses) if b[0] == bname)
+            bid_, cl_, bits_, eps_ = buses[k_]
+            buses[k_] = (bid_, cl_, bits_, list(eps_) + [(f'wleaf_{st}_{pc}', dstport) for pc in range(32)] + [(ctl, dstport)])
 
 
 def strict_ports(M):
