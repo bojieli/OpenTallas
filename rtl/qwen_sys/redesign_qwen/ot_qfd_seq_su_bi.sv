@@ -1599,10 +1599,11 @@ module ot_qwen_tp_seq_w12_vrl #(
     endfunction
 
     // -- transmit: vector-memory words (all-reduce) or the argmax record ------------------
-    localparam integer QD = (VRL > 1) ? 8 : 4;
+    localparam integer QB = (VRL > 1) ? $clog2(VRL + 4) : 2;   // queue address bits
+    localparam integer QD = 1 << QB;
     reg [FW-1:0] q_d [0:QD-1];
-    reg [((VRL > 1) ? 3 : 2)-1:0] q_w, q_r;
-    reg [((VRL > 1) ? 4 : 3)-1:0] q_n;
+    reg [QB-1:0] q_w, q_r;
+    reg [QB:0]   q_n;
     reg [8:0]    rd_k, tx_k, rx_k;
     reg [VRL-1:0] rd_p;                 // reads in flight, oldest at VRL-1
     wire          rd_v = rd_p[VRL-1];

@@ -776,12 +776,14 @@ def tp_seq_vrl() -> str:
     the base assumes 1).  Root cause of the masters' token-chain mismatch (qwen-1010/a 10-10): inside a stationed die
     master the read leaves through the output station and the word returns through the input station, so the base
     queued the word of an earlier read (every all-reduce partial wrong).  The read queue grows to 8 words when VRL > 1
-    so the reads in flight keep the stream rate.  VRL 1 is the base."""
+    so the reads in flight keep the stream rate (QD = 2^ceil(log2(VRL + 4))).  VRL 1 is the base."""
     t = TP_SEQ.read_text()
     t = one(t, "module ot_qwen_tp_seq_w12 #(", "module ot_qwen_tp_seq_w12_vrl #(\n    parameter integer VRL = 1,     // vre -> vrq edges")
-    t = one(t, "    localparam integer QD = 4;", "    localparam integer QD = (VRL > 1) ? 8 : 4;")
-    t = one(t, "    reg [1:0]    q_w, q_r;", "    reg [((VRL > 1) ? 3 : 2)-1:0] q_w, q_r;")
-    t = one(t, "    reg [2:0]    q_n;", "    reg [((VRL > 1) ? 4 : 3)-1:0] q_n;")
+    # the read queue covers the whole round trip (reads in flight + 4 queued words): one word a cycle at any VRL
+    t = one(t, "    localparam integer QD = 4;", "    localparam integer QB = (VRL > 1) ? $clog2(VRL + 4) : 2;   // queue address bits\n"
+               "    localparam integer QD = 1 << QB;")
+    t = one(t, "    reg [1:0]    q_w, q_r;", "    reg [QB-1:0] q_w, q_r;")
+    t = one(t, "    reg [2:0]    q_n;", "    reg [QB:0]   q_n;")
     t = one(t, "    reg          rd_v;", "    reg [VRL-1:0] rd_p;                 // reads in flight, oldest at VRL-1\n    wire          rd_v = rd_p[VRL-1];\n"
                "    integer       rd_i, rd_n;\n    always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end")
     t = one(t, "(q_n + rd_v) < QD;", "(q_n + rd_n) < QD;")
