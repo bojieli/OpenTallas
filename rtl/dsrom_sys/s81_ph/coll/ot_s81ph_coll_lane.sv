@@ -130,17 +130,19 @@ module ot_s81ph_coll_lane #(
 endmodule
 
 // tile tops (pin plans differ: W lanes face the slab's W edge, E lanes the E edge)
-module dsfd_coll_lane_w #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF) (
+module dsfd_coll_lane_w #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF,
+    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
-module dsfd_coll_lane_e #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF) (
+module dsfd_coll_lane_e #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF,
+    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
