@@ -274,16 +274,26 @@ def generate():
     output reg                  ev_v_first,
     // ---- the head tiles (hard sub-tiles): one S1b copy per tile pair (t0: heads 0 / 1 on the S face, t1: heads 2 / 3 on
     //      the N face), the heads' returns on the same faces ----
-    output wire [3:0]           t0_c,   t1_c,
-    output wire [HD*8-1:0]      t0_row, t1_row,
-    output wire [31:0]          t0_e,   t1_e,       // e of the pair's two heads (16 b each)
-    output wire [11:0]          t0_lt,  t1_lt,
-    output wire                 t0_qv,  t1_qv,
-    output wire [5:0]           t0_qb,  t1_qb,
-    output wire [511:0]         t0_qd,  t1_qd,
-    input  wire [2*32-1:0]      ts0_sc, ts1_sc,     // {head 2P + 1, head 2P}
-    input  wire [1:0]           ts0_sf, ts1_sf,
-    input  wire [1:0]           ts0_gf, ts1_gf
+    output wire [3:0]           t0_c,
+    output wire [3:0]           t1_c,
+    output wire [HD*8-1:0]      t0_row,
+    output wire [HD*8-1:0]      t1_row,
+    output wire [31:0]          t0_e,       // e of the pair's two heads (16 b each)
+    output wire [31:0]          t1_e,
+    output wire [11:0]          t0_lt,
+    output wire [11:0]          t1_lt,
+    output wire                 t0_qv,
+    output wire                 t1_qv,
+    output wire [5:0]           t0_qb,
+    output wire [5:0]           t1_qb,
+    output wire [511:0]         t0_qd,
+    output wire [511:0]         t1_qd,
+    input  wire [2*32-1:0]      ts0_sc,     // {head 2P + 1, head 2P}
+    input  wire [2*32-1:0]      ts1_sc,
+    input  wire [1:0]           ts0_sf,
+    input  wire [1:0]           ts1_sf,
+    input  wire [1:0]           ts0_gf,
+    input  wire [1:0]           ts1_gf
 );""")
     # q: no engine q registers (the tiles hold them); the count stays
     # ectl timing (qkd_ectl_a TT -92.6: T -> n_s / gmax compare -> issue -> row FIFO pointer; exp_done pin -> request
