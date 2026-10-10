@@ -28,9 +28,16 @@ if [ "${2:-}" != quick ] && command -v yosys >/dev/null; then
 fi
 sim() {   # sim <label> <st> <fam> <ps lib file> <defines...>
   local L=$1 S=$2 F=$3 PL=$4; shift 4
-  iverilog -g2012 "$@" -o $O/$L.vvp -I $T -s tb_svc_ps_$S $LIB $PL $O/ps/hfd_svc_${F}_s[0-9]_ps.sv $O/ps/hfd_svc_${S}_seg_ps.sv \
-    $V/rtl/seg/hfd_svc_${F}_s[0-9].sv $V/rtl/seg/hfd_svc_${S}_seg.sv $T/tb_svc_physide.sv $T/tb_svc_ps_$S.sv > $O/build_$L.log 2>&1 || { echo "$L build FAIL" >> $O/summary.txt; return 3; }
-  vvp -n $O/$L.vvp > $O/$L.log 2>&1
+  local SFILES="$LIB $PL $O/ps/hfd_svc_${F}_s[0-9]_ps.sv $O/ps/hfd_svc_${S}_seg_ps.sv $V/rtl/seg/hfd_svc_${F}_s[0-9].sv $V/rtl/seg/hfd_svc_${S}_seg.sv $T/tb_svc_physide.sv $T/tb_svc_ps_$S.sv"
+  if [ "${SVC_SIM:-iverilog}" = verilator ]; then
+    local X=()
+    [[ $L == neg_* ]] && X=(-DOT_SVC_EARLY_FAIL)
+    verilator --binary --timing -j 8 -Wno-fatal "$@" "${X[@]}" -DOT_SVC_VLT --top-module tb_svc_ps_$S -I$T --Mdir "$O/vlt_$L" $SFILES > "$O/build_$L.log" 2>&1 || { echo "$L build FAIL" >> "$O/summary.txt"; return 3; }
+    "$O/vlt_$L/Vtb_svc_ps_$S" > "$O/$L.log" 2>&1
+  else
+    iverilog -g2012 "$@" -o "$O/$L.vvp" -I "$T" -s tb_svc_ps_$S $SFILES > "$O/build_$L.log" 2>&1 || { echo "$L build FAIL" >> "$O/summary.txt"; return 3; }
+    vvp -n "$O/$L.vvp" > "$O/$L.log" 2>&1
+  fi
 }
 # every simulation in parallel (single-threaded each), then the verdicts
 sed 's/wire \[1:0\] slot = bb_r\[1:0\] ^ rr\[1:0\];/wire [1:0] slot = bb_r[1:0];/' $PSLIB > $O/ps_mut_slot.sv
