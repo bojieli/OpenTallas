@@ -45,7 +45,8 @@ module tb_hgi_e2e;
     reg rst_n = 0;
     longint cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     reg [8*512-1:0] dir, outp;
-    reg [31:0] host [0:79];        // md words 0..63, token 64, pos 65, expected token 66, rank 67, ncol 68, FUSED scratch 69
+    reg [31:0] host [0:95];        // md words 0..63, token 64, pos 65, expected token 66, rank 67, ncol 68, FUSED scratch 69,
+                                   // expected CTL.TOKX count k 70 (0: no TOKX check) and tokens 71..86 (CPU golden)
     reg [17:0] fscr = 18'd0;
     // ---------------------------------------------------------------- host AXI-lite + loader + CP die
     reg s_awvalid = 0, s_wvalid = 0, s_bready = 1, s_arvalid = 0, s_rready = 1; reg [11:0] s_awaddr = 0, s_araddr = 0;
@@ -319,6 +320,7 @@ module tb_hgi_e2e;
             @(negedge clk); s_arvalid = 0; while (!s_rvalid) @(negedge clk); rd = s_rdata; end
     endtask
     longint t_db, t_cpl, t_drain;
+    integer n_tokx; reg [17:0] tokx_got [0:15];
     always @(posedge clk) if (rst_n && cpd.u_cp.cpl_v && t_cpl == 0) t_cpl = cyc;
     integer w, n_rec, c_tok, c_st, c_cyc, fin, cfgfix;
     initial begin
@@ -351,7 +353,26 @@ module tb_hgi_e2e;
         if (rd[10:8] == 0) begin
             $display("E2E FAIL: no completion (timeout)"); errs = errs + 1; c_tok = -1; c_st = 15; c_cyc = 0;
         end else begin
+            // CTL.TOKX beats (tokx = 1) precede END's completion: collect them, then read END's entry
+            n_tokx = 0;
+            axr(12'hC4C);
+            while (rd[8] && w < 2000000) begin
+                axr(12'hC40);
+                if (n_tokx < 16) tokx_got[n_tokx] = rd[17:0];
+                n_tokx = n_tokx + 1;
+                axr(12'hC50);
+                rd = 0; while (rd[10:8] == 0 && w < 2000000) begin axr(12'hC20); w = w + 1; end
+                axr(12'hC4C);
+            end
             axr(12'hC40); c_tok = rd[17:0]; axr(12'hC4C); c_st = rd[7:4]; axr(12'hC50); c_cyc = rd;
+            if (host[70] != 0 || n_tokx != 0) begin
+                $display("E2E TOKX committed %0d tokens (cpu golden %0d)", n_tokx, host[70]);
+                if (n_tokx != host[70]) errs = errs + 1;
+                for (w = 0; w < n_tokx && w < 16; w = w + 1) begin
+                    $display("E2E TOKX[%0d] = %0d (cpu golden %0d)", w, tokx_got[w], host[71 + w]);
+                    if (tokx_got[w] != host[71 + w][17:0]) errs = errs + 1;
+                end
+            end
         end
         // END's wait mask may be 0 (the Qwen layer program): the completion can precede the last records' writes;
         // drain every unit (the sequencer's busy = a job runs or a unit has work outstanding) before the final checks

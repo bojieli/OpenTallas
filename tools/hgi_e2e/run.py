@@ -164,7 +164,9 @@ def prep(d: Path):
             i += 1
     scr = (best[1] + 7) & ~7
     assert best[0] - (scr - best[1]) >= 16384, f"no 16 Ki-word free VM range for the FUSED scratch ({best})"
-    host = md + [dyn[3], dyn[1], exp_tok, meta["rank"], 1, scr] + [0] * 10
+    tk = meta.get("tokx_golden") or []                # DFlash step: the CPU golden's committed tokens (CTL.TOKX beats)
+    host = md + [dyn[3], dyn[1], exp_tok, meta["rank"], meta.get("ncol", 1), scr, len(tk)] + \
+        [int(x) for x in tk] + [0] * (25 - len(tk))
     (d / "host.mem").write_text("\n".join(f"{x & 0xFFFFFFFF:08x}" for x in host) + "\n")
     print(f"prep {d}: {len(lines)} records, image {len(image)} B, expected token {exp_tok}")
 

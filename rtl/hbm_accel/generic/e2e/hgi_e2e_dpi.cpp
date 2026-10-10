@@ -41,6 +41,8 @@ static std::vector<uint8_t> hbmw;        // golden HBM writes {u64 addr, u64 len
 static int ndisp = 0, nerr_disp = 0, unloaded_hbm = 0, n_ret = 0;
 static std::unordered_map<int, std::unordered_set<uint32_t>> wrote;   // unit -> VM words written since its dispatch
 static std::unordered_set<int> skip_final;                            // VM words excluded from the final compare
+static std::vector<std::pair<unsigned, unsigned>> gold_vm;              // gold.txt: independent golden VM words (e.g. the
+                                                                        // DFlash draft ids / committed tokens from the CPU golden)
 static std::vector<std::pair<int, int>> ignore_rng;                   // compiler-reserved unit scratch (FUSED)
 static bool ignored(int a) { for (auto& r : ignore_rng) if (a >= r.first && a < r.second) return true; return false; }
 extern "C" void e2e_ignore(int lo, int hi) { ignore_rng.push_back({lo, hi}); }
@@ -87,6 +89,12 @@ extern "C" int e2e_init(const char* d, const char* outp) {
     int nskip; if (fscanf(f, "%d", &nskip) != 1) return -1;
     for (int i = 0; i < nskip; i++) { unsigned a, v; if (fscanf(f, "%u %u", &a, &v) != 2) return -1; vm[a] = v; skip_final.insert(a); }
     fclose(f);
+    if ((f = fopen((dir + "/gold.txt").c_str(), "r"))) {
+        unsigned a, v;
+        while (fscanf(f, "%u %u", &a, &v) == 2) gold_vm.push_back({a, v});
+        fclose(f);
+        fprintf(stderr, "E2E: %zu independent golden VM words (gold.txt)\n", gold_vm.size());
+    }
     if (!read_file(dir + "/vmw.bin", b)) return -1;
     vmw.resize(b.size() / 4); memcpy(vmw.data(), b.data(), b.size());
     if (!read_file(dir + "/hbmw.bin", hbmw)) return -1;
@@ -282,6 +290,11 @@ extern "C" int e2e_finish(long long cyc, int token, int status) {
         if (vbad < 8) fprintf(stderr, "E2E FINAL VM[%d] = %08x golden %08x\n", a, vm[a], vm_final[a]);
         vbad++;
     }
+    int gbad = 0;
+    for (auto& gv : gold_vm) if (vm[gv.first] != gv.second) {
+        if (gbad < 16) fprintf(stderr, "E2E GOLDEN VM[%u] = %08x cpu-golden %08x\n", gv.first, vm[gv.first], gv.second);
+        gbad++;
+    }
     int hbad = 0;
     // final HBM: the last golden write of each byte
     std::map<uint64_t, uint8_t> last;
@@ -300,11 +313,11 @@ extern "C" int e2e_finish(long long cyc, int token, int status) {
             fprintf(logf, "%d %d %d %s %d %lld %lld %.1f %.1f %.1f %.1f %x %d %d %d\n", r.k, r.unit, r.op, r.tag.c_str(), r.real,
                     r.disp, r.ret, r.cost, r.s2d, r.s2s, r.s2e, r.dmism, r.checked, r.mism, r.stray);
         fprintf(logf, "SUMMARY cycles %lld token %d status %d dispatched %d/%zu retired %d dispatch_mismatch %d final_vm_mismatch %d "
-                      "final_hbm_mismatch %d unloaded_hbm_reads %d\n", cyc, token, status, ndisp, recs.size(), n_ret, nerr_disp,
-                vbad, hbad, unloaded_hbm);
+                      "final_hbm_mismatch %d unloaded_hbm_reads %d golden_vm_checked %zu golden_vm_mismatch %d\n", cyc, token, status, ndisp,
+                recs.size(), n_ret, nerr_disp, vbad, hbad, unloaded_hbm, gold_vm.size(), gbad);
         fclose(logf); logf = nullptr;
     }
-    fprintf(stderr, "E2E SUMMARY cycles %lld token %d status %d dispatched %d/%zu dispatch_mismatch %d final_vm_mismatch %d final_hbm_mismatch %d unloaded_hbm_reads %d\n",
-            cyc, token, status, ndisp, recs.size(), nerr_disp, vbad, hbad, unloaded_hbm);
-    return nerr_disp + vbad + hbad;
+    fprintf(stderr, "E2E SUMMARY cycles %lld token %d status %d dispatched %d/%zu dispatch_mismatch %d final_vm_mismatch %d final_hbm_mismatch %d unloaded_hbm_reads %d golden_vm_mismatch %d/%zu\n",
+            cyc, token, status, ndisp, recs.size(), nerr_disp, vbad, hbad, unloaded_hbm, gbad, gold_vm.size());
+    return nerr_disp + vbad + hbad + gbad;
 }
