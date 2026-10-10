@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_qwen_native_elastic_relay;
-    parameter integer W=546, NF=2, N=256, NEG=0, STALL=1;
+    parameter integer W=546, NF=2, N=256, NEG=0, STALL=1, DEPTH=8;
     reg clk=0,rst_n=0,go=0;
     always #0.555556 clk=~clk;
     integer issued=0,sent=0,received=0,bad=0,cycle=0,first=-1,last=-1,firstcr=-1,credit_count=0;
@@ -13,7 +13,7 @@ module tb_qwen_native_elastic_relay;
         .l_valid(valid[0]),.l_data(data[0]),.l_credit(cr[0]));
     genvar j;
     generate for(j=0;j<NF;j=j+1) begin:g_relay
-        ot_qwen_native_elastic_relay #(.W(W),.DEPTH(8),.OCRED(j==NF-1?4:8),.ENABLE(1)) u(
+        ot_qwen_native_elastic_relay #(.W(W),.DEPTH(DEPTH),.OCRED(j==NF-1?4:DEPTH),.ENABLE(1)) u(
             .clk(clk),.rst_n(rst_n),.i_v(valid[j]),.i_d(data[j]),.i_cr(cr[j]),
             .o_v(valid[j+1]),.o_d(data[j+1]),.o_cr(cr[j+1]),.fault(faults[j]));
     end endgenerate

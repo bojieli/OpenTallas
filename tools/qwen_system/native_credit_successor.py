@@ -5,12 +5,13 @@ four-credit path remains authoritative until the gates in each row pass.
 """
 
 
-def sizing():
+def sizing(depth=8):
+    if depth not in (4,8):
+        raise ValueError('only finite priced DEPTH4/8 candidates')
     # Same register-storage coefficient used by the full-die analytical model.
     mm2_per_bit = 2.53 / 3332608
     rows = []
     for name, width, count in [('sq', 546, 67), ('cq', 516, 55)]:
-        depth = 8
         # FIFO + input pin + output pin. Add explicit pointer/count/credit,
         # valid and sticky fault registers rather than charging payload alone.
         payload_bits = width * (depth + 2)
@@ -18,7 +19,7 @@ def sizing():
         bits = payload_bits + control_bits
         # The actual52.704um corridor frame exceeds analytical register area,
         # <=350um wire station pitch, and offers ample two-layer pin tracks.
-        frame_um = [52.704, 157.68]
+        frame_um = [52.704, 157.68 if depth==8 else 86.4]
         rows.append(dict(channel=name, payload_bits_per_cycle=width,
                          payload_bytes_per_cycle=width / 8,
                          replicas=count, receive_slots=depth,
@@ -35,10 +36,10 @@ def sizing():
                          first_source_initial_credits=4,
                          final_receiver_initial_credits=4))
     return dict(schema='opentallas.qwen.native_credit_successor.model.v1',
-                target='Qwen3-8B ROM', candidate='qfd_native_elastic8_corr_a',
+                target='Qwen3-8B ROM', candidate=f'qfd_native_elastic{depth}_corr_a',
                 arithmetic='bit/order exact storage only', macs_per_cycle=0,
-                proposed_leaf='ot_qwen_native_elastic_relay W546/516 DEPTH8',
-                implementation_basis='existing ot_link_credit_rx WFREE1 OREG0 and ot_link_credit_tx; no modifications to pinned helpers',
+                proposed_leaf=f'ot_qwen_native_elastic_relay W546/516 DEPTH{depth}',
+                implementation_basis='existing ot_link_credit_rx WFREE1 OREG0 plus one owning TX credit pin/counter and enable-free output pin registers; pinned helpers unchanged',
                 opt_in='new wrapper ENABLE defaults0; die selection defaults off',
                 rows=rows,
                 aggregate_register_bits=sum(r['register_bits_each']*r['replicas'] for r in rows),

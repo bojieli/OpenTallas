@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.qwen.native_elastic4.minimum_gate.v1",
+  "sources": {
+    "rtl/test/tb_qwen_native_elastic_relay.sv": "7c153ab404bce0dc0b8e1d7bcb40dc5949bec796c23c080852c912dcd6650647",
+    "rtl/physical/ot_qwen_native_elastic_relay.sv": "402eb8bee4118e27d8ee6197c8de11c1835a26a28f9e6b104c0345e075e0e22f",
+    "rtl/physical/ot_qwen_die_station.sv": "aa5d461652ab4dc751ce77f7955dfb51d099e02821f5d76a0cce3e413b7d1843",
+    "rtl/common/ot_link_credit.sv": "e8c63b3bf3af841d6cbad57f70e17571c0e2c9fcb44738698f7d1dee1ab58269",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "results": {
+    "sq": "PASS elastic width=546 relays=2 words=256 first_credit_cycles=3 launch_window=564",
+    "cq": "PASS elastic width=516 relays=2 words=256 first_credit_cycles=3 launch_window=564",
+    "neg": "MISMATCH at=5 expected=00c50075 actual=010000b0\nMISMATCH at=6 expected=00f40064 actual=013700a7\nMISMATCH at=7 expected=01e300b3 actual=012200f2\nNEG_DETECTED elastic width=546 negative=2 bad=4"
+  },
+  "pin_ownership": "one o_cr capture counter; enable-free owning output data FFs; RX pin FFs and reset-valid state",
+  "initial_source_credits": 4,
+  "internal_receiver_credits": 4,
+  "production_wiring": "unresolved",
+  "adoption": false,
+  "queue_ready": false
+}

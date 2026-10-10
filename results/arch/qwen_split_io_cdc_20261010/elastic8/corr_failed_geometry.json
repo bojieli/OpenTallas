@@ -1,0 +1,17 @@
+{
+  "source_commit": "89185c283",
+  "verdict": "FAIL",
+  "queue_ready": false,
+  "paths": {
+    "seq_coll": {
+      "relays": 30,
+      "max_center_hop_um": 19581.396
+    },
+    "coll_seq": {
+      "relays": 73,
+      "max_center_hop_um": 550.8
+    }
+  },
+  "reason": "matching corridor width still insufficient: tall158um frames lack continuous free slot path",
+  "successor": "DEPTH4/OCRED4 finite relay with52.704x86.4um frame"
+}

@@ -15269,10 +15269,12 @@ def qwen_split_io_cdc_model():
     return sizing()
 
 
-def qwen_native_elastic_credit_model(square=False):
+def qwen_native_elastic_credit_model(square=False,depth=8):
     """Finite credit successor before RTL/PNR; no unqualified token-rate credit."""
     from tools.qwen_system.native_credit_successor import sizing, square_sizing
-    return square_sizing() if square else sizing()
+    if square and depth!=8:
+        raise ValueError('square model currently prices DEPTH8 only')
+    return square_sizing() if square else sizing(depth)
 
 
 def hgi_token18_fullcore_model():

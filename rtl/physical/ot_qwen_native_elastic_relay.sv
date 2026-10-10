@@ -26,22 +26,25 @@ module ot_qwen_native_elastic_relay #(
         ot_link_credit_rx #(.W(W),.DEPTH(DEPTH),.OREG(0),.WFREE(1)) rx(
             .clk(clk),.rst_n(local_rst_n),.l_valid(i_v),.l_data(i_d),.l_credit(i_cr),
             .o_valid(valid),.o_ready(ready),.o_data(data),.fault(rf));
-        ot_link_credit_tx #(.W(W),.CRED(OCRED)) tx(
-            .clk(clk),.rst_n(local_rst_n),.i_valid(valid),.i_ready(ready),.i_data(data),
-            .l_valid(o_v),.l_data(o_d),.l_credit(o_cr));
-        // Monitor the same captured credit/send accounting as tx. Overflow
-        // remains visible; this never manufactures credits or suppresses data.
+        // One owning o_cr pin flop, shared only after capture. Separately
+        // capturing the same pin for a monitor would defeat pin ownership.
+        // Data pins load freely; only o_v marks a meaningful output word.
         localparam integer CB=$clog2(OCRED+1)+1;
-        reg cr_q, cf, fault_q; reg [CB-1:0] cred;
+        reg cr_q, cf, fault_q, ov_q; reg [CB-1:0] cred;
+        (* keep *) reg [W-1:0] od_q;
+        assign ready=cred!=0;
+        assign o_v=ov_q;assign o_d=od_q;
         wire send=valid && ready;
         wire [CB-1:0] next_credit=cred+cr_q-send;
         always @(posedge clk or negedge local_rst_n)
-            if(!local_rst_n) begin cr_q<=0;cf<=0;fault_q<=0;cred<=OCRED;end
+            if(!local_rst_n) begin cr_q<=0;cf<=0;fault_q<=0;cred<=OCRED;ov_q<=0;end
             else begin
                 cr_q<=o_cr; cred<=next_credit;
+                ov_q<=send;
                 cf<=cf || next_credit>OCRED;
                 fault_q<=fault_q || rf || cf;
             end
         assign fault=fault_q;
+        always @(posedge clk) od_q<=data;
     end endgenerate
 endmodule
