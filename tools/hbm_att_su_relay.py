@@ -38,9 +38,16 @@ def plan(fp: dict) -> dict:
         # this is at_<S>_03 / at_<N>_13 -> lane 0: the only assignment where ONE SU master (MX in N) gets the same
         # master-local lane rows in all four quadrants without the two buses crossing.
         yc = fp['die']['H'] / 2
-        rows = sorted(('03', '13'), key=lambda rw: -abs(by[f'at_{q}_{rw}_hi']['y'] - yc))
+        # the row's tile-chain root (the R25GP chain ta_at_*: W quadrants run c0 -> c3, root c3; E quadrants run
+        # c3 -> c0, root c0), which must be the column next to the SU (fp places the E grid name-mirrored)
+        rc = '3' if q[1] == 'W' else '0'
+        rows = sorted(('0' + rc, '1' + rc), key=lambda rw: -abs(by[f'at_{q}_{rw}_hi']['y'] - yc))
         for r, row in enumerate(rows):
             at = by[f'at_{q}_{row}_hi']
+            assert abs((at['x'] + at['w'] / 2) - (su['x'] + su['w'] / 2)) == min(
+                abs((i['x'] + i['w'] / 2) - (su['x'] + su['w'] / 2)) for i in fp['instances']
+                if i['name'].startswith(f'at_{q}_{row[0]}') and i['name'].endswith('_hi')), \
+                f'{at["name"]} (chain root) is not the attention column next to hb_su_{q}: place the E grid name-mirrored'
             east = at['x'] < su['x']                       # travel direction
             mir_y = at['orient'] in ('MX', 'R180')
             plo = at['y'] + (at['h'] - PIN_HI if mir_y else PIN_LO)

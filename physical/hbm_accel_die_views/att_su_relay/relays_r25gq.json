@@ -98,7 +98,7 @@
   {
    "bus": "tr_SE0",
    "bits": 529,
-   "src": "at_SE_03_hi.o",
+   "src": "at_SE_00_hi.o",
    "dst": "hb_su_SE.a[528:0]",
    "path_um": 2724.288,
    "relays": 7,
@@ -122,7 +122,7 @@
   {
    "bus": "tr_SE1",
    "bits": 529,
-   "src": "at_SE_13_hi.o",
+   "src": "at_SE_10_hi.o",
    "dst": "hb_su_SE.a[1057:529]",
    "path_um": 3405.356,
    "relays": 8,
@@ -196,7 +196,7 @@
   {
    "bus": "tr_NE0",
    "bits": 529,
-   "src": "at_NE_13_hi.o",
+   "src": "at_NE_10_hi.o",
    "dst": "hb_su_NE.a[528:0]",
    "path_um": 2724.288,
    "relays": 7,
@@ -220,7 +220,7 @@
   {
    "bus": "tr_NE1",
    "bits": 529,
-   "src": "at_NE_03_hi.o",
+   "src": "at_NE_00_hi.o",
    "dst": "hb_su_NE.a[1057:529]",
    "path_um": 3405.356,
    "relays": 8,
