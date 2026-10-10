@@ -45,7 +45,7 @@ module ot_hgi_sm_record #(
     // Fault and completion both see the same snapshot (fault keeps priority); the completion inputs are monotone once the
     // SMs are started, so the record retires one edge later and the outcome is unchanged.  Cost: +1 edge per record.
     parameter integer FINR = 0,
-    parameter integer MUT_FINR = 0        // mutant: the snapshot sticks at 'all arrived / nothing pending' (stale true)
+    parameter integer MUT_FINR = 0        // mutant: the snapshot never reports completion (must hang / fail the bench)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -184,7 +184,7 @@ module ot_hgi_sm_record #(
         for (s = 0; s < NSM; s = s + 1) if (act[s] && ret_q[s*4 + 3]) any_fault = 1'b1;
     end
     reg any_fault_q, all_arr_q, pend0_q;
-    always @(posedge clk) begin any_fault_q <= any_fault; all_arr_q <= all_arr || (MUT_FINR != 0); pend0_q <= ((st_pend == 0) && (d_pend == 0)) || (MUT_FINR != 0); end
+    always @(posedge clk) begin any_fault_q <= any_fault; all_arr_q <= all_arr && (MUT_FINR == 0); pend0_q <= (st_pend == 0) && (d_pend == 0) && (MUT_FINR == 0); end
     wire flt_x  = (FINR != 0) ? any_fault_q : any_fault;
     wire arr_x  = (FINR != 0) ? all_arr_q : all_arr;
     wire pend_x = (FINR != 0) ? pend0_q : ((st_pend == 0) && (d_pend == 0));
