@@ -1773,7 +1773,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
-           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py",
+           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
                                                           "macro_sliver_block.tcl", "edge_sliver_block.tcl")))
@@ -4076,6 +4076,22 @@ def precollect_cmd(spec):
     return None
 
 
+ROUTE_CORNER_CHECK = "ttb_routed_at_TC"
+
+
+def route_corner_check_cmd(c):
+    """LOOP-CORNER 2026-10-10: the ttb_routed_at_TC check only grepped {CL}/ttb_corner.txt, where tt_overlay also writes
+    'TC ...' for unrelated patches (direct config.mk); SM piece routes that loaded SS liberties passed it (and closed at
+    the wrong corner).  The check now also proves the corner from the route logs: every setup corner's read_liberty
+    lines in the place / CTS / GRT logs under {RUN} name TT views (route_corner_check.py, sent inline so a job launched
+    before the helper existed is judged the same way).  Other checks: unchanged."""
+    cmd = c.get("cmd") or ""
+    if c.get("name") != ROUTE_CORNER_CHECK or "route_corner_check" in cmd:
+        return cmd
+    src = (HERE / "route_corner_check.py").read_text()
+    return f"( {cmd} ) && python3 -c {shlex.quote(src)} {{RUN}} --want TT"
+
+
 def do_verdict(j, fleet, stl):
     if adoption_held(j):
         return
@@ -4098,7 +4114,7 @@ def do_verdict(j, fleet, stl):
     for c in v.get("checks", []):
         # verdict checks may run real tools (stn_pa_check.sh routes a pin-access probe: > 300 s on AGIdock, which put
         # hbm_stn_mcast_r5/r6 into NEEDS_HUMAN as "loop errors"); spec checks[].timeout_s, default 1800
-        ok, out = remote_ok(j, c["cmd"], timeout=c.get("timeout_s", 1800))
+        ok, out = remote_ok(j, route_corner_check_cmd(c), timeout=c.get("timeout_s", 1800))
         if not ok and TRANSIENT_RE.search(out):
             # an ssh failure is not a failed check (hbm_stn_mcast_r6b: 'Connection reset by peer' failed lef_check_MATCH
             # while check.json said MATCH): raise, so the verdict backs off and is re-taken
