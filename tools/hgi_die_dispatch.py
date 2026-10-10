@@ -35,6 +35,9 @@ SUT_UNITS = {'su', 'att'}
 # units whose adapter sits inside the CP block: their record bus is a CP-die port bound in the CP view, not a die net
 INTERNAL_UNITS = {'sm', 'att'}
 RETURN_FIELDS = [('ready', 1), ('done', 1), ('fault', 1)]
+# the DMA unit's return also carries wr_quiet (hgi-1010/c 2026-10-10): no posted STORE / KVWB HBM write in flight; the
+# CP's CTL.FENCE (S_DRAIN) waits for it.  It rides the same registered word as done, so the two stay aligned.
+RETURN_EXTRA = {'dma': [('wr_quiet', 1)]}
 # units that decode a static MD field (coll: word 46 coll_group_size) get the 40-bit config station bus
 # {cfg_commit, cfg_v, cfg_addr[5:0], cfg_data[31:0]} (ot_hgi_cfg_stn / ot_hgi_cfg_rx)
 CFG_UNITS = {'coll'}
@@ -90,7 +93,7 @@ def model(hub, units, reach_um=504.0, unit_block=None):
         if blk not in hub:
             raise ValueError(f'hgi_dispatch: hub block {blk} for unit {u} not on this die')
         cmd, cbits = layout(fields(u, units))
-        ret, rbits = layout(RETURN_FIELDS)
+        ret, rbits = layout(RETURN_FIELDS + RETURN_EXTRA.get(u, []))
         s, t = hub['cmdproc'], hub[blk]
         dist = abs(s.x + s.w / 2 - t.x - t.w / 2) + abs(s.y + s.h / 2 - t.y - t.h / 2)
         relays = max(0, ceil(dist / reach_um) - 1)
