@@ -1,0 +1,83 @@
+SHARED case 0: agent bursts read 1 write 1 (group shared with the SU)
+REC 0 0 accept 0 retire 191
+CASE 0 service 192 span 24 stage 19 compute 120 drain 21 other 0
+SHARED case 1: agent bursts read 3 write 2 (group shared with the SU)
+REC 1 0 accept 0 retire 150
+CASE 1 service 151 span 24 stage 15 compute 84 drain 20 other 0
+SHARED case 2: agent bursts read 5 write 3 (group shared with the SU)
+REC 2 0 accept 0 retire 140
+CASE 2 service 141 span 32 stage 27 compute 50 drain 24 other 0
+SHARED case 3: agent bursts read 6 write 4 (group shared with the SU)
+REC 3 0 accept 0 retire 150
+CASE 3 service 151 span 24 stage 16 compute 82 drain 21 other 0
+SHARED case 4: agent bursts read 8 write 5 (group shared with the SU)
+REC 4 0 accept 0 retire 150
+CASE 4 service 151 span 24 stage 15 compute 84 drain 20 other 0
+SHARED case 5: agent bursts read 9 write 6 (group shared with the SU)
+REC 5 0 accept 0 retire 119
+CASE 5 service 120 span 32 stage 21 compute 38 drain 21 other 0
+SHARED case 6: agent bursts read 10 write 7 (group shared with the SU)
+REC 6 0 accept 0 retire 108
+CASE 6 service 109 span 32 stage 18 compute 31 drain 20 other 0
+SHARED case 7: agent bursts read 11 write 8 (group shared with the SU)
+REC 7 0 accept 0 retire 109
+CASE 7 service 110 span 32 stage 19 compute 31 drain 20 other 0
+SHARED case 8: agent bursts read 12 write 9 (group shared with the SU)
+REC 8 0 accept 0 retire 137
+CASE 8 service 138 span 24 stage 15 compute 70 drain 21 other 0
+SHARED case 9: agent bursts read 13 write 10 (group shared with the SU)
+REC 9 0 accept 0 retire 195
+CASE 9 service 196 span 32 stage 16 compute 119 drain 21 other 0
+SHARED case 10: agent bursts read 14 write 11 (group shared with the SU)
+REC 10 0 accept 0 retire 98
+CASE 10 service 99 span 24 stage 15 compute 32 drain 20 other 0
+SHARED case 11: agent bursts read 15 write 13 (group shared with the SU)
+REC 11 0 accept 0 retire 219
+CASE 11 service 220 span 32 stage 17 compute 80 drain 83 other 0
+SHARED case 12: agent bursts read 16 write 14 (group shared with the SU)
+REC 12 0 accept 0 retire 128
+CASE 12 service 129 span 28 stage 18 compute 54 drain 21 other 0
+SHARED case 13: agent bursts read 18 write 15 (group shared with the SU)
+REC 13 0 accept 0 retire 108
+CASE 13 service 109 span 32 stage 18 compute 31 drain 20 other 0
+SHARED case 14: agent bursts read 21 write 18 (group shared with the SU)
+REC 14 0 accept 0 retire 601
+CASE 14 service 602 span 24 stage 94 compute 350 drain 126 other 0
+SHARED case 15: agent bursts read 23 write 20 (group shared with the SU)
+REC 15 0 accept 0 retire 265
+CASE 15 service 266 span 24 stage 15 compute 196 drain 23 other 0
+SHARED case 16: agent bursts read 24 write 21 (group shared with the SU)
+REC 16 0 accept 0 retire 111
+CASE 16 service 112 span 28 stage 19 compute 36 drain 21 other 0
+SHARED case 17: agent bursts read 26 write 22 (group shared with the SU)
+REC 17 0 accept 0 retire 132
+CASE 17 service 133 span 24 stage 15 compute 65 drain 21 other 0
+SHARED case 18: agent bursts read 27 write 23 (group shared with the SU)
+REC 18 0 accept 0 retire 97
+CASE 18 service 98 span 24 stage 15 compute 31 drain 20 other 0
+SHARED case 19: agent bursts read 29 write 24 (group shared with the SU)
+REC 19 0 accept 0 retire 118
+CASE 19 service 119 span 28 stage 16 compute 47 drain 20 other 0
+SHARED case 20: agent bursts read 32 write 27 (group shared with the SU)
+REC 20 0 accept 0 retire 748
+CASE 20 service 749 span 32 stage 475 compute 105 drain 129 other 0
+SHARED case 21: agent bursts read 33 write 28 (group shared with the SU)
+REC 21 0 accept 0 retire 104
+CASE 21 service 105 span 28 stage 18 compute 31 drain 20 other 0
+SHARED case 22: agent bursts read 34 write 29 (group shared with the SU)
+REC 22 0 accept 0 retire 109
+CASE 22 service 110 span 32 stage 19 compute 31 drain 20 other 0
+SHARED case 23: agent bursts read 36 write 30 (group shared with the SU)
+REC 23 0 accept 0 retire 109
+CASE 23 service 110 span 32 stage 19 compute 31 drain 20 other 0
+SHARED case 24: agent bursts read 37 write 31 (group shared with the SU)
+REC 24 0 accept 0 retire 103
+CASE 24 service 104 span 28 stage 17 compute 31 drain 20 other 0
+SHARED case 25: agent bursts read 40 write 33 (group shared with the SU)
+REC 25 0 accept 0 retire 601
+CASE 25 service 602 span 24 stage 94 compute 350 drain 126 other 0
+SHARED case 26: agent bursts read 41 write 34 (group shared with the SU)
+REC 26 0 accept 0 retire 97
+CASE 26 service 98 span 24 stage 15 compute 31 drain 20 other 0
+summary: 27 production-shape cases, 44584 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD PASS

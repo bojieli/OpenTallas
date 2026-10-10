@@ -1967,17 +1967,42 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
     terminal must match EXACTLY ONE region regex, else the floorplan errors out.
     A prefix written '^(x_|go)(\\[|$)' matches only a port named 'x_', so the
     x_* bus went unconstrained while 'go' kept the region non-empty."""
+    # BUS-AWARE (drive-1010 2026-10-10): a regex written for a bus BASE name ('^(a|b)$') silently missed every bit
+    # 'a[3]' -- ot_gpu_rf_visibility_fence_p left 4,105 pins without a face.  A pattern now matches a terminal when it
+    # matches its full name OR its bus base name (trailing [n] stripped; a scalar and a bus can never share a base),
+    # and every pin-region run checks that no bus is left partly assigned (ot_check_bus_complete, always on).
     lines = [
         "# Written by tools/run_abi3_physical.py --pin-region.",
+        "proc ot_pin_base {name} { regsub {\\[[0-9]+\\]$} $name {} base; return $base }",
+        "proc ot_pin_matches {pattern name} {",
+        "  return [expr {[regexp -- $pattern $name] || [regexp -- $pattern [ot_pin_base $name]]}]",
+        "}",
         "proc ot_match_pins {pattern} {",
         "  set names {}",
         "  foreach bterm [[ord::get_db_block] getBTerms] {",
         "    set name [$bterm getName]",
-        "    if {[regexp -- $pattern $name]} { lappend names $name }",
+        "    if {[ot_pin_matches $pattern $name]} { lappend names $name }",
         "  }",
         "  if {[llength $names] == 0} { error \"--pin-region $pattern matches no port\" }",
         "  return [lsort -dictionary $names]",
         "}",
+        "proc ot_check_bus_complete {patterns} {",
+        "  array set hit {}; array set all {}",
+        "  foreach bterm [[ord::get_db_block] getBTerms] {",
+        "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
+        "    set name [$bterm getName]",
+        "    set base [ot_pin_base $name]",
+        "    if {$base eq $name} { continue }",
+        "    incr all($base)",
+        "    foreach p $patterns { if {[ot_pin_matches $p $name]} { incr hit($base); break } }",
+        "  }",
+        "  set bad {}",
+        "  foreach base [array names hit] { if {$hit($base) != $all($base)} { lappend bad \"$base:$hit($base)/$all($base)\" } }",
+        "  if {[llength $bad] > 0} {",
+        "    error \"--pin-region leaves bus bits unassigned (bus:assigned/bits): [lrange [lsort $bad] 0 23]\"",
+        "  }",
+        "}",
+        "ot_check_bus_complete [list " + " ".join("{" + r["regex"] + "}" for r in pin_regions) + "]",
     ]
     if exhaustive:
         pats = " ".join("{" + r["regex"] + "}" for r in pin_regions)
@@ -1988,7 +2013,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
             "    set name [$bterm getName]",
             "    set n 0",
-            "    foreach p $patterns { if {[regexp -- $p $name]} { incr n } }",
+            "    foreach p $patterns { if {[ot_pin_matches $p $name]} { incr n } }",
             "    if {$n != 1} { lappend bad \"$name:$n\" }",
             "  }",
             "  if {[llength $bad] > 0} {",

@@ -2326,6 +2326,16 @@ HOST_SLAB = False              # host-aware generator default; initialized befor
 CTRL_RQ = False                # --ctrl-rq (implied by layer1e)
 FWD_IFACE = False              # --fwd-iface: host-write / Engram die interfaces as forwarded lanes
 Q_X1B = False                  # --q-x1b: option-B q pin plan (x1 on the S-face east end, own bank; right lane MY)
+# --cfg-rgap UM (ds-1010 2026-10-10): a relay gap of UM in every right-lane cfg ROM row, between ROM CFG_RGAP_AT-1 and
+# CFG_RGAP_AT.  Root cause of the x1b residual 128 (one per frame, rt_<f>_8b): a left-lane return leaf runs east from its
+# N bank to the node strip through the inter-element band, whose only relay room is the ~35 um strip above the slot
+# station (x 365-538); the right-lane sequencer + 7 ROMs (x 557-914) leave no 17.3 um box for 380 um, so the leaf hop
+# station-area relay -> beyond the ROM row is 538 um > the 504 um SS reach.  The gap is a real reserved relay site in
+# the row (the R row has 126 um of slack to the node strip); default 0 = off (byte-identical).
+CFG_RGAP = 0.0
+CFG_RGAP_AT = 4
+RSV_RECTS = []                 # --cfg-rgap: the reserved relay sites (die coordinates), for return-tree relays only
+RSV_ALLOW = False              # set while a return-tree (rt_*) relay / station is placed
 CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
 COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
 COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
@@ -2641,6 +2651,9 @@ class Placer:
             r = (x, y, x + w, y + h)
             if not _inside(r, allowed) or not self.occ.free(r, 0.432):
                 continue
+            if RSV_RECTS and not RSV_ALLOW and any(a_ < r[2] and r[0] < c_ and b_ < r[3] and r[1] < d_
+                                                   for a_, b_, c_, d_ in RSV_RECTS):
+                continue
             return x, y
         return None
 
@@ -2879,6 +2892,7 @@ def build_r8(variant=None):
     order = [(h, t, c) for h in 'WE' for t in range(TIERS) for c in range(TIER_COLS8[t])]
     assert len(order) == ROOTS
     rng, hbf = frame_plan_r8()
+    RSV_RECTS.clear()
     for r, (half, t, c) in enumerate(order):
         x0, y0 = col_x(half, c), tier_y[t]
         frames[r] = dict(half=half, tier=t, col=c, x=x0, y=y0)
@@ -2941,8 +2955,12 @@ def build_r8(variant=None):
             else:
                 cx0, ro, so = x0 + 4.32, 'MY', 'R0'
                 sx = cx0 + (CFG_PER_PAIR - 1) * CFG_PITCH + rc['w'] + 3.888
+            if CFG_RGAP and ln == 'R':
+                gx0 = cx0 + (CFG_RGAP_AT - 1) * CFG_PITCH + rc['w']
+                RSV_RECTS.append((gx0, sy + CFG_DY, cx0 + CFG_RGAP_AT * CFG_PITCH + CFG_RGAP, sy + CFG_DY + rc['h']))
             for j in range(CFG_PER_PAIR):
-                insts.append(Inst(f'c{p}_{j}', rc['name'], cx0 + j * CFG_PITCH, sy + CFG_DY, rc['w'], rc['h'], ro,
+                gx_ = CFG_RGAP if (ln == 'R' and j >= CFG_RGAP_AT) else 0.0
+                insts.append(Inst(f'c{p}_{j}', rc['name'], cx0 + j * CFG_PITCH + gx_, sy + CFG_DY, rc['w'], rc['h'], ro,
                                   kind='cfg', region=f'frame_{r}'))
             insts.append(Inst(f's{p}', 'ot_s81_cfg7_seq', sx, sy + CFG_DY, SEQ_WH[0] - SHAVE, SEQ_WH[1] - SHAVE, so,
                               kind='seq', region=f'frame_{r}'))
@@ -3178,7 +3196,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(q_x1b=Q_X1B, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -4046,8 +4064,10 @@ def _hop_fix(m, P):
     added_frame = defaultdict(lambda: defaultdict(int))
     fwd_add = defaultdict(int)
     new = []
+    global RSV_ALLOW
     for i in range(len(B)):
         bid, cls, bits, eps = B[i]
+        RSV_ALLOW = bid.startswith('rt_')      # --cfg-rgap: reserved relay sites serve the return tree only
         if cls in HOP_SKIP or len(eps) < 2:
             continue
         keep = [eps[0]]
@@ -4292,6 +4312,7 @@ def _hop_fix(m, P):
             q['max_um'] = max(q['max_um'], L)
             q['max_added'] = max(q['max_added'], n)
         B[i] = (bid, cls, bits, keep)
+    RSV_ALLOW = False
     B[:] = [b for b in B if len(b[3]) > 1 or b[1] in ('col_clock', 'col_reset')] + new
     # inserted relays: faces toward their driver and load
     by = {it.name: it for it in m['insts']}
@@ -4337,7 +4358,9 @@ def _col_relays(m, P):
     out, added = [], defaultdict(int)       # (bus id) -> relays
     ck_add = defaultdict(list)
     tt_col = []                             # --relay-tt-reach: pass-1 relays placed in the TT-reach tier
+    global RSV_ALLOW
     for bid, cls, bits, eps in list(B):
+        RSV_ALLOW = bid.startswith('rt_')      # --cfg-rgap: reserved relay sites serve the return tree only
         if cls not in RCLS or bid.endswith('_eb'):
             out.append((bid, cls, bits, eps))
             continue
@@ -4401,6 +4424,7 @@ def _col_relays(m, P):
             RLY_FACES[it.master] = (fi, fo)
         out.append((bid, cls, bits, [prev] + list(eps[1:])))
         added[bid] = n
+    RSV_ALLOW = False
     B[:] = out
     for i, (bid, cls, bits, eps) in enumerate(B):
         if cls in ('col_clock', 'col_reset') and bid.rsplit('_', 1)[-1].isdigit():
@@ -5799,6 +5823,10 @@ def die_options(ap):
     ap.add_argument('--q-x1b', action='store_true', help='s81-gen 2026-10-10 (coordinator option B): the q element x1 '
                     'port on its S-face east end with its own bank, right-lane elements mirrored MY; needs the x1b q view '
                     '(OT_S81_Q_LEF; stub physical/s81_die_views/q_elem_qs5f_x1b_stub); default off')
+    ap.add_argument('--cfg-rgap', type=float, default=0.0, help='ds-1010 2026-10-10: reserved relay gap (um, e.g. 21.6) '
+                    'in every right-lane cfg ROM row between ROM --cfg-rgap-at - 1 and --cfg-rgap-at (x1b residual '
+                    'rt_<f>_8b return-leaf SS reach class); default 0 = off')
+    ap.add_argument('--cfg-rgap-at', type=int, default=4, help='ROM index the --cfg-rgap gap precedes (default 4)')
     ap.add_argument('--ck-rule', action='store_true', help='s81-gen 2026-10-09 (redesign-ds clock-pin rule): every generated '
                     'master with a side >= 300 um takes its clock pin on a long face in the middle third; default off')
     ap.add_argument('--coll-split3', action='store_true', help='s81-gen 2026-10-09 (redesign-ds): collective slab outline from '
@@ -5897,6 +5925,11 @@ def apply_options(a):
     HOST_SLAB = bool(getattr(a, 'host', False))
     global COLL_SPLIT3, COLL_SPLIT3_CR, COLL_SPLIT3_COMP, CK_RULE, Q_X1B
     Q_X1B = bool(getattr(a, 'q_x1b', False))
+    global CFG_RGAP, CFG_RGAP_AT
+    CFG_RGAP = float(getattr(a, 'cfg_rgap', 0.0) or 0.0)
+    CFG_RGAP_AT = int(getattr(a, 'cfg_rgap_at', 4) or 4)
+    if CFG_RGAP:
+        assert CFG_RGAP > 0 and abs(CFG_RGAP / GX - round(CFG_RGAP / GX)) < 1e-6, ('--cfg-rgap off the x lattice', CFG_RGAP, GX)
     CK_RULE = bool(getattr(a, 'ck_rule', False))
     COLL_SPLIT3_CR = bool(getattr(a, 'coll_split3_cr', False))
     COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False)) or COLL_SPLIT3_CR

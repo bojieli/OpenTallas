@@ -124,6 +124,49 @@ retries the stage once under the guarded flow; cancelled instead when a newer co
 `early-fail <job> --verdict V --why W --detail F` and `kill-stage <job> --why W [--orfs DIR]`, and logs to
 `claude-takeover-20261007/stuckscan.log`. Report: `STATE/stuckscan_last.json`.
 
+## Auto-react, READY_NEXT deep queue and host-down requeue (LOOP-AUTO 2026-10-10)
+
+Session limits stall design work for hours, so the loop reacts to known failure classes on its own. A recovery pass
+(`auto_react`, every tick, background thread) judges every failure verdict (NEEDS_RTL, NEEDS_HUMAN, EARLY_FAIL_*,
+FLOORPLAN_MARGIN, PREROUTE_MARGIN) once per finish (`finished_at`, stamped by `finish()`), within 6 h of it, and only
+when the block has no other live or closed job. Spec `"auto_react": false` opts out.
+
+| class | trigger | action |
+|---|---|---|
+| a | hold-only miss within 30 ps: TT >= 0, -30 <= FF < 0, DRC 0, checks and benches clean, no installed ECO | the same job re-opens at its verdict; the hold ECO runs with `KEEPWIRES=1` (untouched nets keep their wires). This also covers a route that crashed or was requeued and never reached an ECO |
+| b | thin TT and FF miss (`combo_eligible`: TT in [-45, 0), FF in [-30, 0)) with no combo ECO run yet | the same job re-opens at its verdict, where the combo ECO fires (the verdict already launches it inline; this covers the crash and requeue paths) |
+| c | EARLY_FAIL_HOLD, RTL boundary PASS (`rtl_boundary_verdict`, recorded at submit), route ran without the pin-flop IO reference | successor `<job>-arc`, same commit, `pinflop_ref: true` |
+| d | FLOORPLAN_MARGIN whose only failing lint check is `sliver` | successor `<job>-ard` with `"sliver_block": true`. The launch exports `OT_SLIVER_BLOCK=1`; `orfs_hold_mm.py` hooks `physical/common_flow/macro_sliver_block.tcl` and `edge_sliver_block.tcl` at PRE GLOBAL_PLACE, before the lint (shipped into older snapshots). The parent's route key is released |
+| e | DRT-0073 (no access point) in the reason or crash tails | successor `<job>-are` with the recipe's pin knob exported (`DRT_RECIPES`: `route_lane.sh` gets `PINKO=1`; the Qwen die generators get `OT_MINW_PINS=1`, minimum-width pins). It is used only when the job's commit honours the knob |
+
+Rules:
+- No action loosens a constraint: no clock, uncertainty, margin, SDC or hold-margin change.
+- Each job gets at most one action per class (`j.auto_react = {class: successor | "in-place"}`).
+- A successor (spec `auto_react_parent`) gets no new-job successor of its own.
+- A successor is a spec dropped into the drop dir, so intake (validate, route key, submit lint) applies as for any job.
+- In-place classes need the route products, so they are skipped after a bulk or deep release.
+- Anything else, including a class already used, adds one line to the owner's stream log in `$CL_TAKEOVER` (owner
+  `<stream>-1010` if that log exists, else by keyword: hgi / mtp-wfc / qwen / ds / hbm-phys, else drive-1010.log):
+  `<ts> [loop auto-react] <job>: <verdict> <reason> -- <why>; structural fix needed`.
+
+**READY_NEXT deep queue.**
+- **File format.** `$CL_READY_NEXT_DIR` (default `$CL_TAKEOVER/READY_NEXT`) holds `<element>.json`: a JSON list of 1-2
+  full job specs (the `jobs/*.json` schema), each with an extra `"after": "<block or job-name prefix>"`.
+- **Trigger.** A job of the element ends in a failure verdict, no auto-react action was taken, and the element has no
+  other live job and no spec waiting in the drop dir.
+- **Action.** The first spec goes to the drop dir (normal intake; `after` removed, `ready_next_from` added), and a copy
+  goes to `READY_NEXT/done/<element>.<name>.json`. The file keeps the rest; when it is empty, it moves to `done/`.
+- **Logging.** The trigger job gets an event and a ledger line, and its owner-log line names the ingested spec.
+- **Validation.** Files are validated on read (list of 1-2 specs, `after` present, `validate()` clean). A bad file is
+  logged once per content and skipped.
+
+**Host down.** Every admission probe and stage poll records success or failure per host (`HOST_DOWN`, in memory). A host
+whose probes have all failed for more than 30 min is treated as smoke_only: no new job or bench offload goes there, and
+`hosts.json` is untouched. Its RUNNING calibrate / route / bench jobs are requeued from scratch (QUEUED, host and run
+None, stage 0, attempt + 1, `source_synced` false, resume, checkpoint and track state dropped, event and ledger line).
+ECO / ECO_INSTALL / SUMMARY jobs wait up to 6 h for the host before the same requeue; the abandoned ECO is kept in
+`eco_history`. The first successful probe clears the state.
+
 ## Rules the daemon enforces
 - Load cap (OWNER_RULE_LOAD_CAP): launch only if `load1 + own launches of the last 5 min + threads <= cap`
   (1.2 x cores: 154 / 34 / 77) and `MemAvailable >= peak + 32 GB`; per-host per-job limits and NVMe run roots in

@@ -59,7 +59,7 @@ DIES = {
         note=f'chain {SCR}/die-evidence-2/qwen_r22k (EVIDENCE.log + STATUS.log): kv-die die_chain.sh with the GRT-0008 '
              'fix (GRT SPEF) + ETM-bound libs, own clock plan, IR windows, guided regions'),
     'qwen_r22k4': dict(
-        name='Qwen3-8B ROM die r22k4 (kv-die channel-paths case, 12,902 inst)', host='ot-epyc1tb',
+        name='Qwen3-8B ROM die r22k4 (kv-die channel-paths case, 12,902 inst)', host='ot-epyc3',
         note=f'kv-die chain {SCR}/kv-die/die_r22k4 (r22k-channel-paths: real case -> PDN PASS -> full-die GRT writing '
              'die_grt.spef -> STA reading it); the current r22k recipe. die-evidence-2/qwen_r22k (EPYC3, 12,869 inst) '
              'carries the clock plan / IR / regions for the same recipe'),
@@ -91,7 +91,7 @@ DIES = {
         note=f'cont-takeover chain {SCR}/cont-takeover/s81-r4d/r4f (gen -> clock plan -> kit with the colck cfifo views '
              '-> place -> full-die GRT -> STA TT / FF / SS on the GRT SPEF). Pre-x1b q element (qs5f) and 14 pairs/frame'),
     'qwen_kv11': dict(
-        name='Qwen3-8B KV die (die_kv11, src f8a6d7c30)', host='ot-epyc1tb',
+        name='Qwen3-8B KV die (die_kv11, src f8a6d7c30)', host='ot-epyc3',
         note=f'kv-die chain {SCR}/kv-die/die_kv11: real case -> PDN (VSS PSM-0069 FAIL) -> full-die GRT -> STA on the '
              'GRT SPEF rebuilt from the checkpoint (spef_from_ckpt.tcl; the chain\'s write_spef failed RCX-0134)'),
 }
@@ -683,8 +683,10 @@ def probe_qwen_r22k():
 
 def probe_qwen_r22k4():
     R, E = f'{SCR}/kv-die/die_r22k4', f'{SCR}/die-evidence-2/qwen_r22k4'   # E: ETM-bound libs + STA on R's SPEF
-    E3 = f'{SCR}/die-evidence-2/qwen_r22k4_e3'   # ds-1010 10-10: SPEF from the retained checkpoint + STA, run on EPYC3
-    return probe_qwen_run(R, f'{R}/case_r22k', f'{R}/grt_r22k', lambda c: [f'{E3}/sta_r22k_{c}', f'{E}/sta_r22k_{c}', f'{R}/sta_r22k_{c}'], f'{E}/libs',
+    # ds-1010 10-10: SPEF from the retained checkpoint + STA ran on EPYC3 (EPYC1 memory); case netlist / LEFs / GRT log
+    # copied there (die-evidence-2/kvdie_copy) so the probe reads one host
+    E3, C3 = f'{SCR}/die-evidence-2/qwen_r22k4_e3', f'{SCR}/die-evidence-2/kvdie_copy/die_r22k4'
+    return probe_qwen_run(E3, f'{C3}/case_r22k', f'{C3}/grt_r22k', lambda c: [f'{E3}/sta_r22k_{c}'], f'{E3}/libs',
                           f'{R}/ir', f'{R}/clock', f'{R}/regions/gw22k_*')
 
 
@@ -753,8 +755,8 @@ def probe_s81_r4f():
 
 def probe_qwen_kv11():
     K = f'{SCR}/kv-die/die_kv11'
-    E3 = f'{SCR}/die-evidence-2/qwen_kv11_e3'
-    return probe_qwen_run(K, f'{K}/case_kv', f'{K}/grt_kv', lambda c: [f'{E3}/sta_kv_{c}', f'{K}/sta_kv_{c}'], f'{K}/libs',
+    E3, C3 = f'{SCR}/die-evidence-2/qwen_kv11_e3', f'{SCR}/die-evidence-2/kvdie_copy/die_kv11'
+    return probe_qwen_run(E3, f'{C3}/case_kv', f'{C3}/grt_kv', lambda c: [f'{E3}/sta_kv_{c}'], f'{E3}/libs',
                           f'{K}/ir', f'{K}/clock', f'{K}/regions/gwkv_*')
 
 
