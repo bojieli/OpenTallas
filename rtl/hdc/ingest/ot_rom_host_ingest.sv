@@ -52,7 +52,11 @@ module ot_rom_host_ingest #(
     // sys-takeover 2026-10-09 (opt-in): ENG_TRIM = 1 with QKV_EN = 0 builds the engine without its QKV path (unreachable:
     // a QKV descriptor is failed closed above); APIPE = 1 registers the engine's stream address terms (ot_hdc_kv_ingest).
     parameter integer ENG_TRIM = 0,
-    parameter integer APIPE  = 0
+    parameter integer APIPE  = 0,
+    // QPIPE = 1 (qwen-1010/c 2026-10-10, qfd_io_host): the engine's pipelined, lane-banked QKV path (ot_hdc_kv_ingest
+    // QPIPE).  It is write-only, so it implies RMW_EN 0 here (an rmw descriptor fails closed, code 2).  MUT 3 / 4 = the
+    // engine's QMUT 1 (K lane bank) / 2 (stale slot fields).
+    parameter integer QPIPE  = 0
 ) (
     input  wire              rst_n,
     // host link face
@@ -112,7 +116,7 @@ module ot_rom_host_ingest #(
     wire [255:0] hdesc = hx_head[255:0];
     wire         dq_qkv = hdesc[3:0] == 4'd1;
     wire         bad_qkv = (QKV_EN == 0) && dq_qkv;
-    wire         bad_rmw = (RMW_EN == 0) && dq_qkv && hdesc[6];
+    wire         bad_rmw = (RMW_EN == 0 || QPIPE != 0) && dq_qkv && hdesc[6];
     // engine
     wire         e_drdy, e_inrdy, e_wv, e_rv, e_done, e_busy;
     wire [AW-1:0] e_waddr, e_raddr;
@@ -127,7 +131,8 @@ module ot_rom_host_ingest #(
     wire         hv_i = !hx_empty;
     wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw;
     wire         take_p = hv_i && !f_any && hcl == 2'd2;
-    ot_hdc_kv_ingest #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE)) u_eng (
+    ot_hdc_kv_ingest #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE),
+                      .QPIPE(QPIPE), .QMUT((MUT >= 3) ? MUT - 2 : 0)) u_eng (
         .clk(clk_i), .rst_n(rn_i),
         .d_v(take_d), .d_rdy(e_drdy), .d_data(hdesc),
         .in_v(take_p), .in_rdy(e_inrdy), .in_data(pay),
@@ -160,7 +165,7 @@ module ot_rom_host_ingest #(
     wire         csr_mark = hv_i && !f_any && hcl == 2'd0 && hx_head[7:0] == 8'd2;
     wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && !ox_full;
     assign e_wrdy = !ox_full;
-    assign e_rrdy = (RMW_EN != 0) && !e_wv && !ox_full && rd_room;
+    assign e_rrdy = (RMW_EN != 0 && QPIPE == 0) && !e_wv && !ox_full && rd_room;
     wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go;
     // Preserve the optional marker region in bits65:64. Existing markers use
     // zero there and retain their exact low64 payload / RoPE dispatch behavior.
