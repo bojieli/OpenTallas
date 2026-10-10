@@ -1249,6 +1249,14 @@ def cmd_block(a):
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_FILES += /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hbm_accel/cg/ot_cg_tile.sv\n"
                     "export PRE_CTS_TCL = /work/pre_cts_cg.tcl\n")
+    defs = (["OT_SMH_CG_ENREG"] if getattr(a, "cg_enreg", False) else []) + (["OT_SMH_XLK"] if getattr(a, "xlk", False) else [])
+    if defs:
+        if getattr(a, "cg_enreg", False) and not (getattr(a, "cg", False) and a.piece == "tile"):
+            raise ValueError("--cg-enreg applies to the gated tile (--cg --piece tile)")
+        if getattr(a, "xlk", False) and a.piece != "tile":
+            raise ValueError("--xlk applies to the tile (its x-store macros)")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_DEFINES += " + " ".join("-D" + d for d in defs) + "\n")
     int8_enabled = any(x == "ENABLE_INT8=1" for x in (a.top_param or []))
     if int8_enabled:
         if a.piece != "front_c":
@@ -1399,6 +1407,10 @@ def main(argv=None):
                    "cg_pushdown.tcl clones the ICG per sink cluster before CTS")
     b.add_argument("--cg-nopush", action="store_true", help="--cg: keep the ONE ICG at the root (no cg_pushdown cloning; small pieces: "
                    "the back end's CTS segfaulted with the push-down hook)")
+    b.add_argument("--cg-enreg", action="store_true", help="[cg-smt] 2026-10-10: --cg tile: the ICG ENA from one register beside the "
+                   "gate (ot_cg_tile ENREG; tile_wg cal: ENA from leaf-insertion cnt/wq, TT -198 ps)")
+    b.add_argument("--xlk", action="store_true", help="[cg-smt] 2026-10-10: tile: a negedge lockup stage at every x-store macro input "
+                   "(0 cycles; macro clock pin late + 47 ps lib hold: FF hold -55..-84 ps at r_addr_in / w_mask_in)")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)

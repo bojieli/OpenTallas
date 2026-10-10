@@ -1879,9 +1879,30 @@ module ot_hbm_accel_smh_leaf #(
         ot_hbm_accel_smh_kreg #(.W(XW)) u_wa (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(wa_q), .q(wa2));
         ot_hbm_accel_smh_kreg #(.W(256)) u_wd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(wd_m[256*m +: 256]), .q(wd2));
         ot_hbm_accel_smh_kreg #(.W(256)) u_wm (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(wm_m[256*m +: 256]), .q(wm2));
+        // [cg-smt] 2026-10-10 OT_SMH_XLK: a NEGEDGE lockup stage between the kept pin registers and the macro (same values,
+        // same edge at the macro: posedge kreg at t -> negedge at t+0.5 -> macro at t+1; 0 cycles).  Root cause
+        // (hbm_smh_tile_wg_cg-a6d34a72e smtc cal, FF): the macro clock pin sits 59 ps after its pin registers
+        // (shared macro leaf net, 281 ps slew) + 47 ps library hold -> r_addr_in / w_mask_in hold -55..-84 ps that
+        // repair could not buffer; the negedge launch gives the macro inputs a half-cycle hold window (setup slack
+        // at these pins was +668 ps TT, so half a cycle is free).
+        wire          rce3, wce3;
+        wire [XW-1:0] ra3, wa3;
+        wire [255:0]  wd3, wm3;
+`ifdef OT_SMH_XLK
+        reg           rce_n, wce_n;
+        reg  [XW-1:0] ra_n, wa_n;
+        reg  [255:0]  wd_n3, wm_n3;
+        always @(negedge clk or negedge rst_n)
+            if (!rst_n) begin rce_n <= 1'b0; wce_n <= 1'b0; end
+            else begin rce_n <= rce2; wce_n <= wce2; end
+        always @(negedge clk) begin ra_n <= ra2; wa_n <= wa2; wd_n3 <= wd2; wm_n3 <= wm2; end
+        assign rce3 = rce_n; assign wce3 = wce_n; assign ra3 = ra_n; assign wa3 = wa_n; assign wd3 = wd_n3; assign wm3 = wm_n3;
+`else
+        assign rce3 = rce2; assign wce3 = wce2; assign ra3 = ra2; assign wa3 = wa2; assign wd3 = wd2; assign wm3 = wm2;
+`endif
         ot_sram_1r1w_128x256_m1_r2c2 u_x (
-            .clk(clk), .r_ce_in(rce2), .r_addr_in(ra2), .rd_out(xrd[256*m +: 256]),
-            .w_ce_in(wce2), .w_addr_in(wa2), .wd_in(wd2), .w_mask_in(wm2),
+            .clk(clk), .r_ce_in(rce3), .r_addr_in(ra3), .rd_out(xrd[256*m +: 256]),
+            .w_ce_in(wce3), .w_addr_in(wa3), .wd_in(wd3), .w_mask_in(wm3),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     // ---- E4 ----
@@ -2108,7 +2129,11 @@ module ot_hbm_accel_smh_tile_g #(
     parameter integer NC = 8, parameter integer IL = 8, parameter integer TAGW = 16, parameter integer XD = 128,
     parameter integer NBEAT = 13, parameter integer TCK = 1, parameter integer NMG = 32, parameter integer A1B = 9,
     parameter integer A2B = 7, parameter integer PT4 = 1, parameter integer HOLD = `ifdef OT_SMH_CG_MUT_HOLD0 0 `else 64 `endif,
-    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 32 `else 0 `endif
+    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 32 `else 0 `endif,
+    // [cg-smt] 2026-10-10 OT_SMH_CG_ENREG: the tile ICG's ENA from one register beside the gate (ot_cg_tile ENREG, 0 cycles).
+    // Root cause (tile_wg cg a6d34a72e smtc cal): ENA from cnt / wq at leaf insertion 670 ps -> ICG CK at 217 ps over
+    // 160 ps of wire (507 ps slew): TT setup -198 / -352 ps.
+    parameter integer ENREG = `ifdef OT_SMH_CG_ENREG 1 `else 0 `endif
 ) (
     input  wire clk, input wire rst_n, input wire cgi, output wire cgo,
     input  wire [RPT*A1B-1:0] xs_a1, input wire [RPT*5-1:0] xs_g1, input wire [RPT*A2B-1:0] xs_a2, input wire [RPT*5-1:0] xs_g2,
@@ -2120,7 +2145,7 @@ module ot_hbm_accel_smh_tile_g #(
     output wire [SUB*(2+32+TAGW)-1:0]                          gout
 );
     wire gclk;
-    ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
+    ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE), .ENREG(ENREG)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
     ot_hbm_accel_smh_tile #(.SUB(SUB), .RPT(RPT), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW), .XD(XD),
                             .NBEAT(NBEAT), .TCK(TCK), .NMG(NMG), .A1B(A1B), .A2B(A2B), .PT4(PT4)) u (
         .clk(gclk), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2), .rin(rin), .bin(bin),
