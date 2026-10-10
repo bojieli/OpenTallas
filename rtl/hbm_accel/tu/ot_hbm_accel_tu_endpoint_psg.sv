@@ -89,6 +89,7 @@
 module ot_hbm_accel_tu_endpoint_psg #(
     parameter integer ENABLE = 0,
     parameter integer REARM = 0, // opt-in; production pclk must equal clk
+    parameter integer DELCRED = 0, // opt-in publisher reservation before HUBW flight
 
     parameter integer NC     = 8,
     parameter integer NOG    = 8,
@@ -140,6 +141,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
     output wire [NPT-1:0]       rx_credit,       // receive-buffer pop (core clock) -> switch egress credit
     output wire [DEL-1:0]       del_valid,
     output wire [DEL*PWT-1:0]   del_flit,
+    input  wire [DEL-1:0]       del_permit,
+    output wire [DEL-1:0]       del_reserve,
     output wire                 fault,
     output wire [31:0]          stat_credit_stall
 );
@@ -149,7 +152,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
     generate if (ENABLE == 0) begin : g_off
         assign inj_idx = '0; assign inj_rd = '0; assign ph_tx_v = '0; assign ph_tx_flit = '0;
         assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
-        assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
+        assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0; assign del_reserve = '0;
     end else begin : g_on
         reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer; reg run_byp; reg run_bf16;
         reg pending_start, completed, started;
@@ -448,7 +451,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             for (integer s = 0; s <= NPT; s = s + 1) begin
                 n = 0;
                 for (integer t = 0; t <= NPT; t = t + 1) if (rdy[t] && pos[t] < pos[s]) n = n + 1;
-                for (integer l = 0; l < DEL; l = l + 1) dsel[l][s] = rdy[s] && n == l;
+                for (integer l = 0; l < DEL; l = l + 1) dsel[l][s] = rdy[s] && n == l && (DELCRED == 0 || del_permit[l]);
             end
             for (integer l = 0; l < DEL; l = l + 1) begin
                 dv[l] = |dsel[l];
@@ -461,6 +464,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 if (s == NPT) dq_own_pop = taken; else if (taken) rb_pop[s % NPT] = 1'b1;
             end
         end
+        assign del_reserve = dv;
         for (genvar i = 0; i < DEL; i = i + 1) begin : g_del
             (* keep_hierarchy *) ot_hcoll_sdelay #(.W(PWT), .D(HUBW)) u_d (.clk(clk), .rst_n(rst_n), .v_in(dv[i]), .d_in(dfl[i]),
                 .v_out(del_valid[i]), .d_out(del_flit[i*PWT +: PWT]));

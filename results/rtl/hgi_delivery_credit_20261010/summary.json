@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS_COMPONENT_ONLY",
+  "default_enable": 0,
+  "capacity_per_lane": 128,
+  "lanes": 4,
+  "reserved_cycles_checked": 450,
+  "blocked_cycles": 46,
+  "negative_guard": "FAIL as expected at reservation129 before first sink return",
+  "fault_checks": [
+    "complementary count corruption immediately blocks all lanes and latches fault",
+    "extra acknowledgement at full capacity faults"
+  ],
+  "endpoint_change": "DELCRED0 default; DELCRED1 gates selection before HUBW35 and emits del_reserve on selection",
+  "remaining": [
+    "actual endpoint full shape credit-enabled proof",
+    "protected publisher FIFO",
+    "actual consumer acknowledgement ownership and VM allocation",
+    "physical closure"
+  ],
+  "rate_credit": false
+}
