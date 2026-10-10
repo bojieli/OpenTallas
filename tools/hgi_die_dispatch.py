@@ -52,10 +52,12 @@ def layout(fs):
     return rows, off
 
 
-def model(hub, units, reach_um=504.0):
+def model(hub, units, reach_um=504.0, unit_block=None):
     rows = []
+    unit_block = unit_block or {}     # mtp-lead: variant 'hgi_unit_block' (e.g. argmax -> 'mtp_am' in a split slot)
     for u in [x for x in units if x in UNITS]:
         code, blk, desc, _ = UNITS[u]
+        blk = unit_block.get(u, blk)
         if blk not in hub:
             raise ValueError(f'hgi_dispatch: hub block {blk} for unit {u} not on this die')
         cmd, cbits = layout(fields(u))
@@ -98,7 +100,9 @@ def variant(base, units):
     """base variant dict + hgi_dispatch + the cmdproc ECO pins."""
     v = dict(base, hgi_dispatch=list(units))
     ex = {k: dict(x) for k, x in (base.get('split_extra_ports') or {}).items()}
-    ex.setdefault('hfd_cmdproc', {}).update(split_extra_ports(units))
+    alias = base.get('cp_band_alias') or {}     # mtp-lead: a replaced CP band (e.g. the MX1 south view) keeps the plan
+    ex.setdefault('hfd_cmdproc', {}).update({k: (alias.get(t[0], t[0]),) + tuple(t[1:])
+                                             for k, t in split_extra_ports(units).items()})
     v['split_extra_ports'] = ex
     if 'cp' in units:
         # hgi-takeover die gap 4: ONE command-processor block (ot_hgi_cp_die) instead of the legacy N / S split; the
@@ -123,7 +127,7 @@ def variant(base, units):
 
 def install(m, buses, paths, units):
     hub = m['hub']
-    rec = model(hub, units)
+    rec = model(hub, units, unit_block=(m.get('variant') or {}).get('hgi_unit_block'))
     names = {b[0] for b in buses}
     cp = hub['cmdproc'].name
     for r in rec['units']:
