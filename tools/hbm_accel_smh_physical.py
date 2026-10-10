@@ -1157,12 +1157,17 @@ def cmd_block(a):
             mw, mh = 96.552, 69.66
             ch = float(g.get("front_channel_um", 120.0))
             xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
-            y0 = qd(h / 2 - 2.5 * (mh + 4.32))
+            # [cg] 2026-10-10 front_macro_gap_um (default 4.32 = unchanged): the W / E row bundles (rout_l*/r*,
+            # bout_*: ~3.7k bits a side) cross the ring-macro columns horizontally on M6 over the macros (OBS M1-M4)
+            # and through the 4 inter-macro gaps; every routed front_c failed GRT congestion exactly there (markers
+            # x 50-100 / 350-400, y 250-350 = macro rows 2-3).  Wider gaps open M2 / M4 / M6 channels at the bundles.
+            mgap = float(g.get("front_macro_gap_um", 4.32))
+            y0 = qd(h / 2 - 2.5 * (mh + mgap) + (mgap - 4.32) / 2)
             tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
                    "  if {![[$ot_inst getMaster] isBlock]} { continue }",
                    "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
                    "  if {![regexp {g_grp\\[(\\d+)\\]\\.g_mb\\[(\\d+)\\]\\.u_ring} $n -> gg mb]} { error \"no slot for $n\" }",
-                   f"  set y [expr {{{y0} + $mb * {q(mh + 4.32)}}}]",
+                   f"  set y [expr {{{y0} + $mb * {q(mh + mgap)}}}]",
                    f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                    f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                    "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
@@ -1187,6 +1192,13 @@ def cmd_block(a):
                 # Converter register stations beside skid/issue, in the enlarged
                 # macro corridor. Pin-facing register placement remains literal.
                 hops += f"ot_place {{^g_int8\\.}} {w/2-channel/2:g} {w/2+channel/2:g} 100 140\n"
+        if a.piece == "front_c" and float(g.get("front_macro_gap_um", 4.32)) != 4.32:
+            # the hop bands above / below the ring follow the spread macro span (macro top + halo .. ; below y0 - halo)
+            top = y0 + 4 * q(mh + mgap) + mh
+            hops = re.sub(r"(ot_place \{\^g_h\\\[[02]\\\]\\\.\} [0-9.]+ [0-9.]+) 456 486",
+                          lambda m: f"{m.group(1)} {top + 4:.2f} {min(top + 34, h - 4):.2f}", hops)
+            hops = re.sub(r"(ot_place \{\^u_prd\\\.g_s\\\[1\\\]\} [0-9.]+ [0-9.]+) 42 66",
+                          lambda m: f"{m.group(1)} {min(42.0, y0 - 17):.2f} {y0 - 4:.2f}", hops)
         (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + hops)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     else:
