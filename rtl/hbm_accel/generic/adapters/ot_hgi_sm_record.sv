@@ -166,7 +166,9 @@ module ot_hgi_sm_record #(
     assign sm_cmd = hen ? cmd_h : lg_cmd;
     assign lg_ret = hen ? {NSM*4{1'b0}} : sm_ret;
 
-    reg all_arr;
+    // the 32-wide reductions land in flops (retire / go decisions one edge later: no reduction -> enable fanout)
+    reg all_arr, all_arr_r, pend0_r;
+    always @(posedge clk) begin all_arr_r <= all_arr && !rec_done; pend0_r <= (st_pend == 0) && (d_pend == 0); end
     always @* begin
         all_arr = 1'b1;
         for (s = 0; s < NSM; s = s + 1) if (arr_want[s] && !arr_seen[s]) all_arr = 1'b0;
@@ -266,7 +268,7 @@ module ot_hgi_sm_record #(
                     if (d_pend[s] && cmd_h[s*CW + 48] && sm_ret[s*4 + 1]) d_pend[s] <= 1'b0;
                     if (arr_want[s] && ret_q[s*4 + 2] != rel[s]) arr_seen[s] <= 1'b1;
                 end
-                if (st_pend == 0 && d_pend == 0) go_ok <= 1'b0;
+                if (pend0_r) go_ok <= 1'b0;
             end else if (started) begin
                 for (s = 0; s < NSM; s = s + 1)
                     if (arr_want[s] && ret_q[s*4 + 2] != rel[s]) arr_seen[s] <= 1'b1;
@@ -275,7 +277,7 @@ module ot_hgi_sm_record #(
                 rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0; dv_chk <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0;
             end else if (busy && (any_fault || in_xf || in_pf)) begin
                 rec_fault <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; go_ok <= 1'b0;
-            end else if (busy && started && !go_ok && all_arr && pd_seen && st_pend == 0 && d_pend == 0) begin
+            end else if (busy && started && !go_ok && all_arr_r && pd_seen && pend0_r) begin
                 rec_done <= 1'b1; busy <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0; started <= 1'b0;
                 for (s = 0; s < NSM; s = s + 1) if (arr_want[s]) rel[s] <= ret_q[s*4 + 2];
                 arr_want <= 0; act <= 0;
