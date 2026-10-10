@@ -408,6 +408,18 @@ def real_blocks(die, m=None):
             bind={pn:([pn] if n==1 else _bus(pn,n)) for pn,(_,n) in pm['ports'].items()}
             out[mn]=dict(module=mn,file=directory+filename,kind='full-shape native index RTL',
                          params=prm,ports=pm['ports'],binding=bind)
+    if die == 'hbm' and V.get('mtp_x_stop') and V.get('mtp_master') != 'hgi_native' and not V.get('native_mtp_wb'):
+        # hgi-takeover 2026-10-09: the R25G MTP slot = the CLOSED view hfd_mtp_x_stop (renamed hfd_mtp in its LEF / ETMs);
+        # the die buses (stop_model groups) bind bit by bit to its raw RTL ports (the generator's pins are those pins)
+        from hbm_mtp_native_contract import stop_model
+        f = 'rtl/hbm_accel/control/hfd_mtp_x_stop.sv'
+        pm = parse_module(f, 'hfd_mtp_x_stop', {})
+        bind = {}
+        for g, gr in stop_model(ROOT)['groups'].items():
+            bind[g] = [fl['port'] if fl['width'] == 1 else f"{fl['port']}[{b}]" for fl in gr['fields'] for b in range(fl['width'])]
+        bind['ck'], bind['rst'] = ['clk'], ['rst_n']
+        out['hfd_mtp'] = dict(module='hfd_mtp_x_stop', file=f, kind='RTL of the CLOSED view mtp (hfd_mtp_x_stop), die buses '
+                              'bound bit by bit to its raw ports', params={}, ports=pm['ports'], binding=bind)
     if die == 'hbm' and V.get('mtp_master') == 'hgi_native':
         # mtp-lead 2026-10-09: the generic-die MTP slot (controller + ARGMAX unit, both CLOSED views) and the MX1 CP band
         for mn, f, prm, kind in (
