@@ -1,9 +1,9 @@
 `timescale 1ns/1ps
-// hgi-adapters (2026-10-09): DATA bench of the DMA path: records -> ot_hgi_dma_record -> ot_hgi_dma_mover -> the REAL
-// HGI VM (ot_hgi_vm_unit, client 0 = the mover, client 1 = this bench) and a kport-lane HBM model (one transaction
-// outstanding, random latency, sector memory).  Vectors tools/hgi_adapters/mover_bench.py: hbm-sim CF-IDXD n_from_vm,
-// CF-KV linear append + DS KVWB x 2 (expected hbm_out / vm_out) and 60 random LOAD / STORE records (every format,
-// stride, alignment; hgi_sim decode_fmt / encode_fmt).  Prints HGI_ROW_GATHER_STORE PASS / FAIL.
+// Full-shape ROW_GATHER STORE: real record adapter, current mover and SECDED VM, one in-order KOUT64 HBM lane.
+// The lane accepts up to one 32B sector per edge and replies at KLAT=40; this does not serialize each sector roundtrip.
+// G96/c2 moves two 192KiB runs from a slot-interleaved VM region; a selected-row chunk moves64x512FP32 words.
+// Vectors tools/hgi_adapters/row_gather_store_bench.py independently check every destination word and no stray address.
+// Completion requires all write acknowledgements. Timeouts are omitted; the fleet's job lifecycle owns stuck-run policy.
 module tb_hgi_row_gather_store;
     parameter integer KLAT = 40;
 `ifdef MUT_WIDE_MASK
@@ -84,8 +84,13 @@ module tb_hgi_row_gather_store;
         end
     endtask
     integer started, c, j, t, r0, nr, vi0, nvi, hi0, nhi, ve0, nve, he0, nhe, k, nf, words = 0;
+    integer rec_started;
     reg [31:0] qd;
-    always @(posedge clk) begin if (rst_n && done) k = k + 1; if (rst_n && fault) nf = nf + 1; end
+    always @(posedge clk) begin
+        if (rst_n && rec_v && rec_rdy) rec_started=cycle;
+        if (rst_n && done) begin k=k+1; $display("STORE_RECORD case=%0d record=%0d cycles=%0d",c,k,cycle-rec_started);end
+        if (rst_n && fault) nf=nf+1;
+    end
     initial begin
         repeat (3) @(posedge clk);
         for (c = 0; c < NCASE; c = c + 1) begin
@@ -109,6 +114,7 @@ module tb_hgi_row_gather_store;
                     if (errors < 30) $display("ERR case %0d VM[%0d] = %h expected %h", c, vmem[ve0 + j][63:32], qd, vmem[ve0 + j][31:0]);
                     errors = errors + 1; end
             end
+            if (hbm.num()!=nhe) begin $display("ERR stray HBM addresses case %0d got%0d expected%0d",c,hbm.num(),nhe);errors=errors+1;end
             for (j = 0; j < nhe; j = j + 1) begin
                 qd = hbm.exists(hbem[he0 + j][71:32]) ? hbm[hbem[he0 + j][71:32]] : 32'd0;
                 if (qd !== hbem[he0 + j][31:0]) begin
