@@ -5381,6 +5381,11 @@ def cmd_retry(a):
             sys.exit(f"{a.name}: no stage {a.at} (stages: {' '.join(s['key'] for s in stl)})")
         j["stage_idx"], j["stage_key"] = idx[0], a.at
     synchronized = bool(j.get("commit_full")) and j.get("source_synced") is not False
+    # FRESH-RETRY (drive-0849 2026-10-10): a released / cleaned-up job (deep release, disk cleanup) has no src/ left but
+    # still reads source_synced; seven PINFLOP-REF requeues then died rc=127 "route_mtp.sh: No such file" twice.  A human
+    # retry re-syncs the snapshot (sync_source re-extracts in place; cheap when it is intact).
+    if not getattr(a, "keep_resume", False):
+        synchronized = False
     retry_status = ("READY" if synchronized else "SYNC") if j.get("host") else "QUEUED"
     j["status"], j["retries_used"], j["attempt"] = retry_status, 0, j["attempt"] + 1
     j["errors"] = []

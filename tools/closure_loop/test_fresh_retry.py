@@ -21,6 +21,7 @@ class FreshRetry(unittest.TestCase):
     def test_drops(self):
         s = self._run(False)
         self.assertNotIn("resume", s); self.assertNotIn("hold_stop", s); self.assertEqual(s["attempt"], 4)
+        self.assertEqual(s["status"], "SYNC")                     # re-sync: a released job has no src/
 
     def test_keep(self):
         s = self._run(True)
