@@ -1,0 +1,57 @@
+{
+  "scope": "Cross-owner SU exact strap candidate abstract R25GPHT4, no real mapped closure",
+  "hub_ports_sha256": "9ca84856a4c50cef6e35d6ed216b7018285d942b1252796c8aeb0137c2c4bd0b",
+  "qid": {
+    "bits": 2,
+    "layer": "M4",
+    "pins": [
+      [
+        "qid[0]",
+        "M4",
+        1405.944,
+        4450.704,
+        1406.136,
+        4450.728
+      ],
+      [
+        "qid[1]",
+        "M4",
+        1405.944,
+        4450.8,
+        1406.136,
+        4450.824
+      ]
+    ],
+    "face": "E",
+    "dir_segments": [
+      [
+        0,
+        2,
+        "in"
+      ]
+    ],
+    "direction": "input"
+  },
+  "qid_in_order": true,
+  "clashes": [],
+  "geometry": {
+    "instances": 1250,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": [],
+    "reserved_regions": 32,
+    "reserved_overlaps": 0,
+    "reserved_overlap_examples": []
+  },
+  "margin_lint": {
+    "mode": "chains",
+    "chains": 2045,
+    "reach_um": 504.0,
+    "reach_violations": 0,
+    "far_side_relays": 0,
+    "reach_examples": [],
+    "far_side_examples": [],
+    "verdict": "PASS"
+  }
+}
