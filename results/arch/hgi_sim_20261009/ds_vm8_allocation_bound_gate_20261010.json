@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.ds_vm8_allocation.bound_gate.v1",
+  "source_commit": "f03cbafda",
+  "source_sha256": "db59ea507c516b8dfbf5d77dd319531abf9101b41b27557268fbbf6ab418baab",
+  "fixture_sha256": "fd7f9fe4989c8c612ac9274e3dafc13e0e431a3e18f9532218bc33ef617f2697",
+  "verdict": "PASS",
+  "gates": [
+    "All35actualrelocatedrecords retain valid perbuffer extents",
+    "ATT C2048rows uses exactly4MiB, score2176words exactly sized",
+    "Negative Cbytebase1 sector misalignment rejected",
+    "Negative C2049rows rejected before address truncation"
+  ],
+  "limits": [
+    "Capacity/address gate only, runtimeK512 and actual native producer/consumer still separate",
+    "NoK2048numericalmodel or tokenrate claim"
+  ]
+}
