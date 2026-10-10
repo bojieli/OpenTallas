@@ -153,8 +153,17 @@ def master_record(name):
     pdir, narrow = port_dirs()
     insts = [it for it in m['insts'] if it.master == name]
     ports = {}
+    # hgi-takeover 2026-10-09: a fixed 'rects' plan may name its pins after a closed view's raw ports (hfd_mtp: group
+    # bit i -> the controller pin, e.g. t_cmdproc bit 0 = cmd_v): map such names back to (port, bit)
+    alias = {}
+    for p_, sp_ in mst.ports.items():
+        if sp_ and sp_[0] == 'rects':
+            for i_, x_ in enumerate(sp_[1]):
+                if isinstance(x_, (list, tuple)) and isinstance(x_[0], str):
+                    alias[x_[0]] = (p_, i_)
     for nm, layer, r in rects:
-        base, idx = re.match(r'^(.*)\[(\d+)\]$', nm).groups()
+        mm = re.match(r'^(.*)\[(\d+)\]$', nm)
+        base, idx = alias[nm] if nm in alias else mm.groups()
         p = ports.setdefault(base, dict(bits=0, layer=layer, pins=[]))
         p['bits'] = max(p['bits'], int(idx) + 1)
         p['pins'].append([nm, layer] + [round(v, 4) for v in r])
