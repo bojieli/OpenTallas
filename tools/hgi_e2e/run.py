@@ -182,7 +182,7 @@ $VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno
   {srcs} \\
   {' '.join('$S/' + t for t in TB)} --Mdir $O/obj -o tb > $O/build.log 2>&1
 set +e
-$O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt > $O/run.log 2>&1; rc=$?
+$O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt ${{E2E_PLUS:-}} > $O/run.log 2>&1; rc=$?
 echo "rc=$rc" >> $O/run.log
 """
 

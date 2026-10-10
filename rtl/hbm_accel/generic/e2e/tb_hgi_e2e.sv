@@ -38,6 +38,7 @@ module tb_hgi_e2e;
     import "DPI-C" function int e2e_real_retire(input int k, input longint cyc);
     import "DPI-C" function int e2e_finish(input longint cyc, input int token, input int status);
     import "DPI-C" function void e2e_ignore(input int lo, input int hi);
+    import "DPI-C" function void e2e_watch(input int a);
 
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
@@ -310,6 +311,7 @@ module tb_hgi_e2e;
         n_rec = e2e_init(dir, outp);
         if (n_rec <= 0) $fatal(1, "E2E init failed");
         if (REAL_FUSED) e2e_ignore(FUSED_SCRATCH, FUSED_SCRATCH + 8192);
+        if ($value$plusargs("WATCH=%d", w)) e2e_watch(w);
         t_cpl = 0;
         repeat (3) @(posedge clk); rst_n = 1; repeat (2) @(posedge clk);
         axw(12'hC14, host[67]);

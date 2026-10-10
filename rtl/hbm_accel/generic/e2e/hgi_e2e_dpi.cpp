@@ -110,19 +110,24 @@ extern "C" int e2e_init(const char* d, const char* outp) {
 }
 
 // ------------------------------------------------------------------------------------------------ memories
+static long watch_a = -1;
+extern "C" void e2e_watch(int a) { watch_a = a; }
+static void watch(int unit, uint32_t a, uint32_t v) {
+    if ((long)a == watch_a) fprintf(stderr, "E2E WATCH VM[%u] <= %08x by unit %d (dispatches so far %d, retired %d)\n", a, v, unit, ndisp, n_ret);
+}
 extern "C" void e2e_vm_sector(int unit, int sec, svBit we, const svBitVecVal* wd, const svBitVecVal* mask, svBitVecVal* rd) {
     if (sec < 0 || sec >= VMW / 8) { for (int i = 0; i < 8; i++) rd[i] = 0xDEADBEEF; return; }
     for (int i = 0; i < 8; i++) {
         uint32_t a = sec * 8 + i;
         if (we) {
             uint32_t m = (mask[0] >> (4 * i)) & 0xF;
-            if (m == 0xF) { vm[a] = wd[i]; wrote[unit].insert(a); }
+            if (m == 0xF) { vm[a] = wd[i]; wrote[unit].insert(a); watch(unit, a, wd[i]); }
             rd[i] = 0;
         } else rd[i] = vm[a];
     }
 }
 extern "C" int e2e_vm_rd(int a) { return (a >= 0 && a < VMW) ? (int)vm[a] : (int)0xDEADBEEF; }
-extern "C" void e2e_vm_wr(int unit, int a, int v) { if (a >= 0 && a < VMW) { vm[a] = (uint32_t)v; wrote[unit].insert(a); } }
+extern "C" void e2e_vm_wr(int unit, int a, int v) { if (a >= 0 && a < VMW) { vm[a] = (uint32_t)v; wrote[unit].insert(a); watch(unit, a, v); } }
 
 extern "C" void e2e_hbm_sector(long long addr, svBit we, const svBitVecVal* wd, const svBitVecVal* strb, svBitVecVal* rd) {
     uint64_t s = (uint64_t)addr >> 5;
@@ -182,7 +187,7 @@ extern "C" int e2e_cost(int k) { return (k >= 0 && k < (int)recs.size()) ? (int)
 extern "C" int e2e_unit_of(int k) { return (k >= 0 && k < (int)recs.size()) ? recs[k].unit : -1; }
 
 static void apply(const Rec& r) {
-    for (uint64_t i = 0; i < r.vm_n; i++) vm[vmw[2 * (r.vm_off + i)]] = vmw[2 * (r.vm_off + i) + 1];
+    for (uint64_t i = 0; i < r.vm_n; i++) { vm[vmw[2 * (r.vm_off + i)]] = vmw[2 * (r.vm_off + i) + 1]; watch(-r.k - 100, vmw[2 * (r.vm_off + i)], vmw[2 * (r.vm_off + i) + 1]); }
     size_t o = r.hbm_off;
     for (uint64_t i = 0; i < r.hbm_n; i++) {
         uint64_t a, n; memcpy(&a, &hbmw[o], 8); memcpy(&n, &hbmw[o + 8], 8); o += 16;
