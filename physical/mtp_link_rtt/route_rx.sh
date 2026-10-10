@@ -9,8 +9,10 @@ cat > $C/io_route.sdc <<EOT
 create_clock -name vclk -period [get_property [get_clocks core_clk] period]
 set_clock_uncertainty -setup 60 [get_clocks vclk]
 set_clock_uncertainty -hold 25 [get_clocks vclk]
-set_clock_latency $L [get_clocks vclk]
-# Local edge tap is the time origin; its interior insertion is measured by calibrate.
+# BEFORE CTS the real clock is ideal: its nominal interior network delay must
+# equal the virtual reference. AFTER CTS set_propagated_clock ignores this
+# ideal network latency and checks the actual tree; source remains local zero.
+set_clock_latency $L [get_clocks {core_clk vclk}]
 set_clock_latency -source 0 [get_clocks core_clk]
 set ot_in [all_inputs -no_clocks]
 unset_input_delay -clock core_clk \$ot_in
