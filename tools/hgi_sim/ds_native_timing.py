@@ -52,6 +52,16 @@ def load(path):
     return d, recs
 
 
+def apply_dyn_counts(recs, rg, default=7):
+    """VM-count loops (G24 provisional): the bit-exact run's ceil(M / c) per layer (rg = row_gather stats by layer),
+    else `default` (an estimate: M ~ 13 at c = 2)"""
+    for r in recs:
+        if r.unit == "CTL" and r.op == "LOOP" and r.param & (1 << 17):
+            s = rg.get(getattr(r, "layer", None))
+            r.dyn_count = s["rounds"] if s and "rounds" in s else default
+    return recs
+
+
 ROW_BYTES = 288          # a DS compressed KV row as shipped: 9 sectors of 32 B (spec 6.10)
 
 
@@ -113,10 +123,31 @@ class NativeCost:
         if u == "FUSED" and op.startswith("QDQ"):
             n = r.desc["A"].n
             return math.ceil(n / 32) + 8, "rtl_spec", "DS quantiser: 32 / cycle, latency 8"
+        if u == "DMA" and op == "LOAD" and r.desc["A"].indexed and r.desc["A"].n_sel == 63:
+            rows = r.desc["O"].m
+            return T.first_access() + rows * r.desc["O"].n * 4 / T.cv("hbm", "bytes_per_cycle"), "measured_budget", \
+                f"indexed row stream, {rows} rows (full-bandwidth service budget)"
         if u in ("DMA",):
             return T.cost(r, dyn, L)
         if u == "COLL" and op == "ROW_GATHER" and getattr(r, "layer", None) in self.rg:
             return self.row_gather(r, dyn, L)
+        if u == "IDX" and op == "OWNED":
+            K = r.desc["A"].n
+            meas = {512: 1227.0, 2048: 4510.0}
+            return meas.get(K, 1227.0 * K / 512), "measured", f"IDX.OWNED K {K} (hgi-takeover RTL)"
+        if u == "COLL" and op == "ALL_GATHER" and r.src_key and self.ops[r.src_key].get("kind") == "kv_gather":
+            from hgi_sim.perf import coll_cycles
+            n = r.desc["A"].n
+            return coll_cycles("ALL_GATHER", n * 4, 96)[0], "measured_tu_budget", f"row-gather slots ({n} words)"
+        if u == "HC" and op == "HC_MIX_POST":
+            return T.cv("units", "HC.HC_MIX_POST"), "measured", "G22 post (sigmoid + Sinkhorn)"
+        if u == "HC" and op == "HC_MIX_ROWS":
+            c, g, how = self.walk(r)
+            return c / 24, g, "G22 one mix row (1/24 of the measured 24-row mix)"
+        if u == "COLL" and op == "ALL_GATHER" and r.src_key and self.ops[r.src_key].get("fn") == "hc_mixes":
+            from hgi_sim.perf import coll_cycles
+            c, g, how = coll_cycles("ALL_GATHER", 24 * 4, 96)
+            return c, g, "G22 24-word mix gather"
         if u == "ATT":
             c, g, how = self.walk(r, part="tile")
             return c / 2, g, how
@@ -140,6 +171,7 @@ def main():
         for x in json.loads(a.run.read_text())["results"]:
             for s in x.get("row_gather") or []:
                 rg[x["layer"]] = s
+    apply_dyn_counts(recs, rg)
     cf = NativeCost(d["ops"], recs, row_gather=rg)
     image = encode_program(recs)
     walk_us, _ = cf.wc.DA.walk({"layers": []}, cf.wc.sm, cf.wc.su1, cf.wc.coll, cf.wc.local, cf.wc.hbm, use=cf.wc.use)
