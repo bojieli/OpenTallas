@@ -1,4 +1,14 @@
 `timescale 1ns/1ps
+// hbm-phys-1010 [att]: the quad's CG parameter selects the gated RTL in simulation; in synthesis the quad is the hard
+// macro whose view IS the gated (CG 1: quad_b_tc/c891a57cf_cg_hm10) or ungated quad (route_half_cl.sh pairs them), and a
+// hard-macro cell has no parameters.
+`ifndef OT_ATTN_QCG
+`ifdef SYNTHESIS
+`define OT_ATTN_QCG
+`else
+`define OT_ATTN_QCG #(.CG(CG))
+`endif
+`endif
 // ---------------------------------------------------------------------------
 // HBM attention die tile SPLIT into two half-tile die blocks (OWNER 2026-10-08 18:10 PT, stream attn-split): the
 // bank-built tile hfd_attn_tile_b (rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv; ot_attn_bpipe / ot_attn_fpipe come
@@ -19,6 +29,7 @@
 // ---------------------------------------------------------------------------
 module hfd_attn_half_lo #(
     parameter integer CG = 0, // must match half_hi for gated successor
+    parameter integer ROWEW = 0,   // hbm-phys-1010 [att]: 1 = EW row banks (floorplan half_v2); 0 = SN (half / half_ps)
     parameter integer NK = 4,
     parameter integer NC = 2,
     parameter integer NR = 3,
@@ -76,7 +87,8 @@ module hfd_attn_half_lo #(
         for (x = 0; x < 2; x = x + 1) begin : g_x
             localparam integer GB = 2 * x;
             wire [PW-1:0] row_q;
-            ot_attn_bpipe #(.W(PW), .N(1)) u_row (.clk(clk), .d(mid_q), .q(row_q));
+            // hbm-phys-1010 [att]: ROWEW 1 = the ROW stage as EW banks (q facing the quad's M4 input edge; floorplan v2)
+            ot_attn_bpipe #(.W(PW), .N(1), .EW0(ROWEW)) u_row (.clk(clk), .d(mid_q), .q(row_q));
             wire          q_rst_n, q_ld_v, q_ld_mode, q_ld_w2v, q_iv;
             wire [2:0]    q_ld_bank, q_ibank;
             wire [7:0]    q_ld_grp;
@@ -85,17 +97,18 @@ module hfd_attn_half_lo #(
             assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
             wire [3:0]   qv0, qf0;
             wire [127:0] qy0;
-            ot_attn_tile_m6h1q #(.CG(CG)) u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+            ot_attn_tile_m6h1q `OT_ATTN_QCG u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
             // the first NLL of the NL result banks: 2 side-channel EW, then SN up to the N-face pin bank
-            ot_attn_bpipe #(.W(136), .N(NLL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q(xr[x*136 +: 136]));
+            ot_attn_bpipe136 #(.W(136), .N(NLL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q(xr[x*136 +: 136]));
         end
     end endgenerate
 endmodule
 
 module hfd_attn_half_hi #(
     parameter integer CG = 0, // must match half_lo; validates all16 required heads
+    parameter integer ROWEW = 0,   // hbm-phys-1010 [att]: 1 = EW row banks (floorplan half_v2)
     parameter integer PMID = 2,
     parameter integer NFC = 2,
     parameter integer NL = 8,
@@ -125,7 +138,8 @@ module hfd_attn_half_hi #(
         for (x = 0; x < 2; x = x + 1) begin : g_x
             localparam integer GB = 8 + 2 * x;
             wire [PW-1:0] row_q;
-            ot_attn_bpipe #(.W(PW), .N(1)) u_row (.clk(clk), .d(mid_q), .q(row_q));
+            // hbm-phys-1010 [att]: ROWEW 1 = the ROW stage as EW banks (q facing the quad's M4 input edge; floorplan v2)
+            ot_attn_bpipe #(.W(PW), .N(1), .EW0(ROWEW)) u_row (.clk(clk), .d(mid_q), .q(row_q));
             wire          q_rst_n, q_ld_v, q_ld_mode, q_ld_w2v, q_iv;
             wire [2:0]    q_ld_bank, q_ibank;
             wire [7:0]    q_ld_grp;
@@ -134,10 +148,10 @@ module hfd_attn_half_hi #(
             assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
             wire [3:0]   qv0, qf0, qv, qf;
             wire [127:0] qy0, qy;
-            ot_attn_tile_m6h1q #(.CG(CG)) u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+            ot_attn_tile_m6h1q `OT_ATTN_QCG u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
                 .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
-            ot_attn_bpipe #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));
+            ot_attn_bpipe136 #(.W(136), .N(NL), .EWM(3)) u_res (.clk(clk), .d({qv0, qf0, qy0}), .q({qv, qf, qy}));
             for (l = 0; l < 4; l = l + 1) begin : g_l
                 localparam integer G = GB + 4 * (l / 2) + (l % 2);
                 assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
@@ -146,7 +160,7 @@ module hfd_attn_half_hi #(
             localparam integer GL = 2 * x;
             wire [3:0]   lv, lf;
             wire [127:0] ly;
-            ot_attn_bpipe #(.W(136), .N(NL - NLL)) u_xr (.clk(clk), .d(xr[x*136 +: 136]), .q({lv, lf, ly}));
+            ot_attn_bpipe136 #(.W(136), .N(NL - NLL)) u_xr (.clk(clk), .d(xr[x*136 +: 136]), .q({lv, lf, ly}));
             for (l = 0; l < 4; l = l + 1) begin : g_ll
                 localparam integer G = GL + 4 * (l / 2) + (l % 2);
                 assign {gov[G], oflt[G], oy[G*32 +: 32]} = {lv[l], lf[l], ly[l*32 +: 32]};
@@ -159,10 +173,8 @@ module hfd_attn_half_hi #(
     // CG-qualified boundary: the fixed word represents all16 heads. A partial
     // arrival is an explicit transaction fault, never a stale head's arithmetic.
     // Idle oflt/oy are held by gated producers and are consumed only under valid.
-    wire coherent_v = &gov;
-    wire [RW-1:0] loc_r = (CG != 0) ?
-        {(|gov), coherent_v ? oy : 512'd0, coherent_v ? oflt : 16'hffff} :
-        {gov[0], oy, oflt};
+    wire [RW-1:0] loc_r;
+    ot_attn_res_guard #(.CG(CG)) u_guard (.gov(gov), .oy(oy), .oflt(oflt), .w(loc_r));
     wire loc_v = loc_r[RW-1], chn_v = chn_r[RW-1];
     wire [RW-1:0] mrg = loc_v ? {loc_r[RW-1:16], loc_r[15:0] | {16{chn_v}}} : chn_r;
     ot_attn_bpipe #(.W(RW), .N(1), .EW0(1), .EWN(1)) u_oo (.clk(clk), .d(mrg), .q(o));
