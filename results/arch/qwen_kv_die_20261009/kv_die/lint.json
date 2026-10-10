@@ -3,25 +3,25 @@
  "die": "qwen_kv",
  "top_fix": false,
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "cff37f27730ac78e7baae81960cb6ce3754af375838d39da5799ba0bbaf2ff9f",
+ "generator_sha256": "0c5580a869f3eb6998cd42b5df95904e039f3d8aa4d38e84d5beb7c010d432cf",
  "generator_tag": {
   "file": "tools/qwen_kv_die/kv_die.py",
-  "sha256": "cff37f27730ac78e7baae81960cb6ce3754af375838d39da5799ba0bbaf2ff9f",
-  "tree_head": "c21dc8973ab62f00120d409127c19762e73ad92c",
-  "file_commit": "c21dc8973ab62f00120d409127c19762e73ad92c"
+  "sha256": "0c5580a869f3eb6998cd42b5df95904e039f3d8aa4d38e84d5beb7c010d432cf",
+  "tree_head": "782f9c3b3b39003f09d340a13d1481d830d57859",
+  "file_commit": "8f58a3b7de94ce7a5d7e8837527113765d9cd934"
  },
  "qwen_source": null,
  "qwen_recipe": null,
  "pin_fit_errors": {},
- "lint_tool_sha256": "ea9f9d1130fc83e5c84bb0803b3feeb473bea4e674fde2b23438507a9b8c25d5",
+ "lint_tool_sha256": "a689d622f59260d3598f346a62e171e8d20aa08843aec4fe655f39c5099cbd7e",
  "variant": null,
  "census": {
-  "instances": 988,
-  "buses": 1524,
-  "net_bits": 751784,
+  "instances": 938,
+  "buses": 1474,
+  "net_bits": 725583,
   "masters": 26,
   "real_instances": 134,
-  "placeholder_instances": 854
+  "placeholder_instances": 804
  },
  "real_blocks": {
   "ot_hbm3e_phy": {
@@ -147,7 +147,7 @@
    "master": "qkd_rly_1",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 156
+   "instances": 154
   },
   {
    "master": "qkd_rly_10",
@@ -159,19 +159,19 @@
    "master": "qkd_rly_1025",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 88
+   "instances": 73
   },
   {
    "master": "qkd_rly_1048",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 54
+   "instances": 50
   },
   {
    "master": "qkd_rly_16",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 85
+   "instances": 68
   },
   {
    "master": "qkd_rly_21",
@@ -195,7 +195,7 @@
    "master": "qkd_rly_530",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 260
+   "instances": 248
   },
   {
    "master": "qkd_rly_540",
@@ -277,8 +277,8 @@
     "bits": 128,
     "examples": [
      "reng_WS_4.rq face N peer 2039 um behind (krq_WS_4)",
-     "reng_WS_5.rq face N peer 2441 um behind (krq_WS_5)",
-     "reng_WN_4.rq face N peer 2086 um behind (krq_WN_4)"
+     "reng_WS_5.rq face N peer 2397 um behind (krq_WS_5)",
+     "reng_WN_4.rq face N peer 2043 um behind (krq_WN_4)"
     ]
    },
    {
@@ -300,9 +300,9 @@
     "endpoints": 8,
     "bits": 8200,
     "examples": [
-     "reng_WS_4.rs face N peer 2081 um behind (krs_WS_4__r3)",
-     "reng_WS_5.rs face N peer 2137 um behind (krs_WS_5__r8)",
-     "reng_WN_4.rs face N peer 2085 um behind (krs_WN_4__r3)"
+     "reng_WS_4.rs face N peer 2081 um behind (krs_WS_4__r2)",
+     "reng_WS_5.rs face N peer 2137 um behind (krs_WS_5__r7)",
+     "reng_WN_4.rs face N peer 2085 um behind (krs_WN_4__r2)"
     ]
    },
    {
@@ -324,117 +324,117 @@
     "endpoints": 135,
     "bits": 135,
     "examples": [
-     "rly_hs_0.a face W peer 665 um behind (hs)",
-     "rly_hs_1.a face W peer 96 um behind (hs__r1)",
-     "rly_hs_2.a face W peer 96 um behind (hs__r2)"
+     "rly_hs_0.a face W peer 627 um behind (hs)",
+     "rly_hs_1.a face W peer 139 um behind (hs__r1)",
+     "rly_hs_2.a face W peer 52 um behind (hs__r2)"
     ]
    },
    {
     "master": "qkd_rly_1",
     "port": "b",
     "orient": "R0",
-    "endpoints": 134,
-    "bits": 134,
+    "endpoints": 133,
+    "bits": 133,
     "examples": [
-     "rly_hs_0.b face E peer 96 um behind (hs__r1)",
-     "rly_hs_1.b face E peer 96 um behind (hs__r2)",
-     "rly_hs_2.b face E peer 52 um behind (hs__r3)"
+     "rly_hs_0.b face E peer 139 um behind (hs__r1)",
+     "rly_hs_1.b face E peer 52 um behind (hs__r2)",
+     "rly_hs_3.b face E peer 52 um behind (hs__r4)"
     ]
    },
    {
     "master": "qkd_rly_10",
     "port": "a",
     "orient": "R0",
-    "endpoints": 42,
-    "bits": 420,
+    "endpoints": 39,
+    "bits": 390,
     "examples": [
-     "rly_kst_0.a face W peer 623 um behind (kst)",
-     "rly_kst_1.a face W peer 96 um behind (kst__r1)",
-     "rly_kst_2.a face W peer 52 um behind (kst__r2)"
+     "rly_kst_0.a face W peer 714 um behind (kst)",
+     "rly_kst_1.a face W peer 52 um behind (kst__r1)",
+     "rly_kst_3.a face W peer 52 um behind (kst__r3)"
     ]
    },
    {
     "master": "qkd_rly_10",
     "port": "b",
     "orient": "R0",
-    "endpoints": 41,
-    "bits": 410,
+    "endpoints": 38,
+    "bits": 380,
     "examples": [
-     "rly_kst_0.b face E peer 96 um behind (kst__r1)",
-     "rly_kst_1.b face E peer 52 um behind (kst__r2)",
-     "rly_kst_2.b face E peer 52 um behind (kst__r3)"
+     "rly_kst_0.b face E peer 52 um behind (kst__r1)",
+     "rly_kst_2.b face E peer 52 um behind (kst__r3)",
+     "rly_kst_3.b face E peer 52 um behind (kst__r4)"
     ]
    },
    {
     "master": "qkd_rly_1025",
     "port": "a",
     "orient": "R0",
-    "endpoints": 55,
-    "bits": 56375,
+    "endpoints": 47,
+    "bits": 48175,
     "examples": [
+     "rly_krs_WS_5_4.a face W peer 52 um behind (krs_WS_5__r4)",
      "rly_krs_WS_5_5.a face W peer 52 um behind (krs_WS_5__r5)",
-     "rly_krs_WS_5_6.a face W peer 52 um behind (krs_WS_5__r6)",
-     "rly_krs_WS_5_7.a face W peer 52 um behind (krs_WS_5__r7)"
+     "rly_krs_WS_5_6.a face W peer 52 um behind (krs_WS_5__r6)"
     ]
    },
    {
     "master": "qkd_rly_1025",
     "port": "b",
     "orient": "R0",
-    "endpoints": 55,
-    "bits": 56375,
+    "endpoints": 47,
+    "bits": 48175,
     "examples": [
+     "rly_krs_WS_5_3.b face E peer 52 um behind (krs_WS_5__r4)",
      "rly_krs_WS_5_4.b face E peer 52 um behind (krs_WS_5__r5)",
-     "rly_krs_WS_5_5.b face E peer 52 um behind (krs_WS_5__r6)",
-     "rly_krs_WS_5_6.b face E peer 52 um behind (krs_WS_5__r7)"
+     "rly_krs_WS_5_5.b face E peer 52 um behind (krs_WS_5__r6)"
     ]
    },
    {
     "master": "qkd_rly_1048",
     "port": "a",
     "orient": "R0",
-    "endpoints": 46,
-    "bits": 48208,
+    "endpoints": 44,
+    "bits": 46112,
     "examples": [
-     "rly_kvn_WS_0.a face W peer 496 um behind (kvn_WS)",
+     "rly_kvn_WS_0.a face W peer 500 um behind (kvn_WS)",
      "rly_kvn_WS_1.a face W peer 571 um behind (kvn_WS__r1)",
-     "rly_kvn_WS_2.a face W peer 571 um behind (kvn_WS__r2)"
+     "rly_kvn_WS_2.a face W peer 528 um behind (kvn_WS__r2)"
     ]
    },
    {
     "master": "qkd_rly_1048",
     "port": "b",
     "orient": "R0",
-    "endpoints": 46,
-    "bits": 48208,
+    "endpoints": 44,
+    "bits": 46112,
     "examples": [
      "rly_kvn_WS_0.b face E peer 571 um behind (kvn_WS__r1)",
-     "rly_kvn_WS_1.b face E peer 571 um behind (kvn_WS__r2)",
-     "rly_kvn_WS_2.b face E peer 571 um behind (kvn_WS__r3)"
+     "rly_kvn_WS_1.b face E peer 528 um behind (kvn_WS__r2)",
+     "rly_kvn_WS_2.b face E peer 52 um behind (kvn_WS__r3)"
     ]
    },
    {
     "master": "qkd_rly_16",
     "port": "a",
     "orient": "R0",
-    "endpoints": 55,
-    "bits": 880,
+    "endpoints": 46,
+    "bits": 736,
     "examples": [
-     "rly_krq_WS_4_0.a face W peer 1008 um behind (krq_WS_4)",
-     "rly_krq_WS_4_1.a face W peer 571 um behind (krq_WS_4__r1)",
-     "rly_krq_WS_5_1.a face W peer 52 um behind (krq_WS_5__r1)"
+     "rly_krq_WS_4_0.a face W peer 1012 um behind (krq_WS_4)",
+     "rly_krq_WS_5_1.a face W peer 52 um behind (krq_WS_5__r1)",
+     "rly_krq_WS_5_2.a face W peer 52 um behind (krq_WS_5__r2)"
     ]
    },
    {
     "master": "qkd_rly_16",
     "port": "b",
     "orient": "R0",
-    "endpoints": 55,
-    "bits": 880,
+    "endpoints": 46,
+    "bits": 736,
     "examples": [
-     "rly_krq_WS_4_0.b face E peer 571 um behind (krq_WS_4__r1)",
-     "rly_krq_WS_4_1.b face E peer 514 um behind (krq_WS_4__r2)",
-     "rly_krq_WS_5_0.b face E peer 52 um behind (krq_WS_5__r1)"
+     "rly_krq_WS_4_0.b face E peer 471 um behind (krq_WS_4__r1)",
+     "rly_krq_WS_5_0.b face E peer 52 um behind (krq_WS_5__r1)",
+     "rly_krq_WS_5_1.b face E peer 52 um behind (krq_WS_5__r2)"
     ]
    },
    {
@@ -444,8 +444,8 @@
     "endpoints": 2,
     "bits": 42,
     "examples": [
-     "rly_lt_WS_0.a face W peer 871 um behind (lt_WS)",
-     "rly_lt_WN_0.a face W peer 871 um behind (lt_WN)"
+     "rly_lt_WS_0.a face W peer 592 um behind (lt_WS)",
+     "rly_lt_WN_0.a face W peer 592 um behind (lt_WN)"
     ]
    },
    {
@@ -466,7 +466,7 @@
     "endpoints": 12,
     "bits": 432,
     "examples": [
-     "rly_am_WS_0.a face W peer 517 um behind (am_WS)",
+     "rly_am_WS_0.a face W peer 521 um behind (am_WS)",
      "rly_am_WS_1.a face W peer 182 um behind (am_WS__r1)",
      "rly_am_WS_2.a face W peer 96 um behind (am_WS__r2)"
     ]
@@ -490,9 +490,9 @@
     "endpoints": 20,
     "bits": 10400,
     "examples": [
-     "rly_ares_0.a face W peer 102 um behind (ares)",
-     "rly_ares_1.a face W peer 52 um behind (ares__r1)",
-     "rly_ares_2.a face W peer 52 um behind (ares__r2)"
+     "rly_ares_0.a face W peer 203 um behind (ares)",
+     "rly_ares_1.a face W peer 96 um behind (ares__r1)",
+     "rly_ares_2.a face W peer 96 um behind (ares__r2)"
     ]
    },
    {
@@ -502,8 +502,8 @@
     "endpoints": 19,
     "bits": 9880,
     "examples": [
-     "rly_ares_0.b face E peer 52 um behind (ares__r1)",
-     "rly_ares_1.b face E peer 52 um behind (ares__r2)",
+     "rly_ares_0.b face E peer 96 um behind (ares__r1)",
+     "rly_ares_1.b face E peer 96 um behind (ares__r2)",
      "rly_ares_2.b face E peer 52 um behind (ares__r3)"
     ]
    },
@@ -511,11 +511,11 @@
     "master": "qkd_rly_530",
     "port": "a",
     "orient": "R0",
-    "endpoints": 222,
-    "bits": 117660,
+    "endpoints": 210,
+    "bits": 111300,
     "examples": [
-     "rly_emf_WS_0.a face W peer 452 um behind (emf_WS)",
-     "rly_emf_WS_1.a face W peer 96 um behind (emf_WS__r1)",
+     "rly_emf_WS_0.a face W peer 457 um behind (emf_WS)",
+     "rly_emf_WS_1.a face W peer 52 um behind (emf_WS__r1)",
      "rly_emf_WS_2.a face W peer 52 um behind (emf_WS__r2)"
     ]
    },
@@ -523,10 +523,10 @@
     "master": "qkd_rly_530",
     "port": "b",
     "orient": "R0",
-    "endpoints": 220,
-    "bits": 116600,
+    "endpoints": 208,
+    "bits": 110240,
     "examples": [
-     "rly_emf_WS_0.b face E peer 96 um behind (emf_WS__r1)",
+     "rly_emf_WS_0.b face E peer 52 um behind (emf_WS__r1)",
      "rly_emf_WS_1.b face E peer 52 um behind (emf_WS__r2)",
      "rly_emf_WS_2.b face E peer 52 um behind (emf_WS__r3)"
     ]
@@ -538,8 +538,8 @@
     "endpoints": 50,
     "bits": 27000,
     "examples": [
-     "rly_aq_WS_0.a face W peer 261 um behind (aq_WS)",
-     "rly_aq_WS_1.a face W peer 96 um behind (aq_WS__r1)",
+     "rly_aq_WS_0.a face W peer 265 um behind (aq_WS)",
+     "rly_aq_WS_1.a face W peer 52 um behind (aq_WS__r1)",
      "rly_aq_WS_2.a face W peer 52 um behind (aq_WS__r2)"
     ]
    },
@@ -550,7 +550,7 @@
     "endpoints": 50,
     "bits": 27000,
     "examples": [
-     "rly_aq_WS_0.b face E peer 96 um behind (aq_WS__r1)",
+     "rly_aq_WS_0.b face E peer 52 um behind (aq_WS__r1)",
      "rly_aq_WS_1.b face E peer 52 um behind (aq_WS__r2)",
      "rly_aq_WS_2.b face E peer 52 um behind (aq_WS__r3)"
     ]
@@ -677,7 +677,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -688,7 +688,7 @@
     "port": "e0i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -699,7 +699,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -710,7 +710,7 @@
     "port": "e1i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -721,7 +721,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -732,7 +732,7 @@
     "port": "e2i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -743,7 +743,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -754,7 +754,7 @@
     "port": "e3i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -765,7 +765,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -776,7 +776,7 @@
     "port": "e4i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -787,7 +787,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -798,7 +798,7 @@
     "port": "e5i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -809,7 +809,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -820,7 +820,7 @@
     "port": "e6i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -831,7 +831,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -842,7 +842,7 @@
     "port": "e7i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -853,7 +853,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -864,7 +864,7 @@
     "port": "e0i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -875,7 +875,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -886,7 +886,7 @@
     "port": "e1i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -897,7 +897,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -908,7 +908,7 @@
     "port": "e2i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -919,7 +919,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -930,7 +930,7 @@
     "port": "e3i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -941,7 +941,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -952,7 +952,7 @@
     "port": "e4i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -963,7 +963,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -974,7 +974,7 @@
     "port": "e5i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -985,7 +985,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -996,7 +996,7 @@
     "port": "e6i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1007,7 +1007,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1018,7 +1018,7 @@
     "port": "e7i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1029,7 +1029,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1040,7 +1040,7 @@
     "port": "e0i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1051,7 +1051,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1062,7 +1062,7 @@
     "port": "e1i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1073,7 +1073,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1084,7 +1084,7 @@
     "port": "e2i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1095,7 +1095,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1106,7 +1106,7 @@
     "port": "e3i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1117,7 +1117,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1128,7 +1128,7 @@
     "port": "e4i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1139,7 +1139,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1150,7 +1150,7 @@
     "port": "e5i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1161,7 +1161,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1172,7 +1172,7 @@
     "port": "e6i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1183,7 +1183,7 @@
     "port": "so",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1194,7 +1194,7 @@
     "port": "e7i",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1205,7 +1205,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1216,7 +1216,7 @@
     "port": "e0i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.6,
+    "peer_manhattan_um": 1.0,
     "bits": 4521
    },
    {
@@ -1227,7 +1227,7 @@
     "port": "so",
     "face": "E",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    },
    {
@@ -1238,7 +1238,7 @@
     "port": "e1i",
     "face": "W",
     "span_um": 578.6,
-    "peer_manhattan_um": 0.7,
+    "peer_manhattan_um": 0.9,
     "bits": 4521
    }
   ],
@@ -1361,34 +1361,55 @@
   }
  },
  "margin_lint": {
+  "mode": "chains",
   "chains": 78,
   "reach_um": 504.0,
   "reach_violations": 0,
-  "far_side_relays": 4,
+  "far_side_relays": 8,
   "reach_examples": [],
   "far_side_examples": [
    {
-    "chain": "astk_EN->land_EN",
-    "relay": "rly_lt_EN_0",
-    "back_um": 3231.1
-   },
-   {
     "chain": "astk_WN->land_WN",
     "relay": "rly_lt_WN_0",
-    "back_um": 3200.0
+    "back_um": 3478.6
+   },
+   {
+    "chain": "astk_EN->land_EN",
+    "relay": "rly_lt_EN_0",
+    "back_um": 3475.2
    },
    {
     "chain": "astk_WS->land_WS",
     "relay": "rly_lt_WS_0",
-    "back_um": 3195.7
+    "back_um": 3474.3
    },
    {
     "chain": "astk_ES->land_ES",
     "relay": "rly_lt_ES_0",
-    "back_um": 3183.6
+    "back_um": 3470.9
+   },
+   {
+    "chain": "reng_WN_4->land_WN",
+    "relay": "rly_krq_WN_4_0",
+    "back_um": 318.2
+   },
+   {
+    "chain": "reng_EN_0->land_EN",
+    "relay": "rly_krq_EN_0_0",
+    "back_um": 314.7
+   },
+   {
+    "chain": "reng_WS_4->land_WS",
+    "relay": "rly_krq_WS_4_0",
+    "back_um": 313.8
+   },
+   {
+    "chain": "reng_ES_0->land_ES",
+    "relay": "rly_krq_ES_0_0",
+    "back_um": 310.4
    }
   ],
-  "slivers": 337,
+  "slivers": 333,
   "sliver_examples": [
    [
     "cdc_WN_0",
