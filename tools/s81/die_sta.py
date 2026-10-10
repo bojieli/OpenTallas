@@ -249,9 +249,14 @@ def arcs_insertion(mst, view, mi, libpath=None, parts=None):
     """[ss, ff, tt] clock insertion carried INSIDE a view's arcs (closed: its routed measurement, else the calib.json
     boundary mean beside the lib; assembled: mean over its tiles); interim / partitioned / macro carry none"""
     if view == 'closed':
-        if mst in mi:
-            return [mi[mst][c] for c in ('ss', 'ff', 'tt')]
         cj = libpath and Path(libpath).parent / 'calib.json'
+        # ds-1010 2026-10-10: an ALTERNATE view of the block (e.g. views_colck/dsfd_cfifo, bound by --cfifo-colck) carries
+        # its own route's insertion, not the default view's routed measurement in measured_insertion.json (keyed by block
+        # name).  r4f FF: the colck cfifo was balanced with the plain cfifo's 263 ps while its cr arcs carry ~206 ps, so its
+        # read side launched ~57 ps early into the first column relays (cf<c> cr -> y_xa_<c>_0_0, -107 ps).
+        alt = libpath and Path(libpath).parent.parent.name != 'views'
+        if mst in mi and not (alt and cj and cj.exists()):
+            return [mi[mst][c] for c in ('ss', 'ff', 'tt')]
         if cj and cj.exists():
             j = json.loads(cj.read_text())
             ss, ff = j['ss']['boundary']['mean'], j['ff']['boundary']['mean']
