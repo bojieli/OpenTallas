@@ -21,13 +21,17 @@ import qwen_rom_fulldie_b3r2 as B      # noqa: E402
 
 CROSS = ('x3', 'attn_ret', 'emb', 'emb_a', 'emb_cr', 'seq_d2d', 'd2d_seq', 'd2d_fdi', 'pll_fwd', 'rst_fwd')
 RETICLE = 858.0
+# r22ko4: the option-4 words and the moved control / tree / sequencer words (their relay stages go to the record)
+O4_PREFIX = ('o4_', 'tt_', 'pword_', 'seq_', 'd2d_')
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--recipe', default='r22k', choices=L.R22K_FAMILY)
+    ap.add_argument('--insts', type=Path, default=None, help='block rectangles file (default rom_r22k_insts.json beside --out)')
     a = ap.parse_args()
-    r = dict(L.QWEN_RECIPES['r22k'])
+    r = dict(L.QWEN_RECIPES[a.recipe])
     cdc = r.pop('cdc')
     v, m = B.selected(True, cdc=B._cdc_arg(cdc), **r)
     ins = m['insts']
@@ -35,7 +39,7 @@ def main():
     stages = Counter()
     for bid, cl, bits, eps in m['buses']:
         base = re.sub(r'__r\d+$', '', bid)
-        if base in CROSS:
+        if base in CROSS or base.startswith(O4_PREFIX):
             stages[base] += 1
     fam = Counter()
     for i in ins:
@@ -43,7 +47,8 @@ def main():
         fam[k] += i.w * i.h / 1e6
     by = {i.name: i for i in ins}
     rec = dict(
-        schema='opentallas.qwen-kv-die.rom-r22k.v1', recipe='r22k = r21c + tools/qwen_kv_die/rom_r22k.py surgery',
+        schema='opentallas.qwen-kv-die.rom-r22k.v1', recipe=('r22k = r21c + tools/qwen_kv_die/rom_r22k.py surgery' if a.recipe == 'r22k'
+                                                              else f'{a.recipe} (tools/die_top_lint.py QWEN_RECIPES)'),
         generator_sha256=hashlib.sha256((ROOT / 'tools/qwen_rom_fulldie_b3r2.py').read_bytes()).hexdigest(),
         surgery_sha256=hashlib.sha256((ROOT / 'tools/qwen_kv_die/rom_r22k.py').read_bytes()).hexdigest(),
         die_um=[round(W, 3), round(H, 3)], die_mm2=round(W * H / 1e6, 3), reticle_mm2=RETICLE,
@@ -53,7 +58,7 @@ def main():
         ucie=dict(by['ucie_kv'].d(), mm2=round(by['ucie_kv'].w * by['ucie_kv'].h / 1e6, 4), edge='S',
                   edge_um=round(by['ucie_kv'].w, 3)),
         d2d_rom=by['d2d_rom'].d(), clk_rx=by['clk_rx'].d(),
-        crossing_bus_stages={k: max(0, stages[k] - 1) for k in CROSS},
+        crossing_bus_stages={k: max(0, stages[k] - 1) for k in list(CROSS) + sorted(k for k in stages if k not in CROSS)},
         stage_note='relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is '
                    'registered as well (the stage the r21 token-cost counts as one per die hop)',
         r22k=m.get('r22k'),
@@ -64,7 +69,7 @@ def main():
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1, default=str) + '\n')
     # block rectangles (relays omitted) for the two-die explorer view
-    (a.out.parent / 'rom_r22k_insts.json').write_text(json.dumps(
+    (a.insts or (a.out.parent / 'rom_r22k_insts.json')).write_text(json.dumps(
         dict(die=[round(W, 3), round(H, 3)], insts=[[i.name, i.master, i.kind, round(i.x, 2), round(i.y, 2), round(i.w, 2),
                                                      round(i.h, 2)] for i in ins if not i.name.startswith('rly_')]),
         separators=(',', ':')) + '\n')
