@@ -215,7 +215,12 @@ def analyse(netlist: dict, top: str) -> dict:
     io = [(depth(b)[0], n) for b, n in out_bits.items() if depth(b)[0] >= 0]
     r2o = max(((depth(b)[1], n) for b, n in out_bits.items()), default=(-1, None))
     io.sort(reverse=True)
-    return {"in_to_out_bits": len(io), "in_to_out_max": io[0][0] if io else -1,
+    try:   # RESET-PORT FANOUT (design standard 2026-10-10): reset input ports must drive only a local ot_rst_relay
+        import rst_port_fanout
+        rst_bad = rst_port_fanout.violations(rst_port_fanout.fanout(netlist, top))
+    except Exception:  # noqa: BLE001
+        rst_bad = {}
+    return {"rst_port_fanout": rst_bad, "in_to_out_bits": len(io), "in_to_out_max": io[0][0] if io else -1,
             "in_to_out_example": [n for _, n in io[:3]],
             "in_to_reg_max": in2reg[0], "reg_to_out_max": r2o[0], "reg_to_out_example": r2o[1],
             "cells": len(mod["cells"]), "ctrl_ports": sorted({in_bits[b] for b in ctrl_ports})[:8]}
@@ -240,7 +245,7 @@ def check(spec: dict, show, repo: str | None = None) -> dict:
         return _cannot_run(spec, "sources / top not readable from the recipe")
     commit = spec["source"]["commit"]
     import hashlib
-    ckey = hashlib.sha256(json.dumps([commit, r, levels], sort_keys=True).encode()).hexdigest()[:24]
+    ckey = hashlib.sha256(json.dumps([commit, r, levels, "rstfan1"], sort_keys=True).encode()).hexdigest()[:24]
     try:
         cache = json.loads(CACHE.read_text())
     except Exception:  # noqa: BLE001
@@ -318,13 +323,20 @@ def _verdict(res: dict, r: dict, levels: int, strict: bool) -> dict:
         bad.append(f"input->register {res['in_to_reg_max']} gate levels > {levels}")
     if res["reg_to_out_max"] > levels:
         bad.append(f"register->output {res['reg_to_out_max']} gate levels > {levels} (e.g. {res['reg_to_out_example']})")
+    rst_bad = res.get("rst_port_fanout") or {}
+    rst_msg = ("; reset port(s) drive flops directly (> 32, design standard: route through rtl/lib/ot_rst_relay.sv): "
+               + ", ".join(f"{k} {v}" for k, v in sorted(rst_bad.items(), key=lambda x: -x[1])[:4])) if rst_bad else ""
+    if not bad and rst_bad:
+        res.update(verdict="WARN", message=f"rtl_boundary {r['top']}: registered boundary (in->reg {res['in_to_reg_max']}, "
+                                            f"reg->out {res['reg_to_out_max']} levels)" + rst_msg)
+        return res
     if not bad:
         res.update(verdict="PASS", message=f"rtl_boundary {r['top']}: registered boundary (in->reg {res['in_to_reg_max']}, "
                                             f"reg->out {res['reg_to_out_max']} levels)")
     elif strict:
         res.update(verdict="REFUSE", message=f"rtl_boundary {r['top']} (registered_io): " + "; ".join(bad))
     else:
-        res.update(verdict="WARN", message=f"rtl_boundary {r['top']}: " + "; ".join(bad))
+        res.update(verdict="WARN", message=f"rtl_boundary {r['top']}: " + "; ".join(bad) + rst_msg)
     return res
 
 
