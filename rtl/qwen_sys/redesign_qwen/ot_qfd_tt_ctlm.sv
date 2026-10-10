@@ -933,11 +933,19 @@ module ot_qfd_tt_ctlm #(
 );
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
+    // die-facing input pin stations (registered boundary); kv_ok / kv_write_drained / me_mem_ok stay direct (readiness
+    // the controller pairs with its own same-edge state, and the ICG enable path)
+    wire q_h_start; wire [18-1:0] q_token, q_pos; wire [11:0] q_prog_base; wire q_pw_v; wire [9:0] q_pw_addr; wire [63:0] q_pw_data;
+    wire [XW-1:0] q_x_oacc; wire q_x_oidle; wire [15:0] q_x_oprog, q_x_orows;
+    ot_hdc_delay #(.W(3), .D(IS), .RESET(1)) u_is1 (.clk(clk), .rst_n(rst_n), .d({h_start, pw_v, x_oidle}), .q({q_h_start, q_pw_v, q_x_oidle}));
+    ot_hdc_delay #(.W(2*18 + 12 + 10 + 64 + XW + 32), .D(IS)) u_isd (.clk(clk), .rst_n(rst_n),
+        .d({token, pos, prog_base, pw_addr, pw_data, x_oacc, x_oprog, x_orows}),
+        .q({q_token, q_pos, q_prog_base, q_pw_addr, q_pw_data, q_x_oacc, q_x_oprog, q_x_orows}));
     // program-store copy (the sequencer master's semantics)
     wire prog_re; wire [11:0] prog_addr; reg [1023:0] prog_q; reg [1023:0] prog_mem [0:63];
-    wire [11:0] prog_a = prog_base + prog_addr;
+    wire [11:0] prog_a = q_prog_base + prog_addr;
     always @(posedge clk) begin
-        if (pw_v) prog_mem[pw_addr[9:4]][pw_addr[3:0]*64 +: 64] <= pw_data;
+        if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;
         if (prog_re) prog_q <= (prog_a < 64) ? prog_mem[prog_a[5:0]] : 1024'd0;
     end
     wire [1-1:0] c_me_clk, u_me_clk;
@@ -981,9 +989,9 @@ module ot_qfd_tt_ctlm #(
     ot_qwen_rom_core_ctrl_x #(.OWN(1), .XW(XW), .XMUT(0), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD(1)) u_ctrl_me (
         .clk(clk),
         .rst_n(rs),
-        .start(h_start),
-        .token(token),
-        .pos(pos),
+        .start(q_h_start),
+        .token(q_token),
+        .pos(q_pos),
         .done(),
         .next_token(),
         .next_val(),
@@ -1155,10 +1163,10 @@ module ot_qfd_tt_ctlm #(
         .pi_su_progress_rows('0),
         .pi_su_fault('0),
         .po_su_asrc_raw(),
-        .x_oacc(x_oacc),
-        .x_oidle(x_oidle),
-        .x_oprog(x_oprog),
-        .x_orows(x_orows),
+        .x_oacc(q_x_oacc),
+        .x_oidle(q_x_oidle),
+        .x_oprog(q_x_oprog),
+        .x_orows(q_x_orows),
         .x_ofin(1'b1),
         .x_fidx('0),
         .x_fval('0),

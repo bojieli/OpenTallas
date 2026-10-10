@@ -463,11 +463,19 @@ def emit_tt_ctlm() -> str:
          f"    output wire [{W}*32-1:0] mx_data",
          ");"]
     L += ["    wire rs;", "    ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));",
+          "    // die-facing input pin stations (registered boundary); kv_ok / kv_write_drained / me_mem_ok stay direct (readiness",
+          "    // the controller pairs with its own same-edge state, and the ICG enable path)",
+          f"    wire q_h_start; wire [{NW}-1:0] q_token, q_pos; wire [11:0] q_prog_base; wire q_pw_v; wire [9:0] q_pw_addr; wire [63:0] q_pw_data;",
+          "    wire [XW-1:0] q_x_oacc; wire q_x_oidle; wire [15:0] q_x_oprog, q_x_orows;",
+          "    ot_hdc_delay #(.W(3), .D(IS), .RESET(1)) u_is1 (.clk(clk), .rst_n(rst_n), .d({h_start, pw_v, x_oidle}), .q({q_h_start, q_pw_v, q_x_oidle}));",
+          f"    ot_hdc_delay #(.W(2*{NW} + 12 + 10 + 64 + XW + 32), .D(IS)) u_isd (.clk(clk), .rst_n(rst_n),",
+          "        .d({token, pos, prog_base, pw_addr, pw_data, x_oacc, x_oprog, x_orows}),",
+          "        .q({q_token, q_pos, q_prog_base, q_pw_addr, q_pw_data, q_x_oacc, q_x_oprog, q_x_orows}));",
           "    // program-store copy (the sequencer master's semantics)",
           "    wire prog_re; wire [11:0] prog_addr; reg [1023:0] prog_q; reg [1023:0] prog_mem [0:63];",
-          "    wire [11:0] prog_a = prog_base + prog_addr;",
+          "    wire [11:0] prog_a = q_prog_base + prog_addr;",
           "    always @(posedge clk) begin",
-          "        if (pw_v) prog_mem[pw_addr[9:4]][pw_addr[3:0]*64 +: 64] <= pw_data;",
+          "        if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;",
           "        if (prog_re) prog_q <= (prog_a < 64) ? prog_mem[prog_a[5:0]] : 1024'd0;",
           "    end"]
     # controller <-> tile issue / status nets with the in-tile stations
@@ -479,7 +487,7 @@ def emit_tt_ctlm() -> str:
     cc = []
     for n in names:
         d = dirs[n]
-        m = {"clk": "clk", "rst_n": "rs", "start": "h_start", "token": "token", "pos": "pos", "prog_q": "prog_q",
+        m = {"clk": "clk", "rst_n": "rs", "start": "q_h_start", "token": "q_token", "pos": "q_pos", "prog_q": "prog_q",
              "prog_re": "prog_re", "prog_addr": "prog_addr", "kv_ok": "kv_ok", "kv_write_drained": "kv_write_drained",
              "me_mem_ok": "me_mem_ok", "me_clk_en": "me_clk_en", "fault": "c_fault", "w_ok": "1'b1", "emb_ok": "1'b1",
              "fab_fault": "1'b0"}
@@ -502,7 +510,7 @@ def emit_tt_ctlm() -> str:
                     cc.append(f".pi_me_{p}(s_me_{p})")
                 else:
                     cc.append(f".pi_me_{p}(c_me_{p})")
-    cc += [".po_su_asrc_raw()", ".x_oacc(x_oacc)", ".x_oidle(x_oidle)", ".x_oprog(x_oprog)", ".x_orows(x_orows)",
+    cc += [".po_su_asrc_raw()", ".x_oacc(q_x_oacc)", ".x_oidle(q_x_oidle)", ".x_oprog(q_x_oprog)", ".x_orows(q_x_orows)",
            ".x_ofin(1'b1)", ".x_fidx('0)", ".x_fval('0)", ".o_fin(m_fin)", ".o_fidx(m_fidx)", ".o_fval(m_fval)"]
     L.append(f"    ot_qwen_rom_core_ctrl_x #(.OWN(1), .XW(XW), .XMUT(0), .{cpar}) u_ctrl_me (\n        "
              + ",\n        ".join(cc) + ");")
