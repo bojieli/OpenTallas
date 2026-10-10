@@ -42,6 +42,12 @@ def main():
     rp = json.loads((D / 'reprice.json').read_text())
     sr = json.loads((D / 'split_relays.json').read_text())
     o4rec = json.loads((D / 'rom_r22ko4.json').read_text())
+    svrec = json.loads((D / 'rom_r22ksv.json').read_text())
+
+    def vm_ar(rec):
+        s = rec['crossing_bus_stages']
+        return s.get('seq_vrd', 0) + s.get('vm_seq_q', 0) + s.get('seq_vwr', 0)
+    vmar_r22k, vmar_o4 = AR_PER_TOKEN * vm_ar(svrec), AR_PER_TOKEN * vm_ar(o4rec)
     ref = sr['reference']['s22ml7']
     adopted = sr['runs'][sr['adopted_for_price'].split()[0]]['vs_s22ml7']
 
@@ -53,7 +59,7 @@ def main():
     o4 = run_of(a.o4)
     out = dict(schema='opentallas.qwen-kv-die.reprice-o4.v1', date='2026-10-10', clock_hz=CLOCK,
                inputs={str(p.relative_to(ROOT)): sha16(p) for p in (D / 'reprice.json', D / 'split_relays.json',
-                                                                      D / 'rom_r22ko4.json')} | {str(a.o4): sha16(a.o4)},
+                                                                      D / 'rom_r22ko4.json', D / 'rom_r22ksv.json')} | {str(a.o4): sha16(a.o4)},
                r22k_relay_term=dict(run=sr['adopted_for_price'], L0=adopted['L0'], layer=adopted['L1'],
                                     token=adopted['L0'] + 35 * adopted['L1']),
                o4_run=dict(name=a.o4_name, **o4), cases={})
@@ -72,7 +78,15 @@ def main():
             o4_fec_token_cycles=tok + fec, o4_fec_tok_s=round(CLOCK / (tok + fec), 1),
             o4_fec_bound_tok_s=round(CLOCK / (tok + fec_b), 1),
             r22k_fec_tok_s=round(CLOCK / (base + fec), 1),
-            kvd_bound_tok_s=round(CLOCK / (tok + fec + 36 * kvd_extra), 1))
+            kvd_bound_tok_s=round(CLOCK / (tok + fec + 36 * kvd_extra), 1),
+            r22k_fec_vmar_tok_s=round(CLOCK / (base + fec + vmar_r22k), 1),
+            r22k_fecb_vmar_tok_s=round(CLOCK / (base + fec_b + vmar_r22k), 1),
+            o4_fec_vmar_tok_s=round(CLOCK / (tok + fec + vmar_o4), 1),
+            o4_fecb_vmar_tok_s=round(CLOCK / (tok + fec_b + vmar_o4), 1))
+    out['vm_ar'] = dict(per_token_r22k=vmar_r22k, per_token_o4=vmar_o4, stages_r22ksv=vm_ar(svrec), stages_r22ko4=vm_ar(o4rec),
+                        note='the sequencer <-> VM all-reduce word path (read request, word back, write) was not in the r22k '
+                             'die or price; each of the 72 all-reduces pays its die relays once (the stream rate is kept: '
+                             'ot_qwen_tp_seq_w12_vrl), the masters\' own stations are in the measured vehicle')
     out['bounds'] = dict(
         kvd_kok_extra_stages_per_layer=kvd_extra,
         kvd_note='charged in kvd_bound_tok_s only if the KV-die launch waits on the control tile\'s descriptor word '
@@ -90,6 +104,8 @@ def main():
     c = out['cases']['typical']
     out['headline'] = dict(o4_tok_s=c['o4_tok_s'], o4_fec_tok_s=c['o4_fec_tok_s'], r22k_tok_s=c['r22k_tok_s'],
                            r22k_fec_tok_s=c['r22k_fec_tok_s'], o4_exact=o4['exact'],
+                           price_fec100=dict(r22k=c['r22k_fec_vmar_tok_s'], o4=c['o4_fec_vmar_tok_s']),
+                           price_fec240=dict(r22k=c['r22k_fecb_vmar_tok_s'], o4=c['o4_fecb_vmar_tok_s']),
                            layer_relay_cycles=dict(r22k=adopted['L1'], o4=o4['vs_s22ml7']['L1']))
     a.out.write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps(out['headline']))
