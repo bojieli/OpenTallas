@@ -20,7 +20,16 @@ add_pdn_connect -grid {top} -layers {M5 M6}
 add_pdn_connect -grid {top} -layers {M6 M7}
 # the line-memory / frame-FIFO SRAM macros (ot_sram_1r1w_256x256_m2_r2c2, PG pins on M4) get M5 straps over the
 # macro connected down to their M4 PG pins and up to the M6 straps of the top grid (as the HBM-ABSTRACTS hfd_cmdproc view).
-define_pdn_grid -macro -cells {ot_sram_1r1w_256x256_m2_r2c2} -halo {2 2 2 2} -voltage_domains {CORE} -name {sram}
-add_pdn_stripe -grid {sram} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
-add_pdn_connect -grid {sram} -layers {M4 M5}
-add_pdn_connect -grid {sram} -layers {M5 M6}
+# ds-1010 2026-10-10: the grid covers EVERY ot_sram_* master instantiated (it named only ot_sram_1r1w_256x256_m2_r2c2, so
+# the dsfd_selt_q2 FRPR line's six ot_sram_1r1w_128x256_m1_r2c2 macros got no strap: PSM-0069 VDD connectivity at
+# 6_report after a full route, s81b-selt_q2-frprck2a-1dc5e37d5 / fill-6 frpr-sq12).  No SRAM master -> no macro grid.
+set ot_sram_cells {}
+foreach ot_m [[ord::get_db] getLibs] { foreach ot_c [$ot_m getMasters] {
+  if {[$ot_c isBlock] && [string match ot_sram_* [$ot_c getName]]} { lappend ot_sram_cells [$ot_c getName] } } }
+if {[llength $ot_sram_cells]} {
+  puts "pdn_tile_sym: SRAM macro grid on [lsort -unique $ot_sram_cells]"
+  define_pdn_grid -macro -cells [lsort -unique $ot_sram_cells] -halo {2 2 2 2} -voltage_domains {CORE} -name {sram}
+  add_pdn_stripe -grid {sram} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
+  add_pdn_connect -grid {sram} -layers {M4 M5}
+  add_pdn_connect -grid {sram} -layers {M5 M6}
+}
