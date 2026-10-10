@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm_svc.dma_pc_tile.v1",
+  "verdict": "PASS",
+  "sources_unchanged": true,
+  "cases": [
+    {
+      "case": "baseline",
+      "verdict": "PASS",
+      "returncode": 0,
+      "output": "PASS minimal_one_PC sixteen_CAM_leases finite_admission out_of_order_tags reverse_beat_order exact_slot_index lease_retirement\n"
+    },
+    {
+      "case": "unknown_tag",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile.sv:39: DMA native unknown/retired tag\n       Time: 255000 Scope: tb_hbm_svc_dma_pc_tile.dut\n"
+    },
+    {
+      "case": "out_of_bounds_beat",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile.sv:40: DMA native duplicate/out-of-bounds beat\n       Time: 255000 Scope: tb_hbm_svc_dma_pc_tile.dut\n"
+    },
+    {
+      "case": "duplicate_beat",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile.sv:40: DMA native duplicate/out-of-bounds beat\n       Time: 285000 Scope: tb_hbm_svc_dma_pc_tile.dut\n"
+    },
+    {
+      "case": "retired_tag",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_tile.sv:39: DMA native unknown/retired tag\n       Time: 285000 Scope: tb_hbm_svc_dma_pc_tile.dut\n"
+    }
+  ],
+  "input_sha256": {
+    "rtl/ot_hbm_svc_dma_pc_tile.sv": "6d79185251d9685b06f3b868c3088d35d29da122c3f218877318497f7df6a8f4",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_pc_tile.sv": "d5afd8d41354336db9a7e6cee14bc4ce2e3a4b28a4b79d72e566339c3b01836a",
+    "tools/hbm_svc_dma_pc_tile_bench.py": "bc297270c680ff32ed5558197c2ba32f1872045fcd5d0e0c9d62c822e850e45e"
+  },
+  "scope": "One actual RTL native-PC16leaseCAM; permuted lease completion, reversed beat ordering, finite request admission, CPU exact slot/index scoreboard. Physical closure and service ownership integration remain separate."
+}

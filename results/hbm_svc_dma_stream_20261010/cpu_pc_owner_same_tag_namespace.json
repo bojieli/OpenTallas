@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.hbm_svc.dma_pc_owner.v1",
+  "verdict": "PASS",
+  "sources_unchanged": true,
+  "cases": [
+    {
+      "case": "baseline",
+      "verdict": "PASS",
+      "returncode": 0,
+      "output": "PASS minimal_one_PC same17bit_tag_namespace normal_read_and_write_drain DMA_lease_drain request_response_backpressure\n"
+    },
+    {
+      "case": "bypass_drain_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/ot_hbm_svc_dma_pc_owner.sv:35: DMA ownership claimed before normal response drain\n       Time: 75000 Scope: tb_hbm_svc_dma_pc_owner.dut\n"
+    },
+    {
+      "case": "prefix_route_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_pc_owner.sv:20: normal response owner/identity/backpressure mismatch\n       Time: 71000 Scope: tb_hbm_svc_dma_pc_owner.check_normal_response\n"
+    },
+    {
+      "case": "early_release_mutant",
+      "verdict": "FAIL",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-svc-dma-stream-20261010/rtl/test/hbm_accel/tb_hbm_svc_dma_pc_owner.sv:43: owner released with outstanding DMA lease\n       Time: 226000 Scope: tb_hbm_svc_dma_pc_owner\n"
+    }
+  ],
+  "input_sha256": {
+    "rtl/ot_hbm_svc_dma_pc_owner.sv": "254dac75e00a58df5a711ac56137bac2f6c599e117b75f78103e1ef3f7e7650a",
+    "rtl/test/hbm_accel/tb_hbm_svc_dma_pc_owner.sv": "6dff659891c1f7333cede9bca8497d3596f215ac012b6cede684194d0646d9ff",
+    "tools/hbm_svc_dma_pc_owner_bench.py": "0a4f1518318355382164cbe3d59e0d357c5eeea726aac579aa82b442e17fd41f"
+  },
+  "scope": "One actual RTL PC owner with CPU native request/response scoreboard; normal_quiescent driven as full read/write/relay debt contract. Does not prove integration computes that contract or physical closure."
+}
