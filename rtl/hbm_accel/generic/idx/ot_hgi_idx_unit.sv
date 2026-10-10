@@ -16,6 +16,8 @@
 //   op 4 (EHASH, not bound here): record fault (fail-closed).
 // Return {fault, done, ready}: ready = no record in flight.
 module ot_hgi_idx_unit #(
+    parameter integer IKS = 0,
+    parameter integer IKS_MUT = 0,      // bench: the issuer's MUT (1 = quarter split off by one)          // hbm-phys [svc] 10-10: 1 = IDX.INDEX issues the index-key STREAM to the 4 svc stacks (on once the die binds iks_e / ik_base)
     parameter integer MUT = 0,          // bench mutants: 1 ascending sort compares scores instead of ids
     // hgi-1010/g (opt-in, default 0 = the reader above, unchanged): IDX.TOPK streaming reader.  PREF = 1: the A rows
     // (inner stride 1) are prefetched sector by sector with up to 4 VM reads in flight (the VM fast path: in-order
@@ -31,6 +33,11 @@ module ot_hgi_idx_unit #(
     input  wire          rst_n,
     input  wire [2074:0] rec,           // {I 256 (IDX.INDEX key-region descriptor; hgi-1010/g), die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
     output reg  [2:0]    ret,
+    // IKS (ot_hgi_idx_iks_issue): one svc STREAM command a stack at the IDX.INDEX frame start ({payload 127, valid} x 4,
+    // launched on clk: the die forwards clk as each stack's e_fclk); ik_base = the record's key-region base (operand I,
+    // hgi-1010/e adds it to the IDX record; die binding pending)
+    output wire [511:0]  iks_e,
+    input  wire [39:0]   ik_base,
     output wire [337:0]  vmq,
     input  wire [273:0]  vmr,
     // native selector (IDX.INDEX)
@@ -78,13 +85,23 @@ module ot_hgi_idx_unit #(
         .out_last(e_last), .out_values_valid(e_vv), .done(e_done), .error(e_err));
     // ---------------------------------------------------------------- IDX.INDEX frame adapter (op 0)
     reg x_go; wire x_done, x_fault;
+    // ---------------------------------------------------------------- IKS issuer (index keys striped over 32 PCs a stack)
+    reg [12:0] iks_tag;                                  // load tag: frame counter
+    wire iks_fault;
+    wire iks_misaligned = (IKS != 0) && (ik_base[19:0] != 20'd0 || ik_base[36:35] != 2'd0);
+    generate if (IKS != 0) begin : g_iks
+        ot_hgi_idx_iks_issue #(.MUT(IKS_MUT)) u_iks (.clk(clk), .rst_n(rst_n), .go(x_go), .n(hdr[63:32]), .ik_base(ik_base), .tag(iks_tag),
+            .no_credit(1'b0), .e_d(iks_e), .blocks(), .fault(iks_fault));
+    end else begin : g_no_iks
+        assign iks_e = 512'd0; assign iks_fault = 1'b0;
+    end endgenerate
     wire [17:0] dB_b = dB[25:8], dC_b = dC[25:8], dD_b = dD[25:8], dD_s = dD[105:88];
     // legal: A VM FP32 n*m = 4,096, B VM FP32 >= 32, C VM U32 (keep_en), O VM U32, R VM FP32 (optional), D VM (cand_en)
     wire x_keep = hdr[77], x_cand = hdr[76];
     wire x_legal = opnd[0] && opnd[1] && opnd[4] && dA[1:0] == 2'd1 && dA[4:2] == 3'd0 && a_n * a_m == 20'd4096 &&
                    dB[1:0] == 2'd1 && dB[4:2] == 3'd0 && dO[1:0] == 2'd1 && dO[4:2] == 3'd5 &&
                    (!has_r || (dR[1:0] == 2'd1 && dR[4:2] == 3'd0)) && (!x_keep || (opnd[2] && dC[1:0] == 2'd1 && dC[67:48] != 20'd0 && dC[67:48] <= 20'd2048)) &&
-                   (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0;
+                   (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && !iks_misaligned;
     ot_hgi_idx_index #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go(x_go), .k(k), .cand_en(x_cand),
         .keep_en(x_keep), .n(hdr[63:32]), .rank(rdie >= 8'd192 ? 7'(rdie - 8'd192) : rdie >= 8'd96 ? 7'(rdie - 8'd96) : rdie[6:0]),
         .pos(rpos), .a_base(a_base[17:0]), .b_base(dB_b), .c_base(dC_b), .o_base(o_base[17:0]), .r_base(r_base[17:0]),
@@ -144,7 +161,7 @@ module ot_hgi_idx_unit #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= 1'b0; ret <= 3'b001; e_cmd_v <= 1'b0; e_in_v <= 1'b0; vmq_t <= 338'd0; vm_pend <= 1'b0; x_go <= 1'b0; x_active <= 1'b0; m_go <= 1'b0; m_active <= 1'b0; w_go <= 1'b0; w_active <= 1'b0;
+            busy <= 1'b0; ret <= 3'b001; e_cmd_v <= 1'b0; e_in_v <= 1'b0; vmq_t <= 338'd0; vm_pend <= 1'b0; x_go <= 1'b0; x_active <= 1'b0; iks_tag <= 13'd0; m_go <= 1'b0; m_active <= 1'b0; w_go <= 1'b0; w_active <= 1'b0;
             b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; w_v <= 1'b0; c_ok <= 1'b0; r_done <= 1'b1;
             started <= 1'b0; eng_done <= 1'b0; eng_err <= 1'b0; w_cnt <= 32'd0;
             pf_act <= 1'b0; pf_done <= 1'b1; pf_out <= 3'd0; pf_cnt <= 3'd0; pf_h <= 2'd0; pf_t <= 2'd0; pf_it <= 2'd0;
@@ -159,7 +176,7 @@ module ot_hgi_idx_unit #(
                 busy <= 1'b1; ret[0] <= 1'b0; e_cmd_v <= 1'b0; r_row <= 20'd0; r_col <= 20'd0; r_done <= 1'b0;
                 c_ok <= 1'b0; w_cnt <= 32'd0; b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; o_k <= 12'd0;
             end else if (busy && !e_cmd_v && r_row == 20'd0 && r_col == 20'd0 && !r_done && !e_in_v && !vm_pend && w_cnt == 32'd0 && !started) begin
-                if (op == 6'd0 && x_legal) begin x_go <= 1'b1; x_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
+                if (op == 6'd0 && x_legal) begin x_go <= 1'b1; iks_tag <= iks_tag + 13'd1; x_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
                 else if (op == 6'd1 && m_legal) begin m_go <= 1'b1; m_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
                 else if (op == 6'd3 && w_legal) begin w_go <= 1'b1; w_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
                 else if (!legal) begin busy <= 1'b0; ret <= 3'b101; r_done <= 1'b1; end
@@ -240,7 +257,7 @@ module ot_hgi_idx_unit #(
                 m_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= m_fault ? 3'b101 : 3'b011;
             end
             if (x_active && (x_done || x_fault)) begin
-                x_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= x_fault ? 3'b101 : 3'b011;
+                x_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= (x_fault || iks_fault) ? 3'b101 : 3'b011;
             end
             if (vmr[273] && !x_active && !m_active && !w_active && !(pf_on && pf_out != 3'd0)) begin
                 vm_pend <= 1'b0;
