@@ -44,7 +44,7 @@ import os
 import re
 import shlex
 import math
-from contextlib import contextmanager, ExitStack
+from contextlib import contextmanager, ExitStack, nullcontext
 from functools import wraps
 import shutil
 import threading
@@ -58,6 +58,7 @@ from pathlib import Path
 
 from ssh_transport import command as transport_command, direct_command, session_open_refused
 from source_archive import build_archive, repo_path
+import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
 
@@ -1644,8 +1645,11 @@ def sync_source(j):
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
         ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
                   f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
-        with transport_command(host, bulk=True, wait_s=600) as base:
-            if verified_tar is not None:
+        mirrored = mirror_sync(j, host, run, full, paths, archive_receipt)
+        with nullcontext() if mirrored else transport_command(host, bulk=True, wait_s=600) as base:
+            if mirrored:
+                pass
+            elif verified_tar is not None:
                 # Transfer this exact validated tar, not a second git archive.
                 with verified_tar.open("rb") as stream:
                     put = subprocess.run(base + [f"tar -xf - -C {run}/src"], stdin=stream,
@@ -1685,6 +1689,56 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
     j["source_synced"] = True
+
+def mirror_sync(j, host, run, full, paths, receipt):
+    """GITMIRROR (drive-1010 2026-10-10, tools/closure_loop/git_mirror.py): put the archive of full into {run}/src
+    through the host's bare git mirror, moving only the objects it lacks.  True when done; False (event logged) when
+    the host has no ready mirror or any step failed -- the caller then ships the tar exactly as before (receipt jobs:
+    the same verified tar), re-extracting over anything a failed merge left, so a mirror fault costs time only."""
+    if is_local(host):
+        return False
+    try:
+        mc = git_mirror.config(host_cfg(host))
+    except StopIteration:
+        mc = None
+    if mc is None:
+        return False
+    mirror, upstream = mc
+    t0 = time.time()
+    try:
+        branch = j["spec"]["source"].get("branch")
+        pr = ssh(host, git_mirror.probe_script(mirror, full, branch, upstream), timeout=UPSTREAM_PROBE_S)
+        if pr.returncode or "MIRROR_READY" not in pr.stdout:
+            event(j, f"git-mirror {mirror} not ready (rc={pr.returncode}): tar sync")
+            return False
+        how = "upstream"
+        if "MIRROR_HAVE" not in pr.stdout:
+            with transport_command(host, bulk=True, wait_s=600) as base:
+                argv, env = git_mirror.push_command(REPO, host, mirror, full, base)
+                push = subprocess.run(argv, env={**os.environ, **env}, capture_output=True, text=True,
+                                      timeout=MIRROR_PUSH_S)
+            if push.returncode:
+                raise RuntimeError(f"push rc={push.returncode}: {push.stderr.strip()[-400:]}")
+            how = f"push {git_mirror.pushed_objects(push.stderr)} objects"
+        t1 = time.time()
+        ex = ssh(host, git_mirror.extract_script(mirror, full, paths, run, receipt), timeout=1800)
+        if ex.returncode or "GIT_MIRROR_EXTRACTED" not in ex.stdout:
+            raise RuntimeError(f"extract rc={ex.returncode}: {ex.stderr.strip()[-400:]}")
+    except Exception as e:  # noqa: BLE001 -- any mirror fault falls back to the tar transfer
+        event(j, f"git-mirror sync failed ({type(e).__name__}: {str(e)[:500]}): tar sync")
+        return False
+    event(j, f"git-mirror sync {full[:12]} via {how} in {t1 - t0:.0f}s + extract {time.time() - t1:.0f}s"
+             + (" (receipt archive + required_files sha256 verified on host)" if receipt is not None else ""))
+    try:
+        ssh(host, git_mirror.detached(git_mirror.housekeep_script(mirror)), timeout=60)
+    except Exception as e:  # noqa: BLE001 -- housekeeping is best effort
+        log(f"git-mirror housekeeping {host}: {e}")
+    return True
+
+
+UPSTREAM_PROBE_S = git_mirror.UPSTREAM_FETCH_S + 60
+MIRROR_PUSH_S = 1800
+
 
 # Commits whose route generator passes `corner_sta.py --sdc-name 6_signoff.sdc` but whose own tools/w18/corner_sta.py
 # predates that flag (main 80a11cea9, edd8613d6): the route completes and corner STA dies with "unrecognized arguments:
