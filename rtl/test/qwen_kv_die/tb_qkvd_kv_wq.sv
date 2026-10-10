@@ -35,6 +35,11 @@ module tb_qkvd_kv_wq #(parameter integer DIST = 0, parameter integer RLY = 1, pa
         .clk(clk), .rst_n(rst_n), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
         .kvw_cr(kvw_cr), .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(w_room), .wd_v(wd_v),
         .wd_tag(wd_tag), .rw_v(rw_v), .rw_id(rw_id), .fault(wq_fault));
+    end else if (DIST == 3) begin : g_wql
+    ot_qkvd_kv_wq_leaves #(.HD(HD), .NPC(NPC), .QD(4), .TAGW(TAGW), .MUT(MUT >= 1 && MUT <= 3 ? MUT : 0), .RLY(RLY)) u_wq (
+        .clk(clk), .rst_n(rst_n), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
+        .kvw_cr(kvw_cr), .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(w_room), .wd_v(wd_v),
+        .wd_tag(wd_tag), .rw_v(rw_v), .rw_id(rw_id), .fault(wq_fault));
     end else if (DIST == 2) begin : g_wqt
     ot_qkvd_kv_wq_tiles #(.HD(HD), .NPC(NPC), .QD(4), .TAGW(TAGW), .MUT(MUT >= 1 && MUT <= 3 ? MUT : 0), .RLY(RLY)) u_wq (
         .clk(clk), .rst_n(rst_n), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
