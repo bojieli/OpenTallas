@@ -240,7 +240,8 @@ module ot_qfd_sp_tree_top_s #(
     parameter integer AMR = 1,
     parameter integer SPRE = 1,
     parameter integer NU = 4,             // upper sub-tiles (W / NU lanes each)
-    parameter integer CR = 1              // relay stages control tile <-> upper tiles (<= CLNK + 2 + LNK)
+    parameter integer CR = 1,             // relay stages control tile <-> upper tiles (<= CLNK + 2 + LNK)
+    parameter integer SMUT = 0            // negative control: 1 = the upper tiles' DLY not reduced by CR (selects CR late)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -343,7 +344,7 @@ module ot_qfd_sp_tree_top_s #(
                 assign tt_ty[32*(k*W + u*NLU + l) +: 32] = ty[32*(k*NLU + l) +: 32];
             end
         end
-        ot_qfd_band_upper #(.NL(NLU), .NB(NB), .LNK(LNK), .DLY(CLNK + 2 + LNK - CR), .TREE_LAT(TREE_LAT), .MUT(UMUT),
+        ot_qfd_band_upper #(.NL(NLU), .NB(NB), .LNK(LNK), .DLY(CLNK + 2 + LNK - ((SMUT != 0) ? 0 : CR)), .TREE_LAT(TREE_LAT), .MUT(UMUT),
             .TCUT(TCUT), .LG(LG)) u_up (
             .clk(clk), .rst_n(rst_n), .pw(pw), .pw_v(b_pv), .lf(b_lf), .sel_e(r_sel), .tv_e(r_tv),
             .tt_ty(ty), .tt_use(u_use[u]), .tt_v(u_v[u]), .fault(uf[u]));
