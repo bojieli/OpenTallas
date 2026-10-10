@@ -364,7 +364,7 @@ def stage_list(spec):
         t, r = STAGE_DEFAULTS["bench"]
         out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
                         expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
-                        min_count_regex=b.get("min_count_regex"),
+                        min_count_regex=b.get("min_count_regex"), timeout_s=b.get("timeout_s"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
     cal = st.get("calibrate") or {}
     # OWNER 2026-10-08: a recipe that references IO in-run to its own propagated clock (io_ref_skew.sdc) needs no
@@ -4161,7 +4161,10 @@ def eco_install_cmd(j):
         macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
         isdc = f" --interface-sdc {ob}/6_final.sdc" if ob != rb else ""
         lines.append(f"if [ -f {W}/view/{blk}.lef ]; then mv {W}/view {W}/view.pre_eco; python3 tools/hbm_fmax_attn_abstract.py "
-                     f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; fi")
+                     f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; "
+                     # drive-0849: the pre-ECO view (w18 export) carried export.json, which collect recipes copy; the
+                     # abstract writes abstract.json -> keep both names (mtp-seedproj a/b collect crashed twice on it)
+                     f"[ -f {W}/view/export.json ] || [ ! -f {W}/view/abstract.json ] || cp {W}/view/abstract.json {W}/view/export.json; fi")
     return "\n".join(lines)
 
 
@@ -4757,6 +4760,10 @@ for p in os.listdir("/proc"):
         print("LIVE pid", p); sys.exit(3)
 refs = [r.rstrip("/") for r in a.get("refs") or []]
 hard = [r for r in refs if os.path.basename(r) not in GENERIC and r != R]
+# token-exact 2026-10-09: a .keep marker protects its directory (exactness fixtures) like a hard reference
+hard += [dp.rstrip("/") for dp, dn, fn in os.walk(R) if ".keep" in fn and dp.rstrip("/") != R]
+if os.path.exists(os.path.join(R, ".keep")):
+    print("DEEP_FREED 0 (.keep)"); sys.exit(0)
 soft = [r for r in refs if r not in hard and r != R]
 finals = [x.rstrip("/") for x in a.get("final_dirs") or []]
 prot = lambda p: any(p == r or p.startswith(r + "/") for r in hard)

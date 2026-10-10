@@ -83,21 +83,25 @@ module tb_hgi_idx_index;
   ot_hgi_idx_unit #(.MUT(MUT)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
     .sel_fs(fs), .sel_qb(qb), .sel_qbr(qbr), .sel_kin(kin), .sel_to(to), .sel_toc(toc), .sel_co(co), .sel_coc(coc),
     .sel_ev(ev));
+  // VM model (fast path): up to 4 requests outstanding, pipelined (6..8 cycles, never before the predecessor), in order
   reg [31:0] vm [0:262143];
-  integer vdel = -1; reg [337:0] vq;
+  reg [337:0] vqq [0:7]; integer vqt [0:7]; integer qh2 = 0, qn2 = 0, maxo2 = 0, tnow = 0, tlast = 0;
   always @(posedge ck) begin
+    tnow = tnow + 1;
     vmr[273] <= 1'b0;
-    if (vmq[337]) begin
-      if (vdel >= 0) $fatal(1, "VM: second request outstanding");
-      vq = vmq; vdel = 2 + ($urandom % 5);
-    end else if (vdel > 0) vdel = vdel - 1;
-    else if (vdel == 0) begin
-      vdel = -1;
+    if (qn2 > 0 && vqt[qh2 % 8] <= tnow) begin : serve
+      reg [337:0] vq; vq = vqq[qh2 % 8]; qh2 = qh2 + 1; qn2 = qn2 - 1;
       for (integer w = 0; w < 8; w = w + 1) begin
         if (vq[336] && &vq[16 + 4*w +: 4]) vm[{vq[323:309], 3'(w)}] = vq[48 + 32*w +: 32];
         vmr[32*w +: 32] <= vq[336] ? 32'd0 : vm[{vq[323:309], 3'(w)}];
       end
       vmr[256] <= vq[336]; vmr[272:257] <= vq[15:0]; vmr[273] <= 1'b1;
+    end
+    if (vmq[337]) begin
+      if (qn2 >= 4) $fatal(1, "VM: more than 4 outstanding");
+      vqq[(qh2 + qn2) % 8] = vmq;
+      tlast = (tnow + 6 + ($urandom % 3) > tlast + 1) ? tnow + 6 + ($urandom % 3) : tlast + 1;
+      vqt[(qh2 + qn2) % 8] = tlast; qn2 = qn2 + 1; if (qn2 > maxo2) maxo2 = qn2;
     end
   end
   hfd_idx_sel #(.T(T), .LA(LA)) u_x (.ck(ck), .rst(rst), .fs(fs), .qb(qb), .qbr(qbr), .kin(kin), .qo(qo), .si(si), .sc(sc),
@@ -134,7 +138,7 @@ module tb_hgi_idx_index;
     end
   end
   // sinks (credit return after a registered cycle) and monitors
-  integer z, lanes_t, lanes_c, ufault;
+  integer z, lanes_t, lanes_c, ufault, ncand;
   function automatic [255:0] md(input [2:0] fmt, input [39:0] base_, input [19:0] n_, input [19:0] m_, input [31:0] str_);
     begin md = 256'd0; md[1:0] = 2'd1; md[4:2] = fmt; md[47:8] = base_; md[67:48] = n_; md[87:68] = m_; md[119:88] = str_; end
   endfunction
@@ -183,16 +187,27 @@ module tb_hgi_idx_index;
       // stage A / B / C in the VM, then send the IDX.INDEX record
       for (q = 0; q < 128; q = q + 1) for (p = 0; p < 32; p = p + 1) vm[18'h01000 + 32*q + p] = qblk[f_qoff[fr] + q][7 + 32*p +: 32];
       for (q = 0; q < 32; q = q + 1) vm[18'h02000 + q] = {qblk[f_qoff[fr] + 4*q][1046:1031], 16'd0};
-      for (q = 0; q < 4; q = q + 1) for (p = 0; p < 11; p = p + 1) vm[18'h02100 + 11*q + p] = 32'(keepm[fr * 4 + q] >> (32*p));
+      // G18a: C = the layer-20 candidate table [block ids | values]: every kept owned block listed with a finite value,
+      // plus decoys the engine must ignore (other ranks' blocks; own blocks at -inf)
+      ncand = 0;
+      if (f_keep[fr]) for (q = 0; q < 4; q = q + 1) for (p = 0; p < 342; p = p + 1) begin
+        if (keepm[fr * 4 + q][p] && ncand < 2040) begin
+          vm[18'h06000 + ncand] = 96 * (342 * q + p) + f_rank[fr]; vm[18'h07000 + ncand] = 32'h3F80_0000 + p; ncand = ncand + 1;
+        end else if ((p % 97) == 5 && ncand < 2040) begin
+          vm[18'h06000 + ncand] = 96 * (342 * q + p) + f_rank[fr]; vm[18'h07000 + ncand] = 32'hFF80_0000; ncand = ncand + 1;
+        end else if ((p % 89) == 7 && ncand < 2040) begin
+          vm[18'h06000 + ncand] = 96 * (342 * q + p) + ((f_rank[fr] + 1) % 96); vm[18'h07000 + ncand] = 32'h4000_0000; ncand = ncand + 1;
+        end
+      end
       for (q = 0; q < 8192; q = q + 1) vm[18'h03000 + q] = 32'hDEADBEEF;
       lanes_t = 0; lanes_c = 0;
       begin : mkrec
         reg [127:0] h; h = 0; h[127:124] = 4'd9; h[123:118] = 6'd0;
         h[99:93] = {2'b01, 1'b1, 1'(f_cand[fr]), 1'(f_keep[fr]), 2'b11};          // R O D C B A
         h[88:64] = {11'd0, 1'(f_keep[fr]), 1'(f_cand[fr]), 12'(f_k[fr])}; h[63:32] = 32'(f_ndie[fr]); h[31:0] = 32'd20;
-        rec = {8'(f_rank[fr]), 20'(f_pos[fr]), 21'd512, 21'd512, 21'd4096, 21'd44, 21'd32, 21'd4096,
+        rec = {8'(f_rank[fr]), 20'(f_pos[fr]), 21'd512, 21'd512, 21'd4096, 21'(ncand == 0 ? 1 : ncand), 21'd32, 21'd4096,
                md(3'd0, 40'h04000, 20'd512, 20'd1, 32'd0), md(3'd5, 40'h03000, 20'd512, 20'd1, 32'd0),
-               md(3'd0, 40'h05000, 20'd2048, 20'd2, 32'd4096), md(3'd5, 40'h02100, 20'd44, 20'd1, 32'd0),
+               md(3'd0, 40'h05000, 20'd2048, 20'd2, 32'd4096), md(3'd5, 40'h06000, 20'(ncand == 0 ? 1 : ncand), 20'd2, 32'd4096),
                md(3'd0, 40'h02000, 20'd32, 20'd1, 32'd0), md(3'd0, 40'h01000, 20'd4096, 20'd1, 32'd0), h, 1'b1};
       end
       @(negedge ck); rec[0] = 1'b0;

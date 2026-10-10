@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.wfc-hard-source-binding.v1",
+  "source": "4b13388a5",
+  "token_physical_source": "e829cb457",
+  "metadata_rtl_source": "f8f493123",
+  "default_enabled": false,
+  "ports_bits": {
+    "request": 36,
+    "response": 22,
+    "config": 52,
+    "draft": 513,
+    "config_input": 55
+  },
+  "metadata_added": {
+    "stages": 2,
+    "bits": 74
+  },
+  "token_edges": {
+    "original": 1,
+    "r3": 2,
+    "hard": 4,
+    "added_original": 3,
+    "added_r3": 2
+  },
+  "source_forced_cycles": {
+    "baseline": 41423,
+    "hard": 41423,
+    "delta": 0,
+    "hidden": 94
+  },
+  "source_gate": {
+    "host": "ot-pve1",
+    "admission_gib": 4,
+    "reserve_floor_gib": 12,
+    "all_cases_pass_expected": true,
+    "positive": 8,
+    "negative": 2,
+    "receipt": "results/rtl/dsrom_wfc_token_hard_20261009/source_pair_4b13388a5/summary.json"
+  },
+  "migration": {
+    "from_host": "ot-epyc1tb",
+    "guard_pid": 2891934,
+    "launcher_pid": 2891932,
+    "verified_unstarted": true,
+    "terminated_waiting_guard_only": true,
+    "to_host": "ot-pve1"
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv": "466f0e2eccd8eacc5583a36043762dbe98962adbe16a4d5d5e128d09f85cf178",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "4cdc0fe9c0a122db81dae32c34c9afe65185fc6673525c0caa644420b3ecf6e5",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv": "27ec0d2a5f4cbd79c0aef026699d2275c4286a1237c22f22266d5128bd39ac22",
+    "tools/dsrom_wfc_prompt_pipe_bench.py": "54addfe82d44afa66d77618b1d823f0454ba6fef54d07dfca1a06f1d1766263e"
+  },
+  "physical_status": "HARD candidate queued and W8-held pending coordinator release; no closure or SOURCE physical-credit claim"
+}

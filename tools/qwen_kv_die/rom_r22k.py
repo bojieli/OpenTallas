@@ -23,8 +23,20 @@ r22k = r21c (tools/die_top_lint.py QWEN_R21C) with every KV-die block moved off,
             pll_fwd and reset rst_fwd (ckb_rom bump cell -> clk_rx), the clock / reset of d2d_rom + PHY, and clk_rx's
             synchronised reset to the sequencer (rsi), which distributes it in its words as today.
 Contract: results/arch/qwen_kv_die_20261009/CONTRACT.md.
+
+Opt-in r22kcs (die-evidence-2 2026-10-09, `surgery_cs`; default r22k unchanged): the sequencer logic in its CLOSED
+compact outline (qfd_sp_constants_sequencer_sys ICUT, route qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-
+lvt-cl, 259.2 x 333.36 um, TT +12.32 / FF +4.69 / DRC 0) instead of the r21m 777.6 x 2,775.6 um constants+sequencer
+reservation.  The reservation also held the constant ROM (ot_qfd_crom, 48 ot_rom_4096x266_m8, cfg qfd_crom48
+777.6 x 1,000): it becomes its own instance sp_crom (master qfd_crom) with the reservation's ca / cq ports at their old
+N-face offsets; the sequencer keeps every other port (names, widths) on the closed route's pin plan (pin-region rule
+of physical/qwen_die_masters/cfg/qfd_sp_constants_sequencer_sys_icut_t.env: inputs W, outputs E, clock / reset N).
+Both sit inside the old reservation, at the arrangement with the least bit-weighted pin-to-neighbour distance
+(`_compact_seq`); the relays are then derived for the new pin positions as for every other bus.
 """
 import copy
+import functools
+import os
 
 MOVED_KINDS = {'phy', 'ctrl', 'cdc', 'link_fifo', 'hub_element', 'link_station'}
 DROP_CLASSES = {'kv_land', 'link_channel', 'link_spine', 'hbm_cdc', 'cdc_core', 'phy_dfi', 'strip_fan'}
@@ -36,10 +48,14 @@ CTL_BITS = 528 + 1 + 1                    # word + valid down, credit back
 D2D_H = 518.4                             # qfd_d2d_rom frame height (cw x 518.4 = 0.403 mm2), see CONTRACT.md
 MARGIN = 21.6
 SPINE_RELAY_CH = 259.2                      # KV2: set by tools/die_top_lint.py QWEN_R22K (KV2 spine M | E relay channel; 0 = r22k as first built)
+SQ_TI_EAST = False                         # relay fix F1: the r21c-frame sequencer's ti / ts on its E face (the channel of the tree-top pins)
+TT_ISSUE_BOTTOM = False                    # relay fix F1: the tree top's issue / status pins at its BOTTOM (toward the VM / SU)
+SEQ_COMPACT_ANCHOR = 'top'                 # 'top': the compact frame at the top of the old slot (toward the SU / VM / tree top)
+SEQ_COMPACT = None                         # (w, h): the closed compact ICUT sequencer (icut_t-a8f3ba53c 259.2 x 333.36)
 SPINE_RELAY_CH_WM = 129.6                   # KV2: extra relay channel width between spine columns W and M
 
 
-def surgery(v, m):
+def surgery(v, m, compact_seq=False):
     by = {i.name: i for i in m['insts']}
     g = m['geo']
     moved = {n for n, i in by.items() if i.kind in MOVED_KINDS}
@@ -137,9 +153,35 @@ def surgery(v, m):
     g['r22k_dx_um'] = dx
     m['insts'] = insts
     m['buses'] = nb
+    if SEQ_COMPACT:
+        # the compact ICUT constants sequencer (struct-close / drive-0849, CLOSED TT +12.32 / FF +4.69): the frame shrinks
+        # in place, anchored at the old frame's bottom-left (its d2d words leave from its S face, toward d2d_rom)
+        sq = next(i for i in insts if i.name == 'sp_constants_sequencer')
+        rec['seq_compact'] = dict(old=[round(sq.w, 3), round(sq.h, 3)], new=list(SEQ_COMPACT))
+        top = sq.y + sq.h
+        sq.w, sq.h = SEQ_COMPACT[0] - v.SHAVE, SEQ_COMPACT[1] - v.SHAVE
+        if SEQ_COMPACT_ANCHOR == 'top':
+            sq.y = round(v.dn(top - sq.h - v.SHAVE, v.GY), 4)
+        elif str(SEQ_COMPACT_ANCHOR).startswith('chanE:'):
+            # in the M | E spine relay channel (inserted below, SPINE_RELAY_CH wide), right of the sequencer's column
+            yc = float(SEQ_COMPACT_ANCHOR.split(':')[1])
+            sq.y = round(v.dn(yc - sq.h / 2, v.GY), 4)
+            rec['seq_compact']['chanE'] = True          # x set after the M | E channel is inserted (below)
+        elif str(SEQ_COMPACT_ANCHOR).startswith('chan:'):
+            # in the W | M spine channel (between the W column's right edge and the sequencer's column), centred at y
+            yc = float(SEQ_COMPACT_ANCHOR.split(':')[1])
+            wcol = max(i.x + i.w for i in insts if i.kind == 'spine_block' and i.x + i.w <= sq.x + 1.0 and i.name != sq.name)
+            sq.x = round(v.up((wcol + sq.x - sq.w) / 2, v.GX), 4)
+            sq.y = round(v.dn(yc - sq.h / 2, v.GY), 4)
+        elif SEQ_COMPACT_ANCHOR == 'mid':
+            sq.y = round(v.dn(top - (rec['seq_compact']['old'][1] + sq.h) / 2, v.GY), 4)
+        rec['seq_compact']['anchor'] = SEQ_COMPACT_ANCHOR
     if SPINE_RELAY_CH:
         W = _spine_relay_channel(v, m, g, round(xc + g['cw'], 4), SPINE_RELAY_CH, W)
         rec['spine_relay_channel_um'] = SPINE_RELAY_CH
+        if rec.get('seq_compact', {}).get('chanE'):
+            sqc = next(i for i in insts if i.name == 'sp_constants_sequencer')
+            sqc.x = round(v.up(xc + g['cw'] + 4.32, v.GX), 4)   # inside the M | E channel, left of the shifted E column
     if SPINE_RELAY_CH_WM:
         W = _spine_relay_channel(v, m, g, round(xc, 4), SPINE_RELAY_CH_WM, W)
         rec['spine_relay_channel_wm_um'] = SPINE_RELAY_CH_WM
@@ -154,6 +196,11 @@ def surgery(v, m):
     m['die'] = dict(m['die'], w=W, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
     m['r22k'] = rec
     _wrap_masters(v, m)
+    if compact_seq:
+        _compact_seq(v, m, rec)
+
+
+surgery_cs = functools.partial(surgery, compact_seq=True)
 
 
 def _spine_relay_channel(v, m, g, xs, ch, W):
@@ -182,6 +229,64 @@ def _spine_relay_channel(v, m, g, xs, ch, W):
     return round(W + ch, 4)
 
 
+def _compact_seq_master(v, model, old, sqi):
+    """The compact ICUT sequencer frame: every die port of the r21c master on the E / W face nearest its peer (the routed
+    element's pin plan is left / right / top), balanced by face capacity (2-track pitch, two layers a face); the r22k
+    words dc / dh / dflt and the reset rsi as before (S face / area)."""
+    Master = type(old)
+    mm = Master(old.name, sqi.w, sqi.h, old.obs_top, 'compact ICUT constants sequencer (icut_t-a8f3ba53c 259.2 x 333.36)')
+    by = {i.name: i for i in model['insts']}
+    bits, peer = {}, {}
+    for bid, cl, b, eps in model['buses']:
+        for j, (inst, port) in enumerate(eps):
+            if inst == sqi.name:
+                p = port.lstrip('*')
+                bits[p] = max(bits.get(p, 0), b)
+                others = [by[x] for x, _ in eps if x != inst and x in by]
+                if others:
+                    peer[p] = others[0]
+    cx, cy = sqi.x + sqi.w / 2, sqi.y + sqi.h / 2
+    L = {'E': sqi.h, 'W': sqi.h, 'N': sqi.w, 'S': sqi.w}
+    cap = {f: (2 if f in 'EW' else 1) * (L[f] - 4.0) / 0.048 for f in 'NSEW'}   # E / W: M4 + M6, N / S: M5
+    cap['S'] -= 2 * 530 + 9 + 40                                  # dc / dh / dflt (added below) on the S face
+    load = {f: 0 for f in 'NSEW'}
+    faces = {}
+    for p in sorted(bits, key=lambda q: -bits[q]):
+        if p in ('dc', 'dh', 'dflt', 'rsi'):
+            continue
+        if bits[p] == 1 and p in old.ports and old.ports[p][0] == 'area':
+            faces[p] = 'area'
+            continue
+        pe = peer.get(p)
+        if pe is None:
+            order = ['E', 'W', 'N', 'S']
+        else:
+            dx, dy = pe.x + pe.w / 2 - cx, pe.y + pe.h / 2 - cy
+            fx, fy = ('E' if dx >= 0 else 'W'), ('N' if dy >= 0 else 'S')
+            order = [fy, fx] if abs(dy) >= abs(dx) else [fx, fy]
+            order += [f for f in 'NSEW' if f not in order]
+        f = next((f for f in order if load[f] + bits[p] <= cap[f]), order[0])
+        faces[p] = f
+        load[f] += bits[p]
+    for f in 'NSEW':
+        fl = [p for p in faces if faces[p] == f]
+        tot = sum(bits[p] for p in fl) or 1
+        span_all = L[f] - 4.0 if f != 'S' else (L[f] - 4.0) * 0.5
+        pos = 2.0 if f != 'S' else 2.0 + (L[f] - 4.0) * 0.5
+        lay = ('M4', 'M6') if f in 'EW' else ('M5', 'M5')
+        for n, p in enumerate(fl):
+            span = span_all * bits[p] / tot
+            mm.face(p, bits[p], f, lay[n % 2], pos + span / 2, 1)
+            pos += span
+    j = 0
+    for p, fc in faces.items():
+        if fc == 'area':
+            mm.area(p, 1, mm.w / 2 + ((j % 8) - 4) * 1.6, mm.h / 2 + (j // 8 - 4) * 1.6, 1)
+            j += 1
+    mm.load = load
+    return mm
+
+
 def _wrap_masters(v, m):
     inner = v.masters
 
@@ -189,11 +294,30 @@ def _wrap_masters(v, m):
         tiles = [i for i in model['insts'] if i.master == 'qfd_tile_nk']
         for i in tiles:
             i.master = 'qfd_tile_e' if i.name.split('_')[1].isdigit() and int(i.name.split('_')[1]) >= 32 else 'qfd_tile'
+        sqi = next((i for i in model['insts'] if i.name == 'sp_constants_sequencer'), None)
+        sq_wh = (sqi.w, sqi.h) if sqi is not None else None
+        if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):
+            ow, oh = m['r22k']['seq_compact']['old']       # the base generator lays the r21c faces out on the old frame
+            sqi.w, sqi.h = ow, oh
         try:
             M = inner(model, k, port_bits)
         finally:
             for i in tiles:
                 i.master = 'qfd_tile_nk'
+            if sq_wh is not None:
+                sqi.w, sqi.h = sq_wh
+        if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):
+            M['qfd_sp_constants_sequencer'] = _compact_seq_master(v, model, M['qfd_sp_constants_sequencer'], sqi)
+        if SQ_TI_EAST and not (SEQ_COMPACT and m.get('r22k', {}).get('seq_compact')):
+            sqm = M['qfd_sp_constants_sequencer']
+            for pn in ('ti', 'ts'):
+                if pn in sqm.ports:
+                    sqm.ports[pn] = sqm.ports[pn][:2] + ('E',) + sqm.ports[pn][3:]
+        if TT_ISSUE_BOTTOM:
+            tt = M['qfd_sp_tree_top']
+            for pn, c in (('si', 150.0), ('so', 60.0)):
+                if pn in tt.ports:
+                    tt.ports[pn] = tt.ports[pn][:4] + (c,) + tt.ports[pn][5:]
         t = M.pop('qfd_tile')
         M.pop('qfd_tile_e', None)
         t = copy.deepcopy(t)
@@ -248,10 +372,167 @@ def _wrap_masters(v, m):
         cbm.area('rs', 1, 21.0, 18.0, 1)
         M['qfd_ckbump'] = cbm
         sq = M['qfd_sp_constants_sequencer']
-        sq.face('dc', CTL_BITS, 'S', 'M5', sq.w * 0.3, 1)
-        sq.face('dh', CTL_BITS, 'S', 'M5', sq.w * 0.7, 1)
+        cmp_ = bool(SEQ_COMPACT and m.get('r22k', {}).get('seq_compact'))   # compact: the left half of the S face
+        sq.face('dc', CTL_BITS, 'S', 'M5', sq.w * (0.1 if cmp_ else 0.3), 1)
+        sq.face('dh', CTL_BITS, 'S', 'M5', sq.w * (0.35 if cmp_ else 0.7), 1)
         sq.area('rsi', 1, sq.w / 2, sq.h / 2 + 12.0, 1)
-        sq.face('dflt', 9, 'S', 'M5', sq.w * 0.5, 1)
+        sq.face('dflt', 9, 'S', 'M5', sq.w * (0.22 if cmp_ else 0.5), 1)
         # collective: its clock pin (was the PLL output pll_stream) stays at the same place, now an input
         return M
     v.masters = masters
+
+
+# ------------------------------------------------------------------------------------------------ r22kcs (opt-in)
+SEQ_CS = 'qfd_sp_constants_sequencer_cs'
+SEQ_CS_WH = (259.2, 333.36)              # the closed route's die area (LEF size), cfg qfd_sp_constants_sequencer_sys_icut_t
+SEQ_CS_ROUTE = 'qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl'
+CROM_H = 1000.08                         # qfd_crom frame (cfg qfd_crom48.env 777.6 x 1,000, on the 2.16 um row lattice)
+CROM_PORTS = ('ca', 'cq')                # the reservation's constant-ROM ports (SU <-> constant ROM)
+CROM_ST_BITS = 6 + 1                     # crom_stage (LW 6) + its reset, sequencer -> constant ROM (were inside the slot)
+CROM_FLT_BITS = 1 + 2                    # fault + fault_code, constant ROM -> sequencer
+# closed route pin plan: out words leave on E, in words arrive on W, clock / reset on N (route env PINS rule)
+SEQ_CS_OUT = ('dc', 'su', 'ib', 'ti', 'cd', 'cc', 'cst')
+SEQ_CS_IN = ('dh', 'dflt', 'cflt', 'sd', 'md', 'mo', 'ts')
+
+
+def _port_centroids(v, mst, wmap):
+    acc = {}
+    for nm, layer, r in v.pin_rects(mst, 1, wmap):
+        a = acc.setdefault(nm.split('[')[0], [0.0, 0.0, 0])
+        a[0] += (r[0] + r[2]) / 2
+        a[1] += (r[1] + r[3]) / 2
+        a[2] += 1
+    return {p: (a[0] / a[2], a[1] / a[2]) for p, a in acc.items()}
+
+
+def _compact_seq(v, m, rec):
+    """r22kcs: the closed compact sequencer + the constant ROM as its own frame, both inside the old reservation."""
+    by = {i.name: i for i in m['insts']}
+    s = by['sp_constants_sequencer']
+    slot = (s.x, s.y, s.w, s.h)
+    Inst = type(s)
+    cr = Inst('sp_crom', 'qfd_crom', s.x, s.y, s.w, v.up(CROM_H, v.GY) - v.SHAVE, 'R0', kind='spine_block',
+              region=s.region, domain=s.domain)
+    m['insts'].append(cr)
+    by['sp_crom'] = cr
+    old_master = s.master
+    old_dims = (s.w, s.h)
+    old0 = copy.deepcopy(v.masters(m, 1)[old_master])      # the reservation's faces as r22k builds them
+    s.master, s.w, s.h = SEQ_CS, SEQ_CS_WH[0], SEQ_CS_WH[1]
+    nb, moved = [], []
+    for bid, cl, bits, eps in m['buses']:
+        if any(e == ('sp_constants_sequencer', p) for e in eps for p in CROM_PORTS):
+            eps = [('sp_crom', p) if (i == 'sp_constants_sequencer' and p in CROM_PORTS) else (i, p) for i, p in eps]
+            moved.append(bid)
+        elif cl == 'clock_trunk' and ('sp_constants_sequencer', 'ck') in eps:
+            eps = eps + [('sp_crom', 'ck')]
+        nb.append((bid, cl, bits, eps))
+    add = [('crom_st', 'sequencer', CROM_ST_BITS, [('sp_constants_sequencer', 'cst'), ('sp_crom', 'st')]),
+           ('crom_flt', 'spine_local', CROM_FLT_BITS, [('sp_crom', 'flt'), ('sp_constants_sequencer', 'cflt')])]
+    m['buses'] = nb + add
+    inner = v.masters
+    st = dict(crom_top=True)
+
+    def masters(model, k=1, port_bits=None):
+        cur = (s.master, s.w, s.h)
+        s.master, (s.w, s.h) = old_master, old_dims       # the inner chain builds the reservation master by name
+        try:
+            M = inner(model, k, port_bits)
+        finally:
+            s.master, s.w, s.h = cur
+        old = M.pop(old_master)
+        q = Master = type(old)
+        sq = Master(SEQ_CS, SEQ_CS_WH[0], SEQ_CS_WH[1], 7,
+                    f'r22kcs: the CLOSED compact sequencer (ot_qfd_sp_constants_sequencer_sys ICUT, route {SEQ_CS_ROUTE}); '
+                    'pin plan of the route (in W / out E / clock-reset N)')
+        ports = {}
+        for p in old0.order:
+            if p in CROM_PORTS or p in ports:
+                continue
+            ports[p] = old0.ports[p]
+        ports['cst'] = ('face', CROM_ST_BITS)
+        ports['cflt'] = ('face', CROM_FLT_BITS)
+        for face, names in (('E', [p for p in SEQ_CS_OUT if p in ports]), ('W', [p for p in SEQ_CS_IN if p in ports])):
+            span = SEQ_CS_WH[1] - 40.0
+            tot = sum(ports[p][1] for p in names) or 1
+            y = 20.0
+            for p in names:                                 # S -> N: the d2d words lowest (the link end is below)
+                h_ = span * ports[p][1] / tot
+                sq.face(p, ports[p][1], face, 'M4', y + h_ / 2, 1)
+                y += h_
+        sq.face('rsi', 1, 'N', 'M5', SEQ_CS_WH[0] / 2 + 4.0, 1)
+        sq.area('ck', 1, SEQ_CS_WH[0] / 2, SEQ_CS_WH[1] / 2, 1)
+        left = [p for p in ports if p not in sq.ports]
+        assert not left, f'r22kcs: sequencer ports without a face {left}'
+        M[SEQ_CS] = sq
+        c = by['sp_crom']
+        cm = q('qfd_crom', c.w, c.h, 7, 'constant ROM (ot_qfd_crom: 48 ot_rom_4096x266_m8), cfg qfd_crom48; '
+               'the r21m reservation\'s ca / cq ports at their old N-face offsets')
+        for p in CROM_PORTS:
+            sp = old0.ports[p]
+            cm.face(p, sp[1], sp[2], sp[3], sp[4], sp[5])
+        f_ = 'S' if st['crom_top'] else 'N'
+        cm.face('st', CROM_ST_BITS, f_, 'M5', c.w * 0.25, 1)
+        cm.face('flt', CROM_FLT_BITS, f_, 'M5', c.w * 0.25 + 4.0, 1)
+        cm.area('ck', 1, c.w / 2, c.h / 2, 1)
+        M['qfd_crom'] = cm
+        return M
+    v.masters = masters
+    # ---- arrangement: constant ROM at the top / bottom of the reservation, the sequencer in a corner of the rest
+    seq_b = [(b[0], b[2], b[3]) for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')
+             and len(b[3]) == 2 and any(e[0] in ('sp_constants_sequencer', 'sp_crom') for e in b[3])]
+    xs0, ys0, ws, hs = slot
+
+    def score(crom_top, corner):
+        st['crom_top'] = crom_top
+        cr.y = round(ys0 + hs - cr.h if crom_top else ys0, 4)
+        lo, hi = (ys0, cr.y) if crom_top else (cr.y + cr.h + v.SHAVE, ys0 + hs)
+        sx = xs0 if corner[1] == 'W' else v.dn(xs0 + ws - s.w, v.GX)
+        sy = v.up(lo, v.GY) if corner[0] == 'S' else v.dn(hi - s.h - v.SHAVE, v.GY)
+        s.x, s.y = round(sx, 4), round(sy, 4)
+        M = v.masters(m, 1)
+        pw = v.port_widths(m, 1)
+        cen = {}
+
+        def pos(inst, port):
+            i = by[inst]
+            if i.master not in cen:
+                mst = M[i.master]
+                cen[i.master] = _port_centroids(v, mst, {q_: pw.get((i.master, q_), 0) for q_ in mst.order})
+            c_ = cen[i.master].get(port)
+            if c_ is None:
+                return (i.cx, i.cy)
+            x, y = c_
+            if i.orient in ('MY', 'R180'):
+                x = i.w - x
+            if i.orient in ('MX', 'R180'):
+                y = i.h - y
+            return (i.x + x, i.y + y)
+        rows = []
+        for bid, bits, eps in seq_b:
+            a, b_ = pos(*eps[0]), pos(*eps[1])
+            d = abs(a[0] - b_[0]) + abs(a[1] - b_[1])
+            rows.append(dict(bus=bid, bits=bits, eps=[list(e) for e in eps], pin_dist_um=round(d, 1)))
+        return sum(r['bits'] * r['pin_dist_um'] for r in rows), rows, (s.x, s.y), (cr.x, cr.y)
+    cands = []
+    for crom_top in (True, False):
+        for corner in ('SW', 'SE', 'NW', 'NE'):
+            sc, rows, sp, cp = score(crom_top, corner)
+            cands.append(dict(crom='top' if crom_top else 'bottom', seq_corner=corner, bit_um=round(sc, 0),
+                              seq_xy=[round(sp[0], 3), round(sp[1], 3)], crom_xy=[round(cp[0], 3), round(cp[1], 3)],
+                              buses=rows))
+    best = min(cands, key=lambda c_: c_['bit_um'])
+    force = os.environ.get('OT_R22KCS_ARRANGE')       # study only, e.g. 'top:SE' (crom top, sequencer SE corner)
+    if force:
+        best = next(c_ for c_ in cands if f"{c_['crom']}:{c_['seq_corner']}" == force)
+    score(best['crom'] == 'top', best['seq_corner'])
+    free_area = ws * hs - s.w * s.h - cr.w * cr.h
+    rec['compact_seq'] = dict(
+        route=SEQ_CS_ROUTE, master=SEQ_CS, wh_um=list(SEQ_CS_WH), old_master=old_master,
+        old_slot_um=[round(xs0, 3), round(ys0, 3), round(ws, 3), round(hs, 3)],
+        crom=dict(inst='sp_crom', master='qfd_crom', wh_um=[cr.w, cr.h], moved_buses=moved,
+                  added_buses=[(b[0], b[1], b[2], b[3]) for b in add]),
+        pin_plan=dict(E=list(SEQ_CS_OUT), W=list(SEQ_CS_IN), N=['rsi'], area=['ck']),
+        chosen=dict((k_, best[k_]) for k_ in ('crom', 'seq_corner', 'bit_um', 'seq_xy', 'crom_xy')), forced=force or None,
+        candidates=[dict((k_, c_[k_]) for k_ in ('crom', 'seq_corner', 'bit_um')) for c_ in cands],
+        chosen_buses=best['buses'], vacated_um2=round(free_area, 1))

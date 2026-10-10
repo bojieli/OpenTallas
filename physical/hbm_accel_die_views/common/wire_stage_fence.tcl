@@ -39,6 +39,23 @@ foreach i [$ws_blk getInsts] {
     if {![info exists ws_n($c)] || $k + 1 > $ws_n($c)} { set ws_n($c) [expr {$k + 1}] }
   }
 }
+# hbm-forks 2026-10-09: a one-stage chain's register drives the module output directly and synthesis names it after
+# that output (<chain>.q[*], <chain>.qv): those chains were never fenced (svc PS: the W/E cross-bus input stage of
+# c_sd / c_dd / c_wd chains sat at the destination unit, routed TT -47 .. -84 ps from the face pin).  Treat them as
+# the chain's LAST stage: N - 1 with N from its rv[] / st[] names (rv is one vector, every bit kept), stage 0 when the
+# chain has no other register (N = 1, rv itself renamed qv).
+array set ws_q {}
+foreach i [$ws_blk getInsts] {
+  set n [string map {"\\" ""} [$i getName]]
+  if {[regexp {^(c_[a-z]+[0-9]+_[0-9]+)\.(?:q\[[0-9]+\]|qv)} $n -> c] && [[$i getMaster] isSequential]} {
+    lappend ws_q($c) $i
+  }
+}
+foreach c [array names ws_q] {
+  set k [expr {[info exists ws_n($c)] ? $ws_n($c) - 1 : 0}]
+  foreach i $ws_q($c) { lappend ws_st($c,$k) $i; set ws_chain([$i getName]) $c }
+  set ws_n($c) [expr {$k + 1}]
+}
 proc ws_skip {n} {
   global ws_fan
   return [expr {$n eq "NULL" || [$n getSigType] in {POWER GROUND CLOCK RESET} || [llength [$n getITerms]] > $ws_fan + 1}]
@@ -212,7 +229,12 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
   set K [expr {max(1, int(ceil(sqrt(double($m)*$rowh/$pitch))))}]
   set tx [lindex $ws_tgt($key) 0]; set ty [lindex $ws_tgt($key) 1]
   set r0 [expr {max(0, min($nrows-1, int(($ty-$rowy0)/$rowh)))}]
-  set q 0; set dr 0; set tries 0
+  set q 0; set K0 $K
+  # hbm-forks 2026-10-09: when every row's window around the target is taken (many one-stage chains now anchored at
+  # the same face pins: svc PS SW_s1, 101 cells unplaced), widen the window 2x / 4x / 8x / 16x around the same point
+  foreach ws_wf {1 2 4 8 16} {
+  if {$q >= $m} break
+  set K [expr {$K0 * $ws_wf}]; set dr 0; set tries 0
   # rows alternate around the target row; in each row up to K slots centred on the target x, sliding past occupancy
   while {$q < $m && $tries < 4*$nrows} {
     set ri [expr {$r0 + (($dr % 2) ? -(($dr+1)/2) : ($dr/2))}]; incr dr; incr tries
@@ -238,6 +260,7 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
       }
       set x [expr {$x + $pitch}]
     }
+  }
   }
   incr nplaced $q; incr nfail [expr {$m - $q}]; incr nst
 }

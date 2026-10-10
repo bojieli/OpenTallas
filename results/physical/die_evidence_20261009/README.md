@@ -1,4 +1,4 @@
-# Die-level evidence (2026-10-09 08:00 PDT)
+# Die-level evidence (2026-10-09 17:55 PDT)
 
 Academic-validation evidence per die (owner steer 2026-10-07): full-die global route, die STA on global-route
 parasitics (option B: setup at TT 833.333 ps, hold at FF), the CTS-validated clock plan, IR, and detail route of
@@ -16,10 +16,12 @@ from below (a) and the top-N path report gives a listed real-only path (b). Slac
 
 | Die | GRT overflow | TT setup WNS real / real+relay / all | FF hold WNS real / real+relay / all | Clock plan (CTS) | IR | Real-view share (inst / area) |
 |---|---|---|---|---|---|---|
-| Qwen3-8B ROM die r22k (ROM die + KV die pair) | pending | pending / pending / pending | pending / pending / pending | pending | pending | 87.9% / 7.0% |
-| Qwen3-8B KV die (172.3 mm2, assumed frames) | pending | pending / pending / pending | pending / pending / pending | 40 regions, intra <= 40.5, inter <= 78.3 ps, 0+0 viol | pending | 0.6% / 37.5% |
-| HBM generic die R25G (network probe) | pending | pending / pending / pending | pending / pending / pending | 66 regions, intra <= 64.4, inter <= 362.1 ps, 0+81 viol | pending | 6.9% / 36.2% |
-| DeepSeek-V4.1 ROM S81 layer1 die (r3 relay rule + WFC hard + face-pin inset; no --host) | pending | pending / pending / pending | pending / pending / pending | pending | pending | pending |
+| Qwen3-8B ROM die r22k (ROM die + KV die pair) | pending | pending / pending / pending | pending / pending / pending | 211 regions, intra <= 61.7, inter <= 61.5 ps, 0+0 viol | 16.09-32.46 mV judged interior / 35 (5 windows) | 87.9% / 7.0% |
+| Qwen3-8B ROM die r22k4 (kv-die channel-paths case, 12,902 inst) | pending | pending / pending / pending | pending / pending / pending | pending | pending | 0.0% / 0.1% |
+| Qwen3-8B KV die (die_kv5: PHY PDN fix, 988 inst) | pending | pending / pending / pending | pending / pending / pending | pending | pending | 0.6% / 33.7% |
+| HBM generic die R25G (network probe) | pending | pending / pending / pending | pending / pending / pending | 66 regions, intra <= 64.4, inter <= 362.1 ps, 0+81 viol | 25.37 mV / 35 (130 windows) | 6.9% / 36.2% |
+| DeepSeek-V4.1 ROM S81 layer1 die (full recipe: --host, --wfc-hard, --path-pick) | pending | pending / pending / pending | pending / pending / pending | 173 regions, intra <= 75.9, inter <= 322.2 ps, 10+8 viol | pending | pending |
+| DeepSeek-V4.1 ROM S81 layer1e (Engram home die) | pending | pending / pending / pending | pending / pending / pending | pending | pending | pending |
 
 ## Per die
 
@@ -32,43 +34,63 @@ View share: placeholder 1,559 inst (12.1%), 567.6 mm2 (93.0%); real 11,310 inst 
 - STA TT: pending (/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/sta_r22k_tt).
 - STA FF: pending (/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22k/sta_r22k_ff).
 - Region guided windows: pending.
-- clock_plan: pending. 
-- ir: pending. 
 - die_top_lint census: {"instances": 12869, "buses": 16031, "net_bits": 6696349, "masters": 162, "real_instances": 1, "placeholder_instances": 12868}
 - die_top_lint census: {"instances": 936, "buses": 1472, "net_bits": 1627358, "masters": 25, "real_instances": 134, "placeholder_instances": 802}
 
 **Missing for complete die evidence:**
 
-1. Element views: 147 masters ETM-bound (slab_m8, cst, chead, relays by direction), 15 ASSUMED constants, including qfd_tile_nk (the no-KV tile, ~88% of the die area, no closed view) and the new r22k masters qfd_d2d_rom / qfd_clkrx / qfd_ckbump. The real-only slack covers the spine and slab paths only.
-2. Die STA uses ideal clock roots at clk_rx with 60 ps setup / 25 ps hold uncertainty. There is no measured per-region insertion and no rule-H1 hold pads; HBM and S81 have that model, the Qwen dies do not. The clock plan (chain step B) gives the sinks; a Qwen clock-context step is still to be written.
-3. Earlier Qwen die STA had NO wire RC (GRT-0008: read_guides + estimate_parasitics). Affected: the r21 record TT +50.84 / FF -5.64, the r21b chain, and kv-die's die_kv / die_r22k. Fixed for this chain (GRT SPEF). Old numbers must not be quoted.
-4. die_top_lint: 1 real instance of 12,869 (only the UCIe macro is bound to RTL), so the tie-off / connectivity check passes vacuously for placeholders. Data-bus margin lint FAILs: 55 reach and 64 far-side violations on the inherited spine chains (review KV2(a): fix in r22k). Also 26 abut-without-channel and 1 face-away.
-5. IR windows: shoreline_w / io_edge were drawn for the r21 outline. Re-pick them for the r22k outline (HBM bands removed, UCIe at the bottom of spine column M) once judged.txt lands.
-6. Representative regions: col / io / spine / vmsu / ucie windows are cut after the GRT (chain step D). Pending.
+1. Same r22k recipe as qwen_r22k4 (the gap list is kept there); this run carries the clock plan, IR windows and the guided regions.
 
-### Qwen3-8B KV die (172.3 mm2, assumed frames)
+### Qwen3-8B ROM die r22k4 (kv-die channel-paths case, 12,902 inst)
 
-kv-die chain /srv/opentallas-scratch/claude/kv-die/die_kv (GRT + STA owned by kv-die; its STA predates the GRT-0008 fix) + die-evidence-2 re-STA on the GRT SPEF /srv/opentallas-scratch/claude/die-evidence-2/qwen_kv
+kv-die chain /srv/opentallas-scratch/claude/kv-die/die_r22k4 (r22k-channel-paths: real case -> PDN PASS -> full-die GRT writing die_grt.spef -> STA reading it); the current r22k recipe. die-evidence-2/qwen_r22k (EPYC3, 12,869 inst) carries the clock plan / IR / regions for the same recipe
 
-View share: placeholder 179 inst (19.1%), 72.5 mm2 (61.4%); real 6 inst (0.6%), 44.2 mm2 (37.5%); relay 751 inst (80.2%), 1.4 mm2 (1.1%).
+View share: placeholder 3,171 inst (24.6%), 593.5 mm2 (97.2%); real 1 inst (0.0%), 0.6 mm2 (0.1%); relay 9,730 inst (75.4%), 16.3 mm2 (2.7%).
 
-- STA TT: pending (/srv/opentallas-scratch/claude/die-evidence-2/qwen_kv/sta_kv_tt).
-- STA FF: pending (/srv/opentallas-scratch/claude/die-evidence-2/qwen_kv/sta_kv_ff).
+- STA TT: pending (/srv/opentallas-scratch/claude/kv-die/die_r22k4/sta_r22k_tt).
+- STA FF: pending (/srv/opentallas-scratch/claude/kv-die/die_r22k4/sta_r22k_ff).
 - Region guided windows: pending.
+- clock_plan: pending. 
 - ir: pending. 
 
 **Missing for complete die evidence:**
 
-1. Real case: pin access FAILS (DRT-0073 at astk_*/e0i, land_*/emf). kv-die owns the fix; their die_kv chain proceeds to PDN / GRT regardless.
+1. NO SPEF-BASED STA YET. Two r22k cases are at full-die GRT: kv-die die_r22k4 (EPYC1, r22k-channel-paths, 12,902 inst; PDN + PG VDD/VSS PASS 15:43, GRT running since 15:43) and die-evidence-2 qwen_r22k (EPYC3, 12,869 inst; real case legal + PA DONE, PDN + PG PASS 17:45, GRT running). Both GRTs write die_grt.spef; STA TT/FF follows. No r22k slack is quotable until then.
+2. kv-die's die_r22k4 chain times ASSUMED element constants only (libs qfd_elements_*, no ETM binding). die-evidence-2 bound the closed-element ETMs to the r22k4 LEF (149 bound / 15 assumed, die-evidence-2/qwen_r22k4/libs) and re-times the routed die on its GRT SPEF when the GRT lands (qwen_r22k4_sta.sh armed). Quote that STA, not kv-die's.
+3. Element views: 147 masters ETM-bound (slab_m8, cst, chead, relays by direction), 15 ASSUMED constants, including qfd_tile_nk (the no-KV tile, ~88% of the die area, no closed view) and the new r22k masters qfd_d2d_rom / qfd_clkrx / qfd_ckbump. The real-only slack covers the spine and slab paths only.
+4. Die STA uses ideal clock roots at clk_rx (60 ps setup / 25 ps hold uncertainty); no measured per-region insertion / rule-H1 hold pads yet. Own clock plan DONE (clock-only CTS, 211 regions, 8,624 synchronous pairs): max intra 61.7 ps, max inter 61.5 ps, 0 violations -> the Qwen die clock-context step (plan insertion -> STA) is still to be written.
+5. Earlier Qwen die STA had NO wire RC (GRT-0008: read_guides + estimate_parasitics). Affected: the r21 record TT +50.84 / FF -5.64, the r21b chain, and kv-die's die_kv / die_r22k. Fixed for this chain (GRT SPEF). Old numbers must not be quoted.
+6. die_top_lint: 1 real instance of 12,869 (only the UCIe macro is bound to RTL), so the tie-off / connectivity check passes vacuously for placeholders. Data-bus margin lint FAILs: 55 reach and 64 far-side violations on the inherited spine chains (review KV2(a): fix in r22k). Also 26 abut-without-channel and 1 face-away.
+7. IR DONE (5 windows, judged interior, 35 mV budget): io_edge 27.11 mV, shoreline_w 32.46 mV, spine_hub 18.81, spine_slab 19.05, tile_field 16.09 -- all pass. shoreline_w / io_edge were cut for the r21 outline: re-pick them for the r22k outline (UCIe at the bottom of spine column M) before quoting.
+8. Representative regions: col / io / spine / vmsu / ucie windows are cut after the GRT (chain step D). Pending.
+9. Compact constants sequencer (struct-close: CLOSED 259.2 x 333.36 um vs the 777.6 x 1000 slot master): recipe r22kcs (main 62c88c200) puts it in the NE corner of the old reservation under the constant ROM. Added relay stages (= cycles) per bus: seq_d2d +4, d2d_seq +3, d2d_flt +4, seq_ib +3, vm_meok +3, seq_su +2, seq_sud +2, seq_coll -6, new crom_st 2 stages; tt_si / tt_so / rst_seq / crom_a / crom_q 0. Lint unchanged (connectivity 0, unbound 0, margin FAIL with the same 4 reach violations) except face-away 1 -> 5. The CTL path to the KV die (seq_d2d / d2d_seq) grows by 3-4 cycles: price it in the ROM-die token model before adopting; the die cases above still carry the slot master (qwen_r22k_compact_seq.json).
+10. Pending adoptions into the r22k plan: qfd_emb_pcport_kvw2 (KVW=2 pcport, CLOSED 150.12 um, main f70402e80) and the vector_memory widening (fill-5 F5-4: 1,036.8 / 1,166.4 um outlines, if they close).
+
+### Qwen3-8B KV die (die_kv5: PHY PDN fix, 988 inst)
+
+kv-die chain /srv/opentallas-scratch/claude/kv-die/die_kv5 (GRT + STA owned by kv-die) + die-evidence-2 clock plan / re-STA on the GRT SPEF / regions /srv/opentallas-scratch/claude/die-evidence-2/qwen_kv5
+
+View share: placeholder 179 inst (18.1%), 85.4 mm2 (65.1%); real 6 inst (0.6%), 44.2 mm2 (33.7%); relay 803 inst (81.3%), 1.5 mm2 (1.1%).
+
+- STA TT: pending (/srv/opentallas-scratch/claude/die-evidence-2/qwen_kv5/sta_kv_tt).
+- STA FF: pending (/srv/opentallas-scratch/claude/die-evidence-2/qwen_kv5/sta_kv_ff).
+- Region guided windows: pending.
+- clock_plan: pending. 
+- ir: pending. 
+
+**Missing for complete die evidence:**
+
+1. Real case pin access still FAILS on every attempt (DRT-0073; die_kv5 16:33 with the PHY PDN fix, 988 inst). die_kv / die_kv4: PDN PG check VDD + VSS FAIL (PSM-0069); die_kv5 carries the PHY PDN grid fix. kv-die owns both.
 2. Strict tie-off: ot_hbm3e_phy rsp_data has 8 of 8,192 bits unbound on each of the 4 PHYs. That is an unbound functional real-macro output, a build-every-path gap.
 3. Assumed frames: qkd_astk (777.6 um x 4 engines), qkd_land (172.8 um) and the centre blocks are not measured. The 172.3 mm2 is not quotable until they are (review KV3).
-4. kv-die's own STA predates the GRT-0008 fix (no wire RC). die-evidence-2 re-times the die from the GRT SPEF; the EPYC1 grt.tcl was patched to write it.
+4. NO SPEF-BASED STA YET: die_kv5 GRT running (congestion extra iteration 9/30 at 17:50); die_kv (old) GRT at extra iteration 11/30 after ~9.5 h. die-evidence-2 re-STA + regions armed on die_kv5 (EPYC1 die-evidence-2/qwen_kv5).
 5. IR: there is no IR window generator for the KV die. qwen_rom_fulldie ir does not know the qwen_kv recipe.
 6. Clock plan: extract_die --die qwen_kv is attempted, but the mesochronous forwarded clock to the ROM die is outside the plan. The cross-die skew is assumed absorbed by the UCIe macro (CONTRACT K5).
+7. KV-die landing HBM write queue (posted KVN rows -> CDC w_v / w_sec / w_data) for KVW=2 is still owed by kv-die (sys-takeover 11:24).
 
 ### HBM generic die R25G (network probe)
 
-chain /srv/opentallas-scratch/claude/die-evidence-2/hbm_r25g/STATUS.log: R25G = r25s + r25m + r25iqg + fmt3 wide SM grid; the generator builds it only as a NETWORK PROBE (retiled SM network unqualified)
+chain /srv/opentallas-scratch/claude/die-evidence-2/hbm_r25g/STATUS.log: R25G = r25s + r25m + r25iqg + fmt3 wide SM grid; the generator builds it only as a NETWORK PROBE (retiled SM network unqualified). Case built 07:45 PT, BEFORE the hi attention half widening (slot 1,503.36 um), the router kneg_orph2 swap, the svc PS leaf moves and the hfd_mtp closure
 
 View share: placeholder 687 inst (12.5%), 330.5 mm2 (63.4%); real 379 inst (6.9%), 188.7 mm2 (36.2%); relay 4,438 inst (80.6%), 1.9 mm2 (0.4%).
 
@@ -78,22 +100,35 @@ View share: placeholder 687 inst (12.5%), 330.5 mm2 (63.4%); real 379 inst (6.9%
 - Clock plan violation: sm5/ck -> w53_cdSW1/ck (control_leaf) skew 362.1 ps between regions clk_stream:GSWc2 and clk_stream:die.0.0.0.1.1.1.1.1 (inter-region budget 150.0 ps).
 - Clock plan violation: sm7/ck -> w53_cdSW1/ck (control_leaf) skew 362.0 ps between regions clk_stream:GSWc1 and clk_stream:die.0.0.0.1.1.1.1.1 (inter-region budget 150.0 ps).
 - Clock plan violation: sm7/ck -> w31_xmSW3/ck (x_leaf) skew 361.7 ps between regions clk_stream:GSWc1 and clk_stream:die.0.0.1.0 (inter-region budget 150.0 ps).
-- ir: pending. 
 - die_top_lint census: {"instances": 1066, "buses": 1582, "net_bits": 1256469, "masters": 437, "real_instances": 51, "placeholder_instances": 1015}
 
 **Missing for complete die evidence:**
 
-1. The R25G netlist exists only as a NETWORK PROBE: the generator refuses the fmt3 3x3 SM retile as unqualified (network paths / latency). Every R25G number is labelled probe until the hbm-forks / Codex retile qualification lands.
-2. Build-every-path, real-macro pins with no die net: the native indexer selector hfd_idx_sel_native_qend has co / fs / kin / qb / to and 6 more ports unbound (the whole selector is unwired), and hfd_idx_score_native_grid has st unbound (x4). On ot_pdie_serdes, 225 of 512 tx and rx bits are unbound (x9). The case writes those pins unconnected (m['unwired_rect_ports']).
-3. Wrapper tie ledgers: 15,672 TIED_OFF bits in 6 of 7 generic wrappers: hfd_loader 8,069 (cfg 688, fold 330, open 578, dropped 2,509, const0 3,964), hfd_coll 3,214 (f_mtp inputs dropped), hfd_cmdproc_n/s 1,064 + 1,646 (cpl / res / sm_fault folds and cfg), hfd_router 1,409 (f_mtp dropped), hfd_quant 270 (const / fold). Codex GH11 audit (results/arch/hgi_die_integration_20261009/die_lint_preflight.json, codex branch): FAIL on the quant ties. hgi_record_units (coll / quant record nets) is not on main.
-4. Connectivity: the host bus is multi-driven (hfd_meso_r32.b + ot_hbm_host_phy.iox, 149 b; 131 b with no RTL pin). There are 46 'undriven' placeholder-to-placeholder hub chains (attn half xp/xr, index_q a*/kout, svc split ei/eo); these are direction-model gaps for the new masters, not ties. Physical: 57 missing pins, 12 face-away, 34 abut-without-channel, 385 pin-spread.
-5. Clock plan (clock-only CTS): 66 regions, max intra 64.4 ps but max inter 362.1 ps, with 81 pairs over the 150 ps budget. They pair the fmt3 SM group regions G*c0..c2 with the adjacent waypoints / native indexer. A merge sweep does not fix it (7,000 um: 50 inter + 72 intra violations; 10,500 um: 16 + 158). The SM group needs its own trunk / region topology.
-6. Clock context: 281 sinks bound, 303 missing (new R25G masters have no budget sheet). Their paths are untimed, so the all-paths WNS is optimistic.
-7. No hardened view yet for hfd_attn_half_lo/hi (routes in flight), hfd_mtp_native / kvwb, the idx native grid / selector, or the fmt3 SM. They are timed as placeholders (asked Codex for the closure job list).
+1. SUPERSEDED by hbm_r25gp: the R25G probe GRT was killed at 19:50 PT after 12 h (stuck in congestion extra iteration 3/30 since 17:12); its case pre-dated the widened attention slot, the router swap, the svc PS leaves and hfd_mtp. Kept: IR 130 windows pass (worst 25.37 mV), clock plan (81 inter-region violations at the fmt3 SM groups), lint ledgers.
 
-### DeepSeek-V4.1 ROM S81 layer1 die (r3 relay rule + WFC hard + face-pin inset; no --host)
+### DeepSeek-V4.1 ROM S81 layer1 die (full recipe: --host, --wfc-hard, --path-pick)
 
-chain /srv/opentallas-scratch/claude/die-evidence-2/s81_l1w (s81_opts_chain.sh: gen -> own clock plan -> kit -> place -> full GRT -> STA). --host (dsfd_host) and --nxt-reach both fail generation today (hw_SW / rt_0_8a_y1 relay placement)
+chain /srv/opentallas-scratch/claude/die-evidence-2/s81_l1full (s81-gen handoff 11:24; src s81-gen/src_7bb71184d, which carries the apply_options WFC_HARD / MTP_SEQ fix f362d0860): gen -> place -> clock plan -> kit -> GRT -> STA
+
+- STA TT: pending ().
+- STA FF: pending ().
+- Clock plan violation: g_hc_SW_sp_host_7/ck -> g_hc_SW_sp_host_8/ck (host_wr) skew 75.9 ps between regions clk_stream:die.0.0.0.1.0.1 and clk_stream:die.0.0.0.1.0.1 (inter-region budget 150.0 ps).
+- Clock plan violation: g_hc_SW_sp_host_25/ck -> g_hc_SW_sp_host_26/ck (host_wr) skew 74.6 ps between regions clk_stream:die.0.1.0.0.1.1 and clk_stream:die.0.1.0.0.1.1 (inter-region budget 150.0 ps).
+- Clock plan violation: f_hb_gather_capture_3/ck -> f_hb_gather_capture_4/ck (hub) skew 74.5 ps between regions clk_stream:die.0.1.0.0.1.1 and clk_stream:die.0.1.0.0.1.1 (inter-region budget 150.0 ps).
+
+**Missing for complete die evidence:**
+
+1. Generation CLOSED (s81-gen, main 256d72798 + d2b8f7e64): full layer1 recipe (--host, --wfc-hard with the apply_options fix f362d0860, --path-pick, --hop-r-cc 500, --relay-tt-reach 600, --ctrl-rq) GEN_DONE 17:02 PT, PLACE rc 0.
+2. Clock plan (clock-only CTS, 173 regions): 10 intra + 8 inter violations. Inter up to 322 ps on the NEW host write / control paths (g_hw_SW_svc_SW_*, g_hc_SW_sp_host_*) and the hr_W0/W1 -> sp_gather links; intra 72-76 ps (host_wr, hub gather_pq, local hqe/svc). The host path needs its own clock region / relay-region alignment.
+3. NO SPEF-BASED STA YET: kit -> full-die GRT -> STA running (s81_opts_chain).
+4. Relays placed beyond the SS reach in the TT tier (<= 600 um, hop_fix.tt_reach_relays / col_relays.tt_reach_relays): their SS setup is a known sensitivity, TT setup is the sign-off corner.
+5. eng_SE = dsfd_engram interim (PARTS lkp + sink; only the sink has a CLOSED view).
+6. Views: real 24.3% of instances / 17.0% of area. The BF elements are interim (BF full-rate vs HALF_PHL decision 21:30), and the slabs are partitioned with no composite view.
+7. Region DRT on the current recipe: pending after the l1w GRT. r3fx regions stand as the reference: pqstrip 0 / bfcol 19 / spine 4 DRC, WL DRT/GRT 0.994-0.995.
+
+### DeepSeek-V4.1 ROM S81 layer1e (Engram home die)
+
+chain /srv/opentallas-scratch/claude/die-evidence-2/s81_l1e (layer1 full recipe + --die layer1e; same src)
 
 - STA TT: pending ().
 - STA FF: pending ().
@@ -101,12 +136,9 @@ chain /srv/opentallas-scratch/claude/die-evidence-2/s81_l1w (s81_opts_chain.sh: 
 
 **Missing for complete die evidence:**
 
-1. The current layer1 recipe does not generate. --host (dsfd_host, TA-17) fails at hw_SW: the ctrl_SW -> host write bus is a 20.2 mm hop and station 5 of 53 has no legal spot. --nxt-reach (the r4 relay rule) fails at rt_0_8a_y1: frame 0 is packed and has no box within 400 um; Codex fine-lattice and return-first both failed. The die evidence runs on l1w (r3 relay rule + --wfc-hard + --face-pin-inset), so the host path is MISSING from the die.
-2. r4b (r3 + --nxt-reach, pre-TA-10) full-die GRT / STA: TT real >= -198.6 / real+relay -855.2, FF real >= -50.9 / real+relay -301.0, SS -901.6 (baseline_r25_s81r4b). It is worse than r3 (TT -244): the relaxed relays (2,304 nxt_relaxed) sit far from their loads.
-3. Views: real 24.3% of instances / 17.0% of area. The BF elements are interim (BF full-rate vs HALF_PHL decision 21:30), and the slabs are partitioned with no composite view.
-4. layer1e (Engram home die, +1 HBM stack, Engram lookup / sink, -36 ROM table dies): NO generator die kind (STACKS has layer / layer1 / head only). The lookup / sink, SE service, SRAM prefetch and loader bindings to the three-count-burst backend are unimplemented (Codex handover 4a86bf870). No floorplan, GRT or STA is possible until it exists.
-5. scan / head dies for 1,792 stages: generation FAILS (scan: sp_su_s placement assertion; headp2 / head: hw_SW station hop, the same --host failure). The Codex dies_scan_head child owns the follow-through. No die evidence yet.
-6. Region DRT on the current recipe: pending after the l1w GRT. r3fx regions stand as the reference: pqstrip 0 / bfcol 19 / spine 4 DRC, WL DRT/GRT 0.994-0.995.
+1. Generation CLOSED: layer1e (Engram home die) GEN_DONE 17:18 PT, PLACE rc 0; clock plan -> GRT -> STA running.
+2. Engram lookup / sink, SE service, SRAM prefetch and loader bindings to the three-count-burst backend are interim views (Codex handover 4a86bf870): the die evidence times their placeholders.
+3. scan / head dies for 1,792 stages: generation status with the Codex dies_scan_head child; no die evidence yet.
 
 ## Refresh
 

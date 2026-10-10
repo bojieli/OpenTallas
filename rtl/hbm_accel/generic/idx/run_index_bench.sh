@@ -14,7 +14,7 @@ SRC="$I/rtl/hfd_idx_lib.sv $I/rtl/hfd_idx_score.sv $I/rtl/hfd_idx_sel.sv
  $R/rtl/hdc/ot_hdc_fpu.sv $R/rtl/hdc/ot_hdc_fp32_mul_pipe.sv $R/rtl/proto/ot_fp32_add_rne_pipe.sv $R/rtl/hdc/ot_hdc_prefix.sv
  $R/rtl/hdc/ot_hdc_fp32_add_lat.sv $R/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv
  $R/rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv $R/rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv
- $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_index.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv
+ $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_owned.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_merge.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_index.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv
  $R/rtl/hbm_accel/generic/idx/tb_hgi_idx_index.sv"
 for m in 0 2 3; do
   ( mkdir -p $OUT/b$m && cd $OUT/b$m && $V --binary --timing -O2 -j 8 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKANDNBLK \

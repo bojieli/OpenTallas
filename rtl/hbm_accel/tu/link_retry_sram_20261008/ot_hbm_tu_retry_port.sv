@@ -10,7 +10,8 @@ module ot_hbm_tu_retry_port #(
  parameter CW=$clog2(CAPACITY)+2, TIMEOUT=2048, MAX_RETRY=8,
  // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
  // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
- parameter NOEPOCH=0
+ parameter NOEPOCH=0,
+ parameter PIPE_FIX=0  // cont-takeover: HEAD_FREE in the retry SRAM controller
 )(
  input wire clk,rst_n,link_up,input wire[EW-1:0] session,
  input wire in_valid,output wire in_ready,input wire[W-1:0] in_data,
@@ -50,7 +51,7 @@ module ot_hbm_tu_retry_port #(
  assign rx_debt=ENABLE ? rx_owned:0;
  assign ack_pop=pop_total;
  assign fault=credit_fault || core_fault;
- ot_hbm_link_retry_sram #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.TIMEOUT(TIMEOUT),.MAX_RETRY(MAX_RETRY),.NOEPOCH(NOEPOCH)) u_retry(
+ ot_hbm_link_retry_sram #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.TIMEOUT(TIMEOUT),.MAX_RETRY(MAX_RETRY),.NOEPOCH(NOEPOCH),.HEAD_FREE(PIPE_FIX)) u_retry(
  .clk(clk),.rst_n(run),.session(session),.in_valid(in_valid && allow_new && !credit_fault),.in_ready(core_ready),.in_data(in_data),
  .tx_valid(core_tv),.tx_ready(tx_ready && run && !credit_fault),.tx_data(tx_data),.tx_seq(tx_seq),.tx_session(tx_session),
  .rx_valid(rx_valid && run && !credit_fault),.rx_ready(core_rr),.rx_ue(rx_ue),.rx_data(rx_data),.rx_seq(rx_seq),.rx_session(rx_session),

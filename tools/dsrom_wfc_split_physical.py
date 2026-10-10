@@ -133,13 +133,13 @@ puts "DRVEND"
 """
 
 
-def drv_check(case, macros):
+def drv_check(case, macros, corners=("SS", "FF")):
     """max slew / cap / fanout violators at SS and FF on the routed netlist + RCX parasitics (the routed SDC limits)."""
     res = next(case.rglob("results/asap7/*/base/6_final.odb")).parent
     (case / "wf_drv.tcl").write_text(DRV_TCL)
     rel = lambda q: "/work/" + str(q.relative_to(case))
     out = {}
-    for lib in ("SS", "FF"):
+    for lib in corners:
         c = ["docker", "run", "--rm", "-v", f"{case}:/work"] + (["-v", f"{ROOT}:/src:ro"] if macros else []) + [
              "-e", f"WF_LIB={lib}", "-e", f"WF_ODB={rel(res / '6_final.odb')}", "-e", f"WF_SDC={rel(res / '6_final.sdc')}",
              "-e", f"WF_SPEF={rel(res / '6_final.spef')}",

@@ -8,11 +8,13 @@ The legacy records are untouched.   python3 tools/hbm_forks_attn_half_ps.py
 """
 import json
 import shutil
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC, DST = ROOT / 'physical/hbm_attn_tile_r/half', ROOT / 'physical/hbm_attn_tile_r/half_ps'
 X0, PITCH = 1062.0, 0.192
+HI_ROWS = 7                    # hi outline 673.92 -> 689.04 um (strip 90.0 -> 105.12 um)
 
 
 def main():
@@ -21,6 +23,15 @@ def main():
         if d.exists():
             shutil.rmtree(d)
         shutil.copytree(SRC / m, d)
+    # hi: the bottom E-W strip widened by HI_ROWS x 2.16 um (coordinator 2026-10-09: widen, no floorplan-lint waiver;
+    # 7 cuts were 3-5 % short of tracks at 673.92); lo, the seam and every x unchanged (asserted by the placer)
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        subprocess.run([sys.executable, str(ROOT / 'tools/hbm_attn_half_tile_place.py'), '--out', td,
+                        '--hi-channel-rows', str(HI_ROWS)], check=True, stdout=subprocess.DEVNULL)
+        for f in Path(td, 'hfd_attn_half_hi').iterdir():
+            shutil.copy(f, DST / 'hfd_attn_half_hi' / f.name)
     lo = DST / 'hfd_attn_half_lo'
     r = json.loads((lo / 'ports.json').read_text())
     x1 = round(X0 + 1101 * PITCH, 3)

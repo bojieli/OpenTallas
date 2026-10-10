@@ -87,6 +87,13 @@ module ot_dsrom_hc_mean_capture #(
         assign x_cmd_position=cmd_position;assign x_cmd_epoch=cmd_epoch;
         assign x_in_valid=in_valid;assign in_ready=x_in_ready;assign x_in_beat=in_beat;assign x_in_residuals=in_residuals;
     end endgenerate
+    // cont-takeover 2026-10-09: with LINK_CREDIT the core (FSM, FP add/mul pipelines, SECDED pipes) resets from a local
+    // two-flop synchroniser (async assert, release 2 cycles after rst_n) -- the pin no longer drives the recovery tree of
+    // ~3,000 flops (mean -lk place: rst_n -> u_mul pipeline recovery -180 ps).  The link landing / credit logic stays on
+    // rst_n, so beats that arrive in the 2 release cycles wait in the landing FIFO.
+    reg [1:0] rst_s;
+    always @(posedge clk or negedge rst_n) if(!rst_n) rst_s<=2'b00; else rst_s<={rst_s[0],1'b1};
+    wire rst_c=LINK_CREDIT ? rst_s[1] : rst_n;
     localparam [3:0] CMD=0,LOAD=1,AISS=2,AWAIT=3,MISS=4,MWAIT=5,
                      STORE=6,WCOMMIT=7,RREQ=8,RWAIT=9,RDECODE=10,RHOLD=11,RECC=12;
     reg [3:0] state;
@@ -123,11 +130,11 @@ module ot_dsrom_hc_mean_capture #(
         wire [15:0] operand=(MUT_TREE && add_step==0)?h3[16*l+:16]:
                             (MUT_TREE && add_step==2)?h1[16*l+:16]:next_h;
         ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add(
-            .clk(clk),.rst_n(rst_n),.valid_in(state==AISS&&!fault),
+            .clk(clk),.rst_n(rst_c),.valid_in(state==AISS&&!fault),
             .a(acc[32*l+:32]),.b({operand,16'd0}),
             .y(ay[32*l+:32]),.err(ae[2*l+:2]),.valid_out(av[l]));
         ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_mul(
-            .clk(clk),.rst_n(rst_n),.valid_in(state==MISS&&!fault),
+            .clk(clk),.rst_n(rst_c),.valid_in(state==MISS&&!fault),
             .a(acc[32*l+:32]),.b(32'h3e800000),
             .y(my[32*l+:32]),.err(me[2*l+:2]),.valid_out(mv[l]));
         assign mean_bf16[16*l+:16]=bf16_rne(my[32*l+:32]);
@@ -138,7 +145,7 @@ module ot_dsrom_hc_mean_capture #(
     generate for(l=0;l<8;l=l+1) begin:g_ecc
         ot_s81_secded_enc72 u_enc(.d(pack_q[64*l+:64]),.c(write_code[72*l+:72]));
         if(ECC_PIPE) begin:g_pipe
-            ot_dsrom_hc_secded_pipe u_dec(.clk(clk),.rst_n(rst_n),
+            ot_dsrom_hc_secded_pipe u_dec(.clk(clk),.rst_n(rst_c),
                 .valid_in(MACRO_CAP?mc_go:(state==RDECODE&&!fault)),
                 .c((MACRO_CAP?held_code[72*l+:72]:read_code[72*l+:72])^(l==0?READ_INJECT:72'd0)),
                 .valid_out(decode_valid[l]),.d(y_out_data[64*l+:64]),
@@ -175,24 +182,25 @@ module ot_dsrom_hc_mean_capture #(
     assign y_out_last=(SINGLE_CAPTURE || read_capture==2)&&read_frame==39;
     assign y_out_corrected=y_out_valid&&(|enc_ce);
     integer lane;
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RDECODE && !fault;
+    always @(posedge clk or negedge rst_c)
+        if(!rst_c) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RDECODE && !fault;
     always @(posedge clk) if(state==STORE) wcode_q<=write_code;
     // cont-takeover: the wide data registers (acc, h1..h3, pack_q, held_code: 2,500 flops) carry no reset -- validity is the
     // state machine's -- so rst_n no longer drives an async-reset recovery tree (mean -lb0 input->reg -52, join -13).
     // Same write conditions as before (the state machine's, gated by !fault).
-    wire dwr=!fault && !link_fault;
-    always @(posedge clk) if(dwr) begin
-        if(state==LOAD && x_in_valid && x_in_beat==beat_q) begin
+    // the data writes do not wait for the error/fault terms: an add / multiply error or a fault stops the state machine
+    // (and every output) anyway, so the 256-bit acc / pack_q enables need only the state and the unit-valid AND.
+    always @(posedge clk) begin
+        if(state==LOAD && x_in_valid) begin
             for(lane=0;lane<8;lane=lane+1) acc[32*lane+:32]<={x_in_residuals[16*lane+:16],16'd0};
             h1<=x_in_residuals[128+:128];h2<=x_in_residuals[256+:128];h3<=x_in_residuals[384+:128];
         end
-        if(state==AWAIT && (&av) && !(|ae)) acc<=ay;
-        if(state==MWAIT && (&mv) && !(|me)) pack_q[128*part+:128]<=mean_bf16;
+        if(state==AWAIT && (&av)) acc<=ay;
+        if(state==MWAIT && (&mv)) pack_q[128*part+:128]<=mean_bf16;
         if(state==RDECODE) held_code<=read_code;
     end
-    always @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin
+    always @(posedge clk or negedge rst_c) begin
+        if(!rst_c) begin
             state<=CMD;owned<=0;fault<=0;captured<=0;capture_done<=0;
             user_q<=0;position_q<=0;epoch_q<=0;capture_q<=0;
             beat_q<=0;frame_q<=0;part<=0;add_step<=0;
