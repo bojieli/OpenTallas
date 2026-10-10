@@ -234,6 +234,167 @@
           "results/rtl/mtp_takeover_20261010/head_recipe_regeneration.json"
         ]
       }
+    },
+    {
+      "element": "dsrom_mtp_head_full340_A",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp-takeover-20261010",
+      "recorded_at": "2026-10-10T13:08:21.861285+00:00",
+      "description": "Production wrapper exists (85 bundles,340 Markov engines); released-weight NB4/405-row ring-delay gate PASS and three mutants FAIL. rg1a/rg1s component routes live; complete head-die master/inventory binding remains open.",
+      "source": {
+        "commit": "8ab941dbd",
+        "paths": [
+          "tools/mtp_die_reprice.py",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented wrapper; full physical composition pending",
+        "evidence": [
+          "rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340.sv",
+          "tools/dsrom_markov_head_full340_gate.py"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "component subset passed (NB4/405 rows)",
+          "evidence": [
+            "results/rtl/mtp_head340_20261009/ringdly/rg_pos/verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "passed (three mutants fail)",
+          "evidence": [
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mut1/verdict.json",
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mut2/verdict.json",
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mutring/verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "component jobs active; full340 die inventory/clock integration OPEN",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/mtp-head340-mkdrv-pin1b-b0bd92a8e-tc.json",
+          "results/rtl/mtp_takeover_20261010/head_rg1s_failure.json",
+          "results/rtl/mtp_takeover_20261010/head_pin1a_failure.json"
+        ]
+      },
+      "dependencies": [
+        "mtp-head340-mkdrv-rg1a-21471e786-tc or rg1s component closure",
+        "340-engine hardened full head inventory and buses",
+        "full typed BF inventory and full wrapper composition"
+      ],
+      "integration": {
+        "status": "full die unbound; component routes in progress",
+        "evidence": []
+      },
+      "jobs": [
+        {
+          "name": "mtp-head340-mkdrv-rg1a-21471e786-tc",
+          "status": "RUNNING route",
+          "scope": "one full K256/32-row Markov driver component, not340-die composition"
+        },
+        {
+          "name": "mtp-head340-mkdrv-rg1s-21471e786-tc",
+          "status": "EARLY_FAIL_HOLD",
+          "scope": "component failure\u221267.5ps; immutable receipt"
+        },
+        {
+          "name": "mtp-head340-mkdrv-pin1b-b0bd92a8e-tc",
+          "source": "b0bd92a8e",
+          "status": "RUNNING calibrate",
+          "scope": "pin-anchored component, not340-die composition"
+        }
+      ]
+    },
+    {
+      "element": "dsrom_mtp_seq_native_binding",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp-takeover-20261010",
+      "recorded_at": "2026-10-10T13:08:21.861285+00:00",
+      "description": "Regenerated head631/headp2 pass actual six directed bus bindings (1248 bits). Geometry fits and is legal; margin lint FAIL remains immutable. Native identity/credit/physical integration remains OPEN.",
+      "source": {
+        "commit": "ef227c660",
+        "paths": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "implementation": {
+        "status": "directed generated binding PASS; legacy D4/history3 demonstrably unsafe for measured relays; successor opt-in/default0",
+        "evidence": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "tools/dsrom_s81_fulldie.py",
+          "tools/mtp_native_binding_audit.py"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "RTT component60cases/50400flits PASS; optional outputpipe30cases/24000flits PASS",
+          "evidence": [
+            "physical/mtp_link_rtt/head631/record.json"
+          ]
+        },
+        "negative": {
+          "status": "unchanged native legacy8cases overflow FAIL at actualrelaypairs; short-history mutants FAIL",
+          "evidence": [
+            "physical/mtp_link_rtt/native_legacy_failure/record.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "RTT successor local-source0 component qualification in progress; final option1 native die source OPEN",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/mtp-rtt512-f9r10-d23-dd7ddda95-hm10.json",
+          "tools/closure_loop/jobs/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10.json",
+          "physical/mtp_link_rtt/head631/route_model.json",
+          "physical/mtp_link_rtt/native_legacy_failure/record.json"
+        ]
+      },
+      "dependencies": [
+        "seed/draft native endpoints",
+        "verify causal path",
+        "rollback committed-state join",
+        "full production head inventory and routed timing",
+        "RTT credit successor and option1 die-source qualified endpoint integration"
+      ],
+      "integration": {
+        "status": "six generated directed chain widths/directions PASS; actual native endpoint identity, option1 clock and successor credit integration OPEN",
+        "evidence": [
+          "results/rtl/mtp_takeover_20261010/head631_native_binding_verified.json",
+          "results/rtl/mtp_takeover_20261010/headp2_native_binding_verified.json",
+          "results/rtl/mtp_takeover_20261010/head_recipe_regeneration.json"
+        ]
+      },
+      "jobs": [
+        {
+          "name": "mtp-rtt512-f9r10-d23-dd7ddda95-hm10",
+          "source": "dd7ddda95",
+          "status": "READY route after CTS calibration; measured disk admission pending",
+          "scope": "W512/H22/D23 local-source0 receiver; not native adoption"
+        },
+        {
+          "name": "mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10",
+          "source": "09dc8fad4",
+          "status": "QUEUED",
+          "scope": "optional default0 OUTPUT_PIPE; +1cycle/+513FF; not native adoption"
+        }
+      ]
     }
   ]
 }
