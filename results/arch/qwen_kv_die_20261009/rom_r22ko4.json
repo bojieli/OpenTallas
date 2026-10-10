@@ -2,7 +2,7 @@
  "schema": "opentallas.qwen-kv-die.rom-r22k.v1",
  "recipe": "r22ko4 (tools/die_top_lint.py QWEN_RECIPES)",
  "generator_sha256": "6e40ce155e29e0c9dd3f053669def62788c8dd87a0575b8840f290a8ef94b5c3",
- "surgery_sha256": "2b02f094bf088ce7f358e9825089a50cd9557e592ac3366ac9ba356c50d1f798",
+ "surgery_sha256": "0eae6d2ca1ed67a473db180b8c50788ff9f659cc2edc4b72d8196eb9d204d7b8",
  "die_um": [
   23484.384,
   32801.76
@@ -11,14 +11,14 @@
  "reticle_mm2": 858.0,
  "margin_mm2": 87.671,
  "r21c_die_mm2": 846.792,
- "instances": 13236,
- "buses": 16432,
- "instance_mm2": 609.257,
+ "instances": 13180,
+ "buses": 16376,
+ "instance_mm2": 609.182,
  "area_by_kind_mm2": {
   "tile": 529.628,
   "spine_block": 34.667,
   "io": 17.6,
-  "relay": 16.819,
+  "relay": 16.744,
   "station": 8.387,
   "xfifo": 0.626,
   "phy_d2d": 0.605,
@@ -71,7 +71,7 @@
   "attn_ret": 28,
   "emb": 25,
   "emb_a": 25,
-  "emb_cr": 26,
+  "emb_cr": 25,
   "seq_d2d": 25,
   "d2d_seq": 26,
   "d2d_fdi": 0,
@@ -86,14 +86,14 @@
   "o4_cb_a_5": 0,
   "o4_cb_a_6": 0,
   "o4_cb_a_7": 0,
-  "o4_cb_ctl_0": 15,
-  "o4_cb_ctl_1": 7,
+  "o4_cb_ctl_0": 12,
+  "o4_cb_ctl_1": 6,
   "o4_cb_ctl_2": 6,
-  "o4_cb_ctl_3": 22,
-  "o4_cb_ctl_4": 16,
-  "o4_cb_ctl_5": 8,
+  "o4_cb_ctl_3": 6,
+  "o4_cb_ctl_4": 13,
+  "o4_cb_ctl_5": 9,
   "o4_cb_ctl_6": 7,
-  "o4_cb_ctl_7": 7,
+  "o4_cb_ctl_7": 8,
   "o4_cb_q_0": 0,
   "o4_cb_q_1": 0,
   "o4_cb_q_2": 0,
@@ -102,32 +102,32 @@
   "o4_cb_q_5": 0,
   "o4_cb_q_6": 0,
   "o4_cb_q_7": 0,
-  "o4_cb_rdy_0": 16,
-  "o4_cb_rdy_1": 21,
-  "o4_cb_rdy_2": 21,
-  "o4_cb_rdy_3": 5,
-  "o4_cb_rdy_4": 17,
+  "o4_cb_rdy_0": 13,
+  "o4_cb_rdy_1": 6,
+  "o4_cb_rdy_2": 6,
+  "o4_cb_rdy_3": 6,
+  "o4_cb_rdy_4": 14,
   "o4_cb_rdy_5": 6,
-  "o4_cb_rdy_6": 7,
+  "o4_cb_rdy_6": 8,
   "o4_cb_rdy_7": 7,
-  "o4_cf_a_0": 2,
+  "o4_cf_a_0": 3,
   "o4_cf_a_1": 4,
-  "o4_cf_a_2": 1,
+  "o4_cf_a_2": 3,
   "o4_cf_a_3": 3,
   "o4_cf_a_4": 0,
   "o4_cf_a_5": 0,
   "o4_cf_a_6": 0,
   "o4_cf_a_7": 0,
-  "o4_cf_q_0": 3,
-  "o4_cf_q_1": 1,
-  "o4_cf_q_2": 1,
+  "o4_cf_q_0": 7,
+  "o4_cf_q_1": 4,
+  "o4_cf_q_2": 3,
   "o4_cf_q_3": 3,
   "o4_cf_q_4": 0,
   "o4_cf_q_5": 0,
   "o4_cf_q_6": 0,
   "o4_cf_q_7": 0,
   "o4_kok": 43,
-  "o4_kvd": 41,
+  "o4_kvd": 44,
   "o4_me_snap": 16,
   "o4_me_start": 16,
   "o4_meok": 0,
@@ -166,7 +166,7 @@
   "tt_lc3": 5,
   "tt_lc4": 15,
   "tt_lc5": 26,
-  "tt_lf0": 45,
+  "tt_lf0": 44,
   "tt_lf1": 32,
   "tt_lf2": 18,
   "tt_lf3": 7,
@@ -180,18 +180,18 @@
  "stage_note": "relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is registered as well (the stage the r21 token-cost counts as one per die hop)",
  "r22k": {
   "removed_instances": {
-   "ot_hbm3e_phy": 4,
    "qfd_cdc": 128,
-   "qfd_kvc": 2,
-   "qfd_lst_h_e": 10,
-   "qfd_lst_v_split": 6,
+   "qfd_lst_c_split": 2,
    "qfd_lst_h_w": 10,
+   "qfd_lst_v": 3,
+   "qfd_kvc": 2,
+   "ot_hbm3e_phy": 4,
+   "qfd_lst_v_split": 6,
+   "qfd_ctrl": 4,
+   "qfd_lst_h_e": 10,
    "qfd_kvc_n": 2,
    "qfd_hub": 1,
-   "qfd_ctrl": 4,
-   "qfd_lst_c_split": 2,
-   "qfd_lst_c": 1,
-   "qfd_lst_v": 3
+   "qfd_lst_c": 1
   },
   "dropped_buses": {
    "link_channel": 24,
@@ -611,8 +611,8 @@
     {
      "name": "crom_g_0",
      "master": "qfd_crom_g",
-     "x": 11418.624,
-     "y": 8596.8,
+     "x": 12455.424,
+     "y": 9050.4,
      "w": 194.376,
      "h": 518.376,
      "orient": "R0",
@@ -623,8 +623,8 @@
     {
      "name": "crom_g_1",
      "master": "qfd_crom_g",
-     "x": 11613.024,
-     "y": 8596.8,
+     "x": 12649.824,
+     "y": 9050.4,
      "w": 194.376,
      "h": 518.376,
      "orient": "R0",
@@ -635,8 +635,8 @@
     {
      "name": "crom_g_2",
      "master": "qfd_crom_g",
-     "x": 11807.424,
-     "y": 8596.8,
+     "x": 12844.224,
+     "y": 9050.4,
      "w": 194.376,
      "h": 518.376,
      "orient": "R0",
@@ -647,8 +647,8 @@
     {
      "name": "crom_g_3",
      "master": "qfd_crom_g",
-     "x": 12001.824,
-     "y": 8596.8,
+     "x": 13038.624,
+     "y": 9050.4,
      "w": 194.376,
      "h": 518.376,
      "orient": "R0",
@@ -660,7 +660,7 @@
      "name": "crom_g_4",
      "master": "qfd_crom_g",
      "x": 11418.624,
-     "y": 9115.2,
+     "y": 9050.4,
      "w": 194.376,
      "h": 518.376,
      "orient": "R0",
@@ -672,7 +672,7 @@
      "name": "crom_g_5",
      "master": "qfd_crom_g",
      "x": 11613.024,
-     "y": 9115.2,
+     "y": 9050.4,
      "w": 194.376,
      "h": 518.376,
      "orient": "R0",
@@ -684,7 +684,7 @@
      "name": "crom_g_6",
      "master": "qfd_crom_g",
      "x": 11807.424,
-     "y": 9115.2,
+     "y": 9050.4,
      "w": 194.376,
      "h": 518.376,
      "orient": "R0",
@@ -696,7 +696,7 @@
      "name": "crom_g_7",
      "master": "qfd_crom_g",
      "x": 12001.824,
-     "y": 9115.2,
+     "y": 9050.4,
      "w": 194.376,
      "h": 518.376,
      "orient": "R0",
@@ -1861,43 +1861,19 @@
   "mode": "chains",
   "chains": 2700,
   "reach_um": 504.0,
-  "reach_violations": 6,
+  "reach_violations": 2,
   "far_side_relays": 31,
   "reach_examples": [
    {
-    "chain": "crom_g_2->cbuf_g_2",
-    "seg": "crom_g_2->rly_o4_cf_q_2_0",
-    "um": 600.1,
-    "hops": 1
-   },
-   {
-    "chain": "cbuf_g_2->crom_g_2",
-    "seg": "cbuf_g_2->rly_o4_cf_a_2_0",
-    "um": 580.7,
-    "hops": 1
-   },
-   {
-    "chain": "crom_g_1->cbuf_g_1",
-    "seg": "crom_g_1->rly_o4_cf_q_1_0",
-    "um": 535.3,
-    "hops": 1
-   },
-   {
-    "chain": "crom_g_1->cbuf_g_1",
-    "seg": "rly_o4_cf_q_1_0->cbuf_g_1",
-    "um": 535.3,
-    "hops": 1
-   },
-   {
-    "chain": "cbuf_g_2->crom_g_2",
-    "seg": "rly_o4_cf_a_2_0->crom_g_2",
-    "um": 524.5,
+    "chain": "cbuf_g_1->seq_su",
+    "seg": "cbuf_g_1->rly_o4_cb_rdy_1_0",
+    "um": 567.2,
     "hops": 1
    },
    {
     "chain": "cbuf_g_5->seq_su",
-    "seg": "cbuf_g_5->rly_o4_cb_rdy_5_0",
-    "um": 524.0,
+    "seg": "rly_o4_cb_rdy_5_0->rly_o4_cb_rdy_5_1",
+    "um": 515.4,
     "hops": 1
    }
   ],
@@ -1929,7 +1905,7 @@
    },
    {
     "chain": "sp_port_tiles_2_f1->sp_port_tiles_2",
-    "relay": "rly_pfrag_2_port_tiles_2_f1_27",
+    "relay": "rly_pfrag_2_port_tiles_2_f1_22",
     "back_um": 410.4
    },
    {
@@ -1946,11 +1922,6 @@
     "chain": "t_31_13->sp_port_tiles_3",
     "relay": "rly_bword_45_10",
     "back_um": 345.6
-   },
-   {
-    "chain": "d2d_rom->sp_su64_sfu",
-    "relay": "rly_emb_cr_25",
-    "back_um": 324.0
    },
    {
     "chain": "t_27_17->sp_port_tiles_4",
@@ -1978,6 +1949,11 @@
     "back_um": 226.8
    },
    {
+    "chain": "d2d_rom->sp_su64_sfu",
+    "relay": "rly_emb_cr_24",
+    "back_um": 153.4
+   },
+   {
     "chain": "sp_band_lanes_2->tt_up4_0",
     "relay": "rly_tt_lf2_17",
     "back_um": 124.8
@@ -1988,11 +1964,6 @@
     "back_um": 107.6
    },
    {
-    "chain": "sp_band_lanes_0->tt_up4_0",
-    "relay": "rly_tt_lf0_44",
-    "back_um": 99.4
-   },
-   {
     "chain": "sp_port_tiles_3->tt_ctlm",
     "relay": "rly_tt_f3_5",
     "back_um": 97.2
@@ -2001,6 +1972,11 @@
     "chain": "sp_res_ser_2->sp_vector_memory",
     "relay": "rly_rs_2_0",
     "back_um": 93.3
+   },
+   {
+    "chain": "crom_g_1->cbuf_g_1",
+    "relay": "rly_o4_cf_q_1_2",
+    "back_um": 92.0
    }
   ],
   "verdict": "FAIL"

@@ -554,7 +554,8 @@ def _compact_seq(v, m, rec):
 #   SU        the SU master's issue / status (+ the 24-b endpoint accepted count) on its E face; its constant ports
 #             split per 8-lane group on its S face.
 #   constants 8 x qfd_su_cbuf_g (194.4 x 216, SU side on N) in two rows under the SU, 8 x qfd_crom_g (194.4 x 518.4,
-#             answer side on N) in two rows below them (cbuf row 1 pairs with the crom row above-it, row 0 with row 1).
+#             answer side on N) in ONE row: 4..7 under their buffers (column M), 0..3 in the E slot at the same height,
+#             a 64.8-um relay row between buffers and ROMs (no far word crosses a ROM group: 518.4 um > the 504 reach).
 # Pin plans here are the DIE's: where they differ from a closed route's plan the record lists the re-pin route needed
 # (no RTL change).  New words (bits from the RTL ports): me snapshot 92 (ctlm -> seq_su), SU snapshot 57 + ME start 49
 # (seq_su -> ctlm), program writes 75 (d2d_rom -> ctlm), KV descriptor 201 + kv_ok 1 (ctlm <-> d2d_rom), me_mem_ok
@@ -564,6 +565,7 @@ O4_UP4 = (345.6, 388.8)
 O4_SEQ = (518.4, 518.4)
 O4_CBUF = (194.4, 216.0)
 O4_CROM = (194.4, 518.4)
+O4_RROW = 64.8                 # relay row between the buffer rows and the ROM row (>= the 60.48-um wide-word relay frame)
 O4_BITS = dict(me_snap=92, su_snap=57, me_start=49, pw=75, kvd=201, kok=1, meok=1, su_iss=476, su_st=133, su_acc=24,
                cb_su_a=8 + 192 + 6, cb_su_q=512, cb_far_a=8 + 192 + 6, cb_far_q=512 + 1, cb_ctl=6 + 1 + 18, cb_rdy=1 + 6 + 3,
                up_pw=128 + 1, up_ty=384, up_ty0=384 + 2, sel=28, up_flt=1)
@@ -614,10 +616,14 @@ def _option4(v, m, rec):
         col, row = k % 4, k // 4
         cb.append(add(f'cbuf_g_{k}', 'qfd_su_cbuf_g', su.x + col * O4_CBUF[0], su.y - (row + 1) * O4_CBUF[1], O4_CBUF,
                       dom=su.domain))
+    # one ROM row at one height, never crossed by a far word (a 518.4-um ROM group is longer than the 504-um reach):
+    # groups 4..7 under their buffers in column M, groups 0..3 in the E slot at the same height; a relay row (O4_RROW)
+    # between the buffers and the ROM row carries row 0's far words east to the E slot
+    y_rom = v.dn(su.y - 2 * O4_CBUF[1] - O4_RROW - O4_CROM[1], v.GY)
     for k in range(8):
-        col, row = k % 4, 1 - k // 4      # buffer row 1 (k 4..7) pairs with the crom row just below it
-        cr.append(add(f'crom_g_{k}', 'qfd_crom_g', su.x + col * O4_CROM[0],
-                      su.y - 2 * O4_CBUF[1] - (row + 1) * O4_CROM[1], O4_CROM, dom=su.domain))
+        col = k % 4
+        x = (slab.x if k < 4 else su.x) + col * O4_CROM[0]
+        cr.append(add(f'crom_g_{k}', 'qfd_crom_g', x, y_rom, O4_CROM, dom=su.domain))
     m['insts'] += new
     by = {i.name: i for i in m['insts']}
     # ---- buses ----
@@ -664,14 +670,12 @@ def _option4(v, m, rec):
         add_b += [(f'pword_{b}', 'tree_spine', 513, [(f'sp_band_lanes_{b}', 'pw'), ('tt_up4_0', f'pw{b}')]),
                   (f'tt_lf{b}', 'tree_spine', 1, [(f'sp_band_lanes_{b}', 'f'), ('tt_up4_0', f'lf{b}')])]
     for k in range(8):
-        far = 4 + k if k < 4 else k - 4        # buffer row 0 -> crom row 1 (k), row 1 -> crom row 0; same column
         add_b += [(f'o4_cb_a_{k}', 'crom', B['cb_su_a'], [('sp_su64_sfu', f'ca{k}'), (f'cbuf_g_{k}', 'sa')]),
                   (f'o4_cb_q_{k}', 'crom', B['cb_su_q'], [(f'cbuf_g_{k}', 'sq'), ('sp_su64_sfu', f'cq{k}')]),
                   (f'o4_cf_a_{k}', 'crom', B['cb_far_a'], [(f'cbuf_g_{k}', 'fa'), (f'crom_g_{k}', 'ra')]),
                   (f'o4_cf_q_{k}', 'crom', B['cb_far_q'], [(f'crom_g_{k}', 'rq'), (f'cbuf_g_{k}', 'fq')]),
                   (f'o4_cb_ctl_{k}', 'sequencer', B['cb_ctl'], [('seq_su', f'cbc{k}'), (f'cbuf_g_{k}', 'ctl')]),
                   (f'o4_cb_rdy_{k}', 'sequencer', B['cb_rdy'], [(f'cbuf_g_{k}', 'rdy'), ('seq_su', f'cbr{k}')])]
-        del far
     m['buses'] = nb + add_b
     _o4_masters(v, m, [tt, sq])
     rec['option4'] = dict(
