@@ -55,7 +55,8 @@ module tb_hgi_su_unit;
         if (ur[273]) begin if (ur[256]) wr_rsp <= wr_rsp + 1; else rd_rsp <= rd_rsp + 1; end
         if (u.u_ctl.st == 5 && u.u_ctl.rk < 4 && u.u_ctl.outst == 4 && u.u_ctl.cur_sec <= u.u_ctl.end_sec)
             stage_credit_stall <= stage_credit_stall + 1;
-        if (u.u_ctl.st == 9 && u.u_ctl.outst == 4) drain_credit_stall <= drain_credit_stall + 1;
+        if (u.u_ctl.st == 9 && u.u_ctl.dsec <= u.u_ctl.dend &&
+            (u.u_ctl.outst + int'(u.u_ctl.rp[0]) + int'(u.u_ctl.rp[2]) + int'(u.u_ctl.rp[3])) >= 4) drain_credit_stall <= drain_credit_stall + 1;
     end
     integer c, j, t, kind, r0, nr, vi0, nvi, ve0, nve, words = 0, cases = 0, t0;
     reg [31:0] qd, gaddr;
