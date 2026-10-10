@@ -9,7 +9,7 @@ S=(rtl/test/redesign_qwen/tb_qfd_crom_lbuf.sv rtl/qwen_sys/redesign_qwen/ot_qfd_
 run() { local n=$1; shift; iverilog -g2012 -o "$o/$n.vvp" "$@" "${S[@]}" > "$o/$n.build.log" 2>&1 || { echo "BUILD_FAIL $n"; return 2; }
         vvp -n "$o/$n.vvp" > "$o/$n.log" 2>&1; tail -1 "$o/$n.log"; grep -q '^PASS crom_lbuf' "$o/$n.log"; }
 if [[ $m == pos ]]; then
-  ok=1; run flp11 -Ptb_qfd_crom_lbuf.FLP=11 || ok=0; run flp17 -Ptb_qfd_crom_lbuf.FLP=17 -Ptb_qfd_crom_lbuf.SEED=5 || ok=0; run sram -Ptb_qfd_crom_lbuf.SRAM=1 || ok=0
+  ok=1; run flp11 -Ptb_qfd_crom_lbuf.FLP=11 || ok=0; run flp17 -Ptb_qfd_crom_lbuf.FLP=17 -Ptb_qfd_crom_lbuf.SEED=5 || ok=0; run sram -Ptb_qfd_crom_lbuf.SRAM=1 || ok=0; run grps -Ptb_qfd_crom_lbuf.SRAM=1 -Ptb_qfd_crom_lbuf.GRPS=1 -Ptb_qfd_crom_lbuf.NTOK=2 || ok=0
   [[ $ok == 1 ]] && { echo CROM_LBUF_PASS; exit 0; }; echo CROM_LBUF_FAIL; exit 1
 fi
 det=0

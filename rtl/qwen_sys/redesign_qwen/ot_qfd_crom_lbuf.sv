@@ -58,6 +58,7 @@ module ot_qfd_crom_lbuf #(
     input  wire [LW-1:0]     stage,           // the stage the SU is in (or about to start)
     input  wire              tok_start,       // a token starts at position tpos
     input  wire [NW-1:0]     tpos,
+    input  wire [AW-1:0]     lane_base,       // global index of lane 0 (a lane-group tile's strap; 0 for the full block)
     output wire              st_rdy,          // the bank of `stage` is resident (and rope(tpos) for stage 0 starts)
     // the far constant ROM (ot_qfd_crom), FL edges strobe -> answer
     output reg  [SW-1:0]     f_re,
@@ -165,7 +166,7 @@ module ot_qfd_crom_lbuf #(
     end
     always @(posedge clk) if (issue) begin
         f_stage <= (f_kind == F_HEADB) ? S_HEAD : (f_kind == F_ROPE) ? {LW{1'b0}} : f_st;
-        for (la = 0; la < SW; la = la + 1) f_addr[la*AW +: AW] <= row_addr(f_kind, f_r, f_pos) + la;
+        for (la = 0; la < SW; la = la + 1) f_addr[la*AW +: AW] <= row_addr(f_kind, f_r, f_pos) + lane_base + la;
     end
     // ---- local banks -----------------------------------------------------------------------------------------------
     reg [31:0] bn0 [0:SW*NWIN-1];
@@ -343,5 +344,37 @@ module ot_qfd_su_cbuf (
 );
     ot_qfd_crom_lbuf #(.SRAM(1), .FLP(11)) u_b (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .st_rdy(st_rdy),
-        .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q), .f_fault(f_fault), .fault(fault), .fault_code(fault_code));
+        .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q), .f_fault(f_fault), .fault(fault), .fault_code(fault_code),
+        .lane_base(24'd0));
+endmodule
+
+
+// Die master qfd_su_cbuf_g (owner rule: one hardened element, replicated): ONE 8-lane group of the constant buffer -- its
+// SRAM, its lanes' answer pipeline and its own copy of the (deterministic) prefetcher, strapped with its lane base.
+// 8 instances side by side form the SU's constant buffer; every copy sees the same stage / token inputs, so the copies
+// fill in lockstep (st_rdy of any copy stands for all).  No top parameters.
+module ot_qfd_su_cbuf_g (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [7:0]        crom_re,
+    input  wire [8*24-1:0]   crom_addr,
+    input  wire [5:0]        crom_stage,
+    output wire [8*64-1:0]   crom_q,
+    input  wire [5:0]        stage,
+    input  wire              tok_start,
+    input  wire [17:0]       tpos,
+    input  wire [2:0]        grp,              // strap: lanes 8 grp .. 8 grp + 7
+    output wire              st_rdy,
+    output wire [7:0]        f_re,
+    output wire [8*24-1:0]   f_addr,
+    output wire [5:0]        f_stage,
+    input  wire [8*64-1:0]   f_q,
+    input  wire              f_fault,
+    output wire              fault,
+    output wire [1:0]        fault_code
+);
+    ot_qfd_crom_lbuf #(.SW(8), .SRAM(1), .FLP(11)) u_b (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+        .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos),
+        .lane_base({18'd0, grp, 3'd0}), .st_rdy(st_rdy), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
+        .f_fault(f_fault), .fault(fault), .fault_code(fault_code));
 endmodule
