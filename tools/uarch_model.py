@@ -15204,3 +15204,8 @@ def hgi_quant_decode_model():
         tracks_capacity_basis='route fp_lint must verify actual M4/M5 pitch/channel, no assumed pass',
         new_numerical_format=False, performance_gain_claim=None,
         adoption='mandatory approved interface conformance; TT>=0 FF>=0 DRC0 exact+mutant')
+
+
+def hbm_svc_reset_boundary_model():
+    from hbm_svc_reset_boundary_model import model
+    return model()

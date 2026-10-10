@@ -223,11 +223,11 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
     end
     reg lv2a; reg [9:0] lta; reg [1087:0] lda;
     always @(posedge ck or negedge rn) if (!rn) begin lv2a <= 1'b0; lv2 <= 1'b0; end else begin lv2a <= |gq; lv2 <= lv2a; end
-    always @(posedge ck) if (|gq) lta <= tsel;
+    always @(posedge ck or negedge rn) if (!rn) lta <= 10'd0; else if (|gq) lta <= tsel;
     for (genvar c = 0; c < 8; c = c + 1) begin : gl
-      always @(posedge ck) if (|gqr[c]) lda[c*136 +: 136] <= dsel[c*136 +: 136];
+      always @(posedge ck or negedge rn) if (!rn) lda[c*136 +: 136] <= 136'd0; else if (|gqr[c]) lda[c*136 +: 136] <= dsel[c*136 +: 136];
     end
-    always @(posedge ck) begin lt <= lta; ld <= lda; end
+    always @(posedge ck or negedge rn) if (!rn) begin lt <= 10'd0; ld <= 1088'd0; end else begin lt <= lta; ld <= lda; end
   end else if (SLOT == 3) begin : gs3
     // views agent 2026-10-07 (SE_s7 aggressive variant, owner LAUNCH IMMEDIATELY: stages on every class within 100 ps):
     // SLOT 2 + the one-hot grant held in 8 KEPT copies (each drives 136 of the 1,088 data bits: no 1,088-load net on the
@@ -256,8 +256,8 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
     end
     reg lv2a; reg [9:0] lta; reg [1087:0] lda;
     always @(posedge ck or negedge rn) if (!rn) begin lv2a <= 1'b0; lv2 <= 1'b0; end else begin lv2a <= |gq; lv2 <= lv2a; end
-    always @(posedge ck) if (|gq) begin lta <= tsel; lda <= dsel; end
-    always @(posedge ck) begin lt <= lta; ld <= lda; end
+    always @(posedge ck or negedge rn) if (!rn) begin lta <= 10'd0; lda <= 1088'd0; end else if (|gq) begin lta <= tsel; lda <= dsel; end
+    always @(posedge ck or negedge rn) if (!rn) begin lt <= 10'd0; ld <= 1088'd0; end else begin lt <= lta; ld <= lda; end
   end else if (SLOT == 2) begin : gs2
     // views agent (SE_s7 70a27c406: lr -> rot -> off -> mod-5 sel -> 5:1 x 1088 mux -> ld, 25 levels, -267.6 ps over
     // 400 endpoints): SLOT 1 plus a REGISTERED one-hot grant: the arbitration (5-bit) lands in gq, the slot data are
@@ -281,7 +281,7 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
       for (q = 0; q < 5; q = q + 1) begin dsel = dsel | ({1088{gq[q]}} & sd[q]); tsel = tsel | ({10{gq[q]}} & st[q]); end
     end
     always @(posedge ck or negedge rn) if (!rn) lv2 <= 1'b0; else lv2 <= |gq;
-    always @(posedge ck) if (|gq) begin lt <= tsel; ld <= dsel; end
+    always @(posedge ck or negedge rn) if (!rn) begin lt <= 10'd0; ld <= 1088'd0; end else if (|gq) begin lt <= tsel; ld <= dsel; end
   end else if (SLOT) begin : gs
     reg [4:0] sv_q; reg [9:0] st [0:4]; reg [1087:0] sd [0:4];
     wire [4:0] fill = full & ~sv_q;
@@ -295,14 +295,14 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
     for (p = 0; p < 5; p = p + 1) begin : gsl
       always @(posedge ck) if (fill[p]) begin st[p] <= tg[p]; sd[p] <= dt[p][1087:0]; end
     end
-    always @(posedge ck) if (any) begin lt <= st[sel]; ld <= sd[sel]; end
+    always @(posedge ck or negedge rn) if (!rn) begin lt <= 10'd0; ld <= 1088'd0; end else if (any) begin lt <= st[sel]; ld <= sd[sel]; end
   end else begin : g0
     assign cand = full;
     for (p = 0; p < 4; p = p + 1) begin : gt
       assign k_take[p] = any && (sel == p);
     end
     assign w_take = any && (sel == 3'd4);
-    always @(posedge ck) if (any) begin lt <= tg[sel]; ld <= dt[sel][1087:0]; end
+    always @(posedge ck or negedge rn) if (!rn) begin lt <= 10'd0; ld <= 1088'd0; end else if (any) begin lt <= tg[sel]; ld <= dt[sel][1087:0]; end
   end endgenerate
   assign line = {ld, lt, (SLOT >= 2) ? lv2 : lv};
 endmodule
