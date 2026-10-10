@@ -44,8 +44,8 @@ VEC = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_
        "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
        "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec.sv"]
-SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv"]
-SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_sfu_record.sv"]
+SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
+SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
 SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
                     "rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv",
                     "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv", "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
@@ -53,7 +53,8 @@ SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/h
                     "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv", "rtl/hbm_accel/tu/ot_hcoll_port.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
                     "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv"]
 SRC_REAL["fused"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv",
-                           "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv"]
+                           "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv",
+                           "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
 TB = ["rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
       "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
 
