@@ -14,6 +14,8 @@
 // compare checks them against the same golden.  MUT 2: head weight of the next head; MUT 3: R from the wrong lane.
 module tb_hgi_idx_index;
   parameter integer MUT = 0;
+  parameter integer IKS = 1;           // hbm-phys [svc] 10-10: check the unit's index-key STREAM commands (4 stacks)
+  parameter integer IKS_MUT = 0;       // 1: the issuer's quarter split off by one -> must FAIL
   parameter integer LEG = 24;          // relay stages per die net (each direction)
   parameter integer FA = 4;
   parameter integer KEYLEG = 0;       // service key data and credit return stages
@@ -80,9 +82,25 @@ module tb_hgi_idx_index;
   end endgenerate
   // ---- the IDX unit (record -> frame adapter) and its VM model (one request outstanding, 2..6 cycles)
   reg [1818:0] rec = 0; wire [2:0] uret; wire [337:0] vmq; reg [273:0] vmr = 0;
-  ot_hgi_idx_unit #(.MUT(MUT)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
+  wire [511:0] iks_e; localparam [39:0] IK_BASE = 40'h0012300000;      // aligned: row0 = IK_BASE[34:20] = 0x123
+  ot_hgi_idx_unit #(.MUT(MUT), .IKS(IKS), .IKS_MUT(IKS_MUT)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
+    .iks_e(iks_e), .ik_base(IK_BASE),
     .sel_fs(fs), .sel_qb(qb), .sel_qbr(qbr), .sel_kin(kin), .sel_to(to), .sel_toc(toc), .sel_co(co), .sel_coc(coc),
     .sel_ev(ev));
+  // IKS monitor: every valid beat must be the expected STREAM command of its stack for the frame in flight
+  integer iks_n = 0, iks_bad = 0, iks_exp_n = 0, iks_ndie = 0;
+  function automatic [8:0] iks_bq(input integer nd, input integer q);
+    integer nb; begin nb = (nd + 7) / 8; iks_bq = (nb <= 342 * q) ? 9'd0 : ((nb - 342 * q) >= 342 ? 9'd342 : 9'(nb - 342 * q)); end
+  endfunction
+  always @(posedge ck) if (IKS != 0) for (integer q = 0; q < 4; q = q + 1) if (iks_e[q*128]) begin : chk
+    reg [126:0] p_; p_ = iks_e[q*128+1 +: 127]; iks_n = iks_n + 1;
+    if (p_[1:0] != 2'd2 || p_[16:2] != IK_BASE[34:20] || p_[69:61] != iks_bq(iks_ndie, q) || !p_[126] || p_[125] ||
+        p_[60:17] != 0 || p_[124:84] != 0) begin
+      iks_bad = iks_bad + 1;
+      $display("IKS_MISMATCH stack %0d: kind %0d row0 %h blocks %0d (expected %0d) stream %0d", q, p_[1:0], p_[16:2],
+               p_[69:61], iks_bq(iks_ndie, q), p_[126]);
+    end
+  end
   // VM model (fast path): up to 4 requests outstanding, pipelined (6..8 cycles, never before the predecessor), in order
   reg [31:0] vm [0:262143];
   reg [337:0] vqq [0:7]; integer vqt [0:7]; integer qh2 = 0, qn2 = 0, maxo2 = 0, tnow = 0, tlast = 0;
@@ -210,6 +228,8 @@ module tb_hgi_idx_index;
                md(3'd0, 40'h05000, 20'd2048, 20'd2, 32'd4096), md(3'd5, 40'h06000, 20'(ncand == 0 ? 1 : ncand), 20'd2, 32'd4096),
                md(3'd0, 40'h02000, 20'd32, 20'd1, 32'd0), md(3'd0, 40'h01000, 20'd4096, 20'd1, 32'd0), h, 1'b1};
       end
+      iks_ndie = f_ndie[fr]; iks_n = 0; iks_exp_n = 0;
+      for (q = 0; q < 4; q = q + 1) if (iks_bq(iks_ndie, q) != 0) iks_exp_n = iks_exp_n + 1;
       @(negedge ck); rec[0] = 1'b0;
       t0 = cyc;
       run_lines = 1;
@@ -230,9 +250,15 @@ module tb_hgi_idx_index;
       $display("HGIIDX_FRAME %0d done=%0d fault=%0d cycles=%0d first_score=%0d last_score=%0d", fr, t_done >= 0 && !ufault, ufault,
                t_done - t0, t_first_score - t0, t_last_score - t0);
       repeat (20) @(negedge ck);
+      if (IKS != 0 && !f_expfault[fr] && !ufault && iks_n != iks_exp_n) begin
+        iks_bad = iks_bad + 1; $display("IKS_COUNT frame %0d: %0d stream commands, expected %0d", fr, iks_n, iks_exp_n);
+      end
+      if (IKS != 0) $display("IKS_FRAME %0d n=%0d commands=%0d expected=%0d", fr, iks_ndie, iks_n, iks_exp_n);
       if (f_expfault[fr]) break;
     end
     $fclose(fd_s); $fclose(fd_t); $fclose(fd_c); $fclose(fd_f);
+    if (IKS != 0) $display("IKS_RESULT %s mismatches=%0d", iks_bad == 0 ? "PASS" : "FAIL", iks_bad);
+    if (iks_bad != 0) $fatal(1, "FATAL: IKS stream commands wrong");
     $display("HGIIDX_END frames=%0d", nframes);
     $finish;
   end
