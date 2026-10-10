@@ -130,7 +130,7 @@ class Plan:
         self.cks = sorted([p for p in ports['ports'] if re.fullmatch(r'ck\d+', p)], key=lambda x: int(x[2:]))
         self.lane_y = {}                     # set from the placement (multi-ck segment choice)
         if ports.get('w_um') and HOP:
-            cx, cy = ports['w_um'] / 2, ports['h_um'] / 2
+            cx, cy = ports.get('band_xy') or (ports['w_um'] / 2, ports['h_um'] / 2)   # [sfu] --fold: band at the S rows
             for p, v in ports['ports'].items():
                 if p in ('ck', 'rst') or re.fullmatch(r'ck\d+', p) or not v.get('pins'):
                     continue
@@ -144,6 +144,11 @@ class Plan:
         for p, _ in self.din + self.dout:
             self.dp.setdefault(p, self.PIPE + 1)
         self.DMAX = max(self.dp.values())
+        self.fold = 0                        # [sfu] --fold F: chains folded into F-tile column segments (set by main)
+
+    def turns(self):
+        """[sfu] --fold: the tile hops r -> r + 1 of a chain that turn from one column segment to the next"""
+        return [r for r in range(self.NT - 1) if self.fold and (r + 1) % self.fold == 0]
 
     def lanes(self):
         """(lane index j, chain k, group g, side s (0 left col / 1 right col), slot i)."""
@@ -489,6 +494,17 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
                 j = ((k * P.G + g) * P.S + s_) * P.L + i
                 tc = gkt.get(j, ck(P.lane_y.get(j, band_y)))
                 tm = tname if faced else ('hfd_su_tile_xl' if xroot else 'hfd_su_tile')
+                if r in P.turns():
+                    # [sfu] --fold: a column-segment turn (the two tiles' far faces, one tile pitch apart): one posedge
+                    # relay register each way on the quarter clock between the source tile's negedge face lockup and
+                    # the destination tile's pin flop (+1 cycle each way; every register hop <= HOP)
+                    L_.append(f'    wire [{P.LB}:0] tbt_{c}_{r};  wire [{P.WCT - 1}:0] tat_{c}_{r};')
+                    L_.append(f'    (* keep *) reg [{P.LB}:0] tbr_{c}_{r};  always @(posedge {tc}) tbr_{c}_{r} <= tbt_{c}_{r};')
+                    L_.append(f'    (* keep *) reg [{P.WCT - 1}:0] tar_{c}_{r};  always @(posedge {tc}) tar_{c}_{r} <= ta_{c}_{r + 1};')
+                    L_.append(f'    assign tb_{c}_{r + 1} = tbr_{c}_{r};  assign tat_{c}_{r} = tar_{c}_{r};')
+                    L_.append(f'    {tm} u_tile_{j} (.clk({tc}), .bc_in(tb_{c}_{r}), .bc_out(tbt_{c}_{r}), '
+                              f'.acc_in(tat_{c}_{r}), .acc_out(ta_{c}_{r}));')
+                    continue
                 L_.append(f'    {tm} u_tile_{j} (.clk({tc}), .bc_in(tb_{c}_{r}), .bc_out(tb_{c}_{r + 1}), '
                           f'.acc_in(ta_{c}_{r + 1}), .acc_out(ta_{c}_{r}));')
             if faced:      # head-out register on the head tile's root: captures the head tile's negedge face lockup
@@ -921,6 +937,7 @@ def emit_tb(P, nvec, seed, out, cg=False):
     hold = (2 * P.NT + 2 * P.DMAX + 20) if P.tiled else (2 * P.G + 2 * P.DMAX + 14)   # tiled: 16 broadcast + 16 accumulate tile hops
     if P.tiled and q.get('tile', {}).get('style') == 'faced':
         hold = 4 * P.NT + 2 * P.DMAX + 24     # faced tiles: 2 edges a tile each way, + head in / out, lin / lq
+        hold += 2 * len(P.turns())            # [sfu] --fold: one relay each way per turn
     cks = ', '.join(f'.{c}(clk)' for c in P.cks) if P.cks else '.ck(clk)'
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))
@@ -992,7 +1009,7 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
     py = h + GY
     n = P.G * P.L                                   # lanes per half column
     band = Hq - 2 * edge - 2 * n * py
-    assert band >= 50.0, ('port band thinner than 50 um', band)
+    assert P.fold or band >= 50.0, ('port band thinner than 50 um', band)
     blo = up_(edge + n * py, GY)
     bhi = dn(blo + band, GY)
     xs = []
@@ -1014,6 +1031,33 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
             xs.append((x0, x0 + w + c))
     L_ = [f'# tools/hbm_hub_quarter_gen.py --quarter: {P.q["master"]} lane placement ({P.N} x {P.q["lane"]} {w} x {h})']
     rec = []
+    if P.fold:
+        # [sfu] --fold F (R25GQ: a wide, short slot): chain c = KC chains of NT tiles, folded into ceil(NT / F) column
+        # segments side by side; segment 0 starts at the S band (bc in on the tile's band-side face = S: R0, flowing
+        # N), odd segments flow S (MX: band-side face on top); the turn tiles' far faces meet across one column gap
+        assert P.KC == 2, ('--fold places two chains about the centre', P.KC)
+        nseg = -(-P.NT // P.fold)
+        ncol = P.KC * nseg
+        gx = dn((Wq - ncol * w) / (ncol + 1), GX)
+        assert gx >= 30.0 - 1e-6, ('fold: column gap narrower than 30 um', gx)
+        y0 = up_(max(edge, Hq - edge - P.fold * py - 30.0), GY)   # rows packed to the top, the band below them
+        assert y0 >= 30.0 and y0 + P.fold * py <= Hq + 1e-6, ('fold: column taller than the quarter', y0)
+        xs = [(gx + cc * (w + gx),) for cc in range(ncol)]
+        for c in range(P.KC):
+            for r in range(P.NT):
+                g, i = divmod(r, P.L)
+                k, s_ = divmod(c, P.S)
+                j = ((k * P.G + g) * P.S + s_) * P.L + i
+                sg, rr = divmod(r, P.fold)
+                # both chain heads beside the slot centre (band -> head hop short): chain 0 turns W, chain 1 E
+                x = xs[(nseg - 1 - sg) if c == 0 else (nseg + sg)][0]
+                y = round(y0 + (rr if sg % 2 == 0 else P.fold - 1 - rr) * py, 3)
+                o = 'R0' if sg % 2 == 0 else 'MX'
+                L_.append(f'place_macro -macro_name {{{mname}_{j}}} -location {{{x:.3f} {y:.3f}}} -orientation {o}')
+                rec.append([j, round(x, 3), y, o])
+        fp = dict(lane_w=w, lane_h=h, two_sided=False, quarter=[Wq, Hq], edge=round(y0, 3), gap=gx, channel=0.0,
+                  band=[0.0, round(y0, 3)], column_x=[[round(a[0], 3) for a in xs]], fold=P.fold, lanes=rec)
+        return '\n'.join(L_) + '\n', fp
     for j, k, g, s, i in P.lanes():
         pr, half = divmod(k, 2)
         r = g * P.L + i
@@ -1051,6 +1095,8 @@ def main():
     ap.add_argument('--cg', action='store_true', help='per-group clock gating, or per-tile gating with --tiled, with pin cg_en')
     ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
                     help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
+    ap.add_argument('--fold', type=int, default=0, help='[sfu] 2026-10-10 (R25GQ slot 2016 x 1095): fold each tile chain '
+                    'into column segments of F tiles (serpentine, a registered relay each way at every turn); faced tiles')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
     pj = json.loads(Path(a.ports).read_text())
@@ -1058,6 +1104,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     if a.half_width:
         assert a.tiled, '--half-width needs --tiled'
+    if a.half_width and not a.fold:      # [sfu] --fold: the ports record is already the slot's (R25GQ proposal)
         W0 = pj['w_um']
         Wh = round(math.ceil(W0 / 2 / GX - 1e-9) * GX, 3)
         for v in pj['ports'].values():           # E-face pins onto the half-width quarter's E edge
@@ -1069,6 +1116,8 @@ def main():
         (out / 'ports_half.json').write_text(json.dumps(pj, indent=1) + '\n')
     P = Plan(q, pj, half=a.half_width)
     P.tiled = a.tiled
+    P.fold = a.fold
+    assert not a.fold or (a.tiled and q.get('tile', {}).get('style') == 'faced'), '--fold needs a faced tiled quarter'
     m = q['master']
     faced = a.tiled and q.get('tile', {}).get('style') == 'faced'
     if not a.lane_size and q.get('lane_wh'):
@@ -1117,10 +1166,12 @@ def main():
         # register-to-register hops of the tiled quarter (Manhattan um, owner rule <= HOP):
         #   in-tile crossings (bcq -> bco, accq -> acco, bcq -> lin, lq -> acco): <= tile height + strip width;
         #   tile -> tile: the abutment gap; band centre (din_q / head registers) -> the head tile's band-side face
-        cx, cy = pj['w_um'] / 2, pj['h_um'] / 2
+        cx, cy = pj.get('band_xy') or (pj['w_um'] / 2, pj['h_um'] / 2)
         band_hop = max(abs(cy - (r[2] + (th if r[3] in ('MX', 'R180') else 0.0))) + abs(cx - (r[1] + SW / 2))
                        for r in fp['lanes'] if any(r[0] == ((k * P.G) * P.S + s_) * P.L for k in range(P.K) for s_ in range(P.S)))
         hops = dict(in_tile=round(th + SW, 3), tile_to_tile=round(GY, 3), band_to_head_tile=round(band_hop, 3), limit=HOP)
+        if P.fold:      # a turn: source far face -> relay (mid gap) -> destination far face, one tile pitch apart
+            hops['turn_relay'] = round((tw + fp['gap']) / 2 + GY, 3)
         print(f'faced tile hops {hops}', file=sys.stderr)
         assert max(hops['in_tile'], hops['band_to_head_tile']) <= HOP, hops
         (td / 'tile.json').write_text(json.dumps(dict(master=tn, w_um=tw, h_um=th, strip_w=SW, lane=q['lane'],
