@@ -42,7 +42,7 @@ module ot_hgi_cp_die #(
     input  wire [2:0]    coll_ret,      // {fault, done, ready}
     output reg  [682:0]  quant_rec,     // unit 4
     input  wire [2:0]    quant_ret,
-    output reg  [1818:0] idx_rec,       // unit 9 {die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
+    output reg  [2074:0] idx_rec,       // unit 9 {I, die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid} (I: hgi-1010/g)
     input  wire [2:0]    idx_ret,
     output reg  [690:0]  am_rec,        // unit 7 ARGMAX {die_id 8, n_O, n_A, O, A, header, valid} (mtp-lead (1): 683 -> 691)
     input  wire [2:0]    am_ret,
@@ -208,7 +208,7 @@ module ot_hgi_cp_die #(
                 nR = d_n[5*21 +: 21], nI = d_n[6*21 +: 21];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1819'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
+            credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
             sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 704'd0; hc_rec <= 939'd0;
             db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
@@ -221,7 +221,7 @@ module ot_hgi_cp_die #(
             if (u_v[4] && u_rdy[4]) begin quant_rec <= {nO, nA, dO, dA, d_hdr, 1'b1}; credit[1] <= 1'b0; end
             else if (quant_ret[1] || quant_ret[2]) credit[1] <= 1'b1;
             if (u_v[9] && u_rdy[9]) begin
-                idx_rec <= {rank, 20'(d_pos1 - 21'd1), nR, nO, nD, nC, nB, nA, dR, dO, dD, dC, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0;
+                idx_rec <= {dI, rank, 20'(d_pos1 - 21'd1), nR, nO, nD, nC, nB, nA, dR, dO, dD, dC, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0;
             end
             else if (idx_ret[1] || idx_ret[2]) credit[2] <= 1'b1;
             if (u_v[7] && u_rdy[7]) begin am_rec <= {rank, nO, nA, dO, dA, d_hdr, 1'b1}; credit[3] <= 1'b0; end
