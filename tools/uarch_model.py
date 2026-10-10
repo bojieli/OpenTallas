@@ -15438,3 +15438,8 @@ def hgi_cp_fetch_pin_fifo_model(fetch_sectors_per_token=0):
         exact_gate='CP38 + conformance66 + stalled fetch FIFO ordering and TOKX mutant',
         physical_gate='TT setup>=0 FF hold>=0 DRC0 with SRAM SS/FF corner views',
         physical_qualified=False)
+
+
+def hbm_indexer_t4_join_model():
+    from hbm_indexer_r25i_model import hbm_indexer_t4_join_model as impl
+    return impl()
