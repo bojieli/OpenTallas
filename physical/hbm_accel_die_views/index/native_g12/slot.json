@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.hbm_idx_g12_slot.v1",
+ "generator": "tools/hbm_idx_g12_slot.py",
+ "master": "hfd_idx_score_native_g12",
+ "lanes_per_stack": 12,
+ "lanes_per_die": 48,
+ "slot_um": [
+  2000.16,
+  2646.0
+ ],
+ "slot_mm2": 5.2924,
+ "r25gq_36_64_slot_um": [
+  2000.16,
+  1689.12
+ ],
+ "r25gp_l16_slot_um": [
+  2000.16,
+  3000.264
+ ],
+ "sub_blocks": [
+  {
+   "name": "lrg",
+   "master": "hfd_idx_lrg",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 237.6,
+   "h": 2419.2
+  },
+  {
+   "name": "tap0",
+   "master": "hfd_idx_score_b12_lane0",
+   "x": 248.4,
+   "y": 0.0,
+   "w": 1698.84,
+   "h": 799.2
+  },
+  {
+   "name": "tap1",
+   "master": "hfd_idx_score_b12_lane4",
+   "x": 248.4,
+   "y": 810.0,
+   "w": 1698.84,
+   "h": 799.2
+  },
+  {
+   "name": "tap2",
+   "master": "hfd_idx_score_b12_lane8",
+   "x": 248.4,
+   "y": 1620.0,
+   "w": 1698.84,
+   "h": 799.2
+  },
+  {
+   "name": "join",
+   "master": "hfd_idx_t3_join",
+   "x": 1568.16,
+   "y": 2430.0,
+   "w": 432.0,
+   "h": 216.0
+  }
+ ],
+ "e_channel_um": 52.92,
+ "faces": {
+  "W": "svc key lines ik 8 x 1099 + ikc 8 (lrg W face), q 571 from the selector (lrg W face)",
+  "top": "s 610 + sc to the selector (join top face, E end)",
+  "S": "ck / rst"
+ },
+ "cells_um2_estimate": {
+  "taps": 2195289,
+  "lrg": 223229,
+  "join": 20736,
+  "total": 2439254,
+  "basis": "L16 grid estimate per slice + flop counts; NOT measured (slice synthesis never completed); re-derive from the b12 tap / lrg synth reports"
+ },
+ "utilisation_estimate": 0.461,
+ "throughput": {
+  "keys_per_cycle": 12,
+  "hbm_rate_keys_per_cycle": 12.25,
+  "note": "12 keys / cycle / stack = 6 lines (1,088 b) a cycle, the owner >= 90 % HBM rule minimum (index/DESIGN.md sec. 2); scan at 228 beats a full stack vs 171 at L16"
+ }
+}

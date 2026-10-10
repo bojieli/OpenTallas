@@ -568,6 +568,11 @@ ADOPTED = R25
 # m_* host-memory AXI master 228 / 74, irq + fault 2 / 0  ->  406 / 381 (R25GPH: 256 / 256, short 150 / 125)
 HOST_H_HGI = (37 + 65 + 74 + 228 + 2, 65 + 37 + 205 + 74 + 0)
 R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
+             # [idx] lead decisions 10-10 (claude/hbmphys-idx-20261010 d578aa824): the index_q bands go; attention row
+             # outputs reach the SU over 60 hfd_att_su_relay stations (8 tr_<q><r> buses, 529 b); index score grids are
+             # the 12-lane hfd_idx_score_native_g12 slot 2,000.16 x 2,646
+             att_su_relays='physical/hbm_accel_die_views/att_su_relay/relays_r25gq.json',
+             idx_score_slot=('hfd_idx_score_native_g12', 2646.0),
              svc_gap_add=216.0, sm_colch_add=172.8, sm_ch01=1209.6, sm_ch12=561.6, hub_edge_ch=648.0, eq_ch=518.4,
              su_slot=(2016.144, 2808.0), sfu_frac=0.5, hc_mm2=550.8 * 5529.6 / 1e6, idx_score_frac=36 / 64,
              attn_rows=2, attn_cols=4, attn_col_gap=259.2, attn_row_gap=345.6, hub_col_gap=345.6,
@@ -644,9 +649,10 @@ def build_r25gq(variant):
     # ---- index score grids: 36/64 height, shifted outward (the SM group east strip 264 -> ~950 um)
     for q in ('SW', 'SE', 'NW', 'NE'):
         s = B[f'idx_score_{q}']
-        h_ = up(s.h * V['idx_score_frac'], GY)
+        h_ = up(s.h * V['idx_score_frac'], GY) if not V.get('idx_score_slot') else V['idx_score_slot'][1]
         x_ = s.x + V['idx_score_dx'] if q[1] == 'W' else s.x - V['idx_score_dx']
-        add(s.name, s.name, x_, s.y if q[0] == 'S' else s.y + s.h - h_, h=h_)
+        add(s.name, s.name, x_, s.y if q[0] == 'S' else s.y + s.h - h_, h=h_,
+            master=V['idx_score_slot'][0] if V.get('idx_score_slot') else None)
         rmap[s.name] = s.name
     # ---- spine column: re-stacked (quant | HGI VM | CP abutting), VM8 halves, centred on the hub band
     sx0 = B['hb_cmdproc'].x
@@ -720,7 +726,7 @@ def build_r25gq(variant):
         put(f'hb_sfu_{q}', 'hb_sfu_SW', su_x, up(qy + su_h + V['sfu_gap'], GY), su_w, sfu_h)
         rmap[f'hb_su_{q}'], rmap[f'hb_sfu_{q}'] = f'hb_su_{q}', f'hb_sfu_{q}'
         ytop = qy
-        for c_, col in enumerate(V['idx_cols']):
+        for c_, col in enumerate(V['idx_cols'] if not V.get('att_su_relays') else ()):
             y_ = qy
             for b_ in col:
                 s = B[f'hb_index_SW_b{b_}']
@@ -728,6 +734,12 @@ def build_r25gq(variant):
                 rmap[f'hb_index_{q}_b{b_}'] = f'hb_index_{q}_b{b_}'
                 y_ = up(y_ + s.h + V['idx_gap'], GY)
             ytop = max(ytop, y_ - V['idx_gap'])
+        if V.get('att_su_relays'):       # HC stays where it sat over the R25GQ index stack ([idx]: 'HC stays')
+            for col in V['idx_cols']:
+                y_ = qy
+                for b_ in col:
+                    y_ = up(y_ + B[f'hb_index_SW_b{b_}'].h + V['idx_gap'], GY)
+                ytop = max(ytop, y_ - V['idx_gap'])
         hc_y = up(ytop + V['hc_gap'], GY)
         assert hc_y + hc_h <= qy + qh, ('HC over the index stack overflows', hc_y + hc_h, qy + qh)
         put(f'hb_hc_{q}', 'hb_hc_SW', ix_x, hc_y, ix_w, hc_h)
@@ -739,7 +751,9 @@ def build_r25gq(variant):
                 rr = r if S_ else V['attn_rows'] - 1 - r
                 y_ = ty0 + rr * (tp + V['attn_row_gap'])
                 # W: column 0 outermost; E mirrored (the base grid's column 0 is the outermost on both halves)
-                x_ = at_x + c * (tw + V['attn_col_gap'])
+                # E quadrants name-mirrored ([idx] 10-10): the R25GP E tile chains run c3 -> c0, so column 0 (the chain
+                # root) sits next to the SU on both halves
+                x_ = at_x + ((V['attn_cols'] - 1 - c) if E_ else c) * (tw + V['attn_col_gap'])
                 lo_y, hi_y = y_, y_ + th_lo      # N: mirrored below, hi under lo as the R25GP MX copies
                 for half, yh, hh_ in (('lo', lo_y, th_lo), ('hi', hi_y, th_hi)):
                     nm = f'at_{q}_{r}{c}_{half}'
@@ -764,6 +778,10 @@ def build_r25gq(variant):
         xa_, xb_ = (grp['x'], grp['x'] + g0['grp_w'] + ga_) if st[1] == 'W' else (grp['x'] - ga_, grp['x'] + g0['grp_w'])
         regions.append(dict(name=f'grp_{st}', kind='field', rect=[xa_, y0_, xb_, y1_]))
     regions.append(dict(name='hub', kind='hub', rect=[g0['x0'], hb0, g0['x0'] + g0['core_w'], hb1]))
+    if V.get('att_su_relays'):
+        for r_ in json.loads((ROOT / V['att_su_relays']).read_text())['relays']:
+            insts.append(Inst(r_['name'], r_['master'], r_['x'], r_['y'], r_['w'], r_['h'], r_['orient'], kind='waypoint',
+                              region='channel', domain='stream_1p2'))
     notes.append(f'R25GQ: SM rows at {row_y} (S), hub blocks {hb0:.2f}-{hb1:.2f} um, quadrant {qh:.2f} um; spine gap '
                  f'{g_:.2f} um (+ abut 43.2 / cross {V["spine_cross_um"]})')
     V.update(W=W, H=H)
@@ -795,6 +813,8 @@ def build_r25gq_net(variant):
     Q = {it.name: it for it in geo_m['insts']}
     kind = {it.name: it.kind for it in base['insts']}
     gone = {n for n in kind if re.fullmatch(r'at_[NS][EW]_[23]\d_(lo|hi)', n)}
+    if V.get('att_su_relays'):          # [idx] the index_q bands and every die net on them go
+        gone |= {n for n in kind if re.fullmatch(r'hb_index_[NS][EW]_b\d', n)}
     # ---- blocks to their R25GQ sites
     insts, moved = [], {}
     for it in base['insts']:
@@ -808,6 +828,8 @@ def build_r25gq_net(variant):
         moved[it.name] = (q.x - it.x, q.y - it.y)
         it.x, it.y, it.w, it.h, it.orient = q.x, q.y, q.w, q.h, q.orient
         insts.append(it)
+    if V.get('att_su_relays'):          # the att -> SU relay stations sit at their [idx] positions
+        insts += [i for i in geo_m['insts'] if i.master == 'hfd_att_su_relay']
     # ---- buses: drop removed-tile ends, then prune waypoints that serve nothing
     buses = []
     for bid, cls, bits, eps in base['buses']:
@@ -944,7 +966,8 @@ def build_r25gq_net(variant):
     extra = [('cp_mtp_f_mtp', 'control', 517, ('hb_mtp', 'f_mtp_q'), ('hb_cmdproc', 'f_mtp_q')),
              ('cp_mtp_t_mtp', 'control', 197, ('hb_cmdproc', 't_mtp_q'), ('hb_mtp', 't_mtp_q')),
              ('cp_mtp_ports', 'control', 120, ('hb_cmdproc', 't_mtpk'), ('hb_mtp', 'f_mtpk'))] + \
-            [(f'att_rec_{q}', 'control', 1250, ('hb_cmdproc', f'att_rec_{q}'), (f'hb_index_{q}_b0', f'att_rec'))
+            [(f'att_rec_{q}', 'control', 1250, ('hb_cmdproc', f'att_rec_{q}'),
+              (f'hb_index_{q}_b0', 'att_rec') if not V.get('att_su_relays') else (f'hb_hc_{q}', 'att_rec'))
              for q in ('SW', 'SE', 'NW', 'NE')] + \
             [(f'hgi_iks_{q}', 'expert_req', 128 + 1, ('hb_hgi_idx', f't_hgi_iks{q}'), (f'svc_{q}_s3', 'e'))   # [svc] IKS issuer
              for q in ('SW', 'SE', 'NW', 'NE')]     # -> the free svc e pins (ef_<st> skipped on HGI dies); 128 b + fclk
@@ -989,6 +1012,22 @@ def build_r25gq_net(variant):
             p0_ = pts[k] if k == 0 else (pts[k][0], 'b')
             p1_ = pts[k + 1] if k + 1 == len(pts) - 1 else (pts[k + 1][0], 'a')
             buses.append((f'{bid}_{k}' if len(pts) > 2 else bid, cls, bits, [p0_, p1_]))
+    if V.get('att_su_relays'):          # tr_<q><r>: attention row output -> relays -> SU lane slice
+        rp_ = json.loads((ROOT / V['att_su_relays']).read_text())
+        rl_ = defaultdict(list)
+        for r_ in rp_['relays']:
+            q_, ln_, k_ = re.fullmatch(r'rly_([NS][EW])_(\d)_(\d+)', r_['name']).groups()
+            rl_[(q_, int(ln_))].append((int(k_), r_['name']))
+        for bb_ in rp_['buses']:
+            q_, ln_ = bb_['bus'][3:5], int(bb_['bus'][5])
+            src_ = tuple(bb_['src'].split('.'))
+            dm_ = re.fullmatch(r'(\w+)\.(\w+)\[(\d+):(\d+)\]', bb_['dst'])
+            dst_ = (dm_.group(1), f'{dm_.group(2)}@{dm_.group(4)}:{dm_.group(3)}')
+            chain_ = [src_] + [(n_, 'x') for _, n_ in sorted(rl_[(q_, ln_)])] + [dst_]
+            for k_ in range(len(chain_) - 1):
+                p0_ = chain_[k_] if k_ == 0 else (chain_[k_][0], 'o')
+                p1_ = chain_[k_ + 1] if k_ + 1 == len(chain_) - 1 else (chain_[k_ + 1][0], 'i')
+                buses.append((f"{bb_['bus']}_{k_}", 'attn_out', bb_['bits'], [p0_, p1_]))
     for bid, cls, bits, a, b in extra:
         pth = gpath(a[0], b[0])
         L = (len(pth) - 1) * RP.CELL if gap_um(a[0], b[0]) > 2.0 else 0.0
@@ -1753,12 +1792,27 @@ def hub_ck_seg(mst, n, k=1, distinct=False):
 
         def free_(y_):
             return 2.0 <= y_ <= mst.h - 2.0 and not any(a_ - 1.0 <= y_ <= b_ + 1.0 for a_, b_ in win[face])
-        if distinct:      # R25GQ: short quarters -- each ck pin also clears the ck pins already placed
-            got = []
-            for y_ in ys:
-                got.append(next((y_ + s_ * d_ * t for d_ in range(0, 20000) for s_ in (1, -1)
-                                 if free_(y_ + s_ * d_ * t) and all(abs(y_ + s_ * d_ * t - g_) >= 4 * t for g_ in got)), y_))
-            ys = got
+        if distinct:      # R25GQ: short quarters -- the face with the most free length, ck pins spread evenly over it
+            def frees(f_):
+                iv, y0_ = [], 2.0
+                for a_, b_ in sorted(win[f_]):
+                    if a_ - 1.0 > y0_:
+                        iv.append((y0_, a_ - 1.0))
+                    y0_ = max(y0_, b_ + 1.0)
+                if mst.h - 2.0 > y0_:
+                    iv.append((y0_, mst.h - 2.0))
+                return iv
+            face = max(('W', 'E'), key=lambda f_: sum(b_ - a_ for a_, b_ in frees(f_)))
+            iv = frees(face)
+            tot = sum(b_ - a_ for a_, b_ in iv)
+            ys = []
+            for i in range(n):
+                r_ = (i + 0.5) * tot / n
+                for a_, b_ in iv:
+                    if r_ <= b_ - a_:
+                        ys.append(round((a_ + r_) / t) * t)
+                        break
+                    r_ -= b_ - a_
         else:
             ys = [next((y_ + s_ * d_ * t for d_ in range(0, 20000) for s_ in (1, -1) if free_(y_ + s_ * d_ * t)), y_)
                   for y_ in ys]
