@@ -23,7 +23,14 @@ module ot_qwen_die_cdc_ch #(
     parameter integer PIPE = 0,
     // AFW = 1 (safe-qwen S-A4 rx128, 2026-10-08): with PIPE = 0, use the wide FIFO's per-slice read-pointer copies
     // (ot_qwen_async_fifo_w, registered write: +1 wclk before visibility) and nothing else of PIPE = 1.
-    parameter integer AFW = 0
+    parameter integer AFW = 0,
+    // RXP = 1 (sys-takeover 2026-10-09, opt-in; qfd_emb_far92 IBUF 128 x 523: ir -> 128:1 receive-buffer mux -> FIFO
+    // write, -620 ps at 770 / PREROUTE -941): the receive buffer is written and read through replicated ONE-HOT pointers
+    // (one 128-bit copy per 32-bit slice: select fanout 32, no binary decode), and the read is a registered 2-stage
+    // AND-OR (stage 1: 8 region partial ORs of 16 entries, stage 2: their OR) into a 4-entry staging FIFO ahead of the
+    // async FIFO.  A word is issued (credit returned) when the staging FIFO has room for it including the 2 in flight.
+    // Cost: +2 wclk latency per word; full rate; order, values, credits and faults unchanged.
+    parameter integer RXP = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -64,9 +71,86 @@ module ot_qwen_die_cdc_ch #(
     wire        ib_empty = (iw == ir);
     wire        ib_full  = (iw[IA-1:0] == ir[IA-1:0]) && (iw[IA] != ir[IA]);
     wire        af_ready;
-    wire        pop = !ib_empty && af_ready;
+    wire        x_issue;                  // RXP: a word leaves the receive buffer into the read pipeline
+    wire        pop = (RXP != 0) ? x_issue : (!ib_empty && af_ready);
     reg         cr_q, wf_q;
-    always @(posedge wclk) if (iv_q && !ib_full) ib[iw[IA-1:0]] <= id_q;
+    wire        x_wr = iv_q && !ib_full;
+    wire [W-1:0] x_af_d;                  // RXP: staging-FIFO head -> async FIFO
+    wire         x_af_v, x_af_pop;
+    generate if (RXP == 0) begin : g_ibw
+        always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+        assign x_issue = 1'b0; assign x_af_v = 1'b0; assign x_af_d = {W{1'b0}}; assign x_af_pop = 1'b0;
+    end else begin : g_rxp
+        localparam integer G  = 32;
+        localparam integer NS = (W + G - 1) / G;
+        localparam integer NR = 8;                        // stage-1 regions
+        localparam integer RE = (IBUF + NR - 1) / NR;     // entries a region
+        localparam integer SD = 4;                        // staging FIFO depth (>= 2 in flight + 1, full rate)
+        reg [IBUF-1:0] woh [0:NS-1];
+        reg [IBUF-1:0] roh [0:NS-1];
+        integer s, k, r;
+        genvar gs, gk;
+        // one-hot pointer copies (one per slice) and one-hot writes (counters iw / ir still give empty / full / faults)
+        for (gs = 0; gs < NS; gs = gs + 1) begin : g_sl
+            always @(posedge wclk or negedge wr_n)
+                if (!wr_n) begin woh[gs] <= {{(IBUF-1){1'b0}}, 1'b1}; roh[gs] <= {{(IBUF-1){1'b0}}, 1'b1}; end
+                else begin
+                    if (x_wr)    woh[gs] <= {woh[gs][IBUF-2:0], woh[gs][IBUF-1]};
+                    if (x_issue) roh[gs] <= {roh[gs][IBUF-2:0], roh[gs][IBUF-1]};
+                end
+            for (gk = 0; gk < IBUF; gk = gk + 1) begin : g_e
+                localparam integer HI = ((gs + 1) * G > W) ? W : (gs + 1) * G;
+                always @(posedge wclk) if (x_wr && woh[gs][gk]) ib[gk][HI-1:gs*G] <= id_q[HI-1:gs*G];
+            end
+        end
+        // issue: buffer non-empty and staging room for this word plus the ones in flight
+        reg        v1, v2;
+        reg [2:0]  sn;                                    // staging occupancy
+`ifdef OT_CDC_RXP_MUT_NOINFLIGHT
+        wire room = (sn < SD);                            // mutant: the 2 words in flight are not counted
+`else
+        wire room = ({1'b0, sn} + v1 + v2) < SD;
+`endif
+        assign x_issue = !ib_empty && room;
+        // per-entry W-bit select mask from the slice copies (bit b of entry k = roh[b / G][k])
+        wire [W-1:0] ohm [0:IBUF-1];
+        genvar gb, gm;
+        for (gm = 0; gm < IBUF; gm = gm + 1) begin : g_m
+            for (gb = 0; gb < W; gb = gb + 1) begin : g_b
+                assign ohm[gm][gb] = roh[gb / G][gm];
+            end
+        end
+        // stage 1: region partial AND-OR (the issued entry's one-hot); stage 2: OR of the regions
+        reg [W-1:0] p1 [0:NR-1];
+        reg [W-1:0] d2;
+        reg [W-1:0] t1;
+        always @(posedge wclk) begin
+            for (r = 0; r < NR; r = r + 1) begin
+                t1 = {W{1'b0}};
+                for (k = r * RE; k < (r + 1) * RE && k < IBUF; k = k + 1)
+                    t1 = t1 | (ib[k] & ohm[k]);
+                p1[r] <= t1;
+            end
+            t1 = {W{1'b0}};
+            for (r = 0; r < NR; r = r + 1) t1 = t1 | p1[r];
+            d2 <= t1;
+        end
+        // staging FIFO (SD entries) -> async FIFO
+        reg [W-1:0] st [0:SD-1];
+        reg [1:0]   sw, sr;
+        assign x_af_v = (sn != 0);
+        assign x_af_d = st[sr];
+        assign x_af_pop = x_af_v && af_ready;
+        always @(posedge wclk) if (v2) st[sw] <= d2;
+        always @(posedge wclk or negedge wr_n)
+            if (!wr_n) begin v1 <= 1'b0; v2 <= 1'b0; sn <= 3'd0; sw <= 2'd0; sr <= 2'd0; end
+            else begin
+                v1 <= x_issue; v2 <= v1;
+                if (v2) sw <= sw + 1'b1;
+                if (x_af_pop) sr <= sr + 1'b1;
+                sn <= sn + v2 - x_af_pop;
+            end
+    end endgenerate
     always @(posedge wclk or negedge wr_n)
         if (!wr_n) begin iw <= 0; ir <= 0; cr_q <= 1'b0; wf_q <= 1'b0; end
         else begin
@@ -86,14 +170,14 @@ module ot_qwen_die_cdc_ch #(
 `endif
     generate if (PIPE != 0 || AFW != 0) begin : g_afw
         ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0)) u_af (
-            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid(pop), .wr_ready(af_ready), .wr_data(ib[ir[IA-1:0]]), .wr_overflow(),
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS
         assign af_drained = (u_af.wr_bin == u_af.rd_bin);
 `endif
     end else begin : g_af
         ot_async_fifo #(.WIDTH(W), .DEPTH(AD)) u_af (
-            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid(pop), .wr_ready(af_ready), .wr_data(ib[ir[IA-1:0]]), .wr_overflow(),
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS
         assign af_drained = (u_af.wr_bin == u_af.rd_bin);
