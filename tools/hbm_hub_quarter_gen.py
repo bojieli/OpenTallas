@@ -616,7 +616,7 @@ def emit_tb(P, nvec, seed, out):
                                                             for d in vin) + '\n')
     q = P.q
     m = q['master']
-    hold = 2 * P.G + 2 * P.DMAX + 14
+    hold = (2 * P.NT + 2 * P.DMAX + 20) if P.tiled else (2 * P.G + 2 * P.DMAX + 14)   # tiled: 16 broadcast + 16 accumulate tile hops
     cks = ', '.join(f'.{c}(clk)' for c in P.cks) if P.cks else '.ck(clk)'
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))

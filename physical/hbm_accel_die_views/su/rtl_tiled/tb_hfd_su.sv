@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// connectivity bench of hfd_su: 8 random die input words (seed 20261006), each held 42 cycles; the die output must
+// connectivity bench of hfd_su: 8 random die input words (seed 20261006), each held 64 cycles; the die output must
 // settle to the generator's reference (tools/hbm_hub_quarter_gen.py Plan.model) and match exactly; exit 1 on mismatch.
 module tb;
     reg clk = 0; always #0.4165 clk = ~clk;
@@ -17,7 +17,7 @@ module tb;
         din = 0; repeat (6) @(posedge clk); rst = 0;
         for (v = 0; v < 8; v = v + 1) begin
             din = vin[v]; first = -1;
-            for (c = 0; c < 42; c = c + 1) begin
+            for (c = 0; c < 64; c = c + 1) begin
                 @(posedge clk); #0.1;
                 if (first < 0 && dout === vout[v]) first = c;
             end
