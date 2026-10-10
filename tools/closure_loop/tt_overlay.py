@@ -156,6 +156,37 @@ SMH_NBR = (SMH_CORNER_LINE +
            "$W/w18_sta_ss.tcl; echo \"nbr_measured_rc=$?\" >> $W/status; fi\n")
 
 
+# LOOP-CORNER 2026-10-10: since c10b5fc9a the generator names the corner by OT_SMH_CORNER ({_SC}); it honours ONLY that
+# variable, so a recipe with OT_ORFS_CORNER(_OVERRIDE)=TC routed at SS -- and 48c78e37f's "no WC_LIB_FILES line" skip
+# read this form as "predates corner libs" and left it unpatched (hbm_smh_tile_{wg,eg}_cg hold floods, CLOSED at SS).
+SMH_SC_LIB = 'lib_su = lib_ss if _SC == "WC" else " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)\n'
+SMH_SC_LIB_NEW = ('lib_su = " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)'
+                  '  # tt_overlay LOOP-CORNER: TC route stage reads TT\n')
+SMH_SC_LINE = 'f"export {_SC}_LIB_FILES = $({_SC}_NLDM_LIB_FILES) {lib_su}"'
+SMH_SC_LINE_NEW = 'f"export {_SC}_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_su}"'
+SMH_HONOURS = "LOOP-CORNER (2026-10-10): the closure loop's option-B route env"
+
+
+def _smh_sc_form(s):
+    """(text, msg): patch a c10b5fc9a..LOOP-CORNER generator ({_SC} corner) so corner WC reads the TT liberties;
+    msg None when this is not that form."""
+    if SMH_HONOURS in s:
+        return s, "SMH flow: generator honours OT_ORFS_CORNER (no patch)"
+    if SMH_SC_LIB_NEW in s and SMH_SC_LINE_NEW in s:
+        return s, "SMH flow ({_SC} form): WC reads TT"
+    if SMH_SC_LINE not in s and SMH_SC_LIB not in s:
+        return s, None
+    if s.count(SMH_SC_LIB) != 1 or s.count(SMH_SC_LINE) != 1:
+        return s, "SMH: {_SC} corner-lib anchor missing"
+    return s.replace(SMH_SC_LIB, SMH_SC_LIB_NEW).replace(SMH_SC_LINE, SMH_SC_LINE_NEW), "SMH flow ({_SC} form): WC reads TT"
+
+
+def _smh_mark():
+    if os.environ.get("OT_TTB_CORNER_MARK"):
+        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
+            m.write(f"TC {os.getpid()} smh_config wc_reads_tt\n")
+
+
 def ensure_smh(src):
     """SM piece flow (tools/hbm_accel_smh_physical.py writes its own config.mk, not through run_abi3_physical): in a
     TC route stage, corner WC reads the TT std-cell + macro liberties; the mark is written here."""
@@ -164,6 +195,14 @@ def ensure_smh(src):
     if not f.is_file() or not tc:
         return []
     s = f.read_text()
+    s2, msg = _smh_sc_form(s)
+    if msg is not None:
+        if "missing" in msg:
+            return [msg]
+        if s2 != s:
+            f.write_text(s2)
+        _smh_mark()
+        return [msg]
     if "WC_LIB_FILES" not in s:
         # 2026-10-08 drive-0502: commits predating the SM generator's corner-lib line (e.g. 4b111850a) have nothing to
         # patch; a non-SM route (Qwen die masters) on such a snapshot must not fail the overlay on it
@@ -178,9 +217,7 @@ def ensure_smh(src):
             return ["SMH: corner_rc anchor missing"]
         s = s.replace(SMH_CORNER_LINE, SMH_NBR)
     f.write_text(s)
-    if os.environ.get("OT_TTB_CORNER_MARK"):
-        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
-            m.write(f"TC {os.getpid()} smh_config wc_reads_tt\n")
+    _smh_mark()
     return ["SMH flow: WC reads TT"]
 
 

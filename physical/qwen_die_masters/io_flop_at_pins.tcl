@@ -11,6 +11,9 @@ set ot_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ot_core [$ot_blk getCoreArea]
 set cx0 [expr {double([$ot_core xMin]) / $ot_dbu}]; set cx1 [expr {double([$ot_core xMax]) / $ot_dbu}]
 set cy0 [expr {double([$ot_core yMin]) / $ot_dbu}]; set cy1 [expr {double([$ot_core yMax]) / $ot_dbu}]
+set ot_die [$ot_blk getDieArea]
+set dx0 [expr {double([$ot_die xMin]) / $ot_dbu}]; set dx1 [expr {double([$ot_die xMax]) / $ot_dbu}]
+set dy0 [expr {double([$ot_die yMin]) / $ot_dbu}]; set dy1 [expr {double([$ot_die yMax]) / $ot_dbu}]
 set ot_gap [expr {[info exists ::env(OT_OFLOP_GAP)] ? $::env(OT_OFLOP_GAP) : 1.0}]
 proc ot_of_drv {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return $it } }
@@ -74,7 +77,13 @@ foreach bt [$ot_blk getBTerms] {
   set bb [$bt getBBox]
   set px [expr {double([$bb xMin] + [$bb xMax]) / 2.0 / $ot_dbu}]
   set py [expr {double([$bb yMin] + [$bb yMax]) / 2.0 / $ot_dbu}]
-  if {$px <= $cx0} { set side L } elseif {$px >= $cx1} { set side R } elseif {$py <= $cy0} { set side B } else { set side T }
+  # ds-1010 2026-10-10: the side is the NEAREST DIE EDGE.  The old test compared against the core box, so a block whose
+  # core touches the die on the left/right (core-area 0 0.54 W H-0.54: every S81 coll tile, the lane tile) classified
+  # its W/E-face pins (centre x 0.012 > cx0 0) as T: their flops were stacked along the top edge at the pin's x
+  # (coll_cb crpa: u_lo0 l_data[55] FIRM at (0.1, 338.4) for wlo_d[55] at (0, 155.7) -> 730 ps of wire, TT -577).
+  set dl [expr {$px - $dx0}]; set dr [expr {$dx1 - $px}]; set dbo [expr {$py - $dy0}]; set dt [expr {$dy1 - $py}]
+  set dm [expr {min($dl, $dr, $dbo, $dt)}]
+  if {$dl == $dm} { set side L } elseif {$dr == $dm} { set side R } elseif {$dbo == $dm} { set side B } else { set side T }
   lappend cand [list $side [expr {($side eq "L" || $side eq "R") ? $py : $px}] $ff $px $py $io]
 }
 foreach side {L R B T} { set ot_k($side) 0 }
