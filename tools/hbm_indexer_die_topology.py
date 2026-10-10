@@ -13,10 +13,19 @@ def install(m, fp):
     master = 'hfd_idx_score_native_c2' if m['variant'].get('indexer_large_slot') else 'hfd_idx_score_native'
     if m['variant'].get('indexer_mirror_grid'):
         master = 'hfd_idx_score_native_grid_c2' if m['variant'].get('indexer_large_slot') else 'hfd_idx_score_native_grid'
+    t4 = bool(m['variant'].get('indexer_t4_native'))
+    if t4:
+        master = 'hfd_idx_score_native_t4'
+    def record_path(mn):
+        if t4 and mn == 'hfd_idx_score_native_t4':
+            return fp.ROOT / 'physical/hbm_accel_die_views/index/native_t4' / mn / 'ports.json'
+        if t4 and mn == 'hfd_idx_sel_native_qend':
+            return fp.ROOT / 'physical/hbm_accel_die_views/index/native_clock32' / mn / 'ports.json'
+        return root / mn / 'ports.json'
     scores = {}
     fixed = m.setdefault('fixed_ports', {})
     def add(name, mn, x, y, orient, kind):
-        rec = json.loads((root / mn / 'ports.json').read_text())
+        rec = json.loads(record_path(mn).read_text())
         it = fp.Inst(name, mn, x, y, rec['w_um'], rec['h_um'], orient,
                      kind=kind, region='hub', domain='stream_1p2')
         m['insts'].append(it)
@@ -44,7 +53,7 @@ def install(m, fp):
         fixed[mn]=pins
         m.setdefault('master_notes',{})[mn]='Full-shape native indexer; exact and physical verdicts tracked separately'
         return it
-    h=json.loads((root/master/'ports.json').read_text())['h_um']
+    h=json.loads(record_path(master).read_text())['h_um']
     g=m['geo']
     # hbm-forks 2026-10-09 (coordinator, hbm-generic PLAN finding 2): the anchors below are r25-absolute.  indexer_rebase
     # shifts them by the die-centre offset of the current outline (fmt3 wide SM grid: +571.968 um) and lifts the selector
@@ -55,7 +64,7 @@ def install(m, fp):
     # align to the M7 mirrored pin lattice and the 2.16um placement row lattice.
     for st,group in m['groups'].items():
         side,half=st
-        x=round((10732.608 if half=='W' else 16994.88)+DX,6)
+        x=round((10732.608 if half=='W' else (16194.912 if t4 else 16994.88))+DX,6)
         core_h=h-0.024 if m['variant'].get('indexer_mirror_grid') else h
         y=1596.24 if side=='S' else round(g['H']-1596.24-core_h,6)
         orient={'SW':'R0','SE':'MY','NW':'MX','NE':'R180'}[st]
@@ -72,6 +81,11 @@ def install(m, fp):
     m['indexer_native']=dict(scores=scores, selector=sel,
         model=hbm_indexer_r25i_physical_model(),
         qualification='OPT_IN_NATIVE_RESERVATION; service joins and whole-die routing not yet qualified')
+    if t4:
+        from hbm_indexer_r25i_model import hbm_indexer_t4_join_model
+        m['indexer_native']['t4_model'] = hbm_indexer_t4_join_model()
+        m['indexer_native']['t4_assembly_qualified'] = False
+        m['notes'].append('T4 grid reservation: four real1400x1250 L4tap variants plus420x360 atomic join; query hop registers, clock roots, contextual ETMs and unbound native endpoints still require implementation/qualification.')
     m['notes'].append('R25I reserves four full16-lane scorers and captured-SRAM T1/LA7 selector; historical placeholder key/top-k nets require replacement before adoption.')
 
 
@@ -83,7 +97,8 @@ def networks(m, fp, buses, paths, chain):
     """
     native=m['indexer_native']; sel=native['selector']; root=fp.ROOT/'physical/hbm_accel_die_views/index/native'
     def point(it, port, lo=0, count=None):
-        rec=json.loads((root/it.master/'ports.json').read_text());pins=rec['ports'][port]['pins']
+        source = fp.ROOT/'physical/hbm_accel_die_views/index/native_t4' if it.master=='hfd_idx_score_native_t4' else (fp.ROOT/'physical/hbm_accel_die_views/index/native_clock32' if m['variant'].get('indexer_t4_native') and it.master=='hfd_idx_sel_native_qend' else root)
+        rec=json.loads((source/it.master/'ports.json').read_text());pins=rec['ports'][port]['pins']
         ps=pins[lo:lo+count] if count is not None else pins
         x=sum((p[2]+p[4])/2 for p in ps)/len(ps);y=sum((p[3]+p[5])/2 for p in ps)/len(ps)
         if it.orient in ('MY','R180'):x=it.w-x
