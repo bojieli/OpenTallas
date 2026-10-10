@@ -278,14 +278,61 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
   foreach i [$ws_blk getInsts] {
     if {![[$i getMaster] isSequential]} continue
     set dit [$i findITerm D]
-    if {$dit eq "NULL"} continue
-    set dn [$dit getNet]
-    if {$dn eq "NULL"} continue
-    set bts [$dn getBTerms]
-    if {[llength $bts] != 1} continue
-    set bt [lindex $bts 0]
-    if {[$bt getIoType] ne "INPUT"} continue
-    set bn [$bt getName]
+    set bn ""
+    if {$dit ne "NULL" && [$dit getNet] ne "NULL"} {
+      set bts [[$dit getNet] getBTerms]
+      if {[llength $bts] == 1 && [[lindex $bts 0] getIoType] eq "INPUT"} { set bn [[lindex $bts 0] getName] }
+    }
+    # Opt-in tile boundary: a logical XOR may precede the first register.
+    # Trace only combinational drivers, at most three physical cell levels;
+    # anchor only when exactly one external input bit owns this register.
+    if {$bn eq "" && [info exists ::env(OT_WS_INPUT_COMB)] && $::env(OT_WS_INPUT_COMB) eq "1" && $dit ne "NULL" && [$dit getNet] ne "NULL"} {
+      set frontier [list [$dit getNet]]; set seen {}; set owners {}
+      for {set depth 0} {$depth < 4 && [llength $frontier]} {incr depth} {
+        set nxt {}
+        foreach nn $frontier {
+          if {[lsearch -exact $seen $nn] >= 0} continue
+          lappend seen $nn
+          foreach bt [$nn getBTerms] {
+            if {[$bt getIoType] eq "INPUT"} {lappend owners [$bt getName]}
+          }
+          foreach it [$nn getITerms] {
+            set di [$it getInst]
+            if {![$it isOutputSignal] || [[$di getMaster] isSequential]} continue
+            foreach ai [$di getITerms] {
+              if {[$ai isInputSignal] && [$ai getNet] ne "NULL"} {lappend nxt [$ai getNet]}
+            }
+          }
+        }
+        set frontier $nxt
+      }
+      set owners [lsort -unique $owners]
+      if {[llength $owners] == 1} {set bn [lindex $owners 0]}
+    }
+    if {$bn eq "" && [info exists ::env(OT_WS_OUTPUT_PINREG)] && $::env(OT_WS_OUTPUT_PINREG) eq "1"} {
+      set qit [$i findITerm QN]
+      if {$qit eq "NULL"} { set qit [$i findITerm Q] }
+      if {$qit ne "NULL" && [$qit getNet] ne "NULL"} {
+        set qn [$qit getNet]; set bts [$qn getBTerms]
+        # only the pins (and at most one inverter / buffer between: the QN flop's output inverter) load the net
+        set nld [expr {[llength [$qn getITerms]] - 1}]
+        if {[llength $bts] >= 1 && [[lindex $bts 0] getIoType] eq "OUTPUT" && $nld <= 0} { set bn [[lindex $bts 0] getName] }
+        if {$bn eq "" && $nld == 1} {
+          foreach it [$qn getITerms] {
+            set ii [$it getInst]
+            if {$ii ne $i && ![[$ii getMaster] isSequential] && [llength [$ii getITerms]] <= 4} {
+              foreach it2 [$ii getITerms] {
+                if {[$it2 isOutputSignal] && [$it2 getNet] ne "NULL"} {
+                  set b2 [[$it2 getNet] getBTerms]
+                  if {[llength $b2] >= 1 && [[lindex $b2 0] getIoType] eq "OUTPUT" && [llength [[$it2 getNet] getITerms]] == 1} { set bn [[lindex $b2 0] getName] }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if {$bn eq ""} continue
     if {![info exists ws_pin($bn)]} continue
     lassign $ws_pin($bn) px py
     set w [[$i getMaster] getWidth]; set wr [expr {$w + 3*$sitew}]

@@ -1,0 +1,23 @@
+{
+  "mechanism": "negedge tile output lockup between differently clocked tile roots",
+  "source_sha256": {
+    "tools/hbm_su_tile_xl_gen.py": "7c54d094417c6cecc19e9e390c1acf670d97619a00e0d3f1d4fc8266936e2c42",
+    "physical/hbm_accel_die_views/su/rtl_tile_xl/hfd_su_tile_xl.sv": "93eea1aa540a32e8ac86467bac8770849586230585e05ba0e568ba00c528d01a",
+    "tests/rtl/hub_reset/tb_su_tile_xl.sv": "32dd8f9b1023cfd9ace05b93f77073a6343b9bb293598f6f9bec1c7e16496e7b"
+  },
+  "lanes": 2,
+  "word_shapes": [
+    1743,
+    448
+  ],
+  "cycles_per_case": 300,
+  "skew_cases_ps": [
+    -100,
+    100
+  ],
+  "exactness": "PASS",
+  "negative_control": "bypass actual output lockups",
+  "negative_verdict": "FAIL",
+  "negative_mismatches": 287,
+  "scope": "Transport/phase proof with unchanged lane represented by registered connectivity stub. Full lane arithmetic qualified independently; physical closure and macro abstract timing remain open."
+}
