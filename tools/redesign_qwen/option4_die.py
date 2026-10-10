@@ -366,11 +366,14 @@ def main():
         ap.add_argument("--" + k.replace("_", "-"), type=int, default=None)
     ap.add_argument("--ctlm", choices=sorted(CTLMS), default="ctlm")
     ap.add_argument("--seq", choices=sorted(SEQS), default="boundary")
+    ap.add_argument("--tws", type=int, default=None, help="die TWS (tree-word stages; vehicle default 38)")
     a = ap.parse_args()
     VAR.update(ctlm=a.ctlm, seq=a.seq)
     for k in CFG:
         if getattr(a, k) is not None:
             CFG[k] = getattr(a, k)
+    if a.tws is not None:
+        F.DIE[:] = [x if not x.startswith("-GTWS=") else f"-GTWS={a.tws}" for x in F.DIE]
     if a.phase == "run":
         sys.exit(F.run(a.build.resolve(), a.work.resolve(), a.stages, a.threads))
     base_emit = F.EMIT.emit
@@ -399,7 +402,7 @@ def main():
         return orig_link(b, steps, prefixes)
     F.link = link
     F.build(bld, a.jobs)
-    (bld / "O4DIE.json").write_text(json.dumps(dict(CFG, ctlm=str(CTLMS[VAR["ctlm"]][0].relative_to(ROOT)),
+    (bld / "O4DIE.json").write_text(json.dumps(dict(CFG, tws=a.tws, seq=VAR["seq"], ctlm_variant=VAR["ctlm"], ctlm=str(CTLMS[VAR["ctlm"]][0].relative_to(ROOT)),
                                                     seq_su=str(SEQS[VAR["seq"]][0].relative_to(ROOT))), indent=1) + "\n")
 
 

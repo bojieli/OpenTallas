@@ -371,12 +371,13 @@ def _wrap_masters(v, m):
         cbm.area('pll_ck', 1, 21.0, 21.0, 1)
         cbm.area('rs', 1, 21.0, 18.0, 1)
         M['qfd_ckbump'] = cbm
-        sq = M['qfd_sp_constants_sequencer']
+        sq = M.get('qfd_sp_constants_sequencer')        # r22ko4: no sequencer reservation
         cmp_ = bool(SEQ_COMPACT and m.get('r22k', {}).get('seq_compact'))   # compact: the left half of the S face
-        sq.face('dc', CTL_BITS, 'S', 'M5', sq.w * (0.1 if cmp_ else 0.3), 1)
-        sq.face('dh', CTL_BITS, 'S', 'M5', sq.w * (0.35 if cmp_ else 0.7), 1)
-        sq.area('rsi', 1, sq.w / 2, sq.h / 2 + 12.0, 1)
-        sq.face('dflt', 9, 'S', 'M5', sq.w * (0.22 if cmp_ else 0.5), 1)
+        if sq is not None:
+            sq.face('dc', CTL_BITS, 'S', 'M5', sq.w * (0.1 if cmp_ else 0.3), 1)
+            sq.face('dh', CTL_BITS, 'S', 'M5', sq.w * (0.35 if cmp_ else 0.7), 1)
+            sq.area('rsi', 1, sq.w / 2, sq.h / 2 + 12.0, 1)
+            sq.face('dflt', 9, 'S', 'M5', sq.w * (0.22 if cmp_ else 0.5), 1)
         # collective: its clock pin (was the PLL output pll_stream) stays at the same place, now an input
         return M
     v.masters = masters
@@ -536,3 +537,271 @@ def _compact_seq(v, m, rec):
         chosen=dict((k_, best[k_]) for k_ in ('crom', 'seq_corner', 'bit_um', 'seq_xy', 'crom_xy')), forced=force or None,
         candidates=[dict((k_, c_[k_]) for k_ in ('crom', 'seq_corner', 'bit_um')) for c_ in cands],
         chosen_buses=best['buses'], vacated_um2=round(free_area, 1))
+
+
+# ------------------------------------------------------------------------------------------------ r22ko4 (opt-in)
+# qwen-1010/a 2026-10-10: the option-4 control plane on the r22k ROM die (redesign-qwen 02:55 CONTROL-PLANE RESULT; port
+# map kv-die.log 05:40).  Default r22k / r22kcs unchanged.
+#   removed   sp_tree_top (qfd_sp_tree_top monolith) and the constants + sequencer reservation (sequencer + 48-macro
+#             constant ROM); the seq <-> tree-top issue / status words tt_si / tt_so (380 + 97 b) and seq_su / seq_sud.
+#   tt_ctlm   qfd_tt_ctlm (ot_qfd_tt_ctlm[_i]: control tile + ME-side controller + program copy) at the S end of the old
+#             tree-top slot, abutting the VM top (xd / xr / ld / mx on its S face, 0 relays).
+#   tt_up4_u  4 x qfd_tt_up4 (ot_qfd_band_upper NL 4, CLOSED qfd_tt_up4_b 345.6 x 388.8) stacked N of the control tile on
+#             the slot's W edge (band words in on W, top-level words out on E, selects in on S).
+#   seq_su    qfd_seq_su (ot_qfd_seq_su_bi: TP sequencer + SU-side controller + stores) in the free E slot at the SU's
+#             top (x of the E column, just below the port-tile slab), its SU face (W) across the 259.2-um M|E channel
+#             from the SU's E face.
+#   SU        the SU master's issue / status (+ the 24-b endpoint accepted count) on its E face; its constant ports
+#             split per 8-lane group on its S face.
+#   constants 8 x qfd_su_cbuf_g (194.4 x 216, SU side on N) in two rows under the SU, 8 x qfd_crom_g (194.4 x 518.4,
+#             answer side on N) in two rows below them (cbuf row 1 pairs with the crom row above-it, row 0 with row 1).
+# Pin plans here are the DIE's: where they differ from a closed route's plan the record lists the re-pin route needed
+# (no RTL change).  New words (bits from the RTL ports): me snapshot 92 (ctlm -> seq_su), SU snapshot 57 + ME start 49
+# (seq_su -> ctlm), program writes 75 (d2d_rom -> ctlm), KV descriptor 201 + kv_ok 1 (ctlm <-> d2d_rom), me_mem_ok
+# (VM -> ctlm), seq_su <-> SU issue 476 / status 133 + accepted count 24.
+O4_CTLM = (777.6, 1814.4)
+O4_UP4 = (345.6, 388.8)
+O4_SEQ = (518.4, 518.4)
+O4_CBUF = (194.4, 216.0)
+O4_CROM = (194.4, 518.4)
+O4_BITS = dict(me_snap=92, su_snap=57, me_start=49, pw=75, kvd=201, kok=1, meok=1, su_iss=476, su_st=133, su_acc=24,
+               cb_su_a=8 + 192 + 6, cb_su_q=512, cb_far_a=8 + 192 + 6, cb_far_q=512 + 1, cb_ctl=6 + 1 + 18, cb_rdy=1 + 6 + 3,
+               up_pw=128 + 1, up_ty=384, up_ty0=384 + 2, sel=28, up_flt=1)
+O4_REPIN = {
+    'qfd_tt_ctlm': 'route plan qfd_tt_ctlm_{a,b}: h_start / token / pos / prog_base / pw / x_o* / kv_* / me_mem_ok / me_*_o / '
+                   'm_f* / kvd_* on BOTTOM (toward the VM); the die wants them on E (the M|E relay channel to seq_su / '
+                   'd2d_rom), band control (p_*, scale_*, t_sel / t_tv / tr_fault) on W, the up4 selects on N',
+    'qfd_seq_su': 'route plan qfd_seq_su_bi_{a,b} (= boundary): SU words W (OK), snapshots / start N (OK), d2d / VM / '
+                  'collective inputs S, outputs E; the die wants the VM instruction word (ib) on N toward the VM corner',
+    'qfd_sp_su64_sfu': 'SU acc master (ot_qfd_sp_su64_sfu_bv_acc) routes so far: issue / status W (bv_acc_{a,b}) or E '
+                       'without the accepted count (bv_e{a,b}); the die wants issue / status / accepted count on E, the '
+                       'constant ports per group on S',
+    'qfd_su_cbuf_g': 'closed plan: SU side (crom_*) BOTTOM, far ROM side (f_*) TOP; the die (SU above) wants SU side N, far '
+                     'side S',
+    'qfd_crom_g': 'closed plan: crom_* BOTTOM; the die (its buffer above) wants them N',
+    'qfd_sp_vector_memory': 'VM instruction port ib on its W face; seq_su sits E of the VM -> ib on the E face'}
+
+
+def surgery_o4(v, m):
+    surgery(v, m)
+    _option4(v, m, m['r22k'])
+
+
+def _option4(v, m, rec):
+    by = {i.name: i for i in m['insts']}
+    tt, sq, su, vm = by['sp_tree_top'], by['sp_constants_sequencer'], by['sp_su64_sfu'], by['sp_vector_memory']
+    slab = by['sp_port_tiles_2_f1']
+    Inst = type(tt)
+    S = v.SHAVE
+    removed = [tt.name, sq.name]
+    m['insts'] = [i for i in m['insts'] if i.name not in removed]
+    new = []
+
+    def add(name, master, x, y, wh, kind='spine_block', dom=None):
+        i = Inst(name, master, round(x, 4), round(y, 4), round(wh[0] - S, 4), round(wh[1] - S, 4), 'R0', kind=kind,
+                 region=tt.region, domain=dom or tt.domain)
+        new.append(i)
+        return i
+    ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, tt.y, O4_CTLM)
+    # 2 x 2 block N of the control tile: the band words come over the top to the block centre (up4_0's NE corner) and
+    # fan out to the four abutted tiles there (<= 400 um, no stage), as the r21b tree top's bw* area pins
+    y0 = ctl.y + O4_CTLM[1] + v.GY
+    ups = [add(f'tt_up4_{u}', 'qfd_tt_up4' if u == 0 else 'qfd_tt_up4_g', tt.x + (u % 2) * (O4_UP4[0] + v.GX),
+               y0 + (u // 2) * (O4_UP4[1] + v.GY), O4_UP4) for u in range(4)]
+    seq = add('seq_su', 'qfd_seq_su', slab.x, v.dn(slab.y - O4_SEQ[1] - v.GY, v.GY), O4_SEQ, dom=sq.domain)
+    cb, cr = [], []
+    for k in range(8):
+        col, row = k % 4, k // 4
+        cb.append(add(f'cbuf_g_{k}', 'qfd_su_cbuf_g', su.x + col * O4_CBUF[0], su.y - (row + 1) * O4_CBUF[1], O4_CBUF,
+                      dom=su.domain))
+    for k in range(8):
+        col, row = k % 4, 1 - k // 4      # buffer row 1 (k 4..7) pairs with the crom row just below it
+        cr.append(add(f'crom_g_{k}', 'qfd_crom_g', su.x + col * O4_CROM[0],
+                      su.y - 2 * O4_CBUF[1] - (row + 1) * O4_CROM[1], O4_CROM, dom=su.domain))
+    m['insts'] += new
+    by = {i.name: i for i in m['insts']}
+    # ---- buses ----
+    gone, nb = [], []
+    T = {tt.name: 'tt_ctlm', sq.name: 'seq_su'}
+    for bid, cl, bits, eps in m['buses']:
+        names = {e[0] for e in eps}
+        if bid in ('tt_si', 'tt_so', 'seq_su', 'seq_sud', 'crom_a', 'crom_q', 'vm_meok') or bid.startswith(('pword_', 'tt_lf')) \
+                or bid == 'tt_ty':
+            gone.append(bid)
+            continue
+        if cl == 'clock_trunk':
+            ne = []
+            for i, p in eps:
+                if i == tt.name:
+                    ne += [('tt_ctlm', 'ck')] + [(f'tt_up4_{u}', 'ck') for u in range(4)]
+                elif i == sq.name:
+                    ne += [('seq_su', 'ck')]
+                else:
+                    ne.append((i, p))
+            if ('sp_su64_sfu', 'ck') in eps:   # the constant store on the SU's region clock
+                ne += [(f'cbuf_g_{k}', 'ck') for k in range(8)] + [(f'crom_g_{k}', 'ck') for k in range(8)]
+            nb.append((bid, cl, bits, ne))
+            continue
+        if names & set(T):
+            eps = [(T.get(i, i), p) for i, p in eps]
+        nb.append((bid, cl, bits, eps))
+    B = O4_BITS
+    add_b = [('o4_me_snap', 'sequencer', B['me_snap'], [('tt_ctlm', 'xm'), ('seq_su', 'xm')]),
+             ('o4_su_snap', 'sequencer', B['su_snap'], [('seq_su', 'xs'), ('tt_ctlm', 'xs')]),
+             ('o4_me_start', 'sequencer', B['me_start'], [('seq_su', 'st'), ('tt_ctlm', 'st')]),
+             ('o4_pw', 'sequencer', B['pw'], [('d2d_rom', 'pw'), ('tt_ctlm', 'pw')]),
+             ('o4_kvd', 'sequencer', B['kvd'], [('tt_ctlm', 'kvd'), ('d2d_rom', 'kvd')]),
+             ('o4_kok', 'sequencer', B['kok'], [('d2d_rom', 'kok'), ('tt_ctlm', 'kok')]),
+             ('o4_meok', 'spine_local', B['meok'], [('sp_vector_memory', 'mo'), ('tt_ctlm', 'meok')]),
+             ('o4_su_iss', 'sequencer', B['su_iss'], [('seq_su', 'su'), ('sp_su64_sfu', 'si')]),
+             ('o4_su_st', 'sequencer', B['su_st'], [('sp_su64_sfu', 'sd'), ('seq_su', 'sd')]),
+             ('o4_su_acc', 'sequencer', B['su_acc'], [('sp_su64_sfu', 'acc'), ('seq_su', 'acc')]),
+             ('rst_seq_ctlm', 'spine_local', 1, [('clk_rx', 'rso_ctlm'), ('tt_ctlm', 'rsi')])]
+    add_b += [('o4_sel', 'tree_spine', B['sel'], [('tt_ctlm', 'sel'), ('tt_up4_0', 'sel')]),
+              ('o4_upf', 'tree_spine', B['up_flt'], [('tt_up4_0', 'flt'), ('tt_ctlm', 'uf')]),
+              ('tt_ty', 'tree_spine', 1538, [('tt_up4_0', 'ty'), ('sp_band_lanes_0', 'tt')])]
+    for b in range(6):
+        add_b += [(f'pword_{b}', 'tree_spine', 513, [(f'sp_band_lanes_{b}', 'pw'), ('tt_up4_0', f'pw{b}')]),
+                  (f'tt_lf{b}', 'tree_spine', 1, [(f'sp_band_lanes_{b}', 'f'), ('tt_up4_0', f'lf{b}')])]
+    for k in range(8):
+        far = 4 + k if k < 4 else k - 4        # buffer row 0 -> crom row 1 (k), row 1 -> crom row 0; same column
+        add_b += [(f'o4_cb_a_{k}', 'crom', B['cb_su_a'], [('sp_su64_sfu', f'ca{k}'), (f'cbuf_g_{k}', 'sa')]),
+                  (f'o4_cb_q_{k}', 'crom', B['cb_su_q'], [(f'cbuf_g_{k}', 'sq'), ('sp_su64_sfu', f'cq{k}')]),
+                  (f'o4_cf_a_{k}', 'crom', B['cb_far_a'], [(f'cbuf_g_{k}', 'fa'), (f'crom_g_{k}', 'ra')]),
+                  (f'o4_cf_q_{k}', 'crom', B['cb_far_q'], [(f'crom_g_{k}', 'rq'), (f'cbuf_g_{k}', 'fq')]),
+                  (f'o4_cb_ctl_{k}', 'sequencer', B['cb_ctl'], [('seq_su', f'cbc{k}'), (f'cbuf_g_{k}', 'ctl')]),
+                  (f'o4_cb_rdy_{k}', 'sequencer', B['cb_rdy'], [(f'cbuf_g_{k}', 'rdy'), ('seq_su', f'cbr{k}')])]
+        del far
+    m['buses'] = nb + add_b
+    _o4_masters(v, m, [tt, sq])
+    rec['option4'] = dict(
+        removed_instances=removed, removed_buses=gone, added_instances=[i.d() for i in new],
+        added_buses=[(b[0], b[1], b[2], b[3]) for b in add_b], bits=dict(B), repin=O4_REPIN,
+        notes=['tt_c<b> / tt_f<b> / tt_lc<b> / tt_xd / tt_xr / tt_mx / tt_land keep their widths, now on tt_ctlm',
+               'seq_ib / seq_coll / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su',
+               'the KV descriptor (kvd_*) and kv_ok leave the sequencer word for the control tile (o4_kvd / o4_kok); '
+               'seq_d2d keeps its r22k width (not reduced here)',
+               'cbuf stage / tok_start / tpos (o4_cb_ctl) and st_rdy / fault (o4_cb_rdy) have no consumer port in the '
+               'released seq_su / SU RTL yet (the token vehicle prices the buffer as SU ML 7)',
+               'up4 sel words o4_sel_u: the up4 is built with DLY = CLNK + 2 + LNK - CR (closed view DLY 1); its relay '
+               'count here sets CR'])
+
+
+def _o4_masters(v, m, ghosts):
+    inner = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        saved = {}
+        ins = {i.name: i for i in model['insts']}
+        # the inner chain builds (and edits) the removed blocks' masters by name: present them while it runs
+        model['insts'] = model['insts'] + list(ghosts)
+        try:
+            M = inner(model, k, port_bits)
+        finally:
+            model['insts'] = [i for i in model['insts'] if all(i is not g for g in ghosts)]
+        Master = type(next(iter(M.values())))
+        B = O4_BITS
+
+        def mk(name, wh, note):
+            return Master(name, wh[0] - v.SHAVE, wh[1] - v.SHAVE, 7, note)
+        # control tile: VM words S (abut the VM top), die control words E (low), band control W, up4 selects N
+        c = mk('qfd_tt_ctlm', O4_CTLM, 'ot_qfd_tt_ctlm[_i]: tree-top control tile + ME-side controller + program copy '
+               '(cfg qfd_tt_ctlm_a 777.6 x 1,814.4); die pin plan (see r22k.option4.repin)')
+        for p, bits, off in (('xd', 53, 100.0), ('xr', 1, 140.0), ('ld', 16, 549.6), ('mx', 553, 400.0)):
+            c.face(p, bits, 'S', 'M5', off, 2 if bits < 100 else 1)
+        y = 30.0
+        for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']),
+                        ('kvd', B['kvd']), ('kok', 1), ('meok', 1)):
+            c.face(p, bits, 'E', 'M4', y + bits * 0.096 / 2, 2)
+            y += bits * 0.096 + 4.0
+        for b in range(6):
+            c.face(f'c{b}', 343, 'W', 'M4', 80.0 + b * 290.0, 1)
+            c.face(f'f{b}', 107, 'W', 'M4', 80.0 + b * 290.0 + 220.0, 1)
+            c.face(f'lc{b}', 28, 'W', 'M4', 80.0 + b * 290.0 + 260.0, 1)
+        c.face('sel', B['sel'], 'N', 'M5', O4_UP4[0], 2)
+        c.face('uf', 1, 'N', 'M5', O4_UP4[0] + 8.0, 2)
+        c.area('ck', 1, c.w / 2, c.h / 2, 1)
+        c.area('rsi', 1, c.w / 2, c.h / 2 + 12.0, 1)
+        M['qfd_tt_ctlm'] = c
+        # upper tile (closed qfd_tt_up4_b plan: pw / lf W, tt_ty / fault E, sel S)
+        u4 = mk('qfd_tt_up4', O4_UP4, 'ot_qfd_band_upper NL 4 (CLOSED qfd_tt_up4_b-618516521: TT +219.95 / FF +18.95)')
+        cxy = (O4_UP4[0] - 12.0, O4_UP4[1] - 12.0)          # the 2 x 2 block's centre
+        for b in range(6):
+            u4.area(f'pw{b}', 513, cxy[0] - 60.0 + b * 8.0, cxy[1] - 30.0, 2)
+            u4.area(f'lf{b}', 1, cxy[0] - 60.0 + b * 8.0, cxy[1] - 20.0, 2)
+        u4.area('ty', 1538, cxy[0] - 20.0, cxy[1] - 60.0, 2)
+        u4.area('flt', 1, cxy[0] - 4.0, cxy[1] - 4.0, 2)
+        u4.face('sel', B['sel'], 'S', 'M5', O4_UP4[0] / 2, 2)
+        u4.area('ck', 1, u4.w / 2, u4.h / 2, 1)
+        M['qfd_tt_up4'] = u4
+        ug = mk('qfd_tt_up4_g', O4_UP4, 'ot_qfd_band_upper NL 4, tiles 1..3 of the 2 x 2 group (die ports at the group '
+                'centre on tile 0; the in-group fan-out is <= 400 um)')
+        ug.area('ck', 1, ug.w / 2, ug.h / 2, 1)
+        M['qfd_tt_up4_g'] = ug
+        # seq_su: SU words W, snapshots / start N, VM instruction N (west end), d2d / collective S
+        s = mk('qfd_seq_su', O4_SEQ, 'ot_qfd_seq_su_bi (cfg qfd_seq_su_bi_a 518.4 x 518.4)')
+        s.face('su', B['su_iss'], 'W', 'M4', 120.0, 1)
+        s.face('sd', B['su_st'], 'W', 'M4', 260.0, 1)
+        s.face('acc', B['su_acc'], 'W', 'M4', 300.0, 2)
+        for j in range(8):
+            s.face(f'cbc{j}', B['cb_ctl'], 'W', 'M4', 330.0 + j * 18.0, 1)
+            s.face(f'cbr{j}', B['cb_rdy'], 'W', 'M4', 338.0 + j * 18.0, 1)
+        s.face('st', B['me_start'], 'N', 'M5', 300.0, 2)
+        s.face('xs', B['su_snap'], 'N', 'M5', 340.0, 2)
+        s.face('xm', B['me_snap'], 'N', 'M5', 400.0, 2)
+        s.face('ib', 382, 'N', 'M5', 120.0, 1)
+        s.face('dc', 530, 'S', 'M5', 150.0, 1)
+        s.face('dh', 530, 'S', 'M5', 350.0, 1)
+        s.face('dflt', 9, 'S', 'M5', 460.0, 2)
+        s.face('cd', 66, 'E', 'M4', 260.0, 2)
+        s.area('ck', 1, s.w / 2, s.h / 2, 1)
+        s.area('rsi', 1, s.w / 2, s.h / 2 + 12.0, 1)
+        M['qfd_seq_su'] = s
+        # SU: issue / status / accepted count E, constants per group S (over each group's column)
+        su = M['qfd_sp_su64_sfu']
+        for p in ('si', 'sd', 'ca', 'cq'):
+            if p in su.ports:
+                su.ports.pop(p)
+                su.order.remove(p)
+        sui, seq_i = ins['sp_su64_sfu'], ins['seq_su']
+        yc = min(sui.h - 60.0, max(60.0, seq_i.y + seq_i.h / 2 - sui.y))      # facing seq_su across the channel
+        su.face('si', B['su_iss'], 'E', 'M4', yc - 60.0, 1)
+        su.face('sd', B['su_st'], 'E', 'M4', yc + 20.0, 1)
+        su.face('acc', B['su_acc'], 'E', 'M4', yc + 40.0, 2)
+        for j in range(8):
+            col = j % 4
+            su.face(f'ca{j}', B['cb_su_a'], 'S', 'M5', col * O4_CBUF[0] + (40.0 if j < 4 else 120.0), 1)
+            su.face(f'cq{j}', B['cb_su_q'], 'S', 'M5', col * O4_CBUF[0] + (70.0 if j < 4 else 150.0), 1)
+        # constant buffer group (SU side N, far side S, control E)
+        b_ = mk('qfd_su_cbuf_g', O4_CBUF, 'ot_qfd_su_cbuf_g (CLOSED qfd_su_cbuf_g_a-d32ba31e7, re-pin: SU side N)')
+        b_.face('sa', B['cb_su_a'], 'N', 'M5', 50.0, 1)
+        b_.face('sq', B['cb_su_q'], 'N', 'M5', 130.0, 1)
+        b_.face('fa', B['cb_far_a'], 'S', 'M5', 50.0, 1)
+        b_.face('fq', B['cb_far_q'], 'S', 'M5', 130.0, 1)
+        b_.face('ctl', B['cb_ctl'], 'E', 'M4', 80.0, 2)
+        b_.face('rdy', B['cb_rdy'], 'E', 'M4', 130.0, 2)
+        b_.area('ck', 1, b_.w / 2, b_.h / 2, 1)
+        M['qfd_su_cbuf_g'] = b_
+        r_ = mk('qfd_crom_g', O4_CROM, 'ot_qfd_crom_g (CLOSED qfd_crom_g_a-ff3637ce7, re-pin: answer side N)')
+        r_.face('ra', B['cb_far_a'], 'N', 'M5', 50.0, 1)
+        r_.face('rq', B['cb_far_q'], 'N', 'M5', 130.0, 1)
+        r_.area('ck', 1, r_.w / 2, r_.h / 2, 1)
+        M['qfd_crom_g'] = r_
+        # VM: me_mem_ok to the control tile (same port), instruction word on E (seq_su is east of the VM)
+        vmm = M['qfd_sp_vector_memory']
+        if 'ib' in vmm.ports:
+            vmm.ports.pop('ib')
+            vmm.order.remove('ib')
+        vmm.face('ib', 382, 'E', 'M4', 60.0, 1)
+        d2 = M['qfd_d2d_rom']
+        d2.face('pw', B['pw'], 'E', 'M4', 80.0, 2)
+        d2.face('kvd', B['kvd'], 'E', 'M4', 150.0, 1)
+        d2.face('kok', 1, 'E', 'M4', 170.0, 2)
+        cx = M['qfd_clkrx']
+        if 'rso_ctlm' not in cx.ports:
+            cx.area('rso_ctlm', 1, cx.w / 2, cx.h / 2 - 8.0, 1)
+        for name in ('qfd_sp_tree_top', 'qfd_sp_constants_sequencer'):
+            M.pop(name, None)
+        del saved
+        return M
+    v.masters = masters
