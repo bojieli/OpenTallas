@@ -61,6 +61,34 @@ class TransportTest(unittest.TestCase):
         self.assertEqual(peak, 8)
         self.assertEqual(self.root.stat().st_mode & 0o777, 0o700)
 
+    def test_bulk_stream_uses_fresh_connection_under_a_lease(self):
+        # drive-1010: bulk tars through the shared ControlMaster stalled; bulk=True never touches the master
+        with patch.object(T, '_ensure_master', side_effect=AssertionError('mux used for bulk')):
+            with T.command('test-host', bulk=True) as cmd:
+                self.assertIn('ControlPath=none', cmd)
+                self.assertIn('ControlMaster=no', cmd)
+                self.assertEqual(cmd[-1], 'test-host')
+                held = [n for n in range(T.CHANNELS)
+                        if not self._free(self.root / f"{hashlib.sha256(b'test-host').hexdigest()[:20]}.{n}.lease")]
+                self.assertEqual(len(held), 1)
+            with T.command('local', bulk=True) as cmd:
+                self.assertEqual(cmd, ['bash', '-c'])
+
+    def test_source_sync_streams_over_bulk_connection(self):
+        import inspect
+        src = inspect.getsource(C.sync_source)
+        self.assertIn('transport_command(host, bulk=True)', src)
+
+    @staticmethod
+    def _free(path):
+        with open(path, 'a') as f:
+            try:
+                fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return False
+            fcntl.flock(f, fcntl.LOCK_UN)
+            return True
+
     def test_failure_releases_channel_and_reconnects_next_operation(self):
         with patch.object(T, '_ensure_master', side_effect=RuntimeError('ssh: failed')):
             for _ in range(12):

@@ -250,8 +250,13 @@ class ReliabilityTests(unittest.TestCase):
                  stage_idx=0, commit_full="a" * 40, source_synced=True)
         cl.save_job(j)
         with patch.object(cl, "ledger"), patch.object(cl, "log"):
-            cl.cmd_retry(SimpleNamespace(name="race"))
+            cl.cmd_retry(SimpleNamespace(name="race", keep_resume=True))
         self.assertEqual(cl.load_job("race")["status"], "READY")
+        # FRESH-RETRY (48c27d12e): a plain human retry re-syncs (released jobs have no src/ left)
+        cl.save_job(dict(j, status="NEEDS_HUMAN"))
+        with patch.object(cl, "ledger"), patch.object(cl, "log"):
+            cl.cmd_retry(SimpleNamespace(name="race"))
+        self.assertEqual(cl.load_job("race")["status"], "SYNC")
 
     def test_calibration_transport_failure_preserves_completed_stage(self):
         j = dict(self.j, status="RUNNING", host="host", run="/run", stage_idx=0)

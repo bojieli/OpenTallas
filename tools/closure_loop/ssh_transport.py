@@ -76,8 +76,13 @@ def _ensure_master(host, root, key):
 
 
 @contextmanager
-def command(host):
-    """Lease one remote session and yield its argv prefix, or a local shell prefix."""
+def command(host, bulk=False):
+    """Lease one remote session and yield its argv prefix, or a local shell prefix.
+
+    bulk=True (drive-1010 2026-10-10): a bulk stream (source tar, record rsync, checkpoint migration) runs on its own
+    fresh connection, still under one channel lease.  Through the shared ControlMaster six source tars to EPYC3 stalled
+    for 20+ min at 27-42 MB each (git/gzip blocked in write, remote tar idle, the master still serving small ops):
+    one mux connection carries every channel's flow-control window, so bulk channels starve behind it."""
     if host in _LOCAL:
         yield ["bash", "-c"]
         return
@@ -100,7 +105,7 @@ def command(host):
                         break
                 if lease is None:
                     time.sleep(0.05)
-            yield _ensure_master(host, root, key)
+            yield direct_command(host) if bulk else _ensure_master(host, root, key)
         finally:
             if lease is not None:
                 lease.close()

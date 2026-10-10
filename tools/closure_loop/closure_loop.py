@@ -1641,7 +1641,7 @@ def sync_source(j):
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
         ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
                   f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
-        with transport_command(host) as base:
+        with transport_command(host, bulk=True) as base:
             if verified_tar is not None:
                 # Transfer this exact validated tar, not a second git archive.
                 with verified_tar.open("rb") as stream:
@@ -2455,7 +2455,7 @@ def publish(j, metrics):
             isdir = ssh(j["host"], f"test -d {shlex.quote(src)}", timeout=30).returncode == 0
             dst.parent.mkdir(parents=True, exist_ok=True)
             excl = sum((["--exclude", x] for x in r.get("exclude", [])), [])
-            with transport_command(j['host']) as base:
+            with transport_command(j['host'], bulk=True) as base:
                 remote_shell = [] if is_local(j['host']) else ["-e", shlex.join(base[:-1])]
                 if isdir:
                     dst.mkdir(parents=True, exist_ok=True)
@@ -4604,7 +4604,7 @@ def migrate_checkpoint(j, dest):
     ssh(dest, f"mkdir -p {run}", timeout=60, check=True)
     with ExitStack() as stack:
         # Stable order avoids opposite-direction migrations deadlocking channel leases.
-        commands = {h: stack.enter_context(transport_command(h)) for h in sorted({src, dest})}
+        commands = {h: stack.enter_context(transport_command(h, bulk=True)) for h in sorted({src, dest})}
         read = shlex.join(commands[src] + [f"tar -C {shlex.quote(run)} -cf - ."])
         write = shlex.join(commands[dest] + [f"tar -C {shlex.quote(run)} -xf -"])
         p = subprocess.run(["bash", "-o", "pipefail", "-c", f"{read} | {write}"],
