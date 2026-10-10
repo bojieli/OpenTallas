@@ -124,7 +124,8 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 #elTable td.pu div,#elTable td.ev div{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #elTable td.en{text-align:right}
 #elTable td.enm{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#elTable td.est{max-width:120px}#elTable td.est .st{font-size:10.5px}
+#elTable td.est{max-width:none;white-space:nowrap}#elTable td.est .st{max-width:none;overflow:visible}
+#elTable td.en{width:1%;padding:3px 5px}#elTable th.nu{white-space:normal;width:1%;min-width:0;padding:5px 5px;line-height:1.15}
 #elTable td.pu{min-width:160px;max-width:300px}#elTable td.qu{min-width:0;max-width:220px}
 #elTable td.eneg{color:var(--hot)}#elTable td.epos{color:var(--ok)}
 #elTable td.ev{min-width:320px}
@@ -816,7 +817,8 @@ function renderElements() {
   const k = EF.sort === 'category' ? 'cix' : EF.sort, dir = EF.dir;
   const v = x => x == null ? -Infinity : x;
   vis.sort((a, b) => (EF.grp ? tg.indexOf(a.target) - tg.indexOf(b.target) : 0) || ((v(a[k]) > v(b[k])) - (v(a[k]) < v(b[k]))) * dir || a.cix - b.cix || a.element.localeCompare(b.element));
-  setHTML($('eHead'), ECOLS.map(([c, t]) => `<th data-c="${c}" class="${EF.sort === c ? 's' + (EF.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join(''));
+  const NUMC = new Set(['tt', 'ff', 'ss', 'drc', 'die', 'util', 'live', 'failed', 'jobs']);
+  setHTML($('eHead'), ECOLS.map(([c, t]) => `<th data-c="${c}" class="${(NUMC.has(c) ? 'nu ' : '') + (EF.sort === c ? 's' + (EF.dir < 0 ? ' d' : '') : '')}">${t}</th>`).join(''));
   const items = []; let g = null;
   const tf = t => t ? new Date(t * 1000).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) : '';
   for (const r of vis) {
