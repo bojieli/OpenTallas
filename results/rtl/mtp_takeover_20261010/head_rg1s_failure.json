@@ -1,0 +1,13 @@
+{
+  "job": "mtp-head340-mkdrv-rg1s-21471e786-tc",
+  "source_commit": "21471e786ab19f1fb0440ec30eee931060a7459e",
+  "status": "EARLY_FAIL_HOLD",
+  "stage": "route",
+  "recorded_at": "2026-10-10T05:13:58-07:00",
+  "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -67.5 ps (start -94.76), 6100 it / 7362 buffers, 11283 endpoints in margin, 0.3 h in step, HM guard present",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-data/claude/closure-loop/mtp-head340-mkdrv-rg1s-21471e786-tc",
+  "scope": "Immutable predecessor failure; full K256 production driver. No signoff or full340 die closure.",
+  "successor": "mtp-head340-mkdrv-pin1b-b0bd92a8e-tc",
+  "source_sha_preserved": true
+}
