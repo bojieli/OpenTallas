@@ -27,7 +27,7 @@ if DS_TOK:
     tok = Tokenizer.from_file(DS_TOK[0])
 
 def clean(s, n=None):
-    s = (s or '').replace(SANDBOX, '~/sandbox/').replace('/home/ubuntu/landing-scratch', '~/scratch')
+    s = (s or '').replace(SANDBOX, '~/sandbox/').replace('/dev/shm/genui3/', '~/sandbox/').replace('/home/ubuntu/landing-scratch', '~/scratch')
     if n and len(s) > n: s = s[:n] + '\n…'
     return s
 

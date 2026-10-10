@@ -1,19 +1,5 @@
-#!/usr/bin/env python3
-"""sql - query sales.db.   ./sql .tables | ./sql ".schema TABLE" | ./sql "SELECT ..."   (read-only; max 200 rows printed; errors are printed)"""
-import sqlite3, sys, time, os
-db = sqlite3.connect('file:' + os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sales.db') + '?mode=ro', uri=True)
-q = ' '.join(sys.argv[1:]).strip() or sys.stdin.read().strip()
-try:
-    if q == '.tables':
-        for (n,) in db.execute("select name from sqlite_master where type='table' order by name"): print(n, db.execute(f'select count(*) from {n}').fetchone()[0], 'rows')
-        sys.exit(0)
-    if q.startswith('.schema'):
-        a = q.split()[1:]
-        for (s,) in db.execute("select sql from sqlite_master where sql is not null" + (" and tbl_name=?" if a else ""), a): print(s + ';')
-        sys.exit(0)
-    t0 = time.time(); cur = db.execute(q); rows = cur.fetchmany(201); cols = [d[0] for d in cur.description or []]
-    print('\t'.join(cols))
-    for r in rows[:200]: print('\t'.join('' if v is None else (f'{v:.2f}' if isinstance(v, float) else str(v)) for v in r))
-    print(f'({len(rows[:200])}{"+" if len(rows) > 200 else ""} rows, {time.time() - t0:.2f} s)')
-except sqlite3.Error as e:
-    print('SQL error:', e); sys.exit(1)
+#!/bin/bash
+# sql - query sales.db through the warm query server.  ./sql .tables | ./sql ".schema TABLE" | ./sql .indexes | ./sql "SELECT ..."
+q="$*"; [ -z "$q" ] && q="$(cat)"
+exec 3<>/dev/tcp/127.0.0.1/17655 || { echo "sql: query server not running"; exit 2; }
+printf '%s\0' "$q" >&3; cat <&3; exec 3<&-

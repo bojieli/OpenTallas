@@ -1,4 +1,5 @@
-"""Synthetic but realistic sales database: regions, sales_reps, customers, products, orders (~1M), order_items."""
+"""Synthetic but realistic sales database: regions, sales_reps, customers, products, orders (~1M), order_items.
+Then run fix_sales_db.py (realistic quotas, consistent dates, covering indexes, mart tables)."""
 import sqlite3, random, math, datetime, sys, os
 random.seed(20261009)
 path = sys.argv[1]
