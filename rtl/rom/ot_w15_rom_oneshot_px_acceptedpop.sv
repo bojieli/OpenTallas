@@ -55,6 +55,14 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     parameter integer FPLAT    = 0,            // 1: ot_hdc_fp32_add_lat #(ADD_LAT) (3..7 stages, bit-identical to the fast add)
     parameter integer FIFO_SRAM = 0,           // 1: receive FIFOs in 1R1W SRAM macros (rtl/link/ot_fifo_sram_fwft.sv)
     parameter integer SRAM_MACRO = 1,          //    macro kind (0 64x512, 1 256x256, 2 128x256); DEPTH/2 <= its words
+    // PULL (ds-1010 2026-10-10, opt-in, FIFO_SRAM only): each (source, parity) SRAM FIFO streams its head into a small
+    // central landing queue over a registered credit link (ot_link_credit tx DFREE / rx WFREE, PULL_D deep), so the pop
+    // decision (ppar -> per-source nonempty -> all_ne -> pop) reads and pops only central flops.  CE split3cra pre-route
+    // -794 ps = ppar -> 8 FIFOs spread over the 680 um tile -> all_ne -> pop -> back to every FIFO's 547-bit output
+    // buffer enables: ~1,000 ps of wire across the tile in one cycle.  Each FIFO now pops itself (local credit only).
+    // +2 cycles a record from FIFO head to the decision; full rate while the landing queue covers the credit loop.
+    parameter integer PULL     = 0,
+    parameter integer PULL_D   = 4,
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
     parameter integer RB       = (N > 1) ? $clog2(N) : 1
@@ -150,9 +158,31 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
                 assign push[F] = pd_ || pr_;
                 assign clash[F] = pd_ && pr_;
                 if (FIFO_SRAM != 0) begin : g_sram
+                    if (PULL != 0) begin : g_pull
+                        wire fhv, f_rdy, lv, lc; wire [PW-1:0] fhd, ld;
+                        ot_fifo_sram_fwft #(.W(PW), .DEPTH(PD), .MACRO(SRAM_MACRO)) u_f (
+                            .clk(clk), .rst_n(rst_n), .push(push[F]), .wdata(rec), .pop(fhv && f_rdy),
+                            .hv(fhv), .head(fhd), .ovf());
+                        ot_link_credit_tx #(.W(PW), .CRED(PULL_D), .DFREE(1)) u_pt (.clk(clk), .rst_n(rst_n),
+                            .i_valid(fhv), .i_ready(f_rdy), .i_data(fhd), .l_valid(lv), .l_data(ld), .l_credit(lc));
+`ifdef OT_W15_PULL_MUT
+                        // bench mutant: the landing queue returns its credit on arrival instead of on pop (overruns)
+                        wire lc_m;
+                        ot_link_credit_rx #(.W(PW), .DEPTH(PULL_D), .OREG(0), .WFREE(1)) u_pr (.clk(clk), .rst_n(rst_n),
+                            .l_valid(lv), .l_data(ld), .l_credit(lc_m), .o_valid(hvf[F]), .o_ready(pop && ppar == q),
+                            .o_data(hd[F]), .fault());
+                        reg lc_r; always @(posedge clk or negedge rst_n) if (!rst_n) lc_r <= 1'b0; else lc_r <= lv;
+                        assign lc = lc_r;
+`else
+                        ot_link_credit_rx #(.W(PW), .DEPTH(PULL_D), .OREG(0), .WFREE(1)) u_pr (.clk(clk), .rst_n(rst_n),
+                            .l_valid(lv), .l_data(ld), .l_credit(lc), .o_valid(hvf[F]), .o_ready(pop && ppar == q),
+                            .o_data(hd[F]), .fault());
+`endif
+                    end else begin : g_direct
                     ot_fifo_sram_fwft #(.W(PW), .DEPTH(PD), .MACRO(SRAM_MACRO)) u_f (
                         .clk(clk), .rst_n(rst_n), .push(push[F]), .wdata(rec), .pop(pop && ppar == q),
                         .hv(hvf[F]), .head(hd[F]), .ovf());
+                    end
                 end else begin : g_flop
                     reg [PW-1:0] m [0:PD-1];
                     reg [DB-1:0] wp, rp;

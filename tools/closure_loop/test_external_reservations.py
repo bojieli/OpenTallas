@@ -24,11 +24,11 @@ class ExternalReservationTests(unittest.TestCase):
             self.assertTrue(fleet.fits('remote', 16, 384)[0])
             ok, why = fleet.fits('remote', 16, 385)
             self.assertFalse(ok)
-            self.assertIn("MemAvailable 400 GB < 385+16", why)
+            self.assertIn("MemAvailable 400 GB - snapshot launches 0 GB < 385+16", why)  # d67774c3c launch ledger
 
     def test_live_command_identity_has_measured_remaining_peak(self):
         cfg = dict(name='remote', base='/scratch', external_jobs=[dict(name='large', pid=os.getpid(),
-                   command_match='unittest', peak_ram_gb=250)])
+                   command_match=os.path.basename(sys.executable), peak_ram_gb=250)])
         fleet = cl.Fleet()
         def remote(host, command, **kwargs):
             code = shlex.split(command.split('; python3 -c ', 1)[1])[0]

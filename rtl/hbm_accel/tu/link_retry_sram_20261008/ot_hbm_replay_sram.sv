@@ -13,6 +13,15 @@ module ot_hbm_replay_sram #(
  // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
  // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
  parameter NOEPOCH=0,
+ // DECPIPE=1 (sys-takeover 2026-10-10, opt-in): the SECDED decoder's column match gets its own register (DPIPE); +1 read edge.
+ parameter DECPIPE=0,
+ // ADDRREP=1 (sys-takeover 2026-10-10, opt-in): every macro gets its own write / read enable and address flops
+ // (ot_sc_rep_ff, keep_hierarchy): collvmpub_fix5s TT -408 was ONE merged wa register driving the macros of every store
+ // across the block (517 ps of wire).  Same edge as wa / wp; values identical.
+ parameter ADDRREP=0,
+ // WDREP=1 (ds-1010 2026-10-10, opt-in): every bank gets its own SECDED encoder (its own registered codeword beside its
+ // macros) instead of one encoder register driving the write data of every macro of the store.  0 cycles.
+ parameter WDREP=0,
  parameter AW=$clog2(DEPTH), NB=DEPTH/128,
  parameter BW=NB>1?$clog2(NB):1,
  parameter RW=NOEPOCH?W:W+SW+EW, NC=(RW+255)/256, CW=NC*266, NM=(CW+255)/256
@@ -42,16 +51,47 @@ module ot_hbm_replay_sram #(
  for(genvar b=0;b<NB;b=b+1) begin:g_bank
   localparam BANK_INDEX=b;
   wire[NM*256-1:0] raw;
+  wire[NM*256-1:0] bank_d;
+  if(WDREP!=0) begin:g_wenc
+   wire[CW-1:0] enc_b;
+   for(genvar c=0;c<NC;c=c+1) begin:g_enc
+`ifdef OT_REPLAY_MUT_WDREP
+    // mutant: bank 1's own encoder sees data bit 0 inverted (a consistent but wrong codeword: only an exact data compare sees it)
+    wire[255:0] dm=record_in[c*256+:256]^{255'd0,BANK_INDEX==1 && c==0};
+    ot_secded_enc #(.K(256),.R(10),.MUT(MUT)) u_enc(.clk(clk),.d(dm),.q(enc_b[c*266+:266]));
+`else
+    ot_secded_enc #(.K(256),.R(10),.MUT(MUT)) u_enc(.clk(clk),.d(record_in[c*256+:256]),.q(enc_b[c*266+:266]));
+`endif
+   end
+   assign bank_d={{(NM*256-CW){1'b0}},enc_b};
+  end else begin:g_wsh
+   assign bank_d=macro_d;
+  end
   for(genvar m=0;m<NM;m=m+1) begin:g_macro
+   wire m_rce,m_wce;wire[6:0] m_ra,m_wa;
+   if(ADDRREP!=0) begin:g_rep
+    ot_sc_rep_ff u_rce(.clk(clk),.rst_n(rst_n),.d(r_valid && (NB==1 || r_seq[AW-1:7]==BANK_INDEX)),.q(m_rce));
+`ifdef OT_REPLAY_MUT_ADDRREP
+    ot_sc_rep_ff u_wce(.clk(clk),.rst_n(rst_n),.d(w_valid && (NB==1 || w_seq[AW-1:7]!=BANK_INDEX)),.q(m_wce));   // mutant: wrong bank
+`else
+    ot_sc_rep_ff u_wce(.clk(clk),.rst_n(rst_n),.d(w_valid && (NB==1 || w_seq[AW-1:7]==BANK_INDEX)),.q(m_wce));
+`endif
+    for(genvar k=0;k<7;k=k+1) begin:g_a
+     ot_sc_rep_ff u_ra(.clk(clk),.rst_n(rst_n),.d(r_seq[k]),.q(m_ra[k]));
+     ot_sc_rep_ff u_wa(.clk(clk),.rst_n(rst_n),.d(w_seq[k]),.q(m_wa[k]));
+    end
+   end else begin:g_shr
+    assign m_rce=rp && rb==BANK_INDEX; assign m_wce=wp && wb==BANK_INDEX; assign m_ra=ra[6:0]; assign m_wa=wa[6:0];
+   end
    ot_sram_1r1w_128x256_m1_r2c2 u_mem(
-    .clk(clk),.r_ce_in(rp && rb==BANK_INDEX),.r_addr_in(ra[6:0]),.rd_out(raw[m*256+:256]),
-    .w_ce_in(wp && wb==BANK_INDEX),.w_addr_in(wa[6:0]),.wd_in(macro_d[m*256+:256]),
+    .clk(clk),.r_ce_in(m_rce),.r_addr_in(m_ra),.rd_out(raw[m*256+:256]),
+    .w_ce_in(m_wce),.w_addr_in(m_wa),.wd_in(bank_d[m*256+:256]),
     .w_mask_in({256{1'b1}}),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
   end
   always @(posedge clk) captured[b]<=raw;
  end
  reg[3:0] vp;
- reg[SW-1:0] seqp[0:5];reg[EW-1:0] ep[0:5];
+ reg[SW-1:0] seqp[0:6];reg[EW-1:0] ep[0:6];
  reg[NM*256-1:0] msel;
  always @(posedge clk) msel<=captured[b2];
  always @(posedge clk or negedge rst_n) begin
@@ -61,23 +101,44 @@ module ot_hbm_replay_sram #(
  always @(posedge clk) begin
   wa<=w_seq[AW-1:0];ra<=r_seq[AW-1:0];b1<=rb;b2<=b1;
   seqp[0]<=r_seq;ep[0]<=r_session;
-  for(integer t=1;t<6;t=t+1) begin seqp[t]<=seqp[t-1];ep[t]<=ep[t-1];end
+  for(integer t=1;t<7;t=t+1) begin seqp[t]<=seqp[t-1];ep[t]<=ep[t-1];end
  end
  wire[NC*256-1:0] corrected;
  wire[NC-1:0] valid,ce,ue;
  for(genvar c=0;c<NC;c=c+1) begin:g_dec
-  ot_secded_dec #(.K(256),.R(10)) u_dec(.clk(clk),.rst_n(rst_n),.v(MUXREG?vp[3]:vp[2]),
+  ot_secded_dec #(.K(256),.R(10),.DPIPE(DECPIPE)) u_dec(.clk(clk),.rst_n(rst_n),.v(MUXREG?vp[3]:vp[2]),
    .w(MUXREG?msel[c*266+:266]:captured[b2][c*266+:266]),.ov(valid[c]),.d(corrected[c*256+:256]),
    .ce(ce[c]),.ue(ue[c]),.n_ce(),.n_ue());
  end
  wire[SW-1:0] stored_seq=corrected[W+:SW];
  wire[EW-1:0] stored_epoch=corrected[W+SW+:EW];
- assign o_valid=&valid;
- wire[SW-1:0] seq_o=MUXREG?seqp[5]:seqp[4];wire[EW-1:0] ep_o=MUXREG?ep[5]:ep[4];
- assign o_ue=o_valid && ((|ue) || (!NOEPOCH && (stored_seq!=seq_o || stored_epoch!=ep_o)));
- assign o_ce=o_valid && |ce;
- assign o_data=o_ue ? {W{1'b0}}:corrected[W-1:0];
- assign o_seq=seq_o;assign o_session=ep_o;
+ localparam integer SQ=4+(MUXREG!=0)+(DECPIPE!=0);
+ wire[SW-1:0] seq_o=seqp[SQ];wire[EW-1:0] ep_o=ep[SQ];
+ wire d_valid=&valid;
+ wire d_ue=d_valid && ((|ue) || (!NOEPOCH && (stored_seq!=seq_o || stored_epoch!=ep_o)));
+ wire d_ce=d_valid && |ce;
+ // MUXREG>=2 (ds-1010 2026-10-10, opt-in): OREG -- the response (valid, UE verdict incl. the stored seq/epoch compare,
+ // CE, corrected payload, seq, session) is registered before it leaves the store; +1 read edge.  iqs4-a TT -176.85 was
+ // seqp[5] -> 28-bit stored seq/epoch compare -> o_ue -> 545-bit zero mask + the client's head write enables in one
+ // edge.  The UE zero mask is now driven by a flop.  Clients are latency insensitive (reserved / single-outstanding).
+ if(MUXREG>=2) begin:g_oreg
+  reg ov_q,ue_q,ce_q;reg[W-1:0] d_q;reg[SW-1:0] s_q;reg[EW-1:0] e_q;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n) begin ov_q<=0;ue_q<=0;ce_q<=0; end
+   else begin ov_q<=d_valid;ue_q<=d_ue;ce_q<=d_ce; end
+  always @(posedge clk) begin d_q<=corrected[W-1:0];s_q<=seq_o;e_q<=ep_o; end
+  assign o_valid=ov_q;assign o_ue=ue_q;assign o_ce=ce_q;
+`ifdef OT_TU_OREG_MUT
+  assign o_data=ue_q ? {W{1'b0}}:corrected[W-1:0];        // mutant: payload not registered with its valid (one edge skew)
+`else
+  assign o_data=ue_q ? {W{1'b0}}:d_q;
+`endif
+  assign o_seq=s_q;assign o_session=e_q;
+ end else begin:g_ocomb
+  assign o_valid=d_valid;assign o_ue=d_ue;assign o_ce=d_ce;
+  assign o_data=d_ue ? {W{1'b0}}:corrected[W-1:0];
+  assign o_seq=seq_o;assign o_session=ep_o;
+ end
  initial begin
   if(DEPTH<128 || DEPTH%128 || (DEPTH&(DEPTH-1)) || AW>SW) $fatal(1,"invalid SRAM replay depth");
  end

@@ -142,7 +142,8 @@ module dsfd_coll_ce #(
     parameter integer QPIPE = 0,
 `endif
     parameter integer OD = 16,
-    parameter integer CR = 0   // redesign-ds: 1 = every lane / seam face is a credit link (lane tile LCR, cb / ct CR)
+    parameter integer CR = 0,  // redesign-ds: 1 = every lane / seam face is a credit link (lane tile LCR, cb / ct CR)
+    parameter integer PULL = `ifdef OT_S81PH_COLL_PULL 1 `else 0 `endif   // ds-1010: engine FIFO -> central landing queues
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rs,
@@ -220,7 +221,7 @@ module dsfd_coll_ce #(
       end
     end endgenerate
     wire c_bw_v; wire [2099:1] c_bw_d;
-    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD)) u_core (.clk(clk), .rst_n(rst_n),
+    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD), .EPULL(PULL)) u_core (.clk(clk), .rst_n(rst_n),
         .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r), .ts(3'd0), .t_vm(), .fault(), .rank(), .eng_en(),
         .x_lo_v(x_lo_v), .x_lo_r(x_lo_r), .x_lo_d(x_lo_d), .x_lo_l(x_lo_l),
         .x_li_v(x_li_v), .x_li_r(x_li_r), .x_li_d(x_li_d), .x_li_l(x_li_l), .x_lflt(flt_r),

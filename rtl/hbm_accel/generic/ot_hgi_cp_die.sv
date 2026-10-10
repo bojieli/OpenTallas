@@ -10,10 +10,17 @@
 //     ux_* ports (bound when hgi-adapters lands them; a record for such a unit waits: fail-closed);
 //   * the config station bus to the units that decode static MD fields (coll: word 46);
 //   * VM status: an uncorrectable VM error / VM fault freezes dispatch (the CP halts; recovery = drained reset).
+//   * MTP=1 (hgi-1010 2026-10-10; decision 3 of 10-09, stage B): the MTP backend translator ot_hgi_mtp_xlate lives here.
+//     Its native-operation side is the x_* ports (the MX1 MTP collar's t_backend / f_backend / f_am); its doorbells
+//     {entry 3 KERNEL, kind, G26 L' x kstride} share the one doorbell station with the host (the host pulse wins a tie,
+//     the translator holds its valid), and the completion of a translator-launched job returns to the translator, not
+//     the loader.  Kernel entries / kstride = the committed MD words 16-26 / 49.  MTP=0: x_* unused, as before.
 module ot_hgi_cp_die #(
-    parameter integer RW = 512,
+    parameter integer RW = 4096,       // 64 KB record ring (hgi-1010: DFlash verify bodies are 39.6 KB; 512 = the old 8 KB)
     parameter integer USE_MACRO = 1,
-    parameter integer MUT = 0          // bench mutant: 1 VM read returns the neighbouring word
+    parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
+    parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports)
+    parameter integer FQCR = 4         // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -50,7 +57,25 @@ module ot_hgi_cp_die #(
     input  wire [15:0]   ux_rdy,
     input  wire [15:0]   ux_done,
     input  wire [15:0]   ux_fault,
-    input  wire          wr_quiet
+    input  wire          wr_quiet,
+    // MTP=1: native DSpark operations (MX1 collar backend side) and the merged argmax ids
+    input  wire          x_cmd_v,
+    output wire          x_cmd_ready,
+    input  wire [200:0]  x_cmd,
+    input  wire [31:0]   x_cmd_job,
+    input  wire [3:0]    x_cmd_gen,
+    input  wire [31:0]   x_cmd_seq,
+    output wire          x_cpl_v,
+    input  wire          x_cpl_ready,
+    output wire [31:0]   x_cpl_job,
+    output wire [3:0]    x_cpl_gen,
+    output wire [31:0]   x_cpl_seq,
+    output wire          x_cpl_fault,
+    output wire          x_am_v,
+    output wire [16:0]   x_am_idx,
+    output wire          x_drained_ready,
+    input  wire          x_ext_fault,
+    input  wire [16:0]   x_noise
 );
     // ---------------------------------------------------------------- loader link fields
     wire        cfg_we = lcp[0];      wire [5:0] cfg_addr = lcp[6:1];   wire [63:0] cfg_wdata = lcp[70:7];
@@ -66,7 +91,12 @@ module ot_hgi_cp_die #(
     wire cpl_tokx; wire cfg_loaded; wire [2:0] cfg_err; wire [63:0] cfg_cp_act;
     reg  [15:0] u_rdy, u_done, u_fault;
     reg  db_hold; reg [79:0] db_q;                       // one doorbell station
-    reg  [2:0] fq_cr; reg [6:0] fq_in;                  // F5: fetch credits (the loader's 4-entry queue) / sectors in flight (<= 48)
+    reg  [3:0] db_k; reg [31:0] db_lo; reg db_x;         // its kernel / G26 offset / translator-owned flag
+    reg  x_run;                                          // the running job is the translator's
+    wire [11*32-1:0] md_kent; wire [31:0] md_kstride;
+    wire xdb_v, xdb_rdy; wire [17:0] xdb_tok; wire [19:0] xdb_pos; wire [31:0] xdb_job, xdb_off, xdb_loff;
+    wire [3:0] xdb_gen, xdb_kind; wire [1:0] xdb_ent;
+    reg  [4:0] fq_cr; reg [6:0] fq_in;                  // F5: fetch credits (the loader's 4-entry queue) / sectors in flight (<= 48)
     reg  cpl_hold;                                       // completion station: waits for the loader's ack
     reg  vr_busy, vr_rv; reg [31:0] vr_rd; reg [2:0] vr_w;
     reg  [3:0] credit;                                   // {argmax, idx, quant, coll}
@@ -78,13 +108,34 @@ module ot_hgi_cp_die #(
         .cmd_wdata(cfg_wdata), .units_busy(units_busy), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded), .cfg_err(cfg_err),
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),
-        .db_gen(db_q[73:70]), .db_entry(db_q[75:74]), .db_ncol(db_q[79:76]), .db_kernel(4'd0),
-        .f_req_v(f_req_v), .f_req_rdy(fq_cr != 3'd0 && fq_in < 7'd48), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
+        .db_gen(db_q[73:70]), .db_entry(db_q[75:74]), .db_ncol(db_q[79:76]), .db_kernel(db_k), .db_loff(MUT == 2 ? 32'd0 : db_lo),
+        .md_kent(md_kent), .md_kstride(md_kstride),
+        .f_req_v(f_req_v), .f_req_rdy(fq_cr != 5'd0 && fq_in < 7'd48), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
         .vr_v(vr_v), .vr_rdy(!vr_busy), .vr_addr(vr_addr), .vr_rsp_v(vr_rv), .vr_rsp_data(vr_rd),
         .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n), .d_pos1(d_pos1),
         .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault), .wr_quiet(wr_quiet),
-        .cpl_v(cpl_v), .cpl_rdy(!cpl_hold), .cpl_token(cpl_token), .cpl_pos(cpl_pos), .cpl_job(cpl_job),
+        .cpl_v(cpl_v), .cpl_rdy(!cpl_hold || x_run), .cpl_token(cpl_token), .cpl_pos(cpl_pos), .cpl_job(cpl_job),
         .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles), .cpl_tokx(cpl_tokx));
+    // ---------------------------------------------------------------- MTP backend translator (MTP=1)
+    generate if (MTP) begin : g_mtp
+        ot_hgi_mtp_xlate u_xlate (.clk(clk), .rst_n(rst_n), .external_fault(x_ext_fault), .backend_quiescent(!units_busy),
+            .kent(md_kent), .kstride(md_kstride), .noise_token(x_noise),
+            .cmd_v(x_cmd_v), .cmd_ready(x_cmd_ready), .cmd(x_cmd), .cmd_job(x_cmd_job), .cmd_generation(x_cmd_gen),
+            .cmd_sequence(x_cmd_seq), .cpl_v(x_cpl_v), .cpl_ready(x_cpl_ready), .cpl_job(x_cpl_job),
+            .cpl_generation(x_cpl_gen), .cpl_sequence(x_cpl_seq), .cpl_fault(x_cpl_fault), .am_v(x_am_v), .am_idx(x_am_idx),
+            .drained_ready(x_drained_ready),
+            .db_v(xdb_v), .db_rdy(xdb_rdy), .db_token(xdb_tok), .db_pos(xdb_pos), .db_job(xdb_job), .db_gen(xdb_gen),
+            .db_entry(xdb_ent), .db_off(xdb_off), .db_kind(xdb_kind), .db_loff(xdb_loff),
+            .c_v(cpl_v && x_run), .c_rdy(), .c_token(cpl_token), .c_pos(cpl_pos), .c_job(cpl_job), .c_gen(cpl_gen),
+            .c_status(cpl_status), .c_tokx(cpl_tokx));
+    end else begin : g_nomtp
+        assign x_cmd_ready = 1'b0; assign x_cpl_v = 1'b0; assign x_cpl_job = 32'd0; assign x_cpl_gen = 4'd0;
+        assign x_cpl_seq = 32'd0; assign x_cpl_fault = 1'b0; assign x_am_v = 1'b0; assign x_am_idx = 17'd0;
+        assign x_drained_ready = 1'b1; assign xdb_v = 1'b0; assign xdb_tok = 18'd0; assign xdb_pos = 20'd0;
+        assign xdb_job = 32'd0; assign xdb_gen = 4'd0; assign xdb_ent = 2'd0; assign xdb_off = 32'd0;
+        assign xdb_kind = 4'd0; assign xdb_loff = 32'd0;
+    end endgenerate
+    assign xdb_rdy = !db_hold && !l_db_v;                // the host pulse wins a tie; the translator holds its valid
     // ---------------------------------------------------------------- unit credits and dispatch packing
     always @* begin
         u_rdy = ux_rdy & ~RECU & {16{!halt}};
@@ -111,7 +162,7 @@ module ot_hgi_cp_die #(
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1819'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
             sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 704'd0; hc_rec <= 939'd0;
-            db_hold <= 1'b0; fq_cr <= 3'd4; fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
+            db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
         end else begin
             // dispatch (the bus carries one valid edge per record)
@@ -141,12 +192,18 @@ module ot_hgi_cp_die #(
             else if (hc_ret[1] || hc_ret[2]) credx[5] <= 1'b1;
             if (vmstat[18] || vmstat[17] || vmstat[16]) halt <= 1'b1;
             // doorbell station
-            if (l_db_v && !db_hold) begin db_hold <= 1'b1; db_q <= {l_ncol, l_ent, l_gen, l_job, l_pos, l_tok}; end
+            if (l_db_v && !db_hold) begin
+                db_hold <= 1'b1; db_q <= {l_ncol, l_ent, l_gen, l_job, l_pos, l_tok}; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0;
+            end else if (xdb_v && xdb_rdy) begin               // MTP: one KERNEL launch (ncol 1)
+                db_hold <= 1'b1; db_q <= {4'd1, xdb_ent, xdb_gen, xdb_job, xdb_pos, xdb_tok}; db_k <= xdb_kind;
+                db_lo <= xdb_loff; db_x <= 1'b1;
+            end
             cpl[0] <= 1'b0;
-            if (db_hold && db_rdy) begin db_hold <= 1'b0; cpl[0] <= 1'b1; end          // db_taken
-            // completion station
+            if (db_hold && db_rdy) begin db_hold <= 1'b0; cpl[0] <= !db_x; x_run <= db_x; end   // db_taken (host only)
+            // completion station (a translator job's completion is the translator's, consumed the edge it is valid)
             cpl[1] <= 1'b0;
-            if (cpl_v && !cpl_hold) begin
+            if (cpl_v && x_run) x_run <= 1'b0;
+            else if (cpl_v && !cpl_hold) begin
                 cpl_hold <= 1'b1; cpl[1] <= 1'b1;
                 cpl[112:2] <= {cpl_tokx, cpl_cycles, cpl_status, cpl_gen, cpl_job, cpl_pos, cpl_token};
             end
@@ -156,9 +213,9 @@ module ot_hgi_cp_die #(
             // F5: a request leaves on a credit (the loader's queue slot), the slot returns on the loader's f_req_ack (the
             // memory lane took it), not on the data; sectors return in order, at most 48 in flight (the sequencer's NOS)
             begin : fetch
-                reg snd; snd = f_req_v && fq_cr != 3'd0 && fq_in < 7'd48;
+                reg snd; snd = f_req_v && fq_cr != 5'd0 && fq_in < 7'd48;
                 if (snd) begin cpl[113] <= 1'b1; cpl[153:114] <= f_req_addr; end
-                fq_cr <= fq_cr - {2'd0, snd} + {2'd0, l_freq_ack};
+                fq_cr <= fq_cr - {4'd0, snd} + {4'd0, l_freq_ack};
                 fq_in <= fq_in + {6'd0, snd} - {6'd0, l_frsp_v};
             end
             cpl[221:154] <= {cfg_cp_act, cfg_err, cfg_loaded};

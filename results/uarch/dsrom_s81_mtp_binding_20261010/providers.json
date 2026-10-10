@@ -1,0 +1,447 @@
+[
+ {
+  "kind": "HE",
+  "stage": "mtp.0",
+  "dies": [
+   "P.k0",
+   "P.k1",
+   "P.k2",
+   "P.k3"
+  ],
+  "banks": 8,
+  "words_per_bank": 15360,
+  "useful_word_bits": 256,
+  "physical_leaf_depth": 4096,
+  "leaves": 32,
+  "declarations": [
+   {
+    "alias": "hc_attn_fn",
+    "tensor": "mtp.0.hc_attn_fn",
+    "bytes": 1966080,
+    "rows": 24,
+    "K": 20480
+   },
+   {
+    "alias": "hc_ffn_fn",
+    "tensor": "mtp.0.hc_ffn_fn",
+    "bytes": 1966080,
+    "rows": 24,
+    "K": 20480
+   }
+  ],
+  "replicated_per_rank": true,
+  "template": "S81 L0 HE provider (providers.json kind HE layer 0)"
+ },
+ {
+  "kind": "CROM",
+  "stage": "mtp.0",
+  "dies": [
+   "P.k0",
+   "P.k1",
+   "P.k2",
+   "P.k3"
+  ],
+  "banks": 1,
+  "words_per_bank": 800,
+  "useful_word_bits": 256,
+  "physical_leaf_depth": 4096,
+  "leaves": 1,
+  "declarations": [
+   {
+    "alias": "hc_attn_scale",
+    "tensor": "mtp.0.hc_attn_scale",
+    "dtype": "F32",
+    "elements": 3,
+    "bytes": 12
+   },
+   {
+    "alias": "hc_attn_base",
+    "tensor": "mtp.0.hc_attn_base",
+    "dtype": "F32",
+    "elements": 24,
+    "bytes": 96
+   },
+   {
+    "alias": "hc_ffn_scale",
+    "tensor": "mtp.0.hc_ffn_scale",
+    "dtype": "F32",
+    "elements": 3,
+    "bytes": 12
+   },
+   {
+    "alias": "hc_ffn_base",
+    "tensor": "mtp.0.hc_ffn_base",
+    "dtype": "F32",
+    "elements": 24,
+    "bytes": 96
+   },
+   {
+    "alias": "attn_norm.weight",
+    "tensor": "mtp.0.attn_norm.weight",
+    "dtype": "BF16",
+    "elements": 5120,
+    "bytes": 10240
+   },
+   {
+    "alias": "ffn_norm.weight",
+    "tensor": "mtp.0.ffn_norm.weight",
+    "dtype": "BF16",
+    "elements": 5120,
+    "bytes": 10240
+   },
+   {
+    "alias": "attn.q_norm.weight",
+    "tensor": "mtp.0.attn.q_norm.weight",
+    "dtype": "BF16",
+    "elements": 1280,
+    "bytes": 2560
+   },
+   {
+    "alias": "attn.kv_norm.weight",
+    "tensor": "mtp.0.attn.kv_norm.weight",
+    "dtype": "BF16",
+    "elements": 512,
+    "bytes": 1024
+   },
+   {
+    "alias": "attn.attn_sink",
+    "tensor": "mtp.0.attn.attn_sink",
+    "dtype": "F32",
+    "elements": 64,
+    "bytes": 256
+   },
+   {
+    "alias": "ffn.gate.bias",
+    "tensor": "mtp.0.ffn.gate.bias",
+    "dtype": "F32",
+    "elements": 128,
+    "bytes": 512
+   },
+   {
+    "alias": "ffn.gate.bias_vl",
+    "tensor": "mtp.0.ffn.gate.bias_vl",
+    "dtype": "F32",
+    "elements": 128,
+    "bytes": 512
+   }
+  ],
+  "replicated_per_rank": true,
+  "template": "S81 L0 CROM provider (full tensors replicated on each rank die; L0 holds rank slices)"
+ },
+ {
+  "kind": "HE",
+  "stage": "mtp.1",
+  "dies": [
+   "P.k0",
+   "P.k1",
+   "P.k2",
+   "P.k3"
+  ],
+  "banks": 8,
+  "words_per_bank": 15360,
+  "useful_word_bits": 256,
+  "physical_leaf_depth": 4096,
+  "leaves": 32,
+  "declarations": [
+   {
+    "alias": "hc_attn_fn",
+    "tensor": "mtp.1.hc_attn_fn",
+    "bytes": 1966080,
+    "rows": 24,
+    "K": 20480
+   },
+   {
+    "alias": "hc_ffn_fn",
+    "tensor": "mtp.1.hc_ffn_fn",
+    "bytes": 1966080,
+    "rows": 24,
+    "K": 20480
+   }
+  ],
+  "replicated_per_rank": true,
+  "template": "S81 L0 HE provider (providers.json kind HE layer 0)"
+ },
+ {
+  "kind": "CROM",
+  "stage": "mtp.1",
+  "dies": [
+   "P.k0",
+   "P.k1",
+   "P.k2",
+   "P.k3"
+  ],
+  "banks": 1,
+  "words_per_bank": 800,
+  "useful_word_bits": 256,
+  "physical_leaf_depth": 4096,
+  "leaves": 1,
+  "declarations": [
+   {
+    "alias": "hc_attn_scale",
+    "tensor": "mtp.1.hc_attn_scale",
+    "dtype": "F32",
+    "elements": 3,
+    "bytes": 12
+   },
+   {
+    "alias": "hc_attn_base",
+    "tensor": "mtp.1.hc_attn_base",
+    "dtype": "F32",
+    "elements": 24,
+    "bytes": 96
+   },
+   {
+    "alias": "hc_ffn_scale",
+    "tensor": "mtp.1.hc_ffn_scale",
+    "dtype": "F32",
+    "elements": 3,
+    "bytes": 12
+   },
+   {
+    "alias": "hc_ffn_base",
+    "tensor": "mtp.1.hc_ffn_base",
+    "dtype": "F32",
+    "elements": 24,
+    "bytes": 96
+   },
+   {
+    "alias": "attn_norm.weight",
+    "tensor": "mtp.1.attn_norm.weight",
+    "dtype": "BF16",
+    "elements": 5120,
+    "bytes": 10240
+   },
+   {
+    "alias": "ffn_norm.weight",
+    "tensor": "mtp.1.ffn_norm.weight",
+    "dtype": "BF16",
+    "elements": 5120,
+    "bytes": 10240
+   },
+   {
+    "alias": "attn.q_norm.weight",
+    "tensor": "mtp.1.attn.q_norm.weight",
+    "dtype": "BF16",
+    "elements": 1280,
+    "bytes": 2560
+   },
+   {
+    "alias": "attn.kv_norm.weight",
+    "tensor": "mtp.1.attn.kv_norm.weight",
+    "dtype": "BF16",
+    "elements": 512,
+    "bytes": 1024
+   },
+   {
+    "alias": "attn.attn_sink",
+    "tensor": "mtp.1.attn.attn_sink",
+    "dtype": "F32",
+    "elements": 64,
+    "bytes": 256
+   },
+   {
+    "alias": "ffn.gate.bias",
+    "tensor": "mtp.1.ffn.gate.bias",
+    "dtype": "F32",
+    "elements": 128,
+    "bytes": 512
+   },
+   {
+    "alias": "ffn.gate.bias_vl",
+    "tensor": "mtp.1.ffn.gate.bias_vl",
+    "dtype": "F32",
+    "elements": 128,
+    "bytes": 512
+   }
+  ],
+  "replicated_per_rank": true,
+  "template": "S81 L0 CROM provider (full tensors replicated on each rank die; L0 holds rank slices)"
+ },
+ {
+  "kind": "HE",
+  "stage": "mtp.2",
+  "dies": [
+   "P.k0",
+   "P.k1",
+   "P.k2",
+   "P.k3"
+  ],
+  "banks": 8,
+  "words_per_bank": 15360,
+  "useful_word_bits": 256,
+  "physical_leaf_depth": 4096,
+  "leaves": 32,
+  "declarations": [
+   {
+    "alias": "hc_attn_fn",
+    "tensor": "mtp.2.hc_attn_fn",
+    "bytes": 1966080,
+    "rows": 24,
+    "K": 20480
+   },
+   {
+    "alias": "hc_ffn_fn",
+    "tensor": "mtp.2.hc_ffn_fn",
+    "bytes": 1966080,
+    "rows": 24,
+    "K": 20480
+   }
+  ],
+  "replicated_per_rank": true,
+  "template": "S81 L0 HE provider (providers.json kind HE layer 0)"
+ },
+ {
+  "kind": "CROM",
+  "stage": "mtp.2",
+  "dies": [
+   "P.k0",
+   "P.k1",
+   "P.k2",
+   "P.k3"
+  ],
+  "banks": 1,
+  "words_per_bank": 800,
+  "useful_word_bits": 256,
+  "physical_leaf_depth": 4096,
+  "leaves": 1,
+  "declarations": [
+   {
+    "alias": "hc_attn_scale",
+    "tensor": "mtp.2.hc_attn_scale",
+    "dtype": "F32",
+    "elements": 3,
+    "bytes": 12
+   },
+   {
+    "alias": "hc_attn_base",
+    "tensor": "mtp.2.hc_attn_base",
+    "dtype": "F32",
+    "elements": 24,
+    "bytes": 96
+   },
+   {
+    "alias": "hc_ffn_scale",
+    "tensor": "mtp.2.hc_ffn_scale",
+    "dtype": "F32",
+    "elements": 3,
+    "bytes": 12
+   },
+   {
+    "alias": "hc_ffn_base",
+    "tensor": "mtp.2.hc_ffn_base",
+    "dtype": "F32",
+    "elements": 24,
+    "bytes": 96
+   },
+   {
+    "alias": "attn_norm.weight",
+    "tensor": "mtp.2.attn_norm.weight",
+    "dtype": "BF16",
+    "elements": 5120,
+    "bytes": 10240
+   },
+   {
+    "alias": "ffn_norm.weight",
+    "tensor": "mtp.2.ffn_norm.weight",
+    "dtype": "BF16",
+    "elements": 5120,
+    "bytes": 10240
+   },
+   {
+    "alias": "attn.q_norm.weight",
+    "tensor": "mtp.2.attn.q_norm.weight",
+    "dtype": "BF16",
+    "elements": 1280,
+    "bytes": 2560
+   },
+   {
+    "alias": "attn.kv_norm.weight",
+    "tensor": "mtp.2.attn.kv_norm.weight",
+    "dtype": "BF16",
+    "elements": 512,
+    "bytes": 1024
+   },
+   {
+    "alias": "attn.attn_sink",
+    "tensor": "mtp.2.attn.attn_sink",
+    "dtype": "F32",
+    "elements": 64,
+    "bytes": 256
+   },
+   {
+    "alias": "ffn.gate.bias",
+    "tensor": "mtp.2.ffn.gate.bias",
+    "dtype": "F32",
+    "elements": 128,
+    "bytes": 512
+   },
+   {
+    "alias": "ffn.gate.bias_vl",
+    "tensor": "mtp.2.ffn.gate.bias_vl",
+    "dtype": "F32",
+    "elements": 128,
+    "bytes": 512
+   }
+  ],
+  "replicated_per_rank": true,
+  "template": "S81 L0 CROM provider (full tensors replicated on each rank die; L0 holds rank slices)"
+ },
+ {
+  "kind": "CROM",
+  "stage": "seed",
+  "dies": [
+   "P.k0",
+   "P.k1",
+   "P.k2",
+   "P.k3"
+  ],
+  "banks": 1,
+  "words_per_bank": 320,
+  "useful_word_bits": 256,
+  "physical_leaf_depth": 4096,
+  "leaves": 1,
+  "declarations": [
+   {
+    "alias": "main_norm",
+    "tensor": "mtp.0.main_norm.weight",
+    "dtype": "BF16",
+    "bytes": 10240
+   }
+  ],
+  "replicated_per_rank": true
+ },
+ {
+  "kind": "CROM",
+  "stage": "head",
+  "dies": [
+   "H.h0",
+   "H.h1",
+   "H.h2",
+   "H.h3",
+   "H.h4",
+   "H.h5",
+   "H.h6",
+   "H.h7",
+   "H.h8",
+   "H.h9",
+   "H.h10",
+   "H.h11"
+  ],
+  "banks": 1,
+  "words_per_bank": 656,
+  "useful_word_bits": 256,
+  "physical_leaf_depth": 4096,
+  "leaves": 1,
+  "replicated_per_die": true,
+  "declarations": [
+   {
+    "tensor": "mtp.2.confidence_head.proj.weight",
+    "bytes": 10752
+   },
+   {
+    "tensor": "mtp.2.norm.weight",
+    "bytes": 10240
+   }
+  ]
+ }
+]
