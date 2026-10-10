@@ -1,0 +1,18 @@
+{
+  "name": "hfd_cmdproc_s_mtp_native_mx1_rb-ft4-hm10-50026a0a6-tc",
+  "status": "CANCELLED",
+  "reason": "cancelled by a human (Prelaunch actual-record dry-run identified power terminal rectangles; refine signal contract export before build)",
+  "stage_key": null,
+  "stage_idx": 3,
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-ft4-hm10-50026a0a6-tc",
+  "events": [
+    "2026-10-10T05:32:15-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hfd_cmdproc_s_mtp_native_mx1_rb-ft4-hm10-50026a0a6-tc.json",
+    "2026-10-10T05:32:15-07:00 submit lint PASS (estimate None b/um, limit None); PASS rtl_boundary hfd_cmdproc_s_mtp_native_mx1: registered boundary (in->reg 15, reg->out 2 levels)",
+    "2026-10-10T05:32:23-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+    "2026-10-10T05:33:06-07:00 source 50026a0a6c00 synced to ot-epyc4:/srv/opentallas-scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-ft4-hm10-50026a0a6-tc/src",
+    "2026-10-10T05:33:06-07:00 cancel requested: Prelaunch actual-record dry-run identified power terminal rectangles; refine signal contract export before build",
+    "2026-10-10T05:33:06-07:00 CANCELLED: cancelled by a human (Prelaunch actual-record dry-run identified power terminal rectangles; refine signal contract export before build)",
+    "2026-10-10T05:33:16-07:00 route bulk released (cancelled; MB before/after 2074 2074); kept 6_final.*, 5_2_route.odb, logs/reports/json"
+  ]
+}
