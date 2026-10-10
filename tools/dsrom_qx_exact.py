@@ -93,8 +93,12 @@ def main() -> None:
     ap.add_argument("--allow-dirty", action="store_true")
     ap.add_argument("--verilator", default=str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
     a = ap.parse_args()
-    dirty = subprocess.check_output(["git", "status", "--porcelain", "--", *RTL, TB, "tools/dsrom_qx_exact.py"],
-                                    cwd=ROOT, text=True).strip()
+    try:
+        dirty = subprocess.check_output(["git", "status", "--porcelain", "--", *RTL, TB, "tools/dsrom_qx_exact.py"],
+                                        cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        dirty = ""     # ds-1010: a closure-loop source snapshot (no .git); the record carries every source sha256
+    import os
     if dirty and not a.allow_dirty:
         raise SystemExit("exact gate requires committed sources:\n" + dirty)
     a.work.mkdir(parents=True, exist_ok=True)
@@ -117,7 +121,8 @@ def main() -> None:
         return tag, seed, p.returncode, p.stdout + p.stderr, sha(log)
 
     record = dict(schema="opentallas.dsrom_qx.exact.v1", verdict="FAIL",
-                  git_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+                  git_commit=(subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True, capture_output=True).stdout.strip()
+                              or os.environ.get("COMMIT", "unknown")),
                   sources_dirty=bool(dirty),
                   parameters=dict(NB=2, MTP=1, EARLY=1, FAST=1, PP=1, FRONT_PAR=0, QTIMING_FIX=1, HC=3, QPIPE=1,
                                   QP_XS="1 (pos, qz0) / 0 (xs0)", QP_CAP=0, QP_P1=1, QP_CSAM=10,
