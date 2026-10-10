@@ -7,7 +7,7 @@
 // its 24 FIFO SRAMs at <= 60 % utilisation):
 //
 //   dsfd_coll_cb  (bottom, CW x 340.2)  VM side: f_vm / ts / t_vm (S face, the slab's VM interface), the OUTPUT queue
-//                                       (8 deep, sliced, push replicas) + t_vm register; relays of lanes 0 (W0) and
+//                                       (16 deep, sliced, push replicas) + t_vm register; relays of lanes 0 (W0) and
 //                                       4 (E0) between their lane tiles and the engine tile.
 //   dsfd_coll_ce  (middle, CW x 680.4)  ot_s81ph_coll_core (EXT 1, OQX 1): TP4 engine + receive FIFO SRAMs, the 6 VM
 //                                       input queues, packer, credits; lanes 1, 2 (W) and 5, 6 (E) at its own faces.
@@ -34,7 +34,7 @@ module ot_s81ph_relay2 #(parameter integer W = 8) (
 endmodule
 
 // ---- bottom tile: VM interface, output queue, lanes 0 / 4 relays
-module dsfd_coll_cb #(parameter integer OD = 8) (
+module dsfd_coll_cb #(parameter integer OD = 16) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
     // S face: the slab VM interface
@@ -79,8 +79,8 @@ module dsfd_coll_cb #(parameter integer OD = 8) (
     ot_s81ph_relay2 #(.W(553)) u_lo4 (.clk(clk), .rst_n(rst_n), .in_v(lo4_v), .in_r(lo4_r), .in_d(lo4_d), .out_v(elo_v), .out_r(elo_r), .out_d(elo_d));
 `endif
     ot_s81ph_relay2 #(.W(553)) u_li4 (.clk(clk), .rst_n(rst_n), .in_v(eli_v), .in_r(eli_r), .in_d(eli_d), .out_v(li4_v), .out_r(li4_r), .out_d(li4_d));
-    // packer word: seam pin register, then the output queue (sliced, push replicated per slice; OD deep >= the
-    // credit loop: push issue -> ce reg -> pin reg -> queue -> pop -> bw_cr -> ce cred = 6 edges)
+    // packer word: seam pin register, then the output queue (sliced, push replicated per slice; OD 16 = the local
+    // queue's 4 + the credit loop: push issue -> ce reg -> pin reg -> queue -> pop -> bw_cr -> ce cred = 6 edges, + margin)
     reg          bw_vq; reg [2099:1] bw_dq;
     always @(posedge clk or negedge rst_n) if (!rst_n) bw_vq <= 1'b0; else bw_vq <= bw_v;
     always @(posedge clk) bw_dq <= bw_d;
@@ -114,7 +114,7 @@ module dsfd_coll_ce #(
 `else
     parameter integer QPIPE = 0,
 `endif
-    parameter integer OD = 8
+    parameter integer OD = 16
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rs,

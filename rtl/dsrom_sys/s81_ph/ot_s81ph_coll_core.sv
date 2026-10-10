@@ -73,7 +73,7 @@ module ot_s81ph_coll_core #(
     // includes every push issued, so a push is always into a free remote slot).  t_vm / ts are unused (the remote tile
     // owns them); bw_flt carries the remote queue's sticky fault into fv_flt.
     parameter integer OQX = 0,
-    parameter integer OQX_D = 8
+    parameter integer OQX_D = 16
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -338,20 +338,23 @@ module ot_s81ph_coll_core #(
     wire [2099:1] b_word = {b_d, rank, fv_flt, fault, b_cr, pk_emit ? pk_err : 1'b0, in_gat && !pk_emit,
                             pt_push ? ep_ol[3 + pt_l] : 1'b0, b_last, b_mask, pt_push ? pt_l : 3'd0, b_type};
     generate if (OQX != 0) begin : g_oqx
-        localparam integer CW_ = $clog2(OQX_D + 1);
-        reg [CW_-1:0] cred;
+        // cred = OQX_D - (pushes not yet credited back): a pessimistic copy of the remote queue's free slots (it also
+        // counts words and credits in flight).  Controllable pushes (gather / pass-through / status) need cred >= 2, as
+        // room2 on a local queue; the packer's reduce emits are not back-pressured (as in the local queue), so OQX_D
+        // must exceed the local depth (4) by the credit round trip (~6 edges): OQX_D 16.  Signed, never wraps.
+        reg signed [7:0] cred;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin cred <= OQX_D; bw_v <= 1'b0; end
             else begin
 `ifdef OT_S81PH_MUT_SPLIT_NOCR
-                cred <= cred - (oq_push ? 1'b1 : 1'b0);                   // negative control: credits never returned
+                cred <= cred - (oq_push ? 8'sd1 : 8'sd0);                   // negative control: credits never returned
 `else
-                cred <= cred - (oq_push ? 1'b1 : 1'b0) + (bw_cr ? 1'b1 : 1'b0);
+                cred <= cred - (oq_push ? 8'sd1 : 8'sd0) + (bw_cr ? 8'sd1 : 8'sd0);
 `endif
                 bw_v <= oq_push;
             end
         always @(posedge clk) bw_d <= b_word;
-        assign oq_room2 = cred != 0;
+        assign oq_room2 = cred >= 8'sd2;
         assign oq_hv = 1'b0;
         assign oq_hd = {2099{1'b0}};
         assign oq_flt = bw_flt;
