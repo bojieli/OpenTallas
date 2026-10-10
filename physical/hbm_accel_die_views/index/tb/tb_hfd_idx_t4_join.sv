@@ -1,10 +1,10 @@
 `timescale 1ps/1fs
-module tb_hfd_idx_t4_join;
+module tb_hfd_idx_t4_join #(parameter integer MEM=0);
  reg ck=0; always #5 ck=~ck;
  reg rst=0;
  reg [615:0] taps=0;
  wire [3:0] tc; wire [609:0] s; reg sc=0; wire fault;
- hfd_idx_t4_join dut(.ck(ck),.rst(rst),.taps(taps),.tap_credit(tc),.s(s),.sc(sc),.fault(fault));
+ hfd_idx_t4_join #(.MEM(MEM)) dut(.ck(ck),.rst(rst),.taps(taps),.tap_credit(tc),.s(s),.sc(sc),.fault(fault));
  integer sent[0:3],credit[0:3],received=0,pending=0,cycle=0;
  function automatic [152:0] word(input integer beat,tap);
    reg [152:0] w;
