@@ -539,6 +539,12 @@ MTP_HGI_WH, ARGMAX_HGI_WH = (286.56, 200.88), (180.0, 140.0)
 ARGMAX_HGI_IN = (('in_v', 1), ('in_last', 1), ('in_bias_en', 1), ('in_mask', 8), ('in_vals', 256), ('in_bias', 256))
 ARGMAX_HGI_OUT = (('out_v', 1), ('out_idx', 18), ('out_nan', 1), ('fault', 1), ('out_range_fault', 1), ('out_value', 32))
 R25GM = _hgi_mtp(R25G)
+# hgi-takeover 2026-10-09 (hgi-e2e DIE GAP): the generic die as an HGI-1 machine on the closing views (R25GP): the single
+# CP (ot_hgi_cp_die) with every record unit on a die record bus (tools/hgi_die_dispatch.py: sm / att inside the CP block,
+# su / sfu / hc at the SW quarter, dma beside the loader, coll, quant, idx, argmax in the MTP slot), the HGI VM with 8
+# packet clients, and the MTP slot (hgi_mtp_native + the dispatched ARGMAX unit hfd_hgi_am)
+HGI_FULL = ['argmax', 'cp', 'coll', 'quant', 'idx', 'sm', 'su', 'sfu', 'att', 'dma', 'hc']
+R25GPH = dict(_hgi_mtp(R25GP), hgi_dispatch=HGI_FULL, router_exact=True)
 R25G4M = _hgi_mtp(R25G4)       # same on the qualified 4 x 2 SM grid (full network build)
 if _mtp_generic_closed():
     R25G, R25G4 = R25GM, R25G4M
@@ -3955,7 +3961,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gp=R25GP, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25gp=R25GP, r25gph=R25GPH, r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

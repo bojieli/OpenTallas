@@ -36,9 +36,11 @@ UNITS = {
     'fused': ('ot_hgi_fused_record', [f'{A}/ot_hgi_su_record.sv', f'{A}/ot_hgi_fused_record.sv'], (320, 320), (420, 260),
               'run_small.sh fused (HGI_FUSED: CF-NORM d4096 BF16 + QK-norm seg 128 FP32 EXACT on the real vec + mover model; '
               'Qwen ROW_NORM shapes vs hgi_sim row_norm; MUT_SEG FAIL)'),
-    'mover': ('ot_hgi_dma_mover', ['rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv'], (300, 300), (400, 240),
-              'run_small.sh mover (HGI_MOVER: DMA adapter + mover on the real HGI VM + kport HBM model: CF-IDXD / CF-KV x 3 '
-              'exact + 60 random LOAD / STORE over every format; MUT_RNE FAIL)'),
+    'mover': ('ot_hgi_dma_mover', ['rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv',
+                                   'rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv'], (340, 340), (440, 260),
+              'run_small.sh mover (HGI_MOVER: DMA adapter + mover (F6 sector engine + serial engine) on the real HGI VM + '
+              'kport HBM model: CF-IDXD / CF-KV x 3 exact + 60 random LOAD / STORE over every format; MUT_RNE FAIL; '
+              'MUT 2 (sector engine drops a partial row-end sector) FAIL)'),
     'xload': ('ot_hgi_sm_xload', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv'], (520, 520), (640, 420),
               'run_small.sh sm_e2e (HGI_SM_E2E: record -> adapter -> x-load -> 2 real smh -> publication -> real VM; MUT_T FAIL)'),
     'pub': ('ot_hgi_sm_pub', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv'], (700, 700), (860, 560),

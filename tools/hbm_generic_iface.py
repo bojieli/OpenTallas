@@ -49,7 +49,7 @@ OPS = {
     "ARGMAX": ["LOCAL"],
     "DMA": ["LOAD", "STORE", "FENCE"],
     "IDX": ["INDEX_Q", "INDEX_SCORES", "TOPK_LOCAL", "SELECT"],
-    "HC": ["HC_MIX"],
+    "HC": ["HC_MIX", "HC_MIX_ROWS", "HC_MIX_POST"],
     "SIMT": ["RUN"],
 }
 PRED = ["ALWAYS", "POS0", "NOT_POS0", "LAST_ITER"]
