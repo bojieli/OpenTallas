@@ -1,0 +1,130 @@
+{
+  "source": "rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv",
+  "shape": {
+    "H": 16,
+    "D": 512,
+    "TD": 64,
+    "NL": 2,
+    "BLK": 512,
+    "engine_tiles": 16
+  },
+  "clock": {
+    "domain": "streaming",
+    "frequency_GHz": 1.2,
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "headline_requires": "SS setup and FF hold; TT pathfinding only"
+  },
+  "engine_boundary_bits": {
+    "q": 8192,
+    "kv": 8480,
+    "p": 1024,
+    "score": 1024,
+    "pv": 8192
+  },
+  "engine_payload_bits": 26912,
+  "memory": {
+    "Q": {
+      "banks": 8,
+      "depth": 64,
+      "word_bits": 16,
+      "write_ports_per_bank": 1,
+      "read": "all depth words simultaneously",
+      "storage_bits": 8192,
+      "physical_view_qualified": false
+    },
+    "P": {
+      "banks": 128,
+      "depth": 64,
+      "word_bits": 16,
+      "write_ports_per_bank": 1,
+      "read_ports_per_bank": 1,
+      "storage_bits": 131072,
+      "physical_view_qualified": false
+    },
+    "codes": {
+      "banks": 32,
+      "depth": 16,
+      "word_bits": 8,
+      "write_ports_per_bank": 1,
+      "read": "all depth words simultaneously",
+      "storage_bits": 4096,
+      "physical_view_qualified": false
+    },
+    "cur": {
+      "banks": 256,
+      "depth": 32,
+      "word_bits": 32,
+      "write_ports_per_bank": 1,
+      "read_ports_per_bank": 1,
+      "storage_bits": 262144,
+      "physical_view_qualified": false
+    },
+    "merge": {
+      "banks": 1,
+      "depth": 32768,
+      "word_bits": 32,
+      "write_ports_per_bank": 1,
+      "read_ports_per_bank": 1,
+      "storage_bits": 1048576,
+      "physical_view_qualified": false
+    },
+    "scores": {
+      "banks": 1,
+      "depth": 32,
+      "word_bits": 1042,
+      "write_ports_per_bank": 1,
+      "read_ports_per_bank": 1,
+      "storage_bits": 33344,
+      "physical_view_qualified": false
+    },
+    "add_dest": {
+      "banks": 1,
+      "depth": 64,
+      "word_bits": 14,
+      "write_ports_per_bank": 1,
+      "read_ports_per_bank": 1,
+      "storage_bits": 896,
+      "physical_view_qualified": false
+    }
+  },
+  "storage_bits": 1488320,
+  "sector_codec": {
+    "replicas": 1,
+    "macs_per_cycle": 0,
+    "input_bytes_per_cycle": 32,
+    "output_bytes_per_cycle": 32,
+    "useful_output_values": {
+      "FP8": 32,
+      "BF16": 16,
+      "FP32": 8
+    },
+    "inputs_bits": 269,
+    "outputs_bits": 329,
+    "total_pins": 598,
+    "routing_tracks": 598,
+    "pin_density_per_um": 0.55,
+    "slot_side_um": 320,
+    "usable_perimeter_um": 1193.6,
+    "perimeter_capacity_pins": 656,
+    "pin_capacity_fits": true,
+    "register_bits_upper_bound": 598,
+    "area_um2": null,
+    "area_status": "await mapped synthesis; no guessed fit claim",
+    "mux_demux": "static lane select by format/tag; 32 code bank write masks",
+    "added_pipeline_cycles": 1,
+    "token_latency_bound": "at most one added edge per fetched row for a drained response stage; measure exact RTL",
+    "per_record_added_cycles_bound_expression": "ceil(rows/BLK) * BLK; use actual rows, including repeat QK/PV fetches",
+    "rate_credit": 0,
+    "default_on": false
+  },
+  "monolithic_controller_cut": {
+    "payload_bits": 26912,
+    "pin_capacity": 656,
+    "fits": false,
+    "disposition": "reject this perimeter; distribute Q/P/code/cur stagers beside actual engine tiles"
+  },
+  "physical_adopted": false,
+  "readiness": "sector codec ready for component RTL sizing; whole ATT split blocked on real memory port views and distributed geometry"
+}

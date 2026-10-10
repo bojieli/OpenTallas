@@ -454,6 +454,12 @@ def hgi_ehash_binding_model():
     return model()
 
 
+def hgi_att_stager_model(**kwargs):
+    """Real ATT sector boundary and unresolved distributed memory inventory."""
+    from hgi_att_stager_model import model
+    return model(**kwargs)
+
+
 def mtp_hist_pipeline_contract_model():
     """Full 16-slot Engram history ring registered-boundary successor, sized before RTL."""
     from mtp_hist_pipeline_model import model
