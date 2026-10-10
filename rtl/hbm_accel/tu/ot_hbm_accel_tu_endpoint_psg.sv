@@ -15,6 +15,19 @@
 // flits.  No adder, no BF16 packing: ALL_GATHER / TOPK_MERGE / ARGMAX_MERGE / ROW_GATHER payloads are bit-exact
 // (-0, NaN payloads).  Done after pf sent and group * pf delivered with count, sum and xor of gi equal to the
 // 0 .. group * pf - 1 set (a duplicate or a lost flit faults); a partial flit in bypass faults.
+// OWN-QUEUE INJECT GATE (hgi-1010/a 2026-10-10): in bypass every injected flit also enters the own delivery queue (128 + 4),
+// which the delivery rotation serves 4 / 9 of the cycles when all 8 ports hold results (G = 96 all-gather): at pf > ~230 it
+// overflowed (Codex native M18 PF 512 FAIL at 237 deliveries).  Injection now waits while own queue + hub flight + 4 >= 128.
+// In bypass the own queue also takes the first delivery lane when it holds a flit (ports rotate behind it), so a rank
+// injects at one flit a cycle whatever the port load.  Exact (only stalls / order of delivery); reductions are untouched.
+// ROW_GATHER HARDWARE MODE (RGX = 1, rgx = 1 with byp = 1; hgi-1010/a, spec G25): the inject index interface is replaced
+// by a stream {rs_v, rs_gi, rs_data} / rs_rdy from ot_hgi_coll_rgx_src (this rank's owned rows only, in list order, gi =
+// x * F + f for list entry x and flit f of an F-flit row), the flit's gi is rs_gi unchanged (no rank offset), the rank sends
+// a data-dependent number of flits (closed by rs_end), and every rank of the group must receive exactly rgx_total = K * F
+// flits whose gi set is 0 .. K * F - 1 (count, sum, xor: a duplicate, loss or misplaced row faults).  Counters are 17-bit
+// (K * F <= 65,536).  DELIVERY CREDITS (DELCRED = 1): lane l is dispatched only with del_permit[l] (the sink's credit,
+// reserved by del_reserve before the HUBW flight), so a stalled sink holds flits in the receive buffers and back-pressures
+// the switch through the existing egress credits.  RGX = 0 and DELCRED = 0 elaborate the previous behaviour.
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ot_hbm_accel_tu_endpoint_ps (stream hbm-coll-rtl, 2026-10-08): the PER-PORT SPLIT of ot_hbm_accel_tu_endpoint_sr for
@@ -89,6 +102,9 @@
 module ot_hbm_accel_tu_endpoint_psg #(
     parameter integer ENABLE = 0,
     parameter integer REARM = 0, // opt-in; production pclk must equal clk
+    parameter integer RGX = 0,     // 1: ROW_GATHER hardware mode available (rgx pin, stream inject, K*F delivery set)
+    parameter integer DELCRED = 0, // 1: delivery lanes dispatched only with del_permit (sink credits)
+    parameter integer MUT_NOGATE = 0, // bench mutant: no own-queue inject gate
 
     parameter integer NC     = 8,
     parameter integer NOG    = 8,
@@ -140,6 +156,16 @@ module ot_hbm_accel_tu_endpoint_psg #(
     output wire [NPT-1:0]       rx_credit,       // receive-buffer pop (core clock) -> switch egress credit
     output wire [DEL-1:0]       del_valid,
     output wire [DEL*PWT-1:0]   del_flit,
+    // ROW_GATHER hardware mode (RGX = 1) and delivery credits (DELCRED = 1); unused otherwise
+    input  wire                 rgx,             // static (latched at go): ROW_GATHER stream mode, needs byp
+    input  wire [16:0]          rgx_total,       // K * F: flits every rank of the group receives
+    input  wire                 rs_v,
+    input  wire [15:0]          rs_gi,
+    input  wire [FW-1:0]        rs_data,
+    output wire                 rs_rdy,
+    input  wire                 rs_end,          // the source has no further flit this collective (level)
+    input  wire [DEL-1:0]       del_permit,
+    output wire [DEL-1:0]       del_reserve,
     output wire                 fault,
     output wire [31:0]          stat_credit_stall
 );
@@ -150,8 +176,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign inj_idx = '0; assign inj_rd = '0; assign ph_tx_v = '0; assign ph_tx_flit = '0;
         assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
         assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
+        assign rs_rdy = 1'b0; assign del_reserve = '0;
     end else begin : g_on
         reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer; reg run_byp; reg run_bf16;
+        reg run_rgx; reg [16:0] run_total;
         reg pending_start, completed, started;
         reg [15:0] rx_pending;
         wire active_desc = REARM && (started || pending_start || completed);
@@ -160,6 +188,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire [3:0] eff_gsz = active_desc ? run_gsz : gsz;
         wire ALL_DEST = active_desc ? run_mcast : mcast_all;
         wire BYP = active_desc ? run_byp : byp;
+        wire RGXM = (RGX != 0) && (active_desc ? run_rgx : rgx);
+        wire [16:0] RTOT = active_desc ? run_total : rgx_total;
         wire BFX = BF16RT ? (active_desc ? run_bf16 : res_bf16) : (BF16 != 0);
         wire[7:0] OUTER_G = active_desc ? run_outer : mcast_group_size;
         wire[3:0] OUTER_LG = (OUTER_G==2) ? 1 : (OUTER_G==4) ? 2 : 3;
@@ -173,7 +203,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire [31:0] GBASE = ALL_DEST ? OUTER_BASE : ((RANK >> eff_gsz[1:0]) << eff_gsz[1:0]);
         wire BYP_OK = !LEG && (ALL_DEST ? ((OUTER_G==2 || OUTER_G==4 || OUTER_G==8 || OUTER_G==96) && OUTER_G <= NOG*NC) :
                                           (eff_gsz <= 3 && (32'd1 << eff_gsz) <= NOG*NC));
-        wire BYP_PAY_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC);
+        wire BYP_PAY_OK = RGXM ? (BYP && RTOT != 0 && RTOT <= 17'h10000 && RANK < NOG * NC) :
+                                 ((eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC));
         wire [31:0] REQ_NA = LEG ? NC : (MODE_OK ? (32'd1 << eff_gsz) : 1);
         // Valid small groups have power-of-two NA. Avoid synthesizing a general32-bit divider
         // merely to validate a descriptor; legacy NC remains a constant-expression divisor.
@@ -203,7 +234,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
         // multiplies and the f / OF, f % OF divisions become compares / adds against these flops (exact; they settle
         // one edge after rank / pf, before the first injection)
         reg [15:0] mOF [0:NC];
-        reg [15:0] cOGPF, cGI0, cBYP0, cBYPT;
+        reg [15:0] cOGPF, cGI0, cBYP0;
+        reg [16:0] cBYPT;
         always @(posedge clk) begin
             for (integer m = 0; m <= NC; m = m + 1) mOF[m] <= 16'(m * OF);
             cOGPF <= 16'(OG * PF);
@@ -211,9 +243,9 @@ module ot_hbm_accel_tu_endpoint_psg #(
 `ifdef OT_COLL_MUT_BYP_GI
             cBYP0 <= 16'd0;                                   // NEGATIVE: every rank's segment at gi 0 .. pf-1
 `else
-            cBYP0 <= 16'((RANK - GBASE) * PF);
+            cBYP0 <= RGXM ? 16'd0 : 16'((RANK - GBASE) * PF);     // ROW_GATHER: the source's gi is final
 `endif
-            cBYPT <= 16'(GN * PF);
+            cBYPT <= RGXM ? RTOT : 17'(GN * PF);
         end
 
         // ================= hub issue -> HUBW wire stages ==========================================
@@ -221,18 +253,26 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign start_ready = !started && (!REARM || (!pending_start && !completed && !fault && rx_pending == 0 && !(|ph_rx_v)));
         assign done_valid = REARM && completed;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;run_outer<=96;run_byp<=0;run_bf16<=1;end
+            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;run_outer<=96;run_byp<=0;run_bf16<=1;run_rgx<=0;run_total<=0;end
             else if (REARM) begin
                 if (go && start_ready && ACCEPT_MODE) begin
                     run_rank<=rank;run_pf<=pf;run_gsz<=gsz;run_mcast<=mcast_all;run_outer<=mcast_group_size;run_byp<=byp;run_bf16<=res_bf16;pending_start<=1;
+                    run_rgx<=(RGX != 0) && rgx; run_total<=rgx_total;
                 end else if(pending_start) pending_start<=0;
             end
+        // own-queue inject gate (bypass): the own delivery queue (2^QAW SRAM + 4 head) must hold every flit in the hub flight
+        wire [QAW:0] dc0;
+        reg  [6:0]   hub_fl;                     // bypass flits injected, not yet out of the HUBW stages (<= HUBW)
+        wire own_room = (MUT_NOGATE != 0) || (32'(dc0) + 32'(hub_fl) + 32'd6 < (32'd1 << QAW));
+        reg  src_end;                            // RGX: the source closed its stream
+        wire rs_fire = RGXM && BYP && started && !completed && !src_end && own_room && rs_v;
+        assign rs_rdy = RGXM && BYP && started && !completed && !src_end && own_room;
         reg [INJ*16-1:0] r_idx;
         reg [INJ-1:0] r_rd;
         always @* begin
             r_idx = '0; r_rd = '0;
             for (integer i = 0; i < INJ; i = i + 1)
-                if (CONTRIB && started && k + i < PF && ((!BYP && (LEG || NA > 1)) || i == 0)) begin
+                if (CONTRIB && started && !RGXM && k + i < PF && ((!BYP && (LEG || NA > 1)) || (i == 0 && own_room))) begin
                     r_rd[i] = 1'b1;           // rotated slice order: own slice last in each round
                     r_idx[16*i +: 16] = (NC == 1 || BYP) ? 16'(k + i) : LEG ?
                         16'(mOF[(J + 1 + 32'((k + i) % NC)) % NC] + 16'((k + i) / NC)) :
@@ -249,6 +289,14 @@ module ot_hbm_accel_tu_endpoint_psg #(
                     if(completed && done_ready) begin started<=0;k<=0;end
                 end else if (go && !started && ACCEPT_MODE) started <= 1'b1;
                 if (|r_rd) k <= k + ((!BYP && (LEG || NA > 1)) ? INJ : 1);
+                if (rs_fire) k <= k + 1;
+            end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin hub_fl <= 7'd0; src_end <= 1'b0; end
+            else begin
+                hub_fl <= hub_fl + 7'((BYP && r_rd[0]) || rs_fire) - 7'(BYP && h_v[0]);
+                if (RGXM && started && rs_end && !rs_v) src_end <= 1'b1;
+                if (REARM && completed && done_ready) src_end <= 1'b0;
             end
         wire [INJ-1:0] h_v;
         wire [INJ*(16+16+FW)-1:0] h_d;   // {injection ordinal, flit index, data}
@@ -263,8 +311,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
             hfo[i] = f - mOF[hs[i]];
         end
         for (genvar i = 0; i < INJ; i = i + 1) begin : g_hub
-            (* keep_hierarchy *) ot_hcoll_sdelay #(.W(32 + FW), .D(HUBW)) u_h (.clk(clk), .rst_n(rst_n), .v_in(r_rd[i]),
-                .d_in({16'(k + i), r_idx[16*i +: 16], inj_data[FW*i +: FW]}), .v_out(h_v[i]),
+            wire hv_in = (i == 0) ? (r_rd[i] || rs_fire) : r_rd[i];
+            wire [32+FW-1:0] hd_in = (i == 0 && RGXM) ? {16'(k), rs_gi, rs_data} : {16'(k + i), r_idx[16*i +: 16], inj_data[FW*i +: FW]};
+            (* keep_hierarchy *) ot_hcoll_sdelay #(.W(32 + FW), .D(HUBW)) u_h (.clk(clk), .rst_n(rst_n), .v_in(hv_in),
+                .d_in(hd_in), .v_out(h_v[i]),
                 .d_out(h_d[(32+FW)*i +: 32+FW]));
         end
 
@@ -391,7 +441,6 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire dq_own_empty, dq_own_ovf;
         wire [PWT-1:0] dq_own_head;
         reg dq_own_pop;
-        wire [QAW:0] dc0;
         // bypass: the rank's own flits (hub output, one a cycle) enter the own delivery queue unchanged
         wire own_byp_v = BYP && h_v[0];
 `ifdef OT_COLL_MUT_BYP_OWNSIGN
@@ -443,12 +492,14 @@ module ot_hbm_accel_tu_endpoint_psg #(
 `else
                     result_for_group[s % NPT]);
 `endif
-                pos[s] = 4'((s + (NPT + 1) - drot) % (NPT + 1));
+                // bypass: the own delivery queue first (it is the only path of the rank's own flits and gates the
+                // rank's injection; the ports back-pressure through their credits), the ports in rotation behind it
+                pos[s] = BYP ? ((s == NPT) ? 4'd0 : 4'(1 + (s + NPT - (drot % NPT)) % NPT)) : 4'((s + (NPT + 1) - drot) % (NPT + 1));
             end
             for (integer s = 0; s <= NPT; s = s + 1) begin
                 n = 0;
                 for (integer t = 0; t <= NPT; t = t + 1) if (rdy[t] && pos[t] < pos[s]) n = n + 1;
-                for (integer l = 0; l < DEL; l = l + 1) dsel[l][s] = rdy[s] && n == l;
+                for (integer l = 0; l < DEL; l = l + 1) dsel[l][s] = rdy[s] && n == l && (DELCRED == 0 || del_permit[l]);
             end
             for (integer l = 0; l < DEL; l = l + 1) begin
                 dv[l] = |dsel[l];
@@ -461,6 +512,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 if (s == NPT) dq_own_pop = taken; else if (taken) rb_pop[s % NPT] = 1'b1;
             end
         end
+        assign del_reserve = (DELCRED != 0) ? dv : '0;
         for (genvar i = 0; i < DEL; i = i + 1) begin : g_del
             (* keep_hierarchy *) ot_hcoll_sdelay #(.W(PWT), .D(HUBW)) u_d (.clk(clk), .rst_n(rst_n), .v_in(dv[i]), .d_in(dfl[i]),
                 .v_out(del_valid[i]), .d_out(del_flit[i*PWT +: PWT]));
@@ -553,21 +605,23 @@ module ot_hbm_accel_tu_endpoint_psg #(
         localparam integer RMX = NOG * PFMAX / ((NC>1 && BF16 && !BF16RT) ? 2 : 1);
         reg [RMX-1:0] result_seen;
         reg result_error;
-        reg [15:0] tx_count, delivery_count, own_count, produced_count;
+        reg [16:0] tx_count, delivery_count;
+        reg [15:0] own_count, produced_count;
         integer ntx, nrx, npop, ndel;
         reg [RMX-1:0] seen_next;
         reg bad_result;
-        wire [31:0] expected_delivery = (NC==1) ? (NOG-1)*PF : BYP ? {16'd0, cBYPT} : (LEG ? NOG*NC : ALL_DEST ? OUTER_G : NA)*ROF;
-        wire [31:0] expected_tx = (NC==1 || BYP) ? PF : PF-OF+ROF;
+        wire [31:0] expected_delivery = (NC==1) ? (NOG-1)*PF : BYP ? {15'd0, cBYPT} : (LEG ? NOG*NC : ALL_DEST ? OUTER_G : NA)*ROF;
+        wire [31:0] expected_tx = RGXM ? k : (NC==1 || BYP) ? PF : PF-OF+ROF;
+        wire        inj_done = RGXM ? src_end : (k >= PF);
         // bypass delivery set check: count (delivery_count), sum and xor of gi equal those of 0 .. T-1 (T = group * pf)
         reg  [31:0] byp_sum, byp_sum_n, byp_sum_exp;
         reg  [15:0] byp_xor, byp_xor_n, byp_xor_exp;
         always @(posedge clk) begin
-            byp_sum_exp <= ({16'd0, cBYPT} * ({16'd0, cBYPT} - 32'd1)) >> 1;
+            byp_sum_exp <= 32'(({17'd0, cBYPT} * ({17'd0, cBYPT} - 34'd1)) >> 1);
             case (cBYPT[1:0])     // xor of 0 .. T-1 = g(T-1): n % 4 = 0 -> n, 1 -> 1, 2 -> n+1, 3 -> 0
-                2'd1: byp_xor_exp <= cBYPT - 16'd1;
+                2'd1: byp_xor_exp <= cBYPT[15:0] - 16'd1;
                 2'd2: byp_xor_exp <= 16'd1;
-                2'd3: byp_xor_exp <= cBYPT;
+                2'd3: byp_xor_exp <= cBYPT[15:0];
                 default: byp_xor_exp <= 16'd0;
             endcase
         end
@@ -579,7 +633,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             for(integer l=0;l<DEL;l=l+1)if(del_valid[l])begin
                 integer gi;gi=integer'(del_flit[l*PWT+FW+:16]);ndel=ndel+1;
                 if(BYP)begin
-                    if(gi>=integer'(cBYPT))bad_result=1;
+                    if(gi>=integer'({15'd0, cBYPT}))bad_result=1;
                     byp_sum_n=byp_sum_n+32'(gi);byp_xor_n=byp_xor_n^16'(gi);
                 end else if(gi>=RMX)bad_result=1;
                 else if(seen_next[gi])bad_result=1;
@@ -592,7 +646,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         reg [31:0] dcnt32, ndel32;
         reg byp_over, byp_badset;
         always @* begin
-            dcnt32 = {16'd0, delivery_count}; ndel32 = ndel;
+            dcnt32 = {15'd0, delivery_count}; ndel32 = ndel;
             byp_over = BYP && (dcnt32 + ndel32 > expected_delivery);
             byp_badset = BYP && dcnt32 == expected_delivery && ndel32 == 0 && (byp_sum != byp_sum_exp || byp_xor != byp_xor_exp);
         end
@@ -603,16 +657,16 @@ module ot_hbm_accel_tu_endpoint_psg #(
             end else if(REARM)begin
                 rx_pending<=rx_pending+16'(nrx)-16'(npop);
                 if(started && !completed)begin
-                    tx_count<=tx_count+16'(ntx);delivery_count<=delivery_count+16'(ndel);
+                    tx_count<=tx_count+17'(ntx);delivery_count<=delivery_count+17'(ndel);
                     own_count<=own_count+16'(dq_own_pop&&!dq_own_empty);produced_count<=produced_count+16'(r_v);
                     result_seen<=seen_next;byp_sum<=byp_sum_n;byp_xor<=byp_xor_n;
                     if(bad_result || npop>rx_pending+nrx)result_error<=1;
                     // bypass: more deliveries than group * pf, or all of them with a wrong gi set (a duplicate + a loss)
                     if(byp_over || byp_badset)result_error<=1;
                     if(!fault && !bad_result && ntx==0 && nrx==0 && npop==0 && ndel==0 &&
-                       k>=PF && (NC==1 || (BYP && byp_sum==byp_sum_exp && byp_xor==byp_xor_exp) ||
+                       inj_done && (NC==1 || (BYP && byp_sum==byp_sum_exp && byp_xor==byp_xor_exp) ||
                                  (!BYP && rptr>=OF && produced_count==ROF && own_count==ROF)) &&
-                       tx_count==expected_tx && delivery_count==expected_delivery && rx_pending==0 &&
+                       {15'd0, tx_count}==expected_tx && {15'd0, delivery_count}==expected_delivery && rx_pending==0 &&
                        (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !issue)
                         completed<=1;
 `ifdef OT_COLL_MUT_PREMATURE_DONE
