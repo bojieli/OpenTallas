@@ -40,3 +40,8 @@ def test_mem_cap():
     assert cl.stage_mem_cap(dict(spec={"mem_cap_gb": 0}), dict(ram=40)) == 0
     assert cl.stage_mem_cap(dict(spec={"mem_cap_gb": 300}), dict(ram=40)) == 300
     assert cl.DOCKER_SHIM.count("${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g}") == 2
+
+
+def test_stage_oom_first():
+    src = Path(cl.__file__).read_text()
+    assert 'env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj' in src and cl.STAGE_OOM_SCORE_ADJ > 0

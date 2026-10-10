@@ -868,7 +868,10 @@ DIE_MOUNT_RE = r"/(die-evidence[^/ ]*|kv-die)/"
 DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' $c 2>/dev/null); "
                  f"echo \"$i\" | grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' || continue; "
                  "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
-                 "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done; done) >/dev/null 2>&1; true")
+                 "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
+                 # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
+                 "for p in $(pgrep -f '/(die-evidence[^/ ]*|kv-die)/' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
+                 "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
 DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}}' $c | grep -qE '{DIE_CONTAINER_RE}' && continue; ")
 PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
 
@@ -1908,6 +1911,7 @@ def fp_lint_finish(j, tag, text):
 # memory cgroup of max(MEM_CAP_FACTOR x declared, declared + MEM_CAP_SLACK_GB): an overrun kills only its own stage
 # (the loop sees a flow error / crash retry), never a neighbour.  Spec "mem_cap_gb" overrides (0 = no cap).
 MEM_CAP_FACTOR = 4
+STAGE_OOM_SCORE_ADJ = 500
 MEM_CAP_SLACK_GB = 96
 
 
@@ -1932,6 +1936,10 @@ def launch_stage(j, st, cmd):
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    # OOM-FIRST (drive-0849 2026-10-09): synth runs NATIVELY (host yosys, outside any container cgroup) -- the 208 GB
+    # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
+    # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
+    env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj 2>/dev/null || true\n"
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
         cap = stage_mem_cap(j, st)
