@@ -3,6 +3,15 @@ source /src/physical/ha2_truecredit_20261007/rx_capture_pin_plan.tcl
 set cb [ord::get_db_block]
 set cd [[ord::get_db_tech] getDbUnitsPerMicron]
 set cc [$cb getCoreArea]
+# hbm-phys-1010 [link] (cplg 86dbb17ed: detailed route stuck at 1.5-2k violations, 1,460 of them in ONE 20 x 20 um window
+# at lane0 ram0's pin face): the write collar and the transport midpoints were seated 1.08 um from the macro edge,
+# i.e. INSIDE the macro halo (MACRO_PLACE_HALO), on top of the SRAM's M4 pin escape (every M4 track of the face is a
+# pin).  Seats now start outside the halo + 1.08 um, and the collar uses CW columns (default 16, 0.70 um pitch) so a
+# 0.27-um row holds the pins that land on it without stacking cells.
+set ha2_halo 2.0
+if {[info exists ::env(MACRO_PLACE_HALO)]} {set ha2_halo [lindex $::env(MACRO_PLACE_HALO) 0]}
+set ha2_gap [expr {$ha2_halo + 1.08}]
+set ha2_cw [expr {[info exists ::env(HA2_COLLAR_COLS)] ? $::env(HA2_COLLAR_COLS) : 16}]
 array set wd_sinks {}
 array set caps {}
 set raws {}
@@ -59,10 +68,15 @@ foreach fn [lsort [array names wd_sinks]] {
  set mx [[ $mi getBBox] xMin];set xx [[ $mi getBBox] xMax]
  set px [lindex $dst 2];set py [lindex $dst 3]
  set ff [$cb findInst $fn];set width [expr {double([[$ff getMaster] getWidth])/$cd}]
- set col [expr {$bit%8}]
+ set col [expr {$bit%$ha2_cw}]
  if {abs($px-$mx)<abs($px-$xx)} {
-  set x [expr {double($mx)/$cd-1.08-($col+1)*.70}]
- } else {set x [expr {double($xx)/$cd+1.08+$col*.70}]}
+  set x [expr {double($mx)/$cd-$ha2_gap-($col+1)*.70}]
+ } else {set x [expr {double($xx)/$cd+$ha2_gap+$col*.70}]}
+ # a face whose halo abuts the core edge has no room outside the halo: the previous in-halo collar (8 columns)
+ if {$x<double([$cc xMin])/$cd || $x+$width>double([$cc xMax])/$cd} {
+  set col [expr {$bit%8}]
+  if {abs($px-$mx)<abs($px-$xx)} {set x [expr {double($mx)/$cd-1.08-($col+1)*.70}]} else {set x [expr {double($xx)/$cd+1.08+$col*.70}]}
+ }
  set y [expr {floor(double($py)/$cd/.27)*.27}]
  if {$x<double([$cc xMin])/$cd || $x+$width>double([$cc xMax])/$cd || $y<double([$cc yMin])/$cd || $y+.27>double([$cc yMax])/$cd} {error "Write collar outside core: $fn"}
  $ff setLocation [expr {round($x*$cd)}] [expr {round($y*$cd)}];$ff setPlacementStatus FIRM
@@ -88,8 +102,8 @@ foreach rr $raws {
  set candidates [list [list $x $y]]
  foreach rect $macro_rects {
   lassign $rect x0 y0 x1 y1
-  lappend candidates [list [expr {$x0-1.08-$width}] $y] [list [expr {$x1+1.08}] $y] \
-    [list $x [expr {$y0-1.08-.27}]] [list $x [expr {$y1+1.08}]]
+  lappend candidates [list [expr {$x0-$ha2_gap-$width}] $y] [list [expr {$x1+$ha2_gap}] $y] \
+    [list $x [expr {$y0-$ha2_gap-.27}]] [list $x [expr {$y1+$ha2_gap}]]
  }
  set best "";set cost 1e99
  foreach pos $candidates {
@@ -98,7 +112,7 @@ foreach rr $raws {
   set blocked 0
   foreach rect $macro_rects {
    lassign $rect x0 y0 x1 y1
-   if {$px+$width>$x0-1.0 && $px<$x1+1.0 && $py+.27>$y0-1.0 && $py<$y1+1.0} {set blocked 1;break}
+   if {$px+$width>$x0-$ha2_gap+0.08 && $px<$x1+$ha2_gap-0.08 && $py+.27>$y0-$ha2_gap+0.08 && $py<$y1+$ha2_gap-0.08} {set blocked 1;break}
   }
   if {$blocked} continue
   set d [expr {abs($px-$x)+abs($py-$y)}]
