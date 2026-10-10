@@ -172,6 +172,7 @@ BINDINGS['qkd_kvwq_leaf_s'] = copy.deepcopy(BINDINGS['qkd_kvwq_leaf'])
 BINDINGS['qkd_kvwq_leaf_s_w129'] = copy.deepcopy(BINDINGS['qkd_kvwq_leaf'])
 BINDINGS['qkd_kvwq_ctl_bin_h'] = copy.deepcopy(BINDINGS['qkd_kvwq_ctl_bin'])
 BINDINGS['qkd_kvwq_ctl_bin_h']['parameters'] = dict(FLANE_BINARY=1, HEAD_PIPE=1)
+BINDINGS['qkd_kvwq_leaf_s_w129_m'] = copy.deepcopy(BINDINGS['qkd_kvwq_leaf_s_w129'])
 
 
 def _write_tiles(m, add):
@@ -197,7 +198,7 @@ def _write_tiles(m, add):
                 lw = 129.6 if m['geo'].get('kv_wq_wide') else 86.4
                 x = up(cdc.x + (cdc.w-lw)/2, GX)
                 y = cdc.y - 183.6 - GY
-                add(f'wleaf_{st}_{pc}', 'qkd_kvwq_leaf_s_w129' if m['geo'].get('kv_wq_wide') else 'qkd_kvwq_leaf_s', x, y, lw, 183.6,
+                add(f'wleaf_{st}_{pc}', 'qkd_kvwq_leaf_s_w129_m' if m['geo'].get('kv_wq_mirror') else 'qkd_kvwq_leaf_s_w129' if m['geo'].get('kv_wq_wide') else 'qkd_kvwq_leaf_s', x, y, lw, 183.6,
                     'MX' if side == 'W' else 'R180', 'kv_write_leaf', 'strip')
             else:
                 x = m['geo']['x_land'] if side == 'W' else m['die']['w'] - m['geo']['x_land'] - 86.4
@@ -321,7 +322,9 @@ def _band(T, side, Wk):
     return out, dy
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False):
+    kv_wq_head = kv_wq_head or kv_wq_mirror
+    kv_wq_wide = kv_wq_wide or kv_wq_mirror
     kv_wq_leaf_s = kv_wq_leaf_s or kv_wq_head or kv_wq_wide
     kv_wq_binary = kv_wq_binary or kv_wq_leaf_s
     kv_wq_leaves = kv_wq_leaves or kv_wq_binary
@@ -393,7 +396,7 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
     tw, th = FRAMES['qkd_host']
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     m['geo'] = dict(x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
-                    ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide)
+                    ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
     if kv_wq_leaves:
         _write_tiles(m, add)
     _buses(m, T, r)
@@ -708,7 +711,7 @@ def masters(m, k=1, port_bits=None):
             if inst0.orient in ('MX', 'R180'):
                 dyp = -dyp
             face = ('E' if dxp > 0 else 'W') if abs(dxp) >= abs(dyp) else ('N' if dyp > 0 else 'S')
-            if mst in ('qkd_kvwq_leaf_s','qkd_kvwq_leaf_s_w129'):
+            if mst in ('qkd_kvwq_leaf_s','qkd_kvwq_leaf_s_w129','qkd_kvwq_leaf_s_w129_m'):
                 # MX places the S write face against the CDC S face, with the
                 # chain direction S->N after the flip (PC0..7).
                 face = dict(c='N', n='S', dn='S', dp='N', w='S', wr='S', lane='E').get(p, 'E')
@@ -785,6 +788,8 @@ def real_pin_bindings(m):
     if m['geo'].get('kv_wq_wide'):
         paths['qkd_kvwq_leaf_s_w129'] = 'physical/qwen_die_masters/views/qkd_kvwq_leaf_s_w129/qkd_kvwq_leaf_s_w129.lef'
         del paths['qkd_kvwq_leaf_s']
+    if m['geo'].get('kv_wq_mirror'):
+        paths = {('qkd_kvwq_leaf_s_w129_m' if k=='qkd_kvwq_leaf_s_w129' else k):v.replace('qkd_kvwq_leaf_s_w129/','qkd_kvwq_leaf_s_w129_m/').replace('qkd_kvwq_leaf_s_w129.lef','qkd_kvwq_leaf_s_w129_m.lef') for k,v in paths.items()}
     rows, status = {}, {}
     for mst, rel in paths.items():
         path = ROOT/rel
@@ -829,7 +834,7 @@ def real_pin_bindings(m):
 
 def cdc_write_pin_reach(m, rows):
     """Per-bit physical Manhattan distance, with the actual instance mirrors."""
-    if 'qkd_cdc_wleaf' not in rows or not any(k in rows for k in ('qkd_kvwq_leaf_s','qkd_kvwq_leaf_s_w129')):
+    if 'qkd_cdc_wleaf' not in rows or not any(k in rows for k in ('qkd_kvwq_leaf_s','qkd_kvwq_leaf_s_w129','qkd_kvwq_leaf_s_w129_m')):
         return dict(ready=False, reason='actual CDC and south-face leaf pins both required')
     by = {i.name:i for i in m['insts']}
     def locations(it, port):
@@ -997,13 +1002,16 @@ def main(argv=None):
     ap.add_argument('--kv-wq-binary', action='store_true', help='plan-only binary ctl candidate; needs its own routed closure')
     ap.add_argument('--kv-wq-head', action='store_true', help='candidate 216x648 binary ctl with one head capture edge')
     ap.add_argument('--kv-wq-wide', action='store_true', help='candidate 129.6um south-face leaf')
+    ap.add_argument('--kv-wq-mirror', action='store_true', help='candidate single-layer mirror-legal wide leaf, existing head ctl')
     a = ap.parse_args(argv)
+    a.kv_wq_head = a.kv_wq_head or a.kv_wq_mirror
+    a.kv_wq_wide = a.kv_wq_wide or a.kv_wq_mirror
     a.kv_wq_leaf_s = a.kv_wq_leaf_s or a.kv_wq_head or a.kv_wq_wide
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.kv_wq_leaves:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
-    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide)
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror)
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))
