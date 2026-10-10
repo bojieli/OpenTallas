@@ -21,12 +21,12 @@
   "graph": "qwen_rom.json",
   "per_user": {
    "AR": {
-    "value": 4829.1,
+    "value": 4817.9,
     "unit": "tok/s",
     "grade": "derived",
     "source": "results/arch/token_path_20261009/qwen_rom.json totals.tok_s_published <- results/arch/qwen_kv_die_20261009/reprice.json headline",
-    "note": "248,496 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1789 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 170625.0, 'apportioned': 60696.0, 'priced': 17175.0}); range [4814.3, 4830.5] (PHY latency best/worst)",
-    "vs_tp4_single_die": -0.0029
+    "note": "249,070 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1806 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 171201.0, 'apportioned': 60696.0, 'priced': 17173.0}); range [4803.3, 4819.4] (PHY latency best/worst)",
+    "vs_tp4_single_die": -0.0052
    },
    "MTP": {
     "value": null,
@@ -59,14 +59,14 @@
     "note": "generator floorplan (placement legal); reticle margin 87.7 mm2"
    },
    "kv_die_mm2": {
-    "value": 192.1,
+    "value": 164.9,
     "unit": "mm2",
     "grade": "derived",
     "source": "results/arch/qwen_kv_die_20261009/kv_die/plan.json die_mm2",
     "note": "generator floorplan; OpenROAD placement legal"
    },
    "pair_mm2": {
-    "value": 962.4,
+    "value": 935.3,
     "unit": "mm2",
     "grade": "derived",
     "source": "results/arch/qwen_kv_die_20261009/rom_r22k.json + results/arch/qwen_kv_die_20261009/kv_die/plan.json"
@@ -85,13 +85,13 @@
     "note": "4 a KV die (KV, embedding)"
    },
    "logic_mm2": {
-    "value": 3849.5,
+    "value": 3741.1,
     "unit": "mm2",
     "grade": "derived",
     "source": "4 x pair"
    },
    "total_silicon_mm2": {
-    "value": 21273.5,
+    "value": 21165.1,
     "unit": "mm2",
     "grade": "derived",
     "source": "logic + stacks x 1089 mm2 (results/arch/energy_silicon_measured/energy_silicon.json convention)"
@@ -99,11 +99,11 @@
   },
   "power": {
    "static_w": {
-    "value": 207.6,
+    "value": 203.2,
     "unit": "W",
     "grade": "modelled",
     "source": "results/arch/energy_silicon_measured/energy_silicon.json qwen_8k.rom.terms.static + KV-die new logic",
-    "note": "200.0 W uarch static (4 dies, ungated clock) + 7.6 W for 121.8 mm2 of new KV-die logic at the same 62.8 mW/mm2 (aggregators, host SerDes, UCIe, sequencer, host, PLL); the moved PHY / controller / row-engine / landing / CDC blocks are already in the 4-die static"
+    "note": "200.0 W uarch static (4 dies, ungated clock) + 3.2 W for 50.5 mm2 of new KV-die logic at the same 62.8 mW/mm2 (aggregators, host SerDes, UCIe, sequencer, host, PLL); the moved PHY / controller / row-engine / landing / CDC blocks are already in the 4-die static"
    },
    "dynamic_j_per_token": {
     "value": 0.07659,
@@ -113,19 +113,19 @@
     "note": "uarch model; UCIe crossing energy (~0.3 MB a token at sub-pJ/bit) is below its resolution"
    },
    "batch1_w": {
-    "value": 577.5,
+    "value": 572.2,
     "unit": "W",
     "grade": "modelled",
     "source": "static + dyn x per-user rate"
    },
    "saturated_w": {
-    "value": 2150.1,
+    "value": 2145.6,
     "unit": "W",
     "grade": "modelled",
     "source": "static + dyn x aggregate"
    },
    "wall_w": {
-    "value": 2667.1,
+    "value": 2661.5,
     "unit": "W",
     "grade": "derived",
     "source": "saturated x wall factor 1.2404 (results/arch/v41_rack.json power.wall_factor)",
@@ -134,19 +134,19 @@
   },
   "efficiency": {
    "per_user_tok_s_per_kw": {
-    "value": 8361.9,
+    "value": 8420.4,
     "unit": "tok/s per kW (batch 1)",
     "grade": "modelled",
     "source": "per-user / batch1_w"
    },
    "aggregate_tok_s_per_w": {
-    "value": 11.8,
+    "value": 11.82,
     "unit": "tok/s per W (saturated)",
     "grade": "modelled",
     "source": "aggregate / saturated_w"
    },
    "j_per_token_batch1": {
-    "value": 0.1196,
+    "value": 0.1188,
     "unit": "J/token",
     "grade": "modelled",
     "source": "batch1_w / per-user"
@@ -165,8 +165,8 @@
    },
    "usd_per_user_tok_s": {
     "value": [
-     11.6,
-     22.78
+     11.62,
+     22.83
     ],
     "unit": "USD per (tok/s) at batch 1",
     "grade": "assumed",
@@ -1083,22 +1083,22 @@
    "target": "Qwen ROM (ROM + KV die)",
    "model": "Qwen3-8B 8K",
    "mode": "AR",
-   "per_user": 4829.1,
+   "per_user": 4817.9,
    "aggregate": 25362,
    "dies": 8,
    "stacks": 16,
-   "power_w": 2150.1,
-   "tok_s_per_kw_b1": 8361.9,
+   "power_w": 2145.6,
+   "tok_s_per_kw_b1": 8420.4,
    "capex": [
     56000,
     110000
    ],
    "gpu": 1175,
    "served": 55,
-   "vs_gpu_batch1": 4.11,
-   "vs_served_median": 87.8,
+   "vs_gpu_batch1": 4.1,
+   "vs_served_median": 87.6,
    "gpu_same_mode": 230,
-   "vs_gpu_same_mode": 21.0
+   "vs_gpu_same_mode": 20.95
   },
   {
    "target": "DS ROM (S81 + Engram HBM)",
@@ -1233,7 +1233,7 @@
  "changes": [
   {
    "item": "Qwen KV die",
-   "effect": "Qwen ROM per user 5,492.7 -> 4,829.1 tok/s (-0.29 %); pair 962.4 mm2; 8 dies",
+   "effect": "Qwen ROM per user 5,492.7 -> 4,817.9 tok/s (-0.52 %); pair 935.3 mm2; 8 dies",
    "grade": "derived",
    "source": "results/arch/qwen_kv_die_20261009/reprice.json"
   },
@@ -1302,8 +1302,8 @@
   "results/arch/hgi_sim_20261009/ds_native_timing_1M.json": "e450ac5078c587a6",
   "results/arch/hgi_sim_20261009/qwen_int8_packing.json": "18a9adb55a6943ce",
   "results/arch/hgi_sim_20261009/qwen_timing_P8191.json": "95dc2ad9567bc8c3",
-  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "c53ea9d94285f136",
-  "results/arch/qwen_kv_die_20261009/reprice.json": "7fd618cccfc3bbfb",
+  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "13ea1db4de5a89fd",
+  "results/arch/qwen_kv_die_20261009/reprice.json": "673521a4b0b5f94e",
   "results/arch/qwen_kv_die_20261009/rom_r22k.json": "1f7d306ec9136948",
   "results/arch/qwen_tp8_vs_sysdie_20261009/result.json": "664409499b753a7d",
   "results/arch/reprice_20261008/reprice.json": "16c586162e2c61cc",

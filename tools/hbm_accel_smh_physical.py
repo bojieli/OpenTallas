@@ -1237,7 +1237,8 @@ def cmd_block(a):
         pre = ["# redesign-hbm --cg: ICG push-down (one clone per sink cluster) before CTS"]
         if "PRE_CTS_TCL" in extra:
             pre.append("source " + extra["PRE_CTS_TCL"])
-        pre.append("source /src/physical/common_flow/cg_pushdown.tcl")
+        if not getattr(a, "cg_nopush", False):
+            pre.append("source /src/physical/common_flow/cg_pushdown.tcl")
         (work / "pre_cts_cg.tcl").write_text("\n".join(pre) + "\n")
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_FILES += /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hbm_accel/cg/ot_cg_tile.sv\n"
@@ -1390,6 +1391,8 @@ def main(argv=None):
     b.add_argument("--cg", action="store_true", help="tile / be: the COARSE CLOCK-GATED master (redesign-hbm 2026-10-09): "
                    "ot_hbm_accel_smh_{tile,be}_{w,e}g = the same netlist on one ICG (ot_cg_tile) + wake pins cgi / cgo; "
                    "cg_pushdown.tcl clones the ICG per sink cluster before CTS")
+    b.add_argument("--cg-nopush", action="store_true", help="--cg: keep the ONE ICG at the root (no cg_pushdown cloning; small pieces: "
+                   "the back end's CTS segfaulted with the push-down hook)")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)

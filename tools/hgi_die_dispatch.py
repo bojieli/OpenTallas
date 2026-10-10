@@ -51,7 +51,7 @@ SINGLE_CP_ONLY = {'argmax': ('die_id',)}
 def vm_clients(units):
     return [u for u in VM_CLIENTS if u in units and (u != 'argmax' or 'cp' in units)]
 VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
-HGI_VM_SLOT = (1399.656, 885.6)        # 64 macros 174.7 x 70.5 um on a 7 x 10 grid with 2.16 um halos (1,261 x 758 um) + logic
+HGI_VM_SLOT = (1399.656, 1080.0)       # 64 macros 174.7 x 70.5 um on a 7 x 10 grid with 2.16 um halos (1,261 x 758 um) + logic
 HGI_IDX_SLOT = (640.008, 600.48)        # Codex TOPK K2048 slot (175,534 um2 core) + VM stream engines
 LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
 LCP_BITS, CPL_BITS = 419, 222

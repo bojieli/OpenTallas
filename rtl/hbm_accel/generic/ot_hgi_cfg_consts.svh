@@ -5,6 +5,17 @@ function automatic [31:0] hgi_used(input [5:0] w);   // used bits of a word (res
     case (w)
         6'd0: hgi_used = 32'hFFFFFFFF;
         6'd1: hgi_used = 32'h00FFFFFF;
+        6'd16: hgi_used = 32'hFFFFFFFF;
+        6'd17: hgi_used = 32'hFFFFFFFF;
+        6'd18: hgi_used = 32'hFFFFFFFF;
+        6'd19: hgi_used = 32'hFFFFFFFF;
+        6'd20: hgi_used = 32'hFFFFFFFF;
+        6'd21: hgi_used = 32'hFFFFFFFF;
+        6'd22: hgi_used = 32'hFFFFFFFF;
+        6'd23: hgi_used = 32'hFFFFFFFF;
+        6'd24: hgi_used = 32'hFFFFFFFF;
+        6'd25: hgi_used = 32'hFFFFFFFF;
+        6'd26: hgi_used = 32'hFFFFFFFF;
         6'd32: hgi_used = 32'hFFFFFFFF;
         6'd33: hgi_used = 32'hFFFFFFFF;
         6'd34: hgi_used = 32'hFFFFFFFF;

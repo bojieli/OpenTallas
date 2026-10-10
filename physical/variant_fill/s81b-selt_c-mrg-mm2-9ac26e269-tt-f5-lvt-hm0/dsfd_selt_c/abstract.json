@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_selt_c",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_c-mrg-mm2-9ac26e269-tt-f5-lvt-hm0/routes/s81b_selt_c_mrg_mm2_9ac26e269_tt_f5_lvt_hm0/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_c-mrg-mm2-9ac26e269-tt-f5-lvt-hm0/routes/s81b_selt_c_mrg_mm2_9ac26e269_tt_f5_lvt_hm0/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_c-mrg-mm2-9ac26e269-tt-f5-lvt-hm0/routes/s81b_selt_c_mrg_mm2_9ac26e269_tt_f5_lvt_hm0/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_c-mrg-mm2-9ac26e269-tt-f5-lvt-hm0/routes/s81b_selt_c_mrg_mm2_9ac26e269_tt_f5_lvt_hm0/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_c-mrg-mm2-9ac26e269-tt-f5-lvt-hm0/routes/s81b_selt_c_mrg_mm2_9ac26e269_tt_f5_lvt_hm0/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_c-mrg-mm2-9ac26e269-tt-f5-lvt-hm0/routes/s81b_selt_c_mrg_mm2_9ac26e269_tt_f5_lvt_hm0/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-selt_c-mrg-mm2-9ac26e269-tt-f5-lvt-hm0/routes/s81b_selt_c_mrg_mm2_9ac26e269_tt_f5_lvt_hm0/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_selt_c.lef": "5ea0a59fdb84b06c2995eb59334500ab977be5102b88a1d20d218e32bd1dc4af",
+    "dsfd_selt_c_ff.lib": "fbc81634bd2828ecb02021a30423c9b4a1aab34e8e3de1133ab39a5df26063ac",
+    "dsfd_selt_c_ss.lib": "419f96a1486c53bdfe52791e7ff49498114cde7e5da2c1a0e842faedef4b4570"
+  },
+  "ok": true
+}

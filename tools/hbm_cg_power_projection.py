@@ -31,12 +31,16 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--evidence", default=str(ROOT / "results/physical/die_evidence_20261009/hbm_r25gp_power.json"))
     ap.add_argument("--out", required=True)
+    ap.add_argument("--measured", default=None, help="JSON of MEASURED gated floors: {part: {'gated_idle_w': W, 'source': ...}} "
+                    "(e.g. attn_hgrp: its leakage, the leaf's clock pin stopped by the routed gated quad's ICG)")
     a = ap.parse_args()
     d = json.loads(Path(a.evidence).read_text())
+    meas = json.loads(Path(a.measured).read_text()) if a.measured else {}
     limit = d["cooling_limit_w"]
+    out_meas = meas
     out = dict(schema="opentallas.redesign_hbm.cg_power_projection.v1", evidence=a.evidence, cooling_limit_w=limit,
                grade="PROJECTION (measured per-block a20 / a00 + measured duties; gated residual r bracketed) -- to be "
-                     "replaced by die-evidence-2's re-measure of the gated routes", workloads={})
+                     "replaced by die-evidence-2's re-measure of the gated routes", workloads={}, measured_gated_floors=out_meas)
     for wl, mix in d["options"]["b_duty_mix"].items():
         duty = mix["duty"]
         res = {}
@@ -59,6 +63,11 @@ def main():
                     else:
                         gs = gated_share(m, v) if v["kind"] in ("sm", "attn_tile") else (1.0 if u != "ON" else 0.0)
                     idle = (1 - gs) * a00 + gs * (r * a00 + leak)
+                    if scen != "none" and v["kind"] == "attn_tile" and "attn_hgrp" in meas:
+                        # MEASURED: per half, n_hgrp leaves at their gated floor, the rest of the half at its a00
+                        nh = sum(p["count"] for p in v["parts"] if p["part"] == "attn_hgrp")
+                        hg = d["blocks"]["attn_hgrp"]["w"]["a00"]
+                        idle = (v["w_each"]["a00"] - nh * hg + nh * meas["attn_hgrp"]["gated_idle_w"]) * v["n"]
                     tot += dt * a20 + (1 - dt) * idle
                 tot += d["relay_stations"]["w"]["a00"] + mix.get("wire_w", 0.0)
                 res[f"{scen}_r{int(r*100):02d}"] = round(tot, 1)
