@@ -44,6 +44,15 @@ class PostSdc(unittest.TestCase):
         self.assertEqual(j["eco"]["post_sdc"], ["physical/x/signoff.sdc", cl.IOREF_SDC])
 
 
+class UnnamedExtra(unittest.TestCase):
+    def test_copied_w18_extra(self):
+        j = job(); j["spec"]["verdict"]["post_sdc"] = []
+        from types import SimpleNamespace
+        with patch.object(cl, "baked_post_sdcs", return_value=[]), patch.object(cl, "event"), \
+                patch.object(cl, "ssh", return_value=SimpleNamespace(stdout="COPIED\n")):
+            self.assertEqual(cl.eco_post_sdcs(j, M), [".cl_eco/w18_extra.sdc", cl.IOREF_SDC])
+
+
 class ComboHoldRetry(unittest.TestCase):
     def test_eligible(self):
         self.assertTrue(cl.combo_hold_retry_eligible(dict(ss_ps=4.89, ff_ps=-0.13, drc=0)))

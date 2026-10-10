@@ -4141,6 +4141,16 @@ def eco_post_sdcs(j, m, what="ECO"):
     v = j["spec"].get("verdict", {})
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
+    if not baked and not any(p for p in post_sdcs if p != IOREF_SDC):
+        # a route whose in-run STA read a w18_extra.sdc that the spec does not name (route_master --extra-sdc from the
+        # cfg, hgi_mtp_core18 specf2: spec post_sdc None): copy it into the job's src and pass that copy
+        orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
+        rel = ".cl_eco/w18_extra.sdc"
+        if orfs and j.get("host") and j.get("run"):
+            r = ssh(j["host"], f"test -f {shlex.quote(orfs)}/w18_extra.sdc && mkdir -p {shlex.quote(j['run'])}/src/.cl_eco && "
+                               f"cp {shlex.quote(orfs)}/w18_extra.sdc {shlex.quote(j['run'])}/src/{rel} && echo COPIED; true", timeout=60)
+            if "COPIED" in (r.stdout or ""):
+                baked = [rel]
     if baked:
         post_sdcs = baked + [p for p in post_sdcs if p != IOREF_SDC] + ([IOREF_SDC] if IOREF_SDC in post_sdcs else [])
         event(j, f"{what}: verdict post-SDC(s) {baked} were applied in-run (w18_extra.sdc): passed to the ECO")
