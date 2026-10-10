@@ -38,19 +38,31 @@ module hfd_vm_se_w (
     ot_hfd_vm_slice #(.NM(3)) u_slice (.clk(clk), .rst_n(rst_n), .cmd_v(x_f_w_wr[0]), .we(x_f_w_wr[1]), .bank(x_f_w_wr[2]), .addr(x_f_w_wr[9:3]), .wd(x_f_w_wr[777:10]), .rv(sv), .rd(sd));
     wire [2263:0] od_t_n_wr = {1742'd0, x_f_w_wr[1289:778], x_f_w_wr[9:0]};
     wire [2263:0] o_t_n_wr;
-    for (genvar k = 0; k < 2264; k = k + 1) begin : g_o_t_n_wr
+    for (genvar k = 0; k <= 521; k = k + 1) begin : g_o_t_n_wr_0
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_n), .d(od_t_n_wr[k]), .q(o_t_n_wr[k]));
+    end
+    for (genvar k = 522; k <= 2263; k = k + 1) begin : g_o_t_n_wr_522
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_n), .d(od_t_n_wr[k]), .q(o_t_n_wr[k]));
     end
     assign t_n_wr = o_t_n_wr;
     wire [2263:0] od_t_w_wr = {472'd0, x_e2w[1590], x_e2w[1589:1078], x_e2w[1077:0], x_e2w[200:0]};
     wire [2263:0] o_t_w_wr;
-    for (genvar k = 0; k < 2264; k = k + 1) begin : g_o_t_w_wr
+    for (genvar k = 0; k <= 1791; k = k + 1) begin : g_o_t_w_wr_0
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_w), .d(od_t_w_wr[k]), .q(o_t_w_wr[k]));
+    end
+    for (genvar k = 1792; k <= 2263; k = k + 1) begin : g_o_t_w_wr_1792
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_w), .d(od_t_w_wr[k]), .q(o_t_w_wr[k]));
     end
     assign t_w_wr = o_t_w_wr;
     wire [2255:0] od_t_w_row = {974'd0, x_f_n_row[512:1], x_f_n_row[0], sd, sv};
     wire [2255:0] o_t_w_row;
-    for (genvar k = 0; k < 2256; k = k + 1) begin : g_o_t_w_row
+    for (genvar k = 0; k <= 768; k = k + 1) begin : g_o_t_w_row_0
+        ot_hfd_oreg1x u (.clk(clk), .clkf(cf_w), .d(od_t_w_row[k]), .q(o_t_w_row[k]));
+    end
+    for (genvar k = 769; k <= 1281; k = k + 1) begin : g_o_t_w_row_769
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_w), .d(od_t_w_row[k]), .q(o_t_w_row[k]));
+    end
+    for (genvar k = 1282; k <= 2255; k = k + 1) begin : g_o_t_w_row_1282
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_w), .d(od_t_w_row[k]), .q(o_t_w_row[k]));
     end
     assign t_w_row = o_t_w_row;
@@ -58,8 +70,8 @@ module hfd_vm_se_w (
     // w2e: [2062:0] tap row (SW -> SE x face and -> NE), [3036:2063] x_f_w_wr[2263:1290], [3292:3037] x_f_w_ctl
     wire [3292:0] od_w2e = {x_f_w_ctl[255:0], x_f_w_wr[2263:1290], x_f_w_row[2062:0]};
     wire [3292:0] o_w2e;
-    for (genvar k = 0; k < 3293; k = k + 1) begin : g_o_w2e
-        ot_hfd_oreg1x u (.clk(clk), .clkf(cf_e), .d(od_w2e[k]), .q(o_w2e[k]));
+    for (genvar k = 0; k <= 3292; k = k + 1) begin : g_o_w2e_0
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_e), .d(od_w2e[k]), .q(o_w2e[k]));
     end
     assign w2e = o_w2e;
 endmodule

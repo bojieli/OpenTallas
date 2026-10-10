@@ -36,7 +36,7 @@ module hfd_vm_ne_e (
     reg [2865:0] x_w2e; always @(negedge cf_w) x_w2e <= xf_w2e;   // lockup (face root)
     wire [2067:0] od_xNE = {5'd0, x_f_s_row[2062:0]};
     wire [2067:0] o_xNE;
-    for (genvar k = 0; k < 2068; k = k + 1) begin : g_o_xNE
+    for (genvar k = 0; k <= 2067; k = k + 1) begin : g_o_xNE_0
         ot_hfd_oreg3x u (.clk(clk), .clkf(cf_e), .d(od_xNE[k]), .q(o_xNE[k]));
     end
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(cf_e), .y(fclk_1)); assign xNE[2063] = fclk_1;
@@ -47,7 +47,7 @@ module hfd_vm_ne_e (
     for (genvar k = 0; k < 2063; k = k + 1) begin : g_a_xNE assign xNE[k] = o_xNE[k]; end
     wire [581:0] od_qNE = {2'd0, i_f_su_NE[2047:1980], i_iNE[511:0]};
     wire [581:0] o_qNE;
-    for (genvar k = 0; k < 582; k = k + 1) begin : g_o_qNE
+    for (genvar k = 0; k <= 581; k = k + 1) begin : g_o_qNE_0
         ot_hfd_oreg3x u (.clk(clk), .clkf(cf_e), .d(od_qNE[k]), .q(o_qNE[k]));
     end
     wire fclk_6; ot_fwd_clk_inv u_fclk_6 (.a(cf_e), .y(fclk_6)); assign qNE[580] = fclk_6;
@@ -55,19 +55,25 @@ module hfd_vm_ne_e (
     for (genvar k = 0; k < 580; k = k + 1) begin : g_a_qNE assign qNE[k] = o_qNE[k]; end
     wire [2047:0] od_t_su_NE = x_w2e[2865:818];
     wire [2047:0] o_t_su_NE;
-    for (genvar k = 0; k < 2048; k = k + 1) begin : g_o_t_su_NE
+    for (genvar k = 0; k <= 2047; k = k + 1) begin : g_o_t_su_NE_0
         ot_hfd_oreg3x u (.clk(clk), .clkf(cf_e), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
     end
     assign t_su_NE = o_t_su_NE;
     wire [2263:0] od_t_s_wr = {933'd0, x_w2e[817:0], i_f_su_NE[0], i_f_su_NE[1535:1024]};
     wire [2263:0] o_t_s_wr;
-    for (genvar k = 0; k < 2264; k = k + 1) begin : g_o_t_s_wr
+    for (genvar k = 0; k <= 512; k = k + 1) begin : g_o_t_s_wr_0
+        ot_hfd_oreg1x u (.clk(clk), .clkf(cf_s), .d(od_t_s_wr[k]), .q(o_t_s_wr[k]));
+    end
+    for (genvar k = 513; k <= 1330; k = k + 1) begin : g_o_t_s_wr_513
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_s), .d(od_t_s_wr[k]), .q(o_t_s_wr[k]));
+    end
+    for (genvar k = 1331; k <= 2263; k = k + 1) begin : g_o_t_s_wr_1331
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_s), .d(od_t_s_wr[k]), .q(o_t_s_wr[k]));
     end
     assign t_s_wr = o_t_s_wr;
     wire [2047:0] od_e2w = i_f_su_NE;
     wire [2047:0] o_e2w;
-    for (genvar k = 0; k < 2048; k = k + 1) begin : g_o_e2w
+    for (genvar k = 0; k <= 2047; k = k + 1) begin : g_o_e2w_0
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_w), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     assign e2w = o_e2w;

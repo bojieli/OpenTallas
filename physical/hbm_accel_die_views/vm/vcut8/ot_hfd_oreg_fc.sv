@@ -14,3 +14,8 @@ module ot_hfd_oreg3x (input wire clk, input wire clkf, input wire d, output reg 
     always @(negedge clk) l <= s1;
     always @(posedge clkf) q <= l;
 endmodule
+// ot_hfd_oreg1y: the pin register alone on the face leaf, for a bit launched by a NEGEDGE input lockup (or logic on one):
+// that lockup already hands off with T/2 of hold margin; a second negedge lockup would add a cycle (negedge -> negedge).
+module ot_hfd_oreg1y (input wire clk, input wire clkf, input wire d, output reg q);
+    always @(posedge clkf) q <= d;
+endmodule

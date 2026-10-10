@@ -132,6 +132,43 @@ class H(mt.T):
         if FC:
             for f in faces_of(q, h):
                 s.L.append(f'    wire cf_{f} = ck{f}[0];   // face die clock leaf ({f.upper()} face)')
+    def widths(s):
+        wd = {n: w for _, w, n in s.ports}
+        for l in s.L:
+            for m in re.finditer(r'\b(?:reg|wire)\s+(\[(\d+):0\]\s+)?([\w, ]+?)(;| =)', l):
+                for nm in m.group(3).split(','):
+                    nm = nm.strip()
+                    if re.fullmatch(r'\w+', nm):
+                        wd[nm] = int(m.group(2)) + 1 if m.group(2) else 1
+        return wd
+    def neg_bits(s, expr, w):
+        """per bit (LSB first) of a concatenation expression: True when that bit's source is a negedge input lockup"""
+        wd = s.widths()
+        def terms(e):
+            e = e.strip()
+            if e.startswith('{') and e.endswith('}'):
+                out, dep, cur = [], 0, ''
+                for ch in e[1:-1]:
+                    if ch == ',' and dep == 0:
+                        out.append(cur); cur = ''
+                        continue
+                    dep += ch == '{'; dep -= ch == '}'; cur += ch
+                out.append(cur)
+                bits = []
+                for t in out:                    # MSB first
+                    bits = terms(t) + bits
+                return bits
+            m = re.fullmatch(r"(\d+)'d0", e)
+            if m:
+                return [False] * int(m.group(1))
+            m = re.fullmatch(r'(\w+)(?:\[(\d+)(?::(\d+))?\])?', e)
+            assert m, ('unparsed term', e)
+            nm = m.group(1)
+            k = (int(m.group(2)) - int(m.group(3)) + 1) if m.group(3) else (1 if m.group(2) else wd[nm])
+            return [nm in NEG_ALIAS or nm.startswith('x_')] * k
+        b = terms(expr)
+        assert len(b) == w, (expr[:80], len(b), w)
+        return b
     def cf(s, p):
         return f'cf_{port_face(s.q, s.h, p)}' if FC else 'clk'
     def inp(s, p, w, n):           # die face input chain of n stages -> i_<p>; stage 0 on the face leaf + lockup
@@ -149,8 +186,14 @@ class H(mt.T):
             return mt.T.out(s, p, w, n, expr, fclk)
         c = s.cf(p)
         s.a(f'wire [{w-1}:0] od_{p} = {expr};'); s.a(f'wire [{w-1}:0] o_{p};')
-        s.a(f'for (genvar k = 0; k < {w}; k = k + 1) begin : g_o_{p}')
-        s.a(f'    ot_hfd_oreg{n}x u (.clk(clk), .clkf({c}), .d(od_{p}[k]), .q(o_{p}[k]));'); s.a('end')
+        # n = 1: a bit whose D cone starts at a NEGEDGE input lockup (x_*, or a root output combinational in one) already
+        # carries the half-cycle hand-off: it goes straight to the pin register (ot_hfd_oreg1y).  A second negedge lockup
+        # behind it would make negedge -> negedge = one extra cycle (the 6443bf64f bench: root write data one depth early).
+        nb = s.neg_bits(expr, w) if n == 1 else [False] * w
+        for lo_, hi_, neg in runs_of(nb):
+            mod = 'ot_hfd_oreg1y' if neg else f'ot_hfd_oreg{n}x'
+            s.a(f'for (genvar k = {lo_}; k <= {hi_}; k = k + 1) begin : g_o_{p}_{lo_}')
+            s.a(f'    {mod} u (.clk(clk), .clkf({c}), .d(od_{p}[k]), .q(o_{p}[k]));'); s.a('end')
         for k in range(w):
             if k in fclk:      # forwarded clocks leave on the same face leaf as their data
                 s.n += 1; s.a(f'wire fclk_{s.n}; ot_fwd_clk_inv u_fclk_{s.n} (.a({c}), .y(fclk_{s.n})); assign {p}[{k}] = fclk_{s.n};')
@@ -168,6 +211,15 @@ class H(mt.T):
         for d, w, n in s.ports:
             if d == 'output':
                 assert re.search(rf'assign {n}( =|\[)|assign {n}\[k\] =', txt), (s.t, n)
+
+NEG_ALIAS = {'fs', 'wq', 's0_v', 's0_d', 'wr_ready', 'rd_ready'}   # sw_e: wires of x_w2e / root outputs combinational in x_*
+
+def runs_of(flags):
+    out, lo = [], 0
+    for i in range(1, len(flags) + 1):
+        if i == len(flags) or flags[i] != flags[lo]:
+            out.append((lo, i - 1, flags[lo])); lo = i
+    return out
 
 def cross_in(s, p, w):     # cross / seam input: pin register on the face leaf + lockup -> x_<p> (read by the core on ck)
     if not FC:

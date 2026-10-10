@@ -53,31 +53,58 @@ module hfd_vm_sw_e (
     always @(posedge clk) hold <= m_rd;
     wire [2263:0] od_t_n_wr = {668'd0, fs[2047:1230], m_wd[1535:768], m_addr, m_bank, m_we, m_v};
     wire [2263:0] o_t_n_wr;
-    for (genvar k = 0; k < 2264; k = k + 1) begin : g_o_t_n_wr
+    for (genvar k = 0; k <= 777; k = k + 1) begin : g_o_t_n_wr_0
+        ot_hfd_oreg1x u (.clk(clk), .clkf(cf_n), .d(od_t_n_wr[k]), .q(o_t_n_wr[k]));
+    end
+    for (genvar k = 778; k <= 1595; k = k + 1) begin : g_o_t_n_wr_778
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_n), .d(od_t_n_wr[k]), .q(o_t_n_wr[k]));
+    end
+    for (genvar k = 1596; k <= 2263; k = k + 1) begin : g_o_t_n_wr_1596
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_n), .d(od_t_n_wr[k]), .q(o_t_n_wr[k]));
     end
     assign t_n_wr = o_t_n_wr;
     wire [2263:0] od_t_e_wr = {fs[973:0], m_wd[2815:2304], m_wd[2303:1536], m_addr, m_bank, m_we, m_v};
     wire [2263:0] o_t_e_wr;
-    for (genvar k = 0; k < 2264; k = k + 1) begin : g_o_t_e_wr
+    for (genvar k = 0; k <= 1289; k = k + 1) begin : g_o_t_e_wr_0
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_e), .d(od_t_e_wr[k]), .q(o_t_e_wr[k]));
+    end
+    for (genvar k = 1290; k <= 2263; k = k + 1) begin : g_o_t_e_wr_1290
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_e), .d(od_t_e_wr[k]), .q(o_t_e_wr[k]));
     end
     assign t_e_wr = o_t_e_wr;
     wire [255:0] od_t_e_ctl = fs[1229:974];
     wire [255:0] o_t_e_ctl;
-    for (genvar k = 0; k < 256; k = k + 1) begin : g_o_t_e_ctl
-        ot_hfd_oreg1x u (.clk(clk), .clkf(cf_e), .d(od_t_e_ctl[k]), .q(o_t_e_ctl[k]));
+    for (genvar k = 0; k <= 255; k = k + 1) begin : g_o_t_e_ctl_0
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_e), .d(od_t_e_ctl[k]), .q(o_t_e_ctl[k]));
     end
     assign t_e_ctl = o_t_e_ctl;
     wire [2255:0] od_t_e_row = {193'd0, tap_data[2062:0]};
     wire [2255:0] o_t_e_row;
-    for (genvar k = 0; k < 2256; k = k + 1) begin : g_o_t_e_row
+    for (genvar k = 0; k <= 2255; k = k + 1) begin : g_o_t_e_row_0
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_e), .d(od_t_e_row[k]), .q(o_t_e_row[k]));
     end
     assign t_e_row = o_t_e_row;
     wire [5400:0] od_e2w = {c_wd, c_addr, c_bank, c_we, c_v, x_f_e_wr[1790:1279], {x_f_e_wr[1278:201], tap_owner[767:0], wr_ACK_owner[191:0], tap_v[3:0], fault, drained, native_release, rd_ready, wr_ACK_v, wr_ready}, tap_data[2062:0]};
     wire [5400:0] o_e2w;
-    for (genvar k = 0; k < 5401; k = k + 1) begin : g_o_e2w
+    for (genvar k = 0; k <= 2062; k = k + 1) begin : g_o_e2w_0
+        ot_hfd_oreg1x u (.clk(clk), .clkf(cf_w), .d(od_e2w[k]), .q(o_e2w[k]));
+    end
+    for (genvar k = 2063; k <= 2063; k = k + 1) begin : g_o_e2w_2063
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_w), .d(od_e2w[k]), .q(o_e2w[k]));
+    end
+    for (genvar k = 2064; k <= 2064; k = k + 1) begin : g_o_e2w_2064
+        ot_hfd_oreg1x u (.clk(clk), .clkf(cf_w), .d(od_e2w[k]), .q(o_e2w[k]));
+    end
+    for (genvar k = 2065; k <= 2065; k = k + 1) begin : g_o_e2w_2065
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_w), .d(od_e2w[k]), .q(o_e2w[k]));
+    end
+    for (genvar k = 2066; k <= 3032; k = k + 1) begin : g_o_e2w_2066
+        ot_hfd_oreg1x u (.clk(clk), .clkf(cf_w), .d(od_e2w[k]), .q(o_e2w[k]));
+    end
+    for (genvar k = 3033; k <= 4622; k = k + 1) begin : g_o_e2w_3033
+        ot_hfd_oreg1y u (.clk(clk), .clkf(cf_w), .d(od_e2w[k]), .q(o_e2w[k]));
+    end
+    for (genvar k = 4623; k <= 5400; k = k + 1) begin : g_o_e2w_4623
         ot_hfd_oreg1x u (.clk(clk), .clkf(cf_w), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     assign e2w = o_e2w;
