@@ -11,6 +11,12 @@ export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SE
 D=physical/hbm_attn_tile_r
 H=${HALFDIR:-$D/half}/${TOP:?}      # hbm-forks: HALFDIR=physical/hbm_attn_tile_r/half_ps (PS entry ports)
 DW=1778.52
+# Opt-in CG1 must bind an explicitly selected gated hard view, including re-STA.
+QUADDIR=${QUADDIR:-$D/quad_b_cts/ot_attn_tile_m6h1q}
+case " ${PARAMS:-} " in *" CG=1 "*)
+  case "$QUADDIR" in *c891a57cf_cg_hm10*) ;; *)
+    echo "CG1 requires the qualified gated quad hard view" >&2; exit 2 ;; esac
+;; esac
 POSTPDN=$D/die_tile/quad_m7_link.tcl
 SLIVER=${SLIVER-12}
 if [ -n "$SLIVER" ]; then
@@ -24,7 +30,7 @@ echo "TOP=$TOP DW=$DW DH=$DH PARAMS=${PARAMS:-} HALO=${HALO:-1} SLIVER=$SLIVER P
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --source rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv --source rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv \
   --source $D/quad_parent_phys.sv --source $D/quad_bb.sv --source $D/die_tile/bank_bb.sv \
-  --macro-view ot_attn_tile_m6h1q=$D/quad_b_cts/ot_attn_tile_m6h1q \
+  --macro-view ot_attn_tile_m6h1q=$QUADDIR \
   --macro-view ot_attn_bank_sn544=$D/bank/ot_attn_bank_sn544 --macro-view ot_attn_bank_ew544=$D/bank/ot_attn_bank_ew544 \
   --macro-place-halo 1 1 \
   --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
@@ -40,7 +46,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --keep-workdir $W/work --force --output $W/physical.json "$@" > $W/run.log 2>&1
 rc=$?; echo "rc=$rc" > $W/exit
 case " $* " in *"stop-after"*) exit $rc ;; esac
-M="--macro $D/quad_b/ot_attn_tile_m6h1q --macro $D/bank/ot_attn_bank_sn544 --macro $D/bank/ot_attn_bank_ew544"
+M="--macro $QUADDIR --macro $D/bank/ot_attn_bank_sn544 --macro $D/bank/ot_attn_bank_ew544"
 python3 tools/w18/corner_sta.py $M --orfs-dir $W/work/orfs --post-sdc $D/signoff_833_int.sdc --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
 exit $rc

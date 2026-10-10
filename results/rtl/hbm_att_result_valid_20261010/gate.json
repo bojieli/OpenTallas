@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm_att_result_valid.v1",
+  "parent_commit": "0e8d268783d12ceb4120a1f5fb66803a60461e9f",
+  "source_sha256": {
+    "rtl/test/tb_hbm_att_result_valid.sv": "8bbae638e5f60c449eca52d4934ad50480c0ac4dd4c0d10f67f7d738c6341a3d",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv": "8eac53cb8d3868cf9d1001eb5664afd01ef0441010f4864a6169174fb69835b7",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv": "99e1ca0e99a382b3e21910a464b5a6352f534ea2acf752e3ed68337c65efbb4a",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_bank.sv": "58744be475391abd1a96c11a66440566e64f53cd42987c9bcfb95eb74ed5c929"
+  },
+  "consumer_mechanism": "real die tile/hi merge and output bank",
+  "quad_vehicle": "injected hardened-result boundary; arithmetic outside gate",
+  "checks": 36,
+  "heads_required": 16,
+  "runs": [
+    {
+      "CG": 1,
+      "returncode": 0,
+      "passed": true
+    },
+    {
+      "CG": 0,
+      "returncode": 1,
+      "passed": false
+    }
+  ],
+  "physical_status": "successor qualification required; old views untouched"
+}

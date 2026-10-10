@@ -301,6 +301,24 @@ def hgi_seq_vm_loop_model(vm_response_cycles=4, loops_per_token=8):
                 qualification="analytical sizing; no timing or adoption claim")
 
 
+def hbm_attention_result_valid_model():
+    """Fixed 16-head die result: validate the arriving hardened-quad boundary."""
+    return dict(schema="opentallas.hbm_attention_result_valid.v1", heads=16,
+                macs_per_cycle=0, compute_intensity="control-only valid reduction",
+                replicas_per_tile=1, input_bytes_per_cycle=64+4,
+                output_bytes_per_cycle=64+2, existing_boundary_bits=529,
+                added_boundary_bits=0, added_routing_tracks=0,
+                valid_reduction_fanin=16, valid_reduction_depth=4,
+                payload_mux_bits=512, fault_mux_bits=16, added_register_bits=0,
+                added_area_mm2_estimate=600*0.2/1e6,
+                floorplan_slot_fit="inside existing tile/hi result merge; successor route required",
+                added_latency_cycles=0, token_latency_delta_cycles=0,
+                action_on_partial_valid="explicit all-head fault, zero result payload",
+                required_heads="all16: current interface has no active-head mask",
+                opt_in="CG=1 at die tile and both half tops; default0",
+                qualification="analytical sizing only; no physical adoption credit")
+
+
 def hgi_collective_row_formatter_model(**kwargs):
     from uarch_model_hgi_collective_decode import row_formatter_model
     return row_formatter_model(**kwargs)
