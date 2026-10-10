@@ -1,0 +1,83 @@
+{
+  "name": "hbm_svc_SW_s1_ps_reset_eps_982804de3_tc_hm10-cl",
+  "block": "hfd_svc_SW_s1",
+  "owner": "Codex:svc-dma",
+  "purpose": "Source/model-pinned contextual derivative: ot_svs_asm, ot_svs_grp changed reset/pending descriptor. Existing physical outline/pins/clock/uncertainty/budget preserved; no pre-repair corner adoption. Launch requires full four-state exact gate plus measured host admission. | hbm-forks RQ-HF-1: hfd_svc_SW_s0 PER-PC STREAM successor (HGI-1 svc striping, all 32 PCs; DS mode first: the legacy paths are lockstep-identical). TC route, option B, rule H1 budget + link_budget_consistent, mm FF hold HM 0, current flow, submit-time lint. | PINREG: every input-pin-fed register placed beside its own pin (OT_WS_PINREG) | f7ffa2acf+ requeue: PINREG on every segment, fc on the face-hold segments; structural rdyp / grp input register",
+  "hosts": [
+    "ot-epyc3",
+    "ot-epyc1tb",
+    "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "source": {
+    "branch": "codex/svc-dma-takeover-20261010",
+    "commit": "982804de3f97818a4ce4745bc48b6535261466df",
+    "extra_paths": [
+      "results/uarch/hbm_current_target_portmap_20261005",
+      "results/rtl/hbm_accel_die_floorplan_20261005",
+      "results/rtl/die_top_lint_20261006",
+      "results/rtl/dshbm_matched_reference_20261005",
+      "results/uarch/svc_eps_queue_20261010",
+      "results/uarch/svc_reset_boundary_20261010",
+      "tools/hbm_svc_eps_queue_model.py",
+      "tools/hbm_svc_reset_boundary_model.py"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "python3 -c \"import json,os; r=json.load(open(os.environ['OT_SVC_EXACT_GATE_RECEIPT'])); assert r['source']=='982804de3'; assert r['four_state_positive_gate']=='PASS_PS_AND_FC'; assert r['four_state_no_unknown_outputs'] is True\" || exit 1; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_SVC_SPLIT=split_ps; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.010\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" WSFILE=\"physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s1/ws.tcl\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_svc_SW_s1 physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s1.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var OT_WS_PINREG=1 --orfs-var SYNTH_CANONICALIZE_TCL=/src/physical/hbm_accel_die_views/svc/keep_vpipe_dff.tcl --sdc-append physical/hbm_accel_die_views/svc/sdc_ps/hfd_svc_SW_s1_fwd.sdc $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 8,
+      "peak_ram_gb": 40
+    },
+    "route": {
+      "cmd": "python3 -c \"import json,os; r=json.load(open(os.environ['OT_SVC_EXACT_GATE_RECEIPT'])); assert r['source']=='982804de3'; assert r['four_state_positive_gate']=='PASS_PS_AND_FC'; assert r['four_state_no_unknown_outputs'] is True\" || exit 1; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_SVC_SPLIT=split_ps; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.010\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" WSFILE=\"physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s1/ws.tcl\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_svc_SW_s1 physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s1.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var OT_WS_PINREG=1 --orfs-var SYNTH_CANONICALIZE_TCL=/src/physical/hbm_accel_die_views/svc/keep_vpipe_dff.tcl --sdc-append physical/hbm_accel_die_views/svc/sdc_ps/hfd_svc_SW_s1_fwd.sdc $CL_STOP_AFTER",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_svc_SW_s1.lef {RUN}/routes/{NAME}/view/hfd_svc_SW_s1_ss.lib {RUN}/routes/{NAME}/view/hfd_svc_SW_s1_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "lef_check_MATCH",
+        "cmd": "OT_SVC_SPLIT=split_ps python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+      },
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+      "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s1"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+    "master": "hfd_svc_SW_s1",
+    "clock": "core_clk"
+  },
+  "no_bench_reason": "Compiled source982804de3 PS/FC joined service exact208SM16KV16IK12streams12done and4mutantsFAIL; independentPHYfourstateSW/NEPASS; fullPS/FCfourstate gate must PASS beforequeue. Evidence results/rtl/svc_eps_fullgate_20261010/receipt.json. MinimumEPSfourstate4mutantsPASS. This spec is PREPARED_NOT_QUEUED.",
+  "cycles_note": "Repair adds no datapath latency; queued stream no longer blocks legacy ingress. Pending slot128FF perstack; reset adds resettable-cell obligations.",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC"
+}

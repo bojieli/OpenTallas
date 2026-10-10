@@ -1,0 +1,636 @@
+{
+  "source": "982804de3f97818a4ce4745bc48b6535261466df",
+  "model_sources": [
+    "13e43398e",
+    "6daac135b"
+  ],
+  "compiled_gate": "PASS_PS_AND_FC",
+  "independent_PHY_fourstate": "PASS_SW_NE_bothfamilies",
+  "full_positive_fourstate": "PENDING",
+  "ready_state": "PREPARED_NOT_QUEUED",
+  "required_gate_env": "OT_SVC_EXACT_GATE_RECEIPT points immutable PASS receipt matching source982804de3",
+  "resource": "8threads40GB derived prior samefullshapeinventory; admissionguard measuredhostrequired; no launches untilgate",
+  "context": "symmetric family masters include SW/SE used by fourstackSW/SE/NW/NE composition; geometry+pinout hashes authoritative",
+  "derivatives": [
+    {
+      "master": "hfd_svc_SE_s0",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SE_s0.sv": "ee8bf3841a469bcf4268b86bbeef942260be4cfaadee147e4ae438b24904813d",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s0/ports.json": "65daf40feb0fdee907059a37614d37e1939e15855dd3242e45a3a4d9da7a52dd",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s0/ws.tcl": "dd8de5c63a207472b049b91e35d592280d97709675d28d0d40ecf46ea19e9a63",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s0_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s0_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s1",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SE_s1.sv": "dffa352f6f4e82a2637bb5a5636527749fb97203533e396e002a37a097052cd1",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s1/ports.json": "810486817baa339fec0fa1d39963b83a0f5f45a28be70f34292b65aaa2b2ade1",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s1/ws.tcl": "3b12ee065e23f190f451abe4c9d090bca48e456915b3504cd7d3f7912eb978e0",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s1_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s1_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s2",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SE_s2.sv": "5050f403894d2f7fa0f2a490cef84c4395c1d9d9cf2c91171db46d760cb087e1",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s2/ports.json": "1c65d875836288b09c530e9578eb0f1f65ddbdcaf41e3ebda9e37b2229b07725",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s2/ws.tcl": "2775b75720d51aefe741d5ba0527788513dbfec00a23832a2510330674433842",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s2_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s2_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s3",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_eps",
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SE_s3.sv": "b33cfe7c6eca25f4488d00623d2432ba7ba6de109e938270350ff458266fac81",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s3/ports.json": "8f3ad2630b446f1e124676252c0c5276068970910a9868264c8004a4aaccfb54",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s3/ws.tcl": "8f1ca7191ad38feadc4644cca2acc002751327e738665881511c83ac15c291bb",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s3_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s3_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s4",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SE_s4.sv": "e1bc0fee1e2c571ea5543a0625a468476d8282bbc6ee43c7e10bef04ab4b6a63",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s4/ports.json": "c8aa38a9bf1dab597bb00e9274174dde1f173486f7213bdb6e5e4a13b32fdbc9",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s4/ws.tcl": "c3605178c49f498fd4448e4de411a339e58450f919c7ff4954ade660cac105c6",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s4_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s4_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s5",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SE_s5.sv": "0e921cf3439cab901f5d051bd5cfbd52eabd618e557af7b6e0370bccb5dcbd4b",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s5/ports.json": "08ef4d0b0710fe9774721adc4ea35fc75257bf4aebe2857e531ddfc68320ce55",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s5/ws.tcl": "25201b839deddbfd038a538c1de5a108fda7316a2be32b4a4a3797bc4451e16e",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s5_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s5_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s7",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SE_s7.sv": "8fe2c029eec74f6883b66a950cae4d8c9da8ec3ed9d25709263668519cdb76d2",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s7/ports.json": "98ca9c2dae670719ea28867f6e184cb93942b8d264c2f89a19b0c14718784cbc",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s7/ws.tcl": "a619e44335abf80e0debf85e22796779d6b0f4e829a0e466d96fac95284021b3",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s7_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s7_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s0",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s0.sv": "24b3d5c7568c10da6816367042dbbeb44922ff1d4622592d7d734778145ebb7e",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s0/ports.json": "c9168cb09f56d0276d6753cae143f12382d8c7590b3b14d2135b2687b6241d9d",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s0/ws.tcl": "ff68678f8f7348b734758076a743591b82ff0f70b7c807437f387b8d916ebf86",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s0_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s0_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s1",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s1.sv": "05c68121cd01e3118a9880b1f1f5672df3cf3444351b944706c143cbd98edef4",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s1/ports.json": "119244c623d957085d543d2f49e1b25d111ad429133bceeaf194f5a5850f96f2",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s1/ws.tcl": "56af209c02d0822ddb31138f4c28802cf8a52e494899545e30e0accd261f4d70",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s1_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s1_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s2",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s2.sv": "13599dcb391c1ff66549adb14260739600f011cfcfc0acbc45e0b9112d586444",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s2/ports.json": "4af54082306316a9420d850070f283b7fbbd6f5c92c5c9a622e0ae5a11a362e9",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s2/ws.tcl": "d2ae3dc296a30e7f1b02380a7c6d00b4a035bd41ade4e11baeb0056c0991527f",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s2_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s2_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s3",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_eps",
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s3.sv": "62119bce9f1ad0b3f8ab25c8e36b65aba81c4928c2af784802799334884b8c34",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s3/ports.json": "85820b63bc21b6324cbca48df30e143eca4f8c79d877aa47f1253e75bc2c75b1",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s3/ws.tcl": "fef6df52162286c11515f6633318045aae3af062be55918459d9d1030c8d2393",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s3_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s3_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s5",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s5.sv": "e93d05d9e59cc640f18eea84696a425a4ee9a16fea03afcb623527562462b1c3",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s5/ports.json": "34e809cdd9cb412692f18a442ddc24b84c77c09a2ed2fc72adfcc0ffd37d43a5",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s5/ws.tcl": "77fd52a0f22dad1d5d7ece198ea0b31b49230290587b99d8d0bcc541e58c290f",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s5_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s5_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s6",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s6.sv": "f54bc934352543925144b6151de3244d8de91474cb0548d14c05ec98fddee697",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s6/ports.json": "7290e6787f5a99f6b09f92ef0eb648f12a5112ae3478d139d8db1dde097c8c50",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s6/ws.tcl": "b8b866a82e511f67ae330e4894081507a6763076aad50d3d5d26217a3f58884d",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s6_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s6_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s7",
+      "family": "ps",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_ps/hfd_svc_SW_s7.sv": "13cad0692a2f257734d0bad13324a9fa65db30553b53d91d29e6e6d1f1e20293",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s7/ports.json": "6ec1adab524eae7caba400c0b52d9dc8b419f9e4f1e3fa5d7980cb15c537b963",
+        "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s7/ws.tcl": "e002ee6dd290e3f2ed41b46c1785f51bc620c39fa837712b391994d5866b1bfc",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s7_ps_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s7_ps_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s0",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SE_s0.sv": "96fb7d1850608e8a1a79bda89c792b9adf0516b42400da923f2084ff61194c5e",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s0/ports.json": "5b69c93024d7ac4ffec82e55a87f2b5d7b2ac03bcd5cbfe4bc5d285f948543f9",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s0/ws.tcl": "dd8de5c63a207472b049b91e35d592280d97709675d28d0d40ecf46ea19e9a63",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s0_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s0_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s1",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SE_s1.sv": "61b9ea70f6b21a70a95df145ddcdc36dcd973a655304bb16b539e8d0b888a536",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s1/ports.json": "64c9bd18606736425f63cc9cde371f8c6564b8f7cf3b519a8a74b4308b3043ac",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s1/ws.tcl": "3b12ee065e23f190f451abe4c9d090bca48e456915b3504cd7d3f7912eb978e0",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s1_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s1_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s2",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SE_s2.sv": "870fc288fefa7407ec042d3e2107fc21e608470f684674ffb065cca4347e061e",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s2/ports.json": "73ac7d54808eefe562360483843242bda218819e62643d001f89f7d87825bb13",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s2/ws.tcl": "2775b75720d51aefe741d5ba0527788513dbfec00a23832a2510330674433842",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s2_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s2_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s3",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_eps",
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SE_s3.sv": "a0cebd61ed28f1a177e0c2507744a8ee37a6d303aa8ce46cdc8769bc7b69079d",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s3/ports.json": "eebb75d228d9fbd97e2c35b0e69b27502880cc565ae1c64a0928f2ae2051cad5",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s3/ws.tcl": "8f1ca7191ad38feadc4644cca2acc002751327e738665881511c83ac15c291bb",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s3_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s3_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s4",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SE_s4.sv": "21664f73f9089ad891ca21533575d59698f158205ae43b8952fe174dc82fb7a2",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s4/ports.json": "e9fc30387745e9729222a97abdd25b2a73030e778d1923e50aa397b8ab454df2",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s4/ws.tcl": "c3605178c49f498fd4448e4de411a339e58450f919c7ff4954ade660cac105c6",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s4_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s4_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s5",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SE_s5.sv": "fd0d8d02c39df4578b924ecea13854f18c3676f4ea8f25de417f899b9876ffc6",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s5/ports.json": "7df6707f8183a5dbab95767d655a45a51a8dbd2ab91d4a3eee8e40fa1ab7ef09",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s5/ws.tcl": "25201b839deddbfd038a538c1de5a108fda7316a2be32b4a4a3797bc4451e16e",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s5_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s5_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s7",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SE_s7.sv": "1e25c027d990e723260ecbb9c4e8b12200956ab4919593a11c3c563a7e459114",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s7/ports.json": "52dce31b42c48174a7ee6dfe2e887a98b49356c20f77d41b28e832359eb1edf4",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s7/ws.tcl": "a619e44335abf80e0debf85e22796779d6b0f4e829a0e466d96fac95284021b3",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SE_s7_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SE_s7_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s0",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SW_s0.sv": "dbffaf67359945806f712cefccb6d9deaf05b2f735999de06f6a8e84c862faef",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s0/ports.json": "0d42fc037da5d66f1e81beabd9060cea02d743e9d29bffda476ce059b8def55e",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s0/ws.tcl": "ff68678f8f7348b734758076a743591b82ff0f70b7c807437f387b8d916ebf86",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s0_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s0_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s1",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SW_s1.sv": "c908209bf859d0f2322f788ad8e3ac880b8c3b3f38bfe456a250784e16c511c5",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s1/ports.json": "8e6a478e76c562fe690f769c7e4c0068f68e4f9b64438d8edc0de10ad76752de",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s1/ws.tcl": "56af209c02d0822ddb31138f4c28802cf8a52e494899545e30e0accd261f4d70",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s1_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s1_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s2",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SW_s2.sv": "cdf31da73a6cc8180f0634146c646c1454ba0fb812603c939cea40e8e7980195",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s2/ports.json": "e23ddfebcf1ae5e0fff5fca4b605b6da4a22ca766b21ee131ee76e9621fc8b08",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s2/ws.tcl": "d2ae3dc296a30e7f1b02380a7c6d00b4a035bd41ade4e11baeb0056c0991527f",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s2_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s2_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s3",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_eps",
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SW_s3.sv": "ab59c1e321379454d2946164dc6a38db47f72cbcb9fd3cd3511f261a5ce5feed",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s3/ports.json": "2d3eff286c40fd2ac6b1e84cb8550b2ce24453309e12ca44d8da78fae654ddd6",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s3/ws.tcl": "fef6df52162286c11515f6633318045aae3af062be55918459d9d1030c8d2393",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s3_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s3_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s5",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SW_s5.sv": "a695fd2ad971ca092b0758b93ed25a9e45636017b9f3cb6f039202a1a2e6aad7",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s5/ports.json": "886b3e6242a27b45917aed884538ac318d386346f7e34efccbe23e83927338a5",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s5/ws.tcl": "77fd52a0f22dad1d5d7ece198ea0b31b49230290587b99d8d0bcc541e58c290f",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s5_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s5_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s6",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SW_s6.sv": "0d808ce8757544ce837a5c516a3c4d132e1ac7a9f6a0f9c34af46674be7941fa",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s6/ports.json": "d63fb4f40858297fb01d608446e4ab1658a67cc5c87c1ac577005a72f43daa54",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s6/ws.tcl": "b8b866a82e511f67ae330e4894081507a6763076aad50d3d5d26217a3f58884d",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s6_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s6_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s7",
+      "family": "psfc",
+      "changed_module_dependencies": [
+        "ot_svs_asm",
+        "ot_svs_grp"
+      ],
+      "source": "982804de3f97818a4ce4745bc48b6535261466df",
+      "assets": {
+        "physical/hbm_accel_die_views/svc/rtl/seg_psfc/hfd_svc_SW_s7.sv": "72b99b14334aaa041ae14a9b2a46cb60686443c3c1fdce9e6b6d96e3f816eb1d",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s7/ports.json": "9c3407e5ea538d181d7eec60e77f13292c5e65032fd12adbb13d0dfb11f537fa",
+        "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s7/ws.tcl": "e002ee6dd290e3f2ed41b46c1785f51bc620c39fa837712b391994d5866b1bfc",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv": "0c66fc048ae0c68585d9ec8fe010282f2613d16db00804e2389dd26ecaff4c0c",
+        "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv": "4dbfce1db19cd2797c984279429db1d43b09f874109a026942c83425e270c1ee",
+        "results/uarch/svc_eps_queue_20261010/prebuild.json": "ea08e1f390c9c158f2509a217bf7ae065ca50a56723baaa77cc9e9e70019057b",
+        "results/uarch/svc_reset_boundary_20261010/prebuild.json": "7598c833c988b415f5e14bc905800ff222651bbe5b693434e57147cb2acc9eac"
+      },
+      "ids": [
+        "hbm_svc_SW_s7_psfc_reset_eps_982804de3_tc_hm0-cl",
+        "hbm_svc_SW_s7_psfc_reset_eps_982804de3_tc_hm10-cl"
+      ]
+    }
+  ]
+}
