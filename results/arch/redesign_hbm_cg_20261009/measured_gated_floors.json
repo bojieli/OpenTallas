@@ -8,5 +8,25 @@
   "a00_w": 0.010014754720032215,
   "g00_w": 0.009918383322656155,
   "source": "OpenSTA report_power (die-evidence-2 r25gp_block_power.tcl + g00 = ICG ENA case 0) on hbm_attn_quad_cg-c891a57cf-tc-hm01-grta-cl 6_final (spef), EPYC4 /srv/opentallas-scratch/claude/r25gp-power/cg/out/attn_quad_cg.kv; the quad's HC flops stay on the raw clock by design"
+ },
+ "sm_be_wg": {
+  "a20_w": 0.026632225140929222,
+  "a00_w": 0.0158558152616024,
+  "gated_idle_w": 0.00021049357019364834,
+  "g00_w": 0.00021049357019364834,
+  "source": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_wg_cg_80412.kv",
+  "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_wg_cg_80412.src",
+  "point": "TT OpenSTA report_power, routed SPEF, one ICG ENA forced 0",
+  "original_record_commit": "fb12301e5"
+ },
+ "sm_be_eg": {
+  "a20_w": 0.026453407481312752,
+  "a00_w": 0.015697600319981575,
+  "gated_idle_w": 0.00020964471332263201,
+  "g00_w": 0.00020964471332263201,
+  "source": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_eg_cg_80412.kv",
+  "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_be_power_20261010/sm_be_eg_cg_80412.src",
+  "point": "TT OpenSTA report_power, routed SPEF, one ICG ENA forced 0",
+  "original_record_commit": "13323125b"
  }
 }
