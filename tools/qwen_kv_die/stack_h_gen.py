@@ -326,6 +326,65 @@ def generate():
     ectl = rep(ectl, """    localparam integer LANE_D = 4;                         // issue -> lane inputs (S1, S1b, S2, S3)""",
                """    localparam integer LANE_D = 4;                         // issue -> lane inputs (S1, S1b, S2 at the tile pin, S3)
     localparam integer PLAT = 4;""")
+    # ---- qwen-1010/b 2026-10-10: ectl_c timing successor (route qkd_ectl_c-f8a6d7c30 EARLY_FAIL_SETUP TT -519 ps, 746
+    # endpoints).  Three structural causes, three exact fixes (transaction level; the bench re-measures the cycles):
+    #  (a) the request generator is fed by the E face (exp_done / n_s / gmax / start) but its requests leave on the W face
+    #      (the landing column): req_* crossed the 648-um tile in one cycle (629 ps of wire, reg -> out -543 ps).  The
+    #      requests now pass RQD registered relay stages to the W-face pin flops (+RQD cycles of request latency, inside
+    #      the DQ = 32 credit window).
+    #  (b) the q beat broadcast enters on the E face and leaves on both long faces (t0_qd S / t1_qd N, the far end ~700 um
+    #      away): one registered mid stage (qv / qb / qd), and q_ready counts the delayed valid, so the q rows still land in
+    #      the head tiles before the first K issue reaches them (+1 cycle at the layer start).
+    #  (c) the score / running-max block takes its own reset leaf (u_rc fanned out to the whole tile: lmax -16 ps).
+    ectl = re.sub(r'output reg(\s+)req_valid,', r'output wire\1req_valid,', ectl, count=1)
+    ectl = re.sub(r'output reg(\s+)req_v,', r'output wire\1req_v,', ectl, count=1)
+    ectl = re.sub(r'output reg(\s+)req_g,', r'output wire\1req_g,', ectl, count=1)
+    ectl = re.sub(r'output reg (\s*)\[12:0\](\s+)req_t,', r'output wire\1[12:0]\2req_t,', ectl, count=1)
+    n0 = len(re.findall(r'\breq_(?:valid|v|g|t)\b(?=\s*<=)', ectl))
+    assert n0 == 10, n0
+    ectl = re.sub(r'\breq_(valid|v|g|t)\b(?=\s*<=)', r'rq_\1', ectl)
+    ectl = rep(ectl, """    // ---- request generator -------------------------------------------------------------------------------------------
+""", """    // ---- request generator -------------------------------------------------------------------------------------------
+    reg        rq_valid, rq_v, rq_g;                    // the generator's request (relayed to the W-face pin flops below)
+    reg [12:0] rq_t;
+""")
+    ectl = rep(ectl, """    // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
+""", """    // ---- request relay: RQD registered stages from the generator to the W-face pin flops (the last stage) -------------
+    localparam integer RQD = 2;
+    wire [RQD:0]        rqv_s;
+    wire [15*(RQD+1)-1:0] rqd_s;
+    assign rqv_s[0] = rq_valid;
+    assign rqd_s[14:0] = {rq_v, rq_g, rq_t};
+    genvar gq;
+    generate for (gq = 0; gq < RQD; gq = gq + 1) begin : g_rq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(15)) u_d (.clk(clk), .d(rqd_s[15*gq +: 15]), .q(rqd_s[15*(gq + 1) +: 15]));
+    end endgenerate
+    assign req_valid = rqv_s[RQD];
+    assign {req_v, req_g, req_t} = rqd_s[15*RQD +: 15];
+
+    // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
+""")
+    # (b) q beat mid stage
+    ectl = rep(ectl, """    always @(posedge clk or negedge rst_n) if (!rst_n) qv_r <= 1'b0; else qv_r <= q_valid_in;
+    always @(posedge clk) begin qb_r <= q_beat_in; qd_r <= q_data_in; end""",
+               """    reg               qv_p;                    // pin flops (E face); qv_r / qb_r / qd_r are the mid stage
+    reg  [5:0]        qb_p;
+    reg  [511:0]      qd_p;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin qv_p <= 1'b0; qv_r <= 1'b0; end else begin qv_p <= q_valid_in; qv_r <= qv_p; end
+    always @(posedge clk) begin qb_p <= q_beat_in; qd_p <= q_data_in; qb_r <= qb_p; qd_r <= qd_p; end""")
+    # (c) score / running-max reset leaf
+    ectl = rep(ectl, """    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+""", """    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+    wire rsc;                                                         // the score / running-max block's own leaf
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rsc));
+""")
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc)
+        if (!rc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end""", """    always @(posedge clk or negedge rsc)
+        if (!rsc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end""")
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc) begin
+        if (!rc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end""", """    always @(posedge clk or negedge rsc) begin
+        if (!rsc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end""")
     wrapper = ENGINE
     s = s[:i] + HEAD.lstrip('\n') + '\n' + ectl + '\n' + wrapper + s[j:]
     # ================= the aggregator: node beat lanes (beat b = lanes d = LFB k + b of every head) =================
@@ -336,6 +395,37 @@ def generate():
         reg  [LN*32-1:0] stg [0:ND-1];""", """        localparam integer SA = (ND > 1) ? $clog2(ND) : 1;
         integer          hh_, kk_;
         reg  [LN*32-1:0] stg [0:ND-1];""")
+    # (d) qwen-1010/b 2026-10-10: the row FIFO's 32 read-pointer copies span the 648-um word; the pop (the K / V issue
+    # decision) reached all of them in one cycle (cyc8_r -> issue -> 450 ps of buffered wire -> u_rows.g_rp[*]: -204 ps,
+    # 92 endpoints).  The pop now reaches each slice through two registered stages (one of NQ quadrant copies, then the
+    # slice's own), the slice pointer advances on its stage, and the slice reads at q + ps + pq -- exactly the FIFO
+    # pointer (q counts the pops up to t - 3, ps = pop(t - 2), pq = pop(t - 1)).  0 cycles.
+    s = rep(s, """// read-pointer copy: advances on pop exactly as the FIFO's own pointer
+module ot_nhb_rp_h""", """// read-pointer copy (pop reaches it through two registered stages, pq then ps): reads at q + ps + pq = the FIFO pointer
+module ot_nhb_rp2_h #(parameter integer AW = 5, parameter integer D = 32) (input wire clk, input wire rst_n,
+                                                                           input wire pq, output wire [AW-1:0] ra);
+    reg [AW-1:0] q;
+    reg          ps;
+    wire [AW-1:0] q1 = (q == D - 1) ? {AW{1'b0}} : q + 1'b1;
+    wire [AW-1:0] q2 = (q1 == D - 1) ? {AW{1'b0}} : q1 + 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin q <= {AW{1'b0}}; ps <= 1'b0; end else begin ps <= pq; if (ps) q <= q1; end
+    assign ra = (ps && pq) ? q2 : ((ps || pq) ? q1 : q);
+endmodule
+// read-pointer copy: advances on pop exactly as the FIFO's own pointer
+module ot_nhb_rp_h""")
+    s = rep(s, """    wire [NC*AW-1:0] rpc;
+    genvar c;
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pop(pop), .q(rpc[AW*c +: AW]));""",
+           """    wire [NC*AW-1:0] rpc;
+    localparam integer NQ = (NC >= 4) ? 4 : 1;
+    wire [NQ-1:0] pq;
+    genvar c;
+    generate for (c = 0; c < NQ; c = c + 1) begin : g_pq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_pq (.clk(clk), .rst_n(rst_n), .d(pop), .q(pq[c]));
+    end endgenerate
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));""")
     return s
 
 
