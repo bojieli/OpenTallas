@@ -2329,6 +2329,7 @@ Q_X1B = False                  # --q-x1b: option-B q pin plan (x1 on the S-face 
 CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
 COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
 COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
+COLL_SPLIT3_CR = False         # explicit planning candidate, never a closure claim
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -3867,6 +3868,12 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
     not the packed cfg ROM row), and a mirrored (MY, right-lane) element mirrors the bank x."""
     out = []
     groups = []
+    if Q_X1B:
+        # A default/legacy q LEF must never silently stand in for the selected
+        # split x1 face plan.  A stub is allowed for integration, not closure.
+        assert _q_port_face(rq, 'x1') == 'S', '--q-x1b requires x1 on the S face'
+        x1c = _q_port_xc(rq, 'x1')
+        assert 400.08 <= x1c <= 505.44, ('--q-x1b requires the east-end x1 view', x1c)
     for face in 'SN':
         ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_) == face]
         if Q_X1B and face == 'S' and 'x1' in ports:
@@ -5777,6 +5784,7 @@ def die_options(ap):
                     'master with a side >= 300 um takes its clock pin on a long face in the middle third; default off')
     ap.add_argument('--coll-split3', action='store_true', help='s81-gen 2026-10-09 (redesign-ds): collective slab outline from '
                     'physical/s81_ph_views/collective/composition_split3.json (three-tile core column); default off')
+    ap.add_argument('--coll-split3-cr', action='store_true', help='opt-in planning candidate: use composition_split3cr.json with credit seams and LCR lane tiles; implies --coll-split3, all four routed masters required for adoption')
     ap.add_argument('--bf-hier', type=float, choices=[520.128, 600.264], help='s81-gen 2026-10-09 (bf-arch): BF pair as '
                     'dsfd_bf_col | dsfd_bf_front | dsfd_bf_col (MY), 190.08 um tall; frames and die widen; default off')
     ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
@@ -5866,10 +5874,12 @@ def apply_options(a):
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     HOST_SLAB = bool(getattr(a, 'host', False))
-    global COLL_SPLIT3, CK_RULE, Q_X1B
+    global COLL_SPLIT3, COLL_SPLIT3_CR, COLL_SPLIT3_COMP, CK_RULE, Q_X1B
     Q_X1B = bool(getattr(a, 'q_x1b', False))
     CK_RULE = bool(getattr(a, 'ck_rule', False))
-    COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False))
+    COLL_SPLIT3_CR = bool(getattr(a, 'coll_split3_cr', False))
+    COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False)) or COLL_SPLIT3_CR
+    COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr.json' if COLL_SPLIT3_CR else 'physical/s81_ph_views/collective/composition_split3.json'
     global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
     BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
