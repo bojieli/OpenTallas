@@ -15,7 +15,7 @@ function h(tag, attrs = {}, ...kids) {
   return e;
 }
 const TARGETS = ['T1', 'T2', 'T3', 'T4'];
-const TOKEN = { T1: [['qwen_rom', 'AR']], T2: [['ds_rom', 'AR'], ['ds_rom&mode=mtp', 'MTP']], T3: [['hbm_ds', 'AR'], ['hbm_ds&mode=mtp', 'MTP']], T4: [] };
+const TOKEN = { T1: [['qwen_rom', 'AR']], T2: [['ds_rom', 'AR'], ['ds_rom&mode=mtp', 'MTP']], T3: [['hbm_gen_ds', 'AR (generic die)']], T4: [['hbm_gen_qwen', 'AR (generic die)'], ['hbm_gen_qwen&mode=mtp', 'DFlash']] };
 const GROUPS = { host: 'Host / prefill', boot: 'Boot', control: 'Decode control', sampler: 'Sampler', data: 'Decode data', deepseek: 'Decode data: DeepSeek only', mtp: 'MTP', fault: 'Fault', unmapped: 'Not yet normalised' };
 const COLS = [['H', 'hw', 'hardware exists (RTL)'], ['D', 'on_die', 'on a die (master in a recipe)'], ['R', 'rtl', 'RTL path'], ['E', 'exact', 'exact bench'], ['C', 'closure', 'closure (worst element)'], ['P', 'priced', 'priced in a token path']];
 
@@ -79,7 +79,8 @@ function cards() {
     const s = M.summary[t], info = M.targets[t];
     const na = M.rows.length - s.rows_applicable;
     const cl = s.with_gap - s.uncovered;
-    const tp = Object.entries(M.token_paths || {}).filter(([, x]) => x.target === t);
+    const views = new Set(Object.values(TOKEN).flat().map(([d]) => d.split('&')[0]));
+    const tp = Object.entries(M.token_paths || {}).filter(([d, x]) => x.target === t && views.has(d.replace(/_mtp$/, '')));
     const card = h('div', { class: 'card', role: 'button', tabindex: 0, 'aria-pressed': String(F.t.has(t)), title: 'click to show / hide this target in the matrix',
       onclick: () => { F.t.has(t) ? F.t.delete(t) : F.t.add(t); if (!F.t.size) F.t.add(t); render(); },
       onkeydown: (e) => { if (e.key === 'Enter') e.currentTarget.click(); } },
@@ -96,7 +97,7 @@ function cards() {
         h('span', { class: 'chip k', style: `background:${GAPS[k].color}`, title: `${GAPS[k].label}: ${v} rows` }, `${GAPS[k].tag} ${v}`))),
       h('div', { class: 'tk' }, `${s.nodes} ledger nodes · ${s.rows_applicable} of ${M.rows.length} rows apply (${na} n/a)`),
       h('div', { class: 'tk' }, TOKEN[t].length ? ['token path: ', ...TOKEN[t].map(([d, l]) => h('a', { href: `/explorer/token/#design=${d}`, onclick: (e) => e.stopPropagation(), style: 'margin-right:8px' }, l))]
-        : 'token path: none (no qwen_hbm view exists)'),
+        : 'token path: none'),
       ...tp.map(([d, x]) => h('div', { class: 'tk' }, `${d}: ${(100 * x.cycles_on_uncovered_rows / x.critical_cycles).toFixed(1)} % of critical cycles on uncovered rows`)));
     el.append(card);
   }
