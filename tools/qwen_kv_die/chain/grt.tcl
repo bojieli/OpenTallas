@@ -39,5 +39,8 @@ step wl { report_wire_length -net * -global_route -file /work/wirelength.csv }
 # die-evidence-2 2026-10-09: GRT parasitics are extracted HERE, in the routing session, and written as SPEF. A later
 # session cannot get them from the guides: read_guides + estimate_parasitics -global_routing gives NO wire RC (GRT-0008),
 # so every die STA that did that timed the die with zero wire load.  sta_tcl.py reads this SPEF instead.
-step spef { estimate_parasitics -global_routing; write_spef /work/die_grt.spef }
+# qwen-1010/b 2026-10-10: write_spef is the OpenRCX writer: it holds no estimate_parasitics data (die_kv11: RCX-0134 'no
+# extraction data', no SPEF, both die STAs failed).  The estimator writes its own SPEF with -spef_file.
+step spef { estimate_parasitics -global_routing -spef_file /work/die_grt.spef }
+if {![file exists /work/die_grt.spef]} { puts "OT_STEP_FAIL spef not written"; exit 1 }
 puts OT_GRT_DONE

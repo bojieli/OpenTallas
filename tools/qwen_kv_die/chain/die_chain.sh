@@ -13,7 +13,11 @@ ADMIT=/srv/opentallas-scratch/admit.sh
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null)"
+# FROM=pdn (qwen-1010/b 2026-10-10): reuse a passed real case (floorplan.odb + run.log copied from an earlier run)
+if [ "${FROM:-}" = pdn ] && grep -q OT_LEGAL $C/run.log 2>/dev/null && [ -s $C/floorplan.odb ]; then say "real case reused"
+else
 $ADMIT $P1 -- $H/run_case.sh $C run.tcl run.log 16 $((P1+40))
+fi
 grep -q OT_LEGAL $C/run.log || { say "REAL CASE FAIL ($C/run.log)"; exit 1; }
 say "real case: $(grep -m4 -E 'OT_LEGAL|OT_ASSERT|OT_PA' $C/run.log | tr '\n' ' ')"
 $ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60))

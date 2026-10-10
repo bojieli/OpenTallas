@@ -975,15 +975,21 @@ def case(m, work):
     run = (work / 'run.tcl').read_text()
     (work / 'run_pdn.tcl').write_text((work / 'run_pa.tcl').read_text())
     # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,
-    # so the PG check sees them connected (die_kv2..4: 1,000 PSM-0038 unconnected M4 shapes over x 20.8 - 853.3 um)
+    # so the PG check sees them connected (die_kv2..4: 1,000 PSM-0038 unconnected M4 shapes over x 20.8 - 853.3 um).
+    # qwen-1010/b 2026-10-10: M4 and M8 are both horizontal, so an M4 -> M8 connect only forms where a strap happens to
+    # overlay a rail of its own net (die_kv11: VDD PASS by that coincidence, every VSS rail open, PSM-0069).  The grid now
+    # crosses the rails with vertical M5 straps (M5 is free over the PHY: OBS M1-M4 only), M4 -> M5 at every crossing,
+    # M5 -> M8 stacked at every strap crossing, M8 -> M9.
     (work / 'pdn.tcl').write_text((work / 'pdn.tcl').read_text() + '''
 set phy_cells {}
 foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
 if {[llength $phy_cells]} {
   define_pdn_grid -macro -cells $phy_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {phy}
+  add_pdn_stripe -grid {phy} -layer {M5} -width {0.12} -pitch {10.88} -offset {1.0}
   add_pdn_stripe -grid {phy} -layer {M8} -width {0.48} -pitch {10.88} -offset {1.0}
   add_pdn_stripe -grid {phy} -layer {M9} -width {0.48} -pitch {10.88} -offset {1.0}
-  add_pdn_connect -grid {phy} -layers {M4 M8}
+  add_pdn_connect -grid {phy} -layers {M4 M5}
+  add_pdn_connect -grid {phy} -layers {M5 M8}
   add_pdn_connect -grid {phy} -layers {M8 M9}
 }
 ''')
