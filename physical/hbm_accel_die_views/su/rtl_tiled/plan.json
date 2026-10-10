@@ -1,0 +1,49 @@
+{
+ "master": "hfd_su",
+ "lane": "ot_su12_light",
+ "lane_source": "rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+ "lane_params": {},
+ "lanes": 192,
+ "chains": 6,
+ "groups_per_chain": 8,
+ "lanes_per_column_group": 2,
+ "WI": 9499,
+ "WO": 6400,
+ "lane_broadcast_bits": 1742,
+ "lane_per_lane_bits": 192,
+ "lane_out_bits": 315,
+ "acc_bits_per_chain": 896,
+ "face_stages": {
+  "r": 2,
+  "a": 2,
+  "f_sfu": 2,
+  "t_sfu": 2,
+  "t_router": 5,
+  "f_su_ew": 5,
+  "t_su_ew": 5,
+  "f_cmdproc": 5,
+  "f_coll": 5,
+  "t_coll": 5,
+  "f_vm": 6,
+  "t_vm": 6,
+  "f_quant": 6,
+  "f_su_ns": 1,
+  "t_su_ns": 1
+ },
+ "flops": {
+  "boundary": 60100,
+  "broadcast": 83664,
+  "accumulate": 43008,
+  "lane_output_stage": 60480
+ },
+ "tiled": {
+  "tiles": 192,
+  "chains": 12,
+  "tiles_per_chain": 16,
+  "acc_bits_per_chain": 448,
+  "flops_in_tiles": 481152,
+  "flops_in_top": {
+   "boundary": 60100
+  }
+ }
+}
