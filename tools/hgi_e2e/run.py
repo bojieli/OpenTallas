@@ -141,7 +141,30 @@ def prep(d: Path):
     (d / "prep.txt").write_text(f"{meta['image_base_bytes']} image_e2e.bin\n{len(skip)}\n" +
                                 "".join(f"{a} {v}\n" for a, v in skip))
     dyn = meta["dyn"]
-    host = md + [dyn[3], dyn[1], exp_tok, meta["rank"], 1] + [0] * 11
+    # the FUSED unit's compiler-reserved scratch: the largest VM range no record of this layer touches (>= 16 Ki words)
+    import numpy as np
+    used = np.zeros(1 << 18, bool)
+    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4") != 0
+    used[np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]] = True
+    for r in meta["records"]:
+        for e in r["eff"].values():
+            if e[5] == "VM":
+                b_, n_, m_, st_, ist_ = e[:5]
+                used[b_:b_ + (max(m_, 1) - 1) * st_ + (max(n_, 1) - 1) * max(ist_, 1) + 1] = True
+    used[END_TOKEN_VM] = True
+    best, i = (0, 0), 0
+    while i < used.size:
+        if not used[i]:
+            j = i
+            while j < used.size and not used[j]:
+                j += 1
+            best = max(best, (j - i, i))
+            i = j
+        else:
+            i += 1
+    scr = (best[1] + 7) & ~7
+    assert best[0] - (scr - best[1]) >= 16384, f"no 16 Ki-word free VM range for the FUSED scratch ({best})"
+    host = md + [dyn[3], dyn[1], exp_tok, meta["rank"], 1, scr] + [0] * 10
     (d / "host.mem").write_text("\n".join(f"{x & 0xFFFFFFFF:08x}" for x in host) + "\n")
     print(f"prep {d}: {len(lines)} records, image {len(image)} B, expected token {exp_tok}")
 

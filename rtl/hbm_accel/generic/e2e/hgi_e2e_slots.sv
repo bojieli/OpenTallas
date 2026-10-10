@@ -225,10 +225,11 @@ module hgi_e2e_fused_slot #(
     output wire          rec_fault,
     output wire [682:0]  q_rec,
     input  wire          q_done,
-    input  wire          q_fault
+    input  wire          q_fault,
+    input  wire [17:0]   scratch           // the compiler-reserved scratch base (static; default SCRATCH)
 );
     wire mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv; wire [337:0] fq, mq; wire [273:0] fr, mr;
-    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM)) u_f (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'(SCRATCH)), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM)) u_f (.clk(clk), .rst_n(rst_n), .cfg_scratch(scratch), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(rec_hdr), .rec_a(rec_desc[0 +: 256]), .rec_b(rec_desc[256 +: 256]), .rec_c(rec_desc[512 +: 256]),
         .rec_o(rec_desc[1024 +: 256]), .rec_n_a(rec_n[0 +: 21]), .rec_n_b(rec_n[21 +: 21]), .rec_n_o(rec_n[84 +: 21]),
         .rec_done(rec_done), .rec_fault(rec_fault), .halted(),
