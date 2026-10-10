@@ -71,7 +71,7 @@ DIES = {
              'the hi attention half widening (slot 1,503.36 um), the router kneg_orph2 swap, the svc PS leaf moves and '
              'the hfd_mtp closure'),
     'hbm_r25gp': dict(
-        name='HBM generic die R25GP (802.33 mm2, 1,245 inst)', host='ot-epyc4',
+        name='HBM generic die R25GP (802.33 mm2, 1,245 inst)', host='ot-epyc1tb',
         note=f'chain {SCR}/die-evidence-2/hbm_r25gp/STATUS.log (hbm_r25g_chain.sh V=r25gp, src main 26ef27f19): R25G on '
              'the closing PS attention halves (slot 1,503.36 um) + svc split_ps; lint, own clock plan, IR, case, full-die GRT '
              '(congestion loop bounded at 10 iterations), raw STA -> rule-H1 pads -> padded STA, 4 regions'),
