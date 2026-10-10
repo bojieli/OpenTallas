@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_xload_lock;  // hgi-adapters: banked x-load vs the pre-restructure x-load (ot_hgi_sm_xload_old = git show 6fbdd1c:...), 10 random commands, every x-store write identical
+module tb_xload_lock;  // hgi-adapters: banked x-load vs the pre-restructure x-load (ot_hgi_sm_xload_old = git show 861b57fde:rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv), 10 random commands, every x-store write identical
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 3, errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     reg x_v = 0; reg [39:0] x_base = 0; reg [20:0] x_n = 0; reg [3:0] x_p = 0; reg [31:0] x_stride = 0;
