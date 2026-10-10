@@ -15,6 +15,10 @@ module ot_hbm_replay_sram #(
  parameter NOEPOCH=0,
  // DECPIPE=1 (sys-takeover 2026-10-10, opt-in): the SECDED decoder's column match gets its own register (DPIPE); +1 read edge.
  parameter DECPIPE=0,
+ // ADDRREP=1 (sys-takeover 2026-10-10, opt-in): every macro gets its own write / read enable and address flops
+ // (ot_sc_rep_ff, keep_hierarchy): collvmpub_fix5s TT -408 was ONE merged wa register driving the macros of every store
+ // across the block (517 ps of wire).  Same edge as wa / wp; values identical.
+ parameter ADDRREP=0,
  parameter AW=$clog2(DEPTH), NB=DEPTH/128,
  parameter BW=NB>1?$clog2(NB):1,
  parameter RW=NOEPOCH?W:W+SW+EW, NC=(RW+255)/256, CW=NC*266, NM=(CW+255)/256
@@ -45,9 +49,24 @@ module ot_hbm_replay_sram #(
   localparam BANK_INDEX=b;
   wire[NM*256-1:0] raw;
   for(genvar m=0;m<NM;m=m+1) begin:g_macro
+   wire m_rce,m_wce;wire[6:0] m_ra,m_wa;
+   if(ADDRREP!=0) begin:g_rep
+    ot_sc_rep_ff u_rce(.clk(clk),.rst_n(rst_n),.d(r_valid && (NB==1 || r_seq[AW-1:7]==BANK_INDEX)),.q(m_rce));
+`ifdef OT_REPLAY_MUT_ADDRREP
+    ot_sc_rep_ff u_wce(.clk(clk),.rst_n(rst_n),.d(w_valid && (NB==1 || w_seq[AW-1:7]!=BANK_INDEX)),.q(m_wce));   // mutant: wrong bank
+`else
+    ot_sc_rep_ff u_wce(.clk(clk),.rst_n(rst_n),.d(w_valid && (NB==1 || w_seq[AW-1:7]==BANK_INDEX)),.q(m_wce));
+`endif
+    for(genvar k=0;k<7;k=k+1) begin:g_a
+     ot_sc_rep_ff u_ra(.clk(clk),.rst_n(rst_n),.d(r_seq[k]),.q(m_ra[k]));
+     ot_sc_rep_ff u_wa(.clk(clk),.rst_n(rst_n),.d(w_seq[k]),.q(m_wa[k]));
+    end
+   end else begin:g_shr
+    assign m_rce=rp && rb==BANK_INDEX; assign m_wce=wp && wb==BANK_INDEX; assign m_ra=ra[6:0]; assign m_wa=wa[6:0];
+   end
    ot_sram_1r1w_128x256_m1_r2c2 u_mem(
-    .clk(clk),.r_ce_in(rp && rb==BANK_INDEX),.r_addr_in(ra[6:0]),.rd_out(raw[m*256+:256]),
-    .w_ce_in(wp && wb==BANK_INDEX),.w_addr_in(wa[6:0]),.wd_in(macro_d[m*256+:256]),
+    .clk(clk),.r_ce_in(m_rce),.r_addr_in(m_ra),.rd_out(raw[m*256+:256]),
+    .w_ce_in(m_wce),.w_addr_in(m_wa),.wd_in(macro_d[m*256+:256]),
     .w_mask_in({256{1'b1}}),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
   end
   always @(posedge clk) captured[b]<=raw;

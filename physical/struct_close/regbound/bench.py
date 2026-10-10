@@ -198,6 +198,13 @@ def cvp_fix3_tb():
         t = t.replace(a, b)
     return t
 CASES["coll_vm_pub_fix3"] = dict(CASES["coll_vm_pub"], tb=cvp_fix3_tb)
+def cvp_fix4_tb():
+    """sys-takeover 2026-10-10 PUBFIX=4 = 3 + per-macro replicated address / enable flops (ADDRREP): same cycles"""
+    t = cvp_fix3_tb(); a = "ot_hbm_collective_vm_publication #(.PUBFIX(3),"
+    assert t.count(a) == 1, a
+    return t.replace(a, "ot_hbm_collective_vm_publication #(.PUBFIX(4),")
+CASES["coll_vm_pub_fix4"] = dict(CASES["coll_vm_pub"], tb=cvp_fix4_tb)
+CASES["coll_vm_pub_fix4_rep"] = dict(CASES["coll_vm_pub"], tb=cvp_fix4_tb, neg_defines=["OT_REPLAY_MUT_ADDRREP"], neg_ok="FATAL")
 CASES["coll_vm_pub_fix3_tagq"] = dict(CASES["coll_vm_pub"], tb=cvp_fix3_tb, neg_defines=["OT_HBM_PUBLICATION_MUT_TAGQ"],
      neg_ok="actual VM read ABI")
 def artok(mode, w):

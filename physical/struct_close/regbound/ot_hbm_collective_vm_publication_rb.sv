@@ -129,7 +129,7 @@ module ot_hbm_collective_vm_publication_core #(parameter ENABLE=0,OWNER_W=73,PUB
  wire[1:0] valid,ce,ue;wire[511:0] data;
  for(genvar h=0;h<2;h=h+1)begin:g_sector
  localparam HALF=h;
- ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0),.DECPIPE(PUBFIX>=3)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
+ ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(0),.DECPIPE(PUBFIX>=3),.ADDRREP(PUBFIX>=4)) u_store(   // NOEPOCH withdrawn 10-09 16:45: not approved by the review
  .clk(clk),.rst_n(rst_n),.w_valid(st_wv && st_ws[0]==HALF),.w_data(st_wd),
  .w_seq({4'b0,st_ws[8:1]}),.w_session(bound_session),
  .r_valid(fetch),.r_seq(idx[11:0]),.r_session(bound_session),
