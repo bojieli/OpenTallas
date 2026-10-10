@@ -1,0 +1,317 @@
+{
+  "schema": "opentallas.ds_store_sensitivity.v1",
+  "generated_utc": "2026-10-10T12:28:14.043857+00:00",
+  "method": "Retiming sensitivity for full-shape G24 STORE evidence on the earlier native ROW_GATHER DAG.\n\nThe earlier program represents ROW_GATHER as one surrogate operation. Replace its old single\nfull-bandwidth STORE term with every measured c2 group spill plus the K/64 selected-row chunks.\nThis prices serialized traffic inside that surrogate and preserves its external S2 overlap.\nIt is an analytical sensitivity, not a native G24 trace or a measured whole-token rate.\n",
+  "limitations": [
+    "Earlier native ROW_GATHER surrogate DAG, not emitted G24 software descriptor DAG",
+    "Serialized STORE costs within surrogate; no double buffering or speculative inter-record overlap",
+    "LOAD remains optimistic full bandwidth; SU/SFU/ATT production service calibration unresolved",
+    "No new hardware closure and no measured full-token rate",
+    "Does not assign Qwen reduced-reference SU/SFU ratios to DeepSeek absent measured DS production gates"
+  ],
+  "inputs": {
+    "/home/ubuntu/claude-takeover-20261007/codex-ds-rank0-fuse5.json": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+    "/home/ubuntu/claude-takeover-20261007/codex-ds-run-fuse5.json": "62c083301adc5524c6e5046835b0b8d7dd7bfd6e7b4f6b72924f43032fe8c844",
+    "/home/ubuntu/wt-codex-hbm-sim-rates-20261010/results/rtl/hgi_row_gather_store_20261010/measurement.json": "f3de68556d502a02d54f92abdb664fc2349062ff680d3468652168b1ee0a171e"
+  },
+  "store_source_commit": "700389847",
+  "result": {
+    "historical_approved_c2_g22": {
+      "cycles": 692365.8,
+      "tok_s": 1733.2,
+      "n_races": 0,
+      "row_gather": [
+        {
+          "layer": 2,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 16607.6,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 15183.8,
+            "last_store": 92.1,
+            "per_gather": 2169.1,
+            "M": 13,
+            "slots_per_gather": 2
+          }
+        },
+        {
+          "layer": 8,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 16607.6,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 15183.8,
+            "last_store": 92.1,
+            "per_gather": 2169.1,
+            "M": 13,
+            "slots_per_gather": 2
+          }
+        },
+        {
+          "layer": 14,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 12269.3,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 10845.6,
+            "last_store": 92.1,
+            "per_gather": 2169.1,
+            "M": 9,
+            "slots_per_gather": 2
+          }
+        },
+        {
+          "layer": 20,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 14438.5,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 13014.7,
+            "last_store": 92.1,
+            "per_gather": 2169.1,
+            "M": 12,
+            "slots_per_gather": 2
+          }
+        },
+        {
+          "layer": 24,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 14438.5,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 13014.7,
+            "last_store": 92.1,
+            "per_gather": 2169.1,
+            "M": 12,
+            "slots_per_gather": 2
+          }
+        },
+        {
+          "layer": 28,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 20945.8,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 19522.1,
+            "last_store": 92.1,
+            "per_gather": 2169.1,
+            "M": 18,
+            "slots_per_gather": 2
+          }
+        },
+        {
+          "layer": 32,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 14438.5,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 13014.7,
+            "last_store": 92.1,
+            "per_gather": 2169.1,
+            "M": 12,
+            "slots_per_gather": 2
+          }
+        },
+        {
+          "layer": 36,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 16607.6,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 15183.8,
+            "last_store": 92.1,
+            "per_gather": 2169.1,
+            "M": 14,
+            "slots_per_gather": 2
+          }
+        }
+      ]
+    },
+    "measured_store_serial_surrogate_sensitivity": {
+      "cycles": 2757624.0,
+      "tok_s": 435.2,
+      "n_races": 0,
+      "row_gather": [
+        {
+          "layer": 2,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 285180.5,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 15183.8,
+            "per_gather": 2169.1,
+            "M": 13,
+            "slots_per_gather": 2,
+            "previous_last_store": 92.1,
+            "group_spill_store": 194425,
+            "selected_order_store": 74240
+          },
+          "store_scope": "measured full shapes; serialized inside ROW_GATHER surrogate"
+        },
+        {
+          "layer": 8,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 285180.5,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 15183.8,
+            "per_gather": 2169.1,
+            "M": 13,
+            "slots_per_gather": 2,
+            "previous_last_store": 92.1,
+            "group_spill_store": 194425,
+            "selected_order_store": 74240
+          },
+          "store_scope": "measured full shapes; serialized inside ROW_GATHER surrogate"
+        },
+        {
+          "layer": 14,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 225292.2,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 10845.6,
+            "per_gather": 2169.1,
+            "M": 9,
+            "slots_per_gather": 2,
+            "previous_last_store": 92.1,
+            "group_spill_store": 138875,
+            "selected_order_store": 74240
+          },
+          "store_scope": "measured full shapes; serialized inside ROW_GATHER surrogate"
+        },
+        {
+          "layer": 20,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 255236.4,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 13014.7,
+            "per_gather": 2169.1,
+            "M": 12,
+            "slots_per_gather": 2,
+            "previous_last_store": 92.1,
+            "group_spill_store": 166650,
+            "selected_order_store": 74240
+          },
+          "store_scope": "measured full shapes; serialized inside ROW_GATHER surrogate"
+        },
+        {
+          "layer": 24,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 255236.4,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 13014.7,
+            "per_gather": 2169.1,
+            "M": 12,
+            "slots_per_gather": 2,
+            "previous_last_store": 92.1,
+            "group_spill_store": 166650,
+            "selected_order_store": 74240
+          },
+          "store_scope": "measured full shapes; serialized inside ROW_GATHER surrogate"
+        },
+        {
+          "layer": 28,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 345068.7,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 19522.1,
+            "per_gather": 2169.1,
+            "M": 18,
+            "slots_per_gather": 2,
+            "previous_last_store": 92.1,
+            "group_spill_store": 249975,
+            "selected_order_store": 74240
+          },
+          "store_scope": "measured full shapes; serialized inside ROW_GATHER surrogate"
+        },
+        {
+          "layer": 32,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 255236.4,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 13014.7,
+            "per_gather": 2169.1,
+            "M": 12,
+            "slots_per_gather": 2,
+            "previous_last_store": 92.1,
+            "group_spill_store": 166650,
+            "selected_order_store": 74240
+          },
+          "store_scope": "measured full shapes; serialized inside ROW_GATHER surrogate"
+        },
+        {
+          "layer": 36,
+          "tag": "selected compressed-KV rows to the head dies",
+          "op": "ROW_GATHER",
+          "K": 512,
+          "cycles": 285180.5,
+          "parts": {
+            "idx_owned": 1227.0,
+            "first_load": 104.6,
+            "gathers": 15183.8,
+            "per_gather": 2169.1,
+            "M": 14,
+            "slots_per_gather": 2,
+            "previous_last_store": 92.1,
+            "group_spill_store": 194425,
+            "selected_order_store": 74240
+          },
+          "store_scope": "measured full shapes; serialized inside ROW_GATHER surrogate"
+        }
+      ]
+    }
+  },
+  "model_tool_source_commit": "348d35790",
+  "measurement_input_commit": "a3de4c4b9",
+  "baseline_note": "Earlier native program retimed with committed DMA own-unit hazard waits from8a9503606; baseline1733.2 differs from historical1747.5 because dependency waits are now explicit."
+}
