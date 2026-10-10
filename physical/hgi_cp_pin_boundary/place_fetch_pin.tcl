@@ -72,10 +72,34 @@ proc ::ot_pin_place_auto {re depth} {
         if {[string match PHY_EDGE_ROW* [$i getName]] && [[$i getMaster] getWidth] > $capw} { set capw [[$i getMaster] getWidth] }
     }
     set m0 [expr {$m0 + $capw}]
+    # [cp] hbm-phys-1010: the strips are bounded by the CORE (rows + PDN), not the die: ot_hgi_cp has a 10.8-um core
+    # inset, and a die-based strip put the 37 E flops at x 414-418 um, outside every row (PSM-0069 VDD unconnected)
+    # (row extents, so every slot stays on the site grid: the core edge is not a whole number of sites)
+    # (union over the rows: rows are split around the ring macro, so take the outermost row ends)
+    set rxl $dw; set rxh 0; set cyl $dh; set cyh 0
+    foreach r [$::ot_blk getRows] {
+        set rb [$r getBBox]
+        if {[$rb xMin] < $rxl} { set rxl [$rb xMin] }
+        if {[$rb xMax] > $rxh} { set rxh [$rb xMax] }
+        if {[$rb yMin] < $cyl} { set cyl [$rb yMin] }
+        if {[$rb yMax] > $cyh} { set cyh [$rb yMax] }
+    }
+    set cxl [expr {$rxl + $capw}]; set cxh [expr {$rxh - $capw}]
     set ::ot_occ [dict create]
     foreach i [$::ot_blk getInsts] {
-        if {[[$i getMaster] isBlock] || ![$i isPlaced]} { continue }
+        if {![$i isPlaced]} { continue }
         set bb [$i getBBox]
+        if {[[$i getMaster] isBlock]} {
+            # [cp] macros (the ring SRAM) occupy every row they cover, plus the 6-um placement halo
+            set hl [expr {int(round(6.0 * $dbu))}]
+            foreach rw $::ot_rows {
+                set ry [lindex $rw 0]
+                if {$ry + 270 > [$bb yMin] - $hl && $ry < [$bb yMax] + $hl} {
+                    dict lappend ::ot_occ $ry [list [expr {[$bb xMin] - $hl}] [expr {[$bb xMax] + $hl}]]
+                }
+            }
+            continue
+        }
         dict lappend ::ot_occ [$bb yMin] [list [$bb xMin] [$bb xMax]]
     }
     set E [dict create W {} E {} S {} N {}]
@@ -98,7 +122,7 @@ proc ::ot_pin_place_auto {re depth} {
     foreach e {W E} {
         set fl [lsort -integer -index 0 [dict get $E $e]]
         if {![llength $fl]} { continue }
-        if {$e eq "W"} { set lo $m0; set hi [expr {$m0 + $dp}] } else { set hi [expr {$dw - $m0}]; set lo [expr {$hi - $dp}] }
+        if {$e eq "W"} { set lo $cxl; set hi [expr {$cxl + $dp}] } else { set hi $cxh; set lo [expr {$hi - $dp}] }
         set cur [lrepeat $nr [expr {$e eq "W" ? $lo : $hi}]]
         foreach f $fl {
             lassign $f py inst
@@ -135,13 +159,13 @@ proc ::ot_pin_place_auto {re depth} {
         set er {}
         foreach r $rows {
             set y [lindex $r 0]
-            if {($e eq "S" && $y >= $m0 && $y < $m0 + $dp) || ($e eq "N" && $y + 270 <= $dh - $m0 && $y + 270 > $dh - $m0 - $dp)} { lappend er $r }
+            if {($e eq "S" && $y >= $cyl && $y < $cyl + $dp) || ($e eq "N" && $y + 270 <= $cyh && $y + 270 > $cyh - $dp)} { lappend er $r }
         }
         if {$e eq "N"} { set er [lreverse $er] }
         set ne [llength $er]
         if {!$ne} { error "ot_pin_place_auto: no rows on $e" }
-        set cur [lrepeat $ne [expr {$m0 + $dp}]]
-        set lim [expr {$dw - $m0 - $dp}]
+        set cur [lrepeat $ne [expr {$cxl + $dp}]]
+        set lim [expr {$cxh - $dp}]
         # CRASH-TRIAGE 2026-10-08: placements are collected per row and committed at the end.  A flop that finds no
         # room right of its pin in any row (pins crowded toward the edge end: the TT/cgfix re-routes' 3_1 placement
         # moved the S pins and hit "no room on S") goes to the least-filled row past the limit, and that row is then
@@ -158,7 +182,7 @@ proc ::ot_pin_place_auto {re depth} {
                 set r [expr {($k + $t) % $ne}]
                 set c [lindex $cur $r]
                 set x [expr {$px - $w / 2}]
-                set x [expr {$m0 + ($x - $m0) / $sw * $sw}]
+                set x [expr {$cxl + ($x - $cxl) / $sw * $sw}]
                 if {$x < $c} { set x $c }
                 set rr [lindex $er $r]
                 set x [::ot_skip $x $w2 [lindex $rr 0] 1 $sw]
@@ -185,10 +209,10 @@ proc ::ot_pin_place_auto {re depth} {
                 for {set q [expr {[llength $items] - 1}]} {$q >= 0} {incr q -1} {
                     lassign [lindex $items $q] x w2 inst
                     set rt [expr {$x + $w2 > $rl ? $rl : $x + $w2}]
-                    set rt [expr {$m0 + ($rt - $m0) / $sw * $sw}]
+                    set rt [expr {$cxl + ($rt - $cxl) / $sw * $sw}]
                     set rt [::ot_skip $rt $w2 [lindex $rr 0] -1 $sw]
                     set x [expr {$rt - $w2}]
-                    if {$x < $m0 + $dp} { error "ot_pin_place_auto $re: no room on $e for [$inst getName] (row [lindex $rr 0] full after left packing)" }
+                    if {$x < $cxl + $dp} { error "ot_pin_place_auto $re: no room on $e for [$inst getName] (row [lindex $rr 0] full after left packing)" }
                     lset items $q [list $x $w2 $inst]
                     set rl $x
                 }
