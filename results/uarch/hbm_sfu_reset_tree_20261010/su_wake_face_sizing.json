@@ -34,7 +34,7 @@
   "hold_cycles": 64,
   "clock_gates": 192,
   "adopted_power_savings_w": 0,
-  "scheduler_wake_binding": "actual producer and free edge pin remain absent; no tie-active qualification",
+  "scheduler_wake_binding": "legal free M4 edge pin recorded; actual busy producer remains absent; no tie-active qualification",
   "track_requirement_bits_per_boundary": 2199,
   "channel_capacity_status": "actual macro abstractions and M7/channel route pending",
   "slot_fit_status": "same tile outline; full actual placement/corner gate pending",
@@ -44,9 +44,17 @@
   "additional_wake_bits_per_hop": 1,
   "additional_memory_port_bytes_per_cycle": 0,
   "extra_root_lockup_bits": "0 for proposed pin on band root; count actual pin root before route",
-  "proposed_wake_distance_um": 703.068,
+  "proposed_wake_pin_xy_um": [
+    0.096,
+    2814.444
+  ],
+  "proposed_band_capture_xy_um": [
+    703.068,
+    2764.788
+  ],
+  "proposed_wake_distance_um": 752.628,
   "raw_hop_count_to_band": 3,
-  "maximum_raw_hop_um": 353.0,
+  "maximum_raw_hop_um": 376.314,
   "area_note": "two scalar FFs plus clock loads; measure mapping in quarter, no macro outline change",
   "boundary_track_bits_added": 1,
   "qualification": "five-edge lead and64-edge drain bench gate, then actual pin/relay placement and TT/FF route"

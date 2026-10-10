@@ -15345,10 +15345,12 @@ def hbm_su_wake_face_sizing():
              additional_memory_port_bytes_per_cycle=0,
              wake_lead_cycles=5, whole_data_cycles_added=0,
              extra_root_lockup_bits='0 for proposed pin on band root; count actual pin root before route',
-             proposed_wake_distance_um=703.068,
-             raw_hop_count_to_band=3, maximum_raw_hop_um=353.0,
+             proposed_wake_pin_xy_um=[0.096, 2814.444],
+             proposed_band_capture_xy_um=[703.068, 2764.788],
+             proposed_wake_distance_um=752.628,
+             raw_hop_count_to_band=3, maximum_raw_hop_um=376.314,
              area_note='two scalar FFs plus clock loads; measure mapping in quarter, no macro outline change',
              boundary_track_bits_added=1, replica_fanout='face0 -> face1 -> band cg_q ->12 first-tile wakes',
-             scheduler_wake_binding='actual producer and free edge pin remain absent; no tie-active qualification',
+             scheduler_wake_binding='legal free M4 edge pin recorded; actual busy producer remains absent; no tie-active qualification',
              qualification='five-edge lead and64-edge drain bench gate, then actual pin/relay placement and TT/FF route')
     return r
