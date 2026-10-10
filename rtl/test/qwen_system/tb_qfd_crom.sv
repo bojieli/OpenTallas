@@ -7,25 +7,8 @@
 //   phase B: four fail-closed cases (out of range, head out of range, misaligned lane, rows disagree), each after a
 //            reset: fault must rise with the named first-cause code; a clean vector must NOT fault.
 // +VEC=<file> +OT_ROM_DIR=<dir> [+SEED=n].  Prints "CROM_RESULT pass=<0|1> vectors=.. lanes=.. mismatches=..".
-`ifndef CROM_OREG
-`define CROM_OREG 0
-`endif
-`ifndef CROM_IREL
-`define CROM_IREL 0
-`endif
-`ifndef CROM_RSYNC
-`define CROM_RSYNC 0
-`endif
-`ifndef CROM_CHK
-`define CROM_CHK 0
-`endif
-`ifndef CROM_DSPLIT
-`define CROM_DSPLIT 0
-`endif
-// drive-0158: the -cl options (OREG / IREL / RSYNC) shift the answer by OREG + IREL edges and the reset release by
-// 4 edges (RSYNC); the bench follows the DUT's documented latency, it does not search for it.
 module tb_qfd_crom;
-    localparam integer SW = 64, AW = 24, LW = 6, LAT = 5 + `CROM_OREG + `CROM_IREL + `CROM_DSPLIT, RWAIT = (`CROM_RSYNC != 0) ? 4 : 0;
+    localparam integer SW = 64, AW = 24, LW = 6, LAT = 5;
     reg clk = 0, rst_n = 0;
     always #0.4166 clk = ~clk;
     reg  [SW-1:0]    re = 0;
@@ -34,7 +17,7 @@ module tb_qfd_crom;
     wire [SW*64-1:0] q;
     wire             fault;
     wire [1:0]       fcode;
-    ot_qfd_crom #(.MUT(`MUT), .OREG(`CROM_OREG), .IREL(`CROM_IREL), .RSYNC(`CROM_RSYNC), .CHK(`CROM_CHK), .DSPLIT(`CROM_DSPLIT)) dut (.clk(clk), .rst_n(rst_n), .crom_re(re), .crom_addr(addr), .crom_stage(stage),
+    ot_qfd_crom #(.MUT(`MUT)) dut (.clk(clk), .rst_n(rst_n), .crom_re(re), .crom_addr(addr), .crom_stage(stage),
                                    .crom_q(q), .fault(fault), .fault_code(fcode));
 
     // expectation pipeline
@@ -82,7 +65,7 @@ module tb_qfd_crom;
 
     task automatic fault_case(input [SW-1:0] r, input [SW*AW-1:0] a, input [LW-1:0] s, input [1:0] want, input string nm);
         begin
-            rst_n = 0; repeat (3) @(posedge clk); rst_n = 1; @(posedge clk); repeat (RWAIT) @(posedge clk);
+            rst_n = 0; repeat (3) @(posedge clk); rst_n = 1; @(posedge clk);
             step(r, a, s, {SW*64{1'b0}}, 0);
             drain();
             if (want == 0 ? fault : !(fault && fcode == want)) begin
@@ -96,7 +79,7 @@ module tb_qfd_crom;
         if (!$value$plusargs("VEC=%s", vec)) begin $display("need +VEC"); $finish; end
         if ($value$plusargs("SEED=%d", seed)) ;
         for (k = 0; k <= LAT; k = k + 1) v_p[k] = 0;
-        repeat (4) @(posedge clk); rst_n = 1; @(posedge clk); repeat (RWAIT) @(posedge clk);
+        repeat (4) @(posedge clk); rst_n = 1; @(posedge clk);
         fd = $fopen(vec, "r");
         if (fd == 0) begin $display("cannot open %0s", vec); $finish; end
         while (!$feof(fd)) begin

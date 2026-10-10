@@ -15,9 +15,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--part',default='rx',choices=['rx'])
     # credit-ready 2026-10-08: c = ot_ha2_truecredit_rx_c_phys (CREDIT=1 receiver_ready = credit pulses), same pins/SDC
-    p.add_argument('--variant',default='p',choices=['p','c','ch'])
-    # struct-close 2026-10-09: ch = rx_c_phys top built on ot_ha2_truecredit_rxph.sv (HP=1: per-slice read-ring copies +
-    # registered two-level head, +1 send cycle); sources rx_ch_sources.txt
+    p.add_argument('--variant',default='p',choices=['p','c'])
     p.add_argument('--run',required=True,type=Path)
     p.add_argument('--threads',type=int,default=8)
     p.add_argument('--cts-only',action='store_true')
@@ -25,7 +23,7 @@ def main():
     a=p.parse_args()
     run=a.run.resolve();run.mkdir(parents=True,exist_ok=False)
     model=json.loads((HERE/'model.json').read_text());part=model['parts'][a.part]
-    part=dict(part,top=f'ot_ha2_truecredit_rx_{"c" if a.variant=="ch" else a.variant}_phys')
+    part=dict(part,top=f'ot_ha2_truecredit_rx_{a.variant}_phys')
     manifest=dict(variant=f'rx_{a.variant}',sources=(HERE/f'rx_{a.variant}_sources.txt').read_text().splitlines())
     # hbm-blocks 2026-10-07: the CTS-only calibration run has no measurement yet; vclk latency 0 there made CTS repair
     # an input hold of -(insertion) on every data pin (rx/tx d7a64a321: hold -583, setup -1,281, 73,998 violators) and

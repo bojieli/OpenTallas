@@ -85,7 +85,7 @@ D="+define+TU_DUT=ot_hbm_accel_tu_endpoint_$DV"
 AR="+define+TU_NC=8 +define+TU_NOG=8 +define+TU_BF16=1"; GA="+define+TU_NC=1 +define+TU_NOG=96 +define+TU_BF16=0"
 BLK="+define+TU_PFMAX=64 +define+TU_PCLK_IS_CLK -GT_PHY=0.833333"
 build() { n=$1; shift; mkdir -p $T/b; $V --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --x-assign fast --x-initial fast \
-  --top-module tb_hbm_accel_tu_endpoint --Mdir $T/b/$n $D ${SR_DEFS:-} "$@" $SRC > $T/build_$n.log 2>&1 || echo "BUILD_FAIL $n"; }
+  --top-module tb_hbm_accel_tu_endpoint --Mdir $T/b/$n $D "$@" $SRC > $T/build_$n.log 2>&1 || echo "BUILD_FAIL $n"; }
 CK="+define+TU_PCLK_IS_CLK -GT_PHY=0.833333"
 if [ $DV = sr ] || [ $DV = hy ]; then
   B="ar ga arblk_a arblk_s gablk_s"

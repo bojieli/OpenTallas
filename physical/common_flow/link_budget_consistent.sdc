@@ -15,13 +15,6 @@ proc ot_lb_get {n d} { if {[info exists ::$n]} { return [set ::$n] }; if {[info 
 set ot_lb_skew [ot_lb_get ot_lb_skew 150]
 set ot_lb_link [ot_lb_get ot_lb_link 114]
 set ot_lb_sfrac [ot_lb_get ot_lb_sfrac 0.5]
-# struct-close 2026-10-09: INTRA-REGION ports (default none).  ot_lb_intra_re = a regex of port names that the die
-# generator places ABUTTING their partner (e.g. the closed WFC's fixed one-edge VM read port into dsfd_wfc_vmx:
-# f_vr / t_vq).  Their link is intra-region (skew ot_lb_intra_skew 90, wire ot_lb_intra_link 23 = 20 um), and the
-# whole saving goes to THIS block's side (the partner keeps its budget: no stealing from a closed block):
-# gain = (skew - intra_skew) + (link - intra_link).  Die link STA remains the arbiter.
-set ot_lb_intra_re [ot_lb_get ot_lb_intra_re ""]
-set ot_lb_intra_gain [expr {$ot_lb_intra_re eq "" ? 0.0 : (($ot_lb_skew - [ot_lb_get ot_lb_intra_skew 90]) + ($ot_lb_link - [ot_lb_get ot_lb_intra_link 23]))}]
 set ot_lb_clks {}
 foreach c [all_clocks] {
   set src [get_property $c sources]
@@ -110,7 +103,6 @@ foreach p $ot_lb_in {
   if {$x eq "FWD"} { dict incr ot_lb_n "in:skip_fwd"; continue }
   if {$x ne ""} { set d $x }
   lassign [dict get $ot_lb_vmap $d] vc imax omax
-  if {$ot_lb_intra_re ne "" && [regexp -- $ot_lb_intra_re [get_full_name $p]]} { set imax [expr {$imax - $ot_lb_intra_gain}]; dict incr ot_lb_n "in:intra" }
   set_input_delay -max -add_delay $imax -clock $vc $p
   dict incr ot_lb_n "in:$d"
 }
@@ -120,7 +112,6 @@ foreach p $ot_lb_out {
   if {$x eq "FWD"} { dict incr ot_lb_n "out:skip_fwd"; continue }
   if {$x ne ""} { set d $x }
   lassign [dict get $ot_lb_vmap $d] vc imax omax
-  if {$ot_lb_intra_re ne "" && [regexp -- $ot_lb_intra_re [get_full_name $p]]} { set omax [expr {$omax - $ot_lb_intra_gain}]; dict incr ot_lb_n "out:intra" }
   set_output_delay -max -add_delay $omax -clock $vc $p
   dict incr ot_lb_n "out:$d"
 }

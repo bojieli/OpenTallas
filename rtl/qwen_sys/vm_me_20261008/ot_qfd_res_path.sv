@@ -66,21 +66,7 @@ module ot_qfd_res_ser #(
     // TSR = 1 (safe-qwen S-D2, 2026-10-08; 0 = unchanged): the beat's slot select t2_s -> o_data (8:1 x 512 b, routed
     // TT -1,143 post-CTS: t2_s[0] -> o_data[400], 30 of 34 cells buffers) comes from a REGISTERED copy per 64-bit output
     // slice (keep_hierarchy leaves, registered from t1_s with t2_s, so 0 added cycles); each copy drives one slice.
-    parameter integer TSR = 0,
-    // MEC = 1 (struct-close 2026-10-09, "-cl"; 0 = unchanged): the boundary capture loads EVERY edge instead of under
-    // me_en.  tsr41-a66978536-tc-bal32 failed post-CTS TT -789.8 on me_en (input) -> c_data[*] load enables (4,096 b + the
-    // header words).  Every use of the captured burst is gated by c_v (= me_en && i_ov of the same edge): slot writes,
-    // header / row / mask writes, wp / n and the hi_bad fault, so a burst captured without me_en is never observed.
-    // 0 cycles; me_en now drives one flop (c_v).
-    parameter integer MEC = `ifdef OT_QFD_RES_MEC 1 `else 0 `endif,
-    // RDS (struct-close 2026-10-09; 0 = unchanged): tsr42m failed post-CTS TT -757 (19,676 endpoints) on rp -> hdr[rp] ->
-    // pick -> srow / smask[{rp, pick}] -> d_row / d_mask: the send decision AND the 512-entry flop-array read in one
-    // stage.  The row / mask read leaves the decision stage: it is indexed by the REGISTERED {d_p, d_s} (the same index,
-    // one edge later).  RDS = 1: t1_row / t1_mask <= srow / smask[{d_p, d_s}] (one 512:1 stage from flops);
-    // RDS = 2: two registered levels, t1: the 8 slot rows of burst d_p (64:1), t2: the slot t1_s (8:1).  0 cycles: the
-    // row / mask ride t1 / t2 beside the slot-memory read anyway.  Safe: burst d_p cannot be rewritten within 2 edges
-    // (rok keeps n + RS + 2 <= DB, so wp never reaches a burst still being sent).
-    parameter integer RDS = `ifdef OT_QFD_RES_RDS `OT_QFD_RES_RDS `else 0 `endif
+    parameter integer TSR = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -111,12 +97,8 @@ module ot_qfd_res_ser #(
     reg  [NS*AW-1:0]  c_addr;
     reg  [NS*W-1:0]   c_mask;
     reg  [NS*W*32-1:0] c_data;
-`ifndef OT_QFD_RES_MUT_CVNOEN
     always @(posedge clk or negedge rst_n) if (!rst_n) c_v <= 1'b0; else c_v <= me_en && i_ov;
-`else   // struct-close mutant for MEC: the burst valid ignores me_en (a paused engine's held burst is taken again)
-    always @(posedge clk or negedge rst_n) if (!rst_n) c_v <= 1'b0; else c_v <= i_ov;
-`endif
-    always @(posedge clk) if (me_en || MEC != 0) begin c_we <= i_we & {NS{i_ov}}; c_addr <= i_addr; c_mask <= i_mask; c_data <= i_data; end
+    always @(posedge clk) if (me_en) begin c_we <= i_we & {NS{i_ov}}; c_addr <= i_addr; c_mask <= i_mask; c_data <= i_data; end
     // ---- store: slot s of burst wp ----
     reg  [NS-1:0]  hdr [0:DB-1];
     reg  [RW-1:0]  srow [0:NS*DB-1];
@@ -182,8 +164,7 @@ module ot_qfd_res_ser #(
     // ---- slot memories (one edge registered read), capture beside each, then the beat ----
     wire [NS*512-1:0] mq;
     reg  [NS*512-1:0] cap;
-    reg  t1_v, t1_nul, t1_end, t2_v, t2_nul, t2_end, t3_v, t3_nul, t3_end;
-    reg  [LS-1:0] t3_s; reg [RW-1:0] t3_row; reg [W-1:0] t3_mask;
+    reg  t1_v, t1_nul, t1_end, t2_v, t2_nul, t2_end;
     reg  [LS-1:0] t1_s, t2_s;
     reg  [RW-1:0] t1_row, t2_row;
     reg  [W-1:0]  t1_mask, t2_mask;
@@ -195,62 +176,15 @@ module ot_qfd_res_ser #(
         always @(posedge clk) if (t1_v && !t1_nul && t1_s == g) cap[g*512 +: 512] <= mq[g*512 +: 512];
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin t1_v <= 1'b0; t2_v <= 1'b0; t3_v <= 1'b0; o_v <= 1'b0; end
-        else begin t1_v <= d_v; t2_v <= t1_v; t3_v <= t2_v; o_v <= (TSR == 2) ? t3_v : t2_v; end
-    end
-    // RDS row / mask read (see the parameter)
-    wire [W-1:0]  mkd0 = smask[{d_p, {LS{1'b0}}}];
-    wire [W-1:0]  mkd  = (MUT != 0 && d_s == 1) ? mkd0 : smask[{d_p, d_s}];
-    reg  [RW-1:0] rb_row  [0:NS-1];
-    reg  [W-1:0]  rb_mask [0:NS-1];
-    integer rs_i;
-    always @(posedge clk) for (rs_i = 0; rs_i < NS; rs_i = rs_i + 1) begin
-        rb_row[rs_i]  <= srow[{d_p, rs_i[LS-1:0]}];
-        rb_mask[rs_i] <= (MUT != 0 && rs_i == 1) ? mkd0 : smask[{d_p, rs_i[LS-1:0]}];
+        if (!rst_n) begin t1_v <= 1'b0; t2_v <= 1'b0; o_v <= 1'b0; end
+        else begin t1_v <= d_v; t2_v <= t1_v; o_v <= t2_v; end
     end
     always @(posedge clk) begin
-        t1_nul <= d_nul; t1_end <= d_end; t1_s <= d_s;
-`ifndef OT_QFD_RES_MUT_RDS
-        if (RDS == 1) begin t1_row <= srow[{d_p, d_s}]; t1_mask <= mkd; end
-`else   // mutant: the row read indexed by the live rp (one burst late after a pop) instead of the registered d_p
-        if (RDS == 1) begin t1_row <= srow[{rp, d_s}]; t1_mask <= smask[{rp, d_s}]; end
-`endif
-        else begin t1_row <= d_row; t1_mask <= d_mask; end
-        t2_nul <= t1_nul; t2_end <= t1_end; t2_s <= t1_s;
-`ifndef OT_QFD_RES_MUT_RDS
-        if (RDS == 2) begin t2_row <= rb_row[t1_s]; t2_mask <= rb_mask[t1_s]; end
-`else   // mutant: the second level selected by the stale slot (t2_s)
-        if (RDS == 2) begin t2_row <= rb_row[t2_s]; t2_mask <= rb_mask[t2_s]; end
-`endif
-        else begin t2_row <= t1_row; t2_mask <= t1_mask; end
-        t3_nul <= t2_nul; t3_end <= t2_end; t3_s <= t2_s; t3_row <= t2_row; t3_mask <= t2_mask;
-        if (TSR == 2) begin o_nul <= t3_nul; o_end <= t3_end; o_row <= t3_row; o_mask <= t3_nul ? {W{1'b0}} : t3_mask; end
-        else begin o_nul <= t2_nul; o_end <= t2_end; o_row <= t2_row; o_mask <= t2_nul ? {W{1'b0}} : t2_mask; end
+        t1_nul <= d_nul; t1_end <= d_end; t1_s <= d_s; t1_row <= d_row; t1_mask <= d_mask;
+        t2_nul <= t1_nul; t2_end <= t1_end; t2_s <= t1_s; t2_row <= t1_row; t2_mask <= t1_mask;
+        o_nul <= t2_nul; o_end <= t2_end; o_row <= t2_row; o_mask <= t2_nul ? {W{1'b0}} : t2_mask;
     end
-    // TSR = 2 (struct-close 2026-10-09, "-cl"): the 8:1 x 512 slot select becomes two registered levels: pair pre-select
-    // pm[k] = cap of slot 2k / 2k+1 (one 2:1 per bit, next to the pair's capture flops, select = t2_s[0] from per-64-bit
-    // kept copies), then o_data = pm[t3_s[2:1]] (4:1).  tsr41m-ci10 (core inset 10.8) failed post-place TT -1,035 on
-    // g_odr.g_sl[4].u_c/q -> o_data[267]: one 8:1 level gathering 8 slot capture banks over the 777.6 um block
-    // (wire 642 ps).  +1 cycle on the result beat (o_v / o_* move with it); credits unchanged.
-    generate if (TSR == 2) begin : g_od2
-        initial if (NS != 8 && NS != 4) $error("ot_qfd_res_ser TSR=2: NS == 4 or 8");
-        reg [W*32-1:0] pm [0:NS/2-1];
-        genvar k2, pr;
-        for (k2 = 0; k2 < W * 32 / 64; k2 = k2 + 1) begin : g_sl2
-            wire [2:0] sk;
-            (* keep_hierarchy *) ot_qfd_rs_sel3 u_c (.clk(clk), .d(3'(t1_s)), .q(sk));     // = t2_s, per 64-bit slice
-            wire [2:0] sk3;
-            (* keep_hierarchy *) ot_qfd_rs_sel3 u_c3 (.clk(clk), .d(sk), .q(sk3));     // = t3_s
-            for (pr = 0; pr < NS/2; pr = pr + 1) begin : g_pr
-`ifndef OT_QFD_RES_MUT_PAIR
-                always @(posedge clk) pm[pr][k2*64 +: 64] <= sk[0] ? cap[(2*pr+1)*512 + k2*64 +: 64] : cap[(2*pr)*512 + k2*64 +: 64];
-`else           // mutant: the pair pre-select takes the wrong half
-                always @(posedge clk) pm[pr][k2*64 +: 64] <= sk[0] ? cap[(2*pr)*512 + k2*64 +: 64] : cap[(2*pr+1)*512 + k2*64 +: 64];
-`endif
-            end
-            always @(posedge clk) o_data[k2*64 +: 64] <= pm[(sk3 >> 1) & (NS/2 - 1)][k2*64 +: 64];
-        end
-    end else if (TSR == 0) begin : g_od
+    generate if (TSR == 0) begin : g_od
         always @(posedge clk) o_data <= cap[t2_s*512 +: 512];
     end else begin : g_odr
         initial if (NS > 8) $error("ot_qfd_res_ser TSR=1: NS <= 8 (3-bit select leaves)");

@@ -97,9 +97,7 @@ def run_case(name, spec, out: Path):
     rec = dict(case=name, expect=spec["expect"], params=spec.get("params", {}), defines=spec.get("defines", []))
     if "trace" in spec:
         rec["trace"] = trace_hex(ROOT / TRACES / f"{spec['trace']}.cfg.json", d / "trace.hex")
-    sw = spec.get("swap", {})
-    srcs = [str(ROOT / sw.get(s, s)) for s in COMMON] + [str(ROOT / s) for s in spec.get("extra", [])]
-    srcs += [str(ROOT / M / "tb" / f"{spec['tb']}.sv")]
+    srcs = [str(ROOT / s) for s in COMMON] + [str(ROOT / M / "tb" / f"{spec['tb']}.sv")]
     cmd = ["iverilog", "-g2012", "-s", spec["tb"], "-o", str(d / "sim.vvp")]
     cmd += [f"-D{x}" for x in spec.get("defines", [])]
     cmd += [f"-P{spec['tb']}.{k}={v}" for k, v in spec.get("params", {}).items()]
