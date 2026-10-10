@@ -36,8 +36,10 @@ step grt { global_route -congestion_iterations $::env(OT_ITERS) -allow_congestio
 step guides { write_guides /work/route.guide }
 step ckpt { write_db /work/ckpt_grt.odb }
 step wl { report_wire_length -net * -global_route -file /work/wirelength.csv }
-# die-evidence-2 2026-10-09: GRT parasitics are extracted HERE, in the routing session, and written as SPEF. A later
-# session cannot get them from the guides: read_guides + estimate_parasitics -global_routing gives NO wire RC (GRT-0008),
-# so every die STA that did that timed the die with zero wire load.  sta_tcl.py reads this SPEF instead.
-step spef { estimate_parasitics -global_routing; write_spef /work/die_grt.spef }
+# die-evidence-2 2026-10-09 / ds-1010 2026-10-10: GRT parasitics are written as SPEF by the RESIZER
+# (estimate_parasitics -spef_file).  'write_spef' is the RCX writer and fails with RCX-0134 (no extraction data) after
+# a global route, which left every Qwen die without STA.  If this step is lost, spef_from_ckpt.tcl rebuilds the same
+# SPEF from ckpt_grt.odb: write_db keeps the global routes (grt::have_routes = 1 after read_db) and the reloaded
+# estimate is identical to the in-session one (checked net by net, 2026-10-10).
+step spef { estimate_parasitics -global_routing -spef_file /work/die_grt.spef }
 puts OT_GRT_DONE

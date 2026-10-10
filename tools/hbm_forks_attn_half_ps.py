@@ -13,7 +13,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC, DST = ROOT / 'physical/hbm_attn_tile_r/half', ROOT / 'physical/hbm_attn_tile_r/half_ps'
-X0, PITCH = 1062.0, 0.192
+# ds-1010 2026-10-10: X0 on the M5 track (offset 0.012, pitch 0.048) like every k / ci / xp pin (k[0] centre 518.892).
+# 1062.0 put all 1,102 ks pins and ldk 12 nm off track: no legal die origin in any orientation (R25GP die case
+# 'ot_mts: at_SW_00_lo x has no legal origin on this track grid') and no on-track access in the block route.
+X0, PITCH = 1062.012, 0.192
 HI_ROWS = 7                    # hi outline 673.92 -> 689.04 um (strip 90.0 -> 105.12 um)
 
 
