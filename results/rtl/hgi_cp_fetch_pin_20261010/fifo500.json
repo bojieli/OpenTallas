@@ -1,0 +1,17 @@
+{
+  "source_commit": "2c4729bfe8de71047e7bf23f043d4ef02a6ca5e5",
+  "scope": "minimum CP fetch FIFO; sequencer source forced only at its request boundary",
+  "pass_log": "fifo500.log",
+  "mutant_log": "fifo500_mut.log",
+  "requests": 500,
+  "cycles": 1156,
+  "full_cycles": 655,
+  "simultaneous_transfers": 483,
+  "gate": "all requests exact and ordered; valid/address stable during stalls; no drop or duplicate",
+  "mutant": "back_addr zeroed:16 wrong requests,expected rc1",
+  "sha256": {
+    "tb_fetch_fifo.sv": "4759463f4cde1895dc27257b04e254583cfec4d86d623de47464739f3262fc47",
+    "fifo500.log": "b4f1c0deb2428c15674532d571910ca567363e8aa6b7abec8e240b0ec9b48613",
+    "fifo500_mut.log": "e81d9a2a04895d373a1e764c673572a7a32a50cff9a956345df5781030ae3953"
+  }
+}

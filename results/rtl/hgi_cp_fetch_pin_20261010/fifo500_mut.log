@@ -1,0 +1,19 @@
+FAIL req 1 got 0000000000
+FAIL req 33 got 0000000000
+FAIL req 65 got 0000000000
+FAIL req 97 got 0000000000
+FAIL req 129 got 0000000000
+FAIL req 161 got 0000000000
+FAIL req 193 got 0000000000
+FAIL req 225 got 0000000000
+FAIL req 257 got 0000000000
+FAIL req 289 got 0000000000
+FAIL req 321 got 0000000000
+FAIL req 353 got 0000000000
+FAIL req 385 got 0000000000
+FAIL req 417 got 0000000000
+FAIL req 449 got 0000000000
+FAIL req 481 got 0000000000
+FETCH_FIFO FAIL sent500 received500 full655 simultaneous483 errors16
+FATAL: physical/hgi_cp_pin_boundary/tb_fetch_fifo.sv:43: 
+       Time: 2320000 Scope: tb_fetch_fifo
