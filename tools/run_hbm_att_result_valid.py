@@ -5,6 +5,7 @@ This gate proves consumer valid/fault qualification, not arithmetic or gate wake
 latency. Quad arithmetic is replaced by a boundary model; production bank and
 merge RTL are exercised. CG=0 is the true negative for the guarded CG=1 successor.
 """
+import argparse
 import hashlib
 import json
 import subprocess
@@ -16,11 +17,12 @@ SOURCES=['rtl/test/tb_hbm_att_result_valid.sv',
          'rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv',
          'rtl/hdc/v41x/ot_hdc_v41x_attn_bank.sv']
 def main():
+    ap=argparse.ArgumentParser(); ap.add_argument("--negative-only", action="store_true"); args=ap.parse_args()
     out=ROOT/'results/rtl/hbm_att_result_valid_20261010'
     out.mkdir(parents=True,exist_ok=True)
     runs=[]
     with tempfile.TemporaryDirectory(prefix='att-valid-') as td:
-        for cg in (1,0):
+        for cg in ((0,) if args.negative_only else (1,0)):
             exe=Path(td)/'sim.vvp'
             subprocess.run(['iverilog','-g2012','-s','tb_hbm_att_result_valid',
                             f'-Ptb_hbm_att_result_valid.CG={cg}','-o',str(exe)]+
@@ -37,7 +39,8 @@ def main():
              quad_vehicle='injected hardened-result boundary; arithmetic outside gate',
              checks=36,heads_required=16,runs=runs,
              physical_status='successor qualification required; old views untouched')
-    (out/'gate.json').write_text(json.dumps(rec,indent=2)+'\n')
+    (out/('negative_gate.json' if args.negative_only else 'gate.json')).write_text(json.dumps(rec,indent=2)+'\n')
     print(json.dumps(rec))
+    if args.negative_only: return 1 if not runs[0]['passed'] else 0
     return 0 if runs[0]['passed'] and not runs[1]['passed'] else 1
 if __name__=='__main__': raise SystemExit(main())
