@@ -6,6 +6,7 @@
 module ot_hbm_tu_retry_phy_port_core #(
  parameter ENABLE=0,W=545,SW=12,EW=24,CW=10,CAPACITY=256,
  parameter TIMEOUT=2048,
+ parameter PIPE_FIX=0, // cont-takeover 2026-10-09: registered CDC Gray decode + HEAD_FREE replay head (LINK_CREDIT wrapper)
  // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
  // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
  parameter NOEPOCH=0
@@ -30,7 +31,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  wire phy_run=prst_n && phy_link_up;
  wire core_run=rst_n && core_link_up;
  wire local_pop,local_cdc_fault,ret_cdc_fault;
- ot_hbm_retry_pop_cdc #(.CAPACITY(CAPACITY),.CW(CW)) u_rx_pop_cdc(
+ ot_hbm_retry_pop_cdc #(.CAPACITY(CAPACITY),.CW(CW),.OBS_REG(PIPE_FIX)) u_rx_pop_cdc(
  .s_clk(clk),.s_rst_n(core_run),.s_pop(rx_credit),.d_clk(pclk),.d_rst_n(phy_run),.d_pop(local_pop),.fault(local_cdc_fault),.pending());
  wire iq_valid,iq_ready,iq_fault;wire[W-1:0]iq_data;
  ot_hbm_retry_phy_ingress #(.W(W),.EW(EW),.DEPTH(CAPACITY),.NOEPOCH(NOEPOCH)) u_ingress(
@@ -41,7 +42,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  assign fec_tx_v=raw_tx_v && !fault;
  assign ph_rx_v=raw_rx_v && !fault;
  assign fec_rx_ready=raw_rx_ready && !fault;
- ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH)) u_port(
+ ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH),.PIPE_FIX(PIPE_FIX)) u_port(
  .clk(pclk),.rst_n(prst_n),.link_up(phy_link_up),.session(phy_session),
  .in_valid(iq_valid),.in_ready(iq_ready),.in_data(iq_data),
  .tx_valid(raw_tx_v),.tx_ready(fec_tx_ready && !fault),.tx_data(fec_tx_data),.tx_seq(fec_tx_seq),.tx_session(fec_tx_session),
@@ -65,7 +66,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  if(return_new)begin return_seen<=fb_pop;if(delta>CAPACITY)return_fault<=1;end
  if(return_pending>CAPACITY)return_fault<=1;
  end end
- ot_hbm_retry_pop_cdc #(.CAPACITY(CAPACITY),.CW(CW)) u_tx_credit_cdc(
+ ot_hbm_retry_pop_cdc #(.CAPACITY(CAPACITY),.CW(CW),.OBS_REG(PIPE_FIX)) u_tx_credit_cdc(
  .s_clk(pclk),.s_rst_n(phy_run),.s_pop(return_emit),.d_clk(clk),.d_rst_n(core_run),.d_pop(sw_cr_ret),.fault(ret_cdc_fault),.pending());
  assign fault=iq_fault || port_fault || local_cdc_fault || ret_cdc_fault || return_fault;
  end else begin:g_disabled
@@ -145,7 +146,7 @@ module ot_hbm_tu_retry_phy_port #(
  wire c_rx_v,c_cr,c_tx_v,c_tx_r,c_rxin_r,c_nak,c_fault;wire[W-1:0]c_rx_f,c_tx_d;wire[SW-1:0]c_tx_s,c_ack,c_ret,c_ing;
  wire[EW-1:0]c_tx_e,c_ack_e;wire[CW-1:0]c_ack_p,c_debt;
  wire r_v,r_ue;wire[W-1:0]r_d;wire[SW-1:0]r_s;wire[EW-1:0]r_e;
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT)) u(
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.PIPE_FIX(LINK_CREDIT)) u(
  .pclk(pclk),.prst_n(prs[1]),.phy_link_up(pup_q),.phy_session(ses_q),.clk(clk),.rst_n(crs[1]),.core_link_up(cup_q),
  .ph_tx_v(tx_v_q),.ph_tx_flit(tx_f_q),.ph_rx_v(c_rx_v),.ph_rx_flit(c_rx_f),.rx_credit(cred_q),.sw_cr_ret(c_cr),
  .fec_tx_v(c_tx_v),.fec_tx_ready(c_tx_r),.fec_tx_data(c_tx_d),.fec_tx_seq(c_tx_s),.fec_tx_session(c_tx_e),
