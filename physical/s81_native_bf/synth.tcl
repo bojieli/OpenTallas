@@ -138,6 +138,9 @@ setattr -set keep 1 @ot_wake_proc
 select -clear
 } elseif {[env_var_exists_and_non_empty OT_BF_HIER]} {
 puts "OT_BF_HIER synth: bf-arch hardened column / front block, no W10 wake leaves"
+if {[env_var_exists_and_non_empty OT_BF_HIER_ROM_COUNT]} {
+select -assert-count $::env(OT_BF_HIER_ROM_COUNT) {t:ot_rom_4096x274_m8}
+}
 } else {
 # Yosys names the else-if generate branch genblk3.g_rc after HCOL
 # was added. Match that optional prefix while retaining the full RECUT
@@ -237,6 +240,9 @@ setattr -set keep 1 @ot_wake_techmap
 select -clear
 } elseif {[env_var_exists_and_non_empty OT_BF_HIER]} {
 puts "OT_BF_HIER synth: bf-arch hardened column / front block, no W10 wake leaves"
+if {[env_var_exists_and_non_empty OT_BF_HIER_ROM_COUNT]} {
+select -assert-count $::env(OT_BF_HIER_ROM_COUNT) {t:ot_rom_4096x274_m8}
+}
 } else {
 # Yosys names the else-if generate branch genblk3.g_rc after HCOL
 # was added. Match that optional prefix while retaining the full RECUT
