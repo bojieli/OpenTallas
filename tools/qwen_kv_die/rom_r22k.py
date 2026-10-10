@@ -587,6 +587,48 @@ O4_REPIN = {
 def surgery_o4(v, m):
     surgery(v, m)
     _option4(v, m, m['r22k'])
+    _vm_ar(v, m, 'seq_su', 'qfd_seq_su')
+
+
+def surgery_vm(v, m):
+    """r22ksv: r22k (+ seam_free in the recipe) with the sequencer <-> VM all-reduce word path (_vm_ar)"""
+    surgery(v, m)
+    _vm_ar(v, m, 'sp_constants_sequencer', 'qfd_sp_constants_sequencer')
+
+
+# qwen-1010/a 2026-10-10 (owner rule: every path end to end): the TP sequencer's all-reduce reads its partial words from
+# the vector memory (vm_re + 8-b word address out, the 512-b word back) and writes the reduced words (vm_we + address +
+# 512 b).  r22k carried only the one-way seq_ib word, so the read path was neither placed nor priced.  The sequencer
+# master reads with VRL = OS + relays + 1 + relays + IS (ot_qwen_tp_seq_w12_vrl): the stream rate is kept, each
+# all-reduce pays the round trip once (reprice_o4).
+VM_AR_BITS = dict(rd=1 + 8, rq=512, wr=1 + 8 + 512)
+
+
+def _vm_ar(v, m, seq, seq_master):
+    m['buses'] += [('seq_vrd', 'sequencer', VM_AR_BITS['rd'], [(seq, 'vrd'), ('sp_vector_memory', 'svr')]),
+                   ('vm_seq_q', 'sequencer', VM_AR_BITS['rq'], [('sp_vector_memory', 'svq'), (seq, 'vrq')]),
+                   ('seq_vwr', 'sequencer', VM_AR_BITS['wr'], [(seq, 'vwr'), ('sp_vector_memory', 'svw')])]
+    m['r22k']['vm_ar'] = dict(seq=seq, buses=['seq_vrd', 'vm_seq_q', 'seq_vwr'], bits=dict(VM_AR_BITS))
+    inner = v.masters
+    by = {i.name: i for i in m['insts']}
+
+    def masters(model, k=1, port_bits=None):
+        M = inner(model, k, port_bits)
+        s, vm = M[seq_master], M['qfd_sp_vector_memory']
+        si, vi = by[seq], by['sp_vector_memory']
+        # the sequencer's face toward the VM; the VM's face toward the sequencer (S if below, E if to the east)
+        sf = 'N' if vi.y >= si.y + si.h - 1.0 else 'W'
+        vf = 'S' if si.y + si.h <= vi.y + 1.0 and si.x < vi.x + vi.w - 1.0 else 'E'
+        if si.x >= vi.x + vi.w - 1.0:
+            vf = 'E'
+        so = s.w * 0.15 if sf in 'NS' else s.h * 0.85
+        for j, (p, b) in enumerate((('vrd', 9), ('vrq', 512), ('vwr', 521))):
+            s.face(p, b, sf, 'M5' if sf in 'NS' else 'M4', so + j * (60.0 if sf in 'NS' else -60.0), 1)
+        vo = vm.w * 0.85 if vf in 'NS' else 300.0
+        for j, (p, b) in enumerate((('svr', 9), ('svq', 512), ('svw', 521))):
+            vm.face(p, b, vf, 'M5' if vf in 'NS' else 'M4', vo + j * (-60.0 if vf in 'NS' else 60.0), 1)
+        return M
+    v.masters = masters
 
 
 def _option4(v, m, rec):

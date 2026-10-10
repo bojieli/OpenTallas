@@ -22,7 +22,7 @@ import qwen_rom_fulldie_b3r2 as B      # noqa: E402
 CROSS = ('x3', 'attn_ret', 'emb', 'emb_a', 'emb_cr', 'seq_d2d', 'd2d_seq', 'd2d_fdi', 'pll_fwd', 'rst_fwd')
 RETICLE = 858.0
 # r22ko4: the option-4 words and the moved control / tree / sequencer words (their relay stages go to the record)
-O4_PREFIX = ('o4_', 'tt_', 'pword_', 'seq_', 'd2d_')
+O4_PREFIX = ('o4_', 'tt_', 'pword_', 'seq_', 'd2d_', 'vm_seq')
 
 
 def main():
