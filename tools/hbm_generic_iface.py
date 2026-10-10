@@ -165,7 +165,7 @@ D_PARAM = {
     "COLL.ROW_GATHER": "I = selected row ids (U32, identical on every rank; count from I row 1 or imm_a); A = this die's "
                        "row store; row i is owned by rank (i div B) mod G and stored there at local row "
                        "(i div (B*G))*B + i mod B; [7:0] B (DS 8); imm_b = destination ranks 0..imm_b-1; "
-                       "O = the rows in owner order on every destination rank: owner r's j-th selected row (list order) at O row r * M + j, "
+                       "O = the rows in slot-major order on every destination rank: owner r's j-th selected row (list order) at O row j * G + r, "
                        "M = the largest owned count (padded); the list-order view is the compiler's table read by ATT (G14, review-1149)",
     "IDX.EHASH": "Engram row ids of the slot's token: [2:0] Engram layer index; B = that layer's hash constants (table); "
                  "the engine keeps the n-gram token history (pushed by the first EHASH of a token, restored by "
@@ -175,8 +175,9 @@ D_PARAM = {
     "IDX.INDEX": "one DS indexer frame (G18): [11:0] k (DS 512), [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer; A = post-RoPE query (FP32), B = scaled head weights (BF16 values), C = the layer-20 candidate table [block ids U32 | values FP32 at C.stride] (keep_en, G18a: owned blocks listed with value > -inf are kept), O / R = local top-k ids (ascending) / values, D = candidates in the same [ids | values] layout (cand_en)",
     "COLL.ALL_REDUCE_SUM": "rank-order pairwise tree over the group (G = 1, 2, 4, 8); G = 96 is rejected (E_RANGE): DS reduces as 12 groups of 8 with GROUP_REDUCE_MCAST s = 8 (GX11)",
     "IDX.MERGE": "[11:0] k (1..2048), [12] key (0 larger value first, -0 = +0, NaN last, ties lower id; 1 lower id first); A FP32 / B U32 = G = m rows (<= 128) of n key-sorted {value, id} pairs; O / R = the first k of the merged order; an unsorted row faults (G20)",
+    "CTL.LOOP": "param[15:0] static count, [16] level, [17] count from VM: U32(VM[imm_a]) after waits; count 1..65535 and imm_a < 2^18, else E_RANGE (G24)",
     "MDESC.STREAM": "space 2: base = stream id; 0 SM -> SU lanes, 1 SU reduction -> ARGMAX, 2 SM -> ARGMAX; element FIFO (P-slot producers publish slot-major); underrun / overrun / unwired id faults; ids >= 3 reserved (E_RANGE)",
-    "IDX.OWNED": "[7:0] B (power of two <= 128), [15:8] G (1, 2, 4, 8, 96); A U32 = K selected row ids (K <= 2048, id < 2^20); O = this rank's owned local rows in list order padded with 0 to M; R = per-entry gathered row r * M + j; D[0] = M (G21)",
+    "IDX.OWNED": "[7:0] B (power of two <= 128), [15:8] G (1, 2, 4, 8, 96), [23:16] c (0/1 unbatched); A U32 = K selected row ids (K <= 2048, id < 2^20); O = this rank's owned local rows in list order padded with 0 to M; R = per-entry gathered row j * G + r; D[0] = M, D[1] = ceil(M/max(c,1)), c = param[23:16] (G24)",
     "COLL.TOPK_MERGE": "from VM: A = local values, B = local ids; the group top imm_a by descending value, ties lowest id; O = ids in ascending id order, R (optional) = values; bit-exact gather path (G18)",
     "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
