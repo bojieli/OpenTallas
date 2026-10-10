@@ -14,8 +14,12 @@
 //          post = 2 sigmoid(mix * scale1 + base), comb = Sinkhorn(exp(mix * scale2 + base - rowmax)).
 //   DRAIN  the 24 words [pre 4 | post 4 | comb 16] to O (any alignment, word-masked sector writes); retire after.
 // HBM weight-set format (B.base >> 5 = sector S0; SPW = W / 8 sectors a word; RS = R x SPW):
-//   row o (0..23), bank k (0..7), word r: sector S0 + (8 o + k) RS + r SPW = W binary32 lanes fn[o][8 (r W + l) + k]
-//   (lanes past K / 8 zero); then at S0 + 192 RS four sectors: scale[0..2] at words 0..2, base[0..23] at words 8..31.
+//   S0 .. S0 + 3: scale[0..2] at words 0..2, base[0..23] at words 8..31;
+//   row o (0..23), bank k (0..7), word r: sector S0 + 4 + (8 o + k) RS + r SPW = W binary32 lanes
+//   fn[o][8 (r W + l) + k] (lanes past K / 8 zero).
+// G22 ops: 0 HC_MIX (above); 1 HC_MIX_ROWS: rows row0 .. row0 + nrows - 1 only (their fn rows alone are read), the raw x r
+// mixes drained to O (nrows words), no post; 2 HC_MIX_POST: A = the 24 gathered mixes (VM) -> POST -> O, only the 4
+// scale / base sectors read.
 // HBM client: one request channel {sector addr, len (sectors), tag {src 4, slot}}, responses {tag, beat, data} in
 // any order (src 0..7 = weight bank, 8 = the scale / base fetch); always ready (registered).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -62,7 +66,7 @@ module ot_hgi_hc_unit #(
         .lg_v(1'b0), .lg_rdy(), .lg_job(229'd0), .job_v(job_v), .job_rdy(job_rdy), .job(job), .job_done(job_done),
         .job_fault(job_fault));
     // job: {obase 18, nwords 24, w_hbm 35, xbase 18, wbase 16, eps 32, nf 32, scale 1, nchunk 18, nout 5, npos 1}
-    reg [17:0] nchunk, xbase, obase; reg [31:0] nf, eps; reg [34:0] wsec;
+    reg [17:0] nchunk, xbase, obase; reg [31:0] nf, eps; reg [34:0] wsec; reg [1:0] op; reg [4:0] row0, nrows, rend;
     reg [17:0] rr;                               // R
     reg [HAW-1:0] rs, rowstride, rowbase, pbase; reg [HAW-1:0] boff [0:7];
 
@@ -117,12 +121,11 @@ module ot_hgi_hc_unit #(
             end
         end
     end
+    reg ack_f;
     always @* begin
-        wq_ack = 8'd0;
-        if (!hq_v || hq_rdy) begin : ack
-            reg f; f = 1'b0;
-            for (k = 0; k < 8; k = k + 1) if (!f && wq_v[k]) begin f = 1'b1; wq_ack[k] = 1'b1; end
-        end
+        wq_ack = 8'd0; ack_f = 1'b0;
+        if (!hq_v || hq_rdy)
+            for (k = 0; k < 8; k = k + 1) if (!ack_f && wq_v[k]) begin ack_f = 1'b1; wq_ack[k] = 1'b1; end
     end
     wire p_iss = (!hq_v || hq_rdy) && p_req && !(|wq_v);
 
@@ -148,7 +151,8 @@ module ot_hgi_hc_unit #(
     // ---- control
     localparam [4:0] S_IDLE = 0, S_PAR = 1, S_STAGE = 2, S_ROW = 3, S_RW = 4, S_RC = 5, S_REL = 6, S_P1 = 7,
                      S_P2 = 8, S_MAX = 9, S_P3 = 10, S_P4 = 11, S_P5 = 12, S_P6 = 13, S_P7 = 14, S_SK = 15,
-                     S_SKW = 16, S_DRAIN = 17, S_DRW = 18, S_DONE = 19, S_FAULT = 20, S_GEO = 21, S_GEO2 = 22;
+                     S_SKW = 16, S_DRAIN = 17, S_DRW = 18, S_DONE = 19, S_FAULT = 20, S_GEO = 21, S_GEO2 = 22,
+                     S_LDA = 23;
     reg [4:0] st; reg [4:0] i; reg iss_done; reg [4:0] row;
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
     reg [26:0] sec, sec_end, rsec; reg [2:0] vo_n; reg flt;
@@ -190,7 +194,8 @@ module ot_hgi_hc_unit #(
                 S_IDLE: if (job_v && job_rdy) begin
                     job_rdy <= 1'b0;
                     nchunk <= job[23:6]; nf <= job[56:25]; eps <= job[88:57]; xbase <= job[122:105];
-                    wsec <= job[157:123]; obase <= job[199:182];
+                    wsec <= job[157:123]; obase <= job[199:182]; op <= job[201:200]; row0 <= job[206:202];
+                    nrows <= job[211:207];
                     st <= S_GEO;
                 end
                 S_GEO: begin                                         // R, RS, row stride, parameter base
@@ -200,16 +205,32 @@ module ot_hgi_hc_unit #(
                 S_GEO2: begin
                     rs <= {{(HAW-18){1'b0}}, rr} << LS;
                     rowstride <= {{(HAW-18){1'b0}}, rr} << (LS + 3);
-                    pbase <= wsec[HAW-1:0] + (({{(HAW-18){1'b0}}, rr} << (LS + 3)) * 24);
-                    rowbase <= wsec[HAW-1:0];
-                    if (rr > RMAX || rr == 0) flt <= 1'b1;
+                    pbase <= wsec[HAW-1:0];
+                    rowbase <= wsec[HAW-1:0] + 4 + (({{(HAW-18){1'b0}}, rr} << (LS + 3)) * row0);
+                    rend <= row0 + nrows - 5'd1;
+                    if (op != 2'd2 && (rr > RMAX || rr == 0)) flt <= 1'b1;
                     st <= S_PAR;
                 end
                 S_PAR: begin
                     for (q = 0; q < 8; q = q + 1) boff[q] <= rs * q;
-                    p_req <= 1'b1; p_got <= 4'd0;
+                    p_req <= (op != 2'd1); p_got <= 4'd0;
                     sec <= xbase >> 3; rsec <= xbase >> 3; sec_end <= ({9'd0, xbase} + {6'd0, nchunk, 3'd0} - 27'd1) >> 3;
-                    vo_n <= 3'd0; st <= S_STAGE;
+                    vo_n <= 3'd0; st <= (op == 2'd2) ? S_LDA : S_STAGE;
+                end
+                S_LDA: begin                                         // op 2: the 24 gathered mixes -> T
+                    if (vo_n < 3'd4 && sec <= sec_end) begin
+                        vmq <= {1'b1, 1'b0, sec, 5'd0, 256'd0, 32'd0, 16'h4845};
+                        sec <= sec + 27'd1;
+                    end
+                    if (vr[273] && !vr[256]) begin
+                        for (q = 0; q < 8; q = q + 1) begin
+                            e2 = {rsec, q[2:0]} - xbase;
+                            if (e2 >= 0 && e2 < 24) T[e2] <= vr[32*q +: 32];
+                        end
+                        rsec <= rsec + 27'd1;
+                    end
+                    vo_n <= vo_n + ((vo_n < 3'd4 && sec <= sec_end) ? 3'd1 : 3'd0) - ((vr[273] && !vr[256]) ? 3'd1 : 3'd0);
+                    if (rsec > sec_end && vo_n == 3'd0 && p_got == 4'd4) begin i <= 5'd0; iss_done <= 1'b0; st <= S_P1; end
                 end
                 S_STAGE: begin                                       // A sectors -> x banks, 4 outstanding
                     if (vo_n < 3'd4 && sec <= sec_end) begin
@@ -227,18 +248,21 @@ module ot_hgi_hc_unit #(
                         rsec <= rsec + 27'd1;
                     end
                     vo_n <= vo_n + ((vo_n < 3'd4 && sec <= sec_end) ? 3'd1 : 3'd0) - ((vr[273] && !vr[256]) ? 3'd1 : 3'd0);
-                    if (rsec > sec_end && vo_n == 3'd0) begin row <= 5'd0; st <= S_ROW; end   // lanes past K / 8: HCP-masked
+                    if (rsec > sec_end && vo_n == 3'd0) begin row <= row0; st <= S_ROW; end   // lanes past K / 8: HCP-masked
                 end
-                S_ROW: if (p_got == 4'd4 || row != 5'd0) begin w_start <= 1'b1; st <= S_RW; end
+                S_ROW: if (p_got == 4'd4 || op == 2'd1) begin w_start <= 1'b1; st <= S_RW; end
                 S_RW: if (&w_rdy && h_cr) begin h_cv <= 1'b1; st <= S_RC; end
                 S_RC: begin
                     if (h_cv && h_cr) h_cv <= 1'b0;
-                    if (h_ov) begin T[row] <= h_od; w_rel <= 1'b1; st <= S_REL; end
+                    if (h_ov) begin T[row - row0] <= h_od; w_rel <= 1'b1; st <= S_REL; end
                 end
                 S_REL: begin
                     rowbase <= rowbase + rowstride;
-                    if (row == 5'd23) begin
-                        i <= 5'd0; iss_done <= 1'b0; st <= S_P1;
+                    if (row == rend) begin
+                        if (op == 2'd1) begin
+                            sec <= obase >> 3; sec_end <= ({9'd0, obase} + {22'd0, nrows} - 27'd1) >> 3; vo_n <= 3'd0;
+                            st <= S_DRAIN;
+                        end else begin i <= 5'd0; iss_done <= 1'b0; st <= S_P1; end
                     end else begin row <= row + 5'd1; st <= S_ROW; end
                 end
                 // ---- post phases: issue one element per edge, then wait for every write-back
@@ -303,7 +327,8 @@ module ot_hgi_hc_unit #(
                         dat = 256'd0; msk = 32'd0;
                         for (q = 0; q < 8; q = q + 1) begin
                             j = {sec, q[2:0]} - obase;
-                            if (j >= 0 && j < 24) begin dat[32*q +: 32] = T[j]; msk[4*q +: 4] = 4'hF; end
+                            if (j >= 0 && j < ((op == 2'd1) ? {27'd0, nrows} : 24)) begin
+                                dat[32*q +: 32] = T[j]; msk[4*q +: 4] = 4'hF; end
                         end
                         vmq <= {1'b1, 1'b1, sec, 5'd0, dat, msk, 16'h4844};
                         sec <= sec + 27'd1;
