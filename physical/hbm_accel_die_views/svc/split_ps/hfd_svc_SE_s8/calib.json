@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-data/claude/closure-loop/hbm_svc_SE_s8_pspr_ecaae581c_tc_hm10-cl/routes/hbm_svc_SE_s8_pspr_ecaae581c_tc_hm10_cl_cal/work/orfs/results/asap7/opentallas_hfd_svc_SE_s8_asap7_hv_hbm_svc_SE_s8_pspr_ecaae581c_tc_hm10_cl_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": {
+   "n": 418,
+   "mean": 382.3,
+   "min": 320.1,
+   "max": 404.1
+  },
+  "all": {
+   "n": 1106,
+   "mean": 371.4,
+   "min": 318.7,
+   "max": 404.1
+  },
+  "errors": []
+ },
+ "tt": {
+  "boundary": {
+   "n": 418,
+   "mean": 314.2,
+   "min": 253.6,
+   "max": 334.7
+  },
+  "all": {
+   "n": 1106,
+   "mean": 303.1,
+   "min": 252.1,
+   "max": 334.7
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 418,
+   "mean": 269.8,
+   "min": 211.8,
+   "max": 289.2
+  },
+  "all": {
+   "n": 1106,
+   "mean": 258.9,
+   "min": 210.4,
+   "max": 289.2
+  },
+  "errors": []
+ },
+ "route_corner": "TC",
+ "env": {
+  "CK_SS_MEAN": 314,
+  "CK_SS_ALL_MEAN": 303,
+  "CK_SS_MIN": 254,
+  "CK_SS_ALL_MIN": 252,
+  "CK_SS_MAX": 335,
+  "CK_SS_ALL_MAX": 335,
+  "CK_TT_MEAN": 314,
+  "CK_TT_ALL_MEAN": 303,
+  "CK_TT_MIN": 254,
+  "CK_TT_ALL_MIN": 252,
+  "CK_TT_MAX": 335,
+  "CK_TT_ALL_MAX": 335,
+  "CK_FF_MEAN": 270,
+  "CK_FF_ALL_MEAN": 259,
+  "CK_FF_MIN": 212,
+  "CK_FF_ALL_MIN": 210,
+  "CK_FF_MAX": 289,
+  "CK_FF_ALL_MAX": 289,
+  "CK_SSLIB_MEAN": 382,
+  "CK_SSLIB_MIN": 320,
+  "CK_SSLIB_MAX": 404,
+  "CK_SSLIB_ALL_MEAN": 371,
+  "CK_SSLIB_ALL_MIN": 319,
+  "CK_SSLIB_ALL_MAX": 404,
+  "CK_ROUTE_REF": "TT"
+ },
+ "budget_accepted": {
+  "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it",
+  "sheet_ss": 708.5,
+  "sheet_grade": "target",
+  "target_ss": 708.5,
+  "measured": {
+   "ss": 314,
+   "ff": 270,
+   "ss_min": 254,
+   "ss_max": 335,
+   "ff_min": 212,
+   "ff_max": 289,
+   "grade": "measured",
+   "source": "closure-loop calibrate hbm_svc_SE_s8_pspr_ecaae581c_tc_hm10-cl (ot-epyc2:/srv/opentallas-data/claude/closure-loop/hbm_svc_SE_s8_pspr_ecaae581c_tc_hm10-cl)",
+   "over_target": false
+  },
+  "sheets_ref": "9462e8d5659aabf22d5ce45dc460cb2ddc358f13"
+ }
+}
