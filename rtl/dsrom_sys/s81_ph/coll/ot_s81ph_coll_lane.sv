@@ -92,7 +92,7 @@ module ot_s81ph_coll_lane #(
     wire ir_g = ir && (UPGATE == 0 || up);
     generate if (LCR != 0) begin : g_lcri
         wire lcf;
-        ot_link_credit_rx #(.W(W + 1), .DEPTH(8), .OREG(1)) u_ski (.clk(clk), .rst_n(rst_n), .l_valid(lo_v), .l_data(lo_d),
+        ot_link_credit_rx #(.W(W + 1), .DEPTH(8), .OREG(0), .WFREE(1)) u_ski (.clk(clk), .rst_n(rst_n), .l_valid(lo_v), .l_data(lo_d),
             .l_credit(lo_r), .o_valid(iv), .o_ready(ir_g), .o_data({il, id}), .fault(lcf));
     end else begin : g_skid_i
     ot_s81ph_skid2 #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_n), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
