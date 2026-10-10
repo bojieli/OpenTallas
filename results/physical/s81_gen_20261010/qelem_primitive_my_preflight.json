@@ -1,0 +1,21 @@
+{
+  "captured_utc": "2026-10-10T13:03:48.359449+00:00",
+  "source_commit": "e82a88082",
+  "host": "ot-epyc4",
+  "input_kind": "retained calibration CTS ODB, not final route",
+  "input_sha256": "0c965705766c03de5e7691b5c8aa5f558a4baf16d5ab897daf4585711e962108",
+  "script_sha256": "56c724a88fb4561e90ee9255df5799b5a23aa16d4e58523a53d2f91c419b93a0",
+  "instances": 239031,
+  "unique_masters": 82,
+  "unproven_or_disallowed": 0,
+  "primitive_my_preflight": "PASS",
+  "hardview_orientation_qualified": false,
+  "remaining": [
+    "Final routed ODB mirror audit",
+    "Top-level routing-track origin congruence",
+    "Power and row reflection",
+    "Final hard-view abstract SYMMETRY and pin legality",
+    "Context clock/STA and extraction"
+  ],
+  "resource_admission": "10 GiB host reservation; same q-element CTS OpenROAD measured about 2 GiB RSS; no address-space or time cap"
+}
