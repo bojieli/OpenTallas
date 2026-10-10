@@ -31,6 +31,7 @@ module ot_hgi_att_unit #(
     parameter integer NL = 2,               // row lanes (D / (NL x S) <= 32: a tile's dims in one 32-dim group)
     parameter integer BLK = 512,
     parameter integer NOUT = 8,
+    parameter integer PACKED_ROWS = 0, // B/C fmt3 opaque originalscaled265bit groups
     parameter integer SELECTED_VM = 0, // direct handshaken selected C client; explicit scratch rebase
     parameter integer SELECTED_C_ONLY = 1,
     parameter integer SECTOR_CAPTURE = 0, // opt-in codec output capture
@@ -95,8 +96,8 @@ module ot_hgi_att_unit #(
     wire [63:0] a_end = {24'd0,mbase(da)} + ({59'd0,lanes}-1)*{32'd0,mst(da)} + (qk?{54'd0,hd}:{43'd0,tt});
     wire [63:0] o_end = {24'd0,mbase(dout)} + ({59'd0,lanes}-1)*{32'd0,mst(dout)} +
         (qk?({43'd0,tt}-1)*{48'd0,mist(dout)}+1:{54'd0,hd});
-    wire [63:0] b_end = {24'd0,bbase} + ((ring?{44'd0,bm}:{43'd0,nb})-1)*{32'd0,bstr} + ({54'd0,hd}<<es_b);
-    wire [63:0] c_end = {24'd0,cbase} + ({43'd0,nc}-1)*{32'd0,cstr} + ({54'd0,hd}<<es_b);
+    wire [63:0] b_end = {24'd0,bbase} + ((ring?{44'd0,bm}:{43'd0,nb})-1)*{32'd0,bstr} + (PACKED_ROWS ? PACKSEC*32 : ({54'd0,hd}<<es_b));
+    wire [63:0] c_end = {24'd0,cbase} + ({43'd0,nc}-1)*{32'd0,cstr} + (PACKED_ROWS ? PACKSEC*32 : ({54'd0,hd}<<es_b));
     localparam [39:0] SCRATCH_FIRST = SELECTED_C_ONLY ? 40'd1048576 : 40'd1114112;
     wire allocation_ok = mbase(da)>=SCRATCH_FIRST && mbase(dout)>=SCRATCH_FIRST &&
         a_end<=64'd2097152 && o_end<=64'd2097152 && mst(da)<32'd2097152 && mst(dout)<32'd2097152 &&
@@ -170,8 +171,8 @@ module ot_hgi_att_unit #(
     reg [ROWW-1:0] kv_row;
     integer gx, xx;
     always @* begin
-        kv_row = {ROWW{1'b0}};
-        for (gx = 0; gx < G; gx = gx + 1) begin
+        kv_row = PACKED_ROWS ? packed_row_flat[ROWW-1:0] : {ROWW{1'b0}};
+        for (gx = 0; gx < (PACKED_ROWS ? 0 : G); gx = gx + 1) begin
             kv_row[gx * 265 + 256 +: 8] = 8'd127;
             for (xx = 0; xx < 32; xx = xx + 1) kv_row[gx * 265 + 8 * xx +: 8] = (gx * 32 + xx < hd) ? c_flat[8 * (gx * 32 + xx) +: 8] : 8'd0;
         end
@@ -188,7 +189,7 @@ module ot_hgi_att_unit #(
         assign codec_v = 1'b0; assign codec_codes = 256'd0; assign codec_mask = 32'd0;
         assign codec_bad = 32'd0; assign codec_addr = 8'd0;
     end endgenerate
-    wire response_land = SECTOR_CAPTURE ? codec_v : hr_vq;
+    wire response_land = (SECTOR_CAPTURE && !PACKED_ROWS) ? codec_v : hr_vq;
     wire land_c = (st == S_KVC) && response_land;
     wire [26:0] qbase = {{(27-VW){1'b0}}, abase} + hq * {{(27-VW){1'b0}}, astr};
     wire [26:0] pbase = qbase + {6'd0, blk0};
@@ -205,7 +206,8 @@ module ot_hgi_att_unit #(
     end endgenerate
     // p banks: head h, bank b = row mod PB (PB = max(8, R): a sector's 8 rows and a word's R rows hit distinct banks)
     localparam integer PB = (R > 8) ? R : 8;
-    wire [H*PB*16-1:0] pb_val; wire [H*PB*5-1:0] pb_jj; wire [H*PB-1:0] pb_ok;
+    localparam integer PJ = (R>32)?$clog2(R):5;
+    wire [H*PB*16-1:0] pb_val; wire [H*PB*PJ-1:0] pb_jj; wire [H*PB-1:0] pb_ok;
     generate for (gh = 0; gh < H; gh = gh + 1) begin : g_ph
         for (gb = 0; gb < PB; gb = gb + 1) begin : g_pb
             reg [15:0] m [0:BLK/PB-1];
@@ -216,7 +218,7 @@ module ot_hgi_att_unit #(
                         m[({rsec, x[2:0]} - pbase) / PB] <= vr[32*x + 16 +: 16];
             wire [20:0] r0 = pw_i * R;
             wire [20:0] jj = (gb + PB - (r0 % PB)) % PB;
-            assign pb_jj[(gh * PB + gb) * 5 +: 5] = jj[4:0];
+            assign pb_jj[(gh * PB + gb) * PJ +: PJ] = jj[PJ-1:0];
             assign pb_ok[gh * PB + gb] = jj < R;
             assign pb_val[(gh * PB + gb) * 16 +: 16] = m[(r0 + jj) / PB];
         end
@@ -226,9 +228,24 @@ module ot_hgi_att_unit #(
     always @* begin
         p_word_r = {(R*H*16){1'b0}};
         for (pbx = 0; pbx < H * PB; pbx = pbx + 1)
-            if (pb_ok[pbx]) p_word_r[(pb_jj[pbx*5 +: 5] * H + pbx / PB) * 16 +: 16] = pb_val[pbx*16 +: 16];
+            if (pb_ok[pbx]) p_word_r[(pb_jj[pbx*PJ +: PJ] * H + pbx / PB) * 16 +: 16] = pb_val[pbx*16 +: 16];
     end
     assign p_word = p_word_r;
+    // One valid-qualified static sector register per row fragment. Finite storage;
+    // no whole engine flattening or ideal multi-read SRAM abstraction.
+    localparam integer PACKSEC=(ROWW+255)/256, PACKLAST=ROWW-(PACKSEC-1)*256;
+    wire [PACKSEC*256-1:0] packed_row_flat;
+    generate if(PACKED_ROWS) begin : g_packed_row
+        for(genvar ps=0;ps<PACKSEC;ps=ps+1) begin : g_sector
+            localparam integer W=(ps==PACKSEC-1)?PACKLAST:256;
+            reg [W-1:0] payload;
+            always @(posedge clk) if(land_c && hr_tq==ps) payload<=hr_dq[W-1:0];
+            assign packed_row_flat[256*ps+:256]={{(256-W){1'b0}},payload};
+        end
+    end else begin : g_no_packed_row
+        assign packed_row_flat=0;
+    end endgenerate
+    wire packed_tail_fault=PACKED_ROWS && land_c && hr_tq==PACKSEC-1 && (hr_dq>>PACKLAST)!=0;
     reg [31:0] cflt;
     generate for (gb = 0; gb < 32; gb = gb + 1) begin : g_cb
         wire [8:0] c16 = e4m3({hr_dq[16 * (gb % 16) +: 16], 16'd0});
@@ -236,7 +253,7 @@ module ot_hgi_att_unit #(
         reg [7:0] m [0:D/32-1];
         always @(posedge clk) begin
             cflt[gb] <= 1'b0;
-            if (land_c) begin
+            if (land_c && !PACKED_ROWS) begin
                 if (SECTOR_CAPTURE) begin
                     if (codec_mask[gb]) begin m[codec_addr] <= codec_codes[8*gb +: 8]; cflt[gb] <= codec_bad[gb]; end
                 end else if (es_b == 2'd0) m[hr_tq] <= hr_dq[8*gb +: 8];
@@ -299,7 +316,7 @@ module ot_hgi_att_unit #(
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0; vmq_i[337] <= 1'b0; job_v <= 1'b0; sc_cr <= 1'b0; pv_cr <= 1'b0;
             ad_v <= 1'b0;
-            if (|cflt) flt <= 1'b1;
+            if (|cflt || packed_tail_fault) flt <= 1'b1;
             if (SELECTED_VM && (selected_fault || main_identity_fault)) flt <= 1'b1;
             if (ad_o) begin ar <= ar + 6'd1; if (ad_e != 2'd0) flt <= 1'b1; end
             if (rec_v && rec_rdy) raw_v <= 1'b1;
@@ -355,7 +372,7 @@ module ot_hgi_att_unit #(
                 end
                 S_CHK: begin
                     if ((SELECTED_VM && !allocation_ok) || hdr[127:124] != 4'd5 || op > 6'd1 || !opnd[0] || !opnd[1] || !opnd[4] || da[1:0] != 2'd1 ||
-                        dout[1:0] != 2'd1 || db[1:0] != 2'd0 || (hasc && dc[1:0] != 2'd0) || bfmt == 2'd3 ||
+                        dout[1:0] != 2'd1 || db[1:0] != 2'd0 || (hasc && dc[1:0] != 2'd0) || (PACKED_ROWS ? bfmt != 2'd3 : bfmt == 2'd3) ||
                         (hasc && cfmt != bfmt) || hd == 0 || hd > D || hd[4:0] != 0 || tt == 0 ||
                         lanes > H || (ring && (bm == 0 || (bm & (bm - 1)) != 0 || {1'b0, bm} < nb)) ||
                         (!qk && mn(da) != tt[19:0]) || (qk && mn(dout) != tt[19:0]) || bbase[4:0] != 0 ||
@@ -414,7 +431,7 @@ module ot_hgi_att_unit #(
                         end else b = cbase + (t - nb) * cstr;
                         rbyte <= b;
                     end
-                    nsec <= ({8'd0, hd} << es_b) >> 5; isec <= 8'd0; hout <= 4'd0;
+                    nsec <= PACKED_ROWS ? PACKSEC : (({8'd0, hd} << es_b) >> 5); isec <= 8'd0; hout <= 4'd0;
                     st <= S_KVC;
                 end
                 S_KVC: begin
