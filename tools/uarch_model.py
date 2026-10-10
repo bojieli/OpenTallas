@@ -15263,6 +15263,12 @@ def hgi_token18_accept_seat_model():
     return d
 
 
+def qwen_split_io_cdc_model():
+    """Physical IO CDC composition sized before build; no die timing credit."""
+    from tools.qwen_system.split_io_cdc import sizing
+    return sizing()
+
+
 def hgi_token18_fullcore_model():
     """Reuse qualified hfd_mtp_core register/skid/read contract, not naked ctl."""
     return dict(schema='opentallas.hgi_mtp_fullcore18.v1',default_off=True,

@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.qwen.split_io_cdc.v1",
+  "target": "Qwen3-8B ROM",
+  "macs_per_cycle": 0,
+  "payload_bytes_per_cycle_per_tile": 128,
+  "boundary_bits_per_tile_face": 1026,
+  "fifo_bits_per_tile": 8192,
+  "replicas": 4,
+  "shared_data_muxes": 0,
+  "clock_pairs_per_tile": 1,
+  "cdc_tile_um": [
+    302.4,
+    388.8
+  ],
+  "collective_um": [
+    324.0,
+    540.0
+  ],
+  "slot_um": [
+    626.832,
+    1563.816
+  ],
+  "prior_slot_um": [
+    400.008,
+    1563.816
+  ],
+  "added_reserved_area_mm2": 0.35467346880000006,
+  "hard_area_mm2": 0.64525248,
+  "pin_layers": [
+    "M4",
+    "M6"
+  ],
+  "pin_pitch_um": 0.048,
+  "face_tracks_available": 15866,
+  "face_tracks_required": 1026,
+  "pipeline": 2,
+  "cycles_added_vs_pipe2_predecessor": 0,
+  "cycles_added_vs_pipe0_predecessor": 2,
+  "credit_initial": 4,
+  "qualification": "child TT/FF/DRC and exactness qualified; die routing, reset/fault integration and relay cost remain separate gates",
+  "input_base_commit": "8ab941dbd",
+  "source_sha256": {
+    "tools/qwen_system/split_io_cdc.py": "e253e466ab51f1f12d6a37cc28b16ea80a0f58ebca01b0140bcab5714cd050d7",
+    "tools/qwen_rom_fulldie_b3r2.py": "540fcf6c0992273b3eac4bd9435b89b08d7872b68982feed0f244f0084b49f37"
+  }
+}

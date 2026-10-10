@@ -1,0 +1,9 @@
+OT_HOLD_STALL NEEDS_RTL stage=cts reason=stalled: chunk 6 gained 0.00 ps / 0.2% TNS
+chunks (wns_ps tns_ps viol_endpoints): {-418.1 -167452.8 3224.0} {-375.1 -97951.1 1878.0} {-330.9 -30396.2 737.0} {-330.9 -13617.1 520.0} {-330.9 -6409.5 450.0} {-330.9 -6099.9 440.0} {-330.9 -6085.2 439.0}
+class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)
+I2R          255     -42.8  i_serdes_rx[439] -> u_sr.g_ipr.pd[439]$_DFF_P_/D
+R2O          184    -330.9  u_sq.cr_q$_DFF_PN0_/QN -> i_seq_coll_cr
+top pin groups (class start -> end, bus indices folded):
+    255     -42.8  I2R i_serdes_rx[*] -> u_sr.g_ipr.pd[*]$_DFF_P_/D
+    183      -4.3  R2O u_ut.g_ops2.odp[*]$_DFF_P_/QN -> o_ucie_tx[*]
+      1    -330.9  R2O u_sq.cr_q$_DFF_PN0_/QN -> i_seq_coll_cr

@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qwen.split_io_cdc.gate.v1",
+  "input_base_commit": "8ab941dbd",
+  "r21c_shape": "four CDC tiles plus collective; all inside widened IO slot; no overlapping macros",
+  "r22k_port_width_gate": "PASS",
+  "cdc_pos": "CDC1024_PASS",
+  "cdc_neg": "CDC1024_NEG_DETECTED",
+  "view_identity_roundtrip": "PASS",
+  "model_entrypoint": "qwen_split_io_cdc_model AST-executed from unified model; sparse checkout lacks unrelated ABI3 dependency",
+  "rtl_changed": false,
+  "child_reroute_required": false,
+  "reroute_reason": "same closed child RTL, parameters and physical views; composition requires die evidence separately",
+  "production_adoption": "NOT YET: production reset/fault wiring and routed relay composition unresolved",
+  "registry_supersession": false
+}

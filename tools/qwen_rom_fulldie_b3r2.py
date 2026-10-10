@@ -78,12 +78,19 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, split_io_cdc=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
     v = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(v)
+    if split_io_cdc:
+        if not (r18 or r19) or not NATIVE_COLL:
+            raise ValueError('split_io_cdc requires r18/r19 and native collective ports')
+        from qwen_system.split_io_cdc import SLOT_W
+        v.IOX_W = SLOT_W
+        v.IO_BLOCKS = [(n, a, 'stream_1p2' if n == 'collective' else d)
+                       for n, a, d in v.IO_BLOCKS]
     if io_chan:
         v.IO_CHAN = v.up(io_chan, v.GY)   # r22: IO-band routing channel above the top tile row
     # ---- Codex b3 selection (tools/qwen_rom_fulldie_b3.py selected()), unchanged
@@ -251,6 +258,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         # Opt-in system composition: actual slots/ports precede relay discovery.
         # Default recipes retain their existing geometry and master contracts.
         before_relays(v, m)
+    if split_io_cdc:
+        from qwen_system.split_io_cdc import integrate
+        integrate(v, m)
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
@@ -2872,7 +2882,8 @@ def record(v, m):
                 spine_parts=m['geo'].get('spine_parts_band') or m['geo']['spine_parts'],
                 fifo=fifo_accounting(v, m), clock_regions_summary=by_kind, clock_regions=m['clock_regions'],
                 spine_vertical_cut_bits=spine_cut(m, [3000, 8800, 12000, 18000, 25000]),
-                link_stages=v.link_stages(m), bword_stages=bword_stages(v, m))
+                link_stages=v.link_stages(m), bword_stages=bword_stages(v, m),
+                **({'split_io_cdc': m['split_io_cdc']} if 'split_io_cdc' in m else {}))
 
 
 GCELL_OVER_TCL = r"""
@@ -3105,6 +3116,8 @@ def main(argv=None):
     ap.add_argument('--io-faces', action='store_true', help='b3r11: collective->SerDes word on the E/W faces')
     ap.add_argument('--native-coll', action='store_true', help='sys-takeover: full-width sequencer <-> collective '
                     '(548-b forward, 518-b return through io_xfifo NCOLL); default the 66-b descriptor word')
+    ap.add_argument('--split-io-cdc', action='store_true', help='four closed 1024-bit CDC tiles plus the native '
+                    'collective endpoint (requires --native-coll)')
     ap.add_argument('--bw-sp', type=float, default=100.0, help='b3r13: root-row block-word pin spacing in a slab (um)')
     ap.add_argument('--bw-x', type=float, default=20.0, help='b3r13: block-word pin column distance from the slab face (um)')
     ap.add_argument('--edge-gap', type=float, default=0.0, help='b3r14: routing gap (um) between each tile array and '
@@ -3169,6 +3182,7 @@ def main(argv=None):
         import die_top_lint as DTL
         r = dict(DTL.QWEN_RECIPES[a.recipe])
         cdc = r.pop('cdc')
+        r['split_io_cdc'] = a.split_io_cdc
         v, m = selected(True, cdc=_cdc_arg(cdc), **r)
     else:
         v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
@@ -3178,7 +3192,7 @@ def main(argv=None):
                         edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                         slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
                         slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                        r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan, su_vm_abut=a.su_vm_abut, rtl_finish=a.rtl_finish)
+                        r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan, su_vm_abut=a.su_vm_abut, rtl_finish=a.rtl_finish, split_io_cdc=a.split_io_cdc)
     if a.mode == 'relaycost':
         rec = dict(relay_token_cost(v, m), relays=m.get('r21_relays'))
         if a.out:
