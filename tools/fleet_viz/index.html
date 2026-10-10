@@ -25,6 +25,7 @@ h1 .g{background:linear-gradient(90deg,var(--accent),#a78bfa 60%,var(--hot));-we
 .dot{width:8px;height:8px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px var(--hot);animation:pulse 1.6s infinite}
 .live.stale .dot{background:var(--faint);box-shadow:none;animation:none}
 @keyframes pulse{50%{opacity:.35}}
+.dot,.flame,.host.pending .offline{will-change:opacity}
 .cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;align-items:start}
 .col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .coltitle{font:700 11px var(--mono);letter-spacing:.14em;color:var(--faint);text-transform:uppercase;margin:2px 2px -4px}
@@ -49,7 +50,8 @@ canvas.chart{width:100%;display:block}
 .ticker li .sl span.neg{background:#ff5d731f;color:var(--hot)}
 .ticker li .tag{grid-row:1/3}
 .ticker li.hot{background:linear-gradient(90deg,#ff5d7326,#ffb44d14 50%,transparent);box-shadow:inset 3px 0 0 #ffb44d}
-.ticker li.fresh{background:linear-gradient(90deg,#ff5d7355,#ffb44d33 45%,#5ee7ff11);box-shadow:inset 4px 0 0 #ff5d73,0 0 18px #ff5d7333;animation:slidein .7s ease-out,glow 2.4s ease-in-out infinite}
+.ticker li.fresh{background:linear-gradient(90deg,#ff5d7355,#ffb44d33 45%,#5ee7ff11);box-shadow:inset 4px 0 0 #ff5d73,0 0 18px #ff5d7333;animation:slidein .7s ease-out;position:relative}
+.ticker li.fresh::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 4px 0 0 #ffd23f,0 0 26px #ff5d7355;opacity:0;animation:glowo 2.4s ease-in-out infinite;will-change:opacity}
 .ticker li.new{animation:flash 1.8s ease-out 2}
 @keyframes glow{50%{box-shadow:inset 4px 0 0 #ffd23f,0 0 26px #ff5d7355}}
 @keyframes flash{0%{background:#ffd23f88;transform:scale(1.02)}100%{}}
@@ -78,12 +80,13 @@ canvas.chart{width:100%;display:block}
 #vfeed li.k-closed{border-left-color:#4ade80}#vfeed li.k-closed .vs{background:#4ade80}
 #vfeed li.k-timing{border-left-color:#ff8a4d;background:linear-gradient(90deg,#ff5d7312,transparent 60%)}#vfeed li.k-timing .vs{background:linear-gradient(135deg,#ff5d73,#ffb44d)}
 #vfeed li.k-flow{border-left-color:#9b8cc9}#vfeed li.k-flow .vs{background:#9b8cc9}#vfeed li.k-flow .bk{color:#c9c2e6}
-#vfeed li.k-closed.fresh{background:linear-gradient(90deg,#4ade8040,#5ee7ff14 50%,transparent);box-shadow:0 0 18px #4ade8033;animation:slidein .7s ease-out,glowg 2.4s ease-in-out infinite}
+#vfeed li.k-closed.fresh{background:linear-gradient(90deg,#4ade8040,#5ee7ff14 50%,transparent);box-shadow:0 0 18px #4ade8033;animation:slidein .7s ease-out;position:relative}
+#vfeed li.k-closed.fresh::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 28px #4ade8055;opacity:0;animation:glowo 2.4s ease-in-out infinite;will-change:opacity}
 #vfeed li.k-closed.hot{background:linear-gradient(90deg,#4ade801c,transparent 60%)}
 #vfeed li.k-check{border-left-color:#f472b6}#vfeed li.k-check .vs{background:#f472b6}
 #vfeed .ck{grid-column:2;font:800 12px var(--mono);color:#f9a8d4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #vfeed li.new{animation:flash 1.8s ease-out 2}
-@keyframes glowg{50%{box-shadow:0 0 28px #4ade8055}}
+@keyframes glowo{50%{opacity:1}}
 #toast.bad{background:linear-gradient(90deg,#ff5d73,#ff8a4d)}#toast.ok{background:linear-gradient(90deg,#4ade80,#5ee7ff)}#toast.flow{background:linear-gradient(90deg,#9b8cc9,#c4b5fd)}#toast.check{background:linear-gradient(90deg,#f472b6,#f9a8d4)}
 #toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-220%);z-index:9;background:linear-gradient(90deg,#ff5d73,#ffb44d);color:#05070d;font:800 15px var(--mono);padding:12px 22px;border-radius:12px;box-shadow:0 12px 50px #ff5d7388;transition:transform .5s cubic-bezier(.2,.9,.3,1.3);max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #toast.on{transform:translate(-50%,0)}
@@ -99,13 +102,13 @@ canvas.chart{width:100%;display:block}
 .ctl input[type=search]{min-width:200px}
 .chip{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;line-height:1.35;border:1px solid var(--line);border-radius:999px;padding:3px 9px;cursor:pointer;user-select:none;color:var(--dim);background:#0b1020}
 .chip.on{color:#05070d;font-weight:700}
-.tblwrap{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.tblwrap{max-height:70vh;overflow:auto;contain:content;content-visibility:auto;contain-intrinsic-size:auto 600px;border:1px solid var(--line);border-radius:10px}
 table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-variant-numeric:tabular-nums}
 .jt th{position:sticky;top:0;background:#0f1629;color:var(--dim);text-align:left;font-weight:600;padding:5px 7px;border-bottom:0;box-shadow:inset 0 -1px 0 var(--line);cursor:pointer;white-space:nowrap;z-index:2}
 .jt th.s::after{content:' \25B4'}.jt th.s.d::after{content:' \25BE'}
 .jt td{padding:3px 7px;border-bottom:1px solid #121a30;white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;vertical-align:top}
 .jt td.ev{max-width:none;white-space:normal;color:var(--dim);min-width:280px}
-.jt tr.grp td{background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px}
+.jt tr.grp td{white-space:normal;background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px}
 .jt tr.grp td small{color:var(--dim);font-weight:400;margin-left:10px}
 .jt tr:hover td{background:#16203b}
 .st{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;font-weight:700;padding:1px 6px;border-radius:5px;color:#05070d}
@@ -128,7 +131,7 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 #elTable td.en{width:1%;padding:3px 5px}#elTable th.nu{white-space:normal;width:1%;min-width:0;padding:5px 5px;line-height:1.15}
 #elTable td.pu{min-width:160px;max-width:300px}#elTable td.qu{min-width:0;max-width:220px}
 #elTable td.eneg{color:var(--hot)}#elTable td.epos{color:var(--ok)}
-#elTable td.ev{min-width:320px}
+#elTable td.ev{min-width:320px;max-width:560px;width:560px}#elTable td.ev div{max-width:560px}   /* a clamped -webkit-box reports its full text as min-content */
 #elTable tr.el td:first-child{border-left:3px solid var(--c)}
 #elTable a.xl{color:inherit;text-decoration:none;border-bottom:1px dotted #5ee7ff88}
 #elTable a.xl:hover{color:#5ee7ff}
@@ -329,8 +332,14 @@ function reconcile(list, items) {   // items: [[key, outerHTML]] in display orde
   return added;
 }
 const DPR = Math.min(2, window.devicePixelRatio || 1);
+const CSZ = new WeakMap();   // canvas CSS sizes, kept current by a ResizeObserver: reading clientWidth every frame forced a page-wide layout
+const cRO = new ResizeObserver(es => { for (const e of es) { const b = e.contentBoxSize && e.contentBoxSize[0]; CSZ.set(e.target, b ? [b.inlineSize, b.blockSize] : [e.target.clientWidth, e.target.clientHeight]); e.target._dirty = true; } });
+function csize(cv) { let z = CSZ.get(cv); if (!z) { z = [cv.clientWidth, cv.clientHeight]; CSZ.set(cv, z); cRO.observe(cv); } return z; }
+const cVis = new WeakMap();   // on-screen canvases only are animated
+const cIO = new IntersectionObserver(es => { for (const e of es) cVis.set(e.target, e.isIntersecting); });
+function onScreen(cv) { if (!cVis.has(cv)) { cVis.set(cv, true); cIO.observe(cv); } return cVis.get(cv); }
 function fit(cv) {   // size a canvas to its CSS box; returns [ctx, w, h]
-  const w = cv.clientWidth, h = cv.clientHeight;
+  const [w, h] = csize(cv);
   if (cv.width !== Math.round(w * DPR) || cv.height !== Math.round(h * DPR)) { cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); }
   const g = cv.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, w, h); return [g, w, h];
 }
@@ -364,10 +373,29 @@ function layoutGrid(c) {
   const w = c.cv.clientWidth || 300, gap = cols > 20 ? 2 : 3, cell = (w - gap * (cols - 1)) / cols;
   c.geo = {cols, rows, cell, gap};
   c.cv.style.height = (rows * cell + (rows - 1) * gap) + 'px';
-  c.cv.width = Math.round(w * DPR); c.cv.height = Math.round((rows * cell + (rows - 1) * gap) * DPR);
+  c.drawn = false; c.cv.width = Math.round(w * DPR); c.cv.height = Math.round((rows * cell + (rows - 1) * gap) * DPR);
+}
+const SPR = new Map();   // glow sprites: one blurred cell per (fill, glow, size), drawn with drawImage instead of a per-cell shadowBlur
+function sprite(fi, si, cell, r) {
+  const k = fi + '|' + si + '|' + cell.toFixed(2);
+  let s = SPR.get(k);
+  if (!s) {
+    if (SPR.size > 4000) SPR.clear();
+    const pad = Math.ceil(cell * .6) + 2, sz = cell + 2 * pad;
+    s = document.createElement('canvas'); s.width = Math.ceil(sz * DPR); s.height = s.width; s.pad = pad;
+    const g = s.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    g.fillStyle = col(fi); if (si >= 0) { g.shadowColor = col(si); g.shadowBlur = cell * .5; }
+    g.beginPath(); g.roundRect ? g.roundRect(pad, pad, cell, cell, r) : g.rect(pad, pad, cell, cell); g.fill();
+    SPR.set(k, s);
+  }
+  return s;
 }
 function drawGrid(c, t) {
-  if (!c.geo || !c.n || c.cv.hidden) return;
+  if (!c.geo || !c.n || c.cv.hidden || !onScreen(c.cv)) return;
+  let moving = c.cv._dirty || !c.drawn, hot = false;
+  for (let i = 0; i < c.n; i++) { const d = c.tgt[i] - c.cur[i]; if (d > .05 || d < -.05) moving = true; if (c.cur[i] > 85) hot = true; }
+  if (!moving && !hot) return;   // settled and nothing shimmering: the last frame is still correct
+  c.cv._dirty = false; c.drawn = true;
   const g = c.cv.getContext('2d'), {cols, cell, gap} = c.geo;
   g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, c.cv.width, c.cv.height);
   const r = Math.min(3, cell * .22);
@@ -375,11 +403,10 @@ function drawGrid(c, t) {
     c.cur[i] += (c.tgt[i] - c.cur[i]) * 0.06;
     const v = c.cur[i], x = (i % cols) * (cell + gap), y = Math.floor(i / cols) * (cell + gap);
     const shimmer = v > 85 ? 6 * Math.sin(t / 300 + i * 1.7) : 0;
-    g.fillStyle = col(v + shimmer);
-    if (v > 70) { g.shadowColor = col(v); g.shadowBlur = cell * .5; } else g.shadowBlur = 0;
-    g.beginPath(); g.roundRect ? g.roundRect(x, y, cell, cell, r) : g.rect(x, y, cell, cell); g.fill();
+    const fi = Math.max(0, Math.min(100, Math.round(v + shimmer)));
+    if (v > 70) { const s = sprite(fi, Math.max(0, Math.min(100, Math.round(v))), cell, r); g.drawImage(s, x - s.pad, y - s.pad, s.width / DPR, s.height / DPR); }
+    else { g.fillStyle = col(fi); g.beginPath(); g.roundRect ? g.roundRect(x, y, cell, cell, r) : g.rect(x, y, cell, cell); g.fill(); }
   }
-  g.shadowBlur = 0;
 }
 function updateHosts(d) {
   d.hosts.forEach((h, i) => {
@@ -416,9 +443,29 @@ function updateHosts(d) {
 
 // ---- RAM: stacked area over 60 min (redrawn on data, with an eased reveal) and per-host tanks (animated)
 let areaT0 = 0, areaFirst = true;
+let areaC = null, areaKey = '', areaHead = null;
 function drawRamArea(t) {
-  if (!D || !HIST.length) return false;
-  const [g, w, h] = fit($('ramArea'));
+  if (!D || !HIST.length || !onScreen($('ramArea'))) return false;
+  const [g0, w, h] = fit($('ramArea'));
+  if (!areaFirst) {   // after the reveal the chart only changes with new data; redraw the cache then, else blit it
+    const key = HIST.length + '|' + HIST[HIST.length - 1][0] + '|' + w + '|' + h + '|' + D.totals.mem_total + '|' + HH.length;
+    if (key !== areaKey || !areaC) {
+      areaKey = key; areaC = areaC || document.createElement('canvas');
+      areaC.width = Math.round(w * DPR); areaC.height = Math.round(h * DPR);
+      const gc = areaC.getContext('2d'); gc.setTransform(DPR, 0, 0, DPR, 0, 0); gc.clearRect(0, 0, w, h);
+      areaHead = rampArea(gc, w, h, t, false);
+    }
+    g0.drawImage(areaC, 0, 0, w, h);
+    if (areaHead) { const {xl, yl} = areaHead, ph = (t / 1600) % 1;
+      g0.fillStyle = '#e8eefc'; g0.shadowColor = '#5ee7ff'; g0.shadowBlur = 10; g0.beginPath(); g0.arc(xl, yl, 3, 0, 7); g0.fill(); g0.shadowBlur = 0;
+      g0.strokeStyle = rgba('#5ee7ff', 1 - ph); g0.beginPath(); g0.arc(xl, yl, 3 + 9 * ph, 0, 7); g0.stroke(); }
+    return true;
+  }
+  const hd = rampArea(g0, w, h, t, true);
+  if (hd && !areaFirst) { areaKey = ''; }
+  return true;
+}
+function rampArea(g, w, h, t, live) {
   const padL = 44, padB = 18, padT = 8, W = w - padL - 6, H = h - padB - padT;
   const capTB = D.totals.mem_total / 1024 || 1;
   const yMax = Math.max(1, Math.ceil(capTB));
@@ -456,17 +503,18 @@ function drawRamArea(t) {
   // capacity line + fleet edge glow
   g.setLineDash([4, 4]); g.strokeStyle = '#ff5d7399'; g.beginPath(); g.moveTo(padL, Y(capTB)); g.lineTo(padL + W, Y(capTB)); g.stroke(); g.setLineDash([]);
   g.fillStyle = '#ff5d73cc'; g.textAlign = 'left'; g.fillText(`capacity ${fmt(capTB, 2)} TB`, padL + 4, Y(capTB) - 4);
-  if (!areaFirst || u >= 1) {
-    const yl = Y(base[base.length - 1] || 0), xl = X(now), ph = (t / 1600) % 1;
+  const head = {xl: X(now), yl: Y(base[base.length - 1] || 0)};
+  if (live && u >= 1) {
+    const {xl, yl} = head, ph = (t / 1600) % 1;
     g.fillStyle = '#e8eefc'; g.shadowColor = '#5ee7ff'; g.shadowBlur = 10; g.beginPath(); g.arc(xl, yl, 3, 0, 7); g.fill(); g.shadowBlur = 0;
     g.strokeStyle = rgba('#5ee7ff', 1 - ph); g.beginPath(); g.arc(xl, yl, 3 + 9 * ph, 0, 7); g.stroke();
   }
   if (u >= 1) areaFirst = false;
-  return true;
+  return head;
 }
 const tankLvl = [];
 function drawTanks(t) {
-  if (!D) return;
+  if (!D || !onScreen($('tanks'))) return;
   const [g, w, h] = fit($('tanks'));
   const hs = D.hosts, n = hs.length, gap = Math.min(14, w / n * .18), tw = (w - gap * (n - 1)) / n;
   const labH = 30, TH = h - labH - 4, SEG = 16, sg = 2, segH = (TH - sg * (SEG - 1)) / SEG;
@@ -777,7 +825,7 @@ const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what
   ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['qualification', 'qualification'], ['lt', 'latest event']];
 const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});
 let ED = null, eHash = null;
-const esgn = x => x == null ? "" : (x > 0 ? "+" : "") + x.toFixed(1);
+const esgn = x => x == null ? "" : Math.abs(x) >= 1e6 ? (x > 0 ? "∞" : "-∞") : (x > 0 ? "+" : "") + x.toFixed(1);   // STA reports ~1e42 when no path is constrained
 const ecls = x => x == null ? "en" : x < 0 ? "en eneg" : "en epos";
 function elementQualification(q) {
   if (!q) return '';
