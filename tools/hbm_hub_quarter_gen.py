@@ -43,7 +43,7 @@ SU_PHYS = 'rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv'
 HC_RTL = 'rtl/hdc/v41x/ot_dsrom_su_hcpost.sv'
 TILE_SW = 100.224              # tiled su: the tile's register strip width (232 x 0.432), the lane beside it; every
                                # tile pin sits over the strip (fp lint macro_edge: no pins behind the lane)
-TILE_W = 181.44               # tile width (420 x 0.432): strip + lane 79.92 + 1.3 um (the lane fits the core with its halo)
+TILE_W = 184.896              # tile width (428 x 0.432): strip + lane 83.16 + 1.512 um (lane 79.92 -> 83.16 2026-10-10: the PINKO lane at 79.92 is 65.9 % utilised with its hold-buffer allowance)
 EDGE_BAND = 160.0              # um: the end port bands sit at the far-end lane group (south / north)
 HOP = 480.0                    # um a face-chain stage (owner rule 2026-10-07: stages <= 480 um apart)
 QUARTERS = {
@@ -53,7 +53,7 @@ QUARTERS = {
                C2=3, G=8, L=2, PIPE=5,
                # r23 coordinator decision 2026-10-07: end port bands for the S-face / N-face buses (2.8 mm from the
                # centre band): their face chains end at the far-end group of the south / north chains
-               end={'r': 'S', 'f_su_ns': 'N', 't_su_ns': 'N'}, lane_wh=(79.92, 162.0),
+               end={'r': 'S', 'f_su_ns': 'N', 't_su_ns': 'N'}, lane_wh=(83.16, 162.0),
                # coll inject ownership (hgi-takeover 2026-10-09, coll/rtl/spec.json ep.inj_data): f_coll carries the
                # endpoint's {inj_rd[1:0], inj_idx[2 x 16], ...} at bits 579:546; inject flit i (lane h: inj_idx[16h+15:16h])
                # is owned by quarter i mod 4 (SW 0, NW 1, SE 2, NE 3, the 2-bit strap qid tied by the die top); t_coll
