@@ -13,5 +13,5 @@ Path(sys.argv[2]).write_text(s)
 PY
 case "$mode" in exact) extra=();; conformance) extra=(-DSEQ_CONF);; mutant) extra=(-DOT_HGI_SEQ_MUT_TOKX);; *) exit 2;; esac
 cd "$benchdir"
-iverilog -g2012 -DSEQ_CP -DSEQ_MACRO "${extra[@]}" -I. -I.. -o "$scratch/sim.vvp" -s tb_hgi_seq "$scratch/tb.sv" ../ot_hgi_seq.sv ../ot_hgi_cp.sv ../ot_hgi_cfg.sv ../../../../physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+iverilog -g2012 -DSEQ_CP -DSEQ_MACRO "${extra[@]}" -I. -I.. -o "$scratch/sim.vvp" -s tb_hgi_seq "$scratch/tb.sv" ../ot_hgi_seq.sv ../ot_hgi_cp.sv ../ot_hgi_cfg.sv ../../../../physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v ../../../../physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
 vvp -n "$scratch/sim.vvp"
