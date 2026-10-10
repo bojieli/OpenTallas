@@ -22,9 +22,9 @@
 module tb_hgi_e2e;
     parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0;
     parameter integer FUSED_SCRATCH = 256064;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
-    parameter integer COLL_BF16 = 1, COLL_PFMAX = 64, LATC = 453, CRED = 137;
+    parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
-    parameter integer FLAT = 40, KLAT = 40, VLAT = 6;
+    parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
@@ -76,18 +76,20 @@ module tb_hgi_e2e;
     wire [146:0]  d_n = cpd.u_cp.d_n;
     wire [20:0]   d_pos1 = cpd.u_cp.d_pos1;
     // ---------------------------------------------------------------- record-ring fetch (loader memory lane 1): HBM model
-    integer fd = 0; reg fpend = 0; reg [36:0] fa;
+    // F5 (hgi-takeover): the lane takes a request a cycle and answers IN ORDER FLAT cycles later (the pipelined lane-1
+    // read path the loader / kport fork provides); FPIPE = 0 is the old one-outstanding lane
+    integer fq_t [0:255]; reg [36:0] fq_a [0:255]; integer fq_h = 0, fq_n = 0; longint tn = 0;
     always @(posedge clk) begin
+        tn <= tn + 1;
         m_rsp_v <= 1'b0;
-        m_req_rdy <= !fpend;
-        if (rst_n && m_req_v && m_req_rdy && !fpend) begin fpend = 1; fa = m_req_addr; fd = FLAT; end
-        else if (fpend) begin
-            if (fd > 1) fd = fd - 1;
-            else begin : frsp
-                bit [255:0] rd;
-                e2e_hbm_sector({27'd0, fa}, 1'b0, 256'd0, 32'd0, rd);
-                m_rsp_v <= 1'b1; m_rsp_data <= rd; fpend = 0;
-            end
+        m_req_rdy <= (FPIPE != 0) ? (fq_n < 200) : (fq_n == 0);
+        if (fq_n > 0 && fq_t[fq_h % 256] <= tn) begin : frsp
+            bit [255:0] rd;
+            e2e_hbm_sector({27'd0, fq_a[fq_h % 256]}, 1'b0, 256'd0, 32'd0, rd);
+            m_rsp_v <= 1'b1; m_rsp_data <= rd; fq_h = fq_h + 1; fq_n = fq_n - 1;
+        end
+        if (rst_n && m_req_v && m_req_rdy) begin
+            fq_a[(fq_h + fq_n) % 256] = m_req_addr; fq_t[(fq_h + fq_n) % 256] = int'(tn) + FLAT - 1; fq_n = fq_n + 1;
         end
     end
     // ---------------------------------------------------------------- unit slots
@@ -316,13 +318,8 @@ module tb_hgi_e2e;
         repeat (3) @(posedge clk); rst_n = 1; repeat (2) @(posedge clk);
         axw(12'hC14, host[67]);
         for (w = 0; w < 31; w = w + 1) begin axw(12'hD00 + 8 * w, host[2 * w]); axw(12'hD04 + 8 * w, host[2 * w + 1]); end
-        // DIE FINDING (hgi-e2e F1): the CFG window cannot stage MD words 62-63: pair 31 IS the CFG_COMMIT address
-        // (ot_hgi_cp: c_wr excludes the commit), so the CRC word 63 is never written and every real descriptor fails
-        // E_CRC (the CP then keeps the reset image_base 0 and fetches 4,096 CTL.NOP sectors of empty HBM before reaching
-        // the image).  +CFGFIX=1 (default) deposits words 62-63 into the staging buffer as the commit's data would if
-        // c_wr included the commit (the proposed one-line fix); +CFGFIX=0 measures the RTL as is.
-        if (!$value$plusargs("CFGFIX=%d", cfgfix)) cfgfix = 1;
-        if (cfgfix != 0) begin cpd.u_cp.u_cfg.buf_[62] = host[62]; cpd.u_cp.u_cfg.buf_[63] = host[63]; end
+        // F1 (fixed in ot_hgi_cp, hgi-takeover): the CFG_COMMIT write (pair 31) itself stages MD words 62-63 (the CRC)
+        // before the check; no workaround.
         axw(12'hD00 + 8 * 31, host[62]); axw(12'hD04 + 8 * 31, host[63]);
         repeat (4) @(negedge clk);
         w = 0; while ((cpd.u_cp.u_cfg.st_hold || !cpd.u_cp.cfg_loaded) && w < 4000) begin @(negedge clk); w = w + 1; end

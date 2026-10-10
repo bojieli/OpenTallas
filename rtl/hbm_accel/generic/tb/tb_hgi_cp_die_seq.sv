@@ -102,13 +102,22 @@ module tb_hgi_cp_die_seq;
         reg signed [41:0] w; begin w = ($signed({2'b0, a}) - $signed({2'b0, IMG})) / 16;
             word_at = (w >= 0 && w < NW) ? img[w] : 128'hDEAD; end
     endfunction
-    integer fdel = 0; reg fpend = 0; reg [36:0] fa;
+    // F5: the memory lane accepts back-to-back requests and answers IN ORDER after FLAT cycles (+0..3 jitter, never
+    // before its predecessor); a request accepted while 48 are in flight is a violation
+    integer FLAT = 40; integer mq_t [0:255]; reg [36:0] mq_a [0:255]; integer mq_h = 0, mq_n = 0, tnow = 0, tlast = 0, maxf = 0;
+    initial if (!$value$plusargs("FLAT=%d", FLAT)) FLAT = 40;
     always @(posedge clk) begin
-        m_req_rdy <= ($urandom % 3) != 0; m_rsp_v <= 1'b0;
-        if (m_req_v && m_req_rdy && !fpend) begin fpend = 1; fa = m_req_addr; fdel = 2 + $urandom % 6; end
-        else if (fpend) begin
-            if (fdel > 0) fdel = fdel - 1;
-            else begin m_rsp_v <= 1'b1; m_rsp_data <= {word_at({3'd0, fa} + 16), word_at({3'd0, fa})}; fpend = 0; end
+        tnow = tnow + 1;
+        m_req_rdy <= ($urandom % 4) != 0; m_rsp_v <= 1'b0;
+        if (mq_n > 0 && mq_t[mq_h % 256] <= tnow) begin
+            m_rsp_v <= 1'b1; m_rsp_data <= {word_at({3'd0, mq_a[mq_h % 256]} + 16), word_at({3'd0, mq_a[mq_h % 256]})};
+            mq_h = mq_h + 1; mq_n = mq_n - 1;
+        end
+        if (m_req_v && m_req_rdy) begin
+            if (mq_n >= 48) $fatal(1, "more than 48 ring sectors in flight");
+            tlast = (tnow + FLAT + ($urandom % 4) > tlast + 1) ? tnow + FLAT + ($urandom % 4) : tlast + 1;
+            mq_a[(mq_h + mq_n) % 256] = m_req_addr; mq_t[(mq_h + mq_n) % 256] = tlast; mq_n = mq_n + 1;
+            if (mq_n > maxf) maxf = mq_n;
         end
     end
     // ---- VM: the bench's memory; a unit's writes land at its RETIRE (vmw: dispatch index -> addr, value)
@@ -233,7 +242,7 @@ module tb_hgi_cp_die_seq;
             t = 0; while (busy && t < 2000) begin @(negedge clk); t = t + 1; end
             nd = cfg[c*12 + 10] + cfg[c*12 + 6];
         end
-        if (fails == 0) $display("HGI_SEQ_DIE PASS cases=%0d dispatches=%0d argmax_records=%0d", NCASE, nd, n_am);
+        if (fails == 0) $display("HGI_SEQ_DIE PASS cases=%0d dispatches=%0d argmax_records=%0d max_fetch_inflight=%0d", NCASE, nd, n_am, maxf);
         else $display("HGI_SEQ_DIE FAIL %0d", fails);
         $finish;
     end
