@@ -7,9 +7,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
 read_liberty /mv0/ot_attn_hgrp_m6h1_ff.lib
-read_db /in/results/asap7/opentallas_ot_attn_tile_m6h1q_asap7_qb_hbm_attn_quad_qb1_tc_6ce4b64fd/base/6_final.odb
+read_db /in/results/asap7/opentallas_ot_attn_tile_m6h1q_asap7_qb_hbm_attn_quad_cg_c891a57cf_tc_hm03_grta_cl/base/6_final.odb
 read_sdc /interface.sdc
-read_spef /in/results/asap7/opentallas_ot_attn_tile_m6h1q_asap7_qb_hbm_attn_quad_qb1_tc_6ce4b64fd/base/6_final.spef
+read_spef /in/results/asap7/opentallas_ot_attn_tile_m6h1q_asap7_qb_hbm_attn_quad_cg_c891a57cf_tc_hm03_grta_cl/base/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]"
 write_timing_model -library_name ot_attn_tile_m6h1q_ff /out/ot_attn_tile_m6h1q_ff.lib
