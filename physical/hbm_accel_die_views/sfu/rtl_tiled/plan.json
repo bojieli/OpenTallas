@@ -1,0 +1,67 @@
+{
+ "master": "hfd_sfu",
+ "lane": "ot_su12_sfu",
+ "lane_source": "rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+ "lane_params": {},
+ "lanes": 16,
+ "chains": 2,
+ "groups_per_chain": 8,
+ "lanes_per_column_group": 1,
+ "WI": 2048,
+ "WO": 2048,
+ "lane_broadcast_bits": 1742,
+ "lane_per_lane_bits": 192,
+ "lane_out_bits": 315,
+ "acc_bits_per_chain": 1024,
+ "face_stages": {
+  "f_su": 1,
+  "t_su": 1,
+  "f_hc": 1,
+  "t_hc": 1
+ },
+ "flops": {
+  "boundary": 4098,
+  "broadcast": 27888,
+  "accumulate": 16384,
+  "lane_output_stage": 5040
+ },
+ "tiled": {
+  "tiles": 16,
+  "chains": 2,
+  "tiles_per_chain": 8,
+  "acc_bits_per_chain": 1024,
+  "lockup_bits": 44272,
+  "flops_in_tiles": 168816,
+  "face_lockup_bits": 44272,
+  "head_regs": 5534,
+  "tile": {
+   "master": "hfd_sfu_tile",
+   "w_um": 271.944,
+   "h_um": 332.64,
+   "strip_w": 110.592,
+   "lane": "ot_su12_sfu",
+   "lane_xy": [
+    110.592,
+    1.056
+   ],
+   "LB": 1742,
+   "WCT": 1024,
+   "RB": 37,
+   "RA": 315,
+   "LO": 315,
+   "LI": 1934,
+   "style": "faced",
+   "hops_um": {
+    "in_tile": 443.232,
+    "tile_to_tile": 0.54,
+    "band_to_head_tile": 170.652,
+    "limit": 480.0
+   }
+  },
+  "clock_gates": 0,
+  "wake_lead_cycles": 0,
+  "flops_in_top": {
+   "boundary": 4098
+  }
+ }
+}

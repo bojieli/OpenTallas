@@ -1,0 +1,24 @@
+{
+ "master": "hfd_sfu_tile",
+ "w_um": 271.944,
+ "h_um": 332.64,
+ "strip_w": 110.592,
+ "lane": "ot_su12_sfu",
+ "lane_xy": [
+  110.592,
+  1.056
+ ],
+ "LB": 1742,
+ "WCT": 1024,
+ "RB": 37,
+ "RA": 315,
+ "LO": 315,
+ "LI": 1934,
+ "style": "faced",
+ "hops_um": {
+  "in_tile": 443.232,
+  "tile_to_tile": 0.54,
+  "band_to_head_tile": 170.652,
+  "limit": 480.0
+ }
+}
