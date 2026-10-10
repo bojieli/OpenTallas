@@ -148,6 +148,17 @@ class Capture:
         return run
 
 
+def region_bytes(regions, snap, addr, n):
+    """The doorbell-time bytes of [addr, addr + n) (sector-rounded ranges may run past a region's end: zero there)."""
+    out = bytearray(n)
+    for b, dat, nm in regions:
+        lo, hi = max(addr, b), min(addr + n, b + dat.size)
+        if lo < hi:
+            src = snap.get(id(dat), dat)
+            out[lo - addr:hi - addr] = src[lo - b:hi - b].tobytes()
+    return bytes(out)
+
+
 def merge(iv):
     iv = sorted((a & ~31, (b + 31) & ~31) for a, b in iv)
     out = []
@@ -229,11 +240,7 @@ def export_qwen(a):
     assert j == len(cap.recs)
 
     def hbm_pre(addr, n):
-        for b, dat, nm in regions:
-            if b <= addr and addr + n <= b + dat.size:
-                src = snapshot.get(id(dat), dat)
-                return src[addr - b:addr - b + n].tobytes()
-        raise SystemExit(f"HBM range {addr:#x}+{n} outside the regions")
+        return region_bytes(regions, snapshot, addr, n)
     vm0_path = a.out / "vm0.bin"
     a.out.mkdir(parents=True, exist_ok=True)
     vm0_path.write_bytes(vm0.astype("<u4").tobytes())
@@ -310,11 +317,7 @@ def export_ds(a):
     words = md_words(129280, 1 << 20, 96, len(image) + 64)
 
     def hbm_pre(addr, n):
-        for b, dat, nm in st["regions"]:
-            if b <= addr and addr + n <= b + dat.size:
-                src = st["snap"].get(id(dat), dat)
-                return src[addr - b:addr - b + n].tobytes()
-        raise SystemExit(f"HBM range {addr:#x}+{n} outside the regions")
+        return region_bytes(st["regions"], st["snap"], addr, n)
     (a.out / "vm0.bin").write_bytes(st["vm0"].astype("<u4").tobytes())
     res = run["results"][0]
     meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=f"ds_L{a.layer}_1M",
