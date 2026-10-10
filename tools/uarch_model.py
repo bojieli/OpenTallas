@@ -15295,7 +15295,7 @@ def qwen_result_slot_conveyor_model(ns=8, db=64, rs=42, crb=16):
     latency = 2*ns + 5
     slot_w, slot_h = 259.2, 324.0
     boundary = 1+3+6 + 1+1+1+20+16+512
-    ff = 64*38 + 3*552 + 2*10 + 600
+    ff = 64*38 + 3*557 + 2*551 + 8*38 + 38 + 2*10 + 32
     return dict(schema='opentallas.qwen_result_slot_conveyor.v1',
         adopted=False, default_off=True, models=['Qwen3-8B ROM'],
         MACs_per_cycle=0, compute_intensity_MACs_per_byte=0,
@@ -15314,8 +15314,9 @@ def qwen_result_slot_conveyor_model(ns=8, db=64, rs=42, crb=16):
                   band_area_um2=ns*slot_w*slot_h+216*216,physical_fit=False),
         latency=dict(request_to_response_cycles=latency,burst_issue_cycles=ns,
                      worst_full_burst_response_cycles=latency+ns-1,
-                     baseline_first_beat_cycles=5,added_first_beat_cycles=latency-5,
-                     token_cost='+16 edges per serially exposed burst; measured landed token bench required',
+                     ingress_to_request_cycles=3,ingress_to_first_output_cycles=latency+3,
+                     baseline_first_beat_cycles=5,added_first_beat_cycles=latency+3-5,
+                     token_cost='+19 edges per serially exposed burst; measured landed token bench required',
                      stall_budget_edges=rs,store_headroom_bursts=5,
                      ready_threshold=db-rs-5),
         capacity=dict(credits=crb,reserve_per_request=1,disabled_slot_refund=True),

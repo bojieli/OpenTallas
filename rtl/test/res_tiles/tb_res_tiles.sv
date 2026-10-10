@@ -6,11 +6,12 @@ module tb_res_tiles #(parameter integer MUT=0, USE_MACRO=1);
  ot_qfd_res_tiles #(.MUT(MUT),.USE_MACRO(USE_MACRO)) dut(.clk(clk),.rst_n(rst_n),.me_en(me_en),.i_ov(i_ov),.i_we(i_we),
  .i_addr(i_addr),.i_mask(i_mask),.i_data(i_data),.o_v(ov),.o_end(oe),.o_nul(onul),.o_row(row),.o_mask(mask),.o_data(data),.o_cr(cr),.rok(rok),.fault(fault));
  reg [550:0] expq[0:40000];integer ew=0,er=0,pending=0,burst=0,c=0,k,j,last,stopdebt=0;
- integer rq_cycle[0:40000];integer qw=0,qr=0,peak_n=0;
+ integer rq_cycle[0:40000];integer qw=0,qr=0,peak_n=0,first_accept=-1,first_output=-1;
  reg [7:0] wen;reg endbit;integer x;reg [511:0] word;
  task tick;
  begin
  @(negedge clk);
+ if(me_en&&i_ov&&first_accept<0) first_accept=c;
  if(dut.u_ctl.n>peak_n) peak_n=dut.u_ctl.n;
  if(dut.u_ctl.rq_v) begin rq_cycle[qw]=c;qw=qw+1;end
  if(dut.u_ctl.rv) begin
@@ -19,6 +20,7 @@ module tb_res_tiles #(parameter integer MUT=0, USE_MACRO=1);
  end
  if(fault) $fatal(1,"FAULT cycle=%0d n=%0d cr=%0d",c,dut.u_ctl.n,dut.u_ctl.cr);
  if(ov) begin
+  if(first_output<0) first_output=c;
   if(er==ew) $fatal(1,"unexpected beat");
   if({1'b1,oe,onul,row,mask,(onul?512'd0:data)}!==expq[er])
    $fatal(1,"MISMATCH beat=%0d cycle=%0d got row=%0d end=%0d nul=%0d want row=%0d end=%0d nul=%0d",er,c,row,oe,onul,expq[er][547:528],expq[er][549],expq[er][548]);
@@ -53,6 +55,6 @@ module tb_res_tiles #(parameter integer MUT=0, USE_MACRO=1);
  me_en=0;i_ov=0;
  while(er<ew && c<30000) tick();
  if(er!=ew||burst!=360||qw!=qr) $fatal(1,"DRAIN er=%0d ew=%0d bursts=%0d",er,ew,burst);
- $display("PASS res_tiles bursts=%0d beats=%0d cycles=%0d request_to_chain=19 request_to_output=21 peak_bursts=%0d",burst,er,c,peak_n);$finish;
+ $display("PASS res_tiles bursts=%0d beats=%0d cycles=%0d request_to_chain=19 request_to_output=21 peak_bursts=%0d first_accept_to_output=%0d",burst,er,c,peak_n,first_output-first_accept);$finish;
  end
 endmodule
