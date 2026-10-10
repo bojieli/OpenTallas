@@ -1,0 +1,639 @@
+{
+  "schema": 1,
+  "status": "SIZED_SRAM_RESERVATION_NOT_IMPLEMENTED",
+  "sources": [
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+      "sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
+      "sha256": "1b82c8597f1113bfb9e256cfab01630d79e2032c29ecae4a5aca1203f7efe7ff"
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+      "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49"
+    },
+    {
+      "path": "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+      "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+    },
+    {
+      "path": "physical/hbm_accel_die_views/svc/svc_geometry.json",
+      "sha256": "01a8bd7465e4ce4a26911d01a1acc235e87e8c203ae7b98ac0af80d4513551c0"
+    },
+    {
+      "path": "tools/hbm_svc_dma_physical.py",
+      "sha256": "fdcfcb5171ab66059e3ab232679226adb602a038ec6122bd8b92ff3cdb9be074"
+    }
+  ],
+  "macro": {
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "width_um": 94.824,
+    "height_um": 41.064,
+    "area_um2": 3893.8527,
+    "depth": 128,
+    "width_bits": 256,
+    "per_pc_count": 4,
+    "pc_count_per_stack": 32,
+    "stacks": 4,
+    "total_macros": 512
+  },
+  "storage": {
+    "groups_per_pc": 32,
+    "sectors_per_group": 4,
+    "sector_capacity_per_pc": 128,
+    "required_sectors_per_pc": 96,
+    "descriptor_slots": 8,
+    "maximum_groups_per_slot": 3,
+    "data_row_range": [
+      0,
+      31
+    ],
+    "ecc_row_range": [
+      64,
+      95
+    ],
+    "ecc_bits_per_sector": 32,
+    "protection": "mutable SRAM retains existing ECC contract; syndrome/decode RTL and fault gate pending",
+    "publication": "group valid only after payload and ECC writes both complete",
+    "read_order": "payload edge then ECC edge; no checked output before both arrive",
+    "write_order": "payload edge then ECC edge; both ports belong to same PC scheduler"
+  },
+  "throughput": {
+    "sectors_per_pc_per_two_edges": 4,
+    "sectors_per_pc_per_edge": 2,
+    "mean_required_sectors_per_pc_per_edge": 0.25,
+    "initiation_interval_edges": 2,
+    "extra_read_fill_cycles": 2,
+    "qualification": "schedule sizing, not measured SRAM/ECC throughput or timing"
+  },
+  "dff_cell_area_um2": 0.2916,
+  "pc_metadata_reservation_basis": "1536 bits/PC prospective reserve; no actual metadata RTL claim",
+  "macro_pin_capture_basis": "input address/enable/data and output data registered; masks charged too",
+  "geometry_fit": false,
+  "area_reservation_fit": false,
+  "route_admission": false,
+  "gates": [
+    "real SRAM wrapper/ECC transaction gate",
+    "full-shaped mapped area and physical clock/pin obligations",
+    "resolve failed tile area reservations before route",
+    "composed measured bandwidth >=90%"
+  ],
+  "tiles": [
+    {
+      "master": "hfd_svc_dma_SW_s0",
+      "w_um": 1017.0,
+      "h_um": 120.0,
+      "pc_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "geometry_fit": false,
+      "geometry_conflicts": [
+        [
+          "pc1_sector0_sram",
+          "pc0_sector1_sram"
+        ],
+        [
+          "pc1_sector2_sram",
+          "pc0_sector3_sram"
+        ]
+      ],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.5105018336283186,
+      "total_60pct_area_capacity_um2": 73224.0,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 2231.5098,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SW_s1",
+      "w_um": 1305.912,
+      "h_um": 120.0,
+      "pc_ids": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 20,
+      "macro_area_um2": 77877.0547,
+      "macro_outline_fraction": 0.4969519048756731,
+      "total_60pct_area_capacity_um2": 94025.664,
+      "relay_capture_reservation_bits": 13320,
+      "pc_metadata_reservation_bits": 7680,
+      "macro_pin_capture_reservation_bits": 15700,
+      "ff_reservation_bits": 36700,
+      "ff_cell_area_floor_um2": 10701.72,
+      "macro_plus_ff_floor_um2": 88578.7747,
+      "remaining_comb_clock_buffer_area_um2": 5446.8893,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SW_s2",
+      "w_um": 1056.984,
+      "h_um": 120.0,
+      "pc_ids": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.49119037260734316,
+      "total_60pct_area_capacity_um2": 76102.848,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 5110.3578,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SW_s3",
+      "w_um": 1072.968,
+      "h_um": 120.0,
+      "pc_ids": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.48387311159326274,
+      "total_60pct_area_capacity_um2": 77253.696,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 6261.2058,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SW_s4",
+      "w_um": 785.976,
+      "h_um": 120.0,
+      "pc_ids": [
+        17,
+        18,
+        19
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 12,
+      "macro_area_um2": 46726.2328,
+      "macro_outline_fraction": 0.49541623866377593,
+      "total_60pct_area_capacity_um2": 56590.272,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 4608,
+      "macro_pin_capture_reservation_bits": 9420,
+      "ff_reservation_bits": 25128,
+      "ff_cell_area_floor_um2": 7327.3248,
+      "macro_plus_ff_floor_um2": 54053.5576,
+      "remaining_comb_clock_buffer_area_um2": 2536.7144,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SW_s5",
+      "w_um": 1062.984,
+      "h_um": 120.0,
+      "pc_ids": [
+        20,
+        21,
+        22,
+        23
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.4884178546431555,
+      "total_60pct_area_capacity_um2": 76534.848,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 5542.3578,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SW_s6",
+      "w_um": 1061.976,
+      "h_um": 120.0,
+      "pc_ids": [
+        24,
+        25,
+        26,
+        27
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.48888144816832013,
+      "total_60pct_area_capacity_um2": 76462.272,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 5469.7818,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SW_s7",
+      "w_um": 1136.064,
+      "h_um": 120.0,
+      "pc_ids": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.45699922257900955,
+      "total_60pct_area_capacity_um2": 81796.608,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 10804.1178,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s0",
+      "w_um": 1017.0,
+      "h_um": 120.0,
+      "pc_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "geometry_fit": false,
+      "geometry_conflicts": [
+        [
+          "pc1_sector0_sram",
+          "pc0_sector1_sram"
+        ],
+        [
+          "pc1_sector2_sram",
+          "pc0_sector3_sram"
+        ]
+      ],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.5105018336283186,
+      "total_60pct_area_capacity_um2": 73224.0,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 2231.5098,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s1",
+      "w_um": 1300.968,
+      "h_um": 120.0,
+      "pc_ids": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 20,
+      "macro_area_um2": 77877.0547,
+      "macro_outline_fraction": 0.4988404449609829,
+      "total_60pct_area_capacity_um2": 93669.696,
+      "relay_capture_reservation_bits": 13320,
+      "pc_metadata_reservation_bits": 7680,
+      "macro_pin_capture_reservation_bits": 15700,
+      "ff_reservation_bits": 36700,
+      "ff_cell_area_floor_um2": 10701.72,
+      "macro_plus_ff_floor_um2": 88578.7747,
+      "remaining_comb_clock_buffer_area_um2": 5090.9213,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s2",
+      "w_um": 1061.928,
+      "h_um": 120.0,
+      "pc_ids": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.48890354600311875,
+      "total_60pct_area_capacity_um2": 76458.816,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 5466.3258,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s3",
+      "w_um": 1381.992,
+      "h_um": 120.0,
+      "pc_ids": [
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 20,
+      "macro_area_um2": 77877.0547,
+      "macro_outline_fraction": 0.46959422051647187,
+      "total_60pct_area_capacity_um2": 99503.424,
+      "relay_capture_reservation_bits": 13320,
+      "pc_metadata_reservation_bits": 7680,
+      "macro_pin_capture_reservation_bits": 15700,
+      "ff_reservation_bits": 36700,
+      "ff_cell_area_floor_um2": 10701.72,
+      "macro_plus_ff_floor_um2": 88578.7747,
+      "remaining_comb_clock_buffer_area_um2": 10924.6493,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s4",
+      "w_um": 1008.984,
+      "h_um": 120.0,
+      "pc_ids": [
+        18,
+        19,
+        20,
+        21
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.5145575795057206,
+      "total_60pct_area_capacity_um2": 72646.848,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 1654.3578,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s5",
+      "w_um": 1094.952,
+      "h_um": 120.0,
+      "pc_ids": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 16,
+      "macro_area_um2": 62301.6438,
+      "macro_outline_fraction": 0.4741581044648533,
+      "total_60pct_area_capacity_um2": 78836.544,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 6144,
+      "macro_pin_capture_reservation_bits": 12560,
+      "ff_reservation_bits": 29804,
+      "ff_cell_area_floor_um2": 8690.8464,
+      "macro_plus_ff_floor_um2": 70992.4902,
+      "remaining_comb_clock_buffer_area_um2": 7844.0538,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s6",
+      "w_um": 763.992,
+      "h_um": 120.0,
+      "pc_ids": [
+        26,
+        27,
+        28
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 12,
+      "macro_area_um2": 46726.2328,
+      "macro_outline_fraction": 0.5096719253604749,
+      "total_60pct_area_capacity_um2": 55007.424,
+      "relay_capture_reservation_bits": 11100,
+      "pc_metadata_reservation_bits": 4608,
+      "macro_pin_capture_reservation_bits": 9420,
+      "ff_reservation_bits": 25128,
+      "ff_cell_area_floor_um2": 7327.3248,
+      "macro_plus_ff_floor_um2": 54053.5576,
+      "remaining_comb_clock_buffer_area_um2": 953.8664,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s7",
+      "w_um": 469.992,
+      "h_um": 120.0,
+      "pc_ids": [
+        29,
+        30
+      ],
+      "geometry_fit": false,
+      "geometry_conflicts": [
+        [
+          "pc30_sector1_sram",
+          "tile/seam keepout"
+        ],
+        [
+          "pc30_sector3_sram",
+          "tile/seam keepout"
+        ]
+      ],
+      "macro_count": 8,
+      "macro_area_um2": 31150.8219,
+      "macro_outline_fraction": 0.5523289383649083,
+      "total_60pct_area_capacity_um2": 33839.424,
+      "relay_capture_reservation_bits": 8880,
+      "pc_metadata_reservation_bits": 3072,
+      "macro_pin_capture_reservation_bits": 6280,
+      "ff_reservation_bits": 18232,
+      "ff_cell_area_floor_um2": 5316.4512,
+      "macro_plus_ff_floor_um2": 36467.2731,
+      "remaining_comb_clock_buffer_area_um2": -2627.8491,
+      "area_reservation_fit": false,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    },
+    {
+      "master": "hfd_svc_dma_SE_s8",
+      "w_um": 400.032,
+      "h_um": 120.0,
+      "pc_ids": [
+        31
+      ],
+      "geometry_fit": true,
+      "geometry_conflicts": [],
+      "macro_count": 4,
+      "macro_area_um2": 15575.4109,
+      "macro_outline_fraction": 0.32446177105831536,
+      "total_60pct_area_capacity_um2": 28802.304,
+      "relay_capture_reservation_bits": 8880,
+      "pc_metadata_reservation_bits": 1536,
+      "macro_pin_capture_reservation_bits": 3140,
+      "ff_reservation_bits": 13556,
+      "ff_cell_area_floor_um2": 3952.9296,
+      "macro_plus_ff_floor_um2": 19528.3405,
+      "remaining_comb_clock_buffer_area_um2": 9273.9635,
+      "area_reservation_fit": true,
+      "area_qualification": "reservation floor only; mapped gates, CTS, hold repair and wiring not measured",
+      "clock_plan": "W/E face source-balanced taps; local PC clock roots; lockups at clock-root seams",
+      "clock_channel_y_um": [
+        55.992,
+        63.992
+      ]
+    }
+  ]
+}
