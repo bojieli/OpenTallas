@@ -7,7 +7,7 @@
 set -u
 lab=$1; shift
 V=physical/hbm_accel_die_views/su
-T=$V/rtl_tile_xl
+T=${TILED_RTL_DIR:-$V/rtl_tile_xl_r25gpht4}
 W=$OUT/$lab; mkdir -p $W; cd ${SRCDIR:-${SRC:?}}
 read TW TH < <(python3 -c "import json;d=json.load(open('$T/tile.json'));print(d['w_um'],d['h_um'])")
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited

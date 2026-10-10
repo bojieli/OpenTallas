@@ -1,0 +1,11 @@
+{
+  "scope": "Exact current R25GPHT4 interface snapshot; abstract geometry only, no mapped closure",
+  "source_commit": "3fd1fdc91",
+  "strap_successor_commit": "744130879",
+  "files": {
+    "ports.json": "21ad4c7885116bcc431652b93af0b4969aef7ff7ae07a1e863909018c1371799",
+    "io_place.tcl": "6837ed2dea186fc560c3312672431d60627fa35dc1644760da2edb08307e501f"
+  },
+  "face_plan_sha256": "9ca84856a4c50cef6e35d6ed216b7018285d942b1252796c8aeb0137c2c4bd0b",
+  "whole_die_geometry_evidence": "results/uarch/hbm_sfu_reset_tree_20261010/su_strap_geometry_4450812.json"
+}

@@ -10,9 +10,9 @@ sys.path.insert(0,str(Path(__file__).resolve().parent))
 import hbm_hub_quarter_gen as H
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--ports');a=ap.parse_args()
     # The tile bit shape is invariant under the quarter face geometry.
-    q=dict(H.QUARTERS['su']);p=H.Plan(q,{'ports':{'in':{'direction':'input','bits':6310},'out':{'direction':'output','bits':5376}}})
+    q=dict(H.QUARTERS['su']);ports=json.loads(Path(a.ports).read_text()) if a.ports else {'ports':{'in':{'direction':'input','bits':6310},'out':{'direction':'output','bits':5376}}};p=H.Plan(q,ports)
     p.tiled=True
     s=H.emit_tile_xl(p)
     out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
