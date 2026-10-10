@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.s81.selector-clock-ledger.v1",
+ "qualified": false,
+ "source_root": "collective/pll_stream",
+ "clock_support_source": "752a48488",
+ "support_note": "clock/reset outputs excluded from data STA in ck_tile.sdc; not a measured selector clock-tree closure",
+ "old_virtual_reference_ff_ps": 329,
+ "uncertainty_setup_ps": 60,
+ "uncertainty_hold_ps": 25,
+ "control_failed_observations": {
+  "ff_vd_launch_clock_ps": 228.53,
+  "ff_vd_data_arrival_ps": 279.73,
+  "ff_vd_required_ps": 354,
+  "ff_vd_slack_ps": -74.27,
+  "tt_cmd_launch_clock_ps": 296.79,
+  "tt_cmd_data_arrival_ps": 580.56,
+  "tt_cmd_required_ps": 584.22,
+  "tt_cmd_slack_ps": 3.66,
+  "ff_internal_acc_b3_b4_slack_ps": -3.42
+ },
+ "square_quarter_calibration_note": "live1dc source EPYC2 calibration boundary FF339.9ps mean323.6min361.3max, placement estimated, not final routed proof",
+ "seam": {
+  "root": "global pll_stream, same as selector band slab; not cfifo column clock",
+  "launch_capture_taps": "UNIMPLEMENTED",
+  "source_latencies_tt_ff": "UNMEASURED",
+  "cross_root_lockups": "required wherever actual roots differ",
+  "registered_stages": 7,
+  "cycle_only_xdx_gate": "insufficient for physical timing qualification"
+ },
+ "source_only_delay_rejected": "FF100.47ps delay worsens already TT3.66ps output path; needs real pin-register/clock hardware and end-to-end ledger",
+ "actual_delay_cells_added": 0,
+ "output_min_relaxed": false
+}

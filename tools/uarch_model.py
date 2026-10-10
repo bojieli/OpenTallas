@@ -15766,3 +15766,31 @@ def dsrom_selector_registered_seam_model(stages=7):
         mux_demux='no arbitration or numeric reorder; explicit full-width pipeline registers',
         fanout='one local rst synchronizer per quarter seam, no unregistered ready fanout',
         composed_latency_ready_for_route=False)
+
+
+def dsrom_selector_pin_output_tile_model():
+    """Clock-qualified physical output fallback, before RTL or route launch."""
+    bits=264+4+514
+    return dict(candidate='selector_pin_output_tile',selected=False,qualified=False,
+        macs_per_cycle=0,replicas=1,output_bits=bits,memory_changes=0,
+        pin_register_bits=bits,half_cycle_lockup_bits=bits,
+        area_proxy_um2=bits*(5.0+2.5),
+        outline_um=[129.6,319.68],outline_area_um2=129.6*319.68,
+        producer_control_outline_retained=True,
+        boundary_bits=bits,input_face='S M5',output_faces='W/E M4 commands/credits and N M5 VM word',
+        input_pin_span_um=bits*.096,pin_face_width_um=129.6,
+        routing_tracks_needed=bits,minimum_input_track_pitch_um=.048,
+        registered_output_added_cycles=1,half_cycle_lockup_latency_cycles=.5,
+        command_credit_reverse_edges_added=1,
+        model_compose='control XDX increments1, finiteDM4 unchanged; VM word1 additionaledge; measure full transaction/replay tail before route',
+        measured_failed_producer_ff_insertion_ps=228.53,
+        retained_output_virtual_ff_reference_ps=329.0,
+        minimum_actual_pin_capture_ff_insertion_ps=329.0,
+        hold_uncertainty_ps=25,setup_uncertainty_ps=60,period_ps=833.333,
+        naive_clock_only_delay_tt_risk='existing TT3.66ps cannot absorb FF100.47ps source correction without output cone restructuring',
+        clock_source_ledger='global collective pll_stream; producer/lockup/pin tile taps require actual measured source latency and cross-root lockups',
+        clock_output_support_source='752a48488 retained PLL/reset support, excluded clock outputs are not measured die tree closure',
+        mux_demux='bare output registers, no numeric/reduction changes',
+        fanout='local registered reset replicas, producer clock export/tap specification pending',
+        physical_gate='matched source-bound SS/TT/FF hardviews plus actual two-root source/launch/capture ledger',
+        status='UNQUALIFIED; no route authorized until real clock tap/forwarding mechanism exists')
