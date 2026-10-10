@@ -1,0 +1,91 @@
+{
+  "name": "bfh_compact220_front_c900-20261010",
+  "block": "ot_s81_bf_front",
+  "owner": "Codex:bf-deadline",
+  "purpose": "Model-first compact hardened BF front, 100.224x220.32um. Real33x26mm reticle1792mixedpairs/256BFpairs, legal0overlaps/outside/pin clashes. Registered abutted column boundaries, low-phase PINLAT at front, right-long-face midpoint clock root. +1 exposed partial edge versus full948, +15.63%/+26.97% BF footprint by height. Both owner-authorized clocks; unchanged60/25uncertainty. Native HCOL1/PINLAT1 full exact positive and six actual DIFF mutants required BEFORE queueing. No qualification/adoption before routed in-context master and boundary timing.",
+  "hosts": [
+    "ot-epyc3",
+    "ot-epyc2",
+    "ot-epyc4",
+    "ot-epyc1tb",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 60,
+  "source": {
+    "branch": "codex/bf-tcg-pinlat-20261010",
+    "commit": "SOURCE_GATE_COMMIT",
+    "extra_paths": [
+      "results/uarch/s81_bf_compact_hierarchy_20261010.json",
+      "results/uarch/s81_bf_compact_hierarchy_tall_20261010.json",
+      "results/rtl/s81_bf_compact_20261010/reticle",
+      "results/rtl/s81_bf_compact_20261010/bench"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "new CTS topology but the route reference is only the TT boundary mean for route-time setup IO; same-RTL measurement 841 (bfk_recut_qze_ttref calib.json) used; the verdict re-STAs at the routed insertion (BF-PINCLK owner deadline: no serial calibrate)"
+    },
+    "route": {
+      "cmd": "cd {SRC}; python3 -c \"import json;d=json.load(open('results/rtl/s81_bf_compact_20261010/reticle/compact220_legal.json'));assert d['variant']['die_um']==[33000.,26000.] and d['variant']['pairs']==1792;assert d['legality_python']['overlaps']==d['legality_python']['outside']==d['generated_pin_clashes']==0;d=json.load(open('results/rtl/s81_bf_compact_20261010/bench/full.json'));assert d['pass'] and d['cases']['positive']['ok'];assert all(d['cases'][k]['ok'] and any('DIFF' in m for m in d['cases'][k]['markers']) for k in ['mutant_dp','mutant_recut','mutant_pinlat','mutant_tcg','mutant_xst','mutant_fxst'])\" || exit $?; export CK_SS_MEAN=222 OT_ORFS_CORNER_OVERRIDE=TC OT_CTS_FIX_HOOKS=physical/s81_native_bf/margin/pinclk_group.tcl OT_MM_FF_SDC=physical/s81_native_bf/margin/signoff_ref_c900.sdc SIGNOFF_SDC=physical/s81_native_bf/margin/signoff_ref_c900.sdc PER=.980; OUT={RUN}/routes SRC={SRC} BLOCK=front bash physical/s81_bf_hier/route_hier.sh {LABEL} --die-w 100.224 --die-h 220.32 --hm 0.000 --bxst 2 --fxst 2 --pinlat 1 --local-clock-pin",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "peak_ram_gb": 60
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && (grep -h \"BF_PINCLK\\|BF_INHOLD_PAD\\|BF_IO\" {RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/4_1_cts.log > {RUN}/record/pinclk_cts.txt || true)"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "compact_exact_and_reticle_gate",
+        "cmd": "cd {SRC}; python3 -c \"import json;d=json.load(open('results/rtl/s81_bf_compact_20261010/reticle/compact220_legal.json'));assert d['variant']['die_um']==[33000.,26000.] and d['variant']['pairs']==1792;assert d['legality_python']['overlaps']==d['legality_python']['outside']==d['generated_pin_clashes']==0;d=json.load(open('results/rtl/s81_bf_compact_20261010/bench/full.json'));assert d['pass'] and d['cases']['positive']['ok'];assert all(d['cases'][k]['ok'] and any('DIFF' in m for m in d['cases'][k]['markers']) for k in ['mutant_dp','mutant_recut','mutant_pinlat','mutant_tcg','mutant_xst','mutant_fxst'])\""
+      },
+      {
+        "name": "native_HCOL_PINLAT_byte_identity",
+        "cmd": "sha256sum {SRC}/rtl/s81/ot_s81_bf_native.sv | grep -q '^a8d7593ad80dc3823187d009a95fdebe6efd332f319886a21248023776ebd7dd '"
+      },
+      {
+        "name": "generated_front_byte_identity",
+        "cmd": "sha256sum {SRC}/rtl/s81/ot_s81_bf_front.sv | grep -q '^aeb9a86e8a2724f2450050f183f438d49566f9fc72a1308a5316ce25ba5311ce '"
+      }
+    ],
+    "post_sdc": [
+      "physical/s81_native_bf/margin/signoff_ref_c900.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "reason": "Guarded rev3 reproduces SS/FF sign-off independently; owner BF recovery requests first hold-only ECO",
+    "session": "mm"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "no budget sheet for ot_s81_bf_native (dsfd_bf is a different master/pin contract); IO from the measured insertion"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/s81_bf_compact_20261010/bfh_compact220_front_c900-20261010"
+    }
+  ],
+  "cycles_added": "HCOL +1partial edge versus full948 /+3vsflatQZE; PINLAT0; initiation interval unchanged;900MHz BFwork4/3of1.2GHz.",
+  "merge_target": null,
+  "no_bench_reason": "External minimum actual full native HCOL1/PINLAT1 benchmark positive plus six true DIFF mutants is committed into source before this template can be queued.",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.0,
+  "fp_lint": {
+    "set": {
+      "sliver_um": 10.0
+    },
+    "why": "sliver_um 12->10 (bf-fplint 2026-10-08 21:20 PT): the two flagged gaps are the 10.49 um channels between the stacked ROM pair of each column (place.tcl: rom0 R0 / rom1 MX, 2x5.4 um clearance), ~38 placement rows, ROM pins on the outer W/E faces (none face the gap). Not the r23h class (1.5-3.6 um, 2-5 rows -> DPL-0033): the identical floorplan (place.tcl md5 25d7794e at 8db5411e3/f5363befb/6cd23db2b/a12f3c7e7/6e8f0b698/e4272b562) legalised with no DPL error in bfh2_recutcgl50_hm0 cal + route (3_5_place_dp, util 55.3%). All other checks stay FAIL."
+  }
+}
