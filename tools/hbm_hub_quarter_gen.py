@@ -41,8 +41,9 @@ sys.path.insert(0, str(ROOT / 'tools'))
 
 SU_PHYS = 'rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv'
 HC_RTL = 'rtl/hdc/v41x/ot_dsrom_su_hcpost.sv'
-TILE_SW = 80.352               # tiled su: the tile's register strip width (186 x 0.432), the lane beside it
-TILE_W = 161.568              # tile width (374 x 0.432): strip + lane 79.92 + 1.3 um (the lane fits the core with its halo)
+TILE_SW = 100.224              # tiled su: the tile's register strip width (232 x 0.432), the lane beside it; every
+                               # tile pin sits over the strip (fp lint macro_edge: no pins behind the lane)
+TILE_W = 181.44               # tile width (420 x 0.432): strip + lane 79.92 + 1.3 um (the lane fits the core with its halo)
 EDGE_BAND = 160.0              # um: the end port bands sit at the far-end lane group (south / north)
 HOP = 480.0                    # um a face-chain stage (owner rule 2026-10-07: stages <= 480 um apart)
 QUARTERS = {
@@ -542,14 +543,14 @@ def emit_tile(P):
 
 
 def emit_tile_io(P, tw, th):
-    """the tile's pins: bc_in on the S edge, bc_out on the N edge (M5 over the strip, M7 across the whole width: the lane
-    leaves M6 / M7 open), acc_out / acc_in on the W (strip) edge on M4 (lower / upper half), clk on the W edge mid"""
+    """the tile's pins: bc_in on the S edge, bc_out on the N edge (M5 and M7 over the register strip; nothing behind the
+    lane), acc_out / acc_in on the W (strip) edge on M4 (lower / upper half), clk on the W edge mid"""
     L_ = ['# tools/hbm_hub_quarter_gen.py --tiled: hfd_su_tile pins']
     nb = P.LB + 1
     # M5 every other 0.048 track over the strip (0.096 pitch, < 12 pins / um), M7 every other 0.064 track over the whole
     # tile (0.128 pitch): the lane obstructs up to M5 only
     m5 = [round(0.528 + 0.096 * k, 4) for k in range(int((TILE_SW - 1.0) / 0.096))]
-    m7 = [round(0.64 + 0.128 * k, 4) for k in range(int((tw - 1.3) / 0.128))]
+    m7 = [round(0.64 + 0.128 * k, 4) for k in range(int((TILE_SW - 1.3) / 0.128))]     # over the strip only
     slots = [('M5', x) for x in m5] + [('M7', x) for x in m7]
     assert len(slots) >= nb, (len(slots), nb)
     for port, y, w_, h_ in (('bc_in', 0.0, None, None), ('bc_out', th, None, None)):
