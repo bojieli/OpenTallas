@@ -1,6 +1,9 @@
 import argparse,json,sys
 from pathlib import Path
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+tools_root=Path(__file__).resolve().parents[1]
+if not (tools_root/'dsrom_s81_fulldie.py').is_file():
+    tools_root=Path.cwd()/'tools'  # helper copied beside a pinned source archive
+sys.path.insert(0,str(tools_root))
 import dsrom_s81_fulldie as F
 args=F.die_options(argparse.ArgumentParser()).parse_args(Path(sys.argv[1]).read_text().split())
 F.apply_options(args)
