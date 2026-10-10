@@ -1,7 +1,7 @@
 """Size DMA lane credits from composed registered transport, before RTL."""
 import math
 
-def model(depth=64, data_hops=32, credit_hops=32):
+def model(depth=256, data_hops=96, credit_hops=96):
     if depth < 4 or depth & (depth-1): raise ValueError('power-of-two lane depth >=4 required')
     rtt=data_hops+credit_hops+4 # pin capture, front FIFO pop and registered credit
     return dict(scope='DMA front finite lane buffers; streaming1.2GHz', MACs_per_cycle=0,
@@ -18,4 +18,4 @@ def model(depth=64, data_hops=32, credit_hops=32):
         tracks_added=0, channel_capacity='same boundary wires, svc owner independently sizes corridor',
         area='measure mapped storage or SRAM master; no inferred slot fit',floorplan_fit=False,
         physical_admitted=False, adoption=False,
-        source_note='32 service-internal worst-case credit RTT from actual8500um strips plus provisional32cycles loader leg; exact loader distance must replace bound')
+        source_note='source-derived R25GPH13–26mm service/front leg35–69 hops eachway plus32cycles internal strip RTT;96perleg conservatively covers192cycle transport; final tileplacement rechecks bound')

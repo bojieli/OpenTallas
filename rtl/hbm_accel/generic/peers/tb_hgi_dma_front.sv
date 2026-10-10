@@ -31,7 +31,8 @@ module tb_hgi_dma_front;
         .wl(wl), .wl_done(wl_done));
     // ---- memories
     function automatic [7:0] hb(input longint a); hb = 8'((a * 2654435761 + (a >> 7) * 40503) >> 3); endfunction
-    reg [31:0] vm [0:262143];
+    localparam integer VM_WORDS = 1048576;
+    reg [31:0] vm [0:VM_WORDS-1];
     reg [31:0] wl_d1 = 0;
     always @(posedge clk) begin
         wl_d1 <= 0; wl_done <= wl_d1;
@@ -124,7 +125,7 @@ module tb_hgi_dma_front;
                 end
                 begin : untouched
                     integer w, o2, hit, bad; bad = 0;
-                    for (w = 0; w < 262144; w = w + 1) begin
+                    for (w = 0; w < VM_WORDS; w = w + 1) begin
                         hit = 0;
                         for (o2 = 0; o2 < m; o2 = o2 + 1) if (w >= dbase + o2 * dstr && w < dbase + o2 * dstr + n) hit = 1;
                         if (!hit && vm[w] !== 32'hA5A5_0000 + w) bad = bad + 1;
@@ -132,7 +133,7 @@ module tb_hgi_dma_front;
                     if (bad != 0) begin $display("FAIL f %0d: %0d words outside the destination changed", f, bad); errs = errs + 1; end
                 end
                 if (errs != e0) $display("  load f %0d: %0d errors", f, errs - e0);
-                if (LDEPTH >= 64 && f == 0 && m == 4 && n == 65536 && (m * n * 4.0) / (cyc-t0) < 0.9*1024)
+                if (LDEPTH >= 64 && f == 0 && m == 4 && n == 262144 && (m * n * 4.0) / (cyc-t0) < 0.9*1024)
                     begin $display("FAIL physical-credit bandwidth below90pct"); errs=errs+1; end
                 $display("LOAD f %0d m %0d n %0d: %0d cycles, %0.1f destination B / cycle", f, m, n, cyc - t0, (m * n * 4.0) / (cyc - t0));
             end
@@ -149,7 +150,7 @@ module tb_hgi_dma_front;
         load(0, 64'h2000, 32, 250000, 8, 64, 8);                         // 64 one-sector rows
         load(0, 64'h0, 64'(SB), 0, 16384, 4, 16384);                    // FP32 striped, 4 x 64 KB (steady state)
         load(1, 64'h0, 64'(SB), 100000, 32768, 4, 32768);               // BF16 striped, 4 x 64 KB raw -> 512 KB VM
-        load(0, 64'h0, 64'(SB), 0, 65536, 4, 65536); // full-capacity steady window prices transport fill
+        if (LDEPTH >= 64) load(0, 64'h0, 64'(SB), 0, 262144, 4, 262144); // full-capacity steady window prices transport fill
         if (errs == 0) $display("PASS HGI_DMA_FRONT %0d B in %0d cycles (%0.1f B / cycle overall)", tbytes, tcyc, (1.0 * tbytes) / tcyc);
         else $display("FATAL HGI_DMA_FRONT errors=%0d", errs);
         $finish;

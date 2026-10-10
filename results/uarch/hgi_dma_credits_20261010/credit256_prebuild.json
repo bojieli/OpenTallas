@@ -1,0 +1,42 @@
+{
+  "scope": "DMA front finite lane buffers; streaming1.2GHz",
+  "MACs_per_cycle": 0,
+  "compute_intensity": "format conversion unchanged",
+  "source_bytes_per_cycle": 1024,
+  "destination_bytes_per_cycle": 1024,
+  "port_bytes_per_cycle": {
+    "lane": 32,
+    "VM": 1024
+  },
+  "boundary_bits": {
+    "data": 8640,
+    "credit": 32,
+    "VM": 8960
+  },
+  "replicas": {
+    "stacks": 4,
+    "lanes_per_stack": 8,
+    "buffer_entries": 256
+  },
+  "memory_bits": 2244608,
+  "added_memory_bits": 2209536,
+  "added_pointer_bits": 576,
+  "composed_credit_round_trip_cycles": 196,
+  "credit_window_rate_upper_bound": 1,
+  "required_depth_at_90pct": 177,
+  "fifo_mux_inputs": 256,
+  "lane_demux_count": 32,
+  "latency": {
+    "data_hops": 96,
+    "credit_hops": 96,
+    "front_internal_edges": 4,
+    "token_added_cycles": "transport cycles compose with actual DMA critical path"
+  },
+  "tracks_added": 0,
+  "channel_capacity": "same boundary wires, svc owner independently sizes corridor",
+  "area": "measure mapped storage or SRAM master; no inferred slot fit",
+  "floorplan_fit": false,
+  "physical_admitted": false,
+  "adoption": false,
+  "source_note": "source-derived R25GPH13\u201326mm service/front leg35\u201369 hops eachway plus32cycles internal strip RTT;96perleg conservatively covers192cycle transport; final tileplacement rechecks bound"
+}
