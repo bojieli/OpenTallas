@@ -109,6 +109,8 @@ module tb_hgi_fused_record;
         end
         if (rst_n && fault) begin nfault = nfault + 1;
             if (nfault == 1) $display("FAULT at record %0d: adapter state %0d, su halted %0d, vec fault %0d", base + k, u.st, u.s_halt, vfault); end
+        if (rst_n && u.s_fault) $display("SU FAULT: fused state %0d, su bad_q %0d exec %0d, vec fault seen %0d", u.st, u.u_su.bad_q, u.u_su.exec, u.u_su.in_fault);
+        if (rst_n && vfault) $display("VEC FAULT at %0d (fused state %0d)", cyc, u.st);
     end
     integer c, j, kind, r0, nr, vi0, nvi, ve0, nve, h0, nh, t, runs = 0, negs = 0, words = 0, a;
     initial begin

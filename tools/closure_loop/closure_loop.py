@@ -4760,6 +4760,10 @@ for p in os.listdir("/proc"):
         print("LIVE pid", p); sys.exit(3)
 refs = [r.rstrip("/") for r in a.get("refs") or []]
 hard = [r for r in refs if os.path.basename(r) not in GENERIC and r != R]
+# token-exact 2026-10-09: a .keep marker protects its directory (exactness fixtures) like a hard reference
+hard += [dp.rstrip("/") for dp, dn, fn in os.walk(R) if ".keep" in fn and dp.rstrip("/") != R]
+if os.path.exists(os.path.join(R, ".keep")):
+    print("DEEP_FREED 0 (.keep)"); sys.exit(0)
 soft = [r for r in refs if r not in hard and r != R]
 finals = [x.rstrip("/") for x in a.get("final_dirs") or []]
 prot = lambda p: any(p == r or p.startswith(r + "/") for r in hard)

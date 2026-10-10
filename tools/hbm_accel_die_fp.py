@@ -479,8 +479,9 @@ R25G4 = _vmerge(R25S, R25M, R25IQG, dict(indexer_rebase=True, router_exact=True)
 # die-evidence-2 2026-10-09 18:00 PT: R25GP = R25G on the CLOSING attention / svc views: the PS halves (half_ps: PS entry
 # ks port, attn_entry8) with the hi half widened to 689.04 um (hbm-forks 11c7e95b3 --hi-channel-rows 7), slot
 # 814.32 + 689.04 = 1,503.36 um (+15.12 vs R25S), the hub band grown by the same 2 x 4 x 15.12 um; svc split_ps segments.
-# DOES NOT GENERATE YET (18:05 PT): with split_ps the svc SE_s7 ki7 pin finds no free N-face span (apply_splits_x) on
-# the R25G outline; R25SPS at 1,503.36 fails 'no room for station of ks5_SW' -- the PS entry ks chains need hub room.
+# GENERATES (hgi-takeover 2026-10-09 evening): the SE_s7 ki7 span is fixed (hbm-forks 65d804e91) and the plan record
+# serialises through plan_json (tuple-keyed pin_centre); plan --ds-var r25gp: 31,734.288 x 25,282.8 um, 802.33 mm2,
+# 1,245 instances, 0 overlaps / 0 outside, die lint rc 0.  (R25SPS at 1,503.36 still fails 'no room for station of ks5_SW'.)
 R25GP = dict(R25G, attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True,
              split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
              attn_tile_h_um=1503.36, hub_h=R25G['hub_h'] + 2 * 4 * (1503.36 - 1488.24))
@@ -521,6 +522,9 @@ def _hgi_mtp(v):
     return dict(v, mtp_master='hgi_native', split_extra_ports=ex,
                 split_masters=dict(v.get('split_masters', {}), hfd_cmdproc=MX1_SPLIT),
                 cp_band_alias={'hfd_cmdproc_s': MX1_BAND},
+                # MX1 r3 pins (collar_mx1 ports.json): t_hgi_argmax 764.928-895.896 um, f_hgi_argmax 900.096-900.504 um
+                # (S face, 0.192-um pitch = 4 tracks); centres / 1399.656
+                cp_pin_override={'t_hgi_argmax': (0.593297, 4), 'f_hgi_argmax': (0.643229, 4)},
                 hgi_dispatch=sorted(set(v.get('hgi_dispatch') or []) | {'argmax'}),
                 spine_slot_masters=dict(v.get('spine_slot_masters', {}), mtp=GENERIC_MASTER),
                 # two-instance MD-7 slot (466.56 x 200.88): the controller's closed view (mtp_hgi, 286.56 x 200.88) and
@@ -547,6 +551,15 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         # hgi-takeover 2026-10-09: the normative dispatch's ECO pins on the cmdproc split view (tools/hgi_die_dispatch.py)
         from hgi_die_dispatch import variant as hgi_dispatch_variant
         variant = dict(hgi_dispatch_variant(variant, variant['hgi_dispatch']), hgi_dispatch_pins_done=True)
+        # mtp-lead 2026-10-09: a CP band with its own pin record (MX1) overrides a planned dispatch pin's (fraction, pitch)
+        # -- the plan's argmax span (0.50 x 1399.656, 2 tracks = 667-733 um) lies on MX1's f_loader pins
+        ov_ = variant.get('cp_pin_override') or {}
+        if ov_ and 'hfd_cmdproc' in (variant.get('split_extra_ports') or {}):   # 'cp': one CP block, no MX1 band
+            ex_ = {k: dict(x) for k, x in variant['split_extra_ports'].items()}
+            for pn_, (frac_, pitch_) in ov_.items():
+                t_ = ex_['hfd_cmdproc'][pn_]
+                ex_['hfd_cmdproc'][pn_] = t_[:4] + (frac_, pitch_)
+            variant['split_extra_ports'] = ex_
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     Q.PIN_CENTRE.clear()
@@ -1064,6 +1077,12 @@ def _jsonable(o):
     if isinstance(o, (list, tuple, set)):
         return [_jsonable(v) for v in o]
     return o if isinstance(o, (str, int, float, bool)) or o is None else str(o)
+
+
+def plan_json(rec):
+    """floorplan.json text: the record through _jsonable, so a variant's tuple-keyed dicts (pin_centre from the r23 /
+    R25 presets, corner rules) serialise as 'master|port' keys instead of failing json.dumps."""
+    return json.dumps(_jsonable(rec), indent=1)
 
 
 # index_q bands are NOT in the list (r16b a_real, measured + derived): they are placed both R0 and x-mirrored (MY /
@@ -4543,7 +4562,7 @@ def main(argv=None):
         rec = plan_record_qwen(m)
         rec['legality_python'] = _legality(m)
         rec['ir_windows_um'] = ir_windows(m)
-        (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
+        (out / 'floorplan.json').write_text(plan_json(rec) + '\n')
         svg(m, out / 'floorplan.svg', scale=0.03)
         write_def_floorplan(m, out / 'floorplan.def')
         write_sdc_qwen(out / 'domains.sdc')
@@ -4570,12 +4589,13 @@ def main(argv=None):
         print(' '.join(ir_windows(m)))
         return 0
     if a.mode == 'plan':
-        out = ROOT / OUT
+        # --out: write the plan elsewhere (a variant build must not overwrite the committed default-die record)
+        out = a.out.resolve() if a.out else ROOT / OUT
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record(m)
         rec['legality_python'] = _legality(m)
         rec['ir_windows_um'] = ir_windows(m)
-        (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
+        (out / 'floorplan.json').write_text(plan_json(rec) + '\n')
         svg(m, out / 'floorplan.svg')
         write_def_floorplan(m, out / 'floorplan.def')
         write_sdc(out / 'domains.sdc', m)

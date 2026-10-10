@@ -229,7 +229,12 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
   set K [expr {max(1, int(ceil(sqrt(double($m)*$rowh/$pitch))))}]
   set tx [lindex $ws_tgt($key) 0]; set ty [lindex $ws_tgt($key) 1]
   set r0 [expr {max(0, min($nrows-1, int(($ty-$rowy0)/$rowh)))}]
-  set q 0; set dr 0; set tries 0
+  set q 0; set K0 $K
+  # hbm-forks 2026-10-09: when every row's window around the target is taken (many one-stage chains now anchored at
+  # the same face pins: svc PS SW_s1, 101 cells unplaced), widen the window 2x / 4x / 8x / 16x around the same point
+  foreach ws_wf {1 2 4 8 16} {
+  if {$q >= $m} break
+  set K [expr {$K0 * $ws_wf}]; set dr 0; set tries 0
   # rows alternate around the target row; in each row up to K slots centred on the target x, sliding past occupancy
   while {$q < $m && $tries < 4*$nrows} {
     set ri [expr {$r0 + (($dr % 2) ? -(($dr+1)/2) : ($dr/2))}]; incr dr; incr tries
@@ -255,6 +260,7 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
       }
       set x [expr {$x + $pitch}]
     }
+  }
   }
   incr nplaced $q; incr nfail [expr {$m - $q}]; incr nst
 }

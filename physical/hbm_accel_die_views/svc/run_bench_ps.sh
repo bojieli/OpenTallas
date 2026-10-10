@@ -13,14 +13,14 @@ O=$1; mkdir -p $O; V=physical/hbm_accel_die_views/svc; T=$V/tb
 rm -f $O/summary.txt
 # PS modules get a _ps suffix so the legacy segments can share one simulation (lockstep)
 mkdir -p $O/ps
-for f in $V/rtl/seg_ps/*.sv; do
+for f in $V/rtl/${SEGPS:-seg_ps}/*.sv; do
   sed -E 's/\b(hfd_svc_(SW|SE)_s[0-9]+)\b/\1_ps/g; s/\b(hfd_svc_(SW|SE|NW|NE)_seg)\b/\1_ps/g' $f > $O/ps/$(basename $f .sv)_ps.sv
 done
 LIB="rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv $V/rtl/ot_hbm_svc_core.sv $V/rtl/ot_hbm_svc_seg_lib.sv"
 PSLIB=$V/rtl/ot_hbm_svc_ps_lib.sv
 rc=0
 if [ "${2:-}" != quick ] && command -v yosys >/dev/null; then
-  for f in $V/rtl/seg_ps/hfd_svc_S[WE]_s[0-9].sv; do
+  for f in $V/rtl/${SEGPS:-seg_ps}/hfd_svc_S[WE]_s[0-9].sv; do
     m=$(basename $f .sv)
     yosys -q -p "read_verilog -sv $LIB $PSLIB $f; hierarchy -check -top $m; proc; flatten; opt_clean; check -assert" > $O/lint_$m.log 2>&1
     r=$?; echo "lint_$m rc=$r" >> $O/summary.txt; [ $r -ne 0 ] && rc=1

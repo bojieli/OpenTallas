@@ -18,7 +18,12 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
     // pointer / u_cb write / hk_d reload, 36-37 levels): the release condition of the held head is a REGISTER (hr_q),
     // recomputed every edge and cleared whenever the head is consumed or reloaded (acked only grows: never early).
     // +1 ck edge per completion word.
-    parameter integer RPIPE = `ifdef OT_HING_RPIPE 1 `else 0 `endif) (
+    // RPIPE 2 (redesign-ds 2026-10-09; hing_pipec_a/b-18f1b50d4 TT -114: acked[0] -> 32-bit acked >= hk_d compare,
+    // re-rippled by ABC into 26 MAJ levels -> hr_q): the fence compare is split into registered 16-bit partials
+    // (hi >, hi ==, lo >=) and the ACK counter into two 16-bit halves whose carry is applied one edge late.  Both only
+    // UNDER-estimate acked (it only grows), so a release is never early; a partial is used only while hk_d has been
+    // stable for an edge (cmp_ok).  +1 ck edge per done word on top of RPIPE 1 (fault / non-done words unchanged).
+    parameter integer RPIPE = `ifdef OT_HING_RPIPE2 2 `elsif OT_HING_RPIPE 1 `else 0 `endif) (
     input  wire          rst_n,
     input  wire          clk_h,
     input  wire          h_v,
@@ -98,8 +103,27 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
         if (!rn_c) hk_v <= 1'b0;
         else if (HCUT != 0) begin if (a_pop) hk_v <= 1'b1; else if (rel) hk_v <= 1'b0; end
     always @(posedge ck) if (HCUT != 0 && a_pop) hk_d <= a_head;
+    // RPIPE 2: split ACK counter + registered compare partials (see the parameter note)
+    reg  [15:0] ack_lo, ack_hi; reg ack_c;
+    reg         p_gt, p_eq, p_ge, cmp_ok;
+    wire [16:0] ack_lo_n = {1'b0, ack_lo} + {11'd0, ack_n};
+    always @(posedge ck or negedge rn_c)
+        if (!rn_c) begin ack_lo <= 16'd0; ack_hi <= 16'd0; ack_c <= 1'b0; cmp_ok <= 1'b0; end
+        else begin
+            ack_lo <= ack_lo_n[15:0]; ack_c <= ack_lo_n[16]; ack_hi <= ack_hi + {15'd0, ack_c};
+`ifdef OT_HING_MUT_RP2STALE
+            cmp_ok <= hk_v;                                                   // mutant: partials of the previous head used
+`else
+            cmp_ok <= hk_v && !rel && !a_pop;
+`endif
+        end
+    always @(posedge ck) begin
+        p_gt <= ack_hi > hk_d[31:16]; p_eq <= ack_hi == hk_d[31:16]; p_ge <= ack_lo >= hk_d[15:0];
+    end
+    wire        ge2 = cmp_ok && (p_gt || (p_eq && p_ge));
     always @(posedge ck or negedge rn_c)
         if (!rn_c) hr_q <= 1'b0;
+        else if (RPIPE == 2) hr_q <= hk_v && !rel && !a_pop && (!is_done || FENCE == 0 || ge2);
 `ifdef OT_HING_MUT_RPSTALE
         else hr_q <= hk_v && (!is_done || FENCE == 0 || acked >= hk_d[31:0]);                    // mutant: not cleared
 `else

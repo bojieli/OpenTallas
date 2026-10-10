@@ -427,7 +427,10 @@ def real_blocks(die, m=None):
                 ('ot_hgi_argmax18_m', 'physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv',
                  dict(LP=8, FLAT=7, FAST=1, GENERIC18=1), 'RTL of the CLOSED view argmax_hgi (pinsep pd55)'),
                 ('hfd_cmdproc_s_mtp_native_mx1', 'physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv', {},
-                 'MX1 CP-south RTL (route open)')):
+                 'MX1 CP-south RTL (route open)'),
+                # hgi-takeover decision (3): on the single-CP die the slot's ARGMAX instance is the dispatched unit
+                ('hfd_hgi_am', 'rtl/hbm_accel/generic/hfd_hgi_am.sv', {},
+                 'ARGMAX unit die master: ot_hgi_argmax_slot (closed adapter + closed engine) + VM client, 691-b record (route open)')):
             if not (ROOT / f).exists():
                 continue
             pm = parse_module(f, mn, prm)
