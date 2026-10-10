@@ -109,7 +109,7 @@ module ot_qkvd_kv_merge #(
         assign m_hv[e] = hv; assign m_pe[e] = pe; assign m_qf[e] = qf; assign m_qv[e] = rq_v;
         assign m_pf[e] = pf; assign m_go[e] = go;
     end endgenerate
-    initial if (PD < DQ) $display("ot_qkvd_kv_merge: PD %0d < DQ %0d (the pending-tag queue can overrun)", PD, DQ);
+    initial if (PD < DQ) $fdisplay(32'h80000002, "ot_qkvd_kv_merge: PD %0d < DQ %0d (the pending-tag queue can overrun)", PD, DQ);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fault <= 1'b0;
         else if (|(m_hv & m_pe) || |(m_qv & m_qf) || |(m_go & m_pf & ~m_hv)) fault <= 1'b1;   // + a pending-tag overrun
