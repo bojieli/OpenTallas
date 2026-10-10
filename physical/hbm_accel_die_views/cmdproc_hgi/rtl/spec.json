@@ -29,7 +29,9 @@
     "ux_fault": "cfg",
     "wr_quiet": "cfg",
     "idx_rec": "die:t_hgi_idx[0:1819]",
-    "idx_ret": "die:f_hgi_idx[0:3]"
+    "idx_ret": "die:f_hgi_idx[0:3]",
+    "am_rec": "fold",
+    "am_ret": "const:0"
    }
   }
  ],
@@ -41,5 +43,16 @@
  "open_items": [
   "ux_* (12 units) wait for the hgi-adapters record adapters",
   "wr_quiet needs the DMA / svc write-visibility signal"
- ]
+ ],
+ "replaced_when_hgi": "argmax",
+ "ties": {
+  "cpd.am_rec": {
+   "class": "by_design",
+   "reason": "no ARGMAX unit on this die ('argmax' not in hgi_dispatch): the unit-7 record bus has no consumer; am_ret = 0 (never ready), so a unit-7 record waits at dispatch (fail-closed, as the earlier ux_* path); the single-CP die with the MTP slot unit hfd_hgi_am binds both (cmdproc_hgi_am)"
+  },
+  "cpd.am_ret": {
+   "class": "by_design",
+   "reason": "no ARGMAX unit on this die ('argmax' not in hgi_dispatch): the unit-7 record bus has no consumer; am_ret = 0 (never ready), so a unit-7 record waits at dispatch (fail-closed, as the earlier ux_* path); the single-CP die with the MTP slot unit hfd_hgi_am binds both (cmdproc_hgi_am)"
+  }
+ }
 }

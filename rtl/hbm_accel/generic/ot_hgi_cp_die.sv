@@ -28,6 +28,8 @@ module ot_hgi_cp_die #(
     input  wire [2:0]    quant_ret,
     output reg  [1818:0] idx_rec,       // unit 9 {die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
     input  wire [2:0]    idx_ret,
+    output reg  [690:0]  am_rec,        // unit 7 ARGMAX {die_id 8, n_O, n_A, O, A, header, valid} (mtp-lead (1): 683 -> 691)
+    input  wire [2:0]    am_ret,
     output wire [39:0]   cfg_bus,
     // units without a record adapter yet (index = unit code; 4, 6 and 9 unused here)
     output wire [15:0]   ux_v,
@@ -53,9 +55,10 @@ module ot_hgi_cp_die #(
     reg  fq_busy;                                        // fetch station: one request in flight until its sector returns
     reg  cpl_hold;                                       // completion station: waits for the loader's ack
     reg  vr_busy, vr_rv; reg [31:0] vr_rd; reg [2:0] vr_w;
-    reg  [2:0] credit;                                   // {idx, quant, coll}
+    reg  [3:0] credit;                                   // {argmax, idx, quant, coll}
     reg  halt;
-    wire units_busy = ~credit[0] | ~credit[1] | ~credit[2] | (|ux_v);
+    wire units_busy = ~credit[0] | ~credit[1] | ~credit[2] | ~credit[3] | (|ux_v);
+    localparam [15:0] RECU = (16'd1 << 4) | (16'd1 << 6) | (16'd1 << 7) | (16'd1 << 9);   // units with a record bus
     ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
         .cmd_wdata(cfg_wdata), .units_busy(units_busy), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded), .cfg_err(cfg_err),
         .cfg_cp_act(cfg_cp_act), .rank(rank),
@@ -69,14 +72,15 @@ module ot_hgi_cp_die #(
         .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles), .cpl_tokx(cpl_tokx));
     // ---------------------------------------------------------------- unit credits and dispatch packing
     always @* begin
-        u_rdy = ux_rdy & ~((16'd1 << 4) | (16'd1 << 6) | (16'd1 << 9)) & {16{!halt}};
+        u_rdy = ux_rdy & ~RECU & {16{!halt}};
         u_rdy[6] = credit[0] && coll_ret[0] && !halt;
         u_rdy[4] = credit[1] && quant_ret[0] && !halt;
         u_rdy[9] = credit[2] && idx_ret[0] && !halt;
-        u_done = ux_done & ~((16'd1 << 4) | (16'd1 << 6) | (16'd1 << 9)); u_done[6] = coll_ret[1]; u_done[4] = quant_ret[1]; u_done[9] = idx_ret[1];
-        u_fault = ux_fault & ~((16'd1 << 4) | (16'd1 << 6) | (16'd1 << 9)); u_fault[6] = coll_ret[2]; u_fault[4] = quant_ret[2]; u_fault[9] = idx_ret[2];
+        u_rdy[7] = credit[3] && am_ret[0] && !halt;
+        u_done = ux_done & ~RECU; u_done[6] = coll_ret[1]; u_done[4] = quant_ret[1]; u_done[9] = idx_ret[1]; u_done[7] = am_ret[1];
+        u_fault = ux_fault & ~RECU; u_fault[6] = coll_ret[2]; u_fault[4] = quant_ret[2]; u_fault[9] = idx_ret[2]; u_fault[7] = am_ret[2];
     end
-    assign ux_v = u_v & ~((16'd1 << 4) | (16'd1 << 6) | (16'd1 << 9)) & {16{!halt}};
+    assign ux_v = u_v & ~RECU & {16{!halt}};
     // descriptor index: A 0, B 1, C 2, D 3, O 4, R 5, I 6
     wire [255:0] dA = d_desc[0*256 +: 256], dB = d_desc[1*256 +: 256], dC = d_desc[2*256 +: 256], dD = d_desc[3*256 +: 256],
                  dO = d_desc[4*256 +: 256], dR = d_desc[5*256 +: 256],
@@ -85,12 +89,12 @@ module ot_hgi_cp_die #(
                 nR = d_n[5*21 +: 21], nI = d_n[6*21 +: 21];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            credit <= 3'b111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1819'd0; halt <= 1'b0;
+            credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1819'd0; am_rec <= 691'd0; halt <= 1'b0;
             db_hold <= 1'b0; fq_busy <= 1'b0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
         end else begin
             // dispatch (the bus carries one valid edge per record)
-            coll_rec[0] <= 1'b0; quant_rec[0] <= 1'b0; idx_rec[0] <= 1'b0;
+            coll_rec[0] <= 1'b0; quant_rec[0] <= 1'b0; idx_rec[0] <= 1'b0; am_rec[0] <= 1'b0;
             if (u_v[6] && u_rdy[6]) begin coll_rec <= {rank, nI, nO, nA, dI, dO, dA, d_hdr, 1'b1}; credit[0] <= 1'b0; end
             else if (coll_ret[1] || coll_ret[2]) credit[0] <= 1'b1;
             if (u_v[4] && u_rdy[4]) begin quant_rec <= {nO, nA, dO, dA, d_hdr, 1'b1}; credit[1] <= 1'b0; end
@@ -99,6 +103,8 @@ module ot_hgi_cp_die #(
                 idx_rec <= {rank, 20'(d_pos1 - 21'd1), nR, nO, nD, nC, nB, nA, dR, dO, dD, dC, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0;
             end
             else if (idx_ret[1] || idx_ret[2]) credit[2] <= 1'b1;
+            if (u_v[7] && u_rdy[7]) begin am_rec <= {rank, nO, nA, dO, dA, d_hdr, 1'b1}; credit[3] <= 1'b0; end
+            else if (am_ret[1] || am_ret[2]) credit[3] <= 1'b1;
             if (vmstat[18] || vmstat[17] || vmstat[16]) halt <= 1'b1;
             // doorbell station
             if (l_db_v && !db_hold) begin db_hold <= 1'b1; db_q <= {l_ncol, l_ent, l_gen, l_job, l_pos, l_tok}; end
