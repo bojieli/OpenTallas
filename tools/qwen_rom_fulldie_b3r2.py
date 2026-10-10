@@ -1041,8 +1041,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM, native_elastic_relays=False):
             sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, c[3], tol)
             return None if sp is None else (sp[0], sp[1], w, h)
         frames, s_last, ycur = [], 0.0, None
-        while L - s_last > pitch:
-            reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + pitch]
+        local_pitch = min(pitch, 325.0) if bid in elastic_bids else pitch
+        while L - s_last > local_pitch:
+            reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + local_pitch]
             if not reach:
                 nxt = [c for c in cands if c[0] > s_last + 1.0]
                 if not nxt:
@@ -1132,7 +1133,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM, native_elastic_relays=False):
     repaired, unrepaired = [], []
     for idx, pl in sorted(plans.items()):
         hs = hops_of(pl)
-        if max(hs) <= RMAX + 25.0:
+        local_max = 350.0 if pl['bid'] in elastic_bids else RMAX + 25.0
+        if max(hs) <= local_max:
             continue
         bits = pl['bits']
         w, h = relay_frame(bits, pl['cl'], pl['bid'])
@@ -1149,7 +1151,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM, native_elastic_relays=False):
                     lst = grid.get((gx, gy), [])
                     if r_ in lst:
                         lst.remove(r_)
-        D = RMAX - max(W, H) / 2 + 26.0
+        D = (350.0 if pl['bid'] in elastic_bids else RMAX) - max(W, H) / 2 + 26.0
         P0, P1 = pl['P0'], pl['P1']
         ctr = arr + np.array([W / 2, H / 2])
         ok_cache = {}
@@ -1180,7 +1182,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM, native_elastic_relays=False):
                 front = nxt[:4000]
             return hit, par, start
         hit, par, start = bfs(D)
-        if hit is None:
+        if hit is None and pl['bid'] not in elastic_bids:
             # end hops only: the measured closing span (430.56 um, corridor gate +11.9 ps at SS) when the pin's
             # neighbourhood is full
             hit, par, start = bfs(430.0 - max(W, H) / 2)

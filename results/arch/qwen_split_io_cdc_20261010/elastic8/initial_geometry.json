@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.qwen.native_elastic8.geometry_probe.v1",
+  "source_commit": "918015da4",
+  "plan_sha256": "3892618896e58619c47beabc00a5aeae79366e290b1d47f28c1a11fbfaab32bd",
+  "die": {
+    "w": 23484.384,
+    "h": 32801.76,
+    "mm2": 770.329,
+    "budget_mm2": 858,
+    "margin_mm2": 87.671
+  },
+  "paths": {
+    "seq_coll": {
+      "relays": 76,
+      "forward_cycles": 228,
+      "max_center_hop_um": 367.2
+    },
+    "coll_seq": {
+      "relays": 64,
+      "forward_cycles": 192,
+      "max_center_hop_um": 369.948
+    }
+  },
+  "gate": "actual larger-frame placement succeeds at inherited430.56um reach but center hop367/370um exceeds candidate350um constraint; preserved, successor tightens only native elastic paths"
+}
