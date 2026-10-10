@@ -114,6 +114,67 @@
           "results/rtl/mtp_takeover_20261010/native_directed_bus_binding_verified.json"
         ]
       }
+    },
+    {
+      "element": "ot_dsrom_markov_row_K256_PINREG1",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp-takeover-20261010",
+      "recorded_at": "2026-10-10T12:18:40.670270+00:00",
+      "description": "Legacy PINREG1 row closure superseded in execution by the full-K256 Markov head driver with IOREG1/RINGDLY1. rg1a/rg1s remain live; pin1a adds owner-standard pin anchoring and face-midpoint clock. Physical successor adoption pending; no closed alias yet.",
+      "source": {
+        "commit": "ef227c660",
+        "paths": [
+          "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv",
+          "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv",
+          "physical/dsrom_markov_head_driver/route.sh"
+        ]
+      },
+      "implementation": {
+        "status": "implemented in production driver; successor physical jobs active",
+        "evidence": [
+          "physical/dsrom_markov_head_driver/route.sh",
+          "tools/closure_loop/jobs/mtp-head340-mkdrv-pin1a-ef227c660-tc.json"
+        ]
+      },
+      "model": {
+        "status": "sized (K256,32 rows per driver,340 replicas)",
+        "evidence": [
+          "tools/dsrom_markov_model.py",
+          "results/rtl/mtp_takeover_20261010/head_pin_anchor_model.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "released-weight driver context passed; full K256",
+          "evidence": [
+            "results/rtl/mtp_head340_20261009/ringdly/rg_pos/verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "passed (three mutants fail)",
+          "evidence": [
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mut1/verdict.json",
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mut2/verdict.json",
+            "results/rtl/mtp_head340_20261009/ringdly/rg_mutring/verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending successor closure",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "ot_dsrom_markov_head_driver TT setup/FF hold/DRC closure at full K256",
+        "source-pinned successor view export",
+        "full340 head die inventory and identity join"
+      ],
+      "integration": {
+        "status": "successor driver binding planned; no physical adoption",
+        "evidence": [
+          "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv"
+        ]
+      }
     }
   ]
 }
