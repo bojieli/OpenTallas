@@ -460,6 +460,12 @@ def hgi_att_stager_model(**kwargs):
     return model(**kwargs)
 
 
+def hgi_att_selected_model():
+    """Explicit selected-C VM client and checked high-scratch allocation."""
+    from hgi_att_selected_model import model
+    return model()
+
+
 def mtp_hist_pipeline_contract_model():
     """Full 16-slot Engram history ring registered-boundary successor, sized before RTL."""
     from mtp_hist_pipeline_model import model

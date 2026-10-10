@@ -1,0 +1,14 @@
+{
+  "scope": "full H16 structural elaboration only; no gate pass",
+  "shape": {
+    "H": 16,
+    "D": 512,
+    "NL": 2
+  },
+  "process_peak_observed_RSS_KiB": 169029272,
+  "host_RAM_GiB": 188,
+  "host_MemAvailable_GiB": 15,
+  "reason": "elaboration RSS rapidly grew to169GB against188GB host, only15GB available and swap full; capacity-based stop to protect shared host; use measured>=192GB remote reservation for future H16 full elaboration",
+  "source": "a9bcfe9d0",
+  "RTL_error_claim": false
+}
