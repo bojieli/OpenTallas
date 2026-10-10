@@ -792,6 +792,26 @@ def tp_seq_vrl() -> str:
     return t
 
 
+def ctrl_skipmux(t: str) -> str:
+    """qwen-1010/a: the next-edge snapshot comparison without skip in its arithmetic (seq_su_bi_b-e261d6e89 post-CTS -468 on
+    d_wait_su -> odep -> skip -> 24-b o_cnt + skip -> subtract -> compare -> ready_q / osync_r).  Both candidates (count
+    and count + 1, the latter a register kept in step) are compared in parallel from registers; skip only selects.
+    Same values on every edge."""
+    t = one(t, "        else if (skip) o_cnt <= o_cnt + 1'b1;\n",
+            "        else if (skip) o_cnt <= o_cnt + 1'b1;\n"
+            "    reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step\n"
+            "    always @(posedge clk or negedge rst_n)\n"
+            "        if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};\n"
+            "        else if (skip) o_cnt1 <= o_cnt1 + 1'b1;\n"
+            "    wire [XW-1:0] o_dif0 = x_oacc - o_cnt, o_dif1 = x_oacc - o_cnt1;\n"
+            "    wire o_eq0 = (o_dif0 == {XW{1'b0}}), o_eq1 = (o_dif1 == {XW{1'b0}});\n"
+            "    wire o_pa0 = !o_eq0 && !o_dif0[XW-1], o_pa1 = !o_eq1 && !o_dif1[XW-1];\n")
+    t = one(t, "        else begin osync_r <= (o_dif_n == {XW{1'b0}}); opast_r <= (o_dif_n != {XW{1'b0}}) && !o_dif_n[XW-1]; end\n",
+            "        else begin osync_r <= skip ? o_eq1 : o_eq0; opast_r <= skip ? o_pa1 : o_pa0; end\n")
+    t = one(t, "    wire osync_n = (o_dif_n == {XW{1'b0}});", "    wire osync_n = skip ? o_eq1 : o_eq0;")
+    return t
+
+
 def ctrl_prl(t: str) -> str:
     """qwen-1010/a PRL: program read latency a parameter (prog_re -> prog_q edges; the base is 1).  The masters' program
     store is 64 x 1,024 configuration flops: seq_su_bi_b post-CTS -476 ps on prog_base -> add -> 64:1 x 1,024 read mux
@@ -825,7 +845,7 @@ def master_prl(t: str, base: str) -> str:
 def emit_seq_su_bi() -> str:
     """ot_qfd_seq_su_bi = ot_qfd_seq_su_boundary + ICUT + every pin station reset from the registered tile reset rs
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
-    t = ctrl_prl(ctrl_icut(emit_seq_su(boundary=True)))
+    t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_seq_su(boundary=True))))
     t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
     t = master_prl(t, "prog_base")
     t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
@@ -838,7 +858,7 @@ def emit_seq_su_bi() -> str:
 
 def emit_tt_ctlm_i() -> str:
     """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller"""
-    t = ctrl_prl(ctrl_icut(emit_tt_ctlm()))
+    t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_tt_ctlm())))
     t = t.replace("ot_qwen_rom_core_ctrl_x", "ot_qwen_rom_core_ctrl_x_i")
     t = master_prl(t, "q_prog_base")
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
