@@ -554,7 +554,7 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         # mtp-lead 2026-10-09: a CP band with its own pin record (MX1) overrides a planned dispatch pin's (fraction, pitch)
         # -- the plan's argmax span (0.50 x 1399.656, 2 tracks = 667-733 um) lies on MX1's f_loader pins
         ov_ = variant.get('cp_pin_override') or {}
-        if ov_:
+        if ov_ and 'hfd_cmdproc' in (variant.get('split_extra_ports') or {}):   # 'cp': one CP block, no MX1 band
             ex_ = {k: dict(x) for k, x in variant['split_extra_ports'].items()}
             for pn_, (frac_, pitch_) in ov_.items():
                 t_ = ex_['hfd_cmdproc'][pn_]

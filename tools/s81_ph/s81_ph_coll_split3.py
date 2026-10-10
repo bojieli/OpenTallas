@@ -60,7 +60,8 @@ def seam(pl, face, buses, start, step, flip):
     x = start
     for p, b, d in buses:
         dd = d if not flip else ('input' if d == 'output' else 'output')
-        x = pl.bus(p, b, dd, face, 'M5', x, step=step)
+        lo = 1 if p == 'bw_d' else 0          # bw_d is [2099:1] in the RTL (packer word without its valid bit)
+        x = pl.bus(p, b, dd, face, 'M5', x, step=step, lo=lo, n=b)
     return x
 
 
