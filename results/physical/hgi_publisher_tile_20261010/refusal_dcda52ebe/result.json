@@ -1,0 +1,11 @@
+{
+  "source_commit": "dcda52ebe",
+  "verdict": "SUBMIT_LINT_REFUSE",
+  "route_launched": false,
+  "reasons": [
+    "generic route_mtp recipe has no pin-plan estimate",
+    "registered_io true structural check exceeded built-in45s; explicit top/sources/params supplied"
+  ],
+  "resolution": "actualrawPI source fix and explicitroute_mastercfg; capacity-admitted fullstructuralcheck withnoarbitrarydeadline, neverwaive registeredIO",
+  "evidence_origin": "closure_loop validate returned exit1; failedcheck preserved"
+}

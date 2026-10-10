@@ -5,18 +5,19 @@
 module ot_hgi_coll_publish_fifo #(parameter integer ENABLE=0,W=544,CAP=128,MUT=0)(
  input wire clk,rst_n,push,pop,input wire[W-1:0] din,
  output wire valid,output wire[W-1:0] dout,output wire corrected,
- output reg fault,output wire[7:0] occupancy,
- output wire[((W+31)/32)*39-1:0]coded_head
+ output wire fault,output wire[7:0] occupancy,
+ output wire[((W+31)/32)*39-1:0]coded_head,output wire input_ready
 );
  localparam integer NW=(W+31)/32,EW=NW*39;
  reg[EW-1:0] din_p,raw_q,head[0:3];wire[EW-1:0]rd;
  reg[7:0] sc,si,total,ti;reg[6:0]wp,wi,rp,ri;
  reg[2:0]ocr,oi,hc,hi;reg[1:0]hp,hpi,ht,hti;
  reg pp,ppi,v1,v1i,v2,v2i;
+ reg faulti,fstate;
  wire corrupt=(sc^si)!=8'hff||(total^ti)!=8'hff||(wp^wi)!=7'h7f||
   (rp^ri)!=7'h7f||(ocr^oi)!=3'h7||(hc^hi)!=3'h7||
   (hp^hpi)!=2'h3||(ht^hti)!=2'h3||(pp^ppi)!=1'b1||
-  (v1^v1i)!=1'b1||(v2^v2i)!=1'b1||total>CAP||sc>128||hc>4||ocr>4||
+  (v1^v1i)!=1'b1||(v2^v2i)!=1'b1||(fstate^faulti)!=1'b1||total>CAP||sc>128||hc>4||ocr>4||
   total!=(integer'(sc)+integer'(hc)+integer'(pp)+integer'(v1)+integer'(v2))||
   integer'(ocr)+integer'(hc)+integer'(v1)+integer'(v2)!=4;
  wire safe=ENABLE!=0&&!fault&&!corrupt;
@@ -69,11 +70,13 @@ module ot_hgi_coll_publish_fifo #(parameter integer ENABLE=0,W=544,CAP=128,MUT=0
   wire[33:0] result=dec(head[hp][w*39+:39]);
   assign decoded[w*32+:32]=result[31:0];assign ce[w]=result[32];assign ue[w]=result[33];
  end
+ assign fault=fstate||corrupt||(hc!=0&&(|ue));
  assign valid=safe&&hc!=0&&!(|ue);
  assign dout=decoded[W-1:0];assign corrected=valid&&(|ce);assign occupancy=total;
  assign coded_head=head[hp];
  wire dp=pop&&valid;
  wire accept=push&&safe&&(total<CAP||dp);
+ assign input_ready=safe&&(total<CAP||dp);
  wire put=pp&&safe&&sc<128;
  wire fetch=safe&&sc!=0&&ocr!=0;
  wire hput=safe&&v2;
@@ -85,9 +88,9 @@ module ot_hgi_coll_publish_fifo #(parameter integer ENABLE=0,W=544,CAP=128,MUT=0
   if(!rst_n)begin
    sc<=0;si<=8'hff;total<=0;ti<=8'hff;wp<=0;wi<=7'h7f;rp<=0;ri<=7'h7f;
    ocr<=4;oi<=~3'd4;hc<=0;hi<=3'h7;hp<=0;hpi<=3;ht<=0;hti<=3;
-   pp<=0;ppi<=1;v1<=0;v1i<=1;v2<=0;v2i<=1;fault<=0;
+   pp<=0;ppi<=1;v1<=0;v1i<=1;v2<=0;v2i<=1;fstate<=0;faulti<=1;
   end else if(ENABLE!=0)begin
-   if(corrupt||(hc!=0&&(|ue))||(push&&!accept)||(pop&&!valid)||(pp&&sc==128)||(hput&&hc==4&&!dp))fault<=1;
+   if(corrupt||(hc!=0&&(|ue))||(push&&!accept)||(pop&&!valid)||(pp&&sc==128)||(hput&&hc==4&&!dp))begin fstate<=1;faulti<=0;end
    if(safe)begin
     sc<=sn;si<=~sn;total<=tn;ti<=~tn;wp<=wn;wi<=~wn;rp<=rn;ri<=~rn;
     ocr<=onext;oi<=~onext;hc<=hn;hi<=~hn;hp<=hpn;hpi<=~hpn;ht<=htn;hti<=~htn;

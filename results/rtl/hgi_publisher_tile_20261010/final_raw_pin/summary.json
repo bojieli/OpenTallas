@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS_COMPONENT_ONLY",
+  "default_enable": 0,
+  "capacity": {
+    "rawPI": 1,
+    "FIFO": 126,
+    "codedPO": 1,
+    "total": 128
+  },
+  "first_head_edges": 7,
+  "pops_exact": 380,
+  "sustained_fullrate_flits": 128,
+  "II_cycles": 1,
+  "input_boundary": "raw data capture before ECC encoding; holding PI slot mirrored-valid",
+  "output_boundary": "direct encoded663 output pin flops; correction at consumer capture",
+  "protected_flags": [
+    "corestickyfaultcomplement",
+    "tilestickyfaultcomplement",
+    "PIvalidcomplement",
+    "POvalidcomplement"
+  ],
+  "negative": "MUT2bypassegresspinflop failsfirstpacketafterfullhold",
+  "context_drain": "all rawPI/FIFO/pipeline/head/codedPO occupancy zero; actual consumerACKledger pending",
+  "physical_readiness": "explicitroute_master cfg360x220,3realmacros, pinplan544left663rightM5/M7; fullstructuralverdict pending after prior45scheckrefusal",
+  "rate_credit": false
+}

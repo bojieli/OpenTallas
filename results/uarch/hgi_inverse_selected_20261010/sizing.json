@@ -39,15 +39,29 @@
     "build_write": "one selected entry per issue, replicated to all four maps; bit-mask39 per record, full readiness guard after build",
     "provider_warning": "legacy native SRAM simulation model ignores w_mask_in; not usable for packed-map proof",
     "map_init": "no per-op full clear: overwrite every live owner and all K compact records before accepting delivery; slots outside owner count suppressed",
-    "build_cycles_conservative": 3280,
-    "build_cycle_basis": "two serialized R passes, three cycles per entry per pass including count read/modify/write and inverse publish; owner count initialization and prefix plus16 pipeline/drain",
-    "lookup_added_cycles": 8,
+    "build_cycles_base": 17104,
+    "build_cycles_conservative": 19152,
+    "build_cycle_basis": "measured registered macro builder2d47cd540: 30K+18G+16 base plus source stalls;34K+18G+16 conservative for tested Rresponsewait0..2, no normative sourcewait bound assumed",
+    "measured_build_points": [
+      {
+        "k": 2048,
+        "group": 96,
+        "cycles": 67263
+      },
+      {
+        "k": 512,
+        "group": 8,
+        "cycles": 16527
+      }
+    ],
+    "measured_build_point_basis": "two serialized real R request/response passes, responsewait0..2; observed32K+18G-1 at these points, not extrapolated source guarantee",
+    "lookup_added_cycles": 14,
     "finite_credit_candidate_per_lane": 128,
     "credit_register_bits": 65,
     "credit_control_protection": "8b remaining count and its complement per lane; mismatch blocks reservation combinationally and latches fault",
     "credit_added_pipeline_cycles": 0,
     "credit_epoch_completion": "opt-in DELCRED waits all128 credits per lane returned before next epoch or done; alwaysaccept transport measurements excluded this drain",
-    "credit_round_trip_basis": "35 forward wire +35 return wire +8 lookup +2 VM acknowledgement =80 cycles before arbitration; actual arbitration may extend it and stalls must be measured",
+    "credit_round_trip_basis": "35 forward wire +35 return wire +14 lookup +6 coded FIFO +minimum5 VM acknowledgement =95 cycles before arbitration/orderedretire; actual arbitration may extend it and stalls must be measured",
     "fifo_macro_count": 12,
     "fifo_macro_area_um2": 46698.92352,
     "fifo_protection": "512b payload as sixteen SECDED39 records +48b protected identity =672b; three256b macros per lane,128 entries",
@@ -113,15 +127,29 @@
     "build_write": "one selected entry per issue, replicated to all four maps; bit-mask39 per record, full readiness guard after build",
     "provider_warning": "legacy native SRAM simulation model ignores w_mask_in; not usable for packed-map proof",
     "map_init": "no per-op full clear: overwrite every live owner and all K compact records before accepting delivery; slots outside owner count suppressed",
-    "build_cycles_conservative": 12496,
-    "build_cycle_basis": "two serialized R passes, three cycles per entry per pass including count read/modify/write and inverse publish; owner count initialization and prefix plus16 pipeline/drain",
-    "lookup_added_cycles": 8,
+    "build_cycles_base": 63184,
+    "build_cycles_conservative": 71376,
+    "build_cycle_basis": "measured registered macro builder2d47cd540: 30K+18G+16 base plus source stalls;34K+18G+16 conservative for tested Rresponsewait0..2, no normative sourcewait bound assumed",
+    "measured_build_points": [
+      {
+        "k": 2048,
+        "group": 96,
+        "cycles": 67263
+      },
+      {
+        "k": 512,
+        "group": 8,
+        "cycles": 16527
+      }
+    ],
+    "measured_build_point_basis": "two serialized real R request/response passes, responsewait0..2; observed32K+18G-1 at these points, not extrapolated source guarantee",
+    "lookup_added_cycles": 14,
     "finite_credit_candidate_per_lane": 128,
     "credit_register_bits": 65,
     "credit_control_protection": "8b remaining count and its complement per lane; mismatch blocks reservation combinationally and latches fault",
     "credit_added_pipeline_cycles": 0,
     "credit_epoch_completion": "opt-in DELCRED waits all128 credits per lane returned before next epoch or done; alwaysaccept transport measurements excluded this drain",
-    "credit_round_trip_basis": "35 forward wire +35 return wire +8 lookup +2 VM acknowledgement =80 cycles before arbitration; actual arbitration may extend it and stalls must be measured",
+    "credit_round_trip_basis": "35 forward wire +35 return wire +14 lookup +6 coded FIFO +minimum5 VM acknowledgement =95 cycles before arbitration/orderedretire; actual arbitration may extend it and stalls must be measured",
     "fifo_macro_count": 12,
     "fifo_macro_area_um2": 46698.92352,
     "fifo_protection": "512b payload as sixteen SECDED39 records +48b protected identity =672b; three256b macros per lane,128 entries",

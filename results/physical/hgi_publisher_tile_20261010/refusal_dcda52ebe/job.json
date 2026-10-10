@@ -1,0 +1,99 @@
+{
+  "name": "hgi_publish_tile-dcda52ebe-tc-hm25-cl",
+  "block": "ot_hgi_coll_publish_tile",
+  "element": "HBM native gather protected publisher FIFO lane",
+  "owner": "Codex:hbm-row-gather",
+  "purpose": "Harden one full128-admitted-entry protected publisher lane;3realmacro encodedpayload663b, II1, protectedcontrol, directencoded outputpinflops;defaultoff, nativeconsumercontext stillpending.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc4",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "source": {
+    "branch": "codex/hgi-row-gather-20261010",
+    "commit": "dcda52ebe"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "full128_actualSRAM_II1",
+        "cmd": "iverilog -g2012 -s tb_hgi_coll_publish_tile -o {RUN}/pubpos.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_tile.sv rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_fifo.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_publish_tile.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv && vvp {RUN}/pubpos.vvp",
+        "expect": "pass",
+        "pass_regex": "PASS protected publisher tile popped=380 fullrate=128 firsthead6 total128",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "missingegresspin_negative",
+        "cmd": "iverilog -g2012 -s tb_hgi_coll_publish_tile -Ptb_hgi_coll_publish_tile.MUT=2 -o {RUN}/pubneg.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_tile.sv rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_fifo.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_publish_tile.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv && vvp {RUN}/pubneg.vvp",
+        "expect": "fail",
+        "fail_regex": "tilepayloadword0 index0",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.45 HM=0.025 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hgi_coll_publish_tile --source rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_tile.sv --source rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_fifo.sv --source rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv --param ENABLE=1 --param W=544 --param MUT=0 --clock-port clk --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 6 6 --die-area 0 0 360 220 --core-area 10.8 10.8 349.2 209.2",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    },
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.45 HM=0.025 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hgi_coll_publish_tile --source rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_tile.sv --source rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_fifo.sv --source rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv --param ENABLE=1 --param W=544 --param MUT=0 --clock-port clk --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 6 6 --die-area 0 0 360 220 --core-area 10.8 10.8 349.2 209.2 $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 8,
+      "peak_ram_gb": 40
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "route_corner": "TC",
+  "cycles_added": 6,
+  "notes": "Six edges push->coded outputpin; no ratecredit until exactfrontend/consumer/contextclosure.",
+  "merge_target": null,
+  "registered_io": true,
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/closure/hgi_publish_tile-dcda52ebe-tc-hm25-cl"
+    }
+  ],
+  "rtl_boundary": {
+    "top": "ot_hgi_coll_publish_tile",
+    "sources": [
+      "rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_tile.sv",
+      "rtl/hbm_accel/generic/collective/ot_hgi_coll_publish_fifo.sv",
+      "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+    ],
+    "params": {
+      "ENABLE": 1,
+      "W": 544,
+      "MUT": 0
+    }
+  }
+}
