@@ -65,6 +65,21 @@
             "job": "codex_idx_qend_clocksliver_8bbd0820a-tc-cl",
             "element": "hfd_idx_sel_native_qend",
             "scope": "Selector physical root fixes by structural_idle; native_clock32 successor contract"
+          },
+          {
+            "job": "hgi_idx_score_tap_lane4-83a41eefb-tc-cl",
+            "element": "hfd_idx_score_lane4",
+            "scope": "Physical full L4 tap parameter LANE0=4; shared live T4 arithmetic gate required before composite adoption"
+          },
+          {
+            "job": "hgi_idx_score_tap_lane8-83a41eefb-tc-cl",
+            "element": "hfd_idx_score_lane8",
+            "scope": "Physical full L4 tap parameter LANE0=8; shared live T4 arithmetic gate required before composite adoption"
+          },
+          {
+            "job": "hgi_idx_score_tap_lane12-83a41eefb-tc-cl",
+            "element": "hfd_idx_score_lane12",
+            "scope": "Physical full L4 tap parameter LANE0=12; shared live T4 arithmetic gate required before composite adoption"
           }
         ],
         "corners": {}

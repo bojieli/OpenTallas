@@ -26,7 +26,7 @@ module hfd_idx_score_native_t4 (
      .ikc(ikc[t*2 +:2]),.q(qi[t]),.qx(qx[t]),
      .s(scores[t*154 +:154]),.sc(score_credit[t]),.st(status[t]));
  end endgenerate
- hfd_idx_t4_join join(.ck(ck),.rst(rst),.taps(scores),
+ hfd_idx_t4_join u_join(.ck(ck),.rst(rst),.taps(scores),
    .tap_credit(score_credit),.s(s),.sc(sc),.fault(join_fault));
  // Status is an aggregate; the native boundary retains a registered status.
  reg [3:0] status_q;
