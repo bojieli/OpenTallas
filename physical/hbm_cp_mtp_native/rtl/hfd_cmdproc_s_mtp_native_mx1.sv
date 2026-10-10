@@ -163,7 +163,7 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
    else begin
     u_rdy_q<=f_hgi_argmax[0];
     b_v<=b_send;
-    b_hold<=b_send?2'd2:(b_hold==2'd0?2'd0:b_hold-2'd1);
+    b_hold<=b_send?2'd2:(b_hold==2'd0 ?2'd0:b_hold-2'd1);
     if (b_v) b_full<=1'b0; else if (am_ov&&b_take) b_full<=1'b1;
    end
   always @(posedge c) if (am_ov&&b_take) b_d<=am_od;
