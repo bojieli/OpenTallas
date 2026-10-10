@@ -1,0 +1,68 @@
+{
+  "verdict": "PASS",
+  "scope": "one actual256-sector bank; no physical timing/routing or system bandwidth qualification",
+  "golden_commit": "c4de95bd0",
+  "golden_path": "rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv",
+  "golden_functions_sha256": "1525a88d2e6fe60b99c5f662ccffe091c3b53a339edce6edffb070b57a54fe4d",
+  "baseline": {
+    "write_transactions": 602,
+    "read_transactions": 339,
+    "actual_rows": 256,
+    "single_bit_positions": 39,
+    "corrected_words_same_sector": 8,
+    "double_UE": "draining response returns golden rawword, stickyfault stopsadmission",
+    "controlfault": "one identity complementrail flip preventsmacrocommit andsuccessACK",
+    "default_ENABLE": 0
+  },
+  "negative_controls": {
+    "1": "disabled correction READ_EXACT failure",
+    "2": "ignoredmask READ_EXACT failure",
+    "3": "precommitACK WRITE_ACK_TIME_OR_ID failure",
+    "4": "wrongrow READ_EXACT failure",
+    "5": "wrongACKtag WRITE_ACK_TIME_OR_ID failure",
+    "6": "ignoredII2 WRITE_II failure"
+  },
+  "stages": {
+    "write_edges_including_acceptance": 5,
+    "write_elapsed_cycles": 4,
+    "write_commit_elapsed_cycles": 3,
+    "read_edges_including_acceptance": 6,
+    "read_elapsed_cycles": 5,
+    "read_macro_elapsed_cycles": 1,
+    "write_II": 2,
+    "read_II": 2
+  },
+  "RAW": "prioracceptedwrite reservesrow through actualmacrocommit; readandwriteacceptedtogetherreturnolddata; differentrows independent",
+  "macros": {
+    "count": 2,
+    "name": "ot_sram_1r1w_256x256_m2_r2c2",
+    "payload_and_sidecar_protected_bits": 312,
+    "total_storage_bits": 131072,
+    "payload_bits": 65536,
+    "macro_inventory_model_sha256": "f0e8d51af00ec806eddea2f031e4ecaab6316557c9c4a78c00827dc84323d2c5"
+  },
+  "physical_admitted": false,
+  "adopted": false,
+  "files": {
+    "build_m3.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "initial_lint_tool_failure.log": "d193c1929dfd9be48738717a2d834917b26f321ecbf4d7bef2d94145272712e2",
+    "build_m0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build_m1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_gate.py": "444cdbcc406b2ec573ebd599746f8bd5ddc191109cc39de17836e1af4b9a4040",
+    "run_m6.log": "39c655caa7d12395505770dd48a3a682a51ce2caae3dc44d3fd47ac5a60d0931",
+    "run_record.json": "08f45fa452976c089d9231cde0662abb0d1be01b474a28e5b91544e5f1f683a7",
+    "build_m6.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build_m5.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build_m4.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_m2.log": "c71f778cdc27d26987a1818e069f552c55fe9f2912a30ca6f6ccf8002f2df5f2",
+    "initial_test_delta_failure.log": "bb0a1efc37e7b868c1e193def593aad573ba4da6d47d8fcb526b26e0182ba19c",
+    "model_before_rtl.json": "68b73919a15afcd3705c628f28da0a070cb2d6c63f7c7f683407913d4c6d0214",
+    "run_m5.log": "9eb6090500e579f351f4dff26f91c0bb5e6e18dedbd14750ae6ad899e64862b9",
+    "run_m4.log": "c71f778cdc27d26987a1818e069f552c55fe9f2912a30ca6f6ccf8002f2df5f2",
+    "run_m1.log": "6b5dcb1c4d59f898ce5e4ef5c9c2950f99abde0637f0ec22e4b69c937ec177ee",
+    "build_m2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_m3.log": "043678501844ba417480d70ddb4d501eed86dadaccd29d8d66ff06f882c27c66",
+    "run_m0.log": "2f2ed6a4940d8726f6d2f2c38db428c00793ac230ec78daff6bb8c9e8753d042"
+  }
+}
