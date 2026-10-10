@@ -2,10 +2,11 @@
 `default_nettype none
 // One protected publisher lane. All128 admitted entries include input/read/head
 // stages. Data remains SECDED encoded through SRAM and prefetched flop heads.
-module ot_hgi_coll_publish_fifo #(parameter integer ENABLE=0,W=544,MUT=0)(
+module ot_hgi_coll_publish_fifo #(parameter integer ENABLE=0,W=544,CAP=128,MUT=0)(
  input wire clk,rst_n,push,pop,input wire[W-1:0] din,
  output wire valid,output wire[W-1:0] dout,output wire corrected,
- output reg fault,output wire[7:0] occupancy
+ output reg fault,output wire[7:0] occupancy,
+ output wire[((W+31)/32)*39-1:0]coded_head
 );
  localparam integer NW=(W+31)/32,EW=NW*39;
  reg[EW-1:0] din_p,raw_q,head[0:3];wire[EW-1:0]rd;
@@ -15,7 +16,7 @@ module ot_hgi_coll_publish_fifo #(parameter integer ENABLE=0,W=544,MUT=0)(
  wire corrupt=(sc^si)!=8'hff||(total^ti)!=8'hff||(wp^wi)!=7'h7f||
   (rp^ri)!=7'h7f||(ocr^oi)!=3'h7||(hc^hi)!=3'h7||
   (hp^hpi)!=2'h3||(ht^hti)!=2'h3||(pp^ppi)!=1'b1||
-  (v1^v1i)!=1'b1||(v2^v2i)!=1'b1||total>128||sc>128||hc>4||ocr>4||
+  (v1^v1i)!=1'b1||(v2^v2i)!=1'b1||total>CAP||sc>128||hc>4||ocr>4||
   total!=(integer'(sc)+integer'(hc)+integer'(pp)+integer'(v1)+integer'(v2))||
   integer'(ocr)+integer'(hc)+integer'(v1)+integer'(v2)!=4;
  wire safe=ENABLE!=0&&!fault&&!corrupt;
@@ -70,8 +71,9 @@ module ot_hgi_coll_publish_fifo #(parameter integer ENABLE=0,W=544,MUT=0)(
  end
  assign valid=safe&&hc!=0&&!(|ue);
  assign dout=decoded[W-1:0];assign corrected=valid&&(|ce);assign occupancy=total;
+ assign coded_head=head[hp];
  wire dp=pop&&valid;
- wire accept=push&&safe&&(total<128||dp);
+ wire accept=push&&safe&&(total<CAP||dp);
  wire put=pp&&safe&&sc<128;
  wire fetch=safe&&sc!=0&&ocr!=0;
  wire hput=safe&&v2;
@@ -98,7 +100,7 @@ module ot_hgi_coll_publish_fifo #(parameter integer ENABLE=0,W=544,MUT=0)(
  ot_hcoll_sram128 #(.W(EW)) mem(.clk(clk),.r_ce(fetch),.r_addr(rp),.rd(rd),
   .w_ce(put),.w_addr(wp),.wd(din_p));
 `ifndef SYNTHESIS
- initial if(W<1)$fatal(1,"publisher FIFO W must bepositive");
+ initial if(W<1||CAP<8||CAP>128)$fatal(1,"publisher FIFO W positive, CAP8..128");
 `endif
 endmodule
 `default_nettype wire

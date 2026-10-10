@@ -1,0 +1,33 @@
+{
+  "verdict": "PASS_COMPONENT_ONLY",
+  "default_enable": 0,
+  "core_capacity": 127,
+  "egress_capacity": 1,
+  "total_reserved_capacity": 128,
+  "egress": "encoded663b direct output pin flops; consumer corrects at own capture",
+  "first_head_edges": 6,
+  "pops_exact": 380,
+  "sustained_fullrate_flits": 128,
+  "II_cycles": 1,
+  "negative": "MUT2bypassegressflop failsfirstpacketafterfullhold",
+  "context_drain": "total/heads/pipeline/egress zero before context reuse; downstreamACKnotpartofthiscomponent",
+  "physical_ready": {
+    "top": "ot_hgi_coll_publish_tile",
+    "params": {
+      "ENABLE": 1,
+      "W": 544,
+      "MUT": 0
+    },
+    "macros": 3,
+    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+    "proposed_die_um": [
+      360,
+      220
+    ],
+    "input_face_bits": 544,
+    "output_face_bits": 663,
+    "pin_route_tracks_capacity": 2406,
+    "route_status": "NOT LAUNCHED"
+  },
+  "rate_credit": false
+}
