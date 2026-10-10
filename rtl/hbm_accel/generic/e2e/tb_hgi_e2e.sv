@@ -20,7 +20,8 @@
 // (closed by hgi-takeover: every unit has a die record bus; the real slots read their payload from it) DIE GAP was: the ux_* ports of ot_hgi_cp_die carried valid / ready / done / fault but no record
 // payload; the harness taps the sequencer's dispatch registers (cpd.u_cp.d_*) for ux units (a die-level bus is owed).
 module tb_hgi_e2e;
-    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0, REAL_ATT = 0;
+    parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0, REAL_ATT = 0, REAL_HC = 0;
+    parameter integer HC_W = 32, HC_MUT_POST = 0;   // REAL_HC: HCP lanes per group (8 W MAC lanes); bench mutant (pre without + hc_eps)
     parameter integer FUSED_SCRATCH = 256064;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
@@ -104,7 +105,7 @@ module tb_hgi_e2e;
     end
     // ---------------------------------------------------------------- unit slots
     localparam [15:0] REALM = (REAL_DMA ? 16'h0100 : 16'h0) | (REAL_IDX ? 16'h0200 : 16'h0) |
-                              (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0) | (REAL_ATT ? 16'h0020 : 16'h0);
+                              (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0) | (REAL_ATT ? 16'h0020 : 16'h0) | (REAL_HC ? 16'h0400 : 16'h0);
     localparam [15:0] REAL_UX = REALM & ~16'h0250;            // real units on ux_* ports
     wire [15:0] r_rdy, r_done, r_fault;                       // their handshakes
     assign r_rdy[1:0] = 2'b0; assign r_done[1:0] = 2'b0; assign r_fault[1:0] = 2'b0;
@@ -129,7 +130,29 @@ module tb_hgi_e2e;
 `else
     assign r_rdy[5] = 1'b0; assign r_done[5] = 1'b0; assign r_fault[5] = 1'b0;
 `endif
-    assign r_rdy[15:9] = 7'b0; assign r_done[15:9] = 7'b0; assign r_fault[15:9] = 7'b0;
+    assign r_rdy[9] = 1'b0; assign r_done[9] = 1'b0; assign r_fault[9] = 1'b0;
+    assign r_rdy[15:11] = 5'b0; assign r_done[15:11] = 5'b0; assign r_fault[15:11] = 5'b0;
+    // HC (unit 10, hgi-1010/g): the die body ot_hgi_hc_unit (record adapter + x staging + r25 HCP on 8 weight windows +
+    // post + r25 Sinkhorn + drain) on the die hc record bus, its VM packet client on the VM model, its HBM lane on an
+    // in-order KLAT model serving the HC weight sets (hcw.bin, tools/hgi_e2e/hc_weights.py)
+`ifdef E2E_HC
+    generate if (REAL_HC) begin : g_hc
+        wire [337:0] vq; wire [273:0] vr; wire hq_v, hq_rdy, hr_v; wire [34:0] hq_addr; wire [2:0] hq_len;
+        wire [4 + $clog2(128) - 1:0] hq_tag, hr_tag; wire [1:0] hr_beat; wire [255:0] hr_data;
+        ot_hgi_hc_unit #(.W(HC_W), .MUT_POST(HC_MUT_POST)) u_h (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(32'h358637BD),
+            .rec_v(hc_rec[0]), .rec_rdy(r_rdy[10]), .rec_hdr(hc_rec[128:1]), .rec_a(hc_rec[384:129]), .rec_b(hc_rec[640:385]),
+            .rec_o(hc_rec[896:641]), .rec_n_a(hc_rec[917:897]), .rec_n_o(hc_rec[938:918]), .rec_done(r_done[10]),
+            .rec_fault(r_fault[10]), .halted(), .vmq(vq), .vmr(vr), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr),
+            .hq_len(hq_len), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data));
+        hgi_e2e_vmc #(.UNIT(10), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
+        hgi_e2e_hc_hbm #(.LAT(KLAT), .TG(4 + $clog2(128))) u_hb (.clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy),
+            .req_sec(hq_addr), .req_len(hq_len), .req_tag(hq_tag), .rsp_v(hr_v), .rsp_tag(hr_tag), .rsp_beat(hr_beat), .rsp_d(hr_data));
+    end else begin : g_hc_stub
+        assign r_rdy[10] = 1'b0; assign r_done[10] = 1'b0; assign r_fault[10] = 1'b0;
+    end endgenerate
+`else
+    assign r_rdy[10] = 1'b0; assign r_done[10] = 1'b0; assign r_fault[10] = 1'b0;
+`endif
     // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
 `ifdef E2E_VEC
     generate if (REAL_SU) begin : g_su
@@ -237,7 +260,7 @@ module tb_hgi_e2e;
     reg q_inflight;                     // unit-4 record went to the real quant unit
     integer errs = 0, real_recs = 0, real_bad = 0, faults = 0, qs_busy = 0, qs_cnt = 0, qs_k = -1;
     function automatic integer is_real(input integer u, input integer quant_now);
-        is_real = (u == 8 && REAL_DMA != 0) || (u == 5 && REAL_ATT != 0) || (u == 9 && REAL_IDX != 0) || (u == 4 && quant_now != 0);
+        is_real = (u == 8 && REAL_DMA != 0) || (u == 5 && REAL_ATT != 0) || (u == 10 && REAL_HC != 0) || (u == 9 && REAL_IDX != 0) || (u == 4 && quant_now != 0);
     endfunction
     task automatic kpush(input integer u, input integer k); begin kq[u][kt[u] % 8] = k; kt[u] = kt[u] + 1; end endtask
     function automatic integer kpop(input integer u);
