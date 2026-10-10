@@ -113,6 +113,12 @@ def main():
         cases.append((entry, v['doorbell']['token'], v['doorbell']['pos'], die.get('rank', 0), cfg['cp_vocab'],
                       cfg['cp_ctx_max'], len(tr), cpl[0], cpl[1], 0xFFFF, first, 0))
         vmi += [(ci, a, x) for a, x in sorted(vm.items())]
+    mds = []
+    for c in cases:
+        mds += SV.G.d_pack(dict(magic=SV.G.MAGIC, ver_minor=SV.G.D_VERSION[1], ver_major=SV.G.D_VERSION[0],
+                                n_words=SV.G.NWORDS, cp_vocab=c[4], cp_ctx_max=c[5],
+                                coll_group_size=96 if c[4] == 129280 else 4, entry_ar=c[0], image_base=0x10, image_pages=1))
+    (T / 'hgi_seq_md_conf.mem').write_text('\n'.join(f'{x:08X}' for x in mds) + '\n')
     (T / 'hgi_seq_image_conf.mem').write_text('\n'.join(f'{w:032X}' for w in words) + '\n')
     (T / 'hgi_seq_expect_conf.mem').write_text('\n'.join(f'{x:064X}' for x in exp_lines) + '\n')
     (T / 'hgi_seq_cfg_conf.mem').write_text('\n'.join(' '.join(f'{x:08X}' for x in c) for c in cases) + '\n')

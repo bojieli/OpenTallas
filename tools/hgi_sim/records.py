@@ -33,19 +33,37 @@ SPEC_GAPS = [
     dict(id="G8-G14", item="DS native lowering items", status="resolved: QDQ ops, even-split gather, group reduce, "
          "per-die images, ATT B+C ring, IDX.EHASH, COLL.ROW_GATHER"),
     dict(id="C3b", item="indexed descriptors", status="resolved: MDESC indexed + I operand"),
-    # OPEN (found while moving the DS native lowering onto the approved encoding, 2026-10-09; sent to hbm-iface)
+    # RESOLVED (spec c80ed5d7c / 60e919ac4, reviews 08:40 / 10:45)
     dict(id="G15", item="IDX.TOPK output order: the approved order is descending score, but the DS router top-6 and "
          "the DS index top-512 select by rank comparators and emit ids in ASCENDING ID order, which is the golden's "
          "order (expert slot order, the route-weight sum order, the selected-row order); no order flag exists",
-         status="open; PROVISIONAL reading param[12] = 1 -> ids in ascending id order (machine.TOPK_ASC)"),
+         status="resolved (c80ed5d7c): param[12] order = 1 -> ascending id order, legal for k <= 8 only (E_RANGE "
+                "otherwise); the DS index top-512 is IDX.INDEX (ascending by construction)"),
     dict(id="G16", item="DS indexer engines (IDX.INDEX_Q, INDEX_SCORES, SELECT, the index TOPK and COLL.TOPK_MERGE "
          "of the candidate lists) keep their scores / candidates in the indexer engine's own buffers; section 6.7 "
          "defines no operands, param or immediates for them",
-         status="open; the DS lowering passes layer = imm_b, source layer = param, count = imm_a (DS engine fields)"),
+         status="resolved (60e919ac4, G18 indexer frame): ONE IDX.INDEX record per frame (k / cand_en / keep_en, "
+                "imm_a = n, imm_b = layer; A post-RoPE query, B scaled weights, C keep, O / R local selection "
+                "ascending, D candidates); RoPE + scale in SU records; COLL.TOPK_MERGE reads VM; IDX ops 1 / 3 E_RANGE"),
+    dict(id="G18a", item="IDX.INDEX keep_en: spec 6.6 calls C 'the keep bitmap (U32 words)', but no record produces a "
+         "bitmap from the layer-20 candidate merge (TOPK_MERGE writes ids ascending + values; no unit scatters ids "
+         "into bits)",
+         status="open (hgi-takeover); hbm-sim reading: C = the layer-20 merge table [row 0 block ids U32 | row 1 "
+                "values FP32] (TOPK_MERGE O | R); the engine keeps its owned blocks listed with value > -inf (the "
+                "golden cand_apply rule); D uses the same [ids | values] table layout"),
     dict(id="G17", item="ARGMAX.LOCAL id offset for DS: spec 5.4 lists DS imm_a = 0 (ids already global), but the "
          "DS head's even split (129,280 over 96: 1,346 or 1,347 rows) is not RANK x imm_a",
-         status="open; the DS lowering uses uniform 1,347-row head shards (rows are independent dots, so logits are "
-                "unchanged) and imm_a = 1,347"),
+         status="resolved (c80ed5d7c): DS ARGMAX imm_a = 1,347, uniform 1,347-row head shards"),
+    # OPEN (DFlash on Qwen3-8B, stream qwen-hbm-spec 2026-10-09; spec 7.4)
+    dict(id="G18", item="SM.MATVEC [4:2] positions - 1: the spec shares one weight read over P <= 8 slots, but the r25 "
+         "SM element ot_hbm_accel_smh carries op_rows/op_c/op_g/op_gs/op_fmt/op_xb and no slot count; whether one "
+         "issued line serves P x-fragments in the same beat is not benched",
+         status="open (hbm-forks): simulator implements P rows bit-exact; timing reports 'spec' (issue unchanged) and "
+                "'reissue' (issue x P) modes"),
+    dict(id="G19", item="ATT [3:0] head lanes cannot encode 16 (4 query heads x 4 verify slots)",
+         status="clarified: 0 encodes 16 (backward compatible; machine.py)"),
+    dict(id="Q-MTP-1", item="a verify step commits k = 1..ncol tokens but the completion carries one token",
+         status="proposed CTL.TOKX (cmdproc): A[0] = k, A[1..k] tokens -> k completion beats; simulated"),
 ]
 
 

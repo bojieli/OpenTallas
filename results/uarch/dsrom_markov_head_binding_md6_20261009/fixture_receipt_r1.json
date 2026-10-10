@@ -1,0 +1,22 @@
+{
+  "scope": "component-only known golden/backbone head activation; actual native DHEAD publisher/capture provenance unbound",
+  "production_MTP": false,
+  "head_ref_path": "/srv/opentallas-scratch/claude/md6-bundle-source/input/head_ref.npz",
+  "head_ref_sha256": "9b3502ec63d2931d20fb0f8d1dd30f35299898a0b8c82bb9baad15ff5e9f4a49",
+  "keys": [
+    "logits",
+    "xf"
+  ],
+  "xf_shape": [
+    5120
+  ],
+  "xf_dtype": "float32",
+  "xf_source_bytes_sha256": "5028b9d5752fc5e1332d37bce4661b16102a1561c1dface7eeb14eeaf42d028d",
+  "xf_float32_gate_sha256": "5028b9d5752fc5e1332d37bce4661b16102a1561c1dface7eeb14eeaf42d028d",
+  "xf_BF16_LE_gate_sha256": "c77cf83d5587d296b0247bb0260f4ae87fd32f9615f764d76836c0a5bd7481ba",
+  "xf_BF16_LE_bytes": 10240,
+  "embedding_token": 21946,
+  "embedding_bytes_sha256": "5f0a69bb44b4e3ba8a75e8f566def14733a5ccc4f80b0ee834d754a409d13fdc",
+  "activation_conversion": "same gate: xf.astype(float32).view(uint32)>>16 cast<u2; no norm fold",
+  "native_component_receipt": "results/uarch/dsrom_markov_head_binding_md6_20261009/fullbundle_r4/verdict.json source90a0ddeaa; actual4A+B+Markov roots/joins checked against per-case golden; not actual upstream DHEAD capture"
+}

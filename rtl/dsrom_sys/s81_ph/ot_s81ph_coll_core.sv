@@ -61,7 +61,11 @@ module ot_s81ph_coll_core #(
     // into 4 x 2,099 queue write enables in the cycle it arrives (dossier D: valid_out -> u_oq.m[2][480] -1,600).
     // room2 stays safe with one push in flight: room2(t) => n(t) <= D-2, so the in-flight push and this cycle's
     // push both fit.  Status (hv / room / room2) is taken from slice 0; the other slices are identical replicas.
-    parameter integer OQPIPE = 0
+    parameter integer OQPIPE = 0,
+    // QPIPE (cont-takeover 2026-10-09, default 0): every VM input queue drains into a 2-slot skid (ot_s81ph_skid2), so the
+    // engine / lane endpoints read queue words from flops, not through the queue's D:1 read mux (oqpipe-p4 pre-route
+    // -899 ps: g_q[0].u_q.rp -> 8:1 head mux -> u_eng FIFO SRAM wd_in, 2,542 endpoints).  +1 cycle per queue word.
+    parameter integer QPIPE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -124,9 +128,20 @@ module ot_s81ph_coll_core #(
     wire [W+33:0] q_hd [0:5];                              // {last, mode, tag, data}
     generate for (j = 0; j < 6; j = j + 1) begin : g_q
         wire psh = fv && ((j == 0) ? (ftype == 2'd1) : (ftype == 2'd2 && flink == j - 1));
+        if (QPIPE) begin : g_qp
+            wire f_hv, f_pop; wire [W+33:0] f_hd;
+            ot_s81ph_rfifo #(.W(W + 34), .D((j == 0) ? QD0 : QD)) u_q (.clk(clk), .rst_n(rst_n), .push(psh),
+                .wd({flast, fmode, ftag, fdata}), .pop(f_pop), .hv(f_hv), .hd(f_hd), .room(), .room2(),
+                .fault(q_flt[j]));
+            wire sk_ir;
+            assign f_pop = f_hv && sk_ir;
+            ot_s81ph_skid2 #(.W(W + 34)) u_qs (.clk(clk), .rst_n(rst_n), .in_v(f_hv), .in_r(sk_ir), .in_d(f_hd),
+                .out_v(q_hv[j]), .out_r(q_pop[j]), .out_d(q_hd[j]));
+        end else begin : g_qd
         ot_s81ph_rfifo #(.W(W + 34), .D((j == 0) ? QD0 : QD)) u_q (.clk(clk), .rst_n(rst_n), .push(psh),
             .wd({flast, fmode, ftag, fdata}), .pop(q_pop[j]), .hv(q_hv[j]), .hd(q_hd[j]), .room(), .room2(),
             .fault(q_flt[j]));
+        end
     end endgenerate
 
     // ------------------------------------------------------------------ links

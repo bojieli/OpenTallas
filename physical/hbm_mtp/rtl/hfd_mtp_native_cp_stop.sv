@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 `default_nettype none
 // Default-off wiring facade. Physical x-master closure does not qualify these bus pins.
-module hfd_mtp_native_cp_stop #(parameter integer ENABLE=0) (
+module hfd_mtp_native_cp_stop #(parameter integer ENABLE=0, parameter integer PRL=2) (
   input wire clk, input wire rst_n,
   input wire [196:0] f_cmdproc,
   output wire [516:0] t_cmdproc,
@@ -16,7 +16,7 @@ module hfd_mtp_native_cp_stop #(parameter integer ENABLE=0) (
     assign t_router = '0;
     assign t_coll = '0;
   end else begin: on
-    hfd_mtp_x_cp_stop #(.EXTERNAL_AM(1)) core (
+    hfd_mtp_x_cp_stop #(.EXTERNAL_AM(1),.PRL(PRL)) core (
       .clk(clk), .rst_n(rst_n),
       .start(f_cmdproc[0 +: 1]),
       .cfg_gamma(f_cmdproc[1 +: 4]),

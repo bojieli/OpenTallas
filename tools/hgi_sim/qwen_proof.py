@@ -171,7 +171,7 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
                 C.eq("layer", f"x_out L{i}", d, snaps[("x", i)][d].view(F), tr["x_layers"][i])
             r0, r1 = model.head_rows(d)
             vm = snaps["head_scale"][d]
-            C.eq("head+head_scale", "logits", d, vm[g.vm["LOG"]:g.vm["LOG"] + g.hrows].view(F), tr["logits"][r0:r1])
+            C.eq("head+head_scale", "logits", d, dies[d].stream_seen[1], tr["logits"][r0:r1])
         C.rows.append(dict(family="argmax_local+argmax_merge+end", what="token", die=-1, n=1,
                            bit_exact=int(tok) == int(tr["token"][0]), first_bad=None if int(tok) == int(tr["token"][0])
                            else [int(tok), int(tr["token"][0])]))
@@ -179,7 +179,7 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
         if stage == "head":
             r0, r1 = model.head_rows(d)
             vm = snaps["head_scale"][d]
-            C.eq("head+head_scale", "logits", d, vm[g.vm["LOG"]:g.vm["LOG"] + g.hrows].view(F), tr["logits"][r0:r1])
+            C.eq("head+head_scale", "logits", d, dies[d].stream_seen[1], tr["logits"][r0:r1])
             continue
         q, k, v = model.die_rows(d)
         rows = np.concatenate([q, k, v])

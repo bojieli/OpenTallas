@@ -44,7 +44,7 @@ KIND_OF = {      # master prefix -> view kind directory
     'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_vm_': 'vm', 'hfd_barrier': 'barrier',
     'hfd_loader': 'loader', 'hfd_router': 'router', 'hfd_quant': 'quant', 'hfd_sm': 'sm', 'hfd_stn_': 'stations',
     'hfd_mcast_': 'stations', 'hfd_gath_': 'stations', 'hfd_cdist_': 'stations', 'hfd_meso_': 'stations',
-    'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab'}
+    'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab', 'hfd_mtp': 'mtp'}
 
 
 def kind_of(master):
@@ -128,7 +128,7 @@ def derived_record(name):
     if alt:
         f = ROOT / 'physical/hbm_accel_die_views/svc' / alt / name / 'ports.json'
         if f.exists():
-            return json.loads(f.read_text())
+            return dict(json.loads(f.read_text()), _alt_split=alt)
     for f in sorted((ROOT / 'physical/hbm_accel_die_views').glob(f'*/split/{name}/ports.json')):
         return json.loads(f.read_text())
     return None
@@ -140,6 +140,10 @@ def master_record(name):
         # The same source-pinned native contract drives the first full-shape
         # hardening and the opt-in R25I placement; never synthesize fake peers.
         return d
+    if d is not None and d.get('_alt_split'):
+        # hbm-forks: an OT_SVC_SPLIT successor split (e.g. split_ps) is its own pin plan (wider ports than the legacy
+        # split the generator places): the committed record IS the expectation
+        return {k: v for k, v in d.items() if k != '_alt_split'}
     m, pw, M, real = model()
     if d is not None and name not in M:     # a split the generator does not place yet
         return d

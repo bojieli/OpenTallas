@@ -39,6 +39,23 @@ foreach i [$ws_blk getInsts] {
     if {![info exists ws_n($c)] || $k + 1 > $ws_n($c)} { set ws_n($c) [expr {$k + 1}] }
   }
 }
+# hbm-forks 2026-10-09: a one-stage chain's register drives the module output directly and synthesis names it after
+# that output (<chain>.q[*], <chain>.qv): those chains were never fenced (svc PS: the W/E cross-bus input stage of
+# c_sd / c_dd / c_wd chains sat at the destination unit, routed TT -47 .. -84 ps from the face pin).  Treat them as
+# the chain's LAST stage: N - 1 with N from its rv[] / st[] names (rv is one vector, every bit kept), stage 0 when the
+# chain has no other register (N = 1, rv itself renamed qv).
+array set ws_q {}
+foreach i [$ws_blk getInsts] {
+  set n [string map {"\\" ""} [$i getName]]
+  if {[regexp {^(c_[a-z]+[0-9]+_[0-9]+)\.(?:q\[[0-9]+\]|qv)} $n -> c] && [[$i getMaster] isSequential]} {
+    lappend ws_q($c) $i
+  }
+}
+foreach c [array names ws_q] {
+  set k [expr {[info exists ws_n($c)] ? $ws_n($c) - 1 : 0}]
+  foreach i $ws_q($c) { lappend ws_st($c,$k) $i; set ws_chain([$i getName]) $c }
+  set ws_n($c) [expr {$k + 1}]
+}
 proc ws_skip {n} {
   global ws_fan
   return [expr {$n eq "NULL" || [$n getSigType] in {POWER GROUND CLOCK RESET} || [llength [$n getITerms]] > $ws_fan + 1}]

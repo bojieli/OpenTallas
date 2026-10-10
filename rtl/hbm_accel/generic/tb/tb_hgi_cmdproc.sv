@@ -10,7 +10,7 @@
 // Prints HGI_CMDPROC PASS / FAIL.  Mutants: +define+OT_HGI_MUT_CRC / OT_HGI_MUT_RANGE (must FAIL).
 module tb_hgi_cmdproc;
 `include "ot_hgi_cfg_consts.svh"
-    localparam integer NSM = 16, NCASE = 17, REC = 74;
+    localparam integer NSM = 16, NCASE = 19, REC = 74;   // the hbm-sim CF-0 vectors (DS ok, Qwen ok first) + a Qwen reload
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
     reg cmd_we = 0; reg [8:0] cmd_addr = 0; reg [63:0] cmd_wdata = 0; reg units_busy = 0;
@@ -109,7 +109,7 @@ module tb_hgi_cmdproc;
             want_err = cs[c*REC + 64][3:0];
             for (j = 0; j < 9; j = j + 1) want[j*32 +: 32] = cs[c*REC + 65 + j];
             if (err !== want_err[2:0] || act9 !== want || cp_act !== want[63:0] ||
-                (want_err == 0 && (settle < 64 + 9 || !loaded))) begin
+                (want_err == 0 && (settle < 64 + 64 + 9 || !loaded))) begin   // 64-word check + 9-word broadcast + SETTLE 64
                 $display("FAIL cfg case %0d err %0d want %0d settle %0d loaded %b act_ok %b", c, err, want_err, settle, loaded,
                          act9 === want);
                 fails = fails + 1;

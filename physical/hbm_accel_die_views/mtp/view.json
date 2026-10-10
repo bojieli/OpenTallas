@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_mtp",
+ "kind": "mtp",
+ "status": "closed",
+ "lef": "hfd_mtp.lef",
+ "lib": {
+  "ss": "hfd_mtp_ss.lib",
+  "tt": "hfd_mtp_tt.lib",
+  "ff": "hfd_mtp_ff.lib"
+ },
+ "files_sha256": {
+  "hfd_mtp.lef": "6954ba3457ddb48f90879c3b7b1d5c3ff1e01f9257366a164fa3c3f6a3a7e9db",
+  "hfd_mtp_ss.lib": "0ef40f783faff987f36bb33629da5c7d75880af979d6c0dc3d6d224a4a7c1b44",
+  "hfd_mtp_tt.lib": "f9d2f04746f1c8be605e345b6e5b05535d35da014da412350a3a93153807ac7e",
+  "hfd_mtp_ff.lib": "6b92cf87c3ced4a546d790c747d14b3e6e96dcccef4375491e5bf1f85926166e"
+ },
+ "check": {
+  "verdict": "MISMATCH",
+  "positions": "exact",
+  "problems": [
+   "pins: 1319 missing, 1358 extra, 0 wrong face, 0 wrong layer"
+  ],
+  "obs_above_generator": [],
+  "pg_pins": {
+   "VDD": [
+    "M6"
+   ],
+   "VSS": [
+    "M6"
+   ]
+  },
+  "gen_pins": 1319,
+  "view_pins": 1358,
+  "missing": 1319,
+  "extra": 1358,
+  "moved": 0,
+  "wrong_layer": 0,
+  "wrong_face": 0,
+  "variant": "r25g"
+ },
+ "size_um": [
+  466.56,
+  200.88
+ ],
+ "renamed": {
+  "block_top": "hfd_mtp_x_stop",
+  "die_master": "hfd_mtp",
+  "how": "LEF MACRO / FOREIGN / END and the Liberty cell renamed hfd_mtp_x_stop -> hfd_mtp after export (text substitution only; library names hfd_mtp_{ss,tt,ff}); pins, geometry and arcs unchanged"
+ },
+ "source": {
+  "host": "ot-epyc2",
+  "route": "/srv/opentallas-data/claude/closure-loop/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc/routes/hfd_mtp_x_stop_nreg_hm10_7bebe74b7_tc/work/orfs",
+  "odb_sha256": "696aef85ea0b4983bc354b0ff5e939078dd4b623114251f9d74cce4f3552c7d6",
+  "spef_sha256": "21291be37f3eabdfec3ac00e62dccba062979a1053f325ae0cb2f81f3c17a301",
+  "sdc_sha256": "d1ce92c423f34c20e45bb29607ff7c310bf743c32b3137f36f793ba96e3d44a1",
+  "db": "post-hold-ECO 6_final.odb (cl/eco pass1, installed into the route work dir; sha matches corner_sta.json)",
+  "SOURCE_COMMIT": "7bebe74b7a70f5adcf6b38075996219947dddca6",
+  "source_branch": "claude/mtp-hfdpipe-20261009",
+  "setup_corner": "tt",
+  "ss_setup_ps": 17.39,
+  "tt_setup_ps": 17.39,
+  "ss_sensitivity_ps": -283.2,
+  "ff_hold_ps": 8.65,
+  "ss_setup_ps_note": "ss_setup_ps carries the OPTION-B TT setup figure (same convention as hbm_die_views.receipt_views); the true SS figure is ss_sensitivity_ps",
+  "closes_signoff_SS60_FF25": false,
+  "closes_optionB_TT_FF": true,
+  "clock_period_ns": 0.833,
+  "drc": 0,
+  "antenna": 0,
+  "cell_um2_pre_eco": 12363,
+  "seq_um2_pre_eco": 5151.22,
+  "core_um2": 92285.6,
+  "macro_um2": 0,
+  "eco_cells_added": 12719
+ },
+ "closure": {
+  "job": "hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc",
+  "status": "CLOSED",
+  "closed_at": "2026-10-09T16:53:28-07:00",
+  "verdict": "results/closure_loop/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc/verdict.json",
+  "record": "results/rtl/mtp_hfdpipe_20261009/routes/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc",
+  "acceptance": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0",
+  "tt_setup_ps": 17.39,
+  "ff_hold_ps": 8.65,
+  "ss_sensitivity_ps": -283.2,
+  "drc": 0,
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "cycles_added": "+1 per MTP step (S_STEP after a commit); 0 on the STOP-mode prefill path",
+  "gates": "exactness gates run outside the loop on this source (EPYC4 /srv/opentallas-scratch/claude/mtp-lead/hfdpipe: hbm_native_mtp_stop / core_stop / cp_result / cp_closed_mx1 / hgi_mtp_native gates, new vs old ctl_stop); record results/rtl/mtp_hfdpipe_20261009/gates.json"
+ },
+ "export": {
+  "tool": "tools/hbm_fmax_attn_abstract.py --tt (write_abstract_lef + write_timing_model per corner), image openroad/orfs:asap7lock, RVT only",
+  "sdc": "the route's own 6_final.sdc (same method as every other die view); the closure post_sdc set is NOT applied to the ETMs",
+  "raw_sdc_worst_slack_ps": {
+   "ss_setup": -346.2,
+   "tt_setup": -115.6,
+   "ff_hold": -100.8
+  },
+  "raw_sdc_note": "worst slack printed under 6_final.sdc alone (route SDC: 123 ps setup uncertainty, route-time IO budgets); the signoff figures are corner_sta.json under the post_sdc set",
+  "tcl": [
+   "export_hfd_mtp_ss.tcl",
+   "export_hfd_mtp_tt.tcl",
+   "export_hfd_mtp_ff.tcl"
+  ],
+  "log_dir": "ot-epyc2:/srv/opentallas-data/claude/hbm-die-views/mtp/view"
+ },
+ "wrapper": null,
+ "bench": "",
+ "note": "closed block timing (OPTION B, TT setup / FF hold); pin plan does NOT match the r25g generator master (see check / check.json findings): a die facade named hfd_mtp around hfd_mtp_x_stop with the generator pin plan (or a generator update to this ABI) is required before die binding",
+ "defects": [
+  "pin-check MISMATCH vs r25g hfd_mtp: 0 of 1,319 generator pins present (RTL port names vs f_*/t_* buses); tool-placed pins on S/N/E/W vs generator N face only",
+  "FF hold +8.65 ps is below the +15 ps design target (index reports closed-below-margin at best)"
+ ]
+}

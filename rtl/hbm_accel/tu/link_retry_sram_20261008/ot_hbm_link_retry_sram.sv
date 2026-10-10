@@ -6,7 +6,14 @@
 // Receiver landing credit bridge and physical SS/FF remain integration gates.
 module ot_hbm_link_retry_sram #(
  parameter ENABLE=0, W=551, SW=12, EW=16, DEPTH=512,
- parameter TIMEOUT=2048, MAX_RETRY=8
+ parameter TIMEOUT=2048, MAX_RETRY=8,
+ // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
+ // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
+ parameter NOEPOCH=0,
+ // HEAD_FREE (cont-takeover 2026-10-09, default 0): replay_head / head_seq load on every read response (no reset);
+ // head_valid alone carries the acceptance condition.  A read is requested only with head_valid low, so the overwrite
+ // never replaces a valid head.  Removes the 551-bit enable from the feedback -> rewind cone (TU -lkv pclk -499).
+ parameter HEAD_FREE=0
 )(
  input wire clk, rst_n, input wire [EW-1:0] session,
  input wire in_valid, output wire in_ready, input wire [W-1:0] in_data,
@@ -35,7 +42,7 @@ module ot_hbm_link_retry_sram #(
  wire [EW-1:0] read_epoch;
  wire request_read=ENABLE && replaying && !read_pending && !head_valid &&
                    write_guard==0 && !rewind && !fault && !replay_empty;
- ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH)) u_storage(
+ ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.NOEPOCH(NOEPOCH)) u_storage(
   .clk(clk),.rst_n(rst_n),.w_valid(ENABLE && accepted),.w_data(in_data),
   .w_seq(next_seq),.w_session(session),.r_valid(request_read),
   .r_seq(replay_seq),.r_session(session),.o_valid(read_response),
@@ -47,7 +54,7 @@ module ot_hbm_link_retry_sram #(
  integer timer, attempts;
  wire [SW-1:0] debt=next_seq-base;
  wire [SW-1:0] advance=fb_seq-base;
- wire feedback=fb_valid && fb_good && fb_session==session;
+ wire feedback=fb_valid && fb_good && (NOEPOCH || fb_session==session);
  wire ack_progress=feedback && advance!=0 && advance<=debt;
  wire stale=advance[SW-1];
  wire invalid_ack=feedback && advance>debt && !stale;
@@ -65,7 +72,7 @@ module ot_hbm_link_retry_sram #(
  assign tx_session=session;
  wire accepted=in_valid && in_ready;
  wire launched=tx_valid && tx_ready;
- wire current=rx_session==session;
+ wire current=NOEPOCH || rx_session==session;
  wire ordered=rx_seq==expected;
  wire [SW-1:0] rx_delta=rx_seq-expected;
  assign out_valid=!ENABLE ? rx_valid:rx_valid && current && !rx_ue && ordered && !fault;
@@ -78,6 +85,7 @@ module ot_hbm_link_retry_sram #(
   if(DEPTH<2 || (DEPTH & (DEPTH-1))!=0 || DEPTH>=(1<<(SW-1))) $fatal(1,"ambiguous replay window");
   if(TIMEOUT<1 || MAX_RETRY<1) $fatal(1,"invalid retry bound");
  end
+ always @(posedge clk) if(HEAD_FREE && ENABLE && read_response) begin replay_head<=read_data;head_seq<=read_seq; end
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
    base<=0; next_seq<=0; cursor<=0; expected<=0;
@@ -90,8 +98,9 @@ module ot_hbm_link_retry_sram #(
    if(read_response) begin
     read_pending<=0;
     if(read_ue) fault<=1;
-    else if(read_seq==cursor && read_epoch==session && !rewind) begin
-     replay_head<=read_data;head_seq<=read_seq;head_valid<=1;
+    else if(read_seq==cursor && (NOEPOCH || read_epoch==session) && !rewind) begin
+     if(!HEAD_FREE) begin replay_head<=read_data;head_seq<=read_seq; end
+     head_valid<=1;
     end
    end
    if(launched && replaying) head_valid<=0;

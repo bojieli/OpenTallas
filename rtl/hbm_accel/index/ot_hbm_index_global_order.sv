@@ -5,7 +5,11 @@
 // host operands, relabelling IDs, implied ACK or delay-derived publication.
 // strip-protect 2026-10-09 (REVIEW_20261009 S4/X3): PROTECT=0 (default) removes the rejected flop-level protection;
 // PROTECT=1 is the original, bit for bit.  Fault-free behaviour is identical (physical/strip_protect/bench.py).
-module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROTECT=0)(
+// FAST=1 (sys-takeover 2026-10-09, opt-in, needs PROTECT=0; default 0 = unchanged): the routed regbound wrapper failed
+// TT -157 / SS -611 on rank -> ordinal[rank] (96:1 mux) -> response match -> decision -> 96-way head/ordinal write
+// (28 levels).  FAST keeps a shadow cur_ord == ordinal[rank] (updated at every rank / ordinal[rank] change), a one-hot
+// copy of rank for the 96 write enables, and checks id%96 as {(id>>5)%3, id[4:0]} (base-4 digit sum).  Same cycles.
+module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROTECT=0,FAST=0)(
  input wire clk,por_n,start,output wire start_r,
  input wire [72:0] start_frame,input wire publication_complete,
  input wire owner_valid,input wire [72:0] owner_frame,
@@ -29,6 +33,18 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
  reg [33:0] head[0:95],head_n[0:95];
  reg [16:0] ordinal[0:95],ordinal_n[0:95];
  reg [95:0] valid,valid_n,last,last_n;
+ reg [16:0] cur_ord; reg [95:0] rank_oh;   // FAST shadows of ordinal[rank] and rank
+ // FAST=2 (sys-takeover, gorderscan_fast_a TT -123.75 / SS -569: selected -> ordinal[selected] (96:1) -> +1 / ==1379 /
+ // last[selected] -> 96-way ordinal write in EMIT, 27 levels): ordinal[selected], last[selected] and one-hot(selected)
+ // are captured on the edge into EMIT (selected is stable from SETTLE through EMIT); EMIT uses the captured copies.  0 cycles.
+ reg [16:0] sel_ord; reg sel_last; reg [95:0] sel_oh;
+ function automatic [6:0] mod96(input [16:0] id);   // id % 96 = {((id>>5) % 3), id[4:0]}
+  reg [11:0] q; reg [4:0] sum; reg [1:0] r3; integer d;
+  begin q=id[16:5]; sum=0; for(d=0;d<6;d=d+1) sum=sum+q[2*d+:2];   // 4 == 1 (mod 3)
+   r3=sum%3; mod96={r3,id[4:0]}; end
+ endfunction
+ wire [16:0] ord_rank=FAST?cur_ord:ordinal[rank];
+ wire id_rank_bad=FAST?(mod96(rsp_tuple[33:17])!=rank):(rsp_tuple[33:17]%17'd96!=rank);
  // Nodes contain {valid,rank7,id17}. Each level registers its predecessor.
  wire [24:0] tree[0:95],tree_n[0:95];
  function automatic [24:0] lower(input [24:0] a,b);
@@ -52,9 +68,9 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
  wire enabled=ENABLE&&codes_ok&&state!=FAULT;
  assign start_r=enabled&&state==IDLE&&publication_complete&&owner_valid;
  assign read_v=enabled&&lease_ok&&(state==INITREQ||state==REFILLREQ);
- assign read_frame=frame;assign read_rank=rank;assign read_ordinal=ordinal[rank];
+ assign read_frame=frame;assign read_rank=rank;assign read_ordinal=ord_rank;
  wire response_match=(state==INITWAIT||state==REFILLWAIT)&&rsp_frame==frame&&
-                     rsp_rank==rank&&rsp_ordinal==ordinal[rank];
+                     rsp_rank==rank&&rsp_ordinal==ord_rank;
  assign rsp_r=enabled&&lease_ok&&response_match;
  assign out_v=enabled&&lease_ok&&state==EMIT&&winner[24]&&selected<96;
  assign out_tuple=selected<96?head[selected]:34'd0;
@@ -62,6 +78,9 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
  assign retained=ENABLE&&state!=IDLE;
  assign done=enabled&&lease_ok&&state==DONE;
  assign fault=ENABLE&&(!codes_ok||state==FAULT);
+ generate if(FAST!=0&&PROTECT!=0)begin:g_fast_needs_unprotected
+  initial $fatal(1,"FAST=1 requires PROTECT=0 (no mirror of the shadows)");
+ end endgenerate
  generate if(!STATIC_SCAN)begin:g_tournament
  for(genvar l=0;l<7;l=l+1)begin:g_level
   localparam integer NI=(96+(1<<l)-1)>>l;
@@ -97,7 +116,7 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
    rank<=0;rank_n<=~7'd0;wait_edges<=0;wait_edges_n<=~4'd0;
    previous<=0;previous_n<=~17'd0;previous_v<=0;previous_v_n<=1;
    scan_block<=0;scan_block_n<=~18'd0;scan_rank<=0;scan_rank_n<=~7'd0;
-   valid<=0;valid_n<=~96'd0;last<=0;last_n<=~96'd0;
+   valid<=0;valid_n<=~96'd0;last<=0;last_n<=~96'd0;cur_ord<=0;rank_oh<=96'd1;
    for(i=0;i<96;i=i+1)begin head[i]<=0;head_n[i]<=~34'd0;
     ordinal[i]<=0;ordinal_n[i]<=~17'd0;end
   end else if(ENABLE)begin
@@ -106,7 +125,7 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
    end else case(state)
     IDLE:if(start&&start_r)begin
      if(start_frame!=owner_frame)begin state<=FAULT;state_n<=~FAULT;end
-     else begin frame<=start_frame;frame_n<=~start_frame;rank<=0;rank_n<=~7'd0;
+     else begin frame<=start_frame;frame_n<=~start_frame;rank<=0;rank_n<=~7'd0;cur_ord<=0;rank_oh<=96'd1;
       valid<=0;valid_n<=~96'd0;previous_v<=0;previous_v_n<=1;
       scan_block<=0;scan_block_n<=~18'd0;scan_rank<=0;scan_rank_n<=~7'd0;
       for(i=0;i<96;i=i+1)begin ordinal[i]<=0;ordinal_n[i]<=~17'd0;end
@@ -117,22 +136,29 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
     INITWAIT,REFILLWAIT:if(rsp_v&&rsp_r)begin
      if((rsp_empty&&!rsp_last)||(!rsp_empty&&rsp_tuple[0]&&(
           (rsp_tuple[15:8]==8'hff&&|rsp_tuple[7:1])||
-          (rsp_tuple[33:17]%17'd96!=rank)||
+          id_rank_bad||
           (rsp_tuple[33:17]>frame[72:56])||
           (previous_v&&rsp_tuple[33:17]<=previous))))begin
       state<=FAULT;state_n<=~FAULT;
      end else if(!rsp_empty&&!rsp_tuple[0]&&!rsp_last)begin
       // Explicit invalid slots (including quarter padding) consume actual
       // storage ordinals. They neither terminate a rank nor become candidates.
-      if(ordinal[rank]==1379)begin state<=FAULT;state_n<=~FAULT;end
-      else begin ordinal[rank]<=ordinal[rank]+1'b1;ordinal_n[rank]<=~(ordinal[rank]+1'b1);
+      if(ord_rank==1379)begin state<=FAULT;state_n<=~FAULT;end
+      else begin cur_ord<=ord_rank+1'b1;
+       if(FAST)begin for(i=0;i<96;i=i+1)if(rank_oh[i])ordinal[i]<=cur_ord+1'b1;end
+       else begin ordinal[rank]<=ordinal[rank]+1'b1;ordinal_n[rank]<=~(ordinal[rank]+1'b1);end
        state<=(state==INITWAIT)?INITREQ:REFILLREQ;
        state_n<=~((state==INITWAIT)?INITREQ:REFILLREQ);end
      end else begin
+      if(FAST)begin for(i=0;i<96;i=i+1)if(rank_oh[i])begin head[i]<=rsp_tuple;
+        valid[i]<=!rsp_empty&&rsp_tuple[0];last[i]<=rsp_last;end end
+      else begin
       head[rank]<=rsp_tuple;head_n[rank]<=~rsp_tuple;
       valid[rank]<=!rsp_empty&&rsp_tuple[0];valid_n[rank]<=rsp_empty||!rsp_tuple[0];
       last[rank]<=rsp_last;last_n[rank]<=!rsp_last;
+      end
       if(state==INITWAIT&&rank!=95)begin rank<=rank+1'b1;rank_n<=~(rank+1'b1);
+       cur_ord<=0;rank_oh<={rank_oh[94:0],1'b0};   // INIT: every rank above the current one is still at ordinal 0
        state<=INITREQ;state_n<=~INITREQ;end
       else begin wait_edges<=7;wait_edges_n<=~4'd7;state<=SETTLE;state_n<=~SETTLE;end
      end
@@ -140,7 +166,7 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
     SETTLE:if(STATIC_SCAN)begin
       if(scan_block>{1'b0,frame[72:56]})begin state<=DONE;state_n<=~DONE;end
       else if(winner[24]&&{1'b0,winner[16:0]}<scan_block)begin state<=FAULT;state_n<=~FAULT;end
-      else if(winner[24]&&{1'b0,winner[16:0]}==scan_block)begin state<=EMIT;state_n<=~EMIT;end
+      else if(winner[24]&&{1'b0,winner[16:0]}==scan_block)begin state<=EMIT;state_n<=~EMIT;sel_ord<=ordinal[selected];sel_last<=last[selected];for(i=0;i<96;i=i+1)sel_oh[i]<=(selected==i);end
       else begin scan_block<=scan_block+1'b1;scan_block_n<=~(scan_block+1'b1);
        scan_rank<=(scan_rank==95)?7'd0:scan_rank+1'b1;
        scan_rank_n<=~((scan_rank==95)?7'd0:scan_rank+1'b1);end
@@ -148,17 +174,26 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
      wait_edges_n<=~(wait_edges-1'b1);end
      else if(!winner[24])begin state<=DONE;state_n<=~DONE;end
      else if(selected>=96||(previous_v&&winner[16:0]<=previous))begin state<=FAULT;state_n<=~FAULT;end
-     else begin state<=EMIT;state_n<=~EMIT;end
+     else begin state<=EMIT;state_n<=~EMIT;sel_ord<=ordinal[selected];sel_last<=last[selected];for(i=0;i<96;i=i+1)sel_oh[i]<=(selected==i);end
     EMIT:if(out_v&&out_r)begin
      if(STATIC_SCAN)begin scan_block<=scan_block+1'b1;scan_block_n<=~(scan_block+1'b1);
       scan_rank<=(scan_rank==95)?7'd0:scan_rank+1'b1;
       scan_rank_n<=~((scan_rank==95)?7'd0:scan_rank+1'b1);end
      previous<=winner[16:0];previous_n<=~winner[16:0];previous_v<=1;previous_v_n<=0;
+     if(FAST>=2)begin
+      for(i=0;i<96;i=i+1)if(sel_oh[i])valid[i]<=0;
+      if(sel_last)begin wait_edges<=7;wait_edges_n<=~4'd7;state<=SETTLE;state_n<=~SETTLE;end
+      else if(sel_ord==1379)begin state<=FAULT;state_n<=~FAULT;end
+      else begin rank<=selected;for(i=0;i<96;i=i+1)if(sel_oh[i])ordinal[i]<=sel_ord+1'b1;
+       cur_ord<=sel_ord+1'b1;rank_oh<=sel_oh;state<=REFILLREQ;state_n<=~REFILLREQ;end
+     end else begin
      valid[selected]<=0;valid_n[selected]<=1;
      if(last[selected])begin wait_edges<=7;wait_edges_n<=~4'd7;state<=SETTLE;state_n<=~SETTLE;end
      else if(ordinal[selected]==1379)begin state<=FAULT;state_n<=~FAULT;end
      else begin rank<=selected;rank_n<=~selected;ordinal[selected]<=ordinal[selected]+1'b1;
+      cur_ord<=ordinal[selected]+1'b1;for(i=0;i<96;i=i+1)rank_oh[i]<=(selected==i);
       ordinal_n[selected]<=~(ordinal[selected]+1'b1);state<=REFILLREQ;state_n<=~REFILLREQ;end
+     end
     end
     DONE:begin state<=IDLE;state_n<=~IDLE;end
     FAULT:begin state<=FAULT;state_n<=~FAULT;end

@@ -3,17 +3,17 @@
  "die": "qwen_kv",
  "top_fix": false,
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "f8e03c8e0a70eb5e7633b756ce8bc1898a640e92c3926be0619a83166102df40",
+ "generator_sha256": "cff37f27730ac78e7baae81960cb6ce3754af375838d39da5799ba0bbaf2ff9f",
  "generator_tag": {
   "file": "tools/qwen_kv_die/kv_die.py",
-  "sha256": "f8e03c8e0a70eb5e7633b756ce8bc1898a640e92c3926be0619a83166102df40",
-  "tree_head": "135e277ecf3e8c3c827a0fc8b603966cda9d3f4e",
-  "file_commit": "b4617e33b6989e575c2df7c0e3fc728eafbfa381"
+  "sha256": "cff37f27730ac78e7baae81960cb6ce3754af375838d39da5799ba0bbaf2ff9f",
+  "tree_head": "c21dc8973ab62f00120d409127c19762e73ad92c",
+  "file_commit": "c21dc8973ab62f00120d409127c19762e73ad92c"
  },
  "qwen_source": null,
  "qwen_recipe": null,
  "pin_fit_errors": {},
- "lint_tool_sha256": "96106938d8e90a6c7a7e7e56e628e7612ef6b631fd84fc7dff0cc3cdedb51451",
+ "lint_tool_sha256": "ea9f9d1130fc83e5c84bb0803b3feeb473bea4e674fde2b23438507a9b8c25d5",
  "variant": null,
  "census": {
   "instances": 988,
@@ -56,16 +56,7 @@
   }
  },
  "connectivity": [],
- "unbound_real_pins": [
-  {
-   "master": "ot_hbm3e_phy",
-   "port": "rsp_data",
-   "insts": 4,
-   "bits": 8,
-   "dir": "output",
-   "width": 8192
-  }
- ],
+ "unbound_real_pins": [],
  "placeholder_port_direction_conflicts": {},
  "clocking": [
   {
@@ -598,7 +589,7 @@
     "port": "phy",
     "face": "W",
     "span_um": 1767.6,
-    "peer_manhattan_um": 0.5,
+    "peer_manhattan_um": 0.8,
     "bits": 9207
    },
    {
@@ -609,7 +600,7 @@
     "port": "dfi",
     "face": "E",
     "span_um": 1767.6,
-    "peer_manhattan_um": 0.5,
+    "peer_manhattan_um": 0.8,
     "bits": 9207
    },
    {
@@ -620,7 +611,7 @@
     "port": "phy",
     "face": "W",
     "span_um": 1767.6,
-    "peer_manhattan_um": 0.5,
+    "peer_manhattan_um": 0.8,
     "bits": 9207
    },
    {
@@ -631,7 +622,7 @@
     "port": "dfi",
     "face": "E",
     "span_um": 1767.6,
-    "peer_manhattan_um": 0.5,
+    "peer_manhattan_um": 0.8,
     "bits": 9207
    },
    {
@@ -642,7 +633,7 @@
     "port": "phy",
     "face": "E",
     "span_um": 1767.6,
-    "peer_manhattan_um": 0.2,
+    "peer_manhattan_um": 0.6,
     "bits": 9207
    },
    {
@@ -653,7 +644,7 @@
     "port": "dfi",
     "face": "W",
     "span_um": 1767.6,
-    "peer_manhattan_um": 0.2,
+    "peer_manhattan_um": 0.6,
     "bits": 9207
    },
    {
@@ -664,7 +655,7 @@
     "port": "phy",
     "face": "E",
     "span_um": 1767.6,
-    "peer_manhattan_um": 0.2,
+    "peer_manhattan_um": 0.6,
     "bits": 9207
    },
    {
@@ -675,19 +666,8 @@
     "port": "dfi",
     "face": "W",
     "span_um": 1767.6,
-    "peer_manhattan_um": 0.2,
+    "peer_manhattan_um": 0.6,
     "bits": 9207
-   },
-   {
-    "bus": "host_fdi",
-    "cls": "d2d_fdi",
-    "inst": "serdes_host",
-    "master": "ot_qfd_serdes_112g_x12_phy",
-    "port": "fdi",
-    "face": "N",
-    "span_um": 400.1,
-    "peer_manhattan_um": 2.6,
-    "bits": 2085
    },
    {
     "bus": "el_WS_0",
@@ -696,7 +676,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -707,7 +687,7 @@
     "master": "qkd_astk",
     "port": "e0i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -718,7 +698,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -729,7 +709,7 @@
     "master": "qkd_astk",
     "port": "e1i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -740,7 +720,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -751,7 +731,7 @@
     "master": "qkd_astk",
     "port": "e2i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -762,7 +742,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -773,7 +753,7 @@
     "master": "qkd_astk",
     "port": "e3i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -784,7 +764,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -795,7 +775,7 @@
     "master": "qkd_astk",
     "port": "e4i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -806,7 +786,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -817,7 +797,7 @@
     "master": "qkd_astk",
     "port": "e5i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -828,7 +808,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -839,7 +819,7 @@
     "master": "qkd_astk",
     "port": "e6i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -850,7 +830,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -861,7 +841,7 @@
     "master": "qkd_astk",
     "port": "e7i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -872,7 +852,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -883,7 +863,7 @@
     "master": "qkd_astk",
     "port": "e0i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -894,7 +874,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -905,7 +885,7 @@
     "master": "qkd_astk",
     "port": "e1i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -916,7 +896,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -927,7 +907,7 @@
     "master": "qkd_astk",
     "port": "e2i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -938,7 +918,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -949,7 +929,7 @@
     "master": "qkd_astk",
     "port": "e3i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -960,7 +940,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -971,7 +951,7 @@
     "master": "qkd_astk",
     "port": "e4i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -982,7 +962,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -993,7 +973,7 @@
     "master": "qkd_astk",
     "port": "e5i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1004,7 +984,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1015,7 +995,7 @@
     "master": "qkd_astk",
     "port": "e6i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1026,7 +1006,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1037,7 +1017,7 @@
     "master": "qkd_astk",
     "port": "e7i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1048,7 +1028,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1059,7 +1039,7 @@
     "master": "qkd_astk",
     "port": "e0i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1070,7 +1050,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1081,7 +1061,7 @@
     "master": "qkd_astk",
     "port": "e1i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1092,7 +1072,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1103,7 +1083,7 @@
     "master": "qkd_astk",
     "port": "e2i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1114,7 +1094,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1125,7 +1105,7 @@
     "master": "qkd_astk",
     "port": "e3i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1136,7 +1116,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1147,7 +1127,7 @@
     "master": "qkd_astk",
     "port": "e4i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1158,7 +1138,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1169,7 +1149,7 @@
     "master": "qkd_astk",
     "port": "e5i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1180,7 +1160,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1191,7 +1171,7 @@
     "master": "qkd_astk",
     "port": "e6i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1202,7 +1182,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1213,7 +1193,7 @@
     "master": "qkd_astk",
     "port": "e7i",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    },
@@ -1224,7 +1204,7 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1235,7 +1215,7 @@
     "master": "qkd_astk",
     "port": "e0i",
     "face": "W",
-    "span_um": 289.3,
+    "span_um": 578.6,
     "peer_manhattan_um": 0.6,
     "bits": 4521
    },
@@ -1246,7 +1226,18 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 289.3,
+    "span_um": 578.6,
+    "peer_manhattan_um": 0.7,
+    "bits": 4521
+   },
+   {
+    "bus": "el_EN_1",
+    "cls": "stack_local",
+    "inst": "astk_EN",
+    "master": "qkd_astk",
+    "port": "e1i",
+    "face": "W",
+    "span_um": 578.6,
     "peer_manhattan_um": 0.7,
     "bits": 4521
    }
@@ -1507,7 +1498,7 @@
  "verilog": {
   "top": "qwen_kv_lint_top",
   "stubs": 22,
-  "nc_wires": 8,
+  "nc_wires": 0,
   "filelist": "qwen_kv_lint_top.f",
   "rtl_files": 2,
   "unresolved_modules": []

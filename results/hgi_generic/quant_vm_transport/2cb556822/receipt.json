@@ -1,0 +1,63 @@
+{
+  "source": "2cb556822",
+  "functional_RTL": "a63e77167",
+  "core_source": "b827340df",
+  "host": "ot-epyc3",
+  "admission_estimate_GiB": 4,
+  "driver_pid": 1162560,
+  "driver_terminal": true,
+  "driver_rc": 0,
+  "positive": {
+    "cases": 458,
+    "words": 10768,
+    "released_golden_beats": 184,
+    "E4_half_tail": 16,
+    "E4_full_plus_half_tail": 48,
+    "credit_stress_words": 2048,
+    "read_write_stalls": true,
+    "actual_write_ACK_delay": true,
+    "fault_cases": [
+      "provider fault with pendingread drained",
+      "tagmismatch drained",
+      "arithmetic NaN fault with23edge retirement drained",
+      "idle coldreset ready/drained"
+    ],
+    "multirow_strided": true,
+    "unaligned_base": true,
+    "input_broadcast": true,
+    "inplace_same_geometry": true,
+    "illegal_E4_block_params_rejected_before_allocation": 255,
+    "nonfinite_cases": [
+      "NaN",
+      "positiveInf",
+      "negativeInf"
+    ]
+  },
+  "mutants": {
+    "drop_vo": {
+      "rc": 134,
+      "checker": "DROP/CREDIT timeout"
+    },
+    "early_done": {
+      "rc": 134,
+      "checker": "EARLY_DONE actualACK accounting"
+    },
+    "credit_overflow": {
+      "rc": 134,
+      "checker": "WRITE mismatch realqueueoverflow at2048wordrecord"
+    }
+  },
+  "SHA256": {
+    "m0.log": "02d3e550dbec7dd40b164be9ece05a8c3adba6374fed0a641b9b0fa8ebbb60fd",
+    "m3.log": "39de50ee17a3909041484bda7d228d74330bc3ad020e80d6b31007fa4cb649a6",
+    "bench.driver.log": "329acb6f78d3b38db38fc678c3aac230f2362b9ff97b17daec4aacc1e370beee",
+    "m1.log": "2d7e4cf0637867b015a28bcd9093282dbc28b334d534e8b2c5abd3d88dcb38b2",
+    "m2.log": "3c0adace23f74766434c8bd8701c90a64899f59ff701b9dba165b6ba724ebb2d"
+  },
+  "limits": [
+    "partialoverlap/samegeometryaliasedrows policyoutstanding",
+    "physicalVMproducer bindingClaudeGH-d outstanding",
+    "combinedstream1p2 TT/FF/DRC gatesnotyetproven"
+  ],
+  "rss_note": "driver GNUtime peak is measured singleprocess/tree inherited maximum, not simultaneous wholePG sum"
+}

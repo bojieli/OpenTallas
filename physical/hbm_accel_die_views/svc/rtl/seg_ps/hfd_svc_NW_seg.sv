@@ -62,6 +62,6 @@ module hfd_svc_NW_seg (
   hfd_svc_SW_s4 u_s4 (.phy(phy[14773:12908]), .ck(ck), .rst(rst), .wi(xr3), .wo(xl3), .eo(xr4), .ei(xl4));
   hfd_svc_SW_s5 u_s5 (.l5(lsm18), .q5(qsm18), .ks5(ks5), .kq5(kq5), .phy(phy[17261:14774]), .ck(ck), .rst(rst), .wi(xr4), .wo(xl4), .eo(xr5), .ei(xl5));
   hfd_svc_SW_s6 u_s6 (.l6(lsm23), .q6(qsm23), .ks6(ks6), .kq6(kq6), .phy(phy[19749:17262]), .ck(ck), .rst(rst), .wi(xr5), .wo(xl5), .eo(xr6), .ei(xl6));
-  hfd_svc_SW_s7 u_s7 (.l7(lsm19), .q7(qsm19), .ck(ck), .rst(rst), .ks7(ks7), .kq7(kq7), .phy(phy[22237:19750]), .wi(xr6), .wo(xl6));
+  hfd_svc_SW_s7 u_s7 (.l7(lsm19), .q7(qsm19), .ks7(ks7), .kq7(kq7), .phy(phy[22237:19750]), .ck(ck), .rst(rst), .wi(xr6), .wo(xl6));
 endmodule
 `default_nettype wire

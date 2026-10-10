@@ -37,11 +37,18 @@ def sv_ports(path, module):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--variant', default='r25g4m', choices=['r25gm', 'r25g4m'])
     a = ap.parse_args()
-    m = die.build(die.R25GM, network_probe=True)
+    # r25g4m: R25G4 (qualified 4 x 2 SM grid) = full network build; r25gm: R25G fmt3 retile = network probe only
+    m = die.build(die.R25G4M) if a.variant == 'r25g4m' else die.build(die.R25GM, network_probe=True)
     g = m['mtp_generic']
     buses = {b[0]: b for b in m['buses']}
     ctrl = sv_ports(ROOT / 'rtl/hbm_accel/generic/hgi_mtp_native.sv', 'hgi_mtp_native')
+    VIEWS = ROOT / 'physical/hbm_accel_die_views'
+    vctrl_pc = json.loads((VIEWS / 'mtp_hgi/port_check.json').read_text())
+    vam_pc = json.loads((VIEWS / 'argmax_hgi/port_check.json').read_text())
+    vctrl = {k: (v['dir'], v['bits']) for k, v in vctrl_pc['ports'].items()}
+    vam = {k: (v['dir'], v['bits']) for k, v in vam_pc['ports'].items()}
     mx1 = sv_ports(ROOT / 'physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv', 'hfd_cmdproc_s_mtp_native_mx1')
     mx1_rec = json.loads((ROOT / 'physical/hbm_cp_mtp_native/collar_mx1/hfd_cmdproc_s_mtp_native_mx1/ports.json').read_text())['ports']
     checks, fails, obligations = [], [], []
@@ -51,20 +58,33 @@ def main():
         if not ok:
             fails.append(name)
 
-    real = {'hb_mtp': ctrl, 'hb_cmdproc_mx1': mx1}
+    chk('mtp_hgi view LEF == routed netlist', vctrl_pc['verdict'] == 'MATCH', vctrl_pc['lef_pin_bits'])
+    chk('argmax_hgi view LEF == routed netlist', vam_pc['verdict'] == 'MATCH', vam_pc['lef_pin_bits'])
+    chk('mtp_hgi view ports == hgi_mtp_native RTL ports', {k: v[1] for k, v in vctrl.items()} == {k: v[1] for k, v in ctrl.items()},
+        dict(view=len(vctrl), rtl=len(ctrl)))
+    real = {'hb_mtp': vctrl, 'hb_mtp_am': vam, 'hb_cmdproc_mx1': mx1}
+    src = {'hb_mtp': 'view mtp_hgi', 'hb_mtp_am': 'view argmax_hgi', 'hb_cmdproc_mx1': 'MX1 RTL'}
     for bn in g['buses']:
         _, _, bits, eps = buses[bn]
         for inst, port in eps:
             if inst in real:
-                if inst == 'hb_mtp' and port not in ctrl:
-                    obligations.append(f'{inst}.{port} ({bits} b): ARGMAX unit wrapper in the slot (hgi-takeover)')
+                if port not in real[inst]:
+                    if inst == 'hb_mtp_am':
+                        obligations.append(f'{inst}.{port} ({bits} b): record dispatch adapter in front of the bare '
+                                           'ARGMAX view (683-b record -> cfg_rank 7 / cfg_imm_a 18 + in_v gating; '
+                                           'ret {ready, done, fault}) (hgi-takeover)')
+                    elif port.startswith(('t_hgi_', 'f_hgi_')):
+                        obligations.append(f'{inst}.{port} ({bits} b): hgi dispatch ECO port on the CP south band RTL '
+                                           '(hfd_cmdproc_s_mtp_native_mx1 has none yet; hgi-takeover pin plan only)')
+                    else:
+                        chk(f'{bn}:{inst}.{port}', False, f'port missing on {src[inst]}')
                     continue
-                if port.startswith(('t_hgi_', 'f_hgi_')) and port not in real[inst]:
-                    obligations.append(f'{inst}.{port} ({bits} b): hgi dispatch ECO port on the CP south band RTL '
-                                       '(hfd_cmdproc_s_mtp_native_mx1 has none yet; hgi-takeover pin plan only)')
-                    continue
-                w = real[inst].get(port, (None, None))[1]
-                chk(f'{bn}:{inst}.{port}', w == bits, dict(bus_bits=bits, rtl_bits=w))
+                w = real[inst][port][1]
+                chk(f'{bn}:{inst}.{port}', w == bits, dict(bus_bits=bits, port_bits=w, source=src[inst]))
+    used_am = {p for bn in g['buses'] for i, p in buses[bn][3] if i == 'hb_mtp_am'}
+    am_open = sorted(set(vam) - used_am - {'clk', 'rst_n'})
+    for p in am_open:
+        obligations.append(f'hb_mtp_am.{p} ({vam[p][1]} b): driven by the dispatch adapter (not a die bus)')
     for p in ('t_mtp', 'f_mtp', 'f_am'):
         rec = mx1_rec.get(p)
         rb = rec.get('bits') if isinstance(rec, dict) else (rec[1] if isinstance(rec, (list, tuple)) else None)
@@ -80,19 +100,23 @@ def main():
     for name, grp in gm['groups'].items():
         for f in grp['fields']:
             chk(f'facade binds {f["port"]}', f'.{f["port"]}({name}[{f["lsb"]} +: {f["width"]}])' in fac, f)
-    slot = m['hub']['mtp']
-    chk('slot master', slot.master == 'hgi_mtp_native', slot.master)
-    slot_um2 = slot.w * slot.h
-    argmax_um2 = 180 * 140             # ot_hgi_argmax18_m route outline (hgi_argmax18 cfg FW 180 / FH 140)
-    ctrl_um2 = 11611.86 / 0.45         # historical hfd_mtp_x mapped cells at 45 % (cp_stop adds 18 pin flops)
-    chk('slot fits controller + ARGMAX unit', ctrl_um2 + argmax_um2 <= slot_um2,
-        dict(slot_um2=round(slot_um2), controller_at_45pct_um2=round(ctrl_um2), argmax_outline_um2=argmax_um2))
+    hub = m['hub']
+    chk('slot instance 1 = hgi_mtp_native view size', (hub['mtp'].master, hub['mtp'].w, hub['mtp'].h) ==
+        ('hgi_mtp_native', *vctrl_pc['size_um']), (hub['mtp'].master, hub['mtp'].w, hub['mtp'].h))
+    chk('slot instance 2 = ot_hgi_argmax18_m view size', (hub['mtp_am'].master, hub['mtp_am'].w, hub['mtp_am'].h) ==
+        ('ot_hgi_argmax18_m', *vam_pc['size_um']), (hub['mtp_am'].master, hub['mtp_am'].w, hub['mtp_am'].h))
+    W_, H_ = die.R25GM['spine_slots_low']['mtp']
+    x0 = hub['mtp'].x
+    chk('two instances inside the MD-7 slot, no overlap', hub['mtp_am'].x >= hub['mtp'].x + hub['mtp'].w - 1e-6 and
+        hub['mtp_am'].x + hub['mtp_am'].w <= x0 + W_ + 1e-6 and max(hub['mtp'].h, hub['mtp_am'].h) <= H_ + 1e-6,
+        dict(slot=[W_, H_], used_w=round(hub['mtp'].w + hub['mtp_am'].w, 3)))
     peer_pins = sorted({f'{inst}.{port}' for bn in g['buses'] for inst, port in buses[bn][3] if inst not in real})
-    rec = dict(schema='opentallas.hgi_mtp_die_check.v1', verdict='PASS' if not fails else 'FAIL', variant='r25gm (R25G + mtp_master hgi_native)',
-               build='network_probe (R25G retiled SM grid: full build unqualified)', default_on_now=g['default_on'],
+    rec = dict(schema='opentallas.hgi_mtp_die_check.v1', verdict='PASS' if not fails else 'FAIL', variant=a.variant,
+               build='full network build (R25G4, qualified 4 x 2 SM grid)' if a.variant == 'r25g4m' else 'network_probe (R25G fmt3 retile: full build unqualified)', default_on_now=g['default_on'],
                buses={bn: dict(bits=buses[bn][2], ends=buses[bn][3]) for bn in g['buses']},
                signal_bits=sum(buses[bn][2] for bn in g['buses']),
                r25g_hfd_mtp_bits=sum(x[2] for x in die.MTP_HUB_LINKS),
+               slot_content=g['slot_content'], argmax_unbound_ports=am_open,
                unbound_mx1_endpoints=g['unbound'], unbound_owner=g['unbound_owner'],
                peer_pins_required_on_closed_views=peer_pins, rtl_port_obligations=obligations, checks=checks, failed=fails)
     a.out.parent.mkdir(parents=True, exist_ok=True)

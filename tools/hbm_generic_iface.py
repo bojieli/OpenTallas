@@ -101,7 +101,7 @@ D_OPTIONAL_UNITS = {"SIMT": "absent on r25; a record to an absent unit faults (c
 D_OPS = {k: list(v) for k, v in OPS.items()}
 D_OPS["FUSED"] = ["HC_PRE_NORM", "ROW_NORM", "HC_POST", "SOFTMAX"]  # C1 / G4
 D_OPS["DMA"] = ["LOAD", "STORE", "FENCE", "KVWB_DS"]              # C7: kv_dense -> opcode (DS native ring = KVWB_DS)
-D_OPS["IDX"] = ["INDEX_Q", "INDEX_SCORES", "TOPK", "SELECT", "EHASH"]  # TOPK generic top-k; EHASH Engram ids (DS G13)
+D_OPS["IDX"] = ["INDEX", "MERGE", "TOPK", "OWNED", "EHASH"]  # G18: one INDEX frame record; 1 / 3 reserved (E_RANGE)  # TOPK generic top-k; EHASH Engram ids (DS G13)
 # DS native lowering (hgi_sim ds_native, gaps G8-G14): quantise-dequantise on the act-quant engine, the o-group
 # sub-group reduce with multicast, and the selected compressed-row gather from owner dies.
 D_OPS["FUSED"] += ["QDQ_FP8", "QDQ_FP4_E8M0", "QDQ_FP4_E4M3"]                          # G8
@@ -130,14 +130,17 @@ for _n, _w in SUT_FIELDS:                                         # G1: packed f
     _o += _w
 D_PARAM = {
     "CTL.LOOP": "[15:0] count, [16] level (0 inner L, 1 outer L1)",
+    "CTL.TOKX": "PROPOSED (Q-MTP-1, hardware in hfd_cmdproc): A = U32 [1 + ncol]: A[0] = k (1 <= k <= ncol), A[1..k] = "
+                "the committed tokens; the CP emits k completion beats {token A[i], pos + i - 1, status 0}; END follows",
     "CTL.END": "token = A[0] (A required on r25: the ARGMAX / COLL.ARGMAX_MERGE output in VM); A-absent form (latest SIMT RESULT) only on dies with SIMT",
-    "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1",
+    "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1 (P <= 8 slots share one weight read; "
+                 "A and O then carry one row per slot, m = P; each slot's result is the single-slot arithmetic) (G18)",
     "SU.VOP": "operands = the template's slots, flagged in opnd (A,B,C,D,O,R,I)",
     "SFU.GLU": "C = route weight (a 1.0 constant with ibcast to disable); imm_a = clamp limit (FLT_MAX disables); out fmt = O.fmt",
-    "FUSED.ROW_NORM": "[5:0] d_units (width/128: 32|40 prenorm; 8|2 Qwen TP4 QK-norm), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
+    "FUSED.ROW_NORM": "[5:0] d_units (width/128: 32|40 prenorm; 8|2 Qwen TP4 QK-norm; with seg 128 and m > 1 rows, the width of one A row), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
     "FUSED.SOFTMAX": "[0] multipass; A = scores, B = sink row (data: -2^100 for no sink), O = probabilities; imm_a = scale",
     "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (DS 1347: uniform 1,347-row head shards; Qwen3-8B 37984) (G17)",
-    "ATT.QK/PV": "[3:0] head lanes, [7:4] 64-slices per head - 1, [8] ring; B = first row source (n rows, n_sel POS1 / "
+    "ATT.QK/PV": "[3:0] head lanes (0 encodes 16) (G19), [7:4] 64-slices per head - 1, [8] ring; B = first row source (n rows, n_sel POS1 / "
                  "POS_SLOT1 = the mask), C (optional) = second row source appended after B (e.g. DS selected compressed rows); "
                  "ring = 1: B is a ring of B.m slots (power of two), first row read = slot (POS1 - n) mod B.m, wrapping (G12)",
     "FUSED.QDQ_FP8": "act_quant FP8E4M3 with a UE8M0 scale per 32-element block (hfd_quant): O = dequantised values (G8)",
@@ -151,14 +154,19 @@ D_PARAM = {
     "COLL.ROW_GATHER": "I = selected row ids (U32, identical on every rank; count from I row 1 or imm_a); A = this die's "
                        "row store; row i is owned by rank (i div B) mod G and stored there at local row "
                        "(i div (B*G))*B + i mod B; [7:0] B (DS 8); imm_b = destination ranks 0..imm_b-1; "
-                       "O = the rows in list order on every destination rank (G14)",
+                       "O = the rows in owner order on every destination rank: owner r's j-th selected row (list order) at O row r * M + j, "
+                       "M = the largest owned count (padded); the list-order view is the compiler's table read by ATT (G14, review-1149)",
     "IDX.EHASH": "Engram row ids of the slot's token: [2:0] Engram layer index; B = that layer's hash constants (table); "
                  "the engine keeps the n-gram token history (pushed by the first EHASH of a token, restored by "
                  "CTL.ACCEPT); O = U32 ids, one per head and n-gram order, an I table for indexed DMA.LOAD (G13)",
     "SIMT.RUN": "OPTIONAL unit, absent on r25. Where present: [13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
     "IDX.TOPK": "[11:0] k (1..2048), [12] order (0 descending score, 1 ascending id; 1 legal for k <= 8 only, else E_RANGE) (G15); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score (order 0), ties lowest index; R (optional) = the k values",
-    "IDX.INDEX_Q/INDEX_SCORES/SELECT": "DS indexer engines, working buffers internal (A/B/C may be NONE): [5:0] source (compressed-KV) layer, imm_a = candidate count, imm_b = layer; SELECT (DS index top-512): O = selected ids (U32, ascending id), R (optional) = values (G16)",
+    "IDX.INDEX": "one DS indexer frame (G18): [11:0] k (DS 512), [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer; A = post-RoPE query (FP32), B = scaled head weights (BF16 values), C = the layer-20 candidate table [block ids U32 | values FP32 at C.stride] (keep_en, G18a: owned blocks listed with value > -inf are kept), O / R = local top-k ids (ascending) / values, D = candidates in the same [ids | values] layout (cand_en)",
     "COLL.ALL_REDUCE_SUM": "rank-order pairwise tree over the group (G = 1, 2, 4, 8); G = 96 is rejected (E_RANGE): DS reduces as 12 groups of 8 with GROUP_REDUCE_MCAST s = 8 (GX11)",
+    "IDX.MERGE": "[11:0] k (1..2048), [12] key (0 larger value first, -0 = +0, NaN last, ties lower id; 1 lower id first); A FP32 / B U32 = G = m rows (<= 128) of n key-sorted {value, id} pairs; O / R = the first k of the merged order; an unsorted row faults (G20)",
+    "MDESC.STREAM": "space 2: base = stream id; 0 SM -> SU lanes, 1 SU reduction -> ARGMAX, 2 SM -> ARGMAX; element FIFO (P-slot producers publish slot-major); underrun / overrun / unwired id faults; ids >= 3 reserved (E_RANGE)",
+    "IDX.OWNED": "[7:0] B (power of two <= 128), [15:8] G (1, 2, 4, 8, 96); A U32 = K selected row ids (K <= 2048, id < 2^20); O = this rank's owned local rows in list order padded with 0 to M; R = per-entry gathered row r * M + j; D[0] = M (G21)",
+    "COLL.TOPK_MERGE": "from VM: A = local values, B = local ids; the group top imm_a by descending value, ties lowest id; O = ids in ascending id order, R (optional) = values; bit-exact gather path (G18)",
     "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
     "DMA.KVWB_DS": "DS native window-ring KV write-back (unchanged)",
@@ -202,7 +210,7 @@ def d_spec_json():
             G11=dict(item="per-die program images of identical structure", needs="compiler only"),
             G12=dict(item="ATT second row source (C) and ring wrap", needs="small hardware: ATT row-fetch front end (second list, mask on a power-of-two ring counter)"),
             G13=dict(item="IDX.EHASH Engram ids", needs="existing DS Engram hash engine (ot_hdc_engram_hash) behind IDX; host-written ids are the bring-up fallback"),
-            G14=dict(item="COLL.ROW_GATHER", needs="the DS kv_gather collective; dispatcher decode of the owner rule"),
+            G14=dict(item="COLL.ROW_GATHER", needs="owner reads (padded) + the collective gather bypass; no reorder hardware (compiler table)"),
         ),
         linear_attention=dict(scope="in scope via software (owner decision 2026-10-09)", engines="existing (SM, SU, DMA, COLL)",
                               state="FP32 in region STATE, per layer and local head, stored transposed [dv][dk] (GDN-4)",
