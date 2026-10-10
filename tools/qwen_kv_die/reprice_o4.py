@@ -36,7 +36,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--o4', type=Path, required=True, help='L3 run of option4_die.py: {stage_cycles: {L0, L1, L2}, exact}')
     ap.add_argument('--o4-name', default='o4')
-    ap.add_argument('--extra', type=Path, nargs='*', default=[], help='further L3 runs (sensitivities), name=path')
+    ap.add_argument('--extra', type=str, nargs='*', default=[], help='further L3 runs (sensitivities), name=path')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
     rp = json.loads((D / 'reprice.json').read_text())
@@ -96,7 +96,7 @@ def main():
                         note='band words reach the 2 x 2 upper-tile group +8 stages later than the r22k tree top (TWS '
                              'sensitivity run), tt_ty +3'))
     for e in a.extra:
-        name, path = e.split('=', 1)
+        name, path = str(e).split('=', 1)
         r = run_of(path)
         t = r['vs_s22ml7']['L0'] + 35 * r['vs_s22ml7']['L1']
         out.setdefault('sensitivities', {})[name] = dict(**r, token_term=t, tok_s_typical=round(

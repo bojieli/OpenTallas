@@ -39,7 +39,7 @@ def main():
     stages = Counter()
     for bid, cl, bits, eps in m['buses']:
         base = re.sub(r'__r\d+$', '', bid)
-        if base in CROSS or base.startswith(O4_PREFIX):
+        if base in CROSS or (a.recipe != 'r22k' and base.startswith(O4_PREFIX)):
             stages[base] += 1
     fam = Counter()
     for i in ins:
