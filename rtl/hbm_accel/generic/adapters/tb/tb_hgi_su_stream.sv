@@ -21,7 +21,7 @@ module tb_hgi_su_stream #(parameter integer MUTR = 0);
     reg pub_v = 0; wire pub_rdy, pub_done, pub_fault; reg [12:0] pq = 0; reg [19:0] pm = 0;
     reg [NSM-1:0] sm_rv = 0; reg [NSM*12-1:0] sm_rrow = 0; reg [NSM*8*32-1:0] sm_rdata = 0;
     ot_hgi_sm_pub #(.NSM(NSM), .NC(8), .NPC(1), .MUT_ROW(MUTR)) u_pub (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
-        .pub_base(40'd0), .pub_stride(32'd0), .pub_space(2'd2), .pub_m(pm), .pub_q(pq), .pub_p(4'd1),
+        .pub_base(40'd0), .pub_stride(32'd0), .pub_space(2'd2), .pub_m(pm), .pub_q(pq), .pub_p(4'd1), .pub_bf16(1'b0),
         .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(),
         .vmr(274'd0), .s0_v(s0_v), .s0_idx(s0_idx), .s0_data(s0_data));
     reg [31:0] logit [0:65535]; integer bchk = 0, rmask = 63;
@@ -37,6 +37,12 @@ module tb_hgi_su_stream #(parameter integer MUTR = 0);
     wire su_rdy, su_done, su_fault, su_halt; wire [522:0] ams; wire am_rdy; wire [2:0] am_ret; wire nan_flag;
     wire [337:0] sq, aq; wire [273:0] sr, ar, tr; reg [337:0] tq = 0;
     ot_hgi_su_unit #(
+`ifdef MUT_LAT
+    .MUT_LAT(`MUT_LAT),
+`endif
+`ifdef SU_BEH
+    .MACRO(0),
+`endif
 `ifdef NO_PAYLOAD_RST
     .PAYLOAD_RESET(0),
 `endif

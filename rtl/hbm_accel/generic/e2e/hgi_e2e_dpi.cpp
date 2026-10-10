@@ -142,6 +142,25 @@ extern "C" void e2e_hbm_sector(long long addr, svBit we, const svBitVecVal* wd, 
     }
 }
 
+// HC weight sets (hgi-1010/g, tools/hgi_e2e/hc_weights.py -> hcw.bin {u64 sector, 32 B}): the REAL HC unit's HBM lane
+// reads here; the compiler's 1-element placeholder for the set reserves no span in the HBM map, so the sets are a
+// separate map (a sector the record does not own reads as zero and is counted).
+static std::unordered_map<uint64_t, std::vector<uint8_t>> hcw;
+static int hcw_loaded = -1, hcw_miss = 0;
+extern "C" void e2e_hcw_sector(long long sec, svBitVecVal* rd) {
+    if (hcw_loaded < 0) {
+        std::vector<uint8_t> b; hcw_loaded = 0;
+        if (read_file(dir + "/hcw.bin", b))
+            for (size_t o = 0; o + 40 <= b.size(); o += 40) { uint64_t s; memcpy(&s, &b[o], 8); hcw[s].assign(&b[o + 8], &b[o + 40]); hcw_loaded++; }
+        fprintf(stderr, "E2E: hcw.bin %d HC weight-set sectors\n", hcw_loaded);
+    }
+    auto it = hcw.find((uint64_t)sec);
+    if (it == hcw.end()) { hcw_miss++; for (int i = 0; i < 8; i++) rd[i] = 0; return; }
+    const uint8_t* v = it->second.data();
+    for (int i = 0; i < 8; i++) rd[i] = v[4 * i] | v[4 * i + 1] << 8 | v[4 * i + 2] << 16 | (uint32_t)v[4 * i + 3] << 24;
+}
+extern "C" int e2e_hcw_misses() { return hcw_miss; }
+
 // ------------------------------------------------------------------------------------------------ scoreboard
 static uint32_t bits(const svBitVecVal* v, int lsb, int w) {
     uint64_t r = 0;

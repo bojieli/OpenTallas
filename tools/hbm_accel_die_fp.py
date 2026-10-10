@@ -588,8 +588,15 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              lane_rd_bits=8800, lane_wr_bits=9000,
              face_force={('hfd_hgi_vm', 't_lgW'): 'W', ('hfd_hgi_vm', 't_lgE'): 'N', ('hfd_cmdproc', 'f_lgE'): 'S',
                          ('hfd_cmdproc', 't_lgE'): 'N', ('hfd_quant', 'f_lgE'): 'S', ('hfd_su', 'f_lgW'): 'E',
-                         ('hfd_su', 't_lgW'): 'N', ('hfd_sfu', 'f_lgW'): 'S', ('hfd_sfu', 't_lgW'): 'W',
-                         ('hfd_hc', 'f_lgW'): 'E'})
+                         ('hfd_su', 't_lgW'): 'N', ('hfd_sfu', 'f_lgW'): 'W', ('hfd_sfu', 't_lgW'): 'W',
+                         ('hfd_hc', 'f_lgW'): 'E'},
+             # [fp]/[sfu] decision (a) 10-10: the W lane-group trunk (17,800 b) does not pass through hfd_sfu (its slot
+             # has no free M1-M7 corridor and the 17,800-pin windows were 20.8 b/um/layer).  The trunk runs SU (N face)
+             # -> a client-station relay bank hfd_stn_lgW in the SFU | HC gap -> HC (E face); hfd_sfu keeps a narrow
+             # W-face client tap: f_lgW 273 b (read data in) + t_lgW 280 b (write data out) = 553 b, placeholder widths
+             # until hgi-1010/b posts the ot_hgi_vm_lanearb client width.
+             lane_bypass=dict(W=dict(client='hb_sfu_SW', after='hb_su_SW', toward='hb_hc_SW', stn='hb_stn_lgW',
+                                     master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)))
 
 
 def build_r25gq(variant):
@@ -1036,6 +1043,33 @@ def build_r25gq_net(variant):
     # client station (the bus enters one face, leaves another), relays only on the open stretches
     for sd_, chain_ in V['lane_groups'].items():
         rec = []
+        byp = (V.get('lane_bypass') or {}).get(sd_)
+        if byp:     # decision (a): a client-station relay bank in the client | next-block gap replaces the pass-through
+            cb_, nb_ = by[byp['client']].box(), by[byp['toward']].box()
+            if nb_[2] <= cb_[0]:        # next block W of the client: the vertical gap column between them
+                gx0, gx1 = nb_[2], cb_[0]
+            else:
+                gx0, gx1 = cb_[2], nb_[0]
+            gy0, gy1 = max(cb_[1], nb_[1]), min(cb_[3], nb_[3])
+            ln_ = up((lw + byp['tap_rd'] + byp['tap_wr']) * 0.048 + 20.0, GY)
+            assert gx1 - gx0 >= byp['w'] + 2 * 43.2 and gy1 - gy0 >= ln_, ('lane bypass gap too small', byp, gx0, gx1, gy0, gy1, ln_)
+            stn = Inst(byp['stn'], byp['master'], dn((gx0 + gx1 - byp['w']) / 2, GX), dn((gy0 + gy1 - ln_) / 2, GY),
+                       byp['w'], ln_, 'R0', kind='waypoint', region='channel')
+            assert not hit(stn.box(), near(stn.box())), ('lane bypass station overlaps', stn.box())
+            insts.append(stn)
+            by[stn.name] = stn
+            G.inst[stn.name] = stn
+            b_ = stn.box()
+            for gx_ in range(int(b_[0] // 500), int(b_[2] // 500) + 1):
+                for gy_ in range(int(b_[1] // 500), int(b_[3] // 500) + 1):
+                    grid_[(gx_, gy_)].append(b_)
+            i_ = chain_.index(byp['client'])
+            assert chain_[i_ - 1] == byp['after'] and chain_[i_ + 1] == byp['toward'], ('lane bypass order', chain_)
+            chain_ = tuple(chain_[:i_]) + (stn.name,) + tuple(chain_[i_ + 1:])
+            buses.append((f'vm_lg{sd_}_tap_rd', 'hub', byp['tap_rd'], [(stn.name, f't_lg{sd_}c'), (byp['client'], f'f_lg{sd_}')]))
+            buses.append((f'vm_lg{sd_}_tap_wr', 'hub', byp['tap_wr'], [(byp['client'], f't_lg{sd_}'), (stn.name, f'f_lg{sd_}c')]))
+            rec.append(dict(bypass=byp['client'], station=stn.name, box=[round(x, 3) for x in stn.box()],
+                            tap_bits=byp['tap_rd'] + byp['tap_wr']))
         for ci, (src, cl) in enumerate(zip(chain_, chain_[1:])):
             pth = gpath(src, cl)
             L = (len(pth) - 1) * RP.CELL if gap_um(src, cl) > 2.0 else 0.0

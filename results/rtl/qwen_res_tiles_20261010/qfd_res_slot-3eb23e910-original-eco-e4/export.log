@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "qfd_res_slot",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_res_slot-3eb23e910-original-eco-e4/routes/qfd_res_slot_3eb23e910_original_eco_e4/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/qfd_res_slot.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-1.495831236653089e-10",
+  "ws_min": "8.025591302640578e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "1.331754706512811e-10",
+  "ws_min": "4.6211479087787666e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "2.534826792910394e-10",
+  "ws_min": "2.554884082073272e-11"
+ },
+ "files": {
+  "qfd_res_slot.lef": "524e5cdfc5d3bcd7e003f01b8bd3bcefceabf883fb7b3c8a39bf01c1844927c8",
+  "qfd_res_slot_ff.lib": "5b483fd9d4b2c1fffefb57c35691abdee0bb2bbf1075e5a1d827377075c220c4",
+  "qfd_res_slot_ss.lib": "3cec62755c552edaefb7c3a35ec52f33f5d787075de0fcd5b75554b7c7f6dac8",
+  "qfd_res_slot_tt.lib": "1ab5e469c0ad91bc9b2078f4e6e162342e1b80ba4b5e592fec01e71468545cac"
+ }
+}
