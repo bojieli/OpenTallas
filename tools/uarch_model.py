@@ -15416,3 +15416,24 @@ def qwen_result_slot_conveyor_model(ns=8, db=64, rs=42, crb=16):
                      ready_threshold=db-rs-5),
         capacity=dict(credits=crb,reserve_per_request=1,disabled_slot_refund=True),
         exact_gate='full NS8 DB64 RS42 CRB16 ordered burst scoreboard, stalls, wrap, pause, reset, true mutants')
+
+
+def hgi_cp_fetch_pin_fifo_model(fetch_sectors_per_token=0):
+    """CP-only registered fetch boundary; no arithmetic or scheduling reorder."""
+    return dict(schema='opentallas.hgi_cp_fetch_pin_fifo.v1', default_enabled=False,
+        targets=['Qwen3-8B HBM', 'DeepSeek-V4.1 HBM'], replicas_per_die=1,
+        MACs_per_cycle=0, compute_intensity=0, communication_intensity='40 address bits/request',
+        local_memory_bytes_per_cycle=0, fetch_payload_bytes_per_cycle=32,
+        boundary_bits_per_cycle=dict(request=41, credit=1, response=257),
+        added_storage_ff_bits=82, mux_inputs_per_address_bit=3, demuxes=0,
+        ready_fanout=1, output_address_fanout=1, queue_depth=2,
+        request_initiation_interval_cycles=1, registered_backpressure=True,
+        added_first_fetch_latency_cycles=1,
+        conservative_serial_token_added_cycles=fetch_sectors_per_token,
+        token_latency_composition='one extra cycle per dependent fetch, II1 streaming overlap measured by component',
+        estimated_added_area_um2=82*DFF_UM2, slot_um=[420,420],
+        slot_fit='same CP slot; 82 FF increment priced, measured cell inventory and route gate adoption',
+        routing_tracks_required=42, routing_tracks_available=int(420/.064*.5),
+        exact_gate='CP38 + conformance66 + stalled fetch FIFO ordering and TOKX mutant',
+        physical_gate='TT setup>=0 FF hold>=0 DRC0 with SRAM SS/FF corner views',
+        physical_qualified=False)
