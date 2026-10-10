@@ -1,0 +1,12 @@
+{
+ "attn_hgrp": {
+  "gated_idle_w": 2.124867205566261e-05,
+  "source": "hgrp leaf leakage (its clock pin is driven by the routed gated quad's ICG; ICG off = no clock activity in the leaf): hbm_r25gp_power.json blocks.attn_hgrp.leak_w"
+ },
+ "attn_quad": {
+  "a20_w": 0.023715609684586525,
+  "a00_w": 0.010014754720032215,
+  "g00_w": 0.009918383322656155,
+  "source": "OpenSTA report_power (die-evidence-2 r25gp_block_power.tcl + g00 = ICG ENA case 0) on hbm_attn_quad_cg-c891a57cf-tc-hm01-grta-cl 6_final (spef), EPYC4 /srv/opentallas-scratch/claude/r25gp-power/cg/out/attn_quad_cg.kv; the quad's HC flops stay on the raw clock by design"
+ }
+}

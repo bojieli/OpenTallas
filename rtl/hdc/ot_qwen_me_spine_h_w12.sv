@@ -247,7 +247,12 @@ module ot_qwen_me_spctl_w12 #(
     // rmax tag are registered AT the accumulator, and the accumulator clear moves with them, so the top-vs-best compare
     // (u_bgt) and the am_idx / best_key / am_val update are local (routed qfd_sp_tree_top_b: am_idx -> u_bgt -> am_idx
     // 2,228 ps, 6 logic + ~40 wire buffers).  The argmax result (am_any / am_idx / am_val) settles one edge later.
-    parameter integer AMR = 0
+    parameter integer AMR = 0,
+    // SPRE (redesign-qwen 2026-10-09; 0 = unchanged): the post-scale request path (pretag ring read -> per-group in-range
+    // compare / multiply -> scale_active -> scale_addr add, tree-top TT -1,584 / -1,592) is cut by one register stage:
+    // the tags are delayed PD - 1 (balanced-OR ring read), the per-group request is registered, and scale_re / gre / addr
+    // are formed from it on the edge the base forms them.  0 cycles, same outputs every edge.
+    parameter integer SPRE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -748,13 +753,14 @@ end endgenerate
     //: pre = s3 + (SD - 2 + OD + XDD) in ot_qwen_w12_matvec_part; here s3 + (SD - 3 + OD + XDD); the port element
     //: registers scale_q once before its multiplier, so the multiplier sees the same word on the same edge
     localparam integer PD = SD - 3 + OD + XDD + RX;
+    localparam integer PDX = (SPRE != 0) ? PD - 1 : PD;     // SPRE: the request is registered one edge before use
     wire [TW-1:0] pre_tag;
     wire [PD:0]   pre_vline;
-    ot_qwen_me_rdelay_w12 #(.W(TW), .D(PD)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
+    ot_qwen_me_rdelay_w12 #(.W(TW), .D(PDX), .TREE(SPRE)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
     ot_hdc_vline #(.D(PD)) u_prev (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(pre_vline));
     wire [NW-1:0] pre_t;
     generate if (SCALE_LOCAL != 0) begin : g_pret
-        ot_qwen_me_rdelay_w12 #(.W(NW), .D(PD)) u_pret (.clk(clk), .rst_n(rst_n), .d(s3_t), .q(pre_t));
+        ot_qwen_me_rdelay_w12 #(.W(NW), .D(PDX), .TREE(SPRE)) u_pret (.clk(clk), .rst_n(rst_n), .d(s3_t), .q(pre_t));
     end else begin : g_nopret
         assign pre_t = {NW{1'b0}};
     end endgenerate
@@ -793,21 +799,43 @@ end endgenerate
                 assign pgi[pg*32 +: 32] = gb + pg;
                 assign pgok[pg] = ((gb + pg) < (GT >> pre_split));
             end
-            assign pre_scale_active[pg] = pre_vline[PD] && pre_last && !pre_wsrc && pgok[pg] &&
+            assign pre_scale_active[pg] = pre_vline[PDX] && pre_last && !pre_wsrc && pgok[pg] &&
                 (pre_mmode ? (pre_lb + pgi[pg*32 +: 32]*W < pre_nout) :
                              (pre_nb + pgi[pg*32 +: 32]*(W*IL) < pre_nout));
         end
     endgenerate
     integer sg;
+    //: SPRE: one registered stage of the request (active mask, base, row offset, group index); else wires
+    wire [GOUT-1:0] sq_act;
+    wire [AW-1:0]   sq_sbase;
+    wire [NW-1:0]   sq_t;
+    wire [2:0]      sq_j;
+    wire [NW:0]     sq_nbs;
+    wire [NPG*32-1:0] sq_pgi;
+    generate if (SPRE != 0) begin : g_spre
+        reg [GOUT-1:0] r_act;
+        reg [AW-1:0]   r_sbase;
+        reg [NW-1:0]   r_t;
+        reg [2:0]      r_j;
+        reg [NW:0]     r_nbs;
+        reg [NPG*32-1:0] r_pgi;
+        always @(posedge clk or negedge rst_n) if (!rst_n) r_act <= 0; else r_act <= pre_scale_active;
+        always @(posedge clk) begin r_sbase <= pre_sbase; r_t <= pre_t; r_j <= pre_j; r_nbs <= pre_nb >> LW; r_pgi <= pgi; end
+        assign sq_act = r_act; assign sq_sbase = r_sbase; assign sq_t = r_t; assign sq_j = r_j; assign sq_nbs = r_nbs;
+        assign sq_pgi = r_pgi;
+    end else begin : g_nospre
+        assign sq_act = pre_scale_active; assign sq_sbase = pre_sbase; assign sq_t = pre_t; assign sq_j = pre_j;
+        assign sq_nbs = pre_nb >> LW; assign sq_pgi = pgi;
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin scale_re <= 1'b0; scale_gre <= 0; end
-        else begin scale_re <= |pre_scale_active; scale_gre <= pre_scale_active; end
+        else begin scale_re <= |sq_act; scale_gre <= sq_act; end
     end
     always @(posedge clk) begin
         for (sg = 0; sg < NPG; sg = sg + 1)
-            scale_addr[sg*AW +: AW] <= !pre_scale_active[sg] ? pre_sbase :
-                (SCALE_LOCAL != 0) ? pre_sbase + pre_t * IL + pre_j :
-                                     pre_sbase + (pre_nb >> LW) + pgi[sg*32 +: 32] * IL;
+            scale_addr[sg*AW +: AW] <= !sq_act[sg] ? sq_sbase :
+                (SCALE_LOCAL != 0) ? sq_sbase + sq_t * IL + sq_j :
+                                     sq_sbase + sq_nbs + sq_pgi[sg*32 +: 32] * IL;
     end
 
     // -- result tag (a_tag + SCALE_LAT, the post-scale multiply) and the result valid ---------------------------------
@@ -1378,7 +1406,8 @@ endmodule
 module ot_qwen_me_rdelay_w12 #(
     parameter integer W = 32,
     parameter integer D = 1,
-    parameter integer SL = 64
+    parameter integer SL = 64,
+    parameter integer TREE = 0          // redesign-qwen: 1 = the ring read as a balanced OR tree (same value)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -1404,7 +1433,29 @@ module ot_qwen_me_rdelay_w12 #(
                 always @(posedge clk) if (ptr[i]) mem[i*SW +: SW] <= d[LO +: SW];
                 assign sel[(i+1)*SW +: SW] = sel[i*SW +: SW] | (mem[i*SW +: SW] & {SW{ptr[i]}});
             end
-            assign q[LO +: SW] = sel[D*SW +: SW];
+            if (TREE != 0) begin : g_tree
+                wire [D*SW-1:0] tm;
+                for (i = 0; i < D; i = i + 1) begin : g_m
+                    assign tm[i*SW +: SW] = mem[i*SW +: SW] & {SW{ptr[i]}};
+                end
+                ot_qfd_or_tree #(.W(SW), .N(D)) u_or (.d(tm), .q(q[LO +: SW]));
+            end else begin : g_chain
+                assign q[LO +: SW] = sel[D*SW +: SW];
+            end
         end
+    end endgenerate
+endmodule
+
+
+// redesign-qwen 2026-10-09: balanced OR of N W-bit words (recursive halves)
+module ot_qfd_or_tree #(parameter integer W = 1, parameter integer N = 2) (input wire [N*W-1:0] d, output wire [W-1:0] q);
+    generate if (N == 1) begin : g_1
+        assign q = d;
+    end else begin : g_n
+        localparam integer H = N / 2;
+        wire [W-1:0] a, b;
+        ot_qfd_or_tree #(.W(W), .N(H)) u_a (.d(d[H*W-1:0]), .q(a));
+        ot_qfd_or_tree #(.W(W), .N(N - H)) u_b (.d(d[N*W-1:H*W]), .q(b));
+        assign q = a | b;
     end endgenerate
 endmodule

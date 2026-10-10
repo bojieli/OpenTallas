@@ -2101,8 +2101,8 @@ module ot_hbm_accel_smh_tile_g #(
     parameter integer SUB = 4, parameter integer RPT = 2, parameter integer LBS = 2, parameter integer LSB = 16,
     parameter integer NC = 8, parameter integer IL = 8, parameter integer TAGW = 16, parameter integer XD = 128,
     parameter integer NBEAT = 13, parameter integer TCK = 1, parameter integer NMG = 32, parameter integer A1B = 9,
-    parameter integer A2B = 7, parameter integer PT4 = 1, parameter integer HOLD = 64,
-    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 2 `else 0 `endif
+    parameter integer A2B = 7, parameter integer PT4 = 1, parameter integer HOLD = `ifdef OT_SMH_CG_MUT_HOLD0 0 `else 64 `endif,
+    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 32 `else 0 `endif
 ) (
     input  wire clk, input wire rst_n, input wire cgi, output wire cgo,
     input  wire [RPT*A1B-1:0] xs_a1, input wire [RPT*5-1:0] xs_g1, input wire [RPT*A2B-1:0] xs_a2, input wire [RPT*5-1:0] xs_g2,
@@ -2122,8 +2122,8 @@ module ot_hbm_accel_smh_tile_g #(
 endmodule
 module ot_hbm_accel_smh_be_g #(
     parameter integer SUB = 4, parameter integer RPT = 2, parameter integer IL = 8, parameter integer RMAX = 4096,
-    parameter integer LEV = 4, parameter integer TAGW = 16, parameter integer NH = 4, parameter integer HOLD = 64,
-    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 2 `else 0 `endif
+    parameter integer LEV = 4, parameter integer TAGW = 16, parameter integer NH = 4, parameter integer HOLD = `ifdef OT_SMH_CG_MUT_HOLD0 0 `else 64 `endif,
+    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 32 `else 0 `endif
 ) (
     input  wire clk, input wire rst_n, input wire cgi, output wire cgo,
     input  wire [SUB*(2+32+TAGW)-1:0]          gin,

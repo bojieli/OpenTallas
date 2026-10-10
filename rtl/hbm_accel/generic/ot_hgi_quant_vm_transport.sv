@@ -10,7 +10,7 @@
 // port reset reached 20k D / recovery pins (ready = ... && rst_n fed the 1,024-bit lane clear): the block now runs on a
 // registered reset (async assert, 2-flop release, rn); (2) cmd lands in a registered station before it fans out to the
 // 1,024 lane / header / descriptor registers (+1 cycle a record); (3) the shape check's span multiplies are registered
-// before the compares (validation 2 cycles, +1 a record).  Added: +2 cycles a record, no other change.
+// before the compares (validation 2 cycles, +1 a record).  Added: +2 cycles a record (r3: +2 more, a 4-stage shape check), no other change.
 module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  input wire clk,rst_n,input wire [1408:0] cmd,
  output wire ready,output reg done,output reg fault,output wire drained,
@@ -26,7 +26,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg cq_v; reg [1408:0] cq;
  wire [127:0] incoming_header=cq[1+:128];
  wire [255:0] ca=cq[385+:256],co=cq[1153+:256];
- reg [255:0] a,o;reg validating; reg val2; reg [63:0] aspan_q,ospan_q;
+ reg [255:0] a,o;reg validating; reg val2, val3, val4; reg [63:0] aspan_q,ospan_q;
  wire [127:0] ch=header;
  reg busy,bad;
  reg seat_v;reg [336:0] seat;
@@ -54,17 +54,18 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [63:0] aspan=(a[87:68]-20'd1)*{32'd0,a[119:88]}+(a[67:48]-20'd1)*{48'd0,air};
  wire [63:0] ospan=(o[87:68]-20'd1)*{32'd0,o[119:88]}+(o[67:48]-20'd1)*{48'd0,oir};
  wire same_geometry=a[47:8]==o[47:8] && air==oir && a[119:88]==o[119:88];
- wire shape_ok=ch[127:124]==4 && ch[123:118]>=4 && ch[123:118]<=6 &&
+ // shape check in 4 registered stages (route fe1ab05af: ch -> shape_ok -> busy still -1,054 ps over the block's spread):
+ //   v1 spans (multiplies) | v2 field checks + end addresses (adds) | v3 the compares -> shape_q | v4 act on shape_q
+ wire fields_ok=ch[127:124]==4 && ch[123:118]>=4 && ch[123:118]<=6 &&
  ch[99:93]==7'b0010001 && !ch[92] &&
  (ch[123:118]!=6 || ch[71:64]==16) && a[1:0]==1 && o[1:0]==1 &&
  a[4:2]==0 && (o[4:2]==0 || o[4:2]==1) && !o[5] &&
  a[87:68]!=0 && a[87:68]==o[87:68] && a[67:48]!=0 && a[67:48]==o[67:48] &&
- (ch[123:118]==6 ? a[51:48]==0 : a[52:48]==0) &&
- ({24'd0,a[47:8]}+aspan_q<64'd262144) && ({24'd0,o[47:8]}+ospan_q<64'd262144) &&
+ (ch[123:118]==6 ? a[51:48]==0 : a[52:48]==0);
+ reg fields_q, same_q, nalias_q, shape_q; reg [63:0] aend_q, oend_q;
  // In-place identical geometry is safe only when rows do not alias each other.
- (!same_geometry || o[87:68]==1 || o[119:88]>orow_q) &&
- (same_geometry || ({24'd0,a[47:8]}+aspan_q<o[47:8]) ||
- ({24'd0,o[47:8]}+ospan_q<a[47:8]));
+ wire shape_ok=fields_q && (aend_q<64'd262144) && (oend_q<64'd262144) &&
+ (!same_q || nalias_q) && (same_q || (aend_q<{24'd0,o[47:8]}) || (oend_q<{24'd0,a[47:8]}));
  reg [63:0] orow_q;
  assign ready=ENABLE&&rn&&!busy&&!cq_v;
  // ---------------------------------------------------------------- in-flight descriptors (in request order)
@@ -98,7 +99,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire reply_ok=response[272:257]==d_tag && response[256]==d_we;
  // staging the next request (the seat is free, or is being taken this cycle) while fewer than 4 are in flight
  // (req_r is NOT in this cone: the boundary stays registered -- a seat is restaged the cycle after it is taken)
- wire stage=busy&&!validating&&!val2&&!bad&&!launch&&(write_offer||read_offer)&&!seat_v&&pd_n<3'd4;
+ wire stage=busy&&!validating&&!val2&&!val3&&!val4&&!bad&&!launch&&(write_offer||read_offer)&&!seat_v&&pd_n<3'd4;
  wire s_last_read=!write_offer&&(read_part+offer_step==32 || read_col+offer_step==n);
  wire s_last_write=write_offer&&(write_part+offer_step==32 || write_col+offer_step==n);
  wire s_final=s_last_write&&write_row+1==m&&write_col+offer_step==n;
@@ -108,7 +109,8 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [PW-1:0] tail_next=tail==DEPTH-1?0:tail+1;
  always @(posedge clk or negedge rn)begin
   if(!rn)begin
-   cq_v<=0;cq<=0;val2<=0;aspan_q<=0;ospan_q<=0;orow_q<=0;
+   cq_v<=0;cq<=0;val2<=0;val3<=0;val4<=0;aspan_q<=0;ospan_q<=0;orow_q<=0;
+   fields_q<=0;same_q<=0;nalias_q<=0;shape_q<=0;aend_q<=0;oend_q<=0;
    a<=0;o<=0;validating<=0;busy<=0;bad<=0;seat_v<=0;seat<=0;response_v<=0;response<=0;header<=0;n<=0;m<=0;
    abase<=0;obase<=0;read_row<=0;read_col<=0;write_row<=0;write_col<=0;
    read_addr<=0;write_addr<=0;read_rowbase<=0;write_rowbase<=0;rs<=0;ws<=0;ri<=0;wi<=0;
@@ -117,7 +119,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    launch<=0;head<=0;tail<=0;reserved<=0;queued<=0;done<=0;fault<=0;pd_h<=0;pd_t<=0;pd_n<=0;
   end else begin
    done<=0;launch<=0;
-   response_v<=rsp_v; if(rsp_v) response<=rsp;
+   response_v<=rsp_v; response<=rsp;          // no enable: rsp_v drives one flop (IO -636 was rsp_v -> 273 enables)
    cq_v<=0;
    if(ready&&cmd[0])begin cq_v<=1;cq<=cmd;end
    if(cq_v)begin
@@ -134,11 +136,17 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     validating<=0;val2<=1;
     aspan_q<=aspan;ospan_q<=ospan;orow_q<=(o[67:48]-20'd1)*{16'd0,oir};
    end
-   if(busy&&val2)begin                        // validation 2: the compares
-    val2<=0;
-    if(!shape_ok)begin bad<=1;fault<=1;busy<=0;done<=1;end
+   if(busy&&val2)begin                        // validation 2: field checks, end addresses
+    val2<=0;val3<=1;
+    fields_q<=fields_ok;same_q<=same_geometry;nalias_q<=(o[87:68]==1 || o[119:88]>orow_q);
+    aend_q<={24'd0,a[47:8]}+aspan_q;oend_q<={24'd0,o[47:8]}+ospan_q;
    end
-   if(busy&&!validating&&!val2)begin
+   if(busy&&val3)begin val3<=0;val4<=1;shape_q<=shape_ok;end   // validation 3: the compares
+   if(busy&&val4)begin                        // validation 4: act
+    val4<=0;
+    if(!shape_q)begin bad<=1;fault<=1;busy<=0;done<=1;end
+   end
+   if(busy&&!validating&&!val2&&!val3&&!val4)begin
     if(take_req&&!stage)seat_v<=0;
     if(bad)seat_v<=0;
     if(provider_fault||decode_fault)begin bad<=1;fault<=1;end
