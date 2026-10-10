@@ -1,0 +1,30 @@
+{
+  "source": "982804de3",
+  "host": "ot-epyc1tb",
+  "compiled_transaction_gate": "PASS_PS_AND_FC",
+  "simulator": "Verilator2state;noXclaim_not_permitted",
+  "family_results": {
+    "PS": "SW208SM16KV16IK12streams15501rows12done;NE208SM16KV16IK12streams17702rows12done;errors0",
+    "FC": "same"
+  },
+  "independent_PHY_refs": "SW_NE_208SM16KV16IK_errors0",
+  "mutants": [
+    "slotFAIL",
+    "doneFAIL",
+    "pcFAIL",
+    "concurrencyFAIL"
+  ],
+  "minimum_EPS_four_state": "PASS_with4mutantsFAIL",
+  "full_four_state": "RUNNING_source982804de3",
+  "physical_adoption": "HOLD_new_reset_and_EPS_context_closure_required",
+  "remote": "/srv/opentallas-scratch/codex/svc-epsfull",
+  "logs": {
+    "fc_compiled.log": "d98f5efddf3c698bebfbaae5073f0c3728054b1a974f7e977d2ce2dae9121952",
+    "neg_slot.log": "33237c70a6a06fdba933aa8bbeef82b9bf974da95b591a012bc81bd81ae0ce04",
+    "neg_conc.log": "88f38f453dac70f7a9485ce9ce2f3799d98ddebffe8cee2062b8ba1c6d57f64f",
+    "neg_pc.log": "6a1baf70a0d4ac14073ae74a497f16098c86fe20681efc8ee019cfa6e3c73511",
+    "ps_compiled.log": "f6e1e911fb6526375633bdbebbb7b3755c69e157890b057164c20f94fe401ed2",
+    "neg_done.log": "d122d0d959d8f741274b4cf814dd06f3e477522a474d2d8253ff75950dac48da",
+    "eps_fourstate_mutants.log": "b10548b871a7ba2271ab17b4cd9ef74b6491c6582e9d05a4c1d3e4cc0d799678"
+  }
+}

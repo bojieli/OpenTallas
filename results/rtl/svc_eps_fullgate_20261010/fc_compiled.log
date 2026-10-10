@@ -1,0 +1,13 @@
+physical/hbm_accel_die_views/svc/run_bench_ps.sh: line 29: 171737 Aborted                    (core dumped) "$O/vlt_$L/Vtb_svc_ps_$S" > "$O/$L.log" 2>&1
+physical/hbm_accel_die_views/svc/run_bench_ps.sh: line 29: 172897 Aborted                    (core dumped) "$O/vlt_$L/Vtb_svc_ps_$S" > "$O/$L.log" 2>&1
+physical/hbm_accel_die_views/svc/run_bench_ps.sh: line 29: 173663 Aborted                    (core dumped) "$O/vlt_$L/Vtb_svc_ps_$S" > "$O/$L.log" 2>&1
+physical/hbm_accel_die_views/svc/run_bench_ps.sh: line 29: 175478 Aborted                    (core dumped) "$O/vlt_$L/Vtb_svc_ps_$S" > "$O/$L.log" 2>&1
+sim_ps_SW rc=0 SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=12 ps_rows=15501 ps_kd=12 errors=0
+sim_ps_NE rc=0 SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=12 ps_rows=17702 ps_kd=12 errors=0
+ref_SW rc=0 SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=0 ps_rows=0 ps_kd=0 errors=0
+ref_NE rc=0 SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=0 ps_rows=0 ps_kd=0 errors=0
+neg_slot rc=1 (must be nonzero) 
+neg_done rc=1 (must be nonzero) 
+neg_pc rc=1 (must be nonzero) 
+neg_conc rc=1 (must be nonzero) 
+overall rc=0
