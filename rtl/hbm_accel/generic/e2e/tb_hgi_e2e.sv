@@ -95,6 +95,7 @@ module tb_hgi_e2e;
     assign r_rdy[7:4] = 4'b0; assign r_done[7:4] = 4'b0; assign r_fault[7:4] = 4'b0;
     assign r_rdy[15:9] = 7'b0; assign r_done[15:9] = 7'b0; assign r_fault[15:9] = 7'b0;
     // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
+`ifdef E2E_VEC
     generate if (REAL_SU) begin : g_su
         hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[2]),
             .rec_rdy(r_rdy[2]), .rec_hdr(d_hdr), .rec_sut(cpd.u_cp.d_sut), .rec_desc(d_desc), .rec_n_a(d_n[0 +: 21]),
@@ -102,6 +103,10 @@ module tb_hgi_e2e;
     end else begin : g_su_stub
         assign r_rdy[2] = 1'b0; assign r_done[2] = 1'b0; assign r_fault[2] = 1'b0;
     end endgenerate
+`else
+    assign r_rdy[2] = 1'b0; assign r_done[2] = 1'b0; assign r_fault[2] = 1'b0;
+`endif
+`ifdef E2E_VEC
     generate if (REAL_SFU) begin : g_sfu
         hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(ux_v[3]),
             .rec_rdy(r_rdy[3]), .rec_hdr(d_hdr), .rec_sut(cpd.u_cp.d_sut), .rec_desc(d_desc), .rec_n_a(d_n[0 +: 21]),
@@ -109,6 +114,9 @@ module tb_hgi_e2e;
     end else begin : g_sfu_stub
         assign r_rdy[3] = 1'b0; assign r_done[3] = 1'b0; assign r_fault[3] = 1'b0;
     end endgenerate
+`else
+    assign r_rdy[3] = 1'b0; assign r_done[3] = 1'b0; assign r_fault[3] = 1'b0;
+`endif
     // DMA (unit 8)
     wire dma_rdy, dma_done, dma_fault;
     assign r_rdy[8] = dma_rdy; assign r_done[8] = dma_done; assign r_fault[8] = dma_fault;
@@ -145,12 +153,16 @@ module tb_hgi_e2e;
     end endgenerate
     // COLL (unit 6): the collective block body + inject / deliver / switch-tier models (hgi_e2e_slots.sv)
     wire [2:0] c_ret; reg c_kv; reg [31:0] c_k;
+`ifdef E2E_COLL
     generate if (REAL_COLL) begin : g_coll
         hgi_e2e_coll_slot #(.LATC(LATC), .CRED(CRED), .COLL_BF16(COLL_BF16), .COLL_PFMAX(COLL_PFMAX)) u_c (.clk(clk), .rst_n(rst_n), .rec(coll_rec),
             .cfg(cfg_bus), .ret(c_ret), .k_v(c_kv), .k_in(c_k), .group_size(host[46][7:0]));
     end else begin : g_coll_stub
         assign c_ret = 3'b001;
     end endgenerate
+`else
+    assign c_ret = 3'b001;
+`endif
     // IDX (unit 9)
     wire [2:0] i_ret;
     generate if (REAL_IDX) begin : g_idx

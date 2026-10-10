@@ -7,6 +7,7 @@
 // next cycle, element writes, reducer result writes) land on the harness VM model.  DIE GAP (hgi-adapters D1): the
 // die's hfd_su / hfd_sfu are not bound to records, and the HGI packet VM has no synchronous streaming port; this slot
 // shows the adapter + the reference unit's arithmetic on the record stream, not the die's SU timing.
+`ifdef E2E_VEC
 module hgi_e2e_su_slot #(
     parameter integer UNIT = 2,
     parameter integer GLU = 0,
@@ -98,6 +99,7 @@ module hgi_e2e_su_slot #(
         end
     end
 endmodule
+`endif
 
 // hgi_e2e_coll_slot: COLL (unit 6) = the die's collective block body ot_hgi_coll_ep (record binding ot_hgi_coll_record,
 // GX11 decoder, PSG TU endpoint incl. the gather bypass) on the die record bus, plus three labelled MODELS:
@@ -112,6 +114,7 @@ endmodule
 //     partials carry their exported A contributions (real operands: this die's owned slice is reduced by the RTL tree
 //     from them), other owners' results carry the GOLDEN result (placement), gathered flits carry the peers' A.
 //     Credits return CRED cycles after use; one flit per port per cycle.
+`ifdef E2E_COLL
 module hgi_e2e_coll_slot #(
     parameter integer LATC = 453,      // 377.6 ns PHY + switch + cable budget (uarch_model TU) at 1.2 GHz
     parameter integer CRED = 137,      // 113.8 ns reverse-link credit latency
@@ -221,6 +224,8 @@ module hgi_e2e_coll_slot #(
                 $display("E2E COLL FAULT k %0d: dec_err %0d pf_bad %0d pfg_bad %0d ep_fault %0d multi %0d gsz %0d pf %0d byp %0d mall %0d rank %0d g %0d st %0d",
                          k, u_ce.u_rec.dc_ev, u_ce.u_rec.pf_bad, u_ce.u_rec.pfg_bad, u_ce.u_ep.fault, u_ce.multi_err,
                          u_ce.r_gsz, u_ce.r_pf, u_ce.r_byp, u_ce.r_mall, u_ce.r_rank, u_ce.cfg_w46[7:0], u_ce.u_rec.st);
+                $display("E2E COLL FAULT parts: ovf %0d dupe %0d mode %0d result %0d", u_ce.u_ep.g_on.anyovf,
+                         u_ce.u_ep.g_on.dupe, u_ce.u_ep.g_on.mode_error, u_ce.u_ep.g_on.result_error);
             end
             // ---- SU deliver model
             for (integer l = 0; l < DEL; l = l + 1) if (dv[l]) begin : del
@@ -244,3 +249,4 @@ module hgi_e2e_coll_slot #(
         end
     end
 endmodule
+`endif
