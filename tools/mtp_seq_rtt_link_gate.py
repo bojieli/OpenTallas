@@ -22,7 +22,9 @@ SRC = ['rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv', 'rtl/dsrom_sys/mtp/ot_dsro
 # name: (chain F, chain R, ENABLE, defines, receiver F, receiver R)
 CASES = dict(pass_r=(6, 7, 1, []), pass_v=(11, 11, 1, []), fail_legacy_r=(6, 7, 0, []), fail_legacy_v=(11, 11, 0, []),
              fail_short_r=(6, 7, 1, ['-DOT_MTP_NEG_SHORT_RTT']),
-             fail_stale_r=(6, 7, 1, [], 5, 6), fail_stale_v=(11, 11, 1, [], 9, 10), over_r=(5, 6, 1, [], 6, 7))
+             fail_stale_r=(6, 7, 1, [], 5, 6), fail_stale_v=(11, 11, 1, [], 9, 10), over_r=(5, 6, 1, [], 6, 7),
+             # the collective's receivers of the token return / seed (dsfd_coll_mtp_ep): mtp -> collective 8, back 8
+             pass_c=(8, 8, 1, []), fail_legacy_c=(8, 8, 0, []), fail_stale_c=(8, 8, 1, [], 6, 7))
 
 
 def one(name, out):

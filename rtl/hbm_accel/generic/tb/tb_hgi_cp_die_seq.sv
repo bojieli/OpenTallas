@@ -29,7 +29,7 @@ module tb_hgi_cp_die_seq;
         .c_araddr(c_araddr), .c_rvalid(1'b0), .c_rready(c_rready), .c_rdata(32'd0), .lcp(lcp), .cpl(cplk),
         .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_req_len(m_req_len), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
-    wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
+    wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [2074:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
     wire [690:0] am_rec; reg [2:0] am_ret = 3'b001;
     wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
     reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;

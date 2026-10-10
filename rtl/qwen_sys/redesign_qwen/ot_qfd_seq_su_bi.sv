@@ -571,10 +571,17 @@ localparam integer W_ME_AMC = 1;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) o_cnt <= {XW{1'b0}};
         else if (skip) o_cnt <= o_cnt + 1'b1;
+    reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};
+        else if (skip) o_cnt1 <= o_cnt1 + 1'b1;
+    wire [XW-1:0] o_dif0 = x_oacc - o_cnt, o_dif1 = x_oacc - o_cnt1;
+    wire o_eq0 = (o_dif0 == {XW{1'b0}}), o_eq1 = (o_dif1 == {XW{1'b0}});
+    wire o_pa0 = !o_eq0 && !o_dif0[XW-1], o_pa1 = !o_eq1 && !o_dif1[XW-1];
     wire [XW-1:0] o_dif_n = x_oacc - (o_cnt + {{(XW-1){1'b0}}, skip});
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin osync_r <= 1'b1; opast_r <= 1'b0; end
-        else begin osync_r <= (o_dif_n == {XW{1'b0}}); opast_r <= (o_dif_n != {XW{1'b0}}) && !o_dif_n[XW-1]; end
+        else begin osync_r <= skip ? o_eq1 : o_eq0; opast_r <= skip ? o_pa1 : o_pa0; end
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
     wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hq_v : (fq_n != 0)) && (!nx_v || issue || skip);
     // FQ_HEAD: the FIFO pops into hq when hq is empty or being loaded into NEXT
@@ -586,7 +593,7 @@ localparam integer W_ME_AMC = 1;
     wire own_idle_n = own_idle && !issue;
     wire own_ready_n = own_ready && !issue;
     wire kd_n = kv_write_drained && !(issue && OWN == 2);
-    wire osync_n = (o_dif_n == {XW{1'b0}});
+    wire osync_n = skip ? o_eq1 : o_eq0;
     wire o_drained_n = osync_n && x_oidle;
     function automatic rdy_x(input [1:0] u, input bar, input ch, input chr, input [15:0] chn, input wme, input wsu);
         reg chd, wo, wu, xd;

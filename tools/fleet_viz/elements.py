@@ -391,7 +391,9 @@ class Elements:
         vmap = {b: m for b, m in vmap.items() if m not in sup}   # never fold into a superseded parent (it would count nowhere)
         instances = collections.defaultdict(set)
         for b, v in ov['variants'].items():
-            if v.get('kind') == 'instance': instances[vmap[b]].update((b, vmap[b]))   # the master block is an instance too
+            # fill-9 2026-10-10: a fold whose parent is superseded is dropped from vmap above; indexing it raised KeyError
+            # and froze /api/elements from 11:06 to 16:37 (dsfd_mtp_seq_rtt instance of superseded dsrom_mtp_seq_native_binding)
+            if v.get('kind') == 'instance' and b in vmap: instances[vmap[b]].update((b, vmap[b]))   # the master block is an instance too
         groups = collections.defaultdict(list)
         for j in js: groups[master(j['block'], known, vmap)].append(j)
         for b in ob.get('closed', {}):   # option-B closed blocks with no loop job (routes judged outside the loop)

@@ -10,3 +10,8 @@
 - `--lane-equal` makes two changes. (1) Column relays on xa/xb/cc of one slot segment take the max count of the three. (2) `_go_retap`: a sequencer whose go_ carries k relays taps lc k registers earlier on the cc chain.
 - Result: layer1 and layer1e both PASS, 1792/1792 elements with x0 = x1 = go (`field_fa_full_le.log`, `field_fa_l1e_le.log`). The +1 go mutant FAILs on 1792/1792 (`field_fa_full_le_mut.log`).
 - `check` on layer1 (`field_check_full_le.log`): SS reach_violations 0 and TT reach PASS. far_side_relays went from 3849 to 3977 (+128 lane-pad relays). That class already failed on the base recipe (exit 3 unchanged).
+
+## collective <-> mtp receivers
+- `rtl/dsrom_sys/mtp/dsfd_coll_mtp_ep.sv` is the collective's receivers for the sequencer's token return and seed. They are ot_dsrom_mtp_lrx_rtt sized to the real head631 stages, mtp -> collective 8 and back 8, depth 20. The chain record alone says 6 / 7.
+- Link gate (`mtp_rtt_link_gate.log`): pass_c PASSes; fail_legacy_c and fail_stale_c (receiver sized for 6 / 7 on 8 / 8) FAIL as required.
+- The receivers are not bound into dsfd_sp_collective yet, because that slab has no MTP port today.

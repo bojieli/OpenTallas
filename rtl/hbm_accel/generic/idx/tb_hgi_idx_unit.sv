@@ -7,12 +7,12 @@
 module tb_hgi_idx_unit;
  parameter integer MUT = 0, PREF = 0;
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
- reg [1818:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; reg [273:0] vmr = 0;
+ reg [2074:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; reg [273:0] vmr = 0;
  ot_hgi_idx_unit #(.MUT(MUT), .PREF(PREF)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .vmq(vmq), .vmr(vmr),
   .sel_fs(), .sel_qb(), .sel_qbr(1'b0), .sel_kin(), .sel_to(612'd0), .sel_toc(), .sel_co(72'd0), .sel_coc(), .sel_ev(2'b00));
  // the vectors carry the v1 ABOR record; the unit takes {die, pos, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, hdr, v}
- function automatic [1818:0] widen(input [1236:0] o);
-  widen = {8'd0, 20'd0, o[1236:1195], 42'd0, o[1194:1153], o[1152:641], 512'd0, o[640:0]};
+ function automatic [2074:0] widen(input [1236:0] o);
+  widen = {256'd0, 8'd0, 20'd0, o[1236:1195], 42'd0, o[1194:1153], o[1152:641], 512'd0, o[640:0]};
  endfunction
  reg [31:0] vm [0:262143]; reg wr_mark [0:262143];
  reg [1236:0] rmem [0:0]; reg [52:0] lin [0:300000]; reg [52:0] lout [0:300000];

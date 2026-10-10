@@ -13,7 +13,7 @@
     "source": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
     "reason": "AR only by the owner's decision (2026-10-05, results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json verdict AR_MODE): the Qwen3-8B ROM is compute-balanced (weight read rate = MAC rate), so a multi-position verify costs about as much per position as an AR layer and DSpark measured below AR (best np3: 0.691-0.744x AR). DSpark stays built and exact but off; speculation pays only where the dominant per-token cost is shared across positions (the DS ROM and the HBM accelerator)."
    },
-   "exactness": "reference-level only (2026-10-10): the layer / token exactness was proven on the unstationed reference topology (1-edge co-located VM read); the TP sequencer assumes a 1-edge VM read and the r22k floorplan lacks the sequencer <-> VM all-reduce read bus, so die-level exactness and the AR read cost are unproven until the stationed re-proof (claude-takeover qwen-1010.log)"
+   "exactness": "stationed-exact on L0-L2 (option-4 masters); die closure pending (2026-10-10): the option-4 actual masters (seq_su_bi ICUT+VRL, ctlm_i, SU stations + endpoint counter) are token-exact on the L0-L2 chain at r22ko4 relays 16/16/16 with the sequencer <-> VM AR read bus and a round-trip-sized read queue (main 6359dc7dc; XMUT and VRL-1 mutants fail); plan of record r22ko4 = 4,908.6 tok/s typical at FEC +100 cycles per all-reduce (4,714.2 at FEC +240) until the FEC term is pinned"
   },
   {
    "design": "ds_rom",
@@ -56,6 +56,17 @@
    "mtp": {
     "available": false,
     "reason": "AR only: the HGI compiler emits no DeepSeek DSpark (MTP) program yet. On the generic die the DSpark step runs as KERNEL doorbells (spec 6.11, entry 3) issued by the CP's backend operation translator, which is still open, so there is no compiled MTP record stream to show."
+   }
+  },
+  {
+   "design": "qwen_kvdie",
+   "title": "Qwen3-8B ROM + KV die, 8K context, AR (TP4 pairs)",
+   "file": "qwen_kvdie.json",
+   "tok_s": 4908.6,
+   "cycles": 244468.0,
+   "mtp": {
+    "available": false,
+    "reason": "no qualified speculative composition implemented"
    }
   }
  ]

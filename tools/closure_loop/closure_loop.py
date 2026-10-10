@@ -96,7 +96,7 @@ def bench_crashed(st, rc, tail):
         return st["expect"] == "fail" or not WORK_RE.search(tail)
     return False
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
-DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
+DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile", "configs", "src"]   # drive-1010: + configs (5 MB) / src (1 MB): benches importing tools/* need both
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
@@ -887,6 +887,19 @@ DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect -
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
                  f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
                  "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
+# HOST-EMERGENCY (drive-1010 2026-10-10): EPYC2 (6 GB), EPYC4 (7 GB) and EPYC3 (2 GB, 13:26) hung -- the biggest
+# consumers were agent benches OUTSIDE the loop (verilator 75-120 GB at oom_score_adj 0) that MEM-GUARD cannot stop, and
+# the kernel OOM killer acted too late (sshd stalls first).  Every host probe now runs this early-OOM step: below
+# EMERGENCY_FREE_GB available it SIGKILLs the single largest process (>= 8 GB RSS) whose oom_score_adj is >= 0 (never a
+# -900 die process, never sshd / systemd / dockerd / containerd) and logs it to /tmp/ot_emergency_kill.log on the host.
+EMERGENCY_FREE_GB = 12
+EMERGENCY_PROBE = ("(a=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo); "
+                   f"if [ \"$a\" -lt {EMERGENCY_FREE_GB} ]; then "
+                   "v=$(ps -eo pid=,rss=,comm= --sort=-rss | while read p r c; do [ \"$r\" -ge 8388608 ] || break; "
+                   "case $c in sshd|systemd|dockerd|containerd|containerd-shim*) continue;; esac; "
+                   "[ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" -ge 0 ] 2>/dev/null && { echo $p; break; }; done); "
+                   "[ -n \"$v\" ] && { echo \"$(date -Is) MemAvailable ${a}G: kill -9 $v $(tr '\\0' ' ' < /proc/$v/cmdline | cut -c1-200)\" "
+                   ">> /tmp/ot_emergency_kill.log; kill -9 $v; echo OT_EMERGENCY_KILL $v; }; fi) 2>/dev/null; true")
 DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}} {{{{{{{{range .Mounts}}}}}}}}{{{{{{{{.Source}}}}}}}} {{{{{{{{end}}}}}}}}' $c "
                       f"| grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' && continue; ")
 PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
@@ -962,7 +975,7 @@ print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
 mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}
-{PAUSE_PROBE}; {STOPPED_PROBE}; {DIE_OOM_PROBE}""", timeout=40)
+{PAUSE_PROBE}; {STOPPED_PROBE}; {DIE_OOM_PROBE}; {EMERGENCY_PROBE}""", timeout=40)
         if r.returncode:
             info = None
         else:
@@ -1643,7 +1656,19 @@ def sync_source(j):
     if anc.returncode:
         raise ValueError(f"source commit {full[:12]} is not on origin/{src['branch']}")
     j["commit_full"] = full
-    paths = list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))
+    # SYNC-PATHS (drive-1010 2026-10-10): an extra path missing at the pinned commit made every sync fail 10 times with
+    # an empty message (hbm_hc_quarter_hcq_r25gq-7eea45363: results/uarch/hbm_hc_group_root_icg_20261010/model.json) ->
+    # fail once, terminally, naming the path.
+    missing = [x for x in src.get("extra_paths", [])
+               if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{full}:{x}"], timeout=60).returncode]
+    if missing:
+        raise ValueError(f"source.extra_paths not in commit {full[:12]}: {', '.join(missing[:6])} -- fix the spec "
+                         f"(the file must be committed at the pinned commit) and re-drop")
+    base_paths = list(src.get("paths", DEFAULT_SRC_PATHS))
+    if "paths" not in src:   # defaults absent at an old commit (configs/, src/) are skipped, never a pathspec error
+        base_paths = [x for x in base_paths
+                      if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{full}:{x}"], timeout=60).returncode == 0]
+    paths = base_paths + list(src.get("extra_paths", []))
     paths += implied_src_paths(spec, paths, full)
     run = j["run"]
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
