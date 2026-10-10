@@ -21,7 +21,17 @@
 // Cost: +1 cycle on every crossing (+2 per round trip); the prompt / forced-token read loop (t_provider -> provider
 // -> f_provider -> t_mtp) gains 2 cycles: the controller must wait PRL = 4 (hgi_mtp_native default).  REGB=0 is the
 // original unregistered wiring (the 6adb6c001 cycle-exact bench runs it).  MUT (bench mutants, REGB=1 only):
-//   1 native done not held behind the emit FIFO; 2 host done not held behind the host-record FIFO.
+//   1 native done not held behind the emit FIFO; 2 host done not held behind the host-record FIFO;
+//   3 ARGMAX dispatch relay pops without the unit's ready (a record lost while the unit is busy).
+//
+// mtp-lead 2026-10-09 (r25gm die integration): HGI ARGMAX DISPATCH RELAY.  The R25G dispatch plan
+// (tools/hgi_die_dispatch.py 'argmax', cp_band_alias -> this band) puts the CP -> ARGMAX unit record bus on this band's
+// S face: t_hgi_argmax 683 = {n_O, n_A, desc_O, desc_A, header, valid} / f_hgi_argmax 3 = {fault, done, ready} (the
+// unit ot_hgi_argmax_slot, instance hb_mtp_am).  The record's producer is the HGI sequencer (ot_hgi_seq: u_v / u_rdy /
+// u_done / u_fault), which is not in this band: it arrives over the N cross-band pair x_hgi_argmax_rec 683 (in) /
+// x_hgi_argmax_ret 3 (out) from the band that hosts the sequencer (decision hgi-takeover (5)).  REGB=1: the record
+// crosses an ot_sc_pfifo (2 entries; valid = rec[0], ready = the unit's ret[0]); done / fault get one pin flop each;
+// the sequencer's ready is the FIFO's registered in_ready.  +1 cycle each way.  REGB=0: wires.
 // The job pin ready also carries a registered admission-open bit: no job is parked in the pin FIFO while admission
 // is closed (the held native done lasts until the drained reset, which would discard it).
 module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0)(
@@ -38,12 +48,15 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
  output wire [0:0] t_abort,
  output wire [0:0] t_drained,
  input wire [17:0] f_am,
- input wire [72:0] f_backend,output wire [270:0] t_backend
+ input wire [72:0] f_backend,output wire [270:0] t_backend,
+ input wire [682:0] x_hgi_argmax_rec,output wire [2:0] x_hgi_argmax_ret,
+ output wire [682:0] t_hgi_argmax,input wire [2:0] f_hgi_argmax
 );
  hfd_cmdproc_s ar(.cSE(cSE),.cSW(cSW),.ck(ck),.rst(rst),
   .f_loader(f_loader),.f_router(f_router),.t_su_SE(t_su_SE),.t_su_SW(t_su_SW),
   .xb(xb),.xl(xl),.xt(xt));
  generate if (REGB == 0) begin: g_direct
+  assign t_hgi_argmax=x_hgi_argmax_rec;assign x_hgi_argmax_ret=f_hgi_argmax;
   hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(ck[0]),.rst(rst[0]),
    .f_mtp(f_mtp),.emit_pend(f_mtp[43]),.t_mtp(t_mtp),.f_host(f_host),.t_host(t_host),.f_provider(f_provider),
    .t_emit(t_emit),.t_provider(t_provider),.f_emit_host(f_emit_host),.t_emit_host(t_emit_host),
@@ -124,6 +137,14 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   assign t_emit_host={teh_q[24],teh_q[23:3],teh_q[2:0],df_ov,hf_od,hf_ov};
   assign t_abort=ab_q;assign t_drained=dr_q;
   assign t_backend={kf_ir&&rn,bf_od,bf_ov};
+  // ---- HGI ARGMAX dispatch relay (sequencer band -> ARGMAX unit)
+  wire af_ir,af_ov;wire [681:0] af_od;
+  ot_sc_pfifo #(.W(682),.S(2),.G(32)) af(.clk(c),.rst_n(rn),.in_valid(x_hgi_argmax_rec[0]&&rn),.in_ready(af_ir),
+   .in_data(x_hgi_argmax_rec[682:1]),.out_valid(af_ov),.out_ready((MUT==3)?1'b1:f_hgi_argmax[0]),.out_data(af_od));
+  reg [2:1] ar_q;
+  always @(posedge c or posedge rm) if (rm) ar_q<=2'b0; else ar_q<=f_hgi_argmax[2:1];
+  assign t_hgi_argmax={af_od,af_ov};
+  assign x_hgi_argmax_ret={ar_q,af_ir&&rn};
  end endgenerate
 endmodule
 

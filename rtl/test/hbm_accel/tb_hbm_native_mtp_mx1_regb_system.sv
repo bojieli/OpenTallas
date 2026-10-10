@@ -28,7 +28,8 @@ module tb_hbm_native_mtp_mx1_regb_system #(parameter integer MUT=0, parameter in
   .f_loader(341'b0),.f_router(64'b0),.t_su_SE(suSE),.t_su_SW(suSW),.xb(16'b0),.xl(xl),.xt(xt),
   .f_mtp(fm),.t_mtp(tm),.f_host({cfg,4'hb,32'h12345678,jv}),.t_host(th),.f_provider(fprov),
   .t_emit(temit),.t_provider(tprov),.f_emit_host({dr,hr}),.t_emit_host(teh),.t_abort(abort),.t_drained(drained),
-  .f_am({bai,bam}),.f_backend({1'b0,1'b1,bcf,cs,cg,cj,bcv,br}),.t_backend(tb));
+  .f_am({bai,bam}),.f_backend({1'b0,1'b1,bcf,cs,cg,cj,bcv,br}),.t_backend(tb),
+  .x_hgi_argmax_rec(683'b0),.x_hgi_argmax_ret(),.t_hgi_argmax(),.f_hgi_argmax(3'b001));   // dispatch relay idle here
  assign bv=tb[0];assign bc=tb[1+:201];assign bj=tb[202+:32];assign bg=tb[234+:4];assign bs=tb[238+:32];assign bcr=tb[270];
  ot_hbm_native_mtp_operation_backend_mx1 #(.ENABLE(1)) backend(
  .clk(clk),.rst_n(rst_n),.external_fault(abort),.backend_quiescent(1'b1),.install_v(iv),.install_kind(ik),.install_pc(ipc),.noise_token(17'd129279),

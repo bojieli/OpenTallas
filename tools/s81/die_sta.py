@@ -38,7 +38,10 @@ PARTS = dict(dsfd_bk_selector=('dsfd_selt_q', 'dsfd_selt_c'), dsfd_bk_collector=
              dsfd_svc=('dsfd_svc_pc', 'dsfd_svc_stn', 'dsfd_svcio_ad', 'dsfd_svcio_od', 'dsfd_svcio_q', 'dsfd_svcio_x'),
              dsfd_sp_vm=('dsfd_vm_bg',), dsfd_sp_gather=('ot_s81ph_root_tile', 'ot_s81ph_root_blk'),
              # layer1e Engram service (s81-gen 2026-10-09): lookup + sink hardened separately (prefetch SRAM macros)
-             dsfd_engram=('dsfd_engram_lkp', 'dsfd_engram_sink'))
+             dsfd_engram=('dsfd_engram_lkp', 'dsfd_engram_sink'),
+             # --wfc-hard slab (s81-gen 2026-10-09): SOURCE HARD ot_dsrom_wfc_tokpipe_src CLOSED (910e67c7b; record has no
+             # exported LEF / Liberty yet -> counted open by the lib index), HARD tok, link (lnk_b record, cell dsfd_wfc_lnk)
+             dsfd_wfc=('ot_dsrom_wfc_tokpipe_src', 'dsfd_wfc_tok_hard', 'dsfd_wfc_lnk'))
 
 
 def _rank(p, root, label):
