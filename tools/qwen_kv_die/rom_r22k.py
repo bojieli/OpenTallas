@@ -36,6 +36,7 @@ CTL_BITS = 528 + 1 + 1                    # word + valid down, credit back
 D2D_H = 518.4                             # qfd_d2d_rom frame height (cw x 518.4 = 0.403 mm2), see CONTRACT.md
 MARGIN = 21.6
 SPINE_RELAY_CH = 259.2                      # KV2: set by tools/die_top_lint.py QWEN_R22K (KV2 spine M | E relay channel; 0 = r22k as first built)
+SQ_TI_EAST = False                         # relay fix F1: the r21c-frame sequencer's ti / ts on its E face (the channel of the tree-top pins)
 TT_ISSUE_BOTTOM = False                    # relay fix F1: the tree top's issue / status pins at its BOTTOM (toward the VM / SU)
 SEQ_COMPACT_ANCHOR = 'top'                 # 'top': the compact frame at the top of the old slot (toward the SU / VM / tree top)
 SEQ_COMPACT = None                         # (w, h): the closed compact ICUT sequencer (icut_t-a8f3ba53c 259.2 x 333.36)
@@ -149,6 +150,11 @@ def surgery(v, m):
         sq.w, sq.h = SEQ_COMPACT[0] - v.SHAVE, SEQ_COMPACT[1] - v.SHAVE
         if SEQ_COMPACT_ANCHOR == 'top':
             sq.y = round(v.dn(top - sq.h - v.SHAVE, v.GY), 4)
+        elif str(SEQ_COMPACT_ANCHOR).startswith('chanE:'):
+            # in the M | E spine relay channel (inserted below, SPINE_RELAY_CH wide), right of the sequencer's column
+            yc = float(SEQ_COMPACT_ANCHOR.split(':')[1])
+            sq.y = round(v.dn(yc - sq.h / 2, v.GY), 4)
+            rec['seq_compact']['chanE'] = True          # x set after the M | E channel is inserted (below)
         elif str(SEQ_COMPACT_ANCHOR).startswith('chan:'):
             # in the W | M spine channel (between the W column's right edge and the sequencer's column), centred at y
             yc = float(SEQ_COMPACT_ANCHOR.split(':')[1])
@@ -161,6 +167,9 @@ def surgery(v, m):
     if SPINE_RELAY_CH:
         W = _spine_relay_channel(v, m, g, round(xc + g['cw'], 4), SPINE_RELAY_CH, W)
         rec['spine_relay_channel_um'] = SPINE_RELAY_CH
+        if rec.get('seq_compact', {}).get('chanE'):
+            sqc = next(i for i in insts if i.name == 'sp_constants_sequencer')
+            sqc.x = round(v.up(xc + g['cw'] + 4.32, v.GX), 4)   # inside the M | E channel, left of the shifted E column
     if SPINE_RELAY_CH_WM:
         W = _spine_relay_channel(v, m, g, round(xc, 4), SPINE_RELAY_CH_WM, W)
         rec['spine_relay_channel_wm_um'] = SPINE_RELAY_CH_WM
@@ -282,6 +291,11 @@ def _wrap_masters(v, m):
                 sqi.w, sqi.h = sq_wh
         if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):
             M['qfd_sp_constants_sequencer'] = _compact_seq_master(v, model, M['qfd_sp_constants_sequencer'], sqi)
+        if SQ_TI_EAST and not (SEQ_COMPACT and m.get('r22k', {}).get('seq_compact')):
+            sqm = M['qfd_sp_constants_sequencer']
+            for pn in ('ti', 'ts'):
+                if pn in sqm.ports:
+                    sqm.ports[pn] = sqm.ports[pn][:2] + ('E',) + sqm.ports[pn][3:]
         if TT_ISSUE_BOTTOM:
             tt = M['qfd_sp_tree_top']
             for pn, c in (('si', 150.0), ('so', 60.0)):
