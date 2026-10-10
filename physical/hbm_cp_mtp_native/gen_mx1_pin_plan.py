@@ -11,6 +11,8 @@ def generate():
             name,layer,x0,y0,x1,y1=pin
             assert name not in seen,(port,name);seen.add(name)
             assert x1>x0 and y1>y0,(port,pin)
+            # ASAP7 tech LEF M6 WIDTH 0.032: horizontal face contacts.
+            if layer == "M6": assert y1-y0 >= 0.032-1e-9,("M6 minimum width",port,pin)
             lines.append(f'place_pin -pin_name {{{name}}} -layer {layer} -location {{{(x0+x1)/2:.6f} {(y0+y1)/2:.6f}}} -pin_size {{{x1-x0:.6f} {y1-y0:.6f}}}')
     return '\n'.join(lines)+'\n',len(seen)
 def main():

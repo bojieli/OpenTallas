@@ -1,0 +1,8 @@
+hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm); calibrate CTS-only (no repair) added
+PINFLOP-REF overlay: physical/qwen_die_masters/io_ref_skew.sdc
+PINFLOP-REF overlay: physical/qwen_die_masters/mc/qfd_sp_constants_sequencer_fqh/io_ref_skew.sdc
+PINFLOP-REF overlay: physical/qwen_die_masters/mc/qfd_sp_constants_sequencer_sys/io_ref_skew.sdc
+hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)
+tt_overlay: OK run_abi3_physical e71ff6bdbb70: corner block v2 (WC reads TT) replaced a rename block; OT_CTS_FIX_HOOKS function replaced (context fallback); direct config.mk WC->TT x6; context copy helpers x4; SMH: generator has no WC_LIB_FILES line (predates corner libs; not patched); h1_patch: 1 files rewritten under /srv/opentallas-scratch2/scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-ft2-hm10-11a59d73f-tc/src
+calibrate: no 4_1_cts.odb under /srv/opentallas-scratch2/scratch/claude/closure-loop/hfd_cmdproc_s_mtp_native_mx1_rb-ft2-hm10-11a59d73f-tc/routes/hfd_cmdproc_s_mtp_native_mx1_rb_ft2_hm10_11a59d73f_tc_cal/work/orfs/results/asap7/opentallas_hfd_cmdproc_s_mtp_native_mx1_asap7_mtp_hfd_cmdproc_s_mtp_native_mx1_rb_ft2_hm10_11a59d73f_tc_cal/base
+CALIBRATE_FAIL class=synth_or_place detail=[ERROR PPL-0034] Pin cke0[0] has dimension 0.02u which is less than the min width 0.03u of layer M6.

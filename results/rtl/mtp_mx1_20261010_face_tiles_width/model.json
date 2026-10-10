@@ -1,0 +1,99 @@
+{
+  "schema": "opentallas.mx1_face_tiles.v1",
+  "source": "96ee08233",
+  "models": [
+    "Qwen3-8B HBM",
+    "DeepSeek-V4.1 HBM"
+  ],
+  "ports_sha256": "8692c5b04d0d7dfae59372467b8ce4242c329b53ec5858fa90e75fa2d337e3bf",
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity": 0,
+  "memory_port_bytes_per_cycle": 0,
+  "new_boundary_bits_per_cycle": 4,
+  "new_boundary_clock_tracks": 4,
+  "hardened_elements_per_die": 1,
+  "side_tile_count": 4,
+  "additional_ffs": 0,
+  "additional_lockup_ffs": 0,
+  "tile_clock_pins": {
+    "cke0": [
+      1399.56,
+      43.2
+    ],
+    "cke1": [
+      1399.56,
+      129.6
+    ],
+    "ckw0": [
+      0.096,
+      43.2
+    ],
+    "ckw1": [
+      0.096,
+      129.6
+    ]
+  },
+  "side_pin_ranges": {
+    "cSE": {
+      "min_y_um": 13.116,
+      "max_y_um": 171.708,
+      "tile_cut_y_um": 86.4,
+      "pins_per_tile": [
+        382,
+        445
+      ],
+      "max_clock_pin_distance_um": 43.14
+    },
+    "t_su_SE": {
+      "min_y_um": 0.636,
+      "max_y_um": 12.732,
+      "tile_cut_y_um": 86.4,
+      "pins_per_tile": [
+        64,
+        0
+      ],
+      "max_clock_pin_distance_um": 42.564
+    },
+    "cSW": {
+      "min_y_um": 13.116,
+      "max_y_um": 171.708,
+      "tile_cut_y_um": 86.4,
+      "pins_per_tile": [
+        382,
+        445
+      ],
+      "max_clock_pin_distance_um": 43.14
+    },
+    "t_su_SW": {
+      "min_y_um": 0.636,
+      "max_y_um": 12.732,
+      "tile_cut_y_um": 86.4,
+      "pins_per_tile": [
+        64,
+        0
+      ],
+      "max_clock_pin_distance_um": 42.564
+    }
+  },
+  "max_side_tile_span_um": 86.4,
+  "pin_flop_final_wire_target_um": 12,
+  "source_latency_policy": "each face leaf arrives at measured interior insertion; actual local clock network delay is added by STA",
+  "source_accounting": "separate related generated face clocks; calibrate core_clk only; one die common phase, no asynchronous groups",
+  "local_clock_network_target_ps": 130,
+  "cross_root_half_cycle_ps": 416.5,
+  "conservative_data_budget_ps": 206.5,
+  "crossing_obligation": "retain physical source-root falling-edge lockups; measure actual launch/capture skew in TT/FF",
+  "clock_buffers_area_allowance_um2": 19.2,
+  "outline_um": [
+    1399.656,
+    701.976
+  ],
+  "replica_mux_demux_cost": 0,
+  "clock_fanout": "partition E/W capture sinks by actual pin y; no clock mux remains after TILECLK constant elaboration",
+  "routing_tracks_required": 4,
+  "routing_capacity": "four dedicated M6 face contacts; every added contact checked for overlap against existing M6 pins",
+  "latency_cycles_added": 0,
+  "single_user_token_latency_ns_added": 0,
+  "qualification": "full-shape route and exactness; no measured gain claimed"
+}

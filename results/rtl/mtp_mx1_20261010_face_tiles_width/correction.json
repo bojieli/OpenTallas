@@ -1,0 +1,11 @@
+{
+  "prior_job": "hfd_cmdproc_s_mtp_native_mx1_rb-ft2-hm10-11a59d73f-tc",
+  "prior_source": "11a59d73f",
+  "failure": "PPL-0034 new M6 face clock width0.024um below min0.032um",
+  "fix": "four M6 clock contacts increased to0.032um, same centers; generator asserts M6 minimum; RTL byte-identical",
+  "technology_source": "openroad/orfs:latest /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef LAYER M6 WIDTH0.032 PITCH0.064",
+  "pins": 5409,
+  "failed_log_sha256": "53d220c18eeaf4d8c73969dc08ef9ade1eeea8496c14c0b387fa09916e35a42f",
+  "gate": "prior gate13/13 retained; no RTL change",
+  "fullshape_route_required": true
+}
