@@ -32,9 +32,9 @@
 //   ID PHASE: positions >= nout invalidated, every block rank-sorted by the id key, then ceil(nout / 4) rounds of
 //            odd-even transposition (block merge-split between neighbours, the same merge network: the lower cell
 //            keeps the bottom 4 and returns the top 4 to the upper cell) sort the selection by id;
-//   OUTPUT: the array shifts up one cell a cycle; 16 ids -> one O line (VM, 16 words), 16 values -> one R line.
+//   OUTPUT: the array shifts up 4 cells an edge: 16 ids -> one O line (VM, 16 words), 16 values -> one R line.
 // Fault (sticky until rst_n): NaN, a flit from outside the group / past pf, more than G pf flits, a credit underflow,
-// a FIFO overflow.  MUT (bench mutants): 1 ties to the HIGHER id, 2 tau taken one position too early (nout - 2),
+// a FIFO overflow.  MUT (bench mutants): 1 ties to the HIGHER id, 2 the 4th survivor of a select cycle is dropped,
 // 3 a reservation does not consume a credit (FIFO overflow under back-pressure), 4 no id phase (O in value order).
 module ot_hgi_coll_tkm #(
     parameter integer KMAX = 2048,
@@ -142,8 +142,10 @@ module ot_hgi_coll_tkm #(
     reg          e2_v; reg [EW-1:0] e2 [0:3]; reg [5:0] e2_ge;   // pairwise compares for the rank sort
     // ---------------------------------------------------------------- the array
     reg [EW-1:0] X [0:C-1][0:3];
-    reg [EW-1:0] Y [0:C][0:3];
-    reg          Yv [0:C];
+    // the entry block, rank-sorted, registered once per group of BG positions (broadcast fanout replicated at the flops)
+    localparam integer BG = 64, NB = (KMAX + BG - 1) / BG, P = KMAX;
+    reg [EW-1:0] bk [0:NB-1][0:3];
+    reg          bv;
     reg [CB:0]   rnd;                          // OETS rounds done
     reg          par;                          // OETS parity: 0 pairs (2i, 2i+1), 1 pairs (2i+1, 2i+2)
     // merge network outputs, per cell
@@ -159,7 +161,7 @@ module ot_hgi_coll_tkm #(
         for (c = 0; c < C; c = c + 1) begin
             for (s = 0; s < 4; s = s + 1) begin
                 A_[s] = X[c][s];
-                B_[s] = (ph == P_OETS) ? ((c > 0) ? X[(c > 0) ? c - 1 : 0][s] : {EW{1'b0}}) : Y[c][s];
+                B_[s] = (c > 0) ? X[(c > 0) ? c - 1 : 0][s] : {EW{1'b0}};     // OETS: the cell above
             end
             for (a = 0; a < 4; a = a + 1) for (b = 0; b < 4; b = b + 1)
                 ge[a][b] = (mkey(A_[a], idm) >= mkey(B_[b], idm));
@@ -218,16 +220,34 @@ module ot_hgi_coll_tkm #(
     // ---------------------------------------------------------------- output packer
     reg [12:0] outn;                           // elements shifted out
     reg [12:0] wrn;                            // elements written (O lines)
-    reg [31:0] po [0:15]; reg [31:0] pr [0:15]; reg [4:0] pc;   // packer: ids / values collected
     reg [8:0]  line;                           // output line index
-    reg        wq_v, wq_r;                     // line queue: O line pending, R line pending
-    reg [FW-1:0] wq_od, wq_rd; reg [15:0] wq_m; reg [8:0] wq_line;
     // ---------------------------------------------------------------- main sequential
-    reg any_yv;
-    always @* begin
-        any_yv = 1'b0;
-        for (c = 0; c < C; c = c + 1) if (Yv[c] && CB'(c) < cact_q) any_yv = 1'b1;
+    // BROADCAST INSERTION (one rank-sorted block of 4 a cycle, settled the same edge): position p of the array (A_p =
+    // X[p / 4][p % 4], sorted by the value key, larger first) moves to p + c_p, c_p = the block elements greater than A_p
+    // (monotone in p); position q takes A_{q-i} when c_{q-i} = i (i = 0 .. 4), else block element j where
+    // c_{q-j} > j and c_{q-j-1} <= j.  Positions >= KMAX fall off (the smallest: KMAX >= k better ones remain).
+    reg [2:0] cp [0:P-1];
+    reg [EW-1:0] ins [0:P-1];
+    always @* begin : bcins
+        for (integer p_ = 0; p_ < P; p_ = p_ + 1) begin
+            cp[p_] = 3'd0;
+            for (integer j = 0; j < 4; j = j + 1)
+                if (vkey(bk[p_ / BG][j]) > vkey(X[p_ / 4][p_ % 4])) cp[p_] = cp[p_] + 3'd1;
+        end
+        for (integer q = 0; q < P; q = q + 1) begin
+            ins[q] = {EW{1'b0}};
+            for (integer i = 0; i <= 4; i = i + 1)
+                if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) ins[q] = ins[q] | X[((q - i >= 0) ? q - i : 0) / 4][((q - i >= 0) ? q - i : 0) % 4];
+            for (integer j = 0; j < 4; j = j + 1)
+                if (q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j)))
+                    ins[q] = ins[q] | bk[q / BG][j];
+        end
     end
+    // output step: one 16-element line an edge (the array shifts up 4 cells); O line (+ R line) into a 4-line queue that
+    // the write port drains one line an edge; a step needs room for its lines
+    reg [FW-1:0] lq_d [0:3]; reg [39:0] lq_a [0:3]; reg [15:0] lq_m [0:3]; reg [2:0] lq_n; reg [1:0] lq_h, lq_t;
+    wire lq_pop = (lq_n != 3'd0) && (!w_v || w_rdy);
+    wire pgo = (ph == P_OUT) && (outn < nout_q) && ({1'b0, lq_n} - {3'd0, lq_pop} + (hr_q ? 4'd2 : 4'd1) <= 4'd4);
     // select (combinational over the registered staging heads)
     reg [EW-1:0] sel_e [0:3]; reg [2:0] sel_n; reg [7:0] sel_take [0:DEL-1]; reg [DEL-1:0] sel_pop;
     always @* begin : selc
@@ -239,7 +259,7 @@ module ot_hgi_coll_tkm #(
             sel_take[l] = 8'd0;
             hm = (st_n[l] != 2'd0) ? (st_m[l][0] & ~dn[l]) : 8'd0;
             for (i = 0; i < 8; i = i + 1) if (hm[i]) begin
-                if (r_ < 4) begin sel_e[r_] = st_e[l][0][i]; sel_take[l][i] = 1'b1; end
+                if (r_ < 4) begin if (!(MUT == 2 && r_ == 3)) sel_e[r_] = st_e[l][0][i]; sel_take[l][i] = 1'b1; end
                 r_ = r_ + 1;
             end
             sel_pop[l] = (st_n[l] != 2'd0) && ((hm & ~sel_take[l]) == 8'd0);
@@ -254,9 +274,9 @@ module ot_hgi_coll_tkm #(
             n_q <= 12'd1; k_q <= 13'd1; nel <= 19'd0; g_q <= 8'd1; gb_q <= 8'd0; pf_q <= 16'd1; nout_q <= 13'd1; ob_q <= 40'd0; rb_q <= 40'd0; hr_q <= 1'b0;
             tot_q <= 24'd0; cact_q <= '0; tc_q <= '0; ts_q <= 2'd0; rcv <= 24'd0; tau <= '0;
             d1_v <= '0; d2_v <= '0; fpop_q <= '0; ld_v <= '0; e1_v <= 1'b0; e2_v <= 1'b0;
-            rnd <= '0; par <= 1'b0; outn <= 13'd0; wrn <= 13'd0; pc <= 5'd0; line <= 9'd0; wq_v <= 1'b0; wq_r <= 1'b0;
+            rnd <= '0; par <= 1'b0; outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 3'd0; lq_h <= 2'd0; lq_t <= 2'd0;
             for (l = 0; l < DEL; l = l + 1) begin cr[l] <= 8'(CAP); st_n[l] <= 2'd0; dn[l] <= 8'd0; occ[l] <= 8'd0; end
-            for (c = 0; c <= C; c = c + 1) Yv[c] <= 1'b0;
+            bv <= 1'b0;
             for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
         end else begin
             done <= 1'b0;
@@ -327,7 +347,7 @@ module ot_hgi_coll_tkm #(
                     st_n[l] <= n_;
                 end
             end
-            // ---- entry: select -> e1 -> (compares) e2 -> rank-sorted block into Y[0]
+            // ---- entry: select -> e1 -> (compares) e2 -> rank-sorted block -> broadcast insertion
             e1_v <= ins_live && (sel_n != 3'd0);
             for (s = 0; s < 4; s = s + 1) e1[s] <= sel_e[s];
             if (ins_live && sel_n != 3'd0) stat_surv <= stat_surv + 32'(sel_n);
@@ -344,22 +364,18 @@ module ot_hgi_coll_tkm #(
                         r1 = 2'(e2_ge[0]) + 2'(!e2_ge[3]) + 2'(!e2_ge[4]);
                         r2 = 2'(e2_ge[1]) + 2'(e2_ge[3]) + 2'(!e2_ge[5]);
                         r3 = 2'(e2_ge[2]) + 2'(e2_ge[4]) + 2'(e2_ge[5]);
-                        Yv[0] <= e2_v;
-                        for (s = 0; s < 4; s = s + 1)
-                            Y[0][s] <= ((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
-                                       ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}});
+                        bv <= e2_v;
+                        for (integer g = 0; g < NB; g = g + 1)
+                            for (s = 0; s < 4; s = s + 1)
+                                bk[g][s] <= ((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
+                                            ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}});
                         if (e2_v) stat_ins <= stat_ins + 32'd1;
                     end
-                    for (c = 0; c < C; c = c + 1) begin
-                        if (Yv[c]) for (s = 0; s < 4; s = s + 1) X[c][s] <= mt[c][s];
-                        Yv[c + 1] <= Yv[c] && mb[c][0][EW-1];
-                        for (s = 0; s < 4; s = s + 1) Y[c + 1][s] <= mb[c][s];
-                    end
+                    if (bv) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= ins[c * 4 + s];
                 end
                 P_INV: begin
                     for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1)
                         if (13'(c * 4 + s) >= nout_q) X[c][s] <= {EW{1'b0}};
-                    for (c = 0; c <= C; c = c + 1) Yv[c] <= 1'b0;
                 end
                 P_RS: begin
                     for (c = 0; c < C; c = c + 1) begin : rs
@@ -374,40 +390,31 @@ module ot_hgi_coll_tkm #(
                         else if (c + 1 < C && lowc(c + 1, par)) for (s = 0; s < 4; s = s + 1) X[c][s] <= mt[(c + 1 < C) ? c + 1 : c][s];
                     end
                 end
-                P_OUT: if (!wq_v && !wq_r && outn < nout_q) begin
-                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= (c + 1 < C) ? X[(c + 1 < C) ? c + 1 : c][s] : {EW{1'b0}};
+                P_OUT: if (pgo) begin
+                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= (c + 4 < C) ? X[(c + 4 < C) ? c + 4 : c][s] : {EW{1'b0}};
                 end
                 default: ;
             endcase
-            // ---- output packer (P_OUT): cell 0 -> 4 elements an edge; 16 -> one O line (+ one R line)
-            if (ph == P_OUT && !wq_v && !wq_r && outn < nout_q) begin : pk
-                reg [4:0] pc_; reg [12:0] on_;
-                pc_ = pc; on_ = outn;
-                for (s = 0; s < 4; s = s + 1) if (on_ < nout_q) begin
-                    po[pc_[3:0]] <= (MUT == 1) ? X[0][s][50:19] : ~X[0][s][50:19];
-                    pr[pc_[3:0]] <= unkey(X[0][s][82:51], X[0][s][0]);
-                    pc_ = pc_ + 5'd1; on_ = on_ + 13'd1;
+            // ---- output (P_OUT): cells 0 .. 3 -> one O line (+ one R line) an edge
+            begin : pk
+                reg [2:0] n_; reg [1:0] t_; reg [12:0] cnt_; reg [FW-1:0] od_, rd_; reg [15:0] m_;
+                n_ = lq_n; t_ = lq_t;
+                if (lq_pop) begin
+                    w_v <= 1'b1; w_addr <= lq_a[lq_h]; w_mask <= lq_m[lq_h]; w_data <= lq_d[lq_h];
+                    lq_h <= lq_h + 2'd1; n_ = n_ - 3'd1;
+                end else if (w_v && w_rdy) w_v <= 1'b0;
+                if (pgo) begin
+                    cnt_ = ((nout_q - outn) >= 13'd16) ? 13'd16 : (nout_q - outn);
+                    m_ = (cnt_ == 13'd16) ? 16'hFFFF : 16'((17'd1 << cnt_[4:0]) - 17'd1);
+                    for (i = 0; i < 16; i = i + 1) begin
+                        od_[32*i +: 32] = (13'(i) < cnt_) ? ((MUT == 1) ? X[i / 4][i % 4][50:19] : ~X[i / 4][i % 4][50:19]) : 32'd0;
+                        rd_[32*i +: 32] = (13'(i) < cnt_) ? unkey(X[i / 4][i % 4][82:51], X[i / 4][i % 4][0]) : 32'd0;
+                    end
+                    lq_d[t_] <= od_; lq_a[t_] <= ob_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 2'd1; n_ = n_ + 3'd1;
+                    if (hr_q) begin lq_d[t_] <= rd_; lq_a[t_] <= rb_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 2'd1; n_ = n_ + 3'd1; end
+                    line <= line + 9'd1; outn <= outn + cnt_;
                 end
-                outn <= on_;
-                if (pc_ == 5'd16 || on_ == nout_q) begin
-                    wq_v <= 1'b1; wq_r <= hr_q; wq_line <= line; line <= line + 9'd1;
-                    wq_m <= (pc_ == 5'd16) ? 16'hFFFF : 16'((17'd1 << pc_) - 17'd1);
-                    pc_ = 5'd0;
-                end
-                pc <= pc_;
-            end
-            // line data: assembled from the packer one edge after it completed (po / pr settled)
-            if (w_v && w_rdy) w_v <= 1'b0;
-            if (!w_v || w_rdy) begin
-                if (wq_v) begin
-                    w_v <= 1'b1; w_addr <= ob_q + {27'd0, wq_line, 4'd0}; w_mask <= wq_m;
-                    for (i = 0; i < 16; i = i + 1) w_data[32*i +: 32] <= po[i];
-                    wq_v <= 1'b0;
-                end else if (wq_r) begin
-                    w_v <= 1'b1; w_addr <= rb_q + {27'd0, wq_line, 4'd0}; w_mask <= wq_m;
-                    for (i = 0; i < 16; i = i + 1) w_data[32*i +: 32] <= pr[i];
-                    wq_r <= 1'b0;
-                end
+                lq_n <= n_; lq_t <= t_;
             end
             // ---- phase control
             case (ph)
@@ -418,19 +425,19 @@ module ot_hgi_coll_tkm #(
                     cact_q <= CB'((cfg_nout + 13'd3) >> 2);
                     begin : tp
                         reg [12:0] p_;
-                        p_ = (MUT == 2 && cfg_nout >= 13'd2) ? cfg_nout - 13'd2 : cfg_nout - 13'd1;
+                        p_ = cfg_nout - 13'd1;
                         tc_q <= CB'(p_ >> 2); ts_q <= p_[1:0];
                     end
                     for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
-                    for (c = 0; c <= C; c = c + 1) Yv[c] <= 1'b0;
+                    bv <= 1'b0;
                     stat_ins <= 32'd0; stat_surv <= 32'd0; stat_cycles <= 32'd0;
-                    outn <= 13'd0; wrn <= 13'd0; pc <= 5'd0; line <= 9'd0; rnd <= '0; par <= 1'b0;
+                    outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; rnd <= '0; par <= 1'b0;
                     ph <= P_INS;
                 end
                 P_INS: if (rcv == tot_q && d1_v == '0 && d2_v == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
                            st_n[0] == 2'd0 && st_n[1] == 2'd0 && st_n[2] == 2'd0 && st_n[3] == 2'd0)
                     ph <= P_DRAIN;
-                P_DRAIN: if (!e1_v && !e2_v && !any_yv && !Yv[0]) begin
+                P_DRAIN: if (!e1_v && !e2_v && !bv) begin
                     ph <= P_INV;
                     // O.n must be min(k, the group's elements): a record whose O.n disagrees faults (E_RANGE)
                     if (19'(nout_q) != ((19'(k_q) < nel) ? 19'(k_q) : nel)) fault <= 1'b1;
@@ -441,7 +448,7 @@ module ot_hgi_coll_tkm #(
                     par <= ~par; rnd <= rnd + 1'b1;
                     if (rnd + 1'b1 >= (CB+1)'(cact_q)) ph <= P_OUT;
                 end
-                P_OUT: if (outn == nout_q && !wq_v && !wq_r) ph <= P_FLUSH;
+                P_OUT: if (outn == nout_q && lq_n == 3'd0) ph <= P_FLUSH;
                 P_FLUSH: if (!w_v) begin ph <= P_IDLE; done <= 1'b1; end
                 default: ph <= P_IDLE;
             endcase

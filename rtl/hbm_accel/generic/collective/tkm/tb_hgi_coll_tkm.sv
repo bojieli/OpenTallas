@@ -96,7 +96,7 @@ module tb_hgi_coll_tkm;
                 rel = RANK - GB; m = idx - rel * PF;
                 if (!f[PWT-1] || m < 0 || m >= PF) $fatal(1, "unexpected departure kind %0d idx %0d", f[PWT-1], idx);
                 for (integer q = 0; q < G; q = q + 1) if (q != rel)
-                    sched((q + m) % NPT, cyc + LATC + (q % 5) + ((SKEW > 0) ? ($urandom(seed_r) % (SKEW + 1)) : 0),
+                    sched((q + m) % NPT, cyc + LATC + (q % 5) + ((SKEW > 0) ? ($urandom() % (SKEW + 1)) : 0),
                           {1'b1, 8'hFF, 8'(GB + q), 16'(q * PF + m), peer_flit(q, m)});
             end
             for (integer p = 0; p < NPT; p = p + 1) begin
@@ -116,11 +116,20 @@ module tb_hgi_coll_tkm;
                     vm[int'(tw_a) + j] = tw_d[32*j +: 32]; vmw[int'(tw_a) + j] = 1'b1;
                 end
             end
-            tw_r <= (WSTALL == 0) || (($urandom(seed_r) % 100) >= WSTALL);
+            tw_r <= (WSTALL == 0) || (($urandom() % 100) >= WSTALL);
             if (|dv) $fatal(1, "a delivery reached the SU deliver port during a TOPK_MERGE");
         end else begin
             rxv <= 0; crr <= 0; tw_r <= 1'b1;
         end
+    end
+    // ---------------------------------------------------------------- phase timeline (report only)
+    reg [3:0] ph_q = 0; longint t_first = -1, t_last = -1, nperm0 = 0, t_rec = 0;
+    always @(posedge clk) if (rst_n) begin
+        if (rec[0]) t_rec = cyc;
+        if (u_ce.g_tkm.u_tkm.ph != ph_q) $display("PHASE %0d at %0d", u_ce.g_tkm.u_tkm.ph, cyc - t_rec);
+        ph_q <= u_ce.g_tkm.u_tkm.ph;
+        if (|u_ce.e_dv) begin if (t_first < 0) t_first = cyc - t_rec; t_last = cyc - t_rec; end
+        if (u_ce.g_tkm.u_tkm.ph == 4'd1 && u_ce.g_tkm.u_tkm.del_permit != 4'hF) nperm0 = nperm0 + 1;
     end
     // ---------------------------------------------------------------- record construction
     function automatic [255:0] desc(input integer space, input integer fmt, input integer base, input integer n);
@@ -135,7 +144,7 @@ module tb_hgi_coll_tkm;
         if (!$value$plusargs("WSTALL=%d", WSTALL)) WSTALL = 0;
         if (!$value$plusargs("SKEW=%d", SKEW)) SKEW = 0;
         if (!$value$plusargs("SEED=%d", SEED)) SEED = 1;
-        seed_r = SEED;
+        seed_r = SEED; void'($urandom(SEED));
         $readmemh({dir, "/cfg.hex"}, cfgw);
         $readmemh({dir, "/a.hex"}, pa);
         $readmemh({dir, "/b.hex"}, pb);
@@ -193,6 +202,7 @@ module tb_hgi_coll_tkm;
         end
         $display("TKM G=%0d n=%0d M=%0d k=%0d nout=%0d rank=%0d R=%0d CYCLES=%0d SURV=%0d INS=%0d SINK=%0d", G, NL, M, K, NOUT, RANK, HASR,
                  t1 - t0, u_ce.g_tkm.u_tkm.stat_surv, u_ce.g_tkm.u_tkm.stat_ins, u_ce.g_tkm.u_tkm.stat_cycles);
+        $display("TIMELINE first_delivery=%0d last_delivery=%0d sink_credit_blocked_cycles=%0d", t_first, t_last, nperm0);
         if (errs == 0) $display("PASS tb_hgi_coll_tkm %s", dir);
         else $display("FAIL tb_hgi_coll_tkm %s errors %0d", dir, errs);
         $finish;
