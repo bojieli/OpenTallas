@@ -16,7 +16,14 @@ define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M7}
 add_pdn_stripe -grid {top} -layer {M1} -width {0.018} -pitch {0.54} -offset {0} -followpins
 add_pdn_stripe -grid {top} -layer {M2} -width {0.018} -pitch {0.54} -offset {0} -followpins
 add_pdn_stripe -grid {top} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
-add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.288} -pitch {5.4} -offset {0.600}
+# hardcore-1010 [tilexl] 2026-10-10: halo {2 0 2 0} alone did NOT fix PSM-0069 (4f0925af4 hm0 + hm10 attempt 1, same
+# u_lane/VDD island): with -offset 0.600 the M6 pattern starts VSS (y 1.14) / VDD (y 1.716) from the core edge (y 0.54), so the
+# only straps outside the lane's y span (0.96 .. 162.96) are VSS (y 1.14, 163.14); the first VDD strap lies over the lane, is
+# trimmed at x 97.75 by the lane's M6 PG pins, and the M7 VDD stripes over the lane reach no VDD M6.  Phase the pattern so a
+# VDD strap lands below the lane (y 0.606-0.894) and a VSS strap above it (y 163.182-163.470); VDD pairs with 162.606 at the top,
+# VSS with 1.182 at the bottom.  Verified with pdngen + check_power_grid on the 4f0925af4 2_3_floorplan_tapcell.odb: VDD and VSS
+# both connected (the 0.600 phase reproduces PSM-0069 / PSM-0039 u_lane/VDD there).  Pitch, widths and the M7 pin contract unchanged.
+add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.288} -pitch {5.4} -offset {0.210} -starts_with POWER
 add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}
 add_pdn_connect -grid {top} -layers {M1 M2}
 add_pdn_connect -grid {top} -layers {M2 M5}
