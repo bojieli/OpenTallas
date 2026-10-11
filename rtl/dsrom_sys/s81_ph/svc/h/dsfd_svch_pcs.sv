@@ -19,7 +19,10 @@ module dsfd_svch_pcs #(
     parameter integer DB = 14,               // B request receiver depth (2 NRH + 8)
     parameter integer DG = 8,                // G receiver / sender depth to the hub (adjacent)
     parameter integer DRA = 64,
-    parameter integer DRB = 64
+    parameter integer DRB = 64,
+    parameter integer HDLY = 0               // > 0: HDLY inverter pairs (keep_hierarchy, logically identity) in front of
+                                             // the input pin flops and the G-response output register (hold-only miss
+                                             // of svch_pcs-e1d02f5ae-tc: FF -2.88 ps at pdat / bqd / gqd / u_gtx.o_d)
 ) (
     input  wire [0:0]    ck,
     input  wire [0:0]    rst,
@@ -45,15 +48,20 @@ module dsfd_svch_pcs #(
     reg [1:0] rs;
     always @(posedge clk or negedge rst[0]) if (!rst[0]) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
+    wire [5:0] vin_d;
     reg aqv, bqv, gqv, arc, brc, grc; reg [49:0] aqd; reg [45:0] bqd; reg [343:0] gqd;
     always @(posedge clk or negedge rn)
         if (!rn) begin aqv <= 0; bqv <= 0; gqv <= 0; arc <= 0; brc <= 0; grc <= 0; end
-        else begin aqv <= aq_v[0]; bqv <= bq_v[0]; gqv <= gq_v[0]; arc <= ar_c[0]; brc <= br_c[0]; grc <= gr_c[0]; end
-    always @(posedge clk) begin aqd <= aq_d; bqd <= bq_d; gqd <= gq_d; end
+        else begin aqv <= vin_d[5]; bqv <= vin_d[4]; gqv <= vin_d[3]; arc <= ar_c[0]; brc <= br_c[0]; grc <= gr_c[0]; end
+    wire [49:0] aq_dd; wire [45:0] bq_dd; wire [343:0] gq_dd; wire [255:0] qr_data_d; wire [16:0] qr_tag_d; wire [3:0] qr_beat_d;
+    ot_s81_svch_hdly #(.W(50 + 46 + 344 + 256 + 17 + 4 + 6), .N(HDLY)) u_hdi (
+        .a({aq_d, bq_d, gq_d, qr_data, qr_tag, qr_beat, aq_v[0], bq_v[0], gq_v[0], qrk[0], qwd[0], qrv[0]}),
+        .y({aq_dd, bq_dd, gq_dd, qr_data_d, qr_tag_d, qr_beat_d, vin_d}));
+    always @(posedge clk) begin aqd <= aq_dd; bqd <= bq_dd; gqd <= gq_dd; end
     // PC-face pin flops (the ctrl response / credit / write-done side; +1 cycle, credit round trip +1)
     reg pk, pw, pv; reg [255:0] pdat; reg [16:0] ptag; reg [3:0] pbeat;
-    always @(posedge clk or negedge rn) if (!rn) begin pk <= 0; pw <= 0; pv <= 0; end else begin pk <= qrk[0]; pw <= qwd[0]; pv <= qrv[0]; end
-    always @(posedge clk) begin pdat <= qr_data; ptag <= qr_tag; pbeat <= qr_beat; end
+    always @(posedge clk or negedge rn) if (!rn) begin pk <= 0; pw <= 0; pv <= 0; end else begin pk <= vin_d[2]; pw <= vin_d[1]; pv <= vin_d[0]; end
+    always @(posedge clk) begin pdat <= qr_data_d; ptag <= qr_tag_d; pbeat <= qr_beat_d; end
     wire a_v, a_r, b_v, b_r, g_v, g_r, ova, ovb, ovg; wire [49:0] a_d; wire [45:0] b_d; wire [343:0] g_d;
     ot_s81_svch_crx #(.W(50), .DEPTH(DA)) u_arx (.clk(clk), .rst_n(rn), .i_v(aqv), .i_d(aqd), .o_v(a_v), .o_r(a_r), .o_d(a_d),
         .c_out(aq_c[0]), .ovf(ova));
@@ -69,7 +77,9 @@ module dsfd_svch_pcs #(
         .g_v(g_v), .g_r(g_r), .g_d(g_d), .go_v(go_v), .go_r(go_r), .go_d(go_d), .gwd(gwd),
         .rq(qrq), .rk(pk), .rv(pv), .r_tag(ptag), .r_beat(pbeat), .r_data(pdat), .wd(pw),
         .fault(pf), .fault_code(pfc));
-    ot_s81_svch_ctx #(.W(276), .DEPTH(DG)) u_gtx (.clk(clk), .rst_n(rn), .i_v(go_v), .i_r(go_r), .i_d(go_d),
+    wire [275:0] go_dd;
+    ot_s81_svch_hdly #(.W(276), .N(HDLY)) u_hdo (.a(go_d), .y(go_dd));
+    ot_s81_svch_ctx #(.W(276), .DEPTH(DG)) u_gtx (.clk(clk), .rst_n(rn), .i_v(go_v), .i_r(go_r), .i_d(go_dd),
         .o_v(gr_v[0]), .o_d(gr_d), .c_in(grc));
     reg flt;
     always @(posedge clk or negedge rn) if (!rn) flt <= 1'b0; else if (pf | ova | ovb | ovg) flt <= 1'b1;
