@@ -1,18 +1,19 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
-// ot_s81_hc_hroot (s81-suhc-hier-1011, 2026-10-11): the root of the hierarchical S81 HC slab (ot_s81_hc_hier).  It
-// keeps ot_s81_hc_core's engine-side contract (job intake, done / tag, VM read and write slots, y valid/ready) and
-// the job sequencing; the per-element work runs in the KT row-group tiles (ot_s81_hc_tile).  It also holds the
-// scalar tail of the norm: the cross-tile sum-of-squares tree (leaves ordered bank-major, tile-minor = the golden
-// pairwise tree's top levels above the tiles' aligned subtrees), the vector levels (the golden tree's top levels over
-// NV vectors padded to a power of two, a right subtree of padding passes its left value), / D (ot_dsrom_divc), + eps,
-// rsqrt (ot_dsrom_rsqrt), and broadcasts r back on the forward bus.
-// Forward bus out (fv / fd, registered), y beat out (aligned with fv / fd), return packet in (rv / rd, pin flopped).
+// ot_s81_hc_hroot (s81-suhc-hier-1011, 2026-10-11): the root of the hierarchical S81 HC slab (dsfd_sp_hc HIER=1),
+// placed in the root tile ot_s81_hc_rtile.  It keeps ot_s81_hc_core's engine-side contract (job intake, done / tag,
+// VM read and write slots, y valid/ready) and the job sequencing; the per-element work runs in the column sub-tiles
+// (ot_s81_hc_ctile, NCOL chains).  It holds the norm's scalar tail -- the sum-of-squares tree over the 4 NS sub-tile
+// bank partials (leaf j*NS + s = bank j, sub-tile s: the golden pairwise tree's top levels above the sub-tiles'
+// aligned subtrees), the vector levels, / D, + eps, rsqrt, r broadcast -- and the FP8 act-quant of the y rows (one y
+// row = one 32-element block; S_RT ot_dsrom_aq12 units on the returned rows: codes rows pair blocks 2r, 2r+1, the
+// exponent row collects the vector's blocks).  Write slots: y rows / h rows 0 .. S_RT-1, codes S_RT, S_RT+1, exps S_RT+2.
 // MUT (bench negative controls, 0 in silicon) as ot_s81_hc_core: 1 POST does not write h back; 2 POST / NORM use the
 // other slot's h; 3 NORM skipped; 4 done one write early; 5 done tag op bit flipped.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_hroot #(
-    parameter integer NG = 256, D = 5120, KT = 8, S_RD = 2, S_WR = 8, ML = 5, AL = 4, RW = 2, MUT = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4, RW = 2,
+    parameter integer MUT = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -36,12 +37,13 @@ module ot_s81_hc_hroot #(
     output reg                    fault,
     output reg  [3:0]             fault_code,
     output reg  [31:0]            st_jobs,
-    // tile buses
+    // column chain buses: forward (common; the data field carries the VM rows, the y beat goes beside it in yo),
+    // return (one a chain)
     output reg  [S_RD+4:0]        fv,
     output reg  [FDW-1:0]         fd,
     output reg  [NG*32-1:0]       yo,
-    input  wire [S_WR+3:0]        rv_in,
-    input  wire [RDW-1:0]         rd_in
+    input  wire [NCOL*(S_RT+4)-1:0] rv_in,
+    input  wire [NCOL*RDW-1:0]    rd_in
 );
     localparam integer N    = 4 * NG;
     localparam integer NR   = D / NG;
@@ -52,10 +54,18 @@ module ot_s81_hc_hroot #(
     localparam integer YROWS = N / 32;
     localparam integer GROWS = D / 16;
     localparam integer LA = AL, LM = ML;
-    localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_RD = O_RC + S_RD * 16, O_PB = O_RD + S_RD * 512,
-                       O_NG = O_PB + 12, O_NV = O_NG + 6, O_R = O_NV + 8, O_HS = O_R + 32, FDW = O_HS + 1;
-    localparam integer P_T = 0, P_I = 2 * S_WR, P_Q = P_I + 8 * S_WR, P_D = P_Q + 16 * S_WR, P_PI = P_D + 512 * S_WR,
-                       P_PD = P_PI + 8, RDW = P_PD + KT * 128;
+    localparam integer NS   = NG / GS;
+    localparam integer NP   = (NS + NCOL - 1) / NCOL;
+    localparam integer YW   = NP * GS * 32;
+    localparam integer FDD  = (S_RD * 512 > YW) ? S_RD * 512 : YW;
+    localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_PB = O_RC + S_RD * 16, O_NG = O_PB + 12, O_NV = O_NG + 6,
+                       O_R = O_NV + 8, O_HS = O_R + 32, O_D = O_HS + 1, FDW = O_D + FDD;
+    localparam integer P_T = 0, P_I = S_RT, P_Q = P_I + 8 * S_RT, P_PI = P_Q + 16 * S_RT, P_D = P_PI + 8,
+                       RDW = P_D + 512 * S_RT;
+    localparam integer RVW = S_RT + 4;
+`ifndef SYNTHESIS
+    initial if (S_WR < S_RT + 3) $fatal(1, "ot_s81_hc_hroot: S_WR >= S_RT + 3 (rows, two codes rows, the exps row)");
+`endif
     localparam [2:0] K_HLOAD = 0, K_HSTORE = 1, K_COEF = 2, K_POST = 3, K_NORM = 4, K_GAIN = 5;
 
     reg         run;
@@ -76,25 +86,37 @@ module ot_s81_hc_hroot #(
     wire y_take = y_v && y_rdy;
 
     // return packet pin flops
-    reg [S_WR+3:0] rv;
-    reg [RDW-1:0]  rd;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rv <= 0; else rv <= rv_in;
-    always @(posedge clk) rd <= rd_in;
+    reg [NCOL*RVW-1:0] rvc;
+    reg [NCOL*RDW-1:0] rdc;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rvc <= 0; else rvc <= rv_in;
+    always @(posedge clk) rdc <= rd_in;
+    // the chains run in lockstep (equal hop counts): slot valids / metadata from chain 0, row data ORed
+    reg [RVW-1:0] rv;
+    reg [RDW-1:0] rd;
+    integer cc_;
+    always @(*) begin
+        rv = rvc[0 +: RVW]; rd = rdc[0 +: RDW];
+        for (cc_ = 1; cc_ < NCOL; cc_ = cc_ + 1) begin
+            rv[RVW-1:RVW-2] = rv[RVW-1:RVW-2] | rvc[cc_ * RVW + RVW - 2 +: 2];                 // faults
+            rd[P_D +: 512 * S_RT] = rd[P_D +: 512 * S_RT] | rdc[cc_ * RDW + P_D +: 512 * S_RT];
+        end
+    end
 
     // ---------------------------------------------------------------- norm scalar tail
     reg ngo;                                             // the norm job's go (clears the vector levels)
-    localparam integer NL = 4 * KT;
+    localparam integer NL = 4 * NS;
     localparam integer LT = $clog2(NL);
     wire [LT*LA:0] tvv;
-    ot_hdc_vline #(.D(LT * LA > 0 ? LT * LA : 1)) u_tv (.clk(clk), .rst_n(rst_n), .v(rv[S_WR]), .vd(tvv));
+    ot_hdc_vline #(.D(LT * LA > 0 ? LT * LA : 1)) u_tv (.clk(clk), .rst_n(rst_n), .v(rv[S_RT]), .vd(tvv));
     wire [7:0] tvi;
     ot_hdc_delay #(.W(8), .D(LT * LA)) u_tvi (.clk(clk), .rst_n(rst_n), .d(rd[P_PI +: 8]), .q(tvi));
     wire [31:0] tn [0:LT][0:NL-1];
     wire [LT:0] tf;
     genvar c, k, n;
     generate
-        for (c = 0; c < NL; c = c + 1) begin : g_l0                // leaf c = bank c / KT, tile c % KT
-            assign tn[0][c] = rd[P_PD + 128 * (c % KT) + 32 * (c / KT) +: 32];
+        for (c = 0; c < NL; c = c + 1) begin : g_l0                // leaf c = bank c / NS, sub-tile c % NS
+            localparam integer SS = c % NS;                          // = chain SS / NP, slot SS % NP of its packet
+            assign tn[0][c] = rdc[(SS / NP) * RDW + P_D + 128 * (SS % NP) + 32 * (c / NS) +: 32];
         end
         assign tf[0] = 1'b0;
         for (k = 1; k <= LT; k = k + 1) begin : g_tl
@@ -180,7 +202,28 @@ module ot_s81_hc_hroot #(
     ot_hdc_vline #(.D(LA)) u_ve (.clk(clk), .rst_n(rst_n), .v(mq_v), .vd(ve));
     ot_dsrom_qadd #(.LAT(LA)) u_eps (clk, rst_n, mq_v, mq, n_eps, me, f_eps);
     ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rst_n), .v(ve[LA]), .x(me), .y(rr_), .vo(rr_v), .fault(f_rsq));
-    wire tail_f = (|tf) || (|nf) || f_div || f_eps || f_rsq;
+    // ---------------------------------------------------------------- FP8 act-quant of the returned y rows
+    localparam integer N_ = 4 * NG;
+    localparam integer CR = (N_ / 64) > 0 ? N_ / 64 : 1, ER = (N_ + 1023) / 1024, YR = N_ / 32;
+    wire [S_RT-1:0]    aq_vo, aq_f;
+    wire [S_RT*256-1:0] aq_q;
+    wire [S_RT*10-1:0] aq_e;
+    wire [S_RT*24-1:0] aq_iq;                            // {vector, row} of each unit's block, delayed with it
+    genvar u;
+    generate for (u = 0; u < S_RT; u = u + 1) begin : g_aq
+        reg [1023:0] x;
+        integer e_;
+        always @(*) for (e_ = 0; e_ < 32; e_ = e_ + 1) x[32 * e_ +: 32] = {rd[P_D + 512 * u + 16 * e_ +: 16], 16'h0000};
+        wire [511:0] unused_y;
+        wire signed [9:0] e;
+        ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rst_n), .v(rv[u] && !rd[P_T + u] && run && kind == K_NORM), .x(x),
+                            .vo(aq_vo[u]), .q(aq_q[256 * u +: 256]), .e(e), .y(unused_y), .fault(aq_f[u]));
+        assign aq_e[10 * u +: 10] = e;
+        ot_hdc_delay #(.W(24), .D(18)) u_iq (.clk(clk), .rst_n(rst_n), .d({rd[P_I + 8 * u +: 8], rd[P_Q + 16 * u +: 16]}),
+                                             .q(aq_iq[24 * u +: 24]));
+    end endgenerate
+    reg [511:0] er;                                      // the vector's exponent row being collected
+    wire tail_f = (|tf) || (|nf) || f_div || f_eps || f_rsq || (|aq_f);
 
     // ---------------------------------------------------------------- sequencer
     integer s;
@@ -191,12 +234,13 @@ module ot_s81_hc_hroot #(
             ci <= 0; cr <= 0; cw <= 0; nw <= 0; post_ob <= 0; rq_v <= 0; wq_v <= 0; fv <= 0; ngo <= 1'b0;
         end else begin
             e_done_v <= 1'b0; rq_v <= 0; wq_v <= 0; fv <= 0; ngo <= 1'b0;
-            if (tail_f || rv[S_WR+2]) begin fault <= 1'b1; if (!fault) fault_code <= 4'd1; end
-            if (rv[S_WR+3]) begin fault <= 1'b1; if (!fault) fault_code <= 4'd4; end
+            if (tail_f || rv[S_RT+2]) begin fault <= 1'b1; if (!fault) fault_code <= 4'd1; end
+            if (rv[S_RT+3]) begin fault <= 1'b1; if (!fault) fault_code <= 4'd4; end
             if (rs_v != 0 && !(run && (kind == K_HLOAD || kind == K_COEF || kind == K_GAIN))) begin
                 fault <= 1'b1; if (!fault) fault_code <= 4'd2;
             end
             if (take) begin
+                er <= 512'd0;
                 run <= 1'b1; kind <= c_arg[22:20]; jslot <= e_cmd_d[83]; jtag <= {e_cmd_d[83], e_cmd_d[6:0]};
                 base <= c_arg[13:0]; gsel <= c_arg[19:18]; f_q <= c_arg[14]; f_y <= c_arg[15]; st0 <= 1'b0;
                 ci <= 0; cr <= 0; cw <= 0; post_ob <= 0;
@@ -206,24 +250,46 @@ module ot_s81_hc_hroot #(
                 nw <= (c_arg[22:20] == K_HSTORE) ? HROWS :
                       (c_arg[22:20] == K_NORM) ? (c_arg[14] ? NV * (CROWS + EROWS) : 0) + (c_arg[15] ? NV * YROWS : 0) : 0;
             end
-            // ---------------------------------------------------------- returned VM rows (h store / norm outputs)
+            // ---------------------------------------------------------- returned rows (h store / y), quant outputs
             begin : wr
                 reg [15:0] n_w;
+                reg [511:0] ern;
                 n_w = 0;
-                for (s = 0; s < S_WR; s = s + 1)
-                    if (rv[s] && run) begin : one
-                        reg [1:0] t; reg [7:0] v; reg [15:0] q; reg [13:0] a;
-                        t = rd[P_T + 2 * s +: 2]; v = rd[P_I + 8 * s +: 8]; q = rd[P_Q + 16 * s +: 16];
-                        case (t)
-                            2'd0: a = base + v * CROWS + q;
-                            2'd1: a = base + NV * CROWS + v * EROWS + q;
-                            2'd2: a = base + (f_q ? NV * (CROWS + EROWS) : 0) + v * YROWS + q;
-                            default: a = base + q;
-                        endcase
-                        wq_v[s] <= 1'b1; wq_row[14 * s +: 14] <= a; wq_mask[16 * s +: 16] <= 16'hFFFF;
-                        wq_d[512 * s +: 512] <= rd[P_D + 512 * s +: 512];
+                ern = er;
+                for (s = 0; s < S_RT; s = s + 1)
+                    if (rv[s] && run && (rd[P_T + s] || f_y)) begin : one
+                        reg [7:0] v; reg [15:0] q;
+                        v = rd[P_I + 8 * s +: 8]; q = rd[P_Q + 16 * s +: 16];
+                        wq_v[s] <= 1'b1; wq_mask[16 * s +: 16] <= 16'hFFFF; wq_d[512 * s +: 512] <= rd[P_D + 512 * s +: 512];
+                        wq_row[14 * s +: 14] <= rd[P_T + s] ? base + q : base + (f_q ? NV * (CR + ER) : 0) + v * YR + q;
                         n_w = n_w + 1;
                     end
+                if (f_q && run && kind == K_NORM)
+                    for (s = 0; s < S_RT; s = s + 2) begin : cd             // codes row: blocks 2r (slot s), 2r+1 (s+1)
+                        reg [7:0] v; reg [15:0] q;
+                        v = aq_iq[24 * s + 16 +: 8]; q = aq_iq[24 * s +: 16];
+                        if (aq_vo[s]) begin
+                            wq_v[S_RT + s / 2] <= 1'b1; wq_mask[16 * (S_RT + s / 2) +: 16] <= 16'hFFFF;
+                            wq_row[14 * (S_RT + s / 2) +: 14] <= base + v * CR + q / 2;
+                            wq_d[512 * (S_RT + s / 2) +: 512] <= {aq_vo[s + 1] ? aq_q[256 * (s + 1) +: 256] : 256'd0, aq_q[256 * s +: 256]};
+                            n_w = n_w + 1;
+                        end
+                    end
+                if (f_q && run && kind == K_NORM)
+                    for (s = 0; s < S_RT; s = s + 1)
+                        if (aq_vo[s]) begin : ex
+                            reg [7:0] v; reg [15:0] q;
+                            v = aq_iq[24 * s + 16 +: 8]; q = aq_iq[24 * s +: 16];
+                            ern[16 * (q % 32) +: 16] = {6'd0, aq_e[10 * s +: 10]};
+                            if (q == YR - 1) begin
+                                wq_v[S_RT + 2] <= 1'b1; wq_mask[16 * (S_RT + 2) +: 16] <= 16'hFFFF;
+                                wq_row[14 * (S_RT + 2) +: 14] <= base + NV * CR + v * ER;
+                                wq_d[512 * (S_RT + 2) +: 512] <= ern;
+                                ern = 512'd0;
+                                n_w = n_w + 1;
+                            end
+                        end
+                er <= ern;
                 if (run && (kind == K_HSTORE || kind == K_NORM) && !fault && !(kind == K_NORM && MUT == 3)) begin
                     cw <= cw + n_w;
                     if (n_w != 0 && cw + n_w >= nw - ((MUT == 4) ? S_WR : 0) && (kind == K_HSTORE || ci == NV + 1)) begin
@@ -249,7 +315,7 @@ module ot_s81_hc_hroot #(
                         fd[O_RG +: 2] <= gsel;
                         for (s = 0; s < S_RD; s = s + 1)
                             if (rs_v[s]) begin
-                                fv[s] <= 1'b1; fd[O_RC + 16 * s +: 16] <= cc; fd[O_RD + 512 * s +: 512] <= rs_d[512 * s +: 512];
+                                fv[s] <= 1'b1; fd[O_RC + 16 * s +: 16] <= cc; fd[O_D + 512 * s +: 512] <= rs_d[512 * s +: 512];
                                 if (kind == K_COEF && cc == 1) cf_eps[jslot] <= rs_d[512 * s + 256 +: 32];
                                 cc = cc + 1;
                             end
@@ -268,7 +334,7 @@ module ot_s81_hc_hroot #(
                         fd[O_PB + 4 +: 8] <= ci[7:0];
                         ci <= ci + 1;
                     end
-                    if (rv[S_WR + 1]) begin
+                    if (rv[S_RT + 1]) begin
                         post_ob <= post_ob + 1;
                         if (post_ob + 1 == NR - ((MUT == 4) ? 1 : 0)) begin
                             run <= 1'b0; e_done_v <= 1'b1; e_done_tag <= (MUT == 5) ? (jtag ^ 8'h01) : jtag;

@@ -50,15 +50,15 @@ HROWS = HC * D * 16 // 512          # 640
 GROWS = D // 16                     # 320
 
 RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
-       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hier.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv",
-       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_tile.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_rtile.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/lib/ot_skid_buffer.sv",
        "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv", "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
        "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fastfp_lat_f12.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv",
        "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
-       "rtl/hdc/v41/ot_hdc_actquant.sv", "rtl/hdc/v41x/ot_dsrom_aq12.sv", "rtl/hdc/v41x/ot_dsrom_aq12h.sv", "rtl/hdc/v41x/ot_dsrom_divc.sv"]
+       "rtl/hdc/v41/ot_hdc_actquant.sv", "rtl/hdc/v41x/ot_dsrom_aq12.sv", "rtl/hdc/v41x/ot_dsrom_divc.sv"]
 FP = dict(
     rtl=["rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
          "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv"],
@@ -312,8 +312,8 @@ HCG = re.compile(r"HCG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) co
 JOB = re.compile(r"HCJ op=(\d+) kind=(\d+) start=(\d+) done=(\d+)")
 
 
-def build(out: Path, ng, fp, mut, amut, lvm, kt=0, rs=1):
-    tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + (f"_kt{kt}rs{rs}" if kt else "")
+def build(out: Path, ng, fp, mut, amut, lvm, hier=0):
+    tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + ("_hier" if hier else "")
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_hc_master"
     if not exe.exists():
@@ -323,7 +323,7 @@ def build(out: Path, ng, fp, mut, amut, lvm, kt=0, rs=1):
             srcs = dpi_rest(obj) + srcs
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
-               f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GKT={kt}", f"-GRS={rs}", *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={hier}", *map(str, srcs), "-CFLAGS", "-O1"]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode != 0:
@@ -333,7 +333,7 @@ def build(out: Path, ng, fp, mut, amut, lvm, kt=0, rs=1):
 
 def cmd_run(a):
     out = Path(a.out)
-    exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.kt, a.rs)
+    exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier)
     res = []
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
         d = out / "runs" / meta["run"]
@@ -352,7 +352,7 @@ def cmd_run(a):
         print(meta["run"], "PASS" if row["ok"] else "FAIL", row["err_rows"], "/", row["rows"], "fault", row["fault"],
               "cyc", row["cycles"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
-               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, kt=a.kt, rs=a.rs, runs=res,
+               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
                simulator=subprocess.run([VERILATOR, "--version"], capture_output=True, text=True).stdout.strip(),
                source_sha256={s: sha(ROOT / s) for s in FP[a.fp] + RTL + [TB]})
@@ -375,8 +375,7 @@ def main():
     p.add_argument("--mut", type=int, default=0)
     p.add_argument("--amut", type=int, default=0)
     p.add_argument("--lvm", type=int, default=10)
-    p.add_argument("--kt", type=int, default=0, help="0 flat ot_s81_hc_core; > 0 hierarchical slab ot_s81_hc_hier, KT tiles")
-    p.add_argument("--rs", type=int, default=1, help="hier: relay stages a tile hop")
+    p.add_argument("--hier", type=int, default=0, help="1: hierarchical slab (root tile + 3 column chains of 1-octet sub-tiles)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
 
