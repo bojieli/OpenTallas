@@ -20,7 +20,8 @@ module ot_hcoll_port #(
     parameter integer PWB = 545,
     parameter integer SWCRED = 256,
     parameter integer K = 8,
-    parameter integer RFETCH = 0     // FILL-9 opt-in: registered SRAM-FIFO fetch decision (cycle-identical)
+    parameter integer RFETCH = 0,    // FILL-9 opt-in: registered SRAM-FIFO fetch decision (cycle-identical)
+    parameter integer RBSEL = 0      // idleA-hcoll opt-in: registered rb bank select (+1 edge; consumer needs K = 9)
 ) (
     input  wire           clk,
     input  wire           rst_n,
@@ -82,7 +83,7 @@ module ot_hcoll_port #(
     wire rb_ovf;
     (* keep_hierarchy *) ot_hcoll_sdelay #(.W(PWT), .D(WSTG)) u_wrx (.clk(clk), .rst_n(rst_n), .v_in(rxv_p), .d_in(rxf_p),
         .v_out(w2_v), .d_out(w2_d));
-    (* keep_hierarchy *) ot_hcoll_sfifo_x #(.W(PWT), .AW(RXAW), .K(K), .RFETCH(RFETCH)) u_rb (.clk(clk), .rst_n(rst_n), .push(w2_v), .din(w2_d),
+    (* keep_hierarchy *) ot_hcoll_sfifo_x #(.W(PWT), .AW(RXAW), .K(K), .RFETCH(RFETCH), .RBSEL(RBSEL)) u_rb (.clk(clk), .rst_n(rst_n), .push(w2_v), .din(w2_d),
         .cr_in(rbcr_p), .out_v(rb_v), .out_d(rb_d), .ovf(rb_ovf));
     // ---- state, output flops ----
     always @(posedge clk or negedge rst_n)
