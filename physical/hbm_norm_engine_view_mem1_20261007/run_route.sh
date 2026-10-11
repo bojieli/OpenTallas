@@ -19,7 +19,7 @@ DW=${DIEW:-1100}; DH=${DIEH:-1100}
 CORE_INSET=${CORE_INSET:-2}; MACRO_HALO=${MACRO_HALO:-4}
 srcargs=""; for s in $(cat $V/sources.f); do srcargs="$srcargs --source $s"; done
 echo "label=$lab sdc=$SDC die=${DW}x${DH} pd=${PD:-0.45} $*" > $W/args
-/srv/opentallas-scratch/admit.sh ${NEED:-80} -- python3 tools/run_abi3_physical.py --view asap7 --top ot_hbm_norm_engine_view $srcargs \
+/srv/opentallas-scratch/admit.sh ${NEED:-80} -- python3 tools/run_abi3_physical.py --view asap7 --top ${TOP:-ot_hbm_norm_engine_view} $srcargs \
   --clock-port clk --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.05 \
   --orfs-corner WC --hold-corners WC,BC --hold-margin-ns 0.01 --sdc-append $SDC --stages pnr --macro-view $MAC=physical/asap7_memory_macros_v2/$MAC --macro-place-halo $MACRO_HALO $MACRO_HALO \
   --die-area 0 0 $((DW+4)) $((DH+4)) --core-area $CORE_INSET $CORE_INSET $((DW+4-CORE_INSET)) $((DH+4-CORE_INSET)) --place-density ${PD:-0.45} \
