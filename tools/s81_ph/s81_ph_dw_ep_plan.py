@@ -19,7 +19,7 @@ for m in ('dsfd_dw_ep_s', 'dsfd_dw_ep_c'):
                 ports=[['vh', 26, 'input', 'N', 'M5', 2, 0.5],
                        ['c_cmd', 85, 'input', 'S', 'M5', 2, 0.30], ['c_done', 9, 'output', 'S', 'M5', 2, 0.66],
                        ['c_st', 2, 'output', 'S', 'M5', 2, 0.74], ['ck', 1, 'input', 'S', 'M5', 1, 0.82],
-                       ['rs', 1, 'input', 'S', 'M5', 1, 0.86]])
+                       ['rst', 1, 'input', 'S', 'M5', 1, 0.86]])
     ports = TP.plan(spec)
     TP.write(m, W, H, 'stream_1p2', ports, spec)
     print(m, sum(len(p['pins']) for p in ports.values()))
