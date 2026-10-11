@@ -52,18 +52,20 @@ def chain_ports(w):
             ('rst_in', 'rst_out', 1, 'ch_rst', 'input')]
 
 
-def sub_tile(w, h, contract):
+def sub_tile(w, h, contract, half=False):
     CT.CONTRACT = contract
     pl = Plan('ot_s81_hc_ctile', CW, h)
     x = X0
-    for n_in, n_out, b, _, d in chain_ports(w):
+    for n_in, n_out, b, _, d in chain_ports(w) + ([('cy_in', 'cy_out', 128, None, 'input')] if half else []):
         pl.bus(n_in, b, d, 'N', 'M5', x)
         x = pl.bus(n_out, b, 'output' if d == 'input' else 'input', 'S', 'M5', x)
     assert x < CW - 20, x
     y = pl.bus('tid', 8, 'input', 'W', 'M4', 60.0)
     pl.bus('last', 1, 'input', 'W', 'M4', y + 4.8)
     pl.bus('clk', 1, 'input', 'W', 'M4', h / 2)
-    pl.emit(f'HC column sub-tile (1 octet: 32 hc_post + 32 norm lanes, resident h, gain slice) {CW} x {h}; N face '
+    what = ('half octet (HALF=1: 16 hc_post + 16 norm lanes; chunk carry cy_in / cy_out N-S)' if half else
+            '1 octet: 32 hc_post + 32 norm lanes')
+    pl.emit(f'HC column sub-tile ({what}, resident h, gain slice) {CW} x {h}; N face '
             f'root-side chain buses, S face the same at identical x toward the next sub-tile; W face tid / last straps, clk')
     return x
 
@@ -175,6 +177,46 @@ def root_tiles(w, hr, hc, contract):
     return seams
 
 
+def split_roots(w, hy, hr, contract):
+    """structural variant: each outer column root split N-S into ot_s81_hc_crooty (CW x hy: y slice + VM write pins,
+    the y FIFO) over ot_s81_hc_crootr (CW x hr: chain root beside the combine tile)"""
+    ns, np_ = w['ng'] // 8, w['np']
+    ne, L = tree_exports(ns, np_)
+    ys = [l * 8 * 32 for l in L]
+    for c, cn, inner in ((0, contract, 'E'), (2, contract + '_e', 'W')):
+        CT.CONTRACT = cn
+        outer = 'W' if inner == 'E' else 'E'
+        py = [('p_req', 1, 'input'), ('p_w', 4 * 543, 'input'), ('p_y', ys[c], 'output'), ('p_flt', 1, 'output')]
+        pl = Plan('ot_s81_hc_crooty', CW, hy)
+        x = X0
+        for n, b, d in (('y_s', ys[c], 'input'), ('wq_v', 4, 'output'), ('wq_row', 56, 'output'),
+                        ('wq_mask', 64, 'output'), ('wq_d', 2048, 'output')):
+            x = pl.bus(n, b, d, 'N', 'M5', x)
+        assert x < CW - 10, x
+        x = X0
+        for n, b, d in py:
+            x = pl.bus(n, b, d, 'S', 'M5', x)
+        assert x < CW - 10, x
+        pl.bus('yacc', 1, 'input', inner, 'M4', 100.0)
+        pl.bus('sk', 1, 'input', outer, 'M4', hy / 2); pl.bus('srs', 1, 'input', outer, 'M4', hy / 2 + 4.8)
+        pl.emit(f'HC split column root, pin / y FIFO half (chain {c}) {CW} x {hy}: N face y slice + VM write slots; '
+                f'S face the chain-root half below at identical x; {inner} face the y accept')
+        pl = Plan('ot_s81_hc_crootr', CW, hr)
+        x = X0
+        for n, b, d in py:
+            x = pl.bus(n, b, flip(d), 'N', 'M5', x)
+        y = 20.0
+        for n, _, b, d in seam_ports(w, ne[c]):
+            y = pl.bus(n, b, d, inner, 'M4', y)
+        assert y < hr - 10, y
+        x = X0
+        for n_in, _, b, rn, d in chain_ports(w):
+            x = pl.bus(rn, b, 'output' if d == 'input' else 'input', 'S', 'M5', x)
+        pl.bus('sk', 1, 'input', outer, 'M4', hr / 2); pl.bus('srs', 1, 'input', outer, 'M4', hr / 2 + 4.8)
+        pl.emit(f'HC split column root, chain-root half (chain {c}) {CW} x {hr}: N face the pin half, {inner} face the '
+                f'combine seam (identical y), S face chain {c} ports at the sub-tile x')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--sub-h', type=float, default=800.0)
@@ -182,10 +224,15 @@ def main():
     ap.add_argument('--comb-h', type=float, default=640.0, help='combine tile height (outer roots: root-h + comb-h)')
     ap.add_argument('--contract', default='contract_hcc')
     ap.add_argument('--roots', action='store_true', help='also the root-side tiles')
+    ap.add_argument('--half', action='store_true', help='the sub-tile is a half octet (HALF=1)')
+    ap.add_argument('--split-roots', action='store_true', help='the split column roots (crooty 200 / crootr 640)')
     a = ap.parse_args()
     w = widths()
-    xs = sub_tile(w, a.sub_h, a.contract)
+    xs = sub_tile(w, a.sub_h, a.contract, a.half)
     ms = ['ot_s81_hc_ctile']
+    if a.split_roots:
+        split_roots(w, a.root_h, a.comb_h, a.contract)
+        ms += ['ot_s81_hc_crooty', 'ot_s81_hc_crootr', '_e/ot_s81_hc_crooty', '_e/ot_s81_hc_crootr']
     if a.roots:
         print('seam extents', root_tiles(w, a.root_h, a.comb_h, a.contract))
         ms += ['ot_s81_hc_croot', 'ot_s81_hc_comb', 'ot_s81_hc_cpin', '_e/ot_s81_hc_croot']
