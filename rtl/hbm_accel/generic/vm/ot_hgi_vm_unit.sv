@@ -18,12 +18,14 @@ module ot_hgi_vm_unit #(
     parameter integer AP = 0,            // hgi-1010 b: 1 = the HC weight APERTURE route (lead decision (b), d's HC HSRC = 1):
                                          //   the wide write lane grows an ap bit, {v, ap, sector 15, wdata 256, mask 8}
                                          //   (281 b; the DMA front sets ap for VM words >= 2^18, sector = (word - 2^18) / 8).
-                                         //   An ap sector does NOT write VM: it queues (APD a lane, SRAM) and leaves on ap_q
-                                         //   lane b {v, sector 13, wdata 256, mask 8} (278 b) to the HC unit, one in flight
-                                         //   a lane (ap_cr returns it), ap_done = written; wq_done counts both kinds.  The
+                                         //   An ap sector does NOT write VM: it queues (APD a DMA lane, SRAM) and leaves on
+                                         //   ap_q lane k = its HC weight bank (sector [11:9]; 8 lanes {v, sector 13, wdata 256,
+                                         //   mask 8} = 278 b, APC credits a lane, ap_cr returns one), ap_done = written;
+                                         //   wq_done counts both kinds.  The
                                          //   front stops a lane on wq_rdy[b] = 0 (the ap queue is near full).  An ap sector
                                          //   past the two slots (sector >= 8,192) is dropped and faults (status proto).
     parameter integer APD = 16,          // ap queue depth a lane (power of two); wq_rdy is low while the queue holds >= APD - APS
+    parameter integer APC = 1,           // credits an aperture lane holds (d's HC lane holds APC sectors)
     parameter integer APS = 8,           // slack: sectors the front may still send after wq_rdy falls (its X1 -> lane
                                          //   pipeline + the two pin flops)
     parameter integer MUT = 0
@@ -38,9 +40,9 @@ module ot_hgi_vm_unit #(
     input  wire [WP*(280+AP)-1:0] wq,
     output wire [WP-1:0]     wq_done,
     output wire [WP-1:0]     wq_rdy,     // AP: the lane may send (ap queue below APD - APS); 1 without AP
-    output wire [WP*278-1:0] ap_q,       // AP: to the HC unit's aperture lanes
-    input  wire [WP-1:0]     ap_cr,
-    input  wire [WP-1:0]     ap_done,
+    output wire [8*278-1:0]  ap_q,       // AP: to the HC unit's 8 aperture lanes (lane k = weight bank k)
+    input  wire [7:0]        ap_cr,
+    input  wire [7:0]        ap_done,
     // hgi-unitrate wide lanes (credit links; every port pin-flopped here):
     //   rq lane b {v, sector 15} (sector bank must be b); the client holds LQ credits a lane, rq_cr[b] returns one when
     //   the queued request reaches its bank; rr lane b {v, data 256}: the sector, in request order, 5 edges after it
@@ -108,6 +110,8 @@ module ot_hgi_vm_unit #(
     always @(posedge clk or negedge rst_n) if (!rst_n) wq_r <= {WP*WQW{1'b0}}; else wq_r <= wq;
     wire [WP-1:0] wl_v; wire [WP*15-1:0] wl_sec; wire [WP*256-1:0] wl_d; wire [WP*8-1:0] wl_m; wire wl_conflict;
     wire [WP-1:0] wl_done; wire [WP-1:0] ap_flt;
+    reg [WP-1:0] aq_pop; wire [WP-1:0] aq_hv; wire [WP*277-1:0] aq_head;
+    reg [7:0] ap_cr_q, ap_dn_q; reg [$clog2(APC+1)-1:0] apcr [0:7]; reg [4:0] aprr [0:7]; reg [8*278-1:0] apo;
     genvar gp;
     for (gp = 0; gp < WP; gp = gp + 1) begin : g_wl
         wire v  = wq_r[gp*WQW + WQW - 1];
@@ -116,34 +120,61 @@ module ot_hgi_vm_unit #(
         assign wl_sec[gp*15 +: 15] = wq_r[gp*WQW + 264 +: 15];
         assign wl_v[gp] = v && (!ap || MUT == 10);              // MUT 10: an aperture sector also writes VM (must FAIL)
         if (AP != 0) begin : g_ap
-            // the aperture queue: SRAM FWFT, APD deep; one sector in flight to the HC lane
+            // the lane's aperture queue: SRAM FWFT, APD deep; the bank-keyed arbiter below pops it
             wire push = v && ap && wq_r[gp*WQW + 264 + 13 +: 2] == 2'd0;
-            wire hv, ovf; wire [276:0] head; reg infl, rdy_q, rf; reg [1:0] dpend; reg [$clog2(APD):0] n;
-            reg cr_q, dn_q; reg [277:0] apo;
-            wire [1:0] tot = {1'b0, wl_done[gp]} + {1'b0, dn_q} + dpend;   // done events this edge (+ carried)
-            wire pop = hv && !infl;
+            wire ovf; reg rdy_q, rf; reg [1:0] dpend; reg [$clog2(APD):0] n;
+            wire dn = (gp < 8) ? ap_dn_q[gp % 8] : 1'b0;               // aperture dones ride DMA lanes 0..7
+            wire [1:0] tot = {1'b0, wl_done[gp]} + {1'b0, dn} + dpend;    // done events this edge (+ carried)
             ot_fifo_sram_fwft #(.W(277), .DEPTH(APD), .MACRO(QMACRO)) u_aq (.clk(clk), .rst_n(rst_n), .push(push),
-                .wdata({wq_r[gp*WQW + 264 +: 13], wq_r[gp*WQW +: 264]}), .pop(pop), .hv(hv), .head(head), .ovf(ovf));
+                .wdata({wq_r[gp*WQW + 264 +: 13], wq_r[gp*WQW +: 264]}), .pop(aq_pop[gp]), .hv(aq_hv[gp]),
+                .head(aq_head[gp*277 +: 277]), .ovf(ovf));
             always @(posedge clk or negedge rst_n)
-                if (!rst_n) begin infl <= 1'b0; n <= '0; rdy_q <= 1'b1; rf <= 1'b0; cr_q <= 1'b0; dn_q <= 1'b0;
-                                  dpend <= 2'd0; apo <= '0; end
+                if (!rst_n) begin n <= '0; rdy_q <= 1'b1; rf <= 1'b0; dpend <= 2'd0; end
                 else begin
-                    cr_q <= ap_cr[gp]; dn_q <= ap_done[gp];             // pin flops
-                    apo <= {pop, head};
-                    infl <= pop ? 1'b1 : (cr_q ? 1'b0 : infl);
-                    n <= n + push - pop;
+                    n <= n + push - aq_pop[gp];
                     rdy_q <= (MUT == 11) || ({1'b0, n} + push < (APD - APS));
                     if (ovf || (v && ap && !push)) rf <= 1'b1;           // queue overflow / sector past the slots
                     // wq_done: a VM write and an aperture write may finish on the same edge: one pulse, carry the other
                     dpend <= tot - {1'b0, tot != 2'd0};
                 end
-            assign wq_rdy[gp] = rdy_q; assign wq_done[gp] = tot != 2'd0; assign ap_q[gp*278 +: 278] = apo;
+            assign wq_rdy[gp] = rdy_q; assign wq_done[gp] = tot != 2'd0;
             assign ap_flt[gp] = rf;
         end else begin : g_noap
-            assign wq_rdy[gp] = 1'b1; assign wq_done[gp] = wl_done[gp]; assign ap_q[gp*278 +: 278] = '0;
+            assign wq_rdy[gp] = 1'b1; assign wq_done[gp] = wl_done[gp];
             assign ap_flt[gp] = 1'b0;
         end
     end
+    // ---- the aperture's 8 bank lanes (hbm-phys / d 2026-10-11: VM -> HC 8 x 278 b, lane k = HC weight bank k = sector
+    //      [11:9]): per bank a rotating-priority pick over the 32 DMA-lane queue heads of that bank, APC credits a lane
+    //      (ap_cr returns one); ap_done counts into wq_done
+    assign ap_q = (AP != 0) ? apo : '0;
+    always @* begin
+        aq_pop = '0;
+        for (integer k = 0; k < 8; k = k + 1) begin : pk
+            reg found; integer i, l;
+            found = 1'b0;
+            for (i = 0; i < WP; i = i + 1) begin
+                l = (aprr[k] + 1 + i) % WP;
+                if (AP != 0 && !found && apcr[k] != '0 && aq_hv[l] && aq_head[l*277 + (MUT == 13 ? 272 : 273) +: 3] == 3'(k)) begin
+                    found = 1'b1; aq_pop[l] = 1'b1;
+                end
+            end
+        end
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            ap_cr_q <= '0; ap_dn_q <= '0; apo <= '0;
+            for (integer k = 0; k < 8; k = k + 1) begin apcr[k] <= APC; aprr[k] <= 5'd31; end
+        end else begin
+            ap_cr_q <= ap_cr; ap_dn_q <= ap_done;                      // pin flops
+            for (integer k = 0; k < 8; k = k + 1) begin : snd
+                reg sent; reg [276:0] h; sent = 1'b0; h = '0;
+                for (integer l = 0; l < WP; l = l + 1)
+                    if (aq_pop[l] && aq_head[l*277 + (MUT == 13 ? 272 : 273) +: 3] == 3'(k)) begin sent = 1'b1; h = aq_head[l*277 +: 277]; aprr[k] <= 5'(l); end
+                apo[k*278 +: 278] <= {sent, h};
+                apcr[k] <= apcr[k] - sent + ap_cr_q[k];
+            end
+        end
     // per-client station: a 4-entry FIFO with one explicit write enable per entry (hgi-1010/c: the for-loop over clients
     // writing a 2-D array elaborated as a 24-deep procmux chain from cq to sq; rtl_boundary refused in->reg 25 levels)
     wire [NC-1:0]     h_v;

@@ -3,19 +3,19 @@
 //   * a DMA-front model drives the 32 wide write lanes (281 b {v, ap, sector 15, data, mask}) with interleaved VM sectors
 //     (bank = lane) and aperture sectors (both slots, 4,096 each, every bank), honouring wq_rdy through a 3-edge
 //     pipeline (the front's X1 -> X2 -> lane + the VM's pin flop);
-//   * an HC aperture model (d's ot_hgi_hc_unit HSRC = 1 protocol): holds one sector a lane, accepts it on a random edge
+//   * an HC aperture model (d's ot_hgi_hc_unit HSRC = 1 protocol, 8 bank lanes): holds one sector a lane, accepts it on a random edge
 //     (macro conflicts), pulses ap_cr on acceptance and ap_done the edge after; a sector onto a held lane is an error;
 //   * checks: every aperture sector lands exactly once with its data (mask honoured); every VM sector lands in VM; the
 //     VM words aliased by the aperture sectors keep their prior value; wq_done counts every sector; no status fault;
 //     then a packet write to byte address 2^20 + X must fault (status proto) and leave VM[X] unchanged.
-//   VMMUT (ot_hgi_vm_unit MUT): 10 aperture sectors also write VM, 11 no wq_rdy back-pressure, 12 no packet range check:
+//   VMMUT (ot_hgi_vm_unit MUT): 10 aperture sectors also write VM, 11 no wq_rdy back-pressure, 12 no packet range check, 13 the bank key off by one bit (lane k carries another bank):
 //   each must FAIL.
 module tb_hgi_vm_ap;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
     localparam integer NAP = 8192, NVM = 4096;
     reg [338-1:0] cq = 0; wire [274-1:0] cr; wire [18:0] status;
-    reg [32*281-1:0] wq = 0; wire [31:0] wq_done, wq_rdy; wire [32*278-1:0] ap_q; reg [31:0] ap_cr = 0, ap_done = 0;
+    reg [32*281-1:0] wq = 0; wire [31:0] wq_done, wq_rdy; wire [8*278-1:0] ap_q; reg [7:0] ap_cr = 0, ap_done = 0;
     ot_hgi_vm_unit #(.NC(1), .WP(32), .WDIRECT(1), .AP(1), .MUT(`VMMUT)) u (.clk(clk), .rst_n(rst_n), .cq(cq), .cr(cr),
         .status(status), .wq(wq), .wq_done(wq_done), .wq_rdy(wq_rdy), .ap_q(ap_q), .ap_cr(ap_cr), .ap_done(ap_done),
         .rq(16'd0), .rq_cr(), .rr(), .w2q(280'd0), .w2q_cr(), .w2q_done());
@@ -63,18 +63,19 @@ module tb_hgi_vm_ap;
         for (integer b = 0; b < 32; b = b + 1) if (wq_done[b]) dones = dones + 1;
     end
     // ---- HC aperture model
-    reg [31:0] hv = 0; reg [277:0] hq [0:31]; reg [31:0] crn;
+    reg [7:0] hv = 0; reg [277:0] hq [0:7]; reg [7:0] crn;
     always @(posedge clk) begin
         crn = '0;
         ap_done <= ap_cr; ap_cr <= '0;
-        for (integer b = 0; b < 32; b = b + 1)
+        for (integer b = 0; b < 8; b = b + 1)
             if (hv[b] && ($urandom(seed) % 3) == 0) begin : acc
                 reg [12:0] s; s = hq[b][276:264];
                 for (integer w = 0; w < 8; w = w + 1) if (hq[b][w]) apm[s][32*w +: 32] = hq[b][8 + 32*w +: 32];
                 apn[s] = apn[s] + 1; hv[b] = 1'b0; ap_cr[b] <= 1'b1; crn[b] = 1'b1;
             end
-        for (integer b = 0; b < 32; b = b + 1)
+        for (integer b = 0; b < 8; b = b + 1)
             if (ap_q[b*278 + 277]) begin
+                if (ap_q[b*278 + 273 +: 3] != 3'(b)) begin errors = errors + 1; if (errors < 10) $display("ERR aperture lane %0d carries bank %0d", b, ap_q[b*278 + 273 +: 3]); end
                 if (hv[b]) begin errors = errors + 1; if (errors < 10) $display("ERR lane %0d: sector onto a held lane", b); end
                 hv[b] = 1'b1; hq[b] = ap_q[b*278 +: 278];
             end

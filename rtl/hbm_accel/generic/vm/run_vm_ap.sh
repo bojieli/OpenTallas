@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # hgi-1010 b: tb_hgi_vm_ap (VM unit HC weight aperture route + packet range fault).  usage: run_vm_ap.sh <out>
-# env VMMUT=n (ot_hgi_vm_unit MUT: 10 aperture also writes VM, 11 no wq_rdy, 12 no packet range check: must FAIL)
+# env VMMUT=n (ot_hgi_vm_unit MUT: 10 aperture also writes VM, 11 no wq_rdy, 12 no packet range check, 13 the bank key off by one bit (lane k carries another bank): must FAIL)
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../../../.." && pwd); O=$(realpath -m "$1"); mkdir -p "$O"; cd "$ROOT"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; T=m${VMMUT:-0}
