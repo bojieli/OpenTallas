@@ -62,14 +62,41 @@ def _bits_of(m, inst, port):
     return got
 
 
-def _peer(m, inst, port, nbits):
-    """the (instance, port base) set on the other end of every bus touching inst.port"""
+# relay instances a fixed-latency command / done net may pass (ADAPTER_CONTRACT_1011: "relay stations allowed"):
+# common-clock hub stations (di -> dq), forwarded-lane stations (di0 -> do0), start / end / crossing blocks (i -> od,
+# di0 -> o): a relay is followed through its other DATA ports (forwarded clock / status ports fi*, fo*, st excluded)
+_RELAY_KINDS = ('hstn', 'stn', 'hend', 'xstg')
+_NOT_DATA = re.compile(r'^(f[io]\d*|st|ck\w*)$')
+
+
+def _peer(m, inst, port, nbits, _seen=None):
+    """the (instance, port base) set on the other end of every bus touching inst.port, followed through relay
+    stations / end blocks (a relay's peer is the instance on the far side of its other data port)"""
+    if '_kind_of' not in m:
+        m['_kind_of'] = {it.name: it.kind for it in m['insts']}
+        ports = defaultdict(set)
+        for bid, cls, bits, eps in m['buses']:
+            for i_, p_ in eps:
+                ports[i_].add(_slice(p_, bits)[0])
+        m['_ports_of'] = ports
+    kinds, ports = m['_kind_of'], m['_ports_of']
+    seen = _seen if _seen is not None else {(inst, port)}
     peers = set()
     for bid, cls, bits, eps in m['buses']:
-        if any(i_ == inst and _slice(p_, bits)[0] == port for i_, p_ in eps):
-            for i_, p_ in eps:
-                if i_ != inst:
-                    peers.add((i_, _slice(p_, bits)[0]))
+        if cls == 'fclk' or not any(i_ == inst and _slice(p_, bits)[0] == port for i_, p_ in eps):
+            continue
+        for i_, p_ in eps:
+            pb = _slice(p_, bits)[0]
+            if i_ == inst or (i_, pb) in seen:
+                continue
+            seen.add((i_, pb))
+            if kinds.get(i_) in _RELAY_KINDS:
+                for q_ in sorted(ports[i_] - {pb}):
+                    if not _NOT_DATA.match(q_) and (i_, q_) not in seen:
+                        seen.add((i_, q_))
+                        peers |= _peer(m, i_, q_, nbits, seen)
+            else:
+                peers.add((i_, pb))
     return peers
 
 
