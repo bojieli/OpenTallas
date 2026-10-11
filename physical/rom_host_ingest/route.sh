@@ -18,7 +18,7 @@ ADMIT=$(ls /srv/opentallas-scratch/admit.sh 2>/dev/null); ADMIT=${ADMIT:+$ADMIT 
 $ADMIT python3 tools/run_abi3_physical.py --view asap7 --top $top $srcargs \
   --clock-port ck --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 \
-  --sdc-append $D/sdc/hing_clocks_div${DIV:-2}.sdc --stages synth,pnr \
+  --sdc-append $D/sdc/hing_clocks_div${DIV:-2}.sdc --stages ${STAGES:-synth,pnr} \
   --core-utilization ${UTIL:-40} --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var ADDER_MAP_FILE= --orfs-var "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none" \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.010} --purpose signoff_target --nickname-tag hing_$lab \
