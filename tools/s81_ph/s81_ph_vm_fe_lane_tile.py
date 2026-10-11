@@ -3,7 +3,8 @@
 
 Tile 80.64 x 230.04 um (one per f_cap lane slice: the FE's 16 lanes sit under their 79.9-um slices of the N face).
 N face: f_c (832 b = 8 roots x 104) on M5 at 2 tracks, root order W -> E as on the FE N face.
-S face: w_v / w_row / w_m / w_d / flt (547 b, registered outputs) on M5 at 2 tracks.  W face: ck / rn / sok (M4).
+S face: w_v / w_row / w_m / w_d / flt (547 b, registered outputs) + ck / rn / sok on M5 at 2 tracks (v2: no W / E
+pins, the tiles abut).  Routed on M2-M6 only (pdn_clt.tcl: PG pins on M6), so the parent routes M7 over the tiles.
 Writes physical/s81_ph_views/ports/contract_vm28/dsfd_vm_clt/{ports.json, io_place.tcl, ports.svh}."""
 import sys
 from pathlib import Path
@@ -23,10 +24,11 @@ def main():
     x = p.bus('w_m', 16, 'output', 'S', 'M5', x)
     x = p.bus('w_d', 512, 'output', 'S', 'M5', x)
     x = p.bus('flt', 4, 'output', 'S', 'M5', x)
-    y = p.bus('ck', 1, 'input', 'W', 'M4', 115.020)
-    y = p.bus('rn', 1, 'input', 'W', 'M4', y)
-    p.bus('sok', 1, 'input', 'W', 'M4', y)
-    p.emit('el1011-ds-vm/fe hardened capture-lane tile: N = 832-b f_cap slice, S = registered row-write port, W = ck / rn / sok')
+    # v2 (hierarchical FE): ck / rn / sok on the S face too (the W / E faces abut the neighbour tiles)
+    x = p.bus('ck', 1, 'input', 'S', 'M5', x + 1.92)
+    x = p.bus('rn', 1, 'input', 'S', 'M5', x)
+    p.bus('sok', 1, 'input', 'S', 'M5', x)
+    p.emit('el1011-ds-vm/fe hardened capture-lane tile: N = 832-b f_cap slice, S = registered row-write port, S = row-write port + ck / rn / sok; top layer M6')
 
 
 if __name__ == '__main__':

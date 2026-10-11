@@ -22,7 +22,7 @@ W, H, NT, NS = 345.6, 500.04, 4, 4    # W = 32 x the 10.8-um M7 PG pitch (tile M
 SLAB_W = 1520.064                  # ds-1010 hub-column VM slab width (FE / BE span it; the 4 tile columns are centred)
 X0 = 0.0                            # tile columns from the slab's W edge (M7 / M5 / PG grids coincide)
 NP, NPR, RA, DW = 28, 10, 14, 128
-FE_H, BE_H = 311.04, 108.0         # slab height 2,419.2 (ds-1010: 2.42 mm)          # FE / BE outline heights (first estimate: FE ~125k flops + 16.8k die pins; BE ~10k)
+FE_H, BE_H = 473.04, 108.0         # el1011-ds-vm/fe 10-11: FE 311.04 -> 473.04 (hierarchical FE: 16 x dsfd_vm_clt 230.04-um tiles under the N face + landing macros / parent band below); was         # slab height 2,419.2 (ds-1010: 2.42 mm)          # FE / BE outline heights (first estimate: FE ~125k flops + 16.8k die pins; BE ~10k)
 
 
 M7P, M7O = 0.064, 0.016            # ORFS asap7 make_tracks M7 x pitch / offset
@@ -132,8 +132,9 @@ def fe(xs):
                     'N', SLAB_W)
     # E face: composition nets to / from the BE (status down, P2 credit up); W face: clocks / resets
     pl.bus('fe_flt', 16, 'output', 'E', 'M4', 20.0); pl.bus('f_p2c', 1, 'input', 'E', 'M4', 40.0)
-    pl.bus('ck', 1, 'input', 'W', 'M4', FE_H / 2); pl.bus('rst', 1, 'input', 'W', 'M4', FE_H / 2 + 4.8)
-    pl.bus('cks', 1, 'input', 'W', 'M4', FE_H / 2 + 9.6); pl.bus('rss', 1, 'input', 'W', 'M4', FE_H / 2 + 14.4)
+    # W pins below the clt tile wall (y 226.8 .. 456.84; tile 0 abuts the W edge)
+    pl.bus('ck', 1, 'input', 'W', 'M4', 100.0); pl.bus('rst', 1, 'input', 'W', 'M4', 104.8)
+    pl.bus('cks', 1, 'input', 'W', 'M4', 109.6); pl.bus('rss', 1, 'input', 'W', 'M4', 114.4)
     pl.emit('VM master v3 front end: S face = the 4 slice request buses at the tile-0 N pins; N face = every client die pin')
 
 
