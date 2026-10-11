@@ -2,7 +2,7 @@
 """MARGIN 3 face plan for ot_dsrom_window_source_ctl and its hardened leaves (el1011-ds-misc 2026-10-11).
 Prints one --pin-region argument per line.  usage: pinplan_m3.py top|land8|mirror DIE_X DIE_Y
 top (540 x 540): W = clk (mid-face) + rst_n + config / prime / blk / start / stage / merge / status;
-  S = acc_* / wl_req_* lanes 0-15; N = lanes 16-31 (each lane's issue + landing pins on one face); E = K-port m_* / s_*.
+  S = acc_* / wl_req_* lanes 0-15; N = lanes 16-31 (each lane's issue + landing pins on one face); E = K-port request m_* (1.4k); the dead K-port response s_* (1.1k) goes W with control (E with both overflowed: PPL-0107 on 38 s_data pins, flat-e29a7cacf).
 land8: acc_* on the S edge (die-face side), clk / rst_n / b / outputs on the N edge (core side).
 mirror: write command W, reads S, bad E, clk N."""
 import sys
@@ -49,8 +49,8 @@ def main():
         r = ['^clk$=left:%g-%g' % (mx - 1, mx + 1),
              lanes(lane, 0, 15) + '=bottom:10-%g' % (dx - 10),
              lanes(lane, 16, 31) + '=top:10-%g' % (dx - 10),
-             r'^(m_|s_)[a-z_]*(\[[0-9]+\])?$=right:10-%g' % (dy - 10),
-             r'^(rst_n|region_|prime_|blk_|start_|staged_v|stream_go|busy|done|fault|refill_cycles|sectors_|rows_|'
+             r'^m_[a-z_]*(\[[0-9]+\])?$=right:10-%g' % (dy - 10),
+             r'^(s_[a-z_]*(\[[0-9]+\])?$|rst_n|region_|prime_|blk_|start_|staged_v|stream_go|busy|done|fault|refill_cycles|sectors_|rows_|'
              r'blocks_written|stage_|merge_|la_load_cycles)=left:10-%g' % (dy - 10)]
     elif kind == 'land8':
         r = ['^clk$=top:%g-%g' % (mx - 1, mx + 1), '^acc_=bottom:2-%g' % (dx - 2),
