@@ -67,10 +67,10 @@ endmodule
 module ot_dsrom_mtp_hrow_store #(
     parameter integer NW = 21, parameter integer USER_W = 10, parameter integer MAXU = 8, parameter integer RS = 16,
     parameter integer AW = 24, parameter integer NP = 3, parameter integer PB = 80,
-    parameter integer CQ = 2,     // relay stages part ingress <-> central tag unit (events in, read commands out)
+    parameter integer CQ = 3,     // relay stages part ingress <-> central tag unit (events in, read commands out)
     parameter integer DD = 2,     // relay stages part root -> bank pair (the last one decodes the bank enables)
     parameter integer RD = 2,     // relay stages bank pair -> part return root
-    parameter integer RP = 2      // relay stages part return root -> output OR
+    parameter integer RP = 4      // relay stages part return root -> output OR
 ) (
     input  wire                 clk, rst_n,
     input  wire [NP-1:0]        i_v,
