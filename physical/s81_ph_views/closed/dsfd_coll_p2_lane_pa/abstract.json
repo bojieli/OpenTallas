@@ -1,6 +1,6 @@
 {
   "name": "dsfd_coll_p2_lane_pa",
-  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm10_b/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm10_b/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/view:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm10_b/view:/out",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/abs_eco:/tmp",
+        "/srv/opentallas-scratch/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm10_b/abs_eco:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm10_b/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/view:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm10_b/view:/out",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/abs_eco:/tmp",
+        "/srv/opentallas-scratch/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm10_b/abs_eco:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -52,9 +52,9 @@
     "LVT"
   ],
   "files": {
-    "dsfd_coll_p2_lane_pa.lef": "5217109fa6587f8f0062598e47acb909544f964b234cb50a315177a23430ac09",
-    "dsfd_coll_p2_lane_pa_ff.lib": "8a0b7e516ac6951e6359844492fe974915fdd84f626cf34a31b017516b1bdc3c",
-    "dsfd_coll_p2_lane_pa_ss.lib": "5c6bcb520d9a9e36060f51a0d9c35c2743ac0db34b8ad1eaf9172859827fc326"
+    "dsfd_coll_p2_lane_pa.lef": "219cf646b6e861ed51229914e1cf7e968bea15c3a46fe3dc58a3be7c3521d22c",
+    "dsfd_coll_p2_lane_pa_ff.lib": "f86629d27f6d7b55022635e7b3fca1479120a544e3bbc1d3d952bd5f918487bd",
+    "dsfd_coll_p2_lane_pa_ss.lib": "c912fba008ea9f122ffeb3b395aaebc1b9f0233dea9476b1ee44df112afdbe80"
   },
   "ok": true
 }
