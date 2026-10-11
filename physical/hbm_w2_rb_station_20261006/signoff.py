@@ -7,7 +7,7 @@ contract SDC (make_sdc.py) at 833.333 ps with L = measured max (setup) and
 measured min (hold side of the budget), then reports SS setup and FF hold,
 split reg2reg / in2reg / reg2out. Accept: SS >= +15 ps, FF >= +15 ps.
 """
-import argparse, json, math, re, subprocess, sys
+import argparse, shutil, json, math, re, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -89,6 +89,10 @@ def main():
     subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{ss_lat[1]:.2f}',
                     '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--l-ff-max', f'{ff_lat[1]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []),
                    check=True, capture_output=True)
+    # ECO-PLUMB (el1011-hbm-no3 2026-10-11): the loop's post-route hold ECO times with <results base>/<sdc_name>; give it
+    # the exact sign-off SDC (verdict metrics export orfs_dir / drc_metrics / sdc_name=6_signoff.sdc)
+    shutil.copy2(sdc, res/'6_signoff.sdc')
+    result['sdc_name'] = '6_signoff.sdc'
     for corner, delay in (('SS', 'max'), ('FF', 'min')) + ((('TT', 'max'),) if a.tt else ()):
         log = sta(case, odb, sdc, spef, corner, delay)
         (run/f'signoff_{corner}.log').write_text(log)
