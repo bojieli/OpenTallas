@@ -2,7 +2,7 @@
  "schema": "opentallas.qwen-kv-die.rom-r22k.v1",
  "recipe": "r22ko4 (tools/die_top_lint.py QWEN_RECIPES)",
  "generator_sha256": "6e40ce155e29e0c9dd3f053669def62788c8dd87a0575b8840f290a8ef94b5c3",
- "surgery_sha256": "13d1dfa1b902c1e1f7a383e0a946c18a962dad68c04da2a413d7904adb48a9cd",
+ "surgery_sha256": "668ec5434fbe52e1f4ce063faea81cd0ee945b2ac2baf3b0500fc731ab82b501",
  "die_um": [
   23484.384,
   32801.76
@@ -11,14 +11,14 @@
  "reticle_mm2": 858.0,
  "margin_mm2": 87.671,
  "r21c_die_mm2": 846.792,
- "instances": 13180,
- "buses": 16379,
- "instance_mm2": 609.184,
+ "instances": 13203,
+ "buses": 16402,
+ "instance_mm2": 609.243,
  "area_by_kind_mm2": {
   "tile": 529.628,
   "spine_block": 34.667,
   "io": 17.6,
-  "relay": 16.746,
+  "relay": 16.805,
   "station": 8.387,
   "xfifo": 0.626,
   "phy_d2d": 0.605,
@@ -147,8 +147,8 @@
   "seq_coll": 51,
   "seq_coll_x": 0,
   "seq_ib": 1,
-  "seq_vrd": 1,
-  "seq_vwr": 2,
+  "seq_vrd": 5,
+  "seq_vwr": 16,
   "tt_c0": 40,
   "tt_c1": 30,
   "tt_c2": 17,
@@ -178,23 +178,23 @@
   "tt_ty": 42,
   "tt_xd": 17,
   "tt_xr": 17,
-  "vm_seq_q": 1
+  "vm_seq_q": 6
  },
  "stage_note": "relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is registered as well (the stage the r21 token-cost counts as one per die hop)",
  "r22k": {
   "removed_instances": {
    "qfd_cdc": 128,
-   "qfd_lst_h_w": 10,
-   "qfd_lst_h_e": 10,
-   "qfd_ctrl": 4,
    "qfd_lst_v_split": 6,
-   "qfd_kvc": 2,
-   "qfd_lst_v": 3,
+   "qfd_lst_h_w": 10,
+   "qfd_ctrl": 4,
    "ot_hbm3e_phy": 4,
-   "qfd_lst_c_split": 2,
+   "qfd_lst_v": 3,
+   "qfd_lst_h_e": 10,
    "qfd_kvc_n": 2,
-   "qfd_hub": 1,
-   "qfd_lst_c": 1
+   "qfd_lst_c_split": 2,
+   "qfd_kvc": 2,
+   "qfd_lst_c": 1,
+   "qfd_hub": 1
   },
   "dropped_buses": {
    "link_channel": 24,
@@ -1878,7 +1878,7 @@
   "chains": 2703,
   "reach_um": 504.0,
   "reach_violations": 1,
-  "far_side_relays": 31,
+  "far_side_relays": 32,
   "reach_examples": [
    {
     "chain": "cbuf_g_5->seq_su",
@@ -1934,6 +1934,11 @@
     "back_um": 345.6
    },
    {
+    "chain": "seq_su->sp_vector_memory",
+    "relay": "rly_seq_vwr_15",
+    "back_um": 280.8
+   },
+   {
     "chain": "t_27_17->sp_port_tiles_4",
     "relay": "rly_bword_40_6",
     "back_um": 259.2
@@ -1982,11 +1987,6 @@
     "chain": "crom_g_1->cbuf_g_1",
     "relay": "rly_o4_cf_q_1_2",
     "back_um": 92.0
-   },
-   {
-    "chain": "sp_band_lanes_0->tt_up4_0",
-    "relay": "rly_pword_0_46",
-    "back_um": 86.4
    }
   ],
   "verdict": "FAIL"
