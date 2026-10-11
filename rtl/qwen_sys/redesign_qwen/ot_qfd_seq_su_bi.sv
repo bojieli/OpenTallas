@@ -999,7 +999,8 @@ module ot_qfd_seq_su_bi #(
     // HQ2 = 1 (hardcore-1010 fe-h): the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2):
     // fba-0ef4d7781 TT -131 / fbb post-CTS -537 on u_ctrl.st -> skip/issue -> load -> hq_fill -> hq[1023:0] enable (26 lv)
     // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word)
-    parameter integer HQ2 = 0
+    parameter integer HQ2 = 0,
+    parameter integer RLY = 0, parameter integer CRED = 0   // qwen-1010/a 401a799aa (lost in merge 5ae5970d5): stations / credit mode
 ) (
     input  wire clk,
     input  wire rst_n,
