@@ -94,11 +94,11 @@ SPECS = [
                 ['t_vq', FLIT, 'output', 'W', 'M4', 3, 0.78],
                 ['t_swv', 1, 'output', 'E', 'M4', 1, 0.02], ['t_swd', VWA + FLIT, 'output', 'E', 'M4', 3, 0.26],
                 ['f_swr', 1, 'input', 'E', 'M4', 1, 0.495], ['f_swa', 1, 'input', 'E', 'M4', 1, 0.505],
-                ['f_srq', FLIT + 1, 'input', 'E', 'M4', 3, 0.74],
+                ['f_srq', 2 * FLIT + 2, 'input', 'E', 'M4', 3, 0.75],   # RD2 (adopted 9c9ac6963): {rv1, rq1, rv, rq}
                 ['f_cs', UW + 2 * NW + 1, 'input', 'N', 'M5', 4, 0.25], ['t_cd', NW + 33, 'output', 'N', 'M5', 4, 0.65],
                 ['t_vc', 1, 'output', 'N', 'M5', 1, 0.95],
                 ['t_ks', UW + 2 * NW + 1, 'output', 'S', 'M5', 4, 0.3], ['f_kd', NW + 33, 'input', 'S', 'M5', 4, 0.62],
-                ['t_srv', 1, 'output', 'S', 'M5', 1, 0.78], ['t_srd', VWA, 'output', 'S', 'M5', 4, 0.83],
+                ['t_srv', 1, 'output', 'S', 'M5', 1, 0.78], ['t_srd', 2 * VWA + 1, 'output', 'S', 'M5', 4, 0.83],   # RD2 {v1, a1, a0}
                 ['f_srr', 1, 'input', 'S', 'M5', 1, 0.88], ['t_ft', 1, 'output', 'S', 'M5', 1, 0.97],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.02], ['ckv', 1, 'input', 'S', 'M5', 1, 0.05],
                 ['rst', 1, 'input', 'S', 'M5', 1, 0.08], ['rsv', 1, 'input', 'S', 'M5', 1, 0.11]]),

@@ -1,0 +1,1521 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /srcroot/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 404 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  A2O1A1Ixp33_ASAP7_75t_L
+  A2O1A1O1Ixp25_ASAP7_75t_L
+  AO211x2_ASAP7_75t_L
+  AO21x1_ASAP7_75t_L
+  AO21x2_ASAP7_75t_L
+  AO221x1_ASAP7_75t_L
+  AO221x2_ASAP7_75t_L
+  AO222x2_ASAP7_75t_L
+  AO22x1_ASAP7_75t_L
+  AO22x2_ASAP7_75t_L
+  AO31x2_ASAP7_75t_L
+  AO322x2_ASAP7_75t_L
+  AO32x1_ASAP7_75t_L
+  AO32x2_ASAP7_75t_L
+  AO331x1_ASAP7_75t_L
+  AO331x2_ASAP7_75t_L
+  AO332x1_ASAP7_75t_L
+  AO332x2_ASAP7_75t_L
+  AO333x1_ASAP7_75t_L
+  AO333x2_ASAP7_75t_L
+  AO33x2_ASAP7_75t_L
+  AOI211x1_ASAP7_75t_L
+  AOI211xp5_ASAP7_75t_L
+  AOI21x1_ASAP7_75t_L
+  AOI21xp33_ASAP7_75t_L
+  AOI21xp5_ASAP7_75t_L
+  AOI221x1_ASAP7_75t_L
+  AOI221xp5_ASAP7_75t_L
+  AOI222xp33_ASAP7_75t_L
+  AOI22x1_ASAP7_75t_L
+  AOI22xp33_ASAP7_75t_L
+  AOI22xp5_ASAP7_75t_L
+  AOI311xp33_ASAP7_75t_L
+  AOI31xp33_ASAP7_75t_L
+  AOI31xp67_ASAP7_75t_L
+  AOI321xp33_ASAP7_75t_L
+  AOI322xp5_ASAP7_75t_L
+  AOI32xp33_ASAP7_75t_L
+  AOI331xp33_ASAP7_75t_L
+  AOI332xp33_ASAP7_75t_L
+  AOI333xp33_ASAP7_75t_L
+  AOI33xp33_ASAP7_75t_L
+  BUFx10_ASAP7_75t_L
+  BUFx12_ASAP7_75t_L
+  BUFx12f_ASAP7_75t_L
+  BUFx16f_ASAP7_75t_L
+  BUFx24_ASAP7_75t_L
+  BUFx2_ASAP7_75t_L
+  BUFx3_ASAP7_75t_L
+  BUFx4_ASAP7_75t_L
+  BUFx4f_ASAP7_75t_L
+  BUFx5_ASAP7_75t_L
+  BUFx6f_ASAP7_75t_L
+  BUFx8_ASAP7_75t_L
+  CKINVDCx10_ASAP7_75t_L
+  CKINVDCx11_ASAP7_75t_L
+  CKINVDCx12_ASAP7_75t_L
+  CKINVDCx14_ASAP7_75t_L
+  CKINVDCx16_ASAP7_75t_L
+  CKINVDCx20_ASAP7_75t_L
+  CKINVDCx5p33_ASAP7_75t_L
+  CKINVDCx6p67_ASAP7_75t_L
+  CKINVDCx8_ASAP7_75t_L
+  CKINVDCx9p33_ASAP7_75t_L
+  HB1xp67_ASAP7_75t_L
+  HB2xp67_ASAP7_75t_L
+  HB3xp67_ASAP7_75t_L
+  HB4xp67_ASAP7_75t_L
+  INVx11_ASAP7_75t_L
+  INVx13_ASAP7_75t_L
+  INVx1_ASAP7_75t_L
+  INVx2_ASAP7_75t_L
+  INVx3_ASAP7_75t_L
+  INVx4_ASAP7_75t_L
+  INVx5_ASAP7_75t_L
+  INVx6_ASAP7_75t_L
+  INVx8_ASAP7_75t_L
+  INVxp33_ASAP7_75t_L
+  INVxp67_ASAP7_75t_L
+  O2A1O1Ixp33_ASAP7_75t_L
+  O2A1O1Ixp5_ASAP7_75t_L
+  OA211x2_ASAP7_75t_L
+  OA21x2_ASAP7_75t_L
+  OA221x2_ASAP7_75t_L
+  OA222x2_ASAP7_75t_L
+  OA22x2_ASAP7_75t_L
+  OA31x2_ASAP7_75t_L
+  OA331x1_ASAP7_75t_L
+  OA331x2_ASAP7_75t_L
+  OA332x1_ASAP7_75t_L
+  OA332x2_ASAP7_75t_L
+  OA333x1_ASAP7_75t_L
+  OA333x2_ASAP7_75t_L
+  OA33x2_ASAP7_75t_L
+  OAI211xp5_ASAP7_75t_L
+  OAI21x1_ASAP7_75t_L
+  OAI21xp33_ASAP7_75t_L
+  OAI21xp5_ASAP7_75t_L
+  OAI221xp5_ASAP7_75t_L
+  OAI222xp33_ASAP7_75t_L
+  OAI22x1_ASAP7_75t_L
+  OAI22xp33_ASAP7_75t_L
+  OAI22xp5_ASAP7_75t_L
+  OAI311xp33_ASAP7_75t_L
+  OAI31xp33_ASAP7_75t_L
+  OAI31xp67_ASAP7_75t_L
+  OAI321xp33_ASAP7_75t_L
+  OAI322xp33_ASAP7_75t_L
+  OAI32xp33_ASAP7_75t_L
+  OAI331xp33_ASAP7_75t_L
+  OAI332xp33_ASAP7_75t_L
+  OAI333xp33_ASAP7_75t_L
+  OAI33xp33_ASAP7_75t_L
+  DFFASRHQNx1_ASAP7_75t_L
+  DFFHQNx1_ASAP7_75t_L
+  DFFHQNx2_ASAP7_75t_L
+  DFFHQNx3_ASAP7_75t_L
+  DFFHQx4_ASAP7_75t_L
+  DFFLQNx1_ASAP7_75t_L
+  DFFLQNx2_ASAP7_75t_L
+  DFFLQNx3_ASAP7_75t_L
+  DFFLQx4_ASAP7_75t_L
+  DHLx1_ASAP7_75t_L
+  DHLx2_ASAP7_75t_L
+  DHLx3_ASAP7_75t_L
+  DLLx1_ASAP7_75t_L
+  DLLx2_ASAP7_75t_L
+  DLLx3_ASAP7_75t_L
+  ICGx1_ASAP7_75t_L
+  ICGx2_ASAP7_75t_L
+  ICGx2p67DC_ASAP7_75t_L
+  ICGx3_ASAP7_75t_L
+  ICGx4DC_ASAP7_75t_L
+  ICGx4_ASAP7_75t_L
+  ICGx5_ASAP7_75t_L
+  ICGx5p33DC_ASAP7_75t_L
+  ICGx6p67DC_ASAP7_75t_L
+  ICGx8DC_ASAP7_75t_L
+  SDFHx1_ASAP7_75t_L
+  SDFHx2_ASAP7_75t_L
+  SDFHx3_ASAP7_75t_L
+  SDFHx4_ASAP7_75t_L
+  SDFLx1_ASAP7_75t_L
+  SDFLx2_ASAP7_75t_L
+  SDFLx3_ASAP7_75t_L
+  SDFLx4_ASAP7_75t_L
+  AND2x2_ASAP7_75t_L
+  AND2x4_ASAP7_75t_L
+  AND2x6_ASAP7_75t_L
+  AND3x1_ASAP7_75t_L
+  AND3x2_ASAP7_75t_L
+  AND3x4_ASAP7_75t_L
+  AND4x1_ASAP7_75t_L
+  AND4x2_ASAP7_75t_L
+  AND5x1_ASAP7_75t_L
+  AND5x2_ASAP7_75t_L
+  FAx1_ASAP7_75t_L
+  HAxp5_ASAP7_75t_L
+  MAJIxp5_ASAP7_75t_L
+  MAJx2_ASAP7_75t_L
+  MAJx3_ASAP7_75t_L
+  NAND2x1_ASAP7_75t_L
+  NAND2x1p5_ASAP7_75t_L
+  NAND2x2_ASAP7_75t_L
+  NAND2xp33_ASAP7_75t_L
+  NAND2xp5_ASAP7_75t_L
+  NAND2xp67_ASAP7_75t_L
+  NAND3x1_ASAP7_75t_L
+  NAND3x2_ASAP7_75t_L
+  NAND3xp33_ASAP7_75t_L
+  NAND4xp25_ASAP7_75t_L
+  NAND4xp75_ASAP7_75t_L
+  NAND5xp2_ASAP7_75t_L
+  NOR2x1_ASAP7_75t_L
+  NOR2x1p5_ASAP7_75t_L
+  NOR2x2_ASAP7_75t_L
+  NOR2xp33_ASAP7_75t_L
+  NOR2xp67_ASAP7_75t_L
+  NOR3x1_ASAP7_75t_L
+  NOR3x2_ASAP7_75t_L
+  NOR3xp33_ASAP7_75t_L
+  NOR4xp25_ASAP7_75t_L
+  NOR4xp75_ASAP7_75t_L
+  NOR5xp2_ASAP7_75t_L
+  OR2x2_ASAP7_75t_L
+  OR2x4_ASAP7_75t_L
+  OR2x6_ASAP7_75t_L
+  OR3x1_ASAP7_75t_L
+  OR3x2_ASAP7_75t_L
+  OR3x4_ASAP7_75t_L
+  OR4x1_ASAP7_75t_L
+  OR4x2_ASAP7_75t_L
+  OR5x1_ASAP7_75t_L
+  OR5x2_ASAP7_75t_L
+  TIEHIx1_ASAP7_75t_L
+  TIELOx1_ASAP7_75t_L
+  XNOR2x1_ASAP7_75t_L
+  XNOR2x2_ASAP7_75t_L
+  XNOR2xp5_ASAP7_75t_L
+  XOR2x1_ASAP7_75t_L
+  XOR2x2_ASAP7_75t_L
+  XOR2xp5_ASAP7_75t_L
+  A2O1A1Ixp33_ASAP7_75t_SL
+  A2O1A1O1Ixp25_ASAP7_75t_SL
+  AO211x2_ASAP7_75t_SL
+  AO21x1_ASAP7_75t_SL
+  AO21x2_ASAP7_75t_SL
+  AO221x1_ASAP7_75t_SL
+  AO221x2_ASAP7_75t_SL
+  AO222x2_ASAP7_75t_SL
+  AO22x1_ASAP7_75t_SL
+  AO22x2_ASAP7_75t_SL
+  AO31x2_ASAP7_75t_SL
+  AO322x2_ASAP7_75t_SL
+  AO32x1_ASAP7_75t_SL
+  AO32x2_ASAP7_75t_SL
+  AO331x1_ASAP7_75t_SL
+  AO331x2_ASAP7_75t_SL
+  AO332x1_ASAP7_75t_SL
+  AO332x2_ASAP7_75t_SL
+  AO333x1_ASAP7_75t_SL
+  AO333x2_ASAP7_75t_SL
+  AO33x2_ASAP7_75t_SL
+  AOI211x1_ASAP7_75t_SL
+  AOI211xp5_ASAP7_75t_SL
+  AOI21x1_ASAP7_75t_SL
+  AOI21xp33_ASAP7_75t_SL
+  AOI21xp5_ASAP7_75t_SL
+  AOI221x1_ASAP7_75t_SL
+  AOI221xp5_ASAP7_75t_SL
+  AOI222xp33_ASAP7_75t_SL
+  AOI22x1_ASAP7_75t_SL
+  AOI22xp33_ASAP7_75t_SL
+  AOI22xp5_ASAP7_75t_SL
+  AOI311xp33_ASAP7_75t_SL
+  AOI31xp33_ASAP7_75t_SL
+  AOI31xp67_ASAP7_75t_SL
+  AOI321xp33_ASAP7_75t_SL
+  AOI322xp5_ASAP7_75t_SL
+  AOI32xp33_ASAP7_75t_SL
+  AOI331xp33_ASAP7_75t_SL
+  AOI332xp33_ASAP7_75t_SL
+  AOI333xp33_ASAP7_75t_SL
+  AOI33xp33_ASAP7_75t_SL
+  BUFx10_ASAP7_75t_SL
+  BUFx12_ASAP7_75t_SL
+  BUFx12f_ASAP7_75t_SL
+  BUFx16f_ASAP7_75t_SL
+  BUFx24_ASAP7_75t_SL
+  BUFx2_ASAP7_75t_SL
+  BUFx3_ASAP7_75t_SL
+  BUFx4_ASAP7_75t_SL
+  BUFx4f_ASAP7_75t_SL
+  BUFx5_ASAP7_75t_SL
+  BUFx6f_ASAP7_75t_SL
+  BUFx8_ASAP7_75t_SL
+  CKINVDCx10_ASAP7_75t_SL
+  CKINVDCx11_ASAP7_75t_SL
+  CKINVDCx12_ASAP7_75t_SL
+  CKINVDCx14_ASAP7_75t_SL
+  CKINVDCx16_ASAP7_75t_SL
+  CKINVDCx20_ASAP7_75t_SL
+  CKINVDCx5p33_ASAP7_75t_SL
+  CKINVDCx6p67_ASAP7_75t_SL
+  CKINVDCx8_ASAP7_75t_SL
+  CKINVDCx9p33_ASAP7_75t_SL
+  HB1xp67_ASAP7_75t_SL
+  HB2xp67_ASAP7_75t_SL
+  HB3xp67_ASAP7_75t_SL
+  HB4xp67_ASAP7_75t_SL
+  INVx11_ASAP7_75t_SL
+  INVx13_ASAP7_75t_SL
+  INVx1_ASAP7_75t_SL
+  INVx2_ASAP7_75t_SL
+  INVx3_ASAP7_75t_SL
+  INVx4_ASAP7_75t_SL
+  INVx5_ASAP7_75t_SL
+  INVx6_ASAP7_75t_SL
+  INVx8_ASAP7_75t_SL
+  INVxp33_ASAP7_75t_SL
+  INVxp67_ASAP7_75t_SL
+  O2A1O1Ixp33_ASAP7_75t_SL
+  O2A1O1Ixp5_ASAP7_75t_SL
+  OA211x2_ASAP7_75t_SL
+  OA21x2_ASAP7_75t_SL
+  OA221x2_ASAP7_75t_SL
+  OA222x2_ASAP7_75t_SL
+  OA22x2_ASAP7_75t_SL
+  OA31x2_ASAP7_75t_SL
+  OA331x1_ASAP7_75t_SL
+  OA331x2_ASAP7_75t_SL
+  OA332x1_ASAP7_75t_SL
+  OA332x2_ASAP7_75t_SL
+  OA333x1_ASAP7_75t_SL
+  OA333x2_ASAP7_75t_SL
+  OA33x2_ASAP7_75t_SL
+  OAI211xp5_ASAP7_75t_SL
+  OAI21x1_ASAP7_75t_SL
+  OAI21xp33_ASAP7_75t_SL
+  OAI21xp5_ASAP7_75t_SL
+  OAI221xp5_ASAP7_75t_SL
+  OAI222xp33_ASAP7_75t_SL
+  OAI22x1_ASAP7_75t_SL
+  OAI22xp33_ASAP7_75t_SL
+  OAI22xp5_ASAP7_75t_SL
+  OAI311xp33_ASAP7_75t_SL
+  OAI31xp33_ASAP7_75t_SL
+  OAI31xp67_ASAP7_75t_SL
+  OAI321xp33_ASAP7_75t_SL
+  OAI322xp33_ASAP7_75t_SL
+  OAI32xp33_ASAP7_75t_SL
+  OAI331xp33_ASAP7_75t_SL
+  OAI332xp33_ASAP7_75t_SL
+  OAI333xp33_ASAP7_75t_SL
+  OAI33xp33_ASAP7_75t_SL
+  DFFASRHQNx1_ASAP7_75t_SL
+  DFFHQNx1_ASAP7_75t_SL
+  DFFHQNx2_ASAP7_75t_SL
+  DFFHQNx3_ASAP7_75t_SL
+  DFFHQx4_ASAP7_75t_SL
+  DFFLQNx1_ASAP7_75t_SL
+  DFFLQNx2_ASAP7_75t_SL
+  DFFLQNx3_ASAP7_75t_SL
+  DFFLQx4_ASAP7_75t_SL
+  DHLx1_ASAP7_75t_SL
+  DHLx2_ASAP7_75t_SL
+  DHLx3_ASAP7_75t_SL
+  DLLx1_ASAP7_75t_SL
+  DLLx2_ASAP7_75t_SL
+  DLLx3_ASAP7_75t_SL
+  ICGx1_ASAP7_75t_SL
+  ICGx2_ASAP7_75t_SL
+  ICGx2p67DC_ASAP7_75t_SL
+  ICGx3_ASAP7_75t_SL
+  ICGx4DC_ASAP7_75t_SL
+  ICGx4_ASAP7_75t_SL
+  ICGx5_ASAP7_75t_SL
+  ICGx5p33DC_ASAP7_75t_SL
+  ICGx6p67DC_ASAP7_75t_SL
+  ICGx8DC_ASAP7_75t_SL
+  SDFHx1_ASAP7_75t_SL
+  SDFHx2_ASAP7_75t_SL
+  SDFHx3_ASAP7_75t_SL
+  SDFHx4_ASAP7_75t_SL
+  SDFLx1_ASAP7_75t_SL
+  SDFLx2_ASAP7_75t_SL
+  SDFLx3_ASAP7_75t_SL
+  SDFLx4_ASAP7_75t_SL
+  AND2x2_ASAP7_75t_SL
+  AND2x4_ASAP7_75t_SL
+  AND2x6_ASAP7_75t_SL
+  AND3x1_ASAP7_75t_SL
+  AND3x2_ASAP7_75t_SL
+  AND3x4_ASAP7_75t_SL
+  AND4x1_ASAP7_75t_SL
+  AND4x2_ASAP7_75t_SL
+  AND5x1_ASAP7_75t_SL
+  AND5x2_ASAP7_75t_SL
+  FAx1_ASAP7_75t_SL
+  HAxp5_ASAP7_75t_SL
+  MAJIxp5_ASAP7_75t_SL
+  MAJx2_ASAP7_75t_SL
+  MAJx3_ASAP7_75t_SL
+  NAND2x1_ASAP7_75t_SL
+  NAND2x1p5_ASAP7_75t_SL
+  NAND2x2_ASAP7_75t_SL
+  NAND2xp33_ASAP7_75t_SL
+  NAND2xp5_ASAP7_75t_SL
+  NAND2xp67_ASAP7_75t_SL
+  NAND3x1_ASAP7_75t_SL
+  NAND3x2_ASAP7_75t_SL
+  NAND3xp33_ASAP7_75t_SL
+  NAND4xp25_ASAP7_75t_SL
+  NAND4xp75_ASAP7_75t_SL
+  NAND5xp2_ASAP7_75t_SL
+  NOR2x1_ASAP7_75t_SL
+  NOR2x1p5_ASAP7_75t_SL
+  NOR2x2_ASAP7_75t_SL
+  NOR2xp33_ASAP7_75t_SL
+  NOR2xp67_ASAP7_75t_SL
+  NOR3x1_ASAP7_75t_SL
+  NOR3x2_ASAP7_75t_SL
+  NOR3xp33_ASAP7_75t_SL
+  NOR4xp25_ASAP7_75t_SL
+  NOR4xp75_ASAP7_75t_SL
+  NOR5xp2_ASAP7_75t_SL
+  OR2x2_ASAP7_75t_SL
+  OR2x4_ASAP7_75t_SL
+  OR2x6_ASAP7_75t_SL
+  OR3x1_ASAP7_75t_SL
+  OR3x2_ASAP7_75t_SL
+  OR3x4_ASAP7_75t_SL
+  OR4x1_ASAP7_75t_SL
+  OR4x2_ASAP7_75t_SL
+  OR5x1_ASAP7_75t_SL
+  OR5x2_ASAP7_75t_SL
+  TIEHIx1_ASAP7_75t_SL
+  TIELOx1_ASAP7_75t_SL
+  XNOR2x1_ASAP7_75t_SL
+  XNOR2x2_ASAP7_75t_SL
+  XNOR2xp5_ASAP7_75t_SL
+  XOR2x1_ASAP7_75t_SL
+  XOR2x2_ASAP7_75t_SL
+  XOR2xp5_ASAP7_75t_SL
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+TRUECREDIT_SCREENING_INSERTION 481.38 733.70 607.54 PARENT_UNBOUND
+TRUECREDIT_SIGNAL_IDENTITY_PASS signals=2252 pg_terms=2 pg_boxes=66
+TRUECREDIT_PIN_CHECK_PASS count=2252
+OT_P -150.612076 5 u_core.send_data[466]$_DFF_P_/QN send_data[466]
+OT_P -132.697083 4 u_core.send_data[409]$_DFF_P_/QN send_data[409]
+OT_P -129.116608 4 u_core.send_data[414]$_DFF_P_/QN send_data[414]
+OT_P -128.533188 7 u_core.g_lane[1].wd_q[374]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[374]
+OT_P -122.567955 6 u_core.g_lane[1].wd_q[326]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[326]
+OT_P -118.592804 7 u_core.return_tag[5]$_DFFE_PN0P_/QN return_tag[5]
+OT_P -116.874512 7 u_core.return_tag[19]$_DFFE_PN0P_/QN return_tag[19]
+OT_P -106.272545 5 u_core.g_lane[1].wd_q[343]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[343]
+OT_P -98.862808 7 u_core.g_lane[0].g_ram[0].cap_q[48]$_DFF_P_/QN u_core.g_lane[0].raw_q[48]$_DFF_P_/D
+OT_P -98.497543 6 u_core.g_lane[1].wd_q[350]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[350]
+OT_P -98.423492 7 u_core.g_lane[1].wd_q[372]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[372]
+OT_P -96.664009 6 u_core.g_lane[1].wd_q[347]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[347]
+OT_P -95.860878 5 u_core.send_data[474]$_DFF_P_/QN send_data[474]
+OT_P -90.482063 4 u_core.send_data[470]$_DFF_P_/QN send_data[470]
+OT_P -87.931442 7 u_core.g_lane[1].wd_q[352]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[352]
+OT_P -85.457085 4 u_core.send_data[366]$_DFF_P_/QN send_data[366]
+OT_P -84.805611 7 u_core.return_tag[7]$_DFFE_PN0P_/QN return_tag[7]
+OT_P -79.925842 3 u_core.send_data[395]$_DFF_P_/QN send_data[395]
+OT_P -76.919136 6 u_core.g_lane[1].wd_q[284]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[284]
+OT_P -74.401932 4 u_core.send_data[411]$_DFF_P_/QN send_data[411]
+OT_P -73.693604 7 u_core.g_lane[1].wd_q[370]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[370]
+OT_P -72.598595 6 u_core.return_tag[9]$_DFFE_PN0P_/QN return_tag[9]
+OT_P -72.471695 4 u_core.send_data[469]$_DFF_P_/QN send_data[469]
+OT_P -69.276253 4 u_core.send_data[438]$_DFF_P_/QN send_data[438]
+OT_P -66.706306 4 u_core.send_data[434]$_DFF_P_/QN send_data[434]
+OT_P -66.536552 7 u_core.g_lane[1].wd_q[393]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[393]
+OT_P -61.046501 8 u_core.return_tag[20]$_DFFE_PN0P_/QN return_tag[20]
+OT_P -59.964035 7 u_core.g_lane[1].wd_q[366]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[366]
+OT_P -59.160233 6 u_core.g_lane[1].wd_q[322]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[322]
+OT_P -56.809559 3 u_core.send_data[398]$_DFF_P_/QN send_data[398]
+OT_P -56.788132 3 u_core.send_data[445]$_DFF_P_/QN send_data[445]
+OT_P -55.634388 4 u_core.send_data[399]$_DFF_P_/QN send_data[399]
+OT_P -50.086048 4 u_core.send_data[494]$_DFF_P_/QN send_data[494]
+OT_P -48.536064 6 u_core.g_lane[1].wd_q[309]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[309]
+OT_P -47.336136 6 u_core.g_lane[0].g_ram[0].cap_q[100]$_DFF_P_/QN u_core.g_lane[0].raw_q[100]$_DFF_P_/D
+OT_P -46.830872 3 u_core.send_data[16]$_DFF_P_/QN send_data[16]
+OT_P -46.245232 7 u_core.send_v[1]$_DFF_PN0_/QN return_v[1]
+OT_P -45.979885 6 u_core.return_tag[21]$_DFFE_PN0P_/QN return_tag[21]
+OT_P -44.438122 4 u_core.send_data[403]$_DFF_P_/QN send_data[403]
+OT_P -44.372063 5 u_core.send_data[677]$_DFF_P_/QN send_data[677]
+OT_P -40.078274 7 u_core.g_lane[0].g_ram[0].cap_q[139]$_DFF_P_/QN u_core.g_lane[0].raw_q[139]$_DFF_P_/D
+OT_P -37.986057 6 u_core.g_lane[0].g_ram[0].cap_q[13]$_DFF_P_/QN u_core.g_lane[0].raw_q[13]$_DFF_P_/D
+OT_P -37.819191 4 u_core.send_data[400]$_DFF_P_/QN send_data[400]
+OT_P -36.000092 6 u_core.send_data[675]$_DFF_P_/QN send_data[675]
+OT_P -35.178970 7 u_core.g_lane[1].wd_q[384]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[384]
+OT_P -33.136383 7 u_core.g_lane[1].wd_q[376]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[376]
+OT_P -32.460812 4 u_core.send_data[493]$_DFF_P_/QN send_data[493]
+OT_P -31.709858 6 u_core.g_lane[1].wd_q[346]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[346]
+OT_P -31.386671 7 u_core.g_lane[0].g_ram[0].cap_q[89]$_DFF_P_/QN u_core.g_lane[0].raw_q[89]$_DFF_P_/D
+OT_P -30.991432 6 u_core.g_lane[0].g_ram[0].cap_q[70]$_DFF_P_/QN u_core.g_lane[0].raw_q[70]$_DFF_P_/D
+OT_P -28.853807 7 u_core.g_lane[1].wd_q[367]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[367]
+OT_P -28.349100 4 u_core.send_data[371]$_DFF_P_/QN send_data[371]
+OT_P -27.846170 4 u_core.send_data[453]$_DFF_P_/QN send_data[453]
+OT_P -27.515434 5 u_core.send_data[498]$_DFF_P_/QN send_data[498]
+OT_P -27.310932 8 u_core.g_lane[0].g_ram[0].cap_q[112]$_DFF_P_/QN u_core.g_lane[0].raw_q[112]$_DFF_P_/D
+OT_P -27.234215 6 u_core.g_lane[0].g_ram[0].cap_q[194]$_DFF_P_/QN u_core.g_lane[0].raw_q[194]$_DFF_P_/D
+OT_P -27.213009 6 u_core.g_lane[1].wd_q[335]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[335]
+OT_P -25.685898 6 u_core.g_lane[1].wd_q[315]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[315]
+OT_P -22.784996 6 u_core.send_data[672]$_DFF_P_/QN send_data[672]
+OT_P -22.784330 6 u_core.g_lane[1].wd_q[334]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[334]
+OT_P -22.539637 7 u_core.g_lane[0].g_ram[0].cap_q[262]$_DFF_P_/QN u_core.g_lane[0].raw_q[262]$_DFF_P_/D
+OT_P -22.167379 6 u_core.g_lane[0].g_ram[0].cap_q[50]$_DFF_P_/QN u_core.g_lane[0].raw_q[50]$_DFF_P_/D
+OT_P -21.801449 7 u_core.g_lane[1].wd_q[381]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[381]
+OT_P -20.427771 6 u_core.return_tag[1]$_DFFE_PN0P_/QN return_tag[1]
+OT_P -20.418777 5 u_core.send_data[657]$_DFF_P_/QN send_data[657]
+OT_P -19.666157 5 u_core.send_data[601]$_DFF_P_/QN send_data[601]
+OT_P -19.376501 7 u_core.g_lane[1].wd_q[371]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[371]
+OT_P -18.910429 4 u_core.send_data[421]$_DFF_P_/QN send_data[421]
+OT_P -18.772205 4 u_core.send_data[443]$_DFF_P_/QN send_data[443]
+OT_P -18.327229 5 u_core.send_data[692]$_DFF_P_/QN send_data[692]
+OT_P -18.182234 4 u_core.send_data[476]$_DFF_P_/QN send_data[476]
+OT_P -15.922708 5 u_core.g_lane[1].wd_q[353]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[353]
+OT_P -15.706436 8 u_core.return_tag[10]$_DFFE_PN0P_/QN return_tag[10]
+OT_P -15.469625 7 u_core.g_lane[0].g_ram[0].cap_q[56]$_DFF_P_/QN u_core.g_lane[0].raw_q[56]$_DFF_P_/D
+OT_P -15.364932 4 u_core.send_data[401]$_DFF_P_/QN send_data[401]
+OT_P -15.192403 7 u_core.g_lane[0].g_ram[0].cap_q[251]$_DFF_P_/QN u_core.g_lane[0].raw_q[251]$_DFF_P_/D
+OT_P -14.679702 7 u_core.g_lane[0].g_ram[0].cap_q[64]$_DFF_P_/QN u_core.g_lane[0].raw_q[64]$_DFF_P_/D
+OT_P -14.294899 6 u_core.g_lane[0].g_ram[0].cap_q[37]$_DFF_P_/QN u_core.g_lane[0].raw_q[37]$_DFF_P_/D
+OT_P -14.000357 7 u_core.g_lane[0].g_ram[0].cap_q[23]$_DFF_P_/QN u_core.g_lane[0].raw_q[23]$_DFF_P_/D
+OT_P -12.486012 7 u_core.g_lane[0].g_ram[0].cap_q[358]$_DFF_P_/QN u_core.g_lane[0].raw_q[358]$_DFF_P_/D
+OT_P -12.134294 5 u_core.send_data[641]$_DFF_P_/QN send_data[641]
+OT_P -8.540612 4 u_core.send_data[468]$_DFF_P_/QN send_data[468]
+OT_P -8.231638 4 u_core.send_data[417]$_DFF_P_/QN send_data[417]
+OT_P -7.909451 7 u_core.g_lane[0].g_ram[0].cap_q[42]$_DFF_P_/QN u_core.g_lane[0].raw_q[42]$_DFF_P_/D
+OT_P -7.133405 4 u_core.send_data[446]$_DFF_P_/QN send_data[446]
+OT_P -6.618706 4 u_core.send_data[501]$_DFF_P_/QN send_data[501]
+OT_P -6.502243 6 u_core.send_data[694]$_DFF_P_/QN send_data[694]
+OT_P -6.097012 4 u_core.send_data[460]$_DFF_P_/QN send_data[460]
+OT_P -6.055156 3 u_core.send_data[432]$_DFF_P_/QN send_data[432]
+OT_P -5.411227 6 u_core.g_lane[0].g_ram[0].cap_q[268]$_DFF_P_/QN u_core.g_lane[0].raw_q[268]$_DFF_P_/D
+OT_P -5.149769 6 u_core.return_tag[22]$_DFFE_PN0P_/QN return_tag[22]
+OT_P -5.094924 3 u_core.send_data[20]$_DFF_P_/QN send_data[20]
+OT_P -4.625633 4 u_core.send_data[457]$_DFF_P_/QN send_data[457]
+OT_P -4.132028 8 u_core.g_lane[1].wd_q[358]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[358]
+OT_P -3.624545 4 u_core.send_data[482]$_DFF_P_/QN send_data[482]
+OT_P -2.551070 4 u_core.send_data[426]$_DFF_P_/QN send_data[426]
+OT_P -2.338241 7 u_core.send_data[699]$_DFF_P_/QN send_data[699]
+OT_P -2.068012 5 u_core.send_data[465]$_DFF_P_/QN send_data[465]
+OT_P -1.282419 7 u_core.g_lane[0].g_ram[0].cap_q[140]$_DFF_P_/QN u_core.g_lane[0].raw_q[140]$_DFF_P_/D
+OT_P -0.919154 3 u_core.send_data[384]$_DFF_P_/QN send_data[384]
+OT_P -0.916267 8 u_core.g_lane[0].g_ram[0].cap_q[67]$_DFF_P_/QN u_core.g_lane[0].raw_q[67]$_DFF_P_/D
+OT_P -0.753064 6 u_core.g_lane[0].g_ram[0].cap_q[41]$_DFF_P_/QN u_core.g_lane[0].raw_q[41]$_DFF_P_/D
+OT_P -0.639155 6 u_core.g_lane[0].g_ram[0].cap_q[7]$_DFF_P_/QN u_core.g_lane[0].raw_q[7]$_DFF_P_/D
+OT_P -0.614064 4 u_core.send_data[425]$_DFF_P_/QN send_data[425]
+OT_P -0.490386 6 u_core.g_lane[0].g_ram[0].cap_q[81]$_DFF_P_/QN u_core.g_lane[0].raw_q[81]$_DFF_P_/D
+OT_P 0.130229 4 u_core.send_data[450]$_DFF_P_/QN send_data[450]
+OT_P 1.977529 7 u_core.g_lane[1].wd_q[364]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[364]
+OT_P 2.164713 6 u_core.send_data[682]$_DFF_P_/QN send_data[682]
+OT_P 2.397971 4 u_core.send_data[481]$_DFF_P_/QN send_data[481]
+OT_P 2.407630 5 u_core.send_data[685]$_DFF_P_/QN send_data[685]
+OT_P 2.507883 4 u_core.send_data[504]$_DFF_P_/QN send_data[504]
+OT_P 3.551159 6 u_core.send_data[649]$_DFF_P_/QN send_data[649]
+OT_P 4.411471 4 u_core.send_data[454]$_DFF_P_/QN send_data[454]
+OT_P 4.657830 6 u_core.send_data[684]$_DFF_P_/QN send_data[684]
+OT_P 4.723222 5 u_core.send_data[687]$_DFF_P_/QN send_data[687]
+OT_P 4.939938 4 u_core.g_lane[1].wd_q[306]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[306]
+OT_P 5.958345 7 u_core.g_lane[0].g_ram[0].cap_q[65]$_DFF_P_/QN u_core.g_lane[0].raw_q[65]$_DFF_P_/D
+OT_P 6.906587 6 u_core.g_lane[0].g_ram[0].cap_q[38]$_DFF_P_/QN u_core.g_lane[0].raw_q[38]$_DFF_P_/D
+OT_P 7.626344 7 u_core.g_lane[0].g_ram[0].cap_q[238]$_DFF_P_/QN u_core.g_lane[0].raw_q[238]$_DFF_P_/D
+OT_P 7.869705 4 u_core.send_data[451]$_DFF_P_/QN send_data[451]
+OT_P 8.076651 4 u_core.send_data[385]$_DFF_P_/QN send_data[385]
+OT_P 9.184320 5 u_core.send_data[617]$_DFF_P_/QN send_data[617]
+OT_P 9.262702 4 u_core.send_data[479]$_DFF_P_/QN send_data[479]
+OT_P 9.497403 5 u_core.send_data[703]$_DFF_P_/QN send_data[703]
+OT_P 9.746537 7 u_core.g_lane[1].wd_q[392]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[392]
+OT_P 10.085155 6 u_core.g_lane[0].g_ram[0].cap_q[202]$_DFF_P_/QN u_core.g_lane[0].raw_q[202]$_DFF_P_/D
+OT_P 10.122348 6 u_core.g_lane[1].wd_q[340]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[340]
+OT_P 10.571988 7 u_core.g_lane[1].wd_q[391]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[391]
+OT_P 11.044166 7 u_core.g_lane[0].g_ram[0].cap_q[227]$_DFF_P_/QN u_core.g_lane[0].raw_q[227]$_DFF_P_/D
+OT_P 11.482815 5 u_core.g_lane[0].g_ram[0].cap_q[274]$_DFF_P_/QN u_core.g_lane[0].raw_q[274]$_DFF_P_/D
+OT_P 11.504242 7 u_core.g_lane[0].g_ram[0].cap_q[32]$_DFF_P_/QN u_core.g_lane[0].raw_q[32]$_DFF_P_/D
+OT_P 12.178037 5 u_core.send_data[681]$_DFF_P_/QN send_data[681]
+OT_P 13.360424 4 u_core.send_data[335]$_DFF_P_/QN send_data[335]
+OT_P 13.387846 6 u_core.send_data[673]$_DFF_P_/QN send_data[673]
+OT_P 13.883339 7 u_core.g_lane[0].g_ram[0].cap_q[55]$_DFF_P_/QN u_core.g_lane[0].raw_q[55]$_DFF_P_/D
+OT_P 14.353074 6 u_core.g_lane[0].g_ram[0].cap_q[196]$_DFF_P_/QN u_core.g_lane[0].raw_q[196]$_DFF_P_/D
+OT_P 14.522605 4 u_core.send_data[406]$_DFF_P_/QN send_data[406]
+OT_P 14.705570 6 u_core.g_lane[0].g_ram[0].cap_q[40]$_DFF_P_/QN u_core.g_lane[0].raw_q[40]$_DFF_P_/D
+OT_P 14.896528 7 u_core.g_lane[0].g_ram[0].cap_q[73]$_DFF_P_/QN u_core.g_lane[0].raw_q[73]$_DFF_P_/D
+OT_P 15.315415 4 u_core.send_data[467]$_DFF_P_/QN send_data[467]
+OT_P 15.510815 4 u_core.send_data[444]$_DFF_P_/QN send_data[444]
+OT_P 15.528912 7 u_core.g_lane[0].g_ram[0].cap_q[250]$_DFF_P_/QN u_core.g_lane[0].raw_q[250]$_DFF_P_/D
+OT_P 15.535240 4 u_core.send_data[495]$_DFF_P_/QN send_data[495]
+OT_P 16.424084 5 u_core.send_data[664]$_DFF_P_/QN send_data[664]
+OT_P 16.671108 7 u_core.g_lane[0].g_ram[0].cap_q[258]$_DFF_P_/QN u_core.g_lane[0].raw_q[258]$_DFF_P_/D
+OT_P 17.539747 7 u_core.g_lane[0].g_ram[0].cap_q[6]$_DFF_P_/QN u_core.g_lane[0].raw_q[6]$_DFF_P_/D
+OT_P 17.658430 4 u_core.send_data[506]$_DFF_P_/QN send_data[506]
+OT_P 18.033464 5 u_core.send_data[690]$_DFF_P_/QN send_data[690]
+OT_P 18.237745 6 u_core.g_lane[0].g_ram[0].cap_q[15]$_DFF_P_/QN u_core.g_lane[0].raw_q[15]$_DFF_P_/D
+OT_P 19.260149 7 u_core.g_lane[0].g_ram[0].cap_q[11]$_DFF_P_/QN u_core.g_lane[0].raw_q[11]$_DFF_P_/D
+OT_P 19.480751 7 u_core.g_lane[0].g_ram[0].cap_q[66]$_DFF_P_/QN u_core.g_lane[0].raw_q[66]$_DFF_P_/D
+OT_P 19.720892 6 u_core.g_lane[1].wd_q[342]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[342]
+OT_P 19.873325 3 u_core.send_data[412]$_DFF_P_/QN send_data[412]
+OT_P 21.105452 5 u_core.send_data[360]$_DFF_P_/QN send_data[360]
+OT_P 21.125769 7 u_core.g_lane[0].g_ram[0].cap_q[185]$_DFF_P_/QN u_core.g_lane[0].raw_q[185]$_DFF_P_/D
+OT_P 21.172619 4 u_core.send_data[419]$_DFF_P_/QN send_data[419]
+OT_P 21.200485 6 u_core.return_tag[17]$_DFFE_PN0P_/QN return_tag[17]
+OT_P 21.715851 7 u_core.g_lane[0].g_ram[0].cap_q[133]$_DFF_P_/QN u_core.g_lane[0].raw_q[133]$_DFF_P_/D
+OT_P 22.117752 7 u_core.g_lane[1].wd_q[363]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[363]
+OT_P 22.315928 4 u_core.send_data[407]$_DFF_P_/QN send_data[407]
+OT_P 22.719715 4 u_core.send_data[183]$_DFF_P_/QN send_data[183]
+OT_P 23.211544 7 u_core.send_data[688]$_DFF_P_/QN send_data[688]
+OT_P 23.462677 4 u_core.send_data[382]$_DFF_P_/QN send_data[382]
+OT_P 23.725134 7 u_core.send_data[824]$_DFF_P_/QN send_data[824]
+OT_P 24.544256 7 u_core.g_lane[0].g_ram[0].cap_q[181]$_DFF_P_/QN u_core.g_lane[0].raw_q[181]$_DFF_P_/D
+OT_P 24.908854 4 u_core.send_data[47]$_DFF_P_/QN send_data[47]
+OT_P 25.288549 6 u_core.g_lane[0].g_ram[0].cap_q[122]$_DFF_P_/QN u_core.g_lane[0].raw_q[122]$_DFF_P_/D
+OT_P 25.596415 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[7]$_DFFE_PN0P_/D
+OT_P 26.140646 4 u_core.send_data[455]$_DFF_P_/QN send_data[455]
+OT_P 26.427305 6 u_core.g_lane[1].wd_q[317]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[317]
+OT_P 26.971981 4 u_core.send_data[508]$_DFF_P_/QN send_data[508]
+OT_P 27.006952 4 u_core.send_data[351]$_DFF_P_/QN send_data[351]
+OT_P 27.069014 4 u_core.send_data[365]$_DFF_P_/QN send_data[365]
+OT_P 27.241098 6 u_core.g_lane[0].g_ram[0].cap_q[121]$_DFF_P_/QN u_core.g_lane[0].raw_q[121]$_DFF_P_/D
+OT_P 29.382496 6 u_core.send_data[718]$_DFF_P_/QN send_data[718]
+OT_P 29.600988 6 u_core.g_lane[0].g_ram[0].cap_q[22]$_DFF_P_/QN u_core.g_lane[0].raw_q[22]$_DFF_P_/D
+OT_P 29.982349 4 u_core.send_data[182]$_DFF_P_/QN send_data[182]
+OT_P 30.798586 6 u_core.send_data[869]$_DFF_P_/QN send_data[869]
+OT_P 31.064373 6 u_core.g_lane[0].g_ram[0].cap_q[206]$_DFF_P_/QN u_core.g_lane[0].raw_q[206]$_DFF_P_/D
+OT_P 31.837976 3 u_core.send_data[343]$_DFF_P_/QN send_data[343]
+OT_P 32.162941 4 u_core.send_data[461]$_DFF_P_/QN send_data[461]
+OT_P 32.713497 6 u_core.g_lane[0].g_ram[0].cap_q[257]$_DFF_P_/QN u_core.g_lane[0].raw_q[257]$_DFF_P_/D
+OT_P 32.973515 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[14]$_DFFE_PN0P_/D
+OT_P 33.073212 7 u_core.g_lane[0].g_ram[0].cap_q[59]$_DFF_P_/QN u_core.g_lane[0].raw_q[59]$_DFF_P_/D
+OT_P 33.285042 4 u_core.send_data[441]$_DFF_P_/QN send_data[441]
+OT_P 34.257042 3 u_core.send_data[95]$_DFF_P_/QN send_data[95]
+OT_P 34.457993 4 u_core.send_data[15]$_DFF_P_/QN send_data[15]
+OT_P 34.619530 7 u_core.g_lane[0].g_ram[0].cap_q[132]$_DFF_P_/QN u_core.g_lane[0].raw_q[132]$_DFF_P_/D
+OT_P 34.681812 6 u_core.send_data[852]$_DFF_P_/QN send_data[852]
+OT_P 35.646820 4 u_core.send_data[433]$_DFF_P_/QN send_data[433]
+OT_P 35.711990 3 u_core.g_lane[1].wd_q[175]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[175]
+OT_P 36.651459 6 u_core.g_lane[1].wd_q[320]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[320]
+OT_P 36.825764 6 u_core.g_lane[0].g_ram[0].cap_q[218]$_DFF_P_/QN u_core.g_lane[0].raw_q[218]$_DFF_P_/D
+OT_P 37.261860 4 u_core.send_data[463]$_DFF_P_/QN send_data[463]
+OT_P 37.552628 4 u_core.send_data[670]$_DFF_P_/QN send_data[670]
+OT_P 37.765789 6 u_core.g_lane[1].wd_q[345]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[345]
+OT_P 38.309799 4 u_core.send_data[363]$_DFF_P_/QN send_data[363]
+OT_P 39.099613 7 u_core.g_lane[0].g_ram[0].cap_q[161]$_DFF_P_/QN u_core.g_lane[0].raw_q[161]$_DFF_P_/D
+OT_P 39.113823 8 u_core.g_lane[0].g_ram[0].cap_q[78]$_DFF_P_/QN u_core.g_lane[0].raw_q[78]$_DFF_P_/D
+OT_P 39.120930 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[12]$_DFFE_PN0P_/D
+OT_P 39.815819 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[13]$_DFFE_PN0P_/D
+OT_P 39.978355 6 u_core.g_lane[1].wd_q[348]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[348]
+OT_P 40.863312 6 u_core.g_lane[1].wd_q[312]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[312]
+OT_P 40.976776 6 u_core.send_data[680]$_DFF_P_/QN send_data[680]
+OT_P 41.099236 5 u_core.send_data[625]$_DFF_P_/QN send_data[625]
+OT_P 41.110561 5 u_core.send_data[701]$_DFF_P_/QN send_data[701]
+OT_P 41.744053 4 u_core.send_data[410]$_DFF_P_/QN send_data[410]
+OT_P 41.798454 4 u_core.send_data[490]$_DFF_P_/QN send_data[490]
+OT_P 42.068016 7 u_core.return_tag[13]$_DFFE_PN0P_/QN return_tag[13]
+OT_P 42.235550 4 u_core.send_data[374]$_DFF_P_/QN send_data[374]
+OT_P 42.522652 6 u_core.g_lane[1].wd_q[415]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[415]
+OT_P 42.571613 4 u_core.send_data[388]$_DFF_P_/QN send_data[388]
+OT_P 42.813198 6 u_core.send_data[691]$_DFF_P_/QN send_data[691]
+OT_P 42.925220 4 u_core.send_data[424]$_DFF_P_/QN send_data[424]
+OT_P 43.143711 7 u_core.g_lane[0].g_ram[0].cap_q[149]$_DFF_P_/QN u_core.g_lane[0].raw_q[149]$_DFF_P_/D
+OT_P 43.258732 4 u_core.send_data[491]$_DFF_P_/QN send_data[491]
+OT_P 44.279358 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].wp[4]$_DFFE_PN0P_/D
+OT_P 44.395931 6 u_core.g_lane[0].g_ram[0].cap_q[102]$_DFF_P_/QN u_core.g_lane[0].raw_q[102]$_DFF_P_/D
+OT_P 44.443672 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[10]$_DFFE_PN0P_/D
+OT_P 44.674709 7 u_core.g_lane[0].g_ram[0].cap_q[192]$_DFF_P_/QN u_core.g_lane[0].raw_q[192]$_DFF_P_/D
+OT_P 44.746872 3 u_core.g_lane[1].wd_q[128]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[128]
+OT_P 45.113800 4 u_core.send_data[393]$_DFF_P_/QN send_data[393]
+OT_P 45.902946 7 u_core.g_lane[0].g_ram[0].cap_q[205]$_DFF_P_/QN u_core.g_lane[0].raw_q[205]$_DFF_P_/D
+OT_P 45.907166 5 u_core.send_data[499]$_DFF_P_/QN send_data[499]
+OT_P 46.016079 6 u_core.send_data[689]$_DFF_P_/QN send_data[689]
+OT_P 46.264103 5 u_core.send_data[663]$_DFF_P_/QN send_data[663]
+OT_P 46.325500 6 u_core.g_lane[0].g_ram[0].cap_q[87]$_DFF_P_/QN u_core.g_lane[0].raw_q[87]$_DFF_P_/D
+OT_P 46.655457 6 u_core.g_lane[0].g_ram[0].cap_q[45]$_DFF_P_/QN u_core.g_lane[0].raw_q[45]$_DFF_P_/D
+OT_P 46.718407 4 u_core.send_data[348]$_DFF_P_/QN send_data[348]
+OT_P 46.844307 6 u_core.quiet$_DFF_PN1_/QN quiet
+OT_P 46.964321 6 u_core.g_lane[0].g_ram[0].cap_q[175]$_DFF_P_/QN u_core.g_lane[0].raw_q[175]$_DFF_P_/D
+OT_P 47.173710 6 u_core.g_lane[0].g_ram[0].cap_q[282]$_DFF_P_/QN u_core.g_lane[0].raw_q[282]$_DFF_P_/D
+OT_P 47.394531 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[11]$_DFFE_PN0P_/D
+OT_P 47.976845 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[3]$_DFFE_PN0P_/D
+OT_P 48.065884 6 u_core.g_lane[0].g_ram[0].cap_q[237]$_DFF_P_/QN u_core.g_lane[0].raw_q[237]$_DFF_P_/D
+OT_P 48.685833 6 u_core.g_lane[1].wd_q[292]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[292]
+OT_P 48.802963 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[8]$_DFFE_PN0P_/D
+OT_P 50.199512 7 u_core.g_lane[0].g_ram[0].cap_q[125]$_DFF_P_/QN u_core.g_lane[0].raw_q[125]$_DFF_P_/D
+OT_P 50.512482 7 u_core.g_lane[1].wd_q[427]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[427]
+OT_P 50.741966 4 u_core.send_data[492]$_DFF_P_/QN send_data[492]
+OT_P 50.773720 6 u_core.g_lane[1].wd_q[416]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[416]
+OT_P 50.834003 4 u_core.send_data[376]$_DFF_P_/QN send_data[376]
+OT_P 50.934700 4 u_core.send_data[436]$_DFF_P_/QN send_data[436]
+OT_P 51.010750 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[6]$_DFFE_PN0P_/D
+OT_P 51.073700 4 u_core.send_data[477]$_DFF_P_/QN send_data[477]
+OT_P 51.088688 4 u_core.send_data[413]$_DFF_P_/QN send_data[413]
+OT_P 51.172176 6 u_core.g_lane[0].g_ram[0].cap_q[213]$_DFF_P_/QN u_core.g_lane[0].raw_q[213]$_DFF_P_/D
+OT_P 51.211926 3 u_core.send_data[359]$_DFF_P_/QN send_data[359]
+OT_P 51.214699 6 u_core.g_lane[0].g_ram[0].cap_q[193]$_DFF_P_/QN u_core.g_lane[0].raw_q[193]$_DFF_P_/D
+OT_P 51.374905 5 u_core.g_lane[1].wd_q[502]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[502]
+OT_P 51.758488 8 u_core.g_lane[1].tag_q[3]$_DFF_P_/QN u_core.g_lane[1].wp[6]$_DFFE_PN0P_/D
+OT_P 51.810555 7 u_core.g_lane[0].g_ram[0].cap_q[83]$_DFF_P_/QN u_core.g_lane[0].raw_q[83]$_DFF_P_/D
+OT_P 51.892822 6 u_core.g_lane[0].g_ram[0].cap_q[30]$_DFF_P_/QN u_core.g_lane[0].raw_q[30]$_DFF_P_/D
+OT_P 51.927017 6 u_core.g_lane[1].wd_q[325]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[325]
+OT_P 52.645111 4 u_core.send_data[500]$_DFF_P_/QN send_data[500]
+OT_P 52.654991 6 u_core.g_lane[0].g_ram[0].cap_q[29]$_DFF_P_/QN u_core.g_lane[0].raw_q[29]$_DFF_P_/D
+OT_P 53.107407 4 u_core.send_data[836]$_DFF_P_/QN send_data[836]
+OT_P 53.163029 4 u_core.send_data[418]$_DFF_P_/QN send_data[418]
+OT_P 53.297810 4 u_core.send_data[602]$_DFF_P_/QN send_data[602]
+OT_P 53.768990 3 u_core.send_data[537]$_DFF_P_/QN send_data[537]
+OT_P 53.941963 6 u_core.send_data[834]$_DFF_P_/QN send_data[834]
+OT_P 53.956394 5 u_core.g_lane[1].wd_q[482]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[482]
+OT_P 54.035221 7 u_core.g_lane[0].g_ram[0].cap_q[92]$_DFF_P_/QN u_core.g_lane[0].raw_q[92]$_DFF_P_/D
+OT_P 54.160675 7 u_core.g_lane[0].g_ram[0].cap_q[184]$_DFF_P_/QN u_core.g_lane[0].raw_q[184]$_DFF_P_/D
+OT_P 54.355522 7 u_core.g_lane[0].g_ram[0].cap_q[303]$_DFF_P_/QN u_core.g_lane[0].raw_q[303]$_DFF_P_/D
+OT_P 54.774296 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[4]$_DFFE_PN0P_/D
+OT_P 55.571548 4 u_core.send_data[475]$_DFF_P_/QN send_data[475]
+OT_P 55.651707 5 u_core.send_data[661]$_DFF_P_/QN send_data[661]
+OT_P 55.731087 7 u_core.g_lane[1].wd_q[426]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[426]
+OT_P 56.206707 4 u_core.send_data[214]$_DFF_P_/QN send_data[214]
+OT_P 56.294968 7 u_core.return_tag[28]$_DFFE_PN0P_/QN return_tag[28]
+OT_P 56.420090 4 u_core.send_data[483]$_DFF_P_/QN send_data[483]
+OT_P 56.536221 7 u_core.g_lane[1].wd_q[418]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[418]
+OT_P 56.820770 6 u_core.return_tag[4]$_DFFE_PN0P_/QN return_tag[4]
+OT_P 57.003624 4 u_core.send_data[702]$_DFF_P_/QN send_data[702]
+OT_P 57.004955 6 u_core.return_tag[27]$_DFFE_PN0P_/QN return_tag[27]
+OT_P 57.074234 4 u_core.send_data[528]$_DFF_P_/QN send_data[528]
+OT_P 57.743698 6 u_core.g_lane[0].g_ram[0].cap_q[301]$_DFF_P_/QN u_core.g_lane[0].raw_q[301]$_DFF_P_/D
+OT_P 57.969631 5 u_core.g_lane[1].wd_q[454]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[454]
+OT_P 58.098083 5 u_core.send_data[593]$_DFF_P_/QN send_data[593]
+OT_P 58.333229 6 u_core.send_data[656]$_DFF_P_/QN send_data[656]
+OT_P 58.755779 4 u_core.send_data[654]$_DFF_P_/QN send_data[654]
+OT_P 59.035553 7 u_core.g_lane[0].g_ram[0].cap_q[128]$_DFF_P_/QN u_core.g_lane[0].raw_q[128]$_DFF_P_/D
+OT_P 59.296791 7 u_core.g_lane[1].wd_q[383]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[383]
+OT_P 59.391380 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[5]$_DFFE_PN0P_/D
+OT_P 59.523163 6 u_core.g_lane[1].wd_q[473]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[473]
+OT_P 59.646954 6 u_core.g_lane[0].g_ram[0].cap_q[52]$_DFF_P_/QN u_core.g_lane[0].raw_q[52]$_DFF_P_/D
+OT_P 59.651505 7 u_core.g_lane[0].g_ram[0].cap_q[203]$_DFF_P_/QN u_core.g_lane[0].raw_q[203]$_DFF_P_/D
+OT_P 59.983353 7 u_core.send_data[709]$_DFF_P_/QN send_data[709]
+OT_P 60.336182 4 u_core.send_data[717]$_DFF_P_/QN send_data[717]
+OT_P 60.347839 4 u_core.send_data[191]$_DFF_P_/QN send_data[191]
+OT_P 61.658455 6 u_core.g_lane[0].g_ram[0].cap_q[58]$_DFF_P_/QN u_core.g_lane[0].raw_q[58]$_DFF_P_/D
+OT_P 61.782578 6 u_core.g_lane[1].wd_q[310]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[310]
+OT_P 61.850636 4 u_core.send_data[405]$_DFF_P_/QN send_data[405]
+OT_P 61.857742 5 u_core.send_data[665]$_DFF_P_/QN send_data[665]
+OT_P 62.009064 8 u_core.g_lane[0].g_ram[0].cap_q[138]$_DFF_P_/QN u_core.g_lane[0].raw_q[138]$_DFF_P_/D
+OT_P 62.502338 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[2]$_DFFE_PN0P_/D
+OT_P 62.610806 5 u_core.g_lane[1].wd_q[459]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[459]
+OT_P 62.788441 6 u_core.g_lane[1].wd_q[466]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[466]
+OT_P 62.884586 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[1]$_DFFE_PN0P_/D
+OT_P 63.485329 7 u_core.g_lane[0].g_ram[0].cap_q[279]$_DFF_P_/QN u_core.g_lane[0].raw_q[279]$_DFF_P_/D
+OT_P 63.580364 7 u_core.g_lane[0].g_ram[0].cap_q[195]$_DFF_P_/QN u_core.g_lane[0].raw_q[195]$_DFF_P_/D
+OT_P 63.909210 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].wp[1]$_DFFE_PN0P_/D
+OT_P 63.953732 5 u_core.return_tag[16]$_DFFE_PN0P_/QN return_tag[16]
+OT_P 64.219299 4 u_core.send_data[734]$_DFF_P_/QN send_data[734]
+OT_P 64.219627 7 u_core.g_lane[1].wd_q[386]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[386]
+OT_P 64.360298 5 u_core.g_lane[1].wd_q[283]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[283]
+OT_P 64.722893 7 u_core.g_lane[0].g_ram[0].cap_q[197]$_DFF_P_/QN u_core.g_lane[0].raw_q[197]$_DFF_P_/D
+OT_P 65.142891 7 u_core.g_lane[0].g_ram[0].cap_q[114]$_DFF_P_/QN u_core.g_lane[0].raw_q[114]$_DFF_P_/D
+OT_P 65.258018 5 u_core.send_data[633]$_DFF_P_/QN send_data[633]
+OT_P 65.425552 6 u_core.g_lane[1].wd_q[311]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[311]
+OT_P 65.632164 6 u_core.return_tag[23]$_DFFE_PN0P_/QN return_tag[23]
+OT_P 65.666580 7 u_core.g_lane[0].g_ram[0].cap_q[86]$_DFF_P_/QN u_core.g_lane[0].raw_q[86]$_DFF_P_/D
+OT_P 65.865982 5 u_core.g_lane[1].wd_q[298]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[298]
+OT_P 66.344933 6 u_core.g_lane[0].g_ram[0].cap_q[34]$_DFF_P_/QN u_core.g_lane[0].raw_q[34]$_DFF_P_/D
+OT_P 66.580742 6 u_core.g_lane[1].wd_q[421]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[421]
+OT_P 67.042152 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].wp[0]$_DFFE_PN0P_/D
+OT_P 67.137741 3 u_core.g_lane[1].wd_q[149]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[149]
+OT_P 67.306160 7 u_core.g_lane[0].g_ram[0].cap_q[108]$_DFF_P_/QN u_core.g_lane[0].raw_q[108]$_DFF_P_/D
+OT_P 67.420181 4 u_core.send_data[484]$_DFF_P_/QN send_data[484]
+OT_P 67.743141 5 u_core.g_lane[1].wd_q[276]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[276]
+OT_P 67.759468 6 u_core.g_lane[0].g_ram[0].cap_q[201]$_DFF_P_/QN u_core.g_lane[0].raw_q[201]$_DFF_P_/D
+OT_P 68.304810 8 u_core.g_lane[0].g_ram[0].cap_q[49]$_DFF_P_/QN u_core.g_lane[0].raw_q[49]$_DFF_P_/D
+OT_P 68.471336 4 u_core.send_data[423]$_DFF_P_/QN send_data[423]
+OT_P 68.558937 11 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[9]$_DFFE_PN0P_/D
+OT_P 68.670624 7 u_core.g_lane[1].wd_q[505]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[505]
+OT_P 68.744453 7 u_core.g_lane[0].g_ram[0].cap_q[120]$_DFF_P_/QN u_core.g_lane[0].raw_q[120]$_DFF_P_/D
+OT_P 69.932503 6 u_core.g_lane[1].wd_q[291]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[291]
+OT_P 69.967255 7 u_core.g_lane[0].g_ram[0].cap_q[76]$_DFF_P_/QN u_core.g_lane[0].raw_q[76]$_DFF_P_/D
+OT_P 70.681572 6 u_core.g_lane[0].g_ram[0].cap_q[51]$_DFF_P_/QN u_core.g_lane[0].raw_q[51]$_DFF_P_/D
+OT_P 70.841667 4 u_core.send_data[346]$_DFF_P_/QN send_data[346]
+OT_P 70.913612 8 u_core.g_lane[1].tag_q[13]$_DFF_P_/QN u_core.g_lane[1].wp[5]$_DFFE_PN0P_/D
+OT_P 71.277206 4 u_core.send_data[334]$_DFF_P_/QN send_data[334]
+OT_P 71.324615 7 u_core.g_lane[1].wd_q[451]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[451]
+OT_P 71.391113 6 u_core.g_lane[1].wd_q[344]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[344]
+OT_P 71.527229 6 u_core.g_lane[0].g_ram[0].cap_q[109]$_DFF_P_/QN u_core.g_lane[0].raw_q[109]$_DFF_P_/D
+OT_P 71.977425 4 u_core.send_data[380]$_DFF_P_/QN send_data[380]
+OT_P 72.038261 8 u_core.g_lane[1].tag_q[13]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[15]$_DFFE_PN0P_/D
+OT_P 72.050919 7 u_core.g_lane[1].wd_q[493]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[493]
+OT_P 72.373444 4 u_core.send_data[342]$_DFF_P_/QN send_data[342]
+OT_P 72.432175 6 u_core.g_lane[0].g_ram[0].cap_q[221]$_DFF_P_/QN u_core.g_lane[0].raw_q[221]$_DFF_P_/D
+OT_P 72.539085 6 u_core.g_lane[0].g_ram[0].cap_q[2]$_DFF_P_/QN u_core.g_lane[0].raw_q[2]$_DFF_P_/D
+OT_P 72.839737 7 u_core.g_lane[0].g_ram[0].cap_q[54]$_DFF_P_/QN u_core.g_lane[0].raw_q[54]$_DFF_P_/D
+OT_P 73.056229 6 u_core.g_lane[1].wd_q[474]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[474]
+OT_P 73.139717 8 u_core.g_lane[0].g_ram[0].cap_q[144]$_DFF_P_/QN u_core.g_lane[0].raw_q[144]$_DFF_P_/D
+OT_P 73.518417 7 u_core.g_lane[0].g_ram[0].cap_q[126]$_DFF_P_/QN u_core.g_lane[0].raw_q[126]$_DFF_P_/D
+OT_P 73.766441 6 u_core.return_tag[25]$_DFFE_PN0P_/QN return_tag[25]
+OT_P 73.868134 4 u_core.send_data[462]$_DFF_P_/QN send_data[462]
+OT_P 73.970718 7 u_core.g_lane[1].wd_q[495]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[495]
+OT_P 74.519173 4 u_core.send_data[350]$_DFF_P_/QN send_data[350]
+OT_P 74.653061 4 u_core.send_data[327]$_DFF_P_/QN send_data[327]
+OT_P 74.667053 7 u_core.g_lane[0].g_ram[0].cap_q[142]$_DFF_P_/QN u_core.g_lane[0].raw_q[142]$_DFF_P_/D
+OT_P 74.687477 4 u_core.send_data[448]$_DFF_P_/QN send_data[448]
+OT_P 75.147446 5 u_core.g_lane[1].wd_q[413]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[413]
+OT_P 75.271454 5 u_core.g_lane[1].wd_q[318]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[318]
+OT_P 75.307091 5 u_core.send_data[634]$_DFF_P_/QN send_data[634]
+OT_P 75.597862 7 u_core.g_lane[0].g_ram[0].cap_q[266]$_DFF_P_/QN u_core.g_lane[0].raw_q[266]$_DFF_P_/D
+OT_P 75.776611 4 u_core.send_data[170]$_DFF_P_/QN send_data[170]
+OT_P 75.798256 3 u_core.send_data[369]$_DFF_P_/QN send_data[369]
+OT_P 76.267105 4 u_core.send_data[333]$_DFF_P_/QN send_data[333]
+OT_P 76.711967 4 u_core.send_data[478]$_DFF_P_/QN send_data[478]
+OT_P 76.724075 5 u_core.send_data[659]$_DFF_P_/QN send_data[659]
+OT_P 76.806786 7 u_core.g_lane[1].wd_q[401]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[401]
+OT_P 77.340691 3 u_core.send_data[396]$_DFF_P_/QN send_data[396]
+OT_P 77.519104 6 u_core.g_lane[1].wd_q[281]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[281]
+OT_P 78.406395 6 u_core.g_lane[1].wd_q[485]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[485]
+OT_P 78.411278 4 u_core.send_data[391]$_DFF_P_/QN send_data[391]
+OT_P 78.676620 6 u_core.g_lane[1].wd_q[299]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[299]
+OT_P 78.735237 7 u_core.g_lane[1].wd_q[387]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[387]
+OT_P 79.494858 4 u_core.send_data[420]$_DFF_P_/QN send_data[420]
+OT_P 79.573349 4 u_core.send_data[354]$_DFF_P_/QN send_data[354]
+OT_P 79.660164 7 u_core.g_lane[0].g_ram[0].cap_q[186]$_DFF_P_/QN u_core.g_lane[0].raw_q[186]$_DFF_P_/D
+OT_P 80.057182 7 u_core.g_lane[0].g_ram[0].cap_q[265]$_DFF_P_/QN u_core.g_lane[0].raw_q[265]$_DFF_P_/D
+OT_P 80.192741 8 u_core.g_lane[0].g_ram[0].cap_q[188]$_DFF_P_/QN u_core.g_lane[0].raw_q[188]$_DFF_P_/D
+OT_P 80.326637 6 u_core.g_lane[1].wd_q[339]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[339]
+OT_P 80.508713 7 u_core.g_lane[0].g_ram[0].cap_q[60]$_DFF_P_/QN u_core.g_lane[0].raw_q[60]$_DFF_P_/D
+OT_P 80.519035 5 u_core.send_data[635]$_DFF_P_/QN send_data[635]
+OT_P 81.490257 5 u_core.send_data[683]$_DFF_P_/QN send_data[683]
+OT_P 81.609497 7 u_core.g_lane[0].g_ram[0].cap_q[276]$_DFF_P_/QN u_core.g_lane[0].raw_q[276]$_DFF_P_/D
+OT_P 81.755821 3 arrival_data[4] u_core.g_lane[0].data_q[4]$_DFF_P_/D
+OT_P 81.997520 4 u_core.send_data[408]$_DFF_P_/QN send_data[408]
+OT_P 82.232445 4 u_core.send_data[427]$_DFF_P_/QN send_data[427]
+OT_P 82.651001 4 u_core.send_data[18]$_DFF_P_/QN send_data[18]
+OT_P 82.819641 8 u_core.g_lane[0].g_ram[0].cap_q[150]$_DFF_P_/QN u_core.g_lane[0].raw_q[150]$_DFF_P_/D
+OT_P 83.054008 8 u_core.return_tag[24]$_DFFE_PN0P_/QN return_tag[24]
+OT_P 83.140160 3 u_core.send_data[392]$_DFF_P_/QN send_data[392]
+OT_P 83.338112 7 u_core.g_lane[1].wd_q[356]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[356]
+OT_P 83.349442 7 u_core.g_lane[1].wd_q[409]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[409]
+OT_P 83.527519 7 u_core.g_lane[0].g_ram[0].cap_q[216]$_DFF_P_/QN u_core.g_lane[0].raw_q[216]$_DFF_P_/D
+OT_P 83.630325 7 u_core.return_tag[31]$_DFFE_PN0P_/QN return_tag[31]
+OT_P 83.875130 6 u_core.g_lane[0].g_ram[0].cap_q[101]$_DFF_P_/QN u_core.g_lane[0].raw_q[101]$_DFF_P_/D
+OT_P 83.958504 7 u_core.g_lane[1].wd_q[400]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[400]
+OT_P 84.090179 4 u_core.send_data[505]$_DFF_P_/QN send_data[505]
+OT_P 84.139252 4 u_core.send_data[155]$_DFF_P_/QN send_data[155]
+OT_P 84.598770 7 u_core.g_lane[1].wd_q[429]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[429]
+OT_P 84.859344 4 u_core.send_data[473]$_DFF_P_/QN send_data[473]
+OT_P 84.883766 4 u_core.send_data[662]$_DFF_P_/QN send_data[662]
+OT_P 84.913078 6 u_core.g_lane[0].g_ram[0].cap_q[137]$_DFF_P_/QN u_core.g_lane[0].raw_q[137]$_DFF_P_/D
+OT_P 84.951157 4 u_core.send_data[743]$_DFF_P_/QN send_data[743]
+OT_P 85.120132 5 u_core.g_lane[1].wd_q[511]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[511]
+OT_P 85.134125 4 u_core.send_data[317]$_DFF_P_/QN send_data[317]
+OT_P 85.224602 5 u_core.send_data[674]$_DFF_P_/QN send_data[674]
+OT_P 85.449318 7 u_core.send_data[860]$_DFF_P_/QN send_data[860]
+OT_P 85.810577 6 u_core.g_lane[0].g_ram[0].cap_q[207]$_DFF_P_/QN u_core.g_lane[0].raw_q[207]$_DFF_P_/D
+OT_P 85.879196 7 u_core.g_lane[0].g_ram[0].cap_q[131]$_DFF_P_/QN u_core.g_lane[0].raw_q[131]$_DFF_P_/D
+OT_P 85.955467 7 u_core.g_lane[1].wd_q[420]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[420]
+OT_P 86.233353 7 u_core.g_lane[0].g_ram[0].cap_q[254]$_DFF_P_/QN u_core.g_lane[0].raw_q[254]$_DFF_P_/D
+OT_P 86.292419 4 u_core.send_data[174]$_DFF_P_/QN send_data[174]
+OT_P 87.367004 5 u_core.send_v[1]$_DFF_PN0_/QN send_v[1]
+OT_P 87.736595 4 u_core.send_data[584]$_DFF_P_/QN send_data[584]
+OT_P 88.156258 7 u_core.g_lane[0].g_ram[0].cap_q[118]$_DFF_P_/QN u_core.g_lane[0].raw_q[118]$_DFF_P_/D
+OT_P 88.221764 7 u_core.g_lane[1].wd_q[450]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[450]
+OT_P 88.297371 10 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].expect_arrival[0]$_DFFE_PN0P_/D
+OT_P 88.316574 4 u_core.send_data[610]$_DFF_P_/QN send_data[610]
+OT_P 88.350662 4 u_core.send_data[497]$_DFF_P_/QN send_data[497]
+OT_P 88.388405 6 u_core.g_lane[1].wd_q[274]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[274]
+OT_P 88.482330 7 u_core.g_lane[0].g_ram[0].cap_q[198]$_DFF_P_/QN u_core.g_lane[0].raw_q[198]$_DFF_P_/D
+OT_P 88.731689 7 u_core.g_lane[0].g_ram[0].cap_q[212]$_DFF_P_/QN u_core.g_lane[0].raw_q[212]$_DFF_P_/D
+OT_P 89.290245 7 u_core.g_lane[0].g_ram[0].cap_q[104]$_DFF_P_/QN u_core.g_lane[0].raw_q[104]$_DFF_P_/D
+OT_P 89.361519 7 u_core.g_lane[0].g_ram[0].cap_q[141]$_DFF_P_/QN u_core.g_lane[0].raw_q[141]$_DFF_P_/D
+OT_P 89.535049 6 u_core.g_lane[1].wd_q[327]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[327]
+OT_P 89.651176 7 u_core.g_lane[1].wd_q[448]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[448]
+OT_P 89.744987 7 u_core.g_lane[1].wd_q[481]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[481]
+OT_P 90.161880 6 u_core.g_lane[1].wd_q[490]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[490]
+OT_P 90.225937 5 u_core.send_data[379]$_DFF_P_/QN send_data[379]
+OT_P 90.266243 6 u_core.g_lane[1].wd_q[468]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[468]
+OT_P 90.695786 6 u_core.g_lane[1].wd_q[287]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[287]
+OT_P 90.768616 3 u_core.send_data[322]$_DFF_P_/QN send_data[322]
+OT_P 90.876198 7 u_core.g_lane[0].g_ram[0].cap_q[103]$_DFF_P_/QN u_core.g_lane[0].raw_q[103]$_DFF_P_/D
+OT_P 90.960571 7 u_core.g_lane[0].g_ram[0].cap_q[352]$_DFF_P_/QN u_core.g_lane[0].raw_q[352]$_DFF_P_/D
+OT_P 90.984886 5 u_core.send_data[711]$_DFF_P_/QN send_data[711]
+OT_P 91.158638 4 u_core.send_data[435]$_DFF_P_/QN send_data[435]
+OT_P 91.261780 4 u_core.send_data[456]$_DFF_P_/QN send_data[456]
+OT_P 91.513908 6 u_core.g_lane[0].g_ram[0].cap_q[99]$_DFF_P_/QN u_core.g_lane[0].raw_q[99]$_DFF_P_/D
+OT_P 91.577080 4 u_core.send_data[309]$_DFF_P_/QN send_data[309]
+OT_P 91.817329 7 u_core.g_lane[0].g_ram[0].cap_q[208]$_DFF_P_/QN u_core.g_lane[0].raw_q[208]$_DFF_P_/D
+OT_P 92.173492 7 u_core.send_data[727]$_DFF_P_/QN send_data[727]
+OT_P 92.266525 7 u_core.g_lane[0].g_ram[0].cap_q[235]$_DFF_P_/QN u_core.g_lane[0].raw_q[235]$_DFF_P_/D
+OT_P 92.373665 7 u_core.g_lane[1].wd_q[379]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[379]
+OT_P 92.711060 6 u_core.g_lane[1].wd_q[470]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[470]
+OT_P 92.761467 4 u_core.send_data[341]$_DFF_P_/QN send_data[341]
+OT_P 93.096642 6 u_core.g_lane[0].g_ram[0].cap_q[21]$_DFF_P_/QN u_core.g_lane[0].raw_q[21]$_DFF_P_/D
+OT_P 93.297371 3 u_core.send_data[429]$_DFF_P_/QN send_data[429]
+OT_P 93.413940 7 u_core.g_lane[0].g_ram[0].cap_q[129]$_DFF_P_/QN u_core.g_lane[0].raw_q[129]$_DFF_P_/D
+OT_P 93.469124 8 u_core.g_lane[1].tag_q[3]$_DFF_P_/QN u_core.g_lane[1].wp[3]$_DFFE_PN0P_/D
+OT_P 93.796524 4 u_core.send_data[373]$_DFF_P_/QN send_data[373]
+OT_P 93.884453 7 u_core.g_lane[0].g_ram[0].cap_q[36]$_DFF_P_/QN u_core.g_lane[0].raw_q[36]$_DFF_P_/D
+OT_P 93.976936 4 u_core.send_data[485]$_DFF_P_/QN send_data[485]
+OT_P 94.034668 7 u_core.g_lane[0].g_ram[0].cap_q[312]$_DFF_P_/QN u_core.g_lane[0].raw_q[312]$_DFF_P_/D
+OT_P 94.347641 3 u_core.send_data[315]$_DFF_P_/QN send_data[315]
+OT_P 94.708244 4 u_core.g_lane[1].wd_q[232]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[232]
+OT_P 94.945053 7 u_core.g_lane[0].g_ram[0].cap_q[115]$_DFF_P_/QN u_core.g_lane[0].raw_q[115]$_DFF_P_/D
+OT_P 95.656036 4 u_core.send_data[458]$_DFF_P_/QN send_data[458]
+OT_P 95.980560 6 u_core.send_data[611]$_DFF_P_/QN send_data[611]
+OT_P 96.055054 6 u_core.return_tag[30]$_DFFE_PN0P_/QN return_tag[30]
+OT_P 96.114227 10 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].bad$_DFF_PN0_/D
+OT_P 96.638588 7 u_core.g_lane[0].g_ram[0].cap_q[10]$_DFF_P_/QN u_core.g_lane[0].raw_q[10]$_DFF_P_/D
+OT_P 96.838203 3 u_core.send_data[437]$_DFF_P_/QN send_data[437]
+OT_P 96.887390 7 u_core.g_lane[0].g_ram[0].cap_q[310]$_DFF_P_/QN u_core.g_lane[0].raw_q[310]$_DFF_P_/D
+OT_P 97.194473 5 u_core.send_data[503]$_DFF_P_/QN send_data[503]
+OT_P 97.354462 6 u_core.g_lane[0].g_ram[0].cap_q[187]$_DFF_P_/QN u_core.g_lane[0].raw_q[187]$_DFF_P_/D
+OT_P 97.620468 7 u_core.g_lane[0].g_ram[0].cap_q[127]$_DFF_P_/QN u_core.g_lane[0].raw_q[127]$_DFF_P_/D
+OT_P 97.766129 4 u_core.send_data[96]$_DFF_P_/QN send_data[96]
+OT_P 97.806206 4 u_core.send_data[529]$_DFF_P_/QN send_data[529]
+OT_P 97.876152 5 u_core.g_lane[1].wd_q[293]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[293]
+OT_P 97.883255 4 u_core.send_data[480]$_DFF_P_/QN send_data[480]
+OT_P 98.309692 7 u_core.g_lane[0].g_ram[0].cap_q[270]$_DFF_P_/QN u_core.g_lane[0].raw_q[270]$_DFF_P_/D
+OT_P 98.384857 5 u_core.send_data[471]$_DFF_P_/QN send_data[471]
+OT_P 98.659523 7 u_core.g_lane[0].g_ram[0].cap_q[177]$_DFF_P_/QN u_core.g_lane[0].raw_q[177]$_DFF_P_/D
+OT_P 98.865028 4 u_core.send_data[464]$_DFF_P_/QN send_data[464]
+OT_P 99.036667 8 u_core.g_lane[1].wd_q[359]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[359]
+OT_P 99.290466 4 u_core.send_data[716]$_DFF_P_/QN send_data[716]
+OT_P 99.547928 4 u_core.send_data[487]$_DFF_P_/QN send_data[487]
+OT_P 99.591110 4 u_core.send_data[145]$_DFF_P_/QN send_data[145]
+OT_P 99.748878 4 u_core.send_data[166]$_DFF_P_/QN send_data[166]
+OT_P 100.171875 4 u_core.send_data[394]$_DFF_P_/QN send_data[394]
+OT_P 100.175758 4 u_core.send_data[507]$_DFF_P_/QN send_data[507]
+OT_P 100.326859 6 u_core.g_lane[0].g_ram[0].cap_q[14]$_DFF_P_/QN u_core.g_lane[0].raw_q[14]$_DFF_P_/D
+OT_P 100.379814 5 u_core.g_lane[1].wd_q[492]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[492]
+OT_P 100.393471 7 u_core.g_lane[1].wd_q[402]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[402]
+OT_P 100.496498 7 u_core.g_lane[0].g_ram[0].cap_q[84]$_DFF_P_/QN u_core.g_lane[0].raw_q[84]$_DFF_P_/D
+OT_P 100.998657 6 u_core.g_lane[1].wd_q[477]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[477]
+OT_P 101.181511 6 u_core.g_lane[0].g_ram[0].cap_q[204]$_DFF_P_/QN u_core.g_lane[0].raw_q[204]$_DFF_P_/D
+OT_P 101.200050 5 u_core.g_lane[0].g_ram[0].cap_q[304]$_DFF_P_/QN u_core.g_lane[0].raw_q[304]$_DFF_P_/D
+OT_P 101.570534 7 u_core.g_lane[0].g_ram[0].cap_q[292]$_DFF_P_/QN u_core.g_lane[0].raw_q[292]$_DFF_P_/D
+OT_P 101.779251 7 u_core.g_lane[1].wd_q[406]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[406]
+OT_P 101.819443 4 u_core.send_data[510]$_DFF_P_/QN send_data[510]
+OT_P 102.026276 4 u_core.send_data[442]$_DFF_P_/QN send_data[442]
+OT_P 102.125641 7 u_core.g_lane[0].g_ram[0].cap_q[248]$_DFF_P_/QN u_core.g_lane[0].raw_q[248]$_DFF_P_/D
+OT_P 102.132637 7 u_core.g_lane[0].g_ram[0].cap_q[152]$_DFF_P_/QN u_core.g_lane[0].raw_q[152]$_DFF_P_/D
+OT_P 102.219681 6 u_core.g_lane[0].g_ram[0].cap_q[224]$_DFF_P_/QN u_core.g_lane[0].raw_q[224]$_DFF_P_/D
+OT_P 102.664207 4 u_core.send_data[415]$_DFF_P_/QN send_data[415]
+OT_P 102.992279 6 u_core.g_lane[1].wd_q[465]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[465]
+OT_P 103.223984 6 u_core.g_lane[1].wd_q[324]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[324]
+OT_P 103.270058 4 u_core.return_tag[18]$_DFFE_PN0P_/QN return_tag[18]
+OT_P 103.347885 4 u_core.send_data[284]$_DFF_P_/QN send_data[284]
+OT_P 104.269707 4 u_core.send_data[766]$_DFF_P_/QN send_data[766]
+OT_P 104.617317 6 u_core.g_lane[1].wd_q[447]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[447]
+OT_P 104.818932 4 u_core.send_data[24]$_DFF_P_/QN send_data[24]
+OT_P 105.060295 10 u_core.g_lane[1].tag_q[14]$_DFF_P_/QN u_core.g_lane[1].ovf$_DFFE_PN0P_/D
+OT_P 105.704338 6 u_core.g_lane[0].g_ram[0].cap_q[82]$_DFF_P_/QN u_core.g_lane[0].raw_q[82]$_DFF_P_/D
+OT_P 105.765175 7 u_core.g_lane[0].g_ram[0].cap_q[147]$_DFF_P_/QN u_core.g_lane[0].raw_q[147]$_DFF_P_/D
+OT_P 106.077484 4 u_core.send_data[594]$_DFF_P_/QN send_data[594]
+OT_P 106.235245 6 u_core.g_lane[1].wd_q[321]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[321]
+OT_P 106.535782 6 u_core.g_lane[1].wd_q[507]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[507]
+OT_P 106.753830 4 u_core.send_data[377]$_DFF_P_/QN send_data[377]
+OT_P 107.284294 5 u_core.g_lane[1].wd_q[414]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[414]
+OT_P 107.524544 4 u_core.send_data[338]$_DFF_P_/QN send_data[338]
+OT_P 108.211220 7 u_core.g_lane[1].wd_q[423]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[423]
+OT_P 108.383301 6 u_core.g_lane[0].g_ram[0].cap_q[159]$_DFF_P_/QN u_core.g_lane[0].raw_q[159]$_DFF_P_/D
+OT_P 108.398735 3 u_core.send_data[759]$_DFF_P_/QN send_data[759]
+OT_P 108.451912 4 u_core.send_data[167]$_DFF_P_/QN send_data[167]
+OT_P 109.292023 7 u_core.g_lane[0].g_ram[0].cap_q[289]$_DFF_P_/QN u_core.g_lane[0].raw_q[289]$_DFF_P_/D
+OT_P 109.466217 3 u_core.send_data[440]$_DFF_P_/QN send_data[440]
+OT_P 109.469215 7 u_core.send_data[710]$_DFF_P_/QN send_data[710]
+OT_P 109.537376 3 u_core.g_lane[1].wd_q[61]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[61]
+OT_P 109.759644 6 u_core.g_lane[1].wd_q[486]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[486]
+OT_P 109.972145 4 u_core.send_data[26]$_DFF_P_/QN send_data[26]
+OT_P 109.976250 7 u_core.g_lane[1].wd_q[449]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[449]
+OT_P 110.142006 5 u_core.send_data[842]$_DFF_P_/QN send_data[842]
+OT_P 110.219391 6 u_core.g_lane[1].wd_q[487]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[487]
+OT_P 110.421562 4 u_core.send_data[164]$_DFF_P_/QN send_data[164]
+OT_P 110.687683 5 u_core.send_data[686]$_DFF_P_/QN send_data[686]
+OT_P 110.690125 3 u_core.send_data[870]$_DFF_P_/QN send_data[870]
+OT_P 110.859215 5 u_core.return_tag[15]$_DFFE_PN0P_/QN return_tag[15]
+OT_P 111.264885 4 u_core.send_data[564]$_DFF_P_/QN send_data[564]
+OT_P 111.287201 6 u_core.g_lane[0].g_ram[0].cap_q[214]$_DFF_P_/QN u_core.g_lane[0].raw_q[214]$_DFF_P_/D
+OT_P 111.488594 4 u_core.send_data[742]$_DFF_P_/QN send_data[742]
+OT_P 111.818222 6 u_core.g_lane[1].wd_q[497]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[497]
+OT_P 111.918365 5 u_core.send_data[816]$_DFF_P_/QN send_data[816]
+OT_P 111.946121 7 u_core.g_lane[1].wd_q[419]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[419]
+OT_P 111.995972 5 u_core.send_data[655]$_DFF_P_/QN send_data[655]
+OT_P 112.591049 6 u_core.g_lane[1].wd_q[360]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[360]
+OT_P 112.728493 7 u_core.g_lane[1].tag_q[3]$_DFF_P_/QN u_core.g_lane[1].wp[2]$_DFFE_PN0P_/D
+OT_P 112.854836 5 u_core.send_data[626]$_DFF_P_/QN send_data[626]
+OT_P 113.249077 6 u_core.g_lane[1].wd_q[341]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[341]
+OT_P 113.379196 4 u_core.send_data[328]$_DFF_P_/QN send_data[328]
+OT_P 113.487328 4 u_core.g_lane[1].wd_q[68]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[68]
+OT_P 114.117271 4 u_core.send_data[326]$_DFF_P_/QN send_data[326]
+OT_P 114.143913 4 u_core.send_data[280]$_DFF_P_/QN send_data[280]
+OT_P 114.412254 7 u_core.g_lane[0].g_ram[0].cap_q[44]$_DFF_P_/QN u_core.g_lane[0].raw_q[44]$_DFF_P_/D
+OT_P 114.439568 6 u_core.g_lane[0].g_ram[0].cap_q[220]$_DFF_P_/QN u_core.g_lane[0].raw_q[220]$_DFF_P_/D
+OT_P 114.530495 7 u_core.g_lane[1].wd_q[478]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[478]
+OT_P 114.633751 6 u_core.send_data[652]$_DFF_P_/QN send_data[652]
+OT_P 114.729561 6 u_core.g_lane[1].wd_q[323]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[323]
+OT_P 114.802277 6 u_core.g_lane[0].g_ram[0].cap_q[72]$_DFF_P_/QN u_core.g_lane[0].raw_q[72]$_DFF_P_/D
+OT_P 114.836365 7 u_core.g_lane[1].wd_q[369]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[369]
+OT_P 114.868782 5 u_core.send_data[695]$_DFF_P_/QN send_data[695]
+OT_P 114.963264 4 u_core.g_lane[1].wd_q[144]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[144]
+OT_P 115.079391 5 u_core.send_data[561]$_DFF_P_/QN send_data[561]
+OT_P 115.178757 6 u_core.g_lane[0].g_ram[0].cap_q[57]$_DFF_P_/QN u_core.g_lane[0].raw_q[57]$_DFF_P_/D
+OT_P 115.279343 4 u_core.g_lane[1].wd_q[165]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[165]
+OT_P 115.291557 5 u_core.send_data[660]$_DFF_P_/QN send_data[660]
+OT_P 115.437660 7 u_core.g_lane[0].g_ram[0].cap_q[209]$_DFF_P_/QN u_core.g_lane[0].raw_q[209]$_DFF_P_/D
+OT_P 115.536140 5 u_core.send_data[678]$_DFF_P_/QN send_data[678]
+OT_P 115.761620 6 u_core.g_lane[0].g_ram[0].cap_q[107]$_DFF_P_/QN u_core.g_lane[0].raw_q[107]$_DFF_P_/D
+OT_P 115.928154 7 u_core.g_lane[0].g_ram[0].cap_q[68]$_DFF_P_/QN u_core.g_lane[0].raw_q[68]$_DFF_P_/D
+OT_P 115.942810 5 u_core.g_lane[1].wd_q[330]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[330]
+OT_P 116.014198 3 u_core.send_data[0]$_DFF_P_/QN send_data[0]
+OT_P 116.509689 4 u_core.send_data[305]$_DFF_P_/QN send_data[305]
+OT_P 116.725075 4 u_core.send_data[273]$_DFF_P_/QN send_data[273]
+OT_P 116.917587 7 u_core.g_lane[1].wd_q[431]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[431]
+OT_P 117.601814 8 u_core.g_lane[0].g_ram[0].cap_q[143]$_DFF_P_/QN u_core.g_lane[0].raw_q[143]$_DFF_P_/D
+OT_P 117.852615 5 u_core.send_data[719]$_DFF_P_/QN send_data[719]
+OT_P 117.903908 6 u_core.g_lane[0].g_ram[0].cap_q[225]$_DFF_P_/QN u_core.g_lane[0].raw_q[225]$_DFF_P_/D
+OT_P 118.114075 4 u_core.send_data[85]$_DFF_P_/QN send_data[85]
+OT_P 118.136497 4 u_core.send_data[439]$_DFF_P_/QN send_data[439]
+OT_P 118.749229 4 u_core.send_data[449]$_DFF_P_/QN send_data[449]
+OT_P 118.783539 7 u_core.return_tag[11]$_DFFE_PN0P_/QN return_tag[11]
+OT_P 119.081299 4 u_core.send_data[431]$_DFF_P_/QN send_data[431]
+OT_P 119.127823 7 u_core.g_lane[1].wd_q[410]$_DFF_P_/QN u_core.g_lane[1].g_ram[0].storage/wd_in[410]
+OT_P 119.173668 5 u_core.send_data[700]$_DFF_P_/QN send_data[700]
+OT_P 119.871559 4 u_core.send_data[107]$_DFF_P_/QN send_data[107]
+OT_P 121.927361 5 u_core.send_data[608]$_DFF_P_/QN send_data[608]
+OT_P 123.073997 3 u_core.send_data[345]$_DFF_P_/QN send_data[345]
+OT_P 123.416946 4 u_core.send_data[332]$_DFF_P_/QN send_data[332]
+OT_P 123.617004 5 u_core.send_data[705]$_DFF_P_/QN send_data[705]
+OT_P 123.749344 4 u_core.send_data[472]$_DFF_P_/QN send_data[472]
+OT_P 123.941856 4 u_core.send_data[267]$_DFF_P_/QN send_data[267]
+OT_P 124.979469 4 u_core.send_data[459]$_DFF_P_/QN send_data[459]
+OT_P 125.087166 4 u_core.send_data[708]$_DFF_P_/QN send_data[708]
+OT_P 125.691681 3 u_core.send_data[42]$_DFF_P_/QN send_data[42]
+OT_P 126.151314 6 u_core.send_data[706]$_DFF_P_/QN send_data[706]
+OT_P 126.297531 4 u_core.send_data[180]$_DFF_P_/QN send_data[180]
+OT_P 126.471054 3 u_core.send_data[320]$_DFF_P_/QN send_data[320]
+OT_P 126.550217 4 u_core.send_data[669]$_DFF_P_/QN send_data[669]
+OT_P 127.021286 4 u_core.send_data[245]$_DFF_P_/QN send_data[245]
+OT_P 127.067360 4 u_core.send_data[6]$_DFF_P_/QN send_data[6]
+OT_P 127.656219 3 u_core.send_data[539]$_DFF_P_/QN send_data[539]
+OT_P 128.042465 4 u_core.send_data[179]$_DFF_P_/QN send_data[179]
+OT_P 128.280273 3 u_core.send_data[94]$_DFF_P_/QN send_data[94]
+OT_P 128.462234 4 u_core.send_data[98]$_DFF_P_/QN send_data[98]
+OT_P 128.581375 5 u_core.send_data[650]$_DFF_P_/QN send_data[650]
+OT_P 129.206985 3 u_core.send_data[378]$_DFF_P_/QN send_data[378]
+OT_P 130.068619 4 u_core.send_data[502]$_DFF_P_/QN send_data[502]
+OT_P 130.318207 5 u_core.send_data[693]$_DFF_P_/QN send_data[693]
+OT_P 130.353287 5 u_core.send_data[651]$_DFF_P_/QN send_data[651]
+OT_P 131.068039 3 u_core.send_data[362]$_DFF_P_/QN send_data[362]
+OT_P 131.239243 3 u_core.send_data[447]$_DFF_P_/QN send_data[447]
+OT_P 131.244690 4 u_core.send_data[368]$_DFF_P_/QN send_data[368]
+OT_P 147.396423 6 rst_n u_core.g_lane[1].rst_l$_DFF_PN0_/RESETN
+OT_P 151.503143 6 rst_n u_core.fault$_DFF_PN0_/RESETN
+OT_P 154.564133 6 rst_n u_core.g_lane[1].av_q$_DFF_PN0_/RESETN
+OT_P 168.342453 5 rst_n u_core.quiet$_DFF_PN1_/SETN
+OT_P 205.794052 4 rst_n u_core.g_lane[0].av_q$_DFF_PN0_/RESETN
+OT_P 318.774445 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[29]$_DFFE_PN0P_/RESETN
+OT_P 319.039581 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.send_v[0]$_DFF_PN0_/RESETN
+OT_P 320.706024 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[0]$_DFFE_PN0P_/RESETN
+OT_P 320.980591 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[1]$_DFFE_PN0P_/RESETN
+OT_P 322.086456 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[2]$_DFFE_PN0P_/RESETN
+OT_P 323.466583 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[3]$_DFFE_PN0P_/RESETN
+OT_P 324.216553 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[4]$_DFFE_PN0P_/RESETN
+OT_P 328.315613 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[16]$_DFFE_PN0P_/RESETN
+OT_P 332.995758 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[5]$_DFFE_PN0P_/RESETN
+OT_P 334.639526 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[12]$_DFFE_PN0P_/RESETN
+OT_P 335.079193 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.send_v[1]$_DFF_PN0_/RESETN
+OT_P 335.324097 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[6]$_DFFE_PN0P_/RESETN
+OT_P 339.558380 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[14]$_DFFE_PN0P_/RESETN
+OT_P 339.589813 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[3]$_DFFE_PN0P_/RESETN
+OT_P 340.335754 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[6]$_DFFE_PN0P_/RESETN
+OT_P 343.686646 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[0]$_DFFE_PN0P_/RESETN
+OT_P 343.750702 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[4]$_DFFE_PN0P_/RESETN
+OT_P 343.998840 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[13]$_DFFE_PN0P_/RESETN
+OT_P 345.177887 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[9]$_DFFE_PN0P_/RESETN
+OT_P 345.889221 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[1]$_DFFE_PN0P_/RESETN
+OT_P 346.042969 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[7]$_DFFE_PN0P_/RESETN
+OT_P 346.043518 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[10]$_DFFE_PN0P_/RESETN
+OT_P 346.154663 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[11]$_DFFE_PN0P_/RESETN
+OT_P 347.169525 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[27]$_DFFE_PN0P_/RESETN
+OT_P 348.440613 6 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[5]$_DFFE_PN0P_/RESETN
+OT_P 350.811371 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].cr_q$_DFF_PN0_/RESETN
+OT_P 352.655670 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].cr_ok$_DFF_PN1_/SETN
+OT_P 353.249878 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[14]$_DFFE_PN0P_/RESETN
+OT_P 353.308716 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[13]$_DFFE_PN0P_/RESETN
+OT_P 353.697632 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[12]$_DFFE_PN0P_/RESETN
+OT_P 354.134277 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[11]$_DFFE_PN0P_/RESETN
+OT_P 354.348206 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[0]$_DFFE_PN0P_/RESETN
+OT_P 354.799316 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[1]$_DFFE_PN0P_/RESETN
+OT_P 354.861572 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[2]$_DFFE_PN0P_/RESETN
+OT_P 355.506500 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[7]$_DFFE_PN0P_/RESETN
+OT_P 364.307373 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[4]$_DFFE_PN0P_/RESETN
+OT_P 364.454803 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[5]$_DFFE_PN0P_/RESETN
+OT_P 364.460785 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[15]$_DFFE_PN0P_/RESETN
+OT_P 364.927429 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[6]$_DFFE_PN0P_/RESETN
+OT_P 367.457947 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[3]$_DFFE_PN0P_/RESETN
+OT_P 368.350342 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].home_r$_DFF_PN1_/SETN
+OT_P 369.499329 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[9]$_DFFE_PN0P_/RESETN
+OT_P 369.604584 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[8]$_DFFE_PN0P_/RESETN
+OT_P 371.084839 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_arrival[10]$_DFFE_PN0P_/RESETN
+OT_P 373.094788 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].rp[5]$_DFFE_PN0P_/RESETN
+OT_P 373.128967 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].rp[2]$_DFFE_PN0P_/RESETN
+OT_P 375.099609 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].cred[3]$_DFF_PN1_/SETN
+OT_P 375.564697 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].rp[1]$_DFFE_PN0P_/RESETN
+OT_P 376.269897 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].rp[3]$_DFFE_PN0P_/RESETN
+OT_P 379.250977 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp[3]$_DFFE_PN0P_/RESETN
+OT_P 379.285156 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp[2]$_DFFE_PN0P_/RESETN
+OT_P 379.526093 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp_q[0]$_DFF_PN0_/RESETN
+OT_P 379.741364 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp_q[3]$_DFF_PN0_/RESETN
+OT_P 380.442017 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp_q[2]$_DFF_PN0_/RESETN
+OT_P 383.650879 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].rp[4]$_DFFE_PN0P_/RESETN
+OT_P 396.954803 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].rp[5]$_DFFE_PN0P_/RESETN
+OT_P 397.382904 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[12]$_DFFE_PN0P_/RESETN
+OT_P 397.745850 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[11]$_DFFE_PN0P_/RESETN
+OT_P 398.240234 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[10]$_DFFE_PN0P_/RESETN
+OT_P 404.964386 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].ovf$_DFFE_PN0P_/RESETN
+OT_P 405.341644 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].cr_ovf$_DFFE_PN0P_/RESETN
+OT_P 405.819611 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].bad$_DFF_PN0_/RESETN
+OT_P 406.321991 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].w_ce_q$_DFF_PN0_/RESETN
+OT_P 406.432770 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].rp[2]$_DFFE_PN0P_/RESETN
+OT_P 408.465271 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].rp[3]$_DFFE_PN0P_/RESETN
+OT_P 409.125854 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].v1$_DFF_PN0_/RESETN
+OT_P 409.296265 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].rp[1]$_DFFE_PN0P_/RESETN
+OT_P 409.501648 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].v2$_DFF_PN0_/RESETN
+OT_P 409.804749 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].cred[0]$_DFF_PN0_/RESETN
+OT_P 410.108734 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp_q[1]$_DFF_PN0_/RESETN
+OT_P 410.173676 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].cred[1]$_DFF_PN0_/RESETN
+OT_P 410.222961 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].rp[4]$_DFFE_PN0P_/RESETN
+OT_P 412.696777 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp_q[0]$_DFF_PN0_/RESETN
+OT_P 413.704193 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].v3$_DFF_PN0_/RESETN
+OT_P 413.714172 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp[1]$_DFFE_PN0P_/RESETN
+OT_P 413.837311 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[26]$_DFFE_PN0P_/RESETN
+OT_P 414.064453 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].v2$_DFF_PN0_/RESETN
+OT_P 414.229095 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[18]$_DFFE_PN0P_/RESETN
+OT_P 416.766296 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[23]$_DFFE_PN0P_/RESETN
+OT_P 416.950928 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[2]$_DFFE_PN0P_/RESETN
+OT_P 419.263397 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].r_ce_q$_DFF_PN0_/RESETN
+OT_P 419.363098 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].cred[4]$_DFF_PN0_/RESETN
+OT_P 419.423157 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp[0]$_DFFE_PN0P_/RESETN
+OT_P 419.534088 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].rp[0]$_DFFE_PN0P_/RESETN
+OT_P 419.807190 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].cr_ovf$_DFFE_PN0P_/RESETN
+OT_P 419.896332 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].cred[0]$_DFF_PN0_/RESETN
+OT_P 420.079529 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[13]$_DFFE_PN0P_/RESETN
+OT_P 420.428253 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].cr_ok$_DFF_PN1_/SETN
+OT_P 420.431580 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[14]$_DFFE_PN0P_/RESETN
+OT_P 420.686493 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].cred[1]$_DFF_PN0_/RESETN
+OT_P 421.622742 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].cred[2]$_DFF_PN0_/RESETN
+OT_P 421.650818 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[7]$_DFFE_PN0P_/RESETN
+OT_P 421.887207 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[2]$_DFFE_PN0P_/RESETN
+OT_P 421.903961 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[1]$_DFFE_PN0P_/RESETN
+OT_P 423.827209 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].bad$_DFF_PN0_/RESETN
+OT_P 423.936768 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[15]$_DFFE_PN0P_/RESETN
+OT_P 423.964417 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[8]$_DFFE_PN0P_/RESETN
+OT_P 426.226288 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[24]$_DFFE_PN0P_/RESETN
+OT_P 427.247253 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[28]$_DFFE_PN0P_/RESETN
+OT_P 427.677124 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[22]$_DFFE_PN0P_/RESETN
+OT_P 427.794128 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[19]$_DFFE_PN0P_/RESETN
+OT_P 427.974670 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[31]$_DFFE_PN0P_/RESETN
+OT_P 428.621918 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].cred[3]$_DFF_PN1_/SETN
+OT_P 429.337341 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[20]$_DFFE_PN0P_/RESETN
+OT_P 430.216858 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[4]$_DFFE_PN0P_/RESETN
+OT_P 433.715179 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[25]$_DFFE_PN0P_/RESETN
+OT_P 434.964966 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[8]$_DFFE_PN0P_/RESETN
+OT_P 440.505859 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[6]$_DFFE_PN0P_/RESETN
+OT_P 441.481842 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[5]$_DFFE_PN0P_/RESETN
+OT_P 445.983154 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[17]$_DFFE_PN0P_/RESETN
+OT_P 448.432526 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[21]$_DFFE_PN0P_/RESETN
+OT_P 450.863129 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.return_tag[30]$_DFFE_PN0P_/RESETN
+OT_P 455.241333 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].rp[6]$_DFFE_PN0P_/RESETN
+OT_P 455.718231 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[5]$_DFFE_PN0P_/RESETN
+OT_P 456.413971 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp[6]$_DFFE_PN0P_/RESETN
+OT_P 456.615021 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp_q[6]$_DFF_PN0_/RESETN
+OT_P 457.449585 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp[3]$_DFFE_PN0P_/RESETN
+OT_P 457.537109 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp[2]$_DFFE_PN0P_/RESETN
+OT_P 457.848663 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp_q[4]$_DFF_PN0_/RESETN
+OT_P 458.530334 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp[5]$_DFFE_PN0P_/RESETN
+OT_P 458.656281 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp[4]$_DFFE_PN0P_/RESETN
+OT_P 459.474670 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp[0]$_DFFE_PN0P_/RESETN
+OT_P 468.293976 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp_q[5]$_DFF_PN0_/RESETN
+OT_P 468.727325 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp_q[6]$_DFF_PN0_/RESETN
+OT_P 469.366699 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp_q[3]$_DFF_PN0_/RESETN
+OT_P 469.685028 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp_q[2]$_DFF_PN0_/RESETN
+OT_P 471.192139 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].rp[0]$_DFFE_PN0P_/RESETN
+OT_P 471.330475 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].cred[2]$_DFF_PN0_/RESETN
+OT_P 471.656372 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp_q[1]$_DFF_PN0_/RESETN
+OT_P 471.693420 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp_q[4]$_DFF_PN0_/RESETN
+OT_P 471.755402 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp[5]$_DFFE_PN0P_/RESETN
+OT_P 472.599854 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].wp[6]$_DFFE_PN0P_/RESETN
+OT_P 472.892548 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp_q[5]$_DFF_PN0_/RESETN
+OT_P 473.405365 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp[4]$_DFFE_PN0P_/RESETN
+OT_P 473.579285 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].rp[6]$_DFFE_PN0P_/RESETN
+OT_P 476.099121 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].wp[1]$_DFFE_PN0P_/RESETN
+OT_P 476.964844 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].cred[4]$_DFF_PN0_/RESETN
+OT_P 477.581299 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].v0$_DFF_PN0_/RESETN
+OT_P 484.741089 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].home_r$_DFF_PN1_/SETN
+OT_P 487.535889 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].v1$_DFF_PN0_/RESETN
+OT_P 487.628387 5 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].cr_q$_DFF_PN0_/RESETN
+OT_P 490.868408 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[15]$_DFFE_PN0P_/RESETN
+OT_P 491.591644 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[1]$_DFFE_PN0P_/RESETN
+OT_P 492.385925 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[9]$_DFFE_PN0P_/RESETN
+OT_P 492.922913 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[0]$_DFFE_PN0P_/RESETN
+OT_P 493.522675 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[3]$_DFFE_PN0P_/RESETN
+OT_P 495.540222 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[3]$_DFFE_PN0P_/RESETN
+OT_P 496.368439 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[4]$_DFFE_PN0P_/RESETN
+OT_P 497.096588 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].ovf$_DFFE_PN0P_/RESETN
+OT_P 498.320221 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[0]$_DFFE_PN0P_/RESETN
+OT_P 498.347961 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].v3$_DFF_PN0_/RESETN
+OT_P 498.414764 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].w_ce_q$_DFF_PN0_/RESETN
+OT_P 500.130676 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[15]$_DFFE_PN0P_/RESETN
+OT_P 504.087708 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_arrival[2]$_DFFE_PN0P_/RESETN
+OT_P 505.791870 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[15]$_DFFE_PN0P_/RESETN
+OT_P 506.064026 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[13]$_DFFE_PN0P_/RESETN
+OT_P 506.291107 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[14]$_DFFE_PN0P_/RESETN
+OT_P 506.392761 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[10]$_DFFE_PN0P_/RESETN
+OT_P 506.899811 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[7]$_DFFE_PN0P_/RESETN
+OT_P 507.116913 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[8]$_DFFE_PN0P_/RESETN
+OT_P 507.145172 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[9]$_DFFE_PN0P_/RESETN
+OT_P 507.618622 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[12]$_DFFE_PN0P_/RESETN
+OT_P 508.464783 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[6]$_DFFE_PN0P_/RESETN
+OT_P 508.550262 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[7]$_DFFE_PN0P_/RESETN
+OT_P 509.058014 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[1].expect_retire[11]$_DFFE_PN0P_/RESETN
+OT_P 509.378143 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[11]$_DFFE_PN0P_/RESETN
+OT_P 509.881134 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[10]$_DFFE_PN0P_/RESETN
+OT_P 511.059692 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[13]$_DFFE_PN0P_/RESETN
+OT_P 515.439392 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[8]$_DFFE_PN0P_/RESETN
+OT_P 516.466553 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[14]$_DFFE_PN0P_/RESETN
+OT_P 518.021790 4 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[12]$_DFFE_PN0P_/RESETN
+OT_P 602.851562 3 u_core.g_lane[1].rst_l$_DFF_PN0_/QN u_core.g_lane[0].expect_retire[9]$_DFFE_PN0P_/RESETN
+Startpoint: u_core.g_lane[1].rst_l$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_core.return_tag[29]$_DFFE_PN0P_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+Fanout       Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------------
+                              0.0000    0.0000   clock core_clk (rise edge)
+                              0.0000    0.0000   clock source latency
+     1   18.1516    0.0000    0.0000    0.0000 ^ clk (in)
+                                                 clk (net)
+                   53.5182   16.8831   16.8831 ^ wire27953/A (BUFx12_ASAP7_75t_R)
+     1   18.9090   22.0167   37.2872   54.1704 ^ wire27953/Y (BUFx12_ASAP7_75t_R)
+                                                 net27950 (net)
+                   68.6516   20.5556   74.7259 ^ wire27952/A (BUFx24_ASAP7_75t_R)
+     1   18.1115   15.3354   40.4794  115.2053 ^ wire27952/Y (BUFx24_ASAP7_75t_R)
+                                                 net27949 (net)
+                   49.3484   14.6410  129.8463 ^ wire27951/A (BUFx24_ASAP7_75t_R)
+     2   23.0040   15.8846   36.0182  165.8645 ^ wire27951/Y (BUFx24_ASAP7_75t_R)
+                                                 net27948 (net)
+                   64.2919   19.6630  185.5274 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    2.4927   10.8261   37.8995  223.4270 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clk_regs (net)
+                   10.8301    0.2708  223.6977 ^ clkbuf_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   12.2545   14.0095   24.3405  248.0383 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_0_clk_regs (net)
+                   16.5659    3.0206  251.0588 ^ clkbuf_1_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    7.1971   11.0623   25.2795  276.3383 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_0_clk_regs (net)
+                   14.6617    3.3788  279.7171 ^ clkbuf_1_0_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    7.0531   11.0336   24.6251  304.3423 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_1_clk_regs (net)
+                   14.2584    3.2104  307.5527 ^ clkbuf_1_0_2_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    7.5171   11.2339   24.5610  332.1137 ^ clkbuf_1_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_2_clk_regs (net)
+                   14.7369    3.3361  335.4498 ^ clkbuf_1_0_3_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.2231   11.4702   24.7937  360.2435 ^ clkbuf_1_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_3_clk_regs (net)
+                   15.0678    3.2907  363.5342 ^ clkbuf_2_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.9045   12.0677   25.0444  388.5786 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_2_0_0_clk_regs (net)
+                   17.7693    4.2343  392.8130 ^ clkbuf_3_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1   10.1234   12.3988   25.9863  418.7993 ^ clkbuf_3_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_0_0_clk_regs (net)
+                   18.7150    4.5983  423.3976 ^ clkbuf_3_0_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    5.3823   10.4014   25.7819  449.1795 ^ clkbuf_3_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_0_1_clk_regs (net)
+                   11.6623    2.0411  451.2205 ^ clkbuf_3_0_2_clk_regs/A (BUFx24_ASAP7_75t_R)
+     4   11.1627   13.3192   24.5694  475.7900 ^ clkbuf_3_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_0_2_clk_regs (net)
+                   15.0289    2.3813  478.1712 ^ clkbuf_5_3_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.1475   11.4634   24.8957  503.0669 ^ clkbuf_5_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_5_3_0_clk_regs (net)
+                   15.1295    3.3468  506.4138 ^ clkbuf_5_3_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    6.9675   11.1933   24.9611  531.3749 ^ clkbuf_5_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_5_3_1_clk_regs (net)
+                   11.6131    1.1384  532.5133 ^ clkbuf_6_6__f_clk_regs/A (BUFx24_ASAP7_75t_R)
+     4   18.2041   17.6904   25.7110  558.2243 ^ clkbuf_6_6__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_6_6__leaf_clk_regs (net)
+                   21.4713    4.2463  562.4706 ^ clkbuf_leaf_264_clk_regs/A (BUFx24_ASAP7_75t_R)
+    17   19.8575   18.6170   29.6108  592.0814 ^ clkbuf_leaf_264_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_leaf_264_clk_regs (net)
+                   19.9409    2.5279  594.6093 ^ u_core.g_lane[1].rst_l$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    4.6054   53.5070   79.2260  673.8352 v u_core.g_lane[1].rst_l$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+                                                 _05739_ (net)
+                   54.0579    3.0433  676.8785 v _12345_/A (INVx1_ASAP7_75t_R)
+     1    0.7823   20.1516   18.0566  694.9351 ^ _12345_/Y (INVx1_ASAP7_75t_R)
+                                                 u_core.g_lane[0].rst_l (net)
+                   20.1526    0.0778  695.0129 ^ place21304/A (BUFx3_ASAP7_75t_R)
+     5   33.3516  115.7692   31.6387  726.6517 ^ place21304/Y (BUFx3_ASAP7_75t_R)
+                                                 net21301 (net)
+                  240.0323   73.1953  799.8470 ^ place21301/A (BUFx3_ASAP7_75t_R)
+    21   25.9744   91.6395   75.8154  875.6624 ^ place21301/Y (BUFx3_ASAP7_75t_R)
+                                                 net21298 (net)
+                   95.0711    9.7620  885.4244 ^ place21300/A (BUFx3_ASAP7_75t_R)
+    18   26.3614   93.9394   53.3248  938.7492 ^ place21300/Y (BUFx3_ASAP7_75t_R)
+                                                 net21297 (net)
+                  127.6450   30.3138  969.0629 ^ place21299/A (BUFx3_ASAP7_75t_R)
+    25   32.5704  111.9958   72.1283 1041.1913 ^ place21299/Y (BUFx3_ASAP7_75t_R)
+                                                 net21296 (net)
+                  130.6710   23.8078 1064.9991 ^ u_core.return_tag[29]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                     1064.9991   data arrival time
+
+                            833.3330  833.3330   clock core_clk (rise edge)
+                              0.0000  833.3330   clock source latency
+     1   17.8491    0.0000    0.0000  833.3330 ^ clk (in)
+                                                 clk (net)
+                   51.9545   16.3898  849.7228 ^ wire27953/A (BUFx12_ASAP7_75t_R)
+     1   18.3228   21.6172   36.8914  886.6143 ^ wire27953/Y (BUFx12_ASAP7_75t_R)
+                                                 net27950 (net)
+                   65.7172   19.6189  906.2332 ^ wire27952/A (BUFx24_ASAP7_75t_R)
+     1   17.5253   15.1345   39.7662  945.9994 ^ wire27952/Y (BUFx24_ASAP7_75t_R)
+                                                 net27949 (net)
+                   46.9716   13.8828  959.8822 ^ wire27951/A (BUFx24_ASAP7_75t_R)
+     2   21.8315   15.3903   35.3673  995.2495 ^ wire27951/Y (BUFx24_ASAP7_75t_R)
+                                                 net27948 (net)
+                   60.7740   18.5314 1013.7808 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    1.9064   10.3493   36.9329 1050.7137 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clk_regs (net)
+                   10.3511    0.2057 1050.9194 ^ clkbuf_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   11.0821   13.2986   24.0011 1074.9207 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_0_clk_regs (net)
+                   15.4167    2.6505 1077.5712 ^ clkbuf_1_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    6.6109   10.8609   24.8118 1102.3829 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_0_clk_regs (net)
+                   13.7312    3.0242 1105.4072 ^ clkbuf_1_0_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    6.4668   10.8252   24.2303 1129.6375 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_1_clk_regs (net)
+                   13.3431    2.8498 1132.4873 ^ clkbuf_1_0_2_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    6.9308   11.0306   24.1736 1156.6609 ^ clkbuf_1_0_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_2_clk_regs (net)
+                   13.7838    2.9687 1159.6296 ^ clkbuf_1_0_3_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    7.0507   11.0596   24.3146 1183.9442 ^ clkbuf_1_0_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_3_clk_regs (net)
+                   13.6935    2.8371 1186.7812 ^ clkbuf_2_1_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.4532   11.4838   24.4238 1211.2051 ^ clkbuf_2_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_2_1_0_clk_regs (net)
+                   15.8900    3.6655 1214.8705 ^ clkbuf_3_3_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    6.6047   10.8775   24.9770 1239.8475 ^ clkbuf_3_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_3_0_clk_regs (net)
+                   13.6550    2.9657 1242.8134 ^ clkbuf_3_3_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    3.5815    9.5519   23.7076 1266.5209 ^ clkbuf_3_3_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_3_1_clk_regs (net)
+                    9.7831    1.0718 1267.5927 ^ clkbuf_3_3_2_clk_regs/A (BUFx24_ASAP7_75t_R)
+     4   11.0112   13.2228   23.9997 1291.5924 ^ clkbuf_3_3_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_3_2_clk_regs (net)
+                   13.5764    0.9767 1292.5691 ^ clkbuf_5_15_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    5.1373   10.2862   23.9674 1316.5365 ^ clkbuf_5_15_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_5_15_0_clk_regs (net)
+                   11.2726    1.8179 1318.3544 ^ clkbuf_5_15_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    5.4199   10.4329   23.2567 1341.6111 ^ clkbuf_5_15_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_5_15_1_clk_regs (net)
+                   10.9182    1.2947 1342.9058 ^ clkbuf_6_31__f_clk_regs/A (BUFx24_ASAP7_75t_R)
+     5   16.9097   15.9572   24.1677 1367.0735 ^ clkbuf_6_31__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_6_31__leaf_clk_regs (net)
+                   31.4382    8.5859 1375.6594 ^ clkbuf_leaf_20_clk_regs/A (BUFx24_ASAP7_75t_R)
+    17   12.9635   14.6695   31.6702 1407.3296 ^ clkbuf_leaf_20_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_leaf_20_clk_regs (net)
+                   15.2166    1.3871 1408.7167 ^ u_core.return_tag[29]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                            -60.0000 1348.7167   clock uncertainty
+                              9.6324 1358.3490   clock reconvergence pessimism
+                             25.4244 1383.7736   library recovery time
+                                     1383.7736   data required time
+-------------------------------------------------------------------------------------
+                                     1383.7736   data required time
+                                     -1064.9991   data arrival time
+-------------------------------------------------------------------------------------
+                                      318.7744   slack (MET)
+
+
+Startpoint: u_core.g_lane[1].wd_q[374]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_core.g_lane[1].g_ram[0].storage
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout       Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------------
+                              0.0000    0.0000   clock core_clk (rise edge)
+                              0.0000    0.0000   clock source latency
+     1   18.1516    0.0000    0.0000    0.0000 ^ clk (in)
+                                                 clk (net)
+                   53.5182   16.8831   16.8831 ^ wire27953/A (BUFx12_ASAP7_75t_R)
+     1   18.9090   22.0167   37.2872   54.1704 ^ wire27953/Y (BUFx12_ASAP7_75t_R)
+                                                 net27950 (net)
+                   68.6516   20.5556   74.7259 ^ wire27952/A (BUFx24_ASAP7_75t_R)
+     1   18.1115   15.3354   40.4794  115.2053 ^ wire27952/Y (BUFx24_ASAP7_75t_R)
+                                                 net27949 (net)
+                   49.3484   14.6410  129.8463 ^ wire27951/A (BUFx24_ASAP7_75t_R)
+     2   23.0040   15.8846   36.0182  165.8645 ^ wire27951/Y (BUFx24_ASAP7_75t_R)
+                                                 net27948 (net)
+                   64.2919   19.6630  185.5274 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    2.4927   10.8261   37.8995  223.4270 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clk_regs (net)
+                   10.8301    0.2708  223.6977 ^ clkbuf_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   12.2545   14.0095   24.3405  248.0383 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_0_clk_regs (net)
+                   16.5648    3.0199  251.0581 ^ clkbuf_1_1_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    7.5355   11.1027   25.2596  276.3177 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_1_0_clk_regs (net)
+                   15.4745    3.6795  279.9972 ^ clkbuf_1_1_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    7.2579   11.0470   24.8777  304.8749 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_1_1_clk_regs (net)
+                   14.8540    3.4437  308.3186 ^ clkbuf_1_1_2_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    6.6789   10.8729   24.6130  332.9316 ^ clkbuf_1_1_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_1_2_clk_regs (net)
+                   13.8533    3.0640  335.9956 ^ clkbuf_1_1_3_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.2894   11.5333   24.5200  360.5156 ^ clkbuf_1_1_3_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_1_3_clk_regs (net)
+                   15.0540    3.2609  363.7765 ^ clkbuf_2_2_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.2742   11.7750   24.9739  388.7503 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_2_2_0_clk_regs (net)
+                   17.2027    4.1178  392.8682 ^ clkbuf_3_4_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    7.9219   11.2676   25.5592  418.4274 ^ clkbuf_3_4_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_4_0_clk_regs (net)
+                   15.8950    3.8163  422.2437 ^ clkbuf_3_4_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.1276   11.4203   25.1761  447.4198 ^ clkbuf_3_4_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_4_1_clk_regs (net)
+                   15.6942    3.6657  451.0855 ^ clkbuf_3_4_2_clk_regs/A (BUFx24_ASAP7_75t_R)
+     4   18.5442   18.1945   26.7955  477.8810 ^ clkbuf_3_4_2_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_3_4_2_clk_regs (net)
+                   22.6060    4.6095  482.4904 ^ clkbuf_5_16_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    9.0681   11.9837   27.6494  510.1399 ^ clkbuf_5_16_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_5_16_0_clk_regs (net)
+                   16.4600    3.8151  513.9550 ^ clkbuf_5_16_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    5.5709   10.5366   25.1163  539.0713 ^ clkbuf_5_16_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_5_16_1_clk_regs (net)
+                   10.8307    1.0494  540.1207 ^ clkbuf_6_33__f_clk_regs/A (BUFx24_ASAP7_75t_R)
+     6   27.0485   22.9149   24.9158  565.0365 ^ clkbuf_6_33__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_6_33__leaf_clk_regs (net)
+                   40.4938   10.6981  575.7346 ^ clkbuf_leaf_171_clk_regs/A (BUFx24_ASAP7_75t_R)
+    21   18.8250   18.4917   35.6476  611.3821 ^ clkbuf_leaf_171_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_leaf_171_clk_regs (net)
+                   19.1659    1.8138  613.1959 ^ u_core.g_lane[1].wd_q[374]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   32.5889  325.2193  160.8569  774.0528 ^ u_core.g_lane[1].wd_q[374]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                 _04783_ (net)
+                  345.4262   43.3767  817.4296 ^ _11012_/A (INVx3_ASAP7_75t_R)
+     1    3.4707   55.1973   35.5186  852.9482 v _11012_/Y (INVx3_ASAP7_75t_R)
+                                                 u_core.g_lane[1].wd_q[374] (net)
+                   55.3359    1.5976  854.5458 v place22266/A (BUFx3_ASAP7_75t_R)
+     1    1.0220    9.0047   30.8029  885.3486 v place22266/Y (BUFx3_ASAP7_75t_R)
+                                                 net22263 (net)
+                    9.0109    0.1116  885.4602 v place22265/A (BUFx3_ASAP7_75t_R)
+     1    1.7607    8.9870   18.3738  903.8340 v place22265/Y (BUFx3_ASAP7_75t_R)
+                                                 net22262 (net)
+                    9.0467    0.3901  904.2241 v place22264/A (BUFx3_ASAP7_75t_R)
+     1    2.4051   10.3216   19.4209  923.6451 v place22264/Y (BUFx3_ASAP7_75t_R)
+                                                 net22261 (net)
+                   10.3354    0.1973  923.8424 v wire26663/A (BUFx16f_ASAP7_75t_R)
+     1   36.3926    9.6550   21.0421  944.8845 v wire26663/Y (BUFx16f_ASAP7_75t_R)
+                                                 net26660 (net)
+                  318.2606  100.8056 1045.6901 v wire26662/A (BUFx16f_ASAP7_75t_R)
+     1   56.5327   22.5880   72.5613 1118.2513 v wire26662/Y (BUFx16f_ASAP7_75t_R)
+                                                 net26659 (net)
+                  440.7594  138.7514 1257.0028 v u_core.g_lane[1].g_ram[0].storage/wd_in[374] (ot_sram_1r1w_64x512_m1_r2c2)
+                                     1257.0028   data arrival time
+
+                            833.3330  833.3330   clock core_clk (rise edge)
+                              0.0000  833.3330   clock source latency
+     1   17.8491    0.0000    0.0000  833.3330 ^ clk (in)
+                                                 clk (net)
+                   51.9545   16.3898  849.7228 ^ wire27953/A (BUFx12_ASAP7_75t_R)
+     1   18.3228   21.6172   36.8914  886.6143 ^ wire27953/Y (BUFx12_ASAP7_75t_R)
+                                                 net27950 (net)
+                   65.7172   19.6189  906.2332 ^ wire27952/A (BUFx24_ASAP7_75t_R)
+     1   17.5253   15.1345   39.7662  945.9994 ^ wire27952/Y (BUFx24_ASAP7_75t_R)
+                                                 net27949 (net)
+                   46.9716   13.8828  959.8822 ^ wire27951/A (BUFx24_ASAP7_75t_R)
+     2   21.8315   15.3903   35.3673  995.2495 ^ wire27951/Y (BUFx24_ASAP7_75t_R)
+                                                 net27948 (net)
+                   30.3429    7.3007 1002.5502 ^ delaybuf_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    4.3784   10.2705   29.4181 1031.9683 ^ delaybuf_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 delaynet_0_core_clk (net)
+                   10.8528    1.5189 1033.4872 ^ delaybuf_1_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    4.3576    9.9118   22.8713 1056.3584 ^ delaybuf_1_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 delaynet_1_core_clk (net)
+                   10.6047    1.5784 1057.9369 ^ delaybuf_2_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    4.2765    9.8787   22.7833 1080.7202 ^ delaybuf_2_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 delaynet_2_core_clk (net)
+                   10.4319    1.4507 1082.1709 ^ delaybuf_3_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    4.1349    9.8053   22.6840 1104.8549 ^ delaybuf_3_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 delaynet_3_core_clk (net)
+                   10.3996    1.4906 1106.3455 ^ delaybuf_4_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    4.1595    9.8225   22.6903 1129.0358 ^ delaybuf_4_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 delaynet_4_core_clk (net)
+                   10.3054    1.3745 1130.4102 ^ clkbuf_0_clk/A (BUFx24_ASAP7_75t_R)
+     2    7.3408   11.0771   23.1023 1153.5126 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_0_clk (net)
+                   14.5822    3.2664 1156.7789 ^ clkbuf_1_0_0_clk/A (BUFx24_ASAP7_75t_R)
+     1    6.4039   10.7497   24.4642 1181.2432 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_0_clk (net)
+                   13.6933    3.0449 1184.2880 ^ clkbuf_1_0_1_clk/A (BUFx24_ASAP7_75t_R)
+     1    6.6343   10.8773   24.2288 1208.5168 ^ clkbuf_1_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_1_clk (net)
+                   13.7207    3.0169 1211.5338 ^ clkbuf_1_0_2_clk/A (BUFx24_ASAP7_75t_R)
+     1    6.7973   10.8988   24.2283 1235.7621 ^ clkbuf_1_0_2_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_2_clk (net)
+                   14.1443    3.1962 1238.9583 ^ clkbuf_1_0_3_clk/A (BUFx24_ASAP7_75t_R)
+     2    7.8093   11.4235   24.6176 1263.5759 ^ clkbuf_1_0_3_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_1_0_3_clk (net)
+                   14.0441    2.8505 1266.4264 ^ clkbuf_2_0_0_clk/A (BUFx24_ASAP7_75t_R)
+     1   27.0060   14.3135   25.2581 1291.6846 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_2_0_0_clk (net)
+                   75.0367   23.0296 1314.7141 ^ u_core.g_lane[1].g_ram[0].storage/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                            -60.0000 1254.7141   clock uncertainty
+                              3.9480 1258.6621   clock reconvergence pessimism
+                           -130.1924 1128.4696   library setup time
+                                     1128.4696   data required time
+-------------------------------------------------------------------------------------
+                                     1128.4696   data required time
+                                     -1257.0028   data arrival time
+-------------------------------------------------------------------------------------
+                                     -128.5332   slack (VIOLATED)
+
+
