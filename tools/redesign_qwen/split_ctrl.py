@@ -1212,14 +1212,14 @@ def emit_seq_su_bi() -> str:
 # ctlm_i fpbmr-811bd1a67 preroute -1,346 h_rd -> kvd_tiles = ir field ME_SPLIT -> variable shift of pos_r -> / ODD ->
 # two adds -> me_tiles).  PCUT 1: o_eq by direct equality, the chase compares as a log-depth (Brent-Kung) unsigned >=,
 # and the DYN_TTILES rounds of all 16 split values registered in S_DYN (pos_r is fixed for the token; loads only in
-# S_RUN, which S_DYN precedes) so a load selects a register.  PCUT 2 = negative control (strict >, split + 1 entry).
+# S_RUN, which S_DYN precedes) so a load selects a register.  Negative controls: PCUT 2 o_eq counters swapped, 3 strict >, 4 split + 1 entry.
 def ctrl_pcut(t: str) -> str:
     t = one(t, "    parameter integer ME_IDLE_GATE = 0,", "    parameter integer ME_IDLE_GATE = 0,\n"
                "    parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)")
     t = one(t, "    wire o_eq0 = (o_dif0 == {XW{1'b0}}), o_eq1 = (o_dif1 == {XW{1'b0}});",
-            "    wire o_eq0 = (PCUT != 0) ? (x_oacc == o_cnt) : (o_dif0 == {XW{1'b0}});\n"
-            "    wire o_eq1 = (PCUT != 0) ? (x_oacc == o_cnt1) : (o_dif1 == {XW{1'b0}});\n"
-            "    // PCUT: unsigned a >= b as a log-depth prefix tree (no carry chain); PCUT 2 = strict > (negative control)\n"
+            "    wire o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});\n"
+            "    wire o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});\n"
+            "    // PCUT: unsigned a >= b as a log-depth prefix tree (no carry chain); PCUT 3 = strict > (negative control)\n"
             "    function automatic uge16(input [15:0] a, input [15:0] b);\n"
             "        reg [15:0] g, e; integer k, sp;\n"
             "        begin\n"
@@ -1227,7 +1227,7 @@ def ctrl_pcut(t: str) -> str:
             "            for (sp = 1; sp < 16; sp = sp * 2)\n"
             "                for (k = 15; k >= 0; k = k - 1)\n"
             "                    if ((k % (2 * sp)) == (2 * sp - 1)) begin g[k] = g[k] | (e[k] & g[k - sp]); e[k] = e[k] & e[k - sp]; end\n"
-            "            uge16 = g[15] | ((PCUT == 2) ? 1'b0 : e[15]);\n"
+            "            uge16 = g[15] | ((PCUT == 3) ? 1'b0 : e[15]);\n"
             "        end\n"
             "    endfunction")
     t = one(t, "    wire chased = osync && (x_och >= d_chase_n);",
@@ -1247,7 +1247,7 @@ def ctrl_pcut(t: str) -> str:
                "            always @(posedge clk) if (st == S_DYN) begin r_q <= r_w; i_q <= i_w; end\n"
                "            assign dts[ds*NW +: NW] = r_q; assign dti[ds] = i_q;\n"
                "        end\n"
-               "        wire [3:0] dsel = 4'(`F(ME_SPLIT)) + ((PCUT == 2) ? 4'd1 : 4'd0);\n"
+               "        wire [3:0] dsel = 4'(`F(ME_SPLIT)) + ((PCUT == 4) ? 4'd1 : 4'd0);\n"
                "        assign dyn_tiles_split = dts[dsel*NW +: NW];\n"
                "        assign dyn_tiles_invalid = dti[dsel];\n"
                "    end else begin : g_dcomb\n"

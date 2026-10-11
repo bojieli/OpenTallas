@@ -11,10 +11,12 @@
 module tb_qfd_tt_ctlm_i_psram;
     parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50, TW = 400;   // TW: cycles per token window
     parameter integer U1_PSRAM = 1, U1_HQ2 = 0;
-    parameter integer U1_MEREG = 0, U1_RRG = 0, MOK = 0, U1_PCUT = 0;   // el1011-q-seq: u1 registered ME enable / replicated reset; MOK 1: random me_mem_ok (u1 sees it 2 edges ahead)
+    parameter integer U1_MEREG = 0, U1_RRG = 0, MOK = 0, U1_PCUT = 0;
+    parameter integer PCOV = 0;   // el1011-q-seq: 1 = ME ops with DYN_TTILES (valid splits) and small chase targets (PCUT coverage)   // el1011-q-seq: u1 registered ME enable / replicated reset; MOK 1: random me_mem_ok (u1 sees it 2 edges ahead)
     reg clk = 0, rst_n = 1;
     initial #0.1 rst_n = 0;
     always #0.5 clk = ~clk;
+    integer ndt = 0, nceq = 0;
     integer seed = SEED, cyc = 0, bad = 0, nrd = 0, nld = 0, nicut = 0, k, i;
     reg [11:0] pbase = 0;
     reg [15:0] xprog = 0, xrows = 0, lcnt = 0;
@@ -240,9 +242,16 @@ module tb_qfd_tt_ctlm_i_psram;
                 // ME op sizes small (NOUT [38:23], TILES [54:39], K [70:55]) so an ME op finishes within a token
                 pw_data[38:23] = 16'(1 + ($random(seed) & 3)); pw_data[54:39] = 16'(1 + ($random(seed) & 3));
                 pw_data[63:55] = 9'(1 + ($random(seed) & 3));
+                if (PCOV != 0) begin
+                    if ($random(seed) & 1) pw_data[1:0] = 2'd1;             // more ME ops (this unit)
+                    pw_data[3] = $random(seed) & 1;                          // CHASE
+                    pw_data[19:4] = 16'(1 + ($random(seed) & 3));            // CHASE_N small: meets the climbing x_oprog
+                end
             end
             if (k % 16 == 1) pw_data[6:0] = 7'd0;            // K [70:64]
             if (k % 16 == 3) pw_data[44:27] = 18'd0;         // the ME DYN selectors D_* [236:219]: static sizes / bases
+            if (k % 16 == 3 && PCOV != 0 && ($random(seed) & 1)) pw_data[41:39] = 3'd6;   // D_TILES [233:231] = DYN_TTILES
+            if (k % 16 == 5 && PCOV != 0) pw_data[20:17] = 4'($random(seed) % 12);        // ME_SPLIT [340:337]: valid splits
         end
         @(negedge clk); pw_v = 0;
         repeat (8) @(posedge clk);
@@ -271,7 +280,7 @@ module tb_qfd_tt_ctlm_i_psram;
         end
         @(negedge clk); h_start = 0;
         repeat (20) @(posedge clk);
-        if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d icut_stim=%0d", cyc, nrd, nld, nicut);
+        if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d icut_stim=%0d dyn_tiles_loads=%0d chase_eq=%0d", cyc, nrd, nld, nicut, ndt, nceq);
         else $display("FAIL tt_ctlm_i_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d", bad, nrd, MINRD, nld);
         $finish;
     end
@@ -289,6 +298,8 @@ module tb_qfd_tt_ctlm_i_psram;
             if (bad <= 5) $display("XSTATE cyc=%0d", cyc);
         end
         if (u0.u_ctrl_me.load) nld = nld + 1;
+        if (u0.u_ctrl_me.load && u0.u_ctrl_me.ir[u0.u_ctrl_me.O_ME_D_TILES +: 3] == 3'd6) ndt = ndt + 1;   // el1011-q-seq coverage: DYN_TTILES loads
+        if (u0.u_ctrl_me.osync && u0.u_ctrl_me.d_chase && u0.u_ctrl_me.x_och == u0.u_ctrl_me.d_chase_n) nceq = nceq + 1;   // chase at equality
         if (u0.u_ctrl_me.issue && !u0.u_ctrl_me.issue_live) nicut = nicut + 1;
         if (out_mismatch || pq_mismatch) begin
             bad = bad + 1;
