@@ -91,11 +91,14 @@ def cases(quick, no_model=False):
     return out
 
 
+QPIPE = 0
+
+
 def build(work: Path, tag, memw, nd, np_, hd, kvh, qkv, mut=0, rmw=1):
     exe = work / f"sim_{tag}.vvp"
     cmd = ["iverilog", "-g2012", "-o", str(exe), "-s", "tb_rom_host_ingest",
            *(f"-Ptb_rom_host_ingest.{k}={v}" for k, v in dict(MEMW=memw, ND=nd, NP=np_, HDMAX=hd, KVHMAX=kvh,
-                                                                  QKV_EN=qkv, MUT=mut, RMW_EN=rmw).items()),
+                                                                  QKV_EN=qkv, MUT=mut, RMW_EN=rmw, QPIPE=QPIPE).items()),
            *map(str, RTL), str(TB)]
     subprocess.run(cmd, check=True, capture_output=True, text=True)
     return exe
@@ -143,7 +146,11 @@ def main():
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--no-model", action="store_true", help="skip the reduced-vehicle cases (no build/models in a "
                     "loop snapshot); mutants then run on the per-die geometry case")
+    ap.add_argument("--qpipe", action="store_true", help="engine QPIPE 1 (qfd_io_host pipelined lane-banked QKV path, "
+                    "write-only); adds the K-lane-bank and stale-slot-field mutants")
     args = ap.parse_args()
+    global QPIPE
+    QPIPE = 1 if args.qpipe else 0
     work = args.work
     work.mkdir(parents=True, exist_ok=True)
     cs = cases(args.quick, args.no_model)
@@ -184,7 +191,11 @@ def main():
             rec["traffic"][name] = rows
     # mutants: each must FAIL
     base = cs["qwen_reduced_fp32" if "qwen_reduced_fp32" in cs else "qwen_die_geom_bf16"]
-    for mname, mut in (("payload_bit_flip_in_cdc", 1), ("done_tag_plus_one", 2)):
+    muts = [("payload_bit_flip_in_cdc", 1), ("done_tag_plus_one", 2)]
+    if QPIPE:
+        muts += [("qpipe_k_lane_bank", 3), ("qpipe_stale_slot_fields", 4)]
+    rec["qpipe"] = QPIPE
+    for mname, mut in muts:
         exe, memw = exe_for(base, mut=mut)
         d = work / ("mut_" + mname)
         write_case(d, base, memw)
