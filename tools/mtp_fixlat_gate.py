@@ -38,6 +38,10 @@ CASES = {
     'p2_lat1': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1), ['OT_FIXLAT_MUT_LAT1'], 'fail'),
     'p2_naive': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1), ['OT_P2_NAIVE'], 'fail'),
     'p2_naive_1tx': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1, NTX=1, START_DELAY=0), ['OT_P2_NAIVE'], 'fail'),
+    # latency of the link ends (no stations, saturated): lnk vs the core driven directly (OT_P2_NAIVE at 0 stations)
+    'p2_lat_direct0': ('tb_mtp_p2_fixlat', P2, dict(FV=0, RV=0, FC=0, RC=0, NTX=1, START_DELAY=0, NOSTALL=1), ['OT_P2_NAIVE'], 'pass'),
+    'p2_lat_lnk0': ('tb_mtp_p2_fixlat', P2, dict(FV=0, RV=0, FC=0, RC=0, NTX=1, START_DELAY=0, NOSTALL=1), [], 'pass'),
+    'p2_lat_lnk': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, NTX=1, START_DELAY=0, NOSTALL=1), [], 'pass'),
     'p2_nogate': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1), ['OT_FIXLAT_MUT_NOGATE'], 'fail'),
 }
 TAG = {'tb_mtp_partner_ep': 'PEP PASS', 'tb_mtp_p2_fixlat': 'P2FL PASS'}
