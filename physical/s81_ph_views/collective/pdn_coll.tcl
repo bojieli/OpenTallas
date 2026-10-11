@@ -15,7 +15,7 @@ add_pdn_connect -grid {top} -layers {M1 M2}
 add_pdn_connect -grid {top} -layers {M2 M5}
 add_pdn_connect -grid {top} -layers {M5 M6}
 add_pdn_connect -grid {top} -layers {M6 M7}
-define_pdn_grid -macro -cells {ot_sram_1r1w_512x128_m4_r2c2 ot_sram_1r1w_256x256_m2_r2c2 ot_s81_pll_bb} -halo {2 2 2 2} -voltage_domains {CORE} -name {mac}
+define_pdn_grid -macro -cells {ot_sram_1r1w_512x128_m4_r2c2 ot_sram_1r1w_256x256_m2_r2c2 ot_sram_1r1w_128x256_m1_r2c2 ot_s81_pll_bb} -halo {2 2 2 2} -voltage_domains {CORE} -name {mac}
 add_pdn_stripe -grid {mac} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
 add_pdn_connect -grid {mac} -layers {M4 M5}
 add_pdn_connect -grid {mac} -layers {M5 M6}

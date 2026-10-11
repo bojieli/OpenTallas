@@ -204,10 +204,38 @@ foreach r [$ws_blk getRows] {
   lappend rows [list [lindex $o 1] [lindex $o 0] [expr {[lindex $o 0] + [$r getSiteCount]*[$st getWidth]}] [$st getWidth] [$st getHeight] [$r getOrient]]
 }
 set rows [lsort -integer -index 0 $rows]
-set nrows [llength $rows]
 set rowy0 [lindex $rows 0 0]; set rowh [lindex $rows 0 4]; set sitew [lindex $rows 0 3]
+# el1011-hbm-sfu 2026-10-11: ONE entry per site-row y.  ORFS cuts rows around macros, so a y can carry several row
+# segments; the code below indexes rows by (y - rowy0) / rowh, which on the raw segment list pointed half-way up the
+# block (hfd_sfu_tile: N-face pin at y 332 -> list entry ~1,229 = the 8-um sliver right of the lane at y ~156; all
+# 1,743 bc_out lockups anchored there, routed TT -1,081 ps) and keyed occupancy to the wrong rows (overlaps,
+# DPL-0033).  Merge the segments of each y into its full x span and mark the gaps between them (and any y with no
+# segment) occupied.
+array set ws_yseg {}; set ws_X0 ""; set ws_X1 ""
+foreach r $rows {
+  lappend ws_yseg([lindex $r 0]) $r
+  if {$ws_X0 eq "" || [lindex $r 1] < $ws_X0} { set ws_X0 [lindex $r 1] }
+  if {$ws_X1 eq "" || [lindex $r 2] > $ws_X1} { set ws_X1 [lindex $r 2] }
+}
+set nrows [expr {([lindex $rows end 0] - $rowy0) / $rowh + 1}]
+set rows {}; array set ws_gap {}
+for {set k 0} {$k < $nrows} {incr k} {
+  set y [expr {$rowy0 + $k*$rowh}]
+  if {![info exists ws_yseg($y)]} {
+    lappend rows [list $y $ws_X0 $ws_X1 $sitew $rowh R0]; set ws_gap($k) [list [list $ws_X0 $ws_X1]]; continue
+  }
+  set segs [lsort -integer -index 1 $ws_yseg($y)]
+  lappend rows [list $y $ws_X0 $ws_X1 $sitew $rowh [lindex $segs 0 5]]
+  set c $ws_X0; set ws_gap($k) {}
+  foreach sg $segs {
+    if {[lindex $sg 1] > $c} { lappend ws_gap($k) [list $c [lindex $sg 1]] }
+    set c [expr {max($c, [lindex $sg 2])}]
+  }
+  if {$c < $ws_X1} { lappend ws_gap($k) [list $c $ws_X1] }
+}
 # occupancy: per row, list of {x0 x1} of fixed instances (tapcells, endcaps) and of what this hook places
 array set occ {}
+foreach k [array names ws_gap] { foreach iv $ws_gap($k) { lappend occ($k) $iv } }
 foreach i [$ws_blk getInsts] {
   if {![$i isFixed]} continue
   set bb [$i getBBox]
@@ -266,6 +294,34 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
 }
 puts "OT_WS: $ntok token stages joined their data stage; $nst stages, $nplaced cells placed FIRM, $nfail not placed (density $ws_dens)"
 if {$nfail > 0} { error "OT_WS: $nfail stage cells could not be placed" }
+# el1011-hbm-sfu 2026-10-11: ws_nearest = the free slot of width wr in row ri nearest xb on the site grid
+# xb + s*sitew, |s| < lim, inside [rx0, rx1]; ties go to +s.  Same answer as sliding s = 0, 1, .. and testing
+# xb + s*sitew then xb - s*sitew with ws_free (the old loop), but it jumps past each blocking interval instead of
+# testing every site: hfd_sfu_tile (5,535 N/S face pin registers at OT_WS_PINREG_DENSITY 0.3, ~70 full rows a face)
+# spent > 4.5 h single-threaded in the old slide (238dfb802 hm0/hm10 EARLY_FAIL_STALL "3_3_place_gp", 8bb4628d2 scr).
+proc ws_nearest {ri xb wr rx0 rx1 sitew lim} {
+  global occ
+  set ivs [expr {[info exists occ($ri)] ? $occ($ri) : {}}]
+  set xmaxR [expr {min($xb + ($lim-1)*$sitew, $rx1 - $wr)}]
+  set xR ""; set x $xb
+  while {$x <= $xmaxR} {
+    set b ""
+    foreach iv $ivs { if {$x < [lindex $iv 1] && [lindex $iv 0] < $x + $wr} { if {$b eq "" || [lindex $iv 1] > $b} { set b [lindex $iv 1] } } }
+    if {$b eq ""} { if {$x >= $rx0} { set xR $x }; break }
+    set x [expr {$xb + (($b - $xb + $sitew - 1) / $sitew) * $sitew}]
+  }
+  set xminL [expr {max($xb - ($lim-1)*$sitew, $rx0)}]
+  set xL ""; set x $xb
+  while {$x >= $xminL} {
+    set a ""
+    foreach iv $ivs { if {$x < [lindex $iv 1] && [lindex $iv 0] < $x + $wr} { if {$a eq "" || [lindex $iv 0] < $a} { set a [lindex $iv 0] } } }
+    if {$a eq ""} { if {$x + $wr <= $rx1} { set xL $x }; break }
+    set x [expr {$xb - (($xb - ($a - $wr) + $sitew - 1) / $sitew) * $sitew}]
+  }
+  if {$xR eq ""} { return $xL }
+  if {$xL eq ""} { return $xR }
+  return [expr {($xR - $xb) <= ($xb - $xL) ? $xR : $xL}]
+}
 # ---------------------------------------------------------------- pin registers (OT_WS_PINREG=1)
 # hbm-forks 2026-10-09 (svc SW_s7: wi -> c_wl stage 0 -41 ps / q7 -> u_sp7.loc.d_r -65 ps at the routed reference, the
 # input-pin -> first-register wire alone 120-130 ps): every flop whose D is driven straight from ONE input pin (the
@@ -317,6 +373,19 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
         set qn [$qit getNet]; set bts [$qn getBTerms]
         # only the pins (and at most one inverter / buffer between: the QN flop's output inverter) load the net
         set nld [expr {[llength [$qn getITerms]] - 1}]
+        # OT_WS_OUTPUT_PINREG_HOLD=1 ([svc] 10-10, route SE_s0 hm0 phy[625] TT -126: a 300 ps buffered wire from an
+        # interior enable flop to its pin): an enable flop's own hold mux (an instance whose output drives this flop's
+        # D) is not a functional load -- it moves with the flop (placement pulls it), so it does not block anchoring
+        if {[info exists ::env(OT_WS_OUTPUT_PINREG_HOLD)] && $::env(OT_WS_OUTPUT_PINREG_HOLD) eq "1" && $dit ne "NULL" && [$dit getNet] ne "NULL"} {
+          set dnet [$dit getNet]
+          foreach it [$qn getITerms] {
+            set ii [$it getInst]
+            if {$ii eq $i} continue
+            foreach it2 [$ii getITerms] {
+              if {[$it2 isOutputSignal] && [$it2 getNet] eq $dnet} { set nld [expr {$nld - 1}]; break }
+            }
+          }
+        }
         if {[llength $bts] >= 1 && [[lindex $bts 0] getIoType] eq "OUTPUT" && $nld <= 0} { set bn [[lindex $bts 0] getName] }
         if {$bn eq "" && $nld == 1} {
           foreach it [$qn getITerms] {
@@ -337,6 +406,11 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
     if {![info exists ws_pin($bn)]} continue
     lassign $ws_pin($bn) px py
     set w [[$i getMaster] getWidth]; set wr [expr {$w + 3*$sitew}]
+    # svc-fix 2026-10-10 (claude/hbmphys-svcfix-20261010, same text): OT_WS_PINREG_DENSITY gives a pin register the
+    # stage blocks' slot pitch (cell width / density, snapped to sites) so the anchoring strip keeps routing room
+    if {[info exists ::env(OT_WS_PINREG_DENSITY)] && $::env(OT_WS_PINREG_DENSITY) > 0} {
+      set wr [expr {max($wr, int(ceil(double($w)/$::env(OT_WS_PINREG_DENSITY)/$sitew))*$sitew)}]
+    }
     # nearest row to the pin, then outward; in each row the free slot nearest the pin x (sliding both ways)
     set r0 [expr {max(0, min($nrows-1, int(($py-$rowy0)/$rowh)))}]
     set done 0
@@ -345,16 +419,12 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
         if {$done || $ri < 0 || $ri >= $nrows} continue
         set row [lindex $rows $ri]; set ry [lindex $row 0]; set rx0 [lindex $row 1]; set rx1 [lindex $row 2]
         set xb [expr {$rx0 + int((max($rx0, min($rx1 - $wr, $px)) - $rx0)/$sitew)*$sitew}]
-        for {set s 0} {$s < 400 && !$done} {incr s} {
-          foreach x [list [expr {$xb + $s*$sitew}] [expr {$xb - $s*$sitew}]] {
-            if {$done || $x < $rx0 || $x + $wr > $rx1} continue
-            if {[ws_free $ri $x [expr {$x+$wr}]]} {
-              $i setPlacementStatus PLACED     ;# a fenced stage flop is FIRM: unfix before moving (ODB-0359)
-              $i setOrient [lindex $row 5]; $i setLocation $x $ry; $i setPlacementStatus FIRM
-              lappend occ($ri) [list $x [expr {$x+$wr}]]
-              set done 1
-            }
-          }
+        set x [ws_nearest $ri $xb $wr $rx0 $rx1 $sitew 400]
+        if {$x ne ""} {
+          $i setPlacementStatus PLACED     ;# a fenced stage flop is FIRM: unfix before moving (ODB-0359)
+          $i setOrient [lindex $row 5]; $i setLocation $x $ry; $i setPlacementStatus FIRM
+          lappend occ($ri) [list $x [expr {$x+$wr}]]
+          set done 1
         }
       }
     }

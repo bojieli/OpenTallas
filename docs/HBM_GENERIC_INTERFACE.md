@@ -583,6 +583,10 @@ Bit 7 and bits 255:239 are reserved.
 
 **Effective base:** base + L·`lstride` + L1·`l1stride` + X·`dyn_mul`, where X = DYN[`dyn_sel`], or U32(VM[I + L]) when `indexed` = 1.
 
+**HBM row striping (STRIPE4).** An HBM byte address names a stack in bits 36:35 (§6.10), so bits 39:37 of an HBM `base` carry no address. In the A descriptor of `DMA.LOAD` and the O descriptor of `DMA.STORE` they are a row-stripe code; everywhere else they must be 0 (E_RANGE). Code 0 is the linear layout. Code 1, STRIPE4, reads row o from stack (s₀ + o) mod 4, where s₀ = bits 36:35 of the effective base, at the stack-local byte address (effective base bits 34:0) + o·`stride`. Consecutive rows therefore sit on consecutive stacks, and one record streams from all four stacks at once. A row that is spread over the stacks is stored as m = 4 quarter rows at the same local address (`stride` = 0); an HC weight row of 4 × 5,120 FP32 is one such record. STRIPE4 requires 32-byte-aligned row starts on both sides (A `base` and `stride` multiples of 32 bytes, O a VM descriptor with `base` and `stride` multiples of 8 words), `istride` 1 and a stack-local address below 2³⁵; otherwise the record faults (E_RANGE). Codes 2–7 are reserved (E_RANGE). For `DMA.STORE` the same rule places the rows of O (A must then be a VM descriptor), so a 4-row store such as a swapout column writes all four stacks at once.
+
+**DMA.STORE writes whole sectors.** The HBM rows of a `DMA.STORE` must be whole 32-byte sectors: O `base` and `stride` multiples of 32 bytes, n × element size a multiple of 32 bytes, `istride` 1; otherwise the record faults (E_RANGE). A store becomes visible to every later reader that goes through the PC request queues (DMA reads, the KV and index-key streams, SM reads) once the record retires and the posted writes drain (`DMA.FENCE`). It is not ordered against the PHY weight port, which reads load-time weights only, so no `DMA.STORE` may target a region that the weight port reads.
+
 **STREAM descriptors.** With `space` = 2 the descriptor names a hardware stream; `base` is the stream id. A stream is an element FIFO: a P-slot producer publishes slot-major, and an underrun, an overrun or a descriptor naming an unwired producer or consumer faults.
 
 | Stream id | Producer | Consumer | Use |
@@ -673,7 +677,7 @@ The SU template carries the pipeline fields of the SU operation set (`tools/hdc_
 
 ### 6.10 Memory map (per die)
 
-**HBM** is one die-local, 40-bit byte address space with 32-byte sectors. The svc address map (sector → stack and PC) is fixed. A contiguous KV or index-key sweep must spread over all 32 PCs. DS compressed KV rows keep the shipped 9-channel layout: each 288-byte row is 9 consecutive sectors on 9 consecutive PCs (sector s on PC s mod 32), and the existing gather readers fetch the selected rows in that layout, so an indexed selection still spreads over all PCs. The indexed row stream of §3.3 and conformance row CF-IDXD apply to contiguous row layouts only (whole rows in consecutive sectors); the DS 9-channel rows are read by the DS gather readers and checked by their own vectors.
+**HBM** is one die-local, 40-bit byte address space with 32-byte sectors. The svc address map (sector → stack and PC) is fixed: bits 36:35 of a byte address select the stack and bits 34:0 are the stack-local address; bits 39:37 are 0 except for the row-stripe code of a `DMA.LOAD` source (§6.4). A contiguous KV or index-key sweep must spread over all 32 PCs. DS compressed KV rows keep the shipped 9-channel layout: each 288-byte row is 9 consecutive sectors on 9 consecutive PCs (sector s on PC s mod 32), and the existing gather readers fetch the selected rows in that layout, so an indexed selection still spreads over all PCs. The indexed row stream of §3.3 and conformance row CF-IDXD apply to contiguous row layouts only (whole rows in consecutive sectors); the DS 9-channel rows are read by the DS gather readers and checked by their own vectors.
 
 **Regions** are placed by the compiler and recorded in the image manifest, not in hardware:
 
@@ -737,7 +741,7 @@ DS runs on r25 as a record stream of native unit operations only, one image per 
 | Indexer query, scores and select | SU records apply RoPE to the index query and scale the head weights; then one `IDX.INDEX` frame (k = 512, the candidate pass at layer 20 and the keep mask at layers 24 … 36) writes the local selection to VM |
 | Router top-6 | `IDX.TOPK` k = 6, `order` = 1 (ascending id order, the golden's expert-slot order) |
 | Selected compressed KV rows | `COLL.TOPK_MERGE` of the dies' local selections, then `COLL.ROW_GATHER` from the owner dies (compressed rows and index keys are sharded by position in blocks of 8: block j lives on rank j mod 96) into each head die's HBM; the indexed stream `DMA.LOAD` (§3.3) serves rows held locally |
-| Engram rows | `IDX.EHASH` per Engram layer, then indexed `DMA.LOAD`s of the codes and scales and an SU decode |
+| Engram rows | E-HOME (below): the 4 home dies stream their owned rows into a staging store, one G25 `COLL.ROW_GATHER` delivers the 24 rows in list order to every die, then two strided `DMA.LOAD`s (codes, scales) and an SU decode |
 | Window and compressed rows, KV write-back | `DMA.LOAD`, `DMA.KVWB_DS` |
 | Expert fetch by id | `SM.MATVEC` with an indexed B descriptor over the `IDX.TOPK` ids, in a `CTL.LOOP` over the 6 experts |
 | HC mixes | `HC.HC_MIX` |
@@ -745,6 +749,20 @@ DS runs on r25 as a record stream of native unit operations only, one image per 
 | Head and token | `ARGMAX.LOCAL`, `COLL.ARGMAX_MERGE`, `CTL.END` reading A |
 
 The acceptance test is identical tokens and per-unit outputs against the existing DS evidence (`hdc_golden_v41`, chunk8).
+
+**Engram placement (E-HOME, hgi-1010, 2026-10-10).** A layer's Engram table, 384 M rows (about 98 GB), cannot sit in every die's 128 GiB, so it lives in the HBM of 4 home dies. Engram layer li (li 0 = layer 1, li 1 = layer 14) uses ranks 4·li … 4·li + 3, and rows are split contiguously: with RPH = ⌈N / 4⌉, row g sits on home h = g div RPH at local row g mod RPH.
+- **Row format** (288 B, whole sectors): bytes 0 … 255 are the E4M3 codes in column order; bytes 256 … 263 are the UE8M0 scales (e + 127), one per 32 columns; bytes 264 … 287 are 0. The table sits at HBM 96 GiB on stack 3, so every address is below 2³⁷.
+- **Integrity:** HBM ECC on every read, plus a per-row CRC-32 over bytes 0 … 263 held in the boot image. A CRC mismatch poisons the row's slot: that list entry's row is delivered as a fault, and the token completes with status 1.
+- **Host table EGHT:** 144 U32 words (18 sectors) per Engram layer per token. The host writes it into the TABLES region beside the G13 ids before the doorbell; the ids depend only on the last 4 tokens.
+  - Words 0 … 23: the G25 slot id of list entry j. If entry j is the t-th row owned by home rank R, i′ = (t div 8) · 768 + 8 R + (t mod 8). Under the ROW_GATHER owner rule (B 8, G 96) this is owner R at staging row t, and i′ < 2²⁰.
+  - Words 32 … 35: home h's owned-row count c_h (their sum is 24).
+  - Words 40 + 24 h + t: home h's t-th owned local row, in list order (t < c_h).
+  - Words 24 … 31, 36 … 39 and every unused word up to 143 are 0.
+- **Program per Engram layer:**
+  1. `DMA.LOAD` EGHT into VM.
+  2. Home dies only: one indexed-row-stream `DMA.LOAD` (§3.3; count = word 32 + h, ids = words 40 + 24 h …) of 288 B rows, then a `DMA.STORE` to the 24-row staging store, then `DMA.FENCE`.
+  3. Every die: `COLL.ROW_GATHER` in the G25 form (I = words 0 … 23, K 24, A = the staging store, O = the list store, `imm_b` 96), then `CTL.FENCE`.
+  4. Every die: `DMA.LOAD` FP8E4M3 (n 256, m 24, stride 288 B) and `DMA.LOAD` UE8M0 (n 8, m 24, stride 288 B), then the SU decode as before.
 
 **What the DS lowering needs beyond the generic set.** Most items map onto DS engines the die already carries:
 

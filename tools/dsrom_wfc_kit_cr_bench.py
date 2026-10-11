@@ -26,6 +26,10 @@ import dsrom_wfc_kit_bench as K
 ROOT = Path(__file__).resolve().parents[1]
 CR = 'rtl/dsrom_sys/mtp/dsfd_wfc_kit_cr.sv'
 LINK = 'rtl/common/ot_link_credit.sv'
+# fe-push-ds-1010 2026-10-10: harness 'crp' = dsfd_wfc_cr2 (the routed credit-port tile dsfd_wfc_crp + the kit): SRAM
+# link-in landing, DFREE credit txs, ot_rst_relay per domain
+CRP = ['rtl/dsrom_sys/mtp/dsfd_wfc_crp.sv', 'rtl/lib/ot_rst_relay.sv', 'rtl/link/ot_fifo_sram_fwft.sv',
+       'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
 
 PARAMS = '''    parameter integer S_LI = 10, S_LO = 10, S_VM = 13, S_CO = 10, S_CI = 11;   // ds-1010: real hub stages (layer1 x1b+rgap)
     // s0 step watchdog scale.  At the real stages S0 runs 1.46x the cycles of the 2-stage run (s0_hash_u3 129,439 vs
@@ -109,7 +113,20 @@ CASES = {   # name -> (kit bench base case, harness, stage params, extra defines
 
     'neg_skid_stg_r1': ('stg_r1', 'skid', REAL, [], 'fail'), 'neg_skid_s0_tr_forced': ('s0_tr_forced', 'skid', REAL, [], 'fail'),
     'neg_over_stg_r1': ('stg_r1', 'cr', REAL, ['WFC_CR_MUT_OVER'], 'fail'),
+    # fe-push-ds-1010: the credit-port tile (dsfd_wfc_crp) composition dsfd_wfc_cr2
+    'crp_stg_r1': ('stg_r1', 'crp', REAL, [], 'pass'), 'crp_stg_vmnat': ('stg_vmnat', 'crp', REAL, [], 'pass'),
+    'crp_stg_r2_slowvm': ('stg_r2_slowvm', 'crp', REAL, [], 'pass'), 'crp_stg_lag1': ('stg_lag1', 'crp', REAL, [], 'pass'),
+    'crp_stg_r1_short': ('stg_r1', 'crp', SHORT, [], 'pass'), 'crp_stg_r1_long': ('stg_r1', 'crp', LONG, [], 'pass'),
+    'crp_s0_tr_forced': ('s0_tr_forced', 'crp', REAL, [], 'pass'),
+    'crp_s0_hash_u3': ('s0_hash_u3', 'crp', dict(REAL, WDOG_MULT=2), [], 'pass'),
+    'neg_crp_land_stg_r1': ('stg_r1', 'crp', REAL, ['WFC_CRP_MUT_LAND'], 'fail'),
+    'neg_crp_dfree_stg_r1': ('stg_r1', 'crp', REAL, ['OT_LINK_DFREE_MUT'], 'fail'),
+    'neg_crp_over_stg_r1': ('stg_r1', 'crp', REAL, ['WFC_CR_MUT_OVER'], 'fail'),
 }
+CRP_CASES = [k for k, v in CASES.items() if v[1] == 'crp']
+
+
+OSKID_K = 0   # --oskid (mtp-wfc 2026-10-10): dsfd_wfc_crp with the registered kit-side skids
 
 
 def cr_tb(base, harness):
@@ -120,10 +137,10 @@ def cr_tb(base, harness):
     j = i + len(blk)
     tail_old = body[j:]
     # drop the kit bench's hierarchical binds of kit internals (observation only) and re-point them below the wrapper
-    kpath = ('u_kit.g_stg.u_kit' if stage else 'u_kit.g_src.u_kit') if harness == 'cr' else 'u_kit'
+    kpath = ('u_kit.g_stg.u_kit' if stage else 'u_kit.g_src.u_kit') if harness in ('cr', 'crp') else 'u_kit'
     tail = re.sub(r'\bu_kit\.', kpath + '.', tail_old)
-    if harness == 'cr':
-        h = CR_KIT.replace('SRCK', '0' if stage else '1').replace('KITPARAMS', ', .LAG(LAG)' if stage else '')
+    if harness in ('cr', 'crp'):
+        h = (CR_KIT if harness == 'cr' else CR_KIT.replace('dsfd_wfc_cr #(', 'dsfd_wfc_cr2 #(.OSKID(1), ' if OSKID_K else 'dsfd_wfc_cr2 #(')).replace('SRCK', '0' if stage else '1').replace('KITPARAMS', ', .LAG(LAG)' if stage else '')
         h = h.replace('CFGW', "{(3+10+42){1'b0}}" if stage else 'cfgw')
         h = h.replace('KTOK', '' if stage else 'k_tok').replace('KCFG', '' if stage else '{cfg_users, cfg_plen, cfg_glen}')
     else:
@@ -148,7 +165,9 @@ def run(name, out):
     d = out / name; d.mkdir(parents=True, exist_ok=True)
     meta = B.trace_hex(ROOT / B.TRACES / f"{spec['trace']}.cfg.json", d / 'trace.hex') if 'trace' in spec else None
     (d / 'tb.sv').write_text(body)
-    srcs = [str(ROOT / s) for s in list(B.COMMON) + K.EXTRA + [CR, LINK]] + [str(d / 'tb.sv')]
+    # mtp-wfc 2026-10-11: K.EXTRA now carries the vmx SRAM queue (ot_fifo_sram_fwft + the SRAM model): dedupe in order,
+    # else iverilog stops on a re-declared module (every crp_* case BUILD_ERROR)
+    srcs = [str(ROOT / s) for s in dict.fromkeys(list(B.COMMON) + K.EXTRA + [CR, LINK] + (CRP if harness == 'crp' else []))] + [str(d / 'tb.sv')]
     cmd = ['iverilog', '-g2012', '-s', tb, '-o', str(d / 'sim.vvp')] + \
           [f'-D{x}' for x in list(spec.get('defines', [])) + kdefs + defs] + \
           [f'-P{tb}.{k}={v}' for k, v in list(spec.get('params', {}).items()) + list(sp.items())] + srcs
@@ -166,9 +185,12 @@ def run(name, out):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument('--out', type=Path, required=True); p.add_argument('--case'); p.add_argument('--jobs', type=int, default=11)
+    p.add_argument('--out', type=Path, required=True); p.add_argument('--case')
+    p.add_argument('--crp', action='store_true', help='only the dsfd_wfc_crp (credit-port tile) cases'); p.add_argument('--jobs', type=int, default=11)
+    p.add_argument('--oskid', action='store_true', help='dsfd_wfc_crp OSKID 1 (registered kit-side skids)')
     a = p.parse_args(); a.out = a.out.resolve(); a.out.mkdir(parents=True, exist_ok=True)
-    names = [a.case] if a.case else list(CASES)
+    global OSKID_K; OSKID_K = 1 if getattr(a, 'oskid', False) else 0
+    names = [a.case] if a.case else (CRP_CASES if a.crp else list(CASES))
     import concurrent.futures as cf
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         recs = list(ex.map(lambda n: run(n, a.out), names))

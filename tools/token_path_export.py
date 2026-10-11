@@ -421,7 +421,7 @@ def qwen(kv=None):
                 sp = kv["split_structure"]["stations_only"]
                 ot = O4["o4_relay_term"]
                 adders = list(adders) + [dict(item="rom_split_stations_and_option4_control_plane",
-                                              cycles=sp["l0"] + ot["L0"] if L == 0 else sp["layer"] + ot["layer"], grade="measured",
+                                              cycles=(sp["l0"] + ot["L0"] + ot.get("cbuf_wait_per_token", 0)) if L == 0 else sp["layer"] + ot["layer"], grade="measured",
                                               record=O4P, note="ROM-die split stations (token-exact) + the option-4 actual masters "
                                                                "(seq_su_bi + ctlm_i, r22ko4 relays 16/16/16) measured on the stationed "
                                                                "L0-L2 chain vs s22ml7; charged on the layer's last op")]

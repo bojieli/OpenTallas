@@ -72,6 +72,43 @@ def main():
                                                                      100 * (c["measured_fraction"] or 0), c["status"], c["n_unmeasured"],
                                                                      ", ".join(c["unmeasured_nodes"][:4])))
         L.append("")
+    bg = d.get("build_gate") or {}
+    L += ["### Build gate: priced ops with no native RTL bench (PRICED-NOT-BUILT)", "", bg.get("rule", "") + ".", "",
+          "| model | op | variant | status | records / token | priced cycles / token | critical-path cycles (op at 0) | rate if the op were free | evidence |",
+          "|---|---|---|---|---:|---:|---:|---:|---|"]
+    for g in sorted(bg.get("priced_not_built", []), key=lambda g: -(g.get("critical_cycles_if_zero") or 0)):
+        L.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (g["model"], g["op"], g["variant"] or "", g["status"],
+                 f(g["records_per_token"]), f(g["price_cycles_per_token"]), f(g.get("critical_cycles_if_zero")),
+                 f(g.get("rate_if_op_free_tok_s")), g["evidence"].replace("|", "/")))
+    rates = sorted({x for g in bg.get("priced_not_built", []) for x in g.get("inflates", [])})
+    L += ["", "Rate figures these ops inflate (each prices the op at its simulator cost although no RTL runs it): " + "; ".join(rates) + ".", ""]
+    hand = d.get("hand_entered") or []
+    L += ["### Hand-entered ratios (unmeasured; never qualify)", "",
+          "| model | op / element | claimed ratio | source | owner |", "|---|---|---:|---|---|"]
+    for h in hand:
+        L.append("| %s | %s | %s | %s | %s |" % (h["model"], h.get("element") or h["op"], h.get("claimed_ratio") or "–",
+                                              str(h.get("src")).replace("|", "/"), h.get("owner")))
+    bii = d.get("bench_ii") or {}
+    L += ["", f"### Automated bench II ({len(bii)} elements with a cycles line in a passing exact closure-loop bench)", "",
+          "| element | II (cycles / item) | item | stalled stimulus | job @ commit | line |", "|---|---:|---|---|---|---|"]
+    for e, b in sorted(bii.items()):
+        L.append("| %s | %s | %s | %s | %s @ %s | %s |" % (e, b["ii"] if b["ii"] is not None else "–", b["item"] or "–",
+                 "yes" if b["stalled"] else "", b["job"], b["commit"], b["line"][:110].replace("|", "/")))
+    L.append("")
+    bf = d.get("bf_hier")
+    if bf:
+        L += ["### DS ROM BF of record: hierarchical full-rate (ot_v41_bf_col + ot_s81_bf_front)", "",
+              "| item | value |", "|---|---|",
+              f"| target | AR {bf['target']['ds_rom_ar_tok_s']:,} / MTP {bf['target']['ds_rom_mtp_tok_s']:,} tok/s ({bf['target']['row']}; {bf['target']['condition']}) |",
+              f"| budget (bench workload: {bf['budget']['rows']} rows, {bf['budget']['partials']} partials, {bf['budget']['issues']:,} issues) | {bf['budget']['issue_cycles']:,} issue cycles + {bf['budget']['partial_extra_cycles']} cycles a partial |",
+              f"| measured | {bf['measured']['issue_cycles']:,} issue cycles; partial lag +{bf['measured']['partial_lag_extra_ns_mean']} ns mean / +{bf['measured']['partial_lag_extra_ns_max']} ns max = +{bf['measured']['partial_extra_cycles']} cycles |",
+              f"| measured / price | {bf['ratio']} ({bf['status']}) |",
+              f"| timing | column: {bf['timing']['ot_v41_bf_col']}; front: {bf['timing']['ot_s81_bf_front']}; {bf['timing']['composed']} |",
+              f"| evidence | {', '.join(bf['measured']['benches'])} |", ""]
+    cov = d.get("rom_block_coverage") or {}
+    if cov:
+        un = sorted(k for k, v in cov.items() if v is None)
+        L += [f"ROM blocks outside the token-path classes: {len(cov)} covered by name rules (`rom_block_rules`); unmapped: {', '.join(un) or 'none'}.", ""]
     import collections
     cnt = collections.Counter(v["status"] for v in d["elements"].values())
     L += ["### Registry gate (elements)", "", f"{len(d['elements'])} elements mapped: " +

@@ -56,7 +56,11 @@ module tb_hbm_tu_retry_port;
  @(negedge clk);up=0;iv=1;tick;if(tv||ir||ov)$fatal(1,"linkdown interface escaped");
  epoch=3;reset_link;fv=1;fg=1;fe=2;fs=1300;fp=1300;fn=1;tick;
  if(fault||available!=CAP||debt!=0)$fatal(1,"reset oldsession credits");
- fe=3;fn=0;fs=0;fp=1;tick;if(!fault)$fatal(1,"forged future popcredit accepted");
+ fe=3;fn=0;fs=0;fp=1;tick;
+`ifdef OT_TU_CPIPE
+ if(fault)$fatal(1,"CPIPE forged return faulted before its check edge");tick;  // CPIPE: over-return faults one edge later
+`endif
+ if(!fault)$fatal(1,"forged future popcredit accepted");
  $display("PASS coordinated linkdown reset, staleepoch controls, futurepop fault");
  $display("PASS_ALL");$finish;
  end

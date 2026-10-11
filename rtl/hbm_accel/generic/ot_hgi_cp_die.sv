@@ -29,7 +29,10 @@ module ot_hgi_cp_die #(
     parameter integer USE_MACRO = 1,
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
-    parameter integer FQCR = 4         // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer FQCR = 4,        // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer MTP_PINREG = 0   // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
+                                       // FIFOs / flops on f_mtp, t_mtp, mh_* and the translator side; +1 cycle a crossing,
+                                       // controller PRL 4); 0 = the unregistered collar (pinned views unchanged)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -126,13 +129,13 @@ module ot_hgi_cp_die #(
     reg  halt;
     wire units_busy = ~credit[0] | ~credit[1] | ~credit[2] | ~credit[3] | ~(&credx) | (|ux_v);
     localparam [15:0] RECU = 16'b0000_0111_1111_1110;   // units 1-10 have a record bus (0 CTL internal, 11 SIMT absent)
-    ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
+    ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO), .FETCH_PIN_FIFO(1), .FQ_LOCAL(1), .FQCR(FQCR)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
         .cmd_wdata(cfg_wdata), .units_busy(units_busy), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded), .cfg_err(cfg_err),
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),
         .db_gen(db_q[73:70]), .db_entry(db_q[75:74]), .db_ncol(db_q[79:76]), .db_kernel(db_k), .db_loff(MUT == 2 ? 32'd0 : db_lo),
         .md_kent(md_kent), .md_kstride(md_kstride), .md_noise(md_noise),
-        .f_req_v(f_req_v), .f_req_rdy(fq_cr != 5'd0 && fq_in < 7'd48), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
+        .f_req_v(f_req_v), .f_req_rdy(1'b0), .f_req_ack(l_freq_ack), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
         .vr_v(vr_v), .vr_rdy(!vr_busy), .vr_addr(vr_addr), .vr_rsp_v(vr_rv), .vr_rsp_data(vr_rd),
         .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n), .d_pos1(d_pos1),
         .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault), .wr_quiet(wr_quiet),
@@ -145,12 +148,21 @@ module ot_hgi_cp_die #(
     wire [16:0] xi_am_idx;
     generate if (MTP == 2) begin : g_collar
         wire [270:0] t_be;
+        if (MTP_PINREG) begin : g_pinreg      // fe-push-hgi-1010: registered die boundary (feasibility row, in->reg 15 levels)
+            ot_hgi_cp_mtp_pinreg #(.ENABLE_MTP(1), .MUT(MUT >= 10 ? MUT - 10 : 0)) u_collar (.clk(clk), .rst_n(rst_n),
+                .f_mtp(f_mtp), .t_mtp(t_mtp), .f_host(mh_f_host), .t_host(mh_t_host), .f_provider(mh_f_provider),
+                .t_emit(mh_t_emit), .t_provider(mh_t_provider), .f_emit_host(mh_f_emit_host), .t_emit_host(mh_t_emit_host),
+                .t_abort(mh_t_abort), .t_drained(mh_t_drained), .f_am({xi_am_idx, xi_am_v}),
+                .f_backend({1'b0, xi_drained, xi_cpl_fault, xi_cpl_seq, xi_cpl_gen, xi_cpl_job, xi_cpl_v, xi_cmd_ready}),
+                .t_backend(t_be));
+        end else begin : g_direct
         hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(1)) u_collar (.ck(clk), .rst(~rst_n), .f_mtp(f_mtp),
             .emit_pend(f_mtp[43]), .t_mtp(t_mtp), .f_host(mh_f_host), .t_host(mh_t_host), .f_provider(mh_f_provider),
             .t_emit(mh_t_emit), .t_provider(mh_t_provider), .f_emit_host(mh_f_emit_host), .t_emit_host(mh_t_emit_host),
             .t_abort(mh_t_abort), .t_drained(mh_t_drained), .f_am({xi_am_idx, xi_am_v}),
             .f_backend({1'b0, xi_drained, xi_cpl_fault, xi_cpl_seq, xi_cpl_gen, xi_cpl_job, xi_cpl_v, xi_cmd_ready}),
             .t_backend(t_be));
+        end
         assign xi_cmd_v = t_be[0]; assign xi_cmd = t_be[1 +: 201]; assign xi_cmd_job = t_be[202 +: 32];
         assign xi_cmd_gen = t_be[234 +: 4]; assign xi_cmd_seq = t_be[238 +: 32]; assign xi_cpl_ready = t_be[270];
         assign xi_ext_fault = mh_t_abort;
@@ -267,7 +279,7 @@ module ot_hgi_cp_die #(
             // F5: a request leaves on a credit (the loader's queue slot), the slot returns on the loader's f_req_ack (the
             // memory lane took it), not on the data; sectors return in order, at most 48 in flight (the sequencer's NOS)
             begin : fetch
-                reg snd; snd = f_req_v && fq_cr != 5'd0 && fq_in < 7'd48;
+                reg snd; snd = f_req_v;                       // [cp] FQ_LOCAL: the CP sends only on a credit (fq_cr / fq_in mirror it)
                 if (snd) begin cpl[113] <= 1'b1; cpl[153:114] <= f_req_addr; end
                 fq_cr <= fq_cr - {4'd0, snd} + {4'd0, l_freq_ack};
                 fq_in <= fq_in + {6'd0, snd} - {6'd0, l_frsp_v};

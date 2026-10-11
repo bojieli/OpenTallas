@@ -1,0 +1,19 @@
+ILOAD f 0 rows 400 n 8: 749 cycles, 17.1 destination B / cycle, 17.1 source B / cycle = 0.5 % of 3.80 TB/s
+ILOAD f 1 rows 300 n 64: 550 cycles, 139.6 destination B / cycle, 69.8 source B / cycle = 2.2 % of 3.80 TB/s
+ILOAD f 2 rows 96 n 512: 372 cycles, 528.5 destination B / cycle, 132.1 source B / cycle = 4.2 % of 3.80 TB/s
+ILOAD f 0 rows 12 n 4096: 727 cycles, 270.4 destination B / cycle, 270.4 source B / cycle = 8.5 % of 3.80 TB/s
+ILOAD f 4 rows 40 n 2048: 664 cycles, 493.5 destination B / cycle, 123.4 source B / cycle = 3.9 % of 3.80 TB/s
+LOAD f 0 m 4 n 512: 100 cycles, 81.9 destination B / cycle, 81.9 source B / cycle = 2.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 1 m 3 n 4096: 258 cycles, 190.5 destination B / cycle, 95.3 source B / cycle = 3.0 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 2 m 2 n 4096: 151 cycles, 217.0 destination B / cycle, 54.3 source B / cycle = 1.7 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 4 m 5 n 1024: 95 cycles, 215.6 destination B / cycle, 53.9 source B / cycle = 1.7 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 4 n 2048: 104 cycles, 315.1 destination B / cycle, 315.1 source B / cycle = 9.9 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 2 m 4 n 8192: 288 cycles, 455.1 destination B / cycle, 113.8 source B / cycle = 3.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 64 n 8: 122 cycles, 16.8 destination B / cycle, 16.8 source B / cycle = 0.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 4 n 16384: 603 cycles, 434.7 destination B / cycle, 434.7 source B / cycle = 13.7 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 1 m 4 n 32768: 1117 cycles, 469.4 destination B / cycle, 234.7 source B / cycle = 7.4 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+ILOAD f 0 rows 256 n 1024: 2773 cycles, 378.1 destination B / cycle, 378.1 source B / cycle = 11.9 % of 3.80 TB/s
+LOAD f 0 m 8 n 4096: 1003 cycles, 130.7 destination B / cycle, 130.7 source B / cycle = 4.1 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 1 m 8 n 4096: 305 cycles, 429.7 destination B / cycle, 214.9 source B / cycle = 6.8 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+APERTURE: a load past the two slots faults
+PASS HGI_DMA_FRONT 3184128 B in 9981 cycles (319.0 B / cycle overall)

@@ -96,3 +96,83 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# v2 (s81-ctl-1011, 2026-10-11): engine-split shell dsfd_sp_ctrl_e (hop_tx retired) + per-engine slab endpoints
+# (ot_s81_slab_ep inside each slab master).  Engine status: BOUND (slab master with the endpoint, real start / done),
+# PENDING (owner named; the die gate fails while its ports are unbound), ROLE_ABSENT (no stage program of the role
+# routes an op to the engine: checked against the compiled stage programs).
+ENGINE_INDEX = {e: i for i, e in enumerate(ENGINES)}
+V2_SHELL = {'layer': 'physical/s81_ctrl/rtl/dsfd_sp_ctrl_e.sv'}
+ROLE_STAGES = {'layer': lambda s: s.startswith('S') and s not in ('S000', 'S058')}
+
+
+def shell_ports_v2(root, role):
+    src = (Path(root) / V2_SHELL[role]).read_text()
+    header = re.sub(r'//[^\n]*', '', src).split(');', 1)[0]
+    ports = {}
+    for d, width, names in re.findall(r'\b(input|output)\s+(?:wire|reg)\s*(?:\[([^\]]+)\])?\s*([\w\s,]+?)(?=,\s*(?:input|output)\b|$)',
+                                      header + ',', re.S):
+        bits = 1 if not width else _number(width.split(':')[0]) - _number(width.split(':')[1]) + 1
+        for n in re.findall(r'\w+', names):
+            ports[n] = dict(direction=d, bits=bits)
+    return src, ports
+
+
+def program_ports(root, role, programs='results/rtl/s81_ctrl_20261008/programs'):
+    used = {}
+    for f in sorted((Path(root) / programs).glob('S*.json')):
+        if not ROLE_STAGES[role](f.stem):
+            continue
+        for o in json.loads(f.read_text())['ops']:
+            used.setdefault(o['eng'], set()).add(f.stem)
+    return used
+
+
+def validate_manifest_v2(path, root, role):
+    """returns the manifest with 'qualification' recomputed; raises on a malformed / unpinned binding"""
+    data = json.loads(Path(path).read_text())
+    src, ports = shell_ports_v2(root, role)
+    if data.get('schema') != 'opentallas.s81.ctrl-native-binding.v2' or data.get('role') != role:
+        raise ValueError('ctrl binding v2: schema / role')
+    if data.get('shell') != V2_SHELL[role] or data.get('shell_sha256') != hashlib.sha256(src.encode()).hexdigest():
+        raise ValueError('ctrl binding v2 disagrees with the pinned shell')
+    for k in ('adapter', 'endpoint'):
+        rel = data[k + '_rtl']
+        if data.get(k + '_sha256') != hashlib.sha256((Path(root) / rel).read_bytes()).hexdigest():
+            raise ValueError('unpinned ' + k + ' RTL: ' + rel)
+    eng_ports = {f'{p}{i}' for i in range(12) for p in 'cds'}
+    other = set(ports) - eng_ports - {'ck', 'rs'}
+    if set(data['ports']) != other:
+        raise ValueError('ctrl binding v2 omits or invents shell ports: %s' % sorted(set(data['ports']) ^ other))
+    for n, spec in data['ports'].items():
+        ep = spec.get('endpoint')
+        if not isinstance(ep, list) or len(ep) != 2 or any(str(x).lower() in ('tieoff', 'constant', 'unbound') for x in ep):
+            raise ValueError('ctrl port has no native endpoint: ' + n)
+    used = program_ports(root, role)
+    if set(data['engines']) != set(ENGINES):
+        raise ValueError('ctrl binding v2 must name all 12 engines')
+    ready = True
+    for e, spec in data['engines'].items():
+        st = spec.get('status')
+        if spec.get('index') != ENGINE_INDEX[e]:
+            raise ValueError('engine index: ' + e)
+        if st == 'BOUND':
+            rel = spec.get('master_rtl')
+            if not rel or not (Path(root) / rel).is_file() or not any(k in (Path(root) / rel).read_text() for k in ('ot_s81_slab_ep', 'ot_s81_done_word')):
+                raise ValueError('BOUND engine without a slab master carrying ot_s81_slab_ep: ' + e)
+            if spec.get('queue_depth') != 8 or spec.get('credit_return') != 'done':
+                raise ValueError('engine lacks QD 8 / done credit: ' + e)
+        elif st == 'ROLE_ABSENT':
+            if e in used:
+                raise ValueError('engine %s declared ROLE_ABSENT but %s route ops to it' % (e, sorted(used[e])[:3]))
+        elif st == 'PENDING':
+            if not spec.get('owner'):
+                raise ValueError('PENDING engine without an owner: ' + e)
+            ready = False
+        else:
+            raise ValueError('engine status: %s %s' % (e, st))
+    data['qualification'] = 'NATIVE_BINDING_READY' if ready else 'PARTIAL'
+    data['program_engines'] = {k: len(v) for k, v in sorted(used.items())}
+    return data
