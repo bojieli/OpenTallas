@@ -26,7 +26,11 @@ set mw 94.824
 set mh 41.040
 # textbook audit 10-11 (class 6: 31% util at 480x540): compact outlines (< 460 um wide) use 20 um channels
 set gap [expr {[info exists ::env(OT_HCOLL_GAP)] ? double($::env(OT_HCOLL_GAP)) : ($dw < 460.0 ? 20.0 : 24.0)}]
-set array_w [expr {3*$mw+2*$gap}]
+# column channel (x) can differ from the row channel: INTERIOR=4 tiles g / g3 died in DRT-0255 (u_wtx/rd[542] pin access at
+# the col1|col2 channel: one macro's 119 right-edge wd_in + the next one's 256 rd_out + 137 wd_in pins and the capture flops
+# in 20 um) -> OT_HCOLL_GAPX (env) or ::ot_hcoll_gapx (hook wrapper) widens only the column channels
+set gapx [expr {[info exists ::env(OT_HCOLL_GAPX)] ? double($::env(OT_HCOLL_GAPX)) : ([info exists ::ot_hcoll_gapx] ? $::ot_hcoll_gapx : $gap)}]
+set array_w [expr {3*$mw+2*$gapx}]
 set array_h [expr {6*$mh+5*$gap}]
 set x0 [expr {($dw-$array_w)/2}]
 # INTERIOR=4 die tile (10-11, g2ck-r2 GPL-0305 / routability 1.13 top-2%): the LEFT (core) face carries 1,640 pins + their
@@ -35,7 +39,7 @@ if {[info exists ::ot_hcoll_m0_left]} { set x0 [expr {$dw - 20.0 - $array_w}] }
 set y0 [expr {($dh-$array_h)/2}]
 # compact slice (< 400 um wide, the hierarchical hfd_coll tile: 364 x 386 = ~57% util): 20 um pin corridors suffice for
 # one face of pin flops (qp/qr 1,092 flops on the 364 um top face = 4 rows of DFFs)
-set cmin [expr {$dw < 400.0 ? 18.0 : 48.0}]
+set cmin [expr {$dw < 460.0 ? 18.0 : 48.0}]
 if {$x0 < $cmin || $y0 < $cmin} { error "hcoll interior_df outline too small for ${cmin}um pin corridors" }
 set seen 0
 foreach name $macros {
@@ -55,7 +59,7 @@ foreach name $macros {
     }
     # INTERIOR=4 (die tile, interior_macros_df4.tcl sets ot_hcoll_m0_left): core-side pins on the LEFT face, so g_m[0] leftmost
     set col [expr {[info exists ::ot_hcoll_m0_left] ? $m : 2 - $m}]
-    set x [expr {$x0+$col*($mw+$gap)}]
+    set x [expr {$x0+$col*($mw+$gapx)}]
     set y [expr {$y0+$row*($mh+$gap)}]
     $inst setPlacementStatus PLACED
     $inst setOrient R0
