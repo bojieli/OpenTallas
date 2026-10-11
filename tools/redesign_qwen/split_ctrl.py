@@ -1109,6 +1109,79 @@ def seq_psram(t: str) -> str:
 
 # qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
 # above stay byte-identical.
+# el1011-q-seq (2026-10-11): replicated tile reset (RRG).  Root cause (fea-c41bc6ae9 TT -305, ctlm_i-fpa early fail): ONE
+# u_rs.rst_q flop drove the asynchronous clear of every reset flop (~1,000 here; u_seq.vm_wdata 512 of them) across the
+# 518 um tile through a ~590 ps buffer chain (recovery check).  RRG != 0: NRR (* keep *) copies of the same IS-edge
+# release (each async-cleared by the port, released on the same edge as u_rs), one per consumer region, so every copy is
+# placed at its own loads.  The copies are logically identical to rs, so the behaviour is cycle-identical; RRG 0 ties
+# every copy to rs (the old netlist).
+RRG_NRR = 8
+RRG_SIDE = [  # pin-station region by port name (the qfd_seq_su_bi_fe* cfg pin regions)
+    (re.compile(r"^(pi_su_|po_su_|su_tok|su_asrc)"), 3),
+    (re.compile(r"^(x_|me_.*_o|su_.*_o)"), 4),
+    (re.compile(r"^(h_start|tp_|kv_|vm_rq|c_ready|r_|pw_|dw_|stage_in|cb_|kvd_)"), 5),
+]
+
+
+def rst_region(inst: str) -> int:
+    if inst == "u_seq":
+        return 0
+    if inst == "u_ctrl":
+        return 2
+    m = re.match(r"u_[io]_(\w+)$", inst or "")
+    if m:
+        for rx, k in RRG_SIDE:
+            if rx.match(m.group(1)):
+                return k
+        return 6
+    return 7
+
+
+def rst_regions(t: str) -> str:
+    t = one(t, "    wire rs;\n    ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));",
+            "    wire rs;\n    ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));\n"
+            f"    (* keep = \"true\" *) wire [{RRG_NRR}-1:0] rsv;   // RRG: one reset copy per region (el1011-q-seq)\n"
+            "    generate if (RRG != 0 && IS > 0) begin : g_rrg\n"
+            f"        genvar rk;\n        for (rk = 0; rk < {RRG_NRR}; rk = rk + 1) begin : g_r\n"
+            "            (* keep = \"true\", dont_touch = \"true\" *) reg [IS-1:0] r;\n"
+            "            always @(posedge clk or negedge rst_n)\n"
+            "                if (!rst_n) r <= {IS{1'b0}};\n"
+            "                else r <= {r, 1'b1};\n"
+            "            assign rsv[rk] = r[IS-1];\n"
+            "        end\n"
+            f"    end else begin : g_rr0\n        assign rsv = {{{RRG_NRR}{{rs}}}};\n    end endgenerate")
+    out, cur = [], None
+    for ln in t.split("\n"):
+        m = re.search(r"\b(u_\w+) \(", ln)
+        if m:
+            cur = m.group(1)
+        if ".rst_n(rs)" in ln:
+            ln = ln.replace(".rst_n(rs)", f".rst_n(rsv[{rst_region(cur)}])")
+        ln = ln.replace("negedge rs)", "negedge rsv[7])").replace("(!rs)", "(!rsv[7])")
+        out.append(ln)
+    t = "\n".join(out)
+    t = one(t, ".clk(clk), .rst_n(rsv[0]), .start(sg_go),", ".clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go),")
+    t = one(t, ".QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (", ".QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG == 2 ? 1 : 0)) u_seq (")
+    t = one(t, "module ot_qfd_seq_su_bi #(", "module ot_qfd_seq_su_bi #(\n"
+               "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy")
+    return t
+
+
+def vrl_rst_split(t: str) -> str:
+    """u_seq: vm_wdata (FW flops, the bulk of the tile's reset loads) on its own reset copy rst_nw; same write edge."""
+    t = one(t, "    parameter integer VRL = 1,     // vre -> vrq edges", "    parameter integer VRL = 1,     // vre -> vrq edges\n"
+               "    parameter integer RMUT = 0,    // el1011-q-seq negative control: vm_wdata on every receive (drops K_AR)")
+    t = one(t, "    input  wire              rst_n,", "    input  wire              rst_n,\n"
+               "    input  wire              rst_nw,      // vm_wdata reset copy (el1011-q-seq RRG; logically rst_n)")
+    t = one(t, "vm_we <= 1'b0; vm_waddr <= 0; vm_wdata <= 0;", "vm_we <= 1'b0; vm_waddr <= 0;")
+    t = one(t, "vm_we <= 1'b1; vm_waddr <= vw + rx_k; vm_wdata <= r_data;", "vm_we <= 1'b1; vm_waddr <= vw + rx_k;")
+    i = t.rindex("endmodule")
+    return (t[:i] + "    // vm_wdata: the AR receive word (the S_COLL / r_valid / K_AR edge of the main block), own reset copy\n"
+            "    always @(posedge clk or negedge rst_nw)\n"
+            "        if (!rst_nw) vm_wdata <= {FW{1'b0}};\n"
+            "        else if (st == S_COLL && r_valid && (kind == K_AR || RMUT != 0)) vm_wdata <= r_data;\n" + t[i:])
+
+
 def emit_seq_su_bi() -> str:
     """ot_qfd_seq_su_bi = ot_qfd_seq_su_boundary + ICUT + every pin station reset from the registered tile reset rs
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
@@ -1125,7 +1198,7 @@ def emit_seq_su_bi() -> str:
     t = one(t, "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4",
             "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,\n"
             "    parameter integer RLY = 0, parameter integer CRED = 0")
-    return seq_psram(t) + "\n" + tp_seq_vrl(cred=True)
+    return rst_regions(seq_psram(t)) + "\n" + vrl_rst_split(tp_seq_vrl(cred=True))
 
 
 def emit_tt_ctlm_i(psram: bool = True) -> str:

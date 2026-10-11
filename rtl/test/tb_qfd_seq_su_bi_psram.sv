@@ -7,7 +7,8 @@
 // fe-h: U1_HQ2 = 1 (two-word FIFO head, register-only fill enable) must also match; U1_HQ2 = 2 (overwrite mutant) must FAIL.
 module tb_qfd_seq_su_bi_psram;
     parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50;
-    parameter integer U1_PSRAM = 1, U1_HQ2 = 0;      // the instance under test (u0 = PSRAM 0, HQ2 0); fe-h: HQ2 1, mutant HQ2 2
+    parameter integer U1_PSRAM = 1, U1_HQ2 = 0;
+    parameter integer U1_RRG = 0;                   // el1011-q-seq: replicated tile reset (2 = vm_wdata mutant, must FAIL)      // the instance under test (u0 = PSRAM 0, HQ2 0); fe-h: HQ2 1, mutant HQ2 2
     localparam integer W = 16, G = 6144, AW = 24, NW = 18, SW = 64;
     reg clk = 0, rst_n = 1;
     initial #0.1 rst_n = 0;                          // a real negedge: every async reset fires (4-state sim)
@@ -203,7 +204,7 @@ module tb_qfd_seq_su_bi_psram;
         .su_idle_o(su_idle_o_0),
         .su_prog_o(su_prog_o_0),
         .su_rows_o(su_rows_o_0));
-    ot_qfd_seq_su_bi #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2)) u1 (
+    ot_qfd_seq_su_bi #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .RRG(U1_RRG)) u1 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
