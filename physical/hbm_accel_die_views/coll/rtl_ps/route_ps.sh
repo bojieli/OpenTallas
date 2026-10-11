@@ -33,11 +33,11 @@ if [ "$kind" = port ]; then
   # interior_pins_df.tcl); NOBUFPORTS=1 = DONT_BUFFER_PORTS (with PINFLOP=1 every port lands on its FIRM pin flop; the
   # resizer's port buffers were inserted after the PRE_GLOBAL_PLACE anchor and GPL left them up to 160 um off the pin:
   # 76 of the 226 rbsel-7dba707a7 slew violations, e.g. qr_din[174] pin y 148.6, input7960 y 310.2, flop y 148.8).
-  isuf=""; [ "${INTERIOR:-0}" = 2 ] && isuf=_df
+  isuf=""; psuf=""; [ "${INTERIOR:-0}" = 2 ] && isuf=_df && psuf=_df; [ "${INTERIOR:-0}" = 3 ] && isuf=_df && psuf=_df3
   [ "${NOBUFPORTS:-0}" = 1 ] && interior_args+=(--orfs-var DONT_BUFFER_PORTS=1)
   if [ "${INTERIOR:-0}" != 0 ]; then
     interior_args+=(--step-tcl POST_MACRO_PLACE=$D/interior_macros$isuf.tcl
-                   --step-tcl PRE_IO_PLACEMENT=$D/interior_pins$isuf.tcl
+                   --step-tcl PRE_IO_PLACEMENT=$D/interior_pins$psuf.tcl
                    --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5'
                    --orfs-var 'PLACE_PINS_ARGS=-min_distance 4 -min_distance_in_tracks')
   fi
