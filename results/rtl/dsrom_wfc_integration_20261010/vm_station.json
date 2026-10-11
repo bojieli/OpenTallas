@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.rtl.dsrom_wfc_vm_station.v1",
+ "what": "dsfd_wfc_vmx start / done latency per stage job, abutting VM vs the VM behind 13/13 hub relay stations (kit VM_LINK 1, WOUTW 8, VMRQ 64), same stimulus (tb_mtp_rom_stg_tokpipe stg_r1, 60 jobs)",
+ "bench": "tools/dsrom_wfc_kit_bench.py cases stg_r1 / vmrly_stg_r1 --vmrq 64 (EPYC3 /srv/opentallas-scratch/claude/wfc-kit-gen-bb953449b/kitgate4, kitgate4_rq64; source 8a21e4667)",
+ "abutting": {"start_mean": 14.50, "done_mean": 98.67, "cycles": 17433},
+ "stationed": {"start_mean": 51.97, "done_mean": 135.92, "cycles": 21877, "vf": 13, "vr": 13, "vmrq": 64},
+ "rq_sweep_stationed_cycles": {"16": 24845, "32": 21911, "64": 21877},
+ "s0_hash_u3_cycles": {"abutting": 89901, "stationed_rq32": 116751, "stationed_rq64": 110815, "stationed_rq16": "bench watchdog stall"},
+ "delta_per_hop_fast_cycles": 74.72,
+ "split": "start +37.47 (START fences on every write's ACK over the stationed round trip) + done +37.25 (first read of the 46-word prefetch over the round trip; RQ 64 covers the in-flight reads)",
+ "lever_not_taken": "posted writes on an in-order VM channel would drop the start fence term; needs the VM's ordering guarantee (VM slab owner)"
+}
