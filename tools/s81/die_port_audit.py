@@ -80,11 +80,14 @@ def audit(m):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('--recipe', required=True); ap.add_argument('--out', type=Path); ap.add_argument('--strict', action='store_true')
+    ap.add_argument('--recipe'); ap.add_argument('--out', type=Path); ap.add_argument('--strict', action='store_true')
+    ap.add_argument('--opts', type=Path, help='a generator options file instead of a named recipe (ds-1010/s81die)')
     a = ap.parse_args()
+    assert bool(a.recipe) != bool(a.opts), 'exactly one of --recipe / --opts'
     import s81_dies_recipe as RC
     import dsrom_s81_fulldie as F
-    m = RC.build(RC.recipes()[a.recipe]['opts'])
+    m = RC.build(RC.recipes()[a.recipe]['opts'] if a.recipe else a.opts.read_text().split())
+    a.recipe = a.recipe or str(a.opts)
     if 'pdir' not in m:
         F.finalize_r8(m)
     res = audit(m)
