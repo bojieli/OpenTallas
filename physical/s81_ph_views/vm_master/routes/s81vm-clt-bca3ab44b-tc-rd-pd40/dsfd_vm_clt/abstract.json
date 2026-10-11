@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_vm_clt",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81vm-clt-bca3ab44b-tc-rd-pd40/routes/s81vm_clt_bca3ab44b_tc_rd_pd40/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81vm-clt-bca3ab44b-tc-rd-pd40/routes/s81vm_clt_bca3ab44b_tc_rd_pd40/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81vm-clt-bca3ab44b-tc-rd-pd40/routes/s81vm_clt_bca3ab44b_tc_rd_pd40/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81vm-clt-bca3ab44b-tc-rd-pd40/routes/s81vm_clt_bca3ab44b_tc_rd_pd40/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81vm-clt-bca3ab44b-tc-rd-pd40/routes/s81vm_clt_bca3ab44b_tc_rd_pd40/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81vm-clt-bca3ab44b-tc-rd-pd40/routes/s81vm_clt_bca3ab44b_tc_rd_pd40/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81vm-clt-bca3ab44b-tc-rd-pd40/routes/s81vm_clt_bca3ab44b_tc_rd_pd40/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_vm_clt.lef": "72bb897079cda7d005850a5b50d6a63ad475f242f6f13d18247f821ae6003142",
+    "dsfd_vm_clt_ff.lib": "37172d5dc5957a846b5eef5a324109b409cff550e758998e762d0e68c6b49fe1",
+    "dsfd_vm_clt_ss.lib": "c6511a4645051a83ab876f70ded52aa5acc50cbcaf13a39f0f528ac70ef49395"
+  },
+  "ok": true
+}
