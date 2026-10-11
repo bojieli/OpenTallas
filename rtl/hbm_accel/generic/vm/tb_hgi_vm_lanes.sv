@@ -26,7 +26,8 @@ module tb_hgi_vm_lanes;
         .cq(cq), .cr(cr), .status(status), .wq(wq), .wq_done(wq_done), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q),
         .w2q_cr(w2q_cr), .w2q_done(w2q_done));
     // reference model
-    reg [255:0] mem [0:32767];
+    reg [255:0] mem [0:32767]; reg wrtn [0:32767];          // the model and which sectors were ever written
+    initial for (integer x = 0; x < 32768; x = x + 1) wrtn[x] = 1'b0;
     function automatic [255:0] rnd256(input integer a, input integer salt);
         for (integer w = 0; w < 8; w = w + 1) rnd256[32*w +: 32] = 32'(a * 2654435761 + w * 40503 + salt * 97) ^ 32'h9E3779B9;
     endfunction
@@ -41,7 +42,7 @@ module tb_hgi_vm_lanes;
         if (dma_on && (dma_ro || cyc % 2 == 0)) for (integer b = 0; b < 32; b = b + 1) begin : dl
             integer s; s = (dma_ro ? RO0 : D0) + (dma_next % (dma_ro ? RON : DN)) + b;
             wq[b*280 +: 280] = {1'b1, 15'(s), rnd256(s, dma_ro ? 1 : 2 + dma_next / DN), 8'hFF};
-            mem[s] = rnd256(s, dma_ro ? 1 : 2 + dma_next / DN);
+            mem[s] = rnd256(s, dma_ro ? 1 : 2 + dma_next / DN); wrtn[s] = 1'b1;
         end
         if (dma_on && (dma_ro || cyc % 2 == 0)) begin dma_next = dma_next + 32; dma_iss = dma_iss + 32; end
     end
@@ -60,6 +61,7 @@ module tb_hgi_vm_lanes;
     end
     always @(posedge clk) if (rst_n) for (integer l = 0; l < RP; l = l + 1) begin
         if (rq_cr[l]) rcr[l] = rcr[l] + 1;
+        if (rr[l*257 + 256] === 1'bx) begin errors = errors + 1; $display("ERR lane %0d response valid is x", l); end
         if (rr[l*257 + 256]) begin
             if (rh[l] == rt[l]) begin errors = errors + 1; $display("ERR lane %0d: response without a request", l); end
             else begin
@@ -80,7 +82,7 @@ module tb_hgi_vm_lanes;
                 integer s, pass; reg [7:0] m; reg [255:0] d;
                 pass = wnx[l] / WN; s = ((l / 32) ? W10 : W00) + (wnx[l] % WN);
                 m = pass ? 8'(s * 37 + 11) : 8'hFF; d = rnd256(s, 100 + pass);
-                w2q[l*280 +: 280] = {1'b1, 15'(s), d, m}; mem[s] = merge(mem[s], d, m);
+                w2q[l*280 +: 280] = {1'b1, 15'(s), d, m}; mem[s] = merge(mem[s], d, m); wrtn[s] = 1'b1;
                 wnx[l] = wnx[l] + 32; wcr[l] = wcr[l] - 1; wiss[l / 32] = wiss[l / 32] + 1;
             end
         end
@@ -108,7 +110,7 @@ module tb_hgi_vm_lanes;
         while (pk_on) begin
             s = $urandom % RON; pkt(0, 1'b0, RO0 + s, 256'd0, qd);
             if (qd !== mem[RO0 + s]) begin errors = errors + 1; $display("ERR client RO read %0d", s); end
-            s = P0 + ($urandom % PN); pkt(0, 1'b1, s, rnd256(s, 7), qd); mem[s] = rnd256(s, 7); pk_n = pk_n + 2;
+            s = P0 + ($urandom % PN); pkt(0, 1'b1, s, rnd256(s, 7), qd); mem[s] = rnd256(s, 7); wrtn[s] = 1'b1; pk_n = pk_n + 2;
         end
     end
     integer t2;
@@ -118,22 +120,24 @@ module tb_hgi_vm_lanes;
         for (integer g = 0; g < NG; g = g + 1) begin rgot[g] = 0; wdn[g] = 0; wiss[g] = 0; end
         repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
         // phase 1: DMA fills RO
-        dma_ro = 1; dma_next = 0; dma_on = 1; repeat (RON / 32) @(negedge clk); dma_on = 0; dma_ro = 0; dma_next = 0;
+        // dma_on / rd_on / wr_on change at posedges only: the negedge drivers see them stable (no simulator race)
+        @(posedge clk); dma_ro = 1; dma_next = 0; dma_on = 1; repeat (RON / 32) @(posedge clk); dma_on = 0; dma_ro = 0; dma_next = 0;
         repeat (10) @(negedge clk);
         // phase 2: everything at once
-        t2 = cyc; dma_on = 1; rd_on = 1; wr_on = 1; pk_on = 1;
+        @(posedge clk); t2 = cyc; dma_on = 1; rd_on = 1; wr_on = 1; pk_on = 1;
         for (integer g = 0; g < NG; g = g + 1) r_t0[g] = cyc;
         begin : wt integer t; t = 0;
             while ((rgot[0] + rgot[1] < 2 * RON || wdn[0] + wdn[1] < 2 * 2 * WN) && t < 200000) begin @(negedge clk); t = t + 1; end
         end
-        dma_on = 0; rd_on = 0; wr_on = 0; pk_on = 0; repeat (40) @(negedge clk);
+        @(posedge clk); dma_on = 0; rd_on = 0; wr_on = 0; pk_on = 0; repeat (40) @(negedge clk);
         if (dma_done != dma_iss) begin errors = errors + 1; $display("ERR DMA done %0d of %0d", dma_done, dma_iss); end
         // phase 3: readback of every written region
         for (integer s = 0; s < 32768; s = s + 1)
-            if ((s >= W00 && s < W10 + WN) || (s >= D0 && s < D0 + DN) || (s >= P0 && s < P0 + PN) || (s < RON && s % 97 == 0)) begin
+            if (wrtn[s] && ((s >= W00 && s < W10 + WN) || (s >= D0 && s < D0 + DN) || (s >= P0 && s < P0 + PN) || (s < RON && s % 97 == 0))) begin
                 pkt(1, 1'b0, s, 256'd0, qd);
                 if (qd !== mem[s]) begin if (errors < 20) $display("ERR final sector %0d got %h want %h", s, qd[31:0], mem[s][31:0]); errors = errors + 1; end
             end
+        if (^status === 1'bx) begin errors = errors + 1; $display("ERR status has x: %b", status); end
         if (status[18]) begin errors = errors + 1; $display("ERR status proto/conflict/credit %b", status[18:16]); end
         if (status[17] || status[16]) begin errors = errors + 1; $display("ERR status mask/ue %b", status[18:16]); end
         for (integer g = 0; g < NG; g = g + 1)

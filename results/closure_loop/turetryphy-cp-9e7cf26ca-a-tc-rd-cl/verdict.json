@@ -1,0 +1,339 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "turetryphy-cp-9e7cf26ca-a-tc-rd-cl",
+ "block": "ot_hbm_tu_retry_phy_port",
+ "owner": "Claude:tu-retry-1010",
+ "source_branch": "claude/tu-retry-1010",
+ "record_branch": "codex/closure-record-turetryphy-cp-9e7cf26ca-a-tc-rd-cl",
+ "source_commit": "9e7cf26ca936187f3b1c7ca73e76adcb7df414d7",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/turetryphy-cp-9e7cf26ca-a-tc-rd-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 17.91,
+  "ff_ps": 7.2,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -344.01,
+  "ss_sensitivity_tns_ps": -1169197.0,
+  "corner_sta_tt": "/srv/opentallas-data/claude/closure-loop/turetryphy-cp-9e7cf26ca-a-tc-rd-cl/routes/turetryphy_cp_9e7cf26ca_a_tc_rd_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/cont_takeover/gen/tu_pclk_vref.sdc",
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/turetryphy-cp-9e7cf26ca-a-tc-rd-cl/routes/turetryphy_cp_9e7cf26ca_a_tc_rd_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/turetryphy-cp-9e7cf26ca-a-tc-rd-cl/routes/turetryphy_cp_9e7cf26ca_a_tc_rd_cl/work/orfs/logs/asap7/opentallas_ot_hbm_tu_retry_phy_port_asap7_mtp_turetryphy_cp_9e7cf26ca_a_tc_rd_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_tu_cp_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS 1300 full545 protected ingress/replay records, phase-shifted core pops, cumulative wrap\nRREADY_COVER accept-in-rewind #1 seq 17\nPASS FECUE replay delivers once and returns one core credit per actual pop\nPASS coordinated reset/linkdown and stale24bit session; defaultoff has no storage/outputs\nPASS_ALL\nrtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_phy_port.sv:87: $finish called at 3117095000 (1fs)\nTUB_PASS\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_link_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_phy_port.sv:73: ACK returned source credit without core pop\n       Time: 2537465000  Scope: tb_hbm_tu_retry_phy_port\nTUB_NEG_FAIL\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_rready_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "PASS real545 two-clock full256 landing debt, ACK alone returns no sourcecredit\nPASS 1300 full545 protected ingress/replay records, phase-shifted core pops, cumulative wrap\nFATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_phy_port.sv:49: PHY545 order expected5 got18\n       Time: 1648401000  Scope: tb_hbm_tu_retry_phy_port\nTUB_BENCH_ERROR positive\nRREADY_DETECTED\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_skidpi_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_phy_port.sv:49: PHY545 order expected0 gotx\n       Time: 32109000  Scope: tb_hbm_tu_retry_phy_port\nTUB_BENCH_ERROR positive\nSKIDPI_DETECTED\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_sesreg_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "PASS real545 two-clock full256 landing debt, ACK alone returns no sourcecredit\nPASS 1300 full545 protected ingress/replay records, phase-shifted core pops, cumulative wrap\nPASS FECUE replay delivers once and returns one core credit per actual pop\nFATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_phy_port.sv:85: old session controls crossed reset\n       Time: 3117095000  Scope: tb_hbm_tu_retry_phy_port\nTUB_BENCH_ERROR positive\nSESREG_DETECTED\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_hwu_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_phy_port.sv:49: PHY545 order expected0 gotx\n       Time: 32109000  Scope: tb_hbm_tu_retry_phy_port\nTUB_BENCH_ERROR positive\nHWU_DETECTED\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_port_credit": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS TU545 full256 landing debt blocks producer; ACK alone never returns popcredit\nPASS full545bit normalstream, cumulativepop wrap, zero faultfree replay\nPASS FECUE replay exact545; retries consume no duplicate landingcredit\nPASS coordinated linkdown reset, staleepoch controls, futurepop fault\nPASS_ALL\nrtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_port.sv:65: $finish called at 31586000000 (1fs)\nTPC_PASS\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_port_base": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS TU545 full256 landing debt blocks producer; ACK alone never returns popcredit\nPASS full545bit normalstream, cumulativepop wrap, zero faultfree replay\nPASS FECUE replay exact545; retries consume no duplicate landingcredit\nPASS coordinated linkdown reset, staleepoch controls, futurepop fault\nPASS_ALL\nrtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_port.sv:65: $finish called at 31576000000 (1fs)\nTPC_PASS\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_credit_overrun_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: CPIPE reservation credits 3 + in-flight 0 + owed 254 != CAPACITY\nFATAL: CPIPE reservation credits 2 + in-flight 0 + owed 255 != CAPACITY\nFATAL: CPIPE reservation credits 1 + in-flight 0 + owed 256 != CAPACITY\nFATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_port.sv:34: conserved landing debt overflow257\n       Time: 3025000000  Scope: tb_hbm_tu_retry_port\nFATAL: CPIPE owed 257 > CAPACITY\nTPC_NEG_FAIL credit-overrun-detected\n",
+   "track": "parallel"
+  },
+  "bench_tu_cp_over_return_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "PASS full545bit normalstream, cumulativepop wrap, zero faultfree replay\nPASS FECUE replay exact545; retries consume no duplicate landingcredit\nFATAL: CPIPE owed 1023 > CAPACITY\nFATAL: CPIPE reservation credits 256 + in-flight 1 + owed 1023 != CAPACITY\nFATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_tu_retry_port.sv:63: forged future popcredit accepted\n       Time: 31586000000  Scope: tb_hbm_tu_retry_port\nTPC_NEG_FAIL forged-return-detected\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "p_turetryphy_cp_9e7cf26ca_a_tc_rd_cl/base/4_1_cts.log: (single)=TT\nok  routes/turetryphy_cp_9e7cf26ca_a_tc_rd_cl/work/orfs/logs/asap7/opentallas_ot_hbm_tu_retry_phy_port_asap7_mtp_turetryphy_cp_9e7cf26ca_a_tc_rd_cl/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 3,
+    "mean": 150.2,
+    "min": 148.4,
+    "max": 151.5
+   },
+   "all": {
+    "n": 66,
+    "mean": 145.5,
+    "min": 140.1,
+    "max": 151.5
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 3,
+    "mean": 101.5,
+    "min": 99.5,
+    "max": 102.9
+   },
+   "all": {
+    "n": 66,
+    "mean": 96.8,
+    "min": 91.5,
+    "max": 102.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 120,
+   "CK_SS_ALL_MEAN": 116,
+   "CK_SS_MIN": 118,
+   "CK_SS_ALL_MIN": 110,
+   "CK_SS_MAX": 122,
+   "CK_SS_ALL_MAX": 122,
+   "CK_TT_MEAN": 120,
+   "CK_TT_ALL_MEAN": 116,
+   "CK_TT_MIN": 118,
+   "CK_TT_ALL_MIN": 110,
+   "CK_TT_MAX": 122,
+   "CK_TT_ALL_MAX": 122,
+   "CK_FF_MEAN": 102,
+   "CK_FF_ALL_MEAN": 97,
+   "CK_FF_MIN": 100,
+   "CK_FF_ALL_MIN": 92,
+   "CK_FF_MAX": 103,
+   "CK_FF_ALL_MAX": 103,
+   "CK_SSLIB_MEAN": 150,
+   "CK_SSLIB_MIN": 148,
+   "CK_SSLIB_MAX": 152,
+   "CK_SSLIB_ALL_MEAN": 146,
+   "CK_SSLIB_ALL_MIN": 140,
+   "CK_SSLIB_ALL_MAX": 152,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-11T01:55:09-07:00",
+ "job_spec": {
+  "name": "turetryphy-cp-9e7cf26ca-a-tc-rd-cl",
+  "block": "ot_hbm_tu_retry_phy_port",
+  "element": "HBM protected TU PHY retry port",
+  "owner": "Claude:tu-retry-1010",
+  "purpose": "tu-retry-1010: fb-f63e6e650-a TT -112.3 = 24 fec_tx_session pin flops merged by opt_merge with the replay read-epoch ep[0] (same D ses_q) -> not anchored by io_flop_at_pins (557/581) -> 300 ps wire; fix: l_data pin flops in a keep_hierarchy cell. TT -33.9 = 25-level credits/return_ok/put loop -> CPIPE: over-return check on put_cnt (no credits), accepted return credited one edge later, conservative reservation (no over-issue; proof in RTL). +1 pclk credit return only; 0 cycles fault-free flit path. RVT, route hold margin 0.025 ns.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-agidock128"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/tu-retry-1010",
+   "commit": "9e7cf26ca936187f3b1c7ca73e76adcb7df414d7"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "tu_cp_exact",
+     "cmd": "TU_EXTRA_DEFS='-DOT_TU_IQSKID -DOT_TU_SESREG -DOT_TU_RDPIPE3 -DOT_TU_FB -DOT_TU_CPIPE -DOT_TU_SESREG_CHECK -DOT_TU_FB_COVER' bash tools/cont_takeover/tu_bench.sh posl {RUN}/bench_tu_cp_exact",
+     "expect": "pass",
+     "pass_regex": "TUB_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_link_mutant",
+     "cmd": "TU_EXTRA_DEFS='-DOT_TU_IQSKID -DOT_TU_SESREG -DOT_TU_RDPIPE3 -DOT_TU_FB -DOT_TU_CPIPE' bash tools/cont_takeover/tu_bench.sh negl {RUN}/bench_neg",
+     "expect": "fail",
+     "fail_regex": "TUB_NEG_FAIL",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_rready_mutant",
+     "cmd": "TU_EXTRA_DEFS='-DOT_TU_IQSKID -DOT_TU_SESREG -DOT_TU_RDPIPE3 -DOT_TU_FB -DOT_TU_CPIPE -DOT_TU_RREADY_MUT' bash tools/cont_takeover/tu_bench.sh posl {RUN}/bench_tu_cp_rready_mutant; r=$?; [ $r = 2 ] && echo RREADY_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "RREADY_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_skidpi_mutant",
+     "cmd": "TU_EXTRA_DEFS='-DOT_TU_IQSKID -DOT_TU_SESREG -DOT_TU_RDPIPE3 -DOT_TU_FB -DOT_TU_CPIPE -DOT_TU_SKIDPI_MUT' bash tools/cont_takeover/tu_bench.sh posl {RUN}/bench_tu_cp_skidpi_mutant; r=$?; [ $r = 2 ] && echo SKIDPI_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "SKIDPI_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_sesreg_mutant",
+     "cmd": "TU_EXTRA_DEFS='-DOT_TU_IQSKID -DOT_TU_SESREG -DOT_TU_RDPIPE3 -DOT_TU_FB -DOT_TU_CPIPE -DOT_TU_SESREG_MUT' bash tools/cont_takeover/tu_bench.sh posl {RUN}/bench_tu_cp_sesreg_mutant; r=$?; [ $r = 2 ] && echo SESREG_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "SESREG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_hwu_mutant",
+     "cmd": "TU_EXTRA_DEFS='-DOT_TU_IQSKID -DOT_TU_SESREG -DOT_TU_RDPIPE3 -DOT_TU_FB -DOT_TU_CPIPE -DOT_TU_HWU_MUT' bash tools/cont_takeover/tu_bench.sh posl {RUN}/bench_tu_cp_hwu_mutant; r=$?; [ $r = 2 ] && echo HWU_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "HWU_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_port_credit",
+     "cmd": "bash tools/cont_takeover/tu_port_credit_bench.sh pos {RUN}/bench_pcpos",
+     "expect": "pass",
+     "pass_regex": "TPC_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_port_base",
+     "cmd": "bash tools/cont_takeover/tu_port_credit_bench.sh base {RUN}/bench_pcbase",
+     "expect": "pass",
+     "pass_regex": "TPC_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_credit_overrun_mutant",
+     "cmd": "bash tools/cont_takeover/tu_port_credit_bench.sh ovr {RUN}/bench_pcovr",
+     "expect": "fail",
+     "fail_regex": "TPC_NEG_FAIL credit-overrun-detected",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "tu_cp_over_return_mutant",
+     "cmd": "bash tools/cont_takeover/tu_port_credit_bench.sh ret {RUN}/bench_pcret",
+     "expect": "fail",
+     "fail_regex": "TPC_NEG_FAIL forged-return-detected",
+     "threads": 1,
+     "peak_ram_gb": 4
+    }
+   ],
+   "route": {
+    "cmd": "mkdir -p physical/cont_takeover/gen && bash physical/cont_takeover/mk_tu_pclk_sdc.sh ${CK_SS_MEAN:-770} 840 > physical/cont_takeover/gen/tu_pclk_vref.sdc && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.55 HM=0.010 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 SDCX=physical/cont_takeover/gen/tu_pclk_vref.sdc bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_tu_retry_phy_port --source rtl/common/ot_link_credit.sv --source rtl/common/ot_secded.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_link_retry_sram.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_retry_pop_cdc.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_retry_phy_ingress.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_tu_retry_port.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_tu_retry_phy_port.sv --param ENABLE=1 --param REG_IO=1 --param LINK_CREDIT=1 --param IQ_SKID=1 --param SESREG=1 --param RDPIPE=3 --param FB=1 --param CPIPE=1 --param LINK_DEPTH=8 --clock-port clk --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 4 4 --die-area 0 0 640 600 --core-area 2.16 2.16 637.84 597.84 --orfs-var MACRO_PLACEMENT_TCL=/src/physical/cont_takeover/turetry_640_macro_place.tcl --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   },
+   "calibrate": {
+    "cmd": "mkdir -p physical/cont_takeover/gen && bash physical/cont_takeover/mk_tu_pclk_sdc.sh ${CK_SS_MEAN:-770} 840 > physical/cont_takeover/gen/tu_pclk_vref.sdc && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=12 UTIL=40 PD=0.55 HM=0.010 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 SDCX=physical/cont_takeover/gen/tu_pclk_vref.sdc bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hbm_tu_retry_phy_port --source rtl/common/ot_link_credit.sv --source rtl/common/ot_secded.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_link_retry_sram.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_retry_pop_cdc.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_retry_phy_ingress.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_tu_retry_port.sv --source rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_tu_retry_phy_port.sv --param ENABLE=1 --param REG_IO=1 --param LINK_CREDIT=1 --param IQ_SKID=1 --param SESREG=1 --param RDPIPE=3 --param FB=1 --param CPIPE=1 --param LINK_DEPTH=8 --clock-port clk --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 4 4 --die-area 0 0 640 600 --core-area 2.16 2.16 637.84 597.84 --orfs-var MACRO_PLACEMENT_TCL=/src/physical/cont_takeover/turetry_640_macro_place.tcl --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 12,
+    "peak_ram_gb": 40
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/cont_takeover/gen/tu_pclk_vref.sdc",
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "cycles added: 0 on fault-free flits (+1 pclk source-credit return; +1 pclk on over-return fault / link-down). tu-retry-1010, branch claude/tu-retry-1010.",
+  "merge_target": "main",
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/tu_retry_1010/routes/turetryphy-cp-9e7cf26ca-a-tc-rd-cl"
+   }
+  ]
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

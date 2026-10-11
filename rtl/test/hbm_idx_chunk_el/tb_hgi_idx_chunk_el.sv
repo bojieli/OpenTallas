@@ -9,6 +9,7 @@ module tb_hgi_idx_chunk_el;
     reg rst_n = 0, ql_v = 0, k_v = 0; reg [7:0] ql_head = 0; reg [NB*128-1:0] ql_codes = 0; reg [NB*8-1:0] ql_sc = 0;
     reg [15:0] ql_w = 0; reg [NKT-1:0] k_kv = 0; reg [KW-1:0] k_key = 0;
     integer mut = 0, errors = 0, nk = 0, nc = 0, i, j, c, seed = 5;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 5; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     wire [3:0] rv, ev; wire [4*NKT-1:0] rkv, ekv, rf, ef; wire [4*NKT*32-1:0] rs, es;
     genvar g;
     for (g = 0; g < 4; g = g + 1) begin : g_c

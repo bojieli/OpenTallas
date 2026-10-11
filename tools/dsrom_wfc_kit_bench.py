@@ -19,7 +19,8 @@ KIT = 'rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv'
 EXTRA = ['rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv', 'rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv',
          'rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv', KIT,
          'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/tb_mtp_link_rtt.sv',
-         'rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv']
+         'rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv', 'rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv',
+         'rtl/dsrom_sys/mtp/dsfd_stage_seq.sv']
 INTERNAL = ['w_in_valid', 'w_in_ready', 'w_in_last', 'w_out_valid', 'w_out_ready', 'w_out_last', 'w_in_data',
             'w_out_data', 'core_start', 'core_done_w', 'core_token', 'core_pos', 'cnt_tok', 'cnt_val', 'core_user',
             'kv_base', 'vm_we', 'vm_re', 'vm_waddr', 'vm_raddr', 'vm_wdata', 'vm_rq', 'pr_re', 'pr_user', 'pr_pos',
@@ -86,6 +87,52 @@ POSTED_VM = '''    // POSTED (main decision 10-10): the kit's VM channels behind
     end
     assign swv = 1'b0; assign srv = 1'b0; assign swd = '0; assign srd = '0;   // the TB's own VM model stays idle
 '''
+SSEQ = '''    // main decision A: the kit's start / done through the stage sequencer dsfd_stage_seq (ot_s81_stage_seq) to the
+    // engines; port 0 = this bench's stage-core model (cmd -> ks start, its done -> dn), ports 1 / 2 = fixed-latency
+    // engine responders; program {eng1 op, eng0 core op, eng2 op} loaded at reset over f_pw
+    localparam integer S_NENG = 3, S_OPW = 7, S_ARGW = 24, S_PEW = 28, S_CMDW = 1 + USER_W + 2*NW + 24 + 7, S_TAGW = 8;
+    wire [USER_W+2*NW:0] k_ks; wire [NW+32:0] s_kd; wire [S_NENG-1:0] s_cv; wire [S_NENG*S_CMDW-1:0] s_cd; wire [5:0] s_st;
+    reg [S_NENG-1:0] s_dv = 0; reg [S_NENG*S_TAGW-1:0] s_dt = 0; reg [S_OPW+S_PEW:0] s_pw = 0; reg [S_OPW:0] s_plen = 0;
+    dsfd_stage_seq #(.NOPS(128), .NENG(S_NENG)) u_sseq (.ckv(sclk), .rsv(rst_n), .f_ks(k_ks), .t_kd(s_kd), .f_pw(s_pw),
+        .f_plen(s_plen), .t_cmdv(s_cv), .t_cmdd(s_cd), .f_dnv(s_dv), .f_dntag(s_dt), .t_st(s_st));
+    integer s_pi = 0, s_e, s_l1 = -1, s_l2 = -1; reg [S_TAGW-1:0] s_t0, s_t1, s_t2; reg s_core_wait = 0;
+    reg [USER_W+2*NW:0] s_ks = 0;
+    assign ks = s_ks;
+    always @(posedge sclk) begin
+        s_pw <= 0; s_dv <= 0; s_ks <= 0;
+        if (rst_n && scyc > 20 && s_pi < 3) begin   // program (after the sequencer reset): 0 = eng1, 1 = eng0 (the core), 2 = eng2
+            s_pw <= {1'b1, 7'(s_pi), 4'(s_pi == 0 ? 1 : s_pi == 1 ? 0 : 2), 24'(s_pi)}; s_pi = s_pi + 1;
+            if (s_pi == 3) s_plen <= 8'd3;
+        end
+        if (s_cv[0]) begin             // the core op: start the bench's core model with the job context
+            s_t0 = {s_cd[S_CMDW-1], s_cd[S_OPW-1:0]};
+            s_ks <= {1'b1, s_cd[S_CMDW-2 -: USER_W], s_cd[S_CMDW-2-USER_W-NW -: NW], s_cd[S_CMDW-2-USER_W -: NW]};
+            s_core_wait = 1;
+        end
+        if (s_cv[1]) begin s_t1 = {s_cd[S_CMDW + S_CMDW-1], s_cd[S_CMDW +: S_OPW]}; s_l1 = 3; end
+        if (s_cv[2]) begin s_t2 = {s_cd[2*S_CMDW + S_CMDW-1], s_cd[2*S_CMDW +: S_OPW]}; s_l2 = 5; end
+        if (s_l1 == 0) begin s_dv[1] <= 1'b1; s_dt[S_TAGW +: S_TAGW] <= s_t1; end
+        if (s_l2 == 0) begin s_dv[2] <= 1'b1; s_dt[2*S_TAGW +: S_TAGW] <= s_t2; end
+        if (s_l1 >= 0) s_l1 = s_l1 - 1; if (s_l2 >= 0) s_l2 = s_l2 - 1;
+        if (s_core_wait && kd[NW+32]) begin s_dv[0] <= 1'b1; s_dt[0 +: S_TAGW] <= s_t0; s_core_wait = 0; end
+        if (s_st[5]) begin $display("MTP_STG FAIL: stage sequencer fault code %h", s_st[4:1]); $finish; end
+    end
+'''
+HEPCHK = '''    // HEP (DSpark hrow versioning): every stage start's issue epoch; a re-issued (user, pos) must carry a strictly higher
+    // epoch than its previous issue (its old row can never be served), a user's epoch never decreases, and in total the
+    // epochs advance exactly once per WFC rejection (checked before PASS)
+    wire [USER_W+NW+4:0] k_hep;
+    integer h_ep [0:1023]; integer h_pe [0:1023][0:255]; integer h_inc = 0, h_i, h_j;
+    initial for (h_i = 0; h_i < 1024; h_i = h_i + 1) begin h_ep[h_i] = 0; for (h_j = 0; h_j < 256; h_j = h_j + 1) h_pe[h_i][h_j] = -1; end
+    always @(posedge sclk) if (k_hep[USER_W+NW+4]) begin : hepchk
+        integer hu, hp, he;
+        hu = k_hep[NW+4 +: USER_W]; hp = k_hep[4 +: NW]; he = k_hep[3:0];
+        if (he < h_ep[hu] && !(h_ep[hu] == 15 && he == 0)) begin TAGFAIL("epoch of u%0d decreased %0d -> %0d", hu, h_ep[hu], he); end
+        if (he != h_ep[hu]) h_inc = h_inc + ((he - h_ep[hu] + 16) % 16);
+        if (h_pe[hu][hp % 256] >= 0 && h_pe[hu][hp % 256] == he) begin TAGFAIL("u%0d pos %0d re-issued under the same epoch %0d (stale row)", hu, hp, he); end
+        h_pe[hu][hp % 256] = he; h_ep[hu] = he;
+    end
+'''
 CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra defines, expect)
     's0_tr_dspark': ('s0_tr_dspark', 0, [], 'pass'), 's0_tr_forced': ('s0_tr_forced', 0, [], 'pass'),
     's0_tr_forced_w16': ('s0_tr_forced_w16', 0, [], 'pass'), 's0_hash_u3': ('s0_hash_u3', 0, [], 'pass'),
@@ -113,6 +160,15 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'rd2_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 7), 'rd2_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 7),
     'rd2_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 7),
     'rd2_stg_neg_swap': ('stg_r1', 1, ['OT_WFCVMX_MUT_RD2_SWAP'], 'fail', 8),
+    # main decision A: stage start / done through the stage sequencer (dsfd_stage_seq); mutants: dropped start, early done
+    'sseq_stg_r1': ('stg_r1', 1, [], 'pass', 9), 'sseq_stg_vmnat': ('stg_vmnat', 1, [], 'pass', 9),
+    'sseq_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 9),
+    'sseq_stg_neg_dropstart': ('stg_r1', 1, ['OT_SSEQ_MUT_DROP_START'], 'fail', 9),
+    'sseq_stg_neg_earlydone': ('stg_r1', 1, ['OT_SSEQ_MUT_EARLY_DONE'], 'fail', 9),
+    # HEP (DSpark hrow): issue epochs per stage start; mutant = the epoch never advances (stale rows)
+    'hep_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 10), 'hep_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 10),
+    'hep_stg_r1': ('stg_r1', 1, [], 'pass', 10),
+    'hep_s0_neg_stale': ('s0_hash_u3', 0, ['OT_WFCHEP_MUT_STALE'], 'fail', 10),
     # TOKIN: the S0 kit's link-in from the collective MTP lane (t_mrt {data, valid} / f_mrt grant)
     'tokin_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 6), 'tokin_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 6),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
@@ -140,6 +196,16 @@ def kit_tb(stage, vmrly=0):
             kit = kit.replace(a_, b_)
         kit += '''    always @(posedge fclk) if (li_v && !li_d[FLIT]) begin $display("MTP_S0 FAIL: token-return flit without last"); $finish; end
 '''
+    elif vmrly == 10:   # HEP: issue epochs for the hidden-row senders
+        kit = kit.replace('dsfd_wfc_stg #(.LAG(LAG)) u_kit (', 'dsfd_wfc_stg #(.LAG(LAG), .HEP(1)) u_kit (').replace(
+            'dsfd_wfc_src u_kit (', 'dsfd_wfc_src #(.HEP(1)) u_kit (').replace('.t_ft(k_ft));', '.t_ft(k_ft), .t_hep(k_hep));')
+        tag = 'MTP_STG' if stage else 'MTP_S0'
+        kit = kit + HEPCHK.replace('TAGFAIL("', '$display("' + tag + ' FAIL: hep ').replace('); end', '); $finish; end')
+    elif vmrly == 9:   # main decision A: kit start / done through dsfd_stage_seq (stage dies)
+        for a_, b_ in (('.t_ks(ks)', '.t_ks(k_ks)'), ('.f_kd(kd)', '.f_kd(s_kd)')):
+            assert a_ in kit, a_
+            kit = kit.replace(a_, b_)
+        kit = SSEQ + kit
     elif vmrly in (7, 8):   # posted + RD2 (2-port prefetch); 8 = mutant (define in the case)
         kit = kit.replace('u_kit (', '#(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1)) u_kit (').replace(
             'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1))',
@@ -189,6 +255,10 @@ def kit_tb(stage, vmrly=0):
             kit = kit.replace(a_, b_)
     body, n = re.subn(r'    dsfd_wfc_vmx #\(.*?\) u_vmx \(.*?\);\n', lambda m: kit + binds, body, count=1, flags=re.S)
     assert n == 1, tb
+    if vmrly == 10 and not stage:   # HEP: the epochs advance exactly once per WFC rejection
+        assert body.count('        $display("MTP_S0 PASS mode') == 1
+        body = body.replace('        $display("MTP_S0 PASS mode', '        if (h_inc != rej) begin $display("MTP_S0 FAIL: hep epoch '
+                            'advances %0d != WFC rejections %0d", h_inc, rej); $finish; end\n        $display("MTP_S0 PASS mode')
     return tb, body
 
 

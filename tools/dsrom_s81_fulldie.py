@@ -2356,6 +2356,31 @@ COLL_MTP_LANE = False          # --coll-mtp-lane (mtp-colllane-1011): head die: 
 COLL_P2_LANE = False           # --coll-p2-lane (mtp-colllane-1011): draft die A: composition_split3cr_p2l = split3cr + P2 lanes W4
                                #   (primary, board) / E4 (die B, UCIe) + dsfd_coll_p2_lane x2 + dsfd_coll_p2_ep (the P2_BUSES
                                #   collective <-> p2 end); RTL define OT_S81PH_COLL_P2L
+# --suhc-1011 (ds-1010/s81die 2026-10-11, s81-suhc-1011 transport model results/arch/s81_suhc_20261011/transport_model.json,
+# main-approved): the residual h stays resident in the HC master; the all-reduce result y goes collective -> HC directly
+# (8,192 b = 4,096 b to each HC half, 20 beats); HC -> VM carries the norm codes (2,048 b); capture -> SU direct g / u
+# for quant2 (SUHC_GU b to each SU half: PLANNING width until the model's next revision); the SU / HC slabs run on the
+# 1.2 GHz stream domain (their priced su_norm / hcpost / swiglu / qbank pipelines), the VM keeps its narrow buses only.
+SUHC_1011 = False
+SUHC_DOM = 'serial_0p9'
+SUHC_HC_VM = 1024
+SUHC_GU = 512
+# collective -> HC y as 1,024-b lanes (4 a half): one station chain each (a 4,096-b station found no box in the VCH)
+SUHC_BUSES = tuple(('collective', h_, 1024, f't_{h_}{k}', f'f_coll{k}') for h_ in ('hc_s', 'hc_n') for k in range(4)) + \
+    (('capture', 'su_s', SUHC_GU, 't_su_s', 'f_capture'), ('capture', 'su_n', SUHC_GU, 't_su_n', 'f_capture'))
+# --hrow-tx (ds-1010/s81die 2026-10-11, mtp-dsbind 564941967): the stage dies of layers 37 / 38 / 39 send the HC means of
+# the residual (h resident in HC under --suhc-1011) to DSpark primary die P.k on a dedicated MTP lane: ot_dsrom_mtp_hrow_tx
+# (header {user, pos, issue epoch} from the WFC kit's t_hep + the die's part strap from the host; 80 x 1,024-b beats from
+# hc_n; flit {hdr, last, 512} + grant to the collective's MTP lane).  ~1.6 kbit of state: a 259.2 x 129.6 um slab.
+HROW_TX = False
+HRTX_UM = (259.2, 129.6)
+HRTX_BUSES = (('hc_n', 'hrtx', 1025, 't_hrow', 'f_b'), ('hrtx', 'hc_n', 1, 't_b_r', 'f_hrow_r'),
+              ('hrtx', 'collective', 515, 't_lane', 'f_hrow'), ('collective', 'hrtx', 1, 't_hrow_g', 'f_lane_g'))
+HRTX_KIT_BUSES = (('wfc', 'hrtx', 36, 't_hep', 'f_h'), ('hrtx', 'wfc', 1, 't_h_r', 'f_hep_r'))
+HRTX_HOST_BUSES = (('host', 'hrtx', 2, 't_hpart', 'f_part'),)
+COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin face)
+SU_E = 0.0                     # --su-e MM2: su_n in the E column above hc_n (W column: su_s + centre)
+VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
 ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre slabs moved to an E-column sub-column
 ECOL_W = 518.4
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
@@ -2787,10 +2812,23 @@ class Chains:
                 (cx, cy), d = _poly_at(path, t_)
                 horiz = d in 'EW'
                 w, h = stn_dims(lanes, horiz)
-                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, reach=reach)
+                # --relay-progress: the LAST station of a chain (its target is the chain end) may not slide past the end
+                PL_ = dict(nxt=end, nreach=_mh(cur, end) + 15.0) if RELAY_PROGRESS and L - t_ <= step else {}
+                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, reach=reach, **PL_)
+                if placed is None and PL_:
+                    placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, reach=reach, span=300.0, rows=24, **PL_)
                 if placed is None:
+                    # --relay-progress: the unanchored must-stop fallback (prev=None) may not stand behind the previous
+                    # station w.r.t. the path point one step ahead (detour paths: not w.r.t. the chain end)
+                    ah_ = _poly_at(path, min(L, t_ + step))[0]
+                    PG_ = dict(nxt=ah_, nreach=_mh(cur, ah_) + 15.0) if RELAY_PROGRESS else {}
                     if must:
-                        placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=200.0, rows=16)
+                        placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=200.0, rows=16, **PG_)
+                        if placed is None and PG_:
+                            placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=400.0, rows=40, **PG_)
+                        if placed is None and PG_:
+                            _rp_log(dict(chain=name, stop=round(target, 1), cur=cur, end=end))
+                            placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=200.0, rows=16)
                         break
                     t_ -= 25.0
             if placed is None:            # widen the search (still within reach of the previous station)
@@ -3072,6 +3110,9 @@ def build_r8(variant=None):
             centre.remove('wfc')
         centre.insert(centre.index('capture') + 1, 'wfc_hard')
         centre_area['wfc_hard'] = WFC_SLAB_H * cw / 1e6
+        if STAGE_SEQ:   # main decision A (2026-10-11): the stage start / done passes dsfd_stage_seq to the engines
+            centre.insert(centre.index('wfc_hard') + 1, 'sseq')
+            centre_area['sseq'] = SSEQ_MM2
     if MTP_SEQ and DIE_KIND == 'head':
         centre.insert(centre.index('capture') + 1, 'mtp')
         centre_area['mtp'] = MTP_SEQ_MM2
@@ -3085,6 +3126,9 @@ def build_r8(variant=None):
         # slab from the VM (hidden-row reads, x beats to the seed elements, program start)
         centre.insert(centre.index('collective'), 'seedl')
         centre_area['seedl'] = up(SEEDL_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
+        if HROW:   # the main-hidden row store (seed client memory) between the VM and the seed launcher
+            centre.insert(centre.index('seedl'), 'hrow')
+            centre_area['hrow'] = up(HROW_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
     if DRAFT_SIDE == 'A':
         # MD-2 P2 (mtp-draftdie 2026-10-09): the selected-path transport (ot_mtp_p2_prefix_path: PRIMARY_SHARED1
         # 9-SRAM ordered transport + 3-SRAM 16-lane A-prefix + native publisher) on the A die of every draft row
@@ -3106,6 +3150,16 @@ def build_r8(variant=None):
         centre_area['collective'] = slab_w['collective'] * up(cs_[1], GY) / 1e6
     else:
         slab_w = {}
+    if SUHC_1011:   # capture -> SU g/u pins on the capture E face (draft dies: 109 um of pins > the 65 um face)
+        centre_area['capture'] = max(centre_area['capture'], CAPTURE_FACE_UM * cw / 1e6)
+    if SUHC_1011 and not COLL_SPLIT3:
+        # --suhc-1011: the collective E face carries the 8 x 1,024-b y lanes to HC on top of its links / VM / host pins
+        # (layer1e: 840 um of pins > the 806 um face): the slab grows to COLL_FACE_UM tall (same area rule as capture)
+        centre_area['collective'] = max(centre_area['collective'], COLL_FACE_UM * cw / 1e6)
+    if VM_SLAB:   # --vm-slab W,H (s81-vm-1011): the VM master outline (NP24 bgq tiles), centred in the hub column
+        assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
+        slab_w['vm'] = up(VM_SLAB[0], GX)
+        centre_area['vm'] = slab_w['vm'] * up(VM_SLAB[1], GY) / 1e6
     # --ecol-slabs (ds-1010/s81die 2026-10-10): W-column centre slabs moved to a sub-column of the E (HC) column, beside
     # the HC slabs, next to the crossing corridor (the W column overflowed: split3cr collective + WFC kit + host)
     ecol = [n for n in centre if n in ECOL_SLABS or (n == "wfc_hard" and "wfc" in ECOL_SLABS)]
@@ -3137,10 +3191,17 @@ def build_r8(variant=None):
             slab('p2', centre_area[n], x0_, yy, w0_, master='dsfd_p2')
             notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
                          '(the larger first-route outline %s um)' % (centre_area[n], P2_OUTLINE_UM))
+        elif n == 'sseq':
+            slab('sseq', centre_area[n], x0_, yy, w0_, master='dsfd_stage_seq')
+            notes.append('option A: dsfd_stage_seq (ot_s81_stage_seq) %.3f mm2: kit start / done <-> engine cmd / dn' % centre_area[n])
         elif n in ('vm_ep', 'cap_ep', 'p2_lnk'):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
             slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
             notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
+        elif n == 'hrow':
+            slab('hrow', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_hrow')
+            notes.append('MTP-DIE --hrow: dsfd_mtp_hrow (main-hidden row store, 120 x 1024x256 SRAM, contract %s um) %.3f mm2'
+                         % (HROW_UM, centre_area[n]))
         elif n == 'seedl':
             slab('seedl', centre_area[n], x0_, yy, w0_, master='dsfd_mtp_seed_launch')
             notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
@@ -3169,12 +3230,18 @@ def build_r8(variant=None):
     ch_ = sum(up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
     su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
-    slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
+    if SU_E:
+        # --su-e MM2 (ds-1010/s81die 2026-10-11): su_n (MM2) moves to the E column above hc_n; su_s (the rest) sits at the
+        # W column floor with the centre stack right above it (the 2.42 mm VM of s81-vm-1011 overflowed the W column)
+        su_lo = su_area - SU_E
+        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / cw, GY) + SPINE_GAP, GY)
+    slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom=SUHC_DOM)
     yy = yc
     for n in centre:
         put(n, x_sp, yy, cw)
         yy += up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) + SPINE_GAP
-    slab('su_n', su_area - su_lo, x_sp, yy, cw, dom='serial_0p9')
+    if not SU_E:
+        slab('su_n', su_area - su_lo, x_sp, yy, cw, dom=SUHC_DOM)
     vm = hub['vm']
     corr_c = vm.y - SPINE_GAP / 2          # corridor at the gather / VM boundary: the E-half returns exit it at gather
     c0, c1 = dn(corr_c - HC_CORR / 2, GY), up(corr_c + HC_CORR / 2, GY)
@@ -3183,9 +3250,21 @@ def build_r8(variant=None):
     # --ecol-slabs: the moved slabs stack upward from the corridor in an ECOL_W sub-column on the E column's W side
     # (toward the VCH and the W column); the HC halves narrow to the rest (taller) and keep abutting the corridor
     hcx, hcw = (up(x_spe + ECOL_W + 8.64, GX), dn(cw - ECOL_W - 8.64, GX)) if ecol else (x_spe, cw)
+    if SU_E:   # hc_s fills the E column from the band floor to the corridor, hc_n the rest above it, su_n above hc_n
+        fs = min(1.0, (c0 - (band + SPINE_GAP) - 4.32) * hcw / 1e6 / HUB_MM2['hc'])
     hs_ = up(HUB_MM2['hc'] * fs * 1e6 / hcw, GY)
-    slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom='serial_0p9')
-    slab('hc_n', HUB_MM2['hc'] * (1 - fs), hcx, c1, hcw, dom='serial_0p9')
+    slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom=SUHC_DOM)
+    slab('hc_n', HUB_MM2['hc'] * (1 - fs), hcx, c1, hcw, dom=SUHC_DOM)
+    if SU_E:
+        hn_ = hub['hc_n']
+        ysn = up(hn_.y + hn_.h + SPINE_GAP, GY)
+        if HROW_TX:   # --hrow-tx: the stage die's hidden-row sender between hc_n (its source) and su_n
+            slab('hrtx', HRTX_UM[0] * HRTX_UM[1] / 1e6, up(x_spe + (cw - HRTX_UM[0]) / 2, GX), ysn, HRTX_UM[0],
+                 dom='stream_1p2', master='dsfd_mtp_hrow_tx')
+            ysn = up(ysn + HRTX_UM[1] + SPINE_GAP, GY)
+            notes.append('--hrow-tx: dsfd_mtp_hrow_tx (ot_dsrom_mtp_hrow_tx) %s um above hc_n' % (HRTX_UM,))
+        slab('su_n', SU_E, x_spe, ysn, cw, dom=SUHC_DOM)
+        notes.append('--su-e: su_n %.3f mm2 in the E column above hc_n; su_s %.3f mm2 at the W column floor' % (SU_E, su_lo))
     ye = c1
     for n in ecol:
         put(n, x_spe, ye, ECOL_W)
@@ -3267,7 +3346,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -3306,6 +3385,10 @@ def build_r8(variant=None):
     if CTRL_SLAB:
         m['ctrl_model'] = ctrl_model
         m['ctrl_binding_shell_sha256'] = CTRL_BINDINGS['shell_sha256']
+    if CTRL_ADAPTERS:
+        for k_, ms_ in CTRL_C_MASTERS.items():
+            if k_ in hub:
+                hub[k_].master = ms_
     m['buses'] = []
     buses_r8(m)
     return m
@@ -3336,6 +3419,19 @@ def _corridors(m):
             cor['collW'] = (x0c + 4.32, c_.y, c_.x - 4.32, c_.y + c_.h)
         if x1c - (c_.x + c_.w) > 30.0:
             cor['collE'] = (c_.x + c_.w + 4.32, c_.y, x1c - 4.32, c_.y + c_.h)
+    if 'hrtx' in m['hub'] and 'su_n' in m['hub']:
+        # --hrow-tx: the E-column band between hc_n and su_n around the sender is a station channel (su_n <-> hc_n)
+        hn_, sn_ = m['hub']['hc_n'], m['hub']['su_n']
+        cor['hrtxG'] = (m['x_spe'] + 4.32, hn_.y + hn_.h + 4.32, g['x_fe'] - 4.32, sn_.y - 4.32)
+    if VM_SLAB:
+        # --vm-slab: the VM is narrower than the hub column; the column remainder beside it is a station corridor
+        # (layer1e: hb_hc_n_vm had no station spot at the VM's E face)
+        v_ = m['hub']['vm']
+        x0c, x1c = g['x_sp'], g['x_sp'] + (SPINE_W8 - VCH8) / 2
+        if v_.x - x0c > 30.0:
+            cor['vmW'] = (x0c + 4.32, v_.y, v_.x - 4.32, v_.y + v_.h)
+        if x1c - (v_.x + v_.w) > 30.0:
+            cor['vmE'] = (v_.x + v_.w + 4.32, v_.y, x1c - 4.32, v_.y + v_.h)
     if ECOL_SLABS:
         # --ecol-slabs: the E-column sub-column outside the moved stack is free; it is the channel beside the narrowed HC
         # halves' W faces (VM -> hc_s / hc_n chains end there: first try had no station spot below the corridor)
@@ -3678,7 +3774,7 @@ def buses_r8(m):
     # ---------------- hub-internal buses (adjacent slabs, direct)
     hb = hub
     for a_, b_, bits, pa, pb in (('vm', 'su_s', 1024, 't_su_s', 'f_vm'), ('vm', 'su_n', 1024, 't_su_n', 'f_vm'),
-                                 ('vm', 'hc_s', 1024, 't_hc', 'f_vm'), ('hc_n', 'vm', 1024, 't_vm', 'f_hc'),
+                                 ('vm', 'hc_s', 1024, 't_hc', 'f_vm'), ('hc_n', 'vm', SUHC_HC_VM, 't_vm', 'f_hc'),
                                  ('vm', 'gather', 512, 't_gather', 'f_vm'), ('gather', 'capture', 576, 't_capture', 'f_gather'),
                                  ('capture', 'vm', 512, 't_vm', 'f_capture'), ('collective', 'vm', 512, 't_vm', 'f_collective'),
                                  ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
@@ -3688,11 +3784,16 @@ def buses_r8(m):
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
             (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
-            (SEEDL_BUSES + (SEEDL_HOST_BUSES if 'host' in hub else ()) if 'seedl' in hub else ()) + \
+            ((SEEDL_BUSES_HROW + HROW_BUSES if 'hrow' in hub else SEEDL_BUSES) + (SEEDL_HOST_BUSES if 'host' in hub else ())
+             + (HROW_HOST_BUSES if 'hrow' in hub and 'host' in hub else ()) if 'seedl' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
             ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
+            (SUHC_BUSES if SUHC_1011 else ()) + \
+            ((HRTX_BUSES + (HRTX_KIT_BUSES if 'wfc' in hub else ()) + (HRTX_HOST_BUSES if 'host' in hub else ()))
+             if 'hrtx' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
-              ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
+              ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
+            (ctrl_adapter_buses(hb) if CTRL_ADAPTERS else ()):
         if REV == 'r9':
             # mtp-wfc 2026-10-10 (ds-1010 finding): the WFC kit's VM / capture buses are 0.9 GHz serial-domain ports
             # (dsfd_wfc_vmx slow side): their stations are clocked in serial_0p9 and spaced at the 0.9 GHz reach
@@ -3750,6 +3851,8 @@ def buses_r8(m):
         elif it.name == 'sp_stage_ctrl':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rs'))
+        elif it.master == 'dsfd_stage_seq':                    # option A sequencer: the kit's serial (ckv) side
+            dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
         elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2'):   # mtp-wfc: the kit's vmx slow side is the serial domain
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
@@ -3812,6 +3915,15 @@ HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
+PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column net's relay count / path end at a q element
+                                # is measured to that port's LEF pin centroid, not the 510 x 221 um element centre (gt: seq ->
+                                # go_tag pins on the element S face ~150 um, centre 238 um > the 214 um rule)
+SSTN_CCPAD = False              # --sstn-ccpad (hbmdie-1011, compact199): a --lane-equal pad on a cc net driven by a slot
+                                # station is N extra cc registers INSIDE that station (master dsfd_sstn_<pins>_cp<N>), not a
+                                # floating relay on the ~40 um station -> sequencer hop (no site exists between them)
+RELAY_PROGRESS = False          # --relay-progress (hbmdie-1011, compact199 die fit): a column relay must advance toward its
+                                # next chain point (mh(relay, nxt) <= mh(driver, nxt) + 15 um, inside the margin lint's 20 um
+                                # far-side slack) in EVERY placement attempt incl. the TT and last-resort fallbacks; no site -> assert
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
 # MTP-DIE hub buses (a, b, bits, port at a, port at b).  WFC (ot_rom_pkg_ctrl_wfc ports): VM write xa_we/waddr15/wdata512
@@ -3835,7 +3947,7 @@ def wfc_kit_buses(role, host, far=None, crp=False):
              ('wfc', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc', 54, 't_wfc', 'f_kd')]
         if role == 'source' and host:
             b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
-        return tuple(b)
+        return _sseq_rebind(tuple(b), host)
     # far 's0' (--coll-mtp-far): the SOURCE kit's link-in is the collective MTP lane's token return (t_mrt {data, valid}
     # / f_mrt grant; kit TOKIN 1) and the accept word t_macc goes to the host
     b = ([('collective', 'wfc', 513, 't_mrt', 'f_mrt'), ('wfc', 'collective', 1, 't_mrg', 'f_mrt')] if far == 's0' else
@@ -3847,7 +3959,20 @@ def wfc_kit_buses(role, host, far=None, crp=False):
         b += [('collective', 'host', 57, 't_macc', 'f_macc')]
     if role == 'source' and host:
         b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
-    return tuple(b)
+    return _sseq_rebind(tuple(b), host)
+
+
+def _sseq_rebind(b, host):
+    """--stage-seq: the kit's start / done go to dsfd_stage_seq (no capture placeholder pins); program load and status on
+    the host cfg path.  The sequencer's engine cmd / dn ports are bound by the engine-adapter work (s81-ctl-1011)."""
+    if not STAGE_SEQ:
+        return b
+    b = tuple(x for x in b if not (set(x[:2]) == {'wfc', 'capture'}))
+    b += (('wfc', 'sseq', 53, 't_ks', 'f_ks'), ('sseq', 'wfc', 54, 't_kd', 'f_kd'))
+    if host:
+        b += (('host', 'sseq', 36, 't_sseq_pw', 'f_pw'), ('host', 'sseq', 8, 't_sseq_plen', 'f_plen'),
+              ('sseq', 'host', 6, 't_st', 'f_sseq_st'))
+    return b
 
 
 SEEDL = False                   # --seedl (mtp-dsbind 2026-10-10): DSpark primary die (--draft P) seed-descriptor consumer
@@ -3864,11 +3989,23 @@ SEEDL_BUSES = (('collective', 'seedl', 78, 't_mrs', 'f_mrs'), ('seedl', 'collect
 SEEDL_HOST_BUSES = (('host', 'seedl', 11, 't_seedl_clr', 'f_clr'), ('seedl', 'host', 4, 't_flt', 'f_seedl_flt'),
                     ('collective', 'host', 513, 't_mrt', 'f_mrt'), ('host', 'collective', 1, 't_mrg', 'f_mrt'),
                     ('collective', 'host', 57, 't_macc', 'f_macc'))
+HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
+HROW_UM = (1500.48, 1500.48)    #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json
+# the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
+# (t_mhp<k> {flit 514, valid} / f_mhp<k> grant: three more LCR lane tiles + adapters in the MTPL composition, OPEN in
+# the collective composition owner's tree)
+SEEDL_BUSES_HROW = tuple(b for b in SEEDL_BUSES if 'vm' not in (b[0], b[1]) or b[2] in (1025 if b[3] == 't_x' else -1, 2, 57)) + (
+    ('seedl', 'hrow', 25, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1025, 't_vrs', 'f_vrs'))
+HROW_BUSES = tuple(x for k in range(3) for x in (('collective', 'hrow', 515, 't_mhp%d' % k, 'f_hp%d' % k),
+                                                ('hrow', 'collective', 1, 't_hpg', 'f_mhp%d' % k)))
+HROW_HOST_BUSES = (('host', 'hrow', 11, 't_hrow_clr', 'f_clr'), ('hrow', 'host', 3, 't_flt', 'f_hrow_flt'))
 COLL_MTP_FAR = None             # --coll-mtp-far s0 (mtp-wfc 2026-10-10): the S0 die's end of the head die's MTP lane
 MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab master dsfd_mtp_seq_rtt (RTT-sized grant
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
 SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) station spacing = LINK_STAGE_UM x (1111.1 - 261) /
                                 #   (833.3 - 261) on the SS wire model 261 ps + 1.135 ps/um (504 um at 833 ps; 749 um at 1,111 ps)
+STAGE_SEQ = False               # --stage-seq (main decision A 2026-10-11): kit start / done through dsfd_stage_seq
+SSEQ_MM2 = 0.06                 #   ot_s81_stage_seq NOPS 128 program (3.6 kbit) + 12 x (FQ 4 + credits) queues; preliminary
 WFC_CRP = False                 # --wfc-crp (main 10-11): WFC slab master dsfd_wfc_cr2 (credit-boundary tile dsfd_wfc_crp + kit)
 WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
 WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
@@ -3898,6 +4035,35 @@ CTRL_SLAB = False
 CTRL_ROLE = 'layer'
 CTRL_MM2 = 0.15                 # preliminary shell/queue reservation; no routed-area claim
 CTRL_BINDINGS = None
+# --ctrl-adapters (s81-ctl-1011, ADAPTER_CONTRACT_1011): with --stage-seq (the WFC agent's dsfd_stage_seq slab 'sseq',
+# decision A), every sequencer engine port c<e> / d<e> / s<e> is bound to the slab endpoint masters listed in
+# physical/s81_ctrl/die_ctrl_bindings.json (c_cmd / c_done / c_st; *_c slab masters), staged by common-clock stations
+# (pulse nets: fixed latency, no back-pressure); the fld path adds capture t_cd -> gather f_cd (drained event) and
+# gather t_xgo -> VM f_xgo (field broadcast go).  The die gate tools/s81_ctrl/die_ctrl_gate.py runs after the build and
+# FAILS the generator on any unbound engine, sequencer port or die_port_audit finding (no placeholder pins).
+CTRL_ADAPTERS = False
+CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', collective='dsfd_sp_collective_c',
+                      selector='dsfd_bk_selector_c', collector='dsfd_bk_collector_c')
+
+
+def ctrl_adapter_buses(hb):
+    """--ctrl-adapters: (a, b, bits, port a, port b) hub buses of the engine command plane (ADAPTER_CONTRACT_1011):
+    sseq c<e> 85 -> slab c_cmd, slab c_done 9 -> d<e>, slab c_st 2 -> s<e> for every engine whose bindings-file
+    master is a slab of this die; the fld path's capture -> gather drained event and gather -> VM field go."""
+    bind = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
+    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
+    out = []
+    for e, k in eng.items():
+        # band blocks (bk_selector S / bk_collector N) sit in other clock regions across the die: their command lanes
+        # need forwarded-clock lane chains with end blocks (as the svc -> selector / collector chains), not common-clock
+        # hub stations -- NOT BUILT YET: left unbound, so the die control gate reports sel / col UNBOUND (FAIL)
+        for slab_ in [s_ for s_, it in hb.items() if it.master in bind['engines'].get(e, {}).get('masters', [])
+                      and it.kind != 'band_blk']:
+            out += [('sseq', slab_, 85, f'c{k}', 'c_cmd'), (slab_, 'sseq', 9, 'c_done', f'd{k}'),
+                    (slab_, 'sseq', 2, 'c_st', f's{k}')]
+    if 'gather' in hb and hb['gather'].master == 'dsfd_sp_gather_c':
+        out += [('capture', 'gather', 12, 't_cd', 'f_cd'), ('gather', 'vm', 11, 't_xgo', 'f_xgo')]
+    return tuple(out)
 
 
 def _ctrl_native_buses(m, bus):
@@ -4059,6 +4225,28 @@ def _q_port_xc(rq, port):
     nms = real_ports_r8()[rq['name']][port]
     xs = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for n in nms if n in rq['pins']]
     return sum(xs) / len(xs)
+
+
+def _rp_log(rec):
+    """--relay-progress diagnostics: a relay / station with no forward site (OT_S81_RP_LOG) -- else fail loudly"""
+    if not os.environ.get('OT_S81_RP_LOG'):
+        raise AssertionError(('--relay-progress: no forward site', rec))
+    with open(os.environ['OT_S81_RP_LOG'], 'a') as fh_:
+        fh_.write(json.dumps(rec) + '\n')
+
+
+def _q_pin_pt(it, port):
+    """--pin-need: die (x, y) of the centroid of q element `it`'s LEF pins for die port `port`, or None"""
+    rq = real_lef(Q_LEF)
+    nms = [n for n in real_ports_r8().get(rq['name'], {}).get(port, []) if n in rq['pins']]
+    if not nms:
+        return None
+    xs = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for n in nms]
+    ys = [(rq['pins'][n][1][1] + rq['pins'][n][1][3]) / 2 for n in nms]
+    xc, yc = sum(xs) / len(xs), sum(ys) / len(ys)
+    if it.orient == 'MY':
+        xc = it.w - xc
+    return (it.x + xc, it.y + yc)
 
 
 def _rsv_tag(bid):
@@ -4573,7 +4761,7 @@ def _go_retap(m):
     out_of = {}
     for i, (bid, cls, bits, eps) in enumerate(B):
         out_of.setdefault(tuple(eps[0]), []).append(i)
-    rec = {}
+    rec, pad_used = {}, {}
     for it in m['insts']:
         if it.kind != 'seq':
             continue
@@ -4588,13 +4776,22 @@ def _go_retap(m):
             continue
         i = drv_of[(it.name, 'lc')]
         src = B[i][3][0]
+        src0 = tuple(src)
         for _ in range(k):          # one register back along the cc chain per go relay
+            if kind.get(src[0]) == 'sstn' and src[1] == 'cc' and \
+                    pad_used.setdefault(src[0], {}).get(it.name, 0) < m.get('sstn_ccpad', {}).get(src[0], 0):
+                # --sstn-ccpad: the station's own pad registers are the last ones before lc: consume one of them
+                pad_used[src[0]][it.name] = pad_used[src[0]].get(it.name, 0) + 1
+                continue
             if kind.get(src[0]) == 'sstn' and src[1] == 'cc':
                 src = B[drv_of[(src[0], 'cci')]][3][0]
             elif kind.get(src[0]) == 'rly':
                 src = B[drv_of[(src[0], 'i')]][3][0]
             else:
                 raise AssertionError(('--lane-equal: no register to retap before', it.name, src))
+        rec[it.name[1:]] = k
+        if tuple(src) == src0:      # every retap register came out of the station pad: lc stays on the station cc
+            continue
         bid, cls, bits, eps = B[i]
         B[i] = (bid, cls, bits, [e for e in eps if tuple(e) != (it.name, 'lc')])
         j = next(j for j in out_of[tuple(src)] if B[j][1] in ('x_ctl',))
@@ -4602,6 +4799,37 @@ def _go_retap(m):
         B[j] = (bj[0], bj[1], bj[2], bj[3] + [(it.name, 'lc')])
         rec[it.name[1:]] = k
     B[:] = [b for b in B if len(b[3]) > 1]      # a top-slot cc net whose every sequencer moved down
+    # --sstn-ccpad: a padded station's remaining lc loads must have consumed the same number of pad registers; the
+    # station keeps the rest (one pad chain per station, no mid-pad taps)
+    for st_, used in pad_used.items():
+        P_ = m.get('sstn_ccpad', {}).get(st_, 0)
+        if not P_:
+            continue
+        lc_loads = [e[0] for b in B if tuple(b[3][0]) == (st_, 'cc') for e in b[3][1:] if e[1] == 'lc']
+        cs = {used.get(q_, 0) for q_ in lc_loads}
+        if len(cs) <= 1:            # every load agrees: the station keeps P - c pad registers
+            c_ = cs.pop() if cs else 0
+            if P_ - c_:
+                m['sstn_ccpad'][st_] = P_ - c_
+            else:
+                del m['sstn_ccpad'][st_]
+            continue
+        # loads disagree: a load that consumed c pad registers takes the pad tap cct<P - c> (age 1 + P - c)
+        assert P_ <= 4, ('--sstn-ccpad: more than 4 pad taps', st_, P_)
+        for q_ in lc_loads:
+            c_ = used.get(q_, 0)
+            if not c_:
+                continue
+            for bi, b in enumerate(B):
+                if tuple(b[3][0]) == (st_, 'cc') and (q_, 'lc') in [tuple(e) for e in b[3][1:]]:
+                    B[bi] = (b[0], b[1], b[2], [e for e in b[3] if tuple(e) != (q_, 'lc')])
+                    tb = f'cct_{st_}_{P_ - c_}'
+                    ti = next((bj for bj, b2 in enumerate(B) if b2[0] == tb), None)
+                    if ti is None:
+                        B.append((tb, b[1], b[2], [(st_, f'cct{P_ - c_}'), (q_, 'lc')]))
+                    else:
+                        B[ti] = (B[ti][0], B[ti][1], B[ti][2], B[ti][3] + [(q_, 'lc')])
+                    break
     m['go_retap'] = dict(pairs=len(rec), by_k={str(v): sum(1 for x in rec.values() if x == v) for v in set(rec.values())})
 
 
@@ -4611,6 +4839,14 @@ def _col_relays(m, P):
     path and on the worst leaf -> root path."""
     by = {it.name: it for it in m['insts']}
     cen = lambda it: (it.x + it.w / 2, it.y + it.h / 2)
+
+    def ep_pt(e):
+        it_ = by[e[0]]
+        if PIN_NEED and it_.kind == 'q':
+            pt_ = _q_pin_pt(it_, e[1])
+            if pt_ is not None:
+                return pt_
+        return cen(it_)
     RCLS = ('ret_leaf', 'ret_tree', 'x_lane', 'x_ctl', 'stat', 'cfg', 'go', 'col_ret')
     B = m['buses']
     out, added = [], defaultdict(int)       # (bus id) -> relays
@@ -4625,10 +4861,11 @@ def _col_relays(m, P):
         d0 = by.get(eps[0][0])
         if d0 is None or d0.region is None or not d0.region.startswith('frame_'):
             return None
-        far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
-        if far is None:
+        a0 = ep_pt(eps[0])
+        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e)), default=None)
+        if fe is None:
             return None
-        L = _mh(cen(d0), cen(far))
+        L = _mh(a0, ep_pt(fe))
         return math.ceil(L / BANK_RULE_UM - 1e-9) - 1
     # --lane-equal (ds-1010 lat-audit 2026-10-10): the x0 / x1 / cc lanes of one slot segment carry ONE transaction
     # (the element takes x0 and x1 in the same cycle; go rides cc through the pair sequencer), so each of them takes
@@ -4653,19 +4890,31 @@ def _col_relays(m, P):
         r = int(d0.region.split('_')[1])
         f = m['frames'][r]
         fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + column_height())
-        far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
+        if RELAY_PROGRESS:
+            # --relay-progress: a net whose driver / far load sits in the channel beside the frame (PQ root row ->
+            # column FIFO) may take relay sites between its endpoints there, not only inside the frame box
+            ends_ = [by[eps[0][0]]] + [by[e[0]] for e in eps[1:] if e[0] in by]
+            fr = (fr[0], min([fr[1]] + [i_.y for i_ in ends_]), fr[2], max([fr[3]] + [i_.y + i_.h for i_ in ends_]))
+        a0 = ep_pt(eps[0])
+        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e)), default=None)
+        far = by[fe[0]] if fe is not None else None
         if far is None:
             out.append((bid, cls, bits, eps))
             continue
-        L = _mh(cen(d0), cen(far))
+        L = _mh(a0, ep_pt(fe))
         n = math.ceil(L / BANK_RULE_UM - 1e-9) - 1
         mm = re.fullmatch(r'(xa|xb|cc)_(\d+)_(\d+)', bid) if LANE_EQUAL else None
         if mm:
-            n = max(n, lane_n.get((mm.group(2), mm.group(3)), 0))
+            n_pad = max(n, lane_n.get((mm.group(2), mm.group(3)), 0))
+            if SSTN_CCPAD and mm.group(1) == 'cc' and d0.kind == 'sstn' and n_pad > max(n, 0):
+                # the pad cycles (beyond the cc net's own reach need) are registers inside the driving station
+                m.setdefault('sstn_ccpad', {})[d0.name] = m.get('sstn_ccpad', {}).get(d0.name, 0) + n_pad - max(n, 0)
+                n_pad = max(n, 0)
+            n = n_pad
         if n <= 0:
             out.append((bid, cls, bits, eps))
             continue
-        a, b = cen(d0), cen(far)
+        a, b = a0, ep_pt(fe)
         path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
         prev, cur = eps[0], a
         chain = [a]
@@ -4674,11 +4923,16 @@ def _col_relays(m, P):
         for k in range(n):
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
+            pg = _mh(cur, b) + 15.0 if RELAY_PROGRESS else None     # --relay-progress: never behind the driver
+            if pg is not None:
+                NR = dict(nxt=b, nreach=min(NR.get('nreach', pg), pg))
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
             if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
                 # s81-gen: the unbounded fallback below put y_rt_0_8a_1 773.7 um from its driver (r4c frame 0); a relay
                 # first takes a box within the TT reach (inside the frame, then the strip / channel beside it)
                 nr_tt = dict(nxt=b, nreach=(n - k) * (RELAY_TT_REACH - 10.0)) if NXT_REACH else {}
+                if pg is not None:
+                    nr_tt = dict(nxt=b, nreach=min(nr_tt.get('nreach', pg), pg))
                 pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=RELAY_TT_REACH - 10.0, span=400.0,
                             rows=40, **nr_tt)
                 if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
@@ -4686,8 +4940,19 @@ def _col_relays(m, P):
                 if pl:
                     tt_col.append(f'y_{bid}_{k}')
             if pl is None:
+                pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40,
+                            **(dict(nxt=b, nreach=pg) if pg is not None else {}))
+            if pl is None and pg is not None and os.environ.get('OT_S81_RP_LOG'):
+                # diagnostic only: record the frame / path of a relay with no forward site, then legacy fallback
+                with open(os.environ['OT_S81_RP_LOG'], 'a') as fh_:
+                    bx_ = (min(cur[0], b[0]) - 30, min(cur[1], b[1]) - 30, max(cur[0], b[0]) + 30, max(cur[1], b[1]) + 30)
+                    occ_ = [(i_.name, i_.kind, round(i_.x, 2), round(i_.y, 2), round(i_.w, 2), round(i_.h, 2))
+                            for i_ in P.m["insts"] if i_.x < bx_[2] and bx_[0] < i_.x + i_.w and i_.y < bx_[3] and bx_[1] < i_.y + i_.h] \
+                        if True else None
+                    fh_.write(json.dumps(dict(bus=bid, k=k, n=n, cls=cls, drv=cur, far=b, mid=(cx, cy), frame=fr,
+                                              region=d0.region, wh=(w_, h_), occ=occ_)) + '\n')
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
-            assert pl, (bid, k)
+            assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if pg is not None else (bid, k)
             it = P.add(Inst(f'y_{bid}_{k}', f'dsfd_rly_{bits}', pl[0], pl[1], w_, h_, kind='rly',
                             region=d0.region, power_w=bits * FLOP_CLK_W * 1.5))
             out.append((f'{bid}_y{k}', cls, bits, [prev, (it.name, 'i')]))
@@ -4778,14 +5043,16 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     # --ecol-slabs: a second chain between the same slab pair (wfc t_lo + t_lir -> collective: direct face-to-face
     # wires in one column, staged across the VCH once the kit moves) takes its driver port in the name, so its
     # stations do not collide with the first chain's
-    hbn = f'hb_{a_}_{b_}' if not (ECOL_SLABS and f'hb_{a_}_{b_}' in m.get('hub_stations', {})) else f'hb_{a_}_{pa}_{b_}'
+    hbn = f'hb_{a_}_{b_}' if f'hb_{a_}_{b_}' not in m.get('hub_stations', {}) else f'hb_{a_}_{pa}_{b_}'
     # --ecol-slabs: a moved slab stands in the E column (W of the HC halves): it faces the VCH with its W face like HC
-    ecol_ = lambda it: bool(ECOL_SLABS) and it.x >= m['x_spe'] - 1.0 and not it.name.startswith('sp_hc_')
+    ecol_ = lambda it: bool(ECOL_SLABS or SU_E) and it.x >= m['x_spe'] - 1.0 and not it.name.startswith('sp_hc_')
     fx = lambda it: it.x if (it.name.startswith('sp_hc_') or ecol_(it)) else it.x + it.w
+    if SU_E and not ECOL_SLABS:   # --su-e: su_n / hrtx are full-width E-column slabs: on the HC side of the VCH
+        hcA, hcB = hcA or ecol_(A), hcB or ecol_(Bk)
     lo, hi = max(A.y, Bk.y) + 20.0, min(A.y + A.h, Bk.y + Bk.h) - 20.0
     same_col = min(A.x + A.w, Bk.x + Bk.w) - max(A.x, Bk.x) > 0.0
-    xcol = [cor[k_] for k_ in ('ecolS', 'ecolN') if k_ in cor]
-    if (hcA != hcB or (ECOL_SLABS and not same_col)) and hi - lo > 100.0:
+    xcol = [cor[k_] for k_ in ('ecolS', 'ecolN', 'vmW', 'vmE', 'hrtxG') if k_ in cor]
+    if (hcA != hcB or ((ECOL_SLABS or SU_E) and not same_col)) and hi - lo > 100.0:
         # across the VCH where the two slabs overlap in y: a straight horizontal bus
         lane = m.setdefault('_hb_lane', {}).setdefault('x', [0])
         y_ = lo + (hi - lo) * (0.25 + 0.5 * ((lane[0] * 0.37) % 1.0))
@@ -4827,7 +5094,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             path = [(xx, A.y + A.h), (xx, Bk.y)] if A.y < Bk.y else [(xx, A.y), (xx, Bk.y + Bk.h)]
             L = _poly_len(path)
             name = hbn
-            sts = CH8.run(name, [bits], path, [cor['hcc']], path[0], reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
+            sts = CH8.run(name, [bits], path, [cor['hcc']] + ([cor['hrtxG']] if 'hrtxG' in cor else []), path[0], reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
             prev = (A.name, pa)
             for k, (it, s_, hop) in enumerate(sts):
                 it.kind, it.domain = 'hstn', A.domain
@@ -5258,7 +5525,16 @@ def _split_stations(P, CH8, lk, nm, port, allc, lx, side):
         yc, lo, hi = link_half_y(lk, port, h)
         w, h_ = stn_dims([hi - lo + 1], False)
         x0 = lx + (8.0 if side == 'W' else -8.0 - w)
-        pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=200.0, rows=16)
+        if RELAY_PROGRESS:
+            # --relay-progress: the half station stays within 150 um of the half's pin centre (it must not slide along
+            # the macro face behind its feeding chain); a wider search along the face, not a far slot
+            pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=400.0, rows=40,
+                        nxt=(x0 + w / 2, yc), nreach=150.0)
+            if pl is None:
+                _rp_log(dict(split=nm, port=port, half=h, yc=yc))
+                pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=200.0, rows=16)
+        else:
+            pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=200.0, rows=16)
         assert pl, (nm, port, h)
         P.n[f'{nm}{port}s'] += 1
         it = Inst(f'f_{nm}{port}s_{h}', stn_master([hi - lo + 1], False), pl[0], pl[1], w, h_, 'R0', kind='stn',
@@ -5429,6 +5705,9 @@ def finalize_r8(m):
         if it.kind == 'sstn':
             code = ''.join(k for k in ('e0', 'e1', 'c0', 'c1', 'si', 'nf', 'qt') if k in u)
             it.master = f'dsfd_sstn_{code or "x"}'
+            if m.get('sstn_ccpad', {}).get(it.name):
+                it.master += f"_cp{m['sstn_ccpad'][it.name]}"     # --sstn-ccpad: N extra cc registers
+                it.master += ''.join(f't{j}' for j in range(4) if f'cct{j}' in u)   # + pad taps cct<j>
         elif it.kind == 'node':
             par = [e for b_ in m['_nets_of_o'].get(it.name, []) for e in b_[3][1:]]
             py = max((by_[e[0]].y for e in par), default=0.0)
@@ -5619,7 +5898,8 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'N' if horiz else 'W', P_(['ck']), 'M5' if horiz else 'M4')
     elif kind == 'sstn':
         _lay(Mx, 'S', P_(['xai', 'xbi', 'cci', 'qt', 'so']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
-        _lay(Mx, 'N', P_(['e0', 'c0', 'cc', 'xa', 'xb', 'si', 'e1', 'c1']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
+        _lay(Mx, 'N', P_(['e0', 'c0', 'cc', 'cct0', 'cct1', 'cct2', 'cct3', 'xa', 'xb', 'si', 'e1', 'c1']), 'M5',
+             pitch=3 if _LAY_K[0] == 1 else 2)
         _lay(Mx, 'W', P_(['ck', 'rs']), 'M4')
         _lay(Mx, 'E', P_(['nf']), 'M4')
     elif kind == 'node':
@@ -5839,7 +6119,19 @@ def glue_rtl(m):
             body.append('    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end')
             body.append('    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15\'d0; else rc <= cci;')
             body.append('    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset')
-            body.append('    assign xb = rb;\n    assign cc = rc;')
+            cp_ = re.search(r'_cp(\d+)(?:t\d)*$', mst)
+            if cp_:      # --sstn-ccpad: the lane-equal pad registers on cc, after the station's own cc register
+                np_ = int(cp_.group(1))
+                body.append(f'    reg [14:0] rcp [0:{np_ - 1}];')
+                body.append('    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) begin : g_cp_rst')
+                body.append(f'        integer j_; for (j_ = 0; j_ < {np_}; j_ = j_ + 1) rcp[j_] <= 15\'d0; end')
+                body.append(f'    else begin : g_cp integer j_; rcp[0] <= rc; for (j_ = 1; j_ < {np_}; j_ = j_ + 1) rcp[j_] <= rcp[j_ - 1]; end')
+                body.append(f'    assign xb = rb;\n    assign cc = rcp[{np_ - 1}];')
+                for j_ in range(np_):        # pad taps: cct<j> = cc after the station register and j pad stages
+                    if f'cct{j_}' in ports:
+                        body.append(f'    assign cct{j_} = ' + ('rc;' if j_ == 0 else f'rcp[{j_ - 1}];'))
+            else:
+                body.append('    assign xb = rb;\n    assign cc = rc;')
             if 'qt' in ports:
                 body.append('    assign qt = xbi;                             // previous slot q1/e1: same-cycle re-buffer')
             terms = [p_ for p_ in ('e0', 'e1', 'c0', 'c1', 'si') if p_ in ports]
@@ -6105,6 +6397,12 @@ def die_options(ap):
                     'face; layer die value 2.6599; default off)')
     ap.add_argument('--cfifo-colck', action='store_true', help='with --cfifo-v2: the cfifo column side clocked from its '
                     'own column tree (pin cr); fixes the FF xa/xb -> first relay hold class (sta_v6)')
+    ap.add_argument('--pin-need', action='store_true', help='column relay need / path to q element ports measured at the '
+                    'real LEF pin centroid (not the element centre)')
+    ap.add_argument('--sstn-ccpad', action='store_true', help='--lane-equal cc padding as extra cc registers in the '
+                    'driving slot station (no floating pad relay)')
+    ap.add_argument('--relay-progress', action='store_true', help='column relays only on sites that advance toward the next '
+                    'chain point (no far-side relay); a packed frame without such a site fails loudly')
     ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
@@ -6156,6 +6454,15 @@ def die_options(ap):
     ap.add_argument('--bf-hier-compact', action='store_true', help='(bf-hier, claude/bf-compact-1011; OWNER 2026-10-10 BF of record) '
                     'column 450.144 / front 100.224, height 220.32: the pair (1,000.512 um) fits the original lane zone, 1,792 '
                     'pairs / 128 regions kept; requires a BF frame of 228.96 or taller (--elem-h); default off')
+    ap.add_argument('--suhc-1011', action='store_true', help='ds-1010/s81die 2026-10-11 (s81-suhc-1011, main-approved): SU / HC '
+                    'slabs on the 1.2 GHz stream domain; direct collective -> HC y (4,096 b a half), HC -> VM 2,048 b, capture '
+                    '-> SU g/u (512 b a half, planning width); h resident in HC; default off')
+    ap.add_argument('--su-e', type=float, default=0.0, help='ds-1010/s81die 2026-10-11: su_n of MM2 in the E column above hc_n, '
+                    'su_s = the rest at the W column floor under the centre stack (room for the --vm-slab VM); default 0 = off')
+    ap.add_argument('--hrow-tx', action='store_true', help='ds-1010/s81die 2026-10-11: stage die of layer 37/38/39: the '
+                    'hidden-row sender dsfd_mtp_hrow_tx (hc_n -> MTP lane, header from the WFC kit); needs --suhc-1011 --su-e')
+    ap.add_argument('--vm-slab', help='ds-1010/s81die 2026-10-11 (s81-vm-1011): VM slab outline W,H in um (e.g. 1520,2420); '
+                    'default: the HUB_MM2 area at the column width')
     ap.add_argument('--ecol-slabs', help='ds-1010/s81die 2026-10-10: comma list of W hub-column centre slabs (wfc, host, '
                     'capture) moved to a sub-column of the E (HC) column beside the HC halves, stacked up from the crossing '
                     'corridor (the W column overflowed with --coll-split3-cr + --wfc-kit); default none')
@@ -6187,12 +6494,16 @@ def die_options(ap):
     ap.add_argument('--seedl', action='store_true', help='mtp-dsbind 2026-10-10: DSpark primary die (--draft P): '
                     'dsfd_mtp_seed_launch slab (seed descriptor from the collective MTP lane -> seed program); needs '
                     '--coll-mtp-far primary')
+    ap.add_argument('--hrow', action='store_true', help='mtp-dsbind 2026-10-10: with --seedl, the main-hidden row store '
+                    'dsfd_mtp_hrow (3 part links from the MTP part lanes; the seed client reads it)')
     ap.add_argument('--coll-mtp-far', choices=['s0', 'primary'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
                     '(far end of the head lane): token return -> WFC kit link-in (TOKIN), accept word -> host')
     ap.add_argument('--mtp-ep', action='store_true', help='mtp-wfc 2026-10-10: head-die RTT-sized sequencer partner ends')
     ap.add_argument('--p2-lnk', action='store_true', help='mtp-wfc 2026-10-10: draft-A P2 slab = core + dsfd_p2_lnk')
     ap.add_argument('--mtp-seq-rtt', action='store_true', help='mtp-wfc 2026-10-10: head sequencer slab master '
                     'dsfd_mtp_seq_rtt (native RTT successor, same ports)')
+    ap.add_argument('--stage-seq', action='store_true', help='main decision A: with --wfc-kit, a dsfd_stage_seq slab carries '
+                    'the kit start / done (no capture placeholder pins); engine cmd / dn bound by the adapter work')
     ap.add_argument('--wfc-crp', action='store_true', help='main 10-11: with --wfc-kit, the WFC slab master is dsfd_wfc_cr2 '
                     '(dsfd_wfc_crp credit-boundary tile at the die edge + the kit)')
     ap.add_argument('--wfc-kit', action='store_true',
@@ -6210,6 +6521,10 @@ def die_options(ap):
                     '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--ctrl-adapters', action='store_true', help='s81-ctl-1011: with --stage-seq, engine c/d/s buses from the sseq slab to the '
+                    '*_c slab endpoints (physical/s81_ctrl/die_ctrl_bindings.json); the die control gate FAILS the build on '
+                    'any unbound engine / port-audit finding')
+
     ap.add_argument('--ctrl-bindings', type=Path, help='native control-plane endpoint manifest, audited before build')
     ap.add_argument('--mtp-seq-mm2', type=float, help='MTP-DIE: sequencer slab area (default 0.15 mm2)')
     ap.add_argument('--mtp-links', type=int, default=0, help='MTP-DIE: head die extra draft fan-out SerDes '
@@ -6223,6 +6538,14 @@ def apply_options(a):
     CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
     CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
     CTRL_BINDINGS = None
+    global CTRL_ADAPTERS
+    CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
+    if CTRL_ADAPTERS and not (getattr(a, 'stage_seq', False) and getattr(a, 'wfc_kit', False)):
+        raise ValueError('--ctrl-adapters binds the engines of the dsfd_stage_seq slab: needs --wfc-kit --stage-seq')
+    if CTRL_ADAPTERS and (a.gen != 'r8' or a.rev != 'r9'):
+        raise ValueError('--ctrl-adapters requires the r9 wired die (staged hub buses)')
+    if CTRL_ADAPTERS and CTRL_SLAB:
+        raise ValueError('--ctrl-adapters with --ctrl-slab: one stage controller (decision A: dsfd_stage_seq + adapters)')
     if CTRL_SLAB:
         if not (getattr(a, 'hop_fix', False) and getattr(a, 'pin_relay', False)):
             raise ValueError('--ctrl-slab requires implemented --hop-fix --pin-relay endpoint stations')
@@ -6248,6 +6571,12 @@ def apply_options(a):
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
+    global RELAY_PROGRESS
+    RELAY_PROGRESS = bool(getattr(a, 'relay_progress', False))
+    global SSTN_CCPAD
+    SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
+    global PIN_NEED
+    PIN_NEED = bool(getattr(a, 'pin_need', False))
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
@@ -6259,8 +6588,9 @@ def apply_options(a):
     global MTP_EP, P2_LNK
     MTP_EP = bool(getattr(a, 'mtp_ep', False)); P2_LNK = bool(getattr(a, 'p2_lnk', False))
     WFC_KIT = bool(getattr(a, 'wfc_kit', False))
-    global WFC_CRP
+    global WFC_CRP, STAGE_SEQ
     WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT
+    STAGE_SEQ = bool(getattr(a, 'stage_seq', False)) and WFC_KIT
     if WFC_CRP and getattr(a, 'coll_mtp_far', None):
         raise SystemExit('--wfc-crp with --coll-mtp-far: the TOKIN token-return path is a kit port, not a cr2 port (not built)')
     WFC_ROLE = 'source' if getattr(a, 'ctrl_role', 'layer') == 'source' else 'stage'
@@ -6298,8 +6628,11 @@ def apply_options(a):
     COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
     global COLL_MTP_FAR
     COLL_MTP_FAR = getattr(a, 'coll_mtp_far', None)
-    global SEEDL
+    global SEEDL, HROW
     SEEDL = bool(getattr(a, 'seedl', False))
+    HROW = bool(getattr(a, 'hrow', False))
+    if HROW and not SEEDL:
+        raise SystemExit('--hrow: with --seedl (the row store is the seed client memory)')
     if SEEDL and (getattr(a, 'draft', None) != 'P' or COLL_MTP_FAR != 'primary'):
         raise SystemExit('--seedl: DSpark primary die (--draft P) with --coll-mtp-far primary')
     if COLL_MTP_FAR == 'primary':   # mtp-dsbind: the primary die's end of a head MTP lane (seed descriptor class)
@@ -6331,6 +6664,14 @@ def apply_options(a):
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
     COL_W8 = LANES_W + NS_W + RSC_W
     COL_PITCH8 = COL_W8 + 8.64
+    global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB
+    SUHC_1011 = bool(getattr(a, 'suhc_1011', False))
+    SUHC_DOM, SUHC_HC_VM = ('stream_1p2', 2048) if SUHC_1011 else ('serial_0p9', 1024)
+    global SU_E, HROW_TX
+    SU_E = float(getattr(a, 'su_e', 0.0) or 0.0)
+    HROW_TX = bool(getattr(a, 'hrow_tx', False))
+    assert not HROW_TX or (SUHC_1011 and SU_E), '--hrow-tx needs --suhc-1011 --su-e (h resident in HC, E-column slot)'
+    VM_SLAB = tuple(float(x) for x in a.vm_slab.split(',')) if getattr(a, 'vm_slab', None) else None
     global ECOL_SLABS, ECOL_W
     ECOL_SLABS = tuple(x for x in (getattr(a, 'ecol_slabs', None) or '').split(',') if x)
     assert set(ECOL_SLABS) <= {'wfc', 'host', 'capture', 'seedl', 'p2'}, ('--ecol-slabs: wfc / host / capture / seedl / p2', ECOL_SLABS)
@@ -6435,6 +6776,14 @@ def main(argv=None):
         if ub:     # build-every-path rule (s81-die-2 2026-10-08, tie-off audit TA-10): no functional pin without a net
             raise SystemExit('UNBOUND functional real-macro pins (master, pin): instances: '
                              + json.dumps({f'{k[0]}.{k[1]}': v for k, v in sorted(ub.items())}))
+        if CTRL_ADAPTERS:  # s81-ctl-1011: engine command plane + port audit (no placeholder pins, no unbound engine)
+            from s81_ctrl.die_ctrl_gate import gate as ctrl_gate
+            cg = ctrl_gate(m, CTRL_ROLE)
+            m['ctrl_gate'] = cg
+            if a.out:
+                Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
+            if cg['verdict'] != 'PASS':
+                raise SystemExit('DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40]))
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')

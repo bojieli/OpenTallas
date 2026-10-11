@@ -10,23 +10,28 @@ foreach y [lsort -integer [dict keys $::ot_ry]] { lappend ::ot_rows [list $y [di
 # in an edge strip `depth` um wide at the pin's row, N / S pins in the `depth` um of rows next to that edge at the
 # pin's x.  Run before any other FIRM placement in the strips.
 proc ::ot_net_port {net dir} {
+    # breadth-first over every BUF / INV / HB branch (depth <= 4): a pin flop whose Q also feeds internal logic may
+    # reach its port through any of several inverters / buffers (the first one found is not always the port's)
+    set front [list $net]
     for {set d 0} {$d < 4} {incr d} {
-        if {$net eq "NULL" || $net eq ""} { return "" }
-        set bts [$net getBTerms]
-        if {[llength $bts] > 0} { return [lindex $bts 0] }
-        set nx "NULL"
-        foreach it [$net getITerms] {
-            set out [$it isOutputSignal]
-            if {($dir eq "q" && $out) || ($dir eq "d" && !$out)} { continue }
-            set inst [$it getInst]
-            if {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} { continue }
-            foreach o [$inst getITerms] {
-                if {![$o isInputSignal] && ![$o isOutputSignal]} { continue }
-                if {($dir eq "q" && [$o isOutputSignal]) || ($dir eq "d" && [$o isInputSignal])} { set nx [$o getNet] }
+        set nxt {}
+        foreach net $front {
+            if {$net eq "NULL" || $net eq ""} { continue }
+            set bts [$net getBTerms]
+            if {[llength $bts] > 0} { return [lindex $bts 0] }
+            foreach it [$net getITerms] {
+                set out [$it isOutputSignal]
+                if {($dir eq "q" && $out) || ($dir eq "d" && !$out)} { continue }
+                set inst [$it getInst]
+                if {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} { continue }
+                foreach o [$inst getITerms] {
+                    if {![$o isInputSignal] && ![$o isOutputSignal]} { continue }
+                    if {($dir eq "q" && [$o isOutputSignal]) || ($dir eq "d" && [$o isInputSignal])} { lappend nxt [$o getNet] }
+                }
             }
-            break
         }
-        set net $nx
+        if {[llength $nxt] == 0} { return "" }
+        set front $nxt
     }
     return ""
 }
@@ -42,6 +47,14 @@ proc ::ot_flop_port {inst} {
 }
 # first slot from c (dir 1: rightwards, the slot is [c, c + w2]; dir -1: leftwards, the slot is [c - w2, c]) in row y
 # clear of every cell placed before the pin placement (tap / boundary cells, FIRM flops)
+# [cp] 10-10 (686b964d4 hm10 DPL-0006 site aligned check failed (312), N-face d_desc flops): a skip lands on a
+# macro HALO edge (6 um is not a whole number of 0.054-um sites): snap the slot back onto the rows' site grid
+proc ::ot_snap {c dir sw} {
+    if {![info exists ::ot_sx0]} { return $c }
+    set o [expr {($c - $::ot_sx0) % $sw}]
+    if {$o == 0} { return $c }
+    return [expr {$dir > 0 ? $c + ($sw - $o) : $c - $o}]
+}
 proc ::ot_skip {c w2 y dir sw} {
     if {![dict exists $::ot_occ $y]} { return $c }
     set ivs [dict get $::ot_occ $y]
@@ -51,9 +64,9 @@ proc ::ot_skip {c w2 y dir sw} {
         foreach iv $ivs {
             lassign $iv a b
             if {$dir > 0} {
-                if {$c < $b + $sw && $c + $w2 > $a - $sw} { set c [expr {$b + $sw}]; set moved 1 }
+                if {$c < $b + $sw && $c + $w2 > $a - $sw} { set c [::ot_snap [expr {$b + $sw}] 1 $sw]; set moved 1 }
             } else {
-                if {$c - $w2 < $b + $sw && $c > $a - $sw} { set c [expr {$a - $sw}]; set moved 1 }
+                if {$c - $w2 < $b + $sw && $c > $a - $sw} { set c [::ot_snap [expr {$a - $sw}] -1 $sw]; set moved 1 }
             }
         }
     }
@@ -85,6 +98,7 @@ proc ::ot_pin_place_auto {re depth} {
         if {[$rb yMax] > $cyh} { set cyh [$rb yMax] }
     }
     set cxl [expr {$rxl + $capw}]; set cxh [expr {$rxh - $capw}]
+    set ::ot_sx0 $rxl
     set ::ot_occ [dict create]
     foreach i [$::ot_blk getInsts] {
         if {![$i isPlaced]} { continue }
@@ -230,3 +244,9 @@ proc ::ot_pin_place_auto {re depth} {
 # Only the new front flops own these pins; hold repair remains enabled.
 set ot_cp_pin_count [ot_pin_place_auto {^(f_req_addr|f_req_v)(\[|\$)} 14]
 if {$ot_cp_pin_count != 41} { error "CP fetch pin boundary: expected41 anchored flops, got $ot_cp_pin_count" }
+# [cp] 10-11: strip depth 40 um (was 14): with 1,939 flops the 14-um strips overflowed and packed d_desc[1745] 79 um from its pin (2275938cc hm0 TT -62.75)
+# [cp] 2026-10-10 (route hgi_cp-mtp-0673da5ee hm0: u_seq.d_desc[571] -> d_desc[571] TT -17.19, a 130 ps wire from an
+# interior flop to its pin): the dispatch descriptor / n output flops are port flops too -> placed FIRM at their pins
+# (the standard pin-flop anchoring; their few internal readers (vr_addr base, slot aj) are register-to-register)
+set ot_cp_desc_count [ot_pin_place_auto {^u_seq\.d_(desc|n)\[} 40]
+puts "CP dispatch pin boundary: $ot_cp_desc_count d_desc / d_n flops anchored"
