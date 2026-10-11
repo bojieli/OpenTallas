@@ -1,0 +1,613 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------------------------------------------------
+// tb_s81_die_layer (s81die-1011/ctrl bench, 2026-10-11): ONE DeepSeek-V4.1 layer on the S81 die control plane with
+// REAL slab masters, golden-exact at the LAYER OUTPUT (the next layer's h that HC H_STORE writes to the VM).
+// Stage program + golden: tools/s81_ctrl/die_layer_stim.py (layer L0 of the 1M token = the hc_gate golden chain
+// attn -> ffn -> next h; the committed stage programs' L0.attn.* + L0.ffn.* ops on the real masters' descriptors).
+//   dsfd_sp_ctrl_e (program memory, guard, package controller, stage sequencer; one job = one user's layer)
+//   port 0 fld : dsfd_sp_gather_c + dsfd_sp_capture_c (real; field phases + reference roots as tb_s81_die_fld)
+//   port 2 hc  : dsfd_sp_hc_c (real: GAIN / H_LOAD / COEF / NORM / POST / H_STORE).  f_inp = the bench VM's row-
+//                completion state of the head descriptor's operands (H rows landed by the package controller's
+//                HIDDEN writes, gain rows, the coefficient rows the hcx producers write; POST: a y beat on the bus),
+//                dropped on the cycle the adapter takes a head (f_inp is registered in the master: the next head is
+//                re-evaluated before it can start).
+//   port 3 coll: dsfd_sp_collective_c (real, +define+OT_S81PH_COLL_JOB, production split3cr composition) in a 4-die
+//                TP4 group: dies 1..3 are real collective slabs with their own ot_s81_stage_seq + record feeders, all
+//                lanes ot_dsrom_link_chan (bit errors, go-back-N), every die's output checked in order against the
+//                four C8 reference engines (as tb_s81ph_coll_sys).  Die 0's VM feeds a message's records only when
+//                the coll job's predecessors have ended (dataflow).  The all-reduce words die 0's t_vm delivers are
+//                forwarded in order onto the HC y bus (bench glue: the direct coll -> HC bus of contract v2 is not in
+//                dsfd_sp_collective yet) and checked equal to the golden y.
+//   ports 1 su, 4 svc, 5 sel, 6 col, 9 hcx (the HC coefficient producers fn/sumsq/rsqrt/pre_post/sinkhorn, which
+//                write the golden coefficient rows at their end), 7, 8, 10, 11: behavioural engines behind REAL
+//                ot_s81_slab_ep endpoints (golden durations, dataflow start).
+// Clocks: the die PLL in die 0's collective slab (pll_stream 1.2 GHz = ck for the controller and every stream slab;
+// pll_serial 0.9 GHz = ckv for the gather/capture serial side).
+// CHECKS: (1) capture VM writes = reference per root (multiset); (2) every done at dsfd_sp_ctrl_e is the next op of its
+// port in program order, once; (3) every job starts at or after its predecessors ended (HC: core take / core done; the POST's coll
+// predecessor is a streaming bus operand: POST must END after it); (4) stage done once; (5) no fault anywhere;
+// (6) collective outputs of all 4 dies = C8 reference, in order; (7) y words on the HC bus = golden y, bit-exact;
+// (8) HC NORM output rows and H_STORE rows (the layer output) = CPU golden, bit-exact.
+// MUT (gather endpoint) 2 wrong done tag / 4 dropped done; HMUT (HC core) 1 hc_post does not write h back;
+// +define+OT_S81PH_MUT_SPLIT_LO4FLIP (collective lane-4 relay data bit flip); INP1 (HC f_inp tied 1).  Each must FAIL.
+// Plusargs: +DIR=<stim dir>.
+// ---------------------------------------------------------------------------------------------------------------------
+module tb_s81_die_layer;
+    parameter integer MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 400000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
+    localparam integer NR = 128, XW = 640, MAXC = 16384, JOBS = 1, MAXR = 1024, MAXE = 2048, MAXM = 16, FW = 512,
+                       PW = 547, W = 552, LVM = 10;
+    localparam integer S_RD = 2, S_WR = 8, H_BASE = 0, G_BASE = 1280, GROWS = 320, C_BASE = 2560, S_BASE = 6144;
+    string dir;
+    // ---------------- clocks: the die PLL (die 0's collective slab)
+    reg refclk = 0; always #5 refclk = ~refclk;
+    reg por = 0; initial #50 por = 1;
+    wire [3:0] cks, ckvs, rsts;
+    wire ck = cks[0], ckv = ckvs[0];
+    reg rst = 0, rsv = 0;
+    integer cyc = 0;
+    always @(posedge ck) cyc <= cyc + 1;
+    reg [63:0] rs = 64'h243F6A8885A308D3;
+    function [31:0] rnd(input integer d);
+        begin rs = rs ^ (rs << 13); rs = rs ^ (rs >> 7); rs = rs ^ (rs << 17); rnd = rs[31:0]; end
+    endfunction
+    // ---------------- program + stimulus tables
+    integer nop = 0, nph = 0, ncl = 0;
+    integer o_port [0:127], o_arg [0:127], o_dur [0:127], o_np [0:127], o_p [0:127][0:3], o_ph [0:127], o_cm [0:127], o_wr [0:127];
+    reg [63:0] ph_par [0:15][0:9]; integer ph_c0 [0:15], ph_cn [0:15];
+    integer c_gap [0:MAXC-1], c_root [0:MAXC-1], c_e [0:MAXC-1]; reg [31:0] c_t [0:MAXC-1], c_d [0:MAXC-1];
+    reg [511:0] payload [0:XW-1];
+    reg [511:0] ygold [0:MAXR-1];
+    reg [13:0]  ea [0:MAXE-1];
+    reg [511:0] ed [0:MAXE-1];
+    reg [511:0] coefm [0:16383];
+    reg [31:0]  nm [0:4];
+    integer NE, TOT, NMSG, NY, NST;
+    integer errors = 0, nwr = 0;
+    integer endt [0:1][0:127], stt [0:1][0:127];
+    reg pk_v = 0; reg [6:0] pk_a = 0; reg [27:0] pk_d = 0; reg [7:0] pk_len = 0; reg peer_go = 0;
+    // ---------------- DUT: control plane
+    reg pw_v = 0; reg [6:0] pw_a = 0; reg [27:0] pw_d = 0; reg [7:0] plen = 0;
+    reg i_v = 0; wire i_r; reg [511:0] i_d = 0; reg i_l = 0;
+    wire [84:0] c [0:11]; wire [8:0] d [0:11]; wire [1:0] est [0:11];
+    wire vwe; wire [13:0] vwa; wire [511:0] vwd; wire flt, stk; wire [15:0] fvec, snap;
+    dsfd_sp_ctrl_e #(.MY_ID(2), .SRC_LO(1), .SRC_HI(1)) u_ctl (.ck(ck), .rs(rst), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d),
+        .prog_len(plen), .cfg_users(12'd4), .i_v(i_v), .i_r(i_r), .i_d(i_d), .i_l(i_l),
+        .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(c[9]),
+        .c10(c[10]), .c11(c[11]),
+        .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
+        .d10(d[10]), .d11(d[11]),
+        .vwe(vwe), .vwa(vwa), .vwd(vwd), .flt(flt), .fvec(fvec), .stk(stk), .snap(snap));
+    // ---------------- DUT: gather + capture (fld, port 0)
+    reg [511:0] f_vm = 0;
+    wire [6946:0] tcap; wire [13375:0] tvm; wire [11:0] tcd; wire [10:0] xgo;
+    reg [760:0] tp [0:11];
+    dsfd_sp_gather_c #(.MUT(MUT)) u_g (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_vm(f_vm), .t_capture(tcap),
+        .rW0(tp[0][691:0]), .rW1(tp[1][760:0]), .rW2(tp[2][760:0]), .rW3(tp[3][760:0]), .rW4(tp[4][760:0]), .rW5(tp[5][691:0]),
+        .rE0(tp[6][691:0]), .rE1(tp[7][760:0]), .rE2(tp[8][760:0]), .rE3(tp[9][760:0]), .rE4(tp[10][760:0]), .rE5(tp[11][691:0]),
+        .c_cmd(c[0]), .c_done(d[0]), .c_st(est[0]), .f_cd(tcd), .t_xgo(xgo));
+    dsfd_sp_capture_c u_c (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_gather(tcap), .t_vm(tvm), .t_cd(tcd));
+    wire [63:0] dst = tvm[13312 +: 64];
+    // ---------------- DUT: HC (port 2)
+    wire hc_inp;
+    reg  y_v = 0; wire y_rdy; reg [NG*32-1:0] y_d = 0;
+    wire [S_RD-1:0] rq_v; wire [S_RD*14-1:0] rq_row; reg [S_RD-1:0] rs_v = 0; reg [S_RD*512-1:0] rs_d = 0;
+    wire [S_WR-1:0] wq_v; wire [S_WR*14-1:0] wq_row; wire [S_WR*16-1:0] wq_mask; wire [S_WR*512-1:0] wq_d;
+    wire [3:0] hfcode;
+    dsfd_sp_hc_c #(.NG(NG), .D(5120), .S_RD(S_RD), .S_WR(S_WR), .MUT(HMUT)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
+        .c_done(d[2]), .c_st(est[2]), .f_inp(hc_inp), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row),
+        .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .fcode(hfcode));
+    // ---------------- DUT: the TP4 collective group (port 3 of die 0)
+    wire [514:0] rx [0:3][0:7];
+    wire [511:0] tx [0:3][0:7];
+    reg  [591:0] fvm [0:3];
+    reg  [2:0]   tsr [0:3];
+    wire [2099:0] tv [0:3];
+    wire [84:0] ccmd [0:3]; wire [8:0] cdn [0:3]; wire [1:0] cst [0:3];
+    assign ccmd[0] = c[3]; assign d[3] = cdn[0]; assign est[3] = cst[0];
+    genvar gd, gl;
+    generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_die
+        wire tf0, tf1, tf2, tf3, tf4, tf5, tf6, tf7;
+        dsfd_sp_collective_c u (.refclk(refclk), .por(por), .f_vm(fvm[gd]), .ts(tsr[gd]),
+            .c_cmd(ccmd[gd]), .c_done(cdn[gd]), .c_st(cst[gd]),
+            .rW0(rx[gd][0]), .rW1(rx[gd][1]), .rW2(rx[gd][2]), .rW3(rx[gd][3]),
+            .rE0(rx[gd][4]), .rE1(rx[gd][5]), .rE2(rx[gd][6]), .rE3(rx[gd][7]),
+            .pll_stream(cks[gd]), .pll_serial(ckvs[gd]), .pll_hbm(), .rst_stream(rsts[gd]), .rst_serial(), .rst_hbm(),
+            .t_vm(tv[gd]),
+            .tdW0(tx[gd][0]), .tdW1(tx[gd][1]), .tdW2(tx[gd][2]), .tdW3(tx[gd][3]),
+            .tdE0(tx[gd][4]), .tdE1(tx[gd][5]), .tdE2(tx[gd][6]), .tdE3(tx[gd][7]),
+            .tfW0(tf0), .tfW1(tf1), .tfW2(tf2), .tfW3(tf3), .tfE0(tf4), .tfE1(tf5), .tfE2(tf6), .tfE3(tf7));
+        for (gl = 0; gl < 8; gl = gl + 1) begin : g_lane
+            localparam integer X = (gl == 0) ? 1 : (gl == 1) ? 2 : (gl == 2) ? 3 : (gl == 6) ? 2 : (gl == 7) ? 3 : 1;
+            localparam integer DL = (gl == 0 || gl == 4) ? CHU : CHB;
+            wire ov; wire [511:0] od;
+            ot_dsrom_link_chan #(.W(512), .MAXD(DL), .ERR_PERIOD(EPER), .ERR_OFFSET(gd * 8 + gl), .ERR_STRIDE(37)) u_ch (
+                .clk(ck), .rst_n(rsts[gd ^ X]), .delay(16'd0), .in_valid(rsts[gd ^ X]), .in_data(tx[gd ^ X][gl]),
+                .out_valid(ov), .out_data(od), .err_injected());
+            assign rx[gd][gl] = {1'b0, 1'b1, od, ov};
+        end
+        // peers (dies 1..3): their own stage sequencer issues the coll messages (one job, all descriptors)
+        if (gd > 0) begin : g_peer
+            wire [11:0] cv; wire [12*84-1:0] cd; wire jd_, pf, jr;
+            reg jv = 0, started = 0;
+            ot_s81_stage_seq #(.NOPS(128), .NENG(12), .ARGW(24), .USER_W(10), .NW(21), .QD(8), .FQ(4)) u_sq (
+                .clk(ck), .rst_n(rst), .pw_v(pk_v), .pw_a(pk_a), .pw_d(pk_d), .prog_len(pk_len),
+                .job_v(jv), .job_rdy(jr), .job_user(10'(gd)), .job_pos(21'd1048575), .job_tok(21'd12345),
+                .job_done(jd_), .cmd_v(cv), .cmd_d(cd),
+                .dn_v({8'd0, cdn[gd][8], 3'd0}), .dn_tag({64'd0, cdn[gd][7:0], 24'd0}),
+                .busy(), .fault(pf), .fault_code(), .st_jobs(), .st_cmds(), .st_credit_stall());
+            assign ccmd[gd] = {cv[3], cd[3*84 +: 84]};
+            integer njd = 0, ndn = 0;
+            always @(posedge ck) if (rst) begin
+                if (jv && jr) jv <= 1'b0;
+                if (peer_go && !started) begin jv <= 1'b1; started <= 1'b1; end
+                if (jd_) njd <= njd + 1;
+                if (cdn[gd][8]) begin
+                    if (cdn[gd][7:0] !== {1'b0, 7'(ndn)}) begin errors = errors + 1; $display("ERR peer %0d done tag %h exp %0d", gd, cdn[gd][7:0], ndn); end
+                    ndn <= ndn + 1;
+                end
+                if (pf || cst[gd][0] || (cv & ~12'h008) != 0) begin errors = errors + 1; if (errors < 20) $display("ERR peer %0d fault seq %b ep %b", gd, pf, cst[gd][0]); end
+            end
+        end
+    end endgenerate
+    // ---------------- collective records + C8 reference engines
+    reg [FW-1:0] own [0:3][0:MAXR-1];
+    reg ownl [0:MAXR-1]; reg ownm [0:MAXR-1]; reg [31:0] ownt [0:MAXR-1];
+    integer m_mode [0:MAXM-1], m_n [0:MAXM-1], m_r0 [0:MAXM-1], m_op [0:MAXM-1];
+    integer first_send_cyc = -1;
+    reg  [3:0] r_iv = 0; wire [3:0] r_ir;
+    wire [3:0] r_txv [0:3]; wire [PW-1:0] r_txr [0:3]; wire [7:0] r_cro [0:3];
+    wire [3:0] r_ov, r_ol, r_oe; wire [4*FW-1:0] r_od [0:3];
+    integer rptr [0:3];
+    generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_ref
+        wire [3:0] rxv; wire [4*PW-1:0] rxr; wire [7:0] cri;
+        for (gl = 0; gl < 4; gl = gl + 1) begin : g_s
+            assign rxv[gl] = (gl == gd) ? 1'b0 : r_txv[gl][gd];
+            assign rxr[gl*PW +: PW] = (gl == gd) ? {PW{1'b0}} : r_txr[gl];
+            assign cri[2*gl +: 2] = (gl == gd) ? 2'b00 : r_cro[gl][2*gd +: 2];
+        end
+        ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(gd), .LANES(16), .TAGW(32),
+            .DEPTH(256), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1)) u (
+            .clk(ck), .rst_n(rsts[0]),
+            .in_valid(r_iv[gd]), .in_ready(r_ir[gd]), .in_data(own[gd][rptr[gd]]), .in_last(ownl[rptr[gd]]),
+            .in_mode(ownm[rptr[gd]]), .in_tag(ownt[rptr[gd]]),
+            .tx_valid(r_txv[gd]), .tx_rec(r_txr[gd]), .tx_ready(4'hF), .cr_in(cri),
+            .rx_valid(rxv), .rx_rec(rxr), .cr_out(r_cro[gd]),
+            .rl_tx_valid(), .rl_tx_rec(), .rl_rx_valid(4'd0), .rl_rx_rec({4*PW{1'b0}}),
+            .out_valid(r_ov[gd]), .out_ready(1'b1), .out_data(r_od[gd]), .out_last(r_ol[gd]), .out_rank(),
+            .out_err(r_oe[gd]), .fault(), .fault_code());
+    end endgenerate
+    reg [4*FW+1:0] rq [0:3][0:MAXR];
+    reg            rqe [0:3][0:MAXR];
+    integer rn [0:3], ridx [0:3], rp_n, dd;
+    initial for (dd = 0; dd < 4; dd = dd + 1) begin rptr[dd] = 0; rn[dd] = 0; ridx[dd] = 0; end
+    always @(posedge ck) for (dd = 0; dd < 4; dd = dd + 1) begin
+        if (r_ov[dd]) begin rq[dd][rn[dd]] = {ownm[ridx[dd]], r_ol[dd], r_od[dd]}; rqe[dd][rn[dd]] = r_oe[dd]; rn[dd] = rn[dd] + 1; ridx[dd] = ridx[dd] + 1; end
+        rp_n = rptr[dd] + ((r_iv[dd] && r_ir[dd]) ? 1 : 0);
+        rptr[dd] <= rp_n;
+        r_iv[dd] <= rsts[0] && (first_send_cyc >= 0) && (rp_n < TOT);
+    end
+    // ---------------- collective VM models (all dies): consume t_vm, feed records under credits
+    integer cr [0:3][0:5], sp [0:3], dn [0:3], cfgd [0:3], nwv, q, k2, coll_err = 0, msg0 = 0;
+    reg [2099:0] b;
+    reg acc_err;
+    // HC y bus FIFO (die 0's all-reduce words, in order)
+    reg [511:0] yq [0:MAXR-1];
+    integer ywr = 0, yrd = 0, y_ok = 0, y_bad = 0;
+    function automatic integer ready_op(input integer jb, input integer op);
+        integer i, r;
+        begin
+            r = 1;
+            if (o_np[op] == 0) r = (nwr >= XW * (jb + 1));
+            for (i = 0; i < o_np[op]; i = i + 1) if (endt[jb][o_p[op][i]] < 0) r = 0;
+            ready_op = r;
+        end
+    endfunction
+    integer ctl_up = 0;
+    always @(posedge ck) begin
+        for (dd = 0; dd < 4; dd = dd + 1) begin
+            b = tv[dd];
+            if (b[0]) begin
+                for (q = 0; q < 6; q = q + 1) cr[dd][q] = cr[dd][q] + b[17 + 4*q +: 4];
+                if (b[41] && b[49:42] != 0) begin coll_err = coll_err + 1; if (coll_err < 20) $display("ERR DIE %0d coll FAULT vec %b", dd, b[49:42]); end
+                if (b[2:1] == 2'd1) begin
+                    if (b[15]) begin
+                        if (dn[dd] >= rn[dd] || rq[dd][dn[dd]] !== {1'b1, b[13], b[52 +: 4*FW]}) begin
+                            coll_err = coll_err + 1; if (coll_err < 20) $display("ERR DIE %0d GATHER beat %0d mismatch", dd, dn[dd]); end
+                        dn[dd] = dn[dd] + 1;
+                    end else begin
+                        nwv = b[6] + b[7] + b[8] + b[9]; acc_err = 0;
+                        for (k2 = 0; k2 < nwv; k2 = k2 + 1) begin
+                            if (dn[dd] >= rn[dd] || rq[dd][dn[dd]] !== {1'b0, b[10 + k2], {3*FW{1'b0}}, b[52 + k2*FW +: FW]}) begin
+                                coll_err = coll_err + 1; if (coll_err < 20) $display("ERR DIE %0d REDUCE word %0d mismatch", dd, dn[dd]); end
+                            acc_err = acc_err | rqe[dd][dn[dd]];
+                            dn[dd] = dn[dd] + 1;
+                            if (dd == 0) begin
+                                yq[ywr] = b[52 + k2*FW +: FW];
+                                if (ywr < NY && yq[ywr] === ygold[ywr]) y_ok = y_ok + 1;
+                                else begin y_bad = y_bad + 1; if (y_bad < 5) $display("ERR y word %0d != golden", ywr); end
+                                ywr = ywr + 1;
+                            end
+                        end
+                        if (acc_err !== b[16]) begin coll_err = coll_err + 1; if (coll_err < 20) $display("ERR DIE %0d err flag", dd); end
+                    end
+                end
+            end
+            tsr[dd] <= {2'b01, (rnd(0) % 8) < TSR};
+            fvm[dd] <= 0;
+            if (rsts[dd] && cyc > 20) begin
+                if (cfgd[dd] < 2) begin
+                    cfgd[dd] = cfgd[dd] + 1;
+                    if (cfgd[dd] == 2) fvm[dd] <= {{(W-3){1'b0}}, 1'b1, dd[1:0], 32'd0, 1'b0, 1'b0, 3'd0, 2'd3, 1'b1};
+                end else if (cr[dd][0] > 0 && sp[dd] < TOT) begin
+                    // die 0: a message's records exist once its coll job's predecessors have ended (dataflow)
+                    if (dd != 0 || (ctl_up && ready_op(0, m_op[msg0]))) begin
+                        if (dd == 0 && sp[0] == m_r0[msg0]) stt[0][m_op[msg0]] = cyc;
+                        fvm[dd] <= {{(W-FW){1'b0}}, own[dd][sp[dd]], ownt[sp[dd]], ownm[sp[dd]], ownl[sp[dd]], 3'd0, 2'd1, 1'b1};
+                        if (first_send_cyc < 0) first_send_cyc = cyc;
+                        if (dd == 0 && ownl[sp[0]]) msg0 = msg0 + 1;
+                        sp[dd] = sp[dd] + 1; cr[dd][0] = cr[dd][0] - 1;
+                    end
+                end
+            end
+        end
+    end
+    // y bus to the HC: in order, valid while a word is buffered
+    always @(posedge ck) begin
+        if (y_v && y_rdy) yrd = yrd + 1;
+        y_v <= (yrd < ywr);
+        y_d <= yq[yrd];
+    end
+    // ---------------- bench VM (HC rows, HIDDEN payload, coefficient rows) + row-completion state
+    reg [511:0] vm [0:16383];
+    reg vm_ok [0:16383];
+    integer hcnt = 0, gcnt [0:1];
+    task automatic mark(input integer r);
+        begin
+            if (!vm_ok[r]) begin
+                vm_ok[r] = 1'b1;
+                if (r >= H_BASE && r < H_BASE + XW) hcnt = hcnt + 1;
+                if (r >= G_BASE && r < G_BASE + 2 * GROWS) gcnt[(r - G_BASE) / GROWS] = gcnt[(r - G_BASE) / GROWS] + 1;
+            end
+        end
+    endtask
+    reg [S_RD-1:0]    dl_v [0:63];
+    reg [S_RD*14-1:0] dl_a [0:63];
+    integer s, i2;
+    always @(posedge ck) begin
+        if (vwe) begin vm[vwa] = vwd; mark(vwa); nwr = nwr + 1; end
+        if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0) begin
+            vm[o_wr[g_eng[9].g_b.dop_r]] = coefm[o_wr[g_eng[9].g_b.dop_r]]; mark(o_wr[g_eng[9].g_b.dop_r]); end
+        for (s = 0; s < S_WR; s = s + 1) if (wq_v[s]) begin vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512]; mark(wq_row[14 * s +: 14]); end
+        for (i2 = 63; i2 > 0; i2 = i2 - 1) begin dl_v[i2] = dl_v[i2 - 1]; dl_a[i2] = dl_a[i2 - 1]; end
+        dl_v[0] = rq_v; dl_a[0] = rq_row;
+        rs_v <= dl_v[LVM - 1];
+        for (s = 0; s < S_RD; s = s + 1) rs_d[512 * s +: 512] <= vm[dl_a[LVM - 1][14 * s +: 14]];
+    end
+    // f_inp: the head descriptor's operands are complete in the VM (dropped on the take cycle)
+    wire [83:0] hq = u_hc.u_hc.u_ad.rq;
+    wire        hrv = u_hc.u_hc.u_ad.rv;
+    wire        htake = u_hc.u_hc.e_v && u_hc.u_hc.e_r;
+    wire [3:0]  hkind = hq[30:27];
+    wire [13:0] hbase = hq[20:7];
+    reg hpres;
+    always @* begin
+        case (hkind)
+            4'd0: hpres = (hbase == H_BASE) && (hcnt == XW);
+            4'd2: hpres = vm_ok[hbase] && vm_ok[hbase + 1];
+            4'd3: hpres = (yrd < ywr) || y_v;
+            4'd5: hpres = (hbase == G_BASE) ? (gcnt[0] == GROWS) : (hbase == G_BASE + GROWS) ? (gcnt[1] == GROWS) : 1'b0;
+            default: hpres = 1'b1;
+        endcase
+    end
+    assign hc_inp = INP1 ? 1'b1 : (hrv && hpres && !htake);     // INP1: negative control, f_inp tied 1
+    // HC job start (the core takes the descriptor)
+    always @(posedge ck) if (u_hc.u_hc.e_v && u_hc.u_hc.e_r) stt[u_hc.u_hc.e_d[83]][u_hc.u_hc.e_d[6:0]] = cyc;
+    // HC job end: the core's done (the job's last result committed); the controller-pin done follows through the adapter
+    always @(posedge ck) if (u_hc.u_hc.d_v) endt[u_hc.u_hc.d_t[7]][u_hc.u_hc.d_t[6:0]] = cyc;
+    // ---------------- reference roots (as tb_s81ph_gather_capture)
+    reg [NR-1:0] s_v; reg [31:0] s_t [0:NR-1]; reg [31:0] s_d [0:NR-1]; reg [NR-1:0] s_e, s_b;
+    wire [NR-1:0] rr_v, rr_e, rr_f;
+    wire [NR*16-1:0] rr_row, rr_bf; wire [NR*3-1:0] rr_pos; wire [NR*32-1:0] rr_fp;
+    reg rst_n_ref = 0;
+    genvar g;
+    generate for (g = 0; g < NR; g = g + 1) begin : g_ref_root
+        ot_v41_ret_root #(.D(128), .QD(128)) u_root (.clk(ck), .rst_n(rst_n_ref), .i_v(s_v[g]), .i_t(s_t[g]), .i_d(s_d[g]),
+            .i_e(s_e[g]), .r_v(rr_v[g]), .r_row(rr_row[16*g +: 16]), .r_pos(rr_pos[3*g +: 3]), .r_fp32(rr_fp[32*g +: 32]),
+            .r_bf16(rr_bf[16*g +: 16]), .r_e(rr_e[g]), .fault(rr_f[g]));
+    end endgenerate
+    reg p_v = 0;
+    reg [46:0] p_id = 0; reg [9:0] p_ph = 0; reg [29:0] p_ob = 0, p_ops = 0; reg [2:0] p_np = 0; reg [1:0] p_fmt = 0;
+    reg [15:0] p_rs = 0, p_rows = 0; reg p_lo = 0, p_hi = 0;
+    wire [128*19-1:0] quota;
+    ot_dsrom_s81_phase_capture_profile #(.ENABLE(1)) u_prof (.phase_rows(p_rows), .phase_np(p_np), .root_returns(quota));
+    wire [NR-1:0] rv_valid; wire [NR*30-1:0] rv_addr; wire [NR*32-1:0] rv_data;
+    wire r_ready, r_live, r_idle, r_drained, r_fault;
+    ot_dsrom_rd64_vm_capture #(.ENABLE(1), .ROOTS(NR), .CAPACITY(1), .VM_AW(19), .VM_ALWAYS_ACCEPT(1)) u_rc (
+        .clk(ck), .rst_n(rst_n_ref), .reset_request(1'b0), .phase_valid(p_v), .phase_ready(r_ready),
+        .phase_identity(p_id), .phase_id(p_ph), .phase_root_rows(quota), .phase_obase(p_ob), .phase_ops(p_ops),
+        .phase_np(p_np), .phase_fmt(p_fmt), .phase_rsplit(p_rs), .phase_fp32_low(p_lo), .phase_fp32_high(p_hi),
+        .r_valid(rr_v), .r_error(rr_e), .r_row(rr_row), .r_bf16(rr_bf), .r_pos(rr_pos), .r_fp32(rr_fp),
+        .vm_valid(rv_valid), .vm_accept(rv_valid), .vm_addr(rv_addr), .vm_data(rv_data), .vm_row(), .vm_pos(),
+        .held_identity(), .held_phase(), .phase_live(r_live), .phase_idle(r_idle), .phase_drained(r_drained),
+        .fault(r_fault));
+    wire ref_fault = r_fault | (|rr_f);
+    localparam integer NC [0:5] = '{10, 11, 11, 11, 11, 10};
+    function automatic integer port_of(input integer r);
+        integer h, t, bb;
+        begin h = r / 64; bb = h * 64; port_of = -1;
+            for (t = 0; t < 6; t = t + 1) begin if (port_of < 0 && r < bb + NC[t]) port_of = 6 * h + t; bb = bb + NC[t]; end end
+    endfunction
+    function automatic integer lane_of(input integer r);
+        integer h, t, bb;
+        begin h = r / 64; bb = h * 64; lane_of = -1;
+            for (t = 0; t < 6; t = t + 1) begin if (lane_of < 0 && r < bb + NC[t]) lane_of = NC[t] - 1 - (r - bb); bb = bb + NC[t]; end end
+    endfunction
+    integer pi, li, rr;
+    always @* begin
+        for (pi = 0; pi < 12; pi = pi + 1) begin
+            tp[pi] = 761'd0;
+            tp[pi][69 * NC[pi % 6] +: 2] = 2'b01;
+        end
+        for (rr = 0; rr < NR; rr = rr + 1) begin
+            pi = port_of(rr); li = lane_of(rr);
+            tp[pi][69 * li] = s_v[rr];
+            tp[pi][69 * li + 1 +: 68] = {1'b0, s_b[rr], s_e[rr], s_d[rr], s_t[rr], s_v[rr]};
+        end
+    end
+    reg [50:0] refq [0:NR-1][$];
+    reg [50:0] dutq [0:NR-1][$];
+    integer k;
+    always @(posedge ck) for (k = 0; k < NR; k = k + 1) if (rv_valid[k]) refq[k].push_back({rv_data[32*k +: 32], rv_addr[30*k +: 19]});
+    always @(posedge ckv) for (k = 0; k < NR; k = k + 1) begin
+        if (tvm[104*k]) dutq[k].push_back(tvm[104*k + 1 +: 51]);
+        if (tvm[104*k + 52]) dutq[k].push_back(tvm[104*k + 53 +: 51]);
+    end
+    // ---------------- behavioural engines behind real slab endpoints (ports 1, 4..11; 9 = hcx)
+    genvar ge;
+    generate for (ge = 1; ge < 12; ge = ge + 1) begin : g_eng
+        if (ge != 2 && ge != 3) begin : g_b
+            wire jv, jnew, epf; wire [83:0] jd, jnd;
+            reg jdone_r = 1'b0, busy = 1'b0; integer rem = 0; reg [6:0] dop_r = 0;
+            ot_s81_slab_ep #(.QD(8), .JQ(2)) u_ep (.c_clk(ck), .c_rst_n(rst), .c_cmd(c[ge]), .c_done(d[ge]), .c_st(est[ge]),
+                .e_clk(ck), .e_rst_n(rst), .j_v(jv), .j_d(jd), .j_new(jnew), .j_new_d(jnd), .j_present(1'b1),
+                .j_done(jdone_r), .slab_fault(1'b0), .ep_fault(epf));
+            always @(posedge ck) begin
+                jdone_r <= 1'b0;
+                if (jv && !jdone_r) begin
+                    if (!busy) begin
+                        if (ready_op(jd[83], jd[6:0])) begin
+                            busy <= 1'b1; rem <= (o_dur[jd[6:0]] > 0) ? o_dur[jd[6:0]] : 1; stt[jd[83]][jd[6:0]] = cyc;
+                            if (o_port[jd[6:0]] != ge) begin errors = errors + 1; $display("ERR engine %0d got op %0d of port %0d", ge, jd[6:0], o_port[jd[6:0]]); end
+                        end
+                    end else if (rem <= 1) begin
+                        jdone_r <= 1'b1; busy <= 1'b0; endt[jd[83]][jd[6:0]] = cyc; dop_r <= jd[6:0];
+                    end else rem <= rem - 1;
+                end
+            end
+        end
+    end endgenerate
+    always @(posedge ck) begin
+        if (u_g.jnew) stt[u_g.jnd[83]][u_g.jnd[6:0]] = cyc;
+        if (u_g.dn) endt[u_g.jd[83]][u_g.jd[6:0]] = cyc;
+    end
+    // ---------------- done order at the controller pins (ports 2 / 3: the slab's done is the job's end)
+    integer nxt [0:11][0:1];
+    integer ndone = 0, maxlat = 0, t_hstore = -1, t_layer0 = -1;
+    integer e2, s2, t2;
+    always @(posedge ck) if (rst) for (e2 = 0; e2 < 12; e2 = e2 + 1) if (d[e2][8]) begin
+        s2 = d[e2][7]; t2 = d[e2][6:0];
+        if (e2 == 3 && endt[s2][t2] < 0) endt[s2][t2] = cyc;
+        if (e2 == 2 && t2 == nop - 1) t_hstore = cyc;
+        while (nxt[e2][s2] < nop && o_port[nxt[e2][s2]] != e2) nxt[e2][s2] = nxt[e2][s2] + 1;
+        if (nxt[e2][s2] != t2) begin
+            errors = errors + 1;
+            if (errors < 10) $display("ERR done order: port %0d slot %0d got op %0d expected %0d", e2, s2, t2, nxt[e2][s2]);
+        end else nxt[e2][s2] = nxt[e2][s2] + 1;
+        if (endt[s2][t2] < 0) begin errors = errors + 1; $display("ERR done before engine end: port %0d op %0d", e2, t2); end
+        else if (cyc - endt[s2][t2] > maxlat) maxlat = cyc - endt[s2][t2];
+        ndone = ndone + 1;
+    end
+    integer jdn = 0;
+    always @(posedge ck) if (u_ctl.u.u.u_seq.job_done) jdn <= jdn + 1;
+    // ---------------- bench VM: post the field phase words in fld order when the job's inputs are present
+    integer pj = 0, pk = 0, posted = 0, released = 0;
+    always @(posedge ck) if (xgo[10]) released <= released + 1;
+    function automatic integer next_fld(input integer from);
+        integer qq; begin next_fld = nop; for (qq = nop - 1; qq >= from; qq = qq - 1) if (o_ph[qq] >= 0) next_fld = qq; end
+    endfunction
+    initial begin : vm_post
+        integer ph;
+        wait (rst && plen != 0);
+        pk = next_fld(0);
+        while (pj < JOBS) begin
+            @(negedge ckv);
+            if (pk >= nop) begin pj = pj + 1; pk = next_fld(0); end
+            else if (posted - released < 3 && ready_op(pj, pk)) begin
+                ph = o_ph[pk];
+                f_vm = 0; f_vm[0] = 1;
+                f_vm[159:1] = {1'b0, ph_par[ph][0][15:0], ph_par[ph][7][0], ph_par[ph][6][0], ph_par[ph][5][15:0],
+                               ph_par[ph][4][1:0], ph_par[ph][1][2:0], ph_par[ph][3][29:0], ph_par[ph][2][29:0],
+                               ph_par[ph][9][9:0], ph_par[ph][8][46:0], 2'b00};
+                @(negedge ckv); f_vm[0] = 0;
+                posted = posted + 1;
+                pk = next_fld(pk + 1);
+            end
+        end
+    end
+    // ---------------- field model: the x broadcast of a released phase -> its golden partials
+    integer nfp = 0;
+    initial begin : field
+        integer ph, ci, j;
+        s_v = 0; s_e = 0; s_b = 0;
+        for (j = 0; j < NR; j = j + 1) begin s_t[j] = 0; s_d[j] = 0; end
+        forever begin
+            @(posedge ck); #0.1;
+            if (xgo[10]) begin
+                ph = xgo[9:0];
+                @(negedge ck);
+                p_rows = ph_par[ph][0]; p_np = ph_par[ph][1]; p_ob = ph_par[ph][2]; p_ops = ph_par[ph][3]; p_fmt = ph_par[ph][4];
+                p_rs = ph_par[ph][5]; p_lo = ph_par[ph][6]; p_hi = ph_par[ph][7]; p_id = ph_par[ph][8]; p_ph = ph_par[ph][9];
+                for (j = 0; j < 256 && !r_ready; j = j + 1) @(negedge ck);
+                if (!r_ready) begin errors = errors + 1; $display("ERR reference not ready at phase %0d", ph); end
+                p_v = 1; @(negedge ck); p_v = 0;
+                for (j = 0; j < 30; j = j + 1) @(negedge ck);
+                begin : drive
+                    reg [NR-1:0] n_v, n_e; reg [31:0] n_t [0:NR-1]; reg [31:0] n_d [0:NR-1];
+                    n_v = 0; n_e = 0;
+                    for (ci = ph_c0[ph]; ci < ph_c0[ph] + ph_cn[ph]; ci = ci + 1) begin
+                        if (c_gap[ci] != 0) begin
+                            for (j = 0; j < NR; j = j + 1) begin s_v[j] = n_v[j]; s_t[j] = n_t[j]; s_d[j] = n_d[j]; s_e[j] = n_e[j]; s_b[j] = $random; end
+                            n_v = 0; n_e = 0;
+                            @(negedge ck); s_v = 0;
+                            for (j = 1; j < c_gap[ci]; j = j + 1) @(negedge ck);
+                        end
+                        n_v[c_root[ci]] = 1; n_t[c_root[ci]] = c_t[ci]; n_d[c_root[ci]] = c_d[ci]; n_e[c_root[ci]] = c_e[ci];
+                    end
+                    for (j = 0; j < NR; j = j + 1) begin s_v[j] = n_v[j]; s_t[j] = n_t[j]; s_d[j] = n_d[j]; s_e[j] = n_e[j]; s_b[j] = $random; end
+                    @(negedge ck); s_v = 0;
+                end
+                nfp = nfp + 1;
+            end
+        end
+    end
+    // ---------------- main
+    task automatic send_flit(input [511:0] dt, input ll);
+        begin
+            i_v = 1; i_d = dt; i_l = ll;
+            while (!i_r) @(negedge ck);
+            if (t_layer0 < 0) t_layer0 = cyc;
+            @(negedge ck);
+        end
+    endtask
+    initial begin : main
+        integer fd, rc, w, jb, e, bad, tot, tr, td, gst_f, n_ok, n_bad, st_ok, st_bad, m, r0, pt, xm;
+        reg [8*8-1:0] cmd; reg [63:0] a [0:9];
+        reg [511:0] hdr;
+        for (jb = 0; jb < 2; jb = jb + 1) for (w = 0; w < 128; w = w + 1) begin endt[jb][w] = -1; stt[jb][w] = -1; end
+        for (e = 0; e < 12; e = e + 1) begin nxt[e][0] = 0; nxt[e][1] = 0; end
+        for (w = 0; w < 16384; w = w + 1) begin vm[w] = 0; vm_ok[w] = 0; coefm[w] = 0; end
+        gcnt[0] = 0; gcnt[1] = 0;
+        for (dd = 0; dd < 4; dd = dd + 1) begin
+            sp[dd] = 0; dn[dd] = 0; cfgd[dd] = 0; fvm[dd] = 0; tsr[dd] = 0;
+            for (q = 0; q < 6; q = q + 1) cr[dd][q] = (q == 0) ? 16 : 8;
+        end
+        for (w = 0; w < 64; w = w + 1) begin dl_v[w] = 0; dl_a[w] = 0; end
+        if (!$value$plusargs("DIR=%s", dir)) $fatal(1, "+DIR");
+        fd = $fopen({dir, "/prog.txt"}, "r");
+        while (!$feof(fd)) begin
+            rc = $fscanf(fd, "%d %d %d %d %d %d %d %d %d %d %d\n", o_port[nop], o_arg[nop], o_dur[nop], o_np[nop],
+                         o_p[nop][0], o_p[nop][1], o_p[nop][2], o_p[nop][3], o_ph[nop], o_cm[nop], o_wr[nop]);
+            if (rc == 11) nop = nop + 1;
+        end
+        $fclose(fd);
+        fd = $fopen({dir, "/stim.txt"}, "r");
+        while (!$feof(fd)) begin
+            rc = $fscanf(fd, "%s", cmd);
+            if (rc != 1) break;
+            if (cmd == "P") begin
+                rc = $fscanf(fd, "%h %h %h %h %h %h %h %h %h %h", a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
+                for (w = 0; w < 10; w = w + 1) ph_par[nph][w] = a[w];
+                ph_c0[nph] = ncl; ph_cn[nph] = 0; nph = nph + 1;
+            end else if (cmd == "C") begin
+                rc = $fscanf(fd, "%h %h %h %h %h", a[0], a[1], a[2], a[3], a[4]);
+                c_gap[ncl] = a[0]; c_root[ncl] = a[1]; c_t[ncl] = a[2]; c_d[ncl] = a[3]; c_e[ncl] = a[4];
+                ncl = ncl + 1; ph_cn[nph - 1] = ph_cn[nph - 1] + 1;
+            end
+        end
+        $fclose(fd);
+        $readmemh({dir, "/n.mem"}, nm);
+        NE = nm[0]; TOT = nm[1]; NMSG = nm[2]; NY = nm[3]; NST = nm[4];
+        $readmemh({dir, "/payload.mem"}, payload);
+        $readmemh({dir, "/y_gold.mem"}, ygold);
+        $readmemh({dir, "/expa.mem"}, ea);
+        $readmemh({dir, "/expd.mem"}, ed);
+        $readmemh({dir, "/vm_boot.mem"}, vm);
+        $readmemh({dir, "/coef.mem"}, coefm);
+        begin : own_load
+            reg [511:0] tmp [0:4*MAXR-1];
+            $readmemh({dir, "/coll_own.mem"}, tmp);
+            for (w = 0; w < TOT; w = w + 1) for (dd = 0; dd < 4; dd = dd + 1) own[dd][w] = tmp[4 * w + dd];
+        end
+        fd = $fopen({dir, "/coll_msg.txt"}, "r");
+        r0 = 0;
+        for (m = 0; m < NMSG; m = m + 1) begin
+            rc = $fscanf(fd, "%d %d\n", m_mode[m], m_n[m]); m_r0[m] = r0;
+            for (w = 0; w < m_n[m]; w = w + 1) begin ownl[r0 + w] = (w == m_n[m] - 1); ownm[r0 + w] = m_mode[m][0]; ownt[r0 + w] = r0 + w; end
+            r0 = r0 + m_n[m];
+        end
+        $fclose(fd);
+        m_op[NMSG] = 0;
+        for (w = 0; w < nop; w = w + 1) if (o_cm[w] >= 0) m_op[o_cm[w]] = w;
+        for (w = G_BASE; w < G_BASE + 2 * GROWS; w = w + 1) mark(w);     // gain sets: boot image
+        if (r0 != TOT) $fatal(1, "coll records %0d != %0d", r0, TOT);
+        $display("TB_S81_DIE_LAYER program %0d ops, %0d field phases, %0d partials, %0d coll messages / %0d records, %0d y words, %0d golden rows (%0d H_STORE), MUT %0d HMUT %0d NG %0d",
+                 nop, nph, ncl, NMSG, TOT, NY, NE, NST, MUT, HMUT, NG);
+        // reset: the collective group's resets first (PLL lock), then the die controller and slabs
+        wait (rsts == 4'hF);
+        repeat (10) @(negedge ck);
+        rst = 1; rsv = 1; rst_n_ref = 1;
+        repeat (60) @(negedge ck);
+        for (w = 0; w < nop; w = w + 1) begin
+            pw_v = 1; pw_a = w; pw_d = {o_port[w][3:0], o_arg[w][23:0]}; @(negedge ck);
+        end
+        pw_v = 0; plen = nop;
+        // peer programs: the coll messages
+        for (m = 0; m < NMSG; m = m + 1) begin pk_v = 1; pk_a = m; pk_d = {4'd3, 7'd0, m_mode[m][0], 16'(m_n[m])}; @(negedge ck); end
+        pk_v = 0; pk_len = NMSG;
+        repeat (4) @(negedge ck);
+        peer_go = 1;
+        // the links are trained before the token arrives (collective first-send point of the coll gate)
+        while (cyc < 1200) @(negedge ck);
+        ctl_up = 1;
+        hdr = 0; hdr[11:0] = 2; hdr[23:12] = 1; hdr[27:24] = 1; hdr[39:28] = XW; hdr[51:40] = 0; hdr[72:52] = 0;
+        hdr[146:126] = 1000;
+        send_flit(hdr, 1'b0);
+        for (w = 0; w < XW; w = w + 1) send_flit(payload[w], w == XW - 1);
+        i_v = 0; i_l = 0;
+        while (jdn < JOBS && cyc < TMAX) @(negedge ck);
+        repeat (600) @(negedge ck);
+        // ---- compare: capture writes
+        bad = 0; tot = 0;
+        for (k = 0; k < NR; k = k + 1) begin
+            tr = refq[k].size(); td = dutq[k].size(); tot = tot + tr;
+            if (tr != td) begin bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d: ref %0d writes, dut %0d", k, tr, td); end
+            else begin
+                refq[k].sort(); dutq[k].sort();
+                for (rr = 0; rr < tr; rr = rr + 1) if (refq[k][rr] != dutq[k][rr]) begin
+                    bad = bad + 1; if (bad < 6) $display("MISMATCH root %0d sorted write %0d: ref %h dut %h", k, rr, refq[k][rr], dutq[k][rr]); break; end
+            end
+        end
+        // ---- the HC rows: NORM outputs and the layer output (H_STORE)
+        n_ok = 0; n_bad = 0; st_ok = 0; st_bad = 0;
+        for (w = 0; w < NE; w = w + 1) begin
+            if (vm[ea[w]] === ed[w]) begin if (ea[w] >= S_BASE) st_ok = st_ok + 1; else n_ok = n_ok + 1; end
+            else begin
+                if (ea[w] >= S_BASE) st_bad = st_bad + 1; else n_bad = n_bad + 1;
+                if (n_bad + st_bad < 6) $display("MISMATCH VM row %0d got %h want %h", ea[w], vm[ea[w]][63:0], ed[w][63:0]);
+            end
+        end
+        // ---- dataflow
+        for (jb = 0; jb < JOBS; jb = jb + 1) for (w = 0; w < nop; w = w + 1) begin
+            if (endt[jb][w] < 0) begin errors = errors + 1; if (errors < 20) $display("ERR job %0d op %0d never ended (port %0d)", jb, w, o_port[w]); end
+            for (e = 0; e < o_np[w]; e = e + 1) begin
+                pt = o_p[w][e];
+                if (o_port[w] == 2 && o_port[pt] == 3) begin
+                    if (endt[jb][w] >= 0 && endt[jb][w] < endt[jb][pt]) begin errors = errors + 1; $display("ERR op %0d (HC POST) ended %0d before its all-reduce %0d ended %0d", w, endt[jb][w], pt, endt[jb][pt]); end
+                end else if (stt[jb][w] < 0 || stt[jb][w] < endt[jb][pt]) begin
+                    errors = errors + 1; $display("ERR job %0d op %0d started %0d before pred %0d ended %0d", jb, w, stt[jb][w], pt, endt[jb][pt]); end
+            end
+        end
+        gst_f = 0; for (e = 0; e < 12; e = e + 1) if (est[e][0]) begin gst_f = gst_f + 1; $display("ERR endpoint %0d fault", e); end
+        xm = 0;
+        for (dd = 0; dd < 4; dd = dd + 1) if (dn[dd] != rn[dd] || ridx[dd] != TOT) begin xm = xm + 1; $display("ERR DIE %0d coll INCOMPLETE dut %0d ref %0d of %0d", dd, dn[dd], rn[dd], TOT); end
+        if (g_die[1].g_peer.ndn != NMSG || g_die[2].g_peer.ndn != NMSG || g_die[3].g_peer.ndn != NMSG) begin xm = xm + 1; $display("ERR peer dones incomplete"); end
+        $display("SUMMARY layer_cycles=%0d (header %0d -> H_STORE done %0d) stage_done_cycle=%0d jobs_done=%0d/%0d dones=%0d/%0d phases_released=%0d field_phases=%0d capture_writes=%0d mismatching_roots=%0d coll_words_die0=%0d coll_errors=%0d coll_incomplete=%0d y_exact=%0d/%0d y_bad=%0d y_consumed=%0d norm_rows_exact=%0d/%0d hstore_rows_exact=%0d/%0d ref_fault=%0d dut_fault=%0d ctrl_flt=%0d fvec=%h stuck=%0d ep_faults=%0d gather_stage_fault=%0d hc_fcode=%0d max_done_latency=%0d errors=%0d first_coll_send=%0d",
+                 t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
+                 y_ok, NY, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);
+        if (bad == 0 && errors == 0 && jdn == JOBS && ndone == JOBS * nop && !ref_fault && !dst[3] && !flt && gst_f == 0 && !u_g.sf &&
+            tot > 0 && coll_err == 0 && xm == 0 && y_ok == NY && y_bad == 0 && yrd == NY && n_ok == NE - NST && st_ok == NST && n_bad == 0 && st_bad == 0)
+            $display("TB_S81_DIE_LAYER PASS");
+        else $display("TB_S81_DIE_LAYER FAIL");
+        $finish;
+    end
+endmodule
