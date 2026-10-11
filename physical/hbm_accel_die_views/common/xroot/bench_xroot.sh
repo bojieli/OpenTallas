@@ -30,10 +30,12 @@ skew(){ python3 - "$1" "$2" "$SK" <<'PY'
 import re, sys
 src, par, sk = sys.argv[1], int(sys.argv[2]), float(sys.argv[3])
 t = open(src).read()
-m = re.search(r'\.(ck\d+)\(clk\)', t)
-cks = sorted(set(re.findall(r'\.(ck(\d+))\(clk\)', t)), key=lambda x: int(x[1]))
-decl = ''.join(f'    wire {"#%.3f " % sk if int(n) % 2 == par else ""}k_{c} = clk;\n' for c, n in cks)
-t = re.sub(r'\.(ck\d+)\(clk\)', lambda mm: f'.{mm.group(1)}(k_{mm.group(1)})', t)
+# [cg-hc] split row roots ck<c>e / ck<c>w (R25GQ A): checkerboard parity (row + half) so every E/W half crossing and
+# every row crossing of one half sees skew in one of the two patterns; plain ck<c> roots keep the row parity.
+cks = sorted(set(re.findall(r'\.(ck(\d+)([ew]?))\(clk\)', t)), key=lambda x: (int(x[1]), x[2]))
+if not cks: sys.exit('skew: no ck<n>[ew] clock ports found in ' + src)
+decl = ''.join(f'    wire {"#%.3f " % sk if (int(n) + (h == "w")) % 2 == par else ""}k_{c} = clk;\n' for c, n, h in cks)
+t = re.sub(r'\.(ck\d+[ew]?)\(clk\)', lambda mm: f'.{mm.group(1)}(k_{mm.group(1)})', t)
 t = t.replace('    initial begin', decl + '    initial begin', 1)
 t = t.replace('@(posedge clk); #0.1;', '@(posedge clk); #%.3f;' % (sk + 0.05))
 t = t.replace('repeat (6) @(posedge clk); rst = 0;', 'repeat (6) @(posedge clk); #%.3f rst = 0;' % (sk + 0.05))
@@ -41,7 +43,7 @@ open(src.replace('tb_', 'tbskew%d_' % par), 'w').write(t)
 PY
 }
 run(){ ( cd $O/$1 && iverilog -g2012 -o $2.vvp $3 $4 *_simstub.sv > $2.comp 2>&1 && vvp -n $2.vvp > $2.log 2>&1; echo "rc=$?"; grep -h OT_RESULT $2.log ) ; }
-for d in base xl; do skew $O/$d/tb_$m.sv 0; skew $O/$d/tb_$m.sv 1; done
+for d in base xl; do skew $O/$d/tb_$m.sv 0 || fail "skew tb"; skew $O/$d/tb_$m.sv 1 || fail "skew tb"; done
 st(){ sed -n 's/.*mismatches=\([0-9]*\) settle_cycles=\([0-9]*\).*/\1 \2/p'; }
 read BM BS < <(run base tied tb_$m.sv $m.sv | st)
 echo "baseline tied: mismatches $BM settle $BS"; [ "$BM" = 0 ] || fail "baseline does not pass its own bench"
