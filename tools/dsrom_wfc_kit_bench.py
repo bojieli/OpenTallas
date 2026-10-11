@@ -70,7 +70,8 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'vmrly_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 1), 'vmrly_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 1),
     'vmrly_stg_r1': ('stg_r1', 1, [], 'pass', 1), 'vmrly_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 1),
     'vmrly_stg_neg_short': ('stg_r1', 1, ['OT_MTP_NEG_SHORT_RTT'], 'fail', 1),
-    'vmrly_stg_neg_nolink': ('stg_r1', 1, [], 'fail', 2), 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
+    'vmrly_stg_neg_nolink': ('stg_r1', 1, [], 'fail', 2), 'vmrly_s0_neg_wout4': ('s0_hash_u3', 0, [], 'fail', 3),
+    'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3), 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
 }
 
 
@@ -87,8 +88,9 @@ def kit_tb(stage, vmrly=0):
     kit = STG_KIT if stage else SRC_KIT
     if vmrly:
         kit = VMRLY + (kit if vmrly == 2 else   # 2: negative, valid / ready skids (VM_LINK 0) behind the relays
-                       kit.replace('u_kit (', '#(.VM_LINK(1)) u_kit (').replace('dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1))',
-                                                                               'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1))'))
+                       kit.replace('u_kit (', '#(.VM_LINK(1), .WOUTW(WOUTW_K)) u_kit (').replace(
+                           'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .WOUTW(WOUTW_K))', 'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .WOUTW(WOUTW_K))'))
+        kit = kit.replace('WOUTW_K', '4' if vmrly == 3 else '8')
         for a_, b_ in (('.t_swv(swv)', '.t_swv(k_swv)'), ('.t_swd(swd)', '.t_swd(k_swd)'), ('.f_swr(swr)', '.f_swr(k_swg)'),
                        ('.f_swa(swa)', '.f_swa(k_swa)'), ('.t_srv(srv)', '.t_srv(k_srv)'), ('.t_srd(srd)', '.t_srd(k_srd)'),
                        ('.f_srr(srr)', '.f_srr(k_srg)'), ('.f_srq(srq)', '.f_srq(k_srq)')):
