@@ -286,7 +286,11 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     by = {i.name: i for i in m['insts']}
     su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
     gap = vm.y - (su.y + su.h)
-    if abs(su.x - vm.x) > 1e-6 or abs(su.w - vm.w) > 1e-6 or not (0.0 <= gap <= SU_VM_ABUT_TOL_UM) \
+    # qwendie-1011: a VM wider than the SU (r22ko4 near-square slot) abuts with the SU inside its S face; the pin
+    # groups shift by the SU's offset (0 for every equal-width recipe: unchanged)
+    off = round(su.x - vm.x, 4) if vm.w > su.w + 1e-6 else 0.0
+    if abs(su.x - vm.x - off) > 1e-6 or not (-1e-6 <= off and su.x + su.w <= vm.x + vm.w + 1e-6) \
+            or (off == 0.0 and abs(su.w - vm.w) > 1e-6) or not (0.0 <= gap <= SU_VM_ABUT_TOL_UM) \
             or su.orient != 'R0' or vm.orient != 'R0':
         raise ValueError(f'su_vm_abut: SU64 {su.x:.3f},{su.y:.3f} {su.w:.3f}x{su.h:.3f} {su.orient} and VM '
                          f'{vm.x:.3f},{vm.y:.3f} {vm.w:.3f}x{vm.h:.3f} {vm.orient} do not abut (gap {gap:.3f} um): '
@@ -318,15 +322,15 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
                 raise ValueError(f'su_vm_abut: {M_.name} {f} face already holds {taken}')
         s.face('va', SU_VM_A_BITS, 'N', 'M5', a_c, 1)
         s.face('vq', SU_VM_Q_BITS, 'N', 'M5', q_c, 1)
-        q.face('sa', SU_VM_A_BITS, 'S', 'M5', a_c, 1)
-        q.face('sq', SU_VM_Q_BITS, 'S', 'M5', q_c, 1)
+        q.face('sa', SU_VM_A_BITS, 'S', 'M5', a_c + off, 1)
+        q.face('sq', SU_VM_Q_BITS, 'S', 'M5', q_c + off, 1)
         return out
     v.masters = masters
     m['r21v_su_vm'] = dict(bits_su_to_vm=SU_VM_A_BITS, bits_vm_to_su=SU_VM_Q_BITS, gap_um=round(gap, 4),
                            face_um=round(w, 3), layer='M5', pitch_tracks=1,
                            a_span_um=[round(a_c - a_span / 2, 3), round(a_c + a_span / 2, 3)],
                            q_span_um=[round(q_c - q_span / 2, 3), round(q_c + q_span / 2, 3)],
-                           stations=0, rtl_latency_added=0)
+                           stations=0, rtl_latency_added=0, **({'vm_face_offset_um': off} if off else {}))
 
 
 # r21f (qwen-rtl-finish 2026-10-07): the abstracts of the three masters whose RTL was finished
