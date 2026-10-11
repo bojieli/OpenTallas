@@ -76,6 +76,11 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     // FW/PSL (+ tag on slice 0)).  LQW: the landing queues' WFREE (2 = registered non-empty / write enables).
     parameter integer PSL      = 1,
     parameter integer LQW      = 1,
+    // EXTF (el1011-ds-coll 2026-10-11, opt-in, PULL + FIFO_SRAM only; 0 = byte-identical): the REMOTE sources' receive
+    // FIFOs live outside the engine (hardened FIFO tiles, dsfd_coll_cef): for g != RANK the landing queue u_pr is fed
+    // from xl_v / xl_d and returns xl_cr, push / clash / occupancy of those FIFOs are kept by the FIFO tile, and rx_* /
+    // rl_* are unused.  The local source's FIFO stays here (its pushes are this engine's fires).
+    parameter integer EXTF     = 0,
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
     parameter integer RB       = (N > 1) ? $clog2(N) : 1
@@ -116,7 +121,11 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     output wire [FW-1:0]     out_rdat,
     output wire [GW*FW-1:0]  out_gdat,
     output reg               fault,
-    output reg  [2:0]        fault_code       // [0] arithmetic, [1] tag / mode / parity / relay, [2] FIFO overflow
+    output reg  [2:0]        fault_code,      // [0] arithmetic, [1] tag / mode / parity / relay, [2] FIFO overflow
+    // EXTF: landing-queue links of the external FIFOs, [2g + q] = source g parity q (g == RANK unused)
+    input  wire [2*N-1:0]    xl_v,
+    input  wire [2*N*PW-1:0] xl_d,
+    output wire [2*N-1:0]    xl_cr
 );
     localparam integer PD = DEPTH / 2;                  // words per (source, parity) FIFO
     localparam integer DB = (PD > 1) ? $clog2(PD) : 1;
@@ -173,13 +182,20 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
             wire rl_on = (RELAY != 0) && (g != RANK) && ((g / PKG_DIES) != MYPKG);
             for (q = 0; q < 2; q = q + 1) begin : g_par
                 localparam integer F = 2 * g + q;
-                wire          pd_ = (g == RANK) ? (fire && lpar == q) : (rx_valid[g] && dpar == q);
+                wire          pd_ = (g == RANK) ? (fire && lpar == q) : ((EXTF == 0) && rx_valid[g] && dpar == q);
                 wire          pr_ = rl_on && rl_rx_valid[g] && rpar == q;
                 wire [PW-1:0] rec = (g == RANK) ? tx_rec : (pd_ ? rx_rec[g*PW +: PW] : rl_rx_rec[g*PW +: PW]);
                 assign push[F] = pd_ || pr_;
                 assign clash[F] = pd_ && pr_;
                 if (FIFO_SRAM != 0) begin : g_sram
-                    if (PULL != 0) begin : g_pull
+                    if (PULL != 0 && EXTF != 0 && g != RANK) begin : g_xf
+                        // external FIFO: only the landing queue is here
+                        wire pq_ = (PCOPY != 0) ? (pop_k[g*PSL] && ppar_k[g*PSL] == q) : (pop && ppar == q);
+                        ot_link_credit_rx #(.W(PW), .DEPTH(PULL_D), .OREG(0), .WFREE(LQW)) u_pr (.clk(clk), .rst_n(rst_n),
+                            .l_valid(xl_v[F]), .l_data(xl_d[F*PW +: PW]), .l_credit(xl_cr[F]), .o_valid(hvf[F]), .o_ready(pq_),
+                            .o_data(hd[F]), .fault());
+                    end else if (PULL != 0) begin : g_pull
+                        assign xl_cr[F] = 1'b0;
                         wire fhv, f_rdy, lv, lc; wire [PW-1:0] fhd, ld;
                         // the landing-queue pop: the source's local copy under PCOPY, else the shared pop
                         wire pq_ = (PCOPY != 0) ? (pop_k[g*PSL] && ppar_k[g*PSL] == q) : (pop && ppar == q);
@@ -202,11 +218,13 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
                             .o_data(hd[F]), .fault());
 `endif
                     end else begin : g_direct
+                    assign xl_cr[F] = 1'b0;
                     ot_fifo_sram_fwft #(.W(PW), .DEPTH(PD), .MACRO(SRAM_MACRO)) u_f (
                         .clk(clk), .rst_n(rst_n), .push(push[F]), .wdata(rec), .pop(pop && ppar == q),
                         .hv(hvf[F]), .head(hd[F]), .ovf());
                     end
                 end else begin : g_flop
+                    assign xl_cr[F] = 1'b0;
                     reg [PW-1:0] m [0:PD-1];
                     reg [DB-1:0] wp, rp;
                     always @(posedge clk) if (push[F]) m[wp] <= rec;
@@ -280,7 +298,8 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
             for (r = 0; r < 2 * N; r = r + 1) begin
                 if ((r / 2) != RANK)
                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
-                cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+                if (EXTF == 0 || (r / 2) == RANK)       // EXTF: the FIFO tile keeps the remote FIFOs' occupancy
+                    cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
             end
         end
     end
