@@ -37,6 +37,7 @@ Both sit inside the old reservation, at the arrangement with the least bit-weigh
 import copy
 import functools
 import os
+import re
 
 MOVED_KINDS = {'phy', 'ctrl', 'cdc', 'link_fifo', 'hub_element', 'link_station'}
 DROP_CLASSES = {'kv_land', 'link_channel', 'link_spine', 'hbm_cdc', 'cdc_core', 'phy_dfi', 'strip_fan'}
@@ -370,11 +371,17 @@ def _wrap_masters(v, m):
         M['qfd_d2d_rom'] = ad
         c = by['clk_rx']
         cm = Master('qfd_clkrx', c.w, c.h, 7, 'ROM-die clock root (forwarded KV-die PLL clock) + reset synchroniser')
-        j = 0
+        # qwendie-1011: 3.2 um grid (1.6 um < the M8 area-pin shape) and a STABLE slot per port: pll_r<k> -> slot k,
+        # the rest from slot 200 (sorted-list slots shifted when region outputs were added: pll_r107 sat on pll_r15)
+        rest = 200
         for p in sorted(used_ports.get('clk_rx', {})):
-            cm.area(p, 1, min(cm.w - 1.0, max(1.0, cm.w / 2 + ((j % 12) - 6) * 1.6)),
-                    min(cm.h - 1.0, max(1.0, cm.h / 2 + (j // 12 - 5) * 1.6)), 1)
-            j += 1
+            mk_ = re.fullmatch(r'pll_r(\d+)', p)
+            if mk_:
+                j = int(mk_.group(1))
+            else:
+                j, rest = rest, rest + 1
+            cm.area(p, 1, min(cm.w - 1.0, max(1.0, cm.w / 2 + ((j % 16) - 8) * 3.2)),
+                    min(cm.h - 1.0, max(1.0, cm.h / 2 + (j // 16 - 8) * 3.2)), 1)
         M['qfd_clkrx'] = cm
         cbm = Master('qfd_ckbump', 43.2 - v.SHAVE, 43.2 - v.SHAVE, 7, 'forwarded clock / reset bump pair from the KV die (pad cell)')
         cbm.area('pll_ck', 1, 21.0, 21.0, 1)
@@ -625,6 +632,12 @@ O4_REPIN = {
 
 
 def surgery_o4(v, m):
+    # qwendie-1011 audit: clock area pins on a 3.2 um grid; a final face-packing pass (outermost) with the abutted
+    # pairs pinned (VM sa / sq <-> SU va / vq, VM N <-> control tile S groups)
+    v.CK_AREA_PITCH = 3.2
+    v.FACE_PACK_FINAL = True
+    v.PINNED_FACE_PORTS = ({('qfd_sp_vector_memory', p) for p in ('sa', 'sq', *O4_CTLM_S)} |
+                           {('qfd_sp_su64_sfu', p) for p in ('va', 'vq')} | {('qfd_tt_ctlm', p) for p in O4_CTLM_S})
     surgery(v, m)
     _option4(v, m, m['r22k'])
     _vm_ar(v, m, 'seq_su', 'qfd_seq_su')
@@ -732,6 +745,7 @@ def _o4_vm_master(v, Master, vmm, vmi, plan):
     face (the inner chain placed them toward their peers from the same instance y); _despan separates overlaps."""
     off = (O4_VM_SQ[0] - O4_CTLM[0]) / 2
     n = Master(vmm.name, vmi.w, vmi.h, vmm.obs_top, vmm.note + ' | near-square slot %.1f x %.1f (qwendie-1011)' % O4_VM_SQ)
+    grp = []
     for p in vmm.order:
         s = vmm.ports[p]
         if s[0] == 'area':
@@ -756,8 +770,38 @@ def _o4_vm_master(v, Master, vmm, vmi, plan):
             c = c + off
         else:
             c = min(max(c, half + 2.0), n.h - half - 2.0)
+        grp.append([p, bits, f, ly, c, pitch, half])
+    grp.append(['mee', O4_ME_EN_BITS, 'N', 'M5', off + 200.0, 2, O4_ME_EN_BITS * 2 * 0.048 / 2])
+    # qwendie-1011: groups clamped to the same face end (rb3-5 / rk3-5 / rc3-5: every peer above the VM) overlapped;
+    # pack each face + layer: sorted by centre, pushed apart by 2 um, then shifted back inside the face if the pack ran
+    # past an end.  Abutted (fixed) groups keep their place; movable groups pack around them.
+    fixed = set(O4_CTLM_S) | {'sa', 'sq'}
+    for (f, ly) in {(g[2], g[3]) for g in grp}:
+        L = sorted((g for g in grp if g[2] == f and g[3] == ly), key=lambda g: g[4])
+        span = n.w if f in 'NS' else n.h
+        for _ in range(4):
+            for a, b in zip(L, L[1:]):
+                need = a[4] + a[6] + 2.0 + b[6]
+                if b[4] < need:
+                    if b[0] in fixed and a[0] not in fixed:
+                        a[4] = b[4] - b[6] - 2.0 - a[6]
+                    else:
+                        b[4] = need
+            over = L[-1][4] + L[-1][6] + 2.0 - span if L else 0.0
+            if over > 0:
+                for g in L:
+                    if g[0] not in fixed:
+                        g[4] -= over
+            under = 2.0 - (L[0][4] - L[0][6]) if L else 0.0
+            if under > 0:
+                for g in L:
+                    if g[0] not in fixed:
+                        g[4] += under
+            L.sort(key=lambda g: g[4])
+        for a, b in zip(L, L[1:]):
+            assert b[4] - b[6] >= a[4] + a[6] + 1.0, f'VM {f}/{ly}: {a[0]} / {b[0]} overlap after packing'
+    for p, bits, f, ly, c, pitch, half in grp:
         n.face(p, bits, f, ly, round(c, 3), pitch)
-    n.face('mee', O4_ME_EN_BITS, 'N', 'M5', round(off + 200.0, 3), 2)
     return n
 
 
@@ -1037,7 +1081,7 @@ def _o4_masters(v, m, ghosts):
                     rs_.face(pn, w_, 'E', 'M4', yc, 1)
         cx = M['qfd_clkrx']
         if 'rso_ctlm' not in cx.ports:
-            cx.area('rso_ctlm', 1, cx.w / 2, cx.h / 2 - 8.0, 1)
+            cx.area('rso_ctlm', 1, cx.w / 2, cx.h / 2 + 40.0, 1)   # clear of the 3.2 um pll_r grid
         for name in ('qfd_sp_tree_top', 'qfd_sp_constants_sequencer'):
             M.pop(name, None)
         del saved

@@ -259,12 +259,67 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
+        if before_relays is not None:
+            _regions_from_placement(m)   # the relays joined region clocks: re-file + split to the measured cap again
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
     if su_vm_abut:
         # outermost: after the relays (an abutted bus takes no relay); r21m: the banked memory's descriptor ports
         _su_vm_bus(v, m, *((SU_VM_A_BITS_BV, SU_VM_Q_BITS) if vm_me else (SU_VM_A_BITS, SU_VM_Q_BITS)))
     m['b3r2']['r21v_su_vm_abut'] = su_vm_abut
+    if before_relays is not None and getattr(v, 'FACE_PACK_FINAL', False):
+        _face_pack_final(v, m)   # outermost: after every pin-moving wrapper
     return v, m
+
+
+def _face_pack_final(v, m):
+    """qwendie-1011 (r22ko4 audit): no two face pin groups of one master may overlap on one face + layer.  _despan
+    (inside the surgery) only slides forward and gives up at the face end; later wrappers (seam-free) move pins after
+    it.  This outermost pass packs every face + layer forward, then backward from the face end when the forward pack
+    overflows; pinned (abutted pair) groups never move; any overlap left raises."""
+    inner = v.masters
+    pinned = getattr(v, 'PINNED_FACE_PORTS', set())
+    rec = m['b3r2'].setdefault('face_pack_final', [])
+    gap = 0.1   # only real overlaps move (already-legal groups keep their place: abutted pairs stay aligned)
+
+    def masters(model, k=1, port_bits=None):
+        M = inner(model, k, port_bits)
+        for name, mst in M.items():
+            groups = {}
+            for p in dict.fromkeys(mst.order):     # a port can appear twice in order (re-added by a later wrapper)
+                s = mst.ports.get(p)
+                if s and s[0] == 'face':
+                    groups.setdefault((s[2], s[3]), []).append(p)
+            for (face, layer), ps in groups.items():
+                L_ = mst.h if face in 'EW' else mst.w
+                G = sorted(([p, mst.ports[p][4], mst.ports[p][1] * mst.ports[p][5] * 0.048 / 2] for p in ps),
+                           key=lambda g: g[1])
+                fix = lambda g: (name, g[0]) in pinned   # noqa: E731
+                for _ in range(3):
+                    for a, b in zip(G, G[1:]):       # forward
+                        need = a[1] + a[2] + gap + b[2]
+                        if b[1] < need:
+                            if fix(b) and not fix(a):
+                                a[1] = b[1] - b[2] - gap - a[2]
+                            elif not fix(b):
+                                b[1] = need
+                    end = L_                          # backward from the face end
+                    for g in reversed(G):
+                        if g[1] + g[2] > end - 0.5 and not fix(g):
+                            g[1] = end - 0.5 - g[2]
+                        end = g[1] - g[2] - gap
+                    G.sort(key=lambda g: g[1])
+                bad = [(a[0], b[0]) for a, b in zip(G, G[1:]) if b[1] - b[2] < a[1] + a[2] - 1e-6] + \
+                      [(g[0], 'face end') for g in G if g[1] - g[2] < -1e-6 or g[1] + g[2] > L_ + 1e-6]
+                if bad:
+                    raise ValueError(f'{name} {face}/{layer}: face groups do not fit: {bad[:4]}')
+                for g in G:
+                    kind, bits, f, ly, c, pitch = mst.ports[g[0]]
+                    if abs(c - g[1]) > 1e-6:
+                        mst.ports[g[0]] = (kind, bits, f, ly, round(g[1], 3), pitch)
+                        if len(rec) < 400:
+                            rec.append((name, g[0], face, layer, round(c, 3), round(g[1], 3)))
+        return M
+    v.masters = masters
 
 
 # r21v (qwen-split-exact 2026-10-07): the stream unit <-> vector memory bus.  ot_qwen_rom_core's u_su reads three
@@ -1609,8 +1664,9 @@ def _r18_masters(v, m):
                         j += 1
                         continue
                     M.order.append(pn)
-                    M.area(pn, 1, min(M.w - 1.0, max(1.0, M.w / 2 + ((j % 12) - 6) * 1.6)),
-                           min(M.h - 1.0, max(1.0, M.h / 2 + (j // 12) * 1.6)), 1)
+                    pp_ = getattr(v, 'CK_AREA_PITCH', 1.6)   # qwendie-1011 r22ko4: 3.2 (1.6 < the M8 pin: rows overlapped)
+                    M.area(pn, 1, min(M.w - 1.0, max(1.0, M.w / 2 + ((j % 12) - 6) * pp_)),
+                           min(M.h - 1.0, max(1.0, M.h / 2 + (j // 12) * pp_)), 1)
                     j += 1
         return out
     v.masters = masters
@@ -2706,11 +2762,38 @@ def _regions_from_placement(m):
     for i, p in sinks:
         it = by[i]
         per.setdefault(region_at(regs, it.x + it.w / 2, it.y + it.h / 2), []).append((i, p))
+    # a region whose MEASURED sink span exceeds REGION_MAX_MM (r22ko4 + near-square VM: band rectangles 5,264 um tall)
+    # splits at the median of its long axis into two regions (a new root output each) until every span fits
+    cap, split = REGION_MAX_MM * 1000, 0
+    work = sorted(per)
+    while work:
+        k = work.pop()
+        l = per[k]
+        cx = [by[i].x + by[i].w / 2 for i, _ in l]
+        cy = [by[i].y + by[i].h / 2 for i, _ in l]
+        dx, dy = max(cx) - min(cx), max(cy) - min(cy)
+        if max(dx, dy) <= cap or len(l) < 2:
+            continue
+        key = cx if dx >= dy else cy
+        o = sorted(range(len(l)), key=lambda j: key[j])
+        lo, hi = [l[j] for j in o[:len(o) // 2]], [l[j] for j in o[len(o) // 2:]]
+        r0 = regs[k]
+        a, b_, c, d = r0['rect']
+        nk = len(regs)
+        regs.append(dict(name=f"{r0['name']}_s{split}", kind=r0['kind'], rect=[a, b_, c, d], split_of=r0['name']))
+        per[k], per[nk] = lo, hi
+        split += 1
+        for kk in (k, nk):        # the rectangle is shared: record the halves' measured extent
+            xs_ = [by[i].x + by[i].w / 2 for i, _ in per[kk]]
+            ys_ = [by[i].y + by[i].h / 2 for i, _ in per[kk]]
+            ext = round(max(max(xs_) - min(xs_), max(ys_) - min(ys_)) / 1000, 4)
+            regs[kk]['extent_mm'], regs[kk]['within_5p25'] = ext, ext <= REGION_MAX_MM + 1e-9
+        work += [k, nk]
     moved = sum(1 for bus in m['buses'] if re.fullmatch(r'clk_r\d+', bus[0])
                 for i, p in bus[3] if not p.startswith('pll_r')
                 and f'clk_r{region_at(regs, by[i].x + by[i].w / 2, by[i].y + by[i].h / 2)}' != bus[0])
     m['buses'] = keep + [(f'clk_r{k}', 'clock_trunk', 1, [(root, f'pll_r{k}')] + per[k]) for k in sorted(per)]
-    m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), refiled=moved, region_nets=len(per))
+    m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), refiled=moved, region_nets=len(per), split=split)
 
 
 def region_spans(m):

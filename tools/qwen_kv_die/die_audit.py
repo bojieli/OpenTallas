@@ -24,7 +24,7 @@ def main():
     ap.add_argument('--out')
     a = ap.parse_args()
     D = a.case
-    size, pins, cur, pin = {}, collections.defaultdict(dict), None, None
+    size, pins, cur, pin, lay, shapes = {}, collections.defaultdict(dict), None, None, None, {}
     for ln in open(D + '/elements.lef'):
         s = ln.strip()
         if s.startswith('MACRO '):
@@ -34,8 +34,11 @@ def main():
             size[cur] = (float(t[1]), float(t[3]))
         elif s.startswith('PIN '):
             pin = s.split()[1]
+        elif pin and s.startswith('LAYER'):
+            lay = s.split()[1]
         elif pin and s.startswith('RECT'):
             t = s.split()
+            shapes.setdefault(cur, []).append((lay, float(t[1]), float(t[2]), float(t[3]), float(t[4]), pin))
             x, y = (float(t[1]) + float(t[3])) / 2, (float(t[2]) + float(t[4])) / 2
             d = pins[cur].setdefault(re.sub(r'\[\d+\]$', '', pin), [0.0, 0.0, 0])
             d[0] += x; d[1] += y; d[2] += 1
@@ -101,10 +104,28 @@ def main():
         clk.append((round(max(xs) - min(xs)), round(max(ys) - min(ys)), n, len(pts), tr))
     clk.sort(key=lambda c: -max(c[0], c[1]))
     region = [c for c in clk if c[2].startswith('n_clk_r')]
+    # pin shapes of DIFFERENT ports overlapping on one layer inside a master (r22ko4 VM rb3-5 clamped to one face end)
+    used = set(inst.values())
+    pin_ovl = []
+    for mst, sh in shapes.items():
+        if mst not in used:
+            continue
+        for ly in {s_[0] for s_ in sh}:
+            L = sorted((s_ for s_ in sh if s_[0] == ly), key=lambda s_: s_[1])
+            act = []
+            for s_ in L:
+                act = [a_ for a_ in act if a_[3] > s_[1] + 1e-4]
+                for a_ in act:
+                    if a_[5] != s_[5] and min(a_[4], s_[4]) - max(a_[2], s_[2]) > 1e-4 and \
+                            re.sub(r'\[\d+\]$', '', a_[5]) != re.sub(r'\[\d+\]$', '', s_[5]):
+                        pin_ovl.append((mst, ly, a_[5], s_[5]))
+                act.append(s_)
     area = sum(size[inst[i]][0] * size[inst[i]][1] for i in inst if inst[i] in size)
     fo = max(((len(p), n) for n, p in netpins.items() if not is_clk(n)), default=(0, ''))
     over = [h for h in hops if h[0] > a.reach]
     out = dict(case=D, insts=len(inst), nets=len(netpins), nopin_nets=nopin,
+               pin_overlaps=len(pin_ovl), pin_overlap_examples=pin_ovl[:10],
+               pin_overlaps_by_master=dict(collections.Counter(o_[0] for o_ in pin_ovl)),
                util=round(area / (a.die_w * a.die_h), 4), placed_mm2=round(area / 1e6, 2),
                max_fanout_nonclk=dict(net=fo[1], pins=fo[0]),
                hops_over_reach=dict(reach_um=a.reach, nets=len(over), bits=sum(h[2] for h in over),
@@ -117,7 +138,7 @@ def main():
     s = json.dumps(out, indent=1)
     if a.out:
         open(a.out, 'w').write(s)
-    print(json.dumps({k: out[k] for k in ('util', 'max_fanout_nonclk', 'region_nets', 'region_over_max', 'region_trunk_max_um')} |
+    print(json.dumps({k: out[k] for k in ('util', 'pin_overlaps', 'max_fanout_nonclk', 'region_nets', 'region_over_max', 'region_trunk_max_um')} |
                      dict(hops_over=out['hops_over_reach']['nets'], hop_bits=out['hops_over_reach']['bits'],
                           worst_hops=[(w['um'], w['net']) for w in out['hops_over_reach']['worst'][:8]],
                           worst_region=out['region_worst'][:3], worst_clock=out['clock_worst'][:4])))
