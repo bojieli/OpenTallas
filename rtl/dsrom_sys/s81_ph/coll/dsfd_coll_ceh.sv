@@ -279,7 +279,12 @@ module dsfd_coll_cel #(parameter integer KIND = 0, parameter integer XD = 6) (
         reg tv_q; reg [4*163-1:0] td_q; reg [1:0] cro_q;
         always @(posedge ck or negedge erst_n) if (!erst_n) begin tv_q <= 1'b0; cro_q <= 2'd0; end else begin tv_q <= tx_v; cro_q <= cr_o; end
         always @(posedge ck) td_q <= tx_d;
+`ifdef OT_S81PH_MUT_CEL
+        // negative control: slices 1 and 2 swapped in the record sent to the remote dies
+        wire [PW-1:0] rec = {td_q[162:128], td_q[3*163 +: 128], td_q[163 +: 128], td_q[2*163 +: 128], td_q[127:0]};
+`else
         wire [PW-1:0] rec = {td_q[162:128], td_q[3*163 +: 128], td_q[2*163 +: 128], td_q[163 +: 128], td_q[127:0]};
+`endif
         wire sk_hv, sk_f; wire [PW-1:0] sk_hd;
         wire flit_go = x_lo_v && x_lo_r;
         reg [9:0] crx0, crx1, crs0, crs1;
@@ -330,8 +335,14 @@ module dsfd_coll_cel #(parameter integer KIND = 0, parameter integer XD = 6) (
         ot_link_credit_tx #(.W(553), .CRED(XD), .DFREE(1)) u_pt (.clk(ck), .rst_n(rst_n), .i_valid(x_li_v),
             .i_ready(x_li_r), .i_data(x_li_d), .l_valid(p_v), .l_data(ld), .l_credit(pcr_q));
         // slice 0: {last, data[551:512], data[127:0]}; slice s: {last, data[s*128 +: 128]}
+`ifdef OT_S81PH_MUT_CEL
+        // negative control: slices 1 and 2 swapped in the pass-through split
+        assign p_d = {ld[552], ld[3*128 +: 128], ld[552], ld[128 +: 128], ld[552], ld[2*128 +: 128],
+                      ld[552], ld[551:512], ld[127:0]};
+`else
         assign p_d = {ld[552], ld[3*128 +: 128], ld[552], ld[2*128 +: 128], ld[552], ld[128 +: 128],
                       ld[552], ld[551:512], ld[127:0]};
+`endif
         always @(posedge ck or negedge rst_n) if (!rst_n) begin tx_rdy <= 1'b0; cr_i <= 2'd0; rx_v <= 1'b0; skf <= 1'b0; end
         always @(posedge ck) rx_d <= {PW{1'b0}};
         wire unused_k = &{1'b0, tx_v, tx_d, cr_o, erst_n};

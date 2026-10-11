@@ -31,11 +31,15 @@ def _emit_scalar(self, note):
 T.Plan.emit = _emit_scalar
 
 
+LO = {'pe_i': 1, 'tx_v': 1, 'tx_rdy': 1, 'cr_i': 2, 'cr_o': 2}     # [hi:lo] ports of dsfd_coll_ces with lo != 0
+
+
 def lay(pl, face, buses, start=2.4, step=2):
     layer = 'M5' if face in 'NS' else 'M4'
     x = start
     for p, b, d in buses:
-        x = pl.bus(p, b, d, face, layer, x, step=step)
+        lo = LO.get(p, 0) if pl.m.startswith('dsfd_coll_ces') else 0
+        x = pl.bus(p, b, d, face, layer, x, step=step, lo=lo, n=b)
     lim = pl.w if face in 'NS' else pl.h
     assert x < lim - 0.3, (pl.m, face, x, lim)
     return x
