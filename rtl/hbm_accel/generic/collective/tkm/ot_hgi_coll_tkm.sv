@@ -37,7 +37,7 @@
 // a FIFO overflow.  MUT (bench mutants): 1 ties to the HIGHER id, 2 the 4th survivor of a select cycle is dropped,
 // 3 a reservation does not consume a credit (FIFO overflow under back-pressure), 4 no id phase (O in value order).
 module ot_hgi_coll_tkm #(
-    parameter integer KMAX = 2048,
+    parameter integer KMAX = 64,      // the die instance sets 2,048 (ot_hgi_coll_ep TKM_KMAX); a small default keeps read-time elaboration cheap
     parameter integer DEL  = 4,
     parameter integer FW   = 512,
     parameter integer PWT  = FW + 33,
@@ -130,11 +130,11 @@ module ot_hgi_coll_tkm #(
     // ---------------------------------------------------------------- tau
     reg [KW-1:0] tau;
     // ---------------------------------------------------------------- staging (3 a lane) + select
-    reg [EW-1:0] st_e [0:DEL-1][0:2][0:7];
+    reg [8*EW-1:0] st_e [0:DEL-1][0:2];          // packed 8-element words (yosys: no unpacked sub-array copies)
     reg [7:0]    st_m [0:DEL-1][0:2];
     reg [1:0]    st_n [0:DEL-1];
     reg [DEL-1:0] ld_v;
-    reg [EW-1:0] ld_e [0:DEL-1][0:7];
+    reg [8*EW-1:0] ld_e [0:DEL-1];
     reg [7:0]    ld_m [0:DEL-1];
     reg [7:0]    dn [0:DEL-1];                 // survivors of the head already taken
     // entry pipeline
@@ -164,7 +164,7 @@ module ot_hgi_coll_tkm #(
                 B_[s] = (c > 0) ? X[(c > 0) ? c - 1 : 0][s] : {EW{1'b0}};     // OETS: the cell above
             end
             for (a = 0; a < 4; a = a + 1) for (b = 0; b < 4; b = b + 1)
-                ge[a][b] = (mkey(A_[a], idm) >= mkey(B_[b], idm));
+                ge[a][b] = (ikey(A_[a]) >= ikey(B_[b]));        // the merge network serves the id phase only
             for (a = 0; a < 4; a = a + 1) begin
                 ra[a] = 3'(a);
                 for (b = 0; b < 4; b = b + 1) if (!ge[a][b]) ra[a] = ra[a] + 3'd1;
@@ -259,7 +259,7 @@ module ot_hgi_coll_tkm #(
             sel_take[l] = 8'd0;
             hm = (st_n[l] != 2'd0) ? (st_m[l][0] & ~dn[l]) : 8'd0;
             for (i = 0; i < 8; i = i + 1) if (hm[i]) begin
-                if (r_ < 4) begin if (!(MUT == 2 && r_ == 3)) sel_e[r_] = st_e[l][0][i]; sel_take[l][i] = 1'b1; end
+                if (r_ < 4) begin if (!(MUT == 2 && r_ == 3)) sel_e[r_] = st_e[l][0][EW*i +: EW]; sel_take[l][i] = 1'b1; end
                 r_ = r_ + 1;
             end
             sel_pop[l] = (st_n[l] != 2'd0) && ((hm & ~sel_take[l]) == 8'd0);
@@ -326,7 +326,7 @@ module ot_hgi_coll_tkm #(
             for (l = 0; l < DEL; l = l + 1) begin
                 ld_v[l] <= fpop[l];
                 for (s = 0; s < 8; s = s + 1) begin
-                    ld_e[l][s] <= fd[l][EW*s +: EW];
+                    ld_e[l][EW*s +: EW] <= fd[l][EW*s +: EW];
                     ld_m[l][s] <= fd[l][EW*s + EW - 1] && (vkey(fd[l][EW*s +: EW]) > tau);
                 end
                 begin : stg
