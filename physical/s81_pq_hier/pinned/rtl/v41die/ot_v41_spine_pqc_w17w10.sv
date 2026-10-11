@@ -595,6 +595,23 @@ module ot_v41_pqc_ctl #(
         end
     end endgenerate
     reg [7:0] gb [0:NCB-1][0:3];
+    // v15: stage B as a Kogge-Stone tree over the four group popcounts (the seam from the T_RET tiles is register ->
+    // two prefix adds -> register; the same sum, mod 256, as the serial accumulation)
+    wire [7:0] gbn [0:NCB-1][0:3];
+    genvar gqb, gtb;
+    generate for (gqb = 0; gqb < NCB; gqb = gqb + 1) begin : g_gb
+        for (gtb = 0; gtb < 4; gtb = gtb + 1) begin : g_t
+            wire [7:0] t0 = (4*gqb + 0 < NCA) ? 8'(ga[4*gqb + 0][gtb]) : 8'd0;
+            wire [7:0] t1 = (4*gqb + 1 < NCA) ? 8'(ga[(4*gqb + 1 < NCA) ? 4*gqb + 1 : 0][gtb]) : 8'd0;
+            wire [7:0] t2 = (4*gqb + 2 < NCA) ? 8'(ga[(4*gqb + 2 < NCA) ? 4*gqb + 2 : 0][gtb]) : 8'd0;
+            wire [7:0] t3 = (4*gqb + 3 < NCA) ? 8'(ga[(4*gqb + 3 < NCA) ? 4*gqb + 3 : 0][gtb]) : 8'd0;
+            wire [7:0] s01, s23, s;
+            ot_v41_ksadd #(.W(8)) u_a (.a(t0), .b(t1), .cin(1'b0), .s(s01), .cout());
+            ot_v41_ksadd #(.W(8)) u_b (.a(t2), .b(t3), .cin(1'b0), .s(s23), .cout());
+            ot_v41_ksadd #(.W(8)) u_c (.a(s01), .b(s23), .cin(1'b0), .s(s), .cout());
+            assign gbn[gqb][gtb] = s;
+        end
+    end endgenerate
     reg [7:0] rc [0:3];
     reg [7:0] gm;
     reg [7:0] racc;
@@ -607,11 +624,7 @@ module ot_v41_pqc_ctl #(
             end
         end else begin
             for (kt = 0; kt < 4; kt = kt + 1) begin
-                for (kq = 0; kq < NCB; kq = kq + 1) begin
-                    racc = 8'd0;
-                    for (kg = 4 * kq; kg < 4 * kq + 4; kg = kg + 1) if (kg < NCA) racc = racc + 8'(ga[kg][kt]);
-                    gb[kq][kt] <= racc;
-                end
+                for (kq = 0; kq < NCB; kq = kq + 1) gb[kq][kt] <= gbn[kq][kt];
                 for (kq = 0; kq < NCP; kq = kq + 1)
                     gp[kq][kt] <= gb[2 * kq][kt] + ((2 * kq + 1 < NCB) ? gb[2 * kq + 1][kt] : 8'd0);
                 racc = 8'd0;
