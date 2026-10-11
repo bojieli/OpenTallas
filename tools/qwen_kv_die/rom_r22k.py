@@ -623,8 +623,8 @@ def _vm_ar(v, m, seq, seq_master):
         if si.x >= vi.x + vi.w - 1.0:
             vf = 'E'
         # clear of the master's other pins on that face (r22ko4 case: vrq on top of seq_su ib -> DRT-0073 ib[305])
-        so = (430.0 if seq_master == 'qfd_seq_su' else s.w * 0.15) if sf in 'NS' else s.h * 0.85
-        step = 30.0 if seq_master == 'qfd_seq_su' else 60.0
+        so = (20.0 if seq_master == 'qfd_seq_su' else s.w * 0.15) if sf in 'NS' else s.h * 0.85
+        step = 32.0 if seq_master == 'qfd_seq_su' else 60.0
         for j, (p, b) in enumerate((('vrd', 9), ('vrq', 512), ('vwr', 521))):
             s.face(p, b, sf, 'M5' if sf in 'NS' else 'M4', so + j * (step if sf in 'NS' else -60.0), 1)
         vo = vm.w * 0.85 if vf in 'NS' else 300.0
