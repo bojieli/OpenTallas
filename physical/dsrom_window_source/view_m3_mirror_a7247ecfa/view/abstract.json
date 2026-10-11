@@ -1,0 +1,57 @@
+{
+  "name": "ot_dsrom_wsrc_mirror",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/s81b-wsrc-m3-mirror-a7247ecfa-tc-f/routes/s81b_wsrc_m3_mirror_a7247ecfa_tc_f/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81b-wsrc-m3-mirror-a7247ecfa-tc-f/routes/s81b_wsrc_m3_mirror_a7247ecfa_tc_f/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81b-wsrc-m3-mirror-a7247ecfa-tc-f/routes/s81b_wsrc_m3_mirror_a7247ecfa_tc_f/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81b-wsrc-m3-mirror-a7247ecfa-tc-f/routes/s81b_wsrc_m3_mirror_a7247ecfa_tc_f/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81b-wsrc-m3-mirror-a7247ecfa-tc-f/routes/s81b_wsrc_m3_mirror_a7247ecfa_tc_f/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81b-wsrc-m3-mirror-a7247ecfa-tc-f/routes/s81b_wsrc_m3_mirror_a7247ecfa_tc_f/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81b-wsrc-m3-mirror-a7247ecfa-tc-f/routes/s81b_wsrc_m3_mirror_a7247ecfa_tc_f/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_wsrc_mirror.lef": "d31ff107d5580fea9d2d853149a4a529f5cfa9410216b1903cbc71bebb8fc354",
+    "ot_dsrom_wsrc_mirror_ff.lib": "1c48f0f45af5c609289a2c57360fdc30a27a4b8cf5346f0398bb727d5f1e4a06",
+    "ot_dsrom_wsrc_mirror_ss.lib": "8ee45232ee0dcffedb6c5a9c1a0598d12190f84623b8dd8b977d580d63fcc812"
+  },
+  "ok": true
+}
