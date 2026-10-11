@@ -136,7 +136,7 @@ module tb_hgi_seq;
         // protocol violation); a slot returns (f_req_ack) when the memory lane takes the request, 0..3 cycles later
         f_req_ack <= 1'b0;
         if (f_req_v) begin fq[(fqh + fqn) % 64] = f_req_addr; fqn = fqn + 1; fql = fql + 1;
-            if (fql > 16) begin $display("FAIL fetch credit: %0d requests in the 16-slot loader queue", fql); fails = fails + 1; end
+            if (fql > 16) begin $display("FAIL fetch credit: %0d requests in the 16-slot loader queue", fql); $display("HGI_SEQ FAIL fetch credit"); $finish; end
         end
         if (fql > 0 && ($urandom % 4) != 0) begin f_req_ack <= 1'b1; fql = fql - 1; end
 `else
