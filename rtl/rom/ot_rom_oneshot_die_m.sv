@@ -68,7 +68,7 @@ module ot_rom_oneshot_die_m #(
     // the macro is written at control timing from the registered push word / pointer and read with the level-1
     // registered {refill, index} copy, so its registered output lines up with the level-2 slice refill (the flop body
     // was read combinationally one edge later); a word pushed at e1 is counted in that cycle's mnz_n, read at e2.
-    // Source 0's mode bit keeps a 32-bit flop shadow for the control's head-mode look-ahead (hm_n).
+    // Source 0's {mode, last} bits keep a 2 x DEPTH flop shadow for the control's head look-ahead (hb_c / hm_n).
     parameter integer MEMM    = 0
 ) (
     input  wire              clk,
@@ -171,8 +171,8 @@ module ot_rom_oneshot_die_m #(
     reg [PW-1:0] hd [0:N-1];
     wire [N-1:0] push;
     wire [N*PW-1:0] push_rec;
-    reg [DEPTH-1:0] m0mode;              // MEMM: source 0's head-mode bits (control look-ahead; the body is a macro)
-    always @(posedge clk) if (push[0]) m0mode[wp[0]] <= push_rec[FW + 1];
+    reg [1:0] m0ml [0:DEPTH-1];          // MEMM: source 0's {mode, last} bits at control timing (the body is a macro)
+    always @(posedge clk) if (push[0]) m0ml[wp[0]] <= push_rec[FW +: 2];
     generate for (g = 0; g < N; g = g + 1) begin : g_src
         if (g == RANK) begin : g_loc
             assign push[g] = (PR != 0) ? lpv : fire;
@@ -231,7 +231,7 @@ module ot_rom_oneshot_die_m #(
             if (pop) begin s0_mode <= hmode; s0_last <= hlast; end
         end
     end
-    always @(posedge clk) if (refill[0]) hb_c <= mem[rp[0]][FW +: 2];
+    always @(posedge clk) if (refill[0]) hb_c <= (MEMM != 0) ? m0ml[rp[0]] : mem[rp[0]][FW +: 2];
     // PR = 2: the s0 registers are written one edge after the pop; s0_vl / s0_ml / s0_ll re-time their consumers
     reg s0_vl, s0_ml, s0_ll;
     always @(posedge clk or negedge rst_i)
@@ -464,7 +464,7 @@ module ot_rom_oneshot_die_m #(
                 rp_n[r] = rp[r] + (refill[r] ? 1'b1 : 1'b0);
             end
             gb_n = g_busy ? (g_cnt != N - 1) : ((s0_v && s0_mode) ? (N != 1) : 1'b0);
-            hm_n = refill[0] ? ((MEMM != 0) ? m0mode[rp[0]] : mem[rp[0]][FW + 1]) : hb_c[1];
+            hm_n = refill[0] ? ((MEMM != 0) ? m0ml[rp[0]][1] : mem[rp[0]][FW + 1]) : hb_c[1];
             inflight_n = inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
             iz_n = (inflight_n == 16'd0);
         end
