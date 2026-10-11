@@ -1339,12 +1339,12 @@ def ctlm_aud(t: str) -> str:
     head, tile = t[:i], t[i:]
     tile = one(tile, "    parameter integer PCUT = 0    // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n) (",
                "    parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n"
-               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud)\n) (")
+               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops (7 = all); 8 = SRAM one-short mutant\n) (")
     tile = one(tile, "        .kv_write_drained(kv_write_drained),", "        .kv_write_drained(kvwd_c),")
     tile = one(tile, "        .kv_ok(kv_ok),", "        .kv_ok(kv_ok_c),")
     tile = one(tile, "    (* keep = \"true\" *) wire [8-1:0] rsv;",
                "    wire kv_ok_c, kvwd_c;   // AUD: pin flops (kv_ok / kv_write_drained announced one edge ahead)\n"
-               "    generate if (AUD != 0) begin : g_kvreg\n"
+               "    generate if ((AUD & 4) != 0) begin : g_kvreg\n"
                "        reg kv_ok_q, kvwd_q;\n"
                "        always @(posedge clk) begin kv_ok_q <= kv_ok; kvwd_q <= kv_write_drained; end\n"
                "        assign kv_ok_c = kv_ok_q; assign kvwd_c = kvwd_q;\n"
@@ -1352,7 +1352,7 @@ def ctlm_aud(t: str) -> str:
                "        assign kv_ok_c = kv_ok; assign kvwd_c = kv_write_drained;\n"
                "    end endgenerate\n"
                "    (* keep = \"true\" *) wire [8-1:0] rsv;")
-    tile = one(tile, ".SPRE(2), .IS(0), .OS(OS)) u_tt (", ".SPRE(2), .IS(0), .OS(OS), .XADDR((AUD != 0) ? 0 : 1), .RDMEM(AUD)) u_tt (")
+    tile = one(tile, ".SPRE(2), .IS(0), .OS(OS)) u_tt (", ".SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0)) u_tt (")
     return head + tile
 
 

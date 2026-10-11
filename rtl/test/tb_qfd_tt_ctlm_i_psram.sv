@@ -13,7 +13,10 @@ module tb_qfd_tt_ctlm_i_psram;
     parameter integer U1_PSRAM = 1, U1_HQ2 = 0;
     parameter integer U1_MEREG = 0, U1_RRG = 0, MOK = 0, U1_PCUT = 0;
     parameter integer PCOV = 0;
-    parameter integer U1_AUD = 0;   // el1011-q-seq: u1 textbook-audit rebuild (kv_ok / kv_write_drained one edge ahead for u1)   // el1011-q-seq: 1 = ME ops with DYN_TTILES (valid splits) and small chase targets (PCUT coverage)   // el1011-q-seq: u1 registered ME enable / replicated reset; MOK 1: random me_mem_ok (u1 sees it 2 edges ahead)
+    parameter integer U1_AUD = 0;
+    parameter integer PFMASK = 0;   // el1011-q-seq: 1 = p_f_e2 only while p_v_e2, scale_addr only while scale_re | scale_gre (valid/data): the
+                                    //   port element registers it unconditionally but every use is behind raw_v / rv (valid/data contract)
+    integer npfm = 0;   // el1011-q-seq: u1 textbook-audit rebuild (kv_ok / kv_write_drained one edge ahead for u1)   // el1011-q-seq: 1 = ME ops with DYN_TTILES (valid splits) and small chase targets (PCUT coverage)   // el1011-q-seq: u1 registered ME enable / replicated reset; MOK 1: random me_mem_ok (u1 sees it 2 edges ahead)
     reg clk = 0, rst_n = 1;
     initial #0.1 rst_n = 0;
     always #0.5 clk = ~clk;
@@ -40,7 +43,7 @@ module tb_qfd_tt_ctlm_i_psram;
     always @(posedge clk) begin mo_d1 <= me_mem_ok; mo_u0 <= mo_d1; end
     reg kv_d1 = 1, kvwd_d1 = 1;   // u0 sees kv_ok / kv_write_drained one edge after u1 when U1_AUD
     always @(posedge clk) begin kv_d1 <= kv_ok; kvwd_d1 <= kv_write_drained; end
-    wire kv_u0 = (U1_AUD != 0) ? kv_d1 : kv_ok, kvwd_u0 = (U1_AUD != 0) ? kvwd_d1 : kv_write_drained;
+    wire kv_u0 = ((U1_AUD & 4) != 0) ? kv_d1 : kv_ok, kvwd_u0 = ((U1_AUD & 4) != 0) ? kvwd_d1 : kv_write_drained;
     reg  up_fault = 0;
     reg [15:0] land_cnt = 0;
     reg  x_rdy = 0;
@@ -226,8 +229,49 @@ module tb_qfd_tt_ctlm_i_psram;
             fab_fault = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed)};
         end
     endtask
-    wire out_mismatch = (me_acc_o_0 !== me_acc_o_1) || (me_idle_o_0 !== me_idle_o_1) || (me_prog_o_0 !== me_prog_o_1) || (m_fin_o_0 !== m_fin_o_1) || (m_fidx_o_0 !== m_fidx_o_1) || (m_fval_o_0 !== m_fval_o_1) || (kvd_v_0 !== kvd_v_1) || (kvd_wbase_0 !== kvd_wbase_1) || (kvd_ts_0 !== kvd_ts_1) || (kvd_ks_0 !== kvd_ks_1) || (kvd_js_0 !== kvd_js_1) || (kvd_wcs_0 !== kvd_wcs_1) || (kvd_split_0 !== kvd_split_1) || (kvd_jsh_0 !== kvd_jsh_1) || (kvd_tiles_0 !== kvd_tiles_1) || (kvd_k_0 !== kvd_k_1) || (kvd_nout_0 !== kvd_nout_1) || (kvd_kindk_0 !== kvd_kindk_1) || (kvd_pos_0 !== kvd_pos_1) || (me_clk_en_0 !== me_clk_en_1) || (c_fault_0 !== c_fault_1) || (scale_re_0 !== scale_re_1) || (scale_gre_0 !== scale_gre_1) || (scale_addr_0 !== scale_addr_1) || (x_dv_0 !== x_dv_1) || (x_dc_0 !== x_dc_1) || (x_dcs_0 !== x_dcs_1) || (x_dsp_0 !== x_dsp_1) || (t_sel_e_0 !== t_sel_e_1) || (t_tv_e_0 !== t_tv_e_1) || (p_v_e2_0 !== p_v_e2_1) || (p_f_e2_0 !== p_f_e2_1) || (ov_0 !== ov_1) || (mx_we_0 !== mx_we_1) || (mx_addr_0 !== mx_addr_1) || (mx_mask_0 !== mx_mask_1) || (mx_data_0 !== mx_data_1);
+    wire out_mismatch = (me_acc_o_0 !== me_acc_o_1) || (me_idle_o_0 !== me_idle_o_1) || (me_prog_o_0 !== me_prog_o_1) || (m_fin_o_0 !== m_fin_o_1) || (m_fidx_o_0 !== m_fidx_o_1) || (m_fval_o_0 !== m_fval_o_1) || (kvd_v_0 !== kvd_v_1) || (kvd_wbase_0 !== kvd_wbase_1) || (kvd_ts_0 !== kvd_ts_1) || (kvd_ks_0 !== kvd_ks_1) || (kvd_js_0 !== kvd_js_1) || (kvd_wcs_0 !== kvd_wcs_1) || (kvd_split_0 !== kvd_split_1) || (kvd_jsh_0 !== kvd_jsh_1) || (kvd_tiles_0 !== kvd_tiles_1) || (kvd_k_0 !== kvd_k_1) || (kvd_nout_0 !== kvd_nout_1) || (kvd_kindk_0 !== kvd_kindk_1) || (kvd_pos_0 !== kvd_pos_1) || (me_clk_en_0 !== me_clk_en_1) || (c_fault_0 !== c_fault_1) || (scale_re_0 !== scale_re_1) || (scale_gre_0 !== scale_gre_1) || ((PFMASK == 0 || scale_re_0 || scale_gre_0) && (scale_addr_0 !== scale_addr_1)) || (x_dv_0 !== x_dv_1) || (x_dc_0 !== x_dc_1) || (x_dcs_0 !== x_dcs_1) || (x_dsp_0 !== x_dsp_1) || (t_sel_e_0 !== t_sel_e_1) || (t_tv_e_0 !== t_tv_e_1) || (p_v_e2_0 !== p_v_e2_1) || ((PFMASK == 0 || p_v_e2_0) && (p_f_e2_0 !== p_f_e2_1)) || (ov_0 !== ov_1) || (mx_we_0 !== mx_we_1) || (mx_addr_0 !== mx_addr_1) || (mx_mask_0 !== mx_mask_1) || (mx_data_0 !== mx_data_1);
     wire pq_mismatch = (u0.prog_q !== u1.prog_q);
+    always @(posedge clk) if (rst_n && ((!p_v_e2_0 && (p_f_e2_0 !== p_f_e2_1)) || (!scale_re_0 && !scale_gre_0 && (scale_addr_0 !== scale_addr_1)))) npfm = npfm + 1;   // masked (invalid-word) differences
+    // el1011-q-seq debug: name the mismatching outputs (first 5 mismatch cycles)
+    always @(posedge clk) if (rst_n && out_mismatch && bad < 5) begin
+        if (me_acc_o_0 !== me_acc_o_1) $display("  DIFF me_acc_o u0=%h u1=%h v=%b", me_acc_o_0, me_acc_o_1, p_v_e2_0);
+        if (me_idle_o_0 !== me_idle_o_1) $display("  DIFF me_idle_o u0=%h u1=%h v=%b", me_idle_o_0, me_idle_o_1, p_v_e2_0);
+        if (me_prog_o_0 !== me_prog_o_1) $display("  DIFF me_prog_o u0=%h u1=%h v=%b", me_prog_o_0, me_prog_o_1, p_v_e2_0);
+        if (m_fin_o_0 !== m_fin_o_1) $display("  DIFF m_fin_o u0=%h u1=%h v=%b", m_fin_o_0, m_fin_o_1, p_v_e2_0);
+        if (m_fidx_o_0 !== m_fidx_o_1) $display("  DIFF m_fidx_o u0=%h u1=%h v=%b", m_fidx_o_0, m_fidx_o_1, p_v_e2_0);
+        if (m_fval_o_0 !== m_fval_o_1) $display("  DIFF m_fval_o u0=%h u1=%h v=%b", m_fval_o_0, m_fval_o_1, p_v_e2_0);
+        if (kvd_v_0 !== kvd_v_1) $display("  DIFF kvd_v u0=%h u1=%h v=%b", kvd_v_0, kvd_v_1, p_v_e2_0);
+        if (kvd_wbase_0 !== kvd_wbase_1) $display("  DIFF kvd_wbase u0=%h u1=%h v=%b", kvd_wbase_0, kvd_wbase_1, p_v_e2_0);
+        if (kvd_ts_0 !== kvd_ts_1) $display("  DIFF kvd_ts u0=%h u1=%h v=%b", kvd_ts_0, kvd_ts_1, p_v_e2_0);
+        if (kvd_ks_0 !== kvd_ks_1) $display("  DIFF kvd_ks u0=%h u1=%h v=%b", kvd_ks_0, kvd_ks_1, p_v_e2_0);
+        if (kvd_js_0 !== kvd_js_1) $display("  DIFF kvd_js u0=%h u1=%h v=%b", kvd_js_0, kvd_js_1, p_v_e2_0);
+        if (kvd_wcs_0 !== kvd_wcs_1) $display("  DIFF kvd_wcs u0=%h u1=%h v=%b", kvd_wcs_0, kvd_wcs_1, p_v_e2_0);
+        if (kvd_split_0 !== kvd_split_1) $display("  DIFF kvd_split u0=%h u1=%h v=%b", kvd_split_0, kvd_split_1, p_v_e2_0);
+        if (kvd_jsh_0 !== kvd_jsh_1) $display("  DIFF kvd_jsh u0=%h u1=%h v=%b", kvd_jsh_0, kvd_jsh_1, p_v_e2_0);
+        if (kvd_tiles_0 !== kvd_tiles_1) $display("  DIFF kvd_tiles u0=%h u1=%h v=%b", kvd_tiles_0, kvd_tiles_1, p_v_e2_0);
+        if (kvd_k_0 !== kvd_k_1) $display("  DIFF kvd_k u0=%h u1=%h v=%b", kvd_k_0, kvd_k_1, p_v_e2_0);
+        if (kvd_nout_0 !== kvd_nout_1) $display("  DIFF kvd_nout u0=%h u1=%h v=%b", kvd_nout_0, kvd_nout_1, p_v_e2_0);
+        if (kvd_kindk_0 !== kvd_kindk_1) $display("  DIFF kvd_kindk u0=%h u1=%h v=%b", kvd_kindk_0, kvd_kindk_1, p_v_e2_0);
+        if (kvd_pos_0 !== kvd_pos_1) $display("  DIFF kvd_pos u0=%h u1=%h v=%b", kvd_pos_0, kvd_pos_1, p_v_e2_0);
+        if (me_clk_en_0 !== me_clk_en_1) $display("  DIFF me_clk_en u0=%h u1=%h v=%b", me_clk_en_0, me_clk_en_1, p_v_e2_0);
+        if (c_fault_0 !== c_fault_1) $display("  DIFF c_fault u0=%h u1=%h v=%b", c_fault_0, c_fault_1, p_v_e2_0);
+        if (scale_re_0 !== scale_re_1) $display("  DIFF scale_re u0=%h u1=%h v=%b", scale_re_0, scale_re_1, p_v_e2_0);
+        if (scale_gre_0 !== scale_gre_1) $display("  DIFF scale_gre u0=%h u1=%h v=%b", scale_gre_0, scale_gre_1, p_v_e2_0);
+        if (scale_addr_0 !== scale_addr_1) $display("  DIFF scale_addr re=%b gre=%b", scale_re_0, scale_gre_0);
+        if (x_dv_0 !== x_dv_1) $display("  DIFF x_dv u0=%h u1=%h v=%b", x_dv_0, x_dv_1, p_v_e2_0);
+        if (x_dc_0 !== x_dc_1) $display("  DIFF x_dc u0=%h u1=%h v=%b", x_dc_0, x_dc_1, p_v_e2_0);
+        if (x_dcs_0 !== x_dcs_1) $display("  DIFF x_dcs u0=%h u1=%h v=%b", x_dcs_0, x_dcs_1, p_v_e2_0);
+        if (x_dsp_0 !== x_dsp_1) $display("  DIFF x_dsp u0=%h u1=%h v=%b", x_dsp_0, x_dsp_1, p_v_e2_0);
+        if (t_sel_e_0 !== t_sel_e_1) $display("  DIFF t_sel_e u0=%h u1=%h v=%b", t_sel_e_0, t_sel_e_1, p_v_e2_0);
+        if (t_tv_e_0 !== t_tv_e_1) $display("  DIFF t_tv_e u0=%h u1=%h v=%b", t_tv_e_0, t_tv_e_1, p_v_e2_0);
+        if (p_v_e2_0 !== p_v_e2_1) $display("  DIFF p_v_e2 u0=%h u1=%h v=%b", p_v_e2_0, p_v_e2_1, p_v_e2_0);
+        if (p_f_e2_0 !== p_f_e2_1) $display("  DIFF p_f_e2 u0=%h u1=%h v=%b", p_f_e2_0, p_f_e2_1, p_v_e2_0);
+        if (ov_0 !== ov_1) $display("  DIFF ov u0=%h u1=%h v=%b", ov_0, ov_1, p_v_e2_0);
+        if (mx_we_0 !== mx_we_1) $display("  DIFF mx_we u0=%h u1=%h v=%b", mx_we_0, mx_we_1, p_v_e2_0);
+        if (mx_addr_0 !== mx_addr_1) $display("  DIFF mx_addr u0=%h u1=%h v=%b", mx_addr_0, mx_addr_1, p_v_e2_0);
+        if (mx_mask_0 !== mx_mask_1) $display("  DIFF mx_mask u0=%h u1=%h v=%b", mx_mask_0, mx_mask_1, p_v_e2_0);
+        if (mx_data_0 !== mx_data_1) $display("  DIFF mx_data u0=%h u1=%h v=%b", mx_data_0, mx_data_1, p_v_e2_0);
+    end
     initial begin
         seed = SEED;   // the 5.050 simulator ignores the declaration initialiser for $random's seed: every SEED ran one stream
         repeat (6) @(posedge clk);
@@ -284,7 +328,7 @@ module tb_qfd_tt_ctlm_i_psram;
         end
         @(negedge clk); h_start = 0;
         repeat (20) @(posedge clk);
-        if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d icut_stim=%0d dyn_tiles_ld=%0d chase_eq=%0d", cyc, nrd, nld, nicut, ndt, nceq);
+        if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d icut_stim=%0d dyn_tiles_ld=%0d chase_eq=%0d pf_invalid_diffs=%0d", cyc, nrd, nld, nicut, ndt, nceq, npfm);
         else $display("FAIL tt_ctlm_i_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d", bad, nrd, MINRD, nld);
         $finish;
     end
