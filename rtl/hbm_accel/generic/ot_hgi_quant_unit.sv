@@ -8,7 +8,8 @@
 module ot_hgi_quant_unit #(
     parameter integer SERIAL_SHAPE = 0,
     parameter integer PIPE = 0,        // hgi-1010/d5: 1 = ot_hgi_quant_vm_transport_p (pipelined, SRAM result FIFO; opt-in)
-    parameter integer MUT = 0          // bench: transport MUTANT (4 = responses paired with the newest request)
+    parameter integer MUT = 0,         // bench: transport MUTANT (4 = responses paired with the newest request)
+    parameter integer QRING = 0, NORST = 0, RREQ = 0   // el1011-hbm-fq/qvm: transport_p textbook rebuild options
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -24,7 +25,7 @@ module ot_hgi_quant_unit #(
     // the die station queues the request: every staged request is taken the next cycle
     wire take = req_v;
     generate if (PIPE) begin : g_pipe
-    ot_hgi_quant_vm_transport_p #(.ENABLE(1), .MUTANT(MUT)) u_tr (.clk(clk), .rst_n(rst_n), .cmd(cmd), .ready(ready), .done(done),
+    ot_hgi_quant_vm_transport_p #(.ENABLE(1), .MUTANT(MUT), .QRING(QRING), .NORST(NORST), .RREQ(RREQ)) u_tr (.clk(clk), .rst_n(rst_n), .cmd(cmd), .ready(ready), .done(done),
         .fault(fault), .drained(drained), .req_v(req_v), .req_r(take), .req(req), .rsp_v(vmr[273]), .rsp_r(rsp_r),
         .rsp(vmr[272:0]), .provider_fault(1'b0));
     end else begin : g_hist

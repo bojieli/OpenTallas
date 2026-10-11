@@ -14,14 +14,14 @@ tr() {
  m=$1
  for try in 1 2 3; do   # verilator 5.x internal faults intermittently on this tree under load: rebuild clean
   rm -rf "$out/t$m.obj"
-  verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style -DPIPE -DMUTANT=$m --top-module tb_hgi_quant_vm_transport -Mdir "$out/t$m.obj" -o sim "${src[@]}" > "$out/t$m.build" 2>&1 && break
+  verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style -DPIPE -DMUTANT=$m ${QVM_TDEFS:-} --top-module tb_hgi_quant_vm_transport -Mdir "$out/t$m.obj" -o sim "${src[@]}" > "$out/t$m.build" 2>&1 && break
  done
  "$out/t$m.obj/sim" +VECTORS=results/hgi_generic/cf_qdq_891b4b555 > "$out/t$m.log" 2>&1; echo $? > "$out/t$m.rc"
 }
 csrc=(rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv rtl/hbm_accel/generic/ot_hgi_quant_decode.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp_lat_c12.sv rtl/hdc/ot_hdc_sfu.sv physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv rtl/hbm_accel/generic/ot_hgi_quant_vm_transport_p.sv rtl/link/ot_fifo_sram_fwft.sv rtl/hbm_accel/generic/ot_hgi_quant_record.sv rtl/hbm_accel/generic/ot_hgi_quant_unit.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v rtl/test/hbm_accel/generic/tb_hgi_quant_vm_connected.sv)
 co() {
  m=$1
- iverilog -g2012 -I rtl/hbm_accel/generic -Ptb_hgi_quant_vm_connected.PIPE=1 -Ptb_hgi_quant_vm_connected.TMUT=$m -o "$out/c$m.vvp" -s tb_hgi_quant_vm_connected "${csrc[@]}" > "$out/c$m.build" 2>&1 && vvp "$out/c$m.vvp" > "$out/c$m.log" 2>&1; echo $? > "$out/c$m.rc"
+ iverilog -g2012 -I rtl/hbm_accel/generic -Ptb_hgi_quant_vm_connected.PIPE=1 ${QVM_CDEFS:-} -Ptb_hgi_quant_vm_connected.TMUT=$m -o "$out/c$m.vvp" -s tb_hgi_quant_vm_connected "${csrc[@]}" > "$out/c$m.build" 2>&1 && vvp "$out/c$m.vvp" > "$out/c$m.log" 2>&1; echo $? > "$out/c$m.rc"
 }
 if [ "${1:-}" = "--one" ]; then   # closure-loop mutant bench: one transport mutant, exit = its sim rc (expect FAIL)
  m=$2; tr $m; cat $out/t$m.log | tail -3

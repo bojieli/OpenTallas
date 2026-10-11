@@ -30,7 +30,11 @@
 // 6 = the write precompute trusts the entry count instead of the landed FIFO head (queued != 0, head not yet read out
 // of the macro); both must FAIL the exact gates.  (A stage-validity mutant is not observable: the seat cannot restage
 // on the edge after a stage, so p_ok is always fresh -- kept as a structural guard.)
-module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
+module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0,
+ // el1011-hbm-fq/qvm textbook rebuild (all default 0 = the d7c5053c1 design): QRING = K-slot lane rings replace the
+ // quant alignment delay lines (K = 4: launches are >= 4 edges apart); NORST = control-only reset, the ports driven from
+ // a separate reset copy; RREQ = req_r is a pin flop (the handshake is retired one edge later, rsp gets one more pin edge)
+ parameter QRING=0, NORST=0, RREQ=0)(
  input wire clk,rst_n,input wire [1408:0] cmd,
  output wire ready,output reg done,output reg fault,output wire drained,
  output wire req_v,input wire req_r,output wire [336:0] req,
@@ -41,6 +45,8 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  // registered reset: async assert, release two edges after rst_n
  reg [1:0] rq; always @(posedge clk or negedge rst_n) if(!rst_n) rq<=2'b00; else rq<={rq[0],1'b1};
  wire rn=rq[1];
+ reg [1:0] rqo; always @(posedge clk or negedge rst_n) if(!rst_n) rqo<=2'b00; else rqo<={rqo[0],1'b1};
+ wire rnp=NORST?rqo[1]:rn;                  // the reset copy behind ready / req_v / rsp_r
  // ---------------------------------------------------------------- command station (1)
  reg cq_v; reg [1408:0] cq;
  always @(posedge clk) cq<=cmd;
@@ -75,7 +81,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg launch, launch_q;
  reg [CW-1:0] reserved,queued;
  wire vo,qfault,decode_fault;wire [511:0] y;
- ot_hgi_quant_decode quant(.clk(clk),.rst_n(rn),.v(launch),
+ ot_hgi_quant_decode #(.XRING(QRING),.VRING(QRING)) quant(.clk(clk),.rst_n(rn),.v(launch),
  .generic_enable(1'b1),.legacy_fp4(1'b0),.header(header),.x(x),
  .vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault));
  wire [15:0] air=a[5]?16'd0:(a[135:120]==0?16'd1:a[135:120]);
@@ -90,7 +96,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg fields_q, same_q, nalias_q, shape_q; reg [24:0] aend_q, oend_q;
  wire shape_ok=fields_q && (aend_q<25'd262144) && (oend_q<25'd262144) &&
  (!same_q || nalias_q) && (same_q || (aend_q<sat40(o[47:8])) || (oend_q<sat40(a[47:8])));
- assign ready=ENABLE&&rn&&!busy&&!cq_v;
+ assign ready=ENABLE&&rnp&&!busy&&!cq_v;
  // ---------------------------------------------------------------- result store (3)
  wire hv, fovf; wire [511:0] fhead;
  wire push=vo&&!bad&&MUTANT!=1;
@@ -102,10 +108,12 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg [DW-1:0] pd [0:3]; reg [1:0] pd_h,pd_t; reg [2:0] pd_n; reg [DW-1:0] seat_d;
  wire pending=pd_n!=0;
  assign drained=!busy&&!pending&&reserved==0;
- assign req_v=ENABLE&&rn&&seat_v&&!bad;
+ reg req_r_q,req_v_q; always @(posedge clk or negedge rn) if(!rn) begin req_r_q<=0; req_v_q<=0; end else begin req_r_q<=req_r; req_v_q<=req_v; end
+ wire take_reg=req_v_q&&req_r_q;            // RREQ: the handshake of the previous edge, from pin flops
+ assign req_v=ENABLE&&rnp&&seat_v&&!bad&&!(RREQ&&take_reg);
  assign req=seat;
- assign rsp_r=ENABLE&&rn;                     // never back-pressured: one response a cycle is processed
- wire take_req=req_v&&req_r,take_rsp=response_v;
+ assign rsp_r=ENABLE&&rnp;                     // never back-pressured: one response a cycle is processed
+ wire take_req=RREQ?take_reg:(req_v&&req_r),take_rsp=response_v;
  // hgi-1010/c (route e02c1820f TT -107, SS -513: pd_h -> launched / xe / xs / reserved 24-25 levels = the 4-entry head mux
  // under the reply check): the head descriptor is a register (pd_hd) kept equal to pd[pd_h]
  reg [DW-1:0] pd_hd;
@@ -148,7 +156,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire wsel=pw_ok && (p_rdone || (reserved>=DEPTH && MUTANT!=3));
  wire rsel=!p_rdone && (p_r_part!=0 || (reserved<DEPTH || MUTANT==3));
  wire ctl_run=busy&&!validating&&!val_sum&&!val2&&!val3&&!val4;
- wire stage=ctl_run&&!bad&&!launch&&!launch_q&&p_ok&&(wsel||rsel)&&!seat_v&&pd_n<3'd4;
+ wire stage=ctl_run&&!bad&&!launch&&!launch_q&&p_ok&&(wsel||rsel)&&(RREQ?((!seat_v||take_reg)&&(pd_n+{2'd0,take_reg})<3'd4):(!seat_v&&pd_n<3'd4));
  wire stw=wsel;
  wire reserve_read=stage&&!stw&&p_r_part==0;
  wire retire_write=take_rsp&&reply_ok&&d_we&&d_lastw&&!bad;
@@ -175,7 +183,9 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  // ---------------------------------------------------------------- response lanes (5): R1 decides, R2 writes
  reg [255:0] rd2; reg [31:0] xe_q,xz_q; reg [95:0] xs_q;
  always @(posedge clk) rd2<=response[255:0];
- always @(posedge clk) response<=rsp;         // payload: qualified by response_v
+ reg [272:0] rsp_p; reg rsp_vp; always @(posedge clk) rsp_p<=rsp;
+ always @(posedge clk or negedge rn) if(!rn) rsp_vp<=0; else rsp_vp<=rsp_v;
+ always @(posedge clk) response<=RREQ?rsp_p:rsp;         // payload: qualified by response_v
  always @(posedge clk or negedge rn)begin
   if(!rn)begin xe_q<=0;xz_q<=0;xs_q<=0;end
   else for(integer lane=0;lane<32;lane=lane+1)begin
@@ -192,6 +202,108 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    if(xe_q[lane]) x[lane*32+:32]<=xz_q[lane]?32'd0:rd2[xs_q[lane*3+:3]*32+:32];
  end
  // ---------------------------------------------------------------- control
+// el1011-hbm-fq/qvm (textbook class 2: rq[1] reached 1,584 async-reset flops, most of them payload): the control body
+// is one macro; NORST=0 keeps the original async-reset block, NORST=1 resets the 25 control registers only (synchronously,
+// last assignment wins) and leaves every payload register (operands, shape sums, addresses, seat, counters loaded at
+// cq_v) without reset.
+`define OT_QVMP_BODY \
+   done<=0;launch<=launch_q;launch_q<=0; \
+   response_v<=RREQ?rsp_vp:rsp_v; \
+   cq_v<=ready&&cmd[0]; \
+   fh_ok<=(MUTANT==6?queued!=0||push:hv)&&!pop; \
+   p_ok<=!stage&&!cq_v; pw_ok<=fh_ok&&(MUTANT==6?queued!=0||push:hv)&&!pop&&!stage&&!cq_v; p_rdone<=read_row==m; \
+   if(cq_v)begin \
+    a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0; \
+    n<=ca[67:48];m<=ca[87:68]; \
+    read_addr<=ca[39:8];write_addr<=co[39:8];read_rowbase<=ca[39:8];write_rowbase<=co[39:8]; \
+    read_row<=0;read_col<=0;write_row<=0;write_col<=0;read_left<=ca[67:48];write_left<=ca[67:48];rs<=ca[119:88];ws<=co[119:88]; \
+    ri<=ca[5]?16'd0:(ca[135:120]==0?16'd1:ca[135:120]); \
+    wi<=co[135:120]==0?16'd1:co[135:120]; \
+    launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0; \
+    reserved<=0; \
+   end \
+   if(busy&&validating)begin \
+    if(!shape_active)begin \
+     shape_active<=1;shape_bit<=0; \
+     ar_acc<=0;ac_acc<=0;or_acc<=0;oc_acc<=0; \
+     ar_mc<={|a[119:112],a[111:88]};ac_mc<={9'd0,air}; \
+     or_mc<={|o[119:112],o[111:88]};oc_mc<={9'd0,oir}; \
+     ar_count<=a[87:68]-20'd1;ac_count<=a[67:48]-20'd1; \
+     or_count<=o[87:68]-20'd1;oc_count<=o[67:48]-20'd1; \
+    end else begin \
+     ar_acc<=sadd(ar_acc,ar_count[0]?ar_mc:25'd0); \
+     ac_acc<=sadd(ac_acc,ac_count[0]?ac_mc:25'd0); \
+     or_acc<=sadd(or_acc,or_count[0]?or_mc:25'd0); \
+     oc_acc<=sadd(oc_acc,oc_count[0]?oc_mc:25'd0); \
+     ar_mc<=(ar_count>>1)!=0?{ar_mc[24]|ar_mc[23],ar_mc[22:0],1'b0}:ar_mc;ac_mc<=(ac_count>>1)!=0?{ac_mc[24]|ac_mc[23],ac_mc[22:0],1'b0}:ac_mc; \
+     or_mc<=(or_count>>1)!=0?{or_mc[24]|or_mc[23],or_mc[22:0],1'b0}:or_mc;oc_mc<=(oc_count>>1)!=0?{oc_mc[24]|oc_mc[23],oc_mc[22:0],1'b0}:oc_mc; \
+     ar_count<=ar_count>>1;ac_count<=ac_count>>1;or_count<=or_count>>1;oc_count<=oc_count>>1; \
+     shape_bit<=shape_bit+1'b1; \
+     if(shape_bit==19)begin shape_active<=0;validating<=0;val_sum<=1;end \
+    end \
+   end \
+   if(busy&&val_sum)begin \
+    val_sum<=0;val2<=1;aspan_q<=sadd(ar_acc,ac_acc);ospan_q<=sadd(or_acc,oc_acc);orow_q<=oc_acc; \
+   end \
+   if(busy&&val2)begin \
+    val2<=0;val3<=1; \
+    fields_q<=fields_ok;same_q<=same_geometry;nalias_q<=(o[87:68]==1 || (!orow_q[24] && o[119:88]>{8'd0,orow_q[23:0]})); \
+    aend_q<=sadd(sat40(a[47:8]),aspan_q);oend_q<=sadd(sat40(o[47:8]),ospan_q); \
+   end \
+   if(busy&&val3)begin val3<=0;val4<=1;shape_q<=shape_ok;end \
+   if(busy&&val4)begin \
+    val4<=0; \
+    if(!shape_q)begin bad<=1;fault<=1;busy<=0;done<=1;end \
+   end \
+   if(ctl_run)begin \
+    if(take_req&&!stage)seat_v<=0; \
+    if(bad)seat_v<=0; \
+    if(provider_fault||decode_fault||fovf)begin bad<=1;fault<=1;end \
+    if(stage)begin \
+     seat_v<=1;next_tag<=next_tag+1; \
+     if(stw)begin \
+      seat<={1'b1,{p_w_addr[29:3],5'd0},p_wd,p_wmask,next_tag}; \
+      seat_d<={1'b1,p_w_step,p_w_addr[2:0],p_w_part,1'b0,p_w_last,p_w_final,next_tag}; \
+      write_part<=p_w_part_n;write_row<=p_w_row_n;write_col<=p_w_col_n;write_left<=p_w_left_n;write_rowbase<=p_w_rowbase_n;write_addr<=p_w_addr_n; \
+     end else begin \
+      seat<={1'b0,{p_r_addr[29:3],5'd0},256'd0,32'hffffffff,next_tag}; \
+      seat_d<={1'b0,p_r_step,p_r_addr[2:0],p_r_part,p_r_last,1'b0,1'b0,next_tag}; \
+      read_part<=p_r_part_n;read_row<=p_r_row_n;read_col<=p_r_col_n;read_left<=p_r_left_n;read_rowbase<=p_r_rowbase_n;read_addr<=p_r_addr_n; \
+     end \
+    end \
+    if(take_rsp)begin \
+     pd_h<=pd_h+2'd1; \
+     if(!reply_ok)begin bad<=1;fault<=1;end \
+     else if(!bad)begin \
+      if(d_we)begin \
+       if(d_lastw)finished<=finished+1; \
+      end else if(d_lastr)begin \
+       if(MUTANT==5)launch<=1; else launch_q<=1; \
+       launched<=launched+1; \
+      end \
+     end \
+    end \
+    if(take_req)begin pd[pd_t]<=seat_d;pd_t<=pd_t+2'd1;end \
+    pd_n<=pd_n+{2'd0,take_req}-{2'd0,take_rsp}; \
+    if(pd_n-{2'd0,take_rsp}==3'd0)begin if(take_req)pd_hd<=seat_d; end \
+    else if(take_rsp)pd_hd<=pd[pd_h+2'd1]; \
+    if(vo)begin \
+     returned<=returned+1; \
+     if(!bad && MUTANT!=1 && qfault)begin bad<=1;fault<=1;end \
+    end \
+    if(!bad)begin \
+     case({reserve_read,retire_write}) \
+      2'b10:reserved<=reserved+1;2'b01:reserved<=reserved-1; \
+     endcase \
+    end \
+    case({push,pop}) \
+     2'b10:queued<=queued+1;2'b01:queued<=queued-1; \
+    endcase \
+    if(bad&&!pending&&!seat_v&&!launch&&!launch_q&&returned==launched&&queued==0&&!push)begin \
+     busy<=0;reserved<=0;done<=1;fault<=1; \
+    end else if(!bad && take_rsp&&reply_ok&&d_we&&d_lastw&&(d_final || MUTANT==2))begin busy<=0;done<=1;end \
+   end
+ generate if(NORST==0) begin:g_rst
  always @(posedge clk or negedge rn)begin
   if(!rn)begin
    shape_active<=0;val_sum<=0;shape_bit<=0;
@@ -208,109 +320,20 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    launch<=0;launch_q<=0;reserved<=0;queued<=0;done<=0;fault<=0;pd_h<=0;pd_t<=0;pd_n<=0;
    p_ok<=0;pw_ok<=0;p_rdone<=0;fh_ok<=0;
   end else begin
-   done<=0;launch<=launch_q;launch_q<=0;
-   response_v<=rsp_v;
-   cq_v<=ready&&cmd[0];
-   // precompute validity: the stream state did not change at this edge
-   fh_ok<=(MUTANT==6?queued!=0||push:hv)&&!pop;
-   p_ok<=!stage&&!cq_v; pw_ok<=fh_ok&&(MUTANT==6?queued!=0||push:hv)&&!pop&&!stage&&!cq_v; p_rdone<=read_row==m;
-   if(cq_v)begin
-    a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0;
-    n<=ca[67:48];m<=ca[87:68];
-    read_addr<=ca[39:8];write_addr<=co[39:8];read_rowbase<=ca[39:8];write_rowbase<=co[39:8];
-    read_row<=0;read_col<=0;write_row<=0;write_col<=0;read_left<=ca[67:48];write_left<=ca[67:48];rs<=ca[119:88];ws<=co[119:88];
-    ri<=ca[5]?16'd0:(ca[135:120]==0?16'd1:ca[135:120]);
-    wi<=co[135:120]==0?16'd1:co[135:120];
-    launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;
-    reserved<=0;
-   end
-   if(busy&&validating)begin
-    if(!shape_active)begin                  // operand station; invalid zero shapes still reject in fields_ok
-     shape_active<=1;shape_bit<=0;
-     ar_acc<=0;ac_acc<=0;or_acc<=0;oc_acc<=0;
-     ar_mc<={|a[119:112],a[111:88]};ac_mc<={9'd0,air};
-     or_mc<={|o[119:112],o[111:88]};oc_mc<={9'd0,oir};
-     ar_count<=a[87:68]-20'd1;ac_count<=a[67:48]-20'd1;
-     or_count<=o[87:68]-20'd1;oc_count<=o[67:48]-20'd1;
-    end else begin                          // four parallel, one-add-per-edge unsigned products
-     ar_acc<=sadd(ar_acc,ar_count[0]?ar_mc:25'd0);
-     ac_acc<=sadd(ac_acc,ac_count[0]?ac_mc:25'd0);
-     or_acc<=sadd(or_acc,or_count[0]?or_mc:25'd0);
-     oc_acc<=sadd(oc_acc,oc_count[0]?oc_mc:25'd0);
-     // saturating doubling, but only while multiplier bits remain (a zero count leaves the flag alone)
-     ar_mc<=(ar_count>>1)!=0?{ar_mc[24]|ar_mc[23],ar_mc[22:0],1'b0}:ar_mc;ac_mc<=(ac_count>>1)!=0?{ac_mc[24]|ac_mc[23],ac_mc[22:0],1'b0}:ac_mc;
-     or_mc<=(or_count>>1)!=0?{or_mc[24]|or_mc[23],or_mc[22:0],1'b0}:or_mc;oc_mc<=(oc_count>>1)!=0?{oc_mc[24]|oc_mc[23],oc_mc[22:0],1'b0}:oc_mc;
-     ar_count<=ar_count>>1;ac_count<=ac_count>>1;or_count<=or_count>>1;oc_count<=oc_count>>1;
-     shape_bit<=shape_bit+1'b1;
-     if(shape_bit==19)begin shape_active<=0;validating<=0;val_sum<=1;end
-    end
-   end
-   if(busy&&val_sum)begin
-    val_sum<=0;val2<=1;aspan_q<=sadd(ar_acc,ac_acc);ospan_q<=sadd(or_acc,oc_acc);orow_q<=oc_acc;
-   end
-   if(busy&&val2)begin
-    val2<=0;val3<=1;
-    fields_q<=fields_ok;same_q<=same_geometry;nalias_q<=(o[87:68]==1 || (!orow_q[24] && o[119:88]>{8'd0,orow_q[23:0]}));
-    aend_q<=sadd(sat40(a[47:8]),aspan_q);oend_q<=sadd(sat40(o[47:8]),ospan_q);
-   end
-   if(busy&&val3)begin val3<=0;val4<=1;shape_q<=shape_ok;end
-   if(busy&&val4)begin
-    val4<=0;
-    if(!shape_q)begin bad<=1;fault<=1;busy<=0;done<=1;end
-   end
-   if(ctl_run)begin
-    if(take_req&&!stage)seat_v<=0;
-    if(bad)seat_v<=0;
-    if(provider_fault||decode_fault||fovf)begin bad<=1;fault<=1;end
-    // ---- stage: select a precomputed descriptor and commit its next stream state
-    if(stage)begin
-     seat_v<=1;next_tag<=next_tag+1;
-     if(stw)begin
-      seat<={1'b1,{p_w_addr[29:3],5'd0},p_wd,p_wmask,next_tag};
-      seat_d<={1'b1,p_w_step,p_w_addr[2:0],p_w_part,1'b0,p_w_last,p_w_final,next_tag};
-      write_part<=p_w_part_n;write_row<=p_w_row_n;write_col<=p_w_col_n;write_left<=p_w_left_n;write_rowbase<=p_w_rowbase_n;write_addr<=p_w_addr_n;
-     end else begin
-      seat<={1'b0,{p_r_addr[29:3],5'd0},256'd0,32'hffffffff,next_tag};
-      seat_d<={1'b0,p_r_step,p_r_addr[2:0],p_r_part,p_r_last,1'b0,1'b0,next_tag};
-      read_part<=p_r_part_n;read_row<=p_r_row_n;read_col<=p_r_col_n;read_left<=p_r_left_n;read_rowbase<=p_r_rowbase_n;read_addr<=p_r_addr_n;
-     end
-    end
-    // ---- responses, in request order
-    if(take_rsp)begin
-     pd_h<=pd_h+2'd1;
-     if(!reply_ok)begin bad<=1;fault<=1;end
-     else if(!bad)begin
-      if(d_we)begin
-       if(d_lastw)finished<=finished+1;
-      end else if(d_lastr)begin
-       if(MUTANT==5)launch<=1; else launch_q<=1;
-       launched<=launched+1;
-      end
-     end
-    end
-    if(take_req)begin pd[pd_t]<=seat_d;pd_t<=pd_t+2'd1;end
-    pd_n<=pd_n+{2'd0,take_req}-{2'd0,take_rsp};
-    // the head after this edge: the pushed entry when the queue is (becomes) empty, else the next stored entry
-    if(pd_n-{2'd0,take_rsp}==3'd0)begin if(take_req)pd_hd<=seat_d; end
-    else if(take_rsp)pd_hd<=pd[pd_h+2'd1];
-    if(vo)begin
-     returned<=returned+1;
-     if(!bad && MUTANT!=1 && qfault)begin bad<=1;fault<=1;end
-    end
-    if(!bad)begin
-     case({reserve_read,retire_write})
-      2'b10:reserved<=reserved+1;2'b01:reserved<=reserved-1;
-     endcase
-    end
-    case({push,pop})
-     2'b10:queued<=queued+1;2'b01:queued<=queued-1;
-    endcase
-    if(bad&&!pending&&!seat_v&&!launch&&!launch_q&&returned==launched&&queued==0&&!push)begin
-     busy<=0;reserved<=0;done<=1;fault<=1;
-    end else if(!bad && take_rsp&&reply_ok&&d_we&&d_lastw&&(d_final || MUTANT==2))begin busy<=0;done<=1;end
-   end
+   `OT_QVMP_BODY
   end
  end
+ end else begin:g_nrst
+ always @(posedge clk)begin
+   `OT_QVMP_BODY
+  if(!rn)begin
+   shape_active<=0;val_sum<=0;validating<=0;busy<=0;bad<=0;cq_v<=0;val2<=0;val3<=0;val4<=0;seat_v<=0;response_v<=0;
+   launch<=0;launch_q<=0;reserved<=0;queued<=0;done<=0;fault<=0;pd_h<=0;pd_t<=0;pd_n<=0;p_ok<=0;pw_ok<=0;p_rdone<=0;fh_ok<=0;
+   next_tag<=0;
+  end
+ end
+ end endgenerate
+`undef OT_QVMP_BODY
  // bench visibility (historical names)
  wire [4:0] head=0, tail=0;
  initial if(DEPTH<24)$fatal(1,"QDQ result reservations require23 inflight+assembly");

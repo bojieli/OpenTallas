@@ -5,7 +5,11 @@
 module tb_hgi_quant_vm_transport;
 `ifdef PIPE
  `define OT_QTR ot_hgi_quant_vm_transport_p
+`ifdef QVM_XP   // el1011-hbm-fq/qvm: -DQVM_XP -DQVM_QRING=4 -DQVM_NORST=1 -DQVM_RREQ=1
+ `define OT_QTR_P #(.ENABLE(1),.MUTANT(`MUTANT),.QRING(`QVM_QRING),.NORST(`QVM_NORST),.RREQ(`QVM_RREQ))
+`else
  `define OT_QTR_P #(.ENABLE(1),.MUTANT(`MUTANT))
+`endif
 `else
  `define OT_QTR ot_hgi_quant_vm_transport
  `define OT_QTR_P #(.ENABLE(1),.MUTANT(`MUTANT),.SERIAL_SHAPE(`SERIAL_SHAPE))
