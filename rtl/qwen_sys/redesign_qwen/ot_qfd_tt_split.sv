@@ -200,14 +200,30 @@ module ot_qfd_tt_ctl #(
     // ---- output stations: strobes / valids on reset lines, fields plain ----
     wire [9 + NPG + 2*(LG+1)-1:0] os_q;
     wire [2 + AW + NPG*AW + AW + AW + 4 + FW + NW + 32 + AW + W + W*32 + 16-1:0] od_q;
+    generate if (OKEEP != 0 && OS == 1) begin : g_osk
+        // el1011-q-seq: kept station registers (an ot_hdc_delay station was merged with an identical internal flop)
+        wire [9 + NPG + 2*(LG+1)-1:0] os_d = {c_ready && xr_q, c_idle, c_wrom_re, c_kv_re, c_scale_re, c_xdv, c_pv, c_ov, c_mxwe, c_sgre, c_sel, c_tv};
+        (* keep = "true", dont_touch = "true" *) reg [9 + NPG + 2*(LG+1)-1:0] os_r;
+        always @(posedge clk or negedge rs) if (!rs) os_r <= '0; else os_r <= os_d;
+        assign os_q = os_r;
+    end else begin : g_osd
     ot_hdc_delay #(.W(9 + NPG + 2*(LG+1)), .D(OS), .RESET(1)) u_os (.clk(clk), .rst_n(rs),
-        .d({c_ready && xr_q, c_idle, c_wrom_re, c_kv_re, c_scale_re, c_xdv, c_pv, c_ov, c_mxwe, c_sgre, c_sel, c_tv}),
-        .q(os_q));
+            .d({c_ready && xr_q, c_idle, c_wrom_re, c_kv_re, c_scale_re, c_xdv, c_pv, c_ov, c_mxwe, c_sgre, c_sel, c_tv}),
+            .q(os_q));
+    end endgenerate
+    generate if (OKEEP != 0 && OS == 1) begin : g_odk
+        wire [2 + AW + NPG*AW + AW + AW + 4 + FW + NW + 32 + AW + W + W*32 + 16-1:0] od_d = {c_amany, c_fault, c_wrom_addr, c_saddr, c_xdc, c_xdcs_m, c_xdsp, c_pf, c_amidx, c_amval, c_mxaddr,
+            c_mxmask, c_mxdata, c_prog};
+        (* keep = "true", dont_touch = "true" *) reg [2 + AW + NPG*AW + AW + AW + 4 + FW + NW + 32 + AW + W + W*32 + 16-1:0] od_r;
+        always @(posedge clk) od_r <= od_d;
+        assign od_q = od_r;
+    end else begin : g_odd
     ot_hdc_delay #(.W(2 + AW + NPG*AW + AW + AW + 4 + FW + NW + 32 + AW + W + W*32 + 16), .D(OS)) u_od (
-        .clk(clk), .rst_n(rst_n),
-        .d({c_amany, c_fault, c_wrom_addr, c_saddr, c_xdc, c_xdcs_m, c_xdsp, c_pf, c_amidx, c_amval, c_mxaddr,
-            c_mxmask, c_mxdata, c_prog}),
-        .q(od_q));
+            .clk(clk), .rst_n(rst_n),
+            .d({c_amany, c_fault, c_wrom_addr, c_saddr, c_xdc, c_xdcs_m, c_xdsp, c_pf, c_amidx, c_amval, c_mxaddr,
+                c_mxmask, c_mxdata, c_prog}),
+            .q(od_q));
+    end endgenerate
     // el1011-q-seq OKEEP: the stations' flops must drive the pins themselves (ctlm_i-f62cd33ac: x_dv was driven by
     // u_ctl.u_mv.line[1] -- yosys merged the station with an identical internal delay-line flop deep in the block)
     localparam integer OSW = 9 + NPG + 2*(LG+1);
@@ -260,6 +276,11 @@ module ot_qfd_sp_tree_top_s #(
     parameter integer SPRE = 1,
     parameter integer NU = 4,             // upper sub-tiles (W / NU lanes each)
     parameter integer CR = 1,             // relay stages control tile <-> upper tiles (<= CLNK + 2 + LNK)
+    parameter integer XADDR = 1,          // el1011-q-seq: ot_qfd_tt_ctl XADDR / RDMEM / OKEEP (ctlm_i AUD build of u_tt)
+    parameter integer RDMEM = 0,
+    parameter integer OKEEP = 0,
+    parameter integer PAMD = 0,           // el1011-q-seq test point: 1 = p_am one edge late into the control tile (MUST FAIL)
+    parameter integer SLAT = 0,           // el1011-q-seq test point: 1 = up_fault/land_cnt/x_rdy/tr_fault/p_fault/fab_fault one edge late (ctlm_i pin flops)
     parameter integer SMUT = 0            // negative control: 1 = the upper tiles' DLY not reduced by CR (selects CR late)
 ) (
     input  wire              clk,
@@ -321,13 +342,28 @@ module ot_qfd_sp_tree_top_s #(
         initial $error("ot_qfd_sp_tree_top_s: needs BAND 1, NU | W, CR <= CLNK + 2 + LNK");
     end endgenerate
     wire up_f;
-    ot_qfd_tt_ctl #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
+    // el1011-q-seq closed-loop test points on the control tile's die inputs
+    wire [$bits(p_am)-1:0] p_am_x;
+    wire [$bits({up_f, land_cnt, x_rdy, tr_fault, p_fault, fab_fault})-1:0] st_in = {up_f, land_cnt, x_rdy, tr_fault, p_fault, fab_fault}, st_x;
+    generate if (PAMD != 0) begin : g_pamd
+        reg [$bits(p_am)-1:0] q; always @(posedge clk) q <= p_am; assign p_am_x = q;
+    end else begin : g_pam0
+        assign p_am_x = p_am;
+    end endgenerate
+    generate if (SLAT != 0) begin : g_slat
+        reg [$bits(st_in)-1:0] q; always @(posedge clk) q <= st_in; assign st_x = q;
+    end else begin : g_slat0
+        assign st_x = st_in;
+    end endgenerate
+    wire up_f_x, x_rdy_x, fab_fault_x; wire [$bits(land_cnt)-1:0] land_cnt_x; wire [$bits(tr_fault)-1:0] tr_fault_x; wire [$bits(p_fault)-1:0] p_fault_x;
+    assign {up_f_x, land_cnt_x, x_rdy_x, tr_fault_x, p_fault_x, fab_fault_x} = st_x;
+    ot_qfd_tt_ctl #(.XADDR(XADDR), .RDMEM(RDMEM), .OKEEP(OKEEP), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
         .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .SCALE_LAT(SCALE_LAT), .IS(IS), .OS(OS), .LANDED(LANDED), .MUT(MUT), .BAND(1), .NB(NB), .LNK(LNK),
         .CLNK(CLNK), .UMUT(UMUT), .AMR(AMR), .SPRE(SPRE)) u_ctl (
-        .clk(clk), .rst_n(rst_n), .up_fault(up_f),
-        .land_cnt(land_cnt), .go(go), .ready(ready), .idle(idle),
+        .clk(clk), .rst_n(rst_n), .up_fault(up_f_x),
+        .land_cnt(land_cnt_x), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
         .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs),
@@ -336,9 +372,9 @@ module ot_qfd_sp_tree_top_s #(
         .i_mmode(i_mmode), .i_oen(i_oen), .i_amax(i_amax), .i_rmax(i_rmax), .i_mbase(i_mbase),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .kv_re(kv_re),
         .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),
-        .x_rdy(x_rdy), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp),
-        .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault),
-        .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault), .fab_fault(fab_fault),
+        .x_rdy(x_rdy_x), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp),
+        .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault_x),
+        .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am_x), .p_fault(p_fault_x), .fab_fault(fab_fault_x),
         .ov(ov), .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
         .progress(progress), .fault(fault));

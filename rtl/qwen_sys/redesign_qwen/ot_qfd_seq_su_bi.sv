@@ -88,6 +88,7 @@ module ot_qwen_rom_core_ctrl_x_bi #(
     // unchanged.  0 keeps the engine clock free-running.
     parameter integer ME_IDLE_GATE = 0,
     parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)
+    parameter integer OLAG = 0,       // el1011-q-seq: lagged other-unit counter (ctrl_olag)
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0, // element address of embedding row 0 in the program
     parameter integer SMIN = 0,
@@ -592,16 +593,36 @@ localparam integer W_ME_AMC = 1;
         else if (start && st == S_IDLE) fin_seen <= 1'b0;
         else if (fin) fin_seen <= 1'b1;
     assign o_fin = fin_seen;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) o_cnt <= {XW{1'b0}};
-        else if (skip) o_cnt <= o_cnt + 1'b1;
     reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};
-        else if (skip) o_cnt1 <= o_cnt1 + 1'b1;
+    reg ol_sq; reg [XW-1:0] ol_c0, ol_c1, ol_c2;   // OLAG: registered skip, count + 0 / 1 / 2
+    generate if (OLAG != 0) begin : g_olag
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ol_sq <= 1'b0; ol_c0 <= {XW{1'b0}}; ol_c1 <= XW'(1); ol_c2 <= XW'(2); end
+            else begin ol_sq <= skip; if (ol_sq) begin ol_c0 <= ol_c0 + 1'b1; ol_c1 <= ol_c1 + 1'b1; ol_c2 <= ol_c2 + 1'b1; end end
+        always @(*) begin o_cnt = ol_sq ? ol_c1 : ol_c0; o_cnt1 = ol_sq ? ol_c2 : ol_c1; end
+    end else begin : g_ocnt
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) o_cnt <= {XW{1'b0}};
+            else if (skip) o_cnt <= o_cnt + 1'b1;
+        reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};
+            else if (skip) o_cnt1 <= o_cnt1 + 1'b1;
+    end endgenerate
     wire [XW-1:0] o_dif0 = x_oacc - o_cnt, o_dif1 = x_oacc - o_cnt1;
-    wire o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});
-    wire o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});
+    wire o_eq0, o_eq1, o_pa0, o_pa1;
+    generate if (OLAG != 0) begin : g_oleq
+        wire e0 = (x_oacc == ol_c0), e1 = (x_oacc == ol_c1), e2 = (x_oacc == ol_c2);
+        wire [XW-1:0] d0 = x_oacc - ol_c0, d1 = x_oacc - ol_c1, d2 = x_oacc - ol_c2;
+        wire p0 = !e0 && !d0[XW-1], p1 = !e1 && !d1[XW-1], p2 = !e2 && !d2[XW-1];
+        assign o_eq0 = (OLAG == 2) ? (ol_sq ? e0 : e1) : (ol_sq ? e1 : e0);
+        assign o_eq1 = ol_sq ? e2 : e1;
+        assign o_pa0 = ol_sq ? p1 : p0; assign o_pa1 = ol_sq ? p2 : p1;
+    end else begin : g_oeq
+        assign o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});
+        assign o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});
+        assign o_pa0 = !o_eq0 && !o_dif0[XW-1]; assign o_pa1 = !o_eq1 && !o_dif1[XW-1];
+    end endgenerate
     // PCUT: unsigned a >= b as a log-depth prefix tree (no carry chain); PCUT 3 = strict > (negative control)
     function automatic uge16(input [15:0] a, input [15:0] b);
         reg [15:0] g, e; integer k, sp;
@@ -613,7 +634,6 @@ localparam integer W_ME_AMC = 1;
             uge16 = g[15] | ((PCUT == 3) ? 1'b0 : e[15]);
         end
     endfunction
-    wire o_pa0 = !o_eq0 && !o_dif0[XW-1], o_pa1 = !o_eq1 && !o_dif1[XW-1];
     wire [XW-1:0] o_dif_n = x_oacc - (o_cnt + {{(XW-1){1'b0}}, skip});
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin osync_r <= 1'b1; opast_r <= 1'b0; end
@@ -1017,6 +1037,7 @@ endmodule
 module ot_qfd_seq_su_bi #(
     parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy
     parameter integer PCUT = 0,  // el1011-q-seq: exact controller path cuts (ctrl_pcut)
+    parameter integer OLAG = 0,  // el1011-q-seq: lagged other-unit counter (ctrl_olag)
     parameter integer W = 16, parameter integer G = 6144, parameter integer AW = 24, parameter integer NW = 18,
     parameter integer PAW = 12, parameter integer SW = 64, parameter integer LV = 7, parameter integer D = 4,
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
@@ -1436,7 +1457,7 @@ module ot_qfd_seq_su_bi #(
         end
     end endgenerate
     wire wrom_re_w; assign b_rom_fault = wrom_re_w; assign b_core_fault = core_fault_w;
-    ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl (
+    ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT), .OLAG(OLAG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl (
         .clk(clk),
         .rst_n(rsv[2]),
         .start(core_start),

@@ -1182,6 +1182,53 @@ def vrl_rst_split(t: str) -> str:
             "        else if (st == S_COLL && r_valid && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);\n" + t[i:])
 
 
+def ctrl_olag(t: str) -> str:
+    """el1011-q-seq OLAG (seq_su_bi fea_ra-dace0dae3 TT -60.9: u_ctrl.st -> 23-level skip -> o_cnt / o_cnt1 DFFE enables, 48
+    flops): the other-unit counter lags one edge -- c0 / c1 / c2 (= count + 0/1/2) advance by the REGISTERED skip_q, and
+    o_cnt = skip_q ? c1 : c0, o_cnt1 = skip_q ? c2 : c1 (exact: o_cnt(t+1) = c0(t) + skip_q(t) + skip(t)).  The equality /
+    order compares run against c0..c2 in parallel and are selected by skip_q, so the deep skip ends at one flop and the two
+    osync / opast muxes instead of 48 enables.  OLAG 2 = negative control (o_eq0 selects the wrong copy)."""
+    t = one(t, "    parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)",
+               "    parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)\n"
+               "    parameter integer OLAG = 0,       // el1011-q-seq: lagged other-unit counter (ctrl_olag)")
+    old_cnt = ("    always @(posedge clk or negedge rst_n)\n"
+               "        if (!rst_n) o_cnt <= {XW{1'b0}};\n"
+               "        else if (skip) o_cnt <= o_cnt + 1'b1;\n"
+               "    reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step\n"
+               "    always @(posedge clk or negedge rst_n)\n"
+               "        if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};\n"
+               "        else if (skip) o_cnt1 <= o_cnt1 + 1'b1;\n")
+    t = one(t, old_cnt,
+            "    reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step\n"
+            "    reg ol_sq; reg [XW-1:0] ol_c0, ol_c1, ol_c2;   // OLAG: registered skip, count + 0 / 1 / 2\n"
+            "    generate if (OLAG != 0) begin : g_olag\n"
+            "        always @(posedge clk or negedge rst_n)\n"
+            "            if (!rst_n) begin ol_sq <= 1'b0; ol_c0 <= {XW{1'b0}}; ol_c1 <= XW'(1); ol_c2 <= XW'(2); end\n"
+            "            else begin ol_sq <= skip; if (ol_sq) begin ol_c0 <= ol_c0 + 1'b1; ol_c1 <= ol_c1 + 1'b1; ol_c2 <= ol_c2 + 1'b1; end end\n"
+            "        always @(*) begin o_cnt = ol_sq ? ol_c1 : ol_c0; o_cnt1 = ol_sq ? ol_c2 : ol_c1; end\n"
+            "    end else begin : g_ocnt\n"
+            "    " + old_cnt.replace("\n", "\n    ").rstrip() + "\n"
+            "    end endgenerate\n")
+    old_eq = ("    wire o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});\n"
+              "    wire o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});\n")
+    t = one(t, old_eq,
+            "    wire o_eq0, o_eq1, o_pa0, o_pa1;\n"
+            "    generate if (OLAG != 0) begin : g_oleq\n"
+            "        wire e0 = (x_oacc == ol_c0), e1 = (x_oacc == ol_c1), e2 = (x_oacc == ol_c2);\n"
+            "        wire [XW-1:0] d0 = x_oacc - ol_c0, d1 = x_oacc - ol_c1, d2 = x_oacc - ol_c2;\n"
+            "        wire p0 = !e0 && !d0[XW-1], p1 = !e1 && !d1[XW-1], p2 = !e2 && !d2[XW-1];\n"
+            "        assign o_eq0 = (OLAG == 2) ? (ol_sq ? e0 : e1) : (ol_sq ? e1 : e0);\n"
+            "        assign o_eq1 = ol_sq ? e2 : e1;\n"
+            "        assign o_pa0 = ol_sq ? p1 : p0; assign o_pa1 = ol_sq ? p2 : p1;\n"
+            "    end else begin : g_oeq\n"
+            "        assign o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});\n"
+            "        assign o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});\n"
+            "        assign o_pa0 = !o_eq0 && !o_dif0[XW-1]; assign o_pa1 = !o_eq1 && !o_dif1[XW-1];\n"
+            "    end endgenerate\n")
+    t = one(t, "    wire o_pa0 = !o_eq0 && !o_dif0[XW-1], o_pa1 = !o_eq1 && !o_dif1[XW-1];\n", "")
+    return t
+
+
 def emit_seq_su_bi() -> str:
     """ot_qfd_seq_su_bi = ot_qfd_seq_su_boundary + ICUT + every pin station reset from the registered tile reset rs
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
@@ -1199,11 +1246,12 @@ def emit_seq_su_bi() -> str:
             "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,\n"
             "    parameter integer RLY = 0, parameter integer CRED = 0")
     t = rst_regions(seq_psram(t))
-    t = ctrl_pcut(t)
-    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT),")
+    t = ctrl_olag(ctrl_pcut(t))
+    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT), .OLAG(OLAG),")
     t = one(t, "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy",
                "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy\n"
-               "    parameter integer PCUT = 0,  // el1011-q-seq: exact controller path cuts (ctrl_pcut)")
+               "    parameter integer PCUT = 0,  // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n"
+               "    parameter integer OLAG = 0,  // el1011-q-seq: lagged other-unit counter (ctrl_olag)")
     return t + "\n" + vrl_rst_split(tp_seq_vrl(cred=True))
 
 
@@ -1276,7 +1324,7 @@ def ctlm_mereg(t: str) -> str:
     t = one(t, "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0\n) (",
                "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0,\n"
                "    parameter integer MEREG = 0   // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n) (")
-    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .MEREG(MEREG), .PCUT(PCUT),")
+    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT),")
     return t
 
 
@@ -1339,7 +1387,7 @@ def ctlm_aud(t: str) -> str:
     head, tile = t[:i], t[i:]
     tile = one(tile, "    parameter integer PCUT = 0    // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n) (",
                "    parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n"
-               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations (55 = all); 8 = SRAM one-short mutant\n) (")
+               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations, 64 no engine idle clock gate (power; the ICG enable then = the registered supply word); 8 = SRAM one-short mutant\n) (")
     tile = one(tile, "        .kv_write_drained(kv_write_drained),", "        .kv_write_drained(kvwd_c),")
     tile = one(tile, "        .kv_ok(kv_ok),", "        .kv_ok(kv_ok_c),")
     tile = one(tile, "    (* keep = \"true\" *) wire [8-1:0] rsv;",
