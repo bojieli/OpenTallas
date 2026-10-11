@@ -600,7 +600,13 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # lead 10-10 decision (b): a per-link endpoint hfd_lk_ep beside every SerDes (PHY lane packer moved out of
              # hfd_coll + ot_hbm_link_retry_pipeline 690 x 460 um); the llk die nets become the TU flit bus, each way
              # {valid, flit 545, credit} + a fault bit = 1,095 b (+ 2 forwarded clocks), was 976 b of gearboxed lanes
-             link_ep=dict(wh=(820.8, 496.8), gap=43.2, flit_bits=1095),
+             # [link] 10-10 (a81f05080): NS = 3 retry macros 690 x 460 um + FMT1 gearbox / CRC / queues: 2 x 2 macro block
+             # (one corner = logic) 1,503.36 x 993.6 um; flit bus {v, flit 545, credit} each way = 1,094 b + session 24
+             # down + {fault, locked} up = 1,120 b; PHY side
+             # tx[486:0] out + rx[486:0] in = 974 b, the die's SerDes lane contract (H6 link_rtl: 8 TU ports x 547 b a
+             # direction over 9 links); 1,024 b does not fit the SerDes face in the k = 16 GRT bundling
+             link_ep=dict(wh=(1503.36, 993.6), gap=43.2, flit_bits=1120, phy_bits=974),
+             dense_face_masters=('hfd_loader',),
              lane_bypass=dict(W=dict(client='hb_sfu_SW', after='hb_su_SW', toward='hb_hc_SW', stn='hb_stn_lgW',
                                      master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)))
 
@@ -1069,7 +1075,7 @@ def build_r25gq_net(variant):
                 p1_ = chain_[k_ + 1] if k_ + 1 == len(chain_) - 1 else (chain_[k_ + 1][0], 'i')
                 buses.append((f"{bb_['bus']}_{k_}", 'attn_out', bb_['bits'], [p0_, p1_]))
     if ep_of:       # the coll -> SerDes chains end at the endpoint (545-b TU flit + valid + credit each way + fault);
-        #             the endpoint drives the SerDes iox (gearboxed PHY lanes) over its own relayed hop
+        #             the endpoint drives the SerDes iox (gearboxed PHY lanes, phy_bits) over its own relayed hop
         fw = V['link_ep']['flit_bits']
         nb_ = []
         for bid, cls, bits, eps in buses:
@@ -1081,12 +1087,19 @@ def build_r25gq_net(variant):
                     sd_ = hit_[0][0]
                     pth = gpath(ep_of[sd_], sd_)
                     L = (len(pth) - 1) * RP.CELL if gap_um(ep_of[sd_], sd_) > 2.0 else 0.0
-                    rl = relays(f'lkp{sd_[3:]}', bits, pth, L)
-                    pend.append((f'lkp_{sd_[3:]}', 'link', bits, [(ep_of[sd_], 'phy')] + [(r_, 'b') for r_ in rl] + [(sd_, 'iox')]))
+                    pb_ = V['link_ep'].get('phy_bits', bits)
+                    rl = relays(f'lkp{sd_[3:]}', pb_, pth, L)
+                    pend.append((f'lkp_{sd_[3:]}', 'link', pb_, [(ep_of[sd_], 'phy')] + [(r_, 'b') for r_ in rl] + [(sd_, 'iox')]))
                     continue
                 nb_.append((bid, 'link_flit', fw + 2, eps))      # + the two forwarded clocks (fclk map rebased below)
                 continue
             nb_.append((bid, cls, bits, eps))
+        # [link] 10-10 (98493b213) endpoint control: clk = clk_link, rst_n = rst_link (the SerDes clock / reset trees);
+        # session[23:0] (coll -> ep, the coordinated-reset epoch) and {fault, locked} (ep -> coll status aggregation)
+        # ride the flit chain's stations: f_lk = [1093:0] flit bus, [1117:1094] session, [1119:1118] {locked, fault}
+        nb_ = [(b_, c_, w_, e_ + [(ep_of[e[0]], 'clk') for e in e_ if e[0] in ep_of and e[1] == 'ck']
+                if b_ == 'clk_link' else e_ + ([(e, 'rst_n') for e in sorted(set(ep_of.values()))] if b_ == 'rst_link' else []))
+               for b_, c_, w_, e_ in nb_]
         buses[:] = nb_
         for bid, cls, bits, pts in pend:
             link(bid, cls, bits, pts)
@@ -1134,7 +1147,7 @@ def build_r25gq_net(variant):
         lane_rec[sd_] = rec
     # far-side relays (legalisation pushed a relay behind its driver): step it toward its sink and re-legalise
     import fp_margin_lint as FPL
-    for _ in range(4):
+    for _ in range(12):     # R25GQ link endpoints: the IKS chains detour the S endpoint band (4 passes left 3 far-side relays)
         ml_ = FPL.die_margin(insts, buses, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, stages=lambda bid, L: 0)
         bad = [x['relay'] for x in ml_.get('far_side_examples', [])] if ml_['far_side_relays'] else []
         if not bad:
@@ -3782,13 +3795,16 @@ def masters(m, k=1):
                                                                         not M[mname].note.startswith('waypoint') else 1.0):
                     pitch = pc
                     break
-            if mname.startswith(('hfd_stn', 'hfd_mcast', 'hfd_gath', 'hfd_cdist', 'hfd_meso')) or mname == 'hfd_sm':
-                pitch = 2 if 2 * sum(n) * p + (len(n) - 1) * gap <= room else 1
+            if mname.startswith(('hfd_stn', 'hfd_mcast', 'hfd_gath', 'hfd_cdist', 'hfd_meso')) or mname == 'hfd_sm' or \
+                    mname in (m['variant'].get('dense_face_masters') or ()):
+                # R25GQ [svc] 10-10: hfd_loader's N face (t_hgi_vmw 8,960 b + the HGI ports, 10,953 pins) packed at the
+                # 0.048 track was 20.8 b/um (fp gate 12): every other track over the whole face (10.4 b/um)
+                pitch = max(pitch, 2) if 2 * sum(n) * p + (len(n) - 1) * gap <= room else pitch
             need = [x * p * pitch for x in n]
             if sum(need) + gap * (len(n) - 1) > room + 1e-6:
                 raise ValueError(f'{mname} face {face}: {sum(need):.1f} um of pins on {room:.1f} um')
             pos, starts = a0, []
-            spread = mname in SPREAD_MASTERS and not m['variant'].get('no_spread') and full >= 500.0 and mname != 'hfd_sm' and not mname.startswith(('hfd_svc_', 'hfd_stn', 'hfd_mcast',
+            spread = (mname in SPREAD_MASTERS or mname in (m['variant'].get('dense_face_masters') or ())) and not m['variant'].get('no_spread') and full >= 500.0 and mname != 'hfd_sm' and not mname.startswith(('hfd_svc_', 'hfd_stn', 'hfd_mcast',
                                                                                       'hfd_gath', 'hfd_cdist'))
             if spread:          # r4 spread every hub port evenly: overflow 2,519 -> 5,223; r6: coll / VM only
                 g_even = (room - sum(need)) / (len(need) + 1)
