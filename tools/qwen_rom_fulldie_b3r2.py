@@ -1114,10 +1114,17 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         site_cache[key] = (arr, cKDTree(arr + np.array([w / 2, h / 2])) if len(arr) else None)
         return site_cache[key]
 
+    def backtracks(pl):
+        """qwendie-1011 (textbook audit class 4 / fp_margin_lint far_side): a relay farther (Manhattan) from the next
+        chain point than its predecessor is (+ 20 um) -- the chain doubles back."""
+        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
+        mh = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])   # noqa: E731
+        return any(mh(pts[i], pts[i + 1]) > mh(pts[i - 1], pts[i + 1]) + 20.0 for i in range(1, len(pts) - 1))
+
     repaired, unrepaired = [], []
     for idx, pl in sorted(plans.items()):
         hs = hops_of(pl)
-        if max(hs) <= RMAX + 25.0:
+        if max(hs) <= RMAX + 25.0 and not backtracks(pl):
             continue
         bits = pl['bits']
         w, h = relay_frame(bits, pl['cl'])
@@ -1137,6 +1144,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         D = RMAX - max(W, H) / 2 + 26.0
         P0, P1 = pl['P0'], pl['P1']
         ctr = arr + np.array([W / 2, H / 2])
+        # qwendie-1011: every hop of the searched chain makes progress toward the load (no doubling back)
+        dP1 = np.abs(ctr[:, 0] - P1[0]) + np.abs(ctr[:, 1] - P1[1])
         ok_cache = {}
 
         def ok(i):
@@ -1144,7 +1153,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 x0, y0 = arr[i]
                 ok_cache[i] = free((x0, y0, x0 + W, y0 + H))
             return ok_cache[i]
-        def bfs(De):
+        def bfs(De, mono):
             start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i)]
             par = {i: -1 for i in start}
             front, hit = start, None
@@ -1158,38 +1167,59 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 nxt = []
                 for i, nb in zip(front, tree.query_ball_point(ctr[front], D, p=1)):
                     for j in nb:
-                        if j not in par and ok(j):
+                        if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j):
                             par[j] = i
                             nxt.append(j)
                 nxt.sort(key=lambda j: abs(ctr[j][0] - P1[0]) + abs(ctr[j][1] - P1[1]))
                 front = nxt[:4000]
             return hit, par, start
-        hit, par, start = bfs(D)
-        if hit is None:
-            # end hops only: the measured closing span (430.56 um, corridor gate +11.9 ps at SS) when the pin's
-            # neighbourhood is full
-            hit, par, start = bfs(430.0 - max(W, H) / 2)
-        if hit is None:
-            unrepaired.append(f"{pl['bid']} (start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f})")
+
+        def chain_of(hit, par):
+            c_ = [hit]
+            while par[c_[-1]] != -1:
+                c_.append(par[c_[-1]])
+            return [(float(arr[i][0]), float(arr[i][1]), w, h) for i in c_[::-1]]
+        # qwendie-1011: a monotone chain (each relay closer to the load: no doubling back) first; the unconstrained
+        # search only when the pass-1 hops are too long; a pass-1 chain whose hops pass is never replaced by a worse one
+        need = max(hs) > RMAX + 25.0
+        found, why = None, ''
+        for De, mono in ((D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)):
+            if not mono and not need:
+                continue
+            hit, par, start = bfs(De, mono)
+            if hit is None:
+                why = f"start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f}"
+                continue
+            cand = chain_of(hit, par)
+            if mono or not backtracks(dict(pl, frames=cand)) or found is None:
+                found = cand
+            if mono or not need:
+                break
+            if not backtracks(dict(pl, frames=cand)):
+                break
+        frames = []
+        if found is not None:
+            for f in found:
+                r_ = (f[0], f[1], f[0] + W, f[1] + H)
+                if not free(r_):
+                    break
+                add_rect(r_)
+                frames.append(f)
+            if len(frames) != len(found):
+                # the found chain overlaps itself: roll it back (a partial chain leaves a gap hop)
+                for f in frames:
+                    r_ = (f[0], f[1], f[0] + W, f[1] + H)
+                    for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
+                        for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
+                            lst = grid.get((gx, gy), [])
+                            if r_ in lst:
+                                lst.remove(r_)
+                frames, why = [], 'self-overlap'
+        if not frames:
+            unrepaired.append(f"{pl['bid']} ({why})")
             for r_ in own:
                 add_rect(r_)
             continue
-        chain = [hit]
-        while par[chain[-1]] != -1:
-            chain.append(par[chain[-1]])
-        chain = chain[::-1]
-        frames = []
-        for i in chain:
-            x0, y0 = arr[i]
-            r_ = (x0, y0, x0 + W, y0 + H)
-            if not free(r_):
-                break
-            add_rect(r_)
-            frames.append((float(x0), float(y0), w, h))
-        if len(frames) != len(chain):
-            for f in frames:
-                pass
-            unrepaired.append(pl['bid'] + ' (self-overlap)')
         old = len(pl['frames'])
         pl['frames'] = frames
         repaired.append((pl['bid'], old, len(frames), round(max(hops_of(pl)), 1)))

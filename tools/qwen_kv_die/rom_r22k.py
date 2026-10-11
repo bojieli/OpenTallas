@@ -115,19 +115,28 @@ def surgery(v, m, compact_seq=False):
               v.up(D2D_H, v.GY) - v.SHAVE, 'R0', kind='d2d', region='io', domain='stream_1p2')
     ck = Inst('clk_rx', 'qfd_clkrx', round(hub.x - dx, 4), hub.y, hub.w, hub.h, 'R0', kind='clock_root',
               region=hub.region, domain='stream_1p2')
-    cb = Inst('ckb_rom', 'qfd_ckbump', round(xc - 43.2 - 4.32, 4), y0, 43.2 - v.SHAVE, 43.2 - v.SHAVE, 'R0', kind='bump',
-              region='io', domain='stream_1p2')
-    insts += [ph, ad, ck, cb]
-    rec['added_instances'] = [i.d() for i in (ph, ad, ck, cb)]
+    # qwendie-1011 (textbook audit class 4): the reset is synchronised AT the bump.  rs_bump (two ot_reset_sync,
+    # async assert / 2-flop sync release on clk_d2d) sits at the W end of the PHY | d2d_rom seam, where the PHY's and
+    # the link end's rst_n pins meet (<= ~300 um, one local net), with the forwarded clock / reset bump cell directly
+    # under it (still W of the PHY, inside its D2D bump band); the synchronised reset reaches clk_rx (die centre) as a
+    # relayed synchronous word (rst_fwd_s), not as one 16 mm unrelayed async net.  pll_fwd stays a clock trunk (the
+    # top segment of the die clock tree, built by die CTS).
+    rs = Inst('rs_bump', 'qfd_rstsync', v.dn(xc - 4.32 - RS_WH[0], v.GX), v.up(ad.y - RS_WH[1] / 2, v.GY),
+              RS_WH[0] - v.SHAVE, RS_WH[1] - v.SHAVE, 'R0', kind='reset_sync', region='io', domain='stream_1p2')
+    cb = Inst('ckb_rom', 'qfd_ckbump', v.dn(rs.x + (RS_WH[0] - 43.2) / 2, v.GX), v.dn(rs.y - 4.32 - 43.2, v.GY),
+              43.2 - v.SHAVE, 43.2 - v.SHAVE, 'R0', kind='bump', region='io', domain='stream_1p2')
+    insts += [ph, ad, ck, cb, rs]
+    rec['added_instances'] = [i.d() for i in (ph, ad, ck, cb, rs)]
     top_free = 6287.76     # r21c spine column M is free up to the sequencer
     assert ad.y + ad.h < top_free, 'd2d_rom does not fit under the sequencer'
     add = [('d2d_fdi', 'd2d_fdi', FDI_BITS, [('d2d_rom', 'fdi'), ('ucie_kv', 'fdi')]),
            ('seq_d2d', 'sequencer', CTL_BITS, [('sp_constants_sequencer', 'dc'), ('d2d_rom', 'dc')]),
            ('d2d_seq', 'sequencer', CTL_BITS, [('d2d_rom', 'dh'), ('sp_constants_sequencer', 'dh')]),
            ('pll_fwd', 'clock_trunk', 1, [('ckb_rom', 'pll_ck'), ('clk_rx', 'pll_fwd')]),
-           ('rst_fwd', 'reset', 1, [('ckb_rom', 'rs'), ('clk_rx', 'rst_fwd')]),
-           ('clk_d2d', 'clock_trunk', 1, [('clk_rx', 'pll_d2d'), ('d2d_rom', 'ck'), ('ucie_kv', 'clk')]),
-           ('rst_d2d', 'spine_local', 1, [('clk_rx', 'rso_d2d'), ('d2d_rom', 'rst_n'), ('ucie_kv', 'rst_n')]),
+           ('rst_fwd', 'reset', 1, [('ckb_rom', 'rs'), ('rs_bump', 'arst_n')]),
+           ('rst_fwd_s', 'spine_local', 1, [('rs_bump', 'rso_f'), ('clk_rx', 'rst_fwd')]),
+           ('clk_d2d', 'clock_trunk', 1, [('clk_rx', 'pll_d2d'), ('d2d_rom', 'ck'), ('ucie_kv', 'clk'), ('rs_bump', 'ck')]),
+           ('rst_d2d', 'spine_local', 1, [('rs_bump', 'rso_d'), ('d2d_rom', 'rst_n'), ('ucie_kv', 'rst_n')]),
            ('rst_seq', 'spine_local', 1, [('clk_rx', 'rso_seq'), ('sp_constants_sequencer', 'rsi')]),
            ('d2d_flt', 'spine_local', 9, [('d2d_rom', 'flt'), ('sp_constants_sequencer', 'dflt')])]   # link-end fault + cause
     nb += add
@@ -371,6 +380,13 @@ def _wrap_masters(v, m):
         cbm.area('pll_ck', 1, 21.0, 21.0, 1)
         cbm.area('rs', 1, 21.0, 18.0, 1)
         M['qfd_ckbump'] = cbm
+        rsm = Master('qfd_rstsync', RS_WH[0] - v.SHAVE, RS_WH[1] - v.SHAVE, 3,
+                     'bump-side reset synchroniser: 2 x rtl/lib/ot_reset_sync (ASYNC_STAGES 2) on clk_d2d')
+        rsm.face('arst_n', 1, 'S', 'M5', rsm.w / 2, 1)         # from the bump cell directly below
+        rsm.face('rso_d', 1, 'E', 'M4', rsm.h / 2, 1)          # PHY | d2d_rom seam (W end), rst_n pins
+        rsm.face('rso_f', 1, 'N', 'M5', rsm.w / 2, 1)          # relayed to clk_rx
+        rsm.area('ck', 1, rsm.w / 2, rsm.h / 2, 1)
+        M['qfd_rstsync'] = rsm
         sq = M.get('qfd_sp_constants_sequencer')        # r22ko4: no sequencer reservation
         cmp_ = bool(SEQ_COMPACT and m.get('r22k', {}).get('seq_compact'))   # compact: the left half of the S face
         if sq is not None:
@@ -562,10 +578,12 @@ def _compact_seq(v, m, rec):
 # (VM -> ctlm), seq_su <-> SU issue 476 / status 133 + accepted count 24.
 O4_CTLM = (777.6, 1814.4)
 O4_UP4 = (345.6, 388.8)
+RS_WH = (54.0, 32.4)            # qfd_rstsync frame (2 x ot_reset_sync + output flops), qwendie-1011
 O4_SEQ = (518.4, 518.4)
 O4_CBUF = (194.4, 216.0)
 O4_CROM = (194.4, 518.4)
 O4_UP4_LOW = os.environ.get('OT_R22KO4_UP4_LOW') == '1'   # study only (see _option4)
+O4_CHAN = 64.8                 # qwendie-1011: relay channel between the two constant-buffer rows
 O4_RROW = 64.8                 # relay row between the buffer rows and the ROM row (>= the 60.48-um wide-word relay frame)
 # qwen-1010/A 23:30: the all-reduce data path is the RTL's (ot_qwen_tp_seq_w12_vrl in seq_su reads the VM over seq_vrd /
 # vm_seq_q, streams the words to the collective and writes the result back over seq_vwr): the native sequencer <->
@@ -587,7 +605,9 @@ O4_REPIN = {
                        'without the accepted count (bv_e{a,b}); the die wants issue / status / accepted count on E, the '
                        'constant ports per group on S',
     'qfd_su_cbuf_g': 'closed plan: SU side (crom_*) BOTTOM, far ROM side (f_*) TOP; the die (SU above) wants SU side N, far '
-                     'side S',
+                     'side S, control / ready (ctl, rdy) on S beside the far side (qwendie-1011)',
+    'qfd_sp_band_lanes': 'die plan r21m: c / f / pw / tt as M8 area pins; r22ko4 (qwendie-1011) wants them on the E face '
+                         '(tt y 150, pw 420, c 620, f 700 um, M4)',
     'qfd_crom_g': 'closed plan: crom_* BOTTOM; the die (its buffer above) wants them N',
     'qfd_sp_vector_memory': 'VM instruction port ib on its W face; seq_su sits E of the VM -> ib on the E face'}
 
@@ -673,12 +693,14 @@ def _option4(v, m, rec):
     cb, cr = [], []
     for k in range(8):
         col, row = k % 4, k // 4
-        cb.append(add(f'cbuf_g_{k}', 'qfd_su_cbuf_g', su.x + col * O4_CBUF[0], su.y - (row + 1) * O4_CBUF[1], O4_CBUF,
-                      dom=su.domain))
+        # qwendie-1011 (textbook audit class 6): a relay channel (O4_CHAN) between the two buffer rows, so row 0's far
+        # side (S) and row 1's SU side (N) are open faces, not an abutted seam
+        cb.append(add(f'cbuf_g_{k}', 'qfd_su_cbuf_g', su.x + col * O4_CBUF[0],
+                      su.y - (row + 1) * O4_CBUF[1] - row * O4_CHAN, O4_CBUF, dom=su.domain))
     # one ROM row at one height, never crossed by a far word (a 518.4-um ROM group is longer than the 504-um reach):
     # groups 4..7 under their buffers in column M, groups 0..3 in the E slot at the same height; a relay row (O4_RROW)
     # between the buffers and the ROM row carries row 0's far words east to the E slot
-    y_rom = v.dn(su.y - 2 * O4_CBUF[1] - O4_RROW - O4_CROM[1], v.GY)
+    y_rom = v.dn(su.y - 2 * O4_CBUF[1] - O4_CHAN - O4_RROW - O4_CROM[1], v.GY)
     for k in range(8):
         col = k % 4
         x = (slab.x if k < 4 else su.x) + col * O4_CROM[0]
@@ -795,10 +817,17 @@ def _o4_masters(v, m, ghosts):
         # upper tile (closed qfd_tt_up4_b plan: pw / lf W, tt_ty / fault E, sel S)
         u4 = mk('qfd_tt_up4', O4_UP4, 'ot_qfd_band_upper NL 4 (CLOSED qfd_tt_up4_b-618516521: TT +219.95 / FF +18.95)')
         cxy = (O4_UP4[0] - 12.0, O4_UP4[1] - 12.0)          # the 2 x 2 block's centre
+        # qwendie-1011 (textbook audit class 4): the band words land on tile 0's W face (the closed plan's pw / lf
+        # side), which opens on the L|M relay channel, not as area pins at the 2 x 2 block centre where no relay
+        # site is within reach (r22ko4 tt_lf / pword / tt_ty hops 512-683 um); ty (closed plan: E, abutted by
+        # tile 1) joins them on W.  One M4 track per bit: 4,622 b = 222 um of the 388.8-um face.
+        y = 16.0
         for b in range(6):
-            u4.area(f'pw{b}', 513, cxy[0] - 60.0 + b * 8.0, cxy[1] - 30.0, 2)
-            u4.area(f'lf{b}', 1, cxy[0] - 60.0 + b * 8.0, cxy[1] - 20.0, 2)
-        u4.area('ty', 1538, cxy[0] - 20.0, cxy[1] - 60.0, 2)
+            u4.face(f'pw{b}', 513, 'W', 'M4', y + 513 * 0.048 / 2, 1)
+            y += 513 * 0.048 + 1.0
+            u4.face(f'lf{b}', 1, 'W', 'M4', y + 0.5, 1)
+            y += 2.0
+        u4.face('ty', 1538, 'W', 'M4', y + 1.0 + 1538 * 0.048 / 2, 1)
         u4.area('flt', 1, cxy[0] - 4.0, cxy[1] - 4.0, 2)
         u4.face('sel', B['sel'], 'S', 'M5', O4_UP4[0] / 2, 2)
         u4.area('ck', 1, u4.w / 2, u4.h / 2, 1)
@@ -855,8 +884,10 @@ def _o4_masters(v, m, ghosts):
         b_.face('sq', B['cb_su_q'], 'N', 'M5', 130.0, 1)
         b_.face('fa', B['cb_far_a'], 'S', 'M5', 50.0, 1)
         b_.face('fq', B['cb_far_q'], 'S', 'M5', 130.0, 1)
-        b_.face('ctl', B['cb_ctl'], 'E', 'M4', 80.0, 2)
-        b_.face('rdy', B['cb_rdy'], 'E', 'M4', 130.0, 2)
+        # qwendie-1011: control / ready on the S face (the E face abuts the next buffer of the row: a seam); S opens on
+        # the buffer-row channel (row 0) or the ROM relay row (row 1), both leading E to the M|E channel and seq_su
+        b_.face('ctl', B['cb_ctl'], 'S', 'M5', 165.0, 1)
+        b_.face('rdy', B['cb_rdy'], 'S', 'M5', 180.0, 1)
         b_.area('ck', 1, b_.w / 2, b_.h / 2, 1)
         M['qfd_su_cbuf_g'] = b_
         r_ = mk('qfd_crom_g', O4_CROM, 'ot_qfd_crom_g (CLOSED qfd_crom_g_a-ff3637ce7, re-pin: answer side N)')
@@ -873,6 +904,16 @@ def _o4_masters(v, m, ghosts):
         d2 = M['qfd_d2d_rom']
         d2.face('pw', B['pw'], 'E', 'M4', 80.0, 2)
         d2.face('kvd', B['kvd'], 'E', 'M4', 150.0, 1)
+        # qwendie-1011 (textbook audit class 4): the band-lane block's tree words leave on its E face (the L|M relay
+        # channel toward the control / upper tiles), not as M8 area pins 160-400 um inside a 777.6 x 1,131.8 block
+        bl = M.get('qfd_sp_band_lanes')
+        if bl is not None:
+            for pn, yc in (('tt', 150.0), ('pw', 420.0), ('c', 620.0), ('f', 700.0)):
+                if pn in bl.ports:
+                    w_ = bl.ports.pop(pn)[1]
+                    if pn in getattr(bl, 'order', []):
+                        bl.order.remove(pn)
+                    bl.face(pn, w_, 'E', 'M4', yc, 1)
         cx = M['qfd_clkrx']
         if 'rso_ctlm' not in cx.ports:
             cx.area('rso_ctlm', 1, cx.w / 2, cx.h / 2 - 8.0, 1)
