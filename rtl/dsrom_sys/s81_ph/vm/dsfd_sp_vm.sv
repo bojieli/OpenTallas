@@ -277,6 +277,50 @@ module dsfd_vm_cl #(
     end
 endmodule
 
+// ================================================================================================ capture lane tile
+// dsfd_vm_clt (el1011-ds-vm/fe): the hardened capture-lane tile (own clock tree, registered seams): pin flops on the
+// 832-b f_cap slice (8 roots x {row1 {data32, addr19}, v1, row0 {data32, addr19}, v0}), registered reset and port slot,
+// dsfd_vm_cl (outputs registered).  Pin plan physical/s81_ph_views/ports/contract_vm28/dsfd_vm_clt.
+module dsfd_vm_clt #(
+    parameter integer G = 0,
+    parameter integer LA = 12,
+    parameter integer LTO = 16
+) (
+    input  wire [0:0]   ck,
+    input  wire [0:0]   rn,
+    input  wire [0:0]   sok,
+    input  wire [831:0] f_c,
+    output wire [0:0]   w_v,
+    output wire [13:0]  w_row,
+    output wire [15:0]  w_m,
+    output wire [511:0] w_d,
+    output wire [3:0]   flt
+);
+    wire clk = ck[0];
+    reg [831:0] cp; reg rn_r, sok_r;
+    always @(posedge clk) begin cp <= f_c; rn_r <= rn[0]; sok_r <= sok[0]; end
+    wire [15:0] lv; wire [16*19-1:0] la; wire [16*32-1:0] ld;
+    genvar gk;
+    generate for (gk = 0; gk < 8; gk = gk + 1) begin : g_r
+        assign lv[2*gk]     = cp[104*gk];
+        assign la[19*(2*gk) +: 19] = cp[104*gk + 1 +: 19];
+        assign ld[32*(2*gk) +: 32] = cp[104*gk + 20 +: 32];
+        assign lv[2*gk + 1] = cp[104*gk + 52];
+        assign la[19*(2*gk+1) +: 19] = cp[104*gk + 53 +: 19];
+        assign ld[32*(2*gk+1) +: 32] = cp[104*gk + 72 +: 32];
+    end endgenerate
+`ifdef OT_SPVM_MUT_DROPW
+    // MUTANT: lane 0 drops every 61st accepted element (posted write vanishes)
+    reg [5:0] dc;
+    always @(posedge clk) if (!rn_r) dc <= 6'd0; else if (G == 0 && lv[0]) dc <= (dc == 6'd60) ? 6'd0 : dc + 6'd1;
+    wire [15:0] lvx = (G == 0 && dc == 6'd60) ? (lv & 16'hfffe) : lv;
+`else
+    wire [15:0] lvx = lv;
+`endif
+    dsfd_vm_cl #(.G(G), .LA(LA), .LTO(LTO)) u_c (.clk(clk), .rn(rn_r), .ev(lvx), .ea(la), .ed(ld), .slot_ok(sok_r),
+        .w_v(w_v[0]), .w_row(w_row), .w_m(w_m), .w_d(w_d), .flt(flt));
+endmodule
+
 // ================================================================================================ landing lane
 // dsfd_vm_ll v3 (el1011-ds-vm/fe): one row lane of a landing producer.  The pin rows and the LARM arm reach the FIFO
 // through AL relay stages each (equal latency: the arm / row order at the pins is kept).  Rows queue in a DEPTH-row FIFO
@@ -428,43 +472,27 @@ module dsfd_vm_fe #(
         .m1_v(e1_v), .m1_row(e1_row), .m1_ov(1'b0), .m1_od(512'd0));
 
     // ---------------------------------------------------------------- capture face: pin register + 16 lanes
-    reg [13375:0] cq_p;
-    always @(posedge clk) cq_p <= f_cap;
+    // the 16 capture lanes are hardened tiles dsfd_vm_clt (own pin flops, registered reset / slot, registered outputs),
+    // each under its 832-b f_cap slice; only the 64 status bits are registered here
+    reg [63:0] cq_p;
+    always @(posedge clk) cq_p <= f_cap[13312 +: 64];
     wire [15:0] cl_v; wire [16*14-1:0] cl_row; wire [16*16-1:0] cl_m; wire [16*512-1:0] cl_d; wire [63:0] cl_f;
     reg np16_ph;                        // MUT_NP16: the lane pair's shared port slot alternates
     always @(posedge clk) if (!rn) np16_ph <= 1'b0; else np16_ph <= ~np16_ph;
-    genvar gl, gk;
+    genvar gl;
     generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_cl
-        wire [15:0] lv; wire [16*19-1:0] la; wire [16*32-1:0] ld;
-        for (gk = 0; gk < 8; gk = gk + 1) begin : g_r
-            localparam integer R = 8 * gl + gk;
-            assign lv[2*gk]     = cq_p[104*R];
-            assign la[19*(2*gk) +: 19] = cq_p[104*R + 1 +: 19];
-            assign ld[32*(2*gk) +: 32] = cq_p[104*R + 20 +: 32];
-            assign lv[2*gk + 1] = cq_p[104*R + 52];
-            assign la[19*(2*gk+1) +: 19] = cq_p[104*R + 53 +: 19];
-            assign ld[32*(2*gk+1) +: 32] = cq_p[104*R + 72 +: 32];
-        end
-`ifdef OT_SPVM_MUT_DROPW
-        // MUTANT: lane 0 drops every 61st accepted element (posted write vanishes)
-        reg [5:0] dc;
-        always @(posedge clk) if (!rn) dc <= 6'd0; else if (gl == 0 && lv[0]) dc <= (dc == 6'd60) ? 6'd0 : dc + 6'd1;
-        wire [15:0] lvx = (gl == 0 && dc == 6'd60) ? (lv & 16'hfffe) : lv;
-`else
-        wire [15:0] lvx = lv;
-`endif
 `ifdef OT_SPVM_MUT_NP16
         wire sok = np16_ph == gl[0];
 `else
         wire sok = 1'b1;
 `endif
-        (* keep = 1 *) reg [1:0] rr_l;
-        always @(posedge clk) rr_l <= {rr_l[0], rn0};
-        dsfd_vm_cl #(.G(gl), .LA(LA), .LTO(LTO)) u_l (.clk(clk), .rn(rr_l[1]), .ev(lvx), .ea(la), .ed(ld), .slot_ok(sok),
+        (* keep = 1 *) reg rr_l;
+        always @(posedge clk) rr_l <= rn0;
+        dsfd_vm_clt #(.G(gl), .LA(LA), .LTO(LTO)) u_l (.ck(ck), .rn(rr_l), .sok(sok), .f_c(f_cap[832*gl +: 832]),
             .w_v(cl_v[gl]), .w_row(cl_row[14*gl +: 14]), .w_m(cl_m[16*gl +: 16]), .w_d(cl_d[512*gl +: 512]),
             .flt(cl_f[4*gl +: 4]));
     end endgenerate
-    wire cap_src_flt = cq_p[13312 + 3];
+    wire cap_src_flt = cq_p[3];
 
     // ---------------------------------------------------------------- ctrl VM port: stream pins -> 2 ratio CDC FIFOs
     reg s_we, s_re, s_tg; reg [13:0] s_wa, s_ra; reg [511:0] s_wd;
