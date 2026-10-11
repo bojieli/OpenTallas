@@ -3047,9 +3047,6 @@ def build_r8(variant=None):
         ctrl_model = s81_ctrl_die_model(cw, CTRL_ROLE)
         centre.insert(centre.index('collective'), 'stage_ctrl')
         centre_area['stage_ctrl'] = ctrl_model['area_mm2_nominal']
-    if CTRL_ADAPTERS:
-        centre.insert(centre.index('collective'), 'stage_seq')
-        centre_area['stage_seq'] = CTRL_SEQ_MM2
     wfc_rect = None
     if DIE_KIND == 'layer':
         centre.insert(2, 'wfc')
@@ -3121,11 +3118,7 @@ def build_r8(variant=None):
     centre = [n for n in centre if n not in ecol]
     def put(n, x0_, yy, w0_):
         nonlocal wfc_rect
-        if n == 'stage_seq':
-            slab(n, centre_area[n], x0_, yy, w0_, master=CTRL_SEQ_MASTER)
-            notes.append('s81-ctl --ctrl-adapters: stage sequencer %s %.3f mm2 (engine ports c/d/s to the *_c slab endpoints)'
-                         % (CTRL_SEQ_MASTER, centre_area[n]))
-        elif n == 'stage_ctrl':
+        if n == 'stage_ctrl':
             master = 'dsfd_sp_ctrl' + ('_src' if CTRL_ROLE == 'source' else '_h' if CTRL_ROLE == 'head' else '')
             slab(n, centre_area[n], x0_, yy, w0_, master=master)
             notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
@@ -3951,22 +3944,20 @@ CTRL_SLAB = False
 CTRL_ROLE = 'layer'
 CTRL_MM2 = 0.15                 # preliminary shell/queue reservation; no routed-area claim
 CTRL_BINDINGS = None
-# --ctrl-adapters (s81-ctl-1011, ADAPTER_CONTRACT_1011): the stage sequencer slab (CTRL_SEQ_MASTER, default the WFC
-# agent's dsfd_stage_seq: decision A) binds every engine port c<e> / d<e> / s<e> to the slab endpoint masters listed in
+# --ctrl-adapters (s81-ctl-1011, ADAPTER_CONTRACT_1011): with --stage-seq (the WFC agent's dsfd_stage_seq slab 'sseq',
+# decision A), every sequencer engine port c<e> / d<e> / s<e> is bound to the slab endpoint masters listed in
 # physical/s81_ctrl/die_ctrl_bindings.json (c_cmd / c_done / c_st; *_c slab masters), staged by common-clock stations
 # (pulse nets: fixed latency, no back-pressure); the fld path adds capture t_cd -> gather f_cd (drained event) and
 # gather t_xgo -> VM f_xgo (field broadcast go).  The die gate tools/s81_ctrl/die_ctrl_gate.py runs after the build and
 # FAILS the generator on any unbound engine, sequencer port or die_port_audit finding (no placeholder pins).
 CTRL_ADAPTERS = False
-CTRL_SEQ_MASTER = 'dsfd_stage_seq'
-CTRL_SEQ_MM2 = 0.15             # preliminary reservation (program 128 x 28 b, 12 port FIFOs, credits); no routed-area claim
 CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', collective='dsfd_sp_collective_c',
                       selector='dsfd_bk_selector_c', collector='dsfd_bk_collector_c')
 
 
 def ctrl_adapter_buses(hb):
     """--ctrl-adapters: (a, b, bits, port a, port b) hub buses of the engine command plane (ADAPTER_CONTRACT_1011):
-    stage_seq c<e> 85 -> slab c_cmd, slab c_done 9 -> d<e>, slab c_st 2 -> s<e> for every engine whose bindings-file
+    sseq c<e> 85 -> slab c_cmd, slab c_done 9 -> d<e>, slab c_st 2 -> s<e> for every engine whose bindings-file
     master is a slab of this die; the fld path's capture -> gather drained event and gather -> VM field go."""
     bind = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
     eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
@@ -3977,8 +3968,8 @@ def ctrl_adapter_buses(hb):
         # hub stations -- NOT BUILT YET: left unbound, so the die control gate reports sel / col UNBOUND (FAIL)
         for slab_ in [s_ for s_, it in hb.items() if it.master in bind['engines'].get(e, {}).get('masters', [])
                       and it.kind != 'band_blk']:
-            out += [('stage_seq', slab_, 85, f'c{k}', 'c_cmd'), (slab_, 'stage_seq', 9, 'c_done', f'd{k}'),
-                    (slab_, 'stage_seq', 2, 'c_st', f's{k}')]
+            out += [('sseq', slab_, 85, f'c{k}', 'c_cmd'), (slab_, 'sseq', 9, 'c_done', f'd{k}'),
+                    (slab_, 'sseq', 2, 'c_st', f's{k}')]
     if 'gather' in hb and hb['gather'].master == 'dsfd_sp_gather_c':
         out += [('capture', 'gather', 12, 't_cd', 'f_cd'), ('gather', 'vm', 11, 't_xgo', 'f_xgo')]
     return tuple(out)
@@ -6299,10 +6290,10 @@ def die_options(ap):
                     '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
-    ap.add_argument('--ctrl-adapters', action='store_true', help='s81-ctl-1011: stage sequencer slab + engine c/d/s buses to the '
+    ap.add_argument('--ctrl-adapters', action='store_true', help='s81-ctl-1011: with --stage-seq, engine c/d/s buses from the sseq slab to the '
                     '*_c slab endpoints (physical/s81_ctrl/die_ctrl_bindings.json); the die control gate FAILS the build on '
                     'any unbound engine / port-audit finding')
-    ap.add_argument('--ctrl-seq-master', default=None, help='sequencer slab master (default dsfd_stage_seq)')
+
     ap.add_argument('--ctrl-bindings', type=Path, help='native control-plane endpoint manifest, audited before build')
     ap.add_argument('--mtp-seq-mm2', type=float, help='MTP-DIE: sequencer slab area (default 0.15 mm2)')
     ap.add_argument('--mtp-links', type=int, default=0, help='MTP-DIE: head die extra draft fan-out SerDes '
@@ -6316,9 +6307,10 @@ def apply_options(a):
     CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
     CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
     CTRL_BINDINGS = None
-    global CTRL_ADAPTERS, CTRL_SEQ_MASTER
+    global CTRL_ADAPTERS
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
-    CTRL_SEQ_MASTER = getattr(a, 'ctrl_seq_master', None) or 'dsfd_stage_seq'
+    if CTRL_ADAPTERS and not (getattr(a, 'stage_seq', False) and getattr(a, 'wfc_kit', False)):
+        raise ValueError('--ctrl-adapters binds the engines of the dsfd_stage_seq slab: needs --wfc-kit --stage-seq')
     if CTRL_ADAPTERS and (a.gen != 'r8' or a.rev != 'r9'):
         raise ValueError('--ctrl-adapters requires the r9 wired die (staged hub buses)')
     if CTRL_ADAPTERS and CTRL_SLAB:
