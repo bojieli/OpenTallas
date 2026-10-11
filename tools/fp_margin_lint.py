@@ -179,13 +179,16 @@ def relay_lint(chains, reach_um=504.0, back_slack_um=20.0, metric="manhattan"):
     return bad
 
 
-def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, stages=None, sliver_um=0.0, limit=20, edges=False):
+def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, stages=None, sliver_um=0.0, limit=20, edges=False,
+               load_pin=None):
     """Die generator lint (dsrom_s81_fulldie / hbm_accel_die_fp / die_top_lint).  insts: objects with name, kind, x, y,
     w, h; buses: (bid, cls, bits, [(inst, port), ...]) with eps[0] the driver.  Every driver -> relay ... -> load chain
     through instances of relay_kinds is checked:
       reach     a register-to-register segment (nearest points, Manhattan) longer than reach_um after the segment's
                 priced intermediate wire stages (stages(bid, L) -> register hops, None = 1 hop per bus)
-      far_side  a relay farther from the next chain point than its own driver (+ back_slack_um)
+      far_side  a relay farther from the next chain point than its own driver (+ back_slack_um); the next point is the
+                instance centre, or -- when load_pin(bid, load) is given (qwendie-1011, opt-in) and the next point is a
+                non-relay load -- that load's actual pin (a 1.8 mm block's centre is not where its word lands)
     and (sliver_um > 0) gaps 0 < g < sliver_um between die instances (reported, die tops place no std-cell rows)."""
     by = {it.name: it for it in insts}
 
@@ -234,7 +237,10 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                 if by[nx].kind in relay_kinds:
                     nxs = {x for _, x in succ.get(nx, ())}
                     if len(nxs) == 1 and len(pred[nx]) == 1:
-                        q = c(by[next(iter(nxs))])
+                        ld = next(iter(nxs))
+                        q = c(by[ld])
+                        if load_pin is not None and by[ld].kind not in relay_kinds:
+                            q = load_pin(next(b2 for b2, x in succ[nx] if x == ld), ld) or q
                         if mh(c(by[nx]), q) > mh(c(by[cur]), q) + back_slack_um:
                             far_bad.append(dict(chain=f'{cur}->{next(iter(nxs))}', relay=nx,
                                                 back_um=round(mh(c(by[nx]), q) - mh(c(by[cur]), q), 1)))
@@ -271,6 +277,8 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                     # far side (point-to-point relays only: a multicast / gather tree node serves several branches): the relay is farther from the NEXT chain point than its own driver (a ring / detour
                     # route still advances point to point; the s81 r3 hop relays did not)
                     nx = c(by[path[i + 1]])
+                    if load_pin is not None and by[path[i + 1]].kind not in relay_kinds:
+                        nx = load_pin(bids[i], path[i + 1]) or nx
                     if mh(c(b_), nx) > mh(c(a_), nx) + back_slack_um:
                         far_bad.append(dict(chain=f'{path[0]}->{path[-1]}', relay=path[i],
                                             back_um=round(mh(c(b_), nx) - mh(c(a_), nx), 1)))
