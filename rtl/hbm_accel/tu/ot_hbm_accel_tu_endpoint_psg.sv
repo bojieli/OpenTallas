@@ -389,6 +389,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
             // the slice is ONE hardened view: instantiated at its defaults (a hard macro takes no parameters)
 `ifdef OT_HCOLL_PORT_HARD
             ot_hcoll_port u_port (.clk(clk), .rst_n(rst_n),
+`elsif OT_HCOLL_PORT_RBSEL
+            // el1011-hbm-coll 2026-10-11 (hierarchical hfd_coll): the hardened tile's build -- registered SRAM fetch, registered
+            // receive-buffer bank select (+1 edge on rb_v / rb_d, so the slice's land credit K = 9 and u_land holds 16)
+            ot_hcoll_port #(.SWCRED(SWCRED), .RFETCH(1), .RBSEL(1), .K(9)) u_port (.clk(clk), .rst_n(rst_n),
 `else
             ot_hcoll_port #(.SWCRED(SWCRED)) u_port (.clk(clk), .rst_n(rst_n),
 `endif
@@ -396,8 +400,13 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 .sw_cr_ret(sw_cr_ret[p]), .ph_tx_v(ph_tx_v[p]), .ph_tx_flit(ph_tx_flit[p*PWT +: PWT]),
                 .ph_rx_v(ph_rx_v[p]), .ph_rx_flit(ph_rx_flit[p*PWT +: PWT]),
                 .rb_v(s_rbv[p]), .rb_d(s_rbd[p]), .rb_cr(rbcr_q[p]), .stall(pstall[p]), .fault(pfault[p]));
-            wire [3:0] lc;
-            (* keep_hierarchy *) ot_ha2_fifo #(.W(PWT), .AW(3)) u_land (.clk(clk), .rst_n(rst_n), .push(lv_q[p]), .din(ld_q[p]),
+            `ifdef OT_HCOLL_PORT_RBSEL
+            localparam integer LAW = 4;     // K = 9 credits in flight need >= 9 land entries
+`else
+            localparam integer LAW = 3;
+`endif
+            wire [LAW:0] lc;
+            (* keep_hierarchy *) ot_ha2_fifo #(.W(PWT), .AW(LAW)) u_land (.clk(clk), .rst_n(rst_n), .push(lv_q[p]), .din(ld_q[p]),
                 .pop(rb_pop[p]), .empty(rb_empty[p]), .dout(rb_head[p]), .ovf(rb_ovf[p]), .count(lc));
         end
         assign stat_credit_stall = cstall;
