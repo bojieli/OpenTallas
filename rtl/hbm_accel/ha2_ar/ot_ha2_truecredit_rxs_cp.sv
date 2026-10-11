@@ -10,7 +10,8 @@ module ot_ha2_truecredit_receiver_s #(
  input wire[INJ-1:0] arrival_v,receiver_ready,
  input wire[INJ*W-1:0] arrival_data,
  input wire[INJ*TAGW-1:0] arrival_tag,
- output reg[INJ-1:0] send_v,return_v,
+ (* keep = 1 *) output reg[INJ-1:0] send_v,
+ (* keep = 1 *) output reg[INJ-1:0] return_v,
  output reg[INJ*W-1:0] send_data,
  output reg[INJ*TAGW-1:0] return_tag,
  output reg quiet,fault);
