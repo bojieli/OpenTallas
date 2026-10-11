@@ -3,6 +3,7 @@
 #   run_tkm_bench.sh <outdir> <vecdir> matrix      every case in <vecdir> (tools/hgi_coll_tkm_vectors.py) + stalls/skew on the
 #                                                   production cases + the 4 mutants (each must FAIL on a production case)
 #   run_tkm_bench.sh <outdir> <vecdir> quick       base build, every case
+#   run_tkm_bench.sh <outdir> <vecdir> mut <N>     mutant N run as a PASS case on syn_sel (must print HGI_TKM FAIL)
 # Prints one line per case to <outdir>/SUMMARY ("OK name expect got CYCLES=..."), then "HGI_TKM PASS" / "HGI_TKM FAIL".
 set -u
 R=$(cd "$(dirname "$0")/../../../../.." && pwd)
@@ -34,6 +35,9 @@ run() {  # run <name> <PASS|FAIL> <obj> <case> args...
 : > "$O/SUMMARY"
 cases=$(cd "$VEC" && ls -d */ | tr -d /)
 case $MODE in
+mut)   # mut <N>: mutant N on syn_sel as an ordinary PASS case -> the run must end "HGI_TKM FAIL" (closure-loop fail stage)
+  m=${4:-1}; build obj_mut$m -GMUT_TKM=$m
+  run mut${m}_syn_sel PASS obj_mut$m syn_sel ;;
 quick)
   build obj_base
   for c in $cases; do run $c PASS obj_base $c & done; wait ;;
