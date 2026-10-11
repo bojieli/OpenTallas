@@ -147,6 +147,13 @@ def recipes():
                              role='S0 die: WFC slab = dsfd_wfc_cr2 (crp credit-boundary tile + SOURCE kit)', note='main 10-11'),
         'layer1crp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp'],
                           role='stage die: WFC slab = dsfd_wfc_cr2 (crp + STG kit)', note='main 10-11'),
+        # mtp-lead/kitseq 2026-10-11 (option A): the stage controller dsfd_sp_seq bound to the kit's START / DONE
+        'layer1crpks': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp', '--kit-seq'],
+                            role='stage die: layer1crp + dsfd_sp_seq (kit START from the VM-side ep, DONE to the kit)',
+                            note='rtl/dsrom_sys/s81_ctrl/ot_s81_kit_seq.sv; gate tools/s81_ctrl/kit_seq_bench.py'),
+        'layer1srccrpks': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp', '--ctrl-role', 'source',
+                                                     '--kit-seq'],
+                               role='S0 die: layer1srccrp + dsfd_sp_seq', note='as layer1crpks'),
         'scankit': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer', '--wfc-kit'],
                         role='scan die (q-only flavour) with the WFC kit', note='dsfd_wfc_stg'),
         'draftPs': dict(opts=_sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8) + ['--die', 'layer1', '--draft', 'P', '--mtp-links', '5', '--seedl',

@@ -3072,6 +3072,12 @@ def build_r8(variant=None):
             centre.remove('wfc')
         centre.insert(centre.index('capture') + 1, 'wfc_hard')
         centre_area['wfc_hard'] = WFC_SLAB_H * cw / 1e6
+        if KIT_SEQ:
+            # mtp-lead/kitseq 2026-10-11 (option A): the stage controller dsfd_sp_seq (ot_s81_stage_seq bound to the kit's
+            # START / DONE, rtl/dsrom_sys/s81_ctrl/ot_s81_kit_seq.sv) between the capture and the WFC slab: one slab from
+            # the VM (START from dsfd_vm_wfc_ep), abutting the WFC slab (DONE -> kit f_kd)
+            centre.insert(centre.index('wfc_hard'), 'kseq')
+            centre_area['kseq'] = KSEQ_H * cw / 1e6
     if MTP_SEQ and DIE_KIND == 'head':
         centre.insert(centre.index('capture') + 1, 'mtp')
         centre_area['mtp'] = MTP_SEQ_MM2
@@ -3137,6 +3143,11 @@ def build_r8(variant=None):
             slab('p2', centre_area[n], x0_, yy, w0_, master='dsfd_p2')
             notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
                          '(the larger first-route outline %s um)' % (centre_area[n], P2_OUTLINE_UM))
+        elif n == 'kseq':
+            ms_ = 'dsfd_sp_seq_h' if DIE_KIND == 'head' else 'dsfd_sp_seq'
+            slab('kseq', centre_area[n], x0_, yy, w0_, master=ms_)
+            notes.append('kitseq --kit-seq: %s = ot_s81_kit_seq (START queue -> ot_s81_stage_seq -> kit hand-off) %.3f mm2; '
+                         'engine lanes cv/cd/dv/dt + cfg pw_* bound by s81-ctl-1011' % (ms_, centre_area[n]))
         elif n in ('vm_ep', 'cap_ep', 'p2_lnk'):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
             slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
@@ -3686,7 +3697,7 @@ def buses_r8(m):
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
-            (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
+            (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP, 'kseq' in hub) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
             (SEEDL_BUSES + (SEEDL_HOST_BUSES if 'host' in hub else ()) if 'seedl' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
@@ -3696,7 +3707,7 @@ def buses_r8(m):
         if REV == 'r9':
             # mtp-wfc 2026-10-10 (ds-1010 finding): the WFC kit's VM / capture buses are 0.9 GHz serial-domain ports
             # (dsfd_wfc_vmx slow side): their stations are clocked in serial_0p9 and spaced at the 0.9 GHz reach
-            ser_ = (WFC_KIT and 'wfc' in (a_, b_) and bool({a_, b_} & {'vm', 'capture'}))
+            ser_ = (WFC_KIT and (('wfc' in (a_, b_) and bool({a_, b_} & {'vm', 'capture', 'kseq'})) or {a_, b_} == {'vm', 'kseq'}))
             _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom='serial_0p9' if ser_ else None,
                            reach_um=SER_STAGE_UM if ser_ else None)
         else:
@@ -3825,7 +3836,23 @@ WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f
 # VM <-> vmx (t_swv/t_swd 528 + t_srv/t_srd 16 = 544 out; f_swr f_swa f_srr 3 + f_srq 513 = 516 in), capture <-> vmx
 # (t_ks 53, f_kd 54), SOURCE only: host -> tok cfg f_c 55 and core -> host committed token {valid,user,pos,id} 53.
 # The element-to-element wiring is inside the kit master (dsfd_wfc_kit.sv), every element boundary registered.
-def wfc_kit_buses(role, host, far=None, crp=False):
+# mtp-lead/kitseq 2026-10-11 (--kit-seq): the kit's stage START / DONE bind the stage controller dsfd_sp_seq, not the
+# capture (dsfd_sp_capture has no start / done: the 2026-10-10 buses landed on generator placeholder pins).  Under the
+# adopted POSTED kit the START is raised by the VM-side endpoint dsfd_vm_wfc_ep (VM slab master port t_ks), after every
+# payload write is at the VM pins; the DONE is the controller's kit hand-off (t_kd -> kit f_kd).  Both are pulse nets in
+# the serial 0.9 GHz domain (no back-pressure: plain stations); the kit's own t_ks is constant under POSTED (no bus).
+KSEQ_BUSES = (('vm', 'kseq', 53, 't_ks', 'f_ks'), ('kseq', 'wfc', 54, 't_kd', 'f_kd'))
+KSEQ_LANE_PORTS = ('pw_v', 'pw_a', 'pw_d', 'prog_len', 'cv', 'cd', 'dv', 'dt', 'flt', 'fvec')   # s81-ctl-1011 binds
+
+
+def wfc_kit_buses(role, host, far=None, crp=False, kseq=False):
+    b = _wfc_kit_buses(role, host, far, crp)
+    if kseq:
+        b = tuple(x for x in b if 'capture' not in (x[0], x[1])) + KSEQ_BUSES
+    return b
+
+
+def _wfc_kit_buses(role, host, far=None, crp=False):
     # crp (--wfc-crp): dsfd_wfc_cr2 die ports: credit returns (t_lic / f_loc / f_swc / f_src) in place of the kit's grants,
     # same bit counts; link and VM land in dsfd_wfc_crp
     if crp:
@@ -3869,6 +3896,8 @@ MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab 
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
 SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) station spacing = LINK_STAGE_UM x (1111.1 - 261) /
                                 #   (833.3 - 261) on the SS wire model 261 ps + 1.135 ps/um (504 um at 833 ps; 749 um at 1,111 ps)
+KIT_SEQ = False                 # --kit-seq (mtp-lead/kitseq 2026-10-11): stage controller dsfd_sp_seq bound to the kit
+KSEQ_H = 64.8                   #   slab height (um): stage_seq + 2 CDC queues + hand-off (~10k flops), 1,054 lane pins on its face
 WFC_CRP = False                 # --wfc-crp (main 10-11): WFC slab master dsfd_wfc_cr2 (credit-boundary tile dsfd_wfc_crp + kit)
 WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
 WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
@@ -6189,6 +6218,8 @@ def die_options(ap):
     ap.add_argument('--p2-lnk', action='store_true', help='mtp-wfc 2026-10-10: draft-A P2 slab = core + dsfd_p2_lnk')
     ap.add_argument('--mtp-seq-rtt', action='store_true', help='mtp-wfc 2026-10-10: head sequencer slab master '
                     'dsfd_mtp_seq_rtt (native RTT successor, same ports)')
+    ap.add_argument('--kit-seq', action='store_true', help='mtp-lead/kitseq 2026-10-11 (option A): with --wfc-kit, the stage '
+                    'controller dsfd_sp_seq between capture and WFC; kit START (VM-side ep t_ks) / DONE bind it, no capture pins')
     ap.add_argument('--wfc-crp', action='store_true', help='main 10-11: with --wfc-kit, the WFC slab master is dsfd_wfc_cr2 '
                     '(dsfd_wfc_crp credit-boundary tile at the die edge + the kit)')
     ap.add_argument('--wfc-kit', action='store_true',
@@ -6255,8 +6286,11 @@ def apply_options(a):
     global MTP_EP, P2_LNK
     MTP_EP = bool(getattr(a, 'mtp_ep', False)); P2_LNK = bool(getattr(a, 'p2_lnk', False))
     WFC_KIT = bool(getattr(a, 'wfc_kit', False))
-    global WFC_CRP
+    global WFC_CRP, KIT_SEQ
     WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT
+    KIT_SEQ = bool(getattr(a, 'kit_seq', False))
+    if KIT_SEQ and not WFC_KIT:
+        raise SystemExit('--kit-seq binds the WFC kit START / DONE: needs --wfc-kit')
     if WFC_CRP and getattr(a, 'coll_mtp_far', None):
         raise SystemExit('--wfc-crp with --coll-mtp-far: the TOKIN token-return path is a kit port, not a cr2 port (not built)')
     WFC_ROLE = 'source' if getattr(a, 'ctrl_role', 'layer') == 'source' else 'stage'
