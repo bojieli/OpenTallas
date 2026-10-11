@@ -68,9 +68,11 @@ module dsfd_coll_p2_lane #(
 
     // ---------------------------------------------------------------- sender
     // data: a 2-entry input skid (registered x_r) so the 2-beat segmenter never stalls a pin-level handshake
-    wire dv; wire dr; wire [XW-1:0] dd;
-    ot_s81ph_skid2 #(.W(XW)) u_xs (.clk(clk), .rst_n(rst_n), .in_v(x_v[0] && TXK != 0), .in_r(x_r[0]), .in_d(x_d),
+    // x_r is low while this tile's synchronised reset is held (the skid's in_r is 1 in reset: a handshake there was lost)
+    wire dv; wire dr; wire [XW-1:0] dd; wire xs_r;
+    ot_s81ph_skid2 #(.W(XW)) u_xs (.clk(clk), .rst_n(rst_n), .in_v(x_v[0] && TXK != 0 && rst_n), .in_r(xs_r), .in_d(x_d),
         .out_v(dv), .out_r(dr), .out_d(dd));
+    assign x_r[0] = xs_r && rst_n;
     // events: pin flop, change detect, queue
     reg [ETW-1:0] ev_p, ev_last;
     always @(posedge clk) ev_p <= x_ev;
