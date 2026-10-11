@@ -599,6 +599,8 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # [svc-ep] 10-10: PS native-endpoint chains (+~320 b every cut, worst ~2,830 b) at <= 55 % cut use on the
              # strip's 10.3 b/um (M4 / M6 alternate, 0.096 um a bit): 2,830 / 0.55 / 10.3 = 500 um (was 259.176)
              svc_h=500.04, split_x_new_port_band=dict(lq=3, lr=3),
+             svc_split='physical/hbm_accel_die_views/svc/split_psn/split.json',
+             vmr2_dma=True,      # hgi-1010/c: loader dma_vr2q / dma_vr2r <-> VM read group 2 (DS MTP swapout 8.7k -> 3.5k cycles)
              # hgi-1010/b 10-10: a larger hgi_vm outline, single-layer faces at every other track (<= 10.4 b/um)
              hgi_vm_w=2073.6, hgi_vm_h=2073.6,
              lane_chain_nets=(('rdn', 8259), ('wdn', 67), ('rup', 515), ('wup', 8963)),
@@ -608,7 +610,8 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              spine_cross=(('loader', 'coll'), ('quant', 'vm8')), spine_cross_um=302.4,
              lane_groups=dict(W=('hb_hgi_vm', 'hb_su_SW', 'hb_sfu_SW', 'hb_hc_SW'), E=('hb_hgi_vm', 'hb_cmdproc', 'hb_quant')),
              lane_rd_bits=8800, lane_wr_bits=9000,
-             face_force={('hfd_hgi_vm', 't_lgW'): 'W', ('hfd_hgi_vm', 't_lgE'): 'E'},     # clients' taps: by peer
+             face_force={('hfd_hgi_vm', 't_lgW'): 'W', ('hfd_hgi_vm', 't_lgE'): 'E',     # clients' taps: by peer
+                         ('hfd_loader', 't_dma_vr2q'): 'N', ('hfd_loader', 'f_dma_vr2r'): 'N'},   # loader's long face
              # [fp]/[sfu] decision (a) 10-10: the W lane-group trunk (17,800 b) does not pass through hfd_sfu (its slot
              # has no free M1-M7 corridor and the 17,800-pin windows were 20.8 b/um/layer).  The trunk runs SU (N face)
              # -> a client-station relay bank hfd_stn_lgW in the SFU | HC gap -> HC (E face); hfd_sfu keeps a narrow
@@ -872,6 +875,8 @@ def build_r25gq_net(variant):
               del_obase=V.get('del_obase'))
     if V.get('split_x_new_port_band'):      # [svc-ep] 10-10: lq / lr on band 3 of every svc stack
         bv['split_x_new_port_band'] = dict(bv.get('split_x_new_port_band') or {}, **V['split_x_new_port_band'])
+    if V.get('svc_split'):      # [svc-ep] 10-10: the native-endpoint segment records (split_psn, h = 500.04)
+        bv['split_x_masters'] = V['svc_split']
     if V.get('shared_ks'):      # [svc] N8 10-10 (shared-ks): no ki pins; kc<k> lands on the band that drives ks<k>
         bv['shared_ks'] = V['shared_ks']
         bv['split_x_new_port_band'] = dict(bv.get('split_x_new_port_band') or {},
@@ -1072,7 +1077,10 @@ def build_r25gq_net(variant):
     # until D4): no die net; (4) the IDX.INDEX selector path hgi_idx <-> idx_selector (abutted in the spine)
     # (5) [svc] 10-10: cp_mtp_ports (t_mtpk 120 b) had no RTL counterpart (ot_hgi_cp_die: f_mtp 517 / t_mtp 197 only;
     # the mh_* host side goes to the loader): a budget placeholder, dropped
-    extra = [(f'hgi_sel_{p_}', 'idx_sel', w_, ('hb_hgi_idx', f't_sel_{p_}'), ('idx_selector', p_))
+    extra = ([('hgi_vmr2_dma', 'hub', 513, ('hb_loader', 't_dma_vr2q'), ('hb_hgi_vm', 'f_dma_vr2q')),     # hgi-1010/c DS MTP
+              ('hgi_vmr2_dma_r', 'hub', 8257, ('hb_hgi_vm', 't_dma_vr2r'), ('hb_loader', 'f_dma_vr2r'))]   # swapout store on
+             if V.get('vmr2_dma') else []) + \
+            [(f'hgi_sel_{p_}', 'idx_sel', w_, ('hb_hgi_idx', f't_sel_{p_}'), ('idx_selector', p_))
              for p_, w_ in (('fs', 90), ('qb', 1048), ('kin', 345), ('toc', 1), ('coc', 1))] + \
             [(f'hgi_sel_{p_}', 'idx_sel', w_, ('idx_selector', p_), ('hb_hgi_idx', f'f_sel_{p_}'))
              for p_, w_ in (('qbr', 1), ('to', 612), ('co', 72), ('ev', 2))] + \

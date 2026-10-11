@@ -50,6 +50,16 @@
     "E",
     "output"
    ],
+   "f_dma_vr2r": [
+    8257,
+    "N",
+    "input"
+   ],
+   "t_dma_vr2q": [
+    513,
+    "N",
+    "output"
+   ],
    "rst": [
     1,
     "N",
@@ -586,6 +596,16 @@
     19,
     "N",
     "output"
+   ],
+   "t_dma_vr2r": [
+    8257,
+    "S",
+    "output"
+   ],
+   "f_dma_vr2q": [
+    513,
+    "S",
+    "input"
    ],
    "f_hgi_coll": [
     338,
