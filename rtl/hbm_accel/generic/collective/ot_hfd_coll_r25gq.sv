@@ -13,7 +13,7 @@
 module ot_hfd_coll_r25gq #(
     parameter integer NPT = 9,
     parameter integer SWCRED = 32,
-    parameter integer RGX_LQ = 8,          // the VM W2 group's LQ (hfd_hgi_vm, b)
+    parameter integer RGX_LQ = 32,         // the VM W2 group's LQ (hfd_hgi_vm, b: 32)
     parameter integer SESSION_W0 = 47,     // config word of LINK_SESSION [23:0]
     parameter integer INJ = 2, DEL = 4, LANES = 16, FW = 32 * LANES, PWT = FW + 33
 ) (
@@ -65,7 +65,7 @@ module ot_hfd_coll_r25gq #(
     wire [31:0] rg_lq_addr; wire [511:0] rg_lr_data, rg_hr_data;
     wire [1:0] rg_hq_v, rg_hq_rdy, rg_hr_v; wire [69:0] rg_hq_addr; wire [15:0] rg_hq_tag, rg_hr_tag;
     wire [DEL-1:0] rg_w_v, rg_w_rdy; wire [DEL*40-1:0] rg_w_addr; wire [DEL*FW-1:0] rg_w_data;
-    ot_hgi_coll_ep #(.NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1), .RGXHW(1),
+    ot_hgi_coll_ep #(.NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1), .RGXHW(1), .RFMT(0),
                      .INJ(INJ), .DEL(DEL), .LANES(LANES)) u_ep (
         .clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(rank), .pf(pf), .go(go),
         .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_q(inj_q),
