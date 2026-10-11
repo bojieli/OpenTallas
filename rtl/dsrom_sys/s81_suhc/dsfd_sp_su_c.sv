@@ -25,9 +25,11 @@ module dsfd_sp_su_c #(
     output wire [S_WR-1:0]     wq_v,
     output wire [S_WR*14-1:0]  wq_row,
     output wire [S_WR*16-1:0]  wq_mask,
-    output wire [S_WR*512-1:0] wq_d,
-    output wire [3:0]          fcode
+    output wire [S_WR*512-1:0] wq_d
 );
+    // the slab's fault code stays inside (diagnostic); the die fault is c_st[0] -> the sequencer's s<e> (no die sink
+    // exists for a per-slab code: keeping it a pin left it unbound in the die port audit)
+    wire [3:0] fcode;
     reg [1:0] rs_q;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
     wire rn = rs_q[1];
