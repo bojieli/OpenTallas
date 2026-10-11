@@ -858,7 +858,12 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls == 'hub':        # r17 fwd hub chains: a station's a / b port drives when it is the bus driver (j = 0)
         return [(0, bits, 'out' if port.startswith('t_') or (j == 0 and port in ('a', 'b')) else 'in')]
     if cls == 'link_flit':          # R25GQ decision (b): coll <-> link endpoint TU flit bus, {v, flit 545, credit} each
-        return flow(j, bits, 547)   # way (endpoint 0 = coll)
+        #                             way (endpoint 0 = coll), then session[23:0] down and {fault, locked} up
+        d_, u_ = ('out', 'in') if j == 0 else ('in', 'out')
+        seg = [(0, 547, d_), (547, 1094, u_)]
+        if bits >= 1120:
+            seg += [(1094, 1118, d_), (1118, 1120, u_)]
+        return seg
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
         if cls == 'host' and V.get('host_h') and bits == sum(V['host_h']):
             # R25GQ ([svc] 2026-10-10): the host port is sized exactly (HOST_H_HGI tx / rx); the even split gave the
