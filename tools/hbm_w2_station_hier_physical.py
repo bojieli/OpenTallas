@@ -195,6 +195,8 @@ def cmd_top(a):
     lines = [l for l in cfg.splitlines() if not l.startswith(("export VERILOG_FILES", "export SDC_FILE"))]
     lines.insert(3, "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in TOP_RTL))
     lines.append("export SDC_FILE = /work/station.sdc")
+    # hard slice tiles expose M6 power pins: parent grid with M5/M6 stripes + M7 straps, slices strapped M6-M7
+    lines.append(f"export PDN_TCL = /src/{STN}/pdn_hier.tcl")
     lines.append(f"export VERILOG_TOP_PARAMS = ENABLE 1 NO {a.no} REL_REG 1 SAFE 1 GRANT_SEAT 1 HIER 1")
     lines.append(f"export GDS_ALLOW_EMPTY = (ot_hbm_w2_stn_slice8|ot_hbm_w2_stn_slice5)")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
