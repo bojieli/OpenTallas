@@ -32,7 +32,7 @@ module ot_s81_coll_job #(parameter integer HQD = 16, JQ = 8, MUT = 0, EPMUT = 0)
     input  wire          ck, rs_n,               // synchronised slab reset
     input  wire [591:0]  vm_f,                   // the VM's f_vm word (pin-registered by the caller)
     output reg  [591:0]  core_f,                 // to the slab core's f_vm
-    input  wire [2099:0] core_t,                 // the slab's t_vm word (observed: results leaving the slab)
+    input  wire [13:0]   core_h,                 // header [13:0] of the slab's t_vm word (results leaving the slab)
     output wire          fault
 );
     // ---- the pinned endpoint (adapter + in-order job queue of JQ descriptors)
@@ -67,8 +67,8 @@ module ot_s81_coll_job #(parameter integer HQD = 16, JQ = 8, MUT = 0, EPMUT = 0)
     wire [HW-1:0] hsel = cut ? {vm_f[591:40], vm_f[39:8], vm_f[7], vm_f[6]} : hd;
     wire       h_last = hsel[0], h_mode = hsel[1];
     // ---- done side: lasts leaving the slab
-    wire       ob = core_t[0] && core_t[2:1] == 2'd1;
-    wire [3:0] ol = core_t[13:10] & core_t[9:6];
+    wire       ob = core_h[0] && core_h[2:1] == 2'd1;
+    wire [3:0] ol = core_h[13:10] & core_h[9:6];
     wire [2:0] nl = ob ? ({2'b0, ol[0]} + ol[1] + ol[2] + ol[3]) : 3'd0;
     reg  [4:0] pend;                              // lasts seen whose done is not yet pulsed
     reg        first_seen;                        // MUT 5: a result beat seen for the head job
