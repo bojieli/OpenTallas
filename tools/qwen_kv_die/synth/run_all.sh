@@ -6,7 +6,7 @@ FP="rtl/hdc/ot_hdc_sfu_q.sv $N/ot_qwen_nearhbm_sfu_p.sv rtl/hdc/ot_hdc_sfu.sv rt
 $H/synth_area.sh $S $O astk_r8 ot_qwen_nearhbm_attn_stack_p ot_qwen_nearhbm_row_engine_p HD=128,R=8 $N/ot_qwen_nearhbm_attn_stack_p.sv $N/ot_qwen_nearhbm_prod.sv $FP &
 $H/synth_area.sh $S $O reng ot_qwen_nearhbm_row_engine_p - HD=128,R=8 $N/ot_qwen_nearhbm_attn_stack_p.sv $N/ot_qwen_nearhbm_prod.sv $FP &
 $H/synth_area.sh $S $O hub_p ot_qwen_nearhbm_attn_hub_p - HD=128 $N/ot_qwen_nearhbm_attn_hub_p.sv $FP &
-$H/synth_area.sh $S $O kv_seq ot_qkvd_kv_seq - - $K/ot_qkvd_kv_seq.sv $K/ot_qkvd_cbridge.sv $K/ot_qkvd_fifo.sv &
+$H/synth_area.sh $S $O kv_seq ot_qkvd_kv_seq - KDESC=1 $K/ot_qkvd_kv_seq.sv $K/ot_qkvd_kv_desc.sv $K/ot_qkvd_cbridge.sv $K/ot_qkvd_fifo.sv &
 $H/synth_area.sh $S $O kv_end ot_qkvd_kv_end - - $K/ot_qkvd_kv_end.sv $K/ot_qkvd_d2d.sv $K/ot_qkvd_fifo.sv &
 $H/synth_area.sh $S $O rom_end ot_qkvd_rom_end - - $K/ot_qkvd_rom_end.sv $K/ot_qkvd_d2d.sv $K/ot_qkvd_fifo.sv &
 $H/synth_area.sh $S $O kv_merge8 ot_qkvd_kv_merge - E=8 $K/ot_qkvd_kv_merge.sv $K/ot_qkvd_fifo.sv &
