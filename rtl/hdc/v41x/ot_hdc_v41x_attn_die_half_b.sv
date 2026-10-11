@@ -56,7 +56,15 @@ module hfd_attn_half_lo #(
     parameter integer NR = 3,
     parameter integer PMID = 2,
     parameter integer NFR = 3,
-    parameter integer NLL = 3       // result banks of quad row 0 in lo (2 side-channel EW + the N-face pin bank)
+    parameter integer NLL = 3,      // result banks of quad row 0 in lo (2 side-channel EW + the N-face pin bank)
+    // hgi-1010/att 2026-10-11 (lead-approved P2, opt-in; default 0 = the as-built entry): KVIB = 1 puts the PS row on
+    // the ISSUE half (the tile is BF16-stationary (ld) x FP8-stored (ib): K / V must be the ib operand, q / p the ld
+    // operand, or attention is not exact).  ldk = 1 (entry): iv = v & ~idx, ibank = row[578:576], ib = row[575:0] (the
+    // entry stager ot_hgi_att_stager emits tile-native beats on ks); ld = the forward chain's ld | the q port re-read
+    // as an ld word (corner tile only: q[525] ld_v, q[524] ld_mode, q[523:521] ld_bank, q[520:513] ld_grp,
+    // q[512:1] ld_w[511:0], q[0] ld_w2v; ld_w[1023:512] = 0).  ldk = 0 (partner): iv = 0 (no duplicate results), ld as
+    // the entry.  +0 cycles (the same pin pipes).  OT_ATTN_MUT_KVIB_PARTNER (bench): partners keep the forward issue half.
+    parameter integer KVIB = 0
 ) (
     input  wire [1617:0] ci,
     input  wire [0:0]    ck,
@@ -99,7 +107,19 @@ module hfd_attn_half_lo #(
     ot_attn_ks_credit u_kq (.clk(clk), .rst_n(rst[0]), .ks_v(ks[0]), .kq(kq));
     wire [63:0] ks_meta = ks_s[1098:1035];
     wire [1037:0] ks_ld = {ks_s[0] & ~ks_meta[19], ks_meta[32], ks_meta[31:29], ks_meta[28:21], ks_s[1034:11], ks_meta[20]};
-    wire [PW-1:0] pk = {q_s[582], ldk_s ? ks_ld : (k_s[1037:0] | fw[PK-1:580]), q_s[579:0] | fw[579:0]};
+    wire [PW-1:0] pk;
+    generate if (KVIB != 0) begin : g_kvib
+        wire [1037:0] q_ld = {q_s[525:513], 512'd0, q_s[512:0]};
+        wire [579:0]  ks_is = {ks_s[0] & ~ks_meta[19], ks_s[11+578:11]};
+`ifdef OT_ATTN_MUT_KVIB_PARTNER
+        wire [579:0]  pt_is = fw[579:0];                     // NEGATIVE CONTROL (B1): the partner computes the entry's beats
+`else
+        wire [579:0]  pt_is = 580'd0;
+`endif
+        assign pk = {q_s[582], (ldk_s ? 1038'd0 : k_s[1037:0]) | fw[PK-1:580] | q_ld, ldk_s ? ks_is : pt_is};
+    end else begin : g_ld
+        assign pk = {q_s[582], ldk_s ? ks_ld : (k_s[1037:0] | fw[PK-1:580]), q_s[579:0] | fw[579:0]};
+    end endgenerate
     wire [PW-1:0] root_q;
     // ROOT on the N face: its bank outputs are the xp pins
     ot_attn_bpipe #(.W(PW), .N(1)) u_root (.clk(clk), .d(pk), .q(root_q));
