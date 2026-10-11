@@ -10,6 +10,8 @@ set -u
 # improve_placement then crashed ('bad optional access', DPL-0301 matching pass). Congestion is checked at GRT / DRT.
 # DONT_BUFFER_PORTS=1 -- every tile pin lands on a pin flop anchored at the pin (OT_WS_PINREG): the resizer's 1,743 port
 # buffers a face had no site left beside their FIRM flops (DPL-0033, 801 overlaps, 5cc7392e5); same as the SM / Qwen gates.
+# OT_WS_PINREG_DENSITY (PRD, 0.3) -- 9d898f118 GRT-0116: 2,187 of 2,420 overflow (V, M3 / M5 / M7) in the 20-um band at the
+# S edge where the 1,743 bc_in pin flops sat at ~100 % density; pitch them out (svc-fix precedent).
 lab=$1; shift
 V=physical/hbm_accel_die_views/su
 T=${TILED_RTL_DIR:-$V/rtl_tile_xl_r25gpht4}
@@ -29,11 +31,11 @@ export OT_MM_FF_SDC="$G/signoff.sdc"
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append $G/io.sdc --stages pnr \
   --die-area 0 0 $TW $TH --core-area 0 0.54 $TW $(python3 -c "print(round($TH-0.54,3))") --routing-layers M2 M7 \
   --orfs-var IO_CONSTRAINTS=/src/$T/io_place.tcl \
-  --orfs-var PDN_TCL=/src/${PDN:-$V/pdn_quarter.tcl} --orfs-var PLACE_DENSITY_LB_ADDON= \
+  --orfs-var PDN_TCL=/src/${PDN:-$V/tile/pdn_tile_xl.tcl} --orfs-var PLACE_DENSITY_LB_ADDON= \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --orfs-var ADDER_MAP_FILE= \
   --orfs-var "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none" \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag sut_$lab \
-  --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var ENABLE_DPO=0 --orfs-var DONT_BUFFER_PORTS=1 --orfs-var OT_WS_PINREG=1 --orfs-var OT_WS_INPUT_COMB=1 --orfs-var OT_WS_OUTPUT_PINREG=1 --orfs-var OT_IO_FILE=/src/$T/io_place.tcl \
+  --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var ENABLE_DPO=0 --orfs-var DONT_BUFFER_PORTS=1 --orfs-var OT_WS_PINREG_DENSITY=${PRD:-0.3} --orfs-var OT_WS_PINREG=1 --orfs-var OT_WS_INPUT_COMB=1 --orfs-var OT_WS_OUTPUT_PINREG=1 --orfs-var OT_IO_FILE=/src/$T/io_place.tcl \
   --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/common/wire_stage_fence.tcl \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
