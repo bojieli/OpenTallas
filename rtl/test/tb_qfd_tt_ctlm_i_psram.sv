@@ -280,7 +280,7 @@ module tb_qfd_tt_ctlm_i_psram;
         end
         @(negedge clk); h_start = 0;
         repeat (20) @(posedge clk);
-        if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d icut_stim=%0d dyn_tiles_loads=%0d chase_eq=%0d", cyc, nrd, nld, nicut, ndt, nceq);
+        if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d icut_stim=%0d dyn_tiles_ld=%0d chase_eq=%0d", cyc, nrd, nld, nicut, ndt, nceq);
         else $display("FAIL tt_ctlm_i_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d", bad, nrd, MINRD, nld);
         $finish;
     end
