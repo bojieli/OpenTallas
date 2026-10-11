@@ -83,7 +83,7 @@ module ot_s81_su_norm_lg #(
     initial begin
         if (T != 1 && T != 2) $fatal(1, "ot_s81_su_norm_lg: T 1 or 2");
         if (G * T != N || (L0 % G) || (G & (G - 1)) || G < 64) $fatal(1, "ot_s81_su_norm_lg: G = N / T, a power of two >= 64");
-        if (NV > 8) $fatal(1, "ot_s81_su_norm_lg: NV <= 8");
+        if (NV > 255) $fatal(1, "ot_s81_su_norm_lg: NV < 256 (8-bit vector index)");
     end
 `endif
     function automatic [31:0] bf16(input [31:0] x);

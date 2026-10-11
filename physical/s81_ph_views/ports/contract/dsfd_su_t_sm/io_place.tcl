@@ -1,5 +1,5 @@
 # dsfd_su_t_sm (contract pin plan, tools/s81_suhc/su_tiles_plan.py)
-place_pin -pin_name {ck[0]} -layer M5 -location {532.2840 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck} -layer M5 -location {532.2840 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_dh[0]} -layer M5 -location {60.9720 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_dh[1]} -layer M5 -location {61.0680 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_dh[2]} -layer M5 -location {61.1640 0.0960} -pin_size {0.0240 0.1920}
@@ -8192,7 +8192,7 @@ place_pin -pin_name {dn_dl[4092]} -layer M4 -location {0.0960 514.8600} -pin_siz
 place_pin -pin_name {dn_dl[4093]} -layer M4 -location {0.0960 514.9560} -pin_size {0.1920 0.0240}
 place_pin -pin_name {dn_dl[4094]} -layer M4 -location {0.0960 515.0520} -pin_size {0.1920 0.0240}
 place_pin -pin_name {dn_dl[4095]} -layer M4 -location {0.0960 515.1480} -pin_size {0.1920 0.0240}
-place_pin -pin_name {dn_fp4[0]} -layer M5 -location {22.8600 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {dn_fp4} -layer M5 -location {22.8600 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_gsel[0]} -layer M5 -location {17.1000 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_gsel[1]} -layer M5 -location {17.1960 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_jid[0]} -layer M5 -location {28.2840 637.1040} -pin_size {0.0240 0.1920}
@@ -8207,7 +8207,7 @@ place_pin -pin_name {dn_kind[0]} -layer M5 -location {11.2920 637.1040} -pin_siz
 place_pin -pin_name {dn_kind[1]} -layer M5 -location {11.3880 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_kind[2]} -layer M5 -location {11.4840 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_kind[3]} -layer M5 -location {11.5800 637.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {dn_st[0]} -layer M5 -location {5.7240 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {dn_st} -layer M5 -location {5.7240 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_v[0]} -layer M5 -location {39.3240 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_v[1]} -layer M5 -location {39.4200 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {dn_v[2]} -layer M5 -location {39.5160 637.1040} -pin_size {0.0240 0.1920}
@@ -8252,7 +8252,7 @@ place_pin -pin_name {o_a[24]} -layer M4 -location {572.3040 542.5560} -pin_size 
 place_pin -pin_name {o_a[25]} -layer M4 -location {572.3040 542.6520} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_a[26]} -layer M4 -location {572.3040 542.7480} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_a[27]} -layer M4 -location {572.3040 542.8440} -pin_size {0.1920 0.0240}
-place_pin -pin_name {o_alive[0]} -layer M5 -location {557.4360 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {o_alive} -layer M5 -location {557.4360 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {o_d[0]} -layer M4 -location {572.3040 237.6120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_d[1]} -layer M4 -location {572.3040 237.7080} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_d[2]} -layer M4 -location {572.3040 237.8040} -pin_size {0.1920 0.0240}
@@ -9277,9 +9277,9 @@ place_pin -pin_name {o_d[1020]} -layer M4 -location {572.3040 335.5320} -pin_siz
 place_pin -pin_name {o_d[1021]} -layer M4 -location {572.3040 335.6280} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_d[1022]} -layer M4 -location {572.3040 335.7240} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_d[1023]} -layer M4 -location {572.3040 335.8200} -pin_size {0.1920 0.0240}
-place_pin -pin_name {o_den[0]} -layer M5 -location {558.5880 637.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {o_fo[0]} -layer M5 -location {556.3320 637.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {o_fu[0]} -layer M5 -location {555.1800 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {o_den} -layer M5 -location {558.5880 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {o_fo} -layer M5 -location {556.3320 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {o_fu} -layer M5 -location {555.1800 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {o_m[0]} -layer M4 -location {572.3040 603.8040} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_m[1]} -layer M4 -location {572.3040 603.9000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_m[2]} -layer M4 -location {572.3040 603.9960} -pin_size {0.1920 0.0240}
@@ -9312,7 +9312,7 @@ place_pin -pin_name {o_m[28]} -layer M4 -location {572.3040 606.4920} -pin_size 
 place_pin -pin_name {o_m[29]} -layer M4 -location {572.3040 606.5880} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_m[30]} -layer M4 -location {572.3040 606.6840} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_m[31]} -layer M4 -location {572.3040 606.7800} -pin_size {0.1920 0.0240}
-place_pin -pin_name {o_rdy[0]} -layer M5 -location {559.7400 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {o_rdy} -layer M5 -location {559.7400 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {o_rjid[0]} -layer M5 -location {566.2680 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {o_rjid[1]} -layer M5 -location {566.3640 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {o_rjid[2]} -layer M5 -location {566.4600 637.1040} -pin_size {0.0240 0.1920}
@@ -9323,7 +9323,7 @@ place_pin -pin_name {o_rjid[6]} -layer M5 -location {566.8440 637.1040} -pin_siz
 place_pin -pin_name {o_rjid[7]} -layer M5 -location {566.9400 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {o_v[0]} -layer M4 -location {572.3040 19.0680} -pin_size {0.1920 0.0240}
 place_pin -pin_name {o_v[1]} -layer M4 -location {572.3040 19.1640} -pin_size {0.1920 0.0240}
-place_pin -pin_name {rst[0]} -layer M5 -location {543.7080 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst} -layer M5 -location {543.7080 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_pp_d_i[0]} -layer M5 -location {153.0360 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_pp_d_i[1]} -layer M5 -location {153.1320 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_pp_d_i[2]} -layer M5 -location {153.2280 637.1040} -pin_size {0.0240 0.1920}
@@ -9404,8 +9404,8 @@ place_pin -pin_name {x_pp_i_o[4]} -layer M5 -location {354.8760 637.1040} -pin_s
 place_pin -pin_name {x_pp_i_o[5]} -layer M5 -location {354.9720 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_pp_i_o[6]} -layer M5 -location {355.0680 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_pp_i_o[7]} -layer M5 -location {355.1640 637.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {x_pp_v_i[0]} -layer M5 -location {114.4440 637.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {x_pp_v_o[0]} -layer M5 -location {343.4040 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {x_pp_v_i} -layer M5 -location {114.4440 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {x_pp_v_o} -layer M5 -location {343.4040 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_rb_d_i[0]} -layer M5 -location {439.2120 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_rb_d_i[1]} -layer M5 -location {439.3080 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_rb_d_i[2]} -layer M5 -location {439.4040 637.1040} -pin_size {0.0240 0.1920}
@@ -9470,5 +9470,5 @@ place_pin -pin_name {x_rb_d_o[28]} -layer M5 -location {212.9400 637.1040} -pin_
 place_pin -pin_name {x_rb_d_o[29]} -layer M5 -location {213.0360 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_rb_d_o[30]} -layer M5 -location {213.1320 637.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_rb_d_o[31]} -layer M5 -location {213.2280 637.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {x_rb_v_i[0]} -layer M5 -location {412.0920 637.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {x_rb_v_o[0]} -layer M5 -location {183.1320 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {x_rb_v_i} -layer M5 -location {412.0920 637.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {x_rb_v_o} -layer M5 -location {183.1320 637.1040} -pin_size {0.0240 0.1920}

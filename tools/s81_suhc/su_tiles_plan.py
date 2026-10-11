@@ -101,6 +101,9 @@ def main():
     summ = {}
     for sp in SPECS:
         ports = TP.plan(sp)
+        for pp in ports.values():                     # a 1-bit port is a scalar in the RTL: 'ck', not 'ck[0]'
+            if pp['bits'] == 1:
+                pp['pins'][0][0] = pp['pins'][0][0].split('[')[0]
         rec = TP.write(sp['master'], sp['w_um'], sp['h_um'], sp['domain'], ports, sp)
         rec['generator'] = dict(file='tools/s81_suhc/su_tiles_plan.py')
         d = ROOT / 'physical/s81_ph_views/ports/contract' / sp['master']

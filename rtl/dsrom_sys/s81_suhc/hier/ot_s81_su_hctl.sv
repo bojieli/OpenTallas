@@ -11,7 +11,9 @@
 // Job start is announced on the down chain (dn_st with kind / gain set / FP4 / job id) ahead of its parameter rows.
 // QN / KV jobs: operand reads wait for the norm tile's ready (gain vectors loaded, go issued) for this job id.
 // Result writes: QB / SW exponent rows are written by each lane tile under its word mask (nw counts writes).
-// MUT (bench negative controls): 1 done one write early; 2 done tag flipped (the tile MUTs: 3, 4, 5).
+// MUT (bench negative controls): 1 done before the result writes (once the operand rows are in: the done contract
+// ignored; done ONE write early, the flat core's m1, is behaviour-equivalent here: this tile counts the writes 2 + NRL
+// cycles after the pin owners issue them); 2 done tag flipped (the tile MUTs: 3, 4, 5).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_hctl #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16,
@@ -149,6 +151,9 @@ module ot_s81_su_hctl #(
                         for (s = 0; s < S_RD; s = s + 1) if (rs_v[s]) c = c + 1;
                         rr <= c;
                     end
+                    if (MUT == 1 && nw != 0 && rr == nrow && nrow != 0) begin
+                        run <= 0; e_done_v <= 1; e_done_tag <= jtag; st_jobs <= st_jobs + 1;
+                    end
                     if ((kind == K_GQ || kind == K_GK) && rr == nrow && nrow != 0) begin
                         run <= 0; e_done_v <= 1; e_done_tag <= (MUT == 2) ? (jtag ^ 8'h01) : jtag; st_jobs <= st_jobs + 1;
                     end
@@ -161,7 +166,7 @@ module ot_s81_su_hctl #(
                 for (s = 0; s < S_WR; s = s + 1) if (up_v[s]) n_out = n_out + 1;
                 if (run && ph == 2 && nw != 0) begin
                     cw <= cw + n_out;
-                    if (cw + n_out >= nw - ((MUT == 1) ? 1 : 0) && (kind != K_SE || up_den)) begin
+                    if (MUT != 1 && cw + n_out >= nw && (kind != K_SE || up_den)) begin
                         run <= 0; e_done_v <= 1; e_done_tag <= (MUT == 2) ? (jtag ^ 8'h01) : jtag;
                         st_jobs <= st_jobs + 1;
                     end
