@@ -244,8 +244,9 @@ proc ::ot_pin_place_auto {re depth} {
 # Only the new front flops own these pins; hold repair remains enabled.
 set ot_cp_pin_count [ot_pin_place_auto {^(f_req_addr|f_req_v)(\[|\$)} 14]
 if {$ot_cp_pin_count != 41} { error "CP fetch pin boundary: expected41 anchored flops, got $ot_cp_pin_count" }
+# [cp] 10-11: strip depth 40 um (was 14): with 1,939 flops the 14-um strips overflowed and packed d_desc[1745] 79 um from its pin (2275938cc hm0 TT -62.75)
 # [cp] 2026-10-10 (route hgi_cp-mtp-0673da5ee hm0: u_seq.d_desc[571] -> d_desc[571] TT -17.19, a 130 ps wire from an
 # interior flop to its pin): the dispatch descriptor / n output flops are port flops too -> placed FIRM at their pins
 # (the standard pin-flop anchoring; their few internal readers (vr_addr base, slot aj) are register-to-register)
-set ot_cp_desc_count [ot_pin_place_auto {^u_seq\.d_(desc|n)\[} 14]
+set ot_cp_desc_count [ot_pin_place_auto {^u_seq\.d_(desc|n)\[} 40]
 puts "CP dispatch pin boundary: $ot_cp_desc_count d_desc / d_n flops anchored"
