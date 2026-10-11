@@ -5,7 +5,7 @@ MTP=2 MTP_PINREG=1).  iverilog, run off localhost (ot-heavy).
 Cases:
   P_system_positive          tb_hgi_cp_mtp_pinreg_system: real native 40-layer controller hgi_mtp_native (PRL 4) <-> shell
                              <-> typed operation backend; two drained-reset jobs, 4 tokens each in order -> must PASS
-  P_mutant_done_not_held     MUT=1 (native done overtakes the emit FIFO)        -> must FAIL
+  (MUT=1, native done not held behind the emit FIFO, does not discriminate in this system bench: the MX1 gate checks it in its pin bench)
   P_mutant_hostdone_not_held MUT=2 (host done overtakes the host-record FIFO)   -> must FAIL
   P_mutant_prl2              PRL=2 (controller ignores the +2 provider loop)    -> must FAIL
   C_cpdie_elab_pinreg        ot_hgi_cp_die MTP=2 MTP_PINREG=1 elaborates (and MTP_PINREG=0, MTP=1 unchanged)
@@ -30,7 +30,7 @@ CPDIE = ['rtl/hbm_accel/generic/ot_hgi_cp_die.sv', 'rtl/hbm_accel/generic/ot_hgi
          'physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv', 'rtl/common/ot_sc_pfifo.sv',
          'rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv',
          'rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv', RELAY, SHELL]
-CASES = {'P_system_positive': ('pass', ()), 'P_mutant_done_not_held': ('fail', ('MUT=1',)),
+CASES = {'P_system_positive': ('pass', ()),
          'P_mutant_hostdone_not_held': ('fail', ('MUT=2',)), 'P_mutant_prl2': ('fail', ('PRL=2',))}
 
 

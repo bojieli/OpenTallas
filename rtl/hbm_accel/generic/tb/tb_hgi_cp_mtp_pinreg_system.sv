@@ -5,7 +5,8 @@
 // by the CP-die shell: every MTP interaction crosses the shell's pins (job / host emit / host done, t_mtp / f_mtp,
 // t_backend / f_backend / f_am, t_provider -> f_provider with controller PRL 4).  Same expectations: two drained-reset
 // jobs, 4 emitted tokens each in order with identity, final commit 5, no fault, drained after done.
-// Mutants (must FAIL): MUT=1 native done not held behind the emit FIFO, MUT=2 host done not held, PRL=2.
+// Mutants (must FAIL): MUT=2 host done not held behind the host-record FIFO, PRL=2.  Job valid is held across the
+// posedge that samples the pin ready (ready is offered every other cycle).
 module tb_hgi_cp_mtp_pinreg_system #(parameter integer MUT=0, parameter integer PRL=4);
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,jv=0,iv=0;reg [3:0] ik=0;reg [63:0] ipc=0;
@@ -55,7 +56,7 @@ module tb_hgi_cp_mtp_pinreg_system #(parameter integer MUT=0, parameter integer 
  iv=0;repeat(5)@(negedge clk);
  cfg[1+:4]=5;cfg[5]=1;cfg[6+:21]=20;cfg[27+:21]=2;cfg[140]=1;cfg[141+:17]=102;cfg[158+:21]=1048576;
  provider[48+:17]=5;provider[65+:17]=100;
- jv=1;wait(accepted);@(negedge clk);jv=0;
+ jv=1;while(!th[0])@(negedge clk);@(negedge clk);jv=0;   // valid held across the posedge that samples ready (the MX1 bench's wait(accepted) dropped valid before that edge when ready rose mid-cycle)
  wait(hdv);@(negedge clk);
  if(received!=4||ac!=4||hs!=1||fm[357+:32]!=5)$fatal(1,"composed finalcommit received=%0d ac=%0d hs=%0d n=%0d",received,ac,hs,fm[357+:32]);
  if(emits!=4)$fatal(1,"t_emit accepted beats %0d != 4",emits);
