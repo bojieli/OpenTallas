@@ -92,6 +92,16 @@ COLL.ROW_GATHER now reads its ratio from the RGX matrix record (0.997).
 
 **Automated bench II.** `bench_ii()` reads every CLOSED closure-loop job's passing exact benches and extracts the cycles line with its largest item count. This gives cycles per item, the job and the commit. An element qualifies by this route only under the fixed-pipeline full-rate rule: at most 1.10 cycles an item, with no stall-injected stimulus. Otherwise the line is attached to the element as `bench_ii`, with the budget still unmapped. `registry_gaps` lists, per owner, the elements that still need a production-shape throughput bench.
 
+## Bound rule and measured trace windows (owner 2026-10-11)
+
+**QUALIFIED_BY_BOUND.** An op or class qualifies by bound, with no throughput bench, when it is natively built and even a 10× slowdown moves the token rate by less than 1%:
+- **HBM ops:** S2 is re-scheduled with the op at 10× its price.
+- **ROM classes:** 9 × the class's critical cycles / token cycles < 1%.
+
+The rule is recorded as `bound_rule` in budget.json.
+
+**Apportioned trace windows.** Token-path nodes graded `apportioned` are op windows cut from a measured whole-layer RTL trace (for Qwen ROM, the stream4 RT_OPTRACE windows). They count as measured at production shape, which qualifies the Qwen ROM me and su classes.
+
 ## Registry gate
 
 `tools/fleet_viz/elements.py` reads the `elements` map of the latest `results/arch/throughput_budget_*/budget.json`, from the working tree or else origin/main. Every element row in `/api/elements` and ELEMENTS.md then gets two fields:
@@ -131,7 +141,7 @@ S2 price 566,881.1 cycles = 2,116.8 tok/s; target 2,208.1 tok/s = 543,453.6 cycl
 | DMA.KVWB_DS | 40 | 40 | 60.0 | 57.5 | 60.0 | 2,048 bytes | 34.13 | 0.03 % | 3.817 | e2e | **UNQUALIFIED** | +5,376.6 | hgi-1010/c |
 | DMA.FENCE | 40 | 40 | 60.0 | 57.5 | 60.0 | 0  | 0.00 | 0.00 % | 0.117 | e2e | **QUALIFIED** | 0.0 | - |
 | COLL.ARGMAX_MERGE | 1 | 1 | 765.4 | 733.8 | 765.4 | 8 bytes | 0.01 | 0.01 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | UNOWNED |
-| ARGMAX.LOCAL | 1 | 1 | 142.7 | 136.8 | 142.7 | 1,347 elements | 9.44 | 0.00 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | UNOWNED |
+| ARGMAX.LOCAL | 1 | 1 | 142.7 | 136.8 | 142.7 | 1,347 elements | 9.44 | 0.00 % | – | none | **QUALIFIED_BY_BOUND** | 0.0 | UNOWNED |
 
 ### DS bottleneck ranking (measured shortfalls, token cycles on S2 with only that op at its measured ratio)
 
@@ -153,7 +163,6 @@ S2 price 566,881.1 cycles = 2,116.8 tok/s; target 2,208.1 tok/s = 543,453.6 cycl
 | ATT.PV | 13,181.8 | 13,208.3 | hgi-1010/g2 | main a7613320f ATT PIPE=2: PV T512 2,968 cyc (vehicle, not production shape) |
 | IDX.INDEX | 7,513.6 | 7,539.5 | hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea) | results/rtl/hgi_unit_tput_20261010/iks/README.md: key-stream issuer q0 460 vs 339 priced (one stack; not the whole record) (ratio 1.36) |
 | COLL.ARGMAX_MERGE | 765.4 | 793.6 | UNOWNED |  |
-| ARGMAX.LOCAL | 142.7 | 0.0 | UNOWNED |  |
 
 ### HBM loader / svc endpoint budget (DS AR, per die; stack figures assume the 4-stack stripe)
 
@@ -176,9 +185,9 @@ S2 price 1,269,120.1 cycles = 945.5 tok/s; target 953.8 tok/s. Qwen on HBM is de
 | ATT.QK | 72 | 660.1 | 654.4 | 1 | 0.38 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
 | ATT.PV | 72 | 660.1 | 654.4 | 1 | 0.38 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
 | FUSED.ROW_NORM | 145 | 150.2 | 148.9 | 2,380 | 0.17 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
-| DMA.LOAD | 149 | 106.6 | 105.7 | 8,210 | 0.00 % | – | UNQUALIFIED_NO_BENCH | 861.1 |
+| DMA.LOAD | 149 | 106.6 | 105.7 | 8,210 | 0.00 % | – | QUALIFIED_BY_BOUND | 861.1 |
 | SFU.GLU | 36 | 120.0 | 119.0 | 3,072 | 0.03 % | – | UNQUALIFIED_NO_BENCH | 8,190.7 |
-| ARGMAX.LOCAL | 1 | 2,394.0 | 2,373.3 | 37,984 | 0.00 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
+| ARGMAX.LOCAL | 1 | 2,394.0 | 2,373.3 | 37,984 | 0.00 % | – | QUALIFIED_BY_BOUND | 0.0 |
 | DMA.STORE | 72 | 30.0 | 29.7 | 1,024 | 0.02 % | – | UNQUALIFIED_NO_BENCH | 7,128.0 |
 | DMA.FENCE | 36 | 60.0 | 59.5 | 0 | 0.02 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
 | COLL.ARGMAX_MERGE | 1 | 586.0 | 580.9 | 8 | 0.01 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
@@ -189,11 +198,11 @@ S2 price 1,269,120.1 cycles = 945.5 tok/s; target 953.8 tok/s. Qwen on HBM is de
 
 | class | critical cyc / token | share | measured fraction | status | unbenched nodes |
 |---|---:|---:|---:|---|---|
-| me | 124,746.0 | 50.0 % | 52.6 % | UNQUALIFIED_NO_BENCH | 144 (L0.qkv, L0.o_proj, L0.gate_up, L0.down) |
+| me | 124,746.0 | 50.0 % | 100.0 % | QUALIFIED | 0 () |
 | link | 75,600.0 | 30.3 % | 100.0 % | QUALIFIED | 0 () |
-| su | 45,676.0 | 18.3 % | 0.0 % | UNQUALIFIED_NO_BENCH | 180 (L0.rmsnorm1, L0.qknorm_rope, L0.attn_tail, L0.rmsnorm2) |
+| su | 45,676.0 | 18.3 % | 100.0 % | QUALIFIED | 0 () |
 | head | 3,101.0 | 1.2 % | 100.0 % | QUALIFIED | 0 () |
-| embed | 272.0 | 0.1 % | 0.0 % | UNQUALIFIED_NO_BENCH | 1 (embed) |
+| embed | 272.0 | 0.1 % | 0.0 % | QUALIFIED_BY_BOUND | 1 (embed) |
 
 **ds_rom** (1447.7 tok/s, 828,878.4 cycles; 58 stage groups; II limiter Stage 29: L19, L20.ffn = 33,183.5 cycles)
 
@@ -338,5 +347,5 @@ ROM blocks outside the token-path classes: 163 covered by name rules (`rom_block
 
 ### Registry gate (elements)
 
-372 elements mapped: QUALIFIED 129, UNQUALIFIED 9, UNQUALIFIED_NO_BENCH 234.
+372 elements mapped: QUALIFIED 209, QUALIFIED_BY_BOUND 8, UNQUALIFIED 9, UNQUALIFIED_NO_BENCH 146.
 
