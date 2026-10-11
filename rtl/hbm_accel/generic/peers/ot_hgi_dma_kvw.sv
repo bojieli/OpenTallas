@@ -146,12 +146,22 @@ module ot_hgi_dma_kvw #(
     reg [3:0] oh [0:3];                                     // the head pointer one-hot (registered): AND-OR output pick
     reg [3:0]  w_acc, w_ack; reg [6:0] wo [0:3];
     // a stream's next slot is readable: written (w_cnt - q in 1 .. 512)
-    reg [3:0]  w_rdy; reg [1:0] g_s [0:1]; reg [1:0] g_v;
-    always @* begin : wpick
+    // hbm-fq/dma 10-11 (cal cbf118fb5 2_1_floorplan WNS -361 ps into w_ds[1][31]: slot-distance subtract + compare + the
+    // rotating pick + the 32-b destination increment / row-end mux in one cycle): the write-side decision is PIPELINED.
+    // R0 registers each stream's readiness for its current slot (r0) and for the next one (r1, as if granted now); R1
+    // picks on r1 for a stream granted in the previous cycle, else r0.  The destination keeps a registered +1 (w_dsn,
+    // w_dnx1) and a registered row-end flag (w_lst): the grant only selects between registers.
+    reg [3:0]  w_rdy, r0, r1, lg, w_lst; reg [31:0] w_dsn [0:3], w_dnx1 [0:3]; reg [1:0] g_s [0:1]; reg [1:0] g_v;
+    reg [3:0]  c0, c1;                                      // combinational R0 terms
+    always @* begin : wr0
         for (integer t = 0; t < 4; t = t + 1) begin : rd
-            reg [9:0] d; d = w_cnt - w_q[t];
-            w_rdy[t] = w_act[t] && d != 10'd0 && (!d[9] || d == 10'd512) && res[t] < 3'd4;
+            reg [9:0] d0, d1; d0 = w_cnt - w_q[t]; d1 = w_cnt - 10'(w_q[t] + 10'd1);
+            c0[t] = w_act[t] && d0 != 10'd0 && (!d0[9] || d0 == 10'd512) && res[t] < 3'd4;
+            c1[t] = w_act[t] && !(w_lst[t] && w_rows[t] == 20'd1) && d1 != 10'd0 && (!d1[9] || d1 == 10'd512) && res[t] < 3'd3;
         end
+    end
+    always @* begin : wpick
+        for (integer t = 0; t < 4; t = t + 1) w_rdy[t] = lg[t] ? r1[t] : r0[t];
         for (integer b = 0; b < 2; b = b + 1) begin
             g_v[b] = 1'b0; g_s[b] = 2'd0;
             for (integer t = 3; t >= 0; t = t - 1) begin : pk
@@ -189,7 +199,7 @@ module ot_hgi_dma_kvw #(
             for (integer b = 0; b < 32; b = b + 1) begin occ[b] <= 2'd0; hc[b] <= 2'd0; end
             d_v[0] <= 1'b0; d_v[1] <= 1'b0; b0_we <= 1'b0; b1_we <= 1'b0; b0_re <= 1'b0; b1_re <= 1'b0; bw_last <= 1'b0;
             w_cnt <= 10'd0; w_act <= 4'd0; m1_v[0] <= 1'b0; m1_v[1] <= 1'b0; m2_v[0] <= 1'b0; m2_v[1] <= 1'b0; w_acc <= 4'd0; w_ack <= 4'd0;
-            pr[0] <= 2'd0; pr[1] <= 2'd0;
+            pr[0] <= 2'd0; pr[1] <= 2'd0; r0 <= 4'd0; r1 <= 4'd0; lg <= 4'd0; w_lst <= 4'd0;
             for (integer l = 0; l < 4; l = l + 1) begin res[l] <= 3'd0; op[l] <= 2'd0; ot[l] <= 2'd0; oh[l] <= 4'd1; wo[l] <= 7'd0; oa_v[l] <= 4'd0; end
             src <= 1'b0; done <= 1'b0; idle <= 1'b1; owed <= 1'b0;
         end else begin
@@ -254,22 +264,30 @@ module ot_hgi_dma_kvw #(
             if (bw_last) src <= 1'b1;
             // ---- write side: dispatch a move to its stack's stream; each bank serves one stream a cycle
             if (w_disp) begin
-                w_act[f_stk] <= 1'b1; w_q[f_stk] <= f_q[f_w[1:0]]; w_ds[f_stk] <= f_ds[f_w[1:0]];
-                w_dnx[f_stk] <= f_ds[f_w[1:0]] + f_dst[f_w[1:0]]; w_dst[f_stk] <= f_dst[f_w[1:0]];
-                w_left[f_stk] <= f_ns[f_w[1:0]]; w_ns[f_stk] <= f_ns[f_w[1:0]]; w_rows[f_stk] <= f_m[f_w[1:0]]; f_w <= f_w + 3'd1;
+                w_act[f_stk] <= 1'b1; w_q[f_stk] <= f_q[f_w[1:0]]; w_ds[f_stk] <= f_ds[f_w[1:0]]; w_dsn[f_stk] <= f_ds[f_w[1:0]] + 32'd1;
+                w_dnx[f_stk] <= f_ds[f_w[1:0]] + f_dst[f_w[1:0]]; w_dnx1[f_stk] <= f_ds[f_w[1:0]] + f_dst[f_w[1:0]] + 32'd1; w_dst[f_stk] <= f_dst[f_w[1:0]];
+                w_lst[f_stk] <= f_ns[f_w[1:0]] == 18'd1; w_left[f_stk] <= f_ns[f_w[1:0]]; w_ns[f_stk] <= f_ns[f_w[1:0]]; w_rows[f_stk] <= f_m[f_w[1:0]]; f_w <= f_w + 3'd1;
             end
             b0_re <= g_v[0]; b0_ra <= w_q[g_s[0]][8:1]; b1_re <= g_v[1]; b1_ra <= w_q[g_s[1]][8:1];
+            r0 <= c0; r1 <= c1;
             for (integer b = 0; b < 2; b = b + 1) begin : wg
-                reg [1:0] t; t = g_s[b];
-                m1_v[b] <= g_v[b]; m1_l[b] <= t; m1_s[b] <= w_ds[t];
-                if (g_v[b]) begin
-                    pr[b] <= t + 2'd1; w_q[t] <= w_q[t] + 10'd1;
-                    if (w_left[t] == 18'd1) begin
-                        w_left[t] <= w_ns[t]; w_rows[t] <= w_rows[t] - 20'd1; w_ds[t] <= w_dnx[t]; w_dnx[t] <= w_dnx[t] + w_dst[t];
-                        if (w_rows[t] == 20'd1) w_act[t] <= 1'b0;
-                    end else begin w_ds[t] <= w_ds[t] + 32'd1; w_left[t] <= w_left[t] - 18'd1; end
-                end
+                m1_v[b] <= g_v[b]; m1_l[b] <= g_s[b]; m1_s[b] <= w_ds[g_s[b]];
+                if (g_v[b]) pr[b] <= g_s[b] + 2'd1;
                 m2_v[b] <= m1_v[b]; m2_l[b] <= m1_l[b]; m2_s[b] <= m1_s[b];
+            end
+            for (integer t = 0; t < 4; t = t + 1) begin : wst
+                reg gr; gr = (g_v[0] && g_s[0] == 2'(t)) || (g_v[1] && g_s[1] == 2'(t));
+                lg[t] <= gr;
+                if (gr) begin
+                    w_q[t] <= w_q[t] + 10'd1;
+                    if (w_lst[t]) begin
+                        w_left[t] <= w_ns[t]; w_rows[t] <= w_rows[t] - 20'd1; w_lst[t] <= w_ns[t] == 18'd1;
+                        w_ds[t] <= w_dnx[t]; w_dsn[t] <= w_dnx1[t]; w_dnx[t] <= w_dnx[t] + w_dst[t]; w_dnx1[t] <= w_dnx1[t] + w_dst[t];
+                        if (w_rows[t] == 20'd1) w_act[t] <= 1'b0;
+                    end else begin
+                        w_ds[t] <= w_dsn[t]; w_dsn[t] <= w_dsn[t] + 32'd1; w_left[t] <= w_left[t] - 18'd1; w_lst[t] <= w_left[t] == 18'd2;
+                    end
+                end
             end
             // ---- lane FIFOs: push the read sector, pop on the lane's acceptance; acknowledgements
             for (integer l = 0; l < 4; l = l + 1) begin : lf
