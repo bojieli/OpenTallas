@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_coll_p2_lane_ba",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_ba-f6674a3d0-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_ba_f6674a3d0_tc_hm0_a/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_ba-f6674a3d0-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_ba_f6674a3d0_tc_hm0_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_ba-f6674a3d0-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_ba_f6674a3d0_tc_hm0_a/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_ba-f6674a3d0-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_ba_f6674a3d0_tc_hm0_a/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_ba-f6674a3d0-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_ba_f6674a3d0_tc_hm0_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_ba-f6674a3d0-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_ba_f6674a3d0_tc_hm0_a/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_ba-f6674a3d0-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_ba_f6674a3d0_tc_hm0_a/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_coll_p2_lane_ba.lef": "9f04efbf7af9fee8ead9999ab5810ed6670823c6d78bb1c89dc9dde117e9fb48",
+    "dsfd_coll_p2_lane_ba_ff.lib": "f64f9c39c08602f603ebb2bad24c7665bceaf4d934ca5b192daabba97bf5d189",
+    "dsfd_coll_p2_lane_ba_ss.lib": "8134b22dd76d773f8df72305d78418c935bd42378b539655f2ecc0b91064efa8"
+  },
+  "ok": true
+}
