@@ -99,7 +99,8 @@ module ot_s81_svch_pcsvc #(
     reg [1:0] rr [0:NP-1];
     reg [NP-1:0] gpop;               // G landing pops (egress)
     reg [WA:0] wqn [0:NP-1];
-    always @(*) begin
+    always @(*) begin : b1
+        integer p, k, s;
         for (p = 0; p < NP; p = p + 1) begin
             reg ea, eb, eg; reg [2:0] e; reg [1:0] pick; reg fnd;
             ea = ca_v[p] && 32'(resa[p]) + 32'(ca_d[p][49:46]) <= DRA;
@@ -135,7 +136,8 @@ module ot_s81_svch_pcsvc #(
     // issue word per PC (combinational from the registered candidates and this cycle's grant)
     reg [340:1] iw [0:NP-1];
     reg [NP-1:0] iwe;
-    always @(*) begin
+    always @(*) begin : b2
+        integer p, k, s;
         for (p = 0; p < NP; p = p + 1) begin
             iw[p] = '0; iwe[p] = 1'b0;
             if (ga[p]) begin iw[p][52:36] = {1'b0, ca_d[p][15:0]}; iw[p][31:2] = ca_d[p][45:16]; iw[p][35:32] = ca_d[p][49:46]; end
@@ -154,10 +156,14 @@ module ot_s81_svch_pcsvc #(
         end
     end
     reg [NP-1:0] lpush;
-    always @(*) for (p = 0; p < NP; p = p + 1) lpush[p] = rv[p] && r_tag[p*17 + 16] && r_tag[p*17 + 12 +: 4] != 4'd0;
+    always @(*) begin : b3
+        integer p;
+        for (p = 0; p < NP; p = p + 1) lpush[p] = rv[p] && r_tag[p*17 + 16] && r_tag[p*17 + 12 +: 4] != 4'd0;
+    end
     // G egress pick (registered round robin over the landing heads): shared by the pop and the data load
     reg f3; reg [LW-1:0] q3;
-    always @(*) begin
+    always @(*) begin : b4
+        integer p, k, s;
         gpop = 0; f3 = 1'b0; q3 = 0;
         if (!go_v || go_r)
             for (s = 0; s < NP; s = s + 1)
@@ -165,7 +171,8 @@ module ot_s81_svch_pcsvc #(
         if (f3) gpop[q3] = 1'b1;
     end
     // ---- datapath registers: no reset ----
-    always @(posedge clk) begin
+    always @(posedge clk) begin : b5
+        integer p, k, s;
         for (p = 0; p < NP; p = p + 1) begin
             if (a_v[p] && a_r[p]) ca_d[p] <= a_d[p*50 +: 50];
             if (b_v[p] && b_r[p]) cb_d[p] <= b_d[p*46 +: 46];
@@ -179,9 +186,18 @@ module ot_s81_svch_pcsvc #(
         end
         if (f3) go_d <= lg[q3][lgr[q3]];
     end
+    // ---- write completions per port this cycle (combinational from registered wd_q / wd_port) ----
+    reg [3:0] waddv [0:NG-1];
+    always @(*) begin : b6
+        integer k, s;
+        for (k = 0; k < NG; k = k + 1) begin
+            waddv[k] = 0;
+            for (s = 0; s < NP; s = s + 1) if (wd_q[s] && 32'(wd_port[s]) == k) waddv[k] = waddv[k] + 1'b1;
+        end
+    end
     // ---- control registers: async reset ----
-    reg [3:0] wadd;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin : b7
+        integer p, k, s;
         if (!rst_n) begin
             ca_v <= 0; cb_v <= 0; cg_v <= 0; ar_v <= 0; br_v <= 0; go_v <= 1'b0; gwd <= 0; wd_q <= 0; grr <= 0;
             fault <= 1'b0; fault_code <= 0;
@@ -228,10 +244,8 @@ module ot_s81_svch_pcsvc #(
             if (go_v && go_r) go_v <= 1'b0;
             if (f3) begin go_v <= 1'b1; grr <= q3 + 1'b1; end
             for (k = 0; k < NG; k = k + 1) begin
-                wadd = 0;
-                for (p = 0; p < NP; p = p + 1) if (wd_q[p] && 32'(wd_port[p]) == k) wadd = wadd + 1'b1;
-                gwd[k] <= (wdc[k] != 0) || (wadd != 0);
-                wdc[k] <= wdc[k] + 5'(wadd) - 5'((wdc[k] != 0) || (wadd != 0));
+                gwd[k] <= (wdc[k] != 0) || (waddv[k] != 0);
+                wdc[k] <= wdc[k] + 5'(waddv[k]) - 5'((wdc[k] != 0) || (waddv[k] != 0));
             end
         end
     end
