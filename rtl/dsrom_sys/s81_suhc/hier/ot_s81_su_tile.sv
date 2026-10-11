@@ -9,14 +9,14 @@
 //   TK 4 SM  softmax SE / SO, SM_H / NT heads (every reduction is within a head)             NT tiles
 // The cross-lane reductions (RMSNorm sum of squares, softmax max / sum) stay inside one unit in the golden's order;
 // lane groups are split only where the golden has no cross-lane step, so every value is bit-identical.
-// Boundaries (every one registered):
-//   down chain in -> registered copy out (the spine relay: one register a tile hop); the tile taps the input copy:
+// Boundaries (every one registered; the spines' relay registers are slab-level stations, one at each tile stop):
+//   down spine tap (the relay register at this stop):
 //     dn_st announces a job {kind, gain set, FP4, job id}; parameter rows (ph 0) of its own jobs land in prow; operand
 //     rows (ph 1) of its own lane group land in the local beat buffer; a full beat strobes the unit;
-//   unit results -> a two-entry result row staging (rows {VM row, word mask, data}) -> up to WS rows a cycle into the
-//     tile's own window of the S_WR write slots of the up chain (window TI * WS), merged with the chain's incoming
-//     slots in the up chain register (no central multiplexer: only the active function's tiles drive slots);
-//   reset: a two-flop regional relay (asynchronous assert, synchronous release), passed on to the next tile;
+//   unit results -> a two-entry result row staging (rows {VM row, word mask, data}) -> up to WS rows a cycle out of
+//     registered output slots; the slab merges them into the tile's window (TI * WS) of the S_WR write slots of the up
+//     spine at the tile's stop (only the active function's tiles drive slots);
+//   reset: a two-flop regional relay (asynchronous assert, synchronous release) from the slab's reset spine;
 //     datapath registers (beat, staging data, parameters, gain sets) carry no reset.
 // MUT: 3 the softmax unit's one-cycle reset at SO parameter load (behaviour-equivalent: recorded); 4 the norm gain
 // set index ignored; 5 the softmax lanes' den loads on the first SE only (stale den).
@@ -24,11 +24,12 @@
 module ot_s81_su_tile #(
     parameter integer TK = 0, TI = 0, NT = 1,
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
-    parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, MUT = 0
+    parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, MUT = 0,
+    parameter integer WSP = (TK <= 1) ? S_WR : S_WR / NT     // write slots of this tile (its window of the S_WR)
 ) (
     input  wire                   clk,
-    input  wire                   rst_in,
-    output wire                   rst_out,
+    input  wire                   rst_in,         // from the slab's reset relay at this tile's spine stop
+    // down spine tap (the slab's relay register at this stop)
     input  wire                   dn_st_i,
     input  wire [3:0]             dn_kind_i,
     input  wire [1:0]             dn_gsel_i,
@@ -38,27 +39,13 @@ module ot_s81_su_tile #(
     input  wire                   dn_ph_i,
     input  wire [15:0]            dn_idx_i,
     input  wire [S_RD*512-1:0]    dn_d_i,
-    output reg                    dn_st_o,
-    output reg  [3:0]             dn_kind_o,
-    output reg  [1:0]             dn_gsel_o,
-    output reg                    dn_fp4_o,
-    output reg  [7:0]             dn_jid_o,
-    output reg  [S_RD-1:0]        dn_v_o,
-    output reg                    dn_ph_o,
-    output reg  [15:0]            dn_idx_o,
-    output reg  [S_RD*512-1:0]    dn_d_o,
-    input  wire [S_WR-1:0]        up_v_i,
-    input  wire [S_WR*14-1:0]     up_a_i,
-    input  wire [S_WR*16-1:0]     up_m_i,
-    input  wire [S_WR*512-1:0]    up_d_i,
-    input  wire                   up_fu_i, up_fo_i, up_alive_i, up_den_i, up_rdy_i,
-    input  wire [7:0]             up_rjid_i,
-    output reg  [S_WR-1:0]        up_v_o,
-    output reg  [S_WR*14-1:0]     up_a_o,
-    output reg  [S_WR*16-1:0]     up_m_o,
-    output reg  [S_WR*512-1:0]    up_d_o,
-    output reg                    up_fu_o, up_fo_o, up_alive_o, up_den_o, up_rdy_o,
-    output reg  [7:0]             up_rjid_o
+    // this tile's write slots (registered) and status, merged into the up spine at this stop
+    output reg  [WSP-1:0]         o_v,
+    output reg  [WSP*14-1:0]      o_a,
+    output reg  [WSP*16-1:0]      o_m,
+    output reg  [WSP*512-1:0]     o_d,
+    output reg                    o_fu, o_fo, o_alive, o_den, o_rdy,
+    output reg  [7:0]             o_rjid
 );
     localparam integer DQ = 1280, DK = 512, NVQ = DQ / QN_N;
     localparam integer SMW = SM_H * SM_LPH;
@@ -98,15 +85,6 @@ module ot_s81_su_tile #(
     reg rr0, rr1;
     always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
     wire rst_n = rr1;
-    assign rst_out = rr1;
-
-    // ------------------------------------------------------------------ down chain relay
-    always @(posedge clk) begin
-        dn_kind_o <= dn_kind_i; dn_gsel_o <= dn_gsel_i; dn_fp4_o <= dn_fp4_i; dn_jid_o <= dn_jid_i;
-        dn_ph_o <= dn_ph_i; dn_idx_o <= dn_idx_i; dn_d_o <= dn_d_i;
-    end
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin dn_st_o <= 1'b0; dn_v_o <= 0; end
-                                           else begin dn_st_o <= dn_st_i; dn_v_o <= dn_v_i; end
 
     function automatic mine_k(input [3:0] k);
         case (TK)
@@ -392,28 +370,19 @@ module ot_s81_su_tile #(
     // QN events count rows (QN_N / 64 + 1 a vector) in the result row offset
     // (oc counts events; the QN tile's offset is oc * R_QN: see below)
 
-    // ------------------------------------------------------------------ up chain: own window merged in, registered
+    // ------------------------------------------------------------------ registered outputs (the tile's write slots)
     always @(posedge clk) begin
-        for (s = 0; s < S_WR; s = s + 1) begin
-            if (s >= W0 && s < W0 + WS && (s - W0) < k) begin
-                up_a_o[14 * s +: 14] <= hb[s - W0][RW - 1 -: 14];
-                up_m_o[16 * s +: 16] <= hb[s - W0][512 +: 16];
-                up_d_o[512 * s +: 512] <= hb[s - W0][0 +: 512];
-            end else begin
-                up_a_o[14 * s +: 14] <= up_a_i[14 * s +: 14];
-                up_m_o[16 * s +: 16] <= up_m_i[16 * s +: 16];
-                up_d_o[512 * s +: 512] <= up_d_i[512 * s +: 512];
-            end
+        for (s = 0; s < WS; s = s + 1) begin
+            o_a[14 * s +: 14] <= hb[s][RW - 1 -: 14];
+            o_m[16 * s +: 16] <= hb[s][512 +: 16];
+            o_d[512 * s +: 512] <= hb[s][0 +: 512];
         end
     end
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin up_v_o <= 0; up_fu_o <= 0; up_fo_o <= 0; up_alive_o <= 0; up_den_o <= 0; up_rdy_o <= 0; up_rjid_o <= 0; end
+        if (!rst_n) begin o_v <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; end
         else begin
-            for (s = 0; s < S_WR; s = s + 1)
-                up_v_o[s] <= up_v_i[s] || (s >= W0 && s < W0 + WS && (s - W0) < k);
-            up_fu_o <= up_fu_i || ufs; up_fo_o <= up_fo_i || ovf; up_alive_o <= up_alive_i;
-            up_den_o <= up_den_i && den_ok;
-            up_rdy_o <= up_rdy_i || rdy_p; up_rjid_o <= rdy_p ? jid : up_rjid_i;
+            for (s = 0; s < WS; s = s + 1) o_v[s] <= (s < k);
+            o_fu <= ufs; o_fo <= ovf; o_alive <= 1'b1; o_den <= den_ok; o_rdy <= rdy_p; o_rjid <= jid;
         end
     end
 endmodule

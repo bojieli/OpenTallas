@@ -5,10 +5,11 @@
 // online / fcode); inside, one control tile and NT hardened engine tiles on two registered chains:
 //
 //   pins -> pin flops -> ot_s81_su_hctl (adapter-side job control, VM read issue, VM write port)
-//       down chain (VM response rows + job announce, S_RD x 512 b): ctl -> QN -> KV -> QB 0..NQB-1 -> SW 0..NSW-1
-//                                                                       -> SM 0..NSM-1   (a register a tile hop)
-//       up chain (S_WR write row slots, each tile its own slot window): SM .. -> QN -> ctl -> VM write pin flops
-//   regional reset: pin -> relay -> ctl, then tile to tile (two-flop relays)
+//       down spine (VM response rows + job announce, S_RD x 512 b): relay stations at the stops QN, KV, QB 0..NQB-1,
+//         SW 0..NSW-1, SM 0..NSM-1 (one register a stop); each tile taps its stop
+//       up spine (S_WR write row slots): a relay station a stop merges that tile's registered slots into its window
+//   regional reset: pin -> relay -> ctl; a reset spine station a stop -> the tile's own two-flop relay
+// Tiles carry one copy of each bus (no pass-through): pins = the down tap + its own write slots + status.
 //
 // Tile decomposition (production params): QN norm (256 lanes, D 1,280, the q gain sets), KV norm (512 lanes, RoPE
 // tail, the kv gain sets), QB x 2 (16 blocks each), SW x 4 (256 lanes each), SM x 4 (4 heads x 16 lanes each).
@@ -60,7 +61,9 @@ module dsfd_sp_su_h #(
     always @(posedge sk) rs_d_q <= rs_d;
     always @(posedge sk or negedge s1) if (!s1) rs_v_q <= 0; else rs_v_q <= rs_v;
 
-    // chains: index i = the input of tile i (down) / the output of tile i (up); dn[NTL] / up[NTL] the far end
+    // spines: stop t = tile t.  Down: dn[t] is the relay register at stop t (dn[0] the control tile's output
+    // register); the tile taps it and the next stop re-registers it.  Up: up[t] is the relay register at stop t,
+    // = up[t + 1] with tile t's registered write slots merged into its window; up[0] feeds the control tile.
     wire                  dst [0:NTL];
     wire [3:0]            dkd [0:NTL];
     wire [1:0]            dgs [0:NTL];
@@ -101,17 +104,53 @@ module dsfd_sp_su_h #(
         localparam integer TK = (t == 0) ? 0 : (t == 1) ? 1 : (t < 2 + NQB) ? 2 : (t < 2 + NQB + NSW) ? 3 : 4;
         localparam integer TI = (t < 2) ? 0 : (t < 2 + NQB) ? t - 2 : (t < 2 + NQB + NSW) ? t - 2 - NQB : t - 2 - NQB - NSW;
         localparam integer NT = (t < 2) ? 1 : (t < 2 + NQB) ? NQB : (t < 2 + NQB + NSW) ? NSW : NSM;
+        localparam integer WS = (TK <= 1) ? S_WR : S_WR / NT, W0 = (TK <= 1) ? 0 : TI * WS;
+        wire [WS-1:0] o_v; wire [WS*14-1:0] o_a; wire [WS*16-1:0] o_m; wire [WS*512-1:0] o_d;
+        wire o_fu, o_fo, o_alive, o_den, o_rdy; wire [7:0] o_rjid;
         ot_s81_su_tile #(.TK(TK), .TI(TI), .NT(NT), .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H),
                          .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .LM(LM), .LA(LA), .MUT(MUT)) u_tile (
-            .clk(sk), .rst_in(rst[t]), .rst_out(rst[t + 1]),
+            .clk(sk), .rst_in(rst[t]),
             .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
             .dn_v_i(dv[t]), .dn_ph_i(dph[t]), .dn_idx_i(dix[t]), .dn_d_i(dd[t]),
-            .dn_st_o(dst[t + 1]), .dn_kind_o(dkd[t + 1]), .dn_gsel_o(dgs[t + 1]), .dn_fp4_o(df4[t + 1]),
-            .dn_jid_o(dji[t + 1]), .dn_v_o(dv[t + 1]), .dn_ph_o(dph[t + 1]), .dn_idx_o(dix[t + 1]), .dn_d_o(dd[t + 1]),
-            .up_v_i(uv[t + 1]), .up_a_i(ua[t + 1]), .up_m_i(um[t + 1]), .up_d_i(ud[t + 1]), .up_fu_i(ufu[t + 1]),
-            .up_fo_i(ufo[t + 1]), .up_alive_i(ual[t + 1]), .up_den_i(ude[t + 1]), .up_rdy_i(urd[t + 1]),
-            .up_rjid_i(urj[t + 1]),
-            .up_v_o(uv[t]), .up_a_o(ua[t]), .up_m_o(um[t]), .up_d_o(ud[t]), .up_fu_o(ufu[t]), .up_fo_o(ufo[t]),
-            .up_alive_o(ual[t]), .up_den_o(ude[t]), .up_rdy_o(urd[t]), .up_rjid_o(urj[t]));
+            .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
+            .o_rdy(o_rdy), .o_rjid(o_rjid));
+        // reset spine station
+        reg rs_q;
+        always @(posedge sk or negedge rst[t]) if (!rst[t]) rs_q <= 1'b0; else rs_q <= 1'b1;
+        assign rst[t + 1] = rs_q;
+        // down spine relay station
+        reg dst_q; reg [3:0] dkd_q; reg [1:0] dgs_q; reg df4_q; reg [7:0] dji_q; reg [S_RD-1:0] dv_q; reg dph_q;
+        reg [15:0] dix_q; reg [S_RD*512-1:0] dd_q;
+        always @(posedge sk) begin dkd_q <= dkd[t]; dgs_q <= dgs[t]; df4_q <= df4[t]; dji_q <= dji[t]; dph_q <= dph[t];
+                                   dix_q <= dix[t]; dd_q <= dd[t]; end
+        always @(posedge sk or negedge rst[t]) if (!rst[t]) begin dst_q <= 1'b0; dv_q <= 0; end
+                                               else begin dst_q <= dst[t]; dv_q <= dv[t]; end
+        assign dst[t + 1] = dst_q; assign dkd[t + 1] = dkd_q; assign dgs[t + 1] = dgs_q; assign df4[t + 1] = df4_q;
+        assign dji[t + 1] = dji_q; assign dv[t + 1] = dv_q; assign dph[t + 1] = dph_q; assign dix[t + 1] = dix_q;
+        assign dd[t + 1] = dd_q;
+        // up spine relay station: the tile's window merged in
+        integer s;
+        reg [S_WR-1:0] uv_q; reg [S_WR*14-1:0] ua_q; reg [S_WR*16-1:0] um_q; reg [S_WR*512-1:0] ud_q;
+        reg ufu_q, ufo_q, ual_q, ude_q, urd_q; reg [7:0] urj_q;
+        assign uv[t] = uv_q; assign ua[t] = ua_q; assign um[t] = um_q; assign ud[t] = ud_q; assign ufu[t] = ufu_q;
+        assign ufo[t] = ufo_q; assign ual[t] = ual_q; assign ude[t] = ude_q; assign urd[t] = urd_q; assign urj[t] = urj_q;
+        always @(posedge sk) begin
+            for (s = 0; s < S_WR; s = s + 1)
+                if (s >= W0 && s < W0 + WS && o_v[s - W0]) begin
+                    ua_q[14 * s +: 14] <= o_a[14 * (s - W0) +: 14]; um_q[16 * s +: 16] <= o_m[16 * (s - W0) +: 16];
+                    ud_q[512 * s +: 512] <= o_d[512 * (s - W0) +: 512];
+                end else begin
+                    ua_q[14 * s +: 14] <= ua[t + 1][14 * s +: 14]; um_q[16 * s +: 16] <= um[t + 1][16 * s +: 16];
+                    ud_q[512 * s +: 512] <= ud[t + 1][512 * s +: 512];
+                end
+        end
+        always @(posedge sk or negedge rst[t]) begin
+            if (!rst[t]) begin uv_q <= 0; ufu_q <= 0; ufo_q <= 0; ual_q <= 0; ude_q <= 0; urd_q <= 0; urj_q <= 0; end
+            else begin
+                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]);
+                ufu_q <= ufu[t + 1] || o_fu; ufo_q <= ufo[t + 1] || o_fo; ual_q <= ual[t + 1] && o_alive;
+                ude_q <= ude[t + 1] && o_den; urd_q <= urd[t + 1] || o_rdy; urj_q <= o_rdy ? o_rjid : urj[t + 1];
+            end
+        end
     end endgenerate
 endmodule
