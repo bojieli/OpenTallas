@@ -21,6 +21,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import s81_ph_coll_tiles as CT   # noqa: E402
 
 SW = 1727.976
+
+
+class Plan(CT.Plan):
+    """CT.Plan with 1-bit ports named as scalars (`name`, not `name[0]`): every 1-bit port of the HC tiles is declared
+    scalar in the RTL, and the IO placer looks pins up by the exact port-bit name (PPL-0061 otherwise)."""
+    def put(self, port, bit, face, layer, coord):
+        super().put(port, bit, face, layer, coord)
+        if self.dirs[port][1] == 1:
+            nm, *rest = self.pins[-1]
+            self.pins[-1] = (port,) + tuple(rest)
 NCOL = 3
 CW = round(SW / NCOL, 3)         # 575.992 (= 11,999.8 x 0.048: on the placement grid)
 X0 = 40.0
@@ -44,7 +54,7 @@ def chain_ports(w):
 
 def sub_tile(w, h, contract):
     CT.CONTRACT = contract
-    pl = CT.Plan('ot_s81_hc_ctile', CW, h)
+    pl = Plan('ot_s81_hc_ctile', CW, h)
     x = X0
     for n_in, n_out, b, _, d in chain_ports(w):
         pl.bus(n_in, b, d, 'N', 'M5', x)
@@ -106,7 +116,7 @@ def root_tiles(w, hr, hc, contract):
     for c, cn, inner in ((0, contract, 'E'), (2, contract + '_e', 'W')):     # one module, C 0 / 2 (--param C=2)
         CT.CONTRACT = cn
         m = 'ot_s81_hc_croot'
-        pl = CT.Plan(m, CW, hro)
+        pl = Plan(m, CW, hro)
         x = X0
         for n, b, d in (('y_s', ys[c], 'input'), ('wq_v', 4, 'output'), ('wq_row', 56, 'output'),
                         ('wq_mask', 64, 'output'), ('wq_d', 2048, 'output')):
@@ -127,7 +137,7 @@ def root_tiles(w, hr, hc, contract):
                 f'{inner} face: combine seam (lower {hc}) + y accept (upper); S face chain {c} ports at the sub-tile x')
     # combine tile
     CT.CONTRACT = contract
-    pl = CT.Plan('ot_s81_hc_comb', CW, hc)
+    pl = Plan('ot_s81_hc_comb', CW, hc)
     for face, pre, c in (('W', 'w_', 0), ('E', 'e_', 2)):
         y = 20.0
         for n, _, b, d in seam_ports(w, ne[c]):
@@ -144,7 +154,7 @@ def root_tiles(w, hr, hc, contract):
     pl.emit(f'HC combine tile {CW} x {hc}: W / E faces the outer roots\' seams (identical y), N face the centre pin tile '
             f'seam, S face the centre chain ports at the sub-tile x')
     # centre pin tile
-    pl = CT.Plan('ot_s81_hc_cpin', CW, hr)
+    pl = Plan('ot_s81_hc_cpin', CW, hr)
     x = X0
     for n, b, d in pin_seam(w, max(ys[1], 1)):
         x = pl.bus(n, b, d, 'S', 'M5', x)

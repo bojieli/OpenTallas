@@ -1,5 +1,5 @@
 # ot_s81_hc_cpin (contract pin plan, tools/s81_ph/s81_ph_hc_tiles.py via Plan)
-place_pin -pin_name {n_cmd_v[0]} -layer M5 -location {39.9960 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {n_cmd_v} -layer M5 -location {39.9960 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_cmd_d[0]} -layer M5 -location {40.1880 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_cmd_d[1]} -layer M5 -location {40.2840 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_cmd_d[2]} -layer M5 -location {40.3800 0.0960} -pin_size {0.0240 0.1920}
@@ -84,7 +84,7 @@ place_pin -pin_name {n_cmd_d[80]} -layer M5 -location {47.8680 0.0960} -pin_size
 place_pin -pin_name {n_cmd_d[81]} -layer M5 -location {47.9640 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_cmd_d[82]} -layer M5 -location {48.0600 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_cmd_d[83]} -layer M5 -location {48.1560 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {n_done_v[0]} -layer M5 -location {48.3480 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {n_done_v} -layer M5 -location {48.3480 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_done_tag[0]} -layer M5 -location {48.5400 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_done_tag[1]} -layer M5 -location {48.6360 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_done_tag[2]} -layer M5 -location {48.7320 0.0960} -pin_size {0.0240 0.1920}
@@ -93,7 +93,7 @@ place_pin -pin_name {n_done_tag[4]} -layer M5 -location {48.9240 0.0960} -pin_si
 place_pin -pin_name {n_done_tag[5]} -layer M5 -location {49.0200 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_done_tag[6]} -layer M5 -location {49.1160 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_done_tag[7]} -layer M5 -location {49.2120 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {n_inp[0]} -layer M5 -location {49.4040 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {n_inp} -layer M5 -location {49.4040 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_rq_v[0]} -layer M5 -location {49.5960 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_rq_v[1]} -layer M5 -location {49.6920 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_rq_row[0]} -layer M5 -location {49.8840 0.0960} -pin_size {0.0240 0.1920}
@@ -1150,13 +1150,13 @@ place_pin -pin_name {n_rs_d[1020]} -layer M5 -location {150.8760 0.0960} -pin_si
 place_pin -pin_name {n_rs_d[1021]} -layer M5 -location {150.9720 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_rs_d[1022]} -layer M5 -location {151.0680 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_rs_d[1023]} -layer M5 -location {151.1640 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {n_flt[0]} -layer M5 -location {151.3560 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {n_online[0]} -layer M5 -location {151.5480 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {n_flt} -layer M5 -location {151.3560 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {n_online} -layer M5 -location {151.5480 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_fcode[0]} -layer M5 -location {151.7400 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_fcode[1]} -layer M5 -location {151.8360 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_fcode[2]} -layer M5 -location {151.9320 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_fcode[3]} -layer M5 -location {152.0280 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {n_yacc[0]} -layer M5 -location {152.2200 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {n_yacc} -layer M5 -location {152.2200 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_y[0]} -layer M5 -location {152.4120 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_y[1]} -layer M5 -location {152.5080 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_y[2]} -layer M5 -location {152.6040 0.0960} -pin_size {0.0240 0.1920}
@@ -3717,8 +3717,8 @@ place_pin -pin_name {n_y[2556]} -layer M5 -location {397.7880 0.0960} -pin_size 
 place_pin -pin_name {n_y[2557]} -layer M5 -location {397.8840 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_y[2558]} -layer M5 -location {397.9800 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {n_y[2559]} -layer M5 -location {398.0760 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {n_ypop[0]} -layer M5 -location {398.2680 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {c_cmd_v[0]} -layer M5 -location {39.9960 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {n_ypop} -layer M5 -location {398.2680 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {c_cmd_v} -layer M5 -location {39.9960 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_cmd_d[0]} -layer M5 -location {40.1880 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_cmd_d[1]} -layer M5 -location {40.2840 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_cmd_d[2]} -layer M5 -location {40.3800 199.9040} -pin_size {0.0240 0.1920}
@@ -3803,7 +3803,7 @@ place_pin -pin_name {c_cmd_d[80]} -layer M5 -location {47.8680 199.9040} -pin_si
 place_pin -pin_name {c_cmd_d[81]} -layer M5 -location {47.9640 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_cmd_d[82]} -layer M5 -location {48.0600 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_cmd_d[83]} -layer M5 -location {48.1560 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {c_done_v[0]} -layer M5 -location {48.3480 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {c_done_v} -layer M5 -location {48.3480 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_done_tag[0]} -layer M5 -location {48.5400 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_done_tag[1]} -layer M5 -location {48.6360 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_done_tag[2]} -layer M5 -location {48.7320 199.9040} -pin_size {0.0240 0.1920}
@@ -3812,7 +3812,7 @@ place_pin -pin_name {c_done_tag[4]} -layer M5 -location {48.9240 199.9040} -pin_
 place_pin -pin_name {c_done_tag[5]} -layer M5 -location {49.0200 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_done_tag[6]} -layer M5 -location {49.1160 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_done_tag[7]} -layer M5 -location {49.2120 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {inp[0]} -layer M5 -location {49.4040 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {inp} -layer M5 -location {49.4040 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {rq_v[0]} -layer M5 -location {49.5960 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {rq_v[1]} -layer M5 -location {49.6920 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {rq_row[0]} -layer M5 -location {49.8840 199.9040} -pin_size {0.0240 0.1920}
@@ -4869,14 +4869,14 @@ place_pin -pin_name {rs_d[1020]} -layer M5 -location {150.8760 199.9040} -pin_si
 place_pin -pin_name {rs_d[1021]} -layer M5 -location {150.9720 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {rs_d[1022]} -layer M5 -location {151.0680 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {rs_d[1023]} -layer M5 -location {151.1640 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {flt[0]} -layer M5 -location {151.3560 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {online[0]} -layer M5 -location {151.5480 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {flt} -layer M5 -location {151.3560 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {online} -layer M5 -location {151.5480 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {fcode[0]} -layer M5 -location {151.7400 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {fcode[1]} -layer M5 -location {151.8360 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {fcode[2]} -layer M5 -location {151.9320 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {fcode[3]} -layer M5 -location {152.0280 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {y_v[0]} -layer M5 -location {152.2200 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {y_rdy[0]} -layer M5 -location {152.4120 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {y_v} -layer M5 -location {152.2200 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {y_rdy} -layer M5 -location {152.4120 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {y_s[0]} -layer M5 -location {152.6040 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {y_s[1]} -layer M5 -location {152.7000 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {y_s[2]} -layer M5 -location {152.7960 199.9040} -pin_size {0.0240 0.1920}
@@ -7437,9 +7437,9 @@ place_pin -pin_name {y_s[2556]} -layer M5 -location {397.9800 199.9040} -pin_siz
 place_pin -pin_name {y_s[2557]} -layer M5 -location {398.0760 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {y_s[2558]} -layer M5 -location {398.1720 199.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {y_s[2559]} -layer M5 -location {398.2680 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {cck[0]} -layer M5 -location {400.4760 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {crs[0]} -layer M5 -location {402.6360 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {sk[0]} -layer M5 -location {404.8440 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {srs[0]} -layer M5 -location {407.0520 199.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {yacc_w[0]} -layer M4 -location {0.0960 99.9960} -pin_size {0.1920 0.0240}
-place_pin -pin_name {yacc_e[0]} -layer M4 -location {575.8960 99.9960} -pin_size {0.1920 0.0240}
+place_pin -pin_name {cck} -layer M5 -location {400.4760 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {crs} -layer M5 -location {402.6360 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {sk} -layer M5 -location {404.8440 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {srs} -layer M5 -location {407.0520 199.9040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {yacc_w} -layer M4 -location {0.0960 99.9960} -pin_size {0.1920 0.0240}
+place_pin -pin_name {yacc_e} -layer M4 -location {575.8960 99.9960} -pin_size {0.1920 0.0240}
