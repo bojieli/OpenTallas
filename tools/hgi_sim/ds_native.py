@@ -96,7 +96,7 @@ class Layout:
                  SS=8, RS=8, qr=1280, kvn=512, kvr=512, win_new=512, q=512, ROPE=64, q_own=512, SC=640, MB=8,
                  E=640, SE=8, EB=640, SINK=8, ES=8, DEN=8, PV=512, O=512, o_own=512, zpart=12288, z=12288, y=D,
                  gsc=384, BIAS=384, router=384, rid=8, SEL=8, TOT=8, DENR=8, route_w=8, ea=7 * 2304, yf=D,
-                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=128, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
+                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=144, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
                  RK=8, RST=8, DOTR=8, GATE=8, cmp=1024, iwr=32, iq=4096, SELIDX=2048, SLOTKV=1024, SLOTSC=1024, MXC=512, EC=1024,
                  DENC=512, PC=1024, P2=1024, POOL=512, LAT0=512, LAT=512, GCN=512, KIN=128, GKN=128, KN=128, KR=128,
                  LR=512, IK=128, CK=512, ROPE2=64, logits=1352,
@@ -709,8 +709,8 @@ class Lower:
         home = 0 <= hp < 4
         stg, lst = EG_STG + li * EG_LSPAN, EG_LIST + li * EG_LSPAN
         w = EG_ROWB // 4
-        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGHT"], n=128),
-                                         O=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=128)),
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGHT"], n=144),
+                                         O=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=144)),
                 tag="engram.host_table", family="engram"), [], ["EGID"])
         hq = max(hp, 0)
         add(Rec("DMA", "LOAD", desc=dict(
@@ -941,12 +941,12 @@ hist_of = [None]
 
 
 def eg_host_table(ids, nrows, li):
-    """E-HOME host table (128 U32, written by the host per token beside the G13 ids): words 0..23 the G25 slot ids
+    """E-HOME host table (144 U32 = 18 sectors, written by the host per token beside the G13 ids; words 136..143 = 0): words 0..23 the G25 slot ids
     (list entry j owned by home rank R as its t-th row: i' = (t div 8) 768 + 8 R + t mod 8, so the ROW_GATHER owner rule
     (i' div 8) mod 96 = R and local row (i' div 768) 8 + i' mod 8 = t); words 32..35 each home's owned count; words
     40 + 24 h + t the home h's t-th owned table row (local, list order).  Rows split contiguously: home h = id div RPH."""
     rph = -(-nrows // 4)
-    out = np.zeros(128, np.uint32)
+    out = np.zeros(144, np.uint32)
     cnt = [0, 0, 0, 0]
     for j, g in enumerate(np.asarray(ids, np.int64)):
         h, loc = int(g // rph), int(g % rph)
