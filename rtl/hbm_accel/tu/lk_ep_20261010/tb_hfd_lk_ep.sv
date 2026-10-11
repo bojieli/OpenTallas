@@ -12,7 +12,13 @@ module tb_hfd_lk_ep;
     localparam integer W = 545;
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0;
-    integer N, ERRP, seed, cyc, maxcyc;
+    integer N, ERRP, seed, cyc, maxcyc, lostrp, lr_until;
+    // el1011-hbm-lkep: own xorshift32 stream (Verilator ignores the seed argument of $random(seed), so +SEED had no
+    // effect: every seed gave the same error pattern).
+    reg [31:0] rs_x;
+    function automatic integer rnd(input integer dummy);
+        begin rs_x = rs_x ^ (rs_x << 13); rs_x = rs_x ^ (rs_x >> 17); rs_x = rs_x ^ (rs_x << 5); rnd = rs_x & 32'h7fffffff; end
+    endfunction
     // ---- DUTs
     reg            a_tv, b_tv; reg [W-1:0] a_tf, b_tf;
     wire           a_tcr, b_tcr, a_rv, b_rv, a_f, b_f, a_l, b_l;
@@ -30,11 +36,22 @@ module tb_hfd_lk_ep;
         .locked(b_l));
     // ---- lane with bit errors (one register each way, like the PHY)
     integer bi1, bi2;
+    // +LOSTRP=<n>: directed LOST REPLAY, forced (not left to the random pattern): the first n rewinds of A's retry pipelines
+    // open a 40-edge window in which every A->B beat carries a bit error, so the replay that rewind launches is lost too
+    // and B keeps NAKing that sequence.  NAK_HOLD replays again one round trip later; the pre-fix pipeline
+    // (OT_LKEP_MUT_NAKHOLD) waits for the 8,192-edge TIMEOUT, which +MAXCYC catches.
+    wire [NS-1:0] a_rw;
+    genvar gq;
+    generate for (gq = 0; gq < NS; gq = gq + 1) begin : g_rw
+        assign a_rw[gq] = A.g_p[gq].u_rp.g_on.rinc;
+    end endgenerate
+    always @(posedge clk) if (rst_n && lostrp > 0 && (|a_rw) && cyc >= lr_until) begin lr_until <= cyc + 40; lostrp <= lostrp - 1; end
     always @(posedge clk) begin
         a2b <= a_x; b2a <= b_x;
+        if (cyc < lr_until) a2b[cyc % LW] <= ~a_x[cyc % LW];
         if (ERRP > 0 && cyc > 200) begin
-            if (($random(seed) & 32'h7fffffff) % ERRP == 0) begin bi1 = ($random(seed) & 32'h7fffffff) % LW; a2b[bi1] <= ~a_x[bi1]; end
-            if (($random(seed) & 32'h7fffffff) % ERRP == 0) begin bi2 = ($random(seed) & 32'h7fffffff) % LW; b2a[bi2] <= ~b_x[bi2]; end
+            if (rnd(0) % ERRP == 0) begin bi1 = rnd(0) % LW; a2b[bi1] <= ~a_x[bi1]; end
+            if (rnd(0) % ERRP == 0) begin bi2 = rnd(0) % LW; b2a[bi2] <= ~b_x[bi2]; end
         end
     end
     function [W-1:0] pay(input integer dir, input integer n);
@@ -48,8 +65,8 @@ module tb_hfd_lk_ep;
         b_cred <= b_cred + (b_tcr ? 1 : 0) - (b_tv ? 1 : 0);
     end
     always @(negedge clk) begin
-        a_tv = rst_n && cyc > 20 && a_sent < N && (a_cred - (a_tv ? 1 : 0)) > 0 && (FCR > 64 || ($random(seed) & 32'h7fffffff) % 8 != 0);
-        b_tv = rst_n && cyc > 20 && b_sent < N && (b_cred - (b_tv ? 1 : 0)) > 0 && (FCR > 64 || ($random(seed) & 32'h7fffffff) % 5 != 0);
+        a_tv = rst_n && cyc > 20 && a_sent < N && (a_cred - (a_tv ? 1 : 0)) > 0 && (FCR > 64 || rnd(0) % 8 != 0);
+        b_tv = rst_n && cyc > 20 && b_sent < N && (b_cred - (b_tv ? 1 : 0)) > 0 && (FCR > 64 || rnd(0) % 5 != 0);
         a_tf = pay(0, a_sent); b_tf = pay(1, b_sent);
     end
     always @(posedge clk) begin if (a_tv) a_sent <= a_sent + 1; if (b_tv) b_sent <= b_sent + 1; end
@@ -57,8 +74,8 @@ module tb_hfd_lk_ep;
     integer a_occ, b_occ, a_seen, b_seen;
     reg a_pop, b_pop;
     always @(negedge clk) begin
-        a_pop = (a_occ > 0) && (FCR > 64 || ($random(seed) & 32'h7fffffff) % 3 == 0);
-        b_pop = (b_occ > 0) && (FCR > 64 || ($random(seed) & 32'h7fffffff) % 4 != 0);
+        a_pop = (a_occ > 0) && (FCR > 64 || rnd(0) % 3 == 0);
+        b_pop = (b_occ > 0) && (FCR > 64 || rnd(0) % 4 != 0);
         a_rcr = a_pop; b_rcr = b_pop;
     end
     always @(posedge clk) if (rst_n) begin
@@ -81,12 +98,15 @@ module tb_hfd_lk_ep;
         if (!$value$plusargs("ERRP=%d", ERRP)) ERRP = 0;
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
         if (!$value$plusargs("MAXCYC=%d", maxcyc)) maxcyc = 0;   // recovery-time bound (0 = none)
+        if (!$value$plusargs("LOSTRP=%d", lostrp)) lostrp = 0;
+        lr_until = 0; rs_x = 32'h9E3779B9 ^ seed; if (rs_x == 0) rs_x = 1;
         cyc = 0; a_sent = 0; b_sent = 0; a_cred = TXQ; b_cred = TXQ; a_occ = 0; b_occ = 0; a_seen = 0; b_seen = 0;
         a_tv = 0; b_tv = 0; a_rcr = 0; b_rcr = 0; a2b = 0; b2a = 0;
         repeat (5) @(posedge clk); rst_n = 1;
         for (k = 0; k < 400 * N + 200000 && !(a_seen == N && b_seen == N); k = k + 1) begin @(posedge clk); cyc = cyc + 1; end
         if (a_seen != N || b_seen != N) $fatal(1, "TIMEOUT delivered A->B %0d B->A %0d of %0d (locked %0d %0d)", b_seen, a_seen, N, a_l, b_l);
         if (ERRP > 0 && a_rep + b_rep == 0) $fatal(1, "no replay with lane errors");
+        if (lostrp > 0) $fatal(1, "LOSTRP: %0d directed lost-replay windows never opened", lostrp);
         if (maxcyc > 0 && cyc > maxcyc) $fatal(1, "recovery too slow: %0d cycles > MAXCYC %0d (a lost replay waited for TIMEOUT?)", cyc, maxcyc);
         $display("LKEP_BENCH PASS NS %0d N %0d ERRP %0d cycles %0d replays %0d/%0d drops %0d/%0d (%.3f flits/cycle A->B)",
                  NS, N, ERRP, cyc, a_rep, b_rep, a_dr, b_dr, N * 1.0 / cyc);
