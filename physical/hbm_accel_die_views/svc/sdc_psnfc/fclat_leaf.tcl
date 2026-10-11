@@ -34,6 +34,10 @@ proc ot_fcl_post_cts {} {
   return 0
 }
 set ot_fcl_cts [ot_fcl_post_cts]
+# [svc] 10-10: corner_sta reads this file right after read_spef / set_propagated_clock, before any timing query:
+# the pin arrival query then ran on an unbuilt graph and OpenROAD segfaulted (status 139, routes SE_s5 / SW_s6
+# 32e2dbd29).  Build the timing graph first (a worst-slack query) -- verified: corner STA completes, leaf means as in CTS
+if {$ot_fcl_cts} { catch {sta::worst_slack_cmd max} }
 foreach ot_fp {ckw[0] cke[0]} {
   if {![llength [get_ports -quiet $ot_fp]]} continue
   set_clock_latency -source $ot_fcl [get_ports $ot_fp]
