@@ -31,7 +31,8 @@
 // CDEL random cycles, then releases the slot on all 4 sinks (the engines'
 // credit).  SPACED=1: one token in flight at a time (isolated latency).
 module tb_dsfd_engram_c #(parameter integer NSLOT = 8, parameter integer PIPE = 0, parameter integer WRAP = 1,
-    parameter integer CMUT = 0, parameter integer EPMUT = 0, parameter integer TBMUT = 0)
+    parameter integer CMUT = 0, parameter integer EPMUT = 0, parameter integer TBMUT = 0,
+    parameter integer BE = 0, parameter integer BEJIT = 0)
     (input wire clk);
     import ot_hdc_engram_tables_shipped_pkg::*;
     localparam integer MAXV = 1 << 13;
@@ -182,14 +183,24 @@ module tb_dsfd_engram_c #(parameter integer NSLOT = 8, parameter integer PIPE = 
             localparam integer L_ = ge / NR, R_ = ge % NR;
             wire [281:0] t_ag; wire [34:0] t_hq; wire [0:0] wc;
             wire [NR-1:0] ir;
-            dsfd_engram_c #(.MUT(CMUT), .EPMUT(EPMUT), .PIPE(PIPE)) u_e (
-                .ck(clk), .rst(rst_n), .c_cmd(c_cmd[ge]), .c_done(c_done[ge]), .c_st(c_st[ge]),
-                .f_cfg({R_[1:0], L_[0]}), .f_win({e_wv[ge], e_win[ge], e_rel[NR*ge +: NR]}), .t_collective(wc),
-                .t_ag(t_ag), .f_agc(e_occ[ge]),
-                .f_ai({s_stb[NR*ge +: NR], s_sts[SLW*NR*ge +: SLW*NR], s_stv[NR*ge +: NR], s_id[264*NR*ge +: 264*NR],
-                       s_is[SLW*NR*ge +: SLW*NR], s_ib[3*NR*ge +: 3*NR], s_ic[5*NR*ge +: 5*NR], s_iv[NR*ge +: NR]}),
-                .t_air(ir), .t_vm(t_vm[ge]), .f_vm(f_vm[ge]), .t_hq(t_hq),
-                .f_hr({e_hrd[256*ge +: 256], e_hri[4*ge +: 4], e_hrt[3*ge +: 3], e_hrv[ge], e_hqc[ge]}));
+            wire [1123:0] fai = {s_stb[NR*ge +: NR], s_sts[SLW*NR*ge +: SLW*NR], s_stv[NR*ge +: NR], s_id[264*NR*ge +: 264*NR],
+                       s_is[SLW*NR*ge +: SLW*NR], s_ib[3*NR*ge +: 3*NR], s_ic[5*NR*ge +: 5*NR], s_iv[NR*ge +: NR]};
+            if (BE == 0) begin : g_v1
+                wire [290:0] teb_; wire [8:0] hc_; wire [32*341-1:0] rq_;
+                dsfd_engram_c #(.MUT(CMUT), .EPMUT(EPMUT), .PIPE(PIPE), .BE(0)) u_e (
+                    .ck(clk), .rst(rst_n), .c_cmd(c_cmd[ge]), .c_done(c_done[ge]), .c_st(c_st[ge]),
+                    .f_cfg({R_[1:0], L_[0]}), .f_win({e_wv[ge], e_win[ge], e_rel[NR*ge +: NR]}), .t_collective(wc),
+                    .t_ag(t_ag), .f_agc(e_occ[ge]), .f_ai(fai), .t_air(ir), .t_vm(t_vm[ge]), .f_vm(f_vm[ge]), .t_hq(t_hq),
+                    .f_hr({e_hrd[256*ge +: 256], e_hri[4*ge +: 4], e_hrt[3*ge +: 3], e_hrv[ge], e_hqc[ge]}),
+                    .t_eb(teb_), .f_eb(4'd0), .hw(292'd0), .hc(hc_), .rq(rq_), .wd(32'd0), .rd(8896'd0));
+            end else begin : g_be      // the stack HBM client: boot through the host face, then rows from 64 PC models
+                wire [31:0] acks_, sent_; wire bt_, swf_;
+                tb_eng_be_die #(.L(L_), .R(R_), .EXPECT(18), .CMUT(CMUT), .EPMUT(EPMUT), .PIPE(PIPE), .JIT(BEJIT)) u_d (
+                    .clk(clk), .rst_n(rst_n), .c_cmd(c_cmd[ge]), .c_done(c_done[ge]), .c_st(c_st[ge]),
+                    .f_win({e_wv[ge], e_win[ge], e_rel[NR*ge +: NR]}), .t_collective(wc), .t_ag(t_ag), .f_agc(e_occ[ge]),
+                    .f_ai(fai), .t_air(ir), .t_vm(t_vm[ge]), .f_vm(f_vm[ge]), .acks(acks_), .host_sent(sent_), .booted(bt_), .sw_fault(swf_));
+                assign t_hq = 35'd0;
+            end
             assign e_wc[ge] = wc[0];
             assign s_ir[NR*ge +: NR] = ir;
             assign {e_hqt[3*ge +: 3], e_hqa[(ABW-5)*ge +: ABW-5], e_hqv[ge]} = t_hq;

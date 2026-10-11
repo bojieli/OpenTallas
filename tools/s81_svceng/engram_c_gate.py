@@ -25,6 +25,11 @@ SRC = C.SOURCES + [E / "dsfd_engram_sink.sv", E / "ot_dsrom_engram_prefetch.sv",
                    ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
                    E / "dsfd_engram_c.sv"]
 TB = ROOT / "rtl/test/tb_dsfd_engram_c.sv"
+BE_SRC = [E / "ot_dsrom_engram_boot_dispatch.sv", E / "ot_dsrom_engram_boot_ctrl_map.sv",
+          E / "ot_dsrom_engram_rowstripe_service.sv", E / "ot_dsrom_engram_rowstripe_read.sv",
+          ROOT / "rtl/dsrom_sys/s81_ingest/ot_s81_engram_aperture.sv", E / "ot_s81_eng_half.sv", ROOT / "rtl/test/tb_eng_be_die.sv"]
+BE_BASE = [("be_ideal", dict(), 240), ("be_stressed", dict(BUB=10, CDEL=300, AGLAT=20, AGJIT=60), 240),
+           ("be_isolated", dict(SPACED=1, AGLAT=4), 40), ("be_b2b", dict(AGLAT=4), 240)]
 STRESS = dict(LAT=60, JIT=400, STALL=30, GAP=30, REORD=1, BUB=10, CDEL=300, AGLAT=20, AGJIT=60)
 BASE = [("ideal_hbm_200ns", dict(LAT=240), None), ("stressed", STRESS, 500),
         ("crc_injection", dict(LAT=60, JIT=200, STALL=20, GAP=20, REORD=1, BUB=30, CDEL=100, AGLAT=20, AGJIT=40, ERR=1), 400),
@@ -36,8 +41,9 @@ NEG = [("dropstart", dict(TBMUT=1)), ("wrongdesc", dict(TBMUT=2)), ("earlydone",
 
 def build(obj, g):
     exe = obj / "Vtb_dsfd_engram_c"
+    be = BE_SRC if g.get("BE") else []
     subprocess.run(["verilator", *C.VL, "--top-module", "tb_dsfd_engram_c", "-GNSLOT=8",
-                    *(f"-G{k}={v}" for k, v in g.items()), "-Mdir", str(obj), *map(str, SRC), str(TB), str(C.HARNESS),
+                    *(f"-G{k}={v}" for k, v in g.items()), "-Mdir", str(obj), *map(str, SRC + be), str(TB), str(C.HARNESS),
                     "-CFLAGS", "-O1 -DVTOP=Vtb_dsfd_engram_c"], check=True, capture_output=True)
     return exe
 
@@ -47,17 +53,19 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--neg", choices=[n for n, _ in NEG])
+    ap.add_argument("--be", action="store_true", help="the stack HBM client (BE 1): boot via host, rows from PC models")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     t = C.ES.shipped_tables()
     ev = C.build_events(np.random.default_rng(20261008), 120 if a.quick else 600)
     wins = C.official_windows(ev)
     if a.neg:      # negative-control bench: exit 1 when the mutant FAILS the bench (as required), 0 when missed
-        g = dict(NEG)[a.neg]
+        g = {**dict(NEG)[a.neg], **({"BE": 1} if a.be else {})}
         rec = C.run_mode(build(a.out / f"obj_{a.neg}", g), a.out, t, ev, wins, a.neg, STRESS, 200)
         print("ENGRAM_C_NEG", a.neg, "FAIL as required" if not rec.get("pass") else "MISSED")
         return 1 if not rec.get("pass") else 0
-    jobs = [("base", {})] + NEG
+    beg = {"BE": 1} if a.be else {}
+    jobs = [("base", dict(beg))] + [(n, {**g, **beg}) for n, g in NEG]
 
     def one(j):
         name, g = j
@@ -68,7 +76,7 @@ def main():
             return name, {"build_failed": e.stderr.decode(errors="replace")[-800:]}
         if name == "base":
             res = {}
-            for m, args, lim in BASE:
+            for m, args, lim in (BE_BASE if a.be else BASE):
                 res[m] = C.run_mode(exe, a.out, t, ev, wins, m, args, lim)
                 print(m, "pass" if res[m].get("pass") else "FAIL", res[m].get("cycles"), flush=True)
             return name, res
@@ -79,7 +87,7 @@ def main():
     base = out["base"]
     ok_base = all(isinstance(v, dict) and v.get("pass") for v in base.values()) if "build_failed" not in base else False
     negs = {n: (not out[n].get("pass")) and "build_failed" not in out[n] for n, _ in NEG}
-    tp = base.get("throughput_b2b", {}) if ok_base else {}
+    tp = base.get("be_b2b" if a.be else "throughput_b2b", {}) if ok_base else {}
     rec = {"schema": "opentallas.s81.engram-c-gate.v1", "verdict": "PASS" if ok_base and all(negs.values()) else "FAIL",
            "base": base, "negatives_caught": negs,
            "negatives": {n: {k: out[n].get(k) for k in ("bench_pass", "element_mismatches", "dumps", "all_dumps_present",

@@ -32,7 +32,9 @@ module dsfd_engram_c #(
     parameter integer MUT = 0,
     parameter integer EPMUT = 0,
     parameter integer PIPE = 0,
-    parameter integer SINK_PIN = 1
+    parameter integer SINK_PIN = 1,
+    parameter integer BE = 1,              // 1: the stack HBM client (SE half + boot + aperture + router); 0: v1 (t_hq / f_hr = the lookup's port)
+    parameter integer EXPECT_SECTORS = 1   // Engram boot image sectors of this die (both stacks; boot dispatcher)
 ) (
     input  wire [0:0]    ck,
     input  wire [0:0]    rst,                // async die reset (active low), synchronised here
@@ -56,19 +58,31 @@ module dsfd_engram_c #(
     input  wire [15:0]   f_vm,
     // HBM backend port pair: {hq_tag 3, hq_atom 31, hq_v} / {hr_d 256, hr_idx 4, hr_tag 3, hr_v, hq_cred}
     output wire [34:0]   t_hq,
-    input  wire [264:0]  f_hr
+    input  wire [264:0]  f_hr,
+    // BE = 1: t_hq / f_hr = the SW half's read pair (svc_SW feq / ter); t_eb / f_eb = its boot pair
+    //   t_eb {d 256, tag 3, atom 29, type 2, v}: type 1 boot write, 2 aperture CSR word, 3 BOOT READY;  f_eb {tag 3, v}
+    output wire [290:0]  t_eb,
+    input  wire [3:0]    f_eb,
+    // host Engram sectors (dsfd_host_s hw<SE>): {cls 2, we, addr 32, d 256, v};  hc {ack 8, cr}
+    input  wire [291:0]  hw,
+    output reg  [8:0]    hc,
+    // ctrl_SE per-PC faces: rq 32 x 341, wd 32, rd {rv 32, r_beat 32 x 4, r_tag 32 x 17, r_data 32 x 256}
+    output wire [32*341-1:0] rq,
+    input  wire [31:0]   wd,
+    input  wire [8895:0] rd
 );
     localparam integer NSLOT = 8, SLW = 3, IDW = ENG_ID_W;
     reg [1:0] rs_q;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
     wire rn = rs_q[1];
 
+    wire m_cred, m_hrv; wire [2:0] m_hrt; wire [3:0] m_hri; wire [255:0] m_hrd; wire pf_fault_be;   // BE router / merge
     // ---------------- command endpoint
     wire j_v, j_new; wire [83:0] j_d, j_new_d; wire ep_fault;
     reg  j_done, jf;
     ot_s81_slab_ep #(.QD(8), .JQ(8), .MUT(EPMUT)) u_ep (.c_clk(ck[0]), .c_rst_n(rst[0]), .c_cmd(c_cmd), .c_done(c_done),
         .c_st(c_st), .e_clk(ck[0]), .e_rst_n(rn), .j_v(j_v), .j_d(j_d), .j_new(j_new), .j_new_d(j_new_d),
-        .j_present(1'b1), .j_done(j_done), .slab_fault(jf | pf_fault), .ep_fault(ep_fault));
+        .j_present(1'b1), .j_done(j_done), .slab_fault(jf | pf_fault | pf_fault_be), .ep_fault(ep_fault));
     // (the lookup's sticky fault is a DATA status -- CRC / address / alignment of a row -- carried on t_ag to the
     //  collective and per slot as perr on t_vm; it is not an engine-protocol fault)
 
@@ -84,7 +98,8 @@ module dsfd_engram_c #(
     reg [15:0] dn;                         // jobs done
     reg [1:0]  lc;                         // credits toward the lookup's 2-entry window FIFO
     wire       lk_wcred;
-    wire       rel_w = (hn != 2'd0) && (in_ != 4'd0) && (lc != 2'd0);
+    wire       be_rdy;                     // BE: the Engram tables are booted (both halves READY)
+    wire       rel_w = (hn != 2'd0) && (in_ != 4'd0) && (lc != 2'd0) && (BE == 0 || be_rdy);
     wire       lk_wv = rel_w;
     wire [4*IDW-1:0] lk_wid = hq_w[hh];
     always @(posedge ck[0] or negedge rn)
@@ -109,15 +124,110 @@ module dsfd_engram_c #(
     // ---------------- lookup element (closed dsfd_engram_lkp)
     wire lk_fault, lk_ov, lk_stv, lk_stb, lk_hqv; wire [4:0] lk_oc; wire [2:0] lk_ob, lk_os, lk_sts, lk_hqt;
     wire [263:0] lk_od; wire [30:0] lk_hqa;
-    dsfd_engram_lkp #(.PIPE(PIPE), .NSLOT(NSLOT), .HQ_CRED(8), .O_CRED(16), .SLW(SLW)) u_lkp (
+    dsfd_engram_lkp #(.ROWSTRIPE(BE), .PIPE(PIPE), .NSLOT(NSLOT), .HQ_CRED(8), .O_CRED(16), .SLW(SLW)) u_lkp (
         .ck(ck[0]), .rst_n(rn), .cfg_layer(f_cfg[0]), .cfg_rank(f_cfg[2:1]),
         .win_v(lk_wv), .win_ids(lk_wid), .win_cred(lk_wcred), .rel(rel_q),
-        .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(f_hr[0]),
-        .hr_v(f_hr[1]), .hr_tag(f_hr[4:2]), .hr_idx(f_hr[8:5]), .hr_d(f_hr[264:9]),
+        .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(BE ? m_cred : f_hr[0]),
+        .hr_v(BE ? m_hrv : f_hr[1]), .hr_tag(BE ? m_hrt : f_hr[4:2]), .hr_idx(BE ? m_hri : f_hr[8:5]), .hr_d(BE ? m_hrd : f_hr[264:9]),
         .o_v(lk_ov), .o_col(lk_oc), .o_beat(lk_ob), .o_slot(lk_os), .o_d(lk_od), .o_cred(f_agc[0]),
         .st_v(lk_stv), .st_slot(lk_sts), .st_bad(lk_stb), .fault(lk_fault));
-    assign t_hq = {lk_hqt, lk_hqa, lk_hqv};
+    assign t_hq = BE ? {lk_hqt, lk_hqa, lk_hqv && !lk_hqa[0]} : {lk_hqt, lk_hqa, lk_hqv};   // BE: even rows = SW
     assign t_ag = {lk_fault, lk_stb, lk_sts, lk_stv, lk_od, lk_os, lk_ob, lk_oc, lk_ov};
+
+
+    // =============================================================================================================
+    // BE = 1: the stack HBM client of the Engram tables (owner GO 2026-10-11).  Row parity = stack (rowstripe
+    // req_pc = (row % 2) * 32 + ...; the lookup's ROWSTRIPE atom is 9 x row, so row parity = atom[0]).
+    //   router   lookup row request -> SE half (odd rows, local) or t_hq (even rows -> svc_SW's half); the 8 lookup
+    //            credits are shared: each half's FIFO is 8 deep, the credit returns of both are merged one a cycle.
+    //   merge    the halves' row atoms (pure pushes: each half reserves its row buffers before it issues) into the
+    //            lookup's response port: local first, the SW stream through a 64-entry FIFO (<= 6 rows x 9 atoms).
+    //   boot     host Engram sectors (hw, class 2) -> ot_dsrom_engram_boot_dispatch (ROWSTRIPE; both stacks, one
+    //            sequential image, END marker fingerprint) -> SE writes to the local half, SW writes on t_eb; the true
+    //            write completions of both stacks come back to the dispatcher (credits) and to the host as acks.
+    //            Aperture CSR words (marker address, d[65:64] = 3, d[255] = 1; d[254:253] kind 1 stack / 2 pc / 3
+    //            commit, fields per ot_s81_eng_half) go to both halves, credit returned at once.  When the dispatcher
+    //            is loaded, BOOT READY goes to both halves; windows are released to the lookup only after it.
+    // =============================================================================================================
+    generate if (BE != 0) begin : g_be
+        // ---- host face
+        reg hv_q; reg [291:1] hd_q;
+        always @(posedge ck[0] or negedge rn) if (!rn) hv_q <= 1'b0; else hv_q <= hw[0];
+        always @(posedge ck[0]) hd_q <= hw[291:1];
+        wire [255:0] h_d = hd_q[256:1]; wire [31:0] h_a = hd_q[288:257]; wire h_we = hd_q[289]; wire [1:0] h_cls = hd_q[291:290];
+        wire h_mark = h_a == 32'hffffffff;
+        wire h_csr  = hv_q && h_mark && h_d[65:64] == 2'd3 && h_d[255];
+        wire h_boot = hv_q && !h_csr;
+        reg  hbad;
+        // ---- boot dispatcher (both stacks)
+        wire dcred, dready, dfault; wire [1:0] wv; wire [28:0] wa; wire [2:0] wt; wire [255:0] wdd;
+        wire sw_dv, se_dv; wire [2:0] sw_dt, se_dt;
+        ot_dsrom_engram_boot_dispatch #(.ROWSTRIPE(1), .EXPECT_SECTORS(EXPECT_SECTORS)) u_bd (.ck(ck[0]), .rst_n(rn),
+            .i_v(h_boot), .i_addr(h_a), .i_d(h_d), .i_cred(dcred), .w_v(wv), .w_atom(wa), .w_tag(wt), .w_d(wdd),
+            .done_v({se_dv, sw_dv}), .done_tag({se_dt, sw_dt}), .ready(dready), .fault(dfault));
+        reg rsent; reg csr_q; reg [255:0] csr_d;
+        // ---- SW pair (t_eb / f_eb): boot writes, CSR words, READY
+        reg [290:0] eb_q; reg ebv;
+        always @(posedge ck[0] or negedge rn)
+            if (!rn) begin ebv <= 1'b0; rsent <= 1'b0; csr_q <= 1'b0; hbad <= 1'b0; hc <= 9'd0; end
+            else begin
+                csr_q <= h_csr;
+                ebv <= wv[0] || h_csr || (dready && !rsent);
+                if (dready) rsent <= 1'b1;
+                if (hv_q && (h_cls != 2'd2 || !h_we)) hbad <= 1'b1;
+                if ((wv[0] && h_csr) || (wv[1] && csr_q)) hbad <= 1'b1;   // aperture CSR words precede the image
+                hc <= {8'(sw_dv) + 8'(se_dv) + 8'(h_csr), dcred || h_csr};   // acks: true write completions (+ CSR words)
+            end
+        always @(posedge ck[0])
+            eb_q <= wv[0] ? {wdd, wt, wa, 2'd1} : h_csr ? {h_d, 3'd0, 29'd0, 2'd2} : {256'd0, 3'd0, 29'd0, 2'd3};
+        assign t_eb = {eb_q, ebv};
+        reg fv_q; reg [2:0] ft_q;
+        always @(posedge ck[0] or negedge rn) if (!rn) fv_q <= 1'b0; else fv_q <= f_eb[0];
+        always @(posedge ck[0]) ft_q <= f_eb[3:1];
+        assign sw_dv = fv_q; assign sw_dt = ft_q;
+        // ---- SE half (local)
+        wire lq = lk_hqv && lk_hqa[0];
+        wire s_cred, s_hrv, h_rdy, h_fault; wire [2:0] s_hrt; wire [3:0] s_hri; wire [255:0] s_hrd;
+        ot_s81_eng_half #(.STACK(1)) u_se (.ck(ck[0]), .rst_n(rn),
+            .b_v(wv[1] || csr_q || (dready && !rsent)), .b_type(wv[1] ? 2'd1 : csr_q ? 2'd2 : 2'd3),
+            .b_atom(wa), .b_tag(wt), .b_d(wv[1] ? wdd : csr_d), .bd_v(se_dv), .bd_tag(se_dt),
+            .hq_v(lq), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(s_cred),
+            .hr_v(s_hrv), .hr_tag(s_hrt), .hr_idx(s_hri), .hr_d(s_hrd),
+            .rq(rq), .wd(wd), .rd(rd), .ready(h_rdy), .fault(h_fault));
+        always @(posedge ck[0]) csr_d <= h_d;
+        // ---- SW responses (pin flops) + credit merge
+        reg rv_q, rc_q; reg [262:0] rh_q;
+        always @(posedge ck[0] or negedge rn) if (!rn) begin rv_q <= 1'b0; rc_q <= 1'b0; end
+                                             else begin rv_q <= f_hr[1]; rc_q <= f_hr[0]; end
+        always @(posedge ck[0]) rh_q <= f_hr[264:2];
+        reg [3:0] cpend; reg mcred;
+        always @(posedge ck[0] or negedge rn)
+            if (!rn) begin cpend <= 0; mcred <= 1'b0; end
+            else begin
+                mcred <= (cpend + s_cred + rc_q) != 0;
+                cpend <= cpend + s_cred + rc_q - (((cpend + s_cred + rc_q) != 0) ? 1'b1 : 1'b0);
+            end
+        assign m_cred = mcred;
+        // ---- response merge: local first, SW through a FIFO
+        reg [262:0] rf [0:63]; reg [5:0] rw, rr; reg [6:0] rn_;
+        wire take_sw = !s_hrv && rn_ != 0;
+        always @(posedge ck[0] or negedge rn)
+            if (!rn) begin rw <= 0; rr <= 0; rn_ <= 0; end
+            else begin
+                if (rv_q) begin rf[rw] <= rh_q; rw <= rw + 1'b1; end
+                if (take_sw) rr <= rr + 1'b1;
+                rn_ <= rn_ + rv_q - take_sw;
+            end
+        assign m_hrv = s_hrv || take_sw;
+        assign {m_hrd, m_hri, m_hrt} = s_hrv ? {s_hrd, s_hri, s_hrt} : rf[rr];
+        assign be_rdy = rsent && h_rdy;
+        assign pf_fault_be = hbad | dfault | h_fault | (rn_ == 7'd64 && rv_q && !take_sw);
+    end else begin : g_v1
+        assign m_cred = 1'b0; assign m_hrv = 1'b0; assign m_hrt = 0; assign m_hri = 0; assign m_hrd = 0;
+        assign be_rdy = 1'b1; assign pf_fault_be = 1'b0;
+        assign t_eb = 291'd0; assign rq = {32*341{1'b0}};
+        always @(posedge ck[0]) hc <= 9'd0;
+    end endgenerate
 
     // ---------------- row sink (closed dsfd_engram_sink) -> prefetch buffer
     wire s_we; wire [10:0] s_wa; wire [511:0] s_wd; wire [7:0] s_rdy, s_perr;
