@@ -98,19 +98,22 @@ module ot_hgi_hc_lane #(
     output wire          quiet,
     output wire          ovf
 );
+    // hbm-hcvm 10-11: the reset port drives only a local relay (design standard; 640 flops sat on the port)
+    wire rst_l;
+    ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_l));
     localparam integer QB = $clog2(LQ + 1), RB = (NR <= 1) ? 1 : $clog2(NR), FB = $clog2(FD + 1);
     localparam integer QDB = (QD <= 1) ? 1 : $clog2(QD);
     reg wrq_cr_q, wwq_cr_q, wwq_done_q; reg [256:0] wrr_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wrq_cr_q <= 1'b0; wwq_cr_q <= 1'b0; wwq_done_q <= 1'b0; wrr_q <= '0; end
+    always @(posedge clk or negedge rst_l)
+        if (!rst_l) begin wrq_cr_q <= 1'b0; wwq_cr_q <= 1'b0; wwq_done_q <= 1'b0; wrr_q <= '0; end
         else begin wrq_cr_q <= wrq_cr; wwq_cr_q <= wwq_cr; wwq_done_q <= wwq_done; wrr_q <= wrr; end
     // hbm-hcvm 10-11: control-side pin flops (registered boundary): the write FIFO push / data, the write-group grant and
     // the job's P1 row count land in flops before any logic (the FIFO's counters were 75 gate levels behind push; pop and
     // p1_full were combinational outputs of wg_q / p1n).  occ counts the push at the pin, so the top's room check stays
     // conservative; a push enters the FIFO one cycle later.
     reg push_q, wg_qq, post_q; reg [270:0] pdat_q; reg [$clog2(NR):0] p1n_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin push_q <= 1'b0; wg_qq <= 1'b0; post_q <= 1'b0; p1n_q <= '0; end
+    always @(posedge clk or negedge rst_l)
+        if (!rst_l) begin push_q <= 1'b0; wg_qq <= 1'b0; post_q <= 1'b0; p1n_q <= '0; end
         else begin push_q <= push; wg_qq <= wg_q; post_q <= post; p1n_q <= p1n; end
     always @(posedge clk) pdat_q <= pdat;
     reg [QB-1:0] cr; reg scp; reg [1:0] scx; reg [RB:0] p1c; reg [7:0] p2c; reg [1:0] qn; reg [767:0] qsh;
@@ -124,7 +127,7 @@ module ot_hgi_hc_lane #(
     wire rv = wrr_q[256];
     assign sc_v = rv && scp; assign sc_vix = scx; assign sc_d = wrr_q[255:0];
     wire f_hv; wire [270:0] f_hd;
-    ot_fifo_sram_fwft #(.W(271), .DEPTH(FD), .MACRO(0)) u_f (.clk(clk), .rst_n(rst_n), .push(push_q), .wdata(pdat_q), .pop(pop),
+    ot_fifo_sram_fwft #(.W(271), .DEPTH(FD), .MACRO(0)) u_f (.clk(clk), .rst_n(rst_l), .push(push_q), .wdata(pdat_q), .pop(pop),
         .hv(f_hv), .head(f_hd), .ovf(ovf));
     assign pop = wg_qq && f_hv && (wcr != '0);
     assign occ_o = occ;
@@ -135,8 +138,8 @@ module ot_hgi_hc_lane #(
         if (rv && !scp && !is_p1x && qn != 2'd3) qsh[256*qn +: 256] <= wrr_q[255:0];
         if (pb_re) pb_q <= pb[pb_ra];
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_l)
+        if (!rst_l) begin
             wrq <= '0; wwq <= '0; cr <= QB'(LQ); scp <= 1'b0; scx <= '0; p1c <= '0; p2c <= '0; qn <= '0; qwp <= '0; qrp <= '0;
             qcnt <= '0; qres <= '0; occ <= '0; wcr <= QB'(LQ); wpend <= '0;
         end else begin : seq
