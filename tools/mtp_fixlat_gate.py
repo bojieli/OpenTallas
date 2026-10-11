@@ -23,7 +23,7 @@ D = 'rtl/experimental/mtp_p2_ordered_20261009'
 LINK = [f'{M}/ot_dsrom_mtp_link_pair.sv', f'{M}/ot_dsrom_mtp_link_rtt.sv', f'{M}/rtt/ot_dsrom_mtp_rstsync.sv']
 PEP = LINK + [f'{M}/dsfd_mtp_partner_ep.sv', f'{M}/tb/tb_mtp_partner_ep.sv']
 P2 = LINK + [f'{D}/{x}.sv' for x in ('ot_mtp_p2_ordered_rows', 'ot_mtp_p2_prefix', 'ot_mtp_p2_prefix_native',
-                                      'ot_mtp_p2_prefix_path', 'dsfd_p2_lnk', 'tb_mtp_p2_fixlat')] + \
+                                      'ot_mtp_p2_prefix_path', 'dsfd_p2_lnk', 'dsfd_p2_rtt', 'tb_mtp_p2_fixlat')] + \
      ['rtl/v41rom/ot_v41_fadd.sv', 'rtl/common/ot_prefix.sv', 'rtl/common/ot_secded.sv', 'rtl/common/ot_sc_pfifo.sv',
       'rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv']
 HEAD = dict(FC=6, RC=7, FV=11, RV=11)        # head631 (lat-audit head631_stages.json; re-counted on main e707ff5b3)
