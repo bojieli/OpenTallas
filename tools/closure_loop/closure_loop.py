@@ -79,7 +79,7 @@ ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
 # EARLY_FAIL_* (stuckscan 2026-10-08): a route stopped by an early-fail gate (stuckscan.py hopeless()): redesign work
-EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC")
+EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC", "EARLY_FAIL_STALL")
 TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID",
             "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
@@ -96,7 +96,7 @@ def bench_crashed(st, rc, tail):
         return st["expect"] == "fail" or not WORK_RE.search(tail)
     return False
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
-DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
+DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile", "configs", "src"]   # drive-1010: + configs (5 MB) / src (1 MB): benches importing tools/* need both
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
@@ -1656,7 +1656,19 @@ def sync_source(j):
     if anc.returncode:
         raise ValueError(f"source commit {full[:12]} is not on origin/{src['branch']}")
     j["commit_full"] = full
-    paths = list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))
+    # SYNC-PATHS (drive-1010 2026-10-10): an extra path missing at the pinned commit made every sync fail 10 times with
+    # an empty message (hbm_hc_quarter_hcq_r25gq-7eea45363: results/uarch/hbm_hc_group_root_icg_20261010/model.json) ->
+    # fail once, terminally, naming the path.
+    missing = [x for x in src.get("extra_paths", [])
+               if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{full}:{x}"], timeout=60).returncode]
+    if missing:
+        raise ValueError(f"source.extra_paths not in commit {full[:12]}: {', '.join(missing[:6])} -- fix the spec "
+                         f"(the file must be committed at the pinned commit) and re-drop")
+    base_paths = list(src.get("paths", DEFAULT_SRC_PATHS))
+    if "paths" not in src:   # defaults absent at an old commit (configs/, src/) are skipped, never a pathspec error
+        base_paths = [x for x in base_paths
+                      if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{full}:{x}"], timeout=60).returncode == 0]
+    paths = base_paths + list(src.get("extra_paths", []))
     paths += implied_src_paths(spec, paths, full)
     run = j["run"]
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
@@ -3568,7 +3580,8 @@ def routed_ioref(j, m):
         rr.update(available=tt is not None and ff is not None and not errs, tt=tt, ff=ff, errors=errs[:5], ioref=io,
                   tt_i2r=res["setup_tt"].get("worst_input_to_reg_slack_ps"), tt_out=res["setup_tt"].get("worst_output_port_slack_ps"),
                   ff_i2r=res["hold_ff"].get("worst_input_to_reg_slack_ps"), ff_out=res["hold_ff"].get("worst_output_port_slack_ps"),
-                  ff_r2r=res["hold_ff"].get("worst_reg_to_reg_slack_ps"), json=out)
+                  ff_r2r=res["hold_ff"].get("worst_reg_to_reg_slack_ps"), json=out,
+                  registers=res["setup_tt"].get("registers"), registers_clocked=res["setup_tt"].get("registers_clocked"))
         if not rr["available"]:
             rr["why"] = f"re-STA incomplete (TT {tt} / FF {ff}; {errs[:2]})"
         # a corner whose SDC has no insertion-reference virtual clock is unchanged by the re-STA: keep the route's own
@@ -4146,7 +4159,10 @@ def do_verdict(j, fleet, stl):
                f"NEEDS_HUMAN: verdict inputs missing: {json.dumps(m)[:400]}")
         return
     benches_ok = all(b["ok"] for b in j["benches"].values()) and benches_done(j, stl)
-    closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+    closed = real_slack(ss) and real_slack(ff) and ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+    if not (real_slack(ss) and real_slack(ff)):
+        event(j, f"SENTINEL-SLACK: TT {ss} / FF {ff} = no constrained path (constraints not applied or clock not found): "
+                 f"never CLOSED")
     event(j, f"verdict {setup_corner_label(m)} {ss:+.2f} / FF {ff:+.2f} / DRC {drc} / checks failed {failed} -> "
              f"{'CLOSED' if closed else 'NOT CLOSED'}")
     rr = routed_ioref(j, m)
@@ -4158,13 +4174,19 @@ def do_verdict(j, fleet, stl):
             # setup-only post-SDCs (nbr_clk_measured: -source latency) are read after the post-SDCs: re-read it last
             m["setup_post_sdc"] = list(m["setup_post_sdc"]) + [IOREF_SDC]
         ss, ff = rr["tt"], rr["ff"]
-        closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+        closed = real_slack(ss) and real_slack(ff) and ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
         j["metrics"] = m
         event(j, f"verdict at the ROUTED insertion: TT {ss:+.2f} / FF {ff:+.2f} -> {'CLOSED' if closed else 'NOT CLOSED'}")
+    uc = under_constrained(rr)
+    if uc:
+        failed.append("UNDER-CONSTRAINED")
+        j["failed_checks"] = failed
+        closed = False
+        event(j, f"UNDER-CONSTRAINED: {uc}: constraints did not apply; never CLOSED")
     # the calibrate-insertion re-STA / re-route is moot once the route is timed on its own tree
     mr = None if (rr and rr.get("available")) else measured_resta(j, m)
     if mr and mr.get("available"):
-        mclosed = mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
+        mclosed = not uc and real_slack(mr["tt"]) and real_slack(mr["ff"]) and mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
         if mclosed:
             # the finished route signs off on the MEASURED clock: no re-route; its verdict numbers are the measured ones
             m.update(setup_corner="tt", ss_ps=mr["tt"], ff_ps=mr["ff"], measured_resta=mr, assumed_clock=dict(ss_ps=ss, ff_ps=ff))
@@ -4213,13 +4235,40 @@ def do_verdict(j, fleet, stl):
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
 
 
+# SENTINEL-SLACK (drive-1010 2026-10-10): STA reports +1e16-ish slack when NO path is constrained (constraints not
+# applied / clock not found).  hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2 was CLOSED at TT +1e16.  A slack that is not
+# finite or has |slack| >= SENTINEL_PS is never a pass anywhere (route verdict, routed / measured re-STA, ECO results).
+SENTINEL_PS = 1e6
+
+
+def real_slack(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and abs(v) < SENTINEL_PS
+
+
+# UNDER-CONSTRAINED (drive-1010 2026-10-10): a verdict needs real constrained endpoints.  The routed re-STA counts the
+# registers and those clocked by a defined clock; fewer clocked registers than max(UC_MIN_REGS, UC_FRAC x registers)
+# means the constraints did not apply (clock not found / wrong name) -- never CLOSED.  Blocks with no registers at all
+# (pure wiring) are judged by their port paths (SENTINEL-SLACK catches 'no path').
+UC_MIN_REGS = 10
+UC_FRAC = 0.01
+
+
+def under_constrained(rr):
+    """reason string when the routed re-STA census shows too few clocked registers, else None"""
+    n, c = (rr or {}).get("registers"), (rr or {}).get("registers_clocked")
+    if not isinstance(n, int) or not isinstance(c, int) or n <= 0:
+        return None
+    floor = min(n, max(UC_MIN_REGS, UC_FRAC * n))
+    return None if c >= floor else f"only {c} of {n} registers are clocked by a defined clock (< {floor:g})"
+
+
 def eco_passes(res, rc):
     if rc != 0 or not isinstance(res, dict) or res.get("errors"):
         return False
     # option B: setup is judged at TT (tt_ps; older results carry it in ss_ps)
     for key, minimum in (("tt_ps" if "tt_ps" in res else "ss_ps", SS_MIN), ("ff_ps", FF_MIN)):
         value = res.get(key)
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < minimum:
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not real_slack(value) or value < minimum:
             return False
     return type(res.get("drc")) in (int, float) and res["drc"] == 0
 
@@ -4726,6 +4775,9 @@ def requeue_hold_only(jobs):
         e = j.get("eco") or {}
         if j["status"] == "NEEDS_RTL" and e.get("tried") and e.get("result") is None and "hold-eco-reroute-clock" not in j.get("fix_requeued", []):
             j.setdefault("fix_requeued", []).append("hold-eco-reroute-clock")
+            # FRESH-ECO-DIR (drive-1010 2026-10-10, hardcore-1010): the dropped ECO goes to eco_history so the re-run gets
+            # a fresh output dir (eco-combo<n+1> / eco-r<n+1>); clearing it reused eco-combo1 -> rc=10 (qfd_io_collective)
+            j.setdefault("eco_history", []).append(dict(e, requeued="hold-eco-reroute-clock"))
             j["eco"] = {}
             stl = stage_list(j["spec"])
             j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))
