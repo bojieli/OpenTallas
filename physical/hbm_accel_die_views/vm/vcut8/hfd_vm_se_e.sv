@@ -525,201 +525,197 @@ module hfd_vm_se_e (
     assign t_su_SE = o_t_su_SE;
     wire [2255:0] od_t_n_row = {193'd0, x_w2e[2062:0]};
     wire [2255:0] o_t_n_row;
+    // [vm8] wire stages: longest pin-to-pin span 972 um -> +1 core stage(s) on every bit (ws_stages)
     for (genvar k = 0; k <= 107; k = k + 1) begin : g_o_t_n_row_0
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn0), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn0), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 108; k <= 257; k = k + 1) begin : g_o_t_n_row_108
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn1), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn1), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 258; k <= 258; k = k + 1) begin : g_o_t_n_row_258
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 259; k <= 259; k = k + 1) begin : g_o_t_n_row_259
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn1), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn1), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 260; k <= 407; k = k + 1) begin : g_o_t_n_row_260
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 408; k <= 408; k = k + 1) begin : g_o_t_n_row_408
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 409; k <= 409; k = k + 1) begin : g_o_t_n_row_409
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 410; k <= 410; k = k + 1) begin : g_o_t_n_row_410
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 411; k <= 411; k = k + 1) begin : g_o_t_n_row_411
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 412; k <= 557; k = k + 1) begin : g_o_t_n_row_412
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 558; k <= 558; k = k + 1) begin : g_o_t_n_row_558
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 559; k <= 559; k = k + 1) begin : g_o_t_n_row_559
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 560; k <= 560; k = k + 1) begin : g_o_t_n_row_560
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 561; k <= 561; k = k + 1) begin : g_o_t_n_row_561
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 562; k <= 562; k = k + 1) begin : g_o_t_n_row_562
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 563; k <= 563; k = k + 1) begin : g_o_t_n_row_563
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 564; k <= 711; k = k + 1) begin : g_o_t_n_row_564
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 712; k <= 712; k = k + 1) begin : g_o_t_n_row_712
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 713; k <= 713; k = k + 1) begin : g_o_t_n_row_713
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 714; k <= 714; k = k + 1) begin : g_o_t_n_row_714
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 715; k <= 715; k = k + 1) begin : g_o_t_n_row_715
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 716; k <= 716; k = k + 1) begin : g_o_t_n_row_716
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 717; k <= 717; k = k + 1) begin : g_o_t_n_row_717
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 718; k <= 867; k = k + 1) begin : g_o_t_n_row_718
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 868; k <= 1018; k = k + 1) begin : g_o_t_n_row_868
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn6), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn6), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1019; k <= 1019; k = k + 1) begin : g_o_t_n_row_1019
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1020; k <= 1020; k = k + 1) begin : g_o_t_n_row_1020
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn6), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn6), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1021; k <= 1168; k = k + 1) begin : g_o_t_n_row_1021
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1169; k <= 1169; k = k + 1) begin : g_o_t_n_row_1169
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1170; k <= 1170; k = k + 1) begin : g_o_t_n_row_1170
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1171; k <= 1171; k = k + 1) begin : g_o_t_n_row_1171
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1172; k <= 1172; k = k + 1) begin : g_o_t_n_row_1172
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1173; k <= 1320; k = k + 1) begin : g_o_t_n_row_1173
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1321; k <= 1321; k = k + 1) begin : g_o_t_n_row_1321
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1322; k <= 1322; k = k + 1) begin : g_o_t_n_row_1322
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1323; k <= 1323; k = k + 1) begin : g_o_t_n_row_1323
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1324; k <= 1324; k = k + 1) begin : g_o_t_n_row_1324
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1325; k <= 1474; k = k + 1) begin : g_o_t_n_row_1325
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1475; k <= 1475; k = k + 1) begin : g_o_t_n_row_1475
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn10), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn10), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1476; k <= 1476; k = k + 1) begin : g_o_t_n_row_1476
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1477; k <= 1629; k = k + 1) begin : g_o_t_n_row_1477
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn10), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn10), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1630; k <= 1782; k = k + 1) begin : g_o_t_n_row_1630
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn11), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn11), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 1783; k <= 1935; k = k + 1) begin : g_o_t_n_row_1783
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn12), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn12), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1936; k <= 2062; k = k + 1) begin : g_o_t_n_row_1936
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckn13), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
-    end
-    for (genvar k = 2063; k <= 2087; k = k + 1) begin : g_o_t_n_row_2063
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckn13), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    for (genvar k = 1936; k <= 2087; k = k + 1) begin : g_o_t_n_row_1936
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn13), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 2088; k <= 2239; k = k + 1) begin : g_o_t_n_row_2088
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckn14), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn14), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     for (genvar k = 2240; k <= 2255; k = k + 1) begin : g_o_t_n_row_2240
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckn15), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn15), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     assign t_n_row = o_t_n_row;
     assign t_n_ctl = 256'd0;
     wire [1590:0] od_e2w = {x_f_n_wr[512:0], i_f_su_SE[1077:0]};
     wire [1590:0] o_e2w;
+    // [vm8] wire stages: longest pin-to-pin span 1048 um -> +1 core stage(s) on every bit (ws_stages)
     for (genvar k = 0; k <= 17; k = k + 1) begin : g_o_e2w_0
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw31), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw31), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 18; k <= 124; k = k + 1) begin : g_o_e2w_18
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw32), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw32), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 125; k <= 232; k = k + 1) begin : g_o_e2w_125
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw33), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw33), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 233; k <= 341; k = k + 1) begin : g_o_e2w_233
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw34), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw34), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 342; k <= 451; k = k + 1) begin : g_o_e2w_342
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw35), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw35), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 452; k <= 559; k = k + 1) begin : g_o_e2w_452
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw36), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw36), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 560; k <= 667; k = k + 1) begin : g_o_e2w_560
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw37), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw37), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 668; k <= 775; k = k + 1) begin : g_o_e2w_668
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw38), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw38), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 776; k <= 885; k = k + 1) begin : g_o_e2w_776
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw39), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw39), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 886; k <= 992; k = k + 1) begin : g_o_e2w_886
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw40), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw40), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 993; k <= 1077; k = k + 1) begin : g_o_e2w_993
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_ckw41), .d(od_e2w[k]), .q(o_e2w[k]));
-    end
-    for (genvar k = 1078; k <= 1101; k = k + 1) begin : g_o_e2w_1078
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckw41), .d(od_e2w[k]), .q(o_e2w[k]));
+    for (genvar k = 993; k <= 1101; k = k + 1) begin : g_o_e2w_993
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw41), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 1102; k <= 1209; k = k + 1) begin : g_o_e2w_1102
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckw42), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw42), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 1210; k <= 1319; k = k + 1) begin : g_o_e2w_1210
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckw43), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw43), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 1320; k <= 1427; k = k + 1) begin : g_o_e2w_1320
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckw44), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw44), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 1428; k <= 1535; k = k + 1) begin : g_o_e2w_1428
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckw45), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw45), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     for (genvar k = 1536; k <= 1590; k = k + 1) begin : g_o_e2w_1536
-        ot_hfd_oreg1y u (.clk(clk), .clkf(c_ckw46), .d(od_e2w[k]), .q(o_e2w[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw46), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     assign e2w = o_e2w;
 endmodule

@@ -382,7 +382,9 @@ module hfd_vm_sw_e (
     reg [771:0] cfg; always @(posedge clk) cfg <= {cfg[770:0], x_f_e_wr[1791]};
     // write port ONE depth (7): wr_v & co cross the SW seam (+2) after their NW face, wr_data[2047:0] the same seam (+2)
     // after the SW face chain + the two r20 balance regs
-    reg [2047:0] wd0_f_su_SW, wd_f_su_SW; always @(posedge clk) begin wd0_f_su_SW <= fs; wd_f_su_SW <= wd0_f_su_SW; end
+    // [vm8] +1 write-data balance register(s) for the nw_w t_s_wr wire stage(s)
+    reg [2047:0] wb_f_su_SW [0:0]; always @(posedge clk) begin wb_f_su_SW[0] <= fs; end
+    reg [2047:0] wd0_f_su_SW, wd_f_su_SW; always @(posedge clk) begin wd0_f_su_SW <= wb_f_su_SW[0]; wd_f_su_SW <= wd0_f_su_SW; end
     wire m_v, m_we, m_bank; wire [6:0] m_addr; wire [2815:0] m_wd; wire m_rd_v; wire [2815:0] m_rd;
     wire wr_ready, wr_ACK_v, rd_ready, native_release, drained, fault; wire [3:0] tap_v; wire [191:0] wr_ACK_owner;
     wire [767:0] tap_owner; wire [4*2063-1:0] tap_data;

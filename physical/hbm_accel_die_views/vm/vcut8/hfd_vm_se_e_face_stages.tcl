@@ -4,8 +4,8 @@ set fc_ps(f_su_SE) 4
 set fc_ps(iSE) 4
 set fc_ps(qSE) 4
 set fc_ps(t_n_ctl) 2
-set fc_ps(t_n_row) 2
+set fc_ps(t_n_row) 3
 set fc_ps(t_su_SE) 4
 set fc_ps(xSE) 4
 set fc_ps(w2e) 2
-set fc_ps(e2w) 2
+set fc_ps(e2w) 3

@@ -4,9 +4,9 @@ set fc_ps(f_su_SW) 4
 set fc_ps(iSW) 4
 set fc_ps(qSW) 4
 set fc_ps(t_n_ctl) 2
-set fc_ps(t_n_row) 2
+set fc_ps(t_n_row) 3
 set fc_ps(t_router) 4
 set fc_ps(t_su_SW) 4
 set fc_ps(xSW) 4
-set fc_ps(w2e) 2
+set fc_ps(w2e) 3
 set fc_ps(e2w) 2
