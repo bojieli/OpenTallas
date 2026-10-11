@@ -9,11 +9,11 @@
   {
    "id": "wfc_kit.ar_pass",
    "element": "WFC kit (ot_rom_pkg_ctrl_wfc SOURCE/STG + dsfd_wfc_lnk + dsfd_wfc_vmx) on every stage hop",
-   "cycles": 13560.0,
+   "cycles": 17043.6,
    "critical": true,
    "phase": "verify",
    "anchor": "wave.last",
-   "formula": "120 stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x 113 (WFC done->out + entry delta 13 + lnk 6 + vmx start 15 + vmx done/prefetch 79)",
+   "formula": "120 stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x 142.03 (WFC done->out + entry delta 13 + lnk 6 + vmx start 15 + vmx done/prefetch 79 + VM hub-station delta 29.03)",
    "source": [
     "results/rtl/dsrom_wfc_split_20261006/closure.json charge.hop_delta_cycles",
     "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json stg_vmnat MTP_STG_CYC",
@@ -26,18 +26,18 @@
   {
    "id": "wfc_kit.intervals",
    "element": "WFC kit on the 5 wavefront intervals (positions 2-6)",
-   "cycles": 1077.8,
+   "cycles": 1368.1,
    "critical": true,
    "phase": "verify",
    "anchor": "wave.last",
-   "formula": "5 x (hop 113 + handoff 49 vs 46 on the busiest stage 8.6 + stage occupancy 94)",
+   "formula": "5 x (hop 142.03 + handoff 49 vs 46 on the busiest stage 8.6 + stage occupancy 123.03)",
    "source": [
     "results/rtl/dsrom_wfc_split_20261006/closure.json charge.measured_interval_overhead",
     "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json stg_vmnat"
    ],
    "grade": "measured",
-   "cycles_lower": 607.8,
-   "note": "upper bound charged: the vmx start/done cycles are counted both in the hop latency and as stage occupancy (no bench measures the handoff with vmx in place, so the overlap of the outbound prefetch with the next position's start is NOT proven); cycles_lower counts them once (608)"
+   "cycles_lower": 752.9,
+   "note": "upper bound charged: the vmx start/done cycles are counted both in the hop latency and as stage occupancy (no bench measures the handoff with vmx in place, so the overlap of the outbound prefetch with the next position's start is NOT proven); cycles_lower counts them once (753)"
   },
   {
    "id": "mtp_seq.draft_chain",
@@ -112,6 +112,51 @@
    "note": "per draft block the rank prefix replaces only the expert return hop; the block's combine all-reduce stays (no record replaces it): upper bound. Blocks are serial (block k+1 consumes block k's hc_post), so critical."
   },
   {
+   "id": "p2.link_ends",
+   "element": "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)",
+   "cycles": 27.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "3 P2 transactions x (+9: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
+   "source": [
+    "tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0",
+    "~/claude-takeover-20261007/mtp-fixlat-1011.log"
+   ],
+   "grade": "measured (bench log)",
+   "note": "the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"
+  },
+  {
+   "id": "mtp_lane.adapters",
+   "element": "dedicated MTP lane adapter (dsfd_coll_mtp_lane): token return + seed traversals",
+   "cycles": 16.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "2 traversals (token return, seed) x (TX 3 + RX 5)",
+   "source": [
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv",
+    "tools/mtp_colllane_gate.py (exact / HOL / no-block gate)"
+   ],
+   "grade": "rtl count (registered stages)",
+   "note": "upper bound: both traversals charged serially; the collective's lanes 0..7 are untouched (coll_done equal)"
+  },
+  {
+   "id": "p2.lane_adapters",
+   "element": "P2 dedicated lane adapters (dsfd_coll_p2_lane_pa / _ba): start in + last row out",
+   "cycles": 51.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "3 P2 transactions x (start 3 + 5, last row 2-beat 4 + 5)",
+   "source": [
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv",
+    "tools/mtp_p2lane_gate.py"
+   ],
+   "grade": "rtl count (registered stages)",
+   "note": "lane-1 words from die B arrive ahead of the start (buffered), off the chain"
+  },
+  {
    "id": "markov.floor",
    "element": "Markov head PINREG1 (ot_dsrom_markov_row, K 256)",
    "cycles": 562.5,
@@ -125,6 +170,21 @@
    ],
    "grade": "measured",
    "note": "lower bound: the measured single-row pipeline latency is a floor the transfer-ratio model is under; the whole-vocab sweep throughput needs the head full340_A production wrapper (not built)"
+  },
+  {
+   "id": "draft_head.pipe_regs",
+   "element": "draft-head step registers: ot_dsrom_markov_head_driver HBRELAY=1 + dsfd_vm_mtp_ep OUTPUT_PIPE 1",
+   "cycles": 10.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.last",
+   "formula": "5 draft-head steps x (+1 HBRELAY head-input relay + 1 vm_mtp_ep OUTPUT_PIPE)",
+   "source": [
+    "results/rtl/mtp_head_hbrelay_20261010/gate (full340 --hard NB4: HBRELAY=1 8,637 vs HBRELAY=0 8,636 cycles)",
+    "~/claude-takeover-20261007/idle-sweep-1010.log (fixlat-vmmtp 189894fc2: u_h OUTPUT_PIPE 1, +1 per draft-head step)"
+   ],
+   "grade": "measured",
+   "variant": "HBRELAY=1 routes mtp-head340-mkdrv-hbr-{a,b}-d781e7cb0-tc (charged conservatively before adoption); vm_mtp_ep 189894fc2 route fixlat-vmmtp-189894fc2-tc-hm20"
   },
   {
    "id": "binding.expert_rowpack",
@@ -171,25 +231,53 @@
    ],
    "grade": "measured+vendor",
    "note": "P2's primary-on-head-dies home made this hop die-local, but it has no room for the seed (669 > 631 pairs) and packs ~8x the words a pair a phase; the bound primary keeps L0's per-phase pair reads"
+  },
+  {
+   "id": "seedl.launch",
+   "element": "dsfd_mtp_seed_launch (descriptor receive / check, VM hidden-row fetch, x beats, program start)",
+   "cycles": 147.6,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "desc_to_x 34 + done_to_ps 3 + (tau 4.159 - 1) x row_gap 35 (the committed rows of a step are seeded one after another; each extra row waits seed_ctl ready + the VM fetch)",
+   "source": [
+    "results/rtl/mtp_seed_launch_20261010/gate.json cycles (pos_basic)"
+   ],
+   "grade": "measured",
+   "note": "bench stations: descriptor 9/9, VM 6/6 + 12-cycle VM latency, x / join 4/4; the 240 beats and seed_ctl itself are the composition's seed term"
+  },
+  {
+   "id": "hrow.transport",
+   "element": "main-hidden row parts (L37/38/39 stage dies -> primary row store, one dedicated MTP lane a part)",
+   "cycles": 165.0,
+   "critical": false,
+   "phase": "draft",
+   "anchor": "accept.commit",
+   "formula": "per committed row and part: 1 header + 160 data flits on its own lane + 4 store cycles (write, complete)",
+   "source": [
+    "results/rtl/mtp_hrow_20261010/gate.json pos_steady / pos_late"
+   ],
+   "grade": "measured",
+   "overlap_proof": "a position's three parts leave the layer-37/38/39 stage dies when that position passes them in verify; they reach the primary after ONE board hop + 161 flits, while the same position's result still crosses every later stage to the head and the head -> primary seed lane before the seed descriptor can read the row; a late row only delays the read (pos_late), never changes the value"
   }
  ],
  "totals": {
-  "critical_cycles": 41570.7,
-  "critical_cycles_lower": 41100.7,
-  "overlapped_cycles": 0,
+  "critical_cycles": 45596.2,
+  "critical_cycles_lower": 44981.0,
+  "overlapped_cycles": 165.0,
   "composed_step_cycles": 1146896.4,
-  "charged_step_cycles": 1188467.1,
+  "charged_step_cycles": 1192492.6,
   "tau": 4.159,
   "MTP_tok_s_composed": 4351.6,
-  "MTP_tok_s_charged": 4199.4,
-  "MTP_tok_s_charged_lower_charges": 4201.0
+  "MTP_tok_s_charged": 4185.2,
+  "MTP_tok_s_charged_lower_charges": 4187.3
  },
  "inputs": {
   "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json": "3a7db4e5be43cd22",
   "results/rtl/dsrom_wfc_split_20261006/closure.json": "be01b4a2e8de0045",
   "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json": "41db75f37da04e24",
   "results/rtl/dsrom_markov_pinreg_20261008/qualification.json": "29bfec70d415eb2d",
-  "physical/mtp_p2_transport/route.sh": "70ff1bdaf6aedf18",
+  "physical/mtp_p2_transport/route.sh": "230f6fe1133b4e7f",
   "physical/mtp_p2_transport/model.json": "aa2e67ca6da05e0b",
   "rtl/mtp/rollback/ot_mtp_commit.sv": "e2a525e643954df8",
   "results/uarch/dsrom_mtp_rom_step_20261008/step.json": "8980bce0e6478734",
@@ -204,9 +292,9 @@
   "why_not_credited": "dsfd_mtp_seq starts the draft at the closing result while positions a+1..5 are still in verify; the draft head steps then share the head die's lm_head bundle with the verify positions' head passes. The bench proves the sequencing, not a conflict-free head schedule: overlap NOT proven, so not credited"
  },
  "ar_effect": {
-  "cycles": 13560.0,
+  "cycles": 17043.6,
   "rule": "the WFC kit's per-hop cycles on the AR pass; apply to the AR views when --wfc-hard is default-on",
   "AR_tok_s_before": 1447.7,
-  "AR_tok_s_after": 1424.4
+  "AR_tok_s_after": 1418.6
  }
 }

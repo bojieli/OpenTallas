@@ -26,6 +26,7 @@ D = ROOT / 'results/arch/qwen_kv_die_20261009'
 CLOCK = 1.2e9
 AR_PER_TOKEN = 72
 FEC = dict(ds_rule=100, hbm_rule=240)
+FECD = json.loads((ROOT / 'tools/qwen_kv_die/fec_derivation.json').read_text())   # extra FEC per all-reduce: headline 0
 
 
 def sha16(p):
@@ -38,8 +39,15 @@ def main():
     ap.add_argument('--o4-name', default='o4')
     ap.add_argument('--extra', type=str, nargs='*', default=[], help='further L3 runs (sensitivities), name=path')
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--kv-basis', type=Path, default=D / 'reprice.json',
+                    help="the KV-die reprice the option-4 term is applied to (e.g. (b)'s relay + leaf-plan basis)")
+    ap.add_argument('--cbuf-wait', type=int, default=0,
+                    help='constant-buffer stage-start waits a steady-state token (cycles, measured: tb_qfd_crom_lbuf GATE 1)')
+    ap.add_argument('--refresh-step', type=int, nargs=2, default=None, metavar=('MEAN', 'WORST'),
+                    help='PROVISIONAL timed-REFpb KV step increase per layer (cycles, mean / worst)')
     a = ap.parse_args()
-    rp = json.loads((D / 'reprice.json').read_text())
+    a.kv_basis = a.kv_basis.resolve()
+    rp = json.loads(a.kv_basis.read_text())
     sr = json.loads((D / 'split_relays.json').read_text())
     o4rec = json.loads((D / 'rom_r22ko4.json').read_text())
     svrec = json.loads((D / 'rom_r22ksv.json').read_text())
@@ -58,15 +66,21 @@ def main():
                     vs_s22ml7=dict(L0=sc['L0'] - ref['L0'], L1=sc['L1'] - ref['L1']))
     o4 = run_of(a.o4)
     out = dict(schema='opentallas.qwen-kv-die.reprice-o4.v1', date='2026-10-10', clock_hz=CLOCK,
-               inputs={str(p.relative_to(ROOT)): sha16(p) for p in (D / 'reprice.json', D / 'split_relays.json',
+               inputs={str(p.relative_to(ROOT)): sha16(p) for p in (a.kv_basis, D / 'split_relays.json',
                                                                       D / 'rom_r22ko4.json', D / 'rom_r22ksv.json')} | {str(a.o4): sha16(a.o4)},
                r22k_relay_term=dict(run=sr['adopted_for_price'], L0=adopted['L0'], layer=adopted['L1'],
                                     token=adopted['L0'] + 35 * adopted['L1']),
                o4_run=dict(name=a.o4_name, **o4), cases={})
-    o4_token = o4['vs_s22ml7']['L0'] + 35 * o4['vs_s22ml7']['L1']
-    out['o4_relay_term'] = dict(L0=o4['vs_s22ml7']['L0'], layer=o4['vs_s22ml7']['L1'], token=o4_token)
+    o4_token = o4['vs_s22ml7']['L0'] + 35 * o4['vs_s22ml7']['L1'] + a.cbuf_wait
+    out['o4_relay_term'] = dict(L0=o4['vs_s22ml7']['L0'], layer=o4['vs_s22ml7']['L1'], token=o4_token,
+                                cbuf_wait_per_token=a.cbuf_wait,
+                                cbuf_note='constant-buffer stage-start waits (seq_su ot_qfd_stage_gate + 8 SRAM groups, far ROM 17 '
+                                          'edges): 466 cycles on the first token, 111 a steady token (rtl/test/redesign_qwen/'
+                                          'tb_qfd_crom_lbuf.sv GATE 1, NTOK 1 / 2); the chain vehicle prices the buffer as SU ML 7')
     st = o4rec['crossing_bus_stages']
-    kvd_extra = max(0, st.get('o4_kvd', 0) - 12) + max(0, st.get('o4_kok', 0) - 13)
+    # the KV-die bench prices the step from the q word (x3) leaving the ROM faces; a launch descriptor on a longer path
+    # than x3 delays the step by the difference (r22ko4: kvd from seq_su)
+    kvd_extra = max(0, st.get('o4_kvd', 0) - st.get('x3', 25))
     for case, c in rp['cases'].items():
         base = c['token_cycles']
         tok = base - out['r22k_relay_term']['token'] + o4_token
@@ -82,16 +96,16 @@ def main():
             r22k_fec_vmar_tok_s=round(CLOCK / (base + fec + vmar_r22k), 1),
             r22k_fecb_vmar_tok_s=round(CLOCK / (base + fec_b + vmar_r22k), 1),
             o4_fec_vmar_tok_s=round(CLOCK / (tok + fec + vmar_o4), 1),
-            o4_fecb_vmar_tok_s=round(CLOCK / (tok + fec_b + vmar_o4), 1))
+            o4_fecb_vmar_tok_s=round(CLOCK / (tok + fec_b + vmar_o4), 1),
+            r22k_fec0_vmar_tok_s=round(CLOCK / (base + vmar_r22k), 1),
+            o4_fec0_vmar_tok_s=round(CLOCK / (tok + vmar_o4), 1))
     out['vm_ar'] = dict(per_token_r22k=vmar_r22k, per_token_o4=vmar_o4, stages_r22ksv=vm_ar(svrec), stages_r22ko4=vm_ar(o4rec),
                         note='the sequencer <-> VM all-reduce word path (read request, word back, write) was not in the r22k '
                              'die or price; each of the 72 all-reduces pays its die relays once (the stream rate is kept: '
                              'ot_qwen_tp_seq_w12_vrl), the masters\' own stations are in the measured vehicle')
     out['bounds'] = dict(
         kvd_kok_extra_stages_per_layer=kvd_extra,
-        kvd_note='charged in kvd_bound_tok_s only if the KV-die launch waits on the control tile\'s descriptor word '
-                 '(36 layers x the extra one-way stages of kvd + kv_ok); fix: announce the KV descriptor from seq_su '
-                 '(its controller decodes the same instruction) or carry it with the q word',
+        kvd_note='the launch descriptor leaves seq_su (r22ko4): stages beyond the q word path (x3), charged per layer in kvd_bound',
         tree_words=dict(pword_0=st.get('pword_0'), tt_ty=st.get('tt_ty'), r22k=dict(pword_0=39, tt_ty=39),
                         note='band words reach the 2 x 2 upper-tile group +8 stages later than the r22k tree top (TWS '
                              'sensitivity run), tt_ty +3'))
@@ -104,9 +118,22 @@ def main():
     c = out['cases']['typical']
     out['headline'] = dict(o4_tok_s=c['o4_tok_s'], o4_fec_tok_s=c['o4_fec_tok_s'], r22k_tok_s=c['r22k_tok_s'],
                            r22k_fec_tok_s=c['r22k_fec_tok_s'], o4_exact=o4['exact'],
+                           fec_headline_cycles=FECD['extra_fec_cycles_per_allreduce']['headline'],
+                           fec_verdict=FECD['verdict'][:120],
+                           price_fec0=dict(r22k=c['r22k_fec0_vmar_tok_s'], o4=c['o4_fec0_vmar_tok_s']),
                            price_fec100=dict(r22k=c['r22k_fec_vmar_tok_s'], o4=c['o4_fec_vmar_tok_s']),
                            price_fec240=dict(r22k=c['r22k_fecb_vmar_tok_s'], o4=c['o4_fecb_vmar_tok_s']),
                            layer_relay_cycles=dict(r22k=adopted['L1'], o4=o4['vs_s22ml7']['L1']))
+    if a.refresh_step:
+        mean_c, worst_c = (36 * x for x in a.refresh_step)
+        tok0 = CLOCK / c['o4_fec0_vmar_tok_s']
+        out['kv_refresh_provisional'] = dict(
+            status='PROVISIONAL: DQ128 / P8 + SRAM row buffer on timed REFpb HBM (qwen-1010/b); the controller RTL refreshes in '
+                   'a fixed rotation, so these may be optimistic; refresh-aware REFpb RTL in progress',
+            step_increase_per_layer=dict(mean=a.refresh_step[0], worst=a.refresh_step[1]),
+            o4_fec0_tok_s=dict(mean=round(CLOCK / (tok0 + mean_c), 1), worst=round(CLOCK / (tok0 + worst_c), 1)))
+        out['headline']['kv_refresh_provisional'] = out['kv_refresh_provisional']['o4_fec0_tok_s']
+    out['kv_basis'] = str(a.kv_basis.relative_to(ROOT))
     a.out.write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps(out['headline']))
 

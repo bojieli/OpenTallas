@@ -29,7 +29,10 @@ module ot_hgi_cp_die #(
     parameter integer USE_MACRO = 1,
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
-    parameter integer FQCR = 4         // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer FQCR = 4,        // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer MTP_PINREG = 0   // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
+                                       // FIFOs / flops on f_mtp, t_mtp, mh_* and the translator side; +1 cycle a crossing,
+                                       // controller PRL 4); 0 = the unregistered collar (pinned views unchanged)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -56,7 +59,8 @@ module ot_hgi_cp_die #(
     input  wire [2:0]    sfu_ret,
     output reg  [1471:0] att_rec,       // unit 5  {pos1, n_C, n_B, O, C, B, A, SUT, header, valid}
     input  wire [2:0]    att_ret,
-    output reg  [703:0]  dma_rec,       // unit 8  {pos1, n_O, n_A, O, A, header, valid}
+    output reg  [703:0]  dma_rec,       // unit 8  {pos1, n_O, n_A, O, A, header, valid}; A[255:239,7] = the I-list address
+                                        //   (I effective base + L, 18-bit VM word; MDESC reserved bits, hgi-1010/c)
     input  wire [2:0]    dma_ret,
     output reg  [938:0]  hc_rec,        // unit 10 {n_O, n_A, O, B, A, header, valid}
     input  wire [2:0]    hc_ret,
@@ -144,12 +148,21 @@ module ot_hgi_cp_die #(
     wire [16:0] xi_am_idx;
     generate if (MTP == 2) begin : g_collar
         wire [270:0] t_be;
+        if (MTP_PINREG) begin : g_pinreg      // fe-push-hgi-1010: registered die boundary (feasibility row, in->reg 15 levels)
+            ot_hgi_cp_mtp_pinreg #(.ENABLE_MTP(1), .MUT(MUT >= 10 ? MUT - 10 : 0)) u_collar (.clk(clk), .rst_n(rst_n),
+                .f_mtp(f_mtp), .t_mtp(t_mtp), .f_host(mh_f_host), .t_host(mh_t_host), .f_provider(mh_f_provider),
+                .t_emit(mh_t_emit), .t_provider(mh_t_provider), .f_emit_host(mh_f_emit_host), .t_emit_host(mh_t_emit_host),
+                .t_abort(mh_t_abort), .t_drained(mh_t_drained), .f_am({xi_am_idx, xi_am_v}),
+                .f_backend({1'b0, xi_drained, xi_cpl_fault, xi_cpl_seq, xi_cpl_gen, xi_cpl_job, xi_cpl_v, xi_cmd_ready}),
+                .t_backend(t_be));
+        end else begin : g_direct
         hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(1)) u_collar (.ck(clk), .rst(~rst_n), .f_mtp(f_mtp),
             .emit_pend(f_mtp[43]), .t_mtp(t_mtp), .f_host(mh_f_host), .t_host(mh_t_host), .f_provider(mh_f_provider),
             .t_emit(mh_t_emit), .t_provider(mh_t_provider), .f_emit_host(mh_f_emit_host), .t_emit_host(mh_t_emit_host),
             .t_abort(mh_t_abort), .t_drained(mh_t_drained), .f_am({xi_am_idx, xi_am_v}),
             .f_backend({1'b0, xi_drained, xi_cpl_fault, xi_cpl_seq, xi_cpl_gen, xi_cpl_job, xi_cpl_v, xi_cmd_ready}),
             .t_backend(t_be));
+        end
         assign xi_cmd_v = t_be[0]; assign xi_cmd = t_be[1 +: 201]; assign xi_cmd_job = t_be[202 +: 32];
         assign xi_cmd_gen = t_be[234 +: 4]; assign xi_cmd_seq = t_be[238 +: 32]; assign xi_cpl_ready = t_be[270];
         assign xi_ext_fault = mh_t_abort;
@@ -206,6 +219,11 @@ module ot_hgi_cp_die #(
                  dI = d_desc[6*256 +: 256];
     wire [20:0] nA = d_n[0*21 +: 21], nB = d_n[1*21 +: 21], nC = d_n[2*21 +: 21], nD = d_n[3*21 +: 21], nO = d_n[4*21 +: 21],
                 nR = d_n[5*21 +: 21], nI = d_n[6*21 +: 21];
+    // the DMA record's A descriptor carries the I-list address (I effective base + L) in its reserved bits [255:239] and [7]
+    // (spec 6.4: reserved), for the indexed row stream (hgi-1010/c)
+    function automatic [255:0] a_il(input [255:0] a, input [17:0] il);
+        begin a_il = a; a_il[255:239] = il[17:1]; a_il[7] = il[0]; end
+    endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
@@ -234,7 +252,7 @@ module ot_hgi_cp_die #(
             else if (sfu_ret[1] || sfu_ret[2]) credx[2] <= 1'b1;
             if (u_v[5] && u_rdy[5]) begin att_rec <= {d_pos1, nC, nB, dO, dC, dB, dA, d_sut, d_hdr, 1'b1}; credx[3] <= 1'b0; end
             else if (att_ret[1] || att_ret[2]) credx[3] <= 1'b1;
-            if (u_v[8] && u_rdy[8]) begin dma_rec <= {d_pos1, nO, nA, dO, dA, d_hdr, 1'b1}; credx[4] <= 1'b0; end
+            if (u_v[8] && u_rdy[8]) begin dma_rec <= {d_pos1, nO, nA, dO, a_il(dA, dI[25:8] + {2'd0, d_L}), d_hdr, 1'b1}; credx[4] <= 1'b0; end
             else if (dma_ret[1] || dma_ret[2]) credx[4] <= 1'b1;
             if (u_v[10] && u_rdy[10]) begin hc_rec <= {nO, nA, dO, dB, dA, d_hdr, 1'b1}; credx[5] <= 1'b0; end
             else if (hc_ret[1] || hc_ret[2]) credx[5] <= 1'b1;

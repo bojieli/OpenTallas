@@ -16,6 +16,7 @@ module tb_hgi_fused_unit;
         $readmemh({dir, "/fu_vmi.mem"}, vmim); $readmemh({dir, "/fu_vme.mem"}, vmem); $readmemh({dir, "/fu_hbm.mem"}, hbmm);
     end
     integer errors = 0, cyc = 0, seed = 3; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 3; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg rst_n = 0; reg [1214:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted, mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
     wire [337:0] fq, mq; wire [273:0] fr, mr, tr; reg [337:0] tq = 0;
@@ -25,6 +26,9 @@ module tb_hgi_fused_unit;
     .PAYLOAD_RESET(0),
 `endif
 .UNIT(1)
+`ifdef SCRW
+    , .SCR_WORDS(`SCRW)
+`endif
 `ifdef WIDE
     , .UWIDE(1), .ULWB(18)
 `endif
@@ -99,6 +103,9 @@ module tb_hgi_fused_unit;
             t = 0; while (k < nr && nf == 0 && t < 4000000) begin @(posedge clk); t = t + 1; end
             if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", c, k, nr, nf); errors = errors + 1; end
             $display("case %0d: %0d records in %0d cycles", c, k, cyc - t0); $fflush;
+`ifdef DUMP_SCR
+            for (j = 0; j < 4; j = j + 1) begin vm_req(1'b0, 240000 + `DUMP_SCR + j, 0, qd); $display("SCR %0d = %h", j, qd); end
+`endif
             for (j = 0; j < nve; j = j + 1) begin
                 vm_req(1'b0, vmem[ve0 + j][63:32], 0, qd);
                 if (qd !== vmem[ve0 + j][31:0]) begin

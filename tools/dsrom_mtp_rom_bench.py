@@ -32,7 +32,8 @@ M = "rtl/dsrom_sys/mtp"
 TRACES = "results/rtl/dshbm_dspark_rtl_20261003/traces"
 COMMON = [f"{M}/ot_dsrom_mtp_skid.sv", f"{M}/ot_dsrom_mtp_link_pair.sv", f"{M}/ot_dsrom_mtp_seq.sv", f"{M}/ot_dsrom_wfc_tok.sv", f"{M}/ot_dsrom_wfc_lnk.sv",
           f"{M}/ot_dsrom_wfc_vmx.sv", f"{M}/ot_dsrom_drf_fan.sv", f"{M}/dsfd_mtp_tops.sv", "rtl/common/ot_ratio_cdc_fifo.sv",
-          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv", "rtl/link/ot_fifo_sram_fwft.sv",   # vmx RQ x RWE > 32 kbit -> SRAM queue
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
           "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"]
 
 
@@ -96,6 +97,13 @@ def cases():
     # (the receiver stress negatives -- legacy history / short RTT overflow -- are tools/mtp_seq_rtt_link_gate.py: this
     #  system traffic never stalls a receiver with flits in flight, so a short history passes here; measured 2026-10-10)
     c["rtt_s0_neg_off1"] = dict(rtt, trace="tr_forced", params=dict(MODE=0, NUSR=1), defines=["OT_MTPSEQ_MUT_OFF1"], expect="fail")
+    # mtp-fixlat-1011: the same system with the capture / VM slab ends as RTL (dsfd_cap_mtp_ep / dsfd_vm_mtp_ep,
+    # OT_MTP_PARTNER_EP) at the head631 chains; their stalled-receiver negatives are tools/mtp_fixlat_gate.py pep_*
+    ep = dict(tb="tb_mtp_rom_s0_rtt", extra=rtt["extra"] + [f"{M}/dsfd_mtp_partner_ep.sv"])
+    for tr in ("tr_dspark", "tr_forced"):
+        c[f"ep_s0_{tr}"] = dict(ep, trace=tr, params=dict(MODE=0, NUSR=2), defines=["OT_MTP_PARTNER_EP"])
+    c["ep_s0_hash_u3"] = dict(ep, params=dict(MODE=1, NUSR=3, NGEN_H=48, RHO=70, SEED=3), defines=["OT_MTP_PARTNER_EP"])
+    c["ep_s0_neg_off1"] = dict(ep, trace="tr_forced", params=dict(MODE=0, NUSR=1), defines=["OT_MTP_PARTNER_EP", "OT_MTPSEQ_MUT_OFF1"], expect="fail")
     for k in c:
         c[k].setdefault("expect", "pass")
     return c

@@ -30,6 +30,18 @@ proc ot_ser_balance {} {
   # cap: a BUFx4 stage on the root is >= ~8 ps at WC (parasitics re-estimated after every stage)
   set kmax [expr {int(($goal - $se) / 8.0)}]
   set k 0; set now $se
+  # The root re-hang is a deliberate clock-tree edit; it may run after a protect hook (clk_net_protect.tcl wraps
+  # repair_timing_helper too and, sourced after this file, marks every CLOCK net + CTS buffer dont_touch FIRST, so
+  # disconnecting clkbuf_0_ckv[0]/A raised ODB-0370).  Release dont_touch on exactly the ckv root net and its load
+  # instances for the re-hang and restore it afterwards (new chain nets inherit the root net's mark).
+  set n0 [$bt getNet]
+  set n0_dt [$n0 isDoNotTouch]
+  if {$n0_dt} { $n0 setDoNotTouch 0 }
+  set rel {}
+  foreach it [$n0 getITerms] {
+    set i [$it getInst]
+    if {[$i isDoNotTouch]} { $i setDoNotTouch 0; lappend rel $i }
+  }
   while {$now < $goal && $k < $kmax} {
     set n [$bt getNet]
     set loads [$n getITerms]
@@ -50,6 +62,11 @@ proc ot_ser_balance {} {
   }
   # dont_touch only once the chain is complete (each new stage re-hangs the previous one's input)
   for {set i 0} {$i < $k} {incr i} { set_dont_touch [get_cells ot_ser_bal_buf_$i] }
+  foreach i $rel { $i setDoNotTouch 1 }
+  if {$n0_dt} {
+    $n0 setDoNotTouch 1
+    for {set i 0} {$i < $k} {incr i} { [$blk findNet "ot_ser_bal_net_$i"] setDoNotTouch 1 }
+  }
   puts "ot_ser_balance: core_clk mean $ck ps, ser_clk mean $se -> $now ps with $k BUFx4 on the ckv root (goal $goal)"
 }
 if {[info procs repair_timing_helper] ne "" && [info procs ot_s_repair_timing_helper] eq ""} {
