@@ -1,3 +1,4 @@
+rtl/lib/ot_rst_relay.sv
 rtl/hdc/ot_hdc_delay.sv
 rtl/hdc/ot_hdc_sfu.sv
 rtl/hdc/ot_hdc_fpu.sv
