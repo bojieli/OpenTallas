@@ -70,6 +70,9 @@ module tb_mtp_hrow;
             evk[nev] = 1; evu[nev] = 0; eva[nev] = 5; evn[nev] = 3; evy[nev] = 101; eve[nev] = 0; nev = nev + 1;
             eq[ne] = {UW'(0), NW'(5), NW'(101), 4'(0)};                  // (never completes: seed waits at row 4)
             rq_exp[nr] = {4'(0), UW'(0), NW'(3)}; nr = nr + 1;        // row 3 is served, row 4 must NOT be
+            // the seed client reaches row 4 before the ring wraps, whatever the store's read latency (a part-only check
+            // must be caught serving row 4's part-0 beats; el1011-ds-mtp rev 3: the wrap used to race the row-4 reads)
+            evk[nev] = 3; evn[nev] = 6000; nev = nev + 1;
             rows(0, 9, 20, 0);                                        // the ring wraps: pos 20 lands on row 4's slot
             exp_sf = 1;                                               // store fault[0] overrun
         end
@@ -120,6 +123,8 @@ module tb_mtp_hrow;
                     if (!evd[ei][k2]) begin
                         pq[k2][pqw[k2]] = {UW'(evu[ei]), NW'(evp[ei]), 4'(eve[ei]), 2'(k2)}; pqw[k2] = pqw[k2] + 1;
                     end
+            end else if (evk[ei] == 3) begin
+                repeat (evn[ei]) @(posedge clk);                       // pause (no row, no descriptor)
             end else begin
                 if (evk[ei] == 1) begin
                     while (pqr[0] < pqw[0] || pqr[1] < pqw[1] || pqr[2] < pqw[2] || g_tx[0].busy || g_tx[1].busy || g_tx[2].busy)

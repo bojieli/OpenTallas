@@ -157,10 +157,10 @@ module ot_dsrom_mtp_hrow_store #(
         reg [EV-1:0] evr [0:CQ-1];
         for (gk = 0; gk < CQ; gk = gk + 1) begin : g_evr
             always @(posedge clk or negedge rn) if (!rn) evr[gk][EV-2] <= 1'b0;
-                                                else evr[gk][EV-2] <= (gk == 0) ? ev0[EV-2] : evr[gk-1][EV-2];
+                                                else evr[gk][EV-2] <= (gk == 0) ? ev0[EV-2] : evr[(gk == 0) ? 0 : gk-1][EV-2];
             always @(posedge clk) begin
-                evr[gk][EV-1] <= (gk == 0) ? ev0[EV-1] : evr[gk-1][EV-1];
-                evr[gk][EV-3:0] <= (gk == 0) ? ev0[EV-3:0] : evr[gk-1][EV-3:0];
+                evr[gk][EV-1] <= (gk == 0) ? ev0[EV-1] : evr[(gk == 0) ? 0 : gk-1][EV-1];
+                evr[gk][EV-3:0] <= (gk == 0) ? ev0[EV-3:0] : evr[(gk == 0) ? 0 : gk-1][EV-3:0];
             end
         end
         assign ev_c[gp] = evr[CQ-1];
@@ -168,15 +168,15 @@ module ot_dsrom_mtp_hrow_store #(
         reg [WC-1:0] wdl [0:WDLY-1];
         for (gk = 0; gk < WDLY; gk = gk + 1) begin : g_wdl
             always @(posedge clk or negedge rn) if (!rn) wdl[gk][0] <= 1'b0;
-                                                else wdl[gk][0] <= (gk == 0) ? wc0[0] : wdl[gk-1][0];
-            always @(posedge clk) wdl[gk][WC-1:1] <= (gk == 0) ? wc0[WC-1:1] : wdl[gk-1][WC-1:1];
+                                                else wdl[gk][0] <= (gk == 0) ? wc0[0] : wdl[(gk == 0) ? 0 : gk-1][0];
+            always @(posedge clk) wdl[gk][WC-1:1] <= (gk == 0) ? wc0[WC-1:1] : wdl[(gk == 0) ? 0 : gk-1][WC-1:1];
         end
         // read commands from central (CQ relays)
         reg [RC-1:0] rcr [0:CQ-1];
         for (gk = 0; gk < CQ; gk = gk + 1) begin : g_rcr
             always @(posedge clk or negedge rn) if (!rn) rcr[gk][0] <= 1'b0;
-                                                else rcr[gk][0] <= (gk == 0) ? rc_c[gp][0] : rcr[gk-1][0];
-            always @(posedge clk) rcr[gk][RC-1:1] <= (gk == 0) ? rc_c[gp][RC-1:1] : rcr[gk-1][RC-1:1];
+                                                else rcr[gk][0] <= (gk == 0) ? rc_c[gp][0] : rcr[(gk == 0) ? 0 : gk-1][0];
+            always @(posedge clk) rcr[gk][RC-1:1] <= (gk == 0) ? rc_c[gp][RC-1:1] : rcr[(gk == 0) ? 0 : gk-1][RC-1:1];
         end
         wire [WC-1:0] wroot = wdl[WDLY-1];
         wire [RC-1:0] rroot = rcr[CQ-1];
@@ -190,10 +190,10 @@ module ot_dsrom_mtp_hrow_store #(
             for (gk = 0; gk < DD - 1; gk = gk + 1) begin : g_d
                 always @(posedge clk or negedge rn)
                     if (!rn) begin wq[gk][0] <= 1'b0; rq[gk][0] <= 1'b0; end
-                    else begin wq[gk][0] <= (gk == 0) ? wroot[0] : wq[gk-1][0];
-                               rq[gk][0] <= (gk == 0) ? rroot[0] : rq[gk-1][0]; end
-                always @(posedge clk) begin wq[gk][WC-1:1] <= (gk == 0) ? wroot[WC-1:1] : wq[gk-1][WC-1:1];
-                                            rq[gk][RC-1:1] <= (gk == 0) ? rroot[RC-1:1] : rq[gk-1][RC-1:1]; end
+                    else begin wq[gk][0] <= (gk == 0) ? wroot[0] : wq[(gk == 0) ? 0 : gk-1][0];
+                               rq[gk][0] <= (gk == 0) ? rroot[0] : rq[(gk == 0) ? 0 : gk-1][0]; end
+                always @(posedge clk) begin wq[gk][WC-1:1] <= (gk == 0) ? wroot[WC-1:1] : wq[(gk == 0) ? 0 : gk-1][WC-1:1];
+                                            rq[gk][RC-1:1] <= (gk == 0) ? rroot[RC-1:1] : rq[(gk == 0) ? 0 : gk-1][RC-1:1]; end
             end
             // last distribution stage: decoded per-bank enables (registered), shared address / data
             integer bb;
@@ -219,8 +219,8 @@ module ot_dsrom_mtp_hrow_store #(
             always @(posedge clk or negedge rn) if (!rn) po[0][0] <= 1'b0; else po[0][0] <= bt[0][0] | bt[1][0];
             always @(posedge clk) po[0][1024:1] <= bt[0][1024:1] | bt[1][1024:1];
             for (gk = 1; gk <= RD; gk = gk + 1) begin : g_r
-                always @(posedge clk or negedge rn) if (!rn) po[gk][0] <= 1'b0; else po[gk][0] <= po[gk-1][0];
-                always @(posedge clk) po[gk][1024:1] <= po[gk-1][1024:1];
+                always @(posedge clk or negedge rn) if (!rn) po[gk][0] <= 1'b0; else po[gk][0] <= po[(gk == 0) ? 0 : gk-1][0];
+                always @(posedge clk) po[gk][1024:1] <= po[(gk == 0) ? 0 : gk-1][1024:1];
             end
             assign qd[gq] = po[RD];
         end
@@ -231,8 +231,8 @@ module ot_dsrom_mtp_hrow_store #(
         always @(posedge clk or negedge rn) if (!rn) pp[0][0] <= 1'b0; else pp[0][0] <= pacc[0];
         always @(posedge clk) pp[0][1024:1] <= pacc[1024:1];
         for (gk = 1; gk <= RP; gk = gk + 1) begin : g_p
-            always @(posedge clk or negedge rn) if (!rn) pp[gk][0] <= 1'b0; else pp[gk][0] <= pp[gk-1][0];
-            always @(posedge clk) pp[gk][1024:1] <= pp[gk-1][1024:1];
+            always @(posedge clk or negedge rn) if (!rn) pp[gk][0] <= 1'b0; else pp[gk][0] <= pp[(gk == 0) ? 0 : gk-1][0];
+            always @(posedge clk) pp[gk][1024:1] <= pp[(gk == 0) ? 0 : gk-1][1024:1];
         end
         assign pr[gp] = pp[RP];
     end endgenerate
@@ -341,6 +341,15 @@ module ot_dsrom_mtp_hrow_store #(
             if (ev_c[p][EV-2] && ev_c[p][EV-1]) tag[p][ev_c[p][12 +: SW]] <= ev_c[p][11:0];
         end
     end
+`ifdef OT_HROW_DBG
+    integer dcy = 0; integer dn = 0;
+    always @(posedge clk) begin
+        dcy <= dcy + 1;
+        if (issue && dn < 4000) begin dn <= dn + 1; $display("DBG %0d ISSUE p%0d s%0d pb%0d", dcy, p2, s2, pb2); end
+        for (int z = 0; z < NP; z = z + 1) if (ev_c[z][EV-2]) $display("DBG %0d EV p%0d k%0d s%0d pos%0d", dcy, z, ev_c[z][EV-1], ev_c[z][12 +: SW], ev_c[z][11:4]);
+        if (v2 && !issue && s2 == 4 && dn < 4000) begin dn <= dn + 1; $display("DBG %0d WAIT s%0d p%0d pb%0d ok%0d hz%0d", dcy, s2, p2, pb2, ok2, hz2); end
+    end
+`endif
     reg [2:0] fq;
     always @(posedge clk or negedge rn_c) if (!rn_c) fq <= 3'd0;
         else fq <= {fq[2] | pflt[0][1] | pflt[1][1] | pflt[2][1], fq[1] | pflt[0][0] | pflt[1][0] | pflt[2][0], fq[0] | f0};
