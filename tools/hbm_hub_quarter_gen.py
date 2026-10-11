@@ -699,7 +699,9 @@ def emit_tile_io(P, tw, th):
     # 212e3da48 tile (4,398 FIRM pin flops, 645 um2 movable) inflated +314 % and diverged (GPL-0305) / stalled at 0.76.
     # bb7e34c70 DRT-0255: the M3 edge pins (bc_in) had no access path in the bottom row (maze route fails at y < 4 um);
     # M5 every other track (0.096) + M7 every other (0.128), taken evenly in x: 10.4 / 7.8 b/um at full, < 12
-    full = sorted(((ly, round(x0 + pt * k, 4)) for ly, x0, pt in (('M5', 0.528, 0.096), ('M7', 0.64, 0.128))
+    # 2f07deaae DRT-0255 (14 bc_in M7 pins): the 0.528 / 0.64 origins put every M5 / M7 pin a quarter track off the ASAP7
+    # grid (M5 0.012 + 0.048 k, M7 0.016 + 0.064 k): on-track origins 0.540 / 0.656
+    full = sorted(((ly, round(x0 + pt * k, 4)) for ly, x0, pt in (('M5', 0.540, 0.096), ('M7', 0.656, 0.128))
                    for k in range(int((TILE_SW - x0 - 0.5) / pt) + 1)), key=lambda t: (t[1], t[0]))
     assert len(full) >= nb, (len(full), nb)
     slots = [full[(i * len(full)) // nb] for i in range(nb)]
@@ -711,10 +713,11 @@ def emit_tile_io(P, tw, th):
             L_.append(f'place_pin -pin_name {{{port}[{b}]}} -layer {ly} -location {{{x:.4f} {yy:.4f}}} -pin_size {{{sz}}}')
     half = th / 2
     for port, y0 in (('acc_out', 2.0), ('acc_in', half + 2.0)):
+        y0 = round(0.012 + math.ceil((y0 - 0.012) / 0.048 - 1e-9) * 0.048, 4)     # on the M4 track grid (0.012 + 0.048 k)
         for b in range(P.WCT):
             L_.append(f'place_pin -pin_name {{{port}[{b}]}} -layer M4 -location {{0.0960 {y0 + 0.096 * b:.4f}}} -pin_size {{0.1920 0.0240}}')
             assert y0 + 0.096 * b < (half if port == 'acc_out' else th) - 1.0
-    L_.append(f'place_pin -pin_name {{clk}} -layer M4 -location {{0.0960 {round(half, 3):.4f}}} -pin_size {{0.1920 0.0240}}')
+    L_.append(f'place_pin -pin_name {{clk}} -layer M4 -location {{0.0960 {round(0.012 + round((half - 0.012) / 0.048) * 0.048, 4):.4f}}} -pin_size {{0.1920 0.0240}}')
     return '\n'.join(L_) + '\n'
 
 
