@@ -9,7 +9,7 @@ set -u
 lab=$1; shift
 export SRC=${SRC:-$PWD} VARIANT=r25gqn OT_VIEW_PORTS_ROOT=physical/hbm_accel_die_views/ports_r25gqn CKP="clk*" \
   SRCS="rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_crc_par.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv" \
-  MACROS="ot_hbm_link_retry_pipeline=${RVIEW:-physical/hbm_link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline}" HALO="${HALO:-8 8}" \
+  PDN=${PDN:-physical/hbm_accel_die_views/common/pdn_view_hier.tcl} MACROS="ot_hbm_link_retry_pipeline=${RVIEW:-physical/hbm_link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline}" HALO="${HALO:-8 8}" \
   POSTSDC="physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
 L=${L:-${CK_SS_MEAN:-770}}
 bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $L > /dev/null
