@@ -1,4 +1,5 @@
     input wire [0:0] ck,
+    input wire [8256:0] f_dma_vr2r,
     input wire [703:0] f_hgi_cmdproc,
     input wire [221:0] f_hgi_cp,
     input wire [37:0] f_hgi_rgxq0,
@@ -17,6 +18,7 @@
     input wire [293:0] rSE,
     input wire [293:0] rSW,
     input wire [0:0] rst,
+    output wire [512:0] t_dma_vr2q,
     output wire [3:0] t_hgi_cmdproc,
     output wire [418:0] t_hgi_cp,
     output wire [0:0] t_hgi_rgxa0,
@@ -24,4 +26,4 @@
     output wire [256:0] t_hgi_rgxr0,
     output wire [256:0] t_hgi_rgxr1,
     output wire [337:0] t_hgi_vmq,
-    output wire [8959:0] t_hgi_vmw
+    output wire [8991:0] t_hgi_vmw

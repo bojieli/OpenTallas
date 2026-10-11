@@ -567,6 +567,13 @@ O4_CBUF = (194.4, 216.0)
 O4_CROM = (194.4, 518.4)
 O4_UP4_LOW = os.environ.get('OT_R22KO4_UP4_LOW') == '1'   # study only (see _option4)
 O4_RROW = 64.8                 # relay row between the buffer rows and the ROM row (>= the 60.48-um wide-word relay frame)
+# qwen-1010/A 23:30: the all-reduce data path is the RTL's (ot_qwen_tp_seq_w12_vrl in seq_su reads the VM over seq_vrd /
+# vm_seq_q, streams the words to the collective and writes the result back over seq_vwr): the native sequencer <->
+# collective words through io_xfifo (forward {tag32, mode, last, data512} + valid + credit = 548 b, return {err, rank2,
+# last, data512} + valid + credit = 518 b), and NO VM <-> collective words (coll_tx / coll_rx and the VM ct / cr faces
+# go).  Chosen over a VM-port collective DMA: the all-reduce start (core_done) and the next segment's start both live in
+# seq_su, so a VM-top DMA adds the VM-height crossing for the descriptor and the done (seq_coll 51 vs 40 + ~13 + ~13).
+O4_COLL_BITS = dict(fwd=546 + 2, ret=516 + 2)
 O4_BITS = dict(me_snap=92, su_snap=57, me_start=49, pw=75, kvd=201, kok=1, meok=1, su_iss=476, su_st=133, su_acc=24,
                cb_su_a=8 + 192 + 6, cb_su_q=512, cb_far_a=8 + 192 + 6, cb_far_q=512 + 1, cb_ctl=6 + 1 + 18, cb_rdy=1 + 6 + 3,
                up_pw=128 + 1, up_ty=384, up_ty0=384 + 2, sel=28, up_flt=1)
@@ -683,8 +690,8 @@ def _option4(v, m, rec):
     T = {tt.name: 'tt_ctlm', sq.name: 'seq_su'}
     for bid, cl, bits, eps in m['buses']:
         names = {e[0] for e in eps}
-        if bid in ('tt_si', 'tt_so', 'seq_su', 'seq_sud', 'crom_a', 'crom_q', 'vm_meok') or bid.startswith(('pword_', 'tt_lf')) \
-                or bid == 'tt_ty':
+        if bid in ('tt_si', 'tt_so', 'seq_su', 'seq_sud', 'crom_a', 'crom_q', 'vm_meok', 'coll_tx', 'coll_rx', 'coll_tx_x', 'coll_rx_x') \
+                or bid.startswith(('pword_', 'tt_lf')) or bid == 'tt_ty':
             gone.append(bid)
             continue
         if cl == 'clock_trunk':
@@ -702,14 +709,20 @@ def _option4(v, m, rec):
             continue
         if names & set(T):
             eps = [(T.get(i, i), p) for i, p in eps]
+        if bid == 'seq_coll':
+            bits = O4_COLL_BITS['fwd']
         nb.append((bid, cl, bits, eps))
+    # the return crosses io_xfifo like seq_coll (stream -> sequencer clock domain): collective -> xfifo, xfifo -> seq_su
+    nb += [('coll_seq', 'sequencer', O4_COLL_BITS['ret'], [('io_collective', 'cs'), ('io_xfifo', 'i_coll_seq')]),
+           ('coll_seq_x', 'sequencer', O4_COLL_BITS['ret'], [('io_xfifo', 'o_coll_seq'), ('seq_su', 'cc')])]
     B = O4_BITS
     add_b = [('o4_me_snap', 'sequencer', B['me_snap'], [('tt_ctlm', 'xm'), ('seq_su', 'xm')]),
              ('o4_su_snap', 'sequencer', B['su_snap'], [('seq_su', 'xs'), ('tt_ctlm', 'xs')]),
              ('o4_me_start', 'sequencer', B['me_start'], [('seq_su', 'st'), ('tt_ctlm', 'st')]),
              ('o4_pw', 'sequencer', B['pw'], [('d2d_rom', 'pw'), ('tt_ctlm', 'pw')]),
-             ('o4_kvd', 'sequencer', B['kvd'], [('tt_ctlm', 'kvd'), ('d2d_rom', 'kvd')]),
-             ('o4_kok', 'sequencer', B['kok'], [('d2d_rom', 'kok'), ('tt_ctlm', 'kok')]),
+             # the KV-die launch descriptor leaves seq_su (its SU-side controller decodes every instruction): 25 stages
+             # to the link end, the q word's path, against the control tile's 41 (no ME op on this die waits on kv_ok)
+             ('o4_kvd', 'sequencer', B['kvd'], [('seq_su', 'kvd'), ('d2d_rom', 'kvd')]),
              ('o4_meok', 'spine_local', B['meok'], [('sp_vector_memory', 'mo'), ('tt_ctlm', 'meok')]),
              ('o4_su_iss', 'sequencer', B['su_iss'], [('seq_su', 'su'), ('sp_su64_sfu', 'si')]),
              ('o4_su_st', 'sequencer', B['su_st'], [('sp_su64_sfu', 'sd'), ('seq_su', 'sd')]),
@@ -734,7 +747,8 @@ def _option4(v, m, rec):
         removed_instances=removed, removed_buses=gone, added_instances=[i.d() for i in new],
         added_buses=[(b[0], b[1], b[2], b[3]) for b in add_b], bits=dict(B), repin=O4_REPIN,
         notes=['tt_c<b> / tt_f<b> / tt_lc<b> / tt_xd / tt_xr / tt_mx / tt_land keep their widths, now on tt_ctlm',
-               'seq_ib / seq_coll / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su',
+               'seq_ib / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su; seq_coll carries the '
+               'all-reduce words (548 b, native) and coll_seq returns them (518 b); coll_tx / coll_rx (VM <-> collective) removed',
                'the KV descriptor (kvd_*) and kv_ok leave the sequencer word for the control tile (o4_kvd / o4_kok); '
                'seq_d2d keeps its r22k width (not reduced here)',
                'cbuf stage / tok_start / tpos (o4_cb_ctl) and st_rdy / fault (o4_cb_rdy) have no consumer port in the '
@@ -766,8 +780,7 @@ def _o4_masters(v, m, ghosts):
         for p, bits, off in (('xd', 53, 100.0), ('xr', 1, 140.0), ('ld', 16, 549.6), ('mx', 553, 400.0)):
             c.face(p, bits, 'S', 'M5', off, 2 if bits < 100 else 1)
         y = 30.0
-        for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']),
-                        ('kvd', B['kvd']), ('kok', 1), ('meok', 1)):
+        for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']), ('meok', 1)):
             c.face(p, bits, 'E', 'M4', y + bits * 0.096 / 2, 2)
             y += bits * 0.096 + 4.0
         for b in range(6):
@@ -809,10 +822,18 @@ def _o4_masters(v, m, ghosts):
         s.face('dc', 530, 'S', 'M5', 150.0, 1)
         s.face('dh', 530, 'S', 'M5', 350.0, 1)
         s.face('dflt', 9, 'S', 'M5', 460.0, 2)
-        s.face('cd', 66, 'E', 'M4', 260.0, 2)
+        s.face('kvd', B['kvd'], 'S', 'M5', 30.0, 1)
+        s.face('cd', O4_COLL_BITS['fwd'], 'E', 'M4', 200.0, 1)
+        s.face('cc', O4_COLL_BITS['ret'], 'E', 'M4', 340.0, 1)
         s.area('ck', 1, s.w / 2, s.h / 2, 1)
         s.area('rsi', 1, s.w / 2, s.h / 2 + 12.0, 1)
         M['qfd_seq_su'] = s
+        # VM: no collective words (the all-reduce reads / writes go through seq_su's VM port)
+        vmm = M['qfd_sp_vector_memory']
+        for p in ('ct', 'cr'):
+            if p in vmm.ports:
+                vmm.ports.pop(p)
+                vmm.order.remove(p)
         # SU: issue / status / accepted count E, constants per group S (over each group's column)
         su = M['qfd_sp_su64_sfu']
         for p in ('si', 'sd', 'ca', 'cq'):
@@ -852,7 +873,6 @@ def _o4_masters(v, m, ghosts):
         d2 = M['qfd_d2d_rom']
         d2.face('pw', B['pw'], 'E', 'M4', 80.0, 2)
         d2.face('kvd', B['kvd'], 'E', 'M4', 150.0, 1)
-        d2.face('kok', 1, 'E', 'M4', 170.0, 2)
         cx = M['qfd_clkrx']
         if 'rso_ctlm' not in cx.ports:
             cx.area('rso_ctlm', 1, cx.w / 2, cx.h / 2 - 8.0, 1)

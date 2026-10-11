@@ -79,6 +79,11 @@ def main():
         vb = rng.randrange(0, 200000)
         vist = rng.choice([0, 1, 1, 2])
         vst = n * max(1, vist) + rng.randint(0, 9)
+        if not load:      # hgi-1010/c: a STORE writes whole HBM sectors (the kport refuses partial ones; the mover faults)
+            n = (n * es + 31) // 32 * 32 // es
+            hist, vist = 1, 1
+            hst = (n * es + 32 * rng.randint(0, 2))
+            vst = n + rng.randint(0, 9)
         hdesc = C.SV.mdesc(space=0, fmt=f, base=hb, n=n, m=m, stride=hst, istride=hist)
         vdesc = C.SV.mdesc(space=1, fmt=5 if f == 5 else 0, base=vb, n=n, m=m, stride=vst, istride=vist)
         A, O = (hdesc, vdesc) if load else (vdesc, hdesc)
@@ -118,6 +123,38 @@ def main():
                     for k in range(es):
                         hbe[haddr[o][i] + k] = int(raw[k])
         add([d], vmi, hbi, vme, hbe)
+    # hgi-1010/c: STRIPE4 LOADs (spec 6.4; HBM base bits [39:37] = 1): row o from stack (base[36:35] + o) mod 4 at the
+    # stack-local address base[34:0] + o x stride; 32 B row starts, VM destination rows 32 B aligned.  The last case is
+    # the HC weight row shape (4 x 5,120 FP32, stride 0).
+    for t in range(13):
+        hc = t == 12
+        f = 0 if hc else rng.choice([0, 1, 2, 4, 5])
+        es = ES[f]
+        n, m = (5120, 4) if hc else (rng.randint(1, 300), rng.randint(1, 9))
+        s0 = rng.randrange(4)
+        loc = rng.randrange(0, 1 << 16) * 32 + (1 << 30)
+        hst = 0 if hc else rng.choice([0, 32, 64 * rng.randint(1, 40), 32 * rng.randint(1, 400)])
+        vb = rng.randrange(0, 20000) * 8
+        vst = (n + 7) // 8 * 8 + 8 * rng.randint(0, 3)
+        base = (1 << 37) | (s0 << 35) | loc
+        hdesc = C.SV.mdesc(space=0, fmt=f, base=base, n=n, m=m, stride=hst, istride=1)
+        vdesc = C.SV.mdesc(space=1, fmt=5 if f == 5 else 0, base=vb, n=n, m=m, stride=vst, istride=1)
+        d = dict(hdr=C.SV.header(8, 0, opnd=0b10001), eff=[hdesc, 0, 0, 0, vdesc, 0, 0], n=[n, 0, 0, 0, n, 0, 0], pos1=1)
+        hbi, vme = {}, {}
+        for o in range(m):
+            ra = (((s0 + o) & 3) << 35) | (loc + o * hst)
+            for b in range(n * es):
+                if ra + b not in hbi:
+                    hbi[ra + b] = rng.getrandbits(8)
+            for i in range(n):
+                raw = bytes(hbi[ra + i * es + k] for k in range(es))
+                if f == 2 and raw[0] & 0x7F == 0x7F:
+                    raw = bytes([raw[0] & 0x80])
+                    hbi[ra + i * es] = raw[0]
+                val = MC.decode_fmt(np.frombuffer(raw, dtype=np.uint8), FMT[f])
+                w = int(np.asarray(val).astype(np.uint32)[0]) if f == 5 else int(np.asarray(val, dtype=np.float32).view(np.uint32)[0])
+                vme[vb + o * vst + i] = w
+        add([d], {}, hbi, vme, dict(hbi))
     (out / 'mo_rec.mem').write_text(''.join(C.hexw(r, 703) + '\n' for r in recs))
     (out / 'mo_case.mem').write_text(''.join(''.join(f'{x:08X}' for x in c) + '\n' for c in cases))
     for k in ('vmi', 'vme'):

@@ -31,7 +31,10 @@ Sources: ~/.local/state/closure_loop/jobs/*.json (mtime-cached), <repo>/results/
 and tt_restatus_*.json (latest by name), per-job revocations from $FLEET_VIZ_REVOKED (default
 ~/claude-takeover-20261007/revoked_closures.json, {job: {reason, ff_ps, by, at}}; applies to any CLOSED job), descriptions from the repo (die-master .env headers, RTL module headers,
 abstract manifests) falling back to the cleaned job purpose, cached in <state>/element_descriptions.json (entries with
-"src": "manual" are never regenerated). Area comes from the best job's ORFS report (6_report.json, else the route
+"src": "manual" are never regenerated). Throughput qualification (AGENTS.md, owner 2026-10-10) comes from the latest
+<repo>/results/arch/throughput_budget_*/budget.json (working tree, else origin/main): each row gets `throughput`
+(status QUALIFIED / UNQUALIFIED / UNQUALIFIED_NO_BENCH, worst measured/price ratio, limiting op, owner) and `gate`
+('CLOSED-TIMING, THROUGHPUT-UNQUALIFIED' until the unit's production-shape bench is within 1.10 of its price). Area comes from the best job's ORFS report (6_report.json, else the route
 metrics) fetched over ssh in the background and cached in <state>/element_area.json.
 """
 import collections, datetime, glob, json, os, pathlib, re, subprocess, threading, time
@@ -219,6 +222,7 @@ class Elements:
         self.superseded_path = pathlib.Path(os.environ.get('FLEET_VIZ_SUPERSEDED', os.path.expanduser(
             '~/claude-takeover-20261007/superseded_elements.json')))
         self.ovk = (None, {})
+        self.tpk = (None, {})
         self.overrides_path = pathlib.Path(os.environ.get('FLEET_VIZ_OVERRIDES', os.path.expanduser(
             '~/claude-takeover-20261007/element_overrides.json')))
         self.revoked_path = pathlib.Path(os.environ.get('FLEET_VIZ_REVOKED', os.path.expanduser(
@@ -342,6 +346,39 @@ class Elements:
                 if best is None or len(k) > len(best): best = k
         return ov['owner_map'][best] if best else owner
 
+    def throughput(self):
+        """Per-element throughput qualification from the latest committed budget (results/arch/throughput_budget_*/
+        budget.json 'elements'): working tree first, else origin/main (the shared checkout can lag main)."""
+        files = sorted(glob.glob(str(self.repo / 'results/arch/throughput_budget_*/budget.json')))
+        key = None; text = None; src = None
+        try:
+            if files:
+                key = (files[-1], os.stat(files[-1]).st_mtime)
+                if key == self.tpk[0]: return self.tpk[1]
+                text = open(files[-1]).read(); src = os.path.relpath(files[-1], self.repo)
+            else:
+                sha = subprocess.run(['git', '-C', str(self.repo), 'rev-parse', 'origin/main'], capture_output=True,
+                                     text=True, timeout=20).stdout.strip()
+                key = ('origin/main', sha)
+                if key == self.tpk[0]: return self.tpk[1]
+                ls = subprocess.run(['git', '-C', str(self.repo), 'ls-tree', '-r', '--name-only', 'origin/main',
+                                     'results/arch/'], capture_output=True, text=True, timeout=60).stdout.split()
+                cands = sorted(x for x in ls if re.match(r'results/arch/throughput_budget_[^/]+/budget\.json$', x))
+                if cands:
+                    text = subprocess.run(['git', '-C', str(self.repo), 'show', 'origin/main:' + cands[-1]],
+                                          capture_output=True, text=True, timeout=60).stdout
+                    src = 'origin/main:' + cands[-1]
+            d = {}
+            if text:
+                doc = json.loads(text)
+                for e, v in (doc.get('elements') or {}).items():
+                    if isinstance(v, dict) and v.get('status'):
+                        d[e] = dict(v, budget=src, qualify_ratio=doc.get('qualify_ratio', 1.10))
+        except Exception as e:
+            self.log('elements: throughput budget: %s' % e); d = self.tpk[1]
+        self.tpk = (key, d)
+        return d
+
     def registry(self):
         """Read additive, committed implementation evidence; never infer physical closure."""
         history = collections.defaultdict(list); errors = []
@@ -386,6 +423,7 @@ class Elements:
         js = self.jobs(); ob, rest = self.option_b(); rj = self.revoked_jobs(); sup = self.superseded()
         ov = self.overrides() if hasattr(self, 'overrides_path') else dict(variants={}, owner_map={}, owners={})
         registry, registry_errors = self.registry()
+        tput = self.throughput() if hasattr(self, 'tpk') else {}
         known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {})) | set(registry)
         vmap = {b: master(v['of'], known) for b, v in ov['variants'].items()}
         vmap = {b: m for b, m in vmap.items() if m not in sup}   # never fold into a superseded parent (it would count nowhere)
@@ -428,13 +466,21 @@ class Elements:
             if sv and not r['category'].startswith('closed'):
                 r['category'] = 'superseded'; r['superseded'] = dict(by=sv.get('by'), reason=sv.get('reason'))
                 r['via'] = 'superseded by %s' % sv.get('by')
+            tq = tput.get(m) or next((tput[b] for b in r['variants'] if b in tput), None)
+            r['throughput'] = tq
+            r['gate'] = gate_text(r['category'], tq)
             rows.append(r)
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
         summ = collections.defaultdict(lambda: collections.Counter())
-        for r in rows: summ[r['target']][r['category']] += 1
+        tsum = collections.defaultdict(lambda: collections.Counter())
+        for r in rows:
+            summ[r['target']][r['category']] += 1
+            if r['category'].startswith('closed'):
+                tsum[r['target']][(r.get('throughput') or {}).get('status') or 'NO_BUDGET_ROW'] += 1
         self.desc.save()
         return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS,
                     summary={t: dict(summ[t]) for t in TARGETS if t in summ},
+                    throughput_summary={t: dict(tsum[t]) for t in TARGETS if t in tsum},
                     sources=dict(option_b=ob.get('path'), option_b_decided=ob.get('decided'), jobs=len(js),
                                  revoked_jobs=str(self.revoked_path) if rj else None, n_revoked_jobs=len(rj),
                                  registry='results/fleet_viz/element_registry', registry_records=sum(map(len, registry.values())),
@@ -594,13 +640,14 @@ class Elements:
             rs = [r for r in d['rows'] if r['target'] == t]
             if not rs: continue
             L += ['', '## %s (%d)' % (t, len(rs)), '',
-                  '| element | status | what it is | qualification | TT | FF | SS | DRC | die µm² | util | jobs live/failed/total | closed | latest |',
-                  '|---|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|']
+                  '| element | status | throughput | what it is | qualification | TT | FF | SS | DRC | die µm² | util | jobs live/failed/total | closed | latest |',
+                  '|---|---|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|']
             for r in rs:
                 b = r['best']; a = r['area'] or {}
                 fmt = lambda x: '' if x is None else ('%+.1f' % x)
-                L.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d/%d/%d | %s | %s |' % (
+                L.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d/%d/%d | %s | %s |' % (
                     r['element'] + (' (+%d variants)' % len(r['variants']) if r['variants'] else ''), r['category'],
+                    _md(throughput_text(r.get('throughput'))),
                     _md(r['purpose'][:120]), _md(qualification_text(r.get('qualification'))), fmt(b['tt']), fmt(b['ff']), fmt(b['ss']), '' if b['drc'] is None else b['drc'],
                     '' if a.get('die') is None else '%.0f' % a['die'], '' if a.get('util') is None else '%.0f%%' % (100 * a['util']),
                     r['live'], r['failed'], r['jobs'],
@@ -619,7 +666,22 @@ def public(r):
 def change_key(d):
     """What makes an element snapshot worth recording now (not the per-minute latest-event churn)."""
     return hash(tuple((r['element'], r['category'], r['live'], r['failed'], r['jobs'], r['best']['job'],
-                       json.dumps(r.get('evidence_history', []), sort_keys=True)) for r in d['rows']))
+                       json.dumps(r.get('evidence_history', []), sort_keys=True),
+                       (r.get('throughput') or {}).get('status'), (r.get('throughput') or {}).get('ratio')) for r in d['rows']))
+
+def gate_text(category, tq):
+    """AGENTS.md throughput qualification: timing closure alone never qualifies a unit."""
+    timing = 'CLOSED-TIMING' if category.startswith('closed') else 'OPEN-TIMING'
+    if not tq: return timing + ', NO-THROUGHPUT-BUDGET-ROW'
+    st = tq.get('status')
+    return timing + (', THROUGHPUT-QUALIFIED' if st == 'QUALIFIED' else ', THROUGHPUT-QUALIFIED-BY-BOUND' if st == 'QUALIFIED_BY_BOUND'
+                     else ', THROUGHPUT-ACCEPTED' if st == 'ACCEPTED' else ', THROUGHPUT-UNQUALIFIED')
+
+def throughput_text(tq):
+    if not tq: return ''
+    lim = tq.get('limiting') or {}
+    r = tq.get('ratio')
+    return '%s%s (%s %s)' % (tq['status'], '' if r is None else ' %.2fx' % r, lim.get('model', ''), lim.get('op', ''))
 
 def qualification_text(q):
     if not q: return ''

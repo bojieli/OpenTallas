@@ -1,0 +1,106 @@
+  schedule 0: {'input_cycles': 29286.9, 'list_alpha': 0.2, 'moves': 14, 'output_cycles': 23578.9, 'rounds': [24014.4], 'seed': 'given', 'ils_moves': 6, 'layer': 0, 'disk_cache': '8676816f443ac6e5c81a58a77f1f3f54-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 0}
+L00 sliding                      PASS records 95 8 s fault None bad []
+  schedule 1: {'input_cycles': 38860.1, 'list_alpha': 0.2, 'moves': 14, 'output_cycles': 33267.4, 'rounds': [33703.0], 'seed': 'given', 'ils_moves': 6, 'layer': 1, 'disk_cache': '29a1b9df342a558d4852e9a615a84bdd-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 1}
+L01 engram+sliding               PASS records 158 10 s fault None bad []
+  schedule 2: {'input_cycles': 48025.4, 'list_alpha': 0.05, 'moves': 20, 'output_cycles': 40596.1, 'rounds': [40709.1], 'seed': 'given', 'ils_moves': 2, 'layer': 2, 'disk_cache': 'e64926b9de2d248babd17701a68c131d-24adb0cead61b6e3-1048575.json', 'reused_from_layer': 2}
+L02 ratio2+compressor+indexer    PASS records 135 10 s fault None bad []
+  schedule 3: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 3, 'disk_cache': '638d785f562b0bb0b5fb090d141c6683-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 3}
+L03 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 4: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 3, 'disk_cache': '638d785f562b0bb0b5fb090d141c6683-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 3}
+L04 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 5: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 3, 'disk_cache': '638d785f562b0bb0b5fb090d141c6683-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 3}
+L05 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 6: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 3, 'disk_cache': '638d785f562b0bb0b5fb090d141c6683-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 3}
+L06 ratio2                       PASS records 95 7 s fault None bad []
+  schedule 7: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 3, 'disk_cache': '638d785f562b0bb0b5fb090d141c6683-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 3}
+L07 ratio2                       PASS records 95 7 s fault None bad []
+  schedule 8: {'input_cycles': 48025.4, 'list_alpha': 0.05, 'moves': 20, 'output_cycles': 40596.1, 'rounds': [40709.1], 'seed': 'given', 'ils_moves': 2, 'layer': 8, 'disk_cache': 'b47660fb0a623889fe32034181e05d52-24adb0cead61b6e3-1048575.json', 'reused_from_layer': 8}
+L08 ratio2+compressor+indexer    PASS records 135 9 s fault None bad []
+  schedule 9: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 9, 'disk_cache': '876934c73936fa13cc5d55a2f6d82507-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 9}
+L09 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 10: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 9, 'disk_cache': '876934c73936fa13cc5d55a2f6d82507-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 9}
+L10 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 11: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 9, 'disk_cache': '876934c73936fa13cc5d55a2f6d82507-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 9}
+L11 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 12: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 9, 'disk_cache': '876934c73936fa13cc5d55a2f6d82507-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 9}
+L12 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 13: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 9, 'disk_cache': '876934c73936fa13cc5d55a2f6d82507-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 9}
+L13 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 14: {'input_cycles': 57720.6, 'list_alpha': 0.05, 'moves': 21, 'output_cycles': 50268.4, 'rounds': [50380.4], 'seed': 'given', 'ils_moves': 1, 'layer': 14, 'disk_cache': 'bd5e8a8e1efda0d53155caffb52ea8a7-24adb0cead61b6e3-1048575.json', 'reused_from_layer': 14}
+L14 engram+ratio2+compressor+indexer PASS records 198 12 s fault None bad []
+  schedule 15: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 15, 'disk_cache': 'b8fd07d0fb6bca826ac1c23b2dc961ea-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 15}
+L15 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 16: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 15, 'disk_cache': 'b8fd07d0fb6bca826ac1c23b2dc961ea-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 15}
+L16 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 17: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 15, 'disk_cache': 'b8fd07d0fb6bca826ac1c23b2dc961ea-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 15}
+L17 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 18: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 15, 'disk_cache': 'b8fd07d0fb6bca826ac1c23b2dc961ea-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 15}
+L18 ratio2                       PASS records 95 7 s fault None bad []
+  schedule 19: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 15, 'disk_cache': 'b8fd07d0fb6bca826ac1c23b2dc961ea-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 15}
+L19 ratio2                       PASS records 95 8 s fault None bad []
+  schedule 20: {'input_cycles': 49033.4, 'list_alpha': 0.2, 'moves': 14, 'output_cycles': 41559.1, 'rounds': [41624.7], 'seed': 'given', 'ils_moves': 5, 'layer': 20, 'disk_cache': '397a9892a66e2dc47022aa6bcbedf827-24adb0cead61b6e3-1048575.json', 'reused_from_layer': 20}
+L20 ratio1+compressor+indexer+candidates PASS records 125 11 s fault None bad []
+  schedule 21: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L21 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 22: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L22 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 23: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L23 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 24: {'input_cycles': 48177.4, 'list_alpha': 0.05, 'moves': 17, 'output_cycles': 41539.3, 'rounds': [41864.9], 'seed': 'given', 'ils_moves': 2, 'layer': 24, 'disk_cache': '336b52154d320b0a7fb7072b83fb3559-24adb0cead61b6e3-1048575.json', 'reused_from_layer': 24}
+L24 ratio1+indexer               PASS records 105 8 s fault None bad []
+  schedule 25: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L25 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 26: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L26 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 27: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L27 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 28: {'input_cycles': 48177.4, 'list_alpha': 0.05, 'moves': 17, 'output_cycles': 41539.3, 'rounds': [41864.9], 'seed': 'given', 'ils_moves': 2, 'layer': 24, 'disk_cache': '336b52154d320b0a7fb7072b83fb3559-24adb0cead61b6e3-1048575.json', 'reused_from_layer': 24}
+L28 ratio1+indexer               PASS records 105 9 s fault None bad []
+  schedule 29: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L29 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 30: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L30 ratio1                       PASS records 95 7 s fault None bad []
+  schedule 31: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L31 ratio1                       PASS records 95 7 s fault None bad []
+  schedule 32: {'input_cycles': 48177.4, 'list_alpha': 0.05, 'moves': 17, 'output_cycles': 41539.3, 'rounds': [41864.9], 'seed': 'given', 'ils_moves': 2, 'layer': 24, 'disk_cache': '336b52154d320b0a7fb7072b83fb3559-24adb0cead61b6e3-1048575.json', 'reused_from_layer': 24}
+L32 ratio1+indexer               PASS records 105 9 s fault None bad []
+  schedule 33: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L33 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 34: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L34 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 35: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L35 ratio1                       PASS records 95 7 s fault None bad []
+  schedule 36: {'input_cycles': 48177.4, 'list_alpha': 0.05, 'moves': 17, 'output_cycles': 41539.3, 'rounds': [41864.9], 'seed': 'given', 'ils_moves': 2, 'layer': 24, 'disk_cache': '336b52154d320b0a7fb7072b83fb3559-24adb0cead61b6e3-1048575.json', 'reused_from_layer': 24}
+L36 ratio1+indexer               PASS records 105 14 s fault None bad []
+  schedule 37: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L37 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 38: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L38 ratio1                       PASS records 95 6 s fault None bad []
+  schedule 39: {'input_cycles': 29907.2, 'list_alpha': 0.2, 'moves': 13, 'output_cycles': 24422.9, 'rounds': [24858.4], 'seed': 'given', 'ils_moves': 6, 'layer': 21, 'disk_cache': '66da8acddcb4a65d4b3482b90155937b-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 21}
+L39 ratio1                       PASS records 95 7 s fault None bad []
+  schedule head: {'input_cycles': 9576.1, 'list_alpha': None, 'moves': 0, 'output_cycles': 9576.1, 'rounds': [9576.1], 'seed': 'given', 'ils_moves': 0, 'layer': 40, 'disk_cache': 'f8337c19ae8db93ab0f19ba58023a454-008611065b55395a-1048575.json', 'cost_model_of_search': '008611065b55395a', 'reused_from_layer': 40}
+head PASS token 21946 fault None
+pass
+	Command being timed: "/srv/opentallas-scratch/claude/hbm-sim/../qwen-hbm-unify/venv/bin/python -m hgi_sim.ds_native --layers 0-39 --head --refs /srv/opentallas-scratch/claude/hbm-sim/ref/ctx1048576_seed20260930 --out /srv/opentallas-scratch/claude/hbm-sim/runs_smln/full/ds_full.json --program-out /srv/opentallas-scratch/claude/hbm-sim/runs_smln/full/ds_rank0_program.json --export-images /srv/opentallas-scratch/claude/hbm-sim/runs_smln/full/programs --export-layers 0,20"
+	User time (seconds): 1161.27
+	System time (seconds): 44.55
+	Percent of CPU this job got: 263%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 7:38.47
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 33785112
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 588
+	Minor (reclaiming a frame) page faults: 7752595
+	Voluntary context switches: 1434
+	Involuntary context switches: 32440
+	Swaps: 0
+	File system inputs: 910352
+	File system outputs: 20960
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

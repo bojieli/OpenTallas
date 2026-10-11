@@ -191,7 +191,7 @@ module tb_hgi_su_prod;
                     @(negedge clk);
                 end
                 a1_q = 0;
-                begin : home integer w; w = 0; while (w < 4 + 2 * `RLY) begin @(posedge clk);
+                begin : home integer w; w = 0; while (w < 12 + 2 * `RLY) begin @(posedge clk);
                     for (integer l = 0; l < 32; l = l + 1) if (c_rcr[32 + l]) cr[l] = cr[l] + 1; w = w + 1; end end
                 for (integer l = 0; l < 32; l = l + 1) if (cr[l] != `LQ) begin errors = errors + 1; $display("ERR agent1 credits lane %0d = %0d", l, cr[l]); end
                 @(negedge clk); a1_req = 0; a1_bursts = a1_bursts + 1;
@@ -223,7 +223,7 @@ module tb_hgi_su_prod;
                     @(negedge clk);
                 end
                 a2_q = 0;
-                begin : home2 integer w; w = 0; while (w < 4 + 2 * `RLY) begin @(posedge clk);
+                begin : home2 integer w; w = 0; while (w < 12 + 2 * `RLY) begin @(posedge clk);
                     for (integer l = 0; l < 32; l = l + 1) if (c_wcr[64 + l]) cr[l] = cr[l] + 1; w = w + 1; end end
                 for (integer l = 0; l < 32; l = l + 1) if (cr[l] != `LQ) begin errors = errors + 1; $display("ERR agent2 credits lane %0d = %0d", l, cr[l]); end
                 @(negedge clk); a2_req = 0; a2_bursts = a2_bursts + 1;

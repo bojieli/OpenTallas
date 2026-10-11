@@ -75,5 +75,6 @@
   "lost_q_pairs": 24640,
   "extra_q_stages": 14,
   "unpriced": "128 -> 84 region re-bin of the K slicing (dsrom_bf_geometry_alloc / s73), PQ root r128 -> r84, field RTL region count; mapping not built"
- }
+ },
+ "condition": "CONDITIONAL ON OPTION A (ds-1010/s81die 2026-10-10 21:00 PT): the compact BF row (1,792 pairs / 532 dies / AR 1,553.4 / MTP 4,443.6) holds only if the compact column + front route at <= 198.72 um tall (BF frame <= 207.36 um) and <= 1,031.6 um pair width; at the current 220.32 um blocks (frame 228.96) the 1,792-pair layer frame needs 2,766.96 um/tier vs 2,681.65 available (8 slots/column, 511.8 um die-height deficit; generator assert on layer1 + layer1e, src ca1f5e5d5). Fallback (owner): closed HALF_PHL BF."
 }

@@ -317,6 +317,19 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
         set qn [$qit getNet]; set bts [$qn getBTerms]
         # only the pins (and at most one inverter / buffer between: the QN flop's output inverter) load the net
         set nld [expr {[llength [$qn getITerms]] - 1}]
+        # OT_WS_OUTPUT_PINREG_HOLD=1 ([svc] 10-10, route SE_s0 hm0 phy[625] TT -126: a 300 ps buffered wire from an
+        # interior enable flop to its pin): an enable flop's own hold mux (an instance whose output drives this flop's
+        # D) is not a functional load -- it moves with the flop (placement pulls it), so it does not block anchoring
+        if {[info exists ::env(OT_WS_OUTPUT_PINREG_HOLD)] && $::env(OT_WS_OUTPUT_PINREG_HOLD) eq "1" && $dit ne "NULL" && [$dit getNet] ne "NULL"} {
+          set dnet [$dit getNet]
+          foreach it [$qn getITerms] {
+            set ii [$it getInst]
+            if {$ii eq $i} continue
+            foreach it2 [$ii getITerms] {
+              if {[$it2 isOutputSignal] && [$it2 getNet] eq $dnet} { set nld [expr {$nld - 1}]; break }
+            }
+          }
+        }
         if {[llength $bts] >= 1 && [[lindex $bts 0] getIoType] eq "OUTPUT" && $nld <= 0} { set bn [[lindex $bts 0] getName] }
         if {$bn eq "" && $nld == 1} {
           foreach it [$qn getITerms] {
@@ -337,6 +350,11 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
     if {![info exists ws_pin($bn)]} continue
     lassign $ws_pin($bn) px py
     set w [[$i getMaster] getWidth]; set wr [expr {$w + 3*$sitew}]
+    # svc-fix 2026-10-10 (claude/hbmphys-svcfix-20261010, same text): OT_WS_PINREG_DENSITY gives a pin register the
+    # stage blocks' slot pitch (cell width / density, snapped to sites) so the anchoring strip keeps routing room
+    if {[info exists ::env(OT_WS_PINREG_DENSITY)] && $::env(OT_WS_PINREG_DENSITY) > 0} {
+      set wr [expr {max($wr, int(ceil(double($w)/$::env(OT_WS_PINREG_DENSITY)/$sitew))*$sitew)}]
+    }
     # nearest row to the pin, then outward; in each row the free slot nearest the pin x (sliding both ways)
     set r0 [expr {max(0, min($nrows-1, int(($py-$rowy0)/$rowh)))}]
     set done 0

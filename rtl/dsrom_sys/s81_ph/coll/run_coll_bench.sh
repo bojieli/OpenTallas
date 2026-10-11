@@ -1,5 +1,5 @@
 #!/bin/bash
-# CLAUDE S81-PH coll v2 exact gate: tb_s81ph_coll_sys (4-die TP4 group of dsfd_sp_collective vs four C8 engines
+# CLAUDE S81-PH coll v2 exact gate (mtp-colllane-1011: + the dedicated MTP lane with +define+OT_S81PH_COLL_MTPL +define+TB_MTP): tb_s81ph_coll_sys (4-die TP4 group of dsfd_sp_collective vs four C8 engines
 # built with RANK 0..3; transaction-level: every reduce word / gather beat in order per die, pass-through flits in
 # order) on the tiled slab (default) or the v1 flat slab (-DS81PH_COLL_V1).  Run from the repo root.
 #   run_coll_bench.sh <out dir> <label> [-G.. / -D..]      -> <out>/<label>.log; exit 0 iff PASS
@@ -13,10 +13,15 @@ P=$S/rtl/dsrom_sys/s81_ph
   $P/coll/ot_s81ph_coll_lane.sv $P/coll/ot_s81ph_skid2.sv $P/coll/ot_s81ph_ckbuf.sv \
   $P/ot_s81ph_coll_core.sv $P/ot_s81ph_coll_rstc.sv $P/ot_s81_pll_bb.sv $P/ot_s81ph_link_ep.sv $P/ot_s81ph_link_gbx.sv \
   $P/ot_s81ph_mem1r1w.sv $P/ot_s81ph_rfifo.sv \
+  $P/coll/dsfd_coll_mtp_lane.sv $P/test/tb_mtp_lane_io.sv $S/rtl/dsrom_sys/mtp/dsfd_coll_mtp_ep.sv \
+  $S/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv $S/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv $S/rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv \
+  $P/ctrl_c/dsfd_sp_collective_c.sv $P/coll/dsfd_coll_job.sv $S/rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv $S/rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv \
+  $S/rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv $S/rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv $S/rtl/lib/ot_async_fifo.sv $S/rtl/lib/ot_reset_sync.sv \
   $S/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv $S/rtl/link/ot_fifo_sram_fwft.sv $S/rtl/hdc/ot_hdc_fastfp.sv \
-  $S/rtl/proto/ot_fp32_add_rne_pipe.sv $S/rtl/link/ot_link_crc32.sv $S/rtl/common/ot_link_credit.sv $S/rtl/dsrom_sys/ot_dsrom_link_chan.sv \
+  $S/rtl/proto/ot_fp32_add_rne_pipe.sv $S/rtl/link/ot_link_crc32.sv $S/rtl/common/ot_link_credit.sv $S/rtl/lib/ot_rst_relay.sv $S/rtl/dsrom_sys/ot_dsrom_link_chan.sv \
   $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v \
   $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v \
+  $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
   --Mdir obj > build.log 2>&1 ) || { echo "BUILD_FAIL" > $O/$L.log; tail -30 $O/$L/build.log >> $O/$L.log; cat $O/$L.log; exit 2; }
 $O/$L/obj/Vtb_s81ph_coll_sys > $O/$L.log 2>&1
 grep -E "CYCLES|TB_S81PH_COLL_SYS" $O/$L.log | tail -3

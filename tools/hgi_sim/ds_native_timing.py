@@ -122,6 +122,9 @@ class NativeCost:
             return c, "measured_depth_model", how
         if u == "FUSED" and op.startswith("QDQ"):
             n = r.desc["A"].n
+            # price of record: ceil(n / 32) + 8 (owner 2026-10-11: prices are not adjusted to fit measurements).  The
+            # WIDE unit measures ceil(n / 32) + 49 (decode latency 23 + VM round trip): measured / price 2.7x at n 512,
+            # recorded in results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json for the owner / P&R to resolve
             return math.ceil(n / 32) + 8, "rtl_spec", "DS quantiser: 32 / cycle, latency 8"
         if u == "DMA" and op == "LOAD" and r.desc["A"].indexed and r.desc["A"].n_sel == 63:
             rows = r.desc["O"].m
@@ -129,6 +132,13 @@ class NativeCost:
                 f"indexed row stream, {rows} rows (full-bandwidth service budget)"
         if u in ("DMA",):
             return T.cost(r, dyn, L)
+        if u == "COLL" and op == "ROW_GATHER" and (r.param >> 8) & 1:
+            # G25 hardware form, measured (hgi-1010/a, main 5e588e11e: one real rank of 96 against the switch model,
+            # 4 delivery lanes): ~ K x F / 4 + 150 cycles, F = ceil(S / 2) 64-byte flits a row, S = 256-bit sectors a row
+            K = r.imm_a or r.desc["I"].n
+            S = -(-r.desc["A"].n * T.ESZ[r.desc["A"].fmt] * 8 // 256)
+            F_ = -(-S // 2)
+            return K * F_ / 4 + 150, "measured", f"G25 hardware ROW_GATHER K {K}, {F_} flits a row (4,242 cyc at K 512)"
         if u == "COLL" and op == "ROW_GATHER" and getattr(r, "layer", None) in self.rg:
             return self.row_gather(r, dyn, L)
         if u == "IDX" and op == "OWNED":

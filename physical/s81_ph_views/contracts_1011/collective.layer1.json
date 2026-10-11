@@ -1,0 +1,798 @@
+{
+ "schema": "opentallas.s81.slab-contract.v1",
+ "version": "v1",
+ "slab": "collective",
+ "owner": "s81-ctl-1011 / coll-tu",
+ "recipe": {
+  "opts": "results/physical/s81_gen_20261010/s81_layer1_full_efs_xbrg_le.opts",
+  "extra": "",
+  "tag": "layer1",
+  "die_um": [
+   33000.0,
+   26000.0
+  ],
+  "q_lef": "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz",
+  "hub_column_width_um": 1728.0,
+  "ecol_slabs": []
+ },
+ "source_commit": "2a70e35db",
+ "generator": "tools/dsrom_s81_fulldie.py",
+ "tool": "tools/s81_ph/slab_contracts.py",
+ "adapter_contract": "physical/s81_ctrl/ADAPTER_CONTRACT_1011.json",
+ "engines": [
+  "coll"
+ ],
+ "stage_controller": "not in this recipe (--ctrl-slab off): reserved groups face the W hub-column centre; the dsfd_sp_ctrl slab position is fixed when s81-ctl binds it",
+ "rules": [
+  "outline and existing pins are what the die build places: a slab master must keep them (or publish a new contract version) so the generator netlist binds unchanged",
+  "RESERVED groups: pin names are placeholders; widths, face, layer and span are the contract. Each engine adapter (ot_s81_engine_adapter QD 8) sits inside the slab at that face; the die nets are fixed-latency pulse nets (relay stations allowed, every die pin lands in a pin flop)",
+  "clock: slab ck from the die domain tree (domain field); serial_0p9 slabs need the adapter CDC"
+ ],
+ "instances": [
+  {
+   "instance": "sp_collective",
+   "master": "dsfd_sp_collective",
+   "domain": "stream_1p2",
+   "outline_um": [
+    1727.976,
+    805.656
+   ],
+   "die_origin_um": [
+    13942.8,
+    13992.48
+   ],
+   "orient": "R0",
+   "pins": {
+    "f_wfc": {
+     "bits": 514,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      0.432,
+      25.08
+     ],
+     "nets": [
+      {
+       "net": "hb_wfc_collective_d8_g1_sp_collective",
+       "cls": "hub",
+       "bits": 514,
+       "peers": [
+        "g_hb_wfc_collective_d8_sp_collective_0.dq"
+       ]
+      }
+     ]
+    },
+    "t_vm": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      27.072,
+      51.624
+     ],
+     "nets": [
+      {
+       "net": "hb_collective_vm_d0_g0_f_hb_collective_vm_1",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_collective_vm_d0_f_hb_collective_vm_1_0.di"
+       ]
+      }
+     ]
+    },
+    "t_wfc": {
+     "bits": 514,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      53.664,
+      78.312
+     ],
+     "nets": [
+      {
+       "net": "hb_collective_wfc_d0_g0_f_hb_collective_wfc_1",
+       "cls": "hub",
+       "bits": 514,
+       "peers": [
+        "g_hb_collective_wfc_d0_f_hb_collective_wfc_1_0.di"
+       ]
+      }
+     ]
+    },
+    "rE0": {
+     "bits": 515,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      254.4,
+      279.096
+     ],
+     "nets": [
+      {
+       "net": "hl_E0_o",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "hl_E0.o"
+       ]
+      }
+     ]
+    },
+    "tdE3": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      309.552,
+      334.104
+     ],
+     "nets": [
+      {
+       "net": "KE3t_d0_g0_f_KE3t_1",
+       "cls": "lane",
+       "bits": 512,
+       "peers": [
+        "g_KE3t_d0_f_KE3t_1_0.di0"
+       ]
+      }
+     ]
+    },
+    "tfE3": {
+     "bits": 1,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      336.144,
+      336.168
+     ],
+     "nets": [
+      {
+       "net": "KE3t_f0_g0_f_KE3t_1",
+       "cls": "fclk",
+       "bits": 1,
+       "peers": [
+        "g_KE3t_d0_f_KE3t_1_0.fi0"
+       ]
+      }
+     ]
+    },
+    "tdE0": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      338.16,
+      362.712
+     ],
+     "nets": [
+      {
+       "net": "KE0t_d0_g0_f_KE0t_1",
+       "cls": "lane",
+       "bits": 512,
+       "peers": [
+        "g_KE0t_d0_f_KE0t_1_0.di0"
+       ]
+      }
+     ]
+    },
+    "tfE0": {
+     "bits": 1,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      364.752,
+      364.776
+     ],
+     "nets": [
+      {
+       "net": "KE0t_f0_g0_f_KE0t_1",
+       "cls": "fclk",
+       "bits": 1,
+       "peers": [
+        "g_KE0t_d0_f_KE0t_1_0.fi0"
+       ]
+      }
+     ]
+    },
+    "tdE1": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      366.816,
+      391.368
+     ],
+     "nets": [
+      {
+       "net": "KE1t_d0_g0_f_KE1t_1",
+       "cls": "lane",
+       "bits": 512,
+       "peers": [
+        "g_KE1t_d0_f_KE1t_1_0.di0"
+       ]
+      }
+     ]
+    },
+    "tfE1": {
+     "bits": 1,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      393.36,
+      393.384
+     ],
+     "nets": [
+      {
+       "net": "KE1t_f0_g0_f_KE1t_1",
+       "cls": "fclk",
+       "bits": 1,
+       "peers": [
+        "g_KE1t_d0_f_KE1t_1_0.fi0"
+       ]
+      }
+     ]
+    },
+    "rE1": {
+     "bits": 515,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      395.424,
+      420.12
+     ],
+     "nets": [
+      {
+       "net": "hl_E1_o",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "hl_E1.o"
+       ]
+      }
+     ]
+    },
+    "tdE2": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      434.832,
+      459.384
+     ],
+     "nets": [
+      {
+       "net": "KE2t_d0_g0_f_KE2t_1",
+       "cls": "lane",
+       "bits": 512,
+       "peers": [
+        "g_KE2t_d0_f_KE2t_1_0.di0"
+       ]
+      }
+     ]
+    },
+    "tfE2": {
+     "bits": 1,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      461.424,
+      461.448
+     ],
+     "nets": [
+      {
+       "net": "KE2t_f0_g0_f_KE2t_1",
+       "cls": "fclk",
+       "bits": 1,
+       "peers": [
+        "g_KE2t_d0_f_KE2t_1_0.fi0"
+       ]
+      }
+     ]
+    },
+    "rE2": {
+     "bits": 515,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      524.4,
+      549.096
+     ],
+     "nets": [
+      {
+       "net": "hl_E2_o",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "hl_E2.o"
+       ]
+      }
+     ]
+    },
+    "rE3": {
+     "bits": 515,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      633.456,
+      658.152
+     ],
+     "nets": [
+      {
+       "net": "hl_E3_o_g1_sp_collective",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "g_hl_E3_o_sp_collective_0.dq"
+       ]
+      }
+     ]
+    },
+    "t_host": {
+     "bits": 514,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      771.744,
+      796.392
+     ],
+     "nets": [
+      {
+       "net": "hb_collective_host_d0_g0_f_hb_collective_host_1",
+       "cls": "hub",
+       "bits": 514,
+       "peers": [
+        "g_hb_collective_host_d0_f_hb_collective_host_1_0.di"
+       ]
+      }
+     ]
+    },
+    "f_host": {
+     "bits": 130,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      798.432,
+      804.648
+     ],
+     "nets": [
+      {
+       "net": "hb_host_collective_d11",
+       "cls": "hub",
+       "bits": 130,
+       "peers": [
+        "f_hb_host_collective_11.dq"
+       ]
+      }
+     ]
+    },
+    "pll_hbm": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      0.432,
+      0.456
+     ],
+     "nets": [
+      {
+       "net": "clk_hbm",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "ctrl_SW.ckh"
+       ]
+      }
+     ]
+    },
+    "rst_hbm": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      2.448,
+      2.472
+     ],
+     "nets": [
+      {
+       "net": "rst_hbm",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "ctrl_SW.rst"
+       ]
+      }
+     ]
+    },
+    "rst_serial": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1474.224,
+      1474.248
+     ],
+     "nets": [
+      {
+       "net": "rst_serial",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "sp_su_s.rst",
+        "sp_vm.rst",
+        "sp_su_n.rst",
+        "sp_hc_s.rst"
+       ]
+      }
+     ]
+    },
+    "pll_stream": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1723.44,
+      1723.464
+     ],
+     "nets": [
+      {
+       "net": "clk_stream",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "cf0.ck",
+        "cf1.ck",
+        "cf2.ck",
+        "cf3.ck"
+       ]
+      }
+     ]
+    },
+    "rst_stream": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1725.504,
+      1725.528
+     ],
+     "nets": [
+      {
+       "net": "rst_stream",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "cf0.rst",
+        "cf1.rst",
+        "cf2.rst",
+        "cf3.rst"
+       ]
+      }
+     ]
+    },
+    "pll_serial": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1727.52,
+      1727.544
+     ],
+     "nets": [
+      {
+       "net": "clk_serial",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "sp_su_s.ck",
+        "sp_vm.ck",
+        "sp_su_n.ck",
+        "sp_hc_s.ck"
+       ]
+      }
+     ]
+    },
+    "por": {
+     "bits": 1,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      0.432,
+      0.456
+     ],
+     "nets": [
+      {
+       "net": "por_n",
+       "cls": "top_in",
+       "bits": 1,
+       "peers": [
+        "TOP.por_n"
+       ]
+      }
+     ]
+    },
+    "refclk": {
+     "bits": 1,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      2.448,
+      2.472
+     ],
+     "nets": [
+      {
+       "net": "refclk",
+       "cls": "top_in",
+       "bits": 1,
+       "peers": [
+        "TOP.refclk"
+       ]
+      }
+     ]
+    },
+    "tdW0": {
+     "bits": 512,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      115.152,
+      139.704
+     ],
+     "nets": [
+      {
+       "net": "KW0t_d0_g0_f_KW0t_1",
+       "cls": "lane",
+       "bits": 512,
+       "peers": [
+        "g_KW0t_d0_f_KW0t_1_0.di0"
+       ]
+      }
+     ]
+    },
+    "tfW0": {
+     "bits": 1,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      141.744,
+      141.768
+     ],
+     "nets": [
+      {
+       "net": "KW0t_f0_g0_f_KW0t_1",
+       "cls": "fclk",
+       "bits": 1,
+       "peers": [
+        "g_KW0t_d0_f_KW0t_1_0.fi0"
+       ]
+      }
+     ]
+    },
+    "tdW1": {
+     "bits": 512,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      151.872,
+      176.424
+     ],
+     "nets": [
+      {
+       "net": "KW1t_d0_g0_f_KW1t_1",
+       "cls": "lane",
+       "bits": 512,
+       "peers": [
+        "g_KW1t_d0_f_KW1t_1_0.di0"
+       ]
+      }
+     ]
+    },
+    "tfW1": {
+     "bits": 1,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      178.464,
+      178.488
+     ],
+     "nets": [
+      {
+       "net": "KW1t_f0_g0_f_KW1t_1",
+       "cls": "fclk",
+       "bits": 1,
+       "peers": [
+        "g_KW1t_d0_f_KW1t_1_0.fi0"
+       ]
+      }
+     ]
+    },
+    "tdW2": {
+     "bits": 512,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      190.752,
+      215.304
+     ],
+     "nets": [
+      {
+       "net": "KW2t_d0_g0_f_KW2t_1",
+       "cls": "lane",
+       "bits": 512,
+       "peers": [
+        "g_KW2t_d0_f_KW2t_1_0.di0"
+       ]
+      }
+     ]
+    },
+    "tfW2": {
+     "bits": 1,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      217.344,
+      217.368
+     ],
+     "nets": [
+      {
+       "net": "KW2t_f0_g0_f_KW2t_1",
+       "cls": "fclk",
+       "bits": 1,
+       "peers": [
+        "g_KW2t_d0_f_KW2t_1_0.fi0"
+       ]
+      }
+     ]
+    },
+    "rW0": {
+     "bits": 515,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      245.76,
+      270.456
+     ],
+     "nets": [
+      {
+       "net": "hl_W0_o",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "hl_W0.o"
+       ]
+      }
+     ]
+    },
+    "tdW3": {
+     "bits": 512,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      307.392,
+      331.944
+     ],
+     "nets": [
+      {
+       "net": "KW3t_d0_g0_f_KW3t_1",
+       "cls": "lane",
+       "bits": 512,
+       "peers": [
+        "g_KW3t_d0_f_KW3t_1_0.di0"
+       ]
+      }
+     ]
+    },
+    "tfW3": {
+     "bits": 1,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      333.984,
+      334.008
+     ],
+     "nets": [
+      {
+       "net": "KW3t_f0_g0_f_KW3t_1",
+       "cls": "fclk",
+       "bits": 1,
+       "peers": [
+        "g_KW3t_d0_f_KW3t_1_0.fi0"
+       ]
+      }
+     ]
+    },
+    "rW1": {
+     "bits": 515,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      401.28,
+      425.976
+     ],
+     "nets": [
+      {
+       "net": "hl_W1_o",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "hl_W1.o"
+       ]
+      }
+     ]
+    },
+    "rW2": {
+     "bits": 515,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      537.36,
+      562.056
+     ],
+     "nets": [
+      {
+       "net": "hl_W2_o",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "hl_W2.o"
+       ]
+      }
+     ]
+    },
+    "rW3": {
+     "bits": 515,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      671.28,
+      695.976
+     ],
+     "nets": [
+      {
+       "net": "hl_W3_o",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "hl_W3.o"
+       ]
+      }
+     ]
+    }
+   },
+   "reserved_ctrl": {
+    "ccoll": {
+     "bits": 85,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      734.112,
+      738.168
+     ],
+     "direction": "in",
+     "carries": "c_cmd_v + c_cmd_d[84] (adapter controller side)",
+     "controller_port": "cv[3] + cd[3*84 +: 84]",
+     "engine": "coll",
+     "status": "RESERVED"
+    },
+    "dcoll": {
+     "bits": 9,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      742.176,
+      742.584
+     ],
+     "direction": "out",
+     "carries": "c_done_v + c_done_tag[8] (adapter controller side)",
+     "controller_port": "dv[3] + dt[3*8 +: 8]",
+     "engine": "coll",
+     "status": "RESERVED"
+    }
+   }
+  }
+ ],
+ "notes": [
+  "v1 (first publication, 2026-10-11): derived from the efs layer1 recipe of record (198.72 BF frame, hub column 1,728 um) [layer1] and the same recipe + --wfc-kit --wfc-crp --ctrl-role source [layer1srccrp: the WFC slab = dsfd_wfc_cr2]. The MTP-lane dies (layer1srckitm, draftAlnkp2l, draftPs) move slabs (--ecol-slabs) or widen the hub column: their contracts follow in v2 once the hub-column choice is fixed; the outline width of every W-column slab is the hub column width",
+  "collective here = the generic dsfd_sp_collective outline (no --coll-split3); with --coll-split3-cr the slab takes the composition outline physical/s81_ph_views/collective/composition_split3cr*.json (v2)"
+ ]
+}
