@@ -228,8 +228,29 @@ def _untern(expr):
         expr = e
 
 
+def _top_tern(expr):
+    """an unparenthesised top-level SV ternary c ? a : b (branches may hold parentheses) -> python (a) if (c) else (b)"""
+    depth, q, nest = 0, -1, 0
+    for i, ch in enumerate(expr):
+        depth += ch == '('
+        depth -= ch == ')'
+        if depth:
+            continue
+        if ch == '?':
+            if q < 0:
+                q = i
+            else:
+                nest += 1
+        elif ch == ':' and q >= 0:
+            if nest:
+                nest -= 1
+            else:
+                return f'(({_top_tern(expr[q + 1:i])}) if ({expr[:q]}) else ({_top_tern(expr[i + 1:])}))'
+    return expr
+
+
 def _eval(expr, env):
-    e = _untern(expr).replace('$clog2', 'clog2')
+    e = _top_tern(_untern(expr)).replace('$clog2', 'clog2')
     e = re.sub(r"\d+'[dD](\d+)", r'\1', e)
     return int(eval(e, {'clog2': clog2, '__builtins__': {}}, dict(env)))  # noqa: S307
 

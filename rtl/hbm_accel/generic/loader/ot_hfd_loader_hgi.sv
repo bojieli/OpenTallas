@@ -13,6 +13,8 @@ module ot_hfd_loader_hgi #(
     parameter integer DMA_FRONT = 1,    // 0: every move on the mover (a die without the svc DMA stream bound)
     parameter integer VR2 = 0,          // 1: the mover's VM-source reads on the VM's DMA wide READ group (dma_vr2q / dma_vr2r, die
                                         //    nets hgi_vmr2_dma 513 b / hgi_vmr2_dma_r 8,257 b; hgi-1010/c + b), else the packet client
+    parameter integer KVW = 0,          // 1 (needs VR2 = 1): the DMA mover's KV write-back engine ot_hgi_dma_kvw (hbm-fq 2026-10-11:
+                                        //    KVWB_DS 55 cyc single / 53.1 cyc a record cross-stack vs price 60; 202 at VR2 = 0)
     parameter integer RGX = 0,          // 1: the hardware ROW_GATHER's HBM lanes (hfd_coll ot_hgi_coll_rgx_hbm / _snk): 2 read +
                                         //    2 write servers on kport lanes 3..6 (hgi-1010/c)
     parameter integer FMV = 0,          // hgi-1010/c2 (AUDIT N5): 1 = the FUSED mover's remote read lane (fmk_q / fmk_r, the quant
@@ -106,7 +108,7 @@ module ot_hfd_loader_hgi #(
         .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault),
         .mv_src(d_mv_src), .mv_pdone(d_mv_pdone), .mv_fdone(d_mv_fdone),
         .is_v(d_is_v), .is_rdy(d_is_rdy), .is_cmd(d_is_cmd), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone));
-    ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .VR2(VR2), .STACK_BYTES(STACK_BYTES)) u_eng (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy),
+    ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .VR2(VR2), .KVW(KVW), .STACK_BYTES(STACK_BYTES)) u_eng (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy),
         .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault), .mv_src(d_mv_src), .mv_pdone(d_mv_pdone), .mv_fdone(d_mv_fdone),
         .is_v(d_is_v), .is_rdy(d_is_rdy), .is_cmd(d_is_cmd), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
         .k_req_v(d_kv), .k_req_rdy(k_req_rdy[2]), .k_req_we(d_kwe), .k_req_addr(d_ka), .k_req_wdata(d_kd),
