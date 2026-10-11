@@ -310,6 +310,20 @@ module ot_hgi_su_ctl #(
                             3'd4: begin wl[382 +: 24] <= lbk_s; wl[406 +: 24] <= Lr[4]; wl[430 +: 24] <= 24'd1; end
                             default: begin wl[484 +: 24] <= lbk_s; wl[508 +: 24] <= 24'd1; end
                         endcase
+                    end else begin
+                        // an unused stream: give it the flat-consistent stride (so = row words, si = 1) so the vec's
+                        // flatten test (every stream contiguous across rows) agrees with the dense layout's choice
+                        // (flatc).  Without it an absent B / C / D (record so 0, si 1) made the vec run a flatc op
+                        // unflattened: a whole-op reduction over rows of ni then issues 2^tz(ni)-element vectors at
+                        // row offsets the lane-local banks cannot serve (cfault; DS L0 q_norm.ss, ni 160, at N 64).
+                        // Same rule as ot_hgi_su_ctlx.
+                        case (rk)
+                            3'd1: begin wl[162 +: 24] <= bhalf ? {8'd0, ni >> 1} : {8'd0, ni}; wl[186 +: 24] <= 24'd1; end
+                            3'd2: begin wl[235 +: 24] <= {8'd0, ni}; wl[259 +: 24] <= 24'd1; end
+                            3'd3: begin wl[308 +: 24] <= bhalf ? {8'd0, ni >> 1} : {8'd0, ni}; wl[332 +: 24] <= 24'd1; end
+                            3'd4: if (!o_s) begin wl[406 +: 24] <= {8'd0, ni}; wl[430 +: 24] <= 24'd1; end
+                            default: ;
+                        endcase
                     end
                     if (st != S_FAULT) begin
                         if (rk == 3'd5) begin rk <= 3'd0; st <= S_STAGE; end
