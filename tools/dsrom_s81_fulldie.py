@@ -3340,10 +3340,10 @@ def build_r8(variant=None):
                 # mtp-dsbind 2026-10-10 (main decision (a): the store off the full hub spine): the main-hidden row
                 # store in the FREE SE service slot of the 1-stack primary die (no PHY / ctrl / svc there; precedent:
                 # layer1e eng_SE), at the slot's spine end; its field-facing (N) face carries every port
-                hub['hrow'] = Inst(f'hrow_{st}', 'dsfd_mtp_hrow', up(xp, GX), ys_, HROW_UM[0], HROW_UM[1], 'R0',
+                hub['hrow'] = Inst(f'hrow_{st}', 'dsfd_mtp_hrow', up(xp, GX), up(ys_ + HROW_TOP_REF - HROW_UM[1], GY), HROW_UM[0], HROW_UM[1], 'R0',
                                    kind='svc', region='svc', power_w=0.4)
                 insts.append(hub['hrow'])
-                regions.append(dict(name=f'hrow_{st}', kind='svc', rect=[xp, ys_, xp + PHY_W, ys_ + SVC_D]))
+                regions.append(dict(name=f'hrow_{st}', kind='svc', rect=[xp, min(ys_, ys_ + HROW_TOP_REF - HROW_UM[1]), xp + PHY_W, ys_ + SVC_D]))
                 notes.append('MTP-DIE --hrow: hrow_SE = dsfd_mtp_hrow (main-hidden row store, 120 x 1024x256 SRAM in 3 '
                              'banked part arrays) %.1f x %.1f um in the free SE service slot' % HROW_UM)
                 continue
@@ -4074,7 +4074,9 @@ HSRC_BUSES = (('wfc', 'hrsrc', 36, 't_hep', 'f_hep'),
               ('hrsrc', 'collective', 515, 't_hp', 'f_mhs'), ('collective', 'hrsrc', 1, 't_mhsg', 'f_hpg'))
 HSRC_HOST_BUSES = (('hrsrc', 'host', 2, 't_flt', 'f_hsrc_flt'),)
 HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
-HROW_UM = (2998.08, 950.4)       #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
+HROW_UM = (2998.08, 1438.56)     #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
+HROW_TOP_REF = 950.4            # el1011-ds-mtp rev 3 (30 hardened banks): the store grows DOWN into the slot's free PHY / ctrl
+                                #   space; its N face (pins, the end-block corridor above it) stays where the 950.4 um store had it
 # the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
 # (t_mhp<k> {flit 514, valid} / f_mhp<k> grant: three more LCR lane tiles + adapters in the MTPL composition, OPEN in
 # the collective composition owner's tree)
