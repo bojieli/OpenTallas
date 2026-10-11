@@ -71,6 +71,7 @@ class Capture:
         self.vmw = bytearray()
         self.hbmw = bytearray()
         self.touch = []                      # HBM byte intervals read or written by rank 0
+        self.ik_touch = []                   # IDX.INDEX operand-I spans (the --iks key image supplies their bytes)
         self.coll = {}
 
     def wrap(self, key, fn):
@@ -93,7 +94,9 @@ class Capture:
                     eff[nm] = [int(b), int(n), int(m), int(st), int(ist), d.space, d.fmt]
                     if d.space == "HBM" and (r0.unit != "SM" or nm != "B" or self.sm_weights):
                         sp = hbm_span(M, d, die0, L)
-                        if sp:
+                        if sp and r0.unit == "IDX" and nm == "I":
+                            self.ik_touch.append(sp)
+                        elif sp:
                             self.touch.append(sp)
                     elif d.space == "HBM" and r0.unit == "SM":
                         pass
@@ -363,6 +366,8 @@ def export_ds(a):
     # (ot_hgi_idx_iks_issue): die-local key k (ascending owned id) -> stack q = (k div 8) div 342, slot s = k - 2,736 q, at
     # HBM byte (q << 35) | I.base + 68 s, the 544-b key word {4 UE8M0 scale bytes, 128 FP4 codes} little-endian (the
     # scorer's line = 2 keys); a stack's image covers its B_q blocks x 544 B (pad keys zero)
+    if not st.get("ik"):
+        cap.touch += cap.ik_touch                # no key image: keep the sim's own operand-I bytes
     for rd, ids, keys in st.get("ik", []):
         import hbm_idx_die_bench as IB
         ib = rd.desc["I"].base
