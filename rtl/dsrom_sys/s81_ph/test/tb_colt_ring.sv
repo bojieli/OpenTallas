@@ -5,6 +5,7 @@ reg rst_n=0,push=0,pop=0;reg [511:0] wd=0;wire h0,h1,o0,o1;wire [511:0] d0,d1;
 ot_s81ph_colt_fifo #(.RING(0)) base(clk,rst_n,push,wd,pop,h0,d0,o0);
 ot_s81ph_colt_fifo #(.RING(1)) ring(clk,rst_n,push,wd,pop,h1,d1,o1);
 integer i,j,seed=19,random_word,reads=0;
+initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 19; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
 initial begin
  repeat(5) @(negedge clk);rst_n=1;
  for(i=0;i<100000;i=i+1) begin

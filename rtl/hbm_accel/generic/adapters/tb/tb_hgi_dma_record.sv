@@ -28,6 +28,7 @@ module tb_hgi_dma_record;
         $readmemh({dir, "/dma_rec.mem"}, recm); $readmemh({dir, "/dma_ref.mem"}, refm); $readmemh({dir, "/dma_case.mem"}, casem);
     end
     integer errors = 0, cyc = 0, seed = 7;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0; reg [702:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted, mv_v, fence_v; wire [226:0] mv;

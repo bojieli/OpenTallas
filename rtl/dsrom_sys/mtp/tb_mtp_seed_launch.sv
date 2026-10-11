@@ -82,6 +82,7 @@ module tb_mtp_seed_launch;
         .clk(clk), .rst_n(rst_n), .l_valid(vrq_far[0]), .l_ready(vq_far), .l_data(vrq_far[AW:1]),
         .c_valid(cv), .c_ready(cr), .c_data(ca));
     integer seed = 7;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     always @(posedge clk) cr <= ($random(seed) & 3) != 0;              // VM accepts 3 of 4 cycles
     function [1023:0] vmword(input [AW-1:0] a);
         integer k; reg [31:0] h;

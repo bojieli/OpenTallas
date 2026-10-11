@@ -15,6 +15,7 @@ module tb_hgi_vm_unit_lock;
  ot_hgi_vm_unit_ref #(.NC(NC), .WP(WP), .WDIRECT(1)) ref_ (.clk(clk), .rst_n(rst_n), .cq(cq), .cr(cr_b), .status(st_b),
    .wq(wq), .wq_done(wd_b), .rq(rq0), .rq_cr(), .rr(), .w2q(w2q0), .w2q_cr(), .w2q_done());
  integer out [0:NC-1]; integer cyc = 0, nrsp = 0, nreq = 0, seed = 11, errs = 0, ovf = 0;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  initial for (integer c = 0; c < NC; c = c + 1) out[c] = 0;
  always @(negedge clk) if (rst_n) begin
   cyc = cyc + 1;
