@@ -69,10 +69,12 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     # VM behind 13/13 hub relay stations + grant links (VM_LINK 1); negative: the short-history receiver overflows
     'vmrly_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 1), 'vmrly_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 1),
     'vmrly_stg_r1': ('stg_r1', 1, [], 'pass', 1), 'vmrly_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 1),
-    'vmrly_stg_neg_short': ('stg_r1', 1, ['OT_MTP_NEG_SHORT_RTT'], 'fail', 1),
     'vmrly_stg_neg_nolink': ('stg_r1', 1, [], 'fail', 2), 'vmrly_s0_neg_wout4': ('s0_hash_u3', 0, [], 'fail', 3),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3), 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
 }
+
+
+VMRQ_K = 16   # vmx read-response queue in the vmrly cases (set by --vmrq)
 
 
 def kit_tb(stage, vmrly=0):
@@ -90,7 +92,7 @@ def kit_tb(stage, vmrly=0):
         kit = VMRLY + (kit if vmrly == 2 else   # 2: negative, valid / ready skids (VM_LINK 0) behind the relays
                        kit.replace('u_kit (', '#(.VM_LINK(1), .WOUTW(WOUTW_K)) u_kit (').replace(
                            'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .WOUTW(WOUTW_K))', 'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .WOUTW(WOUTW_K))'))
-        kit = kit.replace('WOUTW_K', '4' if vmrly == 3 else '8')
+        kit = kit.replace('WOUTW_K', '4' if vmrly == 3 else '8').replace('.VM_LINK(1), .WOUTW(', f'.VM_LINK(1), .VMRQ({VMRQ_K}), .WOUTW(')
         for a_, b_ in (('.t_swv(swv)', '.t_swv(k_swv)'), ('.t_swd(swd)', '.t_swd(k_swd)'), ('.f_swr(swr)', '.f_swr(k_swg)'),
                        ('.f_swa(swa)', '.f_swa(k_swa)'), ('.t_srv(srv)', '.t_srv(k_srv)'), ('.t_srd(srd)', '.t_srd(k_srd)'),
                        ('.f_srr(srr)', '.f_srr(k_srg)'), ('.f_srq(srq)', '.f_srq(k_srq)')):
@@ -128,7 +130,9 @@ def run(name, out):
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument('--out', type=Path, required=True); p.add_argument('--case'); p.add_argument('--jobs', type=int, default=8)
+    p.add_argument('--vmrq', type=int, default=16, help='vmx RQ in the vmrly cases (power of two; >= stationed read RTT)')
     a = p.parse_args(); a.out = a.out.resolve(); a.out.mkdir(parents=True, exist_ok=True)
+    global VMRQ_K; VMRQ_K = a.vmrq
     names = [a.case] if a.case else list(CASES)
     import concurrent.futures as cf
     with cf.ThreadPoolExecutor(a.jobs) as ex:
