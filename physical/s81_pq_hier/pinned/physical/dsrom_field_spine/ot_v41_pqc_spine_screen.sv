@@ -76,8 +76,17 @@ module ot_v41_pqc_spine_screen #(
     reg [32*R-1:0]   q_f32;
     always @(posedge clk) begin
         q_go <= go; q_ph <= i_ph; q_np <= i_np; q_xb <= i_xbase; q_xps <= i_xps; q_ob <= i_obase; q_ops <= i_ops;
-        q_fm <= i_fmt; q_x <= x_q; q_xrv <= x_rv; q_ff <= f_fault;
+        q_fm <= i_fmt; q_xrv <= x_rv; q_ff <= f_fault;
     end
+    // x_q pin registers: TT = 1, two T_XIN tiles (no top-level soft flops); else plain registers
+    generate if (TT != 0) begin : g_xtt
+        wire [VRD*32-1:0] xq;
+        ot_pqc_t_xin u_xin0 (.clk(clk), .d(x_q[1023:0]), .q(xq[1023:0]));
+        ot_pqc_t_xin u_xin1 (.clk(clk), .d(x_q[2047:1024]), .q(xq[2047:1024]));
+        always @* q_x = xq;
+    end else begin : g_xgen
+        always @(posedge clk) q_x <= x_q;
+    end endgenerate
     wire [PHW:0] pa0, pa1;
     wire [SAW-1:0] sa;
     wire ready, idle, x_re, fault, ev_go, ev_end;
@@ -117,8 +126,16 @@ module ot_v41_pqc_spine_screen #(
     reg [VAW-1:0] p_x_addr;
     always @(posedge clk) begin
         r_ready <= ready; r_idle <= idle; r_fault <= fault; r_ev <= ev_go ^ ev_end ^ ^ev_tag;
-        p_ready <= r_ready; p_idle <= r_idle; p_x_re <= x_re; p_x_addr <= x_addr; o_bus <= bus; p_fault <= r_fault; p_ev <= r_ev;
+        p_ready <= r_ready; p_idle <= r_idle; p_x_re <= x_re; p_x_addr <= x_addr; p_fault <= r_fault; p_ev <= r_ev;
     end
+    // o_bus: TT = 1, a fifth T_BC relay tile (the screen's output register; valid / config bits reset); else a register
+    generate if (TT != 0) begin : g_btt
+        wire [BW-1:0] ob;
+        ot_pqc_t_bc u_obus (.clk(clk), .rst_n(rst_n), .d(bus), .q(ob));
+        always @* o_bus = ob;
+    end else begin : g_bgen
+        always @(posedge clk) o_bus <= bus;
+    end endgenerate
     // TT = 1: the T_CTL tile holds these output registers (its outputs are the screen's)
     assign o_ready = (TT != 0) ? ready : p_ready;   assign o_idle = (TT != 0) ? idle : p_idle;
     assign o_x_re = (TT != 0) ? x_re : p_x_re;      assign o_x_addr = (TT != 0) ? x_addr : p_x_addr;
