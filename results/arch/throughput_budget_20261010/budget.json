@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.throughput_budget.v1",
- "generated_utc": "2026-10-11T05:10:09Z",
+ "generated_utc": "2026-10-11T06:55:41Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -16,71 +16,71 @@
   "ds_rom": 1447.7
  },
  "ds_hbm": {
-  "S2_cycles": 566881.1,
-  "S2_tok_s": 2116.8,
+  "S2_cycles": 566785.1,
+  "S2_tok_s": 2117.2,
   "target_tok_s": 2208.1,
   "image_bytes": 478720,
   "target_cycles": 543453.6,
-  "price_scale_to_target": 0.9587,
+  "price_scale_to_target": 0.9588,
   "per_unit_S2": {
    "FUSED": {
-    "busy": 73009.7,
-    "idle_true_dep": 486170.5,
+    "busy": 72889.7,
+    "idle_true_dep": 486194.5,
     "idle_issue": 3276.5,
     "records": 201
    },
    "SM": {
     "busy": 103968.3,
-    "idle_true_dep": 442232.4,
+    "idle_true_dep": 442136.4,
     "idle_issue": 19886.0,
     "records": 1095
    },
    "COLL": {
     "busy": 336487.2,
-    "idle_true_dep": 222027.0,
+    "idle_true_dep": 221931.0,
     "idle_issue": 8366.9,
     "records": 642
    },
    "DMA": {
     "busy": 40283.8,
-    "idle_true_dep": 47138.7,
-    "idle_issue": 488759.3,
+    "idle_true_dep": 47018.7,
+    "idle_issue": 488783.3,
     "records": 420
    },
    "SU": {
     "busy": 136388.0,
     "idle_true_dep": 384190.3,
-    "idle_issue": 40185.8,
+    "idle_issue": 40089.8,
     "records": 1356
    },
    "CTL": {
     "busy": 8.0,
     "idle_true_dep": 0.0,
-    "idle_issue": 556161.2,
+    "idle_issue": 556065.2,
     "records": 197
    },
    "ATT": {
     "busy": 26363.5,
-    "idle_true_dep": 524718.2,
+    "idle_true_dep": 524622.2,
     "idle_issue": 2056.0,
     "records": 80
    },
    "HC": {
     "busy": 43200.0,
     "idle_true_dep": 463926.8,
-    "idle_issue": 50356.9,
+    "idle_issue": 50260.9,
     "records": 80
    },
    "IDX": {
     "busy": 18833.9,
-    "idle_true_dep": 538615.7,
+    "idle_true_dep": 538519.7,
     "idle_issue": 1392.0,
     "records": 48
    },
    "ARGMAX": {
     "busy": 3626.0,
     "idle_true_dep": 0.0,
-    "idle_issue": 562480.7,
+    "idle_issue": 562384.7,
     "records": 1
    }
   },
@@ -97,9 +97,9 @@
     "items_per_record": 8519.0,
     "item": "bytes",
     "required_items_per_cycle": 21.891,
-    "required_items_per_cycle_at_target": 22.834,
+    "required_items_per_cycle_at_target": 22.83,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.02818,
+    "token_elasticity_at_plus10pct": 0.02819,
     "measured_ratio": 0.716,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/coll/report.json",
@@ -108,7 +108,7 @@
     "measured_cycles_per_record": 278.6,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -41550.1,
-    "impact_tok_s": 167.4,
+    "impact_tok_s": 167.5,
     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
     "elements": [
      "hfd_coll",
@@ -136,9 +136,9 @@
     "items_per_record": 1584.9,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 15.758,
-    "required_items_per_cycle_at_target": 16.437,
+    "required_items_per_cycle_at_target": 16.434,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.01882,
+    "token_elasticity_at_plus10pct": 0.01883,
     "measured_ratio": 1.067,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/su/report.json",
@@ -176,7 +176,7 @@
     "items_per_record": 166974.7,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 1758.587,
-    "required_items_per_cycle_at_target": 1834.397,
+    "required_items_per_cycle_at_target": 1834.086,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00928,
     "measured_ratio": null,
@@ -218,7 +218,7 @@
       "price_cycles_per_token": 19200.0
      }
     },
-    "exposure_cycles_if_2x": 52606.6
+    "exposure_cycles_if_2x": 52597.7
    },
    {
     "op": "COLL.GROUP_REDUCE_MCAST",
@@ -228,7 +228,7 @@
     "price_cycles_per_record": 1325.9,
     "price_cycles_per_token": 53037.6,
     "price_cycles_per_layer": 1325.9,
-    "budget_cycles_per_record_at_target": 1271.1,
+    "budget_cycles_per_record_at_target": 1271.4,
     "items_per_record": 4096.0,
     "item": "bytes",
     "required_items_per_cycle": 3.089,
@@ -261,11 +261,11 @@
     "price_cycles_per_record": 649.3,
     "price_cycles_per_token": 52595.9,
     "price_cycles_per_layer": 1282.8,
-    "budget_cycles_per_record_at_target": 622.5,
+    "budget_cycles_per_record_at_target": 622.6,
     "items_per_record": 20480.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 31.54,
-    "required_items_per_cycle_at_target": 32.9,
+    "required_items_per_cycle_at_target": 32.894,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00928,
     "measured_ratio": 6.514,
@@ -276,7 +276,7 @@
     "measured_cycles_per_record": 4229.7,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 290013.7,
-    "impact_tok_s": -716.4,
+    "impact_tok_s": -716.6,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -296,7 +296,7 @@
     "price_cycles_per_record": 540.0,
     "price_cycles_per_token": 43200.0,
     "price_cycles_per_layer": 1080.0,
-    "budget_cycles_per_record_at_target": 517.7,
+    "budget_cycles_per_record_at_target": 517.8,
     "items_per_record": 24.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 0.044,
@@ -337,7 +337,7 @@
     "items_per_record": 1153.1,
     "item": "bytes",
     "required_items_per_cycle": 11.049,
-    "required_items_per_cycle_at_target": 11.525,
+    "required_items_per_cycle_at_target": 11.523,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00092,
     "measured_ratio": 0.622,
@@ -366,11 +366,11 @@
     "price_cycles_per_record": 4246.0,
     "price_cycles_per_token": 33968.0,
     "price_cycles_per_layer": 4246.0,
-    "budget_cycles_per_record_at_target": 4070.5,
+    "budget_cycles_per_record_at_target": 4071.2,
     "items_per_record": 1048576.0,
     "item": "bytes",
     "required_items_per_cycle": 246.956,
-    "required_items_per_cycle_at_target": 257.602,
+    "required_items_per_cycle_at_target": 257.558,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00599,
     "measured_ratio": 1.0,
@@ -401,7 +401,7 @@
     "price_cycles_per_record": 2382.8,
     "price_cycles_per_token": 21445.0,
     "price_cycles_per_layer": 2680.6,
-    "budget_cycles_per_record_at_target": 2284.3,
+    "budget_cycles_per_record_at_target": 2284.7,
     "items_per_record": 2427.6,
     "item": "bytes",
     "required_items_per_cycle": 1.019,
@@ -425,7 +425,7 @@
       "price_cycles_per_token": 21445.0
      }
     },
-    "exposure_cycles_if_2x": 21428.1
+    "exposure_cycles_if_2x": 21424.5
    },
    {
     "op": "FUSED.HC_POST",
@@ -439,7 +439,7 @@
     "items_per_record": 20480.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 91.974,
-    "required_items_per_cycle_at_target": 95.939,
+    "required_items_per_cycle_at_target": 95.922,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00306,
     "measured_ratio": 20.085,
@@ -450,7 +450,7 @@
     "measured_cycles_per_record": 4472.4,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 339233.8,
-    "impact_tok_s": -792.5,
+    "impact_tok_s": -792.7,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -470,11 +470,11 @@
     "price_cycles_per_record": 329.5,
     "price_cycles_per_token": 13181.8,
     "price_cycles_per_layer": 329.5,
-    "budget_cycles_per_record_at_target": 315.9,
+    "budget_cycles_per_record_at_target": 316.0,
     "items_per_record": 16384.0,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 49.717,
-    "required_items_per_cycle_at_target": 51.86,
+    "required_items_per_cycle_at_target": 51.852,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00233,
     "measured_ratio": null,
@@ -507,7 +507,7 @@
       "price_cycles_per_token": 13181.8
      }
     },
-    "exposure_cycles_if_2x": 13208.3
+    "exposure_cycles_if_2x": 13206.1
    },
    {
     "op": "ATT.PV",
@@ -517,11 +517,11 @@
     "price_cycles_per_record": 329.5,
     "price_cycles_per_token": 13181.8,
     "price_cycles_per_layer": 329.5,
-    "budget_cycles_per_record_at_target": 315.9,
+    "budget_cycles_per_record_at_target": 316.0,
     "items_per_record": 16384.0,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 49.717,
-    "required_items_per_cycle_at_target": 51.86,
+    "required_items_per_cycle_at_target": 51.852,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00233,
     "measured_ratio": null,
@@ -544,7 +544,7 @@
       "price_cycles_per_token": 13181.8
      }
     },
-    "exposure_cycles_if_2x": 13208.3
+    "exposure_cycles_if_2x": 13206.1
    },
    {
     "op": "IDX.TOPK",
@@ -554,7 +554,7 @@
     "price_cycles_per_record": 283.0,
     "price_cycles_per_token": 11320.3,
     "price_cycles_per_layer": 283.0,
-    "budget_cycles_per_record_at_target": 271.3,
+    "budget_cycles_per_record_at_target": 271.4,
     "items_per_record": 384.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 1.357,
@@ -593,11 +593,11 @@
     "price_cycles_per_record": 939.2,
     "price_cycles_per_token": 7513.6,
     "price_cycles_per_layer": 939.2,
-    "budget_cycles_per_record_at_target": 900.4,
+    "budget_cycles_per_record_at_target": 900.5,
     "items_per_record": 851968.0,
     "item": "keys scored",
     "required_items_per_cycle": 907.126,
-    "required_items_per_cycle_at_target": 946.231,
+    "required_items_per_cycle_at_target": 946.07,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00133,
     "measured_ratio": null,
@@ -631,31 +631,31 @@
       "price_cycles_per_token": 7513.6
      }
     },
-    "exposure_cycles_if_2x": 7539.5
+    "exposure_cycles_if_2x": 7538.2
    },
    {
     "op": "FUSED.QDQ_FP8",
     "unit": "FUSED",
     "records_per_token": 40,
     "layers_with_op": 40,
-    "price_cycles_per_record": 65.0,
-    "price_cycles_per_token": 2600.0,
-    "price_cycles_per_layer": 65.0,
-    "budget_cycles_per_record_at_target": 62.3,
+    "price_cycles_per_record": 62.0,
+    "price_cycles_per_token": 2480.0,
+    "price_cycles_per_layer": 62.0,
+    "budget_cycles_per_record_at_target": 59.4,
     "items_per_record": 512.0,
     "item": "elements (largest operand)",
-    "required_items_per_cycle": 7.877,
-    "required_items_per_cycle_at_target": 8.216,
+    "required_items_per_cycle": 8.258,
+    "required_items_per_cycle_at_target": 8.613,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00037,
+    "token_elasticity_at_plus10pct": 0.00035,
     "measured_ratio": 1.012,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json",
     "measured_note": "ot_hgi_quant_unit WIDE (lane group), price ceil(n/32)+49; packet unit was 14.6x at the old price",
     "interim": null,
-    "measured_cycles_per_record": 65.8,
+    "measured_cycles_per_record": 62.7,
     "status": "QUALIFIED",
-    "impact_cycles_per_token": 25.0,
+    "impact_cycles_per_token": 23.8,
     "impact_tok_s": -0.1,
     "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
     "elements": [
@@ -666,7 +666,7 @@
     "variants": {
      "null": {
       "records": 40,
-      "price_cycles_per_token": 2600
+      "price_cycles_per_token": 2480
      }
     }
    },
@@ -682,7 +682,7 @@
     "items_per_record": 2048.0,
     "item": "bytes",
     "required_items_per_cycle": 34.133,
-    "required_items_per_cycle_at_target": 35.605,
+    "required_items_per_cycle_at_target": 35.599,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00028,
     "measured_ratio": 3.817,
@@ -748,7 +748,7 @@
     "price_cycles_per_record": 765.4,
     "price_cycles_per_token": 765.4,
     "price_cycles_per_layer": 765.4,
-    "budget_cycles_per_record_at_target": 733.8,
+    "budget_cycles_per_record_at_target": 733.9,
     "items_per_record": 8.0,
     "item": "bytes",
     "required_items_per_cycle": 0.01,
@@ -772,7 +772,7 @@
       "price_cycles_per_token": 765.4
      }
     },
-    "exposure_cycles_if_2x": 793.6
+    "exposure_cycles_if_2x": 793.5
    },
    {
     "op": "ARGMAX.LOCAL",
@@ -786,7 +786,7 @@
     "items_per_record": 1347.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 9.442,
-    "required_items_per_cycle_at_target": 9.849,
+    "required_items_per_cycle_at_target": 9.847,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.0,
     "measured_ratio": null,
@@ -815,7 +815,7 @@
   "critical_weight_if_zero": {
    "SM.MATVEC|FP8": 20334.9,
    "SM.MATVEC|FP4": 224.0,
-   "IDX.INDEX|None": 4003.5,
+   "IDX.INDEX|None": 4006.5,
    "COLL.TOPK_MERGE|None": 21021.0,
    "COLL.ARGMAX_MERGE|None": 765.4
   },
@@ -828,7 +828,7 @@
    "op": "FUSED.HC_POST",
    "ratio": 20.085,
    "impact_cycles_per_token": 339233.8,
-   "impact_tok_s": -792.5,
+   "impact_tok_s": -792.7,
    "budget_cycles_per_record": 222.7,
    "budget_at_target": 213.5,
    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
@@ -838,9 +838,9 @@
    "op": "FUSED.HC_PRE_NORM",
    "ratio": 6.514,
    "impact_cycles_per_token": 290013.7,
-   "impact_tok_s": -716.4,
+   "impact_tok_s": -716.6,
    "budget_cycles_per_record": 649.3,
-   "budget_at_target": 622.5,
+   "budget_at_target": 622.6,
    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
   },
   {
@@ -850,7 +850,7 @@
    "impact_cycles_per_token": 37198.6,
    "impact_tok_s": -130.4,
    "budget_cycles_per_record": 283.0,
-   "budget_at_target": 271.3,
+   "budget_at_target": 271.4,
    "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)"
   },
   {
@@ -870,14 +870,14 @@
    "impact_cycles_per_token": 0.0,
    "impact_tok_s": 0.0,
    "budget_cycles_per_record": 540.0,
-   "budget_at_target": 517.7,
+   "budget_at_target": 517.8,
    "owner": "hgi-1010/d"
   }
  ],
  "ds_unbenched_by_exposure": [
   {
    "op": "SM.MATVEC",
-   "exposure_cycles_if_2x": 52606.6,
+   "exposure_cycles_if_2x": 52597.7,
    "price_cycles_per_token": 103968.3,
    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
    "interim": {
@@ -887,14 +887,14 @@
   },
   {
    "op": "COLL.TOPK_MERGE",
-   "exposure_cycles_if_2x": 21428.1,
+   "exposure_cycles_if_2x": 21424.5,
    "price_cycles_per_token": 21445.0,
    "owner": "tput-gate-1010 (taken 10-10: production-shape bench)",
    "interim": null
   },
   {
    "op": "ATT.QK",
-   "exposure_cycles_if_2x": 13208.3,
+   "exposure_cycles_if_2x": 13206.1,
    "price_cycles_per_token": 13181.8,
    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
    "interim": {
@@ -904,7 +904,7 @@
   },
   {
    "op": "ATT.PV",
-   "exposure_cycles_if_2x": 13208.3,
+   "exposure_cycles_if_2x": 13206.1,
    "price_cycles_per_token": 13181.8,
    "owner": "hgi-1010/g2",
    "interim": {
@@ -914,7 +914,7 @@
   },
   {
    "op": "IDX.INDEX",
-   "exposure_cycles_if_2x": 7539.5,
+   "exposure_cycles_if_2x": 7538.2,
    "price_cycles_per_token": 7513.6,
    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
    "interim": {
@@ -924,7 +924,7 @@
   },
   {
    "op": "COLL.ARGMAX_MERGE",
-   "exposure_cycles_if_2x": 793.6,
+   "exposure_cycles_if_2x": 793.5,
    "price_cycles_per_token": 765.4,
    "owner": "UNOWNED",
    "interim": null
@@ -973,12 +973,12 @@
     "records_per_token": 290,
     "price_cycles_per_token": 54578.4,
     "critical_cycles_if_zero": 20334.9,
-    "rate_if_op_free_tok_s": 2195.6,
+    "rate_if_op_free_tok_s": 2196.0,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1002,12 +1002,12 @@
     "records_per_token": 720,
     "price_cycles_per_token": 19200.0,
     "critical_cycles_if_zero": 224.0,
-    "rate_if_op_free_tok_s": 2117.7,
+    "rate_if_op_free_tok_s": 2118.0,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1079,12 +1079,12 @@
     "records_per_token": 9,
     "price_cycles_per_token": 21445.0,
     "critical_cycles_if_zero": 21021.0,
-    "rate_if_op_free_tok_s": 2198.4,
+    "rate_if_op_free_tok_s": 2198.8,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1143,13 +1143,13 @@
     "evidence": "ot_hgi_idx_index / _native exist; every committed die e2e runs IDX.INDEX as a stub (DS L2 with IDX stub); only the IKS key-stream issuer is benched (hgi_unit_tput_20261010/iks)",
     "records_per_token": 8,
     "price_cycles_per_token": 7513.6,
-    "critical_cycles_if_zero": 4003.5,
-    "rate_if_op_free_tok_s": 2131.9,
+    "critical_cycles_if_zero": 4006.5,
+    "rate_if_op_free_tok_s": 2132.3,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1159,7 +1159,7 @@
     "status": "BUILT",
     "evidence": "results/rtl/hgi_e2e_20261009/runs/ds_L0_coll_dma_idx_quant_sfu_su_COLL_PFMAX512_f40k40_685ae3/report.json; results/rtl/hgi_e2e_20261009/runs/ds_L0_quant_f40k40/report.json; results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
     "records_per_token": 40,
-    "price_cycles_per_token": 2600,
+    "price_cycles_per_token": 2480,
     "critical_cycles_if_zero": null,
     "rate_if_op_free_tok_s": null,
     "inflates": []
@@ -1197,12 +1197,12 @@
     "records_per_token": 1,
     "price_cycles_per_token": 765.4,
     "critical_cycles_if_zero": 765.4,
-    "rate_if_op_free_tok_s": 2119.7,
+    "rate_if_op_free_tok_s": 2120.1,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1210,7 +1210,7 @@
     "op": "ARGMAX.LOCAL",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_adapters_20261009/benches/argmax_run.log (41 records, HGI_ARGMAX PASS)",
+    "evidence": "results/rtl/hgi_unit_tput_20261010/argmax/ds/report.json; results/rtl/hgi_unit_tput_20261010/argmax/qwen/report.json",
     "records_per_token": 1,
     "price_cycles_per_token": 142.7,
     "critical_cycles_if_zero": null,
@@ -1318,7 +1318,7 @@
     "op": "ARGMAX.LOCAL",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_adapters_20261009/benches/argmax_run.log (41 records, HGI_ARGMAX PASS)",
+    "evidence": "results/rtl/hgi_unit_tput_20261010/argmax/ds/report.json; results/rtl/hgi_unit_tput_20261010/argmax/qwen/report.json",
     "records_per_token": 1,
     "price_cycles_per_token": 2394.0,
     "critical_cycles_if_zero": null,
@@ -1376,12 +1376,12 @@
     "records_per_token": 290,
     "price_cycles_per_token": 54578.4,
     "critical_cycles_if_zero": 20334.9,
-    "rate_if_op_free_tok_s": 2195.6,
+    "rate_if_op_free_tok_s": 2196.0,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1393,12 +1393,12 @@
     "records_per_token": 720,
     "price_cycles_per_token": 19200.0,
     "critical_cycles_if_zero": 224.0,
-    "rate_if_op_free_tok_s": 2117.7,
+    "rate_if_op_free_tok_s": 2118.0,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1410,12 +1410,12 @@
     "records_per_token": 9,
     "price_cycles_per_token": 21445.0,
     "critical_cycles_if_zero": 21021.0,
-    "rate_if_op_free_tok_s": 2198.4,
+    "rate_if_op_free_tok_s": 2198.8,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1426,13 +1426,13 @@
     "evidence": "ot_hgi_idx_index / _native exist; every committed die e2e runs IDX.INDEX as a stub (DS L2 with IDX stub); only the IKS key-stream issuer is benched (hgi_unit_tput_20261010/iks)",
     "records_per_token": 8,
     "price_cycles_per_token": 7513.6,
-    "critical_cycles_if_zero": 4003.5,
-    "rate_if_op_free_tok_s": 2131.9,
+    "critical_cycles_if_zero": 4006.5,
+    "rate_if_op_free_tok_s": 2132.3,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1444,12 +1444,12 @@
     "records_per_token": 1,
     "price_cycles_per_token": 765.4,
     "critical_cycles_if_zero": 765.4,
-    "rate_if_op_free_tok_s": 2119.7,
+    "rate_if_op_free_tok_s": 2120.1,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2117.2 tok/s"
     ]
    },
    {
@@ -1583,9 +1583,9 @@
    "pattern": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
    "model": "qwen_rom",
    "cls": "me",
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
-   "why": "qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+   "status": "QUALIFIED",
+   "ratio": 0.932,
+   "why": "qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
   },
   {
    "pattern": "^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc)",
@@ -1656,6 +1656,7 @@
   "dsfd_m2l_vr_68x11__hr_W2": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_m2l_vr_68x11__hr_W3": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_m2l_vr_68x11__hr_W4": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
+  "dsfd_mtp_hrow": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seed_launch": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seq": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seq_rtt": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -4417,6 +4418,28 @@
      "ratio": null,
      "owner": "ds-1010",
      "src": "name rule ^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn): ds-1010: field relays / stations (measured field phases include the wire)"
+    }
+   ]
+  },
+  "dsfd_mtp_hrow": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:wave",
+    "model": "ds_rom_mtp",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "bf-mtp-1010",
+    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+   },
+   "ops": [
+    {
+     "op": "class:wave",
+     "model": "ds_rom_mtp",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "bf-mtp-1010",
+     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
    ]
   },
@@ -8783,46 +8806,46 @@
    ]
   },
   "ot_qkvd_kv_end": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "ot_qkvd_rom_end": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
@@ -8871,90 +8894,90 @@
    ]
   },
   "ot_qwen_nearhbm_attn_hub_p": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "ot_qwen_nearhbm_ectl_h": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "ot_qwen_nearhbm_head_h": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "ot_qwen_rom_core_core_kv_banked": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
@@ -10883,90 +10906,90 @@
    ]
   },
   "qfd_kv_merge_skid": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "qfd_kv_row": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "qfd_kvc_decode_map_pc": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "qfd_kvc_decode_pc": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
@@ -11551,24 +11574,24 @@
    ]
   },
   "qfd_su_kv624": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
@@ -11757,68 +11780,68 @@
    ]
   },
   "qkd_kvwq_ctl": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "qkd_kvwq_grp": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   },
   "qkd_kvwq_leaf": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "QUALIFIED",
+   "ratio": 0.932,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "QUALIFIED",
+    "ratio": 0.932,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "QUALIFIED",
+     "ratio": 0.932,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail (results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"
     }
    ]
   }

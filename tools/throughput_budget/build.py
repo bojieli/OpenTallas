@@ -190,8 +190,11 @@ ROM_RULES = [
     (r"^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)", "ds_rom", "hbm", None, None, "ds-1010: HBM PC path (hbm class)"),
     (r"^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)", "ds_rom", "host", "UNQUALIFIED_NO_BENCH", None,
      "ds-1010: host / ingest path: no per-token price row (prefill / admission), no throughput bench"),
-    (r"^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)", "qwen_rom", "me", "UNQUALIFIED", 1.124,
-     "qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"),
+    (r"^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)", "qwen_rom", "me", "QUALIFIED", 0.932,
+     "qwen-1010/b: KV die / attention step, STREAM-ONLY measured: the KV-die controller RTL (ot_hbm_r14_stream_pc_ready, WSETP 0) "
+     "streams a layer's KV in 1,085 ns worst vs 1,165 ns priced (0.966 TB/s), 8 refresh phases x 36 layers, mutants fail "
+     "(results/rtl/qwen_kv_die_20261010/kv_stream_bench.json); composed layer step on this controller pending (map v2 + K-pass "
+     "stream order benched exact; descriptor pre-hint RTL open); replaces the 0.80 generic timed-model figure"),
     (r"^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc)", "qwen_rom", "link", None, None, "qwen-1010: link / collective FIFOs (link class)"),
     (r"^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)", "qwen_rom", "me", None, None,
      "qwen-1010: tile-tree / PC control of the matrix engine (me class)"),
