@@ -39,6 +39,7 @@ CH = V1.CH
 DIM = {('sn', 544): (105.84, 11.88), ('ew', 544): (11.88, 105.84), ('sn', 136): (28.08, 11.88), ('ew', 136): (11.88, 28.08)}
 PARAMS = V1.PARAMS
 PIN_GAP = 0.0
+PIN_GAP_EW = None                  # el1011-hbm-attn: E / W face banks' gap (None: PIN_GAP)
 grid = V1.grid
 trk = T.trk
 
@@ -75,7 +76,8 @@ class APlan:
     def put(self, name, kind, bits, orient, x, y, force=False, pin=False):
         """pin: a face pin bank (its outer face is the die edge): only the real box is checked"""
         w, h = DIM[(kind, bits)]
-        if pin and PIN_GAP > 0:
+        gew = PIN_GAP if PIN_GAP_EW is None else PIN_GAP_EW
+        if pin and (PIN_GAP > 0 or gew > 0):
             # hbm-phys-1010 [att] (half_v2 c6c90ac08 GRT: hi 6,424 s 'finished with congestion', 8.5 k congestion
             # entries, the top four net classes xp / cf / i / o = the PORT nets of the face pin banks, in the gcells
             # where a port pin overlaps its bank's M1-M6 OBS; lo's first global_route > 3.5 h): the pin bank stands
@@ -86,9 +88,9 @@ class APlan:
             elif y + h > self.ch - 1.0:
                 y = T.trk(y - PIN_GAP, 0.024, True)
             if x < 1.0:
-                x = T.trk(x + PIN_GAP)
+                x = T.trk(x + gew)
             elif x + w > self.cw - 1.0:
-                x = T.trk(x - PIN_GAP, 0.0, True)
+                x = T.trk(x - gew, 0.0, True)
         b = (x, y, x + w, y + h)
         if not force and not self.free(kind, b, zones=not pin):
             raise SystemExit(f'{name}: ({x:.3f}, {y:.3f}) {w} x {h} not free')
@@ -264,6 +266,8 @@ def place_lo(a):
     x1 = round(X0 + 1101 * PITCH, 3)
     pins.p['ks'] = [(i, 'M5', round(X0 + i * PITCH, 4), 0.096) for i in range(1102)]
     pins.p['ldk'] = [(0, 'M5', round(x1 + 2.016, 4), 0.096)]
+    # el1011-hbm-attn: the PS entry line credit kq = {forwarded clock, v} (audit N9, main 81a0a111c) beside ldk
+    pins.p['kq'] = [(i, 'M5', round(x1 + 4.032 + i * 0.384, 4), 0.096) for i in range(2)]
     return P, hops, pins, quads, dict(cix=cix, xr_x=xr_x)
 
 
@@ -347,6 +351,7 @@ def main():
     ap.add_argument('--out', default='physical/hbm_attn_tile_r/half_v2')
     ap.add_argument('--max-hop', type=float, default=450.0)
     ap.add_argument('--acc', type=float, default=20.0)
+    ap.add_argument('--pin-gap-ew-hi', type=float, default=None, help='hi: E / W face banks gap (corner relays crowd it)')
     ap.add_argument('--pin-gap', type=float, default=0.0, help='face pin banks this far off their face (um)')
     for k, v in PARAMS.items():
         ap.add_argument(f'--{k}', type=int, default=v)
@@ -357,8 +362,10 @@ def main():
     V1.check_pins(P, pins)
     rl = write(a.out, 'hfd_attn_half_lo', a, P, hops, pins, quads, 'lo',
                dict(k='input', ci='input', ri='input', q='input', rst='input', ck='input', rf='output', xp='output', xr='output',
-                    ks='input', ldk='input'),
+                    ks='input', ldk='input', kq='output'),
                f'# hfd_attn_half_lo pins (v2): outline {TW} x {H_LO}; every pin on its pin bank', H_LO)
+    global PIN_GAP_EW
+    PIN_GAP_EW = a.pin_gap_ew_hi
     Ph, hh, pinh, qh = place_hi(a, geo)
     V1.check_pins(Ph, pinh)
     rh = write(a.out, 'hfd_attn_half_hi', a, Ph, hh, pinh, qh, 'hi',
