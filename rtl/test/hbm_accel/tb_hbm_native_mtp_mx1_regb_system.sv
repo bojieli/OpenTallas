@@ -22,8 +22,7 @@ module tb_hbm_native_mtp_mx1_regb_system #(parameter integer MUT=0, parameter in
  wire [16:0] forced_token=17'd100+tprov[20+:23];
  wire [178:0] fprov={provider[178:140],1'b0,provider[138:82],forced_token,provider[64:0]};
  wire [826:0] cSE,cSW;wire [63:0] suSE,suSW;wire [146:0] xl;wire [15:0] xt;
- hgi_mtp_native #(.PRL(PRL)) native(.clk(clk),.rst_n(rst_n),.f_cmdproc(tm),.t_cmdproc(fm),
-  .f_router(59'b0),.t_router(),.t_coll(),.f_coll(1'b1));
+ hgi_mtp_native #(.PRL(PRL)) native(.clk(clk),.rst_n(rst_n),.f_cmdproc(tm),.t_cmdproc(fm));
  hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),.REGB(1),.MUT(MUT)) dut(.cSE(cSE),.cSW(cSW),.ck(clk),.cks(clk),.ckn(clk),.cke(clk),.ckw(clk),.rst(~rst_n),
   .f_loader(341'b0),.f_router(64'b0),.t_su_SE(suSE),.t_su_SW(suSW),.xb(16'b0),.xl(xl),.xt(xt),
   .f_mtp(fm),.t_mtp(tm),.f_host({cfg,4'hb,32'h12345678,jv}),.t_host(th),.f_provider(fprov),

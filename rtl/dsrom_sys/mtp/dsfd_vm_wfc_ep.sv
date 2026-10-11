@@ -36,9 +36,9 @@ module dsfd_vm_wfc_ep #(
     output reg  [0:0] t_err,                                                               // sticky status level
     output reg  [USER_W+2*NW:0] t_ks,                                                      // START toward the core
     // VM request port (one op a cycle, never stalls) and its fixed-latency read return
-    output reg  m_v, output reg m_we, output reg [VWA-1:0] m_row, output reg [FLIT-1:0] m_d,
-    input  wire m_ov, input wire [FLIT-1:0] m_od,
-    input  wire m_fault
+    output reg  [0:0] m_v, output reg [0:0] m_we, output reg [VWA-1:0] m_row, output reg [FLIT-1:0] m_d,
+    input  wire [0:0] m_ov, input wire [FLIT-1:0] m_od,
+    input  wire [0:0] m_fault
 );
     localparam integer MARK = (1 << VWA) - 1;
     wire clk = ck[0];
