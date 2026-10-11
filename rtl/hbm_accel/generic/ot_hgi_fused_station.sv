@@ -32,6 +32,8 @@ module ot_hgi_fused_station #(
                                               //   faults (F10 fail-closed: DS HC_PRE_NORM d 5,120 needs 10,242)
     parameter integer Q = 32,                 // remote kport lane: sectors in flight (= the server queue depth)
     parameter integer LQ = 32,                // lane-group credits a lane (the VM unit's lane queue depth)
+    parameter integer QWIDE = 0,              // 1: the quant unit's WIDE body (ot_hgi_quant_wide, 2628ec01a) on the same lgE
+                                              //    slot (FUSED forwards one QDQ and waits: the three sources never overlap)
     parameter integer MUT = 0                 // bench mutants: 1 the wl lane index from sector bits [5:1] (wrong bank)
 ) (
     input  wire          clk,
@@ -53,7 +55,7 @@ module ot_hgi_fused_station #(
 );
     // ---- FUSED front
     wire f_rdy, f_done, f_fault, mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
-    wire [682:0] q_rec; wire [2:0] q_ret;
+    wire [682:0] q_rec; wire [2:0] q_ret; reg qph; wire qsel = (QWIDE != 0) && qph;
     wire [32*16-1:0] f_wrq; wire [32*280-1:0] f_wwq; wire f_rg_req, f_wg_req, f_wg_gnt;
     ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM), .UWIDE(UWIDE), .SCR_WORDS(SCR_WORDS)) u_f (.clk(clk), .rst_n(rst_n),
         .cfg_scratch(18'(SCRATCH)), .rec_v(rec[0]), .rec_rdy(f_rdy), .rec_hdr(rec[128:1]), .rec_a(rec[384:129]),
@@ -62,13 +64,19 @@ module ot_hgi_fused_station #(
         .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
         .op_v(), .op_rdy(1'b0), .op_w(), .su_idle(1'b1), .su_fault(1'b0), .vmq(f_vmq), .vmr(f_vmr),
         .wrq(f_wrq), .wrq_cr(lg_rdn[32:1]), .wrr(lg_rdn[8256:33]), .wwq(f_wwq), .wwq_cr(lg_wdn[32:1]),
-        .wwq_done(lg_wdn[64:33]), .rg_req(f_rg_req), .rg_gnt(lg_rdn[0]), .wg_req(f_wg_req), .wg_gnt(f_wg_gnt),
+        .wwq_done(lg_wdn[64:33]), .rg_req(f_rg_req), .rg_gnt(lg_rdn[0] && !qsel), .wg_req(f_wg_req), .wg_gnt(f_wg_gnt),
         .ne_v(), .ne_rdy(1'b0), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(q_rec), .q_done(q_ret[1]),
         .q_fault(q_ret[2]));
     assign ret = {f_fault, f_done, f_rdy};
-    assign lg_rup = {f_wrq, f_rg_req};
+    assign lg_rup = qsel ? {q_wrq, q_rg_req} : {f_wrq, f_rg_req};
     // ---- quant unit (QDQ behind the FUSED front)
-    ot_hgi_quant_unit u_q (.clk(clk), .rst_n(rst_n), .rec(q_rec), .ret(q_ret), .vmq(q_vmq), .vmr(q_vmr));
+    wire [32*16-1:0] q_wrq; wire [32*280-1:0] q_wwq; wire q_rg_req, q_wg_req;
+    ot_hgi_quant_unit #(.WIDE(QWIDE), .WLQ(LQ)) u_q (.clk(clk), .rst_n(rst_n), .rec(q_rec), .ret(q_ret), .vmq(q_vmq),
+        .vmr(q_vmr), .wrq(q_wrq), .wrq_cr(QWIDE ? lg_rdn[32:1] : 32'd0), .wrr(QWIDE ? lg_rdn[8256:33] : {32*257{1'b0}}),
+        .wwq(q_wwq), .wwq_cr(QWIDE ? lg_wdn[32:1] : 32'd0), .wwq_done(QWIDE ? lg_wdn[64:33] : 32'd0), .rg_req(q_rg_req),
+        .rg_gnt(QWIDE ? (lg_rdn[0] && qph) : 1'b1), .wg_req(q_wg_req), .wg_gnt(QWIDE ? (lg_wdn[0] && qph) : 1'b1));
+    always @(posedge clk or negedge rst_n)        // a forwarded QDQ owns the lanes until its done / fault
+        if (!rst_n) qph <= 1'b0; else if (q_ret[1] || q_ret[2]) qph <= 1'b0; else if (q_rec[0]) qph <= 1'b1;
     // ---- the move phase: the write group is held from the move's request to its done / fault
     reg mph;                                   // a move is pending or running: the write group belongs to the mover
     wire own = mph && lg_wdn[0];
@@ -79,7 +87,7 @@ module ot_hgi_fused_station #(
         if (!rst_n) mph <= 1'b0;
         else if (mv_done || mv_fault) mph <= 1'b0;
         else if (mv_v) mph <= 1'b1;
-    assign f_wg_gnt = lg_wdn[0] && !mph;
+    assign f_wg_gnt = lg_wdn[0] && !mph && !qsel;
     // ---- mover + remote lane client
     wire k_req_v, k_req_rdy, k_req_we, k_rsp_v; wire [36:0] k_addr; wire [255:0] k_wd, k_rd; wire [31:0] k_ws;
     wire [15:0] k_tag; wire [279:0] wl; reg wl_done; wire k_flt; reg ov;
@@ -125,7 +133,7 @@ module ot_hgi_fused_station #(
             if (!mph) ov <= 1'b0;
         end
     end
-    assign lg_wup = mph ? {wq, wreq} : {f_wwq, f_wg_req};
+    assign lg_wup = mph ? {wq, wreq} : qsel ? {q_wwq, q_wg_req} : {f_wwq, f_wg_req};
 endmodule
 
 `default_nettype wire
