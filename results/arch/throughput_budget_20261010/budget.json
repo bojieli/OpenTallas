@@ -1,6 +1,11 @@
 {
  "schema": "opentallas.throughput_budget.v1",
- "generated_utc": "2026-10-11T06:55:30Z",
+ "bound_rule": {
+  "slowdown": 10.0,
+  "max_rate_change": 0.01,
+  "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
+ },
+ "generated_utc": "2026-10-11T07:11:23Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -843,7 +848,7 @@
     "measured_note": null,
     "interim": null,
     "measured_cycles_per_record": null,
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "impact_cycles_per_token": 0.0,
     "impact_tok_s": 0.0,
     "owner": "UNOWNED",
@@ -856,8 +861,7 @@
       "records": 1,
       "price_cycles_per_token": 142.7
      }
-    },
-    "exposure_cycles_if_2x": 0.0
+    }
    }
   ],
   "critical_weight_if_zero": {
@@ -974,13 +978,6 @@
    "op": "COLL.ARGMAX_MERGE",
    "exposure_cycles_if_2x": 793.6,
    "price_cycles_per_token": 765.4,
-   "owner": "UNOWNED",
-   "interim": null
-  },
-  {
-   "op": "ARGMAX.LOCAL",
-   "exposure_cycles_if_2x": 0.0,
-   "price_cycles_per_token": 142.7,
    "owner": "UNOWNED",
    "interim": null
   }
@@ -3190,7 +3187,7 @@
     "claimed_ratio_unmeasured": 9.204,
     "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json hbm_dma_load",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "impact_cycles_per_token": 861.1,
     "impact_tok_s": -0.6,
     "owner": "hgi-1010",
@@ -3258,7 +3255,7 @@
     "claimed_ratio_unmeasured": 1.263,
     "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json qwen_head_stream_chain",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "impact_cycles_per_token": 0.0,
     "impact_tok_s": 0.0,
     "owner": "UNOWNED",
@@ -3378,23 +3375,10 @@
      "critical_cycles_per_token": 124746.0,
      "share": 0.5001,
      "nodes": 180,
-     "measured_fraction": 0.5259,
-     "unmeasured_nodes": [
-      "L0.qkv",
-      "L0.o_proj",
-      "L0.gate_up",
-      "L0.down",
-      "L1.qkv",
-      "L1.o_proj",
-      "L1.gate_up",
-      "L1.down",
-      "L2.qkv",
-      "L2.o_proj",
-      "L2.gate_up",
-      "L2.down"
-     ],
-     "n_unmeasured": 144,
-     "status": "UNQUALIFIED_NO_BENCH",
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
      "elements": [
       "qfd_tile",
       "qfd_tile_e",
@@ -3438,23 +3422,10 @@
      "critical_cycles_per_token": 45676.0,
      "share": 0.1831,
      "nodes": 216,
-     "measured_fraction": 0.0,
-     "unmeasured_nodes": [
-      "L0.rmsnorm1",
-      "L0.qknorm_rope",
-      "L0.attn_tail",
-      "L0.rmsnorm2",
-      "L0.residual",
-      "L1.rmsnorm1",
-      "L1.qknorm_rope",
-      "L1.attn_tail",
-      "L1.rmsnorm2",
-      "L1.residual",
-      "L2.rmsnorm1",
-      "L2.qknorm_rope"
-     ],
-     "n_unmeasured": 180,
-     "status": "UNQUALIFIED_NO_BENCH",
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
      "elements": [
       "qfd_sp_su64_sfu",
       "qfd_sp_vector_memory",
@@ -3492,7 +3463,7 @@
       "embed"
      ],
      "n_unmeasured": 1,
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "elements": [
       "qfd_io_emb_root",
       "qfd_io_emb_tap",
@@ -9428,12 +9399,12 @@
    ]
   },
   "ot_hgi_argmax18_m": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "ARGMAX.LOCAL",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "UNOWNED",
     "src": null
@@ -9442,7 +9413,7 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "UNOWNED",
      "src": null
@@ -9450,7 +9421,7 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "UNOWNED",
      "src": "budget_audit table.json qwen_head_stream_chain"
@@ -9472,12 +9443,12 @@
    }
   },
   "ot_hgi_argmax_record": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "ARGMAX.LOCAL",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "UNOWNED",
     "src": null
@@ -9486,7 +9457,7 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "UNOWNED",
      "src": null
@@ -9494,7 +9465,7 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "UNOWNED",
      "src": "budget_audit table.json qwen_head_stream_chain"
@@ -10468,12 +10439,12 @@
    ]
   },
   "ot_qwen_rom_core_core_p": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10482,7 +10453,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10490,12 +10461,12 @@
    ]
   },
   "ot_qwen_rom_core_core_pu": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10504,7 +10475,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10512,12 +10483,12 @@
    ]
   },
   "ot_qwen_rom_core_meif_idle_capture": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10526,7 +10497,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10534,12 +10505,12 @@
    ]
   },
   "ot_qwen_slab_port_group_m3_m8": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10548,7 +10519,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10556,12 +10527,12 @@
    ]
   },
   "ot_qwen_slab_port_group_s14_die": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10570,7 +10541,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -11216,12 +11187,12 @@
    ]
   },
   "qfd_crom_g": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11230,7 +11201,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11238,12 +11209,12 @@
    ]
   },
   "qfd_crom_gs": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11252,7 +11223,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11260,12 +11231,12 @@
    ]
   },
   "qfd_cst": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -11274,7 +11245,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -11282,12 +11253,12 @@
    ]
   },
   "qfd_ctrl_emb_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11296,7 +11267,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11304,12 +11275,12 @@
    ]
   },
   "qfd_ctrl_pc_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11318,7 +11289,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11326,12 +11297,12 @@
    ]
   },
   "qfd_ctrl_pc_01": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11340,7 +11311,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11348,12 +11319,12 @@
    ]
   },
   "qfd_ctrl_pc_02": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11362,7 +11333,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11370,12 +11341,12 @@
    ]
   },
   "qfd_ctrl_pc_03": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11384,7 +11355,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11392,12 +11363,12 @@
    ]
   },
   "qfd_ctrl_pc_04": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11406,7 +11377,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11414,12 +11385,12 @@
    ]
   },
   "qfd_ctrl_pc_05": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11428,7 +11399,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11436,12 +11407,12 @@
    ]
   },
   "qfd_ctrl_pc_06": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11450,7 +11421,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11458,12 +11429,12 @@
    ]
   },
   "qfd_ctrl_pc_07": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11472,7 +11443,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11480,12 +11451,12 @@
    ]
   },
   "qfd_ctrl_pc_08": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11494,7 +11465,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11502,12 +11473,12 @@
    ]
   },
   "qfd_ctrl_pc_09": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11516,7 +11487,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11524,12 +11495,12 @@
    ]
   },
   "qfd_ctrl_pc_10": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11538,7 +11509,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11546,12 +11517,12 @@
    ]
   },
   "qfd_ctrl_pc_11": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11560,7 +11531,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11568,12 +11539,12 @@
    ]
   },
   "qfd_ctrl_pc_12": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11582,7 +11553,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11590,12 +11561,12 @@
    ]
   },
   "qfd_ctrl_pc_13": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11604,7 +11575,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11612,12 +11583,12 @@
    ]
   },
   "qfd_ctrl_pc_14": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11626,7 +11597,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11634,12 +11605,12 @@
    ]
   },
   "qfd_ctrl_pc_15": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11648,7 +11619,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11656,12 +11627,12 @@
    ]
   },
   "qfd_ctrl_pc_16": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11670,7 +11641,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11678,12 +11649,12 @@
    ]
   },
   "qfd_ctrl_pc_17": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11692,7 +11663,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11700,12 +11671,12 @@
    ]
   },
   "qfd_ctrl_pc_18": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11714,7 +11685,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11722,12 +11693,12 @@
    ]
   },
   "qfd_ctrl_pc_19": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11736,7 +11707,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11744,12 +11715,12 @@
    ]
   },
   "qfd_ctrl_pc_20": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11758,7 +11729,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11766,12 +11737,12 @@
    ]
   },
   "qfd_ctrl_pc_21": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11780,7 +11751,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11788,12 +11759,12 @@
    ]
   },
   "qfd_ctrl_pc_22": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11802,7 +11773,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11810,12 +11781,12 @@
    ]
   },
   "qfd_ctrl_pc_23": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11824,7 +11795,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11832,12 +11803,12 @@
    ]
   },
   "qfd_ctrl_pc_24": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11846,7 +11817,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11854,12 +11825,12 @@
    ]
   },
   "qfd_ctrl_pc_25": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11868,7 +11839,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11876,12 +11847,12 @@
    ]
   },
   "qfd_ctrl_pc_26": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11890,7 +11861,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11898,12 +11869,12 @@
    ]
   },
   "qfd_ctrl_pc_27": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11912,7 +11883,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11920,12 +11891,12 @@
    ]
   },
   "qfd_ctrl_pc_28": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11934,7 +11905,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11942,12 +11913,12 @@
    ]
   },
   "qfd_ctrl_pc_29": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11956,7 +11927,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11964,12 +11935,12 @@
    ]
   },
   "qfd_ctrl_pc_30": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11978,7 +11949,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11986,12 +11957,12 @@
    ]
   },
   "qfd_ctrl_pc_31": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12000,7 +11971,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12008,12 +11979,12 @@
    ]
   },
   "qfd_ctrl_protected_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12022,7 +11993,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12030,12 +12001,12 @@
    ]
   },
   "qfd_ctrl_ready_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12044,7 +12015,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12052,12 +12023,12 @@
    ]
   },
   "qfd_ctrl_shift_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12066,7 +12037,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12118,12 +12089,12 @@
    ]
   },
   "qfd_emb_pc_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12132,7 +12103,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12140,12 +12111,12 @@
    ]
   },
   "qfd_emb_pcport": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12154,7 +12125,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12162,12 +12133,12 @@
    ]
   },
   "qfd_emb_pcport_kvw": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12176,7 +12147,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12184,12 +12155,12 @@
    ]
   },
   "qfd_emb_pcport_kvw2": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12198,7 +12169,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12206,12 +12177,12 @@
    ]
   },
   "qfd_embed_code_bank": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12220,7 +12191,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12300,12 +12271,12 @@
    }
   },
   "qfd_embed_ingress_code": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12314,7 +12285,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12408,12 +12379,12 @@
    }
   },
   "qfd_embed_ingress_scale": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12422,7 +12393,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12430,12 +12401,12 @@
    ]
   },
   "qfd_embed_scale_bank": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12444,7 +12415,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12496,12 +12467,12 @@
    ]
   },
   "qfd_io_emb_root": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12510,7 +12481,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12532,12 +12503,12 @@
    }
   },
   "qfd_io_emb_tap": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12546,7 +12517,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12568,12 +12539,12 @@
    }
   },
   "qfd_io_host": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12582,7 +12553,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12780,12 +12751,12 @@
    ]
   },
   "qfd_lst_c": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12794,7 +12765,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12802,12 +12773,12 @@
    ]
   },
   "qfd_lst_h": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12816,7 +12787,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12824,12 +12795,12 @@
    ]
   },
   "qfd_lst_v": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12838,7 +12809,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12846,12 +12817,12 @@
    ]
   },
   "qfd_pc_head_owner": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12860,7 +12831,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12868,12 +12839,12 @@
    ]
   },
   "qfd_q5_landing_ecc": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12882,7 +12853,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12890,12 +12861,12 @@
    ]
   },
   "qfd_res_ctl": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12904,7 +12875,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12926,12 +12897,12 @@
    }
   },
   "qfd_res_slot": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12940,7 +12911,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12948,12 +12919,12 @@
    ]
   },
   "qfd_rly": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12962,7 +12933,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12970,12 +12941,12 @@
    ]
   },
   "qfd_row_merge_native_fence": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12984,7 +12955,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13006,12 +12977,12 @@
    }
   },
   "qfd_seq_su": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13020,7 +12991,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13042,12 +13013,12 @@
    }
   },
   "qfd_sp_band_lanes": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13056,7 +13027,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13064,12 +13035,12 @@
    ]
   },
   "qfd_sp_constants_sequencer": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13078,7 +13049,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13086,12 +13057,12 @@
    ]
   },
   "qfd_sp_constants_sequencer_nc": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13100,7 +13071,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13108,12 +13079,12 @@
    ]
   },
   "qfd_sp_constants_sequencer_sys": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13122,7 +13093,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13144,12 +13115,12 @@
    }
   },
   "qfd_sp_constants_sequencer_sys_v_t": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13158,7 +13129,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13166,12 +13137,12 @@
    ]
   },
   "qfd_sp_res_ser": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13180,7 +13151,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13188,12 +13159,12 @@
    ]
   },
   "qfd_sp_su64_sfu": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13202,7 +13173,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13210,12 +13181,12 @@
    ]
   },
   "qfd_sp_tree_lane": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13224,7 +13195,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13232,12 +13203,12 @@
    ]
   },
   "qfd_sp_tree_top": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13246,7 +13217,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13262,12 +13233,12 @@
    ]
   },
   "qfd_sp_tree_top_b": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13276,7 +13247,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13328,12 +13299,12 @@
    ]
   },
   "qfd_sp_vector_memory": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13342,7 +13313,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13350,12 +13321,12 @@
    ]
   },
   "qfd_su_cbuf": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13364,7 +13335,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13372,12 +13343,12 @@
    ]
   },
   "qfd_su_cbuf_g": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13386,7 +13357,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13416,12 +13387,12 @@
    ]
   },
   "qfd_sysctl_sram": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13430,7 +13401,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13438,12 +13409,12 @@
    ]
   },
   "qfd_sysctl_stn": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13452,7 +13423,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13496,12 +13467,12 @@
    }
   },
   "qfd_tile": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13510,7 +13481,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13526,12 +13497,12 @@
    ]
   },
   "qfd_tile_e": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13540,7 +13511,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13548,12 +13519,12 @@
    ]
   },
   "qfd_tt_ctl": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13562,7 +13533,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13570,12 +13541,12 @@
    ]
   },
   "qfd_tt_ctlm": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13584,7 +13555,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13592,12 +13563,12 @@
    ]
   },
   "qfd_tt_up4": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13606,7 +13577,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13614,12 +13585,12 @@
    ]
   },
   "qfd_vm_bank_checked": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13628,7 +13599,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"

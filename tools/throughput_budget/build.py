@@ -432,6 +432,10 @@ def ds_budget():
         impact = (sched_with(k, ratio) - S2) if ratio not in (None, 1.0) else 0.0
         nl = len([L for L in a["layers"] if L is not None])
         price_rec = a["cyc"] / a["n"]
+        if st == "UNQUALIFIED_NO_BENCH" or (st == "UNQUALIFIED" and ratio is not None and ratio <= BOUND_SLOWDOWN):
+            d10 = sched_with(k, BOUND_SLOWDOWN) - S2
+            if d10 / S2 < BOUND_RATE and build_status(k, None)[0] == "BUILT":
+                st = "QUALIFIED_BY_BOUND"
         rows.append(dict(
             op=k, unit=k.split(".")[0], records_per_token=a["n"], layers_with_op=nl,
             price_cycles_per_record=round(price_rec, 1), price_cycles_per_token=round(a["cyc"], 1),
@@ -504,6 +508,9 @@ def qwen_budget():
             continue
         m = MEASURED_QWEN.get(k, {})
         ratio, grade = m.get("ratio"), m.get("grade")
+        st_q = status_of(ratio, grade)
+        if st_q != "QUALIFIED" and (sched_with(k, BOUND_SLOWDOWN) - S2) / S2 < BOUND_RATE and build_status(k, None)[0] == "BUILT":
+            st_q = "QUALIFIED_BY_BOUND"
         impact = (sched_with(k, ratio) - S2) if ratio not in (None, 1.0) else 0.0
         el = (sched_with(k, 1.10) - S2) / S2
         pr = a["cyc"] / a["n"]
@@ -517,7 +524,7 @@ def qwen_budget():
                          measured_ratio=None if grade == "hand_entered" else ratio,
                          claimed_ratio_unmeasured=ratio if grade == "hand_entered" else None,
                          measured_grade=grade, measured_src=m.get("src"),
-                         status=status_of(ratio, grade), impact_cycles_per_token=round(impact, 1),
+                         status=st_q, impact_cycles_per_token=round(impact, 1),
                          impact_tok_s=round(CLK / (S2 + impact) - CLK / S2, 1) if impact else 0.0,
                          owner=OWNERS.get(k, "hgi-1010"), elements=ELEMENTS.get(k, []),
                          variants={v: dict(records=a["varn"][v], price_cycles_per_token=round(c_, 1)) for v, c_ in a["var"].items()}))
@@ -534,6 +541,19 @@ def qwen_budget():
                      "measurements")
 
 
+def _rom_measured(grade):
+    """token-path node grades that ARE RTL measurements at production shape: 'measured*', and 'apportioned' (an op window
+    cut from a measured whole-layer RTL trace, e.g. qwen_plain_ar_stream4 RT_OPTRACE: the window's cycles are measured, only
+    its attribution to an op is by trace position).  'priced' / 'modelled' are not."""
+    return grade.startswith("measured") or grade == "apportioned"
+
+
+# BOUND RULE (main 10-11): an op / class whose price is so small that even a 10x slowdown moves the token rate by < 1 %
+# is QUALIFIED_BY_BOUND (no throughput bench needed); it must still be natively built (the build gate).  HBM ops: S2
+# re-scheduled with the op at 10x its price; ROM classes: 9 x the class's critical cycles / token cycles.
+BOUND_SLOWDOWN, BOUND_RATE = 10.0, 0.01
+
+
 def rom_budget(name):
     d = json.loads((TP / f"{name}.json").read_text())
     tot = d["totals"]["cycles"]
@@ -544,16 +564,18 @@ def rom_budget(name):
         c["grades"][n["src"]["grade"]] += n["cycles"]
         if n.get("critical"):
             c["cycles"] += n["cycles"]
-        if not n["src"]["grade"].startswith("measured") and n["cycles"] > 0:
+        if not _rom_measured(n["src"]["grade"]) and n["cycles"] > 0:
             c["unmeasured"].append(n["id"])
     cls_el = {c["id"]: c["elements"] for c in d["classes"]}
     rows = []
     for k, c in sorted(by.items(), key=lambda kv: -kv[1]["cycles"]):
-        unm = sum(v for g, v in c["grades"].items() if not g.startswith("measured"))
+        unm = sum(v for g, v in c["grades"].items() if not _rom_measured(g))
         allc = sum(c["grades"].values())
         # node prices are measured RTL unit cycles at production shape: a class qualifies when >= 95 % of its cycles
         # are measured; its few modelled nodes are listed as their own unbenched gaps (unmeasured_nodes)
         st = "QUALIFIED" if allc and unm / allc <= 0.05 else "UNQUALIFIED_NO_BENCH"
+        if st != "QUALIFIED" and (BOUND_SLOWDOWN - 1) * c["cycles"] / tot < BOUND_RATE:
+            st = "QUALIFIED_BY_BOUND"
         rows.append(dict(cls=k, critical_cycles_per_token=round(c["cycles"], 1),
                          share=round(c["cycles"] / tot, 4), nodes=c["nodes"],
                          measured_fraction=round(1 - unm / allc, 4) if allc else None,
@@ -594,7 +616,7 @@ def main():
                     impact_tok_s=r["impact_tok_s"], budget_cycles_per_record=r["price_cycles_per_record"],
                     budget_at_target=r["budget_cycles_per_record_at_target"], owner=r["owner"]) for i, r in enumerate(rank)]
     # registry gate: element -> worst status over the ops it serves (DS first, then Qwen, then ROM classes)
-    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "QUALIFIED": 2}
+    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "QUALIFIED_BY_BOUND": 2, "QUALIFIED": 3}
     el = {}
 
     def put(e, target, op, st, ratio, owner, src):
@@ -729,6 +751,9 @@ def main():
                                  rate_if_op_free_tok_s=round(CLK / (S2_ - w), 1) if w else None,
                                  inflates=RATES[model] if st != "BUILT" else []))
     rec = dict(schema="opentallas.throughput_budget.v1",
+               bound_rule=dict(slowdown=BOUND_SLOWDOWN, max_rate_change=BOUND_RATE,
+                               rule="QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % "
+                                    "(HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"),
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                rule="AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when "
                     "bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
