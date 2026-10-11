@@ -691,7 +691,7 @@ The SU template carries the pipeline fields of the SU operation set (`tools/hdc_
 | STATE | Linear-attention layers: per layer and local head, the FP32 state stored transposed (`[dv][dk]`), and the FP32 convolution ring (`[conv_k − 1][channels]`). Base = STATE + layer · layer bytes. |
 | SCRATCH | Spills and collective staging |
 
-**VM** is FP32-word addressed (262,144 words per die) and allocated by the compiler. **Alignment:** HBM bases are 32-byte aligned; KV rows are whole sectors.
+**VM** is FP32-word addressed (262,144 words per die) and allocated by the compiler. **HC weight aperture (hgi-1010, 2026-10-10):** VM word addresses 262,144 … 327,679 (2¹⁸ … 2¹⁸ + 2¹⁶ − 1) are not VM: they map to the HC unit's second weight-window set (2 rows × 20,480 words at 262,144 and 282,624, layout = the HBM weight-set sectors of one row). Only a `DMA.LOAD` destination (O) may address it; the VM unit faults any other client there, and the CP's own VM reads (I tables, END / TOKX / LOOP counts) must stay below 2¹⁸. The compiler double-buffers HC weight rows through it: FENCE; HC row o (slot o mod 2); LOAD row o + 1 after HC row o − 1 retires. **Alignment:** HBM bases are 32-byte aligned; KV rows are whole sectors.
 
 ### 6.11 Doorbell and completion
 
