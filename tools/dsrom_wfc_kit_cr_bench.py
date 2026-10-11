@@ -28,6 +28,11 @@ CR = 'rtl/dsrom_sys/mtp/dsfd_wfc_kit_cr.sv'
 LINK = 'rtl/common/ot_link_credit.sv'
 
 PARAMS = '''    parameter integer S_LI = 10, S_LO = 10, S_VM = 13, S_CO = 10, S_CI = 11;   // ds-1010: real hub stages (layer1 x1b+rgap)
+    // s0 step watchdog scale.  At the real stages S0 runs 1.46x the cycles of the 2-stage run (s0_hash_u3 129,439 vs
+    // 88,933) and one speculative step outgrows the unscaled 3L + T_DRAFT + 1500 NUSR bound: x2 PASSes exact,
+    // x10 identical (not a hang).  Draft flits reach the WFC 745 vs 179 cycles after the last draft head (throughput
+    // cost of the stationed die, reported to mtp-lead).
+    parameter integer WDOG_MULT = 1;
 '''
 RELAY = '''
 module wfc_cr_relay #(parameter integer W = 1, parameter integer N = 1) (input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
@@ -99,8 +104,9 @@ CASES = {   # name -> (kit bench base case, harness, stage params, extra defines
     'cr_stg_r1': ('stg_r1', 'cr', REAL, [], 'pass'), 'cr_stg_vmnat': ('stg_vmnat', 'cr', REAL, [], 'pass'),
     'cr_stg_r2_slowvm': ('stg_r2_slowvm', 'cr', REAL, [], 'pass'), 'cr_stg_lag1': ('stg_lag1', 'cr', REAL, [], 'pass'),
     'cr_stg_r1_short': ('stg_r1', 'cr', SHORT, [], 'pass'), 'cr_stg_r1_long': ('stg_r1', 'cr', LONG, [], 'pass'),
-    'cr_s0_tr_forced': ('s0_tr_forced', 'cr', REAL, [], 'pass'), 'cr_s0_hash_u3': ('s0_hash_u3', 'cr', REAL, [], 'pass'),
+    'cr_s0_tr_forced': ('s0_tr_forced', 'cr', REAL, [], 'pass'), 'cr_s0_hash_u3': ('s0_hash_u3', 'cr', dict(REAL, WDOG_MULT=2), [], 'pass'),
     'cr_s0_hash_u3_short': ('s0_hash_u3', 'cr', SHORT, [], 'pass'),
+
     'neg_skid_stg_r1': ('stg_r1', 'skid', REAL, [], 'fail'), 'neg_skid_s0_tr_forced': ('s0_tr_forced', 'skid', REAL, [], 'fail'),
     'neg_over_stg_r1': ('stg_r1', 'cr', REAL, ['WFC_CR_MUT_OVER'], 'fail'),
 }
@@ -130,6 +136,7 @@ def cr_tb(base, harness):
     body = body[:i] + h + tail
     # the kit bench's ks / srq / swa / kd are the bench-side ends now: the relays connect them to the kit
     body = re.sub(r'(module ' + tb + r';\n)', r'\1' + PARAMS, body, count=1)
+    body = body.replace('cyc - last_close[u] > 3 * L + T_DRAFT + 1500 * NUSR', 'cyc - last_close[u] > WDOG_MULT * (3 * L + T_DRAFT + 1500 * NUSR)')
     return tb, body + RELAY
 
 

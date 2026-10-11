@@ -24,3 +24,4 @@
   - Negatives: neg_skid_stg_r1 (the plain kit across the stages) FAILs; neg_over_stg_r1 (VM landing shallower than the credits) FAILs.
   - Source die: s0_tr_forced PASSes at the real stages and s0_hash_u3 at 2 stages. s0_hash_u3 at the real stages trips the bench's step watchdog (3L + T_DRAFT + 1500 NUSR = 13,000 cycles). This is OPEN: either a throughput fallback or a hang, not yet separated.
 - Results: `wfc_kit_cr_bench.txt`.
+- s0_hash_u3 at the real stages is not a deadlock. With the watchdog scaled x2 or x10 the run PASSes exactly (identical counts, 129,439 cycles vs 88,933 at 2 stages). One speculative step outgrows the unscaled 3L + T_DRAFT + 1500 NUSR bound because draft flits reach the WFC 745 vs 179 cycles after the last draft head (the link-in / VM-write credit path on the stationed die). This is a throughput cost, not an exactness failure. cr_s0_hash_u3 runs with WDOG_MULT 2.
