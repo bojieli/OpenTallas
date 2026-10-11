@@ -14,7 +14,7 @@ build() {  # build <obj> [verilator -G/-D ...]
   local ob=$O/$1; shift
   ( cd "$R" && $V --binary --timing -j $J -O2 --x-assign fast --x-initial fast -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
     -Wno-MULTIDRIVEN -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm -Mdir "$ob" -Irtl/hbm_accel/generic "$@" \
-    rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv \
+    rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv rtl/lib/ot_rst_relay.sv \
     rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_src.sv rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_sink.sv \
     rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv \
     rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv \
