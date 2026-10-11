@@ -34,9 +34,10 @@ module dsfd_sp_su_h #(
     // slots of a cycle stay aligned: the pin owners stack ~1.9 mm along the VM pin edge (<= 500 um a station)
     parameter integer NRL = (S_RD >= 16) ? 4 : 1,
     // relay stations a spine stop / norm rung hop (adjacent tiles' centres ~620 um apart: 2 for <= 500 um a station)
-    // and on the controller pulse nets c_cmd / c_done between the slab's N-face pins and the control tile (cck domain)
+    // and on the controller pulse nets c_cmd / c_done between the slab's N-face pins and the control tile (cck domain;
+    // ~2.25 mm in the su_s composition: 5 stations for <= 500 um)
     parameter integer SRD = (S_RD >= 16) ? 2 : 1,
-    parameter integer NRC = (S_RD >= 16) ? 4 : 1
+    parameter integer NRC = (S_RD >= 16) ? 5 : 1
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
