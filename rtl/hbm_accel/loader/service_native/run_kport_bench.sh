@@ -5,6 +5,8 @@
 #   pos_rtt104   NO 8 RB 16, PHY latency set for a fetch round trip ~104 cycles: fetch rate >= 2 x 0.867 B/cycle
 #   pos_rtt160   NO 8 RB 16, round trip ~160 cycles: fetch rate >= 2 x 0.867
 #   pos_rb32     NO 8 RB 32, round trip ~160 (rate reported)
+#   pos_rb64     NO 16 RB 64 (the die's KP_NO / KP_RB), round trip ~160: >= 9.5 B/cycle a stack (1.6 x the HC row-
+#                prefetch need 23.8 B/cycle a die / 4 stacks; results/uarch/svc_dma_hc_sizing_20261010.json)
 #   pos_no1      NO 1 (one native transaction a stack, bursts on): exact (rate reported, not gated)
 #   neg_lane0    MUT 1 (every response to lane 0)          -> must FAIL
 #   neg_stack    MUT 2 (stack bit 1 ignored)                -> must FAIL
@@ -29,12 +31,12 @@ run() {   # run <label> <params...>
   fi
 }
 L104=${L104:-39000}; L160=${L160:-76000}
-run pos_rtt104 NO=8 XLAT=$L104 & run pos_rtt160 NO=8 XLAT=$L160 & run pos_rb32 NO=8 RB=32 XLAT=$L160 &
+run pos_rtt104 NO=8 XLAT=$L104 & run pos_rtt160 NO=8 XLAT=$L160 & run pos_rb32 NO=8 RB=32 XLAT=$L160 & run pos_rb64 NO=16 RB=64 XLAT=$L160 RATE_MIN=9500 &
 run pos_no1 NO=1 RATE_MIN=0 &
 run neg_lane0 MUT=1 & run neg_stack MUT=2 & run neg_row MUT=3 & run neg_credit MUT=4 &
 wait
 rc=0
-for L in pos_rtt104 pos_rtt160 pos_rb32 pos_no1; do grep -q "^PASS HFD-LOADER-KPORT" $O/$L.log; r=$?
+for L in pos_rtt104 pos_rtt160 pos_rb32 pos_rb64 pos_no1; do grep -q "^PASS HFD-LOADER-KPORT" $O/$L.log; r=$?
   echo "$L rc=$r $(grep -h FETCH_RATE $O/$L.log)" >> $O/summary.txt; [ $r -ne 0 ] && rc=1; done
 for L in neg_lane0 neg_stack neg_row neg_credit; do grep -q "^PASS HFD-LOADER-KPORT" $O/$L.log && r=0 || r=1
   echo "$L rc=$r (must be nonzero) $(grep -m1 FATAL $O/$L.log)" >> $O/summary.txt; [ $r -eq 0 ] && rc=1; done

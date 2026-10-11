@@ -10,6 +10,9 @@
 // Vectors: python3 tools/hgi_mtp_cpdie_vectors.py
 module tb_hgi_cp_die_mtp;
     parameter integer MUT = 0;
+    parameter integer MDQ = 0;            // hgi-1010/h: 0 = DS MD (mtp_noise 128,799), 1 = MD with the DFlash mask id 151,669
+    parameter integer NOISE_EXP = MDQ ? 151669 : 128799;   // the demb token expected on columns > 0 (a wrong value = mutant)
+    parameter integer MTPM = 1;           // CP die MTP mode (the x_* bench form)
 `include "hgi_mtp_cpdie_sizes.svh"
     localparam integer PAGE = 32'h10;
     reg clk = 0; always #1 clk = ~clk;
@@ -30,7 +33,7 @@ module tb_hgi_cp_die_mtp;
     wire [337:0] vmq; reg [273:0] vmr = 0; wire [39:0] cfg_bus; wire [15:0] ux_v;
     // native operation side
     reg xcv = 0; reg [200:0] xc = 0; wire xcr, xcpl_v, xcpl_f, xam_v, xdr; wire [16:0] xam; wire [31:0] xj, xs; wire [3:0] xg;
-    ot_hgi_cp_die #(.USE_MACRO(0), .MUT(MUT), .MTP(1)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
+    ot_hgi_cp_die #(.USE_MACRO(0), .MUT(MUT), .MTP(MTPM)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
         .vmstat(19'd0), .coll_rec(), .coll_ret(3'b001), .quant_rec(), .quant_ret(3'b001), .idx_rec(), .idx_ret(3'b001),
         .am_rec(), .am_ret(3'b001), .sm_rec(), .sm_ret(3'b001), .su_rec(), .su_ret(3'b001), .sfu_rec(), .sfu_ret(3'b001),
         .att_rec(), .att_ret(3'b001), .dma_rec(), .dma_ret(3'b001), .hc_rec(), .hc_ret(3'b001), .cfg_bus(cfg_bus),
@@ -40,7 +43,7 @@ module tb_hgi_cp_die_mtp;
         .x_am_v(xam_v), .x_am_idx(xam), .x_drained_ready(xdr), .x_ext_fault(1'b0), .x_noise(17'd129279));
     // ---- HBM image + in-order memory lane
     reg [127:0] img [0:MTPV_NW-1]; reg [31:0] md [0:63]; reg [63:0] vm0 [0:MTPV_NVM-1];
-    initial begin $readmemh("hgi_mtp_cpdie_image.mem", img); $readmemh("hgi_mtp_cpdie_md.mem", md); $readmemh("hgi_mtp_cpdie_vm0.mem", vm0); end
+    initial begin $readmemh("hgi_mtp_cpdie_image.mem", img); if (MDQ) $readmemh("hgi_mtp_cpdie_md_q.mem", md); else $readmemh("hgi_mtp_cpdie_md.mem", md); $readmemh("hgi_mtp_cpdie_vm0.mem", vm0); end
     localparam [39:0] IMG = PAGE * 4096;
     function automatic [127:0] word_at(input [39:0] a);
         reg signed [41:0] w; begin w = ($signed({2'b0, a}) - $signed({2'b0, IMG})) / 16;
@@ -120,7 +123,7 @@ module tb_hgi_cp_die_mtp;
         end
     endtask
     // ---- checks on every translator-owned completion
-    integer ncpl = 0, nam = 0, nres = 0, errs = 0, hostc = 0;
+    integer ncpl = 0, nam = 0, nres = 0, errs = 0, hostc = 0, ndemb = 0, demb_t1 = 0;
     reg [17:0] last_tok;
     always @(posedge clk) if (rst_n) begin
         if (cpd.cpl_v && cpd.x_run) begin
@@ -135,6 +138,12 @@ module tb_hgi_cp_die_mtp;
                 if (exp_kind[ncpl] == 4 || exp_kind[ncpl] == 10) begin nres = nres + 1; last_tok = cpd.cpl_token; end
             end
             ncpl = ncpl + 1;
+        end
+        // hgi-1010/h: demb (kind 6) doorbells carry tok1 on column 0 and MD word 53 (mtp_noise) on columns > 0
+        if (cpd.xdb_v && cpd.xdb_rdy && cpd.xdb_kind == 4'd6) begin
+            if (cpd.xdb_tok !== ((ndemb % 5 == 0) ? 18'(demb_t1) : 18'(NOISE_EXP))) begin
+                $display("FAIL demb %0d token %0d expected %0d", ndemb, cpd.xdb_tok, (ndemb % 5 == 0) ? demb_t1 : NOISE_EXP); errs = errs + 1; end
+            ndemb = ndemb + 1;
         end
         if (cpd.cpl[1] && cpd.x_run) begin $display("FAIL a translator completion reached the host"); errs = errs + 1; end
         if (xam_v) begin nam = nam + 1; if ({1'b0, xam} !== last_tok) begin $display("FAIL am %0d vs %0d", xam, last_tok); errs = errs + 1; end end
@@ -153,11 +162,12 @@ module tb_hgi_cp_die_mtp;
         axr(12'hC24); if (rd[3:1] != 0 || !rd[0]) begin $display("FAIL cfg load err %0d loaded %0d", rd[3:1], rd[0]); errs = errs + 1; end
         for (i = 0; i < NOPS; i = i + 1) begin
             expect_op(ops[i]);
-            xc = ops[i]; xcv = 1; while (!xcr) @(negedge clk); @(negedge clk); xcv = 0;
+            xc = ops[i]; demb_t1 = ops[i][64:48]; xcv = 1; while (!xcr) @(negedge clk); @(negedge clk); xcv = 0;
             t = 0; while (!xcpl_v && t < 400000) begin @(negedge clk); t = t + 1; end
             if (!xcpl_v || xcpl_f || xj != 32'h12345678 || xs != 32'd5) begin $display("FAIL operation %0d (fault %0d)", i, xcpl_f); errs = errs + 1; end
             repeat (3) @(negedge clk);
         end
+        if (ndemb != 5) begin $display("FAIL demb launches %0d (expected 5)", ndemb); errs = errs + 1; end
         if (ncpl != nexp) begin $display("FAIL launches %0d expected %0d", ncpl, nexp); errs = errs + 1; end
         if (nam != nres) begin $display("FAIL am %0d results %0d", nam, nres); errs = errs + 1; end
         // the host path after the MTP job: an AR doorbell (entry 0) completes with the AR body's token
