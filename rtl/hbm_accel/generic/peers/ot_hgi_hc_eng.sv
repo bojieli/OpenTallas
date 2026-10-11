@@ -108,17 +108,17 @@ module ot_hgi_hc_lane #(
     // the job's P1 row count land in flops before any logic (the FIFO's counters were 75 gate levels behind push; pop and
     // p1_full were combinational outputs of wg_q / p1n).  occ counts the push at the pin, so the top's room check stays
     // conservative; a push enters the FIFO one cycle later.
-    reg push_q, wg_qq; reg [270:0] pdat_q; reg [$clog2(NR):0] p1n_q;
+    reg push_q, wg_qq, post_q; reg [270:0] pdat_q; reg [$clog2(NR):0] p1n_q;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin push_q <= 1'b0; wg_qq <= 1'b0; p1n_q <= '0; end
-        else begin push_q <= push; wg_qq <= wg_q; p1n_q <= p1n; end
+        if (!rst_n) begin push_q <= 1'b0; wg_qq <= 1'b0; post_q <= 1'b0; p1n_q <= '0; end
+        else begin push_q <= push; wg_qq <= wg_q; post_q <= post; p1n_q <= p1n; end
     always @(posedge clk) pdat_q <= pdat;
     reg [QB-1:0] cr; reg scp; reg [1:0] scx; reg [RB:0] p1c; reg [7:0] p2c; reg [1:0] qn; reg [767:0] qsh;
     reg [1023:0] qf [0:QD-1]; reg [QDB-1:0] qwp, qrp; reg [$clog2(QD+1)-1:0] qcnt, qres;
     reg [255:0] pb [0:NR-1];
     reg [FB-1:0] occ; reg [QB-1:0] wcr; reg [7:0] wpend;
     // a response that is not a scalar: HC_POST P1 first (then P2); HC_PRE_NORM P2 first (then P1)
-    wire is_p1x = post ? (p1c != p1n_q) : (p2c == 8'(NB));
+    wire is_p1x = post_q ? (p1c != p1n_q) : (p2c == 8'(NB));
     assign q_head = qf[qrp]; assign q_nz = qcnt != '0; assign q_full = qres >= QD; assign cr_nz = cr != '0;
     assign p1_full = p1c == p1n_q; assign sc_pend = scp;
     wire rv = wrr_q[256];
@@ -143,8 +143,8 @@ module ot_hgi_hc_lane #(
             reg pu;
             wrq <= {iss, iss_sec};
             wwq <= pop ? {1'b1, f_hd[270:256], f_hd[255:0], 8'hFF} : {1'b0, wwq[278:0]};
-            cr <= cr - QB'(iss) + QB'(wrq_cr_q);
-            qres <= qres + iss_j0 - popq;
+            if (iss && !wrq_cr_q) cr <= cr - 1'b1; else if (!iss && wrq_cr_q) cr <= cr + 1'b1;
+            if (iss_j0 && !popq) qres <= qres + 1'b1; else if (!iss_j0 && popq) qres <= qres - 1'b1;
             if (sc_set) begin scp <= 1'b1; scx <= sc_ix; end
             pu = 1'b0;
             if (rv) begin
@@ -155,12 +155,12 @@ module ot_hgi_hc_lane #(
                     qn <= qn + 2'd1; p2c <= p2c + 8'd1;
                 end
             end
-            qcnt <= qcnt + pu - popq;
+            if (pu && !popq) qcnt <= qcnt + 1'b1; else if (!pu && popq) qcnt <= qcnt - 1'b1;   // up/down, no cascaded add/sub
             if (popq) qrp <= qrp + 1'b1;
             if (clr) begin p1c <= '0; p2c <= '0; end
             wcr <= wcr - QB'(pop) + QB'(wwq_cr_q);
             wpend <= wpend + 8'(pop) - 8'(wwq_done_q);
-            occ <= occ + FB'(push) - FB'(pop);
+            if (push && !pop) occ <= occ + 1'b1; else if (!push && pop) occ <= occ - 1'b1;
         end
 endmodule
 
