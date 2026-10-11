@@ -20,9 +20,10 @@ CTRL = re.compile(r'^(ck|ckv|cks|ckh|ckc|clk|refclk|rst|rsv|rss|rs|rst_n|por|pll
 
 def rtl_ports(module):
     """{port: (direction, bits or None)} from the RTL source of `module` (ANSI port list; widths from literal ranges)."""
-    r = subprocess.run(['git', 'grep', '-l', '-E', rf'^\s*module\s+{re.escape(module)}\b', '--', 'rtl'], cwd=ROOT,
-                       capture_output=True, text=True)
-    files = [f for f in r.stdout.split() if f]
+    # filesystem scan (the audit also runs in extracted source trees that are not git checkouts)
+    r = subprocess.run(['grep', '-rlE', '--include=*.sv', '--include=*.v', rf'^\s*module\s+{re.escape(module)}\b', 'rtl'],
+                       cwd=ROOT, capture_output=True, text=True)
+    files = sorted(f for f in r.stdout.split() if f and '/test/' not in f and '/tb' not in f)
     if not files:
         return None
     t = (ROOT / files[0]).read_text()
