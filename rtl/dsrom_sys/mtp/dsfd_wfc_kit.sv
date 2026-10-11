@@ -21,7 +21,9 @@
 // ---------------------------------------------------------------------------
 module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
                       parameter integer VWA = 15, parameter bit VM_LINK = 0,
-                      parameter integer WOUTW = 5, parameter integer VMRQ = 16) (
+                      parameter integer WOUTW = 5, parameter integer VMRQ = 16,
+                      parameter integer POSTED = 0,
+                      parameter bit TOKIN = 0) (   // 1: link-in from the collective MTP lane token return (f_mrt / t_mrg)
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [0:0] f_liv, input  wire [FLIT:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [FLIT:0] t_lod, input  wire [0:0] f_lor,
@@ -29,6 +31,7 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
     output wire [0:0] t_srv, output wire [VWA-1:0] t_srd, input wire [0:0] f_srr, input wire [FLIT:0] f_srq,
     output wire [USER_W+2*NW:0] t_ks, input wire [NW+32:0] f_kd,
     input  wire [2+USER_W+2*NW:0] f_c,
+    input  wire [FLIT:0] f_mrt, output wire [0:0] t_mrg,      // TOKIN: {data, valid} from dsfd_sp_collective t_mrt
     output wire [USER_W+2*NW:0] t_tok,
     output wire [USER_W+2*NW-1:0] t_cfg,
     output wire [3:0] t_ft
@@ -59,13 +62,17 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
         .core_busy(core_busy), .tok_valid(tok_valid), .tok_user(tok_user), .tok_pos(tok_pos), .tok_id(tok_id),
         .users_done(users_done), .proto_fault(proto_fault), .wf_issue(wf_issue), .wf_reject(wf_reject),
         .wf_squash(wf_squash));
-    dsfd_wfc_lnk u_lnk (.ck(ck), .rst(rst), .f_liv(f_liv), .f_lid(f_lid), .t_lir(t_lir),
+    // TOKIN (mtp-wfc 2026-10-10): the S0 die's collective MTP lane hands the head sequencer's token-return flits
+    // (single-flit messages, last = 1) in the grant protocol; the lnk's grant receiver takes them unchanged
+    wire li_v = TOKIN ? f_mrt[0] : f_liv[0]; wire [FLIT:0] li_d = TOKIN ? {1'b1, f_mrt[FLIT:1]} : f_lid; wire li_g;
+    assign t_lir = TOKIN ? 1'b0 : li_g; assign t_mrg = TOKIN ? li_g : 1'b0;
+    dsfd_wfc_lnk u_lnk (.ck(ck), .rst(rst), .f_liv(li_v), .f_lid(li_d), .t_lir(li_g),
         .t_wiv(w_in_valid), .t_wid({w_in_last, w_in_data}), .f_wig(w_in_ready),
         .f_wov(w_out_valid), .f_wod({w_out_last, w_out_data}), .t_wog(w_out_ready),
         .t_lov(t_lov), .t_lod(t_lod), .f_lor(f_lor), .t_dw(dw), .f_vc(vc_ret), .t_ft(lnk_ft));
     dsfd_wfc_tok_hard u_tok (.ck(ck), .rst(rst), .f_c(f_c), .t_cfg({cfg_users, cfg_plen, cfg_glen}), .f_dw(dw),
         .f_pr({pr_re, pr_user, pr_pos, pr_blk}), .t_pr({pr_qk, pr_q}), .t_ft(tok_ft));
-    dsfd_wfc_vmx #(.XWORDS(41), .RQFREE(2), .WOUTW(WOUTW), .RQ(VMRQ)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+    dsfd_wfc_vmx #(.XWORDS(41), .RQFREE(2), .WOUTW(WOUTW), .RQ(VMRQ), .POSTED(POSTED)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq),
         .f_cs({core_start, core_user, core_token, core_pos}), .t_cd({core_done_w, cnt_tok, cnt_val}), .t_vc(vc_ret),
         .t_swv(x_swv), .t_swd(x_swd), .f_swr(x_swr), .f_swa(f_swa), .t_srv(x_srv), .t_srd(x_srd), .f_srr(x_srr),
@@ -96,7 +103,8 @@ endmodule
 
 module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
                       parameter integer VWA = 15, parameter integer LAG = 0, parameter bit VM_LINK = 0,
-                      parameter integer WOUTW = 5, parameter integer VMRQ = 16) (
+                      parameter integer WOUTW = 5, parameter integer VMRQ = 16,
+                      parameter integer POSTED = 0) (
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [0:0] f_liv, input  wire [FLIT:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [FLIT:0] t_lod, input  wire [0:0] f_lor,
@@ -134,7 +142,7 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
         .t_wiv(w_in_valid), .t_wid({w_in_last, w_in_data}), .f_wig(w_in_ready),
         .f_wov(w_out_valid), .f_wod({w_out_last, w_out_data}), .t_wog(w_out_ready),
         .t_lov(t_lov), .t_lod(t_lod), .f_lor(f_lor), .t_dw(dw), .f_vc(vc_ret), .t_ft(lnk_ft));
-    dsfd_wfc_vmx #(.XWORDS(46), .RQFREE(2), .LAG(LAG), .WOUTW(WOUTW), .RQ(VMRQ)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+    dsfd_wfc_vmx #(.XWORDS(46), .RQFREE(2), .LAG(LAG), .WOUTW(WOUTW), .RQ(VMRQ), .POSTED(POSTED)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq),
         .f_cs({core_start, core_user, core_token, core_pos}), .t_cd({core_done_w, cnt_tok, cnt_val}), .t_vc(vc_ret),
         .t_swv(x_swv), .t_swd(x_swd), .f_swr(x_swr), .f_swa(f_swa), .t_srv(x_srv), .t_srd(x_srd), .f_srr(x_srr),

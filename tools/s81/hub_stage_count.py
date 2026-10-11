@@ -80,6 +80,15 @@ def main():
         out['mtp_rtt_check'] = dict(die=need, rtl=have, verdict='PASS' if ok else 'FAIL',
                                     other_receivers=dict(mtp_to_collective=res.get('sp_mtp.t_collective->sp_collective.f_mtp'),
                                                          collective_to_mtp=res.get('sp_collective.t_mtp->sp_mtp.f_collective')))
+        # mtp-colllane-1011: with --coll-mtp-lane the collective end is dsfd_coll_mtp_lane's dsfd_coll_mtp_ep (FWD_C / RET_C)
+        if F.COLL_MTP_LANE:
+            lt = (ROOT / 'rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv').read_text().split('`else', 1)[1]
+            cp = {k: int(re.search(rf'parameter integer {k} = (\d+)', lt).group(1)) for k in ('FWD_C', 'RET_C')}
+            cd = dict(FWD_C=res.get('sp_mtp.t_collective->sp_collective.f_mtp'), RET_C=res.get('sp_collective.t_mtp->sp_mtp.f_collective'))
+            cok = all(cd[k] is not None and cd[k] == cp[k] for k in cd)
+            out['mtp_rtt_check']['collective_lane'] = dict(die=cd, rtl=cp, verdict='PASS' if cok else 'FAIL')
+            ok = ok and cok
+            out['mtp_rtt_check']['verdict'] = 'PASS' if ok else 'FAIL'
         print('MTP_RTT_CHECK', out['mtp_rtt_check'])
         rc = 0 if ok else 1
     own.output.write_text(json.dumps(out, indent=1) + '\n')

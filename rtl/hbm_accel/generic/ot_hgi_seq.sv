@@ -345,9 +345,13 @@ module ot_hgi_seq #(
     wire [31:0] dyn_d = dynv(dc_dsel), dyn_n = dynv(dc_nsel);
     wire [20:0] n_eff = (dc_nsel == 6'd0) ? {1'b0, dc[M_N +: 20]} : dyn_n[20:0];
     function automatic [63:0] sx32(input [31:0] v); sx32 = {{32{v[31]}}, v}; endfunction
-    // range check of an effective base by space (HBM 2^40 bytes, VM 2^18 words; STREAM / NONE unchecked)
-    function automatic base_bad(input [1:0] sp, input [63:0] a);
-        base_bad = (sp == 2'd0) ? (a[63:40] != 24'd0) : (sp == 2'd1) ? (a[63:18] != 46'd0) : 1'b0;
+    // range check of an effective base by space (HBM 2^40 bytes, VM 2^18 words; STREAM / NONE unchecked).  ap = 1
+    // (descriptor operands): VM words [2^18, 2^18 + 2^16) are the HC weight aperture (hgi-1010 2026-10-10: DMA.LOAD lands
+    // HC weight rows there through the VM wide-write port; the VM unit faults any other client in it).  The CP's own VM
+    // reads (I tables, END / TOKX / LOOP counts) stay below 2^18 (ap = 0).
+    function automatic base_bad(input [1:0] sp, input [63:0] a, input ap);
+        base_bad = (sp == 2'd0) ? (a[63:40] != 24'd0) :
+                   (sp == 2'd1) ? ((a[63:19] != 45'd0) || (a[18] && (!ap || a[17:16] != 2'd0))) : 1'b0;
     endfunction
     function automatic [255:0] eff_desc(input [255:0] raw, input [63:0] a, input [20:0] n);
         eff_desc = raw;
@@ -520,7 +524,7 @@ module ot_hgi_seq #(
     wire [16:0] cpa16 = {1'b0, acs[ci*16 +: 16]} + {1'b0, acx[ci*16 +: 16]} + {16'd0, cpa_c};
     // the effective-base range flags registered (acc -> base_bad -> the d_desc write enable was -75 ps)
     reg bad_q, bad_vm_q;
-    always @(posedge clk) begin bad_q <= base_bad(dc_q[M_SPACE +: 2], acc); bad_vm_q <= base_bad(2'd1, acc); end
+    always @(posedge clk) begin bad_q <= base_bad(dc_q[M_SPACE +: 2], acc, 1'b1); bad_vm_q <= base_bad(2'd1, acc, 1'b0); end
     function automatic [2:0] first0(input [6:0] o); first0 = o[0] ? 3'd0 : nxt(o, 4'd0); endfunction
     task advance(input [RB:0] n);
         begin rp <= rp + n; if (depth == 2'd0) frp <= rp + n; end
