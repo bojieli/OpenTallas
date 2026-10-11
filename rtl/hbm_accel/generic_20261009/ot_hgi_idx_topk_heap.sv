@@ -90,6 +90,18 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
  wire [215:0] rdq [0:LV+1];                           // level j store read word (j >= 2), valid the cycle after the read
  reg  [215:0] rdr [0:LV+1];                           // ... registered
  reg byp_v [0:LV+1]; reg [PW-1:0] byp_p [0:LV+1]; reg [53:0] byp_d [0:LV+1];
+ // fe-push-topkw r3 (2026-10-10; the r2 route hgi-idx-topk-wide-{a,b}-8267a2735 PREROUTE_MARGIN -1.07 / -1.32 ns):
+ //  * the level-store write is REGISTERED (wl_*: B_j result / clear word -> flops -> store one cycle later).  Safe: the
+ //    next op reads level j (A_{j-2}) no later than B_j's cycle and takes the value from byp at A_{j-1}; the op after it
+ //    reads level j >= 3 cycles after the delayed write (an op enters every 4 cycles).  A pending write keeps the heap busy.
+ //  * child-exists (node <= k) is computed in A from a heap-local copy of k (kl) and registered (b_e0 / b_e1): the
+ //    shared k register no longer sits in every level's B compare -> write cone.
+ //  * idle is a flop (conservative by one cycle: an entering op / a clear request counts as busy).
+ reg wl_ce [0:LV+1]; reg wl_all [0:LV+1]; reg [PW-1:0] wl_p [0:LV+1]; reg [53:0] wl_d [0:LV+1];
+ reg [$clog2(QMAX+1):0] wl_c [0:LV+1];
+ reg b_e0 [0:LV], b_e1 [0:LV];
+ reg [KW-1:0] kl;
+ reg idle_q;
  wire wr_v [0:LV]; wire [PW-1:0] wr_p [0:LV]; wire [53:0] wr_d [0:LV];
  wire mv [0:LV]; wire [PW-1:0] mi [0:LV];
  wire [53:0] sc0 [0:LV], sc1 [0:LV];                  // A-stage child selects
@@ -114,8 +126,7 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
    assign sc0[j] = 54'd0; assign sc1[j] = 54'd0;
   end
   // B_j: compare, write node b_p[j], move to the smaller child
-  wire [PW:0] n0 = {b_p[j], 1'b0}, n1 = {b_p[j], 1'b1};
-  wire e0 = (j + 1 < LV) && (n0 <= k), e1 = (j + 1 < LV) && (n1 <= k);
+  wire e0 = b_e0[j], e1 = b_e1[j];
   wire x_le0 = b_x[j][52:0] <= b_c0[j][52:0], x_le1 = b_x[j][52:0] <= b_c1[j][52:0], c1_lt = b_c1[j][52:0] < b_c0[j][52:0];
   wire take1 = e1 && c1_lt;
   wire stop = !e0 || (take1 ? x_le1 : x_le0);
@@ -126,33 +137,39 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
  // level stores j >= 2: written by B_j, read (grandchildren word) at A_{j-2}
  generate for (j = 2; j < LV; j = j + 1) begin : g_lv
   localparam integer D = qd(j), A = awf(qd(j));
-  wire [PW-1:0] wp = wr_p[j];
+  wire [PW-1:0] wp = wl_p[j];
   wire [PW-1:0] rp = a_p[j - 2];
   ot_hgi_topk_lvl #(.DEPTH(D), .AW(A)) u_l (.clk(clk),
    .r_ce(a_v[j - 2]), .r_a(A'(rp & ((1 << (j - 2)) - 1))), .rd(rdq[j]),
-   .w_ce(wr_v[j] || clr_b), .w_a(clr_b ? A'(clr_c) : A'((wp & ((1 << j) - 1)) >> 2)), .w_s(wp[1:0]), .w_d(wr_d[j]),
-   .w_all(clr_b));
+   .w_ce(wl_ce[j]), .w_a(wl_all[j] ? A'(wl_c[j]) : A'((wp & ((1 << j) - 1)) >> 2)), .w_s(wp[1:0]), .w_d(wl_d[j]),
+   .w_all(wl_all[j]));
   always @(posedge clk) rdr[j] <= rdq[j];
  end endgenerate
  integer i;
  reg any_v;
- always @* begin any_v = 1'b0; for (i = 0; i < LV; i = i + 1) any_v = any_v | a_v[i] | b_v[i]; end
- assign idle = !any_v && ent_c == 2'd0 && !clr_b && !clr_p;
+ always @* begin
+  any_v = 1'b0; for (i = 0; i < LV; i = i + 1) any_v = any_v | a_v[i] | b_v[i];
+  for (i = 2; i < LV; i = i + 1) any_v = any_v | wl_ce[i];
+ end
+ assign idle = idle_q;
  wire clr_start = clr_p && !any_v && ent_c == 2'd0 && !clr_b;
  always @(posedge clk or negedge rst_n) begin
   if (!rst_n) begin
-   ent_c <= 2'd0; ext_v <= 1'b0; clr_b <= 1'b0; clr_p <= 1'b1; clr_c <= 0; clr_l <= 0; dk <= MAX_K;
+   ent_c <= 2'd0; ext_v <= 1'b0; clr_b <= 1'b0; clr_p <= 1'b1; clr_c <= 0; clr_l <= 0; dk <= MAX_K; idle_q <= 1'b0;
+   for (i = 0; i <= LV + 1; i = i + 1) wl_ce[i] <= 1'b0;
    for (i = 0; i <= LV; i = i + 1) begin a_v[i] <= 1'b0; b_v[i] <= 1'b0; byp_v[i] <= 1'b0; end
    byp_v[LV + 1] <= 1'b0;
   end else begin
    ent_c <= ent ? 2'd3 : (ent_c != 2'd0 ? ent_c - 2'd1 : 2'd0);
+   idle_q <= !any_v && ent_c == 2'd0 && !clr_b && !clr_p && !ent && !clr_go && !clr_start;
+   for (i = 2; i < LV; i = i + 1) wl_ce[i] <= wr_v[i] || clr_b;
    ext_v <= ent && op_ext;
    a_v[0] <= ent && (op_ext || op_x[52:0] > h1[52:0]);
    for (i = 1; i < LV; i = i + 1) a_v[i] <= mv[i - 1];
    for (i = 0; i < LV; i = i + 1) b_v[i] <= a_v[i];
    for (i = 2; i < LV; i = i + 1) if (wr_v[i]) byp_v[i] <= 1'b1; else if (clr_start) byp_v[i] <= 1'b0;
    if (clr_go && MUT_CLR == 0) clr_p <= 1'b1;
-   if (ent && k > dk) dk <= k;
+   if (ent && kl > dk) dk <= kl;
    if (clr_start) begin
     clr_p <= 1'b0; clr_b <= 1'b1; clr_c <= 0; clr_l <= (dkl < QMAX) ? dkl : QMAX; dk <= 0;
    end
@@ -162,7 +179,12 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
  always @(posedge clk) begin
   if (ent) begin a_p[0] <= {{(PW-1){1'b0}}, 1'b1}; a_x[0] <= op_ext ? INF : op_x; if (op_ext) ext_d <= h1; end
   for (i = 1; i < LV; i = i + 1) begin a_p[i] <= mi[i - 1]; a_x[i] <= b_x[i - 1]; end
-  for (i = 0; i < LV; i = i + 1) begin b_p[i] <= a_p[i]; b_x[i] <= a_x[i]; b_c0[i] <= sc0[i]; b_c1[i] <= sc1[i]; end
+  for (i = 0; i < LV; i = i + 1) begin b_p[i] <= a_p[i]; b_x[i] <= a_x[i]; b_c0[i] <= sc0[i]; b_c1[i] <= sc1[i];
+   b_e0[i] <= (i + 1 < LV) && ({a_p[i], 1'b0} <= {1'b0, kl}); b_e1[i] <= (i + 1 < LV) && ({a_p[i], 1'b1} <= {1'b0, kl}); end
+  kl <= k;
+  for (i = 2; i < LV; i = i + 1) begin
+   wl_all[i] <= clr_b; wl_c[i] <= clr_c; wl_p[i] <= wr_p[i]; wl_d[i] <= wr_d[i];
+  end
   for (i = 2; i < LV; i = i + 1) if (wr_v[i]) begin byp_p[i] <= wr_p[i]; byp_d[i] <= wr_d[i]; end
   if (wr_v[0]) h1 <= wr_d[0];
   if (LV > 1 && wr_v[1]) begin if (wr_p[1][0]) h3 <= wr_d[1]; else h2 <= wr_d[1]; end
@@ -194,7 +216,16 @@ module ot_hgi_idx_topk_hw #(
  localparam integer RD = (MAX_K + 3) / 4;               // reverse buffer words
  localparam integer RA = (RD <= 1) ? 1 : $clog2(RD);
  localparam integer HW = (W <= 1) ? 1 : $clog2(W);
- localparam [2:0] IDLE=0, START=1, FILL=2, FLUSH=3, EXT=4, MERGE=5, ABORT=6, FIN=7;
+ localparam integer W2 = (W + 1) / 2;                   // first level of the registered root-max tree
+ localparam integer NWW = $clog2(IW + 1);
+ localparam [3:0] IDLE=0, START=1, FILL=2, FLUSH=3, EXT=4, MERGE=5, ABORT=6, FIN=7, CHK=8;
+ // fe-push-topkw r3 (2026-10-10; the r2 element route hgi-idx-topk-wide-{a,b}-8267a2735 PREROUTE_MARGIN -1.07 / -1.32 ns
+ // pre-route at TT): every k compare of the control is a down counter (extract issue / land, reverse-buffer slot, merge
+ // read / pop / emit); the command checks are registered (CHK, +1 cycle a command); the row-end test is a down counter of
+ // the words left (no 32-b add + compare into st); the drop threshold is a 2-level registered max tree (gth lags 2 edges,
+ // safe: the roots only grow within a row and the inter-row clear finishes >= 3 edges before the next row's first beat);
+ // the merge picks from REGISTERED run heads (hd) with a one-level pairwise compare, not an 8:1 FIFO read + serial W-way
+ // compare chain.
  // reset standard (ot_rst_relay): the port drives only the relay; heap h resets from region h, the control from region W.
  // Release is 3 edges after the port; cmd_ready waits for it (up).
  wire [W:0] rr;
@@ -202,10 +233,11 @@ module ot_hgi_idx_topk_hw #(
  wire rn = rr[W];
  reg up;
  always @(posedge clk or negedge rn) if (!rn) up <= 1'b0; else up <= 1'b1;
- reg [2:0] st;
- reg [31:0] n, m, row, cursor;
+ reg [3:0] st;
+ reg [31:0] n, m, row, cursor, left, rl;
  reg [KW-1:0] k;
  reg values_enabled;
+ reg [3:0] ck_err; reg [KW-1:0] ck_k; reg [31:0] ck_n, ck_m; reg ck_values;   // registered command checks (CHK)
  // ---------------------------------------------------------------- heaps
  wire hp_v [0:W-1]; wire hp_ext; wire [53:0] hp_x [0:W-1];
  assign hp_ext = st == EXT;
@@ -217,13 +249,23 @@ module ot_hgi_idx_topk_hw #(
    .op_ext(hp_ext), .op_x(hp_x[h]), .op_rdy(hp_rdy[h]), .ext_v(hx_v[h]), .ext_d(hx_d[h]), .root_key(h_root[h]),
    .clr_go(clr_go), .idle(h_idle[h]));
  end endgenerate
- reg [52:0] gth; integer i, q;
- always @(posedge clk) begin : g_gth                    // registered max root: the front-end drop threshold
-  reg [52:0] t; t = h_root[0];
-  for (i = 1; i < W; i = i + 1) if (h_root[i] > t) t = h_root[i];
+ // registered max root (2 levels): the front-end drop threshold
+ wire [52:0] gpd [0:W2-1]; reg [52:0] gp [0:W2-1]; reg [52:0] gth; integer i, q;
+ generate for (h = 0; h < W2; h = h + 1) begin : g_gp
+  if (2 * h + 1 < W) begin : g_2
+   assign gpd[h] = (h_root[2 * h + 1] > h_root[2 * h]) ? h_root[2 * h + 1] : h_root[2 * h];
+  end else begin : g_1
+   assign gpd[h] = h_root[2 * h];
+  end
+ end endgenerate
+ always @(posedge clk) begin : g_gth
+  reg [52:0] t;
+  for (i = 0; i < W2; i = i + 1) gp[i] <= gpd[i];
+  t = gp[0];
+  for (i = 1; i < W2; i = i + 1) if (gp[i] > t) t = gp[i];
   gth <= t;
  end
- reg all_idle;
+ reg all_idle;                                          // AND of the heaps' registered idle flags
  always @* begin all_idle = 1'b1; for (i = 0; i < W; i = i + 1) all_idle = all_idle & h_idle[i]; end
  // ---------------------------------------------------------------- front end: F1 (beat) -> keys -> survivor FIFOs
  reg f1_v; reg [IW*32-1:0] f1_s; reg [$clog2(IW+1)-1:0] f1_nw; reg [19:0] f1_c; reg [$clog2(G+1)-1:0] f1_g, grp;
@@ -245,33 +287,53 @@ module ot_hgi_idx_topk_hw #(
  always @(posedge clk or negedge rn) if (!rn) in_ok <= 1'b0; else in_ok <= fmax <= FD - 4;
  assign in_ready = ENABLE && st == FILL && in_ok;
  wire beat = in_valid && in_ready;
+ // the row's last beat: left (= n - cursor) <= in_nw, from the left register (no 32-b add + compare)
+ wire last_beat = (left >> NWW) == 32'd0 && left[NWW-1:0] <= in_nw;
  // ---------------------------------------------------------------- reverse buffers and merge
- reg [KW-1:0] xi [0:W-1], xo [0:W-1];                   // extract ops issued / results written
+ reg [KW-1:0] xil [0:W-1], xol [0:W-1];                 // extract ops left to issue / results left to land
+ reg [KW-1:0] wa [0:W-1];                               // reverse-buffer slot of the next result (k-1 down; MUT_REV 0 up)
  reg [RA:0] mw [0:W-1]; reg mi_q [0:W-1];               // merge: next word to read, read in flight
+ reg [KW-1:0] el [0:W-1]; reg [2:0] nv_q [0:W-1];       // entries left to read a run / entries in the word in flight
  reg [53:0] mf [0:W*8-1]; reg [3:0] mc [0:W-1]; reg [2:0] mr [0:W-1], mwp [0:W-1];
- reg [KW-1:0] mp [0:W-1];                               // entries popped a run
+ reg [53:0] hd [0:W-1]; reg hd_v [0:W-1];               // registered run heads
+ reg [KW-1:0] rp [0:W-1];                               // entries of a run not yet popped
  wire [215:0] rb_q [0:W-1];
+ wire rd_go [0:W-1];
  generate for (h = 0; h < W; h = h + 1) begin : g_rb
-  wire [KW-1:0] wa = (MUT_REV != 0) ? xo[h] : k - 1'b1 - xo[h];
   // heap ops: INS from the survivor FIFO head (FILL / FLUSH), EXT k times (EXT); issued the cycle the heap is ready
-  assign hp_v[h] = ((st == FILL || st == FLUSH) && fc[h] != 4'd0) || (st == EXT && xi[h] != k);
+  assign hp_v[h] = ((st == FILL || st == FLUSH) && fc[h] != 4'd0) || (st == EXT && xil[h] != 0);
   assign hp_x[h] = ff[h * FD + fr[h]];
-  ot_hgi_topk_lvl #(.DEPTH(RD), .AW(RA)) u_rb (.clk(clk), .r_ce(st == MERGE && !mi_q[h] && ({mw[h], 2'b00} < k) &&
-   (mc[h] + 4'd4 <= 4'd8)), .r_a(RA'(mw[h])), .rd(rb_q[h]), .w_ce(hx_v[h]), .w_a(RA'(wa >> 2)), .w_s(wa[1:0]),
-   .w_d(hx_d[h]), .w_all(1'b0));
+  assign rd_go[h] = st == MERGE && !mi_q[h] && el[h] != 0 && mc[h] <= 4'd4;
+  ot_hgi_topk_lvl #(.DEPTH(RD), .AW(RA)) u_rb (.clk(clk), .r_ce(rd_go[h]), .r_a(RA'(mw[h])), .rd(rb_q[h]),
+   .w_ce(hx_v[h]), .w_a(RA'(wa[h] >> 2)), .w_s(wa[h][1:0]), .w_d(hx_d[h]), .w_all(1'b0));
  end endgenerate
- // merge pick: the largest head, only when every unfinished run has a head
- reg mg_ok; reg [HW-1:0] mg_h; reg mg_any; reg [53:0] mg_e;
+ // merge pick: the largest registered head (ties to the lowest run), only when every unfinished run has a head
+ wire [W-1:0] win;
+ generate for (h = 0; h < W; h = h + 1) begin : g_win
+  wire [W-1:0] bt;
+  for (l = 0; l < W; l = l + 1) begin : g_b
+   if (l == h) begin : g_s
+    assign bt[l] = 1'b1;
+   end else if (l > h) begin : g_hi
+    assign bt[l] = !hd_v[l] || hd[h][52:0] >= hd[l][52:0];
+   end else begin : g_lo
+    assign bt[l] = !hd_v[l] || hd[h][52:0] > hd[l][52:0];
+   end
+  end
+  assign win[h] = hd_v[h] && (&bt);
+ end endgenerate
+ reg mg_ok, mg_any; reg [53:0] mg_e;
  always @* begin
-  mg_ok = 1'b1; mg_any = 1'b0; mg_h = 0; mg_e = 54'd0;
+  mg_ok = 1'b1; mg_any = 1'b0; mg_e = 54'd0;
   for (i = 0; i < W; i = i + 1) begin
-   if (mc[i] == 4'd0 && mp[i] != k) mg_ok = 1'b0;
-   if (mc[i] != 4'd0 && (!mg_any || mf[i * 8 + mr[i]][52:0] > mg_e[52:0])) begin mg_any = 1'b1; mg_h = i[HW-1:0]; mg_e = mf[i * 8 + mr[i]]; end
+   if (!hd_v[i] && rp[i] != 0) mg_ok = 1'b0;
+   mg_any = mg_any | hd_v[i];
+   mg_e = mg_e | (win[i] ? hd[i] : 54'd0);
   end
  end
- reg [KW-1:0] emitted;
+ reg [KW-1:0] em;                                       // results left to emit
  reg [53:0] of [0:3]; reg of_l [0:3]; reg [2:0] oc; reg [1:0] ow, orp;
- wire mg_go = st == MERGE && emitted != k && mg_ok && mg_any && oc <= 3'd2;
+ wire mg_go = st == MERGE && em != 0 && mg_ok && mg_any && oc <= 3'd2;
  wire [53:0] oe = of[orp];
  wire [31:0] o_mono = oe[51:20];
  wire [31:0] o_canon = o_mono[31] ? {1'b0, o_mono[30:0]} : ~o_mono;
@@ -286,11 +348,12 @@ module ot_hgi_idx_topk_hw #(
  // ---------------------------------------------------------------- control
  always @(posedge clk or negedge rn) begin
   if (!rn) begin
-   st <= IDLE; done <= 1'b0; error <= 4'd0; n <= 0; m <= 0; k <= 0; row <= 0; cursor <= 0; values_enabled <= 1'b0;
-   f1_v <= 1'b0; grp <= 0; clr_go <= 1'b0; emitted <= 0; oc <= 0; ow <= 0; orp <= 0;
+   st <= IDLE; done <= 1'b0; error <= 4'd0; n <= 0; m <= 0; k <= 0; row <= 0; cursor <= 0; left <= 0; rl <= 0;
+   values_enabled <= 1'b0; ck_err <= 4'd0;
+   f1_v <= 1'b0; grp <= 0; clr_go <= 1'b0; em <= 0; oc <= 0; ow <= 0; orp <= 0;
    for (i = 0; i < W; i = i + 1) begin
-    fc[i] <= 0; fw[i] <= 0; fr[i] <= 0; xi[i] <= 0; xo[i] <= 0; mw[i] <= 0; mi_q[i] <= 1'b0;
-    mc[i] <= 0; mr[i] <= 0; mwp[i] <= 0; mp[i] <= 0;
+    fc[i] <= 0; fw[i] <= 0; fr[i] <= 0; xil[i] <= 0; xol[i] <= 0; wa[i] <= 0; mw[i] <= 0; mi_q[i] <= 1'b0;
+    el[i] <= 0; nv_q[i] <= 0; mc[i] <= 0; mr[i] <= 0; mwp[i] <= 0; hd_v[i] <= 1'b0; rp[i] <= 0;
    end
   end else begin
    done <= 1'b0; clr_go <= 1'b0;
@@ -298,8 +361,8 @@ module ot_hgi_idx_topk_hw #(
    f1_v <= beat;
    if (beat) begin
     f1_s <= in_score; f1_nw <= in_nw; f1_c <= cursor[19:0]; f1_g <= grp; grp <= (grp + 1 == G) ? 0 : grp + 1;
-    cursor <= cursor + in_nw;
-    if (cursor + in_nw >= n) st <= FLUSH;
+    cursor <= cursor + in_nw; left <= left - in_nw;
+    if (last_beat) st <= FLUSH;
    end
    // survivors -> FIFOs, FIFOs -> heaps (INS)
    for (i = 0; i < W; i = i + 1) begin : fifo
@@ -314,54 +377,66 @@ module ot_hgi_idx_topk_hw #(
    case (st)
     IDLE: if (cmd_valid) begin
      error <= 4'd0;
-     if (!ENABLE || cmd_unit != 9 || cmd_op != 2) begin error <= 4'd1; done <= 1'b1; end
-     else if (cmd_param[24:12] != 0 || cmd_param[11:0] == 0 || cmd_param[11:0] > MAX_K ||
-              cmd_param[11:0] > cmd_n || cmd_n == 0 || cmd_n > 1048576 || cmd_m == 0) begin error <= 4'd2; done <= 1'b1; end
-     else begin
-      values_enabled <= cmd_values; n <= cmd_n; m <= cmd_m; k <= cmd_param[KW-1:0]; row <= 0; st <= START;
-     end
+     ck_err <= (!ENABLE || cmd_unit != 9 || cmd_op != 2) ? 4'd1 :
+               (cmd_param[24:12] != 0 || cmd_param[11:0] == 0 || cmd_param[11:0] > MAX_K ||
+                cmd_param[11:0] > cmd_n || cmd_n == 0 || cmd_n > 1048576 || cmd_m == 0) ? 4'd2 : 4'd0;
+     ck_values <= cmd_values; ck_n <= cmd_n; ck_m <= cmd_m; ck_k <= cmd_param[KW-1:0];
+     st <= CHK;
     end
-    START: if (all_idle) begin cursor <= 0; grp <= 0; st <= FILL; end
+    CHK: if (ck_err != 4'd0) begin error <= ck_err; done <= 1'b1; st <= IDLE; end
+         else begin values_enabled <= ck_values; n <= ck_n; m <= ck_m; rl <= ck_m; k <= ck_k; row <= 0; st <= START; end
+    START: if (all_idle) begin cursor <= 0; left <= n; grp <= 0; st <= FILL; end
     FILL, FLUSH: begin
      if (f1_nan) begin error <= 4'd3; done <= 1'b1; st <= ABORT; f1_v <= 1'b0;
       for (i = 0; i < W; i = i + 1) begin fc[i] <= 0; fr[i] <= 0; fw[i] <= 0; end
      end else if (st == FLUSH && !f1_v && !beat) begin : fl
       reg e; e = all_idle;
       for (i = 0; i < W; i = i + 1) e = e && fc[i] == 0;
-      if (e) begin st <= EXT; for (i = 0; i < W; i = i + 1) begin xi[i] <= 0; xo[i] <= 0; end end
+      if (e) begin
+       st <= EXT;
+       for (i = 0; i < W; i = i + 1) begin xil[i] <= k; xol[i] <= k; wa[i] <= (MUT_REV != 0) ? {KW{1'b0}} : k - 1'b1; end
+      end
      end
     end
     EXT: begin : ex
      reg e; e = 1'b1;
      for (i = 0; i < W; i = i + 1) begin
-      if (xi[i] != k && hp_rdy[i]) xi[i] <= xi[i] + 1'b1;
-      if (hx_v[i]) xo[i] <= xo[i] + 1'b1;
-      e = e && (xo[i] + hx_v[i] == k);
+      if (xil[i] != 0 && hp_rdy[i]) xil[i] <= xil[i] - 1'b1;
+      if (hx_v[i]) begin xol[i] <= xol[i] - 1'b1; wa[i] <= (MUT_REV != 0) ? wa[i] + 1'b1 : wa[i] - 1'b1; end
+      e = e && (xol[i] == {{(KW-1){1'b0}}, hx_v[i]});
      end
      if (e) begin
-      st <= MERGE; clr_go <= 1'b1; emitted <= 0;
-      for (i = 0; i < W; i = i + 1) begin mw[i] <= 0; mi_q[i] <= 1'b0; mc[i] <= 0; mr[i] <= 0; mwp[i] <= 0; mp[i] <= 0; end
+      st <= MERGE; clr_go <= 1'b1; em <= k;
+      for (i = 0; i < W; i = i + 1) begin
+       mw[i] <= 0; mi_q[i] <= 1'b0; mc[i] <= 0; mr[i] <= 0; mwp[i] <= 0; el[i] <= k; hd_v[i] <= 1'b0; rp[i] <= k;
+      end
      end
     end
     MERGE: begin
      for (i = 0; i < W; i = i + 1) begin : run
-      reg rd_go, pop; reg [3:0] np; reg [KW+1:0] base; reg [2:0] wp;
-      rd_go = !mi_q[i] && ({mw[i], 2'b00} < k) && (mc[i] + 4'd4 <= 4'd8);
-      mi_q[i] <= rd_go;
-      if (rd_go) mw[i] <= mw[i] + 1'b1;
-      np = 0;
-      if (mi_q[i]) begin                                  // the word read last cycle lands: up to 4 entries < k
-       base = {mw[i] - 1'b1, 2'b00};
-       for (q = 0; q < 4; q = q + 1) if (base + q < k) begin wp = mwp[i] + np[2:0]; mf[i * 8 + wp] <= rb_q[i][54 * q +: 54]; np = np + 1; end
-       mwp[i] <= mwp[i] + np[2:0];
+      reg pop, take; reg [3:0] np; reg [2:0] wp;
+      mi_q[i] <= rd_go[i];
+      if (rd_go[i]) begin
+       mw[i] <= mw[i] + 1'b1;
+       if (el[i] >= 4) begin nv_q[i] <= 3'd4; el[i] <= el[i] - 3'd4; end
+       else begin nv_q[i] <= el[i][2:0]; el[i] <= 0; end
       end
-      pop = mg_go && mg_h == i;
-      if (pop) begin mr[i] <= mr[i] + 1'b1; mp[i] <= mp[i] + 1'b1; end
-      mc[i] <= mc[i] + np - pop;
+      np = 0;
+      if (mi_q[i]) begin                                  // the word read last cycle lands: nv_q entries
+       for (q = 0; q < 4; q = q + 1) if (q < nv_q[i]) begin wp = mwp[i] + q; mf[i * 8 + wp] <= rb_q[i][54 * q +: 54]; end
+       np = {1'b0, nv_q[i]};
+       mwp[i] <= mwp[i] + nv_q[i];
+      end
+      pop = mg_go && win[i];
+      take = (pop || !hd_v[i]) && mc[i] != 4'd0;          // refill the head from the FIFO
+      if (take) begin hd[i] <= mf[i * 8 + mr[i]]; mr[i] <= mr[i] + 1'b1; end
+      if (take) hd_v[i] <= 1'b1; else if (pop) hd_v[i] <= 1'b0;
+      if (pop) rp[i] <= rp[i] - 1'b1;
+      mc[i] <= mc[i] + np - take;
      end
-     if (emitted == k && oc == 0) begin
-      if (row + 1 == m) begin st <= FIN; end
-      else begin row <= row + 1; st <= START; end
+     if (em == 0 && oc == 0) begin
+      if (rl == 32'd1) begin st <= FIN; end
+      else begin row <= row + 1; rl <= rl - 1; st <= START; end
      end
     end
     ABORT: if (all_idle) begin clr_go <= 1'b1; st <= IDLE; end
@@ -369,7 +444,7 @@ module ot_hgi_idx_topk_hw #(
     default: st <= IDLE;
    endcase
    // output FIFO
-   if (mg_go) begin of[ow] <= mg_e; of_l[ow] <= emitted + 1'b1 == k; ow <= ow + 1'b1; emitted <= emitted + 1'b1; end
+   if (mg_go) begin of[ow] <= mg_e; of_l[ow] <= em == 1; ow <= ow + 1'b1; em <= em - 1'b1; end
    if (o_pop) orp <= orp + 1'b1;
    oc <= oc + mg_go - o_pop;
   end
