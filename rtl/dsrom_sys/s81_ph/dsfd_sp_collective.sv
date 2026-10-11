@@ -148,7 +148,7 @@ module dsfd_sp_collective (
         .lo_v(b_lo_v), .lo_r(b_lo_r), .lo_d(b_lo_d), .li_v(b_li_v), .li_r(b_li_r), .li_d(b_li_d), .flt(b_lflt));
     wire c_sv, c_sr, c_ov, c_or; wire [100:0] c_sd; wire [593:0] c_od; wire [0:0] p_abort;
     dsfd_coll_p2_ep u_pe (.ck(pll_stream), .rst(rst_stream),
-        .c_l1v(1'b0), .c_l1r(), .c_l1d(604'd0), .t_l1v(), .t_l1d(), .f_l1g(1'b0),   // lane 1: u_ba's own grant sender
+        // lane 1 has no port here: u_ba (dsfd_coll_p2_lane_ba OGRANT) is its die-bus grant sender
         .c_sv(c_sv), .c_sr(c_sr), .c_sd(c_sd), .t_sv(t_p2[605]), .t_sd(t_p2[706:606]), .f_sg(f_p2[596]),
         .f_ov(f_p2[0]), .f_od(f_p2[594:1]), .t_og(t_p2[708]), .c_ov(c_ov), .c_or(c_or), .c_od(c_od));
     dsfd_coll_p2_lane_pa u_pa (

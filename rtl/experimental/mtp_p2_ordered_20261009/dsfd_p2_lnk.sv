@@ -81,12 +81,16 @@ module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
   .l_valid(t_ov),.l_ready(f_og),.l_data(t_od));
 endmodule
 
-// Collective-slab end: sends lane 1 and start, receives the result row (F = p2 -> collective, R = collective -> p2).
+// Collective-slab end: sends the start, receives the result row (F = p2 -> collective, R = collective -> p2).
+// Lane 1 (die B's expert words) is NOT here: dsfd_coll_p2_lane_ba (rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv,
+// OGRANT) is its grant-protocol sender onto the die bus (mtp-colllane-1011 8aa62270c), so this end has no lane-1 port.
+// Core side (the abutting dsfd_coll_p2_lane_pa): start in on valid / ready from one flop (ltx_rc); result row out on
+// valid / ready through an abutting grant pair (ltx_rc -> ot_dsrom_mtp_lrx D 4 SEL 1, no stations: the closed 3-cycle
+// history is exact there), so the core's ready only steers a dozen state flops, never the 594-b row registers
+// (fixlat-collp2-ffbec0c86-tc TT -64.76: c_or -> 594-b c_data / wp enables, 13 levels).
 module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 9,
                          parameter integer D_O = FWD_C + RET_C + 4) (
  input wire [0:0] ck, rst,
- input wire [0:0] c_l1v, output wire [0:0] c_l1r, input wire [603:0] c_l1d,
- output wire [0:0] t_l1v, output wire [603:0] t_l1d, input wire [0:0] f_l1g,
  input wire [0:0] c_sv, output wire [0:0] c_sr, input wire [100:0] c_sd,
  output wire [0:0] t_sv, output wire [100:0] t_sd, input wire [0:0] f_sg,
  input wire [0:0] f_ov, input wire [593:0] f_od, output wire [0:0] t_og,
@@ -99,19 +103,15 @@ module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 
 `endif
  wire rn;
  ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
- // core-facing ports from single flops (ltx_rc: c_ready = the registered grant).  The result row reaches the
- // collective core on the same grant protocol: c_or is the core's GRANT (one row per grant, launched from flops two
- // edges later; the abutting core sizes its own buffer for that fixed 3-cycle loop), so no core-port input fans out
- // into the 594-b row registers (fixlat-collp2-ffbec0c86-tc TT -64.76: c_or -> c_data / wp enables, 13 levels).
- ot_dsrom_mtp_ltx_rc #(.W(604)) u_l1(.clk(ck[0]),.rst_n(rn),.c_valid(c_l1v),.c_ready(c_l1r),.c_data(c_l1d),
-  .l_valid(t_l1v),.l_ready(f_l1g),.l_data(t_l1d));
  ot_dsrom_mtp_ltx_rc #(.W(101)) u_st(.clk(ck[0]),.rst_n(rn),.c_valid(c_sv),.c_ready(c_sr),.c_data(c_sd),
   .l_valid(t_sv),.l_ready(f_sg),.l_data(t_sd));
- wire ov, orr; wire [593:0] od;
+ wire ov, orr, gv, gr; wire [593:0] od, gd;
  ot_dsrom_mtp_lrx_rtt #(.W(594),.D(D_O),.SEL(1),.ENABLE_RTT(1),.FORWARD_HOPS(OF),.RETURN_HOPS(OR)) u_o(.clk(ck[0]),.rst_n(rn),
   .l_valid(f_ov),.l_ready(t_og),.l_data(f_od),.c_valid(ov),.c_ready(orr),.c_data(od));
- ot_dsrom_mtp_ltx_rc #(.W(594)) u_oc(.clk(ck[0]),.rst_n(rn),.c_valid(ov),.c_ready(orr),.c_data(od),
-  .l_valid(c_ov),.l_ready(c_or),.l_data(c_od));
+ ot_dsrom_mtp_ltx_rc #(.W(594)) u_og(.clk(ck[0]),.rst_n(rn),.c_valid(ov),.c_ready(orr),.c_data(od),
+  .l_valid(gv),.l_ready(gr),.l_data(gd));
+ ot_dsrom_mtp_lrx #(.W(594),.D(4),.SEL(1)) u_oc(.clk(ck[0]),.rst_n(rn),.l_valid(gv),.l_ready(gr),.l_data(gd),
+  .c_valid(c_ov),.c_ready(c_or),.c_data(c_od));
 endmodule
 
 // VM-slab end: sends lane 0.
