@@ -365,28 +365,50 @@ module ot_hgi_idx_topk_hw #(
    (mc[h] + 4'd4 <= 4'd8)), .r_a(RA'(mw[h])), .rd(rb_q[h]), .w_ce_i(hx_v[h]), .w_a_i(RA'(wa >> 2)), .w_s(wa[1:0]),
    .w_d(hx_d[h]), .w_all(1'b0));
  end endgenerate
- // merge pick: the largest head, only when every unfinished run has a head
- // a tournament over the W run heads (keep comparators, log2 W levels); a run without a head never wins
- reg mg_ok; wire [HW-1:0] mg_h; wire mg_any; wire [53:0] mg_e;
- always @* begin mg_ok = 1'b1; for (i = 0; i < W; i = i + 1) if (mc[i] == 4'd0 && mp[i] != k) mg_ok = 1'b0; end
- wire tv [0:WL][0:WP-1]; wire [53:0] te_ [0:WL][0:WP-1]; wire [HW-1:0] th [0:WL][0:WP-1];
- for (gi = 0; gi < WP; gi = gi + 1) begin : g_t0
-  if (gi < W) begin : g_r assign tv[0][gi] = mc[gi] != 4'd0; assign te_[0][gi] = mf[gi * 8 + mr[gi]]; assign th[0][gi] = gi; end
-  else begin : g_z assign tv[0][gi] = 1'b0; assign te_[0][gi] = 54'd0; assign th[0][gi] = 0; end
+ // merge (el1011-hbm-idx r5): a PIPELINED TREE of 2-way merge nodes instead of a one-cycle W-way tournament (the flat w8
+ // route's worst path was run read pointer -> 8:1 head mux -> 3 compare levels -> pop -> counters, -2.3 ns).  Leaf i holds
+ // a REGISTERED head (lh) refilled from its 8-entry run FIFO; node = registered head + one spare, fires when its output
+ // has room (spare empty) and each input has a head or is exhausted: one 53-b compare a cycle a node, one result a cycle.
+ // A stream is exhausted when it has no head and none will come (leaf: k entries popped; node: both inputs exhausted, empty).
+ reg lh_v [0:W-1]; reg [53:0] lh_d [0:W-1];
+ wire sv [0:WL][0:WP-1]; wire [53:0] sd [0:WL][0:WP-1]; wire se [0:WL][0:WP-1]; wire spop [0:WL][0:WP-1];
+ for (gi = 0; gi < WP; gi = gi + 1) begin : g_lf
+  if (gi < W) begin : g_r assign sv[0][gi] = lh_v[gi]; assign sd[0][gi] = lh_d[gi]; assign se[0][gi] = !lh_v[gi] && mp[gi] == k; end
+  else begin : g_z assign sv[0][gi] = 1'b0; assign sd[0][gi] = 54'd0; assign se[0][gi] = 1'b1; end
  end
- for (gl = 0; gl < WL; gl = gl + 1) begin : g_tl
-  for (gi = 0; gi < (WP >> (gl + 1)); gi = gi + 1) begin : g_tn
-   wire lo_lt; ot_topk_lt #(.W(53)) u_c (.a(te_[gl][2 * gi][52:0]), .b(te_[gl][2 * gi + 1][52:0]), .lt(lo_lt));
-   wire hi = tv[gl][2 * gi + 1] && (!tv[gl][2 * gi] || lo_lt);
-   assign tv[gl + 1][gi] = tv[gl][2 * gi] || tv[gl][2 * gi + 1];
-   assign te_[gl + 1][gi] = hi ? te_[gl][2 * gi + 1] : te_[gl][2 * gi];
-   assign th[gl + 1][gi] = hi ? th[gl][2 * gi + 1] : th[gl][2 * gi];
+ for (gl = 0; gl < WL; gl = gl + 1) begin : g_ml
+  for (gi = 0; gi < (WP >> (gl + 1)); gi = gi + 1) begin : g_mn
+   reg hv, pv; reg [53:0] hd, pd;
+   wire av = sv[gl][2 * gi], bv = sv[gl][2 * gi + 1], ae = se[gl][2 * gi], be = se[gl][2 * gi + 1];
+   wire a_lt_b; ot_topk_lt #(.W(53)) u_c (.a(sd[gl][2 * gi][52:0]), .b(sd[gl][2 * gi + 1][52:0]), .lt(a_lt_b));
+   wire fire = !pv && (av || bv) && (av || ae) && (bv || be);
+   wire pick_b = bv && (!av || a_lt_b);
+   wire [53:0] x = pick_b ? sd[gl][2 * gi + 1] : sd[gl][2 * gi];
+   wire cpop = spop[gl + 1][gi];
+   assign spop[gl][2 * gi] = fire && !pick_b; assign spop[gl][2 * gi + 1] = fire && pick_b;
+   assign sv[gl + 1][gi] = hv; assign sd[gl + 1][gi] = hd; assign se[gl + 1][gi] = ae && be && !hv && !pv;
+   always @(posedge clk or negedge rn) begin
+    if (!rn) begin hv <= 1'b0; pv <= 1'b0; end
+    else if (st != MERGE) begin hv <= 1'b0; pv <= 1'b0; end
+    else if (cpop) begin if (pv) begin hd <= pd; pv <= 1'b0; end else begin hv <= fire; hd <= x; end end
+    else if (fire) begin if (!hv) begin hv <= 1'b1; hd <= x; end else begin pv <= 1'b1; pd <= x; end end
+   end
   end
  end
- assign mg_any = tv[WL][0]; assign mg_e = te_[WL][0]; assign mg_h = th[WL][0];
+ always @(posedge clk or negedge rn) begin : g_lh
+  integer li;
+  if (!rn) for (li = 0; li < W; li = li + 1) lh_v[li] <= 1'b0;
+  else for (li = 0; li < W; li = li + 1) begin
+   if (st != MERGE) lh_v[li] <= 1'b0;
+   else if (mc[li] != 4'd0 && (!lh_v[li] || spop[0][li])) begin lh_v[li] <= 1'b1; lh_d[li] <= mf[li * 8 + mr[li]]; end
+   else if (spop[0][li]) lh_v[li] <= 1'b0;
+  end
+ end
  reg [KW-1:0] emitted;
  reg [53:0] of [0:3]; reg of_l [0:3]; reg [2:0] oc; reg [1:0] ow, orp;
- wire mg_go = st == MERGE && emitted != k && mg_ok && mg_any && oc <= 3'd2;
+ wire mg_go = st == MERGE && emitted != k && sv[WL][0] && oc <= 3'd2;     // root pop
+ wire [53:0] mg_e = sd[WL][0];
+ assign spop[WL][0] = mg_go;
  wire [53:0] oe = of[orp];
  wire [31:0] o_mono = oe[51:20];
  wire [31:0] o_canon = o_mono[31] ? {1'b0, o_mono[30:0]} : ~o_mono;
@@ -470,8 +492,9 @@ module ot_hgi_idx_topk_hw #(
        for (q = 0; q < 4; q = q + 1) if (base + q < k) begin wp = mwp[i] + np[2:0]; mf[i * 8 + wp] <= rb_q[i][54 * q +: 54]; np = np + 1; end
        mwp[i] <= mwp[i] + np[2:0];
       end
-      pop = mg_go && mg_h == i;
-      if (pop) begin mr[i] <= mr[i] + 1'b1; mp[i] <= mp[i] + 1'b1; end
+      pop = (mc[i] != 4'd0) && (!lh_v[i] || spop[0][i]);   // refill the registered leaf head
+      if (pop) mr[i] <= mr[i] + 1'b1;
+      if (spop[0][i]) mp[i] <= mp[i] + 1'b1;
       mc[i] <= mc[i] + np - pop;
      end
      if (emitted == k && oc == 0) begin
