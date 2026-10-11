@@ -217,7 +217,7 @@ module ot_hgi_coll_tkm #(
     // the write port drains one line an edge; a step needs room for its lines
     reg [FW-1:0] lq_d [0:3]; reg [39:0] lq_a [0:3]; reg [15:0] lq_m [0:3]; reg [2:0] lq_n; reg [1:0] lq_h, lq_t;
     wire lq_pop = (lq_n != 3'd0) && (!w_v || w_rdy);
-    wire pgo = (ph == P_OUT) && (outn < nout_q) && ({1'b0, lq_n} - {3'd0, lq_pop} + (hr_q ? 4'd2 : 4'd1) <= 4'd4);
+    wire pgo = (ph == P_OUT) && (outn < nout_q) && ({1'b0, lq_n} + (hr_q ? 4'd2 : 4'd1) <= 4'd4);   // room from the registered count only (no w_rdy -> pgo -> array path)
     // select (combinational over the registered staging heads)
     reg [EW-1:0] sel_e [0:3]; reg [2:0] sel_n; reg [7:0] sel_take [0:DEL-1]; reg [DEL-1:0] sel_pop;
     always @* begin : selc
