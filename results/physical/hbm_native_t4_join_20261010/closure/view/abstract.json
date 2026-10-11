@@ -1,6 +1,6 @@
 {
   "name": "hfd_idx_t4_join",
-  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_a_tc_cl/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_b_tc_cl/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_a_tc_cl/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_b_tc_cl/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/record/view:/out",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/view:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/record/export_tmp:/tmp",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/export_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_a_tc_cl/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_b_tc_cl/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/record/view:/out",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/view:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/record/export_tmp:/tmp",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/export_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -54,11 +54,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_a_tc_cl/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_b_tc_cl/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/record/view:/out",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/view:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl/record/export_tmp:/tmp",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/export_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -71,10 +71,10 @@
   },
   "macro_views": [],
   "files": {
-    "hfd_idx_t4_join.lef": "a3a4a16320bec56db8ec48f10d8d3fda31ba74f3d4ef04be30406d0f367ddcfa",
-    "hfd_idx_t4_join_ff.lib": "ebe09598e83f5058975faa3e1da68da7043999e6c49d82923127ec72d7c1fbf9",
-    "hfd_idx_t4_join_ss.lib": "38bbf53302ad08defe189c47cc7b7b7589bf2fe611390c827ef48f581a7e6be6",
-    "hfd_idx_t4_join_tt.lib": "5d0a21356381d8ec735d240f501fb52cee67419bceaf7357f69ee231b2346783"
+    "hfd_idx_t4_join.lef": "d86640b51c243e209244daa848df142e9b5e8c4c5cc5f0bceeaf284c02daf976",
+    "hfd_idx_t4_join_ff.lib": "5c7d40535f0522268aea65e0a11591f62dd0c9eff10f9660d825e4b6be882b1c",
+    "hfd_idx_t4_join_ss.lib": "8c08dd8171f0ec8f1fefe0126e9311aee820e303dc3a9a6b7bc58965c22f78dc",
+    "hfd_idx_t4_join_tt.lib": "8ce36beacc2d67b25198b08a236162366c1822bbdb45a33008bb0ae9d9b6516b"
   },
   "ok": true
 }
