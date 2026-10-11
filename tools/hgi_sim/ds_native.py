@@ -312,19 +312,23 @@ class Lower:
                tag=None, rd=None, wcols=None):
             k = op["k"] if kcols is None else kcols
             r0, r1 = rows
+            # per-die compact slices: a die stores only ITS rows of each matrix (TP96 row split), so the manifest holds
+            # the largest slice over the ranks and the descriptor base does not depend on the rank; the unit model maps
+            # the local row back through the entry's per-rank row offset
+            rows_all = [head_rows(q) if op["out"] == "logits" else op["rows"][q] for q in range(TP)]
+            nsl = max(max(b_ - a_ for a_, b_ in rows_all), 1)
             if expert_slot is not None:
-                e = self.W(w_key, n, op["k"], fmt, n_experts=m.n_exp, lines=True)
-                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
+                e = self.W(w_key, nsl, op["k"], fmt, n_experts=m.n_exp, lines=True)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"], n=k, m=max(r1 - r0, 1),
                            stride=e["rowbytes"], indexed=1, dyn_mul=e["estride"])
             elif col0 or (wcols and wcols != k):
                 # a column slice is its own dense line image (the SM record needs B.stride = LPR x LB of THIS K)
-                e = self.W(f"{w_key}@c{col0}+{k}", n, k, fmt, lines=True, col_off=col0)
-                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
-                           stride=e["rowbytes"])
+                e = self.W(f"{w_key}@c{col0}+{k}", nsl, k, fmt, lines=True, col_off=col0)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"], n=k, m=max(r1 - r0, 1), stride=e["rowbytes"])
             else:
-                e = self.W(w_key, n, op["k"], fmt, lines=True)
-                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"],
-                           n=k, m=max(r1 - r0, 1), stride=e["rowbytes"])
+                e = self.W(w_key, nsl, op["k"], fmt, lines=True)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"], n=k, m=max(r1 - r0, 1), stride=e["rowbytes"])
+            e.setdefault("row_off", {})[self.rank_now] = r0
             # the SM record's line-image rules (ot_hgi_sm_record): rows dense in lines, base on a line boundary
             assert bd.stride == 8 * -(-k // SM_GK[fmt]) * SM_LB and bd.base % SM_LB == 0, (w_key, k, bd.stride, bd.base)
             fp = {"bf16": 0, "fp8": 1, "fp4": 2}[fmt]
@@ -1039,6 +1043,7 @@ def ds_units(m, man, golib):
         for die in M.dies:
             base, n, mrows, st, _ = M.eff(bd, die, L)
             e, ex, r0, c0 = man.find(base)
+            r0 += e.get("row_off", {}).get(die.rank, 0)          # the die's slice -> the matrix row
             w = wrows(e, ex, r0, mrows, c0, n, L)
             x = M.read(a, die, L)
             if fmt in (1, 2):

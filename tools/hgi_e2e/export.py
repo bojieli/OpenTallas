@@ -332,6 +332,7 @@ def export_ds(a):
                 continue
             bb, bn, bm, bst, _, _, bf = e_["eff"]["B"]
             ent, ex, r0, c0 = man.find(bb)
+            r0 += ent.get("row_off", {}).get(0, 0)
             w = wr(ent, ex, r0, bm, c0, bn, e_["L"])
             img = SL.pack(fmtc[bf], w)
             assert img.shape == (bm, bst), (e_["tag"], img.shape, bm, bst)
