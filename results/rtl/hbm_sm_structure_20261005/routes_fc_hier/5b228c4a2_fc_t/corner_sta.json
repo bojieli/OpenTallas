@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_fct-5b228c4a2-tc-m6-pd45-cal2-cl/routes/hbm_smh_fct_5b228c4a2_tc_m6_pd45_cal2_cl",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_hbm_accel_smh_fc_t\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\n",
+ "sdc_name": "6_signoff.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 277.73,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 277.73,
+  "worst_reg_to_reg_slack_ps": 394.94,
+  "worst_input_to_reg_slack_ps": 277.73,
+  "worst_output_port_slack_ps": 282.75,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "39e914ee61c2e3db301b8b5337f0caee16f728453f013b56b48ebe877dd6e3b2",
+  "spef_sha256": "a652a08165a1f1daec833ff914781d22b186fcb46f787bce36b05072a4234307",
+  "sdc_name": "6_signoff.sdc",
+  "sdc_sha256": "7ae7f7c35485062ec185003323dc826705095e10b4338b2863d25de756d48b21"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": 151.58,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 244.57,
+  "worst_reg_to_reg_slack_ps": 219.6,
+  "worst_input_to_reg_slack_ps": 317.32,
+  "worst_output_port_slack_ps": 151.58,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "39e914ee61c2e3db301b8b5337f0caee16f728453f013b56b48ebe877dd6e3b2",
+  "spef_sha256": "a652a08165a1f1daec833ff914781d22b186fcb46f787bce36b05072a4234307",
+  "sdc_name": "6_signoff.sdc",
+  "sdc_sha256": "7ae7f7c35485062ec185003323dc826705095e10b4338b2863d25de756d48b21"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": -1.29,
+  "tns_ps": -4.2,
+  "worst_register_d_slack_ps": 0.94,
+  "worst_reg_to_reg_slack_ps": 0.94,
+  "worst_input_to_reg_slack_ps": 88.32,
+  "worst_output_port_slack_ps": -1.29,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "39e914ee61c2e3db301b8b5337f0caee16f728453f013b56b48ebe877dd6e3b2",
+  "spef_sha256": "a652a08165a1f1daec833ff914781d22b186fcb46f787bce36b05072a4234307",
+  "sdc_name": "6_signoff.sdc",
+  "sdc_sha256": "7ae7f7c35485062ec185003323dc826705095e10b4338b2863d25de756d48b21"
+ },
+ "post_sdc": {},
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f",
+ "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+ "ss_sensitivity": 151.58,
+ "closes_signoff": false
+}
