@@ -2356,6 +2356,8 @@ COLL_MTP_LANE = False          # --coll-mtp-lane (mtp-colllane-1011): head die: 
 COLL_P2_LANE = False           # --coll-p2-lane (mtp-colllane-1011): draft die A: composition_split3cr_p2l = split3cr + P2 lanes W4
                                #   (primary, board) / E4 (die B, UCIe) + dsfd_coll_p2_lane x2 + dsfd_coll_p2_ep (the P2_BUSES
                                #   collective <-> p2 end); RTL define OT_S81PH_COLL_P2L
+ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre slabs moved to an E-column sub-column
+ECOL_W = 518.4
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -3104,15 +3106,15 @@ def build_r8(variant=None):
         centre_area['collective'] = slab_w['collective'] * up(cs_[1], GY) / 1e6
     else:
         slab_w = {}
-    ch_ = sum(up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
-    yc = dn(mid - ch_ / 2, GY)
-    su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
-    slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
-    yy = yc
-    for n in centre:
+    # --ecol-slabs (ds-1010/s81die 2026-10-10): W-column centre slabs moved to a sub-column of the E (HC) column, beside
+    # the HC slabs, next to the crossing corridor (the W column overflowed: split3cr collective + WFC kit + host)
+    ecol = [n for n in centre if n in ECOL_SLABS or (n == "wfc_hard" and "wfc" in ECOL_SLABS)]
+    centre = [n for n in centre if n not in ecol]
+    def put(n, x0_, yy, w0_):
+        nonlocal wfc_rect
         if n == 'stage_ctrl':
             master = 'dsfd_sp_ctrl' + ('_src' if CTRL_ROLE == 'source' else '_h' if CTRL_ROLE == 'head' else '')
-            slab(n, centre_area[n], x_sp, yy, cw, master=master)
+            slab(n, centre_area[n], x0_, yy, w0_, master=master)
             notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
         elif n == 'wfc_hard' and WFC_KIT:
             # mtp-wfc 2026-10-10 (--wfc-kit): the slab master is the WFC kit itself (rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv:
@@ -3122,34 +3124,34 @@ def build_r8(variant=None):
             # --wfc-crp (main 10-11): the slab master is dsfd_wfc_cr2 = the routed credit-boundary tile dsfd_wfc_crp at the
             # slab's die edge (every die link / VM signal lands in its pin flops / SRAM landing) + the kit behind it
             ms_ = 'dsfd_wfc_cr2' if WFC_CRP else ('dsfd_wfc_src' if WFC_ROLE == 'source' else 'dsfd_wfc_stg')
-            slab('wfc', centre_area[n], x_sp, yy, cw, master=ms_)
+            slab('wfc', centre_area[n], x0_, yy, w0_, master=ms_)
             notes.append('MTP-WFC --wfc-kit (%s): %s = %s in a %.2f um slab (%.3f mm2)' % (
                 WFC_ROLE, ms_, 'SOURCE tokpipe + tok_hard + lnk + vmx' if WFC_ROLE == 'source' else 'STG tokpipe + lnk + vmx',
                 WFC_SLAB_H, centre_area[n]))
         elif n == 'wfc_hard':
-            slab('wfc', centre_area[n], x_sp, yy, cw, master='dsfd_wfc')
+            slab('wfc', centre_area[n], x0_, yy, w0_, master='dsfd_wfc')
             notes.append('MTP-DIE --wfc-hard: dsfd_wfc = closed SOURCE ot_dsrom_wfc_tokpipe_src %s um (910e67c7b) + closed '
                          'STG tokpipe %s um (9f7a7f35e) in a %.2f um slab (%.3f mm2 gross)'
                          % (WFC_SRC_UM, WFC_STG_UM, WFC_SLAB_H, centre_area[n]))
         elif n == 'p2':
-            slab('p2', centre_area[n], x_sp, yy, cw, master='dsfd_p2')
+            slab('p2', centre_area[n], x0_, yy, w0_, master='dsfd_p2')
             notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
                          '(the larger first-route outline %s um)' % (centre_area[n], P2_OUTLINE_UM))
         elif n in ('vm_ep', 'cap_ep', 'p2_lnk'):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
-            slab(n, centre_area[n], x_sp, yy, cw, master=ms_)
+            slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
             notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
         elif n == 'seedl':
             slab('seedl', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seed_launch')
             notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
                          % (SEEDL_UM, centre_area[n]))
         elif n == 'mtp':
-            slab('mtp', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seq_rtt' if MTP_SEQ_RTT else 'dsfd_mtp_seq')
+            slab('mtp', centre_area[n], x0_, yy, w0_, master='dsfd_mtp_seq_rtt' if MTP_SEQ_RTT else 'dsfd_mtp_seq')
             notes.append('MTP-DIE --mtp-seq: dsfd_mtp_seq = ot_dsrom_mtp_seq (accept + draft-chain sequencer) %.3f mm2'
                          % centre_area[n])
         elif n == 'wfc':
-            wh = up(centre_area[n] * 1e6 / cw, GY)
-            wfc_rect = [x_sp, yy, x_sp + cw, yy + wh]
+            wh = up(centre_area[n] * 1e6 / w0_, GY)
+            wfc_rect = [x0_, yy, x0_ + w0_, yy + wh]
         elif n == 'pq':
             # core slab W of a ROM column at the slot's E end (2 phase + 1 stream ot_rom_4096x72, real LEF, mirrored
             # so their pins face the core); the slab carries the core budget (results/uarch/
@@ -3162,8 +3164,15 @@ def build_r8(variant=None):
                 insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
         else:
-            slab(n, centre_area[n], up(x_sp + (cw - slab_w.get(n, cw)) / 2, GX), yy, slab_w.get(n, cw), dom='serial_0p9' if n == 'vm' else 'stream_1p2',
+            slab(n, centre_area[n], up(x0_ + (w0_ - slab_w.get(n, w0_)) / 2, GX), yy, slab_w.get(n, w0_), dom='serial_0p9' if n == 'vm' else 'stream_1p2',
                  master='dsfd_host' if n == 'host' else None)
+    ch_ = sum(up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
+    yc = dn(mid - ch_ / 2, GY)
+    su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
+    slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
+    yy = yc
+    for n in centre:
+        put(n, x_sp, yy, cw)
         yy += up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) + SPINE_GAP
     slab('su_n', su_area - su_lo, x_sp, yy, cw, dom='serial_0p9')
     vm = hub['vm']
@@ -3171,9 +3180,17 @@ def build_r8(variant=None):
     c0, c1 = dn(corr_c - HC_CORR / 2, GY), up(corr_c + HC_CORR / 2, GY)
     lo_av, hi_av = c0 - (band + SPINE_GAP), (H - band - SPINE_GAP) - c1      # HC halves sized to the room each side
     fs = lo_av / (lo_av + hi_av)
-    hs_ = up(HUB_MM2['hc'] * fs * 1e6 / cw, GY)
-    slab('hc_s', HUB_MM2['hc'] * fs, x_spe, dn(c0 - hs_, GY), cw, dom='serial_0p9')
-    slab('hc_n', HUB_MM2['hc'] * (1 - fs), x_spe, c1, cw, dom='serial_0p9')
+    # --ecol-slabs: the moved slabs stack upward from the corridor in an ECOL_W sub-column on the E column's W side
+    # (toward the VCH and the W column); the HC halves narrow to the rest (taller) and keep abutting the corridor
+    hcx, hcw = (up(x_spe + ECOL_W + 8.64, GX), dn(cw - ECOL_W - 8.64, GX)) if ecol else (x_spe, cw)
+    hs_ = up(HUB_MM2['hc'] * fs * 1e6 / hcw, GY)
+    slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom='serial_0p9')
+    slab('hc_n', HUB_MM2['hc'] * (1 - fs), hcx, c1, hcw, dom='serial_0p9')
+    ye = c1
+    for n in ecol:
+        put(n, x_spe, ye, ECOL_W)
+        ye += up(centre_area[n] * 1e6 / ECOL_W, GY) + SPINE_GAP
+        notes.append('--ecol-slabs: %s in the E-column sub-column (x %.2f, %.2f um wide)' % (n, x_spe, ECOL_W))
     regions.append(dict(name='hc_corridor', kind='channel', rect=[x_spe, c0, x_fe, c1]))
     for it in insts:
         if it.region == 'spine':
@@ -3250,7 +3267,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -3319,6 +3336,14 @@ def _corridors(m):
             cor['collW'] = (x0c + 4.32, c_.y, c_.x - 4.32, c_.y + c_.h)
         if x1c - (c_.x + c_.w) > 30.0:
             cor['collE'] = (c_.x + c_.w + 4.32, c_.y, x1c - 4.32, c_.y + c_.h)
+    if ECOL_SLABS:
+        # --ecol-slabs: the E-column sub-column outside the moved stack is free; it is the channel beside the narrowed HC
+        # halves' W faces (VM -> hc_s / hc_n chains end there: first try had no station spot below the corridor)
+        hs_, hn_ = m['hub']['hc_s'], m['hub']['hc_n']
+        xs0, xs1 = m['x_spe'] + 4.32, hs_.x - 4.32
+        top = max(m['hub'][n].y + m['hub'][n].h for n in m['hub'] if m['hub'][n].x < hs_.x - 1.0 and m['hub'][n].x >= m['x_spe'] - 1.0)
+        cor['ecolS'] = (xs0, b0, xs1, m['corridor'][0] + 4.32)
+        cor['ecolN'] = (xs0, top + 4.32, xs1, b1)
     if 'eng' in m['hub']:
         # layer1e: the SE service slot around eng_SE is free (no svc_SE): its stations / pin relays stand there and climb
         # into stripS (l1e check: the last VM -> eng hop had no box near eng_SE, 1,181.5 um segment)
@@ -4750,15 +4775,19 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     hb = m['hub']
     A, Bk = hb[a_], hb[b_]
     hcA, hcB = A.name.startswith('sp_hc_'), Bk.name.startswith('sp_hc_')
-    fx = lambda it: it.x if it.name.startswith('sp_hc_') else it.x + it.w
+    # --ecol-slabs: a moved slab stands in the E column (W of the HC halves): it faces the VCH with its W face like HC
+    ecol_ = lambda it: bool(ECOL_SLABS) and it.x >= m['x_spe'] - 1.0 and not it.name.startswith('sp_hc_')
+    fx = lambda it: it.x if (it.name.startswith('sp_hc_') or ecol_(it)) else it.x + it.w
     lo, hi = max(A.y, Bk.y) + 20.0, min(A.y + A.h, Bk.y + Bk.h) - 20.0
-    if hcA != hcB and hi - lo > 100.0:
+    same_col = min(A.x + A.w, Bk.x + Bk.w) - max(A.x, Bk.x) > 0.0
+    xcol = [cor[k_] for k_ in ('ecolS', 'ecolN') if k_ in cor]
+    if (hcA != hcB or (ECOL_SLABS and not same_col)) and hi - lo > 100.0:
         # across the VCH where the two slabs overlap in y: a straight horizontal bus
         lane = m.setdefault('_hb_lane', {}).setdefault('x', [0])
         y_ = lo + (hi - lo) * (0.25 + 0.5 * ((lane[0] * 0.37) % 1.0))
         lane[0] += 1
         path = [(fx(A), y_), (fx(Bk), y_)]
-    elif hcA == hcB and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - (0.0 if {a_, b_} == {'vm', 'pq'} else 60.0):
+    elif hcA == hcB and same_col and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - (0.0 if {a_, b_} == {'vm', 'pq'} else 60.0):
         # stacked neighbours in one column: face to face across the gap, one hop
         g_ = max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h)
         CH8.bus(f'hb_{a_}_{b_}', 'hub', bits, [(A.name, pa), (Bk.name, pb)])
@@ -4769,6 +4798,18 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
         ya = cl(Bk.y + Bk.h / 2, A)
         yb = cl(ya, Bk)
         ya = cl(yb, A)
+        if ECOL_SLABS:   # an HC face beside the moved stack is covered: enter / leave it beyond the stack
+            st_ = [it for it in hb.values() if ecol_(it)]
+            if st_:
+                s0, s1 = min(it.y for it in st_) - 20.0, max(it.y + it.h for it in st_) + 20.0
+                for it_, nm_ in ((A, 'a'), (Bk, 'b')):
+                    yv = ya if nm_ == 'a' else yb
+                    if it_.name.startswith('sp_hc_') and s0 < yv < s1:
+                        yv = s1 if it_.y + it_.h - 6.0 > s1 else s0
+                        if nm_ == 'a':
+                            ya = yv
+                        else:
+                            yb = yv
         side = 'hc' if hcA and hcB else ('sp' if not (hcA or hcB) else 'mid')
         k_ = m.setdefault('_hb_lane', {}).setdefault(side, [0])
         # v2 GRT i50 (r9, 2fcb276fc): overflow 312 / 308 / 768 in the VCH west strip (x_vch + 0..410 um, M7 / M9 up
@@ -4807,7 +4848,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
         CH8.bus(name, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
         m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0)
         return
-    sts = CH8.run(name, [bits], path, [cor['vch']] + [cor[k_] for k_ in ('collE', 'collW') if k_ in cor], path[0],
+    sts = CH8.run(name, [bits], path, [cor['vch']] + [cor[k_] for k_ in ('collE', 'collW') if k_ in cor] + xcol, path[0],
                   reach=reach_um or (CC_REACH if CC_REACH < LINK_STAGE_UM else None))   # collE/W: --coll-split3 column remainder
     prev = (A.name, pa)
     for k, (it, s_, hop) in enumerate(sts):
@@ -6111,6 +6152,10 @@ def die_options(ap):
     ap.add_argument('--bf-hier-compact', action='store_true', help='(bf-hier, claude/bf-compact-1011; OWNER 2026-10-10 BF of record) '
                     'column 450.144 / front 100.224, height 220.32: the pair (1,000.512 um) fits the original lane zone, 1,792 '
                     'pairs / 128 regions kept; requires a BF frame of 228.96 or taller (--elem-h); default off')
+    ap.add_argument('--ecol-slabs', help='ds-1010/s81die 2026-10-10: comma list of W hub-column centre slabs (wfc, host, '
+                    'capture) moved to a sub-column of the E (HC) column beside the HC halves, stacked up from the crossing '
+                    'corridor (the W column overflowed with --coll-split3-cr + --wfc-kit); default none')
+    ap.add_argument('--ecol-w', type=float, default=518.4, help='--ecol-slabs sub-column width (um, default 518.4)')
     ap.add_argument('--tier-cols', help='ds-1010 2026-10-10 (owner: hierarchical full-rate BF AT THE RETICLE): comma list of '
                     'the TIERS frame columns per tier and half (default 10,11,11,11,11,10 = 128 frames); with --bf-hier the '
                     'die stays 33 x 26 mm (no widening) and the columns must fit it (e.g. 8,8,8,8,8,8 = 96 frames at col600); '
@@ -6282,6 +6327,10 @@ def apply_options(a):
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
     COL_W8 = LANES_W + NS_W + RSC_W
     COL_PITCH8 = COL_W8 + 8.64
+    global ECOL_SLABS, ECOL_W
+    ECOL_SLABS = tuple(x for x in (getattr(a, 'ecol_slabs', None) or '').split(',') if x)
+    assert set(ECOL_SLABS) <= {'wfc', 'host', 'capture'}, ('--ecol-slabs: wfc / host / capture', ECOL_SLABS)
+    ECOL_W = float(getattr(a, 'ecol_w', 518.4) or 518.4)
     global TIER_COLS8, ROOTS, TIER_COLS_SET
     TIER_COLS_SET = bool(getattr(a, 'tier_cols', None))
     if TIER_COLS_SET:
