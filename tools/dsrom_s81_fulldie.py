@@ -5742,7 +5742,7 @@ def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, 
         single(tag, payload, 'vr', srcp, a, path, he)
         CH8.bus(f'he_{tag}_o', 'local', payload + 3, [(he.name, 'o'), (dst.name, dport)])
 
-    if HOST_SLAB and CTRL_RQ:
+    if HOST_SLAB and CTRL_RQ and not _svc_c_host():
         for st in m['ctrls']:
             cl = m['svcs'][st] if st in m['svcs'] else hub['eng']
             side = 'W' if st[1] == 'W' else 'E'
@@ -5755,6 +5755,14 @@ def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, 
             lane(f'e_{a_}_{pa}', bits, hub[a_], pa, hub[b_], pb, 'E')
         lane('e_swq', 35, hub['eng'], 'teq', m['svcs']['SW'], 'feq', 'W')
         lane('e_swr', 265, m['svcs']['SW'], 'ter', hub['eng'], 'fer', 'W')
+
+
+def _svc_c_host():
+    """--ctrl-adapters with the svc join bound: the per-stack host write faces are dsfd_host_s hw / hc <-> dsfd_svc_c"""
+    if not CTRL_ADAPTERS:
+        return False
+    b_ = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
+    return CTRL_SVC_JOIN in b_['engines'].get('svc', {}).get('masters', [])
 
 
 def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, sink_end, band):
@@ -5878,6 +5886,16 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
                 sd_ = 'W' if st[1] == 'W' else 'E'
                 ctrl_lane(f'j_{st}', 33, jn, js, sv, 'j', sd_, src_at=sv0)
                 ctrl_lane(f'jd_{st}', 2, sv, 'jd', jn, ds, sd_, dst_at=sv0)
+        if HOST_SLAB and CTRL_RQ and 'host' in hub:
+            # per-stack host writes (s81-svceng host interface, ds-1010.log: host master dsfd_host_s #(NS); svc side
+            # dsfd_svc_c hw / hc, claude/el1011-s81svch eccab9f14): host hw[292 s +: 292] = {cls 2, we, addr 32, d 256, v}
+            # -> svc_<st> hw; svc hc {ack 8, cr} -> host hc[9 s +: 9]; forwarded lanes as the old 578 / 18-b host lanes
+            hub['host'].master = 'dsfd_host_s'
+            m.setdefault('ctrl_host', dict(master='dsfd_host_s', ns=len(sts), stacks=sts))
+            for i_, st in enumerate(sts):
+                sd_ = 'W' if st[1] == 'W' else 'E'
+                ctrl_lane(f'hw{st}', 292, hub['host'], f'hw[{292 * i_}:{292 * i_ + 291}]', svcs[st], 'hw', sd_)
+                ctrl_lane(f'hc{st}', 9, svcs[st], 'hc', hub['host'], f'hc[{9 * i_}:{9 * i_ + 8}]', sd_)
 
 
 def _hub_at(P, name, master, w, h, slab, side, y, cor):
