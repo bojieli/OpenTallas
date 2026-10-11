@@ -43,6 +43,12 @@ module tb_hgi_coll_pipe;
 `ifdef MUT_PIPE
         , .MUT_PIPE(`MUT_PIPE)
 `endif
+`ifdef PKSRAM
+        , .PKSRAM(1)
+`endif
+`ifdef MUT_PARK
+        , .MUT_PARK(`MUT_PARK)
+`endif
         )
 `endif
         dut (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
@@ -206,7 +212,25 @@ module tb_hgi_coll_pipe;
             $display("REC %0d n %0d pf %0d disp %0d ret %0d service %0d", k, n_of[k], pf_of[k], t_disp[k] - t0,
                      (k < nret) ? t_ret[k] - t0 : -1, (k < nret) ? t_ret[k] - ((k > 0 && t_ret[k-1] > t_disp[k]) ? t_ret[k-1] : t_disp[k]) : -1);
         $display("SEQUENCE %0d gathers in %0d cycles (LAT %0d CRED %0d rank %0d)", nk, total, lat, cred, rank);
+`ifdef PIPE
+        $display("PARK max queue depth %0d, max flits parked in one edge %0d", pk_max, pk_burst);
+`endif
         if (errors == 0) $display("HGI_COLL_PIPE PASS"); else $display("HGI_COLL_PIPE FAIL errors=%0d", errors);
         $finish;
     end
+`ifdef PIPE
+    // fe-push-hgi-1010: parking occupancy (sizes PPK / the SRAM parking store)
+    integer pk_max = 0, pk_burst = 0;
+    integer pk_tq [0:3] = '{0, 0, 0, 0};
+    always @(posedge clk) begin : pkmon
+        integer tot, inc;
+        inc = 0;
+        for (integer q = 0; q < 4; q = q + 1) begin
+            if (dut.g_pipe.pk_n[q] > pk_max) pk_max = dut.g_pipe.pk_n[q];
+            if (dut.g_pipe.pk_t[q] != pk_tq[q]) inc = inc + ((dut.g_pipe.pk_t[q] - pk_tq[q]) & 511);
+            pk_tq[q] = dut.g_pipe.pk_t[q];
+        end
+        if (inc > pk_burst) pk_burst = inc;
+    end
+`endif
 endmodule

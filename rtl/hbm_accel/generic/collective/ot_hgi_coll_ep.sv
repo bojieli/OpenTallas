@@ -26,7 +26,10 @@ module ot_hgi_coll_ep #(
     parameter integer MUT_PIPE = 0,    // bench mutants: 1 tag ignored (oldest epoch's context), 2 no parking (early
                                        //   flits formatted with the oldest context), 3 an epoch completes one flit early
     parameter integer RGXHW = 0,       // 1: hardware COLL.ROW_GATHER (G25): owner-row source + list-order sink on this endpoint
-    parameter integer RFMT = 1         // 0: no row formatter (rowfmt ports unbound): ROW_GATHER param[8] = 0 faults
+    parameter integer RFMT = 1,        // 0: no row formatter (rowfmt ports unbound): ROW_GATHER param[8] = 0 faults
+    parameter integer PKSRAM = 0,      // fe-push-hgi-1010: 1 = PIPE parking in SRAM (ot_hgi_coll_park: EQ x DEL banks of
+                                       //   ot_fifo_sram_fwft, one writer a bank an edge) instead of pk[EQ][PPK] flops
+    parameter integer MUT_PARK = 0     // bench mutant (PKSRAM 1): 1 = the parking bank index is ignored
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -213,7 +216,33 @@ module ot_hgi_coll_ep #(
         reg [7:0]  c_gn [0:EQ-1]; reg [16:0] c_T [0:EQ-1]; reg [16:0] c_n [0:EQ-1]; reg [31:0] c_sum [0:EQ-1];
         reg [15:0] c_xor [0:EQ-1];
         reg [2:0]  p_old;                                    // oldest open epoch tag
-        reg [PWT-1:0] pk [0:EQ-1][0:PPK-1]; reg [$clog2(PPK):0] pk_n [0:EQ-1]; reg [$clog2(PPK)-1:0] pk_h [0:EQ-1], pk_t [0:EQ-1];
+        localparam integer PKD = (PKSRAM != 0) ? 1 : PPK;   // flop parking depth (unused with PKSRAM)
+        localparam integer PSB = (DEL > 1) ? $clog2(DEL) : 1;
+        localparam integer PQB = (EQ > 1) ? $clog2(EQ) : 1;
+        reg [PWT-1:0] pk [0:EQ-1][0:PKD-1]; reg [$clog2(PPK):0] pk_n [0:EQ-1]; reg [$clog2(PPK)-1:0] pk_h [0:EQ-1], pk_t [0:EQ-1];
+        // ---- PKSRAM: park requests (registered here), queue heads from the SRAM store, replay pick (combinational:
+        //      the replay lane only depends on e_dv, since a lane used by a live delivery always has e_dv set) ----------
+        reg  [DEL-1:0]      pk_pv; reg [DEL*PQB-1:0] pk_pq; reg [DEL*PSB-1:0] pk_ps; reg [DEL*PWT-1:0] pk_pd;
+        wire [EQ-1:0]       pkh_v; wire [EQ*PWT-1:0] pkh_d; wire pk_ovf;
+        reg  [EQ*PSB-1:0]   pk_hs;
+        reg                 rp_go; reg [PQB-1:0] rp_c; integer rp_lane;
+        reg  [EQ-1:0]       pk_pop;
+        always @* begin
+            for (integer q = 0; q < EQ; q = q + 1) pk_hs[q*PSB +: PSB] = PSB'(pk_h[q] % DEL);
+            rp_lane = -1; rp_go = 1'b0; rp_c = '0;
+            for (integer l = DEL - 1; l >= 0; l = l - 1) if (!e_dv[l]) rp_lane = l;
+            for (integer q = 0; q < EQ; q = q + 1)
+                if (!rp_go && rp_lane >= 0 && pkh_v[q] && c_v[q] && c_tag[q] == pkh_d[q*PWT + FW + 24 +: 3]) begin
+                    rp_go = 1'b1; rp_c = PQB'(q); end
+            pk_pop = '0; if (PKSRAM != 0 && rp_go) pk_pop[rp_c] = 1'b1;
+        end
+        if (PKSRAM != 0) begin : g_pks
+            ot_hgi_coll_park #(.EQ(EQ), .PPK(PPK), .DEL(DEL), .PWT(PWT), .MACRO(2), .MUT_PARK(MUT_PARK)) u_park (.clk(clk),
+                .rst_n(rst_n), .pv(pk_pv), .pq(pk_pq), .ps(pk_ps), .pd(pk_pd), .hs(pk_hs), .hv(pkh_v), .hd(pkh_d),
+                .pop(pk_pop), .ovf(pk_ovf));
+        end else begin : g_pkf
+            assign pkh_v = '0; assign pkh_d = '0; assign pk_ovf = 1'b0;
+        end
         // the group of the gather being started: as the endpoint derives it (mcast_all outer group, else 2^gsz)
         wire [7:0] gn_go = r_mall ? r_mg : (8'd1 << r_gsz[1:0]);
         wire [7:0] gb_go = r_mall ? ((r_mg == 8'd96) ? 8'd0 : (r_rank & ~(r_mg - 8'd1))) : (r_rank & ~((8'd1 << r_gsz[1:0]) - 8'd1));
@@ -233,13 +262,14 @@ module ot_hgi_coll_ep #(
         integer c;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin
-                q_dv <= '0; p_done <= 1'b0; p_flt <= 1'b0; p_open <= 4'd0; p_next <= 3'd0; p_old <= 3'd0;
+                q_dv <= '0; p_done <= 1'b0; p_flt <= 1'b0; p_open <= 4'd0; p_next <= 3'd0; p_old <= 3'd0; pk_pv <= '0;
                 for (c = 0; c < EQ; c = c + 1) begin c_v[c] <= 1'b0; pk_n[c] <= '0; pk_h[c] <= '0; pk_t[c] <= '0; end
             end else begin : pp
                 reg [DEL-1:0] used; reg [EQ-1:0] pop_q; reg [16:0] dn [0:EQ-1]; reg [31:0] ds [0:EQ-1]; reg [15:0] dx [0:EQ-1];
                 reg [2:0] tg; integer s_, gi, lane; reg [PWT-1:0] x; reg drained, ret;
                 reg [$clog2(PPK):0] pn [0:EQ-1]; reg [$clog2(PPK)-1:0] pt [0:EQ-1], ph [0:EQ-1];   // queue state this edge
-                q_dv <= '0; p_done <= 1'b0; used = '0; pop_q = '0;
+                q_dv <= '0; p_done <= 1'b0; used = '0; pop_q = '0; pk_pv <= '0;
+                if (PKSRAM != 0 && pk_ovf) p_flt <= 1'b1;
                 for (c = 0; c < EQ; c = c + 1) begin dn[c] = c_n[c]; ds[c] = c_sum[c]; dx[c] = c_xor[c];
                     pn[c] = pk_n[c]; pt[c] = pk_t[c]; ph[c] = pk_h[c]; end
                 // a pipelined go opens the next epoch's slot
@@ -266,17 +296,25 @@ module ot_hgi_coll_ep #(
                         end else begin                       // an epoch this rank has not started: park it
                             s_ = tg % EQ;
                             if (pn[s_] == PPK) p_flt <= 1'b1;   // several lanes may park into one queue an edge
-                            else begin pk[s_][pt[s_]] <= x; pt[s_] = pt[s_] + 1'b1; pn[s_] = pn[s_] + 1'b1; end
+                            else begin
+                                if (PKSRAM != 0) begin
+                                    pk_pv[l] <= 1'b1; pk_pq[l*PQB +: PQB] <= PQB'(s_); pk_ps[l*PSB +: PSB] <= PSB'(pt[s_] % DEL);
+                                    pk_pd[l*PWT +: PWT] <= x;
+                                end else pk[s_][pt[s_]] <= x;
+                                pt[s_] = pt[s_] + 1'b1; pn[s_] = pn[s_] + 1'b1;
+                            end
                         end
                     end
                 end
                 // replay one parked flit a cycle onto the first free lane, for a started epoch
                 drained = 1'b0;
-                for (c = 0; c < EQ; c = c + 1) if (!drained && pk_n[c] != 0 && c_v[c] && c_tag[c] == pk[c][pk_h[c]][FW+24 +: 3]) begin
+                for (c = 0; c < EQ; c = c + 1) if (!drained && (PKSRAM != 0 ? (rp_go && rp_c == PQB'(c)) :
+                        (pk_n[c] != 0 && c_v[c] && c_tag[c] == pk[c][PKSRAM != 0 ? 0 : pk_h[c]][FW+24 +: 3]))) begin
                     lane = -1;
-                    for (integer l = DEL - 1; l >= 0; l = l - 1) if (!used[l] && !e_dv[l]) lane = l;
+                    if (PKSRAM != 0) lane = rp_lane;
+                    else for (integer l = DEL - 1; l >= 0; l = l - 1) if (!used[l] && !e_dv[l]) lane = l;
                     if (lane >= 0) begin
-                        x = pk[c][pk_h[c]]; drained = 1'b1;
+                        x = (PKSRAM != 0) ? pkh_d[c*PWT +: PWT] : pk[c][PKSRAM != 0 ? 0 : pk_h[c]]; drained = 1'b1;
                         ph[c] = ph[c] + 1'b1; pn[c] = pn[c] - 1'b1;
                         if (x[FW+16 +: 8] >= c_gb[c] && x[FW+16 +: 8] < c_gb[c] + c_gn[c]) begin
                             q_dv[lane] <= 1'b1; q_df[lane*PWT +: PWT] <= fmt(x, c); q_ob[lane*40 +: 40] <= c_ob[c];
