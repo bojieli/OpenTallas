@@ -110,6 +110,9 @@ module ot_hgi_vm_unit #(
     always @(posedge clk or negedge rst_n) if (!rst_n) wq_r <= {WP*WQW{1'b0}}; else wq_r <= wq;
     wire [WP-1:0] wl_v; wire [WP*15-1:0] wl_sec; wire [WP*256-1:0] wl_d; wire [WP*8-1:0] wl_m; wire wl_conflict;
     wire [WP-1:0] wl_done; wire [WP-1:0] ap_flt;
+    // wq_done counts VM and aperture writes alike (the front only sums them): the aperture dones queue in ap_pend and
+    // leave on DMA lanes whose VM done is idle this edge (total dones a cycle <= the sectors the front sent, <= WP)
+    reg [WP-1:0] apx; reg [15:0] ap_pend;
     reg [WP-1:0] aq_pop; wire [WP-1:0] aq_hv; wire [WP*277-1:0] aq_head;
     reg [7:0] ap_cr_q, ap_dn_q; reg [$clog2(APC+1)-1:0] apcr [0:7]; reg [4:0] aprr [0:7]; reg [8*278-1:0] apo;
     genvar gp;
@@ -122,22 +125,18 @@ module ot_hgi_vm_unit #(
         if (AP != 0) begin : g_ap
             // the lane's aperture queue: SRAM FWFT, APD deep; the bank-keyed arbiter below pops it
             wire push = v && ap && wq_r[gp*WQW + 264 + 13 +: 2] == 2'd0;
-            wire ovf; reg rdy_q, rf; reg [1:0] dpend; reg [$clog2(APD):0] n;
-            wire dn = (gp < 8) ? ap_dn_q[gp % 8] : 1'b0;               // aperture dones ride DMA lanes 0..7
-            wire [1:0] tot = {1'b0, wl_done[gp]} + {1'b0, dn} + dpend;    // done events this edge (+ carried)
+            wire ovf; reg rdy_q, rf; reg [$clog2(APD):0] n;
             ot_fifo_sram_fwft #(.W(277), .DEPTH(APD), .MACRO(QMACRO)) u_aq (.clk(clk), .rst_n(rst_n), .push(push),
                 .wdata({wq_r[gp*WQW + 264 +: 13], wq_r[gp*WQW +: 264]}), .pop(aq_pop[gp]), .hv(aq_hv[gp]),
                 .head(aq_head[gp*277 +: 277]), .ovf(ovf));
             always @(posedge clk or negedge rst_n)
-                if (!rst_n) begin n <= '0; rdy_q <= 1'b1; rf <= 1'b0; dpend <= 2'd0; end
+                if (!rst_n) begin n <= '0; rdy_q <= 1'b1; rf <= 1'b0; end
                 else begin
                     n <= n + push - aq_pop[gp];
                     rdy_q <= (MUT == 11) || ({1'b0, n} + push < (APD - APS));
                     if (ovf || (v && ap && !push)) rf <= 1'b1;           // queue overflow / sector past the slots
-                    // wq_done: a VM write and an aperture write may finish on the same edge: one pulse, carry the other
-                    dpend <= tot - {1'b0, tot != 2'd0};
                 end
-            assign wq_rdy[gp] = rdy_q; assign wq_done[gp] = tot != 2'd0;
+            assign wq_rdy[gp] = rdy_q; assign wq_done[gp] = wl_done[gp] || apx[gp];
             assign ap_flt[gp] = rf;
         end else begin : g_noap
             assign wq_rdy[gp] = 1'b1; assign wq_done[gp] = wl_done[gp];
@@ -148,6 +147,10 @@ module ot_hgi_vm_unit #(
     //      [11:9]): per bank a rotating-priority pick over the 32 DMA-lane queue heads of that bank, APC credits a lane
     //      (ap_cr returns one); ap_done counts into wq_done
     assign ap_q = (AP != 0) ? apo : '0;
+    always @* begin : apxs
+        integer left; left = (AP != 0) ? ap_pend : 0; apx = '0;
+        for (integer l = 0; l < WP; l = l + 1) if (left > 0 && !wl_done[l]) begin apx[l] = 1'b1; left = left - 1; end
+    end
     always @* begin
         aq_pop = '0;
         for (integer k = 0; k < 8; k = k + 1) begin : pk
@@ -163,10 +166,11 @@ module ot_hgi_vm_unit #(
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            ap_cr_q <= '0; ap_dn_q <= '0; apo <= '0;
+            ap_cr_q <= '0; ap_dn_q <= '0; apo <= '0; ap_pend <= '0;
             for (integer k = 0; k < 8; k = k + 1) begin apcr[k] <= APC; aprr[k] <= 5'd31; end
         end else begin
             ap_cr_q <= ap_cr; ap_dn_q <= ap_done;                      // pin flops
+            ap_pend <= ap_pend + 16'($countones(ap_dn_q)) - 16'($countones(apx));
             for (integer k = 0; k < 8; k = k + 1) begin : snd
                 reg sent; reg [276:0] h; sent = 1'b0; h = '0;
                 for (integer l = 0; l < WP; l = l + 1)

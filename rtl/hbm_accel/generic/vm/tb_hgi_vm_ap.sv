@@ -10,13 +10,16 @@
 //     then a packet write to byte address 2^20 + X must fault (status proto) and leave VM[X] unchanged.
 //   VMMUT (ot_hgi_vm_unit MUT): 10 aperture sectors also write VM, 11 no wq_rdy back-pressure, 12 no packet range check, 13 the bank key off by one bit (lane k carries another bank):
 //   each must FAIL.
+`ifndef APC
+`define APC 4
+`endif
 module tb_hgi_vm_ap;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
     localparam integer NAP = 8192, NVM = 4096;
     reg [338-1:0] cq = 0; wire [274-1:0] cr; wire [18:0] status;
     reg [32*281-1:0] wq = 0; wire [31:0] wq_done, wq_rdy; wire [8*278-1:0] ap_q; reg [7:0] ap_cr = 0, ap_done = 0;
-    ot_hgi_vm_unit #(.NC(1), .WP(32), .WDIRECT(1), .AP(1), .MUT(`VMMUT)) u (.clk(clk), .rst_n(rst_n), .cq(cq), .cr(cr),
+    ot_hgi_vm_unit #(.NC(1), .WP(32), .WDIRECT(1), .AP(1), .APC(`APC), .MUT(`VMMUT)) u (.clk(clk), .rst_n(rst_n), .cq(cq), .cr(cr),
         .status(status), .wq(wq), .wq_done(wq_done), .wq_rdy(wq_rdy), .ap_q(ap_q), .ap_cr(ap_cr), .ap_done(ap_done),
         .rq(16'd0), .rq_cr(), .rr(), .w2q(280'd0), .w2q_cr(), .w2q_done());
     integer seed = 11, errors = 0, cyc = 0;
@@ -62,22 +65,25 @@ module tb_hgi_vm_ap;
         end
         for (integer b = 0; b < 32; b = b + 1) if (wq_done[b]) dones = dones + 1;
     end
-    // ---- HC aperture model
-    reg [7:0] hv = 0; reg [277:0] hq [0:7]; reg [7:0] crn;
+    // ---- HC aperture model: a lane holds up to APC sectors (d's lane FIFO), takes its head on a random edge (macro
+    //      conflicts), returns a credit (ap_cr) on acceptance and ap_done the edge after; an arrival onto a full lane is an error
+    integer hn [0:7]; reg [277:0] hq [0:7][0:`APC-1];
+    initial for (integer b = 0; b < 8; b = b + 1) hn[b] = 0;
     always @(posedge clk) begin
-        crn = '0;
         ap_done <= ap_cr; ap_cr <= '0;
         for (integer b = 0; b < 8; b = b + 1)
-            if (hv[b] && ($urandom(seed) % 3) == 0) begin : acc
-                reg [12:0] s; s = hq[b][276:264];
-                for (integer w = 0; w < 8; w = w + 1) if (hq[b][w]) apm[s][32*w +: 32] = hq[b][8 + 32*w +: 32];
-                apn[s] = apn[s] + 1; hv[b] = 1'b0; ap_cr[b] <= 1'b1; crn[b] = 1'b1;
+            if (hn[b] > 0 && ($urandom(seed) % 4) != 0) begin : acc
+                reg [12:0] s; s = hq[b][0][276:264];
+                for (integer w = 0; w < 8; w = w + 1) if (hq[b][0][w]) apm[s][32*w +: 32] = hq[b][0][8 + 32*w +: 32];
+                apn[s] = apn[s] + 1; ap_cr[b] <= 1'b1;
+                for (integer q = 0; q < `APC - 1; q = q + 1) hq[b][q] = hq[b][q + 1];
+                hn[b] = hn[b] - 1;
             end
         for (integer b = 0; b < 8; b = b + 1)
             if (ap_q[b*278 + 277]) begin
                 if (ap_q[b*278 + 273 +: 3] != 3'(b)) begin errors = errors + 1; if (errors < 10) $display("ERR aperture lane %0d carries bank %0d", b, ap_q[b*278 + 273 +: 3]); end
-                if (hv[b]) begin errors = errors + 1; if (errors < 10) $display("ERR lane %0d: sector onto a held lane", b); end
-                hv[b] = 1'b1; hq[b] = ap_q[b*278 +: 278];
+                if (hn[b] == `APC) begin errors = errors + 1; if (errors < 10) $display("ERR lane %0d: sector onto a full lane", b); end
+                else begin hq[b][hn[b]] = ap_q[b*278 +: 278]; hn[b] = hn[b] + 1; end
             end
     end
     task automatic pkt(input we, input [31:0] byteaddr, input [255:0] data, output [255:0] qd);
