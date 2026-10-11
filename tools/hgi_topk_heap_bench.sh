@@ -10,4 +10,5 @@ $VL --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNO
  $M/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $M/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v \
  $M/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/test/hbm_generic_20261009/tb_hgi_idx_topk_heap.sv \
  -j 8 > $O/build.log 2>&1 || { tail -20 $O/build.log; echo BUILD_FAIL; exit 2; }
-$O/obj/Vtb_hgi_idx_topk_heap > $O/run.log 2>&1; tail -1 $O/run.log
+$O/obj/Vtb_hgi_idx_topk_heap > $O/run.log 2>&1; grep -m5 ERR $O/run.log; tail -1 $O/run.log
+grep -q 'HGI_TOPK_HEAP PASS' $O/run.log
