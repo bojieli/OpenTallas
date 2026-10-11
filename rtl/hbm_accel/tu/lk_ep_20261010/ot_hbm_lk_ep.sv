@@ -36,8 +36,8 @@
 module ot_hbm_lk_ep #(
     parameter integer NS     = 3,          // retry pipelines (sub-channels) per link, 1..4
     parameter integer W      = 545,
-    parameter integer TXQ    = 8,          // local TX queue depth (= the die sender's credits)
-    parameter integer FCR    = 16,         // far-end receive-buffer credits at reset
+    parameter integer TXQ    = 32,         // local TX queue depth (= the die sender's credits; covers the ~24-cycle die credit loop)
+    parameter integer FCR    = 256,        // far-end receive-buffer credits at reset (ot_hcoll_port: 256-flit SRAM rb)
     parameter integer SQ     = 4,          // per-sub RX FIFO depth (power of 2)
     parameter integer IDLE_P = 1024,
     parameter integer LW     = 487,        // SerDes lanes each way
@@ -124,7 +124,7 @@ module ot_hbm_lk_ep #(
     reg  [W-1:0]  q [0:TXQ-1];
     reg  [QB:0]   qn;
     reg  [QB-1:0] qh, qt;
-    reg  [7:0]    fc;                                   // far-end credits held
+    reg  [8:0]    fc;                                   // far-end credits held (FCR <= 511)
     reg  [1:0]    wsel;                                 // sub of the next admitted flit
     reg           q_ovf;
     reg  [QB+1:0] crp;                                  // die-side credits owed
@@ -149,16 +149,20 @@ module ot_hbm_lk_ep #(
     reg  [7:0]    fc_add;                               // credits returned by the far end this edge (from the rev path)
     always @(posedge clk) if (t_v) q[qt] <= t_flit;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin qn <= 0; qh <= 0; qt <= 0; fc <= FCR[7:0]; wsel <= 0; t_cr <= 1'b0; q_ovf <= 1'b0; crp <= 0; end
+        if (!rst_n) begin qn <= 0; qh <= 0; qt <= 0; fc <= FCR[8:0]; wsel <= 0; t_cr <= 1'b0; q_ovf <= 1'b0; crp <= 0; end
         else begin
             if (t_v) qt <= qt + 1'b1;
             qh <= qh + nadm[QB-1:0];
             wsel <= (wsel + nadm) % NS;
             qn <= qn + (t_v ? 1'b1 : 1'b0) - nadm;
             if (t_v && qn == TXQ && nadm == 0) q_ovf <= 1'b1;
+`ifndef OT_LKEP_MUT_CREDIT
             t_cr <= (crp + nadm) != 0;
             crp <= crp + nadm - (((crp + nadm) != 0) ? 1'b1 : 1'b0);
-            fc <= fc + fc_add - nadm;
+`else
+            t_cr <= t_v;                                // mutant: credit returned on arrival, not on admission
+`endif
+            fc <= fc + {1'b0, fc_add} - {6'b0, nadm};
         end
 
     // ---------------------------------------------------------------- gearbox pacer (exact mirror of its slot FIFO)

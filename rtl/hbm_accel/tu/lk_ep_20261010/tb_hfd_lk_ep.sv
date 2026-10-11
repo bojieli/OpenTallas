@@ -8,7 +8,8 @@
 module tb_hfd_lk_ep;
     parameter integer NS = 3;
     parameter integer FCR = 16;
-    localparam integer W = 545, TXQ = 8;
+    parameter integer TXQ = 32;
+    localparam integer W = 545;
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0;
     integer N, ERRP, seed, cyc;
