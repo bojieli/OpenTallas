@@ -182,15 +182,15 @@ function automatic [71:0] encode64(input [63:0] data);
   wire [319:0] q4;
   for(genvar s=0;s<4;s=s+1)begin:sl
    wire [NO*512-1:0] d;
-   ot_hbm_w2_stn_slice #(.NW(8),.NB(512),.BASE(8*s),.NO(NO),.QOUT(0)) u_sl(
+   ot_hbm_w2_stn_slice8 #(.NO(NO)) u_sl(
     .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),
     .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4),
-    .din(pin_d[s*512+:512]),.dout(d),.q(),
+    .din(pin_d[s*512+:512]),.dout(d),
     .v_same(gs[s]),.v_bad(gb[s]),.v_cbad(gcb[s]),.v_ce(gce[s]),.v_ue(gue[s]),.v_clean(gcl[s]),.grc_o(grc_h[s*8+:8]));
    for(genvar t=0;t<NO;t=t+1)begin:o assign out_q[t*PW+s*512+:512]=d[t*512+:512]; end
   end
   wire [NO*280-1:0] d4;
-  ot_hbm_w2_stn_slice #(.NW(5),.NB(280),.BASE(32),.NO(NO),.QOUT(1)) u_sl4(
+  ot_hbm_w2_stn_slice5 #(.NO(NO)) u_sl4(
    .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),
    .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4),
    .din(pin_d[2048+:280]),.dout(d4),.q(q4),

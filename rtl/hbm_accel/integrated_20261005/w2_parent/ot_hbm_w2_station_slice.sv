@@ -185,3 +185,23 @@ module ot_hbm_w2_stn_payload_ctl #(parameter integer NG=5)(
   end
  end
 endmodule
+
+// Hardened slice masters (fixed geometry, one name per view): slice8 = any of words 0..31 (8 aligned words, all data
+// bits real: BASE only selects constant bits >= NB, none here), slice5 = words 32..36 (280 data bits, the cut valid
+// bit 2328 constant inside, q exported for owner0/frame0/valid).
+module ot_hbm_w2_stn_slice8 #(parameter integer NO=2)(
+ input wire clk,rst_p,rst_e,gr,go_commit,go_repair,go_check,go_sel,input wire [3:0] ph4,
+ input wire [511:0] din,output wire [NO*512-1:0] dout,
+ output wire v_same,v_bad,v_cbad,v_ce,v_ue,v_clean,output wire [7:0] grc_o);
+ ot_hbm_w2_stn_slice #(.NW(8),.NB(512),.BASE(0),.NO(NO),.QOUT(0)) u(.clk(clk),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),
+  .go_commit(go_commit),.go_repair(go_repair),.go_check(go_check),.go_sel(go_sel),.ph4(ph4),.din(din),.dout(dout),.q(),
+  .v_same(v_same),.v_bad(v_bad),.v_cbad(v_cbad),.v_ce(v_ce),.v_ue(v_ue),.v_clean(v_clean),.grc_o(grc_o));
+endmodule
+module ot_hbm_w2_stn_slice5 #(parameter integer NO=2)(
+ input wire clk,rst_p,rst_e,gr,go_commit,go_repair,go_check,go_sel,input wire [3:0] ph4,
+ input wire [279:0] din,output wire [NO*280-1:0] dout,output wire [319:0] q,
+ output wire v_same,v_bad,v_cbad,v_ce,v_ue,v_clean,output wire [4:0] grc_o);
+ ot_hbm_w2_stn_slice #(.NW(5),.NB(280),.BASE(32),.NO(NO),.QOUT(1)) u(.clk(clk),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),
+  .go_commit(go_commit),.go_repair(go_repair),.go_check(go_check),.go_sel(go_sel),.ph4(ph4),.din(din),.dout(dout),.q(q),
+  .v_same(v_same),.v_bad(v_bad),.v_cbad(v_cbad),.v_ce(v_ce),.v_ue(v_ue),.v_clean(v_clean),.grc_o(grc_o));
+endmodule

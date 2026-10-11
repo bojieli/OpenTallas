@@ -29,7 +29,7 @@ import hbm_accel_smh_physical as smh  # noqa: E402
 
 STN = "physical/hbm_w2_rb_station_20261006"
 SLICE_RTL = [f"{STN}/bank_veto_static.sv", f"{STN}/slice_static.sv"]
-NAME = "ot_hbm_w2_stn_slice"
+MASTER = {"slice8": "ot_hbm_w2_stn_slice8", "slice5": "ot_hbm_w2_stn_slice5"}
 PIECES = {"slice8": dict(NW=8, NB=512, BASE=0, QOUT=0), "slice5": dict(NW=5, NB=280, BASE=32, QOUT=1)}
 
 
@@ -75,14 +75,15 @@ def cmd_tile(a):
     p = PIECES[a.piece]
     die = [a.width, a.height]
     nick = f"stnh_{a.piece}_no{a.no}_{a.label}"
+    name = MASTER[a.piece]
     extra = {"PLACE_DENSITY": a.pd, "HOLD_SLACK_MARGIN": a.hold_margin, "CTS_BUF_DISTANCE": 60,
              "PLACE_PINS_ARGS": "-min_distance 1 -min_distance_in_tracks", "IO_PLACER_H": "M4 M6", "IO_PLACER_V": "M5 M7",
              "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M7"}
-    cfg = smh.config_mk(NAME, nick, die, [], extra)
+    cfg = smh.config_mk(name, nick, die, [], extra)
     lines = [l for l in cfg.splitlines() if not l.startswith("export VERILOG_FILES")]
     lines.insert(3, "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in SLICE_RTL))
     params = dict(p, NO=a.no)
-    lines.append("export VERILOG_TOP_PARAMS = " + " ".join(f"{k} {v}" for k, v in params.items()))
+    lines.append(f"export VERILOG_TOP_PARAMS = NO {a.no}")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
     (work / "pins.tcl").write_text(pins_tcl(a.piece, a.no))
     bi, bo, to, nb, nt = ports(a.piece, a.no)
@@ -91,7 +92,7 @@ def cmd_tile(a):
     sdc = sdc.replace("set_false_path -from [get_ports rst_n]",
                       "# (no false path: rst_p / rst_e are registered release copies from the station control, timed)")
     (work / "constraint.sdc").write_text(sdc)
-    abstract_tcls(work, NAME)
+    abstract_tcls(work, name)
     mx = " ".join(f"{k}={v}" for k, v in (x.split("=", 1) for x in (a.make_var or [])))
     smh.run_sh(work, a.label, a.src, a.need, a.cores, [], target=a.stop_after or "finish", admit=not a.no_admit,
                make_extra=(mx + " ") if mx else "")
@@ -100,7 +101,7 @@ def cmd_tile(a):
     geo = dict(piece=a.piece, no=a.no, params=params, die=die, pins_bottom=nb, pins_top=nt,
                pin_density_per_um=dict(bottom=round(nb / a.width, 2), top=round(nt / a.width, 2)), pd=a.pd)
     (work / "geometry.json").write_text(json.dumps(geo, indent=1) + "\n")
-    print(f"wrote {work}: {NAME} {params} die {die} pins bottom {nb} top {nt}")
+    print(f"wrote {work}: {name} {params} die {die} pins bottom {nb} top {nt}")
 
 
 def main(argv=None):
