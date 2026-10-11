@@ -3137,6 +3137,8 @@ def build_r8(variant=None):
         centre_area['collective'] = slab_w['collective'] * up(cs_[1], GY) / 1e6
     else:
         slab_w = {}
+    if SUHC_1011:   # capture -> SU g/u pins on the capture E face (draft dies: 109 um of pins > the 65 um face)
+        centre_area['capture'] = max(centre_area['capture'], CAPTURE_FACE_UM * cw / 1e6)
     if SUHC_1011 and not COLL_SPLIT3:
         # --suhc-1011: the collective E face carries the 8 x 1,024-b y lanes to HC on top of its links / VM / host pins
         # (layer1e: 840 um of pins > the 806 um face): the slab grows to COLL_FACE_UM tall (same area rule as capture)
@@ -3400,6 +3402,15 @@ def _corridors(m):
             cor['collW'] = (x0c + 4.32, c_.y, c_.x - 4.32, c_.y + c_.h)
         if x1c - (c_.x + c_.w) > 30.0:
             cor['collE'] = (c_.x + c_.w + 4.32, c_.y, x1c - 4.32, c_.y + c_.h)
+    if VM_SLAB:
+        # --vm-slab: the VM is narrower than the hub column; the column remainder beside it is a station corridor
+        # (layer1e: hb_hc_n_vm had no station spot at the VM's E face)
+        v_ = m['hub']['vm']
+        x0c, x1c = g['x_sp'], g['x_sp'] + (SPINE_W8 - VCH8) / 2
+        if v_.x - x0c > 30.0:
+            cor['vmW'] = (x0c + 4.32, v_.y, v_.x - 4.32, v_.y + v_.h)
+        if x1c - (v_.x + v_.w) > 30.0:
+            cor['vmE'] = (v_.x + v_.w + 4.32, v_.y, x1c - 4.32, v_.y + v_.h)
     if ECOL_SLABS:
         # --ecol-slabs: the E-column sub-column outside the moved stack is free; it is the channel beside the narrowed HC
         # halves' W faces (VM -> hc_s / hc_n chains end there: first try had no station spot below the corridor)
@@ -4877,9 +4888,11 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     # --ecol-slabs: a moved slab stands in the E column (W of the HC halves): it faces the VCH with its W face like HC
     ecol_ = lambda it: bool(ECOL_SLABS or SU_E) and it.x >= m['x_spe'] - 1.0 and not it.name.startswith('sp_hc_')
     fx = lambda it: it.x if (it.name.startswith('sp_hc_') or ecol_(it)) else it.x + it.w
+    if SU_E and not ECOL_SLABS:   # --su-e: su_n / hrtx are full-width E-column slabs: on the HC side of the VCH
+        hcA, hcB = hcA or ecol_(A), hcB or ecol_(Bk)
     lo, hi = max(A.y, Bk.y) + 20.0, min(A.y + A.h, Bk.y + Bk.h) - 20.0
     same_col = min(A.x + A.w, Bk.x + Bk.w) - max(A.x, Bk.x) > 0.0
-    xcol = [cor[k_] for k_ in ('ecolS', 'ecolN') if k_ in cor]
+    xcol = [cor[k_] for k_ in ('ecolS', 'ecolN', 'vmW', 'vmE') if k_ in cor]
     if (hcA != hcB or ((ECOL_SLABS or SU_E) and not same_col)) and hi - lo > 100.0:
         # across the VCH where the two slabs overlap in y: a straight horizontal bus
         lane = m.setdefault('_hb_lane', {}).setdefault('x', [0])
