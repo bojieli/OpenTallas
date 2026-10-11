@@ -29,6 +29,9 @@ set gap [expr {[info exists ::env(OT_HCOLL_GAP)] ? double($::env(OT_HCOLL_GAP)) 
 set array_w [expr {3*$mw+2*$gap}]
 set array_h [expr {6*$mh+5*$gap}]
 set x0 [expr {($dw-$array_w)/2}]
+# INTERIOR=4 die tile (10-11, g2ck-r2 GPL-0305 / routability 1.13 top-2%): the LEFT (core) face carries 1,640 pins + their
+# FIRM pin flops, the right (link) face 1,092 -> a 20 um link corridor and every other um on the core side (384 wide: 40 um)
+if {[info exists ::ot_hcoll_m0_left]} { set x0 [expr {$dw - 20.0 - $array_w}] }
 set y0 [expr {($dh-$array_h)/2}]
 # compact slice (< 400 um wide, the hierarchical hfd_coll tile: 364 x 386 = ~57% util): 20 um pin corridors suffice for
 # one face of pin flops (qp/qr 1,092 flops on the 364 um top face = 4 rows of DFFs)
