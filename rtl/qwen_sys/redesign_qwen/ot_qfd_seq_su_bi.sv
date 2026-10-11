@@ -1128,7 +1128,7 @@ module ot_qfd_seq_su_bi #(
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) r <= {IS{1'b0}};
                 else r <= {r, 1'b1};
-            assign rsv[rk] = r[IS-1];
+            assign rsv[rk] = (RRG == 2 && rk == 0) ? 1'b0 : r[IS-1];   // RRG 2: negative control (u_seq copy held)
         end
     end else begin : g_rr0
         assign rsv = {8{rs}};

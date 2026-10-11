@@ -1147,7 +1147,7 @@ def rst_regions(t: str) -> str:
             "            always @(posedge clk or negedge rst_n)\n"
             "                if (!rst_n) r <= {IS{1'b0}};\n"
             "                else r <= {r, 1'b1};\n"
-            "            assign rsv[rk] = r[IS-1];\n"
+            "            assign rsv[rk] = (RRG == 2 && rk == 0) ? 1'b0 : r[IS-1];   // RRG 2: negative control (u_seq copy held)\n"
             "        end\n"
             f"    end else begin : g_rr0\n        assign rsv = {{{RRG_NRR}{{rs}}}};\n    end endgenerate")
     out, cur = [], None
