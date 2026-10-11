@@ -95,7 +95,8 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   if(cs_v&&cs_r) starts<=starts+1;
   if(c1_v&&c1_r) s1<=s1+1;
   if(c0_v&&c0_r) s0<=s0+1;
-  if(fault || p_ev[1]) $fatal(1,"P2L unexpected core fault cycle %0d",cycles);
+  if(fault || p_ev[1]) $fatal(1,"P2L unexpected core fault cycle %0d (core %0d primary-seen %0d) starts %0d s0 %0d s1 %0d sv_p %0d l1v_p %0d l0v_p %0d id_s %h id_1 %h",
+                              cycles, fault, p_ev[1], starts, s0, s1, sv_p, l1v_p, l0v_p, sd_p[100:27], l1d_p[603:530]);
   if(p2flt!=0 || p_aflt || b_aflt) begin flt_seen=flt_seen+1; if(flt_seen==1) $display("P2L lane FAULT a=%b p=%b b=%b cycle %0d",p2flt,p_aflt,b_aflt,cycles); end
   pdone_q<=p_ev[0]; if(p_ev[0]&&!pdone_q) done_seen<=done_seen+1;   // done (level-carried pulse) at the primary
   abp_q<=ab_p; if(ab_p&&!abp_q&&ab_arrive<0) ab_arrive=cycles;
