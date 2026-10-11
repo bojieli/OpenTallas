@@ -7,7 +7,8 @@
 // PASS needs: N flits each way delivered, replays > 0 when ERRP > 0, no fault.
 module tb_hfd_lk_ep;
     parameter integer NS = 3;
-    localparam integer W = 545, TXQ = 8, FCR = 16;
+    parameter integer FCR = 16;
+    localparam integer W = 545, TXQ = 8;
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0;
     integer N, ERRP, seed, cyc;
@@ -16,22 +17,23 @@ module tb_hfd_lk_ep;
     wire           a_tcr, b_tcr, a_rv, b_rv, a_f, b_f, a_l, b_l;
     wire [W-1:0]   a_rf, b_rf;
     reg            a_rcr, b_rcr;
-    wire [511:0]   a_x, b_x;
-    reg  [511:0]   a2b, b2a;
-    wire [31:0]    a_rep, b_rep; wire [15:0] a_dr, b_dr;
-    hfd_lk_ep #(.NS(NS), .TXQ(TXQ), .FCR(FCR)) A (.clk(clk), .rst_n(rst_n), .session(24'h5A), .t_v(a_tv), .t_flit(a_tf),
-        .t_cr(a_tcr), .r_v(a_rv), .r_flit(a_rf), .r_cr(a_rcr), .x_tx(a_x), .x_rx_v(1'b1), .x_rx(b2a), .fault(a_f),
-        .locked(a_l), .st_replays(a_rep), .st_drops(a_dr));
-    hfd_lk_ep #(.NS(NS), .TXQ(TXQ), .FCR(FCR)) B (.clk(clk), .rst_n(rst_n), .session(24'h5A), .t_v(b_tv), .t_flit(b_tf),
-        .t_cr(b_tcr), .r_v(b_rv), .r_flit(b_rf), .r_cr(b_rcr), .x_tx(b_x), .x_rx_v(1'b1), .x_rx(a2b), .fault(b_f),
-        .locked(b_l), .st_replays(b_rep), .st_drops(b_dr));
+    localparam integer LW = 487;
+    wire [LW-1:0]  a_x, b_x;
+    reg  [LW-1:0]  a2b, b2a;
+    wire [31:0]    a_rep = A.st_replays, b_rep = B.st_replays; wire [15:0] a_dr = A.st_drops, b_dr = B.st_drops;
+    ot_hbm_lk_ep #(.NS(NS), .TXQ(TXQ), .FCR(FCR)) A (.clk(clk), .rst_n(rst_n), .session(24'h5A), .t_v(a_tv), .t_flit(a_tf),
+        .t_cr(a_tcr), .r_v(a_rv), .r_flit(a_rf), .r_cr(a_rcr), .x_tx(a_x), .x_rx(b2a), .fault(a_f),
+        .locked(a_l));
+    ot_hbm_lk_ep #(.NS(NS), .TXQ(TXQ), .FCR(FCR)) B (.clk(clk), .rst_n(rst_n), .session(24'h5A), .t_v(b_tv), .t_flit(b_tf),
+        .t_cr(b_tcr), .r_v(b_rv), .r_flit(b_rf), .r_cr(b_rcr), .x_tx(b_x), .x_rx(a2b), .fault(b_f),
+        .locked(b_l));
     // ---- lane with bit errors (one register each way, like the PHY)
     integer bi1, bi2;
     always @(posedge clk) begin
         a2b <= a_x; b2a <= b_x;
         if (ERRP > 0 && cyc > 200) begin
-            if (($random(seed) & 32'h7fffffff) % ERRP == 0) begin bi1 = ($random(seed) & 32'h7fffffff) % 512; a2b[bi1] <= ~a_x[bi1]; end
-            if (($random(seed) & 32'h7fffffff) % ERRP == 0) begin bi2 = ($random(seed) & 32'h7fffffff) % 512; b2a[bi2] <= ~b_x[bi2]; end
+            if (($random(seed) & 32'h7fffffff) % ERRP == 0) begin bi1 = ($random(seed) & 32'h7fffffff) % LW; a2b[bi1] <= ~a_x[bi1]; end
+            if (($random(seed) & 32'h7fffffff) % ERRP == 0) begin bi2 = ($random(seed) & 32'h7fffffff) % LW; b2a[bi2] <= ~b_x[bi2]; end
         end
     end
     function [W-1:0] pay(input integer dir, input integer n);
@@ -45,8 +47,8 @@ module tb_hfd_lk_ep;
         b_cred <= b_cred + (b_tcr ? 1 : 0) - (b_tv ? 1 : 0);
     end
     always @(negedge clk) begin
-        a_tv = rst_n && cyc > 20 && a_sent < N && (a_cred - (a_tv ? 1 : 0)) > 0 && (($random(seed) & 32'h7fffffff) % 8 != 0);
-        b_tv = rst_n && cyc > 20 && b_sent < N && (b_cred - (b_tv ? 1 : 0)) > 0 && (($random(seed) & 32'h7fffffff) % 5 != 0);
+        a_tv = rst_n && cyc > 20 && a_sent < N && (a_cred - (a_tv ? 1 : 0)) > 0 && (FCR > 64 || ($random(seed) & 32'h7fffffff) % 8 != 0);
+        b_tv = rst_n && cyc > 20 && b_sent < N && (b_cred - (b_tv ? 1 : 0)) > 0 && (FCR > 64 || ($random(seed) & 32'h7fffffff) % 5 != 0);
         a_tf = pay(0, a_sent); b_tf = pay(1, b_sent);
     end
     always @(posedge clk) begin if (a_tv) a_sent <= a_sent + 1; if (b_tv) b_sent <= b_sent + 1; end
@@ -54,8 +56,8 @@ module tb_hfd_lk_ep;
     integer a_occ, b_occ, a_seen, b_seen;
     reg a_pop, b_pop;
     always @(negedge clk) begin
-        a_pop = (a_occ > 0) && (($random(seed) & 32'h7fffffff) % 3 == 0);
-        b_pop = (b_occ > 0) && (($random(seed) & 32'h7fffffff) % 4 != 0);
+        a_pop = (a_occ > 0) && (FCR > 64 || ($random(seed) & 32'h7fffffff) % 3 == 0);
+        b_pop = (b_occ > 0) && (FCR > 64 || ($random(seed) & 32'h7fffffff) % 4 != 0);
         a_rcr = a_pop; b_rcr = b_pop;
     end
     always @(posedge clk) if (rst_n) begin

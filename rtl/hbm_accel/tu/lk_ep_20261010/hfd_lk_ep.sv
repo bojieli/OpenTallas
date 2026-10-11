@@ -1,290 +1,34 @@
 `timescale 1ns/1ps
-// ---------------------------------------------------------------------------
-// hfd_lk_ep ([link] 2026-10-10, lead decision): the per-link endpoint beside each of the 9 R25GQ SerDes
-// (ot_pdie_serdes: clk, tx[512], rx[512]).  It takes the PHY-side packing OUT of hfd_coll: hfd_coll keeps the
-// collective endpoint (ot_hbm_accel_tu_endpoint / ot_hgi_coll_ep) and talks to this block over a 545-b flit bus
-// with credit feedback each way; this block owns link-level reliability and the lane format.
-//
-//   die side (clk = clk_link, the PHY-interface clock; the core <-> link CDC stays in the endpoint):
-//     t_v / t_flit[545]  flit to send            t_cr   pulse: one local TX-queue slot freed (the sender holds TXQ
-//                                                       credits for this queue)
-//     r_v / r_flit[545]  flit received           r_cr   pulse: the die's receive buffer freed one flit; carried to the
-//                                                       far end as a cumulative 8-bit count (lost frames lose nothing)
-//   link side: x_tx[512] (registered) / x_rx[512] + x_rx_v (registered at the pin here)
-//
-//   TX   t_flit -> TXQ-deep queue -> striped round-robin over NS closed retry pipelines (ot_hbm_link_retry_pipeline,
-//        the view_wpin_hm10 macro: SECDED replay SRAM, ACK/NAK, timeout, bounded retries) -- a flit is admitted only
-//        while a far-end credit is held (FC, initial FCR = the far die's receive buffer) -> the pipelines' tx words
-//        {sub, seq, session, data} + CRC-12 -> ot_s81ph_link_gbx FMT 1 (closed S81 lane format: 3 forward slots per
-//        4 beats at fixed bit positions, marker / idle beats, one 53-b reverse frame in every beat).
-//   RX   gearbox slots -> CRC-12 check (bad frame: dropped; the pipeline's sequence check NAKs the gap or its timeout
-//        replays it) -> per-sub FIFO (full: dropped, same recovery) -> pipeline rx -> strict round-robin merge in the
-//        striping order -> r_v / r_flit.  No backpressure towards the die: the far sender only admits a flit while it
-//        holds one of this die's receive-buffer credits.
-//   Reverse frame (53 b, every non-idle beat, rotating over the subs): {crc6, ccnt8, ack_session24, ack_nak, ack_seq12,
-//        sub2} -> the far pipeline's fb_* (fb_good = CRC ok); ccnt = cumulative r_cr count.
-// Exactness is at transaction level: every flit is delivered once, in order, bit-exact (bench tb_hfd_lk_ep: two
-// endpoints back to back, random lane bit errors, die-side stalls under credits).
-// Throughput: one retry pipeline admits one word per 4 edges (545 / 4 b a cycle); NS = 3 fills the gearbox's 3 slots
-// per 4 beats (0.75 flit a beat less the 1/IDLE_P idle beats).  The pacer mirrors the gearbox slot FIFO (sn) exactly,
-// so the gearbox overflow fault cannot fire.
-// Mutants (bench only): OT_LKEP_MUT_NOCRC (forward CRC not checked), OT_LKEP_MUT_MERGE (merge does not wait for the
-// sub whose turn it is).
-// ---------------------------------------------------------------------------
-module hfd_lk_ep #(
-    parameter integer NS     = 3,          // retry pipelines (sub-channels) per link, 1..4
-    parameter integer W      = 545,
-    parameter integer TXQ    = 8,          // local TX queue depth (= the die sender's credits)
-    parameter integer FCR    = 16,         // far-end receive-buffer credits at reset
-    parameter integer SQ     = 4,          // per-sub RX FIFO depth (power of 2)
-    parameter integer IDLE_P = 1024,
-    // retry pipeline parameters (simulation only; the hard macro is the closed view_wpin_hm10)
-    parameter integer TIMEOUT = 8192,
-    parameter integer MAX_RETRY = 8
-) (
-    input  wire            clk,
-    input  wire            rst_n,
-    input  wire [23:0]     session,
-    input  wire            t_v,
-    input  wire [W-1:0]    t_flit,
-    output reg             t_cr,
-    output reg             r_v,
-    output reg  [W-1:0]    r_flit,
-    input  wire            r_cr,
-    output wire [511:0]    x_tx,
-    input  wire            x_rx_v,
-    input  wire [511:0]    x_rx,
-    output reg             fault,
-    output wire            locked,
-    output reg  [31:0]     st_replays,
-    output reg  [15:0]     st_drops
+// hfd_lk_ep ([link] 2026-10-10): die master of the per-link endpoint (R25GQ, [fp] f0624cc33: 9 slots 1,503.36 x 993.6,
+// pins physical/hbm_accel_die_views/ports_r25gqn/hfd_lk_ep).  Thin wrapper of ot_hbm_lk_ep (NS = 3, lead decision
+// 10-10) onto the die buses, every die-side input landing in a pin register:
+//   f_lk[1093:0] (to / from hb_coll):  [0] t_v, [545:1] t_flit, [546] r_cr       (inputs: coll -> link)
+//                                      [547] r_v, [1092:548] r_flit, [1093] t_cr (outputs: link -> coll)
+//   phy[973:0]   (to / from ot_pdie_serdes): [486:0] x_tx (out), [973:487] x_rx (in)
+// NOT YET DIE PINS (asked of [fp]): clk (clk_link), rst_n, session[23:0] (coordinated-reset epoch from hb_coll), fault /
+// locked (to the coll status aggregation).
+module hfd_lk_ep (
+    inout  wire [1093:0] f_lk,
+    inout  wire [973:0]  phy,
+    /* NOT A GENERATOR PORT */ input  wire        clk,
+    /* NOT A GENERATOR PORT */ input  wire        rst_n,
+    /* NOT A GENERATOR PORT */ input  wire [23:0] session,
+    /* NOT A GENERATOR PORT */ output wire        fault,
+    /* NOT A GENERATOR PORT */ output wire        locked
 );
-    localparam integer SW = 12, EW = 24;
-    localparam integer FFW = 595, RFW = 53;
-    localparam integer HB = 2 + SW + EW + W;           // 583: {session, seq, sub, data} before the CRC
-    localparam integer QB = $clog2(TXQ);
-    localparam integer SB = $clog2(SQ);
-`ifndef SYNTHESIS
-    initial if (NS < 1 || NS > 4 || HB + 12 != FFW || (1 << QB) != TXQ || (1 << SB) != SQ) $fatal(1, "hfd_lk_ep: geometry");
-`endif
-    // ---------------------------------------------------------------- CRCs (parallel, MSB first)
-    function automatic [11:0] crc12(input [HB-1:0] d);
-        reg [11:0] c; integer i;
-        begin c = 12'hFFF;
-            for (i = HB - 1; i >= 0; i = i - 1) c = {c[10:0], 1'b0} ^ ((c[11] ^ d[i]) ? 12'h80F : 12'h000);
-            crc12 = c; end
-    endfunction
-    function automatic [5:0] crc6(input [46:0] d);
-        reg [5:0] c; integer i;
-        begin c = 6'h3F;
-            for (i = 46; i >= 0; i = i - 1) c = {c[4:0], 1'b0} ^ ((c[5] ^ d[i]) ? 6'h03 : 6'h00);
-            crc6 = c; end
-    endfunction
-    // ---------------------------------------------------------------- retry pipelines
-    wire [NS-1:0]    p_in_v, p_in_r, p_tx_v, p_tx_r, p_rx_v, p_rx_r, p_out_v, p_out_r, p_fb_v, p_fault;
-    wire [W-1:0]     p_in_d;
-    wire [W-1:0]     p_tx_d  [0:NS-1];
-    wire [SW-1:0]    p_tx_s  [0:NS-1];
-    wire [EW-1:0]    p_tx_e  [0:NS-1];
-    wire [W-1:0]     p_rx_d  [0:NS-1];
-    wire [SW-1:0]    p_rx_s  [0:NS-1];
-    wire [EW-1:0]    p_rx_e  [0:NS-1];
-    wire [W-1:0]     p_out_d [0:NS-1];
-    wire [SW-1:0]    p_ack_s [0:NS-1];
-    wire [NS-1:0]    p_ack_n;
-    wire [EW-1:0]    p_ack_e [0:NS-1];
-    wire [SW-1:0]    p_ret   [0:NS-1];
-    wire [31:0]      p_rep   [0:NS-1];
-    reg              fb_nak; reg [SW-1:0] fb_seq; reg [EW-1:0] fb_ses;
-    genvar g;
-    generate for (g = 0; g < NS; g = g + 1) begin : g_p
-`ifdef SYNTHESIS
-        ot_hbm_link_retry_pipeline u_rp (
-`else
-        ot_hbm_link_retry_pipeline #(.ENABLE(1), .W(W), .SW(SW), .EW(EW), .DEPTH(512), .TIMEOUT(TIMEOUT),
-            .MAX_RETRY(MAX_RETRY), .RSTR(1), .RX_SLOT_SAMPLE(1), .TX_SLOT_SAMPLE(1), .IN_PIN(1), .IN_WPIN(1)) u_rp (
-`endif
-            .clk(clk), .rst_n(rst_n), .session(session),
-            .in_valid(p_in_v[g]), .in_ready(p_in_r[g]), .in_data(p_in_d),
-            .tx_valid(p_tx_v[g]), .tx_ready(p_tx_r[g]), .tx_data(p_tx_d[g]), .tx_seq(p_tx_s[g]), .tx_session(p_tx_e[g]),
-            .rx_valid(p_rx_v[g]), .rx_ready(p_rx_r[g]), .rx_ue(1'b0), .rx_data(p_rx_d[g]), .rx_seq(p_rx_s[g]),
-            .rx_session(p_rx_e[g]),
-            .out_valid(p_out_v[g]), .out_ready(p_out_r[g]), .out_data(p_out_d[g]),
-            .ack_seq(p_ack_s[g]), .ack_nak(p_ack_n[g]), .ack_session(p_ack_e[g]),
-            .fb_valid(p_fb_v[g]), .fb_good(1'b1), .fb_nak(fb_nak), .fb_seq(fb_seq), .fb_session(fb_ses),
-            .fault(p_fault[g]), .retained(p_ret[g]), .replay_count(p_rep[g]));
-    end endgenerate
-
-    // ---------------------------------------------------------------- TX queue, far credits, striping
-    reg  [W-1:0]  q [0:TXQ-1];
-    reg  [QB:0]   qn;
-    reg  [QB-1:0] qh, qt;
-    reg  [7:0]    fc;                                   // far-end credits held
-    reg  [1:0]    wsel;                                 // sub of the next admitted flit
-    reg           q_ovf;
-    wire          adm = (qn != 0) && (fc != 0) && p_in_r[wsel];
-    assign p_in_d = q[qh];
-    generate for (g = 0; g < NS; g = g + 1) begin : g_in
-        assign p_in_v[g] = (qn != 0) && (fc != 0) && (wsel == g);
-    end endgenerate
-    reg  [7:0]    fc_add;                               // credits returned by the far end this edge (from the rev path)
-    always @(posedge clk) if (t_v) q[qt] <= t_flit;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin qn <= 0; qh <= 0; qt <= 0; fc <= FCR[7:0]; wsel <= 0; t_cr <= 1'b0; q_ovf <= 1'b0; end
-        else begin
-            if (t_v) qt <= qt + 1'b1;
-            if (adm) begin qh <= qh + 1'b1; wsel <= (wsel == NS - 1) ? 2'd0 : wsel + 1'b1; end
-            qn <= qn + (t_v ? 1'b1 : 1'b0) - (adm ? 1'b1 : 1'b0);
-            if (t_v && qn == TXQ && !adm) q_ovf <= 1'b1;
-            t_cr <= adm;
-            fc <= fc + fc_add - (adm ? 8'd1 : 8'd0);
-        end
-
-    // ---------------------------------------------------------------- gearbox pacer (exact mirror of its slot FIFO)
-    reg  [9:0]    m_ic; reg m_idle; reg [1:0] m_ph; reg [2:0] m_sn;
-    reg           a_v, b_v;                             // grant -> A (select) -> B (CRC) -> gearbox push
-    wire          m_need = !m_idle && (m_ph != 2'd3);
-    wire          m_take = m_need && (m_sn != 0);
-    wire [1:0]    pend = {1'b0, a_v} + {1'b0, b_v};
-    wire          room = ({1'b0, m_sn} + {2'b0, pend}) <= 4'd3;
-    reg  [1:0]    tsel;                                 // round-robin start for the tx grant
-    reg  [NS-1:0] gnt;
-    integer       k, j;
-    always @(*) begin
-        gnt = 0;
-        if (room)
-            for (k = NS - 1; k >= 0; k = k - 1) begin
-                j = (tsel + k) % NS;
-                if (p_tx_v[j]) gnt = {{(NS-1){1'b0}}, 1'b1} << j;
-            end
-    end
-    assign p_tx_r = gnt;
-    reg  [HB-1:0] a_h;
-    reg  [FFW-1:0] b_f;
-    integer s;
-    always @(posedge clk) begin
-        for (s = 0; s < NS; s = s + 1)
-            if (gnt[s]) a_h <= {p_tx_e[s], p_tx_s[s], 2'(s), p_tx_d[s]};
-        b_f <= {crc12(a_h), a_h};
-    end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
-            m_ic <= 0; m_idle <= (IDLE_P == 1); m_ph <= 0; m_sn <= 0; a_v <= 0; b_v <= 0; tsel <= 0;
-        end else begin
-            m_ic <= m_idle ? 10'd0 : m_ic + 1'b1;
-            m_idle <= !m_idle && (m_ic == IDLE_P - 2);
-            if (!m_idle) m_ph <= m_ph + 1'b1;
-            m_sn <= m_sn + (b_v ? 3'd1 : 3'd0) - (m_take ? 3'd1 : 3'd0);
-            a_v <= |gnt; b_v <= a_v;
-            if (|gnt) tsel <= (tsel == NS - 1) ? 2'd0 : tsel + 1'b1;
-        end
-
-    // ---------------------------------------------------------------- reverse frame out (acks + credit count)
-    reg  [1:0]    rsub;
-    reg  [7:0]    ccnt;
-    reg  [RFW-1:0] r_tx;
-    wire [46:0]   rbody = {ccnt, p_ack_e[rsub], p_ack_n[rsub], p_ack_s[rsub], rsub};
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rsub <= 0; ccnt <= 0; end
-        else begin
-            rsub <= (rsub == NS - 1) ? 2'd0 : rsub + 1'b1;
-            if (r_cr) ccnt <= ccnt + 1'b1;
-        end
-    always @(posedge clk) r_tx <= {crc6(rbody), rbody};
-
-    // ---------------------------------------------------------------- gearbox (closed S81 lane format, FMT 1)
-    reg  [511:0]  x_rx_q; reg x_rx_vq;
-    always @(posedge clk) x_rx_q <= x_rx;
-    always @(posedge clk or negedge rst_n) if (!rst_n) x_rx_vq <= 1'b0; else x_rx_vq <= x_rx_v;
-    wire          f_rx_v, r_rx_v, gbx_fault;
-    wire [FFW-1:0] f_rx;
-    wire [RFW-1:0] r_rx;
-    ot_s81ph_link_gbx #(.FMT(1), .FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P)) u_gbx (
-        .clk(clk), .rst_n(rst_n), .f_tx_v(b_v), .f_tx(b_f), .r_tx_v(1'b1), .r_tx(r_tx), .beat_tx(x_tx),
-        .beat_rx_v(x_rx_vq), .beat_rx(x_rx_q), .f_rx_v(f_rx_v), .f_rx(f_rx), .r_rx_v(r_rx_v), .r_rx(r_rx),
-        .locked(locked), .fault(gbx_fault));
-
-    // ---------------------------------------------------------------- reverse frame in -> feedback, credits
-    reg  [NS-1:0] fbv;
-    reg  [7:0]    ccnt_far;
-    wire          r_ok = r_rx_v && (crc6(r_rx[46:0]) == r_rx[52:47]);
-    assign p_fb_v = fbv;
-    always @(posedge clk) begin fb_nak <= r_rx[14]; fb_seq <= r_rx[13:2]; fb_ses <= r_rx[38:15]; end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fbv <= 0; ccnt_far <= 0; fc_add <= 0; end
-        else begin
-            fbv <= r_ok ? ({{(NS-1){1'b0}}, 1'b1} << r_rx[1:0]) & {NS{1'b1}} : {NS{1'b0}};
-            fc_add <= r_ok ? r_rx[46:39] - ccnt_far : 8'd0;
-            if (r_ok) ccnt_far <= r_rx[46:39];
-        end
-
-    // ---------------------------------------------------------------- forward frame in -> CRC -> per-sub FIFO
-    reg           c_v; reg [HB-1:0] c_h;
-    wire          f_ok = (crc12(f_rx[HB-1:0]) == f_rx[FFW-1:HB]);
-    always @(posedge clk) c_h <= f_rx[HB-1:0];
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) c_v <= 1'b0;
-`ifndef OT_LKEP_MUT_NOCRC
-        else c_v <= f_rx_v && f_ok;
-`else
-        else c_v <= f_rx_v;
-`endif
-    wire [1:0]    c_sub = c_h[W +: 2];
-    reg  [HB-1:0] sq   [0:NS*SQ-1];
-    reg  [SB:0]   sn_  [0:NS-1];
-    reg  [SB-1:0] sh_  [0:NS-1];
-    reg  [SB-1:0] st_  [0:NS-1];
-    reg           drop;
-    generate for (g = 0; g < NS; g = g + 1) begin : g_rx
-        wire push = c_v && (c_sub == g) && (sn_[g] != SQ);
-        wire pop  = p_rx_v[g] && p_rx_r[g];
-        assign p_rx_v[g] = (sn_[g] != 0);
-        assign p_rx_d[g] = sq[g*SQ + sh_[g]][W-1:0];
-        assign p_rx_s[g] = sq[g*SQ + sh_[g]][W+2 +: SW];
-        assign p_rx_e[g] = sq[g*SQ + sh_[g]][W+2+SW +: EW];
-        always @(posedge clk) if (push) sq[g*SQ + st_[g]] <= c_h;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin sn_[g] <= 0; sh_[g] <= 0; st_[g] <= 0; end
-            else begin
-                if (push) st_[g] <= st_[g] + 1'b1;
-                if (pop) sh_[g] <= sh_[g] + 1'b1;
-                sn_[g] <= sn_[g] + (push ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
-            end
-    end endgenerate
-    always @(*) drop = c_v && ((c_sub >= NS) || (sn_[c_sub] == SQ));
-
-    // ---------------------------------------------------------------- strict round-robin merge -> die
-    reg  [1:0]    msel;
-    generate for (g = 0; g < NS; g = g + 1) begin : g_out
-`ifndef OT_LKEP_MUT_MERGE
-        assign p_out_r[g] = (msel == g);
-`else
-        assign p_out_r[g] = (msel == g) || !p_out_v[msel];
-`endif
-    end endgenerate
-    reg           o_v; reg [W-1:0] o_d;
-    integer       u;
-    always @(*) begin
-        o_v = 1'b0; o_d = p_out_d[0];
-        for (u = 0; u < NS; u = u + 1) if (p_out_v[u] && p_out_r[u] && !o_v) begin o_v = 1'b1; o_d = p_out_d[u]; end
-    end
-    always @(posedge clk) r_flit <= o_d;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin r_v <= 1'b0; msel <= 0; end
-        else begin
-            r_v <= o_v;
-            if (p_out_v[msel]) msel <= (msel == NS - 1) ? 2'd0 : msel + 1'b1;
-        end
-
-    // ---------------------------------------------------------------- status
-    integer v;
-    reg [31:0] rep_sum;
-    always @(*) begin rep_sum = 0; for (v = 0; v < NS; v = v + 1) rep_sum = rep_sum + p_rep[v]; end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fault <= 1'b0; st_replays <= 0; st_drops <= 0; end
-        else begin
-            fault <= fault | (|p_fault) | gbx_fault | q_ovf;
-            st_replays <= rep_sum;
-            if (drop || (f_rx_v && !f_ok)) st_drops <= st_drops + 1'b1;
-        end
+    reg            t_v_q, r_cr_q;
+    reg  [544:0]   t_f_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin t_v_q <= 1'b0; r_cr_q <= 1'b0; end
+                                          else begin t_v_q <= f_lk[0]; r_cr_q <= f_lk[546]; end
+    always @(posedge clk) t_f_q <= f_lk[545:1];
+    wire           t_cr, r_v;
+    wire [544:0]   r_flit;
+    wire [486:0]   x_tx;
+    ot_hbm_lk_ep #(.NS(3), .LW(487)) u (.clk(clk), .rst_n(rst_n), .session(session),
+        .t_v(t_v_q), .t_flit(t_f_q), .t_cr(t_cr), .r_v(r_v), .r_flit(r_flit), .r_cr(r_cr_q),
+        .x_tx(x_tx), .x_rx(phy[973:487]), .fault(fault), .locked(locked));
+    assign f_lk[547] = r_v;
+    assign f_lk[1092:548] = r_flit;
+    assign f_lk[1093] = t_cr;
+    assign phy[486:0] = x_tx;
 endmodule
