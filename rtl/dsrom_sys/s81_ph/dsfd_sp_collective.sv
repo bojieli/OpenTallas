@@ -9,6 +9,14 @@
 //           first station captures on its falling edge as for every r9 start block).
 //   every die input is captured in a flop at the pin, every die output is launched from a flop (clock / reset
 //   outputs: kept cells / reset flops).
+// s81-ctl-1011: the VM-side core tile master (dsfd_coll_cbj with the coll command endpoint, +define+OT_S81PH_COLL_JOB)
+`ifndef OT_S81PH_CB_MASTER
+`ifdef OT_S81PH_COLL_JOB
+`define OT_S81PH_CB_MASTER dsfd_coll_cbj
+`else
+`define OT_S81PH_CB_MASTER dsfd_coll_cb
+`endif
+`endif
 module dsfd_sp_collective (
     input  wire [0:0]    refclk,
     input  wire [0:0]    por,
@@ -89,7 +97,7 @@ module dsfd_sp_collective (
     wire s_lo3_v, s_lo3_r, s_li3_v, s_li3_r, s_lo7_v, s_lo7_r, s_li7_v, s_li7_r;
     wire [552:0] s_lo0_d, s_li0_d, s_lo4_d, s_li4_d, s_lo3_d, s_li3_d, s_lo7_d, s_li7_d;
     wire s_bw_v, s_bw_cr, s_bw_flt; wire [2099:1] s_bw_d;
-    dsfd_coll_cb #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
+    `OT_S81PH_CB_MASTER #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
 `ifdef OT_S81PH_COLL_JOB
         .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
 `endif

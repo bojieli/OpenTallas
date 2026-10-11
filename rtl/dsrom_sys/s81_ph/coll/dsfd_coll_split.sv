@@ -52,7 +52,16 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8) (
 endmodule
 
 // ---- bottom tile: VM interface, output queue, lanes 0 / 4 relays
-module dsfd_coll_cb #(parameter integer OD = 16,
+// s81-ctl-1011: with +define+OT_S81PH_COLL_JOB this tile carries the coll command endpoint and is the distinct master
+// dsfd_coll_cbj (its own closure / view; dsfd_coll_cb without the define is unchanged, cell names included).
+`ifndef OT_S81PH_CB_MASTER
+`ifdef OT_S81PH_COLL_JOB
+`define OT_S81PH_CB_MASTER dsfd_coll_cbj
+`else
+`define OT_S81PH_CB_MASTER dsfd_coll_cb
+`endif
+`endif
+module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
     parameter integer CR = 0,  // redesign-ds: 1 = every lane / seam stream is a credit link (ot_s81ph_cr_relay), see ot_link_credit
     // TREP (ds-1010 2026-10-10, opt-in): the VM take strobe is re-registered once per output-queue slice (keep copies
     // beside each slice) and each slice pops itself, so no single flop drives the 2,100 anchored t_vm pin flops spread
