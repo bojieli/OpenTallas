@@ -384,6 +384,7 @@ def main():
     ap.add_argument('--pin-gap-ew-hi', type=float, default=None, help='hi: E / W face banks gap (corner relays crowd it)')
     ap.add_argument('--lo-v8', action='store_true', help='lo merge root at the bottom (el1011-hbm-attn v8 physical spec)')
     ap.add_argument('--NXP', type=int, default=0)
+    ap.add_argument('--xpx', type=int, default=0, help='v10: extra lo->hi xp stages (taller lo; reference mirrors them)')
     ap.add_argument('--lo-extra-um', type=float, default=0.0, help='v8t: taller lo (bottom strip grows; quads move up), rounded to 2.16-um rows')
     ap.add_argument('--root-dx', type=float, default=0.0, help='v8: root shifted east (ri reach from the E face)')
     ap.add_argument('--pin-gap', type=float, default=0.0, help='face pin banks this far off their face (um)')
@@ -398,7 +399,7 @@ def main():
         H_LO, QY_LO = round(H_LO + 2.16 * rows, 3), round(QY_LO + 2.16 * rows, 3)
     hi_par = {k: getattr(a, k) for k in ('NK', 'NC', 'NR', 'PMID', 'NFR')}
     if a.lo_v8:          # lo-only stage shift (latency per path unchanged); hi keeps its parameters
-        a.NK, a.NC, a.NR, a.PMID, a.NFR, a.NXP = a.NK - 2, a.NC - 2, a.NR - 2, a.PMID + 2, a.NFR + 2, 2
+        a.NK, a.NC, a.NR, a.PMID, a.NFR, a.NXP = a.NK - 2, a.NC - 2, a.NR - 2, a.PMID + 2, a.NFR + 2, 2 + a.xpx
         assert min(a.NK, a.NC, a.NR) >= 0
     P, hops, pins, quads, geo = place_lo(a)
     for k, v in hi_par.items():

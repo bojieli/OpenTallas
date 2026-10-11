@@ -13,6 +13,9 @@ module tb_hfd_attn_half_b (input wire clk);
     // 2 stages from its input pipes to its output pipes (LNK = NK-2, LNC = NC-2, LNR = NR-2, LPMID = PMID+2, LNFR = NFR+2,
     // LNXP = 2): lockstep PASS proves the per-path latency is unchanged.
     parameter integer LNK = NK, LNC = NC, LNR = NR, LPMID = PMID, LNFR = NFR, LNXP = 0;
+    // v10 (taller lo): XPX extra lo->hi xp stages beyond the latency-preserving shift (LNXP = 2 + XPX); the reference tile
+    // mirrors them on the cf pipe (NFC + XPX) and on quad row y=1's mid pipe (PMID1X = XPX).  Cycles are not strict (owner).
+    parameter integer XPX = 0;
     localparam integer H = 16, TD = 32, NBANK = 5, BW = 3, PWORDS = 2;
     parameter integer NCYC = 4000;
     parameter integer ROLE = 4;
@@ -81,7 +84,7 @@ module tb_hfd_attn_half_b (input wire clk);
     wire [581:0]  q_in = {2'b10, pk_k[579:0]};
     // reference: the one-piece tile
     wire [1617:0] cf_r, rf_r; wire [528:0] o_r;
-    hfd_attn_tile_b #(.CG(CG), .NK(NK), .NC(NC), .NR(NR), .PMID(PMID), .NFC(NFC), .NFR(NFR), .NL(NL), .NI(NI)) u_ref (
+    hfd_attn_tile_b #(.CG(CG), .NK(NK), .NC(NC), .NR(NR), .PMID(PMID), .PMID1X(XPX), .NFC(NFC + XPX), .NFR(NFR), .NL(NL), .NI(NI)) u_ref (
         .ck(clk), .rst(rst_n), .k(k_in), .q(q_in), .ci(pk_cr), .ri(pk_rr), .i(i_in), .cf(cf_r), .rf(rf_r), .o(o_r));
     // the split pair + the die-link model (abutting pins: a wire; mutants corrupt it)
     wire [1618:0] xp_l, xp_h; wire [271:0] xr_l, xr_h;
