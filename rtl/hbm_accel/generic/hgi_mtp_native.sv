@@ -19,21 +19,24 @@
 // (HBM_GENERIC_INTERFACE 10.3); its 18-bit controller is hgi-takeover's ot_hgi_mtp_core18 lineage.
 // PRL 4: the controller's prompt / forced-token read wait behind MX1 REGB=1 (t_provider and t_mtp pin flops add 2 to
 // its own 2).  A longer wait is exact for any shorter loop (the address is held until the read).
+//
+// hgi-1010/h 2026-10-10 (audit N14, main ruling DROP): no router / coll ports.  The controller's XSEL inputs (router
+// selections x_*) and its expert-union stream (u_* -> hfd_coll, u_ready) only serve the legacy HFD expert-weight
+// prefetch; on the generic die every verify column / draft row selects its experts with IDX.TOPK and reads them through
+// C3b indexed descriptors (standard records), so nothing consumes them.  The controller is built with XSEL = 2
+// (ot_dshbm_dspark_top_cp_stop): the selection and expert-union logic is not generated (no internal ties); the
+// inner router / coll ports of hfd_mtp_native_cp_stop are left unconnected (not read / constant 0 with XSEL = 2).
 module hgi_mtp_native #(parameter integer PRL=4) (
   input  wire         clk,
   input  wire         rst_n,
   input  wire [196:0] f_cmdproc,
-  output wire [516:0] t_cmdproc,
-  input  wire [58:0]  f_router,
-  output wire [57:0]  t_router,
-  output wire [18:0]  t_coll,
-  input  wire [0:0]   f_coll
+  output wire [516:0] t_cmdproc
 );
-  hfd_mtp_native_cp_stop #(.ENABLE(1),.PRL(PRL)) u_native (
+  hfd_mtp_native_cp_stop #(.ENABLE(1),.PRL(PRL),.XSEL(2)) u_native (
     .clk(clk), .rst_n(rst_n),
     .f_cmdproc(f_cmdproc), .t_cmdproc(t_cmdproc),
     .f_su_red(523'b0),
-    .f_router(f_router), .t_router(t_router),
-    .t_coll(t_coll), .f_coll(f_coll));
+    .f_router(), .t_router(),
+    .t_coll(), .f_coll());
 endmodule
 `default_nettype wire

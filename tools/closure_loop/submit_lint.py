@@ -622,6 +622,21 @@ def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False
     res = _pin_check(spec, git, util_db, force)
     if spec.get("fp_lint", True) is False or spec.get("submit_lint", True) is False:
         return res
+    # PIN-ON-TRACK (fe-push-hphys-1010 2026-10-10, track_lint.py): every static IO pin / placed macro pin on its track
+    try:
+        sys.path.insert(0, str(HERE)); import track_lint  # noqa: E702
+        tk = track_lint.check(spec, git)
+    except Exception as ex:  # noqa: BLE001  (never blocks intake on its own failure)
+        tk = {"verdict": "SKIP", "message": f"pin-on-track skipped: {type(ex).__name__}: {str(ex)[:160]}"}
+    if tk.get("verdict") != "SKIP":
+        res["pin_track"] = {k: tk.get(k) for k in ("verdict", "message", "io_off", "macro_off")}
+        if tk["verdict"] == "REFUSE":
+            pre = res["message"] + " || " if res.get("verdict") != "SKIP" and res.get("message") else ""
+            res["verdict"], res["message"] = "REFUSE", pre + tk["message"]
+        elif res.get("verdict") == "SKIP":
+            res["verdict"], res["message"] = "PASS", "pin estimate n/a || " + tk["message"]
+        elif tk["verdict"] == "WARN":
+            res["message"] = (res.get("message") or "") + " || " + tk["message"][:600]
     try:
         sys.path.insert(0, str(HERE)); import rtl_boundary  # noqa: E702
         rb = rtl_boundary.check(spec, git.show)

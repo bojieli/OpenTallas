@@ -1,14 +1,15 @@
 {
  "master": "hfd_loader",
  "hgi_unit": "dma",
- "note": "HGI loader (hgi-takeover 2026-10-09): ot_hfd_loader_hgi = 37-bit half-rate loader core (ot_hfd_loader_half37) + the host CP window (ot_hgi_loader_cp) + the memory port to the four stack services (ot_hfd_loader_kport; lane 0 loader, lane 1 CP record-ring fetch); stack index (address bits 36:35) 0..3 = SW, SE, NW, NE. Host link binding as the legacy loader wrapper; the host-memory AXI master m_* stays as in the legacy wrapper (TA-14 host link). + the DMA unit (unit 8): ot_hgi_dma_record + ot_hgi_dma_engines (the DMA front for the svc DMA stream, DMA_FRONT 0 until the svc side binds; the F6 full-rate mover on kport lane 2) + one hfd_hgi_vm client + the 32-lane VM wide write port. R25GQ ([svc] 2026-10-10): host port h sized exactly (HOST_H_HGI tx 406 = loader outputs h[0:406], rx 381 = loader inputs h[406:787], in port order s_/h_/h_dma_/m_/irq/fault); the host-memory AXI master m_*, h_dma_wdata, irq and fault are bound to the host link (no fold/cfg ties).",
+ "note": "HGI loader (hgi-takeover 2026-10-09): ot_hfd_loader_hgi = 37-bit half-rate loader core (ot_hfd_loader_half37) + the host CP window (ot_hgi_loader_cp) + the memory port to the four stack services (ot_hfd_loader_kport; lane 0 loader, lane 1 CP record-ring fetch); stack index (address bits 36:35) 0..3 = SW, SE, NW, NE. Host link binding as the legacy loader wrapper; the host-memory AXI master m_* stays as in the legacy wrapper (TA-14 host link). + the DMA unit (unit 8): ot_hgi_dma_record + ot_hgi_dma_engines (the DMA front for the svc DMA stream, DMA_FRONT 0 until the svc side binds; the F6 full-rate mover on kport lane 2) + one hfd_hgi_vm client + the 32-lane VM wide write port. R25GQ ([svc] 2026-10-10): host port h sized exactly (HOST_H_HGI tx 406 = loader outputs h[0:406], rx 381 = loader inputs h[406:787], in port order s_/h_/h_dma_/m_/irq/fault); the host-memory AXI master m_*, h_dma_wdata, irq and fault are bound to the host link (no fold/cfg ties). RGX=1 (hardware ROW_GATHER HBM lanes, [svc] 10-10): rgx_q/r/w/a bound to the die nets hgi_rgxq/rgxr/rgxw/rgxa 0..1 (coll).",
  "instances": [
   {
    "name": "ld",
    "module": "ot_hfd_loader_hgi",
    "file": "rtl/hbm_accel/generic/loader/ot_hfd_loader_hgi.sv",
    "params": {
-    "DMA_FRONT": 0
+    "DMA_FRONT": 0,
+    "RGX": 1
    },
    "bind": {
     "s_awvalid": "die:h[406:407]",
@@ -99,7 +100,11 @@
     "dma_dq": "fold",
     "dma_dq_rdy": "const:0",
     "dma_dd": "const:0",
-    "dma_dd_cr": "fold"
+    "dma_dd_cr": "fold",
+    "rgx_q": "die:f_hgi_rgxq0[0:38]+f_hgi_rgxq1[0:38]",
+    "rgx_r": "die:t_hgi_rgxr0[0:257]+t_hgi_rgxr1[0:257]",
+    "rgx_w": "die:f_hgi_rgxw0[0:326]+f_hgi_rgxw1[0:326]",
+    "rgx_a": "die:t_hgi_rgxa0[0:1]+t_hgi_rgxa1[0:1]"
    }
   }
  ],
@@ -107,20 +112,20 @@
  "face_stages": 5,
  "ties": {
   "ld.dma_dq": {
-   "class": "by_design",
-   "reason": "svc DMA stream not bound on this die variant (hbm-forks builds the svc side, assigned 2026-10-10; die nets hgi_dsq/dsr/dsd/dsc_{st} declared by tools/hgi_die_dispatch.py when the variant sets hgi_svc_dma): DMA_FRONT 0, every move runs on the mover"
+   "class": "not_adopted",
+   "reason": "NOT ADOPTED (lead 10-10, HC sizing results/uarch/svc_dma_hc_sizing_20261010.json): the svc DMA stream v2 is not built; every DMA move runs on the mover over the kport native endpoint (bursts, KP_NO 16 / KP_RB 64, lq/lr to the svc PS native endpoint). DMA_FRONT 0; these front ports carry no traffic."
   },
   "ld.dma_dq_rdy": {
-   "class": "by_design",
-   "reason": "svc DMA stream not bound on this die variant (hbm-forks builds the svc side, assigned 2026-10-10; die nets hgi_dsq/dsr/dsd/dsc_{st} declared by tools/hgi_die_dispatch.py when the variant sets hgi_svc_dma): DMA_FRONT 0, every move runs on the mover"
+   "class": "not_adopted",
+   "reason": "NOT ADOPTED (lead 10-10, HC sizing results/uarch/svc_dma_hc_sizing_20261010.json): the svc DMA stream v2 is not built; every DMA move runs on the mover over the kport native endpoint (bursts, KP_NO 16 / KP_RB 64, lq/lr to the svc PS native endpoint). DMA_FRONT 0; these front ports carry no traffic."
   },
   "ld.dma_dd": {
-   "class": "by_design",
-   "reason": "svc DMA stream not bound on this die variant (hbm-forks builds the svc side, assigned 2026-10-10; die nets hgi_dsq/dsr/dsd/dsc_{st} declared by tools/hgi_die_dispatch.py when the variant sets hgi_svc_dma): DMA_FRONT 0, every move runs on the mover"
+   "class": "not_adopted",
+   "reason": "NOT ADOPTED (lead 10-10, HC sizing results/uarch/svc_dma_hc_sizing_20261010.json): the svc DMA stream v2 is not built; every DMA move runs on the mover over the kport native endpoint (bursts, KP_NO 16 / KP_RB 64, lq/lr to the svc PS native endpoint). DMA_FRONT 0; these front ports carry no traffic."
   },
   "ld.dma_dd_cr": {
-   "class": "by_design",
-   "reason": "svc DMA stream not bound on this die variant (hbm-forks builds the svc side, assigned 2026-10-10; die nets hgi_dsq/dsr/dsd/dsc_{st} declared by tools/hgi_die_dispatch.py when the variant sets hgi_svc_dma): DMA_FRONT 0, every move runs on the mover"
+   "class": "not_adopted",
+   "reason": "NOT ADOPTED (lead 10-10, HC sizing results/uarch/svc_dma_hc_sizing_20261010.json): the svc DMA stream v2 is not built; every DMA move runs on the mover over the kport native endpoint (bursts, KP_NO 16 / KP_RB 64, lq/lr to the svc PS native endpoint). DMA_FRONT 0; these front ports carry no traffic."
   }
  }
 }

@@ -129,4 +129,32 @@ class SupersededInstanceFoldTest(unittest.TestCase):
             self.assertIn('child_blk', rows)
 
 
+class ThroughputGateTest(unittest.TestCase):
+    def test_closed_timing_is_not_throughput_qualified(self):
+        """AGENTS.md throughput qualification (owner 2026-10-10): closure alone never qualifies a unit."""
+        with tempfile.TemporaryDirectory() as td:
+            model = Elements.__new__(Elements)
+            model.repo = pathlib.Path(td); model.log = lambda *a: None; model.tpk = (None, {})
+            model.desc = Describer(); model.area = {}
+            model.option_b = lambda: ({}, {})
+            model.revoked_jobs = lambda: {}
+            model.superseded = lambda: {}
+            model.revoked_path = model.repo / 'revoked'; model.superseded_path = model.repo / 'superseded'
+            model.jobs = lambda: [Elements.reduce(dict(name='ot_hgi_hc_unit-0123456789-tc', status='CLOSED',
+                spec=dict(block='ot_hgi_hc_unit'), metrics=dict(setup_corner='tt', ss_ps=5, ff_ps=3, drc=0)))]
+            row = lambda: {r['element']: r for r in model.compute()['rows']}['ot_hgi_hc_unit']
+            self.assertEqual(row()['gate'], 'CLOSED-TIMING, NO-THROUGHPUT-BUDGET-ROW')
+            b = model.repo / 'results/arch/throughput_budget_20261010'; b.mkdir(parents=True)
+            ent = lambda st, ratio: dict(status=st, ratio=ratio, limiting=dict(op='HC.HC_MIX_ROWS', model='DS', owner='d'))
+            (b / 'budget.json').write_text(json.dumps(dict(qualify_ratio=1.1, elements=dict(ot_hgi_hc_unit=ent('UNQUALIFIED', 125.2)))))
+            r = row()
+            self.assertEqual(r['gate'], 'CLOSED-TIMING, THROUGHPUT-UNQUALIFIED')
+            self.assertEqual(r['throughput']['ratio'], 125.2)
+            import os, time
+            (b / 'budget.json').write_text(json.dumps(dict(qualify_ratio=1.1, elements=dict(ot_hgi_hc_unit=ent('QUALIFIED', 1.04)))))
+            os.utime(b / 'budget.json', (time.time() + 5, time.time() + 5))
+            self.assertEqual(row()['gate'], 'CLOSED-TIMING, THROUGHPUT-QUALIFIED')
+            self.assertEqual(model.compute()['throughput_summary']['HBM accelerator'], {'QUALIFIED': 1})
+
+
 if __name__ == '__main__': unittest.main()
