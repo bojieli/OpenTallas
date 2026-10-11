@@ -2350,6 +2350,12 @@ CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck 
 COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
 COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
 COLL_SPLIT3_CR = False         # explicit planning candidate, never a closure claim
+COLL_MTP_LANE = False          # --coll-mtp-lane (mtp-colllane-1011): head die: collective slab composition_split3cr_mtpl = split3cr +
+                               #   a dedicated MTP lane row (lane tile W4 on lk_W4 + dsfd_coll_mtp_lane: the MTP_SEQ_BUSES
+                               #   mtp <-> collective end, dsfd_coll_mtp_ep RTT-sized 8 / 8); RTL define OT_S81PH_COLL_MTPL
+COLL_P2_LANE = False           # --coll-p2-lane (mtp-colllane-1011): draft die A: composition_split3cr_p2l = split3cr + P2 lanes W4
+                               #   (primary, board) / E4 (die B, UCIe) + dsfd_coll_p2_lane x2 + dsfd_coll_p2_ep (the P2_BUSES
+                               #   collective <-> p2 end); RTL define OT_S81PH_COLL_P2L
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -2858,7 +2864,7 @@ def hop_plan(m):
 
 def collective_variant_binding():
     """Carry the actual candidate interface into downstream assembly selection."""
-    return dict(coll_split3=COLL_SPLIT3, coll_split3_cr=COLL_SPLIT3_CR,
+    return dict(coll_split3=COLL_SPLIT3, coll_split3_cr=COLL_SPLIT3_CR, coll_mtp_lane=COLL_MTP_LANE, coll_p2_lane=COLL_P2_LANE,
                 collective_composition=COLL_SPLIT3_COMP if COLL_SPLIT3 else None)
 
 
@@ -3067,6 +3073,16 @@ def build_r8(variant=None):
     if MTP_SEQ and DIE_KIND == 'head':
         centre.insert(centre.index('capture') + 1, 'mtp')
         centre_area['mtp'] = MTP_SEQ_MM2
+        if MTP_EP:   # mtp-wfc 2026-10-10 (fixlat a7961fc6d): RTT-sized sequencer partner ends beside capture / VM
+            centre.insert(centre.index('vm') + 1, 'vm_ep')
+            centre.insert(centre.index('capture') + 1, 'cap_ep')
+            centre_area['vm_ep'] = centre_area['cap_ep'] = MTP_EP_MM2
+    if SEEDL:
+        # mtp-dsbind 2026-10-10 (--seedl, DSpark primary die): the seed-descriptor consumer dsfd_mtp_seed_launch beside
+        # the collective (its seed descriptor arrives on the collective's MTP lane, --coll-mtp-far primary) and one
+        # slab from the VM (hidden-row reads, x beats to the seed elements, program start)
+        centre.insert(centre.index('collective'), 'seedl')
+        centre_area['seedl'] = up(SEEDL_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
     if DRAFT_SIDE == 'A':
         # MD-2 P2 (mtp-draftdie 2026-10-09): the selected-path transport (ot_mtp_p2_prefix_path: PRIMARY_SHARED1
         # 9-SRAM ordered transport + 3-SRAM 16-lane A-prefix + native publisher) on the A die of every draft row
@@ -3074,6 +3090,9 @@ def build_r8(variant=None):
         # from the primary head die + the in-package UCIe from die B): it sums the row's experts in id order
         centre.insert(centre.index('collective'), 'p2')
         centre_area['p2'] = P2_SLAB_MM2
+        if P2_LNK:   # mtp-wfc 2026-10-10 (fixlat a7961fc6d): the P2 slab is the core + its RTT-sized link pair
+            centre.insert(centre.index('collective'), 'p2_lnk')
+            centre_area['p2_lnk'] = P2_LNK_MM2
     if wfc_die or (MTP_SEQ and DIE_KIND == 'head'):
         # the capture slab (0.109 mm2, ~63 um tall) cannot take the WFC / sequencer endpoint pins on its E face
         # (first --wfc-hard check: 66 um of pins > 65): the slab grows to CAPTURE_FACE_UM so its face spreads them
@@ -3114,6 +3133,14 @@ def build_r8(variant=None):
             slab('p2', centre_area[n], x_sp, yy, cw, master='dsfd_p2')
             notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
                          '(the larger first-route outline %s um)' % (centre_area[n], P2_OUTLINE_UM))
+        elif n in ('vm_ep', 'cap_ep', 'p2_lnk'):
+            ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
+            slab(n, centre_area[n], x_sp, yy, cw, master=ms_)
+            notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
+        elif n == 'seedl':
+            slab('seedl', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seed_launch')
+            notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
+                         % (SEEDL_UM, centre_area[n]))
         elif n == 'mtp':
             slab('mtp', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seq_rtt' if MTP_SEQ_RTT else 'dsfd_mtp_seq')
             notes.append('MTP-DIE --mtp-seq: dsfd_mtp_seq = ot_dsrom_mtp_seq (accept + draft-chain sequencer) %.3f mm2'
@@ -3201,8 +3228,10 @@ def build_r8(variant=None):
     links = []
     for side in 'WE':
         stack = [('ucie', ru_), ('serdes', rs_), ('serdes', rs_), ('serdes', rs_)]
-        if MTP_LINKS and (DIE_KIND == 'head' or DRAFT_SIDE == 'P'):     # MTP-DIE: draft fan-out SerDes, W gets the odd one
+        if MTP_LINKS and (DIE_KIND == 'head' or DRAFT_SIDE == 'P' or COLL_MTP_FAR):     # MTP-DIE: draft fan-out SerDes, W gets the odd one
             stack += [('serdes', rs_)] * ((MTP_LINKS + (side == 'W')) // 2)
+        if COLL_P2_LANE:      # mtp-colllane-1011: draft die A's dedicated P2 lanes: W4 board SerDes (primary), E4 UCIe (die B)
+            stack += [('serdes', rs_)] if side == 'W' else [('ucie', ru_)]
         tot = sum(m_['h'] for _, m_ in stack) + (len(stack) - 1) * 43.2
         y = up(mid - tot / 2, GY)
         for i, (kind, m_) in enumerate(stack):
@@ -3232,7 +3261,7 @@ def build_r8(variant=None):
     if BF_EXPLICIT_IDS is not None:
         variant['bf_pair_ids'] = sorted(BF_EXPLICIT_IDS)
     variant.update(wfc_hard=bool(wfc_die), mtp_seq=(MTP_SEQ_MM2 if MTP_SEQ and DIE_KIND == 'head' else None),
-                   mtp_links=MTP_LINKS if (DIE_KIND == 'head' or DRAFT_SIDE == 'P') else 0, draft=DRAFT_SIDE)
+                   mtp_links=MTP_LINKS if (DIE_KIND == 'head' or DRAFT_SIDE == 'P' or COLL_MTP_FAR) else 0, draft=DRAFT_SIDE)
     if DRAFT_SIDE:
         variant['role'] = ('MD-2 P2 draft die %s (40 = 5 row packages x 4 ranks x A/B; layer1 recipe): %s'
                            % (DRAFT_SIDE, DRAFT_CONTENT[DRAFT_SIDE]))
@@ -3630,13 +3659,19 @@ def buses_r8(m):
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
-            (wfc_kit_buses(WFC_ROLE, 'host' in hub) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg') else ()) + \
-            (MTP_SEQ_BUSES if 'mtp' in hub else ()) + \
-            (P2_BUSES if 'p2' in hub else ()) + \
+            (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg') else ()) + \
+            ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
+            (SEEDL_BUSES + (SEEDL_HOST_BUSES if 'host' in hub else ()) if 'seedl' in hub else ()) + \
+            ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
+            ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
               ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
         if REV == 'r9':
-            _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb)
+            # mtp-wfc 2026-10-10 (ds-1010 finding): the WFC kit's VM / capture buses are 0.9 GHz serial-domain ports
+            # (dsfd_wfc_vmx slow side): their stations are clocked in serial_0p9 and spaced at the 0.9 GHz reach
+            ser_ = (WFC_KIT and 'wfc' in (a_, b_) and bool({a_, b_} & {'vm', 'capture'}))
+            _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom='serial_0p9' if ser_ else None,
+                           reach_um=SER_STAGE_UM if ser_ else None)
         else:
             bus(f'hb_{a_}_{b_}', 'hub', bits, [(hb[a_].name, pa), (hb[b_].name, pb)])
     # ---------------- PHY / controller / service
@@ -3688,6 +3723,9 @@ def buses_r8(m):
         elif it.name == 'sp_stage_ctrl':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rs'))
+        elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg'):   # mtp-wfc: the kit's vmx slow side is the serial domain
+            dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
+            dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
         elif it.kind in ('hub', 'band_blk') and it.name != col:
             d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
             dom[d_].append((it.name, 'ck'))
@@ -3760,18 +3798,40 @@ WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f
 # VM <-> vmx (t_swv/t_swd 528 + t_srv/t_srd 16 = 544 out; f_swr f_swa f_srr 3 + f_srq 513 = 516 in), capture <-> vmx
 # (t_ks 53, f_kd 54), SOURCE only: host -> tok cfg f_c 55 and core -> host committed token {valid,user,pos,id} 53.
 # The element-to-element wiring is inside the kit master (dsfd_wfc_kit.sv), every element boundary registered.
-def wfc_kit_buses(role, host):
-    b = [('collective', 'wfc', 514, 't_wfc', 'f_li'), ('wfc', 'collective', 1, 't_lir', 'f_wfcg'),
+def wfc_kit_buses(role, host, far=None):
+    # far 's0' (--coll-mtp-far): the SOURCE kit's link-in is the collective MTP lane's token return (t_mrt {data, valid}
+    # / f_mrt grant; kit TOKIN 1) and the accept word t_macc goes to the host
+    b = ([('collective', 'wfc', 513, 't_mrt', 'f_mrt'), ('wfc', 'collective', 1, 't_mrg', 'f_mrt')] if far == 's0' else
+         [('collective', 'wfc', 514, 't_wfc', 'f_li'), ('wfc', 'collective', 1, 't_lir', 'f_wfcg')]) + [
          ('wfc', 'collective', 514, 't_lo', 'f_wfc'), ('collective', 'wfc', 1, 't_wfcg', 'f_lor'),
          ('wfc', 'vm', 544, 't_sw_sr', 'f_wfc'), ('vm', 'wfc', 516, 't_wfc', 'f_sw_sr'),
          ('wfc', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc', 54, 't_wfc', 'f_kd')]
+    if far == 's0' and host:
+        b += [('collective', 'host', 57, 't_macc', 'f_macc')]
     if role == 'source' and host:
         b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
     return tuple(b)
 
 
+SEEDL = False                   # --seedl (mtp-dsbind 2026-10-10): DSpark primary die (--draft P) seed-descriptor consumer
+SEEDL_UM = (259.2, 259.2)       #   contract physical/s81_ph_views/specs/dsfd_mtp_seed_launch.json
+# dsfd_mtp_seed_launch exact ports (rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv): seed descriptor {77, valid} from the
+# collective MTP lane (t_mrs) + grant back (f_mrs); VM hidden-row read: request {addr 24, valid} grant protocol + grant,
+# in-order response {1024, valid}; x beats {x_b, x_a, valid} 1025 to the VM's seed staging (seed elements) + die join
+# {done, rdy} 2; program start event {56, v} 57 to the VM / block issue; host: user clear 11 in, sticky faults 4 out.
+# On the primary die the lane's token-return class and accept word are observation only: -> host.
+SEEDL_BUSES = (('collective', 'seedl', 78, 't_mrs', 'f_mrs'), ('seedl', 'collective', 1, 't_mrs', 'f_mrs'),
+               ('seedl', 'vm', 25, 't_vrq', 'f_seedl_rq'), ('vm', 'seedl', 1, 't_seedl_rqg', 'f_vrq'),
+               ('vm', 'seedl', 1025, 't_seedl_rs', 'f_vrs'), ('seedl', 'vm', 1025, 't_x', 'f_seedl_x'),
+               ('vm', 'seedl', 2, 't_seedl_xj', 'f_x'), ('seedl', 'vm', 57, 't_ps', 'f_seedl_ps'))
+SEEDL_HOST_BUSES = (('host', 'seedl', 11, 't_seedl_clr', 'f_clr'), ('seedl', 'host', 4, 't_flt', 'f_seedl_flt'),
+                    ('collective', 'host', 513, 't_mrt', 'f_mrt'), ('host', 'collective', 1, 't_mrg', 'f_mrt'),
+                    ('collective', 'host', 57, 't_macc', 'f_macc'))
+COLL_MTP_FAR = None             # --coll-mtp-far s0 (mtp-wfc 2026-10-10): the S0 die's end of the head die's MTP lane
 MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab master dsfd_mtp_seq_rtt (RTT-sized grant
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
+SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) station spacing = LINK_STAGE_UM x (1111.1 - 261) /
+                                #   (833.3 - 261) on the SS wire model 261 ps + 1.135 ps/um (504 um at 833 ps; 749 um at 1,111 ps)
 WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
 WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
 WFC_VMX_UM = (248.4, 241.92)    #   dsfd_wfc_vmx contract outline (prd-c39e235bb-o292-r2 CLOSED)
@@ -3827,6 +3887,20 @@ def _ctrl_native_buses(m, bus):
 #   p2 -> vm          lane-0 ready                                                                           1
 P2_BUSES = (('collective', 'p2', 709, 't_p2', 'f_collective'), ('vm', 'p2', 605, 't_p2', 'f_vm'),
             ('p2', 'collective', 600, 't_collective', 'f_p2'), ('p2', 'vm', 1, 't_vm', 'f_p2'))
+# mtp-wfc 2026-10-10 (fixlat a7961fc6d, rtl/dsrom_sys/mtp/dsfd_mtp_partner_ep.sv, dsfd_p2_lnk.sv): RTT-sized ends.
+MTP_EP = False                  # --mtp-ep: head-die dsfd_cap_mtp_ep / dsfd_vm_mtp_ep slabs carry the sequencer buses
+MTP_EP_MM2 = 0.112              #   each a 64.8 um strip (cap_ep E face 55 um of pins) of the hub column (cap: 513 b pin flops; vm: D26 35 b receiver)
+MTP_SEQ_EP_BUSES = tuple((('cap_ep' if a == 'capture' else 'vm_ep' if a == 'vm' else a),
+                          ('cap_ep' if b == 'capture' else 'vm_ep' if b == 'vm' else b), w, pa, pb)
+                         for a, b, w, pa, pb in MTP_SEQ_BUSES) + (
+    ('capture', 'cap_ep', 513, 't_cap_ep', 'f_c_r'), ('cap_ep', 'capture', 1, 't_c_rr', 'f_cap_ep'),
+    ('vm_ep', 'vm', 37, 't_c_h', 'f_vm_ep'), ('vm', 'vm_ep', 47, 't_vm_ep', 'f_c_wq'))
+P2_LNK = False                  # --p2-lnk: draft-A P2 slab = dsfd_p2 core + dsfd_p2_lnk (die side 12/14 D30, 8/9 D21)
+P2_LNK_MM2 = 0.38               #   ~40k receiver flops (2 x 604 b x D30 + 101 b x D21); 220 um strip (E face 199 um of pins)
+P2_LNK_BUSES = (('vm', 'p2_lnk', 605, 't_p2', 'f_l0'), ('p2_lnk', 'vm', 1, 't_vm', 'f_p2g'),
+                ('collective', 'p2_lnk', 707, 't_p2', 'f_l1s'), ('p2_lnk', 'collective', 2, 't_collective', 'f_p2g'),
+                ('p2_lnk', 'collective', 595, 't_o', 'f_p2'), ('collective', 'p2_lnk', 1, 't_p2g', 'f_og'),
+                ('p2_lnk', 'p2', 1313, 't_c', 'f_lnk'), ('p2', 'p2_lnk', 598, 't_lnk', 'f_c'))
 P2_OUTLINE_UM = (560.0, 460.0)  # the larger of the two first P2 routes (mtp-p2-path-{a 500x420, b 560x460}-91473d972)
 P2_SLAB_MM2 = P2_OUTLINE_UM[0] * P2_OUTLINE_UM[1] / 1e6
 DRAFT_SIDE = None               # --draft A|B (MD-2 P2 draft die; None = a stage die)
@@ -4655,7 +4729,7 @@ def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
                                                   floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
 
 
-def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
+def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     """r9 (S81-RERUN): a hub slab-to-slab bus staged by common-clock stations (ot_fwd_link_stage clocked by the
     driver slab's domain clock, so no crossing and one cycle per station) every <= 430.56 um.  Spine-column slabs
     (VM, SU, gather, capture, collective) leave from their E face and HC slabs from their W face; the bus runs in its
@@ -4716,15 +4790,15 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         path = _dedup([(fx(A), ya), (vx, ya), (vx, yb), (fx(Bk), yb)])
     name = f'hb_{a_}_{b_}'
     L = _poly_len(path)
-    if L <= CC_REACH - 30.0:
+    if L <= (reach_um or CC_REACH) - 30.0:
         CH8.bus(name, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
         m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0)
         return
     sts = CH8.run(name, [bits], path, [cor['vch']] + [cor[k_] for k_ in ('collE', 'collW') if k_ in cor], path[0],
-                  reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)   # collE/W: --coll-split3 column remainder
+                  reach=reach_um or (CC_REACH if CC_REACH < LINK_STAGE_UM else None))   # collE/W: --coll-split3 column remainder
     prev = (A.name, pa)
     for k, (it, s_, hop) in enumerate(sts):
-        it.kind, it.domain = 'hstn', A.domain
+        it.kind, it.domain = 'hstn', dom or A.domain
         it.master = 'dsfd_hstn%s_%d' % ('h' if it.master.startswith('dsfd_stnh') else 'v', bits)
         CH8.bus(f'{name}_d{k}', 'hub', bits, [prev, (it.name, 'di')])
         prev = (it.name, 'dq')
@@ -6011,6 +6085,12 @@ def die_options(ap):
                     'master with a side >= 300 um takes its clock pin on a long face in the middle third; default off')
     ap.add_argument('--coll-split3', action='store_true', help='s81-gen 2026-10-09 (redesign-ds): collective slab outline from '
                     'physical/s81_ph_views/collective/composition_split3.json (three-tile core column); default off')
+    ap.add_argument('--coll-mtp-lane', action='store_true', help='mtp-colllane-1011: head die collective with the dedicated MTP '
+                    'lane row (composition_split3cr_mtpl.json, lane W4 = lk_W4, RTL OT_S81PH_COLL_MTPL); needs --coll-split3-cr, '
+                    '--mtp-seq, --mtp-links >= 1; default off')
+    ap.add_argument('--coll-p2-lane', action='store_true', help='mtp-colllane-1011: draft die A collective with the P2 lanes '
+                    '(composition_split3cr_p2l.json, W4 primary / E4 die B, RTL OT_S81PH_COLL_P2L); needs --coll-split3-cr '
+                    'and --draft A; default off')
     ap.add_argument('--coll-split3-cr', action='store_true', help='opt-in planning candidate: use composition_split3cr.json with credit seams and LCR lane tiles; implies --coll-split3, all four routed masters required for adoption')
     ap.add_argument('--bf-hier', type=float, choices=[520.128, 600.264], help='s81-gen 2026-10-09 (bf-arch): BF pair as '
                     'dsfd_bf_col | dsfd_bf_front | dsfd_bf_col (MY), 190.08 um tall; frames and die widen; default off')
@@ -6042,6 +6122,13 @@ def die_options(ap):
                     help='MTP-DIE: bound, wired WFC slab (dsfd_wfc) on every layer-class STAGE die (layer and layer1; '
                     'not draft dies) instead of the scan-die-only soft reservation; default WFC_HARD_DEFAULT (off '
                     'until the SOURCE HARD partner closes)')
+    ap.add_argument('--seedl', action='store_true', help='mtp-dsbind 2026-10-10: DSpark primary die (--draft P): '
+                    'dsfd_mtp_seed_launch slab (seed descriptor from the collective MTP lane -> seed program); needs '
+                    '--coll-mtp-far primary')
+    ap.add_argument('--coll-mtp-far', choices=['s0', 'primary'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
+                    '(far end of the head lane): token return -> WFC kit link-in (TOKIN), accept word -> host')
+    ap.add_argument('--mtp-ep', action='store_true', help='mtp-wfc 2026-10-10: head-die RTT-sized sequencer partner ends')
+    ap.add_argument('--p2-lnk', action='store_true', help='mtp-wfc 2026-10-10: draft-A P2 slab = core + dsfd_p2_lnk')
     ap.add_argument('--mtp-seq-rtt', action='store_true', help='mtp-wfc 2026-10-10: head sequencer slab master '
                     'dsfd_mtp_seq_rtt (native RTT successor, same ports)')
     ap.add_argument('--wfc-kit', action='store_true',
@@ -6105,6 +6192,8 @@ def apply_options(a):
     # silent no-ops: restored by mtp-draftdie 2026-10-09, test_s81_mtp_options_bind guards it)
     global WFC_HARD, MTP_SEQ, MTP_SEQ_MM2, MTP_LINKS, DRAFT_SIDE, WFC_KIT, WFC_ROLE, MTP_SEQ_RTT
     MTP_SEQ_RTT = bool(getattr(a, 'mtp_seq_rtt', False))
+    global MTP_EP, P2_LNK
+    MTP_EP = bool(getattr(a, 'mtp_ep', False)); P2_LNK = bool(getattr(a, 'p2_lnk', False))
     WFC_KIT = bool(getattr(a, 'wfc_kit', False))
     WFC_ROLE = 'source' if getattr(a, 'ctrl_role', 'layer') == 'source' else 'stage'
     ws, ms = getattr(a, 'wfc_hard', None), getattr(a, 'mtp_seq', None)
@@ -6135,6 +6224,34 @@ def apply_options(a):
     COLL_SPLIT3_CR = bool(getattr(a, 'coll_split3_cr', False))
     COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False)) or COLL_SPLIT3_CR
     COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr.json' if COLL_SPLIT3_CR else 'physical/s81_ph_views/collective/composition_split3.json'
+    # mtp-colllane-1011 (ds-1010 decision: DEDICATED MTP lanes, never a pass-through queue in the collective core)
+    global COLL_MTP_LANE, COLL_P2_LANE
+    COLL_MTP_LANE = bool(getattr(a, 'coll_mtp_lane', False))
+    COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
+    global COLL_MTP_FAR
+    COLL_MTP_FAR = getattr(a, 'coll_mtp_far', None)
+    global SEEDL
+    SEEDL = bool(getattr(a, 'seedl', False))
+    if SEEDL and (getattr(a, 'draft', None) != 'P' or COLL_MTP_FAR != 'primary'):
+        raise SystemExit('--seedl: DSpark primary die (--draft P) with --coll-mtp-far primary')
+    if COLL_MTP_FAR == 'primary':   # mtp-dsbind: the primary die's end of a head MTP lane (seed descriptor class)
+        if not (COLL_SPLIT3_CR and int(getattr(a, 'mtp_links', 0) or 0) and getattr(a, 'draft', None) == 'P'
+                and getattr(a, 'host', False)):
+            raise SystemExit('--coll-mtp-far primary: needs --draft P --coll-split3-cr --mtp-links >= 1 --host')
+        COLL_MTP_LANE = True
+    elif COLL_MTP_FAR:   # mtp-wfc 2026-10-10: the far (S0) end of the head die's MTP lane: same lane composition
+        if not (COLL_SPLIT3_CR and int(getattr(a, 'mtp_links', 0) or 0) and getattr(a, 'ctrl_role', None) == 'source'
+                and getattr(a, 'wfc_kit', False)):
+            raise SystemExit('--coll-mtp-far s0: needs --coll-split3-cr --mtp-links >= 1 --ctrl-role source --wfc-kit')
+        COLL_MTP_LANE = True
+    if COLL_MTP_LANE or COLL_P2_LANE:
+        if not COLL_SPLIT3_CR or (COLL_MTP_LANE and COLL_P2_LANE):
+            raise SystemExit('--coll-mtp-lane / --coll-p2-lane: one of them, with --coll-split3-cr (credit seams, LCR lane tiles)')
+        if COLL_MTP_LANE and not COLL_MTP_FAR and (getattr(a, 'die', None) != 'head' or not int(getattr(a, 'mtp_links', 0) or 0) or getattr(a, 'mtp_seq', None) is False):
+            raise SystemExit('--coll-mtp-lane: head die with --mtp-seq and --mtp-links >= 1 (lane W4 = the first MTP SerDes lk_W4)')
+        if COLL_P2_LANE and getattr(a, 'draft', None) != 'A':
+            raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
+        COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr_%s.json' % ('mtpl' if COLL_MTP_LANE else 'p2l')
     global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
     if getattr(a, 'bf_hier_compact', False):

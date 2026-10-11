@@ -1,0 +1,6271 @@
+{
+ "schema": "opentallas.throughput_budget.v1",
+ "generated_utc": "2026-10-11T03:48:26Z",
+ "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
+ "qualify_ratio": 1.1,
+ "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
+ "targets": {
+  "ds_ar": 2208.1,
+  "ds_mtp": {
+   "tau": 4.159,
+   "fixed_rtl_tok_s": 3640.3,
+   "source": "results/arch/hgi_sim_20261010/ds_rates_g25.json"
+  },
+  "qwen_ar": 953.8,
+  "qwen_rom": 4810.9,
+  "ds_rom": 1447.7
+ },
+ "ds_hbm": {
+  "S2_cycles": 565569.1,
+  "S2_tok_s": 2121.8,
+  "target_tok_s": 2208.1,
+  "image_bytes": 478720,
+  "target_cycles": 543453.6,
+  "price_scale_to_target": 0.9609,
+  "per_unit_S2": {
+   "FUSED": {
+    "busy": 71369.7,
+    "idle_true_dep": 486498.5,
+    "idle_issue": 3276.5,
+    "records": 201
+   },
+   "SM": {
+    "busy": 103968.3,
+    "idle_true_dep": 440920.4,
+    "idle_issue": 19886.0,
+    "records": 1095
+   },
+   "COLL": {
+    "busy": 336487.2,
+    "idle_true_dep": 220715.0,
+    "idle_issue": 8366.9,
+    "records": 642
+   },
+   "DMA": {
+    "busy": 40283.8,
+    "idle_true_dep": 45498.7,
+    "idle_issue": 489087.3,
+    "records": 420
+   },
+   "SU": {
+    "busy": 136388.0,
+    "idle_true_dep": 384190.3,
+    "idle_issue": 38873.8,
+    "records": 1356
+   },
+   "CTL": {
+    "busy": 8.0,
+    "idle_true_dep": 0.0,
+    "idle_issue": 554849.2,
+    "records": 197
+   },
+   "ATT": {
+    "busy": 26363.5,
+    "idle_true_dep": 523406.2,
+    "idle_issue": 2056.0,
+    "records": 80
+   },
+   "HC": {
+    "busy": 43200.0,
+    "idle_true_dep": 463926.8,
+    "idle_issue": 49044.9,
+    "records": 80
+   },
+   "IDX": {
+    "busy": 18833.9,
+    "idle_true_dep": 537303.7,
+    "idle_issue": 1392.0,
+    "records": 48
+   },
+   "ARGMAX": {
+    "busy": 3626.0,
+    "idle_true_dep": 0.0,
+    "idle_issue": 561168.7,
+    "records": 1
+   }
+  },
+  "ops": [
+   {
+    "op": "COLL.ALL_GATHER",
+    "unit": "COLL",
+    "records_per_token": 584,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 389.2,
+    "price_cycles_per_token": 227271.2,
+    "price_cycles_per_layer": 5681.8,
+    "budget_cycles_per_record_at_target": 373.9,
+    "items_per_record": 8519.0,
+    "item": "bytes",
+    "required_items_per_cycle": 21.891,
+    "required_items_per_cycle_at_target": 22.781,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.02825,
+    "measured_ratio": 0.716,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/coll/report.json",
+    "measured_note": "ot_hgi_coll_ep PIPE=1 on the 13 DS L0 gather records (main 86ee9156a / ca33eaa6e)",
+    "interim": null,
+    "measured_cycles_per_record": 278.6,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": -41550.1,
+    "impact_tok_s": 168.2,
+    "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+    "elements": [
+     "hfd_coll",
+     "ot_hgi_coll_decode",
+     "hfd_coll_pkt_fifo_ii1",
+     "hfd_coll_credit_prod",
+     "hfd_coll_idle_tx"
+    ]
+   },
+   {
+    "op": "SU.VOP",
+    "unit": "SU",
+    "records_per_token": 1356,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 100.6,
+    "price_cycles_per_token": 136388.0,
+    "price_cycles_per_layer": 3409.7,
+    "budget_cycles_per_record_at_target": 96.6,
+    "items_per_record": 1584.9,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 15.758,
+    "required_items_per_cycle_at_target": 16.399,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.01887,
+    "measured_ratio": 1.067,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/su/report.json",
+    "measured_note": "27-record DS L0 SU chain, production width",
+    "interim": null,
+    "measured_cycles_per_record": 107.3,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": 7149.6,
+    "impact_tok_s": -26.5,
+    "owner": "hgi-1010/b",
+    "elements": [
+     "ot_hgi_su_record",
+     "ot_hgi_su_ctl",
+     "ot_hgi_su_ctlw",
+     "hfd_su_tile",
+     "hfd_su_tile_xl",
+     "hfd_su_result_ingress"
+    ]
+   },
+   {
+    "op": "SM.MATVEC",
+    "unit": "SM",
+    "records_per_token": 1095,
+    "layers_with_op": 41,
+    "price_cycles_per_record": 94.9,
+    "price_cycles_per_token": 103968.3,
+    "price_cycles_per_layer": 2535.8,
+    "budget_cycles_per_record_at_target": 91.2,
+    "items_per_record": 166974.7,
+    "item": "MACs (weight / key elements)",
+    "required_items_per_cycle": 1758.587,
+    "required_items_per_cycle_at_target": 1830.151,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.0093,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "measured_note": null,
+    "interim": {
+     "ratio": null,
+     "src": "hgi-1010.log 20:04: SM DS ratio rerun with tb_hgi_sm_tput on exp_2c9860e12 -> d (pending)"
+    },
+    "measured_cycles_per_record": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "elements": [
+     "ot_hgi_sm_record",
+     "ot_hgi_sm_xload",
+     "ot_hgi_sm_pub",
+     "ot_hbm_accel_smh_be_eg",
+     "ot_hbm_accel_smh_be_wg",
+     "ot_hbm_accel_smh_front_n",
+     "ot_hbm_accel_smh_front_s",
+     "ot_hbm_accel_smh_front_c",
+     "ot_hbm_accel_smh_tile_eg",
+     "ot_hbm_accel_smh_tile_wg"
+    ],
+    "exposure_cycles_if_2x": 52597.9
+   },
+   {
+    "op": "COLL.GROUP_REDUCE_MCAST",
+    "unit": "COLL",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 1325.9,
+    "price_cycles_per_token": 53037.6,
+    "price_cycles_per_layer": 1325.9,
+    "budget_cycles_per_record_at_target": 1274.1,
+    "items_per_record": 4096.0,
+    "item": "bytes",
+    "required_items_per_cycle": 3.089,
+    "required_items_per_cycle_at_target": 3.215,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00938,
+    "measured_ratio": 0.908,
+    "measured_grade": "e2e",
+    "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+    "measured_note": "one record, die e2e all-real",
+    "interim": null,
+    "measured_cycles_per_record": 1204.0,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": -4879.5,
+    "impact_tok_s": 18.5,
+    "owner": "-",
+    "elements": []
+   },
+   {
+    "op": "FUSED.HC_PRE_NORM",
+    "unit": "FUSED",
+    "records_per_token": 81,
+    "layers_with_op": 41,
+    "price_cycles_per_record": 649.3,
+    "price_cycles_per_token": 52595.9,
+    "price_cycles_per_layer": 1282.8,
+    "budget_cycles_per_record_at_target": 623.9,
+    "items_per_record": 20480.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 31.54,
+    "required_items_per_cycle_at_target": 32.824,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.0093,
+    "measured_ratio": 6.514,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
+    "measured_note": null,
+    "interim": null,
+    "measured_cycles_per_record": 4229.7,
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 290013.7,
+    "impact_tok_s": -719.2,
+    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
+    "elements": [
+     "ot_hgi_fused_record"
+    ]
+   },
+   {
+    "op": "HC.HC_MIX_POST",
+    "unit": "HC",
+    "records_per_token": 80,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 540.0,
+    "price_cycles_per_token": 43200.0,
+    "price_cycles_per_layer": 1080.0,
+    "budget_cycles_per_record_at_target": 518.9,
+    "items_per_record": 24.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 0.044,
+    "required_items_per_cycle_at_target": 0.046,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.0,
+    "measured_ratio": 1.282,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json",
+    "measured_note": null,
+    "interim": null,
+    "measured_cycles_per_record": 692.3,
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010/d",
+    "elements": [
+     "ot_hgi_hc_record",
+     "ot_hgi_hc_unit",
+     "hfd_hc"
+    ]
+   },
+   {
+    "op": "DMA.LOAD",
+    "unit": "DMA",
+    "records_per_token": 340,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 104.4,
+    "price_cycles_per_token": 35483.8,
+    "price_cycles_per_layer": 887.1,
+    "budget_cycles_per_record_at_target": 100.3,
+    "items_per_record": 1153.1,
+    "item": "bytes",
+    "required_items_per_cycle": 11.049,
+    "required_items_per_cycle_at_target": 11.499,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00092,
+    "measured_ratio": 0.622,
+    "measured_grade": "e2e",
+    "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+    "measured_note": "6 records",
+    "interim": null,
+    "measured_cycles_per_record": 64.9,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": -1927.5,
+    "impact_tok_s": 7.3,
+    "owner": "-",
+    "elements": []
+   },
+   {
+    "op": "COLL.ROW_GATHER",
+    "unit": "COLL",
+    "records_per_token": 8,
+    "layers_with_op": 8,
+    "price_cycles_per_record": 4246.0,
+    "price_cycles_per_token": 33968.0,
+    "price_cycles_per_layer": 4246.0,
+    "budget_cycles_per_record_at_target": 4080.0,
+    "items_per_record": 1048576.0,
+    "item": "bytes",
+    "required_items_per_cycle": 246.956,
+    "required_items_per_cycle_at_target": 257.006,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00601,
+    "measured_ratio": 1.0,
+    "measured_grade": "price_fit",
+    "measured_src": "main 5e588e11e (hgi-1010/a, G25 HW ROW_GATHER, one real rank of 96)",
+    "measured_note": "price = K x F / 4 + 150 fitted to the measured 4,242 cycles at K 512",
+    "interim": null,
+    "measured_cycles_per_record": 4246.0,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010/c",
+    "elements": [
+     "ot_hgi_coll_row_formatter"
+    ]
+   },
+   {
+    "op": "COLL.TOPK_MERGE",
+    "unit": "COLL",
+    "records_per_token": 9,
+    "layers_with_op": 8,
+    "price_cycles_per_record": 2382.8,
+    "price_cycles_per_token": 21445.0,
+    "price_cycles_per_layer": 2680.6,
+    "budget_cycles_per_record_at_target": 2289.6,
+    "items_per_record": 2427.6,
+    "item": "bytes",
+    "required_items_per_cycle": 1.019,
+    "required_items_per_cycle_at_target": 1.06,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00379,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "measured_note": null,
+    "interim": null,
+    "measured_cycles_per_record": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "tput-gate-1010 (taken 10-10: production-shape bench)",
+    "elements": [],
+    "exposure_cycles_if_2x": 21435.1
+   },
+   {
+    "op": "FUSED.HC_POST",
+    "unit": "FUSED",
+    "records_per_token": 80,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 222.7,
+    "price_cycles_per_token": 17813.8,
+    "price_cycles_per_layer": 445.3,
+    "budget_cycles_per_record_at_target": 214.0,
+    "items_per_record": 20480.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 91.974,
+    "required_items_per_cycle_at_target": 95.717,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00307,
+    "measured_ratio": 20.085,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
+    "measured_note": null,
+    "interim": null,
+    "measured_cycles_per_record": 4472.4,
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 339233.8,
+    "impact_tok_s": -795.5,
+    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
+    "elements": [
+     "ot_hgi_fused_record"
+    ]
+   },
+   {
+    "op": "ATT.QK",
+    "unit": "ATT",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 329.5,
+    "price_cycles_per_token": 13181.8,
+    "price_cycles_per_layer": 329.5,
+    "budget_cycles_per_record_at_target": 316.7,
+    "items_per_record": 16384.0,
+    "item": "MACs (weight / key elements)",
+    "required_items_per_cycle": 49.717,
+    "required_items_per_cycle_at_target": 51.74,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00233,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "measured_note": null,
+    "interim": {
+     "ratio": null,
+     "src": "main a7613320f ATT PIPE=2: H4 D128 NL2 vehicle QK T512 1,951 cyc (not DS production shape hd512 / 1M)"
+    },
+    "measured_cycles_per_record": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "elements": [
+     "hgi_att_record_g12_320",
+     "hgi_att_record_g12_360",
+     "hgi_att_rows_g12_120",
+     "hgi_att_rows_g12_140",
+     "ot_hgi_att_issue",
+     "ot_hgi_att_sector_codec",
+     "hfd_attn_half_hi",
+     "hfd_attn_half_lo",
+     "ot_attn_tile_m6h1q"
+    ],
+    "exposure_cycles_if_2x": 13177.8
+   },
+   {
+    "op": "ATT.PV",
+    "unit": "ATT",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 329.5,
+    "price_cycles_per_token": 13181.8,
+    "price_cycles_per_layer": 329.5,
+    "budget_cycles_per_record_at_target": 316.7,
+    "items_per_record": 16384.0,
+    "item": "MACs (weight / key elements)",
+    "required_items_per_cycle": 49.717,
+    "required_items_per_cycle_at_target": 51.74,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00233,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "measured_note": null,
+    "interim": {
+     "ratio": null,
+     "src": "main a7613320f ATT PIPE=2: PV T512 2,968 cyc (vehicle, not production shape)"
+    },
+    "measured_cycles_per_record": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010/g2",
+    "elements": [],
+    "exposure_cycles_if_2x": 13177.8
+   },
+   {
+    "op": "IDX.TOPK",
+    "unit": "IDX",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 283.0,
+    "price_cycles_per_token": 11320.3,
+    "price_cycles_per_layer": 283.0,
+    "budget_cycles_per_record_at_target": 271.9,
+    "items_per_record": 384.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 1.357,
+    "required_items_per_cycle_at_target": 1.412,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.002,
+    "measured_ratio": 4.286,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json",
+    "measured_note": null,
+    "interim": {
+     "ratio": null,
+     "src": "hgi-1010.log 20:50 g2: TOPKW=1 heap IW4/W4 under test (heap n49152 IW4 23.3k)"
+    },
+    "measured_cycles_per_record": 1213.0,
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 37198.6,
+    "impact_tok_s": -130.9,
+    "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
+    "elements": [
+     "hgi_idx_topk_full",
+     "hgi_idx_topk_heap"
+    ]
+   },
+   {
+    "op": "IDX.INDEX",
+    "unit": "IDX",
+    "records_per_token": 8,
+    "layers_with_op": 8,
+    "price_cycles_per_record": 939.2,
+    "price_cycles_per_token": 7513.6,
+    "price_cycles_per_layer": 939.2,
+    "budget_cycles_per_record_at_target": 902.5,
+    "items_per_record": 851968.0,
+    "item": "keys scored",
+    "required_items_per_cycle": 907.126,
+    "required_items_per_cycle_at_target": 944.041,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00133,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "measured_note": null,
+    "interim": {
+     "ratio": 1.36,
+     "src": "results/rtl/hgi_unit_tput_20261010/iks/README.md: key-stream issuer q0 460 vs 339 priced (one stack; not the whole record)"
+    },
+    "measured_cycles_per_record": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "elements": [
+     "hfd_idx_score",
+     "hfd_idx_t4_join",
+     "hfd_idx_sel_native_qend",
+     "hfd_index_q_b0",
+     "hfd_index_q_b1",
+     "hfd_index_q_b2",
+     "hfd_index_q_b3",
+     "hfd_index_q_b5",
+     "hgi_idx_chunk",
+     "ot_hdc_v41x_idx_chunk_el"
+    ],
+    "exposure_cycles_if_2x": 7522.1
+   },
+   {
+    "op": "DMA.KVWB_DS",
+    "unit": "DMA",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 60.0,
+    "price_cycles_per_token": 2400.0,
+    "price_cycles_per_layer": 60.0,
+    "budget_cycles_per_record_at_target": 57.7,
+    "items_per_record": 2048.0,
+    "item": "bytes",
+    "required_items_per_cycle": 34.133,
+    "required_items_per_cycle_at_target": 35.522,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00028,
+    "measured_ratio": 3.817,
+    "measured_grade": "e2e",
+    "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+    "measured_note": "retires on write completion, not acceptance (audit hbm_ds_kvwb)",
+    "interim": null,
+    "measured_cycles_per_record": 229.0,
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 5376.6,
+    "impact_tok_s": -20.0,
+    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+    "elements": [
+     "ot_hgi_dma_mover",
+     "ot_hgi_dma_record",
+     "ot_hgi_dma_front"
+    ]
+   },
+   {
+    "op": "DMA.FENCE",
+    "unit": "DMA",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 60.0,
+    "price_cycles_per_token": 2400.0,
+    "price_cycles_per_layer": 60.0,
+    "budget_cycles_per_record_at_target": 57.7,
+    "items_per_record": 0.0,
+    "item": "",
+    "required_items_per_cycle": 0.0,
+    "required_items_per_cycle_at_target": 0.0,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.0,
+    "measured_ratio": 0.117,
+    "measured_grade": "e2e",
+    "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+    "measured_note": null,
+    "interim": null,
+    "measured_cycles_per_record": 7.0,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "-",
+    "elements": []
+   },
+   {
+    "op": "FUSED.QDQ_FP8",
+    "unit": "FUSED",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 24.0,
+    "price_cycles_per_token": 960.0,
+    "price_cycles_per_layer": 24.0,
+    "budget_cycles_per_record_at_target": 23.1,
+    "items_per_record": 512.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 21.333,
+    "required_items_per_cycle_at_target": 22.201,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00014,
+    "measured_ratio": 14.573,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json",
+    "measured_note": null,
+    "interim": null,
+    "measured_cycles_per_record": 349.8,
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 10424.1,
+    "impact_tok_s": -38.4,
+    "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
+    "elements": [
+     "hfd_quant",
+     "ot_hgi_quant_decode",
+     "ot_hgi_quant_vm_transport_p"
+    ]
+   },
+   {
+    "op": "COLL.ARGMAX_MERGE",
+    "unit": "COLL",
+    "records_per_token": 1,
+    "layers_with_op": 1,
+    "price_cycles_per_record": 765.4,
+    "price_cycles_per_token": 765.4,
+    "price_cycles_per_layer": 765.4,
+    "budget_cycles_per_record_at_target": 735.5,
+    "items_per_record": 8.0,
+    "item": "bytes",
+    "required_items_per_cycle": 0.01,
+    "required_items_per_cycle_at_target": 0.011,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00014,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "measured_note": null,
+    "interim": null,
+    "measured_cycles_per_record": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "UNOWNED",
+    "elements": [],
+    "exposure_cycles_if_2x": 791.8
+   },
+   {
+    "op": "ARGMAX.LOCAL",
+    "unit": "ARGMAX",
+    "records_per_token": 1,
+    "layers_with_op": 1,
+    "price_cycles_per_record": 142.7,
+    "price_cycles_per_token": 142.7,
+    "price_cycles_per_layer": 142.7,
+    "budget_cycles_per_record_at_target": 137.1,
+    "items_per_record": 1347.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 9.442,
+    "required_items_per_cycle_at_target": 9.826,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.0,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "measured_note": null,
+    "interim": null,
+    "measured_cycles_per_record": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "UNOWNED",
+    "elements": [
+     "ot_hgi_argmax18_m",
+     "ot_hgi_argmax_record"
+    ],
+    "exposure_cycles_if_2x": 0.0
+   }
+  ],
+  "program": "results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json",
+  "run": "results/arch/hgi_sim_20261010/g25_proof/ds_full.json"
+ },
+ "ds_bottleneck_ranking": [
+  {
+   "rank": 1,
+   "op": "FUSED.HC_POST",
+   "ratio": 20.085,
+   "impact_cycles_per_token": 339233.8,
+   "impact_tok_s": -795.5,
+   "budget_cycles_per_record": 222.7,
+   "budget_at_target": 214.0,
+   "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
+  },
+  {
+   "rank": 2,
+   "op": "FUSED.HC_PRE_NORM",
+   "ratio": 6.514,
+   "impact_cycles_per_token": 290013.7,
+   "impact_tok_s": -719.2,
+   "budget_cycles_per_record": 649.3,
+   "budget_at_target": 623.9,
+   "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
+  },
+  {
+   "rank": 3,
+   "op": "IDX.TOPK",
+   "ratio": 4.286,
+   "impact_cycles_per_token": 37198.6,
+   "impact_tok_s": -130.9,
+   "budget_cycles_per_record": 283.0,
+   "budget_at_target": 271.9,
+   "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)"
+  },
+  {
+   "rank": 4,
+   "op": "FUSED.QDQ_FP8",
+   "ratio": 14.573,
+   "impact_cycles_per_token": 10424.1,
+   "impact_tok_s": -38.4,
+   "budget_cycles_per_record": 24.0,
+   "budget_at_target": 23.1,
+   "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)"
+  },
+  {
+   "rank": 5,
+   "op": "DMA.KVWB_DS",
+   "ratio": 3.817,
+   "impact_cycles_per_token": 5376.6,
+   "impact_tok_s": -20.0,
+   "budget_cycles_per_record": 60.0,
+   "budget_at_target": 57.7,
+   "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)"
+  },
+  {
+   "rank": 6,
+   "op": "HC.HC_MIX_POST",
+   "ratio": 1.282,
+   "impact_cycles_per_token": 0.0,
+   "impact_tok_s": 0.0,
+   "budget_cycles_per_record": 540.0,
+   "budget_at_target": 518.9,
+   "owner": "hgi-1010/d"
+  }
+ ],
+ "ds_unbenched_by_exposure": [
+  {
+   "op": "SM.MATVEC",
+   "exposure_cycles_if_2x": 52597.9,
+   "price_cycles_per_token": 103968.3,
+   "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+   "interim": {
+    "ratio": null,
+    "src": "hgi-1010.log 20:04: SM DS ratio rerun with tb_hgi_sm_tput on exp_2c9860e12 -> d (pending)"
+   }
+  },
+  {
+   "op": "COLL.TOPK_MERGE",
+   "exposure_cycles_if_2x": 21435.1,
+   "price_cycles_per_token": 21445.0,
+   "owner": "tput-gate-1010 (taken 10-10: production-shape bench)",
+   "interim": null
+  },
+  {
+   "op": "ATT.QK",
+   "exposure_cycles_if_2x": 13177.8,
+   "price_cycles_per_token": 13181.8,
+   "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+   "interim": {
+    "ratio": null,
+    "src": "main a7613320f ATT PIPE=2: H4 D128 NL2 vehicle QK T512 1,951 cyc (not DS production shape hd512 / 1M)"
+   }
+  },
+  {
+   "op": "ATT.PV",
+   "exposure_cycles_if_2x": 13177.8,
+   "price_cycles_per_token": 13181.8,
+   "owner": "hgi-1010/g2",
+   "interim": {
+    "ratio": null,
+    "src": "main a7613320f ATT PIPE=2: PV T512 2,968 cyc (vehicle, not production shape)"
+   }
+  },
+  {
+   "op": "IDX.INDEX",
+   "exposure_cycles_if_2x": 7522.1,
+   "price_cycles_per_token": 7513.6,
+   "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+   "interim": {
+    "ratio": 1.36,
+    "src": "results/rtl/hgi_unit_tput_20261010/iks/README.md: key-stream issuer q0 460 vs 339 priced (one stack; not the whole record)"
+   }
+  },
+  {
+   "op": "COLL.ARGMAX_MERGE",
+   "exposure_cycles_if_2x": 791.8,
+   "price_cycles_per_token": 765.4,
+   "owner": "UNOWNED",
+   "interim": null
+  },
+  {
+   "op": "ARGMAX.LOCAL",
+   "exposure_cycles_if_2x": 0.0,
+   "price_cycles_per_token": 142.7,
+   "owner": "UNOWNED",
+   "interim": null
+  }
+ ],
+ "hbm_datactl_rows": [
+  {
+   "id": "hbm_ds_cp_fetch",
+   "target": "hbm_ds",
+   "unit": "CP.fetch",
+   "metric": "bytes/cycle",
+   "required": 0.867,
+   "designed": 0.308,
+   "measured": null,
+   "margin": 0.36,
+   "flag": "INFEASIBLE",
+   "ratio": 2.778,
+   "owner": "hgi-1010",
+   "confidence": "derived"
+  },
+  {
+   "id": "hbm_ds_mtp_cp_fetch",
+   "target": "hbm_ds_mtp",
+   "unit": "CP.fetch",
+   "metric": "bytes/cycle",
+   "required": null,
+   "designed": 0.308,
+   "measured": null,
+   "margin": null,
+   "flag": "INFEASIBLE",
+   "ratio": null,
+   "owner": "hgi-1010",
+   "confidence": "derived"
+  },
+  {
+   "id": "hbm_dflash_cp_fetch",
+   "target": "hbm_dflash",
+   "unit": "CP.fetch",
+   "metric": "bytes/cycle",
+   "required": 0.293,
+   "designed": 0.308,
+   "measured": null,
+   "margin": 1.05,
+   "flag": "GAP",
+   "ratio": 0.952,
+   "owner": "hgi-1010",
+   "confidence": "derived"
+  },
+  {
+   "id": "hbm_dma_load",
+   "target": "hbm_qwen",
+   "unit": "DMA",
+   "metric": "ratio rtl/sim",
+   "required": 1.0,
+   "designed": null,
+   "measured": 9.204,
+   "margin": 0.11,
+   "flag": "GAP",
+   "ratio": 9.091,
+   "owner": "hgi-1010",
+   "confidence": "measured"
+  },
+  {
+   "id": "hbm_ds_kvwb",
+   "target": "hbm_ds",
+   "unit": "DMA",
+   "metric": "cycles/record",
+   "required": 60,
+   "designed": null,
+   "measured": 376,
+   "margin": 0.16,
+   "flag": "GAP",
+   "ratio": 6.25,
+   "owner": "hgi-1010",
+   "confidence": "measured"
+  },
+  {
+   "id": "hbm_ds_window_rows_1m",
+   "target": "hbm_ds",
+   "unit": "KV_READ",
+   "metric": "ns per layer",
+   "required": null,
+   "designed": null,
+   "measured": 122.1,
+   "margin": 1.0,
+   "flag": "GAP",
+   "ratio": 1.0,
+   "owner": "hgi-1010",
+   "confidence": "derived"
+  },
+  {
+   "id": "hbm_qwen_kv_read_8k",
+   "target": "hbm_qwen",
+   "unit": "KV_READ",
+   "metric": "fraction of 4.0 TB/s die peak",
+   "required": 0.95,
+   "designed": null,
+   "measured": 0.7985,
+   "margin": 0.84,
+   "flag": "GAP",
+   "ratio": 1.19,
+   "owner": "hbm-phys-1010",
+   "confidence": "measured"
+  },
+  {
+   "id": "hbm_qwen_dma_store",
+   "target": "hbm_qwen",
+   "unit": "DMA",
+   "metric": "cycles/record",
+   "required": 30,
+   "designed": null,
+   "measured": 129.0,
+   "margin": 0.23,
+   "flag": "GAP",
+   "ratio": 4.348,
+   "owner": "hgi-1010",
+   "confidence": "measured"
+  },
+  {
+   "id": "ds_mtp_native_verify_program",
+   "target": "hbm_ds_mtp",
+   "unit": "CP.dispatch",
+   "metric": "exists",
+   "required": 1,
+   "designed": 0,
+   "measured": null,
+   "margin": null,
+   "flag": "UNKNOWN",
+   "ratio": null,
+   "owner": "bf-mtp-1010",
+   "confidence": "assumed"
+  },
+  {
+   "id": "hbm_qwen_cp_fetch",
+   "target": "hbm_qwen",
+   "unit": "CP.fetch",
+   "metric": "bytes/cycle",
+   "required": 0.0038,
+   "designed": 0.308,
+   "measured": null,
+   "margin": 81.7,
+   "flag": "OK",
+   "ratio": 0.012,
+   "owner": "hgi-1010",
+   "confidence": "derived"
+  },
+  {
+   "id": "hbm_ds_cp_dispatch",
+   "target": "hbm_ds",
+   "unit": "CP.dispatch",
+   "metric": "cycles/record",
+   "required": 137.5,
+   "designed": null,
+   "measured": 1.16,
+   "margin": null,
+   "flag": "OK",
+   "ratio": null,
+   "owner": "hgi-1010",
+   "confidence": "measured"
+  },
+  {
+   "id": "hbm_ds_index_keys_1m",
+   "target": "hbm_ds",
+   "unit": "KV_READ",
+   "metric": "ns per sweep",
+   "required": 3100.0,
+   "designed": null,
+   "measured": 369.6,
+   "margin": 3.7,
+   "flag": "OK",
+   "ratio": 0.27,
+   "owner": "hbm-phys-1010",
+   "confidence": "measured"
+  },
+  {
+   "id": "hbm_svc_dma_strip",
+   "target": "hbm_ds",
+   "unit": "SVC",
+   "metric": "bits per cut",
+   "required": 3647,
+   "designed": 2668,
+   "measured": null,
+   "margin": 0.73,
+   "flag": "OK",
+   "ratio": 1.37,
+   "owner": "hbm-phys-1010",
+   "confidence": "derived"
+  },
+  {
+   "id": "hbm_qwen_weight_stream",
+   "target": "hbm_qwen",
+   "unit": "SVC",
+   "metric": "fraction of 4.0 TB/s die peak",
+   "required": 0.775,
+   "designed": null,
+   "measured": 0.862,
+   "margin": 1.11,
+   "flag": "OK",
+   "ratio": 0.901,
+   "owner": "hgi-1010",
+   "confidence": "modelled"
+  }
+ ],
+ "svc_endpoint_budget_ds": {
+  "DMA.LOAD": {
+   "kind": "read",
+   "bytes_per_token": 392054,
+   "at_price_B_per_cycle_die": 11.049,
+   "at_price_B_per_cycle_stack_striped": 2.762,
+   "token_average_B_per_cycle_die": 0.721
+  },
+  "DMA.KVWB_DS": {
+   "kind": "write",
+   "bytes_per_token": 81920,
+   "at_price_B_per_cycle_die": 34.133,
+   "at_price_B_per_cycle_stack_striped": 8.533,
+   "token_average_B_per_cycle_die": 0.151
+  },
+  "COLL.ROW_GATHER": {
+   "kind": "write (head-die HBM row write)",
+   "bytes_per_token": 8388608,
+   "at_price_B_per_cycle_die": 246.956,
+   "at_price_B_per_cycle_stack_striped": 61.739,
+   "token_average_B_per_cycle_die": 15.436
+  },
+  "CP.FETCH": {
+   "kind": "read",
+   "bytes_per_token": 478720,
+   "required_B_per_cycle_die": 0.867,
+   "designed_B_per_cycle_die": 0.308,
+   "note": "budget_audit hbm_ds_cp_fetch: ring fetch of the unrolled image, overlap-aware minimum"
+  }
+ },
+ "qwen_hbm": {
+  "S2_cycles": 1269120.1,
+  "S2_tok_s": 945.5,
+  "target_tok_s": 953.8,
+  "price_scale_to_target": 0.9913,
+  "ops": [
+   {
+    "op": "SM.MATVEC",
+    "unit": "SM",
+    "records_per_token": 145,
+    "price_cycles_per_record": 6718.3,
+    "price_cycles_per_token": 974155.0,
+    "price_cycles_per_layer": 27059.9,
+    "budget_cycles_per_record_at_target": 6660.1,
+    "items_per_record": 13048443.6,
+    "item": "MACs (weight / key elements)",
+    "required_items_per_cycle": 1942.221,
+    "token_elasticity_at_plus10pct": 0.07676,
+    "measured_ratio": 2.013,
+    "measured_grade": "unit_bench",
+    "measured_src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)",
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 986819.0,
+    "impact_tok_s": -413.6,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "elements": [
+     "ot_hgi_sm_record",
+     "ot_hgi_sm_xload",
+     "ot_hgi_sm_pub",
+     "ot_hbm_accel_smh_be_eg",
+     "ot_hbm_accel_smh_be_wg",
+     "ot_hbm_accel_smh_front_n",
+     "ot_hbm_accel_smh_front_s",
+     "ot_hbm_accel_smh_front_c",
+     "ot_hbm_accel_smh_tile_eg",
+     "ot_hbm_accel_smh_tile_wg"
+    ]
+   },
+   {
+    "op": "COLL.ALL_REDUCE_SUM",
+    "unit": "COLL",
+    "records_per_token": 72,
+    "price_cycles_per_record": 1350.0,
+    "price_cycles_per_token": 97200.0,
+    "price_cycles_per_layer": 2700.0,
+    "budget_cycles_per_record_at_target": 1338.3,
+    "items_per_record": 16384.0,
+    "item": "bytes",
+    "required_items_per_cycle": 12.136,
+    "token_elasticity_at_plus10pct": 0.00766,
+    "measured_ratio": 0.911,
+    "measured_grade": "e2e",
+    "measured_src": "budget_audit table.json hbm_qwen_allreduce",
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": -8650.8,
+    "impact_tok_s": 6.5,
+    "owner": "hgi-1010",
+    "elements": []
+   },
+   {
+    "op": "SU.VOP",
+    "unit": "SU",
+    "records_per_token": 362,
+    "price_cycles_per_record": 147.8,
+    "price_cycles_per_token": 53517.0,
+    "price_cycles_per_layer": 1486.6,
+    "budget_cycles_per_record_at_target": 146.6,
+    "items_per_record": 2028.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 13.718,
+    "token_elasticity_at_plus10pct": 0.00421,
+    "measured_ratio": 2.896,
+    "measured_grade": "e2e",
+    "measured_src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)",
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 101214.2,
+    "impact_tok_s": -69.8,
+    "owner": "hgi-1010/b",
+    "elements": [
+     "ot_hgi_su_record",
+     "ot_hgi_su_ctl",
+     "ot_hgi_su_ctlw",
+     "hfd_su_tile",
+     "hfd_su_tile_xl",
+     "hfd_su_result_ingress"
+    ]
+   },
+   {
+    "op": "ATT.QK",
+    "unit": "ATT",
+    "records_per_token": 72,
+    "price_cycles_per_record": 660.1,
+    "price_cycles_per_token": 47529.1,
+    "price_cycles_per_layer": 1320.3,
+    "budget_cycles_per_record_at_target": 654.4,
+    "items_per_record": 1.0,
+    "item": "MACs (weight / key elements)",
+    "required_items_per_cycle": 0.002,
+    "token_elasticity_at_plus10pct": 0.00375,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "elements": [
+     "hgi_att_record_g12_320",
+     "hgi_att_record_g12_360",
+     "hgi_att_rows_g12_120",
+     "hgi_att_rows_g12_140",
+     "ot_hgi_att_issue",
+     "ot_hgi_att_sector_codec",
+     "hfd_attn_half_hi",
+     "hfd_attn_half_lo",
+     "ot_attn_tile_m6h1q"
+    ]
+   },
+   {
+    "op": "ATT.PV",
+    "unit": "ATT",
+    "records_per_token": 72,
+    "price_cycles_per_record": 660.1,
+    "price_cycles_per_token": 47529.1,
+    "price_cycles_per_layer": 1320.3,
+    "budget_cycles_per_record_at_target": 654.4,
+    "items_per_record": 1.0,
+    "item": "MACs (weight / key elements)",
+    "required_items_per_cycle": 0.002,
+    "token_elasticity_at_plus10pct": 0.00375,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010/g2",
+    "elements": []
+   },
+   {
+    "op": "FUSED.ROW_NORM",
+    "unit": "FUSED",
+    "records_per_token": 145,
+    "price_cycles_per_record": 150.2,
+    "price_cycles_per_token": 21775.0,
+    "price_cycles_per_layer": 604.9,
+    "budget_cycles_per_record_at_target": 148.9,
+    "items_per_record": 2379.9,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 15.848,
+    "token_elasticity_at_plus10pct": 0.00172,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010",
+    "elements": []
+   },
+   {
+    "op": "DMA.LOAD",
+    "unit": "DMA",
+    "records_per_token": 149,
+    "price_cycles_per_record": 106.6,
+    "price_cycles_per_token": 15882.3,
+    "price_cycles_per_layer": 441.2,
+    "budget_cycles_per_record_at_target": 105.7,
+    "items_per_record": 8210.5,
+    "item": "bytes",
+    "required_items_per_cycle": 77.027,
+    "token_elasticity_at_plus10pct": 1e-05,
+    "measured_ratio": 9.204,
+    "measured_grade": "e2e",
+    "measured_src": "budget_audit table.json hbm_dma_load",
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 861.1,
+    "impact_tok_s": -0.6,
+    "owner": "hgi-1010",
+    "elements": []
+   },
+   {
+    "op": "SFU.GLU",
+    "unit": "SFU",
+    "records_per_token": 36,
+    "price_cycles_per_record": 120.0,
+    "price_cycles_per_token": 4320.0,
+    "price_cycles_per_layer": 120.0,
+    "budget_cycles_per_record_at_target": 119.0,
+    "items_per_record": 3072.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 25.6,
+    "token_elasticity_at_plus10pct": 0.00034,
+    "measured_ratio": 2.896,
+    "measured_grade": "e2e",
+    "measured_src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)",
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 8190.7,
+    "impact_tok_s": -6.1,
+    "owner": "hgi-1010",
+    "elements": [
+     "ot_hgi_sfu_record",
+     "hfd_sfu_tile",
+     "hfd_sfu"
+    ]
+   },
+   {
+    "op": "ARGMAX.LOCAL",
+    "unit": "ARGMAX",
+    "records_per_token": 1,
+    "price_cycles_per_record": 2394.0,
+    "price_cycles_per_token": 2394.0,
+    "price_cycles_per_layer": 66.5,
+    "budget_cycles_per_record_at_target": 2373.3,
+    "items_per_record": 37984.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 15.866,
+    "token_elasticity_at_plus10pct": 0.0,
+    "measured_ratio": 1.263,
+    "measured_grade": "e2e",
+    "measured_src": "budget_audit table.json qwen_head_stream_chain",
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "UNOWNED",
+    "elements": [
+     "ot_hgi_argmax18_m",
+     "ot_hgi_argmax_record"
+    ]
+   },
+   {
+    "op": "DMA.STORE",
+    "unit": "DMA",
+    "records_per_token": 72,
+    "price_cycles_per_record": 30.0,
+    "price_cycles_per_token": 2160.0,
+    "price_cycles_per_layer": 60.0,
+    "budget_cycles_per_record_at_target": 29.7,
+    "items_per_record": 1024.0,
+    "item": "bytes",
+    "required_items_per_cycle": 34.133,
+    "token_elasticity_at_plus10pct": 0.00017,
+    "measured_ratio": 4.3,
+    "measured_grade": "e2e",
+    "measured_src": "budget_audit table.json hbm_qwen_dma_store",
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 7128.0,
+    "impact_tok_s": -5.3,
+    "owner": "hgi-1010",
+    "elements": []
+   },
+   {
+    "op": "DMA.FENCE",
+    "unit": "DMA",
+    "records_per_token": 36,
+    "price_cycles_per_record": 60.0,
+    "price_cycles_per_token": 2160.0,
+    "price_cycles_per_layer": 60.0,
+    "budget_cycles_per_record_at_target": 59.5,
+    "items_per_record": 0.0,
+    "item": "",
+    "required_items_per_cycle": 0.0,
+    "token_elasticity_at_plus10pct": 0.00017,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "hgi-1010",
+    "elements": []
+   },
+   {
+    "op": "COLL.ARGMAX_MERGE",
+    "unit": "COLL",
+    "records_per_token": 1,
+    "price_cycles_per_record": 586.0,
+    "price_cycles_per_token": 586.0,
+    "price_cycles_per_layer": 16.3,
+    "budget_cycles_per_record_at_target": 580.9,
+    "items_per_record": 8.0,
+    "item": "bytes",
+    "required_items_per_cycle": 0.014,
+    "token_elasticity_at_plus10pct": 5e-05,
+    "measured_ratio": null,
+    "measured_grade": null,
+    "measured_src": null,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
+    "owner": "UNOWNED",
+    "elements": []
+   }
+  ],
+  "note": "Qwen on HBM is deprioritised (runs exactly; TOKEN_SAVE 10-10); ratios are the audit's Qwen-shape measurements"
+ },
+ "rom": {
+  "qwen_rom": {
+   "headline": 4810.9,
+   "cycles": 249431.0,
+   "classes": [
+    {
+     "cls": "me",
+     "critical_cycles_per_token": 124746.0,
+     "share": 0.5001,
+     "nodes": 180,
+     "measured_fraction": 0.5259,
+     "unmeasured_nodes": [
+      "L0.qkv",
+      "L0.o_proj",
+      "L0.gate_up",
+      "L0.down",
+      "L1.qkv",
+      "L1.o_proj",
+      "L1.gate_up",
+      "L1.down",
+      "L2.qkv",
+      "L2.o_proj",
+      "L2.gate_up",
+      "L2.down"
+     ],
+     "n_unmeasured": 144,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "elements": [
+      "qfd_tile",
+      "qfd_tile_e",
+      "qfd_sp_tree_lane",
+      "qfd_sp_tree_top",
+      "qfd_sp_tree_top_b",
+      "qfd_sp_band_lanes",
+      "ot_qwen_slab_port_group_m3_m8",
+      "ot_qwen_slab_port_group_s14_die",
+      "qfd_rly",
+      "qfd_lst_c",
+      "qfd_lst_h",
+      "qfd_lst_v",
+      "ot_qwen_rom_core_meif_idle_capture"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "link",
+     "critical_cycles_per_token": 75600.0,
+     "share": 0.3031,
+     "nodes": 72,
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
+     "elements": [
+      "qfd_io_collective",
+      "qfd_io_serdes",
+      "qfd_io_xfifo",
+      "qfd_io_ucie",
+      "qfd_link_rx128",
+      "qfd_hub",
+      "ot_qwen_link_fwd_cx_station",
+      "ot_qwen_link_forwarded_tmr_pair"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "su",
+     "critical_cycles_per_token": 45676.0,
+     "share": 0.1831,
+     "nodes": 216,
+     "measured_fraction": 0.0,
+     "unmeasured_nodes": [
+      "L0.rmsnorm1",
+      "L0.qknorm_rope",
+      "L0.attn_tail",
+      "L0.rmsnorm2",
+      "L0.residual",
+      "L1.rmsnorm1",
+      "L1.qknorm_rope",
+      "L1.attn_tail",
+      "L1.rmsnorm2",
+      "L1.residual",
+      "L2.rmsnorm1",
+      "L2.qknorm_rope"
+     ],
+     "n_unmeasured": 180,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "elements": [
+      "qfd_sp_su64_sfu",
+      "qfd_sp_vector_memory",
+      "qfd_sp_constants_sequencer",
+      "qfd_sp_res_ser",
+      "qfd_vm_bank_checked",
+      "ot_qwen_rom_core_core_p",
+      "ot_qwen_rom_core_core_pu"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "head",
+     "critical_cycles_per_token": 3101.0,
+     "share": 0.0124,
+     "nodes": 1,
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
+     "elements": [
+      "qfd_chead",
+      "qfd_tile",
+      "qfd_sp_tree_top"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "embed",
+     "critical_cycles_per_token": 272.0,
+     "share": 0.0011,
+     "nodes": 1,
+     "measured_fraction": 0.0,
+     "unmeasured_nodes": [
+      "embed"
+     ],
+     "n_unmeasured": 1,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "elements": [
+      "qfd_io_emb_root",
+      "qfd_io_emb_tap",
+      "qfd_embed_code_bank",
+      "qfd_embed_ingress_code",
+      "qfd_embed_ingress_scale",
+      "qfd_embed_scale_bank"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    }
+   ],
+   "stage_ii_limiter": {
+    "id": "L1",
+    "label": "Layer 1",
+    "cycles": 6835.0
+   },
+   "n_stages": 37,
+   "source": "results/arch/token_path_20261009/qwen_rom.json"
+  },
+  "ds_rom": {
+   "headline": 1447.7,
+   "cycles": 828878.4,
+   "classes": [
+    {
+     "cls": "field",
+     "critical_cycles_per_token": 418381.8,
+     "share": 0.5048,
+     "nodes": 336,
+     "measured_fraction": 0.9946,
+     "unmeasured_nodes": [
+      "E1.wkv",
+      "E14.wkv"
+     ],
+     "n_unmeasured": 2,
+     "status": "QUALIFIED",
+     "elements": [
+      "ot_v41_rom_elem_q_qxpq_w10",
+      "ot_s81_bf_native",
+      "dsfd_vm_bg",
+      "dsfd_vm_bgh",
+      "dsfd_vm_bgq",
+      "dsfd_capt_ctl",
+      "dsfd_capt_g2",
+      "dsfd_capt_grp",
+      "dsfd_capt_x",
+      "ot_s81_pq_ret_root_cam_p",
+      "ot_s81ph_root_tile",
+      "dsfd_cfifo",
+      "dsfd_l2r_vr_564x1__hx_W",
+      "dsfd_l2r_vr_564x1__hx_E",
+      "dsfd_l2r_vr_512x1__hq_SW",
+      "dsfd_r2l_vr_1024x1__ha_SW",
+      "dsfd_m2l_raw_512x1__hl_E0",
+      "dsfd_m2l_vr_68x11__hr_E1",
+      "dsfd_stnh_512x1",
+      "dsfd_stnv_512x1",
+      "ot_meso_fifo_w512d8g1",
+      "ot_v41_pqc_spine_screen"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "hop",
+     "critical_cycles_per_token": 123191.2,
+     "share": 0.1486,
+     "nodes": 62,
+     "measured_fraction": 0.7295,
+     "unmeasured_nodes": [
+      "E1.lead_flit",
+      "E14.lead_flit"
+     ],
+     "n_unmeasured": 2,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "elements": [],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "su",
+     "critical_cycles_per_token": 116151.3,
+     "share": 0.1401,
+     "nodes": 1848,
+     "measured_fraction": 0.9627,
+     "unmeasured_nodes": [
+      "L0.attn.hc.fn",
+      "L0.ffn.hc.fn",
+      "L1.ffn.hc.fn",
+      "L2.ffn.hc.fn",
+      "L3.ffn.hc.fn",
+      "L4.ffn.hc.fn",
+      "L5.ffn.hc.fn",
+      "L6.ffn.hc.fn",
+      "L7.ffn.hc.fn",
+      "L8.ffn.hc.fn",
+      "L9.ffn.hc.fn",
+      "L10.ffn.hc.fn"
+     ],
+     "n_unmeasured": 43,
+     "status": "QUALIFIED",
+     "elements": [
+      "ot_dsrom_su_softmax_exp_tile",
+      "ot_dsrom_su_softmax_div_tile",
+      "ot_dsrom_su_softmax_exp_hr",
+      "ot_dsrom_su_fdiv_tile",
+      "ot_dsrom_su_fdiv_hr",
+      "ot_dsrom_su_swiglu_lane"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "coll",
+     "critical_cycles_per_token": 113406.5,
+     "share": 0.1368,
+     "nodes": 212,
+     "measured_fraction": 0.981,
+     "unmeasured_nodes": [
+      "E1.rows_allgather",
+      "E14.rows_allgather"
+     ],
+     "n_unmeasured": 2,
+     "status": "QUALIFIED",
+     "elements": [
+      "dsfd_coll_core",
+      "dsfd_coll_ck",
+      "dsfd_coll_lane_e",
+      "dsfd_coll_lane_w",
+      "dsfd_colt_lane"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "hbm",
+     "critical_cycles_per_token": 26084.8,
+     "share": 0.0315,
+     "nodes": 168,
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
+     "elements": [
+      "dsfd_svc_pc",
+      "dsfd_svc_stn",
+      "dsfd_svcio_ad",
+      "dsfd_svcio_od",
+      "dsfd_svcio_q",
+      "dsfd_svcio_x",
+      "dsfd_ctrl_ctr",
+      "dsfd_ctrl_pc",
+      "ot_dsrom_window_column_128",
+      "ot_dsrom_window_column_256",
+      "ot_dsrom_window_column_halfwrite",
+      "ot_dsrom_window_source_ctl"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "select",
+     "critical_cycles_per_token": 21811.0,
+     "share": 0.0263,
+     "nodes": 105,
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
+     "elements": [
+      "dsfd_selt_c",
+      "dsfd_selt_q",
+      "dsfd_selt_q2",
+      "dsfd_r2l_vr_512x1__hsel",
+      "dsfd_r2l_vr_512x1__hcol",
+      "dsfd_colt_mrg"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "head",
+     "critical_cycles_per_token": 8765.5,
+     "share": 0.0106,
+     "nodes": 6,
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
+     "elements": [
+      "ot_dsrom_head_elem_A",
+      "ot_dsrom_head_elem_B",
+      "ot_dsrom_head_bundle_glue",
+      "ot_s81_head_delay8x32",
+      "ot_hdc_v41_fh_head_top"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    },
+    {
+     "cls": "embed",
+     "critical_cycles_per_token": 1074.3,
+     "share": 0.0013,
+     "nodes": 5,
+     "measured_fraction": 0.5179,
+     "unmeasured_nodes": [
+      "E1.hash",
+      "E1.hbm_read",
+      "E14.hash",
+      "E14.hbm_read"
+     ],
+     "n_unmeasured": 4,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "elements": [
+      "ot_dsrom_engram_idwin",
+      "ot_dsrom_engram_lookup",
+      "ot_dsrom_engram_rowsink",
+      "ot_hdc_engram_hash_shipped"
+     ],
+     "basis": "token-path node prices are the measured RTL unit cycles at production shape (grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"
+    }
+   ],
+   "stage_ii_limiter": {
+    "id": "S029",
+    "label": "Stage 29: L19, L20.ffn",
+    "cycles": 33183.5
+   },
+   "n_stages": 58,
+   "source": "results/arch/token_path_20261009/ds_rom.json"
+  }
+ },
+ "rom_audit_rows": [
+  {
+   "id": "dsrom_mtp_draft_hw",
+   "target": "ds_rom",
+   "unit": "MTP",
+   "metric": "hardware present",
+   "required": 1,
+   "measured": null,
+   "margin": 0.0,
+   "flag": "INFEASIBLE",
+   "owner": "bf-mtp-1010"
+  },
+  {
+   "id": "qrom_treetop",
+   "target": "qwen_rom",
+   "unit": "CP.dispatch",
+   "metric": "cycles per layer",
+   "required": 0,
+   "measured": 821,
+   "margin": null,
+   "flag": "GAP",
+   "owner": "qwen-1010"
+  },
+  {
+   "id": "qrom_kvdie_hbm_model",
+   "target": "qwen_rom",
+   "unit": "KV_READ",
+   "metric": "fraction of 1.0 TB/s/stack peak (minimum to hold the measured 1,814-cyc step)",
+   "required": 0.9,
+   "measured": 0.7985,
+   "margin": 0.89,
+   "flag": "GAP",
+   "owner": "qwen-1010"
+  },
+  {
+   "id": "dsrom_s81_reach",
+   "target": "ds_rom",
+   "unit": "LINK",
+   "metric": "violations",
+   "required": 0,
+   "measured": 768,
+   "margin": null,
+   "flag": "GAP",
+   "owner": "ds-1010"
+  },
+  {
+   "id": "qrom_ar_link_fec",
+   "target": "qwen_rom",
+   "unit": "LINK",
+   "metric": "cycles per all-reduce",
+   "required": 1037,
+   "measured": 1037,
+   "margin": null,
+   "flag": "UNKNOWN",
+   "owner": "qwen-1010"
+  },
+  {
+   "id": "dsrom_cg_wake",
+   "target": "ds_rom",
+   "unit": "CG_WAKE",
+   "metric": "cycles per stage",
+   "required": 0,
+   "measured": null,
+   "margin": null,
+   "flag": "UNKNOWN",
+   "owner": "ds-1010"
+  },
+  {
+   "id": "dsrom_l20_cand_select",
+   "target": "ds_rom",
+   "unit": "IDX",
+   "metric": "cycles",
+   "required": null,
+   "measured": null,
+   "margin": null,
+   "flag": "UNKNOWN",
+   "owner": "ds-1010"
+  },
+  {
+   "id": "qrom_attn_step",
+   "target": "qwen_rom",
+   "unit": "ATT",
+   "metric": "cycles per layer",
+   "required": 1816,
+   "measured": 1814,
+   "margin": 1.0,
+   "flag": "OK",
+   "owner": "qwen-1010"
+  },
+  {
+   "id": "qrom_d2d",
+   "target": "qwen_rom",
+   "unit": "LINK",
+   "metric": "words/cycle/class",
+   "required": 1.0,
+   "measured": 1.0,
+   "margin": 1.0,
+   "flag": "OK",
+   "owner": "qwen-1010"
+  },
+  {
+   "id": "dsrom_engram",
+   "target": "ds_rom",
+   "unit": "KV_READ",
+   "metric": "slack cycles",
+   "required": 5323,
+   "measured": null,
+   "margin": 2.6,
+   "flag": "OK",
+   "owner": "ds-1010"
+  },
+  {
+   "id": "dsrom_kv_1m",
+   "target": "ds_rom",
+   "unit": "KV_READ",
+   "metric": "measured",
+   "required": null,
+   "measured": null,
+   "margin": 1.0,
+   "flag": "OK",
+   "owner": "ds-1010"
+  },
+  {
+   "id": "dsrom_hops_links",
+   "target": "ds_rom",
+   "unit": "LINK",
+   "metric": "cycles",
+   "required": 123191,
+   "measured": 123191,
+   "margin": 1.0,
+   "flag": "OK",
+   "owner": "ds-1010"
+  },
+  {
+   "id": "dsrom_bf_fullrate",
+   "target": "ds_rom",
+   "unit": "SM",
+   "metric": "tok/s",
+   "required": null,
+   "measured": null,
+   "margin": null,
+   "flag": "OK",
+   "owner": "bf-mtp-1010"
+  },
+  {
+   "id": "dsrom_coll_split",
+   "target": "ds_rom",
+   "unit": "COLL",
+   "metric": "cycles",
+   "required": 3015,
+   "measured": 3013,
+   "margin": 1.0,
+   "flag": "OK",
+   "owner": "ds-1010"
+  }
+ ],
+ "elements": {
+  "dsfd_capt_ctl": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_capt_g2": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_capt_grp": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_capt_x": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_cfifo": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_coll_ck": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_coll_core": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_coll_lane_e": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_coll_lane_w": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_colt_lane": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_colt_mrg": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:select",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:select",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_ctrl_ctr": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_ctrl_pc": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_l2r_vr_512x1__hq_SW": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_l2r_vr_564x1__hx_E": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_l2r_vr_564x1__hx_W": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_m2l_raw_512x1__hl_E0": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_m2l_vr_68x11__hr_E1": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_r2l_vr_1024x1__ha_SW": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_r2l_vr_512x1__hcol": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:select",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:select",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_r2l_vr_512x1__hsel": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:select",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:select",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_selt_c": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:select",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:select",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_selt_q": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:select",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:select",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_selt_q2": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:select",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:select",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_stnh_512x1": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_stnv_512x1": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_svc_pc": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_svc_stn": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_svcio_ad": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_svcio_od": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_svcio_q": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_svcio_x": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_vm_bg": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_vm_bgh": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "dsfd_vm_bgq": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "hfd_attn_half_hi": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_attn_half_lo": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_cmdproc_n": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.778,
+   "limiting": {
+    "op": "CP.FETCH",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.778,
+    "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+   },
+   "ops": [
+    {
+     "op": "CP.FETCH",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.778,
+     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    }
+   ]
+  },
+  "hfd_cmdproc_s": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.778,
+   "limiting": {
+    "op": "CP.FETCH",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.778,
+    "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+   },
+   "ops": [
+    {
+     "op": "CP.FETCH",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.778,
+     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    }
+   ]
+  },
+  "hfd_coll": {
+   "status": "QUALIFIED",
+   "ratio": 0.716,
+   "limiting": {
+    "op": "COLL.ALL_GATHER",
+    "model": "DS AR 1M (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.716,
+    "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+    "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+   },
+   "ops": [
+    {
+     "op": "COLL.ALL_GATHER",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.716,
+     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+     "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+    }
+   ]
+  },
+  "hfd_coll_credit_prod": {
+   "status": "QUALIFIED",
+   "ratio": 0.716,
+   "limiting": {
+    "op": "COLL.ALL_GATHER",
+    "model": "DS AR 1M (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.716,
+    "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+    "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+   },
+   "ops": [
+    {
+     "op": "COLL.ALL_GATHER",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.716,
+     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+     "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+    }
+   ]
+  },
+  "hfd_coll_idle_tx": {
+   "status": "QUALIFIED",
+   "ratio": 0.716,
+   "limiting": {
+    "op": "COLL.ALL_GATHER",
+    "model": "DS AR 1M (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.716,
+    "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+    "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+   },
+   "ops": [
+    {
+     "op": "COLL.ALL_GATHER",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.716,
+     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+     "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+    }
+   ]
+  },
+  "hfd_coll_pkt_fifo_ii1": {
+   "status": "QUALIFIED",
+   "ratio": 0.716,
+   "limiting": {
+    "op": "COLL.ALL_GATHER",
+    "model": "DS AR 1M (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.716,
+    "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+    "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+   },
+   "ops": [
+    {
+     "op": "COLL.ALL_GATHER",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.716,
+     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+     "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+    }
+   ]
+  },
+  "hfd_hc": {
+   "status": "UNQUALIFIED",
+   "ratio": 1.282,
+   "limiting": {
+    "op": "HC.HC_MIX_POST",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 1.282,
+    "owner": "hgi-1010/d",
+    "src": "results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+   },
+   "ops": [
+    {
+     "op": "HC.HC_MIX_POST",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 1.282,
+     "owner": "hgi-1010/d",
+     "src": "results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+    }
+   ]
+  },
+  "hfd_idx_score": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_idx_sel_native_qend": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_idx_t4_join": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_index_q_b0": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_index_q_b1": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_index_q_b2": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_index_q_b3": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_index_q_b5": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hfd_loader": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.778,
+   "limiting": {
+    "op": "CP.FETCH",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.778,
+    "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+   },
+   "ops": [
+    {
+     "op": "CP.FETCH",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.778,
+     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    }
+   ]
+  },
+  "hfd_mtp_x_stop": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "MTP.VERIFY",
+    "model": "DS MTP (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/h + bf-mtp-1010",
+    "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+   },
+   "ops": [
+    {
+     "op": "MTP.VERIFY",
+     "model": "DS MTP (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/h + bf-mtp-1010",
+     "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+    }
+   ]
+  },
+  "hfd_quant": {
+   "status": "UNQUALIFIED",
+   "ratio": 14.573,
+   "limiting": {
+    "op": "FUSED.QDQ_FP8",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 14.573,
+    "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
+    "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+   },
+   "ops": [
+    {
+     "op": "FUSED.QDQ_FP8",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 14.573,
+     "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
+     "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+    }
+   ]
+  },
+  "hfd_sfu": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SFU.GLU",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010",
+    "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+   },
+   "ops": [
+    {
+     "op": "SFU.GLU",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010",
+     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+    }
+   ]
+  },
+  "hfd_sfu_tile": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SFU.GLU",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010",
+    "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+   },
+   "ops": [
+    {
+     "op": "SFU.GLU",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010",
+     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+    }
+   ]
+  },
+  "hfd_su_result_ingress": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SU.VOP",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010/b",
+    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+   },
+   "ops": [
+    {
+     "op": "SU.VOP",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 1.067,
+     "owner": "hgi-1010/b",
+     "src": "results/rtl/hgi_unit_tput_20261010/su/report.json"
+    },
+    {
+     "op": "SU.VOP",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010/b",
+     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    }
+   ]
+  },
+  "hfd_su_tile": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SU.VOP",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010/b",
+    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+   },
+   "ops": [
+    {
+     "op": "SU.VOP",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 1.067,
+     "owner": "hgi-1010/b",
+     "src": "results/rtl/hgi_unit_tput_20261010/su/report.json"
+    },
+    {
+     "op": "SU.VOP",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010/b",
+     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    }
+   ]
+  },
+  "hfd_su_tile_xl": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SU.VOP",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010/b",
+    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+   },
+   "ops": [
+    {
+     "op": "SU.VOP",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 1.067,
+     "owner": "hgi-1010/b",
+     "src": "results/rtl/hgi_unit_tput_20261010/su/report.json"
+    },
+    {
+     "op": "SU.VOP",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010/b",
+     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s0": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s1": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s2": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s3": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s4": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s5": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s6": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s7": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SE_s8": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SW_s0": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SW_s1": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SW_s2": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SW_s3": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SW_s4": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SW_s5": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SW_s6": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_svc_SW_s7": {
+   "status": "QUALIFIED",
+   "ratio": 0.901,
+   "limiting": {
+    "op": "SVC.STREAM",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.901,
+    "owner": "hbm-phys-1010",
+    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+   },
+   "ops": [
+    {
+     "op": "SVC.STREAM",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.901,
+     "owner": "hbm-phys-1010",
+     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    }
+   ]
+  },
+  "hfd_vm_ne_e": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hfd_vm_ne_s": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hfd_vm_ne_w": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hfd_vm_nw_e": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hfd_vm_nw_w": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hfd_vm_se_e": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hfd_vm_se_w": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hfd_vm_sw_e": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hfd_vm_sw_w": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "hgi_att_record_g12_320": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "hgi_att_record_g12_360": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "hgi_att_rows_g12_120": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "hgi_att_rows_g12_140": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "hgi_idx_chunk": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "hgi_idx_topk_full": {
+   "status": "UNQUALIFIED",
+   "ratio": 4.286,
+   "limiting": {
+    "op": "IDX.TOPK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 4.286,
+    "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json"
+   },
+   "ops": [
+    {
+     "op": "IDX.TOPK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 4.286,
+     "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json"
+    }
+   ]
+  },
+  "hgi_idx_topk_heap": {
+   "status": "UNQUALIFIED",
+   "ratio": 4.286,
+   "limiting": {
+    "op": "IDX.TOPK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 4.286,
+    "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json"
+   },
+   "ops": [
+    {
+     "op": "IDX.TOPK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 4.286,
+     "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json"
+    }
+   ]
+  },
+  "hgi_mtp_native": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "MTP.VERIFY",
+    "model": "DS MTP (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/h + bf-mtp-1010",
+    "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+   },
+   "ops": [
+    {
+     "op": "MTP.VERIFY",
+     "model": "DS MTP (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/h + bf-mtp-1010",
+     "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+    }
+   ]
+  },
+  "ot_attn_tile_m6h1q": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "ot_dsrom_engram_idwin": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "ds_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_engram_lookup": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "ds_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_engram_rowsink": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "ds_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_head_bundle_glue": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:head",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:head",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_head_elem_A": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:head",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:head",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_head_elem_B": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:head",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:head",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_su_fdiv_hr": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_su_fdiv_tile": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_su_softmax_div_tile": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_su_softmax_exp_hr": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_su_softmax_exp_tile": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_su_swiglu_lane": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_window_column_128": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_window_column_256": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_window_column_halfwrite": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_dsrom_window_source_ctl": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_hbm_accel_smh_be_eg": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hbm_accel_smh_be_wg": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hbm_accel_smh_front_c": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hbm_accel_smh_front_n": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hbm_accel_smh_front_s": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hbm_accel_smh_tile_eg": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hbm_accel_smh_tile_wg": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hdc_engram_hash_shipped": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "ds_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_hdc_v41_fh_head_top": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:head",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:head",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_hdc_v41x_idx_chunk_el": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "IDX.INDEX",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "IDX.INDEX",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+     "src": null
+    }
+   ]
+  },
+  "ot_hgi_argmax18_m": {
+   "status": "UNQUALIFIED",
+   "ratio": 1.263,
+   "limiting": {
+    "op": "ARGMAX.LOCAL",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 1.263,
+    "owner": "UNOWNED",
+    "src": "budget_audit table.json qwen_head_stream_chain"
+   },
+   "ops": [
+    {
+     "op": "ARGMAX.LOCAL",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "UNOWNED",
+     "src": null
+    },
+    {
+     "op": "ARGMAX.LOCAL",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 1.263,
+     "owner": "UNOWNED",
+     "src": "budget_audit table.json qwen_head_stream_chain"
+    }
+   ]
+  },
+  "ot_hgi_argmax_record": {
+   "status": "UNQUALIFIED",
+   "ratio": 1.263,
+   "limiting": {
+    "op": "ARGMAX.LOCAL",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 1.263,
+    "owner": "UNOWNED",
+    "src": "budget_audit table.json qwen_head_stream_chain"
+   },
+   "ops": [
+    {
+     "op": "ARGMAX.LOCAL",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "UNOWNED",
+     "src": null
+    },
+    {
+     "op": "ARGMAX.LOCAL",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 1.263,
+     "owner": "UNOWNED",
+     "src": "budget_audit table.json qwen_head_stream_chain"
+    }
+   ]
+  },
+  "ot_hgi_att_issue": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "ot_hgi_att_sector_codec": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "ATT.QK",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+    "src": null
+   },
+   "ops": [
+    {
+     "op": "ATT.QK",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    },
+    {
+     "op": "ATT.QK",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
+     "src": null
+    }
+   ]
+  },
+  "ot_hgi_coll_decode": {
+   "status": "QUALIFIED",
+   "ratio": 0.716,
+   "limiting": {
+    "op": "COLL.ALL_GATHER",
+    "model": "DS AR 1M (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 0.716,
+    "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+    "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+   },
+   "ops": [
+    {
+     "op": "COLL.ALL_GATHER",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 0.716,
+     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
+     "src": "results/rtl/hgi_unit_tput_20261010/coll/report.json"
+    }
+   ]
+  },
+  "ot_hgi_coll_row_formatter": {
+   "status": "QUALIFIED",
+   "ratio": 1.0,
+   "limiting": {
+    "op": "COLL.ROW_GATHER",
+    "model": "DS AR 1M (HBM)",
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "hgi-1010/c",
+    "src": "main 5e588e11e (hgi-1010/a, G25 HW ROW_GATHER, one real rank of 96)"
+   },
+   "ops": [
+    {
+     "op": "COLL.ROW_GATHER",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "hgi-1010/c",
+     "src": "main 5e588e11e (hgi-1010/a, G25 HW ROW_GATHER, one real rank of 96)"
+    }
+   ]
+  },
+  "ot_hgi_cp": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.778,
+   "limiting": {
+    "op": "CP.FETCH",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.778,
+    "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+   },
+   "ops": [
+    {
+     "op": "CP.FETCH",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.778,
+     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    }
+   ]
+  },
+  "ot_hgi_cp_mtp_pinreg": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "MTP.VERIFY",
+    "model": "DS MTP (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/h + bf-mtp-1010",
+    "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+   },
+   "ops": [
+    {
+     "op": "MTP.VERIFY",
+     "model": "DS MTP (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/h + bf-mtp-1010",
+     "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+    }
+   ]
+  },
+  "ot_hgi_dma_front": {
+   "status": "UNQUALIFIED",
+   "ratio": 3.817,
+   "limiting": {
+    "op": "DMA.KVWB_DS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 3.817,
+    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+    "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+   },
+   "ops": [
+    {
+     "op": "DMA.KVWB_DS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 3.817,
+     "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+     "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+    }
+   ]
+  },
+  "ot_hgi_dma_mover": {
+   "status": "UNQUALIFIED",
+   "ratio": 3.817,
+   "limiting": {
+    "op": "DMA.KVWB_DS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 3.817,
+    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+    "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+   },
+   "ops": [
+    {
+     "op": "DMA.KVWB_DS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 3.817,
+     "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+     "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+    }
+   ]
+  },
+  "ot_hgi_dma_record": {
+   "status": "UNQUALIFIED",
+   "ratio": 3.817,
+   "limiting": {
+    "op": "DMA.KVWB_DS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 3.817,
+    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+    "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+   },
+   "ops": [
+    {
+     "op": "DMA.KVWB_DS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 3.817,
+     "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+     "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+    }
+   ]
+  },
+  "ot_hgi_fused_record": {
+   "status": "UNQUALIFIED",
+   "ratio": 20.085,
+   "limiting": {
+    "op": "FUSED.HC_POST",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 20.085,
+    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
+    "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
+   },
+   "ops": [
+    {
+     "op": "FUSED.HC_PRE_NORM",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 6.514,
+     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
+     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json"
+    },
+    {
+     "op": "FUSED.HC_POST",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 20.085,
+     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
+     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
+    }
+   ]
+  },
+  "ot_hgi_hc_record": {
+   "status": "UNQUALIFIED",
+   "ratio": 1.282,
+   "limiting": {
+    "op": "HC.HC_MIX_POST",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 1.282,
+    "owner": "hgi-1010/d",
+    "src": "results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+   },
+   "ops": [
+    {
+     "op": "HC.HC_MIX_POST",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 1.282,
+     "owner": "hgi-1010/d",
+     "src": "results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+    }
+   ]
+  },
+  "ot_hgi_hc_unit": {
+   "status": "UNQUALIFIED",
+   "ratio": 1.282,
+   "limiting": {
+    "op": "HC.HC_MIX_POST",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 1.282,
+    "owner": "hgi-1010/d",
+    "src": "results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+   },
+   "ops": [
+    {
+     "op": "HC.HC_MIX_POST",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 1.282,
+     "owner": "hgi-1010/d",
+     "src": "results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+    }
+   ]
+  },
+  "ot_hgi_mtp_accept18": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "MTP.VERIFY",
+    "model": "DS MTP (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/h + bf-mtp-1010",
+    "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+   },
+   "ops": [
+    {
+     "op": "MTP.VERIFY",
+     "model": "DS MTP (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/h + bf-mtp-1010",
+     "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+    }
+   ]
+  },
+  "ot_hgi_mtp_core18": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "MTP.VERIFY",
+    "model": "DS MTP (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/h + bf-mtp-1010",
+    "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+   },
+   "ops": [
+    {
+     "op": "MTP.VERIFY",
+     "model": "DS MTP (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/h + bf-mtp-1010",
+     "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
+    }
+   ]
+  },
+  "ot_hgi_quant_decode": {
+   "status": "UNQUALIFIED",
+   "ratio": 14.573,
+   "limiting": {
+    "op": "FUSED.QDQ_FP8",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 14.573,
+    "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
+    "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+   },
+   "ops": [
+    {
+     "op": "FUSED.QDQ_FP8",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 14.573,
+     "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
+     "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+    }
+   ]
+  },
+  "ot_hgi_quant_vm_transport_p": {
+   "status": "UNQUALIFIED",
+   "ratio": 14.573,
+   "limiting": {
+    "op": "FUSED.QDQ_FP8",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 14.573,
+    "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
+    "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+   },
+   "ops": [
+    {
+     "op": "FUSED.QDQ_FP8",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 14.573,
+     "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
+     "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+    }
+   ]
+  },
+  "ot_hgi_seq": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.778,
+   "limiting": {
+    "op": "CP.FETCH",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.778,
+    "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+   },
+   "ops": [
+    {
+     "op": "CP.FETCH",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.778,
+     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    }
+   ]
+  },
+  "ot_hgi_sfu_record": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SFU.GLU",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010",
+    "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+   },
+   "ops": [
+    {
+     "op": "SFU.GLU",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010",
+     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+    }
+   ]
+  },
+  "ot_hgi_sm_pub": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hgi_sm_record": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hgi_sm_xload": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.013,
+   "limiting": {
+    "op": "SM.MATVEC",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.013,
+    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+   },
+   "ops": [
+    {
+     "op": "SM.MATVEC",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": null
+    },
+    {
+     "op": "SM.MATVEC",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.013,
+     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    }
+   ]
+  },
+  "ot_hgi_su_ctl": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SU.VOP",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010/b",
+    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+   },
+   "ops": [
+    {
+     "op": "SU.VOP",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 1.067,
+     "owner": "hgi-1010/b",
+     "src": "results/rtl/hgi_unit_tput_20261010/su/report.json"
+    },
+    {
+     "op": "SU.VOP",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010/b",
+     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    }
+   ]
+  },
+  "ot_hgi_su_ctlw": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SU.VOP",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010/b",
+    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+   },
+   "ops": [
+    {
+     "op": "SU.VOP",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 1.067,
+     "owner": "hgi-1010/b",
+     "src": "results/rtl/hgi_unit_tput_20261010/su/report.json"
+    },
+    {
+     "op": "SU.VOP",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010/b",
+     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    }
+   ]
+  },
+  "ot_hgi_su_record": {
+   "status": "UNQUALIFIED",
+   "ratio": 2.896,
+   "limiting": {
+    "op": "SU.VOP",
+    "model": "Qwen AR 8K (HBM)",
+    "status": "UNQUALIFIED",
+    "ratio": 2.896,
+    "owner": "hgi-1010/b",
+    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+   },
+   "ops": [
+    {
+     "op": "SU.VOP",
+     "model": "DS AR 1M (HBM)",
+     "status": "QUALIFIED",
+     "ratio": 1.067,
+     "owner": "hgi-1010/b",
+     "src": "results/rtl/hgi_unit_tput_20261010/su/report.json"
+    },
+    {
+     "op": "SU.VOP",
+     "model": "Qwen AR 8K (HBM)",
+     "status": "UNQUALIFIED",
+     "ratio": 2.896,
+     "owner": "hgi-1010/b",
+     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    }
+   ]
+  },
+  "ot_hgi_vm_unit": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "VM.PORTS",
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
+   },
+   "ops": [
+    {
+     "op": "VM.PORTS",
+     "model": "DS AR 1M (HBM)",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
+    }
+   ]
+  },
+  "ot_meso_fifo_w512d8g1": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_qwen_link_forwarded_tmr_pair": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:link",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:link",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "ot_qwen_link_fwd_cx_station": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:link",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:link",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "ot_qwen_rom_core_core_p": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "ot_qwen_rom_core_core_pu": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "ot_qwen_rom_core_meif_idle_capture": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "ot_qwen_slab_port_group_m3_m8": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "ot_qwen_slab_port_group_s14_die": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "ot_s81_bf_native": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_s81_head_delay8x32": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:head",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:head",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_s81_pq_ret_root_cam_p": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_s81ph_root_tile": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_v41_pqc_spine_screen": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "ot_v41_rom_elem_q_qxpq_w10": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/ds_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom.json"
+    }
+   ]
+  },
+  "qfd_chead": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:head",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:head",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_embed_code_bank": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_embed_ingress_code": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_embed_ingress_scale": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_embed_scale_bank": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_hub": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:link",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:link",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_io_collective": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:link",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:link",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_io_emb_root": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_io_emb_tap": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_io_serdes": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:link",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:link",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_io_ucie": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:link",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:link",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_io_xfifo": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:link",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:link",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_link_rx128": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:link",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:link",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_lst_c": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_lst_h": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_lst_v": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_rly": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_sp_band_lanes": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_sp_constants_sequencer": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_sp_res_ser": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_sp_su64_sfu": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_sp_tree_lane": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_sp_tree_top": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    },
+    {
+     "op": "class:head",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_sp_tree_top_b": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_sp_vector_memory": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_tile": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    },
+    {
+     "op": "class:head",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_tile_e": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:me",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:me",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_vm_bank_checked": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "results/arch/token_path_20261009/qwen_rom.json"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  }
+ }
+}

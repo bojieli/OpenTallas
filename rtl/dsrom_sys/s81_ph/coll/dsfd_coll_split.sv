@@ -170,7 +170,15 @@ module dsfd_coll_ce #(
 `endif
     parameter integer OD = 16,
     parameter integer CR = 0,  // redesign-ds: 1 = every lane / seam face is a credit link (lane tile LCR, cb / ct CR)
-    parameter integer PULL = `ifdef OT_S81PH_COLL_PULL 1 `else 0 `endif   // ds-1010: engine FIFO -> central landing queues
+    parameter integer PULL = `ifdef OT_S81PH_COLL_PULL 1 `else 0 `endif,  // ds-1010: engine FIFO -> central landing queues
+    // fe-push-ds-1010 2026-10-10 (hardcore-1010 CE fallback, both default 0 = the PULL line unchanged):
+    //  RSTR  : ot_rst_relay (2 sync + 1 kept relay stage, 10 regions) replaces the single synced rst_s[1] flop that cleared
+    //          the 680 um tile: region l = lane l's face credit tx/rx, 8 = core, 9 = the tile's own face registers.
+    //          Release +1 cycle (3 edges); assert stays asynchronous.
+    //  PCOPY : engine per-source (* keep *) pop copies (ot_w15 PCOPY): each source's landing queues, head mux and s0
+    //          load enables follow a local pop_k[r] instead of one pop / ppar net across the tile.  0 cycles.
+    parameter integer RSTR = `ifdef OT_S81PH_COLL_RSTR 1 `else 0 `endif,
+    parameter integer PCOPY = `ifdef OT_S81PH_COLL_PCOPY 1 `else 0 `endif
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rs,
@@ -200,9 +208,28 @@ module dsfd_coll_ce #(
     input  wire [5:0]       flt_d          // {lane 7 flt, lane 3 flt}
 );
     wire clk = ck[0];
+    wire rst_n;                       // tile face registers (region 9)
+    wire [7:0] rst_ln;                // lane l face credit tx / rx (region l)
+    wire rst_cn;                      // collective core (region 8)
+    generate if (RSTR != 0) begin : g_rstr
+        wire [9:0] rr;
+        ot_rst_relay #(.REGIONS(10), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rs[0]), .rst_n(rr));
+`ifdef OT_S81PH_MUT_RSTR
+        // bench mutant: lane 1's face region (engine port 2's lane, traffic-bearing in the TP4 bench) re-asserts from
+        // 1,200 cycles after release on (mid-traffic; first send ~1,111) and stays in reset: proves lane 1's credit tx / rx
+        // hang off their own region copy.  (Lane 5 carries no bench traffic, and a one-cycle release delay leaves the
+        // link in its reset state: both PASS, dropped.)
+        reg [11:0] mc; always @(posedge clk or negedge rr[9]) if (!rr[9]) mc <= 0; else if (mc != 12'hfff) mc <= mc + 1'b1;
+        assign rst_ln = {rr[7:2], rr[1] && (mc < 12'd1200), rr[0]};
+`else
+        assign rst_ln = rr[7:0];
+`endif
+        assign rst_cn = rr[8]; assign rst_n = rr[9];
+    end else begin : g_rst1
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs[0]) if (!rs[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
-    wire rst_n = rst_s[1];
+    assign rst_n = rst_s[1]; assign rst_ln = {8{rst_s[1]}}; assign rst_cn = rst_s[1];
+    end endgenerate
     reg [591:0] fv_r; reg [23:0] flt_r; reg bw_crq, bw_fltq;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fv_r <= 0; flt_r <= 0; bw_crq <= 1'b0; bw_fltq <= 1'b0; end
@@ -236,19 +263,19 @@ module dsfd_coll_ce #(
     generate for (l = 0; l < 8; l = l + 1) begin : g_l
       if (CR != 0) begin : g_cr
         wire f;
-        ot_link_credit_tx #(.W(553), .CRED(8)) u_so (.clk(clk), .rst_n(rst_n), .i_valid(x_lo_v[l]), .i_ready(x_lo_r[l]),
+        ot_link_credit_tx #(.W(553), .CRED(8)) u_so (.clk(clk), .rst_n(rst_ln[l]), .i_valid(x_lo_v[l]), .i_ready(x_lo_r[l]),
             .i_data({x_lo_l[l], x_lo_d[l*552 +: 552]}), .l_valid(f_lo_v[l]), .l_data(f_lo_d[l]), .l_credit(f_lo_r[l]));
-        ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(0), .WFREE(1)) u_si (.clk(clk), .rst_n(rst_n), .l_valid(f_li_v[l]), .l_data(f_li_d[l]),
+        ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(0), .WFREE(1)) u_si (.clk(clk), .rst_n(rst_ln[l]), .l_valid(f_li_v[l]), .l_data(f_li_d[l]),
             .l_credit(f_li_r[l]), .o_valid(x_li_v[l]), .o_ready(x_li_r[l]), .o_data({x_li_l[l], x_li_d[l*552 +: 552]}), .fault(f));
       end else begin : g_sk
-        ot_s81ph_skid2 #(.W(553)) u_so (.clk(clk), .rst_n(rst_n), .in_v(x_lo_v[l]), .in_r(x_lo_r[l]),
+        ot_s81ph_skid2 #(.W(553)) u_so (.clk(clk), .rst_n(rst_ln[l]), .in_v(x_lo_v[l]), .in_r(x_lo_r[l]),
             .in_d({x_lo_l[l], x_lo_d[l*552 +: 552]}), .out_v(f_lo_v[l]), .out_r(f_lo_r[l]), .out_d(f_lo_d[l]));
-        ot_s81ph_skid2 #(.W(553)) u_si (.clk(clk), .rst_n(rst_n), .in_v(f_li_v[l]), .in_r(f_li_r[l]), .in_d(f_li_d[l]),
+        ot_s81ph_skid2 #(.W(553)) u_si (.clk(clk), .rst_n(rst_ln[l]), .in_v(f_li_v[l]), .in_r(f_li_r[l]), .in_d(f_li_d[l]),
             .out_v(x_li_v[l]), .out_r(x_li_r[l]), .out_d({x_li_l[l], x_li_d[l*552 +: 552]}));
       end
     end endgenerate
     wire c_bw_v; wire [2099:1] c_bw_d;
-    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD), .EPULL(PULL)) u_core (.clk(clk), .rst_n(rst_n),
+    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD), .EPULL(PULL), .EPCOPY(PCOPY)) u_core (.clk(clk), .rst_n(rst_cn),
         .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r), .ts(3'd0), .t_vm(), .fault(), .rank(), .eng_en(),
         .x_lo_v(x_lo_v), .x_lo_r(x_lo_r), .x_lo_d(x_lo_d), .x_lo_l(x_lo_l),
         .x_li_v(x_li_v), .x_li_r(x_li_r), .x_li_d(x_li_d), .x_li_l(x_li_l), .x_lflt(flt_r),

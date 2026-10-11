@@ -75,7 +75,9 @@ module ot_s81ph_coll_core #(
     parameter integer OQX = 0,
     parameter integer OQX_D = 16,
     // EPULL (ds-1010 2026-10-10, default 0): engine receive FIFOs feed central landing queues (ot_w15 PULL)
-    parameter integer EPULL = 0
+    parameter integer EPULL = 0,
+    // EPCOPY (fe-push-ds-1010 2026-10-10, default 0): engine per-source pop copies (ot_w15 PCOPY; EPULL only)
+    parameter integer EPCOPY = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -210,7 +212,7 @@ module ot_s81ph_coll_core #(
     assign q_pop[0] = e_iv && e_ir;
     ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(0), .LANES(16), .TAGW(TAGW),
         .DEPTH(EDEPTH), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1),
-        .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL)) u_eng (
+        .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY)) u_eng (
         .clk(clk), .rst_n(erst_n),
         .in_valid(e_iv), .in_ready(e_ir), .in_data(q_hd[0][FW-1:0]), .in_last(q_hd[0][W+33]),
         .in_mode(q_hd[0][W+32]), .in_tag(q_hd[0][W +: TAGW]),

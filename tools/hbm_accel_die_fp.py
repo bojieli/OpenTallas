@@ -588,18 +588,19 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              spine_order=('hgi_idx', 'idx_sel', 'mtp', 'loader', 'coll', 'hgi_vm', 'cmdproc', 'quant', 'barrier', 'router',
                           'vm8', 'su_red', 'su_full'),
              hgi_rgx=True, del_obase=True,
+             # [svc-ep] 10-10: PS native-endpoint chains (+~320 b every cut, worst ~2,830 b) at <= 55 % cut use on the
+             # strip's 10.3 b/um (M4 / M6 alternate, 0.096 um a bit): 2,830 / 0.55 / 10.3 = 500 um (was 259.176)
+             svc_h=500.04, split_x_new_port_band=dict(lq=3, lr=3),
              # hgi-1010/b 10-10: a larger hgi_vm outline, single-layer faces at every other track (<= 10.4 b/um)
              hgi_vm_w=2073.6, hgi_vm_h=2073.6,
              lane_chain_nets=(('rdn', 8259), ('wdn', 67), ('rup', 515), ('wup', 8963)),
-             dense_face_masters=('hfd_loader', 'hfd_coll', 'hfd_hgi_vm', 'hfd_su'),
-             spine_abut=(('hgi_idx', 'idx_sel'), ('coll', 'hgi_vm'), ('hgi_vm', 'cmdproc'), ('cmdproc', 'quant')),
+             dense_face_masters=('hfd_loader', 'hfd_coll', 'hfd_hgi_vm', 'hfd_su', 'hfd_sfu', 'hfd_hc', 'hfd_quant',
+                                 'hfd_stn_lgW0', 'hfd_stn_lgW1', 'hfd_stn_lgW2', 'hfd_stn_lgE0'),
+             spine_abut=(('hgi_idx', 'idx_sel'), ('coll', 'hgi_vm'), ('hgi_vm', 'cmdproc')),
              spine_cross=(('loader', 'coll'), ('vm8', 'su_red')), spine_cross_um=302.4,
              lane_groups=dict(W=('hb_hgi_vm', 'hb_su_SW', 'hb_sfu_SW', 'hb_hc_SW'), E=('hb_hgi_vm', 'hb_cmdproc', 'hb_quant')),
              lane_rd_bits=8800, lane_wr_bits=9000,
-             face_force={('hfd_hgi_vm', 't_lgW'): 'W', ('hfd_hgi_vm', 't_lgE'): 'N', ('hfd_cmdproc', 'f_lgE'): 'S',
-                         ('hfd_cmdproc', 't_lgE'): 'N', ('hfd_quant', 'f_lgE'): 'S', ('hfd_su', 'f_lgW'): 'E',
-                         ('hfd_su', 't_lgW'): 'N', ('hfd_sfu', 'f_lgW'): 'W', ('hfd_sfu', 't_lgW'): 'W',
-                         ('hfd_hc', 'f_lgW'): 'E'},
+             face_force={('hfd_hgi_vm', 't_lgW'): 'W', ('hfd_hgi_vm', 't_lgE'): 'E'},     # clients' taps: by peer
              # [fp]/[sfu] decision (a) 10-10: the W lane-group trunk (17,800 b) does not pass through hfd_sfu (its slot
              # has no free M1-M7 corridor and the 17,800-pin windows were 20.8 b/um/layer).  The trunk runs SU (N face)
              # -> a client-station relay bank hfd_stn_lgW in the SFU | HC gap -> HC (E face); hfd_sfu keeps a narrow
@@ -615,7 +616,16 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # direction over 9 links); 1,024 b does not fit the SerDes face in the k = 16 GRT bundling
              link_ep=dict(wh=(1728.0, 1015.2), gap=43.2, flit_bits=1120, phy_bits=974),
              lane_bypass=dict(W=dict(client='hb_sfu_SW', after='hb_su_SW', toward='hb_hc_SW', stn='hb_stn_lgW',
-                                     master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)))
+                                     master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)),
+             # lead 10-10: no lane-group pass-through in any block: lgW = VM -> stations abutting the SU (E face, SU =
+             # client slot 0), SFU (N face), HC (N face); lgE = VM -> a station abutting quant's S face (cmdproc was only
+             # a pass-through: off the chain).  Taps at full width (b: ot_hgi_vm_lanestation local side)
+             lane_stations=dict(
+                 W=dict(src='hb_hgi_vm', thick=64.8, gap=21.6, align=dict(hb_stn_lgW_su='top'),
+                        stations=(('hb_stn_lgW_su', 'hb_su_SW', 'E', 2073.6), ('hb_stn_lgW_sfu', 'hb_sfu_SW', 'N', 2073.6),
+                                  ('hb_stn_lgW_hc', 'hb_hc_SW', 'N', 2073.6))),
+                 E=dict(src='hb_hgi_vm', thick=64.8, gap=21.6, stations=(('hb_stn_lgE_q', 'hb_quant', 'S', 2073.6),))),
+             lane_tap_nets=(('rdn', 8257), ('wdn', 65), ('rup', 513), ('wup', 8961)))
 
 
 def build_r25gq(variant):
@@ -627,6 +637,12 @@ def build_r25gq(variant):
     g0 = base['geo']
     W, H = g0['W'], g0['H']
     B = {it.name: it for it in base['insts']}
+    svc_d = 0.0
+    if V.get('svc_h'):      # R25GQ 10-10 ([svc-ep] PS native endpoint chains): taller svc strips, S and N; the die grows
+        h0_ = {round(it.h, 3) for it in base['insts'] if it.kind == 'svc'}
+        assert len(h0_) == 1, h0_
+        svc_d = round(V['svc_h'] - h0_.pop(), 4)
+        H = round(H + 2 * svc_d, 4)
     if V.get('hgi_vm_h') and 'hb_hgi_vm' in B:      # R25GQ 10-10: a larger VM slot for its 19-20 k pins a face
         B['hb_hgi_vm'].h = V['hgi_vm_h']
         if V.get('hgi_vm_w'):       # wider than the spine column: centred on it, overhanging both side channels
@@ -651,13 +667,18 @@ def build_r25gq(variant):
     # ---- side bands: PHY / svc / SerDes / host unchanged; SM rows re-pitched (S side; N mirrored)
     for it in base['insts']:
         if it.kind in ('phy', 'svc', 'link', 'serdes_slab', 'host_slab'):
-            add(it.name, it.name, it.x, it.y)
+            n_ = it.y + it.h / 2 > g0['H'] / 2
+            if it.kind == 'svc':
+                add(it.name, it.name, it.x, it.y + (svc_d if n_ else 0.0), h=it.h + svc_d)
+            else:       # N half +2d, S half fixed, a band across the centre (host) +d
+                add(it.name, it.name, it.x, it.y + (2 * svc_d if it.y > g0['H'] / 2 else 0.0 if it.y + it.h < g0['H'] / 2
+                                                    else svc_d))
             rmap[it.name] = it.name
     sms = [it for it in base['insts'] if it.kind == 'sm']
     smh = sms[0].h
     ys = sorted({round(it.y, 3) for it in sms if it.y < H / 2})
     assert len(ys) == 3, ys
-    row_y = [up(ys[0] + V.get('svc_gap_add', 0.0), GY)]
+    row_y = [up(ys[0] + V.get('svc_gap_add', 0.0) + svc_d, GY)]
     row_y.append(up(row_y[0] + smh + V['sm_ch01'], GY))
     row_y.append(up(row_y[1] + smh + V['sm_ch12'], GY))
     colx = {}
@@ -667,7 +688,7 @@ def build_r25gq(variant):
             colx[(st, x_)] = x_ + (k * V.get('sm_colch_add', 0.0) * (1 if st[1] == 'W' else -1))
     for it in sms:
         s_ = it.y < H / 2
-        yr_ = it.y if s_ else H - it.y - it.h      # the N groups sit 2.16 um off the exact mirror (GY snap)
+        yr_ = it.y if s_ else g0['H'] - it.y - it.h      # the N groups sit 2.16 um off the exact mirror (GY snap)
         r_ = min(range(3), key=lambda k: abs(ys[k] - yr_))
         add(it.name, it.name, colx[(it.region[4:], round(it.x, 3))], row_y[r_] if s_ else my(row_y[r_], it.h), region=it.region)
         rmap[it.name] = it.name
@@ -841,6 +862,8 @@ def build_r25gq_net(variant):
     geo_m = build_r25gq(dict(V, r25gq_net=False))
     bv = dict(variant_arg(V['r25gq_base']), host_h=V['host_h'], hub_ports_file=None, hgi_rgx=V.get('hgi_rgx'),
               del_obase=V.get('del_obase'))
+    if V.get('split_x_new_port_band'):      # [svc-ep] 10-10: lq / lr on band 3 of every svc stack
+        bv['split_x_new_port_band'] = dict(bv.get('split_x_new_port_band') or {}, **V['split_x_new_port_band'])
     base = build(bv, network_probe=True)
     Q = {it.name: it for it in geo_m['insts']}
     kind = {it.name: it.kind for it in base['insts']}
@@ -1131,7 +1154,63 @@ def build_r25gq_net(variant):
         link(bid, cls, bits, [a] + [(r_, 'b') for r_ in relays(bid, bits, pth, L)] + [b])
     # hgi-1010/b lane groups: one registered read + write bus a group, through its clients: each client block hosts its
     # client station (the bus enters one face, leaves another), relays only on the open stretches
-    for sd_, chain_ in V['lane_groups'].items():
+    for sd_, cfg_ in (V.get('lane_stations') or {}).items():
+        # lead 10-10 (SU client slot 0 / lgE off cmdproc) + hgi-1010/b tap contract (ot_hgi_vm_lanestation local side,
+        # full width: read up 513 / down 8,257, write up 8,961 / down 65): no lane-group pass-through in any block.  Each
+        # client has a station bank abutting its VM-facing face (the full-width tap is a short abutment); the chain runs
+        # VM -> station -> station on the banks' outer faces
+        rec = []
+        sts_ = []
+        for k_, (snm_, cl_, cf_, lmax_) in enumerate(cfg_['stations']):
+            c_ = by[cl_]
+            th_, g_ = cfg_['thick'], cfg_['gap']
+            if cf_ in 'EW':
+                L_ = lmax_
+                x_ = c_.x + c_.w + g_ if cf_ == 'E' else c_.x - g_ - th_
+                y_ = c_.y + c_.h - 20.0 - L_ if cfg_.get('align', {}).get(snm_) == 'top' else c_.y + (c_.h - L_) / 2
+                w_, h_ = th_, L_
+            else:
+                L_ = lmax_
+                x_ = c_.x + (c_.w - L_) / 2
+                y_ = c_.y + c_.h + g_ if cf_ == 'N' else c_.y - g_ - th_
+                w_, h_ = L_, th_
+            st_ = Inst(snm_, f'hfd_stn_lg{sd_}{k_}', dn(x_, GX), dn(y_, GY), up(w_, GX), up(h_, GY), 'R0', kind='waypoint',
+                       region='channel')
+            hh_ = [i.name for i in insts if i.kind != 'waypoint' and st_.box()[0] < i.x + i.w and i.x < st_.box()[2]
+                   and st_.box()[1] < i.y + i.h and i.y < st_.box()[3]]
+            assert not hh_, ('lane station overlaps', snm_, hh_)
+            insts.append(st_)
+            by[snm_] = st_
+            G.inst[snm_] = st_
+            b_ = st_.box()
+            for gx_ in range(int(b_[0] // 500), int(b_[2] // 500) + 1):
+                for gy_ in range(int(b_[1] // 500), int(b_[3] // 500) + 1):
+                    grid_[(gx_, gy_)].append(b_)
+            for wp_ in [i for i in insts if i.kind == 'waypoint' and i is not st_ and b_[0] < i.x + i.w and i.x < b_[2]
+                        and b_[1] < i.y + i.h and i.y < b_[3]]:
+                legal(wp_)          # a waypoint placed before the station: move it off the bank
+            sts_.append((snm_, cl_))
+        nodes0_ = [cfg_['src']] + [n_ for n_, _ in sts_]
+        for ci, (src, cl) in enumerate(zip(nodes0_, nodes0_[1:])):
+            pth = gpath(src, cl)
+            L = (len(pth) - 1) * RP.CELL if gap_um(src, cl) > 2.0 else 0.0
+            rl = relays(f'lg{sd_}{ci}', lw, pth, L)
+            nodes_ = [src] + rl + [cl]
+            for suf_, bits_ in V['lane_chain_nets']:
+                nn_ = nodes_ if suf_.endswith('dn') else nodes_[::-1]
+                for k_ in range(len(nn_) - 1):
+                    buses.append((f'hgi_lg{sd_.lower()}_{suf_}_{ci}' + (f'_{k_}' if len(nn_) > 2 else ''), 'hub', bits_,
+                                  [(nn_[k_], f't_lg{sd_}_{suf_}'), (nn_[k_ + 1], f'f_lg{sd_}_{suf_}')]))
+            rec.append(dict(station=cl, from_=src, path_um=L, relays=len(rl)))
+        for snm_, cl_ in sts_:          # the abutting full-width tap: station t_lg<G>c_<dn> -> client, client t_* -> station
+            for suf_, bits_ in V['lane_tap_nets']:
+                ends_ = [(snm_, f't_lg{sd_}c_{suf_}'), (cl_, f'f_lg{sd_}_{suf_}')] if suf_.endswith('dn') else \
+                    [(cl_, f't_lg{sd_}_{suf_}'), (snm_, f'f_lg{sd_}c_{suf_}')]
+                buses.append((f'hgi_lg{sd_.lower()}_tap_{suf_}_{cl_[3:]}', 'hub', bits_, ends_))
+            rec.append(dict(client=cl_, station=snm_, box=[round(x, 3) for x in by[snm_].box()],
+                            tap_bits=sum(b_ for _, b_ in V['lane_tap_nets'])))
+        lane_rec[sd_] = rec
+    for sd_, chain_ in ({} if V.get('lane_stations') else V['lane_groups']).items():
         rec = []
         byp = (V.get('lane_bypass') or {}).get(sd_)
         if byp:     # decision (a): a client-station relay bank in the client | next-block gap replaces the pass-through
