@@ -117,15 +117,16 @@ module ot_hgi_coll_tkm #(
     assign busy = (ph != P_IDLE);
     // ---------------------------------------------------------------- delivery credits + decode + FIFO
     reg [7:0] cr [0:DEL-1];
+    reg [DEL-1:0] res_q;                       // del_reserve pin flop (debited one edge later)
     for (genvar l = 0; l < DEL; l = l + 1) begin : g_perm
-        assign del_permit[l] = (cr[l] != 8'd0) && (ph == P_INS);     // flops only (no start -> permit path)
+        assign del_permit[l] = (cr[l] > 8'(res_q[l])) && (ph == P_INS);   // the registered reserve not yet debited     // flops only (no start -> permit path)
     end
     reg [DEL-1:0] d1_v, d2_v;
     // reset standard (ot_rst_relay): the port drives only the relay; FIFO l from region l, the control from region DEL
     wire [DEL:0] rr;
     ot_rst_relay #(.REGIONS(DEL + 1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
     wire rn = rr[DEL];
-    reg [DEL-1:0] rfault;                      // credit-underflow term from the del_reserve pin, registered
+    reg [DEL-1:0] rfault;  // credit-underflow term from the del_reserve pin, registered
     // el1011-hbm-idx 10-11: pin-flop stage d0 on the delivery lanes and on start / cfg (rtl_boundary: the (src - gbase) x pf
     // decode was 85 gate levels from del_flit; start cleared the 2,048-entry array straight from the pin)
     reg [DEL-1:0] d0_v; reg [PWT-1:0] d0_f [0:DEL-1];
@@ -248,7 +249,7 @@ module ot_hgi_coll_tkm #(
             stat_cycles <= 32'd0; stat_ins <= 32'd0; stat_surv <= 32'd0;
             n_q <= 12'd1; k_q <= 13'd1; nel <= 19'd0; g_q <= 8'd1; gb_q <= 8'd0; pf_q <= 16'd1; nout_q <= 13'd1; ob_q <= 40'd0; rb_q <= 40'd0; hr_q <= 1'b0;
             tot_q <= 24'd0; cact_q <= '0; tc_q <= '0; ts_q <= 2'd0; rcv <= 24'd0; tau <= '0;
-            rfault <= '0; d0_v <= '0; start_p <= 1'b0; d1_v <= '0; d2_v <= '0; fpop_q <= '0; ld_v <= '0; e1_v <= 1'b0; e2_v <= 1'b0;
+            rfault <= '0; res_q <= '0; d0_v <= '0; start_p <= 1'b0; d1_v <= '0; d2_v <= '0; fpop_q <= '0; ld_v <= '0; e1_v <= 1'b0; e2_v <= 1'b0;
             shn <= '0; outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 3'd0; lq_h <= 2'd0; lq_t <= 2'd0;
             for (l = 0; l < DEL; l = l + 1) begin cr[l] <= 8'(CAP); st_n[l] <= 2'd0; dn[l] <= 8'd0; occ[l] <= 8'd0; end
             bv <= 1'b0;
@@ -256,14 +257,14 @@ module ot_hgi_coll_tkm #(
             done <= 1'b0;
             if (busy) stat_cycles <= stat_cycles + 32'd1;
             fpop_q <= fpop;
-            start_p <= start; d0_v <= del_valid;
+            start_p <= start; d0_v <= del_valid; res_q <= del_reserve;
             tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> logic paths)
             cact_q <= CB'((nout_q + 13'd3) >> 2);
             tc_q <= CB'((nout_q - 13'd1) >> 2); ts_q <= 2'(nout_q - 13'd1);
             // ---- credits: reserve at dispatch, return one edge after a FIFO pop
             for (l = 0; l < DEL; l = l + 1) begin
-                cr[l] <= cr[l] - ((MUT == 3) ? 8'd0 : 8'(del_reserve[l])) + 8'(fpop_q[l]);
-                rfault[l] <= del_reserve[l] && cr[l] == 8'd0;
+                cr[l] <= cr[l] - ((MUT == 3) ? 8'd0 : 8'(res_q[l])) + 8'(fpop_q[l]);
+                rfault[l] <= res_q[l] && cr[l] == 8'd0;
                 if (rfault[l]) fault <= 1'b1;
                 if (fo[l]) fault <= 1'b1;
                 occ[l] <= occ[l] + 8'(d2_v[l]) - 8'(fpop[l]);
