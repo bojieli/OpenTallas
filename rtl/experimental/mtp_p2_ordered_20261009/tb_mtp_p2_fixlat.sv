@@ -85,7 +85,7 @@ module tb_mtp_p2_fixlat #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NT
   // link receivers sit stalled with flits in flight; the first start is held back START_DELAY cycles
   cs_v = starts<NTX && cycles>=START_DELAY;
   // NOSTALL: saturated sources / always-ready consumer (latency measurement: lnk at 0 stations vs OT_P2_NAIVE at 0
-  // stations = the core driven directly).  Link mode: co_r is the collective core's grant pulse (any rate).
+  // stations = the core driven directly)
   c1_v = s1<80*NTX  && (NOSTALL || rnd[2:0]!=0);
   c0_v = s0<160*NTX && (NOSTALL || rnd[5:3]!=0);
   co_r = NOSTALL || (!(cycles>=900 && cycles<1100) && rnd[9:7]!=0 && !(cycles%300>=250));
@@ -96,11 +96,7 @@ module tb_mtp_p2_fixlat #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NT
   if(c1_v&&c1_r) s1<=s1+1;
   if(c0_v&&c0_r) s0<=s0+1;
   if(fault) $fatal(1,"P2FL unexpected fault cycle %0d",cycles);
-`ifdef OT_P2_NAIVE
   if(co_v&&co_r) begin
-`else
-  if(co_v) begin   // grant protocol at the collective core: every launched row is taken
-`endif
    if(received>=80*NTX) $fatal(1,"P2FL extra/duplicate output row %0d",received);
    if(co_d[81:8]!==IDN0+received/80 || co_d[7:1]!==7'(received%80) || co_d[0]!==(received%80==79))
     $fatal(1,"P2FL metadata row %0d (word %0d last %0d)",received,co_d[7:1],co_d[0]);

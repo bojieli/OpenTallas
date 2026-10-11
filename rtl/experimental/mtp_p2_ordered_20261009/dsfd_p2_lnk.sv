@@ -99,19 +99,23 @@ module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 
 `endif
  wire rn;
  ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
- // core-facing ports from single flops (ltx_rc: c_ready = the registered grant).  The result row reaches the
- // collective core on the same grant protocol: c_or is the core's GRANT (one row per grant, launched from flops two
- // edges later; the abutting core sizes its own buffer for that fixed 3-cycle loop), so no core-port input fans out
- // into the 594-b row registers (fixlat-collp2-ffbec0c86-tc TT -64.76: c_or -> c_data / wp enables, 13 levels).
+ // core-facing ports from single flops (ltx_rc: c_ready = the registered grant, same function as ltx rq && live).
+ // The result row keeps valid / ready at the collective core (dsfd_coll_p2_lane_pa drives a level ready): it leaves
+ // through a 2-entry skid (dsfd_coll_p2_oskid = ot_dsrom_mtp_skid OREG 0, local: no source-list change) whose
+ // row registers load on push only (push = the receiver's registered head && the skid's count flops), so c_or reaches only the skid's read pointer / count, never the 594-b
+ // row enables (fixlat-collp2-ffbec0c86-tc TT -64.76: c_or -> c_data / wp enables, 13 levels).  c_od = 2:1 mux by
+ // a flop.  b69100081 had put c_or on the grant protocol, which the level-ready core adapter does not speak
+ // (tools/mtp_p2lane_gate.py p2l_s1 FAIL on main).
  ot_dsrom_mtp_ltx_rc #(.W(604)) u_l1(.clk(ck[0]),.rst_n(rn),.c_valid(c_l1v),.c_ready(c_l1r),.c_data(c_l1d),
   .l_valid(t_l1v),.l_ready(f_l1g),.l_data(t_l1d));
  ot_dsrom_mtp_ltx_rc #(.W(101)) u_st(.clk(ck[0]),.rst_n(rn),.c_valid(c_sv),.c_ready(c_sr),.c_data(c_sd),
   .l_valid(t_sv),.l_ready(f_sg),.l_data(t_sd));
  wire ov, orr; wire [593:0] od;
- ot_dsrom_mtp_lrx_rtt #(.W(594),.D(D_O),.SEL(1),.ENABLE_RTT(1),.FORWARD_HOPS(OF),.RETURN_HOPS(OR)) u_o(.clk(ck[0]),.rst_n(rn),
+ ot_dsrom_mtp_lrx_rtt #(.W(594),.D(D_O),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(OF),.RETURN_HOPS(OR)) u_o(.clk(ck[0]),.rst_n(rn),
   .l_valid(f_ov),.l_ready(t_og),.l_data(f_od),.c_valid(ov),.c_ready(orr),.c_data(od));
- ot_dsrom_mtp_ltx_rc #(.W(594)) u_oc(.clk(ck[0]),.rst_n(rn),.c_valid(ov),.c_ready(orr),.c_data(od),
-  .l_valid(c_ov),.l_ready(c_or),.l_data(c_od));
+ wire c_ov_w, c_or_w; assign c_ov = c_ov_w; assign c_or_w = c_or;
+ dsfd_coll_p2_oskid #(.W(594)) u_oc(.clk(ck[0]),.rst_n(rn),.in_valid(ov),.in_ready(orr),.in_data(od),
+  .out_valid(c_ov_w),.out_ready(c_or_w),.out_data(c_od));
 endmodule
 
 // VM-slab end: sends lane 0.
@@ -126,3 +130,25 @@ module dsfd_vm_p2_ep (
   .l_valid(t_l0v),.l_ready(f_l0g),.l_data(t_l0d));
 endmodule
 `default_nettype wire
+
+// 2-entry skid, function of ot_dsrom_mtp_skid OREG 0 (rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv): in_ready / out_valid from
+// the count flops, row registers written on push only, out_data = 2:1 mux by the read-pointer flop; full rate.
+module dsfd_coll_p2_oskid #(parameter integer W = 594) (
+    input  wire clk, rst_n, in_valid, output wire in_ready, input wire [W-1:0] in_data,
+    output wire out_valid, input wire out_ready, output wire [W-1:0] out_data);
+    reg [W-1:0] m [0:1];
+    reg [1:0] n; reg r, w;
+    assign in_ready = rst_n && n != 2'd2;
+    assign out_valid = n != 2'd0;
+    assign out_data = m[r];
+    wire push = in_valid && in_ready, pop = out_valid && out_ready;
+    always @(posedge clk) begin
+        if (push) m[w] <= in_data;
+        if (!rst_n) begin n <= 2'd0; r <= 1'b0; w <= 1'b0; end
+        else begin
+            if (push) w <= ~w;
+            if (pop) r <= ~r;
+            n <= n + (push ? 2'd1 : 2'd0) - (pop ? 2'd1 : 2'd0);
+        end
+    end
+endmodule
