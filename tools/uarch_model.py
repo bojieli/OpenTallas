@@ -603,6 +603,38 @@ def hbm_loader_kport_address_contract_model():
 
 # ---------------------------------------------------------------------------------------------------------
 
+def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
+    """HGI IDX.TOPK (unit 9 op 2) as W banked-SRAM pipelined min-heaps (hgi-1010/g2 2026-10-10,
+    rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv): the structural successor of the 2,048-cell flop insertion /
+    systolic sorter (feasibility 67b2d0326 item (e)).  Exact: the same 53-bit unique keys, rank-order output.
+
+    A heap holds the top k of its sub-stream (score i -> heap (i / iw) mod (heaps / iw) * iw + i mod iw); one heap level
+    a cycle, one op every 2 cycles a heap; a score below the registered max root is dropped at the front end.  After the
+    row: k ascending extractions a heap into a reverse SRAM run (2k cycles), then a registered heaps-way merge (k cycles).
+    Survivors a heap ~ k (1 + ln(n / (heaps k))) for unordered scores, n / heaps for ascending (worst case).
+    Measured (tb_hgi_idx_topk_heap, Verilator, 1 in 8 input beats idle): n 49,152 k 2,048:
+      iw 1 / 2 heaps 62.5k cycles (random / ascending / ties) vs the flop sorter's n + k + 6 = 51.2k;
+      iw 4 / 4 heaps 23.2k random, 31.5k ascending (2.2x / 1.6x faster); iw 8 / 8 heaps 16.4k / 19.2k (3.1x / 2.7x).
+    """
+    import math
+    assert 1 <= k <= 2048 and 1 <= n <= 1048576 and rows >= 1 and heaps % iw == 0
+    surv = min(n / heaps, k * (1 + math.log(max(n / (heaps * k), 1.0))))
+    fill = max(n / iw, 2 * surv)
+    cyc = fill + 2 * k + k + 30
+    macros_per_heap = dict(sram_128x256=3, sram_256x256=1, sram_1024x256=1)   # levels 7-9, level 10, run buffer
+    return dict(candidates_per_cycle=iw, input_bytes_per_cycle=4 * iw, output_bytes_per_cycle=8, heaps=heaps,
+                key_bits=53, entry_bits=54, heap_levels=12, level_ops_per_cycle_per_heap=0.5,
+                flops_per_heap_upper_bound=32 * 216 + 12 * 120 + 10 * 120 + 16 * 54,
+                macros_per_heap=macros_per_heap, sram_bits_per_heap=(32 + 64 + 128 + 256) * 216 + 512 * 216,
+                widest_select="registered heaps-way merge compare; heap stage = 2 x 53 b compares register to register",
+                cycles_per_row_estimate=round(cyc), token_latency_cycles=round(rows * cyc),
+                measured=dict(n49152_k2048=dict(iw1_h2=62549, iw4_h4_random=23230, iw4_h4_ascending=31450,
+                                                iw8_h8_random=16361, iw8_h8_ascending=19168),
+                              flop_sorter_priced=n + k + 6),
+                adoption="structural replacement of hgi_idx_topk_full; wide engine (iw 4-8) needs the IDX reader to hand a "
+                         "VM sector a cycle (item: TOPK 4.3x)")
+
+
 def hbm_index_service_model():
     """Full-stack key source geometry and finite return-reservation obligations."""
     from hbm_index_service_model import model
