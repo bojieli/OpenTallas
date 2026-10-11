@@ -94,8 +94,7 @@ module tb_hgi_e2e;
     wire [196:0] c_t_mtp; wire [4:0] c_t_host; wire [42:0] c_t_prov; wire [37:0] c_t_emit; wire [99:0] c_t_eh;
     wire c_t_abort, c_t_drained;
     generate if (MTP) begin : g_mtp
-        hgi_mtp_native native (.clk(clk), .rst_n(rst_n), .f_cmdproc(n_f), .t_cmdproc(n_t), .f_router(59'b0), .t_router(),
-            .t_coll(), .f_coll(1'b1));
+        hgi_mtp_native native (.clk(clk), .rst_n(rst_n), .f_cmdproc(n_f), .t_cmdproc(n_t));
         if (MTP == 1) begin : g_ext_collar           // the collar outside the CP die (x_* ports)
             hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(1)) collar (.ck(clk), .rst(~rst_n), .f_mtp(n_t), .emit_pend(n_t[43]),
                 .t_mtp(n_f), .f_host(f_host), .t_host(t_host), .f_provider(prov), .t_emit(t_emit), .t_provider(t_prov),
