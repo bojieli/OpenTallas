@@ -41,6 +41,8 @@ sys.path.insert(0, str(ROOT / 'tools'))
 
 SU_PHYS = 'rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv'
 HC_RTL = 'rtl/hdc/v41x/ot_dsrom_su_hcpost.sv'
+TILE_LANE_Y = 0.960            # fe-push-hphys-1010: the lane macro's y = 0 mod 0.048 (M4) and 0 mod 0.064 (M6), so its W-face
+                                # pins (on grid in the lane frame) stay on the tile's tracks; 1.080 put all 2,251 off-track
 TILE_SW = 100.224              # tiled su: the tile's register strip width (232 x 0.432), the lane beside it; every
                                # tile pin sits over the strip (fp lint macro_edge: no pins behind the lane)
 TILE_W = 184.896              # tile width (428 x 0.432): strip + lane 83.16 + 1.512 um (lane 79.92 -> 83.16 2026-10-10: the PINKO lane at 79.92 is 65.9 % utilised with its hold-buffer allowance)
@@ -688,6 +690,12 @@ def emit_tile(P):
     return '\n'.join(L_)
 
 
+def _m4_track(y):
+    """nearest asap7 M4 track centre (y = 0.012 + 0.048 k) at or above y"""
+    k = -(-round((y - 0.012) * 1000) // 48)
+    return round(0.012 + 0.048 * k, 4)
+
+
 def emit_tile_io(P, tw, th):
     """the tile's pins: bc_in on the S edge, bc_out on the N edge (M5 and M7 over the register strip; nothing behind the
     lane), acc_out / acc_in on the W (strip) edge on M4 (lower / upper half), clk on the W edge mid"""
@@ -699,7 +707,10 @@ def emit_tile_io(P, tw, th):
     # 212e3da48 tile (4,398 FIRM pin flops, 645 um2 movable) inflated +314 % and diverged (GPL-0305) / stalled at 0.76.
     # bb7e34c70 DRT-0255: the M3 edge pins (bc_in) had no access path in the bottom row (maze route fails at y < 4 um);
     # M5 every other track (0.096) + M7 every other (0.128), taken evenly in x: 10.4 / 7.8 b/um at full, < 12
-    full = sorted(((ly, round(x0 + pt * k, 4)) for ly, x0, pt in (('M5', 0.528, 0.096), ('M7', 0.64, 0.128))
+    # fe-push-hphys-1010: every pin ON its routing track (asap7 make_tracks: M5 x 0.012 + 0.048k, M7 x 0.016 + 0.064k,
+    # M4 y 0.012 + 0.048k).  The old origins 0.528 / 0.64 / y 2.0 sat a quarter pitch off: DRT-0422 / DRT-0421 on every
+    # bc_in / acc pin and DRT-0255 maze failures at the S edge (2f07deaae, bb7e34c70, fe sw147).
+    full = sorted(((ly, round(x0 + pt * k, 4)) for ly, x0, pt in (('M5', 0.540, 0.096), ('M7', 0.656, 0.128))
                    for k in range(int((TILE_SW - x0 - 0.5) / pt) + 1)), key=lambda t: (t[1], t[0]))
     assert len(full) >= nb, (len(full), nb)
     slots = [full[(i * len(full)) // nb] for i in range(nb)]
@@ -710,11 +721,11 @@ def emit_tile_io(P, tw, th):
             yy = 0.096 if port == 'bc_in' else round(th - 0.096, 4)
             L_.append(f'place_pin -pin_name {{{port}[{b}]}} -layer {ly} -location {{{x:.4f} {yy:.4f}}} -pin_size {{{sz}}}')
     half = th / 2
-    for port, y0 in (('acc_out', 2.0), ('acc_in', half + 2.0)):
+    for port, y0 in (('acc_out', 2.028), ('acc_in', _m4_track(half + 2.0))):
         for b in range(P.WCT):
             L_.append(f'place_pin -pin_name {{{port}[{b}]}} -layer M4 -location {{0.0960 {y0 + 0.096 * b:.4f}}} -pin_size {{0.1920 0.0240}}')
             assert y0 + 0.096 * b < (half if port == 'acc_out' else th) - 1.0
-    L_.append(f'place_pin -pin_name {{clk}} -layer M4 -location {{0.0960 {round(half, 3):.4f}}} -pin_size {{0.1920 0.0240}}')
+    L_.append(f'place_pin -pin_name {{clk}} -layer M4 -location {{0.0960 {_m4_track(half):.4f}}} -pin_size {{0.1920 0.0240}}')
     return '\n'.join(L_) + '\n'
 
 
@@ -969,9 +980,9 @@ def main():
         td.mkdir(exist_ok=True)
         (td / 'io_place.tcl').write_text(emit_tile_io(P, tw, th))
         (td / 'macro_place.tcl').write_text(
-            f'place_macro -macro_name {{u_lane}} -location {{{TILE_SW:.3f} 1.080}} -orientation R0 -exact\n')
+            f'place_macro -macro_name {{u_lane}} -location {{{TILE_SW:.3f} {TILE_LANE_Y:.3f}}} -orientation R0 -exact\n')
         (td / 'tile.json').write_text(json.dumps(dict(master='hfd_su_tile_xl' if xr else 'hfd_su_tile', w_um=tw, h_um=th, strip_w=TILE_SW,
-                                                      lane=q['lane'], lane_xy=[TILE_SW, 1.08], LB=P.LB, WCT=P.WCT,
+                                                      lane=q['lane'], lane_xy=[TILE_SW, TILE_LANE_Y], LB=P.LB, WCT=P.WCT,
                                                       RB=P.RB, RA=P.RA, LO=P.LO), indent=1) + '\n')
     (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out, cg=a.cg))
     if a.tiled:
