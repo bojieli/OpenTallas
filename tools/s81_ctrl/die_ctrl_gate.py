@@ -39,11 +39,13 @@ def _slice(port, bits):
 
 def role_engines(role, kinds=None):
     """engines used by the role's stage programs: layer = 'stage' groups, source = 'embed', head = 'head'"""
-    kinds = kinds or dict(layer=('stage',), source=('embed',), head=('head',))[role]
+    kinds = kinds or dict(layer=('stage',), layer1=('stage',), source=('embed',), head=('head',))[role]
     idx = json.loads(PROGS.read_text())
     used = set()
     for s in idx['stages']:
-        if s['kind'] in kinds:
+        # layer1 (s81die-1011/ctrl) = a layer die that is NOT an Engram home: the Engram stages (programs with eng ops)
+        # run on the layer1e home dies (eng_SE slab), so a layer1 die runs only the stage programs without eng ops
+        if s['kind'] in kinds and not (role == 'layer1' and 'eng' in s['ports']):
             used |= set(s['ports'])
     return used
 
@@ -67,6 +69,26 @@ def _bits_of(m, inst, port):
 # di0 -> o): a relay is followed through its other DATA ports (forwarded clock / status ports fi*, fo*, st excluded)
 _RELAY_KINDS = ('hstn', 'stn', 'hend', 'xstg')
 _NOT_DATA = re.compile(r'^(f[io]\d*|st|ck\w*)$')
+_LANE = re.compile(r'^d([io])(\d+)$')
+
+
+def _relay_pair(p, have):
+    """the relay's port on the other side of data port p (same lane): di <-> dq (hub station), di<k> <-> do<k>
+    (forwarded-lane station), di0 <-> o (end block), i <-> od (start block)"""
+    if p in ('di', 'dq'):
+        c = ['dq' if p == 'di' else 'di']
+    elif p == 'o':
+        c = ['di0']
+    elif p == 'i':
+        c = ['od']
+    elif p == 'od':
+        c = ['i']
+    else:
+        mm = _LANE.match(p)
+        if not mm:
+            return []
+        c = [f"d{'o' if mm.group(1) == 'i' else 'i'}{mm.group(2)}"] + (['o'] if p == 'di0' else [])
+    return [q for q in c if q in have]
 
 
 def _peer(m, inst, port, nbits, _seen=None):
@@ -91,8 +113,8 @@ def _peer(m, inst, port, nbits, _seen=None):
                 continue
             seen.add((i_, pb))
             if kinds.get(i_) in _RELAY_KINDS:
-                for q_ in sorted(ports[i_] - {pb}):
-                    if not _NOT_DATA.match(q_) and (i_, q_) not in seen:
+                for q_ in _relay_pair(pb, ports[i_]):
+                    if (i_, q_) not in seen:
                         seen.add((i_, q_))
                         peers |= _peer(m, i_, q_, nbits, seen)
             else:
@@ -159,7 +181,7 @@ def gate(m, role, bindings=None, used=None):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--recipe', required=True)
-    ap.add_argument('--role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--role', choices=['layer', 'layer1', 'source', 'head'], default='layer')
     ap.add_argument('--out', type=Path)
     a = ap.parse_args()
     sys.path[:0] = [str(ROOT / 'tools'), str(ROOT / 'tools/s81')]
