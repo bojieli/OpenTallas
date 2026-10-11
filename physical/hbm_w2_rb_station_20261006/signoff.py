@@ -104,6 +104,15 @@ def main():
         result['accept_tt'] = dict(TT_setup_ps=tt, FF_hold_ps=ff, SS_sensitivity_ps=ss,
                                    TT_ok=tt is not None and math.isfinite(tt) and tt >= 0, FF_ok=ff is not None and math.isfinite(ff) and ff >= 0)
     (run/'signoff.json').write_text(json.dumps(result, indent=2)+'\n')
+    # ECO-PLUMB 2: a tools/w18/corner_sta.py-shaped record so the job can use the loop's STANDARD verdict
+    # (verdict.corner_sta + verdict.drc_metrics): that path carries orfs_dir / drc_metrics / sdc_name to the hold ECO,
+    # which a metrics_cmd verdict drops (closure_loop get_metrics keeps a fixed key set)
+    cs = dict(orfs_dir=str(case), sdc_name='6_signoff.sdc', post_sdc={}, setup_post_sdc=[], extra_sdc='',
+              hold_ff=dict(worst_slack_ps=ff, sdc_name='6_signoff.sdc', errors=[]),
+              setup_ss=dict(worst_slack_ps=ss, tns_ps=None))
+    if 'TT' in result:
+        cs['setup_tt'] = dict(worst_slack_ps=result['TT']['worst'].get('max'), tns_ps=None, errors=[])
+    (run/'corner_sta.json').write_text(json.dumps(cs, indent=1)+'\n')
     print(json.dumps(result['accept']))
     if a.tt:
         return 0 if result['accept_tt']['TT_ok'] and result['accept_tt']['FF_ok'] else 1
