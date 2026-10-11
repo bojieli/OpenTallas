@@ -14,7 +14,7 @@
 //                core, eng2 5 cycles): the 18.5-cycle stage-sequencer term of the price
 //   core stub    at its engine command: every received word in the VM must equal wv_word(D, p, t, w) (41 words);
 //                after T_BUSY slow cycles writes the 46 outbound words wv_word(100 + D, p, t, w), engine done
-//   hrow (HP>=0) the die is layer 37 / 38 / 39's (part HP): at every stage START the issue epoch (dsfd_wfc_hep on the
+//   hrow (HP>=0) the die is layer 37 / 38 / 39's (part HP): at every stage START the issue epoch (the kit's dsfd_wfc_hep on the
 //                endpoint START: under POSTED the kit's own t_ks never pulses, so the kit's t_hep is dead) and the
 //                main-hidden row {header, 80 beats wv_beat(HP, p, t, b)} leave through ot_dsrom_mtp_hrow_tx
 // wv_s0   S0 (SOURCE) die: dsfd_wfc_src TOKIN (token returns from the collective MTP lane far end) + the same VM
@@ -92,10 +92,11 @@ module wv_stg #(parameter integer D = 1, parameter integer HP = -1, parameter in
     // ---- the WFC kit (STAGE)
     wire k_swv, k_swg, k_err, k_srv, k_srg; wire [526:0] k_swd; wire [30:0] k_srd; wire [1025:0] k_srq;
     wire [52:0] k_ks_unused, ks; wire [53:0] s_kd; wire [3:0] k_ft;
-    dsfd_wfc_stg #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1)) u_kit (.ck(fclk), .ckv(sclk), .rst(krst), .rsv(krsv),
+    wire [35:0] k_hep;
+    dsfd_wfc_stg #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1), .HEP(HP >= 0)) u_kit (.ck(fclk), .ckv(sclk), .rst(krst), .rsv(krsv),
         .f_liv(liv), .f_lid(lid), .t_lir(lir), .t_lov(lov), .t_lod(lod), .f_lor(lor),
         .t_swv(k_swv), .t_swd(k_swd), .f_swr(k_swg), .f_swa(k_err), .t_srv(k_srv), .t_srd(k_srd), .f_srr(k_srg),
-        .f_srq(k_srq), .t_ks(k_ks_unused), .f_kd(s_kd), .t_hep(), .t_ft(k_ft));
+        .f_srq(k_srq), .t_ks(k_ks_unused), .f_kd(s_kd), .t_hep(k_hep), .t_ft(k_ft));
     wv_vm u_vm (.sclk(sclk), .rst_n(rst_n), .k_swv(k_swv), .k_swd(k_swd), .k_swg(k_swg), .k_err(k_err),
         .k_srv(k_srv), .k_srd(k_srd), .k_srg(k_srg), .k_srq(k_srq), .ks(ks));
     // ---- stage sequencer + engines (port 0 = the stage core stub, ports 1 / 2 fixed-latency responders)
@@ -143,7 +144,7 @@ module wv_stg #(parameter integer D = 1, parameter integer HP = -1, parameter in
     // ---- main-hidden row part (layers 37 / 38 / 39): issue epoch of every START + the row through ot_dsrom_mtp_hrow_tx
     generate if (HP >= 0) begin : g_hrow
         wire [35:0] hep;
-        dsfd_wfc_hep #(.NW(NW), .USER_W(USER_W)) u_hep (.clk(sclk), .rst_n(rst_n), .ks(ks), .hep(hep));
+        assign hep = k_hep;   // the kit's own issue epochs (posted START doorbell; el1011-ds-mtp fix cfe25038d)
         integer hq_u [0:255], hq_p [0:255], hq_e [0:255], hq_t [0:255]; integer hq_w = 0, hq_r = 0;
         integer tk_q = 0; reg tk_v = 0;
         always @(posedge sclk) begin
