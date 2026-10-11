@@ -42,7 +42,11 @@ module ot_qwen_nearhbm_attn_hub_p #(
     parameter integer HD = 128,
     parameter integer ADD_LAT = 7,
     parameter integer MUL_LAT = 6,
-    parameter integer ZW = 4
+    parameter integer ZW = 4,
+    // ANR = 1 (hardcore-1010 fe-h, 2026-10-10; 0 = unchanged): the FP32 adders as ot_hdc_fp32_add_lat_nr (cut bundles reset
+    // only their valid bit; kept copy for the B2a pass-through).  qkd_ahub_b-eafd37271 FF -25.1 sat on the adders'
+    // zero-logic cut hops (s1_code -> u_cb.r, u_cc.r -> y, u_ca.r -> s1_v).  Bit-identical, 0 cycles.
+    parameter integer ANR = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -252,7 +256,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
                                                            .d({ziv1[gz], zg1, zi1[6*gz +: 6]}), .q(zwi[8*gz +: 8]));
         for (gh = 0; gh < 4; gh = gh + 1) begin : g_h2
             wire [1:0] err;
-            ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add (
+            ot_hdc_fp32_add_lat_sel #(.LAT(ADD_LAT), .NR(ANR)) u_add (
                 .clk(clk), .rst_n(rl[L_ZA + 4*gz + gh]), .valid_in(ziv1[gz]), .a(za_r[32*(4*gz+gh) +: 32]),
                 .b(zb_r[32*(4*gz+gh) +: 32]), .y(zy[32*(4*gz+gh) +: 32]), .err(err), .valid_out(zvo[4*gz+gh]));
             assign zerr[4*gz+gh] = zvo[4*gz+gh] && (err != 2'd0);
@@ -429,11 +433,11 @@ module ot_qwen_nearhbm_attn_hub_p #(
         wire [31:0] a01, a23, a;
         wire [1:0] e1, e2, e3, e4;
         wire v1, v2, v3, v4;
-        ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_01 (.clk(clk), .rst_n(rl[L_PV + 4*gl]), .valid_in(pr2),
+        ot_hdc_fp32_add_lat_sel #(.LAT(ADD_LAT), .NR(ANR)) u_01 (.clk(clk), .rst_n(rl[L_PV + 4*gl]), .valid_in(pr2),
             .a(sr[0 + 32*gl +: 32]), .b(sr[512 + 32*gl +: 32]), .y(a01), .err(e1), .valid_out(v1));
-        ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_23 (.clk(clk), .rst_n(rl[L_PV + 4*gl + 1]), .valid_in(pr2),
+        ot_hdc_fp32_add_lat_sel #(.LAT(ADD_LAT), .NR(ANR)) u_23 (.clk(clk), .rst_n(rl[L_PV + 4*gl + 1]), .valid_in(pr2),
             .a(sr[1024 + 32*gl +: 32]), .b(sr[1536 + 32*gl +: 32]), .y(a23), .err(e2), .valid_out(v2));
-        ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_9 (.clk(clk), .rst_n(rl[L_PV + 4*gl + 2]), .valid_in(v1), .a(a01),
+        ot_hdc_fp32_add_lat_sel #(.LAT(ADD_LAT), .NR(ANR)) u_9 (.clk(clk), .rst_n(rl[L_PV + 4*gl + 2]), .valid_in(v1), .a(a01),
             .b(a23), .y(a), .err(e3), .valid_out(v3));
         ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_m (.clk(clk), .rst_n(rl[L_PV + 4*gl + 3]), .valid_in(v3), .a(a),
             .b(rz_d), .y(y_o[32*gl +: 32]), .err(e4), .valid_out(v4));
