@@ -22,7 +22,7 @@
 #include <map>
 #include "svdpi.h"
 
-static const int VMW = 1 << 18;
+static const int VMW = (1 << 18) + (1 << 16);  // VM + the HC weight aperture (main b1a793d75)
 static uint32_t vm[VMW];
 static std::vector<uint32_t> vm_final;
 static std::unordered_map<uint64_t, std::vector<uint8_t>> hbm;   // sector index -> 32 bytes
@@ -70,10 +70,11 @@ static void hbm_load(uint64_t a, const uint8_t* p, uint64_t n) {
 extern "C" int e2e_init(const char* d, const char* outp) {
     dir = d;
     std::vector<uint8_t> b;
-    if (!read_file(dir + "/vm0.bin", b) || b.size() != 4u * VMW) { fprintf(stderr, "E2E: vm0.bin\n"); return -1; }
-    memcpy(vm, b.data(), 4u * VMW);
-    if (!read_file(dir + "/vm_final.bin", b) || b.size() != 4u * VMW) { fprintf(stderr, "E2E: vm_final.bin\n"); return -1; }
-    vm_final.resize(VMW); memcpy(vm_final.data(), b.data(), 4u * VMW);
+    // vectors carry 2^18 words (no aperture) or 2^18 + 2^16 (with the HC weight aperture)
+    if (!read_file(dir + "/vm0.bin", b) || (b.size() != 4u * VMW && b.size() != 4u * (1 << 18))) { fprintf(stderr, "E2E: vm0.bin\n"); return -1; }
+    memcpy(vm, b.data(), b.size());
+    if (!read_file(dir + "/vm_final.bin", b) || (b.size() != 4u * VMW && b.size() != 4u * (1 << 18))) { fprintf(stderr, "E2E: vm_final.bin\n"); return -1; }
+    vm_final.assign(VMW, 0); memcpy(vm_final.data(), b.data(), b.size());
     if (!read_file(dir + "/hbm.bin", b)) { fprintf(stderr, "E2E: hbm.bin\n"); return -1; }
     for (size_t o = 0; o + 16 <= b.size();) {
         uint64_t a, n; memcpy(&a, &b[o], 8); memcpy(&n, &b[o + 8], 8); o += 16;
