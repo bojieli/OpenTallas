@@ -773,7 +773,8 @@ def lint_at_submit(j):
         ledger(j, f"SUBMIT_LINT {res['fix']} applied: {res['message'][:300]}")
     elif v == "REFUSE":
         j["status"] = "REFUSED"
-        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN"
+        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else (
+            "PIN_TRACK" if (res.get("pin_track") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN")
         j["reason"] = f"SUBMIT_LINT {kind}: {res['message']}"[:1500]
         j["submit_lint"] = res
         event(j, j["reason"])
