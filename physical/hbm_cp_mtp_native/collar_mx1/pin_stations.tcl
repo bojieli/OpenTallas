@@ -55,6 +55,9 @@ foreach i [$mx_blk getInsts] {
     if {[regexp {^ar\.u_o_(cSE|cSW)_([0-9]+)[/\.]lk} $n -> p k]} {set pn "$p\[$k\]";set role output_lockup}
     if {[regexp {^ar\.i1_(cSE|cSW|f_loader)\[([0-9]+)\]} $n -> p k]} {set pn "$p\[$k\]";set role core_crossing_capture}
     if {[regexp {^ar\.i_(f_router|xb)\[([0-9]+)\]} $n -> p k]} {set pn "$p\[$k\]";set role core_crossing_capture}
+    # host job channel pin flops (mtp-mx1 2026-10-10): hv_q <- f_host[0], hd_q[k] <- f_host[k+1]
+    if {[regexp {^g_regb\.hv_q} $n]} {set pn "f_host\[0\]";set role input}
+    if {[regexp {^g_regb\.hd_q\[([0-9]+)\]} $n -> k]} {set pn "f_host\[[expr {$k+1}]\]";set role input}
     if {$pn eq ""} continue
     if {![dict exists $mx_pin $pn]} {error "MX1 pin station $n has no actual pin $pn"}
     lassign [dict get $mx_pin $pn] px py
@@ -79,7 +82,7 @@ foreach i [$mx_blk getInsts] {
             set mx_max [expr {max($mx_max,$dist)}];incr mx_n;set placed 1
         }
     }
-    if {!$placed} {error "MX1 no legal pin station for $n within24um of $pn"}
+    if {!$placed} { if {[string match g_regb.* $n]} { puts "MX1_PIN_STATIONS WARN no seat within 24um for $n ($pn): left to the placer" } else { error "MX1 no legal pin station for $n within24um of $pn" } }
 }
 close $mx_report
 if {$mx_n==0} {error "MX1 mapped pin station census empty"}

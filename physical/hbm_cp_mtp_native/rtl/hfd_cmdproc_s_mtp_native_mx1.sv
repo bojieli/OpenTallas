@@ -147,10 +147,18 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   // job: the pin ready is the FIFO's AND a registered "admission open" (the core's admit, closed by a push or a
   // waiting job), so a job is never parked in the pin FIFO while admission is closed (held native done until the
   // drained reset, which would discard it): one job per admission window, as without the boundary
-  wire jf_ir,jf_ov;wire [214:0] jf_od;reg open_q;
-  wire jf_push=f_host[0]&&rn_jf&&open_q&&jf_ir;
-  always @(posedge c or posedge rm_jf) if (rm_jf) open_q<=1'b0; else open_q<=ho[0]&&!jf_push&&!jf_ov;
-  ot_sc_pfifo #(.W(215),.S(2),.G(32)) jf(.clk(c),.rst_n(rn_jf),.in_valid(f_host[0]&&rn_jf&&open_q),.in_ready(jf_ir),.in_data(f_host[1+:215]),
+  // mtp-mx1 2026-10-10 (FT11 CTS: f_host[0] -> push/open logic -> open_q -206.7 ps under the die-link input budget):
+  // the job channel lands in PIN FLOPS (hv_q = valid AND the registered pin ready, hd_q = the 215 data bits, captured
+  // every cycle) and is pushed into jf one cycle later.  The pin ready is offered at most every other cycle (h_rdy_q),
+  // so a job accepted at the pin in cycle N is the only one in flight at N+1 (ready low) and admission closes from the
+  // registered hv_q before ready can rise again at N+2.  Same one-job-per-admission-window rule as before; +1 cycle on
+  // a job's admission; no pin bit reaches anything but a pin flop.
+  wire jf_ir,jf_ov;wire [214:0] jf_od;reg open_q,hv_q,h_rdy_q;reg [214:0] hd_q;
+  wire h_rdy=jf_ir&&rn_jf&&open_q&&!h_rdy_q&&!hv_q;
+  always @(posedge c or posedge rm_jf) if (rm_jf) begin open_q<=1'b0;hv_q<=1'b0;h_rdy_q<=1'b0;end
+   else begin hv_q<=f_host[0]&&h_rdy;h_rdy_q<=h_rdy;open_q<=ho[0]&&!hv_q&&!jf_ov;end
+  always @(posedge c) hd_q<=f_host[1+:215];
+  ot_sc_pfifo #(.W(215),.S(2),.G(32)) jf(.clk(c),.rst_n(rn_jf),.in_valid(hv_q),.in_ready(jf_ir),.in_data(hd_q),
    .out_valid(jf_ov),.out_ready(ho[0]),.out_data(jf_od));
   wire ef_ir,ef_ov;wire [36:0] ef_od;
   ot_sc_pfifo #(.W(37),.S(2),.G(37)) ef(.clk(c),.rst_n(rn_ef),.in_valid(f_mtp[43]&&rn_ef),.in_ready(ef_ir),.in_data(f_mtp[44+:37]),
@@ -200,7 +208,7 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
     teh_q<={eho[99],eho[78+:21],eho[75+:3]};ab_q<=ab;dr_q<=dr&&fifos_empty;
    end
   assign t_mtp={tm_q[196:140],ef_ir&&rn_ef,tm_q[138:83],cf_ir&&rn_cf,tm_q[81:0]};
-  assign t_host={th_q,jf_ir&&rn_jf&&open_q};
+  assign t_host={th_q,h_rdy};
   assign t_emit=te_q;assign t_provider=tp_q;
   assign t_emit_host={teh_q[24],teh_q[23:3],teh_q[2:0],df_ov,hf_od,hf_ov};
   assign t_abort=ab_q;assign t_drained=dr_q;
