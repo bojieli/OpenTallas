@@ -4094,7 +4094,12 @@ CTRL_BINDINGS = None
 # FAILS the generator on any unbound engine, sequencer port or die_port_audit finding (no placeholder pins).
 CTRL_ADAPTERS = False
 CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', collective='dsfd_sp_collective_c',
-                      selector='dsfd_bk_selector_c', collector='dsfd_bk_collector_c')
+                      selector='dsfd_bk_selector_c', collector='dsfd_bk_collector_c',
+                      # s81die-1011/ctrl: HC (engine 2) endpoint in hc_s = dsfd_sp_hc_c (dsfd_sp_hc, hc_gate PASS); the
+                      # su_hc contract v2 makes HC one logical slab (hc_n folds into it when the suhc floorplan lands)
+                      hc_s='dsfd_sp_hc_c', eng='dsfd_engram_c')
+CTRL_SVC_MASTER = 'dsfd_svc_c'        # svc_<st> under --ctrl-adapters: j / jd job pins from dsfd_svc_join (engine 4)
+CTRL_SVC_JOIN = 'dsfd_svc_join'
 
 
 def ctrl_adapter_buses(hb):
@@ -4109,11 +4114,14 @@ def ctrl_adapter_buses(hb):
         # need forwarded-clock lane chains with end blocks (as the svc -> selector / collector chains), not common-clock
         # hub stations -- NOT BUILT YET: left unbound, so the die control gate reports sel / col UNBOUND (FAIL)
         for slab_ in [s_ for s_, it in hb.items() if it.master in bind['engines'].get(e, {}).get('masters', [])
-                      and it.kind != 'band_blk']:
+                      and it.kind not in ('band_blk', 'svc')]:     # band / svc-band slabs: forwarded ctrl lanes
             out += [('sseq', slab_, 85, f'c{k}', 'c_cmd'), (slab_, 'sseq', 9, 'c_done', f'd{k}'),
                     (slab_, 'sseq', 2, 'c_st', f's{k}')]
     if 'gather' in hb and hb['gather'].master == 'dsfd_sp_gather_c':
         out += [('capture', 'gather', 12, 't_cd', 'f_cd'), ('gather', 'vm', 11, 't_xgo', 'f_xgo')]
+    if 'hc_s' in hb and hb['hc_s'].master == 'dsfd_sp_hc_c':
+        # HC dependency net (dsfd_sp_hc inp): the VM's row-completion event for the HC head descriptor's operands
+        out += [('vm', 'hc_s', 1, 't_inp_hc', 'f_inp')]
     return tuple(out)
 
 
@@ -5584,11 +5592,136 @@ def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, 
             side = 'W' if st[1] == 'W' else 'E'
             lane(f'hw{st}', 512 + 64 + 2, hub['host'], f'tw{st}', cl, 'hw', side)
             lane(f'hc{st}', 18, cl, 'hc', hub['host'], f'fc{st}', side)
+    if CTRL_ADAPTERS:
+        _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, sink_end, band)
     if 'eng' in hub:
         for a_, pa, b_, pb, bits, _ in ENG_BUSES:
             lane(f'e_{a_}_{pa}', bits, hub[a_], pa, hub[b_], pb, 'E')
         lane('e_swq', 35, hub['eng'], 'teq', m['svcs']['SW'], 'feq', 'W')
         lane('e_swr', 265, m['svcs']['SW'], 'ter', hub['eng'], 'fer', 'W')
+
+
+def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, sink_end, band):
+    """--ctrl-adapters (s81die-1011/ctrl): the engine command plane to slabs OUTSIDE the hub column (the band blocks
+    bk_selector / bk_collector, the per-stack svc slabs through dsfd_svc_join, the layer1e eng_SE slab).  They sit in
+    other clock regions, so each pulse group travels as a FORWARDED lane (source-synchronous stations) between a start
+    block at the driver (l2r: i = {v, payload}) and an end block at the sink (m2l meso; o[0:w-1] = the group), the
+    way the svc <-> VM / selector / collector chains are built: sseq c<e> 85 -> slab c_cmd, slab c_done 9 -> d<e>,
+    slab c_st 2 -> s<e>, three lanes per engine (a lane never mixes a pulse group with the level status).
+    svc (engine 4): one dsfd_svc_join beside svc_SW (the die's first stack) holds the pinned endpoint; its job pulses
+    j_cmd {v, arg 24, tag 8} 33 b and the slabs' j_dn {fault, done} 2 b run as lanes to every svc_<st> (direct pins
+    for the adjacent stack)."""
+    hub = m['hub']
+    bind = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
+    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
+    sq = hub['sseq']
+    starts = m.setdefault('_ctrl_starts', {})
+
+    def blk_at(name, nm, w, h, blk):
+        """a lane end / start block beside a band block (bk_selector S / bk_collector N) in the S / N gap, E face,
+        spread over the block's height (the hix / hco ends use 0.3 / 0.7 of it)"""
+        k_ = len(m.setdefault('_ctrl_blk', {}).setdefault(blk.name, []))
+        m['_ctrl_blk'][blk.name].append(name)
+        y = blk.y + blk.h * (0.15 + 0.1 * (k_ % 8))
+        x = blk.x + blk.w + w / 2 + 6.0
+        pl = P.near(x, y, w, h, [cor['gapS'] if blk.y < DIE[1] / 2 else cor['gapN']], horiz=False, span=400.0, rows=12)
+        assert pl, name
+        return P.add(Inst(name, nm, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
+
+    def end_at(tag, payload, at, side):
+        if at.kind == 'band_blk':
+            nm, w, h = end_spec('m2l', [payload], 'vr')
+            return blk_at(f'he_{tag}', nm, w, h, at)
+        return sink_end(tag, payload, at, side)
+
+    def start_at(tag, w_i, at, side):
+        nm, w, h = end_spec('l2r', [w_i - 1], 'vr')
+        if at.kind == 'band_blk':
+            st_ = blk_at(f'hs_{tag}', nm, w, h, at)
+        elif band(at):
+            x, y = face_pt(at, nxt_off_c(at))
+            yy = y + h / 2 + 6.0 if at.orient == 'R0' else y - h / 2 - 6.0
+            pl = P.near(x, yy, w, h, [cor['stripS'] if at.orient == 'R0' else cor['stripN']], horiz=True, span=1200.0,
+                        rows=12)
+            assert pl, tag
+            st_ = P.add(Inst(f'hs_{tag}', nm, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
+        else:
+            st_ = P.add(_hub_at(P, f'hs_{tag}', nm, w, h, at, side, at.y + at.h / 2 + 50.0 * (len(starts) % 8 - 4), cor))
+        starts[tag] = st_
+        return st_
+
+    offs_c = {}
+
+    def nxt_off_c(it):
+        """start-block face offsets on a band slab: 2,600 um west of its east end (past the svc / fwd-iface taps) in
+        90 um steps; a narrow band slab (eng_SE) from its centre"""
+        o_ = offs_c.get(it.name, 2600.0 if it.w > 3000 else it.w / 2)
+        offs_c[it.name] = o_ + 90.0 * (1 if it.w > 3000 else -1)
+        return o_
+
+    def ctrl_lane(tag, w_i, src, sport, dst, dport, side, src_at=None, dst_at=None):
+        """src.sport (w_i bits = {v, payload}) -> dst.dport (w_i bits), forwarded; *_at = the placement anchor (the
+        svc join stands beside svc_SW: its lane ends are placed on svc_SW's face)"""
+        sa, da = src_at or src, dst_at or dst
+        st_ = start_at(tag, w_i, sa, side)
+        CH8.bus(f'hs_{tag}_i', 'local', w_i, [(src.name, sport), (st_.name, 'i')])
+        he = end_at(tag, w_i - 1, da, side)
+        a = (st_.x + st_.w / 2, st_.y + st_.h / 2)
+        b = (he.x + he.w / 2, he.y + he.h / 2)
+        sx = spine_x(side)
+        bk_ = lambda it: (it.y - 30.0) if it.y > DIE[1] / 2 else (it.y + it.h + 30.0)   # band block's die-centre edge
+        if sa.kind == 'band_blk':          # leave the band block's gap at its die-centre edge, then the spine
+            path = [a, (a[0], bk_(sa)), (sx, bk_(sa)), (sx, b[1]), b]
+        elif da.kind == 'band_blk':
+            path = [a, (sx, a[1]), (sx, bk_(da)), (b[0], bk_(da)), b]
+        elif band(da) and band(sa):
+            sy = strip_y(da, tag)
+            path = [a, (a[0], sy), (b[0], sy), b]
+        elif band(sa):
+            sy = strip_y(sa, tag)
+            path = [a, (a[0], sy), (sx, sy), (sx, b[1]), b]
+        elif band(da):
+            sy = strip_y(da, tag)
+            path = [a, (sx, a[1]), (sx, sy), (b[0], sy), b]
+        else:
+            path = [a, (sx, a[1]), (sx, b[1]), b]
+        single(tag, w_i - 1, 'vr', (st_.name, 'fo', 'od'), a, path, he)
+        CH8.bus(f'he_{tag}_o', 'local', w_i, [(he.name, f'o[0:{w_i - 1}]'), (dst.name, dport)])
+
+    def bind_slab(e, slab, side, at=None):
+        k = eng[e]
+        ctrl_lane(f'c{k}_{slab.name}', 85, sq, f'c{k}', slab, 'c_cmd', side, dst_at=at)
+        ctrl_lane(f'd{k}_{slab.name}', 9, slab, 'c_done', sq, f'd{k}', side, src_at=at)
+        ctrl_lane(f's{k}_{slab.name}', 2, slab, 'c_st', sq, f's{k}', side, src_at=at)
+
+    for e, key in (('sel', 'selector'), ('col', 'collector'), ('eng', 'eng')):
+        it = hub.get(key)
+        if it is not None and it.master in bind['engines'].get(e, {}).get('masters', []):
+            bind_slab(e, it, 'E')
+    svcs = m.get('svcs', {})
+    if svcs and CTRL_SVC_JOIN in bind['engines'].get('svc', {}).get('masters', []):
+        sts = list(svcs)
+        sv0 = svcs[sts[0]]
+        for st in sts:
+            svcs[st].master = CTRL_SVC_MASTER
+        jw, jh = 64.8, 64.8                          # ot_s81_slab_ep (QD 8, JQ 8) + NS job pulse registers
+        x, y = face_pt(sv0, 2300.0)
+        yy = y + jh / 2 + 6.0 if sv0.orient == 'R0' else y - jh / 2 - 6.0
+        pl = P.near(x, yy, jw, jh, [cor['stripS'] if sv0.orient == 'R0' else cor['stripN']], horiz=True, span=800.0)
+        assert pl, 'svcj'
+        jn = P.add(Inst('svcj', CTRL_SVC_JOIN, pl[0], pl[1], jw, jh, 'R0', kind='svcj', region='svc', domain=sv0.domain))
+        m.setdefault('ctrl_svc_join', dict(inst='svcj', ns=len(sts), stacks=sts))
+        bind_slab('svc', jn, 'W' if sts[0][1] == 'W' else 'E', at=sv0)
+        for i_, st in enumerate(sts):
+            sv = svcs[st]
+            js, ds = f'j_cmd[{33 * i_}:{33 * i_ + 32}]', f'j_dn[{2 * i_}:{2 * i_ + 1}]'
+            if i_ == 0:                              # the adjacent stack: face-to-face pins (join beside its face)
+                CH8.bus(f'svcj_j{st}', 'local', 33, [(jn.name, js), (sv.name, 'j')])
+                CH8.bus(f'svcj_d{st}', 'local', 2, [(sv.name, 'jd'), (jn.name, ds)])
+            else:                                    # other stacks: forwarded lanes (band -> band / across the VCH)
+                sd_ = 'W' if st[1] == 'W' else 'E'
+                ctrl_lane(f'j_{st}', 33, jn, js, sv, 'j', sd_, src_at=sv0)
+                ctrl_lane(f'jd_{st}', 2, sv, 'jd', jn, ds, sd_, dst_at=sv0)
 
 
 def _hub_at(P, name, master, w, h, slab, side, y, cor):
