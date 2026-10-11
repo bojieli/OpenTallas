@@ -50,7 +50,8 @@ foreach name $macros {
     if {abs(double([$master getWidth])/$units-$mw)>0.01 || abs(double([$master getHeight])/$units-$mh)>0.01} {
         error "hcoll unexpected macro dimensions for $name"
     }
-    set col [expr {2 - $m}]
+    # INTERIOR=4 (die tile, interior_macros_df4.tcl sets ot_hcoll_m0_left): core-side pins on the LEFT face, so g_m[0] leftmost
+    set col [expr {[info exists ::ot_hcoll_m0_left] ? $m : 2 - $m}]
     set x [expr {$x0+$col*($mw+$gap)}]
     set y [expr {$y0+$row*($mh+$gap)}]
     $inst setPlacementStatus PLACED
