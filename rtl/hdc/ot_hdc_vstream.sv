@@ -28,7 +28,10 @@ module ot_hdc_vstream #(
     parameter integer AW = 24,
     parameter integer NW = 16,
     parameter integer KV_FP8 = 1,     // KV cache in FP8 E4M3 (else BF16): hdc_golden.KV_FMT
-    parameter integer ML = 0          // lane memory-read latency (ot_hdc_vstream_lane ML): memories answer 1 + ML edges late
+    parameter integer ML = 0,         // lane memory-read latency (ot_hdc_vstream_lane ML): memories answer 1 + ML edges late
+    parameter integer LOFF = 0        // 1: the per-lane address offsets (cur + l x stride) are formed here and every lane is
+                                      // instantiated with LANE 0, so all SW lanes are ONE module (one synthesis, kept
+                                      // hierarchy); the same AW-bit sums, 0 cycles.  0 = the original per-lane paramods.
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -161,9 +164,18 @@ module ot_hdc_vstream #(
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_lane
         wire live = ({1'b0, v} << LS) + l < {1'b0, nin_r};
-        ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(l), .KV_FP8(KV_FP8), .ML(ML)) u_lane (
+`ifdef OT_LOFF_MUT
+        localparam integer LMUT = 1;   // bench mutant: the offset applied twice (must FAIL)
+`else
+        localparam integer LMUT = 0;
+`endif
+        wire [AW-1:0] lcura = (LOFF != 0) ? cura + l * asi : cura;
+        wire [AW-1:0] lcurb = (LOFF != 0) ? curb + l * bsi : curb;
+        wire [AW-1:0] lcurc = (LOFF != 0) ? curc + l * csi : curc;
+        wire [AW-1:0] lcurd = (LOFF != 0) ? curd + l * dsi : curd;
+        ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE((LOFF != 0) ? LMUT * l : l), .KV_FP8(KV_FP8), .ML(ML)) u_lane (
             .clk(clk), .rst_n(rst_n), .emit0(emit), .live(live), .i(v), .fin_th(fin_th), .i_last_r(v_last_r),
-            .cura0(cura), .curb0(curb), .curc0(curc), .curd0(curd), .rrow(rrow),
+            .cura0(lcura), .curb0(lcurb), .curc0(lcurc), .curd0(lcurd), .rrow(rrow),
             .asi(asi), .bsi(bsi), .csi(csi), .dsi(dsi),
             .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq),
             .ma(ma), .mb(mb), .dst(dst), .red(red), .ad(ad), .imm1(imm1), .imm2(imm2),

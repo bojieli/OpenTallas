@@ -30,7 +30,8 @@ module ot_qfd_sp_su64_sfu_bv #(
     parameter integer CRD = 4,
     parameter integer VL = 7,               // the banked vector memory's extra read latency (answer at 1 + VL)
     parameter integer MUT = 0,
-    parameter integer RSRAM = 0             // ot_qfd_su_embed_pf RSRAM: the embedding row buffer as an SRAM macro
+    parameter integer RSRAM = 0,            // ot_qfd_su_embed_pf RSRAM: the embedding row buffer as an SRAM macro
+    parameter integer LOFF = 0              // ot_hdc_vstream LOFF: lane offsets formed in the stream unit, 64 identical lanes
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -175,7 +176,7 @@ module ot_qfd_sp_su64_sfu_bv #(
     assign sw_a0 = vm_waddr[0 +: AW];
     assign sw_a1 = vm_waddr[AW +: AW];
     wire [15:0] s_progress, s_rows;
-    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML)) u_su (
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LOFF(LOFF)) u_su (
         .clk(clk), .rst_n(rs), .go(go_s), .ready(s_ready), .idle(s_idle),
         .i_nout(q_nout), .i_nin(q_nin),
         .i_asrc(q_asrc), .i_abase(q_abase), .i_aso(q_aso), .i_asi(q_asi),
