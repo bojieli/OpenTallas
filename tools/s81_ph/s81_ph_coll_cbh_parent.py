@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 C = ROOT / 'physical/s81_ph_views/ports/contract_cbh'
 XQ, YQ = 0.432, 2.16                     # x: site 0.054 x M5 track 0.048; y: row 0.27 x M4 track 0.048
-GAP, CW_, CH_ = 5.4, 10.8, 21.6
+GAP, CW_, CH_ = 30.0, 40.0, 40.0          # >= 20-um channels, ~55% (FLOORPLAN_MARGIN 81.4% at 5.4 / 10.8 / 21.6)
 
 
 def up(v, q):
@@ -28,14 +28,14 @@ def main():
     order = [('u_rw', 'dsfd_coll_cbr', 'R0'), ('u_f', 'dsfd_coll_cbf', 'R0'), ('u_q0', 'dsfd_coll_cbq0', 'R0')] + \
             [(f'g_q[{k}].u_q', 'dsfd_coll_cbq', 'R0') for k in range(1, 5)] + [('u_re', 'dsfd_coll_cbr', 'MY')]
     ch = {m: child(m) for _, m, _ in order}
-    x = CW_
+    x = up(CW_, XQ)
     place = []
     for inst, m, o in order:
         place.append((inst, m, o, x))
         x = up(x + ch[m]['w_um'] + GAP, XQ)
     W = up(x - GAP + CW_, XQ)
-    H = up(CH_ + 340.2 + CH_, YQ)
-    y0 = CH_
+    y0 = up(CH_, YQ)
+    H = up(y0 + 340.2 + CH_, YQ)
     pins = []                                  # (name, layer, x0, y0, x1, y1)
     dirs = {}
 

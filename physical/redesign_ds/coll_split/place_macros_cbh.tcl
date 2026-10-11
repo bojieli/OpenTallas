@@ -1,13 +1,13 @@
 # el1011-ds-coll: child placement of the cb parent (tools/s81_ph/s81_ph_coll_cbh_parent.py)
 set ot_at [dict create]
-dict set ot_at {u_rw} [list 10.8000 21.6000 R0]
-dict set ot_at {u_f} [list 129.6000 21.6000 R0]
-dict set ot_at {u_q0} [list 200.0160 21.6000 R0]
-dict set ot_at {g_q[1].u_q} [list 283.3920 21.6000 R0]
-dict set ot_at {g_q[2].u_q} [list 366.7680 21.6000 R0]
-dict set ot_at {g_q[3].u_q} [list 450.1440 21.6000 R0]
-dict set ot_at {g_q[4].u_q} [list 533.5200 21.6000 R0]
-dict set ot_at {u_re} [list 616.8960 21.6000 MY]
+dict set ot_at {u_rw} [list 40.1760 41.0400 R0]
+dict set ot_at {u_f} [list 183.6000 41.0400 R0]
+dict set ot_at {u_q0} [list 278.6400 41.0400 R0]
+dict set ot_at {g_q[1].u_q} [list 386.6400 41.0400 R0]
+dict set ot_at {g_q[2].u_q} [list 494.6400 41.0400 R0]
+dict set ot_at {g_q[3].u_q} [list 602.6400 41.0400 R0]
+dict set ot_at {g_q[4].u_q} [list 710.6400 41.0400 R0]
+dict set ot_at {u_re} [list 818.6400 41.0400 MY]
 set ot_n 0
 foreach ot_i [[ord::get_db_block] getInsts] {
   set ot_nm [$ot_i getName]; set ot_k [string map {"\\" ""} $ot_nm]
