@@ -3902,7 +3902,7 @@ SEEDL_HOST_BUSES = (('host', 'seedl', 11, 't_seedl_clr', 'f_clr'), ('seedl', 'ho
                     ('collective', 'host', 513, 't_mrt', 'f_mrt'), ('host', 'collective', 1, 't_mrg', 'f_mrt'),
                     ('collective', 'host', 57, 't_macc', 'f_macc'))
 HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
-HROW_UM = (1500.48, 1500.48)    #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
+HROW_UM = (3000.96, 751.68)      #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
 # the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
 # (t_mhp<k> {flit 514, valid} / f_mhp<k> grant: three more LCR lane tiles + adapters in the MTPL composition, OPEN in
 # the collective composition owner's tree)

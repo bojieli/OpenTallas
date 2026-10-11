@@ -1,9 +1,9 @@
 {
  "master": "dsfd_mtp_hrow",
- "w_um": 1500.48,
- "h_um": 1500.48,
+ "w_um": 3000.96,
+ "h_um": 751.68,
  "domain": "stream_1p2",
- "note": "dsfd_mtp_hrow (DSpark primary die, mtp-dsbind 2026-10-10): main-hidden row store in the free SE service slot, 120 x ot_sram_1r1w_1024x256 (3 banked part arrays, clustered macro clocks); every port on the N (field-facing) face: part links, seed-client request / response, host clear / faults, clock, reset",
+ "note": "dsfd_mtp_hrow (DSpark primary die, mtp-dsbind 2026-10-10): main-hidden row store (3000.96 x 751.68 um, wide and low so the SE slot keeps an ~800 um end-block corridor above it) in the free SE service slot, 120 x ot_sram_1r1w_1024x256 (3 banked part arrays, clustered macro clocks); every port on the N (field-facing) face: part links, seed-client request / response, host clear / faults, clock, reset",
  "ports": [
   [
    "f_hp0",
