@@ -91,10 +91,12 @@ module dsfd_coll_cbq_core #(parameter integer WS = 420, parameter integer V0 = 0
 `else
     always @(posedge ck) t_vm <= t_vq;
 `endif
+    reg fi_q;                                                 // pin flop on the fault-chain input
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin flt_o <= 1'b0; bw_cr <= 1'b0; hq <= 14'd0; end
+        if (!rst_n) begin fi_q <= 1'b0; flt_o <= 1'b0; bw_cr <= 1'b0; hq <= 14'd0; end
         else begin
-            if (f || flt_i) flt_o <= 1'b1;
+            fi_q <= flt_i;
+            if (f || fi_q) flt_o <= 1'b1;
             bw_cr <= V0 ? sp : 1'b0;
             hq <= V0 ? t_vq[13:0] : 14'd0;
         end
