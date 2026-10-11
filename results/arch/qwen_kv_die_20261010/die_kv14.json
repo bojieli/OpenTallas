@@ -28,5 +28,16 @@
  "before": {
   "die_kv12_tt_ps": -38611.27,
   "cause": "land -> ectl rs hops ~3 mm pin to pin, no relay"
+ },
+ "sta_rerun_port_buffer_views": {
+  "views": "tools/qwen_die_element_lib.py with the ORFS port-buffer stage (SS 25 / FF 12 ps)",
+  "tt": {
+   "wns_ps": 0.0,
+   "worst_slack_ps": 259.78
+  },
+  "ff": {
+   "wns_ps": 0.0,
+   "worst_hold_ps": 18.26
+  }
  }
 }
