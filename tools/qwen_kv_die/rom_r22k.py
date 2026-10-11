@@ -635,6 +635,12 @@ def surgery_o4(v, m):
     # qwendie-1011 audit: clock area pins on a 3.2 um grid; a final face-packing pass (outermost) with the abutted
     # pairs pinned (VM sa / sq <-> SU va / vq, VM N <-> control tile S groups)
     v.CK_AREA_PITCH = 3.2
+    # el1011-q-tile 2406851bf: the hierarchical tile's power pins are its parent grid's M7 straps (pdn_tile_h2.tcl)
+    v.PG_STRAPS = {'qfd_tile_nk': dict(layer='M7', width=.288, spacing=.096, pitch=10.8, offset=1.0)}
+    # ctlm_i keeps p_am UNREGISTERED (fixed-latency argmax loop, el1011-q-seq 9d6bfc082).  A terminal-tight last relay
+    # (v.TERMINAL_TIGHT {('tt_ctlm', 'c<b>'): 100}) costs +1 relay on 5 of 6 c* chains (discrete relay sites) = the
+    # same +1 loop latency as a pin flop, so it is NOT enabled: the c* words keep their relay count (last hop ~400 um)
+    # and the die STA with the routed ctlm_i view decides; if it fails, the +1 goes to the ctlm pin flop (class 3).
     v.FACE_PACK_FINAL = True
     v.PINNED_FACE_PORTS = ({('qfd_sp_vector_memory', p) for p in ('sa', 'sq', *O4_CTLM_S)} |
                            {('qfd_sp_su64_sfu', p) for p in ('va', 'vq')} | {('qfd_tt_ctlm', p) for p in O4_CTLM_S})

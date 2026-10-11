@@ -1082,8 +1082,14 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, c[3], tol)
             return None if sp is None else (sp[0], sp[1], w, h)
         frames, s_last, ycur = [], 0.0, None
-        while L - s_last > pitch:
-            reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + pitch]
+        # qwendie-1011: a TERMINAL_TIGHT endpoint (an unregistered element input: ctlm c* carries p_am into the
+        # fixed-latency argmax loop) gets its relay within `tight` um of the pin; same relay count (checked by the caller)
+        tt_ = getattr(v, 'TERMINAL_TIGHT', {})
+        tight0 = tt_.get(tuple(eps[0]))
+        tight1 = tt_.get(tuple(eps[-1]))
+        while L - s_last > (tight1 if tight1 and len(frames) else pitch) or (tight0 and not frames and L > tight0):
+            hi_ = tight0 if (tight0 and not frames) else pitch
+            reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + hi_]
             if not reach:
                 nxt = [c for c in cands if c[0] > s_last + 1.0]
                 if not nxt:
