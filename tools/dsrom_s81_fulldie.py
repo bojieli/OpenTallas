@@ -4890,7 +4890,7 @@ def _col_relays(m, P):
         if RELAY_PIN_PATH and HOP_M0 is not None:
             # mtp-head-1010: pin anchors (generated faces), centres only for real macros / relays
             def anc(it, port):
-                return _anchor(HOP_M0.get(it.master), it, port) or cen(it)
+                return _anchor(HOP_M0.get(it.master), it, port) or (_real_pin_pt(it, port) if port else None) or cen(it)   # fs3: real-LEF loads (sstn) by their pin, as the lint
             a = anc(d0, eps[0][1])
             ends = [(anc(by[e[0]], e[1]), by[e[0]]) for e in eps[1:] if e[0] in by]
             fe = max(ends, key=lambda t_: _mh(a, t_[0]), default=None)
