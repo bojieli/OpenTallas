@@ -48,5 +48,13 @@
    "hgi_dma_kvw_b-ebb3d0692-tc-cl (280 um)",
    "hgi_dma_kvw_c-ebb3d0692-tc-cl (270 um)"
   ]
+ },
+ "split_89c140d31": {
+  "change": "KV engine split into 2 hardened hold tiles + core; mover element without the read group (SVR2 0)",
+  "kport die config VR2=1 KVW=1 SVR2=0 KVB KVB_MAX=630": "PASS 15 cases, first record 63 cyc, 4-stack 61.1 cyc/rec posted (price 60, ratio 1.02), drain 68.1; 1-stack 97.4",
+  "kport VR2=0 KVW=0 (= mover element)": "PASS 13 cases",
+  "record bench": "HGI_MOVER PASS",
+  "MUT_DROP": "FAIL 317",
+  "MUT5 (die config)": "FAIL 22192 errors"
  }
 }
