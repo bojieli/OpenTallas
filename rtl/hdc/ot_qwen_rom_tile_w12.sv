@@ -96,6 +96,8 @@ module ot_qwen_rom_tile_logic_w12 #(
     // OT_PREQ=1).  The per-bank copy drove its bank's macro in BOTH columns across the frame (fba TT -59: rom_ce -> ce_in
     // 10 levels).  rom_ce / rom_addr_b keep the same stream (bench ROM model); same edge, same value: 0 cycles.
     parameter integer MPR = 0,
+    // HIER = NPL > 0 (el1011-q-tile): the engine's lanes + tree as hardened lane-slice leaves (ot_qwen_w12_matvec_part HIER)
+    parameter integer HIER = 0,
     // TMUT 3 = column 1 / bank 0's MPR copy one edge stale
     parameter integer TMUT = 0,
     parameter integer NREG = 1,
@@ -182,7 +184,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire [TG*W*32-1:0] me_kv_q;
     wire              me_fault;
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR),
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
@@ -562,6 +564,7 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer ANR = 0,            // ot_qwen_rom_tile_logic_w12 ANR (hardcore-1010 D)
     parameter integer ARPB = 0,           // ot_qwen_rom_tile_logic_w12 ARPB (qwen-1010/c): per-bank address register
     parameter integer MPR = 0,            // ot_qwen_rom_tile_logic_w12 MPR (el1011-q-tile): per-macro request register
+    parameter integer HIER = 0,           // ot_qwen_rom_tile_logic_w12 HIER (el1011-q-tile): lane-slice leaves
     parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
     input  wire              clk,
@@ -593,7 +596,7 @@ module ot_qwen_rom_tile_w12 #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .ANR(ANR), .BAW(BAW)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .ANR(ANR), .BAW(BAW)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
