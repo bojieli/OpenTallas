@@ -44,7 +44,7 @@
 //    valid, no fault). R_in_r and acked==ALL are stale-safe: acked only rises
 //    until the release, and a release clears active and rel_q on the same edge.
 //    Cost: +1 edge per release.
-module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1,STATUS_PIN=1,LOCAL_PHASE=0,HOLD_SEAT=0,RESET_SEAT=0,GRANT_SEAT=0)(
+module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1,STATUS_PIN=1,LOCAL_PHASE=0,HOLD_SEAT=0,RESET_SEAT=0,GRANT_SEAT=0,HIER=0)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
  input wire [191:0] in_owner,input wire [72:0] in_frame,
@@ -123,6 +123,7 @@ function automatic [71:0] encode64(input [63:0] data);
   wire C_normal,C_fault,C_rep,C_load;wire [63:0] C_q,C_next;
   wire G_normal,G_fault,G_rep;
   wire R_in_r,R_out_v,R_empty,R_fault,R_in_v,R_out_r;wire [RW-1:0] R_d;
+  wire [NO*PW-1:0] out_q;wire copy_bad;
   assign owner0=P_d[2136+:192];assign frame0=P_d[2063+:73];
   wire active=C_q[0];wire [3:0] sent=C_q[4:1],acked=C_q[8:5];
   // ---------------- forward input: pulsed in_r, encoded seat E -------------
@@ -142,6 +143,7 @@ function automatic [71:0] encode64(input [63:0] data);
   // by E_v. Safe because gr rises only when E_v=0 and take=0, so on the write edge (two edges after gr rose) E_v is
   // still 0: a grant without in_v overwrites an EMPTY seat, and E_v/take (iv_p&&gr_d) decide occupancy exactly as
   // before. 0 cycles; 37 fewer flops; the grc copy check stays.
+  if(!HIER)begin:flat_seat
   for(genvar w=0;w<PN;w=w+1)begin:seat
    if(GRANT_SEAT)begin:gs
     ot_hbm_w2_keep_reg #(.W(1)) u_c(.clk(clk_sm),.rst_n(rst_e),.d(gr),.q(grc[w]));
@@ -153,7 +155,8 @@ function automatic [71:0] encode64(input [63:0] data);
    end
    assign E[w*72+:72]=Ew[w];
   end
-  wire copy_bad=(|(ivc^{PN{iv_p}}))||(|(grc^{PN{gr_d}}));
+  assign copy_bad=(|(ivc^{PN{iv_p}}))||(|(grc^{PN{gr_d}}));
+  end
   // E occupancy (dual rail). P commits E two edges after taking it (PREP,
   // COMMIT); E is released only after that commit edge.
   wire P_take=P_in_r&&P_in_v;
@@ -165,9 +168,42 @@ function automatic [71:0] encode64(input [63:0] data);
   wire quiesce=!receipt_room||!G_normal||fault_any;
   wire receipt_capacity=&A_in_r;
   assign P_in_v=E_v&&!cons[0]&&!cons[1]&&!quiesce&&!fault_any&&receipt_capacity;
+  if(!HIER)begin:flat_payload
   ot_hbm_w2_protected_cut_veto_on #(.W(PW),.PREENC(0),.DIST(1),.LOCAL_PHASE(LOCAL_PHASE),.HOLD_SEAT(HOLD_SEAT)) u_payload(
    .clk(clk_sm),.por_n(rst_p),.in_v(P_in_v),.in_r(P_in_r),.in_d({PW{1'b0}}),.in_codes(E),
    .out_v(P_out_v),.out_r(P_out_r),.out_d(P_d),.empty(P_empty),.fault(P_fault));
+  end else begin:hier_payload
+  // HIER=1 (el1011-hbm-no3, textbook audit class 1/6): payload words + seat + data pin capture + output launch copies
+  // in 5 word-group slice tiles (8,8,8,8,5 words = the RED groups), bank control here. Same logic, 0 cycles.
+  initial if(!GRANT_SEAT||LOCAL_PHASE||HOLD_SEAT)$fatal(1,"HIER station: GRANT_SEAT=1, LOCAL_PHASE=0, HOLD_SEAT=0 only");
+  wire [PW-1:0] pin_d={in_owner,in_frame,in_data};
+  wire [4:0] gs,gb,gcb,gce,gue,gcl,cbs;
+  wire go_c,go_r,go_k,go_s;wire [3:0] ph4;
+  wire [319:0] q4;
+  for(genvar s=0;s<4;s=s+1)begin:sl
+   wire [NO*512-1:0] d;
+   ot_hbm_w2_stn_slice #(.NW(8),.NB(512),.BASE(8*s),.NO(NO),.QOUT(0)) u_sl(
+    .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),.gr_d(gr_d),
+    .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4),
+    .din(pin_d[s*512+:512]),.dout(d),.q(),
+    .v_same(gs[s]),.v_bad(gb[s]),.v_cbad(gcb[s]),.v_ce(gce[s]),.v_ue(gue[s]),.v_clean(gcl[s]),.copy_bad(cbs[s]));
+   for(genvar t=0;t<NO;t=t+1)begin:o assign out_q[t*PW+s*512+:512]=d[t*512+:512]; end
+  end
+  wire [NO*280-1:0] d4;
+  ot_hbm_w2_stn_slice #(.NW(5),.NB(280),.BASE(32),.NO(NO),.QOUT(1)) u_sl4(
+   .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),.gr_d(gr_d),
+   .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4),
+   .din(pin_d[2048+:280]),.dout(d4),.q(q4),
+   .v_same(gs[4]),.v_bad(gb[4]),.v_cbad(gcb[4]),.v_ce(gce[4]),.v_ue(gue[4]),.v_clean(gcl[4]),.copy_bad(cbs[4]));
+  for(genvar t=0;t<NO;t=t+1)begin:o4 assign out_q[t*PW+2048+:280]=d4[t*280+:280]; end
+  ot_hbm_w2_stn_payload_ctl #(.NG(5)) u_pctl(
+   .clk(clk_sm),.por_n(rst_p),.in_v(P_in_v),.out_r(P_out_r),.valid(q4[280]),
+   .g_same(gs),.g_bad(gb),.g_cbad(gcb),.g_ce(gce),.g_ue(gue),.g_clean(gcl),
+   .in_r(P_in_r),.out_v(P_out_v),.empty(P_empty),.fault(P_fault),
+   .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4));
+  assign P_d={q4[279:0],{2048{1'b0}}};   // only owner0/frame0 (bits 2063..2327) are read in HIER mode
+  assign copy_bad=|cbs;
+  end
   wire cv=P_out_v;
   // ---------------- learned transfers -----------------------------------
   wire [NO-1:0] ov,ov_d,pend,learned;wire ov_bad,pend_bad;
@@ -277,10 +313,10 @@ function automatic [71:0] encode64(input [63:0] data);
   ot_hbm_w2_dr_reg #(.W(1)) u_rv(.clk(clk_sm),.rst_n(rst_n),.d(rv_next),.q(rv),.bad(rv_bad));
   ot_hbm_w2_keep_reg #(.W(1)) u_rvd(.clk(clk_sm),.rst_n(rst_n),.d(rv),.q(rv_d));
   // One kept launch register per output pin (never merged across branches).
-  wire [NO*PW-1:0] out_q;wire [RW-1:0] rel_q;
+  wire [RW-1:0] rel_q;
   ot_hbm_w2_keep_dreg #(.W(RW)) u_relq(.clk(clk_sm),.d(R_d),.q(rel_q));
   for(genvar t=0;t<NO;t=t+1)begin:branch
-   ot_hbm_w2_keep_dreg #(.W(PW)) u_outq(.clk(clk_sm),.d(P_d),.q(out_q[t*PW+:PW]));
+   if(!HIER)begin:fq ot_hbm_w2_keep_dreg #(.W(PW)) u_outq(.clk(clk_sm),.d(P_d),.q(out_q[t*PW+:PW])); end
    assign out_data[t*2063+:2063]=out_q[t*PW+:2063];
    assign out_frame[t*73+:73]=out_q[t*PW+2063+:73];
    assign out_owner[t*192+:192]=out_q[t*PW+2136+:192];
