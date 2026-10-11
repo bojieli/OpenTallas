@@ -31,7 +31,7 @@ module ot_hgi_vm_unit #(
     //   w2q lane b {v, sector 15, wdata 256, word mask 8} (wq layout); w2q_cr[b] = the write reached its bank (a
     //   credit back), w2q_done[b] = the write is in the macro (the client retires after its last).
     input  wire [(RP>0?RP:1)*16-1:0]  rq,
-    output reg  [(RP>0?RP:1)-1:0]     rq_cr,
+    output wire [(RP>0?RP:1)-1:0]     rq_cr,
     output reg  [(RP>0?RP:1)*257-1:0] rr,
     input  wire [(W2>0?W2:1)*280-1:0] w2q,
     output reg  [(W2>0?W2:1)-1:0]     w2q_cr,
@@ -40,53 +40,56 @@ module ot_hgi_vm_unit #(
     localparam integer RPL = RP > 0 ? RP : 1, W2L = W2 > 0 ? W2 : 1;
     // ---- wide read lanes: pin flop -> LQ-deep request queue -> core lane (accepted when no client reads the bank)
     reg [RPL*16-1:0] rq_r; always @(posedge clk or negedge rst_n) if (!rst_n) rq_r <= '0; else rq_r <= rq;
-    reg [14:0] rqq [0:RPL-1][0:LQ-1]; reg [$clog2(LQ):0] rqn [0:RPL-1]; reg [$clog2(LQ)-1:0] rqh [0:RPL-1], rqt [0:RPL-1];
-    reg [RPL-1:0] rl_v; reg [RPL*15-1:0] rl_sec; wire [RPL-1:0] rl_acc; wire [RPL*257-1:0] rl_rsp; wire rl_conflict;
-    reg rq_ovf;
-    always @* for (integer lb = 0; lb < RPL; lb = lb + 1) begin
-        rl_v[lb] = (RP > 0) && rqn[lb] != 0; rl_sec[lb*15 +: 15] = rqq[lb][rqh[lb]];
+    // [fe E] hardcore-1010 feasibility: each wide lane owns its queue in its own generate block (1 write port per lane
+    // array).  The previous single 2-D array written from a for-loop over lanes elaborated as ONE memory with RPL / W2L
+    // write ports (a priority mux per word); behaviour is identical (lockstep tb_hgi_vm_lanes, MUT 9 = head read at
+    // tail, must FAIL).
+    wire [RPL-1:0] rl_v; wire [RPL*15-1:0] rl_sec; wire [RPL-1:0] rl_acc; wire [RPL*257-1:0] rl_rsp; wire rl_conflict;
+    wire [RPL-1:0] rq_ovf_l;
+    wire rq_ovf = |rq_ovf_l;                                               // sticky per lane, as before
+    genvar lg;
+    for (lg = 0; lg < RPL; lg = lg + 1) begin : g_rq
+        reg [14:0] q [0:LQ-1]; reg [$clog2(LQ):0] n; reg [$clog2(LQ)-1:0] h, t; reg ovf, cr_q;
+        wire push = (RP > 0) && rq_r[lg*16 + 15], pop = rl_acc[lg], full = n == LQ;
+        assign rl_v[lg] = (RP > 0) && n != 0; assign rl_sec[lg*15 +: 15] = q[(MUT == 9) ? t : h]; assign rq_cr[lg] = cr_q;
+        always @(posedge clk) if (push && !(full && !pop)) q[t] <= rq_r[lg*16 +: 15];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin n <= 0; h <= 0; t <= 0; ovf <= 1'b0; cr_q <= 1'b0; end
+            else begin
+                if (push && full && !pop) ovf <= 1'b1;                        // the client exceeded its credits
+                else if (push) t <= t + 1'b1;
+                if (pop) h <= h + 1'b1;
+                n <= n + (push && !(full && !pop)) - pop;
+                cr_q <= pop;
+            end
+        assign rq_ovf_l[lg] = ovf;
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
-            rq_cr <= '0; rr <= '0; rq_ovf <= 1'b0;
-            for (integer lb = 0; lb < RPL; lb = lb + 1) begin rqn[lb] <= 0; rqh[lb] <= 0; rqt[lb] <= 0; end
-        end else begin
-            rr <= rl_rsp;
-            for (integer lb = 0; lb < RPL; lb = lb + 1) begin : rl
-                reg push, pop;
-                push = (RP > 0) && rq_r[lb*16 + 15]; pop = rl_acc[lb];
-                if (push && rqn[lb] == LQ && !pop) rq_ovf <= 1'b1;           // the client exceeded its credits
-                else if (push) begin rqq[lb][rqt[lb]] <= rq_r[lb*16 +: 15]; rqt[lb] <= rqt[lb] + 1'b1; end
-                if (pop) rqh[lb] <= rqh[lb] + 1'b1;
-                rqn[lb] <= rqn[lb] + (push && !(rqn[lb] == LQ && !pop)) - pop;
-                rq_cr[lb] <= pop;
-            end
-        end
+        if (!rst_n) rr <= '0; else rr <= rl_rsp;
     // ---- second wide write group: pin flop -> LQ-deep queue -> core lane (after the DMA group); done = credit
     reg [W2L*280-1:0] w2q_r; always @(posedge clk or negedge rst_n) if (!rst_n) w2q_r <= '0; else w2q_r <= w2q;
-    reg [278:0] w2qq [0:W2L-1][0:LQ-1]; reg [$clog2(LQ):0] w2n [0:W2L-1]; reg [$clog2(LQ)-1:0] w2h [0:W2L-1], w2t [0:W2L-1];
-    reg [W2L-1:0] w2_v; reg [W2L*15-1:0] w2_sec; reg [W2L*256-1:0] w2_d; reg [W2L*8-1:0] w2_m;
-    wire [W2L-1:0] w2_acc, w2_done; reg w2_ovf;
-    always @* for (integer lb = 0; lb < W2L; lb = lb + 1) begin : w2h_
-        reg [278:0] e; e = w2qq[lb][w2h[lb]];
-        w2_v[lb] = (W2 > 0) && w2n[lb] != 0; w2_m[lb*8 +: 8] = e[7:0]; w2_d[lb*256 +: 256] = e[263:8];
-        w2_sec[lb*15 +: 15] = e[278:264];
+    wire [W2L-1:0] w2_v; wire [W2L*15-1:0] w2_sec; wire [W2L*256-1:0] w2_d; wire [W2L*8-1:0] w2_m;
+    wire [W2L-1:0] w2_acc, w2_done; wire [W2L-1:0] w2_ovf_l; wire w2_ovf = |w2_ovf_l;
+    for (lg = 0; lg < W2L; lg = lg + 1) begin : g_w2
+        reg [278:0] q [0:LQ-1]; reg [$clog2(LQ):0] n; reg [$clog2(LQ)-1:0] h, t; reg ovf;
+        wire push = (W2 > 0) && w2q_r[lg*280 + 279], pop = w2_acc[lg], full = n == LQ;
+        wire [278:0] e = q[h];
+        assign w2_v[lg] = (W2 > 0) && n != 0; assign w2_m[lg*8 +: 8] = e[7:0]; assign w2_d[lg*256 +: 256] = e[263:8];
+        assign w2_sec[lg*15 +: 15] = e[278:264];
+        always @(posedge clk) if (push && !(full && !pop)) q[t] <= w2q_r[lg*280 +: 279];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin n <= 0; h <= 0; t <= 0; ovf <= 1'b0; end
+            else begin
+                if (push && full && !pop) ovf <= 1'b1;
+                else if (push) t <= t + 1'b1;
+                if (pop) h <= h + 1'b1;
+                n <= n + (push && !(full && !pop)) - pop;
+            end
+        assign w2_ovf_l[lg] = ovf;
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
-            w2q_done <= '0; w2q_cr <= '0; w2_ovf <= 1'b0;
-            for (integer lb = 0; lb < W2L; lb = lb + 1) begin w2n[lb] <= 0; w2h[lb] <= 0; w2t[lb] <= 0; end
-        end else begin
-            w2q_done <= w2_done; w2q_cr <= w2_acc;
-            for (integer lb = 0; lb < W2L; lb = lb + 1) begin : w2l
-                reg push, pop;
-                push = (W2 > 0) && w2q_r[lb*280 + 279]; pop = w2_acc[lb];
-                if (push && w2n[lb] == LQ && !pop) w2_ovf <= 1'b1;
-                else if (push) begin w2qq[lb][w2t[lb]] <= w2q_r[lb*280 +: 279]; w2t[lb] <= w2t[lb] + 1'b1; end
-                if (pop) w2h[lb] <= w2h[lb] + 1'b1;
-                w2n[lb] <= w2n[lb] + (push && !(w2n[lb] == LQ && !pop)) - pop;
-            end
-        end
+        if (!rst_n) begin w2q_done <= '0; w2q_cr <= '0; end
+        else begin w2q_done <= w2_done; w2q_cr <= w2_acc; end
     reg [WP*280-1:0] wq_r;
     always @(posedge clk or negedge rst_n) if (!rst_n) wq_r <= {WP*280{1'b0}}; else wq_r <= wq;
     wire [WP-1:0] wl_v; wire [WP*15-1:0] wl_sec; wire [WP*256-1:0] wl_d; wire [WP*8-1:0] wl_m; wire wl_conflict;
