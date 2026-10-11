@@ -350,7 +350,7 @@ class Lower:
                 elif fn == "attend":
                     self.attend(add, su, L, head, op.get("yarn"))
                 elif fn == "router_act":
-                    r0, r1 = W.even(384)[rank]
+                    r0, r1 = W.even(m.n_exp)[rank]              # (hgi-1010/h: the DSpark stages route over 128)
                     su("router_act", "router_act", dict(A=V("gsc", r1 - r0, off=r0), O=V("gsc", r1 - r0, off=r0)),
                        ["gsc"], ["gsc"], sfu=I.SFU_SPSQRT, dst=I.DST_VM)
                 elif fn == "route":
@@ -808,11 +808,11 @@ class Lower:
         if self.fuse:                 # the shared slot's route weight (FUSION 4)
             su("route.one", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["ONE"], n=1),
                                           O=V("route_w", 1, off=m.k_exp)), [], ["route_w"], dst=I.DST_VM)
-        su("route.bias", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["BIAS"], n=384),
-                                       O=V("BIAS", 384)), [], ["BIAS"], dst=I.DST_VM)
-        su("route.scores_bias", "route", dict(A=V("gsc", 384), C=V("BIAS", 384), O=V("router", 384)),
+        su("route.bias", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["BIAS"], n=m.n_exp),
+                                       O=V("BIAS", m.n_exp)), [], ["BIAS"], dst=I.DST_VM)
+        su("route.scores_bias", "route", dict(A=V("gsc", m.n_exp), C=V("BIAS", m.n_exp), O=V("router", m.n_exp)),
            ["gsc", "BIAS"], ["router"], ad=I.AD_C, dst=I.DST_VM)
-        add(Rec("IDX", "TOPK", param=m.k_exp | MC.TOPK_ASC, desc=dict(A=V("router", 384), O=U32V(
+        add(Rec("IDX", "TOPK", param=m.k_exp | MC.TOPK_ASC, desc=dict(A=V("router", m.n_exp), O=U32V(
             self.lay.vm["rid"], m.k_exp)), tag="route.top6", family="route"), ["router"], ["rid"])
         for j in range(m.k_exp):                 # gather the selected scores: indexed descriptors (C3b)
             su(f"route.gather{j}", "route", dict(

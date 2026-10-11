@@ -19,22 +19,30 @@
 //     admission, transaction join, finite-8 emit queue; physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv,
 //     unchanged, unregistered form) lives here too.  Its controller side is the die nets f_mtp 517 (in, from
 //     hgi_mtp_native t_cmdproc) / t_mtp 197 (out, to its f_cmdproc); its backend side (t_backend / f_backend / f_am)
-//     is wired to the translator INSIDE (the x_* ports are unused: outputs 0).  The collar's host side (job f_host,
-//     t_host, the emit records t_emit_host / f_emit_host, t_drained, t_abort) and provider side (f_provider /
-//     t_provider: prompt / forced-token reads, t_emit) are the mh_* ports: classed for the die (bound to the loader
-//     band in the follow-up, proposal in hgi-1010.log: loader AXI-lite MTP window + completion FIFO for emits).
+//     is wired to the translator INSIDE (the x_* ports are unused: outputs 0).  The collar's host / provider side is
+//     bound to the LOADER LINK (hgi-1010/h, fe-push blocker on R25GQ: no tie, no die-level mh_* nets):
+//       lcp [459:419] = {mtp_wdata 32, mtp_widx 8, mtp_we}: the host's AXI-lite writes to the loader's MTP window
+//         0xE00 + 4 w (ot_hgi_loader_cp MTPH = 1): w 0..5 the job config (179 b), 6 job id, 7 generation, 8 START (the
+//         job valid, held until the collar admits it), 9 / 10 a prompt / forced-token table write {index [29:24],
+//         token [16:0]} (64 entries each; the controller's p_addr / f_addr modulo 64, answered from a register a cycle
+//         later: within its PRL = 4 read wait);
+//       cpl [229:222] = {drained, abort, t_host [4:0], 0}: the status the host reads at 0xE40;
+//       the emit records ride the completion station: an emitted token is a tokx beat {token, pos = its index, job,
+//         gen}; the job's done is a completion {token = accepted count, cycles = the stop status}.
 //     Translator external_fault = the collar's abort.
 module ot_hgi_cp_die #(
     parameter integer RW = 4096,       // 64 KB record ring (hgi-1010: DFlash verify bodies are 39.6 KB; 512 = the old 8 KB)
     parameter integer USE_MACRO = 1,
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
-    parameter integer FQCR = 4         // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer FQCR = 4,        // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer LX = (MTP == 2) ? 41 : 0,
+    parameter integer CX = (MTP == 2) ? 8 : 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire [418:0]  lcp,           // from the loader
-    output reg  [221:0]  cpl,           // to the loader
+    input  wire [418+LX:0] lcp,         // from the loader (MTP=2: + the MTP host window, 41 b)
+    output wire [221+CX:0] cpl,         // to the loader (MTP=2: + the MTP status, 8 b)
     output reg  [337:0]  vmq,           // VM client {v, req 337}
     input  wire [273:0]  vmr,           // VM client {v, rsp 273}
     input  wire [18:0]   vmstat,        // {proto_fault, mask_fault, ue, ce}
@@ -86,20 +94,12 @@ module ot_hgi_cp_die #(
     output wire          x_drained_ready,
     input  wire          x_ext_fault,
     input  wire [16:0]   x_noise,           // unused (hgi-1010/h): the noise / mask id is MD word 53 (mtp_noise)
-    // MTP=2: the controller nets (hgi_mtp_native <-> MX1 collar) and the collar's host / provider sides
+    // MTP=2: the controller nets (hgi_mtp_native <-> MX1 collar)
     input  wire [516:0]  f_mtp,
-    output wire [196:0]  t_mtp,
-    input  wire [215:0]  mh_f_host,         // {job config 179, generation 4, job 32, valid}
-    output wire [4:0]    mh_t_host,         // {fault, identity fault, inflight, active, admit}
-    input  wire [178:0]  mh_f_provider,     // prompt token [48 +: 17], forced token [65 +: 17] (others: 0)
-    output wire [42:0]   mh_t_provider,     // {forced address 23, prompt address 20}
-    output wire [37:0]   mh_t_emit,
-    input  wire [1:0]    mh_f_emit_host,    // {done ready, record ready}
-    output wire [99:0]   mh_t_emit_host,
-    output wire          mh_t_abort,
-    output wire          mh_t_drained
+    output wire [196:0]  t_mtp
 );
     // ---------------------------------------------------------------- loader link fields
+    reg [229:0] cpl_r; assign cpl = cpl_r[221 + CX:0];
     wire        cfg_we = lcp[0];      wire [5:0] cfg_addr = lcp[6:1];   wire [63:0] cfg_wdata = lcp[70:7];
     wire        l_db_v = lcp[71];     wire [17:0] l_tok = lcp[89:72];   wire [19:0] l_pos = lcp[109:90];
     wire [31:0] l_job = lcp[141:110]; wire [3:0] l_gen = lcp[145:142];  wire [1:0] l_ent = lcp[147:146];
@@ -124,6 +124,7 @@ module ot_hgi_cp_die #(
     reg  [3:0] credit;                                   // {argmax, idx, quant, coll}
     reg  [5:0] credx;                                    // {hc, dma, att, sfu, su, sm}
     reg  halt;
+    wire mh_emit_free = (MTP == 2) && !cpl_hold && !(cpl_v && !x_run);   // the completion station can take an emit / done beat
     wire units_busy = ~credit[0] | ~credit[1] | ~credit[2] | ~credit[3] | ~(&credx) | (|ux_v);
     localparam [15:0] RECU = 16'b0000_0111_1111_1110;   // units 1-10 have a record bus (0 CTL internal, 11 SIMT absent)
     ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
@@ -143,6 +144,8 @@ module ot_hgi_cp_die #(
     wire xi_cmd_v, xi_cmd_ready, xi_cpl_v, xi_cpl_ready, xi_cpl_fault, xi_am_v, xi_drained, xi_ext_fault;
     wire [200:0] xi_cmd; wire [31:0] xi_cmd_job, xi_cmd_seq, xi_cpl_job, xi_cpl_seq; wire [3:0] xi_cmd_gen, xi_cpl_gen;
     wire [16:0] xi_am_idx;
+    wire [215:0] mh_f_host; wire [4:0] mh_t_host; wire [178:0] mh_f_provider; wire [42:0] mh_t_provider;
+    wire [37:0] mh_t_emit; wire [1:0] mh_f_emit_host; wire [99:0] mh_t_emit_host; wire mh_t_abort, mh_t_drained;
     generate if (MTP == 2) begin : g_collar
         wire [270:0] t_be;
         hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(1)) u_collar (.ck(clk), .rst(~rst_n), .f_mtp(f_mtp),
@@ -184,7 +187,34 @@ module ot_hgi_cp_die #(
         assign xdb_job = 32'd0; assign xdb_gen = 4'd0; assign xdb_ent = 2'd0; assign xdb_off = 32'd0;
         assign xdb_kind = 4'd0; assign xdb_loff = 32'd0;
     end endgenerate
-    assign xdb_rdy = !db_hold && !l_db_v;                // the host pulse wins a tie; the translator holds its valid
+    assign xdb_rdy = !db_hold && !l_db_v;
+    // ---------------------------------------------------------------- MTP=2: the collar's host / provider side on the loader link
+    reg  [191:0] mh_cfg; reg [31:0] mh_job; reg [3:0] mh_gen; reg mh_jv;
+    reg  [16:0] mh_ptab [0:63]; reg [16:0] mh_ftab [0:63]; reg [16:0] mh_ptok, mh_ftok;
+    generate if (MTP == 2) begin : g_mhost
+        wire mw = lcp[419]; wire [7:0] mwi = lcp[427:420]; wire [31:0] mwd = lcp[459:428];
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin mh_cfg <= 192'd0; mh_job <= 32'd0; mh_gen <= 4'd0; mh_jv <= 1'b0; mh_ptok <= 17'd0; mh_ftok <= 17'd0; end
+            else begin
+                if (mw && mwi < 8'd6) mh_cfg[mwi[2:0]*32 +: 32] <= mwd;
+                if (mw && mwi == 8'd6) mh_job <= mwd;
+                if (mw && mwi == 8'd7) mh_gen <= mwd[3:0];
+                if (mw && mwi == 8'd8) mh_jv <= 1'b1;
+                else if (mh_jv && mh_t_host[0]) mh_jv <= 1'b0;          // the collar admitted the job
+                mh_ptok <= mh_ptab[mh_t_provider[5:0]];               // registered table reads (PRL 4 covers them)
+                mh_ftok <= mh_ftab[mh_t_provider[25:20]];
+            end
+        end
+        always @(posedge clk) begin
+            if (mw && mwi == 8'd9) mh_ptab[mwd[29:24]] <= mwd[16:0];
+            if (mw && mwi == 8'd10) mh_ftab[mwd[29:24]] <= mwd[16:0];
+        end
+        assign mh_f_host = {mh_cfg[178:0], mh_gen, mh_job, mh_jv};
+        assign mh_f_provider = {39'd0, 1'b1, 55'd0, 2'd0, mh_ftok, mh_ptok, 48'd0};
+        assign mh_f_emit_host = {mh_emit_free && !mh_t_emit_host[0], mh_emit_free};   // one beat a cycle
+    end else begin : g_nomhost
+        assign mh_f_host = 216'd0; assign mh_f_provider = 179'd0; assign mh_f_emit_host = 2'd0;
+    end endgenerate                // the host pulse wins a tie; the translator holds its valid
     // ---------------------------------------------------------------- unit credits and dispatch packing
     always @* begin
         u_rdy = ux_rdy & ~RECU & {16{!halt}};
@@ -216,7 +246,7 @@ module ot_hgi_cp_die #(
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
             sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 704'd0; hc_rec <= 939'd0;
-            db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
+            db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl_r <= 230'd0;
             vmq <= 338'd0;
         end else begin
             // dispatch (the bus carries one valid edge per record)
@@ -252,27 +282,36 @@ module ot_hgi_cp_die #(
                 db_hold <= 1'b1; db_q <= {4'd1, xdb_ent, xdb_gen, xdb_job, xdb_pos, xdb_tok}; db_k <= xdb_kind;
                 db_lo <= xdb_loff; db_x <= 1'b1;
             end
-            cpl[0] <= 1'b0;
-            if (db_hold && db_rdy) begin db_hold <= 1'b0; cpl[0] <= !db_x; x_run <= db_x; end   // db_taken (host only)
+            cpl_r[0] <= 1'b0;
+            if (db_hold && db_rdy) begin db_hold <= 1'b0; cpl_r[0] <= !db_x; x_run <= db_x; end   // db_taken (host only)
             // completion station (a translator job's completion is the translator's, consumed the edge it is valid)
-            cpl[1] <= 1'b0;
+            cpl_r[1] <= 1'b0;
             if (cpl_v && x_run) x_run <= 1'b0;
             else if (cpl_v && !cpl_hold) begin
-                cpl_hold <= 1'b1; cpl[1] <= 1'b1;
-                cpl[112:2] <= {cpl_tokx, cpl_cycles, cpl_status, cpl_gen, cpl_job, cpl_pos, cpl_token};
+                cpl_hold <= 1'b1; cpl_r[1] <= 1'b1;
+                cpl_r[112:2] <= {cpl_tokx, cpl_cycles, cpl_status, cpl_gen, cpl_job, cpl_pos, cpl_token};
+            end else if (MTP == 2 && mh_emit_free && mh_t_emit_host[0]) begin      // an emitted token (tokx beat)
+                cpl_hold <= 1'b1; cpl_r[1] <= 1'b1;
+                cpl_r[112:2] <= {1'b1, 32'd0, 4'd0, mh_t_emit_host[70 +: 4], mh_t_emit_host[38 +: 32],
+                               mh_t_emit_host[18 +: 20], 1'b0, mh_t_emit_host[1 +: 17]};
+            end else if (MTP == 2 && mh_emit_free && mh_t_emit_host[74]) begin     // the job's done
+                cpl_hold <= 1'b1; cpl_r[1] <= 1'b1;
+                cpl_r[112:2] <= {1'b0, 29'd0, mh_t_emit_host[75 +: 3], 4'd0, mh_t_emit_host[70 +: 4], mh_t_emit_host[38 +: 32], 20'd0,
+                               mh_t_emit_host[78 +: 18]};
             end
             if (l_cpl_ack) cpl_hold <= 1'b0;
             // record-ring fetch station
-            cpl[113] <= 1'b0;
+            cpl_r[113] <= 1'b0;
             // F5: a request leaves on a credit (the loader's queue slot), the slot returns on the loader's f_req_ack (the
             // memory lane took it), not on the data; sectors return in order, at most 48 in flight (the sequencer's NOS)
             begin : fetch
                 reg snd; snd = f_req_v && fq_cr != 5'd0 && fq_in < 7'd48;
-                if (snd) begin cpl[113] <= 1'b1; cpl[153:114] <= f_req_addr; end
+                if (snd) begin cpl_r[113] <= 1'b1; cpl_r[153:114] <= f_req_addr; end
                 fq_cr <= fq_cr - {4'd0, snd} + {4'd0, l_freq_ack};
                 fq_in <= fq_in + {6'd0, snd} - {6'd0, l_frsp_v};
             end
-            cpl[221:154] <= {cfg_cp_act, cfg_err, cfg_loaded};
+            cpl_r[221:154] <= {cfg_cp_act, cfg_err, cfg_loaded};
+            if (MTP == 2) cpl_r[229:222] <= {mh_t_drained, mh_t_abort, mh_t_host, 1'b0};
             // VM read client: one word, read as its sector
             vmq[337] <= 1'b0; vr_rv <= 1'b0;
             if (vr_v && !vr_busy) begin
