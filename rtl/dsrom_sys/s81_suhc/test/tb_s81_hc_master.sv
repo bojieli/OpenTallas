@@ -8,7 +8,7 @@
 // HCG jobs= done= err= rows= fault= code= cyc= bad_tag=  then HCG PASS / HCG FAIL.
 module tb_s81_hc_master;
     parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, MUT = 0, AMUT = 0;
-    parameter integer MAXJ = 64, MAXE = 4096, MAXY = 256, TMAX = 400000;
+    parameter integer MAXJ = 64, MAXE = 4096, MAXY = 2048, TMAX = 400000;
     reg cck = 0, sk = 0, crs = 0, srs = 0;
     always #0.4165 cck = ~cck;              // controller 1.2 GHz
     always #0.4255 sk = ~sk;                // slab clock (stream domain, independent source: exercises the CDC)
