@@ -235,7 +235,7 @@ def place_lo(a):
         # where ci / k / ks (S) and q / ri (E, along the bottom strip) land; xp leaves through its own pipe (u_xpp, last
         # stage = the N pin bank).  The central channel then carries only xp + mid (~3.2 k nets) past the quad rows
         # instead of every input bus up + rf / mid back down (~9.1-9.5 k; lo_v7 lint y=275.6: 7,069 > 5,683 tracks).
-        xpp = [P.put(T.bname('u_xpp', a.NXP - 1, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
+        xpp = [P.put(T.bname('g_xpp.u_xpp', a.NXP - 1, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
         root = [P.snap(T.bname('u_root', 0, c, False), 'sn', 544, 'R0', x + SNW / 2 + a.root_dx, 75.0) for c, x in enumerate(cix)]
     else:
         root = [P.put(T.bname('u_root', 0, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
@@ -264,7 +264,7 @@ def place_lo(a):
         pipe('u_fr', root, a.NFR, 3, 0, [(cc_x - 230, 150.0), (200.0, 150.0)], rfc, 'rf')
         mid = pipe('g_y0.u_mid', root, a.PMID, 3, 0, [], (cc_x, q_in_y - 40), 'mid0')
         row_hops(hops, rcs, cen(mid[-1]), 'row0')
-        pipe('u_xpp', root, a.NXP - 1, 3, 0, [(cc_x, q_in_y + 60)], cen(xpp), 'xp')
+        pipe('g_xpp.u_xpp', root, a.NXP - 1, 3, 0, [(cc_x, q_in_y + 60)], cen(xpp), 'xp')
         for x in (0, 1):
             nm = f'g_y0.g_x\\[{x}\\].u_res'
             pipe(nm, [e1s[x]], a.NLL - 3, 1, 2, [], (xr_x[x] + 14.04, yN), f'res0{x}', bits=136)

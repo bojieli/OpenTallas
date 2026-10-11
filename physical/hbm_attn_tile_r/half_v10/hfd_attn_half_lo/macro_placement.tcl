@@ -15,9 +15,9 @@ place_macro -macro_name {u_fr.gn.g_s\[5\].g_c\[0\].g_ew.u_b} -location {20.016 1
 place_macro -macro_name {u_fr.gn.g_s\[5\].g_c\[1\].g_ew.u_b} -location {20.016 222.720} -orientation MY -exact
 place_macro -macro_name {u_fr.gn.g_s\[5\].g_c\[2\].g_ew.u_b} -location {20.016 330.240} -orientation MY -exact
 place_macro -macro_name {u_pq.gn.g_s\[0\].g_c\[0\].g_ew.u_b} -location {1746.576 2.016} -orientation MY -exact
-place_macro -macro_name {u_xpp.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {733.536 1231.416} -orientation R0 -exact
-place_macro -macro_name {u_xpp.gn.g_s\[2\].g_c\[1\].g_sn.u_b} -location {841.056 1231.416} -orientation R0 -exact
-place_macro -macro_name {u_xpp.gn.g_s\[2\].g_c\[2\].g_sn.u_b} -location {948.576 1231.416} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[2\].g_c\[0\].g_sn.u_b} -location {733.536 1231.416} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[2\].g_c\[1\].g_sn.u_b} -location {841.056 1231.416} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[2\].g_c\[2\].g_sn.u_b} -location {948.576 1231.416} -orientation R0 -exact
 place_macro -macro_name {u_root.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {873.552 69.048} -orientation R0 -exact
 place_macro -macro_name {u_root.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {981.072 69.048} -orientation R0 -exact
 place_macro -macro_name {u_root.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -location {1088.592 69.048} -orientation R0 -exact
@@ -73,12 +73,12 @@ place_macro -macro_name {g_y0.u_mid.gn.g_s\[2\].g_c\[2\].g_sn.u_b} -location {10
 place_macro -macro_name {g_y0.u_mid.gn.g_s\[3\].g_c\[0\].g_sn.u_b} -location {756.720 745.704} -orientation R0 -exact
 place_macro -macro_name {g_y0.u_mid.gn.g_s\[3\].g_c\[1\].g_sn.u_b} -location {864.240 745.704} -orientation R0 -exact
 place_macro -macro_name {g_y0.u_mid.gn.g_s\[3\].g_c\[2\].g_sn.u_b} -location {971.760 745.704} -orientation R0 -exact
-place_macro -macro_name {u_xpp.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {814.944 448.584} -orientation R0 -exact
-place_macro -macro_name {u_xpp.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {922.464 448.584} -orientation R0 -exact
-place_macro -macro_name {u_xpp.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -location {1029.984 448.584} -orientation R0 -exact
-place_macro -macro_name {u_xpp.gn.g_s\[1\].g_c\[0\].g_sn.u_b} -location {756.336 828.120} -orientation R0 -exact
-place_macro -macro_name {u_xpp.gn.g_s\[1\].g_c\[1\].g_sn.u_b} -location {863.856 828.120} -orientation R0 -exact
-place_macro -macro_name {u_xpp.gn.g_s\[1\].g_c\[2\].g_sn.u_b} -location {971.376 828.120} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[0\].g_c\[0\].g_sn.u_b} -location {814.944 448.584} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[0\].g_c\[1\].g_sn.u_b} -location {922.464 448.584} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[0\].g_c\[2\].g_sn.u_b} -location {1029.984 448.584} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[1\].g_c\[0\].g_sn.u_b} -location {756.336 828.120} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[1\].g_c\[1\].g_sn.u_b} -location {863.856 828.120} -orientation R0 -exact
+place_macro -macro_name {g_xpp.u_xpp.gn.g_s\[1\].g_c\[2\].g_sn.u_b} -location {971.376 828.120} -orientation R0 -exact
 foreach ot_i [[ord::get_db_block] getInsts] {
   if {[[$ot_i getMaster] isBlock]} { $ot_i setPlacementStatus FIRM }
 }
