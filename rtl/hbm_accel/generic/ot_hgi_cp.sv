@@ -109,7 +109,7 @@ module ot_hgi_cp #(
     generate if (FETCH_PIN_FIFO && FQ_LOCAL) begin : g_fetch_cr
         // front slot + back slot as g_fetch_pin; the send decision for the NEXT cycle is registered (snd_q = f_req_v)
         (* keep = 1 *) reg [39:0] front_addr, back_addr;
-        (* keep = 1 *) reg snd_q;
+        reg snd_q;                                           // no keep: it drives the f_req_v pin and is named after it (anchored pin flop)
         reg front_v, back_v;
         reg [4:0] cr; reg [6:0] inn;
         wire take_in = sf_v && sf_rdy;
