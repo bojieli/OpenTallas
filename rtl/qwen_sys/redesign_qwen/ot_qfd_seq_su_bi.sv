@@ -973,7 +973,8 @@ module ot_qfd_seq_su_bi #(
     parameter integer W = 16, parameter integer G = 6144, parameter integer AW = 24, parameter integer NW = 18,
     parameter integer PAW = 12, parameter integer SW = 64, parameter integer LV = 7, parameter integer D = 4,
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
-    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4
+    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,
+    parameter integer RLY = 0, parameter integer CRED = 0
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -1533,7 +1534,7 @@ module ot_qfd_seq_su_bi #(
         .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
     ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rs), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
+    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (
         .clk(clk), .rst_n(rs), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
@@ -1607,6 +1608,7 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_qwen_tp_seq_w12_vrl #(
     parameter integer VRL = 1,     // vre -> vrq edges
+    parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits
     parameter integer ENABLE_AR256 = 0,
     parameter integer N    = 4,
     parameter integer NW   = 16,
@@ -1697,11 +1699,15 @@ module ot_qwen_tp_seq_w12_vrl #(
     wire          rd_v = rd_p[VRL-1];
     integer       rd_i, rd_n;
     always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end
-    assign c_valid = (st == S_COLL) && (q_n != 0);
+    reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)
+    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
-    wire   c_fire  = c_valid && c_ready;
+    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) c_cred <= 8'(CRED);
+        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);
     wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rd_n) < QD;
 
     reg [NW-1:0] best_i;

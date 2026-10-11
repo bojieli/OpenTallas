@@ -771,7 +771,7 @@ def emit_seq_su(boundary: bool = False) -> str:
 TP_SEQ = ROOT / "rtl/rom/ot_qwen_tp_seq_w12.sv"
 
 
-def tp_seq_vrl() -> str:
+def tp_seq_vrl(cred: bool = False) -> str:
     """ot_qwen_tp_seq_w12_vrl: the TP sequencer with its vector-memory read latency a parameter (VRL edges vre -> vrq;
     the base assumes 1).  Root cause of the masters' token-chain mismatch (qwen-1010/a 10-10): inside a stationed die
     master the read leaves through the output station and the word returns through the input station, so the base
@@ -789,6 +789,20 @@ def tp_seq_vrl() -> str:
     t = one(t, "(q_n + rd_v) < QD;", "(q_n + rd_n) < QD;")
     t = one(t, "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_v <= 1'b0;", "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};")
     t = one(t, "            rd_v <= rd_go;", "            rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;")
+    if not cred:
+        return t
+    # CRED > 0: the collective port is credit based (ot_rom_oneshot_die_m in_cr): c_ready carries one pulse per freed
+    # input-buffer slot; the sender holds CRED credits (the receiver's buffer, >= the round trip through the stations)
+    t = one(t, "    parameter integer VRL = 1,     // vre -> vrq edges",
+            "    parameter integer VRL = 1,     // vre -> vrq edges\n    parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits")
+    t = one(t, "    assign c_valid = (st == S_COLL) && (q_n != 0);",
+            "    reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)\n"
+            "    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);")
+    t = one(t, "    wire   c_fire  = c_valid && c_ready;",
+            "    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);\n"
+            "    always @(posedge clk or negedge rst_n)\n"
+            "        if (!rst_n) c_cred <= 8'(CRED);\n"
+            "        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);")
     return t
 
 
@@ -936,8 +950,13 @@ def emit_seq_su_bi() -> str:
     t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W)")
     t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
     # the VM read leaves through OS and returns through IS (+ the memory's registered read): VRL = IS + OS + 1
-    t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D),")
-    return t + "\n" + tp_seq_vrl()
+    t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D),")
+    # RLY: die relays each way to the VM; CRED: 0 = collective ready/valid (the token vehicle's model), > 0 = credit port
+    # (ot_rom_oneshot_die_m in_cr, its input buffer IB >= CRED >= the round trip through the stations)
+    t = one(t, "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4",
+            "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,\n"
+            "    parameter integer RLY = 0, parameter integer CRED = 0")
+    return t + "\n" + tp_seq_vrl(cred=True)
 
 
 def emit_tt_ctlm_i() -> str:
