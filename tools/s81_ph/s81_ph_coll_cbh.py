@@ -50,6 +50,18 @@ def main():
     ck(pf, 'W', H / 2)
     pf.emit('cbh f_vm pass-through (2 registers; cbj: job endpoint between them)')
 
+    # cbj: the same tile with the controller endpoint; c_* on the S face after f_vm (single-track pitch)
+    pj = T.Plan('dsfd_coll_cbfj', WF, H)
+    x = pj.bus('f_vm', 592, 'input', 'S', 'M5', 2.4)
+    x = pj.bus('c_cmd', 85, 'input', 'S', 'M5', x, step=1)
+    x = pj.bus('c_done', 9, 'output', 'S', 'M5', x, step=1)
+    x = pj.bus('c_st', 2, 'output', 'S', 'M5', x, step=1)
+    assert x < WF - 0.3, x
+    pj.bus('fvm_u', 592, 'output', 'N', 'M5', 2.4)
+    pj.bus('hq', 14, 'input', 'E', 'M4', H / 2)
+    ck(pj, 'W', H / 2)
+    pj.emit('cbh f_vm pass-through with the ot_s81_coll_job controller endpoint (dsfd_coll_cbj rebuild)')
+
     for m, v0 in (('dsfd_coll_cbq0', 1), ('dsfd_coll_cbq', 0)):
         pq = T.Plan(m, WQ, H)
         x = pq.bus('t_vm', 420, 'output', 'S', 'M5', 2.4)

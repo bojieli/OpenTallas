@@ -138,7 +138,12 @@ endmodule
 
 // f_vm pass-through (S face in, N face out), two registers as in dsfd_coll_cb; with OT_S81PH_COLL_JOB the controller
 // endpoint (ot_s81_coll_job) sits between them and reads slice 0's header copy (hq, +1 cycle vs the flat cb).
-module dsfd_coll_cbf (
+`ifdef OT_S81PH_COLL_JOB
+`define OT_S81PH_CBF_M dsfd_coll_cbfj
+`else
+`define OT_S81PH_CBF_M dsfd_coll_cbf
+`endif
+module `OT_S81PH_CBF_M (
     input  wire ck, input wire rs,
     input  wire [591:0] f_vm, output wire [591:0] fvm_u,
     input  wire [13:0] hq
@@ -212,7 +217,7 @@ module dsfd_coll_cbh #(parameter integer OD = 16, parameter integer CR = 1, para
         .x_li_v(eli_v[0]), .x_li_r(eli_r[0]), .x_li_d(eli_d), .n_li_v(li4_v[0]), .n_li_r(li4_r[0]), .n_li_d(li4_d),
         .x_flt(eflt), .n_flt(flt_u[5:3]));
     wire [13:0] hq;
-    dsfd_coll_cbf u_f (.ck(ck[0]), .rs(rs[0]), .f_vm(f_vm), .fvm_u(fvm_u), .hq(hq)
+    `OT_S81PH_CBF_M u_f (.ck(ck[0]), .rs(rs[0]), .f_vm(f_vm), .fvm_u(fvm_u), .hq(hq)
 `ifdef OT_S81PH_COLL_JOB
         , .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st)
 `endif
