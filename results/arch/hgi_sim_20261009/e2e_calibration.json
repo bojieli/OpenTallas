@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hgi_sim.e2e_calibration.v1",
- "generated_utc": "2026-10-11T01:35:40Z",
+ "generated_utc": "2026-10-11T03:16:52Z",
  "reports": [
   "../results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
  ],
@@ -105,6 +105,26 @@
     ],
     "grade": "measured_unit_bench"
    },
+   "FUSED.HC_POST": {
+    "rtl_service": 4473.0,
+    "sim_cost": 222.7,
+    "ratio": 20.085,
+    "records": 1,
+    "runs": [
+     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
+    ],
+    "grade": "measured_unit_bench"
+   },
+   "FUSED.HC_PRE_NORM": {
+    "rtl_service": 4230.0,
+    "sim_cost": 649.4,
+    "ratio": 6.514,
+    "records": 1,
+    "runs": [
+     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json"
+    ],
+    "grade": "measured_unit_bench"
+   },
    "HC.HC_MIX_ROWS": {
     "rtl_service": 24197.0,
     "sim_cost": 193.3,
@@ -198,6 +218,8 @@
   },
   "unit_reports": [
    "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/coll/report.json",
+   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
+   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
    "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json",
    "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json",
    "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json",
@@ -211,14 +233,14 @@
   "sensitivity": {
    "ds_1M": {
     "scale": {
-     "FUSED.HC_PRE_NORM": 29.261,
+     "FUSED.HC_PRE_NORM": 6.514,
      "COLL.ALL_GATHER": 0.716,
      "DMA.LOAD": 0.622,
      "SU.VOP": 1.067,
      "FUSED.QDQ_FP8": 14.573,
      "DMA.KVWB_DS": 3.817,
      "COLL.GROUP_REDUCE_MCAST": 0.908,
-     "FUSED.HC_POST": 290.674,
+     "FUSED.HC_POST": 20.085,
      "IDX.TOPK": 4.286,
      "DMA.FENCE": 0.117,
      "HC.HC_MIX_ROWS": 125.155,
@@ -239,7 +261,6 @@
       "FUSED.HC_PRE_NORM",
       "FUSED.QDQ_FP8",
       "HC.HC_MIX_POST",
-      "IDX.OWNED",
       "IDX.TOPK",
       "SU.VOP"
      ],
@@ -248,8 +269,8 @@
       "ATT.PV",
       "ATT.QK",
       "COLL.ARGMAX_MERGE",
+      "COLL.ROW_GATHER",
       "COLL.TOPK_MERGE",
-      "DMA.STORE",
       "IDX.INDEX",
       "SM.MATVEC"
      ],
@@ -260,34 +281,33 @@
       "COLL.ALL_GATHER": "measured_unit_bench",
       "COLL.ARGMAX_MERGE": "model (stub in RTL bench or unmeasured)",
       "COLL.GROUP_REDUCE_MCAST": "e2e_single_record",
+      "COLL.ROW_GATHER": "model (stub in RTL bench or unmeasured)",
       "COLL.TOPK_MERGE": "model (stub in RTL bench or unmeasured)",
       "DMA.FENCE": "e2e_single_record",
       "DMA.KVWB_DS": "e2e_single_record",
       "DMA.LOAD": "e2e_measured",
-      "DMA.STORE": "model (stub in RTL bench or unmeasured)",
-      "FUSED.HC_POST": "e2e_reduced_width",
-      "FUSED.HC_PRE_NORM": "e2e_reduced_width",
+      "FUSED.HC_POST": "measured_unit_bench",
+      "FUSED.HC_PRE_NORM": "measured_unit_bench",
       "FUSED.QDQ_FP8": "production_width",
       "HC.HC_MIX_POST": "production_width",
       "IDX.INDEX": "model (stub in RTL bench or unmeasured)",
-      "IDX.OWNED": "production_width",
       "IDX.TOPK": "production_width",
       "SM.MATVEC": "model (stub in RTL bench or unmeasured)",
       "SU.VOP": "measured_unit_bench"
      },
      "scope": "measured unit-service ratios replayed on the modelled token; uncalibrated operations retain their model costs (not a measured whole-token rate)"
     },
-    "fixed_rtl_cycles": 696743.8,
-    "fixed_rtl_tok_s": 1722.3,
-    "current_rtl_cycles": 7312820.1,
-    "current_rtl_tok_s": 164.1,
+    "fixed_rtl_cycles": 565569.1,
+    "fixed_rtl_tok_s": 2121.8,
+    "current_rtl_cycles": 1207216.1,
+    "current_rtl_tok_s": 994.0,
     "scale_dma_full_bw": {
-     "FUSED.HC_PRE_NORM": 29.261,
+     "FUSED.HC_PRE_NORM": 6.514,
      "COLL.ALL_GATHER": 0.716,
      "SU.VOP": 1.067,
      "FUSED.QDQ_FP8": 14.573,
      "COLL.GROUP_REDUCE_MCAST": 0.908,
-     "FUSED.HC_POST": 290.674,
+     "FUSED.HC_POST": 20.085,
      "IDX.TOPK": 4.286,
      "HC.HC_MIX_ROWS": 125.155,
      "HC.HC_MIX_POST": 1.282,
@@ -297,12 +317,14 @@
      "FUSED.QDQ_FP4_E4M3": 14.583
     },
     "dma_full_bw_assumption": "DMA service ratios omitted: full-bandwidth successor budget, not a measured DMA result",
-    "current_rtl_dma_full_bw_cycles": 7317741.9,
-    "current_rtl_dma_full_bw_tok_s": 164.0
+    "current_rtl_dma_full_bw_cycles": 1203579.9,
+    "current_rtl_dma_full_bw_tok_s": 997.0
    },
    "qwen_P8191": {
     "scale": {
      "COLL.ALL_GATHER": 0.716,
+     "FUSED.HC_POST": 20.085,
+     "FUSED.HC_PRE_NORM": 6.514,
      "HC.HC_MIX_ROWS": 125.155,
      "HC.HC_MIX_POST": 1.282,
      "HC.HC_MIX": 64.931,
@@ -352,6 +374,8 @@
     "current_rtl_tok_s": 942.9,
     "scale_dma_full_bw": {
      "COLL.ALL_GATHER": 0.716,
+     "FUSED.HC_POST": 20.085,
+     "FUSED.HC_PRE_NORM": 6.514,
      "HC.HC_MIX_ROWS": 125.155,
      "HC.HC_MIX_POST": 1.282,
      "HC.HC_MIX": 64.931,

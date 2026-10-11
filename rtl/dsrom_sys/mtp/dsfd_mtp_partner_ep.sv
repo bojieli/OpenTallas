@@ -8,7 +8,8 @@
 //     (FORWARD_HOPS + RETURN_HOPS + 3) and is sized D = F + R + 4 for full rate.
 // Station counts are the generator's pin-to-pin stages (tools/s81/hub_stage_count.py on head631, lat-audit
 // head631_stages.json): capture -> mtp 6, mtp -> capture 7, vm -> mtp 11, mtp -> vm 11.
-// The VM receiver runs SEL 1 (c_ready from the VM core selects precomputed next states; 0 added cycles).
+// The VM receiver runs SEL 1 (c_ready from the VM core selects precomputed next states) and OUTPUT_PIPE 1 (registered
+// c_valid / c_data: +1 cycle per draft-head step, pipelined); the VM-core-facing transmitters register c_ready (ltx_rc).
 // OT_FIXLAT_MUT_LAT1 (negative control): the VM receiver assumes a latency-1 link (0 relay hops, the legacy 3-cycle
 // grant history) at the same depth -> must overflow on the stationed bench.
 module dsfd_cap_mtp_ep #(parameter integer FLIT = 512) (
@@ -42,10 +43,30 @@ module dsfd_vm_mtp_ep #(parameter integer NW = 21, parameter integer USER_W = 10
 `endif
     wire rn;
     ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
-    ot_dsrom_mtp_lrx_rtt #(.W(DW), .D(D_H), .SEL(1), .ENABLE_RTT(1), .FORWARD_HOPS(HF), .RETURN_HOPS(HR)) u_h (
+    ot_dsrom_mtp_lrx_rtt #(.W(DW), .D(D_H), .SEL(1), .ENABLE_RTT(1), .OUTPUT_PIPE(1), .FORWARD_HOPS(HF), .RETURN_HOPS(HR)) u_h (
         .clk(ck[0]), .rst_n(rn), .l_valid(f_hv[0]), .l_ready(t_hg[0]), .l_data(f_hd), .c_valid(c_hv), .c_ready(c_hr), .c_data(c_hd));
-    ot_dsrom_mtp_ltx #(.W(USER_W)) u_w (.clk(ck[0]), .rst_n(rn), .c_valid(c_wv), .c_ready(c_wr), .c_data(c_wd),
+    ot_dsrom_mtp_ltx_rc #(.W(USER_W)) u_w (.clk(ck[0]), .rst_n(rn), .c_valid(c_wv), .c_ready(c_wr), .c_data(c_wd),
         .l_valid(t_wv[0]), .l_ready(f_wg[0]), .l_data(t_wd));
-    ot_dsrom_mtp_ltx #(.W(DW)) u_q (.clk(ck[0]), .rst_n(rn), .c_valid(c_qv), .c_ready(c_qr), .c_data(c_qd),
+    ot_dsrom_mtp_ltx_rc #(.W(DW)) u_q (.clk(ck[0]), .rst_n(rn), .c_valid(c_qv), .c_ready(c_qr), .c_data(c_qd),
         .l_valid(t_qv[0]), .l_ready(f_qg[0]), .l_data(t_qd));
+endmodule
+
+// ot_dsrom_mtp_ltx with c_ready straight from one flop (cr <= l_ready && rst_n == rq && live of ot_dsrom_mtp_ltx, the
+// same function cycle for cycle): the VM core port budget (link_budget_hook 0.62 T) leaves no room for the AND gate
+// after the flops (fixlat-vmmtp-ffbec0c86-tc SS live -> c_wr / c_qr -105 / -112 ps).
+module ot_dsrom_mtp_ltx_rc #(parameter integer W = 513) (
+    input  wire         clk, rst_n,
+    input  wire         c_valid,
+    output wire         c_ready,
+    input  wire [W-1:0] c_data,
+    output wire         l_valid,
+    input  wire         l_ready,
+    output wire [W-1:0] l_data
+);
+    reg cr, v;
+    reg [W-1:0] d;
+    always @(posedge clk) cr <= l_ready && rst_n;        // pin flop: the receiver's grant, gated by the reset release
+    assign c_ready = cr;                                 // one flit per grant
+    always @(posedge clk) begin v <= c_valid && c_ready; d <= c_data; end
+    assign l_valid = v; assign l_data = d;
 endmodule

@@ -129,6 +129,13 @@ class NativeCost:
                 f"indexed row stream, {rows} rows (full-bandwidth service budget)"
         if u in ("DMA",):
             return T.cost(r, dyn, L)
+        if u == "COLL" and op == "ROW_GATHER" and (r.param >> 8) & 1:
+            # G25 hardware form, measured (hgi-1010/a, main 5e588e11e: one real rank of 96 against the switch model,
+            # 4 delivery lanes): ~ K x F / 4 + 150 cycles, F = ceil(S / 2) 64-byte flits a row, S = 256-bit sectors a row
+            K = r.imm_a or r.desc["I"].n
+            S = -(-r.desc["A"].n * T.ESZ[r.desc["A"].fmt] * 8 // 256)
+            F_ = -(-S // 2)
+            return K * F_ / 4 + 150, "measured", f"G25 hardware ROW_GATHER K {K}, {F_} flits a row (4,242 cyc at K 512)"
         if u == "COLL" and op == "ROW_GATHER" and getattr(r, "layer", None) in self.rg:
             return self.row_gather(r, dyn, L)
         if u == "IDX" and op == "OWNED":
