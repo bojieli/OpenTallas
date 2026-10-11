@@ -247,6 +247,30 @@ static int hbm_check(int k) {
     }
     return bad;
 }
+// the pending posted records' bytes, the LAST pending writer of each byte winning (posted writes of later records
+// may land before an earlier record is checked; only the program-order final value of the pending set is defined)
+static int posted_drain() {
+    std::map<uint64_t, std::pair<uint8_t, int>> last;
+    for (int pk : posted_pend) {
+        Rec& q = recs[pk]; size_t o = q.hbm_off;
+        for (uint64_t i = 0; i < q.hbm_n; i++) {
+            uint64_t a, n; memcpy(&a, &hbmw[o], 8); memcpy(&n, &hbmw[o + 8], 8); o += 16;
+            for (uint64_t j = 0; j < n; j++) last[a + j] = {hbmw[o + j], pk};
+            o += n;
+        }
+    }
+    int bad = 0;
+    for (auto& kv : last) {
+        uint8_t h = sector(kv.first >> 5)[kv.first & 31];
+        if (h != kv.second.first) {
+            if (bad < 8) fprintf(stderr, "E2E REAL %d (%s) HBM[%llx] = %02x golden %02x (posted, at fence)\n", kv.second.second,
+                                 recs[kv.second.second].tag.c_str(), (unsigned long long)kv.first, h, kv.second.first);
+            recs[kv.second.second].mism++; bad++;
+        }
+    }
+    posted_pend.clear();
+    return bad;
+}
 extern "C" int e2e_real_retire(int k, long long cyc) {
     if (k < 0 || k >= (int)recs.size()) return 1;
     Rec& r = recs[k];
@@ -254,8 +278,7 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
     std::unordered_set<uint32_t> gold;
     int bad = 0;
     if (posted_dma && r.unit == 8 && r.op == 2) {                // DMA.FENCE (op 2): the posted writes before it must be visible
-        for (int pk : posted_pend) { int b = hbm_check(pk); recs[pk].mism += b; bad += b; }
-        posted_pend.clear();
+        bad += posted_drain();
     }
     const bool defer = posted_dma && r.unit == 8 && r.hbm_n > 0 && (r.op == 1 || r.op == 3);   // STORE / KVWB_DS
     if (defer) posted_pend.push_back(k);
@@ -329,8 +352,7 @@ extern "C" void e2e_coll_res(int obase, int gi, int bf16, svBitVecVal* out) {
 
 extern "C" int e2e_finish(long long cyc, int token, int status) {
     int vbad = 0;
-    for (int pk : posted_pend) { int b = hbm_check(pk); recs[pk].mism += b; vbad += b; }   // posted writes with no later fence
-    posted_pend.clear();
+    vbad += posted_drain();                                  // posted writes with no later fence
     for (int a = 0; a < VMW; a++) if (!skip_final.count(a) && !ignored(a) && vm[a] != vm_final[a]) {
         if (vbad < 8) fprintf(stderr, "E2E FINAL VM[%d] = %08x golden %08x\n", a, vm[a], vm_final[a]);
         vbad++;
