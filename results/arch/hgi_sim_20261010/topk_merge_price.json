@@ -1,0 +1,84 @@
+{
+ "native": {
+  "cycles": 566785.1,
+  "tok_s": 2117.2
+ },
+ "g20": {
+  "cycles": 602728.5,
+  "tok_s": 1990.9
+ },
+ "per_merge": [
+  {
+   "layer": 14,
+   "tag": "96 x 512 index merge",
+   "k": 512,
+   "n_local": 512,
+   "g20_cycles": 5496.4,
+   "native_cycles": 2680.6
+  },
+  {
+   "layer": 2,
+   "tag": "96 x 512 index merge",
+   "k": 512,
+   "n_local": 512,
+   "g20_cycles": 5496.4,
+   "native_cycles": 2680.6
+  },
+  {
+   "layer": 20,
+   "tag": "96 x 512 index merge",
+   "k": 512,
+   "n_local": 512,
+   "g20_cycles": 5496.4,
+   "native_cycles": 2680.6
+  },
+  {
+   "layer": 20,
+   "tag": "candidate merge",
+   "k": 2048,
+   "n_local": 1366,
+   "g20_cycles": 13416.8,
+   "native_cycles": 0.0
+  },
+  {
+   "layer": 24,
+   "tag": "96 x 512 index merge",
+   "k": 512,
+   "n_local": 512,
+   "g20_cycles": 5496.4,
+   "native_cycles": 2680.6
+  },
+  {
+   "layer": 28,
+   "tag": "96 x 512 index merge",
+   "k": 512,
+   "n_local": 512,
+   "g20_cycles": 5496.4,
+   "native_cycles": 2680.6
+  },
+  {
+   "layer": 32,
+   "tag": "96 x 512 index merge",
+   "k": 512,
+   "n_local": 512,
+   "g20_cycles": 5496.4,
+   "native_cycles": 2680.6
+  },
+  {
+   "layer": 36,
+   "tag": "96 x 512 index merge",
+   "k": 512,
+   "n_local": 512,
+   "g20_cycles": 5496.4,
+   "native_cycles": 2680.6
+  },
+  {
+   "layer": 8,
+   "tag": "96 x 512 index merge",
+   "k": 512,
+   "n_local": 512,
+   "g20_cycles": 5496.4,
+   "native_cycles": 2680.6
+  }
+ ]
+}

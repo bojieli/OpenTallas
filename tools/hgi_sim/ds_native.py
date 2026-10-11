@@ -382,7 +382,7 @@ class Lower:
                             A=MDesc(space="HBM", fmt="FP32", base=(1 << 37) | loc, n=bw, m=8, stride=bw * 4),
                             O=MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * (1 - slot), n=bw, m=8,
                                     stride=HC_BANK)),
-                            tag=f"hc_{nw}.weight_row_prefetch (layer {nL})", family="hc_mixes"), [],
+                            tag=f"hc_{nw}.weight_row_prefetch", family="hc_mixes"), [],
                             [f"HCW{1 - slot}"], hi > lo)
                     else:
                         add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=Bw, O=V("MIXRAW", max(hi - lo, 1),
