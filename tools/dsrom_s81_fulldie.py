@@ -5107,6 +5107,12 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             return
         if side == 'sp':
             vx = m['x_vch'] + 30.0 + HUB_LANE_PITCH * k_[0]
+            if CTRL_ADAPTERS and vx > m['x_vch'] + VCH8 - 30.0:
+                # --ctrl-adapters (s81die-1011/ctrl): the engine command plane adds ~25 narrow sp chains; lane k past the
+                # VCH's E edge ran into the HC column (hb_capture_gather: no station spot at x 17,620).  Overflow lanes
+                # wrap inside the VCH half a pitch off the first pass (stations are placed against occupancy).
+                nl_ = max(1, int((VCH8 - 60.0) // HUB_LANE_PITCH))
+                vx = m['x_vch'] + 30.0 + HUB_LANE_PITCH * ((k_[0] % nl_) + 0.5 * ((k_[0] // nl_) % 2))
         elif side == 'hc':
             vx = m['x_spe'] - 30.0 - HUB_LANE_PITCH * k_[0]
         else:
