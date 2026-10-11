@@ -295,6 +295,13 @@
        128
       ]
      },
+     "e2": {
+      "parent_port": "e2",
+      "parent_bits": [
+       0,
+       128
+      ]
+     },
      "ks4": {
       "parent_port": "ks4",
       "parent_bits": [
@@ -908,6 +915,13 @@
      },
      "e": {
       "parent_port": "e",
+      "parent_bits": [
+       0,
+       128
+      ]
+     },
+     "e2": {
+      "parent_port": "e2",
       "parent_bits": [
        0,
        128
@@ -1527,6 +1541,13 @@
      },
      "e": {
       "parent_port": "e",
+      "parent_bits": [
+       0,
+       128
+      ]
+     },
+     "e2": {
+      "parent_port": "e2",
       "parent_bits": [
        0,
        128
@@ -2188,6 +2209,13 @@
        128
       ]
      },
+     "e2": {
+      "parent_port": "e2",
+      "parent_bits": [
+       0,
+       128
+      ]
+     },
      "ks4": {
       "parent_port": "ks4",
       "parent_bits": [
@@ -2824,6 +2852,11 @@
      "direction": "input",
      "face": "N"
     },
+    "e2": {
+     "bits": 129,
+     "direction": "input",
+     "face": "N"
+    },
     "ks4": {
      "bits": 1102,
      "direction": "output",
@@ -3440,6 +3473,11 @@
      "direction": "input",
      "face": "N"
     },
+    "e2": {
+     "bits": 129,
+     "direction": "input",
+     "face": "N"
+    },
     "ks4": {
      "bits": 1102,
      "direction": "output",
@@ -4021,8 +4059,8 @@
    "to": "hfd_svc_SW_s3.ei",
    "bits": 1041,
    "chains": [
-    "c_is16",
     "c_ni17",
+    "c_is16",
     "c_dd17",
     "c_rs17",
     "c_rs18",
@@ -4262,9 +4300,9 @@
    "to": "hfd_svc_SE_s4.wi",
    "bits": 1206,
    "chains": [
+    "c_no18",
     "c_is18",
     "c_is19",
-    "c_no18",
     "c_cr18",
     "c_cr19",
     "c_sd18",

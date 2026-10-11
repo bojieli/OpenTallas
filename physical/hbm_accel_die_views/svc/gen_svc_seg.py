@@ -68,7 +68,7 @@ def fc_face(po, x0, x1, name=None):
         if e[0] == 'p' and abs(e[1] - x1) < 1.0:
             return 'E'
     return None
-PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2, kc=2, lq=351, lr=294)
+PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2, kc=2, lq=351, lr=294, e2=129)
 # svc-fix 2026-10-10: segments whose ks face needs the group unit's plain port register (ot_svs_grp OPR = 1, +1 row
 # cycle): routed SE_s4 pspr TT -67.35 / -71.17 ps on u_gp5.od -> ks5 (enabled od not pin-anchorable, ~250 ps of wire)
 GRP_OPR = {'hfd_svc_SE_s4', 'hfd_svc_SE_s3', 'hfd_svc_SE_s7'}   # SE_s3: routed u_gp4.ot -> ks4[8] -55.4 ps once phy[2488] is a clock; SE_s7: routed hm0 u_gp7.od[886] -> ks7[897] TT -10.41 (SE_s4 class)
@@ -195,7 +195,7 @@ def ps_ports(P, parent, segs, seg_of, H_um, wants):
                 d = abs(x0 + need / 2 - xc)
                 if best is None or d < best[0]:
                     best = (d, x0, L_, PITCH_N)
-            if best is not None:
+            if best is not None and name != 'e2':      # [svc-ep] e2: the nearest span at either pitch (beside e)
                 break
         assert best is not None, (parent, name, xc, 'no free N-face span in segment', j)
         L_, PITCH_N = best[2], best[3]
@@ -203,13 +203,13 @@ def ps_ports(P, parent, segs, seg_of, H_um, wants):
         wpin = 0.024
         pins = [[f'{name}[{i}]', L_, round(x0 + i * PITCH_N, 4), round(H_um - 0.192, 4), round(x0 + i * PITCH_N + wpin, 4),
                  H_um] for i in range(bits)]
-        d_ = 'in' if name.startswith(('kq', 'kc', 'lq')) else 'out'
+        d_ = 'in' if name.startswith(('kq', 'kc', 'lq', 'e2')) else 'out'
         P[name] = dict(bits=bits, layer=L_, pins=pins, face='N', dir_segments=[[0, bits, d_]],
                        direction='input' if d_ == 'in' else 'output')
         occl[L_] = merged(occl[L_] + [(pins[0][2], pins[-1][4])])
         fk[name] = ({1099: 'out', 1100: 'out', 1101: 'out'} if name.startswith('ks') else
                     {1: 'in'} if name.startswith(('kq', 'kc')) else {350: 'in'} if name == 'lq' else
-                    {293: 'out'} if name == 'lr' else {1: 'out'})
+                    {293: 'out'} if name == 'lr' else {128: 'in'} if name == 'e2' else {1: 'out'})
         PS_NEW[name] = (bits, P[name]['direction'])
 
 
@@ -262,11 +262,14 @@ def plan_family(fam):
     if PS:
         for k in range(8):
             U[f'gp{k}'] = (smx[k], Y_HI)          # beside SM k's line assembler: the c_rs chains end there
-        ps_ports(P, parent, segs, seg_of, H_um, [('ks%d' % k, smx[k]) for k in range(8)] +
+        # [svc-ep] e2 first: the N-face span nearest the e port (both feed the e unit's capture FIFOs directly, no chain)
+        ps_ports(P, parent, segs, seg_of, H_um, ([('e2', ex)] if NEP else []) + [('ks%d' % k, smx[k]) for k in range(8)] +
                  [('kq%d' % k, smx[k]) for k in range(8)] + [('kd', ex)] +
                  ([('kc%d' % k, smx[k]) for k in range(8)] + [('lq', ex), ('lr', ex)] if NEP else []))
         if NEP:
-            U['nep'] = (ex, Y_MID)                # the native endpoint beside the e port, between its lq / lr pins and the PCs
+            # the native endpoint AT its lq / lr pins (their capture registers feed its CDC FIFOs directly); the native
+            # chains carry it to the PCs
+            U['nep'] = ((cx(P['lq']) + cx(P['lr'])) / 2, Y_HI)
     C = []                                            # chains: name, W (payload), src unit, src v, src d, dst unit, dst v, dst d
 
     def ch(name, w, su, sv, sd, du, dv, dd, kind):
@@ -315,7 +318,10 @@ def plan_family(fam):
         for k in range(8):          # the stream's load tag (ATT ld fields, compiler-supplied) to each group unit
             ch(f'c_sg{k}', 13, 'e', 'e_sgv', 'e_sgd', f'gp{k}', f'gp{k}_sgv', f'gp{k}_sgd', 'ps_tag')
         if NEP:     # [svc-ep] native endpoint daisy chains, one hop a PC outward from the endpoint (as c_sd / c_dd)
-            for side, Ls in ps_lists.items():
+            nx_ = U['nep'][0]
+            nep_lists = dict(w=sorted((p for p in range(32) if pcx[p] < nx_), key=lambda p: -pcx[p]),
+                             e=sorted((p for p in range(32) if pcx[p] >= nx_), key=lambda p: pcx[p]))
+            for side, Ls in nep_lists.items():
                 for i, p in enumerate(Ls):
                     so = 'nep' if i == 0 else f'pc{Ls[i-1]}'
                     sw_ = f'nep_o{side}' if i == 0 else f'pc{Ls[i-1]}_oo'
@@ -388,7 +394,7 @@ def plan_family(fam):
                 portions.append(dict(seg=s, N=N, A=A, B=B, d=round(d, 1)))
         c['portions'] = portions
         c['stages'] = sum(p_['N'] for p_ in portions)
-    return dict(ps_lists=ps_lists, fam=fam, parent=parent, rec=rec, g=g, segs=segs, cuts=cuts, U=U, C=C, cross=cross, face=face,
+    return dict(ps_lists=ps_lists, nep_lists=(nep_lists if NEP else {}), fam=fam, parent=parent, rec=rec, g=g, segs=segs, cuts=cuts, U=U, C=C, cross=cross, face=face,
                 KV=KV, IK=IK, wx=wx, arb=arb, smx=smx, H=H_um, W=W_um, seg_of=seg_of)
 
 
@@ -707,7 +713,8 @@ def build(pl):
                 if NEP:
                     decl.append(f'  wire pc{p}_oiv, pc{p}_iiv, pc{p}_k_we, pc{p}_novf; wire [175:0] pc{p}_oid; wire [176:0] pc{p}_oo; '
                                 f'wire [143:0] pc{p}_iid; wire [144:0] pc{p}_io; wire [255:0] pc{p}_k_wdata; wire [31:0] pc{p}_k_wstrb;')
-                    if end:
+                    nsd_ = 'w' if p in pl['nep_lists']['w'] else 'e'
+                    if pl['nep_lists'][nsd_].index(p) == len(pl['nep_lists'][nsd_]) - 1:
                         body.append(f"  assign pc{p}_iiv = 1'b0; assign pc{p}_iid = 144'd0;   // native inward chain end")
                     nx_ = (f', .k_we(pc{p}_k_we), .k_wdata(pc{p}_k_wdata), .k_wstrb(pc{p}_k_wstrb), .oi({{pc{p}_oid, pc{p}_oiv}}), '
                            f'.oo(pc{p}_oo), .ii({{pc{p}_iid, pc{p}_iiv}}), .io(pc{p}_io), .n_ovf(pc{p}_novf)')
@@ -749,7 +756,7 @@ def build(pl):
                 body.append('  ot_svs_w u_w (.ck(c), .rn(rn), .cv(w_cv), .cd(w_cd), .c_take(w_ct), .room(w_room), '
                             '.lane_done(w_ld), .w_v(w_wv), .w_rdy(w_rdy_s), .w_addr(w_addr_s), .w_len(w_len_s), .w_tag(w_tag_s));')
             elif u == 'nep':
-                wl_, el_ = pl['ps_lists']['w'], pl['ps_lists']['e']
+                wl_, el_ = pl['nep_lists']['w'], pl['nep_lists']['e']
                 wm_ = sum(1 << p_ for p_ in wl_)
                 decl.append('  wire [176:0] nep_ow, nep_oe; wire nep_iwv, nep_iev, nep_fault; wire [143:0] nep_iwd, nep_ied;')
                 if not wl_:
@@ -766,8 +773,8 @@ def build(pl):
                     body.append("  assign e_dwok = 1'b0; assign e_dwph = 1'b0;   // no PC west of the e port")
                 if ee:
                     body.append("  assign e_deok = 1'b0; assign e_deph = 1'b0;   // no PC east of the e port")
-                body.append(f'  ot_svs_eps #(.WEMPTY({we}), .EEMPTY({ee})) u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), '
-                            '.e_fclk(e[128]), .ow_v(e_ow), .ok_v(e_ok), .oi_v(e_oi), .o_d(e_od), .bw(e_bw), .bk(e_bk), .bi(e_bi), '
+                body.append(f'  ot_svs_eps #(.WEMPTY({we}), .EEMPTY({ee}){", .E2(1)" if NEP else ""}) u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), '
+                            f'.e_fclk(e[128]), {".e2_d(e2[127:0]), .e2_fclk(e2[128]), " if NEP else ""}.ow_v(e_ow), .ok_v(e_ok), .oi_v(e_oi), .o_d(e_od), .bw(e_bw), .bk(e_bk), .bi(e_bi), '
                             '.sd_v(e_sdv), .sd_d(e_sdd), .dw_ok(e_dwok), .dw_ph(e_dwph), .de_ok(e_deok), .de_ph(e_deph), .kd(kd), '
                             '.sg_v(e_sgv), .sg_d(e_sgd));')
             elif u == 'e':
@@ -843,6 +850,9 @@ def build(pl):
                 # data bits were timed against vclk (v2 routes: -1006 ps).  Data in relative to its own forwarded clock.
                 sdc.append(f'create_clock -name f{bn} -period 833 [get_ports {{{bn}[44]}}]'); cl.append(f'f{bn}')
                 sdc.append(f'for {{set i 0}} {{$i < 44}} {{incr i}} {{ set_input_delay -clock f{bn} 166.6 [get_ports [format {{{bn}[%d]}} $i]] }}')
+            if NEP and bn == 'e2':       # [svc-ep] the ATT KV stream issuer's command port (same format as e)
+                sdc.append('create_clock -name fe2 -period 833 [get_ports {e2[128]}]'); cl.append('fe2')
+                sdc.append('for {set i 0} {$i < 128} {incr i} { set_input_delay -clock fe2 166.6 [get_ports [format {e2[%d]} $i]] }')
             if NEP and bn == 'lq':       # [svc-ep] loader request chain: data relative to its forwarded clock lq[350]
                 sdc.append('create_clock -name flq -period 833 [get_ports {lq[350]}]'); cl.append('flq')
                 sdc.append('for {set i 0} {$i < 350} {incr i} { set_input_delay -clock flq 166.6 [get_ports [format {lq[%d]} $i]] }')

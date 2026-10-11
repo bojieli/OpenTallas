@@ -83,7 +83,7 @@ module hfd_svc_SW_s4 (
   ot_svc_vpipe #(.W(1), .N(1)) c_tb4_0 (.ck(cw), .rst_n(rn), .v(ar4_take), .d(1'b0), .qv(c_tb4_0_v), .q(c_tb4_0_d));
   assign wo[1040:1039] = {c_tb4_0_d, c_tb4_0_v};
   ot_svc_vpipe #(.W(51), .N(1)) c_is16_0 (.ck(cw), .rst_n(rn), .v(ar4_iv[0]), .d(ar4_id[50:0]), .qv(c_is16_0_v), .q(c_is16_0_d));
-  assign wo[51:0] = {c_is16_0_d, c_is16_0_v};
+  assign wo[196:145] = {c_is16_0_d, c_is16_0_v};
   ot_svc_vpipe #(.W(1), .N(2)) c_dn16_1 (.ck(c), .rst_n(rn), .v(wi[1062]), .d(wi[1063:1063]), .qv(c_dn16_1_v), .q(c_dn16_1_d));
   assign dn16_o = c_dn16_1_v;
   ot_svc_vpipe #(.W(51), .N(1)) c_is17_0 (.ck(c), .rst_n(rn), .v(ar4_iv[1]), .d(ar4_id[101:51]), .qv(c_is17_0_v), .q(c_is17_0_d));
@@ -157,7 +157,7 @@ module hfd_svc_SW_s4 (
   assign pc17_oiv = c_no17_1_v;
   assign pc17_oid = c_no17_1_d;
   ot_svc_vpipe #(.W(144), .N(1)) c_ni17_0 (.ck(cw), .rst_n(rn), .v(pc17_io[0]), .d(pc17_io[144:1]), .qv(c_ni17_0_v), .q(c_ni17_0_d));
-  assign wo[196:52] = {c_ni17_0_d, c_ni17_0_v};
+  assign wo[144:0] = {c_ni17_0_d, c_ni17_0_v};
   ot_svc_vpipe #(.W(176), .N(1)) c_no18_0 (.ck(c), .rst_n(rn), .v(pc17_oo[0]), .d(pc17_oo[176:1]), .qv(c_no18_0_v), .q(c_no18_0_d));
   assign pc18_oiv = c_no18_0_v;
   assign pc18_oid = c_no18_0_d;

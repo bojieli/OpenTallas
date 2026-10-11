@@ -25,8 +25,9 @@
 // sectors a cycle).  No protection beyond what the legacy units had (REVIEW_20261009).
 // ---------------------------------------------------------------------------------------------------------------------
 
-module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) (
+module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0, parameter integer E2 = 0) (
   input wire ck, input wire rst, input wire rn, input wire [127:0] e_d, input wire e_fclk,
+  input wire [127:0] e2_d, input wire e2_fclk,            // E2 1 ([svc-ep], lead ruling (a)): the ATT KV stream issuer's port
   output wire ow_v, output wire ok_v, output wire oi_v, output wire [39:0] o_d,
   input wire bw, input wire bk, input wire bi,
   output reg sd_v, output reg [61:0] sd_d,                 // stream descriptor to both PC daisy chains
@@ -34,9 +35,15 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   output wire [1:0] kd,                                    // {forwarded clock, stream done pulse}
   output reg sg_v, output reg [12:0] sg_d);                // the stream's LOAD TAG (ed[83:71], compiler-supplied
                                                            // {ld_mode, ld_bank3, ld_grp8, ld_w2v}) to every group unit
-  wire [126:0] ed; wire e_empty, e_full; wire [2:0] e_fr;
+  wire [126:0] ed, ed1, ed2; wire e_empty, e1_empty, e2_empty, e_full, e2_full; wire [2:0] e_fr, e2_fr;
   reg [127:0] e_f;
   wire e_wck = ~e_fclk;
+  // [svc-ep] E2: two command ports (e: IKS / legacy, e2: ATT KV streams), each its own forwarded-clock capture + two-clock
+  // FIFO; the head taken is e's when e has one, else e2's (plain priority), then the existing rules (one stream running,
+  // one queued; legacy kinds one pending each) -- two streams launched together are SERIALISED, e first
+  wire sel2 = (E2 != 0) && e1_empty && !e2_empty;
+  assign ed = sel2 ? ed2 : ed1;
+  assign e_empty = e1_empty && ((E2 == 0) || e2_empty);
   always @(posedge e_wck or negedge rst) if (!rst) e_f[0] <= 1'b0; else e_f[0] <= e_d[0];
   always @(posedge e_wck) e_f[127:1] <= e_d[127:1];
   wire [1:0] kind = ed[1:0];
@@ -50,7 +57,17 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   wire e_re = !e_empty && ((kind == 2'd3) || (strm ? !spq_v : !pend[kind]));
 `endif
   ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e (.wclk(e_wck), .wrst_n(rst), .we(e_f[0]), .wdata(e_f[127:1]),
-    .full(e_full), .rd_freed(e_fr), .rclk(ck), .rrst_n(rn), .re(e_re), .rdata(ed), .empty(e_empty));
+    .full(e_full), .rd_freed(e_fr), .rclk(ck), .rrst_n(rn), .re(e_re && !sel2), .rdata(ed1), .empty(e1_empty));
+  generate if (E2 != 0) begin : ge2
+    reg [127:0] e2_f;
+    wire e2_wck = ~e2_fclk;
+    always @(posedge e2_wck or negedge rst) if (!rst) e2_f[0] <= 1'b0; else e2_f[0] <= e2_d[0];
+    always @(posedge e2_wck) e2_f[127:1] <= e2_d[127:1];
+    ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e2 (.wclk(e2_wck), .wrst_n(rst), .we(e2_f[0]), .wdata(e2_f[127:1]),
+      .full(e2_full), .rd_freed(e2_fr), .rclk(ck), .rrst_n(rn), .re(e_re && sel2), .rdata(ed2), .empty(e2_empty));
+  end else begin : ne2
+    assign ed2 = 127'd0; assign e2_empty = 1'b1; assign e2_full = 1'b0; assign e2_fr = 3'd0;
+  end endgenerate
   assign ow_v = e_re && (kind == 2'd0);
   assign ok_v = e_re && (kind == 2'd1) && !strm;
   assign oi_v = e_re && (kind == 2'd2) && !strm;

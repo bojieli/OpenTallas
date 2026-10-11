@@ -289,12 +289,23 @@
     end
   end endgenerate
   // e commands on the forwarded e link: W fetches, KV rows, index keys
-  integer ne = 0;
+  integer ne = 0, n_e2pair = 0;
+  reg ev2 = 1'b0; reg [127:1] ed2 = 127'd0;
   always @(posedge fck) begin
-    ev <= 1'b0;
+    ev <= 1'b0; ev2 <= 1'b0;
 `ifdef PS_STREAMS
     if (rst && bench_ready && ps_n < PS_N && (!ps_busy || !ps2_v) && ($urandom % 5 == 0)) begin : sst
       reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; reg [12:0] tag_; integer q;
+      reg [126:0] w_ [0:1]; reg i_ [0:1], n_ [0:1]; reg [14:0] r_ [0:1]; reg [11:0] s_ [0:1]; reg [31:0] k_ [0:1]; reg [12:0] t_ [0:1];
+      integer ns, si, so;
+      // [svc-ep] lead ruling (a): KV streams on e2 (the ATT KV issuer), IK streams on e (the IKS issuer).  NEP_E2_SIMUL
+      // pairs: when idle, a KV (e2) and an IK (e) stream are launched on the SAME edge: the svc must serialise them, e first
+      // (the row checker sees the IK stream's rows first, then the KV stream's, never mixed)
+      ns = 1;
+`ifdef NEP
+      if (!ps_busy && !ps2_v && ps_n % 3 == 1 && ps_n + 2 <= PS_N && (ps_n % 2 == 1 || $test$plusargs("E2_SIMUL_ALL"))) ns = 2;
+`endif
+      for (si = 0; si < ns; si = si + 1) begin
       tag_ = $urandom;
       idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
 `ifdef NEP
@@ -307,15 +318,29 @@
       mask_ = idx_ ? 32'hFFFF_FFFF : m;
       blocks = 1 + $urandom % 120;
       if (idx_) nsec_ = 12'(((17 * blocks) + 31) >> 5);
-      ed <= {1'b1, nocr_, 41'd0, tag_, idx_ ? {1'b0, blocks} : 10'd0, idx_ ? 32'd0 : m, idx_ ? 12'd0 : nsec_, row0_,
-             idx_ ? 2'd2 : 2'd1};
-      ev <= 1'b1; ps_n = ps_n + 1;
-      if (!ps_busy) begin
-        ps_idx = idx_; ps_nocr = nocr_; ps_row0 = row0_; ps_nsec = nsec_; ps_mask = mask_; ps_tag = tag_; ps_seq = ps_seq + 1;
-        for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
-        ps_busy = 1;
-      end else begin
-        ps2_idx = idx_; ps2_nocr = nocr_; ps2_row0 = row0_; ps2_nsec = nsec_; ps2_mask = mask_; ps2_tag = tag_; ps2_v = 1;
+      w_[si] = {1'b1, nocr_, 41'd0, tag_, idx_ ? {1'b0, blocks} : 10'd0, idx_ ? 32'd0 : m, idx_ ? 12'd0 : nsec_, row0_,
+                idx_ ? 2'd2 : 2'd1};
+      i_[si] = idx_; n_[si] = nocr_; r_[si] = row0_; s_[si] = nsec_; k_[si] = mask_; t_[si] = tag_;
+      ps_n = ps_n + 1;
+      end
+      // drive: IK (and every stream without NEP) on e, KV on e2 (NEP)
+      for (si = 0; si < ns; si = si + 1) begin
+`ifdef NEP
+        if (!i_[si]) begin ed2 <= w_[si]; ev2 <= 1'b1; end else
+`endif
+        begin ed <= w_[si]; ev <= 1'b1; end
+      end
+      // bookkeeping in launch order: on a same-edge pair the e (IK) stream launches first
+      for (so = 0; so < ns; so = so + 1) begin
+        si = (ns == 2) ? (i_[0] ? (so == 0 ? 0 : 1) : (so == 0 ? 1 : 0)) : 0;
+        if (!ps_busy) begin
+          ps_idx = i_[si]; ps_nocr = n_[si]; ps_row0 = r_[si]; ps_nsec = s_[si]; ps_mask = k_[si]; ps_tag = t_[si]; ps_seq = ps_seq + 1;
+          for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
+          ps_busy = 1;
+        end else begin
+          ps2_idx = i_[si]; ps2_nocr = n_[si]; ps2_row0 = r_[si]; ps2_nsec = s_[si]; ps2_mask = k_[si]; ps2_tag = t_[si]; ps2_v = 1;
+        end
+        if (ns == 2) n_e2pair = n_e2pair + (so == 0 ? 1 : 0);
       end
     end else
 `endif
@@ -377,6 +402,10 @@
       if (exp_on[k][j]) $display("MISSING SM=%0d TAG=%0d W=%0d ADDR=%h",k,j,exp_w[k][j],exp_a[k][j]);
 `ifdef NEP
     nep_report();
+`endif
+`ifdef NEP
+    $display("NEP_E2 same-edge e / e2 stream pairs serialised: %0d", n_e2pair);
+    if (n_e2pair == 0 && PS_N > 0) begin err = err + 1; $display("ERR no same-edge e / e2 stream pair was exercised"); end
 `endif
     $display("SVC_BENCH lines=%0d kv=%0d ik=%0d e=%0d ps_streams=%0d ps_rows=%0d ps_kd=%0d errors=%0d", done_lines, kv_got,
              ik_got, ne, ps_n, ps_rows, ps_kd, err);

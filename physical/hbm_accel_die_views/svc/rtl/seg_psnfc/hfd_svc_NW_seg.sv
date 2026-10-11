@@ -3,6 +3,7 @@
 module hfd_svc_NW_seg (
     input wire [0:0] ck,
     input wire [128:0] e,
+    input wire [128:0] e2,
     output wire [1025:0] ik,
     input wire [1:0] kc0,
     input wire [1:0] kc1,
@@ -68,7 +69,7 @@ module hfd_svc_NW_seg (
   hfd_svc_SW_s0 u_s0 (.l0(lsm20), .q0(qsm20), .l1(lsm16), .q1(qsm16), .ks0(ks0), .ks1(ks1), .kq0(kq0), .kq1(kq1), .kc0(kc0), .kc1(kc1), .phy(phy[3625:0]), .ck(ck), .rst(rst), .cke(ck), .eo(xr0), .ei(xl0));
   hfd_svc_SW_s1 u_s1 (.kv(kv), .l2(lsm21), .q2(qsm21), .ik(ik), .ks2(ks2), .kq2(kq2), .kc2(kc2), .phy(phy[7831:3626]), .ck(ck), .rst(rst), .cke(ck), .ckw(ck), .wi(xr0), .wo(xl0), .eo(xr1), .ei(xl1));
   hfd_svc_SW_s2 u_s2 (.l3(lsm17), .q3(qsm17), .ks3(ks3), .kq3(kq3), .kc3(kc3), .phy(phy[10319:7832]), .ck(ck), .rst(rst), .cke(ck), .ckw(ck), .wi(xr1), .wo(xl1), .eo(xr2), .ei(xl2));
-  hfd_svc_SW_s3 u_s3 (.l4(lsm22), .q4(qsm22), .e(e), .ks4(ks4), .kq4(kq4), .kd(kd), .kc4(kc4), .lq(lq), .lr(lr), .phy(phy[12907:10320]), .ck(ck), .rst(rst), .cke(ck), .ckw(ck), .wi(xr2), .wo(xl2), .eo(xr3), .ei(xl3));
+  hfd_svc_SW_s3 u_s3 (.l4(lsm22), .q4(qsm22), .e(e), .e2(e2), .ks4(ks4), .kq4(kq4), .kd(kd), .kc4(kc4), .lq(lq), .lr(lr), .phy(phy[12907:10320]), .ck(ck), .rst(rst), .cke(ck), .ckw(ck), .wi(xr2), .wo(xl2), .eo(xr3), .ei(xl3));
   hfd_svc_SW_s4 u_s4 (.phy(phy[14773:12908]), .ck(ck), .rst(rst), .cke(ck), .ckw(ck), .wi(xr3), .wo(xl3), .eo(xr4), .ei(xl4));
   hfd_svc_SW_s5 u_s5 (.l5(lsm18), .q5(qsm18), .ks5(ks5), .kq5(kq5), .kc5(kc5), .phy(phy[17261:14774]), .ck(ck), .rst(rst), .cke(ck), .ckw(ck), .wi(xr4), .wo(xl4), .eo(xr5), .ei(xl5));
   hfd_svc_SW_s6 u_s6 (.l6(lsm23), .q6(qsm23), .ks6(ks6), .kq6(kq6), .kc6(kc6), .phy(phy[19749:17262]), .ck(ck), .rst(rst), .cke(ck), .ckw(ck), .wi(xr5), .wo(xl5), .eo(xr6), .ei(xl6));

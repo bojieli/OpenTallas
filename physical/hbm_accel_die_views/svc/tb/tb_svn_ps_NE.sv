@@ -23,7 +23,7 @@ module tb_svn_ps_NE;
   wire [43:0] tq7; assign tq7[42:0] = {qd[7], qv[7]}; assign qrdy[7] = tq7[43];
   wire [1098:0] tl7; assign ln[7] = tl7;
   wire [1040:0] tkv; wire [1025:0] tik; assign kvo = tkv[1037:0]; assign iko = tik[1023:0];
-  hfd_svc_NE_seg_ps dut (.ck(ck), .rst(rst), .e({fck, ed, ev}), .kv(tkv), .ik(tik), .phy(phy), .kd(kd), .ks0(ks[0]), .kq0(kqf[0]), .ks1(ks[1]), .kq1(kqf[1]), .ks2(ks[2]), .kq2(kqf[2]), .ks3(ks[3]), .kq3(kqf[3]), .ks4(ks[4]), .kq4(kqf[4]), .ks5(ks[5]), .kq5(kqf[5]), .ks6(ks[6]), .kq6(kqf[6]), .ks7(ks[7]), .kq7(kqf[7]), .kc0(kcf[0]), .kc1(kcf[1]), .kc2(kcf[2]), .kc3(kcf[3]), .kc4(kcf[4]), .kc5(kcf[5]), .kc6(kcf[6]), .kc7(kcf[7]), .lq(lq_w), .lr(lr_w),
+  hfd_svc_NE_seg_ps dut (.ck(ck), .rst(rst), .e({fck, ed, ev}), .e2({fck, ed2, ev2}), .kv(tkv), .ik(tik), .phy(phy), .kd(kd), .ks0(ks[0]), .kq0(kqf[0]), .ks1(ks[1]), .kq1(kqf[1]), .ks2(ks[2]), .kq2(kqf[2]), .ks3(ks[3]), .kq3(kqf[3]), .ks4(ks[4]), .kq4(kqf[4]), .ks5(ks[5]), .kq5(kqf[5]), .ks6(ks[6]), .kq6(kqf[6]), .ks7(ks[7]), .kq7(kqf[7]), .kc0(kcf[0]), .kc1(kcf[1]), .kc2(kcf[2]), .kc3(kcf[3]), .kc4(kcf[4]), .kc5(kcf[5]), .kc6(kcf[6]), .kc7(kcf[7]), .lq(lq_w), .lr(lr_w),
     .qsm28(tq0), .lsm28(tl0), .qsm24(tq1), .lsm24(tl1), .qsm29(tq2), .lsm29(tl2), .qsm25(tq3), .lsm25(tl3), .qsm30(tq4), .lsm30(tl4), .qsm26(tq5), .lsm26(tl5), .qsm31(tq6), .lsm31(tl6), .qsm27(tq7), .lsm27(tl7));
   // [svc-ep] N8 stray-credit / overflow faults of every group unit and the endpoint fault
   reg nep_ff = 0;
