@@ -522,3 +522,34 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
     wire unused_ok = &{1'b0, bwv_s[3:1], q_cr_s[3:1], tx_v_s[1], tx_v_s[2], tx_v_s[3], cr_o_s[1], cr_o_s[2], cr_o_s[3],
                        xl_cr_s[1], xl_cr_s[2], xl_cr_s[3], p_cr_s[1], p_cr_s[2], p_cr_s[3], xl_cr_s[0][1:0]};
 endmodule
+
+// ---- route masters (one per hardened variant; the composition instantiates the parameterised modules above)
+module dsfd_coll_ces0 (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [562:0] bw_d,
+    output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i);
+    dsfd_coll_ces #(.S(0)) u (.*);
+endmodule
+module dsfd_coll_cesn (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [511:0] bw_d,
+    output wire [1:0] lf, output wire pe_o);
+    dsfd_coll_ces #(.S(1)) u (.*, .pe_i(3'd0));
+endmodule
+module dsfd_coll_cele (input wire ck, input wire rs, input wire e_en, output wire f_lo_v, input wire f_lo_r,
+    output wire [552:0] f_lo_d, input wire f_li_v, output wire f_li_r, input wire [552:0] f_li_d, input wire [2:0] x_flt,
+    output wire [3:0] lf, input wire tx_v, input wire [4*163-1:0] tx_d, output wire tx_rdy, input wire [1:0] cr_o,
+    output wire [1:0] cr_i, output wire rx_v, output wire [546:0] rx_d);
+    dsfd_coll_cel #(.KIND(0)) u (.*, .q_v(1'b0), .q_d(553'd0), .q_cr(), .p_v(), .p_d(), .p_cr(1'b0));
+endmodule
+module dsfd_coll_celp (input wire ck, input wire rs, output wire f_lo_v, input wire f_lo_r,
+    output wire [552:0] f_lo_d, input wire f_li_v, output wire f_li_r, input wire [552:0] f_li_d, input wire [2:0] x_flt,
+    output wire [3:0] lf, input wire q_v, input wire [552:0] q_d, output wire q_cr, output wire p_v,
+    output wire [168+3*129:0] p_d, input wire p_cr);
+    dsfd_coll_cel #(.KIND(1)) u (.*, .e_en(1'b0), .tx_v(1'b0), .tx_d({4*163{1'b0}}), .tx_rdy(), .cr_o(2'b00), .cr_i(),
+        .rx_v(), .rx_d());
+endmodule
