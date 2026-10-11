@@ -38,7 +38,7 @@ CASES = [  # name, msgs, words, gap %, modes, consumer %
     ("qwen_argmax_1w", 1, 1, 0, "g", 100),
 ]
 MUT = {"trunc": (".i_d(i_coll_seq), .i_cr(), .w_fault(wf_cq)", ".i_d({i_coll_seq[WCQ-1:1], 1'b0}), .i_cr(), .w_fault(wf_cq)"),
-       "credit": ("ocr_q <= o_coll_seq_v;", "ocr_q <= 1'b0;")}
+       "credit": ("ocr_q <= x_o_coll_seq_v;", "ocr_q <= 1'b0;")}
 
 
 def build(w: Path, mode: str) -> Path:
