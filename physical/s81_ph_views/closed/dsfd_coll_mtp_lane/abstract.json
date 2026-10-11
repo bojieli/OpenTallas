@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_coll_mtp_lane",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/qf-mtpl-pdn-0cd3d2b9c-tc-hm10-b/routes/qf_mtpl_pdn_0cd3d2b9c_tc_hm10_b/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qf-mtpl-pdn-0cd3d2b9c-tc-hm10-b/routes/qf_mtpl_pdn_0cd3d2b9c_tc_hm10_b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qf-mtpl-pdn-0cd3d2b9c-tc-hm10-b/routes/qf_mtpl_pdn_0cd3d2b9c_tc_hm10_b/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qf-mtpl-pdn-0cd3d2b9c-tc-hm10-b/routes/qf_mtpl_pdn_0cd3d2b9c_tc_hm10_b/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qf-mtpl-pdn-0cd3d2b9c-tc-hm10-b/routes/qf_mtpl_pdn_0cd3d2b9c_tc_hm10_b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qf-mtpl-pdn-0cd3d2b9c-tc-hm10-b/routes/qf_mtpl_pdn_0cd3d2b9c_tc_hm10_b/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/qf-mtpl-pdn-0cd3d2b9c-tc-hm10-b/routes/qf_mtpl_pdn_0cd3d2b9c_tc_hm10_b/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_coll_mtp_lane.lef": "34409933491705b0214c21f7df1a923db556d4f38f3f48818d138994c0ab182a",
+    "dsfd_coll_mtp_lane_ff.lib": "e5af43d80ac7a3687ff73c6dd3e9c92174705991a5f372ca95a97d7362b9fcd6",
+    "dsfd_coll_mtp_lane_ss.lib": "5ca45177ca9c3cf18c5e6c89da1688000c82a637c619dcb842b800603184e690"
+  },
+  "ok": true
+}
