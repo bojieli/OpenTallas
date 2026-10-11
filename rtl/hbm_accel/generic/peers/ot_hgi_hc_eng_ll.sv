@@ -331,7 +331,7 @@ module ot_hgi_hc_ctl_ll #(
     parameter integer D   = 5120,
     parameter integer LQ  = 32,
     parameter integer FD  = 64,
-    parameter integer RL  = 4,
+    parameter integer RL  = 10,
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -585,7 +585,7 @@ module ot_hgi_hc_eng_ll #(
     parameter integer D   = 5120,
     parameter integer LQ  = 32,
     parameter integer FD  = 64,
-    parameter integer RL  = 4,
+    parameter integer RL  = 10,
     parameter integer MUT = 0
 ) (
     input  wire              clk,

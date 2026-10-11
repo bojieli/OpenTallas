@@ -571,7 +571,7 @@ module ot_hgi_hc_eng #(
     parameter integer FD  = 64,
     parameter integer MUT = 0,
     parameter integer LL  = 0,           // 1: the lane-local build (ot_hgi_hc_eng_ll.sv; compiler rule: A / B / O at one bank phase)
-    parameter integer RL  = 4            // LL: relay stages each way between the top and a lane
+    parameter integer RL  = 10           // LL: relay stages (500 um a stage over the 4.6 mm slot) each way between the top and a lane
 ) (
     input  wire              clk,
     input  wire              rst_n,
