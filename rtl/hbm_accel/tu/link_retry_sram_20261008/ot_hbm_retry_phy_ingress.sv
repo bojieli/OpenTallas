@@ -12,6 +12,10 @@ module ot_hbm_retry_phy_ingress #(
  // ses_q -> re != session (24 b) -> 4,360 head D enables.  A rejected response lands in the slot past the tail, which
  // is never valid (the tail does not advance and the fault is sticky), so the delivered stream is unchanged.
  parameter HWU=0,
+ // HREP (tu-retry-1011, default 0): the head read pointer is replicated per RS-bit slice of the record (keep_hierarchy
+ // copies of one next-state, ot_hbm_tu_rep_q), so each copy selects RS bits of the 8:1 head mux.  cp-9e7cf26ca-b
+ // post-CTS: u_ingress.hp -> 545 x 8:1 select buffer tree (510 ps) -> skid m0/m1 -41 ps.  Cycle-exact (copies = hp).
+ parameter HREP=0, RS=64,
  parameter HW=$clog2(HEAD),CW=$clog2(HEAD)+1
 )(
  input wire clk,rst_n,input wire[EW-1:0]session,
@@ -26,9 +30,25 @@ module ot_hbm_retry_phy_ingress #(
  assign debt=wseq-consumed;
  assign in_ready=!fault && debt<DEPTH;
  assign out_valid=!fault && hn!=0;
- assign out_data=head[hp];
  wire push=in_valid && in_ready;
  wire pop=out_valid && out_ready;
+ generate if(HREP)begin:g_hrep
+  localparam integer NS=(W+RS-1)/RS;
+`ifdef OT_TU_HREP_MUT
+  wire[HW-1:0]hp_n=hp;                   // negative control: the copies never advance with a pop
+`else
+  wire[HW-1:0]hp_n=pop ? hp+1'b1 : hp;   // = hp's update (pop implies !fault)
+`endif
+  for(genvar k=0;k<NS;k=k+1)begin:g_s
+   localparam integer LO=k*RS, WD=(W-LO<RS) ? W-LO : RS;
+   wire[HW-1:0]hq;
+   ot_hbm_tu_rep_q #(.W(HW)) u_rep(.clk(clk),.rst_n(rst_n),.d(hp_n),.q(hq));
+   wire[W-1:0]hd=head[hq];
+   assign out_data[LO+:WD]=hd[LO+:WD];
+  end
+ end else begin:g_hdir
+ assign out_data=head[hp];
+ end endgenerate
  wire fetch=!fault && issued!=committed && reserved<HEAD;
  wire ov,ce,ue;wire[W-1:0]rd;wire[SW-1:0]rs;wire[EW-1:0]re;
  ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.NOEPOCH(NOEPOCH),.MUXREG(MUXREG)) u_memory(
