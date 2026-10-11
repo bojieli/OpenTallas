@@ -1041,7 +1041,8 @@ module ot_qfd_tt_ctlm_i #(
     parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0,
     parameter integer MEREG = 0,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 0,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
-    parameter integer PCUT = 0    // el1011-q-seq: exact controller path cuts (ctrl_pcut)
+    parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)
+    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud)
 ) (
     input  wire clk, input wire rst_n,
     // token start, program writes (the program-store copy), the SU snapshot, KV / supply readiness
@@ -1067,6 +1068,14 @@ module ot_qfd_tt_ctlm_i #(
 );
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
+    wire kv_ok_c, kvwd_c;   // AUD: pin flops (kv_ok / kv_write_drained announced one edge ahead)
+    generate if (AUD != 0) begin : g_kvreg
+        reg kv_ok_q, kvwd_q;
+        always @(posedge clk) begin kv_ok_q <= kv_ok; kvwd_q <= kv_write_drained; end
+        assign kv_ok_c = kv_ok_q; assign kvwd_c = kvwd_q;
+    end else begin : g_kvdir
+        assign kv_ok_c = kv_ok; assign kvwd_c = kv_write_drained;
+    end endgenerate
     (* keep = "true" *) wire [8-1:0] rsv;   // RRG: reset copies (el1011-q-seq)
     wire [8-1:0] rrv;                      // the raw-port users: rsv under RRG, else rst_n
     generate if (RRG != 0 && IS > 0) begin : g_rrg
@@ -1216,7 +1225,7 @@ module ot_qfd_tt_ctlm_i #(
         .kv_we(),
         .kv_waddr(),
         .kv_wdata(),
-        .kv_write_drained(kv_write_drained),
+        .kv_write_drained(kvwd_c),
         .kv_write_flush(),
         .va_re(),
         .va_addr(),
@@ -1255,7 +1264,7 @@ module ot_qfd_tt_ctlm_i #(
         .kvd_nout(kvd_nout),
         .kvd_kindk(kvd_kindk),
         .kvd_pos(kvd_pos),
-        .kv_ok(kv_ok),
+        .kv_ok(kv_ok_c),
         .wrom_su(),
         .wd_v(),
         .wd_wbase(),
@@ -1412,7 +1421,7 @@ module ot_qfd_tt_ctlm_i #(
     ot_hdc_delay #(.W(XW + 18), .D(OS), .RESET(1)) u_os_snap (.clk(clk), .rst_n(rsv[4]), .d({me_acc, u_me_idle, u_me_progress, m_fin}),
         .q({me_acc_o, me_idle_o, me_prog_o, m_fin_o}));
     ot_hdc_delay #(.W(18 + 32), .D(OS)) u_os_f (.clk(clk), .rst_n(rsv[5]), .d({m_fidx, m_fval}), .q({m_fidx_o, m_fval_o}));
-    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS)) u_tt (
+    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR((AUD != 0) ? 0 : 1), .RDMEM(AUD)) u_tt (
         .clk(c_me_clk), .rst_n(rsv[0]), .up_fault(up_fault), .land_cnt(land_cnt), .go(u_me_go), .ready(u_me_ready),
         .idle(u_me_idle), .i_nout(u_me_i_nout), .i_tiles(u_me_i_tiles), .i_k(u_me_i_k), .i_wsrc(u_me_i_wsrc), .i_wbase(u_me_i_wbase), .i_ts(u_me_i_ts), .i_ks(u_me_i_ks), .i_js(u_me_i_js), .i_xbase(u_me_i_xbase), .i_xks(u_me_i_xks), .i_xjs(u_me_i_xjs), .i_xcs(u_me_i_xcs), .i_jsh(u_me_i_jsh), .i_split(u_me_i_split), .i_wcs(u_me_i_wcs), .i_round(u_me_i_round), .i_obase(u_me_i_obase), .i_ots(u_me_i_ots), .i_ojs(u_me_i_ojs), .i_mmode(u_me_i_mmode), .i_oen(u_me_i_oen), .i_amax(u_me_i_amax), .i_rmax(u_me_i_rmax), .i_mbase(u_me_i_mbase),
         .wrom_re(u_me_wrom_re), .wrom_addr(u_me_wrom_addr), .kv_re(),

@@ -12,7 +12,8 @@ module tb_qfd_tt_ctlm_i_psram;
     parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50, TW = 400;   // TW: cycles per token window
     parameter integer U1_PSRAM = 1, U1_HQ2 = 0;
     parameter integer U1_MEREG = 0, U1_RRG = 0, MOK = 0, U1_PCUT = 0;
-    parameter integer PCOV = 0;   // el1011-q-seq: 1 = ME ops with DYN_TTILES (valid splits) and small chase targets (PCUT coverage)   // el1011-q-seq: u1 registered ME enable / replicated reset; MOK 1: random me_mem_ok (u1 sees it 2 edges ahead)
+    parameter integer PCOV = 0;
+    parameter integer U1_AUD = 0;   // el1011-q-seq: u1 textbook-audit rebuild (kv_ok / kv_write_drained one edge ahead for u1)   // el1011-q-seq: 1 = ME ops with DYN_TTILES (valid splits) and small chase targets (PCUT coverage)   // el1011-q-seq: u1 registered ME enable / replicated reset; MOK 1: random me_mem_ok (u1 sees it 2 edges ahead)
     reg clk = 0, rst_n = 1;
     initial #0.1 rst_n = 0;
     always #0.5 clk = ~clk;
@@ -37,6 +38,9 @@ module tb_qfd_tt_ctlm_i_psram;
     reg  me_mem_ok = 0;
     reg  mo_d1 = 1, mo_u0 = 1;   // el1011-q-seq: u0 sees me_mem_ok two edges after u1
     always @(posedge clk) begin mo_d1 <= me_mem_ok; mo_u0 <= mo_d1; end
+    reg kv_d1 = 1, kvwd_d1 = 1;   // u0 sees kv_ok / kv_write_drained one edge after u1 when U1_AUD
+    always @(posedge clk) begin kv_d1 <= kv_ok; kvwd_d1 <= kv_write_drained; end
+    wire kv_u0 = (U1_AUD != 0) ? kv_d1 : kv_ok, kvwd_u0 = (U1_AUD != 0) ? kvwd_d1 : kv_write_drained;
     reg  up_fault = 0;
     reg [15:0] land_cnt = 0;
     reg  x_rdy = 0;
@@ -94,8 +98,8 @@ module tb_qfd_tt_ctlm_i_psram;
         .x_oidle(x_oidle),
         .x_oprog(x_oprog),
         .x_orows(x_orows),
-        .kv_ok(kv_ok),
-        .kv_write_drained(kv_write_drained),
+        .kv_ok(kv_u0),
+        .kv_write_drained(kvwd_u0),
         .me_mem_ok(mo_u0),
         .up_fault(up_fault),
         .land_cnt(land_cnt),
@@ -141,7 +145,7 @@ module tb_qfd_tt_ctlm_i_psram;
         .mx_addr(mx_addr_0),
         .mx_mask(mx_mask_0),
         .mx_data(mx_data_0));
-    ot_qfd_tt_ctlm_i #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .MEREG(U1_MEREG), .RRG(U1_RRG), .PCUT(U1_PCUT)) u1 (
+    ot_qfd_tt_ctlm_i #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .MEREG(U1_MEREG), .RRG(U1_RRG), .PCUT(U1_PCUT), .AUD(U1_AUD)) u1 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .token(token),

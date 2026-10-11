@@ -1330,6 +1330,32 @@ def ctlm_rrg(t: str) -> str:
     return head + tile
 
 
+def ctlm_aud(t: str) -> str:
+    """el1011-q-seq textbook-audit rebuild (AUD 1): the tree top u_tt without the unobserved per-port x_re / x_addr
+    generators (XADDR 0: 62.7 k flops, CSA-row nets of fan-out 2-4 k) and with its tag delay lines in SRAM (RDMEM 1:
+    u_tag / u_pretag, 51.5 k flops); kv_ok / kv_write_drained pin-flopped (the supply announces them one edge ahead,
+    the MEREG pattern; ctlm_i-fpamr-811 input kv_ok -> d_chase_n -1,148)."""
+    i = t.index("module ot_qfd_tt_ctlm_i #(")
+    head, tile = t[:i], t[i:]
+    tile = one(tile, "    parameter integer PCUT = 0    // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n) (",
+               "    parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n"
+               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud)\n) (")
+    tile = one(tile, "        .kv_write_drained(kv_write_drained),", "        .kv_write_drained(kvwd_c),")
+    tile = one(tile, "        .kv_ok(kv_ok),", "        .kv_ok(kv_ok_c),")
+    tile = one(tile, "    (* keep = \"true\" *) wire [8-1:0] rsv;",
+               "    wire kv_ok_c, kvwd_c;   // AUD: pin flops (kv_ok / kv_write_drained announced one edge ahead)\n"
+               "    generate if (AUD != 0) begin : g_kvreg\n"
+               "        reg kv_ok_q, kvwd_q;\n"
+               "        always @(posedge clk) begin kv_ok_q <= kv_ok; kvwd_q <= kv_write_drained; end\n"
+               "        assign kv_ok_c = kv_ok_q; assign kvwd_c = kvwd_q;\n"
+               "    end else begin : g_kvdir\n"
+               "        assign kv_ok_c = kv_ok; assign kvwd_c = kv_write_drained;\n"
+               "    end endgenerate\n"
+               "    (* keep = \"true\" *) wire [8-1:0] rsv;")
+    tile = one(tile, ".SPRE(2), .IS(0), .OS(OS)) u_tt (", ".SPRE(2), .IS(0), .OS(OS), .XADDR((AUD != 0) ? 0 : 1), .RDMEM(AUD)) u_tt (")
+    return head + tile
+
+
 def emit_tt_ctlm_i(psram: bool = True) -> str:
     """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller (+ HQ2 FQ_HEAD 2/3 in the controller); psram: the
     PSRAM / PMUT / HQ2 tile parameters (fe-push-qwen-1010 F1, defaults 0 = the flop-store tile); psram=False (--no-psram)
@@ -1344,7 +1370,7 @@ def emit_tt_ctlm_i(psram: bool = True) -> str:
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
     if psram:
-        t = ctlm_rrg(ctlm_mereg(ctrl_pcut(t)))
+        t = ctlm_aud(ctlm_rrg(ctlm_mereg(ctrl_pcut(t))))
     return t
 
 
