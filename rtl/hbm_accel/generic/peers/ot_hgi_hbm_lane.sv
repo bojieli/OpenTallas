@@ -86,6 +86,7 @@ module ot_hgi_hc_die #(
     parameter integer XMACRO = 1,
     parameter integer PMAX = 8,
     parameter integer MUT_MP = 0,
+    parameter integer MUT_POST = 0,        // bench mutant: HC post pre without + hc_eps (plumbed to u_hc; synthesis unchanged)
     parameter integer WVM = 1,             // x staging over the W-group wide VM read lanes (client 2)
     parameter integer WLQ = 24,
     parameter integer WD = 8,
@@ -118,7 +119,7 @@ module ot_hgi_hc_die #(
     localparam integer TG = 4 + $clog2(RMAX) + ((W > 32) ? $clog2(W / 32) : 0);   // = the unit's tag width
     wire [HL-1:0] hq_v, hq_rdy, hr_v; wire [HL*35-1:0] hq_addr; wire [HL*3-1:0] hq_len; wire [HL*TG-1:0] hq_tag, hr_tag;
     wire [HL*2-1:0] hr_beat; wire [HL*256-1:0] hr_data;
-    ot_hgi_hc_unit #(.W(W), .RMAX(RMAX), .WMACRO(WMACRO), .XMACRO(XMACRO), .PMAX(PMAX), .MUT_MP(MUT_MP), .WVM(WVM), .WLQ(WLQ), .WD(WD), .MUT_WV(MUT_WV), .HL(HL), .SPL(SPL)) u_hc (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(HC_EPS), .rec_v(rec_v),
+    ot_hgi_hc_unit #(.W(W), .RMAX(RMAX), .WMACRO(WMACRO), .XMACRO(XMACRO), .PMAX(PMAX), .MUT_MP(MUT_MP), .MUT_POST(MUT_POST), .WVM(WVM), .WLQ(WLQ), .WD(WD), .MUT_WV(MUT_WV), .HL(HL), .SPL(SPL)) u_hc (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(HC_EPS), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_a(rec_a), .rec_b(rec_b), .rec_o(rec_o), .rec_n_a(rec_n_a),
         .rec_n_o(rec_n_o), .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted), .vmq(vmq), .vmr(vmr),
         .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag),
