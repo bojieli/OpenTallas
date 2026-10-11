@@ -82,10 +82,10 @@ module tb_hgi_fused_station;
         if (rst_n && ret[2]) nf = nf + 1;
         if (!rst_n) credit <= 1; else if (ret[1] || ret[2]) credit <= 1; else if (rec[0]) credit <= 0;
     end
-    // progress watchdog: no retire / VM traffic for 200,000 edges while a case runs = hang: dump the station and FAIL
+    // progress watchdog: no record retire for 1,000,000 edges while a case runs = hang: dump the station and FAIL
     integer last_prog = 0; reg running = 0;
-    always @(posedge clk) if (!running || ret[1] || ret[2] || xr[0] || fq[337] || mq[337] || qq[337] || wup[0] || rup[0]) last_prog = cyc;
-    always @(posedge clk) if (running && cyc - last_prog > 200000) begin
+    always @(posedge clk) if (!running || ret[1] || ret[2]) last_prog = cyc;   // a held request is not progress: only a record retire is
+    always @(posedge clk) if (running && cyc - last_prog > 1000000) begin
         $display("ERR hang: fused st %0d mph %0d own %0d fifo %0d mv_v %0d mv_rdy %0d credit %0d ret %b rup0 %0d wup0 %0d rgnt %b wgnt %b k_v %0d inflight %0d k %0d",
                  dut.u_fs.u_f.st, dut.u_fs.mph, dut.u_fs.own, dut.u_fs.fn, dut.u_fs.mv_v, dut.u_fs.mv_rdy, credit, ret, rup[0], wup[0],
                  rgnt, wgnt, k_v, dut.u_fs.u_cl.inf, k);
