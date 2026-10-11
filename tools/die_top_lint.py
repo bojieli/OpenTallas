@@ -2273,12 +2273,11 @@ def margin(die, m):
             if die == 'qwen_rom' and 'vm' in _QW:
                 # qwendie-1011: far-side against the load's actual pin (generator pin map), not the load block's centre
                 v_, m_, B_ = _QW['vm']
-                pin = B_._pin_pos(v_, m_)
-                port = {(bid, i): p for bid, _, _, eps in m['buses'] for i, p in eps[1:]}
-                lp = lambda bid, ld: pin(ld, port[(bid, ld)]) if (bid, ld) in port else None   # noqa: E731
+                # (fp_margin_lint pin_pt(inst, port), hbmdie-1011's interface for the same rule)
+                lp = B_._pin_pos(v_, m_)
             return FPL.die_margin(m['insts'], [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
                                   {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
-                                  reach_um=504.0, sliver_um=12.0, load_pin=lp)
+                                  reach_um=504.0, sliver_um=12.0, pin_pt=lp)
     except Exception as ex:  # noqa: BLE001 - a lint add-on must not hide the connectivity findings
         return dict(verdict='ERROR', error=f'{type(ex).__name__}: {ex}')
     return dict(verdict='N/A')
