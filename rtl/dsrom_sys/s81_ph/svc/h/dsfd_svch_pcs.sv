@@ -8,7 +8,8 @@
 //   B lane  (window stream)  same
 //   G lane  (quadrant G hub) request receiver FIFO (credits out), responses on a credit lane to the hub, write
 //                            completions as a pulse vector to the hub
-// Every incoming valid-only signal / credit is captured by a pin flop; every output leaves a flop.
+// Every incoming signal (lanes, credits, the PC face's responses / rk / wd) is captured by a pin flop; every output
+// leaves a flop.
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_svch_pcs #(
     parameter integer QID = 0,
@@ -49,6 +50,10 @@ module dsfd_svch_pcs #(
         if (!rn) begin aqv <= 0; bqv <= 0; gqv <= 0; arc <= 0; brc <= 0; grc <= 0; end
         else begin aqv <= aq_v[0]; bqv <= bq_v[0]; gqv <= gq_v[0]; arc <= ar_c[0]; brc <= br_c[0]; grc <= gr_c[0]; end
     always @(posedge clk) begin aqd <= aq_d; bqd <= bq_d; gqd <= gq_d; end
+    // PC-face pin flops (the ctrl response / credit / write-done side; +1 cycle, credit round trip +1)
+    reg pk, pw, pv; reg [255:0] pdat; reg [16:0] ptag; reg [3:0] pbeat;
+    always @(posedge clk or negedge rn) if (!rn) begin pk <= 0; pw <= 0; pv <= 0; end else begin pk <= qrk[0]; pw <= qwd[0]; pv <= qrv[0]; end
+    always @(posedge clk) begin pdat <= qr_data; ptag <= qr_tag; pbeat <= qr_beat; end
     wire a_v, a_r, b_v, b_r, g_v, g_r, ova, ovb, ovg; wire [49:0] a_d; wire [45:0] b_d; wire [343:0] g_d;
     ot_s81_svch_crx #(.W(50), .DEPTH(DA)) u_arx (.clk(clk), .rst_n(rn), .i_v(aqv), .i_d(aqd), .o_v(a_v), .o_r(a_r), .o_d(a_d),
         .c_out(aq_c[0]), .ovf(ova));
@@ -62,7 +67,7 @@ module dsfd_svch_pcs #(
         .a_v(a_v), .a_r(a_r), .a_d(a_d), .ar_v(ar_v), .ar_d(ar_d), .ar_c(arc),
         .b_v(b_v), .b_r(b_r), .b_d(b_d), .br_v(br_v), .br_d(br_d), .br_c(brc),
         .g_v(g_v), .g_r(g_r), .g_d(g_d), .go_v(go_v), .go_r(go_r), .go_d(go_d), .gwd(gwd),
-        .rq(qrq), .rk(qrk), .rv(qrv), .r_tag(qr_tag), .r_beat(qr_beat), .r_data(qr_data), .wd(qwd),
+        .rq(qrq), .rk(pk), .rv(pv), .r_tag(ptag), .r_beat(pbeat), .r_data(pdat), .wd(pw),
         .fault(pf), .fault_code(pfc));
     ot_s81_svch_ctx #(.W(276), .DEPTH(DG)) u_gtx (.clk(clk), .rst_n(rn), .i_v(go_v), .i_r(go_r), .i_d(go_d),
         .o_v(gr_v[0]), .o_d(gr_d), .c_in(grc));
