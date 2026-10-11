@@ -3085,6 +3085,9 @@ def build_r8(variant=None):
         # slab from the VM (hidden-row reads, x beats to the seed elements, program start)
         centre.insert(centre.index('collective'), 'seedl')
         centre_area['seedl'] = up(SEEDL_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
+        if HROW:   # the main-hidden row store (seed client memory) between the VM and the seed launcher
+            centre.insert(centre.index('seedl'), 'hrow')
+            centre_area['hrow'] = up(HROW_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
     if DRAFT_SIDE == 'A':
         # MD-2 P2 (mtp-draftdie 2026-10-09): the selected-path transport (ot_mtp_p2_prefix_path: PRIMARY_SHARED1
         # 9-SRAM ordered transport + 3-SRAM 16-lane A-prefix + native publisher) on the A die of every draft row
@@ -3141,6 +3144,10 @@ def build_r8(variant=None):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
             slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
             notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
+        elif n == 'hrow':
+            slab('hrow', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_hrow')
+            notes.append('MTP-DIE --hrow: dsfd_mtp_hrow (main-hidden row store, 120 x 1024x256 SRAM, contract %s um) %.3f mm2'
+                         % (HROW_UM, centre_area[n]))
         elif n == 'seedl':
             slab('seedl', centre_area[n], x0_, yy, w0_, master='dsfd_mtp_seed_launch')
             notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
@@ -3688,7 +3695,8 @@ def buses_r8(m):
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
             (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
-            (SEEDL_BUSES + (SEEDL_HOST_BUSES if 'host' in hub else ()) if 'seedl' in hub else ()) + \
+            ((SEEDL_BUSES_HROW + HROW_BUSES if 'hrow' in hub else SEEDL_BUSES) + (SEEDL_HOST_BUSES if 'host' in hub else ())
+             + (HROW_HOST_BUSES if 'hrow' in hub and 'host' in hub else ()) if 'seedl' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
             ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
@@ -3864,6 +3872,16 @@ SEEDL_BUSES = (('collective', 'seedl', 78, 't_mrs', 'f_mrs'), ('seedl', 'collect
 SEEDL_HOST_BUSES = (('host', 'seedl', 11, 't_seedl_clr', 'f_clr'), ('seedl', 'host', 4, 't_flt', 'f_seedl_flt'),
                     ('collective', 'host', 513, 't_mrt', 'f_mrt'), ('host', 'collective', 1, 't_mrg', 'f_mrt'),
                     ('collective', 'host', 57, 't_macc', 'f_macc'))
+HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
+HROW_UM = (1500.48, 1500.48)    #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json
+# the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
+# (t_mhp<k> {flit 514, valid} / f_mhp<k> grant: three more LCR lane tiles + adapters in the MTPL composition, OPEN in
+# the collective composition owner's tree)
+SEEDL_BUSES_HROW = tuple(b for b in SEEDL_BUSES if 'vm' not in (b[0], b[1]) or b[2] in (1025 if b[3] == 't_x' else -1, 2, 57)) + (
+    ('seedl', 'hrow', 25, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1025, 't_vrs', 'f_vrs'))
+HROW_BUSES = tuple(x for k in range(3) for x in (('collective', 'hrow', 515, 't_mhp%d' % k, 'f_hp%d' % k),
+                                                ('hrow', 'collective', 1, 't_hpg', 'f_mhp%d' % k)))
+HROW_HOST_BUSES = (('host', 'hrow', 11, 't_hrow_clr', 'f_clr'), ('hrow', 'host', 3, 't_flt', 'f_hrow_flt'))
 COLL_MTP_FAR = None             # --coll-mtp-far s0 (mtp-wfc 2026-10-10): the S0 die's end of the head die's MTP lane
 MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab master dsfd_mtp_seq_rtt (RTT-sized grant
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
@@ -6187,6 +6205,8 @@ def die_options(ap):
     ap.add_argument('--seedl', action='store_true', help='mtp-dsbind 2026-10-10: DSpark primary die (--draft P): '
                     'dsfd_mtp_seed_launch slab (seed descriptor from the collective MTP lane -> seed program); needs '
                     '--coll-mtp-far primary')
+    ap.add_argument('--hrow', action='store_true', help='mtp-dsbind 2026-10-10: with --seedl, the main-hidden row store '
+                    'dsfd_mtp_hrow (3 part links from the MTP part lanes; the seed client reads it)')
     ap.add_argument('--coll-mtp-far', choices=['s0', 'primary'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
                     '(far end of the head lane): token return -> WFC kit link-in (TOKIN), accept word -> host')
     ap.add_argument('--mtp-ep', action='store_true', help='mtp-wfc 2026-10-10: head-die RTT-sized sequencer partner ends')
@@ -6298,8 +6318,11 @@ def apply_options(a):
     COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
     global COLL_MTP_FAR
     COLL_MTP_FAR = getattr(a, 'coll_mtp_far', None)
-    global SEEDL
+    global SEEDL, HROW
     SEEDL = bool(getattr(a, 'seedl', False))
+    HROW = bool(getattr(a, 'hrow', False))
+    if HROW and not SEEDL:
+        raise SystemExit('--hrow: with --seedl (the row store is the seed client memory)')
     if SEEDL and (getattr(a, 'draft', None) != 'P' or COLL_MTP_FAR != 'primary'):
         raise SystemExit('--seedl: DSpark primary die (--draft P) with --coll-mtp-far primary')
     if COLL_MTP_FAR == 'primary':   # mtp-dsbind: the primary die's end of a head MTP lane (seed descriptor class)

@@ -15,6 +15,7 @@ module tb_hgi_att_unit;
         $readmemh({dir, "/au_vmi.mem"}, vmim); $readmemh({dir, "/au_hbm.mem"}, hbmm); $readmemh({dir, "/au_exp.mem"}, expm);
     end
     integer errors = 0, cyc = 0, seed = 7; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
 `ifdef MUT_RING
     localparam integer MR = 1;
 `else

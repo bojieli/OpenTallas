@@ -155,6 +155,12 @@ def recipes():
                         note='hub column 1,814.4 / VCH 1,468.8 um (the split3cr MTP-lane collective + seedl slab overflow '
                              'the 1,728 um column: sp_su_s assert, as scan / layer1srckitm); draftP + dsfd_mtp_seed_launch slab (rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv) + the '
                              'collective MTP lane far end (seed class -> seedl; token return / accept word -> host)'),
+        'draftPh': dict(opts=_sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8) + ['--die', 'layer1',
+                                               '--draft', 'P', '--mtp-links', '9', '--seedl', '--hrow',
+                                               '--coll-mtp-far', 'primary', '--coll-split3-cr'],
+                        role='DSpark primary die with the seed launcher and the main-hidden row store (mtp-dsbind 2026-10-10)',
+                        note='draftPs + dsfd_mtp_hrow (rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv); 9 MTP SerDes = 5 draft '
+                             'fan-out + the head seed lane + 3 hidden-part lanes (layer 37 / 38 / 39 stage dies, rank k)'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
                        role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '
