@@ -46,6 +46,9 @@ module ot_hdc_v41x_vec_lane #(
                                         // (+1 cycle on sigmoid / SiLU: D_SIG + 1; the controller and the campaign
                                         // model take the same parameter; the side pipe's gate keeps its own depth)
     parameter integer RSTPIPE = 0,      // 1: three registered reset levels; no multicycle paths
+    parameter integer SFUT = 0,         // el1011-hbm-sfu (default off): the sigmoid chain (u_exp / u_den / u_num / u_div)
+                                        // as its own registered sub-tile ot_hdc_v41x_sfu_chain (pin registers in, registers
+                                        // out: +2 cycles on exp / sigmoid / SiLU; controller and campaign model take it too)
     parameter integer DRING = 0         // 1: the SFU numerator delay (u_num) and the S insertion line (u_l4) as ring
                                         // buffers (write slot / read slot one-hot, no flop-to-flop shift chain); same
                                         // words, same cycles
@@ -130,7 +133,8 @@ module ot_hdc_v41x_vec_lane #(
     localparam [1:0] E2_BYP = 0, E2_MULB = 1, E2_MULIMM = 2;
     // stage depths; MLAT = 4 lengthens every multiplying stage by one (M1 / M2 / E1 / E2: 4) and the SFU chains
     localparam integer D_DIV = DDIV, D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG0 = D_EXP + ALAT + D_DIV;  // 49, 71
-    localparam integer D_SIG = D_SIG0 + DENR;
+    localparam integer D_SIG = D_SIG0 + DENR + 2 * SFUT;
+    localparam integer D_EXPL = D_EXP + 2 * SFUT;            // exp as the lane sees it (sub-tile seams)
     localparam integer D_RSQ = 1 + 9 * MLAT + 3 * ALAT + SIDEX, D_SQRT = 31 + SIDEX;                // 37
     localparam integer D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + D_DIV + SIDEX;                    // 162
     localparam integer D_EG = 1 + 31 + 1 + D_SIG0 + SIDEX;                               // 104 (111): side pipe sigmoid
@@ -166,7 +170,7 @@ module ot_hdc_v41x_vec_lane #(
         ot_hdc_v41x_vec_lane_ALAT_must_be_3_to_7_and_at_most_MLAT u_trap ();
     end endgenerate
     localparam [15:0] H1_DIV = D_DIV + OPR, H1_M = MLAT + OPR;      // the M1 line: operand register + unit
-    localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+    localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXPL, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
                       H_SP = D_SP, H_EG = D_EG;
     localparam integer HAS_SFU = (KIND != 0);
     localparam integer FULL = (KIND == 2);
@@ -736,8 +740,14 @@ module ot_hdc_v41x_vec_lane #(
         if (HAS_SFU != 0) begin : g_sfu
             // sigmoid chain: exp(-R); +1; (1 | R) / that
             wire is_exp = (ci_sfu == SFU_EXP), is_sig = (ci_sfu == SFU_SIGM || ci_sfu == SFU_SILU);
-            wire [31:0] y_exp, den, num_d, y_div;
+            wire [31:0] y_exp, y_div;
             wire f_e, f_den, f_div;
+            if (SFUT != 0) begin : g_chain_tile
+                ot_hdc_v41x_sfu_chain #(.MLAT(MLAT), .ALAT(ALAT), .DDIV(DDIV), .DENR(DENR), .DRING(DRING), .K(K)) u_chain (
+                    .clk(clk), .rst_n(local_rst_n[29]), .v(v3), .is_exp(is_exp), .is_sig(is_sig),
+                    .silu(ci_sfu == SFU_SILU), .r(R), .y_exp(y_exp), .y_div(y_div), .f_e(f_e), .f_den(f_den), .f_div(f_div));
+            end else begin : g_chain_flat
+            wire [31:0] den, num_d;
             wire [D_EXP:0] ve;
             wire [D_EXP+DENR:0] vs;                 // a sigmoid-chain element, along the exp
             ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(local_rst_n[29]), .v(v3 && (is_exp || is_sig)), .vd(ve));
@@ -767,6 +777,7 @@ module ot_hdc_v41x_vec_lane #(
             end else begin : g_s19
                 ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(local_rst_n[37]), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div), .vo(),
                                         .fault(f_div));
+            end
             end
             wire [6:0] sel;
             assign sel = {ci_sfu == SFU_EGATE, ci_sfu == SFU_SPSQRT, ci_sfu == SFU_SQRT, ci_sfu == SFU_RSQRT,
@@ -898,4 +909,54 @@ module ot_hdc_v41x_vec_lane #(
     end else begin : g_collw
         assign coll = c1 | c4;
     end endgenerate
+endmodule
+
+// el1011-hbm-sfu 2026-10-11 (textbook class 1, SFU lane: 47,785 sinks on one root): the lane's sigmoid chain as a
+// hardened sub-tile.  Every input is a pin register, every output a register (no logic between pin and flop); the
+// reset enters through its own pin flop.  Same words as the in-lane chain, 2 cycles later.
+module ot_hdc_v41x_sfu_chain #(
+    parameter integer MLAT = 6, parameter integer ALAT = 6, parameter integer DDIV = 21, parameter integer DENR = 0,
+    parameter integer DRING = 0, parameter integer K = 1
+) (
+    input  wire clk, input wire rst_n,
+    input  wire v, input wire is_exp, input wire is_sig, input wire silu, input wire [31:0] r,
+    output reg  [31:0] y_exp, output reg [31:0] y_div, output reg f_e, output reg f_den, output reg f_div
+);
+    localparam integer D_DIV = DDIV, D_EXP = 7 * MLAT + 8 * ALAT + 4;
+    reg rst_q; always @(posedge clk) rst_q <= rst_n;
+    wire [4:0] local_rst_n = {5{rst_q}};
+    reg v3, ie_q, is_q, si_q; reg [31:0] R;
+    always @(posedge clk or negedge rst_q) if (!rst_q) v3 <= 1'b0; else v3 <= v;
+    always @(posedge clk) begin ie_q <= is_exp; is_q <= is_sig; si_q <= silu; R <= r; end
+    wire is_exp_i = ie_q, is_sig_i = is_q;
+    wire [31:0] y_exp_c, y_div_c, den, num_d;
+    wire f_e_c, f_den_c, f_div_c;
+    wire [D_EXP:0] ve;
+    wire [D_EXP+DENR:0] vs;
+    ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(local_rst_n[0]), .v(v3 && (is_exp_i || is_sig_i)), .vd(ve));
+    ot_hdc_vline #(.D(D_EXP + DENR)) u_vs (.clk(clk), .rst_n(local_rst_n[1]), .v(v3 && is_sig_i), .vd(vs));
+    ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk), .rst_n(local_rst_n[2]), .v(v3 && (is_exp_i || is_sig_i)),
+                           .x(is_exp_i ? R : {~R[31], R[30:0]}), .y(y_exp_c), .vo(), .fault(f_e_c));
+    wire [31:0] y_den_in;
+    generate if (DENR != 0) begin : g_denr
+        (* keep *) reg [31:0] y_den_r;
+        always @(posedge clk) y_den_r <= y_exp_c;
+        assign y_den_in = y_den_r;
+    end else begin : g_nodenr
+        assign y_den_in = y_exp_c;
+    end endgenerate
+    ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk, local_rst_n[3], vs[D_EXP + DENR], y_den_in, 32'h3F800000, den, f_den_c);
+    wire [31:0] num_in = si_q ? R : 32'h3F800000;
+    ot_hdc_delay_ring #(.W(32), .D(D_EXP + DENR + ALAT), .RING(DRING)) u_num (.clk(clk), .rst_n(local_rst_n[4]), .d(num_in), .q(num_d));
+    wire [ALAT:0] vdn;
+    ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk), .rst_n(rst_q), .v(vs[D_EXP + DENR]), .vd(vdn));
+    generate if (DDIV == 21) begin : g_s21
+        ot_dsrom_fdiv_f12 u_div (.clk(clk), .rst_n(rst_q), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div_c), .vo(), .fault(f_div_c));
+    end else begin : g_bad
+        initial $error("ot_hdc_v41x_sfu_chain: DDIV 21 only");
+    end endgenerate
+    always @(posedge clk) begin y_exp <= y_exp_c; y_div <= y_div_c; end
+    always @(posedge clk or negedge rst_q)
+        if (!rst_q) begin f_e <= 1'b0; f_den <= 1'b0; f_div <= 1'b0; end
+        else begin f_e <= f_e_c; f_den <= f_den_c; f_div <= f_div_c; end
 endmodule

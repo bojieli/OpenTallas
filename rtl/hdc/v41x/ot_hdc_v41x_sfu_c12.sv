@@ -775,10 +775,19 @@ module ot_hdc_v41x_ins #(
             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
         end
     endfunction
+    // RING 4 eligibility: even DMAX, every depth even, no data reset (otherwise the instance stays RING 3)
+    function automatic r4ok(input integer dummy);
+        integer k;
+        begin
+            r4ok = (DMAX % 2 == 0) && (RESET_DATA == 0);
+            for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] % 2 != 0) r4ok = 1'b0;
+        end
+    endfunction
+    localparam integer R4OK = r4ok(0);
     generate
         if (DMAX == 0) begin : g_wire
             assign vo = v; assign q = d; assign coll = 1'b0; assign busy = 1'b0;
-        end else if (RING >= 4) begin : g_ring4
+        end else if (RING >= 4 && R4OK != 0) begin : g_ring4
             // RING 4 (el1011-hbm-sfu 2026-10-11, textbook class 1: the SFU lane's u_l4 wheel was 15,981 of its 47,785
             // clock sinks): RING 3's valid side (oh / mv / rs / qv / coll / busy, unchanged) with the DATA slots in two
             // single-port SRAM banks by slot parity (bank = slot[0], row = slot >> 1).  Every edge reads slot e+1 and
@@ -787,15 +796,7 @@ module ot_hdc_v41x_ins #(
             localparam integer N = DMAX;
             localparam integer NR = N / 2;
             localparam integer SB = $clog2(N);
-            function automatic alleven(input integer dummy);
-                integer k;
-                begin
-                    alleven = 1'b1;
-                    for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] % 2 != 0) alleven = 1'b0;
-                end
-            endfunction
-            initial if (canbe(1) || DMAX < 2 || (N % 2) != 0 || !alleven(0) || RESET_DATA != 0)
-                $error("ot_hdc_v41x_ins RING 4: needs even DMAX, even depths, RESET_DATA 0");
+            initial if (canbe(1) || DMAX < 2) $error("ot_hdc_v41x_ins RING 4: depth 1 not supported");
             reg [N-1:0] oh;
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) oh <= {{(N-1){1'b0}}, 1'b1};
