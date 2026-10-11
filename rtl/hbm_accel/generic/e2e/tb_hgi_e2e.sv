@@ -335,6 +335,7 @@ module tb_hgi_e2e;
             $finish;
         end
     end
+    integer dq_k [0:63]; integer dq_n = 0;              // DMA records awaiting wr_quiet
     always @(posedge clk) if (|(s_uv & s_ur) || |ux_done || quant_ret[1] || coll_ret[1] || idx_ret[1]) begin last_prog <= cyc; nprog <= nprog + 1; end
     always @(posedge clk) begin
         if (!rst_n) begin
@@ -362,9 +363,22 @@ module tb_hgi_e2e;
                 end
             end
             // real units retire: check the record's golden writes
+            // hgi-1010/c: a DMA record (unit 8) retires POSTED (STORE / KVWB on source consumed); its HBM writes are checked once
+            // the DMA unit reports its posted writes drained (wr_quiet), as a DMA.FENCE would make them visible
+            if (dq_n > 0 && dma_wq) begin
+                for (integer j = 0; j < dq_n; j = j + 1) begin
+                    m = e2e_real_retire(dq_k[j], cyc); real_recs = real_recs + 1;
+                    if (m != 0) begin real_bad = real_bad + 1; $display("E2E REAL unit 8 record %0d: %0d mismatches (checked at wr_quiet)", dq_k[j], m); end
+                end
+                dq_n = 0;
+            end
             for (u = 1; u < 16; u = u + 1) if (REAL_UX[u] && (r_done[u] || r_fault[u])) begin
-                k = kpop(u); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
-                if (m != 0 || r_fault[u]) begin real_bad = real_bad + 1; $display("E2E REAL unit %0d record %0d: %0d mismatches fault %0d", u, k, m, r_fault[u]); end
+                k = kpop(u);
+                if (u == 8 && !r_fault[u] && DMA_POSTED != 0) begin dq_k[dq_n] = k; dq_n = dq_n + 1; end
+                else begin
+                    m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
+                    if (m != 0 || r_fault[u]) begin real_bad = real_bad + 1; $display("E2E REAL unit %0d record %0d: %0d mismatches fault %0d", u, k, m, r_fault[u]); end
+                end
             end
             if (REAL_IDX && (i_ret[1] || i_ret[2])) begin
                 k = kpop(9); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
