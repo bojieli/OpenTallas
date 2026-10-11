@@ -609,7 +609,7 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # lead 10-11 (b): the die widens 1,250 um E of x 16,700 (31.73 -> 32.98 mm, reticle 33): hc_eng sits in the
              # E centre band beside the spine (between the SE / NE SFU halves), within ~3 relays of the VM's lgE chain
              col_split=(16700.0, 1250.0),
-             hc_eng=dict(name='hb_hc_eng', master='hfd_hc_eng', xy=(16794.0, 12204.0), wh=(4384.8, 1468.8)),      # hgi-1010/c: loader dma_vr2q / dma_vr2r <-> VM read group 2 (DS MTP swapout 8.7k -> 3.5k cycles)
+             hc_eng=dict(name='hb_hc_eng', master='hfd_hc_eng', xy=(16578.0, 12096.0), wh=(4600.8, 1566.0)),      # hgi-1010/c: loader dma_vr2q / dma_vr2r <-> VM read group 2 (DS MTP swapout 8.7k -> 3.5k cycles)
              # hgi-1010/b 10-10: a larger hgi_vm outline, single-layer faces at every other track (<= 10.4 b/um)
              hgi_vm_w=2073.6, hgi_vm_h=2073.6,
              lane_chain_nets=(('rdn', 8259), ('wdn', 67), ('rup', 515), ('wup', 8963)),
@@ -650,7 +650,7 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
                  # (beside the VM) -> CP (cmdproc E face) -> quant (S face) -> ATT (cmdproc W face: the ATT staging
                  # client sits with the ATT record adapter in the CP block; the attention band is >= 6 mm away)
                  E=dict(src='hb_hgi_vm', thick=64.8, gap=21.6,
-                        stations=(('hb_stn_lgE_hce', 'hb_hc_eng', 'S', 3024.0), ('hb_stn_lgE_cp', 'hb_cmdproc', 'N', 2073.6, 'cp'),
+                        stations=(('hb_stn_lgE_hce', 'hb_hc_eng', 'N', 3024.0), ('hb_stn_lgE_cp', 'hb_cmdproc', 'N', 2073.6, 'cp'),
                                   ('hb_stn_lgE_q', 'hb_quant', 'S', 2073.6), ('hb_stn_lgE_att', 'hb_cmdproc', 'W', 1360.8, 'att')))),
              lane_tap_nets=(('rdn', 8257), ('wdn', 65), ('rup', 513), ('wup', 8961)),
              lane_chain_nets_E=(('rdn', 8260), ('wdn', 68), ('rup', 516), ('wup', 8964)))   # lgE KE = 4 bundles
@@ -1125,8 +1125,8 @@ def build_r25gq_net(variant):
             ([('hgi_vmap', 'hub', 2224, ('hb_hgi_vm', 't_hgi_vmap'), ('hb_hc_SW', 'f_hgi_vmap')),      # b / d 10-11: VM ->
               ('hgi_vmap_r', 'hub', 16, ('hb_hc_SW', 't_hgi_vmap'), ('hb_hgi_vm', 'f_hgi_vmap'))]       # HC aperture, 8 lanes
              if V.get('vmap') else []) + \
-            ([('hc_fused_ne', 'hub', 149, ('hb_quant', 't_fused_ne'), ('hb_hc_eng', 'f_fused_ne')),      # FUSED record
-              ('hc_fused_ne_r', 'hub', 2, ('hb_hc_eng', 't_fused_ne'), ('hb_quant', 'f_fused_ne'))]      # -> hc_eng
+            ([('hc_fused_ne', 'hub', 151, ('hb_quant', 't_fused_ne'), ('hb_hc_eng', 'f_fused_ne')),      # {g_rdy, job_v, job 149}
+              ('hc_fused_ne_r', 'hub', 3, ('hb_hc_eng', 't_fused_ne'), ('hb_quant', 'f_fused_ne'))]      # {job_rdy, fault, done}
              if V.get('hc_eng') else []) + \
             ([('hgi_vmr2_dma', 'hub', 513, ('hb_loader', 't_dma_vr2q'), ('hb_hgi_vm', 'f_dma_vr2q')),     # hgi-1010/c DS MTP
               ('hgi_vmr2_dma_r', 'hub', 8257, ('hb_hgi_vm', 't_dma_vr2r'), ('hb_loader', 'f_dma_vr2r'))]   # swapout store on
