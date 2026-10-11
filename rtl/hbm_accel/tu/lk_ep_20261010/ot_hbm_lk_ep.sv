@@ -260,9 +260,18 @@ module ot_hbm_lk_ep #(
     localparam integer QD = 1 << $clog2((TXQ + NS - 1) / NS);   // per-sub TX queue depth (flit k -> sub k mod NS)
     localparam integer NSL = (W + SL - 1) / SL;
     localparam integer CI = $clog2(PBD + 2);
+    // Link round trip seen by a retry pipeline (its rewind -> the last stale NAK of that sequence), measured with the
+    // tb_hfd_lk_ep trace: 48 / 52 / 56 edges at XR 0 / 1 / 2 (RL 2) -- 4 edges per relay stage (forward + reverse, both
+    // ends).  NAKH (> RTT by two feedback phases) is the retry pipeline's NAK re-arm hold (NAK_HOLD): a NAK still standing
+    // after it is a lost replay, replayed again instead of waiting for the 8,192-edge TIMEOUT.  The hardened retry macro
+    // view is built with NAK_HOLD = NAKH_HW (physical/hbm_link_retry_pipeline_20261009 route_cl.sh NAK_HOLD=...).
+    localparam integer RTT = 40 + 4 * RL + 4 * XR;
+    localparam integer NAKH = RTT + 8;
+    localparam integer NAKH_HW = 64;
 `ifndef SYNTHESIS
     initial if (NS < 1 || NS > 3 || HB + 14 != FFW || (1 << QB) != TXQ || SQ < 2 || PBD < 2 || TFD < 2 || OFD < 2)
         $fatal(1, "hfd_lk_ep: geometry");
+    initial if (NAKH > NAKH_HW) $fatal(1, "hfd_lk_ep: round trip %0d needs NAK_HOLD %0d > the hardened view's %0d", RTT, NAKH, NAKH_HW);
 `endif
     // ---------------------------------------------------------------- reset: synchronised, replicated per region
     // rst_n reaches only the 2-flop synchroniser (async assert, sync release); every region owns a registered copy (keep):
@@ -299,7 +308,12 @@ module ot_hbm_lk_ep #(
         ot_hbm_link_retry_pipeline u_rp (
 `else
         ot_hbm_link_retry_pipeline #(.ENABLE(1), .W(W), .SW(SW), .EW(EW), .DEPTH(512), .TIMEOUT(TIMEOUT),
-            .MAX_RETRY(MAX_RETRY), .RSTR(1), .RX_SLOT_SAMPLE(1), .TX_SLOT_SAMPLE(1), .IN_PIN(1), .IN_WPIN(1)) u_rp (
+            .MAX_RETRY(MAX_RETRY), .RSTR(1), .RX_SLOT_SAMPLE(1), .TX_SLOT_SAMPLE(1), .IN_PIN(1), .IN_WPIN(1),
+`ifndef OT_LKEP_MUT_NAKHOLD
+            .NAK_HOLD(NAKH_HW)) u_rp (
+`else
+            .NAK_HOLD(0)) u_rp (                     // mutant: the pre-fix pipeline (a lost replay waits for TIMEOUT)
+`endif
 `endif
             .clk(clk), .rst_n(rl[g]), .session(ses_p[g*EW +: EW]),
             .in_valid(p_in_v[g]), .in_ready(p_in_r[g]), .in_data(p_in_dd[g]),

@@ -12,7 +12,7 @@ module tb_hfd_lk_ep;
     localparam integer W = 545;
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0;
-    integer N, ERRP, seed, cyc;
+    integer N, ERRP, seed, cyc, maxcyc;
     // ---- DUTs
     reg            a_tv, b_tv; reg [W-1:0] a_tf, b_tf;
     wire           a_tcr, b_tcr, a_rv, b_rv, a_f, b_f, a_l, b_l;
@@ -80,12 +80,14 @@ module tb_hfd_lk_ep;
         if (!$value$plusargs("N=%d", N)) N = 3000;
         if (!$value$plusargs("ERRP=%d", ERRP)) ERRP = 0;
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
+        if (!$value$plusargs("MAXCYC=%d", maxcyc)) maxcyc = 0;   // recovery-time bound (0 = none)
         cyc = 0; a_sent = 0; b_sent = 0; a_cred = TXQ; b_cred = TXQ; a_occ = 0; b_occ = 0; a_seen = 0; b_seen = 0;
         a_tv = 0; b_tv = 0; a_rcr = 0; b_rcr = 0; a2b = 0; b2a = 0;
         repeat (5) @(posedge clk); rst_n = 1;
         for (k = 0; k < 400 * N + 200000 && !(a_seen == N && b_seen == N); k = k + 1) begin @(posedge clk); cyc = cyc + 1; end
         if (a_seen != N || b_seen != N) $fatal(1, "TIMEOUT delivered A->B %0d B->A %0d of %0d (locked %0d %0d)", b_seen, a_seen, N, a_l, b_l);
         if (ERRP > 0 && a_rep + b_rep == 0) $fatal(1, "no replay with lane errors");
+        if (maxcyc > 0 && cyc > maxcyc) $fatal(1, "recovery too slow: %0d cycles > MAXCYC %0d (a lost replay waited for TIMEOUT?)", cyc, maxcyc);
         $display("LKEP_BENCH PASS NS %0d N %0d ERRP %0d cycles %0d replays %0d/%0d drops %0d/%0d (%.3f flits/cycle A->B)",
                  NS, N, ERRP, cyc, a_rep, b_rep, a_dr, b_dr, N * 1.0 / cyc);
         $finish;

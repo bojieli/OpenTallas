@@ -22,6 +22,13 @@ module ot_hbm_link_retry_pipeline #(
  // read_pending implies replaying, which closes in_ready, so the replay response and an admitted word are never both
  // possible.  All validation still gates txv (unchanged control block), so empty-slot contents are never visible.
  TX_SLOT_SAMPLE=`ifdef OT_RETRY_TX_SLOT_SAMPLE 1 `else 0 `endif,
+ // el1011-hbm-lkep 2026-10-11 NAK_HOLD (0 = off, the old behaviour): NAK re-arm after the link round trip.  A NAK of the
+ // same sequence is ignored after the rewind it caused (stale copies are in flight for one round trip), and nak_seen was
+ // cleared only by ACK progress -- so a LOST REPLAY of that sequence (the receiver keeps NAKing it) recovered only via the
+ // TIMEOUT (8,192 edges; hfd_lk_ep XR=2 bench 5,464 -> 13,518 cycles).  With NAK_HOLD > 0, nak_seen re-arms NAK_HOLD
+ // edges after each rewind: a NAK still standing one round trip later is a new loss and replays again.  The user sizes
+ // NAK_HOLD from its stage count (>= the round trip; smaller only costs duplicate replays, which the receiver drops).
+ NAK_HOLD=0,
  // [link] 2026-10-10 IN_PIN (opt-in): at the routed IO reference the remaining TT classes are INPUT PORT -> compare ->
  // flop (rx_session -> rxv / nak_pending / rxd_u, fb_session -> mail_seq: 14-17 levels after the 0.2 T + 150 ps budget).
  // Every rx_* / fb_* input lands in a pin register first (OT_WS_PINREG) and all validation runs on registered copies.
@@ -91,6 +98,7 @@ module ot_hbm_link_retry_pipeline #(
  localparam TW=$clog2(TIMEOUT+1),RW=$clog2(MAX_RETRY+2);
  reg [TW-1:0] timer;
  reg [RW-1:0] attempts;
+ reg [15:0] nhold;
  reg timeout_pending;
  reg txv,tx_replay;reg [W-1:0] txd;reg [SW-1:0] txs;
  reg rxv;reg [W-1:0] rxd;
@@ -197,7 +205,7 @@ module ot_hbm_link_retry_pipeline #(
  if(!rst_i) begin
  phase<=0;base<=0;next_seq<=0;sent_seq<=0;cursor<=0;expected<=0;
  debt_pipe<=0;full_pipe<=0;fault_r<=0;replaying<=0;nak_pending<=0;
- nak_seen<=0;last_nak<=0;rinc<=0;timer<=0;attempts<=0;
+ nak_seen<=0;last_nak<=0;rinc<=0;timer<=0;attempts<=0;nhold<=0;
  timeout_pending<=0;txv<=0;tx_replay<=0;txd<=0;txs<=0;rxv<=0;rxd<=0;rp_v<=0;
  mail_v<=0;mail_nak<=0;mail_seq<=0;cap_v<=0;cap_nak<=0;cap_seq<=0;
  cap_base<=0;cap_sent<=0;delta_pipe<=0;window_pipe<=0;
@@ -256,6 +264,7 @@ module ot_hbm_link_retry_pipeline #(
  
  end
  end
+ if(nhold!=0)begin nhold<=nhold-1'b1;if(nhold==16'd1)nak_seen<=0;end
  if(next_seq==base)begin timer<=0;timeout_pending<=0;end
  else if(timer<TIMEOUT)timer<=timer+1'b1;
  else timeout_pending<=1;
@@ -268,7 +277,7 @@ module ot_hbm_link_retry_pipeline #(
  if(fresh_nak)begin nak_seen<=1;last_nak<=cap_seq;end
  if(rewind)begin
  cursor<=ack_progress?cap_seq:base;generation<=~generation;
- replaying<=1;timer<=0;timeout_pending<=0;rinc<=1;
+ replaying<=1;timer<=0;timeout_pending<=0;rinc<=1;nhold<=16'(NAK_HOLD);
  attempts<=ack_progress?1:attempts+1'b1;
  // A normal buffered packet remains retained and launches before replay.
  if(tx_replay)begin txv<=0;end
