@@ -13,6 +13,15 @@ add_pdn_connect -grid {top} -layers {M1 M2}
 add_pdn_connect -grid {top} -layers {M2 M5}
 add_pdn_connect -grid {top} -layers {M5 M6}
 add_pdn_connect -grid {top} -layers {M6 M7}
-# HIER leaves (closed dsfd_engram_lkp / dsfd_engram_sink views: VDD / VSS on M6 / M7, OBS to M7): macro grid to M7
+# HIER leaves (closed dsfd_engram_lkp / dsfd_engram_sink views: OBS M1..M7, VDD / VSS pins on M6 / M7 with M7 vertical
+# stripes at pitch 10.8): the ORFS BLOCKS recipe one layer up -- the top grid carries M8 straps over the whole outline
+# (connected to its M7), and the leaf grid connects each leaf's M7 pins to those M8 straps (PDN-0232/0233 otherwise:
+# a leaf grid with only a connect and no layer above the leaf's obstructions has no shapes).
+add_pdn_stripe -grid {top} -layer {M8} -width {0.32} -spacing {5.08} -pitch {10.8} -offset {2.0}
+add_pdn_connect -grid {top} -layers {M7 M8}
 define_pdn_grid -macro -cells {dsfd_engram_lkp dsfd_engram_sink} -halo {2 2 2 2} -voltage_domains {CORE} -name {engram_leaves}
-add_pdn_connect -grid {engram_leaves} -layers {M6 M7}
+add_pdn_connect -grid {engram_leaves} -layers {M7 M8}
+# SRAM macros (OBS M1..M4, VDD / VSS pins on M4): the top grid's M5 straps cross them -> connect M4-M5 (the ORFS macro recipe;
+# pdn_view.tcl alone left the 18 SRAM supplies unconnected: PSM-0039 on every u_sram under check_power_grid).
+define_pdn_grid -macro -cells {ot_sram_1r1w_256x256_m2_r2c2} -halo {2 2 2 2} -voltage_domains {CORE} -name {engram_srams}
+add_pdn_connect -grid {engram_srams} -layers {M4 M5}
