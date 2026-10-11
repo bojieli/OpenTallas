@@ -361,7 +361,7 @@ module dsfd_vm_fe #(
     parameter integer LD = 64,          // landing FIFO depth (rows) of every landing lane
     parameter integer NLP = 2,          // shared landing drain ports
     parameter integer LMACRO = 1,
-    parameter integer FRL = 2,          // relay stages order register -> slice pins (master MD += FRL)
+    parameter integer FRL = 2,          // relay stages order register -> slice pins (BE MD unchanged)
     parameter integer KD = 1,           // relay stages order register -> completion counter (ARM ops delayed alike)
     parameter integer LAL = 2,          // landing input / LARM relay stages
     parameter integer LGL = 2,          // landing grant relay stages (arbiter -> lane)
@@ -1132,8 +1132,9 @@ module dsfd_sp_vm_m #(
     localparam integer EP = 2;
 `endif
     localparam integer ED = (EP == 0) ? 0 : EP + 1;
-    localparam integer FRL = 2;         // el1011-ds-vm/fe: FE order register -> slice pin relay stages
-    localparam integer MD = 4 * NSTG + QD + 9 - 4 * (NSTG + 1) + ED + FRL;
+    localparam integer FRL = 2;         // el1011-ds-vm/fe: FE order register -> slice pin relay stages (shifts f_* and o_*
+                                        // alike: MD, the tile-3 f_* -> o_* skew, is unchanged)
+    localparam integer MD = 4 * NSTG + QD + 9 - 4 * (NSTG + 1) + ED;
     wire [NS*NP-1:0] mv, mwe; wire [NS*NP*RA-1:0] mrow; wire [NS*NP*4-1:0] mm; wire [NS*NP*128-1:0] md;
     wire [NS*4-1:0] mrf; wire [15:0] fe_flt;
     wire p2c;
