@@ -11,7 +11,7 @@
 module tb_qfd_tt_ctlm_i_psram;
     parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50, TW = 400;   // TW: cycles per token window
     parameter integer U1_PSRAM = 1, U1_HQ2 = 0;
-    parameter integer U1_MEREG = 0, U1_RRG = 0, MOK = 0;   // el1011-q-seq: u1 registered ME enable / replicated reset; MOK 1: random me_mem_ok (u1 sees it 2 edges ahead)
+    parameter integer U1_MEREG = 0, U1_RRG = 0, MOK = 0, U1_PCUT = 0;   // el1011-q-seq: u1 registered ME enable / replicated reset; MOK 1: random me_mem_ok (u1 sees it 2 edges ahead)
     reg clk = 0, rst_n = 1;
     initial #0.1 rst_n = 0;
     always #0.5 clk = ~clk;
@@ -139,7 +139,7 @@ module tb_qfd_tt_ctlm_i_psram;
         .mx_addr(mx_addr_0),
         .mx_mask(mx_mask_0),
         .mx_data(mx_data_0));
-    ot_qfd_tt_ctlm_i #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .MEREG(U1_MEREG), .RRG(U1_RRG)) u1 (
+    ot_qfd_tt_ctlm_i #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .MEREG(U1_MEREG), .RRG(U1_RRG), .PCUT(U1_PCUT)) u1 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .token(token),

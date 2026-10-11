@@ -1198,7 +1198,62 @@ def emit_seq_su_bi() -> str:
     t = one(t, "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4",
             "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,\n"
             "    parameter integer RLY = 0, parameter integer CRED = 0")
-    return rst_regions(seq_psram(t)) + "\n" + vrl_rst_split(tp_seq_vrl(cred=True))
+    t = rst_regions(seq_psram(t))
+    t = ctrl_pcut(t)
+    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT),")
+    t = one(t, "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy",
+               "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy\n"
+               "    parameter integer PCUT = 0,  // el1011-q-seq: exact controller path cuts (ctrl_pcut)")
+    return t + "\n" + vrl_rst_split(tp_seq_vrl(cred=True))
+
+
+# el1011-q-seq (2026-10-11): PCUT -- exact path cuts in the controller (verdicts: seq_su_bi fearr-ca675ca83 post-CTS
+# u_i_x_oacc -> u_ctrl.ready_q, 13 MAJ ripple cells = the 24-bit subtract-and-test o_dif == 0 and the 16-bit chase >=;
+# ctlm_i fpbmr-811bd1a67 preroute -1,346 h_rd -> kvd_tiles = ir field ME_SPLIT -> variable shift of pos_r -> / ODD ->
+# two adds -> me_tiles).  PCUT 1: o_eq by direct equality, the chase compares as a log-depth (Brent-Kung) unsigned >=,
+# and the DYN_TTILES rounds of all 16 split values registered in S_DYN (pos_r is fixed for the token; loads only in
+# S_RUN, which S_DYN precedes) so a load selects a register.  PCUT 2 = negative control (strict >, split + 1 entry).
+def ctrl_pcut(t: str) -> str:
+    t = one(t, "    parameter integer ME_IDLE_GATE = 0,", "    parameter integer ME_IDLE_GATE = 0,\n"
+               "    parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)")
+    t = one(t, "    wire o_eq0 = (o_dif0 == {XW{1'b0}}), o_eq1 = (o_dif1 == {XW{1'b0}});",
+            "    wire o_eq0 = (PCUT != 0) ? (x_oacc == o_cnt) : (o_dif0 == {XW{1'b0}});\n"
+            "    wire o_eq1 = (PCUT != 0) ? (x_oacc == o_cnt1) : (o_dif1 == {XW{1'b0}});\n"
+            "    // PCUT: unsigned a >= b as a log-depth prefix tree (no carry chain); PCUT 2 = strict > (negative control)\n"
+            "    function automatic uge16(input [15:0] a, input [15:0] b);\n"
+            "        reg [15:0] g, e; integer k, sp;\n"
+            "        begin\n"
+            "            g = a & ~b; e = ~(a ^ b);\n"
+            "            for (sp = 1; sp < 16; sp = sp * 2)\n"
+            "                for (k = 15; k >= 0; k = k - 1)\n"
+            "                    if ((k % (2 * sp)) == (2 * sp - 1)) begin g[k] = g[k] | (e[k] & g[k - sp]); e[k] = e[k] & e[k - sp]; end\n"
+            "            uge16 = g[15] | ((PCUT == 2) ? 1'b0 : e[15]);\n"
+            "        end\n"
+            "    endfunction")
+    t = one(t, "    wire chased = osync && (x_och >= d_chase_n);",
+               "    wire chased = osync && ((PCUT != 0) ? uge16(x_och, d_chase_n) : (x_och >= d_chase_n));")
+    t = one(t, "chd = osync_n && ((OWN == 1 && chr) ? (x_orows >= chn) : (x_oprog >= chn));",
+               "chd = osync_n && ((OWN == 1 && chr) ? ((PCUT != 0) ? uge16(x_orows, chn) : (x_orows >= chn))\n"
+               "                                                : ((PCUT != 0) ? uge16(x_oprog, chn) : (x_oprog >= chn)));")
+    t = one(t, "        .pos(pos_r),.split_log2(`F(ME_SPLIT)),.rounds(dyn_tiles_split),\n        .invalid_split(dyn_tiles_invalid));",
+               "        .pos(pos_r),.split_log2(`F(ME_SPLIT)),.rounds(dyn_tiles_split_c),\n        .invalid_split(dyn_tiles_invalid_c));\n"
+               "    wire [NW-1:0] dyn_tiles_split_c; wire dyn_tiles_invalid_c;\n"
+               "    generate if (PCUT != 0) begin : g_dtab\n"
+               "        wire [16*NW-1:0] dts; wire [15:0] dti;\n"
+               "        genvar ds;\n"
+               "        for (ds = 0; ds < 16; ds = ds + 1) begin : g_ds\n"
+               "            wire [NW-1:0] r_w; wire i_w; reg [NW-1:0] r_q; reg i_q;\n"
+               "            ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_t (.pos(pos_r),.split_log2(4'(ds)),.rounds(r_w),.invalid_split(i_w));\n"
+               "            always @(posedge clk) if (st == S_DYN) begin r_q <= r_w; i_q <= i_w; end\n"
+               "            assign dts[ds*NW +: NW] = r_q; assign dti[ds] = i_q;\n"
+               "        end\n"
+               "        wire [3:0] dsel = 4'(`F(ME_SPLIT)) + ((PCUT == 2) ? 4'd1 : 4'd0);\n"
+               "        assign dyn_tiles_split = dts[dsel*NW +: NW];\n"
+               "        assign dyn_tiles_invalid = dti[dsel];\n"
+               "    end else begin : g_dcomb\n"
+               "        assign dyn_tiles_split = dyn_tiles_split_c; assign dyn_tiles_invalid = dyn_tiles_invalid_c;\n"
+               "    end endgenerate")
+    return t
 
 
 # el1011-q-seq (2026-10-11): MEREG -- registered engine clock enable.  Root cause (ctlm_i-fpa-772ccf422 early fail, gating
@@ -1221,7 +1276,7 @@ def ctlm_mereg(t: str) -> str:
     t = one(t, "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0\n) (",
                "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0,\n"
                "    parameter integer MEREG = 0   // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n) (")
-    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .MEREG(MEREG),")
+    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .MEREG(MEREG), .PCUT(PCUT),")
     return t
 
 
@@ -1270,7 +1325,8 @@ def ctlm_rrg(t: str) -> str:
                "always @(posedge c_me_clk or negedge rrv[6]) if (!rrv[6]) me_acc <=")
     tile = one(tile, "    parameter integer MEREG = 0   // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n) (",
                "    parameter integer MEREG = 0,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n"
-               "    parameter integer RRG = 0     // el1011-q-seq: replicated tile reset (ctlm_rrg)\n) (")
+               "    parameter integer RRG = 0,    // el1011-q-seq: replicated tile reset (ctlm_rrg)\n"
+               "    parameter integer PCUT = 0    // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n) (")
     return head + tile
 
 
@@ -1288,7 +1344,7 @@ def emit_tt_ctlm_i(psram: bool = True) -> str:
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
     if psram:
-        t = ctlm_rrg(ctlm_mereg(t))
+        t = ctlm_rrg(ctlm_mereg(ctrl_pcut(t)))
     return t
 
 

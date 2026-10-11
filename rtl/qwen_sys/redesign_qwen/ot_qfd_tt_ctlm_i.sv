@@ -88,6 +88,7 @@ module ot_qwen_rom_core_ctrl_x_i #(
     // unchanged.  0 keeps the engine clock free-running.
     parameter integer ME_IDLE_GATE = 0,
     parameter integer MEREG = 0,      // el1011-q-seq: me_mem_ok announced 2 edges ahead; me_en a register
+    parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0, // element address of embedding row 0 in the program
     parameter integer SMIN = 0,
@@ -495,8 +496,24 @@ localparam integer W_ME_AMC = 1;
     ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_dyn_tiles_zero (
         .pos(pos_r),.split_log2(4'd0),.rounds(dyn_tiles_zero),.invalid_split());
     ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_dyn_tiles_split (
-        .pos(pos_r),.split_log2(`F(ME_SPLIT)),.rounds(dyn_tiles_split),
-        .invalid_split(dyn_tiles_invalid));
+        .pos(pos_r),.split_log2(`F(ME_SPLIT)),.rounds(dyn_tiles_split_c),
+        .invalid_split(dyn_tiles_invalid_c));
+    wire [NW-1:0] dyn_tiles_split_c; wire dyn_tiles_invalid_c;
+    generate if (PCUT != 0) begin : g_dtab
+        wire [16*NW-1:0] dts; wire [15:0] dti;
+        genvar ds;
+        for (ds = 0; ds < 16; ds = ds + 1) begin : g_ds
+            wire [NW-1:0] r_w; wire i_w; reg [NW-1:0] r_q; reg i_q;
+            ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_t (.pos(pos_r),.split_log2(4'(ds)),.rounds(r_w),.invalid_split(i_w));
+            always @(posedge clk) if (st == S_DYN) begin r_q <= r_w; i_q <= i_w; end
+            assign dts[ds*NW +: NW] = r_q; assign dti[ds] = i_q;
+        end
+        wire [3:0] dsel = 4'(`F(ME_SPLIT)) + ((PCUT == 2) ? 4'd1 : 4'd0);
+        assign dyn_tiles_split = dts[dsel*NW +: NW];
+        assign dyn_tiles_invalid = dti[dsel];
+    end else begin : g_dcomb
+        assign dyn_tiles_split = dyn_tiles_split_c; assign dyn_tiles_invalid = dyn_tiles_invalid_c;
+    end endgenerate
     wire dyn_tiles_bad_instruction = load && `F(ME_D_TILES) == 3'd6 && dyn_tiles_invalid;
 
     // decoded, DYN-adjusted fields
@@ -554,7 +571,7 @@ localparam integer W_ME_AMC = 1;
     wire o_drained = osync && x_oidle;
     wire x_drained = own_idle && o_drained && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
     wire [15:0] x_och = (OWN == 1) ? (d_chase_rows ? x_orows : x_oprog) : x_oprog;
-    wire chased = osync && (x_och >= d_chase_n);
+    wire chased = osync && ((PCUT != 0) ? uge16(x_och, d_chase_n) : (x_och >= d_chase_n));
     wire wait_o = (OWN == 1) ? d_wait_su : d_wait_me;
     wire wait_u = (OWN == 1) ? d_wait_me : d_wait_su;
     wire xdep_ok = (XMUT == 1 && OWN == 1) ? 1'b1 :
@@ -584,7 +601,19 @@ localparam integer W_ME_AMC = 1;
         if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};
         else if (skip) o_cnt1 <= o_cnt1 + 1'b1;
     wire [XW-1:0] o_dif0 = x_oacc - o_cnt, o_dif1 = x_oacc - o_cnt1;
-    wire o_eq0 = (o_dif0 == {XW{1'b0}}), o_eq1 = (o_dif1 == {XW{1'b0}});
+    wire o_eq0 = (PCUT != 0) ? (x_oacc == o_cnt) : (o_dif0 == {XW{1'b0}});
+    wire o_eq1 = (PCUT != 0) ? (x_oacc == o_cnt1) : (o_dif1 == {XW{1'b0}});
+    // PCUT: unsigned a >= b as a log-depth prefix tree (no carry chain); PCUT 2 = strict > (negative control)
+    function automatic uge16(input [15:0] a, input [15:0] b);
+        reg [15:0] g, e; integer k, sp;
+        begin
+            g = a & ~b; e = ~(a ^ b);
+            for (sp = 1; sp < 16; sp = sp * 2)
+                for (k = 15; k >= 0; k = k - 1)
+                    if ((k % (2 * sp)) == (2 * sp - 1)) begin g[k] = g[k] | (e[k] & g[k - sp]); e[k] = e[k] & e[k - sp]; end
+            uge16 = g[15] | ((PCUT == 2) ? 1'b0 : e[15]);
+        end
+    endfunction
     wire o_pa0 = !o_eq0 && !o_dif0[XW-1], o_pa1 = !o_eq1 && !o_dif1[XW-1];
     wire [XW-1:0] o_dif_n = x_oacc - (o_cnt + {{(XW-1){1'b0}}, skip});
     always @(posedge clk or negedge rst_n)
@@ -607,7 +636,8 @@ localparam integer W_ME_AMC = 1;
     function automatic rdy_x(input [1:0] u, input bar, input ch, input chr, input [15:0] chn, input wme, input wsu);
         reg chd, wo, wu, xd;
         begin
-            chd = osync_n && ((OWN == 1 && chr) ? (x_orows >= chn) : (x_oprog >= chn));
+            chd = osync_n && ((OWN == 1 && chr) ? ((PCUT != 0) ? uge16(x_orows, chn) : (x_orows >= chn))
+                                                : ((PCUT != 0) ? uge16(x_oprog, chn) : (x_oprog >= chn)));
             wo = (OWN == 1) ? wsu : wme;
             wu = (OWN == 1) ? wme : wsu;
             xd = (XMUT == 1 && OWN == 1) ? 1'b1 :
@@ -1010,7 +1040,8 @@ module ot_qfd_tt_ctlm_i #(
     // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word).
     parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0,
     parameter integer MEREG = 0,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
-    parameter integer RRG = 0     // el1011-q-seq: replicated tile reset (ctlm_rrg)
+    parameter integer RRG = 0,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
+    parameter integer PCUT = 0    // el1011-q-seq: exact controller path cuts (ctrl_pcut)
 ) (
     input  wire clk, input wire rst_n,
     // token start, program writes (the program-store copy), the SU snapshot, KV / supply readiness
@@ -1149,7 +1180,7 @@ module ot_qfd_tt_ctlm_i #(
     wire [16-1:0] c_me_progress, u_me_progress;
     wire [1-1:0] c_me_fault, u_me_fault;
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
-    ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .MEREG(MEREG), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
+    ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .MEREG(MEREG), .PCUT(PCUT), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
         .clk(clk),
         .rst_n(rsv[1]),
         .start(q_h_start),
