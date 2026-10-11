@@ -488,7 +488,8 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
                     fj = ((k * P.G + P.G - 1) * P.S + s_) * P.L + P.L - 1
                     fc = ck(P.lane_y.get(fj, band_y))
                     ein[x] = ' ^ '.join(f'{X(n_, fc)}[{b_}]' for n_, b_ in einj[(c, x)])
-            L_.append(f'    assign ta_{c}_{P.NT} = {{' + ', '.join(reversed(ein)) + '};')
+            sep_ = ',\n        ' if einj else ', '    # far-end injection: one term a line (Verilator: < 40,000 tokens a line)
+            L_.append(f'    assign ta_{c}_{P.NT} = {{' + sep_.join(reversed(ein)) + '};')
             for r in range(P.NT):
                 g, i = divmod(r, P.L)
                 j = ((k * P.G + g) * P.S + s_) * P.L + i
@@ -608,7 +609,7 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
         t = 0
         for p_, w in P.end_bits(side, P.dout):
             if P.tiled:
-                srcs[p_] = (lambda d, ks=ks, t=t, w=w: '{' + ', '.join(f'tb_{ks[tt % len(ks)] * P.S}_{P.NT}[{(tt // len(ks)) % P.LB}]' for tt in reversed(range(t, t + w))) + '}')
+                srcs[p_] = (lambda d, ks=ks, t=t, w=w: '{' + (',\n        ' if w > 512 else ', ').join(f'tb_{ks[tt % len(ks)] * P.S}_{P.NT}[{(tt // len(ks)) % P.LB}]' for tt in reversed(range(t, t + w))) + '}')
             else:
                 srcs[p_] = (lambda d, ks=ks, t=t, w=w: '{' + ', '.join(f'{X(f"bc_{ks[tt % len(ks)]}_{P.G - 1}", d)}[{(tt // len(ks)) % P.LB}]'
                                                                     for tt in reversed(range(t, t + w))) + '}')
