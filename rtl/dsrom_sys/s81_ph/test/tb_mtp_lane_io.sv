@@ -48,7 +48,9 @@ module tb_mtp_lane_io #(parameter integer DIE = 0, parameter integer NTOK = 300,
         reg [63:0] w; begin w = {32'h165667b1 * (n + 5), 32'hd3a2646c ^ (n * 977 + die)}; accw = {1'b0, 1'b1, w[AW-3:0]}; end
     endfunction
     // ---------------- sender side: the sequencer's ltx pair, FWD / RET stations
-    wire tv_c = rst_n && tok_tx < NTOK && (TGAP == 0 ? (cyc % 97) < 70 : (cyc % TGAP) == 0);
+    // TGAP > 0: the sequencer's fastest emission -- valid held until granted, at most one token per TGAP cycles
+    integer last_t = -1000;
+    wire tv_c = rst_n && tok_tx < NTOK && (TGAP == 0 ? (cyc % 97) < 70 : (cyc - last_t) >= TGAP);
     wire sv_c = rst_n && seed_tx < NSEED && (cyc % 53) < 12;
     wire tr_c, sr_c, tl_v, sl_v, tg_l, sg_l; wire [511:0] tl_d; wire [SW-1:0] sl_d;
     ot_dsrom_mtp_ltx #(.W(512)) u_tt (.clk(clk), .rst_n(rst_n), .c_valid(tv_c), .c_ready(tr_c), .c_data(tok(DIE, tok_tx)),
@@ -82,7 +84,7 @@ module tb_mtp_lane_io #(parameter integer DIE = 0, parameter integer NTOK = 300,
     initial begin tok_rx = 0; seed_rx = 0; acc_rx = 0; tok_tx = 0; seed_tx = 0; acc_tx = 0; errs = 0;
                   tok_first_tx = -1; tok_first_rx = -1; tok_last_rx = -1; tok_mid_rx = -1; end
     always @(posedge clk) if (rst_n) begin
-        if (tv_c && tr_c) begin if (tok_first_tx < 0) tok_first_tx <= cyc; tok_tx <= tok_tx + 1; end
+        if (tv_c && tr_c) begin if (tok_first_tx < 0) tok_first_tx <= cyc; tok_tx <= tok_tx + 1; last_t <= cyc; end
         if (sv_c && sr_c) seed_tx <= seed_tx + 1;
         if (acc_go) acc_tx <= acc_tx + 1;
         if (ct_v && ct_r) begin

@@ -48,7 +48,12 @@ module dsfd_coll_mtp_lane #(
 `else
     parameter integer FWD_C = 8, parameter integer RET_C = 8,
 `endif
-    parameter integer TCRED = 64, parameter integer SCRED = 16, parameter integer AQ = 4,
+`ifdef OT_MTPL_TCRED
+    parameter integer TCRED = `OT_MTPL_TCRED,
+`else
+    parameter integer TCRED = 64,
+`endif
+    parameter integer SCRED = 16, parameter integer AQ = 4,
     parameter integer LCRED = 8
 ) (
     input  wire [0:0]        ck,

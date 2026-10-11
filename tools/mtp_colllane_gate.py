@@ -35,6 +35,8 @@ CASES = dict(
     pos_block=('pass', ['-GMSTALL=2', '-GMTP_HOLD=9000']),
     pos_win=('pass', ['-GMSTALL=4']),
     pos_rate=('pass', ['-GMSTALL=3', '-GTGAP=6', '-GNTOK=1000']),
+    rate_t128=('pass', ['-GMSTALL=3', '-GTGAP=6', '-GNTOK=1000', '+define+OT_MTPL_TCRED=128']),
+    rate_t32=('pass', ['-GMSTALL=3', '-GTGAP=6', '-GNTOK=1000', '+define+OT_MTPL_TCRED=32']),
     neg_shared=('fail', ['-GMSTALL=1', '-GMTP_HOLD=20000', '+define+OT_MTPL_MUT_SHARED']),
     neg_cred=('fail', ['-GMSTALL=4', '+define+OT_MTPL_MUT_CRED']),
     neg_stale=('fail', ['-GMSTALL=4', '+define+OT_MTPL_MUT_STALE']),
@@ -50,10 +52,12 @@ def run(out, name):
     built = 'BUILD_FAIL' not in log
     cyc = re.search(r'CYCLES dut_last (\d+) ref_last (\d+) first_send (\d+) .* coll_done (-?\d+)', log)
     mtp = [l for l in log.splitlines() if l.startswith('MTP DIE')]
+    rate = re.search(r'second_half_tokens (\d+) in (\d+) cycles', log)
     ok = built and (passed if exp == 'pass' else not passed)
     return name, dict(expect=exp, passed=passed, built=built, ok=ok, extra=extra,
                       coll_done=int(cyc.group(4)) if cyc else None, dut_last=int(cyc.group(1)) if cyc else None,
                       ref_last=int(cyc.group(2)) if cyc else None, mtp=mtp[:12],
+                      cycles_per_token=round(int(rate.group(2)) / int(rate.group(1)), 3) if rate and int(rate.group(1)) else None,
                       tail=[l for l in log.splitlines() if 'FAIL' in l or 'fatal' in l.lower() or 'LINK_REG' in l][:6])
 
 
@@ -69,7 +73,7 @@ def main():
         res = dict(ex.map(lambda n: run(a.out, n), names))
     for n, r in res.items():
         print(f"{n:11s} expect {r['expect']:4s} -> {'PASS' if r['passed'] else 'FAIL'} {'OK' if r['ok'] else 'BAD'} "
-              f"coll_done {r['coll_done']} {' | '.join(r['tail'][:2])}")
+              f"coll_done {r['coll_done']} cyc/tok {r['cycles_per_token']} {' | '.join(r['tail'][:2])}")
     noblock = None
     if 'base' in res and 'pos_block' in res:
         noblock = res['base']['coll_done'] is not None and res['base']['coll_done'] == res['pos_block']['coll_done'] \
