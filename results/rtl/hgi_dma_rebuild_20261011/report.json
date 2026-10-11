@@ -30,5 +30,14 @@
    "hgi_dma_front_n2a-a2fb5da71-tc-cl (340 um)",
    "hgi_dma_front_n2b-a2fb5da71-tc-cl (380 um)"
   ]
+ },
+ "kvw_90e2f2e7a": {
+  "change": "write side pipelined (cal cbf118fb5 2_1_floorplan WNS -361 ps into w_ds, 1,051 endpoints)",
+  "kport KVW=1 KVB KVB_MAX=630": "PASS 15 cases, first 56 cyc, 4-stack 54.1 cyc/rec posted, drain 61.0; 1-stack 96.8",
+  "MUT5": "FAIL 22192 errors",
+  "routes": [
+   "hgi_dma_kvw_b-90e2f2e7a-tc-cl (280 um)",
+   "hgi_dma_kvw_c-90e2f2e7a-tc-cl (270 um)"
+  ]
  }
 }
