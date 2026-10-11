@@ -108,10 +108,10 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     wire [3:0] e_txv; wire [PW-1:0] e_txr; wire [7:0] e_cro;
     wire o_v, o_last, o_err, o_red; wire [1:0] o_rank; wire [4*SFW-1:0] o_d, o_gdat; wire [SFW-1:0] o_rdat;
     reg  o_rdy;
-    wire e_flt; wire [2:0] e_code;
+    wire e_flt; wire [2:0] e_code; wire e_rpop;
     ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(0), .LANES(4), .TAGW(TAGW),
         .DEPTH(EDEPTH), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1), .FIFO_SRAM(1),
-        .SRAM_MACRO(1), .PULL(1), .PULL_D(XD), .PCOPY(1), .PSL(1), .LQW(2), .EXTF(1)) u_eng (
+        .SRAM_MACRO(1), .PULL(1), .PULL_D(XD), .PCOPY(1), .PSL(1), .LQW(2), .EXTF(1), .RHOLD(1)) u_eng (
         .clk(ck), .rst_n(erst_n),
         .in_valid(e_iv), .in_ready(e_ir), .in_data(lq_d[SFW-1:0]), .in_last(lq_d[161]), .in_mode(lq_d[160]),
         .in_tag(lq_d[SFW +: TAGW]),
@@ -120,7 +120,7 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
         .rl_tx_valid(), .rl_tx_rec(), .rl_rx_valid(4'd0), .rl_rx_rec({4*PW{1'b0}}),
         .out_valid(o_v), .out_ready(o_rdy), .out_data(o_d), .out_last(o_last), .out_rank(o_rank), .out_err(o_err),
         .out_red(o_red), .out_rdat(o_rdat), .out_gdat(o_gdat),
-        .fault(e_flt), .fault_code(e_code), .xl_v(xl_v), .xl_d(xl_d), .xl_cr(xl_cr));
+        .fault(e_flt), .fault_code(e_code), .red_hold(!room2), .out_rpop(e_rpop), .xl_v(xl_v), .xl_d(xl_d), .xl_cr(xl_cr));
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin tx_v <= 3'd0; cr_o <= 6'd0; end
         else begin tx_v <= e_txv[3:1]; cr_o <= e_cro[7:2]; end
@@ -148,7 +148,11 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     always @(posedge ck or negedge erst_n) if (!erst_n) r_v <= 1'b0; else r_v <= o_red;
     always @(posedge ck) begin r_d <= o_rdat; r_last <= o_last; r_err <= o_err; end
     reg  signed [7:0] cred;
-    reg          room2;                                     // registered (cred >= 2), from the next credit value
+    // room2 = (cred - w_r) >= 2, registered from the next values: w_r = reduce words popped and not yet emitted, each
+    // holding a reserved output slot (reduce words are not back-pressured at the output); also the engine's reduce-pop
+    // gate (red_hold).  Slow-VM-drain fix (1-in-8 take overflowed the remote queue in the flat and the split designs).
+    reg          room2;
+    reg  [7:0]   w_r;
     wire         in_red = r_v && !hm;
     always @(*) o_rdy = hm && (pk_n == 0) && room2;
     wire         in_gat = o_v && !o_red && hm && o_rdy;
@@ -200,9 +204,17 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     wire [50:0]  hdr = {rank, fv_q, fault, b_cr, pe, in_gat && !pk_emit, pt_push ? ptw[PTW-1] : 1'b0, b_last, b_mask,
                         pt_push ? pt_l : 3'd0, b_type};
     wire [7:0]   cred_nx = cred - (oq_push ? 8'sd1 : 8'sd0) + (bcr_q ? 8'sd1 : 8'sd0);
+    wire [7:0]   w_nx = w_r + (e_rpop ? 8'd1 : 8'd0) - (pk_emit ? {5'd0, pk_n} : 8'd0);
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin cred <= OQX_D; room2 <= 1'b1; end
-        else begin cred <= cred_nx; room2 <= $signed(cred_nx) >= 8'sd2; end
+        if (!rst_n) begin cred <= OQX_D; room2 <= 1'b1; w_r <= 8'd0; end
+        else begin
+            cred <= cred_nx; w_r <= w_nx;
+`ifdef OT_S81PH_MUT_ORC
+            room2 <= $signed(cred_nx) >= 8'sd2;                              // negative control: no reservation
+`else
+            room2 <= ($signed({cred_nx[7], cred_nx}) - $signed({1'b0, w_nx})) >= 9'sd2;
+`endif
+        end
     always @(posedge ck) if (in_red) pk_d[(pk_emit ? 0 : pk_n) * SFW +: SFW] <= r_d;
     always @(posedge ck or negedge erst_n) begin
         if (!erst_n) begin
