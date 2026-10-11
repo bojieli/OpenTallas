@@ -6,6 +6,7 @@ B=$1; VEC=$2; shift 2
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 CASES=${CASES:-"full1m short300 skew1m tail46"}; SEEDS=${SEEDS:-"1 2"}; JOBS=${JOBS:-16}
 Q=rtl/dsrom_sys/s81_ph/svc/q
+IDX_SRCS=${IDX_SRCS-"rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/v41x/ot_hdc_v41x_idx.sv rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv rtl/hdc/v41x/ot_hdc_v41x_idx_score_quarter.sv rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv"}
 SRC=(rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv rtl/hdc/v41x/ot_hdc_v41x_kreg.sv
      rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv rtl/hdc/v41x/ot_hdc_v41x_attn.sv
      rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv
