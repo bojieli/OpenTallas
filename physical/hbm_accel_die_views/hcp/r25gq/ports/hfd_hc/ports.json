@@ -16433,12 +16433,12 @@
    ],
    "direction": "output"
   },
-  "ck0": {
+  "ck0e": {
    "bits": 1,
    "layer": "M4",
    "pins": [
     [
-     "ck0[0]",
+     "ck0e[0]",
      "M4",
      2032.752,
      93.696,
@@ -16456,12 +16456,35 @@
    ],
    "direction": "input"
   },
-  "ck1": {
+  "ck0w": {
    "bits": 1,
    "layer": "M4",
    "pins": [
     [
-     "ck1[0]",
+     "ck0w[0]",
+     "M4",
+     0.0,
+     93.696,
+     0.192,
+     93.72
+    ]
+   ],
+   "face": "W",
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ],
+   "direction": "input"
+  },
+  "ck1e": {
+   "bits": 1,
+   "layer": "M4",
+   "pins": [
+    [
+     "ck1e[0]",
      "M4",
      2032.752,
      281.088,
@@ -16479,12 +16502,35 @@
    ],
    "direction": "input"
   },
-  "ck2": {
+  "ck1w": {
+   "bits": 1,
+   "layer": "M4",
+   "pins": [
+    [
+     "ck1w[0]",
+     "M4",
+     0.0,
+     281.088,
+     0.192,
+     281.112
+    ]
+   ],
+   "face": "W",
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ],
+   "direction": "input"
+  },
+  "ck2e": {
    "bits": 1,
    "layer": "M6",
    "pins": [
     [
-     "ck2[0]",
+     "ck2e[0]",
      "M6",
      2032.752,
      468.48,
@@ -16502,12 +16548,35 @@
    ],
    "direction": "input"
   },
-  "ck3": {
+  "ck2w": {
+   "bits": 1,
+   "layer": "M4",
+   "pins": [
+    [
+     "ck2w[0]",
+     "M4",
+     0.0,
+     468.48,
+     0.192,
+     468.504
+    ]
+   ],
+   "face": "W",
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ],
+   "direction": "input"
+  },
+  "ck3e": {
    "bits": 1,
    "layer": "M6",
    "pins": [
     [
-     "ck3[0]",
+     "ck3e[0]",
      "M6",
      2032.752,
      655.872,
@@ -16525,12 +16594,35 @@
    ],
    "direction": "input"
   },
-  "ck4": {
+  "ck3w": {
    "bits": 1,
    "layer": "M4",
    "pins": [
     [
-     "ck4[0]",
+     "ck3w[0]",
+     "M4",
+     0.0,
+     655.872,
+     0.192,
+     655.896
+    ]
+   ],
+   "face": "W",
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ],
+   "direction": "input"
+  },
+  "ck4e": {
+   "bits": 1,
+   "layer": "M4",
+   "pins": [
+    [
+     "ck4e[0]",
      "M4",
      2032.752,
      843.168,
@@ -16548,12 +16640,35 @@
    ],
    "direction": "input"
   },
-  "ck5": {
+  "ck4w": {
    "bits": 1,
    "layer": "M4",
    "pins": [
     [
-     "ck5[0]",
+     "ck4w[0]",
+     "M4",
+     0.0,
+     843.168,
+     0.192,
+     843.192
+    ]
+   ],
+   "face": "W",
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ],
+   "direction": "input"
+  },
+  "ck5e": {
+   "bits": 1,
+   "layer": "M4",
+   "pins": [
+    [
+     "ck5e[0]",
      "M4",
      2032.752,
      1030.56,
@@ -16571,12 +16686,35 @@
    ],
    "direction": "input"
   },
-  "ck6": {
+  "ck5w": {
    "bits": 1,
    "layer": "M4",
    "pins": [
     [
-     "ck6[0]",
+     "ck5w[0]",
+     "M4",
+     0.0,
+     1030.56,
+     0.192,
+     1030.584
+    ]
+   ],
+   "face": "W",
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ],
+   "direction": "input"
+  },
+  "ck6e": {
+   "bits": 1,
+   "layer": "M4",
+   "pins": [
+    [
+     "ck6e[0]",
      "M4",
      2032.752,
      1217.952,
@@ -16594,16 +16732,62 @@
    ],
    "direction": "input"
   },
-  "ck7": {
+  "ck6w": {
    "bits": 1,
    "layer": "M4",
    "pins": [
     [
-     "ck7[0]",
+     "ck6w[0]",
+     "M4",
+     0.0,
+     1217.952,
+     0.192,
+     1217.976
+    ]
+   ],
+   "face": "W",
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ],
+   "direction": "input"
+  },
+  "ck7e": {
+   "bits": 1,
+   "layer": "M4",
+   "pins": [
+    [
+     "ck7e[0]",
      "M4",
      2032.752,
      1405.344,
      2032.944,
+     1405.368
+    ]
+   ],
+   "face": "W",
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ],
+   "direction": "input"
+  },
+  "ck7w": {
+   "bits": 1,
+   "layer": "M4",
+   "pins": [
+    [
+     "ck7w[0]",
+     "M4",
+     0.0,
+     1405.344,
+     0.192,
      1405.368
     ]
    ],

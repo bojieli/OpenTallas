@@ -11,7 +11,7 @@ module tb;
     integer v, c, bad, lat, first;
     parameter integer QID = 0;
     reg cg_en = 1;
-    hfd_hc dut(.ck0(clk), .ck1(clk), .ck2(clk), .ck3(clk), .ck4(clk), .ck5(clk), .ck6(clk), .ck7(clk), .rst(rst), .f_sfu(din[1023:0]), .t_sfu(dout[1023:0]), .cg_en(cg_en));
+    hfd_hc dut(.ck0e(clk), .ck0w(clk), .ck1e(clk), .ck1w(clk), .ck2e(clk), .ck2w(clk), .ck3e(clk), .ck3w(clk), .ck4e(clk), .ck4w(clk), .ck5e(clk), .ck5w(clk), .ck6e(clk), .ck6w(clk), .ck7e(clk), .ck7w(clk), .rst(rst), .f_sfu(din[1023:0]), .t_sfu(dout[1023:0]), .cg_en(cg_en));
     initial begin
         $readmemh("tb_in.mem", vin); $readmemh("tb_out.mem", vout);
         bad = 0; lat = 0;
