@@ -284,11 +284,7 @@ module ot_v41_pqc_ctl #(
     // v15: the two quantisers are T_AQ tiles (ot_dsrom_aq12t) in the spine wrapper
     localparam integer AQL = 29;
     wire [1:0] aq_f = aqf;
-`ifdef OT_PQC_MUT_CTL
-    assign aq_vin = rq_v;                                              // mutant: BF-family reads also quantised
-`else
     assign aq_vin = rq_v && !rq_fam;
-`endif
     // the qb / eb write and the `have` update are driven from the spine's own copy of the request, delayed to the
     // quantiser's output cycle, never from the quantiser's vo (v8: vo drove every qb row enable, a single flop with a
     // 4,096-flop cone, the SS critical class at R = 128):
@@ -519,7 +515,11 @@ module ot_v41_pqc_ctl #(
     reg [2:0]   bt_np, bt_pos;
     reg [PHW-1:0] bt_ph;
     always @(posedge clk) begin
-        p1_p <= hw[8:1]; p1_b <= h_fam ? hw[3:1] : hw[11:9]; p1_sv <= hw[13:12]; p1_pos <= h_pos;
+`ifdef OT_PQC_MUT_CTL
+        p1_p <= hw[8:1]; p1_b <= h_fam ? hw[11:9] : hw[3:1];          // mutant: block field of the wrong family
+`else
+        p1_p <= hw[8:1]; p1_b <= h_fam ? hw[3:1] : hw[11:9];
+`endif p1_sv <= hw[13:12]; p1_pos <= h_pos;
         p1_bsv <= hw[7:4]; p1_u <= hw[39:8];
         // stage 2
         bt_p <= p1_p; bt_b <= p1_b; bt_sv <= p1_sv; bt_pos <= p1_pos; bt_bsv <= p1_bsv; bt_u <= p1_u;
