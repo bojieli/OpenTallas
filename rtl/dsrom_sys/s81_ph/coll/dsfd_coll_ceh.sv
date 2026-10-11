@@ -226,14 +226,15 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     always @(posedge ck) begin
         w1_d <= b_d; w1_h <= hdr;
         bd_q <= w1_d;
-`ifdef OT_S81PH_MUT_CEH
-        bh_q <= w1_h;                                       // negative control: the other slices' errors are lost
-`else
-        bh_q <= {w1_h[50:16], w1_h[15] | (|pe_q), w1_h[14:0]};
-`endif
+        bh_q <= w1_h;
     end
+    // pe_q (pin flops) holds the other slices' error bits of the word now in bd_q / bh_q (emit + 2)
     generate if (S == 0) begin : g_o0
-        always @(posedge ck) bw_d <= {bd_q, bh_q};
+`ifdef OT_S81PH_MUT_CEH
+        always @(posedge ck) bw_d <= {bd_q, bh_q};            // negative control: the other slices' errors are lost
+`else
+        always @(posedge ck) bw_d <= {bd_q, bh_q[50:16], bh_q[15] | (|pe_q), bh_q[14:0]};
+`endif
     end else begin : g_on
         always @(posedge ck) bw_d <= bd_q;
         wire unused_h = &{1'b0, bh_q, pe_q};
