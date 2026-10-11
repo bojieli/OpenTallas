@@ -126,7 +126,7 @@ QWEN_R22KCS = dict(QWEN_R21C, before_relays=_R22K.surgery_cs)
 # r22ks (qwen-1010/d 2026-10-10, opt-in): r22k with seam-free default pin faces (qwen_rom_fulldie_b3r2._abutter): the
 # r22k4 full-die GRT put all 159,448 overflow in one window where the tree top's ty and the VM's rb3-rb5 left the
 # zero-width tree-top / VM abutment seam
-QWEN_R22KS = dict(QWEN_R22K, seam_free=True)
+QWEN_R22KS = dict(QWEN_R22K, before_relays=_R22K.surgery_s, seam_free=True)   # + non-overlapping face pin groups (qwen-1010/a)
 # r22ko4 (qwen-1010/a 2026-10-10, opt-in): r22k with the option-4 control plane (tree-top control tile + 4 upper tiles,
 # seq_su by the SU, constant buffer / ROM group tiles; rom_r22k._option4), seam-free pin faces as r22ks (the control
 # tile's S face meets the VM)
