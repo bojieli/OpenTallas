@@ -389,6 +389,7 @@ def cmd_batch(a):
         try: host = json.loads((STATE / (job + '.json')).read_text()).get('host')
         except Exception: continue
         if a.host and host != a.host: continue
+        if host in (a.skip_host or '').split(','): continue
         mk = {}
         try: mk = json.loads((MARKS / (job + '.json')).read_text())
         except Exception: pass
@@ -416,7 +417,7 @@ def main():
     r.add_argument('--npath', type=int, default=40); r.add_argument('--image', default=IMAGE)
     r.add_argument('--tt-tcl'); r.add_argument('--ff-tcl'); r.add_argument('--ss2tt', action='store_true'); r.add_argument('--nosta', action='store_true')
     u = sp.add_parser('auto'); u.add_argument('--job', required=True); u.add_argument('--element'); u.add_argument('--dest', default=str(DEST))
-    b = sp.add_parser('batch'); b.add_argument('--dest', default=str(DEST)); b.add_argument('--limit', type=int); b.add_argument('--host')
+    b = sp.add_parser('batch'); b.add_argument('--dest', default=str(DEST)); b.add_argument('--limit', type=int); b.add_argument('--host'); b.add_argument('--skip-host', default='localhost', help='comma list (default localhost: no heavy work there)')
     b.add_argument('--redo', action='store_true'); b.add_argument('--only'); b.add_argument('--workers', type=int, default=10); b.add_argument('--per-host', type=int, default=2)
     p = sp.add_parser('pack'); p.add_argument('--raw'); p.add_argument('--element', required=True)
     p.add_argument('--job', required=True); p.add_argument('--dest', default=str(DEST)); p.add_argument('--label')
