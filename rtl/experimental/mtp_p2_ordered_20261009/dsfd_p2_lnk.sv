@@ -21,12 +21,20 @@
 //   start     collective -> p2      FWD_C             RET_C
 //   out row   p2 -> collective      RET_C             FWD_C      (receiver in dsfd_coll_p2_ep)
 //   abort / done / fault / corrected: unhandshaked level / pulse wires, a relay only delays them.
+// Defaults = draft A's pin-to-pin stages (tools/s81/hub_stage_count.py on s81_dies_recipe draftA, main e707ff5b3):
+//   vm -> p2 12, p2 -> vm 14, collective -> p2 8, p2 -> collective 9.
 // Lane flit {identity74, expert9, shared1, last1, word7, data512} = 604; start {identity74, ids27} = 101;
 // out row {data512, identity74, word7, last1} = 594 (the core's own pin-FIFO packing).
+// Transaction gate: the core latches the start identity and FAULTS on a lane word of another identity (transport
+// identity check), so a word of transaction t+1 must not reach it before start t+1 fires.  Over stations no sender can
+// know when that is (the VM's lane 0 never sees the start at all), so the lane ends present a word to the core only
+// while its identity equals the identity of the last start the core accepted; later words wait in the credited
+// receiver (OUTPUT_PIPE 1: the compare reads a registered head, not the queue mux).
 // OT_FIXLAT_MUT_LAT1 (negative control): every receiver here assumes a latency-1 link (0 hops, the legacy
 // 3-cycle grant history) at the same depth -> must overflow on the stationed bench.
-module dsfd_p2_lnk #(parameter integer FWD_V = 6, parameter integer RET_V = 6,
-                     parameter integer FWD_C = 6, parameter integer RET_C = 6,
+// OT_FIXLAT_MUT_NOGATE (negative control): no transaction gate -> back-to-back transactions fault the core.
+module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
+                     parameter integer FWD_C = 8, parameter integer RET_C = 9,
                      parameter integer D_V = FWD_V + RET_V + 4, parameter integer D_C = FWD_C + RET_C + 4) (
  input wire clk, rst_n,
  // die side
@@ -44,19 +52,33 @@ module dsfd_p2_lnk #(parameter integer FWD_V = 6, parameter integer RET_V = 6,
 `else
  localparam integer VF = FWD_V, VR = RET_V, CF = FWD_C, CR = RET_C;
 `endif
- ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.ENABLE_RTT(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_l0(.clk(clk),.rst_n(rst_n),
-  .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(c_in_v[0]),.c_ready(c_in_r[0]),.c_data(c_in_d[603:0]));
- ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.ENABLE_RTT(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_l1(.clk(clk),.rst_n(rst_n),
-  .l_valid(f_l1v),.l_ready(t_l1g),.l_data(f_l1d),.c_valid(c_in_v[1]),.c_ready(c_in_r[1]),.c_data(c_in_d[1207:604]));
+ wire [1:0] lv, lr, open_;
+ ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_l0(.clk(clk),.rst_n(rst_n),
+  .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(lv[0]),.c_ready(lr[0]),.c_data(c_in_d[603:0]));
+ ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_l1(.clk(clk),.rst_n(rst_n),
+  .l_valid(f_l1v),.l_ready(t_l1g),.l_data(f_l1d),.c_valid(lv[1]),.c_ready(lr[1]),.c_data(c_in_d[1207:604]));
  ot_dsrom_mtp_lrx_rtt #(.W(101),.D(D_C),.ENABLE_RTT(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_st(.clk(clk),.rst_n(rst_n),
   .l_valid(f_sv),.l_ready(t_sg),.l_data(f_sd),.c_valid(c_start_v),.c_ready(c_start_r),.c_data(c_start_d));
+ // transaction gate: identity of the start the core last accepted (registered compare against the registered heads)
+ reg [73:0] cur_id; reg cur_ok;
+ always @(posedge clk)
+  if(!rst_n) begin cur_ok<=1'b0; cur_id<='0; end
+  else if(c_start_v&&c_start_r) begin cur_ok<=1'b1; cur_id<=c_start_d[100:27]; end
+`ifdef OT_FIXLAT_MUT_NOGATE
+ assign open_=2'b11;
+`else
+ assign open_[0]=cur_ok&&(c_in_d[603:530]==cur_id);
+ assign open_[1]=cur_ok&&(c_in_d[1207:1134]==cur_id);
+`endif
+ assign c_in_v=lv&open_;
+ assign lr=c_in_r&open_;
  ot_dsrom_mtp_ltx #(.W(594)) u_o(.clk(clk),.rst_n(rst_n),.c_valid(c_out_v),.c_ready(c_out_r),.c_data(c_out_d),
   .l_valid(t_ov),.l_ready(f_og),.l_data(t_od));
 endmodule
 
 // P2 slab = core + its link ends (composition used by the stationed bench; the core keeps its closed outline).
-module dsfd_p2_rtt #(parameter integer FWD_V = 6, parameter integer RET_V = 6,
-                     parameter integer FWD_C = 6, parameter integer RET_C = 6) (
+module dsfd_p2_rtt #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
+                     parameter integer FWD_C = 8, parameter integer RET_C = 9) (
  input wire clk, rst_n,
  input wire f_l0v, input wire [603:0] f_l0d, output wire t_l0g,
  input wire f_l1v, input wire [603:0] f_l1d, output wire t_l1g,
@@ -80,7 +102,7 @@ module dsfd_p2_rtt #(parameter integer FWD_V = 6, parameter integer RET_V = 6,
 endmodule
 
 // Collective-slab end: sends lane 1 and start, receives the result row (F = p2 -> collective, R = collective -> p2).
-module dsfd_coll_p2_ep #(parameter integer FWD_C = 6, parameter integer RET_C = 6,
+module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 9,
                          parameter integer D_O = FWD_C + RET_C + 4) (
  input wire [0:0] ck, rst,
  input wire c_l1v, output wire c_l1r, input wire [603:0] c_l1d,

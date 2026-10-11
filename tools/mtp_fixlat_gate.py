@@ -12,7 +12,8 @@
     python3 tools/mtp_fixlat_gate.py all --out DIR
 Negatives (expect FAIL): *_lat1 (OT_FIXLAT_MUT_LAT1: every new receiver sized for a latency-1 link = the legacy
 3-cycle grant history), pep_stale (VM end sized for the chain-only 10 / 9 count), p2_naive (the core's plain
-valid / ready pins straight onto the stations, i.e. the as-is P2).
+valid / ready pins straight onto the stations, i.e. the as-is P2, also on a single transaction), p2_nogate
+(OT_FIXLAT_MUT_NOGATE: no transaction gate in dsfd_p2_lnk -> the next transaction's lane words fault the core).
 """
 import argparse, subprocess, sys
 from pathlib import Path
@@ -26,7 +27,7 @@ P2 = LINK + [f'{D}/{x}.sv' for x in ('ot_mtp_p2_ordered_rows', 'ot_mtp_p2_prefix
      ['rtl/v41rom/ot_v41_fadd.sv', 'rtl/common/ot_prefix.sv', 'rtl/common/ot_secded.sv', 'rtl/common/ot_sc_pfifo.sv',
       'rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv']
 HEAD = dict(FC=6, RC=7, FV=11, RV=11)        # head631 (lat-audit head631_stages.json; re-counted on main e707ff5b3)
-DRAFTA = dict(FV=6, RV=6, FC=6, RC=6)        # draft A (s81_dies_recipe draftA, hub_stage_count) -- set from the count
+DRAFTA = dict(FV=12, RV=14, FC=8, RC=9)     # draft A (s81_dies_recipe draftA on e707ff5b3, hub_stage_count): vm->p2 12, p2->vm 14, coll->p2 8, p2->coll 9
 CASES = {
     'pep_s1': ('tb_mtp_partner_ep', PEP, dict(HEAD, SEED=1), [], 'pass'),
     'pep_s7': ('tb_mtp_partner_ep', PEP, dict(HEAD, SEED=7), [], 'pass'),
@@ -36,6 +37,8 @@ CASES = {
     'p2_s5': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=5), [], 'pass'),
     'p2_lat1': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1), ['OT_FIXLAT_MUT_LAT1'], 'fail'),
     'p2_naive': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1), ['OT_P2_NAIVE'], 'fail'),
+    'p2_naive_1tx': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1, NTX=1, START_DELAY=0), ['OT_P2_NAIVE'], 'fail'),
+    'p2_nogate': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1), ['OT_FIXLAT_MUT_NOGATE'], 'fail'),
 }
 TAG = {'tb_mtp_partner_ep': 'PEP PASS', 'tb_mtp_p2_fixlat': 'P2FL PASS'}
 

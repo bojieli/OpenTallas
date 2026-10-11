@@ -17,7 +17,7 @@ module p2fl_relay #(parameter integer W=1, N=0)(input wire clk, rst_n, input wir
   assign q=s[N-1];
  end endgenerate
 endmodule
-module tb_mtp_p2_fixlat #(parameter integer FV=6, RV=6, FC=6, RC=6, SEED=1, NTX=2, START_DELAY=300);
+module tb_mtp_p2_fixlat #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX=2, START_DELAY=300);
  reg clk=0; always #0.416667 clk=~clk;
  reg rst_n=0;
  reg [31:0] inputs[0:3839], gold[0:1279];
