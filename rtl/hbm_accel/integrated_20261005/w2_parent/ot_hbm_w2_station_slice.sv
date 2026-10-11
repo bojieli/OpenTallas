@@ -11,14 +11,14 @@
 // Seam signals are registers or decodes of the protected phase register (go_*, ph4) into registers on the far
 // side, and the registered group verdicts back: no new combinational depth across the seam, no added edge.
 module ot_hbm_w2_stn_slice #(parameter integer NW=8, NB=512, BASE=0, NO=2, QOUT=0)(
- input wire clk,rst_p,rst_e,gr,gr_d,
+ input wire clk,rst_p,rst_e,gr,
  input wire go_commit,go_repair,go_check,go_sel,
  input wire [3:0] ph4,
  input wire [NB-1:0] din,
  output wire [NO*NB-1:0] dout,
  output wire [(QOUT?NW*64:1)-1:0] q,
  output wire v_same,v_bad,v_cbad,v_ce,v_ue,v_clean,
- output wire copy_bad);
+ output wire [NW-1:0] grc_o);   // kept seat copies: the copy check (vs gr_d) stays in the control core
  import ot_gpu_w6_secded_pkg::*;
  import ot_hbm_w2_boundary_pkg::*;
  localparam integer PW=2328;
@@ -38,7 +38,7 @@ module ot_hbm_w2_stn_slice #(parameter integer NW=8, NB=512, BASE=0, NO=2, QOUT=
   ot_hbm_w2_keep_reg #(.W(1)) u_c(.clk(clk),.rst_n(rst_e),.d(gr),.q(grc[w]));
   always @(posedge clk)if(grc[w])Ew[w]<=encode64(raw_in[w*64+:64]);
  end
- assign copy_bad=|(grc^{NW{gr_d}});
+ assign grc_o=grc;
  // ---- payload bank words (ot_hbm_w2_protected_bank_veto_on, STAGE=0 DIST=1 RED=1 LOCAL_PHASE=0 HOLD_SEAT=0)
  reg [71:0] code[0:NW-1];
  reg [71:0] snapshot_lo[0:NW-1],snapshot_hi[0:NW-1];

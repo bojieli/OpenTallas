@@ -7,14 +7,14 @@
   },
   "source_pins": {
     "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "1441ea6c9dc6cc7486be8df3787409ac7f382bf03f3ce2d781a961328191f540",
-    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_station_slice.sv": "41fb914a7aae59557d3b6b1a9baca3fb2920a19693859f8593af40dea34fa280",
-    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "ac19906e8e098da1bbca8eca3347d069e8fc51f5fad3a95e840c35852c595ac9",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_station_slice.sv": "e89b27621c55d6a2745ef680dffe21d4f088c6d4bc97b21ce075f8a097a421e0",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "5bd5430456ebcf095fc92b7e0ebd41609e98f411eaadc0ef602ef23d7f75b9f9",
     "physical/hbm_w2_check_station_20261006/bank_legacy_static.sv": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e"
   },
   "generated_pins": {
     "bank_veto_static.sv": "693a3ba8b103ef2985fda601ccfb32617394e7ef6d0cfe1d5c262c5b1fdf1020",
-    "station_rb_static.sv": "7563102ecaed952534a745aedc38a90120148cb894302c263b489bb94be064cd",
-    "slice_static.sv": "d91d8f7778ae10699d56677e7296afdc1d103d0146e077b99ca2ad80f8ab9040"
+    "station_rb_static.sv": "9c1cfb565bea99630bcdc64b5d980d8026e67c181077c9ca051ee9fad8a2d1f5",
+    "slice_static.sv": "8378aace2311e94df3a31d24bd6df0271fbca11d816be3c1cf996d22a28f9ca5"
   },
   "lowering": "package imports replaced by the static W6 functions of bank_legacy_static.sv"
 }

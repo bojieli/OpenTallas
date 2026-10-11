@@ -177,24 +177,24 @@ function automatic [71:0] encode64(input [63:0] data);
   // in 5 word-group slice tiles (8,8,8,8,5 words = the RED groups), bank control here. Same logic, 0 cycles.
   initial if(!GRANT_SEAT||LOCAL_PHASE||HOLD_SEAT)$fatal(1,"HIER station: GRANT_SEAT=1, LOCAL_PHASE=0, HOLD_SEAT=0 only");
   wire [PW-1:0] pin_d={in_owner,in_frame,in_data};
-  wire [4:0] gs,gb,gcb,gce,gue,gcl,cbs;
+  wire [4:0] gs,gb,gcb,gce,gue,gcl;wire [PN-1:0] grc_h;
   wire go_c,go_r,go_k,go_s;wire [3:0] ph4;
   wire [319:0] q4;
   for(genvar s=0;s<4;s=s+1)begin:sl
    wire [NO*512-1:0] d;
    ot_hbm_w2_stn_slice #(.NW(8),.NB(512),.BASE(8*s),.NO(NO),.QOUT(0)) u_sl(
-    .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),.gr_d(gr_d),
+    .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),
     .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4),
     .din(pin_d[s*512+:512]),.dout(d),.q(),
-    .v_same(gs[s]),.v_bad(gb[s]),.v_cbad(gcb[s]),.v_ce(gce[s]),.v_ue(gue[s]),.v_clean(gcl[s]),.copy_bad(cbs[s]));
+    .v_same(gs[s]),.v_bad(gb[s]),.v_cbad(gcb[s]),.v_ce(gce[s]),.v_ue(gue[s]),.v_clean(gcl[s]),.grc_o(grc_h[s*8+:8]));
    for(genvar t=0;t<NO;t=t+1)begin:o assign out_q[t*PW+s*512+:512]=d[t*512+:512]; end
   end
   wire [NO*280-1:0] d4;
   ot_hbm_w2_stn_slice #(.NW(5),.NB(280),.BASE(32),.NO(NO),.QOUT(1)) u_sl4(
-   .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),.gr_d(gr_d),
+   .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),
    .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4),
    .din(pin_d[2048+:280]),.dout(d4),.q(q4),
-   .v_same(gs[4]),.v_bad(gb[4]),.v_cbad(gcb[4]),.v_ce(gce[4]),.v_ue(gue[4]),.v_clean(gcl[4]),.copy_bad(cbs[4]));
+   .v_same(gs[4]),.v_bad(gb[4]),.v_cbad(gcb[4]),.v_ce(gce[4]),.v_ue(gue[4]),.v_clean(gcl[4]),.grc_o(grc_h[32+:5]));
   for(genvar t=0;t<NO;t=t+1)begin:o4 assign out_q[t*PW+2048+:280]=d4[t*280+:280]; end
   ot_hbm_w2_stn_payload_ctl #(.NG(5)) u_pctl(
    .clk(clk_sm),.por_n(rst_p),.in_v(P_in_v),.out_r(P_out_r),.valid(q4[280]),
@@ -202,7 +202,7 @@ function automatic [71:0] encode64(input [63:0] data);
    .in_r(P_in_r),.out_v(P_out_v),.empty(P_empty),.fault(P_fault),
    .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4));
   assign P_d={q4[279:0],{2048{1'b0}}};   // only owner0/frame0 (bits 2063..2327) are read in HIER mode
-  assign copy_bad=|cbs;
+  assign copy_bad=|(grc_h^{PN{gr_d}});   // the flat seat's check (GRANT_SEAT: ivc==iv_p)
   end
   wire cv=P_out_v;
   // ---------------- learned transfers -----------------------------------
