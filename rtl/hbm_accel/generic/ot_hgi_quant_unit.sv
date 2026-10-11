@@ -18,7 +18,7 @@ module ot_hgi_quant_unit #(
     parameter integer WLQ = 16,        // lane credits (WIDE)
     parameter integer WMUT = 0,        // bench: ot_hgi_quant_wide MUT; 3 = every record forced to the packet path
     parameter integer WNB = 16, WOD = 32,
-    parameter integer WQ = 0           // el1011-hbm-fq: 1 = ot_hgi_quant_wide_q (lane-quad physical structure, +~5 cyc/record)
+    parameter integer WQ = 0           // el1011-hbm-fq: 1 = ot_hgi_quant_wide_q (flat lane-quad), 2 = ot_hgi_quant_wide_h (hierarchical tiles)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -79,7 +79,11 @@ module ot_hgi_quant_unit #(
         ot_hgi_quant_vm_transport #(.ENABLE(1), .MUTANT(MUT), .SERIAL_SHAPE(SERIAL_SHAPE)) u_tr (.clk(clk), .rst_n(rst_n),
             .cmd({c[1408:1], t_go}), .ready(t_ready), .done(t_done), .fault(t_fault), .drained(t_drained), .req_v(req_v),
             .req_r(take), .req(req), .rsp_v(vmr[273]), .rsp_r(rsp_r), .rsp(vmr[272:0]), .provider_fault(1'b0));
-        if (WQ) begin : g_wq
+        if (WQ == 2) begin : g_wh
+        ot_hgi_quant_wide_h #(.LQ(WLQ), .MUT(WMUT == 3 ? 0 : WMUT)) u_w (.clk(clk), .rst_n(rst_n),
+            .go(w_go), .cmd(c), .idle(w_idle), .done(w_done), .fault(w_fault), .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr),
+            .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .rg_req(rg_req), .rg_gnt(rg_gnt), .wg_req(wg_req), .wg_gnt(wg_gnt));
+        end else if (WQ) begin : g_wq
         ot_hgi_quant_wide_q #(.NB(2*WNB), .OD(WOD), .LQ(WLQ), .MUT(WMUT == 3 ? 0 : WMUT)) u_w (.clk(clk), .rst_n(rst_n),
             .go(w_go), .cmd(c), .idle(w_idle), .done(w_done), .fault(w_fault), .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr),
             .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .rg_req(rg_req), .rg_gnt(rg_gnt), .wg_req(wg_req), .wg_gnt(wg_gnt));
