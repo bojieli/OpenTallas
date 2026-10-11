@@ -569,8 +569,15 @@ module ot_qwen_nearhbm_ectl_h #(
     reg [2:0]  rg_j;
     reg [$clog2(DQ+1)-1:0] credit_used;
     wire       consume;                                 // a row popped this cycle
+`ifdef KVD_VMUT
+    wire [13:0] rg_vt = tpos(klast(rg_gam[3:0]) - rg_k, {rg_gam[3:0], rg_j});
+`else
     wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});
-    wire       rg_k_ok = rg_run && !rg_vph && (rg_idx < n_s);
+`endif
+    wire       kord = (n_s > 12'd1024);                  // stream order for the K pass (see above)
+    wire [11:0] rg_pidx = kord ? {rg_idx[11], rg_idx[9:6], rg_idx[10], rg_idx[5:0]} : rg_idx;
+    wire       rg_klim = kord ? (rg_idx < 12'd2048) : (rg_idx < n_s);
+    wire       rg_k_ok = rg_run && !rg_vph && rg_klim && (rg_pidx < n_s);
     wire       rg_v_valid_row = (rg_vt < T);
     wire       rg_v_gate = exp_done_r[{rg_g, rg_gam[3:0]}];
     wire       has_credit = (credit_used < DQ);
@@ -585,11 +592,12 @@ module ot_qwen_nearhbm_ectl_h #(
             if (start) begin
                 rg_run <= 1'b1; rg_vph <= 1'b0; rg_g <= 1'b0; rg_idx <= E; rg_gam <= E; rg_k <= 0; rg_j <= 0;
             end else if (rg_run && !rg_vph) begin
-                if (rg_idx < n_s) begin
-                    if (has_credit) begin
+                if (rg_klim) begin
+                    if (rg_pidx >= n_s) rg_idx <= rg_idx + R;             // not a position: skip
+                    else if (has_credit) begin
                         issue = 1'b1;
                         rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
-                        rq_t <= tpos(rg_idx[10:7], rg_idx[6:0]);
+                        rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
                         rg_idx <= rg_idx + R;
                     end
                 end else if (!rg_g) begin
@@ -665,9 +673,16 @@ module ot_qwen_nearhbm_ectl_h #(
     reg [7:0]  pend_g;
     reg [3:0]  pend_gam [0:7];
     reg        c_started;
-    wire       k_issue = c_started && !c_vph && !c_fin && (c_idx < n_s) && row_ne && q_ready;
+    wire [11:0] c_pidx = kord ? {c_idx[11], c_idx[9:6], c_idx[10], c_idx[5:0]} : c_idx;
+    wire       c_klim = kord ? (c_idx < 12'd2048) : (c_idx < n_s);
+    wire       k_issue = c_started && !c_vph && !c_fin && c_klim && (c_pidx < n_s) && row_ne && q_ready;
     // V pass
-    wire [13:0] c_vt = tpos(c_k, {c_gam[3:0], c_j});
+`ifdef KVD_VMUT
+    wire [3:0]  c_kk = klast(c_gam[3:0]) - c_k;              // MUTANT: the V pass k order reversed (P.V sum reordered)
+`else
+    wire [3:0]  c_kk = c_k;
+`endif
+    wire [13:0] c_vt = tpos(c_kk, {c_gam[3:0], c_j});
     wire        c_vrow = (c_vt < T);
     reg  [7:0]  kdrain;                                 // cycles since the last K issue, saturating
     wire        v_here = c_started && c_vph && !c_fin && (c_gam < gmax) && (c_j == cyc8) && (kdrain >= KDRAIN);
@@ -701,8 +716,9 @@ module ot_qwen_nearhbm_ectl_h #(
                 c_j <= 0; pend <= 8'd0; arm <= 8'd0; k_done <= 1'b0; v_done <= 1'b0;
             end else if (c_started && !c_fin) begin
                 if (!c_vph) begin
-                    if (c_idx < n_s) begin
-                        if (k_issue) begin
+                    if (c_klim) begin
+                        if (c_pidx >= n_s) c_idx <= c_idx + R;            // not a position: skip
+                        else if (k_issue) begin
                             c_idx <= c_idx + R;
                             if (c_idx == E && !c_g) ev_k_first <= 1'b1;
                         end
@@ -854,7 +870,7 @@ module ot_qwen_nearhbm_ectl_h #(
     localparam integer SCD = KDEPTH + LANE_D + 2;
     wire [11:0] tag_sc;
     wire        sc_v_n;
-    ot_hdc_delay #(.W(12), .D(SCD - 1)) u_tag (.clk(clk), .rst_n(rc), .d({c_g, c_idx[10:0]}), .q(tag_sc));
+    ot_hdc_delay #(.W(12), .D(SCD - 1)) u_tag (.clk(clk), .rst_n(rc), .d({c_g, c_pidx[10:0]}), .q(tag_sc));
     ot_hdc_delay #(.W(1), .D(SCD - 1), .RESET(1)) u_scv (.clk(clk), .rst_n(rc), .d(k_issue), .q(sc_v_n));
     reg tf2;
     wire [3:0] tf = 4'd0;

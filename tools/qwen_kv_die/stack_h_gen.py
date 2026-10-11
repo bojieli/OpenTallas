@@ -399,6 +399,54 @@ def generate():
         ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
                                                  .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
     end endgenerate""")
+    # (f) qwen-1010/b 2026-10-10: STREAM ORDER for the K (max) pass.  The KV-die controller streams each PC in its
+    # PC-local order j = {v, g, t[6], t[12:9], t[5:3]} (CONTRACT, stream bench: 0.966 TB/s worst over 8 refresh phases);
+    # the K pass consumes in that order (t[6] outer) whenever the stack holds more than 1,024 positions: the max pass and
+    # the score memory are order-free (scores land by their {g, idx} tag; max is exact in any order).  The V pass keeps
+    # the golden order.  The engine's linear counter L (step R) maps to the position index pidx = perm(L); an L whose
+    # pidx is not a position is skipped by both the request generator and the consumer.  KVD_VMUT (bench only):
+    # the V pass walks k in reverse (the P.V sum reordered) -- must be inexact.
+    ectl = rep(ectl, """    wire       rg_k_ok = rg_run && !rg_vph && (rg_idx < n_s);""",
+               """    wire       kord = (n_s > 12'd1024);                  // stream order for the K pass (see above)
+    wire [11:0] rg_pidx = kord ? {rg_idx[11], rg_idx[9:6], rg_idx[10], rg_idx[5:0]} : rg_idx;
+    wire       rg_klim = kord ? (rg_idx < 12'd2048) : (rg_idx < n_s);
+    wire       rg_k_ok = rg_run && !rg_vph && rg_klim && (rg_pidx < n_s);""")
+    ectl = rep(ectl, """                if (rg_idx < n_s) begin
+                    if (has_credit) begin
+                        issue = 1'b1;
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_idx[10:7], rg_idx[6:0]);
+                        rg_idx <= rg_idx + R;
+                    end""", """                if (rg_klim) begin
+                    if (rg_pidx >= n_s) rg_idx <= rg_idx + R;             // not a position: skip
+                    else if (has_credit) begin
+                        issue = 1'b1;
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
+                        rg_idx <= rg_idx + R;
+                    end""")
+    ectl = rep(ectl, """    wire       k_issue = c_started && !c_vph && !c_fin && (c_idx < n_s) && row_ne && q_ready;""",
+               """    wire [11:0] c_pidx = kord ? {c_idx[11], c_idx[9:6], c_idx[10], c_idx[5:0]} : c_idx;
+    wire       c_klim = kord ? (c_idx < 12'd2048) : (c_idx < n_s);
+    wire       k_issue = c_started && !c_vph && !c_fin && c_klim && (c_pidx < n_s) && row_ne && q_ready;""")
+    ectl = rep(ectl, """                    if (c_idx < n_s) begin
+                        if (k_issue) begin
+                            c_idx <= c_idx + R;""", """                    if (c_klim) begin
+                        if (c_pidx >= n_s) c_idx <= c_idx + R;            // not a position: skip
+                        else if (k_issue) begin
+                            c_idx <= c_idx + R;""")
+    ectl = rep(ectl, """.d({c_g, c_idx[10:0]}), .q(tag_sc));""", """.d({c_g, c_pidx[10:0]}), .q(tag_sc));""")
+    ectl = rep(ectl, """    wire [13:0] c_vt = tpos(c_k, {c_gam[3:0], c_j});""", """`ifdef KVD_VMUT
+    wire [3:0]  c_kk = klast(c_gam[3:0]) - c_k;              // MUTANT: the V pass k order reversed (P.V sum reordered)
+`else
+    wire [3:0]  c_kk = c_k;
+`endif
+    wire [13:0] c_vt = tpos(c_kk, {c_gam[3:0], c_j});""")
+    ectl = rep(ectl, """    wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});""", """`ifdef KVD_VMUT
+    wire [13:0] rg_vt = tpos(klast(rg_gam[3:0]) - rg_k, {rg_gam[3:0], rg_j});
+`else
+    wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});
+`endif""")
     wrapper = ENGINE
     s = s[:i] + HEAD.lstrip('\n') + '\n' + ectl + '\n' + wrapper + s[j:]
     # ================= the aggregator: node beat lanes (beat b = lanes d = LFB k + b of every head) =================
