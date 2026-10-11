@@ -6329,7 +6329,7 @@ def apply_options(a):
     COL_PITCH8 = COL_W8 + 8.64
     global ECOL_SLABS, ECOL_W
     ECOL_SLABS = tuple(x for x in (getattr(a, 'ecol_slabs', None) or '').split(',') if x)
-    assert set(ECOL_SLABS) <= {'wfc', 'host', 'capture'}, ('--ecol-slabs: wfc / host / capture', ECOL_SLABS)
+    assert set(ECOL_SLABS) <= {'wfc', 'host', 'capture', 'seedl'}, ('--ecol-slabs: wfc / host / capture / seedl', ECOL_SLABS)
     ECOL_W = float(getattr(a, 'ecol_w', 518.4) or 518.4)
     global TIER_COLS8, ROOTS, TIER_COLS_SET
     TIER_COLS_SET = bool(getattr(a, 'tier_cols', None))
