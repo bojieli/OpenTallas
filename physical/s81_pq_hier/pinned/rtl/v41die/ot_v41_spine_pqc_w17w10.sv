@@ -800,7 +800,8 @@ module ot_v41_spine_pqc_w17w10 #(
     parameter integer RG = 8,            // regions per replica group (return configuration replicas; v9: 16 -> 8)
     parameter integer XRV = 0,           // v14: 1 = valid-return VM read (x_rv), 0 = v13b fixed one-edge read
     parameter integer XCAP = 16,         // v14: outstanding VM reads (XRV = 1; >= round trip + 1 for full rate)
-    parameter integer SCR = 0,           // v15: 1 = physical screen (T_RET holds the screen pin registers)
+    parameter integer SCR = 0,
+    parameter integer TT = 0,            // v15: 1 = instantiate the fixed-name tile tops (screen shape; composition)           // v15: 1 = physical screen (T_RET holds the screen pin registers)
     parameter integer RPT = 2,           // v9: registered repeater stages on the broadcast out, the root inputs and
                                          // the row-write outputs (long die-scale nets; each adds RPT cycles)
     parameter integer BW = 1 + PHW + 3 + 1 + 1 + 2 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024
@@ -889,23 +890,38 @@ module ot_v41_spine_pqc_w17w10 #(
     wire [NGR-1:0] q2f;
     wire [16*NGR-1:0] ga;
     wire [BW-1025:0] bc_hr;
-    ot_v41_pqc_ctl #(.PHW(PHW), .SAW(SAW), .R(R), .VAW(VAW), .VRD(VRD), .KMAX(KMAX), .BST(BST), .NSEG(NSEG), .PQ(PQ),
-                     .GAP(GAP), .GUARD(GUARD), .GSLACK(GSLACK), .RG(RG), .XRV(XRV), .XCAP(XCAP), .RPT(RPT), .BW(BW)) u_ctl (
-        .clk(clk), .rst_n(rst_n), .aq_vin(aq_vin), .aqf(aqf), .aqi_o(aqi), .ba_v_o(ba_v), .ba_blk_o(ba_blk), .hw_o(hw),
-        .h_hi_o(h_hi), .h_b0_o(h_b0), .h_b1_o(h_b1), .mdr_o(mdr), .q2f_i(q2f), .ga_i(ga), .bc_hr_o(bc_hr),
-        .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase), .i_xps(i_xps), .i_obase(i_obase), .i_ops(i_ops),
-        .i_fmt(i_fmt), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_rv(x_rv), .f_fault(f_fault),
-        .fault(fault), .phase_cycles(phase_cycles), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag)
-`ifdef OT_PQ_ROM_PORTS
-        , .rom_pa0(rom_pa0), .rom_pa1(rom_pa1), .rom_pq0(rom_pq0), .rom_pq1(rom_pq1), .rom_sa(rom_sa), .rom_sq(rom_sq)
-`endif
-    );
+    generate if (TT != 0) begin : g_ctt
+        ot_pqc_t_ctl16 u_ctl (
+            .clk(clk), .rst_n(rst_n), .aq_vin(aq_vin), .aqf(aqf), .aqi_o(aqi), .ba_v_o(ba_v), .ba_blk_o(ba_blk), .hw_o(hw),
+            .h_hi_o(h_hi), .h_b0_o(h_b0), .h_b1_o(h_b1), .mdr_o(mdr), .q2f_i(q2f), .ga_i(ga), .bc_hr_o(bc_hr),
+            .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase), .i_xps(i_xps), .i_obase(i_obase), .i_ops(i_ops),
+            .i_fmt(i_fmt), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_rv(x_rv), .f_fault(f_fault),
+            .fault(fault), .phase_cycles(phase_cycles), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag)
+    `ifdef OT_PQ_ROM_PORTS
+            , .rom_pa0(rom_pa0), .rom_pa1(rom_pa1), .rom_pq0(rom_pq0), .rom_pq1(rom_pq1), .rom_sa(rom_sa), .rom_sq(rom_sq)
+    `endif
+        );
+        end else begin : g_cgen
+        ot_v41_pqc_ctl #(.PHW(PHW), .SAW(SAW), .R(R), .VAW(VAW), .VRD(VRD), .KMAX(KMAX), .BST(BST), .NSEG(NSEG), .PQ(PQ),
+                         .GAP(GAP), .GUARD(GUARD), .GSLACK(GSLACK), .RG(RG), .XRV(XRV), .XCAP(XCAP), .RPT(RPT), .BW(BW)) u_ctl (
+            .clk(clk), .rst_n(rst_n), .aq_vin(aq_vin), .aqf(aqf), .aqi_o(aqi), .ba_v_o(ba_v), .ba_blk_o(ba_blk), .hw_o(hw),
+            .h_hi_o(h_hi), .h_b0_o(h_b0), .h_b1_o(h_b1), .mdr_o(mdr), .q2f_i(q2f), .ga_i(ga), .bc_hr_o(bc_hr),
+            .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase), .i_xps(i_xps), .i_obase(i_obase), .i_ops(i_ops),
+            .i_fmt(i_fmt), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_rv(x_rv), .f_fault(f_fault),
+            .fault(fault), .phase_cycles(phase_cycles), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag)
+    `ifdef OT_PQ_ROM_PORTS
+            , .rom_pa0(rom_pa0), .rom_pa1(rom_pa1), .rom_pq0(rom_pq0), .rom_pq1(rom_pq1), .rom_sa(rom_sa), .rom_sq(rom_sq)
+    `endif
+        );
+    end endgenerate
 `ifndef SYNTHESIS
     // bench observation aliases (the field vehicle's stall statistics read u_sp.ld_run / x_ok / xo)
     localparam integer XMWW = (XCAP > 1) ? $clog2(XCAP) : 1;
-    wire          ld_run = u_ctl.ld_run;
-    wire          x_ok = u_ctl.x_ok;
-    wire [XMWW:0] xo = u_ctl.xo;
+    wire          ld_run, x_ok;
+    wire [XMWW:0] xo;
+    if (TT == 0) begin : g_obs
+        assign ld_run = g_cgen.u_ctl.ld_run; assign x_ok = g_cgen.u_ctl.x_ok; assign xo = g_cgen.u_ctl.xo;
+    end
 `endif
     // T_AQ x2
     wire [511:0] aq_q;
@@ -920,14 +936,24 @@ module ot_v41_spine_pqc_w17w10 #(
     // T_QB
     wire [255:0] hq0, hq1;
     wire [9:0]   he0, he1;
+    if (TT != 0) begin : g_qtt
+        ot_pqc_t_qb u_qb (.clk(clk), .rst_n(rst_n), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e), .h_b0(h_b0),
+                          .h_b1(h_b1), .hw_sv(hw[13:12]), .hq0(hq0), .hq1(hq1), .he0(he0), .he1(he1));
+    end else begin : g_qgen
     ot_v41_pqc_qb #(.KMAX(KMAX)) u_qb (.clk(clk), .rst_n(rst_n), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e), .h_b0(h_b0),
                                       .h_b1(h_b1), .hw_sv(hw[13:12]), .hq0(hq0), .hq1(hq1), .he0(he0), .he1(he1));
+    end
     // T_IX x4: tile g holds the read lanes kl in [4g, 4g+3] (block parity g[1], words 32 g[0] ..)
     wire [1023:0] bt_d;
     generate for (g = 0; g < 4; g = g + 1) begin : g_ix
         wire [255:0] d;
-        ot_v41_pqc_ix #(.KMAX(KMAX), .VRD(VRD)) u_ix (.clk(clk), .rst_n(rst_n), .par(g >= 2),
-            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]), .bt_d(d));
+        if (TT != 0) begin : g_tt
+            ot_pqc_t_ix u_ix (.clk(clk), .rst_n(rst_n), .par(g >= 2),
+                .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]), .bt_d(d));
+        end else begin : g_gen
+            ot_v41_pqc_ix #(.KMAX(KMAX), .VRD(VRD)) u_ix (.clk(clk), .rst_n(rst_n), .par(g >= 2),
+                .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]), .bt_d(d));
+        end
         genvar u;
         for (u = 0; u < 4; u = u + 1) begin : g_u
             assign bt_d[256*u + 64*g +: 64] = d[64*u +: 64];
@@ -937,19 +963,31 @@ module ot_v41_spine_pqc_w17w10 #(
     generate for (g = 0; g < NGR; g = g + 1) begin : g_ret
         localparam integer N = (R - RG * g < RG) ? (R - RG * g) : RG;
         wire [15:0] ga_g;
-        ot_v41_pqc_ret #(.NR(N), .VAW(VAW), .PQ(PQ), .RPT(RPT), .PIN(SCR)) u_ret (.clk(clk), .rst_n(rst_n),
-            .r_v(r_v[RG*g +: N]), .r_row(r_row[16*RG*g +: 16*N]), .r_pos(r_pos[3*RG*g +: 3*N]),
-            .r_fp32(r_fp32[32*RG*g +: 32*N]), .r_bf16(r_bf16[16*RG*g +: 16*N]), .r_e(r_e[RG*g +: N]), .mdr(mdr),
-            .w_we(w_we[RG*g +: N]), .w_addr(w_addr[VAW*RG*g +: VAW*N]), .w_data(w_data[32*RG*g +: 32*N]),
-            .q2f(q2f[g]), .ga(ga_g));
+        if (TT != 0) begin : g_tt
+            ot_pqc_t_ret u_ret (.clk(clk), .rst_n(rst_n),
+                .r_v(r_v[RG*g +: N]), .r_row(r_row[16*RG*g +: 16*N]), .r_pos(r_pos[3*RG*g +: 3*N]),
+                .r_fp32(r_fp32[32*RG*g +: 32*N]), .r_bf16(r_bf16[16*RG*g +: 16*N]), .r_e(r_e[RG*g +: N]), .mdr(mdr),
+                .w_we(w_we[RG*g +: N]), .w_addr(w_addr[VAW*RG*g +: VAW*N]), .w_data(w_data[32*RG*g +: 32*N]),
+                .q2f(q2f[g]), .ga(ga_g));
+            end else begin : g_gen
+            ot_v41_pqc_ret #(.NR(N), .VAW(VAW), .PQ(PQ), .RPT(RPT), .PIN(SCR)) u_ret (.clk(clk), .rst_n(rst_n),
+                .r_v(r_v[RG*g +: N]), .r_row(r_row[16*RG*g +: 16*N]), .r_pos(r_pos[3*RG*g +: 3*N]),
+                .r_fp32(r_fp32[32*RG*g +: 32*N]), .r_bf16(r_bf16[16*RG*g +: 16*N]), .r_e(r_e[RG*g +: N]), .mdr(mdr),
+                .w_we(w_we[RG*g +: N]), .w_addr(w_addr[VAW*RG*g +: VAW*N]), .w_data(w_data[32*RG*g +: 32*N]),
+                .q2f(q2f[g]), .ga(ga_g));
+        end
         assign ga[16*g +: 16] = ga_g;
     end endgenerate
     // T_BC: the broadcast {bc_hr with T_QB's fields, bt_d} through NST relay stages
     wire [BW-1:0] bc_st [0:NST];
     assign bc_st[0] = {bc_hr[BW-1025:578], hq0, he0, hq1, he1, bc_hr[45:0], bt_d};
     generate for (g = 0; g < NST; g = g + 1) begin : g_bc
-        ot_v41_pqc_bcrel #(.W(BW), .RT(PHW + 9), .RB(1024 + 39)) u_rel (.clk(clk), .rst_n(rst_n), .d(bc_st[g]),
-                                                                      .q(bc_st[g + 1]));
+        if (TT != 0) begin : g_tt
+            ot_pqc_t_bc u_rel (.clk(clk), .rst_n(rst_n), .d(bc_st[g]), .q(bc_st[g + 1]));
+        end else begin : g_gen
+            ot_v41_pqc_bcrel #(.W(BW), .RT(PHW + 9), .RB(1024 + 39)) u_rel (.clk(clk), .rst_n(rst_n), .d(bc_st[g]),
+                                                                          .q(bc_st[g + 1]));
+        end
     end endgenerate
     wire [BW-1:0] bc = bc_st[NST];
     assign {f_cfg_go, f_cfg_ph, f_cfg_np, f_go, f_go_bf, f_go_tag, f_xs_v, f_xs_p, f_xs_b, f_xs_sv, f_xs_q0, f_xs_e0,

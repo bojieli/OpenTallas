@@ -26,6 +26,7 @@ module ot_v41_pqc_spine_screen #(
     parameter integer PQ = 1,
     parameter integer XRV = 0,           // v14 (ds-1010/pqc): valid-return VM read
     parameter integer XCAP = 16,
+    parameter integer TT = 1,            // v15: 1 = the fixed-name tile tops (the composition; R 16 shape only)
     parameter integer BW = 1 + PHW + 3 + 1 + 1 + 2 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024
 ) (
     input  wire              clk,
@@ -89,13 +90,19 @@ module ot_v41_pqc_spine_screen #(
     // ROM models: two-cycle synchronous macros (ot_v41_pqc_rom2_model below), read with the spine's next address
     wire [47:0] sq;
     wire [63:0] pq0, pq1;
-    ot_v41_pqc_rom2_model #(.AW(SAW), .DW(48)) u_srom (.clk(clk), .rst_n(rst_n), .we(rw_st), .wa(rw_a), .wd(rw_d[47:0]),
-                                                       .ra(sa), .q(sq));
-    ot_v41_pqc_rom2_model #(.AW(PHW + 1), .DW(64)) u_prom0 (.clk(clk), .rst_n(rst_n), .we(rw_ph), .wa(rw_a[PHW:0]),
-                                                           .wd(rw_d), .ra(pa0), .q(pq0));
-    ot_v41_pqc_rom2_model #(.AW(PHW + 1), .DW(64)) u_prom1 (.clk(clk), .rst_n(rst_n), .we(rw_ph), .wa(rw_a[PHW:0]),
-                                                           .wd(rw_d), .ra(pa1), .q(pq1));
-    ot_v41_spine_pqc_w17w10 #(.PHW(PHW), .SAW(SAW), .R(R), .VAW(VAW), .VRD(VRD), .KMAX(KMAX), .BST(BST), .PQ(PQ), .XRV(XRV), .XCAP(XCAP), .SCR(1)) u_sp (
+    generate if (TT != 0) begin : g_rtt
+        ot_pqc_t_srom u_srom (.clk(clk), .rst_n(rst_n), .we(rw_st), .wa(rw_a), .wd(rw_d[47:0]), .ra(sa), .q(sq));
+        ot_pqc_t_prom u_prom0 (.clk(clk), .rst_n(rst_n), .we(rw_ph), .wa(rw_a[PHW:0]), .wd(rw_d), .ra(pa0), .q(pq0));
+        ot_pqc_t_prom u_prom1 (.clk(clk), .rst_n(rst_n), .we(rw_ph), .wa(rw_a[PHW:0]), .wd(rw_d), .ra(pa1), .q(pq1));
+    end else begin : g_rgen
+        ot_v41_pqc_rom2_model #(.AW(SAW), .DW(48)) u_srom (.clk(clk), .rst_n(rst_n), .we(rw_st), .wa(rw_a), .wd(rw_d[47:0]),
+                                                           .ra(sa), .q(sq));
+        ot_v41_pqc_rom2_model #(.AW(PHW + 1), .DW(64)) u_prom0 (.clk(clk), .rst_n(rst_n), .we(rw_ph), .wa(rw_a[PHW:0]),
+                                                               .wd(rw_d), .ra(pa0), .q(pq0));
+        ot_v41_pqc_rom2_model #(.AW(PHW + 1), .DW(64)) u_prom1 (.clk(clk), .rst_n(rst_n), .we(rw_ph), .wa(rw_a[PHW:0]),
+                                                               .wd(rw_d), .ra(pa1), .q(pq1));
+    end endgenerate
+    ot_v41_spine_pqc_w17w10 #(.PHW(PHW), .SAW(SAW), .R(R), .VAW(VAW), .VRD(VRD), .KMAX(KMAX), .BST(BST), .PQ(PQ), .XRV(XRV), .XCAP(XCAP), .SCR(1), .TT(TT)) u_sp (
         .clk(clk), .rst_n(rst_n), .go(q_go), .i_ph(q_ph), .i_np(q_np), .i_xbase(q_xb), .i_xps(q_xps),
         .i_obase(q_ob), .i_ops(q_ops), .i_fmt(q_fm), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr),
         .x_q(q_x), .x_rv(q_xrv), .w_we(o_w_we), .w_addr(o_w_addr), .w_data(o_w_data),
