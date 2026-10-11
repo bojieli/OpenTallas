@@ -271,21 +271,22 @@ module ot_hcoll_sfifo_x #(
     end
     // ---- RBSEL: bank-local AND stage, then OR into the pin flop (+1 edge) ----
     generate if (RBX != 0) begin : g_rbsel
-        (* keep *) reg [NSL-1:0] selq [0:NBK-1];   // selq[b][s] == (bs2 == b), one copy per bank and 64-bit slice
-        reg [W-1:0] mq [0:NBK-1];
+        // flat vectors (no unpacked arrays): the keep reaches every select bit cell (physical/common_flow/ot_keep_regs.tcl)
+        (* keep *) reg [NBK*NSL-1:0] selq;    // selq[b*NSL+s] == (bs2 == b), one copy per bank and 64-bit slice
+        reg [NBK*W-1:0] mq;
         reg v3;
         always @(posedge clk) begin
             for (integer b = 0; b < NBK; b = b + 1)
+                for (integer s = 0; s < NSL; s = s + 1)
 `ifdef OT_HCOLL_MUT_RBSEL
-                selq[b] <= {NSL{bs2 == 1'(b)}};            // mutant: select one edge late (stale bank)
+                    selq[b*NSL+s] <= (bs2 == 1'(b));            // mutant: select one edge late (stale bank)
 `else
-                selq[b] <= {NSL{bs1 == 1'(b)}};
+                    selq[b*NSL+s] <= (bs1 == 1'(b));
 `endif
             for (integer b = 0; b < NBK; b = b + 1)
-                for (integer s = 0; s < NSL; s = s + 1)
-                    for (integer i = 0; i < 64; i = i + 1)
-                        if (s * 64 + i < W) mq[b][s*64+i] <= rawb[b][s*64+i] & selq[b][s];
-            out_d <= mq[0] | mq[NBK-1];
+                for (integer i = 0; i < W; i = i + 1)
+                    mq[b*W+i] <= rawb[b][i] & selq[b*NSL + i/64];
+            out_d <= mq[0 +: W] | mq[(NBK-1)*W +: W];
         end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) v3 <= 1'b0; else v3 <= v2;
