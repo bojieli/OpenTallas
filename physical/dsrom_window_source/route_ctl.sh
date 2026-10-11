@@ -66,7 +66,11 @@ set_clock_uncertainty -hold 50 -from [get_clocks core_clk] -to [get_clocks vclk]
 }
 EOT
 E=$(python3 -c "print($DIE-5)")
-echo "SRC=$SRC lab=$lab MARGIN=${MARGIN:-2} DIE=$DIE PD=${PD:-0.50} L=$L FMIN=$FMIN FMAX=$FMAX $*" > $W/args
+# PINPLAN=m3 (el1011-ds-misc 2026-10-11, MARGIN 3): the face plan of pinplan_m3.py (lanes 0-15 S / 16-31 N, K-port E,
+# control + clk W); default: the clock pin alone, as before.
+PINARGS=(--pin-region '^clk$=left:269-271')
+if [ "${PINPLAN:-}" = m3 ]; then PINARGS=(); while IFS= read -r l; do PINARGS+=(--pin-region "$l"); done < <(python3 physical/dsrom_window_source/pinplan_m3.py top $DIE $DIE); fi
+echo "SRC=$SRC lab=$lab MARGIN=${MARGIN:-2} PINPLAN=${PINPLAN:-} DIE=$DIE PD=${PD:-0.50} L=$L FMIN=$FMIN FMAX=$FMAX $*" > $W/args
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 python3 tools/run_abi3_physical.py --view asap7 --top ot_dsrom_window_source_ctl \
   --source rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_ctl.sv \
@@ -74,13 +78,14 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_dsrom_window_source_ctl
   --source rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_stream_la_s81.sv \
   --source rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_chip_v41x_window_stage4.sv --source rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_chip_v41x_window_row_codec.sv \
   --source rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv \
+  --source rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_land8.sv --source rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_mirror.sv \
   --param MARGIN=${MARGIN:-2} --param REFILL_OWNER_SAFE=1 --param REFILL_CREDITS=8 --param LA_ISSUE_PC=1 \
   --clock-period-ns 0.770 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append $C/io_route.sdc --stages pnr \
   --hold-margin-ns ${HM:-0.010} --max-fanout 32 \
   --die-area 0 0 $DIE $DIE --core-area 5 5 $E $E --place-density ${PD:-0.50} --orfs-var ADDER_MAP_FILE= \
   --orfs-var "IO_PLACER_H=M4 M6" --orfs-var "IO_PLACER_V=M5 M7" \
-  --pin-region '^clk$=left:269-271' \
+  "${PINARGS[@]}" \
   --orfs-var "PRE_GLOBAL_PLACE_TCL=/src/physical/qwen_die_masters/io_flop_at_pins.tcl" \
   --orfs-var "PRE_DETAIL_PLACE_TCL=/src/physical/qwen_die_masters/out_flop_release.tcl" --orfs-var TMPDIR=/work/tmp \
   --routing-layers M2 M9 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
