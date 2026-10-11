@@ -45,7 +45,7 @@ module ot_s81_svch_rly #(parameter integer W = 8, parameter integer NR = 1, para
     end else begin : g_r
         reg [V-1:0] v [0:NR-1];
         reg [W-1:0] d [0:NR-1];
-        integer k;
+        integer k, kd;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) for (k = 0; k < NR; k = k + 1) v[k] <= '0;
 `ifdef SVCH_MUT_RLY_DROP
@@ -53,7 +53,7 @@ module ot_s81_svch_rly #(parameter integer W = 8, parameter integer NR = 1, para
 `else
             else begin v[0] <= i_v; for (k = 1; k < NR; k = k + 1) v[k] <= v[k-1]; end
 `endif
-        always @(posedge clk) begin d[0] <= i_d; for (k = 1; k < NR; k = k + 1) d[k] <= d[k-1]; end
+        always @(posedge clk) begin d[0] <= i_d; for (kd = 1; kd < NR; kd = kd + 1) d[kd] <= d[kd-1]; end
         assign o_v = v[NR-1]; assign o_d = d[NR-1];
     end endgenerate
 endmodule
