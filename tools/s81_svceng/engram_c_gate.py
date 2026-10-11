@@ -19,7 +19,7 @@ import numpy as np  # noqa: E402
 import rtl_dsrom_engram_lookup_campaign as C  # noqa: E402
 
 E = ROOT / "rtl/dsrom_sys/engram"
-SRC = C.SOURCES + [E / "ot_dsrom_engram_prefetch.sv", ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+SRC = C.SOURCES + [E / "dsfd_engram_sink.sv", E / "ot_dsrom_engram_prefetch.sv", ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
                    ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
                    ROOT / "rtl/lib/ot_reset_sync.sv", ROOT / "rtl/lib/ot_async_fifo.sv",
                    ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
