@@ -41,6 +41,12 @@ module ot_s81ph_link_ep #(
     // TOREG (ds-1010 2026-10-10, opt-in): the ACK timeout limit (static ch_b select) is registered and the timer keeps a
     // registered at-limit flag, so timeout = occ && !progress && at_lim (coll lane lcrpg TT -470 = ch_b_q -> limit mux ->
     // timer == limit compare -> retry / rewind across the tile).  0 cycles.
+    // MWR (ds-1010/coll-tu 2026-10-11, opt-in): the replay buffer and the receive FIFO use ot_s81ph_mem1r1w WREG = 1
+    // (registered write ports beside the macros, read-after-write forwarded inside the wrapper; caller-visible timing
+    // unchanged), and the replay forward word rb_fwd_d loads every cycle (it is read only when rb_fwd, i.e. right after an
+    // accept, so its accept load enable was redundant): accept no longer drives 553-bit enables or macro pins directly
+    // (lane lcrpi: hold stuck -68 at u_rb w_addr_in = nxt_i, a setup-critical register).  0 cycles.
+    parameter integer MWR            = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
     parameter integer TOREG          = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
     parameter integer RXPIPE         = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer PIPE           = 0,     // CLAUDE S81-PH coll lane v3: 1 = sender pipelined (see the PIPE notes below)
@@ -256,7 +262,7 @@ module ot_s81ph_link_ep #(
     wire            ack_skip  = ack_ok && (d_ack > snd_off);
     wire [IW-1:0]   snd_i_nx  = (rewind || ack_skip) ? una_i_n : snd_i_l;
 
-    ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(RP), .SRAM(SRAM)) u_rb (.clk(clk),
+    ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(RP), .SRAM(SRAM), .WREG(MWR)) u_rb (.clk(clk), .rst_n(rst_n),
         .we(accept), .wa(nxt_i), .wd({in_last, in_data}), .re(1'b1), .ra(PIPE ? snd_i : snd_i_nx), .q(rb_q));
 
     // TX pipe: stage 0 = {payload, partial CRCs}; stage 1 = {payload, CRC}; stages 2.. copies
@@ -366,7 +372,7 @@ module ot_s81ph_link_ep #(
     wire            c_nak    = (c_crcerr || c_ahead) && !nak_sent;
     wire            drain    = (fill != 0) && (!out_valid_r || out_ready);
 
-    ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(CREDITS), .SRAM(SRAM)) u_fifo (.clk(clk),
+    ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(CREDITS), .SRAM(SRAM), .WREG(MWR)) u_fifo (.clk(clk), .rst_n(rst_n),
         .we(c_acc), .wa(tail), .wd({c_last, c_data}), .re(drain), .ra(head), .q(fifo_q));
 
     reg  [SEQW-1:0] tx_ack;
@@ -447,7 +453,7 @@ module ot_s81ph_link_ep #(
                 else if (!pace_ok) begin pace <= pace + PNUM_W;           pace_ok_r <= pace_ok_inc;    end
             end
             rb_fwd <= accept && (nxt_i == snd_i_nx);
-            if (accept) rb_fwd_d <= {in_last, in_data};
+            if (accept || MWR != 0) rb_fwd_d <= {in_last, in_data};
             if (accept) begin
                 nxt   <= nxt + 1'b1;
                 nxt_i <= idx_add(nxt_i, 1);

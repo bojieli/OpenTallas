@@ -1,0 +1,241 @@
+{
+ "schema": "opentallas.s81.slab-contract.v1",
+ "version": "v1",
+ "slab": "wfc_kit",
+ "owner": "mtp-wfc-1010",
+ "recipe": {
+  "opts": "results/physical/s81_gen_20261010/s81_layer1_full_efs_xbrg_le.opts",
+  "extra": "",
+  "tag": "layer1",
+  "die_um": [
+   33000.0,
+   26000.0
+  ],
+  "q_lef": "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz",
+  "hub_column_width_um": 1728.0,
+  "ecol_slabs": []
+ },
+ "source_commit": "2a70e35db",
+ "generator": "tools/dsrom_s81_fulldie.py",
+ "tool": "tools/s81_ph/slab_contracts.py",
+ "adapter_contract": "physical/s81_ctrl/ADAPTER_CONTRACT_1011.json",
+ "engines": [
+  "spare"
+ ],
+ "stage_controller": "not in this recipe (--ctrl-slab off): reserved groups face the W hub-column centre; the dsfd_sp_ctrl slab position is fixed when s81-ctl binds it",
+ "rules": [
+  "outline and existing pins are what the die build places: a slab master must keep them (or publish a new contract version) so the generator netlist binds unchanged",
+  "RESERVED groups: pin names are placeholders; widths, face, layer and span are the contract. Each engine adapter (ot_s81_engine_adapter QD 8) sits inside the slab at that face; the die nets are fixed-latency pulse nets (relay stations allowed, every die pin lands in a pin flop)",
+  "clock: slab ck from the die domain tree (domain field); serial_0p9 slabs need the adapter CDC"
+ ],
+ "instances": [
+  {
+   "instance": "sp_wfc",
+   "master": "dsfd_wfc",
+   "domain": "stream_1p2",
+   "outline_um": [
+    1727.976,
+    328.296
+   ],
+   "die_origin_um": [
+    13942.8,
+    13491.36
+   ],
+   "orient": "R0",
+   "pins": {
+    "ck": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1725.504,
+      1725.528
+     ],
+     "nets": [
+      {
+       "net": "clk_stream",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "sp_collective.pll_stream",
+        "cf0.ck",
+        "cf1.ck",
+        "cf2.ck"
+       ]
+      }
+     ]
+    },
+    "rst": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1727.52,
+      1727.544
+     ],
+     "nets": [
+      {
+       "net": "rst_stream",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "sp_collective.rst_stream",
+        "cf0.rst",
+        "cf1.rst",
+        "cf2.rst"
+       ]
+      }
+     ]
+    },
+    "f_vm": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      0.432,
+      24.984
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_wfc_d11_g1_sp_wfc",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_vm_wfc_d11_sp_wfc_0.dq"
+       ]
+      }
+     ]
+    },
+    "f_capture": {
+     "bits": 64,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      26.976,
+      30.024
+     ],
+     "nets": [
+      {
+       "net": "hb_capture_wfc_d10",
+       "cls": "hub",
+       "bits": 64,
+       "peers": [
+        "f_hb_capture_wfc_10.dq"
+       ]
+      }
+     ]
+    },
+    "t_capture": {
+     "bits": 64,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      32.064,
+      35.112
+     ],
+     "nets": [
+      {
+       "net": "hb_wfc_capture_d0_g0_f_hb_wfc_capture_1",
+       "cls": "hub",
+       "bits": 64,
+       "peers": [
+        "g_hb_wfc_capture_d0_f_hb_wfc_capture_1_0.di"
+       ]
+      }
+     ]
+    },
+    "t_vm": {
+     "bits": 544,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      74.4,
+      100.488
+     ],
+     "nets": [
+      {
+       "net": "hb_wfc_vm_d0_g0_f_hb_wfc_vm_1",
+       "cls": "hub",
+       "bits": 544,
+       "peers": [
+        "g_hb_wfc_vm_d0_f_hb_wfc_vm_1_0.di"
+       ]
+      }
+     ]
+    },
+    "t_collective": {
+     "bits": 514,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      276.576,
+      301.224
+     ],
+     "nets": [
+      {
+       "net": "hb_wfc_collective_d0_g0_f_hb_wfc_collective_1",
+       "cls": "hub",
+       "bits": 514,
+       "peers": [
+        "g_hb_wfc_collective_d0_f_hb_wfc_collective_1_0.di"
+       ]
+      }
+     ]
+    },
+    "f_collective": {
+     "bits": 514,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      303.216,
+      327.864
+     ],
+     "nets": [
+      {
+       "net": "hb_collective_wfc_d8",
+       "cls": "hub",
+       "bits": 514,
+       "peers": [
+        "f_hb_collective_wfc_8.dq"
+       ]
+      }
+     ]
+    }
+   },
+   "reserved_ctrl": {
+    "cspare": {
+     "bits": 85,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      859.488,
+      863.544
+     ],
+     "direction": "in",
+     "carries": "c_cmd_v + c_cmd_d[84] (adapter controller side)",
+     "controller_port": "cv[11] + cd[11*84 +: 84]",
+     "engine": "spare",
+     "status": "RESERVED"
+    },
+    "dspare": {
+     "bits": 9,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      867.6,
+      868.008
+     ],
+     "direction": "out",
+     "carries": "c_done_v + c_done_tag[8] (adapter controller side)",
+     "controller_port": "dv[11] + dt[11*8 +: 8]",
+     "engine": "spare",
+     "status": "RESERVED"
+    }
+   }
+  }
+ ],
+ "notes": [
+  "v1 (first publication, 2026-10-11): derived from the efs layer1 recipe of record (198.72 BF frame, hub column 1,728 um) [layer1] and the same recipe + --wfc-kit --wfc-crp --ctrl-role source [layer1srccrp: the WFC slab = dsfd_wfc_cr2]. The MTP-lane dies (layer1srckitm, draftAlnkp2l, draftPs) move slabs (--ecol-slabs) or widen the hub column: their contracts follow in v2 once the hub-column choice is fixed; the outline width of every W-column slab is the hub column width",
+  "collective here = the generic dsfd_sp_collective outline (no --coll-split3); with --coll-split3-cr the slab takes the composition outline physical/s81_ph_views/collective/composition_split3cr*.json (v2)"
+ ]
+}

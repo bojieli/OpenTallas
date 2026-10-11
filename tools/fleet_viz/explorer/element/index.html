@@ -76,6 +76,9 @@ h1{margin:0;font:800 17px var(--mono);letter-spacing:-.01em;min-width:0;overflow
 .sec{padding:12px 14px;border-bottom:1px solid var(--line)}
 .sec h3{margin:0 0 8px;font:700 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sec h3 .u{text-transform:none;letter-spacing:0;color:var(--dim);font-weight:600}
+h4.sub{margin:16px 0 8px;font:700 12px var(--sans);color:var(--ink);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+h4.sub:first-of-type{margin-top:4px}
+h4.sub .u{font:500 12px var(--sans);color:var(--dim)}
 .sec p,.note{margin:0 0 6px;font-size:12px;color:var(--dim);line-height:1.5}
 table.t{width:100%;border-collapse:collapse;font-size:12px}
 table.t th{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:left;padding:4px 5px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -124,7 +127,6 @@ svg.hist{width:100%;display:block}
 body.story .side{opacity:.55}
 body.story .lensbar{opacity:.5;pointer-events:none}
 @media (max-width: 980px){
-  .ov{grid-template-columns:minmax(0,1fr)} .ovc{border-right:0;border-bottom:1px solid var(--line)}
   body.tab-rtl .main{grid-template-columns:minmax(0,1fr)}
   .main{grid-template-columns:minmax(0,1fr)}
   .side{border-left:0;border-top:1px solid var(--line);max-height:none}
@@ -147,16 +149,6 @@ body.story .lensbar{opacity:.5;pointer-events:none}
 .tabs button:hover{color:var(--ink);background:var(--hover)}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);background:var(--hover)}
 .tabdesc{margin:6px 2px 0;font-size:13px;color:var(--dim)}
-/* overview */
-.ov{display:grid;grid-template-columns:repeat(var(--ovn,1),minmax(0,1fr));gap:0;border-bottom:1px solid var(--line)}
-.ovc{overflow-wrap:anywhere;padding:16px 18px 28px;border-right:1px solid var(--line);min-width:0;display:flex;flex-direction:column;gap:18px}
-.ovc:last-child{border-right:0}
-.ovc table.t{table-layout:fixed}
-.ovc table.t td:first-child{width:34%}
-.ovc h2{margin:0;font:800 17px var(--mono);overflow-wrap:anywhere}
-.ovc h3{margin:0 0 8px;font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
-.ovc h3 .u{text-transform:none;letter-spacing:0;color:var(--dim);font-weight:600}
-.ovc p{margin:0;font-size:14px;line-height:1.6}
 .lbl{display:inline-block;font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:5px;border:1px solid currentColor}
 .lbl.ver{color:var(--ok)} .lbl.unv{color:var(--warn)} .lbl.pend{color:var(--dim)} .lbl.bad{color:var(--hot)}
 ol.sumy{margin:4px 0 0;padding-left:22px;font-size:13.5px;line-height:1.55}
@@ -189,7 +181,7 @@ body.tab-rtl .main{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
 .mtree .nd .mm{color:var(--dim)}
 .dendro{width:100%;display:block}
 @media (max-width: 980px){ .tabbar{position:relative;top:0} .tabs button{font-size:14px;padding:7px 10px}
-  .ov{grid-template-columns:minmax(0,1fr)!important} .ovc{border-right:0;border-bottom:1px solid var(--line);padding:14px 12px 22px}
+
   body.tab-rtl .main{grid-template-columns:minmax(0,1fr)} }
 </style>
 </head>
@@ -203,7 +195,6 @@ body.tab-rtl .main{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
 <nav class="tabbar" aria-label="Element views"><div class="tabs" role="tablist" id="tabs"></div><p class="tabdesc" id="tabdesc"></p></nav>
 <div class="summary"><p id="sum">Loading&hellip;</p></div>
 <div class="pills" id="pills"></div>
-<div id="ov" class="ov" hidden></div>
 <div class="main" id="main">
   <div class="stagewrap"><div class="stage" id="stage"></div></div>
   <aside class="side" id="side" aria-label="Detail"></aside>

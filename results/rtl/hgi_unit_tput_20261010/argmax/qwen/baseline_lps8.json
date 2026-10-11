@@ -1,0 +1,212 @@
+{
+ "pass_": true,
+ "bench_pass": true,
+ "grade": "measured_unit_bench",
+ "vehicle": "BASELINE ot_hgi_argmax_record LPS 8 (closed build) + ot_hgi_argmax18_m GENERIC18 LP 8 + real ot_hgi_vm_unit; Qwen3-8B TP4 rank-0 ARGMAX.LOCAL (A STREAM n 37,984 from SU head_scale STREAM 1, imm_a 37,984; ranks 0 / 3); STREAM fed at the bus's full rate (1 beat / cycle)",
+ "source_log": "results/rtl/hgi_unit_tput_20261010/argmax/qwen/logs/l8_m0.log",
+ "summary": {
+  "records": 12,
+  "cycles": 57432,
+  "sim_cost": 28728.0,
+  "ratio": 1.999,
+  "n": 37984,
+  "imm_a": 37984,
+  "price_per_record": 2394.0,
+  "price_how": "argmax on the streamed logits",
+  "max_ret": 4786,
+  "max_tail_last_beat_to_retire": 36
+ },
+ "per_unit": {
+  "ARGMAX": {
+   "records": 12,
+   "real": 12,
+   "exact": 12,
+   "sim_cost": 28728.0
+  }
+ },
+ "mutants": [
+  {
+   "log": "results/rtl/hgi_unit_tput_20261010/argmax/qwen/logs/l8_m1.log",
+   "verdict": "FAIL",
+   "errors": 4
+  },
+  {
+   "log": "results/rtl/hgi_unit_tput_20261010/argmax/qwen/logs/l8_m2.log",
+   "verdict": "FAIL",
+   "errors": 12
+  }
+ ],
+ "records": [
+  {
+   "k": 0,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.max_last.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 1,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.tie_halves.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 2,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.tie_far.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 3,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.nan_first.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 4,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.zeros.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 5,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.gauss.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 6,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.max_last.r3",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 7,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.tie_halves.r3",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 8,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.tie_far.r3",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 9,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.nan_first.r3",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 10,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.zeros.r3",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  },
+  {
+   "k": 11,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "qwen.argmax_local.gauss.r3",
+   "real": 1,
+   "disp": 0,
+   "ret": 4786,
+   "cost": 2394.0,
+   "first_beat": 3,
+   "last_beat": 4750,
+   "tail": 36,
+   "ratio": 1.999
+  }
+ ],
+ "source_commit": "445ca2a45 (+ worktree LPS change)",
+ "bench": "rtl/hbm_accel/generic/adapters/tb/tb_hgi_argmax_tput.sv via run_argmax_tput.sh qwen OUT 8 {0,1,2} 1",
+ "host": "ot-epyc4 Verilator 5.050"
+}

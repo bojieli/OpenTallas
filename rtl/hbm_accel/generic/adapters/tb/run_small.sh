@@ -19,7 +19,7 @@ case $U in
   mover) SRC="rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv
      rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v" ;;
-  sm_e2e) SRC="rtl/hbm_accel/generic/adapters/ot_hgi_sm_record.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv
+  sm_e2e) SRC="physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/adapters/ot_hgi_sm_record.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv
      rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
      $(python3 -c "import sys; sys.path.insert(0,'tools'); import dshbm_sm_pq_seq as Q; print(' '.join(s for s in Q.SRC + Q.SMH_SRC if 'rtl/test/' not in s))")" ;;
   su_unit|sfu_unit) SRC="rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv $VEC
