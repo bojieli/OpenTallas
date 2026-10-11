@@ -99,7 +99,10 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  assign req=seat;
  assign rsp_r=ENABLE&&rn;                     // never back-pressured: one response a cycle is processed
  wire take_req=req_v&&req_r,take_rsp=response_v;
- wire [DW-1:0] dsc=(MUTANT==4)?pd[pd_t-2'd1]:pd[pd_h];
+ // hgi-1010/c (route e02c1820f TT -107, SS -513: pd_h -> launched / xe / xs / reserved 24-25 levels = the 4-entry head mux
+ // under the reply check): the head descriptor is a register (pd_hd) kept equal to pd[pd_h]
+ reg [DW-1:0] pd_hd;
+ wire [DW-1:0] dsc=(MUTANT==4)?pd[pd_t-2'd1]:pd_hd;
  wire d_we=dsc[DW-1]; wire [3:0] d_step=dsc[DW-2-:4]; wire [2:0] d_lane=dsc[DW-6-:3]; wire [5:0] d_part=dsc[DW-9-:6];
  wire d_lastr=dsc[18]; wire d_lastw=dsc[17]; wire d_final=dsc[16]; wire [15:0] d_tag=dsc[15:0];
  wire reply_ok=response[272:257]==d_tag && response[256]==d_we;
@@ -272,6 +275,9 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     end
     if(take_req)begin pd[pd_t]<=seat_d;pd_t<=pd_t+2'd1;end
     pd_n<=pd_n+{2'd0,take_req}-{2'd0,take_rsp};
+    // the head after this edge: the pushed entry when the queue is (becomes) empty, else the next stored entry
+    if(pd_n-{2'd0,take_rsp}==3'd0)begin if(take_req)pd_hd<=seat_d; end
+    else if(take_rsp)pd_hd<=pd[pd_h+2'd1];
     if(vo)begin
      returned<=returned+1;
      if(!bad && MUTANT!=1 && qfault)begin bad<=1;fault<=1;end
