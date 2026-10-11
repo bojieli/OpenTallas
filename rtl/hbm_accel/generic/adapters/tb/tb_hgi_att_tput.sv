@@ -42,17 +42,55 @@ module tb_hgi_att_tput;
 `else
     localparam integer MROW = 0;
 `endif
+`ifdef MUT_LANE
+    localparam integer MLANE = 1;
+`else
+    localparam integer MLANE = 0;
+`endif
+    localparam integer SPRL = `ATT_D * 4 / 32;
     reg rst_n = 0; reg [1215:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
     wire hq_v; reg hq_rdy = 0; wire [34:0] hq_addr; wire [7:0] hq_tag;
     reg hr_v = 0; reg [7:0] hr_tag = 0; reg [255:0] hr_data = 0;
-    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    // PIPE = 2 row lanes: the HBM side (one request = one beat of up to NL rows; lane (s, l) returns sector l of slot
+    // s's row in order).  Die bandwidth model: a beat's sectors leave no earlier than KLAT after the request and the die
+    // delivers at most BWS sectors a cycle (+BWS, default 99 = 3,166.7 B/cycle / 32 B).
+    wire wq_v, wq_rdy = 1'b1; wire [`ATT_NL-1:0] wq_sv; wire [`ATT_NL*40-1:0] wq_row; wire [7:0] wq_nsec;
+    reg [`ATT_NL*SPRL-1:0] wl_v = 0; reg [`ATT_NL*SPRL*256-1:0] wl_d = 0;
+    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE)) u (
+        .wq_v(wq_v), .wq_rdy(wq_rdy), .wq_sv(wq_sv), .wq_row(wq_row), .wq_nsec(wq_nsec), .wl_v(wl_v), .wl_d(wl_d),.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]), .rec_o(cur[1151:896]),
         .rec_n_b(cur[1172:1152]), .rec_n_c(cur[1193:1173]), .rec_pos1(cur[1214:1194]), .rec_done(done),
         .rec_fault(fault), .halted(halted), .vmq(uq), .vmr(ur), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr),
         .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_data(hr_data));
     ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status());
     reg [255:0] hbm [longint];
+    // row-lane model state: a FIFO of beats {release cycle, slot mask, row addresses, nsec}
+    longint bq_t [$]; reg [`ATT_NL-1:0] bq_m [$]; reg [`ATT_NL*40-1:0] bq_r [$]; reg [7:0] bq_n [$];
+    integer bws = 99; longint bw_next = 0, lane_secs = 0; real bw_acc = 0;
+    initial if (!$value$plusargs("BWS=%d", bws)) bws = 99;
+    always @(posedge clk) begin : lanes_model
+        longint t; integer s_, l_, nrow;
+        wl_v <= 0;
+        if (rst_n && wq_v && wq_rdy) begin
+            nrow = 0; for (s_ = 0; s_ < `ATT_NL; s_ = s_ + 1) nrow = nrow + wq_sv[s_];
+            // the die's bandwidth: this beat's sectors take nrow * nsec / BWS cycles of the shared bus
+            if (bw_acc < cyc) bw_acc = cyc;                       // bw_acc: when the shared bus is next free
+            bw_acc = bw_acc + (nrow * wq_nsec) * 1.0 / bws;
+            t = cyc + ((klat >= 0) ? klat : 40);
+            if (t < $rtoi(bw_acc)) t = $rtoi(bw_acc);
+            bq_t.push_back(t); bq_m.push_back(wq_sv); bq_r.push_back(wq_row); bq_n.push_back(wq_nsec);
+        end
+        if (bq_t.size() > 0 && cyc >= bq_t[0]) begin
+            for (s_ = 0; s_ < `ATT_NL; s_ = s_ + 1) if (bq_m[0][s_])
+                for (l_ = 0; l_ < bq_n[0]; l_ = l_ + 1) begin
+                    wl_v[s_ * SPRL + l_] <= 1'b1;
+                    wl_d[(s_ * SPRL + l_) * 256 +: 256] <= hbm.exists((bq_r[0][s_ * 40 +: 40] >> 5) + l_) ? hbm[(bq_r[0][s_ * 40 +: 40] >> 5) + l_] : 256'd0;
+                    lane_secs = lane_secs + 1;
+                end
+            void'(bq_t.pop_front()); void'(bq_m.pop_front()); void'(bq_r.pop_front()); void'(bq_n.pop_front());
+        end
+    end
     reg [42:0] rq [$]; reg [42:0] cq; integer pk, lat = 0, klat = -1; longint rt [$];
     initial if (!$value$plusargs("KLAT=%d", klat)) klat = -1;
     always @(posedge clk) begin
