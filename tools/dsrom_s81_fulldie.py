@@ -3336,6 +3336,7 @@ def build_r8(variant=None):
     variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
+    variant.update(relay_mono=RELAY_MONO_STATS if RELAY_MONO else None)
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     layer1e='Engram home layer die, 2 HBM3E stacks (8 of the rack: '
@@ -4309,6 +4310,16 @@ HOPDBG = os.environ.get('OT_S81_HOPDBG', '')
 # hop_fix.tt_reach_relays for the die STA).  TT wire fit 261 ps + 0.76 ps/um: 600 um = 717 ps < 833.333 - 60 ps setup
 # uncertainty.  Default None = off (r3 / r4 reproduce byte-identically).
 RELAY_TT_REACH = None
+# --relay-mono (s81die-1011, compact199 die-fit): a relay of a multi-sink bus must not land farther than its driver
+# (+ RELAY_MONO_SLACK) from ANY sink of the bus.  The --lane-equal pad relay of the last-slot cc lane (cc_<r>_9: a
+# latency pad, the lane's own reach needs none) found no box at its path point in the narrowed tier channels of
+# compact199 (--ch-heights 259.2,285.12,302.4,...) and the unconstrained fallback put it 330.5 um behind its driver
+# for 1,545 chains (margin_lint far_side, m_c199a/b).  A violating spot is re-searched inside the monotone box: the
+# intersection of the driver-to-sink bounding boxes (every point in it is no farther from each sink than the driver,
+# Manhattan), grown by half the slack.  No reach or lint limit is relaxed.
+RELAY_MONO = False
+RELAY_MONO_SLACK = 18.0
+RELAY_MONO_STATS = dict(replaced=0, unresolved=0, unresolved_examples=[])
 
 
 def _corr_frac(path, rects, step=20.0):
@@ -4340,6 +4351,31 @@ def _hop_paths(a, b, cor):
             yc = (y0 + y1) / 2
             out.append([a, (a[0], yc), (b[0], yc), b])
     return out
+
+
+def _relay_mono(P, pl, w_, h_, cur, sinks, cx, cy, reach, NR, name):
+    """--relay-mono: keep pl if no sink sees it farther than the driver (+ slack); else the nearest free box in the
+    monotone box (intersection of the driver-to-sink bounding boxes, grown by slack / 2), within reach of the driver
+    and (with --nxt-reach) of the chain's next point."""
+    pc = (pl[0] + w_ / 2, pl[1] + h_ / 2)
+    if not sinks or all(_mh(pc, s_) <= _mh(cur, s_) + RELAY_MONO_SLACK for s_ in sinks):
+        return pl
+    g = RELAY_MONO_SLACK / 2
+    x0 = max(min(cur[0], s_[0]) for s_ in sinks) - g
+    x1 = min(max(cur[0], s_[0]) for s_ in sinks) + g
+    y0 = max(min(cur[1], s_[1]) for s_ in sinks) - g
+    y1 = min(max(cur[1], s_[1]) for s_ in sinks) + g
+    box = [(x0 - w_ / 2, y0 - h_ / 2, x1 + w_ / 2, y1 + h_ / 2)]
+    tx, ty = min(max(cx, x0), x1), min(max(cy, y0), y1)
+    for span_, rows_ in ((400.0, 40), (1200.0, 120)):
+        q = P.near(tx, ty, w_, h_, box, prev=cur, horiz=True, reach=reach, span=span_, rows=rows_, **NR)
+        if q is not None:
+            RELAY_MONO_STATS['replaced'] += 1
+            return q
+    RELAY_MONO_STATS['unresolved'] += 1
+    if len(RELAY_MONO_STATS['unresolved_examples']) < 20:
+        RELAY_MONO_STATS['unresolved_examples'].append(name)
+    return pl
 
 
 def _tt_place(P, cx, cy, w_, h_, cur, R_tt, nxt, nreach_tt, horiz):
@@ -4832,6 +4868,9 @@ def _col_relays(m, P):
             if pl is None:
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
             assert pl, (bid, k)
+            if RELAY_MONO:
+                pl = _relay_mono(P, pl, w_, h_, cur, [cen(by[e[0]]) for e in eps[1:] if e[0] in by], cx, cy,
+                                 RELAY_TT_REACH or (BANK_RULE_UM + 40.0), NR, f'y_{bid}_{k}')
             it = P.add(Inst(f'y_{bid}_{k}', f'dsfd_rly_{bits}', pl[0], pl[1], w_, h_, kind='rly',
                             region=d0.region, power_w=bits * FLOP_CLK_W * 1.5))
             out.append((f'{bid}_y{k}', cls, bits, [prev, (it.name, 'i')]))
@@ -6326,6 +6365,8 @@ def die_options(ap):
                     'chains crossed 6-8 clock regions: 322 ps inter-region skew); default off')
     ap.add_argument('--path-pick', action='store_true', help='s81-gen 2026-10-09: a die-level hop runs on the L or '
                     'corridor Z path with the largest corridor share (station count from that path); = OT_S81_PATH_PICK=1')
+    ap.add_argument('--relay-mono', action='store_true', help='s81die-1011: a multi-sink bus relay that lands farther '
+                    'than its driver from any sink is re-placed in the monotone box (compact199 cc pad relays)')
     ap.add_argument('--relay-tt-reach', type=float, help='s81-gen 2026-10-09: a relay with no legal box inside the SS '
                     'reach takes the nearest box within this TT reach in um (option B: TT setup; 600 = 717 ps of TT wire); '
                     'listed in hop_fix.tt_reach_relays / col_relays.tt_reach_relays; default off')
@@ -6565,7 +6606,8 @@ def apply_options(a):
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
     # s81-gen: the OT_S81_HOP_R_CC override (9917e9987) was reset to 410 here, after import (the r4e_rcc runs were no-ops)
     HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, float(getattr(a, 'hop_r_cc', None) or os.environ.get('OT_S81_HOP_R_CC', 410.0))
-    global PATH_PICK, RELAY_TT_REACH
+    global PATH_PICK, RELAY_TT_REACH, RELAY_MONO
+    RELAY_MONO = bool(getattr(a, 'relay_mono', False))
     PATH_PICK = bool(getattr(a, 'path_pick', False)) or os.environ.get('OT_S81_PATH_PICK', '0') == '1'
     RELAY_TT_REACH = getattr(a, 'relay_tt_reach', None)
     if a.fwd_pitch:            # every hop on the die at or under the pitch
