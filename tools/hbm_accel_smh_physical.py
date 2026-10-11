@@ -1146,7 +1146,10 @@ def cmd_block(a):
                f"if {{$ot_n != {12 if a.hier_views else 8}}} {{ error \"macro_place: placed $ot_n\" }}"]
         if a.hier_views:
             # el1011-hbm-smh: the 2 x 2 hardened columns (geom col_xy: "j:tcc" -> [x, y, orient]); x-store overrides xs_xy
-            macros = [SRAM_X, f"{a.hier_views}/ot_hbm_accel_smh_tcc", f"{a.hier_views}/ot_hbm_accel_smh_bdc"]
+            hv = [x.strip() for x in a.hier_views.split(",")]
+            if sorted(Path(x).name for x in hv) != ["ot_hbm_accel_smh_bdc", "ot_hbm_accel_smh_tcc"]:
+                raise ValueError("--hier-views: the two column view dirs (.../ot_hbm_accel_smh_tcc,.../ot_hbm_accel_smh_bdc)")
+            macros = [SRAM_X] + hv
             if "xs_xy" in g:
                 xy = {tuple(int(t) for t in k.split(":")): tuple(v) for k, v in g["xs_xy"].items()}
                 tcl[2:2 + len(xy)] = [f"  {{{j}:{mi}}} {{{x} {y}}}" for (j, mi), (x, y) in xy.items()]
@@ -1462,7 +1465,7 @@ def main(argv=None):
     b.add_argument("--rst-relay", action="store_true", help="fe-push-hphys-1010: tile rst_n port -> ot_rst_relay (4 regions, release +3 edges)")
     b.add_argument("--xlk", action="store_true", help="[cg-smt] 2026-10-10: tile: a negedge lockup stage at every x-store macro input "
                    "(0 cycles; macro clock pin late + 47 ps lib hold: FF hold -55..-84 ps at r_addr_in / w_mask_in)")
-    b.add_argument("--hier-views", default=None, help="el1011-hbm-smh: tile under OT_SMH_HIER with the hardened columns (repo dir holding ot_hbm_accel_smh_tcc / _bdc views)")
+    b.add_argument("--hier-views", default=None, help="el1011-hbm-smh: tile under OT_SMH_HIER with the hardened columns: TCCDIR,BDCDIR (repo view dirs named after the masters)")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
