@@ -3,7 +3,7 @@
     output wire [7:0] c_done_tag,
     output wire [0:0] c_done_v,
     input wire [0:0] cck,
-    output wire [8735:0] ch_fd,
+    output wire [8759:0] ch_fd,
     output wire [20:0] ch_fv,
     input wire [6467:0] ch_rd,
     output wire [2:0] ch_rst,

@@ -54,7 +54,7 @@ module ot_s81_hc_ctile #(
     localparam integer DM = LM + 3 * LA + 1;
     localparam integer DS = LM + 7 * LA + LTB * LA;
     // forward bus layout (ot_s81_hc_hroot uses the same)
-    localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_PB = O_RC + S_RD * 16, O_NG = O_PB + 12, O_NV = O_NG + 6,
+    localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_PB = O_RC + S_RD * 16, O_NG = O_PB + 20, O_NV = O_NG + 6,
                        O_R = O_NV + 8, O_HS = O_R + 32, O_D = O_HS + 1, FDW = O_D + FDD;
     // return bus layout
     localparam integer P_T = 0, P_I = S_RT, P_Q = P_I + 8 * S_RT, P_PI = P_Q + 16 * S_RT, P_D = P_PI + 8,
@@ -94,7 +94,7 @@ module ot_s81_hc_ctile #(
     wire       rd_s = fd[O_RS];
     wire [1:0] rd_g = fd[O_RG +: 2];
     wire pb_go = fd[O_PB], pb_wb = fd[O_PB + 1], pb_hs = fd[O_PB + 2], pb_cs = fd[O_PB + 3];
-    wire [7:0] pb_b = fd[O_PB + 4 +: 8];
+    wire [15:0] pb_b = fd[O_PB + 4 +: 16];
     wire [7:0] nv_i = fd[O_NV +: 8];
     wire [31:0] r_d = fd[O_R +: 32];
 
@@ -145,19 +145,19 @@ module ot_s81_hc_ctile #(
         .clk(clk), .rst_n(rst_n), .go(hp_go), .comb(hp_comb), .post(hp_post), .in_v(hp_in_v), .in_r(hp_r), .in_y(hp_y),
         .out_v(hp_out_v), .out_d(hp_out), .fault(hp_fault));
     reg        p_wb, p_hs;
-    reg [7:0]  p_ob;
+    reg [15:0] p_ob;
     always @(posedge clk or negedge rst_n) if (!rst_n) hp_in_v <= 1'b0; else hp_in_v <= pb_v;
     always @(posedge clk) begin
         hp_go <= pb_v && pb_go;
         if (pb_v) begin
             for (q = 0; q < 4 * GS; q = q + 1) hp_r[32 * q +: 32] <= {hb[(pb_b % 4) * 2 * NV + pb_hs * NV + pb_b / 4][16 * q +: 16], 16'h0000};
             hp_y <= fd[O_D +: GS * 32]; hp_comb <= cf_comb[pb_cs]; hp_post <= cf_post[pb_cs];
-            if (pb_go) begin p_wb <= pb_wb; p_hs <= pb_hs; p_ob <= 8'd0; end
+            if (pb_go) begin p_wb <= pb_wb; p_hs <= pb_hs; p_ob <= 16'd0; end
         end
         if (hp_out_v) begin
             if (p_wb)
                 for (q = 0; q < 4 * GS; q = q + 1) hb[(p_ob % 4) * 2 * NV + p_hs * NV + p_ob / 4][16 * q +: 16] <= hp_out[32 * q + 16 +: 16];
-            p_ob <= p_ob + 8'd1;
+            p_ob <= p_ob + 16'd1;
         end
     end
     reg nz;                                              // hc_post output not BF16 (lower half nonzero)

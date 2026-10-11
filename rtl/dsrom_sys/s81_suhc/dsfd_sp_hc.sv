@@ -41,7 +41,7 @@ module dsfd_sp_hc #(
     generate if (HIER) begin : g_hier
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32;
     localparam integer FDD = (S_RD * 512 > YW) ? S_RD * 512 : YW;
-    localparam integer FDW = 5 + S_RD * 16 + 12 + 6 + 8 + 32 + 1 + FDD;
+    localparam integer FDW = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1 + FDD;
     localparam integer RDW = S_RT + 8 * S_RT + 16 * S_RT + 8 + 512 * S_RT;
     localparam integer FVW = S_RD + 5, RVW = S_RT + 4;
     wire [NCOL-1:0]     ch_rst;

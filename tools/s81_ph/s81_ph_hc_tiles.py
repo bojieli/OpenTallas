@@ -30,7 +30,7 @@ def widths(ng=256, gs=8, s_rd=2, s_wr=8, s_rt=4):
     ns = ng // gs
     np_ = (ns + NCOL - 1) // NCOL
     fdd = max(s_rd * 512, np_ * gs * 32)
-    return dict(fv=s_rd + 5, fd=5 + s_rd * 16 + 12 + 6 + 8 + 32 + 1 + fdd, rv=s_rt + 4,
+    return dict(fv=s_rd + 5, fd=5 + s_rd * 16 + 20 + 6 + 8 + 32 + 1 + fdd, rv=s_rt + 4,
                 rd=s_rt + 8 * s_rt + 16 * s_rt + 8 + 512 * s_rt, ng=ng, s_rd=s_rd, s_wr=s_wr)
 
 

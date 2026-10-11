@@ -58,7 +58,7 @@ module ot_s81_hc_hroot #(
     localparam integer NP   = (NS + NCOL - 1) / NCOL;
     localparam integer YW   = NP * GS * 32;
     localparam integer FDD  = (S_RD * 512 > YW) ? S_RD * 512 : YW;
-    localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_PB = O_RC + S_RD * 16, O_NG = O_PB + 12, O_NV = O_NG + 6,
+    localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_PB = O_RC + S_RD * 16, O_NG = O_PB + 20, O_NV = O_NG + 6,
                        O_R = O_NV + 8, O_HS = O_R + 32, O_D = O_HS + 1, FDW = O_D + FDD;
     localparam integer P_T = 0, P_I = S_RT, P_Q = P_I + 8 * S_RT, P_PI = P_Q + 16 * S_RT, P_D = P_PI + 8,
                        RDW = P_D + 512 * S_RT;
@@ -331,7 +331,7 @@ module ot_s81_hc_hroot #(
                     if (y_take) begin
                         fv[S_RD] <= 1'b1;
                         fd[O_PB] <= (ci == 0); fd[O_PB + 1] <= (MUT != 1); fd[O_PB + 2] <= hs; fd[O_PB + 3] <= jslot;
-                        fd[O_PB + 4 +: 8] <= ci[7:0];
+                        fd[O_PB + 4 +: 16] <= ci;
                         ci <= ci + 1;
                     end
                     if (rv[S_RT + 1]) begin

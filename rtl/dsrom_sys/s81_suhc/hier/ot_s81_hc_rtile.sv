@@ -45,7 +45,7 @@ module ot_s81_hc_rtile #(
     localparam integer NP   = (NS + NCOL - 1) / NCOL;
     localparam integer YW   = NP * GS * 32;
     localparam integer FDD  = (S_RD * 512 > YW) ? S_RD * 512 : YW;
-    localparam integer O_D  = 5 + S_RD * 16 + 12 + 6 + 8 + 32 + 1, FDW = O_D + FDD;
+    localparam integer O_D  = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FDW = O_D + FDD;
     localparam integer RDW  = S_RT + 8 * S_RT + 16 * S_RT + 8 + 512 * S_RT;
     localparam integer FVW  = S_RD + 5, RVW = S_RT + 4;
     localparam integer HOP  = 3;                                  // registers a sub-tile hop (each bus)
