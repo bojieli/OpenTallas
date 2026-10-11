@@ -55,6 +55,17 @@ module tb_hgi_coll_lk;
     end
     always @* begin crr = l_tcr; rxv = l_rv; rxf = l_rf; end
     always @(posedge clk) if (rst_n && (|l_flt || |r_flt)) $fatal(1, "link fault L %b R %b", l_flt, r_flt);
+`ifdef COLL_TOP
+    // the R25GQ hfd_coll body (ot_hfd_coll_r25gq: ep NPT 9 SWCRED 32 PIPE RGXHW RFMT 0 + RGX lanes, idle here)
+    wire [NPT*24-1:0] lk_sess; wire [2*NPT-1:0] lk_st; wire [75:0] rxq; wire [337:0] rvq; wire rcrq; wire [32*280-1:0] rcq; wire [651:0] rxw;
+    ot_hfd_coll_r25gq dut (.clk(clk), .rst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
+        .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .del_valid(dv), .del_flit(dfl), .fault(flt), .stat_credit_stall(cst),
+        .hgi_rec(rec), .hgi_ret(ret), .hgi_cfg(cfgb), .hgi_rowfmt_o(rfo), .hgi_rowfmt_i(3'b000), .hgi_vmaddr(vma), .hgi_del_obase(dob),
+        .lk_tx_v(txv), .lk_tx_flit(txf), .lk_rx_credit(rxc), .lk_rx_v(rxv), .lk_rx_flit(rxf), .lk_sw_cr(crr),
+        .lk_session(lk_sess), .lk_fault(l_flt), .lk_locked(l_lk), .lk_status(lk_st),
+        .rgx_xq(rxq), .rgx_xr(514'd0), .rgx_vmq(rvq), .rgx_vmr(274'd0), .rgx_c_req(rcrq), .rgx_c_gnt(1'b0), .rgx_c_q(rcq),
+        .rgx_c_cr(32'd0), .rgx_c_rsp(32'd0), .rgx_xw(rxw), .rgx_xwa(2'b00));
+`else
     ot_hgi_coll_ep #(.NPT(NPT), .SWCRED(TXQ)
 `ifdef PIPE
         , .PIPE(1)
@@ -71,6 +82,7 @@ module tb_hgi_coll_lk;
         , .hgi_del_obase(dob)
 `endif
         );
+`endif
     function automatic [255:0] md(input [2:0] fmt, input [39:0] base_, input [19:0] n);
         begin md = 256'd0; md[1:0] = 2'd1; md[4:2] = fmt; md[47:8] = base_; md[67:48] = n; md[87:68] = 20'd1; end
     endfunction

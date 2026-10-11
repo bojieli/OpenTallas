@@ -15,7 +15,11 @@ module ot_hfd_coll_r25gq #(
     parameter integer SWCRED = 32,
     parameter integer RGX_LQ = 32,         // the VM W2 group's LQ (hfd_hgi_vm, b: 32)
     parameter integer SESSION_W0 = 47,     // config word of LINK_SESSION [23:0]
-    parameter integer INJ = 2, DEL = 4, LANES = 16, FW = 32 * LANES, PWT = FW + 33
+    parameter integer INJ = 2,
+    parameter integer DEL = 4,
+    parameter integer LANES = 16,
+    parameter integer FW = 32 * LANES,
+    parameter integer PWT = FW + 33
 ) (
     input  wire                 clk,
     input  wire                 rst_n,

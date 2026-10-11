@@ -9,8 +9,8 @@ S="rtl/common/ot_secded.sv rtl/common/ot_secded_dec_dp.sv physical/asap7_memory_
    $C/ot_hgi_coll_ep.sv $C/ot_hgi_coll_amerge.sv $C/ot_hgi_coll_record.sv $C/ot_hgi_coll_decode.sv
    $D/ot_hbm_accel_tu_endpoint_psg.sv $D/ot_hcoll_sram_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv $D/ot_hcoll_port.sv
    rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/link/ot_link_afifo.sv
-   rtl/hbm_accel/generic/ot_hgi_cfg.sv $D/lk_ep_20261010/tb_hgi_coll_lk.sv"
-for f in $C/rgx/ot_hgi_coll_rgx.sv $C/rgx/ot_hgi_coll_rgx_src.sv $C/rgx/ot_hgi_coll_rgx_sink.sv; do [ -f $f ] && S="$S $f"; done
+   rtl/hbm_accel/generic/ot_hgi_cfg.sv $C/ot_hfd_coll_r25gq.sv $D/lk_ep_20261010/tb_hgi_coll_lk.sv"
+for f in $C/rgx/*.sv rtl/hbm_accel/generic/peers/ot_hgi_hbm_lane.sv rtl/hbm_accel/generic/ot_hgi_vm_lanearb.sv; do case $f in *tb_*) continue;; esac; [ -f $f ] && S="$S $f"; done
 verilator --binary --timing -O2 -j ${JOBS:-8} -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-lint -Wno-style \
   -Irtl/common -Irtl/hbm_accel/generic --top-module tb_hgi_coll_lk --Mdir $O/obj ${DEFS:-} $S > $O/build.log 2>&1 || { grep -m8 "%Error" $O/build.log; echo "HGI_COLL_PIPE FAIL (build)"; exit 2; }
 $O/obj/Vtb_hgi_coll_lk "$@" > $O/run.log 2>&1

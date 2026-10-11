@@ -8,6 +8,7 @@
 //   +N=<flits each way>  defines: OT_LKEP_MUT_CREDIT (link credit mutant: must FAIL)
 module tb_lk_rate;
     parameter integer TXQ = 32;
+    parameter integer FS = 0;       // die-wrapper face stages on the coll side, each way (hfd_coll R25GQ: 5 in + 5 out)
     localparam integer W = 545, LW = 487;
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0;
@@ -26,11 +27,20 @@ module tb_lk_rate;
     reg  [LW-1:0] lane [0:1];
     genvar g;
     generate for (g = 0; g < 2; g = g + 1) begin : g_d
+        // face stages: coll -> link {tx_v, tx_flit, rx_credit}, link -> coll {rx_v, rx_flit, sw_cr} each delayed FS edges
+        reg [W+1:0] dn [0:FS]; reg [W+1:0] up [0:FS];
+        wire [W+1:0] dn_in = {ptx_v[g], ptx_f[g], lrcr[g]};
+        wire [W+1:0] up_in = {lrv[g], lrf[g], lcr[g]};
+        always @* begin dn[0] = dn_in; up[0] = up_in; end
+        for (genvar z = 1; z <= FS; z = z + 1) begin : g_fs
+            always @(posedge clk or negedge rst_n) if (!rst_n) begin dn[z] <= '0; up[z] <= '0; end else begin dn[z] <= dn[z-1]; up[z] <= up[z-1]; end
+        end
+        wire [W+1:0] dn_o = dn[FS], up_o = up[FS];
         ot_hcoll_port #(.SWCRED(TXQ)) P (.clk(clk), .rst_n(rst_n), .qp_push(qp_push[g]), .qp_din(qp_din[g]), .qr_push(1'b0),
-            .qr_din({W{1'b0}}), .sw_cr_ret(lcr[g]), .ph_tx_v(ptx_v[g]), .ph_tx_flit(ptx_f[g]), .ph_rx_v(lrv[g]), .ph_rx_flit(lrf[g]),
+            .qr_din({W{1'b0}}), .sw_cr_ret(up_o[0]), .ph_tx_v(ptx_v[g]), .ph_tx_flit(ptx_f[g]), .ph_rx_v(up_o[W+1]), .ph_rx_flit(up_o[W:1]),
             .rb_v(prb_v[g]), .rb_d(prb_d[g]), .rb_cr(prb_cr[g]), .stall(pstall[g]), .fault(pfault[g]));
         ot_hbm_lk_ep #(.NS(3), .TXQ(TXQ), .FCR(256), .LW(LW)) L (.clk(clk), .rst_n(rst_n), .session(24'hC0FFEE),
-            .t_v(ptx_v[g]), .t_flit(ptx_f[g]), .t_cr(lcr[g]), .r_v(lrv[g]), .r_flit(lrf[g]), .r_cr(lrcr[g]),
+            .t_v(dn_o[W+1]), .t_flit(dn_o[W:1]), .t_cr(lcr[g]), .r_v(lrv[g]), .r_flit(lrf[g]), .r_cr(dn_o[0]),
             .x_tx(lx[g]), .x_rx(lane[1-g]), .fault(lflt[g]), .locked(llk[g]));
     end endgenerate
     always @(posedge clk) begin lane[0] <= lx[0]; lane[1] <= lx[1]; end
@@ -70,7 +80,7 @@ module tb_lk_rate;
         if (seen[0] != N || seen[1] != N) $fatal(1, "TIMEOUT seen %0d / %0d of %0d", seen[1], seen[0], N);
         @(posedge clk);
         r0 = (N - 1 - N / 4) * 1.0 / (t1[1] - t0[1]); r1 = (N - 1 - N / 4) * 1.0 / (t1[0] - t0[0]);
-        $display("LKRATE PASS TXQ %0d N %0d A->B %.3f B->A %.3f flits/cycle (steady window)", TXQ, N, r0, r1);
+        $display("LKRATE PASS FS %0d TXQ %0d N %0d A->B %.3f B->A %.3f flits/cycle (steady window)", FS, TXQ, N, r0, r1);
         if (r0 < 0.70 || r1 < 0.70) $display("LKRATE BELOW 0.70");
         $finish;
     end
