@@ -68,7 +68,9 @@ module ot_qfd_tt_ctl #(
     parameter integer CLNK = 0,
     parameter integer UMUT = 0,           // ot_qfd_band_upper MUT (negative mutant)
     parameter integer AMR = 0,            // ot_qwen_me_spctl_w12 AMR (safe-qwen S-D1: argmax top registered at the accumulator)
-    parameter integer SPRE = 0            // ot_qwen_me_spctl_w12 SPRE (redesign-qwen: registered scale request)
+    parameter integer SPRE = 0,           // ot_qwen_me_spctl_w12 SPRE (redesign-qwen: registered scale request)
+    parameter integer XADDR = 1,          // el1011-q-seq: spctl XADDR (0: no per-port x_re / x_addr; this module uses the descriptor form)
+    parameter integer RDMEM = 0           // el1011-q-seq: spctl RDMEM (tag delay lines in SRAM)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -168,7 +170,7 @@ module ot_qfd_tt_ctl #(
     wire [W-1:0] c_mxmask;
     wire [W*32-1:0] c_mxdata;
     wire [15:0] c_prog;
-    ot_qwen_me_spctl_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
+    ot_qwen_me_spctl_w12 #(.XADDR(XADDR), .RDMEM(RDMEM), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
         .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD((BAND != 0) ? XD - CLNK : XD), .XVM(XVM), .ORD(ORD),
         .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE),
         .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .LANDED(LANDED),
