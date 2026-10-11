@@ -3150,7 +3150,9 @@ def build_r8(variant=None):
         centre_area['wfc_hard'] = WFC_SLAB_H * cw / 1e6
         if STAGE_SEQ:   # main decision A (2026-10-11): the stage start / done passes dsfd_stage_seq to the engines
             centre.insert(centre.index('wfc_hard') + 1, 'sseq')
-            centre_area['sseq'] = SSEQ_MM2
+            # --ctrl-adapters (s81die-1011/ctrl): dsfd_stage_seq_c carries 12 x (85 + 9 + 2) engine pins + 3 async FIFOs:
+            # 0.06 mm2 gave a 37 um slab whose E face could not hold the pins (40 um): 0.15 mm2 (~87 um tall)
+            centre_area['sseq'] = max(SSEQ_MM2, 0.15) if CTRL_ADAPTERS else SSEQ_MM2
     if MTP_SEQ and DIE_KIND == 'head':
         centre.insert(centre.index('capture') + 1, 'mtp')
         centre_area['mtp'] = MTP_SEQ_MM2
@@ -4099,7 +4101,7 @@ CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', co
                       selector='dsfd_bk_selector_c', collector='dsfd_bk_collector_c',
                       # s81die-1011/ctrl: HC (engine 2) endpoint in hc_s = dsfd_sp_hc_c (dsfd_sp_hc, hc_gate PASS); the
                       # su_hc contract v2 makes HC one logical slab (hc_n folds into it when the suhc floorplan lands)
-                      hc_s='dsfd_sp_hc_c', eng='dsfd_engram_c')
+                      hc_s='dsfd_sp_hc_c', su_s='dsfd_sp_su_c', eng='dsfd_engram_c')
 CTRL_SVC_MASTER = 'dsfd_svc_c'        # svc_<st> under --ctrl-adapters: j / jd job pins from dsfd_svc_join (engine 4)
 CTRL_SVC_JOIN = 'dsfd_svc_join'
 
@@ -4124,6 +4126,8 @@ def ctrl_adapter_buses(hb):
     if 'hc_s' in hb and hb['hc_s'].master == 'dsfd_sp_hc_c':
         # HC dependency net (dsfd_sp_hc inp): the VM's row-completion event for the HC head descriptor's operands
         out += [('vm', 'hc_s', 1, 't_inp_hc', 'f_inp')]
+    if 'su_s' in hb and hb['su_s'].master == 'dsfd_sp_su_c':     # SU dependency net (dsfd_sp_su inp), same rule
+        out += [('vm', 'su_s', 1, 't_inp_su', 'f_inp')]
     return tuple(out)
 
 

@@ -16,8 +16,10 @@
    "note": "non-PQ dies: gather_c phase stage = start, capture_c drained = done (lead s81-ctl v2); PQ dies: PQ core master (RTL pending)"
   },
   "su": {
-   "masters": [],
-   "note": "s81-suhc-1011: dsfd_sp_su master in progress (sibling); bind when its gate passes"
+   "masters": [
+    "dsfd_sp_su_c"
+   ],
+   "note": "s81die-1011/ctrl: dsfd_sp_su (main 28e66b4d4, full shape 3/3 exact, mutants FAIL) behind c_cmd/c_done/c_st (rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv) in su_s; f_inp = VM row-completion dependency net (vm t_inp_su); dsfd_sp_su_h replaces it with the same pins"
   },
   "hc": {
    "masters": [
