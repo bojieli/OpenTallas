@@ -229,7 +229,16 @@ def place_lo(a):
     pins.p['q'] += [(b, 'M4', round(TW - 0.096, 3), round(qy + 0.396 + V1.PITCH * b, 3)) for b in range(544, 582)]
     pins.single('rst', 'E', round(qy + 0.396 + V1.PITCH * 582, 3))
     pins.single('ck', 'E', grid(600.0) + 0.012)
-    root = [P.put(T.bname('u_root', 0, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
+    V8 = getattr(a, 'lo_v8', False)
+    if V8:
+        # el1011-hbm-attn v8 (physical spec 2026-10-11): the merge root sits at the BOTTOM centre, above the ci pin banks,
+        # where ci / k / ks (S) and q / ri (E, along the bottom strip) land; xp leaves through its own pipe (u_xpp, last
+        # stage = the N pin bank).  The central channel then carries only xp + mid (~3.2 k nets) past the quad rows
+        # instead of every input bus up + rf / mid back down (~9.1-9.5 k; lo_v7 lint y=275.6: 7,069 > 5,683 tracks).
+        xpp = [P.put(T.bname('u_xpp', a.NXP - 1, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
+        root = [P.snap(T.bname('u_root', 0, c, False), 'sn', 544, 'R0', x + SNW / 2 + a.root_dx, 75.0) for c, x in enumerate(cix)]
+    else:
+        root = [P.put(T.bname('u_root', 0, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
     pins.run('xp', 'N', cix, 1619)
     # the seam result pin banks sit in the side channels (136-bit banks): v1's E bank (x TW - 140) sat over quad1's top
     # edge, its d pins 4 um above the quad halo; die seam nets follow the half records (ports.json)
@@ -245,6 +254,27 @@ def place_lo(a):
     rcs = rows(P, 'g_y0.g_x\\[{x}\\].u_row', QL_X, QR_X, q_in_y)
     sy = QY_LO + 281.5
     e1s = [side_res(P, hops, f'g_y0.g_x\\[{x}\\].u_res', x, QL_X, QR_X, sy, True, f'res0{x}') for x in (0, 1)]
+    if V8:
+        rfc = cen(pin['rf'])
+        pipe('u_pc', pin['ci'], a.NC, 3, 1, [], rc, 'ci')
+        pipe('u_pk', pin['k'], a.NK, 2, 1, [(cc_x - 200, 60.0)], rc, 'k')
+        pipe('u_pks', pin['ks'], a.NK, 2, 1, [(cc_x + 200, 60.0)], rc, 'ks')
+        pipe('u_pq', pin['q'], a.NK, 1, 1, [(TW - 60.0, 60.0), (cc_x + 230, 60.0)], rc, 'q')
+        pipe('u_pr', pin['ri'], a.NR, 3, 1, [(TW - 200.0, 150.0), (cc_x + 230, 150.0)], rc, 'ri')
+        pipe('u_fr', root, a.NFR, 3, 0, [(cc_x - 230, 150.0), (200.0, 150.0)], rfc, 'rf')
+        mid = pipe('g_y0.u_mid', root, a.PMID, 3, 0, [], (cc_x, q_in_y - 40), 'mid0')
+        row_hops(hops, rcs, cen(mid[-1]), 'row0')
+        pipe('u_xpp', root, a.NXP - 1, 3, 0, [(cc_x, q_in_y + 60)], cen(xpp), 'xp')
+        for x in (0, 1):
+            nm = f'g_y0.g_x\\[{x}\\].u_res'
+            pipe(nm, [e1s[x]], a.NLL - 3, 1, 2, [], (xr_x[x] + 14.04, yN), f'res0{x}', bits=136)
+        quads = {'g_y0.g_x\\[0\\].u_q': (QL_X, QY_LO, 'MY'), 'g_y0.g_x\\[1\\].u_q': (QR_X, QY_LO, 'R0')}
+        X0, PITCH = 1062.0, 0.192
+        x1 = round(X0 + 1101 * PITCH, 3)
+        pins.p['ks'] = [(i, 'M5', round(X0 + i * PITCH, 4), 0.096) for i in range(1102)]
+        pins.p['ldk'] = [(0, 'M5', round(x1 + 2.016, 4), 0.096)]
+        pins.p['kq'] = [(i, 'M5', round(x1 + 4.032 + i * 0.384, 4), 0.096) for i in range(2)]
+        return P, hops, pins, quads, dict(cix=cix, xr_x=xr_x)
     # flows into ROOT (up the central channel): straight columns where the pins allow
     pipe('u_pc', pin['ci'], a.NC, 3, 1, [], rc, 'ci')
     pipe('u_pk', pin['k'], a.NK, 2, 1, [(cc_x - 200, 60.0), (cc_x - 200, top)], rc, 'k')
@@ -352,13 +382,22 @@ def main():
     ap.add_argument('--max-hop', type=float, default=450.0)
     ap.add_argument('--acc', type=float, default=20.0)
     ap.add_argument('--pin-gap-ew-hi', type=float, default=None, help='hi: E / W face banks gap (corner relays crowd it)')
+    ap.add_argument('--lo-v8', action='store_true', help='lo merge root at the bottom (el1011-hbm-attn v8 physical spec)')
+    ap.add_argument('--NXP', type=int, default=0)
+    ap.add_argument('--root-dx', type=float, default=0.0, help='v8: root shifted east (ri reach from the E face)')
     ap.add_argument('--pin-gap', type=float, default=0.0, help='face pin banks this far off their face (um)')
     for k, v in PARAMS.items():
         ap.add_argument(f'--{k}', type=int, default=v)
     a = ap.parse_args()
     global PIN_GAP
     PIN_GAP = a.pin_gap
+    hi_par = {k: getattr(a, k) for k in ('NK', 'NC', 'NR', 'PMID', 'NFR')}
+    if a.lo_v8:          # lo-only stage shift (latency per path unchanged); hi keeps its parameters
+        a.NK, a.NC, a.NR, a.PMID, a.NFR, a.NXP = a.NK - 2, a.NC - 2, a.NR - 2, a.PMID + 2, a.NFR + 2, 2
+        assert min(a.NK, a.NC, a.NR) >= 0
     P, hops, pins, quads, geo = place_lo(a)
+    for k, v in hi_par.items():
+        setattr(a, k, v)
     V1.check_pins(P, pins)
     rl = write(a.out, 'hfd_attn_half_lo', a, P, hops, pins, quads, 'lo',
                dict(k='input', ci='input', ri='input', q='input', rst='input', ck='input', rf='output', xp='output', xr='output',

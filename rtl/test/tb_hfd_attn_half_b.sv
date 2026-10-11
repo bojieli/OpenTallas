@@ -9,6 +9,10 @@
 // Prints ATTNHALF role=<r> mut=<m> cycles=<n> mismatches=<m> ov=<valid o words>; $fatal on mismatch or no valid word.
 module tb_hfd_attn_half_b (input wire clk);
     parameter integer NK = 4, NC = 2, NR = 3, PMID = 2, NFC = 2, NFR = 3, NL = 8, NI = 6, NLL = 3;
+    // el1011-hbm-attn v8: lo-only stage overrides (the reference tile and hi keep NK / NC / NR / PMID / NFR); a v8 lo moves
+    // 2 stages from its input pipes to its output pipes (LNK = NK-2, LNC = NC-2, LNR = NR-2, LPMID = PMID+2, LNFR = NFR+2,
+    // LNXP = 2): lockstep PASS proves the per-path latency is unchanged.
+    parameter integer LNK = NK, LNC = NC, LNR = NR, LPMID = PMID, LNFR = NFR, LNXP = 0;
     localparam integer H = 16, TD = 32, NBANK = 5, BW = 3, PWORDS = 2;
     parameter integer NCYC = 4000;
     parameter integer ROLE = 4;
@@ -86,7 +90,7 @@ module tb_hfd_attn_half_b (input wire clk);
     assign xp_h = (MUT == 1) ? (xp_l ^ (1619'd1 << 1000)) : (MUT == 5) ? xp_d : xp_l;
     assign xr_h = (MUT == 2) ? xr_d : (MUT == 3) ? {xr_l[135:0], xr_l[271:136]} : xr_l;
     wire [1617:0] cf_s, rf_s; wire [528:0] o_s;
-    hfd_attn_half_lo #(.CG(CG), .NK(NK), .NC(NC), .NR(NR), .PMID(PMID), .NFR(NFR), .NLL(NLL)) u_lo (
+    hfd_attn_half_lo #(.CG(CG), .NK(LNK), .NC(LNC), .NR(LNR), .PMID(LPMID), .NFR(LNFR), .NXP(LNXP), .NLL(NLL)) u_lo (
         .ck(clk), .rst(rst_n), .k(LDK ? 1041'd0 : k_in), .ks(ks_in), .ldk(LDK[0]), .q(q_in), .ci(pk_c), .ri(pk_r), .rf(rf_s), .xp(xp_l), .xr(xr_l));
     hfd_attn_half_hi #(.CG(CG), .PMID(PMID), .NFC(NFC), .NL(NL), .NLL(NLL + ((MUT == 4) ? 1 : 0)), .NI(NI)) u_hi (
         .ck(clk), .xp(xp_h), .xr(xr_h), .i(i_in), .cf(cf_s), .o(o_s));
