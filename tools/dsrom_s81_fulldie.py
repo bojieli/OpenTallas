@@ -3077,6 +3077,12 @@ def build_r8(variant=None):
             centre.insert(centre.index('vm') + 1, 'vm_ep')
             centre.insert(centre.index('capture') + 1, 'cap_ep')
             centre_area['vm_ep'] = centre_area['cap_ep'] = MTP_EP_MM2
+    if SEEDL:
+        # mtp-dsbind 2026-10-10 (--seedl, DSpark primary die): the seed-descriptor consumer dsfd_mtp_seed_launch beside
+        # the collective (its seed descriptor arrives on the collective's MTP lane, --coll-mtp-far primary) and one
+        # slab from the VM (hidden-row reads, x beats to the seed elements, program start)
+        centre.insert(centre.index('collective'), 'seedl')
+        centre_area['seedl'] = up(SEEDL_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
     if DRAFT_SIDE == 'A':
         # MD-2 P2 (mtp-draftdie 2026-10-09): the selected-path transport (ot_mtp_p2_prefix_path: PRIMARY_SHARED1
         # 9-SRAM ordered transport + 3-SRAM 16-lane A-prefix + native publisher) on the A die of every draft row
@@ -3131,6 +3137,10 @@ def build_r8(variant=None):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
             slab(n, centre_area[n], x_sp, yy, cw, master=ms_)
             notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
+        elif n == 'seedl':
+            slab('seedl', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seed_launch')
+            notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
+                         % (SEEDL_UM, centre_area[n]))
         elif n == 'mtp':
             slab('mtp', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seq_rtt' if MTP_SEQ_RTT else 'dsfd_mtp_seq')
             notes.append('MTP-DIE --mtp-seq: dsfd_mtp_seq = ot_dsrom_mtp_seq (accept + draft-chain sequencer) %.3f mm2'
@@ -3651,6 +3661,7 @@ def buses_r8(m):
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
             (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
+            (SEEDL_BUSES + (SEEDL_HOST_BUSES if 'host' in hub else ()) if 'seedl' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
             ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
@@ -3802,6 +3813,20 @@ def wfc_kit_buses(role, host, far=None):
     return tuple(b)
 
 
+SEEDL = False                   # --seedl (mtp-dsbind 2026-10-10): DSpark primary die (--draft P) seed-descriptor consumer
+SEEDL_UM = (259.2, 259.2)       #   contract physical/s81_ph_views/specs/dsfd_mtp_seed_launch.json
+# dsfd_mtp_seed_launch exact ports (rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv): seed descriptor {77, valid} from the
+# collective MTP lane (t_mrs) + grant back (f_mrs); VM hidden-row read: request {addr 24, valid} grant protocol + grant,
+# in-order response {1024, valid}; x beats {x_b, x_a, valid} 1025 to the VM's seed staging (seed elements) + die join
+# {done, rdy} 2; program start event {56, v} 57 to the VM / block issue; host: user clear 11 in, sticky faults 4 out.
+# On the primary die the lane's token-return class and accept word are observation only: -> host.
+SEEDL_BUSES = (('collective', 'seedl', 78, 't_mrs', 'f_mrs'), ('seedl', 'collective', 1, 't_mrs', 'f_mrs'),
+               ('seedl', 'vm', 25, 't_vrq', 'f_seedl_rq'), ('vm', 'seedl', 1, 't_seedl_rqg', 'f_vrq'),
+               ('vm', 'seedl', 1025, 't_seedl_rs', 'f_vrs'), ('seedl', 'vm', 1025, 't_x', 'f_seedl_x'),
+               ('vm', 'seedl', 2, 't_seedl_xj', 'f_x'), ('seedl', 'vm', 57, 't_ps', 'f_seedl_ps'))
+SEEDL_HOST_BUSES = (('host', 'seedl', 11, 't_seedl_clr', 'f_clr'), ('seedl', 'host', 4, 't_flt', 'f_seedl_flt'),
+                    ('collective', 'host', 513, 't_mrt', 'f_mrt'), ('host', 'collective', 1, 't_mrg', 'f_mrt'),
+                    ('collective', 'host', 57, 't_macc', 'f_macc'))
 COLL_MTP_FAR = None             # --coll-mtp-far s0 (mtp-wfc 2026-10-10): the S0 die's end of the head die's MTP lane
 MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab master dsfd_mtp_seq_rtt (RTT-sized grant
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
@@ -6097,7 +6122,10 @@ def die_options(ap):
                     help='MTP-DIE: bound, wired WFC slab (dsfd_wfc) on every layer-class STAGE die (layer and layer1; '
                     'not draft dies) instead of the scan-die-only soft reservation; default WFC_HARD_DEFAULT (off '
                     'until the SOURCE HARD partner closes)')
-    ap.add_argument('--coll-mtp-far', choices=['s0'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
+    ap.add_argument('--seedl', action='store_true', help='mtp-dsbind 2026-10-10: DSpark primary die (--draft P): '
+                    'dsfd_mtp_seed_launch slab (seed descriptor from the collective MTP lane -> seed program); needs '
+                    '--coll-mtp-far primary')
+    ap.add_argument('--coll-mtp-far', choices=['s0', 'primary'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
                     '(far end of the head lane): token return -> WFC kit link-in (TOKIN), accept word -> host')
     ap.add_argument('--mtp-ep', action='store_true', help='mtp-wfc 2026-10-10: head-die RTT-sized sequencer partner ends')
     ap.add_argument('--p2-lnk', action='store_true', help='mtp-wfc 2026-10-10: draft-A P2 slab = core + dsfd_p2_lnk')
@@ -6202,7 +6230,16 @@ def apply_options(a):
     COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
     global COLL_MTP_FAR
     COLL_MTP_FAR = getattr(a, 'coll_mtp_far', None)
-    if COLL_MTP_FAR:   # mtp-wfc 2026-10-10: the far (S0) end of the head die's MTP lane: same lane composition
+    global SEEDL
+    SEEDL = bool(getattr(a, 'seedl', False))
+    if SEEDL and (getattr(a, 'draft', None) != 'P' or COLL_MTP_FAR != 'primary'):
+        raise SystemExit('--seedl: DSpark primary die (--draft P) with --coll-mtp-far primary')
+    if COLL_MTP_FAR == 'primary':   # mtp-dsbind: the primary die's end of a head MTP lane (seed descriptor class)
+        if not (COLL_SPLIT3_CR and int(getattr(a, 'mtp_links', 0) or 0) and getattr(a, 'draft', None) == 'P'
+                and getattr(a, 'host', False)):
+            raise SystemExit('--coll-mtp-far primary: needs --draft P --coll-split3-cr --mtp-links >= 1 --host')
+        COLL_MTP_LANE = True
+    elif COLL_MTP_FAR:   # mtp-wfc 2026-10-10: the far (S0) end of the head die's MTP lane: same lane composition
         if not (COLL_SPLIT3_CR and int(getattr(a, 'mtp_links', 0) or 0) and getattr(a, 'ctrl_role', None) == 'source'
                 and getattr(a, 'wfc_kit', False)):
             raise SystemExit('--coll-mtp-far s0: needs --coll-split3-cr --mtp-links >= 1 --ctrl-role source --wfc-kit')
