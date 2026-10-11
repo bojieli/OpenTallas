@@ -140,8 +140,14 @@ module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 
   .l_valid(f_ov),.l_ready(t_og),.l_data(f_od),.c_valid(ov),.c_ready(orr),.c_data(od));
  ot_dsrom_mtp_ltx_rc #(.W(594)) u_og(.clk(ck[0]),.rst_n(rn),.c_valid(ov),.c_ready(orr),.c_data(od),
   .l_valid(gv),.l_ready(gr),.l_data(gd));
+ wire cv, cr; wire [593:0] cd;
  ot_dsrom_mtp_lrx #(.W(594),.D(4),.SEL(1)) u_oc(.clk(ck[0]),.rst_n(rn),.l_valid(gv),.l_ready(gr),.l_data(gd),
-  .c_valid(c_ov),.c_ready(c_or),.c_data(c_od));
+  .c_valid(cv),.c_ready(cr),.c_data(cd));
+ // Core-facing output register (idle-sweep-1011): fixlat-collp2-5b059065b-tc NEEDS_RTL TT -52.31 at the routed insertion =
+ // u_oc.rp -> D4 read mux (OA22 / AND3 / AOI21) -> c_od[*] under the 0.62 T output budget. ot_sc_pfifo S 2: c_od is one
+ // AND-OR of flop copies (rs x slot), c_ov / c_or-side state are flops, c_or touches only pointer state. +1 cycle per row.
+ ot_sc_pfifo #(.W(594),.S(2),.G(32)) u_op(.clk(ck[0]),.rst_n(rn),.in_valid(cv),.in_ready(cr),.in_data(cd),
+  .out_valid(c_ov),.out_ready(c_or),.out_data(c_od));
 endmodule
 
 // VM-slab end: sends lane 0.

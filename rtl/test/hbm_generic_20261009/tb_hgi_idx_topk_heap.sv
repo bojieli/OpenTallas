@@ -61,6 +61,7 @@ module tb_hgi_idx_topk_heap;
   end
  endtask
  integer seed = 11;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  function automatic [31:0] gen(input integer mode, input integer i, input integer r);
   reg [31:0] x; begin
    case (mode)

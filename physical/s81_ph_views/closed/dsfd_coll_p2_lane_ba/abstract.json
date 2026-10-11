@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_coll_p2_lane_ba",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_coll_p2_lane_ba.lef": "2bc683ad3ed18d1f6613a730b5ecb611a4bc69c11c11770fc7818d3e671e264f",
+    "dsfd_coll_p2_lane_ba_ff.lib": "a294755cd3d05f3f8815162d207cd9ad3fa46a4fdbb4f43f9af68db4b0596b02",
+    "dsfd_coll_p2_lane_ba_ss.lib": "439d5c6c286c04234ea51c63d5dd902c71a9256c00225171e8c30b712e2776d6"
+  },
+  "ok": true
+}

@@ -3072,6 +3072,9 @@ def build_r8(variant=None):
             centre.remove('wfc')
         centre.insert(centre.index('capture') + 1, 'wfc_hard')
         centre_area['wfc_hard'] = WFC_SLAB_H * cw / 1e6
+        if STAGE_SEQ:   # main decision A (2026-10-11): the stage start / done passes dsfd_stage_seq to the engines
+            centre.insert(centre.index('wfc_hard') + 1, 'sseq')
+            centre_area['sseq'] = SSEQ_MM2
     if MTP_SEQ and DIE_KIND == 'head':
         centre.insert(centre.index('capture') + 1, 'mtp')
         centre_area['mtp'] = MTP_SEQ_MM2
@@ -3085,6 +3088,9 @@ def build_r8(variant=None):
         # slab from the VM (hidden-row reads, x beats to the seed elements, program start)
         centre.insert(centre.index('collective'), 'seedl')
         centre_area['seedl'] = up(SEEDL_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
+        if HROW:   # the main-hidden row store (seed client memory) between the VM and the seed launcher
+            centre.insert(centre.index('seedl'), 'hrow')
+            centre_area['hrow'] = up(HROW_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
     if DRAFT_SIDE == 'A':
         # MD-2 P2 (mtp-draftdie 2026-10-09): the selected-path transport (ot_mtp_p2_prefix_path: PRIMARY_SHARED1
         # 9-SRAM ordered transport + 3-SRAM 16-lane A-prefix + native publisher) on the A die of every draft row
@@ -3137,10 +3143,17 @@ def build_r8(variant=None):
             slab('p2', centre_area[n], x0_, yy, w0_, master='dsfd_p2')
             notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
                          '(the larger first-route outline %s um)' % (centre_area[n], P2_OUTLINE_UM))
+        elif n == 'sseq':
+            slab('sseq', centre_area[n], x0_, yy, w0_, master='dsfd_stage_seq')
+            notes.append('option A: dsfd_stage_seq (ot_s81_stage_seq) %.3f mm2: kit start / done <-> engine cmd / dn' % centre_area[n])
         elif n in ('vm_ep', 'cap_ep', 'p2_lnk'):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
             slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
             notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
+        elif n == 'hrow':
+            slab('hrow', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_hrow')
+            notes.append('MTP-DIE --hrow: dsfd_mtp_hrow (main-hidden row store, 120 x 1024x256 SRAM, contract %s um) %.3f mm2'
+                         % (HROW_UM, centre_area[n]))
         elif n == 'seedl':
             slab('seedl', centre_area[n], x0_, yy, w0_, master='dsfd_mtp_seed_launch')
             notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
@@ -3688,7 +3701,8 @@ def buses_r8(m):
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
             (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
-            (SEEDL_BUSES + (SEEDL_HOST_BUSES if 'host' in hub else ()) if 'seedl' in hub else ()) + \
+            ((SEEDL_BUSES_HROW + HROW_BUSES if 'hrow' in hub else SEEDL_BUSES) + (SEEDL_HOST_BUSES if 'host' in hub else ())
+             + (HROW_HOST_BUSES if 'hrow' in hub and 'host' in hub else ()) if 'seedl' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
             ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
@@ -3750,6 +3764,8 @@ def buses_r8(m):
         elif it.name == 'sp_stage_ctrl':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rs'))
+        elif it.master == 'dsfd_stage_seq':                    # option A sequencer: the kit's serial (ckv) side
+            dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
         elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2'):   # mtp-wfc: the kit's vmx slow side is the serial domain
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
@@ -3835,7 +3851,7 @@ def wfc_kit_buses(role, host, far=None, crp=False):
              ('wfc', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc', 54, 't_wfc', 'f_kd')]
         if role == 'source' and host:
             b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
-        return tuple(b)
+        return _sseq_rebind(tuple(b), host)
     # far 's0' (--coll-mtp-far): the SOURCE kit's link-in is the collective MTP lane's token return (t_mrt {data, valid}
     # / f_mrt grant; kit TOKIN 1) and the accept word t_macc goes to the host
     b = ([('collective', 'wfc', 513, 't_mrt', 'f_mrt'), ('wfc', 'collective', 1, 't_mrg', 'f_mrt')] if far == 's0' else
@@ -3847,7 +3863,20 @@ def wfc_kit_buses(role, host, far=None, crp=False):
         b += [('collective', 'host', 57, 't_macc', 'f_macc')]
     if role == 'source' and host:
         b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
-    return tuple(b)
+    return _sseq_rebind(tuple(b), host)
+
+
+def _sseq_rebind(b, host):
+    """--stage-seq: the kit's start / done go to dsfd_stage_seq (no capture placeholder pins); program load and status on
+    the host cfg path.  The sequencer's engine cmd / dn ports are bound by the engine-adapter work (s81-ctl-1011)."""
+    if not STAGE_SEQ:
+        return b
+    b = tuple(x for x in b if not (set(x[:2]) == {'wfc', 'capture'}))
+    b += (('wfc', 'sseq', 53, 't_ks', 'f_ks'), ('sseq', 'wfc', 54, 't_kd', 'f_kd'))
+    if host:
+        b += (('host', 'sseq', 36, 't_sseq_pw', 'f_pw'), ('host', 'sseq', 8, 't_sseq_plen', 'f_plen'),
+              ('sseq', 'host', 6, 't_st', 'f_sseq_st'))
+    return b
 
 
 SEEDL = False                   # --seedl (mtp-dsbind 2026-10-10): DSpark primary die (--draft P) seed-descriptor consumer
@@ -3864,11 +3893,23 @@ SEEDL_BUSES = (('collective', 'seedl', 78, 't_mrs', 'f_mrs'), ('seedl', 'collect
 SEEDL_HOST_BUSES = (('host', 'seedl', 11, 't_seedl_clr', 'f_clr'), ('seedl', 'host', 4, 't_flt', 'f_seedl_flt'),
                     ('collective', 'host', 513, 't_mrt', 'f_mrt'), ('host', 'collective', 1, 't_mrg', 'f_mrt'),
                     ('collective', 'host', 57, 't_macc', 'f_macc'))
+HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
+HROW_UM = (1500.48, 1500.48)    #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json
+# the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
+# (t_mhp<k> {flit 514, valid} / f_mhp<k> grant: three more LCR lane tiles + adapters in the MTPL composition, OPEN in
+# the collective composition owner's tree)
+SEEDL_BUSES_HROW = tuple(b for b in SEEDL_BUSES if 'vm' not in (b[0], b[1]) or b[2] in (1025 if b[3] == 't_x' else -1, 2, 57)) + (
+    ('seedl', 'hrow', 25, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1025, 't_vrs', 'f_vrs'))
+HROW_BUSES = tuple(x for k in range(3) for x in (('collective', 'hrow', 515, 't_mhp%d' % k, 'f_hp%d' % k),
+                                                ('hrow', 'collective', 1, 't_hpg', 'f_mhp%d' % k)))
+HROW_HOST_BUSES = (('host', 'hrow', 11, 't_hrow_clr', 'f_clr'), ('hrow', 'host', 3, 't_flt', 'f_hrow_flt'))
 COLL_MTP_FAR = None             # --coll-mtp-far s0 (mtp-wfc 2026-10-10): the S0 die's end of the head die's MTP lane
 MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab master dsfd_mtp_seq_rtt (RTT-sized grant
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
 SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) station spacing = LINK_STAGE_UM x (1111.1 - 261) /
                                 #   (833.3 - 261) on the SS wire model 261 ps + 1.135 ps/um (504 um at 833 ps; 749 um at 1,111 ps)
+STAGE_SEQ = False               # --stage-seq (main decision A 2026-10-11): kit start / done through dsfd_stage_seq
+SSEQ_MM2 = 0.06                 #   ot_s81_stage_seq NOPS 128 program (3.6 kbit) + 12 x (FQ 4 + credits) queues; preliminary
 WFC_CRP = False                 # --wfc-crp (main 10-11): WFC slab master dsfd_wfc_cr2 (credit-boundary tile dsfd_wfc_crp + kit)
 WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
 WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
@@ -6187,12 +6228,16 @@ def die_options(ap):
     ap.add_argument('--seedl', action='store_true', help='mtp-dsbind 2026-10-10: DSpark primary die (--draft P): '
                     'dsfd_mtp_seed_launch slab (seed descriptor from the collective MTP lane -> seed program); needs '
                     '--coll-mtp-far primary')
+    ap.add_argument('--hrow', action='store_true', help='mtp-dsbind 2026-10-10: with --seedl, the main-hidden row store '
+                    'dsfd_mtp_hrow (3 part links from the MTP part lanes; the seed client reads it)')
     ap.add_argument('--coll-mtp-far', choices=['s0', 'primary'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
                     '(far end of the head lane): token return -> WFC kit link-in (TOKIN), accept word -> host')
     ap.add_argument('--mtp-ep', action='store_true', help='mtp-wfc 2026-10-10: head-die RTT-sized sequencer partner ends')
     ap.add_argument('--p2-lnk', action='store_true', help='mtp-wfc 2026-10-10: draft-A P2 slab = core + dsfd_p2_lnk')
     ap.add_argument('--mtp-seq-rtt', action='store_true', help='mtp-wfc 2026-10-10: head sequencer slab master '
                     'dsfd_mtp_seq_rtt (native RTT successor, same ports)')
+    ap.add_argument('--stage-seq', action='store_true', help='main decision A: with --wfc-kit, a dsfd_stage_seq slab carries '
+                    'the kit start / done (no capture placeholder pins); engine cmd / dn bound by the adapter work')
     ap.add_argument('--wfc-crp', action='store_true', help='main 10-11: with --wfc-kit, the WFC slab master is dsfd_wfc_cr2 '
                     '(dsfd_wfc_crp credit-boundary tile at the die edge + the kit)')
     ap.add_argument('--wfc-kit', action='store_true',
@@ -6259,8 +6304,9 @@ def apply_options(a):
     global MTP_EP, P2_LNK
     MTP_EP = bool(getattr(a, 'mtp_ep', False)); P2_LNK = bool(getattr(a, 'p2_lnk', False))
     WFC_KIT = bool(getattr(a, 'wfc_kit', False))
-    global WFC_CRP
+    global WFC_CRP, STAGE_SEQ
     WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT
+    STAGE_SEQ = bool(getattr(a, 'stage_seq', False)) and WFC_KIT
     if WFC_CRP and getattr(a, 'coll_mtp_far', None):
         raise SystemExit('--wfc-crp with --coll-mtp-far: the TOKIN token-return path is a kit port, not a cr2 port (not built)')
     WFC_ROLE = 'source' if getattr(a, 'ctrl_role', 'layer') == 'source' else 'stage'
@@ -6298,8 +6344,11 @@ def apply_options(a):
     COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
     global COLL_MTP_FAR
     COLL_MTP_FAR = getattr(a, 'coll_mtp_far', None)
-    global SEEDL
+    global SEEDL, HROW
     SEEDL = bool(getattr(a, 'seedl', False))
+    HROW = bool(getattr(a, 'hrow', False))
+    if HROW and not SEEDL:
+        raise SystemExit('--hrow: with --seedl (the row store is the seed client memory)')
     if SEEDL and (getattr(a, 'draft', None) != 'P' or COLL_MTP_FAR != 'primary'):
         raise SystemExit('--seedl: DSpark primary die (--draft P) with --coll-mtp-far primary')
     if COLL_MTP_FAR == 'primary':   # mtp-dsbind: the primary die's end of a head MTP lane (seed descriptor class)
