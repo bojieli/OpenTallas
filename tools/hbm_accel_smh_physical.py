@@ -1250,6 +1250,13 @@ def cmd_block(a):
             f.write("export VERILOG_FILES += /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hbm_accel/cg/ot_cg_tile.sv\n"
                     "export PRE_CTS_TCL = /work/pre_cts_cg.tcl\n")
     defs = (["OT_SMH_CG_ENREG"] if getattr(a, "cg_enreg", False) else []) + (["OT_SMH_XLK"] if getattr(a, "xlk", False) else [])
+    # fe-push-hphys-1010: valid-only reset in the fp32 add pipelines / bmul (--drst0), the port reset through ot_rst_relay (--rst-relay)
+    defs += (["OT_FP_DATA_NORST", "OT_SMH_DRST0"] if getattr(a, "drst0", False) else []) + (["OT_SMH_RSTRELAY"] if getattr(a, "rst_relay", False) else [])
+    if getattr(a, "rst_relay", False):
+        if a.piece != "tile":
+            raise ValueError("--rst-relay applies to the tile")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_FILES += /src/rtl/lib/ot_rst_relay.sv\n")
     if defs:
         if getattr(a, "cg_enreg", False) and not (getattr(a, "cg", False) and a.piece == "tile"):
             raise ValueError("--cg-enreg applies to the gated tile (--cg --piece tile)")
@@ -1409,6 +1416,8 @@ def main(argv=None):
                    "the back end's CTS segfaulted with the push-down hook)")
     b.add_argument("--cg-enreg", action="store_true", help="[cg-smt] 2026-10-10: --cg tile: the ICG ENA from one register beside the "
                    "gate (ot_cg_tile ENREG; tile_wg cal: ENA from leaf-insertion cnt/wq, TT -198 ps)")
+    b.add_argument("--drst0", action="store_true", help="fe-push-hphys-1010: fp32 add cuts / y / err and the bmul y unreset (valid bits keep the reset)")
+    b.add_argument("--rst-relay", action="store_true", help="fe-push-hphys-1010: tile rst_n port -> ot_rst_relay (4 regions, release +3 edges)")
     b.add_argument("--xlk", action="store_true", help="[cg-smt] 2026-10-10: tile: a negedge lockup stage at every x-store macro input "
                    "(0 cycles; macro clock pin late + 47 ps lib hold: FF hold -55..-84 ps at r_addr_in / w_mask_in)")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
