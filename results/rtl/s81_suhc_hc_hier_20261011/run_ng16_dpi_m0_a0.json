@@ -1,13 +1,12 @@
 {
  "schema": "opentallas.s81_suhc.hc_gate.run.v1",
- "generated_utc": "2026-10-11T15:55:36.332319Z",
+ "generated_utc": "2026-10-11T16:27:45.914204Z",
  "ng": 16,
  "fp": "dpi",
  "mut": 0,
  "amut": 0,
  "lvm": 10,
- "kt": 0,
- "rs": 1,
+ "hier": 0,
  "runs": [
   {
    "run": "golden_L0_L2",
@@ -428,10 +427,10 @@
   "rtl/test/sim_hdc_prefix_beh.sv": "75c1a57d38d81da07b7ff70a37d6660c563ccfa6fa921edc53b21b68635b50b5",
   "rtl/test/sim_dsrom_fp32_add_l6_dpi.sv": "11fae84900616ad993513b319366beb0f44637b3be420caaa9c98ddd652b7fc2",
   "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv": "ca1e3bbc1bd884ba4a93e886be743c921b8bd9bb1c1adf874773e04db1fda4a6",
-  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv": "c42ab12450158e494d64b49067f9cd36ae02fba5ee4cbbfed3218f23cfd77edc",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hier.sv": "6894f9aac805b451e41f7642d66788c3d14f417f44c3bae14890fd4a029d8bbb",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv": "2c2710bd2717a80e9b8e1db29080c3b0fc3e8f28ada5e4b16e3761136335417f",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_tile.sv": "8609008c7791144300db154f4fb47fda96669ad38f4375cf9a7fde275af160c9",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv": "0db0d79a6533257fdd18e2acdd80c258648ad4a92215e820b762e2772f3baed6",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_rtile.sv": "87921c82292c3afaca7f8e3d3f2692db98c498f94043d29b7a9622c02cf8c350",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv": "f81fa1179d3d9db35e427b2ba22f9a7691dcee500b00ae63c3a173532695895e",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv": "d8fa9aeaa0994bd3b264da4450f967d2139d36ca667d4a9516f04928cb7c8cd7",
   "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "f01f0b3d0f6000005376d2816a0dc482025103e11a74f3627cba722fa0348e91",
   "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
   "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
@@ -452,6 +451,6 @@
   "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
   "rtl/hdc/v41x/ot_dsrom_aq12.sv": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
   "rtl/hdc/v41x/ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
-  "rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_master.sv": "c9e134fa8025c6d56a778f95360e96b1a6f17d00ebdb24b59c6d4ddb22af20a7"
+  "rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_master.sv": "51890090b18e8a231a16d181f107c77039e4afce172fa6a23da8bd8a339baef4"
  }
 }
