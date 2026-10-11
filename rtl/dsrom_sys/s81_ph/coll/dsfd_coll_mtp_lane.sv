@@ -156,9 +156,10 @@ module dsfd_coll_mtp_lane #(
     assign t_pop_l = tb_v && t_cr;
     assign s_pop_l = sb_v && s_cr;
     reg [AW-1:0] racc;
+    reg flt;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) racc <= {AW{1'b0}};
-        else racc <= ac_in ? lr_d[AW-1:0] : {racc[AW-1], 1'b0, racc[AW-3:0]};   // acc_v is a one-cycle event
+        else racc <= ac_in ? {lr_d[AW-1] | flt, lr_d[AW-2:0]} : {racc[AW-1] | flt, 1'b0, racc[AW-3:0]};   // acc_v: one-cycle event
 
     // ---------------------------------------------------------------- credit state
     wire [CW-1:0] rt = cr_in ? lr_d[CW-1:0] : {CW{1'b0}}, rsc = cr_in ? lr_d[2*CW-1:CW] : {CW{1'b0}};
@@ -177,9 +178,8 @@ module dsfd_coll_mtp_lane #(
             owe_s <= (c_snd ? {CW{1'b0}} : owe_s) + CW'(s_pop_l);
             if (send) ptr <= (gnt[0] ? 2'd1 : gnt[1] ? 2'd2 : gnt[2] ? 2'd3 : 2'd0);
         end
-    reg flt;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) flt <= 1'b0;
         else flt <= flt | lr_flt | bad_k | tb_flt | sb_flt | aq_flt | (acc_ev && !aq_room) | (|f_lflt);
-    assign t_racc = {racc[AW-1] | flt, racc[AW-2:0]};
+    assign t_racc = racc;                // launched from flops (fault bit = the far fault OR this lane's, +1 cycle)
 endmodule

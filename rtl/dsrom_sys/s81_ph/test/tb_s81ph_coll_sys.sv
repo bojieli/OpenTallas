@@ -90,11 +90,11 @@ module tb_s81ph_coll_sys;
             .clk(clk), .rst_n(rsts[gd ^ 1]), .delay(16'd0), .in_valid(rsts[gd ^ 1]), .in_data(mtx[gd ^ 1]),
             .out_valid(mov), .out_data(mod), .err_injected());
         assign mrx = {1'b0, 1'b1, mod, mov};
-        integer tok_rx, seed_rx, acc_rx, tok_tx, seed_tx, acc_tx, merrs, tf_tx, tf_rx, tl_rx;
+        integer tok_rx, seed_rx, acc_rx, tok_tx, seed_tx, acc_tx, merrs, tf_tx, tf_rx, tl_rx, tm_rx;
         tb_mtp_lane_io #(.DIE(gd), .NTOK(NTOK), .NSEED(NSEED), .NACC(NACC), .MSTALL(MSTALL), .TGAP(TGAP)) u_io (
             .clk(clk), .rst_n(rsts[gd]), .cyc(cyc), .f_mtp(fmtp), .t_mtp(tmtp), .t_mrt(mrt), .f_mrt(fmrt), .t_mrs(mrs),
             .f_mrs(fmrs), .t_macc(macc), .tok_rx(tok_rx), .seed_rx(seed_rx), .acc_rx(acc_rx), .tok_tx(tok_tx),
-            .seed_tx(seed_tx), .acc_tx(acc_tx), .errs(merrs), .tok_first_tx(tf_tx), .tok_first_rx(tf_rx), .tok_last_rx(tl_rx));
+            .seed_tx(seed_tx), .acc_tx(acc_tx), .errs(merrs), .tok_first_tx(tf_tx), .tok_first_rx(tf_rx), .tok_last_rx(tl_rx), .tok_mid_rx(tm_rx));
 `endif
         for (gl = 0; gl < 8; gl = gl + 1) begin : g_lane
             // lane gl of die gd receives lane gl of die gd ^ X(gl)
@@ -258,16 +258,16 @@ module tb_s81ph_coll_sys;
         mtp_die_done = (MSTALL == 2 || t == NTOK) && (MSTALL == 1 || MSTALL == 2 || s_ == NSEED) && a == NACC;
     endfunction
     task mtp_end();
-        integer dd, t, s_, a, e, ttx, ftx, frx, lrx;
+        integer dd, t, s_, a, e, ttx, ftx, frx, lrx, mdr;
         for (dd = 0; dd < 4; dd = dd + 1) begin
             case (dd)
-                0: begin t = g_die[0].tok_rx; s_ = g_die[0].seed_rx; a = g_die[0].acc_rx; e = g_die[0].merrs; ttx = g_die[1].tok_tx; ftx = g_die[1].tf_tx; frx = g_die[0].tf_rx; lrx = g_die[0].tl_rx; end
-                1: begin t = g_die[1].tok_rx; s_ = g_die[1].seed_rx; a = g_die[1].acc_rx; e = g_die[1].merrs; ttx = g_die[0].tok_tx; ftx = g_die[0].tf_tx; frx = g_die[1].tf_rx; lrx = g_die[1].tl_rx; end
-                2: begin t = g_die[2].tok_rx; s_ = g_die[2].seed_rx; a = g_die[2].acc_rx; e = g_die[2].merrs; ttx = g_die[3].tok_tx; ftx = g_die[3].tf_tx; frx = g_die[2].tf_rx; lrx = g_die[2].tl_rx; end
-                default: begin t = g_die[3].tok_rx; s_ = g_die[3].seed_rx; a = g_die[3].acc_rx; e = g_die[3].merrs; ttx = g_die[2].tok_tx; ftx = g_die[2].tf_tx; frx = g_die[3].tf_rx; lrx = g_die[3].tl_rx; end
+                0: begin t = g_die[0].tok_rx; s_ = g_die[0].seed_rx; a = g_die[0].acc_rx; e = g_die[0].merrs; ttx = g_die[1].tok_tx; ftx = g_die[1].tf_tx; frx = g_die[0].tf_rx; lrx = g_die[0].tl_rx; mdr = g_die[0].tm_rx; end
+                1: begin t = g_die[1].tok_rx; s_ = g_die[1].seed_rx; a = g_die[1].acc_rx; e = g_die[1].merrs; ttx = g_die[0].tok_tx; ftx = g_die[0].tf_tx; frx = g_die[1].tf_rx; lrx = g_die[1].tl_rx; mdr = g_die[1].tm_rx; end
+                2: begin t = g_die[2].tok_rx; s_ = g_die[2].seed_rx; a = g_die[2].acc_rx; e = g_die[2].merrs; ttx = g_die[3].tok_tx; ftx = g_die[3].tf_tx; frx = g_die[2].tf_rx; lrx = g_die[2].tl_rx; mdr = g_die[2].tm_rx; end
+                default: begin t = g_die[3].tok_rx; s_ = g_die[3].seed_rx; a = g_die[3].acc_rx; e = g_die[3].merrs; ttx = g_die[2].tok_tx; ftx = g_die[2].tf_tx; frx = g_die[3].tf_rx; lrx = g_die[3].tl_rx; mdr = g_die[3].tm_rx; end
             endcase
-            $display("MTP DIE %0d rx tokens %0d / %0d (peer sent %0d) seeds %0d / %0d accepts %0d / %0d errs %0d first_tok_latency %0d last_tok %0d",
-                     dd, t, NTOK, ttx, s_, NSEED, a, NACC, e, frx - ftx, lrx);
+            $display("MTP DIE %0d rx tokens %0d / %0d (peer sent %0d) seeds %0d / %0d accepts %0d / %0d errs %0d first_tok_latency %0d last_tok %0d second_half_tokens %0d in %0d cycles",
+                     dd, t, NTOK, ttx, s_, NSEED, a, NACC, e, frx - ftx, lrx, NTOK - NTOK / 2, lrx - mdr);
             errs = errs + e;
             if (!mtp_die_done(t, s_, a)) begin errs = errs + 1; $display("MTP DIE %0d INCOMPLETE", dd); end
             if (MSTALL == 1 && s_ != 0) begin errs = errs + 1; $display("MTP DIE %0d seed consumer stalled but received", dd); end

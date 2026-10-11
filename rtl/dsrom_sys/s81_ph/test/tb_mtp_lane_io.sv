@@ -6,7 +6,8 @@
 // MSTALL.  Checks: every received token / seed / accept equals the partner die's sent stream, in order, nothing extra.
 //   MSTALL 0 random stalls | 1 seed consumer stalled forever (HOL: tokens must still all arrive) | 2 both consumers
 //   stalled forever (collective traffic must still complete, unchanged) | 3 no stalls (rate / class RTT) | 4 long
-//   windows (token 3,000..15,000, seed 5,000..20,000: the class credits, receiver grants and buffers run full)
+//   windows from cycle 1,200 (link up ~1,100; token to 15,000, seed to 20,000: class credits, receiver grants and
+//   buffers run full)
 module tb_mtp_relay #(parameter integer W = 1, parameter integer HOPS = 0) (
     input wire clk, rst_n, input wire [W-1:0] i, output wire [W-1:0] o);
     generate if (HOPS == 0) begin : g0 assign o = i; end
@@ -34,7 +35,7 @@ module tb_mtp_lane_io #(parameter integer DIE = 0, parameter integer NTOK = 300,
     output wire          f_mrs,
     input  wire [56:0]   t_macc,
     output integer       tok_rx, seed_rx, acc_rx, tok_tx, seed_tx, acc_tx, errs,
-    output integer       tok_first_tx, tok_first_rx, tok_last_rx
+    output integer       tok_first_tx, tok_first_rx, tok_last_rx, tok_mid_rx
 );
     localparam integer SW = 77, AW = 57, PEER = DIE ^ 1;
     function automatic [511:0] tok(input integer die, input integer n);
@@ -74,12 +75,12 @@ module tb_mtp_lane_io #(parameter integer DIE = 0, parameter integer NTOK = 300,
             1: begin ct_r = (cyc % 7) != 0; cs_r = 1'b0; end
             2: begin ct_r = 1'b0; cs_r = 1'b0; end
             3: begin ct_r = 1'b1; cs_r = 1'b1; end
-            4: begin ct_r = !(cyc >= 3000 && cyc < 15000) && (cyc % 7) != 0; cs_r = !(cyc >= 5000 && cyc < 20000) && (cyc % 5) != 0; end
+            4: begin ct_r = !(cyc >= 1200 && cyc < 15000) && (cyc % 7) != 0; cs_r = !(cyc >= 1200 && cyc < 20000) && (cyc % 5) != 0; end
             default: begin ct_r = (cyc % 7) != 0 && !((cyc % 500) >= 400); cs_r = (cyc % 5) != 0 && !((cyc % 700) >= 500); end
         endcase
     end
     initial begin tok_rx = 0; seed_rx = 0; acc_rx = 0; tok_tx = 0; seed_tx = 0; acc_tx = 0; errs = 0;
-                  tok_first_tx = -1; tok_first_rx = -1; tok_last_rx = -1; end
+                  tok_first_tx = -1; tok_first_rx = -1; tok_last_rx = -1; tok_mid_rx = -1; end
     always @(posedge clk) if (rst_n) begin
         if (tv_c && tr_c) begin if (tok_first_tx < 0) tok_first_tx <= cyc; tok_tx <= tok_tx + 1; end
         if (sv_c && sr_c) seed_tx <= seed_tx + 1;
@@ -88,6 +89,7 @@ module tb_mtp_lane_io #(parameter integer DIE = 0, parameter integer NTOK = 300,
             if (tok_rx >= NTOK || ct_d !== tok(PEER, tok_rx)) begin errs = errs + 1; if (errs < 10) $display("MTP DIE %0d token %0d mismatch", DIE, tok_rx); end
             if (tok_first_rx < 0) tok_first_rx = cyc;
             tok_last_rx = cyc; tok_rx = tok_rx + 1;
+            if (tok_rx == NTOK / 2) tok_mid_rx = cyc;
         end
         if (cs_v && cs_r) begin
             if (seed_rx >= NSEED || cs_d !== seed(PEER, seed_rx)) begin errs = errs + 1; if (errs < 10) $display("MTP DIE %0d seed %0d mismatch", DIE, seed_rx); end

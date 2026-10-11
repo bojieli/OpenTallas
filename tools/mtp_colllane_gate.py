@@ -32,7 +32,7 @@ CASES = dict(
     base=('pass', ['-GNTOK=0', '-GNSEED=0', '-GNACC=0']),
     pos_rand=('pass', ['-GMSTALL=0']),
     pos_hol=('pass', ['-GMSTALL=1']),
-    pos_block=('pass', ['-GMSTALL=2', '-GMTP_HOLD=3000']),
+    pos_block=('pass', ['-GMSTALL=2', '-GMTP_HOLD=9000']),
     pos_win=('pass', ['-GMSTALL=4']),
     pos_rate=('pass', ['-GMSTALL=3', '-GTGAP=6', '-GNTOK=1000']),
     neg_shared=('fail', ['-GMSTALL=1', '-GMTP_HOLD=20000', '+define+OT_MTPL_MUT_SHARED']),
