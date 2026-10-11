@@ -220,6 +220,19 @@
       if (ec_cr[ke] > ec_rows[ke]) begin err = err + 1; $display("ERR entry credit surplus port %0d credits %0d rows %0d", ke, ec_cr[ke], ec_rows[ke]); end
     end
   end
+  // hgi-1010/g3: credit-deadlock watchdog.  A current stream with rows still owed that lands no row on any port for
+  // 8,192 cycles is stalled on credits (a lost credit never comes back); the 1.2 M-cycle completion timeout below would
+  // take ~2 days of iverilog, so OT_ATTN_MUT_KQ_DROP must fail here.
+  integer ps_stall = 0, kw;
+  always @(posedge ck) if (rst) begin : wdog
+    reg any; any = 1'b0;
+    for (kw = 0; kw < 8; kw = kw + 1) any = any | ks[kw][0];
+    if (ps_busy && ps_rows < ps_want && !any) ps_stall = ps_stall + 1; else ps_stall = 0;
+    if (ps_stall == 8192) begin err = err + 1;
+      $display("ERR PS credit stall: no row for 8192 cycles, rows %0d/%0d streams %0d", ps_rows, ps_want, ps_n);
+      $display("SVC_BENCH lines=%0d errors=%0d", done_lines, err);
+      $fatal(1, "SVC_BENCH FAIL"); end
+  end
 `else
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf assign kqf[gq] = {fck, kq[gq][0]}; end endgenerate
 `endif
