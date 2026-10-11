@@ -1,0 +1,80 @@
+{
+  "name": "hfd_idx_t4_join",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_b_tc_cl/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_b_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/export_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_b_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/export_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/routes/hgi_idx_t4_join_fe_f7cabb9b7_b_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl/record/export_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "hfd_idx_t4_join.lef": "d86640b51c243e209244daa848df142e9b5e8c4c5cc5f0bceeaf284c02daf976",
+    "hfd_idx_t4_join_ff.lib": "5c7d40535f0522268aea65e0a11591f62dd0c9eff10f9660d825e4b6be882b1c",
+    "hfd_idx_t4_join_ss.lib": "8c08dd8171f0ec8f1fefe0126e9311aee820e303dc3a9a6b7bc58965c22f78dc",
+    "hfd_idx_t4_join_tt.lib": "8ce36beacc2d67b25198b08a236162366c1822bbdb45a33008bb0ae9d9b6516b"
+  },
+  "ok": true
+}
