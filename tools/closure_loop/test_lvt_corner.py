@@ -105,18 +105,22 @@ CTS = "routes/lbl/logs/asap7/n/base/4_1_cts.log"
 
 
 class CornerCheckAnyVt(unittest.TestCase):
-    def test_lvt_ss_in_single_corner_fails(self):
+    def test_lvt_ss_in_single_corner_warns(self):
         r = tempfile.mkdtemp()           # the qfd sys_v lvt r3 load: RVT TT + LVT TT + LVT SS + FF
         write_log(r, CTS, [(None, "AO", "RVT", "TT"), (None, "AO", "LVT", "TT"), (None, "AO", "LVT", "SS"),
                            (None, "AO", "RVT", "FF"), (None, "AO", "LVT", "FF")])
         ok, lines = rcc.check(r)
-        self.assertFalse(ok)
+        self.assertTrue(ok)             # TT + SS only: pessimistic repair, verdict STA authoritative
+        self.assertTrue(lines[0].startswith("WARN"))
         self.assertIn("SS+TT", lines[0])
 
-    def test_lvt_or_slvt_ss_in_wc_scene_fails(self):
+    def test_lvt_or_slvt_ss_in_wc_scene_warns(self):
         for vt in ("LVT", "SLVT"):
             r = tempfile.mkdtemp()
             write_log(r, CTS, [("WC", "AO", "RVT", "TT"), ("WC", "AO", vt, "SS"), ("BC", "AO", "RVT", "FF")])
+            self.assertTrue(rcc.check(r)[0], vt)
+            r = tempfile.mkdtemp()      # no TT views in the setup scene at all: still a failure
+            write_log(r, CTS, [("WC", "AO", "RVT", "SS"), ("WC", "AO", vt, "SS"), ("BC", "AO", "RVT", "FF")])
             self.assertFalse(rcc.check(r)[0], vt)
 
     def test_all_vt_tt_passes(self):
