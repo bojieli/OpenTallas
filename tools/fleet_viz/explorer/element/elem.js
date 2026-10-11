@@ -1,7 +1,8 @@
 /* Chip Explorer element page (/explorer/element/): one closed element (or a side-by-side pair), from its final routed
    DB (tools/explorer_elem_export.py: OpenROAD in the ORFS container with the closure loop's own sign-off STA setup) and
    its RTL at the closure's source commit (tools/explorer_elem/rtl_export.py: yosys elaboration of the exact synthesis
-   inputs).  Tabs: Overview · Layout · Timing · Clock arrival · Clock tree · Density · RTL · Facts.
+   inputs).  Tabs: Layout (landing) · Timing · Clock arrival · Clock tree · Density · RTL (structure diagram, reference
+   model, source) · Facts (key numbers, throughput qualification, every fact with its record).
    URL: ?p=<page id> | ?e=<element id>; #tab=<tab>; ?safe=1 hides raw names. */
 (function(){
 'use strict';
@@ -20,14 +21,14 @@ function hex2rgb(h){ h = h.replace('#', ''); if (h.length === 3) h = h.split('')
 
 const F = {flop: 1, clk: 2, lvt: 4, hold: 8, repair: 16, infer: 32, slvt: 64, icg: 128};
 const TABS = [
-  ['overview', 'Overview', 'What the element computes, its major blocks, the verified golden model, key numbers and throughput qualification.'],
   ['layout', 'Layout', 'Every placed cell of the routed layout, coloured by the RTL block it implements.'],
   ['timing', 'Timing', 'The worst setup (TT) and hold (FF) paths, drawn through their placed pins, with per-stage delays.'],
   ['arrival', 'Clock arrival', 'When the clock edge reaches each flop, on one colour scale for every element shown.'],
   ['tree', 'Clock tree', 'How one clock pin feeds every flop: each buffer level and clock gate, on the layout and as a level diagram.'],
   ['density', 'Density', 'Cell density, pin density and routed-wire demand per bin.'],
-  ['rtl', 'RTL', 'The RTL at the closure\u2019s source commit. Select a module to light its cells on the layout; hover a flop on the layout for its register and line.'],
-  ['facts', 'Facts', 'Sign-off and layout facts, each with the record it is read from.']];
+  ['rtl', 'RTL', 'Structure from the elaborated RTL, the reference model the bench names, and the source at the closure\u2019s commit. Select a module to light its cells.'],
+  ['facts', 'Facts', 'Key numbers, throughput qualification against the budget, and every sign-off and layout fact with its record.']];
+const LAYOUT_TABS = new Set(['layout', 'timing', 'arrival', 'tree', 'density']);
 const PAL = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#17becf', '#bcbd22', '#8c6bb1'];
 const OTHER = '#7c86a6', UNATTR = '#4a5678';
 const RAMP = ['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725'];
@@ -37,7 +38,7 @@ function rampAt(r, t){ t = Math.max(0, Math.min(1, t)); const k = t * (r.length 
   const a = hex2rgb(r[i]), b = hex2rgb(r[i + 1]); return [0, 1, 2].map(j => Math.round(a[j] + (b[j] - a[j]) * f)); }
 const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 
-const S = {page: null, pages: null, els: [], tab: 'overview', depth: null, iso: {}, pcorner: lsGet('pcorner', 'setup'), ccorner: lsGet('ccorner', 'tt'),
+const S = {page: null, pages: null, els: [], tab: 'layout', depth: null, iso: {}, pcorner: lsGet('pcorner', 'setup'), ccorner: lsGet('ccorner', 'tt'),
   dmetric: lsGet('dmetric', 'density'), psel: {}, tview: lsGet('tview', 'wires'), tlevel: null, rtlEl: 0, rtlSel: null, rtlFile: null, rtlLines: null,
   diag: {}, tput: null, rows: false};
 
@@ -49,11 +50,11 @@ $('theme').onclick = () => { const dark = cssv('color-scheme') !== 'light'; lsSe
 /* ------------------------------------------------------------------ load */
 async function getJSON(u){ const r = await fetch(u, {cache: 'no-store'}); if (!r.ok) throw new Error(r.status + ' ' + u); return r.json(); }
 async function getBin(u){ const r = await fetch(u, {cache: 'no-store'}); if (!r.ok) throw new Error(r.status + ' ' + u); return r.arrayBuffer(); }
-function hashTab(){ const m = location.hash.match(/^#tab=(\w+)/); return m && TABS.some(t => t[0] === m[1]) ? m[1] : null; }
+function hashTab(){ const m = location.hash.match(/^#tab=(\w+)/); if (m && m[1] === 'overview') return 'layout'; return m && TABS.some(t => t[0] === m[1]) ? m[1] : null; }
 
 async function init(){
-  // the old stepped story is gone: its deep links land on the Overview
-  if (/^#story-/.test(location.hash)){ try { history.replaceState(null, '', location.pathname + location.search + '#tab=overview'); } catch (e) {} }
+  // the stepped story and the Overview tab are gone: their deep links land on the Layout
+  if (/^#(story-|overview|tab=overview)/.test(location.hash)){ try { history.replaceState(null, '', location.pathname + location.search + '#tab=layout'); } catch (e) {} }
   let pages = {pages: [], elements: {}};
   try { pages = await getJSON('pages.json' + QS); } catch (e) {}
   S.pages = pages;
@@ -65,36 +66,41 @@ async function init(){
   S.page = page;
   document.title = (page.title || 'Element Layout').slice(0, 40);
   $('title').textContent = page.title || page.elements.join(' vs ');
-  S.tab = hashTab() || 'overview';
+  S.tab = hashTab() || 'layout';
   renderTabs();
   buildStage();
   const els = await Promise.all(page.elements.map(async (id, k) => {
     try {
       const d = await getJSON('data/' + encodeURIComponent(id) + '.json' + QS);
+      if (!d.geom) return {id, d, k, pane: S.panes[k], nolayout: true, M: {status: (d.facts.find(f => f.k === 'status') || {}).v, recTT: factv(d, /setup WNS \(sign-off/), recFF: factv(d, /^FF hold WNS \(sign-off/), drc: factv(d, /^DRC$/)}};
       const [buf, cbuf] = await Promise.all([getBin('data/' + encodeURIComponent(d.geom.cells.file)),
         d.clock_wires ? getBin('data/' + encodeURIComponent(d.clock_wires.file)).catch(() => null) : null]);
       return prep(id, d, buf, cbuf, k);
     } catch (e) { return {id, err: String(e), k, pane: S.panes[k]}; }
   }));
   S.els = els;
-  if (!page.title) $('title').textContent = els.map(E => E.d ? E.d.label : E.id).join(' vs ');
-  $('sum').textContent = page.summary || (els[0].d && els[0].d.summary) || '';
-  els.forEach(E => { const p = E.pane; p.busy.textContent = E.err ? 'Could not load ' + E.id + ': ' + E.err : ''; p.busy.hidden = !E.err; });
+  if (!page.title) $('title').textContent = els.map(E => E.d ? E.d.label + (E.d.target ? ' · ' + E.d.target : '') : E.id).join(' vs ');
+  document.title = ($('title').textContent || 'Element').slice(0, 40);
+  const sumtxt = page.summary || els.filter(E => E.d).map(E => [E.d.category, E.d.role && E.d.role !== E.d.category ? E.d.role : null, E.d.nosta && E.d.layout ? 'timing not re-run (sources released)' : null].filter(Boolean).join(' · ')).join(' | ');
+  $('sum').textContent = sumtxt; $('sum').parentNode.hidden = !sumtxt;
+  els.forEach(E => { const p = E.pane; p.busy.textContent = E.err ? 'Could not load ' + E.id + ': ' + E.err : E.nolayout ? 'Layout data released: the closure loop deleted this job\u2019s routed DB before the page existed. RTL and Facts remain.' : ''; p.busy.hidden = !(E.err || E.nolayout); });
+  if (LAYOUT_TABS.has(S.tab) && els.every(E => E.nolayout || E.err)){ S.tab = 'facts'; renderTabs(); }
   chooseLayout();
   S.depth = +lsGet('depth.' + page.id, 0) || null;
   regroup();
   renderPills();
   render();
   // RTL (1 MB per element) and the throughput budget load behind the first paint
-  els.forEach(E => { if (!E.err && E.d.rtl_file) getJSON('data/' + encodeURIComponent(E.d.rtl_file) + QS).then(r => { if (r && r.tree){ E.rtl = r; prepRtl(E); if (S.tab === 'overview' || S.tab === 'rtl') render(); } }).catch(() => {}); });
+  els.forEach(E => { if (!E.err && E.d && E.d.rtl_file) getJSON('data/' + encodeURIComponent(E.d.rtl_file) + QS).then(r => { if (r && r.tree){ E.rtl = r; prepRtl(E); if (S.tab === 'rtl' || S.tab === 'layout') render(); } }).catch(() => {}); });
   loadTput(); setInterval(loadTput, 10 * 60 * 1000);
 }
 async function loadTput(){
   const blocks = (S.page.blocks || []).concat(S.els.filter(E => !E.err).map(E => E.d.block), S.els.filter(E => !E.err).map(E => E.d.job));
   try { S.tput = await getJSON('/api/explorer/elem_tput?blocks=' + encodeURIComponent(blocks.join(',')) + (SAFE ? '&safe=1' : '')); }
   catch (e) { S.tput = {status: 'unavailable', error: String(e)}; }
-  if (S.tab === 'overview') renderOverview();
+  if (S.tab === 'facts') renderSide();
 }
+function factv(d, re){ const f = (d.facts || []).find(x => re.test(x.k)); return f ? f.v : null; }
 
 function prep(id, d, buf, cbuf, k){
   const g = d.geom, n = g.cells.n, q = g.quantum_dbu / g.dbu_per_um;
@@ -180,7 +186,7 @@ function treeStats(E){
 /* ------------------------------------------------------------------ hierarchy groups (Layout tab colours) */
 function regroup(){
   S.els.forEach(E => {
-    if (E.err) return;
+    if (E.err || E.nolayout) return;
     const mods = E.d.geom.modules, cnt = E.d.geom.module_cells;
     const comps = mods.map(m => m === '(unattributed)' ? null : m.split('.'));
     let pre = null; comps.forEach(c => { if (!c) return; if (pre == null) pre = c.slice(); else { let i = 0; while (i < pre.length && i < c.length && pre[i] === c[i]) i++; pre.length = i; } });
@@ -212,6 +218,7 @@ function regroup(){
 function prepRtl(E){
   const R = E.rtl;
   E.instOf = {}; for (const k in R.modules){ const m = R.modules[k]; const o = {}; (m.inst || []).forEach(x => o[x[0]] = x[1]); E.instOf[k] = o; }
+  if (E.nolayout){ E.prefCount = () => [0, 0]; return; }
   const mods = E.d.geom.modules;
   E.prefCount = p => { let n = 0, inf = 0; const pp = p ? p + '.' : ''; for (let i = 0; i < mods.length; i++){ const m = mods[i]; if (!p ? m !== '(unattributed)' : (m === p || m.startsWith(pp))){ n += E.d.geom.module_cells[i]; inf += E.inferByMod[i]; } } return [n, inf]; };
 }
@@ -245,13 +252,10 @@ function setTab(k){
   try { history.replaceState(null, '', location.pathname + location.search + '#tab=' + k); } catch (e) {}
   render();
 }
-window.addEventListener('hashchange', () => { if (/^#story-/.test(location.hash)){ setTab('overview'); return; } const t = hashTab(); if (t && t !== S.tab) setTab(t); });
+window.addEventListener('hashchange', () => { if (/^#(story-|overview)/.test(location.hash)){ setTab('layout'); return; } const t = hashTab(); if (t && t !== S.tab) setTab(t); });
 function render(){
   document.body.className = 'tab-' + S.tab;
-  const ov = S.tab === 'overview';
-  $('ov').hidden = !ov; $('main').hidden = ov;
-  if (ov){ renderOverview(); return; }
-  S.els.forEach(E => { if (!E.err && (!E.view || E.view.auto)) fit(E); });
+  S.els.forEach(E => { if (!E.err && !E.nolayout && (!E.view || E.view.auto)) fit(E); });
   renderSide(); redrawAll();
 }
 
@@ -268,17 +272,17 @@ function buildStage(){
     bindPane(P);
     return P;
   });
-  if (window.ResizeObserver){ const ro = new ResizeObserver(() => { if (S.tab === 'overview') return; if (S.els.length) chooseLayout(); S.els.forEach(E => { if (!E.err && E.view && E.view.auto) fit(E); }); redrawAll(); }); ro.observe(st); }
+  if (window.ResizeObserver){ const ro = new ResizeObserver(() => { if (S.els.length) chooseLayout(); S.els.forEach(E => { if (!E.err && !E.nolayout && E.view && E.view.auto) fit(E); }); redrawAll(); }); ro.observe(st); }
 }
 function chooseLayout(){
-  const st = $('stage'), ok = S.els.filter(E => !E.err); if (ok.length < 2){ S.rows = false; return; }
+  const st = $('stage'), ok = S.els.filter(E => !E.err && !E.nolayout); if (ok.length < 2){ S.rows = false; return; }
   const r = st.getBoundingClientRect(), n = ok.length, phone = innerWidth <= 980;
   if (!r.width){ S.rows = true; st.classList.add('rows'); return; }
   const side = ok.reduce((a, E) => a + Math.min((r.width / n) / E.W, r.height / E.H), 0);
   const rows = ok.reduce((a, E) => a + Math.min(r.width / E.W, (r.height / n) / E.H), 0);
   S.rows = phone || rows > side; st.classList.toggle('rows', S.rows);
 }
-function elOfPane(P){ return S.els.find(E => E.k === P.k && !E.err); }
+function elOfPane(P){ return S.els.find(E => E.k === P.k && !E.err && !E.nolayout); }
 function fit(E){
   const r = E.pane.cv.getBoundingClientRect(); const pad = 16, top = 44;
   if (!r.width || !r.height){ E.view = null; return; }
@@ -359,7 +363,7 @@ function baseColorFn(E, mode){
 function baseKey(E, mode){ return mode + ':' + (mode === 'hier' ? E.depth + ':' + [...(S.iso[E.id] || [])].join(',') : mode === 'rtl' ? (S.rtlEl === E.k ? S.rtlSel : '-') : '') + ':' + cssv('--cellgrey') + cssv('--accent'); }
 
 /* ------------------------------------------------------------------ drawing */
-function redrawAll(){ S.els.forEach(E => { if (!E.err) draw(E); }); }
+function redrawAll(){ S.els.forEach(E => { if (!E.err && !E.nolayout) draw(E); }); }
 function lensState(){
   const T = S.tab;
   if (T === 'layout') return {base: 'hier', overlays: ['macros', 'root']};
@@ -468,10 +472,10 @@ const OVER = {
 function poly(E, c, p){ c.beginPath(); let st = false; for (const pt of p.points){ if (pt[5] == null) continue; const X = sx(E, pt[5]), Y = sy(E, pt[6]); if (!st){ c.moveTo(X, Y); st = true; } else c.lineTo(X, Y); } c.stroke(); }
 function lbl(c, x, y, t, col){ c.font = '600 11px ' + cssv('--mono'); const w = c.measureText(t).width; c.fillStyle = cssv('--tipbg'); c.fillRect(x - 3, y - 11, w + 6, 15); c.fillStyle = col; c.fillText(t, x, y); }
 function clockRange(corner){
-  let lo = Infinity, hi = -Infinity; S.els.forEach(E => { if (E.err) return; const st = corner === 'ff' ? E.M.ff : E.M.tt; if (!st) return; lo = Math.min(lo, st.p1); hi = Math.max(hi, st.p99); });
+  let lo = Infinity, hi = -Infinity; S.els.forEach(E => { if (E.err || E.nolayout) return; const st = corner === 'ff' ? E.M.ff : E.M.tt; if (!st) return; lo = Math.min(lo, st.p1); hi = Math.max(hi, st.p99); });
   return isFinite(lo) ? [lo, hi] : [0, 1];
 }
-function heatMax(m){ let mx = 0; S.els.forEach(E => { if (E.err) return; const a = E.d.geom.grid[m]; const s = a.slice().sort((x, y) => x - y); mx = Math.max(mx, s[Math.floor(s.length * 0.995)] || 0); }); return mx || 1; }
+function heatMax(m){ let mx = 0; S.els.forEach(E => { if (E.err || E.nolayout) return; const a = E.d.geom.grid[m]; const s = a.slice().sort((x, y) => x - y); mx = Math.max(mx, s[Math.floor(s.length * 0.995)] || 0); }); return mx || 1; }
 
 /* ------------------------------------------------------------------ hover */
 function hover(E, e){
@@ -544,64 +548,43 @@ function codeHtml(text, py, hlRange, id){
   return `<div class="code" ${id ? `id="${id}"` : ''}><table>${lines.map((l, k) => `<tr id="${id || 'c'}-L${k + 1}" class="${hlRange && k + 1 >= hlRange[0] && k + 1 <= hlRange[1] ? 'hl' : ''}"><td class="ln">${k + 1}</td><td class="lc">${hl(l, py)}</td></tr>`).join('')}</table></div>`;
 }
 
-/* ------------------------------------------------------------------ overview */
-function elMeta(E){ return (S.pages.elements || {})[E.id] || {}; }
-function renderOverview(){
-  const ok = S.els.filter(E => !E.err);
-  $('ov').style.setProperty('--ovn', Math.max(1, ok.length));
-  $('ov').innerHTML = ok.map(E => `<section class="ovc" data-e="${E.k}">${overviewHtml(E)}</section>`).join('');
-  ok.forEach(E => bindOverview(E));
-}
-function overviewHtml(E){
-  const M = elMeta(E), d = E.d, st = d.geom.stats, H = [];
-  H.push(`<div><h2>${esc(d.label)}</h2><p style="color:var(--dim);font:12px var(--mono);margin-top:4px">${esc(SAFE ? '' : d.block + ' · ')}${esc(d.role || '')}${d.rtl_meta && !SAFE ? ` · RTL @ ${esc((d.rtl_meta.source_commit || '').slice(0, 10))}` : ''}</p></div>`);
-  // (a) function
-  H.push(`<div><h3>Function</h3><p>${esc(M.function || d.summary || 'No function description recorded for this element.')}</p></div>`);
-  // (b) block diagram
-  H.push(`<div><h3>Block diagram <span class="u">from the elaborated RTL netlist: sub-blocks and the signals between them, bit widths on the arrows</span></h3><div data-diag="${E.k}">${E.rtl ? '' : '<p class="note">Loading the RTL netlist&hellip;</p>'}</div></div>`);
-  // (c) golden model
-  const G = M.golden, gt = d.golden;
-  if (G){
-    H.push(`<div><h3>Algorithm <span class="lbl unv">summary, not verified</span> <span class="u">the golden model below is authoritative</span></h3>
-      <ol class="sumy">${(M.summary || []).map(x => `<li>${esc(x.t)} ${SAFE ? '' : x.r.map(rr => `<button class="rl" data-rtl="${E.k}" data-f="${esc(rr[0])}" data-l0="${rr[1]}" data-l1="${rr[2]}">${esc(rr[0].replace(/^.*\//, ''))}:${rr[1]}–${rr[2]}</button>`).join(' ')}</li>`).join('')}</ol></div>`);
-    H.push(`<div><h3>Golden reference model <span class="lbl ver">verified</span></h3>
-      <div class="vbox"><p><b>${esc(G.path)}</b> @ ${esc(G.commit.slice(0, 10))}${gt ? ` · sha256 ${esc(gt.sha256.slice(0, 12))}…` : ''} · entry <code>${esc(G.entry)}</code></p>
-      <p style="margin-top:6px"><b>The RTL matches it bit for bit and the mutants fail.</b> ${esc(G.chain)}</p>
-      <p style="margin-top:6px">Bench: ${esc(G.bench)}.<br>Positive: ${esc(G.positive)}<br>Mutants: ${esc(G.mutants)}<br>${esc(G.rtl_pin)}</p>
-      <p style="margin-top:6px;color:var(--faint);font:11px var(--mono)">record ${esc(SAFE ? '' : G.record)}</p></div>
-      ${gt && !SAFE ? `<details style="margin-top:8px" open><summary style="cursor:pointer;font:600 12.5px var(--sans);color:var(--dim)">${esc(G.path)} (${gt.text.split('\n').length} lines, exact file at ${esc(G.commit.slice(0, 10))})</summary>${codeHtml(gt.text, true, null, 'gold' + E.k)}</details>` : ''}</div>`);
-  }
-  // (d) key numbers
-  const per = E.M.periodPs, rows = [
-    ...((M.key || []).some(k => k.k === 'clock') ? [] : [['clock', (per ? fmt(1e3 / per, 2) + ' GHz (' + fmt(per, 3) + ' ps)' : '—'), 'sign-off SDC (export)']]),
-    ...(M.key || []).map(k => [k.k, k.v, k.src]),
-    ['std-cell area', fmt(st.std_cell_area_um2, 0) + ' µm² (+ macros ' + fmt(st.macro_area_um2, 0) + ' µm²)', 'routed DB (export)'],
-    ['die / utilisation', fmt(E.W, 1) + ' × ' + fmt(E.H, 1) + ' µm · ' + fmt(E.M.util, 1) + ' %', 'routed DB (export)'],
-    ['TT setup / FF hold', `<span class="${E.M.recTT >= 0 ? 'ok' : 'ng'}">${sgn(E.M.recTT)}</span> / <span class="${E.M.recFF >= 0 ? 'ok' : 'ng'}">${sgn(E.M.recFF)}</span> ps · DRC ${esc(E.M.drc)}`, 'closure record', true]];
-  H.push(`<div><h3>Key numbers</h3><table class="t"><tbody>${rows.map(r => `<tr><td>${esc(r[0])}</td><td class="m" style="font-size:12px">${r[3] ? r[1] : esc(r[1])}${SAFE ? '' : `<div class="src" style="font:10.5px var(--mono);color:var(--faint)">${esc(r[2])}</div>`}</td></tr>`).join('')}</tbody></table></div>`);
-  // (e) throughput qualification
-  H.push(`<div><h3>Throughput qualification <span class="u">budget vs measured; QUALIFIED if measured/budget ≤ 1.10</span></h3>${tputHtml(E)}</div>`);
-  return H.join('');
+/* ------------------------------------------------------------------ facts: key numbers + throughput */
+function keyNumbersHtml(E){
+  const d = E.d, f = re => factv(d, re), fx = (v, u, dg) => v == null ? '—' : (typeof v === 'number' ? fmt(v, dg == null ? (Number.isInteger(v) ? 0 : 2) : dg) : esc(v)) + (u ? ' ' + u : '');
+  const cl = []; for (let i = 0; i + 1 < (d.clocks || []).length; i += 2){ const per = +d.clocks[i + 1]; cl.push(`${esc(d.clocks[i])} ${fmt(per, 3)} ps (${fmt(1e3 / per, 3)} GHz)`); }
+  const setupK = (d.facts.find(x => /setup WNS \(sign-off/.test(x.k)) || {}).k || 'setup WNS';
+  const rows = [
+    ['clocks (sign-off SDC)', cl.length ? cl.join('<br>') : (d.layout ? 'not read (geometry-only export)' : '—')],
+    [setupK.replace(' (sign-off record)', '') + ' / FF hold', `<span class="${f(/setup WNS \(sign-off/) >= 0 ? 'ok' : 'ng'}">${fx(f(/setup WNS \(sign-off/), '', 2)}</span> / <span class="${f(/^FF hold WNS \(sign-off/) >= 0 ? 'ok' : 'ng'}">${fx(f(/^FF hold WNS \(sign-off/), '', 2)}</span> ps · DRC ${fx(f(/^DRC$/))}`],
+    ['cycles added', fx(f(/^cycles added/))],
+    ['std-cell area', fx(f(/^std-cell area/), 'µm²', 0) + (f(/^macro area/) ? ' + macros ' + fx(f(/^macro area/), 'µm²', 0) : '')],
+    ['die · utilisation', fx(f(/^die$/), 'µm') + ' · ' + fx(f(/^utilisation/), '%', 1)],
+    ['cells · flops', fx(f(/^std cells$/)) + ' · ' + fx(f(/^flops$/))],
+    ['LVT / SLVT cells', fx(f(/^LVT cells/), '%', 2) + ' / ' + fx(f(/^SLVT cells/), '%', 2)],
+    ['power (vectorless, TT)', fx(f(/^power/), 'mW', 1)]];
+  return `<table class="t"><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="m">${r[1]}</td></tr>`).join('')}</tbody></table>
+    <p class="note" style="margin-top:4px">From the closure record and the routed DB (each number's record is in "all facts" below).</p>`;
 }
 function tputHtml(E){
   const T = S.tput;
-  if (!T) return '<p class="note">Checking the throughput budget&hellip;</p>';
-  if (T.status === 'pending') return `<div class="vbox"><span class="lbl pend">pending</span> The throughput budget (${esc(T.path)}, stream tput-gate-1010) has not been committed yet. This box fills in automatically when it lands.</div>`;
+  if (!T) return '<p class="note">Reading the throughput budget&hellip;</p>';
+  if (T.status === 'pending') return `<div class="vbox"><span class="lbl pend">pending</span> ${esc(T.path)} is not on origin/main yet${T.error ? ' (' + esc(T.error) + ')' : ''}. This box fills in automatically when it lands.</div>`;
   if (T.status !== 'present') return `<div class="vbox"><span class="lbl bad">${esc(T.status)}</span> ${esc(T.error || '')}</div>`;
-  const names = [E.d.block, E.d.job].filter(Boolean);
-  const hits = (T.hits || []).filter(h => names.some(n => JSON.stringify(h.entry).includes(n)));
-  if (!hits.length) return `<div class="vbox"><span class="lbl unv">no bench</span> ${esc(T.path)} has no entry for ${esc(E.d.block)}.</div>`;
-  return hits.slice(0, 4).map(h => {
-    const o = h.entry, num = k => { for (const kk of Object.keys(o)) if (kk.toLowerCase().includes(k) && typeof o[kk] === 'number') return [kk, o[kk]]; return null; };
-    const ratio = num('ratio'), bud = num('budget'), meas = num('measured');
-    let r = ratio ? ratio[1] : (bud && meas && bud[1] ? meas[1] / bud[1] : null);
-    const ver = r == null ? 'no bench' : r <= 1.10 ? 'QUALIFIED' : 'UNQUALIFIED';
-    return `<div class="vbox" style="margin-bottom:6px"><span class="lbl ${ver === 'QUALIFIED' ? 'ver' : ver === 'UNQUALIFIED' ? 'bad' : 'unv'}">${ver}</span>${r != null ? ` measured / budget = <b>${fmt(r, 3)}</b>` : ''}
-      <table class="t" style="margin-top:6px"><tbody>${Object.entries(o).filter(([k, v]) => typeof v !== 'object').slice(0, 14).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="m">${esc(typeof v === 'number' ? fmt(v, Number.isInteger(v) ? 0 : 3) : v)}</td></tr>`).join('')}</tbody></table>
-      <p class="note" style="margin-top:4px">${esc(T.path)} ${esc(h.at)}</p></div>`;
-  }).join('');
+  const b = E.d.block, el = (T.elements || {})[b], cls = (T.classes || {})[b] || [], qr = T.qualify_ratio;
+  const src = `<p class="note" style="margin-top:6px">${esc(T.path)} @ origin/main ${esc(T.commit || '')}${T.generated_utc ? ' · generated ' + esc(T.generated_utc) : ''}. Rule: ${esc(T.rule || '')}</p>`;
+  if (!el) return `<div class="vbox"><span class="lbl unv">not in the budget</span> ${esc(T.path)} has no <code>elements["${esc(b)}"]</code> entry: this block is not on a priced token path yet, so it has no budget and no production-shape throughput bench.${src}</div>`;
+  const lab = st => st === 'QUALIFIED' ? 'ver' : st === 'UNQUALIFIED_NO_BENCH' ? 'unv' : 'bad';
+  const txt = st => st === 'UNQUALIFIED_NO_BENCH' ? 'UNQUALIFIED · no production-shape bench' : st;
+  const L = el.limiting || {};
+  const ops = (el.ops || []).map(o => `<div class="fact"><div class="fr"><span><code>${esc(o.op)}</code> · ${esc(o.model)}</span><b><span class="lbl ${lab(o.status)}">${esc(txt(o.status))}</span> ${o.ratio == null ? '' : 'ratio ' + fmt(o.ratio, 3)}</b></div>${o.owner && o.owner !== '-' ? `<div class="note" style="margin:2px 0 0">owner ${esc(o.owner)}</div>` : ''}<div class="src">${esc(o.src || 'no source recorded')}</div></div>`).join('');
+  const cl = cls.map(c => `<tr><td class="m">${esc(c.model)} · ${esc(c.cls)}</td><td><span class="lbl ${lab(c.status)}">${esc(txt(c.status))}</span></td><td class="n">${fmt(c.critical_cycles_per_token, 1)}</td><td class="n">${fmt(100 * c.share, 1)} %</td><td class="n">${fmt(100 * c.measured_fraction, 2)} % of ${fmt(c.nodes, 0)}</td></tr>
+    ${c.n_unmeasured ? `<tr><td colspan="5" class="note">unmeasured nodes (${c.n_unmeasured}): ${esc((c.unmeasured_nodes || []).join(', '))}</td></tr>` : ''}`).join('');
+  return `<div class="vbox"><p><span class="lbl ${lab(el.status)}">${esc(txt(el.status))}</span> ${el.ratio == null ? 'measured / budget ratio: <b>none recorded</b> (status from the token-path class below)' : `measured / budget = <b>${fmt(el.ratio, 3)}</b> (qualifies at ≤ ${fmt(qr, 2)})`}</p>
+    <p class="note" style="margin-top:4px">limiting op ${esc(L.op || '—')} in ${esc(L.model || '—')}${L.owner && L.owner !== '-' ? ' · owner ' + esc(L.owner) : ''}</p>
+    <div class="facts" style="margin-top:6px">${ops}</div>
+    ${cl ? `<div class="tw"><table class="t" style="margin-top:8px"><thead><tr><th>token-path class</th><th>status</th><th class="n">cycles / token</th><th class="n">share</th><th class="n">measured</th></tr></thead><tbody>${cl}</tbody></table></div><p class="note">${esc(cls[0].basis || '')}</p>` : ''}
+    ${src}</div>`;
 }
-
 /* ---- block diagram */
 function diagScopes(E){
   const R = E.rtl, out = [];
@@ -725,11 +708,7 @@ function instModule(E, sc, g){
   if (hits.length > 1) return hits.length + ' instances · ';
   return '';
 }
-function glueCount(E, path){ const mods = E.d.geom.modules; let n = 0, inf = 0; for (let i = 0; i < mods.length; i++) if (mods[i] === path){ n += E.d.geom.module_cells[i]; inf += E.inferByMod[i]; } return [n, inf]; }
-function bindOverview(E){
-  renderDiagram(E);
-  document.querySelectorAll(`[data-rtl="${E.k}"]`).forEach(b => b.onclick = () => openRtl(E, null, [b.dataset.f, +b.dataset.l0, +b.dataset.l1]));
-}
+function glueCount(E, path){ if (E.nolayout) return [0, 0]; const mods = E.d.geom.modules; let n = 0, inf = 0; for (let i = 0; i < mods.length; i++) if (mods[i] === path){ n += E.d.geom.module_cells[i]; inf += E.inferByMod[i]; } return [n, inf]; }
 
 /* ------------------------------------------------------------------ RTL tab */
 function openRtl(E, modPath, lines){
@@ -744,6 +723,7 @@ function rtlSideHtml(){
   const ok = S.els.filter(E => !E.err);
   const E = ok.find(x => x.k === S.rtlEl) || ok[0]; if (!E) return '';
   if (SAFE) return sec('RTL', '<p class="note">The RTL source is not shown in the share-safe view.</p>');
+  if (!E.d.rtl_file) return sec(esc(E.d.label) + ' · RTL', `<p class="note">No RTL export for this element: ${esc(E.d.rtl_error || 'the job\'s synthesis config was not found')}.</p><h4 class="sub">Reference model</h4>${refHtml(E)}`);
   if (!E.rtl) return sec('RTL', '<p class="note">Loading the RTL&hellip;</p>');
   S.rtlEl = E.k;
   const R = E.rtl;
@@ -751,6 +731,9 @@ function rtlSideHtml(){
   const open = new Set(); if (S.rtlSel){ const parts = S.rtlSel.split('.'); } // expansion handled by data-open
   const H = [];
   if (ok.length > 1) H.push(`<div class="seg" role="group" style="margin-bottom:8px">${ok.map(x => `<button type="button" data-rel="${x.k}" aria-pressed="${x.k === E.k}">${esc(short(x))}</button>`).join('')}</div>`);
+  H.push(`<h4 class="sub">Structure <span class="u">sub-blocks of the elaborated RTL and the signals between them, bit widths on the arrows</span></h4><div data-diag="${E.k}"></div>`);
+  H.push(`<h4 class="sub">Reference model</h4>${refHtml(E)}`);
+  H.push(`<h4 class="sub">Module tree and source</h4>`);
   H.push(`<p class="note">${esc(R.top)} elaborated by yosys from the route's own inputs (${R.files ? Object.keys(R.files).length : 0} files, ${esc((R.top_params || []).map(p => p.join('=')).join(' '))}) at <b>${esc((R.source_commit || '').slice(0, 12))}</b>. Counts are placed cells under each instance (inferred cells are those without an RTL name, assigned by their connections).</p>`);
   H.push(`<div class="mtree" id="mtree">${treeHtml(E, R.tree, 0)}</div>`);
   const files = Object.keys(R.files).sort();
@@ -771,8 +754,22 @@ function treeHtml(E, n, depth, parent){
   }
   return h;
 }
+function refHtml(E){
+  const R = E.d.reference || {}, B = E.d.bench || {};
+  const bspec = Object.entries(B.spec || {}).filter(([k, v]) => v != null && v !== '' && !(Array.isArray(v) && !v.length));
+  const bst = Object.entries(B.state || {});
+  const bench = (bspec.length || bst.length || (B.stages || []).length) ? `<div class="vbox" style="margin-top:6px"><p><b>Bench spec, from the job record</b></p>${bspec.map(([k, v]) => `<p class="note" style="margin:3px 0"><code>${esc(k)}</code>: ${esc(typeof v === 'string' ? v : JSON.stringify(v)).slice(0, 900)}</p>`).join('')}
+    ${(B.stages || []).map(x => `<p class="note" style="margin:3px 0"><code>stages.bench</code>: ${esc(JSON.stringify(x)).slice(0, 600)}</p>`).join('')}
+    ${bst.map(([k, v]) => `<p class="note" style="margin:3px 0">bench <code>${esc(k)}</code>: ${esc(typeof v === 'object' ? (v.status || v.state || JSON.stringify(v).slice(0, 200)) : v)}</p>`).join('')}</div>` : '';
+  if (!R.found) return `<div class="vbox"><span class="lbl unv">no reference model recorded</span> The job's bench spec names no file recognisable as a reference model (oracle / golden / reference)${R.seeds && R.seeds.length ? '; files it names: ' + R.seeds.map(esc).join(', ') : ''}${R.note ? ' (' + esc(R.note) + ')' : ''}.</div>${bench}`;
+  const direct = (R.chain || []).length <= 2;
+  return `<div class="vbox"><p><span class="lbl ${direct ? 'ver' : 'unv'}">${direct ? 'reference model' : 'candidate reference'}</span> <b>${esc(R.path)}</b> @ ${esc((R.commit || '').slice(0, 10))} · sha256 ${esc((R.sha256 || '').slice(0, 12))}…</p>
+    <p class="note" style="margin-top:4px">Located from the bench spec by following file references at the source commit: ${(R.chain || []).map(esc).join(' → ')}</p></div>${bench}
+    ${SAFE ? '' : `<details style="margin-top:6px"><summary style="cursor:pointer;font:600 12.5px var(--sans);color:var(--dim)">${esc(R.path)} (${R.text.split('\n').length} lines, exact file at ${esc((R.commit || '').slice(0, 10))})</summary>${codeHtml(R.text, /\.py$/.test(R.path), null, 'ref' + E.k)}</details>`}`;
+}
 function bindRtlSide(){
   const side = $('side');
+  S.els.filter(E => !E.err && E.rtl && document.querySelector(`[data-diag="${E.k}"]`)).forEach(E => renderDiagram(E));
   side.querySelectorAll('[data-rel]').forEach(b => b.onclick = () => { S.rtlEl = +b.dataset.rel; S.rtlFile = null; S.rtlSel = null; renderSide(); redrawAll(); });
   side.querySelectorAll('.mtree [data-tog]').forEach(t => t.onclick = e => { e.stopPropagation(); const p = t.dataset.tog; if (TREE_OPEN.has(p)) TREE_OPEN.delete(p); else TREE_OPEN.add(p); renderSide(); });
   side.querySelectorAll('.mtree .nd').forEach(d => d.onclick = () => {
@@ -789,7 +786,7 @@ function bindRtlSide(){
 function short(E){ return ((S.page.short || {})[E.id]) || E.d.label; }
 function sec(t, body, sub){ return `<div class="sec"><h3>${t}${sub ? ` <span class="u">${sub}</span>` : ''}</h3>${body}</div>`; }
 function renderSide(){
-  const H = [], ok = S.els.filter(E => !E.err), T = S.tab;
+  const T = S.tab, H = [], ok = S.els.filter(E => !E.err && (!LAYOUT_TABS.has(T) || !E.nolayout));
   if (T === 'layout'){
     H.push(sec('Hierarchy', `<div class="ctl"><label for="dep">Depth</label><select id="dep">${[1, 2, 3, 4, 5, 6].map(d => `<option value="${d}" ${ok[0] && ok[0].depth === d ? 'selected' : ''}>${d}</option>`).join('')}</select>
       <span class="note" style="margin:0">Cells coloured by RTL block (module path below the common prefix). Click a block to isolate it.</span></div>`));
@@ -847,8 +844,10 @@ function renderSide(){
   } else if (T === 'rtl'){
     H.push(rtlSideHtml());
   } else if (T === 'facts'){
+    ok.forEach(E => H.push(sec(esc(E.d.label) + ' · key numbers', keyNumbersHtml(E))));
+    ok.forEach(E => H.push(sec(esc(E.d.label) + ' · throughput qualification', tputHtml(E), 'budget vs measured; QUALIFIED if measured / budget ≤ 1.10')));
     const fv = f => typeof f.v === 'number' ? (Number.isInteger(f.v) ? fmt(f.v, 0) : Math.abs(f.v) >= 1000 ? fmt(f.v, 0) : fmt(f.v, 2)) : esc(f.v);
-    ok.forEach(E => H.push(sec(esc(E.d.label), `<div class="facts">${E.d.facts.map(f =>
+    ok.forEach(E => H.push(sec(esc(E.d.label) + ' · all facts', `<div class="facts">${E.d.facts.map(f =>
       `<div class="fact"><div class="fr"><span>${esc(f.k)}</span><b>${fv(f)}${f.unit ? ' ' + esc(f.unit) : ''}</b></div>${f.note ? `<div class="note" style="margin:2px 0 0">${esc(f.note)}</div>` : ''}${SAFE || !f.src ? '' : `<div class="src">${esc(f.src)}</div>`}</div>`).join('')}</div>`, esc(SAFE ? '' : E.d.block || ''))));
   }
   if (!SAFE && T !== 'rtl') H.push(sec('Source', ok.map(E => `<dl class="kv"><dt>${esc(E.d.label)}</dt><dd>${esc(E.d.db)}<br>job ${esc(E.d.job)} on ${esc(E.d.host)} · exported ${esc((E.d.exported_at || '').slice(0, 16).replace('T', ' '))}${E.d.note ? '<br>' + esc(E.d.note) : ''}</dd></dl>`).join('') +

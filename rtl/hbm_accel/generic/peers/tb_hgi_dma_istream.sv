@@ -39,10 +39,21 @@ module tb_hgi_dma_istream;
         .mv_fdone(mv_fdone), .is_v(is_v), .is_rdy(is_rdy), .is_cmd(is_cmd), .fence_v(fence_v), .fence_rdy(fence_rdy),
         .fence_done(fence_done), .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_a),
         .k_req_wdata(k_wd), .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(1'b0),
-        .k_rsp_data(k_rsp_d), .vmq(vmq), .vmr(vmr0), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
+        .k_rsp_data(k_rsp_d), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(), .vr2r(8257'd0),
+        .vmq(vmq), .vmr(vmr0), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
     ot_hgi_vm_unit #(.NC(2), .WP(32), .WDIRECT(1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, vmq}), .cr({vmr1, vmr0}), .status(),
         .wq(wl), .wq_done(wl_done));
     // ---- kport lane model (the mover): in order, latency 6, reads only (a stream is a LOAD)
+    // hgi-1010/c: the mover's four HBM read lanes (bursts, in order a lane) on tb_hgi_rlanes over this bench's memory
+    wire [3:0] r_req_v, r_req_rdy, r_rsp_v, r_rsp_rdy, r_rsp_last; wire [4*37-1:0] r_req_addr, la; wire [15:0] r_req_len;
+    wire [63:0] r_req_tag, r_rsp_tag; wire [1023:0] r_rsp_data, r_req_wdata; wire [3:0] r_req_we, r_rsp_we; wire [127:0] r_req_wstrb; reg [1023:0] ld; integer hgen = 0; wire [3:0] wv; wire [4*37-1:0] wa; wire [1023:0] wd; wire [127:0] ws;
+    always @(posedge clk) hgen <= hgen + 1;
+    tb_hgi_rlanes #(.LAT(6)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
+        .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
+        .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .la(la), .ld(ld), .wv(wv), .wa(wa), .wd(wd), .ws(ws));
+    always @(la or hgen) for (integer l = 0; l < 4; l = l + 1) for (integer b = 0; b < 32; b = b + 1)
+        ld[l*256 + 8*b +: 8] = hb(longint'(la[l*37 +: 37]) + b);
     reg [36:0] kq [0:63]; integer kh = 0, kt = 0, kdue [0:63];
     always @(posedge clk) begin
         k_rsp_v <= 0;

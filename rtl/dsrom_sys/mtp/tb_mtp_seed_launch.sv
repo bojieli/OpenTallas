@@ -16,8 +16,9 @@ module tb_mtp_seed_launch;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     // ---------------- stimulus queue ----------------
-    reg [SW-1:0] dq [0:63]; reg [PW-1:0] eq [0:63]; reg [UW+NW-1:0] rq_exp [0:4095];
-    integer nd = 0, ne = 0, nr = 0, exp_fault = 0;
+    reg [SW-1:0] dq [0:63]; reg [PW-1:0] eq [0:63]; reg [4+UW+NW-1:0] rq_exp [0:4095]; integer uep [0:15];
+    initial for (ue_i = 0; ue_i < 16; ue_i = ue_i + 1) uep[ue_i] = 0;
+    integer nd = 0, ne = 0, nr = 0, exp_fault = 0, ue_i;
     reg [255:0] cs;
     function [SW-1:0] desc(input integer u, input integer anc, input integer nrow, input integer y, input integer ep);
         desc = {UW'(u), NW'(anc), NW'(nrow), NW'(y), 4'(ep)};
@@ -28,7 +29,8 @@ module tb_mtp_seed_launch;
             dq[nd] = desc(u, anc, nrow, y, ep); nd = nd + 1;
             eq[ne] = {UW'(u), NW'(anc), NW'(y), 4'(ep)}; ne = ne + 1;
             lo = (nrow > WIN) ? anc + 1 - WIN : anc - nrow + 1;
-            for (p = lo; p <= anc; p = p + 1) begin rq_exp[nr] = {UW'(u), NW'(p)}; nr = nr + 1; end
+            for (p = lo; p <= anc; p = p + 1) begin rq_exp[nr] = {4'(uep[u]), UW'(u), NW'(p)}; nr = nr + 1; end
+            uep[u] = ep;                 // rows of the next block are issued under the new epoch
         end
     endtask
     task bad(input integer u, input integer anc, input integer nrow, input integer y, input integer ep);
@@ -82,6 +84,7 @@ module tb_mtp_seed_launch;
         .clk(clk), .rst_n(rst_n), .l_valid(vrq_far[0]), .l_ready(vq_far), .l_data(vrq_far[AW:1]),
         .c_valid(cv), .c_ready(cr), .c_data(ca));
     integer seed = 7;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     always @(posedge clk) cr <= ($random(seed) & 3) != 0;              // VM accepts 3 of 4 cycles
     function [1023:0] vmword(input [AW-1:0] a);
         integer k; reg [31:0] h;
@@ -145,7 +148,7 @@ module tb_mtp_seed_launch;
                 if (t_x1 < 0 && t_desc >= 0) begin t_x1 = cyc; if (d2x < 0) d2x = t_x1 - t_desc; end
                 if (rows >= nr) begin $display("SEEDL_ERR unexpected row"); errs = errs + 1; end
                 else begin
-                    ea = (AW'(rq_exp[rows][UW+NW-1:NW]) << 16) | (AW'(rq_exp[rows][7:0]) << 8) | AW'(beat);
+                    ea = (AW'(rq_exp[rows][4+UW+NW-1:UW+NW]) << 19) | (AW'(rq_exp[rows][UW+NW-1:NW]) << 16) | (AW'(rq_exp[rows][7:0]) << 8) | AW'(beat);
                     if (t_x[1024:1] !== vmword(ea)) begin
                         if (errs < 5) $display("SEEDL_ERR row %0d beat %0d data mismatch", rows, beat);
                         errs = errs + 1;

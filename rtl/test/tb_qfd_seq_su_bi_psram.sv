@@ -110,6 +110,7 @@ module tb_qfd_seq_su_bi_psram;
     ot_qfd_seq_su_bi #(.PSRAM(0), .PMUT(0)) u0 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
+        .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
         .tp_token(tp_token),
         .tp_pos(tp_pos),
         .kv_write_drained(kv_write_drained),
@@ -205,6 +206,7 @@ module tb_qfd_seq_su_bi_psram;
     ot_qfd_seq_su_bi #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2)) u1 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
+        .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
         .tp_token(tp_token),
         .tp_pos(tp_pos),
         .kv_write_drained(kv_write_drained),
@@ -331,6 +333,7 @@ module tb_qfd_seq_su_bi_psram;
     wire out_mismatch = (s_done_0 !== s_done_1) || (seq_ntok_0 !== seq_ntok_1) || (seq_nval_0 !== seq_nval_1) || (s_fault_0 !== s_fault_1) || (core_fault_0 !== core_fault_1) || (coll_busy_0 !== coll_busy_1) || (kv_write_flush_0 !== kv_write_flush_1) || (vm_re_0 !== vm_re_1) || (vm_raddr_0 !== vm_raddr_1) || (vm_we_0 !== vm_we_1) || (vm_waddr_0 !== vm_waddr_1) || (vm_wdata_0 !== vm_wdata_1) || (c_valid_0 !== c_valid_1) || (c_data_0 !== c_data_1) || (c_last_0 !== c_last_1) || (c_mode_0 !== c_mode_1) || (c_tag_0 !== c_tag_1) || (rom_fault_0 !== rom_fault_1) || (su_asrc_0 !== su_asrc_1) || (su_tok_0 !== su_tok_1) || (po_su_go_0 !== po_su_go_1) || (po_su_i_nout_0 !== po_su_i_nout_1) || (po_su_i_nin_0 !== po_su_i_nin_1) || (po_su_i_asrc_0 !== po_su_i_asrc_1) || (po_su_i_abase_0 !== po_su_i_abase_1) || (po_su_i_aso_0 !== po_su_i_aso_1) || (po_su_i_asi_0 !== po_su_i_asi_1) || (po_su_i_bsrc_0 !== po_su_i_bsrc_1) || (po_su_i_bbase_0 !== po_su_i_bbase_1) || (po_su_i_bso_0 !== po_su_i_bso_1) || (po_su_i_bsi_0 !== po_su_i_bsi_1) || (po_su_i_csrc_0 !== po_su_i_csrc_1) || (po_su_i_cbase_0 !== po_su_i_cbase_1) || (po_su_i_cso_0 !== po_su_i_cso_1) || (po_su_i_csi_0 !== po_su_i_csi_1) || (po_su_i_ma_0 !== po_su_i_ma_1) || (po_su_i_mb_0 !== po_su_i_mb_1) || (po_su_i_ad_0 !== po_su_i_ad_1) || (po_su_i_sfu_0 !== po_su_i_sfu_1) || (po_su_i_mc_0 !== po_su_i_mc_1) || (po_su_i_md_0 !== po_su_i_md_1) || (po_su_i_dst_0 !== po_su_i_dst_1) || (po_su_i_dbase_0 !== po_su_i_dbase_1) || (po_su_i_dso_0 !== po_su_i_dso_1) || (po_su_i_dsi_0 !== po_su_i_dsi_1) || (po_su_i_red_0 !== po_su_i_red_1) || (po_su_i_redsq_0 !== po_su_i_redsq_1) || (po_su_i_rbase_0 !== po_su_i_rbase_1) || (po_su_i_rso_0 !== po_su_i_rso_1) || (po_su_i_imm1_0 !== po_su_i_imm1_1) || (po_su_i_imm2_0 !== po_su_i_imm2_1) || (me_start_o_0 !== me_start_o_1) || (me_token_o_0 !== me_token_o_1) || (me_pos_o_0 !== me_pos_o_1) || (me_prog_base_o_0 !== me_prog_base_o_1) || (su_acc_o_0 !== su_acc_o_1) || (su_idle_o_0 !== su_idle_o_1) || (su_prog_o_0 !== su_prog_o_1) || (su_rows_o_0 !== su_rows_o_1);
     wire pq_mismatch = (u0.prog_q !== u1.prog_q);
     initial begin
+        seed = SEED;   // the 5.050 simulator ignores the declaration initialiser for $random's seed: every SEED ran one stream
         repeat (6) @(posedge clk);
         rst_n = 1;
         repeat (6) @(posedge clk);

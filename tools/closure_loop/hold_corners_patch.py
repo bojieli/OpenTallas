@@ -149,6 +149,17 @@ def patch(src):
                 shutil.copy2(cand, Path(src) / "tools" / h)
                 msg.append(f"shipped tools/{h}")
                 break
+    # MACRO-CLK (2026-10-10): tools/orfs_hold_mm.tcl sources the flow-default macro clock clustering wrapper from the
+    # snapshot's physical/common_flow; snapshots older than it get the loop's copy (always refreshed, like the helper)
+    mcc = "macro_cts_cluster.tcl"
+    dst = Path(src) / "physical" / "common_flow" / mcc
+    for cand in (here / mcc, here.parent.parent / "physical" / "common_flow" / mcc):
+        if cand.is_file():
+            if not dst.is_file() or dst.read_bytes() != cand.read_bytes():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(cand, dst)
+                msg.append(f"shipped physical/common_flow/{mcc}")
+            break
     return "; ".join(msg)
 
 

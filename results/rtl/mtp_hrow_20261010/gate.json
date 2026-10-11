@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.mtp-hrow-gate.v1",
+ "sources": [
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+  "rtl/dsrom_sys/mtp/tb_mtp_hrow.sv"
+ ],
+ "cases": [
+  {
+   "case": "pos_steady",
+   "rc": 0,
+   "line": "case=pos_steady result=PASS rows=26 beats=6240 starts=6 store_fault=000 seedl_fault=0000 cyc=39159",
+   "errors": [],
+   "result": "PASS",
+   "rows": "26",
+   "beats": "6240",
+   "starts": "6",
+   "store_fault": "000",
+   "seedl_fault": "0000",
+   "cyc": "39159"
+  },
+  {
+   "case": "pos_late",
+   "rc": 0,
+   "line": "case=pos_late result=PASS rows=26 beats=6240 starts=6 store_fault=000 seedl_fault=0000 cyc=42323",
+   "errors": [],
+   "result": "PASS",
+   "rows": "26",
+   "beats": "6240",
+   "starts": "6",
+   "store_fault": "000",
+   "seedl_fault": "0000",
+   "cyc": "42323"
+  },
+  {
+   "case": "neg_drop",
+   "rc": 0,
+   "line": "case=neg_drop result=PASS rows=4 beats=960 starts=1 store_fault=001 seedl_fault=0000 cyc=23180",
+   "errors": [],
+   "result": "PASS",
+   "rows": "4",
+   "beats": "960",
+   "starts": "1",
+   "store_fault": "001",
+   "seedl_fault": "0000",
+   "cyc": "23180"
+  }
+ ],
+ "mutants": [
+  {
+   "case": "pos_late",
+   "rc": 0,
+   "line": "case=pos_late result=FAIL rows=26 beats=6240 starts=6 store_fault=000 seedl_fault=0000 cyc=40681",
+   "errors": [
+    "HROW_ERR row 14 (u 0 pos 6 ep 1) beat 0 mismatch",
+    "HROW_ERR row 14 (u 0 pos 6 ep 1) beat 1 mismatch",
+    "HROW_ERR row 14 (u 0 pos 6 ep 1) beat 2 mismatch",
+    "HROW_ERR row 14 (u 0 pos 6 ep 1) beat 3 mismatch",
+    "HROW_ERR row 14 (u 0 pos 6 ep 1) beat 4 mismatch"
+   ],
+   "result": "FAIL",
+   "rows": "26",
+   "beats": "6240",
+   "starts": "6",
+   "store_fault": "000",
+   "seedl_fault": "0000",
+   "cyc": "40681",
+   "define": "OT_HROW_MUT_NOEPOCH"
+  },
+  {
+   "case": "neg_drop",
+   "rc": 0,
+   "line": "case=neg_drop result=FAIL rows=4 beats=993 starts=1 store_fault=001 seedl_fault=0000 cyc=23715",
+   "errors": [
+    "HROW_ERR unexpected beat (row 4)",
+    "HROW_ERR unexpected beat (row 4)",
+    "HROW_ERR unexpected beat (row 4)",
+    "HROW_ERR unexpected beat (row 4)",
+    "HROW_ERR unexpected beat (row 4)",
+    "HROW_ERR beats 993 expected 960"
+   ],
+   "result": "FAIL",
+   "rows": "4",
+   "beats": "993",
+   "starts": "1",
+   "store_fault": "001",
+   "seedl_fault": "0000",
+   "cyc": "23715",
+   "define": "OT_HROW_MUT_NOPART"
+  }
+ ],
+ "verdict": {
+  "positives_and_rejections": true,
+  "mutants_fail": true
+ }
+}

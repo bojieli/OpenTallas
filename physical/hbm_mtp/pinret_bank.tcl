@@ -80,10 +80,12 @@ foreach bt [$ot_blk getBTerms] {
 
 # The returned handshake is internal but belongs beside its receiving ready pin.
 set returned_count 0
-foreach net [$ot_blk getNets] {
- if {![regexp {g_pinret[./]u_(hw|fn)[./]returned$} [$net getName] _ unit]} continue
- set d [ot_of_drv $net]; if {$d eq ""} continue
- set ff [$d getInst]; if {![ot_of_isff $ff]} continue
+# Match the capture flop by INSTANCE name: synthesis keeps the register name
+# (g_pinret.u_hw.returned$_SDFF_PN0_) but its Q net is renamed (QN + inverter
+# after asap7 mapping), so the earlier net-name match found 0 (fill-7, 887a929c9 cal).
+foreach ff [$ot_blk getInsts] {
+ if {![regexp {g_pinret\\?[./]u_(hw|fn)\\?[./]returned(\$.*)?$} [$ff getName] _ unit]} continue
+ if {![ot_of_isff $ff]} continue
  if {[dict exists $ot_seen [$ff getName]]} continue
  dict set ot_seen [$ff getName] 1
  set port [expr {$unit eq "hw" ? "host_wr_ready" : "fence_ready"}]
@@ -106,6 +108,28 @@ foreach row [$ot_blk getRows] {
  lappend rows [list [$bb yMin] [$bb xMin] [$bb xMax] [$row getSite] [$row getOrient]]
 }
 set used [dict create]
+# hardcore-1010/c (f8 cal DPL-0033: 97 anchored pin flops overlapped TAPCELL / PHY_EDGE_ROW endcaps): pre-mark every site
+# already held by a fixed cell (tap / endcap / well-tie, any FIRM / FIXED / LOCKED / COVER instance) so an anchored flop
+# only takes a free legal site.  Layout only, 0 cycles.
+set ot_prefixed 0
+foreach inst [$ot_blk getInsts] {
+ set ps [$inst getPlacementStatus]
+ if {$ps ne "FIRM" && $ps ne "FIXED" && $ps ne "LOCKED" && $ps ne "COVER"} continue
+ set ib [$inst getBBox]
+ set ix0 [$ib xMin]; set ix1 [$ib xMax]; set iy0 [$ib yMin]; set iy1 [$ib yMax]
+ foreach row $rows {
+  lassign $row y x0 x1 site orient
+  if {$y < $iy0 || $y >= $iy1} continue
+  if {$ix1 <= $x0 || $ix0 >= $x1} continue
+  set sw [$site getWidth]
+  set k0 [expr {int(floor(double($ix0 - $x0) / $sw))}]
+  set k1 [expr {int(ceil(double($ix1 - $x0) / $sw))}]
+  for {set k $k0} {$k < $k1} {incr k} { dict set used "$y:$k" 1 }
+ }
+ incr ot_prefixed
+}
+puts "PINRET_LEGAL_BANK pre-marked sites of $ot_prefixed fixed cells"
+set ot_pad [expr {[info exists ::env(OT_PINRET_PAD)] ? $::env(OT_PINRET_PAD) : 6}]
 set count 0
 foreach c [lsort -real -index 1 $cand] {
  lassign $c side pos ff px py io
@@ -127,6 +151,9 @@ foreach c [lsort -real -index 1 $cand] {
  foreach option [lsort -integer -index 0 $options] {
   lassign $option distance y x0 x1 site orient
   set sw [$site getWidth]; set sites [expr {int(ceil(double($width)/$sw))}]
+  # hardcore-1010/c: reserve resize headroom to the right of every anchored flop (02359f0c7 cal DPL-0033: the
+  # returned-credit flop was upsized DFFHQNx1 -> x2 in 3_4_place_resized and overlapped its FIRM neighbour)
+  set rsites [expr {$sites + $ot_pad}]
   if {$side eq "L"} {set want [expr {$x0+round($ot_gap*$ot_dbu)}]} elseif {$side eq "R"} {
    set want [expr {$x1-$width-round($ot_gap*$ot_dbu)}]
   } else {set want $targetx}
@@ -135,13 +162,13 @@ foreach c [lsort -real -index 1 $cand] {
   for {set shift 0} {$shift<=$maxshift && !$placed} {incr shift} {
    foreach signed [list $shift [expr {-$shift}]] {
     set begin [expr {$base+$signed}]; set x [expr {$x0+$begin*$sw}]
-    if {$x<$x0 || $x+$width>$x1} continue
+    if {$x<$x0 || $x+$rsites*$sw>$x1} continue
     set free 1
-    for {set k $begin} {$k<$begin+$sites} {incr k} {
+    for {set k $begin} {$k<$begin+$rsites} {incr k} {
      if {[dict exists $used "$y:$k"]} {set free 0; break}
     }
     if {!$free} continue
-    for {set k $begin} {$k<$begin+$sites} {incr k} {dict set used "$y:$k" 1}
+    for {set k $begin} {$k<$begin+$rsites} {incr k} {dict set used "$y:$k" 1}
     $ff setOrient $orient; $ff setLocation $x $y; $ff setPlacementStatus FIRM
     lappend ot_list [$ff getName]; incr count; set placed 1; break
    }
