@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.hgi_sim.ds_rates.v1",
+ "generated_utc": "2026-10-11T03:17:11Z",
+ "basis": "DS-V4.1 1M TP96 generic HBM die: G25 hardware COLL.ROW_GATHER (default lowering; software G24 via --rg-sw), SM weights as the SM record's line image, G22 HC rows, BF16 gains; bit-exact 96-die token (results/arch/hgi_sim_20261010/g25_proof, head token 21946, races 0); re-floorplan cost tables; G25 priced at the measured K x F / 4 + 150 (hgi-1010/a, main 5e588e11e)",
+ "AR": {
+  "fixed_rtl": {
+   "cycles": 565569.1,
+   "tok_s": 2121.8,
+   "source": "results/arch/hgi_sim_20261009/ds_native_timing_1M.json S2"
+  },
+  "current_rtl": {
+   "cycles": 1207216.1,
+   "tok_s": 994.0,
+   "source": "results/arch/hgi_sim_20261009/e2e_calibration.json sensitivity.ds_1M (grades per op)"
+  },
+  "previous": {
+   "g24_software_gather": 1722.3,
+   "approved_path_analytic": 1747.5
+  }
+ },
+ "MTP": {
+  "method": "tau x CLK / (charged composed verify step + (native S2 - 543,456.7)), once per verify pass (token_path_systems 842b457a2); no native DS verify program yet",
+  "tau": 4.159,
+  "charged_step_cycles": 1348890.6,
+  "fixed_rtl": {
+   "delta_cycles": 22112.4,
+   "tok_s": 3640.3
+  },
+  "current_rtl": {
+   "delta_cycles": 663759.4,
+   "tok_s": 2479.7,
+   "note": "crude: one delta per pass on the composition"
+  }
+ },
+ "current_rtl_dominant": "HC.HC_MIX_ROWS 125.2x (g unit bench, HC weights through one VM client: the HC double-buffer + wide lanes are open), FUSED.HC_POST 20.1x / HC_PRE_NORM 6.5x (b WIDE UN64 unit bench), QDQ 8-15x, IDX.TOPK 4.3x, DMA.KVWB_DS 3.8x (single record); SU.VOP 1.067x (WIDE N512), ALL_GATHER 0.716x (PIPE); ATT / SM / IDX.INDEX / TOPK_MERGE / ROW_GATHER(G25 priced as measured) model cost"
+}
