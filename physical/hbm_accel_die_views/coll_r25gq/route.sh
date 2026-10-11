@@ -12,7 +12,8 @@ export SRC=${SRC:-$PWD} VARIANT=r25gqn OT_VIEW_PORTS_ROOT=physical/hbm_accel_die
         $C/rgx/ot_hgi_coll_rgx_hbm.sv $C/rgx/ot_hgi_coll_rgx_snk.sv $C/rgx/ot_hgi_coll_rgx.sv $C/rgx/ot_hgi_coll_rgx_src.sv
         $C/rgx/ot_hgi_coll_rgx_sink.sv rtl/hbm_accel/generic/peers/ot_hgi_hbm_lane.sv $T/ot_hbm_accel_tu_endpoint_psg.sv
         $T/ot_hcoll_sram_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv $T/ot_hcoll_port.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
-        rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/link/ot_link_afifo.sv rtl/hbm_accel/generic/ot_hgi_cfg.sv"
+        rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/link/ot_link_afifo.sv rtl/hbm_accel/generic/ot_hgi_cfg.sv
+        physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv"
 L=${L:-${CK_SS_MEAN:-770}}
 bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $L > /dev/null
 export SDCA=physical/hbm_accel_die_views/common/io_vclk_m_$L.sdc
