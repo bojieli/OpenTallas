@@ -1,5 +1,5 @@
 # hfd_quant: every die pin at the generator's position (tools/hbm_die_views.py ports, r25)
-place_pin -pin_name {ck[0]} -layer M7 -location {32.5280 0.0960} -pin_size {0.0320 0.1920}
+place_pin -pin_name {ck[0]} -layer M5 -location {64.5240 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_hgi_cmdproc[0]} -layer M5 -location {1297.6440 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_hgi_cmdproc[1]} -layer M7 -location {1297.6800 0.0960} -pin_size {0.0320 0.1920}
 place_pin -pin_name {f_hgi_cmdproc[2]} -layer M5 -location {1297.7400 0.0960} -pin_size {0.0240 0.1920}
@@ -9279,7 +9279,7 @@ place_pin -pin_name {f_lgE_wdn[61]} -layer M7 -location {631.5680 0.0960} -pin_s
 place_pin -pin_name {f_lgE_wdn[62]} -layer M5 -location {631.5960 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_lgE_wdn[63]} -layer M5 -location {631.6920 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_lgE_wdn[64]} -layer M7 -location {631.6960 0.0960} -pin_size {0.0320 0.1920}
-place_pin -pin_name {rst[0]} -layer M5 -location {64.5240 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst[0]} -layer M7 -location {32.5280 0.0960} -pin_size {0.0320 0.1920}
 place_pin -pin_name {t_hgi_cmdproc[0]} -layer M5 -location {1367.0520 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_hgi_cmdproc[1]} -layer M7 -location {1367.0560 0.0960} -pin_size {0.0320 0.1920}
 place_pin -pin_name {t_hgi_cmdproc[2]} -layer M5 -location {1367.1480 0.0960} -pin_size {0.0240 0.1920}

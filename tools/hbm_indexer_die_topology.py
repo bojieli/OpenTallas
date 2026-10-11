@@ -163,8 +163,9 @@ def networks(m, fp, buses, paths, chain):
                 cross=row1.y+row1.h+fp.SHAVE+fp.CH/2 if side=='S' else row1.y-fp.CH/2
             outer=score.x-80-12*p if half=='W' else score.x+score.w+80+12*p
             pts=[a,(a[0],gutter),(col,gutter),(col,cross),(outer,cross),(outer,b[1]),b]
-            route(f'idx_key_{st}_{p}',1099,(svc.name,f'ki{p}'),
-                  (score.name,f'ik@{p*1099}:{(p+1)*1099-1}'),pts)
+            if not (m.get('variant') or {}).get('shared_ks'):    # R25GQ shared-ks: the grid's keys branch off ks<k>
+                route(f'idx_key_{st}_{p}',1099,(svc.name,f'ki{p}'),
+                      (score.name,f'ik@{p*1099}:{(p+1)*1099-1}'),pts)
             c=point(score,'ikc',p,1)
             route(f'idx_key_credit_{st}_{p}',1,(score.name,f'ikc@{p}:{p}'),
                   (svc.name,f'kc{p}'),[c,(outer,c[1]),(outer,gutter),a])

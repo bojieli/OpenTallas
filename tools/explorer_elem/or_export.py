@@ -120,10 +120,11 @@ for r in clock_roots:
     bb = bt.getBBox()
     nodes.append([um((bb.xMin() + bb.xMax()) / 2), um((bb.yMin() + bb.yMax()) / 2), -1, 0, 'PORT', 0.0, r])
     queue.append((bt.getNet(), len(nodes) - 1, 0))
+clock_nets = []     # (net, level of its driver: 0 = clock port)
 while queue:
     net, parent, depth = queue.popleft()
     if net.getId() in seen_nets: continue
-    seen_nets.add(net.getId())
+    seen_nets.add(net.getId()); clock_nets.append((net, depth))
     for it in net.getITerms():
         if not it.isInputSignal() and not it.getIoType() == 'INPUT': continue
         inst = it.getInst(); m = inst.getMaster()
@@ -140,6 +141,34 @@ while queue:
         node_of_inst[inst.getId()] = len(nodes) - 1
         for o in outs: queue.append((o.getNet(), len(nodes) - 1, depth + 1))
 log('clock tree: %d nodes, %d leaves' % (len(nodes), len(leaves)))
+
+# routed clock wires (tt only): every wire segment of every clock-tree net, from the DB's routed wires
+CLKSEG = None
+if GEOM:
+    D = odb.dbWireDecoder; segs = []; layers = []; lidx = {}
+    dieb = block.getDieArea(); qd = max(1, int(math.ceil(max(dieb.xMax() - dieb.xMin(), dieb.yMax() - dieb.yMin()) / 65535.0)))
+    for net, lvl in clock_nets:
+        w = net.getWire()
+        if w is None: continue
+        dec = D(); dec.begin(w); last = None; op = dec.next()
+        while op != D.END_DECODE:
+            if op in (D.PATH, D.JUNCTION, D.SHORT, D.VWIRE): last = None
+            elif op in (D.POINT, D.POINT_EXT):
+                pt = dec.getPoint() if op == D.POINT else dec.getPoint_ext()
+                xy = ((pt[0] - dieb.xMin()) // qd, (pt[1] - dieb.yMin()) // qd)
+                if last is not None and xy != last:
+                    ln = dec.getLayer().getName()
+                    if ln not in lidx: lidx[ln] = len(layers); layers.append(ln)
+                    segs.append((last[0], last[1], xy[0], xy[1], lidx[ln], min(255, lvl)))
+                last = xy
+            op = dec.next()
+    with open(os.path.join(OUT, 'clk.bin'), 'wb') as fh:
+        n = len(segs)
+        for k in range(4): fh.write(struct.pack('<%dH' % n, *[min(65535, max(0, s_[k])) for s_ in segs]))
+        fh.write(struct.pack('<%dB' % n, *[s_[4] for s_ in segs])); fh.write(struct.pack('<%dB' % n, *[s_[5] for s_ in segs]))
+    CLKSEG = dict(n=len(segs), file='clk.bin', quantum_dbu=qd, layers=layers, nets=len(clock_nets),
+                  layout='x1,y1,x2,y2 u16 (quantum_dbu from die origin); layer u8 (index into layers); level u8 (driver level, 0 = clock port)')
+    log('clock wires: %d segments on %d nets' % (len(segs), len(clock_nets)))
 
 # ------------------------------------------------------------------ worst paths
 
@@ -231,7 +260,7 @@ part = dict(schema='opentallas.explorer_elem.corner.v1', corner=CORNER, worst_sl
             clocks=clock_names, clock_roots=clock_roots,
             clock_tree=dict(nodes=[[n[0], n[1], n[2], n[3], n[4], None if n[5] is None else round(n[5], 1), n[6]] for n in nodes],
                             leaves=[[l[0], l[1], l[2], None if l[3] is None else round(l[3], 1), l[4], l[5]] for l in leaves]),
-            paths=paths)
+            paths=paths, clock_wires=CLKSEG)
 
 if CORNER == 'tt':
     try:

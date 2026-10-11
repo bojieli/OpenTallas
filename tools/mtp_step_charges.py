@@ -209,6 +209,17 @@ def ds_rom():
         source=[MARKOV_Q + " first_result_cycles_no_bubbles", "results/arch/token_path_20261009/ds_rom_mtp.json draft.markov*"],
         note="lower bound: the measured single-row pipeline latency is a floor the transfer-ratio model is under; the "
              "whole-vocab sweep throughput needs the head full340_A production wrapper (not built)"))
+    # ---- fixed-latency pipelining added on the draft-head step chain (fe-push-ds-1010, 2026-10-10): each of the 5 serial
+    #      draft-head steps crosses the head-driver input relay (HBRELAY=1: +1, kept r_hb copies) and the VM partner end
+    #      (dsfd_vm_mtp_ep u_h OUTPUT_PIPE 1: +1, idle-sweep fix 189894fc2) -> +2 a draft-head step, critical (serial chain)
+    ch.append(charge(
+        "draft_head.pipe_regs", "draft-head step registers: ot_dsrom_markov_head_driver HBRELAY=1 + dsfd_vm_mtp_ep OUTPUT_PIPE 1",
+        5 * (1 + 1), anchor="draft.last", phase="draft",
+        formula="5 draft-head steps x (+1 HBRELAY head-input relay + 1 vm_mtp_ep OUTPUT_PIPE)",
+        source=["results/rtl/mtp_head_hbrelay_20261010/gate (full340 --hard NB4: HBRELAY=1 8,637 vs HBRELAY=0 8,636 cycles)",
+                "~/claude-takeover-20261007/idle-sweep-1010.log (fixlat-vmmtp 189894fc2: u_h OUTPUT_PIPE 1, +1 per draft-head step)"],
+        variant="HBRELAY=1 routes mtp-head340-mkdrv-hbr-{a,b}-d781e7cb0-tc (charged conservatively before adoption); "
+                "vm_mtp_ep 189894fc2 route fixlat-vmmtp-189894fc2-tc-hm20"))
     # ---- S81 MTP binding (mtp-dsbind 2026-10-10): the draft dies the composition assumed, as bound
     if (ROOT / BINDING).exists():
         bv = J(BINDING)

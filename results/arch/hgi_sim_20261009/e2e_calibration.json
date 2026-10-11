@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hgi_sim.e2e_calibration.v1",
- "generated_utc": "2026-10-11T03:16:52Z",
+ "generated_utc": "2026-10-11T04:29:40Z",
  "reports": [
   "../results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
  ],
@@ -101,7 +101,7 @@
     "ratio": 0.716,
     "records": 13,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/coll/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/coll/report.json"
     ],
     "grade": "measured_unit_bench"
    },
@@ -111,7 +111,7 @@
     "ratio": 20.085,
     "records": 1,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
     ],
     "grade": "measured_unit_bench"
    },
@@ -121,7 +121,7 @@
     "ratio": 6.514,
     "records": 1,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json"
     ],
     "grade": "measured_unit_bench"
    },
@@ -131,7 +131,7 @@
     "ratio": 125.155,
     "records": 4,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
     ],
     "grade": "production_width"
    },
@@ -141,7 +141,7 @@
     "ratio": 1.282,
     "records": 4,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
     ],
     "grade": "production_width"
    },
@@ -151,19 +151,19 @@
     "ratio": 64.931,
     "records": 1,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
     ],
     "grade": "production_width"
    },
    "IDX.TOPK": {
-    "rtl_service": 7277.0,
+    "rtl_service": 1094.0,
     "sim_cost": 1698.0,
-    "ratio": 4.286,
+    "ratio": 0.644,
     "records": 6,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report_topkw1.json"
     ],
-    "grade": "production_width"
+    "grade": "production_width_opt_in_TOPKW1"
    },
    "IDX.OWNED": {
     "rtl_service": 6994.0,
@@ -171,9 +171,9 @@
     "ratio": 1.004,
     "records": 3,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report_topkw1.json"
     ],
-    "grade": "production_width"
+    "grade": "production_width_opt_in_TOPKW1"
    },
    "FUSED.QDQ_FP8": {
     "rtl_service": 1399.0,
@@ -181,7 +181,7 @@
     "ratio": 14.573,
     "records": 4,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
     ],
     "grade": "production_width"
    },
@@ -191,7 +191,7 @@
     "ratio": 8.167,
     "records": 2,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
     ],
     "grade": "production_width"
    },
@@ -201,7 +201,7 @@
     "ratio": 14.583,
     "records": 2,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
     ],
     "grade": "production_width"
    },
@@ -211,19 +211,19 @@
     "ratio": 1.067,
     "records": 27,
     "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/su/report.json"
+     "../results/rtl/hgi_unit_tput_20261010/su/report.json"
     ],
     "grade": "measured_unit_bench"
    }
   },
   "unit_reports": [
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/coll/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/su/report.json"
+   "../results/rtl/hgi_unit_tput_20261010/coll/report.json",
+   "../results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
+   "../results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
+   "../results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json",
+   "../results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report_topkw1.json",
+   "../results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json",
+   "../results/rtl/hgi_unit_tput_20261010/su/report.json"
   ],
   "open_defects": {
    "COLL": "F3 whole-row gathers + F4 PFMAX 64 (die build faults; PFMAX 512 what-if measured)",
@@ -241,7 +241,7 @@
      "DMA.KVWB_DS": 3.817,
      "COLL.GROUP_REDUCE_MCAST": 0.908,
      "FUSED.HC_POST": 20.085,
-     "IDX.TOPK": 4.286,
+     "IDX.TOPK": 0.644,
      "DMA.FENCE": 0.117,
      "HC.HC_MIX_ROWS": 125.155,
      "HC.HC_MIX_POST": 1.282,
@@ -291,7 +291,7 @@
       "FUSED.QDQ_FP8": "production_width",
       "HC.HC_MIX_POST": "production_width",
       "IDX.INDEX": "model (stub in RTL bench or unmeasured)",
-      "IDX.TOPK": "production_width",
+      "IDX.TOPK": "production_width_opt_in_TOPKW1",
       "SM.MATVEC": "model (stub in RTL bench or unmeasured)",
       "SU.VOP": "measured_unit_bench"
      },
@@ -299,8 +299,8 @@
     },
     "fixed_rtl_cycles": 565569.1,
     "fixed_rtl_tok_s": 2121.8,
-    "current_rtl_cycles": 1207216.1,
-    "current_rtl_tok_s": 994.0,
+    "current_rtl_cycles": 1165987.5,
+    "current_rtl_tok_s": 1029.2,
     "scale_dma_full_bw": {
      "FUSED.HC_PRE_NORM": 6.514,
      "COLL.ALL_GATHER": 0.716,
@@ -308,7 +308,7 @@
      "FUSED.QDQ_FP8": 14.573,
      "COLL.GROUP_REDUCE_MCAST": 0.908,
      "FUSED.HC_POST": 20.085,
-     "IDX.TOPK": 4.286,
+     "IDX.TOPK": 0.644,
      "HC.HC_MIX_ROWS": 125.155,
      "HC.HC_MIX_POST": 1.282,
      "HC.HC_MIX": 64.931,
@@ -317,8 +317,8 @@
      "FUSED.QDQ_FP4_E4M3": 14.583
     },
     "dma_full_bw_assumption": "DMA service ratios omitted: full-bandwidth successor budget, not a measured DMA result",
-    "current_rtl_dma_full_bw_cycles": 1203579.9,
-    "current_rtl_dma_full_bw_tok_s": 997.0
+    "current_rtl_dma_full_bw_cycles": 1162351.3,
+    "current_rtl_dma_full_bw_tok_s": 1032.4
    },
    "qwen_P8191": {
     "scale": {
@@ -328,7 +328,7 @@
      "HC.HC_MIX_ROWS": 125.155,
      "HC.HC_MIX_POST": 1.282,
      "HC.HC_MIX": 64.931,
-     "IDX.TOPK": 4.286,
+     "IDX.TOPK": 0.644,
      "IDX.OWNED": 1.004,
      "FUSED.QDQ_FP8": 14.573,
      "FUSED.QDQ_FP4_E8M0": 8.167,
@@ -379,7 +379,7 @@
      "HC.HC_MIX_ROWS": 125.155,
      "HC.HC_MIX_POST": 1.282,
      "HC.HC_MIX": 64.931,
-     "IDX.TOPK": 4.286,
+     "IDX.TOPK": 0.644,
      "IDX.OWNED": 1.004,
      "FUSED.QDQ_FP8": 14.573,
      "FUSED.QDQ_FP4_E8M0": 8.167,

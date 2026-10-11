@@ -9,7 +9,8 @@
 //                       freed landing slot.
 //   ot_link_credit_rx : link -> landing FIFO (DEPTH) -> core valid/ready (internal); a credit pulse per core pop.
 //                       A beat that lands with the FIFO full is a protocol fault (sticky; the beat is dropped).
-// Pin registers (l_valid / l_data / l_credit) are (* keep *) (ds-1010 2026-10-10): synthesis otherwise merges identical
+// Pin registers l_valid / l_credit are (* keep *) (ds-1010 2026-10-10; NOT l_data: its hold-mux feedback would then tap
+// the kept net and io_flop_at_pins could no longer anchor the data pin flops -- ct crpc 2214 output ports unanchored): synthesis otherwise merges identical
 // credit pulses of two links into one flop driving two face pins (coll ct crpb: u_lo7 l_credit anchored at the E face,
 // its merged twin's pin; lo7_r on the S face 250 ps away).  Function unchanged.
 // Full throughput needs DEPTH >= the credit round trip (2 x link latency + 4 cycles of pin/landing flops).
@@ -20,7 +21,7 @@
 module ot_link_credit_tx #(parameter integer W=8, CRED=8, DFREE=0)(
     input wire clk, rst_n,
     input wire i_valid, output wire i_ready, input wire [W-1:0] i_data,
-    (* keep *) output reg l_valid, (* keep *) output reg [W-1:0] l_data, input wire l_credit
+    (* keep *) output reg l_valid, output reg [W-1:0] l_data, input wire l_credit
 );
     localparam integer CW = $clog2(CRED + 1);
     reg cr_q;

@@ -143,6 +143,10 @@ def recipes():
                              role='draft die A with the collective P2 lanes (the P2 link end dsfd_coll_p2_ep is inside the '
                                   'collective composition: an alternative to --p2-lnk); t_p2flt -> host',
                              note='mtp-colllane-1011 P2 variant + mtp-wfc binding'),
+        'layer1srccrp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp', '--ctrl-role', 'source'],
+                             role='S0 die: WFC slab = dsfd_wfc_cr2 (crp credit-boundary tile + SOURCE kit)', note='main 10-11'),
+        'layer1crp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp'],
+                          role='stage die: WFC slab = dsfd_wfc_cr2 (crp + STG kit)', note='main 10-11'),
         'scankit': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer', '--wfc-kit'],
                         role='scan die (q-only flavour) with the WFC kit', note='dsfd_wfc_stg'),
         'draftPs': dict(opts=_sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8) + ['--die', 'layer1', '--draft', 'P', '--mtp-links', '5', '--seedl',

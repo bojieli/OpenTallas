@@ -771,7 +771,7 @@ def emit_seq_su(boundary: bool = False) -> str:
 TP_SEQ = ROOT / "rtl/rom/ot_qwen_tp_seq_w12.sv"
 
 
-def tp_seq_vrl() -> str:
+def tp_seq_vrl(cred: bool = False) -> str:
     """ot_qwen_tp_seq_w12_vrl: the TP sequencer with its vector-memory read latency a parameter (VRL edges vre -> vrq;
     the base assumes 1).  Root cause of the masters' token-chain mismatch (qwen-1010/a 10-10): inside a stationed die
     master the read leaves through the output station and the word returns through the input station, so the base
@@ -789,6 +789,20 @@ def tp_seq_vrl() -> str:
     t = one(t, "(q_n + rd_v) < QD;", "(q_n + rd_n) < QD;")
     t = one(t, "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_v <= 1'b0;", "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};")
     t = one(t, "            rd_v <= rd_go;", "            rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;")
+    if not cred:
+        return t
+    # CRED > 0: the collective port is credit based (ot_rom_oneshot_die_m in_cr): c_ready carries one pulse per freed
+    # input-buffer slot; the sender holds CRED credits (the receiver's buffer, >= the round trip through the stations)
+    t = one(t, "    parameter integer VRL = 1,     // vre -> vrq edges",
+            "    parameter integer VRL = 1,     // vre -> vrq edges\n    parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits")
+    t = one(t, "    assign c_valid = (st == S_COLL) && (q_n != 0);",
+            "    reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)\n"
+            "    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);")
+    t = one(t, "    wire   c_fire  = c_valid && c_ready;",
+            "    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);\n"
+            "    always @(posedge clk or negedge rst_n)\n"
+            "        if (!rst_n) c_cred <= 8'(CRED);\n"
+            "        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);")
     return t
 
 
@@ -840,6 +854,90 @@ def master_prl(t: str, base: str) -> str:
     return t
 
 
+def master_pw2(t: str) -> str:
+    """qwen-1010/a: the program-store write with registered one-hot row / word selects (seq_su_bi_b-955329f22 routed: the
+    q_pw_addr -> 64 x 16 decode -> 65,536 write enables path); the write lands one edge later (configuration time)"""
+    t = one(t, "    always @(posedge clk) prog_a_r <= prog_a;\n",
+            "    always @(posedge clk) prog_a_r <= prog_a;\n    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;\n")
+    return one(t, "        if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;\n",
+               "        if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)\n"
+               "            if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;\n"
+               "    end\n"
+               "    // program writes: one-hot row / word selects registered one edge before the store (65,536 enables)\n"
+               "    always @(posedge clk) begin\n"
+               "        pw_row2 <= q_pw_v ? (64'd1 << q_pw_addr[9:4]) : 64'd0;\n"
+               "        pw_word2 <= 16'd1 << q_pw_addr[3:0];\n"
+               "        pw_d2 <= q_pw_data;\n")
+
+
+KVD_FIELDS = [("v", "1"), ("wbase", "AW"), ("ts", "AW"), ("ks", "AW"), ("js", "AW"), ("wcs", "AW"), ("split", "4"),
+              ("jsh", "3"), ("tiles", "NW"), ("k", "NW"), ("nout", "NW"), ("kindk", "1"), ("pos", "NW")]
+
+
+def seq_kvd_out(t: str) -> str:
+    """qwen-1010/a: the KV-die launch descriptor (kvd_*) leaves seq_su, not the control tile: the SU-side controller decodes
+    every instruction too, and seq_su sits 25 relay stages from the link end (the q word's path) against the control tile's
+    41 -- so the KV-die step starts no later than the bench's q / CTL assumption.  Out through the OS pin stations."""
+    t = one(t, "    output wire [16-1:0] su_rows_o\n);",
+            "    output wire [16-1:0] su_rows_o,\n" +
+            ",\n".join(f"    output wire [{w}-1:0] kvd_{n}" for n, w in KVD_FIELDS) + "\n);")
+    st = []
+    for n, w in KVD_FIELDS:
+        st.append(f"    wire [{w}-1:0] b_kvd_{n};")
+        st.append(f"    ot_hdc_delay #(.W({w}), .D(OS){', .RESET(1)' if w == '1' else ''}) u_o_kvd_{n} (.clk(clk), .rst_n(rs), "
+                  f".d(b_kvd_{n}), .q(kvd_{n}));")
+    t = one(t, "    wire [16-1:0] b_su_rows_o;\n", "    wire [16-1:0] b_su_rows_o;\n" + "\n".join(st) + "\n")
+    t = one(t, "        .kvd_v(),\n", "        .kvd_v(b_kvd_v),\n")
+    for n, _ in KVD_FIELDS[1:]:
+        t = one(t, f"        .kvd_{n}(),\n", f"        .kvd_{n}(b_kvd_{n}),\n")
+    return t
+
+
+STAGE_GATE = """
+// qwen-1010/a: the stage start waits for the SU-local constant buffer (ot_qfd_su_cbuf_g st_rdy / st_rdy_stage): a stage
+// (one layer program, or HEAD) starts only when the buffer reports that stage resident.  The prefetcher fills stage s + 1
+// during stage s, so the wait is normally only at the token's first stage.  MUT 1 (NOWAIT): starts without the buffer.
+module ot_qfd_stage_gate #(parameter integer SW_ = 6, parameter integer NW = 18, parameter integer MUT = 0) (
+    input  wire clk, input wire rst_n,
+    input  wire h_start, input wire [SW_-1:0] stage, input wire [NW-1:0] token, input wire [NW-1:0] pos,
+    input  wire st_rdy, input wire [SW_-1:0] st_rdy_stage,
+    output wire go, output reg [NW-1:0] go_token, output reg [NW-1:0] go_pos,
+    output reg [SW_-1:0] cur_stage, output wire tok_start
+);
+    reg pend;
+    assign go = pend && !h_start && ((MUT != 0) || (st_rdy && st_rdy_stage == cur_stage));
+    assign tok_start = h_start && (stage == {SW_{1'b0}});
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pend <= 1'b0; cur_stage <= {SW_{1'b0}}; end
+        else if (h_start) begin pend <= 1'b1; cur_stage <= stage; end
+        else if (go) pend <= 1'b0;
+    always @(posedge clk) if (h_start) begin go_token <= token; go_pos <= pos; end
+endmodule
+"""
+
+
+def seq_stage_gate(t: str) -> str:
+    """qwen-1010/a: wire the SU-local constant buffer's readiness into the seq_su stage start (owner rule: every path)"""
+    t = one(t, "    input  wire [1-1:0] h_start,\n",
+            "    input  wire [1-1:0] h_start,\n    input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs\n"
+            "    input  wire [1-1:0] cb_st_rdy,        // constant buffer: stage cb_st_rdy_stage resident\n"
+            "    input  wire [5:0] cb_st_rdy_stage,\n"
+            "    output wire [5:0] cb_stage,           // to every constant-buffer group: the stage the SU runs\n"
+            "    output wire [1-1:0] cb_tok_start,\n    output wire [NW-1:0] cb_tpos,\n")
+    gate = ("    wire [5:0] q_stage_in, q_cb_st_rdy_stage; wire q_cb_st_rdy;\n"
+            "    ot_hdc_delay #(.W(12), .D(IS)) u_i_cbs (.clk(clk), .rst_n(rs), .d({stage_in, cb_st_rdy_stage}), .q({q_stage_in, q_cb_st_rdy_stage}));\n"
+            "    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rs), .d(cb_st_rdy), .q(q_cb_st_rdy));\n"
+            "    wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;\n"
+            "    ot_qfd_stage_gate #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rs), .h_start(q_h_start), .stage(q_stage_in),\n"
+            "        .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),\n"
+            "        .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));\n"
+            "    ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rs), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));\n")
+    t = one(t, "        .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),",
+            "        .clk(clk), .rst_n(rs), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),")
+    i = t.index("    ot_qwen_tp_seq_w12 #(.N(D),")
+    return t[:i] + gate + t[i:] + STAGE_GATE
+
+
 # qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
 # above stay byte-identical.
 def emit_seq_su_bi() -> str:
@@ -847,20 +945,25 @@ def emit_seq_su_bi() -> str:
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_seq_su(boundary=True))))
     t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
-    t = master_prl(t, "prog_base")
+    t = seq_stage_gate(seq_kvd_out(master_pw2(master_prl(t, "prog_base"))))
     t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W)")
     t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
     # the VM read leaves through OS and returns through IS (+ the memory's registered read): VRL = IS + OS + 1
-    t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D),")
-    return t + "\n" + tp_seq_vrl()
+    t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D),")
+    # RLY: die relays each way to the VM; CRED: 0 = collective ready/valid (the token vehicle's model), > 0 = credit port
+    # (ot_rom_oneshot_die_m in_cr, its input buffer IB >= CRED >= the round trip through the stations)
+    t = one(t, "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4",
+            "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,\n"
+            "    parameter integer RLY = 0, parameter integer CRED = 0")
+    return t + "\n" + tp_seq_vrl(cred=True)
 
 
 def emit_tt_ctlm_i() -> str:
     """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_tt_ctlm())))
     t = t.replace("ot_qwen_rom_core_ctrl_x", "ot_qwen_rom_core_ctrl_x_i")
-    t = master_prl(t, "q_prog_base")
+    t = master_pw2(master_prl(t, "q_prog_base"))
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
     return t
