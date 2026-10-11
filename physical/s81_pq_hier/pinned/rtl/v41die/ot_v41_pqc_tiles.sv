@@ -393,7 +393,11 @@ module ot_v41_pqc_bcrel #(
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_l));
     reg [W-1:0] qd;                          // data (bits under reset unused)
     reg [RT:0]  qc;                          // {top RT bits, bit RB}
+`ifdef OT_PQC_MUT_BC
+    always @(posedge clk) qd <= {d[W-1:2], d[0], d[1]};             // mutant: two BF16 data bits swapped
+`else
     always @(posedge clk) qd <= d;
+`endif
     always @(posedge clk or negedge rst_l[0])
         if (!rst_l[0]) qc <= '0;
         else qc <= {d[W-1 -: RT], d[RB]};

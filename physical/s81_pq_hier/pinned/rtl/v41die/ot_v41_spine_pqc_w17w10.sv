@@ -284,7 +284,11 @@ module ot_v41_pqc_ctl #(
     // v15: the two quantisers are T_AQ tiles (ot_dsrom_aq12t) in the spine wrapper
     localparam integer AQL = 29;
     wire [1:0] aq_f = aqf;
+`ifdef OT_PQC_MUT_CTL
+    assign aq_vin = rq_v;                                              // mutant: BF-family reads also quantised
+`else
     assign aq_vin = rq_v && !rq_fam;
+`endif
     // the qb / eb write and the `have` update are driven from the spine's own copy of the request, delayed to the
     // quantiser's output cycle, never from the quantiser's vo (v8: vo drove every qb row enable, a single flop with a
     // 4,096-flop cone, the SS critical class at R = 128):
