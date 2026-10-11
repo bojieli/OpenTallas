@@ -101,25 +101,53 @@ module ot_dsrom_mtp_hrow_store #(
     reg ihalf [0:NP-1];
     reg [511:0] ilo [0:NP-1];
     assign i_r = {NP{1'b1}};                           // the receivers' flits are always taken (one write port a part)
-    // memory: part p, 4 x 256-b columns, NM macros deep; one write and one read port each
+    // memory: part p, 4 x 256-b columns, NM macros deep; one write and one read port each.
+    // Physical structure (rev 2, el1011-ds-mtp): every macro row gm of a part has its own registered copy of the
+    // write enable / address / data and the read enable / address (one stage, +1 cycle on BOTH ports, so a part's
+    // last write still lands before any read of its slot); every macro output lands in a capture flop with no logic
+    // in front; the 10:1 x 1024-b read select is a pipelined one-hot AND-OR (macro groups -> part -> output).
+    localparam integer NG = (NM + 3) / 4;                 // read-select groups a part (<= 4 macro rows each)
     reg  [NP-1:0] mw_v; reg [DB-1:0] mw_a [0:NP-1]; reg [1023:0] mw_d [0:NP-1];
-    wire [1023:0] mr_d [0:NP-1];
-    reg  [NP-1:0] mr_v; reg [DB-1:0] mr_a;
-    genvar gp, gm, gc;
+    reg  [NP-1:0] mr_v; reg [DB-1:0] mr_a [0:NP-1];
+    reg  [1023:0] pr_d [0:NP-1]; reg [NP-1:0] pr_v;     // part results (R5)
+    genvar gp, gm, gc, gg;
     generate for (gp = 0; gp < NP; gp = gp + 1) begin : g_part
-        wire [1023:0] rdm [0:NM-1];
-        reg [$clog2(NM+1)-1:0] rsel;
-        always @(posedge clk) rsel <= mr_a[DB-1:10];
+        reg  [1023:0] grp_d [0:NG-1]; reg [NG-1:0] grp_v;
+        reg  [1023:0] cap [0:NM-1];
+        reg  [NM-1:0] s2, s3;
         for (gm = 0; gm < NM; gm = gm + 1) begin : g_m
+            reg wce, rce; reg [9:0] wa, ra; reg [1023:0] wd; wire [1023:0] rdo;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin wce <= 1'b0; rce <= 1'b0; s2[gm] <= 1'b0; s3[gm] <= 1'b0; end
+                else begin
+                    wce <= mw_v[gp] && mw_a[gp][DB-1:10] == gm;
+                    rce <= mr_v[gp] && mr_a[gp][DB-1:10] == gm;
+                    s2[gm] <= rce; s3[gm] <= s2[gm];
+                end
+            always @(posedge clk) begin wa <= mw_a[gp][9:0]; wd <= mw_d[gp]; ra <= mr_a[gp][9:0]; cap[gm] <= rdo; end
             for (gc = 0; gc < 4; gc = gc + 1) begin : g_c
                 ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(clk),
-                    .r_ce_in(mr_v[gp] && mr_a[DB-1:10] == gm), .r_addr_in(mr_a[9:0]), .rd_out(rdm[gm][256*gc +: 256]),
-                    .w_ce_in(mw_v[gp] && mw_a[gp][DB-1:10] == gm), .w_addr_in(mw_a[gp][9:0]),
-                    .wd_in(mw_d[gp][256*gc +: 256]), .w_mask_in({256{1'b1}}),
+                    .r_ce_in(rce), .r_addr_in(ra), .rd_out(rdo[256*gc +: 256]),
+                    .w_ce_in(wce), .w_addr_in(wa),
+                    .wd_in(wd[256*gc +: 256]), .w_mask_in({256{1'b1}}),
                     .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
             end
         end
-        assign mr_d[gp] = rdm[rsel];
+        for (gg = 0; gg < NG; gg = gg + 1) begin : g_g
+            integer k;
+            reg [1023:0] acc; reg vacc;
+            always @(*) begin
+                acc = '0; vacc = 1'b0;
+                for (k = 4*gg; k < 4*gg + 4 && k < NM; k = k + 1) begin acc = acc | (cap[k] & {1024{s3[k]}}); vacc = vacc | s3[k]; end
+            end
+            always @(posedge clk or negedge rst_n) if (!rst_n) grp_v[gg] <= 1'b0; else grp_v[gg] <= vacc;
+            always @(posedge clk) grp_d[gg] <= acc;
+        end
+        integer j;
+        reg [1023:0] pacc;
+        always @(*) begin pacc = '0; for (j = 0; j < NG; j = j + 1) pacc = pacc | (grp_d[j] & {1024{grp_v[j]}}); end
+        always @(posedge clk or negedge rst_n) if (!rst_n) pr_v[gp] <= 1'b0; else pr_v[gp] <= |grp_v;
+        always @(posedge clk) pr_d[gp] <= pacc;
     end endgenerate
     // ---------------- read side: in-order requests, served when the slot holds the requested version
     wire [3:0] q_ep = q_a[UB+16 +: 4];
@@ -147,21 +175,16 @@ module ot_dsrom_mtp_hrow_store #(
         end
     end
     assign q_r = q_ok;                                 // the head request waits until its row version is complete
-    reg rv2;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin r_v <= 1'b0; rv2 <= 1'b0; mr_v <= '0; end
+        if (!rst_n) begin r_v <= 1'b0; mr_v <= '0; end
         else begin
-            mr_v <= '0; rv2 <= |mr_v; r_v <= rv2;
+            mr_v <= '0; r_v <= |pr_v;
             if (q_v && q_ok) begin
                 mr_v[q_part] <= 1'b1;
-                mr_a <= DB'(q_slot) * DB'(PB) + DB'(q_pb);
+                mr_a[q_part] <= DB'(q_slot) * DB'(PB) + DB'(q_pb);
             end
         end
-    reg [1:0] rp1, rp2;
-    always @(posedge clk) begin
-        rp1 <= (q_v && q_ok) ? q_part : rp1; rp2 <= rp1;
-        if (rv2) r_d <= mr_d[rp2];
-    end
+    always @(posedge clk) r_d <= (pr_d[0] & {1024{pr_v[0]}}) | (pr_d[1] & {1024{pr_v[1]}}) | (pr_d[2] & {1024{pr_v[2]}});
     // ---------------- ingress state machines
     integer p, s;
     reg [UB-1:0] hu; reg [NW-1:0] hp; reg [3:0] he; reg [1:0] hq; reg [UB+SB-1:0] hs;
