@@ -143,7 +143,14 @@ module dsfd_engram_c #(
             agc_r <= f_agc[0];
         end
     always @(posedge ck[0]) begin cfg_r1 <= f_cfg; cfg_r2 <= cfg_r1; end
+    // HIER: in synthesis the lookup / sink are the closed hardened views (liberty black boxes, no parameters); the
+    // views were built at exactly these values (lkp: defaults = PIPE 0 / NSLOT 8 / HQ_CRED 8 / O_CRED 16 / SLW 3;
+    // sink: PIN_CAPTURE 1 / NSLOT 8 / SLW 3), so the parameterised instance below is what simulation runs.
+`ifdef SYNTHESIS
+    dsfd_engram_lkp u_lkp (
+`else
     dsfd_engram_lkp #(.PIPE(PIPE), .NSLOT(NSLOT), .HQ_CRED(8), .O_CRED(16), .SLW(SLW)) u_lkp (
+`endif
         .ck(ck[0]), .rst_n(rn_lk), .cfg_layer(cfg_r2[0]), .cfg_rank(cfg_r2[2:1]),
         .win_v(lk_wv), .win_ids(lk_wid), .win_cred(lk_wcred), .rel(rel_q),
         .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(hr_r2[0]),
@@ -162,7 +169,11 @@ module dsfd_engram_c #(
     always @(posedge ck[0]) begin vrels_q <= f_vm[15:13]; vra_q <= f_vm[11:1]; end   // f_vm = {rel_slot 3, rel_v, rd_addr 11, rd_v}
     always @(posedge ck[0] or negedge rn_sk) if (!rn_sk) begin vrel_r1 <= 4'd0; vrel_r2 <= 4'd0; end
                                             else begin vrel_r1 <= {vrels_q, vrel_q}; vrel_r2 <= vrel_r1; end
+`ifdef SYNTHESIS
+    dsfd_engram_sink u_sink (
+`else
     dsfd_engram_sink #(.PIN_CAPTURE(SINK_PIN), .NSLOT(NSLOT), .SLW(SLW)) u_sink (
+`endif
         .ck(ck[0]), .rst_n(rn_sk), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
         .in_slot(f_ai[47:36]), .in_d(f_ai[1103:48]), .st_v(f_ai[1107:1104]), .st_slot(f_ai[1119:1108]),
         .st_bad(f_ai[1123:1120]), .wr_en(s_we), .wr_addr(s_wa), .wr_data(s_wd), .rdy(s_rdy), .perr(s_perr),
