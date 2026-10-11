@@ -62,5 +62,252 @@
   }
  ],
  "examples": [],
- "verdict": "NO OVERLAP: shared ks (one stream at a time) costs no rate"
+ "verdict": "NO OVERLAP: shared ks (one stream at a time) costs no rate",
+ "ds_mtp": {
+  "method": "per-layer launch (serial launches)",
+  "layers_with_idx_index": [
+   2,
+   8,
+   14,
+   20,
+   24,
+   28,
+   32,
+   36
+  ],
+  "cases": [
+   {
+    "layer": 2,
+    "pos": 1024,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35614.3
+   },
+   {
+    "layer": 2,
+    "pos": 65536,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35614.3
+   },
+   {
+    "layer": 2,
+    "pos": 1048575,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35614.3
+   },
+   {
+    "layer": 8,
+    "pos": 1024,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35614.3
+   },
+   {
+    "layer": 8,
+    "pos": 65536,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35614.3
+   },
+   {
+    "layer": 8,
+    "pos": 1048575,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35614.3
+   },
+   {
+    "layer": 14,
+    "pos": 1024,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 17802.8,
+    "launch_cycles": 36184.0
+   },
+   {
+    "layer": 14,
+    "pos": 65536,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 17802.8,
+    "launch_cycles": 36184.0
+   },
+   {
+    "layer": 14,
+    "pos": 1048575,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 17802.8,
+    "launch_cycles": 36184.0
+   },
+   {
+    "layer": 20,
+    "pos": 1024,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 46030.3
+   },
+   {
+    "layer": 20,
+    "pos": 65536,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 46030.3
+   },
+   {
+    "layer": 20,
+    "pos": 1048575,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 46030.3
+   },
+   {
+    "layer": 24,
+    "pos": 1024,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 33806.1
+   },
+   {
+    "layer": 24,
+    "pos": 65536,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 33806.1
+   },
+   {
+    "layer": 24,
+    "pos": 1048575,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 33806.1
+   },
+   {
+    "layer": 28,
+    "pos": 1024,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 26479.3,
+    "launch_cycles": 40313.5
+   },
+   {
+    "layer": 28,
+    "pos": 65536,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 26479.3,
+    "launch_cycles": 40313.5
+   },
+   {
+    "layer": 28,
+    "pos": 1048575,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 26479.3,
+    "launch_cycles": 40313.5
+   },
+   {
+    "layer": 32,
+    "pos": 1024,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 33806.1
+   },
+   {
+    "layer": 32,
+    "pos": 65536,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 33806.1
+   },
+   {
+    "layer": 32,
+    "pos": 1048575,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 19971.9,
+    "launch_cycles": 33806.1
+   },
+   {
+    "layer": 36,
+    "pos": 1024,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35975.3
+   },
+   {
+    "layer": 36,
+    "pos": 65536,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35975.3
+   },
+   {
+    "layer": 36,
+    "pos": 1048575,
+    "idx": 1,
+    "att": 2,
+    "overlaps": 0,
+    "min_gap": 22141.0,
+    "launch_cycles": 35975.3
+   }
+  ],
+  "overlapping": 0,
+  "min_gap_cycles": 17802.8
+ },
+ "qwen": {
+  "qwen_ar_P8191": {
+   "idx_index": 0,
+   "att": 144,
+   "overlaps": 0,
+   "min_gap": null
+  },
+  "qwen_dflash_b16": {
+   "idx_index": 0,
+   "att": 656,
+   "overlaps": 0,
+   "min_gap": null
+  }
+ }
 }
