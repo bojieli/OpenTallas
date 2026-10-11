@@ -1,16 +1,22 @@
 `timescale 1ns/1ps
-module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm_pub) checked against the expected O words; ot_hgi_sm_pub_old = git show 962d7d8d1:rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv (renamed) rides along: random MATVEC results from 32 SMs, VM images compared
+module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm_pub) checked against the expected O words; the flop form ot_hgi_sm_pub_ff rides along as the reference (hgi-1010/d: ot_hgi_sm_pub = the banked-SRAM form): random MATVEC results from 32 SMs, VM images compared
     localparam integer NSM = 32;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 11, errors = 0;
     reg pub_v = 0; reg [39:0] pb = 0; reg [31:0] pst = 0; reg [19:0] pm = 0; reg [12:0] pq = 0; reg [3:0] pp = 0;
     reg [NSM-1:0] rv = 0; reg [NSM*12-1:0] rr = 0; reg [NSM*256-1:0] rd = 0;
     wire ra, rb, da, db, fa, fb; wire [4*338-1:0] qa, qb; wire [4*274-1:0] xa, xb; wire [273:0] ta, tb2; reg [337:0] tq = 0;
-    ot_hgi_sm_pub_old ua (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(ra), .pub_base(pb), .pub_stride(pst),
-        .pub_space(2'd1), .pub_m(pm), .pub_q(pq), .pub_p(pp), .pub_done(da), .pub_fault(fa), .sm_rv(rv), .sm_rrow(rr),
+    ot_hgi_sm_pub_ff ua (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(ra), .pub_base(pb), .pub_stride(pst),
+        .pub_space(2'd1), .pub_m(pm), .pub_q(pq), .pub_p(pp), .pub_bf16(1'b0), .pub_done(da), .pub_fault(fa), .sm_rv(rv), .sm_rrow(rr),
         .sm_rdata(rd), .vmq(qa), .vmr(xa), .s0_v(), .s0_idx(), .s0_data());
-    ot_hgi_sm_pub ub (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(rb), .pub_base(pb), .pub_stride(pst),
-        .pub_space(2'd1), .pub_m(pm), .pub_q(pq), .pub_p(pp), .pub_done(db), .pub_fault(fb), .sm_rv(rv), .sm_rrow(rr),
+`ifdef MUT_PAR
+    ot_hgi_sm_pub #(.MUT_PAR(1)) ub (
+`elsif MUT_ROWM
+    ot_hgi_sm_pub #(.MUT_ROW(1)) ub (
+`else
+    ot_hgi_sm_pub ub (
+`endif.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(rb), .pub_base(pb), .pub_stride(pst),
+        .pub_space(2'd1), .pub_m(pm), .pub_q(pq), .pub_p(pp), .pub_bf16(1'b0), .pub_done(db), .pub_fault(fb), .sm_rv(rv), .sm_rrow(rr),
         .sm_rdata(rd), .vmq(qb), .vmr(xb), .s0_v(), .s0_idx(), .s0_data());
     ot_hgi_vm_unit #(.NC(5)) va (.clk(clk), .rst_n(rst_n), .cq({tq, qa}), .cr({ta, xa}), .status());
     ot_hgi_vm_unit #(.NC(5)) vb (.clk(clk), .rst_n(rst_n), .cq({tq, qb}), .cr({tb2, xb}), .status());
