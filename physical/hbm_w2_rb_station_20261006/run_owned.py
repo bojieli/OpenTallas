@@ -32,6 +32,9 @@ p.add_argument('--tag', default='tk_W2_rb')
 p.add_argument('--half', action='store_true', help='half-rate shell top')
 p.add_argument('--phase-seat', action='store_true', help='localphase and real kept hold/reset delay seats')
 p.add_argument('--safe', action='store_true', help='SAFE=1 station (registered permission decision)')
+p.add_argument('--face-plan', choices=('ns', 'nesw'), default='ns',
+               help='ns (default): input bottom, every branch top.  nesw (idleA-no3 2026-10-10): input bottom, branch 0 '
+                    'left, branch 1 right, branch NO-1 top (NO3: each SM on its own side face, the next column on top)')
 p.add_argument('--post-route-ff-hold', action='store_true',
                help='SS-only setup optimization at CTS/GRT; strict FF hold repair/signoff remains required after route')
 p.add_argument('--hold-margin-ns', type=float, default=0.01)
@@ -136,6 +139,86 @@ def pins(regions, exhaustive=False, die_area_um=None):
     return '\n'.join('set_io_pin_constraint -region '+r['edge']+':* -pin_names {'+pat[r['regex']]+'}' for r in regions)+'\n'
 
 
+def range_regex(lo, hi):
+    """Regex alternation (no quantifier braces: the pattern lands inside Tcl braces) matching the decimals lo..hi."""
+    def rr(lo, hi):
+        sl, sh = str(lo), str(hi)
+        if len(sl) < len(sh):
+            return rr(lo, 10**len(sl)-1) + rr(10**len(sl), hi)
+        if sl == sh:
+            return [sl]
+        n = len(sl)
+        # common prefix, then split on the first differing digit
+        k = 0
+        while sl[k] == sh[k]:
+            k += 1
+        pre = sl[:k]
+        if k == n-1:
+            return [pre + f'[{sl[k]}-{sh[k]}]']
+        tail = n-k-1
+        out = []
+        lo_full = sl[k+1:] == '0'*tail
+        hi_full = sh[k+1:] == '9'*tail
+        a0 = int(sl[k]) if lo_full else int(sl[k])+1
+        b0 = int(sh[k]) if hi_full else int(sh[k])-1
+        if not lo_full:
+            out += [pre + sl[k] + x for x in _rr_fixed(sl[k+1:], '9'*tail)]
+        if a0 <= b0:
+            out.append(pre + (f'[{a0}-{b0}]' if a0 != b0 else str(a0)) + '[0-9]'*tail)
+        if not hi_full:
+            out += [pre + sh[k] + x for x in _rr_fixed('0'*tail, sh[k+1:])]
+        return out
+    return '(' + '|'.join(rr(lo, hi)) + ')'
+
+
+def _rr_fixed(sl, sh):
+    """Fixed-width digit strings sl..sh (same length, leading zeros allowed) as a list of patterns."""
+    n = len(sl)
+    if n == 0:
+        return ['']
+    if sl == sh:
+        return [sl]
+    if n == 1:
+        return [f'[{sl}-{sh}]']
+    if sl[0] == sh[0]:
+        return [sl[0] + x for x in _rr_fixed(sl[1:], sh[1:])]
+    out = []
+    a0, b0 = int(sl[0]), int(sh[0])
+    if sl[1:] != '0'*(n-1):
+        out += [sl[0] + x for x in _rr_fixed(sl[1:], '9'*(n-1))]
+        a0 += 1
+    if sh[1:] != '9'*(n-1):
+        tail = [sh[0] + x for x in _rr_fixed('0'*(n-1), sh[1:])]
+        b0 -= 1
+    else:
+        tail = []
+    if a0 <= b0:
+        out.append((f'[{a0}-{b0}]' if a0 != b0 else str(a0)) + '[0-9]'*(n-1))
+    return out + tail
+
+
+def face_regions(a):
+    """--pin-region arguments of the station.  nesw: one face per branch, so the held frame P_d fans out to three
+    faces from a central bank instead of three adjacent 2,328-bit blocks along ONE face (the ns plan's horizontal
+    crossbar: w2-rb-safe-no3-corepins-6744fd439-f8 GRT congestion 18,361 markers, all in the top band x 156-520)."""
+    inp = '^(clk_sm|por_n|release_held|in_.*|release_.*)$=bottom'
+    if a.face_plan == 'ns':
+        return ['--pin-region', inp, '--pin-region', '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$=top']
+    if a.no != 3:
+        raise SystemExit('--face-plan nesw is the NO3 plan (two SM branches + the next column)')
+    if not os.environ.get('OT_PIN_BALANCE_H'):
+        raise SystemExit('--face-plan nesw needs the balanced pin generator (OT_PIN_GROUP_MAX / OT_PIN_BALANCE_H/V)')
+
+    def branch(t):
+        r = lambda w: range_regex(t*w, (t+1)*w-1)
+        return (f'out_data\\[{r(2063)}\\]|out_owner\\[{r(192)}\\]|out_frame\\[{r(73)}\\]|out_v\\[{t}\\]|out_r\\[{t}\\]|'
+                f'ACK_v\\[{t}\\]|ACK_owner\\[{r(192)}\\]|ACK_frame\\[{r(73)}\\]')
+    return ['--pin-region', inp,
+            '--pin-region', f'^({branch(0)})$=left',
+            '--pin-region', f'^({branch(1)})$=right',
+            '--pin-region', f'^({branch(2)}|fclk_o|fault|drained|paused)$=top']
+
+
 driver.run_synthesis = synth
 driver.prepare_w11_orfs_endpoint_netlist = endpoint
 driver.io_constraints_tcl = pins
@@ -162,8 +245,7 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb_half' if a.h
         '--orfs-var', 'SDC_FILE=/work/station.sdc',
         '--step-tcl', 'PRE_IO_PLACEMENT='+rel+'/pin_faces.tcl',
         '--step-tcl', 'PRE_CTS='+rel+('/cts_setup_only.tcl' if a.post_route_ff_hold else '/forwarded_subtree.tcl'),
-        '--pin-region', '^(clk_sm|por_n|release_held|in_.*|release_.*)$=bottom',
-        '--pin-region', '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$=top',
+        *face_regions(a),
         '--purpose', 'signoff_target', '--nickname-tag', f'{a.tag}_NO{a.no}',
         '--output', str(run/'physical.json')]
 if a.post_route_ff_hold:

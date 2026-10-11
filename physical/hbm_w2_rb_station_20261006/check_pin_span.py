@@ -21,12 +21,19 @@ exec(compile(ast.Module(body=[pins], type_ignores=[]), 'station-pins', 'exec'), 
 os.environ.update(OT_PIN_GROUP_MAX='32', OT_PIN_BALANCE_H='M4 M6', OT_PIN_BALANCE_V='M5 M7')
 # The real NO3 bus wall has ~10k boundary flops. Exercise every face at that
 # density; bottom/top must exclude the W/E strips and left/right the S/N strips.
+ORD_MOCK = '''
+namespace eval ord { proc get_db_block {} { return ot_mock_block } }
+proc ot_mock_block {args} { return {} }
+'''
 records = []
 for edge in ('bottom', 'top', 'left', 'right'):
     tcl = namespace['pins']([dict(regex='^ACK_frame', edge=edge)], False, [0, 0, 524.104, 164.32])
     prefix, body = tcl.split('set ot_region_pins', 1)
     lo, hi = (2.16, 162.16) if edge in ('left', 'right') else (2.052, 522.052)
     axis = 1 if edge in ('left', 'right') else 0
+    # idleA-no3 2026-10-10: the generator's prefix now also checks bus completeness against the block's BTerms
+    # (ot_check_bus_complete, [ord::get_db_block]); outside OpenROAD the mock block has no terminals, so that check is
+    # vacuous here and the pin placement below is what this regression exercises.
     mock = '''
 proc ot_match_pins {pattern} {
   set names {}; for {set k 0} {$k < 10428} {incr k} { lappend names "ACK_frame\\[$k\\]" }; return $names
@@ -41,7 +48,7 @@ proc place_pin {args} {
   incr checked
 }
 '''.replace('AXIS', str(axis)).replace('LOWER', str(lo)).replace('UPPER', str(hi))
-    result = subprocess.run(['tclsh'], input=prefix+mock+'set ot_region_pins'+body+'\nputs "CHECKED $checked"\n',
+    result = subprocess.run(['tclsh'], input=ORD_MOCK+prefix+mock+'set ot_region_pins'+body+'\nputs "CHECKED $checked"\n',
                             text=True, capture_output=True, check=True)
     if result.stderr or result.stdout.strip() != 'CHECKED 10428':
         raise RuntimeError(result.stdout+result.stderr)
