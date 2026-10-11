@@ -801,8 +801,9 @@ endmodule
 // slice pin flops feed RL relay stages (every lane, every slice, aligned) before the response stage; the bus-lane
 // selects are priority-resolved one-hot, registered and kept per lane x 128-b quarter, and the 5 X rows are broadcast
 // through 4 kept per-lane-group copies (t_bl = AND-OR of registered operands); the ctrl return writes the CDC from
-// registered pushes (per-slice replicated pointer) and reads it through a registered output with kept one-hot read
-// selects per 64-b chunk (dsfd_vm_be_rcdc); the P2 FIFO always writes (no bypass: its enables never see c_l0r).
+// registered pushes (per-64-b-chunk valid copies and pointer replicas, per-chunk storage with kept write one-hots) and reads it through a registered output with kept one-hot read
+// selects per 64-b chunk (dsfd_vm_be_rcdc); the P2 FIFO always writes (no bypass: its enables never see c_l0r) and is 8
+// column chunks with kept pointer / push / load copies.  RL = 3: <= ~330 um of wire per stage on the 1,315 um worst bus.
 // Added latency (fixed, every lane alike; metadata lines are MD + RL long): t_srq / P2 RL + 1 (P2 +1 no bypass),
 // bus lanes RL + 2, ctrl return RL + 1 serial + 1 stream cycle.  Pins and contract unchanged.
 // ID: a distinct value per copy makes every copy its own module (no pass can merge two copies)
@@ -834,7 +835,6 @@ module dsfd_vm_be_rcdc #(
     localparam [1:0] S_DOWN = 2'b00, S_WAIT = 2'b01, S_RUN = 2'b10;
     localparam [AW:0] DP = DEPTH;
     localparam [CW-1:0] HL = HOLD;
-    reg [W-1:0]  mem [0:DEPTH-1];
     reg [AW:0]   wp, rp_w, rp, wp_r;
     reg [1:0]    w_st, r_st_w, r_st, w_st_r;
     reg [CW-1:0] w_cnt, r_cnt;
@@ -843,35 +843,32 @@ module dsfd_vm_be_rcdc #(
     wire w_live = (w_st == S_RUN) && (r_st_w != S_DOWN);
     assign w_rdy = wrst_n && w_live && ((wp - rp_w) != DP);
     wire w_fire = w_v && w_rdy;
+    reg [AW:0] wp_nx;
+    always @* begin
+        wp_nx = wp;
+        if (!wrst_n) wp_nx = {(AW+1){1'b0}};
+        else case (w_st)
+            S_DOWN, S_WAIT: wp_nx = {(AW+1){1'b0}};
+            default: if (r_st_w == S_DOWN) wp_nx = {(AW+1){1'b0}}; else if (w_fire) wp_nx = wp + 1'b1;
+        endcase
+    end
     always @(posedge wclk) begin
+        wp <= wp_nx;
         if (!wrst_n) begin
-            w_st <= S_DOWN; w_cnt <= HL; w_ok <= 1'b0; wp <= {(AW+1){1'b0}};
+            w_st <= S_DOWN; w_cnt <= HL; w_ok <= 1'b0;
         end else begin
             case (w_st)
                 S_DOWN: begin
-                    wp <= {(AW+1){1'b0}};
                     if (r_st_w != S_RUN) w_ok <= 1'b1;
                     if (w_cnt != {CW{1'b0}}) w_cnt <= w_cnt - 1'b1;
                     else if (w_ok || r_st_w != S_RUN) w_st <= S_WAIT;
                 end
-                S_WAIT: begin
-                    wp <= {(AW+1){1'b0}};
-                    if (r_st_w != S_DOWN) w_st <= S_RUN;
-                end
-                default: begin
-                    if (r_st_w == S_DOWN) begin
-                        w_st <= S_DOWN; w_cnt <= HL; w_ok <= 1'b1; wp <= {(AW+1){1'b0}};
-                    end else if (w_fire) wp <= wp + 1'b1;
-                end
+                S_WAIT: if (r_st_w != S_DOWN) w_st <= S_RUN;
+                default: if (r_st_w == S_DOWN) begin w_st <= S_DOWN; w_cnt <= HL; w_ok <= 1'b1; end
             endcase
         end
     end
-    always @(posedge wclk) if (w_fire) mem[wp[AW-1:0]] <= w_d;
-    reg [W-1:0] sh [0:DEPTH-1];
-    always @(posedge rclk) begin : p_sh integer i;
-        wp_r <= wp; w_st_r <= w_st;
-        for (i = 0; i < DEPTH; i = i + 1) sh[i] <= mem[i];
-    end
+    always @(posedge rclk) begin wp_r <= wp; w_st_r <= w_st; end
     wire r_live = (r_st == S_RUN) && (w_st_r != S_DOWN);
     assign r_v = rrst_n && r_live && (wp_r != rp);
     wire r_take = r_v && r_rdy;
@@ -902,15 +899,26 @@ module dsfd_vm_be_rcdc #(
         end
     end
     wire [DEPTH-1:0] oh_nx = {{(DEPTH-1){1'b0}}, 1'b1} << rp_nx[AW-1:0];
+    wire [DEPTH-1:0] woh_nx = {{(DEPTH-1){1'b0}}, 1'b1} << wp_nx[AW-1:0];
     genvar c;
     generate for (c = 0; c < NC; c = c + 1) begin : g_c
         wire [DEPTH-1:0] oh;
         dsfd_vm_be_kreg #(.W(DEPTH), .ID(IDB + c)) u_oh (.clk(rclk), .d(oh_nx), .q(oh));
         dsfd_vm_be_kreg #(.W(1), .ID(IDB + NC + c)) u_vc (.clk(rclk), .d(r_take), .q(o_vc[c]));
+        // this chunk's storage: written through its own kept one-hot copy of wp (w_fire drives DEPTH gates per chunk)
+        wire [DEPTH-1:0] woh;
+        dsfd_vm_be_kreg #(.W(DEPTH), .ID(IDB + 2*NC + c)) u_woh (.clk(wclk), .d(woh_nx), .q(woh));
+        reg [CB-1:0] mem [0:DEPTH-1]; reg [CB-1:0] sh [0:DEPTH-1];
+        always @(posedge wclk) begin : p_w integer i;
+            for (i = 0; i < DEPTH; i = i + 1) if (w_fire && woh[i]) mem[i] <= w_d[c*CB +: CB];
+        end
+        always @(posedge rclk) begin : p_sh integer i;
+            for (i = 0; i < DEPTH; i = i + 1) sh[i] <= mem[i];
+        end
         reg [CB-1:0] od;
         always @(posedge rclk) begin : p_od integer i; reg [CB-1:0] a;
             a = {CB{1'b0}};
-            for (i = 0; i < DEPTH; i = i + 1) a = a | (sh[i][c*CB +: CB] & {CB{oh[i]}});
+            for (i = 0; i < DEPTH; i = i + 1) a = a | (sh[i] & {CB{oh[i]}});
             od <= a;
         end
         assign o_d[c*CB +: CB] = od;
@@ -921,7 +929,7 @@ module dsfd_vm_be #(
     parameter integer NS = 4,
     parameter integer P2D = 40,         // P2 flit FIFO depth (the FE reader's credits)
     parameter integer MD = 9,           // tile-3 f_* (request exit) -> o_* (read data) skew (NSTG 2, QD 4)
-    parameter integer RL = 2            // relay stages between the slice pin flops and the response stage
+    parameter integer RL = 3            // relay stages between the slice pin flops and the response stage
 ) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rst,
@@ -1068,14 +1076,22 @@ module dsfd_vm_be #(
     // ---------------------------------------------------------------- ctrl read return: p3 then p4 -> 2 CDC FIFOs
     // the op order of a cycle: p3 (if valid) first, then p4; pushes alternate FIFOs starting at w_nx.  The pushes are
     // registered (wq_*) and every slice muxes its own 128 b with its own valid copy and its own w_nx replica.
-    reg [NS-1:0] w_nx; reg [1:0] wq_v; reg [511:0] wq_d0, wq_d1; reg r_ovf;
+    reg [NC-1:0] w_nx; reg [1:0] wq_v; reg [511:0] wq_d0, wq_d1; reg r_ovf;
+    // per 64-b chunk kept copies of its slice's relayed p3 / p4 valids (= a_v bits; 128 loads each)
+    wire [NC-1:0] cv3, cv4;
+    generate for (gg = 0; gg < NC; gg = gg + 1) begin : g_cv
+        localparam integer SS = gg / (NC / NS);
+        dsfd_vm_be_kreg #(.W(2), .ID(48 + gg)) u_cv (.clk(clk),
+            .d(rn_i ? {rv[RL-1][SS*NP + 4], rv[RL-1][SS*NP + 3]} : 2'b00), .q({cv4[gg], cv3[gg]}));
+    end endgenerate
     wire [1:0] rw_rdy, rr_v, o_vr; wire [511:0] o_d0, o_d1; wire [NC-1:0] o_vc0, o_vc1; reg rr_nx;
-    always @(posedge clk) begin : p_cw integer ss; reg p0, p1, pa_, pb_, nx;
-        for (ss = 0; ss < NS; ss = ss + 1) begin
-            p0 = a_v[ss*NP + 3]; p1 = a_v[ss*NP + 4]; pa_ = p0 | p1; pb_ = p0 & p1; nx = w_nx[ss];
-            wq_d0[128*ss +: 128] <= (pa_ && !nx && p0) ? a_d[(ss*NP + 3)*128 +: 128] : a_d[(ss*NP + 4)*128 +: 128];
-            wq_d1[128*ss +: 128] <= (pa_ && nx && p0) ? a_d[(ss*NP + 3)*128 +: 128] : a_d[(ss*NP + 4)*128 +: 128];
-            if (!rn_c) w_nx[ss] <= 1'b0; else if (pa_ && !pb_) w_nx[ss] <= ~nx;
+    always @(posedge clk) begin : p_cw integer c, ss, o; reg p0, p1, pa_, pb_, nx;
+        for (c = 0; c < NC; c = c + 1) begin
+            ss = c / (NC / NS); o = 64 * (c % (NC / NS));
+            p0 = cv3[c]; p1 = cv4[c]; pa_ = p0 | p1; pb_ = p0 & p1; nx = w_nx[c];
+            wq_d0[64*c +: 64] <= (pa_ && !nx && p0) ? a_d[(ss*NP + 3)*128 + o +: 64] : a_d[(ss*NP + 4)*128 + o +: 64];
+            wq_d1[64*c +: 64] <= (pa_ && nx && p0) ? a_d[(ss*NP + 3)*128 + o +: 64] : a_d[(ss*NP + 4)*128 + o +: 64];
+            if (!rn_c) w_nx[c] <= 1'b0; else if (pa_ && !pb_) w_nx[c] <= ~nx;
         end
         p0 = v0[3]; p1 = v0[4]; pa_ = p0 | p1; pb_ = p0 & p1; nx = w_nx[0];
         if (!rn_c) begin wq_v <= 2'b00; r_ovf <= 1'b0; end
@@ -1109,14 +1125,41 @@ module dsfd_vm_be #(
     wire mv = md_v[XL-1]; wire [91:0] mm = md_m[XL-1];
     wire [603:0] flit = {mm, row_of(a_d, 5)};
     localparam integer PB = $clog2(P2D);
-    reg [603:0] pf [0:P2D-1];
     reg [PB-1:0] ph, pt; reg [PB:0] pn;
-    reg ov; reg [603:0] od;
+    reg ov; wire [603:0] od;
     wire take = ov && c_l0r[0];
     wire ld = (!ov || take) && (pn != 0);
     assign c_l0v = ov; assign c_l0d = od;
-    always @(posedge clk) if (mv) pf[pt] <= flit;          // every flit is written (no bypass, no reset in the enable)
-    always @(posedge clk) if (ld) od <= pf[ph];
+    // every flit is written (no bypass: no c_l0r, no reset in the write enables).  The FIFO is PC column chunks, each
+    // with kept copies of the next write / read one-hots, the next push, the next ov and the next non-empty flag, so no
+    // pointer, push or load net drives more than one chunk (<= 76 loads).
+    localparam integer PC = 8, PCB = 76;
+    wire mv_nx = rn_p && md_v[XL-2];
+    wire [PB-1:0] pt_nx = !rn_p ? {PB{1'b0}} : mv ? ((pt == P2D - 1) ? {PB{1'b0}} : pt + 1'b1) : pt;
+    wire [PB-1:0] ph_nx = !rn_p ? {PB{1'b0}} : ld ? ((ph == P2D - 1) ? {PB{1'b0}} : ph + 1'b1) : ph;
+    wire [PB:0]   pn_nx = !rn_p ? {(PB+1){1'b0}} : pn + mv - ld;
+    wire          ov_nx = rn_p && (ld || (ov && !take));
+    wire [P2D-1:0] pw_oh = {{(P2D-1){1'b0}}, 1'b1} << pt_nx;
+    wire [P2D-1:0] pr_oh = {{(P2D-1){1'b0}}, 1'b1} << ph_nx;
+    genvar gp;
+    generate for (gp = 0; gp < PC; gp = gp + 1) begin : g_pf
+        localparam integer O = PCB * gp;
+        localparam integer CWD = (gp == PC - 1) ? 604 - PCB * (PC - 1) : PCB;
+        wire [P2D-1:0] wo, ro; wire mvc, ovc, pec;
+        dsfd_vm_be_kreg #(.W(2*P2D + 3), .ID(64 + gp)) u_pc (.clk(clk), .d({pw_oh, pr_oh, mv_nx, ov_nx, pn_nx != 0}),
+            .q({wo, ro, mvc, ovc, pec}));
+        wire ldc = (!ovc || c_l0r[0]) && pec;              // = ld
+        reg [CWD-1:0] pf [0:P2D-1]; reg [CWD-1:0] q;
+        always @(posedge clk) begin : p_w integer i;
+            for (i = 0; i < P2D; i = i + 1) if (mvc && wo[i]) pf[i] <= flit[O +: CWD];
+        end
+        always @(posedge clk) begin : p_r integer i; reg [CWD-1:0] a;
+            a = {CWD{1'b0}};
+            for (i = 0; i < P2D; i = i + 1) a = a | (pf[i] & {CWD{ro[i]}});
+            if (ldc) q <= a;
+        end
+        assign od[O +: CWD] = q;
+    end endgenerate
     reg p_ovf, p_mis;
     always @(posedge clk) begin
         if (!rn_p) begin ph <= 0; pt <= 0; pn <= 0; ov <= 1'b0; t_p2c <= 1'b0; p_ovf <= 1'b0; p_mis <= 1'b0; end
