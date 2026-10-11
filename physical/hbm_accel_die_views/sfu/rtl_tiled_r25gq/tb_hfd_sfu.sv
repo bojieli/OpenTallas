@@ -1,24 +1,24 @@
 `timescale 1ns/1ps
-// connectivity bench of hfd_sfu: 6 random die input words (seed 20261006), each held 70 cycles; the die output must
+// connectivity bench of hfd_sfu: 6 random die input words (seed 20261006), each held 68 cycles; the die output must
 // settle to the generator's reference (tools/hbm_hub_quarter_gen.py Plan.model) and match exactly; exit 1 on mismatch.
 module tb;
     reg clk = 0; always #0.4165 clk = ~clk;
     reg rst = 1;
-    reg [3768:0] din;
-    wire [2668:0] dout;
-    reg [3768:0] vin [0:5];
-    reg [2668:0] vout [0:5];
+    reg [11817:0] din;
+    wire [11862:0] dout;
+    reg [11817:0] vin [0:5];
+    reg [11862:0] vout [0:5];
     integer v, c, bad, lat, first;
     parameter integer QID = 0;
     reg cg_en = 1;
-    hfd_sfu dut(.ck0(clk), .ck1(clk), .ck2(clk), .ck3(clk), .ck4(clk), .ck5(clk), .ck6(clk), .ck7(clk), .rst(rst), .f_hc(din[1023:0]), .f_hgi_cmdproc(din[2197:1024]), .f_hgi_vmr(din[2471:2198]), .f_lgW(din[2744:2472]), .f_su(din[3768:2745]), .t_hc(dout[1023:0]), .t_hgi_cmdproc(dout[1026:1024]), .t_hgi_vmq(dout[1364:1027]), .t_lgW(dout[1644:1365]), .t_su(dout[2668:1645]));
+    hfd_sfu dut(.ck0(clk), .ck1(clk), .ck2(clk), .ck3(clk), .ck4(clk), .ck5(clk), .ck6(clk), .ck7(clk), .rst(rst), .f_hc(din[1023:0]), .f_hgi_cmdproc(din[2197:1024]), .f_hgi_vmr(din[2471:2198]), .f_lgW_rdn(din[10728:2472]), .f_lgW_wdn(din[10793:10729]), .f_su(din[11817:10794]), .t_hc(dout[1023:0]), .t_hgi_cmdproc(dout[1026:1024]), .t_hgi_vmq(dout[1364:1027]), .t_lgW_rup(dout[1877:1365]), .t_lgW_wup(dout[10838:1878]), .t_su(dout[11862:10839]));
     initial begin
         $readmemh("tb_in.mem", vin); $readmemh("tb_out.mem", vout);
         bad = 0; lat = 0;
         din = 0; repeat (6) @(posedge clk); rst = 0;
         for (v = 0; v < 6; v = v + 1) begin
             din = vin[v]; first = -1;
-            for (c = 0; c < 70; c = c + 1) begin
+            for (c = 0; c < 68; c = c + 1) begin
                 @(posedge clk); #0.1;
                 if (first < 0 && dout === vout[v]) first = c;
             end
