@@ -262,7 +262,9 @@ def place_lo(a):
         pipe('u_pq', pin['q'], a.NK, 1, 1, [(TW - 60.0, 60.0), (cc_x + 230, 60.0)], rc, 'q')
         pipe('u_pr', pin['ri'], a.NR, 3, 1, [(TW - 200.0, 150.0), (cc_x + 230, 150.0)], rc, 'ri')
         pipe('u_fr', root, a.NFR, 3, 0, [(cc_x - 230, 150.0), (200.0, 150.0)], rfc, 'rf')
-        mid = pipe('g_y0.u_mid', root, a.PMID, 3, 0, [], (cc_x, q_in_y - 40), 'mid0')
+        # the LAST mid stage lands at the quad input rows' height (a pipe spaces its stages at k/(n+1) toward the sink)
+        my = rc[1] + (q_in_y - 40 - rc[1]) * (a.PMID + 1) / a.PMID
+        mid = pipe('g_y0.u_mid', root, a.PMID, 3, 0, [], (cc_x, my), 'mid0')
         row_hops(hops, rcs, cen(mid[-1]), 'row0')
         pipe('g_xpp.u_xpp', root, a.NXP - 1, 3, 0, [(cc_x, q_in_y + 60)], cen(xpp), 'xp')
         for x in (0, 1):
@@ -384,6 +386,7 @@ def main():
     ap.add_argument('--pin-gap-ew-hi', type=float, default=None, help='hi: E / W face banks gap (corner relays crowd it)')
     ap.add_argument('--lo-v8', action='store_true', help='lo merge root at the bottom (el1011-hbm-attn v8 physical spec)')
     ap.add_argument('--NXP', type=int, default=0)
+    ap.add_argument('--lo-shift', type=int, default=2, help='v8: stages moved from every lo input pipe to every output pipe')
     ap.add_argument('--xpx', type=int, default=0, help='v10: extra lo->hi xp stages (taller lo; reference mirrors them)')
     ap.add_argument('--lo-extra-um', type=float, default=0.0, help='v8t: taller lo (bottom strip grows; quads move up), rounded to 2.16-um rows')
     ap.add_argument('--root-dx', type=float, default=0.0, help='v8: root shifted east (ri reach from the E face)')
@@ -399,7 +402,8 @@ def main():
         H_LO, QY_LO = round(H_LO + 2.16 * rows, 3), round(QY_LO + 2.16 * rows, 3)
     hi_par = {k: getattr(a, k) for k in ('NK', 'NC', 'NR', 'PMID', 'NFR')}
     if a.lo_v8:          # lo-only stage shift (latency per path unchanged); hi keeps its parameters
-        a.NK, a.NC, a.NR, a.PMID, a.NFR, a.NXP = a.NK - 2, a.NC - 2, a.NR - 2, a.PMID + 2, a.NFR + 2, 2 + a.xpx
+        S = a.lo_shift
+        a.NK, a.NC, a.NR, a.PMID, a.NFR, a.NXP = a.NK - S, a.NC - S, a.NR - S, a.PMID + S, a.NFR + S, S + a.xpx
         assert min(a.NK, a.NC, a.NR) >= 0
     P, hops, pins, quads, geo = place_lo(a)
     for k, v in hi_par.items():
