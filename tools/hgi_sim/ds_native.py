@@ -136,6 +136,8 @@ TBASE = 1 << 34
 SBASE = 1 << 35                      # selected compressed-KV rows per KV source (persistent across layers)
 SOURCES = [2, 8, 14, 20]
 SELB = 512 * 2048
+SM_LB = 136                          # SM weight line bytes (DS 1,088-b line); groups of Gk K-elements = 8 lines
+SM_GK = {"bf16": 512, "fp8": 1024, "fp4": 2048}
 
 
 class Manifest:
@@ -144,12 +146,22 @@ class Manifest:
     def __init__(self):
         self.ent, self.cur = [], WBASE
 
-    def place(self, key, rows, cols, fmt, n_experts=1):
+    def place(self, key, rows, cols, fmt, n_experts=1, lines=False):
         rb = int(cols * ESZ[fmt])
         rb = -(-rb // 32) * 32
+        base = self.cur
+        ex = {}
+        if lines:
+            # SM weight line image (ot_hgi_sm_record): a row is LPR = 8 op_g lines of LB = 136 B (the 1,088-b DS line),
+            # op_g = ceil(K / Gk); B.stride = LPR x LB, B.base a multiple of LB (and of the 32 B sector: 544)
+            gk = SM_GK[fmt]
+            rb = 8 * -(-cols // gk) * SM_LB
+            base = -(-base // 544) * 544
+            ex = dict(lines=True, gk=gk, gbytes=8 * SM_LB)
         size = rb * rows * n_experts
-        e = dict(key=key, base=self.cur, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
-                 estride=rb * rows)
+        e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
+                 estride=rb * rows, **ex)
+        self.cur = base
         self.ent.append(e)
         self.cur += -(-size // 4096) * 4096 + 4096
         return e
@@ -160,6 +172,8 @@ class Manifest:
                 off = addr - e["base"]
                 ex, off = divmod(off, e["estride"])
                 r0, cb = divmod(off, e["rowbytes"])
+                if e.get("lines"):
+                    return e, ex, r0, (cb // e["gbytes"]) * e["gk"]
                 return e, ex, r0, int(cb / ESZ[e["fmt"]])
         raise MC.Fault(3, f"weight address {addr:#x} outside the manifest")
 
@@ -181,9 +195,11 @@ class Lower:
         blocks = np.arange(rank, -(-n // W.KEY_BLOCK), TP)
         return int(np.minimum(n - blocks * W.KEY_BLOCK, W.KEY_BLOCK).clip(0).sum()), len(blocks)
 
-    def W(self, key, rows, cols, fmt, n_experts=1):
+    def W(self, key, rows, cols, fmt, n_experts=1, lines=False, col_off=0):
         if key not in self.ent:
-            self.ent[key] = self.man.place(key, rows, cols, fmt, n_experts)
+            self.ent[key] = self.man.place(key, rows, cols, fmt, n_experts, lines=lines)
+            if col_off:
+                self.ent[key]["col_off"] = col_off
         return self.ent[key]
 
     def layer(self, L, ops, rank):
@@ -224,13 +240,20 @@ class Lower:
             k = op["k"] if kcols is None else kcols
             r0, r1 = rows
             if expert_slot is not None:
-                e = self.W(w_key, n, op["k"], fmt, n_experts=m.n_exp)
+                e = self.W(w_key, n, op["k"], fmt, n_experts=m.n_exp, lines=True)
                 bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
                            stride=e["rowbytes"], indexed=1, dyn_mul=e["estride"])
+            elif col0 or (wcols and wcols != k):
+                # a column slice is its own dense line image (the SM record needs B.stride = LPR x LB of THIS K)
+                e = self.W(f"{w_key}@c{col0}+{k}", n, k, fmt, lines=True, col_off=col0)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
+                           stride=e["rowbytes"])
             else:
-                e = self.W(w_key, n, wcols or op["k"], fmt)
-                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"] + int(col0 * ESZ[fmt]),
+                e = self.W(w_key, n, op["k"], fmt, lines=True)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"],
                            n=k, m=max(r1 - r0, 1), stride=e["rowbytes"])
+            # the SM record's line-image rules (ot_hgi_sm_record): rows dense in lines, base on a line boundary
+            assert bd.stride == 8 * -(-k // SM_GK[fmt]) * SM_LB and bd.base % SM_LB == 0, (w_key, k, bd.stride, bd.base)
             fp = {"bf16": 0, "fp8": 1, "fp4": 2}[fmt]
             if self.fuse and out == "q":
                 out = "q_own"                 # FUSION 3: the RoPE head is the matvec's own output (tail in place)
@@ -852,14 +875,16 @@ def ds_units(m, man, golib):
     U = dict(MC.UNITS)
 
     def wrows(e, ex, r0, nrows, c0, ncols, L):
-        key = e["key"]
+        key = e["key"].split("@c")[0]                 # a column-slice entry names its matrix + column offset
+        c0 = c0 + e.get("col_off", 0)
         if e["experts"] > 1:
             pre, mat = key.rsplit(".", 1)
             name = f"{pre}.{ex}.{mat}.weight"
         else:
             name = key.split("|") if "|" in key else key
         w = golib.wrows(name, r0, r0 + nrows)
-        if c0 or ncols != e["cols"]:
+        full = (w.q if isinstance(w, V_.Q8) else w).shape[1]      # the source matrix's columns
+        if c0 or ncols != full:
             w = (w.q[:, c0:c0 + ncols], w.e) if isinstance(w, V_.Q8) else w[:, c0:c0 + ncols]
         return w
 
