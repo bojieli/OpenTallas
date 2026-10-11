@@ -63,8 +63,8 @@ def main():
                       'stations a stop in the channels (adjacent tile centres ~620 um)',
                       'pin owners po0..po3 sit directly W of f_vm (NE corner): VM read / write slots 4 each; NRL 4 relay '
                       'stations on every pin owner link (the stack spans ~2 mm)',
-                      'csu / dsu (c_cmd / c_done, cck) reach the control tile over NRC relay stations (~2.25 mm: NRC 5 '
-                      'for <= 500 um; RTL default 4 = ~560 um)',
+                      'csu / dsu (c_cmd / c_done, cck) reach the control tile over NRC 5 relay stations (~2.25 mm, <= 500 um '
+                      'a station)',
                       'f_vm is the contract VM hub port (1,024 b); the slab RTL VM interface is 16 read + 16 write row '
                       'slots (rq / rs / wq): the VM hub binding is the generator\'s, its endpoint next to po0..po3',
                       'f_capture / t_hc are die hub pins of the contract that dsfd_sp_su_h does not bind (no capture / '
