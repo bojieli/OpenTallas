@@ -215,9 +215,11 @@ module dsfd_coll_ce #(
         wire [9:0] rr;
         ot_rst_relay #(.REGIONS(10), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rs[0]), .rst_n(rr));
 `ifdef OT_S81PH_MUT_RSTR
-        // bench mutant: lane 5's face region releases one cycle late (its rx drops the first flits / tx credits skew)
-        reg rl5; always @(posedge clk or negedge rs[0]) if (!rs[0]) rl5 <= 1'b0; else rl5 <= rr[5];
-        assign rst_ln = {rr[7:6], rl5, rr[4:0]};
+        // bench mutant: lane 5's face region is NOT on its own relay copy: it re-asserts for one cycle 1,400 cycles after
+        // release (mid-traffic; first send ~1,111), so the gate proves each lane region's reset reaches only that lane
+        // and that a region reset during traffic is observable (a late release before traffic is not: PASS, dropped)
+        reg [11:0] mc; always @(posedge clk or negedge rr[9]) if (!rr[9]) mc <= 0; else if (mc != 12'hfff) mc <= mc + 1'b1;
+        assign rst_ln = {rr[7:6], rr[5] && (mc != 12'd1400), rr[4:0]};
 `else
         assign rst_ln = rr[7:0];
 `endif
