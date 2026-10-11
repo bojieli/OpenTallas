@@ -120,7 +120,11 @@ module ot_ha2_truecredit_receiver_s #(
    end
   always @(posedge clk)send_data[i*W+:W]<=raw_q[W-1:0];
  end
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin quiet<=1'b1;fault<=1'b0;end
+ // [link] cplr hm0 TT -161.42 = rst_n pin -> quiet (async set: recovery over the die): quiet / fault reset from a
+ // registered reset beside the pin (async assert, sync release one edge later, as the lanes' rst_l)
+ (* keep = 1 *) reg rst_t;
+ always @(posedge clk or negedge rst_n) if(!rst_n) rst_t<=1'b0; else rst_t<=1'b1;
+ always @(posedge clk or negedge rst_t)
+  if(!rst_t)begin quiet<=1'b1;fault<=1'b0;end
   else begin quiet<=&idle;fault<=|bads;end
 endmodule
