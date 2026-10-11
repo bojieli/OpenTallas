@@ -138,6 +138,9 @@ SOURCES = [2, 8, 14, 20]
 SELB = 512 * 2048
 SM_LB = 136                          # SM weight line bytes (DS 1,088-b line); groups of Gk K-elements = 8 lines
 SM_GK = {"bf16": 512, "fp8": 1024, "fp4": 2048}
+KBASE = 1 << 32                      # IKS (opt-in --iks): per-source index-key regions, 1 MiB aligned, stack bits [36:35] 0
+KALIGN = 1 << 20
+IKS = [False]                        # --iks: IDX.INDEX carries operand I = the layer's key region (IKS issuer, main 4d2d33086)
 
 
 class Manifest:
@@ -164,6 +167,13 @@ class Manifest:
         self.cur = base
         self.ent.append(e)
         self.cur += -(-size // 4096) * 4096 + 4096
+        return e
+
+    def place_at(self, key, base, rows, cols, fmt):
+        """a fixed-base extent (IKS key regions: row-aligned, independent of placement order)"""
+        rb = -(-int(cols * ESZ[fmt]) // 32) * 32
+        e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=1, estride=rb * rows)
+        self.ent.append(e)
         return e
 
     def find(self, addr):
@@ -194,6 +204,18 @@ class Lower:
         """Keys < n owned by `rank` (blocks of KEY_BLOCK round robin over TP ranks): count, owned blocks."""
         blocks = np.arange(rank, -(-n // W.KEY_BLOCK), TP)
         return int(np.minimum(n - blocks * W.KEY_BLOCK, W.KEY_BLOCK).clip(0).sum()), len(blocks)
+
+    def ik_region(self, src):
+        """the index-key store of KV source `src`: legacy = a manifest extent; IKS = KBASE + slot x 1 MiB-aligned span"""
+        key = f"IKSTORE{src}"
+        if not IKS[0]:
+            return self.W(key, CK_CAP[1], 128, "fp8", n_experts=1)
+        if key not in self.ent:
+            span = -(-CK_CAP[1] * 128 // KALIGN) * KALIGN
+            base = KBASE + SOURCES.index(src) * span
+            assert base % KALIGN == 0 and (base >> 35) == 0 and base + span <= CKBASE
+            self.ent[key] = self.man.place_at(key, base, CK_CAP[1], 128, "fp8")
+        return self.ent[key]
 
     def W(self, key, rows, cols, fmt, n_experts=1, lines=False, col_off=0):
         if key not in self.ent:
@@ -439,6 +461,10 @@ class Lower:
                         desc["C"] = MDesc(space="VM", fmt="U32", base=lay.vm["CANDM"], n=min(m.cand_k, nb20), m=2,
                                           stride=2048)
                         rd.append("CANDM")
+                    if IKS[0]:                     # operand I: the source's key region (row-aligned base, n keys)
+                        ikr = self.ik_region(m.kv_of[L])
+                        desc["I"] = MDesc(space="HBM", fmt="FP32", base=ikr["base"],
+                                          n=max(self.owned_keys(rank, n)[0], 1))   # this die's own key rows
                     add(Rec("IDX", "INDEX", param=kk | (cand_en << 12) | (keep_en << 13), imm_a=n, imm_b=L,
                             desc=desc, tag="index frame (G18)", family="indexer"), rd, wr)
                     self.frame_rec, self.frame_n = b.recs[-1], n
@@ -698,7 +724,7 @@ class Lower:
         add(Rec("FUSED", "QDQ_FP4_E4M3", param=16, desc=dict(A=V("LR", 512), O=V("CK", 512)), tag="cmp.ckv_qdq",
                 family="compressor"), ["LR"], ["CK"], run)
         # index key: the DS indexer engine's key store (engine-internal, G16), row = group
-        ik = self.W(f"IKSTORE{L}", CK_CAP[1], 128, "fp8", n_experts=1)
+        ik = self.ik_region(L)
         add(Rec("DMA", "STORE", desc=dict(A=V("IK", 128), O=MDesc(space="HBM", fmt="FP32",
                                                                    base=ik["base"] + grp * ik["rowbytes"], n=128)),
                 tag="cmp.store_IK", family="compressor"), ["IK"], ["kvstore"], run)
@@ -1036,7 +1062,7 @@ def ds_units(m, man, golib):
 
     def dma_store(M, r, L):
         o = r.desc["O"]
-        if o.space == "HBM" and o.base >= WBASE:          # index key -> the DS indexer engine's key store (G16)
+        if o.space == "HBM" and (o.base >= WBASE or (IKS[0] and KBASE <= o.base < CKBASE)):   # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
                 golib.st.ik[int(e["key"][7:])][grp] = M.read(r.desc["A"], die, L)
@@ -1222,12 +1248,14 @@ def main():
     ap.add_argument("--export-layers", default="0", help="layers (and 'head') whose images --export-images writes")
     ap.add_argument("--no-fuse", action="store_true", help="one SU template a record (the pre-fusion stream)")
     ap.add_argument("--rg-sw", action="store_true", help="software ROW_GATHER (G21/G24 idiom) instead of the G25 record")
+    ap.add_argument("--iks", action="store_true", help="IKS: row-aligned key regions + IDX.INDEX operand I (opt-in)")
     ap.add_argument("--schedule", choices=("opt", "none"), default="opt",
                     help="opt: per-layer CP-aware order (schedule_layer); none: lowering order")
     ap.add_argument("--export-images", type=Path,
                     help="DIR: per layer, every rank's HGI-1 image + its dispatch trace (RTL sequencer check, CF-PROG DS)")
     a = ap.parse_args()
     RG_SW[0] = a.rg_sw
+    IKS[0] = a.iks
     prog_dump = dict(rank=0, layers=[], ops={})
     feats = getattr(np, "_core", np.core)._multiarray_umath.__cpu_features__
     if feats.get("AVX512F"):
