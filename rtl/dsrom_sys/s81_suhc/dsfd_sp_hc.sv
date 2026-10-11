@@ -12,8 +12,12 @@ module dsfd_sp_hc #(
     parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, WIN = 2, WOUT = 2, ML = 5, AL = 4,
     parameter integer OQ = 512, MUT = 0, AMUT = 0,
     parameter integer HIER = 0,                          // 0: flat engine ot_s81_hc_core; 1: hierarchical slab = pin tile
-    parameter integer NCOL = 3, GS = 8, S_RT = 4         //    ot_s81_hc_cpin + combine ot_s81_hc_comb + column roots
+    parameter integer NCOL = 3, GS = 8, S_RT = 4,        //    ot_s81_hc_cpin + combine ot_s81_hc_comb + column roots
                                                          //    ot_s81_hc_croot (chains 0 / 2) + 3 chains of ot_s81_hc_ctile
+    parameter integer HALF = 0,                          // HIER structural variant: half-octet sub-tiles (2 an octet)
+    parameter integer CSPLIT = 0,                        // HIER structural variant: column roots split N-S (ot_s81_hc_crooty
+                                                         //    pins / y FIFO + ot_s81_hc_crootr chain root)
+    parameter integer RLY = HALF ? 2 : 1                 // sub-tile relays a hop
 ) (
     input  wire                cck, crs,                 // controller clock / reset (dsfd_sp_ctrl domain)
     input  wire                sk, srs,                  // slab clock / reset
@@ -118,7 +122,8 @@ module dsfd_sp_hc #(
     wire [NE0*32-1:0] w_ex;
     wire [NE2*32-1:0] e_ex;
     ot_s81_hc_comb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
-                     .MUT(MUT), .AMUT(AMUT)) u_cb (
+                     .MUT(MUT), .AMUT(AMUT), .HALF(HALF), .RLY(RLY), .RF(CSPLIT ? 4 : 1),
+                     .DW(CSPLIT ? 6 : 5)) u_cb (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
         .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
         .n_flt(n_flt), .n_online(n_online), .n_fcode(n_fcode), .n_yacc(n_yacc), .n_y(n_y), .n_ypop(n_ypop),
@@ -126,6 +131,8 @@ module dsfd_sp_hc #(
         .e_fv(e_fv), .e_fd(e_fd), .e_w(e_w), .e_rv(e_rv), .e_rd(e_rd), .e_ex(e_ex), .e_flt(e_flt),
         .ch_rst(ch_rst[1]), .ch_fv(ch_fv[FVW +: FVW]), .ch_fd(ch_fd[FDW +: FDW]), .ch_rv(ch_rv[RVW +: RVW]),
         .ch_rd(ch_rd[RDW +: RDW]));
+    genvar c, p;
+    if (!CSPLIT) begin : g_r1
     ot_s81_hc_croot #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .AL(AL), .C(0)) u_rw (
         .sk(sk), .srs(srs), .y_s(y_d[B0 * GS * 32 +: L0 * GS * 32]), .wq_v(wq_v[3:0]), .wq_row(wq_row[0 +: 56]),
         .wq_mask(wq_mask[0 +: 64]), .wq_d(wq_d[0 +: 2048]), .yacc(yacc_w), .s_fv(w_fv), .s_fd(w_fd), .s_w(w_w),
@@ -136,20 +143,58 @@ module dsfd_sp_hc #(
         .wq_mask(wq_mask[64 +: 64]), .wq_d(wq_d[2048 +: 2048]), .yacc(yacc_e), .s_fv(e_fv), .s_fd(e_fd), .s_w(e_w),
         .s_rv(e_rv), .s_rd(e_rd), .s_ex(e_ex), .s_flt(e_flt), .ch_rst(ch_rst[2]), .ch_fv(ch_fv[2 * FVW +: FVW]),
         .ch_fd(ch_fd[2 * FDW +: FDW]), .ch_rv(ch_rv[2 * RVW +: RVW]), .ch_rd(ch_rd[2 * RDW +: RDW]));
-    genvar c, p;
+    end else begin : g_r2
+    begin : g_s0
+        localparam integer CC = 0;
+        localparam integer LCC = (CC == 0) ? L0 : L2;
+        localparam integer BCC = (CC == 0) ? B0 : B2;
+        wire             p_req, p_flt;
+        wire [LCC*GS*32-1:0] p_y;
+        wire [4*WSL-1:0] p_w;
+        ot_s81_hc_crooty #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(CC)) u_y (
+            .sk(sk), .srs(srs), .y_s(y_d[BCC * GS * 32 +: LCC * GS * 32]), .wq_v(wq_v[0 +: 4]),
+            .wq_row(wq_row[0 +: 56]), .wq_mask(wq_mask[0 +: 64]), .wq_d(wq_d[0 +: 2048]),
+            .yacc(yacc_w), .p_req(p_req), .p_w(p_w), .p_y(p_y), .p_flt(p_flt));
+        ot_s81_hc_crootr #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .AL(AL), .C(CC)) u_r (
+            .sk(sk), .srs(srs), .p_req(p_req), .p_y(p_y), .p_w(p_w), .p_flt(p_flt),
+            .s_fv(w_fv), .s_fd(w_fd), .s_w(w_w),
+            .s_rv(w_rv), .s_rd(w_rd), .s_ex(w_ex),
+            .s_flt(w_flt), .ch_rst(ch_rst[CC]), .ch_fv(ch_fv[CC * FVW +: FVW]),
+            .ch_fd(ch_fd[CC * FDW +: FDW]), .ch_rv(ch_rv[CC * RVW +: RVW]), .ch_rd(ch_rd[CC * RDW +: RDW]));
+    end
+    begin : g_s1
+        localparam integer CC = 2;
+        localparam integer LCC = (CC == 0) ? L0 : L2;
+        localparam integer BCC = (CC == 0) ? B0 : B2;
+        wire             p_req, p_flt;
+        wire [LCC*GS*32-1:0] p_y;
+        wire [4*WSL-1:0] p_w;
+        ot_s81_hc_crooty #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(CC)) u_y (
+            .sk(sk), .srs(srs), .y_s(y_d[BCC * GS * 32 +: LCC * GS * 32]), .wq_v(wq_v[4 +: 4]),
+            .wq_row(wq_row[56 +: 56]), .wq_mask(wq_mask[64 +: 64]), .wq_d(wq_d[2048 +: 2048]),
+            .yacc(yacc_e), .p_req(p_req), .p_w(p_w), .p_y(p_y), .p_flt(p_flt));
+        ot_s81_hc_crootr #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .AL(AL), .C(CC)) u_r (
+            .sk(sk), .srs(srs), .p_req(p_req), .p_y(p_y), .p_w(p_w), .p_flt(p_flt),
+            .s_fv(e_fv), .s_fd(e_fd), .s_w(e_w),
+            .s_rv(e_rv), .s_rd(e_rd), .s_ex(e_ex),
+            .s_flt(e_flt), .ch_rst(ch_rst[CC]), .ch_fv(ch_fv[CC * FVW +: FVW]),
+            .ch_fd(ch_fd[CC * FDW +: FDW]), .ch_rv(ch_rv[CC * RVW +: RVW]), .ch_rd(ch_rd[CC * RDW +: RDW]));
+    end
+    end
     for (c = 0; c < NCOL; c = c + 1) begin : g_c
-        localparam integer LC = (c == 0) ? L0 : (c == 1) ? L1 : L2;
-        localparam integer BC = (c == 0) ? B0 : (c == 1) ? B1 : B2;
+        localparam integer LC = ((c == 0) ? L0 : (c == 1) ? L1 : L2) * (HALF ? 2 : 1);   // sub-tiles of the chain
+        localparam integer BC = ((c == 0) ? B0 : (c == 1) ? B1 : B2) * (HALF ? 2 : 1);
         if (LC > 0) begin : g_live
             wire [FVW-1:0] fvo [0:LC-1];
             wire [FDW-1:0] fdo [0:LC-1];
             wire [RVW-1:0] rvo [0:LC-1];
             wire [RDW-1:0] rdo [0:LC-1];
             wire           rso [0:LC-1];
+            wire [127:0]   cyo [0:LC-1];
             for (p = 0; p < LC; p = p + 1) begin : g_p
                 localparam [7:0] TID = BC + p;
                 ot_s81_hc_ctile #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
-                                  .ML(ML), .AL(AL)) u_t (
+                                  .ML(ML), .AL(AL), .HALF(HALF), .RLY(RLY)) u_t (
                     .clk(sk), .rst_in(p == 0 ? ch_rst[c] : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
                     .last(p == LC - 1),
                     .fv_in(p == 0 ? ch_fv[c * FVW +: FVW] : fvo[p > 0 ? p - 1 : 0]),
@@ -157,7 +202,8 @@ module dsfd_sp_hc #(
                     .fv_out(fvo[p]), .fd_out(fdo[p]),
                     .rv_in(p == LC - 1 ? {RVW{1'b0}} : rvo[p < LC - 1 ? p + 1 : 0]),
                     .rd_in(p == LC - 1 ? {RDW{1'b0}} : rdo[p < LC - 1 ? p + 1 : 0]),
-                    .rv_out(rvo[p]), .rd_out(rdo[p]));
+                    .rv_out(rvo[p]), .rd_out(rdo[p]),
+                    .cy_out(cyo[p]), .cy_in(p == 0 ? 128'd0 : cyo[p > 0 ? p - 1 : 0]));
             end
             assign ch_rv[c * RVW +: RVW] = rvo[0];
             assign ch_rd[c * RDW +: RDW] = rdo[0];

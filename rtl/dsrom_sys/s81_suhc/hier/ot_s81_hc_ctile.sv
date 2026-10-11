@@ -18,11 +18,18 @@
 // tile's pieces in the merge register and leaves the N face through a relay register (3 registers a hop).  The far tile
 // of the chain (strap `last`) ORIGINATES the return slots: per norm vector a partial packet (each tile shifts it up one
 // 128-b slot and inserts its 4 bank partials) and the y rows (S_RT a cycle), and the h rows of an H_STORE.
+// HALF = 1 (structural variant): every octet is two half-octet sub-tiles (GT = GS / 2 = 4 groups: 16 hc_post + 16
+// norm lanes each), N-S neighbours in the chain (tid = 2 x octet + h).  An octet's 8-lane chunk chain runs across the
+// seam in the golden order: the near half (h 0) sums lanes 0..3 sequentially and sends the running sum south (send +
+// capture + RLY registers = exactly one forward hop, so it meets the far half's lane-4 add); the far half (h 1)
+// continues with lanes 4..7 and owns the octet's slot in the partial packet (the near half passes it through).
+// RLY: mid-tile relay registers on each bus (a hop is 2 + RLY registers each way).
 // Reset: rst_in is relayed (two flops, no reset) to this tile's logic and to rst_out; datapath registers have no reset.
 // Straps: tid = s, last = (s is the chain's far tile).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_ctile #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, WIN = 2, WOUT = 2, ML = 5, AL = 4
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, WIN = 2, WOUT = 2, ML = 5, AL = 4,
+    parameter integer HALF = 0, RLY = 1
 ) (
     input  wire                       clk,
     input  wire                       rst_in,
@@ -36,19 +43,23 @@ module ot_s81_hc_ctile #(
     input  wire [S_RT+3:0]            rv_in,
     input  wire [RDW-1:0]             rd_in,
     output reg  [S_RT+3:0]            rv_out,
-    output reg  [RDW-1:0]             rd_out
+    output reg  [RDW-1:0]             rd_out,
+    // HALF: an octet's chunk chain carry, near half -> far half (4 banks x 32 b)
+    output reg  [127:0]               cy_out,
+    input  wire [127:0]               cy_in
 );
-    localparam integer NS   = NG / GS;
-    localparam integer NP   = (NS + NCOL - 1) / NCOL;
+    localparam integer NS   = NG / GS;                // octets
+    localparam integer NP   = (NS + NCOL - 1) / NCOL; // octet slots a chain (the partial packet)
     localparam integer YW   = NP * GS * 32;
+    localparam integer GT   = HALF ? GS / 2 : GS;     // groups of this sub-tile
     localparam integer FDD  = (S_RD * 512 > YW) ? S_RD * 512 : YW;
     localparam integer N    = 4 * NG;
     localparam integer NR   = D / NG;
     localparam integer NV   = D / N;
     localparam integer PPR  = NG / 8;
-    localparam integer RWT  = GS * 64;
-    localparam integer NT   = 4 * GS;
-    localparam integer LTB  = $clog2(GS / 8);
+    localparam integer RWT  = GT * 64;
+    localparam integer NT   = 4 * GT;
+    localparam integer LTB  = HALF ? 0 : $clog2(GS / 8);
     localparam integer HROWS = NR * NG / 8;
     localparam integer YROWS = N / 32;
     localparam integer LM = ML, LA = AL;
@@ -63,6 +74,7 @@ module ot_s81_hc_ctile #(
 `ifndef SYNTHESIS
     initial begin
         if (GS < 8 || (GS & (GS - 1)) != 0 || NG % GS != 0) $fatal(1, "ot_s81_hc_ctile: GS a power of two >= 8 dividing NG");
+        if (HALF && GS != 8) $fatal(1, "ot_s81_hc_ctile: HALF splits an octet (GS 8)");
         if (NP * 128 > S_RT * 512) $fatal(1, "ot_s81_hc_ctile: the partial packet must fit the return data field");
         if (D % N != 0) $fatal(1, "ot_s81_hc_ctile: D a multiple of 4 NG");
     end
@@ -79,15 +91,19 @@ module ot_s81_hc_ctile #(
     assign rst_out = rr[1];
     reg [S_RD+4:0] fv, fvm;
     reg [FDW-1:0]  fd, fdm;
+    wire [S_RD+4:0] fvm_d;
+    wire [FDW-1:0]  fdm_d;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fv <= 0; fvm <= 0; fv_out <= 0; end
-        else begin fv <= fv_in; fvm <= fv; fv_out <= fvm; end
+        else begin fv <= fv_in; fvm <= fv; fv_out <= fvm_d; end
     always @(posedge clk) begin
         fd <= fd_in;
         fdm <= fd;
-        if (fv[S_RD] && NP > 1) fdm[O_D +: YW] <= fd[O_D +: YW] >> (GS * 32);     // y beat: next tile's slice to 0
-        fd_out <= fdm;
+        if (fv[S_RD] && (NP > 1 || HALF)) fdm[O_D +: YW] <= fd[O_D +: YW] >> (GT * 32);   // y beat: next tile's slice to 0
+        fd_out <= fdm_d;
     end
+    ot_hdc_delay #(.W(S_RD + 5), .D(RLY - 1), .RESET(1)) u_fvr (.clk(clk), .rst_n(rst_n), .d(fvm), .q(fvm_d));
+    ot_hdc_delay #(.W(FDW), .D(RLY - 1)) u_fdr (.clk(clk), .rst_n(rst_n), .d(fdm), .q(fdm_d));
 
     wire [S_RD-1:0] rd_v = fv[S_RD-1:0];
     wire pb_v = fv[S_RD], ng_v = fv[S_RD+1], nv_v = fv[S_RD+2], r_v = fv[S_RD+3], hs_v = fv[S_RD+4];
@@ -115,14 +131,15 @@ module ot_s81_hc_ctile #(
                 c = fd[O_RC + 16 * s +: 16];
                 if (rd_k == 2'd0) begin
                     rb = c / PPR; g0 = 8 * (c % PPR);
-                    if (g0 / GS == tid)
-                        hb[(rb % 4) * 2 * NV + rd_s * NV + rb / 4][64 * (g0 % GS) +: 512] <= fd[O_D + 512 * s +: 512];
+                    for (k = 0; k < 8; k = k + 1)                         // the row's 8 groups
+                        if ((g0 + k) / GT == tid)
+                            hb[(rb % 4) * 2 * NV + rd_s * NV + rb / 4][64 * ((g0 + k) % GT) +: 64] <= fd[O_D + 512 * s + 64 * k +: 64];
                 end else if (rd_k == 2'd1) begin
                     l0 = (16 * c) % N;
                     for (k = 0; k < 16; k = k + 1) begin
                         g = (l0 + k) % NG;
-                        if (g / GS == tid)
-                            gtab[rd_g * NV + (16 * c) / N][32 * (((l0 + k) / NG) * GS + g % GS) +: 32] <= fd[O_D + 512 * s + 32 * k +: 32];
+                        if (g / GT == tid)
+                            gtab[rd_g * NV + (16 * c) / N][32 * (((l0 + k) / NG) * GT + g % GT) +: 32] <= fd[O_D + 512 * s + 32 * k +: 32];
                     end
                 end else if (rd_k == 2'd2) begin
                     if (c == 0) cf_comb[rd_s] <= fd[O_D + 512 * s +: 512];
@@ -134,15 +151,15 @@ module ot_s81_hc_ctile #(
             end
     end
 
-    // ------------------------------------------------------------------ hc_post (GS groups), write back in place
+    // ------------------------------------------------------------------ hc_post (GT groups), write back in place
     reg               hp_go, hp_in_v;
-    reg [GS*4*32-1:0] hp_r;
-    reg [GS*32-1:0]   hp_y;
+    reg [GT*4*32-1:0] hp_r;
+    reg [GT*32-1:0]   hp_y;
     reg [16*32-1:0]   hp_comb;
     reg [4*32-1:0]    hp_post;
     wire              hp_out_v, hp_fault;
-    wire [GS*4*32-1:0] hp_out;
-    ot_dsrom_su_hcpost #(.NG(GS), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL)) u_post (
+    wire [GT*4*32-1:0] hp_out;
+    ot_dsrom_su_hcpost #(.NG(GT), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL)) u_post (
         .clk(clk), .rst_n(rst_n), .go(hp_go), .comb(hp_comb), .post(hp_post), .in_v(hp_in_v), .in_r(hp_r), .in_y(hp_y),
         .out_v(hp_out_v), .out_d(hp_out), .fault(hp_fault));
     reg        p_wb, p_hs;
@@ -151,18 +168,18 @@ module ot_s81_hc_ctile #(
     always @(posedge clk) begin
         hp_go <= pb_v && pb_go;
         if (pb_v) begin
-            for (q = 0; q < 4 * GS; q = q + 1) hp_r[32 * q +: 32] <= {hb[(pb_b % 4) * 2 * NV + pb_hs * NV + pb_b / 4][16 * q +: 16], 16'h0000};
-            hp_y <= fd[O_D +: GS * 32]; hp_comb <= cf_comb[pb_cs]; hp_post <= cf_post[pb_cs];
+            for (q = 0; q < 4 * GT; q = q + 1) hp_r[32 * q +: 32] <= {hb[(pb_b % 4) * 2 * NV + pb_hs * NV + pb_b / 4][16 * q +: 16], 16'h0000};
+            hp_y <= fd[O_D +: GT * 32]; hp_comb <= cf_comb[pb_cs]; hp_post <= cf_post[pb_cs];
             if (pb_go) begin p_wb <= pb_wb; p_hs <= pb_hs; p_ob <= 16'd0; end
         end
         if (hp_out_v) begin
             if (p_wb)
-                for (q = 0; q < 4 * GS; q = q + 1) hb[(p_ob % 4) * 2 * NV + p_hs * NV + p_ob / 4][16 * q +: 16] <= hp_out[32 * q + 16 +: 16];
+                for (q = 0; q < 4 * GT; q = q + 1) hb[(p_ob % 4) * 2 * NV + p_hs * NV + p_ob / 4][16 * q +: 16] <= hp_out[32 * q + 16 +: 16];
             p_ob <= p_ob + 16'd1;
         end
     end
     reg nz;                                              // hc_post output not BF16 (lower half nonzero)
-    always @(*) begin nz = 1'b0; for (q = 0; q < 4 * GS; q = q + 1) nz = nz | (|hp_out[32 * q +: 16]); end
+    always @(*) begin nz = 1'b0; for (q = 0; q < 4 * GT; q = q + 1) nz = nz | (|hp_out[32 * q +: 16]); end
 
     // ------------------------------------------------------------------ norm
     reg       n_hs, n_cs;
@@ -175,9 +192,9 @@ module ot_s81_hc_ctile #(
     always @(posedge clk) if (nv_v) begin
         mx_i <= nv_i;
         for (j_ = 0; j_ < 4; j_ = j_ + 1)
-            for (gg = 0; gg < GS; gg = gg + 1)
+            for (gg = 0; gg < GT; gg = gg + 1)
                 for (k = 0; k < 4; k = k + 1)
-                    mx_x[(k * NT + j_ * GS + gg) * 32 +: 32] <= {hb[j_ * 2 * NV + n_hs * NV + nv_i][16 * (4 * gg + k) +: 16], 16'h0000};
+                    mx_x[(k * NT + j_ * GT + gg) * 32 +: 32] <= {hb[j_ * 2 * NV + n_hs * NV + nv_i][16 * (4 * gg + k) +: 16], 16'h0000};
     end
     wire [DM:0] vm;
     ot_hdc_vline #(.D(DM)) u_vm (.clk(clk), .rst_n(rst_n), .v(mx_v), .vd(vm));
@@ -210,8 +227,9 @@ module ot_s81_hc_ctile #(
 
     wire [NT-1:0]      lf;
     wire [NT*32-1:0]   sq, yb;
-    wire [NT/8*32-1:0] cs;
-    wire [NT/8-1:0]    cf;
+    localparam integer NC = HALF ? 4 : NT / 8;        // chunk sums of the tile (HALF: one a bank, the far half's real)
+    wire [NC*32-1:0]   cs;
+    wire [NC-1:0]      cf;
     genvar l, c, kk;
     generate
         for (l = 0; l < NT; l = l + 1) begin : g_lane
@@ -235,6 +253,7 @@ module ot_s81_hc_ctile #(
             assign yb[l * 32 +: 32] = yr;
             assign lf[l] = |f;
         end
+        if (!HALF) begin : g_full
         for (c = 0; c < NT / 8; c = c + 1) begin : g_chunk
             wire [31:0] acc [0:7];
             wire [7:0] f;
@@ -248,9 +267,41 @@ module ot_s81_hc_ctile #(
             assign cs[c * 32 +: 32] = acc[7];
             assign cf[c] = |f;
         end
+        always @(posedge clk) cy_out <= 128'd0;
+        end else begin : g_half
+        // one master for both halves (the half is the strap tid[0]): 4 adders a bank, run as chain positions 1..3 (near
+        // half: acc = lane 0, + lanes 1, 2, 3; the running sum leaves south as cy_out) or 4..7 (far half: the near
+        // half's running sum, one forward hop late = exactly this tile's lane-4 time, + lanes 0..3 = chunk lanes 4..7)
+        wire         far = tid[0];
+        wire [127:0] cyd;
+        reg  [127:0] cyq;
+        always @(posedge clk) cyq <= cy_in;
+        ot_hdc_delay #(.W(128), .D(RLY)) u_cy (.clk(clk), .rst_n(rst_n), .d(cyq), .q(cyd));
+        for (c = 0; c < 4; c = c + 1) begin : g_chunk
+            wire [31:0] acc [0:4];
+            wire [4:0]  f;
+            assign f[0] = 1'b0;
+            assign acc[0] = far ? cyd[32 * c +: 32] : sq[(4 * c) * 32 +: 32];
+            for (kk = 0; kk < 4; kk = kk + 1) begin : g_j
+                // near: adder kk = position kk + 1, operand lane kk + 1, fires at LM + LA kk
+                // far:  adder kk = position kk + 4, operand lane kk,     fires at LM + LA (kk + 3)
+                wire [31:0] dn, df;
+                if (kk < 3) begin : g_n
+                    ot_hdc_delay #(.W(32), .D(LA * kk)) u_dn (.clk(clk), .rst_n(rst_n), .d(sq[(4 * c + kk + 1) * 32 +: 32]), .q(dn));
+                end else begin : g_nn
+                    assign dn = 32'd0;
+                end
+                ot_hdc_delay #(.W(32), .D(LA * (kk + 3))) u_df (.clk(clk), .rst_n(rst_n), .d(sq[(4 * c + kk) * 32 +: 32]), .q(df));
+                wire fire = far ? vs[LM + LA * (kk + 3)] : (kk < 3 ? vs[LM + LA * kk] : 1'b0);
+                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rst_n, fire, acc[kk], far ? df : dn, acc[kk + 1], f[kk + 1]);
+            end
+            assign cs[c * 32 +: 32] = acc[4];
+            assign cf[c] = |f;
+            always @(posedge clk) cy_out[32 * c +: 32] <= acc[3];
+        end
+        end
     endgenerate
     // per-bank subtree over the tile's GS/8 chunks of the bank (chunks of bank j: j*GS/8 .. j*GS/8 + GS/8 - 1)
-    localparam integer NC = NT / 8;
     wire [31:0] tv [0:LTB][0:NC-1];
     wire [LTB:0] tf;
     generate
@@ -319,6 +370,8 @@ module ot_s81_hc_ctile #(
     // ------------------------------------------------------------------ return: pin flops, merge, relay
     reg [S_RT+3:0] rvq, rvm;
     reg [RDW-1:0]  rdq, rdm;
+    wire [S_RT+3:0] rvm_d;
+    wire [RDW-1:0]  rdm_d;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin rvq <= 0; rvm <= 0; rv_out <= 0; end
         else begin
@@ -328,7 +381,7 @@ module ot_s81_hc_ctile #(
             rvm[S_RT+1]   <= (last && hp_out_v) | (!last && rvq[S_RT+1]);
             rvm[S_RT+2]   <= rvq[S_RT+2] | hp_fault | (|lf) | (|cf) | (|tf);
             rvm[S_RT+3]   <= rvq[S_RT+3] | (hp_out_v & nz);
-            rv_out <= rvm;
+            rv_out <= rvm_d;
         end
     always @(posedge clk) begin : mrg
         reg [RDW-1:0] o;
@@ -337,7 +390,7 @@ module ot_s81_hc_ctile #(
         vv = last ? g_v : rvq[S_RT-1:0];
         if (last) begin o[P_T +: S_RT] = g_t; o[P_I +: 8 * S_RT] = g_i; o[P_Q +: 16 * S_RT] = g_q; o[P_PI +: 8] = po_i; end
         // partial packet: shift up one slot, insert mine at slot 0 (tile p of the chain ends at slot p)
-        if (last ? po_v : rvq[S_RT]) begin
+        if ((last ? po_v : rvq[S_RT]) && (!HALF || tid[0])) begin                       // HALF: the far half owns the slot
             if (NP > 1) o[P_D + 128 +: (NP > 1 ? NP - 1 : 1) * 128] = o[P_D +: (NP > 1 ? NP - 1 : 1) * 128];
             o[P_D +: 128] = psb[o[P_PI +: 8]];
         end
@@ -349,16 +402,19 @@ module ot_s81_hc_ctile #(
                 if (!o[P_T + s]) begin                                       // y row qx: lanes 32 qx .. 32 qx + 31
                     for (k = 0; k < 32; k = k + 1) begin
                         L = 32 * qx + k; g = L % NG;
-                        if (g / GS == tid) o[P_D + 512 * s + 16 * k +: 16] = ybuf[vi][16 * ((L / NG) * GS + g % GS) +: 16];
+                        if (g / GT == tid) o[P_D + 512 * s + 16 * k +: 16] = ybuf[vi][16 * ((L / NG) * GT + g % GT) +: 16];
                     end
                 end else begin                                               // h row qx: 8 groups of resident row b
                     g0 = (8 * qx) % NG; b = (8 * qx) / NG;
-                    if (g0 / GS == tid)
-                        o[P_D + 512 * s +: 512] = hb[(b % 4) * 2 * NV + hs_sl * NV + b / 4][64 * (g0 % GS) +: 512];
+                    for (k = 0; k < 8; k = k + 1)
+                        if ((g0 + k) / GT == tid)
+                            o[P_D + 512 * s + 64 * k +: 64] = hb[(b % 4) * 2 * NV + hs_sl * NV + b / 4][64 * ((g0 + k) % GT) +: 64];
                 end
             end
         rdq <= rd_in;
         rdm <= o;
-        rd_out <= rdm;
+        rd_out <= rdm_d;
     end
+    ot_hdc_delay #(.W(S_RT + 4), .D(RLY - 1), .RESET(1)) u_rvr (.clk(clk), .rst_n(rst_n), .d(rvm), .q(rvm_d));
+    ot_hdc_delay #(.W(RDW), .D(RLY - 1)) u_rdr (.clk(clk), .rst_n(rst_n), .d(rdm), .q(rdm_d));
 endmodule
