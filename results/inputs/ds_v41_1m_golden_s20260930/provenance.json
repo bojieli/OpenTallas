@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.inputs.ds_v41_1m_golden.v1",
+ "status": "golden_input_restored",
+ "claim_boundary": "Recovered copy of the CPU golden input data (no new computation). Every file is byte-identical to pins already committed; no RTL verdict.",
+ "contents": {
+  "die/ctx1048576_s20260930_L20_r0": "TP-4 rank-0 ISA executor dump of the DeepSeek-V4.1 1M-context reference token (seed 20260930), layer 20: vm_pc000..143.hex snapshots, expect_vm, crom, hbank, hbm_s0..3, vm_init, prog, weight_ops.json, manifest.json (tools/v41_die_l0_images.py --context 1048576 --seed 20260930 --layer 20 --snapshots)",
+  "die/ctx1048576_s20260930_L20/r0": "runtime-wrapper rank-0 set (weights.json, prog.hex, cfg.txt, crom.hex, field_phases.json)",
+  "ref/ctx1048576_seed20260930": "40-layer golden shards ctx1048576_LNN.json/.npz + head/cand (tools/rtl_v41_fullshape_layer_campaign.py --steps golden --contexts 1048576 --layers 0-39 --seed 20260930)"
+ },
+ "archive": {"file": "golden.tar.xz", "sha256": "407e262cfebb30d010b038f7e962d06e86d2c5605a8f341d9470cdc0ed8dec79", "manifest": "MANIFEST.sha256", "manifest_sha256": "cc3d29b72064bf7735b5f138e63f11a4ea3f3d496f73e994332b121c6dac6641", "files": 240, "unpacked_mb": 393},
+ "verification": {
+  "die_r0_images": "crom/expect_vm/hbank/hbm_s0..3/hbm_s0_with_current_row/vm_init/weight_ops.json equal results/rtl/w17_die_l20_images.json rank 0; prog.hex 77e7a3b1... and L20/r0 weights.json f313f7e1... equal results/rtl/w17_existing_images_scale_pin_audit_20261001.json; vm_pc143.hex == expect_vm.hex (40a81675...)",
+  "weight_ops_sha256": "295d4a093ae744cb9538c9db48ba0687b915bf4cfe58b4cc8e6774d0a9ed08de (= golden.gold_weight_ops_sha256 of the committed field records)",
+  "ref": "83 files identical on 3 independent copies (ot-epyc1tb + ot-epyc3 hbm-sim/ref, ot-epyc2 hgi-e2e/data/ref); all 40 layers' h_in/pre_in and h_out/pre_out digests equal results/rtl/w17_v41_1m_reference_token.json; the 7 pinned layers' json/npz sha256 equal results/rtl/dsrom_field_qelem_20261005/field_base.json golden.ref_sha256"
+ },
+ "recovered_from": "ot-epyc1tb:/srv/opentallas-scratch/claude/exactness/fixtures/s81_token_l20/fix/die (tar copy of localhost /home/ubuntu/w17work made 2026-10-08, original mtimes 2026-09-30 23:27) + ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-sim/ref",
+ "loss": "localhost /home/ubuntu/w17work removed 2026-10-09 07:24 PT by the ad-hoc cleanup /home/ubuntu/.claude/jobs/724d7460/tmp/old_clean.sh (find /home/ubuntu -maxdepth 1 -name 'w1[0-9]*' -mmin +1440 -exec rm -rf; top-level mtime only), log /home/ubuntu/wt-cleanup-20261009/old_clean.log line 10",
+ "durable_locations": {
+  "ot-epyc1tb": "/srv/opentallas-scratch/claude/exactness-fixtures/goldens/ds_v41_1m_s20260930 (.keep; dir48.sh name-exempt)",
+  "localhost": "/home/ubuntu/exactness-fixtures/goldens/ds_v41_1m_s20260930 (.keep)",
+  "compat": "/home/ubuntu/w17work -> the golden dir (symlink) on both hosts, so tools/dsrom_1m_field.py defaults resolve unchanged"
+ },
+ "restore": "mkdir -p DIR && xz -dc golden.tar.xz | tar -xf - -C DIR && (cd DIR && sha256sum -c MANIFEST.sha256) && ln -sfn DIR /home/ubuntu/w17work"
+}
