@@ -222,6 +222,19 @@ def compose(core: str, c: dict) -> str:
           "    always @(posedge clk or negedge rst_n) if (!rst_n) es_pend <= 1'b0; else es_pend <= embed_scale_re;",
           "    always @(posedge clk) if (es_pend) es_hold <= embed_scale_q;",
           "    assign c_escale = es_hold;"]
+    if VAR.get("trace"):
+        # --trace: per-event cycle log of the all-reduce loop and the controllers' issues (sizing only; no state)
+        L += ["    reg [31:0] tr_cyc = 0; always @(posedge clk) tr_cyc <= tr_cyc + 1;",
+              "    always @(posedge clk) if (rst_n) begin",
+              "        if (u_seq_su.u_ctrl.su_go) $display(\"TR %0d %m SU pc=%0d\", tr_cyc, u_seq_su.u_ctrl.pc);",
+              "        if (u_ctlm.u_ctrl_me.me_go) $display(\"TR %0d %m ME pc=%0d\", tr_cyc, u_ctlm.u_ctrl_me.pc);",
+              "        if (u_seq_su.u_seq.st == 3'd3) $display(\"TR %0d %m SEG_RUN seg=%0d\", tr_cyc, u_seq_su.u_seq.seg);",
+              "        if (u_seq_su.u_seq.st == 3'd4 && u_seq_su.u_seq.core_done) $display(\"TR %0d %m SEG_DONE kind=%0d nw=%0d\", tr_cyc, u_seq_su.u_seq.kind, u_seq_su.u_seq.nw);",
+              "        if (u_seq_su.u_seq.c_fire && u_seq_su.u_seq.tx_k == 0) $display(\"TR %0d %m AR_TX0\", tr_cyc);",
+              "        if (u_seq_su.u_seq.c_fire && u_seq_su.u_seq.tx_k + 1 == u_seq_su.u_seq.nw) $display(\"TR %0d %m AR_TXN\", tr_cyc);",
+              "        if (u_seq_su.u_seq.r_valid && u_seq_su.u_seq.rx_k == 0) $display(\"TR %0d %m AR_RX0\", tr_cyc);",
+              "        if (u_seq_su.u_seq.r_valid && u_seq_su.u_seq.r_last) $display(\"TR %0d %m AR_RXN\", tr_cyc);",
+              "    end"]
 
     def stn(name, w, d, clk, src, dst, rst=""):
         L.append(f"    ot_hdc_delay #(.W({w}), .D({d}){rst}) u_{name} (.clk({clk}), .rst_n(rst_n), .d({src}), .q({dst}));")
@@ -407,8 +420,9 @@ def main():
     ap.add_argument("--ctlm", choices=sorted(CTLMS), default="ctlm")
     ap.add_argument("--seq", choices=sorted(SEQS), default="boundary")
     ap.add_argument("--tws", type=int, default=None, help="die TWS (tree-word stages; vehicle default 38)")
+    ap.add_argument("--trace", action="store_true", help="print TR lines: SU / ME issues and the all-reduce loop events")
     a = ap.parse_args()
-    VAR.update(ctlm=a.ctlm, seq=a.seq)
+    VAR.update(ctlm=a.ctlm, seq=a.seq, trace=a.trace)
     for k in CFG:
         if getattr(a, k) is not None:
             CFG[k] = getattr(a, k)
