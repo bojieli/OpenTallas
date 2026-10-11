@@ -13,12 +13,12 @@
 "hb_coll"
 ],
 "ports": {
-"por_stream": {
+"pll_stream": {
 "bits": 1,
 "layer": "M5",
 "pins": [
 [
-"por_stream[0]",
+"pll_stream[0]",
 "M5",
 27.072,
 1403.784,
@@ -36,12 +36,12 @@
 ],
 "direction": "output"
 },
-"pll_stream": {
+"por_stream": {
 "bits": 1,
 "layer": "M5",
 "pins": [
 [
-"pll_stream[0]",
+"por_stream[0]",
 "M5",
 53.568,
 1403.784,
@@ -232745,7 +232745,7 @@
 },
 "generator": {
 "file": "tools/hbm_accel_die_fp.py",
-"sha256": "2954921302414a7a76b64aa213380b34e589e08dc036fe5b2a285e2753584c12",
+"sha256": "6122237e9e4434b1e0a44b717209886238024626375e0457603a66a0f1a954e8",
 "round": "r25"
 }
 }

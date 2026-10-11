@@ -587,9 +587,9 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # hgi_vm) so those buses are face to face; router moves north of barrier
              spine_order=('hgi_idx', 'idx_sel', 'mtp', 'loader', 'coll', 'hgi_vm', 'cmdproc', 'quant', 'barrier', 'router',
                           'vm8', 'su_red', 'su_full'),
-             hgi_rgx=True, del_obase=True,
+             hgi_rgx=True, del_obase=True, hgi_vm_h=1296.0,
              lane_chain_nets=(('rdn', 8259), ('wdn', 67), ('rup', 515), ('wup', 8963)),
-             dense_face_masters=('hfd_loader', 'hfd_coll', 'hfd_hgi_vm'),
+             dense_face_masters=('hfd_loader', 'hfd_coll', 'hfd_hgi_vm', 'hfd_su'),
              spine_abut=(('hgi_idx', 'idx_sel'), ('coll', 'hgi_vm'), ('hgi_vm', 'cmdproc'), ('cmdproc', 'quant')),
              spine_cross=(('loader', 'coll'), ('vm8', 'su_red')), spine_cross_um=302.4,
              lane_groups=dict(W=('hb_hgi_vm', 'hb_su_SW', 'hb_sfu_SW', 'hb_hc_SW'), E=('hb_hgi_vm', 'hb_cmdproc', 'hb_quant')),
@@ -625,6 +625,8 @@ def build_r25gq(variant):
     g0 = base['geo']
     W, H = g0['W'], g0['H']
     B = {it.name: it for it in base['insts']}
+    if V.get('hgi_vm_h') and 'hb_hgi_vm' in B:      # R25GQ 10-10: a taller VM slot for its 19-20 k pins a face
+        B['hb_hgi_vm'].h = V['hgi_vm_h']
     cx = g0['cx']
     insts, regions, notes, rmap = [], [], [], {}
 
@@ -3837,6 +3839,14 @@ def masters(m, k=1):
                 # 0.048 track was 20.8 b/um (fp gate 12): every other track over the whole face (10.4 b/um)
                 pitch = max(pitch, 2) if 2 * sum(n) * p + (len(n) - 1) * gap <= room else pitch
             need = [x * p * pitch for x in n]
+            if mname in (m['variant'].get('dense_face_masters') or ()) and pitch >= 1 and \
+                    2 * sum(n) * p + (len(n) - 1) * gap > room:
+                # R25GQ 10-10: a dense face that cannot hold every other track on one layer interleaves two layers
+                # (M5 + M7 on N / S, M4 + M6 on E / W), every other track on each: <= 10.4 b/um a layer
+                l2_ = 'M7' if layer == 'M5' else 'M6'
+                peff = 1.0 / (1.0 / (2 * Q.TRK[layer][1] * k) + 1.0 / (2 * Q.TRK[l2_][1] * k))
+                layer, pitch = f'{layer}+{l2_}', 1
+                need = [x * peff for x in n]
             if sum(need) + gap * (len(n) - 1) > room + 1e-6:
                 raise ValueError(f'{mname} face {face}: {sum(need):.1f} um of pins on {room:.1f} um')
             pos, starts = a0, []
@@ -3873,7 +3883,7 @@ def masters(m, k=1):
             ck_centre(M[name], M[name].ports)
     if m['variant'].get('hub_pin_window') and k == 1:    # r23: hub quarter ports in a <= 500 um window per face
         for nm_ in ('hfd_su', 'hfd_sfu', 'hfd_hc'):
-            if nm_ in M:
+            if nm_ in M and nm_ not in (m['variant'].get('dense_face_masters') or ()):   # R25GQ: dense faces spread
                 hub_pin_window(M[nm_], m['variant']['hub_pin_window'], p4=bool(m['variant'].get('hub_pin_p4')))
     if m['variant'].get('hub_ports_file') and k == 1:   # r25: hub quarter E/W faces frozen at the r24p plan (the
         #   cmdproc split shifts the peer-projected SU E window by ~2.6 um; the queued r24p quarter routes stay valid)

@@ -16103,11 +16103,11 @@ place_pin -pin_name {llk_S4[1121]} -layer M4 -location {1399.5600 710.6520} -pin
 place_pin -pin_name {pll_hbm[0]} -layer M4 -location {1399.5600 908.5080} -pin_size {0.1920 0.0240}
 place_pin -pin_name {pll_link[0]} -layer M4 -location {1399.5600 842.5560} -pin_size {0.1920 0.0240}
 place_pin -pin_name {pll_serial[0]} -layer M5 -location {80.1240 1403.8800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {pll_stream[0]} -layer M5 -location {53.5800 1403.8800} -pin_size {0.0240 0.1920}
+place_pin -pin_name {pll_stream[0]} -layer M5 -location {27.0840 1403.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {por_hbm[0]} -layer M4 -location {1399.5600 974.4120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {por_link[0]} -layer M4 -location {1399.5600 776.6040} -pin_size {0.1920 0.0240}
 place_pin -pin_name {por_serial[0]} -layer M5 -location {106.6680 1403.8800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {por_stream[0]} -layer M5 -location {27.0840 1403.8800} -pin_size {0.0240 0.1920}
+place_pin -pin_name {por_stream[0]} -layer M5 -location {53.5800 1403.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_cmdproc[0]} -layer M5 -location {397.1640 1403.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_cmdproc[1]} -layer M5 -location {397.2600 1403.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_cmdproc[2]} -layer M5 -location {397.3560 1403.8800} -pin_size {0.0240 0.1920}
