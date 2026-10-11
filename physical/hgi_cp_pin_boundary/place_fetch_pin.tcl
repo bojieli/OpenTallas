@@ -47,6 +47,14 @@ proc ::ot_flop_port {inst} {
 }
 # first slot from c (dir 1: rightwards, the slot is [c, c + w2]; dir -1: leftwards, the slot is [c - w2, c]) in row y
 # clear of every cell placed before the pin placement (tap / boundary cells, FIRM flops)
+# [cp] 10-10 (686b964d4 hm10 DPL-0006 site aligned check failed (312), N-face d_desc flops): a skip lands on a
+# macro HALO edge (6 um is not a whole number of 0.054-um sites): snap the slot back onto the rows' site grid
+proc ::ot_snap {c dir sw} {
+    if {![info exists ::ot_sx0]} { return $c }
+    set o [expr {($c - $::ot_sx0) % $sw}]
+    if {$o == 0} { return $c }
+    return [expr {$dir > 0 ? $c + ($sw - $o) : $c - $o}]
+}
 proc ::ot_skip {c w2 y dir sw} {
     if {![dict exists $::ot_occ $y]} { return $c }
     set ivs [dict get $::ot_occ $y]
@@ -56,9 +64,9 @@ proc ::ot_skip {c w2 y dir sw} {
         foreach iv $ivs {
             lassign $iv a b
             if {$dir > 0} {
-                if {$c < $b + $sw && $c + $w2 > $a - $sw} { set c [expr {$b + $sw}]; set moved 1 }
+                if {$c < $b + $sw && $c + $w2 > $a - $sw} { set c [::ot_snap [expr {$b + $sw}] 1 $sw]; set moved 1 }
             } else {
-                if {$c - $w2 < $b + $sw && $c > $a - $sw} { set c [expr {$a - $sw}]; set moved 1 }
+                if {$c - $w2 < $b + $sw && $c > $a - $sw} { set c [::ot_snap [expr {$a - $sw}] -1 $sw]; set moved 1 }
             }
         }
     }
@@ -90,6 +98,7 @@ proc ::ot_pin_place_auto {re depth} {
         if {[$rb yMax] > $cyh} { set cyh [$rb yMax] }
     }
     set cxl [expr {$rxl + $capw}]; set cxh [expr {$rxh - $capw}]
+    set ::ot_sx0 $rxl
     set ::ot_occ [dict create]
     foreach i [$::ot_blk getInsts] {
         if {![$i isPlaced]} { continue }
