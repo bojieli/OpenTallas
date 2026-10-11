@@ -1,0 +1,24 @@
+{
+ "what": "textbook-audit rebuild gates (hbm-fq/dma 2026-10-11): ot_hgi_dma_mover (pipelined reader, KVW split out), ot_hgi_dma_kvw (own element), ot_hgi_dma_front XP=1",
+ "branch": "claude/el1011-hbm-fq-dma",
+ "mover_bef6da400": {
+  "kport VR2=0 KVW=0": "MOVER-KPORT PASS 13 cases",
+  "kport VR2=1 KVW=0": "MOVER-KPORT PASS 13 cases",
+  "kport MUT=4": "FAIL 50203 errors",
+  "record bench": "HGI_MOVER PASS",
+  "MUT_DROP": "FAIL 317",
+  "MUT_RNE": "FAIL 246",
+  "MUT_FENCE": "FAIL 328",
+  "kport KVW=1 KVB": "PASS 15 cases, first 55 cyc, 4-stack 53.1 cyc/rec, 1-stack 89.4",
+  "KVW MUT5": "FAIL"
+ },
+ "kvw_cbf118fb5": {
+  "kport KVW=1 KVB KVB_MAX=630": "PASS 15 cases, first record 56 cyc, 4-stack 54.1 cyc/rec posted (price 60), 1-stack 96.7 (svc write credits)",
+  "MUT5": "FAIL 221xx errors"
+ },
+ "front_bd89eceb8": {
+  "tb_hgi_dma_front XP=1": "PASS 2,921,984 B in 5,319 cycles (549.3 B/cycle; XP=0 540.5)",
+  "MUT1/2/3/4/5 (XP=1)": "all FAIL"
+ },
+ "host": "ot-epyc3, Verilator 5.050, ot-heavy"
+}
