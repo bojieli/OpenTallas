@@ -109,15 +109,20 @@ endmodule
 module ot_hgi_vm_die #(
     parameter integer NC = 9,
     parameter integer LQ = 32,             // every lane client's credits (power of two; >= the longest chain's round trip)
-    parameter integer K = 3
+    parameter integer K = 3,
+    parameter integer AP = 1               // the HC weight aperture route (ot_hgi_vm_unit AP): DMA lanes 281 b, ap_* to hfd_hc
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
     input  wire [NC*338-1:0]        cq,
     output wire [NC*274-1:0]        cr,
     output wire [18:0]              status,
-    input  wire [32*280-1:0]        wq,
+    input  wire [32*(280+AP)-1:0]   wq,         // the DMA front's wide write lanes ({v, ap, sector 15, data, mask} with AP)
     output wire [31:0]              wq_done,
+    output wire [31:0]              wq_rdy,     // AP: per-lane stop to the DMA front (aperture queue near full)
+    output wire [32*278-1:0]        ap_q,       // AP: to hfd_hc's weight aperture lanes (d's HC HSRC = 1)
+    input  wire [31:0]              ap_cr,
+    input  wire [31:0]              ap_done,
     input  wire [K+32*16-1:0]       lgw_r_up,   // {req K, lanes 32 x 16}
     output wire [K+32+32*257-1:0]   lgw_r_dn,   // {gnt K, credits 32, responses 32 x 257}
     input  wire [K+32*280-1:0]      lgw_w_up,
@@ -133,8 +138,8 @@ module ot_hgi_vm_die #(
 );
     wire [96*16-1:0] rq; wire [95:0] rq_cr; wire [96*257-1:0] rr;
     wire [96*280-1:0] w2q; wire [95:0] w2_cr, w2_done;
-    ot_hgi_vm_unit #(.NC(NC), .WP(32), .WDIRECT(1), .RP(96), .W2(96), .LQ(LQ)) u_vmu (.clk(clk), .rst_n(rst_n), .cq(cq), .cr(cr),
-        .status(status), .wq(wq), .wq_done(wq_done), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q), .w2q_cr(w2_cr), .w2q_done(w2_done));
+    ot_hgi_vm_unit #(.NC(NC), .WP(32), .WDIRECT(1), .RP(96), .W2(96), .LQ(LQ), .AP(AP)) u_vmu (.clk(clk), .rst_n(rst_n), .cq(cq),
+        .cr(cr), .status(status), .wq(wq), .wq_done(wq_done), .wq_rdy(wq_rdy), .ap_q(ap_q), .ap_cr(ap_cr), .ap_done(ap_done), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q), .w2q_cr(w2_cr), .w2q_done(w2_done));
     // read chains
     ot_hgi_vm_lanehead #(.K(K), .REQW(16), .RSPW(257)) u_hrw (.clk(clk), .rst_n(rst_n), .c_req(lgw_r_up[32*16 +: K]), .c_q(lgw_r_up[0 +: 32*16]),
         .c_gnt(lgw_r_dn[32+32*257 +: K]), .c_cr(lgw_r_dn[32*257 +: 32]), .c_rsp(lgw_r_dn[0 +: 32*257]),

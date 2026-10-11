@@ -15,6 +15,17 @@ module ot_hgi_vm_unit #(
     parameter integer W2 = 0,            // hgi-unitrate: second wide WRITE group (lane b <-> bank b): the SU / SFU drain
     parameter integer LQ = 8,            // per-lane request queue depth = the credits the lane's client holds (power of 2)
     parameter integer QMACRO = 0,        // the write-lane queues' SRAM (ot_fifo_sram_fwft MACRO: 0 = 64x512 macros)
+    parameter integer AP = 0,            // hgi-1010 b: 1 = the HC weight APERTURE route (lead decision (b), d's HC HSRC = 1):
+                                         //   the wide write lane grows an ap bit, {v, ap, sector 15, wdata 256, mask 8}
+                                         //   (281 b; the DMA front sets ap for VM words >= 2^18, sector = (word - 2^18) / 8).
+                                         //   An ap sector does NOT write VM: it queues (APD a lane, SRAM) and leaves on ap_q
+                                         //   lane b {v, sector 13, wdata 256, mask 8} (278 b) to the HC unit, one in flight
+                                         //   a lane (ap_cr returns it), ap_done = written; wq_done counts both kinds.  The
+                                         //   front stops a lane on wq_rdy[b] = 0 (the ap queue is near full).  An ap sector
+                                         //   past the two slots (sector >= 8,192) is dropped and faults (status proto).
+    parameter integer APD = 16,          // ap queue depth a lane (power of two); wq_rdy is low while the queue holds >= APD - APS
+    parameter integer APS = 8,           // slack: sectors the front may still send after wq_rdy falls (its X1 -> lane
+                                         //   pipeline + the two pin flops)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -22,9 +33,14 @@ module ot_hgi_vm_unit #(
     input  wire [NC*338-1:0] cq,         // per client {v, req 337}
     output reg  [NC*274-1:0] cr,         // per client {v, rsp 273}
     output reg  [18:0]       status,
-    // wide write port, per lane {v, sector 15, wdata 256, word mask 8} (280 b), pin-flopped here; done per lane
-    input  wire [WP*280-1:0] wq,
+    // wide write port, per lane {v, sector 15, wdata 256, word mask 8} (280 b; AP: {v, ap, sector 15, ...} 281 b),
+    // pin-flopped here; done per lane (a written VM sector or a written aperture sector)
+    input  wire [WP*(280+AP)-1:0] wq,
     output wire [WP-1:0]     wq_done,
+    output wire [WP-1:0]     wq_rdy,     // AP: the lane may send (ap queue below APD - APS); 1 without AP
+    output wire [WP*278-1:0] ap_q,       // AP: to the HC unit's aperture lanes
+    input  wire [WP-1:0]     ap_cr,
+    input  wire [WP-1:0]     ap_done,
     // hgi-unitrate wide lanes (credit links; every port pin-flopped here):
     //   rq lane b {v, sector 15} (sector bank must be b); the client holds LQ credits a lane, rq_cr[b] returns one when
     //   the queued request reaches its bank; rr lane b {v, data 256}: the sector, in request order, 5 edges after it
@@ -32,7 +48,7 @@ module ot_hgi_vm_unit #(
     //   w2q lane b {v, sector 15, wdata 256, word mask 8} (wq layout); w2q_cr[b] = the write reached its bank (a
     //   credit back), w2q_done[b] = the write is in the macro (the client retires after its last).
     input  wire [(RP>0?RP:1)*16-1:0]  rq,
-    output reg  [(RP>0?RP:1)-1:0]     rq_cr,
+    output wire [(RP>0?RP:1)-1:0]     rq_cr,
     output reg  [(RP>0?RP:1)*257-1:0] rr,
     input  wire [(W2>0?W2:1)*280-1:0] w2q,
     output reg  [(W2>0?W2:1)-1:0]     w2q_cr,
@@ -46,28 +62,27 @@ module ot_hgi_vm_unit #(
     end endgenerate
     // ---- wide read lanes: pin flop -> LQ-deep request queue -> core lane (accepted when no client reads the bank)
     reg [RPL*16-1:0] rq_r; always @(posedge clk or negedge rst_n) if (!rst_n) rq_r <= '0; else rq_r <= rq;
-    reg [14:0] rqq [0:RPL-1][0:LQ-1]; reg [$clog2(LQ):0] rqn [0:RPL-1]; reg [$clog2(LQ)-1:0] rqh [0:RPL-1], rqt [0:RPL-1];
-    reg [RPL-1:0] rl_v; reg [RPL*15-1:0] rl_sec; wire [RPL-1:0] rl_acc; wire [RPL*257-1:0] rl_rsp; wire rl_conflict;
-    reg rq_ovf;
-    always @* for (integer lb = 0; lb < RPL; lb = lb + 1) begin
-        rl_v[lb] = (RP > 0) && rqn[lb] != 0; rl_sec[lb*15 +: 15] = rqq[lb][rqh[lb]];
-    end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
-            rq_cr <= '0; rr <= '0; rq_ovf <= 1'b0;
-            for (integer lb = 0; lb < RPL; lb = lb + 1) begin rqn[lb] <= 0; rqh[lb] <= 0; rqt[lb] <= 0; end
-        end else begin
-            rr <= rl_rsp;
-            for (integer lb = 0; lb < RPL; lb = lb + 1) begin : rl
-                reg push, pop;
-                push = (RP > 0) && rq_r[lb*16 + 15]; pop = rl_acc[lb];
-                if (push && rqn[lb] == LQ && !pop) rq_ovf <= 1'b1;           // the client exceeded its credits
-                else if (push) begin rqq[lb][rqt[lb]] <= rq_r[lb*16 +: 15]; rqt[lb] <= rqt[lb] + 1'b1; end
-                if (pop) rqh[lb] <= rqh[lb] + 1'b1;
-                rqn[lb] <= rqn[lb] + (push && !(rqn[lb] == LQ && !pop)) - pop;
-                rq_cr[lb] <= pop;
+    // hardcore-1010 feasibility (a3e0d3e86, folded): each read lane owns its queue in its own generate block (one write
+    // port a lane array), not one 2-D array written from a for-loop (a 32-96 write-port memory at elaboration)
+    wire [RPL-1:0] rl_v; wire [RPL*15-1:0] rl_sec; wire [RPL-1:0] rl_acc; wire [RPL*257-1:0] rl_rsp; wire rl_conflict;
+    wire [RPL-1:0] rq_ovf_l; wire rq_ovf = |rq_ovf_l;
+    for (genvar lg = 0; lg < RPL; lg = lg + 1) begin : g_rq
+        reg [14:0] q [0:LQ-1]; reg [$clog2(LQ):0] n; reg [$clog2(LQ)-1:0] h, t; reg ovf, cr_q;
+        wire push = (RP > 0) && rq_r[lg*16 + 15], pop = rl_acc[lg], full = n == LQ;
+        assign rl_v[lg] = (RP > 0) && n != 0; assign rl_sec[lg*15 +: 15] = q[(MUT == 9) ? t : h]; assign rq_cr[lg] = cr_q;
+        always @(posedge clk) if (push && !(full && !pop)) q[t] <= rq_r[lg*16 +: 15];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin n <= 0; h <= 0; t <= 0; ovf <= 1'b0; cr_q <= 1'b0; end
+            else begin
+                if (push && full && !pop) ovf <= 1'b1;                        // the client exceeded its credits
+                else if (push) t <= t + 1'b1;
+                if (pop) h <= h + 1'b1;
+                n <= n + (push && !(full && !pop)) - pop;
+                cr_q <= pop;
             end
-        end
+        assign rq_ovf_l[lg] = ovf;
+    end
+    always @(posedge clk or negedge rst_n) if (!rst_n) rr <= '0; else rr <= rl_rsp;
     // ---- second wide write group: pin flop -> LQ-deep queue -> core lane (after the DMA group); done = credit
     reg [W2L*280-1:0] w2q_r; always @(posedge clk or negedge rst_n) if (!rst_n) w2q_r <= '0; else w2q_r <= w2q;
     // per-lane write queues in SRAM (feasibility review: no LQ x 279-b flop arrays behind a wide select): one
@@ -88,19 +103,53 @@ module ot_hgi_vm_unit #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin w2q_done <= '0; w2q_cr <= '0; w2_ovf <= 1'b0; end
         else begin w2q_done <= w2_done; w2q_cr <= w2_acc; if (|w2_qovf) w2_ovf <= 1'b1; end
-    reg [WP*280-1:0] wq_r;
-    always @(posedge clk or negedge rst_n) if (!rst_n) wq_r <= {WP*280{1'b0}}; else wq_r <= wq;
+    localparam integer WQW = 280 + AP;
+    reg [WP*WQW-1:0] wq_r;
+    always @(posedge clk or negedge rst_n) if (!rst_n) wq_r <= {WP*WQW{1'b0}}; else wq_r <= wq;
     wire [WP-1:0] wl_v; wire [WP*15-1:0] wl_sec; wire [WP*256-1:0] wl_d; wire [WP*8-1:0] wl_m; wire wl_conflict;
+    wire [WP-1:0] wl_done; wire [WP-1:0] ap_flt;
     genvar gp;
     for (gp = 0; gp < WP; gp = gp + 1) begin : g_wl
-        assign wl_m[gp*8 +: 8] = wq_r[gp*280 +: 8]; assign wl_d[gp*256 +: 256] = wq_r[gp*280 + 8 +: 256];
-        assign wl_sec[gp*15 +: 15] = wq_r[gp*280 + 264 +: 15]; assign wl_v[gp] = wq_r[gp*280 + 279];
+        wire v  = wq_r[gp*WQW + WQW - 1];
+        wire ap = (AP != 0) && wq_r[gp*WQW + 279];
+        assign wl_m[gp*8 +: 8] = wq_r[gp*WQW +: 8]; assign wl_d[gp*256 +: 256] = wq_r[gp*WQW + 8 +: 256];
+        assign wl_sec[gp*15 +: 15] = wq_r[gp*WQW + 264 +: 15];
+        assign wl_v[gp] = v && (!ap || MUT == 10);              // MUT 10: an aperture sector also writes VM (must FAIL)
+        if (AP != 0) begin : g_ap
+            // the aperture queue: SRAM FWFT, APD deep; one sector in flight to the HC lane
+            wire push = v && ap && wq_r[gp*WQW + 264 + 13 +: 2] == 2'd0;
+            wire hv, ovf; wire [276:0] head; reg infl, rdy_q, rf; reg [1:0] dpend; reg [$clog2(APD):0] n;
+            reg cr_q, dn_q; reg [277:0] apo;
+            wire [1:0] tot = {1'b0, wl_done[gp]} + {1'b0, dn_q} + dpend;   // done events this edge (+ carried)
+            wire pop = hv && !infl;
+            ot_fifo_sram_fwft #(.W(277), .DEPTH(APD), .MACRO(QMACRO)) u_aq (.clk(clk), .rst_n(rst_n), .push(push),
+                .wdata({wq_r[gp*WQW + 264 +: 13], wq_r[gp*WQW +: 264]}), .pop(pop), .hv(hv), .head(head), .ovf(ovf));
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin infl <= 1'b0; n <= '0; rdy_q <= 1'b1; rf <= 1'b0; cr_q <= 1'b0; dn_q <= 1'b0;
+                                  dpend <= 2'd0; apo <= '0; end
+                else begin
+                    cr_q <= ap_cr[gp]; dn_q <= ap_done[gp];             // pin flops
+                    apo <= {pop, head};
+                    infl <= pop ? 1'b1 : (cr_q ? 1'b0 : infl);
+                    n <= n + push - pop;
+                    rdy_q <= (MUT == 11) || ({1'b0, n} + push < (APD - APS));
+                    if (ovf || (v && ap && !push)) rf <= 1'b1;           // queue overflow / sector past the slots
+                    // wq_done: a VM write and an aperture write may finish on the same edge: one pulse, carry the other
+                    dpend <= tot - {1'b0, tot != 2'd0};
+                end
+            assign wq_rdy[gp] = rdy_q; assign wq_done[gp] = tot != 2'd0; assign ap_q[gp*278 +: 278] = apo;
+            assign ap_flt[gp] = rf;
+        end else begin : g_noap
+            assign wq_rdy[gp] = 1'b1; assign wq_done[gp] = wl_done[gp]; assign ap_q[gp*278 +: 278] = '0;
+            assign ap_flt[gp] = 1'b0;
+        end
     end
     // per-client station: a 4-entry FIFO with one explicit write enable per entry (hgi-1010/c: the for-loop over clients
     // writing a 2-D array elaborated as a 24-deep procmux chain from cq to sq; rtl_boundary refused in->reg 25 levels)
     wire [NC-1:0]     h_v;
     wire [NC*337-1:0] h_q;
     wire [NC-1:0]     ovf;                 // a push into a full station that does not pop this cycle
+    wire [NC-1:0]     pk_rng;              // a packet address past the VM
     wire [NC-1:0]     req_r, rsp_v;
     wire [NC*273-1:0] rsp;
     wire [15:0] ce; wire ue, mask_fault;
@@ -108,28 +157,34 @@ module ot_hgi_vm_unit #(
     ot_hgi_vm_core #(.NC(NC), .OUT(4), .WP(WP), .WDIRECT(WDIRECT), .RP(RP), .W2(W2), .MUT(MUT)) u_core (.clk(clk), .rst_n(rst_n), .req_v(h_v), .req_r(req_r), .req(h_q),
         .rsp_v(rsp_v), .rsp_r({NC{1'b1}}), .rsp(rsp), .ce(ce), .ue(ue), .mask_fault(mask_fault),
         .inj_v(1'b0), .inj_bank(5'd0), .inj_word(3'd0), .inj_mask(39'd0),
-        .wl_v(wl_v), .wl_sec(wl_sec), .wl_d(wl_d), .wl_m(wl_m), .wl_done(wq_done), .wl_conflict(wl_conflict),
+        .wl_v(wl_v), .wl_sec(wl_sec), .wl_d(wl_d), .wl_m(wl_m), .wl_done(wl_done), .wl_conflict(wl_conflict),
         .rl_v(rl_v), .rl_sec(rl_sec), .rl_acc(rl_acc), .rl_rsp(rl_rsp), .rl_conflict(rl_conflict),
         .w2_v(w2_v), .w2_sec(w2_sec), .w2_d(w2_d), .w2_m(w2_m), .w2_acc(w2_acc), .w2_done(w2_done));
     genvar gc;
     for (gc = 0; gc < NC; gc = gc + 1) begin : g_st
-        reg [336:0] e0, e1, e2, e3;
+        reg [336:0] e0, e1, e2, e3; reg rflt;
         reg [1:0] sh, stl; reg [2:0] sn;
         wire push = cq[gc*338 + 337];
+        // hgi-1010 b: a packet address past the VM (byte address [31:20] != 0, e.g. the aperture's words >= 2^18) faults
+        // (status proto) and its write mask is cleared (nothing written; a read returns an aliased sector, the CP halts)
+        wire rng = (MUT != 12) && (cq[gc*338 + 324 +: 12] != 12'd0);
+        wire [336:0] cqe = rng ? {cq[gc*338 + 48 +: 289], 32'd0, cq[gc*338 +: 16]} : cq[gc*338 +: 337];
         wire pop  = h_v[gc] && req_r[gc];
         assign ovf[gc] = push && sn == 3'd4 && !pop;
         wire wr = push && !ovf[gc];
         assign h_v[gc] = sn != 3'd0;
         assign h_q[gc*337 +: 337] = (sh == 2'd0) ? e0 : (sh == 2'd1) ? e1 : (sh == 2'd2) ? e2 : e3;
+        assign pk_rng[gc] = rflt;
         always @(posedge clk) begin
-            if (wr && stl == 2'd0) e0 <= cq[gc*338 +: 337];
-            if (wr && stl == 2'd1) e1 <= cq[gc*338 +: 337];
-            if (wr && stl == 2'd2) e2 <= cq[gc*338 +: 337];
-            if (wr && stl == 2'd3) e3 <= cq[gc*338 +: 337];
+            if (wr && stl == 2'd0) e0 <= cqe;
+            if (wr && stl == 2'd1) e1 <= cqe;
+            if (wr && stl == 2'd2) e2 <= cqe;
+            if (wr && stl == 2'd3) e3 <= cqe;
         end
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin sh <= 2'd0; stl <= 2'd0; sn <= 3'd0; cr[gc*274 +: 274] <= 274'd0; end
+            if (!rst_n) begin sh <= 2'd0; stl <= 2'd0; sn <= 3'd0; cr[gc*274 +: 274] <= 274'd0; rflt <= 1'b0; end
             else begin
+                if (push && rng) rflt <= 1'b1;
                 if (wr) stl <= stl + 2'd1;
                 if (pop) sh <= sh + 2'd1;
                 sn <= sn + {2'd0, wr} - {2'd0, pop};
@@ -140,7 +195,7 @@ module ot_hgi_vm_unit #(
         if (!rst_n) begin proto <= 1'b0; status <= 19'd0; end
         else begin
             if (|ovf) proto <= 1'b1;
-            status <= {proto | wl_conflict | rl_conflict | rq_ovf | w2_ovf, mask_fault, ue, ce};
+            status <= {proto | wl_conflict | rl_conflict | rq_ovf | w2_ovf | (|ap_flt) | (|pk_rng), mask_fault, ue, ce};
         end
 endmodule
 `default_nettype wire
