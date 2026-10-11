@@ -3624,7 +3624,11 @@ def buses_r8(m):
             ((('collective', 'host', 514, 't_host', 'f_collective'),
               ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
         if REV == 'r9':
-            _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb)
+            # mtp-wfc 2026-10-10 (ds-1010 finding): the WFC kit's VM / capture buses are 0.9 GHz serial-domain ports
+            # (dsfd_wfc_vmx slow side): their stations are clocked in serial_0p9 and spaced at the 0.9 GHz reach
+            ser_ = (WFC_KIT and 'wfc' in (a_, b_) and bool({a_, b_} & {'vm', 'capture'}))
+            _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom='serial_0p9' if ser_ else None,
+                           reach_um=SER_STAGE_UM if ser_ else None)
         else:
             bus(f'hb_{a_}_{b_}', 'hub', bits, [(hb[a_].name, pa), (hb[b_].name, pb)])
     # ---------------- PHY / controller / service
@@ -3758,6 +3762,8 @@ def wfc_kit_buses(role, host):
 
 MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab master dsfd_mtp_seq_rtt (RTT-sized grant
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
+SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) station spacing = LINK_STAGE_UM x (1111.1 - 261) /
+                                #   (833.3 - 261) on the SS wire model 261 ps + 1.135 ps/um (504 um at 833 ps; 749 um at 1,111 ps)
 WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
 WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
 WFC_VMX_UM = (248.4, 241.92)    #   dsfd_wfc_vmx contract outline (prd-c39e235bb-o292-r2 CLOSED)
@@ -4592,7 +4598,7 @@ def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
                                                   floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
 
 
-def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
+def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     """r9 (S81-RERUN): a hub slab-to-slab bus staged by common-clock stations (ot_fwd_link_stage clocked by the
     driver slab's domain clock, so no crossing and one cycle per station) every <= 430.56 um.  Spine-column slabs
     (VM, SU, gather, capture, collective) leave from their E face and HC slabs from their W face; the bus runs in its
@@ -4653,15 +4659,15 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         path = _dedup([(fx(A), ya), (vx, ya), (vx, yb), (fx(Bk), yb)])
     name = f'hb_{a_}_{b_}'
     L = _poly_len(path)
-    if L <= CC_REACH - 30.0:
+    if L <= (reach_um or CC_REACH) - 30.0:
         CH8.bus(name, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
         m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0)
         return
     sts = CH8.run(name, [bits], path, [cor['vch']] + [cor[k_] for k_ in ('collE', 'collW') if k_ in cor], path[0],
-                  reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)   # collE/W: --coll-split3 column remainder
+                  reach=reach_um or (CC_REACH if CC_REACH < LINK_STAGE_UM else None))   # collE/W: --coll-split3 column remainder
     prev = (A.name, pa)
     for k, (it, s_, hop) in enumerate(sts):
-        it.kind, it.domain = 'hstn', A.domain
+        it.kind, it.domain = 'hstn', dom or A.domain
         it.master = 'dsfd_hstn%s_%d' % ('h' if it.master.startswith('dsfd_stnh') else 'v', bits)
         CH8.bus(f'{name}_d{k}', 'hub', bits, [prev, (it.name, 'di')])
         prev = (it.name, 'dq')
