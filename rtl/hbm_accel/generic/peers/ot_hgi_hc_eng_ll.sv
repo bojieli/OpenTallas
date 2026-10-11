@@ -575,7 +575,10 @@ module ot_hgi_hc_ctl_ll #(
                     else if (!post && r_pend && cop != 3'd1) begin
                         cv <= 1'b1; cop <= 3'd5; cd <= {96'd0, r_hold}; r_pend <= 1'b0;
                     end
-                    if ((MUT == 4 ? 1'b1 : (ndone == nexp)) && fin_all && cop != 3'd1) st <= S_FIN;
+                    if (ndone == nexp && fin_all && cop != 3'd1) st <= S_FIN;
+                    // MUT 4 (must FAIL): retire as soon as the last command (GO / r) leaves the top, before any output
+                    // write has landed (the relay latency hides a lane-side-only mutant, so it is cut at the top)
+                    if (MUT == 4 && cv && (post ? cop == 3'd3 : cop == 3'd5)) st <= S_FIN;
                 end
                 S_FIN: begin
                     rg_req <= 1'b0; wg_req <= 1'b0; st <= S_IDLE;
