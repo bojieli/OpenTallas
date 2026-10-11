@@ -182,7 +182,7 @@ module ot_hgi_vm_tunit #(
                                    {4{c_wm[gc][3]}}, {4{c_wm[gc][2]}}, {4{c_wm[gc][1]}}, {4{c_wm[gc][0]}}});
     end
     wire [NB-1:0] wb_hit, wb_dup;                          // the wide lanes' bank hits, relayed from the faces (h3)
-    reg [NC-1:0] busy; reg [NC-1:0][2:0] ocnt; reg [NC-1:0] a1, a2, a3, a4;
+    reg [NC-1:0] busy; reg [NC*3-1:0] ocnt; reg [NC-1:0] a1, a2, a3, a4;
     reg [NC-1:0] gr_r [0:NB-1]; reg [NC-1:0] gr_w [0:NB-1];
     always @* begin
         for (integer ab = 0; ab < NB; ab = ab + 1) begin
@@ -200,12 +200,12 @@ module ot_hgi_vm_tunit #(
     always @(posedge clk or negedge rn[0])
         if (!rn[0]) begin
             busy <= '0; a1 <= '0; a2 <= '0; a3 <= '0; a4 <= '0; proto <= 1'b0; mfault <= 1'b0; wlc <= 1'b0;
-            for (integer c = 0; c < NC; c = c + 1) ocnt[c] <= 3'd0;
+            ocnt <= '0;
         end else begin
             a1 <= acc; a2 <= a1; a3 <= a2; a4 <= a3;
             for (integer c = 0; c < NC; c = c + 1) begin
-                ocnt[c] <= ocnt[c] + {2'd0, acc[c]} - {2'd0, a4[c]};
-                busy[c] <= (ocnt[c] + {2'd0, acc[c]} - {2'd0, a4[c]}) >= 3'(OUT);
+                ocnt[c*3 +: 3] <= ocnt[c*3 +: 3] + {2'd0, acc[c]} - {2'd0, a4[c]};
+                busy[c] <= (ocnt[c*3 +: 3] + {2'd0, acc[c]} - {2'd0, a4[c]}) >= 3'(OUT);
             end
             if (|ovf) proto <= 1'b1;
             if (|wb_dup) wlc <= 1'b1;
@@ -225,13 +225,14 @@ module ot_hgi_vm_tunit #(
             s0_g[ab*8 +: 8] <= {|gr_r[ab], oh2i(8'(gr_r[ab])), |gr_w[ab], oh2i(8'(gr_w[ab]))};
     // tag line: {v, we, tag} from the grant to the response register (9 stages)
     localparam integer TLN = 9;
-    reg [TLN-1:0][NC-1:0] tl_v, tl_we; reg [TLN-1:0][NC*16-1:0] tl_tag;
+    reg [NC-1:0] we_now; reg [NC*16-1:0] tag_now;
+    always @* for (integer c = 0; c < NC; c = c + 1) begin we_now[c] = c_we[c]; tag_now[c*16 +: 16] = h_q[c*337 +: 16]; end
+    reg [TLN*NC-1:0] tl_v, tl_we; reg [TLN*NC*16-1:0] tl_tag;
     always @(posedge clk or negedge rn[0])
-        if (!rn[0]) for (integer s = 0; s < TLN; s = s + 1) tl_v[s] <= '0;
-        else begin tl_v[0] <= acc; for (integer s = 1; s < TLN; s = s + 1) tl_v[s] <= tl_v[s-1]; end
+        if (!rn[0]) tl_v <= '0;
+        else tl_v <= {tl_v[(TLN-1)*NC-1:0], acc};
     always @(posedge clk) begin
-        for (integer c = 0; c < NC; c = c + 1) begin tl_we[0][c] <= c_we[c]; tl_tag[0][c*16 +: 16] <= h_q[c*337 +: 16]; end
-        for (integer s = 1; s < TLN; s = s + 1) begin tl_we[s] <= tl_we[s-1]; tl_tag[s] <= tl_tag[s-1]; end
+        tl_we <= {tl_we[(TLN-1)*NC-1:0], we_now}; tl_tag <= {tl_tag[(TLN-1)*NC*16-1:0], tag_now};
     end
 
     // ---------------------------------------------------------------- down tree: one kept relay copy per group
@@ -262,15 +263,14 @@ module ot_hgi_vm_tunit #(
         assign wb_hit[gl] = hh[2]; assign wb_dup[gl] = hd[2];
         assign wq_done[gl] = dn[DNN-1];
         // data line {hit, row 10, wdata 256, mask 8}; the last stage carries the encoded word
-        reg [WLN-2:0] wv; reg [WLN-2:0][273:0] wd;
+        reg [WLN-2:0] wv; reg [(WLN-1)*274-1:0] wd;
         reg w6h; reg [9:0] w6r; reg [311:0] w6e; reg [7:0] w6m;
         always @(posedge clk or negedge rn[RF])
             if (!rn[RF]) begin wv <= '0; w6h <= 1'b0; end
             else begin wv <= {wv[WLN-3:0], hit}; w6h <= wv[WLN-2]; end
         always @(posedge clk) begin
-            wd[0] <= {p0_d[264 + 5 +: 10], p0_d[8 +: 256], p0_d[7:0]};
-            for (integer s = 1; s < WLN - 1; s = s + 1) wd[s] <= wd[s-1];
-            w6r <= wd[WLN-2][273:264]; w6e <= enc8(wd[WLN-2][263:8]); w6m <= wd[WLN-2][7:0];
+            wd <= {wd[(WLN-2)*274-1:0], p0_d[264 + 5 +: 10], p0_d[8 +: 256], p0_d[7:0]};
+            w6r <= wd[(WLN-2)*274 + 264 +: 10]; w6e <= enc8(wd[(WLN-2)*274 + 8 +: 256]); w6m <= wd[(WLN-2)*274 +: 8];
         end
         assign w6_hit[gl] = w6h; assign w6_row[gl*10 +: 10] = w6r; assign w6_enc[gl*312 +: 312] = w6e; assign w6_wm[gl*8 +: 8] = w6m;
     end
@@ -335,7 +335,7 @@ module ot_hgi_vm_tunit #(
     end
 
     // ---------------------------------------------------------------- per-group per-client merge (hm) -> hub response
-    reg [2:0][NC*256-1:0] hm_d; reg [2:0][7:0] hm_ce; reg [2:0] hm_ue;
+    reg [3*NC*256-1:0] hm_d; reg [3*8-1:0] hm_ce; reg [2:0] hm_ue;
     always @(posedge clk) begin
         for (integer g = 0; g < 3; g = g + 1) begin : mg
             reg [NC*256-1:0] o; reg [7:0] s; reg e;
@@ -345,7 +345,7 @@ module ot_hgi_vm_tunit #(
                     if (u_v[b] && u_c[b*3 +: 3] == 3'(c)) o[c*256 +: 256] = o[c*256 +: 256] | u_d[b*256 +: 256];
                 s = s + {4'd0, u_ce[b*4 +: 4]}; e = e | u_ue[b];
             end
-            hm_d[g] <= o; hm_ce[g] <= s; hm_ue[g] <= e;
+            hm_d[g*NC*256 +: NC*256] <= o; hm_ce[g*8 +: 8] <= s; hm_ue[g] <= e;
         end
     end
     localparam integer TLX = (MUT == 3) ? TLN - 2 : TLN - 1;
@@ -353,24 +353,23 @@ module ot_hgi_vm_tunit #(
     always @(posedge clk or negedge rn[0])
         if (!rn[0]) begin hr_v <= '0; ce_h <= 16'd0; ue_h <= 1'b0; end
         else begin
-            hr_v <= tl_v[TLX];
-            ce_h <= ce_h + {8'd0, hm_ce[0]} + {8'd0, hm_ce[1]} + {8'd0, hm_ce[2]};
+            hr_v <= tl_v[TLX*NC +: NC];
+            ce_h <= ce_h + {8'd0, hm_ce[7:0]} + {8'd0, hm_ce[15:8]} + {8'd0, hm_ce[23:16]};
             if (|hm_ue) ue_h <= 1'b1;
         end
     always @(posedge clk)
         for (integer c = 0; c < NC; c = c + 1)
-            hr[c*274 +: 274] <= tl_v[TLX][c] ? {1'b0, tl_tag[TLX][c*16 +: 16], tl_we[TLX][c],
-                                               tl_we[TLX][c] ? 256'd0 : (hm_d[0][c*256 +: 256] | hm_d[1][c*256 +: 256] | hm_d[2][c*256 +: 256])}
+            hr[c*274 +: 274] <= tl_v[TLX*NC + c] ? {1'b0, tl_tag[TLX*NC*16 + c*16 +: 16], tl_we[TLX*NC + c],
+                                               tl_we[TLX*NC + c] ? 256'd0 : (hm_d[c*256 +: 256] | hm_d[NC*256 + c*256 +: 256] | hm_d[2*NC*256 + c*256 +: 256])}
                                              : 274'd0;
     // status: the reference's sticky faults delayed to line up with ce / ue (6 edges), then relay + pin flop
     localparam integer FDN = 6;
-    reg [FDN-1:0][1:0] fd; reg [18:0] st_h, st_r;
+    reg [FDN*2-1:0] fd; reg [18:0] st_h, st_r;
     always @(posedge clk or negedge rn[0])
-        if (!rn[0]) begin for (integer s = 0; s < FDN; s = s + 1) fd[s] <= 2'd0; st_h <= 19'd0; end
+        if (!rn[0]) begin fd <= '0; st_h <= 19'd0; end
         else begin
-            fd[0] <= {proto | wlc | (|pk_rng), mfault};
-            for (integer s = 1; s < FDN; s = s + 1) fd[s] <= fd[s-1];
-            st_h <= {fd[FDN-1], ue_h, ce_h};
+            fd <= {fd[(FDN-1)*2-1:0], proto | wlc | (|pk_rng), mfault};
+            st_h <= {fd[FDN*2-1 -: 2], ue_h, ce_h};
         end
     always @(posedge clk or negedge rn[1])
         if (!rn[1]) begin crr_v <= '0; st_r <= 19'd0; status <= 19'd0; for (integer c = 0; c < NC; c = c + 1) cr[c*274 + 273] <= 1'b0; end
