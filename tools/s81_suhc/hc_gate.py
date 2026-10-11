@@ -60,7 +60,7 @@ RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_
 FP = dict(
     rtl=["rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
          "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv"],
-    dpi=["rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/test/sim_hdc_v41x_fastfp_dpi.sv", "rtl/test/sim_hdc_v41x_fastfp_wrap.sv",
+    dpi=["rtl/test/sim_hdc_v41x_fastfp_dpi.sv", "rtl/test/sim_hdc_v41x_fastfp_wrap.sv",
          "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp", "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv",
          "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv", "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.cpp",
          "rtl/test/sim_hdc_fp32_lat_tops.sv", "rtl/test/sim_hdc_prefix_beh.sv", "rtl/test/sim_dsrom_fp32_add_l6_dpi.sv"])
@@ -295,7 +295,21 @@ def build(out: Path, ng, fp, mut, amut, lvm):
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_hc_master"
     if not exe.exists():
+        obj.mkdir(parents=True, exist_ok=True)
         srcs = [ROOT / s for s in FP[fp] + RTL + [TB]]
+        if fp == "dpi":
+            # the f12 units the DPI tops do not replace (cuts, l6/l7 variants), from the RTL file itself
+            dpi_mods = set()
+            for s_ in FP["dpi"]:
+                if s_.endswith(".sv"):
+                    dpi_mods |= set(re.findall(r"^module\s+(\w+)", (ROOT / s_).read_text(), re.M))
+            keep = []
+            for blk in re.split(r"(?m)^(?=module\s)", (ROOT / "rtl/hdc/ot_hdc_fp32_f12.sv").read_text()):
+                m_ = re.match(r"module\s+(\w+)", blk)
+                if not m_ or m_.group(1) not in dpi_mods:
+                    keep.append(blk)
+            (obj / "fp32_f12_rest.sv").write_text("".join(keep))
+            srcs = [obj / "fp32_f12_rest.sv"] + srcs
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
                f"-GAMUT={amut}", f"-GLVM={lvm}", *map(str, srcs), "-CFLAGS", "-O1"]
