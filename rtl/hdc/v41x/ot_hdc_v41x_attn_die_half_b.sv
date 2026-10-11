@@ -27,6 +27,27 @@
 // the same cycle, cf in 1 + NFC, rf in 1 + NFR, every result word in NL + 1, the chain in 2 + NI): ZERO added cycles.
 // Lock-stepped against hfd_attn_tile_b by rtl/test/tb_hfd_attn_half_b.sv (physical/hbm_attn_tile_r/half/run_lockh.sh).
 // ---------------------------------------------------------------------------
+// hgi-1010/g2 2026-10-10 (audit N9): the attention entry's line credit to the svc PS group unit (ot_svs_grp kq):
+// v = the row's valid at the entry pin, registered (the entry consumes a row every cycle: fixed-latency pipe, no
+// buffer, so a credit is due the cycle a row lands); the forwarded clock is the inverted, kept tile clock (the
+// ot_svs_grp captures kq[0] on ~kq[1], as the e port).  Bench mutants: OT_ATTN_MUT_KQ_DROP (every 16th credit lost ->
+// the stream stalls), OT_ATTN_MUT_KQ_DUP (every 16th credit doubled).
+module ot_attn_ks_credit (input wire clk, input wire rst_n, input wire ks_v, output wire [1:0] kq);
+    reg v; reg [3:0] n;
+    always @(posedge clk) begin
+`ifdef OT_ATTN_MUT_KQ_DROP
+        v <= ks_v && rst_n && n != 4'd15;
+`elsif OT_ATTN_MUT_KQ_DUP
+        v <= (ks_v || n == 4'd15) && rst_n;
+`else
+        v <= ks_v && rst_n;
+`endif
+        n <= !rst_n ? 4'd0 : n + (ks_v ? 4'd1 : 4'd0);
+    end
+    wire fck; ot_fwd_clk_inv u_fck (.a(clk), .y(fck));
+    assign kq = {fck, v};
+endmodule
+
 module hfd_attn_half_lo #(
     parameter integer CG = 0, // must match half_hi for gated successor
     parameter integer ROWEW = 0,   // hbm-phys-1010 [att]: 1 = EW row banks (floorplan half_v2); 0 = SN (half / half_ps)
@@ -43,7 +64,10 @@ module hfd_attn_half_lo #(
     input  wire [1101:0] ks,       // hbm-forks RQ-HF-4: the svc PS row port of this tile's pair (entry tiles only; others
                                    // leave it unconnected at the die = 0): {fclk x3, meta64, row1024, rq10, v}, meta[32:20] =
                                    // the stream's load tag {ld_mode, ld_bank3, ld_grp8, ld_w2v} (compiler-supplied), meta[19] = idx
-    input  wire [0:0]    ldk,      // hbm-forks 2026-10-09 (RQ-HF-4, 8 KV entry points a stack): STATIC die strap (by_design
+    input  wire [0:0]    ldk,
+    output wire [1:0]    kq,       // hgi-1010/g2 2026-10-10 (audit N9): the PS row port's LINE CREDIT back to the svc group
+                                   // unit, {forwarded clock, v}: one pulse per row consumed (the tile takes a row a cycle,
+                                   // so every row that lands at the pin is consumed); entry tiles only (others: open)      // hbm-forks 2026-10-09 (RQ-HF-4, 8 KV entry points a stack): STATIC die strap (by_design
                                    // tie, false path).  1: the ld half of the packet comes from this tile's own k port only
                                    // (the forward chains' ld field is ignored; they still carry the query); 0: today's OR
     input  wire [581:0]  q,
@@ -72,6 +96,7 @@ module hfd_attn_half_lo #(
     // ld_w2v}; the row rides the same 1 + NK pin pipe as k, so its packet reaches ROOT in the same cycle k would (0 added)
     wire [1101:0] ks_s;
     ot_attn_bpipe #(.W(1102), .N(1 + NK)) u_pks (.clk(clk), .d(ks), .q(ks_s));
+    ot_attn_ks_credit u_kq (.clk(clk), .rst_n(rst[0]), .ks_v(ks[0]), .kq(kq));
     wire [63:0] ks_meta = ks_s[1098:1035];
     wire [1037:0] ks_ld = {ks_s[0] & ~ks_meta[19], ks_meta[32], ks_meta[31:29], ks_meta[28:21], ks_s[1034:11], ks_meta[20]};
     wire [PW-1:0] pk = {q_s[582], ldk_s ? ks_ld : (k_s[1037:0] | fw[PK-1:580]), q_s[579:0] | fw[579:0]};

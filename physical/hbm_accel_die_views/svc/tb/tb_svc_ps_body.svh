@@ -203,7 +203,15 @@
     end
   end endgenerate
   wire [1:0] kqf [0:7];
+`ifdef PS_ENTRY_CREDIT
+  // hgi-1010/g2 (audit N9): the consumer is the attention entry's REAL credit RTL (ot_attn_ks_credit, the unit inside
+  // hfd_attn_half_lo): one credit per row landed, every stream credited (KV too)
+  generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf
+    ot_attn_ks_credit u_ent (.clk(ck), .rst_n(rst), .ks_v(ks[gq][0]), .kq(kqf[gq]));
+  end endgenerate
+`else
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf assign kqf[gq] = {fck, kq[gq][0]}; end endgenerate
+`endif
   // ---------------------------------------------------------------- stimulus
   localparam integer NREQ = 24;        // per SM
   reg [9:0] ntag [0:7];
@@ -243,6 +251,9 @@
       reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; reg [12:0] tag_; integer q;
       tag_ = $urandom;
       idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
+`ifdef PS_ENTRY_CREDIT
+      nocr_ = 1'b0;
+`endif
       nsec_ = idx_ ? 0 : 1 + ($urandom % ((ps_n % 4 == 0) ? 1100 : 70));
       m = (ps_n % 2) ? {$urandom} : 32'hFFFF_FFFF;
       mask_ = idx_ ? 32'hFFFF_FFFF : m;
