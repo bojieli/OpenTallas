@@ -220,6 +220,7 @@ module tb_qfd_tt_ctlm_i_psram;
     wire out_mismatch = (me_acc_o_0 !== me_acc_o_1) || (me_idle_o_0 !== me_idle_o_1) || (me_prog_o_0 !== me_prog_o_1) || (m_fin_o_0 !== m_fin_o_1) || (m_fidx_o_0 !== m_fidx_o_1) || (m_fval_o_0 !== m_fval_o_1) || (kvd_v_0 !== kvd_v_1) || (kvd_wbase_0 !== kvd_wbase_1) || (kvd_ts_0 !== kvd_ts_1) || (kvd_ks_0 !== kvd_ks_1) || (kvd_js_0 !== kvd_js_1) || (kvd_wcs_0 !== kvd_wcs_1) || (kvd_split_0 !== kvd_split_1) || (kvd_jsh_0 !== kvd_jsh_1) || (kvd_tiles_0 !== kvd_tiles_1) || (kvd_k_0 !== kvd_k_1) || (kvd_nout_0 !== kvd_nout_1) || (kvd_kindk_0 !== kvd_kindk_1) || (kvd_pos_0 !== kvd_pos_1) || (me_clk_en_0 !== me_clk_en_1) || (c_fault_0 !== c_fault_1) || (scale_re_0 !== scale_re_1) || (scale_gre_0 !== scale_gre_1) || (scale_addr_0 !== scale_addr_1) || (x_dv_0 !== x_dv_1) || (x_dc_0 !== x_dc_1) || (x_dcs_0 !== x_dcs_1) || (x_dsp_0 !== x_dsp_1) || (t_sel_e_0 !== t_sel_e_1) || (t_tv_e_0 !== t_tv_e_1) || (p_v_e2_0 !== p_v_e2_1) || (p_f_e2_0 !== p_f_e2_1) || (ov_0 !== ov_1) || (mx_we_0 !== mx_we_1) || (mx_addr_0 !== mx_addr_1) || (mx_mask_0 !== mx_mask_1) || (mx_data_0 !== mx_data_1);
     wire pq_mismatch = (u0.prog_q !== u1.prog_q);
     initial begin
+        seed = SEED;   // the 5.050 simulator ignores the declaration initialiser for $random's seed: every SEED ran one stream
         repeat (6) @(posedge clk);
         rst_n = 1;
         repeat (6) @(posedge clk);
