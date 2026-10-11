@@ -54,7 +54,7 @@ module ot_link_credit_rx_sram #(parameter integer W = 513, parameter integer DEP
     always @(posedge clk) d_q <= l_data;
 endmodule
 
-module dsfd_wfc_crp #(parameter integer FLIT = 512, parameter integer VWA = 15,
+module dsfd_wfc_crp #(parameter integer FLIT = 512, parameter integer VWA = 15, parameter bit OSKID = 0,
                       parameter integer LIN_D = 24, parameter integer LAND_D = 32, parameter integer LOUT_C = 24,
                       parameter integer VMW_C = 32, parameter integer VMR_C = 32, parameter integer WOUT_MAX = 27) (
     input  wire [0:0] ck, ckv, rst, rsv,
@@ -77,9 +77,19 @@ module dsfd_wfc_crp #(parameter integer FLIT = 512, parameter integer VWA = 15,
     ot_rst_relay #(.REGIONS(3)) u_rs (.clk(ckv[0]), .rst_n_in(rsv[0]), .rst_n(sn));
     assign t_krst = rn[2]; assign t_krsv = sn[2];
     // ---- fast (ck) half --------------------------------------------------------------------------------------------
+    // OSKID (mtp-wfc 2026-10-10): the kit's ready f_klir drove the landing FIFO's pop and its read-issue count arithmetic
+    // (74 generic gate levels pin -> register, rtl_boundary).  A registered 2-entry output skid (ot_dsrom_mtp_skid OREG:
+    // in_ready from a flop) takes the pin; the FIFO pops on the skid's registered ready.  +1 cycle on link in.
+    wire li_v, li_r; wire [FLIT:0] li_d;
     ot_link_credit_rx_sram #(.W(FLIT + 1), .DEPTH(LAND_D), .MACRO(2)) u_li (.clk(ck[0]), .rst_n(rn[0]),
-        .l_valid(f_liv[0]), .l_data(f_lid), .l_credit(t_lic[0]), .o_valid(t_kliv[0]), .o_ready(f_klir[0]),
-        .o_data(t_klid), .fault(t_ft[0]));
+        .l_valid(f_liv[0]), .l_data(f_lid), .l_credit(t_lic[0]), .o_valid(li_v), .o_ready(li_r),
+        .o_data(li_d), .fault(t_ft[0]));
+    generate if (OSKID) begin : g_oskid
+        ot_dsrom_mtp_skid #(.W(FLIT + 1), .OREG(1)) u_os (.clk(ck[0]), .rst_n(rn[0]), .in_valid(li_v), .in_ready(li_r),
+            .in_data(li_d), .out_valid(t_kliv[0]), .out_ready(f_klir[0]), .out_data(t_klid));
+    end else begin : g_direct
+        assign t_kliv[0] = li_v; assign li_r = f_klir[0]; assign t_klid = li_d;
+    end endgenerate
     ot_link_credit_tx #(.W(FLIT + 1), .CRED(LOUT_C), .DFREE(1)) u_lo (.clk(ck[0]), .rst_n(rn[1]),
         .i_valid(f_klov[0]), .i_ready(t_klor[0]), .i_data(f_klod), .l_valid(t_lov[0]), .l_data(t_lod), .l_credit(f_loc[0]));
     // ---- serial (ckv) half -----------------------------------------------------------------------------------------
@@ -89,20 +99,28 @@ module dsfd_wfc_crp #(parameter integer FLIT = 512, parameter integer VWA = 15,
     reg [5:0] wr_out;
     wire w_cap = wr_out < WOUT_MAX[5:0];
     wire swr_c;
-    wire sw_go = f_kswv[0] && swr_c && w_cap;
-    assign t_kswr = swr_c && w_cap;
+    // OSKID: the kit's VM-write valid also reached the unACKed-write count and the credit tx counter (20 levels):
+    // a registered 2-entry skid takes f_kswv / f_kswd and drives t_kswr from a flop
+    wire kw_v; wire [VWA+FLIT-1:0] kw_d; wire kw_r = swr_c && w_cap;
+    generate if (OSKID) begin : g_iskid
+        ot_dsrom_mtp_skid #(.W(VWA + FLIT), .OREG(1)) u_is (.clk(ckv[0]), .rst_n(sn[0]), .in_valid(f_kswv[0]),
+            .in_ready(t_kswr[0]), .in_data(f_kswd), .out_valid(kw_v), .out_ready(kw_r), .out_data(kw_d));
+    end else begin : g_idirect
+        assign kw_v = f_kswv[0]; assign kw_d = f_kswd; assign t_kswr = kw_r;
+    end endgenerate
+    wire sw_go = kw_v && kw_r;
     always @(posedge ckv[0] or negedge sn[0])
         if (!sn[0]) wr_out <= 6'd0;
         else wr_out <= wr_out + {5'd0, sw_go} - {5'd0, swa_q};
     ot_link_credit_tx #(.W(VWA + FLIT), .CRED(VMW_C), .DFREE(1)) u_sw (.clk(ckv[0]), .rst_n(sn[0]),
-        .i_valid(f_kswv[0] && w_cap), .i_ready(swr_c), .i_data(f_kswd), .l_valid(t_swv[0]), .l_data(t_swd), .l_credit(f_swc[0]));
+        .i_valid(kw_v && w_cap), .i_ready(swr_c), .i_data(kw_d), .l_valid(t_swv[0]), .l_data(t_swd), .l_credit(f_swc[0]));
     ot_link_credit_tx #(.W(VWA), .CRED(VMR_C), .DFREE(1)) u_sr (.clk(ckv[0]), .rst_n(sn[1]),
         .i_valid(f_ksrv[0]), .i_ready(t_ksrr[0]), .i_data(f_ksrd), .l_valid(t_srv[0]), .l_data(t_srd), .l_credit(f_src[0]));
 endmodule
 
 // dsfd_wfc_cr2: same die ports as dsfd_wfc_cr; the credit boundary is the routed dsfd_wfc_crp tile, the kit is the
 // closed kit master.  (Composition for the exact gate and the slab binding; not itself a routed block.)
-module dsfd_wfc_cr2 #(parameter integer SOURCE = 0, parameter integer FLIT = 512, parameter integer NW = 21,
+module dsfd_wfc_cr2 #(parameter bit OSKID = 0, parameter integer SOURCE = 0, parameter integer FLIT = 512, parameter integer NW = 21,
                       parameter integer USER_W = 10, parameter integer VWA = 15, parameter integer LAG = 0,
                       parameter integer LIN_D = 24, parameter integer LAND_D = 32, parameter integer LOUT_C = 24,
                       parameter integer VMW_C = 32, parameter integer VMR_C = 32, parameter integer WOUT_MAX = 27) (
@@ -120,7 +138,7 @@ module dsfd_wfc_cr2 #(parameter integer SOURCE = 0, parameter integer FLIT = 512
     wire liv, lir, lov, lor, swv, swr, swa, srv, srr, krst, krsv, li_flt;
     wire [FLIT:0] lid, lod; wire [VWA+FLIT-1:0] swd; wire [VWA-1:0] srd; wire [3:0] kft;
     dsfd_wfc_crp #(.FLIT(FLIT), .VWA(VWA), .LIN_D(LIN_D), .LAND_D(LAND_D), .LOUT_C(LOUT_C), .VMW_C(VMW_C), .VMR_C(VMR_C),
-                   .WOUT_MAX(WOUT_MAX)) u_crp (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+                   .WOUT_MAX(WOUT_MAX), .OSKID(OSKID)) u_crp (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_liv(f_liv), .f_lid(f_lid), .t_lic(t_lic), .t_lov(t_lov), .t_lod(t_lod), .f_loc(f_loc),
         .t_swv(t_swv), .t_swd(t_swd), .f_swc(f_swc), .f_swa(f_swa), .t_srv(t_srv), .t_srd(t_srd), .f_src(f_src),
         .t_kliv(liv), .t_klid(lid), .f_klir(lir), .f_klov(lov), .f_klod(lod), .t_klor(lor),

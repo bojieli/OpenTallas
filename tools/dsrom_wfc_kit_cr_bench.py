@@ -126,6 +126,9 @@ CASES = {   # name -> (kit bench base case, harness, stage params, extra defines
 CRP_CASES = [k for k, v in CASES.items() if v[1] == 'crp']
 
 
+OSKID_K = 0   # --oskid (mtp-wfc 2026-10-10): dsfd_wfc_crp with the registered kit-side skids
+
+
 def cr_tb(base, harness):
     stage = K.CASES[base][1]
     tb, body = K.kit_tb(stage)
@@ -137,7 +140,7 @@ def cr_tb(base, harness):
     kpath = ('u_kit.g_stg.u_kit' if stage else 'u_kit.g_src.u_kit') if harness in ('cr', 'crp') else 'u_kit'
     tail = re.sub(r'\bu_kit\.', kpath + '.', tail_old)
     if harness in ('cr', 'crp'):
-        h = (CR_KIT if harness == 'cr' else CR_KIT.replace('dsfd_wfc_cr #(', 'dsfd_wfc_cr2 #(')).replace('SRCK', '0' if stage else '1').replace('KITPARAMS', ', .LAG(LAG)' if stage else '')
+        h = (CR_KIT if harness == 'cr' else CR_KIT.replace('dsfd_wfc_cr #(', 'dsfd_wfc_cr2 #(.OSKID(1), ' if OSKID_K else 'dsfd_wfc_cr2 #(')).replace('SRCK', '0' if stage else '1').replace('KITPARAMS', ', .LAG(LAG)' if stage else '')
         h = h.replace('CFGW', "{(3+10+42){1'b0}}" if stage else 'cfgw')
         h = h.replace('KTOK', '' if stage else 'k_tok').replace('KCFG', '' if stage else '{cfg_users, cfg_plen, cfg_glen}')
     else:
@@ -182,7 +185,9 @@ def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument('--out', type=Path, required=True); p.add_argument('--case')
     p.add_argument('--crp', action='store_true', help='only the dsfd_wfc_crp (credit-port tile) cases'); p.add_argument('--jobs', type=int, default=11)
+    p.add_argument('--oskid', action='store_true', help='dsfd_wfc_crp OSKID 1 (registered kit-side skids)')
     a = p.parse_args(); a.out = a.out.resolve(); a.out.mkdir(parents=True, exist_ok=True)
+    global OSKID_K; OSKID_K = 1 if getattr(a, 'oskid', False) else 0
     names = [a.case] if a.case else (CRP_CASES if a.crp else list(CASES))
     import concurrent.futures as cf
     with cf.ThreadPoolExecutor(a.jobs) as ex:
