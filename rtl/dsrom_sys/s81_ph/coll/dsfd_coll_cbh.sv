@@ -13,6 +13,9 @@
 // Datapath registers carry no reset (class 2); each tile synchronises rs itself (same edge in every tile).
 `timescale 1ns/1ps
 
+// OT_S81PH_CBH_PARENT (the parent route): the children below are hard macros (closed tiles), so their bodies are left
+// out and synthesis binds them to their liberty views; the parent is wiring only.
+`ifndef OT_S81PH_CBH_PARENT
 // FIFO with a registered head: the D-deep array sits behind a head register, so the consumer reads a flop, and the
 // array read mux lands in the head register (never in the consumer's logic).  Same push -> visible latency as
 // ot_s81ph_rfifo (1 cycle); capacity D + 1.
@@ -185,6 +188,10 @@ module `OT_S81PH_CBF_M (
     always @(posedge ck) begin fv_p <= f_vm[591:1]; fu_p <= fv_rel[591:1]; end
 endmodule
 
+`else
+`define OT_S81PH_CBF_M dsfd_coll_cbf
+`endif
+
 // the hierarchical cb: dsfd_coll_cb's ports, built from the hardened sub-elements
 module dsfd_coll_cbh #(parameter integer OD = 16, parameter integer CR = 1, parameter integer TREP = 1,
     parameter integer RSL = 8, parameter integer PCR = 1) (
@@ -217,11 +224,13 @@ module dsfd_coll_cbh #(parameter integer OD = 16, parameter integer CR = 1, para
 `endif
 );
     wire unused_p = &{1'b0, ts[2:1]};
-    dsfd_coll_cbr #(.RSL(RSL), .PCR(PCR)) u_rw (.ck(ck[0]), .rs(rs[0]),
+    dsfd_coll_cbr u_rw (                                    // RSL 8 / PCR 1 = the closed tile's defaults
+       .ck(ck[0]), .rs(rs[0]),
         .n_lo_v(lo0_v[0]), .n_lo_r(lo0_r[0]), .n_lo_d(lo0_d), .x_lo_v(wlo_v[0]), .x_lo_r(wlo_r[0]), .x_lo_d(wlo_d),
         .x_li_v(wli_v[0]), .x_li_r(wli_r[0]), .x_li_d(wli_d), .n_li_v(li0_v[0]), .n_li_r(li0_r[0]), .n_li_d(li0_d),
         .x_flt(wflt), .n_flt(flt_u[2:0]));
-    dsfd_coll_cbr #(.RSL(RSL), .PCR(PCR)) u_re (.ck(ck[0]), .rs(rs[0]),
+    dsfd_coll_cbr u_re (
+       .ck(ck[0]), .rs(rs[0]),
         .n_lo_v(lo4_v[0]), .n_lo_r(lo4_r[0]), .n_lo_d(lo4_d), .x_lo_v(elo_v[0]), .x_lo_r(elo_r[0]), .x_lo_d(elo_d),
         .x_li_v(eli_v[0]), .x_li_r(eli_r[0]), .x_li_d(eli_d), .n_li_v(li4_v[0]), .n_li_r(li4_r[0]), .n_li_d(li4_d),
         .x_flt(eflt), .n_flt(flt_u[5:3]));
