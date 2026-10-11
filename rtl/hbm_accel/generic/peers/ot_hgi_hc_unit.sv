@@ -66,6 +66,8 @@ module ot_hgi_hc_unit #(
     parameter integer SYS = 0,
     parameter integer XRLY = 4,             // relay stages ctl -> tile (window control, x writes) and back
     parameter integer DRLY = 2,             // relay stages ctl <-> tile 0 / tile 7 (descriptor, chunk sums)
+    parameter integer SLM = 8,              // SYS lane multiply / add pipeline depths (1.2 GHz)
+    parameter integer SLA = 7,
     parameter integer TW = $clog2(RMAX),
     // a window word is W / 8 sectors; one HBM request carries at most 4 (the 3-bit length of the HBM lane protocol), so
     // a W > 32 word is fetched in W / 32 segments and the window tag grows by their index (hgi-1010/d W sweep)
@@ -252,7 +254,7 @@ module ot_hgi_hc_unit #(
     always @(posedge clk) begin xd <= xq1; wd <= wq; end
     reg h_cv; wire h_cr, h_ov, h_last, h_fault, h_idle; wire [31:0] h_od;
     wire [$clog2(PMAX)-1:0] h_opos;
-    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2), .SYS(SYS), .SYS_LAT(2*DRLY + 40)) u_hcp (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2), .SYS(SYS), .SYS_LAT(2*DRLY + 1 + 7*(SLA + 1) + 3 + 2 + SLM + SLA)) u_hcp (.clk(clk), .rst_n(rst_n),
         .cmd_valid(h_cv), .cmd_ready(h_cr), .cmd_npos(npos[$clog2(PMAX):0]), .cmd_nout(2'd1), .cmd_nchunk(nchunk[15:0]),
         .cmd_scale(1'b1), .cmd_nf(nf), .cmd_eps(eps), .cmd_wbase(16'd0), .cmd_xbase(16'd0),
         .w_re(w_re), .w_addr(w_addr), .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd),
@@ -446,7 +448,7 @@ module ot_hgi_hc_unit #(
             wire [2:0] c = cc[XRLY-1]; wire [DB-1:0] e = cd[XRLY-1];
             assign w_rdy0[g*SPL +: SPL] = {SPL{rb[XRLY-1][0]}};
             assign w_flt[g*SPL +: SPL] = {{(SPL-1){1'b0}}, rb[XRLY-1][1]};
-            ot_hgi_hc_tile #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO)) u_t (
+            ot_hgi_hc_tile #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .LM(SLM), .LA(SLA)) u_t (
                 .clk(clk), .rst_n(rst_n), .first(g == 0),
                 .d_v(cv[g]), .d_ss(css[g]), .d_nv(cnv[g*(LW+1) +: LW+1]), .d_wa(cwa[g*AW +: AW]), .d_xa(cxa[g*AW +: AW]),
                 .o_v(cv[g+1]), .o_ss(css[g+1]), .o_nv(cnv[(g+1)*(LW+1) +: LW+1]), .o_wa(cwa[(g+1)*AW +: AW]),
@@ -763,6 +765,8 @@ module ot_hgi_hc_tile #(
     parameter integer RTW = 7,
     parameter integer TG = 11,
     parameter integer WMACRO = 1,
+    parameter integer LM = 8,
+    parameter integer LA = 7,
     parameter integer NVW = $clog2(W) + 1,
     parameter integer CWW = $clog2(RMAX + 1),
     parameter integer NXM = W / 16
@@ -811,7 +815,7 @@ module ot_hgi_hc_tile #(
     ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
     // ---- the lane stage
     wire w_re, x_re; wire [AW-1:0] w_addr, x_addr; reg [W*32-1:0] wd; reg [W*16-1:0] xd;
-    ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(2), .NVW(NVW)) u_st (.clk(clk), .rst_n(rl[0]), .first(first),
+    ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(2), .NVW(NVW), .LM(LM), .LA(LA)) u_st (.clk(clk), .rst_n(rl[0]), .first(first),
         .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv), .o_wa(o_wa),
         .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out), .w_re(w_re), .w_addr(w_addr),
         .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd));

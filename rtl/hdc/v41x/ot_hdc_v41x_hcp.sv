@@ -613,7 +613,11 @@ module ot_hdc_v41x_hcp_stage #(
     parameter integer W   = 8,
     parameter integer AW  = 16,
     parameter integer ML  = 2,
-    parameter integer NVW = $clog2(W) + 1
+    parameter integer NVW = $clog2(W) + 1,
+    // pipelined IEEE units (1.2 GHz: 8-stage multiply, 7-stage add, ot_hdc_fp32_*_lat, bit for bit the fast units);
+    // the stage hop is LA + 1 cycles (adder output register -> next stage's pin flop)
+    parameter integer LM  = 8,
+    parameter integer LA  = 7
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -639,7 +643,7 @@ module ot_hdc_v41x_hcp_stage #(
     output reg  [AW-1:0]     x_addr,
     input  wire [W*16-1:0]   x_data
 );
-    localparam integer NC = (2 + ML > 3) ? 2 + ML : 3;          // descriptor delay taps kept locally
+    localparam integer NC = (1 + ML > LA) ? 1 + ML : LA;       // descriptor delay taps kept locally
     localparam integer DW = 2 + NVW + 2 * AW;
     reg  [NC:0]      cv;                                         // valid, taps 0..NC (reset)
     reg  [DW-2:0]    cd [0:NC];                                  // other fields (no reset)
@@ -661,7 +665,7 @@ module ot_hdc_v41x_hcp_stage #(
         w_addr <= cd[0][2*AW-1:AW];
         x_addr <= cd[0][AW-1:0];
     end
-    assign o_v = cv[3]; assign {o_ss, o_nv, o_wa, o_xa} = cd[3];   // tap j = local j: out at local 3
+    assign o_v = cv[LA]; assign {o_ss, o_nv, o_wa, o_xa} = cd[LA]; // tap j = local j: out at local LA
     // input registers (local 2 + ML) and the per-lane enables of that task (computed a cycle early, replicated)
     reg [W*32-1:0] w_in; reg [W*16-1:0] x_in;
     (* keep = "true" *) reg [W-1:0] lv_r, ss_r;
@@ -687,9 +691,9 @@ module ot_hdc_v41x_hcp_stage #(
             gw <= lv_r[gl] ? (ss_r[gl] ? xw : w_in[32*gl +: 32]) : 32'd0;
         end
         wire [31:0] prod; wire [1:0] e0, e1; wire v0, v1;
-        ot_hdc_fp32_mul_fast u_mul (.clk(clk), .rst_n(rst_n), .valid_in(gov), .a(gw), .b(gx), .y(prod), .err(e0),
-                                    .valid_out(v0));
-        ot_hdc_fp32_add_fast u_add (.clk(clk), .rst_n(rst_n), .valid_in(v0), .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]),
+        ot_hdc_fp32_mul_lat #(.LAT(LM)) u_mul (.clk(clk), .rst_n(rst_n), .valid_in(gov), .a(gw), .b(gx), .y(prod),
+                                    .err(e0), .valid_out(v0));
+        ot_hdc_fp32_add_lat #(.LAT(LA)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(v0), .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]),
                                     .b(prod), .y(sum_out[32*gl +: 32]), .err(e1), .valid_out(v1));
         assign lfl[gl] = (v0 && (|e0)) || (v1 && (|e1));
     end endgenerate
