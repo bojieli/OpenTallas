@@ -9,6 +9,11 @@
 // job must already hold its expected value -- a consumer issued on done reads them; a done ahead of the job's last
 // row write counts in early= and fails the run even when the row lands later.  Prints per job its engine start / done (slab cycles) and
 // SUG jobs= done= err= rows= fault= code= cyc= bad_tag= early=  then SUG PASS / SUG FAIL.
+`ifdef SU_HIER
+`define CORE dut.u_root.u_core
+`else
+`define CORE dut.u_core
+`endif
 module tb_s81_su_master;
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40;
     parameter integer S_RD = 16, S_WR = 16, LVM = 10, MUT = 0, AMUT = 0;
@@ -60,10 +65,10 @@ module tb_s81_su_master;
                   n_sp = 0; n_so = 0; n_beat = 0; end
 `ifndef SU_HIER
     always @(posedge sk) begin
-        n_qn += dut.u_core.qn_in; n_qnq += dut.u_core.qn_qv; n_kv += dut.u_core.kv_in; n_kvq += dut.u_core.kv_qv;
-        n_qb += dut.u_core.qb_v; n_qbo += dut.u_core.qb_vo; n_sw += dut.u_core.sw_v; n_swo += dut.u_core.sw_vo;
-        n_ss += dut.u_core.sm_sv; n_se += dut.u_core.sm_ev; n_sp += dut.u_core.sm_pv; n_so += dut.u_core.sm_ov;
-        n_beat += dut.u_core.beat_v;
+        n_qn += `CORE.qn_in; n_qnq += `CORE.qn_qv; n_kv += `CORE.kv_in; n_kvq += `CORE.kv_qv;
+        n_qb += `CORE.qb_v; n_qbo += `CORE.qb_vo; n_sw += `CORE.sw_v; n_swo += `CORE.sw_vo;
+        n_ss += `CORE.sm_sv; n_se += `CORE.sm_ev; n_sp += `CORE.sm_pv; n_so += `CORE.sm_ov;
+        n_beat += `CORE.beat_v;
     end
 `endif
     integer nj, ne, ny, i, s, errs, credits, ip, ndone, yb, bad_tag, scyc, t;
@@ -106,7 +111,7 @@ module tb_s81_su_master;
     reg [S_RD*14-1:0]  dl_a [0:63];
     always @(posedge sk) if (srs) begin
         scyc = scyc + 1;
-        if (dut.u_core.e_cmd_v && dut.u_core.e_cmd_ready) jstart[dut.u_core.e_cmd_d[6:0]] = scyc;
+        if (`CORE.e_cmd_v && `CORE.e_cmd_ready) jstart[`CORE.e_cmd_d[6:0]] = scyc;
         // writes take effect at issue (before reads of the same cycle: the core never mixes them in one job), under
         // the slot's 32-bit word mask
         for (s = 0; s < S_WR; s = s + 1)
@@ -114,11 +119,11 @@ module tb_s81_su_master;
                 for (i = 0; i < 16; i = i + 1)
                     if (wq_mask[16 * s + i]) vm[wq_row[14 * s +: 14]][32 * i +: 32] = wq_d[512 * s + 32 * i +: 32];
         // done contract: the job's rows are all in the VM, with their values, when the core pulses done
-        if (dut.u_core.e_done_v)
-            for (k = 0; k < jexp[dut.u_core.e_done_tag[6:0]][31:0]; k = k + 1)
-                if (vm[ea[jexp[dut.u_core.e_done_tag[6:0]][63:32] + k]] !== ed[jexp[dut.u_core.e_done_tag[6:0]][63:32] + k]) begin
-                    if (early < 5) $display("early done op=%0d row %0d", dut.u_core.e_done_tag[6:0],
-                                            ea[jexp[dut.u_core.e_done_tag[6:0]][63:32] + k]);
+        if (`CORE.e_done_v)
+            for (k = 0; k < jexp[`CORE.e_done_tag[6:0]][31:0]; k = k + 1)
+                if (vm[ea[jexp[`CORE.e_done_tag[6:0]][63:32] + k]] !== ed[jexp[`CORE.e_done_tag[6:0]][63:32] + k]) begin
+                    if (early < 5) $display("early done op=%0d row %0d", `CORE.e_done_tag[6:0],
+                                            ea[jexp[`CORE.e_done_tag[6:0]][63:32] + k]);
                     early = early + 1;
                 end
         // reads: fixed latency LVM
@@ -147,8 +152,8 @@ module tb_s81_su_master;
         for (i = 0; i < nj; i = i + 1)
             $display("SUJ op=%0d kind=%0d start=%0d done=%0d", i, prog[i][30:27], jstart[i], jdone[i]);
         $display("SUC qn %0d/%0d kv %0d/%0d qb %0d/%0d sw %0d/%0d sm s %0d e %0d pv %0d o %0d beats %0d ph %0d rr %0d nrow %0d cw %0d nw %0d",
-                 n_qn, n_qnq, n_kv, n_kvq, n_qb, n_qbo, n_sw, n_swo, n_ss, n_se, n_sp, n_so, n_beat, dut.u_core.ph,
-                 dut.u_core.rr, dut.u_core.nrow, dut.u_core.cw, dut.u_core.nw);
+                 n_qn, n_qnq, n_kv, n_kvq, n_qb, n_qbo, n_sw, n_swo, n_ss, n_se, n_sp, n_so, n_beat, `CORE.ph,
+                 `CORE.rr, `CORE.nrow, `CORE.cw, `CORE.nw);
         $display("SUG jobs=%0d done=%0d err=%0d rows=%0d fault=%0d code=%0d cyc=%0d bad_tag=%0d early=%0d", nj, ndone, errs, ne,
                  flt, fcode, scyc, bad_tag, early);
         if (errs == 0 && ndone == nj && !flt && bad_tag == 0 && early == 0 && pend == 0) $display("SUG PASS"); else $display("SUG FAIL");
