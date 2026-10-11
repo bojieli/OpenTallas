@@ -811,6 +811,9 @@ module ot_hgi_su_unit #(
     parameter integer SLB = 16,
     parameter integer MUT_DIRTY = 0,
     parameter integer WIDE = 0,           // hgi-unitrate: 1 = ot_hgi_su_ctlw (32-lane wide stage / drain, pipelined span)
+    parameter integer LQ = 8,             // WIDE: credits a lane holds (size to the lane-group round trip incl. relays)
+    parameter integer LRLAT = 1,          // WIDE bench: the wide lmem model's read latency (the controller is valid-driven)
+    parameter integer MUT_RV = 0,         // WIDE bench: lmem read valid 1 early / 2 late (must FAIL)
     parameter integer MUT_W = 0,          // WIDE bench mutants (ot_hgi_su_ctlw)
     // WIDE = 0 (hgi-1010/d): the lane-local banked local memory (ot_hgi_su_lmem) and its dense-layout controller
     parameter integer LG1 = LWB, LG2 = LWB, LG3 = LWB, LGO = LWB, RWB = 6,
@@ -852,12 +855,12 @@ module ot_hgi_su_unit #(
     wire sl_v, sw_v, dc_v, sr_v; wire [LWB-1:0] sl_addr; wire [31:0] sl_data; wire [LWB-4:0] sw_sec, dc_sec, sr_sec;
     wire [255:0] sw_data, sr_data; wire [7:0] sr_dm;
     wire [31:0] lsw_v, ldc_v, ldr_v; wire [32*(LWB-3)-1:0] lsw_sec, ldc_sec, ldr_sec; wire [32*256-1:0] lsw_d, ldr_d;
-    wire [32*8-1:0] ldr_dm; wire lm_bank_err;
+    wire [32*8-1:0] ldr_dm; wire lm_bank_err; wire [31:0] ldr_rv; wire sr_rv;
     // WIDE = 0: the lane-local memory's controller ports
     wire [LWB-1:0] l_sw_addr, l_sr_addr; wire [7:0] l_sw_mask; wire [3:0] l_sw_g, l_use_p; wire [1:0] l_sr_g;
     wire l_sl_pend, l_cfault, l_a_str, l_sr_rv;
     generate if (WIDE) begin : g_wctl
-    ot_hgi_su_ctlw #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET), .MUT_W(MUT_W)) u_ctl (.clk(clk),
+    ot_hgi_su_ctlw #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET), .MUT_W(MUT_W), .LQ(LQ)) u_ctl (.clk(clk),
         .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a),
         .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o), .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a),
         .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
@@ -866,7 +869,7 @@ module ot_hgi_su_unit #(
         .sw_sec(sw_sec), .sw_data(sw_data), .dc_v(dc_v), .dc_sec(dc_sec), .sr_v(sr_v), .sr_sec(sr_sec),
         .sr_data(sr_data), .sr_dm(sr_dm),
         .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .rg_req(rg_req), .rg_gnt(rg_gnt),
-        .wg_req(wg_req), .wg_gnt(wg_gnt), .lsw_v(lsw_v), .lsw_sec(lsw_sec),
+        .wg_req(wg_req), .wg_gnt(wg_gnt), .ldr_rv(ldr_rv), .sr_rv(sr_rv), .lsw_v(lsw_v), .lsw_sec(lsw_sec),
         .lsw_d(lsw_d), .ldc_v(ldc_v), .ldc_sec(ldc_sec), .ldr_v(ldr_v), .ldr_sec(ldr_sec), .ldr_d(ldr_d), .ldr_dm(ldr_dm));
     end else begin : g_ctl
     ot_hgi_su_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET), .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO), .RWB(RWB)) u_ctl (.clk(clk),
@@ -904,13 +907,13 @@ module ot_hgi_su_unit #(
         .fault(vfault), .order_fault(ofault), .emitted(emitted), .retire_o(ro), .dbg_emit(de), .dbg_eseq(es),
         .dbg_ret(dr), .dbg_rseq(rs), .dbg_res(ds), .dbg_sseq(ss));
     generate if (WIDE) begin : g_wmem
-    ot_hgi_su_lmemw #(.N(N), .LWB(LWB), .AW(AW)) u_mem (.clk(clk), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q),
+    ot_hgi_su_lmemw #(.N(N), .LWB(LWB), .AW(AW), .RLAT(LRLAT), .MUT_RV(MUT_RV)) u_mem (.clk(clk), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q),
         .rd_re(rd_re), .rd_addr(rd_addr), .rd_q(rd_q), .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata),
         .res_we(res_we), .res_addr(res_addr), .res_data(res_data), .sl_v(sl_v), .sl_addr(sl_addr), .sl_data(sl_data),
         .sr_v(sr_v), .sr_sec(sr_sec),
         .sr_data(sr_data), .sr_dm(sr_dm),
         .lsw_v(lsw_v), .lsw_sec(lsw_sec), .lsw_d(lsw_d), .ldc_v(ldc_v), .ldc_sec(ldc_sec), .ldr_v(ldr_v), .ldr_sec(ldr_sec),
-        .ldr_d(ldr_d), .ldr_dm(ldr_dm), .bank_err(lm_bank_err));
+        .ldr_d(ldr_d), .ldr_dm(ldr_dm), .ldr_rv(ldr_rv), .sr_rv(sr_rv), .bank_err(lm_bank_err));
     end else begin : g_mem
     ot_hgi_su_lmem #(.N(N), .M(M), .LWB(LWB), .AW(AW), .MACRO(MACRO && (MUT_LAT == 0 || MUT_LAT > 2)), .MUT_LAT(MUT_LAT),
         .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO), .RWB(RWB), .SLB(SLB), .NOSTR(GLU)) u_mem (.clk(clk), .rst_n(rst_n),
@@ -1014,7 +1017,9 @@ module ot_hgi_su_ctlw #(
     output reg  [31:0]       ldr_v,        // local drain read lane b: {data, dirty mask} one edge later
     output reg  [32*(LWB-3)-1:0] ldr_sec,
     input  wire [32*256-1:0] ldr_d,
-    input  wire [32*8-1:0]   ldr_dm
+    input  wire [32*8-1:0]   ldr_dm,
+    input  wire [31:0]       ldr_rv,       // the lane's drain read data is valid (any latency, in request order)
+    input  wire              sr_rv         // the STREAM-out sector read data is valid
 );
     localparam integer AW = 24, NR = N / 8, LW = 1 << LWB;
     // ---- the record adapter (decode) and the op it issues
@@ -1072,7 +1077,9 @@ module ot_hgi_su_ctlw #(
     reg [3:0] rp;                                         // read pipe: a sector read is in flight
     // Local-memory return pin registers; advance data, mask, valid and sector identity together.
     reg [255:0] sr_data_q; reg [7:0] sr_dm_q;
+    reg sr_rv_q;
     always @(posedge clk) begin sr_data_q <= sr_data; sr_dm_q <= sr_dm; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) sr_rv_q <= 1'b0; else sr_rv_q <= sr_rv;
     reg [255:0] rd_hold; reg [7:0] rd_dm_hold;
     // ---- STREAM 0 landing (top SW words of the local memory) and the op's stream flags
     localparam integer SW = 1 << SLB;
@@ -1105,11 +1112,17 @@ module ot_hgi_su_ctlw #(
         if (!rst_n) begin wrq_cr_q <= '0; wwq_cr_q <= '0; wwq_done_q <= '0; wrr_q <= '0; end
         else begin wrq_cr_q <= wrq_cr; wwq_cr_q <= wwq_cr; wwq_done_q <= wwq_done; wrr_q <= wrr; end
     reg [32*256-1:0] ldr_d_q; reg [32*8-1:0] ldr_dm_q;
+    reg [31:0] ldr_rv_q;
     always @(posedge clk) begin ldr_d_q <= ldr_d; ldr_dm_q <= ldr_dm; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) ldr_rv_q <= '0; else ldr_rv_q <= ldr_rv;
+    // drain reads are VALID-driven: each lane keeps the VM sector of every read in flight (in order); a returned
+    // {data, dirty} (ldr_rv, pin-flopped) pops it, whatever the memory latency
+    reg [20:0] dq_s [0:31][0:LQ-1]; reg [QB-1:0] dq_h [0:31], dq_t [0:31]; reg [QB:0] dq_n [0:31];
     // per-lane state
     reg [2:0]  sg_r [0:31]; reg sg_on [0:31]; reg [20:0] sg_nx [0:31]; reg [20:0] sg_end [0:31];
-    localparam integer LFD = 32;                            // landing FIFO: LQ queued + the accepted-not-landed pipe
-    reg [QB:0] cr [0:31]; reg [LSW-1:0] lq [0:31][0:LFD-1]; reg [4:0] lqh [0:31], lqt [0:31]; reg [5:0] lqn [0:31];
+    // landing FIFO: LQ queued at the VM + the accepted-not-landed pipe (VM core + relays): power of two >= 2 LQ + 32
+    localparam integer LFB = $clog2(2 * LQ + 32), LFD = 1 << LFB;
+    reg [QB:0] cr [0:31]; reg [LSW-1:0] lq [0:31][0:LFD-1]; reg [LFB-1:0] lqh [0:31], lqt [0:31]; reg [LFB:0] lqn [0:31];
     reg [5:0] wpend [0:31]; reg lane_ovf;
     reg [2:0]  cl_r [0:31]; reg cl_on [0:31]; reg [LSW-1:0] cl_nx [0:31]; reg [LSW-1:0] cl_end [0:31];
     reg [2:0]  dg_r [0:31]; reg dg_on [0:31]; reg [LSW-1:0] dg_nx [0:31]; reg [LSW-1:0] dg_end [0:31];
@@ -1121,7 +1134,8 @@ module ot_hgi_su_ctlw #(
     endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wrq <= '0; wwq <= '0; lsw_v <= '0; ldc_v <= '0; ldr_v <= '0; dp1 <= '0; dp2 <= '0;
+            wrq <= '0; wwq <= '0; lsw_v <= '0; ldc_v <= '0; ldr_v <= '0; dp1 <= '0; dp2 <= '0; dp3 <= '0;
+            for (integer b = 0; b < 32; b = b + 1) begin dq_h[b] <= '0; dq_t[b] <= '0; dq_n[b] <= '0; end
             wst_ldone <= '1; wdr_ldone <= '1; lane_ovf <= 1'b0;
             for (integer b = 0; b < 32; b = b + 1) begin
                 sg_r[b] <= 3'd7; sg_on[b] <= 1'b0; cl_r[b] <= 3'd7; cl_on[b] <= 1'b0; dg_r[b] <= 3'd7; dg_on[b] <= 1'b0;
@@ -1158,7 +1172,7 @@ module ot_hgi_su_ctlw #(
                     lqh[b] <= lqh[b] + 1'b1;
                 end
                 lqn[b] <= lqn[b] + iss - land;
-                if (lqn[b] == 6'(LFD) && iss && !land) lane_ovf <= 1'b1;
+                if (lqn[b] == (LFB+1)'(LFD) && iss && !land) lane_ovf <= 1'b1;
                 cr[b] <= cr[b] - iss + wrq_cr_q[b];
                 // sink dirty-mask clears (regions 4, 5; the local span), one sector a lane an edge
                 if (!wst_go && cl_r[b] < 3'd6) begin
@@ -1190,18 +1204,19 @@ module ot_hgi_su_ctlw #(
                         if (!(MUT_W == 2 && 21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b]))) begin
                             dr_iss = 1'b1;
                             ldr_v[b] <= 1'b1; ldr_sec[b*LSW +: LSW] <= dg_nx[b];
-                            dp1_s[b] <= 21'(dg_nx[b]) - d_dsec[dg_r[b]];
+                            dq_s[b][dq_t[b]] <= 21'(dg_nx[b]) - d_dsec[dg_r[b]]; dq_t[b] <= dq_t[b] + 1'b1;
                         end
                         if (21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b])) begin dg_on[b] <= 1'b0; dg_r[b] <= dg_r[b] + 3'd1; end
                         else dg_nx[b] <= dg_nx[b] + LSW'(32);
                     end
                 end
-                // read pipe: ldr_v (flop) -> memory -> ldr_d (one edge) -> pin flop ldr_d_q: valid 3 edges after issue
-                dp1[b] <= dr_iss; dp2[b] <= dp1[b]; dp2_s[b] <= dp1_s[b];
+                // read return: valid-driven (ldr_rv pin flop), the sector identity from the lane's in-flight FIFO
                 begin : wpub
                     reg [7:0] mk; reg v3; reg [20:0] s3;
                     mk = MUT_DIRTY ? 8'hFF : ldr_dm_q[b*8 +: 8];
-                    v3 = dp3[b]; s3 = dp3_s[b];
+                    v3 = ldr_rv_q[b]; s3 = dq_s[b][dq_h[b]];
+                    if (v3) dq_h[b] <= dq_h[b] + 1'b1;
+                    dq_n[b] <= dq_n[b] + dr_iss - v3;
                     if (v3) begin
                         if (mk != 8'd0) begin
                             wsend = 1'b1;
@@ -1209,10 +1224,9 @@ module ot_hgi_su_ctlw #(
                         end else wfree = 1'b1;
                     end
                 end
-                dp3[b] <= dp2[b]; dp3_s[b] <= dp2_s[b];
                 wcr[b] <= wcr[b] - dr_iss + wfree + wwq_cr_q[b];
                 wpend[b] <= wpend[b] + wsend - wwq_done_q[b];
-                if (!wdr_go && dg_r[b] >= 3'd6 && dg_r[b] != 3'd7 && !dr_iss && !dp1[b] && !dp2[b] && !dp3[b] &&
+                if (!wdr_go && dg_r[b] >= 3'd6 && dg_r[b] != 3'd7 && !dr_iss && (dq_n[b] - ldr_rv_q[b]) == 0 &&
                     (MUT_W == 3 || ((wpend[b] + wsend - wwq_done_q[b]) == 0 && (wcr[b] - dr_iss + wfree + wwq_cr_q[b]) == (QB+1)'(LQ)))) wdr_ldone[b] <= 1'b1;
             end
         end
@@ -1410,17 +1424,16 @@ module ot_hgi_su_ctlw #(
                               else begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; if (d_as) s_clr <= 1'b1; end
                           end
                     default: begin                                  // STREAM out: 8 elements a beat, in element order
-                        if (amr_q && !rp[1] && !rp[3] && !so_w) begin
+                        // one sector read in flight; its data is taken on the memory's valid (any latency)
+                        if (amr_q && !so_w) begin
                             sr_v <= 1'b1; sr_sec <= (o_lb + ebeat) >> 3; so_w <= 1'b1;
-                        end else if (so_w) begin so_w <= 1'b0; rp[1] <= 1'b1; end
-                        else if (rp[1]) begin rp[1] <= 1'b0; rp[3] <= 1'b1; end
-                        else if (rp[3]) begin
+                        end else if (so_w && sr_rv_q) begin
                             begin : so
                                 reg [7:0] mk; integer q;
                                 for (q = 0; q < 8; q = q + 1) mk[q] = (ebeat + q < etot);
                                 am_stream <= {1'b0, 256'd0, sr_data_q, mk, (ebeat + 21'd8 >= etot), 1'b1};
                             end
-                            rp[3] <= 1'b0;
+                            so_w <= 1'b0;
                             if (ebeat + 21'd8 >= etot) begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; if (d_as) s_clr <= 1'b1; end
                             else ebeat <= ebeat + 21'd8;
                         end
@@ -1437,7 +1450,9 @@ endmodule
 // sector write, a dirty-mask clear and a drain sector read {data, dirty mask} one edge later.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_su_lmemw #(
-    parameter integer N = 16, LWB = 17, AW = 24, NR = N / 8
+    parameter integer N = 16, LWB = 17, AW = 24, NR = N / 8,
+    parameter integer RLAT = 1,           // bench: drain / STREAM-out read latency (edges); the controller is valid-driven
+    parameter integer MUT_RV = 0          // bench mutants: 1 the read valid one edge EARLY, 2 one edge LATE (vs its data)
 ) (
     input  wire              clk,
     input  wire [N-1:0]      vi_re,
@@ -1468,10 +1483,24 @@ module ot_hgi_su_lmemw #(
     input  wire [32*(LWB-3)-1:0] ldr_sec,
     output reg  [32*256-1:0] ldr_d,
     output reg  [32*8-1:0]   ldr_dm,
+    output wire [31:0]       ldr_rv,
+    output wire              sr_rv,
     output reg               bank_err          // a lane addressed another bank (controller bug): sticky
 );
     localparam integer LW = 1 << LWB, LS = LWB - 3;
     reg [31:0] lm [0:LW-1];
+    // read data leaves after RLAT edges: ldr_d / sr_data are the last stage of a delay line, valids alongside
+    reg [32*256-1:0] ld_p [1:4]; reg [32*8-1:0] lm_p [1:4]; reg [31:0] lv_p [0:5]; reg [255:0] sd_p [1:4]; reg [7:0] sm_p [1:4]; reg sv_p [0:5];
+    reg [32*256-1:0] ld0; reg [32*8-1:0] lm0; reg [255:0] sd0; reg [7:0] sm0;
+    always @* begin lv_p[0] = ldr_v; sv_p[0] = sr_v; end
+    always @(posedge clk) begin
+        lv_p[1] <= lv_p[0]; sv_p[1] <= sv_p[0];
+        for (integer q = 2; q <= 4; q = q + 1) begin ld_p[q] <= ld_p[q-1]; lm_p[q] <= lm_p[q-1]; sd_p[q] <= sd_p[q-1]; sm_p[q] <= sm_p[q-1]; end
+        for (integer q = 2; q <= 5; q = q + 1) begin lv_p[q] <= lv_p[q-1]; sv_p[q] <= sv_p[q-1]; end
+    end
+    always @* begin ldr_d = ld_p[RLAT]; ldr_dm = lm_p[RLAT]; sr_data = sd_p[RLAT]; sr_dm = sm_p[RLAT]; end
+    localparam integer VL = (MUT_RV == 1) ? RLAT - 1 : (MUT_RV == 2) ? RLAT + 1 : RLAT;
+    assign ldr_rv = lv_p[VL]; assign sr_rv = sv_p[VL];
     reg [7:0]  dm [0:LW/8-1];
     integer l, s2, q;
     initial bank_err = 1'b0;
@@ -1481,12 +1510,14 @@ module ot_hgi_su_lmemw #(
             for (s2 = 0; s2 < 4; s2 = s2 + 1)
                 if (rd_re[4*l + s2]) rd_q[(4*l + s2)*32 +: 32] <= lm[rd_addr[(4*l + s2)*AW +: AW] & (LW - 1)];
         end
-        if (sr_v) begin for (q = 0; q < 8; q = q + 1) sr_data[32*q +: 32] <= lm[{sr_sec, 3'b000} + q]; sr_dm <= dm[sr_sec]; end
+        if (sr_v) begin for (q = 0; q < 8; q = q + 1) sd0[32*q +: 32] = lm[{sr_sec, 3'b000} + q]; sm0 = dm[sr_sec]; end
+        sd_p[1] <= sd0; sm_p[1] <= sm0;
         for (l = 0; l < 32; l = l + 1) begin
             if (ldr_v[l]) begin
-                for (q = 0; q < 8; q = q + 1) ldr_d[l*256 + 32*q +: 32] <= lm[{ldr_sec[l*LS +: LS], 3'b000} + q];
-                ldr_dm[l*8 +: 8] <= dm[ldr_sec[l*LS +: LS]];
+                for (q = 0; q < 8; q = q + 1) ld0[l*256 + 32*q +: 32] = lm[{ldr_sec[l*LS +: LS], 3'b000} + q];
+                lm0[l*8 +: 8] = dm[ldr_sec[l*LS +: LS]];
             end
+            ld_p[1][l*256 +: 256] <= ld0[l*256 +: 256]; lm_p[1][l*8 +: 8] <= lm0[l*8 +: 8];
             if ((lsw_v[l] && lsw_sec[l*LS +: 5] != 5'(l)) || (ldc_v[l] && ldc_sec[l*LS +: 5] != 5'(l)) ||
                 (ldr_v[l] && ldr_sec[l*LS +: 5] != 5'(l))) bank_err <= 1'b1;
         end

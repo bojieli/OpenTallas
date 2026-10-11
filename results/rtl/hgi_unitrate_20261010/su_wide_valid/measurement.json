@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.hgi_unitrate.su_wide_valid.v1",
+ "what": "ctlw drain + STREAM-out valid-driven (lmem ldr_rv / sr_rv, per-lane in-flight sector FIFO) on the DS L0 27-record SU chain (exact VM check), lmem read latency 1 and 3 must PASS, valid one edge early / late must FAIL; MUT_W 1 and lanearb preempting grant must FAIL (hang watchdog); shared groups with RLY 8 relay stages each way (fp W loop) at LQ 8",
+ "sources": {
+  "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "8f2d3969c65d6302a64c55c3964591ca9a3f436cf45aff36b1939699f3ee8d83",
+  "rtl/hbm_accel/generic/vm/ot_hgi_vm_lanearb.sv": "526ae4cd8f646509533e080b74c2196cd906a95c3e892372e99b36840fe86c80",
+  "rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_prod.sv": "a120a50c94e32f9780690fe390084c6dacc1e84f6d8d848c8343e857915007e3"
+ },
+ "runs": {
+  "run_n512_wide_shared_rly8_lq8": {
+   "cycles": 7285,
+   "verdict": "PASS",
+   "hang": false
+  },
+  "run_n64_wide_lat1": {
+   "cycles": 3718,
+   "verdict": "PASS",
+   "hang": false
+  },
+  "run_n64_wide_lat2_mutrv1": {
+   "cycles": 3697,
+   "verdict": "FAIL",
+   "hang": false
+  },
+  "run_n64_wide_lat2_mutrv2": {
+   "cycles": 3774,
+   "verdict": "FAIL",
+   "hang": false
+  },
+  "run_n64_wide_lat3": {
+   "cycles": 3774,
+   "verdict": "PASS",
+   "hang": false
+  },
+  "run_n64_wide_mutw1": {
+   "cycles": null,
+   "verdict": "FAIL",
+   "hang": true
+  },
+  "run_n64_wide_shared_arbmut": {
+   "cycles": null,
+   "verdict": "FAIL",
+   "hang": true
+  }
+ },
+ "notes": [
+  "N512 RLY8 LQ8: 7,285 cycles vs 3,064 with a dedicated unrelayed group: the 8+8 relay loop starves 8 credits -> LQ must cover the loop (LQ 24 run pending)",
+  "MUT_W 3 not observable in this bench (kept as a protocol guarantee)"
+ ]
+}

@@ -3660,6 +3660,8 @@ def buses_r8(m):
         _hop_fix(m, P)
     if LANE_EQUAL:
         _go_retap(m)
+    if CTRL_SLAB and HOP_PLAN:
+        _ctrl_vm_latency_check(m)
     # ---------------- clocks, resets, top ports
     col = coll.name
     bus('refclk', 'top_in', 1, [('TOP', 'refclk'), (col, 'refclk')])
@@ -4381,6 +4383,51 @@ def _hop_fix(m, P):
                         planned_hops=len(plan), fwd_rt_add=fwd_add.get('r', 0) + fwd_add.get('x', 0),
                         reach_um=dict(common_clock=HOP_R_CC, forwarded=HOP_R_FWD, tt_exception=RELAY_TT_REACH),
                         tt_reach_relays=sorted(m.get('tt_reach_relays', [])))
+
+
+def _pin_stages(m, src):
+    """registered relay stages from driver pin src = (inst, port) to every non-relay load pin: {(inst, port): n}"""
+    kind = {it.name: it.kind for it in m['insts']}
+    outs = {}
+    for bid, cls, bits, eps in m['buses']:
+        outs.setdefault(tuple(eps[0]), []).append(eps[1:])
+    thru = {'i': 'o', 'di': 'dq', 'di0': 'do0'}
+    res, stack = {}, [(tuple(src), 0)]
+    while stack:
+        ep, n = stack.pop()
+        for loads in outs.get(ep, []):
+            for l_ in loads:
+                l_ = tuple(l_)
+                if (kind.get(l_[0]) in ('rly', 'hstn') or (kind.get(l_[0]) == 'stn' and l_[0].startswith('g_'))) \
+                        and l_[1] in thru:
+                    stack.append(((l_[0], thru[l_[1]]), n + 1))
+                else:
+                    res[l_] = n
+    return res
+
+
+def _ctrl_vm_latency_check(m):
+    """ds-1010 lat-audit (2026-10-10): the native stage controller (ot_s81_ctrl / ot_s81_hop_tx) reads the VM in
+    FIXED-latency mode by default (USE_VM_RVALID 0: data taken from its own r1 -> rd pipe) and the binding manifest
+    claims vm_read_cycles 1.  --hop-fix / --pin-relay put stations on the vre / vra request and the vrq / vrv response
+    when the endpoints are apart, so the claim is checked here on the built die: any stage on the read path fails the
+    build unless the manifest declares vm_return_valid (the master consumes vrv, which must then carry exactly the
+    stages of vrq)."""
+    it = m['hub']['stage_ctrl'].name
+    P = CTRL_BINDINGS['ports']
+    req = max([max(_pin_stages(m, (it, p_)).values(), default=0) for p_ in ('vre', 'vra')])
+    rsp = {}
+    for p_ in ('vrq', 'vrv'):
+        ep = tuple(P[p_]['endpoint'])
+        rsp[p_] = _pin_stages(m, ep).get((it, p_), 0)
+    m['ctrl_vm_read'] = dict(request_stages=req, response_stages=rsp,
+                             vm_return_valid=bool(CTRL_BINDINGS.get('vm_return_valid')))
+    if rsp['vrq'] != rsp['vrv']:
+        raise SystemExit('--ctrl-slab: VM read data and valid cross different stage counts %s' % rsp)
+    if not CTRL_BINDINGS.get('vm_return_valid') and (req or rsp['vrq']):
+        raise SystemExit('--ctrl-slab: fixed-latency VM read (USE_VM_RVALID 0, vm_read_cycles 1) but the die puts %d '
+                         'request + %d response stages on it: bind the master with --vm-return-valid '
+                         '(tools/s81_ctrl/specialize_master.py) and set vm_return_valid in the manifest' % (req, rsp['vrq']))
 
 
 def _go_retap(m):
