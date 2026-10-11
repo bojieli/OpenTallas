@@ -601,10 +601,11 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # hfd_coll + ot_hbm_link_retry_pipeline 690 x 460 um); the llk die nets become the TU flit bus, each way
              # {valid, flit 545, credit} + a fault bit = 1,095 b (+ 2 forwarded clocks), was 976 b of gearboxed lanes
              # [link] 10-10 (a81f05080): NS = 3 retry macros 690 x 460 um + FMT1 gearbox / CRC / queues: 2 x 2 macro block
-             # (one corner = logic) 1,503.36 x 993.6 um; flit bus {v, flit 545, credit} each way = 1,094 b; PHY side
+             # (one corner = logic) 1,503.36 x 993.6 um; flit bus {v, flit 545, credit} each way = 1,094 b + session 24
+             # down + {fault, locked} up = 1,120 b; PHY side
              # tx[486:0] out + rx[486:0] in = 974 b, the die's SerDes lane contract (H6 link_rtl: 8 TU ports x 547 b a
              # direction over 9 links); 1,024 b does not fit the SerDes face in the k = 16 GRT bundling
-             link_ep=dict(wh=(1503.36, 993.6), gap=43.2, flit_bits=1094, phy_bits=974),
+             link_ep=dict(wh=(1503.36, 993.6), gap=43.2, flit_bits=1120, phy_bits=974),
              dense_face_masters=('hfd_loader',),
              lane_bypass=dict(W=dict(client='hb_sfu_SW', after='hb_su_SW', toward='hb_hc_SW', stn='hb_stn_lgW',
                                      master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)))
@@ -1093,6 +1094,12 @@ def build_r25gq_net(variant):
                 nb_.append((bid, 'link_flit', fw + 2, eps))      # + the two forwarded clocks (fclk map rebased below)
                 continue
             nb_.append((bid, cls, bits, eps))
+        # [link] 10-10 (98493b213) endpoint control: clk = clk_link, rst_n = rst_link (the SerDes clock / reset trees);
+        # session[23:0] (coll -> ep, the coordinated-reset epoch) and {fault, locked} (ep -> coll status aggregation)
+        # ride the flit chain's stations: f_lk = [1093:0] flit bus, [1117:1094] session, [1119:1118] {locked, fault}
+        nb_ = [(b_, c_, w_, e_ + [(ep_of[e[0]], 'clk') for e in e_ if e[0] in ep_of and e[1] == 'ck']
+                if b_ == 'clk_link' else e_ + ([(e, 'rst_n') for e in sorted(set(ep_of.values()))] if b_ == 'rst_link' else []))
+               for b_, c_, w_, e_ in nb_]
         buses[:] = nb_
         for bid, cls, bits, pts in pend:
             link(bid, cls, bits, pts)
