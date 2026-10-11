@@ -423,6 +423,8 @@ module ot_hgi_dma_mover #(
     end
     reg [3:0] l_wo;                                        // lanes with writes in flight (their responses are all write acks)
     reg [5:0] l_wn [0:3];
+    reg [3:0] w_acc_q, w_ack_q;                            // write accepted / acknowledged a lane (pin flops of the handshakes)
+    always @* for (integer l = 0; l < 4; l = l + 1) l_wo[l] = l_wn[l] != 6'd0 || w_acc_q[l];
     assign r_rsp_rdy = lg | l_wo;
     // the taken sector is registered first (the grant is one-hot: an AND-OR pick), its slot computed from the register
     // (registered boundary: r_rsp_v -> lt_i -> tag[lt_i] + beat -> lw_a was 49 levels)
@@ -452,7 +454,7 @@ module ot_hgi_dma_mover #(
             sf_h <= '0; sf_a <= '0; v_ptr <= '0; sf_n <= 9'd0; lv <= '0; lw_v <= 1'b0; lq_v <= 4'd0; lg <= 4'd0; lgi <= 2'd0; ract <= 4'd0; rrr <= 2'd0;
             cf_h <= 6'd0; cf_t <= 6'd0; cf_n <= 7'd0; cd_v <= 1'b0; u_cv <= 1'b0; go_q4 <= 1'b0; stp <= 1'b0; stpd <= 1'b0;
             g_busy <= 32'd0; g_hv <= 32'd0; g_rr <= 5'd0; vr2q <= '0; for (integer b = 0; b < 32; b = b + 1) g_cr[b] <= 6'(GLQ);
-            l_wo <= 4'd0; for (integer l = 0; l < 4; l = l + 1) l_wn[l] <= 6'd0;
+            w_acc_q <= 4'd0; w_ack_q <= 4'd0; for (integer l = 0; l < 4; l = l + 1) l_wn[l] <= 6'd0;
             for (integer l = 0; l < 4; l = l + 1) lbc[l] <= 3'd0;
             wq_h <= 4'd0; wq_t <= 4'd0; wq_n <= 5'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
             p1_v <= 1'b0; pr_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pa_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 4'd0;
@@ -547,8 +549,8 @@ module ot_hgi_dma_mover #(
                 // read lane requests leave their registers when the lane takes them
                 for (integer l = 0; l < 4; l = l + 1) begin
                     if (lq_v[l] && r_req_rdy[l]) lq_v[l] <= 1'b0;
-                    l_wn[l] <= l_wn[l] + 6'((lq_v[l] && r_req_rdy[l] && lq_we[l]) ? 1 : 0) - 6'(w_ack[l] ? 1 : 0);
-                    l_wo[l] <= (l_wn[l] + 6'((lq_v[l] && r_req_rdy[l] && lq_we[l]) ? 1 : 0) - 6'(w_ack[l] ? 1 : 0)) != 6'd0;
+                    w_acc_q[l] <= lq_v[l] && r_req_rdy[l] && lq_we[l]; w_ack_q[l] <= w_ack[l];
+                    l_wn[l] <= l_wn[l] + 6'(w_acc_q[l] ? 1 : 0) - 6'(w_ack_q[l] ? 1 : 0);
                 end
                 // reader: the chunk of slot r_k -> its lane request (HBM) / VM read, its descriptor, its landing slots
                 if (r_go) begin : radv
@@ -582,7 +584,7 @@ module ot_hgi_dma_mover #(
                 end
                 rd_in <= rd_in + (r_go ? {5'd0, c_ns[r_k]} : 9'd0) - {8'd0, lw_v};
                 wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, v_wr_ack | (wld_q & busy_f & !dst_hbm)}
-                         - {6'd0, 3'(w_ack[0]) + 3'(w_ack[1]) + 3'(w_ack[2]) + 3'(w_ack[3])};
+                         - {6'd0, 3'(w_ack_q[0]) + 3'(w_ack_q[1]) + 3'(w_ack_q[2]) + 3'(w_ack_q[3])};
             end
             if (k_fault && busy_f) begin f_fault <= 1'b1; mv_fault <= 1'b1; end
             // ---- landing
