@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_host_sd",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/host_sd-9f8b3d216-tc/routes/host_sd_9f8b3d216_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/host_sd-9f8b3d216-tc/routes/host_sd_9f8b3d216_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/host_sd-9f8b3d216-tc/routes/host_sd_9f8b3d216_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/host_sd-9f8b3d216-tc/routes/host_sd_9f8b3d216_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/host_sd-9f8b3d216-tc/routes/host_sd_9f8b3d216_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/host_sd-9f8b3d216-tc/routes/host_sd_9f8b3d216_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/host_sd-9f8b3d216-tc/routes/host_sd_9f8b3d216_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_host_sd.lef": "bb070f34798fbc055dd5c6a5fd585995e4806e972c46d3baf7a9395337af996c",
+    "dsfd_host_sd_ff.lib": "ca6b98e5e2629a47d76f582bfb6c4673718fe4accad1195494928c5ae0825d8b",
+    "dsfd_host_sd_ss.lib": "e4b3ccedb75cf65a38d0f68d39c36872710e9feb1f4108d4e68a42ee0ce2311f"
+  },
+  "ok": true
+}
