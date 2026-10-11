@@ -25,8 +25,22 @@ W=$OUT/$lab; mkdir -p $W; cd $SRC
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $master --out $W/ports > $W/ports.log 2>&1 || { echo "rc=ports" > $W/exit; exit 1; }
 read DW DH < <(python3 -c "import json;d=json.load(open('$W/ports/$master/ports.json'));print(d['w_um'],d['h_um'])")
+# [link] 2026-10-10 DH_OVR (opt-in, trial outlines only): a taller outline than the generator's, die pins kept at the
+# generator positions (all below the generator height); not adoptable as a die view until [fp] regenerates the slot
+[ -n "${DH_OVR:-}" ] && DH=$DH_OVR
 mkdir -p $SRC/.views/$lab; cp $W/ports/$master/io_place.tcl $SRC/.views/$lab/io_place.tcl
 [ -n "${IOAPP:-}" ] && cat $SRC/$IOAPP >> $SRC/.views/$lab/io_place.tcl   # extra pins not yet in the die view (hfd_su qid strap)
+# [link] 2026-10-10: a 1-bit die port ([0:0] in the record, e.g. hfd_lk_ep clk / rst_n) is a scalar after yosys: place
+# '<name>' rather than '<name>[0]' when the record has no other bit of that port (PPL-0061 otherwise)
+python3 - $SRC/.views/$lab/io_place.tcl <<'PYEOF'
+import re, sys, collections
+p = sys.argv[1]; t = open(p).read()
+bits = collections.defaultdict(set)
+for b, i in re.findall(r'-pin_name \{([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]\}', t): bits[b].add(i)
+for b, s in bits.items():
+    if s == {'0'}: t = t.replace('{%s[0]}' % b, '{%s}' % b)
+open(p, 'w').write(t)
+PYEOF
 srcargs="--source $topsrc"; for s in ${SRCS:-}; do srcargs="$srcargs --source $s"; done
 mvargs=""; for mv in ${MACROS:-}; do mvargs="$mvargs --macro-view $mv"; done
 PS=${POSTSYN:-physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl}; [ "$PS" = none ] && PS=
