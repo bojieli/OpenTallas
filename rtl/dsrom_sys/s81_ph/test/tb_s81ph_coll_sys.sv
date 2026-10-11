@@ -155,6 +155,9 @@ module tb_s81ph_coll_sys;
     integer tf_n [0:3]; initial for (integer i = 0; i < 4; i = i + 1) tf_n[i] = 0;
     always @(posedge clk) begin
         for (integer i = 0; i < 4; i = i + 1) tf_n[i] = tf_n[i] + fvm[i][0];
+        if (cyc == 25 || cyc == 30 || cyc == 3000)
+            $display("TBGRD cyc=%0d rsts0=%b warm=%0d cfgd0=%0d fvm00=%b sp0=%0d cr00=%0d", cyc, rsts[0], WARM, cfgd[0],
+                     fvm[0][0], sp[0], cr[0][0]);
         if (cyc % 50000 == 3000) $display("TBFVM cyc=%0d rsts=%b sent=%0d %0d %0d %0d slab0_fvm=%b", cyc, rsts, tf_n[0], tf_n[1],
                                           tf_n[2], tf_n[3], g_die[0].u.f_vm[0]);
     end
