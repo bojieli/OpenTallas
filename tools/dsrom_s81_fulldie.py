@@ -4225,7 +4225,10 @@ def _hop_fix(m, P):
             L, a, b, _ = plan[key]
             fwd = cls in HOP_FWD_CLS
             R = HOP_R_FWD if fwd else HOP_R_CC
-            n = math.ceil(L / (R - 20.0) - 1e-9) - 1
+            # fs3 (--relay-pin-path): stations at <= R - 60 spacing: at R - 20 a hop near 2 (R - 20) leaves one station
+            # a ~25 um band between its two reaches; in a packed frame it found none and took the TT tier (p9
+            # head631: 46 y_rt_*_2b_0 -> g_rt hops at 510.2 um > the 504 um SS reach) -- one more stage instead
+            n = math.ceil(L / (R - (60.0 if RELAY_PIN_PATH else 20.0)) - 1e-9) - 1
             d0, l0 = by[eps[0][0]], by[e[0]]
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
             if cls in ('mk_bc', 'mk_pick'):
@@ -4669,7 +4672,8 @@ def _col_relays(m, P):
                 # 20 um lint slack), so no relay stands on the far side of its driver; and monotone on BOTH axes (centre
                 # inside the previous point -> load box + slack): a Manhattan-only advance let y_es_508_1 step 96 um
                 # west but 60 um north past both neighbours, which flips its output face away from the load
-                NR = dict(nxt=b, nreach=min(NR.get('nreach', 1e9), _mh(cur, b) + 20.0),
+                # fs3: strict advance (p9: y_rt_*_4a_2 stepped 19.4 um back inside the +20 slack, 36.7 um pin to pin)
+                NR = dict(nxt=b, nreach=min(NR.get('nreach', 1e9), _mh(cur, b)),
                           box=(min(cur[0], b[0]) - 20.0, min(cur[1], b[1]) - 20.0,
                                max(cur[0], b[0]) + 20.0, max(cur[1], b[1]) + 20.0))
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
@@ -4713,6 +4717,21 @@ def _col_relays(m, P):
                                 **{k_: v for k_, v in NR.items() if k_ != 'box'})
                     if pl:
                         m.setdefault('pin_path_unboxed', []).append(f'y_{bid}_{k}')
+                if pl is None:
+                    # fs3: p9 head631 885 relays (so / gt / ef / cc / xb: 324-332 um column hops, n = 1 at the 214 um
+                    # common-clock bank rule) have no spot within 254 um of both ends in a packed frame; the default
+                    # build takes _tt_place (<= 600 um).  Here: the SS reach (- 10) from the previous point, advancing,
+                    # in the frame then the die, counted with the TT-reach relays
+                    for alw in ([fr], [(0.0, 0.0, DIE[0], DIE[1])]):
+                        pl = P.near(cx, cy, w_, h_, alw, prev=cur, horiz=True, reach=SS_REACH_UM - 10.0, span=1600.0,
+                                    rows=160, nxt=b, nreach=min(_mh(cur, b) + 20.0, SS_REACH_UM - 10.0), box=NR['box'])
+                        if pl is None:
+                            pl = P.near(cx, cy, w_, h_, alw, prev=cur, horiz=True, reach=SS_REACH_UM - 10.0,
+                                        span=1600.0, rows=160, nxt=b, nreach=min(_mh(cur, b) + 20.0, SS_REACH_UM - 10.0))
+                        if pl:
+                            tt_col.append(f'y_{bid}_{k}')
+                            m.setdefault('pin_path_ss', []).append(f'y_{bid}_{k}')
+                            break
                 if pl is None:
                     m.setdefault('pin_path_unbounded', []).append(f'y_{bid}_{k}')
                     if len(m.setdefault('pin_path_unbounded_dbg', [])) < 40:     # fs3: why no bounded spot
@@ -4776,7 +4795,7 @@ def _col_relays(m, P):
                            by_class={c: sum(v for k_, v in added.items() if k_.startswith(c)) for c in
                                      ('rt_', 'xa_', 'xb_', 'cc_', 'qt_', 'es_', 'ss_', 'so_', 'nf_', 'cfg_', 'go_', 'rr_')})
     if RELAY_PIN_PATH:
-        m['col_relays'].update(pin_path_unboxed=len(m.get('pin_path_unboxed', [])),
+        m['col_relays'].update(pin_path_unboxed=len(m.get('pin_path_unboxed', [])), pin_path_ss=len(m.get('pin_path_ss', [])),
                                pin_path_unbounded=sorted(m.get('pin_path_unbounded', [])),
                                pin_path_unbounded_dbg=m.get('pin_path_unbounded_dbg', []))
 
