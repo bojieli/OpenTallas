@@ -1,0 +1,98 @@
+{
+ "name": "hgi_xload_sram_b-fc210e160-tc-f9b",
+ "block": "ot_hgi_sm_xload",
+ "owner": "Claude:hgi-1010",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/fill-9-20261010-xv",
+  "commit": "fc210e1601e771cab030be62f921e8c83f27b31a"
+ },
+ "purpose": "FILL-9 (fill9-hgi/xv) root cause of xload_a EARLY_FAIL_SETUP TT -695 ps / 71,877 endpoints and the bb92f4fe8 yosys OOM: the 64-Kb x tile was flops (dynamic 16-b lane-slice writes, 8:1 x 1,024-b reads) -> 32 ot_sram_1r1w_128x256 macros with registered pins (+2 edges a beat, pipelined), command pin flop (+1 edge), rst_n -> ot_rst_relay with reset-free data flops. Knob: floorplan b = die 760 x 480, four 8-high macro columns in pin-facing pairs, centre logic. Bench: lockstep vs the flop x-load (every x-store write identical, 10 random commands) + MUT_T / MUT_M FAIL.",
+ "stages": {
+  "bench": [
+   {
+    "name": "xload_lock_exact",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_lock.sh {RUN}/bench_lock",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "timeout_s": 5400,
+    "pass_regex": "XLOAD_LOCK PASS"
+   },
+   {
+    "name": "mut_t",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_lock.sh {RUN}/bench_lock MUT_T",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "timeout_s": 5400,
+    "fail_regex": "XLOAD_LOCK FAIL"
+   },
+   {
+    "name": "mut_wmask",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_lock.sh {RUN}/bench_lock MUT_M",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "timeout_s": 5400,
+    "fail_regex": "XLOAD_LOCK FAIL"
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES={THREADS} UTIL=40 PD=0.50 HM=0.025 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hgi_sm_xload --source rtl/lib/ot_rst_relay.sv --source rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv --clock-port clk --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 2.16 2.16 --orfs-var MACRO_PLACEMENT_TCL=/src/physical/variant_fill/hgi_sm_xload_sram/place_b.tcl --step-tcl POST_PDN=physical/s81_ph_views/tiles/sliver_block.tcl --die-area 0 0 760 480 --core-area 10.8 10.8 749.2 469.2 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "clk",
+   "threads": 8,
+   "peak_ram_gb": 48
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES={THREADS} UTIL=40 PD=0.50 HM=0.025 LB=1 STAGES=pnr MACRO=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hgi_sm_xload --source rtl/lib/ot_rst_relay.sv --source rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv --clock-port clk --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 2.16 2.16 --orfs-var MACRO_PLACEMENT_TCL=/src/physical/variant_fill/hgi_sm_xload_sram/place_b.tcl --step-tcl POST_PDN=physical/s81_ph_views/tiles/sliver_block.tcl --die-area 0 0 760 480 --core-area 10.8 10.8 749.2 469.2",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "new adapter master; die-link budget via link_budget_hook"
+ },
+ "route_hold_margin_ns": 0.025,
+ "route_hold_corners": "mm",
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "merge_target": null
+}
