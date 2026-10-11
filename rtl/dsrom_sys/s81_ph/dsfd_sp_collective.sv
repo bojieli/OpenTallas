@@ -17,6 +17,12 @@
 `define OT_S81PH_CB_MASTER dsfd_coll_cb
 `endif
 `endif
+// el1011-ds-coll 2026-10-11: OT_S81PH_COLL_CBH instantiates the hierarchical cb (dsfd_coll_cbh: hardened sub-elements)
+`ifdef OT_S81PH_COLL_CBH
+`define OT_S81PH_CB_INST dsfd_coll_cbh
+`else
+`define OT_S81PH_CB_INST `OT_S81PH_CB_MASTER
+`endif
 module dsfd_sp_collective (
     input  wire [0:0]    refclk,
     input  wire [0:0]    por,
@@ -97,7 +103,7 @@ module dsfd_sp_collective (
     wire s_lo3_v, s_lo3_r, s_li3_v, s_li3_r, s_lo7_v, s_lo7_r, s_li7_v, s_li7_r;
     wire [552:0] s_lo0_d, s_li0_d, s_lo4_d, s_li4_d, s_lo3_d, s_li3_d, s_lo7_d, s_li7_d;
     wire s_bw_v, s_bw_cr, s_bw_flt; wire [2099:1] s_bw_d;
-    `OT_S81PH_CB_MASTER #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
+    `OT_S81PH_CB_INST #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
 `ifdef OT_S81PH_COLL_JOB
         .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
 `endif
