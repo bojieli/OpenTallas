@@ -320,7 +320,7 @@ module tb_dsfd_sp_vm;
     // a phase: rows R a root, NPOS positions, obase / ops (elements); returns the element count
     function automatic integer cap_phase(input integer obase, input integer ops, input integer R, input integer npos,
                                          input integer skew, input integer reord, input integer salt);
-        integer r_, j_, p_, addr, row, n_; reg [31:0] dd;
+        integer r_, j_, p_, addr, row, n_, tl_; reg [31:0] dd;
         begin
             n_ = 0;
             for (r_ = 0; r_ < NR; r_ = r_ + 1) begin
@@ -338,7 +338,8 @@ module tb_dsfd_sp_vm;
                     dd = rq_d[r_][j_]; rq_d[r_][j_] = rq_d[r_][j_+1]; rq_d[r_][j_+1] = dd;
                 end
             end
-            if (MODE == 0) r_tail[rnd(52) % NR] = 60;      // one late last element a phase (an early done reads stale)
+            tl_ = rnd(52) % NR;                          // one rnd() call (an index side effect is evaluated twice by Verilator 5.032)
+            if (MODE == 0) r_tail[tl_] = 60;      // one late last element a phase (an early done reads stale)
             cap_pend = cap_pend + n_; n_el_exp = n_el_exp + n_;
             cap_phase = n_;
         end
