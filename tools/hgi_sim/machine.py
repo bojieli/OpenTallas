@@ -33,6 +33,8 @@ from .records import MDesc, Rec, decode_program  # noqa: E402
 
 F = np.float32
 VM_WORDS = 1 << 18
+VM_AP = 1 << 16          # HC weight aperture (main b1a793d75): VM words [2^18, 2^18 + 2^16), written only by DMA.LOAD O and
+                         # read only by HC_MIX_ROWS B; any other access faults
 ESIZE = {"FP32": 4, "BF16": 2, "FP8E4M3": 1, "INT8": 1, "U32": 4, "UE8M0": 1, "FP4E2M1": 1}
 _E4M3 = None
 
@@ -108,8 +110,9 @@ class Hbm:
 class Die:
     def __init__(self, rank, hbm: Hbm):
         self.rank = rank
-        self.vm = np.zeros(VM_WORDS, dtype=np.uint32)
+        self.vm = np.zeros(VM_WORDS + VM_AP, dtype=np.uint32)
         self.hbm = hbm
+        self.synth_hbm = {}          # HBM bytes a unit model synthesised from the checkpoint (abs addr -> bytes; e2e export)
         self.dyn = [0] * 32
         self.streams = {}            # STREAM id -> FIFO of pushed element vectors (credit-ordered producer -> consumer)
         self.stream_seen = {}        # STREAM id -> the last vector pushed (simulator-side visibility for checkers)
@@ -219,6 +222,12 @@ class Machine:
         else:
             n = die.dyn[d.n_sel] if d.n_sel else d.n
         ist = 0 if d.ibcast else (d.istride or 1)
+        if d.space == "HBM" and base >> 37:
+            # bits [39:37] are the row-stripe code (spec 3.6): only a DMA.LOAD A may carry one (code 1 = STRIPE4); any
+            # other HBM base >= 2^37 is outside the die's 128 GiB and would alias the code
+            c = self.cur
+            if not (base >> 37 == 1 and c is not None and (c.unit, c.op) == ("DMA", "LOAD") and d == c.desc.get("A")):
+                raise Fault(3, f"HBM base {base:#x} >= 2^37 outside a STRIPE-coded DMA.LOAD A")
         return base, n, d.m, d.stride, ist
 
     def vm_addrs(self, d, die, L, no=None, ni=None):
@@ -228,7 +237,12 @@ class Machine:
         o, i = np.meshgrid(np.arange(no), np.arange(ni), indexing="ij")
         a = (base + o * st + i * ist).reshape(-1)
         if a.size and (a.min() < 0 or a.max() >= VM_WORDS):
-            raise Fault(3, "VM access out of range")
+            c = self.cur
+            ok = (c is not None and a.max() < VM_WORDS + VM_AP and a.min() >= VM_WORDS and
+                  (((c.unit, c.op) == ("DMA", "LOAD") and d == c.desc.get("O")) or
+                   ((c.unit, c.op) == ("HC", "HC_MIX_ROWS") and d == c.desc.get("B"))))
+            if not ok:
+                raise Fault(3, "VM access out of range (the HC aperture is DMA.LOAD O / HC_MIX_ROWS B only)")
         return a
 
     def vm_read(self, d, die, L, no=None, ni=None):
@@ -432,6 +446,9 @@ def decode_fmt(raw, fmt):
         return raw.view(np.int8).astype(F)
     if fmt == "FP8E4M3":
         return e4m3_table()[raw]
+    if fmt == "UE8M0":                          # a power-of-two scale byte: 2^(b - 127); 255 = NaN
+        b = raw.view(np.uint8).astype(np.int64)
+        return np.where(b == 255, np.nan, np.exp2(b - 127.0)).astype(F)
     raise Fault(3, f"fmt {fmt} not decodable here")
 
 

@@ -22,13 +22,14 @@
 module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
                       parameter integer VWA = 15, parameter bit VM_LINK = 0,
                       parameter integer WOUTW = 5, parameter integer VMRQ = 16,
-                      parameter integer POSTED = 0,
+                      parameter integer POSTED = 0, parameter integer RD2 = 0,
                       parameter bit TOKIN = 0) (   // 1: link-in from the collective MTP lane token return (f_mrt / t_mrg)
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [0:0] f_liv, input  wire [FLIT:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [FLIT:0] t_lod, input  wire [0:0] f_lor,
     output wire [0:0] t_swv, output wire [VWA+FLIT-1:0] t_swd, input wire [0:0] f_swr, input wire [0:0] f_swa,
-    output wire [0:0] t_srv, output wire [VWA-1:0] t_srd, input wire [0:0] f_srr, input wire [FLIT:0] f_srq,
+    output wire [0:0] t_srv, output wire [(RD2 ? 2*VWA+1 : VWA)-1:0] t_srd, input wire [0:0] f_srr,
+    input wire [(RD2 ? 2*FLIT+2 : FLIT+1)-1:0] f_srq,
     output wire [USER_W+2*NW:0] t_ks, input wire [NW+32:0] f_kd,
     input  wire [2+USER_W+2*NW:0] f_c,
     input  wire [FLIT:0] f_mrt, output wire [0:0] t_mrg,      // TOKIN: {data, valid} from dsfd_sp_collective t_mrt
@@ -46,7 +47,7 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
     wire core_busy, tok_valid, proto_fault, wf_issue, wf_reject, wf_squash;
     wire [USER_W-1:0] tok_user, users_done; wire [NW-1:0] tok_pos, tok_id;
     wire [9:0] cfg_users; wire [NW-1:0] cfg_plen, cfg_glen;
-    wire x_swv, x_swr, x_srv, x_srr; wire [VWA+FLIT-1:0] x_swd; wire [VWA-1:0] x_srd;
+    wire x_swv, x_swr, x_srv, x_srr; wire [VWA+FLIT-1:0] x_swd; wire [(RD2 ? 2*VWA+1 : VWA)-1:0] x_srd;
     wire [FLIT:0] dw; wire vc_ret, lnk_ft, tok_ft, vmx_ft;
     ot_dsrom_wfc_tokpipe_src #(.WAVE(1), .WIN(6), .FLIT(FLIT), .NW(NW), .AW(30), .VWA(VWA), .USER_W(USER_W), .MAXU(866),
         .KVW(32768), .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1), .SOURCE(1), .XWORDS(41), .RXWORDS(41), .REC_SRAM(1),
@@ -72,7 +73,7 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
         .t_lov(t_lov), .t_lod(t_lod), .f_lor(f_lor), .t_dw(dw), .f_vc(vc_ret), .t_ft(lnk_ft));
     dsfd_wfc_tok_hard u_tok (.ck(ck), .rst(rst), .f_c(f_c), .t_cfg({cfg_users, cfg_plen, cfg_glen}), .f_dw(dw),
         .f_pr({pr_re, pr_user, pr_pos, pr_blk}), .t_pr({pr_qk, pr_q}), .t_ft(tok_ft));
-    dsfd_wfc_vmx #(.XWORDS(41), .RQFREE(2), .WOUTW(WOUTW), .RQ(VMRQ), .POSTED(POSTED)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+    dsfd_wfc_vmx #(.XWORDS(41), .RQFREE(2), .WOUTW(WOUTW), .RQ(VMRQ), .POSTED(POSTED), .RD2(RD2)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq),
         .f_cs({core_start, core_user, core_token, core_pos}), .t_cd({core_done_w, cnt_tok, cnt_val}), .t_vc(vc_ret),
         .t_swv(x_swv), .t_swd(x_swd), .f_swr(x_swr), .f_swa(f_swa), .t_srv(x_srv), .t_srd(x_srd), .f_srr(x_srr),
@@ -86,7 +87,7 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
     generate if (VM_LINK) begin : g_vm_link
         ot_dsrom_mtp_ltx #(.W(VWA + FLIT)) u_swl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_swv), .c_ready(x_swr),
             .c_data(x_swd), .l_valid(t_swv[0]), .l_ready(f_swr[0]), .l_data(t_swd));
-        ot_dsrom_mtp_ltx #(.W(VWA)) u_srl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_srv), .c_ready(x_srr),
+        ot_dsrom_mtp_ltx #(.W(RD2 ? 2*VWA+1 : VWA)) u_srl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_srv), .c_ready(x_srr),
             .c_data(x_srd), .l_valid(t_srv[0]), .l_ready(f_srr[0]), .l_data(t_srd));
     end else begin : g_vm_direct
         assign t_swv = x_swv; assign t_swd = x_swd; assign x_swr = f_swr;
@@ -104,12 +105,13 @@ endmodule
 module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
                       parameter integer VWA = 15, parameter integer LAG = 0, parameter bit VM_LINK = 0,
                       parameter integer WOUTW = 5, parameter integer VMRQ = 16,
-                      parameter integer POSTED = 0) (
+                      parameter integer POSTED = 0, parameter integer RD2 = 0) (
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [0:0] f_liv, input  wire [FLIT:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [FLIT:0] t_lod, input  wire [0:0] f_lor,
     output wire [0:0] t_swv, output wire [VWA+FLIT-1:0] t_swd, input wire [0:0] f_swr, input wire [0:0] f_swa,
-    output wire [0:0] t_srv, output wire [VWA-1:0] t_srd, input wire [0:0] f_srr, input wire [FLIT:0] f_srq,
+    output wire [0:0] t_srv, output wire [(RD2 ? 2*VWA+1 : VWA)-1:0] t_srd, input wire [0:0] f_srr,
+    input wire [(RD2 ? 2*FLIT+2 : FLIT+1)-1:0] f_srq,
     output wire [USER_W+2*NW:0] t_ks, input wire [NW+32:0] f_kd,
     output wire [3:0] t_ft
 );
@@ -122,7 +124,7 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
     wire pr_re; wire [USER_W-1:0] pr_user; wire [NW-1:0] pr_pos; wire [3:0] pr_blk;
     wire core_busy, tok_valid, proto_fault, wf_issue, wf_reject, wf_squash;
     wire [USER_W-1:0] tok_user, users_done; wire [NW-1:0] tok_pos, tok_id;
-    wire x_swv, x_swr, x_srv, x_srr; wire [VWA+FLIT-1:0] x_swd; wire [VWA-1:0] x_srd;
+    wire x_swv, x_swr, x_srv, x_srr; wire [VWA+FLIT-1:0] x_swd; wire [(RD2 ? 2*VWA+1 : VWA)-1:0] x_srd;
     wire [FLIT:0] dw; wire vc_ret, lnk_ft, vmx_ft;
     ot_dsrom_wfc_tokpipe_stg #(.WAVE(1), .WIN(6), .FLIT(FLIT), .NW(NW), .AW(30), .VWA(VWA), .USER_W(USER_W), .MAXU(866),
         .KVW(32768), .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1), .SOURCE(0), .XWORDS(46), .RXWORDS(41),
@@ -142,7 +144,7 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
         .t_wiv(w_in_valid), .t_wid({w_in_last, w_in_data}), .f_wig(w_in_ready),
         .f_wov(w_out_valid), .f_wod({w_out_last, w_out_data}), .t_wog(w_out_ready),
         .t_lov(t_lov), .t_lod(t_lod), .f_lor(f_lor), .t_dw(dw), .f_vc(vc_ret), .t_ft(lnk_ft));
-    dsfd_wfc_vmx #(.XWORDS(46), .RQFREE(2), .LAG(LAG), .WOUTW(WOUTW), .RQ(VMRQ), .POSTED(POSTED)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+    dsfd_wfc_vmx #(.XWORDS(46), .RQFREE(2), .LAG(LAG), .WOUTW(WOUTW), .RQ(VMRQ), .POSTED(POSTED), .RD2(RD2)) u_vmx (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq),
         .f_cs({core_start, core_user, core_token, core_pos}), .t_cd({core_done_w, cnt_tok, cnt_val}), .t_vc(vc_ret),
         .t_swv(x_swv), .t_swd(x_swd), .f_swr(x_swr), .f_swa(f_swa), .t_srv(x_srv), .t_srd(x_srd), .f_srr(x_srr),
@@ -156,7 +158,7 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
     generate if (VM_LINK) begin : g_vm_link
         ot_dsrom_mtp_ltx #(.W(VWA + FLIT)) u_swl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_swv), .c_ready(x_swr),
             .c_data(x_swd), .l_valid(t_swv[0]), .l_ready(f_swr[0]), .l_data(t_swd));
-        ot_dsrom_mtp_ltx #(.W(VWA)) u_srl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_srv), .c_ready(x_srr),
+        ot_dsrom_mtp_ltx #(.W(RD2 ? 2*VWA+1 : VWA)) u_srl (.clk(ckv[0]), .rst_n(rsv[0]), .c_valid(x_srv), .c_ready(x_srr),
             .c_data(x_srd), .l_valid(t_srv[0]), .l_ready(f_srr[0]), .l_data(t_srd));
     end else begin : g_vm_direct
         assign t_swv = x_swv; assign t_swd = x_swd; assign x_swr = f_swr;

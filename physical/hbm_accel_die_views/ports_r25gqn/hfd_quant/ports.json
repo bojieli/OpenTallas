@@ -13,12 +13,12 @@
 "hb_quant"
 ],
 "ports": {
-"ck": {
+"rst": {
 "bits": 1,
 "layer": "M7",
 "pins": [
 [
-"ck[0]",
+"rst[0]",
 "M7",
 32.512,
 0.0,
@@ -36,12 +36,12 @@
 ],
 "direction": "input"
 },
-"rst": {
+"ck": {
 "bits": 1,
 "layer": "M5",
 "pins": [
 [
-"rst[0]",
+"ck[0]",
 "M5",
 64.512,
 0.0,
@@ -152934,7 +152934,7 @@
 },
 "generator": {
 "file": "tools/hbm_accel_die_fp.py",
-"sha256": "93a0a1714f3d99b0feef3aefa6a7bebc92912c7401d3b1135cda4e51427875bc",
+"sha256": "aa4ccbd92f214ca3220237919f555013a6f435929e4ea5ce7c8e85f38e513c70",
 "round": "r25"
 }
 }

@@ -1,4 +1,5 @@
     input wire [0:0] ck,
+    input wire [512:0] f_dma_vr2q,
     input wire [337:0] f_hgi_argmax,
     input wire [337:0] f_hgi_coll,
     input wire [337:0] f_hgi_cp,
@@ -15,6 +16,7 @@
     input wire [514:0] f_lgW_rup,
     input wire [8962:0] f_lgW_wup,
     input wire [0:0] rst,
+    output wire [8256:0] t_dma_vr2r,
     output wire [273:0] t_hgi_argmax,
     output wire [273:0] t_hgi_coll,
     output wire [273:0] t_hgi_cp,

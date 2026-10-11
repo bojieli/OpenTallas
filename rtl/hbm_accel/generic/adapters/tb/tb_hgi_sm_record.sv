@@ -46,7 +46,7 @@ module tb_hgi_sm_record;
         .halted(halted), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride),
         .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(1'b0), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q),
-        .pub_p(pub_p), .pub_done(pub_done), .pub_fault(1'b0), .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd),
+        .pub_p(pub_p), .pub_bf16(), .pub_done(pub_done), .pub_fault(1'b0), .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd),
         .sm_ret(sm_ret), .sm_cg_en(cg_en));
     // coarse clock gate: every start / descriptor beat must leave with the gate open
     wire cg_en; integer cgq, cg_err = 0;
@@ -61,7 +61,7 @@ module tb_hgi_sm_record;
         .rec_o(cur[895:640]), .rec_n_a(cur[916:896]), .rec_n_b(cur[937:917]), .rec_done(l_done), .rec_fault(l_fault),
         .halted(), .x_v(), .x_rdy(1'b1), .x_base(), .x_n(), .x_p(), .x_stride(), .x_space(), .x_fmt(), .x_done(1'b1),
         .x_fault(1'b0), .pub_v(), .pub_rdy(1'b1), .pub_base(), .pub_stride(), .pub_space(), .pub_m(), .pub_q(),
-        .pub_p(), .pub_done(1'b1), .pub_fault(1'b0), .lg_cmd(lgc), .lg_ret(l_ret), .sm_cmd(l_cmd), .sm_ret(lgr));
+        .pub_p(), .pub_bf16(), .pub_done(1'b1), .pub_fault(1'b0), .lg_cmd(lgc), .lg_ret(l_ret), .sm_cmd(l_cmd), .sm_ret(lgr));
     always @(posedge clk) begin
         for (q = 0; q < NSM*CW; q = q + 32) lgc[q +: 32] <= $random(seed);
         lgr <= $random(seed);

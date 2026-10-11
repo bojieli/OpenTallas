@@ -338,6 +338,10 @@ def export_ds(a):
             sm_img.append((bb, img.reshape(-1).tobytes()))
             cap.touch.append((bb, bb + bm * bst))
 
+    for b0, img in getattr(die0, "synth_hbm", {}).items():      # e.g. the STRIPE4 HC weight rows
+        sm_img.append((b0, img))
+        cap.touch.append((b0, b0 + len(img)))
+
     def hbm_pre(addr, n):
         out = bytearray(region_bytes(st["regions"], st["snap"], addr, n))
         for b0, img in sm_img:
