@@ -69,7 +69,13 @@ module ot_rom_oneshot_die_m #(
     // registered {refill, index} copy, so its registered output lines up with the level-2 slice refill (the flop body
     // was read combinationally one edge later); a word pushed at e1 is counted in that cycle's mnz_n, read at e2.
     // Source 0's {mode, last} bits keep a 2 x DEPTH flop shadow for the control's head look-ahead (hb_c / hm_n).
-    parameter integer MEMM    = 0
+    parameter integer MEMM    = 0,
+    // FSL = 1 (el1011-q-coll 2026-10-11, textbook class 1 residual: the 3 x 16 LAT-7 adder lanes + skew lines kept ~50k
+    // sinks on one root): the all-reduce fold is built from FW / 128 hardened lane-slice tiles (ot_coll_fold_slice: 4
+    // lanes, its own skew lines, adders, valid chain from its lane 0, partial error OR and reset leaf) with registered
+    // seams (pin flops in, flops out: +2 edges on the reduce path; ldl grows by 2).  serr[N-1] = OR of the slice
+    // partials (OR is associative and every slice delays identically).  OPQ must be 0.
+    parameter integer FSL     = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -97,7 +103,7 @@ module ot_rom_oneshot_die_m #(
     localparam integer DB = (DEPTH > 1) ? $clog2(DEPTH) : 1;
     localparam integer CB = $clog2(DEPTH + 1);
     localparam integer IA = (IB <= 2) ? 1 : $clog2(IB);
-    localparam integer DL = (N - 1) * ADD_LAT;
+    localparam integer DL = (N - 1) * ADD_LAT + ((FSL != 0) ? 2 : 0);   // FSL: + the slice seams
     integer r;
     // ---- PR = 2: per-region reset synchronisers (rst_n reaches only these) ------------------------------------------
     wire          rst_i;                 // control region
@@ -272,7 +278,29 @@ module ot_rom_oneshot_die_m #(
     assign sum[0] = fsrc[0];
     assign sv[0] = red_in;
     assign serr[0] = 1'b0;
-    generate
+    generate if (FSL != 0) begin : g_fsl
+        initial if (OPQ != 0 || FW % 128 != 0) $error("ot_rom_oneshot_die_m FSL: OPQ 0 and FW a multiple of 128");
+        localparam integer NS = FW / 128;
+        wire [NS-1:0] sl_v, sl_e;
+        wire [FW-1:0] fsum;
+        wire [N*FW-1:0] fsrc_f;
+        genvar gs, gq;
+        for (gq = 0; gq < N; gq = gq + 1) begin : g_ff
+            assign fsrc_f[gq*FW +: FW] = fsrc[gq];
+        end
+        for (gs = 0; gs < NS; gs = gs + 1) begin : g_sl
+            wire [N*128-1:0] sd;
+            for (gq = 0; gq < N; gq = gq + 1) begin : g_sd
+                assign sd[gq*128 +: 128] = fsrc_f[gq*FW + gs*128 +: 128];
+            end
+            (* keep_hierarchy *) ot_coll_fold_slice #(.N(N), .ADD_LAT(ADD_LAT), .SEAM(1)) u_fs (
+                .clk(clk), .rst_n(rst_n), .red_in(red_in), .src(sd), .sum(fsum[gs*128 +: 128]),
+                .v_out(sl_v[gs]), .e_out(sl_e[gs]));
+        end
+        assign sum[N-1] = fsum;
+        assign sv[N-1] = sl_v[0];
+        assign serr[N-1] = |sl_e;
+    end else begin : g_flat
         for (g = 1; g < N; g = g + 1) begin : g_stage
             wire [FW-1:0] pg;
             if (g == 1) begin : g_nd
@@ -309,7 +337,7 @@ module ot_rom_oneshot_die_m #(
             assign sv[g] = lv[0];
             assign serr[g] = (|le) || edl[ADD_LAT-1];
         end
-    endgenerate
+    end endgenerate
     reg [DL-1:0] ldl;
     always @(posedge clk or negedge rst_i)
         if (!rst_i) ldl <= 0;
@@ -540,11 +568,6 @@ module ot_coll_opq_slice #(parameter integer W = 128, parameter integer QA = 3) 
 `else
     assign q = mem[rp];
 `endif
-endmodule
-module ot_coll_rst_leaf (input wire clk, input wire arst_n, output wire q);
-    (* async_reg = "true" *) reg [1:0] s;
-    always @(posedge clk or negedge arst_n) if (!arst_n) s <= 2'b00; else s <= {s[0], 1'b1};
-    assign q = s[1];
 endmodule
 module ot_coll_dup16 (input wire clk, input wire arst_n, input wire [15:0] d, output reg [15:0] q);
     always @(posedge clk or negedge arst_n) if (!arst_n) q <= 16'd0; else q <= d;
