@@ -30,6 +30,9 @@ def command(a):
         for k, v in QP.items():
             cmd += ['--param', f'{k}={v}']
         cmd += ['--param', f'BXST={a.bxst}', '--param', f'FXST={a.fxst}']
+        if a.hdly:
+            # bf-hier-1011: HB4 hold-delay stage ahead of the boundary registers, dont_touch from PRE_FLOORPLAN
+            cmd += ['--param', f'HDLY={a.hdly}', '--step-tcl', 'PRE_FLOORPLAN=physical/s81_bf_hier/hdly_dont_touch.tcl']
         pins = ['--pin-region', r'^(pv|pval|prow|pseg|pnseg|perr|ppos|qy_bkf).*=bottom', '--pin-region',
                 r'^(clk|rst_n_pin|ze_d|issue|a_ctr|i1_|i2x_|so_).*=right']
     else:
@@ -81,6 +84,7 @@ def main():
     p.add_argument('--tag', required=True); p.add_argument('--period', default='.730'); p.add_argument('--ins-ss', type=float, default=841.0)
     p.add_argument('--die-w', type=float, default=0.0); p.add_argument('--hm', default='0.000')
     p.add_argument('--die-h', type=float, default=190.08)
+    p.add_argument('--hdly', type=int, default=0, help='column: HB4 hold-delay cells per input bit (bf-hier-1011)')
     p.add_argument('--local-clock-pin', action='store_true', help='root at middle of long right face; compact hierarchy model, default off')
     p.add_argument('--pinlat', type=int, choices=(0,1), default=0)
     p.add_argument('--bxst', type=int, default=2); p.add_argument('--fxst', type=int, default=2); p.add_argument('--extra', default='')
