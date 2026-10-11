@@ -583,6 +583,9 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # wire chain (stations <= 67 um); die routes cross the tiles on M8 / M9. face_coll 1,560 (el1011-hbm-coll: 9 tiles +
              # core SRAMs, hierarchical hfd_coll): the spine stack re-gaps evenly (cross gap loader -> coll 302.4 kept)
              coll_h=1560.0,
+             phys_trees=True,      # hbmdie-1011 textbook audit rows 2-3: regional pipelined reset tree + clock H-tree per domain
+             # (phys_relays, row 1, stays OFF: fully physical relaying of the hub's wide buses does not fit this
+             # floorplan's channels -- relays reach 64.5 % of a 2 x 2 mm hub cell; needs the row-4 re-floorplan)
              idx_cols=((0, 1, 2), (3, 4, 5)), idx_col_gap=172.8, idx_gap=43.2, hc_gap=172.8, sfu_gap=216.0,
              idx_score_dx=432.0, spine_over=864.0, spch_q=1546.56,
              # hgi-1010/b lane groups (ot_hgi_vm_lanearb ace618cd8): VM | CP | quant abut, the W group leaves the VM's W face
@@ -1431,6 +1434,115 @@ def build_r25gq_net(variant):
                 link(f'vm_lg{sd_}_{ci}', 'hub', lw, [(src, f't_lg{sd_}')] + [(r_, 'b') for r_ in rl] + [(cl, f'f_lg{sd_}')])
             rec.append(dict(client=cl, from_=src, gap_um=round(max(gap_um(src, cl), 0.0), 1), path_um=L, relays=len(rl)))
         lane_rec[sd_] = rec
+    # hbmdie-1011 (textbook audit row 1, phys_relays): every budgeted register hop becomes a physical relay.  A driver ->
+    # load segment longer than one stage gets relay stations every <= LINK_STAGE_UM along its grid-router path (the
+    # same relays() stations as the Option A chains: forwarded clock where the bus is an fclk bus, common clock
+    # otherwise); the first relay takes the far load's place on the original net (fan-out buses stay one net; bus ids,
+    # fclk entries and named paths keep working) and the chain continues as <bid>_p<j>_<k>.
+    phys_rec = None
+    new_rl = {}
+    fcl_ = dict(base.get('fclk') or {}, **fclk_new_)
+
+    def prelays(bid, bits, pth, L):
+        """hbmdie-1011 phys_relays: relays() with ROUTE-AWARE placement -- each station first takes a free site on its
+        own path (+-4 grid cells along the route, <= 2 lattice steps across it), only then the spiral legaliser."""
+        nonlocal nst
+        ns_ = max(0, math.ceil(L / LINK_STAGE_UM) - 1)
+        out = []
+        for k in range(ns_):
+            fr = (k + 1) / (ns_ + 1)
+            ix = min(len(pth) - 1, int(round(fr * (len(pth) - 1))))
+            kk = pth[ix]
+            if bits <= 1400:
+                sw_, sh_ = 58.32, 71.28
+            else:
+                ln_ = up(bits * 0.048 + 20.0, GY)
+                k2 = pth[max(0, ix - 1)] if ix else pth[min(len(pth) - 1, 1)]
+                horiz = abs(k2 - kk) == 1
+                sw_, sh_ = (21.6, ln_) if horiz else (up(ln_, GX), 21.6)
+            nm = f'wq{nst}_{bid}'
+            nst += 1
+            st_ = Inst(nm, f'hfd_stn_q{bid.split("_")[0]}{nst}' if bits > 1400 else f'hfd_stn_q{bits}', 0.0, 0.0, sw_, sh_,
+                       'R0', kind='waypoint', region='channel')
+            ok_ = False
+            for dd in (0, -1, 1, -2, 2, -3, 3, -4, 4):
+                jx = ix + dd
+                if not 0 <= jx < len(pth):
+                    continue
+                j_, i_ = divmod(pth[jx], G.nx)
+                for ox, oy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1), (2, 0), (-2, 0), (0, 2), (0, -2)):
+                    x_ = dn((i_ + .5) * RP.CELL - sw_ / 2 + ox * 21.6, GX)
+                    y_ = dn((j_ + .5) * RP.CELL - sh_ / 2 + oy * 21.6, GY)
+                    bx = (x_ - 2.0, y_ - 2.0, x_ + sw_ + 2.0, y_ + sh_ + 2.0)
+                    if x_ < 20 or y_ < 20 or x_ + sw_ > W_ - 20 or y_ + sh_ > H_ - 20 or hit(bx, near(bx)):
+                        continue
+                    st_.x, st_.y, ok_ = x_, y_, True
+                    break
+                if ok_:
+                    break
+            if ok_:
+                b_ = st_.box()
+                for gx_ in range(int(b_[0] // 500), int(b_[2] // 500) + 1):
+                    for gy_ in range(int(b_[1] // 500), int(b_[3] // 500) + 1):
+                        grid_[(gx_, gy_)].append(b_)
+            else:
+                j_, i_ = divmod(kk, G.nx)
+                st_.x, st_.y = dn((i_ + .5) * RP.CELL - sw_ / 2, GX), dn((j_ + .5) * RP.CELL - sh_ / 2, GY)
+                legal(st_)
+            insts.append(st_)
+            by[nm] = st_
+            out.append(nm)
+        return out
+    if V.get('phys_relays'):
+
+        def _near_pt(it, q):
+            return (min(max(q[0], it.x), it.x + it.w), min(max(q[1], it.y), it.y + it.h))
+
+        def eseg(a, b):
+            ca, cb = (a.x + a.w / 2, a.y + a.h / 2), (b.x + b.w / 2, b.y + b.h / 2)
+            p_, q_ = _near_pt(a, cb), _near_pt(b, ca)
+            p_, q_ = _near_pt(a, q_), _near_pt(b, p_)
+            return abs(p_[0] - q_[0]) + abs(p_[1] - q_[1])
+        PR_LIM = SS_REACH_UM - 20.0
+        nb_, n_rl, n_ch = [], 0, 0
+        for b_ in buses:
+            bid, cls, bits, eps = b_
+            if cls in ('clock_trunk', 'reset_tree') or len(eps) < 2 or eps[0][0] not in by or eps[0][0] == 'TOP':
+                nb_.append(b_)
+                continue
+            d0 = eps[0]
+            keep, far_ = [d0], []
+            for e in eps[1:]:
+                if e[0] in by and e[0] != d0[0] and eseg(by[d0[0]], by[e[0]]) > PR_LIM:
+                    far_.append(e)
+                else:
+                    keep.append(e)
+            if not far_:
+                nb_.append(b_)
+                continue
+            for j_, e in enumerate(far_):
+                G.inst.setdefault(d0[0], by[d0[0]])
+                G.inst.setdefault(e[0], by[e[0]])
+                pth = gpath(d0[0], e[0])
+                L = max((len(pth) - 1) * RP.CELL, eseg(by[d0[0]], by[e[0]]) + LINK_STAGE_UM / 2)
+                rl = prelays(bid, bits, pth, L)
+                if not rl:
+                    keep.append(e)
+                    continue
+                for r_ in rl:
+                    G.inst[r_] = by[r_]
+                    new_rl[r_] = bid
+                n_rl += len(rl)
+                n_ch += 1
+                keep.append((rl[0], 'a'))
+                for k_ in range(len(rl)):
+                    nid = f'{bid}_p{j_}_{k_}'
+                    nb_.append((nid, cls, bits, [(rl[k_], 'b'), (rl[k_ + 1], 'a') if k_ + 1 < len(rl) else e]))
+                    if bid in fcl_:
+                        fclk_new_[nid] = fcl_[bid]
+            nb_.append((bid, cls, bits, keep))
+        buses[:] = nb_
+        phys_rec = dict(data_chains=n_ch, data_relays=n_rl)
     # far-side relays (legalisation pushed a relay behind its driver): step it toward its sink and re-legalise
     import fp_margin_lint as FPL
     for _ in range(20):     # R25GQ link endpoints: the IKS chains detour the S endpoint band (4 passes left 3 far-side relays)
@@ -1452,6 +1564,253 @@ def build_r25gq_net(variant):
                 it.x = dn(it.x + 0.4 * (sk.x + sk.w / 2 - it.x), GX)
                 it.y = dn(it.y + 0.4 * (sk.y + sk.h / 2 - it.y), GY)
             legal(it)
+    if V.get('phys_relays'):
+        # repair: a relay legalised off its route can still leave a segment over the reach -> one more relay on it
+        for _r in range(6):
+            ml_ = FPL.die_margin(insts, [b_ for b_ in buses if b_[1] not in ('clock_trunk', 'reset_tree')],
+                                 MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, stages=lambda bid, L: 0, limit=100000, edges=True)
+            bad_ = {tuple(x['seg'].split('->')) for x in ml_['reach_examples']}
+            if not bad_:
+                break
+            nb_ = []
+            for b_ in buses:
+                bid, cls, bits, eps = b_
+                hit_ = [e for e in eps[1:] if (eps[0][0], e[0]) in bad_] if cls not in ('clock_trunk', 'reset_tree') else []
+                if not hit_:
+                    nb_.append(b_)
+                    continue
+                keep = [e for e in eps if e not in hit_]
+                for j_, e in enumerate(hit_):
+                    G.inst.setdefault(eps[0][0], by[eps[0][0]])
+                    G.inst.setdefault(e[0], by[e[0]])
+                    rl = prelays(bid, bits, gpath(eps[0][0], e[0]), 2 * LINK_STAGE_UM - 1.0)
+                    for r_ in rl:
+                        G.inst[r_] = by[r_]
+                        new_rl[r_] = bid
+                    phys_rec['data_relays'] += len(rl)
+                    keep.append((rl[0], 'a'))
+                    nid = f'{bid}_r{_r}{j_}'
+                    nb_.append((nid, cls, bits, [(rl[-1], 'b'), e]))
+                    if bid in fcl_:
+                        fclk_new_[nid] = fcl_[bid]
+                nb_.append((bid, cls, bits, keep))
+            buses[:] = nb_
+        phys_rec['data_reach_left'] = len(bad_)
+    if V.get('phys_trees') or V.get('phys_relays'):
+        phys_rec = phys_rec or {}
+        # textbook audit rows 2 + 3: per clock domain ONE balanced H-tree from the PLL port on hb_coll to region leaves
+        # (leaf cells <= 480 um, empty branches pruned).  Every tree node carries a clock buffer (hfd_ckb) and, beside
+        # it, a registered reset relay (hfd_rrl, clocked by that buffer): the reset is a pipelined regional tree, never a
+        # die-wide net.  Edges get buffer / relay pairs every <= LINK_STAGE_UM, so sibling paths are equal (balanced).
+        # Leaves drive the block ck / rst pins of their cell and the common-clock data relays.
+        coll_ = next(i for i in insts if i.kind == 'spine' and i.name == 'hb_coll')
+        ck_sinks, rs_sinks, keep_b = defaultdict(list), defaultdict(list), []
+        # block ck / rst pins keep the position the die-wide net gave them (their peers on the old net), so no data pin
+        # of a block moves; the block attaches to the tree leaf at that pin (the block point nearest the old peers)
+        pin_hold, pin_pt = {}, {}
+        first_of = {}
+        for it_ in insts:
+            first_of.setdefault(it_.master, it_)
+        for b_ in buses:
+            if b_[1] in ('clock_trunk', 'reset_tree') and (b_[0].startswith('clk_') or b_[0].startswith('rst_')):
+                es_ = [e for e in b_[3] if e[0] in by]
+                if not es_:
+                    continue
+                sx_ = sum(by[e[0]].x + by[e[0]].w / 2 for e in es_)
+                sy_ = sum(by[e[0]].y + by[e[0]].h / 2 for e in es_)
+                eps_ = b_[3]
+                if V.get('hc_ck_ew') and b_[1].startswith('clock'):     # as the hc_ck_ew pass below will expand them
+                    eps_ = [x for e in eps_ for x in ([(e[0], e[1] + 'e'), (e[0], e[1] + 'w')]
+                                                       if e[0].startswith('hb_hc_') and re.fullmatch(r'ck\d', e[1]) else [e])]
+                for i_, e in enumerate(eps_):           # the PLL source port on hb_coll too
+                    if e[0] not in by:
+                        continue
+                    it = by[e[0]]
+                    n_ = len(es_) - 1
+                    ox_ = (sx_ - (it.x + it.w / 2)) / max(1, n_)
+                    oy_ = (sy_ - (it.y + it.h / 2)) / max(1, n_)
+                    if it.kind != 'waypoint':       # blocks attach at their held pin; stations at their centre
+                        pin_pt[e] = (min(max(ox_, it.x), it.x + it.w), min(max(oy_, it.y), it.y + it.h))
+                    # exactly the peers masters() saw on the old net: every other endpoint by index (same inst's other
+                    # ports and repeats included), per copy
+                    pin_hold.setdefault(f'{it.master}|{e[1]}|{it.name}', []).extend(
+                        x[0] for j_, x in enumerate(eps_) if j_ != i_ and x[0] != 'TOP')
+        for b_ in buses:
+            if b_[1] == 'clock_trunk' and b_[0].startswith('clk_'):
+                ck_sinks[b_[0][4:]] += [e for e in b_[3][1:]]
+            elif b_[1] == 'reset_tree' and b_[0].startswith('rst_'):
+                rs_sinks[b_[0][4:]] += [e for e in b_[3][1:]]
+            else:
+                keep_b.append(b_)
+        dom_of = {}
+        for d_, es_ in ck_sinks.items():
+            for e in es_:
+                dom_of.setdefault(e[0], d_)
+        for r_, bid in new_rl.items():      # new relays: reset always, clock unless the bus forwards its clock
+            b0_ = bid.split('_p')[0]
+            drv_ = next((b_[3][0][0] for b_ in buses if b_[0] == b0_), None)
+            d_ = dom_of.get(drv_) or 'stream'
+            rs_sinks[d_].append((r_, 'rst'))
+            if b0_ not in fcl_:
+                ck_sinks[d_].append((r_, 'ck'))
+        old_order = list(buses)         # tree nets go where the die-wide net they replace sat (masters() packs a face's
+        buses[:] = keep_b               # ports in first-seen order: the block pin plans stay identical)
+        tree_nets = defaultdict(list)
+        CKW, CKH = 12.96, 12.96        # >= 3 generated 1-b pins + gaps a face in the k = 16 bundled view
+        tree_rec = {}
+
+        def free_at(x_, y_, w_, h_):
+            bx = (x_ - 1.0, y_ - 1.0, x_ + w_ + 1.0, y_ + h_ + 1.0)
+            return not (x_ < 20 or y_ < 20 or x_ + w_ > W_ - 20 or y_ + h_ > H_ - 20 or hit(bx, near(bx)))
+
+        def occupy(it):
+            b_ = it.box()
+            for gx_ in range(int(b_[0] // 500), int(b_[2] // 500) + 1):
+                for gy_ in range(int(b_[1] // 500), int(b_[3] // 500) + 1):
+                    grid_[(gx_, gy_)].append(b_)
+
+        def pair_at(nm_ck, nm_rr, x, y, cells=None):
+            """a clock buffer + its reset relay side by side (one 13 x 4.3 um footprint): first on the given route cells
+            near (x, y), else the spiral legaliser on the pair footprint"""
+            pw_ = 2 * CKW + 4.32
+            cands = []
+            if cells:
+                for kk_ in cells:
+                    j_, i_ = divmod(kk_, G.nx)
+                    cands.append(((i_ + .5) * RP.CELL, (j_ + .5) * RP.CELL))
+            cands.append((x, y))
+            px = py = None
+            for cx_, cy_ in cands:
+                for ox, oy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1), (2, 0), (-2, 0), (0, 2), (0, -2)):
+                    x_ = dn(cx_ - pw_ / 2 + ox * 10.8, GX)
+                    y_ = dn(cy_ - CKH / 2 + oy * 10.8, GY)
+                    if free_at(x_, y_, pw_, CKH):
+                        px, py = x_, y_
+                        break
+                if px is not None:
+                    break
+            fp_ = Inst(nm_ck + '_fp', 'x', px if px is not None else dn(x - pw_ / 2, GX),
+                       py if py is not None else dn(y - CKH / 2, GY), pw_, CKH, 'R0', kind='waypoint')
+            if px is None:
+                legal(fp_)          # the spiral legaliser places (and occupies) the pair footprint
+            else:
+                occupy(fp_)
+            cb_ = Inst(nm_ck, 'hfd_ckb', fp_.x, fp_.y, CKW, CKH, 'R0', kind='waypoint', region='channel')
+            rr_ = Inst(nm_rr, 'hfd_rrl', fp_.x + CKW + 4.32, fp_.y, CKW, CKH, 'R0', kind='waypoint', region='channel')
+            for it in (cb_, rr_):
+                insts.append(it)
+                by[it.name] = it
+                G.inst[it.name] = it
+            return cb_, rr_
+
+        for d_ in ('stream', 'serial', 'hbm', 'link'):
+            sk_ = [(e, 'ck') for e in ck_sinks.get(d_, [])] + [(e, 'rst') for e in rs_sinks.get(d_, [])]
+            if not sk_:
+                continue
+            cen_ = {e: pin_pt.get(e, (by[e[0]].x + by[e[0]].w / 2, by[e[0]].y + by[e[0]].h / 2)) for e, _ in sk_}
+            xs_, ys_ = [c[0] for c in cen_.values()], [c[1] for c in cen_.values()]
+            X0, X1, Y0, Y1 = min(xs_), max(xs_) + 1.0, min(ys_), max(ys_) + 1.0
+            nx_ = max(0, math.ceil(math.log2(max(1.0, (X1 - X0) / 480.0))))
+            ny_ = max(0, math.ceil(math.log2(max(1.0, (Y1 - Y0) / 480.0))))
+            leafw, leafh = (X1 - X0) / 2 ** nx_, (Y1 - Y0) / 2 ** ny_
+            cell_of = defaultdict(list)
+            for e, kind_ in sk_:
+                cx, cy = cen_[e]
+                cell_of[(min(2 ** nx_ - 1, int((cx - X0) / leafw)), min(2 ** ny_ - 1, int((cy - Y0) / leafh)))].append((e, kind_))
+            cnt = [0]
+            nets_ck, nets_rs = defaultdict(list), defaultdict(list)      # driver inst -> loads
+            leaf_L = []
+            rec_ = dict(pairs=0, sinks=len(sk_), leaves=0, levels=nx_ + ny_, leaf_um=[round(leafw, 1), round(leafh, 1)])
+
+            def node(x, y, cells=None):
+                cnt[0] += 1
+                cb_, rr_ = pair_at(f'ck_{d_}_{cnt[0]}', f'rr_{d_}_{cnt[0]}', x, y, cells)
+                nets_ck[cb_.name].append((rr_.name, 'ck'))      # the relay clocked by the buffer beside it
+                rec_['pairs'] += 1
+                return cb_.name, rr_.name
+
+            leaves_ = []         # (leaf pair, stage depth, leaf x, leaf y, ck sinks, rst sinks)
+
+            def edge(par, x1_, y1_):
+                """the child node at (x1_, y1_) (legalised), reached from par along the channel router path with a
+                buffer / relay pair every <= 400 um of route; returns (child pair, route length)"""
+                ch = node(x1_, y1_)
+                pth = gpath(par[0], ch[0])
+                Lp = (len(pth) - 1) * RP.CELL
+                n_ = max(0, math.ceil(Lp / 400.0) - 1)
+                cur = par
+                for k_ in range(n_):
+                    ix = min(len(pth) - 1, int(round((k_ + 1) / (n_ + 1) * (len(pth) - 1))))
+                    j_, i_ = divmod(pth[ix], G.nx)
+                    nd = node((i_ + .5) * RP.CELL, (j_ + .5) * RP.CELL, pth[max(0, ix - 2):ix + 3])
+                    nets_ck[cur[0]].append((nd[0], 'i'))
+                    nets_rs[cur[1]].append((nd[1], 'i'))
+                    cur = nd
+                nets_ck[cur[0]].append((ch[0], 'i'))
+                nets_rs[cur[1]].append((ch[1], 'i'))
+                return ch, Lp, n_ + 1
+
+            def sub(i0, i1, j0, j1, par, Lpar, Dpar):
+                if not any(i0 <= a < i1 and j0 <= b < j1 for a, b in cell_of):
+                    return
+                cx = X0 + (i0 + i1) / 2 * leafw
+                cy = Y0 + (j0 + j1) / 2 * leafh
+                me, Le, De = edge(par, cx, cy)
+                if i1 - i0 == 1 and j1 - j0 == 1:
+                    rec_['leaves'] += 1
+                    leaf_L.append(Lpar + Le)
+                    leaves_.append((me, Dpar + De, cx, cy, cell_of[(i0, j0)]))
+                    return
+                if (i1 - i0) >= (j1 - j0) and i1 - i0 > 1:
+                    im = (i0 + i1) // 2
+                    sub(i0, im, j0, j1, me, Lpar + Le, Dpar + De)
+                    sub(im, i1, j0, j1, me, Lpar + Le, Dpar + De)
+                else:
+                    jm = (j0 + j1) // 2
+                    sub(i0, i1, j0, jm, me, Lpar + Le, Dpar + De)
+                    sub(i0, i1, jm, j1, me, Lpar + Le, Dpar + De)
+            G.inst.setdefault(coll_.name, coll_)
+            root = node(coll_.x + coll_.w / 2, coll_.y - 30.0)      # the domain's root pair at the PLL block's S face
+            nets_ck[('PLL',)] = [(root[0], 'i')]
+            nets_rs[('POR',)] = [(root[1], 'i')]
+            sub(0, 2 ** nx_, 0, 2 ** ny_, root, 0.0, 0)
+            # balance by construction: every leaf is padded to the deepest leaf's stage count with buffer / relay pairs
+            # placed AT the leaf, so each sink sees the same number of clock buffers and reset relay cycles from the PLL
+            Dmax = max((lf[1] for lf in leaves_), default=0)
+            npad = 0
+            for me, dd, lx, ly, sks in leaves_:
+                cur = me
+                for _p in range(Dmax - dd):
+                    nd = node(lx, ly)
+                    nets_ck[cur[0]].append((nd[0], 'i'))
+                    nets_rs[cur[1]].append((nd[1], 'i'))
+                    cur = nd
+                    npad += 1
+                for e, kind_ in sks:
+                    (nets_ck[cur[0]] if kind_ == 'ck' else nets_rs[cur[1]]).append(e)
+            rec_['stages_root_to_leaf'] = Dmax + 1
+            rec_['pad_pairs'] = npad
+            for drv_, lds_ in nets_ck.items():
+                src_ = (coll_.name, f'pll_{d_}') if drv_ == ('PLL',) else (drv_, 'o')
+                tree_nets[f'clk_{d_}'].append((f'clk_{d_}' if drv_ == ('PLL',) else f'clk_{d_}_{drv_}', 'clock_trunk', 1,
+                                               [src_] + lds_))
+            for drv_, lds_ in nets_rs.items():
+                src_ = (coll_.name, f'por_{d_}') if drv_ == ('POR',) else (drv_, 'o')
+                tree_nets[f'rst_{d_}'].append((f'rst_{d_}' if drv_ == ('POR',) else f'rst_{d_}_{drv_}', 'reset_tree', 1,
+                                               [src_] + lds_))
+            rec_['root_route_um'] = dict(min=round(min(leaf_L), 1), max=round(max(leaf_L), 1),
+                                         spread=round(max(leaf_L) - min(leaf_L), 1)) if leaf_L else None
+            tree_rec[d_] = rec_
+        phys_rec['clock_reset_trees'] = tree_rec
+        nb_ = []
+        for b_ in old_order:
+            if b_[1] in ('clock_trunk', 'reset_tree') and b_[0] in tree_nets:
+                nb_.extend(tree_nets.pop(b_[0]))
+            elif b_[1] not in ('clock_trunk', 'reset_tree') or not (b_[0].startswith('clk_') or b_[0].startswith('rst_')):
+                nb_.append(b_)
+        for v_ in tree_nets.values():
+            nb_.extend(v_)
+        buses[:] = nb_
     m = dict(base)
     m.update(insts=insts, buses=buses, geo=dict(base['geo'], **geo_m['geo']), regions=geo_m['regions'],
              variant=dict(bv, **V), result_pin_bays=bays, reserved_regions=[b_['box_um'] for b_ in bays],
@@ -1460,6 +1819,10 @@ def build_r25gq_net(variant):
                                      f'instances removed, {len(wps)} waypoints re-placed ({len(unplaced)} unplaced), '
                                      f'{nst} Option A relays'],
              r25gq_unplaced=unplaced, r25gq_lane_groups=lane_rec, network_probe=True)
+    if phys_rec is not None:
+        m['phys_relays'] = phys_rec
+    if V.get('phys_trees') or V.get('phys_relays'):
+        m['pin_peer_hold'] = pin_hold
     if ep_of:
         m['fclk'] = {k: ((V['link_ep']['flit_bits'], *v[1:]) if k.startswith('lk_lk_') else v)
                      for k, v in (base.get('fclk') or {}).items()}
@@ -4019,6 +4382,13 @@ def masters(m, k=1):
                 continue
             others = [by[o] for j, (o, _) in enumerate(eps) if j != i and o != 'TOP']
             peers[key] += others
+    hold_ = m.get('pin_peer_hold') or {}      # hbmdie-1011: block ck / rst pins stay where the die-wide net put them
+    if hold_:                                 # (clock / reset trees): peers of the copy masters() pins this port from
+        for (mst_, prt_) in list(peers):
+            it_ = ref.get((mst_, prt_), first.get(mst_))
+            nm_ = hold_.get(f'{mst_}|{prt_}|{it_.name}') if it_ is not None else None
+            if nm_ is not None:
+                peers[(mst_, prt_)] = [by[n_] for n_ in nm_ if n_ in by]
     notes = {'hfd_sm': 'SM element ot_hbm_accel_sm_v NC8/SUB4 (sm_r2 context 2202.768 x 2072.79, 202 macros; pin regions '
                        'of the context: d/req/rsp bottom, xw left, results right, control top; element route OPEN)'}
     notes.update(m.get('master_notes', {}))
@@ -4502,8 +4872,9 @@ MARGIN_RELAY_KINDS = ('stn', 'waypoint')
 
 def margin_lint(m):
     import fp_margin_lint as FPL
+    phys_ = bool((m.get('variant') or {}).get('phys_relays'))     # hbmdie-1011: physical relays only, no budget credit
     return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
-                          stages=lambda bid, L: seg_stages(m, bid, L),
+                          stages=(lambda bid, L: 0) if phys_ else (lambda bid, L: seg_stages(m, bid, L)),
                           edges=bool((m.get('variant') or {}).get('lane_stations')))   # R25GQ: per register segment
 
 
