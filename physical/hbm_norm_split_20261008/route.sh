@@ -43,7 +43,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $top $srcargs --macro-view
   --die-area 0 0 $DW $DH --core-area ${CORE_INSET:-2} ${CORE_INSET:-2} $(python3 -c "print(round($DW-${CORE_INSET:-2},3), round($DH-${CORE_INSET:-2},3))") --place-density ${PD:-0.5} \
   --orfs-var NUM_CORES=$C --orfs-var ADDER_MAP_FILE= --orfs-var PLACE_DENSITY_LB_ADDON= --orfs-var "SYNTH_KEEP_MODULES=$KEEPM" \
   --orfs-var "PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks" --orfs-var "IO_PLACER_H=M4 M6" --orfs-var "IO_PLACER_V=M5 M7" \
-  ${IOFILE:+--orfs-var IO_CONSTRAINTS=/src/$IOFILE} ${MACROFILE:+--orfs-var MACRO_PLACEMENT_TCL=/src/$MACROFILE} \
+  ${PDNF:+--orfs-var PDN_TCL=/src/$PDNF} ${IOFILE:+--orfs-var IO_CONSTRAINTS=/src/$IOFILE} ${MACROFILE:+--orfs-var MACRO_PLACEMENT_TCL=/src/$MACROFILE} \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.050} --purpose signoff_target --nickname-tag nsp_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
