@@ -31,7 +31,12 @@ module ot_qkvd_fifo_sb #(
     output reg  [$clog2(D+1)-1:0] count
 );
     localparam integer TW = W - 512;
-    localparam integer CW = $clog2(P + 1);
+`ifdef KVD_SBP
+    localparam integer PQ = `KVD_SBP;             // bench only: a shallow head queue forces traffic through the SRAM path
+`else
+    localparam integer PQ = P;
+`endif
+    localparam integer CW = $clog2(PQ + 1);
     assign full = (count == D[$clog2(D+1)-1:0]);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) count <= 0;
@@ -49,12 +54,12 @@ module ot_qkvd_fifo_sb #(
     wire [511:0]  rd_out;
     wire [CW-1:0] oc;
     `ifdef KVD_FSBMUT
-    wire direct = push && (oc < P[CW-1:0]);       // bench mutant: bypasses words still in the SRAM path (reorders)
+    wire direct = push && (oc < PQ[CW-1:0]);       // bench mutant: bypasses words still in the SRAM path (reorders)
 `else
-    wire direct = push && (ns == 0) && (f == 0) && (oc < P[CW-1:0]);
+    wire direct = push && (ns == 0) && (f == 0) && (oc < PQ[CW-1:0]);
 `endif
     wire tos    = push && !direct;
-    wire req    = (ns != 0) && ({1'b0, oc} + f < P);
+    wire req    = (ns != 0) && ({1'b0, oc} + f < PQ);
 
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
@@ -83,7 +88,7 @@ module ot_qkvd_fifo_sb #(
 
     // ---- output queue (registered head) ----------------------------------------------------------------------------
     wire oq_empty, oq_full;
-    ot_qkvd_fifo #(.RH(1), .W(W), .D(P)) u_oq (.clk(clk), .rst_n(rst_n), .push(direct || cap_v),
+    ot_qkvd_fifo #(.RH(1), .W(W), .D(PQ)) u_oq (.clk(clk), .rst_n(rst_n), .push(direct || cap_v),
         .din(cap_v ? cap : din), .pop(pop), .dout(dout), .empty(oq_empty), .full(oq_full), .count(oc));
     assign empty = oq_empty;
 endmodule

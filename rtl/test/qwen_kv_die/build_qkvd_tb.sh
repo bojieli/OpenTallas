@@ -44,6 +44,6 @@ SRC="$W/test/qwen_kv_die/ot_qkvd_layer_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd
 CPP="$W/test/qwen_kv_die/tb_qkvd_layer.cpp $W/test/nearhbm/sim_nhb_fp_lat_dpi.cpp $W/test/sim_hdc_v41x_fastfp_dpi.cpp"
 mkdir -p $OUT
 $VL --cc --exe --build -j 16 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
-  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
+  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${SBP:++define+KVD_SBP=$SBP} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
   -CFLAGS "-O1 -DKVD_R=$RR -DKVD_ROM_ST=$RST" --Mdir $OUT -o Vtb $SRC $CPP > $OUT/build.log 2>&1
 echo built $OUT
