@@ -11,6 +11,7 @@ hfd_su_tile r1(clk,rb0,rb1,tail,ra1);
 hfd_su_tile_xl x0(clk,head,xb0,xa1,xa0);
 hfd_su_tile_xl x1(clk_b,xb0,xb1,tail,xa1);
 integer c,b,s=17,bad=0;
+initial begin if (!$value$plusargs("SEED=%d", s)) s = 17; $display("SEED=%0d", s); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
 initial begin
   for(c=0;c<300;c=c+1)begin
     @(negedge clk_b);#((SKEW<0 ? -SKEW : 0)+0.02);

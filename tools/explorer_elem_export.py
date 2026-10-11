@@ -110,6 +110,7 @@ need = set()
 for k in ("tt_tcl", "ff_tcl"):
     if res.get(k):
         need.update(re.findall(r"/src/(\S+)", open(res[k]).read()))
+res["need_sta"] = sorted(need)
 if res.get("config"):
     t = open(res["config"]).read()
     need.update(re.findall(r"/src/(\S+)", t))
@@ -245,9 +246,30 @@ def _auto(job, element, dest, reg, log, redo):
                                          ['ssh', '-o', 'BatchMode=yes', host, 'tar -x -C %s' % src]), input=ar.stdout, capture_output=True, timeout=600)
                     if rr.returncode: raise RuntimeError('src rebuild: %s' % rr.stderr[-200:])
                 ssh(host, 'echo %s > %s/SOURCE_COMMIT' % (commit, src))
+                # files the loop GENERATES into a job's src (io_ref_routed.sdc, per-view io_place.tcl, ...) are not in git;
+                # the loop keeps text copies elsewhere in the run dir (cl/, routes/...): recover them by name
                 missing = [p for p in P.get('need', []) if p not in paths]
-                if missing and not nosta:
-                    log('%s: %d source paths not in git at %s -> geometry only' % (job, len(missing), commit[:10])); nosta = True
+                if missing:
+                    rec = r'''
+import os, shutil, sys
+run, src = sys.argv[1], sys.argv[2]
+for p in sys.argv[3:]:
+    b = os.path.basename(p); hit = None
+    for dp, dn, fn in [w for root in (run + "/cl", run) for w in os.walk(root)]:   # the loop's own copy in cl/ first
+        if hit: break
+        if dp == run + "/src" or dp.startswith(run + "/src/"): dn[:] = []; continue
+        if dp.startswith(run + "/routes") and "/objects" in dp: dn[:] = []; continue
+        if b in fn: hit = os.path.join(dp, b)
+    if hit:
+        os.makedirs(os.path.dirname(os.path.join(src, p)), exist_ok=True); shutil.copy(hit, os.path.join(src, p)); print("RECOVERED", p, hit)
+'''
+                    r = ssh(host, 'python3 -c %s %s %s %s' % (shlex.quote(rec), shlex.quote(run), shlex.quote(src), ' '.join(shlex.quote(p) for p in missing)), timeout=600)
+                    got = set(re.findall(r'^RECOVERED (\S+)', r.stdout, re.M))
+                    missing = [p for p in missing if p not in got]
+                    if got: log('%s: recovered %d generated source file(s) from the run dir: %s' % (job, len(got), ', '.join(sorted(got))))
+                sta_missing = [p for p in missing if p in set(P.get('need_sta', P.get('need', [])))]
+                if sta_missing and not nosta:
+                    log('%s: %d STA source paths neither in git at %s nor in the run dir (%s) -> geometry only' % (job, len(sta_missing), commit[:10], ', '.join(sta_missing))); nosta = True
     if layout:
         odb_gb, spef_gb = P.get('odb_gb') or 0, P.get('spef_gb') or 0
         mem = int(min(160, max(12, math.ceil(10 * odb_gb + 6 * spef_gb + 6))))

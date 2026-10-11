@@ -82,6 +82,19 @@ def main():
                  f(g.get("rate_if_op_free_tok_s")), g["evidence"].replace("|", "/")))
     rates = sorted({x for g in bg.get("priced_not_built", []) for x in g.get("inflates", [])})
     L += ["", "Rate figures these ops inflate (each prices the op at its simulator cost although no RTL runs it): " + "; ".join(rates) + ".", ""]
+    hand = d.get("hand_entered") or []
+    L += ["### Hand-entered ratios (unmeasured; never qualify)", "",
+          "| model | op / element | claimed ratio | source | owner |", "|---|---|---:|---|---|"]
+    for h in hand:
+        L.append("| %s | %s | %s | %s | %s |" % (h["model"], h.get("element") or h["op"], h.get("claimed_ratio") or "–",
+                                              str(h.get("src")).replace("|", "/"), h.get("owner")))
+    bii = d.get("bench_ii") or {}
+    L += ["", f"### Automated bench II ({len(bii)} elements with a cycles line in a passing exact closure-loop bench)", "",
+          "| element | II (cycles / item) | item | stalled stimulus | job @ commit | line |", "|---|---:|---|---|---|---|"]
+    for e, b in sorted(bii.items()):
+        L.append("| %s | %s | %s | %s | %s @ %s | %s |" % (e, b["ii"] if b["ii"] is not None else "–", b["item"] or "–",
+                 "yes" if b["stalled"] else "", b["job"], b["commit"], b["line"][:110].replace("|", "/")))
+    L.append("")
     bf = d.get("bf_hier")
     if bf:
         L += ["### DS ROM BF of record: hierarchical full-rate (ot_v41_bf_col + ot_s81_bf_front)", "",
