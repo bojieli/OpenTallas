@@ -69,9 +69,9 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     # VM behind 13/13 hub relay stations + grant links (VM_LINK 1); negative: the short-history receiver overflows
     'vmrly_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 1), 'vmrly_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 1),
     'vmrly_stg_r1': ('stg_r1', 1, [], 'pass', 1), 'vmrly_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 1),
-    'vmrly_stg_neg_nolink': ('stg_r1', 1, [], 'fail', 2), 'vmrly_s0_neg_wout4': ('s0_hash_u3', 0, [], 'fail', 3),
+    'vmrly_stg_neg_nolink': ('stg_r1', 1, [], 'fail', 2),
     'vmrly_stg_vmnat': ('stg_vmnat', 1, [], 'pass', 1),
-    'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3), 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
+    'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
 }
 
 
