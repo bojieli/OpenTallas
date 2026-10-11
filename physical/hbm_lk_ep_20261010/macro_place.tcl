@@ -2,7 +2,10 @@
 # f_lk y 783-993): two retry macros in the west column, the third mid-height in the east column, so the SerDes-side
 # logic (gearbox, CRC, sub FIFOs) owns the south-east corner beside phy and the coll-side logic (TX queue, merge) the
 # north-east corner beside f_lk.
-set pos {{19.44 19.44} {19.44 513.0} {749.52 266.76}}
+# idle-sweep 10-10: slot 1,503.36 x 1,123.2 (was 993.6, 64.6% util). Every die pin is on the E face at y 0.6-403
+# (f_lk 0.6-215, phy 216-403), so the third macro moves to the NE corner and the SE corner (x 749-1503, y 0-623)
+# beside all the pins holds the gearbox / CRC / queues; west column macros keep a 164 um channel between them.
+set pos {{19.44 19.44} {19.44 643.68} {749.52 643.68}}
 set n 0
 foreach inst [lsort [lmap i [[ord::get_db_block] getInsts] {expr {[[$i getMaster] getName] eq "ot_hbm_link_retry_pipeline" ? [$i getName] : [continue]}}]] {
   place_macro -macro_name $inst -location [lindex $pos $n] -orientation R0
