@@ -282,11 +282,14 @@ for p in sys.argv[3:]:
         r = ssh(host, 'cd %s && python3 tools/explorer_elem_export.py run %s' % (S, ' '.join(shlex.quote(x) for x in args)), timeout=6 * 3600)
         if r.returncode:
             raise RuntimeError('run rc %d: %s %s' % (r.returncode, r.stdout[-300:], r.stderr[-300:]))
-    rtl_ok = False
+    rtl_ok, rtl_err = False, None if P.get('config') else 'the route\'s synthesis config (config.mk) was not found on the host'
     if P.get('config') and src:
         r = ssh(host, 'cd %s && nice -n 19 python3 tools/explorer_elem/rtl_export.py --config %s --src %s --out %s/rtl --mem 16' % (S, shlex.quote(P['config']), shlex.quote(src), S), timeout=3600)
         rtl_ok = r.returncode == 0
-        if not rtl_ok: log('%s: rtl export failed: %s' % (job, (r.stdout + r.stderr)[-300:]))
+        if not rtl_ok:
+            errs = re.findall(r'^.*ERROR.*$', r.stdout + r.stderr, re.M)
+            rtl_err = (errs[-1] if errs else (r.stdout + r.stderr)[-200:]).strip()[:300]
+            log('%s: rtl export failed: %s' % (job, rtl_err))
     # fetch
     names = (['tt.json', 'ff.json', 'cells.bin', 'clk.bin', 'power_tt.rpt'] if layout else [])
     for n in names:
@@ -301,7 +304,7 @@ for p in sys.argv[3:]:
     ref = find_reference_model(spec, st, commit) if have_commit else dict(found=False, seeds=[], note='source commit not in the repo')
     pack(raw=raw_local if layout and (raw_local / 'tt.json').exists() else None, element=eid, job=job, dest=dest, st=st,
          host=host, raw_remote=(S + '/raw') if S else None, db=('%s:%s/6_final.odb' % (host, P['base'])) if P.get('base') else None,
-         rtl=rtl_local, ref=ref, reg=reg, nosta=nosta)
+         rtl=rtl_local, ref=ref, reg=reg, nosta=nosta, rtl_error=None if rtl_local else (rtl_err or 'RTL export produced no output'))
     mark(job, state='done', element=eid, layout=layout, nosta=nosta, rtl=bool(rtl_local), reference=ref.get('path'), error=None)
     log('%s -> %s done (layout %s, sta %s, rtl %s, ref %s)' % (job, eid, layout, not nosta, bool(rtl_local), ref.get('path')))
     return True
@@ -313,7 +316,7 @@ def _num(x):
     except Exception: return None
 
 
-def pack(raw, element, job, dest, st, host=None, raw_remote=None, db=None, rtl=None, ref=None, reg=None, nosta=False,
+def pack(raw, element, job, dest, st, host=None, raw_remote=None, db=None, rtl=None, ref=None, reg=None, nosta=False, rtl_error=None,
          label=None, role=None, summary=None, note=None, extra_facts=(), record_ref=None):
     dest = pathlib.Path(dest); dest.mkdir(parents=True, exist_ok=True)
     reg = reg or {}
@@ -363,7 +366,7 @@ def pack(raw, element, job, dest, st, host=None, raw_remote=None, db=None, rtl=N
               category=reg.get('category'), summary=summary, note=note, block=spec.get('block') or (tt or {}).get('top'), job=job, host=host, db=db,
               record=rec_ref, exported_at=time.strftime('%Y-%m-%dT%H:%M:%S%z'), facts=facts, layout=bool(tt), nosta=bool(nosta or (tt or {}).get('nosta')),
               bench=dict(spec={k: v for k, v in spec.items() if 'bench' in k.lower()}, stages=(spec.get('stages') or {}).get('bench') or [],
-                         state=st.get('benches') or {}), reference=ref)
+                         state=st.get('benches') or {}), reference=ref, rtl_error=rtl_error)
     if tt:
         el['geom'] = {k: tt[k] for k in ('die', 'core', 'cells', 'masters', 'modules', 'module_cells', 'macros', 'ports', 'grid', 'quantum_dbu', 'dbu_per_um', 'stats')}
         el['geom']['cells']['file'] = '%s.cells.bin' % element
