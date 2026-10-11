@@ -30,8 +30,18 @@
 // know when that is (the VM's lane 0 never sees the start at all), so the lane ends present a word to the core only
 // while its identity equals the identity of the last start the core accepted; later words wait in the credited
 // receiver (OUTPUT_PIPE 1: the compare reads a registered head, not the queue mux).
-// Boundary timing: every receiver facing a core port runs SEL 1 (c_ready selects precomputed next states) and
-// OUTPUT_PIPE 1 (registered c_valid / c_data): +1 cycle per lane word / start / result row, pipelined.
+// Boundary (rev 2, fixlat-p2lnk-ffbec0c86-tc TT -280: c_in_v = valid AND a 74-b compare (13 levels to the pin), c_in_r
+// -> 604-b output-pipe enables + SEL state (15 levels, 1,208 loads from one input pin), head / row flops 100+ um from
+// their pins): no core port touches logic.  Per lane: receiver (lrx_rtt OUTPUT_PIPE, registered head) -> GATE stage
+// (a_d / a_v, a REGISTERED match flag a_m: the compare reads flops and lands in one flop, recomputed every cycle for
+// the next head / next identity) -> core-side ot_sc_pfifo PINREG S 3 (pin flop capture, registered in_ready /
+// out_valid, out_data = 3:1 select by replicated pointer flops, c_in_r only steers the late-select copies).  Start:
+// receiver -> ot_sc_pfifo PINREG S 3.  Accepted-start identity: the accept is registered (acc_r) together with a
+// free-running copy of c_start_d (sd_r), so c_start_r reaches 1 flop, never the 74-b cur_id enables; the gate opens
+// one cycle after the core accepts the start (correct: later is safe, earlier is the fault).  Result row: core ->
+// ot_sc_pfifo PINREG S 3 (c_out_r = its registered in_ready, pin flops at the core pins) -> ot_dsrom_mtp_ltx_rc
+// (grant from one flop, row flops at the die pins).  Cost: +3 cycles per lane word / +2 per start / +2 per result row,
+// pipelined (full rate kept: S 3 with PINREG; receiver depths unchanged).
 // OT_FIXLAT_MUT_LAT1 (negative control): every receiver here assumes a latency-1 link (0 hops, the legacy
 // 3-cycle grant history) at the same depth -> must overflow on the stationed bench.
 // OT_FIXLAT_MUT_NOGATE (negative control): no transaction gate -> back-to-back transactions fault the core.
@@ -57,27 +67,61 @@ module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
  wire clk = ck[0];
  wire rst_n;
  ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rst_n));
- wire [1:0] lv, lr, open_;
- ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_l0(.clk(clk),.rst_n(rst_n),
-  .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(lv[0]),.c_ready(lr[0]),.c_data(c_in_d[603:0]));
- ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_l1(.clk(clk),.rst_n(rst_n),
-  .l_valid(f_l1v),.l_ready(t_l1g),.l_data(f_l1d),.c_valid(lv[1]),.c_ready(lr[1]),.c_data(c_in_d[1207:604]));
+ // ---- start: receiver -> core-side pin FIFO
+ wire sv, sr; wire [100:0] sd;
  ot_dsrom_mtp_lrx_rtt #(.W(101),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_st(.clk(clk),.rst_n(rst_n),
-  .l_valid(f_sv),.l_ready(t_sg),.l_data(f_sd),.c_valid(c_start_v),.c_ready(c_start_r),.c_data(c_start_d));
- // transaction gate: identity of the start the core last accepted (registered compare against the registered heads)
- reg [73:0] cur_id; reg cur_ok;
+  .l_valid(f_sv),.l_ready(t_sg),.l_data(f_sd),.c_valid(sv),.c_ready(sr),.c_data(sd));
+ ot_sc_pfifo #(.W(101),.S(3),.G(32),.PINREG(1)) u_sp(.clk(clk),.rst_n(rst_n),.in_valid(sv),.in_ready(sr),.in_data(sd),
+  .out_valid(c_start_v[0]),.out_ready(c_start_r[0]),.out_data(c_start_d));
+ // ---- accepted-start identity (registered accept + free-running data copy; cur_id loads from flops only)
+ reg acc_r; reg [73:0] sd_r, cur_id; reg cur_ok;
+ always @(posedge clk) sd_r <= c_start_d[100:27];
  always @(posedge clk)
-  if(!rst_n) begin cur_ok<=1'b0; cur_id<='0; end
-  else if(c_start_v&&c_start_r) begin cur_ok<=1'b1; cur_id<=c_start_d[100:27]; end
+  if(!rst_n) begin acc_r<=1'b0; cur_ok<=1'b0; cur_id<='0; end
+  else begin
+   acc_r <= c_start_v[0] && c_start_r[0];
+   if(acc_r) begin cur_ok<=1'b1; cur_id<=sd_r; end
+  end
+ wire [73:0] cur_id_n = acc_r ? sd_r : cur_id;   // identity in force next cycle (from flops)
+ wire cur_ok_n = cur_ok || acc_r;
+ // ---- lanes: receiver -> gate stage -> core-side pin FIFO
+ genvar l;
+ generate for (l = 0; l < 2; l = l + 1) begin: g_lane
+  wire rv, rr; wire [603:0] rd;
+  if (l == 0) begin: g_r
+   ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_rx(.clk(clk),.rst_n(rst_n),
+    .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(rv),.c_ready(rr),.c_data(rd));
+  end else begin: g_r
+   ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_rx(.clk(clk),.rst_n(rst_n),
+    .l_valid(f_l1v),.l_ready(t_l1g),.l_data(f_l1d),.c_valid(rv),.c_ready(rr),.c_data(rd));
+  end
+  // gate stage: a_m = (identity of the word held next cycle == identity in force next cycle), registered
+  reg a_v, a_m; reg [603:0] a_d;
+  wire pr;                                  // pin FIFO in_ready (a flop)
 `ifdef OT_FIXLAT_MUT_NOGATE
- assign open_=2'b11;
+  wire pass = a_v;
 `else
- assign open_[0]=cur_ok&&(c_in_d[603:530]==cur_id);
- assign open_[1]=cur_ok&&(c_in_d[1207:1134]==cur_id);
+  wire pass = a_v && a_m;
 `endif
- assign c_in_v=lv&open_;
- assign lr=c_in_r&open_;
- ot_dsrom_mtp_ltx #(.W(594)) u_o(.clk(clk),.rst_n(rst_n),.c_valid(c_out_v),.c_ready(c_out_r),.c_data(c_out_d),
+  wire adv = !a_v || (pass && pr);          // the stage takes the receiver head (flops only)
+  assign rr = adv;
+  wire [73:0] id_n = adv ? rd[603:530] : a_d[603:530];
+  always @(posedge clk) begin
+   if(!rst_n) begin a_v<=1'b0; a_m<=1'b0; end
+   else begin
+    if(adv) a_v<=rv;
+    a_m <= cur_ok_n && (id_n == cur_id_n);
+   end
+   if(adv && rv) a_d<=rd;
+  end
+  ot_sc_pfifo #(.W(604),.S(3),.G(32),.PINREG(1)) u_pf(.clk(clk),.rst_n(rst_n),.in_valid(pass),.in_ready(pr),.in_data(a_d),
+   .out_valid(c_in_v[l]),.out_ready(c_in_r[l]),.out_data(c_in_d[604*l+:604]));
+ end endgenerate
+ // ---- result row: core -> pin FIFO -> grant-protocol sender (grant from one flop)
+ wire ov, orr; wire [593:0] od;
+ ot_sc_pfifo #(.W(594),.S(3),.G(32),.PINREG(1)) u_op(.clk(clk),.rst_n(rst_n),.in_valid(c_out_v[0]),.in_ready(c_out_r[0]),.in_data(c_out_d),
+  .out_valid(ov),.out_ready(orr),.out_data(od));
+ ot_dsrom_mtp_ltx_rc #(.W(594)) u_o(.clk(clk),.rst_n(rst_n),.c_valid(ov),.c_ready(orr),.c_data(od),
   .l_valid(t_ov),.l_ready(f_og),.l_data(t_od));
 endmodule
 
