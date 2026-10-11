@@ -1168,7 +1168,9 @@ def cmd_block(a):
             if y0 < 1.0:
                 raise ValueError(f"{a.piece}: {len(names)} pins do not fit a {h} um edge at 0.192")
             return [(nm, "M4", "", x, round(y0 + i * 0.192, 3)) for i, nm in enumerate(names)]
-        pins = edge(ins, 0.0) + edge(outs, w)
+        # bdc sits WEST of the x-store stack in the tile (R0, no mirror: mirrored pins leave the track grid), so its
+        # operand inputs face EAST toward the SRAM capture flops; tcc sits east of the stack with its inputs WEST.
+        pins = (edge(ins, w) + edge(outs, 0.0)) if a.piece == "bdc" else (edge(ins, 0.0) + edge(outs, w))
         xc = round(round((w / 2 - 0.012) / 0.048) * 0.048 + 0.012, 3)
         pins += [("clk", "M5", "", xc, h), ("rst_a", "M5", "", round(xc + 0.48, 3), h)]
         macros = []
