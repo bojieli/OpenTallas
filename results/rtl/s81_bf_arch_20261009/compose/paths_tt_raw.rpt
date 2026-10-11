@@ -1,0 +1,112 @@
+Startpoint: u_col0 (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_front (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_col0/clk (ot_v41_bf_col)
+ 866.31  866.31 v u_col0/qy_bkf (ot_v41_bf_col)
+   0.00  866.31 v u_front/c_qy_bkf_in[0] (ot_s81_bf_front)
+         866.31   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (ideal)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+         773.33 ^ u_front/clk (ot_s81_bf_front)
+  80.28  853.62   library setup time
+         853.62   data required time
+---------------------------------------------------------
+         853.62   data required time
+        -866.31   data arrival time
+---------------------------------------------------------
+         -12.70   slack (VIOLATED)
+
+
+Startpoint: u_front (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_col0 (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_front/clk (ot_s81_bf_front)
+ 638.01  638.01 v u_front/c0_issue (ot_s81_bf_front)
+   0.00  638.01 v u_col0/issue (ot_v41_bf_col)
+         638.01   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (ideal)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+         773.33 ^ u_col0/clk (ot_v41_bf_col)
+ 548.00 1321.33   library setup time
+        1321.33   data required time
+---------------------------------------------------------
+        1321.33   data required time
+        -638.01   data arrival time
+---------------------------------------------------------
+         683.32   slack (MET)
+
+
+Startpoint: u_front (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_col1 (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_front/clk (ot_s81_bf_front)
+ 619.48  619.48 ^ u_front/c1_ze_d (ot_s81_bf_front)
+   0.00  619.48 ^ u_col1/ze_d (ot_v41_bf_col)
+         619.48   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (ideal)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+         773.33 ^ u_col1/clk (ot_v41_bf_col)
+ 554.64 1327.98   library setup time
+        1327.98   data required time
+---------------------------------------------------------
+        1327.98   data required time
+        -619.48   data arrival time
+---------------------------------------------------------
+         708.50   slack (MET)
+
+
+Startpoint: u_front (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_col1 (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_front/clk (ot_s81_bf_front)
+ 584.69  584.69 v u_front/c1_so_idx[34] (ot_s81_bf_front)
+   0.00  584.69 v u_col1/so_idx[34] (ot_v41_bf_col)
+         584.69   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (ideal)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+         773.33 ^ u_col1/clk (ot_v41_bf_col)
+ 524.18 1297.52   library setup time
+        1297.52   data required time
+---------------------------------------------------------
+        1297.52   data required time
+        -584.69   data arrival time
+---------------------------------------------------------
+         712.82   slack (MET)
+
+

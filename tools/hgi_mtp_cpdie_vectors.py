@@ -40,13 +40,15 @@ def main():
             body = end_rec(i)
             assert len(body) <= KS
             words += body + [0] * (KS - len(body))
-    md = dict(magic=G.MAGIC, ver_minor=G.D_VERSION[1], ver_major=G.D_VERSION[0], n_words=G.NWORDS,
-              cp_vocab=129280, cp_ctx_max=1 << 20, coll_group_size=96, entry_ar=ar,
-              image_base=0x10, image_pages=1, mtp_kstride=KS, **{f'mtp_kernel_{k}': kent[k] for k in range(11)})
-    mdw = G.d_pack(md)
     T = ROOT / 'rtl/hbm_accel/generic/tb'
+    for sfx, noise, vocab in (('', 128799, 129280), ('_q', 151669, 151936)):     # MD word 53 mtp_noise: DS noise id / the DFlash mask id (18 b)
+        md = dict(magic=G.MAGIC, ver_minor=G.D_VERSION[1], ver_major=G.D_VERSION[0], n_words=G.NWORDS,
+                  cp_vocab=vocab, cp_ctx_max=1 << 20, coll_group_size=96, entry_ar=ar, mtp_noise=noise,
+                  image_base=0x10, image_pages=1, mtp_kstride=KS, **{f'mtp_kernel_{k}': kent[k] for k in range(11)})
+        mdw = G.d_pack(md)
+        assert G.d_hw_check(mdw) == 0
+        (T / f'hgi_mtp_cpdie_md{sfx}.mem').write_text('\n'.join(f'{x:08X}' for x in mdw) + '\n')
     (T / 'hgi_mtp_cpdie_image.mem').write_text('\n'.join(f'{w:032X}' for w in words) + '\n')
-    (T / 'hgi_mtp_cpdie_md.mem').write_text('\n'.join(f'{x:08X}' for x in mdw) + '\n')
     (T / 'hgi_mtp_cpdie_vm0.mem').write_text('\n'.join(f'{a:08X}{v:08X}' for a, v in sorted(vm.items())) + '\n')
     (T / 'hgi_mtp_cpdie_sizes.svh').write_text(f'localparam integer MTPV_NW = {len(words)}, MTPV_NVM = {len(vm)}, '
                                                f'MTPV_KS = {KS}, MTPV_TOKB = {TOKB};\n')
