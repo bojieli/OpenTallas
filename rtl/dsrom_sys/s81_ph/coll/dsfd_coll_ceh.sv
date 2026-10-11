@@ -78,7 +78,10 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     output reg  [1:0]        lf,                            // {e_flt, mq_flt}
     output reg               pe_o, input wire [3:1] pe_i
 );
-    localparam integer SFW = 128, PW = 163, TAGW = 32, EDEPTH = 512, MQD = EDEPTH, MQB = $clog2(MQD);
+    // OT_S81PH_COLL_CSTRESS (bench only): 8-deep receive FIFOs per parity, so the inter-die credit loop runs dry and
+    // must work (277 records per die never exhaust the 256-deep production FIFOs)
+    localparam integer EDEPTH = `ifdef OT_S81PH_COLL_CSTRESS 16 `else 512 `endif;
+    localparam integer SFW = 128, PW = 163, TAGW = 32, MQD = EDEPTH, MQB = $clog2(MQD);
     localparam integer PTW = (S == 0) ? 169 : 129;
     reg [1:0] rst_s;
     always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
@@ -494,7 +497,7 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
         end
     end endgenerate
     generate for (k = 1; k < 4; k = k + 1) begin : g_f
-        dsfd_coll_cef u_f (.ck(c), .rs(r), .e_en(e_en), .rx_v(rx_v[k]), .rx_d(rx_d[k]), .x_v(xv[k]), .x_d(xd[k]),
+        dsfd_coll_cef #(.PD(`ifdef OT_S81PH_COLL_CSTRESS 8 `else 256 `endif)) u_f (.ck(c), .rs(r), .e_en(e_en), .rx_v(rx_v[k]), .rx_d(rx_d[k]), .x_v(xv[k]), .x_d(xd[k]),
             .x_cr(xl_cr_s[0][2*k +: 2]), .flt(fifo_f[k - 1]));
     end endgenerate
     // slices
