@@ -42,7 +42,8 @@ module ot_hgi_sm_xload #(
     parameter integer PMAX = 8,
     parameter integer MUT_M = 0,          // mutant (FILL-9): a landing sector's write mask on lane slice (j ^ 1) of its quarter
     parameter integer MUT_T = 0,          // mutant: lane j takes t from the wrong half (k = (g 64 + j) 8 + (7 - t))
-    parameter integer MUT_BD = 0          // mutant: a block-dot block lands in the neighbouring lane (j ^ 1)
+    parameter integer MUT_BD = 0,         // mutant: a block-dot block lands in the neighbouring lane (j ^ 1)
+    parameter integer BD = 0              // hbm-relaunch-1011/xfp: 1 = native block-dot x (fmt 1 / 2); 0 = refuse (as main)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -177,8 +178,8 @@ module ot_hgi_sm_xload #(
     always @(posedge clk) if (x_v && x_rdy) begin
         c_base <= x_base; c_n <= x_n; c_p <= x_p; c_stride <= x_stride; c_space <= x_space; c_fmt <= x_fmt;
     end
-    wire c_bdf = (c_fmt == 2'd1 || c_fmt == 2'd2);
-    wire c_bad = c_space != 2'd1 || |c_base[2:0] || |c_stride[2:0] || c_p > PMAX || c_p == 4'd0 ||
+    wire c_bdf = (BD != 0) && (c_fmt == 2'd1 || c_fmt == 2'd2);
+    wire c_bad = ((BD == 0) && (c_fmt == 2'd1 || c_fmt == 2'd2)) || c_space != 2'd1 || |c_base[2:0] || |c_stride[2:0] || c_p > PMAX || c_p == 4'd0 ||
                  (c_bdf && (|c_n[4:0] || c_n == 21'd0));
     // ---- block-dot state
     reg bd; reg [3:0] la; reg [15:0] nbk;  // fmt 1 / 2; lanes a fragment column; K / 32 blocks
@@ -186,22 +187,54 @@ module ot_hgi_sm_xload #(
     reg [3:0] bp; reg [3:0] bj; reg [1:0] bs; reg asl;   // issue cursor: column, lane, sector, assembly slot
     reg [15:0] bq_exp, bq_got; reg bq_iss_done; reg bflt;
     reg [1023:0] ab [0:1]; reg [2:0] acnt [0:1]; reg [3:0] ap [0:1]; reg [3:0] aj [0:1]; reg [1:0] aact;
-    reg [2127:0] qb [0:PMAX-1];
-    wire aq_vo, aq_f; wire [255:0] aq_q; wire signed [9:0] aq_e; wire [511:0] aq_y;
+    wire aq_vo, aq_f; wire [255:0] aq_q; wire signed [9:0] aq_e;
     reg aq_v; reg [1023:0] aq_x; reg [7:0] aq_tg; reg [7:0] tgf [0:15]; reg [3:0] tgh, tgt;
-    ot_hdc_actquant u_aq (.clk(clk), .rst_n(rst_c), .v(aq_v), .fp4(1'b0), .x(aq_x), .vo(aq_vo), .q(aq_q), .e(aq_e),
-                          .y(aq_y), .fault(aq_f));
+    // EMIT STORE (hbm-relaunch-1011/xfp, structural): the address's fragment is built in NBQ beat registers bdb[k]
+    // (fragment bits [k 2,048 +: 2,048]).  A quantised block (slot p, lane j) is written at its STATIC fragment
+    // position p XC + 266 j through a registered write stage (one-hot lane enable + the 266-b word replicated into
+    // fragment space: no dynamic part-select).  Emission shifts the chain one beat an edge (bdb[k] <= bdb[k + 1], zero
+    // in at the top) and takes bdb[0]: no NBQ:1 x 2,048-b beat mux and no beat-index fanout; after nb shifts the
+    // written beats (< nb) are gone and the chain is all-zero again, so no per-address clear.  One clear per command
+    // (bclr, a per-beat copy of start).
     localparam integer NBQ = (PMAX * XC + 2047) / 2048;
-    wire [PMAX*XC-1:0] fq;
-    for (genvar gf = 0; gf < PMAX; gf = gf + 1) begin : g_fq
-        assign fq[gf*XC +: XC] = {{(XC-2128){1'b0}}, qb[gf]};
-    end
-    wire [NBQ*2048-1:0] fqx = {{(NBQ*2048 - PMAX*XC){1'b0}}, fq};
+    wire bshift;
+    localparam integer NL = PMAX * 8;
+    reg w_v; reg [NL-1:0] w_oh; reg [265:0] w_d;
+    reg [NBQ-1:0] bclr;
+    reg [2047:0] bdb [0:NBQ-1];
+    wire [NBQ*2048-1:0] fd, fm;
+    genvar gl, gk;
+    generate if (BD != 0) begin : g_bd
+        ot_hdc_actquant u_aq (.clk(clk), .rst_n(rst_c), .v(aq_v), .fp4(1'b0), .x(aq_x), .vo(aq_vo), .q(aq_q), .e(aq_e),
+                              .y(), .fault(aq_f));
+        for (gl = 0; gl < NL; gl = gl + 1) begin : g_l
+            localparam integer LO = (gl / 8) * XC + 266 * (gl % 8);
+            assign fd[LO +: 266] = w_d;
+            assign fm[LO +: 266] = {266{w_oh[gl]}};
+            if (gl % 8 == 7) begin : g_gap      // the slot's gap up to the next slot (and the beat padding past PMAX)
+                localparam integer GE = ((gl / 8) == PMAX - 1) ? NBQ * 2048 : (gl / 8 + 1) * XC;
+                assign fd[GE - 1 : LO + 266] = '0;
+                assign fm[GE - 1 : LO + 266] = '0;
+            end
+        end
+        for (gk = 0; gk < NBQ; gk = gk + 1) begin : g_k
+            always @(posedge clk) begin
+                if (bclr[gk]) bdb[gk] <= 2048'd0;
+                else if (bshift) bdb[gk] <= (gk == NBQ - 1) ? 2048'd0 : bdb[(gk == NBQ - 1) ? gk : gk + 1];
+                else if (w_v) bdb[gk] <= (bdb[gk] & ~fm[gk*2048 +: 2048]) | (fd[gk*2048 +: 2048] & fm[gk*2048 +: 2048]);
+            end
+        end
+    end else begin : g_nobd
+        assign aq_vo = 1'b0; assign aq_f = 1'b0; assign aq_q = '0; assign aq_e = '0;
+        assign fd = '0; assign fm = '0;
+        always @(posedge clk) bdb[0] <= 2048'd0;
+    end endgenerate
     reg be_v; reg [6:0] be_a, be_g; reg [2047:0] be_d;   // a block-dot beat on its way to the xw pins
     wire [15:0] blk = ({8'd0, g} * {12'd0, la} + {12'd0, bj}) * 16'd8 + {12'd0, t};
     wire blk_ok = blk < nbk;
     wire [31:0] wdb = {14'd0, base} + bp * {14'd0, st} + {blk, 5'd0} + {bs, 3'd0};
     wire bd_rd = busy && ph == 2'd3 && bph == 2'd1;
+    assign bshift = busy && ph == 2'd3 && bph == 2'd2;
     wire bd_issue = bd_rd && !bq_iss_done && bp < pp && blk_ok && found && !aact[asl];
     reg bq_v; reg bq_s;                    // a complete block -> the quantiser (older slot first)
     always @* begin
@@ -286,7 +319,6 @@ module ot_hgi_sm_xload #(
                 gn <= (c_fmt == 2'd2) ? ((c_n - 21'd1) >> 11) + 8'd1 : ((c_n - 21'd1) >> 10) + 8'd1;
                 t <= 4'd0; b <= 7'd0; bp <= 4'd0; bj <= 4'd0; bs <= 2'd0; asl <= 1'b0;
                 bq_exp <= 16'd0; bq_got <= 16'd0; bq_iss_done <= 1'b0; acnt[0] <= 3'd0; acnt[1] <= 3'd0;
-                for (integer w = 0; w < PMAX; w = w + 1) qb[w] <= 2128'd0;
             end
         end
         // ---- block-dot data path
@@ -312,14 +344,19 @@ module ot_hgi_sm_xload #(
             if (!(lsel_v && hdat[lsel][267] == bq_s)) acnt[bq_s] <= 3'd0;
         end
         if (aq_v) tgf[tgt] <= aq_tg;                         // the quantiser is in order: tags ride
+        // registered lane write (W): one-hot lane enable {p, j} + the word; bq_got counts WRITTEN blocks
+        w_v <= ph == 2'd3 && aq_vo;
+        w_oh <= {NL{1'b0}};
+        if (ph == 2'd3 && aq_vo) w_oh[{tgf[tgh][7:4], 3'd0} + {4'd0, tgf[tgh][2:0] ^ MUT_BD[2:0]}] <= 1'b1;
+        if (w_v) bq_got <= bq_got + 16'd1;
+        bclr <= {NBQ{start}};
         if (ph == 2'd3 && aq_vo) begin
-            qb[tgf[tgh][7:4]][266*(tgf[tgh][3:0] ^ MUT_BD[3:0]) +: 266] <= {aq_e, aq_q}; bq_got <= bq_got + 16'd1;
+            w_d <= {aq_e, aq_q};
         end
         if (busy && ph == 2'd3 && bph == 2'd2) begin
-            be_a <= {g[3:0], t[2:0]}; be_g <= b; be_d <= fqx[b*2048 +: 2048];
+            be_a <= {g[3:0], t[2:0]}; be_g <= b; be_d <= bdb[0];
             if (be_last) begin
                 b <= 7'd0;
-                for (integer w = 0; w < PMAX; w = w + 1) qb[w] <= 2128'd0;
                 bp <= 4'd0; bj <= 4'd0; bs <= 2'd0; bq_exp <= 16'd0; bq_got <= 16'd0; bq_iss_done <= 1'b0;
                 if (t == 4'd7) begin t <= 4'd0; if (g != gn - 8'd1) g <= g + 8'd1; end else t <= t + 4'd1;
             end else b <= b + 7'd1;
