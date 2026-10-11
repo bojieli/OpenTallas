@@ -470,26 +470,45 @@ def elem_redact(o):
             for pt in p['points']: pt[0] = ''
     return o
 
+_TPUT = {'t': 0, 'd': None, 'commit': None, 'err': None}
+TPUT_REL = 'results/arch/throughput_budget_20261010/budget.json'
+
+def _tput_load():
+    """budget.json from origin/main (the shared checkout may sit on a stale HEAD): git fetch at most every 10 min,
+    then git show origin/main:<path>"""
+    now = time.time()
+    if _TPUT['d'] is not None and now - _TPUT['t'] < 600: return
+    repo = os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas')
+    _TPUT['t'] = now
+    try:
+        subprocess.run(['git', '-C', repo, 'fetch', '-q', 'origin', 'main'], timeout=90, capture_output=True)
+        r = subprocess.run(['git', '-C', repo, 'show', 'origin/main:' + TPUT_REL], timeout=30, capture_output=True)
+        if r.returncode:
+            _TPUT.update(d=None, err='not on origin/main yet'); return
+        c = subprocess.run(['git', '-C', repo, 'log', '-1', '--format=%h %cI', 'origin/main', '--', TPUT_REL], timeout=30, capture_output=True, text=True)
+        _TPUT.update(d=json.loads(r.stdout), commit=c.stdout.strip(), err=None)
+    except Exception as e:
+        _TPUT.update(err=str(e)[:200])
+
 def elem_tput(blocks, safe):
-    """throughput qualification for the element page: entries of the committed throughput budget
-    (results/arch/throughput_budget_20261010/budget.json, tput-gate-1010) that name one of the blocks; pending until it exists"""
-    rel = 'results/arch/throughput_budget_20261010/budget.json'
-    p = pathlib.Path(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas')) / rel
-    if not p.exists(): return dict(status='pending', path=rel)
-    try: d = json.loads(p.read_text())
-    except Exception as e: return dict(status='unreadable', path=rel, error=str(e)[:200])
-    hits = []
-    def walk(o, at, depth):
-        if len(hits) >= 40 or depth > 8: return
-        if isinstance(o, dict):
-            s_ = json.dumps(o)
-            if len(s_) < 6000 and any(b in s_ for b in blocks) and any(k in o for k in ('ratio', 'measured', 'budget', 'status', 'qualified', 'verdict')):
-                hits.append(dict(at=at, entry=o)); return
-            for k, v in o.items(): walk(v, at + '/' + str(k), depth + 1)
-        elif isinstance(o, list):
-            for i, v in enumerate(o): walk(v, at + '/%d' % i, depth + 1)
-    walk(d, '', 0)
-    return dict(status='present', path=rel, mtime=p.stat().st_mtime, generated=d.get('generated') if isinstance(d, dict) else None, hits=hits)
+    """throughput qualification of the element page's blocks, read with the budget's exact keys:
+    elements[<block>] = {status, ratio, limiting{op, model, status, ratio, owner, src}, ops[...]} and the token-path
+    classes (rom.<model>.classes[] with elements[]) that list the block"""
+    _tput_load()
+    d = _TPUT['d']
+    if d is None: return dict(status='pending', path=TPUT_REL, error=_TPUT['err'])
+    out = dict(status='present', path=TPUT_REL, commit=_TPUT['commit'], generated_utc=d.get('generated_utc'), rule=d.get('rule'),
+               qualify_ratio=d.get('qualify_ratio'), elements={}, classes={})
+    for b in blocks:
+        out['elements'][b] = (d.get('elements') or {}).get(b)
+        cl = []
+        for model, md in (d.get('rom') or {}).items():
+            for c in (md or {}).get('classes', []) if isinstance(md, dict) else []:
+                if b in (c.get('elements') or []):
+                    cl.append(dict(model='rom.' + model, **{k: c.get(k) for k in ('cls', 'status', 'critical_cycles_per_token', 'share', 'nodes',
+                                                                                  'measured_fraction', 'n_unmeasured', 'unmeasured_nodes', 'basis')}))
+        out['classes'][b] = cl
+    return out
 
 def elem_body(path, safe, gz):
     import gzip as _gz

@@ -585,23 +585,24 @@ function overviewHtml(E){
 }
 function tputHtml(E){
   const T = S.tput;
-  if (!T) return '<p class="note">Checking the throughput budget&hellip;</p>';
-  if (T.status === 'pending') return `<div class="vbox"><span class="lbl pend">pending</span> The throughput budget (${esc(T.path)}, stream tput-gate-1010) has not been committed yet. This box fills in automatically when it lands.</div>`;
+  if (!T) return '<p class="note">Reading the throughput budget&hellip;</p>';
+  if (T.status === 'pending') return `<div class="vbox"><span class="lbl pend">pending</span> ${esc(T.path)} is not on origin/main yet${T.error ? ' (' + esc(T.error) + ')' : ''}. This box fills in automatically when it lands.</div>`;
   if (T.status !== 'present') return `<div class="vbox"><span class="lbl bad">${esc(T.status)}</span> ${esc(T.error || '')}</div>`;
-  const names = [E.d.block, E.d.job].filter(Boolean);
-  const hits = (T.hits || []).filter(h => names.some(n => JSON.stringify(h.entry).includes(n)));
-  if (!hits.length) return `<div class="vbox"><span class="lbl unv">no bench</span> ${esc(T.path)} has no entry for ${esc(E.d.block)}.</div>`;
-  return hits.slice(0, 4).map(h => {
-    const o = h.entry, num = k => { for (const kk of Object.keys(o)) if (kk.toLowerCase().includes(k) && typeof o[kk] === 'number') return [kk, o[kk]]; return null; };
-    const ratio = num('ratio'), bud = num('budget'), meas = num('measured');
-    let r = ratio ? ratio[1] : (bud && meas && bud[1] ? meas[1] / bud[1] : null);
-    const ver = r == null ? 'no bench' : r <= 1.10 ? 'QUALIFIED' : 'UNQUALIFIED';
-    return `<div class="vbox" style="margin-bottom:6px"><span class="lbl ${ver === 'QUALIFIED' ? 'ver' : ver === 'UNQUALIFIED' ? 'bad' : 'unv'}">${ver}</span>${r != null ? ` measured / budget = <b>${fmt(r, 3)}</b>` : ''}
-      <table class="t" style="margin-top:6px"><tbody>${Object.entries(o).filter(([k, v]) => typeof v !== 'object').slice(0, 14).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="m">${esc(typeof v === 'number' ? fmt(v, Number.isInteger(v) ? 0 : 3) : v)}</td></tr>`).join('')}</tbody></table>
-      <p class="note" style="margin-top:4px">${esc(T.path)} ${esc(h.at)}</p></div>`;
-  }).join('');
+  const b = E.d.block, el = (T.elements || {})[b], cls = (T.classes || {})[b] || [], qr = T.qualify_ratio;
+  const src = `<p class="note" style="margin-top:6px">${esc(T.path)} @ origin/main ${esc(T.commit || '')}${T.generated_utc ? ' · generated ' + esc(T.generated_utc) : ''}. Rule: ${esc(T.rule || '')}</p>`;
+  if (!el) return `<div class="vbox"><span class="lbl unv">not in the budget</span> ${esc(T.path)} has no <code>elements["${esc(b)}"]</code> entry: this block is not on a priced token path yet, so it has no budget and no production-shape throughput bench.${src}</div>`;
+  const lab = st => st === 'QUALIFIED' ? 'ver' : st === 'UNQUALIFIED_NO_BENCH' ? 'unv' : 'bad';
+  const txt = st => st === 'UNQUALIFIED_NO_BENCH' ? 'UNQUALIFIED · no production-shape bench' : st;
+  const L = el.limiting || {};
+  const ops = (el.ops || []).map(o => `<tr><td class="m">${esc(o.op)}</td><td class="m">${esc(o.model)}</td><td><span class="lbl ${lab(o.status)}">${esc(txt(o.status))}</span></td><td class="n">${o.ratio == null ? '—' : fmt(o.ratio, 3)}</td><td class="m" style="font-size:10.5px">${esc(o.src || '—')}</td></tr>`).join('');
+  const cl = cls.map(c => `<tr><td class="m">${esc(c.model)} · ${esc(c.cls)}</td><td><span class="lbl ${lab(c.status)}">${esc(txt(c.status))}</span></td><td class="n">${fmt(c.critical_cycles_per_token, 1)}</td><td class="n">${fmt(100 * c.share, 1)} %</td><td class="n">${fmt(100 * c.measured_fraction, 2)} % of ${fmt(c.nodes, 0)}</td></tr>
+    ${c.n_unmeasured ? `<tr><td colspan="5" class="note">unmeasured nodes (${c.n_unmeasured}): ${esc((c.unmeasured_nodes || []).join(', '))}</td></tr>` : ''}`).join('');
+  return `<div class="vbox"><p><span class="lbl ${lab(el.status)}">${esc(txt(el.status))}</span> ${el.ratio == null ? 'measured / budget ratio: <b>none recorded</b> (status from the token-path class below)' : `measured / budget = <b>${fmt(el.ratio, 3)}</b> (qualifies at ≤ ${fmt(qr, 2)})`}</p>
+    <p class="note" style="margin-top:4px">limiting op ${esc(L.op || '—')} in ${esc(L.model || '—')}${L.owner && L.owner !== '-' ? ' · owner ' + esc(L.owner) : ''}</p>
+    <div class="tw"><table class="t" style="margin-top:6px"><thead><tr><th>op</th><th>model</th><th>status</th><th class="n">ratio</th><th>source</th></tr></thead><tbody>${ops}</tbody></table></div>
+    ${cl ? `<div class="tw"><table class="t" style="margin-top:8px"><thead><tr><th>token-path class</th><th>status</th><th class="n">cycles / token</th><th class="n">share</th><th class="n">measured</th></tr></thead><tbody>${cl}</tbody></table></div><p class="note">${esc(cls[0].basis || '')}</p>` : ''}
+    ${src}</div>`;
 }
-
 /* ---- block diagram */
 function diagScopes(E){
   const R = E.rtl, out = [];
