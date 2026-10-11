@@ -111,8 +111,8 @@ module ot_hgi_coll_tkm #(
     reg [CB-1:0] cact_q;                       // ceil(nout / 4) active cells
     reg [CB-1:0] tc_q; reg [1:0] ts_q;         // tau position (nout - 1) -> cell, slot
     // ---------------------------------------------------------------- phases
-    localparam [3:0] P_IDLE = 4'd0, P_INS = 4'd1, P_DRAIN = 4'd2, P_INV = 4'd3, P_REINS = 4'd4, P_RDRAIN = 4'd5,
-                     P_OUT = 4'd6, P_FLUSH = 4'd7, P_DONE = 4'd8;
+    localparam [3:0] P_IDLE = 4'd0, P_INS = 4'd1, P_DRAIN = 4'd2, P_CONV1 = 4'd3, P_CLR2 = 4'd4, P_INS2 = 4'd5,
+                     P_DRAIN2 = 4'd6, P_OUT = 4'd7, P_FLUSH = 4'd8, P_CLR0 = 4'd9;
     reg [3:0] ph;
     assign busy = (ph != P_IDLE);
     // ---------------------------------------------------------------- delivery credits + decode + FIFO
@@ -163,67 +163,72 @@ module ot_hgi_coll_tkm #(
     // entry pipeline
     reg          e1_v; reg [EW-1:0] e1 [0:3];
     reg          e2_v; reg [EW-1:0] e2 [0:3]; reg [5:0] e2_ge;   // pairwise compares for the rank sort
-    // ---------------------------------------------------------------- the array
-    reg [EW-1:0] X [0:C-1][0:3];
-    // the entry block, rank-sorted, registered once per group of BG positions (broadcast fanout replicated at the flops)
-    localparam integer BG = 32, NB = (KMAX + BG - 1) / BG, P = KMAX;
-    reg [EW-1:0] bk [0:NB-1][0:3];
-    reg          bv;
-    reg [CB:0]   shn;                          // re-insertion: top cells shifted out so far
-    wire         rsh = (ph == P_REINS) && (shn < (CB+1)'(cact_q));   // this edge shifts the top cell out
-    integer c, s, a, b, l, i;
-    // ---------------------------------------------------------------- tau tap (gated OR tree, registered every 16:1)
-    localparam integer NG = (C + 15) / 16;
-    reg [KW-1:0] tau_a [0:NG-1];
-    reg [KW-1:0] tau_b;
-    always @(posedge clk) begin : tg
-        reg [KW-1:0] o_;
-        for (integer g = 0; g < NG; g = g + 1) begin
-            o_ = '0;
-            for (integer x = 0; x < 16; x = x + 1)
-                if (g * 16 + x < C && CB'(g * 16 + x) == tc_q) o_ = o_ | vkey(X[(g * 16 + x < C) ? g * 16 + x : 0][ts_q]);
-            tau_a[g] <= o_;
+    // ---------------------------------------------------------------- the chain of hardened tiles (el1011-hbm-idx rebuild)
+    // textbook audit (owner 10-11): the flat 2,048 x 85-b array (one clock root over 1,800 um, one entry bus to every
+    // cell, 8,192 key compares in one edge) is now NT tiles of PT positions (ot_hgi_coll_tkm_tile, ~12k flops, own clock
+    // tree): a tile keeps its best PT of what reached it and passes its bottom 4 down on a registered seam; an upward
+    // conveyor (one presented-top register a seam) empties the chain from the top.  Two passes: value key, top nout ->
+    // an SRAM cell buffer, chain cleared, id key, conveyed out as O / R lines.  Control reaches every tile at equal depth.
+    localparam integer PT = (KMAX < 128) ? KMAX : 128;
+    localparam integer NT = KMAX / PT;
+    localparam integer NG2 = (NT + 3) / 4;
+    localparam integer TW = 6, LW = 7;
+    localparam integer BD = KMAX / 4;
+    localparam integer BA = (BD <= 2) ? 1 : $clog2(BD);
+    reg  [TW-1:0] tau_t; reg [LW-1:0] tau_l;
+    reg  ctl_conv, ctl_clr;
+    reg  [NG2-1:0] g_conv, g_clr; reg [TW-1:0] g_tt [0:NG2-1]; reg [LW-1:0] g_tl [0:NG2-1];
+    reg  dconv1, dconv2;
+    reg  eb_v; reg [4*EW-1:0] eb;
+    wire [4*EW-1:0] t_ovf [0:NT]; wire t_ovf_v [0:NT]; wire [4*EW-1:0] t_up [0:NT];
+    wire [KW-1:0] t_tau [0:NT-1]; wire t_busy [0:NT-1];
+    assign t_ovf[0] = eb; assign t_ovf_v[0] = eb_v; assign t_up[NT] = '0;
+    for (genvar t = 0; t < NT; t = t + 1) begin : g_t
+        ot_hgi_coll_tkm_tile #(.EW(EW), .PT(PT), .TW(TW), .LW(LW)) u_t (.clk(clk), .tid(TW'(t)),
+            .clr(g_clr[t / 4]), .conv(g_conv[t / 4]), .tau_t(g_tt[t / 4]), .tau_l(g_tl[t / 4]),
+            .ins_v(t_ovf_v[t]), .ins_b(t_ovf[t]), .ovf_v(t_ovf_v[t + 1]), .ovf_b(t_ovf[t + 1]),
+            .up_in(t_up[t + 1]), .up_out(t_up[t]), .tau_o(t_tau[t]), .busy(t_busy[t]));
+    end
+    reg [NG2-1:0] gb_busy; reg [KW-1:0] g_tau [0:NG2-1]; reg any_busy; reg [KW-1:0] tau_b;
+    always @(posedge clk) begin : trees
+        reg [KW-1:0] o_; reg b_;
+        for (integer g = 0; g < NG2; g = g + 1) begin
+            g_conv[g] <= ctl_conv; g_clr[g] <= ctl_clr; g_tt[g] <= tau_t; g_tl[g] <= tau_l;
+            o_ = '0; b_ = 1'b0;
+            for (integer x = 0; x < 4; x = x + 1) if (g * 4 + x < NT) begin o_ = o_ | t_tau[g * 4 + x]; b_ = b_ | t_busy[g * 4 + x]; end
+            g_tau[g] <= o_; gb_busy[g] <= b_;
         end
+        o_ = '0; for (integer g = 0; g < NG2; g = g + 1) o_ = o_ | g_tau[g];
+        tau_b <= o_; any_busy <= |gb_busy;
+        dconv1 <= ctl_conv; dconv2 <= dconv1;             // the tiles shift 2 edges after ctl_conv: capture t_up[0] then
     end
-    always @* begin : tor
-        tau_b = '0;
-        for (integer g = 0; g < NG; g = g + 1) tau_b = tau_b | tau_a[g];
+    // the SRAM cell buffer (pass 1 -> pass 2): BD cells of 4 elements, registered write port, captured read
+    reg  bw_v; reg [BA-1:0] bw_a; reg [4*EW-1:0] bw_d;
+    reg  br_v; reg [BA-1:0] br_a; reg br_q, rd2_v; reg [4*EW-1:0] rd2;
+    wire [511:0] b_q;
+    wire [511:0] bw_w = 512'(bw_d);
+    for (genvar m = 0; m < 2; m = m + 1) begin : g_bm
+        ot_sram_1r1w_1024x256_m2_r2c2 u_b (.clk(clk), .r_ce_in(br_v), .r_addr_in(10'(br_a)), .rd_out(b_q[256*m +: 256]),
+            .w_ce_in(bw_v), .w_addr_in(10'(bw_a)), .wd_in(bw_w[256*m +: 256]), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b0), .rr_addr(18'd0), .cr_en(2'b0), .cr_sel(16'd0));
     end
+    reg [BA:0] cnv, cap, rdn; reg [12:0] cneed; reg [3:0] qcnt; reg [3:0] wcnt;
+    reg [EW-1:0] lb [0:15]; reg [9:0] lp;               // output line buffer, lines pushed
+    integer c, s, a, b, l, i;
     // ---------------------------------------------------------------- output packer
     reg [12:0] outn;                           // elements shifted out
     reg [12:0] wrn;                            // elements written (O lines)
     reg [8:0]  line;                           // output line index
     // ---------------------------------------------------------------- main sequential
-    // BROADCAST INSERTION (one rank-sorted block of 4 a cycle, settled the same edge): position p of the array (A_p =
-    // X[p / 4][p % 4], sorted by the value key, larger first) moves to p + c_p, c_p = the block elements greater than A_p
-    // (monotone in p); position q takes A_{q-i} when c_{q-i} = i (i = 0 .. 4), else block element j where
-    // c_{q-j} > j and c_{q-j-1} <= j.  Positions >= KMAX fall off (the smallest: KMAX >= k better ones remain).
-    // (re-insertion phase: the array is first shifted up one cell -- the top block leaves -- in the same edge: SX)
-    reg [2:0] cp [0:P-1];
-    reg [EW-1:0] ins [0:P-1];
-    reg [EW-1:0] SX [0:P-1];
-    always @* begin : bcins
-        for (integer p_ = 0; p_ < P; p_ = p_ + 1)
-            SX[p_] = rsh ? ((p_ + 4 < P) ? X[((p_ + 4 < P) ? p_ + 4 : 0) / 4][((p_ + 4 < P) ? p_ + 4 : 0) % 4] : {EW{1'b0}}) : X[p_ / 4][p_ % 4];
-        for (integer p_ = 0; p_ < P; p_ = p_ + 1) begin
-            cp[p_] = 3'd0;
-            for (integer j = 0; j < 4; j = j + 1)
-                if (bv && key2(bk[p_ / BG][j]) > key2(SX[p_])) cp[p_] = cp[p_] + 3'd1;
-        end
-        for (integer q = 0; q < P; q = q + 1) begin
-            ins[q] = {EW{1'b0}};
-            for (integer i = 0; i <= 4; i = i + 1)
-                if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) ins[q] = ins[q] | SX[(q - i >= 0) ? q - i : 0];
-            for (integer j = 0; j < 4; j = j + 1)
-                if (bv && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j)))
-                    ins[q] = ins[q] | bk[q / BG][j];
-        end
-    end
     // output step: one 16-element line an edge (the array shifts up 4 cells); O line (+ R line) into a 4-line queue that
     // the write port drains one line an edge; a step needs room for its lines
-    reg [FW-1:0] lq_d [0:3]; reg [39:0] lq_a [0:3]; reg [15:0] lq_m [0:3]; reg [2:0] lq_n; reg [1:0] lq_h, lq_t;
-    wire lq_pop = (lq_n != 3'd0) && (!w_v || w_rdy);
-    wire pgo = (ph == P_OUT) && (outn < nout_q) && ({1'b0, lq_n} + (hr_q ? 4'd2 : 4'd1) <= 4'd4);   // room from the registered count only (no w_rdy -> pgo -> array path)
+    reg [FW-1:0] lq_d [0:7]; reg [39:0] lq_a [0:7]; reg [15:0] lq_m [0:7]; reg [3:0] lq_n; reg [2:0] lq_h, lq_t;
+    wire lq_pop = (lq_n != 4'd0) && (!w_v || w_rdy);
+    // P_OUT conveyor: a cell (4 elements) an edge while the 8-line queue has room for every line issued and not yet
+    // pushed (registered counts only; the cells reach the packer 2 edges after the decision)
+    wire [10:0] lines_iss = 11'((cnv + 1 + 3) >> 2);
+    wire [11:0] lq_need = 12'(lq_n) + 12'(lines_iss - 11'(lp)) * (hr_q ? 12'd2 : 12'd1);
+    wire pgo = (ph == P_OUT) && (13'(cnv) < cneed) && (lq_need <= 12'd8);
     // select (combinational over the registered staging heads)
     reg [EW-1:0] sel_e [0:3]; reg [2:0] sel_n; reg [7:0] sel_take [0:DEL-1]; reg [DEL-1:0] sel_pop;
     always @* begin : selc
@@ -250,9 +255,10 @@ module ot_hgi_coll_tkm #(
             n_q <= 12'd1; k_q <= 13'd1; nel <= 19'd0; g_q <= 8'd1; gb_q <= 8'd0; pf_q <= 16'd1; nout_q <= 13'd1; ob_q <= 40'd0; rb_q <= 40'd0; hr_q <= 1'b0;
             tot_q <= 24'd0; cact_q <= '0; tc_q <= '0; ts_q <= 2'd0; rcv <= 24'd0; tau <= '0;
             rfault <= '0; res_q <= '0; d0_v <= '0; start_p <= 1'b0; d1_v <= '0; d2_v <= '0; fpop_q <= '0; ld_v <= '0; e1_v <= 1'b0; e2_v <= 1'b0;
-            shn <= '0; outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 3'd0; lq_h <= 2'd0; lq_t <= 2'd0;
+            outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 4'd0; lq_h <= 3'd0; lq_t <= 3'd0;
+            ctl_conv <= 1'b0; ctl_clr <= 1'b0; eb_v <= 1'b0; bw_v <= 1'b0; br_v <= 1'b0; br_q <= 1'b0; rd2_v <= 1'b0;
+            cnv <= '0; cap <= '0; rdn <= '0; cneed <= 13'd0; qcnt <= 4'd0; wcnt <= 4'd0; lp <= 10'd0; tau_t <= '0; tau_l <= '0;
             for (l = 0; l < DEL; l = l + 1) begin cr[l] <= 8'(CAP); st_n[l] <= 2'd0; dn[l] <= 8'd0; occ[l] <= 8'd0; end
-            bv <= 1'b0;
         end else begin
             done <= 1'b0;
             if (busy) stat_cycles <= stat_cycles + 32'd1;
@@ -261,6 +267,8 @@ module ot_hgi_coll_tkm #(
             tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> logic paths)
             cact_q <= CB'((nout_q + 13'd3) >> 2);
             tc_q <= CB'((nout_q - 13'd1) >> 2); ts_q <= 2'(nout_q - 13'd1);
+            tau_t <= TW'((nout_q - 13'd1) / PT); tau_l <= LW'((nout_q - 13'd1) % PT);
+            cneed <= (nout_q + 13'd3) >> 2;
             // ---- credits: reserve at dispatch, return one edge after a FIFO pop
             for (l = 0; l < DEL; l = l + 1) begin
                 cr[l] <= cr[l] - ((MUT == 3) ? 8'd0 : 8'(res_q[l])) + 8'(fpop_q[l]);
@@ -329,37 +337,70 @@ module ot_hgi_coll_tkm #(
             end
             // ---- entry: select -> e1 -> (compares) e2 -> rank-sorted block -> broadcast insertion
             // (re-insertion: the top cell, tagged region 1 -- the id order)
-            e1_v <= (ins_live && (sel_n != 3'd0)) || rsh;
-            for (s = 0; s < 4; s = s + 1) e1[s] <= rsh ? (X[0][s] | {X[0][s][83], {(EW-1){1'b0}}}) : sel_e[s];
-            if (rsh) shn <= shn + 1'b1;
+            e1_v <= (ins_live && (sel_n != 3'd0)) || rd2_v;
+            for (s = 0; s < 4; s = s + 1) e1[s] <= rd2_v ? rd2[EW*s +: EW] : sel_e[s];
             if (ins_live && sel_n != 3'd0) stat_surv <= stat_surv + 32'(sel_n);
             e2_v <= e1_v;
             for (s = 0; s < 4; s = s + 1) e2[s] <= e1[s];
             e2_ge[0] <= key2(e1[0]) >= key2(e1[1]); e2_ge[1] <= key2(e1[0]) >= key2(e1[2]); e2_ge[2] <= key2(e1[0]) >= key2(e1[3]);
             e2_ge[3] <= key2(e1[1]) >= key2(e1[2]); e2_ge[4] <= key2(e1[1]) >= key2(e1[3]); e2_ge[5] <= key2(e1[2]) >= key2(e1[3]);
             // ---- the array (X / bk: reset-free data flops in their own block below)
-            if (ph == P_INS || ph == P_DRAIN || ph == P_REINS || ph == P_RDRAIN) begin
-                bv <= e2_v;
+            begin : entry
+                reg [1:0] r0, r1, r2, r3;
+                r0 = 2'(!e2_ge[0]) + 2'(!e2_ge[1]) + 2'(!e2_ge[2]);
+                r1 = 2'(e2_ge[0]) + 2'(!e2_ge[3]) + 2'(!e2_ge[4]);
+                r2 = 2'(e2_ge[1]) + 2'(e2_ge[3]) + 2'(!e2_ge[5]);
+                r3 = 2'(e2_ge[2]) + 2'(e2_ge[4]) + 2'(e2_ge[5]);
+                eb_v <= e2_v;
+                for (s = 0; s < 4; s = s + 1)
+                    eb[EW*s +: EW] <= ((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
+                                      ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}});
                 if (e2_v && (ph == P_INS || ph == P_DRAIN)) stat_ins <= stat_ins + 32'd1;
             end
-            // ---- output (P_OUT): cells 0 .. 3 -> one O line (+ one R line) an edge
+            // ---- the chain controls (one-edge pulses / levels; the tiles act 2 edges later)
+            ctl_clr <= 1'b0; bw_v <= 1'b0;
+            ctl_conv <= ((ph == P_CONV1) && (13'(cnv) < cneed)) || pgo;
+            if (((ph == P_CONV1) && (13'(cnv) < cneed)) || pgo) cnv <= cnv + 1'b1;
+            qcnt <= (!e1_v && !e2_v && !eb_v && !any_busy && !br_v && !br_q && !rd2_v) ? ((qcnt == 4'd15) ? qcnt : qcnt + 4'd1) : 4'd0;
+            // pass-1 capture: the top cell leaving the chain -> the buffer, id order tag (region 1), positions >= nout dropped
+            if (ph == P_CONV1 && dconv2) begin
+                for (s = 0; s < 4; s = s + 1) begin : c1
+                    reg [EW-1:0] e_;
+                    e_ = t_up[0][EW*s +: EW];
+                    bw_d[EW*s +: EW] <= (13'({cap, 2'(s)}) < nout_q) ? (e_ | {e_[83], {(EW-1){1'b0}}}) : {EW{1'b0}};
+                end
+                bw_v <= 1'b1; bw_a <= BA'(cap); cap <= cap + 1'b1;
+            end
+            // pass-2 feed: buffer cells read one an edge, captured, then into the entry sorter
+            br_v <= (ph == P_INS2) && (13'(rdn) < cneed);
+            if ((ph == P_INS2) && (13'(rdn) < cneed)) begin br_a <= BA'(rdn); rdn <= rdn + 1'b1; end
+            br_q <= br_v; rd2_v <= br_q; rd2 <= b_q[4*EW-1:0];
+            // ---- output (P_OUT): conveyed cells -> a 16-element line every 4 cells -> O line (+ R line) into the queue
             begin : pk
-                reg [2:0] n_; reg [1:0] t_; reg [12:0] cnt_; reg [FW-1:0] od_, rd_; reg [15:0] m_;
+                reg [3:0] n_; reg [2:0] t_; reg [12:0] cnt_; reg [FW-1:0] od_, rd_; reg [15:0] m_; reg [EW-1:0] e_;
+                reg [EW-1:0] lx [0:15];
                 n_ = lq_n; t_ = lq_t;
                 if (lq_pop) begin
                     w_v <= 1'b1; w_addr <= lq_a[lq_h]; w_mask <= lq_m[lq_h]; w_data <= lq_d[lq_h];
-                    lq_h <= lq_h + 2'd1; n_ = n_ - 3'd1;
+                    lq_h <= lq_h + 3'd1; n_ = n_ - 4'd1;
                 end else if (w_v && w_rdy) w_v <= 1'b0;
-                if (pgo) begin
-                    cnt_ = ((nout_q - outn) >= 13'd16) ? 13'd16 : (nout_q - outn);
-                    m_ = (cnt_ == 13'd16) ? 16'hFFFF : 16'((17'd1 << cnt_[4:0]) - 17'd1);
-                    for (i = 0; i < 16; i = i + 1) begin
-                        od_[32*i +: 32] = (13'(i) < cnt_) ? ((MUT == 1) ? X[i / 4][i % 4][50:19] : ~X[i / 4][i % 4][50:19]) : 32'd0;
-                        rd_[32*i +: 32] = (13'(i) < cnt_) ? unkey(X[i / 4][i % 4][82:51], X[i / 4][i % 4][0]) : 32'd0;
+                if (ph == P_OUT && dconv2) begin
+                    for (i = 0; i < 16; i = i + 1) lx[i] = lb[i];
+                    for (s = 0; s < 4; s = s + 1) begin lx[4 * cap[1:0] + s] = t_up[0][EW*s +: EW]; lb[4 * cap[1:0] + s] <= t_up[0][EW*s +: EW]; end
+                    cap <= cap + 1'b1;
+                    if (cap[1:0] == 2'd3 || 13'(cap) + 13'd1 == cneed) begin
+                        cnt_ = ((nout_q - outn) >= 13'd16) ? 13'd16 : (nout_q - outn);
+                        m_ = (cnt_ == 13'd16) ? 16'hFFFF : 16'((17'd1 << cnt_[4:0]) - 17'd1);
+                        for (i = 0; i < 16; i = i + 1) begin
+                            e_ = lx[i];
+                            od_[32*i +: 32] = (13'(i) < cnt_) ? ((MUT == 1) ? e_[50:19] : ~e_[50:19]) : 32'd0;
+                            rd_[32*i +: 32] = (13'(i) < cnt_) ? unkey(e_[82:51], e_[0]) : 32'd0;
+                        end
+                        lq_d[t_] <= od_; lq_a[t_] <= ob_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1;
+                        if (hr_q) begin lq_d[t_] <= rd_; lq_a[t_] <= rb_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1; end
+                        line <= line + 9'd1; outn <= outn + cnt_; lp <= lp + 10'd1;
+                        for (i = 0; i < 16; i = i + 1) lb[i] <= {EW{1'b0}};
                     end
-                    lq_d[t_] <= od_; lq_a[t_] <= ob_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 2'd1; n_ = n_ + 3'd1;
-                    if (hr_q) begin lq_d[t_] <= rd_; lq_a[t_] <= rb_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 2'd1; n_ = n_ + 3'd1; end
-                    line <= line + 9'd1; outn <= outn + cnt_;
                 end
                 lq_n <= n_; lq_t <= t_;
             end
@@ -368,67 +409,106 @@ module ot_hgi_coll_tkm #(
                 P_IDLE: if (start_p) begin
                     n_q <= cfg_n_p; k_q <= cfg_k_p; nel <= 19'd0; g_q <= cfg_g_p; gb_q <= cfg_gbase_p; pf_q <= cfg_pf_p; nout_q <= cfg_nout_p;
                     ob_q <= cfg_obase_p; rb_q <= cfg_rbase_p; hr_q <= cfg_has_r_p;
-                    rcv <= 24'd0;
-                    bv <= 1'b0;
+                    rcv <= 24'd0; tau <= '0;
                     stat_ins <= 32'd0; stat_surv <= 32'd0; stat_cycles <= 32'd0;
-                    outn <= 13'd0; wrn <= 13'd0; line <= 9'd0;
-                    ph <= P_INS;
+                    outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lp <= 10'd0;
+                    ctl_clr <= 1'b1; wcnt <= 4'd0;
+                    ph <= P_CLR0;
                 end
+                // the chain clears 2 edges after ctl_clr; the tau tree settles 3 more
+                P_CLR0: begin wcnt <= wcnt + 4'd1; tau <= '0; if (wcnt == 4'd7) ph <= P_INS; end
                 P_INS: if (rcv == tot_q && d0_v == '0 && d1_v == '0 && d2_v == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
                            st_n[0] == 2'd0 && st_n[1] == 2'd0 && st_n[2] == 2'd0 && st_n[3] == 2'd0)
                     ph <= P_DRAIN;
-                P_DRAIN: if (!e1_v && !e2_v && !bv) begin
-                    ph <= P_INV;
+                P_DRAIN: if (qcnt >= 4'd4) begin
                     // O.n must be min(k, the group's elements): a record whose O.n disagrees faults (E_RANGE)
                     if (19'(nout_q) != ((19'(k_q) < nel) ? 19'(k_q) : nel)) fault <= 1'b1;
+                    cnv <= '0; cap <= '0;
+                    ph <= (MUT == 4) ? P_OUT : P_CONV1;
                 end
-                P_INV: begin ph <= (MUT == 4) ? P_OUT : P_REINS; shn <= '0; end
-                P_REINS: if (!rsh) ph <= P_RDRAIN;
-                P_RDRAIN: if (!e1_v && !e2_v && !bv) ph <= P_OUT;
-                P_OUT: if (outn == nout_q && lq_n == 3'd0) ph <= P_FLUSH;
+                P_CONV1: if (13'(cap) == cneed) begin ctl_clr <= 1'b1; wcnt <= 4'd0; ph <= P_CLR2; end
+                P_CLR2: begin wcnt <= wcnt + 4'd1; if (wcnt == 4'd4) begin rdn <= '0; ph <= P_INS2; end end
+                P_INS2: if (13'(rdn) == cneed) ph <= P_DRAIN2;
+                P_DRAIN2: if (qcnt >= 4'd4) begin cnv <= '0; cap <= '0; ph <= P_OUT; end
+                P_OUT: if (13'(cap) == cneed && lq_n == 4'd0 && !dconv1 && !dconv2) ph <= P_FLUSH;
                 P_FLUSH: if (!w_v) begin ph <= P_IDLE; done <= 1'b1; end
                 default: ph <= P_IDLE;
             endcase
         end
     end
-    // ---------------------------------------------------------------- the array: reset-free data flops (cleared at start)
-    (* keep *) reg [NB-1:0] clr_r;
-    always @(posedge clk) clr_r <= {NB{(ph == P_IDLE) && start_p}};
-    always @(posedge clk) begin : arr_b
-        integer c, s;
-        if (ph == P_IDLE) begin
-        end else begin
-            case (ph)
-                P_INS, P_DRAIN, P_REINS, P_RDRAIN: begin
-                    begin : entry
-                        reg [1:0] r0, r1, r2, r3;
-                        r0 = 2'(!e2_ge[0]) + 2'(!e2_ge[1]) + 2'(!e2_ge[2]);
-                        r1 = 2'(e2_ge[0]) + 2'(!e2_ge[3]) + 2'(!e2_ge[4]);
-                        r2 = 2'(e2_ge[1]) + 2'(e2_ge[3]) + 2'(!e2_ge[5]);
-                        r3 = 2'(e2_ge[2]) + 2'(e2_ge[4]) + 2'(e2_ge[5]);
-                        for (integer g = 0; g < NB; g = g + 1)
-                            for (s = 0; s < 4; s = s + 1)
-                                bk[g][s] <= ((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
-                                            ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}});
-                    end
-                    if (bv || rsh) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= ins[c * 4 + s];
-                end
-                P_INV: begin
-                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1)
-                        if (13'(c * 4 + s) >= nout_q) X[c][s] <= {EW{1'b0}};
-                end
-                P_OUT: if (pgo) begin
-                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= (c + 4 < C) ? X[(c + 4 < C) ? c + 4 : c][s] : {EW{1'b0}};
-                end
-                default: ;
-            endcase
-        end
-        // array clear one edge after the start pin flop (in P_INS before any insert: bv is 0 until the first staged block),
-        // enable from a replicated flop per entry block (8 cells), not a 2,048-entry fanout
-        for (c = 0; c < C; c = c + 1) if (clr_r[c / (BG / 4)]) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
-    end
     // FIFO pop into the landing register: room counted on registered state (3 slots + landing)
     always @* for (integer l2 = 0; l2 < DEL; l2 = l2 + 1)
         fpop[l2] = !fe[l2] && (ph == P_INS) && ({1'b0, st_n[l2]} + 3'(ld_v[l2]) < 3'd3);
+endmodule
+
+// el1011-hbm-idx 2026-10-11: one HARDENED TILE of the TOPK_MERGE chain: PT positions sorted by the insertion key (larger
+// first), reset-free, cleared by a pin.  Every input pin-flopped except the conveyor seam up_in (the tile below's
+// up_out register drives only the bottom cell's D mux).  Per edge (pins registered): clr -> empty; conv -> shift up one
+// cell, bottom cell <- up_in; ins_v -> broadcast insertion of the 4-element block (rank sorted), positions PT..PT+3
+// leave as the registered overflow block; up_out always = the top cell (the presented-top seam register); tau_o = the
+// value key at (tau_t, tau_l) when this tile holds it.
+module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 128, parameter integer TW = 6,
+                              parameter integer LW = 7) (
+    input  wire              clk,
+    input  wire [TW-1:0]     tid,
+    input  wire              clr, conv,
+    input  wire [TW-1:0]     tau_t,
+    input  wire [LW-1:0]     tau_l,
+    input  wire              ins_v,
+    input  wire [4*EW-1:0]   ins_b,
+    output reg               ovf_v,
+    output reg  [4*EW-1:0]   ovf_b,
+    input  wire [4*EW-1:0]   up_in,
+    output reg  [4*EW-1:0]   up_out,
+    output reg  [EW-3:0]     tau_o,
+    output reg               busy
+);
+    localparam integer KW = EW - 2;
+    function automatic [KW-1:0] vkey(input [EW-1:0] e); vkey = e[KW:1]; endfunction
+    function automatic [KW-1:0] ikey(input [EW-1:0] e); ikey = {e[83], e[50:19], e[82:51], e[18:1]}; endfunction
+    function automatic [KW:0] key2(input [EW-1:0] e);
+        reg [KW-1:0] b_;
+        begin b_ = e[84] ? ikey(e) : vkey(e); key2 = e[83] ? {1'b1, ~e[84], b_[KW-2:0]} : {(KW+1){1'b0}}; end
+    endfunction
+    reg p_clr, p_conv, p_v; reg [4*EW-1:0] p_b; reg [TW-1:0] p_tid, p_tt; reg [LW-1:0] p_tl;
+    always @(posedge clk) begin
+        p_clr <= clr; p_conv <= conv; p_v <= ins_v; p_b <= ins_b; p_tid <= tid; p_tt <= tau_t; p_tl <= tau_l;
+    end
+    reg [EW-1:0] X [0:PT-1];
+    reg [EW-1:0] SX [0:PT+3];
+    reg [2:0] cp [0:PT+3];
+    reg [EW-1:0] ins [0:PT+3];
+    always @* begin : bcins
+        for (integer p_ = 0; p_ < PT + 4; p_ = p_ + 1) SX[p_] = (p_ < PT) ? X[(p_ < PT) ? p_ : 0] : {EW{1'b0}};
+        for (integer p_ = 0; p_ < PT + 4; p_ = p_ + 1) begin
+            cp[p_] = 3'd0;
+            for (integer j = 0; j < 4; j = j + 1)
+                if (p_v && key2(p_b[EW*j +: EW]) > key2(SX[p_])) cp[p_] = cp[p_] + 3'd1;
+        end
+        for (integer q = 0; q < PT + 4; q = q + 1) begin
+            ins[q] = {EW{1'b0}};
+            for (integer i = 0; i <= 4; i = i + 1)
+                if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) ins[q] = ins[q] | SX[(q - i >= 0) ? q - i : 0];
+            for (integer j = 0; j < 4; j = j + 1)
+                if (p_v && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j)))
+                    ins[q] = ins[q] | p_b[EW*j +: EW];
+        end
+    end
+    always @(posedge clk) begin : upd
+        if (p_clr) begin
+            for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= {EW{1'b0}};
+            up_out <= '0; ovf_v <= 1'b0;
+        end else if (p_conv) begin
+            for (integer p_ = 0; p_ < PT - 4; p_ = p_ + 1) X[p_] <= X[p_ + 4];
+            for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin X[PT - 4 + s_] <= up_in[EW*s_ +: EW]; up_out[EW*s_ +: EW] <= X[4 + s_]; end
+            ovf_v <= 1'b0;
+        end else if (p_v) begin
+            for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= ins[p_];
+            for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin ovf_b[EW*s_ +: EW] <= ins[PT + s_]; up_out[EW*s_ +: EW] <= ins[s_]; end
+            ovf_v <= ins[PT][83] | ins[PT + 1][83] | ins[PT + 2][83] | ins[PT + 3][83];
+        end else ovf_v <= 1'b0;
+        busy <= p_v || ovf_v;
+        tau_o <= (p_tid == p_tt) ? vkey(X[p_tl % PT]) : '0;
+    end
 endmodule
 `default_nettype wire
