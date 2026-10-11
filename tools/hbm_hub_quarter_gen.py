@@ -493,7 +493,7 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
                 g, i = divmod(r, P.L)
                 j = ((k * P.G + g) * 2 + s_) * P.L + i
                 tc = gkt.get(j, ck(P.lane_y.get(j, band_y), getattr(P, 'lane_x', {}).get(j)))
-                tm = 'hfd_su_tile_xl' if xroot else 'hfd_su_tile'
+                tm = getattr(P, 'tile_master', None) or ('hfd_su_tile_xl' if xroot else 'hfd_su_tile')
                 L_.append(f'    {tm} u_tile_{j} (.clk({tc}), .bc_in(tb_{c}_{r}), .bc_out(tb_{c}_{r + 1}), '
                           f'.acc_in(ta_{c}_{r + 1}), .acc_out(ta_{c}_{r}));')
         L_.append(f'    wire [{P.KC * P.WCT - 1}:0] heads = {{' + ', '.join(f'ta_{c}_0' for c in reversed(range(P.KC))) + '};')
@@ -913,6 +913,33 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
     return '\n'.join(L_) + '\n', fp
 
 
+def grid_place(P, tw, th, W, H, rows, cols, mname='u_tile'):
+    """conservative-1011 2026-10-11 (OWNER textbook audit, hfd_hc): tiled quarter as a ROWS x COLS grid of closed tiles,
+    one row per die clock-row segment (H / rows), serpentine chains: chain c = rows 2c (E -> W, head at the E port
+    band) and 2c + 1 (W -> E).  Tile x / y on 0.192 (the tile's M4 / M5 / M7 pins stay on track); >= 20 um channels."""
+    g = lambda v: round(round(v / 0.192) * 0.192, 3)
+    pitch_x = g(tw + 20.4); x0 = g(20.16); pitch_y = H / rows
+    assert P.KC * P.NT == rows * cols and 2 * P.KC == rows, (P.KC, P.NT, rows, cols)
+    assert x0 + (cols - 1) * pitch_x + tw < W - 150, 'no E port band'
+    assert pitch_y - th >= 20, 'row channel < 20 um'
+    lanes, tcl = [], []
+    P.lane_x = {}
+    for c in range(P.KC):
+        k, s_ = divmod(c, 2)
+        for r in range(P.NT):
+            gg, i_ = divmod(r, P.L)
+            j = ((k * P.G + gg) * 2 + s_) * P.L + i_
+            row = 2 * c + r // cols; ie = r % cols
+            fe = ie if row % 2 == 0 else cols - 1 - ie          # column counted from the E end
+            col = cols - 1 - fe
+            x = round(x0 + col * pitch_x, 3); y = g(row * pitch_y + (pitch_y - th) / 2)
+            lanes.append([j, x, y]); P.lane_x[j] = x + tw / 2
+            tcl.append(f'place_macro -macro_name {{{mname}_{j}}} -location {{{x:.3f} {y:.3f}}} -orientation R0 -exact')
+    fp = dict(lanes=lanes, grid=[rows, cols], pitch=[pitch_x, round(pitch_y, 3)], x0=x0, tile=[tw, th],
+              e_band_um=round(W - (x0 + (cols - 1) * pitch_x + tw), 3))
+    return '\n'.join(tcl) + '\n', fp
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--quarter', choices=sorted(QUARTERS), required=True)
@@ -925,6 +952,9 @@ def main():
     ap.add_argument('--two-sided', action='store_true', help='lanes with pins on both edges (su/io_lr.tcl)')
     ap.add_argument('--tiled', action='store_true', help='su: one hfd_su_tile hard macro per lane (lane + its boundary '
                     'registers), no standard-cell sea in the channels (hbm-forks 2026-10-10)')
+    ap.add_argument('--tile-master', help='--tiled: the hardened tile master (default hfd_su_tile[_xl]); conservative-1011: hfd_hc_tile_xl')
+    ap.add_argument('--tile-grid', nargs=2, type=int, metavar=('ROWS', 'COLS'), help='--tiled: grid_place (one row per clock segment, serpentine chains)')
+    ap.add_argument('--tile-size', nargs=2, type=float, metavar=('W', 'H'), help='--tiled: the closed tile footprint (default: strip + lane)')
     ap.add_argument('--cg', action='store_true', help='per-group clock gating, or per-tile gating with --tiled, with pin cg_en')
     ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
                     help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
@@ -943,13 +973,19 @@ def main():
     pj = json.loads(Path(a.ports).read_text())
     if not a.lane_size and q.get('lane_wh'):
         a.lane_size = list(q['lane_wh'])   # the closed lane footprint (registers' clock segments need the placement)
-    if a.tiled:     # the tile footprint: [register strip TSW | lane], lane at (TSW, 0.54), one row pair above it
+    P.tile_master = a.tile_master
+    if a.tiled and a.tile_size:
+        a.lane_size = list(a.tile_size)
+    elif a.tiled:     # the tile footprint: [register strip TSW | lane], lane at (TSW, 0.54), one row pair above it
         a.lane_size = [round(TILE_SW + a.lane_size[0] + 1.512, 3), round(a.lane_size[1] + 2.16, 3)]   # lane at y 1.08: two rows below and above it
     if a.lane_size:                      # placement first: the multi-ck wrapper clocks each register by its segment
-        tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided,
-                             mname='u_tile' if a.tiled else 'u_lane')
+        if a.tiled and a.tile_grid:
+            tcl, fp = grid_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], *a.tile_grid)
+        else:
+            tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided,
+                                 mname='u_tile' if a.tiled else 'u_lane')
         P.lane_y = {r[0]: r[2] + a.lane_size[1] / 2 for r in fp['lanes']}
-    if q.get('bc_hop_check') and a.lane_size:
+    if q.get('bc_hop_check') and a.lane_size and not a.tile_grid:
         # broadcast relay hops (Manhattan, um): band -> first group bank, bank -> next bank, bank -> farthest lane pin
         # edge of its group (banks sit in the channel between the two columns, at the group's mean lane y)
         cols = fp.get('column_x', [[0, 0]])[0]
