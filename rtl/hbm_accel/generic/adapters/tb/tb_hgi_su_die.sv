@@ -79,8 +79,10 @@ module tb_hgi_su_die;
         if (!rst_n) credit <= 1; else if (ret[1] || ret[2]) credit <= 1; else if (rec[0]) credit <= 0;
     end
     integer c, j, t, cid, sfu, r0, nr, vi0, nvi, ve0, nve, cases = 0, words = 0, t0, w;
+    integer wd = 4000000;          // +WD=<cycles>: per-wait watchdog (mutant runs: a hang fails in WD cycles, not days)
     reg [255:0] qd;
     initial begin
+        if (!$value$plusargs("WD=%d", wd)) wd = 4000000;
         repeat (3) @(posedge clk);
         for (c = 0; c < NCASE; c = c + 1) begin
             r0 = casem[c][223:192]; nr = casem[c][191:160]; vi0 = casem[c][159:128];
@@ -90,13 +92,13 @@ module tb_hgi_su_die;
             for (j = 0; j < nvi; j = j + 1) vm_sec(1'b1, vmim[vi0 + j][287:256], vmim[vi0 + j][255:0], qd);
             k = 0; nf = 0; t0 = cyc;
             for (j = 0; j < nr; j = j + 1) begin
-                t = 0; while (!(credit && ret[0]) && t < 4000000) begin @(negedge clk); t = t + 1; end
+                t = 0; while (!(credit && ret[0]) && t < wd) begin @(negedge clk); t = t + 1; end
                 @(negedge clk); rec = die_rec(recm[r0 + j]);
                 @(negedge clk); rec[0] = 1'b0;
                 t = 0; while (credit && t < 100) begin @(negedge clk); t = t + 1; end
             end
-            t = 0; while (k < nr && nf == 0 && t < 4000000) begin @(posedge clk); t = t + 1; end
-            if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", cid, k, nr, nf); errors = errors + 1; end
+            t = 0; while (k < nr && nf == 0 && t < wd) begin @(posedge clk); t = t + 1; end
+            if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", cid, k, nr, nf); errors = errors + 1; $fflush; end
             $display("CASE %0d: %0d records retired in %0d cycles (die ports, real VM, lgW taps)", cid, k, cyc - t0); $fflush;
             for (j = 0; j < nve; j = j + 1) begin
                 vm_sec(1'b0, vmem[ve0 + j][287:256], 256'd0, qd);

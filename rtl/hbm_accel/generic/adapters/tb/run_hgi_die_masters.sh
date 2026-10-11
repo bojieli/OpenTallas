@@ -43,7 +43,7 @@ run() {   # top, vecdir, defines, files...
   local top=$1 vec=$2 defs=$3; shift 3
   "$VL" --binary --timing -O1 $W $Y $defs --top-module "$top" -I"$vec" -Mdir "$OUT/obj_$CASE" "$@" -j ${J:-32} \
     > "$OUT/build_$CASE.log" 2>&1 || { tail -30 "$OUT/build_$CASE.log"; exit 2; }
-  "$OUT/obj_$CASE/V$top" +DIR="$vec" | tee "$OUT/run_$CASE.log" | tail -${TAILN:-16}
+  "$OUT/obj_$CASE/V$top" +DIR="$vec" ${SIMARGS:-} | tee "$OUT/run_$CASE.log" | tail -${TAILN:-16}
 }
 case "$CASE" in
   fused)     run tb_hgi_fused_station "$OUT/fuvec" "" $(cat "$OUT/fl_fused.f") $V/quant_hgi/rtl/hfd_quant.sv rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_station.sv ;;
