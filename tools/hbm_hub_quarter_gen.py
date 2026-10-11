@@ -958,6 +958,9 @@ def main():
     ap.add_argument('--cg', action='store_true', help='per-group clock gating, or per-tile gating with --tiled, with pin cg_en')
     ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
                     help='lockup: launch every inter-root register hop from a negedge copy on the source root (0 cycles)')
+    ap.add_argument('--sfut', type=int, default=0, help='hbmdie-1011 (el1011-hbm-sfu SFUT contract): sfu quarter lanes take '
+                    'SFUT = N (chain sub-tile: exp / sigmoid / SiLU +2 N cycles); the lane module must declare SFUT and the '
+                    'die vec controller must be built with the same SFUT')
     ap.add_argument('--cg-enreg', action='store_true', help='--cg: ot_cg_tile ENREG = 1 (registered ICG enable, 0 cycles)')
     ap.add_argument('--fold', type=int, default=1, help='fold each chain half over N physical column pairs (serpentine; '
                     'square outlines such as R25GQ hfd_hc 2,033 x 1,499 um)')
@@ -965,6 +968,11 @@ def main():
     global CG_ENREG, FOLD
     CG_ENREG, FOLD = a.cg_enreg, a.fold
     q = QUARTERS[a.quarter]
+    if a.sfut:
+        assert a.quarter == 'sfu', '--sfut applies to the sfu quarter only'
+        src_ = (ROOT / q['src']).read_text()
+        assert re.search(r'module\s+' + q['lane'] + r'\s*#\([^;]*\bSFUT\b', src_), (q['lane'], 'declares no SFUT parameter (el1011-hbm-sfu lane top pending)')
+        q['params'] = dict(q['params'] or {}, SFUT=a.sfut)     # in place: emit_rtl finds the quarter by identity
     P = Plan(q, json.loads(Path(a.ports).read_text()))
     P.tiled = a.tiled
     out = Path(a.out)
