@@ -805,8 +805,9 @@ endmodule
 // selects per 64-b chunk (dsfd_vm_be_rcdc); the P2 FIFO always writes (no bypass: its enables never see c_l0r).
 // Added latency (fixed, every lane alike; metadata lines are MD + RL long): t_srq / P2 RL + 1 (P2 +1 no bypass),
 // bus lanes RL + 2, ctrl return RL + 1 serial + 1 stream cycle.  Pins and contract unchanged.
+// ID: a distinct value per copy makes every copy its own module (no pass can merge two copies)
 (* keep_hierarchy = "yes" *)
-module dsfd_vm_be_kreg #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+module dsfd_vm_be_kreg #(parameter integer W = 1, parameter integer ID = 0) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
     always @(posedge clk) q <= d;
 endmodule
 
@@ -814,7 +815,8 @@ endmodule
 // registered read port: o_v = the take one stream cycle later, o_d = the taken entry (sh[rp] registered every cycle
 // through NC kept one-hot copies of the next rp, one per W/NC-bit chunk), o_vc = NC kept copies of o_v.
 module dsfd_vm_be_rcdc #(
-    parameter integer W = 512, parameter integer DEPTH = 8, parameter integer HOLD = 2, parameter integer NC = 8
+    parameter integer W = 512, parameter integer DEPTH = 8, parameter integer HOLD = 2, parameter integer NC = 8,
+    parameter integer IDB = 0          // kept-copy ID base
 ) (
     input  wire          wclk, wrst_n, w_v,
     output wire          w_rdy,
@@ -903,8 +905,8 @@ module dsfd_vm_be_rcdc #(
     genvar c;
     generate for (c = 0; c < NC; c = c + 1) begin : g_c
         wire [DEPTH-1:0] oh;
-        dsfd_vm_be_kreg #(.W(DEPTH)) u_oh (.clk(rclk), .d(oh_nx), .q(oh));
-        dsfd_vm_be_kreg #(.W(1)) u_vc (.clk(rclk), .d(r_take), .q(o_vc[c]));
+        dsfd_vm_be_kreg #(.W(DEPTH), .ID(IDB + c)) u_oh (.clk(rclk), .d(oh_nx), .q(oh));
+        dsfd_vm_be_kreg #(.W(1), .ID(IDB + NC + c)) u_vc (.clk(rclk), .d(r_take), .q(o_vc[c]));
         reg [CB-1:0] od;
         always @(posedge rclk) begin : p_od integer i; reg [CB-1:0] a;
             a = {CB{1'b0}};
@@ -966,12 +968,12 @@ module dsfd_vm_be #(
     ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns));
     // regional reset copies (control state only; no data register carries a reset)
     wire rn_i, rn_x, rn_c, rn_p, rn_s, rn_w;
-    dsfd_vm_be_kreg #(.W(1)) u_rn_i (.clk(clk), .d(rn0), .q(rn_i));
-    dsfd_vm_be_kreg #(.W(1)) u_rn_x (.clk(clk), .d(rn0), .q(rn_x));
-    dsfd_vm_be_kreg #(.W(1)) u_rn_c (.clk(clk), .d(rn0), .q(rn_c));
-    dsfd_vm_be_kreg #(.W(1)) u_rn_p (.clk(clk), .d(rn0), .q(rn_p));
-    dsfd_vm_be_kreg #(.W(1)) u_rn_s (.clk(clk), .d(rn0), .q(rn_s));
-    dsfd_vm_be_kreg #(.W(1)) u_rn_w (.clk(clk), .d(rn0), .q(rn_w));
+    dsfd_vm_be_kreg #(.W(1), .ID(1)) u_rn_i (.clk(clk), .d(rn0), .q(rn_i));
+    dsfd_vm_be_kreg #(.W(1), .ID(2)) u_rn_x (.clk(clk), .d(rn0), .q(rn_x));
+    dsfd_vm_be_kreg #(.W(1), .ID(3)) u_rn_c (.clk(clk), .d(rn0), .q(rn_c));
+    dsfd_vm_be_kreg #(.W(1), .ID(4)) u_rn_p (.clk(clk), .d(rn0), .q(rn_p));
+    dsfd_vm_be_kreg #(.W(1), .ID(5)) u_rn_s (.clk(clk), .d(rn0), .q(rn_s));
+    dsfd_vm_be_kreg #(.W(1), .ID(6)) u_rn_w (.clk(clk), .d(rn0), .q(rn_w));
     // ---------------------------------------------------------------- pin flops (stage 0) + RL relay stages
     reg [NS*NP-1:0] q_v; reg [NS*NP*128-1:0] q_d; reg [NS*4-1:0] q_f; reg [NS*3-1:0] q_o;
     reg q_fv; reg [91:0] q_fm; reg [15:0] q_fe; reg [4:0] q_xv; reg [19:0] q_xm;
@@ -1048,14 +1050,14 @@ module dsfd_vm_be #(
     // stage RL + 1: kept X-row copies per lane group, kept one-hot selects per lane x 128-b quarter
     wire [5*512-1:0] xb [0:NG-1];
     generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_xb
-        dsfd_vm_be_kreg #(.W(5*512)) u_xb (.clk(clk), .d(xrow), .q(xb[gg]));
+        dsfd_vm_be_kreg #(.W(5*512), .ID(16 + gg)) u_xb (.clk(clk), .d(xrow), .q(xb[gg]));
     end endgenerate
     // stage RL + 2: t_bl = AND-OR of registered operands
     generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_bl
         always @(posedge clk) if (!rn_x) t_bl[513*gl] <= 1'b0; else t_bl[513*gl] <= tv[gl];
         for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
             wire [4:0] s;
-            dsfd_vm_be_kreg #(.W(5)) u_s (.clk(clk), .d(xsel[gl]), .q(s));
+            dsfd_vm_be_kreg #(.W(5), .ID(32 + 4*gl + gq)) u_s (.clk(clk), .d(xsel[gl]), .q(s));
             always @(posedge clk) begin : p_o integer x; reg [127:0] a;
                 a = 128'd0;
                 for (x = 0; x < 5; x = x + 1) a = a | (xb[gl/4][512*x + 128*gq +: 128] & {128{s[x]}});
@@ -1083,10 +1085,10 @@ module dsfd_vm_be #(
         end
     end
     wire [1:0] rtk = {rr_v[1] && rr_nx, rr_v[0] && !rr_nx};
-    dsfd_vm_be_rcdc #(.W(512), .DEPTH(8), .HOLD(2), .NC(NC)) u_rc0 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[0]),
+    dsfd_vm_be_rcdc #(.W(512), .DEPTH(8), .HOLD(2), .NC(NC), .IDB(100)) u_rc0 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[0]),
         .w_rdy(rw_rdy[0]), .w_d(wq_d0), .rclk(cks[0]), .rrst_n(rns), .r_v(rr_v[0]), .r_rdy(rtk[0]),
         .o_v(o_vr[0]), .o_d(o_d0), .o_vc(o_vc0));
-    dsfd_vm_be_rcdc #(.W(512), .DEPTH(8), .HOLD(2), .NC(NC)) u_rc1 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[1]),
+    dsfd_vm_be_rcdc #(.W(512), .DEPTH(8), .HOLD(2), .NC(NC), .IDB(200)) u_rc1 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[1]),
         .w_rdy(rw_rdy[1]), .w_d(wq_d1), .rclk(cks[0]), .rrst_n(rns), .r_v(rr_v[1]), .r_rdy(rtk[1]),
         .o_v(o_vr[1]), .o_d(o_d1), .o_vc(o_vc1));
     always @(posedge cks[0]) begin : p_vr integer c;
