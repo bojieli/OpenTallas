@@ -840,6 +840,22 @@ def master_prl(t: str, base: str) -> str:
     return t
 
 
+def master_pw2(t: str) -> str:
+    """qwen-1010/a: the program-store write with registered one-hot row / word selects (seq_su_bi_b-955329f22 routed: the
+    q_pw_addr -> 64 x 16 decode -> 65,536 write enables path); the write lands one edge later (configuration time)"""
+    t = one(t, "    always @(posedge clk) prog_a_r <= prog_a;\n",
+            "    always @(posedge clk) prog_a_r <= prog_a;\n    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;\n")
+    return one(t, "        if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;\n",
+               "        if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)\n"
+               "            if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;\n"
+               "    end\n"
+               "    // program writes: one-hot row / word selects registered one edge before the store (65,536 enables)\n"
+               "    always @(posedge clk) begin\n"
+               "        pw_row2 <= q_pw_v ? (64'd1 << q_pw_addr[9:4]) : 64'd0;\n"
+               "        pw_word2 <= 16'd1 << q_pw_addr[3:0];\n"
+               "        pw_d2 <= q_pw_data;\n")
+
+
 # qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
 # above stay byte-identical.
 def emit_seq_su_bi() -> str:
@@ -847,7 +863,7 @@ def emit_seq_su_bi() -> str:
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_seq_su(boundary=True))))
     t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
-    t = master_prl(t, "prog_base")
+    t = master_pw2(master_prl(t, "prog_base"))
     t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W)")
     t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
@@ -860,7 +876,7 @@ def emit_tt_ctlm_i() -> str:
     """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_tt_ctlm())))
     t = t.replace("ot_qwen_rom_core_ctrl_x", "ot_qwen_rom_core_ctrl_x_i")
-    t = master_prl(t, "q_prog_base")
+    t = master_pw2(master_prl(t, "q_prog_base"))
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
     return t
