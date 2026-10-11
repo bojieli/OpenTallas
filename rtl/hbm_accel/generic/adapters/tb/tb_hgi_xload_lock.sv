@@ -2,6 +2,7 @@
 module tb_xload_lock;  // hgi-adapters: banked x-load vs the pre-restructure x-load (ot_hgi_sm_xload_old = git show 861b57fde:rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv), 10 random commands, every x-store write identical
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 3, errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 3; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg x_v = 0; reg [39:0] x_base = 0; reg [20:0] x_n = 0; reg [3:0] x_p = 0; reg [31:0] x_stride = 0;
     wire rdy_a, rdy_b, done_a, done_b, f_a, f_b, en_a, en_b; wire [6:0] ad_a, ad_b, gr_a, gr_b; wire [2047:0] d_a, d_b;
     wire [4*338-1:0] qa, qb; wire [4*274-1:0] ra, rb; wire [273:0] tra, trb; reg [337:0] tq = 0;
