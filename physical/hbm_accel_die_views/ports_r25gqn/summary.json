@@ -60,12 +60,12 @@
     "N",
     "output"
    ],
-   "rst": [
+   "ck": [
     1,
     "N",
     "input"
    ],
-   "ck": [
+   "rst": [
     1,
     "N",
     "input"
@@ -188,32 +188,52 @@
     "W",
     "output"
    ],
+   "t_hgi_e2SW": [
+    129,
+    "W",
+    "output"
+   ],
    "cSW": [
-    827,
+    899,
     "W",
     "inout"
    ],
    "cNW": [
-    827,
+    899,
     "W",
     "inout"
    ],
+   "t_hgi_e2NW": [
+    129,
+    "W",
+    "output"
+   ],
+   "t_hgi_e2SE": [
+    129,
+    "E",
+    "output"
+   ],
    "cSE": [
-    827,
+    899,
     "E",
     "inout"
    ],
    "cNE": [
-    827,
+    899,
     "E",
     "inout"
    ],
-   "rst": [
+   "t_hgi_e2NE": [
+    129,
+    "E",
+    "output"
+   ],
+   "ck": [
     1,
     "S",
     "input"
    ],
-   "ck": [
+   "rst": [
     1,
     "S",
     "input"
@@ -386,11 +406,6 @@
     "E",
     "inout"
    ],
-   "llk_S2": [
-    1122,
-    "E",
-    "inout"
-   ],
    "llk_S4": [
     1122,
     "E",
@@ -436,12 +451,12 @@
     "E",
     "output"
    ],
-   "por_stream": [
+   "pll_stream": [
     1,
     "N",
     "output"
    ],
-   "pll_stream": [
+   "por_stream": [
     1,
     "N",
     "output"
@@ -466,12 +481,12 @@
     "N",
     "output"
    ],
-   "pll_serial": [
+   "por_serial": [
     1,
     "N",
     "output"
    ],
-   "por_serial": [
+   "pll_serial": [
     1,
     "N",
     "output"
@@ -532,6 +547,11 @@
     "output"
    ],
    "llk_S3": [
+    1122,
+    "S",
+    "inout"
+   ],
+   "llk_S2": [
     1122,
     "S",
     "inout"
@@ -714,6 +734,16 @@
    ],
    "t_hgi_hc": [
     274,
+    "W",
+    "output"
+   ],
+   "f_hgi_vmap": [
+    16,
+    "W",
+    "input"
+   ],
+   "t_hgi_vmap": [
+    2224,
     "W",
     "output"
    ],
@@ -1036,6 +1066,16 @@
     "E",
     "output"
    ],
+   "t_hgi_vmap": [
+    16,
+    "E",
+    "output"
+   ],
+   "f_hgi_vmap": [
+    2224,
+    "E",
+    "input"
+   ],
    "f_hgi_vmr": [
     274,
     "E",
@@ -1049,46 +1089,6 @@
    "rst": [
     1,
     "E",
-    "input"
-   ],
-   "ck0": [
-    1,
-    "W",
-    "input"
-   ],
-   "ck1": [
-    1,
-    "W",
-    "input"
-   ],
-   "ck2": [
-    1,
-    "W",
-    "input"
-   ],
-   "ck3": [
-    1,
-    "W",
-    "input"
-   ],
-   "ck4": [
-    1,
-    "W",
-    "input"
-   ],
-   "ck5": [
-    1,
-    "W",
-    "input"
-   ],
-   "ck6": [
-    1,
-    "W",
-    "input"
-   ],
-   "ck7": [
-    1,
-    "W",
     "input"
    ],
    "f_hgi_cmdproc": [
@@ -1120,6 +1120,86 @@
     8961,
     "N",
     "output"
+   ],
+   "ck0e": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck0w": [
+    1,
+    "W",
+    "input"
+   ],
+   "ck1e": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck1w": [
+    1,
+    "W",
+    "input"
+   ],
+   "ck2e": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck2w": [
+    1,
+    "W",
+    "input"
+   ],
+   "ck3e": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck3w": [
+    1,
+    "W",
+    "input"
+   ],
+   "ck4e": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck4w": [
+    1,
+    "W",
+    "input"
+   ],
+   "ck5e": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck5w": [
+    1,
+    "W",
+    "input"
+   ],
+   "ck6e": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck6w": [
+    1,
+    "W",
+    "input"
+   ],
+   "ck7e": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck7w": [
+    1,
+    "W",
+    "input"
    ]
   }
  },
@@ -1129,12 +1209,12 @@
   "h": 358.536,
   "instances": 1,
   "ports": {
-   "rst": [
+   "ck": [
     1,
     "S",
     "input"
    ],
-   "ck": [
+   "rst": [
     1,
     "S",
     "input"
@@ -1176,6 +1256,54 @@
    ],
    "t_hgi_cmdproc": [
     3,
+    "S",
+    "output"
+   ],
+   "f_fused_ne": [
+    2,
+    "E",
+    "input"
+   ],
+   "t_fused_ne": [
+    149,
+    "E",
+    "output"
+   ]
+  }
+ },
+ "hfd_hc_eng": {
+  "kind": null,
+  "w": 6069.6,
+  "h": 1490.4,
+  "instances": 1,
+  "ports": {
+   "f_fused_ne": [
+    149,
+    "N",
+    "input"
+   ],
+   "t_fused_ne": [
+    2,
+    "N",
+    "output"
+   ],
+   "f_lgE_rdn": [
+    8257,
+    "S",
+    "input"
+   ],
+   "f_lgE_wdn": [
+    65,
+    "S",
+    "input"
+   ],
+   "t_lgE_rup": [
+    513,
+    "S",
+    "output"
+   ],
+   "t_lgE_wup": [
+    8961,
     "S",
     "output"
    ]
