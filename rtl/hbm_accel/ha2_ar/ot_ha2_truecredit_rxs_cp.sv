@@ -88,7 +88,12 @@ module ot_ha2_truecredit_receiver_s #(
   // fault rises one edge later (sticky status), nothing else changes.
   (* keep = 1 *) reg sv_i, rv_i, bads_q;
   assign bads[i]=bads_q;
-  assign idle[i]=empty&&!av_q&&!w_ce_q&&!v0&&!v1&&!v2&&!v3&&!sv_i&&!rv_i&&cr_home;
+  // [link] quiet: each lane registers its idle term beside the lane (cplp TT -128.87 = lane0 sv_i -> 840-um AND tree -> quiet);
+  // quiet follows one edge later (a quiescence status: asserts and drops one edge later; nothing reads it combinationally)
+  wire idle_c=empty&&!av_q&&!w_ce_q&&!v0&&!v1&&!v2&&!v3&&!sv_i&&!rv_i&&cr_home;
+  (* keep = 1 *) reg idle_q;
+  always @(posedge clk or negedge rst_l) if(!rst_l) idle_q<=1'b1; else idle_q<=idle_c;
+  assign idle[i]=idle_q;
   always @(posedge clk or negedge rst_l)
    if(!rst_l)begin
     expect_arrival<=0;expect_retire<=0;bad<=0;ovf<=0;wp<=0;rp<=0;wp_q<=0;v0<=0;v1<=0;v2<=0;v3<=0;
