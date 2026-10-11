@@ -416,7 +416,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
     else:
         s += [f"set nbr_in [get_ports {{{nbr_in}}}]",
               "set nbr_out [all_outputs]"]
-    if io_ref:
+    if io_ref and io_ref != "vclk":
         s += ["# abutting ports (m2g, 2026-10-06): the neighbour piece's flop sits on the same element clock tree, so its",
               "# clock arrives at THIS block's insertion in EVERY corner.  Reference the abutting port delays to a register",
               "# clock pin of this block (-reference_pin: the propagated arrival at that pin, per corner) instead of nbr_clk",
@@ -433,6 +433,21 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "set_input_delay -min 30 -clock core_clk -reference_pin $refpin $nbr_in   ;# RULE H1: hold_io on the sender output min only",
               "set_output_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_out",
               "set_output_delay -min [expr 50 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_out   ;# the neighbour lands it >= 50 ps inside",
+              "set_load 2.0 [all_outputs]",
+              "set_max_fanout 32 [current_design]"]
+    elif io_ref == "vclk":
+        s += ["# [cg] 2026-10-10 IO-REF as virtual clocks (the -reference_pin form SEGVs OpenROAD's estimate_parasitics on",
+              "# front_c: sta::Sim::findDisabledEdges -> LibertyCell::timingArcSets; bisected on 3_3 with/without -reference_pin).",
+              "# lat / lat_ff = this block's MEASURED median input pin-flop insertion at TT / FF (the PINFLOP-REF value, from the",
+              "# calibrate CTS db).  Inputs: the neighbour launches at that insertion in each check: nbr_clk_i -max (setup, TT)",
+              "# / -min (hold, FF).  Outputs: nbr_clk at lat with the FF difference dlo in the output min, as before.",
+              f"create_clock -name nbr_clk_i -period $clk_period",
+              f"set_clock_latency -source -max {lat} [get_clocks nbr_clk_i]",
+              f"set_clock_latency -source -min {lat_ff} [get_clocks nbr_clk_i]",
+              "set_input_delay -max [expr 300 + $skew] -clock nbr_clk_i $nbr_in",
+              "set_input_delay -min 30 -clock nbr_clk_i $nbr_in   ;# RULE H1: hold_io on the sender output min only",
+              "set_output_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_out",
+              "set_output_delay -min [expr 50 + $dlo - $hold_io] -clock nbr_clk $nbr_out",
               "set_load 2.0 [all_outputs]",
               "set_max_fanout 32 [current_design]"]
     else:
@@ -1177,7 +1192,7 @@ def cmd_block(a):
                    f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                    f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                    "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
+        sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=("vclk" if getattr(a, "io_vclk", False) else a.io_ref))
         hops = STRIP_HOPS[a.piece]
         if g.get("front_channel_um", 120.0) != 120.0:
             if a.piece == "front_c":
@@ -1411,6 +1426,7 @@ def main(argv=None):
                    "cg_pushdown.tcl clones the ICG per sink cluster before CTS")
     b.add_argument("--cg-nopush", action="store_true", help="--cg: keep the ONE ICG at the root (no cg_pushdown cloning; small pieces: "
                    "the back end's CTS segfaulted with the push-down hook)")
+    b.add_argument("--io-vclk", action="store_true", help="[cg] 2026-10-10: strip IO reference as virtual clocks at the measured pin-flop insertion (--lat / --lat-ff), not -reference_pin (OpenROAD SEGV)")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
