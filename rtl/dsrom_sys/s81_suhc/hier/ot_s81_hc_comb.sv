@@ -7,6 +7,7 @@
 // (its y slice FIFO, its subtrees) and the y credit view (beats available = accept notices - beats taken).
 // Every seam is registered both sides; the centre chain is padded to the outer chains' register counts so all three
 // chains run in lockstep: forward = send + capture + RF + chain output flop, return = capture + RT + send + capture.
+// The centre chain is the short one (NS - 2 NP sub-tiles): 3 more registers a missing hop on both buses.
 // The done pulse waits for the write path (send + capture + RW + pin flop) before the adapter: the last write of a
 // job leaves the slab pins no later than its done.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -155,7 +156,9 @@ module ot_s81_hc_comb #(
     wire              tf1;
     ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(AL), .OWN(1)) u_tree1 (.clk(sk), .rst_n(srs), .v(crv[S_RT]),
         .pk(crd[P_D +: NP * 128]), .im(32'd0), .ex(ex1), .r_v(), .r(), .fault(tf1));
-    localparam integer RP = RT + 2;                               // the outer chains' relay + send + capture
+    localparam integer HOP = 3;                                   // registers a sub-tile hop (each bus)
+    localparam integer PAD = HOP * (NP - L1);                     // the centre chain is short by NP - L1 sub-tiles
+    localparam integer RP = RT + 2 + PAD;                         // the outer chains' relay + send + capture + padding
     wire [RVW-1:0]    crv_p;
     wire [RDW-1:0]    crd_p;
     wire [NE1*32-1:0] ex1_p;
@@ -219,7 +222,7 @@ module ot_s81_hc_comb #(
     reg [1:0] rr;
     always @(posedge sk) rr <= {rr[0], srs};
     assign ch_rst = rr[1];
-    localparam integer FP = 2 + RF;                               // send + capture + RF
+    localparam integer FP = 2 + RF + PAD;                         // send + capture + RF + padding
     wire [FVW-1:0] fv_p;
     wire [FSW-1:0] fd_p;
     ot_hdc_delay #(.W(FVW), .D(FP), .RESET(1)) u_pfv (.clk(sk), .rst_n(srs), .d(fv), .q(fv_p));
