@@ -675,7 +675,7 @@ def gate_text(category, tq):
     if not tq: return timing + ', NO-THROUGHPUT-BUDGET-ROW'
     st = tq.get('status')
     return timing + (', THROUGHPUT-QUALIFIED' if st == 'QUALIFIED' else ', THROUGHPUT-QUALIFIED-BY-BOUND' if st == 'QUALIFIED_BY_BOUND'
-                     else ', THROUGHPUT-UNQUALIFIED')
+                     else ', THROUGHPUT-ACCEPTED' if st == 'ACCEPTED' else ', THROUGHPUT-UNQUALIFIED')
 
 def throughput_text(tq):
     if not tq: return ''

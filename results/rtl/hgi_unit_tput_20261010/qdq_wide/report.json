@@ -12,27 +12,27 @@
    "real": 8,
    "exact": 8,
    "rtl_busy": 503,
-   "sim_cost": 496.0
+   "sim_cost": 168.0
   }
  },
  "per_op": {
   "FUSED.QDQ_FP8": {
    "records": 4,
    "rtl_service": 263,
-   "sim_cost": 260.0,
-   "ratio": 1.012
+   "sim_cost": 96.0,
+   "ratio": 2.74
   },
   "FUSED.QDQ_FP4_E8M0": {
    "records": 2,
    "rtl_service": 108,
-   "sim_cost": 106.0,
-   "ratio": 1.019
+   "sim_cost": 24.0,
+   "ratio": 4.5
   },
   "FUSED.QDQ_FP4_E4M3": {
    "records": 2,
    "rtl_service": 132,
-   "sim_cost": 130.0,
-   "ratio": 1.015
+   "sim_cost": 48.0,
+   "ratio": 2.75
   }
  },
  "records": [
@@ -46,8 +46,8 @@
    "issue": 0,
    "ret": 65,
    "service": 65,
-   "cost": 65.0,
-   "ratio": 1.0,
+   "cost": 24.0,
+   "ratio": 2.708,
    "mismatch": 0
   },
   {
@@ -60,8 +60,8 @@
    "issue": 66,
    "ret": 131,
    "service": 66,
-   "cost": 65.0,
-   "ratio": 1.015,
+   "cost": 24.0,
+   "ratio": 2.75,
    "mismatch": 0
   },
   {
@@ -74,8 +74,8 @@
    "issue": 132,
    "ret": 185,
    "service": 54,
-   "cost": 53.0,
-   "ratio": 1.019,
+   "cost": 12.0,
+   "ratio": 4.5,
    "mismatch": 0
   },
   {
@@ -88,8 +88,8 @@
    "issue": 186,
    "ret": 251,
    "service": 66,
-   "cost": 65.0,
-   "ratio": 1.015,
+   "cost": 24.0,
+   "ratio": 2.75,
    "mismatch": 0
   },
   {
@@ -102,8 +102,8 @@
    "issue": 252,
    "ret": 317,
    "service": 66,
-   "cost": 65.0,
-   "ratio": 1.015,
+   "cost": 24.0,
+   "ratio": 2.75,
    "mismatch": 0
   },
   {
@@ -116,8 +116,8 @@
    "issue": 318,
    "ret": 383,
    "service": 66,
-   "cost": 65.0,
-   "ratio": 1.015,
+   "cost": 24.0,
+   "ratio": 2.75,
    "mismatch": 0
   },
   {
@@ -130,8 +130,8 @@
    "issue": 384,
    "ret": 449,
    "service": 66,
-   "cost": 65.0,
-   "ratio": 1.015,
+   "cost": 24.0,
+   "ratio": 2.75,
    "mismatch": 0
   },
   {
@@ -144,8 +144,8 @@
    "issue": 450,
    "ret": 503,
    "service": 54,
-   "cost": 53.0,
-   "ratio": 1.019,
+   "cost": 12.0,
+   "ratio": 4.5,
    "mismatch": 0
   }
  ],
@@ -169,8 +169,7 @@
  },
  "grade": "production_width",
  "bench": "tb_hgi_quant_wide_tput (tools/hgi_unit_tput/run_qdq_wide.sh, Verilator 5.050 ot-epyc3)",
- "structure": "ot_hgi_quant_unit WIDE=1 -> ot_hgi_quant_wide (registered boundary, ot_rst_relay, per-lane response FIFOs LD 4, NB 16, OD 32) on ot_hgi_vm_unit RP 32 / W2 32 LQ 16",
- "price": "ceil(n/32)+49 (ds_native_timing, corrected 10-10 tput-gate-1010)",
- "control": "w3 (forced packet path) PASS 2,319 cycles = the previous unit",
- "vectors": "tools/hgi_unit_tput/qdq_vectors.py (DS L0/L20/L40 shapes + CF corners)"
+ "structure": "ot_hgi_quant_unit WIDE=1 -> ot_hgi_quant_wide (registered boundary, ot_rst_relay, LD 4, NB 16, OD 32) on ot_hgi_vm_unit RP 32 / W2 32 LQ 16",
+ "price": "ceil(n/32)+8 (the token path's price, unchanged; owner 2026-10-11)",
+ "control": "w3 (forced packet path) PASS 2,319 cycles = the previous unit (14.6x)"
 }

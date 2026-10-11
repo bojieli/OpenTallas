@@ -67,7 +67,7 @@
  },
  "adapter": {
   "rtl": "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
-  "sha256": "87cc81dad4b26c09510ed147a32e9df99eddddbffca2887553b540254086fadb",
+  "sha256": "f01f0b3d0f6000005376d2816a0dc482025103e11a74f3627cba722fa0348e91",
   "module": "ot_s81_engine_adapter #(QD=8)",
   "placement": "inside each slab master at the slab boundary (engine clock e_clk = the slab clock); the die nets between dsfd_sp_ctrl and the slab carry only c_cmd_v/c_cmd_d (85 b) and c_done_v/c_done_tag (9 b) pulses",
   "controller_side": {
@@ -90,8 +90,8 @@
   },
   "handshake": "controller: QD=8 credits per engine, one credit returned only by a validated done (no ready on the die net). Adapter: depth-8 pulse CDC queue each way (ot_s81_pulse_cdc over ot_async_fifo); engine side is valid/ready on e_cmd, pulse on e_done. Faults: command without credit, duplicate pending tag, done for a non-pending tag.",
   "latency": {
-   "cmd_issue_to_e_cmd_v": "async FIFO: ~2 synchroniser + 2 register cycles of e_clk (+ die relay stations on cv/cd: fixed, priced per hop by the generator)",
-   "e_done_to_dv": "~2 sync + 2 register cycles of c_clk (+ relay stations)",
+   "cmd_issue_to_e_cmd_v": "async FIFO: ~2 synchroniser + 2 register cycles of e_clk (+ die relay stations on cv/cd: fixed, priced per hop by the generator) + 1 output register (2026-10-11 timing fix)",
+   "e_done_to_dv": "~2 sync + 2 register cycles of c_clk (+ relay stations) + 1 output register (2026-10-11 timing fix)",
    "priced_in": "tools/s81_ctrl/die_binding_contract.py model: stage_handoff_extra_cycles 3, ar_stage_handoffs 121; generator must add the relay-station count per engine net"
   },
   "transport": "cv/cd/dv/dt are pulse nets with no back-pressure: die relay stations are plain pipeline flops (fixed latency), allowed on any hop; every die input/output lands in a pin flop"

@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.s81.die-ctrl-bindings.v1",
+ "owner": "s81-ctl-1011 (ds-1010)",
+ "contract": "physical/s81_ctrl/ADAPTER_CONTRACT_1011.json",
+ "gate": "tools/s81_ctrl/die_ctrl_gate.py (generator --ctrl-adapters, with --wfc-kit --stage-seq: the sseq slab of decision A)",
+ "rule": "sequencer port c<e>[84:0] -> slab c_cmd, slab c_done[8:0] -> d<e>, slab c_st[1:0] -> s<e>; a slab master is listed for an engine only when its RTL carries the pinned endpoint (ot_s81_slab_ep / ot_s81_engine_adapter) wired to its datapath AND its gate passed. An empty list = UNBOUND = die gate FAIL.",
+ "sequencers": ["dsfd_stage_seq"],
+ "engines": {
+  "fld":   {"masters": ["dsfd_sp_gather_c"], "note": "non-PQ dies: gather_c phase stage = start, capture_c drained = done (lead s81-ctl v2); PQ dies: PQ core master (RTL pending)"},
+  "su":    {"masters": [], "note": "s81-suhc-1011"},
+  "hc":    {"masters": [], "note": "s81-suhc-1011"},
+  "coll":  {"masters": ["dsfd_sp_collective_c"], "note": "s81-ctl-1011 ot_s81_coll_job; split3cr / MTP-lane variants pending"},
+  "svc":   {"masters": [], "note": "HBM scan service: owner to name (one engine port for 4 svc slabs needs a done join)"},
+  "sel":   {"masters": ["dsfd_bk_selector_c"], "note": "lead s81-ctl v2"},
+  "col":   {"masters": ["dsfd_bk_collector_c"], "note": "lead s81-ctl v2"},
+  "hop":   {"masters": [], "note": "hop_tx retired; under decision A the stage hand-off is the WFC kit's: kit endpoint for port 7 (mtp-wfc) pending"},
+  "head":  {"masters": [], "note": "head-root die"},
+  "emb":   {"masters": [], "note": "source die"},
+  "eng":   {"masters": [], "note": "Engram home dies"},
+  "spare": {"masters": [], "note": "unused unless a role binds it"}
+ },
+ "role_absent": {
+  "layer":  ["head", "emb", "spare"],
+  "source": ["sel", "col", "head", "eng", "spare"],
+  "head":   ["fld", "su", "hc", "svc", "sel", "col", "emb", "eng", "spare"]
+ }
+}
