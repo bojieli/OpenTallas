@@ -11,7 +11,7 @@ The gate is `tools/hgi_unit_tput/run_qdq_wide.sh` (Verilator 5.050, ot-epyc3), r
 
 | run | what | result |
 |---|---|---|
-| m0 | wide | PASS: 8 records, 3,328 words exact, 479 cycles |
+| m0 | wide | PASS: 8 records, 3,328 words exact, 503 cycles |
 | w3 | the same records forced to the packet path (control) | PASS: 2,319 cycles, the previous unit |
 | m1 | header A-bit mutant | FAIL, as required |
 | w1 | lane-to-sector mutant | FAIL, as required |
@@ -20,10 +20,10 @@ The gate is `tools/hgi_unit_tput/run_qdq_wide.sh` (Verilator 5.050, ot-epyc3), r
 
 | shape | cycles per record |
 |---|---:|
-| n 512 | 62 |
-| n 128 | 50 |
+| n 512 | 65 |
+| n 128 | 53 |
 
-The old price, ceil(n/32) + 8, left out two things: the decode's fixed latency of 23 edges and the VM round trip. The price in `ds_native_timing` is corrected to the measured structure, ceil(n/32) + 46. Against that price the ratios are:
+The old price, ceil(n/32) + 8, left out two things: the decode's fixed latency of 23 edges and the VM round trip. The price in `ds_native_timing` is corrected to the measured structure, ceil(n/32) + 49. Against that price the ratios are:
 
 | op | ratio |
 |---|---:|
@@ -31,7 +31,7 @@ The old price, ceil(n/32) + 8, left out two things: the decode's fixed latency o
 | QDQ_FP4_E8M0 | 1.020 |
 | QDQ_FP4_E4M3 | 1.016 |
 
-The bench printed costs at the old price; `m0_repriced.log` is `m0.log` with the cost column recomputed at the corrected one. With the corrected price the DS S2 token is 566,785 cycles (2,117.2 tok/s, −4.6 tok/s against 2,121.8); hgi-1010/e owns the published rate. Against the old price, the old packet unit was 14.6× (`../qdq/ds_L0_tput/report_packet.json`, kept as history; renamed so the calibration glob reads only the current structure). The wide unit is 5.7× faster than the packet unit on the same records.
+The bench printed costs at the old price; `m0_repriced.log` is `m0.log` with the cost column recomputed at the corrected one. With the corrected price the DS S2 token changes slightly (see the budget README); hgi-1010/e owns the published rate. Against the old price, the old packet unit was 14.6× (`../qdq/ds_L0_tput/report_packet.json`, kept as history; renamed so the calibration glob reads only the current structure). Every input of the engine lands in a pin flop (registered boundary, +2 edges a record; the reset port drives only an ot_rst_relay). The wide unit is 5.4× faster than the packet unit on the same records.
 
 ## Open
 

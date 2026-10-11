@@ -3072,6 +3072,9 @@ def build_r8(variant=None):
             centre.remove('wfc')
         centre.insert(centre.index('capture') + 1, 'wfc_hard')
         centre_area['wfc_hard'] = WFC_SLAB_H * cw / 1e6
+        if STAGE_SEQ:   # main decision A (2026-10-11): the stage start / done passes dsfd_stage_seq to the engines
+            centre.insert(centre.index('wfc_hard') + 1, 'sseq')
+            centre_area['sseq'] = SSEQ_MM2
     if MTP_SEQ and DIE_KIND == 'head':
         centre.insert(centre.index('capture') + 1, 'mtp')
         centre_area['mtp'] = MTP_SEQ_MM2
@@ -3140,6 +3143,9 @@ def build_r8(variant=None):
             slab('p2', centre_area[n], x0_, yy, w0_, master='dsfd_p2')
             notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
                          '(the larger first-route outline %s um)' % (centre_area[n], P2_OUTLINE_UM))
+        elif n == 'sseq':
+            slab('sseq', centre_area[n], x0_, yy, w0_, master='dsfd_stage_seq')
+            notes.append('option A: dsfd_stage_seq (ot_s81_stage_seq) %.3f mm2: kit start / done <-> engine cmd / dn' % centre_area[n])
         elif n in ('vm_ep', 'cap_ep', 'p2_lnk'):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
             slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
@@ -3758,6 +3764,8 @@ def buses_r8(m):
         elif it.name == 'sp_stage_ctrl':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rs'))
+        elif it.master == 'dsfd_stage_seq':                    # option A sequencer: the kit's serial (ckv) side
+            dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
         elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2'):   # mtp-wfc: the kit's vmx slow side is the serial domain
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
@@ -3843,7 +3851,7 @@ def wfc_kit_buses(role, host, far=None, crp=False):
              ('wfc', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc', 54, 't_wfc', 'f_kd')]
         if role == 'source' and host:
             b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
-        return tuple(b)
+        return _sseq_rebind(tuple(b), host)
     # far 's0' (--coll-mtp-far): the SOURCE kit's link-in is the collective MTP lane's token return (t_mrt {data, valid}
     # / f_mrt grant; kit TOKIN 1) and the accept word t_macc goes to the host
     b = ([('collective', 'wfc', 513, 't_mrt', 'f_mrt'), ('wfc', 'collective', 1, 't_mrg', 'f_mrt')] if far == 's0' else
@@ -3855,7 +3863,20 @@ def wfc_kit_buses(role, host, far=None, crp=False):
         b += [('collective', 'host', 57, 't_macc', 'f_macc')]
     if role == 'source' and host:
         b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
-    return tuple(b)
+    return _sseq_rebind(tuple(b), host)
+
+
+def _sseq_rebind(b, host):
+    """--stage-seq: the kit's start / done go to dsfd_stage_seq (no capture placeholder pins); program load and status on
+    the host cfg path.  The sequencer's engine cmd / dn ports are bound by the engine-adapter work (s81-ctl-1011)."""
+    if not STAGE_SEQ:
+        return b
+    b = tuple(x for x in b if not (set(x[:2]) == {'wfc', 'capture'}))
+    b += (('wfc', 'sseq', 53, 't_ks', 'f_ks'), ('sseq', 'wfc', 54, 't_kd', 'f_kd'))
+    if host:
+        b += (('host', 'sseq', 36, 't_sseq_pw', 'f_pw'), ('host', 'sseq', 8, 't_sseq_plen', 'f_plen'),
+              ('sseq', 'host', 6, 't_st', 'f_sseq_st'))
+    return b
 
 
 SEEDL = False                   # --seedl (mtp-dsbind 2026-10-10): DSpark primary die (--draft P) seed-descriptor consumer
@@ -3887,6 +3908,8 @@ MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab 
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
 SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) station spacing = LINK_STAGE_UM x (1111.1 - 261) /
                                 #   (833.3 - 261) on the SS wire model 261 ps + 1.135 ps/um (504 um at 833 ps; 749 um at 1,111 ps)
+STAGE_SEQ = False               # --stage-seq (main decision A 2026-10-11): kit start / done through dsfd_stage_seq
+SSEQ_MM2 = 0.06                 #   ot_s81_stage_seq NOPS 128 program (3.6 kbit) + 12 x (FQ 4 + credits) queues; preliminary
 WFC_CRP = False                 # --wfc-crp (main 10-11): WFC slab master dsfd_wfc_cr2 (credit-boundary tile dsfd_wfc_crp + kit)
 WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
 WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
@@ -6213,6 +6236,8 @@ def die_options(ap):
     ap.add_argument('--p2-lnk', action='store_true', help='mtp-wfc 2026-10-10: draft-A P2 slab = core + dsfd_p2_lnk')
     ap.add_argument('--mtp-seq-rtt', action='store_true', help='mtp-wfc 2026-10-10: head sequencer slab master '
                     'dsfd_mtp_seq_rtt (native RTT successor, same ports)')
+    ap.add_argument('--stage-seq', action='store_true', help='main decision A: with --wfc-kit, a dsfd_stage_seq slab carries '
+                    'the kit start / done (no capture placeholder pins); engine cmd / dn bound by the adapter work')
     ap.add_argument('--wfc-crp', action='store_true', help='main 10-11: with --wfc-kit, the WFC slab master is dsfd_wfc_cr2 '
                     '(dsfd_wfc_crp credit-boundary tile at the die edge + the kit)')
     ap.add_argument('--wfc-kit', action='store_true',
@@ -6279,8 +6304,9 @@ def apply_options(a):
     global MTP_EP, P2_LNK
     MTP_EP = bool(getattr(a, 'mtp_ep', False)); P2_LNK = bool(getattr(a, 'p2_lnk', False))
     WFC_KIT = bool(getattr(a, 'wfc_kit', False))
-    global WFC_CRP
+    global WFC_CRP, STAGE_SEQ
     WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT
+    STAGE_SEQ = bool(getattr(a, 'stage_seq', False)) and WFC_KIT
     if WFC_CRP and getattr(a, 'coll_mtp_far', None):
         raise SystemExit('--wfc-crp with --coll-mtp-far: the TOKIN token-return path is a kit port, not a cr2 port (not built)')
     WFC_ROLE = 'source' if getattr(a, 'ctrl_role', 'layer') == 'source' else 'stage'

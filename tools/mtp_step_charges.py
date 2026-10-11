@@ -105,7 +105,9 @@ def ds_rom():
     vst_p = ROOT / "results/rtl/dsrom_wfc_integration_20261010/vm_station.json"
     vst = json.loads(vst_p.read_text()) if vst_p.exists() else None
     vst_d = vst["delta_per_hop_fast_cycles"] if vst else 0.0
-    vmx += vst_d
+    # main decision A (2026-10-11): the stage start / done passes the stage-program sequencer dsfd_stage_seq (measured)
+    vst_s = vst.get("stage_seq_delta_per_hop_fast_cycles", 0.0) if vst else 0.0
+    vmx += vst_d + vst_s
     per_hop = wfc["hop_delta_cycles"] + lnk + vmx
     busy_cyc = hv["worst_stage"]["busy_us"] * CLK / 1e6
     handoff = busy_cyc * (wfc["measured_interval_overhead"] - 46 / 11271)
@@ -115,7 +117,7 @@ def ds_rom():
         hops * per_hop, anchor="wave.last", phase="verify",
         formula=f"{hops} stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x {per_hop:g} "
                 f"(WFC done->out + entry delta {wfc['hop_delta_cycles']} + lnk {lnk} + vmx start {stg['start_mean']:g} + "
-                f"vmx done/prefetch {stg['done_mean']:g} + VM hub-station delta {vst_d:g})",
+                f"vmx done/prefetch {stg['done_mean']:g} + VM hub-station delta {vst_d:g} + stage sequencer {vst_s:g})",
         source=[WFC_CLOSURE + " charge.hop_delta_cycles", MTP_ROM_BENCH + " stg_vmnat MTP_STG_CYC",
                 "~/claude-takeover-20261007/mtp-rom.log (lnk +3/+3 a hop)"],
         note="the composition charges the reference ot_rom_pkg_ctrl_wf (46/11,271 handoff, no shims) whose route was rejected; "

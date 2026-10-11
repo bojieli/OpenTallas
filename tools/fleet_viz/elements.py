@@ -673,7 +673,9 @@ def gate_text(category, tq):
     """AGENTS.md throughput qualification: timing closure alone never qualifies a unit."""
     timing = 'CLOSED-TIMING' if category.startswith('closed') else 'OPEN-TIMING'
     if not tq: return timing + ', NO-THROUGHPUT-BUDGET-ROW'
-    return timing + (', THROUGHPUT-QUALIFIED' if tq.get('status') == 'QUALIFIED' else ', THROUGHPUT-UNQUALIFIED')
+    st = tq.get('status')
+    return timing + (', THROUGHPUT-QUALIFIED' if st == 'QUALIFIED' else ', THROUGHPUT-QUALIFIED-BY-BOUND' if st == 'QUALIFIED_BY_BOUND'
+                     else ', THROUGHPUT-UNQUALIFIED')
 
 def throughput_text(tq):
     if not tq: return ''

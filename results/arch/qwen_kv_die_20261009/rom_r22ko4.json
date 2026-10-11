@@ -2,7 +2,7 @@
  "schema": "opentallas.qwen-kv-die.rom-r22k.v1",
  "recipe": "r22ko4 (tools/die_top_lint.py QWEN_RECIPES)",
  "generator_sha256": "6e40ce155e29e0c9dd3f053669def62788c8dd87a0575b8840f290a8ef94b5c3",
- "surgery_sha256": "17fec8b4b93992a50bfa7fa21a109454515cc7ea20505c35e559b3cf3da51fe7",
+ "surgery_sha256": "77262a34d44ef3f631f38cb20b91aa1cb86010e4a9a401b3fdf6f7dd56b5eb9a",
  "die_um": [
   23484.384,
   32801.76
@@ -11,14 +11,14 @@
  "reticle_mm2": 858.0,
  "margin_mm2": 87.671,
  "r21c_die_mm2": 846.792,
- "instances": 13099,
- "buses": 16297,
- "instance_mm2": 609.06,
+ "instances": 13082,
+ "buses": 16278,
+ "instance_mm2": 609.2,
  "area_by_kind_mm2": {
   "tile": 529.628,
   "spine_block": 34.667,
   "io": 17.6,
-  "relay": 16.621,
+  "relay": 16.762,
   "station": 8.387,
   "xfifo": 0.626,
   "phy_d2d": 0.605,
@@ -77,6 +77,8 @@
   "d2d_fdi": 0,
   "pll_fwd": 0,
   "rst_fwd": 0,
+  "coll_seq": 0,
+  "coll_seq_x": 53,
   "d2d_flt": 26,
   "o4_cb_a_0": 0,
   "o4_cb_a_1": 0,
@@ -86,14 +88,14 @@
   "o4_cb_a_5": 0,
   "o4_cb_a_6": 0,
   "o4_cb_a_7": 0,
-  "o4_cb_ctl_0": 13,
+  "o4_cb_ctl_0": 12,
   "o4_cb_ctl_1": 6,
-  "o4_cb_ctl_2": 5,
-  "o4_cb_ctl_3": 5,
-  "o4_cb_ctl_4": 14,
-  "o4_cb_ctl_5": 7,
+  "o4_cb_ctl_2": 6,
+  "o4_cb_ctl_3": 6,
+  "o4_cb_ctl_4": 13,
+  "o4_cb_ctl_5": 6,
   "o4_cb_ctl_6": 7,
-  "o4_cb_ctl_7": 7,
+  "o4_cb_ctl_7": 8,
   "o4_cb_q_0": 0,
   "o4_cb_q_1": 0,
   "o4_cb_q_2": 0,
@@ -106,10 +108,10 @@
   "o4_cb_rdy_1": 6,
   "o4_cb_rdy_2": 6,
   "o4_cb_rdy_3": 5,
-  "o4_cb_rdy_4": 7,
+  "o4_cb_rdy_4": 14,
   "o4_cb_rdy_5": 6,
-  "o4_cb_rdy_6": 6,
-  "o4_cb_rdy_7": 7,
+  "o4_cb_rdy_6": 7,
+  "o4_cb_rdy_7": 8,
   "o4_cf_a_0": 3,
   "o4_cf_a_1": 3,
   "o4_cf_a_2": 3,
@@ -143,7 +145,7 @@
   "pword_3": 6,
   "pword_4": 15,
   "pword_5": 25,
-  "seq_coll": 51,
+  "seq_coll": 52,
   "seq_coll_x": 0,
   "seq_ib": 1,
   "seq_vrd": 1,
@@ -182,18 +184,18 @@
  "stage_note": "relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is registered as well (the stage the r21 token-cost counts as one per die hop)",
  "r22k": {
   "removed_instances": {
-   "qfd_cdc": 128,
-   "ot_hbm3e_phy": 4,
-   "qfd_lst_h_e": 10,
-   "qfd_lst_h_w": 10,
-   "qfd_kvc_n": 2,
    "qfd_lst_v_split": 6,
-   "qfd_ctrl": 4,
+   "qfd_cdc": 128,
+   "qfd_kvc_n": 2,
    "qfd_lst_c_split": 2,
-   "qfd_lst_v": 3,
-   "qfd_kvc": 2,
+   "ot_hbm3e_phy": 4,
+   "qfd_lst_c": 1,
+   "qfd_lst_h_w": 10,
    "qfd_hub": 1,
-   "qfd_lst_c": 1
+   "qfd_lst_h_e": 10,
+   "qfd_ctrl": 4,
+   "qfd_lst_v": 3,
+   "qfd_kvc": 2
   },
   "dropped_buses": {
    "link_channel": 24,
@@ -420,6 +422,10 @@
     "sp_constants_sequencer"
    ],
    "removed_buses": [
+    "coll_tx",
+    "coll_tx_x",
+    "coll_rx",
+    "coll_rx_x",
     "pword_0",
     "pword_1",
     "pword_2",
@@ -1837,7 +1843,7 @@
    },
    "notes": [
     "tt_c<b> / tt_f<b> / tt_lc<b> / tt_xd / tt_xr / tt_mx / tt_land keep their widths, now on tt_ctlm",
-    "seq_ib / seq_coll / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su",
+    "seq_ib / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su; seq_coll carries the all-reduce words (548 b, native) and coll_seq returns them (518 b); coll_tx / coll_rx (VM <-> collective) removed",
     "the KV descriptor (kvd_*) and kv_ok leave the sequencer word for the control tile (o4_kvd / o4_kok); seq_d2d keeps its r22k width (not reduced here)",
     "cbuf stage / tok_start / tpos (o4_cb_ctl) and st_rdy / fault (o4_cb_rdy) have no consumer port in the released seq_su / SU RTL yet (the token vehicle prices the buffer as SU ML 7)",
     "up4 sel words o4_sel_u: the up4 is built with DLY = CLNK + 2 + LNK - CR (closed view DLY 1); its relay count here sets CR"
@@ -2181,21 +2187,15 @@
  },
  "margin_lint": {
   "mode": "chains",
-  "chains": 2702,
+  "chains": 2699,
   "reach_um": 504.0,
-  "reach_violations": 2,
-  "far_side_relays": 32,
+  "reach_violations": 1,
+  "far_side_relays": 31,
   "reach_examples": [
    {
-    "chain": "cbuf_g_4->seq_su",
-    "seg": "rly_o4_cb_rdy_4_0->rly_o4_cb_rdy_4_1",
-    "um": 593.2,
-    "hops": 1
-   },
-   {
-    "chain": "cbuf_g_6->seq_su",
-    "seg": "rly_o4_cb_rdy_6_0->rly_o4_cb_rdy_6_1",
-    "um": 539.2,
+    "chain": "cbuf_g_5->seq_su",
+    "seg": "rly_o4_cb_rdy_5_0->rly_o4_cb_rdy_5_1",
+    "um": 550.0,
     "hops": 1
    }
   ],
@@ -2231,6 +2231,11 @@
     "back_um": 410.4
    },
    {
+    "chain": "sp_port_tiles_2_f1->sp_port_tiles_2",
+    "relay": "rly_pfrag_2_port_tiles_2_f1_22",
+    "back_um": 410.4
+   },
+   {
     "chain": "tt_ctlm->sp_vector_memory",
     "relay": "rly_tt_mx_13",
     "back_um": 410.4
@@ -2239,11 +2244,6 @@
     "chain": "t_31_13->sp_port_tiles_3",
     "relay": "rly_bword_45_10",
     "back_um": 345.6
-   },
-   {
-    "chain": "sp_port_tiles_2_f1->sp_port_tiles_2",
-    "relay": "rly_pfrag_2_port_tiles_2_f1_22",
-    "back_um": 324.0
    },
    {
     "chain": "t_27_17->sp_port_tiles_4",
@@ -2306,5 +2306,16 @@
  "margin_note": "data buses only: clock / reset trunks are CTS / reset trees (their relay-row sinks are clock pins)",
  "relay_kinds": [
   "relay"
- ]
+ ],
+ "collective_credit": {
+  "round_trip_edges": 121,
+  "credits": 121,
+  "receiver_buffer_words": 121,
+  "receiver_buffer_bits": 61952,
+  "one_way_edges": {
+   "fwd": 60,
+   "ret": 61
+  },
+  "note": "the die streams all-reduce words seq_su (tp_seq_vrl reads / writes the VM over seq_vrd / vm_seq_q / seq_vwr) -> io_xfifo -> io_collective on seq_coll (548 b) and back on coll_seq (518 b); no VM <-> collective words.  Credits = round trip (relays both ways + 8 port stations + 2 CDCs of 4 edges) keep one word a cycle; the collective input buffer holds that many words.  The token vehicle carries the same one-way edges as relay stations on the sequencer <-> collective words (option4_die --crly)."
+ }
 }

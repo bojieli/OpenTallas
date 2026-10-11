@@ -19,6 +19,24 @@ proc ot_of_drv {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return $it } }
   return ""
 }
+# ds-1010 2026-10-11: the chain net may also feed the flop's OWN hold / enable mux (a DFFE maps to DFF + mux whose feedback
+# can tap the Q-polarity net after the output inverter): accept a net whose only other loads are cells whose output is the
+# candidate flop's D net (lane lcrpx: 556 li_d / flt output flops skipped, li_d 240 ps of wire, TT -43 / -67).
+proc ot_of_fbonly {net cand chain} {
+  if {![ot_of_isff $cand]} { return 0 }
+  set dnet ""
+  foreach it [$cand getITerms] { if {[[$it getMTerm] getName] eq "D"} { set dnet [$it getNet] } }
+  if {$dnet eq "" || $dnet eq "NULL"} { return 0 }
+  foreach it [$net getITerms] {
+    if {![$it isInputSignal]} continue
+    set li [$it getInst]
+    if {$li eq $chain} continue
+    set ok 0
+    foreach ot [$li getITerms] { if {[$ot isOutputSignal] && [$ot getNet] eq $dnet} { set ok 1 } }
+    if {!$ok} { return 0 }
+  }
+  return 1
+}
 proc ot_of_isff {inst} { return [string match "DFF*" [[$inst getMaster] getName]] }
 proc ot_of_isbuf {inst} { set m [[$inst getMaster] getName]; return [expr {[string match "INV*" $m] || [string match "BUF*" $m]}] }
 # the single input-signal sink of a net (or "" if 0 or > 1 sinks)
@@ -54,7 +72,7 @@ foreach bt [$ot_blk getBTerms] {
         if {![$it isInputSignal]} continue
         set n2 [$it getNet]; if {$n2 eq "NULL"} continue
         set d2 [ot_of_drv $n2]
-        if {$d2 ne "" && [llength [$n2 getITerms]] == 2} { set nxt [$d2 getInst] }
+        if {$d2 ne "" && ([llength [$n2 getITerms]] == 2 || [ot_of_fbonly $n2 [$d2 getInst] $inst])} { set nxt [$d2 getInst] }
       }
       if {$nxt eq ""} break
       set inst $nxt

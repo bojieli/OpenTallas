@@ -290,12 +290,20 @@ module tb_hgi_e2e;
         wire [31:0] k_ws; wire [15:0] k_tag; wire [337:0] vq; wire [273:0] vr;
         // the VM wide write port (32 lanes) + the svc DMA stream (hgi-takeover 2026-10-10); DMA_FRONT 0 = mover only
         wire [32*280-1:0] wl; wire [31:0] wl_done; wire [4*51-1:0] dq; wire [3:0] dq_rdy; wire [32*270-1:0] dd; wire [31:0] dd_cr;
+    // hgi-1010/c: the mover's four HBM read lanes (bursts) on hgi_e2e_rlanes (the DPI HBM)
+    wire [3:0] r_req_v, r_req_rdy, r_rsp_v, r_rsp_rdy, r_rsp_last; wire [4*37-1:0] r_req_addr; wire [15:0] r_req_len;
+    wire [63:0] r_req_tag, r_rsp_tag; wire [1023:0] r_rsp_data, r_req_wdata; wire [3:0] r_req_we, r_rsp_we; wire [127:0] r_req_wstrb;
+    hgi_e2e_rlanes #(.LAT(KLAT)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
+        .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
+        .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data));
         ot_hgi_dma_engines #(.FRONT(DMA_FRONT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
             .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone),
             .is_v(is_v), .is_rdy(is_rdy), .is_cmd(is_cmd), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
             .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
             .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-            .k_rsp_data(k_rd), .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
+            .k_rsp_data(k_rd), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(), .vr2r(8257'd0),
+        .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
         hgi_e2e_vmw #(.UNIT(8), .NW(32)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
         hgi_e2e_svc #(.LAT(KLAT)) u_svc (.clk(clk), .rst_n(rst_n), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr));
         hgi_e2e_kport #(.LAT(KLAT)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(k_req_v), .req_rdy(k_req_rdy), .req_we(k_req_we),
@@ -400,6 +408,7 @@ module tb_hgi_e2e;
             $finish;
         end
     end
+    integer dq_k [0:63]; integer dq_n = 0;              // DMA records awaiting wr_quiet
     always @(posedge clk) if (|(s_uv & s_ur) || |ux_done || quant_ret[1] || coll_ret[1] || idx_ret[1]) begin last_prog <= cyc; nprog <= nprog + 1; end
     always @(posedge clk) begin
         if (!rst_n) begin
@@ -427,9 +436,22 @@ module tb_hgi_e2e;
                 end
             end
             // real units retire: check the record's golden writes
+            // hgi-1010/c: a DMA record (unit 8) retires POSTED (STORE / KVWB on source consumed); its HBM writes are checked once
+            // the DMA unit reports its posted writes drained (wr_quiet), as a DMA.FENCE would make them visible
+            if (dq_n > 0 && dma_wq) begin
+                for (integer j = 0; j < dq_n; j = j + 1) begin
+                    m = e2e_real_retire(dq_k[j], cyc); real_recs = real_recs + 1;
+                    if (m != 0) begin real_bad = real_bad + 1; $display("E2E REAL unit 8 record %0d: %0d mismatches (checked at wr_quiet)", dq_k[j], m); end
+                end
+                dq_n = 0;
+            end
             for (u = 1; u < 16; u = u + 1) if (REAL_UX[u] && (r_done[u] || r_fault[u])) begin
-                k = kpop(u); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
-                if (m != 0 || r_fault[u]) begin real_bad = real_bad + 1; $display("E2E REAL unit %0d record %0d: %0d mismatches fault %0d", u, k, m, r_fault[u]); end
+                k = kpop(u);
+                if (u == 8 && !r_fault[u] && DMA_POSTED != 0) begin dq_k[dq_n] = k; dq_n = dq_n + 1; end
+                else begin
+                    m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
+                    if (m != 0 || r_fault[u]) begin real_bad = real_bad + 1; $display("E2E REAL unit %0d record %0d: %0d mismatches fault %0d", u, k, m, r_fault[u]); end
+                end
             end
             if (REAL_IDX && (i_ret[1] || i_ret[2])) begin
                 k = kpop(9); m = e2e_real_retire(k, cyc); real_recs = real_recs + 1;
@@ -715,6 +737,27 @@ module hgi_e2e_svc #(parameter integer LAT = 40, parameter integer RATE = 8) (
 endmodule
 
 // kport lane on the HBM model: one transaction outstanding, the response LAT cycles after acceptance.
+// hgi-1010/c: the DMA mover's four HBM read lanes (tb_hgi_rlanes) over the DPI HBM
+module hgi_e2e_rlanes #(parameter integer LAT = 40) (
+    input wire clk, input wire rst_n, input wire [3:0] r_req_v, output wire [3:0] r_req_rdy, input wire [4*37-1:0] r_req_addr,
+    input wire [15:0] r_req_len, input wire [63:0] r_req_tag, input wire [3:0] r_req_we, input wire [1023:0] r_req_wdata,
+    input wire [127:0] r_req_wstrb, output wire [3:0] r_rsp_v, output wire [3:0] r_rsp_we, input wire [3:0] r_rsp_rdy,
+    output wire [63:0] r_rsp_tag, output wire [3:0] r_rsp_last, output wire [1023:0] r_rsp_data);
+    import "DPI-C" function void e2e_hbm_sector(input longint addr, input bit we, input bit [255:0] wd,
+                                                input bit [31:0] strb, output bit [255:0] rd);
+    wire [4*37-1:0] la; reg [1023:0] ld; integer hgen = 0; wire [3:0] wv; wire [4*37-1:0] wa; wire [1023:0] wd; wire [127:0] ws;
+    always @(posedge clk) for (integer l = 0; l < 4; l = l + 1) if (wv[l]) begin : wr
+        bit [255:0] rd; e2e_hbm_sector({27'd0, wa[l*37 +: 37]}, 1'b1, wd[l*256 +: 256], ws[l*32 +: 32], rd);
+    end
+    always @(posedge clk) hgen <= hgen + 1;
+    tb_hgi_rlanes #(.LAT(LAT), .RAND(0)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
+        .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
+        .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .la(la), .ld(ld), .wv(wv), .wa(wa), .wd(wd), .ws(ws));
+    always @(la or hgen) begin : rl_dpi
+        bit [255:0] rd;
+        for (integer l = 0; l < 4; l = l + 1) begin e2e_hbm_sector({27'd0, la[l*37 +: 37]}, 1'b0, 256'd0, 32'd0, rd); ld[l*256 +: 256] = rd; end
+    end
+endmodule
 module hgi_e2e_kport #(parameter integer LAT = 40, parameter integer PIPE = 1) (
     input wire clk, input wire rst_n, input wire req_v, output reg req_rdy, input wire req_we, input wire [36:0] req_addr,
     input wire [255:0] req_wd, input wire [31:0] req_ws, output reg rsp_v, output reg rsp_we, output reg [255:0] rsp_d);

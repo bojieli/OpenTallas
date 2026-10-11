@@ -1,0 +1,99 @@
+{
+  "name": "hfd_su_tile_xl",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/src/.views/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/src/physical/hbm_accel_die_views/su/lane_pk2/ot_su12_light:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/src/.views/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/src/physical/hbm_accel_die_views/su/lane_pk2/ot_su12_light:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/routes/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/src/.views/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/src/physical/hbm_accel_die_views/su/lane_pk2/ot_su12_light:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl/src/.views/hfd_su_tilexl_fe_fa7b65cba_sw147_ongrid_pdnp_tc_hm10_pd55_cl/signoff.sdc",
+    "sha256": "8090f65f04ac5e5e16a4f9044c49ea90fe7f5aec2af93f230069ae769dd59e4a",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "physical/hbm_accel_die_views/su/lane_pk2/ot_su12_light"
+  ],
+  "files": {
+    "hfd_su_tile_xl.lef": "6c08c4cfc5118055d86c073783d55fd69c7a26e7a2213c0635d9b3f64af0b43f",
+    "hfd_su_tile_xl_ff.lib": "abc5a2b1846dd45838aefe3655489e3ed38bfb3ccb3cdd7d25857bfccba5c72c",
+    "hfd_su_tile_xl_ss.lib": "e1ae3837a54fd5ecfc6bd4d13f1c2896272575e4e32069d916984fdd33259a22",
+    "hfd_su_tile_xl_tt.lib": "6d8900a3ac370bad39cb1c657857e66788e3c78901e6700c2979ff42c9cef366"
+  },
+  "ok": true
+}
