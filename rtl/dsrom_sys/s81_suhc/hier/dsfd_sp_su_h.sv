@@ -12,16 +12,17 @@
 // Tiles carry one copy of each bus (no pass-through): pins = the down tap + its own write slots + status.
 //
 // Tile decomposition (production params): QN norm (256 lanes, D 1,280, the q gain sets), KV norm (512 lanes, RoPE
-// tail, the kv gain sets), QB x 2 (16 blocks each), SW x 4 (256 lanes each), SM x 4 (4 heads x 16 lanes each).
+// tail, the kv gain sets), QB x 4 (8 blocks each), SW x 8 (128 lanes each), SM x 8 (2 heads x 16 lanes each).
 // The values are those of dsfd_sp_su (bit-exact gate tools/s81_suhc/su_gate.py --hier); added latency: the chain
 // hops (a cycle a tile each way) and the norm tiles' ready round trip.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_su_h #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
     parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, OQ = 1024, MUT = 0, AMUT = 0,
-    parameter integer NQB = 2,
-    parameter integer NSW = (SW_W >= 256) ? SW_W / 256 : 1,
-    parameter integer NSM = (SM_H >= 4) ? SM_H / 4 : 1
+    // lane-group tiles (production: QB 4 x 8 blocks, SW 8 x 128 lanes, SM 8 x 2 heads; sized for <= ~600-um tiles)
+    parameter integer NQB = (QB_NB >= 32) ? QB_NB / 8 : 2,
+    parameter integer NSW = (SW_W >= 128) ? SW_W / 128 : 1,
+    parameter integer NSM = (SM_H >= 2) ? SM_H / 2 : 1
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
