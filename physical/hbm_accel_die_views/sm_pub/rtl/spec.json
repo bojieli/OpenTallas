@@ -1,0 +1,30 @@
+{
+  "master": "hfd_sm_pub",
+  "hgi_unit": "sm",
+  "note": "hgi-1010/d N4: the SM publication station at the SM result trunk ends: ot_hgi_sm_pub (banked-SRAM form, NPC 2 VM packet clients 'smp0' / 'smp1') behind the publication command link from ot_hgi_sm_cp in the CP. Result leaves: SM s = stack order SW SE NW NE x 8 + leaf (270 b {fault, rdata 256, rrow 12, rv}). Bench: tb_hgi_sm_e2e +define+DIEPATH.",
+  "instances": [
+    {
+      "name": "stn",
+      "module": "ot_hgi_sm_pub_stn",
+      "file": "rtl/hbm_accel/generic/ot_hgi_sm_die.sv",
+      "params": {
+        "NSM": 32,
+        "NPC": 2,
+        "NE": 2
+      },
+      "bind": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "pc": "die:f_hgi_smpub[0:113]",
+        "pr": "die:t_hgi_smpub[0:4]",
+        "r": "die:rt_SW[0:2160]+die:rt_SE[0:2160]+die:rt_NW[0:2160]+die:rt_NE[0:2160]",
+        "vmq": "die:t_hgi_vmq_smp0[0:338]+die:t_hgi_vmq_smp1[0:338]",
+        "vmr": "die:f_hgi_vmr_smp0[0:274]+die:f_hgi_vmr_smp1[0:274]"
+      }
+    }
+  ],
+  "macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ties": {}
+}

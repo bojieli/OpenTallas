@@ -55,7 +55,10 @@ SINGLE_CP_ONLY = {'argmax': ('die_id',)}
 
 
 def vm_clients(units):
-    return [u for u in VM_CLIENTS if u in units and (u != 'argmax' or 'cp' in units)]
+    # hgi-1010/d N4: the SM publication station (hfd_sm_pub, ot_hgi_sm_pub NPC 2) takes two packet clients 'smp0' /
+    # 'smp1' when 'sm' is dispatched (the SM x-load reads through the E-group wide lanes, not packet clients)
+    return [u for u in VM_CLIENTS if u in units and (u != 'argmax' or 'cp' in units)] + \
+        (['smp0', 'smp1'] if 'sm' in units else [])
 VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
 VMW_LANES, VMW_BITS = 32, 280            # VM wide write port: lane {v, sector 15, wdata 256, word mask 8}, lane b = bank b
 SVC_DMA_STACKS = ('SW', 'SE', 'NW', 'NE')   # stack index (address bits 36:35) 0..3
