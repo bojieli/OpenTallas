@@ -14,5 +14,5 @@ else
   iverilog -g2012 -Irtl/common -s tb_hfd_lk_ep -Ptb_hfd_lk_ep.NS=$NS $DEFS -o $O/sim $S > $O/build.log 2>&1 || { tail -20 $O/build.log; echo "LKEP_BENCH FAIL (build)"; exit 1; }
   vvp -n $O/sim +N=$N +ERRP=$E +SEED=$SD > $O/sim.log 2>&1
 fi
-tail -3 $O/sim.log
+grep -h "LKEP_BENCH\|Fatal\|mismatch" $O/sim.log | head -3
 grep -q "LKEP_BENCH PASS" $O/sim.log || { echo "LKEP_BENCH FAIL"; exit 1; }
