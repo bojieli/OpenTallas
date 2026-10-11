@@ -46,7 +46,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  ot_hbm_retry_pop_cdc #(.CAPACITY(CAPACITY),.CW(CW),.OBS_REG(PIPE_FIX)) u_rx_pop_cdc(
  .s_clk(clk),.s_rst_n(core_run),.s_pop(rx_credit),.d_clk(pclk),.d_rst_n(phy_run),.d_pop(local_pop),.fault(local_cdc_fault),.pending());
  wire iq_valid,iq_ready,iq_fault;wire[W-1:0]iq_data;
- ot_hbm_retry_phy_ingress #(.W(W),.EW(EW),.DEPTH(CAPACITY),.NOEPOCH(NOEPOCH),.MUXREG(RDPIPE)) u_ingress(
+ ot_hbm_retry_phy_ingress #(.W(W),.EW(EW),.DEPTH(CAPACITY),.NOEPOCH(NOEPOCH),.MUXREG(RDPIPE),.HWU(FB)) u_ingress(
  .clk(pclk),.rst_n(phy_run),.session(phy_session),.in_valid(ph_tx_v && phy_run),.in_data(ph_tx_flit),.in_ready(),
  .out_valid(iq_valid),.out_ready(iq_ready),.out_data(iq_data),.fault(iq_fault),.debt(ingress_debt));
  wire pq_valid,pq_ready;wire[W-1:0]pq_data;
