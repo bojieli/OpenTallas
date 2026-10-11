@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.throughput_budget.v1",
- "generated_utc": "2026-10-11T05:10:09Z",
+ "generated_utc": "2026-10-11T06:55:30Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -122,6 +122,10 @@
       "records": 584,
       "price_cycles_per_token": 227271.2
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/coll/report.json",
+     "commit": "ca33eaa6e"
     }
    },
    {
@@ -162,6 +166,10 @@
       "records": 1356,
       "price_cycles_per_token": 136388.0
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/su/report.json",
+     "commit": "df3f7e4e0"
     }
    },
    {
@@ -251,6 +259,10 @@
       "records": 40,
       "price_cycles_per_token": 53037.6
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+     "commit": "e02a65f1f"
     }
    },
    {
@@ -286,6 +298,10 @@
       "records": 81,
       "price_cycles_per_token": 52595.9
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
+     "commit": "57499aeea"
     }
    },
    {
@@ -323,6 +339,10 @@
       "records": 80,
       "price_cycles_per_token": 43200
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json",
+     "commit": "bae9d9265"
     }
    },
    {
@@ -356,6 +376,10 @@
       "records": 340,
       "price_cycles_per_token": 35483.8
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+     "commit": "e02a65f1f"
     }
    },
    {
@@ -373,15 +397,15 @@
     "required_items_per_cycle_at_target": 257.602,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00599,
-    "measured_ratio": 1.0,
-    "measured_grade": "price_fit",
-    "measured_src": "main 5e588e11e (hgi-1010/a, G25 HW ROW_GATHER, one real rank of 96)",
-    "measured_note": "price = K x F / 4 + 150 fitted to the measured 4,242 cycles at K 512",
+    "measured_ratio": 0.997,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_rgx_pipe_merge_20261010/rgx_matrix_SUMMARY.txt",
+    "measured_note": "g96_b1 G96 K512: 4,233 cycles vs the 4,246 price (K x F / 4 + 150)",
     "interim": null,
-    "measured_cycles_per_record": 4246.0,
+    "measured_cycles_per_record": 4233.3,
     "status": "QUALIFIED",
-    "impact_cycles_per_token": 0.0,
-    "impact_tok_s": 0.0,
+    "impact_cycles_per_token": -101.9,
+    "impact_tok_s": 0.4,
     "owner": "hgi-1010/c",
     "elements": [
      "ot_hgi_coll_row_formatter"
@@ -391,6 +415,10 @@
       "records": 8,
       "price_cycles_per_token": 33968.0
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_rgx_pipe_merge_20261010/rgx_matrix_SUMMARY.txt",
+     "commit": "15b6aded0"
     }
    },
    {
@@ -460,6 +488,10 @@
       "records": 80,
       "price_cycles_per_token": 17813.8
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
+     "commit": "57499aeea"
     }
    },
    {
@@ -583,6 +615,10 @@
       "records": 40,
       "price_cycles_per_token": 11320.3
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json",
+     "commit": "1e5058b30"
     }
    },
    {
@@ -668,6 +704,10 @@
       "records": 40,
       "price_cycles_per_token": 2600
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json",
+     "commit": "2628ec01a"
     }
    },
    {
@@ -705,6 +745,10 @@
       "records": 40,
       "price_cycles_per_token": 2400
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+     "commit": "e02a65f1f"
     }
    },
    {
@@ -738,6 +782,10 @@
       "records": 40,
       "price_cycles_per_token": 2400
      }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+     "commit": "e02a65f1f"
     }
    },
    {
@@ -1470,6 +1518,902 @@
    }
   ]
  },
+ "hand_entered": [
+  {
+   "model": "Qwen",
+   "op": "SM.MATVEC",
+   "claimed_ratio": 2.013,
+   "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)",
+   "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+   "why": "not a committed bench record of this op at this shape"
+  },
+  {
+   "model": "Qwen",
+   "op": "COLL.ALL_REDUCE_SUM",
+   "claimed_ratio": 0.911,
+   "src": "budget_audit table.json hbm_qwen_allreduce",
+   "owner": "hgi-1010",
+   "why": "not a committed bench record of this op at this shape"
+  },
+  {
+   "model": "Qwen",
+   "op": "SU.VOP",
+   "claimed_ratio": 2.896,
+   "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)",
+   "owner": "hgi-1010/b",
+   "why": "not a committed bench record of this op at this shape"
+  },
+  {
+   "model": "Qwen",
+   "op": "DMA.LOAD",
+   "claimed_ratio": 9.204,
+   "src": "budget_audit table.json hbm_dma_load",
+   "owner": "hgi-1010",
+   "why": "not a committed bench record of this op at this shape"
+  },
+  {
+   "model": "Qwen",
+   "op": "SFU.GLU",
+   "claimed_ratio": 2.896,
+   "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)",
+   "owner": "hgi-1010",
+   "why": "not a committed bench record of this op at this shape"
+  },
+  {
+   "model": "Qwen",
+   "op": "ARGMAX.LOCAL",
+   "claimed_ratio": 1.263,
+   "src": "budget_audit table.json qwen_head_stream_chain",
+   "owner": "UNOWNED",
+   "why": "not a committed bench record of this op at this shape"
+  },
+  {
+   "model": "Qwen",
+   "op": "DMA.STORE",
+   "claimed_ratio": 4.3,
+   "src": "budget_audit table.json hbm_qwen_dma_store",
+   "owner": "hgi-1010",
+   "why": "not a committed bench record of this op at this shape"
+  },
+  {
+   "model": "DS AR 1M (HBM)",
+   "op": "CP.FETCH",
+   "element": "ot_hgi_cp",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record",
+   "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "DS AR 1M (HBM)",
+   "op": "CP.FETCH",
+   "element": "ot_hgi_seq",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record",
+   "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "DS AR 1M (HBM)",
+   "op": "CP.FETCH",
+   "element": "hfd_cmdproc_n",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record",
+   "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "DS AR 1M (HBM)",
+   "op": "CP.FETCH",
+   "element": "hfd_cmdproc_s",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record",
+   "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "DS AR 1M (HBM)",
+   "op": "CP.FETCH",
+   "element": "hfd_loader",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record",
+   "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s0",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s1",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s2",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s3",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s4",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s5",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s6",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s7",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SE_s8",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SW_s0",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SW_s1",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SW_s2",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SW_s3",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SW_s4",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SW_s5",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SW_s6",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "Qwen AR 8K (HBM)",
+   "op": "SVC.STREAM",
+   "element": "hfd_svc_SW_s7",
+   "claimed_ratio": null,
+   "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited",
+   "owner": "hbm-phys-1010",
+   "why": "audit-derived claim"
+  },
+  {
+   "model": "qwen_rom",
+   "op": "KV die (name rule)",
+   "claimed_ratio": 1.124,
+   "src": "removed hand rule (superseded audit model)",
+   "owner": "qwen-1010/b",
+   "why": "replaced by the measured KV-die record (pending)"
+  }
+ ],
+ "bench_ii": {
+  "qfd_io_emb_root": {
+   "job": "qfd_io_emb_root-1e23a4915-lvt-tc",
+   "commit": "1e23a4915",
+   "bench": "bench_emb_exact",
+   "line": "PASS qfd_embedding_rom NCOL=3 NTAP=4 PINREG=0 requests=6000 responses=6000 cycles=19370",
+   "cycles": 19370,
+   "item": "requests",
+   "items": 6000,
+   "ii": 3.228,
+   "stalled": false,
+   "owner": "Claude:drive-0928",
+   "target": null,
+   "t": "2026-10-10T19:14:24-07:00"
+  },
+  "ot_dsrom_hc_input_reader": {
+   "job": "hcreader-plain300-lk-b678636a2-tc-cl",
+   "commit": "b678636a2",
+   "bench": "bench_reader_plain_lk_exact",
+   "line": "PASS full shape 3x1280 BF16 means 120 flits cycles=17011 CE=0",
+   "cycles": 17011,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
+   "target": null,
+   "t": "2026-10-10T16:47:11-07:00"
+  },
+  "ot_hbm_native_index_query_credit": {
+   "job": "qcredit_rb-2db44a8cd-tc-hm25-cl",
+   "commit": "2db44a8cd",
+   "bench": "bench_rb_query_credit_exact",
+   "line": "QUERY_DONE blocks=256 cycles=1792",
+   "cycles": 1792,
+   "item": "blocks",
+   "items": 256,
+   "ii": 7.0,
+   "stalled": false,
+   "owner": "Claude:struct-close",
+   "target": null,
+   "t": "2026-10-10T03:48:15-07:00"
+  },
+  "hfd_att_su_relay": {
+   "job": "hfd_att_su_relay-d578aa824-tc-cl",
+   "commit": "d578aa824",
+   "bench": "bench_relay_chain",
+   "line": "pos.log:RELAYCHAIN N=9 cycles=20000 in=13919 out=13899 mismatches=0 latency=9 RELAY_PASS",
+   "cycles": 20000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:hbm-phys-1010/idx",
+   "target": null,
+   "t": "2026-10-10T18:44:36-07:00"
+  },
+  "qfd_row_merge_native_fence": {
+   "job": "rowfence_b-7eea9e354-tc",
+   "commit": "7eea9e354",
+   "bench": "bench_row_fence_exact",
+   "line": "PASS_ROW_FENCE layers=24 heads_last_layer=126 halves=3200 fence_hold_edges=3328 cycles=4706",
+   "cycles": 4706,
+   "item": "halves",
+   "items": 3200,
+   "ii": 1.471,
+   "stalled": false,
+   "owner": "Claude:sys-takeover",
+   "target": null,
+   "t": "2026-10-10T20:45:26-07:00"
+  },
+  "qfd_sp_constants_sequencer_sys": {
+   "job": "qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl",
+   "commit": "a8f3ba53c",
+   "bench": "bench_seqsys_icut_exact",
+   "line": "SYS_CASE pos=8191 starts=38 me=440 su=1448 coll=146 cycles=43612 bad=0",
+   "cycles": 43612,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:struct-close",
+   "target": null,
+   "t": "2026-10-10T19:14:24-07:00"
+  },
+  "dsfd_mtp_seq": {
+   "job": "mtp-mtp_seq-c-c67a71fe5-tc",
+   "commit": "c67a71fe5",
+   "bench": "bench_pass_s0_tr_forced",
+   "line": "{\"case\": \"s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\": 24,",
+   "cycles": 41423,
+   "item": "issues",
+   "items": 92,
+   "ii": 450.25,
+   "stalled": false,
+   "owner": "Claude:mtp-rom",
+   "target": null,
+   "t": "2026-10-09T18:19:17-07:00"
+  },
+  "hfd_idx_t4_join": {
+   "job": "hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2",
+   "commit": "ff4827405",
+   "bench": "bench_t4j_sram_exact",
+   "line": "PASS atomic T4 join beats=342 cycles=1013 depth128 downstreamstall500",
+   "cycles": 1013,
+   "item": "beats",
+   "items": 342,
+   "ii": 2.962,
+   "stalled": true,
+   "owner": "Claude:hgi-1010",
+   "target": null,
+   "t": "2026-10-10T23:47:03-07:00"
+  },
+  "ot_dsrom_hc_seed_join": {
+   "job": "hcjoin-mc420-lk-d4211f538-tc-cl",
+   "commit": "d4211f538",
+   "bench": "bench_join_mc_lk_exact",
+   "line": "PASS join120frames cycles=1099 CE=0 reset=0",
+   "cycles": 1099,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
+   "target": null,
+   "t": "2026-10-09T23:19:13-07:00"
+  },
+  "dsfd_mtp_seq_rtt": {
+   "job": "mtp-seqrtt-d-20ec697d1-tc",
+   "commit": "20ec697d1",
+   "bench": "bench_pass_rtt_s0_tr_forced",
+   "line": "{\"case\": \"rtt_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\":",
+   "cycles": 42073,
+   "item": "issues",
+   "items": 92,
+   "ii": 457.315,
+   "stalled": false,
+   "owner": "Claude:mtp-head-1010",
+   "target": null,
+   "t": "2026-10-10T17:44:49-07:00"
+  },
+  "qfd_io_serdes": {
+   "job": "qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc",
+   "commit": "073694e6b",
+   "bench": "bench_rate512_sram",
+   "line": "PASS qfd_link_adapter W=1024 RXD=512 LAT=223 words=2000 each way cycles=2252",
+   "cycles": 2252,
+   "item": "words",
+   "items": 2000,
+   "ii": 1.126,
+   "stalled": false,
+   "owner": "Claude:drive-1143",
+   "target": null,
+   "t": "2026-10-10T03:48:07-07:00"
+  },
+  "qfd_embed_ingress_code": {
+   "job": "qfd_embed_ingress_code-0e025d03c",
+   "commit": "0e025d03c",
+   "bench": "bench_exact",
+   "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+   "cycles": 32103,
+   "item": "words",
+   "items": 4096,
+   "ii": 7.838,
+   "stalled": false,
+   "owner": "Codex:embedding-scale",
+   "target": null,
+   "t": "2026-10-10T05:01:06-07:00"
+  },
+  "ot_hgi_argmax18_m": {
+   "job": "hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl",
+   "commit": "30853dbe1",
+   "bench": "bench_exact_cf_arg_ds_lockstep",
+   "line": "HGI_ARGMAX18 PASS rows=8 cycles=19063 DS_LOCKSTEP=1",
+   "cycles": 19063,
+   "item": "rows",
+   "items": 8,
+   "ii": 2382.875,
+   "stalled": false,
+   "owner": "Claude:hgi-takeover",
+   "target": null,
+   "t": "2026-10-10T16:47:22-07:00"
+  },
+  "ot_hbm_native_candidate_parse": {
+   "job": "candparse_rb-937531860-tc-hm10-cl",
+   "commit": "937531860",
+   "bench": "bench_rb_cand_parse_exact",
+   "line": "PARSE_DONE tuples=60 cycles=78",
+   "cycles": 78,
+   "item": "tuples",
+   "items": 60,
+   "ii": 1.3,
+   "stalled": false,
+   "owner": "Claude:struct-close",
+   "target": null,
+   "t": "2026-10-09T15:54:12-07:00"
+  },
+  "dsfd_cap_mtp_ep": {
+   "job": "fixlat-capmtp-ffbec0c86-tc",
+   "commit": "ffbec0c86",
+   "bench": "bench_pass_pep_s1",
+   "line": "FIXLAT pep_s1 PASS (expect pass) :: PEP PASS FC=6 RC=7 FV=11 RV=11 VM-end hops 11/11 flits=4x1200 cycles=2250 | rtl/dsrom_sys/mtp/tb/tb_mtp_partner_ep.sv:85: $finish called at 2258500 (1ps)",
+   "cycles": 2250,
+   "item": "flits",
+   "items": 4,
+   "ii": 562.5,
+   "stalled": false,
+   "owner": "Claude:mtp-fixlat-1011",
+   "target": null,
+   "t": "2026-10-10T20:03:33-07:00"
+  },
+  "qfd_sysctl_stn_pb2": {
+   "job": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
+   "commit": "d4760be45",
+   "bench": "bench_ctl_pb2_cl_campaign",
+   "line": "s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309",
+   "cycles": 6226309,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:drive-0158",
+   "target": null,
+   "t": "2026-10-10T19:21:56-07:00"
+  },
+  "dsfd_colt_lane": {
+   "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12-ttfix",
+   "commit": "e96dd1e56",
+   "bench": "bench_exact_ring",
+   "line": "COLT_RING PASS cycles=100000 reads=27118",
+   "cycles": 100000,
+   "item": "reads",
+   "items": 27118,
+   "ii": 3.688,
+   "stalled": false,
+   "owner": "Codex:s81-slab-continuation",
+   "target": null,
+   "t": "2026-10-10T19:58:04-07:00"
+  },
+  "hgi_att_rows_g12_140": {
+   "job": "hgi-att-g12-140-187a8471c-tc-cx",
+   "commit": "187a8471c",
+   "bench": "bench_fullshape_exact",
+   "line": "PASS CF-ATT cases=142 rows=1081866 cycles=1894250 legacy_lockstep=300",
+   "cycles": 1894250,
+   "item": "rows",
+   "items": 1081866,
+   "ii": 1.751,
+   "stalled": false,
+   "owner": "Codex:generic_attn_g12",
+   "target": null,
+   "t": "2026-10-09T19:48:12-07:00"
+  },
+  "qfd_embed_code_bank_retained": {
+   "job": "qfd_embed_code_bank_retained-24bd6a53b-tt",
+   "commit": "24bd6a53b",
+   "bench": "bench_exact",
+   "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+   "cycles": 32103,
+   "item": "words",
+   "items": 4096,
+   "ii": 7.838,
+   "stalled": false,
+   "owner": "Codex:embedding-scale",
+   "target": null,
+   "t": "2026-10-10T02:54:48-07:00"
+  },
+  "qfd_coll_xfifo_b": {
+   "job": "qfd_coll_xfifo_b-66fd85cda-tc",
+   "commit": "66fd85cda",
+   "bench": "bench_coll_native_exact",
+   "line": "case reduce_8w PASS NCOLL_NATIVE PASS cycles=481",
+   "cycles": 481,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:sys-takeover",
+   "target": null,
+   "t": "2026-10-10T01:09:24-07:00"
+  },
+  "dsfd_coll_p2_lane_pa": {
+   "job": "mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b",
+   "commit": "0ddaf548b",
+   "bench": "bench_exact_p2l",
+   "line": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=27020 abort_latency=94 starts=3",
+   "cycles": 27020,
+   "item": "rows",
+   "items": 240,
+   "ii": 112.583,
+   "stalled": false,
+   "owner": "Claude:mtp-colllane-1011",
+   "target": null,
+   "t": "2026-10-10T21:01:07-07:00"
+  },
+  "qfd_embed_code_bank_parent": {
+   "job": "qfd_embed_code_bank_parent_flat-e510ca8c2tt",
+   "commit": "e510ca8c2",
+   "bench": "bench_exact",
+   "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+   "cycles": 32103,
+   "item": "words",
+   "items": 4096,
+   "ii": 7.838,
+   "stalled": false,
+   "owner": "Claude:qwen-missing",
+   "target": null,
+   "t": "2026-10-09T12:17:54-07:00"
+  },
+  "dsfd_coll_p2_lane_ba": {
+   "job": "qf-p2lba-ogrant-5b059065b-tc-hm10-lvt",
+   "commit": "5b059065b",
+   "bench": "bench_exact_p2l_s1",
+   "line": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26692 abort_latency=94 starts=3",
+   "cycles": 26692,
+   "item": "rows",
+   "items": 240,
+   "ii": 111.217,
+   "stalled": false,
+   "owner": "Claude:mtp-colllane-1011/p2lba",
+   "target": null,
+   "t": "2026-10-10T23:48:18-07:00"
+  },
+  "qfd_coll_xfifo": {
+   "job": "qfd_coll_xfifo_a-66fd85cda-tc",
+   "commit": "66fd85cda",
+   "bench": "bench_coll_native_exact",
+   "line": "case reduce_8w PASS NCOLL_NATIVE PASS cycles=481",
+   "cycles": 481,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:sys-takeover",
+   "target": null,
+   "t": "2026-10-10T17:46:54-07:00"
+  },
+  "qfd_res_ctl": {
+   "job": "qfd_res_ctl-f46a68c8a-tc-hm0",
+   "commit": "f46a68c8a",
+   "bench": "bench_fullshape",
+   "line": "PASS res_tiles bursts=360 beats=1465 cycles=12000 request_to_chain=19 request_to_output=21 peak_bursts=55",
+   "cycles": 12000,
+   "item": "beats",
+   "items": 1465,
+   "ii": 8.191,
+   "stalled": false,
+   "owner": "Codex:res-ser-tiles",
+   "target": null,
+   "t": "2026-10-10T17:49:58-07:00"
+  },
+  "ot_hbm_native_candidate_format": {
+   "job": "candfmt_rb-937531860-tc-hm25-cl",
+   "commit": "937531860",
+   "bench": "bench_rb_cand_format_exact",
+   "line": "FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0",
+   "cycles": 1860,
+   "item": "packets",
+   "items": 863,
+   "ii": 2.155,
+   "stalled": false,
+   "owner": "Claude:struct-close",
+   "target": null,
+   "t": "2026-10-09T12:31:28-07:00"
+  },
+  "ot_hgi_coll_row_formatter": {
+   "job": "hgi_coll_row_formatter_c130-264ff331a-tc-cl",
+   "commit": "264ff331a",
+   "bench": "bench_GOLDEN",
+   "line": "B=8 K=2048 W=32 destinations=96 badrow=-1 cycles=333826",
+   "cycles": 333826,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:hgi-takeover",
+   "target": null,
+   "t": "2026-10-10T16:47:31-07:00"
+  },
+  "qfd_embed_ingress_code_numeric": {
+   "job": "qfd_embed_ingress_code_numeric-82c12047d-lbc",
+   "commit": "387a4d2ac",
+   "bench": "bench_exact",
+   "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+   "cycles": 32103,
+   "item": "words",
+   "items": 4096,
+   "ii": 7.838,
+   "stalled": false,
+   "owner": "Claude:setup-triage (block owner main / Codex:embedding-scale)",
+   "target": null,
+   "t": "2026-10-09T12:17:54-07:00"
+  },
+  "dsfd_hstnh_515": {
+   "job": "s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl",
+   "commit": "4a12f4d5d",
+   "bench": "bench_hstnh_pe_exact",
+   "line": "HSTNH_PE PASS cycles=2000",
+   "cycles": 2000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:struct-close",
+   "target": null,
+   "t": "2026-10-09T12:17:55-07:00"
+  },
+  "dsfd_vm_wfc_ep": {
+   "job": "mtp-vm_wfc_ep-rd2-9c9ac6963-tc",
+   "commit": "9c9ac6963",
+   "bench": "bench_kit_rd2_stg_r1",
+   "line": "OK         rd2_stg_r1         expect=pass MTP_STG PASS jobs=60 starts=60 out=60 cycles=17939 vmslow=0 core_user_mismatch_at_start=0",
+   "cycles": 17939,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:mtp-wfc-1010",
+   "target": null,
+   "t": "2026-10-10T23:30:55-07:00"
+  },
+  "ot_attn_tile_m6h1q": {
+   "job": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
+   "commit": "c891a57cf",
+   "bench": "bench_quad_cg_lockstep",
+   "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060",
+   "cycles": 12000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:redesign-hbm",
+   "target": null,
+   "t": "2026-10-10T06:26:00-07:00"
+  },
+  "hgi_att_rows_g12_120": {
+   "job": "hgi-att-g12-120-187a8471c-tc-cx",
+   "commit": "187a8471c",
+   "bench": "bench_fullshape_exact",
+   "line": "PASS CF-ATT cases=142 rows=1081866 cycles=1894250 legacy_lockstep=300",
+   "cycles": 1894250,
+   "item": "rows",
+   "items": 1081866,
+   "ii": 1.751,
+   "stalled": false,
+   "owner": "Codex:generic_attn_g12",
+   "target": null,
+   "t": "2026-10-09T19:48:11-07:00"
+  },
+  "ot_hbm_index_global_order": {
+   "job": "gorderscan_fast2_a-f11374855-tc-hm10",
+   "commit": "f11374855",
+   "bench": "bench_rb_global_order_exact",
+   "line": "PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=159412",
+   "cycles": 159412,
+   "item": "tuples",
+   "items": 4096,
+   "ii": 38.919,
+   "stalled": false,
+   "owner": "Claude:sys-takeover",
+   "target": null,
+   "t": "2026-10-09T16:06:31-07:00"
+  },
+  "qfd_seq_su": {
+   "job": "qfd_seq_su-fea-f3e3d6b6f-tc-hm0-cl",
+   "commit": "f3e3d6b6f",
+   "bench": "bench_hq2_lockstep_s1",
+   "line": "PASS seq_su_bi_psram cycles=20997 program_reads=800 loads=600",
+   "cycles": 20997,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:hardcore-1010/fe-h",
+   "target": null,
+   "t": "2026-10-10T21:00:13-07:00"
+  },
+  "dsfd_vm_mtp_ep": {
+   "job": "fixlat-vmmtp-189894fc2-tc-hm20",
+   "commit": "189894fc2",
+   "bench": "bench_pass_pep_s1",
+   "line": "FIXLAT pep_s1 PASS (expect pass) :: PEP PASS FC=6 RC=7 FV=11 RV=11 VM-end hops 11/11 flits=4x1200 cycles=2250 | rtl/dsrom_sys/mtp/tb/tb_mtp_partner_ep.sv:85: $finish called at 2258500 (1ps)",
+   "cycles": 2250,
+   "item": "flits",
+   "items": 4,
+   "ii": 562.5,
+   "stalled": false,
+   "owner": "Claude:mtp-fixlat-1011",
+   "target": null,
+   "t": "2026-10-10T20:21:46-07:00"
+  },
+  "ot_su12_sfu": {
+   "job": "hbm_sfu_lane_ring3_aa5dd28d5",
+   "commit": "aa5dd28d5",
+   "bench": "bench_c12_campaign_exact",
+   "line": "random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1604",
+   "cycles": 1604,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:hbm-blocks",
+   "target": null,
+   "t": "2026-10-09T19:22:19-07:00"
+  },
+  "dsfd_wfc_vmx": {
+   "job": "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl",
+   "commit": "c39e235bb",
+   "bench": "bench_prd_s0_tr_forced",
+   "line": "{\"case\": \"prd_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [\"OT_WFCVMX_PRED\"], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"p",
+   "cycles": 41423,
+   "item": "issues",
+   "items": 92,
+   "ii": 450.25,
+   "stalled": false,
+   "owner": "Claude:struct-close",
+   "target": null,
+   "t": "2026-10-10T00:42:23-07:00"
+  },
+  "ot_hgi_cp_mtp_pinreg": {
+   "job": "hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2",
+   "commit": "7d9c1b45e",
+   "bench": "bench_P_system_positive",
+   "line": "PASS HGI_CP_MTP_PINREG system drained reset twice native40layer pairedresults finitequeue cycles=26539",
+   "cycles": 26539,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:fe-push-hgi-1010",
+   "target": null,
+   "t": "2026-10-10T21:49:39-07:00"
+  },
+  "qfd_io_emb_tap": {
+   "job": "qfd_io_emb_tap-c1e4eba84tt",
+   "commit": "c1e4eba84",
+   "bench": "bench_emb_exact",
+   "line": "PASS qfd_embedding_rom NCOL=3 NTAP=4 requests=6000 responses=6000 cycles=19370",
+   "cycles": 19370,
+   "item": "requests",
+   "items": 6000,
+   "ii": 3.228,
+   "stalled": false,
+   "owner": "Claude:qwen-rtl-finish",
+   "target": null,
+   "t": "2026-10-09T12:17:55-07:00"
+  },
+  "qfd_embed_ingress_code_padded": {
+   "job": "qfd_embed_ingress_code_padded-3d5ad2a4ftt",
+   "commit": "3d5ad2a4f",
+   "bench": "bench_exact",
+   "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+   "cycles": 32103,
+   "item": "words",
+   "items": 4096,
+   "ii": 7.838,
+   "stalled": false,
+   "owner": "Claude:qwen-blocks",
+   "target": null,
+   "t": "2026-10-10T02:57:06-07:00"
+  },
+  "ot_dsrom_hc_mean_capture": {
+   "job": "hcmean-mc560-lk-a7bdfef93-tc-cl",
+   "commit": "a7bdfef93",
+   "bench": "bench_mean_mc_lk_exact",
+   "line": "PASS full shape 3x1280 BF16 means 120 flits cycles=16943 CE=0",
+   "cycles": 16943,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
+   "target": null,
+   "t": "2026-10-10T07:03:29-07:00"
+  },
+  "dsfd_vm_p2_ep": {
+   "job": "fixlat-vmp2-ffbec0c86-tc",
+   "commit": "ffbec0c86",
+   "bench": "bench_pass_p2_s1",
+   "line": "FIXLAT p2_s1 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 cycles=12692 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:117: $finish ",
+   "cycles": 12692,
+   "item": "rows",
+   "items": 160,
+   "ii": 79.325,
+   "stalled": false,
+   "owner": "Claude:mtp-fixlat-1011",
+   "target": null,
+   "t": "2026-10-10T20:06:06-07:00"
+  },
+  "dsfd_wfc_lnk": {
+   "job": "mtp-wfc_lnk-b-0cd6caa1b-tc",
+   "commit": "0cd6caa1b",
+   "bench": "bench_pass_stg_r1",
+   "line": "{\"case\": \"stg_r1\", \"expect\": \"pass\", \"params\": {\"SEED\": 1, \"NJOB\": 60}, \"defines\": [], \"result\": \"MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0 core_user_mismatch_at_start=45\", \"got\": \"p",
+   "cycles": 17433,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:mtp-rom",
+   "target": null,
+   "t": "2026-10-10T00:27:21-07:00"
+  },
+  "ot_dsrom_su_hcpost_lane_pr": {
+   "job": "hbm_hcp_lane_pr_79315a431-tc",
+   "commit": "79315a431",
+   "bench": "bench_lane_pr_exact",
+   "line": "PASS_HCPOST_LANE_PR cycles=20000 outputs=15083 latency=+1",
+   "cycles": 20000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:safe-hbm",
+   "target": null,
+   "t": "2026-10-09T13:52:14-07:00"
+  },
+  "ot_v41_rom_elem_q_qxpq_w10": {
+   "job": "dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl",
+   "commit": "7fb23b7ff",
+   "bench": "bench_qs5_source_bound",
+   "line": "QS5_GATE_BOUND_PASS sources=37 positives=5 negatives=3 cycles=12775002",
+   "cycles": 12775002,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:cont-takeover",
+   "target": null,
+   "t": "2026-10-10T22:52:51-07:00"
+  }
+ },
  "bf_hier": {
   "status": "QUALIFIED",
   "ratio": 1.0,
@@ -1582,10 +2526,10 @@
   {
    "pattern": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
    "model": "qwen_rom",
-   "cls": "me",
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
-   "why": "qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+   "cls": "kv_die",
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "why": "qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
   },
   {
    "pattern": "^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc)",
@@ -1656,6 +2600,7 @@
   "dsfd_m2l_vr_68x11__hr_W2": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_m2l_vr_68x11__hr_W3": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_m2l_vr_68x11__hr_W4": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
+  "dsfd_mtp_hrow": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seed_launch": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seq": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seq_rtt": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -2033,10 +2978,11 @@
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 1942.221,
     "token_elasticity_at_plus10pct": 0.07676,
-    "measured_ratio": 2.013,
-    "measured_grade": "unit_bench",
+    "measured_ratio": null,
+    "claimed_ratio_unmeasured": 2.013,
+    "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)",
-    "status": "UNQUALIFIED",
+    "status": "UNQUALIFIED_NO_BENCH",
     "impact_cycles_per_token": 986819.0,
     "impact_tok_s": -413.6,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
@@ -2057,6 +3003,10 @@
       "records": 145,
       "price_cycles_per_token": 974155
      }
+    },
+    "measured_record": {
+     "path": "budget_audit",
+     "commit": null
     }
    },
    {
@@ -2071,10 +3021,11 @@
     "item": "bytes",
     "required_items_per_cycle": 12.136,
     "token_elasticity_at_plus10pct": 0.00766,
-    "measured_ratio": 0.911,
-    "measured_grade": "e2e",
+    "measured_ratio": null,
+    "claimed_ratio_unmeasured": 0.911,
+    "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json hbm_qwen_allreduce",
-    "status": "QUALIFIED",
+    "status": "UNQUALIFIED_NO_BENCH",
     "impact_cycles_per_token": -8650.8,
     "impact_tok_s": 6.5,
     "owner": "hgi-1010",
@@ -2084,6 +3035,10 @@
       "records": 72,
       "price_cycles_per_token": 97200
      }
+    },
+    "measured_record": {
+     "path": "budget_audit",
+     "commit": null
     }
    },
    {
@@ -2098,10 +3053,11 @@
     "item": "elements (largest operand)",
     "required_items_per_cycle": 13.718,
     "token_elasticity_at_plus10pct": 0.00421,
-    "measured_ratio": 2.896,
-    "measured_grade": "e2e",
+    "measured_ratio": null,
+    "claimed_ratio_unmeasured": 2.896,
+    "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)",
-    "status": "UNQUALIFIED",
+    "status": "UNQUALIFIED_NO_BENCH",
     "impact_cycles_per_token": 101214.2,
     "impact_tok_s": -69.8,
     "owner": "hgi-1010/b",
@@ -2118,6 +3074,10 @@
       "records": 362,
       "price_cycles_per_token": 53517.0
      }
+    },
+    "measured_record": {
+     "path": "budget_audit",
+     "commit": null
     }
    },
    {
@@ -2133,6 +3093,7 @@
     "required_items_per_cycle": 0.002,
     "token_elasticity_at_plus10pct": 0.00375,
     "measured_ratio": null,
+    "claimed_ratio_unmeasured": null,
     "measured_grade": null,
     "measured_src": null,
     "status": "UNQUALIFIED_NO_BENCH",
@@ -2170,6 +3131,7 @@
     "required_items_per_cycle": 0.002,
     "token_elasticity_at_plus10pct": 0.00375,
     "measured_ratio": null,
+    "claimed_ratio_unmeasured": null,
     "measured_grade": null,
     "measured_src": null,
     "status": "UNQUALIFIED_NO_BENCH",
@@ -2197,6 +3159,7 @@
     "required_items_per_cycle": 15.848,
     "token_elasticity_at_plus10pct": 0.00172,
     "measured_ratio": null,
+    "claimed_ratio_unmeasured": null,
     "measured_grade": null,
     "measured_src": null,
     "status": "UNQUALIFIED_NO_BENCH",
@@ -2223,10 +3186,11 @@
     "item": "bytes",
     "required_items_per_cycle": 77.027,
     "token_elasticity_at_plus10pct": 1e-05,
-    "measured_ratio": 9.204,
-    "measured_grade": "e2e",
+    "measured_ratio": null,
+    "claimed_ratio_unmeasured": 9.204,
+    "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json hbm_dma_load",
-    "status": "UNQUALIFIED",
+    "status": "UNQUALIFIED_NO_BENCH",
     "impact_cycles_per_token": 861.1,
     "impact_tok_s": -0.6,
     "owner": "hgi-1010",
@@ -2236,6 +3200,10 @@
       "records": 149,
       "price_cycles_per_token": 15882.3
      }
+    },
+    "measured_record": {
+     "path": "budget_audit",
+     "commit": null
     }
    },
    {
@@ -2250,10 +3218,11 @@
     "item": "elements (largest operand)",
     "required_items_per_cycle": 25.6,
     "token_elasticity_at_plus10pct": 0.00034,
-    "measured_ratio": 2.896,
-    "measured_grade": "e2e",
+    "measured_ratio": null,
+    "claimed_ratio_unmeasured": 2.896,
+    "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)",
-    "status": "UNQUALIFIED",
+    "status": "UNQUALIFIED_NO_BENCH",
     "impact_cycles_per_token": 8190.7,
     "impact_tok_s": -6.1,
     "owner": "hgi-1010",
@@ -2267,6 +3236,10 @@
       "records": 36,
       "price_cycles_per_token": 4320.0
      }
+    },
+    "measured_record": {
+     "path": "budget_audit",
+     "commit": null
     }
    },
    {
@@ -2281,10 +3254,11 @@
     "item": "elements (largest operand)",
     "required_items_per_cycle": 15.866,
     "token_elasticity_at_plus10pct": 0.0,
-    "measured_ratio": 1.263,
-    "measured_grade": "e2e",
+    "measured_ratio": null,
+    "claimed_ratio_unmeasured": 1.263,
+    "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json qwen_head_stream_chain",
-    "status": "UNQUALIFIED",
+    "status": "UNQUALIFIED_NO_BENCH",
     "impact_cycles_per_token": 0.0,
     "impact_tok_s": 0.0,
     "owner": "UNOWNED",
@@ -2297,6 +3271,10 @@
       "records": 1,
       "price_cycles_per_token": 2394.0
      }
+    },
+    "measured_record": {
+     "path": "budget_audit",
+     "commit": null
     }
    },
    {
@@ -2311,10 +3289,11 @@
     "item": "bytes",
     "required_items_per_cycle": 34.133,
     "token_elasticity_at_plus10pct": 0.00017,
-    "measured_ratio": 4.3,
-    "measured_grade": "e2e",
+    "measured_ratio": null,
+    "claimed_ratio_unmeasured": 4.3,
+    "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json hbm_qwen_dma_store",
-    "status": "UNQUALIFIED",
+    "status": "UNQUALIFIED_NO_BENCH",
     "impact_cycles_per_token": 7128.0,
     "impact_tok_s": -5.3,
     "owner": "hgi-1010",
@@ -2324,6 +3303,10 @@
       "records": 72,
       "price_cycles_per_token": 2160
      }
+    },
+    "measured_record": {
+     "path": "budget_audit",
+     "commit": null
     }
    },
    {
@@ -2339,6 +3322,7 @@
     "required_items_per_cycle": 0.0,
     "token_elasticity_at_plus10pct": 0.00017,
     "measured_ratio": null,
+    "claimed_ratio_unmeasured": null,
     "measured_grade": null,
     "measured_src": null,
     "status": "UNQUALIFIED_NO_BENCH",
@@ -2366,6 +3350,7 @@
     "required_items_per_cycle": 0.014,
     "token_elasticity_at_plus10pct": 5e-05,
     "measured_ratio": null,
+    "claimed_ratio_unmeasured": null,
     "measured_grade": null,
     "measured_src": null,
     "status": "UNQUALIFIED_NO_BENCH",
@@ -3130,7 +4115,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "fixlat-capmtp-ffbec0c86-tc",
+    "commit": "ffbec0c86",
+    "bench": "bench_pass_pep_s1",
+    "line": "FIXLAT pep_s1 PASS (expect pass) :: PEP PASS FC=6 RC=7 FV=11 RV=11 VM-end hops 11/11 flits=4x1200 cycles=2250 | rtl/dsrom_sys/mtp/tb/tb_mtp_partner_ep.sv:85: $finish called at 2258500 (1ps)",
+    "cycles": 2250,
+    "item": "flits",
+    "items": 4,
+    "ii": 562.5,
+    "stalled": false,
+    "owner": "Claude:mtp-fixlat-1011",
+    "target": null,
+    "t": "2026-10-10T20:03:33-07:00"
+   }
   },
   "dsfd_capt_ctl": {
    "status": "QUALIFIED",
@@ -3532,7 +4531,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qf-p2lba-ogrant-5b059065b-tc-hm10-lvt",
+    "commit": "5b059065b",
+    "bench": "bench_exact_p2l_s1",
+    "line": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26692 abort_latency=94 starts=3",
+    "cycles": 26692,
+    "item": "rows",
+    "items": 240,
+    "ii": 111.217,
+    "stalled": false,
+    "owner": "Claude:mtp-colllane-1011/p2lba",
+    "target": null,
+    "t": "2026-10-10T23:48:18-07:00"
+   }
   },
   "dsfd_coll_p2_lane_pa": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -3554,7 +4567,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b",
+    "commit": "0ddaf548b",
+    "bench": "bench_exact_p2l",
+    "line": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=27020 abort_latency=94 starts=3",
+    "cycles": 27020,
+    "item": "rows",
+    "items": 240,
+    "ii": 112.583,
+    "stalled": false,
+    "owner": "Claude:mtp-colllane-1011",
+    "target": null,
+    "t": "2026-10-10T21:01:07-07:00"
+   }
   },
   "dsfd_colt_lane": {
    "status": "QUALIFIED",
@@ -3584,7 +4611,21 @@
      "owner": "-",
      "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12-ttfix",
+    "commit": "e96dd1e56",
+    "bench": "bench_exact_ring",
+    "line": "COLT_RING PASS cycles=100000 reads=27118",
+    "cycles": 100000,
+    "item": "reads",
+    "items": 27118,
+    "ii": 3.688,
+    "stalled": false,
+    "owner": "Codex:s81-slab-continuation",
+    "target": null,
+    "t": "2026-10-10T19:58:04-07:00"
+   }
   },
   "dsfd_colt_mrg": {
    "status": "QUALIFIED",
@@ -3806,7 +4847,21 @@
      "owner": "ds-1010",
      "src": "name rule ^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn): ds-1010: field relays / stations (measured field phases include the wire)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl",
+    "commit": "4a12f4d5d",
+    "bench": "bench_hstnh_pe_exact",
+    "line": "HSTNH_PE PASS cycles=2000",
+    "cycles": 2000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:struct-close",
+    "target": null,
+    "t": "2026-10-09T12:17:55-07:00"
+   }
   },
   "dsfd_l2r_vr_512x1__hq_SW": {
    "status": "QUALIFIED",
@@ -4420,6 +5475,28 @@
     }
    ]
   },
+  "dsfd_mtp_hrow": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:wave",
+    "model": "ds_rom_mtp",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "bf-mtp-1010",
+    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+   },
+   "ops": [
+    {
+     "op": "class:wave",
+     "model": "ds_rom_mtp",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "bf-mtp-1010",
+     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    }
+   ]
+  },
   "dsfd_mtp_seed_launch": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -4462,7 +5539,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-mtp_seq-c-c67a71fe5-tc",
+    "commit": "c67a71fe5",
+    "bench": "bench_pass_s0_tr_forced",
+    "line": "{\"case\": \"s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\": 24,",
+    "cycles": 41423,
+    "item": "issues",
+    "items": 92,
+    "ii": 450.25,
+    "stalled": false,
+    "owner": "Claude:mtp-rom",
+    "target": null,
+    "t": "2026-10-09T18:19:17-07:00"
+   }
   },
   "dsfd_mtp_seq_rtt": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -4484,7 +5575,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-seqrtt-d-20ec697d1-tc",
+    "commit": "20ec697d1",
+    "bench": "bench_pass_rtt_s0_tr_forced",
+    "line": "{\"case\": \"rtt_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\":",
+    "cycles": 42073,
+    "item": "issues",
+    "items": 92,
+    "ii": 457.315,
+    "stalled": false,
+    "owner": "Claude:mtp-head-1010",
+    "target": null,
+    "t": "2026-10-10T17:44:49-07:00"
+   }
   },
   "dsfd_p2_lnk": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5126,7 +6231,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "fixlat-vmmtp-189894fc2-tc-hm20",
+    "commit": "189894fc2",
+    "bench": "bench_pass_pep_s1",
+    "line": "FIXLAT pep_s1 PASS (expect pass) :: PEP PASS FC=6 RC=7 FV=11 RV=11 VM-end hops 11/11 flits=4x1200 cycles=2250 | rtl/dsrom_sys/mtp/tb/tb_mtp_partner_ep.sv:85: $finish called at 2258500 (1ps)",
+    "cycles": 2250,
+    "item": "flits",
+    "items": 4,
+    "ii": 562.5,
+    "stalled": false,
+    "owner": "Claude:mtp-fixlat-1011",
+    "target": null,
+    "t": "2026-10-10T20:21:46-07:00"
+   }
   },
   "dsfd_vm_p2_ep": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5148,7 +6267,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "fixlat-vmp2-ffbec0c86-tc",
+    "commit": "ffbec0c86",
+    "bench": "bench_pass_p2_s1",
+    "line": "FIXLAT p2_s1 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 cycles=12692 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:117: $finish ",
+    "cycles": 12692,
+    "item": "rows",
+    "items": 160,
+    "ii": 79.325,
+    "stalled": false,
+    "owner": "Claude:mtp-fixlat-1011",
+    "target": null,
+    "t": "2026-10-10T20:06:06-07:00"
+   }
   },
   "dsfd_vm_wfc_ep": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5170,7 +6303,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-vm_wfc_ep-rd2-9c9ac6963-tc",
+    "commit": "9c9ac6963",
+    "bench": "bench_kit_rd2_stg_r1",
+    "line": "OK         rd2_stg_r1         expect=pass MTP_STG PASS jobs=60 starts=60 out=60 cycles=17939 vmslow=0 core_user_mismatch_at_start=0",
+    "cycles": 17939,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:mtp-wfc-1010",
+    "target": null,
+    "t": "2026-10-10T23:30:55-07:00"
+   }
   },
   "dsfd_wfc_crp": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5214,7 +6361,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-wfc_lnk-b-0cd6caa1b-tc",
+    "commit": "0cd6caa1b",
+    "bench": "bench_pass_stg_r1",
+    "line": "{\"case\": \"stg_r1\", \"expect\": \"pass\", \"params\": {\"SEED\": 1, \"NJOB\": 60}, \"defines\": [], \"result\": \"MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0 core_user_mismatch_at_start=45\", \"got\": \"p",
+    "cycles": 17433,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:mtp-rom",
+    "target": null,
+    "t": "2026-10-10T00:27:21-07:00"
+   }
   },
   "dsfd_wfc_tok_hard": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5258,7 +6419,21 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl",
+    "commit": "c39e235bb",
+    "bench": "bench_prd_s0_tr_forced",
+    "line": "{\"case\": \"prd_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [\"OT_WFCVMX_PRED\"], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"p",
+    "cycles": 41423,
+    "item": "issues",
+    "items": 92,
+    "ii": 450.25,
+    "stalled": false,
+    "owner": "Claude:struct-close",
+    "target": null,
+    "t": "2026-10-10T00:42:23-07:00"
+   }
   },
   "dsrom_mtp_head_full340_A": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5281,6 +6456,42 @@
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
    ]
+  },
+  "hfd_att_su_relay": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:hbm-phys-1010/idx",
+    "src": "closure job hfd_att_su_relay-d578aa824-tc-cl: pos.log:RELAYCHAIN N=9 cycles=20000 in=13919 out=13899 mismatches=0 latency=9 RELAY_PASS (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:hbm-phys-1010/idx",
+     "src": "closure job hfd_att_su_relay-d578aa824-tc-cl: pos.log:RELAYCHAIN N=9 cycles=20000 in=13919 out=13899 mismatches=0 latency=9 RELAY_PASS (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "hfd_att_su_relay-d578aa824-tc-cl",
+    "commit": "d578aa824",
+    "bench": "bench_relay_chain",
+    "line": "pos.log:RELAYCHAIN N=9 cycles=20000 in=13919 out=13899 mismatches=0 latency=9 RELAY_PASS",
+    "cycles": 20000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:hbm-phys-1010/idx",
+    "target": null,
+    "t": "2026-10-10T18:44:36-07:00"
+   }
   },
   "hfd_attn_half_hi": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5343,46 +6554,46 @@
    ]
   },
   "hfd_cmdproc_n": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.778,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.778,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.778,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
     }
    ]
   },
   "hfd_cmdproc_s": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.778,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.778,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.778,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
     }
    ]
   },
@@ -5560,7 +6771,21 @@
      "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
      "src": null
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2",
+    "commit": "ff4827405",
+    "bench": "bench_t4j_sram_exact",
+    "line": "PASS atomic T4 join beats=342 cycles=1013 depth128 downstreamstall500",
+    "cycles": 1013,
+    "item": "beats",
+    "items": 342,
+    "ii": 2.962,
+    "stalled": true,
+    "owner": "Claude:hgi-1010",
+    "target": null,
+    "t": "2026-10-10T23:47:03-07:00"
+   }
   },
   "hfd_index_q_b0": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5673,24 +6898,24 @@
    ]
   },
   "hfd_loader": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.778,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.778,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.778,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
     }
    ]
   },
@@ -5739,13 +6964,13 @@
    ]
   },
   "hfd_sfu": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SFU.GLU",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010",
     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
    },
@@ -5753,21 +6978,21 @@
     {
      "op": "SFU.GLU",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010",
      "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
     }
    ]
   },
   "hfd_sfu_tile": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SFU.GLU",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010",
     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
    },
@@ -5775,21 +7000,21 @@
     {
      "op": "SFU.GLU",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010",
      "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
     }
    ]
   },
   "hfd_su_result_ingress": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/b",
     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
    },
@@ -5805,21 +7030,21 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/b",
      "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
     }
    ]
   },
   "hfd_su_tile": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/b",
     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
    },
@@ -5835,21 +7060,21 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/b",
      "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
     }
    ]
   },
   "hfd_su_tile_xl": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/b",
     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
    },
@@ -5865,582 +7090,582 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/b",
      "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
     }
    ]
   },
   "hfd_svc_SE_s0": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SE_s1": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SE_s2": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SE_s3": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SE_s4": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SE_s5": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SE_s6": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SE_s7": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SE_s8": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SW_s0": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SW_s1": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SW_s2": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SW_s3": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SW_s4": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SW_s5": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SW_s6": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_svc_SW_s7": {
-   "status": "QUALIFIED",
-   "ratio": 0.901,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 0.901,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010",
-    "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 0.901,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010",
-     "src": "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited"
     }
    ]
   },
   "hfd_vm_ne_e": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
   "hfd_vm_ne_s": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
   "hfd_vm_ne_w": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
   "hfd_vm_nw_e": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
   "hfd_vm_nw_w": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
   "hfd_vm_se_e": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
   "hfd_vm_se_w": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
   "hfd_vm_sw_e": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
   "hfd_vm_sw_w": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
@@ -6532,7 +7757,21 @@
      "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
      "src": null
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hgi-att-g12-120-187a8471c-tc-cx",
+    "commit": "187a8471c",
+    "bench": "bench_fullshape_exact",
+    "line": "PASS CF-ATT cases=142 rows=1081866 cycles=1894250 legacy_lockstep=300",
+    "cycles": 1894250,
+    "item": "rows",
+    "items": 1081866,
+    "ii": 1.751,
+    "stalled": false,
+    "owner": "Codex:generic_attn_g12",
+    "target": null,
+    "t": "2026-10-09T19:48:11-07:00"
+   }
   },
   "hgi_att_rows_g12_140": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -6562,7 +7801,21 @@
      "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
      "src": null
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hgi-att-g12-140-187a8471c-tc-cx",
+    "commit": "187a8471c",
+    "bench": "bench_fullshape_exact",
+    "line": "PASS CF-ATT cases=142 rows=1081866 cycles=1894250 legacy_lockstep=300",
+    "cycles": 1894250,
+    "item": "rows",
+    "items": 1081866,
+    "ii": 1.751,
+    "stalled": false,
+    "owner": "Codex:generic_attn_g12",
+    "target": null,
+    "t": "2026-10-09T19:48:12-07:00"
+   }
   },
   "hgi_idx_chunk": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -6680,7 +7933,21 @@
      "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
      "src": null
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
+    "commit": "c891a57cf",
+    "bench": "bench_quad_cg_lockstep",
+    "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060",
+    "cycles": 12000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:redesign-hbm",
+    "target": null,
+    "t": "2026-10-10T06:26:00-07:00"
+   }
   },
   "ot_dshbm_accept_port": {
    "status": "QUALIFIED",
@@ -6880,7 +8147,21 @@
      "owner": "ds-1010",
      "src": "name rule ^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_): ds-1010: HC / SU lanes (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hcreader-plain300-lk-b678636a2-tc-cl",
+    "commit": "b678636a2",
+    "bench": "bench_reader_plain_lk_exact",
+    "line": "PASS full shape 3x1280 BF16 means 120 flits cycles=17011 CE=0",
+    "cycles": 17011,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
+    "target": null,
+    "t": "2026-10-10T16:47:11-07:00"
+   }
   },
   "ot_dsrom_hc_mean_capture": {
    "status": "QUALIFIED",
@@ -6902,7 +8183,21 @@
      "owner": "ds-1010",
      "src": "name rule ^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_): ds-1010: HC / SU lanes (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hcmean-mc560-lk-a7bdfef93-tc-cl",
+    "commit": "a7bdfef93",
+    "bench": "bench_mean_mc_lk_exact",
+    "line": "PASS full shape 3x1280 BF16 means 120 flits cycles=16943 CE=0",
+    "cycles": 16943,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
+    "target": null,
+    "t": "2026-10-10T07:03:29-07:00"
+   }
   },
   "ot_dsrom_hc_secded_pipe": {
    "status": "QUALIFIED",
@@ -6946,7 +8241,21 @@
      "owner": "ds-1010",
      "src": "name rule ^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_): ds-1010: HC / SU lanes (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hcjoin-mc420-lk-d4211f538-tc-cl",
+    "commit": "d4211f538",
+    "bench": "bench_join_mc_lk_exact",
+    "line": "PASS join120frames cycles=1099 CE=0 reset=0",
+    "cycles": 1099,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
+    "target": null,
+    "t": "2026-10-09T23:19:13-07:00"
+   }
   },
   "ot_dsrom_head_bundle_glue": {
    "status": "QUALIFIED",
@@ -7272,7 +8581,21 @@
      "owner": "ds-1010",
      "src": "name rule ^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_): ds-1010: HC / SU lanes (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hbm_hcp_lane_pr_79315a431-tc",
+    "commit": "79315a431",
+    "bench": "bench_lane_pr_exact",
+    "line": "PASS_HCPOST_LANE_PR cycles=20000 outputs=15083 latency=+1",
+    "cycles": 20000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:safe-hbm",
+    "target": null,
+    "t": "2026-10-09T13:52:14-07:00"
+   }
   },
   "ot_dsrom_su_softmax_div_tile": {
    "status": "QUALIFIED",
@@ -7559,15 +8882,15 @@
    ]
   },
   "ot_hbm_accel_smh_be_eg": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -7581,23 +8904,23 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_be_wg": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -7611,23 +8934,23 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_front_c": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -7641,23 +8964,23 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_front_n": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -7671,23 +8994,23 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_front_s": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -7701,23 +9024,23 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_tile_eg": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -7731,23 +9054,23 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_tile_wg": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -7761,12 +9084,156 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
+  },
+  "ot_hbm_index_global_order": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (tuples)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:sys-takeover",
+    "src": "closure job gorderscan_fast2_a-f11374855-tc-hm10: PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=159412 (II 38.919 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (tuples)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:sys-takeover",
+     "src": "closure job gorderscan_fast2_a-f11374855-tc-hm10: PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=159412 (II 38.919 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "gorderscan_fast2_a-f11374855-tc-hm10",
+    "commit": "f11374855",
+    "bench": "bench_rb_global_order_exact",
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=159412",
+    "cycles": 159412,
+    "item": "tuples",
+    "items": 4096,
+    "ii": 38.919,
+    "stalled": false,
+    "owner": "Claude:sys-takeover",
+    "target": null,
+    "t": "2026-10-09T16:06:31-07:00"
+   }
+  },
+  "ot_hbm_native_candidate_format": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (packets)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:struct-close",
+    "src": "closure job candfmt_rb-937531860-tc-hm25-cl: FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0 (II 2.155 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (packets)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:struct-close",
+     "src": "closure job candfmt_rb-937531860-tc-hm25-cl: FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0 (II 2.155 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "candfmt_rb-937531860-tc-hm25-cl",
+    "commit": "937531860",
+    "bench": "bench_rb_cand_format_exact",
+    "line": "FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0",
+    "cycles": 1860,
+    "item": "packets",
+    "items": 863,
+    "ii": 2.155,
+    "stalled": false,
+    "owner": "Claude:struct-close",
+    "target": null,
+    "t": "2026-10-09T12:31:28-07:00"
+   }
+  },
+  "ot_hbm_native_candidate_parse": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (tuples)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:struct-close",
+    "src": "closure job candparse_rb-937531860-tc-hm10-cl: PARSE_DONE tuples=60 cycles=78 (II 1.3 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (tuples)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:struct-close",
+     "src": "closure job candparse_rb-937531860-tc-hm10-cl: PARSE_DONE tuples=60 cycles=78 (II 1.3 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "candparse_rb-937531860-tc-hm10-cl",
+    "commit": "937531860",
+    "bench": "bench_rb_cand_parse_exact",
+    "line": "PARSE_DONE tuples=60 cycles=78",
+    "cycles": 78,
+    "item": "tuples",
+    "items": 60,
+    "ii": 1.3,
+    "stalled": false,
+    "owner": "Claude:struct-close",
+    "target": null,
+    "t": "2026-10-09T15:54:12-07:00"
+   }
+  },
+  "ot_hbm_native_index_query_credit": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (blocks)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:struct-close",
+    "src": "closure job qcredit_rb-2db44a8cd-tc-hm25-cl: QUERY_DONE blocks=256 cycles=1792 (II 7.0 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (blocks)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:struct-close",
+     "src": "closure job qcredit_rb-2db44a8cd-tc-hm25-cl: QUERY_DONE blocks=256 cycles=1792 (II 7.0 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "qcredit_rb-2db44a8cd-tc-hm25-cl",
+    "commit": "2db44a8cd",
+    "bench": "bench_rb_query_credit_exact",
+    "line": "QUERY_DONE blocks=256 cycles=1792",
+    "cycles": 1792,
+    "item": "blocks",
+    "items": 256,
+    "ii": 7.0,
+    "stalled": false,
+    "owner": "Claude:struct-close",
+    "target": null,
+    "t": "2026-10-10T03:48:15-07:00"
+   }
   },
   "ot_hdc_accept": {
    "status": "QUALIFIED",
@@ -7961,15 +9428,15 @@
    ]
   },
   "ot_hgi_argmax18_m": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.263,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "ARGMAX.LOCAL",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.263,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "UNOWNED",
-    "src": "budget_audit table.json qwen_head_stream_chain"
+    "src": null
    },
    "ops": [
     {
@@ -7983,23 +9450,37 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.263,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "UNOWNED",
      "src": "budget_audit table.json qwen_head_stream_chain"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl",
+    "commit": "30853dbe1",
+    "bench": "bench_exact_cf_arg_ds_lockstep",
+    "line": "HGI_ARGMAX18 PASS rows=8 cycles=19063 DS_LOCKSTEP=1",
+    "cycles": 19063,
+    "item": "rows",
+    "items": 8,
+    "ii": 2382.875,
+    "stalled": false,
+    "owner": "Claude:hgi-takeover",
+    "target": null,
+    "t": "2026-10-10T16:47:22-07:00"
+   }
   },
   "ot_hgi_argmax_record": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.263,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "ARGMAX.LOCAL",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.263,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "UNOWNED",
-    "src": "budget_audit table.json qwen_head_stream_chain"
+    "src": null
    },
    "ops": [
     {
@@ -8013,8 +9494,8 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.263,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "UNOWNED",
      "src": "budget_audit table.json qwen_head_stream_chain"
     }
@@ -8104,45 +9585,59 @@
   },
   "ot_hgi_coll_row_formatter": {
    "status": "QUALIFIED",
-   "ratio": 1.0,
+   "ratio": 0.997,
    "limiting": {
     "op": "COLL.ROW_GATHER",
     "model": "DS AR 1M (HBM)",
     "status": "QUALIFIED",
-    "ratio": 1.0,
+    "ratio": 0.997,
     "owner": "hgi-1010/c",
-    "src": "main 5e588e11e (hgi-1010/a, G25 HW ROW_GATHER, one real rank of 96)"
+    "src": "results/rtl/hgi_rgx_pipe_merge_20261010/rgx_matrix_SUMMARY.txt"
    },
    "ops": [
     {
      "op": "COLL.ROW_GATHER",
      "model": "DS AR 1M (HBM)",
      "status": "QUALIFIED",
-     "ratio": 1.0,
+     "ratio": 0.997,
      "owner": "hgi-1010/c",
-     "src": "main 5e588e11e (hgi-1010/a, G25 HW ROW_GATHER, one real rank of 96)"
+     "src": "results/rtl/hgi_rgx_pipe_merge_20261010/rgx_matrix_SUMMARY.txt"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hgi_coll_row_formatter_c130-264ff331a-tc-cl",
+    "commit": "264ff331a",
+    "bench": "bench_GOLDEN",
+    "line": "B=8 K=2048 W=32 destinations=96 badrow=-1 cycles=333826",
+    "cycles": 333826,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:hgi-takeover",
+    "target": null,
+    "t": "2026-10-10T16:47:31-07:00"
+   }
   },
   "ot_hgi_cp": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.778,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.778,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.778,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
     }
    ]
   },
@@ -8166,7 +9661,21 @@
      "owner": "hgi-1010/h + bf-mtp-1010",
      "src": "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2",
+    "commit": "7d9c1b45e",
+    "bench": "bench_P_system_positive",
+    "line": "PASS HGI_CP_MTP_PINREG system drained reset twice native40layer pairedresults finitequeue cycles=26539",
+    "cycles": 26539,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:fe-push-hgi-1010",
+    "target": null,
+    "t": "2026-10-10T21:49:39-07:00"
+   }
   },
   "ot_hgi_dma_front": {
    "status": "UNQUALIFIED",
@@ -8397,35 +9906,35 @@
    ]
   },
   "ot_hgi_seq": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.778,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.778,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-    "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+    "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.778,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
-     "src": "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)"
+     "src": "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record"
     }
    ]
   },
   "ot_hgi_sfu_record": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SFU.GLU",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010",
     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
    },
@@ -8433,23 +9942,23 @@
     {
      "op": "SFU.GLU",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010",
      "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
     }
    ]
   },
   "ot_hgi_sm_pub": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -8463,23 +9972,23 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hgi_sm_record": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -8493,23 +10002,23 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hgi_sm_xload": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.013,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SM.MATVEC",
-    "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.013,
+    "model": "DS AR 1M (HBM)",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
+    "src": null
    },
    "ops": [
     {
@@ -8523,21 +10032,21 @@
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.013,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hgi_su_ctl": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/b",
     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
    },
@@ -8553,21 +10062,21 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/b",
      "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
     }
    ]
   },
   "ot_hgi_su_ctlw": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/b",
     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
    },
@@ -8583,21 +10092,21 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/b",
      "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
     }
    ]
   },
   "ot_hgi_su_record": {
-   "status": "UNQUALIFIED",
-   "ratio": 2.896,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 2.896,
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
     "owner": "hgi-1010/b",
     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
    },
@@ -8613,32 +10122,32 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 2.896,
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
      "owner": "hgi-1010/b",
      "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
     }
    ]
   },
   "ot_hgi_vm_unit": {
-   "status": "QUALIFIED",
-   "ratio": 1.0142,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
     "op": "VM.PORTS",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.0142,
-    "owner": "hgi-1010/vm",
-    "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "hgi-1010/b (wide VM lanes)",
+    "src": "no production-shape VM lane-group bench against the client budget yet"
    },
    "ops": [
     {
      "op": "VM.PORTS",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.0142,
-     "owner": "hgi-1010/vm",
-     "src": "results/rtl/hgi_unit_tput_20261010/vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "hgi-1010/b (wide VM lanes)",
+     "src": "no production-shape VM lane-group bench against the client budget yet"
     }
    ]
   },
@@ -8783,46 +10292,46 @@
    ]
   },
   "ot_qkvd_kv_end": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "ot_qkvd_rom_end": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
@@ -8871,90 +10380,90 @@
    ]
   },
   "ot_qwen_nearhbm_attn_hub_p": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "ot_qwen_nearhbm_ectl_h": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "ot_qwen_nearhbm_head_h": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "ot_qwen_rom_core_core_kv_banked": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
@@ -9378,6 +10887,42 @@
     }
    ]
   },
+  "ot_su12_sfu": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:hbm-blocks",
+    "src": "closure job hbm_sfu_lane_ring3_aa5dd28d5: random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1604 (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:hbm-blocks",
+     "src": "closure job hbm_sfu_lane_ring3_aa5dd28d5: random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1604 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "hbm_sfu_lane_ring3_aa5dd28d5",
+    "commit": "aa5dd28d5",
+    "bench": "bench_c12_campaign_exact",
+    "line": "random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1604",
+    "cycles": 1604,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:hbm-blocks",
+    "target": null,
+    "t": "2026-10-09T19:22:19-07:00"
+   }
+  },
   "ot_v41_bf_col": {
    "status": "QUALIFIED",
    "ratio": 1.0,
@@ -9494,7 +11039,21 @@
      "owner": "-",
      "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl",
+    "commit": "7fb23b7ff",
+    "bench": "bench_qs5_source_bound",
+    "line": "QS5_GATE_BOUND_PASS sources=37 positives=5 negatives=3 cycles=12775002",
+    "cycles": 12775002,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:cont-takeover",
+    "target": null,
+    "t": "2026-10-10T22:52:51-07:00"
+   }
   },
   "qfd_cdc1024": {
    "status": "QUALIFIED",
@@ -9560,7 +11119,21 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc): qwen-1010: link / collective FIFOs (link class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_coll_xfifo_a-66fd85cda-tc",
+    "commit": "66fd85cda",
+    "bench": "bench_coll_native_exact",
+    "line": "case reduce_8w PASS NCOLL_NATIVE PASS cycles=481",
+    "cycles": 481,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:sys-takeover",
+    "target": null,
+    "t": "2026-10-10T17:46:54-07:00"
+   }
   },
   "qfd_coll_xfifo_b": {
    "status": "QUALIFIED",
@@ -9582,7 +11155,21 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc): qwen-1010: link / collective FIFOs (link class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_coll_xfifo_b-66fd85cda-tc",
+    "commit": "66fd85cda",
+    "bench": "bench_coll_native_exact",
+    "line": "case reduce_8w PASS NCOLL_NATIVE PASS cycles=481",
+    "cycles": 481,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:sys-takeover",
+    "target": null,
+    "t": "2026-10-10T01:09:24-07:00"
+   }
   },
   "qfd_coll_xfifo_l8": {
    "status": "QUALIFIED",
@@ -10640,6 +12227,78 @@
     }
    ]
   },
+  "qfd_embed_code_bank_parent": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (words)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:qwen-missing",
+    "src": "closure job qfd_embed_code_bank_parent_flat-e510ca8c2tt: PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211 (II 7.838 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (words)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:qwen-missing",
+     "src": "closure job qfd_embed_code_bank_parent_flat-e510ca8c2tt: PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211 (II 7.838 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "qfd_embed_code_bank_parent_flat-e510ca8c2tt",
+    "commit": "e510ca8c2",
+    "bench": "bench_exact",
+    "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+    "cycles": 32103,
+    "item": "words",
+    "items": 4096,
+    "ii": 7.838,
+    "stalled": false,
+    "owner": "Claude:qwen-missing",
+    "target": null,
+    "t": "2026-10-09T12:17:54-07:00"
+   }
+  },
+  "qfd_embed_code_bank_retained": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (words)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Codex:embedding-scale",
+    "src": "closure job qfd_embed_code_bank_retained-24bd6a53b-tt: PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211 (II 7.838 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (words)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Codex:embedding-scale",
+     "src": "closure job qfd_embed_code_bank_retained-24bd6a53b-tt: PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211 (II 7.838 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "qfd_embed_code_bank_retained-24bd6a53b-tt",
+    "commit": "24bd6a53b",
+    "bench": "bench_exact",
+    "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+    "cycles": 32103,
+    "item": "words",
+    "items": 4096,
+    "ii": 7.838,
+    "stalled": false,
+    "owner": "Codex:embedding-scale",
+    "target": null,
+    "t": "2026-10-10T02:54:48-07:00"
+   }
+  },
   "qfd_embed_ingress_code": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -10660,7 +12319,93 @@
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_embed_ingress_code-0e025d03c",
+    "commit": "0e025d03c",
+    "bench": "bench_exact",
+    "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+    "cycles": 32103,
+    "item": "words",
+    "items": 4096,
+    "ii": 7.838,
+    "stalled": false,
+    "owner": "Codex:embedding-scale",
+    "target": null,
+    "t": "2026-10-10T05:01:06-07:00"
+   }
+  },
+  "qfd_embed_ingress_code_numeric": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (words)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:setup-triage (block owner main / Codex:embedding-scale)",
+    "src": "closure job qfd_embed_ingress_code_numeric-82c12047d-lbc: PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211 (II 7.838 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (words)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:setup-triage (block owner main / Codex:embedding-scale)",
+     "src": "closure job qfd_embed_ingress_code_numeric-82c12047d-lbc: PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211 (II 7.838 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "qfd_embed_ingress_code_numeric-82c12047d-lbc",
+    "commit": "387a4d2ac",
+    "bench": "bench_exact",
+    "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+    "cycles": 32103,
+    "item": "words",
+    "items": 4096,
+    "ii": 7.838,
+    "stalled": false,
+    "owner": "Claude:setup-triage (block owner main / Codex:embedding-scale)",
+    "target": null,
+    "t": "2026-10-09T12:17:54-07:00"
+   }
+  },
+  "qfd_embed_ingress_code_padded": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (words)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:qwen-blocks",
+    "src": "closure job qfd_embed_ingress_code_padded-3d5ad2a4ftt: PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211 (II 7.838 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (words)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:qwen-blocks",
+     "src": "closure job qfd_embed_ingress_code_padded-3d5ad2a4ftt: PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211 (II 7.838 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "qfd_embed_ingress_code_padded-3d5ad2a4ftt",
+    "commit": "3d5ad2a4f",
+    "bench": "bench_exact",
+    "line": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211",
+    "cycles": 32103,
+    "item": "words",
+    "items": 4096,
+    "ii": 7.838,
+    "stalled": false,
+    "owner": "Claude:qwen-blocks",
+    "target": null,
+    "t": "2026-10-10T02:57:06-07:00"
+   }
   },
   "qfd_embed_ingress_scale": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -10770,7 +12515,21 @@
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_io_emb_root-1e23a4915-lvt-tc",
+    "commit": "1e23a4915",
+    "bench": "bench_emb_exact",
+    "line": "PASS qfd_embedding_rom NCOL=3 NTAP=4 PINREG=0 requests=6000 responses=6000 cycles=19370",
+    "cycles": 19370,
+    "item": "requests",
+    "items": 6000,
+    "ii": 3.228,
+    "stalled": false,
+    "owner": "Claude:drive-0928",
+    "target": null,
+    "t": "2026-10-10T19:14:24-07:00"
+   }
   },
   "qfd_io_emb_tap": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -10792,7 +12551,21 @@
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_io_emb_tap-c1e4eba84tt",
+    "commit": "c1e4eba84",
+    "bench": "bench_emb_exact",
+    "line": "PASS qfd_embedding_rom NCOL=3 NTAP=4 requests=6000 responses=6000 cycles=19370",
+    "cycles": 19370,
+    "item": "requests",
+    "items": 6000,
+    "ii": 3.228,
+    "stalled": false,
+    "owner": "Claude:qwen-rtl-finish",
+    "target": null,
+    "t": "2026-10-09T12:17:55-07:00"
+   }
   },
   "qfd_io_host": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -10836,7 +12609,21 @@
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc",
+    "commit": "073694e6b",
+    "bench": "bench_rate512_sram",
+    "line": "PASS qfd_link_adapter W=1024 RXD=512 LAT=223 words=2000 each way cycles=2252",
+    "cycles": 2252,
+    "item": "words",
+    "items": 2000,
+    "ii": 1.126,
+    "stalled": false,
+    "owner": "Claude:drive-1143",
+    "target": null,
+    "t": "2026-10-10T03:48:07-07:00"
+   }
   },
   "qfd_io_ucie": {
    "status": "QUALIFIED",
@@ -10883,90 +12670,90 @@
    ]
   },
   "qfd_kv_merge_skid": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "qfd_kv_row": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "qfd_kvc_decode_map_pc": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "qfd_kvc_decode_pc": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
@@ -11122,7 +12909,21 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_res_ctl-f46a68c8a-tc-hm0",
+    "commit": "f46a68c8a",
+    "bench": "bench_fullshape",
+    "line": "PASS res_tiles bursts=360 beats=1465 cycles=12000 request_to_chain=19 request_to_output=21 peak_bursts=55",
+    "cycles": 12000,
+    "item": "beats",
+    "items": 1465,
+    "ii": 8.191,
+    "stalled": false,
+    "owner": "Codex:res-ser-tiles",
+    "target": null,
+    "t": "2026-10-10T17:49:58-07:00"
+   }
   },
   "qfd_res_slot": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -11188,7 +12989,21 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "rowfence_b-7eea9e354-tc",
+    "commit": "7eea9e354",
+    "bench": "bench_row_fence_exact",
+    "line": "PASS_ROW_FENCE layers=24 heads_last_layer=126 halves=3200 fence_hold_edges=3328 cycles=4706",
+    "cycles": 4706,
+    "item": "halves",
+    "items": 3200,
+    "ii": 1.471,
+    "stalled": false,
+    "owner": "Claude:sys-takeover",
+    "target": null,
+    "t": "2026-10-10T20:45:26-07:00"
+   }
   },
   "qfd_seq_su": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -11210,7 +13025,21 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_seq_su-fea-f3e3d6b6f-tc-hm0-cl",
+    "commit": "f3e3d6b6f",
+    "bench": "bench_hq2_lockstep_s1",
+    "line": "PASS seq_su_bi_psram cycles=20997 program_reads=800 loads=600",
+    "cycles": 20997,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:hardcore-1010/fe-h",
+    "target": null,
+    "t": "2026-10-10T21:00:13-07:00"
+   }
   },
   "qfd_sp_band_lanes": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -11298,7 +13127,21 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl",
+    "commit": "a8f3ba53c",
+    "bench": "bench_seqsys_icut_exact",
+    "line": "SYS_CASE pos=8191 starts=38 me=440 su=1448 coll=146 cycles=43612 bad=0",
+    "cycles": 43612,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:struct-close",
+    "target": null,
+    "t": "2026-10-10T19:14:24-07:00"
+   }
   },
   "qfd_sp_constants_sequencer_sys_v_t": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -11551,24 +13394,24 @@
    ]
   },
   "qfd_su_kv624": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
@@ -11615,6 +13458,42 @@
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
     }
    ]
+  },
+  "qfd_sysctl_stn_pb2": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:drive-0158",
+    "src": "closure job qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl: s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309 (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:drive-0158",
+     "src": "closure job qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl: s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
+    "commit": "d4760be45",
+    "bench": "bench_ctl_pb2_cl_campaign",
+    "line": "s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309",
+    "cycles": 6226309,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:drive-0158",
+    "target": null,
+    "t": "2026-10-10T19:21:56-07:00"
+   }
   },
   "qfd_tile": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -11757,68 +13636,68 @@
    ]
   },
   "qkd_kvwq_ctl": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "qkd_kvwq_grp": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   },
   "qkd_kvwq_leaf": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.124,
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
    "limiting": {
-    "op": "class:me",
+    "op": "class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED",
-    "ratio": 1.124,
-    "owner": "qwen-1010",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "class:me",
+     "op": "class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED",
-     "ratio": 1.124,
-     "owner": "qwen-1010",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
   }

@@ -81,6 +81,17 @@ Every op the simulator prices must run natively in a committed RTL bench (unit o
 - **COLL.TOPK_MERGE** (21.4k priced, 21.0k critical): `ot_hgi_coll_record` refuses op 2.
 - **IDX.INDEX** and **COLL.ARGMAX_MERGE**: RTL exists but no committed native bench.
 
+## Provenance rule and automated bench II
+
+**Provenance.** Every ratio must come from a committed bench record, with its path and commit (`measured_record` on each op row). The following are therefore downgraded to claims (`hand_entered`, never qualifying) and listed in `registry_gaps`:
+- the Qwen-on-HBM ratios copied from budget_audit rows;
+- the CP-fetch and svc-stream audit ratios;
+- the removed KV-die name rule (1.124, a superseded model; qwen-1010/b is replacing it with the measured KV-die record).
+
+COLL.ROW_GATHER now reads its ratio from the RGX matrix record (0.997).
+
+**Automated bench II.** `bench_ii()` reads every CLOSED closure-loop job's passing exact benches and extracts the cycles line with its largest item count. This gives cycles per item, the job and the commit. An element qualifies by this route only under the fixed-pipeline full-rate rule: at most 1.10 cycles an item, with no stall-injected stimulus. Otherwise the line is attached to the element as `bench_ii`, with the budget still unmapped. `registry_gaps` lists, per owner, the elements that still need a production-shape throughput bench.
+
 ## Registry gate
 
 `tools/fleet_viz/elements.py` reads the `elements` map of the latest `results/arch/throughput_budget_*/budget.json`, from the working tree or else origin/main. Every element row in `/api/elements` and ELEMENTS.md then gets two fields:
@@ -109,7 +120,7 @@ S2 price 566,881.1 cycles = 2,116.8 tok/s; target 2,208.1 tok/s = 543,453.6 cycl
 | FUSED.HC_PRE_NORM | 81 | 41 | 649.3 | 622.5 | 1,282.8 | 20,480 elements | 31.54 | 0.93 % | 6.514 | unit_bench | **UNQUALIFIED** | +290,013.7 | hgi-1010/b |
 | HC.HC_MIX_POST | 80 | 40 | 540.0 | 517.7 | 1,080.0 | 24 elements | 0.04 | 0.00 % | 1.282 | unit_bench | **UNQUALIFIED** | 0.0 | hgi-1010/d |
 | DMA.LOAD | 340 | 40 | 104.4 | 100.1 | 887.1 | 1,153 bytes | 11.05 | 0.09 % | 0.622 | e2e | **QUALIFIED** | -1,927.5 | - |
-| COLL.ROW_GATHER | 8 | 8 | 4,246.0 | 4,070.5 | 4,246.0 | 1,048,576 bytes | 246.96 | 0.60 % | 1.000 | price_fit | **QUALIFIED** | 0.0 | hgi-1010/c |
+| COLL.ROW_GATHER | 8 | 8 | 4,246.0 | 4,070.5 | 4,246.0 | 1,048,576 bytes | 246.96 | 0.60 % | 0.997 | unit_bench | **QUALIFIED** | -101.9 | hgi-1010/c |
 | COLL.TOPK_MERGE | 9 | 8 | 2,382.8 | 2,284.3 | 2,680.6 | 2,428 bytes | 1.02 | 0.38 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | tput-gate-1010 |
 | FUSED.HC_POST | 80 | 40 | 222.7 | 213.5 | 445.3 | 20,480 elements | 91.97 | 0.31 % | 20.085 | unit_bench | **UNQUALIFIED** | +339,233.8 | hgi-1010/b |
 | ATT.QK | 40 | 40 | 329.5 | 315.9 | 329.5 | 16,384 MACs | 49.72 | 0.23 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | hgi-1010/g2 |
@@ -159,16 +170,16 @@ S2 price 1,269,120.1 cycles = 945.5 tok/s; target 953.8 tok/s. Qwen on HBM is de
 
 | op | records / token | price cyc / record | budget at target | items / record | elasticity | measured / price | status | token cycles at measured |
 |---|---:|---:|---:|---:|---:|---:|---|---:|
-| SM.MATVEC | 145 | 6,718.3 | 6,660.1 | 13,048,444 | 7.68 % | 2.013 | UNQUALIFIED | 986,819.0 |
-| COLL.ALL_REDUCE_SUM | 72 | 1,350.0 | 1,338.3 | 16,384 | 0.77 % | 0.911 | QUALIFIED | -8,650.8 |
-| SU.VOP | 362 | 147.8 | 146.6 | 2,028 | 0.42 % | 2.896 | UNQUALIFIED | 101,214.2 |
+| SM.MATVEC | 145 | 6,718.3 | 6,660.1 | 13,048,444 | 7.68 % | – | UNQUALIFIED_NO_BENCH | 986,819.0 |
+| COLL.ALL_REDUCE_SUM | 72 | 1,350.0 | 1,338.3 | 16,384 | 0.77 % | – | UNQUALIFIED_NO_BENCH | -8,650.8 |
+| SU.VOP | 362 | 147.8 | 146.6 | 2,028 | 0.42 % | – | UNQUALIFIED_NO_BENCH | 101,214.2 |
 | ATT.QK | 72 | 660.1 | 654.4 | 1 | 0.38 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
 | ATT.PV | 72 | 660.1 | 654.4 | 1 | 0.38 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
 | FUSED.ROW_NORM | 145 | 150.2 | 148.9 | 2,380 | 0.17 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
-| DMA.LOAD | 149 | 106.6 | 105.7 | 8,210 | 0.00 % | 9.204 | UNQUALIFIED | 861.1 |
-| SFU.GLU | 36 | 120.0 | 119.0 | 3,072 | 0.03 % | 2.896 | UNQUALIFIED | 8,190.7 |
-| ARGMAX.LOCAL | 1 | 2,394.0 | 2,373.3 | 37,984 | 0.00 % | 1.263 | UNQUALIFIED | 0.0 |
-| DMA.STORE | 72 | 30.0 | 29.7 | 1,024 | 0.02 % | 4.300 | UNQUALIFIED | 7,128.0 |
+| DMA.LOAD | 149 | 106.6 | 105.7 | 8,210 | 0.00 % | – | UNQUALIFIED_NO_BENCH | 861.1 |
+| SFU.GLU | 36 | 120.0 | 119.0 | 3,072 | 0.03 % | – | UNQUALIFIED_NO_BENCH | 8,190.7 |
+| ARGMAX.LOCAL | 1 | 2,394.0 | 2,373.3 | 37,984 | 0.00 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
+| DMA.STORE | 72 | 30.0 | 29.7 | 1,024 | 0.02 % | – | UNQUALIFIED_NO_BENCH | 7,128.0 |
 | DMA.FENCE | 36 | 60.0 | 59.5 | 0 | 0.02 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
 | COLL.ARGMAX_MERGE | 1 | 586.0 | 580.9 | 8 | 0.01 % | – | UNQUALIFIED_NO_BENCH | 0.0 |
 
@@ -227,6 +238,91 @@ every op the simulator prices needs a committed bench that executes it natively 
 
 Rate figures these ops inflate (each prices the op at its simulator cost although no RTL runs it): DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl); DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds); DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl); Qwen AR 953.8 tok/s (results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json S2); Qwen DFlash b16 1,791.8 tok/s (dflash_timing.json); this budget's DS S2 2116.8 tok/s; this budget's Qwen S2 945.5 tok/s.
 
+### Hand-entered ratios (unmeasured; never qualify)
+
+| model | op / element | claimed ratio | source | owner |
+|---|---|---:|---|---|
+| Qwen | SM.MATVEC | 2.013 | budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record) | hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path) |
+| Qwen | COLL.ALL_REDUCE_SUM | 0.911 | budget_audit table.json hbm_qwen_allreduce | hgi-1010 |
+| Qwen | SU.VOP | 2.896 | budget_audit table.json qwen_su_sfu (measured rtl/sim) | hgi-1010/b |
+| Qwen | DMA.LOAD | 9.204 | budget_audit table.json hbm_dma_load | hgi-1010 |
+| Qwen | SFU.GLU | 2.896 | budget_audit table.json qwen_su_sfu (SU/SFU staging, same row) | hgi-1010 |
+| Qwen | ARGMAX.LOCAL | 1.263 | budget_audit table.json qwen_head_stream_chain | UNOWNED |
+| Qwen | DMA.STORE | 4.3 | budget_audit table.json hbm_qwen_dma_store | hgi-1010 |
+| DS AR 1M (HBM) | ot_hgi_cp | – | HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record | hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model) |
+| DS AR 1M (HBM) | ot_hgi_seq | – | HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record | hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model) |
+| DS AR 1M (HBM) | hfd_cmdproc_n | – | HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record | hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model) |
+| DS AR 1M (HBM) | hfd_cmdproc_s | – | HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record | hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model) |
+| DS AR 1M (HBM) | hfd_loader | – | HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record | hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model) |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s0 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s1 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s2 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s3 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s4 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s5 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s6 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s7 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SE_s8 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SW_s0 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SW_s1 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SW_s2 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SW_s3 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SW_s4 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SW_s5 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SW_s6 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| Qwen AR 8K (HBM) | hfd_svc_SW_s7 | – | HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited | hbm-phys-1010 |
+| qwen_rom | KV die (name rule) | 1.124 | removed hand rule (superseded audit model) | qwen-1010/b |
+
+### Automated bench II (45 elements with a cycles line in a passing exact closure-loop bench)
+
+| element | II (cycles / item) | item | stalled stimulus | job @ commit | line |
+|---|---:|---|---|---|---|
+| dsfd_cap_mtp_ep | 562.5 | flits |  | fixlat-capmtp-ffbec0c86-tc @ ffbec0c86 | FIXLAT pep_s1 PASS (expect pass) :: PEP PASS FC=6 RC=7 FV=11 RV=11 VM-end hops 11/11 flits=4x1200 cycles=2250  |
+| dsfd_coll_p2_lane_ba | 111.217 | rows |  | qf-p2lba-ogrant-5b059065b-tc-hm10-lvt @ 5b059065b | p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 |
+| dsfd_coll_p2_lane_pa | 112.583 | rows |  | mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b @ 0ddaf548b | p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 |
+| dsfd_colt_lane | 3.688 | reads |  | s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12-ttfix @ e96dd1e56 | COLT_RING PASS cycles=100000 reads=27118 |
+| dsfd_hstnh_515 | – | – |  | s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl @ 4a12f4d5d | HSTNH_PE PASS cycles=2000 |
+| dsfd_mtp_seq | 450.25 | issues |  | mtp-mtp_seq-c-c67a71fe5-tc @ c67a71fe5 | {"case": "s0_tr_forced", "expect": "pass", "params": {"MODE": 0, "NUSR": 2}, "defines": [], "trace": {"trace": |
+| dsfd_mtp_seq_rtt | 457.315 | issues |  | mtp-seqrtt-d-20ec697d1-tc @ 20ec697d1 | {"case": "rtt_s0_tr_forced", "expect": "pass", "params": {"MODE": 0, "NUSR": 2}, "defines": [], "trace": {"tra |
+| dsfd_vm_mtp_ep | 562.5 | flits |  | fixlat-vmmtp-189894fc2-tc-hm20 @ 189894fc2 | FIXLAT pep_s1 PASS (expect pass) :: PEP PASS FC=6 RC=7 FV=11 RV=11 VM-end hops 11/11 flits=4x1200 cycles=2250  |
+| dsfd_vm_p2_ep | 79.325 | rows |  | fixlat-vmp2-ffbec0c86-tc @ ffbec0c86 | FIXLAT p2_s1 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 |
+| dsfd_vm_wfc_ep | – | – |  | mtp-vm_wfc_ep-rd2-9c9ac6963-tc @ 9c9ac6963 | OK         rd2_stg_r1         expect=pass MTP_STG PASS jobs=60 starts=60 out=60 cycles=17939 vmslow=0 core_use |
+| dsfd_wfc_lnk | – | – |  | mtp-wfc_lnk-b-0cd6caa1b-tc @ 0cd6caa1b | {"case": "stg_r1", "expect": "pass", "params": {"SEED": 1, "NJOB": 60}, "defines": [], "result": "MTP_STG PASS |
+| dsfd_wfc_vmx | 450.25 | issues |  | mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl @ c39e235bb | {"case": "prd_s0_tr_forced", "expect": "pass", "params": {"MODE": 0, "NUSR": 2}, "defines": ["OT_WFCVMX_PRED"] |
+| hfd_att_su_relay | – | – |  | hfd_att_su_relay-d578aa824-tc-cl @ d578aa824 | pos.log:RELAYCHAIN N=9 cycles=20000 in=13919 out=13899 mismatches=0 latency=9 RELAY_PASS |
+| hfd_idx_t4_join | 2.962 | beats | yes | hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2 @ ff4827405 | PASS atomic T4 join beats=342 cycles=1013 depth128 downstreamstall500 |
+| hgi_att_rows_g12_120 | 1.751 | rows |  | hgi-att-g12-120-187a8471c-tc-cx @ 187a8471c | PASS CF-ATT cases=142 rows=1081866 cycles=1894250 legacy_lockstep=300 |
+| hgi_att_rows_g12_140 | 1.751 | rows |  | hgi-att-g12-140-187a8471c-tc-cx @ 187a8471c | PASS CF-ATT cases=142 rows=1081866 cycles=1894250 legacy_lockstep=300 |
+| ot_attn_tile_m6h1q | – | – |  | hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl @ c891a57cf | TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060 |
+| ot_dsrom_hc_input_reader | – | – |  | hcreader-plain300-lk-b678636a2-tc-cl @ b678636a2 | PASS full shape 3x1280 BF16 means 120 flits cycles=17011 CE=0 |
+| ot_dsrom_hc_mean_capture | – | – |  | hcmean-mc560-lk-a7bdfef93-tc-cl @ a7bdfef93 | PASS full shape 3x1280 BF16 means 120 flits cycles=16943 CE=0 |
+| ot_dsrom_hc_seed_join | – | – |  | hcjoin-mc420-lk-d4211f538-tc-cl @ d4211f538 | PASS join120frames cycles=1099 CE=0 reset=0 |
+| ot_dsrom_su_hcpost_lane_pr | – | – |  | hbm_hcp_lane_pr_79315a431-tc @ 79315a431 | PASS_HCPOST_LANE_PR cycles=20000 outputs=15083 latency=+1 |
+| ot_hbm_index_global_order | 38.919 | tuples |  | gorderscan_fast2_a-f11374855-tc-hm10 @ f11374855 | PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=159412 |
+| ot_hbm_native_candidate_format | 2.155 | packets |  | candfmt_rb-937531860-tc-hm25-cl @ 937531860 | FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0 |
+| ot_hbm_native_candidate_parse | 1.3 | tuples |  | candparse_rb-937531860-tc-hm10-cl @ 937531860 | PARSE_DONE tuples=60 cycles=78 |
+| ot_hbm_native_index_query_credit | 7.0 | blocks |  | qcredit_rb-2db44a8cd-tc-hm25-cl @ 2db44a8cd | QUERY_DONE blocks=256 cycles=1792 |
+| ot_hgi_argmax18_m | 2382.875 | rows |  | hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl @ 30853dbe1 | HGI_ARGMAX18 PASS rows=8 cycles=19063 DS_LOCKSTEP=1 |
+| ot_hgi_coll_row_formatter | – | – |  | hgi_coll_row_formatter_c130-264ff331a-tc-cl @ 264ff331a | B=8 K=2048 W=32 destinations=96 badrow=-1 cycles=333826 |
+| ot_hgi_cp_mtp_pinreg | – | – |  | hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2 @ 7d9c1b45e | PASS HGI_CP_MTP_PINREG system drained reset twice native40layer pairedresults finitequeue cycles=26539 |
+| ot_su12_sfu | – | – |  | hbm_sfu_lane_ring3_aa5dd28d5 @ aa5dd28d5 | random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1604 |
+| ot_v41_rom_elem_q_qxpq_w10 | – | – |  | dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl @ 7fb23b7ff | QS5_GATE_BOUND_PASS sources=37 positives=5 negatives=3 cycles=12775002 |
+| qfd_coll_xfifo | – | – |  | qfd_coll_xfifo_a-66fd85cda-tc @ 66fd85cda | case reduce_8w PASS NCOLL_NATIVE PASS cycles=481 |
+| qfd_coll_xfifo_b | – | – |  | qfd_coll_xfifo_b-66fd85cda-tc @ 66fd85cda | case reduce_8w PASS NCOLL_NATIVE PASS cycles=481 |
+| qfd_embed_code_bank_parent | 7.838 | words |  | qfd_embed_code_bank_parent_flat-e510ca8c2tt @ e510ca8c2 | PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_RO |
+| qfd_embed_code_bank_retained | 7.838 | words |  | qfd_embed_code_bank_retained-24bd6a53b-tt @ 24bd6a53b | PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_RO |
+| qfd_embed_ingress_code | 7.838 | words |  | qfd_embed_ingress_code-0e025d03c @ 0e025d03c | PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_RO |
+| qfd_embed_ingress_code_numeric | 7.838 | words |  | qfd_embed_ingress_code_numeric-82c12047d-lbc @ 387a4d2ac | PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_RO |
+| qfd_embed_ingress_code_padded | 7.838 | words |  | qfd_embed_ingress_code_padded-3d5ad2a4ftt @ 3d5ad2a4f | PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_RO |
+| qfd_io_emb_root | 3.228 | requests |  | qfd_io_emb_root-1e23a4915-lvt-tc @ 1e23a4915 | PASS qfd_embedding_rom NCOL=3 NTAP=4 PINREG=0 requests=6000 responses=6000 cycles=19370 |
+| qfd_io_emb_tap | 3.228 | requests |  | qfd_io_emb_tap-c1e4eba84tt @ c1e4eba84 | PASS qfd_embedding_rom NCOL=3 NTAP=4 requests=6000 responses=6000 cycles=19370 |
+| qfd_io_serdes | 1.126 | words |  | qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc @ 073694e6b | PASS qfd_link_adapter W=1024 RXD=512 LAT=223 words=2000 each way cycles=2252 |
+| qfd_res_ctl | 8.191 | beats |  | qfd_res_ctl-f46a68c8a-tc-hm0 @ f46a68c8a | PASS res_tiles bursts=360 beats=1465 cycles=12000 request_to_chain=19 request_to_output=21 peak_bursts=55 |
+| qfd_row_merge_native_fence | 1.471 | halves |  | rowfence_b-7eea9e354-tc @ 7eea9e354 | PASS_ROW_FENCE layers=24 heads_last_layer=126 halves=3200 fence_hold_edges=3328 cycles=4706 |
+| qfd_seq_su | – | – |  | qfd_seq_su-fea-f3e3d6b6f-tc-hm0-cl @ f3e3d6b6f | PASS seq_su_bi_psram cycles=20997 program_reads=800 loads=600 |
+| qfd_sp_constants_sequencer_sys | – | – |  | qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl @ a8f3ba53c | SYS_CASE pos=8191 starts=38 me=440 su=1448 coll=146 cycles=43612 bad=0 |
+| qfd_sysctl_stn_pb2 | – | – |  | qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl @ d4760be45 | s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309 |
+
 ### DS ROM BF of record: hierarchical full-rate (ot_v41_bf_col + ot_s81_bf_front)
 
 | item | value |
@@ -238,9 +334,9 @@ Rate figures these ops inflate (each prices the op at its simulator cost althoug
 | timing | column: bfh_col600_28fa6290c-cl CLOSED TT +34.26 / FF +0.67 (compact col: bfh_compact220_col_a1200); front: bfh_compact220_front_a1200_84d63c93f-cl CLOSED TT +87.90 / FF +9.98 (main 943cad2b2); results/rtl/s81_bf_arch_20261009/compose/summary.json: interface TT +265.8 / FF +45.1 balanced |
 | evidence | results/rtl/s81_bf_arch_20261009/bench/tcg0.json, results/rtl/s81_bf_arch_20261009/bench/hcol.json, results/rtl/s81_bf_arch_20261009/bench/full.json |
 
-ROM blocks outside the token-path classes: 162 covered by name rules (`rom_block_rules`); unmapped: ot_dsrom_engram_lead_producer, qfd_sp_tree_top_b_f1a, qfd_sp_tree_top_b_f1b.
+ROM blocks outside the token-path classes: 163 covered by name rules (`rom_block_rules`); unmapped: ot_dsrom_engram_lead_producer, qfd_sp_tree_top_b_f1a, qfd_sp_tree_top_b_f1b.
 
 ### Registry gate (elements)
 
-360 elements mapped: QUALIFIED 146, UNQUALIFIED 49, UNQUALIFIED_NO_BENCH 165.
+372 elements mapped: QUALIFIED 129, UNQUALIFIED 9, UNQUALIFIED_NO_BENCH 234.
 
