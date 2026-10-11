@@ -43,6 +43,7 @@ BINDING_DIES = "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json"
 ROWPACK = "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz"
 P2_MICRO = "results/uarch/dsrom_mtp_p2_20261009/microbench.json"
 SEEDL_GATE = "results/rtl/mtp_seed_launch_20261010/gate.json"
+HROW_GATE = "results/rtl/mtp_hrow_20261010/gate.json"
 
 
 def J(p):
@@ -289,6 +290,19 @@ def ds_rom():
             source=[SEEDL_GATE + " cycles (pos_basic)"],
             note="bench stations: descriptor 9/9, VM 6/6 + 12-cycle VM latency, x / join 4/4; the 240 beats and seed_ctl "
                  "itself are the composition's seed term"))
+    # ---- main-hidden rows to the primary die (dsfd_mtp_hrow + ot_dsrom_mtp_hrow_tx, mtp-dsbind 2026-10-10)
+    if (ROOT / HROW_GATE).exists():
+        hg = J(HROW_GATE)
+        assert hg["verdict"]["positives_and_rejections"] and hg["verdict"]["mutants_fail"], "hrow gate not PASS"
+        ch.append(charge(
+            "hrow.transport", "main-hidden row parts (L37/38/39 stage dies -> primary row store, one dedicated MTP lane a part)",
+            1 + 160 + 4, critical=False, anchor="accept.commit", phase="draft", grade="measured",
+            formula="per committed row and part: 1 header + 160 data flits on its own lane + 4 store cycles (write, complete)",
+            source=[HROW_GATE + " pos_steady / pos_late"],
+            proof="a position's three parts leave the layer-37/38/39 stage dies when that position passes them in verify; "
+                  "they reach the primary after ONE board hop + 161 flits, while the same position's result still crosses "
+                  "every later stage to the head and the head -> primary seed lane before the seed descriptor can read the "
+                  "row; a late row only delays the read (pos_late), never changes the value"))
     # ---- sensitivity: the RTL-sequenced step (draft from the closing result), NOT credited
     old = J(OLD_STEP)["step_model"]["blend_harmonic"]
     sens = dict(rtl_sequenced_over_model=old["rtl_over_model"], source=OLD_STEP + " step_model.blend_harmonic",

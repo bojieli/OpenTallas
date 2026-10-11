@@ -222,6 +222,12 @@ class Machine:
         else:
             n = die.dyn[d.n_sel] if d.n_sel else d.n
         ist = 0 if d.ibcast else (d.istride or 1)
+        if d.space == "HBM" and base >> 37:
+            # bits [39:37] are the row-stripe code (spec 3.6): only a DMA.LOAD A may carry one (code 1 = STRIPE4); any
+            # other HBM base >= 2^37 is outside the die's 128 GiB and would alias the code
+            c = self.cur
+            if not (base >> 37 == 1 and c is not None and (c.unit, c.op) == ("DMA", "LOAD") and d == c.desc.get("A")):
+                raise Fault(3, f"HBM base {base:#x} >= 2^37 outside a STRIPE-coded DMA.LOAD A")
         return base, n, d.m, d.stride, ist
 
     def vm_addrs(self, d, die, L, no=None, ni=None):
@@ -440,6 +446,9 @@ def decode_fmt(raw, fmt):
         return raw.view(np.int8).astype(F)
     if fmt == "FP8E4M3":
         return e4m3_table()[raw]
+    if fmt == "UE8M0":                          # a power-of-two scale byte: 2^(b - 127); 255 = NaN
+        b = raw.view(np.uint8).astype(np.int64)
+        return np.where(b == 255, np.nan, np.exp2(b - 127.0)).astype(F)
     raise Fault(3, f"fmt {fmt} not decodable here")
 
 

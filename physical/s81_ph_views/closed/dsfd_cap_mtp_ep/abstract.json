@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_cap_mtp_ep",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/fixlat-capmtp-ffbec0c86-tc/routes/fixlat_capmtp_ffbec0c86_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/fixlat-capmtp-ffbec0c86-tc/routes/fixlat_capmtp_ffbec0c86_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/fixlat-capmtp-ffbec0c86-tc/routes/fixlat_capmtp_ffbec0c86_tc/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/fixlat-capmtp-ffbec0c86-tc/routes/fixlat_capmtp_ffbec0c86_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/fixlat-capmtp-ffbec0c86-tc/routes/fixlat_capmtp_ffbec0c86_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/fixlat-capmtp-ffbec0c86-tc/routes/fixlat_capmtp_ffbec0c86_tc/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/fixlat-capmtp-ffbec0c86-tc/routes/fixlat_capmtp_ffbec0c86_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_cap_mtp_ep.lef": "f66eacd9f90e5077266ca455566197df757b52085feae749b5c2145bf6f378ad",
+    "dsfd_cap_mtp_ep_ff.lib": "03f8728a7849c3774215d0be86d096a13ea413d58f84e714d4311b97a668284a",
+    "dsfd_cap_mtp_ep_ss.lib": "868a8519158fbedc46b65c6a90551993c779294d78f3b3315cb3a51df8a47a5f"
+  },
+  "ok": true
+}
