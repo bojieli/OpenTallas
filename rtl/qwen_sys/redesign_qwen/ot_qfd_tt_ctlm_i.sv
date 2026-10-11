@@ -1042,7 +1042,7 @@ module ot_qfd_tt_ctlm_i #(
     parameter integer MEREG = 0,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 0,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
     parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)
-    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (23 = all); 8 = SRAM one-short mutant
+    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations (55 = all); 8 = SRAM one-short mutant
 ) (
     input  wire clk, input wire rst_n,
     // token start, program writes (the program-store copy), the SU snapshot, KV / supply readiness
@@ -1077,14 +1077,14 @@ module ot_qfd_tt_ctlm_i #(
         assign kv_ok_c = kv_ok; assign kvwd_c = kv_write_drained;
     end endgenerate
     wire up_fault_c, x_rdy_c, fab_fault_c; wire [15:0] land_cnt_c; wire [16-1:0] tr_fault_c;
-    wire [12*51-1:0] p_am_c; wire [12-1:0] p_fault_c;
-    wire [658:0] dpin = {up_fault, land_cnt, x_rdy, tr_fault, p_am, p_fault, fab_fault};
+    wire [12-1:0] p_fault_c;
+    wire [46:0] dpin = {up_fault, land_cnt, x_rdy, tr_fault, p_fault, fab_fault};
     generate if ((AUD & 16) != 0) begin : g_dpin
-        reg [658:0] dpin_q;   // AUD 16: die-input pin flops (announced one edge ahead)
+        reg [46:0] dpin_q;    // AUD 16: die-input pin flops (status / count / fault inputs; p_am stays direct)
         always @(posedge clk) dpin_q <= dpin;
-        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_am_c, p_fault_c, fab_fault_c} = dpin_q;
+        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin_q;
     end else begin : g_ddir
-        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_am_c, p_fault_c, fab_fault_c} = dpin;
+        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin;
     end endgenerate
     (* keep = "true" *) wire [8-1:0] rsv;   // RRG: reset copies (el1011-q-seq)
     wire [8-1:0] rrv;                      // the raw-port users: rsv under RRG, else rst_n
@@ -1431,14 +1431,14 @@ module ot_qfd_tt_ctlm_i #(
     ot_hdc_delay #(.W(XW + 18), .D(OS), .RESET(1)) u_os_snap (.clk(clk), .rst_n(rsv[4]), .d({me_acc, u_me_idle, u_me_progress, m_fin}),
         .q({me_acc_o, me_idle_o, me_prog_o, m_fin_o}));
     ot_hdc_delay #(.W(18 + 32), .D(OS)) u_os_f (.clk(clk), .rst_n(rsv[5]), .d({m_fidx, m_fval}), .q({m_fidx_o, m_fval_o}));
-    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0)) u_tt (
+    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0)) u_tt (
         .clk(c_me_clk), .rst_n(rsv[0]), .up_fault(up_fault_c), .land_cnt(land_cnt_c), .go(u_me_go), .ready(u_me_ready),
         .idle(u_me_idle), .i_nout(u_me_i_nout), .i_tiles(u_me_i_tiles), .i_k(u_me_i_k), .i_wsrc(u_me_i_wsrc), .i_wbase(u_me_i_wbase), .i_ts(u_me_i_ts), .i_ks(u_me_i_ks), .i_js(u_me_i_js), .i_xbase(u_me_i_xbase), .i_xks(u_me_i_xks), .i_xjs(u_me_i_xjs), .i_xcs(u_me_i_xcs), .i_jsh(u_me_i_jsh), .i_split(u_me_i_split), .i_wcs(u_me_i_wcs), .i_round(u_me_i_round), .i_obase(u_me_i_obase), .i_ots(u_me_i_ots), .i_ojs(u_me_i_ojs), .i_mmode(u_me_i_mmode), .i_oen(u_me_i_oen), .i_amax(u_me_i_amax), .i_rmax(u_me_i_rmax), .i_mbase(u_me_i_mbase),
         .wrom_re(u_me_wrom_re), .wrom_addr(u_me_wrom_addr), .kv_re(),
         .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),
         .x_rdy(x_rdy_c), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp),
         .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault_c),
-        .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am_c), .p_fault(p_fault_c), .fab_fault(fab_fault_c),
+        .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault_c), .fab_fault(fab_fault_c),
         .ov(ov), .am_idx(u_me_am_idx), .am_val(u_me_am_val), .am_any(u_me_am_any),
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
         .progress(u_me_progress), .fault(u_me_fault));

@@ -97,8 +97,6 @@ module tb_qfd_tt_ctlm_i_psram;
     wire [$bits(x_rdy)-1:0] x_rdy_u0 = ((U1_AUD & 16) != 0) ? x_rdy_d1 : x_rdy;
     reg [$bits(tr_fault)-1:0] tr_fault_d1; always @(posedge clk) tr_fault_d1 <= tr_fault;
     wire [$bits(tr_fault)-1:0] tr_fault_u0 = ((U1_AUD & 16) != 0) ? tr_fault_d1 : tr_fault;
-    reg [$bits(p_am)-1:0] p_am_d1; always @(posedge clk) p_am_d1 <= p_am;
-    wire [$bits(p_am)-1:0] p_am_u0 = ((U1_AUD & 16) != 0) ? p_am_d1 : p_am;
     reg [$bits(p_fault)-1:0] p_fault_d1; always @(posedge clk) p_fault_d1 <= p_fault;
     wire [$bits(p_fault)-1:0] p_fault_u0 = ((U1_AUD & 16) != 0) ? p_fault_d1 : p_fault;
     reg [$bits(fab_fault)-1:0] fab_fault_d1; always @(posedge clk) fab_fault_d1 <= fab_fault;
@@ -123,7 +121,7 @@ module tb_qfd_tt_ctlm_i_psram;
         .land_cnt(land_cnt_u0),
         .x_rdy(x_rdy_u0),
         .tr_fault(tr_fault_u0),
-        .p_am(p_am_u0),
+        .p_am(p_am),
         .p_fault(p_fault_u0),
         .fab_fault(fab_fault_u0),
         .me_acc_o(me_acc_o_0),

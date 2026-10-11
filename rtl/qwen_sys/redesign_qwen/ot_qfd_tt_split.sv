@@ -70,7 +70,8 @@ module ot_qfd_tt_ctl #(
     parameter integer AMR = 0,            // ot_qwen_me_spctl_w12 AMR (safe-qwen S-D1: argmax top registered at the accumulator)
     parameter integer SPRE = 0,           // ot_qwen_me_spctl_w12 SPRE (redesign-qwen: registered scale request)
     parameter integer XADDR = 1,          // el1011-q-seq: spctl XADDR (0: no per-port x_re / x_addr; this module uses the descriptor form)
-    parameter integer RDMEM = 0           // el1011-q-seq: spctl RDMEM (tag delay lines in SRAM)
+    parameter integer RDMEM = 0,          // el1011-q-seq: spctl RDMEM (tag delay lines in SRAM)
+    parameter integer OKEEP = 0           // el1011-q-seq: output stations through (* keep *) wires (no merge with internal flops)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -197,15 +198,31 @@ module ot_qfd_tt_ctl #(
     always @(posedge clk or negedge rs) if (!rs) uf_q <= 1'b0; else uf_q <= up_fault;
     assign u_fault = uf_q;
     // ---- output stations: strobes / valids on reset lines, fields plain ----
+    wire [9 + NPG + 2*(LG+1)-1:0] os_q;
+    wire [2 + AW + NPG*AW + AW + AW + 4 + FW + NW + 32 + AW + W + W*32 + 16-1:0] od_q;
     ot_hdc_delay #(.W(9 + NPG + 2*(LG+1)), .D(OS), .RESET(1)) u_os (.clk(clk), .rst_n(rs),
         .d({c_ready && xr_q, c_idle, c_wrom_re, c_kv_re, c_scale_re, c_xdv, c_pv, c_ov, c_mxwe, c_sgre, c_sel, c_tv}),
-        .q({ready, idle, wrom_re, kv_re, scale_re, x_dv, p_v_e2, ov, mx_we, scale_gre, t_sel_e, t_tv_e}));
+        .q(os_q));
     ot_hdc_delay #(.W(2 + AW + NPG*AW + AW + AW + 4 + FW + NW + 32 + AW + W + W*32 + 16), .D(OS)) u_od (
         .clk(clk), .rst_n(rst_n),
         .d({c_amany, c_fault, c_wrom_addr, c_saddr, c_xdc, c_xdcs_m, c_xdsp, c_pf, c_amidx, c_amval, c_mxaddr,
             c_mxmask, c_mxdata, c_prog}),
-        .q({am_any, fault, wrom_addr, scale_addr, x_dc, x_dcs, x_dsp, p_f_e2, am_idx, am_val, mx_addr,
-            mx_mask, mx_data, progress}));
+        .q(od_q));
+    // el1011-q-seq OKEEP: the stations' flops must drive the pins themselves (ctlm_i-f62cd33ac: x_dv was driven by
+    // u_ctl.u_mv.line[1] -- yosys merged the station with an identical internal delay-line flop deep in the block)
+    localparam integer OSW = 9 + NPG + 2*(LG+1);
+    localparam integer ODW = 2 + AW + NPG*AW + AW + AW + 4 + FW + NW + 32 + AW + W + W*32 + 16;
+    generate if (OKEEP != 0) begin : g_okeep
+        (* keep = "true" *) wire [OSW-1:0] os_k = os_q;
+        (* keep = "true" *) wire [ODW-1:0] od_k = od_q;
+        assign {ready, idle, wrom_re, kv_re, scale_re, x_dv, p_v_e2, ov, mx_we, scale_gre, t_sel_e, t_tv_e} = os_k;
+        assign {am_any, fault, wrom_addr, scale_addr, x_dc, x_dcs, x_dsp, p_f_e2, am_idx, am_val, mx_addr,
+                mx_mask, mx_data, progress} = od_k;
+    end else begin : g_oplain
+        assign {ready, idle, wrom_re, kv_re, scale_re, x_dv, p_v_e2, ov, mx_we, scale_gre, t_sel_e, t_tv_e} = os_q;
+        assign {am_any, fault, wrom_addr, scale_addr, x_dc, x_dcs, x_dsp, p_f_e2, am_idx, am_val, mx_addr,
+                mx_mask, mx_data, progress} = od_q;
+    end endgenerate
 endmodule
 
 module ot_qfd_sp_tree_top_s #(
