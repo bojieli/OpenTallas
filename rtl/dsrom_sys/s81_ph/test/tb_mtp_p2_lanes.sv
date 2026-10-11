@@ -94,12 +94,12 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   co_r = NOSTALL || (!(row1>=0 && cycles>=row1+RS0 && cycles<row1+RS1) && rnd[9:7]!=0 && !(cycles%300>=250));
   ab = cycles>=AB0 && cycles<AB0+40;
  end
- // transport monitors at die A's coll_p2_ep core side: every lane-1 word / start equals what the far end sent, in order
+ // transport monitors at die A (lane 1 on the die bus, starts at coll_p2_ep's core side): every lane-1 word / start equals what the far end sent, in order
  integer a_l1=0, a_st=0;
  always @(posedge clk) if(rstd) begin
-  if(u_a.c_l1v && u_a.c_l1r) begin
-   if(u_a.c_l1d !== l1w(a_l1)) $fatal(1,"P2L transport lane-1 word %0d mismatch: got id %h exp %h got lo %h exp lo %h", a_l1,
-       u_a.c_l1d[603:530], l1w(a_l1)>>530, u_a.c_l1d[63:0], l1w(a_l1)[63:0]);
+  if(t_p2[0]) begin                       // lane 1 leaves die A's u_ba on the die bus (grant protocol: one word a valid)
+   if(t_p2[604:1] !== l1w(a_l1)) $fatal(1,"P2L transport lane-1 word %0d mismatch: got id %h exp %h got lo %h exp lo %h", a_l1,
+       t_p2[604:531], l1w(a_l1)>>530, t_p2[64:1], l1w(a_l1)[63:0]);
    a_l1 <= a_l1 + 1;
   end
   if(u_a.c_sv && u_a.c_sr) begin

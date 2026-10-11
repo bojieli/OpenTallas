@@ -45,6 +45,7 @@ module tb_hgi_mover_record;
         $readmemh({dir, "/mo_hbi.mem"}, hbim); $readmemh({dir, "/mo_hbe.mem"}, hbem);
     end
     integer errors = 0, seed = 5;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 5; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg rst_n = 0; reg [702:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted, mv_v, mv_rdy, mv_done, mv_fault, mv_src, fence_v, fence_rdy, fence_done;
     wire [226:0] mv;

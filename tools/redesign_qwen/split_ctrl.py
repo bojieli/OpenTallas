@@ -436,6 +436,7 @@ def main():
         ap.add_argument("--" + k.replace("_", "-"), type=int, default=None)
     ap.add_argument("--max-cycles", type=int, default=0)
     ap.add_argument("--out", type=Path, help="emit: write the generated core here")
+    ap.add_argument("--no-psram", action="store_true", help="emit-tile-i: the pre-PSRAM/HQ2 ctlm_i text (pw2 flop store only)")
     a = ap.parse_args()
     if a.max_cycles:
         F.L0_MAX_CYCLES = a.max_cycles
@@ -454,7 +455,7 @@ def main():
         a.out.write_text(emit_seq_su_bi())
         return
     if a.phase == "emit-tile-i":
-        a.out.write_text(emit_tt_ctlm_i())
+        a.out.write_text(emit_tt_ctlm_i(psram=not a.no_psram))
         return
     if a.phase in ("emit-seq-su", "emit-seq-su-boundary"):
         a.out.write_text(emit_seq_su(boundary=a.phase == "emit-seq-su-boundary"))
@@ -771,7 +772,7 @@ def emit_seq_su(boundary: bool = False) -> str:
 TP_SEQ = ROOT / "rtl/rom/ot_qwen_tp_seq_w12.sv"
 
 
-def tp_seq_vrl() -> str:
+def tp_seq_vrl(cred: bool = False) -> str:
     """ot_qwen_tp_seq_w12_vrl: the TP sequencer with its vector-memory read latency a parameter (VRL edges vre -> vrq;
     the base assumes 1).  Root cause of the masters' token-chain mismatch (qwen-1010/a 10-10): inside a stationed die
     master the read leaves through the output station and the word returns through the input station, so the base
@@ -789,6 +790,20 @@ def tp_seq_vrl() -> str:
     t = one(t, "(q_n + rd_v) < QD;", "(q_n + rd_n) < QD;")
     t = one(t, "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_v <= 1'b0;", "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};")
     t = one(t, "            rd_v <= rd_go;", "            rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;")
+    if not cred:
+        return t
+    # CRED > 0: the collective port is credit based (ot_rom_oneshot_die_m in_cr): c_ready carries one pulse per freed
+    # input-buffer slot; the sender holds CRED credits (the receiver's buffer, >= the round trip through the stations)
+    t = one(t, "    parameter integer VRL = 1,     // vre -> vrq edges",
+            "    parameter integer VRL = 1,     // vre -> vrq edges\n    parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits")
+    t = one(t, "    assign c_valid = (st == S_COLL) && (q_n != 0);",
+            "    reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)\n"
+            "    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);")
+    t = one(t, "    wire   c_fire  = c_valid && c_ready;",
+            "    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);\n"
+            "    always @(posedge clk or negedge rst_n)\n"
+            "        if (!rst_n) c_cred <= 8'(CRED);\n"
+            "        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);")
     return t
 
 
@@ -840,6 +855,258 @@ def master_prl(t: str, base: str) -> str:
     return t
 
 
+def master_pw2(t: str) -> str:
+    """qwen-1010/a: the program-store write with registered one-hot row / word selects (seq_su_bi_b-955329f22 routed: the
+    q_pw_addr -> 64 x 16 decode -> 65,536 write enables path); the write lands one edge later (configuration time)"""
+    t = one(t, "    always @(posedge clk) prog_a_r <= prog_a;\n",
+            "    always @(posedge clk) prog_a_r <= prog_a;\n    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;\n")
+    return one(t, "        if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;\n",
+               "        if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)\n"
+               "            if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;\n"
+               "    end\n"
+               "    // program writes: one-hot row / word selects registered one edge before the store (65,536 enables)\n"
+               "    always @(posedge clk) begin\n"
+               "        pw_row2 <= q_pw_v ? (64'd1 << q_pw_addr[9:4]) : 64'd0;\n"
+               "        pw_word2 <= 16'd1 << q_pw_addr[3:0];\n"
+               "        pw_d2 <= q_pw_data;\n")
+
+
+KVD_FIELDS = [("v", "1"), ("wbase", "AW"), ("ts", "AW"), ("ks", "AW"), ("js", "AW"), ("wcs", "AW"), ("split", "4"),
+              ("jsh", "3"), ("tiles", "NW"), ("k", "NW"), ("nout", "NW"), ("kindk", "1"), ("pos", "NW")]
+
+
+def seq_kvd_out(t: str) -> str:
+    """qwen-1010/a: the KV-die launch descriptor (kvd_*) leaves seq_su, not the control tile: the SU-side controller decodes
+    every instruction too, and seq_su sits 25 relay stages from the link end (the q word's path) against the control tile's
+    41 -- so the KV-die step starts no later than the bench's q / CTL assumption.  Out through the OS pin stations."""
+    t = one(t, "    output wire [16-1:0] su_rows_o\n);",
+            "    output wire [16-1:0] su_rows_o,\n" +
+            ",\n".join(f"    output wire [{w}-1:0] kvd_{n}" for n, w in KVD_FIELDS) + "\n);")
+    st = []
+    for n, w in KVD_FIELDS:
+        st.append(f"    wire [{w}-1:0] b_kvd_{n};")
+        st.append(f"    ot_hdc_delay #(.W({w}), .D(OS){', .RESET(1)' if w == '1' else ''}) u_o_kvd_{n} (.clk(clk), .rst_n(rs), "
+                  f".d(b_kvd_{n}), .q(kvd_{n}));")
+    t = one(t, "    wire [16-1:0] b_su_rows_o;\n", "    wire [16-1:0] b_su_rows_o;\n" + "\n".join(st) + "\n")
+    t = one(t, "        .kvd_v(),\n", "        .kvd_v(b_kvd_v),\n")
+    for n, _ in KVD_FIELDS[1:]:
+        t = one(t, f"        .kvd_{n}(),\n", f"        .kvd_{n}(b_kvd_{n}),\n")
+    return t
+
+
+STAGE_GATE = """
+// qwen-1010/a: the stage start waits for the SU-local constant buffer (ot_qfd_su_cbuf_g st_rdy / st_rdy_stage): a stage
+// (one layer program, or HEAD) starts only when the buffer reports that stage resident.  The prefetcher fills stage s + 1
+// during stage s, so the wait is normally only at the token's first stage.  MUT 1 (NOWAIT): starts without the buffer.
+module ot_qfd_stage_gate #(parameter integer SW_ = 6, parameter integer NW = 18, parameter integer MUT = 0) (
+    input  wire clk, input wire rst_n,
+    input  wire h_start, input wire [SW_-1:0] stage, input wire [NW-1:0] token, input wire [NW-1:0] pos,
+    input  wire st_rdy, input wire [SW_-1:0] st_rdy_stage,
+    output wire go, output reg [NW-1:0] go_token, output reg [NW-1:0] go_pos,
+    output reg [SW_-1:0] cur_stage, output wire tok_start
+);
+    reg pend;
+    assign go = pend && !h_start && ((MUT != 0) || (st_rdy && st_rdy_stage == cur_stage));
+    assign tok_start = h_start && (stage == {SW_{1'b0}});
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pend <= 1'b0; cur_stage <= {SW_{1'b0}}; end
+        else if (h_start) begin pend <= 1'b1; cur_stage <= stage; end
+        else if (go) pend <= 1'b0;
+    always @(posedge clk) if (h_start) begin go_token <= token; go_pos <= pos; end
+endmodule
+"""
+
+
+def seq_stage_gate(t: str) -> str:
+    """qwen-1010/a: wire the SU-local constant buffer's readiness into the seq_su stage start (owner rule: every path)"""
+    t = one(t, "    input  wire [1-1:0] h_start,\n",
+            "    input  wire [1-1:0] h_start,\n    input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs\n"
+            "    input  wire [1-1:0] cb_st_rdy,        // constant buffer: stage cb_st_rdy_stage resident\n"
+            "    input  wire [5:0] cb_st_rdy_stage,\n"
+            "    output wire [5:0] cb_stage,           // to every constant-buffer group: the stage the SU runs\n"
+            "    output wire [1-1:0] cb_tok_start,\n    output wire [NW-1:0] cb_tpos,\n")
+    gate = ("    wire [5:0] q_stage_in, q_cb_st_rdy_stage; wire q_cb_st_rdy;\n"
+            "    ot_hdc_delay #(.W(12), .D(IS)) u_i_cbs (.clk(clk), .rst_n(rs), .d({stage_in, cb_st_rdy_stage}), .q({q_stage_in, q_cb_st_rdy_stage}));\n"
+            "    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rs), .d(cb_st_rdy), .q(q_cb_st_rdy));\n"
+            "    wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;\n"
+            "    ot_qfd_stage_gate #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rs), .h_start(q_h_start), .stage(q_stage_in),\n"
+            "        .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),\n"
+            "        .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));\n"
+            "    ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rs), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));\n")
+    t = one(t, "        .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),",
+            "        .clk(clk), .rst_n(rs), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),")
+    i = t.index("    ot_qwen_tp_seq_w12 #(.N(D),")
+    return t[:i] + gate + t[i:] + STAGE_GATE
+
+
+def ctrl_hq2(t: str) -> str:
+    """hardcore-1010 fe-h HQ2: the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2; 3 = the
+    bench negative control, a third fill overwrites an unread head word).  seq_su fba TT -131 / fbb post-CTS -537 on
+    st -> skip/issue -> load -> hq_fill -> the 1,024-b hq enable; fill now depends on fq_n / hc only.  Same words, same
+    edges as FQ_HEAD 1 (lockstep benches)."""
+    t = one(t, "    parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)\n",
+            "    parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)\n"
+            "                                     // 2 (hardcore-1010 fe-h): two head words written in turn while fewer than 2 are held\n"
+            "                                     // (fill enable from registers only: fq_n, hc), decode reads hq / hq1 by a registered\n"
+            "                                     // pointer.  Same words, same edges as FQ_HEAD 1 (lockstep bench)\n")
+    t = one(t, "    wire [INSTR_BITS-1:0] ir = (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads\n",
+            "    reg  [INSTR_BITS-1:0] hq1;           // FQ_HEAD 2: second head word\n"
+            "    reg                   h_rd, h_wr;    // FQ_HEAD 2: head read / write pointers\n"
+            "    reg  [1:0]            hc;            // FQ_HEAD 2: head words held\n"
+            "    wire                  hv = (FQ_HEAD >= 2) ? (hc != 2'd0) : hq_v;\n"
+            "    wire [INSTR_BITS-1:0] ir = (FQ_HEAD >= 2) ? (h_rd ? hq1 : hq) : (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads\n")
+    t = one(t, "((FQ_HEAD != 0) ? hq_v : (fq_n != 0)) && (!nx_v || issue || skip);",
+            "((FQ_HEAD != 0) ? hv : (fq_n != 0)) && (!nx_v || issue || skip);")
+    t = one(t, "    wire hq_fill = (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);\n",
+            "    wire hq_fill = (FQ_HEAD >= 2) ? ((st == S_RUN) && (fq_n != 0) && (hc != ((FQ_HEAD == 3) ? 2'd3 : 2'd2))) :\n"
+            "                  (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);\n")
+    t = one(t, "            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0;\n",
+            "            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0; hc <= 2'd0; h_rd <= 1'b0; h_wr <= 1'b0;\n")
+    t = one(t, "pend1 <= 1'b0; pend2 <= 1'b0; hq_v <= 1'b0;\n",
+            "pend1 <= 1'b0; pend2 <= 1'b0; hq_v <= 1'b0;\n                    hc <= 2'd0; h_rd <= 1'b0; h_wr <= 1'b0;\n")
+    t = one(t, "{1'b0, fq_n} + ((FQ_HEAD != 0) ? hq_v : 1'b0) + prog_re",
+            "{1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re")
+    t = one(t, "                    if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end\n",
+            "                    if (FQ_HEAD >= 2) begin\n"
+            "                        if (hq_fill && !h_wr) hq <= fq[fq_rd];\n"
+            "                        if (hq_fill && h_wr) hq1 <= fq[fq_rd];\n"
+            "                        if (hq_fill) h_wr <= !h_wr;\n"
+            "                        if (load) h_rd <= !h_rd;\n"
+            "                        hc <= hc + (hq_fill ? 2'd1 : 2'd0) - (load ? 2'd1 : 2'd0);\n"
+            "                    end else if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end\n")
+    return t
+
+
+def ctrl_icut_nonfatal(t: str) -> str:
+    """OT_ICUT_NONFATAL (sim define, lockstep benches): count the ICUT illegal-issue check instead of stopping (the real ME
+    unit's readiness falls without a go under random programs; the check fires identically in both lockstep copies)"""
+    return one(t, "            $fatal(1, \"ICUT issue without the live issue condition\");\n",
+               "`ifndef OT_ICUT_NONFATAL\n            $fatal(1, \"ICUT issue without the live issue condition\");\n`endif\n")
+
+
+SRAM_PM = ("            ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(clk), .r_ce_in(p_rce), .r_addr_in(p_ra), .rd_out(p_rd[512*m +: 512]),\n"
+           "                .w_ce_in(w_ce), .w_addr_in({wa}), .wd_in({{8{{{wd}}}}}), .w_mask_in(w_mask),\n"
+           "                .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));\n")
+PSRAM_RD = ("        reg rng_r;                                       // the read word is inside the store (else prog_q = 0)\n"
+            "        always @(posedge clk) rng_r <= (PMUT != 0) ? (prog_a_r < 64) : (prog_a < 64);\n"
+            "        wire [1023:0] p_rd;\n"
+            "        wire p_rce = (PMUT != 0) ? prog_re_r : prog_re;\n"
+            "        wire [5:0] p_ra = (PMUT != 0) ? prog_a_r[5:0] : prog_a[5:0];\n")
+PSRAM_Q = ("        if (PMUT != 0) begin : g_pmut\n"
+           "            reg pre_rr;\n"
+           "            always @(posedge clk or negedge rs) if (!rs) pre_rr <= 1'b0; else pre_rr <= prog_re_r;\n"
+           "            always @(posedge clk) if (pre_rr) prog_q <= rng_r ? p_rd : 1024'd0;\n"
+           "        end else begin : g_pq\n"
+           "            always @(posedge clk) if (prog_re_r) prog_q <= rng_r ? p_rd : 1024'd0;\n"
+           "        end\n")
+PW2_BODY = ("        if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)\n"
+            "            if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;\n"
+            "    end\n"
+            "    // program writes: one-hot row / word selects registered one edge before the store (65,536 enables)\n"
+            "    always @(posedge clk) begin\n"
+            "        pw_row2 <= q_pw_v ? (64'd1 << q_pw_addr[9:4]) : 64'd0;\n"
+            "        pw_word2 <= 16'd1 << q_pw_addr[3:0];\n"
+            "        pw_d2 <= q_pw_data;\n")
+
+
+def tile_psram(t: str) -> str:
+    """fe-push-qwen-1010 F1 (ctlm_i PSRAM + HQ2, route top ot_qfd_tt_ctlm_i_fp): applied to the master_pw2 tile.  PSRAM 1:
+    the 64 x 1,024 program store as two ot_sram_1r1w_64x512_m1_r2c2 macros, every macro write pin from a register (valid,
+    row, bank, one-hot 64-bit slice; one edge after q_pw_v like the pw2 selects), read issued at prog_re with the
+    unregistered address and captured in prog_q one edge later (= PRL 2, 0 cycles).  PSRAM 0 = the pw2 flop store
+    unchanged.  HQ2 selects FQ_HEAD 2 (3 at HQ2 = 2) on the ME-side controller.  Defaults (0 / 0 / 0) = the old tile."""
+    t = one(t, "    parameter integer XW = 24, parameter integer IS = 1, parameter integer OS = 1\n) (",
+            "    parameter integer XW = 24, parameter integer IS = 1, parameter integer OS = 1,\n"
+            "    // PSRAM = 1 (fe-push-qwen-1010, port of the seq_su_bi hardcore-1010 PSRAM; 0 = unchanged): the 64 x 1,024 program\n"
+            "    // store is two ot_sram_1r1w_64x512_m1_r2c2 macros (bit-masked 64-bit writes) instead of 65,536 flops; the read is\n"
+            "    // issued at the prog_re edge with the unregistered address, the macro output captured in prog_q one edge later = the\n"
+            "    // PRL 2 timing of the flop store (0 cycles).  Writes come from registered macro pins (valid, row, bank, one-hot\n"
+            "    // 64-bit slice) one edge after q_pw_v, as the flop store's registered selects.  Contract: the store is written\n"
+            "    // only while no program read of the same word is in flight (boot load; read-before-write macro).\n"
+            "    // PMUT = 1: bench negative control (the read issued one edge late, with the registered address).\n"
+            "    // HQ2 = 1: the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2; seq_su fea/feb\n"
+            "    // f3e3d6b6f: feb TT +95.26 after fbb post-CTS -537 on st -> load -> hq_fill -> 1,024-b hq enable).\n"
+            "    // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word).\n"
+            "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0\n) (")
+    t = one(t, "    wire prog_re; wire [11:0] prog_addr; reg [1023:0] prog_q; reg [1023:0] prog_mem [0:63];\n",
+            "    wire prog_re; wire [11:0] prog_addr; reg [1023:0] prog_q;\n")
+    t = one(t, "    always @(posedge clk) prog_a_r <= prog_a;\n    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;\n"
+            "    always @(posedge clk) begin\n" + PW2_BODY +
+            "        if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;\n    end\n",
+            "    always @(posedge clk) prog_a_r <= prog_a;\n"
+            "    generate if (PSRAM != 0) begin : g_psram\n"
+            "        //: the program store as two 64 x 512 SRAM macros; every macro write pin from a register (no decode at the pins)\n"
+            "        reg pw_v2, pw_b2; reg [5:0] pw_row2; reg [7:0] pw_sl2; reg [63:0] pw_d2;\n"
+            "        always @(posedge clk or negedge rs) if (!rs) pw_v2 <= 1'b0; else pw_v2 <= q_pw_v;\n"
+            "        always @(posedge clk) begin\n"
+            "            pw_b2 <= q_pw_addr[3]; pw_row2 <= q_pw_addr[9:4]; pw_sl2 <= 8'd1 << q_pw_addr[2:0]; pw_d2 <= q_pw_data;\n"
+            "        end\n" + PSRAM_RD +
+            "        wire [511:0] w_mask;\n"
+            "        genvar m, s;\n"
+            "        for (s = 0; s < 8; s = s + 1) begin : g_s\n"
+            "            assign w_mask[64*s +: 64] = {64{pw_sl2[s]}};\n"
+            "        end\n"
+            "        for (m = 0; m < 2; m = m + 1) begin : g_m\n"
+            "            wire w_ce = pw_v2 && (pw_b2 == ((m != 0) ? 1'b1 : 1'b0));\n"
+            + SRAM_PM.format(wa="pw_row2", wd="pw_d2") +
+            "        end\n" + PSRAM_Q +
+            "    end else begin : g_pflop\n"
+            "        reg [1023:0] prog_mem [0:63];\n"
+            "        reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;\n"
+            "        always @(posedge clk) begin\n"
+            + "".join("    " + ln + "\n" for ln in PW2_BODY.splitlines()) +
+            "            if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;\n"
+            "        end\n"
+            "    end endgenerate\n")
+    t = one(t, ".TCUT(7), .FQ_HEAD(1)) u_ctrl_me (", ".TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (")
+    return t
+
+
+def seq_psram(t: str) -> str:
+    """hardcore-1010 D fallback (2026-10-10) PSRAM + fe-h HQ2 on seq_su_bi, applied to the master_pw2 text (the routed
+    seq_su fea/feb-f3e3d6b6f closures).  PSRAM 1: the program store as two ot_sram_1r1w_64x512_m1_r2c2 macros (write pins
+    straight from q_pw_*, as routed); PSRAM 0: the pw2 flop store.  HQ2 selects FQ_HEAD 2 (3 at HQ2 = 2) on u_ctrl."""
+    t = one(t, "    parameter integer RLY = 0, parameter integer CRED = 0\n) (",
+            "    parameter integer RLY = 0, parameter integer CRED = 0,\n"
+            "    // PSRAM = 1 (hardcore-1010 D fallback, 2026-10-10; 0 = unchanged): the 64 x 1,024 program store is two\n"
+            "    // ot_sram_1r1w_64x512_m1_r2c2 macros (64 x 512, bit-masked 64-bit writes) instead of 65,536 flops; the read is\n"
+            "    // issued at the prog_re edge with the unregistered address (12-bit add -> macro address pins), the macro output is\n"
+            "    // captured in prog_q one edge later = the PRL 2 timing of the flop store (0 cycles).  Contract: the store is\n"
+            "    // written only while no program read of the same word is in flight (boot load; read-before-write macro).\n"
+            "    // PMUT = 1: bench negative control (the read issued one edge late, with the registered address).\n"
+            "    parameter integer PSRAM = 0, parameter integer PMUT = 0,\n"
+            "    // HQ2 = 1 (hardcore-1010 fe-h): the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2):\n"
+            "    // fba-0ef4d7781 TT -131 / fbb post-CTS -537 on u_ctrl.st -> skip/issue -> load -> hq_fill -> hq[1023:0] enable (26 lv)\n"
+            "    // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word)\n"
+            "    parameter integer HQ2 = 0\n) (")
+    t = one(t, "    reg [1023:0] prog_mem [0:63];\n    reg [63:0] desc_mem [0:7];\n",
+            "    reg [1023:0] prog_mem [0:63];                       // PSRAM 0 (the flop store)\n    reg [63:0] desc_mem [0:7];\n")
+    t = one(t, "    always @(posedge clk) begin\n" + PW2_BODY +
+            "        if (q_dw_v) desc_mem[q_dw_addr] <= q_dw_data;\n"
+            "        if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;\n"
+            "        if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;\n    end\n",
+            "    always @(posedge clk) begin\n"
+            "        if (q_dw_v) desc_mem[q_dw_addr] <= q_dw_data;\n"
+            "        if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;\n    end\n"
+            "    generate if (PSRAM != 0) begin : g_psram\n"
+            "        //: the program store as two 64 x 512 SRAM macros (bit-masked 64-bit slice writes); prog_q = the captured output\n"
+            + PSRAM_RD +
+            "        genvar m;\n"
+            "        for (m = 0; m < 2; m = m + 1) begin : g_m\n"
+            "            wire w_ce = q_pw_v && (q_pw_addr[3] == ((m != 0) ? 1'b1 : 1'b0));\n"
+            "            wire [511:0] w_mask = {448'd0, {64{1'b1}}} << (64 * q_pw_addr[2:0]);\n"
+            + SRAM_PM.format(wa="q_pw_addr[9:4]", wd="q_pw_data") +
+            "        end\n" + PSRAM_Q +
+            "    end else begin : g_pflop\n"
+            "        always @(posedge clk) begin\n"
+            + "".join("    " + ln + "\n" for ln in PW2_BODY.splitlines()) +
+            "            if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;\n"
+            "        end\n"
+            "    end endgenerate\n")
+    t = one(t, ".TCUT(TCUT), .FQ_HEAD(1)) u_ctrl (", ".TCUT(TCUT), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl (")
+    return t
+
+
 # qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
 # above stay byte-identical.
 def emit_seq_su_bi() -> str:
@@ -847,20 +1114,31 @@ def emit_seq_su_bi() -> str:
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_seq_su(boundary=True))))
     t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
-    t = master_prl(t, "prog_base")
+    t = seq_stage_gate(seq_kvd_out(master_pw2(master_prl(ctrl_hq2(t), "prog_base"))))
     t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W)")
     t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
     # the VM read leaves through OS and returns through IS (+ the memory's registered read): VRL = IS + OS + 1
-    t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D),")
-    return t + "\n" + tp_seq_vrl()
+    t = one(t, "    ot_qwen_tp_seq_w12 #(.N(D),", "    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D),")
+    # RLY: die relays each way to the VM; CRED: 0 = collective ready/valid (the token vehicle's model), > 0 = credit port
+    # (ot_rom_oneshot_die_m in_cr, its input buffer IB >= CRED >= the round trip through the stations)
+    t = one(t, "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4",
+            "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,\n"
+            "    parameter integer RLY = 0, parameter integer CRED = 0")
+    return seq_psram(t) + "\n" + tp_seq_vrl(cred=True)
 
 
-def emit_tt_ctlm_i() -> str:
-    """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller"""
+def emit_tt_ctlm_i(psram: bool = True) -> str:
+    """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller (+ HQ2 FQ_HEAD 2/3 in the controller); psram: the
+    PSRAM / PMUT / HQ2 tile parameters (fe-push-qwen-1010 F1, defaults 0 = the flop-store tile); psram=False (--no-psram)
+    = the pre-F1 tile text"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_tt_ctlm())))
     t = t.replace("ot_qwen_rom_core_ctrl_x", "ot_qwen_rom_core_ctrl_x_i")
-    t = master_prl(t, "q_prog_base")
+    if psram:
+        t = ctrl_icut_nonfatal(ctrl_hq2(t))
+    t = master_pw2(master_prl(t, "q_prog_base"))
+    if psram:
+        t = tile_psram(t)
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
     return t

@@ -164,7 +164,7 @@ class Ref:
         sp = field(d, MD, 'space')
         if sp == 0 and not 0 <= base <= M40:
             raise Fault('HBM base out of range')
-        if sp == 1 and not 0 <= base < (1 << 18):
+        if sp == 1 and not 0 <= base < (1 << 18) + (1 << 16):   # + the HC weight aperture [2^18, 2^18 + 2^16)
             raise Fault('VM base out of range')
         ns = field(d, MD, 'n_sel')
         if ns == 0:
@@ -416,7 +416,12 @@ def fault_programs():
         A=mdesc(space=0, base=0, n=0, n_sel=NFV), O=mdesc(space=1, n=4),
         I=mdesc(space=1, fmt=5, base=0xF0FF, n=1, stride=1))) + end
     P['vm_base_range'] = ok + record(header('SU', 'VOP'), sut=0, descs=dict(
-        A=mdesc(space=1, base=(1 << 18) - 4, n=4, lstride=0, dyn_sel=DYN['POS'], dyn_mul=1))) + end
+        A=mdesc(space=1, base=(1 << 18) + (1 << 16) - 4, n=4, lstride=0, dyn_sel=DYN['POS'], dyn_mul=1))) + end
+    P['vm_aperture'] = ok + record(header('DMA', 'LOAD'), descs=dict(   # HC weight aperture: in range
+        A=mdesc(space=0, base=0x1000, n=64), O=mdesc(space=1, base=(1 << 18) + 20480, n=64))) + end
+    P['vm_idx_aperture'] = ok + record(header('DMA', 'LOAD'), descs=dict(   # an I table in the aperture: out of range
+        A=mdesc(space=0, indexed=1, base=0, n=4, dyn_mul=32), O=mdesc(space=1, n=4),
+        I=mdesc(space=1, fmt=5, base=(1 << 18) + 8, n=1))) + end
     P['loop0'] = ok + record(header('CTL', 'LOOP', param=0)) + end
     P['loop3'] = ok + record(header('CTL', 'LOOP', param=2)) + record(header('CTL', 'LOOP', param=(1 << 16) | 2)) + \
         record(header('CTL', 'LOOP', param=2)) + end

@@ -57,7 +57,7 @@ SRC_REAL["hc"] = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/o
                   "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
                   "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv", "rtl/hdc/v41/ot_hdc_sk_arith.sv",
                   "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv", "rtl/hdc/v41/ot_hdc_sinkhorn.sv", "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
-                  "rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv"]
+                  "rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv", "rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv"]
 SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
 SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
 SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
@@ -158,11 +158,12 @@ def prep(d: Path):
     # the FUSED unit's compiler-reserved scratch: the largest VM range no record of this layer touches (>= 16 Ki words)
     import numpy as np
     used = np.zeros(1 << 18, bool)
-    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4") != 0
-    used[np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]] = True
+    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4")[:1 << 18] != 0      # (words past 2^18: the HC aperture)
+    wa = np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]
+    used[wa[wa < (1 << 18)]] = True
     for r in meta["records"]:
         for e in r["eff"].values():
-            if e[5] == "VM":
+            if e[5] == "VM" and e[0] < (1 << 18):
                 b_, n_, m_, st_, ist_ = e[:5]
                 used[b_:b_ + (max(m_, 1) - 1) * st_ + (max(n_, 1) - 1) * max(ist_, 1) + 1] = True
     used[END_TOKEN_VM] = True

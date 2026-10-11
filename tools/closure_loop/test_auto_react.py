@@ -5,6 +5,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch, MagicMock
 
 os.environ.setdefault("CL_STATE", tempfile.mkdtemp(prefix="autoreact_"))
@@ -39,7 +40,9 @@ class Base(unittest.TestCase):
         ps = [patch.object(cl, "STATE", self.d / "state"), patch.object(cl, "DROP", self.d / "drop"),
               patch.object(cl, "TAKEOVER", self.tk), patch.object(cl, "READY_NEXT", self.tk / "READY_NEXT"),
               patch.object(cl, "ledger"), patch.object(cl, "log"), patch.object(cl, "experiment"),
-              patch.object(cl, "validate", return_value=[])]
+              patch.object(cl, "validate", return_value=[]),
+              # class f reads the job's CTS logs over ssh: no macro clock signature unless a test says so
+              patch.object(cl, "ssh", lambda h, c, **k: SimpleNamespace(returncode=0, stdout="", stderr=""))]
         for p in ps:
             p.start()
             self.addCleanup(p.stop)

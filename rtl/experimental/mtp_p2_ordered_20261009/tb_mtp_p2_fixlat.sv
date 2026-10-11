@@ -44,8 +44,10 @@ module tb_mtp_p2_fixlat #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NT
  wire l0v_s, l0g_s, l1v_s, l1g_s, sv_s, sg_s, ov_s, og_s; wire [603:0] l0d_s, l1d_s; wire [100:0] sd_s; wire [593:0] od_s;
  wire l0v_p, l0g_p, l1v_p, l1g_p, sv_p, sg_p, ov_p, og_p; wire [603:0] l0d_p, l1d_p; wire [100:0] sd_p; wire [593:0] od_p;
  dsfd_vm_p2_ep vme(.ck(clk), .rst(rst_n), .c_l0v(c0_v), .c_l0r(c0_r), .c_l0d(l0w(s0)), .t_l0v(l0v_s), .t_l0d(l0d_s), .f_l0g(l0g_s));
- dsfd_coll_p2_ep #(.FWD_C(FC),.RET_C(RC)) cle(.ck(clk), .rst(rst_n), .c_l1v(c1_v), .c_l1r(c1_r), .c_l1d(l1w(s1)),
-  .t_l1v(l1v_s), .t_l1d(l1d_s), .f_l1g(l1g_s), .c_sv(cs_v), .c_sr(cs_r), .c_sd({IDN0+starts,IDS}), .t_sv(sv_s), .t_sd(sd_s), .f_sg(sg_s),
+ // lane 1 sender: a grant-protocol transmitter (as dsfd_coll_p2_lane_ba OGRANT on the die bus)
+ ot_dsrom_mtp_ltx_rc #(.W(604)) l1tx(.clk(clk), .rst_n(rst_n), .c_valid(c1_v), .c_ready(c1_r), .c_data(l1w(s1)),
+  .l_valid(l1v_s), .l_ready(l1g_s), .l_data(l1d_s));
+ dsfd_coll_p2_ep #(.FWD_C(FC),.RET_C(RC)) cle(.ck(clk), .rst(rst_n), .c_sv(cs_v), .c_sr(cs_r), .c_sd({IDN0+starts,IDS}), .t_sv(sv_s), .t_sd(sd_s), .f_sg(sg_s),
   .f_ov(ov_s), .f_od(od_s), .t_og(og_s), .c_ov(co_v), .c_or(co_r), .c_od(co_d));
  p2fl_relay #(.W(605),.N(FV)) r0 (clk, rst_n, {l0v_s,l0d_s}, {l0v_p,l0d_p});
  p2fl_relay #(.W(1),.N(RV))   r0g(clk, rst_n, l0g_p, l0g_s);
@@ -85,7 +87,7 @@ module tb_mtp_p2_fixlat #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NT
   // link receivers sit stalled with flits in flight; the first start is held back START_DELAY cycles
   cs_v = starts<NTX && cycles>=START_DELAY;
   // NOSTALL: saturated sources / always-ready consumer (latency measurement: lnk at 0 stations vs OT_P2_NAIVE at 0
-  // stations = the core driven directly)
+  // stations = the core driven directly).
   c1_v = s1<80*NTX  && (NOSTALL || rnd[2:0]!=0);
   c0_v = s0<160*NTX && (NOSTALL || rnd[5:3]!=0);
   co_r = NOSTALL || (!(cycles>=900 && cycles<1100) && rnd[9:7]!=0 && !(cycles%300>=250));
