@@ -21,6 +21,9 @@
   localparam integer PS_N = 0;
 `endif
   localparam [31:0] W_SALT = 32'h5a5a_0000;
+`ifndef NEP
+  wire nep_done = 1'b1;
+`endif
   reg ck = 0, rst = 0, fck = 0;
   reg bench_ready = 0; // no requests until reset has reached every segment boundary
   always #(TCK/2) ck = ~ck;
@@ -61,13 +64,43 @@
   integer bcount [0:31]; integer lat [0:31];
   integer pc, j, k, err = 0;
   initial for (pc = 0; pc < 32; pc = pc + 1) begin qh[pc] = 0; qn[pc] = 0; bcount[pc] = 0; lat[pc] = 0; end
+`ifdef NEP
+  // [svc-ep] native requests (tag {11, .., bit 4}): sector memory (written at the PHY accept, read data snapshotted at the
+  // read's accept: the PHY's per-PC order), the landing check (every sector belongs to the PC it is sent to) and NXL
+  // cycles of extra PHY latency (the RTT knob of the rate cases)
+  reg [255:0] nmem [bit [29:0]]; reg [255:0] qdat [0:31][0:15][0:3]; integer qtm [0:31][0:15]; integer pcyc = 0;
+  integer n_wr_land = 0, n_land_bad = 0;
+  function automatic [255:0] g0(input [29:0] a); g0 = f({2'b01, a}, 5'd17); endfunction
+  function automatic [4:0] owner(input [29:0] a); owner = a[6:2] ^ a[11:7] ^ a[16:12]; endfunction
+  always @(posedge pclk) pcyc <= pcyc + 1;
+`endif
   always @(posedge pclk) begin
     for (pc = 0; pc < 32; pc = pc + 1) begin
-      if (k_v[pc] && k_rdy[pc]) begin
+      if (k_v[pc] && k_rdy[pc]) begin : kacc
+        reg enq; reg [29:0] a_; integer b_; enq = 1'b1; a_ = k_addr[pc*30 +: 30];
         if ($test$plusargs("SVC_TRACE") && k_tag[pc*17+15 +: 2]==0) $display("KREAD PC=%0d SM=%0d TAG=%0d",pc,k_tag[pc*17+12 +: 3],k_tag[pc*17 +: 10]);
+`ifdef NEP
+        if (k_tag[pc*17+15 +: 2] == 2'b11 && k_tag[pc*17+4]) begin
+          for (b_ = 0; b_ < (k_we[pc] ? 1 : k_len[pc*4 +: 4]); b_ = b_ + 1) if (owner(a_ + 30'(b_)) != 5'(pc)) begin
+            n_land_bad = n_land_bad + 1; err = err + 1;
+            if (n_land_bad < 4) $display("ERR native sector %h (PC %0d) landed on PC %0d", a_ + 30'(b_), owner(a_ + 30'(b_)), pc); end
+          if (k_we[pc]) begin
+            if (k_wstrb[pc*32 +: 32] != 32'hffff_ffff) begin err = err + 1; $display("ERR native write strobes %h", k_wstrb[pc*32 +: 32]); end
+            nmem[a_] = k_wdata[pc*256 +: 256]; n_wr_land = n_wr_land + 1; enq = 1'b0;
+          end else for (b_ = 0; b_ < 4; b_ = b_ + 1)
+            qdat[pc][(qh[pc]+qn[pc]) % 16][b_] = nmem.exists(a_ + 30'(b_)) ? nmem[a_ + 30'(b_)] : g0(a_ + 30'(b_));
+          qtm[pc][(qh[pc]+qn[pc]) % 16] = pcyc + NXL;
+        end else begin
+          if (k_we[pc]) begin err = err + 1; $display("ERR non-native write on PC %0d", pc); end
+          qtm[pc][(qh[pc]+qn[pc]) % 16] = 0;
+        end
+`else
         if (k_we[pc]) begin err = err + 1; $display("ERR write on PC %0d", pc); end
+`endif
+        if (enq) begin
         qa[pc][(qh[pc]+qn[pc]) % 16] = k_addr[pc*30 +: 30]; ql[pc][(qh[pc]+qn[pc]) % 16] = k_len[pc*4 +: 4];
         qt[pc][(qh[pc]+qn[pc]) % 16] = k_tag[pc*17 +: 17]; qn[pc] = qn[pc] + 1;
+        end
       end
       k_rdy[pc] <= ($urandom % 4) != 0 && qn[pc] < 14;
       // response engine: one beat at a time per PC, in order, random gaps; kr_v held until kr_rdy
@@ -76,10 +109,18 @@
         kr_v[pc] <= 1'b0; bcount[pc] = bcount[pc] + 1;
         if (bcount[pc] == ql[pc][qh[pc]]) begin bcount[pc] = 0; qh[pc] = (qh[pc] + 1) % 16; qn[pc] = qn[pc] - 1;
           lat[pc] = 2 + ($urandom % 8); end
+`ifdef NEP
+      end else if (!kr_v[pc] && qn[pc] > 0 && pcyc >= qtm[pc][qh[pc]]) begin
+`else
       end else if (!kr_v[pc] && qn[pc] > 0) begin
+`endif
         if (lat[pc] > 0) lat[pc] = lat[pc] - 1;
         else if ($urandom % 3 != 0) begin
           kr_v[pc] <= 1'b1; kr_tag[pc*17 +: 17] <= qt[pc][qh[pc]]; kr_beat[pc*4 +: 4] <= bcount[pc][3:0];
+`ifdef NEP
+          if (qt[pc][qh[pc]][16:15] == 2'b11 && qt[pc][qh[pc]][4]) kr_data[pc*256 +: 256] <= qdat[pc][qh[pc]][bcount[pc][1:0]];
+          else
+`endif
           kr_data[pc*256 +: 256] <= f({2'b00, qa[pc][qh[pc]]}, bcount[pc][4:0]);
         end
       end
@@ -190,18 +231,31 @@
     end join_none
   end
   // consumer credits: one 1-bit credit a forwarded cycle per port, in row order, released at random (IK streams only)
-  integer cr_pend [0:7];
+  integer cr_pend [0:7]; reg [3:0] kcr [0:7];
   initial for (pq = 0; pq < 8; pq = pq + 1) cr_pend[pq] = 0;
   always @(posedge ck) if (rst) for (kc = 0; kc < 8; kc = kc + 1) if (ks[kc][0] && !ps_nocr) cr_pend[kc] = cr_pend[kc] + 1;
   genvar gq;
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkq
     always @(posedge fck) begin
-      kq[gq] <= 4'd0;
+      kq[gq] <= 4'd0; kcr[gq] <= 4'd0;
       if (($urandom % 3) == 0 && cr_pend[gq] > 0) begin
-        kq[gq] <= 4'd1; cr_pend[gq] = cr_pend[gq] - 1; ps_cr_out = ps_cr_out - 1;
+`ifdef NEP
+        // [svc-ep] N8: an index-key (idx) stream's credits come from the index score grid (kc), KV credits from attention
+        // (kq).  NEP_MUT_WCONS: the IK credits come back on kq (the idle consumer) -> must FAIL (stray credit fault)
+  `ifdef NEP_MUT_WCONS
+        kq[gq] <= 4'd1;
+  `else
+        if (ps_idx) kcr[gq] <= 4'd1; else kq[gq] <= 4'd1;
+  `endif
+`else
+        kq[gq] <= 4'd1;
+`endif
+        cr_pend[gq] = cr_pend[gq] - 1; ps_cr_out = ps_cr_out - 1;
       end
     end
   end endgenerate
+  wire [1:0] kcf [0:7];
+  generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkcf assign kcf[gq] = {fck, kcr[gq][0]}; end endgenerate
   wire [1:0] kqf [0:7];
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf assign kqf[gq] = {fck, kq[gq][0]}; end endgenerate
   // ---------------------------------------------------------------- stimulus
@@ -296,7 +350,7 @@
 `ifdef OT_SVC_VLT
     // Same bounded completion predicate for compiled simulator (named fork disable unsupported).
     wait_cycles = 0;
-    while (!(ne >= 48 && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want && sent[0] + sent[1] + sent[2] + sent[3] + sent[4] + sent[5] + sent[6] + sent[7] == 8 * NREQ) && wait_cycles < 1200000) begin @(posedge ck); wait_cycles = wait_cycles + 1; end
+    while (!(ne >= 48 && nep_done && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want && sent[0] + sent[1] + sent[2] + sent[3] + sent[4] + sent[5] + sent[6] + sent[7] == 8 * NREQ) && wait_cycles < 1200000) begin @(posedge ck); wait_cycles = wait_cycles + 1; end
     if (wait_cycles == 1200000) begin
       $display("ERR timeout lines %0d/%0d kv %0d/%0d ik %0d/%0d e %0d", done_lines, want_lines, kv_got, kv_want, ik_got, ik_want, ne);
       $display("ERR PS streams %0d rows %0d/%0d kd %0d busy %0d", ps_n, ps_rows, ps_want, ps_kd, ps_busy); err = err + 1;
@@ -304,7 +358,7 @@
 `else
     fork : wait_done
       begin
-        wait (ne >= 48 && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want &&
+        wait (ne >= 48 && nep_done && ps_n >= PS_N && !ps_busy && ps_cr_out == 0 && done_lines == want_lines && kv_got == kv_want && ik_got == ik_want &&
               sent[0] + sent[1] + sent[2] + sent[3] + sent[4] + sent[5] + sent[6] + sent[7] == 8 * NREQ);
         repeat (50) @(posedge ck);
         disable wait_done;
@@ -316,6 +370,9 @@
 `endif
     if ($test$plusargs("SVC_TRACE")) for (k=0;k<8;k=k+1) for (j=0;j<1024;j=j+1)
       if (exp_on[k][j]) $display("MISSING SM=%0d TAG=%0d W=%0d ADDR=%h",k,j,exp_w[k][j],exp_a[k][j]);
+`ifdef NEP
+    nep_report();
+`endif
     $display("SVC_BENCH lines=%0d kv=%0d ik=%0d e=%0d ps_streams=%0d ps_rows=%0d ps_kd=%0d errors=%0d", done_lines, kv_got,
              ik_got, ne, ps_n, ps_rows, ps_kd, err);
     if (err != 0 || done_lines == 0) $fatal(1, "SVC_BENCH FAIL");

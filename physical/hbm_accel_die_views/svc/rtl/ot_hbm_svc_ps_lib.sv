@@ -172,10 +172,11 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
   always @(posedge ck) if (di_v) do_d <= di_d;
 endmodule
 
-module ot_svs_grp #(parameter integer K = 0, parameter integer OPR = 0) (
+module ot_svs_grp #(parameter integer K = 0, parameter integer OPR = 0, parameter integer KC = 0) (
   input wire ck, input wire rst, input wire rn,
   input wire [3:0] sv_i, input wire [4*277-1:0] sq_i,     // stream beats of PCs 4K .. 4K+3 (tag 11)
   input wire [1:0] kq,                                     // {fclk, v}: one line credit, in row order
+  input wire [1:0] kc,                                     // KC 1 ([svc-ep] N8): the index score grid's line credit
   input wire sg_v, input wire [12:0] sg_d,                 // the running stream's load tag (from the e port)
   output wire [3:0] cr,                                    // credit pulse to PC 4K + j
   output wire [1101:0] ks,                                 // {fclk x3, meta64, row1024, rq10, v}
@@ -211,13 +212,19 @@ module ot_svs_grp #(parameter integer K = 0, parameter integer OPR = 0) (
   wire [3:0] rot = r2 >> rr;
   wire [1:0] off = rot[0] ? 2'd0 : rot[1] ? 2'd1 : rot[2] ? 2'd2 : 2'd3;
   wire [1:0] sel = rr + off;
-  wire any = |rdy;
+  wire any_r = |rdy;
+  // [svc-ep] N8 (KC 1): ks rows go to two consumers (meta idx 0 = attention, credits on kq; idx 1 = the index score grid,
+  // credits on kc).  The credit queue holds rows of ONE consumer at a time: a credited row for the other consumer waits
+  // until the queue (and the row in stage B) drained, so a credit from the consumer that owns no queued row is a stray
+  // (fault), never a reordering.
+  wire blk;
+  wire any = any_r && !blk;
   reg ov, ovb; reg [1087:0] od; reg [9:0] ot; reg [12:0] lt;
   // hbm-forks 2026-10-09 (route SW_s1 PREROUTE_MARGIN reg2reg -815 ps: rs -> rdy -> rotate / priority -> sel -> the
   // 8:1 x 1,024-b row mux and the credit-queue write): two stages -- A picks the row (sel, its slot) and frees it,
   // B reads the picked buffer into the port register one edge later (+1 row cycle; a beat landing in the freed slot
   // at B's edge is written after B samples it)
-  reg av; reg [1:0] asel; reg aslot; reg anc;
+  reg av; reg [1:0] asel; reg aslot; reg anc, acons;
   always @(posedge ck) if (sg_v) lt <= sg_d;
   always @(posedge ck or negedge rn)
     if (!rn) begin
@@ -243,7 +250,7 @@ module ot_svs_grp #(parameter integer K = 0, parameter integer OPR = 0) (
       ix[p][ws[p]] <= sq[p*277+260+3];
       nc[p][ws[p]] <= sq[p*277+260+4];
     end
-    if (any) begin asel <= sel; aslot <= rs[sel]; anc <= nc[sel][rs[sel]]; end
+    if (any) begin asel <= sel; aslot <= rs[sel]; anc <= nc[sel][rs[sel]]; acons <= ix[sel][rs[sel]]; end
   end
   // Boundary payloads remain defined during idle after reset, before the first row.
   always @(posedge ck or negedge rn) if (!rn) begin od <= 1088'd0; ot <= 10'd0; end
@@ -274,20 +281,39 @@ module ot_svs_grp #(parameter integer K = 0, parameter integer OPR = 0) (
   reg cf_v; wire c_empty, c_full; wire [2:0] c_fr; wire cd;
   wire c_wck = ~kq[1];
   always @(posedge c_wck or negedge rst) if (!rst) cf_v <= 1'b0; else cf_v <= kq[0];
+  reg qcons;                                    // consumer of the queued rows (KC 1)
+  wire pend_c = av && !anc;                     // a credited row in stage B (pushed at its edge)
+  wire pop, pop_q, pop_c, k_empty;
+  generate if (KC != 0) begin : kcq
+    // grid credits: the same forwarded {fclk, v} capture + two-clock FIFO as kq
+    reg kf_v; wire k_full; wire [2:0] k_fr; wire kdq;
+    wire k_wck = ~kc[1];
+    always @(posedge k_wck or negedge rst) if (!rst) kf_v <= 1'b0; else kf_v <= kc[0];
+    ot_hbm_accel_cdc_fifo #(.W(1), .AW(3)) u_k (.wclk(k_wck), .wrst_n(rst), .we(kf_v), .wdata(1'b1), .full(k_full),
+      .rd_freed(k_fr), .rclk(ck), .rrst_n(rn), .re(!k_empty), .rdata(kdq), .empty(k_empty));
+    assign pop_q = !c_empty; assign pop_c = !k_empty;          // every credit is taken at once: matched or stray
+    assign pop = (pop_q && qn != 0 && !qcons) || (pop_c && qn != 0 && qcons);
+    assign blk = !nc[sel][rs[sel]] && (qn != 0 || pend_c) && ((pend_c ? acons : qcons) != ix[sel][rs[sel]]);
+  end else begin : nokc
+    assign k_empty = 1'b1; assign pop_c = 1'b0;
+    assign pop_q = !c_empty && qn != 0; assign pop = pop_q;
+    assign blk = 1'b0;
+  end endgenerate
   ot_hbm_accel_cdc_fifo #(.W(1), .AW(3)) u_c (.wclk(c_wck), .wrst_n(rst), .we(cf_v), .wdata(1'b1), .full(c_full),
-    .rd_freed(c_fr), .rclk(ck), .rrst_n(rn), .re(!c_empty && qn != 0), .rdata(cd), .empty(c_empty));
-  wire pop = !c_empty && qn != 0;
-  reg [3:0] crq; reg ovq;
-  assign ovf = ovb | ovq;
+    .rd_freed(c_fr), .rclk(ck), .rrst_n(rn), .re(pop_q), .rdata(cd), .empty(c_empty));
+  reg [3:0] crq; reg ovq, cfault;
+  assign ovf = ovb | ovq | cfault;
   always @(posedge ck) if (push) pq[qt] <= asel;
   always @(posedge ck or negedge rn)
-    if (!rn) begin qh <= 0; qt <= 0; qn <= 0; crq <= 4'd0; ovq <= 1'b0; end
+    if (!rn) begin qh <= 0; qt <= 0; qn <= 0; crq <= 4'd0; ovq <= 1'b0; qcons <= 1'b0; cfault <= 1'b0; end
     else begin
-      if (push) qt <= qt + 6'd1;
+      if (push) begin qt <= qt + 6'd1; qcons <= acons; end
       if (pop) qh <= qh + 6'd1;
       qn <= qn + (push ? 7'd1 : 7'd0) - (pop ? 7'd1 : 7'd0);
       crq <= pop ? (4'd1 << pq[qh]) : 4'd0;
       if (push && qn == QD) ovq <= 1'b1;
+      // a stray credit: from the consumer that owns no queued row (or both consumers at once)
+      if (KC != 0 && ((pop_q && (qn == 0 || qcons)) || (pop_c && (qn == 0 || !qcons)))) cfault <= 1'b1;
     end
   assign cr = crq;
 endmodule

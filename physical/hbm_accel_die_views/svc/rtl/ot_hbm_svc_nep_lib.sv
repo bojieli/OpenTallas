@@ -16,23 +16,24 @@
 //   WRITES: one sector a packet; WR_G = 8-bit Gray count of write packets popped from the WQ-deep write queue into
 //          their PC queue (the kport holds WQ credits a stack and gets one back a WR_G step); popped = visible: a PC's
 //          queue issues in arrival order and the outward chain is FIFO, so a later read of that PC sees the write.
+//          A write pops only when no read is queued here (no write overtakes an older read).
 // Structure: one endpoint (ot_svn_ep) in the band under the loader chain (band 3) and one station (ot_svn_st) beside
 // every PC unit; the endpoint drives two OUTWARD daisy chains (west / east of it, OW bits: one request flit a cycle)
 // and takes two INWARD merge chains (IW bits: one flit a cycle, a station inserts into an empty slot).  Flits:
-//   outward {0, data 128, slot 6, len 3, addr 30, pc 5, op 2, v} (176) op 1 read, 2 write low half (+addr), 3 write high half
-//   inward  {data 128, last, slot 6, half, pc 5, op 2, v} (144) op 1 read data half, 2 queue-entry free (credit)
+//   outward {0, data 128, slot 7, len 3, addr 30, pc 5, op 2, v} (177) op 1 read, 2 write low half (+addr), 3 write high half
+//   inward  {data 128, last, slot 7, half, pc 5, op 2, v} (145) op 1 read data half, 2 queue-entry free (credit)
 // A station queue holds QD entries (credited by the endpoint per PC); a read buffers its <= 4 returning beats.
 // Rate a stack: one 128-bit flit a cycle each way -> 16 B/cycle reads, 16 B/cycle writes (2 flits a sector).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_svn_ep #(parameter integer NO = 16, parameter integer NQ = 4, parameter integer RING = 64,
+module ot_svn_ep #(parameter integer NO = 32, parameter integer NQ = 4, parameter integer RING = 128,
                    parameter integer WQ = 16, parameter integer QD = 4, parameter [31:0] WMASK = 32'h0000_0000,
                    parameter integer MUT = 0) (     // MUT 1: drop every 5th read-data flit; 2: return beats out of
                                                     // order (head skips); 3: write lands at the wrong PC
   input wire ck, input wire rst, input wire rn,
   input wire [350:0] lq,                            // {fclk, lq 350}
   output wire [293:0] lr,                           // {fclk, lr 293}
-  output reg [175:0] ow_w, output reg [175:0] ow_e,
-  input wire [143:0] iw_w, input wire [143:0] iw_e,
+  output reg [176:0] ow_w, output reg [176:0] ow_e,
+  input wire [144:0] iw_w, input wire [144:0] iw_e,
   output wire fault);
   // ---------------------------------------------------------------- capture (forwarded clock, falling edge)
   wire l_wck = ~lq[350];
@@ -67,7 +68,9 @@ module ot_svn_ep #(parameter integer NO = 16, parameter integer NQ = 4, paramete
   wire n_e = !WMASK[n_pc], w_e = !WMASK[w_pc];
   wire n_ok = !n_empty && on != (FA+1)'(NO) && ((RA+2)'(used) + (RA+2)'(n_ln) <= (RA+2)'(RING)) &&
               pcr[n_pc] != 3'd0 && !rbusy[n_pc] && !(hb_v && hb_e == n_e);
-  wire w_ok = !w_empty && pcr[w_pc] != 3'd0 && !hb_v;
+  // a write pops only behind every queued read (no write overtakes an older read: WAR order per PC); the kport admits
+  // no read while a write is unpopped (RAW), so the stack's native ops reach each PC queue in arrival order
+  wire w_ok = !w_empty && n_empty && pcr[w_pc] != 3'd0 && !hb_v;
   reg pri;                                   // round robin read / write
   assign n_pop = n_ok && (!w_ok || pri);
   assign w_pop = w_ok && !n_pop;
@@ -95,24 +98,24 @@ module ot_svn_ep #(parameter integer NO = 16, parameter integer NQ = 4, paramete
     if (!rn) begin
       for (p = 0; p < 32; p = p + 1) pcr[p] <= 3'(QD);
       rbusy <= 32'd0; oh <= 0; ot <= 0; on <= 0; rh <= 0; rt <= 0; hb_v <= 1'b0; pri <= 1'b0; nrdy <= 1'b0;
-      ow_w <= 176'd0; ow_e <= 176'd0; vlo <= 0; vhi <= 0; bc <= 3'd0; rv <= 1'b0; wcnt <= 8'd0; dcnt <= 8'd0;
+      ow_w <= 177'd0; ow_e <= 177'd0; vlo <= 0; vhi <= 0; bc <= 3'd0; rv <= 1'b0; wcnt <= 8'd0; dcnt <= 8'd0;
     end else begin
       nrdy <= n_pop; rv <= h_rdy;
       if (n_pop || w_pop) pri <= ~pri;
       // outward flits
-      ow_w <= 176'd0; ow_e <= 176'd0;
+      ow_w <= 177'd0; ow_e <= 177'd0;
       if (hb_v) begin
-        if (hb_e) ow_e <= {hb_d, 6'd0, 3'd0, 30'd0, hb_pc, 2'd3, 1'b1}; else ow_w <= {hb_d, 6'd0, 3'd0, 30'd0, hb_pc, 2'd3, 1'b1};
+        if (hb_e) ow_e <= {1'b0, hb_d, 7'd0, 3'd0, 30'd0, hb_pc, 2'd3, 1'b1}; else ow_w <= {1'b0, hb_d, 7'd0, 3'd0, 30'd0, hb_pc, 2'd3, 1'b1};
         hb_v <= 1'b0;
       end
       if (n_pop) begin
-        if (n_e) ow_e <= {128'd0, rt[RA-1:0], n_ln, n_ad, n_pc, 2'd1, 1'b1}; else ow_w <= {128'd0, rt[RA-1:0], n_ln, n_ad, n_pc, 2'd1, 1'b1};
+        if (n_e) ow_e <= {129'd0, 7'(rt[RA-1:0]), n_ln, n_ad, n_pc, 2'd1, 1'b1}; else ow_w <= {129'd0, 7'(rt[RA-1:0]), n_ln, n_ad, n_pc, 2'd1, 1'b1};
         o_pc[ot] <= n_pc; o_tg[ot] <= n_tg; o_ln[ot] <= n_ln; o_sl[ot] <= rt[RA-1:0];
         ot <= (ot == FA'(NO - 1)) ? {FA{1'b0}} : ot + 1'b1;
         rt <= rt + (RA+1)'(n_ln); rbusy[n_pc] <= 1'b1;
       end
       if (w_pop) begin
-        if (w_e) ow_e <= {w_dt[127:0], 6'd0, 3'd1, w_ad, w_pcm, 2'd2, 1'b1}; else ow_w <= {w_dt[127:0], 6'd0, 3'd1, w_ad, w_pcm, 2'd2, 1'b1};
+        if (w_e) ow_e <= {1'b0, w_dt[127:0], 7'd0, 3'd1, w_ad, w_pcm, 2'd2, 1'b1}; else ow_w <= {1'b0, w_dt[127:0], 7'd0, 3'd1, w_ad, w_pcm, 2'd2, 1'b1};
         hb_v <= 1'b1; hb_e <= w_e; hb_pc <= w_pcm; hb_d <= w_dt[255:128]; wcnt <= wcnt + 8'd1;
       end
       // per-PC credits: - issue, + free flits (both chains)
@@ -121,10 +124,10 @@ module ot_svn_ep #(parameter integer NO = 16, parameter integer NQ = 4, paramete
                           + ((fr_w && i_pc_w == p) ? 3'd1 : 3'd0) + ((fr_e && i_pc_e == p) ? 3'd1 : 3'd0);
       // inward data halves
       if (dt_w) dcnt <= dcnt + 8'd1;
-      if (dt_w && !drop_w) begin if (iw_w[8]) vhi[iw_w[RA+8:9]] <= 1'b1; else vlo[iw_w[RA+8:9]] <= 1'b1; end
-      if (dt_e) begin if (iw_e[8]) vhi[iw_e[RA+8:9]] <= 1'b1; else vlo[iw_e[RA+8:9]] <= 1'b1; end
-      if (dt_w && iw_w[15]) rbusy[i_pc_w] <= 1'b0;
-      if (dt_e && iw_e[15]) rbusy[i_pc_e] <= 1'b0;
+      if (dt_w && !drop_w) begin if (iw_w[8]) vhi[iw_w[9 +: RA]] <= 1'b1; else vlo[iw_w[9 +: RA]] <= 1'b1; end
+      if (dt_e) begin if (iw_e[8]) vhi[iw_e[9 +: RA]] <= 1'b1; else vlo[iw_e[9 +: RA]] <= 1'b1; end
+      if (dt_w && iw_w[16]) rbusy[i_pc_w] <= 1'b0;
+      if (dt_e && iw_e[16]) rbusy[i_pc_e] <= 1'b0;
       // return
       if (h_rdy) begin
         vlo[hsm] <= 1'b0; vhi[hsm] <= 1'b0;
@@ -134,8 +137,8 @@ module ot_svn_ep #(parameter integer NO = 16, parameter integer NQ = 4, paramete
       on <= on + (n_pop ? 1'b1 : 1'b0) - (h_last ? 1'b1 : 1'b0);
     end
   always @(posedge ck) begin
-    if (dt_w && !drop_w) begin if (iw_w[8]) ring[iw_w[RA+8:9]][255:128] <= iw_w[143:16]; else ring[iw_w[RA+8:9]][127:0] <= iw_w[143:16]; end
-    if (dt_e) begin if (iw_e[8]) ring[iw_e[RA+8:9]][255:128] <= iw_e[143:16]; else ring[iw_e[RA+8:9]][127:0] <= iw_e[143:16]; end
+    if (dt_w && !drop_w) begin if (iw_w[8]) ring[iw_w[9 +: RA]][255:128] <= iw_w[144:17]; else ring[iw_w[9 +: RA]][127:0] <= iw_w[144:17]; end
+    if (dt_e) begin if (iw_e[8]) ring[iw_e[9 +: RA]][255:128] <= iw_e[144:17]; else ring[iw_e[9 +: RA]][127:0] <= iw_e[144:17]; end
     rpc <= o_pc[oh]; rtg <= o_tg[oh]; rbt <= {1'b0, bc}; rdt <= ring[hsm];
   end
   reg [7:0] wg_q; always @(posedge ck or negedge rn) if (!rn) wg_q <= 8'd0; else wg_q <= wg;
@@ -147,8 +150,8 @@ endmodule
 // station beside PC unit PCID: outward pass / capture, QD-entry queue, read beat buffer, inward merge
 module ot_svn_st #(parameter integer PCID = 0, parameter integer QD = 4) (
   input wire ck, input wire rn,
-  input wire [175:0] oi, output reg [175:0] oo,
-  input wire [143:0] ii, output reg [143:0] io,
+  input wire [176:0] oi, output reg [176:0] oo,
+  input wire [144:0] ii, output reg [144:0] io,
   // to the PC unit (ot_svs_pcsn native port)
   output wire n_v, output wire n_we, output wire [29:0] n_addr, output wire [3:0] n_len, output wire [255:0] n_wd,
   input wire n_take,
@@ -160,13 +163,13 @@ module ot_svn_st #(parameter integer PCID = 0, parameter integer QD = 4) (
   reg wa_v; reg [29:0] wa_a; reg [127:0] wa_lo;
   // queue {we, addr30, len3, slot6, data256}
   localparam integer QA = (QD <= 2) ? 1 : $clog2(QD);
-  reg qwe [0:QD-1]; reg [29:0] qa [0:QD-1]; reg [2:0] ql [0:QD-1]; reg [5:0] qs [0:QD-1]; reg [255:0] qd [0:QD-1];
+  reg qwe [0:QD-1]; reg [29:0] qa [0:QD-1]; reg [2:0] ql [0:QD-1]; reg [6:0] qs [0:QD-1]; reg [255:0] qd [0:QD-1];
   reg [QA-1:0] qh, qt; reg [QA:0] qn;
   wire push_r = mine && op == 2'd1, push_w = mine && op == 2'd3 && wa_v;
   wire push = push_r || push_w;
   assign n_v = qn != 0; assign n_we = qwe[qh]; assign n_addr = qa[qh]; assign n_len = {1'b0, ql[qh]}; assign n_wd = qd[qh];
   // read in progress: its slot / length, the buffered beats
-  reg r_act; reg [5:0] r_sl; reg [2:0] r_ln; reg [255:0] rb [0:3]; reg [3:0] rbv;
+  reg r_act; reg [6:0] r_sl; reg [2:0] r_ln; reg [255:0] rb [0:3]; reg [3:0] rbv;
   reg [2:0] snd; reg sh;                          // next beat to send and its half
   reg [2:0] frq;                                   // free flits owed
   wire own_d = r_act && rbv[snd[1:0]];
@@ -176,11 +179,11 @@ module ot_svn_st #(parameter integer PCID = 0, parameter integer QD = 4) (
   wire send_d = slot_free && !own_f && own_d;
   wire d_last = send_d && sh && (snd + 3'd1 == r_ln);
   always @(posedge ck or negedge rn)
-    if (!rn) begin oo <= 176'd0; io <= 144'd0; wa_v <= 1'b0; qh <= 0; qt <= 0; qn <= 0; r_act <= 1'b0; rbv <= 4'd0;
+    if (!rn) begin oo <= 177'd0; io <= 145'd0; wa_v <= 1'b0; qh <= 0; qt <= 0; qn <= 0; r_act <= 1'b0; rbv <= 4'd0;
                    snd <= 3'd0; sh <= 1'b0; frq <= 3'd0; ovf <= 1'b0; end
     else begin
-      oo <= mine ? 176'd0 : oi;
-      if (mine && op == 2'd2) begin wa_v <= 1'b1; wa_a <= oi[37:8]; wa_lo <= oi[174:47]; end
+      oo <= mine ? 177'd0 : oi;
+      if (mine && op == 2'd2) begin wa_v <= 1'b1; wa_a <= oi[37:8]; wa_lo <= oi[175:48]; end
       else if (push_w) wa_v <= 1'b0;
       if (push) begin
         if (qn == (QA+1)'(QD)) ovf <= 1'b1;
@@ -197,13 +200,13 @@ module ot_svn_st #(parameter integer PCID = 0, parameter integer QD = 4) (
         if (d_last) r_act <= 1'b0;
       end
       io <= !slot_free ? ii :
-            send_f ? {128'd0, 1'b0, 6'd0, 1'b0, 5'(PCID), 2'd2, 1'b1} :
-            send_d ? {sh ? rb[snd[1:0]][255:128] : rb[snd[1:0]][127:0], d_last, r_sl + 6'(snd), sh, 5'(PCID), 2'd1, 1'b1} :
-            144'd0;
+            send_f ? {128'd0, 1'b0, 7'd0, 1'b0, 5'(PCID), 2'd2, 1'b1} :
+            send_d ? {sh ? rb[snd[1:0]][255:128] : rb[snd[1:0]][127:0], d_last, r_sl + 7'(snd), sh, 5'(PCID), 2'd1, 1'b1} :
+            145'd0;
     end
   always @(posedge ck) begin
-    if (push_r) begin qwe[qt] <= 1'b0; qa[qt] <= oi[37:8]; ql[qt] <= oi[40:38]; qs[qt] <= oi[46:41]; end
-    if (push_w) begin qwe[qt] <= 1'b1; qa[qt] <= wa_a; ql[qt] <= 3'd1; qs[qt] <= 6'd0; qd[qt] <= {oi[174:47], wa_lo}; end
+    if (push_r) begin qwe[qt] <= 1'b0; qa[qt] <= oi[37:8]; ql[qt] <= oi[40:38]; qs[qt] <= oi[47:41]; end
+    if (push_w) begin qwe[qt] <= 1'b1; qa[qt] <= wa_a; ql[qt] <= 3'd1; qs[qt] <= 7'd0; qd[qt] <= {oi[175:48], wa_lo}; end
     if (nb_v) rb[nb_beat[1:0]] <= nb_d;
   end
 endmodule
@@ -302,5 +305,31 @@ module ot_svs_pcsn #(parameter integer PCID = 0, parameter integer KNO = 15, par
     end
   always @(posedge ck) if (di_v) {row0, nsec} <= di_d[58:32];
   always @(posedge ck) if (di_v) do_d <= di_d;
+endmodule
+`default_nettype wire
+
+// [svc-ep] the PS PC unit with its native station (the generator's pc<p> unit in --nep segments): ot_svs_pcsn + ot_svn_st
+`default_nettype none
+module ot_svs_pcse #(parameter integer PCID = 0, parameter integer KNO = 15, parameter integer CRR = 16,
+                     parameter integer END = 0, parameter integer QD = 4) (
+  input wire ck, input wire rn, input wire rdy_q2,
+  input wire iss_v, input wire [50:0] iss_d,
+  output wire k_v, input wire k_rdy, output wire [29:0] k_addr, output wire [3:0] k_len, output wire [16:0] k_tag,
+  output wire k_we, output wire [255:0] k_wdata, output wire [31:0] k_wstrb,
+  input wire kr_v, input wire [16:0] kr_tag, input wire [3:0] kr_beat, input wire [255:0] kr_data,
+  output wire b_v, output wire [16:0] b_t, output wire [3:0] b_b, output wire [255:0] b_d,
+  input wire di_v, input wire [61:0] di_d, output wire do_v, output wire [61:0] do_d,
+  input wire dni_ok, input wire dni_ph, output wire dno_ok, output wire dno_ph,
+  input wire cr_v,
+  input wire [176:0] oi, output wire [176:0] oo, input wire [144:0] ii, output wire [144:0] io, output wire n_ovf);
+  wire n_v, n_we, n_take, nb_v; wire [29:0] n_addr; wire [3:0] n_len, nb_beat; wire [255:0] n_wd, nb_d;
+  ot_svn_st #(.PCID(PCID), .QD(QD)) u_st (.ck(ck), .rn(rn), .oi(oi), .oo(oo), .ii(ii), .io(io), .n_v(n_v), .n_we(n_we),
+    .n_addr(n_addr), .n_len(n_len), .n_wd(n_wd), .n_take(n_take), .nb_v(nb_v), .nb_beat(nb_beat), .nb_d(nb_d), .ovf(n_ovf));
+  ot_svs_pcsn #(.PCID(PCID), .KNO(KNO), .CRR(CRR), .END(END)) u_pc (.ck(ck), .rn(rn), .rdy_q2(rdy_q2), .iss_v(iss_v),
+    .iss_d(iss_d), .k_v(k_v), .k_rdy(k_rdy), .k_addr(k_addr), .k_len(k_len), .k_tag(k_tag), .kr_v(kr_v), .kr_tag(kr_tag),
+    .kr_beat(kr_beat), .kr_data(kr_data), .b_v(b_v), .b_t(b_t), .b_b(b_b), .b_d(b_d), .di_v(di_v), .di_d(di_d),
+    .do_v(do_v), .do_d(do_d), .dni_ok(dni_ok), .dni_ph(dni_ph), .dno_ok(dno_ok), .dno_ph(dno_ph), .cr_v(cr_v),
+    .n_v(n_v), .n_we(n_we), .n_addr(n_addr), .n_len(n_len), .n_wd(n_wd), .n_take(n_take), .k_we(k_we),
+    .k_wdata(k_wdata), .k_wstrb(k_wstrb), .nb_v(nb_v), .nb_beat(nb_beat), .nb_d(nb_d));
 endmodule
 `default_nettype wire
