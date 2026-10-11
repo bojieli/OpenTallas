@@ -3119,7 +3119,9 @@ def build_r8(variant=None):
             # the closed tokpipe core + lnk + vmx (+ tok_hard on the source die), wired element to element inside it,
             # every element boundary registered), on exact die-facing ports (wfc_kit_buses).  First try (sub-instances
             # in the slab) left the hub chains no station spot inside the partly empty slab region (11:27 PT).
-            ms_ = 'dsfd_wfc_src' if WFC_ROLE == 'source' else 'dsfd_wfc_stg'
+            # --wfc-crp (main 10-11): the slab master is dsfd_wfc_cr2 = the routed credit-boundary tile dsfd_wfc_crp at the
+            # slab's die edge (every die link / VM signal lands in its pin flops / SRAM landing) + the kit behind it
+            ms_ = 'dsfd_wfc_cr2' if WFC_CRP else ('dsfd_wfc_src' if WFC_ROLE == 'source' else 'dsfd_wfc_stg')
             slab('wfc', centre_area[n], x_sp, yy, cw, master=ms_)
             notes.append('MTP-WFC --wfc-kit (%s): %s = %s in a %.2f um slab (%.3f mm2)' % (
                 WFC_ROLE, ms_, 'SOURCE tokpipe + tok_hard + lnk + vmx' if WFC_ROLE == 'source' else 'STG tokpipe + lnk + vmx',
@@ -3659,7 +3661,7 @@ def buses_r8(m):
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
-            (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg') else ()) + \
+            (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
             (SEEDL_BUSES + (SEEDL_HOST_BUSES if 'host' in hub else ()) if 'seedl' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
@@ -3723,7 +3725,7 @@ def buses_r8(m):
         elif it.name == 'sp_stage_ctrl':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rs'))
-        elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg'):   # mtp-wfc: the kit's vmx slow side is the serial domain
+        elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2'):   # mtp-wfc: the kit's vmx slow side is the serial domain
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
         elif it.kind in ('hub', 'band_blk') and it.name != col:
@@ -3798,7 +3800,17 @@ WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f
 # VM <-> vmx (t_swv/t_swd 528 + t_srv/t_srd 16 = 544 out; f_swr f_swa f_srr 3 + f_srq 513 = 516 in), capture <-> vmx
 # (t_ks 53, f_kd 54), SOURCE only: host -> tok cfg f_c 55 and core -> host committed token {valid,user,pos,id} 53.
 # The element-to-element wiring is inside the kit master (dsfd_wfc_kit.sv), every element boundary registered.
-def wfc_kit_buses(role, host, far=None):
+def wfc_kit_buses(role, host, far=None, crp=False):
+    # crp (--wfc-crp): dsfd_wfc_cr2 die ports: credit returns (t_lic / f_loc / f_swc / f_src) in place of the kit's grants,
+    # same bit counts; link and VM land in dsfd_wfc_crp
+    if crp:
+        b = [('collective', 'wfc', 514, 't_wfc', 'f_li'), ('wfc', 'collective', 1, 't_lic', 'f_wfcc'),
+             ('wfc', 'collective', 514, 't_lo', 'f_wfc'), ('collective', 'wfc', 1, 't_wfcc', 'f_loc'),
+             ('wfc', 'vm', 544, 't_sw_sr', 'f_wfc'), ('vm', 'wfc', 516, 't_wfc', 'f_swc_swa_src_srq'),
+             ('wfc', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc', 54, 't_wfc', 'f_kd')]
+        if role == 'source' and host:
+            b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
+        return tuple(b)
     # far 's0' (--coll-mtp-far): the SOURCE kit's link-in is the collective MTP lane's token return (t_mrt {data, valid}
     # / f_mrt grant; kit TOKIN 1) and the accept word t_macc goes to the host
     b = ([('collective', 'wfc', 513, 't_mrt', 'f_mrt'), ('wfc', 'collective', 1, 't_mrg', 'f_mrt')] if far == 's0' else
@@ -3832,6 +3844,7 @@ MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab 
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
 SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) station spacing = LINK_STAGE_UM x (1111.1 - 261) /
                                 #   (833.3 - 261) on the SS wire model 261 ps + 1.135 ps/um (504 um at 833 ps; 749 um at 1,111 ps)
+WFC_CRP = False                 # --wfc-crp (main 10-11): WFC slab master dsfd_wfc_cr2 (credit-boundary tile dsfd_wfc_crp + kit)
 WFC_KIT = False                 # --wfc-kit (mtp-wfc 2026-10-10, default off): the WFC slab as the kit's closed elements
 WFC_ROLE = 'stage'              #   'source' on the S0 die (--ctrl-role source), else 'stage'
 WFC_VMX_UM = (248.4, 241.92)    #   dsfd_wfc_vmx contract outline (prd-c39e235bb-o292-r2 CLOSED)
@@ -6131,6 +6144,8 @@ def die_options(ap):
     ap.add_argument('--p2-lnk', action='store_true', help='mtp-wfc 2026-10-10: draft-A P2 slab = core + dsfd_p2_lnk')
     ap.add_argument('--mtp-seq-rtt', action='store_true', help='mtp-wfc 2026-10-10: head sequencer slab master '
                     'dsfd_mtp_seq_rtt (native RTT successor, same ports)')
+    ap.add_argument('--wfc-crp', action='store_true', help='main 10-11: with --wfc-kit, the WFC slab master is dsfd_wfc_cr2 '
+                    '(dsfd_wfc_crp credit-boundary tile at the die edge + the kit)')
     ap.add_argument('--wfc-kit', action='store_true',
                     help='mtp-wfc 2026-10-10: with --wfc-hard, place the WFC kit closed elements (tokpipe core, lnk, '
                     'vmx, tok on the source die) as their own masters in the WFC slab, wired at exact ports')
@@ -6195,6 +6210,10 @@ def apply_options(a):
     global MTP_EP, P2_LNK
     MTP_EP = bool(getattr(a, 'mtp_ep', False)); P2_LNK = bool(getattr(a, 'p2_lnk', False))
     WFC_KIT = bool(getattr(a, 'wfc_kit', False))
+    global WFC_CRP
+    WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT
+    if WFC_CRP and getattr(a, 'coll_mtp_far', None):
+        raise SystemExit('--wfc-crp with --coll-mtp-far: the TOKIN token-return path is a kit port, not a cr2 port (not built)')
     WFC_ROLE = 'source' if getattr(a, 'ctrl_role', 'layer') == 'source' else 'stage'
     ws, ms = getattr(a, 'wfc_hard', None), getattr(a, 'mtp_seq', None)
     WFC_HARD = WFC_HARD_DEFAULT if ws is None else bool(ws)
