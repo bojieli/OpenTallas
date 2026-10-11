@@ -3427,6 +3427,8 @@ def build_r8(variant=None):
         for k_, ms_ in CTRL_C_MASTERS.items():
             if k_ in hub:
                 hub[k_].master = ms_
+        if 'sseq' in hub:   # s81die-1011/ctrl: per-engine c/d/s pins on the stream clock (kit / program faces cross)
+            hub['sseq'].master = 'dsfd_stage_seq_c'
     m['buses'] = []
     buses_r8(m)
     return m
@@ -7024,7 +7026,8 @@ def main(argv=None):
                              + json.dumps({f'{k[0]}.{k[1]}': v for k, v in sorted(ub.items())}))
         if CTRL_ADAPTERS:  # s81-ctl-1011: engine command plane + port audit (no placeholder pins, no unbound engine)
             from s81_ctrl.die_ctrl_gate import gate as ctrl_gate
-            cg = ctrl_gate(m, CTRL_ROLE)
+            # a layer1 die (no eng_SE: not an Engram home) runs the stage programs without Engram ops
+            cg = ctrl_gate(m, 'layer1' if (CTRL_ROLE == 'layer' and DIE_KIND == 'layer1') else CTRL_ROLE)
             m['ctrl_gate'] = cg
             if a.out:
                 Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
