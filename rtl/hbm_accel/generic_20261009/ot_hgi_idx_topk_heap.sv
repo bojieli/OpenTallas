@@ -45,13 +45,24 @@ module ot_topk_lt #(parameter integer W = 53) (input wire [W-1:0] a, input wire 
  assign lt = tl[L][0];
 endmodule
 
-module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1) (
+// el1011-hbm-idx 10-11: WREG=1 registers the write port (ce / address / mask / data flops next to the macro, write one edge
+// after the B stage): the macro's wd_in / w_mask_in / w_addr_in see flop -> pin only (the w8 route had B-stage compare ->
+// select -> wd_in in one cycle across the block).  The heap's last-write register (byp) covers the extra edge (see heap).
+module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, parameter integer WREG=0) (
  input wire clk,
  input wire r_ce, input wire [AW-1:0] r_a, output wire [215:0] rd,
- input wire w_ce, input wire [AW-1:0] w_a, input wire [1:0] w_s, input wire [53:0] w_d, input wire w_all
+ input wire w_ce_i, input wire [AW-1:0] w_a_i, input wire [1:0] w_s, input wire [53:0] w_d, input wire w_all
 );
- wire [255:0] wmask = w_all ? {40'd0, {216{1'b1}}} : ({202'd0, {54{1'b1}}} << (54 * w_s));
- wire [255:0] wdat = w_all ? 256'd0 : {40'd0, w_d, w_d, w_d, w_d};
+ wire [255:0] wmask_c = w_all ? {40'd0, {216{1'b1}}} : ({202'd0, {54{1'b1}}} << (54 * w_s));
+ wire [255:0] wdat_c = w_all ? 256'd0 : {40'd0, w_d, w_d, w_d, w_d};
+ wire w_ce; wire [AW-1:0] w_a; wire [255:0] wmask, wdat;
+ generate if (WREG != 0) begin : g_wr
+  reg wce_q; reg [AW-1:0] wa_q; reg [255:0] wm_q, wd_q;
+  always @(posedge clk) begin wce_q <= w_ce_i; wa_q <= w_a_i; wm_q <= wmask_c; wd_q <= wdat_c; end
+  assign w_ce = wce_q; assign w_a = wa_q; assign wmask = wm_q; assign wdat = wd_q;
+ end else begin : g_wc
+  assign w_ce = w_ce_i; assign w_a = w_a_i; assign wmask = wmask_c; assign wdat = wdat_c;
+ end endgenerate
  generate if (DEPTH <= 16) begin : g_ff
   reg [215:0] m [0:DEPTH-1]; reg [215:0] q;
   integer i;
@@ -114,6 +125,7 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
  wire wr_v [0:LV]; wire [PW-1:0] wr_p [0:LV]; wire [53:0] wr_d [0:LV];
  wire mv [0:LV]; wire [PW-1:0] mi [0:LV];
  wire [53:0] sc0 [0:LV], sc1 [0:LV];                  // A-stage child selects
+ (* keep *) reg clr_bl [0:LV]; (* keep *) reg [$clog2(QMAX+1):0] clr_cl [0:LV];   // per-level clear copies
  reg [1:0] ent_c; reg clr_b; reg [$clog2(QMAX+1):0] clr_c, clr_l; reg clr_p;
  // clear extent: only words that can hold a node <= the largest k used since the last clear (a level of k's heap has
  // <= (k + 1) / 2 nodes = (k >> 3) + 1 words); reset clears everything
@@ -154,10 +166,10 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
   localparam integer D = qd(j), A = awf(qd(j));
   wire [PW-1:0] wp = wr_p[j];
   wire [PW-1:0] rp = a_p[j - 2];
-  ot_hgi_topk_lvl #(.DEPTH(D), .AW(A)) u_l (.clk(clk),
+  ot_hgi_topk_lvl #(.DEPTH(D), .AW(A), .WREG(1)) u_l (.clk(clk),
    .r_ce(a_v[j - 2]), .r_a(A'(rp & ((1 << (j - 2)) - 1))), .rd(rdq[j]),
-   .w_ce(wr_v[j] || clr_b), .w_a(clr_b ? A'(clr_c) : A'((wp & ((1 << j) - 1)) >> 2)), .w_s(wp[1:0]), .w_d(wr_d[j]),
-   .w_all(clr_b));
+   .w_ce_i(wr_v[j] || clr_bl[j]), .w_a_i(clr_bl[j] ? A'(clr_cl[j]) : A'((wp & ((1 << j) - 1)) >> 2)), .w_s(wp[1:0]),
+   .w_d(wr_d[j]), .w_all(clr_bl[j]));
   always @(posedge clk) rdr[j] <= rdq[j];
  end endgenerate
  integer i;
@@ -167,6 +179,7 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
  wire clr_start = clr_p && !any_v && ent_c == 2'd0 && !clr_b;
  always @(posedge clk or negedge rst_n) begin
   if (!rst_n) begin
+   for (i = 0; i <= LV; i = i + 1) begin clr_bl[i] <= 1'b0; clr_cl[i] <= 0; end
    ent_c <= 2'd0; ext_v <= 1'b0; clr_b <= 1'b0; clr_p <= 1'b1; clr_c <= 0; clr_l <= 0; dk <= MAX_K;
    for (i = 0; i <= LV; i = i + 1) begin a_v[i] <= 1'b0; b_v[i] <= 1'b0; byp_v[i] <= 1'b0; end
    byp_v[LV + 1] <= 1'b0;
@@ -183,6 +196,11 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
     clr_p <= 1'b0; clr_b <= 1'b1; clr_c <= 0; clr_l <= (dkl < QMAX) ? dkl : QMAX; dk <= 0;
    end
    if (clr_b) begin clr_c <= clr_c + 1'b1; if (clr_c + 1 >= clr_l) clr_b <= 1'b0; end
+   // replicated copies (same recurrence; each level's store reads only its own)
+   for (i = 0; i <= LV; i = i + 1) begin
+    if (clr_start) begin clr_bl[i] <= 1'b1; clr_cl[i] <= 0; end
+    if (clr_bl[i]) begin clr_cl[i] <= clr_cl[i] + 1'b1; if (clr_cl[i] + 1 >= clr_l) clr_bl[i] <= 1'b0; end
+   end
   end
  end
  always @(posedge clk) begin
@@ -193,6 +211,46 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
   if (wr_v[0]) h1 <= wr_d[0];
   if (LV > 1 && wr_v[1]) begin if (wr_p[1][0]) h3 <= wr_d[1]; else h2 <= wr_d[1]; end
   if (clr_start) begin h1 <= 54'd0; h2 <= 54'd0; h3 <= 54'd0; end
+ end
+endmodule
+
+// el1011-hbm-idx 10-11: ONE HEAP AS A HARDENED TILE (registered boundary): pin flops on every input, a 2-entry op FIFO
+// in front of the heap, credit return (one pulse per op taken by the heap; the engine starts with OPC credits), registered
+// ext / idle / root outputs.  The engine counts credits and holds a settle count after any op or clear so the registered
+// idle can never be read stale.  W of these replace the flat heaps (hierarchical: one tile closes, W copies place).
+module ot_hgi_topk_heap_tile #(parameter integer MAX_K=2048, parameter integer MUT_BYP=0, parameter integer MUT_CLR=0) (
+ input wire clk, rst_n,
+ input wire [$clog2(MAX_K+1)-1:0] k,
+ input wire op_v, input wire op_ext, input wire [53:0] op_x,
+ output reg op_cr,                                     // one edge per op the heap took
+ output reg ext_v, output reg [53:0] ext_d,
+ output reg [52:0] root_key,
+ input wire clr_go, output reg idle
+);
+ localparam integer KW = $clog2(MAX_K + 1);
+ reg [KW-1:0] k_p; reg v_p, x_p, c_p; reg [53:0] d_p;
+ wire [1:0] trr;                                       // reset standard: the port drives only the relay
+ ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(trr));
+ reg [54:0] fq [0:1]; reg [1:0] fn; reg fh;           // {ext, x}
+ wire h_rdy, h_xv, h_idle; wire [53:0] h_xd; wire [52:0] h_root;
+ wire h_go = (fn != 2'd0) && h_rdy;
+ wire [54:0] h_op = fq[fh];
+ ot_hgi_topk_heap #(.MAX_K(MAX_K), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_h (.clk(clk), .rst_n(trr[0]), .k(k_p),
+  .op_v(fn != 2'd0), .op_ext(h_op[54]), .op_x(h_op[53:0]), .op_rdy(h_rdy), .ext_v(h_xv), .ext_d(h_xd), .root_key(h_root),
+  .clr_go(c_p), .idle(h_idle));
+ always @(posedge clk) begin
+  k_p <= k; d_p <= op_x; x_p <= op_ext;
+  if (v_p) fq[fh ^ fn[0]] <= {x_p, d_p};                 // tail (credits keep fn + v_p <= 2)
+  ext_d <= h_xd; root_key <= h_root;
+ end
+ always @(posedge clk or negedge trr[1]) begin
+  if (!trr[1]) begin v_p <= 1'b0; c_p <= 1'b0; fn <= 2'd0; fh <= 1'b0; op_cr <= 1'b0; ext_v <= 1'b0; idle <= 1'b0; end
+  else begin
+   v_p <= op_v; c_p <= clr_go;
+   fn <= fn + v_p - h_go; if (h_go) fh <= ~fh;
+   op_cr <= h_go; ext_v <= h_xv;
+   idle <= h_idle && fn == 2'd0 && !v_p && !c_p && !h_go;
+  end
  end
 endmodule
 
@@ -239,9 +297,18 @@ module ot_hgi_idx_topk_hw #(
  reg clr_go;
  genvar h, l;
  generate for (h = 0; h < W; h = h + 1) begin : g_h
-  ot_hgi_topk_heap #(.MAX_K(MAX_K), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_hp (.clk(clk), .rst_n(rr[h]), .k(k), .op_v(hp_v[h]),
-   .op_ext(hp_ext), .op_x(hp_x[h]), .op_rdy(hp_rdy[h]), .ext_v(hx_v[h]), .ext_d(hx_d[h]), .root_key(h_root[h]),
-   .clr_go(clr_go), .idle(h_idle[h]));
+  wire t_cr, t_idle;
+  reg [1:0] cr; reg [1:0] sc;                       // credits (2 = tile FIFO depth), settle count
+  wire iss = hp_v[h] && cr != 2'd0;
+  assign hp_rdy[h] = cr != 2'd0;
+  assign h_idle[h] = t_idle && sc == 2'd0;
+  always @(posedge clk or negedge rr[h]) begin
+   if (!rr[h]) begin cr <= 2'd2; sc <= 2'd3; end
+   else begin cr <= cr - iss + t_cr; sc <= (iss || clr_go) ? 2'd3 : (sc != 2'd0 ? sc - 2'd1 : 2'd0); end
+  end
+  ot_hgi_topk_heap_tile #(.MAX_K(MAX_K), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_hp (.clk(clk), .rst_n(rr[h]), .k(k),
+   .op_v(iss), .op_ext(hp_ext), .op_x(hp_x[h]), .op_cr(t_cr), .ext_v(hx_v[h]), .ext_d(hx_d[h]), .root_key(h_root[h]),
+   .clr_go(clr_go), .idle(t_idle));
  end endgenerate
  reg [52:0] gth; integer i, q;
  // registered max root (the front-end drop threshold; any lag only admits more): a registered tournament of keep
@@ -294,8 +361,8 @@ module ot_hgi_idx_topk_hw #(
   // heap ops: INS from the survivor FIFO head (FILL / FLUSH), EXT k times (EXT); issued the cycle the heap is ready
   assign hp_v[h] = ((st == FILL || st == FLUSH) && fc[h] != 4'd0) || (st == EXT && xi[h] != k);
   assign hp_x[h] = ff[h * FD + fr[h]];
-  ot_hgi_topk_lvl #(.DEPTH(RD), .AW(RA)) u_rb (.clk(clk), .r_ce(st == MERGE && !mi_q[h] && ({mw[h], 2'b00} < k) &&
-   (mc[h] + 4'd4 <= 4'd8)), .r_a(RA'(mw[h])), .rd(rb_q[h]), .w_ce(hx_v[h]), .w_a(RA'(wa >> 2)), .w_s(wa[1:0]),
+  ot_hgi_topk_lvl #(.DEPTH(RD), .AW(RA), .WREG(0)) u_rb (.clk(clk), .r_ce(st == MERGE && !mi_q[h] && ({mw[h], 2'b00} < k) &&
+   (mc[h] + 4'd4 <= 4'd8)), .r_a(RA'(mw[h])), .rd(rb_q[h]), .w_ce_i(hx_v[h]), .w_a_i(RA'(wa >> 2)), .w_s(wa[1:0]),
    .w_d(hx_d[h]), .w_all(1'b0));
  end endgenerate
  // merge pick: the largest head, only when every unfinished run has a head
