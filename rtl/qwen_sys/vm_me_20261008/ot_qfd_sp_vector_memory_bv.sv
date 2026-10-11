@@ -98,7 +98,15 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer SQD = 2,
     parameter integer NRBS = 16,                       // banks of each SU replica copy (rows r mod NRBS)
     parameter integer USE_MACRO = 0,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // XQT = 1 (fe-push-qwen-1010, 2026-10-10; 0 = unchanged): the x-descriptor beat count without a divider.  Every
+    // bv route stopped at floorplan with -2,429 ps on x_dsp -> span_n = ((1 << x_dsp) - 1) * x_dcs -> bq = span_n / BEAT
+    // (a 37-bit divide by the constant 1,008) -> h_b[0].  The span is a shift-subtract ((x_dcs << x_dsp) - x_dcs, equal
+    // mod 2^37), and the beat count is a table over the legal descriptor set (x_dcs in DSET via the din one-hot, x_dsp
+    // in [SMIN, SMAX]) evaluated at elaboration.  Same edges, 0 cycles; identical h_b / x_fault for every legal
+    // descriptor; an illegal descriptor raises x_fault exactly as before (its h_b is then 0 instead of the divider's
+    // value: the faulted tuple's beats are unspecified).  XQT = 2: bench negative control (DSET entry 1's count + 1).
+    parameter integer XQT = 0
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -191,12 +199,39 @@ module ot_qfd_sp_vector_memory_bv #(
     reg           p_v;
     reg  [AW-1:0] p_dc, p_d;
     reg  [3:0]    p_sp;
-    wire [AW+12:0] span_n = (({{13{1'b0}}, {AW{1'b0}}} | ((1 << x_dsp) - 1)) * x_dcs);
     wire           same = p_v && x_dv && p_dc == x_dc && p_d == x_dcs && p_sp == x_dsp;
     wire           nt = x_dv && !same;
-    wire [AW+12:0] bq = span_n / BEAT;
     reg  [ND-1:0]  din;
     always @(*) for (di = 0; di < ND; di = di + 1) din[di] = (x_dcs == DSET[di*8 +: 8]);
+    wire [AW+12:0] span_n;
+    wire [LB-1:0]  bq_lo;                                // bq[LB-1:0]
+    wire           bq_ge;                                // bq >= BMAX
+    generate if (XQT != 0) begin : g_xqt
+        function automatic [63:0] xq_beats(input integer d, input integer sp);
+            xq_beats = (((64'd1 << sp) - 64'd1) * d) / BEAT;
+        endfunction
+        wire [AW+12:0] dcs_w = {{13{1'b0}}, x_dcs};
+        assign span_n = (dcs_w << x_dsp) - dcs_w;
+        reg [LB-1:0] t_lo;
+        reg          t_ge;
+        integer td, ts;
+        always @(*) begin
+            t_lo = 0; t_ge = 1'b0;
+            for (td = 0; td < ND; td = td + 1)
+                for (ts = SMIN; ts <= SMAX; ts = ts + 1)
+                    if (din[td] && x_dsp == ts) begin
+                        t_lo = t_lo | (xq_beats(DSET[td*8 +: 8], ts) + ((XQT == 2 && td == 1) ? 64'd1 : 64'd0));
+                        t_ge = t_ge | (xq_beats(DSET[td*8 +: 8], ts) >= BMAX);
+                    end
+        end
+        assign bq_lo = t_lo;
+        assign bq_ge = t_ge;
+    end else begin : g_xdiv
+        assign span_n = (({{13{1'b0}}, {AW{1'b0}}} | ((1 << x_dsp) - 1)) * x_dcs);
+        wire [AW+12:0] bq = span_n / BEAT;
+        assign bq_lo = bq[LB-1:0];
+        assign bq_ge = (bq >= BMAX);
+    end endgenerate
     reg            bi_v;
     reg  [LB-1:0]  bi_j;
     reg  [AW-1:0]  bi_dc, bi_d;
@@ -224,7 +259,7 @@ module ot_qfd_sp_vector_memory_bv #(
         end else if (me_en) begin
             h_new <= {h_new[HL-2:0], nt};
             p_v <= x_dv; p_dc <= x_dc; p_d <= x_dcs; p_sp <= x_dsp;
-            if (nt && (bq >= BMAX || !(|din) || x_dsp > SMAX || x_dsp < SMIN)) x_fault <= 1'b1;
+            if (nt && (bq_ge || !(|din) || x_dsp > SMAX || x_dsp < SMIN)) x_fault <= 1'b1;
             if (bi_n > 1) x_fault <= 1'b1;
         end
     end
@@ -232,7 +267,7 @@ module ot_qfd_sp_vector_memory_bv #(
         for (a = HL - 1; a > 0; a = a - 1) begin
             h_dc[a] <= h_dc[a-1]; h_d[a] <= h_d[a-1]; h_sp[a] <= h_sp[a-1]; h_b[a] <= h_b[a-1]; h_span[a] <= h_span[a-1];
         end
-        h_dc[0] <= x_dc; h_d[0] <= x_dcs; h_sp[0] <= x_dsp; h_b[0] <= bq[LB-1:0] + 1'b1; h_span[0] <= span_n;
+        h_dc[0] <= x_dc; h_d[0] <= x_dcs; h_sp[0] <= x_dsp; h_b[0] <= bq_lo + 1'b1; h_span[0] <= span_n;
     end
     wire [AW-1:0] ba = bi_dc + bi_j * BEAT;
     wire [AW-5:0] br0 = ba[AW-1:4];
