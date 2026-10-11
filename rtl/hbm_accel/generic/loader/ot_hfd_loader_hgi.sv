@@ -7,6 +7,9 @@
 // only).  Host link (s_*, h_*, h_dma_*, m_*) as the legacy loader wrapper; lq / lr = the per-stack loader_mem lanes.
 module ot_hfd_loader_hgi #(
     parameter [35:0] STACK_BYTES = 36'd22500000000,
+    parameter integer KP_RB = 64,       // [svc] 10-10: kport response FIFO a stack (sectors) and native transactions in flight a
+    parameter integer KP_NO = 16,       // stack: RB 64 / NO 16 = 10.9 B/cycle a stack at RTT 139 (gate pos_rb64), 1.83x the HC row-
+                                        // prefetch need 23.8 B/cycle a die (results/uarch/svc_dma_hc_sizing_20261010.json); svc NQ 4 unchanged
     parameter integer DMA_FRONT = 1,    // 0: every move on the mover (a die without the svc DMA stream bound)
     parameter integer RGX = 0           // 1: the hardware ROW_GATHER's HBM lanes (hfd_coll ot_hgi_coll_rgx_hbm / _snk): 2 read +
                                         //    2 write servers on kport lanes 3..6 (hgi-1010/c)
@@ -129,7 +132,7 @@ module ot_hfd_loader_hgi #(
                 .fault(x_flt[2 + gx]));
             assign x_we[2 + gx] = 1'b1;
         end
-        ot_hfd_loader_kport #(.ENABLE(1), .ND(7), .STACK_BYTES(STACK_BYTES)) u_kp (.clk(clk), .rst_n(rst_n),
+        ot_hfd_loader_kport #(.ENABLE(1), .ND(7), .STACK_BYTES(STACK_BYTES), .RB(KP_RB), .NO(KP_NO)) u_kp (.clk(clk), .rst_n(rst_n),
             .req_v({x_v, d_kv, f_v, l_req_v}), .req_rdy(k_req_rdy), .req_we({x_we, d_kwe, 1'b0, l_req_we}),
             .req_addr({x_a, d_ka, f_a, l_req_addr}), .req_wdata({x_d, d_kd, 256'd0, l_req_wdata}),
             .req_wstrb({x_s, d_ks, 32'd0, l_req_wstrb}), .req_tag({64'hf004f003f002f001, d_kt, 16'hf000, l_req_tag}),
@@ -140,7 +143,7 @@ module ot_hfd_loader_hgi #(
         assign rgx_r = '0; assign rgx_a = '0; assign x_flt = '0;
         assign k_rsp_v[6:3] = '0; assign k_rsp_we[6:3] = '0; assign k_req_rdy[6:3] = '0; assign k_rsp_tag[7*16-1:48] = '0;
         assign k_rsp_data[7*256-1:768] = '0;
-    ot_hfd_loader_kport #(.ENABLE(1), .ND(3), .STACK_BYTES(STACK_BYTES)) u_kp (.clk(clk), .rst_n(rst_n),
+    ot_hfd_loader_kport #(.ENABLE(1), .ND(3), .STACK_BYTES(STACK_BYTES), .RB(KP_RB), .NO(KP_NO)) u_kp (.clk(clk), .rst_n(rst_n),
         .req_v({d_kv, f_v, l_req_v}), .req_rdy(k_req_rdy[2:0]), .req_we({d_kwe, 1'b0, l_req_we}), .req_addr({d_ka, f_a, l_req_addr}),
         .req_wdata({d_kd, 256'd0, l_req_wdata}), .req_wstrb({d_ks, 32'd0, l_req_wstrb}), .req_tag({d_kt, 16'hf000, l_req_tag}),
         .req_len({4'd1, f_len, 4'd1}),            // the CP record fetch (lane 1) bursts 1..8 sectors; loader / DMA lanes 1

@@ -98,6 +98,12 @@ def ds_rom():
     assert hops == hv.get("stages", 120) or hops == 120, hops
     lnk = 3 + 3                                    # dsfd_wfc_lnk +3 in / +3 out (mtp-rom benches)
     vmx = stg["start_mean"] + stg["done_mean"]     # dsfd_wfc_vmx start crossing + done path incl. the 46-word prefetch
+    # mtp-wfc 2026-10-10: on the die the VM sits behind the hub relay stations (13/13); the kit's grant-linked VM channels
+    # (VM_LINK 1, WOUTW 8, VMRQ 64) add the measured stationed delta to the vmx start + done path on every hop
+    vst_p = ROOT / "results/rtl/dsrom_wfc_integration_20261010/vm_station.json"
+    vst = json.loads(vst_p.read_text()) if vst_p.exists() else None
+    vst_d = vst["delta_per_hop_fast_cycles"] if vst else 0.0
+    vmx += vst_d
     per_hop = wfc["hop_delta_cycles"] + lnk + vmx
     busy_cyc = hv["worst_stage"]["busy_us"] * CLK / 1e6
     handoff = busy_cyc * (wfc["measured_interval_overhead"] - 46 / 11271)
@@ -107,7 +113,7 @@ def ds_rom():
         hops * per_hop, anchor="wave.last", phase="verify",
         formula=f"{hops} stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x {per_hop:g} "
                 f"(WFC done->out + entry delta {wfc['hop_delta_cycles']} + lnk {lnk} + vmx start {stg['start_mean']:g} + "
-                f"vmx done/prefetch {stg['done_mean']:g})",
+                f"vmx done/prefetch {stg['done_mean']:g} + VM hub-station delta {vst_d:g})",
         source=[WFC_CLOSURE + " charge.hop_delta_cycles", MTP_ROM_BENCH + " stg_vmnat MTP_STG_CYC",
                 "~/claude-takeover-20261007/mtp-rom.log (lnk +3/+3 a hop)"],
         note="the composition charges the reference ot_rom_pkg_ctrl_wf (46/11,271 handoff, no shims) whose route was rejected; "
