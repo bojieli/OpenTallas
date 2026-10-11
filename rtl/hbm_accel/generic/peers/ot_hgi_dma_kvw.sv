@@ -1,0 +1,272 @@
+`timescale 1ns/1ps
+`default_nettype none
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_hgi_dma_kvw (hbm-fq/dma 2026-10-11): the DMA mover's KV WRITE-BACK ENGINE (ot_hgi_dma_mover KVW = 1, needs VR2 = 1).
+// Budget: ds_hbm op DMA.KVWB_DS, one 2,048 B row a record at 60 cycles (>= 35.5 B / cycle sustained at target).  The
+// sector engine moves one 32 B sector a cycle at best and, on a VM source, keeps one sector in flight a read lane and drains
+// one landed sector a cycle into one landing RAM; its write lane takes one request every second cycle (request register
+// set from its own valid).  This engine takes every raw VM -> HBM row copy (VM source, HBM linear destination, FP32 / U32
+// words on both sides, element strides 1, VM rows of whole sectors, 32 B aligned destination rows) and runs it as a
+// 64 B / cycle stream:
+//   I  issue: an address generator walks (row, sector) and issues TWO consecutive VM sectors a cycle on the VM DMA wide
+//      READ group (lanes s[4:0] and s[4:0] + 1), up to two in flight a lane (64 sectors = one 2 KB row in flight), against
+//      the group's per-lane credits (the mover's counters) and the grant; every issued sector takes the next slot of a
+//      512-slot two-bank buffer (slot q: bank q[0], row q[8:1]) and pushes {lane, last of move} into the issue-order FIFO.
+//   H  hold: a lane's responses (in order a lane) land in its two hold entries (written from the response pins).
+//   D  drain (two stages): the issue-order FIFO's head pair is taken when held (D1, registered one-hot entry selects, one a
+//      bank), the selected entries go through one AND-OR rung each into the bank write registers (D2): two sectors a cycle
+//      in issue order, one a bank.  A move's last sector written = its SOURCE CONSUMED (src pulse: the posted retire).
+//   W  write: four write STREAMS, one a stack: a move is dispatched (in order) to its destination stack's stream when that
+//      stream is free; a stream walks the move's destination rows over its slot range.  Each bank's read port serves one
+//      stream a cycle (rotating priority among the streams whose next slot is in that bank, written, and whose lane FIFO
+//      has room): up to two sectors a cycle on two stacks.  Two edges after the read the sector enters its stack lane's
+//      4-deep request FIFO (reservations taken at the read), whose head is the lane request (full sector, all strobes);
+//      acknowledgements are counted a lane.  Slots are released by the oldest unread slot (buffer room for the issue).
+// The engine accepts the next move as soon as the descriptor FIFO (4) has room: a posted move's HBM writes drain while the
+// next move's source is read.  done pulses once when every accepted move's every write is acknowledged (the mover's FENCE
+// and any non-KVW move wait for idle).
+// MUT 5 (bench): the second drain port takes the head's hold entry (the wrong sector is written).
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_hgi_dma_kvw #(
+    parameter integer MUT = 0
+) (
+    input  wire          clk,
+    input  wire          rn,
+    // move descriptor (from the mover's command station)
+    input  wire          c_v,
+    output reg           c_rdy,
+    input  wire [14:0]   c_vs,          // VM sector of row 0 (the read group's 15-bit sector)
+    input  wire [14:0]   c_vst,         // VM row stride, sectors
+    input  wire [31:0]   c_ds,          // HBM destination sector of row 0 {stack 2, stack-local sector 30}
+    input  wire [31:0]   c_dst,         // HBM row stride, sectors
+    input  wire [17:0]   c_ns,          // sectors a row
+    input  wire [19:0]   c_m,           // rows
+    // VM DMA wide read group (the mover's pin-flopped grant and its per-lane credit counters)
+    input  wire          g_gnt,
+    input  wire [32*6-1:0] g_cr,
+    output reg  [511:0]  kq,            // lane requests {v, sector 15} x 32 (ORed into vr2q by the mover)
+    output wire          kq_creq,       // this engine needs the group (reads to issue or in flight)
+    input  wire [8256:0] vr2r,
+    // buffer bank 0 = the mover's landing RAM (shared: the sector engine is idle while this engine is busy)
+    output reg           b0_we,
+    output reg  [7:0]    b0_wa,
+    output reg  [255:0]  b0_wd,
+    output reg           b0_re,
+    output reg  [7:0]    b0_ra,
+    input  wire [255:0]  b0_rd,
+    // HBM write lanes (one a stack)
+    output wire [3:0]    kw_v,
+    input  wire [3:0]    kw_rdy,
+    output wire [4*37-1:0] kw_addr,
+    output wire [4*256-1:0] kw_wdata,
+    input  wire [3:0]    r_rsp_v,
+    input  wire [3:0]    r_rsp_we,
+    output wire [3:0]    kw_wo,         // lanes with this engine's writes in flight (their responses are acknowledgements)
+    output reg           src,           // pulse: a move's last source sector is in the buffer
+    output reg           done,          // pulse: every accepted move's every write acknowledged
+    output reg           idle
+);
+    // ================================================================ descriptor FIFO (two readers: issue, write)
+    reg [14:0] f_vs [0:3], f_vst [0:3]; reg [31:0] f_ds [0:3], f_dst [0:3]; reg [17:0] f_ns [0:3]; reg [19:0] f_m [0:3];
+    reg [2:0] f_t, f_i, f_w;                                // tail, issue head, write head (mod 8 counters, 4 entries)
+    // ================================================================ issue (I)
+    reg        i_act; reg [14:0] i_vs, i_vnx, i_vst; reg [17:0] i_left, i_ns; reg [19:0] i_rows;
+    reg [1:0]  occ [0:31];                                  // a lane's sectors issued, not drained (<= 2: its hold entries)
+    reg [31:0] kqv;                                         // lanes with a request in kq (not yet counted by the mover's credits)
+    reg [9:0]  q_iss;                                       // slots issued (mod 1024, 512 slots)
+    reg        buf_ok;                                      // registered: >= 8 free slots
+    // issue-order FIFO {lane 5, last of move 1}
+    reg [5:0]  iof [0:63]; reg [5:0] o_t, o_h; reg [6:0] o_n;
+    reg [1:0]  ok_n; reg [4:0] l0, l1; reg i_rend, i_last;
+    always @* begin : idec
+        reg ok0, ok1;
+        l0 = i_vs[4:0]; l1 = 5'(i_vs[4:0] + 5'd1);
+        ok0 = i_act && g_gnt && buf_ok && occ[l0] != 2'd2 && g_cr[l0*6 +: 6] > {5'd0, kqv[l0]};
+        ok1 = ok0 && i_left >= 18'd2 && occ[l1] != 2'd2 && g_cr[l1*6 +: 6] > {5'd0, kqv[l1]};
+        ok_n = ok1 ? 2'd2 : ok0 ? 2'd1 : 2'd0;
+        i_rend = i_left == {16'd0, ok_n};                   // this cycle ends the row
+        i_last = i_rend && i_rows == 20'd1;                 // ... and the move
+    end
+    reg owed;
+    assign kq_creq = owed;                                  // the group is held from the accept until done (no re-grant gap)
+    // ================================================================ hold (H) + drain (D1, D2)
+    reg [255:0] hd [0:63];                                  // lane b entry e at 2b + e
+    reg [31:0] hw, hr; reg [1:0] hc [0:31];                 // write / read entry, held count
+    reg        d_v [0:1]; reg [63:0] d_sel [0:1]; reg [7:0] d_a [0:1]; reg d_last [0:1];   // D1 registers, per bank
+    reg [9:0]  q_drn;                                       // slots drained (in issue order)
+    reg [1:0]  dn; reg [5:0] e0, e1; reg e0_ok, e1_ok; reg [5:0] x0, x1;   // drain pick (hold entry indices x = 2 lane + entry)
+    always @* begin : dpick
+        e0 = iof[o_h]; e1 = iof[6'(o_h + 6'd1)];
+        e0_ok = o_n != 7'd0 && hc[e0[5:1]] != 2'd0;
+        e1_ok = e0_ok && o_n >= 7'd2 && !e0[0] &&
+                ((e1[5:1] != e0[5:1]) ? hc[e1[5:1]] != 2'd0 : hc[e1[5:1]] == 2'd2);
+        x0 = {e0[5:1], hr[e0[5:1]]};
+        x1 = {e1[5:1], (e1[5:1] == e0[5:1]) ? !hr[e1[5:1]] : hr[e1[5:1]]};
+        if (MUT == 5) x1 = x0;
+        dn = e1_ok ? 2'd2 : e0_ok ? 2'd1 : 2'd0;
+    end
+    // D2: one AND-OR rung a bank from the registered one-hot select
+    reg [255:0] d_dat [0:1];
+    always @* for (integer b = 0; b < 2; b = b + 1) begin
+        d_dat[b] = 256'd0;
+        for (integer k = 0; k < 64; k = k + 1) d_dat[b] = d_dat[b] | (hd[k] & {256{d_sel[b][k]}});
+    end
+    reg        b1_we; reg [7:0] b1_wa; reg [255:0] b1_wd; reg b1_re; reg [7:0] b1_ra; wire [255:0] b1_rd;
+    reg        bw_last;                                     // a move's last sector is in the bank write registers
+    reg [9:0]  w_cnt;                                       // slots written into the buffer
+    ot_sram_1r1w_256x256_m2_r2c2 u_b1 (.clk(clk), .r_ce_in(b1_re), .r_addr_in(b1_ra), .rd_out(b1_rd),
+        .w_ce_in(b1_we), .w_addr_in(b1_wa), .wd_in(b1_wd), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    // ================================================================ write side (W): four streams, one a stack
+    reg [9:0]  f_q [0:3];                                   // a move's first slot (set when the issue side loads it)
+    reg [3:0]  w_act; reg [9:0] w_q [0:3]; reg [31:0] w_ds [0:3], w_dnx [0:3], w_dst [0:3]; reg [17:0] w_left [0:3], w_ns [0:3];
+    reg [19:0] w_rows [0:3];
+    reg [2:0]  res [0:3];                                   // lane FIFO entries + reservations
+    reg [1:0]  pr [0:1];                                    // a bank's rotating stream priority
+    reg        m1_v [0:1], m2_v [0:1]; reg [1:0] m1_l [0:1], m2_l [0:1]; reg [31:0] m1_s [0:1], m2_s [0:1];   // read pipes a bank
+    reg [255:0] lf_d [0:15]; reg [31:0] lf_s [0:15]; reg [1:0] lf_h [0:3], lf_t [0:3]; reg [2:0] lf_n [0:3];
+    reg [3:0]  w_acc, w_ack; reg [6:0] wo [0:3];
+    // a stream's next slot is readable: written (w_cnt - q in 1 .. 512)
+    reg [3:0]  w_rdy; reg [1:0] g_s [0:1]; reg [1:0] g_v;
+    always @* begin : wpick
+        for (integer t = 0; t < 4; t = t + 1) begin : rd
+            reg [9:0] d; d = w_cnt - w_q[t];
+            w_rdy[t] = w_act[t] && d != 10'd0 && (!d[9] || d == 10'd512) && res[t] < 3'd4;
+        end
+        for (integer b = 0; b < 2; b = b + 1) begin
+            g_v[b] = 1'b0; g_s[b] = 2'd0;
+            for (integer t = 3; t >= 0; t = t - 1) begin : pk
+                reg [1:0] c; c = 2'(pr[b] + 2'(t));
+                if (w_rdy[c] && w_q[c][0] == 1'(b)) begin g_v[b] = 1'b1; g_s[b] = c; end
+            end
+        end
+    end
+    // the move to dispatch (the oldest the issue side has loaded) and the oldest unread slot
+    wire [1:0] f_stk = f_ds[f_w[1:0]][31:30];
+    wire       w_disp = f_w != f_i && !w_act[f_stk];
+    reg  [9:0] used;
+    always @* begin : old
+        used = (f_w != f_i) ? 10'(q_iss - f_q[f_w[1:0]]) : 10'd0;
+        for (integer t = 0; t < 4; t = t + 1) if (w_act[t] && 10'(q_iss - w_q[t]) > used) used = 10'(q_iss - w_q[t]);
+    end
+    genvar gl;
+    for (gl = 0; gl < 4; gl = gl + 1) begin : g_lane
+        assign kw_v[gl] = lf_n[gl] != 3'd0;
+        assign kw_addr[gl*37 +: 37] = {lf_s[gl*4 + lf_h[gl]], 5'd0};
+        assign kw_wdata[gl*256 +: 256] = lf_d[gl*4 + lf_h[gl]];
+        assign kw_wo[gl] = wo[gl] != 7'd0 || w_acc[gl];
+    end
+    // ================================================================ registers
+    always @(posedge clk) begin : hold_w                     // hold entries: written from the response pins
+        for (integer b = 0; b < 32; b = b + 1) if (vr2r[b*257 + 256] && !idle) hd[2*b + hw[b]] <= vr2r[b*257 +: 256];
+    end
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
+            f_t <= 3'd0; f_i <= 3'd0; f_w <= 3'd0; c_rdy <= 1'b0;
+            i_act <= 1'b0; kq <= 512'd0; kqv <= 32'd0; q_iss <= 10'd0; buf_ok <= 1'b0;
+            o_t <= 6'd0; o_h <= 6'd0; o_n <= 7'd0; hw <= 32'd0; hr <= 32'd0; q_drn <= 10'd0;
+            for (integer b = 0; b < 32; b = b + 1) begin occ[b] <= 2'd0; hc[b] <= 2'd0; end
+            d_v[0] <= 1'b0; d_v[1] <= 1'b0; b0_we <= 1'b0; b1_we <= 1'b0; b0_re <= 1'b0; b1_re <= 1'b0; bw_last <= 1'b0;
+            w_cnt <= 10'd0; w_act <= 4'd0; m1_v[0] <= 1'b0; m1_v[1] <= 1'b0; m2_v[0] <= 1'b0; m2_v[1] <= 1'b0; w_acc <= 4'd0; w_ack <= 4'd0;
+            pr[0] <= 2'd0; pr[1] <= 2'd0;
+            for (integer l = 0; l < 4; l = l + 1) begin res[l] <= 3'd0; lf_h[l] <= 2'd0; lf_t[l] <= 2'd0; lf_n[l] <= 3'd0; wo[l] <= 7'd0; end
+            src <= 1'b0; done <= 1'b0; idle <= 1'b1; owed <= 1'b0;
+        end else begin
+            src <= 1'b0; done <= 1'b0;
+            // ---- descriptors
+            if (c_v && c_rdy) begin
+                f_vs[f_t[1:0]] <= c_vs; f_vst[f_t[1:0]] <= c_vst; f_ds[f_t[1:0]] <= c_ds; f_dst[f_t[1:0]] <= c_dst;
+                f_ns[f_t[1:0]] <= c_ns; f_m[f_t[1:0]] <= c_m; f_t <= f_t + 3'd1; owed <= 1'b1;
+            end
+            c_rdy <= 3'(f_t + {2'd0, c_v && c_rdy} - f_w) < 3'd3 && !(c_v && c_rdy);   // registered, one accept per two edges
+            // ---- issue
+            kq <= 512'd0; kqv <= 32'd0;
+            if (!i_act && f_i != f_t) begin
+                i_act <= 1'b1; i_vs <= f_vs[f_i[1:0]]; i_vnx <= f_vs[f_i[1:0]] + f_vst[f_i[1:0]]; i_vst <= f_vst[f_i[1:0]];
+                i_left <= f_ns[f_i[1:0]]; i_ns <= f_ns[f_i[1:0]]; i_rows <= f_m[f_i[1:0]]; f_i <= f_i + 3'd1;
+                f_q[f_i[1:0]] <= q_iss;
+            end
+            if (ok_n != 2'd0) begin
+                kq[l0*16 +: 16] <= {1'b1, i_vs}; kqv[l0] <= 1'b1;
+                iof[o_t] <= {l0, ok_n == 2'd1 && i_last};
+                if (ok_n == 2'd2) begin
+                    kq[l1*16 +: 16] <= {1'b1, 15'(i_vs + 15'd1)}; kqv[l1] <= 1'b1;
+                    iof[6'(o_t + 6'd1)] <= {l1, i_last};
+                end
+                o_t <= o_t + 6'(ok_n); q_iss <= q_iss + 10'(ok_n);
+                if (i_rend) begin
+                    i_left <= i_ns; i_rows <= i_rows - 20'd1; i_vs <= i_vnx; i_vnx <= i_vnx + i_vst;
+                    if (i_last) i_act <= 1'b0;
+                end else begin i_vs <= i_vs + 15'(ok_n); i_left <= i_left - 18'(ok_n); end
+            end
+            buf_ok <= 11'({1'b0, used} + 11'(ok_n)) <= 11'd504;
+            o_n <= o_n + 7'(ok_n) - 7'(dn);
+            // ---- hold counts / lane occupancy
+            for (integer b = 0; b < 32; b = b + 1) begin : lanes
+                reg [1:0] dd; reg ii;
+                dd = 2'((dn != 2'd0 && e0[5:1] == 5'(b)) ? 1 : 0) + 2'((dn == 2'd2 && e1[5:1] == 5'(b)) ? 1 : 0);
+                ii = (ok_n != 2'd0 && l0 == 5'(b)) || (ok_n == 2'd2 && l1 == 5'(b));
+                // the group's responses are this engine's only while it is busy (the sector engine reads only while it is idle)
+                hc[b] <= hc[b] + 2'(vr2r[b*257 + 256] && !idle) - dd;
+                if (vr2r[b*257 + 256] && !idle) hw[b] <= !hw[b];
+                if (dd[0] ^ dd[1]) hr[b] <= !hr[b];           // dd = 2 flips twice
+                occ[b] <= occ[b] + 2'(ii) - dd;
+            end
+            // ---- drain D1: the head pair, a bank each (slot q -> bank q[0])
+            o_h <= o_h + 6'(dn); q_drn <= q_drn + 10'(dn);
+            for (integer b = 0; b < 2; b = b + 1) begin : d1
+                reg first; first = q_drn[0] == 1'(b);             // this bank takes the head (else head + 1)
+                d_v[b] <= first ? (dn != 2'd0) : (dn == 2'd2);
+                d_sel[b] <= first ? (64'd1 << x0) : (64'd1 << x1);
+                d_a[b] <= first ? q_drn[8:1] : 8'(10'(q_drn + 10'd1) >> 1);
+                d_last[b] <= first ? (dn == 2'd1 && e0[0]) : (dn == 2'd2 && e1[0]);
+            end
+            // ---- drain D2: the bank write registers
+            b0_we <= d_v[0]; b0_wa <= d_a[0]; b0_wd <= d_dat[0];
+            b1_we <= d_v[1]; b1_wa <= d_a[1]; b1_wd <= d_dat[1];
+            bw_last <= (d_v[0] && d_last[0]) || (d_v[1] && d_last[1]);
+            // the macro writes on this edge: the slots are readable, a move's last sector is in the buffer
+            w_cnt <= w_cnt + 10'(b0_we) + 10'(b1_we);
+            if (bw_last) src <= 1'b1;
+            // ---- write side: dispatch a move to its stack's stream; each bank serves one stream a cycle
+            if (w_disp) begin
+                w_act[f_stk] <= 1'b1; w_q[f_stk] <= f_q[f_w[1:0]]; w_ds[f_stk] <= f_ds[f_w[1:0]];
+                w_dnx[f_stk] <= f_ds[f_w[1:0]] + f_dst[f_w[1:0]]; w_dst[f_stk] <= f_dst[f_w[1:0]];
+                w_left[f_stk] <= f_ns[f_w[1:0]]; w_ns[f_stk] <= f_ns[f_w[1:0]]; w_rows[f_stk] <= f_m[f_w[1:0]]; f_w <= f_w + 3'd1;
+            end
+            b0_re <= g_v[0]; b0_ra <= w_q[g_s[0]][8:1]; b1_re <= g_v[1]; b1_ra <= w_q[g_s[1]][8:1];
+            for (integer b = 0; b < 2; b = b + 1) begin : wg
+                reg [1:0] t; t = g_s[b];
+                m1_v[b] <= g_v[b]; m1_l[b] <= t; m1_s[b] <= w_ds[t];
+                if (g_v[b]) begin
+                    pr[b] <= t + 2'd1; w_q[t] <= w_q[t] + 10'd1;
+                    if (w_left[t] == 18'd1) begin
+                        w_left[t] <= w_ns[t]; w_rows[t] <= w_rows[t] - 20'd1; w_ds[t] <= w_dnx[t]; w_dnx[t] <= w_dnx[t] + w_dst[t];
+                        if (w_rows[t] == 20'd1) w_act[t] <= 1'b0;
+                    end else begin w_ds[t] <= w_ds[t] + 32'd1; w_left[t] <= w_left[t] - 18'd1; end
+                end
+                m2_v[b] <= m1_v[b]; m2_l[b] <= m1_l[b]; m2_s[b] <= m1_s[b];
+            end
+            // ---- lane FIFOs: push the read sector, pop on the lane's acceptance; acknowledgements
+            for (integer l = 0; l < 4; l = l + 1) begin : lf
+                reg push, pop;
+                reg pb; pb = m2_v[1] && m2_l[1] == 2'(l);       // a stream (= stack) reads one bank a cycle
+                push = (m2_v[0] && m2_l[0] == 2'(l)) || pb; pop = kw_v[l] && kw_rdy[l];
+                if (push) begin lf_d[l*4 + lf_t[l]] <= pb ? b1_rd : b0_rd; lf_s[l*4 + lf_t[l]] <= pb ? m2_s[1] : m2_s[0]; lf_t[l] <= lf_t[l] + 2'd1; end
+                if (pop) lf_h[l] <= lf_h[l] + 2'd1;
+                lf_n[l] <= lf_n[l] + 3'(push) - 3'(pop);
+                res[l] <= res[l] + 3'(((g_v[0] && g_s[0] == 2'(l)) || (g_v[1] && g_s[1] == 2'(l))) ? 1 : 0) - 3'(pop);
+                w_acc[l] <= pop; w_ack[l] <= r_rsp_v[l] && r_rsp_we[l] && kw_wo[l];
+                wo[l] <= wo[l] + 7'(w_acc[l]) - 7'(w_ack[l]);
+            end
+            // ---- completion
+            idle <= !owed && !(c_v && c_rdy);
+            if (owed && f_t == f_w && !i_act && o_n == 7'd0 && !d_v[0] && !d_v[1] && !b0_we && !b1_we && w_act == 4'd0 && !m1_v[0] && !m1_v[1] && !m2_v[0] && !m2_v[1] &&
+                lf_n[0] == 3'd0 && lf_n[1] == 3'd0 && lf_n[2] == 3'd0 && lf_n[3] == 3'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
+                wo[0] == 7'd0 && wo[1] == 7'd0 && wo[2] == 7'd0 && wo[3] == 7'd0 && !(c_v && c_rdy)) begin
+                owed <= 1'b0; done <= 1'b1; idle <= 1'b1;
+            end
+        end
+    end
+endmodule
+`default_nettype wire
