@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_su_t_pin",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81su-tpin-9eff3d007-tc-pd45/routes/s81su_tpin_9eff3d007_tc_pd45/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81su-tpin-9eff3d007-tc-pd45/routes/s81su_tpin_9eff3d007_tc_pd45/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81su-tpin-9eff3d007-tc-pd45/routes/s81su_tpin_9eff3d007_tc_pd45/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81su-tpin-9eff3d007-tc-pd45/routes/s81su_tpin_9eff3d007_tc_pd45/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81su-tpin-9eff3d007-tc-pd45/routes/s81su_tpin_9eff3d007_tc_pd45/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81su-tpin-9eff3d007-tc-pd45/routes/s81su_tpin_9eff3d007_tc_pd45/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81su-tpin-9eff3d007-tc-pd45/routes/s81su_tpin_9eff3d007_tc_pd45/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_su_t_pin.lef": "1687922333976e0ba36e4a9139513c30236652823fbbb61a405881ae798a8e30",
+    "dsfd_su_t_pin_ff.lib": "4b7a058e9c95e7135a9209e4db1487cdf41077990c969bfd70e0d6db87bac261",
+    "dsfd_su_t_pin_ss.lib": "67a92e7a255e2890ea3309e60392100f34cea87d0d460b71fa8af58d3eeabb4a"
+  },
+  "ok": true
+}
