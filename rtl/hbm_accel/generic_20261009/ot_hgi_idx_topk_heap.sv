@@ -220,7 +220,10 @@ module ot_hgi_idx_topk_hw #(
   assign f1_nl[l] = (l < f1_nw) && (s[30:23] == 8'hff) && (s[22:0] != 23'd0);
  end endgenerate
  assign f1_nan = f1_v && (|f1_nl);
- assign in_ready = ENABLE && st == FILL && fmax <= FD - 3;
+ // in_ready leaves a flop compare: room is judged one edge late (<= FD - 4: up to 3 beats in flight past fc)
+ reg in_ok;
+ always @(posedge clk or negedge rst_n) if (!rst_n) in_ok <= 1'b0; else in_ok <= fmax <= FD - 4;
+ assign in_ready = ENABLE && st == FILL && in_ok;
  wire beat = in_valid && in_ready;
  // ---------------------------------------------------------------- reverse buffers and merge
  reg [KW-1:0] xi [0:W-1], xo [0:W-1];                   // extract ops issued / results written
