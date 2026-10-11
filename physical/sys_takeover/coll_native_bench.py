@@ -28,7 +28,8 @@ SRC = [ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROO
        # el1011-q-coll: dual-clock FIFO body macros (MEMM = 1), behavioural views
        ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.v",
        ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
-       ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1.v"]
+       ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1.v",
+       ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1.v"]
 CASES = [  # name, msgs, words, gap %, modes, consumer %
     ("reduce_8w", 32, 8, 0, "r", 100),
     ("mixed_gaps", 32, 8, 30, "m", 100),

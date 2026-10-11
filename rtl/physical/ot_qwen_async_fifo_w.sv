@@ -96,7 +96,7 @@ module ot_qwen_async_fifo_w #(
     localparam integer NG = DEPTH / GS;
     localparam integer GA = $clog2(GS);
     localparam integer GI = (NG > 1) ? $clog2(NG) : 1;
-    initial if (RSEL2 != 0 && NG > 8) $error("ot_qwen_async_fifo_w RSEL2: DEPTH <= 64 (level 2 <= 8:1)");
+    initial if (RSEL2 != 0 && NG > 8 && MEMM == 0) $error("ot_qwen_async_fifo_w RSEL2: DEPTH <= 64 (level 2 <= 8:1); MEMM has no read select");
     // level-2 select copies: a kept ARRAY like rd_bc (the _p synthesis kept every rd_bc element; plain kept regs in a
     // generate were merged by Yosys in the collective's PR=1 copies)
     (* keep *) reg [GI-1:0] gsel_q [0:NSL-1];
@@ -157,6 +157,9 @@ module ot_qwen_async_fifo_w #(
 `endif
         if (DEPTH == 64 && WIDTH == 516) begin : g_64x516
             ot_sram_1r1w2c_64x516_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else if (DEPTH == 128 && WIDTH == 516) begin : g_128x516
+            ot_sram_1r1w2c_128x516_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
                 .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
         end else if (DEPTH == 32 && WIDTH == 546) begin : g_32x546
             ot_sram_1r1w2c_32x546_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
