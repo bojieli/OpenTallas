@@ -1,0 +1,57 @@
+{
+  "name": "ot_dsrom_wsrc_land8",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81b-wsrc-m3-land8-6c3ed996d-tc-ih/routes/s81b_wsrc_m3_land8_6c3ed996d_tc_ih/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-wsrc-m3-land8-6c3ed996d-tc-ih/routes/s81b_wsrc_m3_land8_6c3ed996d_tc_ih/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-wsrc-m3-land8-6c3ed996d-tc-ih/routes/s81b_wsrc_m3_land8_6c3ed996d_tc_ih/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-wsrc-m3-land8-6c3ed996d-tc-ih/routes/s81b_wsrc_m3_land8_6c3ed996d_tc_ih/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-wsrc-m3-land8-6c3ed996d-tc-ih/routes/s81b_wsrc_m3_land8_6c3ed996d_tc_ih/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-wsrc-m3-land8-6c3ed996d-tc-ih/routes/s81b_wsrc_m3_land8_6c3ed996d_tc_ih/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-wsrc-m3-land8-6c3ed996d-tc-ih/routes/s81b_wsrc_m3_land8_6c3ed996d_tc_ih/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_wsrc_land8.lef": "5a2aa5f9a70655cc1e5412a6c03ce0f9f31db5779b79e27f954ef33b1209f8b0",
+    "ot_dsrom_wsrc_land8_ff.lib": "aba9520ce7a80fb7ff9147cbee3b85215232f2494e35aa088cf4a2c1b6cfc493",
+    "ot_dsrom_wsrc_land8_ss.lib": "7731ae5c5a91982c35bb5737b9df20795c932a89e5faba62de8216b8360c662b"
+  },
+  "ok": true
+}
