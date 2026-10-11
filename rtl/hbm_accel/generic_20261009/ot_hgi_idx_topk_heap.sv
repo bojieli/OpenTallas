@@ -24,6 +24,29 @@
 // Cycles a row (W heaps, k, n): fill max(n / IW, 2 x survivors a heap) + 2k extract + k merge + ~30; the level clear
 // ((k >> 3) + 1 cycles: only the words a k-node heap can use) overlaps the merge.
 // Mutants (bench): MUT_BYP no bypass (stale grandchildren), MUT_CLR no inter-row clear, MUT_REV unreversed runs.
+// Unsigned a > b as a balanced (log-depth) prefix compare; every level is a (* keep *) net so ABC cannot collapse it
+// back into the ripple MAJ chain it builds from a behavioural '>' in context (fe-push-topkw r3: the r2 route's 53-b key
+// compares were 15-20 MAJ/OA levels, ~0.7 ns of a 0.77 ns cycle).
+module ot_hgi_topk_gt #(parameter integer W=53) (input wire [W-1:0] a, b, output wire gt);
+ localparam integer L = $clog2(W), T = 1 << L;
+ (* keep *) wire [T-1:0] g [0:L];
+ (* keep *) wire [T-1:0] p [0:L];
+ assign g[0] = {{(T-W){1'b0}}, a & ~b};
+ assign p[0] = {{(T-W){1'b1}}, ~(a ^ b)};
+ genvar k, j;
+ generate for (k = 1; k <= L; k = k + 1) begin : g_lv
+  for (j = 0; j < (T >> k); j = j + 1) begin : g_pr
+   assign g[k][j] = g[k-1][2*j+1] | (p[k-1][2*j+1] & g[k-1][2*j]);
+   assign p[k][j] = p[k-1][2*j+1] & p[k-1][2*j];
+  end
+  if ((T >> k) < T) begin : g_pad
+   assign g[k][T-1:(T>>k)] = '0;
+   assign p[k][T-1:(T>>k)] = '1;
+  end
+ end endgenerate
+ assign gt = g[L][0];
+endmodule
+
 module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1) (
  input wire clk,
  input wire r_ce, input wire [AW-1:0] r_a, output wire [215:0] rd,
@@ -112,6 +135,8 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
  wire [KW:0] dkl = (dk >> 3) + 1;
  assign root_key = h1[52:0];
  wire ent = op_v && op_rdy;
+ wire ent_gt;
+ ot_hgi_topk_gt #(.W(53)) u_eg (.a(op_x[52:0]), .b(h1[52:0]), .gt(ent_gt));
  assign op_rdy = ent_c == 2'd0 && !clr_b && !clr_p;
  genvar j;
  generate for (j = 0; j < LV; j = j + 1) begin : g_st
@@ -127,7 +152,11 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
   end
   // B_j: compare, write node b_p[j], move to the smaller child
   wire e0 = b_e0[j], e1 = b_e1[j];
-  wire x_le0 = b_x[j][52:0] <= b_c0[j][52:0], x_le1 = b_x[j][52:0] <= b_c1[j][52:0], c1_lt = b_c1[j][52:0] < b_c0[j][52:0];
+  wire xg0, xg1, c1_lt;
+  ot_hgi_topk_gt #(.W(53)) u_xg0 (.a(b_x[j][52:0]), .b(b_c0[j][52:0]), .gt(xg0));
+  ot_hgi_topk_gt #(.W(53)) u_xg1 (.a(b_x[j][52:0]), .b(b_c1[j][52:0]), .gt(xg1));
+  ot_hgi_topk_gt #(.W(53)) u_c1l (.a(b_c0[j][52:0]), .b(b_c1[j][52:0]), .gt(c1_lt));
+  wire x_le0 = !xg0, x_le1 = !xg1;
   wire take1 = e1 && c1_lt;
   wire stop = !e0 || (take1 ? x_le1 : x_le0);
   assign wr_v[j] = b_v[j]; assign wr_p[j] = b_p[j];
@@ -164,7 +193,7 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
    idle_q <= !any_v && ent_c == 2'd0 && !clr_b && !clr_p && !ent && !clr_go && !clr_start;
    for (i = 2; i < LV; i = i + 1) wl_ce[i] <= wr_v[i] || clr_b;
    ext_v <= ent && op_ext;
-   a_v[0] <= ent && (op_ext || op_x[52:0] > h1[52:0]);
+   a_v[0] <= ent && (op_ext || ent_gt);
    for (i = 1; i < LV; i = i + 1) a_v[i] <= mv[i - 1];
    for (i = 0; i < LV; i = i + 1) b_v[i] <= a_v[i];
    for (i = 2; i < LV; i = i + 1) if (wr_v[i]) byp_v[i] <= 1'b1; else if (clr_start) byp_v[i] <= 1'b0;
@@ -253,16 +282,27 @@ module ot_hgi_idx_topk_hw #(
  wire [52:0] gpd [0:W2-1]; reg [52:0] gp [0:W2-1]; reg [52:0] gth; integer i, q;
  generate for (h = 0; h < W2; h = h + 1) begin : g_gp
   if (2 * h + 1 < W) begin : g_2
-   assign gpd[h] = (h_root[2 * h + 1] > h_root[2 * h]) ? h_root[2 * h + 1] : h_root[2 * h];
+   wire gg;
+   ot_hgi_topk_gt #(.W(53)) u_gg (.a(h_root[2 * h + 1]), .b(h_root[2 * h]), .gt(gg));
+   assign gpd[h] = gg ? h_root[2 * h + 1] : h_root[2 * h];
   end else begin : g_1
    assign gpd[h] = h_root[2 * h];
   end
  end endgenerate
+ wire g2gt;
+ generate if (W2 == 2) begin : g_g2
+  ot_hgi_topk_gt #(.W(53)) u_g2 (.a(gp[1]), .b(gp[0]), .gt(g2gt));
+ end else begin : g_g2n
+  assign g2gt = 1'b0;
+ end endgenerate
  always @(posedge clk) begin : g_gth
   reg [52:0] t;
   for (i = 0; i < W2; i = i + 1) gp[i] <= gpd[i];
-  t = gp[0];
-  for (i = 1; i < W2; i = i + 1) if (gp[i] > t) t = gp[i];
+  if (W2 == 2) t = g2gt ? gp[1] : gp[0];
+  else begin
+   t = gp[0];
+   for (i = 1; i < W2; i = i + 1) if (gp[i] > t) t = gp[i];
+  end
   gth <= t;
  end
  reg all_idle;                                          // AND of the heaps' registered idle flags
@@ -272,7 +312,7 @@ module ot_hgi_idx_topk_hw #(
  reg [53:0] ff [0:W*FD-1]; reg [3:0] fc [0:W-1]; reg [2:0] fw [0:W-1], fr [0:W-1];
  reg [3:0] fmax;
  always @* begin fmax = 4'd0; for (i = 0; i < W; i = i + 1) if (fc[i] > fmax) fmax = fc[i]; end
- wire f1_nan; wire [53:0] f1_e [0:IW-1]; wire [IW-1:0] f1_nl;
+ wire f1_nan; wire [53:0] f1_e [0:IW-1]; wire [IW-1:0] f1_nl, f1_gt;
  generate for (l = 0; l < IW; l = l + 1) begin : g_key
   wire [31:0] s = f1_s[32 * l +: 32];
   wire [31:0] canon = (s[30:0] == 31'd0) ? 32'd0 : s;
@@ -280,6 +320,7 @@ module ot_hgi_idx_topk_hw #(
   wire [19:0] idx = f1_c + l;
   assign f1_e[l] = {s == 32'h80000000, 1'b1, mono, MUTANT_TIE ? idx : ~idx};
   assign f1_nl[l] = (l < f1_nw) && (s[30:23] == 8'hff) && (s[22:0] != 23'd0);
+  ot_hgi_topk_gt #(.W(53)) u_fg (.a(f1_e[l][52:0]), .b(gth), .gt(f1_gt[l]));
  end endgenerate
  assign f1_nan = f1_v && (|f1_nl);
  // in_ready leaves a flop compare: room is judged one edge late (<= FD - 4: up to 3 beats in flight past fc)
@@ -315,9 +356,13 @@ module ot_hgi_idx_topk_hw #(
    if (l == h) begin : g_s
     assign bt[l] = 1'b1;
    end else if (l > h) begin : g_hi
-    assign bt[l] = !hd_v[l] || hd[h][52:0] >= hd[l][52:0];
+    wire lg;                                        // hd[l] > hd[h]
+    ot_hgi_topk_gt #(.W(53)) u_c (.a(hd[l][52:0]), .b(hd[h][52:0]), .gt(lg));
+    assign bt[l] = !hd_v[l] || !lg;
    end else begin : g_lo
-    assign bt[l] = !hd_v[l] || hd[h][52:0] > hd[l][52:0];
+    wire hg;                                        // hd[h] > hd[l]
+    ot_hgi_topk_gt #(.W(53)) u_c (.a(hd[h][52:0]), .b(hd[l][52:0]), .gt(hg));
+    assign bt[l] = !hd_v[l] || hg;
    end
   end
   assign win[h] = hd_v[h] && (&bt);
@@ -368,7 +413,7 @@ module ot_hgi_idx_topk_hw #(
    for (i = 0; i < W; i = i + 1) begin : fifo
     reg push, pop;
     push = f1_v && !f1_nan && (st == FILL || st == FLUSH) && (i / IW == f1_g) && ((i % IW) < f1_nw) &&
-           (f1_e[i % IW][52:0] > gth);
+           f1_gt[i % IW];
     pop = (st == FILL || st == FLUSH) && fc[i] != 0 && hp_rdy[i];
     if (push) begin ff[i * FD + fw[i]] <= f1_e[i % IW]; fw[i] <= fw[i] + 1'b1; end
     if (pop) fr[i] <= fr[i] + 1'b1;
