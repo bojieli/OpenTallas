@@ -35,7 +35,8 @@ module dsfd_coll_p2_lane #(
     parameter integer EVT = 3, parameter integer EVR = 1,    // event widths sent / received (0 = none)
     parameter integer CRED = 8,                               // receive class buffer (0 = DIRECT)
     parameter integer TCRED = 8,                              // credits for the sent class (= the peer's CRED; 0 = DIRECT)
-    parameter integer EQ = 4, parameter integer LCRED = 8
+    parameter integer EQ = 4, parameter integer LCRED = 8,
+    parameter integer OGRANT = 0                              // DIRECT only: r_v / r_d / r_r = MTP grant protocol (die bus)
 ) (
     input  wire [0:0]             ck, rs,
     input  wire [0:0]             x_v,  output wire [0:0] x_r,  input  wire [(TXW>0?TXW:1)-1:0] x_d,   // data to send
@@ -154,6 +155,12 @@ module dsfd_coll_p2_lane #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) ov <= 1'b0; else if (!ov || r_r[0]) ov <= cb_v;
         always @(posedge clk) if (cb_pop) od <= cb_d;
+    end else if (!OGRANT) begin : g_direct_vr     // plain valid / ready output register (the pin ready reaches its enables)
+        assign cb_flt = 1'b0; assign cb_pop = 1'b0; assign cb_v = 1'b0; assign cb_d = '0; assign cb_room = 1'b1; assign cb_room2 = 1'b1;
+        assign o_free = !ov || r_r[0];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) ov <= 1'b0; else if (w_in) ov <= 1'b1; else if (r_r[0]) ov <= 1'b0;
+        always @(posedge clk) if (w_in) od <= word[RW_-1:0];
     end else begin : g_direct
         // DIRECT (route mtpl-dsfd_coll_p2_lane_ba-0ddaf548b TT -141: the consumer's ready pin r_r fanned out to the
         // 604-bit output enables and the landing skid, 13-15 levels): the received words land in a 4-word register FIFO
@@ -169,7 +176,7 @@ module dsfd_coll_p2_lane #(
         assign o_free = db_room;
         always @(posedge clk) begin ov <= 1'b0; od <= '0; end
     end endgenerate
-    generate if (RCRED > 0) begin : g_out_reg
+    generate if (RCRED > 0 || !OGRANT) begin : g_out_reg
         assign r_v = ov; assign r_d = od;
     end endgenerate
     reg [ERW-1:0] rev;
@@ -221,7 +228,7 @@ module dsfd_coll_p2_lane_ba (
     output wire [0:0] lo_v, input wire [0:0] lo_r, output wire [552:0] lo_d,
     input  wire [0:0] li_v, output wire [0:0] li_r, input wire [552:0] li_d,
     input  wire [2:0] f_lflt, output wire [0:0] t_flt);
-    dsfd_coll_p2_lane #(.TXK(0), .TXW(0), .RXK(5), .RXW(604), .EVT(0), .EVR(0), .CRED(0), .TCRED(0)) u (.ck(ck), .rs(rs),
+    dsfd_coll_p2_lane #(.TXK(0), .TXW(0), .RXK(5), .RXW(604), .EVT(0), .EVR(0), .CRED(0), .TCRED(0), .OGRANT(1)) u (.ck(ck), .rs(rs),
         .x_v(1'b0), .x_r(), .x_d(1'b0), .r_v(r_v), .r_r(r_r), .r_d(r_d), .x_ev(1'b0), .r_ev(),
         .lo_v(lo_v), .lo_r(lo_r), .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .f_lflt(f_lflt), .t_flt(t_flt));
 endmodule
