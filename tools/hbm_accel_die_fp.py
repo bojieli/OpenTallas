@@ -576,6 +576,9 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              svc_gap_add=216.0, sm_colch_add=172.8, sm_ch01=1209.6, sm_ch12=561.6, hub_edge_ch=648.0, eq_ch=518.4,
              su_slot=(2016.144, 2808.0), sfu_frac=0.5, hc_mm2=550.8 * 5529.6 / 1e6, idx_score_frac=36 / 64,
              attn_rows=2, attn_cols=4, attn_col_gap=259.2, attn_row_gap=345.6, hub_col_gap=345.6,
+             # hbmdie-1011 (main 10-11: taller attention halves, not M8): lo 1,024.92 / hi 867.24 (tile 1,892.16, +25.9 %)
+             # grown into the empty band between the S and N row pairs; die height / hub blocks unchanged
+             attn_tall='physical/hbm_attn_tile_r/half_tall', attn_tall_corridor=345.6,
              idx_cols=((0, 1, 2), (3, 4, 5)), idx_col_gap=172.8, idx_gap=43.2, hc_gap=172.8, sfu_gap=216.0,
              idx_score_dx=432.0, spine_over=864.0, spch_q=1546.56,
              # hgi-1010/b lane groups (ot_hgi_vm_lanearb ace618cd8): VM | CP | quant abut, the W group leaves the VM's W face
@@ -789,6 +792,15 @@ def build_r25gq(variant):
     tp = th_lo + th_hi
     at_h = V['attn_rows'] * tp + (V['attn_rows'] - 1) * V['attn_row_gap']
     assert at_h <= qh, ('attention rows do not fit the quadrant', at_h, qh)
+    at_h0 = at_h
+    if V.get('attn_tall'):      # hbmdie-1011 (main 10-11: taller attention halves, M8 / M9 stay die-only): the halves take
+        # the attn_tall records' outlines; the S row pair keeps its bottom edge and grows UP into the empty band between
+        # the S and N pairs (N mirrored: grows DOWN), so the die height and the hub blocks do not move
+        recs_t = {h: json.loads((ROOT / V['attn_tall'] / f'hfd_attn_half_{h}/ports.json').read_text()) for h in ('lo', 'hi')}
+        assert abs(recs_t['lo']['w_um'] - tw) < 1e-6 and abs(recs_t['hi']['w_um'] - B['at_SW_00_hi'].w) < 1e-6, 'widths change'
+        th_lo, th_hi = recs_t['lo']['h_um'], recs_t['hi']['h_um']
+        tp = th_lo + th_hi
+        at_h = V['attn_rows'] * tp + (V['attn_rows'] - 1) * V['attn_row_gap']
     sfu_h = up(B['hb_sfu_SW'].w * B['hb_sfu_SW'].h * V['sfu_frac'] / su_w, GY)
     hc_h = up(V['hc_mm2'] * 1e6 / ix_w, GY)
     assert su_h + V['sfu_gap'] + sfu_h <= qh, ('SU + SFU column overflows', su_h + V['sfu_gap'] + sfu_h, qh)
@@ -824,7 +836,10 @@ def build_r25gq(variant):
         assert hc_y + hc_h <= qy + qh, ('HC over the index stack overflows', hc_y + hc_h, qy + qh)
         put(f'hb_hc_{q}', 'hb_hc_SW', ix_x, hc_y, ix_w, hc_h)
         rmap[f'hb_hc_{q}'] = f'hb_hc_{q}'
-        ty0 = up(qy + (qh - at_h) / 2, GY)
+        ty0 = up(qy + (qh - at_h0) / 2, GY)
+        if V.get('attn_tall'):      # S top below the die equator with half the >= 346 um central corridor
+            corr_ = H / 2 - (hb0 + ty0 - qy + at_h)
+            assert 2 * corr_ >= V.get('attn_tall_corridor', 345.6) - 1e-6, ('taller attention rows close the corridor', 2 * corr_)
         for r in range(V['attn_rows']):
             for c in range(V['attn_cols']):
                 # S: row 0 at the hub edge; N (mirrored): row 0 at the equator, as the R25GP grid (MX copies)
@@ -839,7 +854,8 @@ def build_r25gq(variant):
                     nm = f'at_{q}_{r}{c}_{half}'
                     xx = mx(x_, tw) if E_ else x_
                     yy_ = yh if S_ else my(yh, hh_)
-                    add(nm, f'at_{q}_00_{half}', xx, yy_, kind='attn_tile', region='hub')
+                    add(nm, f'at_{q}_00_{half}', xx, yy_, h=(hh_ if V.get('attn_tall') else None), kind='attn_tile',
+                        region='hub')
     # attention: base rows r (0..3) and columns c map onto R25GQ row r // 2 (the merged pair's work runs on one tile)
     for nm in B:
         m_ = re.fullmatch(r'at_([NS][EW])_(\d)(\d)_(lo|hi)', nm)
@@ -917,6 +933,8 @@ def build_r25gq_net(variant):
                                                           for par_, fam_ in V['shared_ks']['family'].items()}
                                               for k_ in range(8)})
     base = build(bv, network_probe=True)
+    if V.get('attn_tall'):      # hbmdie-1011: the taller halves' pin plans (N-face pins at the new top edge)
+        attn_half_fixed_ports(base, V['attn_tall'])
     Q = {it.name: it for it in geo_m['insts']}
     kind = {it.name: it.kind for it in base['insts']}
     gone = {n for n in kind if re.fullmatch(r'at_[NS][EW]_[23]\d_(lo|hi)', n)}
@@ -2536,6 +2554,14 @@ def split_attn(m, half_dir):
     for e in m.get('meso', []):
         if e.get('inst') in halves:
             e['inst'] = halves[e['inst']]['lo'].name            # the q receiver
+    attn_half_fixed_ports(m, half_dir)
+    m['attn_halves'] = {nm: [d['lo'].name, d['hi'].name] for nm, d in halves.items()}
+
+
+def attn_half_fixed_ports(m, half_dir):
+    """pin plans of hfd_attn_half_lo / _hi fixed to the half records in half_dir (exact rectangles at k = 1, face runs when
+    bundled).  split_attn's tail; hbmdie-1011: also re-bound on the R25GQ net by the taller-slot knob attn_tall."""
+    recs = {h: json.loads((ROOT / half_dir / f'hfd_attn_half_{h}/ports.json').read_text()) for h in ('lo', 'hi')}
     fixed = m.setdefault('fixed_ports', {})
     for h, rec in recs.items():
         text = (ROOT / half_dir / f'hfd_attn_half_{h}/io_place.tcl').read_text()
@@ -2579,7 +2605,6 @@ def split_attn(m, half_dir):
                 sp_ = dict(rects)
             mst.ports, mst.order = sp_, list(order)
         fixed[f'hfd_attn_half_{h}'] = fn
-    m['attn_halves'] = {nm: [d['lo'].name, d['hi'].name] for nm, d in halves.items()}
 
 
 MTP_X_STOP_LEF = 'physical/hbm_accel_die_views/mtp/hfd_mtp.lef'

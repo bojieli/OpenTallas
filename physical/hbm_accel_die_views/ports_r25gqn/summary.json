@@ -456,15 +456,15 @@
     "E",
     "inout"
    ],
-   "llk_N3": [
-    1122,
-    "E",
-    "inout"
-   ],
    "por_link": [
     1,
     "E",
     "output"
+   ],
+   "llk_N3": [
+    1122,
+    "E",
+    "inout"
    ],
    "pll_link": [
     1,
@@ -662,15 +662,15 @@
     "N",
     "output"
    ],
-   "f_hgi_vmw_dma": [
-    8992,
-    "S",
-    "input"
-   ],
    "t_dma_vr2r": [
     8257,
     "S",
     "output"
+   ],
+   "f_hgi_vmw_dma": [
+    8992,
+    "S",
+    "input"
    ],
    "f_dma_vr2q": [
     513,
@@ -1310,12 +1310,12 @@
     "input"
    ],
    "t_fused_ne": [
-    149,
+    151,
     "E",
     "output"
    ],
    "f_fused_ne": [
-    2,
+    3,
     "E",
     "input"
    ]
@@ -1323,38 +1323,38 @@
  },
  "hfd_hc_eng": {
   "kind": null,
-  "w": 4384.8,
-  "h": 1468.8,
+  "w": 4600.8,
+  "h": 1566.0,
   "instances": 1,
   "ports": {
    "f_fused_ne": [
-    149,
+    151,
     "N",
     "input"
    ],
    "t_fused_ne": [
-    2,
+    3,
     "N",
     "output"
    ],
    "f_lgE_rdn": [
     8257,
-    "S",
+    "N",
     "input"
    ],
    "f_lgE_wdn": [
     65,
-    "S",
+    "N",
     "input"
    ],
    "t_lgE_rup": [
     513,
-    "S",
+    "N",
     "output"
    ],
    "t_lgE_wup": [
     8961,
-    "S",
+    "N",
     "output"
    ]
   }
