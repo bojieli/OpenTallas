@@ -16,7 +16,7 @@ build() {  # build <dir> <defines>
 ls $G0/x.mem $G0/eqc.mem > /dev/null 2>&1 || { echo "BENCH_SETUP_FAILED: golden memories missing under $G0"; exit 4; }
 # safe-hbm S-C7: G = 8r / 16r selects the REP=1 top (broadcast flops replicated per group); M = repmut is its
 # negative control (group 1's rstd replica one edge late); G = 8x: REP=1 + relay stage on every input/output (conservative-1011/F), M = xrmut its negative control (wl_d relay skipped)
-DEF="+define+OT_NSPLIT_G$(echo $G | tr a-z A-Z)"; [ "$M" = mut ] && DEF="$DEF +define+OT_NSPLIT_MUT"; [ "$M" = repmut ] && DEF="$DEF +define+OT_NSPLIT_REP_MUT"; [ "$M" = xrmut ] && DEF="$DEF +define+OT_NSPLIT_XR_MUT"
+DEF="+define+OT_NSPLIT_G$(echo $G | tr a-z A-Z)"; [ "$M" = mut ] && DEF="$DEF +define+OT_NSPLIT_MUT"; [ "$M" = repmut ] && DEF="$DEF +define+OT_NSPLIT_REP_MUT"; [ "$M" = xrmut ] && DEF="$DEF +define+OT_NSPLIT_XR_MUT"; [ "$M" = pmut ] && DEF="$DEF +define+OT_NSPLIT_P_MUT"
 mkdir -p $O/ref $O/dut
 build $O/ref "" & p1=$!
 build $O/dut "$DEF" & p2=$!
