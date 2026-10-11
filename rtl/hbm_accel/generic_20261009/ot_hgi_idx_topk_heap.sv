@@ -182,6 +182,13 @@ module ot_hgi_idx_topk_hw #(
  localparam integer RA = (RD <= 1) ? 1 : $clog2(RD);
  localparam integer HW = (W <= 1) ? 1 : $clog2(W);
  localparam [2:0] IDLE=0, START=1, FILL=2, FLUSH=3, EXT=4, MERGE=5, ABORT=6, FIN=7;
+ // reset standard (ot_rst_relay): the port drives only the relay; heap h resets from region h, the control from region W.
+ // Release is 3 edges after the port; cmd_ready waits for it (up).
+ wire [W:0] rr;
+ ot_rst_relay #(.REGIONS(W + 1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+ wire rn = rr[W];
+ reg up;
+ always @(posedge clk or negedge rn) if (!rn) up <= 1'b0; else up <= 1'b1;
  reg [2:0] st;
  reg [31:0] n, m, row, cursor;
  reg [KW-1:0] k;
@@ -193,7 +200,7 @@ module ot_hgi_idx_topk_hw #(
  reg clr_go;
  genvar h, l;
  generate for (h = 0; h < W; h = h + 1) begin : g_h
-  ot_hgi_topk_heap #(.MAX_K(MAX_K), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_hp (.clk(clk), .rst_n(rst_n), .k(k), .op_v(hp_v[h]),
+  ot_hgi_topk_heap #(.MAX_K(MAX_K), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_hp (.clk(clk), .rst_n(rr[h]), .k(k), .op_v(hp_v[h]),
    .op_ext(hp_ext), .op_x(hp_x[h]), .op_rdy(hp_rdy[h]), .ext_v(hx_v[h]), .ext_d(hx_d[h]), .root_key(h_root[h]),
    .clr_go(clr_go), .idle(h_idle[h]));
  end endgenerate
@@ -222,7 +229,7 @@ module ot_hgi_idx_topk_hw #(
  assign f1_nan = f1_v && (|f1_nl);
  // in_ready leaves a flop compare: room is judged one edge late (<= FD - 4: up to 3 beats in flight past fc)
  reg in_ok;
- always @(posedge clk or negedge rst_n) if (!rst_n) in_ok <= 1'b0; else in_ok <= fmax <= FD - 4;
+ always @(posedge clk or negedge rn) if (!rn) in_ok <= 1'b0; else in_ok <= fmax <= FD - 4;
  assign in_ready = ENABLE && st == FILL && in_ok;
  wire beat = in_valid && in_ready;
  // ---------------------------------------------------------------- reverse buffers and merge
@@ -262,10 +269,10 @@ module ot_hgi_idx_topk_hw #(
  assign out_last = of_l[orp];
  assign out_values_valid = out_valid && values_enabled;
  wire o_pop = out_valid && out_ready;
- assign cmd_ready = st == IDLE;
+ assign cmd_ready = st == IDLE && up;
  // ---------------------------------------------------------------- control
- always @(posedge clk or negedge rst_n) begin
-  if (!rst_n) begin
+ always @(posedge clk or negedge rn) begin
+  if (!rn) begin
    st <= IDLE; done <= 1'b0; error <= 4'd0; n <= 0; m <= 0; k <= 0; row <= 0; cursor <= 0; values_enabled <= 1'b0;
    f1_v <= 1'b0; grp <= 0; clr_go <= 1'b0; emitted <= 0; oc <= 0; ow <= 0; orp <= 0;
    for (i = 0; i < W; i = i + 1) begin

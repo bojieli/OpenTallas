@@ -11,5 +11,5 @@ if [ ! -x $O/obj/Vtb_hgi_idx_chunk_el ]; then
   --top-module tb_hgi_idx_chunk_el -Mdir $O/obj $S rtl/test/hbm_idx_chunk_el/tb_hgi_idx_chunk_el.sv -j 16 > $O/build.log 2>&1 \
   || { tail -20 $O/build.log; echo HGI_IDX_CHUNK_EL BUILD_FAIL; exit 2; }
 fi
-$O/obj/Vtb_hgi_idx_chunk_el $P > $O/run$P.log 2>&1; tail -2 $O/run$P.log
+$O/obj/Vtb_hgi_idx_chunk_el $P > $O/run$P.log 2>&1; grep -m5 ERR $O/run$P.log; grep 'summary\|HGI_IDX_CHUNK_EL' $O/run$P.log
 grep -q "HGI_IDX_CHUNK_EL PASS" $O/run$P.log
