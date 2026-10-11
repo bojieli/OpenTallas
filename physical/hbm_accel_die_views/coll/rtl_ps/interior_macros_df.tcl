@@ -30,7 +30,10 @@ set array_w [expr {3*$mw+2*$gap}]
 set array_h [expr {6*$mh+5*$gap}]
 set x0 [expr {($dw-$array_w)/2}]
 set y0 [expr {($dh-$array_h)/2}]
-if {$x0 < 48 || $y0 < 48} { error "hcoll interior_df outline too small for 48um pin corridors" }
+# compact slice (< 400 um wide, the hierarchical hfd_coll tile: 364 x 386 = ~57% util): 20 um pin corridors suffice for
+# one face of pin flops (qp/qr 1,092 flops on the 364 um top face = 4 rows of DFFs)
+set cmin [expr {$dw < 400.0 ? 18.0 : 48.0}]
+if {$x0 < $cmin || $y0 < $cmin} { error "hcoll interior_df outline too small for ${cmin}um pin corridors" }
 set seen 0
 foreach name $macros {
     # odb names keep the escaped identifier, e.g. u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram
