@@ -168,7 +168,7 @@ module tb_s81_die_layer;
             integer njd = 0, ndn = 0;
             always @(posedge ck) if (rst) begin
                 if (jv && jr) jv <= 1'b0;
-                if (peer_go && !jv && started < JOBS && njd >= started) begin   // one peer job at a time (as the kit) jv <= 1'b1; started <= started + 1; end
+                if (peer_go && !jv && started < JOBS && njd >= started) begin jv <= 1'b1; started <= started + 1; end   // one peer job at a time (as the kit)
                 if (jd_) njd <= njd + 1;
                 if (cdn[gd][8]) begin
                     if (cdn[gd][6:0] !== 7'(ndn % NMSG)) begin errors = errors + 1; $display("ERR peer %0d done tag %h exp %0d", gd, cdn[gd][7:0], ndn); end
