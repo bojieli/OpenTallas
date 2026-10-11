@@ -3,6 +3,7 @@ module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm
     localparam integer NSM = 32;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 11, errors = 0;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg pub_v = 0; reg [39:0] pb = 0; reg [31:0] pst = 0; reg [19:0] pm = 0; reg [12:0] pq = 0; reg [3:0] pp = 0;
     reg [NSM-1:0] rv = 0; reg [NSM*12-1:0] rr = 0; reg [NSM*256-1:0] rd = 0;
     wire ra, rb, da, db, fa, fb; wire [4*338-1:0] qa, qb; wire [4*274-1:0] xa, xb; wire [273:0] ta, tb2; reg [337:0] tq = 0;

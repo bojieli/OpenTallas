@@ -13,6 +13,7 @@ module tb_qfd_seq_su_bi_psram;
     initial #0.1 rst_n = 0;                          // a real negedge: every async reset fires (4-state sim)
     always #0.5 clk = ~clk;
     integer seed = SEED, cyc = 0, bad = 0, nrd = 0, nld = 0, k, i;
+    initial begin seed = SEED; $display("SEED=%0d", seed); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg [23:0] xacc = 0;
     reg  [1-1:0] h_start = 0;
     reg  [NW-1:0] tp_token = 0;

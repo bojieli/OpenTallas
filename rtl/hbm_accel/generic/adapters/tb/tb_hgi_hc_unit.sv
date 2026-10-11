@@ -20,6 +20,7 @@ module tb_hgi_hc_unit;
     end
     integer c0;
     integer errors = 0, cyc = 0, seed = 5; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 5; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg rst_n = 0; reg [937:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
     reg [255:0] hbm [longint];
