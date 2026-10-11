@@ -51,7 +51,8 @@ GROWS = D // 16                     # 320
 
 RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
-       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_croot.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_croot.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
@@ -315,7 +316,9 @@ JOB = re.compile(r"HCJ op=(\d+) kind=(\d+) start=(\d+) done=(\d+)")
 
 
 def build(out: Path, ng, fp, mut, amut, lvm, hier=0):
-    tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + ("_hier" if hier else "")
+    # hier: 1 = root split + column chains of octet sub-tiles; 2 = the structural variant (half-octet sub-tiles, split
+    # column roots)
+    tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + {0: "", 1: "_hier", 2: "_hier2"}[hier]
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_hc_master"
     if not exe.exists():
@@ -325,7 +328,7 @@ def build(out: Path, ng, fp, mut, amut, lvm, hier=0):
             srcs = dpi_rest(obj) + srcs
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
-               f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={hier}", *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier == 2)}", f"-GCSPLIT={int(hier == 2)}", *map(str, srcs), "-CFLAGS", "-O1"]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode != 0:

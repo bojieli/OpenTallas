@@ -13,7 +13,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_comb #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer WIN = 2, WOUT = 2, MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16
+    parameter integer WIN = 2, WOUT = 2, MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16,
+    parameter integer HALF = 0, RLY = 1,            // the chains' sub-tiles: half octets (2 a slot), RLY relays a hop
+    parameter integer DW = 3 + RW                   // the write path to the pins (send + capture + relays + pin flop)
 ) (
     input  wire                 cck, crs, sk, srs,
     // centre pin tile seam
@@ -99,8 +101,6 @@ module ot_s81_hc_comb #(
     localparam integer NE0_ = necnt(0), NE1_ = necnt(1), NE2_ = necnt(2);
     localparam integer NE0 = (NE0_ > 0) ? NE0_ : 1, NE1 = (NE1_ > 0) ? NE1_ : 1, NE2 = (NE2_ > 0) ? NE2_ : 1;
     localparam integer NIM_ = NE0_ + NE1_ + NE2_, NIM = (NIM_ > 0) ? NIM_ : 1;
-    localparam integer DW = 3 + RW;                               // done waits the write path
-    localparam integer YB = $clog2(YD);
 
     // ---------------------------------------------------------------- adapter
     wire e_v, e_r, d_v, a_flt, c_flt, online;
@@ -156,8 +156,13 @@ module ot_s81_hc_comb #(
     wire              tf1;
     ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(AL), .OWN(1)) u_tree1 (.clk(sk), .rst_n(srs), .v(crv[S_RT]),
         .pk(crd[P_D +: NP * 128]), .im(32'd0), .ex(ex1), .r_v(), .r(), .fault(tf1));
-    localparam integer HOP = 3;                                   // registers a sub-tile hop (each bus)
-    localparam integer PAD = HOP * (NP - L1);                     // the centre chain is short by NP - L1 sub-tiles
+    localparam integer HOP = 2 + RLY;                             // registers a sub-tile hop (each bus)
+    localparam integer PAD = HOP * (NP - L1) * (HALF ? 2 : 1);    // the centre chain is short by NP - L1 octets
+    localparam integer FP = 2 + RF + PAD;                         // send + capture + RF + padding
+    // the centre chain's slice FIFO is popped FP cycles after the take, which the pin tile's credit count already
+    // retired: YD (the outer roots' depth) + FP entries
+    localparam integer YB = $clog2(YD + FP);
+    localparam integer YDC = 1 << YB;
     localparam integer RP = RT + 2 + PAD;                         // the outer chains' relay + send + capture + padding
     wire [RVW-1:0]    crv_p;
     wire [RDW-1:0]    crd_p;
@@ -222,12 +227,11 @@ module ot_s81_hc_comb #(
     reg [1:0] rr;
     always @(posedge sk) rr <= {rr[0], srs};
     assign ch_rst = rr[1];
-    localparam integer FP = 2 + RF + PAD;                         // send + capture + RF + padding
     wire [FVW-1:0] fv_p;
     wire [FSW-1:0] fd_p;
     ot_hdc_delay #(.W(FVW), .D(FP), .RESET(1)) u_pfv (.clk(sk), .rst_n(srs), .d(fv), .q(fv_p));
     ot_hdc_delay #(.W(FSW), .D(FP)) u_pfd (.clk(sk), .rst_n(srs), .d(fd), .q(fd_p));
-    reg  [YS1-1:0] yf [0:YD-1];
+    reg  [YS1-1:0] yf [0:YDC-1];
     reg  [YB-1:0]  yw, yr;
     wire pop = fv_p[S_RD];
     always @(posedge sk or negedge srs)
@@ -237,7 +241,7 @@ module ot_s81_hc_comb #(
             if (ya) yw <= yw + 1'b1;
             if (pop) yr <= yr + 1'b1;
             yn1 <= yn1 + ya - pop;
-            if (L1 > 0 && ((ya && !pop && yn1 == YD) || (pop && yn1 == 0))) yfl <= 1'b1;
+            if (L1 > 0 && ((ya && !pop && yn1 == YDC) || (pop && yn1 == 0))) yfl <= 1'b1;
         end
     always @(posedge sk) begin
         if (ya) yf[yw] <= y1;
