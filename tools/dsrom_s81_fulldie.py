@@ -3923,7 +3923,7 @@ HSRC_BUSES = (('wfc', 'hrsrc', 36, 't_hep', 'f_hep'),
               ('hrsrc', 'collective', 515, 't_hp', 'f_mhs'), ('collective', 'hrsrc', 1, 't_mhsg', 'f_hpg'))
 HSRC_HOST_BUSES = (('hrsrc', 'host', 2, 't_flt', 'f_hsrc_flt'),)
 HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
-HROW_UM = (3000.96, 751.68)      #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
+HROW_UM = (2998.08, 950.4)       #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
 # the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
 # (t_mhp<k> {flit 514, valid} / f_mhp<k> grant: three more LCR lane tiles + adapters in the MTPL composition, OPEN in
 # the collective composition owner's tree)
