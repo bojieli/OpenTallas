@@ -26,4 +26,4 @@
     output wire [256:0] t_hgi_rgxr0,
     output wire [256:0] t_hgi_rgxr1,
     output wire [337:0] t_hgi_vmq,
-    output wire [8959:0] t_hgi_vmw
+    output wire [8991:0] t_hgi_vmw

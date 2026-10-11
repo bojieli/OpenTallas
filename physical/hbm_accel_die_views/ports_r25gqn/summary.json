@@ -50,6 +50,11 @@
     "E",
     "output"
    ],
+   "t_hgi_vmw": [
+    8992,
+    "N",
+    "output"
+   ],
    "f_dma_vr2r": [
     8257,
     "N",
@@ -60,13 +65,8 @@
     "N",
     "output"
    ],
-   "ck": [
-    1,
-    "N",
-    "input"
-   ],
-   "rst": [
-    1,
+   "f_hgi_vmw": [
+    32,
     "N",
     "input"
    ],
@@ -75,18 +75,8 @@
     "N",
     "input"
    ],
-   "f_hgi_vmw": [
-    32,
-    "N",
-    "input"
-   ],
    "t_hgi_vmq": [
     338,
-    "N",
-    "output"
-   ],
-   "t_hgi_vmw": [
-    8960,
     "N",
     "output"
    ],
@@ -149,6 +139,16 @@
     257,
     "N",
     "output"
+   ],
+   "rst": [
+    1,
+    "N",
+    "input"
+   ],
+   "ck": [
+    1,
+    "N",
+    "input"
    ]
   }
  },
@@ -198,6 +198,26 @@
     "W",
     "inout"
    ],
+   "f_lgEatt_rdn": [
+    8257,
+    "W",
+    "input"
+   ],
+   "f_lgEatt_wdn": [
+    65,
+    "W",
+    "input"
+   ],
+   "t_lgEatt_rup": [
+    513,
+    "W",
+    "output"
+   ],
+   "t_lgEatt_wup": [
+    8961,
+    "W",
+    "output"
+   ],
    "cNW": [
     899,
     "W",
@@ -227,16 +247,6 @@
     129,
     "E",
     "output"
-   ],
-   "ck": [
-    1,
-    "S",
-    "input"
-   ],
-   "rst": [
-    1,
-    "S",
-    "input"
    ],
    "f_mtp": [
     517,
@@ -316,6 +326,36 @@
    "t_hgi_argmax": [
     691,
     "S",
+    "output"
+   ],
+   "rst": [
+    1,
+    "S",
+    "input"
+   ],
+   "ck": [
+    1,
+    "S",
+    "input"
+   ],
+   "f_lgEcp_rdn": [
+    8257,
+    "N",
+    "input"
+   ],
+   "f_lgEcp_wdn": [
+    65,
+    "N",
+    "input"
+   ],
+   "t_lgEcp_rup": [
+    513,
+    "N",
+    "output"
+   ],
+   "t_lgEcp_wup": [
+    8961,
+    "N",
     "output"
    ],
    "f_hgi_quant": [
@@ -451,16 +491,6 @@
     "E",
     "output"
    ],
-   "pll_stream": [
-    1,
-    "N",
-    "output"
-   ],
-   "por_stream": [
-    1,
-    "N",
-    "output"
-   ],
    "f_hgi_vmr": [
     274,
     "N",
@@ -481,16 +511,6 @@
     "N",
     "output"
    ],
-   "por_serial": [
-    1,
-    "N",
-    "output"
-   ],
-   "pll_serial": [
-    1,
-    "N",
-    "output"
-   ],
    "f_hgi_cfg": [
     40,
     "N",
@@ -503,6 +523,26 @@
    ],
    "t_hgi_cmdproc": [
     3,
+    "N",
+    "output"
+   ],
+   "por_stream": [
+    1,
+    "N",
+    "output"
+   ],
+   "pll_stream": [
+    1,
+    "N",
+    "output"
+   ],
+   "por_serial": [
+    1,
+    "N",
+    "output"
+   ],
+   "pll_serial": [
+    1,
     "N",
     "output"
    ],
@@ -617,6 +657,11 @@
     "N",
     "output"
    ],
+   "f_hgi_vmw_dma": [
+    8992,
+    "S",
+    "input"
+   ],
    "t_dma_vr2r": [
     8257,
     "S",
@@ -626,6 +671,11 @@
     513,
     "S",
     "input"
+   ],
+   "t_hgi_vmw_rdy": [
+    32,
+    "S",
+    "output"
    ],
    "f_hgi_coll": [
     338,
@@ -642,11 +692,6 @@
     "S",
     "input"
    ],
-   "f_hgi_vmw_dma": [
-    8960,
-    "S",
-    "input"
-   ],
    "t_hgi_coll": [
     274,
     "S",
@@ -659,11 +704,6 @@
    ],
    "t_hgi_vmw2_coll": [
     65,
-    "S",
-    "output"
-   ],
-   "t_hgi_vmw_dma": [
-    32,
     "S",
     "output"
    ],
@@ -747,35 +787,35 @@
     "W",
     "output"
    ],
-   "rst": [
-    1,
-    "W",
-    "input"
-   ],
-   "ck": [
-    1,
-    "W",
-    "input"
-   ],
    "f_lgE_rup": [
-    515,
+    516,
     "E",
     "input"
    ],
    "f_lgE_wup": [
-    8963,
+    8964,
     "E",
     "input"
    ],
    "t_lgE_rdn": [
-    8259,
+    8260,
     "E",
     "output"
    ],
    "t_lgE_wdn": [
-    67,
+    68,
     "E",
     "output"
+   ],
+   "rst": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck": [
+    1,
+    "E",
+    "input"
    ]
   }
  },
@@ -1209,16 +1249,6 @@
   "h": 358.536,
   "instances": 1,
   "ports": {
-   "ck": [
-    1,
-    "S",
-    "input"
-   ],
-   "rst": [
-    1,
-    "S",
-    "input"
-   ],
    "f_hgi_vmr": [
     274,
     "S",
@@ -1259,22 +1289,32 @@
     "S",
     "output"
    ],
-   "f_fused_ne": [
-    2,
-    "E",
+   "rst": [
+    1,
+    "S",
+    "input"
+   ],
+   "ck": [
+    1,
+    "S",
     "input"
    ],
    "t_fused_ne": [
     149,
     "E",
     "output"
+   ],
+   "f_fused_ne": [
+    2,
+    "E",
+    "input"
    ]
   }
  },
  "hfd_hc_eng": {
   "kind": null,
-  "w": 6069.6,
-  "h": 1490.4,
+  "w": 4384.8,
+  "h": 1468.8,
   "instances": 1,
   "ports": {
    "f_fused_ne": [
