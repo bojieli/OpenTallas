@@ -32,7 +32,10 @@
 // exps 1 + y BF16 W/32; SE per beat e SM_H*SM_LPH/16 (binary32); SO per beat o BF16 SM_H*SM_LPH/32.
 //
 // MUT (bench negative controls): 1 done one beat early; 2 done tag flipped; 3 SO uses a stale den (SE of the slot not
-// observed: the unit's den is cleared); 4 the gain set index ignored (always set 0).
+// observed: the unit's den is cleared); 4 the gain set index ignored (always set 0); 5 stale den: the softmax lanes'
+// den (denl) loads on the first SE after reset only, so every later SO divides by the first SE's den.
+// MUT 3 is behaviour-equivalent to MUT 0 (kept as a record): its one-cycle unit reset at SO parameter load hits only
+// valid / counter flops that already hold their reset values once SE is done; denl has no reset, so it is not cleared.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_core #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
@@ -154,7 +157,7 @@ module ot_s81_su_core #(
     wire [SMW*32-1:0] sm_ed; wire [SM_H*32-1:0] sm_mx, sm_es, sm_den; wire [SMW*16-1:0] sm_od;
     reg sm_rst_n;                                     // MUT 3: the unit's den lost between SE and SO
     ot_dsrom_su_softmax #(.H(SM_H), .LPH(SM_LPH), .NVMAX(SM_NVMAX), .DIN(1), .DOUT(1), .RWU(1), .RWD(1), .LM(LM),
-                          .LA(LA)) u_sm (
+                          .LA(LA), .STALEDEN(MUT == 5)) u_sm (
         .clk(clk), .rst_n(rst_n && sm_rst_n), .nv(sm_nv), .lt(sm_lt), .scale(sm_scale), .sink(sm_sink),
         .cosv(sm_cos), .sinv(sm_sin), .s_v(sm_sv), .s_d(be[0 +: SMW * 32]), .e_v(sm_ev), .e_d(sm_ed), .mx_v(sm_mxv),
         .mx_d(sm_mx), .es_v(sm_esv), .es_d(sm_es), .den_v(sm_denv), .den_d(sm_den), .pv_v(sm_pv), .pv_d(be[0 +: SMW * 32]),

@@ -4,8 +4,11 @@
 // only by c_done_v, no ready), a behavioural VM (fixed read latency LVM on every read slot, writes in issue order) and
 // no y bus (SU operands come through the wide VM read port).  Files (tools/s81_suhc/su_gate.py prep): vm.mem (initial
 // VM image), prog.mem (84-bit commands in program order), expa.mem / expd.mem
-// (expected VM rows), n.mem (counts).  Prints per job its engine start / done (slab cycles) and
-// SUG jobs= done= err= rows= fault= code= cyc= bad_tag=  then SUG PASS / SUG FAIL.
+// (expected VM rows), n.mem (counts), jexp.mem (per op: first index into expa / ed and row count of the job's result
+// rows).  Done contract check: at the core's e_done_v (slab clock, after that cycle's writes) every result row of the
+// job must already hold its expected value -- a consumer issued on done reads them; a done ahead of the job's last
+// row write counts in early= and fails the run even when the row lands later.  Prints per job its engine start / done (slab cycles) and
+// SUG jobs= done= err= rows= fault= code= cyc= bad_tag= early=  then SUG PASS / SUG FAIL.
 module tb_s81_su_master;
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40;
     parameter integer S_RD = 16, S_WR = 16, LVM = 10, MUT = 0, AMUT = 0;
@@ -40,6 +43,8 @@ module tb_s81_su_master;
     reg [13:0]      ea [0:MAXE-1];
     reg [511:0]     ed [0:MAXE-1];
     reg [31:0]      nm [0:2];
+    reg [63:0]      jexp [0:MAXJ-1];
+    integer early, k;
     integer fd;
     integer n_qn, n_qnq, n_kv, n_kvq, n_qb, n_qbo, n_sw, n_swo, n_ss, n_se, n_sp, n_so, n_beat;
     initial begin n_qn = 0; n_qnq = 0; n_kv = 0; n_kvq = 0; n_qb = 0; n_qbo = 0; n_sw = 0; n_swo = 0; n_ss = 0; n_se = 0;
@@ -61,6 +66,9 @@ module tb_s81_su_master;
         $readmemh("expa.mem", ea);
         $readmemh("expd.mem", ed);
         $readmemh("n.mem", nm);
+        for (i = 0; i < MAXJ; i = i + 1) jexp[i] = 64'd0;
+        $readmemh("jexp.mem", jexp);
+        early = 0;
         nj = nm[0]; ne = nm[1]; ny = nm[2];
         for (i = 0; i < MAXJ; i = i + 1) begin jstart[i] = -1; jdone[i] = -1; end
         credits = 8; ip = 0; ndone = 0; yb = 0; bad_tag = 0; pend = 0; scyc = 0;
@@ -91,6 +99,14 @@ module tb_s81_su_master;
         // writes take effect at issue (before reads of the same cycle: the core never mixes them in one job)
         for (s = 0; s < S_WR; s = s + 1)
             if (wq_v[s]) vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512];
+        // done contract: the job's rows are all in the VM, with their values, when the core pulses done
+        if (dut.u_core.e_done_v)
+            for (k = 0; k < jexp[dut.u_core.e_done_tag[6:0]][31:0]; k = k + 1)
+                if (vm[ea[jexp[dut.u_core.e_done_tag[6:0]][63:32] + k]] !== ed[jexp[dut.u_core.e_done_tag[6:0]][63:32] + k]) begin
+                    if (early < 5) $display("early done op=%0d row %0d", dut.u_core.e_done_tag[6:0],
+                                            ea[jexp[dut.u_core.e_done_tag[6:0]][63:32] + k]);
+                    early = early + 1;
+                end
         // reads: fixed latency LVM
         for (i = 63; i > 0; i = i - 1) begin dl_v[i] = dl_v[i - 1]; dl_a[i] = dl_a[i - 1]; end
         dl_v[0] = rq_v; dl_a[0] = rq_row;
@@ -119,9 +135,9 @@ module tb_s81_su_master;
         $display("SUC qn %0d/%0d kv %0d/%0d qb %0d/%0d sw %0d/%0d sm s %0d e %0d pv %0d o %0d beats %0d ph %0d rr %0d nrow %0d cw %0d nw %0d",
                  n_qn, n_qnq, n_kv, n_kvq, n_qb, n_qbo, n_sw, n_swo, n_ss, n_se, n_sp, n_so, n_beat, dut.u_core.ph,
                  dut.u_core.rr, dut.u_core.nrow, dut.u_core.cw, dut.u_core.nw);
-        $display("SUG jobs=%0d done=%0d err=%0d rows=%0d fault=%0d code=%0d cyc=%0d bad_tag=%0d", nj, ndone, errs, ne,
-                 flt, fcode, scyc, bad_tag);
-        if (errs == 0 && ndone == nj && !flt && bad_tag == 0 && pend == 0) $display("SUG PASS"); else $display("SUG FAIL");
+        $display("SUG jobs=%0d done=%0d err=%0d rows=%0d fault=%0d code=%0d cyc=%0d bad_tag=%0d early=%0d", nj, ndone, errs, ne,
+                 flt, fcode, scyc, bad_tag, early);
+        if (errs == 0 && ndone == nj && !flt && bad_tag == 0 && early == 0 && pend == 0) $display("SUG PASS"); else $display("SUG FAIL");
         $finish;
     end
 endmodule

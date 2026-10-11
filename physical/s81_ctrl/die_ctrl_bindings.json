@@ -16,8 +16,10 @@
    "note": "non-PQ dies: gather_c phase stage = start, capture_c drained = done (lead s81-ctl v2); PQ dies: PQ core master (RTL pending)"
   },
   "su": {
-   "masters": [],
-   "note": "s81-suhc-1011: dsfd_sp_su master in progress (sibling); bind when its gate passes"
+   "masters": [
+    "dsfd_sp_su_c"
+   ],
+   "note": "s81die-1011/ctrl: dsfd_sp_su (main 28e66b4d4, full shape 3/3 exact, mutants FAIL) behind c_cmd/c_done/c_st (rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv) in su_s; f_inp = VM row-completion dependency net (vm t_inp_su); dsfd_sp_su_h replaces it with the same pins"
   },
   "hc": {
    "masters": [
@@ -102,5 +104,37 @@
    "spare",
    "eng"
   ]
+ },
+ "absent_ports": {
+  "rule": "s81die-1011/ctrl: a master port that a die role / stack set does not use is DECLARED here; die_port_audit reports it as declared_absent (not a finding) only if the RTL port exists with that width and no die bus reaches it. Inputs carry the declared constant (the die netlist tie), outputs are 'open'. Nothing undeclared is waived.",
+  "layer1": {
+   "dsfd_stage_seq_c": {
+    "c8": "open",
+    "d8": "9'd0",
+    "s8": "2'b00",
+    "c9": "open",
+    "d9": "9'd0",
+    "s9": "2'b00",
+    "c10": "open",
+    "d10": "9'd0",
+    "s10": "2'b00",
+    "c11": "open",
+    "d11": "9'd0",
+    "s11": "2'b00",
+    "note": "engines 8 head, 9 emb, 10 eng, 11 spare are role-absent on a layer1 die (role_absent.layer1); engine 7 hop is NOT declared (pending the WFC port-7 endpoint)"
+   },
+   "dsfd_bk_selector_c": {
+    "iNE": "515'd0",
+    "iNW": "515'd0",
+    "iSE": "515'd0",
+    "note": "layer1 = one HBM stack (SW): the NE / NW / SE svc index inputs have no stack (STACKS.layer1)"
+   },
+   "dsfd_bk_collector_c": {
+    "cNE": "515'd0",
+    "cNW": "515'd0",
+    "cSE": "515'd0",
+    "note": "layer1 = one HBM stack (SW): the NE / NW / SE svc row-export inputs have no stack"
+   }
+  }
  }
 }
