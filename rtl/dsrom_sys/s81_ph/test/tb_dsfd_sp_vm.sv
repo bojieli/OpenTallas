@@ -338,7 +338,9 @@ module tb_dsfd_sp_vm;
                     dd = rq_d[r_][j_]; rq_d[r_][j_] = rq_d[r_][j_+1]; rq_d[r_][j_+1] = dd;
                 end
             end
-            if (MODE == 0) r_tail[rnd(52) % NR] = 60;      // one late last element a phase (an early done reads stale)
+            // rnd() has a side effect (rs); a side-effecting index is evaluated twice by Verilator 5.032 (SIDEEFFECT) and
+            // desynchronises the stimulus stream between simulator versions: draw into a temporary first.
+            if (MODE == 0) begin p_ = rnd(52) % NR; r_tail[p_] = 60; end      // one late last element a phase (an early done reads stale)
             cap_pend = cap_pend + n_; n_el_exp = n_el_exp + n_;
             cap_phase = n_;
         end
