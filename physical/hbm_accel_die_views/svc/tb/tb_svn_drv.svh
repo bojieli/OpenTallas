@@ -32,6 +32,7 @@
   integer f_reads = 0, f_writes = 0, f_bursts = 0, max_infl = 0, wr_base0 = 0, wr_land_t = -1;
   reg [29:0] hot [0:15];
   reg nep_done = 1'b0;
+  reg f_have = 1'b0, f_wr; integer f_h, f_s0, f_L, raw_seen = 0;
   function automatic [7:0] g2b(input [7:0] g);
     integer i; begin g2b[7] = g[7]; for (i = 6; i >= 0; i = i - 1) g2b[i] = g2b[i+1] ^ g[i]; end
   endfunction
@@ -92,13 +93,18 @@
     case (nmode)
       0: nmode = 1;
       1: begin   // functional mix (2,000 ops), random gaps
-        if (nops < 2000 && ($urandom % 3) != 0) begin
-          h = $urandom % 16; s0 = $urandom % 4; L = 1 + ($urandom % (4 - s0));
-          if (($urandom % 2) && wr_ok) issue_write(hot[h] + 30'(s0), {$urandom, $urandom, $urandom, $urandom, $urandom,
-                                                                       $urandom, $urandom, $urandom}, w);
-          else if (rd_ok && rbres + L <= N_RB) issue_read(hot[h] + 30'(s0), L, w);
+        // the next op is drawn once and HELD until the protocol admits it (a read waits for every write to pop: the
+        // kport's RAW rule), so reads and writes interleave in runs and reads follow writes to the same rows
+        if (nops < 2000 && !f_have && ($urandom % 3) != 0) begin
+          f_have = 1'b1; f_wr = ($urandom % 8) < 3; f_h = $urandom % 16; f_s0 = $urandom % 4; f_L = 1 + ($urandom % (4 - f_s0));
         end
-        if (nops >= 2000 && eh == et && unp == 0 && legacy_done) begin nmode = 2; nops = 0; end
+        if (f_have) begin
+          if (f_wr && wr_ok) begin issue_write(hot[f_h] + 30'(f_s0), {$urandom, $urandom, $urandom, $urandom, $urandom,
+                                                                     $urandom, $urandom, $urandom}, w); f_have = 1'b0; end
+          else if (!f_wr && rd_ok && rbres + f_L <= N_RB) begin issue_read(hot[f_h] + 30'(f_s0), f_L, w); f_have = 1'b0;
+            if (raw_seen < 1000000 && mm.exists(hot[f_h] + 30'(f_s0))) raw_seen = raw_seen + 1; end
+        end
+        if (nops >= 2000 && !f_have && eh == et && unp == 0 && legacy_done) begin nmode = 2; nops = 0; end
       end
       2: begin   // read rate: 256 rows
         if (nops < 256 && rd_ok && rbres + 4 <= N_RB) begin if (t_first < 0) t_first = cyc; issue_read(rowadr(nops), 4, w); end
@@ -129,7 +135,8 @@
     lqs[0] <= w;
   end
   task automatic nep_report;
-    $display("NEP_BENCH native ops: reads %0d (bursts %0d) writes %0d beats %0d, max in flight %0d, PHY landed writes %0d, landing errors %0d, mode %0d",
-             f_reads, f_bursts, f_writes, nbeats, max_infl, n_wr_land, n_land_bad, nmode);
+    $display("NEP_BENCH native ops: reads %0d (bursts %0d, reads of written sectors %0d) writes %0d beats %0d, max in flight %0d, PHY landed writes %0d, landing errors %0d, mode %0d",
+             f_reads, f_bursts, raw_seen, f_writes, nbeats, max_infl, n_wr_land, n_land_bad, nmode);
+    if (raw_seen < 100) begin err = err + 1; $display("ERR native mix exercised only %0d reads of written sectors", raw_seen); end
     if (nmode != 5) begin err = err + 1; $display("ERR native driver incomplete (mode %0d, beats %0d/%0d)", nmode, eh, et); end
   endtask

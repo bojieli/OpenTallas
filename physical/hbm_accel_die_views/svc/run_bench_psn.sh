@@ -15,14 +15,15 @@ set -u
 O=$1; mkdir -p $O; V=physical/hbm_accel_die_views/svc; T=$V/tb
 rm -f $O/summary.txt
 mkdir -p $O/ps
-for f in $V/rtl/seg_psn/*.sv; do
+SD=${SEGD:-seg_psn}
+for f in $V/rtl/$SD/*.sv; do
   sed -E 's/\b(hfd_svc_(SW|SE)_s[0-9]+)\b/\1_ps/g; s/\b(hfd_svc_(SW|SE|NW|NE)_seg)\b/\1_ps/g' $f > $O/ps/$(basename $f .sv)_ps.sv
 done
 LIB="rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv $V/rtl/ot_hbm_svc_core.sv $V/rtl/ot_hbm_svc_seg_lib.sv $V/rtl/ot_hbm_svc_ps_lib.sv"
 NEPLIB=$V/rtl/ot_hbm_svc_nep_lib.sv
 rc=0
 if command -v yosys >/dev/null; then
-  for f in $V/rtl/seg_psn/hfd_svc_S[WE]_s[0-9].sv; do
+  for f in $V/rtl/$SD/hfd_svc_S[WE]_s[0-9].sv; do
     m=$(basename $f .sv)
     ( yosys -q -p "read_verilog -sv $LIB $NEPLIB $f; hierarchy -check -top $m; proc; flatten; opt_clean; check -assert" > $O/lint_$m.log 2>&1
       echo "lint_$m rc=$?" > $O/lint_$m.rc ) &
@@ -37,7 +38,7 @@ sim() {   # sim <label> <st> <fam> <nep lib> <args...>
   verilator --binary --timing -j ${VJ:-16} -Wno-fatal "$@" "${X[@]}" -DOT_SVC_VLT --top-module tb_svn_ps_$S -I$T --Mdir "$O/vlt_$L" $SFILES > "$O/build_$L.log" 2>&1 || { echo "$L build FAIL" >> "$O/summary.txt"; return 3; }
   "$O/vlt_$L/Vtb_svn_ps_$S" > "$O/$L.log" 2>&1
 }
-POS=${POS:-"SW:0 SW:30 SW:60 SW:90 NE:30"}
+POS=${POS:-"SW:0 SW:30 SW:43 SW:60 SW:90 NE:30 NE:43"}
 for c in $POS; do s=${c%%:*}; x=${c##*:}; f=SW; [ $s = NE ] && f=SE
   sim pos_${s}_x$x $s $f $NEPLIB -DPS_STREAMS -GNXL=$x & done
 sim neg_drop SW SW $O/nep_mut1.sv -DPS_STREAMS & sim neg_order SW SW $O/nep_mut2.sv -DPS_STREAMS &
