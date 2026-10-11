@@ -10,7 +10,11 @@
 // PASS line "TB_S81PH_COLL_SYS PASS".  Cycle report: the last result cycle of DUT and reference.
 module tb_s81ph_coll_sys;
     parameter integer SPEC = 1, FIXW = 0, FIXM = -1, PERF = 0, NM = 40, MAXW = 12, NPT = 30, CHB = 60, CHU = 12, EPER = 97, SEED = 7, TSR = 7,
-                      WARM = 20;   // VM sends nothing before this cycle (pricing: links trained before the first collective)
+                      WARM = 20,   // VM sends nothing before this cycle (pricing: links trained before the first collective)
+                      // TB_MTP (mtp-colllane-1011): the dedicated MTP lane W4 (dies d <-> d ^ 1, board channel CHB) with the
+                      // head-die sequencer's token / seed / accept traffic at the real 8 / 8 hub stations; MSTALL see
+                      // tb_mtp_lane_io.  MTP_HOLD: cycles to wait for MTP after the collective is complete.
+                      NTOK = 300, NSEED = 80, NACC = 24, MSTALL = 0, MTP_HOLD = 40000, TGAP = 0;
     localparam integer FW = 512, PW = 547, W = 552;
     reg [63:0] rs = 64'h243F6A8885A308D3 ^ SEED;
     function [31:0] rnd(input integer d);
@@ -62,6 +66,7 @@ module tb_s81ph_coll_sys;
     reg  [591:0] fvm [0:3];
     reg  [2:0] tsr [0:3];
     wire [2099:0] tvm [0:3];
+    wire [511:0] mtx [0:3];
     genvar gd, gl;
     generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_die
         wire tf0, tf1, tf2, tf3, tf4, tf5, tf6, tf7;
@@ -72,7 +77,25 @@ module tb_s81ph_coll_sys;
             .t_vm(tvm[gd]),
             .tdW0(tx[gd][0]), .tdW1(tx[gd][1]), .tdW2(tx[gd][2]), .tdW3(tx[gd][3]),
             .tdE0(tx[gd][4]), .tdE1(tx[gd][5]), .tdE2(tx[gd][6]), .tdE3(tx[gd][7]),
-            .tfW0(tf0), .tfW1(tf1), .tfW2(tf2), .tfW3(tf3), .tfE0(tf4), .tfE1(tf5), .tfE2(tf6), .tfE3(tf7));
+            .tfW0(tf0), .tfW1(tf1), .tfW2(tf2), .tfW3(tf3), .tfE0(tf4), .tfE1(tf5), .tfE2(tf6), .tfE3(tf7)
+`ifdef TB_MTP
+            , .f_mtp(fmtp), .t_mtp(tmtp), .rW4(mrx), .tdW4(mtx[gd]), .tfW4(), .t_mrt(mrt), .f_mrt(fmrt), .t_mrs(mrs),
+            .f_mrs(fmrs), .t_macc(macc)
+`endif
+            );
+`ifdef TB_MTP
+        wire [647:0] fmtp; wire [1:0] tmtp; wire [514:0] mrx; wire [512:0] mrt; wire [77:0] mrs; wire [56:0] macc;
+        wire fmrt, fmrs, mov; wire [511:0] mod;
+        ot_dsrom_link_chan #(.W(512), .MAXD(CHB), .ERR_PERIOD(EPER), .ERR_OFFSET(gd * 8 + 8), .ERR_STRIDE(37)) u_mch (
+            .clk(clk), .rst_n(rsts[gd ^ 1]), .delay(16'd0), .in_valid(rsts[gd ^ 1]), .in_data(mtx[gd ^ 1]),
+            .out_valid(mov), .out_data(mod), .err_injected());
+        assign mrx = {1'b0, 1'b1, mod, mov};
+        integer tok_rx, seed_rx, acc_rx, tok_tx, seed_tx, acc_tx, merrs, tf_tx, tf_rx, tl_rx;
+        tb_mtp_lane_io #(.DIE(gd), .NTOK(NTOK), .NSEED(NSEED), .NACC(NACC), .MSTALL(MSTALL), .TGAP(TGAP)) u_io (
+            .clk(clk), .rst_n(rsts[gd]), .cyc(cyc), .f_mtp(fmtp), .t_mtp(tmtp), .t_mrt(mrt), .f_mrt(fmrt), .t_mrs(mrs),
+            .f_mrs(fmrs), .t_macc(macc), .tok_rx(tok_rx), .seed_rx(seed_rx), .acc_rx(acc_rx), .tok_tx(tok_tx),
+            .seed_tx(seed_tx), .acc_tx(acc_tx), .errs(merrs), .tok_first_tx(tf_tx), .tok_first_rx(tf_rx), .tok_last_rx(tl_rx));
+`endif
         for (gl = 0; gl < 8; gl = gl + 1) begin : g_lane
             // lane gl of die gd receives lane gl of die gd ^ X(gl)
             localparam integer X = (gl == 0) ? 1 : (gl == 1) ? 2 : (gl == 2) ? 3 : (gl == 6) ? 2 : (gl == 7) ? 3 : 1;
@@ -113,6 +136,7 @@ module tb_s81ph_coll_sys;
     integer rn [0:3], r_last_cyc;
     integer ridx [0:3];                  // plan index of the next reference output (one output per record)
     integer cyc, rp_n;
+    integer cdone_cyc = -1;           // the cycle the collective traffic is complete
     always @(posedge clk) begin
         cyc <= cyc + 1;
         for (d = 0; d < 4; d = d + 1) begin
@@ -211,16 +235,48 @@ module tb_s81ph_coll_sys;
             end
         end
         // ---- end
-        if (cyc > 400000 || (cyc > 1000 && dn[0] == rn[0] && dn[1] == rn[1] && dn[2] == rn[2] && dn[3] == rn[3] &&
-             rn[0] > 0 && ridx[0] == TOT_IDX() && all_pt())) begin
+        if (cdone_cyc < 0 && cyc > 1000 && dn[0] == rn[0] && dn[1] == rn[1] && dn[2] == rn[2] && dn[3] == rn[3] &&
+             rn[0] > 0 && ridx[0] == TOT_IDX() && all_pt()) cdone_cyc = cyc;
+        if (cyc > 400000 || (cdone_cyc >= 0 && (mtp_done() || cyc > cdone_cyc + MTP_HOLD))) begin
+            mtp_end();
             for (d = 0; d < 4; d = d + 1) if (dn[d] != rn[d] || ridx[d] != TOT_IDX()) begin
                 errs = errs + 1; $display("DIE %0d INCOMPLETE dut %0d ref %0d of %0d", d, dn[d], rn[d], TOT_IDX()); end
             if (!all_pt()) begin errs = errs + 1; $display("PT INCOMPLETE"); end
-            $display("CYCLES dut_last %0d ref_last %0d first_send %0d records %0d messages %0d", d_last_cyc, r_last_cyc, first_send_cyc, TOT, NM);
+            $display("CYCLES dut_last %0d ref_last %0d first_send %0d records %0d messages %0d coll_done %0d", d_last_cyc, r_last_cyc, first_send_cyc, TOT, NM, cdone_cyc);
             if (errs == 0) $display("TB_S81PH_COLL_SYS PASS"); else $display("TB_S81PH_COLL_SYS FAIL errs %0d", errs);
             $finish;
         end
     end
+`ifdef TB_MTP
+    // every die's MTP streams are complete: tokens (unless both consumers are stalled forever), seeds (unless the
+    // seed consumer is), accept events (always: they need no consumer)
+    function mtp_done();
+        mtp_done = mtp_die_done(g_die[0].tok_rx, g_die[0].seed_rx, g_die[0].acc_rx) && mtp_die_done(g_die[1].tok_rx, g_die[1].seed_rx, g_die[1].acc_rx) &&
+                   mtp_die_done(g_die[2].tok_rx, g_die[2].seed_rx, g_die[2].acc_rx) && mtp_die_done(g_die[3].tok_rx, g_die[3].seed_rx, g_die[3].acc_rx);
+    endfunction
+    function mtp_die_done(input integer t, input integer s_, input integer a);
+        mtp_die_done = (MSTALL == 2 || t == NTOK) && (MSTALL == 1 || MSTALL == 2 || s_ == NSEED) && a == NACC;
+    endfunction
+    task mtp_end();
+        integer dd, t, s_, a, e, ttx, ftx, frx, lrx;
+        for (dd = 0; dd < 4; dd = dd + 1) begin
+            case (dd)
+                0: begin t = g_die[0].tok_rx; s_ = g_die[0].seed_rx; a = g_die[0].acc_rx; e = g_die[0].merrs; ttx = g_die[1].tok_tx; ftx = g_die[1].tf_tx; frx = g_die[0].tf_rx; lrx = g_die[0].tl_rx; end
+                1: begin t = g_die[1].tok_rx; s_ = g_die[1].seed_rx; a = g_die[1].acc_rx; e = g_die[1].merrs; ttx = g_die[0].tok_tx; ftx = g_die[0].tf_tx; frx = g_die[1].tf_rx; lrx = g_die[1].tl_rx; end
+                2: begin t = g_die[2].tok_rx; s_ = g_die[2].seed_rx; a = g_die[2].acc_rx; e = g_die[2].merrs; ttx = g_die[3].tok_tx; ftx = g_die[3].tf_tx; frx = g_die[2].tf_rx; lrx = g_die[2].tl_rx; end
+                default: begin t = g_die[3].tok_rx; s_ = g_die[3].seed_rx; a = g_die[3].acc_rx; e = g_die[3].merrs; ttx = g_die[2].tok_tx; ftx = g_die[2].tf_tx; frx = g_die[3].tf_rx; lrx = g_die[3].tl_rx; end
+            endcase
+            $display("MTP DIE %0d rx tokens %0d / %0d (peer sent %0d) seeds %0d / %0d accepts %0d / %0d errs %0d first_tok_latency %0d last_tok %0d",
+                     dd, t, NTOK, ttx, s_, NSEED, a, NACC, e, frx - ftx, lrx);
+            errs = errs + e;
+            if (!mtp_die_done(t, s_, a)) begin errs = errs + 1; $display("MTP DIE %0d INCOMPLETE", dd); end
+            if (MSTALL == 1 && s_ != 0) begin errs = errs + 1; $display("MTP DIE %0d seed consumer stalled but received", dd); end
+        end
+    endtask
+`else
+    function mtp_done(); mtp_done = 1'b1; endfunction
+    task mtp_end(); endtask
+`endif
     // outputs per die = reduce words (one per mode-0 record) + gather beats (one per mode-1 record)
     function integer TOT_IDX(); TOT_IDX = TOT; endfunction
     function all_pt();

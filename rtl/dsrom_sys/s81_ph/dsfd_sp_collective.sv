@@ -20,6 +20,26 @@ module dsfd_sp_collective (
     output wire [2099:0] t_vm,
     output wire [511:0]  tdW0, tdW1, tdW2, tdW3, tdE0, tdE1, tdE2, tdE3,
     output wire [0:0]    tfW0, tfW1, tfW2, tfW3, tfE0, tfE1, tfE2, tfE3
+`ifdef OT_S81PH_COLL_MTPL
+    // mtp-colllane-1011 (ds-1010 decision: DEDICATED MTP lane, not a pass-through queue in the core): lane W4 = the
+    // generator's first --mtp-links board SerDes (lk_W4: rW4 / tdW4 / tfW4), carrying the head-die sequencer's token
+    // return / seed / accept word between dsfd_coll_mtp_lane adapters (rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv).
+    //   f_mtp  = generator bus mtp -> collective 648 = {t_acc 57, t_sd 77, t_sv, t_td 512, t_tv} of dsfd_mtp_seq_rtt
+    //   t_mtp  = generator bus collective -> mtp 2 = {f_sg, f_tg} (grants, RTT-sized receivers dsfd_coll_mtp_ep 8 / 8)
+    //   t_mrt / f_mrt, t_mrs / f_mrs, t_macc: what the far die's sequencer sent (grant protocol / accept event); the
+    //   accept word's fault bit [56] also carries this die's MTP-lane faults (lane tile + adapter, sticky)
+    ,
+    input  wire [647:0]  f_mtp,
+    output wire [1:0]    t_mtp,
+    input  wire [514:0]  rW4,
+    output wire [511:0]  tdW4,
+    output wire [0:0]    tfW4,
+    output wire [512:0]  t_mrt,
+    input  wire [0:0]    f_mrt,
+    output wire [77:0]   t_mrs,
+    input  wire [0:0]    f_mrs,
+    output wire [56:0]   t_macc
+`endif
 );
 `ifndef S81PH_COLL_V1
     // CLAUDE S81-PH coll v2 (redesign pass, coll_m1 7 h in timing-driven placement at ~1M nets): the slab is a
@@ -85,6 +105,19 @@ module dsfd_sp_collective (
                 .li_d(li_d[g*553 +: 553]), .flt(flt[3*g +: 3]));
         end
     end endgenerate
+`ifdef OT_S81PH_COLL_MTPL
+    // the dedicated MTP lane: one more closed lane tile (credit seams, LCR 1; board lane: ch_b 1) + the MTP adapter.
+    // Nothing here touches the core tiles or lanes 0..7: collective traffic and MTP traffic share no queue.
+    wire m_lo_v, m_lo_r, m_li_v, m_li_r; wire [552:0] m_lo_d, m_li_d; wire [2:0] m_lflt;
+    dsfd_coll_lane_w #(.LCR(1)) u_ml (.ck(pll_stream), .rs(rst_stream), .chb(1'b1), .rx(rW4), .tx(tdW4), .tf(tfW4),
+        .lo_v(m_lo_v), .lo_r(m_lo_r), .lo_d(m_lo_d), .li_v(m_li_v), .li_r(m_li_r), .li_d(m_li_d), .flt(m_lflt));
+    dsfd_coll_mtp_lane u_ma (.ck(pll_stream), .rs(rst_stream),
+        .f_tv(f_mtp[0]), .f_td(f_mtp[512:1]), .t_tg(t_mtp[0]), .f_sv(f_mtp[513]), .f_sd(f_mtp[590:514]), .t_sg(t_mtp[1]),
+        .f_acc(f_mtp[647:591]),
+        .lo_v(m_lo_v), .lo_r(m_lo_r), .lo_d(m_lo_d), .li_v(m_li_v), .li_r(m_li_r), .li_d(m_li_d),
+        .t_rtv(t_mrt[0]), .t_rtd(t_mrt[512:1]), .f_rtg(f_mrt), .t_rsv(t_mrs[0]), .t_rsd(t_mrs[77:1]), .f_rsg(f_mrs),
+        .t_racc(t_macc), .f_lflt(m_lflt));
+`endif
 `else
     wire ck_s, ck_v, ck_h, lock, pd;
     ot_s81_pll_bb u_pll (.refclk(refclk[0]), .pd(pd), .ck_stream(ck_s), .ck_serial(ck_v), .ck_hbm(ck_h), .lock(lock));
