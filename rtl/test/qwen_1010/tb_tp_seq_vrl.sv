@@ -6,7 +6,9 @@
 // word it names (order kept).  VRL = 0: the base ot_qwen_tp_seq_w12 (assumes 1 edge); VRL > 0: ot_qwen_tp_seq_w12_vrl
 // with that read latency.  Expected: base FAILS at any station; VRL = round trip PASSES; VRL = round trip - 1 FAILS.
 module tb_tp_seq_vrl;
-    parameter integer VRL = 0, OS = 1, IS = 1, RLY = 0, NWORDS = 40, VW0 = 16, CRDY = 0, CST = 0;
+    parameter integer VRL = 0, OS = 1, IS = 1, RLY = 0, NWORDS = 40, VW0 = 16, CRDY = 0, CST = 0, CRED = 0, IB = 0;
+    // CRED > 0: credit-mode collective port: the receiver buffers IB words, drains them at random and returns one credit
+    // pulse per drained word through the stations (c_ready = credit); an overflow of its buffer is a FAIL
     // CST 1: the collective handshake also crosses the stations (c_valid / c_data through OS, c_ready back through IS)
     localparam integer FW = 512, NW = 18;
     reg clk = 0, rst_n = 0; always #0.5 clk = ~clk;
@@ -30,12 +32,22 @@ module tb_tp_seq_vrl;
     ot_hdc_delay #(.W(FW), .D(RLY + IS)) u_up (.clk(clk), .rst_n(rst_n), .d(m_q), .q(vm_rq));
     // collective: c_ready always (CRDY 0) or random; loops the words back after all are sent
     integer sent = 0, bad = 0, back = 0;
-    reg x_ready; wire x_valid; wire [FW-1:0] x_data; wire q_ready;
-    always @(posedge clk) x_ready <= (CRDY == 0) ? 1'b1 : $random;
-    ot_hdc_delay #(.W(1 + FW), .D(CST ? OS : 0)) u_cv (.clk(clk), .rst_n(rst_n), .d({c_valid, c_data}), .q({x_valid, x_data}));
-    ot_hdc_delay #(.W(1), .D(CST ? IS : 0)) u_cr (.clk(clk), .rst_n(rst_n), .d(x_ready), .q(q_ready));
-    always @(*) c_ready = q_ready;
-    always @(posedge clk) if (rst_n && x_valid && x_ready) begin
+    reg x_ready = 0; wire x_valid; wire [FW-1:0] x_data; wire q_ready;
+    // credit receiver: IB-word buffer; drains a word on a random cycle and returns its credit
+    integer occ = 0, ovf = 0; reg drain;
+    always @(posedge clk) begin
+        drain = (CRDY == 0) ? 1'b1 : $random;
+        if (CRED != 0 && !rst_n) x_ready <= 1'b0;
+        else if (CRED != 0) begin
+            x_ready <= (occ > 0) && drain;
+            occ = occ + ((x_valid) ? 1 : 0) - (((occ > 0) && drain) ? 1 : 0);
+            if (occ > IB) ovf = ovf + 1;
+        end else x_ready <= (CRDY == 0) ? 1'b1 : $random;
+    end
+    ot_hdc_delay #(.W(1 + FW), .D(CST ? OS : 0), .RESET(1)) u_cv (.clk(clk), .rst_n(rst_n), .d({c_valid, c_data}), .q({x_valid, x_data}));
+    ot_hdc_delay #(.W(1), .D(CST ? IS : 0), .RESET(1)) u_cr (.clk(clk), .rst_n(rst_n), .d(x_ready), .q(q_ready));
+    always @(*) c_ready = q_ready;   // (unused by the DUT: it reads q_ready)
+    always @(posedge clk) if (rst_n && x_valid && (CRED != 0 || x_ready)) begin
         if (x_data !== mem[VW0 + sent]) begin bad = bad + 1; if (bad < 4) $display("word %0d: got %h want %h", sent, x_data[31:0], mem[VW0 + sent][31:0]); end
         sent = sent + 1;
     end
@@ -49,23 +61,23 @@ module tb_tp_seq_vrl;
             .fault(fault), .coll_busy(coll_busy), .core_start(core_start), .core_token(core_tok), .core_pos(core_pos),
             .core_done(core_done), .core_next_token(18'd0), .core_next_val(32'd0), .core_fault(1'b0), .prog_base(prog_base),
             .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq),
-            .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .c_valid(c_valid), .c_ready(c_ready), .c_data(c_data),
+            .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .c_valid(c_valid), .c_ready(q_ready), .c_data(c_data),
             .c_last(c_last), .c_mode(c_mode), .c_tag(c_tag), .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(2'd0), .r_err(1'b0));
     end else begin : g_vrl
-        ot_qwen_tp_seq_w12_vrl #(.VRL(VRL), .ENABLE_AR256(1), .N(4), .NW(NW), .QWEN_FULLSHAPE(1)) u (
+        ot_qwen_tp_seq_w12_vrl #(.VRL(VRL), .CRED(CRED), .ENABLE_AR256(1), .N(4), .NW(NW), .QWEN_FULLSHAPE(1)) u (
             .clk(clk), .rst_n(rst_n), .start(start), .token(18'd5), .pos(18'd9), .done(done), .next_token(ntok), .next_val(nval),
             .fault(fault), .coll_busy(coll_busy), .core_start(core_start), .core_token(core_tok), .core_pos(core_pos),
             .core_done(core_done), .core_next_token(18'd0), .core_next_val(32'd0), .core_fault(1'b0), .prog_base(prog_base),
             .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq),
-            .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .c_valid(c_valid), .c_ready(c_ready), .c_data(c_data),
+            .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .c_valid(c_valid), .c_ready(q_ready), .c_data(c_data),
             .c_last(c_last), .c_mode(c_mode), .c_tag(c_tag), .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(2'd0), .r_err(1'b0));
     end endgenerate
     integer t0;
     initial begin
         repeat (3) @(posedge clk); rst_n = 1; @(posedge clk); start = 1; @(posedge clk); start = 0; t0 = $time;
         repeat (4000) begin @(posedge clk); if (done) begin
-            if (bad == 0 && sent == NWORDS && !fault) $display("PASS tp_seq_vrl VRL=%0d OS=%0d IS=%0d RLY=%0d words=%0d coll_cycles=%0d", VRL, OS, IS, RLY, sent, $time - t0);
-            else $display("FAIL tp_seq_vrl VRL=%0d OS=%0d IS=%0d RLY=%0d bad=%0d sent=%0d fault=%0d", VRL, OS, IS, RLY, bad, sent, fault);
+            if (bad == 0 && sent == NWORDS && !fault && ovf == 0) $display("PASS tp_seq_vrl VRL=%0d OS=%0d IS=%0d RLY=%0d words=%0d coll_cycles=%0d", VRL, OS, IS, RLY, sent, $time - t0);
+            else $display("FAIL tp_seq_vrl VRL=%0d OS=%0d IS=%0d RLY=%0d bad=%0d sent=%0d fault=%0d ovf=%0d", VRL, OS, IS, RLY, bad, sent, fault, ovf);
             $finish; end end
         $display("FAIL tp_seq_vrl timeout sent=%0d bad=%0d", sent, bad); $finish;
     end

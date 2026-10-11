@@ -12,6 +12,7 @@ module tb_hdc_add_lat_nr;
     ot_hdc_fp32_add_lat_nr #(.LAT(LAT), .HMUT(HMUT)) u_dut (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y1), .err(e1), .valid_out(v1));
     always #0.5 clk = ~clk;
     integer i, bad = 0, nv = 0, seed = SEED;
+    initial begin seed = SEED; $display("SEED=%0d", seed); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     function [31:0] rnd_fp(input integer k);
         reg [31:0] r;
         begin

@@ -6,6 +6,7 @@ module tb_w11s_cut_equiv;
     reg clk = 0;
     always #1 clk = ~clk;
     integer seed = 32'h5eed, cyc = 0, checked = 0, errors = 0, ncyc = 20000;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 32'h5eed; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     initial if (!$value$plusargs("NCYC=%d", ncyc)) ncyc = 20000;
     reg [127:0] qa, qb;
     reg [7:0]   ua, ub;

@@ -120,6 +120,31 @@ module tb_s81ph_col;
         nfr_got = 0;
     endtask
 
+`ifdef TB_CTRL
+    // ---------------- s81-ctl-1011 TB_CTRL: the col engine endpoint tile dsfd_dw_ep_c (framed snoop of vd). One descriptor
+    // per job (arg[7:0] = the job tag, op = job index) before the job's words; CHECK: one done per job DONE word, tag
+    // {slot 0, op} in order, never before that DONE word left the slab, no endpoint fault (data words that look like
+    // typed words must be skipped), online.  TB_MUT_WRONGTAG: one descriptor names another tag (must FAIL).
+    reg [84:0] c_cmd = 0; wire [8:0] c_done; wire [1:0] c_st;
+    dsfd_dw_ep_c u_ep (.ck(clk), .rst(rst_n), .vh({vd[513:502], vd[493:482], vd[1], vd[0]}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st));
+    int c_sent = 0, c_dn = 0, c_err = 0;
+    always @(posedge clk) begin
+        if (c_done[8]) begin
+            if (c_done[7:0] !== {1'b0, 7'(c_dn % 128)}) begin c_err++; $display("ERR ctrl: done tag %h expected op %0d", c_done[7:0], c_dn); end
+            c_dn++;
+            if (c_dn > done_out) begin c_err++; $display("ERR ctrl: EARLY done %0d with %0d DONE words out", c_dn, done_out); end
+        end
+        if (rst_n && c_st[0]) begin c_err++; if (c_err < 5) $display("ERR ctrl: endpoint fault cyc %0d", cyc); end
+    end
+    task automatic ctrl_arm(int tag);
+        int a; a = tag;
+`ifdef TB_MUT_WRONGTAG
+        if (c_sent == 3) a = (tag + 1) % 256;
+`endif
+        @(negedge clk); c_cmd = {1'b1, 1'b0, 10'd0, 21'd0, 21'd0, 16'd0, 8'(a), 7'(c_sent % 128)}; @(negedge clk); c_cmd = 0;
+        c_sent++;
+    endtask
+`endif
     // ---------------- drivers
     int fault_lane = -1, fault_at = -1;
     always @(posedge clk) begin
@@ -209,6 +234,9 @@ module tb_s81ph_col;
                 b0 = bub; tm = 640;
                 do begin build_job(j, tm, ok); tm = tm * 3 / 4; end while (!ok);
                 if (b0 < 0) bub = (j % 3 == 0) ? 0 : (j % 3 == 1) ? 30 : 80;
+`ifdef TB_CTRL
+                ctrl_arm(jtag);
+`endif
                 job_done = 0; job_live = 1;
                 begin
                     int w0; w0 = cyc;
@@ -223,6 +251,12 @@ module tb_s81ph_col;
                 if (errors > 20) break;
                 repeat ($urandom % 20) @(posedge clk);
             end
+`ifdef TB_CTRL
+            repeat (200) @(posedge clk);
+            if (c_dn != c_sent || done_out != c_sent || !c_st[1]) begin c_err++; $display("ERR ctrl: %0d descriptors %0d dones %0d DONE words online %b", c_sent, c_dn, done_out, c_st[1]); end
+            $display("CTRL col descriptors %0d dones %0d errors %0d", c_sent, c_dn, c_err);
+            errors += c_err; if (c_err) jobs_ok = 0;
+`endif
             $display("RESULT %s jobs %0d/%0d words %0d frames %0d done %0d errors %0d", (errors == 0 && jobs_ok == njobs) ? "PASS" : "FAIL",
                      jobs_ok, njobs, words_out, frames_out, done_out, errors);
         end else begin

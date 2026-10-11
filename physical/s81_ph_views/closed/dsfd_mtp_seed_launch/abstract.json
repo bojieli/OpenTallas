@@ -1,6 +1,6 @@
 {
   "name": "dsfd_mtp_seed_launch",
-  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-seedl-4b2f329b3-tc/routes/mtp_seedl_4b2f329b3_tc/work/orfs",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/mtp-seedl-564941967-tc/routes/mtp_seedl_564941967_tc/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedl-4b2f329b3-tc/routes/mtp_seedl_4b2f329b3_tc/work/orfs:/in:ro",
+        "/srv/opentallas/claude/closure-loop/mtp-seedl-564941967-tc/routes/mtp_seedl_564941967_tc/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedl-4b2f329b3-tc/routes/mtp_seedl_4b2f329b3_tc/view:/out",
+        "/srv/opentallas/claude/closure-loop/mtp-seedl-564941967-tc/routes/mtp_seedl_564941967_tc/view:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedl-4b2f329b3-tc/routes/mtp_seedl_4b2f329b3_tc/abs_tmp:/tmp",
+        "/srv/opentallas/claude/closure-loop/mtp-seedl-564941967-tc/routes/mtp_seedl_564941967_tc/abs_eco:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedl-4b2f329b3-tc/routes/mtp_seedl_4b2f329b3_tc/work/orfs:/in:ro",
+        "/srv/opentallas/claude/closure-loop/mtp-seedl-564941967-tc/routes/mtp_seedl_564941967_tc/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedl-4b2f329b3-tc/routes/mtp_seedl_4b2f329b3_tc/view:/out",
+        "/srv/opentallas/claude/closure-loop/mtp-seedl-564941967-tc/routes/mtp_seedl_564941967_tc/view:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/mtp-seedl-4b2f329b3-tc/routes/mtp_seedl_4b2f329b3_tc/abs_tmp:/tmp",
+        "/srv/opentallas/claude/closure-loop/mtp-seedl-564941967-tc/routes/mtp_seedl_564941967_tc/abs_eco:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -48,10 +48,13 @@
     }
   },
   "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
   "files": {
-    "dsfd_mtp_seed_launch.lef": "7439f966f2c02538ac532029bb0ec52a9e0422d5f3e5127375e251219594a30d",
-    "dsfd_mtp_seed_launch_ff.lib": "7b3238ed3ac4069c2838ea74e8dd6342658a2a6668a017c32df1e62f11b82f25",
-    "dsfd_mtp_seed_launch_ss.lib": "3a684627ada7933a800c98005a34bae1aa6d8e21de59855931274a15e8d2e4ac"
+    "dsfd_mtp_seed_launch.lef": "ad25a6c5e3639eba8d0e64b80223abf467195f02ef3110a260e7ea4198a7fb16",
+    "dsfd_mtp_seed_launch_ff.lib": "95928cfa5083451887cfb15c9daef1ff7b100cd049461089d3d5ef5463df97c2",
+    "dsfd_mtp_seed_launch_ss.lib": "da64ceaf4a3fa180f7df366277cdf2830bb14cc5f7a6696f3207c0c3ead4682f"
   },
   "ok": true
 }

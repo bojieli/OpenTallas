@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_coll_ct",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/dsfd_coll_ct-fe-34c4ded32-rsl-tc-cl/routes/dsfd_coll_ct_fe_34c4ded32_rsl_tc_cl/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ct-fe-34c4ded32-rsl-tc-cl/routes/dsfd_coll_ct_fe_34c4ded32_rsl_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ct-fe-34c4ded32-rsl-tc-cl/routes/dsfd_coll_ct_fe_34c4ded32_rsl_tc_cl/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ct-fe-34c4ded32-rsl-tc-cl/routes/dsfd_coll_ct_fe_34c4ded32_rsl_tc_cl/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ct-fe-34c4ded32-rsl-tc-cl/routes/dsfd_coll_ct_fe_34c4ded32_rsl_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ct-fe-34c4ded32-rsl-tc-cl/routes/dsfd_coll_ct_fe_34c4ded32_rsl_tc_cl/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ct-fe-34c4ded32-rsl-tc-cl/routes/dsfd_coll_ct_fe_34c4ded32_rsl_tc_cl/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_coll_ct.lef": "a84b9e6db3bfd909a91288d3b7272762a44a4371b826660c3ab425d05a4711ad",
+    "dsfd_coll_ct_ff.lib": "08da9300adb5014f55a910dbb7c9f7b5a271c4fd2155fb91932b3e354ff7f744",
+    "dsfd_coll_ct_ss.lib": "91a4a1ce6a8c67ea42d77e3f6b57182e73a67d2f0f6069f3bcec305a69185f9b"
+  },
+  "ok": true
+}

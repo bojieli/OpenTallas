@@ -21,7 +21,8 @@ T0 = time.time()
 CORNER = os.environ.get('OT_CORNER', 'tt')
 OUT = os.environ.get('OT_OUT', '/out')
 NPATH = int(os.environ.get('OT_NPATH', '40'))
-GEOM = CORNER == 'tt'
+NOSTA = os.environ.get('OT_NOSTA') == '1'   # geometry / clock topology only (no liberty, no SDC / SPEF available)
+GEOM = CORNER in ('tt', 'geom')
 
 
 def log(*a):
@@ -58,7 +59,7 @@ def mod_path(name):
     n = clean(name)
     if TOOL_NAME.match(n): return None
     parts = n.split('.')
-    if len(parts) < 2: return None
+    if len(parts) < 2: return '(top)' if '$_' in n else None   # a yosys register of the top module itself
     return '.'.join(parts[:-1][:10])
 
 
@@ -77,6 +78,8 @@ masters_buf = {}
 
 def is_seq(m):
     k = m.getName()
+    if k not in masters_seq and NOSTA:   # no liberty loaded: ASAP7 sequential cell names
+        masters_seq[k] = bool(re.match(r'(DFF|SDF|DHL|DLL|ASYNC_DFF)', k))
     if k not in masters_seq:
         masters_seq[k] = bool(design.isSequential(m)) and 'ICG' not in k
     return masters_seq[k]
@@ -91,15 +94,18 @@ def is_bufinv(m):
 
 # ------------------------------------------------------------------ clock tree (both corners)
 MAXMIN = Timing.Max if CORNER != 'ff' else Timing.Min
-clock_roots = [r for r in design.evalTclString(
+if NOSTA:
+    timing = None
+clock_roots = [] if NOSTA else [r for r in design.evalTclString(
     'set r {}; foreach c [all_clocks] { foreach s [get_property $c sources] { lappend r [get_full_name $s] } }; '
     'join [lsort -unique $r] " "').split() if r]
-clock_names = design.evalTclString('set r {}; foreach c [all_clocks] { lappend r [get_name $c] [get_property $c period] }; '
+clock_names = [] if NOSTA else design.evalTclString('set r {}; foreach c [all_clocks] { lappend r [get_name $c] [get_property $c period] }; '
                                    'join $r " "').split()
 log('clock roots', clock_roots, 'clocks', clock_names)
 
 
 def arr(iterm):
+    if NOSTA: return None
     try:
         v = timing.getPinArrival(iterm, Timing.Rise, MAXMIN)
         if timing.isTimeInf(v) or abs(v) > 1e20: return None
@@ -114,16 +120,19 @@ node_of_inst = {}
 leaf_insts = set()
 seen_nets = set()
 queue = collections.deque()
+if NOSTA:   # no SDC: clock roots are the input ports whose net is a CLOCK net
+    clock_roots = [clean(bt.getName()) for bt in block.getBTerms() if bt.getNet() is not None and bt.getNet().getSigType() == 'CLOCK' and bt.getIoType() == 'INPUT']
 for r in clock_roots:
     bt = block.findBTerm(r)
     if bt is None or bt.getNet() is None: continue
     bb = bt.getBBox()
     nodes.append([um((bb.xMin() + bb.xMax()) / 2), um((bb.yMin() + bb.yMax()) / 2), -1, 0, 'PORT', 0.0, r])
     queue.append((bt.getNet(), len(nodes) - 1, 0))
+clock_nets = []     # (net, level of its driver: 0 = clock port)
 while queue:
     net, parent, depth = queue.popleft()
     if net.getId() in seen_nets: continue
-    seen_nets.add(net.getId())
+    seen_nets.add(net.getId()); clock_nets.append((net, depth))
     for it in net.getITerms():
         if not it.isInputSignal() and not it.getIoType() == 'INPUT': continue
         inst = it.getInst(); m = inst.getMaster()
@@ -140,6 +149,34 @@ while queue:
         node_of_inst[inst.getId()] = len(nodes) - 1
         for o in outs: queue.append((o.getNet(), len(nodes) - 1, depth + 1))
 log('clock tree: %d nodes, %d leaves' % (len(nodes), len(leaves)))
+
+# routed clock wires (tt only): every wire segment of every clock-tree net, from the DB's routed wires
+CLKSEG = None
+if GEOM:
+    D = odb.dbWireDecoder; segs = []; layers = []; lidx = {}
+    dieb = block.getDieArea(); qd = max(1, int(math.ceil(max(dieb.xMax() - dieb.xMin(), dieb.yMax() - dieb.yMin()) / 65535.0)))
+    for net, lvl in clock_nets:
+        w = net.getWire()
+        if w is None: continue
+        dec = D(); dec.begin(w); last = None; op = dec.next()
+        while op != D.END_DECODE:
+            if op in (D.PATH, D.JUNCTION, D.SHORT, D.VWIRE): last = None
+            elif op in (D.POINT, D.POINT_EXT):
+                pt = dec.getPoint() if op == D.POINT else dec.getPoint_ext()
+                xy = ((pt[0] - dieb.xMin()) // qd, (pt[1] - dieb.yMin()) // qd)
+                if last is not None and xy != last:
+                    ln = dec.getLayer().getName()
+                    if ln not in lidx: lidx[ln] = len(layers); layers.append(ln)
+                    segs.append((last[0], last[1], xy[0], xy[1], lidx[ln], min(255, lvl)))
+                last = xy
+            op = dec.next()
+    with open(os.path.join(OUT, 'clk.bin'), 'wb') as fh:
+        n = len(segs)
+        for k in range(4): fh.write(struct.pack('<%dH' % n, *[min(65535, max(0, s_[k])) for s_ in segs]))
+        fh.write(struct.pack('<%dB' % n, *[s_[4] for s_ in segs])); fh.write(struct.pack('<%dB' % n, *[s_[5] for s_ in segs]))
+    CLKSEG = dict(n=len(segs), file='clk.bin', quantum_dbu=qd, layers=layers, nets=len(clock_nets),
+                  layout='x1,y1,x2,y2 u16 (quantum_dbu from die origin); layer u8 (index into layers); level u8 (driver level, 0 = clock port)')
+    log('clock wires: %d segments on %d nets' % (len(segs), len(clock_nets)))
 
 # ------------------------------------------------------------------ worst paths
 
@@ -187,7 +224,7 @@ def clock_pin_arrival(inst):
 
 
 paths = []
-raw = tcl_paths('max' if CORNER != 'ff' else 'min', NPATH)
+raw = '' if NOSTA else tcl_paths('max' if CORNER != 'ff' else 'min', NPATH)
 for ln in raw.splitlines():
     f = ln.split('\t')
     if not f or f[0] != 'PATH': continue
@@ -222,18 +259,18 @@ paths.sort(key=lambda p: p['slack'])
 paths = paths[:NPATH]
 log('paths:', len(paths), 'worst', paths[0]['slack'] if paths else None)
 
-ws = design.evalTclString('sta::worst_slack_cmd %s' % ('max' if CORNER != 'ff' else 'min'))
+ws = '' if NOSTA else design.evalTclString('sta::worst_slack_cmd %s' % ('max' if CORNER != 'ff' else 'min'))
 try:
     ws = float(ws); ws = ws * 1e12 if abs(ws) < 1e-3 else ws  # worst_slack_cmd returns seconds
 except ValueError:
     ws = None
-part = dict(schema='opentallas.explorer_elem.corner.v1', corner=CORNER, worst_slack_ps=None if ws is None else round(ws, 3),
+part = dict(schema='opentallas.explorer_elem.corner.v1', corner=CORNER, nosta=NOSTA, worst_slack_ps=None if ws is None else round(ws, 3),
             clocks=clock_names, clock_roots=clock_roots,
             clock_tree=dict(nodes=[[n[0], n[1], n[2], n[3], n[4], None if n[5] is None else round(n[5], 1), n[6]] for n in nodes],
                             leaves=[[l[0], l[1], l[2], None if l[3] is None else round(l[3], 1), l[4], l[5]] for l in leaves]),
-            paths=paths)
+            paths=paths, clock_wires=CLKSEG)
 
-if CORNER == 'tt':
+if CORNER == 'tt' and not NOSTA:
     try:
         design.evalTclString('report_power > %s/power_tt.rpt' % OUT)
         txt = open('%s/power_tt.rpt' % OUT).read()
@@ -417,6 +454,6 @@ else:
                 if pt[5] is not None: pt[5] -= ox; pt[6] -= oy
 
 part['elapsed_s'] = round(time.time() - T0, 1)
-with open(os.path.join(OUT, '%s.json' % CORNER), 'w') as fh:
+with open(os.path.join(OUT, '%s.json' % ('tt' if CORNER == 'geom' else CORNER)), 'w') as fh:
     json.dump(part, fh, separators=(',', ':'))
 log('done')
