@@ -1,0 +1,9 @@
+hgi-1010/d HC multi-position (A.m = P positions, weights fetched once a row for all P) + weight windows / x memory in SRAM macros
+(opt-in WMACRO / XMACRO, +define+OT_WW_MACRO) + HBM read lane client/server (ot_hgi_hbm_lane, VIA_LANE); epyc1tb, merged on main
+run_hc_unit.sh (18 cases incl. multi-position P 2..6, K up to 20480)  : HGI_HC_UNIT PASS
+  MUT_MP   (every position lands on position 0's x words)            : FAIL errors=418
+  MUT_POST (pre without + hc_eps)                                     : FAIL errors=84
+  VIA_LANE (unit + HBM lane client -> server over the loader kport)   : PASS ; MUT_LANE : FAIL errors=693
+tools/hgi_unit_tput/run_hc.sh (g's DS 1M back-to-back bench): FAILS IDENTICALLY with main's own HC sources (record 4 faults
+  at the BF16 x check: the vector set places HC_MIX_POST outputs / guards at 41024 + 64 j inside x2's A at 40960..61439) ->
+  a bench vector overlap, not this change (reported to g / lead).

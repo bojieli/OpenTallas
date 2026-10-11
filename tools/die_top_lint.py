@@ -836,6 +836,7 @@ def dirs_hbm(bid, cls, bits, eps, j, port):
 
 def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('x_trunk', 'x_leaf', 'result_leaf', 'result_trunk', 'expert_req', 'kv_rows', 'attn_chain', 'attn_root',
+               'idx_sel',                    # R25GQ 10-10: one class a net type, endpoint 0 drives
                'attn_kv', 'attn_out', 'attn_operand', 'attn_input', 'attn_query', 'attn_packet'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'weight':     # line + tag + valid down, ready back (TF7 / r15 sm_rtl_w: no ready)
@@ -856,6 +857,8 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
         return seg
     if cls == 'hub':        # r17 fwd hub chains: a station's a / b port drives when it is the bus driver (j = 0)
         return [(0, bits, 'out' if port.startswith('t_') or (j == 0 and port in ('a', 'b')) else 'in')]
+    if cls == 'link_flit':          # R25GQ decision (b): coll -> link endpoint TU flit bus, {v, flit 545, credit} down
+        return flow(j, bits, 547)   # and {v, flit 545, credit, fault} up
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
         if cls == 'host' and V.get('host_h') and bits == sum(V['host_h']):
             # R25GQ ([svc] 2026-10-10): the host port is sized exactly (HOST_H_HGI tx / rx); the even split gave the
