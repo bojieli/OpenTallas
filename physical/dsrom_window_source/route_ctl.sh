@@ -69,7 +69,7 @@ E=$(python3 -c "print($DIE-5)")
 # PINPLAN=m3 (el1011-ds-misc 2026-10-11, MARGIN 3): the face plan of pinplan_m3.py (lanes 0-15 S / 16-31 N, K-port E,
 # control + clk W); default: the clock pin alone, as before.
 PINARGS=(--pin-region '^clk$=left:269-271')
-if [ "${PINPLAN:-}" = m3 ]; then PINARGS=(); while IFS= read -r l; do PINARGS+=(--pin-region "$l"); done < <(python3 physical/dsrom_window_source/pinplan_m3.py top $DIE $DIE); fi
+if [ "${PINPLAN:-}" = m3 ]; then export OT_PIN_GROUP_MAX=1 OT_PIN_BALANCE_H="M4 M6" OT_PIN_BALANCE_V="M5 M7"; PINARGS=(); while IFS= read -r l; do PINARGS+=(--pin-region "$l"); done < <(python3 physical/dsrom_window_source/pinplan_m3.py top $DIE $DIE); fi
 echo "SRC=$SRC lab=$lab MARGIN=${MARGIN:-2} PINPLAN=${PINPLAN:-} DIE=$DIE PD=${PD:-0.50} L=$L FMIN=$FMIN FMAX=$FMAX $*" > $W/args
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 python3 tools/run_abi3_physical.py --view asap7 --top ot_dsrom_window_source_ctl \

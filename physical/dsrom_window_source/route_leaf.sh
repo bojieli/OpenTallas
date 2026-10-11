@@ -64,6 +64,7 @@ set_clock_uncertainty -hold 50 -from [get_clocks core_clk] -to [get_clocks vclk]
 }
 EOT
 EX=$(python3 -c "print(round($DX-2.16,3))"); EY=$(python3 -c "print(round($DY-2.16,3))")
+export OT_PIN_GROUP_MAX=1 OT_PIN_BALANCE_H="M4 M6" OT_PIN_BALANCE_V="M5 M7"   # explicit uniform pins, layers alternating (pincheck_m3.sh)
 PINARGS=(); while IFS= read -r l; do PINARGS+=(--pin-region "$l"); done < <(python3 physical/dsrom_window_source/pinplan_m3.py $LEAF $DX $DY)
 D=rtl/dsrom_sys/s81_window_la/recovered_ctl_m2
 SRCS=(--source $D/ot_dsrom_wsrc_$LEAF.sv); [ $LEAF = land8 ] && SRCS+=(--source $D/ot_hdc_prefix.sv)
