@@ -21,7 +21,7 @@ import rtl_hdc_package_tp_campaign as C  # noqa: E402
 XF = ROOT / "rtl/physical/ot_qwen_die_io_xfifo.sv"
 CX = ROOT / "rtl/physical/ot_qwen_die_coll_xfifo.sv"
 SRC = [ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-       ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
+       ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/rom/ot_coll_fold_slice.sv", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
        ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv",
        ROOT / "rtl/physical/ot_qwen_die_coll_xfifo.sv", ROOT / "rtl/physical/ot_qwen_die_cdc_ch.sv", ROOT / "rtl/physical/ot_qwen_async_fifo_w.sv",
        ROOT / "rtl/lib/ot_async_fifo.sv", ROOT / "rtl/lib/ot_reset_sync.sv", ROOT / "rtl/lib/ot_hdly.sv", ROOT / "rtl/test/tb_qfd_coll_native.sv",
