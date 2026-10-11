@@ -13,13 +13,17 @@ module tb_hgi_hc_unit;
     reg clk = 0; always #1 clk = ~clk;
     reg [1163:0] casem [0:NCASE-1]; reg [63:0] vmim [0:NVMI-1]; reg [295:0] hbmm [0:NHBM-1]; reg [63:0] expm [0:NEXP-1];
     reg [8*256-1:0] dir;
+    // seed is assigned here (Verilator 5.050 ignores a declaration initialiser for $random); +SEED=n, default 5
+    integer seed;
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
+        if (!$value$plusargs("SEED=%d", seed)) seed = 5;
+        $display("tb_hgi_hc_unit seed %0d", seed);
         $readmemh({dir, "/hu_case.mem"}, casem); $readmemh({dir, "/hu_vmi.mem"}, vmim);
         $readmemh({dir, "/hu_hbm.mem"}, hbmm); $readmemh({dir, "/hu_exp.mem"}, expm);
     end
     integer c0;
-    integer errors = 0, cyc = 0, seed = 5; always @(posedge clk) cyc <= cyc + 1;
+    integer errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0; reg [937:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
     reg [255:0] hbm [longint];
@@ -41,7 +45,7 @@ module tb_hgi_hc_unit;
     wire [37:0] xq; wire [256:0] xr; reg [37:0] xq1, xq2; reg [256:0] xr1, xr2;
     wire k_v; reg k_rdy = 0; wire [36:0] k_a; reg k_rv = 0; reg [255:0] k_rd = 0; wire lane_f;
     always @(posedge clk) begin xq1 <= xq; xq2 <= xq1; end
-    ot_hgi_hc_die #(.HC_EPS(NEPS), .MUT_MP(MM)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_hc_die #(.HC_EPS(NEPS), .MUT_MP(MM), .MUT_POST(MP)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]),
         .rec_n_a(cur[916:896]), .rec_n_o(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted),
         .vmq(uq), .vmr(ur), .xq(xq), .xr(xr2));
