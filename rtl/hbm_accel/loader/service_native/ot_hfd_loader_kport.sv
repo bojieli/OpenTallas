@@ -60,6 +60,7 @@ module ot_hfd_loader_kport #(
     localparam integer NA = (NO <= 1) ? 1 : $clog2(NO);
     localparam integer CW = $clog2(NO + 1);
     localparam integer RA = $clog2(RB);
+    localparam integer LN = (ND <= 2) ? 1 : $clog2(ND);   // lane index width (hgi-1010/c: was 2 bits; ND 7 aliased lanes 4..6 onto 0..2)
     genvar s, d;
     // ---- per lane address translation and request length
     wire [1:0]  l_stack [0:ND-1];
@@ -85,10 +86,10 @@ module ot_hfd_loader_kport #(
     wire [15:0] e_rsp_tag [0:3];
     wire [255:0] e_rsp_data [0:3];
     reg  [ND-1:0] owner [0:3];                             // lane holding the stack's WRITE (one-hot)
-    reg  [1:0]  rr [0:3];
+    reg  [LN-1:0] rr [0:3];
     wire [ND-1:0] grant [0:3];
     wire [3:0]  r_hv;                                      // read response head valid (n_rsp_v steered)
-    wire [1:0]  r_hl [0:3];                                // ... to this lane
+    wire [LN-1:0] r_hl [0:3];                                // ... to this lane
     wire [15:0] r_ht [0:3];
     wire [255:0] r_hd [0:3];
     wire [3:0]  r_hlast;
@@ -112,8 +113,8 @@ module ot_hfd_loader_kport #(
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) ack_prev <= 8'd0; else ack_prev <= ack_now;
         wire wr_ack = ack_now != ack_prev;
-        reg [52:0] rq [0:3]; reg [1:0] rqh, rqt; reg [2:0] rqn;   // {lane 2, tag 16, sector 30, len 4, spare}
-        reg [24:0] fl [0:NO-1]; reg [NA-1:0] fh, ft; reg [CW-1:0] fn;  // issued, not consumed {lane 2, tag 16, len 4, last, spare 2}
+        reg [50+LN:0] rq [0:3]; reg [1:0] rqh, rqt; reg [2:0] rqn;   // {lane LN, tag 16, sector 30, len 4, spare}
+        reg [22+LN:0] fl [0:NO-1]; reg [NA-1:0] fh, ft; reg [CW-1:0] fn;  // issued, not consumed {lane LN, tag 16, len 4, last, spare 2}
         // ---------------- lane grant (rotating): a read into the request FIFO, or a write to the endpoint
         wire [ND-1:0] want;
         for (d = 0; d < ND; d = d + 1) begin : g_want
@@ -122,17 +123,17 @@ module ot_hfd_loader_kport #(
             wire wr_ok = req_we[d] && r_idle[s] && !(|owner[s]) && l_cnt[d] == 0 && e_req_rdy_raw[s];
             assign want[d] = ENABLE && req_v[d] && !l_wr[d] && l_ok[d] && l_stack[d] == s && (rd_ok || wr_ok);
         end
-        reg [ND-1:0] gr_; reg [1:0] gs_;
+        reg [ND-1:0] gr_; reg [LN-1:0] gs_;
         always @* begin : arb
             integer t, dd; reg found;
-            gr_ = {ND{1'b0}}; gs_ = 2'd0; found = 1'b0;
+            gr_ = {ND{1'b0}}; gs_ = '0; found = 1'b0;
             for (t = 0; t < ND; t = t + 1) begin
                 dd = (rr[s] + t) % ND;
-                if (!found && want[dd]) begin gr_[dd] = 1'b1; gs_ = 2'(dd); found = 1'b1; end
+                if (!found && want[dd]) begin gr_[dd] = 1'b1; gs_ = LN'(dd); found = 1'b1; end
             end
         end
         assign grant[s] = gr_;
-        wire [1:0] gsel_s = gs_;
+        wire [LN-1:0] gsel_s = gs_;
         assign r_acc[s] = |gr_ && !req_we[gs_];
         wire        ev   = |gr_ && req_we[gs_];
         assign acc_s[s] = r_acc[s] || (ev && e_req_rdy[s]);
@@ -156,7 +157,7 @@ module ot_hfd_loader_kport #(
         reg [RA-1:0] fb [0:NO-1];                                  // a transaction's first buffer slot
         reg [7:0] ga;                                              // beats arrived of the arrival transaction
         reg rsticky;
-        wire [52:0] qh_ = rq[rqh];
+        wire [50+LN:0] qh_ = rq[rqh];
         wire [29:0] sc = hact ? cs : qh_[34:5];
         wire [3:0] rm = hact ? rem : qh_[4:1];
         wire [3:0] room4 = 4'd4 - {2'b00, sc[1:0]};
@@ -165,8 +166,8 @@ module ot_hfd_loader_kport #(
         wire rd_go = ENABLE && rqn != 3'd0 && fn != CW'(NO) && (cr != 0 || MUT == 4) && (rres + (RA+1)'(chunk) <= (RA+1)'(RB)) &&
                      !rsticky && !n_fault;
         wire rlast = chunk == rm;
-        wire [24:0] fh_ = fl[fh];
-        wire [24:0] fa_ = fl[fa];
+        wire [22+LN:0] fh_ = fl[fh];
+        wire [22+LN:0] fa_ = fl[fa];
         wire arr = n_rsp_v;                                        // a response beat arrives (never refused)
         // the PHY controller may return a burst's beats in any order (FR-FCFS per sector): a beat lands in its own slot
         wire arr_ok = an != 0 && n_rsp_tag == fa_[22:7] && n_rsp_beat < fa_[6:3] && !ga[n_rsp_beat[2:0]];
@@ -174,7 +175,7 @@ module ot_hfd_loader_kport #(
         wire [RA:0] slot_ = {1'b0, fb[fa]} + {{(RA-2){1'b0}}, n_rsp_beat[2:0]};
         wire [RA-1:0] aslot = (slot_ >= (RA+1)'(RB)) ? RA'(slot_ - (RA+1)'(RB)) : RA'(slot_);
         assign r_hv[s] = rbv[rbr] && fn != 0 && !rsticky;
-        assign r_hl[s] = fh_[24:23];
+        assign r_hl[s] = fh_[23 +: LN];
         assign r_ht[s] = fh_[22:7];
         assign r_hd[s] = rb[rbr];
         assign r_hlast[s] = fh_[2] && (bt + 4'd1 == fh_[6:3]);
@@ -183,8 +184,8 @@ module ot_hfd_loader_kport #(
         assign r_idle[s] = rqn == 3'd0 && fn == 0;
         assign r_fault[s] = rsticky;
         always @(posedge clk) begin
-            if (r_acc[s]) rq[rqt] <= {2'(gsel_s), req_tag[gsel_s*16 +: 16], l_sec[gsel_s], l_len[gsel_s], 1'b0};
-            if (rd_go) begin fl[ft] <= {qh_[52:51], qh_[50:35], chunk, rlast, 2'b00}; fb[ft] <= rbi; end
+            if (r_acc[s]) rq[rqt] <= {gsel_s, req_tag[gsel_s*16 +: 16], l_sec[gsel_s], l_len[gsel_s], 1'b0};
+            if (rd_go) begin fl[ft] <= {qh_[51 +: LN], qh_[50:35], chunk, rlast, 2'b00}; fb[ft] <= rbi; end
             if (arr) rb[aslot] <= n_rsp_data;
         end
         always @(posedge clk or negedge rst_n)
@@ -239,9 +240,9 @@ module ot_hfd_loader_kport #(
         wire owp = e_busy[s] && |(owner[s]) && !e_rsp_v[s];
         assign lq[s*350 +: 350] = {(BURST != 0) ? chunk : 4'd1, owp, 1'b1, qh_[50:35], sc, cpc, rd_go, wr_packet, wr_v};
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin owner[s] <= {ND{1'b0}}; rr[s] <= 2'd0; end
+            if (!rst_n) begin owner[s] <= {ND{1'b0}}; rr[s] <= '0; end
             else begin
-                if (acc_s[s]) rr[s] <= 2'((gs_ + 2'd1) % ND);
+                if (acc_s[s]) rr[s] <= LN'((32'(gs_) + 1) % ND);
                 if (ev && e_req_rdy[s]) owner[s] <= gr_;
                 else if (e_rsp_v[s] && |(owner[s] & rsp_rdy)) owner[s] <= {ND{1'b0}};
             end
@@ -252,7 +253,7 @@ module ot_hfd_loader_kport #(
         wire [3:0] o_w = {owner[3][d], owner[2][d], owner[1][d], owner[0][d]};
         wire [3:0] o_r;
         for (s = 0; s < 4; s = s + 1) begin : g_or
-            assign o_r[s] = r_hv[s] && ((MUT == 1) ? (d == 0) : (r_hl[s] == 2'(d)));
+            assign o_r[s] = r_hv[s] && ((MUT == 1) ? (d == 0) : (r_hl[s] == LN'(d)));
         end
         assign req_rdy[d] = |(g_d & acc_s);
         assign rsp_v[d] = |(o_w & e_rsp_v) | |o_r;
