@@ -10,7 +10,7 @@ F="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/dsrom_sys/s81_ctrl/ot_s
 run() { n=$1; shift
   verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN --top-module tb_s81_svc_job -Mdir $O/obj_$n "$@" $F > $O/$n.build 2>&1 || { echo BUILD_FAIL > $O/$n.log; return 2; }
   $O/obj_$n/Vtb_s81_svc_job > $O/$n.log 2>&1; grep -q '^PASS' $O/$n.log && return 0 || return 1; }
-declare -A R
+if [ "${2:-}" = one ]; then shift 2; run "$@"; rc=$?; echo "SVC_JOB_ONE $1 rc=$rc"; exit $rc; fi   # single run (closure-loop negative bench)
 for c in "b1 -GSEED=1" "b2 -GSEED=2 -GNJ=80" "b3 -GSEED=3 -GLEAD=40" "ns1 -GNS=1 -GSEED=4" "ns4 -GNS=4 -GSEED=5" "tile1 -GTILE=1 -GSEED=6" "tile4 -GTILE=1 -GNS=4 -GSEED=7 -GNJ=80" \
          "dropstart -GTBMUT=1" "wrongdesc_end -GTBMUT=2" "wrongdesc_nq -GTBMUT=3" "earlydone -GJMUT=5" \
          "nogate -GJMUT=1 -GTBMUT=1" "partialdone -GJNMUT=5" "lostcmd -GJNMUT=6" "tile_earlydone -GTILE=1 -GJMUT=5" "tile_dropstart -GTILE=1 -GTBMUT=1"; do

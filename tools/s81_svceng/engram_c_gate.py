@@ -46,11 +46,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--neg", choices=[n for n, _ in NEG])
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     t = C.ES.shipped_tables()
     ev = C.build_events(np.random.default_rng(20261008), 120 if a.quick else 600)
     wins = C.official_windows(ev)
+    if a.neg:      # negative-control bench: exit 1 when the mutant FAILS the bench (as required), 0 when missed
+        g = dict(NEG)[a.neg]
+        rec = C.run_mode(build(a.out / f"obj_{a.neg}", g), a.out, t, ev, wins, a.neg, STRESS, 200)
+        print("ENGRAM_C_NEG", a.neg, "FAIL as required" if not rec.get("pass") else "MISSED")
+        return 1 if not rec.get("pass") else 0
     jobs = [("base", {})] + NEG
 
     def one(j):
