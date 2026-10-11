@@ -8,10 +8,10 @@
 //   phy[973:0]   (to / from ot_pdie_serdes): [486:0] x_tx (out), [973:487] x_rx (in)
 // clk = clk_link (the SerDes ck tree), rst_n = rst_link (hb_coll por_link)  ([fp] f3eeffcbf).
 module hfd_lk_ep (
-    input  wire          clk,
+    input  wire [0:0]    clk,                         // die record: 1-bit buses (pins clk[0] / rst_n[0])
     inout  wire [1119:0] f_lk,
     inout  wire [973:0]  phy,
-    input  wire          rst_n
+    input  wire [0:0]    rst_n
 );
     wire fault, locked;
     reg [23:0] session;                                   // pin register (changes only under the coordinated reset)
