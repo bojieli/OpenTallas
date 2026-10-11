@@ -36,6 +36,9 @@ p.add_argument('--l-ff-max', type=float, default=None, help='FF clk_sm insertion
 p.add_argument('--wire-credit-ps', type=float, default=0.0, help='0.112 ps/um x minimum die wire to the neighbour pin (stn_io_min.py)')
 p.add_argument('--hold-relax', action='store_true', help='calibration run: IO hold constraints relaxed (insertion measurement only)')
 p.add_argument('--half', action='store_true', help='half-rate shell: forwarded inverters are w_clk*, core clock is a divide-by-2 generated clock at the ICG AND')
+p.add_argument('--route-hold-unc-ps', type=float, default=25.0,
+               help='route SDC (--route-ss-hold) clock hold uncertainty; 25 = legacy. Pass the HOLD_SKEW contract (50) so route hold repair '
+                    'targets the uncertainty sign-off checks (conservative-1011/C: hm10 routes repaired to +10 at 25 ps and signed off -30 at 50 ps)')
 p.add_argument('--route-ss-hold', action='store_true', help='route SDC: hold windows referenced to the SS insertion (the flow repairs hold at the SS corner; sign-off uses the FF model)')
 p.add_argument('--skew-ps', type=float, default=150.0)
 p.add_argument('--hold-skew-ps', type=float, default=50.0)
@@ -87,7 +90,7 @@ out_min = -(a.l_ff_min - 60.0)  # launch-only promise; 60 ps below our earliest 
 if a.route_ss_hold and not a.hold_relax:
     in_min = a.l_min - a.hold_skew_ps + a.clkq_min_ps
     out_min = -(a.l_min - a.hold_skew_ps)
-    hold_unc = 25
+    hold_unc = a.route_hold_unc_ps
 L = a.l_max
 lines = [
     f'# W2 rb station receiver clock-root contract ({"LEGACY overlapping split" if a.legacy_split else f"consistent link split S {S:.1f} / R {R:.1f} / link {link:.1f}"}): period {a.period_ps} ps, L SS {a.l_min}..{a.l_max} FFmin {a.l_ff_min} ps, setup skew {a.skew_ps} ps, hold skew {a.hold_skew_ps} ps, IO windows at {a.io_ref_period_ps or a.period_ps} ps',

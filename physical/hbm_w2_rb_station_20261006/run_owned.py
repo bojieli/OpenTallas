@@ -36,6 +36,8 @@ p.add_argument('--grant-seat', action='store_true', help='GRANT_SEAT=1: in_v pin
 p.add_argument('--post-route-ff-hold', action='store_true',
                help='SS-only setup optimization at CTS/GRT; strict FF hold repair/signoff remains required after route')
 p.add_argument('--hold-margin-ns', type=float, default=0.01)
+p.add_argument('--route-hold-unc-ps', type=float, default=25.0,
+               help='clock hold uncertainty of the route SDC (25 legacy; 50 = the sign-off HOLD_SKEW contract, so hold repair targets what sign-off checks)')
 a, passthrough = p.parse_known_args()
 for k, e in (('l_max', 'CK_SS_MAX'), ('l_min', 'CK_SS_MIN'), ('l_ff_min', 'CK_FF_MIN'), ('l_ff_max', 'CK_FF_MAX')):
     if os.environ.get(e):
@@ -92,7 +94,7 @@ if cal:
     a.hold_margin_ns = 0.0
 subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', str(a.period_ps),
                 '--l-max', str(a.l_max), '--l-min', str(a.l_min), '--l-ff-min', str(a.l_ff_min), '--l-ff-max', str(a.l_ff_max),
-                '--io-ref-period-ps', '833.333'] + (['--half'] if a.half else []) + (['--hold-relax'] if cal else []) + ['--route-ss-hold'] + (['--half'] if False else []) + [
+                '--io-ref-period-ps', '833.333', '--route-hold-unc-ps', str(a.route_hold_unc_ps)] + (['--half'] if a.half else []) + (['--hold-relax'] if cal else []) + ['--route-ss-hold'] + (['--half'] if False else []) + [
                 '--out', str(sdc)], check=True)
 native_synth = driver.run_synthesis
 
@@ -150,7 +152,7 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb_half' if a.h
         *(['--param','LOCAL_PHASE=1','--param','HOLD_SEAT=1','--param','RESET_SEAT=1'] if a.phase_seat else []),
         *(['--param','GRANT_SEAT=1'] if a.grant_seat else []),
         '--clock-port', 'clk_sm', '--clock-period-ns', f'{a.period_ps/1000:.6f}',
-        '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', '0.025',
+        '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', f'{a.route_hold_unc_ps/1000:.3f}',
         '--orfs-corner', 'WC', '--hold-corners', ('WC' if a.post_route_ff_hold else 'WC,BC'), '--hold-margin-ns', str(a.hold_margin_ns),
         '--die-area', '0', '0', str(a.core_width+4.104), str(a.core_height+4.32),
         '--core-area', '2.052', '2.16', str(a.core_width+2.052), str(a.core_height+2.16),
