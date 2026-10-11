@@ -114,11 +114,11 @@
   {
    "id": "p2.link_ends",
    "element": "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)",
-   "cycles": 27.0,
+   "cycles": 51.0,
    "critical": true,
    "phase": "draft",
    "anchor": "draft.blocks",
-   "formula": "3 P2 transactions x (+9: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
+   "formula": "3 P2 transactions x (+17: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends rev 2 6,130 vs core direct 6,113; rev 1 was 6,122)",
    "source": [
     "tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0",
     "~/claude-takeover-20261007/mtp-fixlat-1011.log"
@@ -279,15 +279,15 @@
   }
  ],
  "totals": {
-  "critical_cycles": 48211.2,
-  "critical_cycles_lower": 47503.5,
+  "critical_cycles": 48235.2,
+  "critical_cycles_lower": 47527.5,
   "overlapped_cycles": 165.0,
   "composed_step_cycles": 1146896.4,
-  "charged_step_cycles": 1195107.6,
+  "charged_step_cycles": 1195131.6,
   "tau": 4.159,
   "MTP_tok_s_composed": 4351.6,
-  "MTP_tok_s_charged": 4176.0,
-  "MTP_tok_s_charged_lower_charges": 4178.5
+  "MTP_tok_s_charged": 4175.9,
+  "MTP_tok_s_charged_lower_charges": 4178.4
  },
  "inputs": {
   "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json": "3a7db4e5be43cd22",
