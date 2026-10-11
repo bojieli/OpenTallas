@@ -19,6 +19,9 @@ same element clock tree.  60 / 25 ps uncertainty (AGENTS policy); nothing is fal
 Reuses tools/hbm_accel_smh_physical.py (config_mk, sdc_block, run_sh, RUN) unchanged.
 """
 import argparse
+import re
+import shutil
+import subprocess
 import json
 import sys
 from pathlib import Path
@@ -104,9 +107,150 @@ def cmd_tile(a):
     print(f"wrote {work}: {name} {params} die {die} pins bottom {nb} top {nt}")
 
 
+TOP = "ot_hbm_native_frame_station_rb"
+TOP_RTL = [f"{STN}/bank_veto_static.sv", "rtl/common/ot_fwd_link_stage.sv", f"{STN}/station_rb_static.sv",
+           f"{STN}/slice_static.sv"]
+
+
+def lef_size(src: Path, view: str):
+    m = re.search(r"^\s*SIZE\s+([0-9.]+)\s+BY\s+([0-9.]+)", (src / view / (Path(view).name + ".lef")).read_text(), re.M)
+    return float(m.group(1)), float(m.group(2))
+
+
+LAT_TCL = """set PLAT /OpenROAD-flow-scripts/flow/platforms/asap7
+foreach f [lsort [glob $PLAT/lib/NLDM/*_RVT_{C}_nldm_2*.lib*]] {{ if {{![string match *250407* $f]}} {{ read_liberty $f }} }}
+{mlibs}
+set base [lindex [glob /work/results/asap7/*/base] 0]
+read_db $base/6_final.odb
+read_sdc $base/6_final_route.sdc
+read_spef $base/6_final.spef
+set_propagated_clock [all_clocks]
+report_clock_latency -clock clk_sm -digits 2
+exit
+"""
+
+
+def cmd_signoff_sdc(a):
+    """Station sign-off SDC for the HIER top (the flat signoff.py model): routed clk_sm latency at SS and FF with the
+    slice views read, then make_sdc.py sign-off mode (POLICY-HOLD) -> <base>/6_signoff.sdc (+ insertion record)."""
+    work, src = Path(a.work), Path(a.src)
+    base = next((work / "results/asap7").glob("*/base"))
+    if not (base / "6_final_route.sdc").exists():
+        shutil.copy2(base / "6_final.sdc", base / "6_final_route.sdc")
+    lat = {}
+    for c in ("SS", "FF"):
+        mlibs = "\n".join(f"read_liberty /src/{m}/{Path(m).name}_{c.lower()}.lib" for m in a.macro)
+        (work / f"lat_{c}.tcl").write_text(LAT_TCL.format(C=c, mlibs=mlibs))
+        p = subprocess.run(["docker", "run", "--rm", "-v", f"{src}:/src:ro", "-v", f"{work}:/work", "openroad/orfs:asap7lock",
+                            "bash", "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/lat_{c}.tcl"],
+                           capture_output=True, text=True)
+        (work / f"lat_{c}.log").write_text(p.stdout + p.stderr)
+        rise = p.stdout.split("fall ->")[0]
+        mn = re.search(r"^\s*([0-9.]+)\s+network latency", rise, re.M)
+        mx = re.search(r"^\s+([0-9.]+)\s+network latency", rise.split(mn.group(0))[1], re.M) if mn else None
+        if not (mn and mx):
+            raise SystemExit(f"no clk_sm latency at {c}: see {work}/lat_{c}.log")
+        lat[c] = [float(mn.group(1)), float(mx.group(1))]
+    subprocess.run([sys.executable, str(src / STN / "make_sdc.py"), "--period-ps", "833.333", "--l-max", f"{lat['SS'][1]:.2f}",
+                    "--l-min", f"{lat['SS'][0]:.2f}", "--l-ff-min", f"{lat['FF'][0]:.2f}", "--l-ff-max", f"{lat['FF'][1]:.2f}",
+                    "--out", str(base / "6_signoff.sdc")], check=True)
+    (work / "signoff_insertion.json").write_text(json.dumps(lat, indent=1) + "\n")
+    print("6_signoff.sdc", lat)
+
+
+def cmd_top(a):
+    """HIER station top: 4 slice8 + 1 slice5 macros in one row (20 um edge / channels), the control core (phase FSM,
+    S2, ACK / receipt / permission banks) in a strip below the row, station pins on the flat station's faces."""
+    a.hold_margin = smh.loop_hold_margin(a.hold_margin)
+    work, src = Path(a.out), Path(a.src)
+    work.mkdir(parents=True, exist_ok=True)
+    w8, h8 = lef_size(src, a.view8)
+    w5, h5 = lef_size(src, a.view5)
+    e, ch = a.edge, a.chan
+    hrow = max(h8, h5)
+    die = [round(2 * e + 4 * w8 + w5 + 4 * ch, 3), round(e + a.ctl_h + ch + hrow + e, 3)]
+    y = e + a.ctl_h + ch
+    xs = [e + k * (w8 + ch) for k in range(4)] + [e + 4 * (w8 + ch)]
+    macros = [a.view8, a.view5]
+    nick = f"stnh_top_no{a.no}_{a.label}"
+    extra = {"PLACE_DENSITY": a.pd, "HOLD_SLACK_MARGIN": a.hold_margin, "MACRO_PLACE_HALO": f"{a.halo} {a.halo}",
+             "PLACE_PINS_ARGS": "-min_distance 1 -min_distance_in_tracks", "IO_PLACER_H": "M4 M6", "IO_PLACER_V": "M5 M7",
+             "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M7"}
+    cfg = smh.config_mk(TOP, nick, die, macros, extra)
+    lines = [l for l in cfg.splitlines() if not l.startswith(("export VERILOG_FILES", "export SDC_FILE"))]
+    lines.insert(3, "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in TOP_RTL))
+    lines.append("export SDC_FILE = /work/station.sdc")
+    lines.append(f"export VERILOG_TOP_PARAMS = ENABLE 1 NO {a.no} REL_REG 1 SAFE 1 GRANT_SEAT 1 HIER 1")
+    lines.append(f"export GDS_ALLOW_EMPTY = (ot_hbm_w2_stn_slice8|ot_hbm_w2_stn_slice5)")
+    (work / "config.mk").write_text("\n".join(lines) + "\n")
+    tcl = ["# HIER station: slice macros in one row, data bit order left -> right (words 0..36)",
+           "set ot_s8 {}; set ot_s5 {}",
+           "foreach ot_inst [[ord::get_db_block] getInsts] {",
+           "  set ot_m [[$ot_inst getMaster] getName]",
+           "  if {$ot_m eq \"ot_hbm_w2_stn_slice8\"} { lappend ot_s8 [$ot_inst getName] }",
+           "  if {$ot_m eq \"ot_hbm_w2_stn_slice5\"} { lappend ot_s5 [$ot_inst getName] }",
+           "}",
+           "set ot_s8 [lsort -dictionary $ot_s8]",
+           "if {[llength $ot_s8] != 4 || [llength $ot_s5] != 1} { error \"HIER station: expected 4 slice8 + 1 slice5, got $ot_s8 / $ot_s5\" }"]
+    for k in range(4):
+        tcl.append(f"place_macro -macro_name [lindex $ot_s8 {k}] -location {{{xs[k]} {y}}} -orientation R0")
+    tcl.append(f"place_macro -macro_name [lindex $ot_s5 0] -location {{{xs[4]} {y}}} -orientation R0")
+    (work / "macros.tcl").write_text("\n".join(tcl) + "\n")
+    (work / "pins.tcl").write_text(
+        "# station pin faces (as the flat station: run_owned.py --pin-region)\n"
+        "set_io_pin_constraint -region bottom:* -pin_names {clk_sm por_n release_held in_* release_*}\n"
+        "set_io_pin_constraint -region top:* -pin_names {fclk_o out_* ACK_* fault drained paused}\n")
+    # route SDC: the station contract at the route period (make_sdc route mode, as run_owned.py)
+    subprocess.run([sys.executable, str(src / STN / "make_sdc.py"), "--period-ps", str(a.period), "--l-max", str(a.l_max),
+                    "--l-min", str(a.l_min), "--l-ff-min", str(a.l_ff_min), "--l-ff-max", str(a.l_ff_max),
+                    "--io-ref-period-ps", "833.333", "--route-ss-hold", "--out", str(work / "station.sdc")], check=True)
+    (work / "abstract.tcl").write_text("exit\n")
+    (work / "abstract_ss.tcl").write_text("exit\n")   # the station top exports no view
+    margs = " ".join(f"--macro {m}" for m in macros)
+    smh.run_sh(work, a.label, a.src, a.need, a.cores, macros, target="finish", admit=not a.no_admit, make_extra="")
+    rs = (work / "run.sh").read_text()
+    rs = rs.replace('for c in ss ff; do', 'for c in ss; do')
+    # station sign-off model: measured insertion -> make_sdc sign-off (POLICY-HOLD) as 6_signoff.sdc, then corner STA
+    old = "  sed -E 's/-period [0-9.]+/-period 833.0000/g' $B/6_final.sdc > $B/6_signoff.sdc\n"
+    assert rs.count(old) == 1
+    rs = rs.replace(old, f"  python3 $S/tools/hbm_w2_station_hier_physical.py signoff-sdc --work $W --src $S {margs} > $W/signoff_sdc.log 2>&1\n"
+                         "  echo \"signoff_sdc_rc=$?\" >> $W/status\n")
+    rs = rs.replace("[ -f $B/6_final_route.sdc ] || cp $B/6_final.sdc $B/6_final_route.sdc; ", "")
+    (work / "run.sh").write_text(rs)
+    geo = dict(no=a.no, die=die, slice8=[w8, h8], slice5=[w5, h5], row_y=y, xs=xs, ctl_h=a.ctl_h, chan=ch, edge=e,
+               views=macros, pd=a.pd)
+    (work / "geometry.json").write_text(json.dumps(geo, indent=1) + "\n")
+    print(f"wrote {work}: {TOP} HIER NO={a.no} die {die} slices at y {y} x {xs}")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
+    s = sp.add_parser("signoff-sdc")
+    s.add_argument("--work", required=True)
+    s.add_argument("--src", required=True)
+    s.add_argument("--macro", action="append", default=[])
+    tp = sp.add_parser("top")
+    tp.add_argument("--no", type=int, choices=(2, 3), required=True)
+    tp.add_argument("--view8", required=True, help="src-relative view dir .../ot_hbm_w2_stn_slice8")
+    tp.add_argument("--view5", required=True, help="src-relative view dir .../ot_hbm_w2_stn_slice5")
+    tp.add_argument("--ctl-h", type=float, default=60)
+    tp.add_argument("--chan", type=float, default=20)
+    tp.add_argument("--edge", type=float, default=20)
+    tp.add_argument("--halo", type=float, default=10)
+    tp.add_argument("--pd", type=float, default=0.55)
+    tp.add_argument("--period", type=float, default=770)
+    tp.add_argument("--l-max", type=float, default=510.0)
+    tp.add_argument("--l-min", type=float, default=440.0)
+    tp.add_argument("--l-ff-min", type=float, default=280.0)
+    tp.add_argument("--l-ff-max", type=float, default=330.0)
+    tp.add_argument("--hold-margin", default="10")
+    tp.add_argument("--src", required=True)
+    tp.add_argument("--label", required=True)
+    tp.add_argument("--out", required=True)
+    tp.add_argument("--need", default="40")
+    tp.add_argument("--cores", default="16")
+    tp.add_argument("--no-admit", action="store_true")
     t = sp.add_parser("tile")
     t.add_argument("--piece", choices=sorted(PIECES), required=True)
     t.add_argument("--no", type=int, choices=(2, 3), required=True)
@@ -128,6 +272,10 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "tile":
         cmd_tile(a)
+    elif a.cmd == "top":
+        cmd_top(a)
+    elif a.cmd == "signoff-sdc":
+        cmd_signoff_sdc(a)
 
 
 if __name__ == "__main__":
