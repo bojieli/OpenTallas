@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // hgi-1010/g2 2026-10-10: IDX.TOPK as BANKED-SRAM PIPELINED HEAPS (successor of the flop insertion / systolic arrays).
-// Same module name, parameters and ports as ot_hgi_idx_topk.sv (a route / bench uses ONE of the files); the wide engine
+// The drop-in core (same module name, parameters and ports as ot_hgi_idx_topk.sv) is ot_hgi_idx_topk_heap_dropin.sv
+// (a route / bench uses ONE of those two files); the wide engine
 // ot_hgi_idx_topk_hw takes IW scores a beat (the rate fix: the IDX reader can hand over a VM sector a cycle).
 //
 // Why: the flop designs hold MAX_K x 85 b in flops behind one-cycle 2,048-way selects / enables (feasibility 67b2d0326
@@ -363,30 +364,55 @@ module ot_hgi_idx_topk_hw #(
  end
 endmodule
 
-// Drop-in core: the historical one-score-a-cycle port (IW 1, W 2 heaps).
-module ot_hgi_idx_topk #(
- parameter bit ENABLE=0, parameter integer MAX_K=2048,
- parameter bit MUTANT_TIE=0,
- parameter integer RST_RELAY=0,                     // accepted for wrapper compatibility (no reset net spans an array here)
- parameter integer W=`ifdef OT_TOPK_HEAP_W `OT_TOPK_HEAP_W `else 2 `endif,
- parameter integer MUT_BYP=`ifdef OT_TOPK_HEAP_MUT_BYP 1 `else 0 `endif,
- parameter integer MUT_CLR=`ifdef OT_TOPK_HEAP_MUT_CLR 1 `else 0 `endif,
- parameter integer MUT_REV=`ifdef OT_TOPK_HEAP_MUT_REV 1 `else 0 `endif
+
+// Registered boundary around the wide engine (the die wrapper ot_hgi_idx_topk_registered, IW scores a beat): command,
+// score beat and result are each captured in a flop; a command retires only after its last accepted output.
+module ot_hgi_idx_topk_wreg #(
+ parameter bit ENABLE=0, parameter integer MAX_K=2048, parameter integer IW=4, parameter integer W=4,
+ parameter integer MUT_BYP=0
 )(
  input wire clk,rst_n,
  input wire cmd_valid, output wire cmd_ready,
  input wire [3:0] cmd_unit, input wire [5:0] cmd_op,
  input wire [24:0] cmd_param, input wire [31:0] cmd_n,cmd_m,
  input wire cmd_values,
- input wire in_valid, output wire in_ready, input wire [31:0] in_score,
+ input wire in_valid, output wire in_ready, input wire [IW*32-1:0] in_score, input wire [$clog2(IW+1)-1:0] in_nw,
  output wire out_valid, input wire out_ready,
  output wire [31:0] out_id,out_score,out_row,
- output wire out_last, output wire out_values_valid, output wire done, output wire [3:0] error
+ output wire out_last, output wire out_values_valid, output reg done, output reg [3:0] error
 );
- ot_hgi_idx_topk_hw #(.ENABLE(ENABLE), .MAX_K(MAX_K), .MUTANT_TIE(MUTANT_TIE), .IW(1), .W(W), .MUT_BYP(MUT_BYP),
-  .MUT_CLR(MUT_CLR), .MUT_REV(MUT_REV)) u (.clk(clk), .rst_n(rst_n), .cmd_valid(cmd_valid), .cmd_ready(cmd_ready), .cmd_unit(cmd_unit),
-  .cmd_op(cmd_op), .cmd_param(cmd_param), .cmd_n(cmd_n), .cmd_m(cmd_m), .cmd_values(cmd_values), .in_valid(in_valid),
-  .in_ready(in_ready), .in_score(in_score), .in_nw(1'b1), .out_valid(out_valid), .out_ready(out_ready), .out_id(out_id),
-  .out_score(out_score), .out_row(out_row), .out_last(out_last), .out_values_valid(out_values_valid), .done(done),
-  .error(error));
+ reg active,c_valid,s_valid,q_valid,pending_done;
+ reg [3:0] c_unit; reg [5:0] c_op; reg [24:0] c_param; reg [31:0] c_n,c_m; reg c_values;
+ reg [IW*32-1:0] s_score; reg [$clog2(IW+1)-1:0] s_nw;
+ reg [31:0] q_id,q_score,q_row; reg q_last,q_values;
+ wire core_cmd_ready,core_in_ready,core_out_valid,core_done; wire [3:0] core_error;
+ wire [31:0] core_id,core_score,core_row; wire core_last,core_values;
+ wire core_out_ready=!q_valid||out_ready;
+ assign cmd_ready=!active&&!c_valid&&core_cmd_ready&&!pending_done&&!q_valid;
+ assign in_ready=active&&(!s_valid||core_in_ready);
+ assign out_valid=q_valid; assign out_id=q_id; assign out_score=q_score; assign out_row=q_row;
+ assign out_last=q_last; assign out_values_valid=q_valid&&q_values;
+ ot_hgi_idx_topk_hw #(.ENABLE(ENABLE),.MAX_K(MAX_K),.IW(IW),.W(W),.MUT_BYP(MUT_BYP)) core(
+  .clk(clk),.rst_n(rst_n),.cmd_valid(c_valid),.cmd_ready(core_cmd_ready),
+  .cmd_unit(c_unit),.cmd_op(c_op),.cmd_param(c_param),.cmd_n(c_n),.cmd_m(c_m),.cmd_values(c_values),
+  .in_valid(s_valid&&active),.in_ready(core_in_ready),.in_score(s_score),.in_nw(s_nw),
+  .out_valid(core_out_valid),.out_ready(core_out_ready),.out_id(core_id),.out_score(core_score),
+  .out_row(core_row),.out_last(core_last),.out_values_valid(core_values),.done(core_done),.error(core_error));
+ always @(posedge clk) begin
+  if(cmd_valid&&cmd_ready)begin c_unit<=cmd_unit;c_op<=cmd_op;c_param<=cmd_param;c_n<=cmd_n;c_m<=cmd_m;c_values<=cmd_values;end
+  if(in_ready&&in_valid)begin s_score<=in_score;s_nw<=in_nw;end
+  if(core_out_ready&&core_out_valid)begin q_id<=core_id;q_score<=core_score;q_row<=core_row;q_last<=core_last;q_values<=core_values;end
+ end
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin active<=0;c_valid<=0;s_valid<=0;q_valid<=0;pending_done<=0;done<=0;error<=0;end
+  else begin
+   done<=0;
+   if(c_valid&&core_cmd_ready)c_valid<=0;
+   if(cmd_valid&&cmd_ready)begin active<=1;c_valid<=1;error<=0;end
+   if(in_ready)s_valid<=in_valid;
+   if(core_out_ready)q_valid<=core_out_valid;
+   if(core_done)begin pending_done<=1;error<=core_error;end
+   if((pending_done||core_done)&&(!q_valid||out_ready))begin done<=1;active<=0;pending_done<=0;c_valid<=0;s_valid<=0;end
+  end
+ end
 endmodule
