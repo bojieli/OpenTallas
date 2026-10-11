@@ -148,9 +148,13 @@ def main():
                     "loop snapshot); mutants then run on the per-die geometry case")
     ap.add_argument("--qpipe", action="store_true", help="engine QPIPE 1 (qfd_io_host pipelined lane-banked QKV path, "
                     "write-only); adds the K-lane-bank and stale-slot-field mutants")
+    ap.add_argument("--qpipe-level", type=int, default=1, help="with --qpipe: engine QPIPE level (2 = el1011-q-coll macro "
+                    "corner-turn, ot_sram_1r1w_32x128_m1, at the 256-byte lane geometry)")
     args = ap.parse_args()
-    global QPIPE
-    QPIPE = 1 if args.qpipe else 0
+    global QPIPE, RTL
+    QPIPE = args.qpipe_level if args.qpipe else 0
+    if QPIPE >= 2:
+        RTL = RTL + [ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v"]
     work = args.work
     work.mkdir(parents=True, exist_ok=True)
     cs = cases(args.quick, args.no_model)
