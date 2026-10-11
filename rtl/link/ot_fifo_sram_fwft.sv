@@ -24,7 +24,10 @@
 module ot_fifo_sram_fwft #(
     parameter integer W     = 547,
     parameter integer DEPTH = 64,
-    parameter integer MACRO = 0
+    parameter integer MACRO = 0,
+    parameter integer ESL   = 0            // > 0: the output buffer in ESL-bit slices, each with its own kept copy of the
+                                            //      head / occupancy / landing state (no buffer-wide select or enable net;
+                                            //      hbm-hcvm 10-11, class 2).  0: unchanged
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -52,7 +55,9 @@ module ot_fifo_sram_fwft #(
     reg  [1:0]    oc;                              // occupancy
     reg           oh;                              // index of the head register
     assign hv = oc != 0;
-    assign head = ob[oh];
+    generate if (ESL == 0) begin : g_head
+        assign head = ob[oh];
+    end endgenerate
     wire          do_pop = pop && hv;
     wire [1:0]    oc_after = oc - (do_pop ? 1'b1 : 1'b0);
     wire          bypass = push && in_arr == 0 && !inflight && (oc_after + (inflight ? 1 : 0)) < 2;
@@ -100,8 +105,33 @@ module ot_fifo_sram_fwft #(
         end
     end
     // write slots: the first free register after the (post-pop) head
+    generate if (ESL == 0) begin : g_ob
     always @(posedge clk) begin
         if (inflight) ob[do_pop ? (~oh ^ oc_after[0]) : (oh ^ oc[0])] <= rq[W-1:0];
         if (bypass) ob[(do_pop ? ~oh : oh) ^ (oc_after[0] ^ inflight)] <= wdata;
     end
+    end else begin : g_esl
+        localparam integer NS = (W + ESL - 1) / ESL;
+        wire [1:0] oc_nx = oc_after + n_in;
+        genvar s;
+        for (s = 0; s < NS; s = s + 1) begin : g_s
+            localparam integer LO = s * ESL;
+            localparam integer WS = (W - LO < ESL) ? (W - LO) : ESL;
+            (* keep *) reg oh_c, oc0_c, inf_c;           // copies of oh, oc[0], inflight for this slice
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin oh_c <= 1'b0; oc0_c <= 1'b0; inf_c <= 1'b0; end
+                else begin oh_c <= do_pop ? ~oh_c : oh_c; oc0_c <= oc_nx[0]; inf_c <= rd_arr; end
+            wire oa0 = oc0_c ^ do_pop;                    // oc_after[0]
+            wire ia = do_pop ? (~oh_c ^ oa0) : (oh_c ^ oc0_c);
+            wire ib = (do_pop ? ~oh_c : oh_c) ^ (oa0 ^ inf_c);
+            reg [WS-1:0] b0, b1;
+            always @(posedge clk) begin
+                if (inf_c && !ia) b0 <= rq[LO +: WS];
+                if (inf_c &&  ia) b1 <= rq[LO +: WS];
+                if (bypass && !ib) b0 <= wdata[LO +: WS];
+                if (bypass &&  ib) b1 <= wdata[LO +: WS];
+            end
+            assign head[LO +: WS] = oh_c ? b1 : b0;
+        end
+    end endgenerate
 endmodule

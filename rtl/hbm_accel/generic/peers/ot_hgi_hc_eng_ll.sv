@@ -245,7 +245,7 @@ module ot_hgi_hc_lane_ll #(
     wire [270:0] pdat = hv[0] ? {o_s + 15'(ok) * 15'(SD) + 15'(o_i), ho} : {o_s + 15'(y_i), yb};
     wire f_hv, ovf, pop; wire [270:0] f_hd;
     reg [QB-1:0] wcr;
-    ot_fifo_sram_fwft #(.W(271), .DEPTH(FD), .MACRO(0)) u_f (.clk(clk), .rst_n(rl), .push(push), .wdata(pdat), .pop(pop),
+    ot_fifo_sram_fwft #(.W(271), .DEPTH(FD), .MACRO(0), .ESL(64)) u_f (.clk(clk), .rst_n(rl), .push(push), .wdata(pdat), .pop(pop),
         .hv(f_hv), .head(f_hd), .ovf(ovf));
     assign pop = run && f_hv && (wcr != '0);
     always @(posedge clk or negedge rl) if (!rl) wwq[279] <= 1'b0; else wwq[279] <= pop;
