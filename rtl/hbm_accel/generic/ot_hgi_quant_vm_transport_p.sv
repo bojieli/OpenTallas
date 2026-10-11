@@ -46,16 +46,24 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  always @(posedge clk) cq<=cmd;
  wire [127:0] incoming_header=cq[1+:128];
  wire [255:0] ca=cq[385+:256],co=cq[1153+:256];
- reg [255:0] a,o;reg validating; reg val2, val3, val4; reg [63:0] aspan_q,ospan_q;
+ // hgi-1010/c (route f589c9afa SS: ac_count / ac_acc / aspan_q / o -> aend_q 23-26 levels = 64-bit adds): the shape
+ // arithmetic is SATURATING at 2^24 (bit 24 = "at least 2^24"): every accepted shape lies below 2^18 words, so every
+ // accept / reject decision is unchanged, and the adders are 24 bits
+ reg [255:0] a,o;reg validating; reg val2, val3, val4; reg [24:0] aspan_q,ospan_q;
  reg shape_active, val_sum; reg [4:0] shape_bit;
- reg [63:0] ar_acc,ac_acc,or_acc,oc_acc;
- reg [63:0] ar_mc,ac_mc,or_mc,oc_mc;
+ reg [24:0] ar_acc,ac_acc,or_acc,oc_acc;
+ reg [24:0] ar_mc,ac_mc,or_mc,oc_mc;
+ function automatic [24:0] sadd(input [24:0] x, input [24:0] y);
+  reg [24:0] t; begin t={1'b0,x[23:0]}+{1'b0,y[23:0]}; sadd={x[24]|y[24]|t[24],t[23:0]}; end
+ endfunction
+ function automatic [24:0] sat40(input [39:0] x); sat40={|x[39:24],x[23:0]}; endfunction
  reg [19:0] ar_count,ac_count,or_count,oc_count;
  wire [127:0] ch=header;
  reg busy,bad;
  reg seat_v;reg [336:0] seat;
  reg response_v;reg [272:0] response;
  reg [127:0] header;
+ reg [24:0] orow_q;
  reg [19:0] n,m,read_row,read_col,write_row,write_col;
  reg [19:0] read_left,write_left;           // n - col, kept as registers (hgi-1010/c)
  reg [39:0] launched,returned,finished;
@@ -79,10 +87,9 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  a[4:2]==0 && (o[4:2]==0 || o[4:2]==1) && !o[5] &&
  a[87:68]!=0 && a[87:68]==o[87:68] && a[67:48]!=0 && a[67:48]==o[67:48] &&
  (ch[123:118]==6 ? a[51:48]==0 : a[52:48]==0);
- reg fields_q, same_q, nalias_q, shape_q; reg [63:0] aend_q, oend_q;
- wire shape_ok=fields_q && (aend_q<64'd262144) && (oend_q<64'd262144) &&
- (!same_q || nalias_q) && (same_q || (aend_q<{24'd0,o[47:8]}) || (oend_q<{24'd0,a[47:8]}));
- reg [63:0] orow_q;
+ reg fields_q, same_q, nalias_q, shape_q; reg [24:0] aend_q, oend_q;
+ wire shape_ok=fields_q && (aend_q<25'd262144) && (oend_q<25'd262144) &&
+ (!same_q || nalias_q) && (same_q || (aend_q<sat40(o[47:8])) || (oend_q<sat40(a[47:8])));
  assign ready=ENABLE&&rn&&!busy&&!cq_v;
  // ---------------------------------------------------------------- result store (3)
  wire hv, fovf; wire [511:0] fhead;
@@ -119,12 +126,17 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire w_rowend=w_burst ? (write_left==20'd8) : (write_left==20'd1);
  wire w_last=write_part+w_step==32 || w_rowend;
  wire w_final=w_last&&write_row+1==m&&w_rowend;
+ // hgi-1010/c (route f589c9afa TT -58: u_res.oh / write_part -> p_wd 18-20 levels = the result FIFO head mux + the
+ // halfword barrel shift by write_part in one edge): the head word is registered first (fh_q, valid fh_ok while the head
+ // did not pop), the barrel reads the register; pw_ok waits for it (+1 edge after a pop).
+ reg [511:0] fh_q; reg fh_ok;
+ always @(posedge clk) fh_q<=fhead;
  reg [255:0] wd;
  always @* begin
   wd=0;
   if(w_burst)for(integer j=0;j<8;j=j+1)
-    wd[j*32+:32]={fhead[(write_part+j)*16+:16],16'd0};
-  else wd[write_addr[2:0]*32+:32]={fhead[write_part*16+:16],16'd0};
+    wd[j*32+:32]={fh_q[(write_part+j)*16+:16],16'd0};
+  else wd[write_addr[2:0]*32+:32]={fh_q[write_part*16+:16],16'd0};
  end
  wire [31:0] wmask=w_burst?32'hffffffff:(32'hf<<(write_addr[2:0]*4));
  reg p_ok,pw_ok,p_rdone;
@@ -194,13 +206,14 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    launched<=0;returned<=0;finished<=0;
    read_part<=0;write_part<=0;next_tag<=0;seat_d<=0;
    launch<=0;launch_q<=0;reserved<=0;queued<=0;done<=0;fault<=0;pd_h<=0;pd_t<=0;pd_n<=0;
-   p_ok<=0;pw_ok<=0;p_rdone<=0;
+   p_ok<=0;pw_ok<=0;p_rdone<=0;fh_ok<=0;
   end else begin
    done<=0;launch<=launch_q;launch_q<=0;
    response_v<=rsp_v;
    cq_v<=ready&&cmd[0];
    // precompute validity: the stream state did not change at this edge
-   p_ok<=!stage&&!cq_v; pw_ok<=(MUTANT==6?queued!=0||push:hv)&&!pop&&!stage&&!cq_v; p_rdone<=read_row==m;
+   fh_ok<=(MUTANT==6?queued!=0||push:hv)&&!pop;
+   p_ok<=!stage&&!cq_v; pw_ok<=fh_ok&&(MUTANT==6?queued!=0||push:hv)&&!pop&&!stage&&!cq_v; p_rdone<=read_row==m;
    if(cq_v)begin
     a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0;
     n<=ca[67:48];m<=ca[87:68];
@@ -215,28 +228,30 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     if(!shape_active)begin                  // operand station; invalid zero shapes still reject in fields_ok
      shape_active<=1;shape_bit<=0;
      ar_acc<=0;ac_acc<=0;or_acc<=0;oc_acc<=0;
-     ar_mc<={32'd0,a[119:88]};ac_mc<={48'd0,air};
-     or_mc<={32'd0,o[119:88]};oc_mc<={48'd0,oir};
+     ar_mc<={|a[119:112],a[111:88]};ac_mc<={9'd0,air};
+     or_mc<={|o[119:112],o[111:88]};oc_mc<={9'd0,oir};
      ar_count<=a[87:68]-20'd1;ac_count<=a[67:48]-20'd1;
      or_count<=o[87:68]-20'd1;oc_count<=o[67:48]-20'd1;
     end else begin                          // four parallel, one-add-per-edge unsigned products
-     ar_acc<=ar_acc+(ar_count[0]?ar_mc:64'd0);
-     ac_acc<=ac_acc+(ac_count[0]?ac_mc:64'd0);
-     or_acc<=or_acc+(or_count[0]?or_mc:64'd0);
-     oc_acc<=oc_acc+(oc_count[0]?oc_mc:64'd0);
-     ar_mc<=ar_mc<<1;ac_mc<=ac_mc<<1;or_mc<=or_mc<<1;oc_mc<=oc_mc<<1;
+     ar_acc<=sadd(ar_acc,ar_count[0]?ar_mc:25'd0);
+     ac_acc<=sadd(ac_acc,ac_count[0]?ac_mc:25'd0);
+     or_acc<=sadd(or_acc,or_count[0]?or_mc:25'd0);
+     oc_acc<=sadd(oc_acc,oc_count[0]?oc_mc:25'd0);
+     // saturating doubling, but only while multiplier bits remain (a zero count leaves the flag alone)
+     ar_mc<=(ar_count>>1)!=0?{ar_mc[24]|ar_mc[23],ar_mc[22:0],1'b0}:ar_mc;ac_mc<=(ac_count>>1)!=0?{ac_mc[24]|ac_mc[23],ac_mc[22:0],1'b0}:ac_mc;
+     or_mc<=(or_count>>1)!=0?{or_mc[24]|or_mc[23],or_mc[22:0],1'b0}:or_mc;oc_mc<=(oc_count>>1)!=0?{oc_mc[24]|oc_mc[23],oc_mc[22:0],1'b0}:oc_mc;
      ar_count<=ar_count>>1;ac_count<=ac_count>>1;or_count<=or_count>>1;oc_count<=oc_count>>1;
      shape_bit<=shape_bit+1'b1;
      if(shape_bit==19)begin shape_active<=0;validating<=0;val_sum<=1;end
     end
    end
    if(busy&&val_sum)begin
-    val_sum<=0;val2<=1;aspan_q<=ar_acc+ac_acc;ospan_q<=or_acc+oc_acc;orow_q<=oc_acc;
+    val_sum<=0;val2<=1;aspan_q<=sadd(ar_acc,ac_acc);ospan_q<=sadd(or_acc,oc_acc);orow_q<=oc_acc;
    end
    if(busy&&val2)begin
     val2<=0;val3<=1;
-    fields_q<=fields_ok;same_q<=same_geometry;nalias_q<=(o[87:68]==1 || o[119:88]>orow_q);
-    aend_q<={24'd0,a[47:8]}+aspan_q;oend_q<={24'd0,o[47:8]}+ospan_q;
+    fields_q<=fields_ok;same_q<=same_geometry;nalias_q<=(o[87:68]==1 || (!orow_q[24] && o[119:88]>{8'd0,orow_q[23:0]}));
+    aend_q<=sadd(sat40(a[47:8]),aspan_q);oend_q<=sadd(sat40(o[47:8]),ospan_q);
    end
    if(busy&&val3)begin val3<=0;val4<=1;shape_q<=shape_ok;end
    if(busy&&val4)begin
