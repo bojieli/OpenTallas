@@ -27,8 +27,8 @@
 //   mod 32): HC_POST y (A), res (B), out (O); HC_PRE_NORM h (A), gain (B, FP32: GPK = 0), y (O).  The packed BF16 gain
 //   (GPK = 1) spans two lanes a sector and is refused.  A refused job faults with no lane activity (the record falls
 //   back to its lowering).  C (the scalars) may sit anywhere.
-// MUT (bench negatives, must FAIL): 2 lane 0 swaps res rows 0 / 1 (HC_POST) / h rows 0 / 1 (PRE); 4 retire when the
-//   lanes report finished, before the write dones; 5 (PRE) the gain read does not wait for g_rdy.
+// MUT (bench negatives, must FAIL): 2 lane 0 swaps res rows 0 / 1 (HC_POST) / h rows 0 / 1 (PRE); 4 retire before the
+//   write dones (the top ignores its done count, the lanes their write credits); 5 (PRE) the gain read does not wait for g_rdy.
 // ---------------------------------------------------------------------------------------------------------------------
 
 // relay: N register stages (valid with reset, data without)
@@ -318,7 +318,7 @@ module ot_hgi_hc_lane_ll #(
             if (y_v) ym <= ym + 1'b1;
             if (push) npush <= npush + 1'b1;
             if (pop) npop <= npop + 1'b1;
-            if (run && npush == nexp_l && npop == nexp_l && !f_hv && cr == QB'(LQ) && wcr == QB'(LQ)) fin <= 1'b1;
+            if (run && npush == nexp_l && npop == nexp_l && !f_hv && cr == QB'(LQ) && (MUT == 4 || wcr == QB'(LQ))) fin <= 1'b1;
             if ((|hf) || (|mf) || (|sf) || (|cf) || (|f1) || (|f2) || ovf) flt <= 1'b1;
         end
     end
@@ -399,7 +399,7 @@ module ot_hgi_hc_ctl_ll #(
         wire dv; wire [138:0] dd;
         ot_hgi_hc_rly #(.W(139), .N(RL)) u_dn (.clk(clk), .rst_n(rst_n), .v(cv), .d({cop, cx, cd}), .vq(dv), .q(dd));
         wire uv, ut, wd, fn, fl; wire [9:0] ux; wire [255:0] ud;
-        ot_hgi_hc_lane_ll #(.D(D), .LQ(LQ), .FD(FD), .MUT(MUT == 2 || MUT == 5 ? MUT : 0)) u_l (.clk(clk), .rst_n(rst_n),
+        ot_hgi_hc_lane_ll #(.D(D), .LQ(LQ), .FD(FD), .MUT(MUT == 2 || MUT == 4 || MUT == 5 ? MUT : 0)) u_l (.clk(clk), .rst_n(rst_n),
             .lid(5'(gl)), .wrq(wrq[gl*16 +: 16]), .wrq_cr(wrq_cr[gl]), .wrr(wrr[gl*257 +: 257]), .wwq(wwq[gl*280 +: 280]),
             .wwq_cr(wwq_cr[gl]), .wwq_done(wwq_done[gl]), .dn_v(dv), .dn_op(dd[138:136]), .dn_x(dd[135:128]),
             .dn_d(dd[127:0]), .up_v(uv), .up_t(ut), .up_x(ux), .up_d(ud), .wdone(wd), .fin(fn), .flt(fl));
