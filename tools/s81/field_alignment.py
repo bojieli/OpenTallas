@@ -17,6 +17,7 @@ the gate must FAIL).
 """
 import argparse
 import json
+import re
 import sys
 from functools import lru_cache
 from pathlib import Path
@@ -54,7 +55,11 @@ def analyze(model, go_extra=0):
             return source, age + 1
         if it.kind == 'sstn' and port == 'cc':
             source, age = input_age(name, 'cci')
-            return source, age + 1
+            pad = re.search(r'_cp(\d+)(?:t\d)*$', it.master or '')       # --sstn-ccpad: N pad registers after the cc register
+            return source, age + 1 + (int(pad.group(1)) if pad else 0)
+        if it.kind == 'sstn' and re.fullmatch(r'cct\d', port):     # --sstn-ccpad pad tap: station register + j pads
+            source, age = input_age(name, 'cci')
+            return source, age + 1 + int(port[3:])
         if it.kind == 'sstn' and port in ('xa', 'xb', 'qt'):
             source, age = input_age(name, 'xai' if port == 'xa' else 'xbi')
             return source, age + (0 if port == 'qt' else 1)

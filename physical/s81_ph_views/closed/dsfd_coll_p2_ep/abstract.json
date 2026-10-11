@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_coll_p2_ep",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/el1011-collp2-966562e4c-tc-a/routes/el1011_collp2_966562e4c_tc_a/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/el1011-collp2-966562e4c-tc-a/routes/el1011_collp2_966562e4c_tc_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/el1011-collp2-966562e4c-tc-a/routes/el1011_collp2_966562e4c_tc_a/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/el1011-collp2-966562e4c-tc-a/routes/el1011_collp2_966562e4c_tc_a/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/el1011-collp2-966562e4c-tc-a/routes/el1011_collp2_966562e4c_tc_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/el1011-collp2-966562e4c-tc-a/routes/el1011_collp2_966562e4c_tc_a/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/el1011-collp2-966562e4c-tc-a/routes/el1011_collp2_966562e4c_tc_a/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_coll_p2_ep.lef": "e4556edcdaaa4246b0ab699025e08e27fd748ce75a935b25ad9f34e448d1433a",
+    "dsfd_coll_p2_ep_ff.lib": "4624395f62ea8c998798e4c3f9aee7e6dd80e7918ee438e750dcf9f82e59276e",
+    "dsfd_coll_p2_ep_ss.lib": "aa105718a66217cb723fd161819dbd6f03168b92542c88b3818360e6bbac7725"
+  },
+  "ok": true
+}

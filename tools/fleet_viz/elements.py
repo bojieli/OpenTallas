@@ -48,7 +48,7 @@ CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
-STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen)')),   # qkd / ot_qkvd: the KV die (kv-die 2026-10-09)
+STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen|ot_nhb_|ot_qkh_)')),   # qkd / ot_qkvd: the KV die (kv-die 2026-10-09)
           ('HBM accelerator', re.compile(r'^(hfd|ot_hbm|ot_ha2|ot_su\d|ot_attn|hbm|smh|w2_|hgi|ot_hgi|ot_hcoll|ot_gpu_rf_)')),
           ('DeepSeek ROM', re.compile(r'^(dsfd|ot_dsrom|ot_s81|s81|dshead|dsrom|ot_v41_|bf_|pq_|ot_mtp_)'))]
 WEAK = [('Qwen ROM', re.compile(r'qwen')), ('HBM accelerator', re.compile(r'hbm|ha2')),
@@ -675,7 +675,7 @@ def gate_text(category, tq):
     if not tq: return timing + ', NO-THROUGHPUT-BUDGET-ROW'
     st = tq.get('status')
     return timing + (', THROUGHPUT-QUALIFIED' if st == 'QUALIFIED' else ', THROUGHPUT-QUALIFIED-BY-BOUND' if st == 'QUALIFIED_BY_BOUND'
-                     else ', THROUGHPUT-UNQUALIFIED')
+                     else ', THROUGHPUT-ACCEPTED' if st == 'ACCEPTED' else ', THROUGHPUT-UNQUALIFIED')
 
 def throughput_text(tq):
     if not tq: return ''
