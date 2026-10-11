@@ -34,6 +34,11 @@ module ot_s81ph_link_ep #(
     parameter integer PHY_NUM        = 0,
     parameter integer PHY_DEN        = 1,
     parameter integer SRAM           = 0,
+    // RXPIPE (ds-1010 2026-10-10, opt-in; RX_STAGES >= 3): the receive sequence classification is precomputed one stage
+    // early against the NEXT expected sequence (exp_seq + this cycle's accept, both arms in parallel, selected at the
+    // flop), so c_acc = registered in-order flag && !full: the 10-bit seq subtract / compare no longer sits in front of
+    // fill / tail / exp_seq / the landing SRAM write in one cycle (coll lane lcrpe TT -560 exp_seq -> fill).  0 cycles.
+    parameter integer RXPIPE         = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer PIPE           = 0,     // CLAUDE S81-PH coll lane v3: 1 = sender pipelined (see the PIPE notes below)
                                               // CLAUDE s81-blocks 2026-10-07: 2 = PIPE 1 + (a) the freed-count difference
                                               // d_fr registered in S2 (fr_seen only changes in S2-apply cycles, as una for
@@ -320,13 +325,28 @@ module ot_s81ph_link_ep #(
     assign out_data  = fifo_q[W-1:0];
     assign out_last  = fifo_q[W];
 
-    wire [SEQW-1:0] c_diff   = c_seq - exp_seq;
-    wire [SEQW-1:0] c_back   = exp_seq - c_seq;
+    wire [SEQW-1:0] c_diff, c_back;
+    wire            c_acc;
+    generate if (RXPIPE != 0) begin : g_rxp
+        // seq of the flit entering the last RX stage next edge, against exp_seq as it will be after this edge
+        wire [SEQW-1:0] n_seq = xp_f[RX_STAGES-2][FFW-1 -: SEQW];
+        reg  [SEQW-1:0] d_q;
+`ifdef OT_S81PH_EP_RXPIPE_MUT
+        always @(posedge clk or negedge rst_n) if (!rst_n) d_q <= 0; else d_q <= n_seq - exp_seq;   // mutant: ignores this cycle's accept
+`else
+        always @(posedge clk or negedge rst_n) if (!rst_n) d_q <= 0; else d_q <= c_acc ? (n_seq - exp_seq - 1'b1) : (n_seq - exp_seq);
+`endif
+        assign c_diff = d_q;
+        assign c_back = {SEQW{1'b0}} - d_q;
+    end else begin : g_rxc
+        assign c_diff = c_seq - exp_seq;
+        assign c_back = exp_seq - c_seq;
+    end endgenerate
     wire            c_good   = c_v && c_crc_ok;
     wire            c_crcerr = c_v && !c_crc_ok;
     wire            c_inord  = c_good && (c_diff == 0);
     wire            c_full   = (fill == CREDITS[CW-1:0]);
-    wire            c_acc    = c_inord && !c_full;
+    assign          c_acc    = c_inord && !c_full;
     wire            c_ovf    = c_inord && c_full;
     wire            c_ahead  = c_good && (c_diff != 0) && (c_diff < HALF);
     wire            c_behind = c_good && (c_diff >= HALF);

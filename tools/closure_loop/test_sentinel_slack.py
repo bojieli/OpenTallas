@@ -28,3 +28,26 @@ class Sentinel(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class UnderConstrained(unittest.TestCase):
+    def test_census(self):
+        self.assertIsNone(cl.under_constrained({"registers": 5000, "registers_clocked": 4990}))
+        self.assertIn("only 0 of 5000", cl.under_constrained({"registers": 5000, "registers_clocked": 0}))
+        self.assertIsNotNone(cl.under_constrained({"registers": 5000, "registers_clocked": 30}))   # < 1 % = 50
+        self.assertIsNone(cl.under_constrained({"registers": 5000, "registers_clocked": 50}))
+        self.assertIsNotNone(cl.under_constrained({"registers": 200, "registers_clocked": 3}))     # < 10
+        self.assertIsNone(cl.under_constrained({"registers": 4, "registers_clocked": 4}))         # tiny block: all clocked
+        self.assertIsNone(cl.under_constrained({"registers": 0, "registers_clocked": 0}))         # pure wiring
+        self.assertIsNone(cl.under_constrained({}))                                                # no census (old run)
+
+    def test_verdict_and_measured_paths_use_it(self):
+        src = inspect.getsource(cl)
+        self.assertIn('failed.append("UNDER-CONSTRAINED")', src)
+        self.assertIn('mclosed = not uc and', src)
+
+    def test_meas_resta_emits_census(self):
+        import pathlib
+        t = (pathlib.Path(cl.__file__).parent / "meas_resta.py").read_text()
+        self.assertIn('OT_REGS_CLOCKED', t)
+        self.assertIn('registers_clocked=', t)
