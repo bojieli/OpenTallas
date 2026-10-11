@@ -222,7 +222,7 @@ def script(a):
         src = list(dict.fromkeys(src + mtp_sources()))
     src = list(dict.fromkeys(src + closure(src)))
     gp = " ".join(f"-G{'REAL_' + ('idx' if x == 'idxn' else x).upper()}=1" for x in real)
-    gp += " -GIDX_NATIVE=1" if "idxn" in real else "" + "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG"))
+    gp += "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG")) + (" -GIDX_NATIVE=1" if "idxn" in real else "")
     gp += (" +define+E2E_COLL_DEBUG +define+E2E_FUSED_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
     gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
     gp += " +define+E2E_FUSED" if "fused" in real else ""
