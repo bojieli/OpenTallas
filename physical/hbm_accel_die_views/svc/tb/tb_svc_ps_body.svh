@@ -297,6 +297,11 @@
       reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; reg [12:0] tag_; integer q;
       tag_ = $urandom;
       idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
+`ifdef NEP
+      // [svc-ep] N9: the attention entry returns one kq credit per consumed row (hfd_attn_half_lo d590eb8b0), so KV
+      // streams toward it are CREDITED; every other KV stream here is credited on kq (the rest stay no-credit)
+      if (!idx_ && ps_n % 2 == 1) nocr_ = 1'b0;
+`endif
       nsec_ = idx_ ? 0 : 1 + ($urandom % ((ps_n % 4 == 0) ? 1100 : 70));
       m = (ps_n % 2) ? {$urandom} : 32'hFFFF_FFFF;
       mask_ = idx_ ? 32'hFFFF_FFFF : m;
