@@ -1328,6 +1328,11 @@ def cmd_block(a):
         # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
         (work / "hops.tcl").write_text(HOPS)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
+    if a.piece in FC_HOPS and not a.pin_flops:
+        # hbm-smh/fc: unanchored children still get their pass stages spread (no adjacent zero-logic pairs)
+        k0 = HOPS.index("proc ::ot_place ")
+        (work / "hops.tcl").write_text(PIN_HDR + HOPS[k0:HOPS.index("\n}\n", k0) + 3] + FC_HOPS[a.piece])
+        extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     if (a.piece in ("tile", "be", "tcc", "bdc", "pt_w", "pt_e") or a.piece in FC_DIM) and a.pin_flops:
         # m2: the pass-through landing registers join the input face's strip (tile W 16 um overflowed: --pin-depth)
         ht = PIN_TCL.replace("ot_pin_place_auto {.*} 16\n", f"ot_pin_place_auto {{.*}} {a.pin_depth}\n")
@@ -1494,8 +1499,8 @@ def fc_pins(m):
         P_ += vf(["clk", "rst_a"], 0.0, w / 2, pitch=0.48)
     elif m == "fc_t":
         P_ += [(f"rout[{i}]", "M4", "", 0.0, round(fp[f"rout_l1[{i}]"][1] - oy, 3)) for i in range(818)]
-        P_ += vf(lt, 0.0, 100.0)
-        P_ += vf(["clk", "rst_a"], 0.0, 100.0 + len(lt) * PITCH + 2.0, pitch=0.48)
+        P_ += vf(lt, 0.0, 30.0)          # clear of the 24-30 um W / E pin-flop strips
+        P_ += vf(["clk", "rst_a"], 0.0, 30.0 + len(lt) * PITCH + 2.0, pitch=0.48)
         P_ += hf(bits("r0a", 818), w, 210.0 + 786.24 - oy)
     elif m == "fc_xr":
         P_ += vf(bits("xi", 2069), h, 8.0) + vf(bits("xo", 2069), 0.0, 8.0)
@@ -1522,8 +1527,8 @@ def fc_pins(m):
 
 
 FC_HOPS = {
-    # fc_t: H2 at the S-edge pins (x 100-204), O at the W-edge pins (y 137-216): p1 / p2 / M / P stepped between them
-    "fc_t": "ot_place {^u_p1[vd]\\.} 120 200 36 60\not_place {^u_p2[vd]\\.} 110 190 76 100\n"
+    # fc_t: H2 at the S-edge pins (x 30-134), O at the W-edge pins (y 137-216): p1 / p2 / M / P stepped between them
+    "fc_t": "ot_place {^u_p1[vd]\\.} 60 150 36 60\not_place {^u_p2[vd]\\.} 60 150 76 100\n"
             "ot_place {^u_m1\\.} 70 130 120 150\not_place {^u_p1\\.} 24 70 150 200\n",
     # fc_b: H2 at the E-edge pins (y 230-285), O at the W-edge pins (y 199-277)
     "fc_b": "ot_place {^u_p2[vd]\\.} 150 196 220 270\not_place {^u_m2\\.} 90 130 210 260\n"
