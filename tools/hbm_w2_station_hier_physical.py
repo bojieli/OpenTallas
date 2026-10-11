@@ -100,6 +100,8 @@ def cmd_tile(a):
     lines.insert(3, "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in SLICE_RTL))
     params = dict(p, NO=a.no)
     lines.append(f"export VERILOG_TOP_PARAMS = NO {a.no}")
+    if a.pdn == "m7":   # second line: the tile owns M7 power stripes (its pins); the station joins them from M8
+        lines.append(f"export PDN_TCL = /src/{STN}/pdn_slice_m7.tcl")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
     (work / "pins.tcl").write_text(pins_tcl(a.piece, a.no))
     bi, bo, to, nb, nt = ports(a.piece, a.no)
@@ -196,7 +198,7 @@ def cmd_top(a):
     lines.insert(3, "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in TOP_RTL))
     lines.append("export SDC_FILE = /work/station.sdc")
     # hard slice tiles expose M6 power pins: parent grid with M5/M6 stripes + M7 straps, slices strapped M6-M7
-    lines.append(f"export PDN_TCL = /src/{STN}/pdn_hier.tcl")
+    lines.append(f"export PDN_TCL = /src/{STN}/" + ("pdn_hier_m8.tcl" if a.pdn == "m8" else "pdn_hier.tcl"))
     # the hardened slices are liberty cells (no parameters): the station instantiates them without #(.NO())
     lines = [l + " -DOT_STN_HARD" if l.startswith("export VERILOG_DEFINES") else l for l in lines]
     lines.append(f"export VERILOG_TOP_PARAMS = ENABLE 1 NO {a.no} REL_REG 1 SAFE 1 GRANT_SEAT 1 HIER 1")
@@ -264,6 +266,7 @@ def main(argv=None):
     tp.add_argument("--l-ff-min", type=float, default=280.0)
     tp.add_argument("--l-ff-max", type=float, default=330.0)
     tp.add_argument("--hold-margin", default="10")
+    tp.add_argument("--pdn", choices=("m7", "m8"), default="m7", help="m7: slices with M6 pins (default grid); m8: slices built --pdn m7")
     tp.add_argument("--src", required=True)
     tp.add_argument("--label", required=True)
     tp.add_argument("--out", required=True)
@@ -282,6 +285,7 @@ def main(argv=None):
     t.add_argument("--lat-ff", type=float, default=150)
     t.add_argument("--hold-margin", default="10")
     t.add_argument("--make-var", action="append")
+    t.add_argument("--pdn", choices=("default", "m7"), default="default")
     t.add_argument("--stop-after", default=None)
     t.add_argument("--src", required=True)
     t.add_argument("--label", required=True)
