@@ -32,7 +32,11 @@ module dsfd_sp_su_h #(
     parameter integer NPO = (S_RD >= 16 && S_WR >= 16) ? 4 : 1,
     // relay stations on every pin owner link (spine slices and control seams), the same depth on every link so the
     // slots of a cycle stay aligned: the pin owners stack ~1.9 mm along the VM pin edge (<= 500 um a station)
-    parameter integer NRL = (S_RD >= 16) ? 4 : 1
+    parameter integer NRL = (S_RD >= 16) ? 4 : 1,
+    // relay stations a spine stop / norm rung hop (adjacent tiles' centres ~620 um apart: 2 for <= 500 um a station)
+    // and on the controller pulse nets c_cmd / c_done between the slab's N-face pins and the control tile (cck domain)
+    parameter integer SRD = (S_RD >= 16) ? 2 : 1,
+    parameter integer NRC = (S_RD >= 16) ? 4 : 1
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
@@ -77,6 +81,13 @@ module dsfd_sp_su_h #(
     assign ufu[NTL] = 1'b0; assign ufo[NTL] = 1'b0; assign ual[NTL] = 1'b1; assign ude[NTL] = 1'b1;
     assign urd[NTL] = 1'b0; assign urj[NTL] = 8'd0;
 
+    // ------------------------------------------------------------------ controller pulse nets: NRC relay stations (cck)
+    wire        cc_v, cd_v;
+    wire [83:0] cc_d;
+    wire [7:0]  cd_t;
+    ot_hdc_delay #(.W(2), .D(NRC), .RESET(1)) u_rcv (.clk(cck), .rst_n(crs), .d({c_cmd_v, cd_v}), .q({cc_v, c_done_v}));
+    ot_hdc_delay #(.W(92), .D(NRC)) u_rcd (.clk(cck), .rst_n(crs), .d({c_cmd_d, cd_t}), .q({cc_d, c_done_tag}));
+
     // ------------------------------------------------------------------ control tile
     wire [S_RD-1:0]    c_rq_v;
     wire [S_RD*14-1:0] c_rq_row;
@@ -86,8 +97,8 @@ module dsfd_sp_su_h #(
     wire               rst_c;
     ot_s81_su_ctl #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
                     .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(NQB), .NQN(NQN), .NKV(NKV), .MUT(MUT), .AMUT(AMUT)) u_ctl (
-        .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
-        .c_done_tag(c_done_tag), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_c),
+        .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(cc_v), .c_cmd_d(cc_d), .c_done_v(cd_v),
+        .c_done_tag(cd_t), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_c),
         .p_rq_v(c_rq_v), .p_rq_row(c_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),
         .dn_st(dst[0]), .dn_kind(dkd[0]), .dn_gsel(dgs[0]), .dn_fp4(df4[0]), .dn_jid(dji[0]),
         .up_fu(ufu[0]), .up_fo(ufo[0]), .up_alive(ual[0]), .up_den(ude[0]), .up_rdy(urd[0]), .up_rjid(urj[0]));
@@ -136,14 +147,18 @@ module dsfd_sp_su_h #(
         // rung relays: into a head (TK <= 1, TI 0) from t + 1; into a member (TI 1) from t - 1
         reg ipv, irv; reg [7:0] ipi; reg [31:0] ipd, ird;
         if (TK <= 1 && TI == 0 && NT == 2) begin : g_rh
-            always @(posedge sk) begin ipi <= xpi[t + 1]; ipd <= xpd[t + 1]; end
-            always @(posedge sk or negedge rst[t]) if (!rst[t]) ipv <= 1'b0; else ipv <= xpv[t + 1];
+            wire v; wire [39:0] d;
+            ot_hdc_delay #(.W(1), .D(SRD), .RESET(1)) u_v (.clk(sk), .rst_n(rst[t]), .d(xpv[t + 1]), .q(v));
+            ot_hdc_delay #(.W(40), .D(SRD)) u_d (.clk(sk), .rst_n(rst[t]), .d({xpi[t + 1], xpd[t + 1]}), .q(d));
+            always @(*) begin ipv = v; {ipi, ipd} = d; end
         end else begin : g_rh0
             always @(*) begin ipv = 1'b0; ipi = 8'd0; ipd = 32'd0; end
         end
         if (TK <= 1 && TI == 1) begin : g_rm
-            always @(posedge sk) ird <= xrd[t - 1];
-            always @(posedge sk or negedge rst[t]) if (!rst[t]) irv <= 1'b0; else irv <= xrv[t - 1];
+            wire v; wire [31:0] d;
+            ot_hdc_delay #(.W(1), .D(SRD), .RESET(1)) u_v (.clk(sk), .rst_n(rst[t]), .d(xrv[t - 1]), .q(v));
+            ot_hdc_delay #(.W(32), .D(SRD)) u_d (.clk(sk), .rst_n(rst[t]), .d(xrd[t - 1]), .q(d));
+            always @(*) begin irv = v; ird = d; end
         end else begin : g_rm0
             always @(*) begin irv = 1'b0; ird = 32'd0; end
         end
@@ -161,19 +176,18 @@ module dsfd_sp_su_h #(
         always @(posedge sk or negedge rst[t]) if (!rst[t]) rs_q <= 1'b0; else rs_q <= 1'b1;
         assign rst[t + 1] = rs_q;
         // down spine relay station
-        reg dst_q; reg [3:0] dkd_q; reg [1:0] dgs_q; reg df4_q; reg [7:0] dji_q; reg [S_RD-1:0] dv_q;
-        reg [S_RD*512-1:0] dd_q;
-        always @(posedge sk) begin dkd_q <= dkd[t]; dgs_q <= dgs[t]; df4_q <= df4[t]; dji_q <= dji[t]; dd_q <= dd[t]; end
-        always @(posedge sk or negedge rst[t]) if (!rst[t]) begin dst_q <= 1'b0; dv_q <= 0; end
-                                               else begin dst_q <= dst[t]; dv_q <= dv[t]; end
-        assign dst[t + 1] = dst_q; assign dkd[t + 1] = dkd_q; assign dgs[t + 1] = dgs_q; assign df4[t + 1] = df4_q;
-        assign dji[t + 1] = dji_q; assign dv[t + 1] = dv_q; assign dd[t + 1] = dd_q;
+        ot_hdc_delay #(.W(1 + S_RD), .D(SRD), .RESET(1)) u_dsc (.clk(sk), .rst_n(rst[t]), .d({dst[t], dv[t]}),
+                                                               .q({dst[t + 1], dv[t + 1]}));
+        ot_hdc_delay #(.W(15 + S_RD * 512), .D(SRD)) u_dsd (.clk(sk), .rst_n(rst[t]),
+            .d({dkd[t], dgs[t], df4[t], dji[t], dd[t]}), .q({dkd[t + 1], dgs[t + 1], df4[t + 1], dji[t + 1], dd[t + 1]}));
         // up spine relay station: the tile's window merged in
         integer s;
         reg [S_WR-1:0] uv_q; reg [S_WR*14-1:0] ua_q; reg [S_WR*16-1:0] um_q; reg [S_WR*512-1:0] ud_q;
         reg ufu_q, ufo_q, ual_q, ude_q, urd_q; reg [7:0] urj_q;
-        assign uv[t] = uv_q; assign ua[t] = ua_q; assign um[t] = um_q; assign ud[t] = ud_q; assign ufu[t] = ufu_q;
-        assign ufo[t] = ufo_q; assign ual[t] = ual_q; assign ude[t] = ude_q; assign urd[t] = urd_q; assign urj[t] = urj_q;
+        ot_hdc_delay #(.W(S_WR + 13), .D(SRD - 1), .RESET(1)) u_usc (.clk(sk), .rst_n(rst[t]),
+            .d({uv_q, ufu_q, ufo_q, ual_q, ude_q, urd_q, urj_q}), .q({uv[t], ufu[t], ufo[t], ual[t], ude[t], urd[t], urj[t]}));
+        ot_hdc_delay #(.W(S_WR * 542), .D(SRD - 1)) u_usd (.clk(sk), .rst_n(rst[t]), .d({ua_q, um_q, ud_q}),
+                                                          .q({ua[t], um[t], ud[t]}));
         always @(posedge sk) begin
             for (s = 0; s < S_WR; s = s + 1)
                 if (s >= W0 && s < W0 + WS && o_v[s - W0]) begin
