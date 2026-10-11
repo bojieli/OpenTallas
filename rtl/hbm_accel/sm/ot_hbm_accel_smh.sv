@@ -1645,9 +1645,17 @@ module ot_hbm_accel_smh_tile #(
             .clk(clk), .rst_n(rst_n), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
             .xs_a2(xs_a2[j*A2B +: A2B]), .xs_g2(xs_g2[j*5 +: 5]), .rl1(j == 0 ? rl1_n : rl1_s),
             .bk1(j == 0 ? bk1_n : bk1_s), .ohl1(j == 0 ? ohl1_n : ohl1_s), .gv(gv), .gf(gf), .gy(gy), .gt(gt));
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_gov (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d({gv, gf}),
+        // (physical spec round 3) the hierarchical tile is 1,080 um tall: leaf 0's result travels ~1,000 um to the
+        // S-edge gout pins -> two relay registers on EVERY own-row lane of every tile (uniform: the back end's deskew
+        // is unchanged; +2 cycles on every result), <= ~360 um of wire per stage
+        wire [GLW-1:0] g1, g2;
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_grv1 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d({gv, gf}), .q(g1[GLW-2 +: 2]));
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_grd1 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d({gy, gt}), .q(g1[0 +: GLW-2]));
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_grv2 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(g1[GLW-2 +: 2]), .q(g2[GLW-2 +: 2]));
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_grd2 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(g1[0 +: GLW-2]), .q(g2[0 +: GLW-2]));
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_gov (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(g2[GLW-2 +: 2]),
             .q(gout[(RPT-1-j)*GLW + GLW - 2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_god (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d({gy, gt}),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_god (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(g2[0 +: GLW-2]),
             .q(gout[(RPT-1-j)*GLW +: GLW-2]));
     end
     for (ln = RPT; ln < SUB; ln = ln + 1) begin : g_gl

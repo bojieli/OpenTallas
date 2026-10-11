@@ -1157,6 +1157,40 @@ def cmd_block(a):
             tcl = ["array set ot_cx {"] + [f"  {{{k}}} {{{v[0]} {v[1]} {v[2]}}}" for k, v in g["col_xy"].items()] + ["}"] + tcl
         sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref,
                         nbr_in="rin* bin* gin*" + (" cgi" if a.cg else ""))
+    if a.piece == "tile" and a.hier3:
+        # el1011-hbm-smh round 3 (physical spec in el1011-hbm-smh.log): 12 hardened sub-element macros, no SRAM at the top
+        w, h = H3_TILE
+        pins = tile_pins(w, h, a.variant, cg=a.cg)
+        macros = [x.strip() for x in a.hier3.split(",")]
+        want = sorted(H3_MASTER[k] for k in H3_DIM)
+        if sorted(set(Path(x).name for x in macros)) != sorted(set(want)):
+            raise ValueError(f"--hier3 needs the view dirs of {sorted(set(want))}")
+        tcl, _slots = h3_tile_macros_tcl(macros)
+        extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_smh_tile_hier.tcl"
+    elif a.piece in H3_DIM:
+        if a.max_layer != "M6":
+            raise ValueError(f"--piece {a.piece}: route with --max-layer M6 (the tile owns M7)")
+        w, h = H3_DIM[a.piece]
+        name = H3_MASTER[a.piece]
+        pins = h3_pins(a.piece)
+        macros, tcl = [], None
+        if a.piece == "xs":
+            # the 4 x-store SRAMs as a 2 x 2 block, 21.6 um channels, pins (left / right edges) facing the channels
+            macros = [SRAM_X]
+            mw, mh = 94.824, 41.04
+            xy = {mi: (round(45.36 + (mi % 2) * (mw + 21.6), 3), round(30.24 + (mi // 2) * (mh + 21.6), 3)) for mi in range(4)}
+            tcl = ["set ot_n 0", "array set ot_xy {"] + [f"  {{{mi}}} {{{x} {y}}}" for mi, (x, y) in xy.items()] + [
+                   "}", "foreach ot_inst [[ord::get_db_block] getInsts] {",
+                   "  if {![[$ot_inst getMaster] isBlock]} { continue }",
+                   "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
+                   "  if {![regexp {g_xm\\[(\\d+)\\]\\.u_x} $n -> mi]} { error \"no slot for $n\" }",
+                   "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($mi) -orientation R0",
+                   "  incr ot_n", "}", "if {$ot_n != 4} { error \"macro_place: placed $ot_n of 4\" }"]
+        extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_smh_child.tcl"
+        nbr = {"pt_w": "rin* bin*", "pt_e": "rpm* bm*", "xs": "rl1* bk1* ohl1*", "bdc3": "i_*", "tcl": "i_*",
+               "tct": "i_* sum_i* lf_*"}[a.piece]
+        sdc = sdc_block(a.lat, nbr_in=nbr, static_inputs=(("xs_*",) if a.piece == "xs" else ()), lat_ff=a.lat_ff,
+                        period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref).replace("[get_ports rst_n]", "[get_ports rst_a]")
     elif a.piece in ("tcc", "bdc"):
         # el1011-hbm-smh: a hardened column of one leaf (OT_SMH_HIER).  Inputs (the j-stage pin flops) on the W edge,
         # lane-major (i_w[k] beside i_x[k]), M4 every 4 tracks (5.2 b/um); results on the E edge; clk / rst_a north.
@@ -1296,14 +1330,14 @@ def cmd_block(a):
     # fe-push-hphys-1010: valid-only reset in the fp32 add pipelines / bmul (--drst0), the port reset through ot_rst_relay (--rst-relay)
     defs += (["OT_FP_DATA_NORST", "OT_SMH_DRST0"] if getattr(a, "drst0", False) else []) + (["OT_SMH_RSTRELAY"] if getattr(a, "rst_relay", False) else [])
     if getattr(a, "rst_relay", False):
-        if a.piece not in ("tile", "tcc", "bdc"):
-            raise ValueError("--rst-relay applies to the tile / its columns")
+        if a.piece not in ("tile", "tcc", "bdc") and a.piece not in H3_DIM:
+            raise ValueError("--rst-relay applies to the tile / its sub-elements")
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_FILES += /src/rtl/lib/ot_rst_relay.sv\n")
     if defs:
         if getattr(a, "cg_enreg", False) and not (getattr(a, "cg", False) and a.piece == "tile"):
             raise ValueError("--cg-enreg applies to the gated tile (--cg --piece tile)")
-        if getattr(a, "xlk", False) and a.piece not in ("tile", "tcc", "bdc"):
+        if getattr(a, "xlk", False) and a.piece not in ("tile", "tcc", "bdc") and a.piece not in H3_DIM:
             raise ValueError("--xlk applies to the tile (its x-store macros)")
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_DEFINES += " + " ".join("-D" + d for d in defs) + "\n")
@@ -1316,13 +1350,13 @@ def cmd_block(a):
     if getattr(a, "hold_mm", False):
         with (work / "config.mk").open("a") as f:
             f.write("export OT_HOLD_MM = 1\n")
-    if a.piece in ("tcc", "bdc") or a.hier_views:
+    if a.piece in ("tcc", "bdc") or a.piece in H3_DIM or a.hier_views or a.hier3:
         defs_h = "export VERILOG_DEFINES += -DOT_SMH_HIER\n"
-        if a.piece in ("tcc", "bdc"):
+        if a.piece in ("tcc", "bdc") or a.piece in H3_DIM:
             defs_h += "export VERILOG_FILES += /src/rtl/lib/ot_rst_relay.sv\n" if not getattr(a, "rst_relay", False) else ""
         with (work / "config.mk").open("a") as f:
             f.write(defs_h)
-    hier_tt = a.piece in ("tcc", "bdc") or bool(a.hier_views)
+    hier_tt = a.piece in ("tcc", "bdc") or a.piece in H3_DIM or bool(a.hier_views) or bool(a.hier3)
     write_abstract(work, name, macros, name, tt=hier_tt)
     if a.top_param:
         # e.g. --top-param REQCR=1: the hardened master built with a non-default parameter (ORFS VERILOG_TOP_PARAMS)
@@ -1343,6 +1377,130 @@ def cmd_block(a):
         script.write_text(content.replace(token, hook + token))
     print(f"wrote {work}: {name} {a.variant} die {die} pins {len(pins)} macros {len(macros)}")
 
+
+
+# ---------------- el1011-hbm-smh round 3: the hierarchical SM tile (OT_SMH_HIER), physical spec in el1011-hbm-smh.log ----
+H3_TILE = (587.52, 1080.0)
+H3_YM2 = 1080.024             # 2 x the mirror axis: leaf 1 = MX image of leaf 0 about y 540.012 (tracks map onto tracks)
+H3_DIM = {"pt_w": (302.4, 371.52), "pt_e": (51.84, 371.52), "xs": (302.4, 155.544), "bdc3": (112.32, 142.56),
+          "tcl": (86.4, 120.024), "tct": (194.4, 69.144)}
+H3_MASTER = {"pt_w": "ot_hbm_accel_smh_pt_w", "pt_e": "ot_hbm_accel_smh_pt_e", "xs": "ot_hbm_accel_smh_xs",
+             "bdc3": "ot_hbm_accel_smh_bdc", "tcl": "ot_hbm_accel_smh_tcl", "tct": "ot_hbm_accel_smh_tct"}
+H3_BAND_Y = 354.24
+H3_XS_X, H3_XS_Y = 10.8, 747.36
+H3_TCX = 367.2                 # tct / tcl0 x (tcc region 334.8 + 32.4 input channel)
+
+
+def _h3_pos():
+    """leaf-0 / band macro origins (R0); leaf 1 is derived by mirroring."""
+    tw = H3_TILE[0]
+    xb0 = trk((H3_DIM["bdc3"][0] - 1084 * 0.096) / 2)
+    pos = {"ptw": (10.8, H3_BAND_Y), "pte": (round(tw - 10.8 - 51.84, 3), H3_BAND_Y),
+           "xs": (H3_XS_X, H3_XS_Y), "bdc": (round(H3_XS_X + trk(20.0) - xb0, 3), 924.48),
+           "tct": (H3_TCX, 758.16), "tcl0": (H3_TCX, 849.12), "tcl1": (round(H3_TCX + 86.4 + 21.6, 3), 849.12)}
+    return pos
+
+
+def h3_pins(m, T=16):
+    """pin list [(name, layer, edge, x, y)] of round-3 master m (local coordinates)."""
+    w, h = H3_DIM[m]
+    P_ = []
+    def hf(names, x, y0, pitch=0.192, layer="M4"):
+        return [(n, layer, "", x, round(y0 + i * pitch, 3)) for i, n in enumerate(names)]
+    def vf(names, y, x0, pitch=0.096, layer="M5"):
+        return [(n, layer, "", round(x0 + i * pitch, 3), y) for i, n in enumerate(names)]
+    land = lambda suf: bits("rl1" + suf, 22 + T - 16 + 818 - 22) if False else None
+    rbw = 6 + T + 788 + 1 + 7
+    def landing(suf):
+        return bits("rl1" + suf, rbw) + bits("bk1" + suf, 2069) + bits("ohl1" + suf, 13)
+    XL = trk(12.0)
+    if m in ("pt_w", "pt_e"):
+        ys = tile_edge_slots(H3_TILE[1])
+        rin_i, rout_o = ("rin", "rpm") if m == "pt_w" else ("rpm", "rout")
+        bin_i, bout_o = ("bin", "bm") if m == "pt_w" else ("bm", "bout")
+        for (kind, i), y in ys.items():
+            yl = round(y - H3_BAND_Y, 3)
+            if not 0.5 < yl < h - 0.5:
+                raise ValueError(f"{m}: slot {kind}{i} y {y} outside the band")
+            a_, b_ = (rin_i, rout_o) if kind == "r" else (bin_i, bout_o)
+            P_ += [(f"{a_}[{i}]", "M4", "", 0.0, yl), (f"{b_}[{i}]", "M4", "", w, yl)]
+        if m == "pt_w":
+            P_ += vf(landing("_n"), h, XL) + vf(landing("_s"), 0.0, XL)
+            P_ += [("clk", "M5", "", trk(w - 8.0), h), ("rst_a", "M5", "", trk(w - 7.5), h)]
+        else:
+            P_ += [("clk", "M5", "", trk(w / 2), h), ("rst_a", "M5", "", trk(w / 2 + 0.5), h)]
+    elif m == "xs":
+        P_ += vf(landing(""), 0.0, XL)
+        nb = ["o_iv_b", "o_ifirst", "o_ilast", "o_ifp4"] + bits("o_itag", T)
+        for k in range(532):
+            nb += [f"o_iw[{k}]", f"o_ix[{k}]"]
+        P_ += vf(nb, h, trk(20.0))
+        x2 = trk(20.0 + len(nb) * 0.096 + 5.0)
+        st = bits("xs_a1", 9) + bits("xs_g1", 5) + bits("xs_a2", 7) + bits("xs_g2", 5) + ["clk", "rst_a"]
+        P_ += vf(st, h, x2, pitch=0.48)
+        ne = ["o_iv_f", "o_ifirst_e", "o_ilast_e"] + bits("o_itag_e", T)
+        for k in range(256):
+            ne += [f"o_iw[{532 + k}]", f"o_ix[{532 + k}]"]
+        P_ += hf(ne, w, trk((h - len(ne) * 0.192) / 2))
+    elif m == "bdc3":
+        ni = ["i_v", "i_first", "i_last", "i_fp4"] + bits("i_tag", T)
+        for k in range(532):
+            ni += [f"i_w[{k}]", f"i_x[{k}]"]
+        xb0 = trk((w - len(ni) * 0.096) / 2)
+        P_ += vf(ni, 0.0, xb0)
+        P_ += vf(["ov", "fault"] + bits("y", 32) + bits("otag", T) + ["clk", "rst_a"], h, trk(20.0), pitch=0.192)
+    elif m == "tcl":
+        ni = ["clk", "rst_a", "i_v", "i_first"]
+        for k in range(128):
+            ni += [f"i_w[{k}]", f"i_x[{k}]"]
+        P_ += vf(ni, h, trk(10.0))
+        P_ += vf(bits("sum_o", 256) + ["lfault"], 0.0, trk(10.0))
+    elif m == "tct":
+        xa, xb = trk(10.0), round(trk(10.0) + 108.0, 3)
+        P_ += vf(bits("sum_i", 256)[:256] + ["lf_a"], h, xa)
+        P_ += vf([f"sum_i[{256 + k}]" for k in range(256)] + ["lf_b"], h, xb)
+        P_ += hf(["i_v", "i_last"] + bits("i_tag", T), 0.0, trk((h - (T + 2) * 0.192) / 2))
+        P_ += hf(["ov", "fault"] + bits("y", 32) + bits("otag", T), w, trk((h - (T + 34) * 0.192) / 2))
+        P_ += vf(["clk", "rst_a"], 0.0, trk(w / 2), pitch=0.48)
+    else:
+        raise ValueError(m)
+    names = [p_[0] for p_ in P_]
+    if len(set(names)) != len(names):
+        raise ValueError(f"{m}: duplicate pins")
+    for n, layer, _, x, y in P_:
+        if not (0 <= x <= w and 0 <= y <= h):
+            raise ValueError(f"{m}: pin {n} at {x},{y} outside {w}x{h}")
+    return P_
+
+
+def h3_tile_macros_tcl(views):
+    """tile macro placement (instance regex -> origin, orientation) for the 12 round-3 macros."""
+    pos = _h3_pos()
+    H = dict(H3_DIM)
+    slots = {}
+    slots["u_ptw"] = (*pos["ptw"], "R0")
+    slots["u_pte"] = (*pos["pte"], "R0")
+    for j in range(2):
+        for key, inst, dim in (("xs", "u_xs", "xs"), ("bdc", "u_bdc", "bdc3"), ("tct", "u_tcc.u_tr", "tct"),
+                               ("tcl0", "u_tcc.u_h0", "tcl"), ("tcl1", "u_tcc.u_h1", "tcl")):
+            x, y = pos[key]
+            if abs(y / 0.048 - round(y / 0.048)) > 1e-6:
+                raise ValueError(f"leaf-0 origin {key} y {y} off the 0.048 grid (mirror would leave the tracks)")
+            if j == 1:
+                y = round(H3_YM2 - y - H[dim][1], 3)
+            slots[f"g_lf[{j}].u_lh.{inst}"] = (x, y, "R0" if j == 0 else "MX")
+    tcl = ["set ot_n 0", "array set ot_s {"] + [f"  {{{k}}} {{{x} {y} {o}}}" for k, (x, y, o) in slots.items()] + [
+           "}", "foreach ot_inst [[ord::get_db_block] getInsts] {",
+           "  if {![[$ot_inst getMaster] isBlock]} { continue }",
+           "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
+           "  set hit \"\"",
+           "  foreach k [array names ot_s] { if {[string range $n end-[expr {[string length $k] - 1}] end] eq $k} { set hit $k } }",
+           "  if {$hit eq \"\"} { error \"no slot for $n\" }",
+           "  set v $ot_s($hit)",
+           "  place_macro -macro_name [$ot_inst getName] -location [lrange $v 0 1] -orientation [lindex $v 2]",
+           "  incr ot_n", "}",
+           f"if {{$ot_n != {len(slots)}}} {{ error \"macro_place: placed $ot_n of {len(slots)}\" }}"]
+    return tcl, slots
 
 VIEWS = "physical/hbm_accel_smh_views"
 PIECES = ["ot_hbm_accel_smh_tile_e", "ot_hbm_accel_smh_tile_w", "ot_hbm_accel_smh_be_e", "ot_hbm_accel_smh_be_w",
@@ -1425,7 +1583,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("block")
-    b.add_argument("--piece", choices=("tile", "be", "front", "tcc", "bdc") + STRIPS, required=True)
+    b.add_argument("--piece", choices=("tile", "be", "front", "tcc", "bdc", "pt_w", "pt_e", "xs", "bdc3", "tcl", "tct") + STRIPS, required=True)
     b.add_argument("--variant", default="toE", choices=("toE", "toW", "one"))
     b.add_argument("--label", required=True)
     b.add_argument("--out", required=True)
@@ -1471,6 +1629,7 @@ def main(argv=None):
     b.add_argument("--xlk", action="store_true", help="[cg-smt] 2026-10-10: tile: a negedge lockup stage at every x-store macro input "
                    "(0 cycles; macro clock pin late + 47 ps lib hold: FF hold -55..-84 ps at r_addr_in / w_mask_in)")
     b.add_argument("--hier-views", default=None, help="el1011-hbm-smh: tile under OT_SMH_HIER with the hardened columns: TCCDIR,BDCDIR (repo view dirs named after the masters)")
+    b.add_argument("--hier3", default=None, help="el1011-hbm-smh round 3: tile from the hardened sub-elements: comma-separated view dirs of ot_hbm_accel_smh_{pt_w,pt_e,xs,bdc,tcl,tct}")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
