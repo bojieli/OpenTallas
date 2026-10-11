@@ -4247,6 +4247,9 @@ def _hop_fix(m, P):
                 fdrv = B[fi_][3][0]
             def find(k, n, path, pos, cur, rc, tt):
                 """s81-gen: the station search tiers of one hop station (unchanged order); rc counts the fallbacks"""
+                # fs3 (--relay-pin-path): the first station after a column relay keeps 30 um for the relay's output face,
+                # chosen after hop-fix (p6 head631: 46 y_rt_*_2b_0 -> g_rt hops at 510.2 um, pin and centre)
+                RR = R - 10.0 - (30.0 if RELAY_PIN_PATH and k == 0 and d0.name.startswith('y_') else 0.0)
                 Lp = _poly_len(path)
                 (cx, cy), dch = _poly_at(path, pos[k])
                 horiz = dch in 'EW'
@@ -4266,10 +4269,26 @@ def _hop_fix(m, P):
                 # stations into each other: 41 / 49 / 49 overlaps, all hop-fix stations)
                 # v7: a station with no padded spot inside its frame (v6c: rt_63_26b in frame 63) falls back to a
                 # 1.08 um, then no keep-out (counted in rc)
-                for PAD in (2.16, 1.08, 0.0):
+                if RELAY_PIN_PATH and NR and not fwd:
+                    # fs3: first a station monotone on both axes (centre in the cur -> load box + 20 um; p6 head631: the
+                    # g_rt_*_2b_y1 station stood 260 um north of y_rt_*_2b_0 and its load), in its region, then the die
+                    bx = (min(cur[0], b[0]) - 20.0, min(cur[1], b[1]) - 20.0, max(cur[0], b[0]) + 20.0,
+                          max(cur[1], b[1]) + 20.0)
+                    for alw in (allowed, [(0.0, 0.0, W, H)]):
+                        for span, rows in ((300.0, 30), (1200.0, 120)):
+                            pl = P.near(cx, cy, w_ + 4.32, h_ + 4.32, alw, prev=cur, horiz=horiz, reach=RR, span=span,
+                                        rows=rows, box=bx, **NR)
+                            if pl:
+                                pl = (up(pl[0] + 2.16, GX), up(pl[1] + 2.16, GY))
+                                break
+                        if pl:
+                            break
+                    if pl is None:
+                        rc['pin_unboxed'] = rc.get('pin_unboxed', 0) + 1
+                for PAD in (() if pl else (2.16, 1.08, 0.0)):
                     for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
-                                    reach=R - 10.0, span=span, rows=rows, **NR)
+                                    reach=RR, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
                             break
@@ -4282,7 +4301,7 @@ def _hop_fix(m, P):
                     # takes the nearest legal spot within reach (the strip / channel next to the frame)
                     for span, rows in ((300.0, 30), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
-                                    reach=R - 10.0, span=span, rows=rows, **NR)
+                                    reach=RR, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                             rc['frame_out'] = rc.get('frame_out', 0) + 1
@@ -4290,7 +4309,7 @@ def _hop_fix(m, P):
                 if pl is None and PIN_RELAY and reg is None:   # a pin relay beside a slab: anywhere legal on the die
                     for span, rows in ((300.0, 30), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
-                                    reach=R - 10.0, span=span, rows=rows, **NR)
+                                    reach=RR, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                             rc['die'] = rc.get('die', 0) + 1
@@ -4298,7 +4317,7 @@ def _hop_fix(m, P):
                 if pl is None and NR:          # both reaches, anywhere legal on the die (the frame / channel is full)
                     for span, rows in ((300.0, 30), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
-                                    reach=R - 10.0, span=span, rows=rows, **NR)
+                                    reach=RR, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                             rc['nxt_die'] = rc.get('nxt_die', 0) + 1
@@ -4316,7 +4335,7 @@ def _hop_fix(m, P):
                     for PAD in (2.16, 1.08, 0.0):
                         for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
                             pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
-                                        reach=R - 10.0, span=span, rows=rows)
+                                        reach=RR, span=span, rows=rows)
                             if pl:
                                 pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
                                 break
@@ -4327,7 +4346,7 @@ def _hop_fix(m, P):
                     if pl is None and ((reg is not None and not fwd and (PQ_PLACE or FRAME_OUT_RELAY)) or (PIN_RELAY and reg is None)):
                         for span, rows in ((300.0, 30), (1200.0, 120)):
                             pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
-                                        reach=R - 10.0, span=span, rows=rows)
+                                        reach=RR, span=span, rows=rows)
                             if pl:
                                 pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                                 rc['relaxed_die'] = rc.get('relaxed_die', 0) + 1
@@ -4337,7 +4356,7 @@ def _hop_fix(m, P):
                     # lattice before failing; keep both timing reaches and the original occupancy clearance.
                     for PAD in (2.16, 1.08, 0.0):
                         pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, [(0.0, 0.0, W, H)],
-                                    prev=cur, horiz=horiz, reach=R - 10.0, span=1200.0,
+                                    prev=cur, horiz=horiz, reach=RR, span=1200.0,
                                     rows=560, cross_step=2.16, **NR)
                         if pl:
                             pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
@@ -4696,6 +4715,10 @@ def _col_relays(m, P):
                         m.setdefault('pin_path_unboxed', []).append(f'y_{bid}_{k}')
                 if pl is None:
                     m.setdefault('pin_path_unbounded', []).append(f'y_{bid}_{k}')
+                    if len(m.setdefault('pin_path_unbounded_dbg', [])) < 40:     # fs3: why no bounded spot
+                        m['pin_path_unbounded_dbg'].append(dict(relay=f'y_{bid}_{k}', n=n, L=round(L, 1),
+                            cur=[round(v, 1) for v in cur], b=[round(v, 1) for v in b], c=[round(cx, 1), round(cy, 1)],
+                            fr=[round(v, 1) for v in fr], wh=[w_, h_], nreach=round(NR.get('nreach', -1), 1)))
             if pl is None:
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
             assert pl, (bid, k)
@@ -4754,7 +4777,8 @@ def _col_relays(m, P):
                                      ('rt_', 'xa_', 'xb_', 'cc_', 'qt_', 'es_', 'ss_', 'so_', 'nf_', 'cfg_', 'go_', 'rr_')})
     if RELAY_PIN_PATH:
         m['col_relays'].update(pin_path_unboxed=len(m.get('pin_path_unboxed', [])),
-                               pin_path_unbounded=sorted(m.get('pin_path_unbounded', [])))
+                               pin_path_unbounded=sorted(m.get('pin_path_unbounded', [])),
+                               pin_path_unbounded_dbg=m.get('pin_path_unbounded_dbg', []))
 
 
 def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
