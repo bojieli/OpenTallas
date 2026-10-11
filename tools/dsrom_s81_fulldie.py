@@ -3969,6 +3969,9 @@ def buses_r8(m):
             c_ = m['ctrls'][st].name
             for nm_, lo_, n_ in (('r_data', 0, 8192), ('r_tag', 8192, 544), ('r_beat', 8736, 128), ('rv', 8864, 32)):
                 bus(f'rd_{st}_{nm_}', 'hbm_read', n_, [(c_, f'rd[{lo_}:{lo_ + n_ - 1}]'), (cl_, nm_)])
+            # the controller status st = {fault, live} -> the stack's svc (hs): folded into its job-done fault (jd ->
+            # dsfd_svc_join c_st -> sequencer s4) and gating its PC issue on live (composition.json nets.status)
+            bus(f'st_{st}', 'hbm_req', 2, [(c_, 'st'), (cl_, 'hs')])
         else:
             bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
         if CTRL_RQ:   # s81-gen: the controller's request side (real dsfd_ctrl rq / rk / wd), abutting faces

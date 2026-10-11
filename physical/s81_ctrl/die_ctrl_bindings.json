@@ -134,6 +134,15 @@
     "cNW": "515'd0",
     "cSE": "515'd0",
     "note": "layer1 = one HBM stack (SW): the NE / NW / SE svc row-export inputs have no stack"
+   },
+   "ot_s81_cfg7_seq": {
+    "ef": "2'b00",
+    "go_tag": "open",
+    "note": "PQ = 0 (the layer1 q element ot_v41_rom_elem_q_qp_w10 has no op-tag / loader handshake pins): rtl/v41die/ot_s81_cfg7_seq.sv 'PQ = 0: go_tag = 0, ef ignored'"
+   },
+   "ot_rom_4096x72_m8": {
+    "rd_out[48:71]": "open",
+    "note": "cfg ROM spare columns rd_out[71:48]: the 48-b cfg word uses columns 0..47 (tools/dsrom_s81_fulldie.py unbound_functional_pins / UNUSED_BY_DESIGN note; ROM ECC retired by the 2026-10-02 ROM reliability policy)"
    }
   }
  }

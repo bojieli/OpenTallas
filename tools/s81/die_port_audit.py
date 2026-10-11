@@ -139,6 +139,11 @@ def audit(m, glue_out=None, absent=None):
             if p not in die:
                 f['unbound'].append(f'{d} {p}[{w}]')
             elif w and die[p][1] != w:
+                sp_ = f'{p}[{die[p][1]}:{w - 1}]'       # a declared unused upper slice (e.g. ROM spare columns)
+                if die[p][1] < w and dec.get(sp_) == 'open' and d == 'output':
+                    out.setdefault('declared_absent', []).append(dict(master=ms, port=sp_, dir=d, bits=w - die[p][1],
+                                                                      value='open', ok=True))
+                    continue
                 f['width'].append(f'{p}: die {die[p][1]} vs rtl {w}')
         for p in die:
             if p not in rp and not CTRL.match(p):
