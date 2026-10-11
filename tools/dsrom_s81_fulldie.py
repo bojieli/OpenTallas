@@ -2368,6 +2368,16 @@ SUHC_GU = 512
 # collective -> HC y as 1,024-b lanes (4 a half): one station chain each (a 4,096-b station found no box in the VCH)
 SUHC_BUSES = tuple(('collective', h_, 1024, f't_{h_}{k}', f'f_coll{k}') for h_ in ('hc_s', 'hc_n') for k in range(4)) + \
     (('capture', 'su_s', SUHC_GU, 't_su_s', 'f_capture'), ('capture', 'su_n', SUHC_GU, 't_su_n', 'f_capture'))
+# --hrow-tx (ds-1010/s81die 2026-10-11, mtp-dsbind 564941967): the stage dies of layers 37 / 38 / 39 send the HC means of
+# the residual (h resident in HC under --suhc-1011) to DSpark primary die P.k on a dedicated MTP lane: ot_dsrom_mtp_hrow_tx
+# (header {user, pos, issue epoch} from the WFC kit's t_hep + the die's part strap from the host; 80 x 1,024-b beats from
+# hc_n; flit {hdr, last, 512} + grant to the collective's MTP lane).  ~1.6 kbit of state: a 259.2 x 129.6 um slab.
+HROW_TX = False
+HRTX_UM = (259.2, 129.6)
+HRTX_BUSES = (('hc_n', 'hrtx', 1025, 't_hrow', 'f_b'), ('hrtx', 'hc_n', 1, 't_b_r', 'f_hrow_r'),
+              ('hrtx', 'collective', 515, 't_lane', 'f_hrow'), ('collective', 'hrtx', 1, 't_hrow_g', 'f_lane_g'))
+HRTX_KIT_BUSES = (('wfc', 'hrtx', 36, 't_hep', 'f_h'), ('hrtx', 'wfc', 1, 't_h_r', 'f_hep_r'))
+HRTX_HOST_BUSES = (('host', 'hrtx', 2, 't_hpart', 'f_part'),)
 COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin face)
 SU_E = 0.0                     # --su-e MM2: su_n in the E column above hc_n (W column: su_s + centre)
 VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
@@ -3232,7 +3242,13 @@ def build_r8(variant=None):
     slab('hc_n', HUB_MM2['hc'] * (1 - fs), hcx, c1, hcw, dom=SUHC_DOM)
     if SU_E:
         hn_ = hub['hc_n']
-        slab('su_n', SU_E, x_spe, up(hn_.y + hn_.h + SPINE_GAP, GY), cw, dom=SUHC_DOM)
+        ysn = up(hn_.y + hn_.h + SPINE_GAP, GY)
+        if HROW_TX:   # --hrow-tx: the stage die's hidden-row sender between hc_n (its source) and su_n
+            slab('hrtx', HRTX_UM[0] * HRTX_UM[1] / 1e6, up(x_spe + (cw - HRTX_UM[0]) / 2, GX), ysn, HRTX_UM[0],
+                 dom='stream_1p2', master='dsfd_mtp_hrow_tx')
+            ysn = up(ysn + HRTX_UM[1] + SPINE_GAP, GY)
+            notes.append('--hrow-tx: dsfd_mtp_hrow_tx (ot_dsrom_mtp_hrow_tx) %s um above hc_n' % (HRTX_UM,))
+        slab('su_n', SU_E, x_spe, ysn, cw, dom=SUHC_DOM)
         notes.append('--su-e: su_n %.3f mm2 in the E column above hc_n; su_s %.3f mm2 at the W column floor' % (SU_E, su_lo))
     ye = c1
     for n in ecol:
@@ -3315,7 +3331,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, vm_slab=list(VM_SLAB) if VM_SLAB else None, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -3741,6 +3757,8 @@ def buses_r8(m):
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
             ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
             (SUHC_BUSES if SUHC_1011 else ()) + \
+            ((HRTX_BUSES + (HRTX_KIT_BUSES if 'wfc' in hub else ()) + (HRTX_HOST_BUSES if 'host' in hub else ()))
+             if 'hrtx' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
               ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
         if REV == 'r9':
@@ -6238,6 +6256,8 @@ def die_options(ap):
                     '-> SU g/u (512 b a half, planning width); h resident in HC; default off')
     ap.add_argument('--su-e', type=float, default=0.0, help='ds-1010/s81die 2026-10-11: su_n of MM2 in the E column above hc_n, '
                     'su_s = the rest at the W column floor under the centre stack (room for the --vm-slab VM); default 0 = off')
+    ap.add_argument('--hrow-tx', action='store_true', help='ds-1010/s81die 2026-10-11: stage die of layer 37/38/39: the '
+                    'hidden-row sender dsfd_mtp_hrow_tx (hc_n -> MTP lane, header from the WFC kit); needs --suhc-1011 --su-e')
     ap.add_argument('--vm-slab', help='ds-1010/s81die 2026-10-11 (s81-vm-1011): VM slab outline W,H in um (e.g. 1520,2420); '
                     'default: the HUB_MM2 area at the column width')
     ap.add_argument('--ecol-slabs', help='ds-1010/s81die 2026-10-10: comma list of W hub-column centre slabs (wfc, host, '
@@ -6426,8 +6446,10 @@ def apply_options(a):
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB
     SUHC_1011 = bool(getattr(a, 'suhc_1011', False))
     SUHC_DOM, SUHC_HC_VM = ('stream_1p2', 2048) if SUHC_1011 else ('serial_0p9', 1024)
-    global SU_E
+    global SU_E, HROW_TX
     SU_E = float(getattr(a, 'su_e', 0.0) or 0.0)
+    HROW_TX = bool(getattr(a, 'hrow_tx', False))
+    assert not HROW_TX or (SUHC_1011 and SU_E), '--hrow-tx needs --suhc-1011 --su-e (h resident in HC, E-column slot)'
     VM_SLAB = tuple(float(x) for x in a.vm_slab.split(',')) if getattr(a, 'vm_slab', None) else None
     global ECOL_SLABS, ECOL_W
     ECOL_SLABS = tuple(x for x in (getattr(a, 'ecol_slabs', None) or '').split(',') if x)
