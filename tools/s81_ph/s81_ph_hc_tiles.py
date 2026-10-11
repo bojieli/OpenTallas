@@ -56,7 +56,8 @@ def sub_tile(w, h, contract, half=False):
     CT.CONTRACT = contract
     pl = Plan('ot_s81_hc_ctile', CW, h)
     x = X0
-    for n_in, n_out, b, _, d in chain_ports(w) + ([('cy_in', 'cy_out', 128, None, 'input')] if half else []):
+    # cy_in / cy_out: the ctile always has the chunk-carry ports (used at HALF=1, tied / unused at HALF=0)
+    for n_in, n_out, b, _, d in chain_ports(w) + [('cy_in', 'cy_out', 128, None, 'input')]:
         pl.bus(n_in, b, d, 'N', 'M5', x)
         x = pl.bus(n_out, b, 'output' if d == 'input' else 'input', 'S', 'M5', x)
     assert x < CW - 20, x
