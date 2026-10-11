@@ -38,6 +38,7 @@ HBM_BENCH = "results/rtl/hbm_mtp_20261008/bench/round1.json"
 SPEC_SWEEP = "results/rtl/mtp_exact_20261008/spec_state/sweep.json"
 OLD_STEP = "results/uarch/dsrom_mtp_rom_step_20261008/step.json"
 REPRICE = "results/arch/reprice_20261008/reprice.json"
+COLL_PROGS = "results/rtl/s81_ctrl_20261008/programs/index.json"
 BINDING = "results/uarch/dsrom_s81_mtp_binding_20261010/verdict.json"
 BINDING_DIES = "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json"
 ROWPACK = "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz"
@@ -305,6 +306,22 @@ def ds_rom():
                   "they reach the primary after ONE board hop + 161 flits, while the same position's result still crosses "
                   "every later stage to the head and the head -> primary seed lane before the seed descriptor can read the "
                   "row; a late row only delays the read (pos_late), never changes the value"))
+    # ---- s81-ctl-1011 (ADAPTER_CONTRACT_1011, engine 3): the collective's command endpoint dsfd_coll_job holds a coll
+    # message's records until its descriptor (queued ahead by dsfd_stage_seq) and releases them through its f_vm pin flop:
+    # +1 cycle per coll op on the record path (t_vm feedthrough +0); every coll op of the stage programs is charged as
+    # critical (the programs run <= 1 coll op at a time, so the QD 8 credit window never throttles)
+    progs = json.loads((ROOT / COLL_PROGS).read_text())
+    n_coll = sum(1 for f in sorted((ROOT / COLL_PROGS).parent.glob("S*.json"))
+                 for o in json.loads(f.read_text())["ops"] if o["eng"] == "coll")
+    assert progs["stages"] and n_coll > 0
+    coll_ep = n_coll * 1
+    ch.append(charge(
+        "coll.engine_endpoint", "collective command endpoint dsfd_coll_job (coll engine 3 under dsfd_stage_seq)", coll_ep,
+        anchor="wave.last", phase="verify", grade="rtl count (registered stages)",
+        formula=f"{n_coll} coll ops on one pass of the stage programs x 1 (f_vm pin flop of the endpoint tile)",
+        source=["rtl/dsrom_sys/s81_ph/coll/dsfd_coll_job.sv", "rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv",
+                "rtl/dsrom_sys/s81_ph/coll/run_coll_ctrl_gate.sh (exact + dropstart / wrongdesc / earlydone)", COLL_PROGS],
+        note="upper bound (every coll op taken as critical); the same cycles apply to every AR pass (ar_effect)"))
     # ---- sensitivity: the RTL-sequenced step (draft from the closing result), NOT credited
     old = J(OLD_STEP)["step_model"]["blend_harmonic"]
     sens = dict(rtl_sequenced_over_model=old["rtl_over_model"], source=OLD_STEP + " step_model.blend_harmonic",
@@ -313,9 +330,9 @@ def ds_rom():
                                  "positions' head passes. The bench proves the sequencing, not a conflict-free head "
                                  "schedule: overlap NOT proven, so not credited")
     return finish("ds_rom", ch, mtp, sens=sens, ar_effect=dict(
-        cycles=hops * per_hop, rule="the WFC kit's per-hop cycles on the AR pass; apply to the AR views when --wfc-hard is "
-        "default-on", AR_tok_s_before=hv["AR_tok_s"],
-        AR_tok_s_after=round(CLK / (hv["AR_us"] * CLK / 1e6 + hops * per_hop), 1)),
+        cycles=hops * per_hop + coll_ep, rule="the WFC kit's per-hop cycles on the AR pass + the collective command endpoint "
+        f"(+1 a coll op, {coll_ep:g}); apply to the AR views when --wfc-hard is default-on", AR_tok_s_before=hv["AR_tok_s"],
+        AR_tok_s_after=round(CLK / (hv["AR_us"] * CLK / 1e6 + hops * per_hop + coll_ep), 1)),
         inputs=[MTP_ROM_BENCH, WFC_CLOSURE, DRAFT_REC, MARKOV_Q, P2_SRC, P2_MODEL, COMMIT_RTL, OLD_STEP]
         + ([BINDING, BINDING_DIES, ROWPACK, P2_MICRO] if (ROOT / BINDING).exists() else []))
 

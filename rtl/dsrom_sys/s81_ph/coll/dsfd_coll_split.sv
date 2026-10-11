@@ -33,6 +33,14 @@ module ot_s81ph_relay2 #(parameter integer W = 8) (
     ot_s81ph_skid2 #(.W(W)) u_b (.clk(clk), .rst_n(rst_n), .in_v(m_v), .in_r(m_r), .in_d(m_d), .out_v(out_v), .out_r(out_r), .out_d(out_d));
 endmodule
 
+// ---- kept 1-bit register (hardcore-1010 collct 2026-10-10): one instance per physical copy.  The hierarchy boundary
+// stops opt_merge from folding equal copies (a plain (* keep *) reg does NOT: see ot_dsrom_window_keep_reg), so two pin
+// flops with the same D each anchor at their own pin.  Synthesise with SYNTH_KEEP_MODULES=ot_s81ph_keep_ff.
+(* keep_hierarchy = "yes" *)
+module ot_s81ph_keep_ff (input wire clk, input wire rst_n, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+
 // ---- credit relay (redesign-ds 2026-10-10, split3 CR mode): link -> credit rx (pin flops + FIFO + OREG) -> credit tx -> link
 // PS (fill-9 2026-10-10, opt-in, default 0 = byte-identical): PIN STATIONS.  One extra register stage on every pin of the
 // relay -- {i_v, i_d} and the returned credit o_cr on the way in, {o_v, o_d} and the issued credit i_cr on the way out --
@@ -56,10 +64,14 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8, par
     wire m_v, m_r, f; wire [W-1:0] m_d;
     wire xi_v, xi_cr, xo_v, xo_cr; wire [W-1:0] xi_d, xo_d;
     generate if (PS != 0) begin : g_ps
-        reg iv_q, icr_q, ov_q, ocr_q; reg [W-1:0] id_q, od_q;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin iv_q <= 1'b0; icr_q <= 1'b0; ov_q <= 1'b0; ocr_q <= 1'b0; end
-            else begin iv_q <= i_v; icr_q <= xi_cr; ov_q <= xo_v; ocr_q <= o_cr; end
+        wire iv_q, icr_q, ov_q, ocr_q; reg [W-1:0] id_q, od_q;
+        // 1-bit pin stations are separate kept instances (KPS, hardcore-1010 collct): the issued-credit station icr_q and
+        // the valid station ov_q both equal 'send' two cycles late, so opt_merge folded them into ONE flop driving two
+        // pins on different faces (rslps routed TT -56.65: u_lo7.o_v -> lo7_r S face / elo_v E face, li7_v, wli_r, wlo_v)
+        ot_s81ph_keep_ff u_iv (.clk(clk), .rst_n(rst_n), .d(i_v), .q(iv_q));
+        ot_s81ph_keep_ff u_icr (.clk(clk), .rst_n(rst_n), .d(xi_cr), .q(icr_q));
+        ot_s81ph_keep_ff u_ov (.clk(clk), .rst_n(rst_n), .d(xo_v), .q(ov_q));
+        ot_s81ph_keep_ff u_ocr (.clk(clk), .rst_n(rst_n), .d(o_cr), .q(ocr_q));
 `ifdef OT_S81PH_MUT_CTPS
         // negative control: the output data station lags its valid by one more cycle (must be caught by the bench)
         reg [W-1:0] od_m;
@@ -87,19 +99,29 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8, par
         localparam integer SW = (W + RSL - 1) / RSL;          // bits per slice (last slice may be short)
         localparam integer CW = $clog2(D + 1), KW = $clog2(CX + 1);
         // rx: landing register, count, credit (same as ot_link_credit_rx WFREE=1 OREG=0)
-        reg v_q; reg [W-1:0] d_q; reg [CW-1:0] n; reg l_cr, flt;
+        reg v_q; reg [W-1:0] d_q; reg [CW-1:0] n; reg flt; wire l_cr;
         // tx: credit counter (same as ot_link_credit_tx)
-        reg cr_q; reg [KW-1:0] cnt; reg l_v; wire [W-1:0] l_d;
+        reg cr_q; reg [KW-1:0] cnt; wire l_v; wire [W-1:0] l_d;
         wire fv = n != 0, full = n == CW'(D);
         wire send = fv && cnt != 0;                           // = pop
         wire wr = v_q && !full;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin v_q <= 1'b0; n <= 0; l_cr <= 1'b0; flt <= 1'b0; cr_q <= 1'b0; cnt <= KW'(CX); l_v <= 1'b0; end
+            if (!rst_n) begin v_q <= 1'b0; n <= 0; flt <= 1'b0; cr_q <= 1'b0; cnt <= KW'(CX); end
             else begin
-                v_q <= xi_v; l_cr <= send; if (v_q && full && !send) flt <= 1'b1;
+                v_q <= xi_v; if (v_q && full && !send) flt <= 1'b1;
                 n <= n + CW'(wr) - CW'(send);
-                cr_q <= xo_cr; cnt <= cnt + KW'(cr_q) - KW'(send); l_v <= send;
+                cr_q <= xo_cr; cnt <= cnt + KW'(cr_q) - KW'(send);
             end
+        // l_cr (credit out, upstream face) and l_v (valid out, downstream face) both = send one cycle late: kept separate
+        // instances so each can sit at its own pin (a plain reg pair is merged by opt_merge; cb RSL has no PS stations)
+        ot_s81ph_keep_ff u_lcr (.clk(clk), .rst_n(rst_n), .d(send), .q(l_cr));
+`ifdef OT_S81PH_MUT_KPS
+        // negative control: the kept valid copy is fed one cycle late (valid lags its data word; must be caught)
+        reg send_m; always @(posedge clk or negedge rst_n) if (!rst_n) send_m <= 1'b0; else send_m <= send;
+        ot_s81ph_keep_ff u_lv (.clk(clk), .rst_n(rst_n), .d(send_m), .q(l_v));
+`else
+        ot_s81ph_keep_ff u_lv (.clk(clk), .rst_n(rst_n), .d(send), .q(l_v));
+`endif
         always @(posedge clk) d_q <= xi_d;
         genvar s, e;
         for (s = 0; s < RSL; s = s + 1) begin : g_s
@@ -139,7 +161,16 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8, par
 endmodule
 
 // ---- bottom tile: VM interface, output queue, lanes 0 / 4 relays
-module dsfd_coll_cb #(parameter integer OD = 16,
+// s81-ctl-1011: with +define+OT_S81PH_COLL_JOB this tile carries the coll command endpoint and is the distinct master
+// dsfd_coll_cbj (its own closure / view; dsfd_coll_cb without the define is unchanged, cell names included).
+`ifndef OT_S81PH_CB_MASTER
+`ifdef OT_S81PH_COLL_JOB
+`define OT_S81PH_CB_MASTER dsfd_coll_cbj
+`else
+`define OT_S81PH_CB_MASTER dsfd_coll_cb
+`endif
+`endif
+module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
     parameter integer CR = 0,  // redesign-ds: 1 = every lane / seam stream is a credit link (ot_s81ph_cr_relay), see ot_link_credit
     // TREP (ds-1010 2026-10-10, opt-in): the VM take strobe is re-registered once per output-queue slice (keep copies
     // beside each slice) and each slice pops itself, so no single flop drives the 2,100 anchored t_vm pin flops spread
@@ -172,6 +203,13 @@ module dsfd_coll_cb #(parameter integer OD = 16,
     input  wire [2099:1]  bw_d,
     output reg [0:0] bw_cr,
     output reg [0:0] bw_flt
+`ifdef OT_S81PH_COLL_JOB
+    // s81-ctl-1011: the coll command endpoint (ADAPTER_CONTRACT_1011 engine 3), S face beside t_vm (x 522..680)
+    ,
+    input  wire [84:0]    c_cmd,
+    output wire [8:0]     c_done,
+    output wire [1:0]     c_st
+`endif
 );
     wire clk = ck[0];
     reg [1:0] rst_s;
@@ -179,9 +217,20 @@ module dsfd_coll_cb #(parameter integer OD = 16,
     wire rst_n = rst_s[1];
     // VM input: pin register, then the seam register (two edges, no handshake: the VM sends only with credits)
     reg [591:0] fv_r; reg [2:0] ts_r; reg [5:0] flt_r;
+    wire [591:0] fv_rel;
+`ifdef OT_S81PH_COLL_JOB
+    // the endpoint's release mux sits between the pin register and the seam register: records reach the core only under
+    // their coll descriptor (+0 cycles); the done is taken from this tile's t_vm output flops (the slab's VM-edge pins)
+    wire jf_unused;
+    ot_s81_coll_job #(.MUT(`ifdef OT_S81PH_COLL_JOB_MUT `OT_S81PH_COLL_JOB_MUT `else 0 `endif)) u_job (.c_clk(clk), .c_rst_n(rs[0]),
+        .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .ck(clk), .rs_n(rst_n), .vm_f(fv_r), .core_f(fv_rel),
+        .core_h(t_vm[13:0]), .fault(jf_unused));
+`else
+    assign fv_rel = fv_r;
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fv_r <= 0; fvm_u <= 0; ts_r <= 0; flt_r <= 0; flt_u <= 0; end
-        else begin fv_r <= f_vm; fvm_u <= fv_r; ts_r <= ts; flt_r <= {eflt, wflt}; flt_u <= flt_r; end
+        else begin fv_r <= f_vm; fvm_u <= fv_rel; ts_r <= ts; flt_r <= {eflt, wflt}; flt_u <= flt_r; end
     // lane relays (lane-face skid + seam-face skid; CR: credit relays, the *_r pins carry credit pulses)
     generate if (CR != 0) begin : g_cr
     ot_s81ph_cr_relay #(.W(553), .RSL(RSL)) u_lo0 (.clk(clk), .rst_n(rst_n), .i_v(lo0_v), .i_cr(lo0_r), .i_d(lo0_d), .o_v(wlo_v), .o_cr(wlo_r), .o_d(wlo_d));

@@ -33,9 +33,9 @@ module ot_hgi_idx_unit #(
     // index or when the next word targets another sector) instead of one VM write a word.  A non-unit inner stride keeps
     // the one-word path (the heap engine is fed 1-word beats).
     parameter integer TOPKW = 0,
-    // hgi-1010/g3: TWIW = the TOPKW engine's beat width and heap count (ot_hgi_idx_topk_wreg IW = W = TWIW): 4 (as built)
+    // hgi-1010/g3: TWIW = the TOPKW engine's beat width and heap count (ot_hgi_idx_topk_wreg IW = W = TWIW): 8 = DEFAULT (production; 4 = the first build)
     // or 8 (the production 8-wide engine: a whole sector a beat, 8 heaps; g2 heap bench IW8/W8 16 cases PASS)
-    parameter integer TWIW = 4,
+    parameter integer TWIW = 8,
     // hgi-1010/g3 (opt-in, defaults 0 = unchanged): see the IDX.INDEX front below
     parameter integer NGLOB = 0,
     parameter integer IKS = 0
