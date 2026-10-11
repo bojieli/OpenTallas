@@ -1,13 +1,3 @@
-# CLAUDE HBM-ABSTRACTS die view PDN = the HBM die PDN contract (tools/dsrom_s81_fulldie.py _gen_pg_lef / case_irm, the
-# model the r16g IR verdict was measured with): the die owns M8/M9 (bump-aligned straps); every block exposes M7 PG
-# stripes 0.288 um wide on a 10.8 um pitch (VDD at x = 1.0, VSS at x = 6.4 + k * 10.8) that the die grid drops onto
-# through M7-M8 vias.  Inside: M1/M2 rails, M5 straps, M6 straps, M7 stripes.  Signals route M2-M7 (route_view.sh
-# MAXL), so the view leaves M8/M9 to the die.  A view whose hard sub-macros carry M8/M9 PG breaks this contract:
-# report it as a defect (the sub-block must be re-hardened with its PDN top at M7).
-# mtp-lead 2026-10-11: pdn_view_sram.tcl = pdn_view.tcl (same M7 contract, VDD x = 1.0 / VSS 6.4 + k 10.8) PLUS the SRAM
-# macro grid of pdn_tile_sym.tcl for EVERY ot_sram_* master instantiated (M5 straps over the macro down to its M4 PG pins,
-# up to the M6 top straps).  pdn_view.tcl has no macro grid: a view with SRAM macros fails PSM-0069 (macro VDD unconnected)
-# at 6_report (dsfd_coll_mtp_lane mtpl-*-0ddaf548b).  Used by views with SRAM FIFOs (dsfd_wfc_vmx RQ queue, dsfd_wfc_crp).
 add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDD$} -power
 add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground
 global_connect
@@ -26,7 +16,7 @@ set ot_sram_cells {}
 foreach ot_m [[ord::get_db] getLibs] { foreach ot_c [$ot_m getMasters] {
   if {[$ot_c isBlock] && [string match ot_sram_* [$ot_c getName]]} { lappend ot_sram_cells [$ot_c getName] } } }
 if {[llength $ot_sram_cells]} {
-  puts "pdn_view_sram: SRAM macro grid on [lsort -unique $ot_sram_cells]"
+  puts "pdn_tile_sym: SRAM macro grid on [lsort -unique $ot_sram_cells]"
   define_pdn_grid -macro -cells [lsort -unique $ot_sram_cells] -halo {2 2 2 2} -voltage_domains {CORE} -name {sram}
   add_pdn_stripe -grid {sram} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
   add_pdn_connect -grid {sram} -layers {M4 M5}
