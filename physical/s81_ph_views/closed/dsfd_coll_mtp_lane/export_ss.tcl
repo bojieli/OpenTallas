@@ -8,9 +8,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SI
 read_liberty /mv0/ot_sram_1r1w_128x256_m1_r2c2_ss.lib
 read_lef /mv0/ot_sram_1r1w_128x256_m1_r2c2.lef
 
-read_db /in/results/asap7/opentallas_dsfd_coll_mtp_lane_asap7_s81ph_mtpl_dsfd_coll_mtp_lane_f6674a3d0_tc_hm10_b/base/6_final.odb
-read_sdc /in/results/asap7/opentallas_dsfd_coll_mtp_lane_asap7_s81ph_mtpl_dsfd_coll_mtp_lane_f6674a3d0_tc_hm10_b/base/6_final.sdc
-read_spef /in/results/asap7/opentallas_dsfd_coll_mtp_lane_asap7_s81ph_mtpl_dsfd_coll_mtp_lane_f6674a3d0_tc_hm10_b/base/6_final.spef
+read_db /in/results/asap7/opentallas_dsfd_coll_mtp_lane_asap7_s81ph_mtpl_dsfd_coll_mtp_lane_f6674a3d0_tc_hm0_a/base/6_final.odb
+read_sdc /in/results/asap7/opentallas_dsfd_coll_mtp_lane_asap7_s81ph_mtpl_dsfd_coll_mtp_lane_f6674a3d0_tc_hm0_a/base/6_final.sdc
+read_spef /in/results/asap7/opentallas_dsfd_coll_mtp_lane_asap7_s81ph_mtpl_dsfd_coll_mtp_lane_f6674a3d0_tc_hm0_a/base/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS [sta::worst_slack_cmd max]"
 write_timing_model -library_name dsfd_coll_mtp_lane_ss /out/dsfd_coll_mtp_lane_ss.lib
