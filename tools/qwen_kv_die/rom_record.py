@@ -67,7 +67,22 @@ def main():
         margin_note='data buses only: clock / reset trunks are CTS / reset trees (their relay-row sinks are clock pins)',
         relay_kinds=sorted({i.kind for i in ins if i.name.startswith('rly_')}))
     st_ = rec['crossing_bus_stages']
-    if all(k in st_ for k in ('coll_tx', 'coll_tx_x', 'coll_rx', 'coll_rx_x')):
+    if 'coll_seq' in st_:
+        # qwen-1010/A: the all-reduce words leave seq_su (tp_seq_vrl, which reads the VM over seq_vrd / vm_seq_q) on
+        # seq_coll through io_xfifo (CDC) to io_collective and return on coll_seq; a credit-based link (no same-cycle
+        # ready across stations) needs credits >= the round trip
+        pins, cdc = 2 * 4, 2 * 4      # registered endpoint ports (seq_su, xfifo x2, collective) each way; 4 sync edges a CDC
+        rt = st_['seq_coll'] + st_.get('seq_coll_x', 0) + st_['coll_seq'] + st_.get('coll_seq_x', 0) + pins + cdc
+        rec['collective_credit'] = dict(
+            round_trip_edges=rt, credits=rt, receiver_buffer_words=rt, receiver_buffer_bits=rt * 512,
+            one_way_edges=dict(fwd=st_['seq_coll'] + st_.get('seq_coll_x', 0) + 4 + 4,
+                               ret=st_['coll_seq'] + st_.get('coll_seq_x', 0) + 4 + 4),
+            note='the die streams all-reduce words seq_su (tp_seq_vrl reads / writes the VM over seq_vrd / vm_seq_q / '
+                 'seq_vwr) -> io_xfifo -> io_collective on seq_coll (548 b) and back on coll_seq (518 b); no VM <-> '
+                 'collective words.  Credits = round trip (relays both ways + 8 port stations + 2 CDCs of 4 edges) keep one '
+                 'word a cycle; the collective input buffer holds that many words.  The token vehicle carries the same '
+                 'one-way edges as relay stations on the sequencer <-> collective words (option4_die --crly).')
+    elif all(k in st_ for k in ('coll_tx', 'coll_tx_x', 'coll_rx', 'coll_rx_x')):
         # qwen-1010/a: the collective words leave the VM (ct) through io_xfifo (CDC) to io_collective and return the same
         # way (cr); a credit-based link (no same-cycle ready across stations) needs credits >= the round trip
         pins, cdc = 2 * 4, 2 * 4      # registered endpoint ports (VM, xfifo x2, collective) each way; 4 sync edges a CDC

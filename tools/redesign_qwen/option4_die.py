@@ -55,7 +55,10 @@ SEQS = {"boundary": (RQ / "ot_qfd_seq_su_boundary.sv", "ot_qfd_seq_su_boundary",
 VAR = dict(ctlm="ctlm", seq="boundary")
 SPM = ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv"
 # die relay stations between the masters' pin flops (r22ko4 counts replace these defaults)
-CFG = dict(x_s2m=15, x_m2s=15, dst=15, dcu_s=0, duc_s=0, su_ml=7, xmut=0, cred=0)
+# crf / crr (qwen-1010/A): die relay edges between seq_su's collective port and the collective engine, forward (c_*) /
+# return (r_* and the credit pulse) -- r22ko4 native: seq_coll + 4 port stations + one 4-edge CDC = 60 / 59 (rom_r22ko4
+# collective_credit.one_way_edges); needs the credit mode (--cred >= crf + crr)
+CFG = dict(x_s2m=15, x_m2s=15, dst=15, dcu_s=0, duc_s=0, su_ml=7, xmut=0, cred=0, crf=0, crr=0)
 LIT = {"NW": "18", "AW": "24", "(G >> SMIN)": "48"}
 
 
@@ -162,9 +165,15 @@ def compose(core: str, c: dict) -> str:
           "    wire c_me_clk_w; wire m_fault;"]
     # ---- the SU-side master ----
     sq = [".clk(clk)", ".rst_n(rst_n)", ".h_start(sq_start)", ".tp_token(sq_token)", ".tp_pos(sq_pos)",
-          ".kv_write_drained(kv_write_drained)", ".vm_rq(sq_vm_rq)", ".c_ready(sq_c_ready)", ".r_valid(sq_r_valid)",
-          ".r_data(sq_r_data)", ".r_last(sq_r_last)", ".r_rank(sq_r_rank)", ".r_err(sq_r_err)",
-          ".pw_v(1'b0)", ".pw_addr(10'd0)", ".pw_data(64'd0)", ".dw_v(1'b0)", ".dw_addr(3'd0)", ".dw_data(64'd0)"]
+          ".kv_write_drained(kv_write_drained)", ".vm_rq(sq_vm_rq)", ".c_ready(cl_c_ready)", ".r_valid(cl_r_valid)",
+          ".r_data(cl_r_data)", ".r_last(cl_r_last)", ".r_rank(cl_r_rank)", ".r_err(cl_r_err)",
+          ".pw_v(1'b0)", ".pw_addr(10'd0)", ".pw_data(64'd0)", ".dw_v(1'b0)", ".dw_addr(3'd0)", ".dw_data(64'd0)",
+          # constant-buffer stage gate (qwen-1010/A): the vehicle prices the SU constants as SU ML 7 and the buffer's
+          # stage-start wait from tb_qfd_crom_lbuf GATE 1 (+111 a steady token, reprice_o4 --cbuf-wait); here the buffer
+          # reports the stage resident (stage 0 echoed back through the pin stations), so the gate opens on its handshake.
+          # Unconnected (cr8 build) these inputs were 0 and the gate never opened: the L3 run hung in L0.
+          ".stage_in(6'd0)", ".cb_st_rdy(1'b1)", ".cb_st_rdy_stage(o4_cb_stage)", ".cb_stage(o4_cb_stage)",
+          ".cb_tok_start()", ".cb_tpos()"]
     for p, ex, k, w in P.SU:
         if k in ("in", "dir_ok") and not P._local("su", p):
             sq.append(f".pi_su_{p}(d_su_{p})")
@@ -173,8 +182,8 @@ def compose(core: str, c: dict) -> str:
            ".s_done(sq_done)", ".seq_ntok(sq_next_token)", ".seq_nval(sq_next_val)", ".s_fault(sq_fault)",
            ".core_fault(sq_core_fault)", ".coll_busy(sq_coll_busy)", ".kv_write_flush(kv_write_flush)",
            ".vm_re(sq_vm_re)", ".vm_raddr(sq_vm_raddr)", ".vm_we(sq_vm_we)", ".vm_waddr(sq_vm_waddr)",
-           ".vm_wdata(sq_vm_wdata)", ".c_valid(sq_c_valid)", ".c_data(sq_c_data)", ".c_last(sq_c_last)",
-           ".c_mode(sq_c_mode)", ".c_tag(sq_c_tag)", ".rom_fault(sq_rom_fault)", ".su_asrc(c_su_asrc_raw)",
+           ".vm_wdata(sq_vm_wdata)", ".c_valid(cl_c_valid)", ".c_data(cl_c_data)", ".c_last(cl_c_last)",
+           ".c_mode(cl_c_mode)", ".c_tag(cl_c_tag)", ".rom_fault(sq_rom_fault)", ".su_asrc(c_su_asrc_raw)",
            ".su_tok(c_tok)"]
     for p, ex, k, w in P.SU:
         if k == "out" and p != "va_q":
@@ -182,6 +191,9 @@ def compose(core: str, c: dict) -> str:
     sq += [".me_start_o(s_me_start)", ".me_token_o(s_me_token)", ".me_pos_o(s_me_pos)",
            ".me_prog_base_o(s_me_prog_base)", ".su_acc_o(s_su_acc)", ".su_idle_o(s_su_idle)", ".su_prog_o(s_su_prog)",
            ".su_rows_o(s_su_rows)"]
+    L += ["    wire [5:0] o4_cb_stage;",
+          "    wire cl_c_valid, cl_c_last, cl_c_mode, cl_c_ready, cl_r_valid, cl_r_last, cl_r_err;",
+          "    wire [511:0] cl_c_data, cl_r_data; wire [31:0] cl_c_tag; wire [1:0] cl_r_rank;"]
     L += ["    wire sq_core_fault, sq_rom_fault; wire s_me_start; wire [NW-1:0] s_me_token, s_me_pos; wire [11:0] s_me_prog_base;",
           "    wire [23:0] s_su_acc; wire s_su_idle; wire [15:0] s_su_prog, s_su_rows;",
           "    wire [23:0] xm_acc; wire xm_idle, xm_fin; wire [15:0] xm_prog; wire [NW-1:0] xm_fidx; wire [31:0] xm_fval;",
@@ -213,6 +225,14 @@ def compose(core: str, c: dict) -> str:
 
     def stn(name, w, d, clk, src, dst, rst=""):
         L.append(f"    ot_hdc_delay #(.W({w}), .D({d}){rst}) u_{name} (.clk({clk}), .rst_n(rst_n), .d({src}), .q({dst}));")
+    # the die's sequencer <-> collective words (r22ko4 native seq_coll / coll_seq): CRF / CRR relay edges each way; the
+    # credit pulse rides the return with the result words (CRF = CRR = 0: the vehicle's direct connection)
+    stn("crf_v", "1", "CRF", "clk", "cl_c_valid", "sq_c_valid", ", .RESET(1)")
+    stn("crf_d", "512 + 1 + 1 + 32", "CRF", "clk", "{cl_c_data, cl_c_last, cl_c_mode, cl_c_tag}",
+        "{sq_c_data, sq_c_last, sq_c_mode, sq_c_tag}")
+    stn("crr_v", "2", "CRR", "clk", "{sq_c_ready, sq_r_valid}", "{cl_c_ready, cl_r_valid}", ", .RESET(1)")
+    stn("crr_d", "512 + 1 + 2 + 1", "CRR", "clk", "{sq_r_data, sq_r_last, sq_r_rank, sq_r_err}",
+        "{cl_r_data, cl_r_last, cl_r_rank, cl_r_err}")
     # ---- seq_su <-> SU: die relays + the SU master's pin stations ----
     for p, ex, k, w in P.SU:
         if k == "out" and p != "va_q":
@@ -421,6 +441,9 @@ def main():
         proxy_access(b / "gen" / "rm_access.hpp", b / "die" / "Vdie___024root.h")
         return orig_link(b, steps, prefixes)
     F.link = link
+    if (CFG["crf"] or CFG["crr"]) and CFG["cred"] < CFG["crf"] + CFG["crr"]:
+        raise SystemExit("--crf / --crr relays need the credit mode with --cred >= crf + crr (a ready handshake across "
+                         "stations is not a valid link)")
     if CFG["cred"]:
         # credit-mode collective: the package with the die_m credit port, the die's input buffer = the credit count
         cg = gen / "ot_rom_oneshot_allreduce_cr.sv"
