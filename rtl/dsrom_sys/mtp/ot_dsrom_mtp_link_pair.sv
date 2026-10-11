@@ -126,7 +126,8 @@ endmodule
 // i_data under i_ready = !v[wsel] (a flop).  Full rate (one pop and one load a cycle), order preserved.
 // IDG > 0: identity gate.  Each slot keeps a registered match flag (slot[IDL +: IDG] == g_id && g_ok); o_valid is
 // v[sel] && m[sel], so a word of a later transaction waits until g_id moves to it.  A load compares against the
-// current g_id; a g_id change (g_chg, registered by the caller) recomputes both flags from flops the next cycle.
+// current g_id; g_chg (registered by the caller, high the cycle after g_id moved) recomputes the flags of the slots
+// not loaded in that cycle from flops (a slot loaded that cycle takes its load compare against the new g_id).
 module ot_dsrom_mtp_pp2 #(parameter integer W = 594, parameter integer IDG = 0, parameter integer IDL = 0) (
     input  wire         clk, rst_n,
     input  wire         i_valid,
@@ -147,8 +148,10 @@ module ot_dsrom_mtp_pp2 #(parameter integer W = 594, parameter integer IDG = 0, 
         wire mi = g_ok && (i_data[IDL +: IDG] == g_id);
         always @(posedge clk)
             if (!rst_n) begin ma <= 1'b0; mb <= 1'b0; end
-            else if (g_chg) begin ma <= g_ok && (a[IDL +: IDG] == g_id); mb <= g_ok && (b[IDL +: IDG] == g_id); end
-            else begin if (ld && !wsel) ma <= mi; if (ld && wsel) mb <= mi; end
+            else begin
+                if (ld && !wsel) ma <= mi; else if (g_chg) ma <= g_ok && (a[IDL +: IDG] == g_id);
+                if (ld && wsel) mb <= mi; else if (g_chg) mb <= g_ok && (b[IDL +: IDG] == g_id);
+            end
     end else begin: g_id_off
         always @(posedge clk) begin ma <= 1'b1; mb <= 1'b1; end
     end endgenerate
