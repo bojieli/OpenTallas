@@ -3142,7 +3142,7 @@ def build_r8(variant=None):
             slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
             notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
         elif n == 'seedl':
-            slab('seedl', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seed_launch')
+            slab('seedl', centre_area[n], x0_, yy, w0_, master='dsfd_mtp_seed_launch')
             notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
                          % (SEEDL_UM, centre_area[n]))
         elif n == 'mtp':
@@ -4775,6 +4775,10 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     hb = m['hub']
     A, Bk = hb[a_], hb[b_]
     hcA, hcB = A.name.startswith('sp_hc_'), Bk.name.startswith('sp_hc_')
+    # --ecol-slabs: a second chain between the same slab pair (wfc t_lo + t_lir -> collective: direct face-to-face
+    # wires in one column, staged across the VCH once the kit moves) takes its driver port in the name, so its
+    # stations do not collide with the first chain's
+    hbn = f'hb_{a_}_{b_}' if not (ECOL_SLABS and f'hb_{a_}_{b_}' in m.get('hub_stations', {})) else f'hb_{a_}_{pa}_{b_}'
     # --ecol-slabs: a moved slab stands in the E column (W of the HC halves): it faces the VCH with its W face like HC
     ecol_ = lambda it: bool(ECOL_SLABS) and it.x >= m['x_spe'] - 1.0 and not it.name.startswith('sp_hc_')
     fx = lambda it: it.x if (it.name.startswith('sp_hc_') or ecol_(it)) else it.x + it.w
@@ -4790,8 +4794,8 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     elif hcA == hcB and same_col and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - (0.0 if {a_, b_} == {'vm', 'pq'} else 60.0):
         # stacked neighbours in one column: face to face across the gap, one hop
         g_ = max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h)
-        CH8.bus(f'hb_{a_}_{b_}', 'hub', bits, [(A.name, pa), (Bk.name, pb)])
-        m.setdefault('hub_stations', {})[f'hb_{a_}_{b_}'] = dict(path_um=round(g_, 1), stations=0, floor_added=0)
+        CH8.bus(hbn, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
+        m.setdefault('hub_stations', {})[hbn] = dict(path_um=round(g_, 1), stations=0, floor_added=0)
         return
     else:
         cl = lambda v, it: min(max(v, it.y + 6.0), it.y + it.h - 6.0)
@@ -4822,7 +4826,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             xx = A.x + A.w * (0.3 if a_ == 'hc_s' else 0.7)
             path = [(xx, A.y + A.h), (xx, Bk.y)] if A.y < Bk.y else [(xx, A.y), (xx, Bk.y + Bk.h)]
             L = _poly_len(path)
-            name = f'hb_{a_}_{b_}'
+            name = hbn
             sts = CH8.run(name, [bits], path, [cor['hcc']], path[0], reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
             prev = (A.name, pa)
             for k, (it, s_, hop) in enumerate(sts):
@@ -4842,7 +4846,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             vx = m['x_vch'] + VCH8 / 2 + 70.0 * k_[0]
         k_[0] += 1
         path = _dedup([(fx(A), ya), (vx, ya), (vx, yb), (fx(Bk), yb)])
-    name = f'hb_{a_}_{b_}'
+    name = hbn
     L = _poly_len(path)
     if L <= (reach_um or CC_REACH) - 30.0:
         CH8.bus(name, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
@@ -6148,7 +6152,7 @@ def die_options(ap):
     ap.add_argument('--coll-split3-cr', action='store_true', help='opt-in planning candidate: use composition_split3cr.json with credit seams and LCR lane tiles; implies --coll-split3, all four routed masters required for adoption')
     ap.add_argument('--bf-hier', type=float, choices=[520.128, 600.264], help='s81-gen 2026-10-09 (bf-arch): BF pair as '
                     'dsfd_bf_col | dsfd_bf_front | dsfd_bf_col (MY), 190.08 um tall; frames and die widen; default off')
-    ap.add_argument('--bf-hier-height', type=float, choices=[220.32, 241.92], default=220.32, help='model-priced compact hardened BF heights, default 220.32; requires --bf-hier-compact')
+    ap.add_argument('--bf-hier-height', type=float, choices=[198.72, 220.32, 241.92], default=220.32, help='model-priced compact hardened BF heights, default 220.32 (198.72 = bfh_compact199: frame 207.36); requires --bf-hier-compact')
     ap.add_argument('--bf-hier-compact', action='store_true', help='(bf-hier, claude/bf-compact-1011; OWNER 2026-10-10 BF of record) '
                     'column 450.144 / front 100.224, height 220.32: the pair (1,000.512 um) fits the original lane zone, 1,792 '
                     'pairs / 128 regions kept; requires a BF frame of 228.96 or taller (--elem-h); default off')
