@@ -116,6 +116,9 @@ module tb_hgi_hc_unit;
 `ifdef WMAC
         , .WMACRO(1)
 `endif
+`ifdef SYS
+        , .SYS(1)
+`endif
         ) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]),
         .rec_n_a(cur[916:896]), .rec_n_o(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted),

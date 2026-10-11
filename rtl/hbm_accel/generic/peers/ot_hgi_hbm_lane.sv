@@ -91,6 +91,7 @@ module ot_hgi_hc_die #(
     parameter integer WLQ = 24,
     parameter integer WD = 8,
     parameter integer MUT_WV = 0,
+    parameter integer SYS = 0,             // el1011-hcvm-hc: systolic bank tiles (ot_hgi_hc_unit SYS)
     parameter integer SPL = 4,             // striped weight fetch: sub-windows a bank (HL = 8 SPL HBM read lanes, window i
                                            //   on lane i), each lane its own client -> its own svc / loader lane
     parameter integer HL = 8 * SPL
@@ -119,7 +120,7 @@ module ot_hgi_hc_die #(
     localparam integer TG = 4 + $clog2(RMAX) + ((W > 32) ? $clog2(W / 32) : 0);   // = the unit's tag width
     wire [HL-1:0] hq_v, hq_rdy, hr_v; wire [HL*35-1:0] hq_addr; wire [HL*3-1:0] hq_len; wire [HL*TG-1:0] hq_tag, hr_tag;
     wire [HL*2-1:0] hr_beat; wire [HL*256-1:0] hr_data;
-    ot_hgi_hc_unit #(.W(W), .RMAX(RMAX), .WMACRO(WMACRO), .XMACRO(XMACRO), .PMAX(PMAX), .MUT_MP(MUT_MP), .MUT_POST(MUT_POST), .WVM(WVM), .WLQ(WLQ), .WD(WD), .MUT_WV(MUT_WV), .HL(HL), .SPL(SPL)) u_hc (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(HC_EPS), .rec_v(rec_v),
+    ot_hgi_hc_unit #(.W(W), .RMAX(RMAX), .WMACRO(WMACRO), .XMACRO(XMACRO), .PMAX(PMAX), .MUT_MP(MUT_MP), .MUT_POST(MUT_POST), .WVM(WVM), .WLQ(WLQ), .WD(WD), .MUT_WV(MUT_WV), .HL(HL), .SPL(SPL), .SYS(SYS)) u_hc (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(HC_EPS), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_a(rec_a), .rec_b(rec_b), .rec_o(rec_o), .rec_n_a(rec_n_a),
         .rec_n_o(rec_n_o), .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted), .vmq(vmq), .vmr(vmr),
         .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag),
