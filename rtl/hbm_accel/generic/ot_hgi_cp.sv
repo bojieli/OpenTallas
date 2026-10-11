@@ -109,26 +109,27 @@ module ot_hgi_cp #(
     generate if (FETCH_PIN_FIFO && FQ_LOCAL) begin : g_fetch_cr
         // front slot + back slot as g_fetch_pin; the send decision for the NEXT cycle is registered (snd_q = f_req_v)
         (* keep = 1 *) reg [39:0] front_addr, back_addr;
-        reg snd_q;                                           // no keep: it drives the f_req_v pin and is named after it (anchored pin flop)
+        reg snd_q, snd_pin;                                  // snd_pin: a copy whose only load is the f_req_v pin (the anchored pin flop)
         reg front_v, back_v;
         reg [4:0] cr; reg [6:0] inn;
         wire take_in = sf_v && sf_rdy;
         wire take_out = snd_q;                               // registered: the front entry leaves this cycle
         assign sf_rdy = !back_v;
-        assign f_req_v = snd_q;
+        assign f_req_v = snd_pin;
         assign f_req_addr = front_addr;
         // next state (same as g_fetch_pin with take_out = snd_q)
         wire fv_n = take_out ? (back_v || take_in) : (front_v || take_in);
         wire [4:0] cr_n = cr - {4'd0, take_out && MUT_FQ == 0} + {4'd0, f_req_ack};
         wire [6:0] inn_n = inn + {6'd0, take_out} - {6'd0, f_rsp_v};
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin front_v <= 0; back_v <= 0; snd_q <= 0; cr <= 5'(FQCR); inn <= 7'd0; end
+            if (!rst_n) begin front_v <= 0; back_v <= 0; snd_q <= 0; snd_pin <= 0; cr <= 5'(FQCR); inn <= 7'd0; end
             else begin
                 front_v <= fv_n;
                 if (take_out) back_v <= 0;
                 else if (take_in && front_v) back_v <= 1;
                 cr <= cr_n; inn <= inn_n;
                 snd_q <= fv_n && cr_n != 5'd0 && inn_n < 7'd48;
+                snd_pin <= fv_n && cr_n != 5'd0 && inn_n < 7'd48;
             end
         always @(posedge clk) begin
             if (take_out && back_v) front_addr <= back_addr;
