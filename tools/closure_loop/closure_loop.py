@@ -96,7 +96,7 @@ def bench_crashed(st, rc, tail):
         return st["expect"] == "fail" or not WORK_RE.search(tail)
     return False
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
-DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
+DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile", "configs", "src"]   # drive-1010: + configs (5 MB) / src (1 MB): benches importing tools/* need both
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
@@ -887,6 +887,19 @@ DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect -
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
                  f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
                  "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
+# HOST-EMERGENCY (drive-1010 2026-10-10): EPYC2 (6 GB), EPYC4 (7 GB) and EPYC3 (2 GB, 13:26) hung -- the biggest
+# consumers were agent benches OUTSIDE the loop (verilator 75-120 GB at oom_score_adj 0) that MEM-GUARD cannot stop, and
+# the kernel OOM killer acted too late (sshd stalls first).  Every host probe now runs this early-OOM step: below
+# EMERGENCY_FREE_GB available it SIGKILLs the single largest process (>= 8 GB RSS) whose oom_score_adj is >= 0 (never a
+# -900 die process, never sshd / systemd / dockerd / containerd) and logs it to /tmp/ot_emergency_kill.log on the host.
+EMERGENCY_FREE_GB = 12
+EMERGENCY_PROBE = ("(a=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo); "
+                   f"if [ \"$a\" -lt {EMERGENCY_FREE_GB} ]; then "
+                   "v=$(ps -eo pid=,rss=,comm= --sort=-rss | while read p r c; do [ \"$r\" -ge 8388608 ] || break; "
+                   "case $c in sshd|systemd|dockerd|containerd|containerd-shim*) continue;; esac; "
+                   "[ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" -ge 0 ] 2>/dev/null && { echo $p; break; }; done); "
+                   "[ -n \"$v\" ] && { echo \"$(date -Is) MemAvailable ${a}G: kill -9 $v $(tr '\\0' ' ' < /proc/$v/cmdline | cut -c1-200)\" "
+                   ">> /tmp/ot_emergency_kill.log; kill -9 $v; echo OT_EMERGENCY_KILL $v; }; fi) 2>/dev/null; true")
 DIE_CONTAINER_SKIP = (f"docker inspect --format '{{{{{{{{.Name}}}}}}}} {{{{{{{{range .Mounts}}}}}}}}{{{{{{{{.Source}}}}}}}} {{{{{{{{end}}}}}}}}' $c "
                       f"| grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' && continue; ")
 PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
@@ -962,7 +975,7 @@ print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
 mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}
-{PAUSE_PROBE}; {STOPPED_PROBE}; {DIE_OOM_PROBE}""", timeout=40)
+{PAUSE_PROBE}; {STOPPED_PROBE}; {DIE_OOM_PROBE}; {EMERGENCY_PROBE}""", timeout=40)
         if r.returncode:
             info = None
         else:
@@ -1643,7 +1656,19 @@ def sync_source(j):
     if anc.returncode:
         raise ValueError(f"source commit {full[:12]} is not on origin/{src['branch']}")
     j["commit_full"] = full
-    paths = list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))
+    # SYNC-PATHS (drive-1010 2026-10-10): an extra path missing at the pinned commit made every sync fail 10 times with
+    # an empty message (hbm_hc_quarter_hcq_r25gq-7eea45363: results/uarch/hbm_hc_group_root_icg_20261010/model.json) ->
+    # fail once, terminally, naming the path.
+    missing = [x for x in src.get("extra_paths", [])
+               if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{full}:{x}"], timeout=60).returncode]
+    if missing:
+        raise ValueError(f"source.extra_paths not in commit {full[:12]}: {', '.join(missing[:6])} -- fix the spec "
+                         f"(the file must be committed at the pinned commit) and re-drop")
+    base_paths = list(src.get("paths", DEFAULT_SRC_PATHS))
+    if "paths" not in src:   # defaults absent at an old commit (configs/, src/) are skipped, never a pathspec error
+        base_paths = [x for x in base_paths
+                      if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{full}:{x}"], timeout=60).returncode == 0]
+    paths = base_paths + list(src.get("extra_paths", []))
     paths += implied_src_paths(spec, paths, full)
     run = j["run"]
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
@@ -4133,7 +4158,10 @@ def do_verdict(j, fleet, stl):
                f"NEEDS_HUMAN: verdict inputs missing: {json.dumps(m)[:400]}")
         return
     benches_ok = all(b["ok"] for b in j["benches"].values()) and benches_done(j, stl)
-    closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+    closed = real_slack(ss) and real_slack(ff) and ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+    if not (real_slack(ss) and real_slack(ff)):
+        event(j, f"SENTINEL-SLACK: TT {ss} / FF {ff} = no constrained path (constraints not applied or clock not found): "
+                 f"never CLOSED")
     event(j, f"verdict {setup_corner_label(m)} {ss:+.2f} / FF {ff:+.2f} / DRC {drc} / checks failed {failed} -> "
              f"{'CLOSED' if closed else 'NOT CLOSED'}")
     rr = routed_ioref(j, m)
@@ -4145,13 +4173,13 @@ def do_verdict(j, fleet, stl):
             # setup-only post-SDCs (nbr_clk_measured: -source latency) are read after the post-SDCs: re-read it last
             m["setup_post_sdc"] = list(m["setup_post_sdc"]) + [IOREF_SDC]
         ss, ff = rr["tt"], rr["ff"]
-        closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+        closed = real_slack(ss) and real_slack(ff) and ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
         j["metrics"] = m
         event(j, f"verdict at the ROUTED insertion: TT {ss:+.2f} / FF {ff:+.2f} -> {'CLOSED' if closed else 'NOT CLOSED'}")
     # the calibrate-insertion re-STA / re-route is moot once the route is timed on its own tree
     mr = None if (rr and rr.get("available")) else measured_resta(j, m)
     if mr and mr.get("available"):
-        mclosed = mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
+        mclosed = real_slack(mr["tt"]) and real_slack(mr["ff"]) and mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
         if mclosed:
             # the finished route signs off on the MEASURED clock: no re-route; its verdict numbers are the measured ones
             m.update(setup_corner="tt", ss_ps=mr["tt"], ff_ps=mr["ff"], measured_resta=mr, assumed_clock=dict(ss_ps=ss, ff_ps=ff))
@@ -4200,13 +4228,23 @@ def do_verdict(j, fleet, stl):
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
 
 
+# SENTINEL-SLACK (drive-1010 2026-10-10): STA reports +1e16-ish slack when NO path is constrained (constraints not
+# applied / clock not found).  hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2 was CLOSED at TT +1e16.  A slack that is not
+# finite or has |slack| >= SENTINEL_PS is never a pass anywhere (route verdict, routed / measured re-STA, ECO results).
+SENTINEL_PS = 1e6
+
+
+def real_slack(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and abs(v) < SENTINEL_PS
+
+
 def eco_passes(res, rc):
     if rc != 0 or not isinstance(res, dict) or res.get("errors"):
         return False
     # option B: setup is judged at TT (tt_ps; older results carry it in ss_ps)
     for key, minimum in (("tt_ps" if "tt_ps" in res else "ss_ps", SS_MIN), ("ff_ps", FF_MIN)):
         value = res.get(key)
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < minimum:
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not real_slack(value) or value < minimum:
             return False
     return type(res.get("drc")) in (int, float) and res["drc"] == 0
 
@@ -4713,6 +4751,9 @@ def requeue_hold_only(jobs):
         e = j.get("eco") or {}
         if j["status"] == "NEEDS_RTL" and e.get("tried") and e.get("result") is None and "hold-eco-reroute-clock" not in j.get("fix_requeued", []):
             j.setdefault("fix_requeued", []).append("hold-eco-reroute-clock")
+            # FRESH-ECO-DIR (drive-1010 2026-10-10, hardcore-1010): the dropped ECO goes to eco_history so the re-run gets
+            # a fresh output dir (eco-combo<n+1> / eco-r<n+1>); clearing it reused eco-combo1 -> rc=10 (qfd_io_collective)
+            j.setdefault("eco_history", []).append(dict(e, requeued="hold-eco-reroute-clock"))
             j["eco"] = {}
             stl = stage_list(j["spec"])
             j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))

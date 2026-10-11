@@ -127,11 +127,17 @@ QWEN_R22KCS = dict(QWEN_R21C, before_relays=_R22K.surgery_cs)
 # r22k4 full-die GRT put all 159,448 overflow in one window where the tree top's ty and the VM's rb3-rb5 left the
 # zero-width tree-top / VM abutment seam
 QWEN_R22KS = dict(QWEN_R22K, seam_free=True)
-R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks')
+# r22ko4 (qwen-1010/a 2026-10-10, opt-in): r22k with the option-4 control plane (tree-top control tile + 4 upper tiles,
+# seq_su by the SU, constant buffer / ROM group tiles; rom_r22k._option4), seam-free pin faces as r22ks (the control
+# tile's S face meets the VM)
+QWEN_R22KO4 = dict(QWEN_R21C, before_relays=_R22K.surgery_o4, seam_free=True)
+# r22ksv (qwen-1010/a, opt-in): r22ks + the sequencer <-> VM all-reduce word path (rom_r22k._vm_ar; r22ko4 has it too)
+QWEN_R22KSV = dict(QWEN_R22K, before_relays=_R22K.surgery_vm, seam_free=True)
+R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
                 'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K,
-                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS}
+                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS, 'r22ko4': QWEN_R22KO4, 'r22ksv': QWEN_R22KSV}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -210,8 +216,20 @@ def _strip(t):
     return re.sub(r'^\s*`(ifdef|ifndef|else|endif|elsif)\b[^\n]*', '', t, flags=re.M)
 
 
+_TERN = re.compile(r'\(([^()?:]+)\?([^()?:]+):([^()?:]+)\)')
+
+
+def _untern(expr):
+    """parenthesised SV ternaries (a ? b : c) -> python ((b) if (a) else (c)), innermost first"""
+    while True:
+        e = _TERN.sub(lambda m: f'(({m.group(2)}) if ({m.group(1)}) else ({m.group(3)}))', expr)
+        if e == expr:
+            return e
+        expr = e
+
+
 def _eval(expr, env):
-    e = expr.replace('$clog2', 'clog2')
+    e = _untern(expr).replace('$clog2', 'clog2')
     e = re.sub(r"\d+'[dD](\d+)", r'\1', e)
     return int(eval(e, {'clog2': clog2, '__builtins__': {}}, dict(env)))  # noqa: S307
 
@@ -268,7 +286,7 @@ def parse_module(path, module, params=None):
         if dm:
             cur_dir = dm.group(1)
             if dm.group(2):
-                hi, lo = dm.group(2)[1:-1].split(':')
+                hi, lo = _untern(dm.group(2)[1:-1]).split(':')     # a ternary in the range (vm_unit RP) is one term
                 cur_w = abs(_eval(hi, env) - _eval(lo, env)) + 1
             else:
                 cur_w = 1
@@ -818,6 +836,7 @@ def dirs_hbm(bid, cls, bits, eps, j, port):
 
 def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('x_trunk', 'x_leaf', 'result_leaf', 'result_trunk', 'expert_req', 'kv_rows', 'attn_chain', 'attn_root',
+               'idx_sel',                    # R25GQ 10-10: one class a net type, endpoint 0 drives
                'attn_kv', 'attn_out', 'attn_operand', 'attn_input', 'attn_query', 'attn_packet'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'weight':     # line + tag + valid down, ready back (TF7 / r15 sm_rtl_w: no ready)
@@ -839,6 +858,10 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls == 'hub':        # r17 fwd hub chains: a station's a / b port drives when it is the bus driver (j = 0)
         return [(0, bits, 'out' if port.startswith('t_') or (j == 0 and port in ('a', 'b')) else 'in')]
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
+        if cls == 'host' and V.get('host_h') and bits == sum(V['host_h']):
+            # R25GQ ([svc] 2026-10-10): the host port is sized exactly (HOST_H_HGI tx / rx); the even split gave the
+            # loader 394 out / 393 in for its 406 / 381 host-facing ports
+            return flow(j, bits, V['host_h'][0])
         return flow(j, bits, (bits + 1) // 2 if (TOP_FIX or V.get('link_rtl')) else min(512, bits))
     if cls == 'clock_trunk':
         return [(0, bits, 'out' if port.startswith('pll') else 'in')]
@@ -2406,7 +2429,7 @@ def main(argv=None):
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
-                                                              'r21c', 'r22k', 'r22kcs', 'r22ks'])
+                                                              'r21c', 'r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '

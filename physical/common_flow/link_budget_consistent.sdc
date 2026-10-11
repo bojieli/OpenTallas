@@ -36,6 +36,14 @@ foreach c $ot_lb_clks {
   set rs [sta::redirect_string_end]
   if {![regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $rs -> lo hi]} { puts "OT_LINK_BUDGET no latency for $cn (no sinks?)"; continue }
   set L [expr {($lo + $hi) / 2.0}]
+  # mtp-mx1 2026-10-10: on a clock with port source latency (die leaf delivered by the die tree, e.g. MX1 face leaves)
+  # this OpenSTA's report_clock_latency already includes the source latency in each "network latency" line and adds it
+  # AGAIN in the "latency" total (FT8 ckn: source 782.1, real port->CLK tree 74 ps, reported network 846, total 1628).
+  # The virtual clock then sat one source latency late: inputs over-constrained (-625 ps fake on xb), outputs optimistic
+  # by the same amount.  Remove the duplicate; clocks without source latency are unchanged.
+  if {[regexp {([0-9.]+)\s+([0-9.]+)\s+source latency} $rs -> slo shi] && ($slo + $shi) > 0.0} {
+    set L [expr {$L - ($slo + $shi) / 2.0}]
+  }
   set B [expr {$T - 60.0 - $ot_lb_skew - $ot_lb_link}]
   set S [expr {$ot_lb_sfrac * $B}]; set R [expr {$B - $S}]
   create_clock -name ot_lb_v_$cn -period $T

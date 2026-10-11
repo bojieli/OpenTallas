@@ -172,6 +172,9 @@ module ot_hgi_dma_mover #(
     // (route 51ae5ce55 TT -212 / -270: r_end = r_row + nn * ses - 1 was a multiply + add into the row compare; now the
     //  current / next row start and last byte are registers, a row change is a register move)
     reg [19:0] r_o; reg [41:0] r_nrow, r_end, r_nend; reg [36:0] r_sec; reg r_done;
+    // hgi-1010/c (route f628d5015 TT -60: r_sec[4] -> r_sec[36], the 37-bit increment): the sector counter increments its
+    // low 8 bits; the high part's +1 is a register kept one step ahead (r_hi1 = r_sec[36:8] + 1)
+    reg [28:0] r_hi1;
     // ---- unpack state
     // (route 51ae5ce55: the unpack decision divided by the element size, (32 - u_sp) / ses and (32 - u_dp) / des, then
     //  multiplied u_k back -- the ses / u_dp -> u_dsec / sf_n / sf_h classes, 28-30 levels.  Now the elements left in the
@@ -186,10 +189,14 @@ module ot_hgi_dma_mover #(
     reg [7:0] k_in; reg [2:0] v_in; reg [255:0] k_kind; reg [7:0] v_kind;    // shift registers of kinds, oldest at [0]
     reg [8:0] rd_in;                                          // source reads in flight (landing room)
     // ---- write queue
-    reg [255:0] wq_d [0:7]; reg [31:0] wq_s [0:7]; reg [36:0] wq_a [0:7]; reg [2:0] wq_h, wq_t; reg [3:0] wq_n;
+    reg [255:0] wq_d [0:15]; reg [31:0] wq_s [0:15]; reg [36:0] wq_a [0:15]; reg [3:0] wq_h, wq_t; reg [4:0] wq_n;   // 16: the 8-stage pipe
     reg [8:0] wr_in;                                          // writes issued, not acknowledged
     // ---- pipeline registers
-    reg        p1_v; reg [3:0] p1_k; reg [255:0] p1_sec; reg [4:0] p1_sp; reg [5:0] p1_dp; reg [36:0] p1_dsec; reg p1_fl;
+    // hgi-1010/c (route f628d5015: sf_h -> p1_sec, the 64-entry landing read under the unpack enable, 18 levels): p1 keeps
+    // the slot address, the PR stage reads the slot from that register (+1 cycle); the reader stops 2 slots short of
+    // full, so a popped slot is not rewritten before PR has read it
+    reg        p1_v; reg [3:0] p1_k; reg [SB-1:0] p1_h; reg [4:0] p1_sp; reg [5:0] p1_dp; reg [36:0] p1_dsec; reg p1_fl;
+    reg        pr_v; reg [3:0] pr_k; reg [255:0] p1_sec; reg [4:0] pr_sp; reg [5:0] pr_dp; reg [36:0] pr_dsec; reg pr_fl;
     // extract (px) and convert (p2) are separate stages; encode (pe) and byte placement (p3) are separate stages
     // (route 51ae5ce55: p2_w / des -> p3_d, 31 levels: the encoders and the variable placement in one cycle)
     reg        px_v; reg [3:0] px_k; reg [255:0] px_r; reg [5:0] px_dp; reg [36:0] px_dsec; reg px_fl;
@@ -217,16 +224,17 @@ module ot_hgi_dma_mover #(
     end
     reg go_q3;                                                         // one more setup edge: the row-end registers settle
     reg go_q2;                                                         // the command fields are settled
-    // the write queue (8) must hold the flushes the pipe may still produce (p1, px, p2, pe, p3 + this one)
-    wire wq_room = (wq_n + {3'd0, p1_v & p1_fl} + {3'd0, px_v & px_fl} + {3'd0, p2_v & p2_fl} + {3'd0, pe_v & pe_fl} + {3'd0, pk_v & pk_fl} +
-                    {3'd0, p3_v & p3_fl}) < 4'd7;
+    // the write queue (16) must hold the flushes the pipe may still produce (p1, px, p2, pe, p3 + this one)
+    // slots reserved = queued + flushes in the pipe, kept as a register (a popcount over the 8 stages sat in u_go)
+    reg [4:0] wq_res;
+    wire wq_room = wq_res < 5'd15;
     // ---- extract (p1 -> px): lane j's raw element, right-aligned (word / half / byte at offset sp + j << sl2)
     reg [255:0] ext_r;
     always @* begin
         ext_r = 256'd0;
         for (integer j = 0; j < 8; j = j + 1) begin : xl
             reg [4:0] off; reg [31:0] w;
-            off = p1_sp + (5'(j) << sl2);
+            off = pr_sp + (5'(j) << sl2);
             w = p1_sec[{off[4:2], 5'd0} +: 32];
             ext_r[32*j +: 32] = (sl2 == 2'd2) ? w : (sl2 == 2'd1) ? {16'd0, off[1] ? w[31:16] : w[15:0]}
                                                              : {24'd0, w[{off[1:0], 3'd0} +: 8]};
@@ -247,15 +255,47 @@ module ot_hgi_dma_mover #(
             endcase
         end
     end
-    // ---- encode (p2 -> pe): binary32 -> the destination format, right-aligned per lane
+    // ---- encode, two stages (hgi-1010/c, route f628d5015: p2_w -> pe_e 20 levels = E4M3 variable shift + sticky + round +
+    //      code assembly in one edge).  ENC A (p2 -> pa): BF16 complete (one 32-bit add); E4M3 to the pre-round quotient,
+    //      its round-up bit and the exponent class.  ENC B (pa -> pe): E4M3 round add + code.  +1 cycle in the pipe.
+    reg [255:0] enc_a; reg [8*25-1:0] ea_q; reg [7:0] ea_inc, ea_big, ea_sat, ea_sign; reg [8*8-1:0] ea_ex;
+    always @* begin
+        enc_a = 256'd0; ea_q = '0; ea_inc = 8'd0; ea_big = 8'd0; ea_sat = 8'd0; ea_sign = 8'd0; ea_ex = '0;
+        for (integer j = 0; j < 8; j = j + 1) begin : en
+            reg [31:0] x; reg [7:0] ex; reg [23:0] mant; integer sh; reg [24:0] q;
+            x = p2_w[32*j +: 32];
+            if (dsp == 2'd1 || df == 3'd0 || df == 3'd5) enc_a[32*j +: 32] = x;
+            else if (df == 3'd1) enc_a[32*j +: 32] = {16'd0, to_bf16(x)};
+            else begin
+                ex = x[30:23]; ea_ex[8*j +: 8] = ex; ea_sign[j] = x[31];
+                ea_sat[j] = (ex == 8'hFF) || (ex >= 8'd136);
+                ea_big[j] = ex >= 8'd121;
+                mant = (ex == 8'd0) ? 24'd0 : {1'b1, x[22:0]};
+                sh = (ex >= 8'd121) ? 20 : (20 + 121 - ex);
+                if (sh > 24) q = 25'd0;
+                else begin
+                    q = {1'b0, mant} >> sh;
+                    ea_inc[j] = sh > 0 && mant[sh - 1] && ((mant & ((24'd1 << (sh - 1)) - 24'd1)) != 0 || q[0]);
+                end
+                ea_q[25*j +: 25] = q;
+            end
+        end
+    end
+    reg        pa_v; reg [3:0] pa_k; reg [255:0] pa_e; reg [8*25-1:0] pa_q; reg [7:0] pa_inc, pa_big, pa_sat, pa_sign;
+    reg [8*8-1:0] pa_ex; reg [5:0] pa_dp; reg [36:0] pa_dsec; reg pa_fl, pa_e4;
     reg [255:0] enc_e;
     always @* begin
-        enc_e = 256'd0;
-        for (integer j = 0; j < 8; j = j + 1) begin : en
-            reg [31:0] x; x = p2_w[32*j +: 32];
-            if (dsp == 2'd1 || df == 3'd0 || df == 3'd5) enc_e[32*j +: 32] = x;
-            else if (df == 3'd1) enc_e[32*j +: 32] = {16'd0, to_bf16(x)};
-            else enc_e[32*j +: 32] = {24'd0, to_e4m3(x)};
+        enc_e = pa_e;
+        if (pa_e4) for (integer j = 0; j < 8; j = j + 1) begin : eb
+            reg [24:0] q; reg [7:0] code; reg [4:0] e4; reg [3:0] mq;
+            q = pa_q[25*j +: 25] + {24'd0, pa_inc[j]};
+            if (pa_big[j]) begin
+                e4 = 5'(pa_ex[8*j +: 8] - 8'd120); mq = q[4] ? 4'd8 : q[3:0];
+                if (q[4]) e4 = e4 + 5'd1;
+                code = (e4 > 5'd15) ? 8'h7F : {e4[3:0], mq[2:0]};
+            end else code = {1'b0, 4'd0, q[2:0]} + (q[3] ? 8'd8 : 8'd0);
+            if (code > 8'h7E) code = 8'h7E;
+            enc_e[32*j +: 32] = {24'd0, pa_sat[j] ? {pa_sign[j], 7'h7E} : (code == 8'd0) ? 8'd0 : {pa_sign[j], code[6:0]}};
         end
     end
     // ---- place (pe -> p3): lane j at byte dp + j << dl2 of the destination sector
@@ -277,10 +317,10 @@ module ot_hgi_dma_mover #(
     always @* begin
         iss_kw = 1'b0; iss_kr = 1'b0; iss_vw = 1'b0; iss_vr = 1'b0;
         if (busy_f && go_q3 && !f_fault) begin
-            if (wq_n != 4'd0 && dst_hbm && k_in < 8'(KOUT) && kq_n < 2'd2) iss_kw = 1'b1;
-            else if (!r_done && src_hbm && k_in < 8'(KOUT) && kq_n < 2'd2 && ({1'b0, sf_n} + {1'b0, rd_in}) < 10'(SFD)) iss_kr = 1'b1;
-            if (wq_n != 4'd0 && !dst_hbm) iss_vw = 1'b1;                      // the wide port: no client slot
-            if (!r_done && !src_hbm && v_in < 3'd4 && ({1'b0, sf_n} + {1'b0, rd_in}) < 10'(SFD)) iss_vr = 1'b1;
+            if (wq_n != 5'd0 && dst_hbm && k_in < 8'(KOUT) && kq_n < 2'd2) iss_kw = 1'b1;
+            else if (!r_done && src_hbm && k_in < 8'(KOUT) && kq_n < 2'd2 && ({1'b0, sf_n} + {1'b0, rd_in}) < 10'(SFD - 2)) iss_kr = 1'b1;
+            if (wq_n != 5'd0 && !dst_hbm) iss_vw = 1'b1;                      // the wide port: no client slot
+            if (!r_done && !src_hbm && v_in < 3'd4 && ({1'b0, sf_n} + {1'b0, rd_in}) < 10'(SFD - 2)) iss_vr = 1'b1;
         end
     end
     // ---- response routing (in order per port)
@@ -292,8 +332,8 @@ module ot_hgi_dma_mover #(
             busy_f <= 1'b0; sel_s <= 1'b0; go_f <= 1'b0; go_q2 <= 1'b0; f_fault <= 1'b0;
             mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq <= 338'd0; wl <= 280'd0; mv_src <= 1'b0; src_sent <= 1'b0;
             k_in <= 8'd0; v_in <= 3'd0; k_kind <= 256'd0; v_kind <= 8'd0; rd_in <= 9'd0; wr_in <= 9'd0; kq_n <= 2'd0; kq_h <= 1'b0; kq_t <= 1'b0;
-            sf_h <= '0; sf_t <= '0; sf_n <= 9'd0; wq_h <= 3'd0; wq_t <= 3'd0; wq_n <= 4'd0; go_q3 <= 1'b0;
-            p1_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 1'b0; r_done <= 1'b1; u_done <= 1'b1;
+            sf_h <= '0; sf_t <= '0; sf_n <= 9'd0; wq_h <= 4'd0; wq_t <= 4'd0; wq_n <= 5'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
+            p1_v <= 1'b0; pr_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pa_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 1'b0; r_done <= 1'b1; u_done <= 1'b1;
         end else begin
             mv_done <= 1'b0; fence_done <= 1'b0; mv_src <= 1'b0;
             if (fence_v && fence_rdy) fence_done <= 1'b1;
@@ -325,7 +365,7 @@ module ot_hgi_dma_mover #(
             if (go_f) src_sent <= 1'b0;
             if (busy_f && go_q3 && !f_fault && r_done && rd_in == 9'd0 && !src_sent) begin mv_src <= 1'b1; src_sent <= 1'b1; end
             if (go_f) begin
-                r_o <= 20'd0; r_sec <= sbase[41:5]; r_done <= 1'b0;
+                r_o <= 20'd0; r_sec <= sbase[41:5]; r_hi1 <= sbase[41:13] + 29'd1; r_done <= 1'b0;
                 r_nrow <= sbase + {8'd0, sstb}; r_end <= sbase + {18'd0, nnb} - 42'd1;
                 u_o <= 20'd0; u_left <= nn; u_sp <= sbase[4:0]; u_nsrow <= sbase + {8'd0, sstb}; u_ndrow <= dbase + {8'd0, dstb};
                 u_dsec <= dbase[41:5]; u_dp <= {1'b0, dbase[4:0]}; u_done <= 1'b0; db_dirty <= 1'b0;
@@ -362,16 +402,17 @@ module ot_hgi_dma_mover #(
                     f_vmq <= {1'b1, 1'b0, r_sec[26:0], 5'd0, 256'd0, 32'd0, 16'h4D52}; vpush = 1'b1;
                 end
                 // write queue pop
-                if (iss_kw || iss_vw) begin wq_h <= wq_h + 3'd1; end
+                if (iss_kw || iss_vw) begin wq_h <= wq_h + 4'd1; end
                 // reader advance
                 if (iss_kr || iss_vr) begin
                     if (r_sec == r_end[41:5]) begin
                         if (r_o + 20'd1 == mm) r_done <= 1'b1;
                         else begin
-                            r_o <= r_o + 20'd1; r_sec <= r_nrow[41:5]; r_nrow <= r_nrow + {8'd0, sstb};
+                            r_o <= r_o + 20'd1; r_sec <= r_nrow[41:5]; r_hi1 <= r_nrow[41:13] + 29'd1; r_nrow <= r_nrow + {8'd0, sstb};
                             r_end <= r_nend; r_nend <= r_nend + {8'd0, sstb};
                         end
-                    end else r_sec <= r_sec + 37'd1;
+                    end else if (&r_sec[7:0]) begin r_sec <= {r_hi1, 8'd0}; r_hi1 <= r_hi1 + 29'd1; end
+                    else r_sec[7:0] <= r_sec[7:0] + 8'd1;
                 end
                 // in-flight accounting (kind shift registers: push at the tail, pop at the head)
                 k_in <= k_in + {7'd0, kpush} - {7'd0, k_rv};
@@ -403,7 +444,7 @@ module ot_hgi_dma_mover #(
             // ---- unpack (stage U -> p1)
             p1_v <= 1'b0;
             if (u_go) begin
-                p1_v <= 1'b1; p1_k <= u_k; p1_sec <= sfd[sf_h]; p1_sp <= u_sp; p1_dp <= u_dp; p1_dsec <= u_dsec;
+                p1_v <= 1'b1; p1_k <= u_k; p1_h <= sf_h; p1_sp <= u_sp; p1_dp <= u_dp; p1_dsec <= u_dsec;
                 p1_fl <= u_fl;
                 if (u_left <= 21'({2'd0, u_k})) begin                         // row end: next row (precomputed)
                     if (u_o + 20'd1 == mm) u_done <= 1'b1;
@@ -420,15 +461,22 @@ module ot_hgi_dma_mover #(
                 end
             end
             // ---- extract (p1 -> px), convert (px -> p2), encode (p2 -> pe), place (pe -> p3), merge (p3)
-            px_v <= p1_v;
-            if (p1_v) begin px_k <= p1_k; px_r <= ext_r; px_dp <= p1_dp; px_dsec <= p1_dsec; px_fl <= p1_fl; end
+            pr_v <= p1_v;
+            if (p1_v) begin pr_k <= p1_k; p1_sec <= sfd[p1_h]; pr_sp <= p1_sp; pr_dp <= p1_dp; pr_dsec <= p1_dsec; pr_fl <= p1_fl; end
+            px_v <= pr_v;
+            if (pr_v) begin px_k <= pr_k; px_r <= ext_r; px_dp <= pr_dp; px_dsec <= pr_dsec; px_fl <= pr_fl; end
             p2_v <= px_v;
             if (px_v) begin p2_k <= px_k; p2_w <= dec_w; p2_dp <= px_dp; p2_dsec <= px_dsec; p2_fl <= px_fl; end
-            pe_v <= p2_v;
+            pa_v <= p2_v;
             if (p2_v) begin
-                pe_e <= enc_e; pe_dp <= p2_dp; pe_dsec <= p2_dsec; pe_fl <= p2_fl;
-                for (integer q = 0; q < 8; q = q + 1) pe_lv[q] <= q < p2_k;
-                pe_keep <= !(MUT == 2 && p2_dp + (6'(p2_k) << dl2) != 6'd32);
+                pa_k <= p2_k; pa_e <= enc_a; pa_q <= ea_q; pa_inc <= ea_inc; pa_big <= ea_big; pa_sat <= ea_sat; pa_sign <= ea_sign;
+                pa_ex <= ea_ex; pa_dp <= p2_dp; pa_dsec <= p2_dsec; pa_fl <= p2_fl; pa_e4 <= !(dsp == 2'd1 || df == 3'd0 || df == 3'd5 || df == 3'd1);
+            end
+            pe_v <= pa_v;
+            if (pa_v) begin
+                pe_e <= enc_e; pe_dp <= pa_dp; pe_dsec <= pa_dsec; pe_fl <= pa_fl;
+                for (integer q = 0; q < 8; q = q + 1) pe_lv[q] <= q < pa_k;
+                pe_keep <= !(MUT == 2 && pa_dp + (6'(pa_k) << dl2) != 6'd32);
             end
             pk_v <= pe_v;
             if (pe_v) begin pk_d <= pack_d; pk_s <= pack_s; pk_dp <= pe_dp; pk_dsec <= pe_dsec; pk_fl <= pe_fl; pk_keep <= pe_keep; end
@@ -437,7 +485,7 @@ module ot_hgi_dma_mover #(
             if (p3_v) begin
                 if (p3_fl && p3_keep) begin
                     wq_d[wq_t] <= ((db_dirty ? db_dat : 256'd0) & ~mk(p3_s)) | p3_d;
-                    wq_s[wq_t] <= (db_dirty ? db_strb : 32'd0) | p3_s; wq_a[wq_t] <= p3_dsec; wq_t <= wq_t + 3'd1;
+                    wq_s[wq_t] <= (db_dirty ? db_strb : 32'd0) | p3_s; wq_a[wq_t] <= p3_dsec; wq_t <= wq_t + 4'd1;
                     db_dirty <= 1'b0;
                 end else if (p3_fl) db_dirty <= 1'b0;                          // MUT 2: the partial sector is lost
                 else begin
@@ -445,9 +493,10 @@ module ot_hgi_dma_mover #(
                     db_strb <= (db_dirty ? db_strb : 32'd0) | p3_s; db_dirty <= 1'b1;
                 end
             end
-            wq_n <= wq_n + {3'd0, p3_v && p3_fl && p3_keep} - {3'd0, iss_kw | iss_vw};
+            wq_n <= wq_n + {4'd0, p3_v && p3_fl && p3_keep} - {4'd0, iss_kw | iss_vw};
+            wq_res <= wq_res + {4'd0, u_go && u_fl} - {4'd0, iss_kw | iss_vw} - {4'd0, p3_v && p3_fl && !p3_keep};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
-            if (busy_f && go_q3 && !f_fault && u_done && r_done && !p1_v && !px_v && !p2_v && !pe_v && !pk_v && !p3_v && wq_n == 4'd0 && wr_in == 9'd0 &&
+            if (busy_f && go_q3 && !f_fault && u_done && r_done && !p1_v && !pr_v && !px_v && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 &&
                 !(iss_kw | iss_vw) && rd_in == 9'd0 && sf_n == 9'd0 && kq_n == 2'd0) begin
                 busy_f <= 1'b0; mv_done <= 1'b1;
             end

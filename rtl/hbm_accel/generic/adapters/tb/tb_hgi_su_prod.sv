@@ -63,6 +63,15 @@ module tb_hgi_su_prod;
     ot_hgi_su_unit #(.N(`N), .M(`M), .LV(`LV), .LWB(`LWB), .GLU(GL), .MUT_DIRTY(MD)
 `ifdef WIDE
         , .WIDE(1)
+`ifdef LQ
+        , .LQ(`LQ)
+`endif
+`ifdef LRLAT
+        , .LRLAT(`LRLAT)
+`endif
+`ifdef MUT_RV
+        , .MUT_RV(`MUT_RV)
+`endif
 `endif
 `ifdef MUT_W
         , .MUT_W(`MUT_W)
@@ -89,13 +98,19 @@ module tb_hgi_su_prod;
     wire [32*280-1:0] g_wq; wire [3*32-1:0] c_rcr, c_wcr; wire [3*32*257-1:0] c_rr; wire [3*32-1:0] c_wdone;
     reg [32*16-1:0] a1_q = 0; reg [32*280-1:0] a2_q = 0; reg a1_req = 0, a2_req = 0;
     assign rg_req[1] = a1_req; assign rg_req[2] = 1'b0; assign wg_req[1] = 1'b0; assign wg_req[2] = a2_req;
-    ot_hgi_vm_lanearb #(.K(3), .REQW(16), .RSPW(257), .MUT(`ifdef ARBMUT 1 `else 0 `endif)) u_ar (.clk(clk), .rst_n(rst_n),
+`ifndef RLY
+`define RLY 0
+`endif
+`ifndef LQ
+`define LQ 8
+`endif
+    ot_hgi_vm_lanearb #(.K(3), .REQW(16), .RSPW(257), .RLY(`RLY), .MUT(`ifdef ARBMUT 1 `else 0 `endif)) u_ar (.clk(clk), .rst_n(rst_n),
         .c_req(rg_req), .c_gnt(rg_gnt), .c_q({512'd0, a1_q, rq}), .c_cr(c_rcr), .c_rsp(c_rr), .g_q(g_rq), .g_cr(g_rcr), .g_rsp(g_rr));
-    ot_hgi_vm_lanearb #(.K(3), .REQW(280), .RSPW(1), .MUT(`ifdef ARBMUT 1 `else 0 `endif)) u_aw (.clk(clk), .rst_n(rst_n),
+    ot_hgi_vm_lanearb #(.K(3), .REQW(280), .RSPW(1), .RLY(`RLY), .MUT(`ifdef ARBMUT 1 `else 0 `endif)) u_aw (.clk(clk), .rst_n(rst_n),
         .c_req(wg_req), .c_gnt(wg_gnt), .c_q({a2_q, {32*280{1'b0}}, w2q}), .c_cr(c_wcr), .c_rsp(c_wdone), .g_q(g_wq), .g_cr(g_wcr),
         .g_rsp(g_wdone));
     assign rq_cr = c_rcr[31:0]; assign rr = c_rr[0 +: 32*257]; assign w2_cr = c_wcr[31:0]; assign w2_done = c_wdone[31:0];
-    ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(8)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}),
+    ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(`LQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}),
         .status(vm_status), .wq(280'd0), .wq_done(), .rq(g_rq), .rq_cr(g_rcr), .rr(g_rr), .w2q(g_wq), .w2q_cr(g_wcr), .w2q_done(g_wdone));
     // ---- agents: bursts of 8 sectors a lane on the free region (sectors AR0.. read-only, AW0.. written), checked
     localparam integer AR0 = 14336, AW0 = 18432, AN = 2048;
@@ -104,36 +119,36 @@ module tb_hgi_su_prod;
     endfunction
     integer a_on = 0, a1_bursts = 0, a2_bursts = 0, a2_it = -1;
     initial begin : agent1
-        integer cr [0:31]; integer nx [0:31]; integer exp_ [0:31][0:63]; integer h [0:31], t [0:31], got, base, gap;
+        integer cr [0:31]; integer nx [0:31]; integer exp_ [0:31][0:127]; integer h [0:31], t [0:31], got, base, gap;
         forever begin
             @(negedge clk);
             if (a_on) begin
                 base = AR0 + 256 * ($urandom % (AN / 256));
-                for (integer l = 0; l < 32; l = l + 1) begin cr[l] = 8; nx[l] = base + l; h[l] = 0; t[l] = 0; end
+                for (integer l = 0; l < 32; l = l + 1) begin cr[l] = `LQ; nx[l] = base + l; h[l] = 0; t[l] = 0; end
                 a1_req = 1; while (!rg_gnt[1]) @(negedge clk); @(negedge clk);
                 got = 0;
                 while (got < 256) begin
                     for (integer l = 0; l < 32; l = l + 1) begin
                         a1_q[l*16 +: 16] = 0;
                         if (nx[l] < base + 256 && cr[l] > 0) begin
-                            a1_q[l*16 +: 16] = {1'b1, 15'(nx[l])}; exp_[l][t[l] % 64] = nx[l]; t[l] = t[l] + 1; nx[l] = nx[l] + 32; cr[l] = cr[l] - 1;
+                            a1_q[l*16 +: 16] = {1'b1, 15'(nx[l])}; exp_[l][t[l] % 128] = nx[l]; t[l] = t[l] + 1; nx[l] = nx[l] + 32; cr[l] = cr[l] - 1;
                         end
                     end
                     @(posedge clk);
                     for (integer l = 0; l < 32; l = l + 1) begin
                         if (c_rcr[32 + l]) cr[l] = cr[l] + 1;
                         if (c_rr[(32 + l)*257 + 256]) begin
-                            if (c_rr[(32 + l)*257 +: 256] !== apat(exp_[l][h[l] % 64], 0)) begin
-                                errors = errors + 1; if (errors < 20) $display("ERR agent1 sector %0d", exp_[l][h[l] % 64]); end
+                            if (c_rr[(32 + l)*257 +: 256] !== apat(exp_[l][h[l] % 128], 0)) begin
+                                errors = errors + 1; if (errors < 20) $display("ERR agent1 sector %0d", exp_[l][h[l] % 128]); end
                             h[l] = h[l] + 1; got = got + 1;
                         end
                     end
                     @(negedge clk);
                 end
                 a1_q = 0;
-                begin : home integer w; w = 0; while (w < 4) begin @(posedge clk);
+                begin : home integer w; w = 0; while (w < 4 + 2 * `RLY) begin @(posedge clk);
                     for (integer l = 0; l < 32; l = l + 1) if (c_rcr[32 + l]) cr[l] = cr[l] + 1; w = w + 1; end end
-                for (integer l = 0; l < 32; l = l + 1) if (cr[l] != 8) begin errors = errors + 1; $display("ERR agent1 credits lane %0d = %0d", l, cr[l]); end
+                for (integer l = 0; l < 32; l = l + 1) if (cr[l] != `LQ) begin errors = errors + 1; $display("ERR agent1 credits lane %0d = %0d", l, cr[l]); end
                 @(negedge clk); a1_req = 0; a1_bursts = a1_bursts + 1;
                 gap = $urandom % 300; repeat (gap) @(negedge clk);
             end
@@ -145,7 +160,7 @@ module tb_hgi_su_prod;
             @(negedge clk);
             if (a_on) begin
                 a2_it = a2_it + 1;
-                for (integer l = 0; l < 32; l = l + 1) begin cr[l] = 8; nx[l] = AW0 + l; end
+                for (integer l = 0; l < 32; l = l + 1) begin cr[l] = `LQ; nx[l] = AW0 + l; end
                 a2_req = 1; while (!wg_gnt[2]) @(negedge clk); @(negedge clk);
                 sent = 0; done_n = 0;
                 while (done_n < AN) begin
@@ -163,9 +178,9 @@ module tb_hgi_su_prod;
                     @(negedge clk);
                 end
                 a2_q = 0;
-                begin : home2 integer w; w = 0; while (w < 4) begin @(posedge clk);
+                begin : home2 integer w; w = 0; while (w < 4 + 2 * `RLY) begin @(posedge clk);
                     for (integer l = 0; l < 32; l = l + 1) if (c_wcr[64 + l]) cr[l] = cr[l] + 1; w = w + 1; end end
-                for (integer l = 0; l < 32; l = l + 1) if (cr[l] != 8) begin errors = errors + 1; $display("ERR agent2 credits lane %0d = %0d", l, cr[l]); end
+                for (integer l = 0; l < 32; l = l + 1) if (cr[l] != `LQ) begin errors = errors + 1; $display("ERR agent2 credits lane %0d = %0d", l, cr[l]); end
                 @(negedge clk); a2_req = 0; a2_bursts = a2_bursts + 1;
                 gap = $urandom % 300; repeat (gap) @(negedge clk);
             end
