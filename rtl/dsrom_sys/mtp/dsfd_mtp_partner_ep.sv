@@ -13,7 +13,7 @@
 // grant history) at the same depth -> must overflow on the stationed bench.
 module dsfd_cap_mtp_ep #(parameter integer FLIT = 512) (
     input  wire [0:0] ck, rst,
-    input  wire       c_rv, output wire c_rr, input wire [FLIT-1:0] c_rd,                 // capture core: RESULT flit
+    input  wire [0:0] c_rv, output wire [0:0] c_rr, input wire [FLIT-1:0] c_rd,                 // capture core: RESULT flit
     output wire [0:0] t_rv, output wire [FLIT-1:0] t_rd, input wire [0:0] f_rg          // -> dsfd_mtp_seq_rtt u_r
 );
     wire rn;
@@ -29,10 +29,10 @@ module dsfd_vm_mtp_ep #(parameter integer NW = 21, parameter integer USER_W = 10
                         parameter integer D_H = FWD_H + RET_H + 4) (
     input  wire [0:0] ck, rst,
     input  wire [0:0] f_hv, input wire [DW-1:0] f_hd, output wire [0:0] t_hg,           // draft-head step from the seq
-    output wire       c_hv, input wire c_hr, output wire [DW-1:0] c_hd,
-    input  wire       c_wv, output wire c_wr, input wire [USER_W-1:0] c_wd,              // rows ready (VM core)
+    output wire [0:0] c_hv, input wire [0:0] c_hr, output wire [DW-1:0] c_hd,
+    input  wire [0:0] c_wv, output wire [0:0] c_wr, input wire [USER_W-1:0] c_wd,              // rows ready (VM core)
     output wire [0:0] t_wv, output wire [USER_W-1:0] t_wd, input wire [0:0] f_wg,
-    input  wire       c_qv, output wire c_qr, input wire [DW-1:0] c_qd,                  // draft-head result (VM core)
+    input  wire [0:0] c_qv, output wire [0:0] c_qr, input wire [DW-1:0] c_qd,                  // draft-head result (VM core)
     output wire [0:0] t_qv, output wire [DW-1:0] t_qd, input wire [0:0] f_qg
 );
 `ifdef OT_FIXLAT_MUT_LAT1
