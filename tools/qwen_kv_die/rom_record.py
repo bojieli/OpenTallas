@@ -22,7 +22,7 @@ import qwen_rom_fulldie_b3r2 as B      # noqa: E402
 CROSS = ('x3', 'attn_ret', 'emb', 'emb_a', 'emb_cr', 'seq_d2d', 'd2d_seq', 'd2d_fdi', 'pll_fwd', 'rst_fwd')
 RETICLE = 858.0
 # r22ko4: the option-4 words and the moved control / tree / sequencer words (their relay stages go to the record)
-O4_PREFIX = ('o4_', 'tt_', 'pword_', 'seq_', 'd2d_', 'vm_seq')
+O4_PREFIX = ('o4_', 'tt_', 'pword_', 'seq_', 'd2d_', 'vm_seq', 'coll_')
 
 
 def main():
@@ -66,6 +66,18 @@ def main():
                                    {i.kind for i in ins if i.name.startswith('rly_')}, reach_um=504.0),
         margin_note='data buses only: clock / reset trunks are CTS / reset trees (their relay-row sinks are clock pins)',
         relay_kinds=sorted({i.kind for i in ins if i.name.startswith('rly_')}))
+    st_ = rec['crossing_bus_stages']
+    if all(k in st_ for k in ('coll_tx', 'coll_tx_x', 'coll_rx', 'coll_rx_x')):
+        # qwen-1010/a: the collective words leave the VM (ct) through io_xfifo (CDC) to io_collective and return the same
+        # way (cr); a credit-based link (no same-cycle ready across stations) needs credits >= the round trip
+        pins, cdc = 2 * 4, 2 * 4      # registered endpoint ports (VM, xfifo x2, collective) each way; 4 sync edges a CDC
+        rt = st_['coll_tx'] + st_['coll_tx_x'] + st_['coll_rx'] + st_['coll_rx_x'] + pins + cdc
+        rec['collective_credit'] = dict(
+            round_trip_edges=rt, credits=rt, receiver_buffer_words=rt, receiver_buffer_bits=rt * 512,
+            note='the die streams all-reduce words VM -> io_xfifo -> io_collective (coll_tx 512 b) and back (coll_rx); the '
+                 'sequencer sends only the 66-b descriptor (seq_coll).  Credits = round trip (relays both ways + 8 port '
+                 'stations + 2 CDCs of 4 edges) keep one word a cycle; the collective input buffer must hold that many words. '
+                 'The token vehicle streams the words through the sequencer (tp_seq_vrl CRED), the die through the VM port.')
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1, default=str) + '\n')
     # block rectangles (relays omitted) for the two-die explorer view

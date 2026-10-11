@@ -77,6 +77,10 @@
   "d2d_fdi": 0,
   "pll_fwd": 0,
   "rst_fwd": 0,
+  "coll_rx": 7,
+  "coll_rx_x": 33,
+  "coll_tx": 32,
+  "coll_tx_x": 8,
   "d2d_flt": 26,
   "o4_cb_a_0": 0,
   "o4_cb_a_1": 0,
@@ -183,17 +187,17 @@
  "r22k": {
   "removed_instances": {
    "qfd_cdc": 128,
-   "ot_hbm3e_phy": 4,
    "qfd_lst_h_e": 10,
    "qfd_lst_h_w": 10,
-   "qfd_kvc_n": 2,
-   "qfd_lst_v_split": 6,
    "qfd_ctrl": 4,
-   "qfd_lst_c_split": 2,
+   "qfd_kvc_n": 2,
+   "qfd_lst_c": 1,
+   "ot_hbm3e_phy": 4,
    "qfd_lst_v": 3,
    "qfd_kvc": 2,
-   "qfd_hub": 1,
-   "qfd_lst_c": 1
+   "qfd_lst_v_split": 6,
+   "qfd_lst_c_split": 2,
+   "qfd_hub": 1
   },
   "dropped_buses": {
    "link_channel": 24,
@@ -2306,5 +2310,12 @@
  "margin_note": "data buses only: clock / reset trunks are CTS / reset trees (their relay-row sinks are clock pins)",
  "relay_kinds": [
   "relay"
- ]
+ ],
+ "collective_credit": {
+  "round_trip_edges": 96,
+  "credits": 96,
+  "receiver_buffer_words": 96,
+  "receiver_buffer_bits": 49152,
+  "note": "the die streams all-reduce words VM -> io_xfifo -> io_collective (coll_tx 512 b) and back (coll_rx); the sequencer sends only the 66-b descriptor (seq_coll).  Credits = round trip (relays both ways + 8 port stations + 2 CDCs of 4 edges) keep one word a cycle; the collective input buffer must hold that many words. The token vehicle streams the words through the sequencer (tp_seq_vrl CRED), the die through the VM port."
+ }
 }
