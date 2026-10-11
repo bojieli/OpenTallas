@@ -41,6 +41,8 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--kv-basis', type=Path, default=D / 'reprice.json',
                     help="the KV-die reprice the option-4 term is applied to (e.g. (b)'s relay + leaf-plan basis)")
+    ap.add_argument('--cbuf-wait', type=int, default=0,
+                    help='constant-buffer stage-start waits a steady-state token (cycles, measured: tb_qfd_crom_lbuf GATE 1)')
     ap.add_argument('--refresh-step', type=int, nargs=2, default=None, metavar=('MEAN', 'WORST'),
                     help='PROVISIONAL timed-REFpb KV step increase per layer (cycles, mean / worst)')
     a = ap.parse_args()
@@ -69,8 +71,12 @@ def main():
                r22k_relay_term=dict(run=sr['adopted_for_price'], L0=adopted['L0'], layer=adopted['L1'],
                                     token=adopted['L0'] + 35 * adopted['L1']),
                o4_run=dict(name=a.o4_name, **o4), cases={})
-    o4_token = o4['vs_s22ml7']['L0'] + 35 * o4['vs_s22ml7']['L1']
-    out['o4_relay_term'] = dict(L0=o4['vs_s22ml7']['L0'], layer=o4['vs_s22ml7']['L1'], token=o4_token)
+    o4_token = o4['vs_s22ml7']['L0'] + 35 * o4['vs_s22ml7']['L1'] + a.cbuf_wait
+    out['o4_relay_term'] = dict(L0=o4['vs_s22ml7']['L0'], layer=o4['vs_s22ml7']['L1'], token=o4_token,
+                                cbuf_wait_per_token=a.cbuf_wait,
+                                cbuf_note='constant-buffer stage-start waits (seq_su ot_qfd_stage_gate + 8 SRAM groups, far ROM 17 '
+                                          'edges): 466 cycles on the first token, 111 a steady token (rtl/test/redesign_qwen/'
+                                          'tb_qfd_crom_lbuf.sv GATE 1, NTOK 1 / 2); the chain vehicle prices the buffer as SU ML 7')
     st = o4rec['crossing_bus_stages']
     # the KV-die bench prices the step from the q word (x3) leaving the ROM faces; a launch descriptor on a longer path
     # than x3 delays the step by the difference (r22ko4: kvd from seq_su)
