@@ -693,16 +693,18 @@ def emit_tile_io(P, tw, th):
     lane), acc_out / acc_in on the W (strip) edge on M4 (lower / upper half), clk on the W edge mid"""
     L_ = ['# tools/hbm_hub_quarter_gen.py --tiled: hfd_su_tile pins']
     nb = P.LB + 1
-    # M5 every other 0.048 track over the strip (0.096 pitch, < 12 pins / um), M7 every other 0.064 track over the whole
-    # tile (0.128 pitch): the lane obstructs up to M5 only
-    m5 = [round(0.528 + 0.096 * k, 4) for k in range(int((TILE_SW - 1.0) / 0.096))]
-    m7 = [round(0.64 + 0.128 * k, 4) for k in range(int((TILE_SW - 1.3) / 0.128))]     # over the strip only
-    slots = [('M5', x) for x in m5] + [('M7', x) for x in m7]
-    assert len(slots) >= nb, (len(slots), nb)
+    # [su] R25GQ agent 2026-10-10: three vertical layers over the strip, M3 every 4th track (0.144), M5 every 3rd (0.144),
+    # M7 every 2nd (0.128), the slots taken evenly in x (the [sfu] faced-tile precedent 18d5bc494).  Was M5 0.096 + M7
+    # 0.128 filled M5-first: S / N M5 10.3 b/um (fp lint target 6) and the routability-driven global placement of the
+    # 212e3da48 tile (4,398 FIRM pin flops, 645 um2 movable) inflated +314 % and diverged (GPL-0305) / stalled at 0.76.
+    full = sorted(((ly, round(x0 + pt * k, 4)) for ly, x0, pt in (('M3', 0.516, 0.144), ('M5', 0.528, 0.144), ('M7', 0.64, 0.128))
+                   for k in range(int((TILE_SW - x0 - 0.5) / pt) + 1)), key=lambda t: (t[1], t[0]))
+    assert len(full) >= nb, (len(full), nb)
+    slots = [full[(i * len(full)) // nb] for i in range(nb)]
     for port, y, w_, h_ in (('bc_in', 0.0, None, None), ('bc_out', th, None, None)):
         for b in range(nb):
             ly, x = slots[b]
-            sz = '0.0240 0.1920' if ly == 'M5' else '0.0320 0.1920'
+            sz = {'M3': '0.0180 0.1920', 'M5': '0.0240 0.1920'}.get(ly, '0.0320 0.1920')
             yy = 0.096 if port == 'bc_in' else round(th - 0.096, 4)
             L_.append(f'place_pin -pin_name {{{port}[{b}]}} -layer {ly} -location {{{x:.4f} {yy:.4f}}} -pin_size {{{sz}}}')
     half = th / 2
