@@ -457,6 +457,7 @@ def elem_redact(o):
     for m in g.get('macros', []): m['name'] = ''
     for p in g.get('ports', []): p[0] = ''
     for k in ('job', 'host', 'db', 'record', 'note', 'block'): o[k] = ''
+    o.pop('golden', None); o.pop('rtl_meta', None); o.pop('rtl_file', None)
     for f in o.get('facts', []): f['src'] = ''
     o['facts'] = [f for f in o.get('facts', []) if f.get('k') not in ('closure job', 'source commit')]
     ct = o.get('clock_tt') or {}
@@ -469,12 +470,54 @@ def elem_redact(o):
             for pt in p['points']: pt[0] = ''
     return o
 
+_TPUT = {'t': 0, 'd': None, 'commit': None, 'err': None}
+TPUT_REL = 'results/arch/throughput_budget_20261010/budget.json'
+
+def _tput_load():
+    """budget.json from origin/main (the shared checkout may sit on a stale HEAD): git fetch at most every 10 min,
+    then git show origin/main:<path>"""
+    now = time.time()
+    if _TPUT['d'] is not None and now - _TPUT['t'] < 600: return
+    repo = os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas')
+    _TPUT['t'] = now
+    try:
+        subprocess.run(['git', '-C', repo, 'fetch', '-q', 'origin', 'main'], timeout=90, capture_output=True)
+        r = subprocess.run(['git', '-C', repo, 'show', 'origin/main:' + TPUT_REL], timeout=30, capture_output=True)
+        if r.returncode:
+            _TPUT.update(d=None, err='not on origin/main yet'); return
+        c = subprocess.run(['git', '-C', repo, 'log', '-1', '--format=%h %cI', 'origin/main', '--', TPUT_REL], timeout=30, capture_output=True, text=True)
+        _TPUT.update(d=json.loads(r.stdout), commit=c.stdout.strip(), err=None)
+    except Exception as e:
+        _TPUT.update(err=str(e)[:200])
+
+def elem_tput(blocks, safe):
+    """throughput qualification of the element page's blocks, read with the budget's exact keys:
+    elements[<block>] = {status, ratio, limiting{op, model, status, ratio, owner, src}, ops[...]} and the token-path
+    classes (rom.<model>.classes[] with elements[]) that list the block"""
+    _tput_load()
+    d = _TPUT['d']
+    if d is None: return dict(status='pending', path=TPUT_REL, error=_TPUT['err'])
+    out = dict(status='present', path=TPUT_REL, commit=_TPUT['commit'], generated_utc=d.get('generated_utc'), rule=d.get('rule'),
+               qualify_ratio=d.get('qualify_ratio'), elements={}, classes={})
+    for b in blocks:
+        out['elements'][b] = (d.get('elements') or {}).get(b)
+        cl = []
+        for model, md in (d.get('rom') or {}).items():
+            for c in (md or {}).get('classes', []) if isinstance(md, dict) else []:
+                if b in (c.get('elements') or []):
+                    cl.append(dict(model='rom.' + model, **{k: c.get(k) for k in ('cls', 'status', 'critical_cycles_per_token', 'share', 'nodes',
+                                                                                  'measured_fraction', 'n_unmeasured', 'unmeasured_nodes', 'basis')}))
+        out['classes'][b] = cl
+    return out
+
 def elem_body(path, safe, gz):
     import gzip as _gz
     st = path.stat(); key = (str(path), st.st_mtime, safe, gz)
     if key in _ELEM_CACHE: return _ELEM_CACHE[key]
     b = path.read_bytes()
-    if safe and path.suffix == '.json' and path.parent.name == 'data':
+    if safe and path.name.endswith('.rtl.json'):
+        b = b'{"redacted":true}'
+    elif safe and path.suffix == '.json' and path.parent.name == 'data':
         b = json.dumps(elem_redact(json.loads(b)), separators=(',', ':')).encode()
     if gz: b = _gz.compress(b, 6)
     for k in [k for k in _ELEM_CACHE if k[0] == str(path)]: _ELEM_CACHE.pop(k)
@@ -555,6 +598,9 @@ class H(BaseHTTPRequestHandler):
         if u.path == '/explorer/coverage' or u.path.startswith('/explorer/coverage/'):
             if u.path == '/explorer/coverage': return self.redirect('/explorer/coverage/')
             return self.static_dir(COVERAGE_DIR, u.path[len('/explorer/coverage'):].lstrip('/') or 'index.html', None)
+        if u.path == '/api/explorer/elem_tput':
+            bl = [b for b in q.get('blocks', [''])[0].split(',') if b]
+            return self.send(200, json.dumps(elem_tput(bl, safe)).encode(), 'application/json')
         if u.path == '/explorer/element' or u.path.startswith('/explorer/element/'):
             if u.path == '/explorer/element': return self.redirect('/explorer/element/' + ('?' + u.query if u.query else ''))
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)

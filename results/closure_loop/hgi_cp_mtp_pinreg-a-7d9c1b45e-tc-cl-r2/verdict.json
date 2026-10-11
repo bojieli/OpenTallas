@@ -1,0 +1,234 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2",
+ "block": "ot_hgi_cp_mtp_pinreg",
+ "owner": "Claude:fe-push-hgi-1010",
+ "source_branch": "claude/fe-push-mtp-1010",
+ "record_branch": "codex/closure-record-hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2",
+ "source_commit": "7d9c1b45eb11f67453f6cbf199707495bc21cbb1",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 134.55,
+  "ff_ps": 1.47,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -153.51,
+  "ss_sensitivity_tns_ps": -48001.0,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2/routes/hgi_cp_mtp_pinreg_a_7d9c1b45e_tc_cl_r2/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2/routes/hgi_cp_mtp_pinreg_a_7d9c1b45e_tc_cl_r2/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2/routes/hgi_cp_mtp_pinreg_a_7d9c1b45e_tc_cl_r2/work/orfs/logs/asap7/opentallas_ot_hgi_cp_mtp_pinreg_asap7_qdm_hgi_cp_mtp_pinreg_a_7d9c1b45e_tc_cl_r2/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_P_system_positive": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS HGI_CP_MTP_PINREG system drained reset twice native40layer pairedresults finitequeue cycles=26539\n/srv/opentallas-scratch/claude/closure-loop/hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2/bench_src_a1/rtl/hbm_accel/generic/tb/tb_hgi_cp_mtp_pinreg_system.sv:69: $finish called at 265500000 (1ps)\n\nHGI_CP_MTP_PINREG_CASE P_system_positive rc=0\n",
+   "track": "parallel"
+  },
+  "bench_C_cpdie_elab": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "C_cpdie_elab_pinreg rc 0 \nC_cpdie_elab_direct rc 0 \nC_cpdie_elab_mtp1 rc 0 \nHGI_CP_MTP_PINREG_ELAB PASS\n",
+   "track": "parallel"
+  },
+  "bench_P_mutant_hostdone_not_held": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: /srv/opentallas-scratch/claude/closure-loop/hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2/bench_src_a1/rtl/hbm_accel/generic/tb/tb_hgi_cp_mtp_pinreg_system.sv:61: composed finalcommit received=3 ac=4 hs=1 n=5\n       Time: 132490000  Scope: tb_hgi_cp_mtp_pinreg_system\n\nHGI_CP_MTP_PINREG_CASE P_mutant_hostdone_not_held rc=1\n",
+   "track": "parallel"
+  },
+  "bench_P_mutant_prl2": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: /srv/opentallas-scratch/claude/closure-loop/hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2/bench_src_a1/rtl/hbm_accel/generic/tb/tb_hgi_cp_mtp_pinreg_system.sv:45: composed emittedtoken/identity idx=3 token=100 expected=102\n       Time: 226085000  Scope: tb_hgi_cp_mtp_pinreg_system\n\nHGI_CP_MTP_PINREG_CASE P_mutant_prl2 rc=1\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "_mtp_pinreg_a_7d9c1b45e_tc_cl_r2/base/4_1_cts.log: (single)=TT\nok  routes/hgi_cp_mtp_pinreg_a_7d9c1b45e_tc_cl_r2/work/orfs/logs/asap7/opentallas_ot_hgi_cp_mtp_pinreg_asap7_qdm_hgi_cp_mtp_pinreg_a_7d9c1b45e_tc_cl_r2/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "calibration": null,
+ "cycles_added": 2,
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T21:49:19-07:00",
+ "job_spec": {
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4"
+  ],
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "routed_ioref": true,
+  "merge_target": null,
+  "owner": "Claude:fe-push-hgi-1010",
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/fe-push-mtp-1010",
+   "commit": "7d9c1b45eb11f67453f6cbf199707495bc21cbb1",
+   "extra_paths": [
+    "results/rtl/hbm_token_fifo_reservation_20261009"
+   ]
+  },
+  "registered_io": true,
+  "cycles_added": 2,
+  "hold_eco": {
+   "enabled": true,
+   "reason": "Current MM ECO after TT setup eligibility.",
+   "session": "mm"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "standalone element of ot_hgi_cp_die MTP=2 (cmdproc_hgi view); die budget sheet at view regen"
+  },
+  "name": "hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2",
+  "block": "ot_hgi_cp_mtp_pinreg",
+  "element": "ot_hgi_cp_mtp_pinreg",
+  "purpose": "fe-push-hgi-1010 feasibility row (hardcore 18:55): the MX1 MTP collar inside ot_hgi_cp_die MTP=2 was unregistered on f_mtp 517 / t_mtp 197 (in->reg 15 levels) and the mh_* nets; MTP_PINREG=1 puts the MX1 REGB/FT12 boundary (pin FIFOs / flops, ot_rst_relay) around it: +1 cycle a crossing, PRL 4. 240x240 PD 0.45 | idle-sweep r2050 re-drop: bench_P_system_positive rc=1 was FileNotFoundError (hbm_mx1_regb_gate reads results/rtl/hbm_token_fifo_reservation_20261009/native_mtp_sources.json, not synced) -> extra_paths; spec-only, same source.",
+  "stages": {
+   "bench": [
+    {
+     "name": "P_system_positive",
+     "cmd": "python3 tools/hgi_cp_mtp_pinreg_gate.py --work {RUN}/bench/P_system_positive --single P_system_positive",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "timeout_s": 3600,
+     "pass_regex": "^PASS HGI_CP_MTP_PINREG system"
+    },
+    {
+     "name": "C_cpdie_elab",
+     "cmd": "python3 tools/hgi_cp_mtp_pinreg_gate.py --work {RUN}/bench/C_cpdie_elab --single C_cpdie_elab",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "timeout_s": 3600,
+     "pass_regex": "^HGI_CP_MTP_PINREG_ELAB PASS"
+    },
+    {
+     "name": "P_mutant_hostdone_not_held",
+     "cmd": "python3 tools/hgi_cp_mtp_pinreg_gate.py --work {RUN}/bench/P_mutant_hostdone_not_held --single P_mutant_hostdone_not_held",
+     "expect": "fail",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "timeout_s": 3600,
+     "fail_regex": "fatal|FATAL|HGI_CP_MTP_PINREG_CASE P_mutant_hostdone_not_held rc=[1-9]"
+    },
+    {
+     "name": "P_mutant_prl2",
+     "cmd": "python3 tools/hgi_cp_mtp_pinreg_gate.py --work {RUN}/bench/P_mutant_prl2 --single P_mutant_prl2",
+     "expect": "fail",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "timeout_s": 3600,
+     "fail_regex": "fatal|FATAL|HGI_CP_MTP_PINREG_CASE P_mutant_prl2 rc=[1-9]"
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Current master flow measures real boundary clock in-run at each corner, no borrowed insertion."
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_cp_mtp_pinreg_a.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh hgi_cp_mtp_pinreg_a {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/"
+   }
+  },
+  "verdict": {
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/hgi_cp_mtp_pinreg_a.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/hgi_cp_mtp_pinreg_20261010/routes/hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl"
+   }
+  ],
+  "submit_lint": {
+   "applied": "pin_balance",
+   "env": {
+    "OT_PIN_GROUP_MAX": "32",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M5 M7",
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+   },
+   "at": "2026-10-10T21:28:00-07:00",
+   "est_as_configured": {
+    "W": 5.85,
+    "E": 3.62,
+    "N": 7.16
+   },
+   "est_fix": {
+    "W": 1.31,
+    "E": 0.81,
+    "N": 1.6
+   },
+   "why": "ordered pin group(s) > 200 pins (^(clk|rst_n|f_mtp|t_mtp)(\\[|$) 716, ^(f_host|t_host|f_provider|t_provider|t_emit|f_emit_host|t_emit_host|t_abort|t_drained)(\\[|$) 585, ^(f_backend|t_backend|f_am)(\\[|$) 362) fall back in the IO placer (PPL-0107) || measured pin-density failure (the estimate is a lower bound); approved automatic fix pin_balance (OT_PIN_GROUP_MAX='32' OT_PIN_BALANCE_H='M4 M6' OT_PIN_"
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

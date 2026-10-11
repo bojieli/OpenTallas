@@ -1,7 +1,7 @@
 {
  "master": "dsfd_vm_wfc_ep",
- "w_um": 259.2,
- "h_um": 259.2,
+ "w_um": 345.6,
+ "h_um": 345.6,
  "domain": "serial_0p9",
  "note": "dsfd_vm_wfc_ep: N kit channels (grant links), S VM port, E START",
  "ports": [
@@ -43,7 +43,7 @@
   ],
   [
    "f_srd",
-   15,
+   31,
    "input",
    "N",
    "M5",
@@ -61,12 +61,12 @@
   ],
   [
    "t_srq",
-   513,
+   1026,
    "output",
-   "N",
-   "M5",
+   "E",
+   "M4",
    4,
-   0.83
+   0.5
   ],
   [
    "t_err",
@@ -159,13 +159,49 @@
    0.04
   ],
   [
+   "m1_v",
+   1,
+   "output",
+   "W",
+   "M4",
+   1,
+   0.05
+  ],
+  [
+   "m1_row",
+   15,
+   "output",
+   "W",
+   "M4",
+   4,
+   0.1
+  ],
+  [
+   "m1_ov",
+   1,
+   "input",
+   "W",
+   "M4",
+   1,
+   0.16
+  ],
+  [
+   "m1_od",
+   512,
+   "input",
+   "W",
+   "M4",
+   4,
+   0.55
+  ],
+  [
    "t_ks",
    53,
    "output",
-   "E",
-   "M4",
+   "N",
+   "M5",
    4,
-   0.5
+   0.88
   ]
  ]
 }

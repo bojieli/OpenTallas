@@ -108,6 +108,11 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'post_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 4),
     'post_stg_neg_early': ('stg_r1', 1, ['OT_VMWFC_MUT_EARLY_START'], 'fail', 5),
     # (the s0 bench checks no VM contents at core start, so its early-START mutant cannot discriminate: stg only)
+    # RD2 (main GO 10-11): 2-port prefetch over the posted endpoint; mutant = the pair's words swapped
+    'rd2_stg_r1': ('stg_r1', 1, [], 'pass', 7), 'rd2_stg_vmnat': ('stg_vmnat', 1, [], 'pass', 7),
+    'rd2_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 7), 'rd2_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 7),
+    'rd2_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 7),
+    'rd2_stg_neg_swap': ('stg_r1', 1, ['OT_WFCVMX_MUT_RD2_SWAP'], 'fail', 8),
     # TOKIN: the S0 kit's link-in from the collective MTP lane (t_mrt {data, valid} / f_mrt grant)
     'tokin_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 6), 'tokin_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 6),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
@@ -135,6 +140,33 @@ def kit_tb(stage, vmrly=0):
             kit = kit.replace(a_, b_)
         kit += '''    always @(posedge fclk) if (li_v && !li_d[FLIT]) begin $display("MTP_S0 FAIL: token-return flit without last"); $finish; end
 '''
+    elif vmrly in (7, 8):   # posted + RD2 (2-port prefetch); 8 = mutant (define in the case)
+        kit = kit.replace('u_kit (', '#(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1)) u_kit (').replace(
+            'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1))',
+            'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1))')
+        for a_, b_ in (('.t_swv(swv)', '.t_swv(k_swv)'), ('.t_swd(swd)', '.t_swd(k_swd)'), ('.f_swr(swr)', '.f_swr(k_swg)'),
+                       ('.f_swa(swa)', '.f_swa(k_err)'), ('.t_srv(srv)', '.t_srv(k_srv)'), ('.t_srd(srd)', '.t_srd(k_srd)'),
+                       ('.f_srr(srr)', '.f_srr(k_srg)'), ('.f_srq(srq)', '.f_srq(k_srq)'), ('.t_ks(ks)', '.t_ks(k_ks_unused)')):
+            assert a_ in kit, a_
+            kit = kit.replace(a_, b_)
+        pv = (POSTED_VM.replace('wire [VWA-1:0] k_srd, r_srd; wire [FLIT:0] k_srq, e_srq;',
+                                'wire [2*VWA:0] k_srd, r_srd; wire [2*FLIT+1:0] k_srq, e_srq;')
+              .replace('mtp_test_relay #(.W(VWA+1), .HOPS(VF)) y_srf', 'mtp_test_relay #(.W(2*VWA+2), .HOPS(VF)) y_srf')
+              .replace('mtp_test_relay #(.W(FLIT+1), .HOPS(VR)) y_srq', 'mtp_test_relay #(.W(2*FLIT+2), .HOPS(VR)) y_srq')
+              .replace('dsfd_vm_wfc_ep #(.VF(VF), .VR(VR), .RL(RL))', 'dsfd_vm_wfc_ep #(.VF(VF), .VR(VR), .RL(RL), .RD2(1))')
+              .replace(".m_fault(1'b0));", ".m_fault(1'b0), .m1_v(e_m1v), .m1_row(e_m1row), .m1_ov(e_m1ov), .m1_od(e_m1od));")
+              .replace('reg [RL-1:0] e_rv = 0; reg [VWA-1:0] e_rr [0:RL-1]; integer e_i;',
+                       'reg [RL-1:0] e_rv = 0; reg [VWA-1:0] e_rr [0:RL-1]; integer e_i;\n'
+                       '    wire e_m1v; wire [VWA-1:0] e_m1row; reg e_m1ov = 0; reg [FLIT-1:0] e_m1od = 0;\n'
+                       '    reg [RL-1:0] e_rv1 = 0; reg [VWA-1:0] e_rr1 [0:RL-1];')
+              .replace("        e_mov <= rst_n && e_rv[RL-1]; e_mod <= vmem[e_rr[RL-1]];",
+                       "        e_mov <= rst_n && e_rv[RL-1]; e_mod <= vmem[e_rr[RL-1]];\n"
+                       "        e_rv1 <= rst_n ? {e_rv1[RL-2:0], e_m1v === 1'b1} : '0; e_rr1[0] <= e_m1row;\n"
+                       "        for (e_i = 1; e_i < RL; e_i = e_i + 1) e_rr1[e_i] <= e_rr1[e_i-1];\n"
+                       "        e_m1ov <= rst_n && e_rv1[RL-1]; e_m1od <= vmem[e_rr1[RL-1]];"))
+        for chk in ('RD2(1)', 'e_m1od <= vmem', '2*FLIT+2', '2*VWA+2', 'wire [2*VWA:0] k_srd'):
+            assert chk in pv, chk
+        kit = pv + kit
     elif vmrly in (4, 5):   # posted: endpoint + VM port model; 5 = mutant (the define is in the case)
         kit = kit.replace('u_kit (', '#(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1)) u_kit (').replace(
             'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1))',
