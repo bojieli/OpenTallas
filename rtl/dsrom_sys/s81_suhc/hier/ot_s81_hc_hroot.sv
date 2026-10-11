@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
 // ot_s81_hc_hroot (s81-suhc-hier-1011, 2026-10-11): the root of the hierarchical S81 HC slab (dsfd_sp_hc HIER=1),
-// placed in the root tile ot_s81_hc_rtile.  It keeps ot_s81_hc_core's engine-side contract (job intake, done / tag,
+// placed in the combine tile ot_s81_hc_comb.  It keeps ot_s81_hc_core's engine-side contract (job intake, done / tag,
 // VM read and write slots, y valid/ready) and the job sequencing; the per-element work runs in the column sub-tiles
-// (ot_s81_hc_ctile, NCOL chains).  It holds the norm's scalar tail -- the sum-of-squares tree over the 4 NS sub-tile
-// bank partials (leaf j*NS + s = bank j, sub-tile s: the golden pairwise tree's top levels above the sub-tiles'
-// aligned subtrees), the vector levels, / D, + eps, rsqrt, r broadcast -- and the FP8 act-quant of the y rows (one y
+// (ot_s81_hc_ctile, NCOL chains).  It holds the norm's scalar tail -- the final rungs of the sum-of-squares tree
+// (ot_s81_hc_stree OWN 3: the nodes no single chain owns, from the chain roots' exported subtrees), the vector levels,
+// / D, + eps, rsqrt, r broadcast -- and the FP8 act-quant of the y rows (one y
 // row = one 32-element block; S_RT ot_dsrom_aq12 units on the returned rows: codes rows pair blocks 2r, 2r+1, the
 // exponent row collects the vector's blocks).  Write slots: y rows / h rows 0 .. S_RT-1, codes S_RT, S_RT+1, exps S_RT+2.
 // MUT (bench negative controls, 0 in silicon) as ot_s81_hc_core: 1 POST does not write h back; 2 POST / NORM use the
@@ -13,7 +13,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_hroot #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4, RW = 2,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer NIM = 1                       // imported tree nodes (ot_s81_hc_stree_fn.vh necnt 0 + 1 + 2)
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -22,9 +23,8 @@ module ot_s81_hc_hroot #(
     output wire                   e_cmd_ready,
     output reg                    e_done_v,
     output reg  [7:0]             e_done_tag,
-    input  wire                   y_v,
-    output wire                   y_rdy,
-    input  wire [NG*32-1:0]       y_d,
+    input  wire                   y_v,            // a y beat is buffered in the chain roots (data never comes here)
+    output wire                   y_rdy,          // taken: its POST forward beat issues next cycle
     output reg  [S_RD-1:0]        rq_v,
     output reg  [S_RD*14-1:0]     rq_row,
     input  wire [S_RD-1:0]        rs_v,
@@ -37,13 +37,13 @@ module ot_s81_hc_hroot #(
     output reg                    fault,
     output reg  [3:0]             fault_code,
     output reg  [31:0]            st_jobs,
-    // column chain buses: forward (common; the data field carries the VM rows, the y beat goes beside it in yo),
-    // return (one a chain)
+    // forward bus to the chains (the data field carries the VM rows; the chain roots insert the y slices), the
+    // merged return bus (the chains' aligned returns ORed), the imported chain subtrees (aligned with the return bus)
     output reg  [S_RD+4:0]        fv,
-    output reg  [FDW-1:0]         fd,
-    output reg  [NG*32-1:0]       yo,
-    input  wire [NCOL*(S_RT+4)-1:0] rv_in,
-    input  wire [NCOL*RDW-1:0]    rd_in
+    output reg  [FSW-1:0]         fd,
+    input  wire [S_RT+3:0]        rv_in,
+    input  wire [RDW-1:0]         rd_in,
+    input  wire [NIM*32-1:0]      im
 );
     localparam integer N    = 4 * NG;
     localparam integer NR   = D / NG;
@@ -59,7 +59,7 @@ module ot_s81_hc_hroot #(
     localparam integer YW   = NP * GS * 32;
     localparam integer FDD  = (S_RD * 512 > YW) ? S_RD * 512 : YW;
     localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_PB = O_RC + S_RD * 16, O_NG = O_PB + 20, O_NV = O_NG + 6,
-                       O_R = O_NV + 8, O_HS = O_R + 32, O_D = O_HS + 1, FDW = O_D + FDD;
+                       O_R = O_NV + 8, O_HS = O_R + 32, O_D = O_HS + 1, FSW = O_D + S_RD * 512;
     localparam integer P_T = 0, P_I = S_RT, P_Q = P_I + 8 * S_RT, P_PI = P_Q + 16 * S_RT, P_D = P_PI + 8,
                        RDW = P_D + 512 * S_RT;
     localparam integer RVW = S_RT + 4;
@@ -85,53 +85,24 @@ module ot_s81_hc_hroot #(
     assign y_rdy = run && (kind == K_POST) && (ci < NR) && !fault;
     wire y_take = y_v && y_rdy;
 
-    // return packet pin flops
-    reg [NCOL*RVW-1:0] rvc;
-    reg [NCOL*RDW-1:0] rdc;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rvc <= 0; else rvc <= rv_in;
-    always @(posedge clk) rdc <= rd_in;
-    // the chains run in lockstep (equal hop counts): slot valids / metadata from chain 0, row data ORed
+    // merged return bus pin flops
     reg [RVW-1:0] rv;
     reg [RDW-1:0] rd;
-    integer cc_;
-    always @(*) begin
-        rv = rvc[0 +: RVW]; rd = rdc[0 +: RDW];
-        for (cc_ = 1; cc_ < NCOL; cc_ = cc_ + 1) begin
-            rv[RVW-1:RVW-2] = rv[RVW-1:RVW-2] | rvc[cc_ * RVW + RVW - 2 +: 2];                 // faults
-            rd[P_D +: 512 * S_RT] = rd[P_D +: 512 * S_RT] | rdc[cc_ * RDW + P_D +: 512 * S_RT];
-        end
-    end
+    reg [NIM*32-1:0] imq;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rv <= 0; else rv <= rv_in;
+    always @(posedge clk) begin rd <= rd_in; imq <= im; end
 
     // ---------------------------------------------------------------- norm scalar tail
     reg ngo;                                             // the norm job's go (clears the vector levels)
     localparam integer NL = 4 * NS;
     localparam integer LT = $clog2(NL);
-    wire [LT*LA:0] tvv;
-    ot_hdc_vline #(.D(LT * LA > 0 ? LT * LA : 1)) u_tv (.clk(clk), .rst_n(rst_n), .v(rv[S_RT]), .vd(tvv));
     wire [7:0] tvi;
     ot_hdc_delay #(.W(8), .D(LT * LA)) u_tvi (.clk(clk), .rst_n(rst_n), .d(rd[P_PI +: 8]), .q(tvi));
-    wire [31:0] tn [0:LT][0:NL-1];
-    wire [LT:0] tf;
-    genvar c, k, n;
-    generate
-        for (c = 0; c < NL; c = c + 1) begin : g_l0                // leaf c = bank c / NS, sub-tile c % NS
-            localparam integer SS = c % NS;                          // = chain SS / NP, slot SS % NP of its packet
-            assign tn[0][c] = rdc[(SS / NP) * RDW + P_D + 128 * (SS % NP) + 32 * (c / NS) +: 32];
-        end
-        assign tf[0] = 1'b0;
-        for (k = 1; k <= LT; k = k + 1) begin : g_tl
-            wire [(NL >> k)-1:0] f;
-            for (c = 0; c < (NL >> k); c = c + 1) begin : g_tn
-                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rst_n, tvv[LA * (k - 1)], tn[k - 1][2 * c], tn[k - 1][2 * c + 1], tn[k][c], f[c]);
-            end
-            for (c = (NL >> k); c < NL; c = c + 1) begin : g_tz
-                assign tn[k][c] = 32'd0;
-            end
-            assign tf[k] = |f;
-        end
-    endgenerate
-    wire        vsum_v = tvv[LT * LA];
-    wire [31:0] vsum = tn[LT][0];
+    wire        vsum_v, tf;
+    wire [31:0] vsum;
+    ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(LA), .OWN(3)) u_tree (.clk(clk), .rst_n(rst_n), .v(rv[S_RT]),
+        .pk({NP*128{1'b0}}), .im(imq), .ex(), .r_v(vsum_v), .r(vsum), .fault(tf));
+    genvar k, n;
     localparam integer NVP = (NV <= 1) ? 1 : (1 << $clog2(NV));
     localparam integer LAV = (LA >= 5) ? LA : LA + 1;
     wire [31:0] nv_ [1:2*NVP-1];
@@ -223,7 +194,7 @@ module ot_s81_hc_hroot #(
                                              .q(aq_iq[24 * u +: 24]));
     end endgenerate
     reg [511:0] er;                                      // the vector's exponent row being collected
-    wire tail_f = (|tf) || (|nf) || f_div || f_eps || f_rsq || (|aq_f);
+    wire tail_f = tf || (|nf) || f_div || f_eps || f_rsq || (|aq_f);
 
     // ---------------------------------------------------------------- sequencer
     integer s;
@@ -359,5 +330,4 @@ module ot_s81_hc_hroot #(
             end
         end
     end
-    always @(posedge clk) yo <= y_d;
 endmodule

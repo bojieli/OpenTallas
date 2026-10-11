@@ -2,7 +2,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // ot_s81_hc_ctile (s81-suhc-hier-1011, 2026-10-11): ONE column sub-tile of the hierarchical S81 HC slab
 // (dsfd_sp_hc HIER=1).  The slab (1,727.976 um wide) is NCOL = 3 independent column chains of 575.992 um; chain c
-// holds the sub-tiles s = c*NP .. c*NP + L(c) - 1 (NS = NG / GS sub-tiles, NP = ceil(NS / NCOL) a chain), sub-tile s
+// holds the sub-tiles s = B_c .. B_c + L_c - 1 (NS = NG / GS sub-tiles, NP = ceil(NS / NCOL); L = NP, NS - 2 NP, NP:
+// the short chain in the centre, under the combine tile; B = 0, NP, NP + L_1), sub-tile s
 // owning the GS element groups s*GS .. s*GS + GS - 1 (an octet at GS 8) of every resident row:
 //   - the resident h of its groups (2 job slots x NR rows x GS groups x 4 copies BF16; no reset),
 //   - its hc_post groups (ot_dsrom_su_hcpost, NG = GS) writing back in place,

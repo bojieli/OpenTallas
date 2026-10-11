@@ -50,7 +50,9 @@ HROWS = HC * D * 16 // 512          # 640
 GROWS = D // 16                     # 320
 
 RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
-       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_rtile.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_croot.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/lib/ot_skid_buffer.sv",

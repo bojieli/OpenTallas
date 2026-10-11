@@ -1,144 +1,144 @@
 {
  "schema": "opentallas.s81_suhc.hc_gate.run.v1",
- "generated_utc": "2026-10-11T16:27:45.914204Z",
- "ng": 16,
+ "generated_utc": "2026-10-11T20:54:15.768107Z",
+ "ng": 64,
  "fp": "dpi",
  "mut": 0,
  "amut": 0,
  "lvm": 10,
- "hier": 0,
+ "hier": 1,
  "runs": [
   {
    "run": "golden_L0_L2",
    "jobs": 20,
    "done": 20,
    "err_rows": 0,
-   "rows": 2240,
+   "rows": 2000,
    "fault": 0,
    "fault_code": 0,
-   "cycles": 4986,
+   "cycles": 3825,
    "bad_tag": 0,
    "ok": true,
    "job_cycles": [
     {
      "op": 0,
      "kind": 5,
-     "start": 12,
-     "done": 191
+     "start": 14,
+     "done": 203
     },
     {
      "op": 1,
      "kind": 5,
-     "start": 185,
-     "done": 364
+     "start": 190,
+     "done": 379
     },
     {
      "op": 2,
      "kind": 5,
-     "start": 358,
-     "done": 537
+     "start": 366,
+     "done": 554
     },
     {
      "op": 3,
      "kind": 5,
-     "start": 531,
-     "done": 710
+     "start": 542,
+     "done": 731
     },
     {
      "op": 4,
      "kind": 0,
-     "start": 704,
-     "done": 1043
+     "start": 718,
+     "done": 1066
     },
     {
      "op": 5,
      "kind": 0,
-     "start": 1037,
-     "done": 1376
+     "start": 1054,
+     "done": 1403
     },
     {
      "op": 6,
      "kind": 2,
-     "start": 1370,
-     "done": 1389
+     "start": 1390,
+     "done": 1420
     },
     {
      "op": 7,
      "kind": 4,
-     "start": 1384,
-     "done": 1839
+     "start": 1407,
+     "done": 1731
     },
     {
      "op": 8,
      "kind": 2,
-     "start": 1833,
-     "done": 1852
+     "start": 1718,
+     "done": 1748
     },
     {
      "op": 9,
      "kind": 4,
-     "start": 1847,
-     "done": 2302
+     "start": 1735,
+     "done": 2059
     },
     {
      "op": 10,
      "kind": 3,
-     "start": 2296,
-     "done": 2651
+     "start": 2046,
+     "done": 2193
     },
     {
      "op": 11,
      "kind": 3,
-     "start": 2645,
-     "done": 3000
+     "start": 2180,
+     "done": 2327
     },
     {
      "op": 12,
      "kind": 2,
-     "start": 2994,
-     "done": 3013
+     "start": 2314,
+     "done": 2344
     },
     {
      "op": 13,
      "kind": 4,
-     "start": 3008,
-     "done": 3463
+     "start": 2331,
+     "done": 2655
     },
     {
      "op": 14,
      "kind": 2,
-     "start": 3457,
-     "done": 3476
+     "start": 2642,
+     "done": 2672
     },
     {
      "op": 15,
      "kind": 4,
-     "start": 3471,
-     "done": 3926
+     "start": 2659,
+     "done": 2983
     },
     {
      "op": 16,
      "kind": 3,
-     "start": 3920,
-     "done": 4275
+     "start": 2970,
+     "done": 3117
     },
     {
      "op": 17,
      "kind": 3,
-     "start": 4269,
-     "done": 4624
+     "start": 3104,
+     "done": 3251
     },
     {
      "op": 18,
      "kind": 1,
-     "start": 4618,
-     "done": 4705
+     "start": 3238,
+     "done": 3438
     },
     {
      "op": 19,
      "kind": 1,
-     "start": 4699,
-     "done": 4786
+     "start": 3425,
+     "done": 3625
     }
    ],
    "mismatches": []
@@ -148,132 +148,132 @@
    "jobs": 20,
    "done": 20,
    "err_rows": 0,
-   "rows": 2240,
+   "rows": 2000,
    "fault": 0,
    "fault_code": 0,
-   "cycles": 4986,
+   "cycles": 3825,
    "bad_tag": 0,
    "ok": true,
    "job_cycles": [
     {
      "op": 0,
      "kind": 5,
-     "start": 12,
-     "done": 191
+     "start": 14,
+     "done": 203
     },
     {
      "op": 1,
      "kind": 5,
-     "start": 185,
-     "done": 364
+     "start": 190,
+     "done": 379
     },
     {
      "op": 2,
      "kind": 5,
-     "start": 358,
-     "done": 537
+     "start": 366,
+     "done": 554
     },
     {
      "op": 3,
      "kind": 5,
-     "start": 531,
-     "done": 710
+     "start": 542,
+     "done": 731
     },
     {
      "op": 4,
      "kind": 0,
-     "start": 704,
-     "done": 1043
+     "start": 718,
+     "done": 1066
     },
     {
      "op": 5,
      "kind": 0,
-     "start": 1037,
-     "done": 1376
+     "start": 1054,
+     "done": 1403
     },
     {
      "op": 6,
      "kind": 2,
-     "start": 1370,
-     "done": 1389
+     "start": 1390,
+     "done": 1420
     },
     {
      "op": 7,
      "kind": 4,
-     "start": 1384,
-     "done": 1839
+     "start": 1407,
+     "done": 1731
     },
     {
      "op": 8,
      "kind": 2,
-     "start": 1833,
-     "done": 1852
+     "start": 1718,
+     "done": 1748
     },
     {
      "op": 9,
      "kind": 4,
-     "start": 1847,
-     "done": 2302
+     "start": 1735,
+     "done": 2059
     },
     {
      "op": 10,
      "kind": 3,
-     "start": 2296,
-     "done": 2651
+     "start": 2046,
+     "done": 2193
     },
     {
      "op": 11,
      "kind": 3,
-     "start": 2645,
-     "done": 3000
+     "start": 2180,
+     "done": 2327
     },
     {
      "op": 12,
      "kind": 2,
-     "start": 2994,
-     "done": 3013
+     "start": 2314,
+     "done": 2344
     },
     {
      "op": 13,
      "kind": 4,
-     "start": 3008,
-     "done": 3463
+     "start": 2331,
+     "done": 2655
     },
     {
      "op": 14,
      "kind": 2,
-     "start": 3457,
-     "done": 3476
+     "start": 2642,
+     "done": 2672
     },
     {
      "op": 15,
      "kind": 4,
-     "start": 3471,
-     "done": 3926
+     "start": 2659,
+     "done": 2983
     },
     {
      "op": 16,
      "kind": 3,
-     "start": 3920,
-     "done": 4275
+     "start": 2970,
+     "done": 3117
     },
     {
      "op": 17,
      "kind": 3,
-     "start": 4269,
-     "done": 4624
+     "start": 3104,
+     "done": 3251
     },
     {
      "op": 18,
      "kind": 1,
-     "start": 4618,
-     "done": 4705
+     "start": 3238,
+     "done": 3438
     },
     {
      "op": 19,
      "kind": 1,
-     "start": 4699,
-     "done": 4786
+     "start": 3425,
+     "done": 3625
     }
    ],
    "mismatches": []
@@ -283,132 +283,132 @@
    "jobs": 20,
    "done": 20,
    "err_rows": 0,
-   "rows": 2240,
+   "rows": 2000,
    "fault": 0,
    "fault_code": 0,
-   "cycles": 4986,
+   "cycles": 3825,
    "bad_tag": 0,
    "ok": true,
    "job_cycles": [
     {
      "op": 0,
      "kind": 5,
-     "start": 12,
-     "done": 191
+     "start": 14,
+     "done": 203
     },
     {
      "op": 1,
      "kind": 5,
-     "start": 185,
-     "done": 364
+     "start": 190,
+     "done": 379
     },
     {
      "op": 2,
      "kind": 5,
-     "start": 358,
-     "done": 537
+     "start": 366,
+     "done": 554
     },
     {
      "op": 3,
      "kind": 5,
-     "start": 531,
-     "done": 710
+     "start": 542,
+     "done": 731
     },
     {
      "op": 4,
      "kind": 0,
-     "start": 704,
-     "done": 1043
+     "start": 718,
+     "done": 1066
     },
     {
      "op": 5,
      "kind": 0,
-     "start": 1037,
-     "done": 1376
+     "start": 1054,
+     "done": 1403
     },
     {
      "op": 6,
      "kind": 2,
-     "start": 1370,
-     "done": 1389
+     "start": 1390,
+     "done": 1420
     },
     {
      "op": 7,
      "kind": 4,
-     "start": 1384,
-     "done": 1839
+     "start": 1407,
+     "done": 1731
     },
     {
      "op": 8,
      "kind": 2,
-     "start": 1833,
-     "done": 1852
+     "start": 1718,
+     "done": 1748
     },
     {
      "op": 9,
      "kind": 4,
-     "start": 1847,
-     "done": 2302
+     "start": 1735,
+     "done": 2059
     },
     {
      "op": 10,
      "kind": 3,
-     "start": 2296,
-     "done": 2651
+     "start": 2046,
+     "done": 2193
     },
     {
      "op": 11,
      "kind": 3,
-     "start": 2645,
-     "done": 3000
+     "start": 2180,
+     "done": 2327
     },
     {
      "op": 12,
      "kind": 2,
-     "start": 2994,
-     "done": 3013
+     "start": 2314,
+     "done": 2344
     },
     {
      "op": 13,
      "kind": 4,
-     "start": 3008,
-     "done": 3463
+     "start": 2331,
+     "done": 2655
     },
     {
      "op": 14,
      "kind": 2,
-     "start": 3457,
-     "done": 3476
+     "start": 2642,
+     "done": 2672
     },
     {
      "op": 15,
      "kind": 4,
-     "start": 3471,
-     "done": 3926
+     "start": 2659,
+     "done": 2983
     },
     {
      "op": 16,
      "kind": 3,
-     "start": 3920,
-     "done": 4275
+     "start": 2970,
+     "done": 3117
     },
     {
      "op": 17,
      "kind": 3,
-     "start": 4269,
-     "done": 4624
+     "start": 3104,
+     "done": 3251
     },
     {
      "op": 18,
      "kind": 1,
-     "start": 4618,
-     "done": 4705
+     "start": 3238,
+     "done": 3438
     },
     {
      "op": 19,
      "kind": 1,
-     "start": 4699,
-     "done": 4786
+     "start": 3425,
+     "done": 3625
     }
    ],
    "mismatches": []
@@ -427,10 +427,13 @@
   "rtl/test/sim_hdc_prefix_beh.sv": "75c1a57d38d81da07b7ff70a37d6660c563ccfa6fa921edc53b21b68635b50b5",
   "rtl/test/sim_dsrom_fp32_add_l6_dpi.sv": "11fae84900616ad993513b319366beb0f44637b3be420caaa9c98ddd652b7fc2",
   "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv": "ca1e3bbc1bd884ba4a93e886be743c921b8bd9bb1c1adf874773e04db1fda4a6",
-  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv": "0db0d79a6533257fdd18e2acdd80c258648ad4a92215e820b762e2772f3baed6",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_rtile.sv": "87921c82292c3afaca7f8e3d3f2692db98c498f94043d29b7a9622c02cf8c350",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv": "f81fa1179d3d9db35e427b2ba22f9a7691dcee500b00ae63c3a173532695895e",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv": "d8fa9aeaa0994bd3b264da4450f967d2139d36ca667d4a9516f04928cb7c8cd7",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv": "1d71ff147b28b24c13b66186c1f8680759bc80ce3266084cbf4ba127727d95ea",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv": "e976ff6dc7191aabc1790b98625e6c58da88765f618399497669a728b33bb360",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv": "c418affe5fca6819ced691787c961b138331cd0fc2f80c1c37939c8944d0543d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_croot.sv": "560019d848bb8c0aad9f659b63dcdde91706ed444a1a9344820a6b9da7b77f42",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv": "46ac12fc2932d5dd4a50593d5c26a8683fbbd76e1d62c975b9b4609f614e8e27",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv": "d22b3923be74dd9581e7d44de2b0ea6a8a1d3c5304979fe5e973f929c599b27b",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv": "364f227e95cf568ca7f4bcf2200f5eb820827bbab0dc95122f9e20771aa23523",
   "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "f01f0b3d0f6000005376d2816a0dc482025103e11a74f3627cba722fa0348e91",
   "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
   "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
