@@ -112,6 +112,7 @@ class Die:
         self.rank = rank
         self.vm = np.zeros(VM_WORDS + VM_AP, dtype=np.uint32)
         self.hbm = hbm
+        self.synth_hbm = {}          # HBM bytes a unit model synthesised from the checkpoint (abs addr -> bytes; e2e export)
         self.dyn = [0] * 32
         self.streams = {}            # STREAM id -> FIFO of pushed element vectors (credit-ordered producer -> consumer)
         self.stream_seen = {}        # STREAM id -> the last vector pushed (simulator-side visibility for checkers)
