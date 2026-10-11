@@ -35,7 +35,8 @@ module dsfd_coll_p2_lane #(
     parameter integer EVT = 3, parameter integer EVR = 1,    // event widths sent / received (0 = none)
     parameter integer CRED = 8,                               // receive class buffer (0 = DIRECT)
     parameter integer TCRED = 8,                              // credits for the sent class (= the peer's CRED; 0 = DIRECT)
-    parameter integer EQ = 4, parameter integer LCRED = 8
+    parameter integer EQ = 4, parameter integer LCRED = 8,
+    parameter integer RSKID = 0                               // 1: DIRECT output stage = 2-slot skid (registered ready)
 ) (
     input  wire [0:0]             ck, rs,
     input  wire [0:0]             x_v,  output wire [0:0] x_r,  input  wire [(TXW>0?TXW:1)-1:0] x_d,   // data to send
@@ -154,12 +155,23 @@ module dsfd_coll_p2_lane #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) ov <= 1'b0; else if (!ov || r_r[0]) ov <= cb_v;
         always @(posedge clk) if (cb_pop) od <= cb_d;
-    end else begin : g_direct
+    end else if (RSKID == 0) begin : g_direct
         assign cb_flt = 1'b0; assign cb_pop = 1'b0; assign cb_v = 1'b0; assign cb_d = '0; assign cb_room = 1'b1; assign cb_room2 = 1'b1;
         assign o_free = !ov || r_r[0];
         always @(posedge clk or negedge rst_n)
             if (!rst_n) ov <= 1'b0; else if (w_in) ov <= 1'b1; else if (r_r[0]) ov <= 1'b0;
         always @(posedge clk) if (w_in) od <= word[RW_-1:0];
+    end else begin : g_direct_skid
+        // quickfix-1010 (2026-10-10): the DIRECT output stage as a 2-slot skid.  o_free is the skid's registered in_r,
+        // so the r_r input pin reaches only the skid's load enable (out_v / out_d / sk_d) instead of li_ready and the
+        // link receiver's output register (the 13-15-level r_r class of mtpl-*-0ddaf548b, TT -140).  r_v / r_d still
+        // leave flops; same word order, full rate, 0 added cycles on an unstalled stream (one more word of buffering).
+        assign cb_flt = 1'b0; assign cb_pop = 1'b0; assign cb_v = 1'b0; assign cb_d = '0; assign cb_room = 1'b1; assign cb_room2 = 1'b1;
+        wire sk_in_r, sk_ov; wire [RW_-1:0] sk_od;
+        ot_s81ph_skid2 #(.W(RW_)) u_os (.clk(clk), .rst_n(rst_n), .in_v(w_in), .in_r(sk_in_r), .in_d(word[RW_-1:0]),
+            .out_v(sk_ov), .out_r(r_r[0]), .out_d(sk_od));
+        assign o_free = sk_in_r;
+        always @(*) begin ov = sk_ov; od = sk_od; end
     end endgenerate
     assign r_v = ov; assign r_d = od;
     reg [ERW-1:0] rev;
@@ -210,7 +222,12 @@ module dsfd_coll_p2_lane_ba (
     output wire [0:0] lo_v, input wire [0:0] lo_r, output wire [552:0] lo_d,
     input  wire [0:0] li_v, output wire [0:0] li_r, input wire [552:0] li_d,
     input  wire [2:0] f_lflt, output wire [0:0] t_flt);
-    dsfd_coll_p2_lane #(.TXK(0), .TXW(0), .RXK(5), .RXW(604), .EVT(0), .EVR(0), .CRED(0), .TCRED(0)) u (.ck(ck), .rs(rs),
+`ifdef OT_P2L_BA_NOSKID
+    localparam integer BA_RSKID = 0;
+`else
+    localparam integer BA_RSKID = 1;     // quickfix-1010: registered-ready output skid (r_r pin class)
+`endif
+    dsfd_coll_p2_lane #(.TXK(0), .TXW(0), .RXK(5), .RXW(604), .EVT(0), .EVR(0), .CRED(0), .TCRED(0), .RSKID(BA_RSKID)) u (.ck(ck), .rs(rs),
         .x_v(1'b0), .x_r(), .x_d(1'b0), .r_v(r_v), .r_r(r_r), .r_d(r_d), .x_ev(1'b0), .r_ev(),
         .lo_v(lo_v), .lo_r(lo_r), .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .f_lflt(f_lflt), .t_flt(t_flt));
 endmodule
