@@ -91,13 +91,26 @@ module ot_hgi_fused_station #(
     // ---- mover + remote lane client
     wire k_req_v, k_req_rdy, k_req_we, k_rsp_v; wire [36:0] k_addr; wire [255:0] k_wd, k_rd; wire [31:0] k_ws;
     wire [15:0] k_tag; wire [279:0] wl; reg wl_done; wire k_flt; reg ov;
+    // the mover's HBM loads: main's mover bursts on four per-stack lanes (r_*) and single sectors on k_*; the station has one
+    // remote kport read lane, so ot_hgi_rlane_rdq serves both onto it in order (hbmdie-1011/bind)
+    wire [3:0] r_v, r_rdy, r_we, r_rv, r_rrdy, r_rl; wire [4*37-1:0] r_a; wire [15:0] r_len; wire [63:0] r_tg, r_rtg;
+    wire [4*256-1:0] r_wd, r_rd; wire [127:0] r_ws; wire c_v, c_rdy, c_we, c_rv, a_flt; wire [36:0] c_a; wire [255:0] c_rd;
     ot_hgi_dma_mover u_mv (.clk(clk), .rst_n(rst_n), .mv_v(m_v), .mv_rdy(m_rdy), .mv(mv), .mv_done(mv_done),
         .mv_fault(mv_fault), .mv_src(), .fence_v(1'b0), .fence_rdy(), .fence_done(),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(), .k_rsp_we(1'b0), .k_rsp_data(k_rd),
-        .k_fault(k_flt | ov), .vmq(m_vmq), .vmr(m_vmr), .wl(wl), .wl_done(wl_done));
-    ot_hgi_hbm_rdq_client #(.Q(Q)) u_cl (.clk(clk), .rst_n(rst_n), .req_v(k_req_v), .req_rdy(k_req_rdy), .req_we(k_req_we),
-        .req_addr(k_addr), .rsp_v(k_rsp_v), .rsp_data(k_rd), .fault(k_flt), .xq(xq), .xr(xr));
+        .k_fault(k_flt | ov | a_flt),
+        .r_req_v(r_v), .r_req_rdy(r_rdy), .r_req_addr(r_a), .r_req_len(r_len), .r_req_tag(r_tg), .r_req_we(r_we),
+        .r_req_wdata(r_wd), .r_req_wstrb(r_ws), .r_rsp_v(r_rv), .r_rsp_we(4'd0), .r_rsp_rdy(r_rrdy), .r_rsp_tag(r_rtg),
+        .r_rsp_last(r_rl), .r_rsp_data(r_rd), .vr2q(), .vr2r(8257'd0),
+        .vmq(m_vmq), .vmr(m_vmr), .wl(wl), .wl_done(wl_done));
+    ot_hgi_rlane_rdq #(.D(Q)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_v), .r_req_rdy(r_rdy), .r_req_addr(r_a),
+        .r_req_len(r_len), .r_req_tag(r_tg), .r_req_we(r_we), .r_rsp_v(r_rv), .r_rsp_rdy(r_rrdy), .r_rsp_tag(r_rtg),
+        .r_rsp_last(r_rl), .r_rsp_data(r_rd), .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we),
+        .k_req_addr(k_addr), .k_rsp_v(k_rsp_v), .k_rsp_data(k_rd), .c_req_v(c_v), .c_req_rdy(c_rdy), .c_req_we(c_we),
+        .c_req_addr(c_a), .c_rsp_v(c_rv), .c_rsp_data(c_rd), .fault(a_flt));
+    ot_hgi_hbm_rdq_client #(.Q(Q)) u_cl (.clk(clk), .rst_n(rst_n), .req_v(c_v), .req_rdy(c_rdy), .req_we(c_we),
+        .req_addr(c_a), .rsp_v(c_rv), .rsp_data(c_rd), .fault(k_flt), .xq(xq), .xr(xr));
     // ---- wl -> the lgE write group (landing FIFO, per-lane credits)
     localparam integer FD = 16;
     reg [279:0] fq [0:FD-1]; reg [4:0] fn; reg [3:0] fh, ft;
