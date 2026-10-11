@@ -33,6 +33,9 @@ module ot_hgi_idx_unit #(
     // index or when the next word targets another sector) instead of one VM write a word.  A non-unit inner stride keeps
     // the one-word path (the heap engine is fed 1-word beats).
     parameter integer TOPKW = 0,
+    // hgi-1010/g3: TWIW = the TOPKW engine's beat width and heap count (ot_hgi_idx_topk_wreg IW = W = TWIW): 4 (as built)
+    // or 8 (the production 8-wide engine: a whole sector a beat, 8 heaps; g2 heap bench IW8/W8 16 cases PASS)
+    parameter integer TWIW = 4,
     // hgi-1010/g3 (opt-in, defaults 0 = unchanged): see the IDX.INDEX front below
     parameter integer NGLOB = 0,
     parameter integer IKS = 0
@@ -81,10 +84,11 @@ module ot_hgi_idx_unit #(
     reg  e_cmd_v; wire e_cmd_r, e_in_r, e_out_v, e_last, e_vv, e_done; wire [3:0] e_err;
     wire [31:0] e_id, e_sc, e_row;
     reg  e_in_v; reg [31:0] e_in;
-    reg  [127:0] e_inw; reg [2:0] e_nw;               // TOPKW: a beat of up to 4 words
+    localparam integer TWB = $clog2(TWIW + 1);
+    reg  [TWIW*32-1:0] e_inw; reg [TWB-1:0] e_nw;     // TOPKW: a beat of up to TWIW words
     wire e_out_r;
     generate if (TOPKW != 0) begin : g_tw
-    ot_hgi_idx_topk_wreg #(.ENABLE(1'b1), .MAX_K(2048), .IW(4), .W(4)) u_topk (.clk(clk), .rst_n(rst_n),
+    ot_hgi_idx_topk_wreg #(.ENABLE(1'b1), .MAX_K(2048), .IW(TWIW), .W(TWIW)) u_topk (.clk(clk), .rst_n(rst_n),
         .cmd_valid(e_cmd_v), .cmd_ready(e_cmd_r), .cmd_unit(4'd9), .cmd_op(6'd2), .cmd_param({13'd0, k}),
         .cmd_n({12'd0, a_n}), .cmd_m({12'd0, a_m}), .cmd_values(has_r),
         .in_valid(e_in_v), .in_ready(e_in_r), .in_score(e_inw), .in_nw(e_nw),
@@ -204,11 +208,13 @@ module ot_hgi_idx_unit #(
     wire [39:0] pf_re_n = pf_rb_n + {20'd0, a_n} - 40'd1;
     // pop the head after the row's last word or the sector's last word (MUT_PREF: one word early)
     wire pf_pop = (r_col + 20'd1 == a_n) || (rw_now[2:0] == (MUT_PREF ? 3'd6 : 3'd7));
-    // TOPKW beat: nw = min(4, words left in the sector, words left in the row); pop when it ends the sector or the row
+    // TOPKW beat: nw = min(TWIW, words left in the sector, words left in the row); pop when it ends the sector or the row
     wire [3:0] tw_sec = 4'd8 - {1'b0, rw_now[2:0]};
     wire [19:0] tw_row = a_n - r_col;
-    wire [2:0] tw_nw = (tw_sec < 4'd4 && {16'd0, tw_sec} < tw_row) ? tw_sec[2:0] : (tw_row < 20'd4 ? tw_row[2:0] : 3'd4);
-    wire tw_pop = (r_col + {17'd0, tw_nw} == a_n) || ({1'b0, rw_now[2:0]} + {1'b0, tw_nw} == 4'd8);
+    wire [3:0] tw_m1 = (tw_sec < 4'(TWIW)) ? tw_sec : 4'(TWIW);
+    wire [3:0] tw_nw4 = ({16'd0, tw_m1} < tw_row) ? tw_m1 : tw_row[3:0];
+    wire [TWB-1:0] tw_nw = tw_nw4[TWB-1:0];
+    wire tw_pop = (r_col + 20'(tw_nw) == a_n) || (5'(rw_now[2:0]) + 5'(tw_nw) == 5'd8);
     wire [255:0] tw_hd = pf_q_dat[pf_h] >> (32 * rw_now[2:0]);
     wire pf_feed = !r_done && (!e_in_v || e_in_r) && pf_cnt != 3'd0;
     wire pf_dpop = TOPKW != 0 ? tw_pop : pf_pop;
@@ -254,12 +260,12 @@ module ot_hgi_idx_unit #(
                 if (pf_feed) begin
                     if (pf_q_sec[pf_h] != rw_now[17:3]) eng_err <= 1'b1;            // never (fail closed)
                     e_in_v <= 1'b1; e_in <= pf_q_dat[pf_h][rw_now[2:0]*32 +: 32];
-                    e_inw <= tw_hd[127:0]; e_nw <= tw_nw;
+                    e_inw <= tw_hd[TWIW*32-1:0]; e_nw <= tw_nw;
                     if (pf_dpop) begin pf_h <= pf_h + 2'd1; end
-                    if (r_col + (TOPKW != 0 ? {17'd0, tw_nw} : 20'd1) == a_n) begin
+                    if (r_col + (TOPKW != 0 ? 20'(tw_nw) : 20'd1) == a_n) begin
                         r_col <= 20'd0;
                         if (r_row + 20'd1 == a_m) r_done <= 1'b1; else r_row <= r_row + 20'd1;
-                    end else r_col <= r_col + (TOPKW != 0 ? {17'd0, tw_nw} : 20'd1);
+                    end else r_col <= r_col + (TOPKW != 0 ? 20'(tw_nw) : 20'd1);
                 end
                 if (vmr[273] && pf_out != 3'd0) begin
                     pf_q_sec[pf_t] <= vm_sec_q[pf_t]; pf_q_dat[pf_t] <= vmr[255:0]; pf_t <= pf_t + 2'd1;
@@ -275,7 +281,7 @@ module ot_hgi_idx_unit #(
             if (!pf_on && busy && started && !r_done && !e_in_v) begin
                 if (c_ok && c_sec == rw_now[17:3]) begin
                     e_in_v <= 1'b1; e_in <= c_dat[rw_now[2:0]*32 +: 32];
-                    e_inw <= {96'd0, c_dat[rw_now[2:0]*32 +: 32]}; e_nw <= 3'd1;
+                    e_inw <= {{(TWIW*32-32){1'b0}}, c_dat[rw_now[2:0]*32 +: 32]}; e_nw <= TWB'(1);
                     if (r_col + 20'd1 == a_n) begin
                         r_col <= 20'd0;
                         if (r_row + 20'd1 == a_m) r_done <= 1'b1; else r_row <= r_row + 20'd1;
