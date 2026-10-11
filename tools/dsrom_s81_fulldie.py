@@ -5258,7 +5258,9 @@ def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, 
             lane(f'hc{st}', 18, cl, 'hc', hub['host'], f'fc{st}', side)
     if 'hrow' in hub:      # mtp-dsbind: the row store's lanes (SE slot <-> spine slabs / host), forwarded like Engram's
         for a_, b_, bits, pa, pb in HROW_LANES + (HROW_HOST_BUSES if 'host' in hub else ()):
-            lane(f'h_{a_}_{pa}_{pb}', bits, hub[a_], pa, hub[b_], pb, 'E')
+            # into a spine slab: the end block in the S14 W channel (the VCH beside the collective is taken by the
+            # collective's own lane ends); out of the spine / into the SE slot: the E (VCH) side
+            lane(f'h_{a_}_{pa}_{pb}', bits, hub[a_], pa, hub[b_], pb, 'W' if hub[b_].kind != 'svc' else 'E')
     if 'eng' in hub:
         for a_, pa, b_, pb, bits, _ in ENG_BUSES:
             lane(f'e_{a_}_{pa}', bits, hub[a_], pa, hub[b_], pb, 'E')
