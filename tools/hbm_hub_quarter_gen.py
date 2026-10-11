@@ -697,7 +697,9 @@ def emit_tile_io(P, tw, th):
     # M7 every 2nd (0.128), the slots taken evenly in x (the [sfu] faced-tile precedent 18d5bc494).  Was M5 0.096 + M7
     # 0.128 filled M5-first: S / N M5 10.3 b/um (fp lint target 6) and the routability-driven global placement of the
     # 212e3da48 tile (4,398 FIRM pin flops, 645 um2 movable) inflated +314 % and diverged (GPL-0305) / stalled at 0.76.
-    full = sorted(((ly, round(x0 + pt * k, 4)) for ly, x0, pt in (('M3', 0.516, 0.144), ('M5', 0.528, 0.144), ('M7', 0.64, 0.128))
+    # bb7e34c70 DRT-0255: the M3 edge pins (bc_in) had no access path in the bottom row (maze route fails at y < 4 um);
+    # M5 every other track (0.096) + M7 every other (0.128), taken evenly in x: 10.4 / 7.8 b/um at full, < 12
+    full = sorted(((ly, round(x0 + pt * k, 4)) for ly, x0, pt in (('M5', 0.528, 0.096), ('M7', 0.64, 0.128))
                    for k in range(int((TILE_SW - x0 - 0.5) / pt) + 1)), key=lambda t: (t[1], t[0]))
     assert len(full) >= nb, (len(full), nb)
     slots = [full[(i * len(full)) // nb] for i in range(nb)]
