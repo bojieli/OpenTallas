@@ -623,7 +623,12 @@ class Kernels:
                                                          O=self.V(buf, n)), tag=f"load.{buf}", family="mtp"), [], [buf])
             rc = copy.copy(res_copy)
             rc.wait = 0xFFFE
-            out = list(b_.recs) + [rc]
+            # tables the lowering loads once a layer (ds_native FUSION 1 dedup) that dsa loaded and dsb reads: the RoPE
+            # row of POS (the inverse RoPE of the attention output) -- reloaded here, the VM holds the LAST dsa's
+            tl = [copy.copy(r) for r in pa if r.unit == "DMA" and r.op == "LOAD" and "A" in r.desc
+                  and r.desc["A"].space == "HBM" and r.desc["A"].base == ROPEB]
+            assert len(tl) == 1, len(tl)
+            out = list(b_.recs) + [rc] + tl
             first = True
             for r in pb:
                 r = copy.copy(r)
@@ -784,7 +789,12 @@ class Engine:
         Lp = self.Lp if k in PER_LAYER else 0
         progs = [self.K.body[d.rank][(k, Lp)] for d in self.M.dies]
         t0 = time.time()
-        DN.run_per_die(self.M, progs, self.units, pos, tok)
+        try:
+            DN.run_per_die(self.M, progs, self.units, pos, tok)
+        except Exception as ex:                       # noqa: BLE001
+            cur = getattr(self.M, "cur", None)
+            raise RuntimeError(f"launch {kind} L'{Lp} tok {tok} pos {pos}: record {getattr(cur, 'tag', None)} "
+                               f"{getattr(cur, 'unit', None)}.{getattr(cur, 'op', None)}: {ex}") from ex
         end = progs[0][-1]
         res = int(self.M.dies[0].vm[end.desc["A"].base + (pos if end.desc["A"].dyn_sel == 1 else 0)])
         self.launches.append(dict(kind=kind, k=k, Lp=Lp, token=int(tok), pos=int(pos), result=res,
@@ -904,9 +914,17 @@ def sim(a):
                                                        for d in dies]
         if e["kind"] == "swapin":
             K_cur["L"] = e["pos"]
+        if spec and e["kind"] in ("dsa", "dsb") and not K_cur.get("dbg_" + e["kind"] + str(e["token"])) and K_cur["L"] == 40:
+            K_cur["dbg_" + e["kind"] + str(e["token"])] = 1
+            d0 = dies[0]
+            dbg[f"{e['kind']}{e['token']}_dskx"] = d0.hbm.view(DSKX, 6 * WROW).view(np.uint32).copy()
+            dbg[f"{e['kind']}{e['token']}_rowq"] = d0.hbm.view(ROWQ, BLK * 2048).view(np.uint32).copy()
+            dbg[f"{e['kind']}{e['token']}_rowmix"] = d0.hbm.view(ROWMIX, BLK * 128).view(np.uint32).copy()
+            dbg[f"{e['kind']}{e['token']}_qv"] = d0.vm[QV:QV + 16].copy()
         if e["kind"] in ("dsa", "dsb"):
             K_cur["phase_b"] = e["kind"] == "dsb"
     K_cur = {"L": -1, "phase_b": False}
+    dbg = {}
     eng.on_launch = on_launch
     plen = len(gd["prompt"])
     forced = None
@@ -938,11 +956,19 @@ def sim(a):
                 want = gz[f"dsk_{st}_{p}"].view(np.uint32)
                 got = [d.hbm.view(DSKX + st * (1 << 20) + (p % 128) * WROW, 2048).view(np.uint32) for d in dies]
                 dsk_ok[f"st{st}_p{p}"] = bool(all(np.array_equal(g_, want) for g_ in got))
-        stg_ok = {}
+        stg_ok, draft_detail = {}, {}
+        np.savez(out / "dbg_stage0.npz", **dbg)
+        np.savez(out / "stage_rows_rank0.npz", **{f"st{st}_row{i}": got[0][:20484] for (st, i), got in stage_out.items()})
         for (st, i), got in sorted(stage_out.items()):
             want = np.concatenate([gz[f"dh_{st}_{i}"].reshape(-1).view(np.uint32), gz[f"dpre_{st}_{i}"].view(np.uint32)])
             stg_ok[f"st{st}_row{i}"] = bool(all(np.array_equal(g_[:20484], want) for g_ in got))
-        draft_checks = dict(dsk_rows_bit_exact=dsk_ok, stage_rows_bit_exact=stg_ok,
+            if not stg_ok[f"st{st}_row{i}"]:
+                dif = np.nonzero(got[0][:20484] != want)[0]
+                stg_detail = draft_detail.setdefault(f"st{st}_row{i}", {})
+                stg_detail.update(n=int(len(dif)), first=[int(x) for x in dif[:6]],
+                                  got=[hex(int(got[0][x])) for x in dif[:6]], want=[hex(int(want[x])) for x in dif[:6]],
+                                  ranks_equal=bool(all(np.array_equal(g_[:20484], got[0][:20484]) for g_ in got)))
+        draft_checks = dict(dsk_rows_bit_exact=dsk_ok, stage_rows_bit_exact=stg_ok, stage_mismatch_detail=draft_detail,
                             drafts=steps[0]["drafts"] if steps else None, golden_drafts=gd["drafts"],
                             all_ok=bool(all(dsk_ok.values()) and all(stg_ok.values()) and len(stg_ok) == 15))
     # (C) timing: the simulator's S2 cycles of every launch body (rank 0), and per record
@@ -963,7 +989,25 @@ def sim(a):
                 r.src_key = r.src_key0 if r.src_key0 in K.ops else None
                 r.src_extra = []
                 r.layer = e["Lp"]
-            sch = T.schedule(body, e["pos"], "S2", token=e["token"], cost_fn=NativeCost(K.ops, body))
+            nc = NativeCost(K.ops, body)
+
+            def cf(r, dyn, L, nc=nc):
+                """NativeCost; the MTP kernels' own collectives (no w19 op) priced by the TU collective model"""
+                def model():
+                    from hgi_sim.perf import coll_cycles
+                    n = r.desc["A"].n if "A" in r.desc else 1
+                    nb = 8 * 96 if r.op == "ARGMAX_MERGE" else 4 * n
+                    c, _, _ = coll_cycles("ALL_GATHER", nb, 96)
+                    return c, "measured_tu_budget", f"{r.op} {nb} B over 96 (TU collective model; no measured class)"
+                if r.unit == "COLL" and r.src_key is None:
+                    return model()
+                try:
+                    return nc(r, dyn, L)
+                except KeyError:
+                    if r.unit == "COLL":          # a size the measured table lacks (the DSpark stages' gathers)
+                        return model()
+                    raise
+            sch = T.schedule(body, e["pos"], "S2", token=e["token"], cost_fn=cf)
             cache[key] = sch
         sch = cache[key]
         for i, (k_, L_, L1_) in enumerate(sch["ex"]):
