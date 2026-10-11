@@ -7,8 +7,6 @@ module hfd_cmdproc (
     inout wire [826:0] cSE,
     inout wire [826:0] cSW,
     input wire [0:0] ck,
-    input wire [63:0] f_barrier,
-    input wire [32:0] f_coll,
     input wire [2:0] f_hgi_argmax,
     input wire [2:0] f_hgi_coll,
     input wire [3:0] f_hgi_dma,
@@ -22,8 +20,6 @@ module hfd_cmdproc (
     input wire [18:0] f_hgi_vmstat,
     input wire [516:0] f_mtp,
     input wire [0:0] rst,
-    output wire [63:0] t_barrier,
-    output wire [24:0] t_coll,
     output wire [690:0] t_hgi_argmax,
     output wire [39:0] t_hgi_cfg_coll,
     output wire [967:0] t_hgi_coll,
@@ -35,11 +31,7 @@ module hfd_cmdproc (
     output wire [1173:0] t_hgi_sfu,
     output wire [2197:0] t_hgi_su,
     output wire [337:0] t_hgi_vmq,
-    output wire [196:0] t_mtp,
-    output wire [63:0] t_su_NE,
-    output wire [63:0] t_su_NW,
-    output wire [63:0] t_su_SE,
-    output wire [63:0] t_su_SW
+    output wire [196:0] t_mtp
 );
     wire clk = ck[0];
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};
@@ -64,16 +56,6 @@ module hfd_cmdproc (
     reg [826:0] i2_cSW; always @(posedge clk) i2_cSW <= i1_cSW;
     reg [826:0] i3_cSW; always @(posedge clk) i3_cSW <= i2_cSW;
     reg [826:0] i_cSW; always @(posedge clk) i_cSW <= i3_cSW;
-    reg [63:0] i0_f_barrier; always @(posedge clk) i0_f_barrier <= f_barrier;
-    reg [63:0] i1_f_barrier; always @(posedge clk) i1_f_barrier <= i0_f_barrier;
-    reg [63:0] i2_f_barrier; always @(posedge clk) i2_f_barrier <= i1_f_barrier;
-    reg [63:0] i3_f_barrier; always @(posedge clk) i3_f_barrier <= i2_f_barrier;
-    reg [63:0] i_f_barrier; always @(posedge clk) i_f_barrier <= i3_f_barrier;
-    reg [32:0] i0_f_coll; always @(posedge clk) i0_f_coll <= f_coll;
-    reg [32:0] i1_f_coll; always @(posedge clk) i1_f_coll <= i0_f_coll;
-    reg [32:0] i2_f_coll; always @(posedge clk) i2_f_coll <= i1_f_coll;
-    reg [32:0] i3_f_coll; always @(posedge clk) i3_f_coll <= i2_f_coll;
-    reg [32:0] i_f_coll; always @(posedge clk) i_f_coll <= i3_f_coll;
     reg [2:0] i0_f_hgi_argmax; always @(posedge clk) i0_f_hgi_argmax <= f_hgi_argmax;
     reg [2:0] i1_f_hgi_argmax; always @(posedge clk) i1_f_hgi_argmax <= i0_f_hgi_argmax;
     reg [2:0] i2_f_hgi_argmax; always @(posedge clk) i2_f_hgi_argmax <= i1_f_hgi_argmax;
@@ -344,18 +326,6 @@ module hfd_cmdproc (
     assign cSW[762:721] = o_cSW[762:721];
     assign cSW[822:766] = o_cSW[822:766];
     assign cSW[825:824] = o_cSW[825:824];
-    wire [63:0] od_t_barrier = {64'd0};
-    wire [63:0] o_t_barrier;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_barrier
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_barrier[k]), .q(o_t_barrier[k]));
-    end
-    assign t_barrier[63:0] = o_t_barrier[63:0];
-    wire [24:0] od_t_coll = {25'd0};
-    wire [24:0] o_t_coll;
-    for (genvar k = 0; k < 25; k = k + 1) begin : g_o_t_coll
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_coll[k]), .q(o_t_coll[k]));
-    end
-    assign t_coll[24:0] = o_t_coll[24:0];
     wire [690:0] od_t_hgi_argmax = {w_cpd_am_rec[690:0]};
     wire [690:0] o_t_hgi_argmax;
     for (genvar k = 0; k < 691; k = k + 1) begin : g_o_t_hgi_argmax
@@ -428,28 +398,4 @@ module hfd_cmdproc (
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_mtp[k]), .q(o_t_mtp[k]));
     end
     assign t_mtp[196:0] = o_t_mtp[196:0];
-    wire [63:0] od_t_su_NE = {64'd0};
-    wire [63:0] o_t_su_NE;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NE
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
-    end
-    assign t_su_NE[63:0] = o_t_su_NE[63:0];
-    wire [63:0] od_t_su_NW = {64'd0};
-    wire [63:0] o_t_su_NW;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NW
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
-    end
-    assign t_su_NW[63:0] = o_t_su_NW[63:0];
-    wire [63:0] od_t_su_SE = {64'd0};
-    wire [63:0] o_t_su_SE;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_SE
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
-    end
-    assign t_su_SE[63:0] = o_t_su_SE[63:0];
-    wire [63:0] od_t_su_SW = {64'd0};
-    wire [63:0] o_t_su_SW;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_SW
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
-    end
-    assign t_su_SW[63:0] = o_t_su_SW[63:0];
 endmodule

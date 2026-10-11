@@ -47,9 +47,9 @@
  ],
  "forwarded_clock_outputs": 0,
  "forwarded_clock_inputs": 0,
- "die_input_bits": 1485,
+ "die_input_bits": 1388,
  "die_input_bits_used": 1254,
- "die_output_bits": 14283,
+ "die_output_bits": 13938,
  "die_output_bits_driven": 10762,
  "ties": [
   {
@@ -869,22 +869,6 @@
    "gap": null
   },
   {
-   "where": "die:f_barrier[0:64]",
-   "kind": "spare_die_input_dropped",
-   "bits": 64,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy barrier (HGI collectives synchronise in their endpoints by group sequence)",
-   "gap": null
-  },
-  {
-   "where": "die:f_coll[0:33]",
-   "kind": "spare_die_input_dropped",
-   "bits": 33,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy collective config / status bus (HGI: hgi_coll_cmd / _ret and hgi_cfg_coll)",
-   "gap": null
-  },
-  {
    "where": "die:cNE[0:42]",
    "kind": "spare_die_output_const0",
    "bits": 42,
@@ -1427,61 +1411,13 @@
    "cls": "by_design",
    "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
    "gap": null
-  },
-  {
-   "where": "die:t_barrier[0:64]",
-   "kind": "spare_die_output_const0",
-   "bits": 64,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy barrier (HGI collectives synchronise in their endpoints by group sequence)",
-   "gap": null
-  },
-  {
-   "where": "die:t_coll[0:25]",
-   "kind": "spare_die_output_const0",
-   "bits": 25,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy collective config / status bus (HGI: hgi_coll_cmd / _ret and hgi_cfg_coll)",
-   "gap": null
-  },
-  {
-   "where": "die:t_su_NE[0:64]",
-   "kind": "spare_die_output_const0",
-   "bits": 64,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)",
-   "gap": null
-  },
-  {
-   "where": "die:t_su_NW[0:64]",
-   "kind": "spare_die_output_const0",
-   "bits": 64,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)",
-   "gap": null
-  },
-  {
-   "where": "die:t_su_SE[0:64]",
-   "kind": "spare_die_output_const0",
-   "bits": 64,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)",
-   "gap": null
-  },
-  {
-   "where": "die:t_su_SW[0:64]",
-   "kind": "spare_die_output_const0",
-   "bits": 64,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)",
-   "gap": null
   }
  ],
  "tied_off_bits": 0,
  "classed_tie_bits": {
   "debug": 0,
   "test": 0,
-  "by_design": 7195,
+  "by_design": 6753,
   "open": 0,
   "not_adopted": 0
  }

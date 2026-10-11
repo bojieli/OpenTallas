@@ -21359,6 +21359,29 @@
 ],
 "direction": "output"
 },
+"rst": {
+"bits": 1,
+"layer": "M4",
+"pins": [
+[
+"rst[0]",
+"M4",
+2032.752,
+762.768,
+2032.944,
+762.792
+]
+],
+"face": "E",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
+},
 "ck0": {
 "bits": 1,
 "layer": "M4",
@@ -21534,29 +21557,6 @@
 ]
 ],
 "face": "W",
-"dir_segments": [
-[
-0,
-1,
-"in"
-]
-],
-"direction": "input"
-},
-"rst": {
-"bits": 1,
-"layer": "M4",
-"pins": [
-[
-"rst[0]",
-"M4",
-2032.752,
-1166.544,
-2032.944,
-1166.568
-]
-],
-"face": "E",
 "dir_segments": [
 [
 0,
@@ -171563,7 +171563,7 @@
 },
 "generator": {
 "file": "tools/hbm_accel_die_fp.py",
-"sha256": "549f6cd6f168579fc82b8d22d4ec470ea6536fe2edcd937837296827c681eca4",
+"sha256": "cce23c68d6f8a71f41ff3d5ed4ac18058a47f0a30ae6d83e3043f9c23400a91d",
 "round": "r25"
 }
 }

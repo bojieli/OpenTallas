@@ -11,7 +11,6 @@ module hfd_su (
     input wire [0:0] ck5,
     input wire [0:0] ck6,
     input wire [0:0] ck7,
-    input wire [63:0] f_cmdproc,
     input wire [619:0] f_coll,
     input wire [2197:0] f_hgi_cmdproc,
     input wire [79:0] f_hgi_vmaddr,
@@ -29,7 +28,6 @@ module hfd_su (
     output wire [337:0] t_hgi_vmq,
     output wire [512:0] t_lgW_rup,
     output wire [8960:0] t_lgW_wup,
-    output wire [1:0] t_router,
     output wire [1023:0] t_sfu,
     output wire [1023:0] t_su_ew,
     output wire [1023:0] t_su_ns,
@@ -54,8 +52,6 @@ module hfd_su (
     reg [0:0] i_ck6; always @(posedge clk) i_ck6 <= i0_ck6;
     reg [0:0] i0_ck7; always @(posedge clk) i0_ck7 <= ck7;
     reg [0:0] i_ck7; always @(posedge clk) i_ck7 <= i0_ck7;
-    reg [63:0] i0_f_cmdproc; always @(posedge clk) i0_f_cmdproc <= f_cmdproc;
-    reg [63:0] i_f_cmdproc; always @(posedge clk) i_f_cmdproc <= i0_f_cmdproc;
     reg [619:0] i0_f_coll; always @(posedge clk) i0_f_coll <= f_coll;
     reg [619:0] i_f_coll; always @(posedge clk) i_f_coll <= i0_f_coll;
     reg [2197:0] i0_f_hgi_cmdproc; always @(posedge clk) i0_f_hgi_cmdproc <= f_hgi_cmdproc;
@@ -173,12 +169,6 @@ module hfd_su (
         ot_hfd_oreg2 u (.clk(clk), .d(od_t_lgW_wup[k]), .q(o_t_lgW_wup[k]));
     end
     assign t_lgW_wup[8960:0] = o_t_lgW_wup[8960:0];
-    wire [1:0] od_t_router = {2'd0};
-    wire [1:0] o_t_router;
-    for (genvar k = 0; k < 2; k = k + 1) begin : g_o_t_router
-        ot_hfd_oreg2 u (.clk(clk), .d(od_t_router[k]), .q(o_t_router[k]));
-    end
-    assign t_router[1:0] = o_t_router[1:0];
     wire [1023:0] od_t_sfu = {1024'd0};
     wire [1023:0] o_t_sfu;
     for (genvar k = 0; k < 1024; k = k + 1) begin : g_o_t_sfu

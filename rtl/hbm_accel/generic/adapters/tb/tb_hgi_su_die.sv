@@ -42,8 +42,8 @@ module tb_hgi_su_die;
 `else
     hfd_su dut (.ck0(clk), .ck1(clk), .ck2(clk), .ck3(clk), .ck4(clk), .ck5(clk), .ck6(clk), .ck7(clk), .rst(!rst_n),
         .f_hgi_cmdproc(rec), .t_hgi_cmdproc(ret), .t_hgi_vmq(uq), .f_hgi_vmr(ur), .t_lgW_rup(rup), .f_lgW_rdn(rdn),
-        .t_lgW_wup(wup), .f_lgW_wdn(wdn), .a(1058'd0), .f_cmdproc(64'd0), .f_coll(620'd0), .f_hgi_vmaddr(80'd0),
-        .f_sfu(1024'd0), .f_su_ew(1024'd0), .f_su_ns(1024'd0), .f_vm(2048'd0), .r(2165'd0), .t_coll(), .t_router(),
+        .t_lgW_wup(wup), .f_lgW_wdn(wdn), .a(1058'd0), .f_coll(620'd0), .f_hgi_vmaddr(80'd0),
+        .f_sfu(1024'd0), .f_su_ew(1024'd0), .f_su_ns(1024'd0), .f_vm(2048'd0), .r(2165'd0), .t_coll(),
         .t_sfu(), .t_su_ew(), .t_su_ns(), .t_vm());
 `endif
     wire [2:0] rgnt, wgnt; wire [3*32-1:0] rcr, wcr, wdone; wire [3*32*257-1:0] rrs;

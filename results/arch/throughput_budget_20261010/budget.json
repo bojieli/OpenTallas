@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.throughput_budget.v1",
- "generated_utc": "2026-10-11T03:48:26Z",
+ "generated_utc": "2026-10-11T04:39:17Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -16,71 +16,71 @@
   "ds_rom": 1447.7
  },
  "ds_hbm": {
-  "S2_cycles": 565569.1,
-  "S2_tok_s": 2121.8,
+  "S2_cycles": 566785.1,
+  "S2_tok_s": 2117.2,
   "target_tok_s": 2208.1,
   "image_bytes": 478720,
   "target_cycles": 543453.6,
-  "price_scale_to_target": 0.9609,
+  "price_scale_to_target": 0.9588,
   "per_unit_S2": {
    "FUSED": {
-    "busy": 71369.7,
-    "idle_true_dep": 486498.5,
+    "busy": 72889.7,
+    "idle_true_dep": 486194.5,
     "idle_issue": 3276.5,
     "records": 201
    },
    "SM": {
     "busy": 103968.3,
-    "idle_true_dep": 440920.4,
+    "idle_true_dep": 442136.4,
     "idle_issue": 19886.0,
     "records": 1095
    },
    "COLL": {
     "busy": 336487.2,
-    "idle_true_dep": 220715.0,
+    "idle_true_dep": 221931.0,
     "idle_issue": 8366.9,
     "records": 642
    },
    "DMA": {
     "busy": 40283.8,
-    "idle_true_dep": 45498.7,
-    "idle_issue": 489087.3,
+    "idle_true_dep": 47018.7,
+    "idle_issue": 488783.3,
     "records": 420
    },
    "SU": {
     "busy": 136388.0,
     "idle_true_dep": 384190.3,
-    "idle_issue": 38873.8,
+    "idle_issue": 40089.8,
     "records": 1356
    },
    "CTL": {
     "busy": 8.0,
     "idle_true_dep": 0.0,
-    "idle_issue": 554849.2,
+    "idle_issue": 556065.2,
     "records": 197
    },
    "ATT": {
     "busy": 26363.5,
-    "idle_true_dep": 523406.2,
+    "idle_true_dep": 524622.2,
     "idle_issue": 2056.0,
     "records": 80
    },
    "HC": {
     "busy": 43200.0,
     "idle_true_dep": 463926.8,
-    "idle_issue": 49044.9,
+    "idle_issue": 50260.9,
     "records": 80
    },
    "IDX": {
     "busy": 18833.9,
-    "idle_true_dep": 537303.7,
+    "idle_true_dep": 538519.7,
     "idle_issue": 1392.0,
     "records": 48
    },
    "ARGMAX": {
     "busy": 3626.0,
     "idle_true_dep": 0.0,
-    "idle_issue": 561168.7,
+    "idle_issue": 562384.7,
     "records": 1
    }
   },
@@ -93,13 +93,13 @@
     "price_cycles_per_record": 389.2,
     "price_cycles_per_token": 227271.2,
     "price_cycles_per_layer": 5681.8,
-    "budget_cycles_per_record_at_target": 373.9,
+    "budget_cycles_per_record_at_target": 373.1,
     "items_per_record": 8519.0,
     "item": "bytes",
     "required_items_per_cycle": 21.891,
-    "required_items_per_cycle_at_target": 22.781,
+    "required_items_per_cycle_at_target": 22.83,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.02825,
+    "token_elasticity_at_plus10pct": 0.02819,
     "measured_ratio": 0.716,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/coll/report.json",
@@ -108,7 +108,7 @@
     "measured_cycles_per_record": 278.6,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -41550.1,
-    "impact_tok_s": 168.2,
+    "impact_tok_s": 167.5,
     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
     "elements": [
      "hfd_coll",
@@ -126,13 +126,13 @@
     "price_cycles_per_record": 100.6,
     "price_cycles_per_token": 136388.0,
     "price_cycles_per_layer": 3409.7,
-    "budget_cycles_per_record_at_target": 96.6,
+    "budget_cycles_per_record_at_target": 96.4,
     "items_per_record": 1584.9,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 15.758,
-    "required_items_per_cycle_at_target": 16.399,
+    "required_items_per_cycle_at_target": 16.434,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.01887,
+    "token_elasticity_at_plus10pct": 0.01883,
     "measured_ratio": 1.067,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/su/report.json",
@@ -141,7 +141,7 @@
     "measured_cycles_per_record": 107.3,
     "status": "QUALIFIED",
     "impact_cycles_per_token": 7149.6,
-    "impact_tok_s": -26.5,
+    "impact_tok_s": -26.4,
     "owner": "hgi-1010/b",
     "elements": [
      "ot_hgi_su_record",
@@ -160,13 +160,13 @@
     "price_cycles_per_record": 94.9,
     "price_cycles_per_token": 103968.3,
     "price_cycles_per_layer": 2535.8,
-    "budget_cycles_per_record_at_target": 91.2,
+    "budget_cycles_per_record_at_target": 91.0,
     "items_per_record": 166974.7,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 1758.587,
-    "required_items_per_cycle_at_target": 1830.151,
+    "required_items_per_cycle_at_target": 1834.086,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.0093,
+    "token_elasticity_at_plus10pct": 0.00928,
     "measured_ratio": null,
     "measured_grade": null,
     "measured_src": null,
@@ -192,7 +192,7 @@
      "ot_hbm_accel_smh_tile_eg",
      "ot_hbm_accel_smh_tile_wg"
     ],
-    "exposure_cycles_if_2x": 52597.9
+    "exposure_cycles_if_2x": 52597.7
    },
    {
     "op": "COLL.GROUP_REDUCE_MCAST",
@@ -202,13 +202,13 @@
     "price_cycles_per_record": 1325.9,
     "price_cycles_per_token": 53037.6,
     "price_cycles_per_layer": 1325.9,
-    "budget_cycles_per_record_at_target": 1274.1,
+    "budget_cycles_per_record_at_target": 1271.4,
     "items_per_record": 4096.0,
     "item": "bytes",
     "required_items_per_cycle": 3.089,
-    "required_items_per_cycle_at_target": 3.215,
+    "required_items_per_cycle_at_target": 3.222,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00938,
+    "token_elasticity_at_plus10pct": 0.00936,
     "measured_ratio": 0.908,
     "measured_grade": "e2e",
     "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
@@ -217,7 +217,7 @@
     "measured_cycles_per_record": 1204.0,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -4879.5,
-    "impact_tok_s": 18.5,
+    "impact_tok_s": 18.4,
     "owner": "-",
     "elements": []
    },
@@ -229,13 +229,13 @@
     "price_cycles_per_record": 649.3,
     "price_cycles_per_token": 52595.9,
     "price_cycles_per_layer": 1282.8,
-    "budget_cycles_per_record_at_target": 623.9,
+    "budget_cycles_per_record_at_target": 622.6,
     "items_per_record": 20480.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 31.54,
-    "required_items_per_cycle_at_target": 32.824,
+    "required_items_per_cycle_at_target": 32.894,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.0093,
+    "token_elasticity_at_plus10pct": 0.00928,
     "measured_ratio": 6.514,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
@@ -244,7 +244,7 @@
     "measured_cycles_per_record": 4229.7,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 290013.7,
-    "impact_tok_s": -719.2,
+    "impact_tok_s": -716.6,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -258,7 +258,7 @@
     "price_cycles_per_record": 540.0,
     "price_cycles_per_token": 43200.0,
     "price_cycles_per_layer": 1080.0,
-    "budget_cycles_per_record_at_target": 518.9,
+    "budget_cycles_per_record_at_target": 517.8,
     "items_per_record": 24.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 0.044,
@@ -289,11 +289,11 @@
     "price_cycles_per_record": 104.4,
     "price_cycles_per_token": 35483.8,
     "price_cycles_per_layer": 887.1,
-    "budget_cycles_per_record_at_target": 100.3,
+    "budget_cycles_per_record_at_target": 100.1,
     "items_per_record": 1153.1,
     "item": "bytes",
     "required_items_per_cycle": 11.049,
-    "required_items_per_cycle_at_target": 11.499,
+    "required_items_per_cycle_at_target": 11.523,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00092,
     "measured_ratio": 0.622,
@@ -304,7 +304,7 @@
     "measured_cycles_per_record": 64.9,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -1927.5,
-    "impact_tok_s": 7.3,
+    "impact_tok_s": 7.2,
     "owner": "-",
     "elements": []
    },
@@ -316,13 +316,13 @@
     "price_cycles_per_record": 4246.0,
     "price_cycles_per_token": 33968.0,
     "price_cycles_per_layer": 4246.0,
-    "budget_cycles_per_record_at_target": 4080.0,
+    "budget_cycles_per_record_at_target": 4071.2,
     "items_per_record": 1048576.0,
     "item": "bytes",
     "required_items_per_cycle": 246.956,
-    "required_items_per_cycle_at_target": 257.006,
+    "required_items_per_cycle_at_target": 257.558,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00601,
+    "token_elasticity_at_plus10pct": 0.00599,
     "measured_ratio": 1.0,
     "measured_grade": "price_fit",
     "measured_src": "main 5e588e11e (hgi-1010/a, G25 HW ROW_GATHER, one real rank of 96)",
@@ -345,13 +345,13 @@
     "price_cycles_per_record": 2382.8,
     "price_cycles_per_token": 21445.0,
     "price_cycles_per_layer": 2680.6,
-    "budget_cycles_per_record_at_target": 2289.6,
+    "budget_cycles_per_record_at_target": 2284.7,
     "items_per_record": 2427.6,
     "item": "bytes",
     "required_items_per_cycle": 1.019,
-    "required_items_per_cycle_at_target": 1.06,
+    "required_items_per_cycle_at_target": 1.063,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00379,
+    "token_elasticity_at_plus10pct": 0.00378,
     "measured_ratio": null,
     "measured_grade": null,
     "measured_src": null,
@@ -363,7 +363,7 @@
     "impact_tok_s": 0.0,
     "owner": "tput-gate-1010 (taken 10-10: production-shape bench)",
     "elements": [],
-    "exposure_cycles_if_2x": 21435.1
+    "exposure_cycles_if_2x": 21424.5
    },
    {
     "op": "FUSED.HC_POST",
@@ -373,13 +373,13 @@
     "price_cycles_per_record": 222.7,
     "price_cycles_per_token": 17813.8,
     "price_cycles_per_layer": 445.3,
-    "budget_cycles_per_record_at_target": 214.0,
+    "budget_cycles_per_record_at_target": 213.5,
     "items_per_record": 20480.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 91.974,
-    "required_items_per_cycle_at_target": 95.717,
+    "required_items_per_cycle_at_target": 95.922,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00307,
+    "token_elasticity_at_plus10pct": 0.00306,
     "measured_ratio": 20.085,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
@@ -388,7 +388,7 @@
     "measured_cycles_per_record": 4472.4,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 339233.8,
-    "impact_tok_s": -795.5,
+    "impact_tok_s": -792.7,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -402,11 +402,11 @@
     "price_cycles_per_record": 329.5,
     "price_cycles_per_token": 13181.8,
     "price_cycles_per_layer": 329.5,
-    "budget_cycles_per_record_at_target": 316.7,
+    "budget_cycles_per_record_at_target": 316.0,
     "items_per_record": 16384.0,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 49.717,
-    "required_items_per_cycle_at_target": 51.74,
+    "required_items_per_cycle_at_target": 51.852,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00233,
     "measured_ratio": null,
@@ -433,7 +433,7 @@
      "hfd_attn_half_lo",
      "ot_attn_tile_m6h1q"
     ],
-    "exposure_cycles_if_2x": 13177.8
+    "exposure_cycles_if_2x": 13206.1
    },
    {
     "op": "ATT.PV",
@@ -443,11 +443,11 @@
     "price_cycles_per_record": 329.5,
     "price_cycles_per_token": 13181.8,
     "price_cycles_per_layer": 329.5,
-    "budget_cycles_per_record_at_target": 316.7,
+    "budget_cycles_per_record_at_target": 316.0,
     "items_per_record": 16384.0,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 49.717,
-    "required_items_per_cycle_at_target": 51.74,
+    "required_items_per_cycle_at_target": 51.852,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00233,
     "measured_ratio": null,
@@ -464,7 +464,7 @@
     "impact_tok_s": 0.0,
     "owner": "hgi-1010/g2",
     "elements": [],
-    "exposure_cycles_if_2x": 13177.8
+    "exposure_cycles_if_2x": 13206.1
    },
    {
     "op": "IDX.TOPK",
@@ -474,11 +474,11 @@
     "price_cycles_per_record": 283.0,
     "price_cycles_per_token": 11320.3,
     "price_cycles_per_layer": 283.0,
-    "budget_cycles_per_record_at_target": 271.9,
+    "budget_cycles_per_record_at_target": 271.4,
     "items_per_record": 384.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 1.357,
-    "required_items_per_cycle_at_target": 1.412,
+    "required_items_per_cycle_at_target": 1.415,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.002,
     "measured_ratio": 4.286,
@@ -492,7 +492,7 @@
     "measured_cycles_per_record": 1213.0,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 37198.6,
-    "impact_tok_s": -130.9,
+    "impact_tok_s": -130.4,
     "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
     "elements": [
      "hgi_idx_topk_full",
@@ -507,11 +507,11 @@
     "price_cycles_per_record": 939.2,
     "price_cycles_per_token": 7513.6,
     "price_cycles_per_layer": 939.2,
-    "budget_cycles_per_record_at_target": 902.5,
+    "budget_cycles_per_record_at_target": 900.5,
     "items_per_record": 851968.0,
     "item": "keys scored",
     "required_items_per_cycle": 907.126,
-    "required_items_per_cycle_at_target": 944.041,
+    "required_items_per_cycle_at_target": 946.07,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00133,
     "measured_ratio": null,
@@ -539,7 +539,38 @@
      "hgi_idx_chunk",
      "ot_hdc_v41x_idx_chunk_el"
     ],
-    "exposure_cycles_if_2x": 7522.1
+    "exposure_cycles_if_2x": 7538.2
+   },
+   {
+    "op": "FUSED.QDQ_FP8",
+    "unit": "FUSED",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 62.0,
+    "price_cycles_per_token": 2480.0,
+    "price_cycles_per_layer": 62.0,
+    "budget_cycles_per_record_at_target": 59.4,
+    "items_per_record": 512.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 8.258,
+    "required_items_per_cycle_at_target": 8.613,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00035,
+    "measured_ratio": 1.012,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json",
+    "measured_note": "ot_hgi_quant_unit WIDE (lane group), price ceil(n/32)+46; packet unit was 14.6x at the old price",
+    "interim": null,
+    "measured_cycles_per_record": 62.7,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": 23.8,
+    "impact_tok_s": -0.1,
+    "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+    "elements": [
+     "hfd_quant",
+     "ot_hgi_quant_decode",
+     "ot_hgi_quant_vm_transport_p"
+    ]
    },
    {
     "op": "DMA.KVWB_DS",
@@ -549,11 +580,11 @@
     "price_cycles_per_record": 60.0,
     "price_cycles_per_token": 2400.0,
     "price_cycles_per_layer": 60.0,
-    "budget_cycles_per_record_at_target": 57.7,
+    "budget_cycles_per_record_at_target": 57.5,
     "items_per_record": 2048.0,
     "item": "bytes",
     "required_items_per_cycle": 34.133,
-    "required_items_per_cycle_at_target": 35.522,
+    "required_items_per_cycle_at_target": 35.599,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00028,
     "measured_ratio": 3.817,
@@ -564,7 +595,7 @@
     "measured_cycles_per_record": 229.0,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 5376.6,
-    "impact_tok_s": -20.0,
+    "impact_tok_s": -19.9,
     "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
     "elements": [
      "ot_hgi_dma_mover",
@@ -580,7 +611,7 @@
     "price_cycles_per_record": 60.0,
     "price_cycles_per_token": 2400.0,
     "price_cycles_per_layer": 60.0,
-    "budget_cycles_per_record_at_target": 57.7,
+    "budget_cycles_per_record_at_target": 57.5,
     "items_per_record": 0.0,
     "item": "",
     "required_items_per_cycle": 0.0,
@@ -600,37 +631,6 @@
     "elements": []
    },
    {
-    "op": "FUSED.QDQ_FP8",
-    "unit": "FUSED",
-    "records_per_token": 40,
-    "layers_with_op": 40,
-    "price_cycles_per_record": 24.0,
-    "price_cycles_per_token": 960.0,
-    "price_cycles_per_layer": 24.0,
-    "budget_cycles_per_record_at_target": 23.1,
-    "items_per_record": 512.0,
-    "item": "elements (largest operand)",
-    "required_items_per_cycle": 21.333,
-    "required_items_per_cycle_at_target": 22.201,
-    "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00014,
-    "measured_ratio": 14.573,
-    "measured_grade": "unit_bench",
-    "measured_src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json",
-    "measured_note": null,
-    "interim": null,
-    "measured_cycles_per_record": 349.8,
-    "status": "UNQUALIFIED",
-    "impact_cycles_per_token": 10424.1,
-    "impact_tok_s": -38.4,
-    "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
-    "elements": [
-     "hfd_quant",
-     "ot_hgi_quant_decode",
-     "ot_hgi_quant_vm_transport_p"
-    ]
-   },
-   {
     "op": "COLL.ARGMAX_MERGE",
     "unit": "COLL",
     "records_per_token": 1,
@@ -638,7 +638,7 @@
     "price_cycles_per_record": 765.4,
     "price_cycles_per_token": 765.4,
     "price_cycles_per_layer": 765.4,
-    "budget_cycles_per_record_at_target": 735.5,
+    "budget_cycles_per_record_at_target": 733.9,
     "items_per_record": 8.0,
     "item": "bytes",
     "required_items_per_cycle": 0.01,
@@ -656,7 +656,7 @@
     "impact_tok_s": 0.0,
     "owner": "UNOWNED",
     "elements": [],
-    "exposure_cycles_if_2x": 791.8
+    "exposure_cycles_if_2x": 793.5
    },
    {
     "op": "ARGMAX.LOCAL",
@@ -666,11 +666,11 @@
     "price_cycles_per_record": 142.7,
     "price_cycles_per_token": 142.7,
     "price_cycles_per_layer": 142.7,
-    "budget_cycles_per_record_at_target": 137.1,
+    "budget_cycles_per_record_at_target": 136.8,
     "items_per_record": 1347.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 9.442,
-    "required_items_per_cycle_at_target": 9.826,
+    "required_items_per_cycle_at_target": 9.847,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.0,
     "measured_ratio": null,
@@ -699,9 +699,9 @@
    "op": "FUSED.HC_POST",
    "ratio": 20.085,
    "impact_cycles_per_token": 339233.8,
-   "impact_tok_s": -795.5,
+   "impact_tok_s": -792.7,
    "budget_cycles_per_record": 222.7,
-   "budget_at_target": 214.0,
+   "budget_at_target": 213.5,
    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
   },
   {
@@ -709,9 +709,9 @@
    "op": "FUSED.HC_PRE_NORM",
    "ratio": 6.514,
    "impact_cycles_per_token": 290013.7,
-   "impact_tok_s": -719.2,
+   "impact_tok_s": -716.6,
    "budget_cycles_per_record": 649.3,
-   "budget_at_target": 623.9,
+   "budget_at_target": 622.6,
    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
   },
   {
@@ -719,46 +719,36 @@
    "op": "IDX.TOPK",
    "ratio": 4.286,
    "impact_cycles_per_token": 37198.6,
-   "impact_tok_s": -130.9,
+   "impact_tok_s": -130.4,
    "budget_cycles_per_record": 283.0,
-   "budget_at_target": 271.9,
+   "budget_at_target": 271.4,
    "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)"
   },
   {
    "rank": 4,
-   "op": "FUSED.QDQ_FP8",
-   "ratio": 14.573,
-   "impact_cycles_per_token": 10424.1,
-   "impact_tok_s": -38.4,
-   "budget_cycles_per_record": 24.0,
-   "budget_at_target": 23.1,
-   "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)"
-  },
-  {
-   "rank": 5,
    "op": "DMA.KVWB_DS",
    "ratio": 3.817,
    "impact_cycles_per_token": 5376.6,
-   "impact_tok_s": -20.0,
+   "impact_tok_s": -19.9,
    "budget_cycles_per_record": 60.0,
-   "budget_at_target": 57.7,
+   "budget_at_target": 57.5,
    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)"
   },
   {
-   "rank": 6,
+   "rank": 5,
    "op": "HC.HC_MIX_POST",
    "ratio": 1.282,
    "impact_cycles_per_token": 0.0,
    "impact_tok_s": 0.0,
    "budget_cycles_per_record": 540.0,
-   "budget_at_target": 518.9,
+   "budget_at_target": 517.8,
    "owner": "hgi-1010/d"
   }
  ],
  "ds_unbenched_by_exposure": [
   {
    "op": "SM.MATVEC",
-   "exposure_cycles_if_2x": 52597.9,
+   "exposure_cycles_if_2x": 52597.7,
    "price_cycles_per_token": 103968.3,
    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
    "interim": {
@@ -768,14 +758,14 @@
   },
   {
    "op": "COLL.TOPK_MERGE",
-   "exposure_cycles_if_2x": 21435.1,
+   "exposure_cycles_if_2x": 21424.5,
    "price_cycles_per_token": 21445.0,
    "owner": "tput-gate-1010 (taken 10-10: production-shape bench)",
    "interim": null
   },
   {
    "op": "ATT.QK",
-   "exposure_cycles_if_2x": 13177.8,
+   "exposure_cycles_if_2x": 13206.1,
    "price_cycles_per_token": 13181.8,
    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
    "interim": {
@@ -785,7 +775,7 @@
   },
   {
    "op": "ATT.PV",
-   "exposure_cycles_if_2x": 13177.8,
+   "exposure_cycles_if_2x": 13206.1,
    "price_cycles_per_token": 13181.8,
    "owner": "hgi-1010/g2",
    "interim": {
@@ -795,7 +785,7 @@
   },
   {
    "op": "IDX.INDEX",
-   "exposure_cycles_if_2x": 7522.1,
+   "exposure_cycles_if_2x": 7538.2,
    "price_cycles_per_token": 7513.6,
    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
    "interim": {
@@ -805,7 +795,7 @@
   },
   {
    "op": "COLL.ARGMAX_MERGE",
-   "exposure_cycles_if_2x": 791.8,
+   "exposure_cycles_if_2x": 793.5,
    "price_cycles_per_token": 765.4,
    "owner": "UNOWNED",
    "interim": null
@@ -3052,24 +3042,24 @@
    ]
   },
   "hfd_quant": {
-   "status": "UNQUALIFIED",
-   "ratio": 14.573,
+   "status": "QUALIFIED",
+   "ratio": 1.012,
    "limiting": {
     "op": "FUSED.QDQ_FP8",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 14.573,
-    "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
-    "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+    "status": "QUALIFIED",
+    "ratio": 1.012,
+    "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+    "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
    },
    "ops": [
     {
      "op": "FUSED.QDQ_FP8",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 14.573,
-     "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
-     "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+     "status": "QUALIFIED",
+     "ratio": 1.012,
+     "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+     "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
     }
    ]
   },
@@ -5038,46 +5028,46 @@
    ]
   },
   "ot_hgi_quant_decode": {
-   "status": "UNQUALIFIED",
-   "ratio": 14.573,
+   "status": "QUALIFIED",
+   "ratio": 1.012,
    "limiting": {
     "op": "FUSED.QDQ_FP8",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 14.573,
-    "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
-    "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+    "status": "QUALIFIED",
+    "ratio": 1.012,
+    "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+    "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
    },
    "ops": [
     {
      "op": "FUSED.QDQ_FP8",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 14.573,
-     "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
-     "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+     "status": "QUALIFIED",
+     "ratio": 1.012,
+     "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+     "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
     }
    ]
   },
   "ot_hgi_quant_vm_transport_p": {
-   "status": "UNQUALIFIED",
-   "ratio": 14.573,
+   "status": "QUALIFIED",
+   "ratio": 1.012,
    "limiting": {
     "op": "FUSED.QDQ_FP8",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 14.573,
-    "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
-    "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+    "status": "QUALIFIED",
+    "ratio": 1.012,
+    "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+    "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
    },
    "ops": [
     {
      "op": "FUSED.QDQ_FP8",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 14.573,
-     "owner": "tput-gate-1010 (taken 10-10: QDQ on the FUSED lgE lane group, 32 elements/cycle; c keeps the packet transport)",
-     "src": "results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
+     "status": "QUALIFIED",
+     "ratio": 1.012,
+     "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+     "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
     }
    ]
   },
