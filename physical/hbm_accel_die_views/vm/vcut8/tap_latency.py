@@ -27,7 +27,7 @@ set fo [open /t/{C}.txt w]
 set blk [ord::get_db_block]
 foreach bt [$blk getBTerms] {{
   set n [regsub {{\[0\]$}} [$bt getName] {{}}]
-  if {{![regexp {{^ck[wens][0-9]*$}} $n]}} {{ continue }}
+  if {{![regexp {{^ck[wensg][0-9]*$}} $n]}} {{ continue }}
   # walk the clock tree in the db: through buffers / inverters to the sequential clock pins
   set todo [list [$bt getNet]]; set seen [dict create]; set s 0.0; set k 0
   while {{[llength $todo]}} {{

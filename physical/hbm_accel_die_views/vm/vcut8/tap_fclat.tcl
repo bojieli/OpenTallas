@@ -22,7 +22,7 @@ proc ot_fcl_taps {} {
   set r {}
   foreach bt [[ord::get_db_block] getBTerms] {
     set n [regsub {\[0\]$} [$bt getName] {}]
-    if {[regexp {^ck[wens][0-9]+$} $n] && [$bt getNet] ne "NULL"} { lappend r [list $n [$bt getNet]] }
+    if {[regexp {^ck[wensg][0-9]+$} $n] && [$bt getNet] ne "NULL"} { lappend r [list $n [$bt getNet]] }
   }
   return $r
 }

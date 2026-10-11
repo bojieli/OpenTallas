@@ -25,7 +25,7 @@ T = f'{V}/vm/tiles'
 SRAM = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v'
 HALVES = [f'hfd_vm_{q}_{h}' for q in ('sw', 'nw', 'se', 'ne') for h in ('w', 'e')]
 CLKQ = 32.2
-TAP = re.compile(r'^ck[wens][0-9]+$')
+TAP = re.compile(r'^ck[wensg][0-9]+$')
 FF_TYPES = ('$dff', '$adff', '$sdff', '$dffe', '$adffe', '$sdffe', '$sdffce', '$aldff', '$dffsr')
 
 
