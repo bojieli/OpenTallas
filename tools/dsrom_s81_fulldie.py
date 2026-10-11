@@ -3203,7 +3203,7 @@ def build_r8(variant=None):
         # --su-e MM2 (ds-1010/s81die 2026-10-11): su_n (MM2) moves to the E column above hc_n; su_s (the rest) sits at the
         # W column floor with the centre stack right above it (the 2.42 mm VM of s81-vm-1011 overflowed the W column)
         su_lo = su_area - SU_E
-        yc = up(band + SPINE_GAP + up(su_lo * 1e6 / cw, GY) + SPINE_GAP, GY)
+        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / cw, GY) + SPINE_GAP, GY)
     slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom=SUHC_DOM)
     yy = yc
     for n in centre:
@@ -3220,7 +3220,7 @@ def build_r8(variant=None):
     # (toward the VCH and the W column); the HC halves narrow to the rest (taller) and keep abutting the corridor
     hcx, hcw = (up(x_spe + ECOL_W + 8.64, GX), dn(cw - ECOL_W - 8.64, GX)) if ecol else (x_spe, cw)
     if SU_E:   # hc_s fills the E column from the band floor to the corridor, hc_n the rest above it, su_n above hc_n
-        fs = min(1.0, (c0 - (band + SPINE_GAP)) * hcw / 1e6 / HUB_MM2['hc'])
+        fs = min(1.0, (c0 - (band + SPINE_GAP) - 4.32) * hcw / 1e6 / HUB_MM2['hc'])
     hs_ = up(HUB_MM2['hc'] * fs * 1e6 / hcw, GY)
     slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom=SUHC_DOM)
     slab('hc_n', HUB_MM2['hc'] * (1 - fs), hcx, c1, hcw, dom=SUHC_DOM)
