@@ -32,7 +32,9 @@ SRC_BASE = [
     "rtl/hbm_accel/generic/ot_hgi_cp_die.sv", "rtl/hbm_accel/generic/loader/ot_hgi_loader_cp.sv",
 ]
 SRC_REAL = {
-    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv"],
+    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv",
+            # hgi-1010/c: the mover's landing RAM (a 256 x 256 macro; the sequencer ring stays USE_MACRO 0)
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"],
     "quant": ["rtl/hbm_accel/generic/ot_hgi_quant_unit.sv", "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
               "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv", "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
               "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"],
@@ -65,7 +67,8 @@ SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/h
                     "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv"]
 SRC_REAL["fused"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv",
                            "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv"]
-TB = ["rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
+TB = ["rtl/hbm_accel/generic/peers/tb_hgi_rlanes.sv",   # hgi-1010/c: the mover's HBM lane model (hgi_e2e_rlanes)
+      "rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
       "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
 
 
