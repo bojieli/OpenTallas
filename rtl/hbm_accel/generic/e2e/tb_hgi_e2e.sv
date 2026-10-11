@@ -32,6 +32,10 @@ module tb_hgi_e2e;
                                        // transaction outstanding per lane, native endpoint) to a stack-service model at
                                        // FLAT cycles; 0: the FPIPE lane model (FPIPE 1 hides the CP fetch gap)
     parameter integer DMA_POSTED = 1;    // hgi-1010/c: 0 = STORE / KVWB retire on the last write ack (the pre-posted A/B point)
+    parameter integer DMA_VR2 = 0;     // hbmdie-1011/kvw: the mover's VM-source reads on the VM DMA wide READ group (die t_dma_vr2q /
+                                       // f_dma_vr2r, the loader die view runs VR2 1): modelled by hgi_e2e_vmlanes on the DMA unit's VM
+    parameter integer DMA_KVW = 0;
+    parameter integer DMA_MUT = 0;     // bench: the DMA mover's MUT (5 = ot_hgi_dma_kvw mutant: must FAIL)     // 1 (needs DMA_VR2 1): the KV write-back engine ot_hgi_dma_kvw (hbm-fq 8df9a0e9f; die view KVW 1)
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
     parameter integer ATT_H = 16, ATT_D = 512, ATT_TD = 64, ATT_NL = 4, ATT_PIPE = 0, ATT_MUT_ROW = 0;   // REAL_ATT: r25 engine geometry
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
@@ -297,14 +301,21 @@ module tb_hgi_e2e;
     hgi_e2e_rlanes #(.LAT(KLAT)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
         .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
         .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data));
-        ot_hgi_dma_engines #(.FRONT(DMA_FRONT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
+        ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .VR2(DMA_VR2), .KVW(DMA_KVW), .MUT_MV(DMA_MUT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
             .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone),
             .is_v(is_v), .is_rdy(is_rdy), .is_cmd(is_cmd), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
             .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
             .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
             .k_rsp_data(k_rd), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
-        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(), .vr2r(8257'd0),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(vr2q), .vr2r(vr2r),
         .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
+        // VR2: the VM's DMA wide read group (ot_hgi_vm_die dma_r_up / dma_r_dn, one lanehead client): up {c_req, 32 x {v,
+        // sector 15}}, down {c_gnt (c_req one edge later), credits 32 (the lane's bank pop), 32 x {v, data 256}}
+        wire [512:0] vr2q; wire [8256:0] vr2r; reg vr2_gnt = 1'b0; wire [31:0] vr2_cr, vr2_wcr, vr2_wd; wire [32*257-1:0] vr2_rr;
+        always @(posedge clk) vr2_gnt <= rst_n && vr2q[512];
+        assign vr2r = (DMA_VR2 != 0) ? {vr2_gnt, vr2_cr, vr2_rr} : 8257'd0;
+        hgi_e2e_vmlanes #(.UNIT(8), .LAT(VLAT)) u_vr2 (.clk(clk), .rst_n(rst_n), .rq((DMA_VR2 != 0) ? vr2q[511:0] : 512'd0),
+            .rq_cr(vr2_cr), .rr(vr2_rr), .wq('0), .wq_cr(vr2_wcr), .wq_done(vr2_wd));
         hgi_e2e_vmw #(.UNIT(8), .NW(32)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
         hgi_e2e_svc #(.LAT(KLAT)) u_svc (.clk(clk), .rst_n(rst_n), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr));
         hgi_e2e_kport #(.LAT(KLAT)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(k_req_v), .req_rdy(k_req_rdy), .req_we(k_req_we),

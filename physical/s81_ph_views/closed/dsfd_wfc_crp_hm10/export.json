@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_wfc_crp",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm10-pr/routes/el1011_wfccrp_bb847e831_tc_hm10_pr/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm10-pr/routes/el1011_wfccrp_bb847e831_tc_hm10_pr/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm10-pr/routes/el1011_wfccrp_bb847e831_tc_hm10_pr/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm10-pr/routes/el1011_wfccrp_bb847e831_tc_hm10_pr/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm10-pr/routes/el1011_wfccrp_bb847e831_tc_hm10_pr/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm10-pr/routes/el1011_wfccrp_bb847e831_tc_hm10_pr/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm10-pr/routes/el1011_wfccrp_bb847e831_tc_hm10_pr/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_wfc_crp.lef": "d942604bfdada9c8c33ac41278964eb9fe22d5832d54058729624eb088858fe4",
+    "dsfd_wfc_crp_ff.lib": "afb37c90241fc8b97e405188a265af079af70535398dc8b0e0df1476577605ab",
+    "dsfd_wfc_crp_ss.lib": "ea576f69432c944d7478576753c9a602b30d90a089cdd68e9428be0ff3d1f1df"
+  },
+  "ok": true
+}

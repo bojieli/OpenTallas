@@ -1347,6 +1347,42 @@ SS_REACH_UM = 504.0
 TT_REACH_UM = 674.0             # TT wire fit 261 ps + 0.76 ps/um within 833.333 - 60 ps (reported, option B)
 
 
+def _lint_pin_pt(m):
+    """--pin-need lint / placement pin model: (inst, port or 'port[lo:hi]') -> die (x, y) of the centroid of those pins of
+    a REAL (hardened LEF) macro -- link macros (250 x 2,250 um), q elements, PHYs -- mirrored with the instance
+    orientation.  Generated glue / slab masters get their pin faces from these same nets at finalize (after placement),
+    so they keep the instance centre (None) -- except a hop endpoint that --hop-fix's pass 1 anchored (HOP_PLAN: the
+    pin anchor a generated slab's pin relay is placed against), which takes that anchor."""
+    _init_real()
+    rp = real_ports_r8()
+    by = {it.name: it for it in m['insts']}
+    anc = {}
+    for (di, dp, li, lp), (L_, a_, b_, *_r) in (HOP_PLAN or {}).items():
+        anc.setdefault((li, lp), b_)
+        anc.setdefault((di, dp), a_)
+
+    def pt(inst, port):
+        it = by.get(inst)
+        if it is not None and it.master not in REAL_FILES and (inst, port) in anc:
+            return tuple(anc[(inst, port)])
+        if it is None or it.master not in REAL_FILES:
+            return None
+        r = real_lef(REAL_FILES[it.master])
+        base, lo, hi = pslice(port)
+        nms = [n for n in (rp.get(it.master, {}).get(base) or [])[(lo or 0):(None if hi is None else hi + 1)]
+               if n in r['pins']]
+        if not nms:
+            return None
+        x = sum((r['pins'][n][1][0] + r['pins'][n][1][2]) / 2 for n in nms) / len(nms)
+        y = sum((r['pins'][n][1][1] + r['pins'][n][1][3]) / 2 for n in nms) / len(nms)
+        if it.orient in ('MY', 'R180'):
+            x = r['w'] - x
+        if it.orient in ('MX', 'R180'):
+            y = r['h'] - y
+        return (it.x + x, it.y + y)
+    return pt
+
+
 def margin_lint(m):
     import fp_margin_lint as FPL
     # s81-gen: per-segment walk (the per-chain walk ran > 5 h on the S81 layer1 die; same tests, same verdict)
@@ -1354,10 +1390,12 @@ def margin_lint(m):
     # PLL) to every station's ck: as 'segments' they gave 52,988 false 9-13 mm reach violations on the layer1 die.
     data = [b for b in m['buses'] if b[1] not in HOP_SKIP]
     edges = os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1'
-    out = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=edges)
+    pp = _lint_pin_pt(m) if PIN_NEED else None      # --pin-need: far-side measured to the load's real pins
+    out = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=edges, pin_pt=pp)
+    out['pin_need'] = bool(pp)
     # s81-gen 2026-10-10: the sign-off corner is TT (owner option B); the SS 504 um verdict above stays the gate, and the
     # TT reach (833.333 - 60 ps setup unc. = 261 ps + 0.76 ps/um x L -> 674 um) is reported beside it
-    tt = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=TT_REACH_UM, edges=edges, limit=5)
+    tt = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=TT_REACH_UM, edges=edges, limit=5, pin_pt=pp)
     out['tt'] = dict(reach_um=TT_REACH_UM, reach_violations=tt['reach_violations'], verdict_reach='PASS' if not tt['reach_violations'] else 'FAIL',
                      max_um=max((r['um'] for r in out['reach_examples']), default=0.0))
     return out
@@ -2812,10 +2850,23 @@ class Chains:
                 (cx, cy), d = _poly_at(path, t_)
                 horiz = d in 'EW'
                 w, h = stn_dims(lanes, horiz)
-                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, reach=reach)
+                # --relay-progress: the LAST station of a chain (its target is the chain end) may not slide past the end
+                PL_ = dict(nxt=end, nreach=_mh(cur, end) + 15.0) if RELAY_PROGRESS and L - t_ <= step else {}
+                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, reach=reach, **PL_)
+                if placed is None and PL_:
+                    placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, reach=reach, span=300.0, rows=24, **PL_)
                 if placed is None:
+                    # --relay-progress: the unanchored must-stop fallback (prev=None) may not stand behind the previous
+                    # station w.r.t. the path point one step ahead (detour paths: not w.r.t. the chain end)
+                    ah_ = _poly_at(path, min(L, t_ + step))[0]
+                    PG_ = dict(nxt=ah_, nreach=_mh(cur, ah_) + 15.0) if RELAY_PROGRESS else {}
                     if must:
-                        placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=200.0, rows=16)
+                        placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=200.0, rows=16, **PG_)
+                        if placed is None and PG_:
+                            placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=400.0, rows=40, **PG_)
+                        if placed is None and PG_:
+                            _rp_log(dict(chain=name, stop=round(target, 1), cur=cur, end=end))
+                            placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=200.0, rows=16)
                         break
                     t_ -= 25.0
             if placed is None:            # widen the search (still within reach of the previous station)
@@ -3739,15 +3790,26 @@ def buses_r8(m):
             else:
                 cy_, vx_ = corr_y(m, f'r{t}'), vch_x(m, f'r{t}')
                 path += [(sx_, cy_), (vx_, cy_), (vx_, gy)]
+            endb = None
+            if RELAY_PROGRESS:
+                # --relay-progress: the end block stands first, and the trunk ends on its facing (trunk-side) pin face
+                # (placed after the trunk, hr_W4 slid 256 um off the path end and the last station overshot it)
+                nm, w, h = end_spec('m2l', [CRET] * ncol, 'vr')
+                endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
+                                 [cor['s14W'] if half == 'W' else cor['vch']])
+                ey_ = endb.y + endb.h / 2
+                ex_ = endb.x + endb.w if path[-1][0] >= endb.x + endb.w / 2 else endb.x
+                path = path[:-1] + [(path[-1][0], ey_), (ex_, ey_)]
             path = _dedup(path)
             forced = [abs(xs_[-1] - x_) for x_ in xs_[::-1]]
             lanes_at = []
             allowed = [cor[f'ch{t}'], cor['s14W'] if half == 'W' else cor['s14E'], cor['vch'], cor['hcc']]
             # lanes: column c joins at its tap; a station carries every lane that has joined so far
             sts = _run_multi(CH8, f'r{half}{t}', path, allowed, forced, ncol)
-            nm, w, h = end_spec('m2l', [CRET] * ncol, 'vr')
-            endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
-                             [cor['s14W'] if half == 'W' else cor['vch']])
+            if endb is None:
+                nm, w, h = end_spec('m2l', [CRET] * ncol, 'vr')
+                endb = hub_block(f'hr_{half}{t}', nm, 'hend', w, h, ga.x if half == 'W' else ga.x + ga.w, gy, half,
+                                 [cor['s14W'] if half == 'W' else cor['vch']])
             _multi_nets(m, CH8, f'r{half}{t}', sts, ncol, [_frame_of(m, half, t, c) for c in range(ncol)], endb)
             if REV == 'r9':
                 _local_chain(m, CH8, [cor['s14W'] if half == 'W' else cor['vch']], endb, 'o', ga, f'r{half}{t}',
@@ -3820,6 +3882,8 @@ def buses_r8(m):
             bus(f'pqrq_{j}', 'rom_q', 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
+    if RELAY_PROGRESS:
+        _relay_progress_fix(m, P)
     if LANE_EQUAL:
         _go_retap(m)
     if CTRL_SLAB and HOP_PLAN:
@@ -3902,6 +3966,15 @@ HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
+PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column net's relay count / path end at a q element
+                                # is measured to that port's LEF pin centroid, not the 510 x 221 um element centre (gt: seq ->
+                                # go_tag pins on the element S face ~150 um, centre 238 um > the 214 um rule)
+SSTN_CCPAD = False              # --sstn-ccpad (hbmdie-1011, compact199): a --lane-equal pad on a cc net driven by a slot
+                                # station is N extra cc registers INSIDE that station (master dsfd_sstn_<pins>_cp<N>), not a
+                                # floating relay on the ~40 um station -> sequencer hop (no site exists between them)
+RELAY_PROGRESS = False          # --relay-progress (hbmdie-1011, compact199 die fit): a column relay must advance toward its
+                                # next chain point (mh(relay, nxt) <= mh(driver, nxt) + 15 um, inside the margin lint's 20 um
+                                # far-side slack) in EVERY placement attempt incl. the TT and last-resort fallbacks; no site -> assert
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
 # MTP-DIE hub buses (a, b, bits, port at a, port at b).  WFC (ot_rom_pkg_ctrl_wfc ports): VM write xa_we/waddr15/wdata512
@@ -4203,6 +4276,28 @@ def _q_port_xc(rq, port):
     nms = real_ports_r8()[rq['name']][port]
     xs = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for n in nms if n in rq['pins']]
     return sum(xs) / len(xs)
+
+
+def _rp_log(rec):
+    """--relay-progress diagnostics: a relay / station with no forward site (OT_S81_RP_LOG) -- else fail loudly"""
+    if not os.environ.get('OT_S81_RP_LOG'):
+        return              # the old placement stands; the margin lint (far-side) judges it
+    with open(os.environ['OT_S81_RP_LOG'], 'a') as fh_:
+        fh_.write(json.dumps(rec) + '\n')
+
+
+def _q_pin_pt(it, port):
+    """--pin-need: die (x, y) of the centroid of q element `it`'s LEF pins for die port `port`, or None"""
+    rq = real_lef(Q_LEF)
+    nms = [n for n in real_ports_r8().get(rq['name'], {}).get(port, []) if n in rq['pins']]
+    if not nms:
+        return None
+    xs = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for n in nms]
+    ys = [(rq['pins'][n][1][1] + rq['pins'][n][1][3]) / 2 for n in nms]
+    xc, yc = sum(xs) / len(xs), sum(ys) / len(ys)
+    if it.orient == 'MY':
+        xc = it.w - xc
+    return (it.x + xc, it.y + yc)
 
 
 def _rsv_tag(bid):
@@ -4702,6 +4797,62 @@ def _ctrl_vm_latency_check(m):
                          '(tools/s81_ctrl/specialize_master.py) and set vm_return_valid in the manifest' % (req, rsp['vrq']))
 
 
+def _relay_progress_fix(m, P, passes=3):
+    """--relay-progress (hbmdie-1011): a point-to-point relay / station that stands farther from its next chain point
+    than its own driver (the FP-LINT far-side test, +20 um) is ripped up and re-placed on a free site BETWEEN its driver
+    and next point: inside the region rects around it, no farther from the next point than the driver, and neither of
+    its two hops longer than the longer of its old hops (same register count, no hop gets longer: latency and reach
+    unchanged).  The next point is the load's real LEF pin centroid for a real macro (link tx halves, q ports), else its
+    centre.  Records m['relay_progress_fix'] = {moved, left: [...]}."""
+    import fp_margin_lint as FPL
+    by = {it.name: it for it in m['insts']}
+    cen = lambda it: (it.x + it.w / 2, it.y + it.h / 2)
+    lpt = _lint_pin_pt(m)
+    rects = [r_['rect'] for r_ in m['regions']] + [cr['rect'] for cr in m.get('cregions', [])] + \
+        [tuple(r_) for r_ in _corridors(m).values()]
+    moved, left = 0, []
+    for _ in range(passes):
+        data = [b for b in m['buses'] if b[1] not in HOP_SKIP]
+        res = FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM, edges=True, limit=10 ** 7,
+                             pin_pt=lpt)
+        todo = {}
+        for e in res['far_side_examples']:
+            todo.setdefault(e['relay'], e['chain'].split('->'))
+        if not todo:
+            break
+        left = []
+        for rn, (dn, nn) in todo.items():
+            it, d_ = by[rn], by[dn]
+            ports = {e_[1] for b in data if b[3][0][0] == rn for e_ in b[3][1:] if e_[0] == nn}
+            qs = [q_ for q_ in (lpt(nn, p_) for p_ in sorted(ports)) if q_ is not None]
+            q = (sum(a[0] for a in qs) / len(qs), sum(a[1] for a in qs) / len(qs)) if qs else cen(by[nn])
+            a, o = cen(d_), cen(it)
+            if _mh(o, q) <= _mh(a, q) + 20.0:
+                continue
+            R = min(SS_REACH_UM - 30.0, max(_mh(a, o), _mh(o, q)))
+            pts = (a, o, q)
+            allowed = [r_ for r_ in rects if any(r_[0] <= p_[0] <= r_[2] and r_[1] <= p_[1] <= r_[3] for p_ in pts)]
+            box = it.box()
+            for k_ in P.occ._bins(*box):
+                if box in P.occ.g[k_]:
+                    P.occ.g[k_].remove(box)
+            pl = None
+            # no farther from the next point than the driver + 15 um (inside the lint's 20 um far-side slack)
+            for sp_, rw_ in ((72.0, 10), (200.0, 16), (400.0, 40), (800.0, 80)):
+                pl = P.near((a[0] + q[0]) / 2, (a[1] + q[1]) / 2, it.w, it.h, allowed, prev=a, reach=R,
+                            span=sp_, rows=rw_, nxt=q, nreach=min(R, _mh(a, q) + 15.0))
+                if pl is not None:
+                    break
+            if pl is None:
+                P.occ.add(box)
+                left.append(dict(relay=rn, drv=dn, nxt=nn, back_um=round(_mh(o, q) - _mh(a, q), 1)))
+                continue
+            it.x, it.y = pl
+            P.occ.add(it.box())
+            moved += 1
+    m['relay_progress_fix'] = dict(moved=moved, left=left[:40], n_left=len(left))
+
+
 def _go_retap(m):
     """--lane-equal (ds-1010 lat-audit 2026-10-10): a pair whose sequencer -> element go path (go_<p>, through
     ot_s81_cfg7_seq's combinational go_e) carries k column / hop relays would see go k cycles after its x0 (x0 and the
@@ -4717,7 +4868,7 @@ def _go_retap(m):
     out_of = {}
     for i, (bid, cls, bits, eps) in enumerate(B):
         out_of.setdefault(tuple(eps[0]), []).append(i)
-    rec = {}
+    rec, pad_used = {}, {}
     for it in m['insts']:
         if it.kind != 'seq':
             continue
@@ -4732,13 +4883,22 @@ def _go_retap(m):
             continue
         i = drv_of[(it.name, 'lc')]
         src = B[i][3][0]
+        src0 = tuple(src)
         for _ in range(k):          # one register back along the cc chain per go relay
+            if kind.get(src[0]) == 'sstn' and src[1] == 'cc' and \
+                    pad_used.setdefault(src[0], {}).get(it.name, 0) < m.get('sstn_ccpad', {}).get(src[0], 0):
+                # --sstn-ccpad: the station's own pad registers are the last ones before lc: consume one of them
+                pad_used[src[0]][it.name] = pad_used[src[0]].get(it.name, 0) + 1
+                continue
             if kind.get(src[0]) == 'sstn' and src[1] == 'cc':
                 src = B[drv_of[(src[0], 'cci')]][3][0]
             elif kind.get(src[0]) == 'rly':
                 src = B[drv_of[(src[0], 'i')]][3][0]
             else:
                 raise AssertionError(('--lane-equal: no register to retap before', it.name, src))
+        rec[it.name[1:]] = k
+        if tuple(src) == src0:      # every retap register came out of the station pad: lc stays on the station cc
+            continue
         bid, cls, bits, eps = B[i]
         B[i] = (bid, cls, bits, [e for e in eps if tuple(e) != (it.name, 'lc')])
         j = next(j for j in out_of[tuple(src)] if B[j][1] in ('x_ctl',))
@@ -4746,6 +4906,37 @@ def _go_retap(m):
         B[j] = (bj[0], bj[1], bj[2], bj[3] + [(it.name, 'lc')])
         rec[it.name[1:]] = k
     B[:] = [b for b in B if len(b[3]) > 1]      # a top-slot cc net whose every sequencer moved down
+    # --sstn-ccpad: a padded station's remaining lc loads must have consumed the same number of pad registers; the
+    # station keeps the rest (one pad chain per station, no mid-pad taps)
+    for st_, used in pad_used.items():
+        P_ = m.get('sstn_ccpad', {}).get(st_, 0)
+        if not P_:
+            continue
+        lc_loads = [e[0] for b in B if tuple(b[3][0]) == (st_, 'cc') for e in b[3][1:] if e[1] == 'lc']
+        cs = {used.get(q_, 0) for q_ in lc_loads}
+        if len(cs) <= 1:            # every load agrees: the station keeps P - c pad registers
+            c_ = cs.pop() if cs else 0
+            if P_ - c_:
+                m['sstn_ccpad'][st_] = P_ - c_
+            else:
+                del m['sstn_ccpad'][st_]
+            continue
+        # loads disagree: a load that consumed c pad registers takes the pad tap cct<P - c> (age 1 + P - c)
+        assert P_ <= 4, ('--sstn-ccpad: more than 4 pad taps', st_, P_)
+        for q_ in lc_loads:
+            c_ = used.get(q_, 0)
+            if not c_:
+                continue
+            for bi, b in enumerate(B):
+                if tuple(b[3][0]) == (st_, 'cc') and (q_, 'lc') in [tuple(e) for e in b[3][1:]]:
+                    B[bi] = (b[0], b[1], b[2], [e for e in b[3] if tuple(e) != (q_, 'lc')])
+                    tb = f'cct_{st_}_{P_ - c_}'
+                    ti = next((bj for bj, b2 in enumerate(B) if b2[0] == tb), None)
+                    if ti is None:
+                        B.append((tb, b[1], b[2], [(st_, f'cct{P_ - c_}'), (q_, 'lc')]))
+                    else:
+                        B[ti] = (B[ti][0], B[ti][1], B[ti][2], B[ti][3] + [(q_, 'lc')])
+                    break
     m['go_retap'] = dict(pairs=len(rec), by_k={str(v): sum(1 for x in rec.values() if x == v) for v in set(rec.values())})
 
 
@@ -4755,6 +4946,14 @@ def _col_relays(m, P):
     path and on the worst leaf -> root path."""
     by = {it.name: it for it in m['insts']}
     cen = lambda it: (it.x + it.w / 2, it.y + it.h / 2)
+
+    def ep_pt(e):
+        it_ = by[e[0]]
+        if PIN_NEED and it_.kind == 'q':
+            pt_ = _q_pin_pt(it_, e[1])
+            if pt_ is not None:
+                return pt_
+        return cen(it_)
     RCLS = ('ret_leaf', 'ret_tree', 'x_lane', 'x_ctl', 'stat', 'cfg', 'go', 'col_ret')
     B = m['buses']
     out, added = [], defaultdict(int)       # (bus id) -> relays
@@ -4769,10 +4968,11 @@ def _col_relays(m, P):
         d0 = by.get(eps[0][0])
         if d0 is None or d0.region is None or not d0.region.startswith('frame_'):
             return None
-        far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
-        if far is None:
+        a0 = ep_pt(eps[0])
+        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e)), default=None)
+        if fe is None:
             return None
-        L = _mh(cen(d0), cen(far))
+        L = _mh(a0, ep_pt(fe))
         return math.ceil(L / BANK_RULE_UM - 1e-9) - 1
     # --lane-equal (ds-1010 lat-audit 2026-10-10): the x0 / x1 / cc lanes of one slot segment carry ONE transaction
     # (the element takes x0 and x1 in the same cycle; go rides cc through the pair sequencer), so each of them takes
@@ -4797,19 +4997,31 @@ def _col_relays(m, P):
         r = int(d0.region.split('_')[1])
         f = m['frames'][r]
         fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + column_height())
-        far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
+        if RELAY_PROGRESS:
+            # --relay-progress: a net whose driver / far load sits in the channel beside the frame (PQ root row ->
+            # column FIFO) may take relay sites between its endpoints there, not only inside the frame box
+            ends_ = [by[eps[0][0]]] + [by[e[0]] for e in eps[1:] if e[0] in by]
+            fr = (fr[0], min([fr[1]] + [i_.y for i_ in ends_]), fr[2], max([fr[3]] + [i_.y + i_.h for i_ in ends_]))
+        a0 = ep_pt(eps[0])
+        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e)), default=None)
+        far = by[fe[0]] if fe is not None else None
         if far is None:
             out.append((bid, cls, bits, eps))
             continue
-        L = _mh(cen(d0), cen(far))
+        L = _mh(a0, ep_pt(fe))
         n = math.ceil(L / BANK_RULE_UM - 1e-9) - 1
         mm = re.fullmatch(r'(xa|xb|cc)_(\d+)_(\d+)', bid) if LANE_EQUAL else None
         if mm:
-            n = max(n, lane_n.get((mm.group(2), mm.group(3)), 0))
+            n_pad = max(n, lane_n.get((mm.group(2), mm.group(3)), 0))
+            if SSTN_CCPAD and mm.group(1) == 'cc' and d0.kind == 'sstn' and n_pad > max(n, 0):
+                # the pad cycles (beyond the cc net's own reach need) are registers inside the driving station
+                m.setdefault('sstn_ccpad', {})[d0.name] = m.get('sstn_ccpad', {}).get(d0.name, 0) + n_pad - max(n, 0)
+                n_pad = max(n, 0)
+            n = n_pad
         if n <= 0:
             out.append((bid, cls, bits, eps))
             continue
-        a, b = cen(d0), cen(far)
+        a, b = a0, ep_pt(fe)
         path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
         prev, cur = eps[0], a
         chain = [a]
@@ -4818,11 +5030,16 @@ def _col_relays(m, P):
         for k in range(n):
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
+            pg = _mh(cur, b) + 15.0 if RELAY_PROGRESS else None     # --relay-progress: never behind the driver
+            if pg is not None:
+                NR = dict(nxt=b, nreach=min(NR.get('nreach', pg), pg))
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
             if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
                 # s81-gen: the unbounded fallback below put y_rt_0_8a_1 773.7 um from its driver (r4c frame 0); a relay
                 # first takes a box within the TT reach (inside the frame, then the strip / channel beside it)
                 nr_tt = dict(nxt=b, nreach=(n - k) * (RELAY_TT_REACH - 10.0)) if NXT_REACH else {}
+                if pg is not None:
+                    nr_tt = dict(nxt=b, nreach=min(nr_tt.get('nreach', pg), pg))
                 pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=RELAY_TT_REACH - 10.0, span=400.0,
                             rows=40, **nr_tt)
                 if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
@@ -4830,8 +5047,19 @@ def _col_relays(m, P):
                 if pl:
                     tt_col.append(f'y_{bid}_{k}')
             if pl is None:
+                pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40,
+                            **(dict(nxt=b, nreach=pg) if pg is not None else {}))
+            if pl is None and pg is not None and os.environ.get('OT_S81_RP_LOG'):
+                # diagnostic only: record the frame / path of a relay with no forward site, then legacy fallback
+                with open(os.environ['OT_S81_RP_LOG'], 'a') as fh_:
+                    bx_ = (min(cur[0], b[0]) - 30, min(cur[1], b[1]) - 30, max(cur[0], b[0]) + 30, max(cur[1], b[1]) + 30)
+                    occ_ = [(i_.name, i_.kind, round(i_.x, 2), round(i_.y, 2), round(i_.w, 2), round(i_.h, 2))
+                            for i_ in P.m["insts"] if i_.x < bx_[2] and bx_[0] < i_.x + i_.w and i_.y < bx_[3] and bx_[1] < i_.y + i_.h] \
+                        if True else None
+                    fh_.write(json.dumps(dict(bus=bid, k=k, n=n, cls=cls, drv=cur, far=b, mid=(cx, cy), frame=fr,
+                                              region=d0.region, wh=(w_, h_), occ=occ_)) + '\n')
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
-            assert pl, (bid, k)
+            assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if pg is not None else (bid, k)
             it = P.add(Inst(f'y_{bid}_{k}', f'dsfd_rly_{bits}', pl[0], pl[1], w_, h_, kind='rly',
                             region=d0.region, power_w=bits * FLOP_CLK_W * 1.5))
             out.append((f'{bid}_y{k}', cls, bits, [prev, (it.name, 'i')]))
@@ -5404,7 +5632,16 @@ def _split_stations(P, CH8, lk, nm, port, allc, lx, side):
         yc, lo, hi = link_half_y(lk, port, h)
         w, h_ = stn_dims([hi - lo + 1], False)
         x0 = lx + (8.0 if side == 'W' else -8.0 - w)
-        pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=200.0, rows=16)
+        if RELAY_PROGRESS:
+            # --relay-progress: the half station stays within 150 um of the half's pin centre (it must not slide along
+            # the macro face behind its feeding chain); a wider search along the face, not a far slot
+            pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=400.0, rows=40,
+                        nxt=(x0 + w / 2, yc), nreach=150.0)
+            if pl is None:
+                _rp_log(dict(split=nm, port=port, half=h, yc=yc))
+                pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=200.0, rows=16)
+        else:
+            pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=200.0, rows=16)
         assert pl, (nm, port, h)
         P.n[f'{nm}{port}s'] += 1
         it = Inst(f'f_{nm}{port}s_{h}', stn_master([hi - lo + 1], False), pl[0], pl[1], w, h_, 'R0', kind='stn',
@@ -5575,6 +5812,9 @@ def finalize_r8(m):
         if it.kind == 'sstn':
             code = ''.join(k for k in ('e0', 'e1', 'c0', 'c1', 'si', 'nf', 'qt') if k in u)
             it.master = f'dsfd_sstn_{code or "x"}'
+            if m.get('sstn_ccpad', {}).get(it.name):
+                it.master += f"_cp{m['sstn_ccpad'][it.name]}"     # --sstn-ccpad: N extra cc registers
+                it.master += ''.join(f't{j}' for j in range(4) if f'cct{j}' in u)   # + pad taps cct<j>
         elif it.kind == 'node':
             par = [e for b_ in m['_nets_of_o'].get(it.name, []) for e in b_[3][1:]]
             py = max((by_[e[0]].y for e in par), default=0.0)
@@ -5765,7 +6005,8 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'N' if horiz else 'W', P_(['ck']), 'M5' if horiz else 'M4')
     elif kind == 'sstn':
         _lay(Mx, 'S', P_(['xai', 'xbi', 'cci', 'qt', 'so']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
-        _lay(Mx, 'N', P_(['e0', 'c0', 'cc', 'xa', 'xb', 'si', 'e1', 'c1']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
+        _lay(Mx, 'N', P_(['e0', 'c0', 'cc', 'cct0', 'cct1', 'cct2', 'cct3', 'xa', 'xb', 'si', 'e1', 'c1']), 'M5',
+             pitch=3 if _LAY_K[0] == 1 else 2)
         _lay(Mx, 'W', P_(['ck', 'rs']), 'M4')
         _lay(Mx, 'E', P_(['nf']), 'M4')
     elif kind == 'node':
@@ -5985,7 +6226,19 @@ def glue_rtl(m):
             body.append('    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end')
             body.append('    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15\'d0; else rc <= cci;')
             body.append('    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset')
-            body.append('    assign xb = rb;\n    assign cc = rc;')
+            cp_ = re.search(r'_cp(\d+)(?:t\d)*$', mst)
+            if cp_:      # --sstn-ccpad: the lane-equal pad registers on cc, after the station's own cc register
+                np_ = int(cp_.group(1))
+                body.append(f'    reg [14:0] rcp [0:{np_ - 1}];')
+                body.append('    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) begin : g_cp_rst')
+                body.append(f'        integer j_; for (j_ = 0; j_ < {np_}; j_ = j_ + 1) rcp[j_] <= 15\'d0; end')
+                body.append(f'    else begin : g_cp integer j_; rcp[0] <= rc; for (j_ = 1; j_ < {np_}; j_ = j_ + 1) rcp[j_] <= rcp[j_ - 1]; end')
+                body.append(f'    assign xb = rb;\n    assign cc = rcp[{np_ - 1}];')
+                for j_ in range(np_):        # pad taps: cct<j> = cc after the station register and j pad stages
+                    if f'cct{j_}' in ports:
+                        body.append(f'    assign cct{j_} = ' + ('rc;' if j_ == 0 else f'rcp[{j_ - 1}];'))
+            else:
+                body.append('    assign xb = rb;\n    assign cc = rc;')
             if 'qt' in ports:
                 body.append('    assign qt = xbi;                             // previous slot q1/e1: same-cycle re-buffer')
             terms = [p_ for p_ in ('e0', 'e1', 'c0', 'c1', 'si') if p_ in ports]
@@ -6251,6 +6504,12 @@ def die_options(ap):
                     'face; layer die value 2.6599; default off)')
     ap.add_argument('--cfifo-colck', action='store_true', help='with --cfifo-v2: the cfifo column side clocked from its '
                     'own column tree (pin cr); fixes the FF xa/xb -> first relay hold class (sta_v6)')
+    ap.add_argument('--pin-need', action='store_true', help='column relay need / path to q element ports measured at the '
+                    'real LEF pin centroid (not the element centre)')
+    ap.add_argument('--sstn-ccpad', action='store_true', help='--lane-equal cc padding as extra cc registers in the '
+                    'driving slot station (no floating pad relay)')
+    ap.add_argument('--relay-progress', action='store_true', help='column relays only on sites that advance toward the next '
+                    'chain point (no far-side relay); a packed frame without such a site fails loudly')
     ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
@@ -6419,6 +6678,12 @@ def apply_options(a):
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
+    global RELAY_PROGRESS
+    RELAY_PROGRESS = bool(getattr(a, 'relay_progress', False))
+    global SSTN_CCPAD
+    SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
+    global PIN_NEED
+    PIN_NEED = bool(getattr(a, 'pin_need', False))
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
