@@ -24,6 +24,7 @@ module tb_hgi_e2e;
     parameter integer HC_W = 32, HC_MUT_POST = 0;   // REAL_HC: HCP lanes per group (8 W MAC lanes); bench mutant (pre without + hc_eps)
     parameter integer FUSED_SCRATCH = 256064, FUSED_UN = 32, FUSED_UM = 8;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
+    parameter integer COLL_TKM = 1;     // hgi-1010/k: the collective's hardware TOPK_MERGE merge sink (ot_hgi_coll_ep TKM)
     parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;
     parameter integer SU_WIDE = 0, FUSED_UWIDE = 0;      // 1: the D1 body's WIDE successor (32-lane VM stage / drain; hgi-1010/b)   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
@@ -79,7 +80,7 @@ module tb_hgi_e2e;
         .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_req_len(m_req_len), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
     wire [337:0] cp_vmq; wire [273:0] cp_vmr;
-    wire [967:0] coll_rec; wire [682:0] quant_rec; wire [2074:0] idx_rec; wire [39:0] cfg_bus;
+    wire [967:0] coll_rec; wire [553:0] coll_recx; wire [682:0] quant_rec; wire [2074:0] idx_rec; wire [39:0] cfg_bus;
     reg  [2:0] coll_ret, quant_ret, idx_ret;
     wire [15:0] ux_v_raw; reg [15:0] ux_rdy, ux_done, ux_fault;
     wire dma_wq;                       // the DMA unit's wr_quiet (posted writes drained) -> CTL.FENCE
@@ -109,7 +110,7 @@ module tb_hgi_e2e;
         assign t_abort = 1'b0; assign t_drained = 1'b0; assign t_be = '0;
     end endgenerate
     ot_hgi_cp_die #(.USE_MACRO(0), .MTP(MTP), .MUT(MUT), .FQCR(16)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
-        .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret),
+        .vmstat(19'd0), .coll_rec(coll_rec), .coll_recx(coll_recx), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret),
         .idx_rec(idx_rec), .idx_ret(idx_ret),
         .am_rec(am_rec), .am_ret({ux_fault[7], ux_done[7], ux_rdy[7]}),
         .sm_rec(sm_rec), .sm_ret({ux_fault[1], ux_done[1], ux_rdy[1]}), .su_rec(su_rec), .su_ret({ux_fault[2], ux_done[2], ux_rdy[2]}),
@@ -330,7 +331,7 @@ module tb_hgi_e2e;
     wire [2:0] c_ret; reg c_kv; reg [31:0] c_k;
 `ifdef E2E_COLL
     generate if (REAL_COLL) begin : g_coll
-        hgi_e2e_coll_slot #(.LATC(LATC), .CRED(CRED), .COLL_BF16(COLL_BF16), .COLL_PFMAX(COLL_PFMAX)) u_c (.clk(clk), .rst_n(rst_n), .rec(coll_rec),
+        hgi_e2e_coll_slot #(.LATC(LATC), .CRED(CRED), .COLL_BF16(COLL_BF16), .COLL_PFMAX(COLL_PFMAX), .TKM(COLL_TKM)) u_c (.clk(clk), .rst_n(rst_n), .rec(coll_rec), .recx(coll_recx),
             .cfg(cfg_bus), .ret(c_ret), .k_v(c_kv), .k_in(c_k), .group_size(host[46][7:0]));
     end else begin : g_coll_stub
         assign c_ret = 3'b001;
