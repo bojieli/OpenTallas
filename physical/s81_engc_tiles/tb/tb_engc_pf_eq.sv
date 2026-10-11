@@ -3,7 +3,9 @@
 // write transit) -> T_PBC (bank 0) -> T_PBC (bank 2); T_IO read request / decode / t_vm} against the HIER sub-function
 // ot_dsrom_engram_prefetch_h, same write / read stimulus, VM read stream (out_v / data / ce / ue) compared in order,
 // sticky fault compared at the end.  Phases: full sequential fill, then random write bursts / read bursts / mixed
-// slot-disjoint traffic (reads never target a row written in the last 16 cycles: the tile write commit is later).
+// slot-disjoint traffic.  Reads never target a row written in the last 24 cycles and writes never target a row read in
+// the last 24 cycles (the engine protocol separates a slot's refill from its reads by a release + a whole HBM window; the
+// tile chain reorders a same-row read/write pair closer than ~10 cycles, which that protocol never issues).
 module tb_engc_pf_eq;
     reg ck = 0, rst = 0; always #0.5 ck = ~ck;
     reg wr_v = 0, rd_v = 0; reg [10:0] wr_addr = 0, rd_addr = 0; reg [511:0] wr_data = 0;
@@ -52,11 +54,11 @@ module tb_engc_pf_eq;
             qh = qh + 1; n = n + 1;
         end
     end
-    integer i, ph, cyc, last_w [0:2047]; reg [10:0] a;
+    integer i, ph, cyc, last_w [0:2047], last_r [0:2047]; reg [10:0] a;
     function [10:0] ra(input integer x); ra = {x[10:8], 5'(x % 24), x[2:0]}; endfunction
     task tick; begin @(negedge ck); cyc = cyc + 1; end endtask
     initial begin
-        cyc = 0; for (i = 0; i < 2048; i = i + 1) last_w[i] = -100;
+        cyc = 0; for (i = 0; i < 2048; i = i + 1) begin last_w[i] = -100; last_r[i] = -100; end
         repeat (4) tick; rst = 1; repeat (6) tick;
         // fill
         for (i = 0; i < 1536; i = i + 1) begin
@@ -73,11 +75,12 @@ module tb_engc_pf_eq;
                     wr_v = 1; wr_addr = ra($urandom); if (($urandom % 500) == 0) wr_addr[7:3] = 5'd27;   // rare address fault
                     wr_data = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom,
                                $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom};
-                    if (wr_addr[7:3] < 24) last_w[wr_addr] = cyc;
+                    if (cyc - last_r[wr_addr] <= 24) wr_v = 0;          // no write to a row read < 24 cycles ago
+                    else if (wr_addr[7:3] < 24) last_w[wr_addr] = cyc;
                 end
                 if ((ph % 3) != 0 && ($urandom % 3) != 0) begin       // read (never a row written < 16 cycles ago)
                     a = ra($urandom);
-                    if (cyc - last_w[a] > 24 && !(wr_v && wr_addr == a)) begin rd_v = 1; rd_addr = a; end
+                    if (cyc - last_w[a] > 24 && !(wr_v && wr_addr == a)) begin rd_v = 1; rd_addr = a; last_r[a] = cyc; end
                 end
                 tick;
             end
