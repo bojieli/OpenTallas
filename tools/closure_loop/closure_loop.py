@@ -6471,10 +6471,20 @@ def cmd_reverdict(a):
     if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN"):
         sys.exit(f"{a.name} is {j['status']}")
     m, e = j.get("metrics") or {}, j.get("eco") or {}
-    if j.get("failed_checks"):
-        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss")
     stl = stage_list(j["spec"])
     vidx = next(i for i, x in enumerate(stl) if x["kind"] == "verdict")
+    if j.get("failed_checks") and getattr(a, "recheck", False):
+        # a verdict CHECK was fixed (e.g. LOOP-CORNER TT+SS warn): re-run the verdict stage, which re-runs every check
+        # live on the recorded route and then takes the normal path (closed / hold ECO / NEEDS_RTL)
+        how = f"re-run verdict checks (were {j['failed_checks']}) on the recorded route"
+        j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None,
+                 failed_checks=[])
+        event(j, f"human re-verdict ({a.why}): {how}")
+        save_job(j)
+        ledger(j, f"RE-VERDICT (human, no re-route): {a.why}; {how}")
+        return
+    if j.get("failed_checks"):
+        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss (--recheck re-runs them)")
     if eco_passes(dict(m, errors=[]), 0):
         j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None)
         how = f"route sign-off {setup_corner_label(m)} {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')}"
@@ -6740,6 +6750,7 @@ def main():
     r = sub.add_parser("rebudget-rejudge"); r.add_argument("name"); r.add_argument("--rb", required=True)
     r.add_argument("--sdc", required=True); r.add_argument("--dry", action="store_true")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line TTsetup>=0/FFhold>=0/DRC0; SS sensitivity")
+    r.add_argument("--recheck", action="store_true", help="a failed verdict check was fixed: re-run the verdict stage")
     c = sub.add_parser("cancel"); c.add_argument("name"); c.add_argument("--why")
     ef = sub.add_parser("early-fail"); ef.add_argument("name"); ef.add_argument("--verdict", required=True)
     ef.add_argument("--why", required=True); ef.add_argument("--detail")
