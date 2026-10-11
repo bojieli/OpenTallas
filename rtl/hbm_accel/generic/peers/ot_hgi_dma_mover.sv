@@ -432,13 +432,14 @@ module ot_hgi_dma_mover #(
     genvar gl;
     for (gl = 0; gl < 4; gl = gl + 1) begin : g_rl
         // KVW: the KV engine's write requests share the lane (the engines never run together)
-        assign r_req_v[gl] = lq_v[gl] | kv_wv[gl];
-        assign r_req_addr[gl*37 +: 37] = kv_wv[gl] ? kv_wa[gl*37 +: 37] : lq_a[gl];
-        assign r_req_len[gl*4 +: 4] = kv_wv[gl] ? 4'd1 : lq_n[gl];
-        assign r_req_tag[gl*16 +: 16] = {8'h52, kv_wv[gl] ? 8'd0 : lq_t[gl]};
-        assign r_req_we[gl] = lq_we[gl] | kv_wv[gl];
-        assign r_req_wdata[gl*256 +: 256] = kv_wv[gl] ? kv_wd[gl*256 +: 256] : lq_d[gl];
-        assign r_req_wstrb[gl*32 +: 32] = kv_wv[gl] ? 32'hFFFF_FFFF : lq_s[gl];
+        // (selected by the KV engine's registered busy, not by its valid: registered outputs + one mux)
+        assign r_req_v[gl] = kv_idle ? lq_v[gl] : kv_wv[gl];
+        assign r_req_addr[gl*37 +: 37] = kv_idle ? lq_a[gl] : kv_wa[gl*37 +: 37];
+        assign r_req_len[gl*4 +: 4] = kv_idle ? lq_n[gl] : 4'd1;
+        assign r_req_tag[gl*16 +: 16] = {8'h52, kv_idle ? lq_t[gl] : 8'd0};
+        assign r_req_we[gl] = kv_idle ? lq_we[gl] : 1'b1;
+        assign r_req_wdata[gl*256 +: 256] = kv_idle ? lq_d[gl] : kv_wd[gl*256 +: 256];
+        assign r_req_wstrb[gl*32 +: 32] = kv_idle ? lq_s[gl] : 32'hFFFF_FFFF;
     end
     reg [3:0] l_wo;                                        // lanes with writes in flight (their responses are all write acks)
     // ---- KV write-back engine (hbm-fq/dma, KVW = 1)

@@ -20,7 +20,8 @@
 //      stream is free; a stream walks the move's destination rows over its slot range.  Each bank's read port serves one
 //      stream a cycle (rotating priority among the streams whose next slot is in that bank, written, and whose lane FIFO
 //      has room): up to two sectors a cycle on two stacks.  Two edges after the read the sector enters its stack lane's
-//      4-deep request FIFO (reservations taken at the read), whose head is the lane request (full sector, all strobes);
+//      8-deep request FIFO (6 reservations taken at the read), which refills two ping-pong output registers = the lane
+//      request (full sector, all strobes; the lane's ready only clears one and flips the pointer);
 //      acknowledgements are counted a lane.  Slots are released by the oldest unread slot (buffer room for the issue).
 // The engine accepts the next move as soon as the descriptor FIFO (4) has room: a posted move's HBM writes drain while the
 // next move's source is read.  done pulses once when every accepted move's every write is acknowledged (the mover's FENCE
@@ -124,14 +125,17 @@ module ot_hgi_dma_kvw #(
     reg [2:0]  res [0:3];                                   // lane FIFO entries + reservations
     reg [1:0]  pr [0:1];                                    // a bank's rotating stream priority
     reg        m1_v [0:1], m2_v [0:1]; reg [1:0] m1_l [0:1], m2_l [0:1]; reg [31:0] m1_s [0:1], m2_s [0:1];   // read pipes a bank
-    reg [255:0] lf_d [0:15]; reg [31:0] lf_s [0:15]; reg [1:0] lf_h [0:3], lf_t [0:3]; reg [2:0] lf_n [0:3];
+    reg [255:0] lf_d [0:31]; reg [31:0] lf_s [0:31]; reg [2:0] lf_h [0:3], lf_t [0:3]; reg [3:0] lf_n [0:3];   // 8 deep a lane
+    // the lane's REGISTERED request: two output registers (ping-pong) presented by a registered pointer; the lane's ready
+    // only clears the presented register and flips the pointer, the FIFO head refills the next register in order
+    reg [1:0] oa_v [0:3]; reg [31:0] oa_s [0:7]; reg [255:0] oa_d [0:7]; reg [3:0] op, fp;
     reg [3:0]  w_acc, w_ack; reg [6:0] wo [0:3];
     // a stream's next slot is readable: written (w_cnt - q in 1 .. 512)
     reg [3:0]  w_rdy; reg [1:0] g_s [0:1]; reg [1:0] g_v;
     always @* begin : wpick
         for (integer t = 0; t < 4; t = t + 1) begin : rd
             reg [9:0] d; d = w_cnt - w_q[t];
-            w_rdy[t] = w_act[t] && d != 10'd0 && (!d[9] || d == 10'd512) && res[t] < 3'd4;
+            w_rdy[t] = w_act[t] && d != 10'd0 && (!d[9] || d == 10'd512) && res[t] < 3'd6;
         end
         for (integer b = 0; b < 2; b = b + 1) begin
             g_v[b] = 1'b0; g_s[b] = 2'd0;
@@ -151,9 +155,9 @@ module ot_hgi_dma_kvw #(
     end
     genvar gl;
     for (gl = 0; gl < 4; gl = gl + 1) begin : g_lane
-        assign kw_v[gl] = lf_n[gl] != 3'd0;
-        assign kw_addr[gl*37 +: 37] = {lf_s[gl*4 + lf_h[gl]], 5'd0};
-        assign kw_wdata[gl*256 +: 256] = lf_d[gl*4 + lf_h[gl]];
+        assign kw_v[gl] = oa_v[gl][op[gl]];
+        assign kw_addr[gl*37 +: 37] = {oa_s[gl*2 + op[gl]], 5'd0};
+        assign kw_wdata[gl*256 +: 256] = oa_d[gl*2 + op[gl]];
         assign kw_wo[gl] = wo[gl] != 7'd0 || w_acc[gl];
     end
     // ================================================================ registers
@@ -169,7 +173,8 @@ module ot_hgi_dma_kvw #(
             d_v[0] <= 1'b0; d_v[1] <= 1'b0; b0_we <= 1'b0; b1_we <= 1'b0; b0_re <= 1'b0; b1_re <= 1'b0; bw_last <= 1'b0;
             w_cnt <= 10'd0; w_act <= 4'd0; m1_v[0] <= 1'b0; m1_v[1] <= 1'b0; m2_v[0] <= 1'b0; m2_v[1] <= 1'b0; w_acc <= 4'd0; w_ack <= 4'd0;
             pr[0] <= 2'd0; pr[1] <= 2'd0;
-            for (integer l = 0; l < 4; l = l + 1) begin res[l] <= 3'd0; lf_h[l] <= 2'd0; lf_t[l] <= 2'd0; lf_n[l] <= 3'd0; wo[l] <= 7'd0; end
+            for (integer l = 0; l < 4; l = l + 1) begin res[l] <= 3'd0; lf_h[l] <= 3'd0; lf_t[l] <= 3'd0; lf_n[l] <= 4'd0; wo[l] <= 7'd0; oa_v[l] <= 2'd0; end
+            op <= 4'd0; fp <= 4'd0;
             src <= 1'b0; done <= 1'b0; idle <= 1'b1; owed <= 1'b0;
         end else begin
             src <= 1'b0; done <= 1'b0;
@@ -249,12 +254,20 @@ module ot_hgi_dma_kvw #(
             end
             // ---- lane FIFOs: push the read sector, pop on the lane's acceptance; acknowledgements
             for (integer l = 0; l < 4; l = l + 1) begin : lf
-                reg push, pop;
-                reg pb; pb = m2_v[1] && m2_l[1] == 2'(l);       // a stream (= stack) reads one bank a cycle
+                reg push, pop, pb, fill; reg [1:0] ov;
+                pb = m2_v[1] && m2_l[1] == 2'(l);              // a stream (= stack) reads one bank a cycle
                 push = (m2_v[0] && m2_l[0] == 2'(l)) || pb; pop = kw_v[l] && kw_rdy[l];
-                if (push) begin lf_d[l*4 + lf_t[l]] <= pb ? b1_rd : b0_rd; lf_s[l*4 + lf_t[l]] <= pb ? m2_s[1] : m2_s[0]; lf_t[l] <= lf_t[l] + 2'd1; end
-                if (pop) lf_h[l] <= lf_h[l] + 2'd1;
-                lf_n[l] <= lf_n[l] + 3'(push) - 3'(pop);
+                fill = lf_n[l] != 4'd0 && !oa_v[l][fp[l]];
+                if (push) begin lf_d[l*8 + lf_t[l]] <= pb ? b1_rd : b0_rd; lf_s[l*8 + lf_t[l]] <= pb ? m2_s[1] : m2_s[0]; lf_t[l] <= lf_t[l] + 3'd1; end
+                if (fill) begin
+                    oa_d[l*2 + fp[l]] <= lf_d[l*8 + lf_h[l]]; oa_s[l*2 + fp[l]] <= lf_s[l*8 + lf_h[l]];
+                    lf_h[l] <= lf_h[l] + 3'd1; fp[l] <= !fp[l];
+                end
+                lf_n[l] <= lf_n[l] + 4'(push) - 4'(fill);
+                ov = oa_v[l];
+                if (pop) begin ov[op[l]] = 1'b0; op[l] <= !op[l]; end
+                if (fill) ov[fp[l]] = 1'b1;
+                oa_v[l] <= ov;
                 res[l] <= res[l] + 3'(((g_v[0] && g_s[0] == 2'(l)) || (g_v[1] && g_s[1] == 2'(l))) ? 1 : 0) - 3'(pop);
                 w_acc[l] <= pop; w_ack[l] <= r_rsp_v[l] && r_rsp_we[l] && kw_wo[l];
                 wo[l] <= wo[l] + 7'(w_acc[l]) - 7'(w_ack[l]);
@@ -262,7 +275,7 @@ module ot_hgi_dma_kvw #(
             // ---- completion
             idle <= !owed && !(c_v && c_rdy);
             if (owed && f_t == f_w && !i_act && o_n == 7'd0 && !d_v[0] && !d_v[1] && !b0_we && !b1_we && w_act == 4'd0 && !m1_v[0] && !m1_v[1] && !m2_v[0] && !m2_v[1] &&
-                lf_n[0] == 3'd0 && lf_n[1] == 3'd0 && lf_n[2] == 3'd0 && lf_n[3] == 3'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
+                lf_n[0] == 4'd0 && lf_n[1] == 4'd0 && lf_n[2] == 4'd0 && lf_n[3] == 4'd0 && oa_v[0] == 2'd0 && oa_v[1] == 2'd0 && oa_v[2] == 2'd0 && oa_v[3] == 2'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
                 wo[0] == 7'd0 && wo[1] == 7'd0 && wo[2] == 7'd0 && wo[3] == 7'd0 && !(c_v && c_rdy)) begin
                 owed <= 1'b0; done <= 1'b1; idle <= 1'b1;
             end
