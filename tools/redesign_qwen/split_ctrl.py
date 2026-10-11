@@ -1217,7 +1217,7 @@ def ctrl_olag(t: str) -> str:
             "        wire e0 = (x_oacc == ol_c0), e1 = (x_oacc == ol_c1), e2 = (x_oacc == ol_c2);\n"
             "        wire [XW-1:0] d0 = x_oacc - ol_c0, d1 = x_oacc - ol_c1, d2 = x_oacc - ol_c2;\n"
             "        wire p0 = !e0 && !d0[XW-1], p1 = !e1 && !d1[XW-1], p2 = !e2 && !d2[XW-1];\n"
-            "        assign o_eq0 = (OLAG == 2) ? (ol_sq ? e0 : e1) : (ol_sq ? e1 : e0);\n"
+            "        assign o_eq0 = (OLAG == 2 || PCUT == 2) ? (ol_sq ? e0 : e1) : (ol_sq ? e1 : e0);   // PCUT 2 / OLAG 2: negative controls\n"
             "        assign o_eq1 = ol_sq ? e2 : e1;\n"
             "        assign o_pa0 = ol_sq ? p1 : p0; assign o_pa1 = ol_sq ? p2 : p1;\n"
             "    end else begin : g_oeq\n"
