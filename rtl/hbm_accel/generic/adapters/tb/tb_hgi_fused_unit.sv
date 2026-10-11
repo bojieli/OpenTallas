@@ -34,6 +34,9 @@ module tb_hgi_fused_unit;
 `ifdef UN
     , .UN(`UN), .UM(`UM)
 `endif
+`ifdef HCE
+    , .HCE(1), .HMUT(`HCE)
+`endif
     ) u (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'd240000), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]),
         .rec_o(cur[1151:896]), .rec_n_a(cur[1172:1152]), .rec_n_b(cur[1193:1173]), .rec_n_o(cur[1214:1194]),
@@ -80,7 +83,8 @@ module tb_hgi_fused_unit;
             qd = tr[32 * word[2:0] +: 32];
         end
     endtask
-    integer k, nf;
+    integer k, nf, hce_cyc = 0, mv_cyc = 0;
+    always @(posedge clk) begin if (rst_n && u.st == 5'd9) hce_cyc <= hce_cyc + 1; if (rst_n && u.st == 5'd3) mv_cyc <= mv_cyc + 1; end
     always @(posedge clk) begin if (rst_n && done) k = k + 1; if (rst_n && fault) nf = nf + 1; end
     integer c, j, t, kind, r0, nr, vi0, nvi, ve0, nve, h0, nh, words = 0, cases = 0, t0;
     reg [31:0] qd;
@@ -93,7 +97,7 @@ module tb_hgi_fused_unit;
             rst_n = 0; hbm.delete(); repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk);
             for (j = 0; j < nvi; j = j + 1) vm_req(1'b1, vmim[vi0 + j][63:32], vmim[vi0 + j][31:0], qd);
             for (j = 0; j < nh; j = j + 1) hbm[hbmm[h0 + j][71:32]] = hbmm[h0 + j][31:0];
-            k = 0; nf = 0; t0 = cyc;
+            k = 0; nf = 0; t0 = cyc; hce_cyc = 0; mv_cyc = 0;
             for (j = 0; j < nr; j = j + 1) begin
                 @(negedge clk); cur = recm[r0 + j]; rec_v = 1;
                 t = 0; while (!rec_rdy && t < 4000000) begin @(negedge clk); t = t + 1; end
@@ -101,7 +105,7 @@ module tb_hgi_fused_unit;
             end
             t = 0; while (k < nr && nf == 0 && t < 4000000) begin @(posedge clk); t = t + 1; end
             if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", c, k, nr, nf); errors = errors + 1; end
-            $display("case %0d: %0d records in %0d cycles", c, k, cyc - t0); $fflush;
+            $display("case %0d: %0d records in %0d cycles (HC engine %0d, mover %0d)", c, k, cyc - t0, hce_cyc, mv_cyc); $fflush;
 `ifdef DUMP_SCR
             for (j = 0; j < 4; j = j + 1) begin vm_req(1'b0, 240000 + `DUMP_SCR + j, 0, qd); $display("SCR %0d = %h", j, qd); end
 `endif

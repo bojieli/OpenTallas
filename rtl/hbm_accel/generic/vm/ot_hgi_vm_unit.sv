@@ -39,6 +39,11 @@ module ot_hgi_vm_unit #(
     output reg  [(W2>0?W2:1)-1:0]     w2q_done
 );
     localparam integer RPL = RP > 0 ? RP : 1, W2L = W2 > 0 ? W2 : 1;
+    // LQ must be a power of two: the read-queue pointers are $clog2(LQ) bits and wrap at 2^n (lead / d: an LQ of 24 would
+    // index past the queue), and the write queues are ot_fifo_sram_fwft (power-of-two DEPTH)
+    generate if ((1 << $clog2(LQ)) != LQ) begin : g_lq_must_be_pow2
+        ot_hgi_vm_unit_LQ_must_be_a_power_of_two u_trap ();
+    end endgenerate
     // ---- wide read lanes: pin flop -> LQ-deep request queue -> core lane (accepted when no client reads the bank)
     reg [RPL*16-1:0] rq_r; always @(posedge clk or negedge rst_n) if (!rst_n) rq_r <= '0; else rq_r <= rq;
     reg [14:0] rqq [0:RPL-1][0:LQ-1]; reg [$clog2(LQ):0] rqn [0:RPL-1]; reg [$clog2(LQ)-1:0] rqh [0:RPL-1], rqt [0:RPL-1];

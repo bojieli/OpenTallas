@@ -258,12 +258,24 @@ module tb_hgi_su_prod;
         $display("XFAULT cyc %0d vf_seen %0d vfault_q %0d lane_ovf %0d cfault_q %0d s0 %0d r_v %0d r_gop %0d st_prev? wl_nout %0d wl_nin %0d",
             cyc, `CTLP.vf_seen, `CTLP.vfault_q, `CTLP.lane_ovf, `CTLP.cfault_q, `CTLP.s0v_q, `CTLP.r_v, `CTLP.r_gop,
             `CTLP.wl[0 +: 16], `CTLP.wl[16 +: 16]); $fflush;
+        $display("XFAULT wl A base %0d so %0d si %0d  B base %0d so %0d  R base %0d  red %0d sfu %0d m1 %0d lfull %0d lb0 %0d Lr0 %0d",
+            `CTLP.wl[40 +: 24], `CTLP.wl[64 +: 24], `CTLP.wl[88 +: 24], `CTLP.wl[138 +: 24], `CTLP.wl[162 +: 24], `CTLP.wl[484 +: 24],
+            `CTLP.wl[478 +: 2], `CTLP.wl[371 +: 3], `CTLP.wl[360 +: 3], `CTLP.l_full_q, `CTLP.lb[0], `CTLP.Lr[0]);
     end
+    always @(posedge clk) if (`CTLP.go) $display("XGO cyc %0d A base %0d so %0d si %0d no %0d ni %0d", cyc, `CTLP.wl[40 +: 24],
+        `CTLP.wl[64 +: 24], `CTLP.wl[88 +: 24], `CTLP.wl[0 +: 16], `CTLP.wl[16 +: 16]);
     always @(posedge clk) if (inrec && cyc % 2000 == 0) begin
         $display("XDBG cyc %0d st %0d r_v %0d r_gop %0d r_cdone %0d d_v %0d d_ph %0d st_busy %0d st_done %0d sk %0d s_rows %0d bq_n %0d rp_on %0d mq0 %0d lq0 %0d cr0 %0d dr_live %0d drk %0d e_rows %0d rg %0d/%0d nexec %0d",
             cyc, `CTLP.st, `CTLP.r_v, `CTLP.r_gop, `CTLP.r_cdone, `CTLP.d_v, `CTLP.d_ph, `CTLP.st_busy, `CTLP.st_done, `CTLP.sk,
             `CTLP.s_rows, `CTLP.bq_n, `CTLP.rp_on, `CTLP.mq_n[0], `CTLP.lq_n[0], `CTLP.cr[0], `CTLP.dr_live, `CTLP.drk, `CTLP.e_rows,
             `CTLP.rg_req, `CTLP.rg_q, `CTLP.u_rec.nexec); $fflush; end
+    always @(posedge clk) if (inrec && cyc % 2000 == 1) begin
+        $display("XBQ head id %0d cnt %0d b_act %0d b_left %0d s_md %0d | lane heads:", `CTLP.bq_id[`CTLP.bq_h], `CTLP.bq_cnt[`CTLP.bq_h],
+                 `CTLP.b_act, `CTLP.b_left, `CTLP.s_md);
+        for (integer b = 0; b < 32; b = b + 1) if (`CTLP.lq_n[b] != 0)
+            $display("XBQ   lane %0d n %0d beat %0d md %0d", b, `CTLP.lq_n[b], `CTLP.m_bt(`CTLP.lq[b][`CTLP.lq_h[b]][`CTLP.MW+255 -: `CTLP.MW]),
+                     `CTLP.m_md(`CTLP.lq[b][`CTLP.lq_h[b]][`CTLP.MW+255 -: `CTLP.MW]));
+    end
 `endif
 `endif
     // progress watchdog: a record pipeline that stops retiring (a hang) is a FAIL, not a wait

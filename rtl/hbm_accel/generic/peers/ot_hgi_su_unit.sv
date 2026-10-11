@@ -1700,6 +1700,9 @@ module ot_hgi_su_ctlx #(
 );
     localparam integer AW = 24, LW = 1 << LWB, QB = $clog2(LQ), DB = $clog2(DF);
     // sectors a beat: 8 x BL consecutive local words must fall on distinct banks (d's lmem rule) -> BL = min(32, N / 8)
+    generate if ((1 << QB) != LQ || (1 << DB) != DF) begin : g_pow2
+        ot_hgi_su_ctlx_LQ_and_DF_must_be_powers_of_two u_trap ();
+    end endgenerate
     localparam integer BL = (N / 8 < 32) ? ((N / 8 < 1) ? 1 : N / 8) : 32;
     // ---- the record adapter (decode), PIPED: retire on su_ret
     wire op_v; reg op_rdy_r; wire [669:0] op_w; reg su_idle_r, su_fault_r, su_ret;
@@ -1804,7 +1807,9 @@ module ot_hgi_su_ctlx #(
     reg [15:0] s_rows; reg [23:0] s_rb, s_va, s_nw, s_j; reg [LWB:0] s_lr, s_L; reg [23:0] s_so, s_si; reg [1:0] s_md;
     reg [20:0] s_cur, s_end; reg [3:0] s_g; reg [7:0] s_beat;
     reg [QB:0] cr [0:31]; reg [DB:0] slot [0:31];
-    reg [MW-1:0] mq [0:31][0:LQ+DF-1]; reg [$clog2(LQ+DF):0] mq_n [0:31]; reg [$clog2(LQ+DF)-1:0] mq_h [0:31], mq_t [0:31];
+    // in-flight meta FIFO: a power of two deep (pointers wrap at 2^n; LQ + DF need not be one)
+    localparam integer MQB = $clog2(LQ + DF), MQD = 1 << MQB;
+    reg [MW-1:0] mq [0:31][0:MQD-1]; reg [MQB:0] mq_n [0:31]; reg [MQB-1:0] mq_h [0:31], mq_t [0:31];
     reg [MW+255:0] lq [0:31][0:DF-1]; reg [DB:0] lq_n [0:31]; reg [DB-1:0] lq_h [0:31], lq_t [0:31];
     // beat queue: {beat id, count of sectors, mode}
     reg [7:0] bq_id [0:63]; reg [5:0] bq_cnt [0:63]; reg [5:0] bq_h, bq_t; reg [6:0] bq_n; reg [5:0] b_left; reg b_act;
@@ -1944,6 +1949,17 @@ module ot_hgi_su_ctlx #(
                             default: begin fw[484 +: 24] <= galloc[5]; fw[508 +: 24] <= 24'd1; end
                         endcase
                     end
+                    else begin
+                        // an unused stream: give it the flat-consistent stride (so = row words, si = 1) so the vec's
+                        // flatten test (every stream contiguous across rows) agrees with the dense layout's choice
+                        case (rk)
+                            3'd1: begin fw[162 +: 24] <= bhalf ? {8'd0, ni >> 1} : {8'd0, ni}; fw[186 +: 24] <= 24'd1; end
+                            3'd2: begin fw[235 +: 24] <= {8'd0, ni}; fw[259 +: 24] <= 24'd1; end
+                            3'd3: begin fw[308 +: 24] <= bhalf ? {8'd0, ni >> 1} : {8'd0, ni}; fw[332 +: 24] <= 24'd1; end
+                            3'd4: if (!o_s) begin fw[406 +: 24] <= {8'd0, ni}; fw[430 +: 24] <= 24'd1; end
+                            default: ;
+                        endcase
+                    end
                     if (rk == 3'd5) st <= S_STAGE; else rk <= rk + 3'd1;
                 end
                 S_STAGE: begin                                      // sources clear of older undrained sinks?
@@ -2072,7 +2088,7 @@ module ot_hgi_su_ctlx #(
                     if (s_md == 2'd0) begin
                         for (integer k = 0; k < BL; k = k + 1) begin
                             sc = s_cur + 21'(k); bl = sc[4:0];
-                            if (!stop && sc <= s_end && cr[bl] != 0 && slot[bl] != 0 && mq_n[bl] < (LQ + DF)) begin
+                            if (!stop && sc <= s_end && cr[bl] != 0 && slot[bl] != 0 && mq_n[bl] < (MQB+1)'(MQD)) begin
                                 iss[bl] = 1'b1; n_ok = n_ok + 1;
                                 w0 = {sc, 3'b000};
                                 for (integer q = 0; q < 8; q = q + 1) mk[q] = MUT_X == 1 ? 1'b1 : ((w0 + q >= s_rb) && (w0 + q < s_rb + s_nw));
@@ -2089,7 +2105,7 @@ module ot_hgi_su_ctlx #(
                         end
                     end else begin
                         sc = (s_md == 2'd1) ? 21'(s_rb >> 3) : 21'(s_va >> 3); bl = sc[4:0];
-                        if (cr[bl] != 0 && slot[bl] != 0 && mq_n[bl] < (LQ + DF) && bq_n < 7'd60) begin
+                        if (cr[bl] != 0 && slot[bl] != 0 && mq_n[bl] < (MQB+1)'(MQD) && bq_n < 7'd60) begin
                             iss[bl] = 1'b1;
                             wrq[bl*16 +: 16] <= {1'b1, sc[14:0]};
                             if (s_md == 2'd1)                      // broadcast row: one read, the row's L words
