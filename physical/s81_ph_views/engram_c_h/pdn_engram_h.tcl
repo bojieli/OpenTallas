@@ -14,5 +14,5 @@ add_pdn_connect -grid {top} -layers {M2 M5}
 add_pdn_connect -grid {top} -layers {M5 M6}
 add_pdn_connect -grid {top} -layers {M6 M7}
 # HIER leaves (closed dsfd_engram_lkp / dsfd_engram_sink views: VDD / VSS on M6 / M7, OBS to M7): macro grid to M7
-define_pdn_grid -macro -cells {dsfd_engram_lkp dsfd_engram_sink} -halo {5 5 5 5} -voltage_domains {CORE} -name {engram_leaves}
+define_pdn_grid -macro -cells {dsfd_engram_lkp dsfd_engram_sink} -halo {2 2 2 2} -voltage_domains {CORE} -name {engram_leaves}
 add_pdn_connect -grid {engram_leaves} -layers {M6 M7}

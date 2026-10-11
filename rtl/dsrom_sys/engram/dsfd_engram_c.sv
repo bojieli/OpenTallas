@@ -74,13 +74,14 @@ module dsfd_engram_c #(
     reg  [1:0] jf_r;                     // sticky window fault -> endpoint (window queue sits by f_win, the endpoint by c_cmd)
     reg  [17:0] jn_r1, jn_r2;            // {j_new, reserved != 0, n 16}: endpoint -> descriptor queue
     reg  [15:0] wn_r1, wn_r2;            // windows released: window queue -> done side
+    reg  [1:0]  pff_r;                   // prefetch fault -> endpoint
 
     // ---------------- command endpoint
     wire j_v, j_new; wire [83:0] j_d, j_new_d; wire ep_fault;
     reg  j_done, jf;
     ot_s81_slab_ep #(.QD(8), .JQ(8), .MUT(EPMUT)) u_ep (.c_clk(ck[0]), .c_rst_n(rst[0]), .c_cmd(c_cmd), .c_done(c_done),
         .c_st(c_st), .e_clk(ck[0]), .e_rst_n(rn), .j_v(j_v), .j_d(j_d), .j_new(j_new), .j_new_d(j_new_d),
-        .j_present(1'b1), .j_done(j_done), .slab_fault(jf_r[1] | pf_fault), .ep_fault(ep_fault));
+        .j_present(1'b1), .j_done(j_done), .slab_fault(jf_r[1] | pff_r[1]), .ep_fault(ep_fault));
     // (the lookup's sticky fault is a DATA status -- CRC / address / alignment of a row -- carried on t_ag to the
     //  collective and per slot as perr on t_vm; it is not an engine-protocol fault)
 
@@ -124,24 +125,38 @@ module dsfd_engram_c #(
             jn_r1 <= {j_new, (j_new_d[30:23] != 8'd0), j_new_d[22:7]}; jn_r2 <= jn_r1;
             wn_r1 <= wn; wn_r2 <= wn_r1;
         end
+    always @(posedge ck[0] or negedge rn) if (!rn) pff_r <= 2'b00; else pff_r <= {pff_r[0], pf_fault};
 
     // ---------------- lookup element (closed dsfd_engram_lkp)
     wire lk_fault, lk_ov, lk_stv, lk_stb, lk_hqv; wire [4:0] lk_oc; wire [2:0] lk_ob, lk_os, lk_sts, lk_hqt;
     wire [263:0] lk_od; wire [30:0] lk_hqa;
     // HBM pair relays (die pins on the W edge, the lookup's HBM edge faces S): 2 forward stages each way
-    reg  [34:0]  hq_r1, hq_r2; reg [264:0] hr_r1, hr_r2;
+    // HBM pair relays (die pins on the W edge, the lookup's HBM edge faces S): 2 forward stages each way
     // all-gather out relays (the lookup's output edge faces N, the t_ag pins are left of it) + credit return stage
-    reg  [281:0] ag_r1, ag_r2; reg agc_r;
+    // (TEXTBOOK class 2: relay data carries no reset; only the valid / credit / fault bits are reset)
+    reg  [33:0]  hqd_1, hqd_2; reg hqv_1, hqv_2;                  // {hq_tag, hq_atom} / hq_v
+    reg  [262:0] hrd_1, hrd_2; reg [1:0] hrv_1, hrv_2;            // {hr_d, hr_idx, hr_tag} / {hr_v, hq_cred}
+    reg  [3:0]   ags_1, ags_2;                                     // {st_bad, st_slot}
+    reg  [274:0] agd_1, agd_2;                                     // {d, slot, beat, col}
+    reg  [2:0]   agv_1, agv_2;                                     // {fault, st_v, o_v}
+    reg agc_r;
     reg  [2:0]   cfg_r1, cfg_r2;             // boot straps (static)
+    always @(posedge ck[0]) begin
+        hqd_1 <= {lk_hqt, lk_hqa}; hqd_2 <= hqd_1;
+        hrd_1 <= f_hr[264:2]; hrd_2 <= hrd_1;
+        ags_1 <= {lk_stb, lk_sts}; ags_2 <= ags_1;
+        agd_1 <= {lk_od, lk_os, lk_ob, lk_oc}; agd_2 <= agd_1;
+    end
     always @(posedge ck[0] or negedge rn_lk)
-        if (!rn_lk) begin hq_r1 <= 35'd0; hq_r2 <= 35'd0; hr_r1 <= 265'd0; hr_r2 <= 265'd0; ag_r1 <= 282'd0; ag_r2 <= 282'd0;
+        if (!rn_lk) begin hqv_1 <= 1'b0; hqv_2 <= 1'b0; hrv_1 <= 2'b00; hrv_2 <= 2'b00; agv_1 <= 3'd0; agv_2 <= 3'd0;
                           agc_r <= 1'b0; end
         else begin
-            hq_r1 <= {lk_hqt, lk_hqa, lk_hqv}; hq_r2 <= hq_r1;
-            hr_r1 <= f_hr; hr_r2 <= hr_r1;
-            ag_r1 <= {lk_fault, lk_stb, lk_sts, lk_stv, lk_od, lk_os, lk_ob, lk_oc, lk_ov}; ag_r2 <= ag_r1;
+            hqv_1 <= lk_hqv; hqv_2 <= hqv_1;
+            hrv_1 <= f_hr[1:0]; hrv_2 <= hrv_1;
+            agv_1 <= {lk_fault, lk_stv, lk_ov}; agv_2 <= agv_1;
             agc_r <= f_agc[0];
         end
+    wire [264:0] hr_r2 = {hrd_2, hrv_2};
     always @(posedge ck[0]) begin cfg_r1 <= f_cfg; cfg_r2 <= cfg_r1; end
     // HIER: in synthesis the lookup / sink are the closed hardened views (liberty black boxes, no parameters); the
     // views were built at exactly these values (lkp: defaults = PIPE 0 / NSLOT 8 / HQ_CRED 8 / O_CRED 16 / SLW 3;
@@ -157,8 +172,8 @@ module dsfd_engram_c #(
         .hr_v(hr_r2[1]), .hr_tag(hr_r2[4:2]), .hr_idx(hr_r2[8:5]), .hr_d(hr_r2[264:9]),
         .o_v(lk_ov), .o_col(lk_oc), .o_beat(lk_ob), .o_slot(lk_os), .o_d(lk_od), .o_cred(agc_r),
         .st_v(lk_stv), .st_slot(lk_sts), .st_bad(lk_stb), .fault(lk_fault));
-    assign t_hq = hq_r2;
-    assign t_ag = ag_r2;
+    assign t_hq = {hqd_2, hqv_2};
+    assign t_ag = {agv_2[2], ags_2[3], ags_2[2:0], agv_2[1], agd_2, agv_2[0]};
 
     // ---------------- row sink (closed dsfd_engram_sink) -> prefetch buffer
     wire s_we; wire [10:0] s_wa; wire [511:0] s_wd; wire [7:0] s_rdy, s_perr;
@@ -192,11 +207,13 @@ module dsfd_engram_c #(
         else begin rdy_1 <= s_rdy; rdy_2 <= rdy_1; rdy_3 <= rdy_2; rdy_p <= rdy_3;
                    perr_1 <= s_perr; perr_2 <= perr_1; perr_3 <= perr_2; perr_p <= perr_3; end
     // registered VM outputs at the t_vm pins
-    reg [531:0] tvm_q;
+    // (data unreset; perr / rdy / fault / ue / ce / v reset)
+    reg [511:0] tvd_q; reg [18:0] tvs_q; reg tvv_q;
+    always @(posedge ck[0]) tvd_q <= pf_d;
     always @(posedge ck[0] or negedge rn)
-        if (!rn) tvm_q <= 532'd0;
-        else     tvm_q <= {perr_p, rdy_p, pf_fault, pf_ue, pf_ce, pf_d, pf_v};
-    assign t_vm = tvm_q;
+        if (!rn) begin tvs_q <= 19'd0; tvv_q <= 1'b0; end
+        else     begin tvs_q <= {perr_p, rdy_p, pf_fault, pf_ue, pf_ce}; tvv_q <= pf_v; end
+    assign t_vm = {tvs_q, tvd_q, tvv_q};
 
     // ---------------- done side: the (n / 8 + 1)-th rising edge of rdy[n mod 8]
     reg [7:0] rdy_d; reg [12:0] rise [0:7]; integer s;

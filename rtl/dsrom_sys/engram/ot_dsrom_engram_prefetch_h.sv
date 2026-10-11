@@ -51,11 +51,13 @@ module ot_dsrom_engram_prefetch_h #(
     reg wr_q;
     reg [10:0] wa_q;
     reg [575:0] wd_q;
+    reg werr_q, rerr_q;          // address faults registered at their own port (write side / read side), then OR-ed
     always @(posedge ck or negedge rst_n) begin
-        if(!rst_n) begin wr_q<=0;fault<=0;end
+        if(!rst_n) begin wr_q<=0;fault<=0;werr_q<=0;rerr_q<=0;end
         else begin
             wr_q<=wr_v&&wr_ok;
-            if((wr_v&&!wr_ok)||(rd_v&&!rd_ok)||out_ue) fault<=1;
+            werr_q<=wr_v&&!wr_ok; rerr_q<=rd_v&&!rd_ok;
+            if(werr_q||rerr_q||out_ue) fault<=1;
         end
     end
     always @(posedge ck) begin wa_q<=wr_compact;wd_q<=encoded;end
@@ -74,20 +76,23 @@ module ot_dsrom_engram_prefetch_h #(
     generate for(bank=0;bank<NB;bank=bank+1) begin:g_bank
         localparam integer BW = (bank < 2) ? 256 : 64;
         // W2 / R1: per-bank copies
-        ot_v41_kreg #(.W(6+8+BW), .AR(1)) u_w2 (.clk(ck), .arst_n(rst_n),
-            .d({wd_q[256*bank+:BW], wa_q[7:0], w1_oh}), .q({w2_d[bank][BW-1:0], w2_a[bank], w2_oh[bank]}));
+        // (TEXTBOOK class 2: datapath copies carry no reset; only the valid / select one-hots are reset)
+        ot_v41_kreg #(.W(8+BW), .AR(0)) u_w2d (.clk(ck), .arst_n(rst_n),
+            .d({wd_q[256*bank+:BW], wa_q[7:0]}), .q({w2_d[bank][BW-1:0], w2_a[bank]}));
+        ot_v41_kreg #(.W(6), .AR(1)) u_w2v (.clk(ck), .arst_n(rst_n), .d(w1_oh), .q(w2_oh[bank]));
         if (BW < 256) begin : g_pad assign w2_d[bank][255:BW] = {(256-BW){1'b0}}; end
-        ot_v41_kreg #(.W(6+8), .AR(1)) u_r1 (.clk(ck), .arst_n(rst_n),
-            .d({rd_compact[7:0], r0_oh}), .q({r1_a[bank], r1_oh[bank]}));
+        ot_v41_kreg #(.W(8), .AR(0)) u_r1a (.clk(ck), .arst_n(rst_n), .d(rd_compact[7:0]), .q(r1_a[bank]));
+        ot_v41_kreg #(.W(6), .AR(1)) u_r1v (.clk(ck), .arst_n(rst_n), .d(r0_oh), .q(r1_oh[bank]));
         wire [BW-1:0] cap [0:NG-1];
         wire [NG-1:0] sel3;
         for(group=0;group<NG;group=group+1) begin:g_grp
             // W3 / R2: per-macro access registers (in the macro's left channel)
             wire w3_v, r2_v; wire [7:0] w3_a, r2_a; wire [BW-1:0] w3_d; wire [255:0] rd_out;
-            ot_v41_kreg #(.W(1+8+BW), .AR(1)) u_w3 (.clk(ck), .arst_n(rst_n),
-                .d({w2_d[bank][BW-1:0], w2_a[bank], w2_oh[bank][group]}), .q({w3_d, w3_a, w3_v}));
-            ot_v41_kreg #(.W(1+8), .AR(1)) u_r2 (.clk(ck), .arst_n(rst_n),
-                .d({r1_a[bank], r1_oh[bank][group]}), .q({r2_a, r2_v}));
+            ot_v41_kreg #(.W(8+BW), .AR(0)) u_w3d (.clk(ck), .arst_n(rst_n),
+                .d({w2_d[bank][BW-1:0], w2_a[bank]}), .q({w3_d, w3_a}));
+            ot_v41_kreg #(.W(1), .AR(1)) u_w3v (.clk(ck), .arst_n(rst_n), .d(w2_oh[bank][group]), .q(w3_v));
+            ot_v41_kreg #(.W(8), .AR(0)) u_r2a (.clk(ck), .arst_n(rst_n), .d(r1_a[bank]), .q(r2_a));
+            ot_v41_kreg #(.W(1), .AR(1)) u_r2v (.clk(ck), .arst_n(rst_n), .d(r1_oh[bank][group]), .q(r2_v));
             wire [255:0] wd_m;
             if (BW < 256) begin : g_wpad assign wd_m = {{(256-BW){1'b0}}, w3_d}; end
             else begin : g_wfull assign wd_m = w3_d; end
@@ -141,6 +146,7 @@ module ot_dsrom_engram_prefetch_h #(
     always @(posedge ck or negedge rst_n)
         if(!rst_n) begin v7_q<=0; ce7_q<=0; ue7_q<=0; end
         else begin v7_q<=rv_q[6]; ce7_q<=ce & {8{rv_q[6]}}; ue7_q<=ue & {8{rv_q[6]}}; end
+    // (out_data / d7_q / rl / m_q / p_q / cap_q: datapath, no reset)
     // R8: out
     always @(posedge ck or negedge rst_n) begin
         if(!rst_n) begin out_v<=0;out_ce<=0;out_ue<=0;end
