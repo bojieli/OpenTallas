@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_svch_pcs",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_svch_pcs.lef": "e0ed67dddd534a7def1dcfe6c55270e720f0ed3726e853e32e8ac83a7fa9f2b6",
+    "dsfd_svch_pcs_ff.lib": "2a37ca14e9b887808e7679684137eade93bd69115988453e1afc0cf799111a2b",
+    "dsfd_svch_pcs_ss.lib": "7e9b973d5bbb68eae457d8c25fb6d5c8f5a1f2ff5437d356ff751c903fbbebda"
+  },
+  "ok": true
+}
