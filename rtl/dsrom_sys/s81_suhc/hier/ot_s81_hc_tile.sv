@@ -19,7 +19,8 @@
 // Reset: rst_in is relayed (two flops, no reset) to this tile's logic and to rst_out; datapath registers have no reset.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_tile #(
-    parameter integer NG = 256, D = 5120, KT = 8, S_RD = 2, S_WR = 8, WIN = 2, WOUT = 2, ML = 5, AL = 4
+    parameter integer NG = 256, D = 5120, KT = 8, S_RD = 2, S_WR = 8, WIN = 2, WOUT = 2, ML = 5, AL = 4,
+    parameter integer RS = 1                    // relay stages a hop (the G = 16 quant max exchange waits RS + 1)
 ) (
     input  wire                       clk,
     input  wire                       rst_in,
@@ -33,7 +34,13 @@ module ot_s81_hc_tile #(
     input  wire [S_WR+3:0]            rv_in,
     input  wire [RDW-1:0]             rd_in,
     output reg  [S_WR+3:0]            rv_out,
-    output reg  [RDW-1:0]             rd_out
+    output reg  [RDW-1:0]             rd_out,
+    // G = 16: the 32-element quant blocks straddle tile pairs (2p, 2p+1): each unit's 16-lane maximum goes to the
+    // partner (tid ^ 1) over the seam; pm_in_n from tile t-1, pm_in_s from tile t+1 (unused when G >= 32)
+    output wire [NU*32-1:0]           pm_out_n,   // to tile t-1 (N face)
+    output wire [NU*32-1:0]           pm_out_s,   // to tile t+1 (S face), the same maxima
+    input  wire [NU*32-1:0]           pm_in_n,
+    input  wire [NU*32-1:0]           pm_in_s
 );
     localparam integer G    = NG / KT;
     localparam integer N    = 4 * NG;
@@ -42,9 +49,10 @@ module ot_s81_hc_tile #(
     localparam integer NV   = D / N;
     localparam integer PPR  = NG / 8;
     localparam integer RWT  = G * 64;               // tile resident row bits
-    localparam integer NBT  = NT / 32;              // quant blocks of the tile
-    localparam integer BPB  = NG / 32;              // quant blocks of a bank (global)
-    localparam integer GB   = G / 32;               // quant blocks of a bank in the tile
+    localparam integer SEG  = (G < 32) ? G : 32;    // quant unit lanes (a block, or a half block when G = 16)
+    localparam integer NU   = NT / SEG;             // quant units of the tile
+    localparam integer SPB  = NG / SEG;             // segments of a bank (global)
+    localparam integer SPT  = G / SEG;              // segments of a bank in the tile
     localparam integer LTB  = $clog2(G / 8);        // per-bank subtree levels
     localparam integer CROWS = N / 64;
     localparam integer EROWS = (N + 1023) / 1024;
@@ -61,7 +69,8 @@ module ot_s81_hc_tile #(
                        P_PD = P_PI + 8, RDW = P_PD + KT * 128;
 `ifndef SYNTHESIS
     initial begin
-        if (G % 32 != 0 || (G & (G - 1)) != 0 || (KT & (KT - 1)) != 0) $fatal(1, "ot_s81_hc_tile: G a power of two >= 32, KT a power of two");
+        if (G < 16 || (G & (G - 1)) != 0 || (KT & (KT - 1)) != 0 || (G == 16 && KT < 2))
+            $fatal(1, "ot_s81_hc_tile: G a power of two >= 16, KT a power of two");
         if (D % N != 0) $fatal(1, "ot_s81_hc_tile: D a multiple of 4 NG");
     end
 `endif
@@ -278,23 +287,48 @@ module ot_s81_hc_tile #(
     reg [127:0] psb [0:NV-1];
     always @(posedge clk) if (vs[DS]) psb[si] <= {tv[LTB][3], tv[LTB][2], tv[LTB][1], tv[LTB][0]};
 
-    // FP8 act-quant of the tile's 32-lane blocks (local block lb = j*GB + gl/32)
-    wire [NBT*256-1:0] qc;
-    wire [NBT*10-1:0]  qe;
-    wire [NBT-1:0]     qvo, qf;
+    // FP8 act-quant of the tile's quant units (local unit u = local lanes u*SEG .. u*SEG + SEG - 1; a 32-lane block, or
+    // the tile's half of a block when G = 16, with the block maximum exchanged with the partner tile)
+    wire [NT*8-1:0]    qc;
+    wire [NU*10-1:0]   qe;
+    wire [NU-1:0]      qvo, qf;
     wire [7:0]         qi;
-    generate for (kk = 0; kk < NBT; kk = kk + 1) begin : g_aq
+    // Exchange timing (H = RS + 1, a tile hop): tile t sees r at T0 + t H, so its units' maxima exist at T0 + t H + c.
+    // The odd partner's maximum reaches an even tile 2 H after the even tile's own; the even partner's reaches an odd
+    // tile together with its own, so the odd tile holds it 2 H more: both halves then form the block maximum XD = 2 H
+    // after their own, with the same quant latency in every tile.
+    localparam integer HOP = RS + 1;
+    localparam integer QLAT = (SEG == 32) ? 18 : 18 + 2 * HOP;
+    reg  [NU*32-1:0]   pmn_q, pms_q;                 // pin flops
+    always @(posedge clk) begin pmn_q <= pm_in_n; pms_q <= pm_in_s; end
+    wire [NU*32-1:0]   pmn_d;
+    ot_hdc_delay #(.W(NU * 32), .D(2 * HOP)) u_pmd (.clk(clk), .rst_n(rst_n), .d(pmn_q), .q(pmn_d));
+    wire [NU*32-1:0]   pm_q = tid[0] ? pmn_d : pms_q;
+    generate for (kk = 0; kk < NU; kk = kk + 1) begin : g_aq
         wire signed [9:0] e;
-        wire [511:0] unused_y;
-        ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rst_n), .v(vy[DY]), .x(yb[kk * 1024 +: 1024]), .vo(qvo[kk]),
-                            .q(qc[kk * 256 +: 256]), .e(e), .y(unused_y), .fault(qf[kk]));
+        if (SEG == 32) begin : g_full
+            wire [511:0] unused_y;
+            ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rst_n), .v(vy[DY]), .x(yb[kk * 1024 +: 1024]), .vo(qvo[kk]),
+                                .q(qc[kk * 256 +: 256]), .e(e), .y(unused_y), .fault(qf[kk]));
+            assign pm_out_n[kk * 32 +: 32] = 32'd0;
+            assign pm_out_s[kk * 32 +: 32] = 32'd0;
+        end else begin : g_half
+            wire [255:0] unused_y;
+            wire [30:0]  ml;
+            wire         nl;
+            ot_dsrom_aq12h #(.XD(2 * HOP)) u_aq (.clk(clk), .rst_n(rst_n), .v(vy[DY]), .x(yb[kk * 512 +: 512]),
+                                .mloc(ml), .nloc(nl), .mpart(pm_q[kk * 32 +: 31]), .npart(pm_q[kk * 32 + 31]),
+                                .vo(qvo[kk]), .q(qc[kk * 128 +: 128]), .e(e), .y(unused_y), .fault(qf[kk]));
+            assign pm_out_n[kk * 32 +: 32] = {nl, ml};
+            assign pm_out_s[kk * 32 +: 32] = {nl, ml};
+        end
         assign qe[kk * 10 +: 10] = e;
     end endgenerate
-    ot_hdc_delay #(.W(8), .D(18)) u_qi (.clk(clk), .rst_n(rst_n), .d(yi), .q(qi));
+    ot_hdc_delay #(.W(8), .D(QLAT)) u_qi (.clk(clk), .rst_n(rst_n), .d(yi), .q(qi));
     // output buffers by vector: y BF16, codes, exps
     reg [NT*16-1:0]  ybuf [0:NV-1];
-    reg [NBT*256-1:0] cbuf [0:NV-1];
-    reg [NBT*10-1:0] ebuf [0:NV-1];
+    reg [NT*8-1:0]   cbuf [0:NV-1];
+    reg [NU*10-1:0]  ebuf [0:NV-1];
     always @(posedge clk) begin
         if (vy[DY]) for (q = 0; q < NT; q = q + 1) ybuf[yi][16 * q +: 16] <= yb[32 * q + 16 +: 16];
         if (qvo[0]) begin cbuf[qi] <= qc; ebuf[qi] <= qe; end
@@ -358,12 +392,12 @@ module ot_s81_hc_tile #(
     always @(posedge clk) if (hs_v) hs_sl <= fd[O_HS];
 
     // ------------------------------------------------------------------ merge: base slots (originated or passing) | mine
-    // global quant block B (row-local position) -> mine? and the local block index
-    function automatic is_mine(input [15:0] B);
-        is_mine = ((B % BPB) / GB) == tid;
+    // global segment Sg (SEG lanes: bank Sg / SPB, groups (Sg % SPB) * SEG ..) -> mine? and the local unit index
+    function automatic seg_mine(input [15:0] Sg);
+        seg_mine = ((Sg % SPB) / SPT) == tid;
     endfunction
-    function automatic [7:0] lblk(input [15:0] B);
-        lblk = (B / BPB) * GB + (B % GB);
+    function automatic [7:0] seg_loc(input [15:0] Sg);
+        seg_loc = (Sg / SPB) * SPT + (Sg % SPT);
     endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) rv_out <= 0;
@@ -397,17 +431,19 @@ module ot_s81_hc_tile #(
                 t = o[P_T + 2 * s +: 2]; vi = o[P_I + 8 * s +: 8]; qx = o[P_Q + 16 * s +: 16];
                 dd = o[P_D + 512 * s +: 512];
                 case (t)
-                    2'd0: for (k = 0; k < 2; k = k + 1) begin
-                              B = 2 * qx + k;
-                              if (is_mine(B)) dd[256 * k +: 256] = cbuf[vi][256 * lblk(B) +: 256];
+                    2'd0: for (k = 0; k < 64 / SEG; k = k + 1) begin             // codes of lanes 64 qx ..
+                              B = (64 * qx) / SEG + k;
+                              if (seg_mine(B)) dd[8 * SEG * k +: 8 * SEG] = cbuf[vi][8 * SEG * seg_loc(B) +: 8 * SEG];
                           end
-                    2'd1: for (k = 0; k < 32; k = k + 1) begin
-                              B = 32 * qx + k;
-                              if (B < N / 32 && is_mine(B)) dd[16 * k +: 16] = {6'd0, ebuf[vi][10 * lblk(B) +: 10]};
+                    2'd1: for (k = 0; k < 32; k = k + 1) begin                    // exps of blocks 32 qx ..
+                              for (b_ = 0; b_ < 32 / SEG; b_ = b_ + 1) begin
+                                  B = (32 * qx + k) * (32 / SEG) + b_;
+                                  if (32 * qx + k < N / 32 && seg_mine(B)) dd[16 * k +: 16] = {6'd0, ebuf[vi][10 * seg_loc(B) +: 10]};
+                              end
                           end
-                    2'd2: begin
-                              B = qx;
-                              if (is_mine(B)) dd = ybuf[vi][512 * lblk(B) +: 512];
+                    2'd2: for (k = 0; k < 32 / SEG; k = k + 1) begin             // y of lanes 32 qx ..
+                              B = (32 * qx) / SEG + k;
+                              if (seg_mine(B)) dd[16 * SEG * k +: 16 * SEG] = ybuf[vi][16 * SEG * seg_loc(B) +: 16 * SEG];
                           end
                     default: begin
                               g0 = (8 * qx) % NG;

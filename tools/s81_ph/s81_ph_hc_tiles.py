@@ -25,21 +25,25 @@ W = 1727.976
 def widths(ng=256, kt=8, s_rd=2, s_wr=8):
     fdw = 5 + s_rd * 16 + s_rd * 512 + 12 + 6 + 8 + 32 + 1
     rdw = 2 * s_wr + 8 * s_wr + 16 * s_wr + 512 * s_wr + 8 + kt * 128
-    return dict(fv=s_rd + 5, fd=fdw, rv=s_wr + 4, rd=rdw, y=ng // kt * 32)
+    g = ng // kt
+    nu = 4 * g // min(g, 32)
+    return dict(fv=s_rd + 5, fd=fdw, rv=s_wr + 4, rd=rdw, y=g * 32, pm=nu * 32)
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--h', type=float, default=1200.0)
     ap.add_argument('--contract', default='contract_hch')
+    ap.add_argument('--kt', type=int, default=8)
     a = ap.parse_args()
     CT.CONTRACT = a.contract
-    w = widths()
+    w = widths(kt=a.kt)
     pl = CT.Plan('ot_s81_hc_tile', W, a.h)
     x = 60.0
     for i_n, o_n, b, di in (('fv_in', 'fv_out', w['fv'], 'f'), ('fd_in', 'fd_out', w['fd'], 'f'),
                             ('rv_out', 'rv_in', w['rv'], 'r'), ('rd_out', 'rd_in', w['rd'], 'r'),
-                            ('rst_in', 'rst_out', 1, 'f')):
+                            ('rst_in', 'rst_out', 1, 'f'), ('pm_in_n', 'pm_out_s', w['pm'], 'f'),
+                            ('pm_out_n', 'pm_in_s', w['pm'], 'r')):
         # N face = root side; the forward buses come in there, the return buses go out there
         pl.bus(i_n, b, 'input' if di == 'f' else 'output', 'N', 'M5', x)
         x = pl.bus(o_n, b, 'output' if di == 'f' else 'input', 'S', 'M5', x)
@@ -49,7 +53,8 @@ def main():
     y = pl.bus('tid', 8, 'input', 'W', 'M4', y + 4.8)
     pl.bus('clk', 1, 'input', 'W', 'M4', a.h / 2)
     assert y < a.h / 2 - 5
-    pl.emit(f'HC row-group tile (G 32 groups: 128 hc_post lanes + 128 norm lanes, resident h, gain slice); N face root-side '
+    g = 256 // a.kt
+    pl.emit(f'HC row-group tile (KT {a.kt}, G {g} groups: {4 * g} hc_post lanes + {4 * g} norm lanes, resident h, gain slice); N face root-side '
             f'buses, S face the same at identical x toward the next tile; W face y slice + tid strap + clk; {W} x {a.h}')
     print('ok', len(pl.pins), 'pins; N/S span to x', round(x, 1))
 

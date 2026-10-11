@@ -55,6 +55,9 @@ module ot_s81_hc_hier #(
     wire [RVW-1:0] t_rvo [0:KT-1];
     wire [RDW-1:0] t_rdo [0:KT-1];
     wire           t_rso [0:KT-1];
+    localparam integer SEG = (G < 32) ? G : 32, NU = 4 * G / SEG;
+    wire [NU*32-1:0] t_pmn [0:KT-1];
+    wire [NU*32-1:0] t_pms [0:KT-1];
     genvar t;
     generate for (t = 0; t < KT; t = t + 1) begin : g_t
         wire [FVW-1:0] fv_src = (t == 0) ? r_fv : t_fvo[t > 0 ? t - 1 : 0];
@@ -74,10 +77,15 @@ module ot_s81_hc_hier #(
         ot_hdc_delay #(.W(RDW), .D(RS)) u_rrd (.clk(clk), .rst_n(rst_n), .d(rd_src), .q(rd_in));
         // the tile's y slice beside the forward bus: (t+1)(RS+1) - 1 stages from the root's y register
         ot_hdc_delay #(.W(G * 32), .D((t + 1) * RS + t)) u_ry (.clk(clk), .rst_n(rst_n), .d(r_y[G * 32 * t +: G * 32]), .q(y_in));
-        ot_s81_hc_tile #(.NG(NG), .D(D), .KT(KT), .S_RD(S_RD), .S_WR(S_WR), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL)) u_tile (
+        // G = 16 quant-maximum exchange with the neighbours (relayed like every seam)
+        wire [NU*32-1:0] pm_n, pm_s;
+        ot_hdc_delay #(.W(NU * 32), .D(RS)) u_rpn (.clk(clk), .rst_n(rst_n), .d((t == 0) ? {NU*32{1'b0}} : t_pms[t > 0 ? t - 1 : 0]), .q(pm_n));
+        ot_hdc_delay #(.W(NU * 32), .D(RS)) u_rps (.clk(clk), .rst_n(rst_n), .d((t == KT - 1) ? {NU*32{1'b0}} : t_pmn[t < KT - 1 ? t + 1 : 0]), .q(pm_s));
+        ot_s81_hc_tile #(.NG(NG), .D(D), .KT(KT), .S_RD(S_RD), .S_WR(S_WR), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL), .RS(RS)) u_tile (
             .clk(clk), .rst_in((t == 0) ? rst_n : t_rso[t > 0 ? t - 1 : 0]), .rst_out(t_rso[t]), .tid(t),
             .fv_in(fv_in), .fd_in(fd_in), .fv_out(t_fvo[t]), .fd_out(t_fdo[t]), .y_in(y_in),
-            .rv_in(rv_in), .rd_in(rd_in), .rv_out(t_rvo[t]), .rd_out(t_rdo[t]));
+            .rv_in(rv_in), .rd_in(rd_in), .rv_out(t_rvo[t]), .rd_out(t_rdo[t]),
+            .pm_out_n(t_pmn[t]), .pm_out_s(t_pms[t]), .pm_in_n(pm_n), .pm_in_s(pm_s));
     end endgenerate
     ot_hdc_delay #(.W(RVW), .D(RS), .RESET(1)) u_rrv0 (.clk(clk), .rst_n(rst_n), .d(t_rvo[0]), .q(r_rv));
     ot_hdc_delay #(.W(RDW), .D(RS)) u_rrd0 (.clk(clk), .rst_n(rst_n), .d(t_rdo[0]), .q(r_rd));
