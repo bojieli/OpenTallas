@@ -577,7 +577,7 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              su_slot=(2016.144, 2808.0), sfu_frac=0.5, hc_mm2=550.8 * 5529.6 / 1e6, idx_score_frac=36 / 64,
              attn_rows=2, attn_cols=4, attn_col_gap=259.2, attn_row_gap=345.6, hub_col_gap=345.6,
              idx_cols=((0, 1, 2), (3, 4, 5)), idx_col_gap=172.8, idx_gap=43.2, hc_gap=172.8, sfu_gap=216.0,
-             idx_score_dx=432.0, spine_over=432.0, spch_q=1546.56,
+             idx_score_dx=432.0, spine_over=864.0, spch_q=1546.56,
              # hgi-1010/b lane groups (ot_hgi_vm_lanearb ace618cd8): VM | CP | quant abut, the W group leaves the VM's W face
              # for the SW quarter (SU -> SFU -> HC), the E group its E face up the E spine channel past CP and quant
              # lead 10-10 (IDX.INDEX selector path): the native selector abuts hgi_idx (its t_sel / f_sel ports: fs, qb,
@@ -587,7 +587,9 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # hgi_vm) so those buses are face to face; router moves north of barrier
              spine_order=('hgi_idx', 'idx_sel', 'mtp', 'loader', 'coll', 'hgi_vm', 'cmdproc', 'quant', 'barrier', 'router',
                           'vm8', 'su_red', 'su_full'),
-             hgi_rgx=True, del_obase=True, hgi_vm_h=1296.0,
+             hgi_rgx=True, del_obase=True,
+             # hgi-1010/b 10-10: a larger hgi_vm outline, single-layer faces at every other track (<= 10.4 b/um)
+             hgi_vm_w=2073.6, hgi_vm_h=2073.6,
              lane_chain_nets=(('rdn', 8259), ('wdn', 67), ('rup', 515), ('wup', 8963)),
              dense_face_masters=('hfd_loader', 'hfd_coll', 'hfd_hgi_vm', 'hfd_su'),
              spine_abut=(('hgi_idx', 'idx_sel'), ('coll', 'hgi_vm'), ('hgi_vm', 'cmdproc'), ('cmdproc', 'quant')),
@@ -607,11 +609,11 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # hfd_coll + ot_hbm_link_retry_pipeline 690 x 460 um); the llk die nets become the TU flit bus, each way
              # {valid, flit 545, credit} + a fault bit = 1,095 b (+ 2 forwarded clocks), was 976 b of gearboxed lanes
              # [link] 10-10 (a81f05080): NS = 3 retry macros 690 x 460 um + FMT1 gearbox / CRC / queues: 2 x 2 macro block
-             # (one corner = logic) 1,503.36 x 993.6 um; flit bus {v, flit 545, credit} each way = 1,094 b + session 24
+             # (one corner = logic) 1,728 x 1,015.2 um (1.754 mm2, [link] floorplan lint: 1.49 mm2 was 64.6 % util); flit bus {v, flit 545, credit} each way = 1,094 b + session 24
              # down + {fault, locked} up = 1,120 b; PHY side
              # tx[486:0] out + rx[486:0] in = 974 b, the die's SerDes lane contract (H6 link_rtl: 8 TU ports x 547 b a
              # direction over 9 links); 1,024 b does not fit the SerDes face in the k = 16 GRT bundling
-             link_ep=dict(wh=(1503.36, 993.6), gap=43.2, flit_bits=1120, phy_bits=974),
+             link_ep=dict(wh=(1728.0, 1015.2), gap=43.2, flit_bits=1120, phy_bits=974),
              lane_bypass=dict(W=dict(client='hb_sfu_SW', after='hb_su_SW', toward='hb_hc_SW', stn='hb_stn_lgW',
                                      master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)))
 
@@ -625,8 +627,11 @@ def build_r25gq(variant):
     g0 = base['geo']
     W, H = g0['W'], g0['H']
     B = {it.name: it for it in base['insts']}
-    if V.get('hgi_vm_h') and 'hb_hgi_vm' in B:      # R25GQ 10-10: a taller VM slot for its 19-20 k pins a face
+    if V.get('hgi_vm_h') and 'hb_hgi_vm' in B:      # R25GQ 10-10: a larger VM slot for its 19-20 k pins a face
         B['hb_hgi_vm'].h = V['hgi_vm_h']
+        if V.get('hgi_vm_w'):       # wider than the spine column: centred on it, overhanging both side channels
+            B['hb_hgi_vm'].x = dn(B['hb_hgi_vm'].x + B['hb_hgi_vm'].w / 2 - V['hgi_vm_w'] / 2, GX)
+            B['hb_hgi_vm'].w = V['hgi_vm_w']
     cx = g0['cx']
     insts, regions, notes, rmap = [], [], [], {}
 
@@ -870,8 +875,17 @@ def build_r25gq_net(variant):
             x0 = dn(cx - tot / 2, GX)
             y0 = up(max(i.y + i.h for i in sds) + V['link_ep']['gap'], GY) if grp == 'S' else \
                 dn(min(i.y for i in sds) - V['link_ep']['gap'] - eh, GY)
+            sp_ = [i for i in insts if i.kind == 'spine' and i.y < y0 + eh and y0 < i.y + i.h]
+            if sp_:     # the band would cross the spine column (spine_over reaches it): split it around the column
+                cx0_, cx1_ = min(i.x for i in sp_), max(i.x + i.w for i in sp_)
+                nl_ = (len(sds) + 1) // 2
+                xs_ = [cx0_ - V['link_ep']['gap'] - (nl_ - k) * (ew + V['link_ep']['gap']) + V['link_ep']['gap']
+                       for k in range(nl_)] + [cx1_ + V['link_ep']['gap'] + k * (ew + V['link_ep']['gap'])
+                                               for k in range(len(sds) - nl_)]
+            else:
+                xs_ = [x0 + k * (ew + V['link_ep']['gap']) for k in range(len(sds))]
             for k, sd in enumerate(sds):
-                ep = Inst(f'ep_{sd.name[3:]}', 'hfd_lk_ep', dn(x0 + k * (ew + V['link_ep']['gap']), GX), y0, ew, eh,
+                ep = Inst(f'ep_{sd.name[3:]}', 'hfd_lk_ep', dn(xs_[k], GX), y0, ew, eh,
                           'R0' if grp == 'S' else 'MX', kind='hub', region='hub')
                 bx = ep.box()
                 hit_ = [i.name for i in insts if i.kind != 'waypoint' and bx[0] < i.x + i.w and i.x < bx[2]
