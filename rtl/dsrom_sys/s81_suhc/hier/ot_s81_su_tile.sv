@@ -26,7 +26,7 @@ module ot_s81_su_tile #(
     parameter integer TK = 0, TI = 0, NT = 1,
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
     parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, MUT = 0,
-    parameter integer WSP = (TK <= 1) ? S_WR : S_WR / NT     // write slots of this tile (its window of the S_WR)
+    parameter integer WSP = S_WR / NT                        // write slots of this tile (its window of the S_WR)
 ) (
     input  wire                   clk,
     input  wire                   rst_in,         // from the slab's reset relay at this tile's spine stop
@@ -37,9 +37,18 @@ module ot_s81_su_tile #(
     input  wire                   dn_fp4_i,
     input  wire [7:0]             dn_jid_i,
     input  wire [S_RD-1:0]        dn_v_i,
-    input  wire                   dn_ph_i,
-    input  wire [15:0]            dn_idx_i,
     input  wire [S_RD*512-1:0]    dn_d_i,
+    // norm lane-group seams (TK 0 / 1, through the slab's registered rung): group partial to the head, rstd back
+    input  wire                   x_pp_v_i,
+    input  wire [7:0]             x_pp_i_i,
+    input  wire [31:0]            x_pp_d_i,
+    input  wire                   x_rb_v_i,
+    input  wire [31:0]            x_rb_d_i,
+    output reg                    x_pp_v_o,
+    output reg  [7:0]             x_pp_i_o,
+    output reg  [31:0]            x_pp_d_o,
+    output reg                    x_rb_v_o,
+    output reg  [31:0]            x_rb_d_o,
     // this tile's write slots (registered) and status, merged into the up spine at this stop
     output reg  [WSP-1:0]         o_v,
     output reg  [WSP*14-1:0]      o_a,
@@ -60,17 +69,18 @@ module ot_s81_su_tile #(
     localparam integer LT  = HPT * SM_LPH;                        // SM lanes
     // operand rows: rows a beat (whole function), this tile's segment(s) [A0, A0 + L) (+ [B0, B0 + L) for SW's u)
     localparam integer RPB = (TK == 0) ? RQN : (TK == 1) ? RKV : (TK == 2) ? RQB : (TK == 3) ? 2 * RSW : RSM;
-    localparam integer L   = (TK == 0) ? RQN : (TK == 1) ? RKV : (TK == 2) ? 2 * NBT : (TK == 3) ? WT / 16 : LT / 16;
-    localparam integer A0  = (TK <= 1) ? 0 : TI * L;
+    localparam integer L   = (TK == 0) ? RQN / NT : (TK == 1) ? RKV / NT : (TK == 2) ? 2 * NBT : (TK == 3) ? WT / 16 : LT / 16;
+    localparam integer A0  = TI * L;
     localparam integer B0  = RSW + TI * L;
     localparam integer NBR = (TK == 3) ? 2 * L : L;               // rows of this tile's beat
     // results: rows an event, write slots
-    localparam integer R_QN = QN_N / 64 + 1, R_KV = KV_N / 64 + 1 + KV_N / 32, R_QB = NBT / 2 + 1 + NBT;
+    localparam integer R_QNF = QN_N / 64 + 1;                     // rows a q vector (every lane tile's codes + exps)
+    localparam integer R_QN = QN_N / NT / 64 + 1, R_KV = KV_N / NT / 64 + 1 + KV_N / NT / 32, R_QB = NBT / 2 + 1 + NBT;
     localparam integer R_SW = WT / 64 + 1 + WT / 32, R_SE = LT / 16, R_SO = LT / 32;
     localparam integer R = (TK == 0) ? R_QN : (TK == 1) ? R_KV : (TK == 2) ? R_QB : (TK == 3) ? R_SW :
                            (R_SE > R_SO ? R_SE : R_SO);
-    localparam integer WS = (TK <= 1) ? S_WR : S_WR / NT;         // write slots of this tile
-    localparam integer W0 = (TK <= 1) ? 0 : TI * WS;              // its window
+    localparam integer WS = S_WR / NT;                            // write slots of this tile
+    localparam integer W0 = TI * WS;                              // its window
     localparam integer RW = 14 + 16 + 512;                        // staged row {row, mask, data}
 `ifndef SYNTHESIS
     initial begin
@@ -88,19 +98,24 @@ module ot_s81_su_tile #(
     wire rst_n = rr1;
 
     // ------------------------------------------------------------------ pin flops (the down-spine tap)
-    reg                dq_st, dq_fp4, dq_ph;
+    reg                dq_st, dq_fp4;
     reg  [3:0]         dq_kind;
     reg  [1:0]         dq_gsel;
     reg  [7:0]         dq_jid;
     reg  [S_RD-1:0]    dq_v;
-    reg  [15:0]        dq_idx;
     reg  [S_RD*512-1:0] dq_d;
     always @(posedge clk) begin
-        dq_kind <= dn_kind_i; dq_gsel <= dn_gsel_i; dq_fp4 <= dn_fp4_i; dq_jid <= dn_jid_i; dq_ph <= dn_ph_i;
-        dq_idx <= dn_idx_i; dq_d <= dn_d_i;
+        dq_kind <= dn_kind_i; dq_gsel <= dn_gsel_i; dq_fp4 <= dn_fp4_i; dq_jid <= dn_jid_i;
+        dq_d <= dn_d_i;
+        xq_pp_i <= x_pp_i_i; xq_pp_d <= x_pp_d_i; xq_rb_d <= x_rb_d_i;
     end
     always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; end
                                            else begin dq_st <= dn_st_i; dq_v <= dn_v_i; end
+    reg                xq_pp_v, xq_rb_v;
+    reg  [7:0]         xq_pp_i;
+    reg  [31:0]        xq_pp_d, xq_rb_d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin xq_pp_v <= 1'b0; xq_rb_v <= 1'b0; end
+                                           else begin xq_pp_v <= x_pp_v_i; xq_rb_v <= x_rb_v_i; end
 
     function automatic mine_k(input [3:0] k);
         case (TK)
@@ -130,14 +145,40 @@ module ot_s81_su_tile #(
     wire [13:0] obase = prow[0][13:0];
     wire [31:0] w3 = prow[0][96 +: 32];
     integer s, q, g;
+    // row numbering (from the job announce): the VM responses of a job arrive in order, a prefix of the slots a
+    // cycle; the first nparams(kind) rows are the descriptor + parameter rows (phase 0), the rest the operand rows
+    reg  [15:0]        rcnt;
+    reg  [S_RD-1:0]    sph;                           // slot s: an operand row
+    reg  [S_RD*16-1:0] six;                           // slot s: its index within its phase
+    always @(*) begin : numb
+        integer i;
+        reg [15:0] gi, npj;
+        npj = {12'd0, nparams(jkind)};
+        for (i = 0; i < S_RD; i = i + 1) begin
+            gi = rcnt + i;
+            sph[i] = (gi >= npj);
+            six[16 * i +: 16] = (gi >= npj) ? gi - npj : gi;
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin : rcntb
+        integer i;
+        reg [15:0] c;
+        if (!rst_n) rcnt <= 0;
+        else if (dq_st) rcnt <= 0;
+        else begin
+            c = rcnt;
+            for (i = 0; i < S_RD; i = i + 1) if (dq_v[i]) c = c + 1;
+            rcnt <= c;
+        end
+    end
     always @(posedge clk) begin                       // parameter rows / beat data: no reset
         for (s = 0; s < S_RD; s = s + 1)
-            if (dq_v[s] && !dq_ph && mine && dq_idx + s < MAXP) prow[dq_idx + s] <= dq_d[512 * s +: 512];
+            if (dq_v[s] && !sph[s] && mine && six[16 * s +: 16] < MAXP) prow[six[16 * s +: 16]] <= dq_d[512 * s +: 512];
         begin : asm
             reg [15:0] r;
             for (s = 0; s < S_RD; s = s + 1)
-                if (dq_v[s] && dq_ph && mine) begin
-                    r = (dq_idx + s) & (RPB - 1);
+                if (dq_v[s] && sph[s] && mine) begin
+                    r = six[16 * s +: 16] & (RPB - 1);
                     if (r >= A0 && r < A0 + L) bb[512 * (r - A0) +: 512] = dq_d[512 * s +: 512];
                     else if (TK == 3 && r >= B0 && r < B0 + L) bb[512 * (L + r - B0) +: 512] = dq_d[512 * s +: 512];
                 end
@@ -150,7 +191,7 @@ module ot_s81_su_tile #(
         integer i;
         cmp = 1'b0;
         for (i = 0; i < S_RD; i = i + 1)
-            if (dq_v[i] && dq_ph && mine && (((dq_idx + i) & (RPB - 1)) == ((TK == 3) ? B0 + L - 1 : A0 + L - 1)))
+            if (dq_v[i] && sph[i] && mine && ((six[16 * i +: 16] & (RPB - 1)) == ((TK == 3) ? B0 + L - 1 : A0 + L - 1)))
                 cmp = 1'b1;
     end
     always @(posedge clk or negedge rst_n) begin
@@ -165,7 +206,7 @@ module ot_s81_su_tile #(
                 begin : pcnt
                     reg [3:0] c;
                     c = pc;
-                    for (s = 0; s < S_RD; s = s + 1) if (dq_v[s] && !dq_ph && mine) c = c + 1;
+                    for (s = 0; s < S_RD; s = s + 1) if (dq_v[s] && !sph[s] && mine) c = c + 1;
                     pc <= c;
                     if (mine && c == nparams(jkind) && pc != c) pdone <= 1'b1;
                 end
@@ -188,79 +229,57 @@ module ot_s81_su_tile #(
     endfunction
 
     generate
-    if (TK == 0) begin : g_qn
-        reg [QN_N*32-1:0] gq [0:4*NVQ-1];
-        reg qn_go, qn_wl; reg [7:0] qn_wi; reg [QN_N*32-1:0] qn_wd; reg [15:0] gp; reg gon;
-        wire qn_yv, qn_rv, qn_qv, qn_rov, qn_f; wire [7:0] qn_yi, qn_qi; wire [QN_N*32-1:0] qn_y, qn_ro; wire [31:0] qn_r;
-        wire [(QN_N/32)*256-1:0] qn_qc; wire [(QN_N/32)*10-1:0] qn_qe; wire [(QN_N/32)*512-1:0] qn_qy;
-        ot_dsrom_su_norm #(.N(QN_N), .D(DQ), .HC(0), .RD(0), .QUANT(1), .LM(LM), .LA(LA)) u_qn (
-            .clk(clk), .rst_n(rst_n), .go(qn_go), .in_v(beat_v && jkind == K_QN), .in_x(bq[0 +: QN_N * 32]),
-            .pre(128'd0), .n_f(32'h44A00000), .eps(w3), .wl_v(qn_wl), .wl_i(qn_wi), .wl_d(qn_wd), .cos_t(32'd0),
-            .sin_t(32'd0), .y_v(qn_yv), .y_i(qn_yi), .y(qn_y), .r_v(qn_rv), .r(qn_r), .q_v(qn_qv), .q_i(qn_qi),
-            .q_codes(qn_qc), .q_e(qn_qe), .q_y(qn_qy), .ro_v(qn_rov), .ro(qn_ro), .fault(qn_f));
+    if (TK <= 1) begin : g_nm
+        // a lane group of the q (TK 0) / kv (TK 1) RMSNorm: G lanes from L0; the group sums of squares meet in the
+        // head tile (TI 0) through the slab's registered rung (x_pp_*), its rstd comes back over x_rb_*
+        localparam integer NN = (TK == 0) ? QN_N : KV_N, GG = NN / NT, NVN = (TK == 0) ? NVQ : 1;
+        localparam integer DD = (TK == 0) ? DQ : DK, RFULL = (TK == 0) ? R_QNF : 0;
+        reg [GG*32-1:0] gn [0:4*NVN-1];
+        reg n_go, n_wl, gon; reg [7:0] n_wi; reg [GG*32-1:0] n_wd; reg [15:0] gp;
+        wire n_yv, n_qv, n_rov, n_f; wire [7:0] n_yi, n_qi; wire [GG*32-1:0] n_y, n_ro;
+        wire [(GG/32)*256-1:0] n_qc; wire [(GG/32)*10-1:0] n_qe; wire [(GG/32)*512-1:0] n_qy;
+        wire ps_v; wire [7:0] ps_i; wire [31:0] ps_d; wire rb_v; wire [31:0] rb_d;
+        ot_s81_su_norm_lg #(.N(NN), .G(GG), .L0(TI * GG), .T(NT), .HEAD(TI == 0), .D(DD), .RD(TK == 1 ? 64 : 0),
+                            .QUANT(1), .LM(LM), .LA(LA)) u_n (
+            .clk(clk), .rst_n(rst_n), .go(n_go), .in_v(beat_v && jkind == (TK == 0 ? K_QN : K_KV)), .in_x(bq[0 +: GG * 32]),
+            .n_f(TK == 0 ? 32'h44A00000 : 32'h44000000), .eps(w3), .wl_v(n_wl), .wl_i(n_wi), .wl_d(n_wd),
+            .cos_t(TK == 1 ? {prow[2], prow[1]} : 1024'd0), .sin_t(TK == 1 ? {prow[4], prow[3]} : 1024'd0),
+            .ps_v(ps_v), .ps_i(ps_i), .ps_d(ps_d), .pp_v(xq_pp_v), .pp_i(xq_pp_i), .pp_d(xq_pp_d),
+            .rb_o_v(rb_v), .rb_o_d(rb_d), .rb_i_v(xq_rb_v), .rb_i_d(xq_rb_d),
+            .y_v(n_yv), .y_i(n_yi), .y(n_y), .q_v(n_qv), .q_i(n_qi), .q_codes(n_qc), .q_e(n_qe), .q_y(n_qy),
+            .ro_v(n_rov), .ro(n_ro), .fault(n_f));
+        always @(*) begin x_pp_v_o = ps_v; x_pp_i_o = ps_i; x_pp_d_o = ps_d; x_rb_v_o = rb_v; x_rb_d_o = rb_d; end
         always @(posedge clk) begin
-            if (beat_v && jkind == K_GQ) gq[gsel * NVQ + bi] <= bq[0 +: QN_N * 32];
-            qn_wd <= gq[gs * NVQ + gp];
+            if (beat_v && jkind == (TK == 0 ? K_GQ : K_GK)) gn[gsel * NVN + bi] <= bq[0 +: GG * 32];
+            n_wd <= gn[gs * NVN + gp];
         end
-        // gain vectors -> go -> ready, after the job's parameters (eps) are in
+        // gain vectors -> go -> ready (the head reports it), after the job's parameters (eps) are in
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin qn_go <= 0; qn_wl <= 0; qn_wi <= 0; gp <= 0; gon <= 0; rdy_p <= 0; end
+            if (!rst_n) begin n_go <= 0; n_wl <= 0; n_wi <= 0; gp <= 0; gon <= 0; rdy_p <= 0; end
             else begin
-                qn_go <= 0; qn_wl <= 0; rdy_p <= 0;
-                if (pdone && jkind == K_QN) begin gon <= 1; gp <= 0; end
+                n_go <= 0; n_wl <= 0; rdy_p <= 0;
+                if (pdone && jkind == (TK == 0 ? K_QN : K_KV)) begin gon <= 1; gp <= 0; end
                 if (gon) begin
-                    if (gp < NVQ) begin qn_wl <= 1; qn_wi <= gp[7:0]; gp <= gp + 1; end
-                    else begin qn_go <= 1; rdy_p <= 1; gon <= 0; end
+                    if (gp < NVN) begin n_wl <= 1; n_wi <= gp[7:0]; gp <= gp + 1; end
+                    else begin n_go <= 1; rdy_p <= (TI == 0); gon <= 0; end
                 end
             end
         end
         always @(*) begin : evb
             integer q, g;
-            ev = qn_qv; ev_n = R_QN; ev_r = 0; u_f = qn_f; den_ok = 1'b1;
-            for (q = 0; q < QN_N / 64; q = q + 1) ev_r[RW * q +: RW] = mkrow(obase + oc * R_QN + q, 16'hFFFF, qn_qc[512 * q +: 512]);
-            begin : ex
-                reg [511:0] row;
-                row = 0; for (g = 0; g < QN_N / 32; g = g + 1) row[16 * g +: 16] = {6'd0, qn_qe[10 * g +: 10]};
-                ev_r[RW * (QN_N / 64) +: RW] = mkrow(obase + oc * R_QN + QN_N / 64, 16'hFFFF, row);
-            end
-        end
-    end else if (TK == 1) begin : g_kv
-        reg [KV_N*32-1:0] gk [0:3];
-        reg kv_go, kv_wl, gon; reg [KV_N*32-1:0] kv_wd;
-        wire kv_yv, kv_rv, kv_qv, kv_rov, kv_f; wire [7:0] kv_yi, kv_qi; wire [KV_N*32-1:0] kv_y, kv_ro; wire [31:0] kv_r;
-        wire [(KV_N/32)*256-1:0] kv_qc; wire [(KV_N/32)*10-1:0] kv_qe; wire [(KV_N/32)*512-1:0] kv_qy;
-        ot_dsrom_su_norm #(.N(KV_N), .D(DK), .HC(0), .RD(64), .QUANT(1), .LM(LM), .LA(LA)) u_kv (
-            .clk(clk), .rst_n(rst_n), .go(kv_go), .in_v(beat_v && jkind == K_KV), .in_x(bq[0 +: KV_N * 32]),
-            .pre(128'd0), .n_f(32'h44000000), .eps(w3), .wl_v(kv_wl), .wl_i(8'd0), .wl_d(kv_wd),
-            .cos_t({prow[2], prow[1]}), .sin_t({prow[4], prow[3]}), .y_v(kv_yv), .y_i(kv_yi), .y(kv_y), .r_v(kv_rv),
-            .r(kv_r), .q_v(kv_qv), .q_i(kv_qi), .q_codes(kv_qc), .q_e(kv_qe), .q_y(kv_qy), .ro_v(kv_rov), .ro(kv_ro),
-            .fault(kv_f));
-        always @(posedge clk) begin
-            if (beat_v && jkind == K_GK) gk[gsel] <= bq[0 +: KV_N * 32];
-            kv_wd <= gk[gs];
-        end
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin kv_go <= 0; kv_wl <= 0; gon <= 0; rdy_p <= 0; end
-            else begin
-                kv_go <= 0; kv_wl <= 0; rdy_p <= 0;
-                if (pdone && jkind == K_KV) gon <= 1;
-                if (gon && !kv_wl) kv_wl <= 1;
-                if (gon && kv_wl) begin kv_go <= 1; rdy_p <= 1; gon <= 0; end
-            end
-        end
-        always @(*) begin : evb
-            integer q, g;
-            ev = kv_qv; ev_n = R_KV; ev_r = 0; u_f = kv_f; den_ok = 1'b1;
-            for (q = 0; q < KV_N / 64; q = q + 1) ev_r[RW * q +: RW] = mkrow(obase + q, 16'hFFFF, kv_qc[512 * q +: 512]);
-            begin : ex
-                reg [511:0] row;
-                row = 0; for (g = 0; g < KV_N / 32; g = g + 1) row[16 * g +: 16] = {6'd0, kv_qe[10 * g +: 10]};
-                ev_r[RW * (KV_N / 64) +: RW] = mkrow(obase + KV_N / 64, 16'hFFFF, row);
-                for (q = 0; q < KV_N / 32; q = q + 1) begin
-                    for (g = 0; g < 32; g = g + 1) row[16 * g +: 16] = kv_qy[16 * (32 * q + g) +: 16];
-                    ev_r[RW * (KV_N / 64 + 1 + q) +: RW] = mkrow(obase + KV_N / 64 + 1 + q, 16'hFFFF, row);
-                end
-            end
+            reg [13:0] base; reg [511:0] row; reg [15:0] m;
+            ev = n_qv; ev_n = R; ev_r = 0; u_f = n_f; den_ok = 1'b1;
+            base = obase + oc * RFULL;
+            for (q = 0; q < GG / 64; q = q + 1)
+                ev_r[RW * q +: RW] = mkrow(base + TI * (GG / 64) + q, 16'hFFFF, n_qc[512 * q +: 512]);
+            row = 0; m = 0;
+            for (g = 0; g < GG / 32; g = g + 1) row[16 * (TI * (GG / 32) + g) +: 16] = {6'd0, n_qe[10 * g +: 10]};
+            for (g = 0; g < 16; g = g + 1) m[g] = (g >= TI * (GG / 64)) && (TI == NT - 1 || g < (TI + 1) * (GG / 64));
+            ev_r[RW * (GG / 64) +: RW] = mkrow(base + NN / 64, m, row);
+            if (TK == 1)
+                for (q = 0; q < GG / 32; q = q + 1)
+                    ev_r[RW * (GG / 64 + 1 + q) +: RW] = mkrow(base + NN / 64 + 1 + TI * (GG / 32) + q, 16'hFFFF,
+                                                               n_qy[512 * q +: 512]);
         end
     end else if (TK == 2) begin : g_qb
         wire qb_vo, qb_f; wire [256*NBT-1:0] qb_q; wire [10*NBT-1:0] qb_e; wire [512*NBT-1:0] qb_y;
@@ -352,6 +371,10 @@ module ot_s81_su_tile #(
         end
     end
     endgenerate
+
+    generate if (TK >= 2) begin : g_nx
+        always @(*) begin x_pp_v_o = 1'b0; x_pp_i_o = 8'd0; x_pp_d_o = 32'd0; x_rb_v_o = 1'b0; x_rb_d_o = 32'd0; end
+    end endgenerate
 
     // ------------------------------------------------------------------ result staging: head + tail buffers
     reg [RW-1:0] hb [0:R-1];

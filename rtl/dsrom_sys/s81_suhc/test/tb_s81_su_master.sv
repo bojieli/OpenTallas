@@ -10,7 +10,7 @@
 // row write counts in early= and fails the run even when the row lands later.  Prints per job its engine start / done (slab cycles) and
 // SUG jobs= done= err= rows= fault= code= cyc= bad_tag= early=  then SUG PASS / SUG FAIL.
 `ifdef SU_HIER
-`define CORE dut.u_root.u_core
+`define CORE dut.u_ctl.u_core
 `else
 `define CORE dut.u_core
 `endif
