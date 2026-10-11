@@ -8,7 +8,7 @@
 set -u
 lab=$1; shift
 W=$OUT/$lab; mkdir -p $W/work/orfs/tmp; cd $SRC
-L=${CK_SS_MEAN:-700}; FMIN=${CK_FF_MIN:-380}; FMAX=${CK_FF_MAX:-460}; LEAF=${LEAF:?land8|mirror}; case $LEAF in land8) DX=${DX:-181.44}; DY=${DY:-30.24}; TOP=ot_dsrom_wsrc_land8;; mirror) DX=${DX:-75.6}; DY=${DY:-75.6}; TOP=ot_dsrom_wsrc_mirror;; esac
+L=${CK_SS_MEAN:-700}; FMIN=${CK_FF_MIN:-380}; FMAX=${CK_FF_MAX:-460}; LEAF=${LEAF:?land8|mirror}; case $LEAF in land8) DX=${DX:-140.4}; DY=${DY:-43.224}; TOP=ot_dsrom_wsrc_land8;; mirror) DX=${DX:-82.08}; DY=${DY:-82.08}; TOP=ot_dsrom_wsrc_mirror;; esac
 C=physical/dsrom_window_source/cl_$lab; mkdir -p $C
 cat > $C/io_route.sdc <<EOT
 # IO against vclk at the measured SS insertion $L ps, 0.2 T + 150 ps, FF-true hold mins

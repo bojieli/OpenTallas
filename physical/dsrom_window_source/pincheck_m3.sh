@@ -25,6 +25,6 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${SRCS[@]}" "${P[@]}
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 rc=$?
 n=$(grep -c 'PPL-0102\|ERROR PPL' $W/run.log)
-grep -q '3_2_place_iop\|place_iop' $W/run.log && reached=1 || reached=0
+ls $W/work/orfs/results/asap7/*/base/3_2_place_iop.odb >/dev/null 2>&1 && reached=1 || reached=0
 echo "pincheck $kind ${DX}x${DY} rc=$rc ppl_errors=$n reached_iop=$reached"
 [ $n = 0 ] && [ $reached = 1 ] && echo "PINCHECK PASS $kind" || echo "PINCHECK FAIL $kind"
