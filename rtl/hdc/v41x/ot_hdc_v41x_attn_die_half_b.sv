@@ -55,6 +55,9 @@ module hfd_attn_half_lo #(
     parameter integer NC = 2,
     parameter integer NR = 3,
     parameter integer PMID = 2,
+    parameter integer NXP = 0,   // el1011-hbm-attn v8: root -> xp pipe stages (0: xp = root_q, the root is the N pin bank).  The v8
+                                 // floorplan puts the merge root at the BOTTOM (where ci / k / ks / q / ri land) and moves 2 stages from
+                                 // every input pipe (NK/NC/NR -2) to every output pipe (NXP 2, PMID/NFR +2): same latency per path.
     parameter integer NFR = 3,
     parameter integer NLL = 3       // result banks of quad row 0 in lo (2 side-channel EW + the N-face pin bank)
 ) (
@@ -103,7 +106,11 @@ module hfd_attn_half_lo #(
     wire [PW-1:0] root_q;
     // ROOT on the N face: its bank outputs are the xp pins
     ot_attn_bpipe #(.W(PW), .N(1)) u_root (.clk(clk), .d(pk), .q(root_q));
-    assign xp = root_q;
+    generate if (NXP == 0) begin : g_xp0
+        assign xp = root_q;
+    end else begin : g_xpp
+        ot_attn_bpipe #(.W(PW), .N(NXP)) u_xpp (.clk(clk), .d(root_q), .q(xp));
+    end endgenerate
     ot_attn_bpipe #(.W(PK), .N(NFR + 1), .EWN(1)) u_fr (.clk(clk), .d(root_q[PK-1:0]), .q(rf));
     genvar x;
     generate if (1) begin : g_y0

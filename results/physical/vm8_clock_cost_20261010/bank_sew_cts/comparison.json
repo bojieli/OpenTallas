@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.vm8-bank-clock-comparison.v1",
+  "candidate_source_commit": "cf7c9ca2a5ab767fa87286e214547afc1f9ca42e",
+  "pilot": "hbm_vm8bank_sew_cf7c9ca2a-tc-lvt-cl",
+  "master": "hfd_vm_se_w",
+  "baseline_summary": "results/physical/vm8_clock_cost_20261010/baseline_v2/summary.json",
+  "candidate_summary": "results/physical/vm8_clock_cost_20261010/bank_sew_cts/summary.json",
+  "scope": "TT CTS, placement parasitics; actual clock buffers, excluding sequential cells; not die power signoff",
+  "clock_taps": {
+    "baseline": 11,
+    "candidate": 110
+  },
+  "costs": {
+    "clock_buffer_count": {
+      "baseline": 1660,
+      "candidate": 2508,
+      "delta": 848,
+      "delta_pct": 51.08433734939759
+    },
+    "clock_buffer_area_um2": {
+      "baseline": 669.2803199999977,
+      "candidate": 927.5941799999988,
+      "delta": 258.3138600000011,
+      "delta_pct": 38.595765074939294
+    },
+    "clock_buffer_power_w": {
+      "baseline": 0.03452510752459995,
+      "candidate": 0.04230265066340009,
+      "delta": 0.007777543138800136,
+      "delta_pct": 22.52720902681753
+    }
+  },
+  "candidate_mapped_lvt_fraction": 0.0,
+  "adoption": "pending TT setup>=0 FF hold>=0 DRC0; all exact/negative bench gates PASS; candidate not adopted",
+  "die_composition": "Eight half CTS costs and actual sourced clock drops not yet measured. Do not use eightfold pilot power as measured full-die cost.",
+  "half_slot_area_um2": 349075.547136,
+  "clock_buffer_area_delta_pct_of_slot": 0.07399941420112188,
+  "bench_gates": {
+    "bench_vm8v_exact": {
+      "rc": 0,
+      "expect": "pass",
+      "ok": true
+    },
+    "bench_vm8v_neg_xbus": {
+      "rc": 1,
+      "expect": "fail",
+      "ok": true
+    },
+    "bench_vm8v_neg_seam": {
+      "rc": 1,
+      "expect": "fail",
+      "ok": true
+    },
+    "bench_vm8v_neg_seatp": {
+      "rc": 1,
+      "expect": "fail",
+      "ok": true
+    },
+    "bench_vm8v_neg_port_depth": {
+      "rc": 1,
+      "expect": "fail",
+      "ok": true
+    }
+  }
+}
