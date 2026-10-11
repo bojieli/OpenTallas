@@ -18,6 +18,12 @@ module tb_hgi_att_tput;
 `ifndef ATT_TD
  `define ATT_TD 64
 `endif
+`ifndef ATT_KV8
+ `define ATT_KV8 0                // fe-push kv8: fmt 7 FP8 KV rows (cases *_kv8)
+`endif
+`ifndef ATT_MUT_KV8
+ `define ATT_MUT_KV8 0
+`endif
 `ifndef ATT_PIPE
  `define ATT_PIPE 0
 `endif
@@ -62,7 +68,8 @@ module tb_hgi_att_tput;
     // delivers at most BWS sectors a cycle (+BWS, default 99 = 3,166.7 B/cycle / 32 B).
     wire wq_v, wq_rdy = 1'b1; wire [`ATT_NL-1:0] wq_sv; wire [`ATT_NL*40-1:0] wq_row; wire [7:0] wq_nsec;
     reg [`ATT_NL*SPRL-1:0] wl_v = 0; reg [`ATT_NL*SPRL*256-1:0] wl_d = 0;
-    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE)) u (
+    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE),
+        .KV8(`ATT_KV8), .MUT_KV8(`ATT_MUT_KV8)) u (
         .wq_v(wq_v), .wq_rdy(wq_rdy), .wq_sv(wq_sv), .wq_row(wq_row), .wq_nsec(wq_nsec), .wl_v(wl_v), .wl_d(wl_d),.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]), .rec_o(cur[1151:896]),
         .rec_n_b(cur[1172:1152]), .rec_n_c(cur[1193:1173]), .rec_pos1(cur[1214:1194]), .rec_done(done),
