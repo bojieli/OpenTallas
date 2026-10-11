@@ -137,7 +137,7 @@ class Tracker:
             self.pending[(int(m.group(1)), m.group(2))] = ln[:ln.rindex(' <unfinished ...>')]; return None
         m = CLONE_RE.match(ln)
         if m:
-            self.cwd[int(m.group(2))] = self.cwd.get(int(m.group(1)), self.cwd0); return None
+            self.cwd.setdefault(int(m.group(2)), self.cwd.get(int(m.group(1)), self.cwd0)); return None   # the child may have chdir'd first
         m = CHDIR_RE.match(ln)
         if m:
             pid = int(m.group(1)); p = c_unescape(m.group(2))
@@ -194,7 +194,34 @@ def block_variants(mods, block):
     return [m for m in mods if m == block or (m.endswith('_' + block) and len(m) - len(block) <= 12)]
 
 
+KEEP_IN_RUN = {'src', 'out', 'cl', 'spec.json', '6_final.v', 'workdir_src', 'absfiles'}
+
+
 def capture(spec, out):
+    """capture_once, retried while the bench stops on a results/ file left out of the sparse source tree: the missing
+    directory is added to the checkout (git sparse-checkout add) and the bench's own outputs are cleared"""
+    src = spec['bench'].get('cwd') or spec['src']
+    for attempt in range(10):
+        try:
+            return capture_once(spec, out)
+        except SystemExit as e:
+            if not str(e).startswith('NO_SIM'): raise
+            txt = open(out / 'bench.log', errors='replace').read()
+            shas = sorted(set(re.findall(r"'git', 'show', '([0-9a-f]{7,40}):", txt) + re.findall(r'(?:bad object|not a valid object name|unknown revision[^\n]*?|invalid object name) \'?([0-9a-f]{7,40})', txt)))
+            shas = [s for s in shas if subprocess.run(['git', '-C', src, 'cat-file', '-e', s + '^{commit}'], capture_output=True).returncode]
+            if shas: raise SystemExit('NEED_COMMITS ' + ' '.join(shas))
+            miss = re.findall(re.escape(src.rstrip('/')) + r'/(results/[^\s\'"]+)', txt)
+            if not miss: raise
+            d = os.path.dirname(miss[-1])
+            log('capture: bench needs %s (not in the sparse tree): adding it and re-running' % d)
+            subprocess.run(['git', '-C', src, 'sparse-checkout', 'add', '/' + d + '/'], check=True, capture_output=True)
+            run = Path(spec['src']).parent
+            for p in run.iterdir():
+                if p.name not in KEEP_IN_RUN: subprocess.run(['rm', '-rf', str(p)])
+    raise SystemExit('NO_SIM: too many missing results/ paths')
+
+
+def capture_once(spec, out):
     b = spec['bench']; block = spec['block']
     cwd = b.get('cwd') or spec['src']
     st = out / 'strace.log'
@@ -525,7 +552,7 @@ def gen_probe(spec, comp, out, mode, dut_path=None, segments=None, gate=None):
     L += ['  end',
           '  final if (sel) begin $fwrite(ft, "E %%0d\\n", cyc); $fclose(ft); $fclose(fh); %s end' % ('ot_anim_close();' if mode == 'gate' else ''),
           'endmodule']
-    cat = lambda xs: '{%s}' % ', '.join(xs) if xs else "1'b0"
+    cat = lambda xs: ('{\n    %s}' % ',\n    '.join(xs)) if xs else "1'b0"   # one element per line (Verilator: <= 40000 tokens per line)
     binds = []
     targets = comp['variant_files'].items() if mode == 'rtl' else [('ot_gl_' + spec['block'], None)]
     for mod, path in targets:
@@ -704,37 +731,114 @@ def derive_window(spec, layout, rst, end, per, cap=8192, floor=32, settle=8):
 
 
 # ---------------------------------------------------------------------------------------------- gate-level preparation
-INST_RE = re.compile(r'^\s*([A-Za-z_][\w$]*)\s+(\\\S+\s|[A-Za-z_][\w$]*)\s*\(')
+def _pins(s):
+    r"""'.A(x), .B(\esc[3] ), .Y()' -> {pin: expr or None}; escaped identifiers run to whitespace"""
+    out = {}; i = 0; n = len(s)
+    while True:
+        i = s.find('.', i)
+        if i < 0: break
+        m = re.match(r'\.([A-Za-z_]\w*)\s*\(', s[i:])
+        if not m: i += 1; continue
+        j = i + m.end(); d = 1; k = j
+        while k < n and d:
+            c = s[k]
+            if c == '\\':
+                while k < n and not s[k].isspace(): k += 1
+                continue
+            if c == '(': d += 1
+            elif c == ')': d -= 1
+            k += 1
+        e = s[j:k - 1].strip()
+        out[m.group(1)] = e or None; i = k
+    return out
+
+
+def _qname(raw):
+    return '\\' + raw.lstrip('\\').strip() + '__q '
+
+
+def _subst(expr, pins, extra=None):
+    m = dict(pins); m.update(extra or {})
+    return re.sub(r"(?<!')\b([A-Za-z_]\w*)\b", lambda x: m[x.group(1)] if x.group(1) in m else x.group(0), expr)
 
 
 def prep_netlist(spec, kinds, out):
-    """the routed netlist with its top renamed ot_gl_<block>; sequential / ICG / macro instances (names as in the DB)"""
+    r"""the routed netlist flattened into one module ot_gl_<block>: every standard cell becomes its zero-delay function
+    (assigns; flops / latches / ICG enable latches as named registers \<instance>__q), macros stay instances.  A
+    flat module avoids Verilator's inlining of ~10^5 cell instances (V3Inline is quadratic there)."""
     src = spec['netlist']; dst = out / 'netlist_gl.v'
-    seq = []; icg = []; macros = collections.Counter(); minst = []; modules = set(); renamed = False; masters = collections.Counter(); physical = set()
+    seq = []; icg = []; macros = collections.Counter(); minst = []; masters = collections.Counter(); physical = set()
+    top = None; renamed = False; nmod = 0
     with open(src, errors='replace') as f, open(dst, 'w') as g:
+        buf = None
         for ln in f:
-            if ln.startswith('module '):
-                nm = ln.split()[1].split('(')[0]
-                modules.add(nm)
-                if nm == spec['block']:
-                    ln = ln.replace('module ' + nm, 'module ot_gl_' + nm, 1); renamed = True
+            s = ln.strip()
+            if buf is not None:
+                buf.append(ln)
+                if s.endswith(');'): stmt = ''.join(buf); buf = None
+                else: continue
             else:
-                m = INST_RE.match(ln)
-                if m and m.group(1) not in ('module', 'input', 'output', 'wire', 'assign', 'inout', 'reg'):
-                    master, nm = m.group(1), m.group(2)
-                    k = kinds.get(master)
-                    masters[master] += 1
-                    if k is None and re.search(r'\(\s*\)\s*;', ln[m.end() - 1:]): physical.add(master)
-                    elif k is None: macros[master] += 1; minst.append((master, nm.strip()))
-                    elif k['kind'] in ('ff', 'latch'): seq.append((nm, master))
-                    elif k['kind'] == 'icg': icg.append((nm, master))
-            g.write(ln)
+                if s.startswith('module '):
+                    nm = s.split()[1].split('(')[0]; nmod += 1
+                    if nm == spec['block']:
+                        ln = ln.replace('module ' + nm, 'module ot_gl_' + nm, 1); renamed = True; top = True
+                    else: top = False
+                    g.write(ln); continue
+                m = re.match(r'([A-Za-z_][\w$]*)\s+(\\\S+\s|[A-Za-z_][\w$]*)\s*\(', s)
+                if not top or not m or m.group(1) in ('module', 'input', 'output', 'inout', 'wire', 'assign', 'reg', 'tri', 'supply0', 'supply1'):
+                    g.write(ln); continue
+                if s.endswith(');'): stmt = ln
+                else: buf = [ln]; continue
+            m = re.match(r'\s*([A-Za-z_][\w$]*)\s+(\\\S+\s|[A-Za-z_][\w$]*)\s*\(', stmt)
+            master, raw = m.group(1), m.group(2)
+            masters[master] += 1
+            k = kinds.get(master)
+            body = stmt[m.end():]
+            if k is None:
+                if re.match(r'\s*\)\s*;', body): physical.add(master); continue
+                macros[master] += 1; minst.append((master, raw.strip())); g.write(stmt); continue
+            lhs = {p: (e + ' ' if e and e.startswith('\\') else e) for p, e in _pins(body).items()}   # escaped ids end at whitespace
+            pins = {p: ('(' + e + ')' if e else None) for p, e in lhs.items()}
+            ins = {p: (pins.get(p) or "1'b0") for p in k.get('ins', [])}
+            name = raw.lstrip('\\').strip()
+            if k['kind'] in ('comb', 'nofunc'):
+                for o, ex in k['outs'].items():
+                    if pins.get(o): g.write('  assign %s = %s;\n' % (lhs[o], _subst(ex, ins)))
+                continue
+            if k['kind'] == 'physical': physical.add(master); continue
+            q = _qname(raw)
+            if k['kind'] == 'icg':
+                g.write('  reg %s = 1\'b0;\n' % q)
+                ck = ins.get(k['clk'], "1'b0"); ena = _subst(k['ena'], ins)
+                if k['icg'].startswith('latch_posedge'):
+                    g.write('  always @* if (!%s) %s = %s;\n' % (ck, q, ena))
+                    if pins.get(k['gclk']): g.write('  assign %s = %s & %s;\n' % (lhs[k['gclk']], ck, q))
+                else:
+                    g.write('  always @* if (%s) %s = %s;\n' % (ck, q, ena))
+                    if pins.get(k['gclk']): g.write('  assign %s = %s | ~%s;\n' % (lhs[k['gclk']], ck, q))
+                icg.append((name, master)); continue
+            # ff / latch: state register named after the instance (power-up: logical Q = 0, as the RTL run)
+            g.write('  reg %s = 1\'b%d;\n' % (q, 1 if k.get('inv') else 0))
+            st = {k['state']: q, k['state_n']: '(~' + q + ')'}
+            clr = _subst(k['clr'], ins) if k.get('clr') else None; pre = _subst(k['pre'], ins) if k.get('pre') else None
+            if k['kind'] == 'ff':
+                c = '\\' + name + '__c '
+                g.write('  wire %s = %s;\n' % (c, ins.get(k['clk'], "1'b0")))
+                sens = ['%s %s' % ('negedge' if k['neg'] else 'posedge', c)]
+                if clr: g.write('  wire \\%s__r = %s;\n' % (name, clr)); sens.append('posedge \\%s__r ' % name)
+                if pre: g.write('  wire \\%s__s = %s;\n' % (name, pre)); sens.append('posedge \\%s__s ' % name)
+                nx = _subst(k['next'], ins)
+                body_ = ('if (\\%s__r ) %s <= 1\'b0; else ' % (name, q) if clr else '') + ('if (\\%s__s ) %s <= 1\'b1; else ' % (name, q) if pre else '') + '%s <= %s;' % (q, nx)
+                g.write('  always @(%s) %s\n' % (' or '.join(sens), body_))
+            else:
+                g.write('  always @* begin %s%sif (%s) %s = %s; end\n' % ('if (%s) %s = 1\'b0; else ' % (clr, q) if clr else '',
+                        'if (%s) %s = 1\'b1; else ' % (pre, q) if pre else '', _subst(k['en'], ins), q, _subst(k['d'], ins)))
+            for o, ex in k['outs'].items():
+                if pins.get(o): g.write('  assign %s = %s;\n' % (lhs[o], _subst(ex, st)))
+            seq.append((name, master))
     if not renamed: raise SystemExit('NETLIST: module %s not in %s' % (spec['block'], src))
-    macros = {m: n for m, n in macros.items() if m not in modules and m not in physical}
-    if physical:   # fillers / taps / decaps instantiated without ports: empty modules
-        with open(dst, 'a') as g:
-            for p in sorted(physical): g.write('\n/*verilator tracing_off*/\nmodule %s (); endmodule\n' % p)
-    return dst, seq, icg, macros, [x for x in minst if x[0] in macros], masters
+    if nmod > 1: log('netlist: %d modules (only the top is flattened)' % nmod)
+    return dst, seq, icg, dict(macros), minst, masters
 
 
 def macro_model(found, variant, master, out):
@@ -838,7 +942,7 @@ def main():
     mfiles = [macro_model(found, mvariant[m], m, out) for m in macros]
     # ---- gate-level: state vector in DB-leaf order (flops), then ICGs
     leaves = spec['flops']; lidx = {n: i for i, n in enumerate(leaves) if n}
-    nl = {nm.replace('\\', '').strip(): (nm, master) for nm, master in seq}
+    nl = {nm: (nm, master) for nm, master in seq}
     order = []; unplaced = []
     for i, n in enumerate(leaves):
         if n and n in nl: order.append((n, i))
@@ -848,12 +952,12 @@ def main():
     st_expr = []; flops = []
     for n, i in order:
         raw, master = nl[n]; k = kinds[master]
-        st_expr.append('%s%s.%s' % ('~' if k.get('inv') else '', raw if raw.endswith(' ') else raw + ' ', k['state']))
+        st_expr.append('%s%s' % ('~' if k.get('inv') else '', _qname(raw)))
         flops.append(dict(name=n, leaf=i, master=master))
     icgs = []
     for raw, master in icg:
-        st_expr.append('%s.%s' % (raw if raw.endswith(' ') else raw + ' ', kinds[master]['state']))
-        icgs.append(dict(name=raw.replace('\\', '').strip(), master=master))
+        st_expr.append(_qname(raw))
+        icgs.append(dict(name=raw, master=master))
     gate = dict(state_expr=st_expr)
     pg, cfg_, gmeta = gen_probe(spec, comp, out, 'gate', dut_path=dut, segments=segs, gate=gate)
     (out / 'chunks').mkdir(exist_ok=True)
@@ -869,7 +973,7 @@ def main():
             if n:
                 p = out / ('swap_' + os.path.basename(f)); p.write_text(t2); repl[f] = str(p); nsw += n
     if nsw != 1: raise SystemExit('SWAP: %d instantiations of %s named %s' % (nsw, comp['variants'], inst))
-    gv = verilator_args(spec, comp, out, out / 'obj_gate', [cm, netlist] + mfiles + [pg, cfg_], replace=repl, gate=True)
+    gv = verilator_args(spec, comp, out, out / 'obj_gate', [netlist] + mfiles + [pg, cfg_], replace=repl, gate=True)
     G = build_and_run(spec, comp, run, out, 'gate', gv, spec.get('gate_mem_gb', 160), spec.get('gate_run_mem_gb', 64),
                       plusargs=['+OT_ANIM_MTAB=%s' % (out / 'mtab.txt')])
     gl = open(G['log'], errors='replace').read()

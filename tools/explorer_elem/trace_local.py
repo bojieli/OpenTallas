@@ -156,6 +156,8 @@ if [ ! -f $S/.anim_ready ]; then
   git -C $S checkout -q --detach $C || exit 14
   echo $C > $S/SOURCE_COMMIT; touch $S/.anim_ready
 fi
+# the markers must not dirty the tree (benches that demand a clean pinned worktree)
+grep -qx SOURCE_COMMIT $S/.git/info/exclude 2>/dev/null || printf 'SOURCE_COMMIT\n.anim_ready\n' >> $S/.git/info/exclude
 echo SRC_READY
 '''
 CELLS_SH = r'''
@@ -183,7 +185,7 @@ echo FSTX_READY
 def prepare_host(host, cfg, commit, keep):
     base = anim_base(cfg)
     for name, mode in (('fstx.c', 'cmp'), ('trace_bench.py', 'cat'), ('lib2v.py', 'cat')):
-        r = ssh(host, 'mkdir -p {b}/bin && cat > {b}/bin/{n}.new && (cmp -s {b}/bin/{n}.new {b}/bin/{n} && rm {b}/bin/{n}.new || mv {b}/bin/{n}.new {b}/bin/{n})'
+        r = ssh(host, 'mkdir -p {b}/bin && cat > {b}/bin/{n}.new$$ && (cmp -s {b}/bin/{n}.new$$ {b}/bin/{n} && rm -f {b}/bin/{n}.new$$ || mv -f {b}/bin/{n}.new$$ {b}/bin/{n})'
                 .format(b=base, n=name), inp=(HERE / name).read_text())
         if r.returncode: raise RuntimeError('ship %s: %s' % (name, r.stderr[-300:]))
     r = ssh(host, FSTX_SH % dict(base=base), timeout=900)
@@ -271,13 +273,18 @@ def _trace(job, element, dest, host, window, log):
     if r.returncode: raise RuntimeError('job dir: ' + r.stderr[-300:])
     if bench['mode'] == 'workdir' and bench['host'] != host:   # the prior bench directory, without its builds
         wd = bench['workdir']
-        r = subprocess.run('ssh -o BatchMode=yes %s "tar -C %s --exclude=\'obj_*\' --exclude=\'*/obj_*\' -cf - ." | ssh -o BatchMode=yes %s "mkdir -p %s/workdir_src && tar -C %s/workdir_src -xf -"'
-                           % (bench['host'], shlex.quote(wd), host, run, run), shell=True, capture_output=True, text=True, timeout=7200)
+        lst = "cd %s && { find . -path \'*/obj_*\' -prune -o -type f -print; find . -name \'V*__verFiles.dat\'; } | tar -cf - -T -" % shlex.quote(wd)
+        r = subprocess.run('ssh -o BatchMode=yes %s %s | ssh -o BatchMode=yes %s "mkdir -p %s/workdir_src && tar -C %s/workdir_src -xf -"'
+                           % (bench['host'], shlex.quote(lst), host, run, run), shell=True, capture_output=True, text=True, timeout=7200)
         if r.returncode: raise RuntimeError('workdir copy: ' + r.stderr[-300:])
         # absolute inputs the prior compile names outside its directory (e.g. a shared DPI .cpp)
-        r = subprocess.run('ssh -o BatchMode=yes %s "grep -h \'^C \' $(find %s -name \'V*__verFiles.dat\' | head -20) | grep -o \'/[^ \\\"]*\' | sort -u | '
-                           'while read f; do [ -f \$f ] && echo \$f; done | grep -v \'^%s/\' | tar -cPf - -T -" | ssh -o BatchMode=yes %s "mkdir -p %s/absfiles && tar -C %s/absfiles -xf -"'
-                           % (bench['host'], shlex.quote(wd), wd.rstrip('/'), host, run, run), shell=True, capture_output=True, text=True, timeout=3600)
+        r = ssh(bench['host'], "grep -h '^C ' $(find %s -name 'V*__verFiles.dat' | head -20)" % shlex.quote(wd), timeout=300)
+        absf = sorted({x for x in re.findall(r'(/[^\s"]+)', r.stdout) if not x.startswith(wd.rstrip('/') + '/')})
+        for f in absf:
+            ex = ssh(bench['host'], 'test -f %s && echo Y' % shlex.quote(f), timeout=60)
+            if 'Y' not in ex.stdout: continue
+            ssh(host, 'mkdir -p %s' % shlex.quote(run + '/absfiles' + os.path.dirname(f)), timeout=60)
+            subprocess.run(['scp', '-3', '-q', '-o', 'BatchMode=yes', '%s:%s' % (bench['host'], f), '%s:%s' % (host, run + '/absfiles' + f)], capture_output=True, timeout=3600)
         s['bench'] = dict(bench, workdir=run + '/workdir_src', origin='%s:%s' % (bench['host'], wd), absroot=run + '/absfiles', prior_root=wd)
         r = ssh(host, 'cat > %s/spec.json' % run, inp=json.dumps(s), timeout=600)
     if dbhost == host:
@@ -286,8 +293,21 @@ def _trace(job, element, dest, host, window, log):
         r = subprocess.run(['scp', '-3', '-q', '-o', 'BatchMode=yes', '%s:%s' % (dbhost, nlsrc), '%s:%s/6_final.v' % (host, run)], capture_output=True, text=True, timeout=7200)
     if r.returncode: raise RuntimeError('netlist copy %s -> %s: %s' % (dbhost, host, r.stderr[-300:]))
     t = time.time()
-    r = ssh(host, 'cd %s && nice -n 10 python3 %s/bin/trace_bench.py --spec spec.json --out %s/out > %s/out/driver.log 2>&1; rc=$?; '
-                  'rm -rf %s/out/obj_rtl %s/out/obj_gate %s/src %s/out/netlist_gl.v %s/6_final.v; echo RC=$rc; tail -3 %s/out/driver.log' % (run, base, run, run, run, run, run, run, run, run), timeout=12 * 3600)
+    for attempt in range(6):   # a bench that git-shows other pinned commits: push them (local-only refs too), re-run
+        r = ssh(host, 'cd %s && nice -n 10 python3 %s/bin/trace_bench.py --spec spec.json --out %s/out > %s/out/driver.log 2>&1; echo RC=$?; tail -1 %s/out/driver.log'
+                % (run, base, run, run, run), timeout=12 * 3600)
+        m = re.search(r'NEED_COMMITS ([0-9a-f ]+)', r.stdout)
+        if not m or bench['mode'] != 'cmd': break
+        for sha in m.group(1).split():
+            full = sh(['git', '-C', str(REPO), 'rev-parse', sha + '^{commit}']).stdout.strip()
+            if not full: raise RuntimeError('bench needs commit %s, unknown here too' % sha)
+            for dst in ('%s/src/%s' % (base, commit), run + '/src'):
+                p = sh(['git', '-C', str(REPO), 'push', '-q', '%s:%s' % (host, dst), '%s:refs/anim/%s' % (full, full)], timeout=3600)
+                if p.returncode: raise RuntimeError('push %s -> %s:%s: %s' % (full[:10], host, dst, p.stderr[-300:]))
+            log('%s: pushed pinned commit %s the bench reads' % (job, full[:10]))
+        ssh(host, 'cd %s && for p in *; do case $p in src|out|cl|spec.json|6_final.v|workdir_src|absfiles) ;; *) rm -rf $p;; esac; done; rm -rf out && mkdir out' % run, timeout=600)
+    r = ssh(host, 'cd %s && rc=$(tail -c 2000 out/driver.log | grep -c "^DONE\\|DONE elem_trace"); '
+                  '[ -f out/elem_trace.json ] && rc=0 || rc=1; rm -rf %s/out/obj_rtl %s/out/obj_gate %s/src %s/out/netlist_gl.v %s/6_final.v; echo RC=$rc; tail -3 %s/out/driver.log' % (run, run, run, run, run, run, run), timeout=3600)
     rc = re.search(r'RC=(\d+)', r.stdout)
     if not rc or rc.group(1) != '0':
         raise RuntimeError('trace_bench rc %s on %s: %s' % (rc and rc.group(1), host, r.stdout[-500:]))

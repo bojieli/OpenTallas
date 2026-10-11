@@ -168,12 +168,24 @@ def model(cell):
         if outs and not any_fn: kind = 'nofunc'
         if not outs: kind = 'physical'
     L.append('endmodule')
-    info = dict(kind=kind)
+    # template for the netlist flattener (trace_bench.flatten_netlist): expressions over pin names / state vars
+    info = dict(kind=kind, ins=ins, outs={p['args'][0]: fexpr(p['attrs']['function']) for p in outs if p['attrs'].get('function')})
     if seq:
         g = seq[0]; a = g['attrs']
         ns = (a.get('next_state') or a.get('data_in') or '').replace(' ', '')
-        info.update(state=(g['args'] + ['IQ'])[0], inv=ns.startswith('!') or ns.endswith("'"))
-    if icg: info.update(state='en_l', inv=False)
+        iq, iqn = (g['args'] + ['IQ', 'IQN'])[:2]
+        info.update(state=iq, state_n=iqn, inv=ns.startswith('!') or ns.endswith("'"),
+                    clr=fexpr(a['clear']) if a.get('clear') else None, pre=fexpr(a['preset']) if a.get('preset') else None)
+        if g['type'] == 'ff':
+            ck = a.get('clocked_on', 'CLK').strip()
+            info.update(clk=ck.strip("!'() "), neg=ck.startswith('!') or ck.endswith("'"), next=fexpr(a.get('next_state', '0')))
+        else:
+            info.update(en=fexpr(a.get('enable', '0')), d=fexpr(a.get('data_in', '0')))
+    if icg:
+        ck = next((p['args'][0] for p in pins if p['attrs'].get('clock_gate_clock_pin') == 'true'), 'CLK')
+        en = [p['args'][0] for p in pins if p['attrs'].get('clock_gate_enable_pin') == 'true' or p['attrs'].get('clock_gate_test_pin') == 'true']
+        go = next((p['args'][0] for p in outs if p['attrs'].get('clock_gate_out_pin') == 'true'), outs[0]['args'][0] if outs else None)
+        info.update(state='en_l', inv=False, clk=ck, ena=' | '.join(en) or "1'b1", gclk=go, icg=icg)
     return name, info, '\n'.join(L)
 
 
