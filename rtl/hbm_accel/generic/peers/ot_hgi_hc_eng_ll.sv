@@ -101,8 +101,9 @@ module ot_hgi_hc_lane_ll #(
         begin s = {1'b0, x} + 33'h7FFF + {32'd0, x[16]}; bf16 = {s[31:16], 16'd0}; end
     endfunction
     // ---- local reset relay
-    wire rl;
-    ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    // two reset regions: rl (pin flops, sequencer, FIFO) and rp (the FP pipelines' valid lines); control flops only
+    wire [1:0] rlr; wire rl = rlr[0], rp = rlr[1];
+    ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rlr));
     // ---- pin flops
     reg wrq_cr_q, wwq_cr_q, wwq_done_q, rv_q, dv_q; reg [255:0] rd_q; reg [2:0] dop_q; reg [7:0] dx_q; reg [127:0] dd_q;
     reg [4:0] lid_q;
@@ -182,7 +183,7 @@ module ot_hgi_hc_lane_ll #(
     wire [7:0] hv; wire [255:0] ho; wire [7:0] hf;
     genvar e;
     generate for (e = 0; e < 8; e = e + 1) begin : g_hp
-        ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_h (.clk(clk), .rst_n(rl), .v(sw),
+        ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_h (.clk(clk), .rst_n(rp), .v(sw),
             .r0(op[1][32*e +: 32]), .r1(op[2][32*e +: 32]), .r2(op[3][32*e +: 32]), .r3(op[4][32*e +: 32]),
             .y(op[0][32*e +: 32]), .c0(wt[32*(4 + 0 + kk) +: 32]), .c1(wt[32*(4 + 4 + kk) +: 32]),
             .c2(wt[32*(4 + 8 + kk) +: 32]), .c3(wt[32*(4 + 12 + kk) +: 32]), .p(wt[32*kk +: 32]),
@@ -196,10 +197,10 @@ module ot_hgi_hc_lane_ll #(
     ot_hdc_vline #(.D(DM)) u_vm (.clk(clk), .rst_n(rl), .v(mx_v), .vd(vm));
     wire x_v = vm[DM];
     generate for (e = 0; e < 8; e = e + 1) begin : g_mx
-        ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rl), .v(mx_v), .h0(op[0][32*e +: 32]),
+        ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rp), .v(mx_v), .h0(op[0][32*e +: 32]),
             .h1(op[1][32*e +: 32]), .h2(op[2][32*e +: 32]), .h3(op[3][32*e +: 32]), .pre(wt[127:0]),
             .x(xl[32*e +: 32]), .fault(mf[e]));
-        ot_hdc_qmul_lat #(LM) u_sq (clk, rl, x_v, xl[32*e +: 32], xl[32*e +: 32], sq[32*e +: 32], sf[e]);
+        ot_hdc_qmul_lat #(LM) u_sq (clk, rp, x_v, xl[32*e +: 32], xl[32*e +: 32], sq[32*e +: 32], sf[e]);
     end endgenerate
     localparam integer DS = LM + 7 * LA;
     wire [DS:0] vs;
@@ -209,8 +210,8 @@ module ot_hgi_hc_lane_ll #(
     genvar k;
     generate for (k = 1; k < 8; k = k + 1) begin : g_ch
         wire [31:0] sd;
-        ot_hdc_delay #(.W(32), .D(LA * (k - 1))) u_sd (.clk(clk), .rst_n(rl), .d(sq[32*k +: 32]), .q(sd));
-        ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rl, vs[LM + LA * (k - 1)], acc[k - 1], sd, acc[k], cf[k]);
+        ot_hdc_delay #(.W(32), .D(LA * (k - 1))) u_sd (.clk(clk), .rst_n(rp), .d(sq[32*k +: 32]), .q(sd));
+        ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rp, vs[LM + LA * (k - 1)], acc[k - 1], sd, acc[k], cf[k]);
     end endgenerate
     wire cs_v = vs[DS];
 
@@ -227,8 +228,8 @@ module ot_hgi_hc_lane_ll #(
     ot_hdc_vline #(.D(LMS)) u_vx (.clk(clk), .rst_n(rl), .v(xo_v), .vd(vx));
     wire [255:0] pp, qq; wire [7:0] f1, f2;
     generate for (e = 0; e < 8; e = e + 1) begin : g_sc
-        ot_hdc_qmul_lat #(LMS) u_xr (clk, rl, xo_v, xo[32*e +: 32], rh, pp[32*e +: 32], f1[e]);
-        ot_hdc_qmul_lat #(LMS) u_w  (clk, rl, vx[LMS], wo[32*e +: 32], pp[32*e +: 32], qq[32*e +: 32], f2[e]);
+        ot_hdc_qmul_lat #(LMS) u_xr (clk, rp, xo_v, xo[32*e +: 32], rh, pp[32*e +: 32], f1[e]);
+        ot_hdc_qmul_lat #(LMS) u_w  (clk, rp, vx[LMS], wo[32*e +: 32], pp[32*e +: 32], qq[32*e +: 32], f2[e]);
     end endgenerate
     wire [LMS:0] vq;
     ot_hdc_vline #(.D(LMS)) u_vq (.clk(clk), .rst_n(rl), .v(vx[LMS]), .vd(vq));
@@ -248,7 +249,7 @@ module ot_hgi_hc_lane_ll #(
         .hv(f_hv), .head(f_hd), .ovf(ovf));
     assign pop = run && f_hv && (wcr != '0);
     always @(posedge clk or negedge rl) if (!rl) wwq[279] <= 1'b0; else wwq[279] <= pop;
-    always @(posedge clk) if (pop) wwq[278:0] <= {f_hd[270:256], f_hd[255:0], 8'hFF};
+    always @(posedge clk) wwq[278:0] <= {f_hd[270:256], f_hd[255:0], 8'hFF};   // no enable: wwq[279] qualifies
 
     // ---- control
     reg [7:0] npush, nexp_l;                 // outputs pushed / expected this run (HC_POST 4 NM, PRE NM)
@@ -289,7 +290,7 @@ module ot_hgi_hc_lane_ll #(
             end
             // responses
             if (rv_q && scp) begin
-                scp <= 1'b0; up_v <= 1'b1; up_t <= 1'b0; up_x <= {2'd0, scx}; up_d <= rd_q;
+                scp <= 1'b0; up_v <= 1'b1; up_t <= 1'b0;
             end else if (rsp) begin
                 if (rph_b) rm <= rm + 1'b1;
                 else if (post) begin
@@ -306,7 +307,7 @@ module ot_hgi_hc_lane_ll #(
             if (last_h) mx_v <= 1'b1;
             // PRE: x into its buffer, the chunk sum up
             if (x_v) xm <= xm + 1'b1;
-            if (cs_v) begin up_v <= 1'b1; up_t <= 1'b1; up_x <= c_i; up_d <= {224'd0, acc[7]}; cm <= cm + 1'b1; end
+            if (cs_v) begin up_v <= 1'b1; up_t <= 1'b1; cm <= cm + 1'b1; end
             // PRE phase C: the scale starts when r has landed and every gain sector is in
             if (c_rstd) r_ok <= 1'b1;
             if (!post && run && r_ok && !sc_run && sm == '0 && rph_b && rm == MB'(NM) && ym == '0 && !y_v && !vx[LMS]
@@ -322,6 +323,12 @@ module ot_hgi_hc_lane_ll #(
         end
     end
     always @(posedge clk) if (x_v) xb[xm] <= xl;
+    // up data: a scalar sector (rd_q) or a chunk sum in the low word; 32-bit select, no enable on the 224 upper bits
+    always @(posedge clk) begin
+        up_d[255:32] <= rd_q[255:32];
+        up_d[31:0]   <= cs_v ? acc[7] : rd_q[31:0];
+        up_x         <= cs_v ? c_i : {2'd0, scx};
+    end
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
