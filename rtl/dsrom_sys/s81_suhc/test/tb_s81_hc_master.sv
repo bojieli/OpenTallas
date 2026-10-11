@@ -42,6 +42,7 @@ module tb_s81_hc_master;
     reg [13:0]      ea [0:MAXE-1];
     reg [511:0]     ed [0:MAXE-1];
     reg [31:0]      nm [0:2];
+    integer fd;
     integer nj, ne, ny, i, s, errs, credits, ip, ndone, yb, bad_tag, scyc, t;
     reg [MAXJ-1:0] pend;
     integer jstart [0:MAXJ-1];
@@ -102,6 +103,9 @@ module tb_s81_hc_master;
         while (t < TMAX && !(ndone >= nj && nj > 0) && !flt) begin @(posedge sk); t = t + 1; end
         repeat (200) @(posedge sk);
         errs = 0;
+        fd = $fopen("got.mem", "w");
+        for (i = 0; i < ne; i = i + 1) $fdisplay(fd, "%h", vm[ea[i]]);
+        $fclose(fd);
         for (i = 0; i < ne; i = i + 1)
             if (vm[ea[i]] !== ed[i]) begin
                 if (errs < 5) $display("mismatch row %0d got %h want %h", ea[i], vm[ea[i]][63:0], ed[i][63:0]);

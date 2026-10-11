@@ -40,6 +40,16 @@ module tb_s81_su_master;
     reg [13:0]      ea [0:MAXE-1];
     reg [511:0]     ed [0:MAXE-1];
     reg [31:0]      nm [0:2];
+    integer fd;
+    integer n_qn, n_qnq, n_kv, n_kvq, n_qb, n_qbo, n_sw, n_swo, n_ss, n_se, n_sp, n_so, n_beat;
+    initial begin n_qn = 0; n_qnq = 0; n_kv = 0; n_kvq = 0; n_qb = 0; n_qbo = 0; n_sw = 0; n_swo = 0; n_ss = 0; n_se = 0;
+                  n_sp = 0; n_so = 0; n_beat = 0; end
+    always @(posedge sk) begin
+        n_qn += dut.u_core.qn_in; n_qnq += dut.u_core.qn_qv; n_kv += dut.u_core.kv_in; n_kvq += dut.u_core.kv_qv;
+        n_qb += dut.u_core.qb_v; n_qbo += dut.u_core.qb_vo; n_sw += dut.u_core.sw_v; n_swo += dut.u_core.sw_vo;
+        n_ss += dut.u_core.sm_sv; n_se += dut.u_core.sm_ev; n_sp += dut.u_core.sm_pv; n_so += dut.u_core.sm_ov;
+        n_beat += dut.u_core.beat_v;
+    end
     integer nj, ne, ny, i, s, errs, credits, ip, ndone, yb, bad_tag, scyc, t;
     reg [MAXJ-1:0] pend;
     integer jstart [0:MAXJ-1];
@@ -96,6 +106,9 @@ module tb_s81_su_master;
         while (t < TMAX && !(ndone >= nj && nj > 0) && !flt) begin @(posedge sk); t = t + 1; end
         repeat (200) @(posedge sk);
         errs = 0;
+        fd = $fopen("got.mem", "w");
+        for (i = 0; i < ne; i = i + 1) $fdisplay(fd, "%h", vm[ea[i]]);
+        $fclose(fd);
         for (i = 0; i < ne; i = i + 1)
             if (vm[ea[i]] !== ed[i]) begin
                 if (errs < 5) $display("mismatch row %0d got %h want %h", ea[i], vm[ea[i]][63:0], ed[i][63:0]);
@@ -103,6 +116,9 @@ module tb_s81_su_master;
             end
         for (i = 0; i < nj; i = i + 1)
             $display("SUJ op=%0d kind=%0d start=%0d done=%0d", i, prog[i][30:27], jstart[i], jdone[i]);
+        $display("SUC qn %0d/%0d kv %0d/%0d qb %0d/%0d sw %0d/%0d sm s %0d e %0d pv %0d o %0d beats %0d ph %0d rr %0d nrow %0d cw %0d nw %0d",
+                 n_qn, n_qnq, n_kv, n_kvq, n_qb, n_qbo, n_sw, n_swo, n_ss, n_se, n_sp, n_so, n_beat, dut.u_core.ph,
+                 dut.u_core.rr, dut.u_core.nrow, dut.u_core.cw, dut.u_core.nw);
         $display("SUG jobs=%0d done=%0d err=%0d rows=%0d fault=%0d code=%0d cyc=%0d bad_tag=%0d", nj, ndone, errs, ne,
                  flt, fcode, scyc, bad_tag);
         if (errs == 0 && ndone == nj && !flt && bad_tag == 0 && pend == 0) $display("SUG PASS"); else $display("SUG FAIL");
