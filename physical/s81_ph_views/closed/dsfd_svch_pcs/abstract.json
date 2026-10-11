@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_svch_pcs",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_svch_pcs.lef": "0930cd6a2968f397abc667734214e2a3166e8e59c58a6426d66e6ba64b5eca32",
+    "dsfd_svch_pcs_ff.lib": "bfc21f036d8325c0aea64bbbd9581be18171dfd8339ecda0db5a50a07ae8cabd",
+    "dsfd_svch_pcs_ss.lib": "3b43d6a4d59eaa76ed5dc132b79fe6626d02a2d104bacc00200f2dd3977ca4f8"
+  },
+  "ok": true
+}
