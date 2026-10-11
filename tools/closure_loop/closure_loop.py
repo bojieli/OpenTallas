@@ -2490,6 +2490,12 @@ def auto_merge_guard(j):
     if not str(spec['source'].get('branch', '')).startswith('claude/'):
         return f"source branch {spec['source'].get('branch')} is not claude/*"
     benches = j.get('benches') or {}
+    try:
+        waive = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_external_bench_prefixes') or []
+    except (OSError, ValueError):
+        waive = []
+    if not benches and spec.get('no_bench_reason') and any(j['name'].startswith(w) for w in waive):
+        return None if j.get('commit_full') else "no verified source commit"   # owner-approved external bench (BF of record)
     if not benches:
         return "no loop benches ran"
     bad = [k for k, v in benches.items() if not (isinstance(v, dict) and v.get('ok') is True)]
@@ -5430,7 +5436,7 @@ def stale24_candidates(jobs, now=None):
     out = []
     for j in jobs:
         st = j.get("status")
-        if st in TERMINAL or j["spec"].get("allow_over_24h"):
+        if st in TERMINAL or j["spec"].get("allow_over_24h") or (protected_jobs() and j["name"].startswith(protected_jobs())):
             continue
         run = j.get("run") or ""
         if re.search(DIE_CONTAINER_RE, j["name"]) or re.search(DIE_MOUNT_RE, run):
@@ -5499,6 +5505,15 @@ MEM_GUARD_EVERY_S = 300
 _MEM_GUARD_LAST = {}
 
 
+def protected_jobs():
+    """STATE/protected_jobs.json {"prefixes": [...]}: owner-priority lines (e.g. the BF of record) that MEM-GUARD and
+    STALE-24H never stop."""
+    try:
+        return tuple(json.loads((STATE / "protected_jobs.json").read_text()).get("prefixes") or [])
+    except (OSError, ValueError):
+        return ()
+
+
 def mem_guard(jobs, fleet, now=None):
     """returns [(host, job name)] stopped this call"""
     now = time.time() if now is None else now
@@ -5511,7 +5526,9 @@ def mem_guard(jobs, fleet, now=None):
         floor = max(MEM_GUARD_GB, MEM_GUARD_FRAC * h.get("ram_gb", 1024))
         if good[1].get("mem_gb", 1e9) >= floor or now - _MEM_GUARD_LAST.get(name, 0) < MEM_GUARD_EVERY_S:
             continue
+        prot = protected_jobs()
         cand = [j for j in jobs if j.get("host") == name and j["status"] == "RUNNING" and j.get("stage_tag")
+                and not (prot and j["name"].startswith(prot))
                 and not re.search(DIE_CONTAINER_RE, j["name"]) and not re.search(DIE_MOUNT_RE, j.get("run") or "")]
         if not cand:
             continue

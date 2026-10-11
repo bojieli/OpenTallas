@@ -40,14 +40,14 @@ module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
                      parameter integer D_V = FWD_V + RET_V + 4, parameter integer D_C = FWD_C + RET_C + 4) (
  input wire [0:0] ck, rst,                                               // die stream clock, async active-low reset
  // die side
- input wire f_l0v, input wire [603:0] f_l0d, output wire t_l0g,          // vm -> p2 lane 0
- input wire f_l1v, input wire [603:0] f_l1d, output wire t_l1g,          // collective -> p2 lane 1
- input wire f_sv,  input wire [100:0] f_sd,  output wire t_sg,           // collective -> p2 start
- output wire t_ov, output wire [593:0] t_od, input wire f_og,            // p2 -> collective result row
+ input wire [0:0] f_l0v, input wire [603:0] f_l0d, output wire [0:0] t_l0g,          // vm -> p2 lane 0
+ input wire [0:0] f_l1v, input wire [603:0] f_l1d, output wire [0:0] t_l1g,          // collective -> p2 lane 1
+ input wire [0:0] f_sv,  input wire [100:0] f_sd,  output wire [0:0] t_sg,           // collective -> p2 start
+ output wire [0:0] t_ov, output wire [593:0] t_od, input wire [0:0] f_og,            // p2 -> collective result row
  // core side (ot_mtp_p2_prefix_path pins)
  output wire [1:0] c_in_v, input wire [1:0] c_in_r, output wire [1207:0] c_in_d,   // {lane1 604, lane0 604}
- output wire c_start_v, input wire c_start_r, output wire [100:0] c_start_d,
- input wire c_out_v, output wire c_out_r, input wire [593:0] c_out_d
+ output wire [0:0] c_start_v, input wire [0:0] c_start_r, output wire [100:0] c_start_d,
+ input wire [0:0] c_out_v, output wire [0:0] c_out_r, input wire [593:0] c_out_d
 );
 `ifdef OT_FIXLAT_MUT_LAT1
  localparam integer VF = 0, VR = 0, CF = 0, CR = 0;
@@ -85,12 +85,12 @@ endmodule
 module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 9,
                          parameter integer D_O = FWD_C + RET_C + 4) (
  input wire [0:0] ck, rst,
- input wire c_l1v, output wire c_l1r, input wire [603:0] c_l1d,
- output wire t_l1v, output wire [603:0] t_l1d, input wire f_l1g,
- input wire c_sv, output wire c_sr, input wire [100:0] c_sd,
- output wire t_sv, output wire [100:0] t_sd, input wire f_sg,
- input wire f_ov, input wire [593:0] f_od, output wire t_og,
- output wire c_ov, input wire c_or, output wire [593:0] c_od
+ input wire [0:0] c_l1v, output wire [0:0] c_l1r, input wire [603:0] c_l1d,
+ output wire [0:0] t_l1v, output wire [603:0] t_l1d, input wire [0:0] f_l1g,
+ input wire [0:0] c_sv, output wire [0:0] c_sr, input wire [100:0] c_sd,
+ output wire [0:0] t_sv, output wire [100:0] t_sd, input wire [0:0] f_sg,
+ input wire [0:0] f_ov, input wire [593:0] f_od, output wire [0:0] t_og,
+ output wire [0:0] c_ov, input wire [0:0] c_or, output wire [593:0] c_od
 );
 `ifdef OT_FIXLAT_MUT_LAT1
  localparam integer OF = 0, OR = 0;
@@ -110,8 +110,8 @@ endmodule
 // VM-slab end: sends lane 0.
 module dsfd_vm_p2_ep (
  input wire [0:0] ck, rst,
- input wire c_l0v, output wire c_l0r, input wire [603:0] c_l0d,
- output wire t_l0v, output wire [603:0] t_l0d, input wire f_l0g
+ input wire [0:0] c_l0v, output wire [0:0] c_l0r, input wire [603:0] c_l0d,
+ output wire [0:0] t_l0v, output wire [603:0] t_l0d, input wire [0:0] f_l0g
 );
  wire rn;
  ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
