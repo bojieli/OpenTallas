@@ -2368,6 +2368,7 @@ SUHC_GU = 512
 # collective -> HC y as 1,024-b lanes (4 a half): one station chain each (a 4,096-b station found no box in the VCH)
 SUHC_BUSES = tuple(('collective', h_, 1024, f't_{h_}{k}', f'f_coll{k}') for h_ in ('hc_s', 'hc_n') for k in range(4)) + \
     (('capture', 'su_s', SUHC_GU, 't_su_s', 'f_capture'), ('capture', 'su_n', SUHC_GU, 't_su_n', 'f_capture'))
+COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin face)
 SU_E = 0.0                     # --su-e MM2: su_n in the E column above hc_n (W column: su_s + centre)
 VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
 ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre slabs moved to an E-column sub-column
@@ -3126,6 +3127,10 @@ def build_r8(variant=None):
         centre_area['collective'] = slab_w['collective'] * up(cs_[1], GY) / 1e6
     else:
         slab_w = {}
+    if SUHC_1011 and not COLL_SPLIT3:
+        # --suhc-1011: the collective E face carries the 8 x 1,024-b y lanes to HC on top of its links / VM / host pins
+        # (layer1e: 840 um of pins > the 806 um face): the slab grows to COLL_FACE_UM tall (same area rule as capture)
+        centre_area['collective'] = max(centre_area['collective'], COLL_FACE_UM * cw / 1e6)
     if VM_SLAB:   # --vm-slab W,H (s81-vm-1011): the VM master outline (NP24 bgq tiles), centred in the hub column
         assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
         slab_w['vm'] = up(VM_SLAB[0], GX)
