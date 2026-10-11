@@ -1,6 +1,6 @@
 {
   "name": "dsfd_svch_pcs",
-  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/work/orfs",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/work/orfs:/in:ro",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/view:/out",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/view:/out",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/abs_eco:/tmp",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/abs_eco:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/work/orfs:/in:ro",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/view:/out",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/view:/out",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/svch_pcs-eccab9f14-pd45-tc/routes/svch_pcs_eccab9f14_pd45_tc/abs_eco:/tmp",
+        "/srv/opentallas-data/claude/closure-loop/svch_pcs-38c109f8d-hd1-tc/routes/svch_pcs_38c109f8d_hd1_tc/abs_eco:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -49,9 +49,9 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_svch_pcs.lef": "e0ed67dddd534a7def1dcfe6c55270e720f0ed3726e853e32e8ac83a7fa9f2b6",
-    "dsfd_svch_pcs_ff.lib": "2a37ca14e9b887808e7679684137eade93bd69115988453e1afc0cf799111a2b",
-    "dsfd_svch_pcs_ss.lib": "7e9b973d5bbb68eae457d8c25fb6d5c8f5a1f2ff5437d356ff751c903fbbebda"
+    "dsfd_svch_pcs.lef": "0930cd6a2968f397abc667734214e2a3166e8e59c58a6426d66e6ba64b5eca32",
+    "dsfd_svch_pcs_ff.lib": "bfc21f036d8325c0aea64bbbd9581be18171dfd8339ecda0db5a50a07ae8cabd",
+    "dsfd_svch_pcs_ss.lib": "3b43d6a4d59eaa76ed5dc132b79fe6626d02a2d104bacc00200f2dd3977ca4f8"
   },
   "ok": true
 }
