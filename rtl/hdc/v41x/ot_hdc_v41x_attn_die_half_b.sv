@@ -64,12 +64,12 @@ module hfd_attn_half_lo #(
     input  wire [1101:0] ks,       // hbm-forks RQ-HF-4: the svc PS row port of this tile's pair (entry tiles only; others
                                    // leave it unconnected at the die = 0): {fclk x3, meta64, row1024, rq10, v}, meta[32:20] =
                                    // the stream's load tag {ld_mode, ld_bank3, ld_grp8, ld_w2v} (compiler-supplied), meta[19] = idx
-    input  wire [0:0]    ldk,
-    output wire [1:0]    kq,       // hgi-1010/g2 2026-10-10 (audit N9): the PS row port's LINE CREDIT back to the svc group
-                                   // unit, {forwarded clock, v}: one pulse per row consumed (the tile takes a row a cycle,
-                                   // so every row that lands at the pin is consumed); entry tiles only (others: open)      // hbm-forks 2026-10-09 (RQ-HF-4, 8 KV entry points a stack): STATIC die strap (by_design
+    input  wire [0:0]    ldk,      // hbm-forks 2026-10-09 (RQ-HF-4, 8 KV entry points a stack): STATIC die strap (by_design
                                    // tie, false path).  1: the ld half of the packet comes from this tile's own k port only
                                    // (the forward chains' ld field is ignored; they still carry the query); 0: today's OR
+    output wire [1:0]    kq,       // hgi-1010/g2 2026-10-10 (audit N9): the PS row port's LINE CREDIT back to the svc group
+                                   // unit, {forwarded clock, v}: one pulse per row consumed (the tile takes a row a cycle,
+                                   // so every row that lands at the pin is consumed); entry tiles only (others: open)
     input  wire [581:0]  q,
     output wire [1617:0] rf,
     input  wire [1617:0] ri,
