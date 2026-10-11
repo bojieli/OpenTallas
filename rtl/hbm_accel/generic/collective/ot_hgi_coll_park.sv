@@ -12,9 +12,12 @@
 //   park side   : per delivery lane l: pv[l] (park this edge), pq[l] (queue), ps[l] (bank = sequence mod DEL) and the
 //                 flit; registered here at the pins (one edge), then pushed into the bank (bank write = AND-OR of the
 //                 registered lanes, one-hot by construction).
-//   replay side : per queue c: hv[c] / hd[c] = the queue's head flit (valid once the flit has reached its bank's head
-//                 buffer: >= 2 edges after the park decision); pop[c] consumes it.  The parent keeps the occupancy count
-//                 (the full check stays at the park decision, as in the flop form) and the head sequence number.
+//   replay side : per queue c: hv[c] / hd[c] = the queue's head flit from a REGISTERED output stage (oq) loaded from
+//                 the head bank's FWFT head (bank hb[c], advanced per load: the parking order); pop[c] is pin-flopped,
+//                 so a popped head is replaced one edge later -- the parent must not pop the same queue on two
+//                 consecutive edges (a queue replays at most every other cycle).  The parent keeps the occupancy count
+//                 (the full check stays at the park decision, as in the flop form).
+//   Boundary: every input lands in a pin flop, every output is a register (rtl_boundary registered_io).
 //   ovf         : sticky, any bank FIFO overflowed (cannot happen while the parent's count check holds: fault input).
 // Reset: pointers / valids only (inside ot_fifo_sram_fwft); payload registers are not reset.
 // =====================================================================================================================
@@ -32,7 +35,6 @@ module ot_hgi_coll_park #(
     input  wire [DEL*$clog2(EQ)-1:0]    pq,
     input  wire [DEL*$clog2(DEL)-1:0]   ps,
     input  wire [DEL*PWT-1:0]           pd,
-    input  wire [EQ*$clog2(DEL)-1:0]    hs,     // per queue: bank of the head flit (head sequence mod DEL)
     output wire [EQ-1:0]                hv,
     output wire [EQ*PWT-1:0]            hd,
     input  wire [EQ-1:0]                pop,
@@ -49,8 +51,9 @@ module ot_hgi_coll_park #(
     reg [SB-1:0]      r_s [0:DEL-1];
     reg [PWT-1:0]     r_d [0:DEL-1];
     integer l;
+    reg [EQ-1:0]      pop_r;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) r_v <= '0; else r_v <= pv;
+        if (!rst_n) begin r_v <= '0; pop_r <= '0; end else begin r_v <= pv; pop_r <= pop; end
     always @(posedge clk)
         for (l = 0; l < DEL; l = l + 1) begin
             r_q[l] <= pq[l*QB +: QB];
@@ -63,6 +66,10 @@ module ot_hgi_coll_park #(
     wire [PWT-1:0]        b_hd [0:EQ*DEL-1];
     genvar c, b;
     generate for (c = 0; c < EQ; c = c + 1) begin : g_q
+        reg  [SB-1:0]  hb;                     // bank of the next flit to load into the output register
+        reg            ohv; reg [PWT-1:0] ohd;  // registered queue head
+        wire           ld;                     // load the output register from the head bank this edge
+        assign hv[c] = ohv; assign hd[c*PWT +: PWT] = ohd;
         for (b = 0; b < DEL; b = b + 1) begin : g_b
             reg            push; reg [PWT-1:0] wd;
             integer        k;
@@ -71,13 +78,19 @@ module ot_hgi_coll_park #(
                 for (k = 0; k < DEL; k = k + 1)
                     if (r_v[k] && r_q[k] == c[QB-1:0] && r_s[k] == b[SB-1:0]) begin push = 1'b1; wd = wd | r_d[k]; end
             end
-            wire bpop = pop[c] && hs[c*SB +: SB] == b[SB-1:0];
+            wire bpop = ld && hb == b[SB-1:0];
             ot_fifo_sram_fwft #(.W(PWT), .DEPTH(BD), .MACRO(MACRO)) u_f (.clk(clk), .rst_n(rst_n), .push(push), .wdata(wd),
                 .pop(bpop), .hv(b_hv[c*DEL + b]), .head(b_hd[c*DEL + b]), .ovf(b_ovf[c*DEL + b]));
         end
-        // queue head = head of its head bank
-        assign hv[c] = b_hv[c*DEL + hs[c*SB +: SB]];
-        assign hd[c*PWT +: PWT] = b_hd[c*DEL + hs[c*SB +: SB]];
+        // registered queue head: (re)load when empty or popped last edge, from the head bank's FWFT head
+        assign ld = (!ohv || pop_r[c]) && b_hv[c*DEL + hb];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ohv <= 1'b0; hb <= '0; end
+            else begin
+                if (ld) begin ohv <= 1'b1; hb <= (DEL > 1) ? SB'((hb + 1) % DEL) : '0; end
+                else if (pop_r[c]) ohv <= 1'b0;
+            end
+        always @(posedge clk) if (ld) ohd <= b_hd[c*DEL + hb];
     end endgenerate
 
     always @(posedge clk or negedge rst_n)

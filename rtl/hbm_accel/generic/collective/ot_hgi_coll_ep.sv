@@ -224,21 +224,21 @@ module ot_hgi_coll_ep #(
         //      the replay lane only depends on e_dv, since a lane used by a live delivery always has e_dv set) ----------
         reg  [DEL-1:0]      pk_pv; reg [DEL*PQB-1:0] pk_pq; reg [DEL*PSB-1:0] pk_ps; reg [DEL*PWT-1:0] pk_pd;
         wire [EQ-1:0]       pkh_v; wire [EQ*PWT-1:0] pkh_d; wire pk_ovf;
-        reg  [EQ*PSB-1:0]   pk_hs;
+        reg  [EQ-1:0]       pk_msk;      // a queue popped last edge: its registered head is replaced this edge
+        always @(posedge clk or negedge rst_n) if (!rst_n) pk_msk <= '0; else pk_msk <= pk_pop;
         reg                 rp_go; reg [PQB-1:0] rp_c; integer rp_lane;
         reg  [EQ-1:0]       pk_pop;
         always @* begin
-            for (integer q = 0; q < EQ; q = q + 1) pk_hs[q*PSB +: PSB] = PSB'(pk_h[q] % DEL);
             rp_lane = -1; rp_go = 1'b0; rp_c = '0;
             for (integer l = DEL - 1; l >= 0; l = l - 1) if (!e_dv[l]) rp_lane = l;
             for (integer q = 0; q < EQ; q = q + 1)
-                if (!rp_go && rp_lane >= 0 && pkh_v[q] && c_v[q] && c_tag[q] == pkh_d[q*PWT + FW + 24 +: 3]) begin
+                if (!rp_go && rp_lane >= 0 && pkh_v[q] && !pk_msk[q] && c_v[q] && c_tag[q] == pkh_d[q*PWT + FW + 24 +: 3]) begin
                     rp_go = 1'b1; rp_c = PQB'(q); end
             pk_pop = '0; if (PKSRAM != 0 && rp_go) pk_pop[rp_c] = 1'b1;
         end
         if (PKSRAM != 0) begin : g_pks
             ot_hgi_coll_park #(.EQ(EQ), .PPK(PPK), .DEL(DEL), .PWT(PWT), .MACRO(2), .MUT_PARK(MUT_PARK)) u_park (.clk(clk),
-                .rst_n(rst_n), .pv(pk_pv), .pq(pk_pq), .ps(pk_ps), .pd(pk_pd), .hs(pk_hs), .hv(pkh_v), .hd(pkh_d),
+                .rst_n(rst_n), .pv(pk_pv), .pq(pk_pq), .ps(pk_ps), .pd(pk_pd), .hv(pkh_v), .hd(pkh_d),
                 .pop(pk_pop), .ovf(pk_ovf));
         end else begin : g_pkf
             assign pkh_v = '0; assign pkh_d = '0; assign pk_ovf = 1'b0;
