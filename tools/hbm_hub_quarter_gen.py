@@ -913,12 +913,12 @@ def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0, two_sided=False, mname='u_l
     return '\n'.join(L_) + '\n', fp
 
 
-def grid_place(P, tw, th, W, H, rows, cols, mname='u_tile'):
+def grid_place(P, tw, th, W, H, rows, cols, mname='u_tile', pitch_x=None):
     """conservative-1011 2026-10-11 (OWNER textbook audit, hfd_hc): tiled quarter as a ROWS x COLS grid of closed tiles,
     one row per die clock-row segment (H / rows), serpentine chains: chain c = rows 2c (E -> W, head at the E port
     band) and 2c + 1 (W -> E).  Tile x / y on 0.192 (the tile's M4 / M5 / M7 pins stay on track); >= 20 um channels."""
     g = lambda v: round(round(v / 0.192) * 0.192, 3)
-    pitch_x = g(tw + 20.4); x0 = g(20.16); pitch_y = H / rows
+    pitch_x = g(pitch_x) if pitch_x else g(tw + 20.4); x0 = g(20.16); pitch_y = H / rows
     assert P.KC * P.NT == rows * cols and 2 * P.KC == rows, (P.KC, P.NT, rows, cols)
     assert x0 + (cols - 1) * pitch_x + tw < W - 150, 'no E port band'
     assert pitch_y - th >= 20, 'row channel < 20 um'
@@ -954,6 +954,7 @@ def main():
                     'registers), no standard-cell sea in the channels (hbm-forks 2026-10-10)')
     ap.add_argument('--tile-master', help='--tiled: the hardened tile master (default hfd_su_tile[_xl]); conservative-1011: hfd_hc_tile_xl')
     ap.add_argument('--tile-grid', nargs=2, type=int, metavar=('ROWS', 'COLS'), help='--tiled: grid_place (one row per clock segment, serpentine chains)')
+    ap.add_argument('--tile-pitch-x', type=float, help='--tile-grid: column pitch um (default tile + 20.4)')
     ap.add_argument('--tile-size', nargs=2, type=float, metavar=('W', 'H'), help='--tiled: the closed tile footprint (default: strip + lane)')
     ap.add_argument('--cg', action='store_true', help='per-group clock gating, or per-tile gating with --tiled, with pin cg_en')
     ap.add_argument('--xroot', choices=['none', 'lockup'], default='none',
@@ -988,7 +989,7 @@ def main():
         a.lane_size = [round(TILE_SW + a.lane_size[0] + 1.512, 3), round(a.lane_size[1] + 2.16, 3)]   # lane at y 1.08: two rows below and above it
     if a.lane_size:                      # placement first: the multi-ck wrapper clocks each register by its segment
         if a.tiled and a.tile_grid:
-            tcl, fp = grid_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], *a.tile_grid)
+            tcl, fp = grid_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], *a.tile_grid, pitch_x=a.tile_pitch_x)
         else:
             tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided,
                                  mname='u_tile' if a.tiled else 'u_lane')
