@@ -31,7 +31,12 @@ RB=$1; OB=$2; OUT=$3; BLK=$4; shift 4
 D=$(basename $(dirname $RB))
 CLD=$(cd $(dirname $0) && pwd)
 IMG=${ORFS_IMAGE:-openroad/orfs:asap7lock}
-[ ! -e "$OUT" ] || { echo "ECO output already exists; preserving evidence: $OUT"; exit 10; }
+# DEAD-ECO (drive-1010 2026-10-10): an ECO killed by a host hang left $OUT without result.json and every re-run
+# refused (exit 10). A finished ECO (result.json present) is still never overwritten; an unfinished one is moved aside.
+if [ -e "$OUT" ]; then
+  if [ -e "$OUT/result.json" ]; then echo "ECO output already exists; preserving evidence: $OUT"; exit 10; fi
+  mv "$OUT" "$OUT.dead-$(date +%Y%m%dT%H%M%S)" && echo "ECO output without result.json (dead run) moved aside: $OUT"
+fi
 if [ -n "${ECO_GUARD:-}" ]; then python3 "$CLD/eco_recovery.py" verify "$ECO_GUARD"; fi
 mkdir -p "$OUT"
 # mtp-lead 2026-10-09: per-job opt-in knobs in <run>/hold_eco_opts.env (CLD = <run>/cl), e.g. REPAIR_DRV=1 DRV_SLEW_MARGIN=50.

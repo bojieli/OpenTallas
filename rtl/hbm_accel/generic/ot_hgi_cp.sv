@@ -38,6 +38,7 @@ module ot_hgi_cp #(
     input  wire [31:0]   db_loff,       // G26: per-layer offset L' x kstride (kinds 3 / 7 / 8; the MTP translator)
     output wire [11*32-1:0] md_kent,    // G23 / G26: committed MD words 16 .. 26 and 49 (to the MTP translator)
     output wire [31:0]   md_kstride,
+    output wire [17:0]   md_noise,      // MD word 53 (MTP noise / mask token id)
     // record fetch, VM read, dispatch, retire (ot_hgi_seq)
     output wire          f_req_v,
     input  wire          f_req_rdy,
@@ -83,11 +84,11 @@ module ot_hgi_cp #(
     wire c_commit = we_q && win && (a_q[4:0] == 5'h1F);
     wire c_wr = we_q && win;           // F1 (hgi_e2e 2026-10-09): the commit write stages MD words 62 / 63 too
     wire hold, seq_busy;
-    wire [5*32-1:0] md_d; wire [11*32-1:0] md_k; wire [31:0] md_ks;
-    assign md_kent = md_k; assign md_kstride = md_ks;
+    wire [5*32-1:0] md_d; wire [11*32-1:0] md_k; wire [31:0] md_ks; wire [17:0] md_nz;
+    assign md_kent = md_k; assign md_kstride = md_ks; assign md_noise = md_nz;
     ot_hgi_cfg_master #(.SETTLE(SETTLE)) u_cfg (.clk(clk), .rst_n(rst_n), .w_en(c_wr), .w_pair(a_q[4:0]),
         .w_data(wd_q), .commit(c_commit), .busy(ub_q || seq_busy), .bus(cfg_bus),
-        .st_loaded(cfg_loaded), .st_err(cfg_err), .st_hold(hold), .md_d(md_d), .md_k(md_k), .md_ks(md_ks));
+        .st_loaded(cfg_loaded), .st_err(cfg_err), .st_hold(hold), .md_d(md_d), .md_k(md_k), .md_ks(md_ks), .md_nz(md_nz));
     wire [2*32-1:0] cp_act;
     ot_hgi_cfg_rx #(.W0(40), .NW(2), .RST({HGI_RST_W41, HGI_RST_W40})) u_rx (.clk(clk), .rst_n(rst_n), .bus(cfg_bus),
         .act(cp_act));
