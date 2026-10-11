@@ -35,7 +35,11 @@ module dsfd_vm_bgq #(
     parameter integer RQ = 8,
     parameter integer MACRO = 1,
     parameter integer DW = 128,
-    parameter integer NSTG = 1         // register stages of the two buses inside the tile (1, 2, 4, 8; divides NBL)
+    parameter integer NSTG = 1,        // register stages of the two buses inside the tile (1, 2, 4, 8; divides NBL)
+    // s81-vm-1011 (opt-in): ports NPR .. NP-1 are WRITE-ONLY (the VM master's capture landing ports): no read history,
+    // no read-return lane (r_* / o_* carry ports 0 .. NPR-1 only).  A read op on such a port is a schedule violation
+    // -> sticky fault (code bit 0, with the queue faults).  Default NPR = NP: the closed tile, unchanged.
+    parameter integer NPR = NP
 ) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rs,
@@ -50,12 +54,12 @@ module dsfd_vm_bgq #(
     output wire [NP*($clog2(NB)+9)-1:0] f_row,
     output wire [NP*(DW/32)-1:0] f_mask,
     output wire [NP*DW-1:0]    f_d,
-    input  wire [NP-1:0]       r_v,
-    input  wire [NP*DW-1:0]    r_d,
+    input  wire [NPR-1:0]       r_v,
+    input  wire [NPR*DW-1:0]    r_d,
     input  wire [3:0]          r_f,
     input  wire [$clog2(QD):0] r_o,
-    output wire [NP-1:0]       o_v,
-    output wire [NP*DW-1:0]    o_d,
+    output wire [NPR-1:0]       o_v,
+    output wire [NPR*DW-1:0]    o_d,
     output reg  [3:0]          o_f,
     output reg  [$clog2(QD):0] o_o
 );
@@ -72,6 +76,7 @@ module dsfd_vm_bgq #(
     localparam integer MW = DW / 32, NC = DW / 128;
     localparam integer SR = NBL / NSTG;            // bank rows per bus stage
     localparam integer OW = $clog2(QD) + 1;
+    localparam [NP-1:0] RMASK = {NP{1'b1}} >> (NP - NPR);   // read-capable ports
     wire clk = ck[0];
 
     // ------------------------------------------------------------------ reset: async assert, 2-flop release
@@ -106,15 +111,17 @@ module dsfd_vm_bgq #(
 `else
     localparam integer FS = NSTG;
 `endif
+    wire wo_rd_any;                                          // a read on a write-only port (any stage sees it first at rb[0])
+    assign wo_rd_any = |(rb_v[0] & ~rb_we[0] & ~RMASK);
     assign f_v = rb_v[FS]; assign f_we = rb_we[FS]; assign f_row = rb_row[FS]; assign f_mask = rb_m[FS]; assign f_d = rb_d[FS];
 
     // ------------------------------------------------------------------ read-return bus input: pin registers
-    reg [NP-1:0]    q_v;
-    reg [NP*DW-1:0] q_d;
+    reg [NPR-1:0]    q_v;
+    reg [NPR*DW-1:0] q_d;
     reg [3:0]       q_f;
     reg [OW-1:0]    q_o;
     always @(posedge clk or negedge rst_i)
-        if (!rst_i) begin q_v <= {NP{1'b0}}; q_f <= 4'd0; q_o <= {OW{1'b0}}; end
+        if (!rst_i) begin q_v <= {NPR{1'b0}}; q_f <= 4'd0; q_o <= {OW{1'b0}}; end
         else begin q_v <= r_v; q_f <= r_f; q_o <= r_o; end
     always @(posedge clk) q_d <= r_d;
 
@@ -140,29 +147,29 @@ module dsfd_vm_bgq #(
         always @(posedge clk or negedge rst_i)
             if (!rst_i) for (hh = 0; hh < HL; hh = hh + 1) h_v[hh] <= {NP{1'b0}};
             else begin
-                h_v[0] <= a_v & ~a_we;
+                h_v[0] <= a_v & ~a_we & RMASK;
                 for (hh = 1; hh < HL; hh = hh + 1) h_v[hh] <= h_v[hh-1];
             end
         always @(posedge clk) begin
             for (p = 0; p < NP; p = p + 1) h_b[0][p] <= a_row[p*RA +: BB];
             for (hh = 1; hh < HL; hh = hh + 1) for (p = 0; p < NP; p = p + 1) h_b[hh][p] <= h_b[hh-1][p];
         end
-        reg [NP-1:0] d_v;
-        reg [BB-1:0] d_b [0:NP-1];
-        reg [KW-1:0] d_j [0:NP-1];
-        reg [KW-1:0] jc [0:NP-1];
+        reg [NPR-1:0] d_v;
+        reg [BB-1:0] d_b [0:NPR-1];
+        reg [KW-1:0] d_j [0:NPR-1];
+        reg [KW-1:0] jc [0:NPR-1];
         always @* begin
-            for (p = 0; p < NP; p = p + 1) begin
+            for (p = 0; p < NPR; p = p + 1) begin
                 jc[p] = {KW{1'b0}};
                 for (q = 0; q < p; q = q + 1)
                     if (h_v[HL-1][q] && h_b[HL-1][q] == h_b[HL-1][p]) jc[p] = jc[p] + 1'b1;
             end
         end
         always @(posedge clk or negedge rst_i)
-            if (!rst_i) d_v <= {NP{1'b0}};
-            else d_v <= h_v[HL-1];
+            if (!rst_i) d_v <= {NPR{1'b0}};
+            else d_v <= h_v[HL-1][NPR-1:0];
         always @(posedge clk)
-            for (p = 0; p < NP; p = p + 1) begin
+            for (p = 0; p < NPR; p = p + 1) begin
                 d_b[p] <= h_b[HL-1][p];
 `ifdef OT_S81PH_VM_MUT_J0
                 d_j[p] <= {KW{1'b0}};                              // MUTANT: every port takes the first due slot
@@ -314,22 +321,22 @@ module dsfd_vm_bgq #(
 
         // ---- this stage's contribution to the return bus: per bank, AND-OR of its own due slots
         // own[p]: port p's due read is in this tile's group AND in this stage's rows
-        reg [NP-1:0] own;
-        reg [LB-1:0] lb [0:NP-1];
-        always @* for (p = 0; p < NP; p = p + 1) begin
+        reg [NPR-1:0] own;
+        reg [LB-1:0] lb [0:NPR-1];
+        always @* for (p = 0; p < NPR; p = p + 1) begin
             lb[p] = d_b[p][LB-1:0];
             own[p] = d_v[p] && (d_b[p] >> LB) == grp_q && (lb[p] / SR) == gs;
         end
-        reg [NP*DW-1:0] part;
+        reg [NPR*DW-1:0] part;
         integer bb2;
         always @* begin
-            part = {NP*DW{1'b0}};
-            for (p = 0; p < NP; p = p + 1)
+            part = {NPR*DW{1'b0}};
+            for (p = 0; p < NPR; p = p + 1)
                 for (bb2 = 0; bb2 < SR; bb2 = bb2 + 1)
                     if (own[p] && (lb[p] % SR) == bb2) part[p*DW +: DW] = part[p*DW +: DW] | b_ds[bb2][DW*d_j[p] +: DW];
         end
-        wire [NP-1:0]    in_v;
-        wire [NP*DW-1:0] in_d;
+        wire [NPR-1:0]    in_v;
+        wire [NPR*DW-1:0] in_d;
         if (gs == 0) begin : g_in0
             assign in_v = q_v | d_v;
             assign in_d = q_d;
@@ -337,10 +344,10 @@ module dsfd_vm_bgq #(
             assign in_v = g_s[gs-1].rt_v;
             assign in_d = g_s[gs-1].rt_d;
         end
-        reg [NP-1:0]    rt_v;
-        reg [NP*DW-1:0] rt_d;
+        reg [NPR-1:0]    rt_v;
+        reg [NPR*DW-1:0] rt_d;
         always @(posedge clk or negedge rst_i)
-            if (!rst_i) rt_v <= {NP{1'b0}};
+            if (!rst_i) rt_v <= {NPR{1'b0}};
             else rt_v <= in_v;
         always @(posedge clk) rt_d <= in_d | part;
         // ---- stage status: sticky (queue overflow, return underflow, due-slot port-id mismatch)
@@ -351,10 +358,10 @@ module dsfd_vm_bgq #(
         always @(posedge clk or negedge rst_i)
             if (!rst_i) begin mis_r <= 1'b0; stf <= 1'b0; stc <= 3'd0; sto <= {OW{1'b0}}; end
             else begin
-                for (p = 0; p < NP; p = p + 1)
+                for (p = 0; p < NPR; p = p + 1)
                     if (own[p] && b_dp[lb[p] % SR][PW*d_j[p] +: PW] != p) mis_r <= 1'b1;
-                stc <= stc | {|b_und, mis_r, |b_ovf};
-                stf <= stf | |b_und | mis_r | |b_ovf;
+                stc <= stc | {|b_und, mis_r, |b_ovf | (gs == 0 && wo_rd_any)};
+                stf <= stf | |b_und | mis_r | |b_ovf | (gs == 0 && wo_rd_any);
                 for (bo = 0; bo < SR; bo = bo + 1) if (b_occ[bo] > sto) sto <= b_occ[bo];
             end
         assign st_f[gs] = stf;
@@ -422,4 +429,36 @@ module dsfd_vm_mem_sys #(parameter integer NS = 4, parameter integer NP = 8, par
     end
     assign o_v = ovh[0]; assign fault = fo[3]; assign fault_code = fo[2:0]; assign max_occ = ooh[0];
     assign slice_mismatch = mism;
+endmodule
+
+// dsfd_vm_bgq28 (s81-vm-1011, 2026-10-11): the hard tile of the VM master dsfd_sp_vm v3 = dsfd_vm_bgq at NP 28 (ports
+// 0 .. 9 read / write, 10 .. 27 write-only: 2 landing drains + 16 capture lanes: NPR 10), NSTG 2, DW 128 (one bit
+// slice), 8 banks / 8 macros.  A separate master name so the closed NP 8 view (dsfd_vm_bgq, contract_vmh) stays valid.
+module dsfd_vm_bgq28 (
+    input  wire [0:0]        ck,
+    input  wire [0:0]        rs,
+    input  wire [1:0]        grp,
+    input  wire [27:0]       i_v,
+    input  wire [27:0]       i_we,
+    input  wire [28*14-1:0]  i_row,
+    input  wire [28*4-1:0]   i_mask,
+    input  wire [28*128-1:0] i_d,
+    output wire [27:0]       f_v,
+    output wire [27:0]       f_we,
+    output wire [28*14-1:0]  f_row,
+    output wire [28*4-1:0]   f_mask,
+    output wire [28*128-1:0] f_d,
+    input  wire [9:0]        r_v,
+    input  wire [10*128-1:0] r_d,
+    input  wire [3:0]        r_f,
+    input  wire [2:0]        r_o,
+    output wire [9:0]        o_v,
+    output wire [10*128-1:0] o_d,
+    output wire [3:0]        o_f,
+    output wire [2:0]        o_o
+);
+    dsfd_vm_bgq #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(1), .DW(128), .NSTG(2)) u (
+        .ck(ck), .rs(rs), .grp(grp), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
+        .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
+        .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));
 endmodule

@@ -4,33 +4,47 @@
     python3 tools/s81_vm/s81_vm_gate.py one CASE --out DIR      -> exit 0 iff the case meets its expectation
     python3 tools/s81_vm/s81_vm_gate.py all --out DIR           -> every case, DIR/summary.json
 
-Cases: gold_s{1,2,3} (exact, 60k cycles), tp (throughput, production-shaped streams), and the negative controls
-mut_stale / mut_dropw / mut_early (must FAIL).  Bench rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv (Verilator)."""
+Cases (v2): gold_s{1,2,3} (exact, random all clients), tp (production-shape throughput), burst_* (all 128 roots back to
+back at the root rate, > 56 rows a root, every lane), align_neg (misaligned phase must raise the alignment fault) and the
+negative controls mut_stale / mut_dropw(_burst) / mut_early(_s2) / neg_early_consumer / mut_noalign / mut_np16 (must FAIL).
+Bench rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv (Verilator)."""
 import argparse, json, re, subprocess, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SRCS = ['rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv', 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv',
         'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv', 'rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv',
         'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv',
-        'rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv',
-        'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v']
+        'rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv', 'rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv',
+        'rtl/lib/ot_async_fifo.sv', 'rtl/lib/ot_reset_sync.sv', 'rtl/common/ot_ratio_cdc_fifo.sv',
+        'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v',
+        'physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v']
+# v2 (NP 24: 16 capture write-only lanes + 8 client ports, engine adapter, element-count completion counter)
 CASES = {
     'gold_s1': dict(params=dict(SEED=1), expect='pass'),
     'gold_s2': dict(params=dict(SEED=2), expect='pass'),
     'gold_s3': dict(params=dict(SEED=3, NCYC=120000), expect='pass'),
-    'tp': dict(params=dict(MODE=1, TP_ROWS=64), expect='pass'),
-    'tp128': dict(params=dict(MODE=1, TP_ROWS=128), expect='pass'),
+    'tp': dict(params=dict(MODE=1, TP_ROWS=56), expect='pass'),
+    'burst_r128': dict(params=dict(MODE=2, BROWS=128, BNP=0, BSKEW=3), expect='pass'),
+    'burst_r128_np2': dict(params=dict(MODE=2, BROWS=128, BNP=1, BSKEW=3), expect='pass'),
+    'burst_r256_skew6': dict(params=dict(MODE=2, BROWS=256, BNP=0, BSKEW=6), expect='pass'),
+    'align_neg': dict(params=dict(MODE=3, BROWS=16), expect='pass', regex='ALIGN_FAULT'),
     'mut_stale': dict(params=dict(SEED=1, NCYC=20000), defines=['OT_SPVM_MUT_STALE'], expect='fail'),
     'mut_dropw': dict(params=dict(SEED=1, NCYC=20000), defines=['OT_SPVM_MUT_DROPW'], expect='fail'),
+    'mut_dropw_burst': dict(params=dict(MODE=2, BROWS=128), defines=['OT_SPVM_MUT_DROPW'], expect='fail'),
     'mut_early': dict(params=dict(SEED=1, NCYC=20000), defines=['OT_SPVM_MUT_EARLY'], expect='fail'),
     'mut_early_s2': dict(params=dict(SEED=2, NCYC=20000), defines=['OT_SPVM_MUT_EARLY'], expect='fail'),
     'neg_early_consumer': dict(params=dict(SEED=1, NCYC=20000, EARLYC=1), expect='fail', regex='EARLY_READ'),
+    'mut_noalign': dict(params=dict(MODE=3, BROWS=16), defines=['OT_SPVM_MUT_NOALIGN'], expect='fail'),
+    'land_attn': dict(params=dict(MODE=4), expect='pass'),
+    'land_hc': dict(params=dict(MODE=5), expect='pass'),
+    'mut_lsmall': dict(params=dict(MODE=4), defines=['OT_SPVM_MUT_LSMALL'], expect='fail'),
+    'mut_np16': dict(params=dict(MODE=2, BROWS=128, BNP=0, BSKEW=3), defines=['OT_SPVM_MUT_NP16'], expect='fail'),
 }
 
 
 def build(out, tag, defines, params):
     obj = out / f'obj_{tag}'
-    cmd = ['verilator', '--binary', '--timing', '-O1', '-Wno-fatal', '-Wno-lint', '-Wno-style', '-j', '8',
+    cmd = ['verilator', '--binary', '--timing', '-O1', '-Wno-UNOPTFLAT', '-Wno-fatal', '-Wno-lint', '-Wno-style', '-j', '8',
            '--top-module', 'tb_dsfd_sp_vm', '--Mdir', str(obj), *[f'+define+{d}' for d in defines],
            *[f'-G{k}={v}' for k, v in params.items()], *[str(ROOT / s) for s in SRCS]]
     b = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
@@ -48,10 +62,10 @@ def one(name, out):
     r = subprocess.run([str(exe)], capture_output=True, text=True)
     log = r.stdout + r.stderr
     (out / f'run_{name}.log').write_text(log)
-    keep = [l for l in log.splitlines() if l.startswith(('RESULT', 'THROUGHPUT', 'PASS', 'FAIL', 'MISMATCH', 'FAULT', 'MIRROR', '%Error'))
+    keep = [l for l in log.splitlines() if l.startswith(('RESULT', 'THROUGHPUT', 'PASS', 'FAIL', 'MISMATCH', 'FAULT', 'MIRROR', '%Error', 'ALIGN'))
             or 'EARLY_READ' in l]
     passed = any(l.strip() == 'PASS' for l in log.splitlines())
-    ok = passed if c['expect'] == 'pass' else (not passed and (not c.get('regex') or re.search(c['regex'], log) is not None))
+    ok = (passed and (not c.get('regex') or re.search(c['regex'], log) is not None)) if c['expect'] == 'pass' else (not passed and (not c.get('regex') or re.search(c['regex'], log) is not None))
     res = dict(case=name, expect=c['expect'], passed=passed, ok=ok, tail=keep[-12:])
     m = re.search(r'THROUGHPUT .*', log)
     if m:

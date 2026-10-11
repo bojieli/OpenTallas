@@ -1,24 +1,25 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
-// tb_dsfd_sp_vm -- exact gate + throughput bench of the S81 VM master dsfd_sp_vm_m (s81-vm-1011, 2026-10-11):
-// the FE (dsfd_vm_fe), 4 x 4 CLOSED dsfd_vm_bgq tiles (NSTG 2, real SRAM macro models) and the BE (dsfd_vm_be).
+// tb_dsfd_sp_vm v2 -- exact gate, burst stress and throughput bench of the S81 VM master dsfd_sp_vm_m
+// (s81-vm-1011, 2026-10-11): FE (dsfd_vm_fe), 4 x 4 CLOSED-design dsfd_vm_bgq tiles (NSTG 2, NP 24, NPR 8, real SRAM
+// macro models) and BE (dsfd_vm_be).  Clocks on the 3.6 GHz VCO grid: serial ck = VCO/4, stream cks = VCO/3.
 //
-// Clients (all at the master's die pins, the link ones behind registered relay stations):
-//   WFC kit   : ltx senders on the sw (writes + START doorbell) / sr (RD2 read pairs) links, VF / VR stations; t_ks and
-//               t_srq checked (doorbell after every earlier write is ordered; every read pair's data).
-//   capture W : ltx sender on the posted-write link (CF / CR stations): pool bursts (hazards) and ARMed region fills.
-//   ctrl      : VM write / read port + engine commands ARM / P2ID / P2RD, done (dv / dt) consumed.
-//   P2 lane 0 : the dsfd_vm_p2_ep core side (c_l0r random grants), every flit's data and metadata checked.
-//   X0 / X1   : random reads / writes over a small row pool (cross-port hazards with every client).
+// Clients (all at the master's pins):
+//   capture   : the dsfd_sp_capture t_vm face: 128 roots, each <= 2 elements a serial cycle at <= 4/3 a cycle (one row a
+//               stream cycle), S81 profile (root r owns rows 2r, 2r+1 mod 256), address obase + row + pos * ops; phases
+//               ARMed (ARMB / ARMR / ARMN through the engine adapter), then read back (P2RD / X0) and checked.
+//   WFC kit   : ltx senders on the sw (writes + START doorbell) / sr (RD2 read pairs) links, VF / VR stations.
+//   ctrl      : dsfd_sp_ctrl VM write / read port (stream domain), read data via vrv / vrq; engine commands cv / cd.
+//   P2 lane 0 : dsfd_vm_p2_ep core side (c_l0r random grants), every flit's data and metadata checked.
+//   X0 .. X2  : random reads / writes over a row pool (hazards with every client).
 //   MTP       : rows-ready (c_wr random), checked against the notify slots.
 // Reference: a 16,384 x 512 b array updated at the FE order register (u_fe.b_*) in (cycle, port) order; every read's
-// expected row is taken there and compared at its return port.  Per-client scoreboards check that every op the
-// client sent reaches the order register exactly once and in order (catches a dropped posted write).  The
-// free-running ports (ctrl, X) are gated by an exact mirror of the tiles' bank-queue arithmetic, projected over the
-// two cycles between the pins and the order register (the stall-free contract the compiler's schedule keeps).
-// PASS needs: 0 mismatches, every scoreboard drained, every ARM / P2RD done received, rows-ready = notify slots,
-// fe_flt = 0, fvec = 0, constant read latency per port.
-// MODE 1 = throughput: production-shaped streams only (see the THROUGHPUT block), measured cycles printed.
+// expected row is taken there and compared at its return port.  Capture: every element must reach the order register
+// exactly once with its data (no drop, no duplicate); every region read after its done must hold the phase's elements.
+// PASS needs 0 mismatches, every scoreboard drained, every done, fe_flt = 0, fvec = 0, constant latency per port.
+// MODE 0 gate (random), MODE 1 throughput (production-shaped concurrent streams), MODE 2 burst stress (all 128 roots
+// back to back at the root rate, BROWS rows a root, BNP + 1 positions), MODE 3 misaligned phase (the DUT must flag
+// the alignment fault: PASS = fault raised and nothing else wrong).
 // ---------------------------------------------------------------------------------------------------------------
 module tb_spvm_relay #(parameter integer W = 1, parameter integer N = 0) (input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
     generate if (N == 0) begin : g0 assign q = d; end
@@ -33,41 +34,47 @@ endmodule
 module tb_dsfd_sp_vm;
     parameter integer SEED = 1;
     parameter integer NCYC = 60000;
-    parameter integer MODE = 0;              // 0 gate, 1 throughput
-    parameter integer CF = 8, CR = 8, VF = 13, VR = 13, P2D = 40;
-    parameter integer TP_ROWS = 64;          // throughput: rows per stream
-    parameter integer EARLYC = 0;            // negative control: stream a region to P2 right after its ARM (before done)
-    localparam integer QD = 4, NB = 32, NP = 8, NROW = 16384, POOL = 64, MARK = 32767;
+    parameter integer MODE = 0;
+    parameter integer VF = 13, VR = 13, P2D = 40;
+    parameter integer TP_ROWS = 56;          // throughput: rows per root of the capture phase
+    parameter integer BROWS = 128;           // burst: rows per root
+    parameter integer BNP = 0;               // burst: positions - 1
+    parameter integer BSKEW = 3;             // burst: max start skew between roots (serial cycles)
+    parameter integer EARLYC = 0;
+    parameter integer LA = 12;              // capture lane row entries (DUT)            // negative control: read a region right after its ARMN (before done)
+    parameter integer NSVC = 1;
+    localparam integer QD = 4, NB = 32, NP = 28, NROW = 16384, POOL = 64, MARK = 32767, NR = 128, CP = 12;
 
-    reg clk = 0; always #0.5 clk = ~clk;
-    reg rst_n = 0;
+    reg clk = 0, cks = 0;
+    always #2 clk = ~clk;                    // serial, period 4 (VCO / 4)
+    always #1.5 cks = ~cks;                  // stream, period 3 (VCO / 3)
+    reg rst_n = 0, rss_n = 0;
     integer cyc = 0;
     // ------------------------------------------------------------ DUT
-    wire t_swg, t_srg, t_err, t_cwg, vrv, dv, c_wv, c_l0v; wire [52:0] t_ks; wire [1025:0] t_srq; wire [511:0] vrq;
-    wire [7:0] dt; wire [1:0] x_ov; wire [1023:0] x_od; wire [9:0] c_wd; wire [603:0] c_l0d; wire flt; wire [15:0] fvec;
-    wire [2:0] max_occ;
-    wire p_swv, p_srv, p_cwv; wire [526:0] p_swd; wire [30:0] p_srd; wire [541:0] p_cwd;
+    wire t_swg, t_srg, t_err, vrv, dv, c_wv, c_l0v; wire [52:0] t_ks; wire [1025:0] t_srq; wire [511:0] vrq;
+    wire [7:0] dt; wire [16*513-1:0] t_bl; wire [2:0] t_cts; wire [9:0] c_wd; wire [603:0] c_l0d; wire flt; wire [31:0] fvec;
+    wire [2:0] max_occ; wire [3:0] t_rdy;
+    wire p_swv, p_srv; wire [526:0] p_swd; wire [30:0] p_srd;
     reg vwe = 0, vre = 0, cv = 0, c_wr = 0, c_l0r = 0; reg [13:0] vwa = 0, vra = 0; reg [511:0] vwd = 0; reg [83:0] cd = 0;
-    reg [1:0] x_v = 0, x_we = 0; reg [27:0] x_row = 0; reg [31:0] x_mask = 0; reg [1023:0] x_d = 0;
-    dsfd_sp_vm_m #(.MACRO(1), .CF(CF), .CR(CR), .VF(VF), .VR(VR), .P2D(P2D)) dut (
-        .ck(clk), .rst(rst_n), .f_swv(p_swv), .f_swd(p_swd), .t_swg(t_swg), .f_srv(p_srv), .f_srd(p_srd), .t_srg(t_srg),
-        .t_ks(t_ks), .t_srq(t_srq), .t_err(t_err), .f_cwv(p_cwv), .f_cwd(p_cwd), .t_cwg(t_cwg),
+    reg [NSVC*1027-1:0] f_svc = 0; reg [2099:0] f_coll = 0; reg [514:0] f_sel = 0, f_col = 0; reg [1025:0] f_hc = 0;
+    reg [13375:0] f_cap = 0;
+    dsfd_sp_vm_m #(.MACRO(1), .VF(VF), .VR(VR), .P2D(P2D), .LA(LA), .NSVC(NSVC)) dut (
+        .ck(clk), .rst(rst_n), .cks(cks), .rss(rss_n),
+        .f_swv(p_swv), .f_swd(p_swd), .t_swg(t_swg), .f_srv(p_srv), .f_srd(p_srd), .t_srg(t_srg),
+        .t_ks(t_ks), .t_srq(t_srq), .t_err(t_err), .f_cap(f_cap),
         .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra), .vrv(vrv), .vrq(vrq), .cv(cv), .cd(cd), .dv(dv), .dt(dt),
-        .x_v(x_v), .x_we(x_we), .x_row(x_row), .x_mask(x_mask), .x_d(x_d), .x_ov(x_ov), .x_od(x_od),
-        .c_wv(c_wv), .c_wd(c_wd), .c_wr(c_wr), .c_l0v(c_l0v), .c_l0d(c_l0d), .c_l0r(c_l0r),
+        .f_svc(f_svc), .f_coll(f_coll), .t_cts(t_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc), .t_bl(t_bl),
+        .c_wv(c_wv), .c_wd(c_wd), .c_wr(c_wr), .t_rdy(t_rdy), .c_l0v(c_l0v), .c_l0d(c_l0d), .c_l0r(c_l0r),
         .flt(flt), .fvec(fvec), .max_occ(max_occ));
-    // ------------------------------------------------------------ link senders (ltx) + relay stations
-    reg s_wv = 0, s_rv = 0, s_cv = 0; reg [526:0] s_wd = 0; reg [30:0] s_rd = 0; reg [541:0] s_cd = 0;
-    wire s_wr, s_rr, s_cr; wire k_swv, k_srv, k_cwv, g_sw, g_sr, g_cw; wire [526:0] k_swd; wire [30:0] k_srd; wire [541:0] k_cwd;
+    // ------------------------------------------------------------ WFC link senders (ltx) + relay stations
+    reg s_wv = 0, s_rv = 0; reg [526:0] s_wd = 0; reg [30:0] s_rd = 0;
+    wire s_wr, s_rr; wire k_swv, k_srv, g_sw, g_sr; wire [526:0] k_swd; wire [30:0] k_srd;
     ot_dsrom_mtp_ltx #(.W(527)) x_sw (.clk(clk), .rst_n(rst_n), .c_valid(s_wv), .c_ready(s_wr), .c_data(s_wd), .l_valid(k_swv), .l_ready(g_sw), .l_data(k_swd));
     ot_dsrom_mtp_ltx #(.W(31))  x_sr (.clk(clk), .rst_n(rst_n), .c_valid(s_rv), .c_ready(s_rr), .c_data(s_rd), .l_valid(k_srv), .l_ready(g_sr), .l_data(k_srd));
-    ot_dsrom_mtp_ltx #(.W(542)) x_cw (.clk(clk), .rst_n(rst_n), .c_valid(s_cv), .c_ready(s_cr), .c_data(s_cd), .l_valid(k_cwv), .l_ready(g_cw), .l_data(k_cwd));
     tb_spvm_relay #(.W(528), .N(VF)) r1 (.clk(clk), .d({k_swv, k_swd}), .q({p_swv, p_swd}));
     tb_spvm_relay #(.W(1),   .N(VR)) r2 (.clk(clk), .d(t_swg), .q(g_sw));
     tb_spvm_relay #(.W(32),  .N(VF)) r3 (.clk(clk), .d({k_srv, k_srd}), .q({p_srv, p_srd}));
     tb_spvm_relay #(.W(1),   .N(VR)) r4 (.clk(clk), .d(t_srg), .q(g_sr));
-    tb_spvm_relay #(.W(543), .N(CF)) r5 (.clk(clk), .d({k_cwv, k_cwd}), .q({p_cwv, p_cwd}));
-    tb_spvm_relay #(.W(1),   .N(CR)) r6 (.clk(clk), .d(t_cwg), .q(g_cw));
 
     // ------------------------------------------------------------ helpers
     function automatic [31:0] mix(input [31:0] a, input [31:0] b);
@@ -84,23 +91,22 @@ module tb_dsfd_sp_vm;
     // ------------------------------------------------------------ reference array + expectations
     reg [511:0] gm [0:NROW-1];
     integer i0; initial for (i0 = 0; i0 < NROW; i0 = i0 + 1) gm[i0] = 512'd0;
-    // expected read data per return port: p0 / p1 (t_srq), p4 (vrq), p5 (P2), p6 / p7 (x_od)
     reg [511:0] ex_q [0:7][$];
     integer ex_t [0:7][$];
     integer lat [0:7]; integer nchk = 0, nbad = 0;
-    // scoreboards: ops the clients sent, in order: {row, data-hash}
-    integer sb_c [$];   // capture rows
-    integer sb_w [$];   // WFC writes (row)
-    integer sb_r [$];   // WFC read pairs: row0 | (v1 << 16) | (row1 << 17)
-    integer sb_x [$];   // ctrl / X ops: {port, row, we}
-    integer nw_sent_b4_db [$];   // WFC: writes sent before each doorbell
-    integer ks_pay [$];
+    integer sb_w [$], sb_r [$], sb_x [$], nw_sent_b4_db [$], ks_pay [$];
     integer n_wfc_w_seen = 0;
-    // bank mirror (stall-free contract) at the order register
+    // capture: expected elements of the live phases, landed set
+    reg [31:0] exp_el [int];
+    bit landed [int];
+    integer n_el_exp = 0, n_el_land = 0;
+    // ctrl: ops sent (stream side) in order {we, row}; read expectations come from the order register
+    integer sb_c [$];
+    integer ctrl_inflight = 0;
     integer occ_m [0:NB-1]; integer ovf_m = 0, maxocc_m = 0;
     integer bi; initial for (bi = 0; bi < NB; bi = bi + 1) occ_m[bi] = 0;
 
-    // ------------------------------------------------------------ observe the order register (b_* set at the last edge)
+    // ------------------------------------------------------------ observe the order register
     wire [NP-1:0] b_v = dut.u_fe.b_v, b_we = dut.u_fe.b_we;
     wire [NP*14-1:0] b_row = dut.u_fe.b_row; wire [NP*16-1:0] b_m = dut.u_fe.b_m; wire [NP*512-1:0] b_d = dut.u_fe.b_d;
     function automatic integer step_mirror(inout integer occ [0:NB-1], input integer rows [$]);
@@ -118,10 +124,16 @@ module tb_dsfd_sp_vm;
         end
     endfunction
 
-    integer p, e, rw; reg [511:0] old, nd, mk;
+    integer p, e, rw, a; reg [511:0] old, nd, mk;
     integer obs_rows [$];
     integer done_seen [$];
     integer p2_words_seen = 0;
+    integer cap_ops = 0, cap_first = -1, cap_last = -1, lan_ops = 0, lan_first = -1, lan_last = -1;
+    reg [511:0] ex_l [0:15][$]; integer ex_lt [0:15][$]; integer lat_l [0:15];
+    integer xs_row [0:4][$];                 // rows each X streamer will read, in order
+    function automatic integer xidx(input integer pp);
+        begin xidx = (pp == 6) ? 0 : (pp == 7) ? 1 : (pp == 2) ? 2 : (pp == 8) ? 3 : 4; end
+    endfunction
     task automatic observe_b();
         obs_rows.delete();
         for (p = 0; p < NP; p = p + 1) if (b_v[p]) begin
@@ -131,13 +143,32 @@ module tb_dsfd_sp_vm;
                 old = gm[rw]; nd = b_d[p*512 +: 512];
                 for (e = 0; e < 16; e = e + 1) mk[32*e +: 32] = {32{b_m[p*16 + e]}};
                 gm[rw] = (old & ~mk) | (nd & mk);
-            end else begin
+            end else if (p == 2 || p >= 6 && p <= 9) begin
+                // X streamer read: expected at its bus lane (id in the data field)
+                ex_l[b_d[p*512 +: 4]].push_back(gm[rw]); ex_lt[b_d[p*512 +: 4]].push_back(cyc);
+                if (xs_row[xidx(p)].size() == 0 || xs_row[xidx(p)][0] != rw) begin
+                    $display("FAIL cyc %0d: X port %0d read row %0d not the next streamed", cyc, p, rw); nbad = nbad + 1;
+                end else void'(xs_row[xidx(p)].pop_front());
+            end else if (p < 10) begin
                 ex_q[p].push_back(gm[rw]); ex_t[p].push_back(cyc);
+            end else begin
+                $display("FAIL cyc %0d: read op on capture port %0d", cyc, p); nbad = nbad + 1;
             end
-            // client scoreboards
-            if (p == 2) begin
-                if (sb_c.size() == 0 || sb_c[0] != rw) begin $display("FAIL cyc %0d: capture write row %0d not the next sent (%0d)", cyc, rw, sb_c.size() ? sb_c[0] : -1); nbad = nbad + 1; end
-                else void'(sb_c.pop_front());
+            if (p >= 10) begin
+                if (p >= CP) begin cap_ops = cap_ops + 1; if (cap_first < 0) cap_first = cyc; cap_last = cyc; end
+                else begin lan_ops = lan_ops + 1; if (lan_first < 0) lan_first = cyc; lan_last = cyc; end
+                if (p >= CP && rw % 16 != p - CP) begin $display("FAIL cyc %0d: capture lane %0d wrote row %0d", cyc, p - CP, rw); nbad = nbad + 1; end
+                for (e = 0; e < 16; e = e + 1) if (b_m[p*16 + e]) begin
+                    a = rw * 16 + e;
+                    if (!exp_el.exists(a)) begin $display("FAIL cyc %0d: capture element %0d not expected", cyc, a); nbad = nbad + 1; end
+                    else if (landed.exists(a)) begin $display("FAIL cyc %0d: capture element %0d written twice", cyc, a); nbad = nbad + 1; end
+                    else begin
+                        landed[a] = 1; n_el_land = n_el_land + 1;
+                        if (nd[32*e +: 32] !== exp_el[a]) begin
+                            nbad = nbad + 1; if (nbad < 12) $display("MISMATCH cyc %0d capture element %0d", cyc, a);
+                        end
+                    end
+                end
             end
             if (p == 0 && b_we[0]) begin
                 n_wfc_w_seen = n_wfc_w_seen + 1;
@@ -150,10 +181,10 @@ module tb_dsfd_sp_vm;
                     $display("FAIL cyc %0d: WFC read pair at %0d / %0d not the next sent", cyc, rw, b_row[14 +: 14]); nbad = nbad + 1;
                 end else void'(sb_r.pop_front());
             end
-            if (p == 3 || p == 4 || p == 6 || p == 7) begin
-                if (sb_x.size() == 0 || sb_x[0] != (p << 20 | rw << 1 | b_we[p])) begin
-                    $display("FAIL cyc %0d: port %0d op row %0d not the next pinned one", cyc, p, rw); nbad = nbad + 1;
-                end else void'(sb_x.pop_front());
+            if (p == 3 || p == 4) begin    // ctrl lanes: in send order (lane A before lane B in a cycle)
+                if (sb_c.size() == 0 || sb_c[0] != (rw << 1 | b_we[p])) begin
+                    $display("FAIL cyc %0d: ctrl op (port %0d row %0d we %0d) not the next sent (exp %0d of %0d)", cyc, p, rw, b_we[p], sb_c.size() ? sb_c[0] : -1, sb_c.size()); nbad = nbad + 1;
+                end else begin void'(sb_c.pop_front()); ctrl_inflight = ctrl_inflight - 1; end
             end
         end
         begin : mir
@@ -165,12 +196,12 @@ module tb_dsfd_sp_vm;
     endtask
 
     // ------------------------------------------------------------ returns
-    task automatic chk(input integer pp, input [511:0] got);
+    task automatic chk(input integer pp, input [511:0] got, input integer fixed);
         reg [511:0] w; integer t; begin
             if (ex_q[pp].size() == 0) begin $display("FAIL cyc %0d: unexpected read data on port %0d", cyc, pp); nbad = nbad + 1; end
             else begin
                 w = ex_q[pp].pop_front(); t = ex_t[pp].pop_front(); nchk = nchk + 1;
-                if (pp != 5) begin
+                if (fixed) begin
                     if (lat[pp] < 0) lat[pp] = cyc - t;
                     else if (lat[pp] != cyc - t) begin $display("FAIL cyc %0d: port %0d latency %0d != %0d", cyc, pp, cyc - t, lat[pp]); nbad = nbad + 1; end
                 end
@@ -181,36 +212,50 @@ module tb_dsfd_sp_vm;
             end
         end
     endtask
-    // P2 command bookkeeping (bench side): words expected {identity, expert, shared, base, nw}
-    integer p2c_base [$], p2c_nw [$], p2c_ex [$], p2c_sh [$], p2c_tag [$]; reg [73:0] p2c_id [$];
-    integer p2_w = 0;
-    integer rr_exp [$];       // rows-ready users expected (multiset)
-    integer n_rr = 0;
-    integer ks_seen = 0;
-    task automatic check_returns();
-        if (t_srq[512]) chk(0, t_srq[511:0]);
-        if (t_srq[1025]) chk(1, t_srq[1024:513]);
-        if (vrv) chk(4, vrq);
-        if (x_ov[0]) chk(6, x_od[511:0]);
-        if (x_ov[1]) chk(7, x_od[1023:512]);
-        if (c_l0v && c_l0r) begin
-            chk(5, c_l0d[511:0]);
-            p2_words_seen = p2_words_seen + 1;
-            if (p2c_base.size() == 0) begin $display("FAIL cyc %0d: P2 flit without a command", cyc); nbad = nbad + 1; end
-            else if (c_l0d[603:530] !== p2c_id[0] || c_l0d[529:521] != p2c_ex[0] || c_l0d[520] != p2c_sh[0] ||
-                     c_l0d[519] != (p2_w == p2c_nw[0]) || c_l0d[518:512] != p2_w) begin
-                $display("FAIL cyc %0d: P2 flit metadata (word %0d / %0d)", cyc, c_l0d[518:512], p2_w); nbad = nbad + 1;
-            end
-            if (p2c_base.size() != 0 && p2c_base[0] >= 1024) begin
-                if (!fill_d.exists(p2c_base[0] + p2_w) || fill_d[p2c_base[0] + p2_w] !== c_l0d[511:0]) begin
+    // a region read back after its done must hold the phase's elements (catches early / stale)
+    task automatic chk_region(input integer row, input [511:0 ] got);
+        integer ee, aa; begin
+            for (ee = 0; ee < 16; ee = ee + 1) begin
+                aa = row * 16 + ee;
+                if (exp_el.exists(aa) && got[32*ee +: 32] !== exp_el[aa]) begin
                     nbad = nbad + 1;
-                    if (nbad < 12) $display("FAIL cyc %0d: P2 word %0d of region %0d is not the captured row (early / stale read)", cyc, p2_w, p2c_base[0]);
+                    if (nbad < 12) $display("FAIL cyc %0d: region row %0d element %0d not the captured value (early / stale read)", cyc, row, ee);
                 end
             end
-            if (p2c_base.size() != 0) begin
+        end
+    endtask
+    integer p2c_base [$], p2c_nw [$], p2c_ex [$], p2c_sh [$], p2c_tag [$], p2c_chk [$]; reg [73:0] p2c_id [$];
+    integer p2_w = 0;
+    integer rr_exp [$];
+    integer n_rr = 0, ks_seen = 0;
+    integer x0_chk [$];                     // X0 reads that are region checks: row, or -1
+    // ctrl read return (stream domain): expectations in order
+    task automatic check_returns();
+        if (t_srq[512]) chk(0, t_srq[511:0], 1);
+        if (t_srq[1025]) chk(1, t_srq[1024:513], 1);
+        for (integer bl = 0; bl < 16; bl = bl + 1) if (t_bl[513*bl]) begin
+            if (ex_l[bl].size() == 0) begin $display("FAIL cyc %0d: unexpected row on bus lane %0d", cyc, bl); nbad = nbad + 1; end
+            else begin
+                nchk = nchk + 1;
+                if (lat_l[bl] < 0) lat_l[bl] = cyc - ex_lt[bl][0];
+                else if (lat_l[bl] != cyc - ex_lt[bl][0]) begin $display("FAIL cyc %0d: lane %0d latency", cyc, bl); nbad = nbad + 1; end
+                if (ex_l[bl][0] !== t_bl[513*bl + 1 +: 512]) begin nbad = nbad + 1; if (nbad < 12) $display("MISMATCH cyc %0d bus lane %0d", cyc, bl); end
+                void'(ex_l[bl].pop_front()); void'(ex_lt[bl].pop_front());
+            end
+        end
+        if (c_l0v && c_l0r) begin
+            chk(5, c_l0d[511:0], 0);
+            p2_words_seen = p2_words_seen + 1;
+            if (p2c_base.size() == 0) begin $display("FAIL cyc %0d: P2 flit without a command", cyc); nbad = nbad + 1; end
+            else begin
+                if (c_l0d[603:530] !== p2c_id[0] || c_l0d[529:521] != p2c_ex[0] || c_l0d[520] != p2c_sh[0] ||
+                     c_l0d[519] != (p2_w == p2c_nw[0]) || c_l0d[518:512] != p2_w) begin
+                    $display("FAIL cyc %0d: P2 flit metadata (word %0d / %0d)", cyc, c_l0d[518:512], p2_w); nbad = nbad + 1;
+                end
+                if (p2c_chk[0]) chk_region(p2c_base[0] + p2_w, c_l0d[511:0]);
                 if (p2_w == p2c_nw[0]) begin
                     p2_w = 0; void'(p2c_base.pop_front()); void'(p2c_nw.pop_front()); void'(p2c_ex.pop_front());
-                    void'(p2c_sh.pop_front()); void'(p2c_id.pop_front()); void'(p2c_tag.pop_front());
+                    void'(p2c_sh.pop_front()); void'(p2c_id.pop_front()); void'(p2c_tag.pop_front()); void'(p2c_chk.pop_front());
                 end else p2_w = p2_w + 1;
             end
         end
@@ -219,8 +264,7 @@ module tb_dsfd_sp_vm;
             if (ks_pay.size() == 0 || ks_pay[0] != t_ks[31:0]) begin $display("FAIL cyc %0d: START payload", cyc); nbad = nbad + 1; end
             else void'(ks_pay.pop_front());
             if (nw_sent_b4_db.size() == 0 || n_wfc_w_seen < nw_sent_b4_db[0]) begin
-                $display("FAIL cyc %0d: START before its writes were ordered (%0d < %0d)", cyc, n_wfc_w_seen, nw_sent_b4_db.size() ? nw_sent_b4_db[0] : -1);
-                nbad = nbad + 1;
+                $display("FAIL cyc %0d: START before its writes were ordered", cyc); nbad = nbad + 1;
             end else void'(nw_sent_b4_db.pop_front());
         end
         if (c_wv && c_wr) begin
@@ -229,64 +273,236 @@ module tb_dsfd_sp_vm;
                 foreach (rr_exp[j]) if (f < 0 && rr_exp[j] == c_wd) f = j;
                 if (f < 0) begin $display("FAIL cyc %0d: rows-ready user %0d not expected", cyc, c_wd); nbad = nbad + 1; end
                 else rr_exp.delete(f);
-                for (j = 0; j < 4; j = j + 1) if (slot_busy[j] == 2 && slot_user[j] == c_wd) slot_busy[j] = 0;
                 n_rr = n_rr + 1;
             end
         end
-        if (dv) done_seen.push_back(dt);
     endtask
+    integer n_cq = 0;
+    reg [511:0] ex_q_c [$];
+    always @(posedge cks) if (rss_n && vrv) begin
+        if (ex_q_c.size() == 0) begin $display("FAIL: ctrl read data without a read"); nbad = nbad + 1; end
+        else begin
+            nchk = nchk + 1; n_cq = n_cq + 1;
+            if (ex_q_c[0] !== vrq) begin nbad = nbad + 1; if (nbad < 12) $display("MISMATCH ctrl read %0d", n_cq); end
+            void'(ex_q_c.pop_front());
+        end
+    end
 
-    // ------------------------------------------------------------ stimulus
-    // capture jobs: rows to write (in order), and per-row gap before it
-    integer cj_row [$], cj_gap [$];
-    reg [511:0] fill_d [int];
-    integer c_lastbank = 0;
-    // WFC: pending sw ops (row, MARK = doorbell with payload) / sr pairs
-    integer wj_row [$]; integer wj_pay [$];
-    integer rj [$];
-    integer w_lastbank = 0, r_lastrow = 0;
-    // ARM / region flow
-    integer slot_busy [0:3]; integer slot_tag [0:3], slot_base [0:3], slot_n [0:3], slot_ntf [0:3], slot_user [0:3];
-    integer reg_ptr = 1024;
+    // ------------------------------------------------------------ capture source model
+    // per root: queue of {addr, data}; emission <= 2 a serial cycle, <= 4/3 a cycle on average (credit in thirds)
+    integer rq_a [0:NR-1][$]; reg [31:0] rq_d [0:NR-1][$];
+    integer r_cr [0:NR-1], r_gap [0:NR-1], r_tail [0:NR-1];
+    integer cap_pend = 0;               // elements not yet emitted
+    integer cap_last_emit = -1, cap_first_emit = -1;
+    integer rr, nn, kk2;
+    reg [13375:0] fc;
+    task automatic cap_step(input integer gaps);
+        fc = '0;
+        for (rr = 0; rr < NR; rr = rr + 1) begin
+            r_cr[rr] = (r_cr[rr] + 4 > 6) ? 6 : r_cr[rr] + 4;
+            if (r_gap[rr] > 0) r_gap[rr] = r_gap[rr] - 1;
+            else begin
+                nn = 0;
+                if (rq_a[rr].size() == 1 && r_tail[rr] > 0) begin r_tail[rr] = r_tail[rr] - 1; nn = 2; end
+                while (nn < 2 && r_cr[rr] >= 3 && rq_a[rr].size() != 0) begin
+                    fc[104*rr + 52*nn] = 1'b1;
+                    fc[104*rr + 52*nn + 1 +: 19] = rq_a[rr][0];
+                    fc[104*rr + 52*nn + 20 +: 32] = rq_d[rr][0];
+                    void'(rq_a[rr].pop_front()); void'(rq_d[rr].pop_front());
+                    r_cr[rr] = r_cr[rr] - 3; nn = nn + 1; cap_pend = cap_pend - 1;
+                    if (cap_first_emit < 0) cap_first_emit = cyc; cap_last_emit = cyc;
+                end
+                if (gaps && rnd(40 + rr) % 23 == 0) r_gap[rr] = rnd(41) % 3;
+            end
+        end
+        f_cap <= fc;
+    endtask
+    // a phase: rows R a root, NPOS positions, obase / ops (elements); returns the element count
+    function automatic integer cap_phase(input integer obase, input integer ops, input integer R, input integer npos,
+                                         input integer skew, input integer reord, input integer salt);
+        integer r_, j_, p_, addr, row, n_; reg [31:0] dd;
+        begin
+            n_ = 0;
+            for (r_ = 0; r_ < NR; r_ = r_ + 1) begin
+                r_gap[r_] = skew ? rnd(50) % (skew + 1) : 0;
+                for (j_ = 0; j_ < R; j_ = j_ + 1) for (p_ = 0; p_ < npos; p_ = p_ + 1) begin
+                    row = 256 * (j_ >> 1) + 2 * r_ + (j_ & 1);
+                    addr = obase + row + p_ * ops;
+                    dd = mix(addr, salt);
+                    rq_a[r_].push_back(addr); rq_d[r_].push_back(dd);
+                    exp_el[addr] = dd; n_ = n_ + 1;
+                    if (landed.exists(addr)) landed.delete(addr);
+                end
+                if (reord) for (j_ = 0; j_ + 1 < rq_a[r_].size(); j_ = j_ + 2) if (rnd(51) % 4 == 0) begin
+                    addr = rq_a[r_][j_]; rq_a[r_][j_] = rq_a[r_][j_+1]; rq_a[r_][j_+1] = addr;
+                    dd = rq_d[r_][j_]; rq_d[r_][j_] = rq_d[r_][j_+1]; rq_d[r_][j_+1] = dd;
+                end
+            end
+            if (MODE == 0) r_tail[rnd(52) % NR] = 60;      // one late last element a phase (an early done reads stale)
+            cap_pend = cap_pend + n_; n_el_exp = n_el_exp + n_;
+            cap_phase = n_;
+        end
+    endfunction
+
+    // ------------------------------------------------------------ engine commands (stream side)
+    // command word: {slot, user 10, pos 21, tok 21, arg 24, op 7}; the done tag {slot, op}
+    reg [83:0] cmd_q [$];
+    integer n_cmd_out = 0;           // adapter credits in use (<= 8)
+    integer pend_tag [$];
+    function automatic [83:0] vcmd(input [2:0] vop, input [20:0] f, input [9:0] user, input [7:0] tag);
+        begin vcmd = 84'd0; vcmd[83] = tag[7]; vcmd[82:73] = user; vcmd[30:28] = vop; vcmd[27:7] = f; vcmd[6:0] = tag[6:0]; end
+    endfunction
     integer tag_ctr = 1;
-    integer cmd_q [$]; reg [83:0] cmd_d [$];
-    integer pend_tag [$];          // tags we wait for
-    integer n_arm = 0, n_p2rd = 0, n_done = 0, n_p2_out = 0;
-    integer p2tags [$];
-    integer p5_lastbank = 0;
-    integer pool_p2_busy = 0;
-    // ctrl / X pinned ops of the last 2 edges (for the projection)
+    function automatic integer tag_pending(input integer t);
+        begin tag_pending = 0; foreach (pend_tag[j]) if (pend_tag[j] == t) tag_pending = 1; end
+    endfunction
+    function automatic [7:0] ntag(input integer d);
+        begin
+            // a tag not pending: 1 .. 250
+            while (tag_pending(tag_ctr)) tag_ctr = (tag_ctr % 250) + 1;
+            ntag = tag_ctr[7:0]; tag_ctr = (tag_ctr % 250) + 1;
+        end
+    endfunction
+    // slots
+    integer slot_busy [0:3]; integer slot_tag [0:3], slot_base [0:3], slot_n [0:3], slot_ntf [0:3], slot_user [0:3];
+    integer slot_t_arm [0:3], slot_t_done [0:3];
+    task automatic arm(input integer k, input integer base, input integer nrows, input integer nel, input integer ntf,
+                       input integer user);
+        reg [7:0] t;
+        begin
+            t = ntag(0); cmd_q.push_back(vcmd(3'd1, {k[1:0], ntf[0], 4'd0, base[13:0]}, 10'd0, t)); pend_tag.push_back(t);
+            t = ntag(0); cmd_q.push_back(vcmd(3'd2, {k[1:0], 4'd0, nrows[14:0]}, 10'd0, t)); pend_tag.push_back(t);
+            t = ntag(0); cmd_q.push_back(vcmd(3'd3, {k[1:0], nel[18:0]}, user[9:0], t)); pend_tag.push_back(t);
+            slot_busy[k] = 1; slot_tag[k] = t; slot_base[k] = base; slot_n[k] = nrows; slot_ntf[k] = ntf; slot_user[k] = user;
+            slot_t_arm[k] = cyc;
+            if (ntf) rr_exp.push_back(user);
+        end
+    endtask
+    task automatic p2rd(input integer base, input integer nw, input integer check);
+        reg [7:0] t; reg [89:0] id; integer q;
+        begin
+            id = {rnd(60), rnd(61), rnd(62)};
+            for (q = 0; q < 5; q = q + 1) begin t = ntag(0); cmd_q.push_back(vcmd(3'd4, {q[2:0], id[18*q +: 18]}, 10'd0, t)); pend_tag.push_back(t); end
+            t = ntag(0); cmd_q.push_back(vcmd(3'd5, {base[13:0], nw[6:0] - 7'd1}, 10'd0, t)); pend_tag.push_back(t);
+            p2c_base.push_back(base); p2c_nw.push_back(nw - 1); p2c_id.push_back(id[73:0]); p2c_ex.push_back(id[82:74]);
+            p2c_sh.push_back(id[83]); p2c_tag.push_back(t); p2c_chk.push_back(check);
+        end
+    endtask
+    // X streamer: map {lane, n} + go {base}; rows recorded for the order-register check
+    integer x_busy [0:4], x_ln [0:4];
+    task automatic xrd(input integer xp, input integer lane, input integer base, input integer n);
+        reg [7:0] t; integer q;
+        begin
+            t = ntag(0); cmd_q.push_back(vcmd(3'd7, {xp[2:0], 1'b0, lane[3:0], n[12:0] - 13'd1}, 10'd0, t)); pend_tag.push_back(t);
+            t = ntag(0); cmd_q.push_back(vcmd(3'd7, {xp[2:0], 1'b1, 3'd0, base[13:0]}, 10'd0, t)); pend_tag.push_back(t);
+            for (q = 0; q < n; q = q + 1) xs_row[xp].push_back(base + q);
+            x_busy[xp] = t; x_ln[xp] = lane;
+        end
+    endtask
+    // landing producer pointer (LARM): group 0..3 svc, 4 coll, 5 sel, 6 col, 7 hc
+    task automatic larm(input integer grp_, input integer base);
+        reg [7:0] t; begin
+            t = ntag(0); cmd_q.push_back(vcmd(3'd6, {grp_[3:0], 3'd0, base[13:0]}, 10'd0, t)); pend_tag.push_back(t);
+        end
+    endtask
+    // landing producer sources: queues of rows (each row = 16 elements registered in exp_el)
+    reg [511:0] lq_svc [$], lq_sel [$], lq_col [$], lq_hc [$], lq_coll [$];
+    integer l_gap_col = 0, l_start = -1;
+    function automatic [511:0] lrow(input integer row, input integer salt);
+        integer ee; reg [511:0] r_; begin
+            for (ee = 0; ee < 16; ee = ee + 1) begin
+                r_[32*ee +: 32] = mix(row * 16 + ee, salt);
+                exp_el[row * 16 + ee] = r_[32*ee +: 32];
+                if (landed.exists(row * 16 + ee)) landed.delete(row * 16 + ee);
+            end
+            n_el_exp = n_el_exp + 16; lrow = r_;
+        end
+    endfunction
+    integer l_pend = 0;                       // landing rows not yet sent
+    task automatic lphase(input integer grp_, input integer k, input integer base, input integer nrows, input integer salt);
+        integer q; begin
+            larm(grp_, base);
+            arm(k, base, nrows, nrows * 16, 0, 0);
+            for (q = 0; q < nrows; q = q + 1) begin
+                case (grp_)
+                    0: lq_svc.push_back(lrow(base + q, salt));
+                    4: lq_coll.push_back(lrow(base + q, salt));
+                    5: lq_sel.push_back(lrow(base + q, salt));
+                    6: lq_col.push_back(lrow(base + q, salt));
+                    default: lq_hc.push_back(lrow(base + q, salt));
+                endcase
+            end
+            l_pend = l_pend + nrows;
+        end
+    endtask
+    always @(posedge cks) begin
+        cv <= 1'b0;
+        if (rss_n && cmd_q.size() != 0 && n_cmd_out < 8) begin
+            cv <= 1'b1; cd <= cmd_q.pop_front(); n_cmd_out = n_cmd_out + 1;
+        end
+        if (dv) begin
+            n_cmd_out = n_cmd_out - 1;
+            done_seen.push_back(dt);
+        end
+    end
+    // ------------------------------------------------------------ ctrl VM port (stream side)
+    reg [13:0] cq_rows [$]; reg cq_we [$];   // ops to send
+    integer c_gap = 0;
+    always @(posedge cks) begin
+        vwe <= 1'b0; vre <= 1'b0;
+        if (rss_n && cyc > 60 && cq_rows.size() != 0) begin   // the controller starts after the VM is up
+            if (c_gap > 0) c_gap = c_gap - 1;
+            else begin : cs
+                reg fw; fw = cq_we[0];
+                if (cq_we[0]) begin vwe <= 1'b1; vwa <= cq_rows[0]; vwd <= rowdata(mix(cq_rows[0], $time)); end
+                else begin vre <= 1'b1; vra <= cq_rows[0]; end
+                sb_c.push_back(int'(cq_rows[0]) * 2 + int'(cq_we[0])); ctrl_inflight = ctrl_inflight + 1;
+                void'(cq_rows.pop_front()); void'(cq_we.pop_front());
+                // both ops in one stream cycle (write then read) sometimes
+                if (fw && cq_rows.size() != 0 && !cq_we[0] && vwe_next_both()) begin
+                    vre <= 1'b1; vra <= cq_rows[0]; sb_c.push_back(int'(cq_rows[0]) * 2); ctrl_inflight = ctrl_inflight + 1;
+                    void'(cq_rows.pop_front()); void'(cq_we.pop_front());
+                end
+                c_gap = (MODE == 1) ? 0 : rnd(70) % 3;
+            end
+        end
+    end
+    reg both_ok = 0;
+    function automatic bit vwe_next_both();
+        begin vwe_next_both = both_ok; end
+    endfunction
+
+    // ------------------------------------------------------------ stimulus (serial domain)
+    integer wj_row [$]; integer wj_pay [$]; integer rj [$];
+    integer w_lastbank = 0, r_lastrow = 0, p5_lastbank = 0;
+    integer reg_ptr = 1024;
+    integer n_arm = 0, n_p2rd = 0, n_done = 0, n_phase = 0;
     integer xc_m1 [$], xc_m2 [$];
-    integer k, j, r, g, n, bb;
-    reg [83:0] c;
-    // ---- projection of the order-register ops of the next three edges for the gate
+    integer k, j, r, g, n;
+    integer x_win;                      // 1: X window, 0: ctrl window (stall-free admission in the bench)
     task automatic proj(output integer o0 [$], output integer o1 [$], output integer o2 [$]);
-        integer pr; begin
+        integer pr, l2; begin
             o0.delete(); o1.delete(); o2.delete();
-            // b(k): sources now
             if (dut.u_fe.e_v && !dut.u_fe.e_row[14]) o0.push_back(dut.u_fe.e_row[13:0]);
             if (dut.u_fe.e1_v) o0.push_back(dut.u_fe.e1_row[13:0]);
-            if (dut.u_fe.c_v) o0.push_back(dut.u_fe.c_d[541:528]);
             if (dut.u_fe.r_iss) o0.push_back(dut.u_fe.r_base + dut.u_fe.r_w);
             foreach (xc_m2[j]) o0.push_back(xc_m2[j]);
-            // b(k+1)
             if (dut.u_fe.u_wfc.p_v[1] && !dut.u_fe.u_wfc.p_mk[1]) o1.push_back(dut.u_fe.u_wfc.p_row[1][13:0]);
             if (dut.u_fe.u_wfc.p_v1[1]) o1.push_back(dut.u_fe.u_wfc.p_row1[1][13:0]);
-            if (dut.u_fe.u_cw.g_rtt.u_rx.pv && dut.u_fe.u_cw.g_rtt.u_rx.live) o1.push_back(dut.u_fe.u_cw.g_rtt.u_rx.pd[541:528]);
             foreach (xc_m1[j]) o1.push_back(xc_m1[j]);
-            // b(k+2)
             if (dut.u_fe.u_wfc.p_v[0] && !dut.u_fe.u_wfc.p_mk[0]) o2.push_back(dut.u_fe.u_wfc.p_row[0][13:0]);
             if (dut.u_fe.u_wfc.p_v1[0]) o2.push_back(dut.u_fe.u_wfc.p_row1[0][13:0]);
-            if (p_cwv) o2.push_back(p_cwd[541:528]);
-            // P2 reader: conservative (any of its next rows / the next command's base, in both later cycles)
             if (dut.u_fe.r_act || dut.u_fe.cq_n != 0) begin
                 pr = dut.u_fe.r_base + dut.u_fe.r_w;
                 o1.push_back(pr + 1); o2.push_back(pr + 1); o2.push_back(pr + 2); o1.push_back(pr);
-                if (dut.u_fe.cq_n != 0) begin
-                    o1.push_back(dut.u_fe.cq[dut.u_fe.cq_h][38:25]); o2.push_back(dut.u_fe.cq[dut.u_fe.cq_h][38:25]);
-                    o2.push_back(dut.u_fe.cq[dut.u_fe.cq_h][38:25] + 1);
-                end
             end
+            // capture: every lane may write either of its banks in each of the next cycles (conservative)
+            if (cap_pend != 0 || dut.u_fe.cl_v != 0) for (l2 = 0; l2 < 16; l2 = l2 + 1) begin
+                o0.push_back(l2); o1.push_back(l2); o2.push_back(l2);
+                o0.push_back(l2 + 16); o1.push_back(l2 + 16); o2.push_back(l2 + 16);
+            end
+            // ctrl ops in flight (any cycle)
+            foreach (sb_c[j]) begin o0.push_back(sb_c[j] >> 1); o1.push_back(sb_c[j] >> 1); o2.push_back(sb_c[j] >> 1); end
         end
     endtask
     function automatic integer fits(input integer o0 [$], input integer o1 [$], input integer o2 [$]);
@@ -297,30 +513,44 @@ module tb_dsfd_sp_vm;
             f = step_mirror(occ, o2); fits = !f;
         end
     endfunction
+    function automatic integer lane_free(input integer ln);
+        integer q; begin lane_free = 1; for (q = 0; q < 5; q = q + 1) if (x_busy[q] >= 0 && x_ln[q] == ln) lane_free = 0; end
+    endfunction
+    function automatic integer rr_pending(input integer u);
+        begin rr_pending = 0; foreach (rr_exp[j]) if (rr_exp[j] == u) rr_pending = 1; end
+    endfunction
     function automatic integer bank_row(input integer base, input integer span, input integer bank);
-        // a row in [base, base + span) with the given bank (span a multiple of 32)
         begin bank_row = base + ((rnd(7) % (span / 32)) * 32) + bank; end
     endfunction
 
-    // throughput bookkeeping
-    integer tp_t0 = -1, tp_t1 = -1, tp_cap_t1 = -1, tp_p2_t1 = -1, tp_wfc_t1 = -1, tp_x_t1 = -1;
-    integer tp_xn = 0;
+    integer tp_t0 = -1, tp_cap_t1 = -1, tp_p2_t1 = -1, tp_wfc_t1 = -1, tp_x_t1 = -1, tp_xn = 0;
+    integer region_q [$];               // slots completed, region checks to issue (slot index)
+    integer max_ctrl_if = 0;
 
     always @(posedge clk) begin
         cyc <= cyc + 1;
-        if (cyc == 6) rst_n <= 1'b1;
+        if (cyc == 6) begin rst_n <= 1'b1; rss_n <= 1'b1; end
         if (rst_n && cyc > 4) begin observe_b(); check_returns(); end
         if (rst_n && cyc > 8) begin
-            // ---------------- capture link sender
-            if (s_cv && s_cr) s_cv <= 1'b0;
-            if ((!s_cv || s_cr) && cj_row.size() != 0) begin
-                if (cj_gap[0] > 0) cj_gap[0] = cj_gap[0] - 1;
-                else begin
-                    r = cj_row.pop_front(); void'(cj_gap.pop_front());
-                    g = rnd(1);
-                    s_cv <= 1'b1; s_cd <= {r[13:0], (MODE == 1 || g[3] || r >= 1024) ? 16'hffff : g[31:16], rowdata(mix(r, cyc))};
-                    if (r >= 1024) fill_d[r] = rowdata(mix(r, cyc));
-                    sb_c.push_back(r);
+            cap_step(MODE == 0);
+            // ---------------- landing producers (start l_start; svc / hc 2 rows a beat, coll 4 words when t_cts room)
+            f_svc <= '0; f_sel <= '0; f_col <= '0; f_hc <= '0; f_coll <= '0;
+            if (l_start >= 0 && cyc >= l_start) begin
+                if (lq_svc.size() >= 2 && (MODE != 0 || rnd(80) % 3 == 0)) begin
+                    f_svc[0] <= 1'b1; f_svc[1 +: 512] <= lq_svc.pop_front(); f_svc[513 +: 512] <= lq_svc.pop_front(); l_pend = l_pend - 2;
+                end
+                if (lq_sel.size() != 0 && (MODE != 0 || rnd(81) % 3 == 0)) begin f_sel[0] <= 1'b1; f_sel[512:1] <= lq_sel.pop_front(); l_pend = l_pend - 1; end
+                if (lq_col.size() != 0 && cyc % 3 != 0) begin f_col[0] <= 1'b1; f_col[512:1] <= lq_col.pop_front(); l_pend = l_pend - 1; end
+                if (lq_hc.size() >= 2 && (MODE != 0 || rnd(82) % 3 == 0)) begin
+                    f_hc[512] <= 1'b1; f_hc[511:0] <= lq_hc.pop_front(); f_hc[1025] <= 1'b1; f_hc[1024:513] <= lq_hc.pop_front(); l_pend = l_pend - 2;
+                end
+                if (lq_coll.size() != 0 && t_cts[0] && cyc % 2 == 0) begin : cw
+                    integer w; reg [3:0] mk4; mk4 = 4'd0;
+                    f_coll[0] <= 1'b1; f_coll[2:1] <= 2'd1;
+                    for (w = 0; w < 4; w = w + 1) if (lq_coll.size() != 0) begin
+                        f_coll[52 + 512*w +: 512] <= lq_coll.pop_front(); mk4[w] = 1'b1; l_pend = l_pend - 1;
+                    end
+                    f_coll[9:6] <= mk4;
                 end
             end
             // ---------------- WFC kit senders
@@ -338,16 +568,8 @@ module tb_dsfd_sp_vm;
                 s_rv <= 1'b1; s_rd <= {r[16], 1'b0, r[30:17], 1'b0, r[13:0]};
                 sb_r.push_back(r[16] ? (r & 32'h1ffff) | ((r >> 17) << 17) : (r & 32'hffff));
             end
-            // ---------------- engine commands (one a cycle)
-            cv <= 1'b0;
-            if (cmd_d.size() != 0 && (cmd_d[0][83:80] != 4'd3 || n_p2_out < 4)) begin
-                cv <= 1'b1; cd <= cmd_d[0];
-                if (cmd_d[0][83:80] == 4'd3) n_p2_out = n_p2_out + 1;
-                void'(cmd_d.pop_front());
-            end
-            // ---------------- grants of the P2 ep / MTP ep
             g = rnd(2);
-            c_l0r <= (MODE == 1) ? 1'b1 : (g[2:0] != 0);
+            c_l0r <= (MODE != 0) ? 1'b1 : (g[2:0] != 0);
             c_wr <= g[5:4] != 0;
             // ---------------- done handling
             while (done_seen.size() != 0) begin
@@ -357,60 +579,44 @@ module tb_dsfd_sp_vm;
                     foreach (pend_tag[j]) if (f < 0 && pend_tag[j] == r) f = j;
                     if (f < 0) begin $display("FAIL cyc %0d: done tag %0d not pending", cyc, r); nbad = nbad + 1; end
                     else pend_tag.delete(f);
-                    f = -1;
-                    foreach (p2tags[j]) if (f < 0 && p2tags[j] == r) f = j;
-                    if (f >= 0) begin p2tags.delete(f); n_p2_out = n_p2_out - 1; end
                 end
+                for (k = 0; k < 5; k = k + 1) if (x_busy[k] == r) x_busy[k] = -1;
                 for (k = 0; k < 4; k = k + 1) if (slot_busy[k] == 1 && slot_tag[k] == r) begin
-                    // region complete: stream it to P2; the slot is free once its rows-ready (if any) went out
-                    slot_busy[k] = slot_ntf[k] ? 2 : 0;
-                    c = 84'd0; c[83:80] = 4'd2; c[79:6] = {rnd(3), rnd(4), r[9:0]}; cmd_d.push_back(c);
-                    p2c_id.push_back(c[79:6]);
-                    c = 84'd0; c[83:80] = 4'd3; c[79:66] = slot_base[k]; c[65:59] = slot_n[k] - 1; g = rnd(5);
-                    c[58:50] = g[8:0]; c[49] = g[9]; c[7:0] = tag_ctr[7:0];
-                    cmd_d.push_back(c); pend_tag.push_back(tag_ctr[7:0]); p2tags.push_back(tag_ctr[7:0]); tag_ctr = (tag_ctr % 250) + 1; n_p2rd = n_p2rd + 1;
-                    p2c_base.push_back(slot_base[k]); p2c_nw.push_back(slot_n[k] - 1); p2c_ex.push_back(g[8:0]); p2c_sh.push_back(g[9]);
-                    p2c_tag.push_back(c[7:0]);
+                    slot_busy[k] = 2; slot_t_done[k] = cyc; region_q.push_back(k);
+                    if (cap_pend != 0 && MODE != 3) begin
+                        // done while elements of a phase are still unsent: only legal if they are not this slot's
+                    end
                 end
             end
+            // ---------------- region checks after done: P2RD (<= 128 rows) or X0 reads
+            if (region_q.size() != 0 && cmd_q.size() == 0 && p2c_base.size() == 0) begin
+                k = region_q.pop_front();
+                n = slot_n[k] > 128 ? 128 : slot_n[k];
+                p2rd(slot_base[k], n, 1); n_p2rd = n_p2rd + 1;
+                slot_busy[k] = 0;
+            end
             if (MODE == 0 && cyc < NCYC) begin
-                // ---------------- new ARM region (every ~170 cycles, a free slot)
+                x_win = ((cyc / 256) % 2 == 0) && (cyc % 256 >= 24);
+                // ---------------- capture phases (ARMed), every ~600 cycles
                 g = rnd(10);
-                begin : arm
-                    integer fk; fk = -1;
-                    for (k = 3; k >= 0; k = k - 1) if (slot_busy[k] == 0) fk = k;
-                    if (g[8:0] < 10 && cj_row.size() < 8 && fk >= 0) begin
+                begin : ph
+                    integer fk, R, np_, ops, ob, span, nel;
+                    fk = -1;
+                    for (k = 3; k >= 0; k = k - 1) if (slot_busy[k] == 0 && !(slot_ntf[k] && rr_pending(slot_user[k]))) fk = k;
+                    if (g[9:0] < 3 && cap_pend == 0 && fk >= 0) begin
                         k = fk;
-                        n = 8 + rnd(11) % 57;  // rows
-                        if (reg_ptr + 160 > NROW) reg_ptr = 1024;
-                        slot_base[k] = reg_ptr + ((c_lastbank + 1) % 32); reg_ptr = reg_ptr + 160;
-                        slot_n[k] = n; slot_ntf[k] = g[9]; slot_user[k] = {tag_ctr[7:0], k[1:0]}; slot_tag[k] = tag_ctr[7:0];
-                        c = 84'd0; c[83:80] = 4'd1; c[79:78] = k; c[77] = g[9]; c[76:67] = slot_user[k]; c[66:53] = slot_base[k];
-                        c[52:38] = n; c[37:23] = n; c[7:0] = tag_ctr[7:0];
-                        cmd_d.push_back(c); pend_tag.push_back(tag_ctr[7:0]); tag_ctr = (tag_ctr % 250) + 1; n_arm = n_arm + 1;
-                        if (g[9]) rr_exp.push_back(slot_user[k]);
-                        slot_busy[k] = 1;
-                        if (EARLYC) begin
-                            c = 84'd0; c[83:80] = 4'd3; c[79:66] = slot_base[k]; c[65:59] = n - 1; c[7:0] = 8'd251;
-                            cmd_d.push_back(c);
-                        end
-                        // the fill: a few cycles after the ARM, rows in order, random gaps, the LAST row late
-                        for (r = 0; r < n; r = r + 1) begin
-                            cj_row.push_back(slot_base[k] + r);
-                            cj_gap.push_back(r == 0 ? 6 : r == n - 1 ? 10 + rnd(12) % 40 : (rnd(13) % 4 == 0 ? rnd(14) % 6 : 0));
-                        end
-                        c_lastbank = (slot_base[k] + n - 1) % 32;
+                        R = 2 + rnd(11) % 15; np_ = 1 + (g[11:10] == 0 ? rnd(12) % 3 : 0);
+                        span = 256 * ((R + 1) / 2); ops = span;
+                        if (reg_ptr + (span * np_) / 16 + 16 > NROW) reg_ptr = 1024;
+                        ob = reg_ptr * 16; reg_ptr = reg_ptr + (span * np_) / 16 + 16;
+                        nel = NR * R * np_;
+                        arm(k, ob / 16, (span * np_) / 16, nel, g[12], {tag_ctr[7:0], k[1:0]});
+                        n_arm = n_arm + 1; n_phase = n_phase + 1;
+                        if (EARLYC) p2rd(ob / 16, 8, 0);
+                        // the phase's elements start a little after the ARM (the field GO follows the ARM)
+                        void'(cap_phase(ob, ops, R, np_, 6, 1, cyc));
+                        for (r = 0; r < NR; r = r + 1) r_gap[r] = r_gap[r] + 40;
                     end
-                end
-                // ---------------- pool capture bursts (unarmed: hazards with every reader)
-                g = rnd(15);
-                if (g[5:0] == 0 && cj_row.size() < 4) begin
-                    n = 2 + g[10:8];
-                    r = bank_row(0, POOL, (c_lastbank + 1) % 32);
-                    for (j = 0; j < n; j = j + 1) begin
-                        cj_row.push_back((r + j) % POOL); cj_gap.push_back(0);
-                    end
-                    c_lastbank = (r + n - 1) % 32;
                 end
                 // ---------------- WFC: writes + doorbell in the pool, read pairs
                 g = rnd(16);
@@ -426,105 +632,153 @@ module tb_dsfd_sp_vm;
                     rj.push_back(r_lastrow | (g[14] << 16) | (((r_lastrow + 1) % POOL) << 17));
                 end
                 // ---------------- P2 stream over pool rows (unarmed)
-                if (g[20:16] == 0 && dut.u_fe.cq_n == 0 && cmd_d.size() == 0 && p2c_base.size() == 0) begin
+                if (g[20:16] == 0 && dut.u_fe.cq_n == 0 && cmd_q.size() == 0 && p2c_base.size() == 0 && region_q.size() == 0) begin
                     n = 1 + g[24:22];
                     r = bank_row(0, POOL, (p5_lastbank + 1) % 32);
-                    c = 84'd0; c[83:80] = 4'd2; c[79:6] = {rnd(18), rnd(19), 10'h3ff}; cmd_d.push_back(c); p2c_id.push_back(c[79:6]);
-                    c = 84'd0; c[83:80] = 4'd3; c[79:66] = r; c[65:59] = n - 1; c[58:50] = 9'h1a5; c[49] = 1'b1; c[7:0] = tag_ctr[7:0];
-                    cmd_d.push_back(c); pend_tag.push_back(tag_ctr[7:0]); p2tags.push_back(tag_ctr[7:0]); tag_ctr = (tag_ctr % 250) + 1; n_p2rd = n_p2rd + 1;
-                    p2c_base.push_back(r); p2c_nw.push_back(n - 1); p2c_ex.push_back(9'h1a5); p2c_sh.push_back(1); p2c_tag.push_back(c[7:0]);
+                    p2rd(r, n, 0); n_p2rd = n_p2rd + 1;
                     p5_lastbank = (r + n - 1) % 32;
                 end
-                // ---------------- ctrl + X random over the pool, gated by the projected bank mirror
-                begin : gate
-                    integer o0 [$], o1 [$], o2 [$]; integer cand_p [4], cand_r [4], cand_w [4]; integer nk;
-                    reg [31:0] gx;
-                    proj(o0, o1, o2);
-                    vwe <= 1'b0; vre <= 1'b0; x_v <= 2'b00;
-                    xc_m2 = xc_m1; xc_m1.delete();
-                    for (nk = 0; nk < 4; nk = nk + 1) begin
-                        gx = rnd(20 + nk);
-                        if (gx[1:0] != 0) begin
-                            cand_p[nk] = (nk == 0) ? 3 : (nk == 1) ? 4 : (nk == 2) ? 6 : 7;
-                            cand_r[nk] = gx[13:8] % POOL;
-                            cand_w[nk] = (nk == 0) ? 1 : (nk == 1) ? 0 : gx[2];
-                            o2.push_back(cand_r[nk]);
-                            if (!fits(o0, o1, o2)) void'(o2.pop_back());
-                            else begin
-                                xc_m1.push_back(cand_r[nk]);
-                                sb_x.push_back(cand_p[nk] << 20 | cand_r[nk] << 1 | cand_w[nk]);
-                                case (nk)
-                                    0: begin vwe <= 1'b1; vwa <= cand_r[nk]; vwd <= rowdata(mix(gx, cyc)); end
-                                    1: begin vre <= 1'b1; vra <= cand_r[nk]; end
-                                    2: begin x_v[0] <= 1'b1; x_we[0] <= cand_w[nk]; x_row[13:0] <= cand_r[nk];
-                                             x_mask[15:0] <= gx[3] ? 16'hffff : gx[31:16]; x_d[511:0] <= rowdata(mix(gx, cyc + 5)); end
-                                    3: begin x_v[1] <= 1'b1; x_we[1] <= cand_w[nk]; x_row[27:14] <= cand_r[nk];
-                                             x_mask[31:16] <= gx[3] ? 16'hffff : gx[31:16]; x_d[1023:512] <= rowdata(mix(gx, cyc + 9)); end
-                                endcase
-                            end
+                // ---------------- ctrl (ctrl window) over the pool
+                if (!x_win && cyc % 256 < 200 && cq_rows.size() < 2 && sb_c.size() < 3 && rnd(30) % 4 == 0) begin
+                    r = rnd(31) % POOL;
+                    if (occ_m[r % 32] <= 1) begin cq_rows.push_back(r); cq_we.push_back(rnd(32) % 2); end
+                end
+                both_ok = rnd(33) % 3 == 0;
+                // ---------------- X streams over the pool (X window): bus lane = streamer index + 4 * k
+                begin : xs
+                    integer xp, ln;
+                    for (xp = 0; xp < 5; xp = xp + 1)
+                        if (x_win && sb_c.size() == 0 && x_busy[xp] < 0 && xs_row[xp].size() == 0 && rnd(90 + xp) % 64 == 0) begin
+                            n = 4 + rnd(95) % 13;
+                            ln = (xp + 5 * (rnd(96) % 3)) % 16;
+                            if (lane_free(ln)) xrd(xp, ln, (cyc + 7 * xp + 20) % 32, n);
                         end
+                end
+                // ---------------- landing phases (a free slot, no landing traffic pending)
+                begin : lp
+                    integer fk2, g2;
+                    fk2 = -1;
+                    for (k = 3; k >= 0; k = k - 1) if (slot_busy[k] == 0 && !(slot_ntf[k] && rr_pending(slot_user[k]))) fk2 = k;
+                    g2 = rnd(97);
+                    if (fk2 >= 0 && l_pend == 0 && g2 % 400 == 0) begin
+                        n = 2 * (1 + rnd(98) % 8);
+                        if (reg_ptr + n + 16 > NROW) reg_ptr = 1024;
+                        lphase((g2 / 400) % 8 == 1 ? 4 : (g2 / 400) % 8 == 2 ? 5 : (g2 / 400) % 8 == 3 ? 6 : (g2 / 400) % 8 == 4 ? 7 : 0,
+                               fk2, reg_ptr, n, cyc);
+                        reg_ptr = ((reg_ptr + n + 16 + 15) / 16) * 16; l_start = cyc + 40;   // capture obase stays 256-aligned
                     end
                 end
             end else if (MODE == 0) begin
-                vwe <= 1'b0; vre <= 1'b0; x_v <= 2'b00; xc_m2 = xc_m1; xc_m1.delete();
+                xc_m2 = xc_m1; xc_m1.delete();
             end else if (MODE == 1) begin
-                // ---------------- THROUGHPUT: production-shaped concurrent streams from cycle 200
-                //  capture : TP_ROWS posted row writes back to back (one ARMed region), done measured
-                //  P2      : after the done, P2RD of the region (TP_ROWS <= 128 words) at full grant rate
-                //  WFC     : 46-word outbound prefetch = 23 RD2 read pairs (vmx done path), plus 46 inbound writes
-                //  X0 / X1 : SU-style unit-stride read streams of TP_ROWS rows each
-                vwe <= 1'b0; vre <= 1'b0; x_v <= 2'b00; xc_m2 = xc_m1; xc_m1.delete();
+                // ---------------- THROUGHPUT (production shape, concurrent from cycle 200):
+                //  capture : one ARMed phase, TP_ROWS rows a root (128 roots, 1 position) at the root rate
+                //  P2      : after the done, P2RD of the region's first 128 rows at full grant rate
+                //  WFC     : 46-word outbound prefetch = 23 RD2 read pairs, plus 46 inbound writes
+                //  X0 / X1 : SU-style unit-stride read streams of 128 rows each
+                //  ctrl    : 32 reads + 32 writes back to back
+                xc_m2 = xc_m1; xc_m1.delete();
                 if (cyc == 200) begin
                     tp_t0 = cyc;
-                    c = 84'd0; c[83:80] = 4'd1; c[79:78] = 0; c[77] = 1; c[76:67] = 10'd5; c[66:53] = 14'd2048;
-                    c[52:38] = TP_ROWS; c[37:23] = TP_ROWS; c[7:0] = 8'd200;
-                    cmd_d.push_back(c); pend_tag.push_back(200); rr_exp.push_back(5);
-                    slot_busy[0] = 1; slot_tag[0] = 200; slot_base[0] = 2048; slot_n[0] = TP_ROWS;
-                    for (r = 0; r < TP_ROWS; r = r + 1) begin cj_row.push_back(2048 + r); cj_gap.push_back(r == 0 ? 4 : 0); end
-                    for (r = 0; r < 46; r = r + 1) begin wj_row.push_back(4096 + r); wj_pay.push_back(0); end
-                    for (r = 0; r < 23; r = r + 1) rj.push_back((6144 + 2 * r) | (1 << 16) | ((6145 + 2 * r) << 17));
+                    xrd(0, 0, 9216, 128); xrd(1, 1, 9216 + 128 + 9, 128);
+                    arm(0, 2048, (256 * ((TP_ROWS + 1) / 2)) / 16, NR * TP_ROWS, 1, 5);
+                    void'(cap_phase(2048 * 16, 0, TP_ROWS, 1, 2, 0, 9));
+                    for (r = 0; r < NR; r = r + 1) r_gap[r] = r_gap[r] + 30;
+                    for (r = 0; r < 46; r = r + 1) begin wj_row.push_back(8192 + r); wj_pay.push_back(0); end
+                    for (r = 0; r < 23; r = r + 1) rj.push_back((8448 + 2 * r) | (1 << 16) | ((8449 + 2 * r) << 17));
+                    for (r = 0; r < 32; r = r + 1) begin cq_rows.push_back(12288 + r); cq_we.push_back(1); end
+                    for (r = 0; r < 32; r = r + 1) begin cq_rows.push_back(12288 + r); cq_we.push_back(0); end
                 end
-                if (tp_t0 > 0 && cyc >= tp_t0 + 2 && tp_xn < TP_ROWS) begin
-                    // X streams: rows 8192 + i (X0) and 10240 + i + 16 (X1, another bank phase), reads
-                    x_v <= 2'b11; x_we <= 2'b00; x_row <= {14'd10256 + tp_xn[13:0], 14'd8192 + tp_xn[13:0]};
-                    sb_x.push_back(6 << 20 | (8192 + tp_xn) << 1); sb_x.push_back(7 << 20 | (10256 + tp_xn) << 1);
-                    tp_xn = tp_xn + 1;
+            end else if (MODE == 4 || MODE == 5) begin
+                // ---------------- LANDING WORST BURST: MODE 4 attention window (svc 64 beats + sel 64 rows back to back,
+                // collector 680 rows at 2/3 a cycle, collective 320 words under t_cts), MODE 5 HC window (hc 64 beats)
+                xc_m2 = xc_m1; xc_m1.delete();
+                if (cyc == 200) begin
+                    tp_t0 = cyc;
+                    if (MODE == 4) begin
+                        lphase(0, 0, 2048, 128, 1); lphase(5, 1, 2304, 64, 2); lphase(6, 2, 4096, 680, 3); lphase(4, 3, 6144, 320, 4);
+                    end else lphase(7, 0, 2048, 128, 5);
+                    l_start = cyc + 40;
+                end
+            end else if (MODE == 2 || MODE == 3) begin
+                // ---------------- BURST STRESS: all 128 roots back to back at the root rate, every lane busy
+                xc_m2 = xc_m1; xc_m1.delete();
+                if (cyc == 200) begin
+                    tp_t0 = cyc;
+                    begin : bs
+                        integer span, ob, ops;
+                        span = 256 * ((BROWS + 1) / 2); ops = span;
+                        ob = (MODE == 3) ? 2048 * 16 + 16 : 2048 * 16;       // MODE 3: obase 16 (not 256) aligned
+                        arm(0, ob / 16, (span * (BNP + 1)) / 16 + 1, NR * BROWS * (BNP + 1), 0, 7);
+                        void'(cap_phase(ob, ops, BROWS, BNP + 1, BSKEW, 0, 11));
+                        for (r = 0; r < NR; r = r + 1) r_gap[r] = r_gap[r] + 30;
+                    end
                 end
             end
-            // completion detection for throughput
-            if (MODE == 1) begin
-                if (tp_cap_t1 < 0 && slot_busy[0] == 0 && tp_t0 > 0) tp_cap_t1 = cyc;
-                if (tp_p2_t1 < 0 && tp_cap_t1 > 0 && p2c_base.size() == 0 && pend_tag.size() == 0) tp_p2_t1 = cyc;
-                if (tp_wfc_t1 < 0 && tp_t0 > 0 && cyc > tp_t0 + 10 && sb_r.size() == 0 && rj.size() == 0 && !s_rv && ex_q[0].size() == 0 && ex_q[1].size() == 0) tp_wfc_t1 = cyc;
-                if (tp_x_t1 < 0 && tp_xn == TP_ROWS && ex_q[6].size() == 0 && ex_q[7].size() == 0 && sb_x.size() == 0) tp_x_t1 = cyc;
+            if (MODE != 0 && tp_t0 > 0) begin
+                if (tp_cap_t1 < 0 && slot_busy[0] != 1 && slot_busy[1] != 1 && slot_busy[2] != 1 && slot_busy[3] != 1) tp_cap_t1 = cyc;
+                if (tp_p2_t1 < 0 && tp_cap_t1 > 0 && p2c_base.size() == 0 && region_q.size() == 0 && pend_tag.size() == 0) tp_p2_t1 = cyc;
+                if (tp_wfc_t1 < 0 && cyc > tp_t0 + 10 && sb_r.size() == 0 && rj.size() == 0 && !s_rv && ex_q[0].size() == 0 && ex_q[1].size() == 0) tp_wfc_t1 = cyc;
+                if (tp_x_t1 < 0 && (MODE != 1 || (xs_row[0].size() == 0 && xs_row[1].size() == 0 && ex_l[0].size() == 0 && ex_l[1].size() == 0 &&
+                                                   cq_rows.size() == 0 && sb_c.size() == 0 && ex_q_c.size() == 0))) tp_x_t1 = cyc;
             end
         end
         // ---------------- end
-        if (cyc == NCYC + 4000 || (MODE == 1 && tp_p2_t1 > 0 && tp_wfc_t1 > 0 && tp_x_t1 > 0 && cyc > tp_p2_t1 + 40)) begin
-            for (p = 0; p < NP; p = p + 1) if (ex_q[p].size() != 0) begin $display("FAIL: %0d reads outstanding on port %0d", ex_q[p].size(), p); nbad = nbad + 1; end
-            if (sb_c.size() || sb_w.size() || sb_r.size() || sb_x.size() || cj_row.size() || wj_row.size() || rj.size()) begin
-                $display("FAIL: scoreboards not drained (capture %0d / %0d, wfc w %0d r %0d, x %0d)", sb_c.size(), cj_row.size(), sb_w.size(), sb_r.size(), sb_x.size()); nbad = nbad + 1;
+        if (cyc == NCYC + 4000 || (MODE != 0 && tp_p2_t1 > 0 && tp_wfc_t1 > 0 && tp_x_t1 > 0 && cyc > tp_p2_t1 + 60) ||
+            (MODE == 3 && cyc > 3000)) begin
+            for (p = 0; p < 8; p = p + 1) if (ex_q[p].size() != 0) begin $display("FAIL: %0d reads outstanding on port %0d", ex_q[p].size(), p); nbad = nbad + 1; end
+            for (p = 0; p < 16; p = p + 1) if (ex_l[p].size() != 0) begin $display("FAIL: %0d rows outstanding on bus lane %0d", ex_l[p].size(), p); nbad = nbad + 1; end
+            for (p = 0; p < 5; p = p + 1) if (xs_row[p].size() != 0) begin $display("FAIL: X streamer %0d did not read %0d rows", p, xs_row[p].size()); nbad = nbad + 1; end
+            if (l_pend != 0) begin $display("FAIL: %0d landing rows unsent", l_pend); nbad = nbad + 1; end
+            if (sb_w.size() || sb_r.size() || sb_c.size() || wj_row.size() || rj.size() || cq_rows.size() || ex_q_c.size()) begin
+                $display("FAIL: scoreboards not drained (wfc w %0d r %0d, ctrl %0d / %0d)", sb_w.size(), sb_r.size(), sb_c.size(), ex_q_c.size()); nbad = nbad + 1;
             end
-            if (pend_tag.size() != 0) begin $display("FAIL: %0d engine dones never arrived (first tag %0d)", pend_tag.size(), pend_tag[0]); nbad = nbad + 1; end
-            if (rr_exp.size() != 0) begin $display("FAIL: %0d rows-ready missing", rr_exp.size()); nbad = nbad + 1; end
+            if (MODE != 3) begin
+                if (cap_pend != 0 || n_el_land != n_el_exp) begin $display("FAIL: capture elements landed %0d of %0d (unsent %0d)", n_el_land, n_el_exp, cap_pend); nbad = nbad + 1; end
+                if (pend_tag.size() != 0) begin $display("FAIL: %0d engine dones never arrived (first tag %0d)", pend_tag.size(), pend_tag[0]); nbad = nbad + 1; end
+                if (rr_exp.size() != 0) begin $display("FAIL: %0d rows-ready missing", rr_exp.size()); nbad = nbad + 1; end
+                if (dut.u_fe.fe_flt != 0 || fvec != 0 || flt) begin $display("FAIL: fault fe_flt %b fvec %b", dut.u_fe.fe_flt, fvec); nbad = nbad + 1; end
+            end else begin
+                // misaligned phase: the alignment fault must be raised (fail closed); nothing else may be wrong
+                if (dut.u_fe.fe_flt[8] !== 1'b1) begin $display("FAIL: misaligned capture phase NOT flagged (fe_flt %b)", dut.u_fe.fe_flt); nbad = nbad + 1; end
+                else $display("ALIGN_FAULT raised (fe_flt %b)", dut.u_fe.fe_flt);
+            end
             if (ks_pay.size() != 0) begin $display("FAIL: %0d START doorbells missing", ks_pay.size()); nbad = nbad + 1; end
-            if (dut.u_fe.fe_flt != 0 || fvec != 0 || flt) begin $display("FAIL: fault fe_flt %b fvec %b", dut.u_fe.fe_flt, fvec); nbad = nbad + 1; end
             if (ovf_m != 0) begin $display("FAIL: stimulus broke the stall-free contract %0d times", ovf_m); nbad = nbad + 1; end
-            $display("RESULT cyc=%0d checked=%0d mismatches_or_fails=%0d arm=%0d p2rd=%0d done=%0d rows_ready=%0d starts=%0d p2_words=%0d max_occ=%0d mirror_max=%0d lat p0=%0d p1=%0d p4=%0d p6=%0d p7=%0d",
-                     cyc, nchk, nbad, n_arm, n_p2rd, n_done, n_rr, ks_seen, p2_words_seen, max_occ, maxocc_m, lat[0], lat[1], lat[4], lat[6], lat[7]);
-            if (MODE == 1)
-                $display("THROUGHPUT rows=%0d capture_done=%0d p2_done=%0d (from capture done %0d) wfc_23pairs=%0d x_streams=%0d (cycles from t0 %0d)",
-                         TP_ROWS, tp_cap_t1 - tp_t0, tp_p2_t1 - tp_t0, tp_p2_t1 - tp_cap_t1, tp_wfc_t1 - tp_t0, tp_x_t1 - tp_t0, tp_t0);
-            if (nbad == 0 && nchk > 0) $display("PASS"); else $display("FAIL");
+            $display("RESULT cyc=%0d checked=%0d mismatches_or_fails=%0d phases=%0d arm=%0d p2rd=%0d done=%0d rows_ready=%0d starts=%0d p2_words=%0d ctrl_reads=%0d el=%0d/%0d cap_ops=%0d max_occ=%0d mirror_max=%0d lat p0=%0d p1=%0d p2=%0d p4=%0d p6=%0d p7=%0d",
+                     cyc, nchk, nbad, n_phase, n_arm, n_p2rd, n_done, n_rr, ks_seen, p2_words_seen, n_cq, n_el_land, n_el_exp, cap_ops,
+                     max_occ, maxocc_m, lat[0], lat[1], lat[2], lat[4], lat[6], lat[7]);
+            if (MODE >= 4)
+                $display("LANDING mode=%0d rows=%0d land_ops=%0d span=%0d (first %0d last %0d) all_done=%0d (serial cycles from t0 %0d)",
+                         MODE, n_el_exp / 16, lan_ops, lan_last - lan_first + 1, lan_first, lan_last, tp_cap_t1 - tp_t0, tp_t0);
+            if (MODE == 1 || MODE == 2)
+                $display("THROUGHPUT mode=%0d rows_per_root=%0d positions=%0d elements=%0d emit_cycles=%0d (first %0d last %0d) cap_ops=%0d cap_write_span=%0d landing_tail=%0d (last element at the pins -> done) arm_to_done=%0d p2_done=%0d wfc_23pairs=%0d x_ctrl=%0d (serial cycles from t0 %0d)",
+                         MODE, MODE == 1 ? TP_ROWS : BROWS, MODE == 1 ? 1 : BNP + 1, n_el_exp, cap_last_emit - cap_first_emit + 1,
+                         cap_first_emit, cap_last_emit, cap_ops, cap_last - cap_first + 1, slot_t_done[0] - cap_last_emit,
+                         slot_t_done[0] - slot_t_arm[0], tp_p2_t1 - tp_t0, tp_wfc_t1 - tp_t0, tp_x_t1 - tp_t0, tp_t0);
+            if (nbad == 0 && nchk + n_el_land > 0) $display("PASS"); else $display("FAIL");
             $finish;
+        end
+    end
+    // ctrl reads ride the generic per-port queues (ex_q[3] / ex_q[4]) filled by observe_b in the right order; move
+    // them, in (cycle, port 3 then 4) order, to the stream-domain expectation queue
+    always @(posedge clk) if (rst_n && cyc > 4) begin
+        while (ex_q[3].size() != 0 || ex_q[4].size() != 0) begin
+            if (ex_q[3].size() != 0 && (ex_q[4].size() == 0 || ex_t[3][0] <= ex_t[4][0])) begin
+                ex_q_c.push_back(ex_q[3].pop_front()); void'(ex_t[3].pop_front());
+            end else begin
+                ex_q_c.push_back(ex_q[4].pop_front()); void'(ex_t[4].pop_front());
+            end
         end
     end
     initial begin
         for (k = 0; k < 8; k = k + 1) lat[k] = -1;
+        for (k = 0; k < 16; k = k + 1) lat_l[k] = -1;
+        for (k = 0; k < 5; k = k + 1) x_busy[k] = -1;
         for (k = 0; k < 4; k = k + 1) slot_busy[k] = 0;
+        for (k = 0; k < NR; k = k + 1) begin r_cr[k] = 0; r_gap[k] = 0; r_tail[k] = 0; end
         rs = SEED * 32'h2545f491 + 1;
     end
-    // early-read and fault visibility (the RTL fault is checked at the end; print the first occurrence)
     reg flt_seen = 0;
     always @(posedge clk) if (!flt_seen && rst_n && (dut.u_fe.fe_flt != 0 || fvec != 0)) begin
         flt_seen <= 1; $display("FAULT first at cyc %0d: fe_flt %b fvec %b", cyc, dut.u_fe.fe_flt, fvec);
