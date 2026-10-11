@@ -151,6 +151,14 @@ module tb_s81ph_coll_sys;
     integer ridx [0:3];                  // plan index of the next reference output (one output per record)
     integer cyc, rp_n;
     integer cdone_cyc = -1;           // the cycle the collective traffic is complete
+`ifdef TB_FVM_TRACE
+    integer tf_n [0:3]; initial for (integer i = 0; i < 4; i = i + 1) tf_n[i] = 0;
+    always @(posedge clk) begin
+        for (integer i = 0; i < 4; i = i + 1) tf_n[i] = tf_n[i] + fvm[i][0];
+        if (cyc % 50000 == 3000) $display("TBFVM cyc=%0d rsts=%b sent=%0d %0d %0d %0d slab0_fvm=%b", cyc, rsts, tf_n[0], tf_n[1],
+                                          tf_n[2], tf_n[3], g_die[0].u.f_vm[0]);
+    end
+`endif
     always @(posedge clk) begin
         cyc <= cyc + 1;
         for (d = 0; d < 4; d = d + 1) begin
