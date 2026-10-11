@@ -52,16 +52,16 @@ module ot_v41_pqc_spine_screen #(
     input  wire              rw_st,
     input  wire [SAW-1:0]    rw_a,
     input  wire [63:0]       rw_d,
-    output reg               o_ready,
-    output reg               o_idle,
-    output reg               o_x_re,
-    output reg  [VAW-1:0]    o_x_addr,
+    output wire              o_ready,
+    output wire              o_idle,
+    output wire              o_x_re,
+    output wire [VAW-1:0]    o_x_addr,
     output wire [R-1:0]      o_w_we,          // v15: registered inside the T_RET tiles (SCR = 1)
     output wire [R*VAW-1:0]  o_w_addr,
     output wire [R*32-1:0]   o_w_data,
     output reg  [BW-1:0]     o_bus,
-    output reg               o_fault,
-    output reg               o_ev
+    output wire              o_fault,
+    output wire              o_ev
 );
     reg              q_go, q_ff;
     reg [PHW-1:0]    q_ph;
@@ -103,20 +103,26 @@ module ot_v41_pqc_spine_screen #(
                                                                .wd(rw_d), .ra(pa1), .q(pq1));
     end endgenerate
     ot_v41_spine_pqc_w17w10 #(.PHW(PHW), .SAW(SAW), .R(R), .VAW(VAW), .VRD(VRD), .KMAX(KMAX), .BST(BST), .PQ(PQ), .XRV(XRV), .XCAP(XCAP), .SCR(1), .TT(TT)) u_sp (
-        .clk(clk), .rst_n(rst_n), .go(q_go), .i_ph(q_ph), .i_np(q_np), .i_xbase(q_xb), .i_xps(q_xps),
-        .i_obase(q_ob), .i_ops(q_ops), .i_fmt(q_fm), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr),
-        .x_q(q_x), .x_rv(q_xrv), .w_we(o_w_we), .w_addr(o_w_addr), .w_data(o_w_data),
+        .clk(clk), .rst_n(rst_n), .go((TT != 0) ? go : q_go), .i_ph((TT != 0) ? i_ph : q_ph), .i_np((TT != 0) ? i_np : q_np),
+        .i_xbase((TT != 0) ? i_xbase : q_xb), .i_xps((TT != 0) ? i_xps : q_xps), .i_obase((TT != 0) ? i_obase : q_ob), .i_ops((TT != 0) ? i_ops : q_ops),
+        .i_fmt((TT != 0) ? i_fmt : q_fm), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr),
+        .x_q(q_x), .x_rv((TT != 0) ? x_rv : q_xrv), .w_we(o_w_we), .w_addr(o_w_addr), .w_data(o_w_data),
         .f_cfg_go(), .f_cfg_ph(), .f_cfg_np(), .f_go(), .f_go_bf(), .f_go_tag(), .f_xs_v(), .f_xs_p(), .f_xs_b(),
         .f_xs_sv(), .f_xs_q0(), .f_xs_e0(), .f_xs_q1(), .f_xs_e1(), .f_xs_pos(), .f_xb_pos(), .f_xb_v(), .f_xb_b(),
         .f_xb_sv(), .f_xb_u(), .f_xb_d(), .f_bus(bus),
-        .r_v(r_v), .r_row(r_row), .r_pos(r_pos), .r_fp32(r_fp32), .r_bf16(r_bf16), .r_e(r_e), .f_fault(q_ff),
+        .r_v(r_v), .r_row(r_row), .r_pos(r_pos), .r_fp32(r_fp32), .r_bf16(r_bf16), .r_e(r_e), .f_fault((TT != 0) ? f_fault : q_ff),
         .fault(fault), .phase_cycles(), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag),
         .rom_pa0(pa0), .rom_pa1(pa1), .rom_pq0(pq0), .rom_pq1(pq1), .rom_sa(sa), .rom_sq(sq));
-    reg r_ready, r_idle, r_fault, r_ev;
+    reg r_ready, r_idle, r_fault, r_ev, p_ready, p_idle, p_x_re, p_fault, p_ev;
+    reg [VAW-1:0] p_x_addr;
     always @(posedge clk) begin
         r_ready <= ready; r_idle <= idle; r_fault <= fault; r_ev <= ev_go ^ ev_end ^ ^ev_tag;
-        o_ready <= r_ready; o_idle <= r_idle; o_x_re <= x_re; o_x_addr <= x_addr; o_bus <= bus; o_fault <= r_fault; o_ev <= r_ev;
+        p_ready <= r_ready; p_idle <= r_idle; p_x_re <= x_re; p_x_addr <= x_addr; o_bus <= bus; p_fault <= r_fault; p_ev <= r_ev;
     end
+    // TT = 1: the T_CTL tile holds these output registers (its outputs are the screen's)
+    assign o_ready = (TT != 0) ? ready : p_ready;   assign o_idle = (TT != 0) ? idle : p_idle;
+    assign o_x_re = (TT != 0) ? x_re : p_x_re;      assign o_x_addr = (TT != 0) ? x_addr : p_x_addr;
+    assign o_fault = (TT != 0) ? fault : p_fault;   assign o_ev = (TT != 0) ? ev_go : p_ev;
 endmodule
 
 // SCREEN FIXTURE ONLY: a register-file stand-in for a two-cycle synchronous ROM macro (writable through a screen port so

@@ -33,16 +33,38 @@ module ot_pqc_t_prom (input wire clk, rst_n, we, input wire [6:0] wa, input wire
                       output wire [63:0] q);
     ot_v41_pqc_rom2_model #(.AW(7), .DW(64)) u (.*);
 endmodule
+// T_CTL at the screen shape, with the screen's own pin registers (go / i_* / x_rv / f_fault) and output registers
+// (ready / idle two stages, x_re / x_addr one, fault two, ev = ev_go ^ ev_end ^ ^ev_tag two) inside the tile, so every
+// tile pin is a register (the screen with TT = 1 does not register these itself).
 module ot_pqc_t_ctl16 (
     input  wire clk, rst_n,
     output wire aq_vin, input wire [1:0] aqf, output wire [4:0] aqi_o, output wire ba_v_o, output wire [2:0] ba_blk_o,
     output wire [47:0] hw_o, output wire [35:0] h_hi_o, output wire [15:0] h_b0_o, h_b1_o, output wire [457:0] mdr_o,
     input  wire [1:0] q2f_i, input wire [31:0] ga_i, output wire [605:0] bc_hr_o,
     input  wire go, input wire [5:0] i_ph, input wire [2:0] i_np, input wire [18:0] i_xbase, i_xps, i_obase, i_ops,
-    input  wire [1:0] i_fmt, output wire ready, idle, x_re, output wire [18:0] x_addr, input wire x_rv, f_fault,
-    output wire fault, output wire [31:0] phase_cycles, output wire ev_go, ev_end, output wire [1:0] ev_tag,
+    input  wire [1:0] i_fmt, input wire x_rv, f_fault,
+    output reg  o_ready, o_idle, o_x_re, output reg [18:0] o_x_addr, output reg o_fault, o_ev,
     output wire [6:0] rom_pa0, rom_pa1, input wire [63:0] rom_pq0, rom_pq1, output wire [7:0] rom_sa,
     input  wire [47:0] rom_sq);
-    ot_v41_pqc_ctl #(.PHW(6), .SAW(8), .R(16), .VAW(19), .VRD(64), .KMAX(256), .BST(2), .PQ(1), .XRV(1), .XCAP(16))
-        u (.*);
+    reg q_go, q_xrv, q_ff;
+    reg [5:0] q_ph; reg [2:0] q_np; reg [18:0] q_xb, q_xps, q_ob, q_ops; reg [1:0] q_fm;
+    always @(posedge clk) begin
+        q_go <= go; q_ph <= i_ph; q_np <= i_np; q_xb <= i_xbase; q_xps <= i_xps; q_ob <= i_obase; q_ops <= i_ops;
+        q_fm <= i_fmt; q_xrv <= x_rv; q_ff <= f_fault;
+    end
+    wire ready, idle, x_re, fault, ev_go, ev_end;
+    wire [18:0] x_addr;
+    wire [1:0] ev_tag;
+    ot_v41_pqc_ctl #(.PHW(6), .SAW(8), .R(16), .VAW(19), .VRD(64), .KMAX(256), .BST(2), .PQ(1), .XRV(1), .XCAP(16)) u (
+        .clk(clk), .rst_n(rst_n), .aq_vin(aq_vin), .aqf(aqf), .aqi_o(aqi_o), .ba_v_o(ba_v_o), .ba_blk_o(ba_blk_o),
+        .hw_o(hw_o), .h_hi_o(h_hi_o), .h_b0_o(h_b0_o), .h_b1_o(h_b1_o), .mdr_o(mdr_o), .q2f_i(q2f_i), .ga_i(ga_i),
+        .bc_hr_o(bc_hr_o), .go(q_go), .i_ph(q_ph), .i_np(q_np), .i_xbase(q_xb), .i_xps(q_xps), .i_obase(q_ob),
+        .i_ops(q_ops), .i_fmt(q_fm), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_rv(q_xrv),
+        .f_fault(q_ff), .fault(fault), .phase_cycles(), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag),
+        .rom_pa0(rom_pa0), .rom_pa1(rom_pa1), .rom_pq0(rom_pq0), .rom_pq1(rom_pq1), .rom_sa(rom_sa), .rom_sq(rom_sq));
+    reg r_ready, r_idle, r_fault, r_ev;
+    always @(posedge clk) begin
+        r_ready <= ready; r_idle <= idle; r_fault <= fault; r_ev <= ev_go ^ ev_end ^ ^ev_tag;
+        o_ready <= r_ready; o_idle <= r_idle; o_x_re <= x_re; o_x_addr <= x_addr; o_fault <= r_fault; o_ev <= r_ev;
+    end
 endmodule

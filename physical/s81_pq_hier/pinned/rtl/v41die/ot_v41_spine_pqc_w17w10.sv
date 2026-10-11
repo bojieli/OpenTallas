@@ -891,17 +891,19 @@ module ot_v41_spine_pqc_w17w10 #(
     wire [16*NGR-1:0] ga;
     wire [BW-1025:0] bc_hr;
     generate if (TT != 0) begin : g_ctt
-        ot_pqc_t_ctl16 u_ctl (
-            .clk(clk), .rst_n(rst_n), .aq_vin(aq_vin), .aqf(aqf), .aqi_o(aqi), .ba_v_o(ba_v), .ba_blk_o(ba_blk), .hw_o(hw),
-            .h_hi_o(h_hi), .h_b0_o(h_b0), .h_b1_o(h_b1), .mdr_o(mdr), .q2f_i(q2f), .ga_i(ga), .bc_hr_o(bc_hr),
-            .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase), .i_xps(i_xps), .i_obase(i_obase), .i_ops(i_ops),
-            .i_fmt(i_fmt), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_rv(x_rv), .f_fault(f_fault),
-            .fault(fault), .phase_cycles(phase_cycles), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag)
-    `ifdef OT_PQ_ROM_PORTS
+        // the screen shape: ready / idle / x_re / x_addr / fault / ev_go come back already through the screen's output
+        // registers (inside the tile; ev_go carries the screen's o_ev), the inputs are taken raw (pin registers inside)
+        ot_pqc_t_ctl16 u_ctl (.clk(clk), .rst_n(rst_n), .aq_vin(aq_vin), .aqf(aqf), .aqi_o(aqi), .ba_v_o(ba_v),
+            .ba_blk_o(ba_blk), .hw_o(hw), .h_hi_o(h_hi), .h_b0_o(h_b0), .h_b1_o(h_b1), .mdr_o(mdr), .q2f_i(q2f), .ga_i(ga),
+            .bc_hr_o(bc_hr), .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase), .i_xps(i_xps), .i_obase(i_obase),
+            .i_ops(i_ops), .i_fmt(i_fmt), .x_rv(x_rv), .f_fault(f_fault), .o_ready(ready), .o_idle(idle), .o_x_re(x_re),
+            .o_x_addr(x_addr), .o_fault(fault), .o_ev(ev_go)
+`ifdef OT_PQ_ROM_PORTS
             , .rom_pa0(rom_pa0), .rom_pa1(rom_pa1), .rom_pq0(rom_pq0), .rom_pq1(rom_pq1), .rom_sa(rom_sa), .rom_sq(rom_sq)
-    `endif
+`endif
         );
-        end else begin : g_cgen
+        assign ev_end = 1'b0; assign ev_tag = 2'd0; assign phase_cycles = 32'd0;
+    end else begin : g_cgen
         ot_v41_pqc_ctl #(.PHW(PHW), .SAW(SAW), .R(R), .VAW(VAW), .VRD(VRD), .KMAX(KMAX), .BST(BST), .NSEG(NSEG), .PQ(PQ),
                          .GAP(GAP), .GUARD(GUARD), .GSLACK(GSLACK), .RG(RG), .XRV(XRV), .XCAP(XCAP), .RPT(RPT), .BW(BW)) u_ctl (
             .clk(clk), .rst_n(rst_n), .aq_vin(aq_vin), .aqf(aqf), .aqi_o(aqi), .ba_v_o(ba_v), .ba_blk_o(ba_blk), .hw_o(hw),
