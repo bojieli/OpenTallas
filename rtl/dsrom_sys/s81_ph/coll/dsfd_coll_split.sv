@@ -215,11 +215,12 @@ module dsfd_coll_ce #(
         wire [9:0] rr;
         ot_rst_relay #(.REGIONS(10), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rs[0]), .rst_n(rr));
 `ifdef OT_S81PH_MUT_RSTR
-        // bench mutant: lane 5's face region re-asserts from 1,200 cycles after release on (mid-traffic; first send
-        // ~1,111) and stays in reset: proves lane 5's credit tx / rx hang off their own region copy.  (A one-cycle
-        // release delay, or a one-cycle glitch while the link is idle, leaves the link in its reset state: PASS, dropped.)
+        // bench mutant: lane 1's face region (engine port 2's lane, traffic-bearing in the TP4 bench) re-asserts from
+        // 1,200 cycles after release on (mid-traffic; first send ~1,111) and stays in reset: proves lane 1's credit tx / rx
+        // hang off their own region copy.  (Lane 5 carries no bench traffic, and a one-cycle release delay leaves the
+        // link in its reset state: both PASS, dropped.)
         reg [11:0] mc; always @(posedge clk or negedge rr[9]) if (!rr[9]) mc <= 0; else if (mc != 12'hfff) mc <= mc + 1'b1;
-        assign rst_ln = {rr[7:6], rr[5] && (mc < 12'd1200), rr[4:0]};
+        assign rst_ln = {rr[7:2], rr[1] && (mc < 12'd1200), rr[0]};
 `else
         assign rst_ln = rr[7:0];
 `endif
