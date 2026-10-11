@@ -88,7 +88,7 @@ def _expand_real(die, gmap):
     return out
 
 
-def audit(m, glue_out=None):
+def audit(m, glue_out=None, absent=None):
     """glue masters (tools/dsrom_s81_fulldie.py GLUE_PREFIX: stations, relays, lane ends, FIFOs, nodes) are read from
     THIS die's generated glue RTL (glue_rtl(m): structural over ot_fwd_link_stage / ot_meso_fifo / ot_ratio_cdc_fifo /
     ot_v41_retn_w17w10), written to glue_out when given, the way die_top_lint binds them; macro views by their bb."""
@@ -125,8 +125,16 @@ def audit(m, glue_out=None):
         if ms in real_map:
             die = _expand_real(die, real_map[ms])
         f = dict(unbound=[], placeholder=[], width=[])
+        dec = (absent or {}).get(ms, {})
         for p, (d, w) in rp.items():
             if CTRL.match(p):
+                continue
+            if p not in die and p in dec:
+                ok_ = (dec[p] == 'open') == (d == 'output') and \
+                      (d == 'output' or (w is None or re.match(rf'^{w}\'', str(dec[p])) is not None))
+                out.setdefault('declared_absent', []).append(dict(master=ms, port=p, dir=d, bits=w, value=dec[p], ok=ok_))
+                if not ok_:
+                    f['unbound'].append(f'{d} {p}[{w}] (declared absent as {dec[p]}: direction / width mismatch)')
                 continue
             if p not in die:
                 f['unbound'].append(f'{d} {p}[{w}]')
