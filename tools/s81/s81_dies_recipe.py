@@ -76,6 +76,18 @@ def _sub(o, k, v=None):
     return o
 
 
+LAYER1_SUHC = 'results/physical/s81_gen_20261011/s81_layer1_full_efs_suhc.opts'
+Q_LEF_EFS = 'physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz'
+
+
+def _suhc_opts():
+    """ds-1010 2026-10-11 SU/HC direct-bus floorplan of record (main 6b5bb0506 slab contracts v2, efs q abstract): the
+    layer1 options without --die"""
+    o = (ROOT / LAYER1_SUHC).read_text().split()
+    i = o.index('--die')
+    return o[:i] + o[i + 2:]
+
+
 def _head_base():
     o = _layer1_opts()
     for k in ('--bf-per-region', '--pairs', '--q-elem-h'):
@@ -145,9 +157,12 @@ def recipes():
                              note='mtp-colllane-1011 P2 variant + mtp-wfc binding'),
         'layer1srccrp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp', '--ctrl-role', 'source'],
                              role='S0 die: WFC slab = dsfd_wfc_cr2 (crp credit-boundary tile + SOURCE kit)', note='main 10-11'),
-        'layer1crpseq': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp', '--stage-seq'],
+        'layer1crpseq': dict(opts=_suhc_opts() + ['--die', 'layer1', '--wfc-crp'],
                              role='stage die, option A: WFC cr2 slab + dsfd_stage_seq (kit start / done, no capture placeholders)',
-                             note='main 10-11 decision A'),
+                             note='main 10-11 decision A; mtp-wfc 2026-10-11: on the SU/HC direct-bus floorplan of record '
+                                  '(s81_layer1_full_efs_suhc.opts: --suhc-1011 --vm-slab --su-e, already --wfc-kit --stage-seq; '
+                                  'the r3 base overflowed the W hub column: sp_su_s 3,211.9..10,622.9 um). Run with '
+                                  'OT_S81_Q_LEF=' + Q_LEF_EFS),
         'layer1crp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp'],
                           role='stage die: WFC slab = dsfd_wfc_cr2 (crp + STG kit)', note='main 10-11'),
         'scankit': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer', '--wfc-kit'],
