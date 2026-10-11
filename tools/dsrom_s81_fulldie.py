@@ -3908,8 +3908,8 @@ HROW_UM = (3000.96, 751.68)      #   contract physical/s81_ph_views/specs/dsfd_m
 # the collective composition owner's tree)
 SEEDL_BUSES_HROW = tuple(b for b in SEEDL_BUSES if 'vm' not in (b[0], b[1]) or b[2] in (1025 if b[3] == 't_x' else -1, 2, 57)) + (
     ('seedl', 'hrow', 25, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1025, 't_vrs', 'f_vrs'))
-HROW_BUSES = tuple(x for k in range(3) for x in (('collective', 'hrow', 515, 't_mhp%d' % k, 'f_hp%d' % k),
-                                                ('hrow', 'collective', 1, 't_hpg', 'f_mhp%d' % k)))
+HROW_BUSES = tuple(('collective', 'hrow', 515, 't_mhp%d' % k, 'f_hp%d' % k) for k in range(3)) + (
+    ('hrow', 'collective', 3, 't_hpg', 'f_mhpg'),)      # the three part grants, one 3-bit lane back
 SEEDL_BUSES_SPINE = tuple(b for b in SEEDL_BUSES_HROW if 'hrow' not in b[:2])     # spine-internal (hub chains)
 HROW_LANES = tuple(b for b in SEEDL_BUSES_HROW if 'hrow' in b[:2]) + HROW_BUSES     # forwarded lanes to the SE slot
 HROW_HOST_BUSES = (('host', 'hrow', 11, 't_hrow_clr', 'f_clr'), ('hrow', 'host', 3, 't_flt', 'f_hrow_flt'))
