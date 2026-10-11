@@ -245,12 +245,26 @@
    ],
    "grade": "measured",
    "note": "bench stations: descriptor 9/9, VM 6/6 + 12-cycle VM latency, x / join 4/4; the 240 beats and seed_ctl itself are the composition's seed term"
+  },
+  {
+   "id": "hrow.transport",
+   "element": "main-hidden row parts (L37/38/39 stage dies -> primary row store, one dedicated MTP lane a part)",
+   "cycles": 165.0,
+   "critical": false,
+   "phase": "draft",
+   "anchor": "accept.commit",
+   "formula": "per committed row and part: 1 header + 160 data flits on its own lane + 4 store cycles (write, complete)",
+   "source": [
+    "results/rtl/mtp_hrow_20261010/gate.json pos_steady / pos_late"
+   ],
+   "grade": "measured",
+   "overlap_proof": "a position's three parts leave the layer-37/38/39 stage dies when that position passes them in verify; they reach the primary after ONE board hop + 161 flits, while the same position's result still crosses every later stage to the head and the head -> primary seed lane before the seed descriptor can read the row; a late row only delays the read (pos_late), never changes the value"
   }
  ],
  "totals": {
   "critical_cycles": 49619.7,
   "critical_cycles_lower": 48849.8,
-  "overlapped_cycles": 0,
+  "overlapped_cycles": 165.0,
   "composed_step_cycles": 1146896.4,
   "charged_step_cycles": 1196516.1,
   "tau": 4.159,
