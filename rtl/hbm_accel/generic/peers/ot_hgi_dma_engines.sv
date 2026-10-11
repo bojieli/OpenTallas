@@ -143,7 +143,7 @@ module ot_hgi_dma_engines #(
                 end
             end
             if (iss_go) begin
-                r_vmq <= {1'b1, 1'b0, rd_w[31:3], 5'd0, 256'd0, 32'd0, 16'h4944};
+                r_vmq <= {1'b1, 1'b0, rd_w[29:3], 5'd0, 256'd0, 32'd0, 16'h4944};   // byte address = sector x 32
                 ro_off[ro_t] <= rd_w[2:0]; ro_k[ro_t] <= iss_k; ro_t <= ro_t + 2'd1;
                 rd_w <= rd_w + {28'd0, iss_k}; rd_left <= rd_left - {16'd0, iss_k};
             end

@@ -129,7 +129,9 @@ module tb_hgi_dma_istream;
             ra[87:68] = 20'd1; ra[200:174] = 27'(mul); ra[206:201] = 6'd63;
             ro = 0; ro[1:0] = 2'd1; ro[4:2] = 3'd0; ro[47:8] = 40'(dbase); ro[67:48] = 20'(n); ro[87:68] = 20'(cnt + 1); ro[119:88] = 32'(dstr);
             nA = 21'(cnt); nO = 21'(n); il = 32'(ibase);
-            @(negedge clk); rec_v = 1; while (!rec_rdy) @(negedge clk); @(posedge clk); #0.1 rec_v = 0; t0 = cyc;
+            $display("ISTREAM f %0d: record at cycle %0d", f, cyc);
+            @(negedge clk); rec_v = 1; t0 = cyc; while (!rec_rdy) begin @(negedge clk); if (cyc - t0 > 20000) $fatal(1, "FATAL: record never accepted"); end
+            @(posedge clk); #0.1 rec_v = 0; t0 = cyc;
             while (!done && !fault && cyc - t0 < 100000) @(posedge clk);
             if (!done || fault) begin $display("FATAL: stream f %0d: done %0d fault %0d", f, done, fault); errs = errs + 1; end
             repeat (8) @(negedge clk);
