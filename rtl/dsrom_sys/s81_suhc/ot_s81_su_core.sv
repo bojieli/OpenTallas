@@ -312,7 +312,7 @@ module ot_s81_su_core #(
                 reg [OQB-1:0] wp, rp;
                 reg [15:0] oc;
                 reg [511:0] row;
-                n_in = 0; wp = oq_w; oc = ocur;
+                n_in = 0; wp = oq_w; oc = take ? 16'd0 : ocur;   // a new job's rows start at its out_base
                 if (qn_qv) begin
                     for (q = 0; q < QN_N / 64; q = q + 1) begin oq[wp] <= {obase + oc, qn_qc[512 * q +: 512]}; wp = wp + 1; oc = oc + 1; n_in = n_in + 1; end
                     row = 0; for (g = 0; g < QN_N / 32; g = g + 1) row[16 * g +: 16] = {6'd0, qn_qe[10 * g +: 10]};
