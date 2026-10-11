@@ -25,6 +25,10 @@ if [ -n "$SLIVER" ]; then
   POSTPDN=$PWD/$W/post_pdn_sliver.tcl; case "$W" in /*) POSTPDN=$W/post_pdn_sliver.tcl ;; esac
   { cat $D/die_tile/quad_m7_link.tcl; echo "set ot_sliver_um $SLIVER"; cat $D/die_tile/sliver_block.tcl; } > $POSTPDN
 fi
+if [ -n "${QOBS:-}" ]; then   # el1011-hbm-attn v5: opaque quads on M4-M6 (half/quad_route_obs.tcl)
+  case "$POSTPDN" in $D/*) cp $POSTPDN $W/post_pdn_q.tcl; POSTPDN=$PWD/$W/post_pdn_q.tcl; case "$W" in /*) POSTPDN=$W/post_pdn_q.tcl ;; esac ;; esac
+  { echo "set ot_qobs_um $QOBS"; cat $D/half/quad_route_obs.tcl; } >> $POSTPDN
+fi
 PADV=""; [ -n "${PADG:-}" ] && PADV="$PADV --orfs-var CELL_PAD_IN_SITES_GLOBAL_PLACEMENT=$PADG"
 [ -n "${PADD:-}" ] && PADV="$PADV --orfs-var CELL_PAD_IN_SITES_DETAIL_PLACEMENT=$PADD"
 P=""; for kv in ${PARAMS:-}; do P="$P --param $kv"; done
