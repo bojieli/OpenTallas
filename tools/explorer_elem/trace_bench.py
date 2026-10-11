@@ -926,11 +926,13 @@ def main():
     segs, win = derive_window(spec, meta['layout'], rst, end, per, cap=int(spec.get('cap', 8192)))
     log('window', segs, json.dumps({k: v for k, v in win.items() if k != 'rule'}))
     # macro parameter table: RTL macro instances under the selected DUT
+    duts = sorted({m.rsplit('.', 1)[0] for m in re.findall(r'OT_ANIM_INST (\S+) PSEL=1', rl)} | {dut})
     mrows = []; mvariant = {}
     for ln in rl.splitlines():
         if not ln.startswith('OT_ANIM_MACRO '): continue
         _, v, path, *kv = ln.split(' ')
-        if not path.startswith(dut + '.'): continue
+        # the gate swap is module-wide: every instance the probe matched (PSEL=1) runs the routed netlist
+        if not any(path.startswith(d + '.') for d in duts): continue
         mvariant[found[v]['master']] = v
         np_ = path.rsplit('.', 1)[0]   # the probe's own scope is <macro>.u_ot_anim_mprobe
         for x in kv:
