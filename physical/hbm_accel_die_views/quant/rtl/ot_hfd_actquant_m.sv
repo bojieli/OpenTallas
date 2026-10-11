@@ -3,7 +3,8 @@
 `timescale 1ns/1ps
 module ot_hfd_actquant_m #(
     parameter integer MR = 0,       // views agent: 1 with MLAT 6 = L5 multiplier + rounding cut (_l6r)
-    parameter integer MLAT = 5      // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
+    parameter integer MLAT = 5,     // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
+    parameter integer HOLDLINE = 0  // hgi-1010/idleB opt-in: n retained BUFx2 in front of every stage of the x delay line
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -103,7 +104,11 @@ module ot_hfd_actquant_m #(
         assign s0_nz[zi] = |s0_x[32*zi +: 31];
         assign s0_fz[zi] = |s0_x[32*zi + 23 +: 8];
     end endgenerate
-    ot_hdc_delay #(.W(1024 + 64), .D(7 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d({s0_fz, s0_nz, s0_x}), .q({xfz, xnz, xe}));
+    generate if (HOLDLINE != 0) begin : g_xh
+        ot_s81_head_min_delay #(.W(1024 + 64), .D(7 + MLAT), .ENABLE(1), .DEPTH(HOLDLINE)) u_x (.clk(clk), .rst_n(rst_n), .d({s0_fz, s0_nz, s0_x}), .q({xfz, xnz, xe}));
+    end else begin : g_x
+        ot_hdc_delay #(.W(1024 + 64), .D(7 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d({s0_fz, s0_nz, s0_x}), .q({xfz, xnz, xe}));
+    end endgenerate
 
     // ---- E: e = ceil_log2(prod)
     reg              e_v, e_fp4, e_nf;

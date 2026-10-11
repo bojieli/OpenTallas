@@ -29,7 +29,10 @@
 // Stages: S0 input register; S1 |x| and 16 -> 4 per block; S2 4 -> 1; S2b the
 // floor; S3 scale; S4 thresholds; S5 codes; S6 outputs (registers).
 // ---------------------------------------------------------------------------
-module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
+// SPLIT5=1 (hgi-1010/idleB, opt-in): S5 registers the seven threshold predicates per element (S5a) and counts them one
+// edge later (S5b): route f589c9afa TT -58 on s4_t -> 31-bit compares -> count -> s5_c (28 levels).  LATENCY + 1.
+// HOLDLINE=n (opt-in): n retained BUFx2 in front of every stage of the x delay line (a hold floor by construction).
+module ot_hgi_fp4qdq #(parameter integer PACKED=0, SPLIT5=0, HOLDLINE=0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
@@ -200,7 +203,11 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
         end
     end
     wire [1023:0] x4;
-    ot_hdc_delay #(.W(1024), .D(5)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x4));
+    generate if (HOLDLINE != 0) begin : g_xh
+        ot_s81_head_min_delay #(.W(1024), .D(5), .ENABLE(1), .DEPTH(HOLDLINE)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x4));
+    end else begin : g_x
+        ot_hdc_delay #(.W(1024), .D(5)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x4));
+    end endgenerate
 
     // -- S5: E2M1 codes ------------------------------------------------------------------------
     reg              s5_v, s5_nf;
@@ -221,6 +228,34 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
             cnt7 = ({1'b0, a} + {1'b0, b2}) + ({1'b0, c} + {2'b0, p[6]});
         end
     endfunction
+    // S5a (SPLIT5 only): predicates registered; S5b counts them.  Without SPLIT5 the stage is the original single S5.
+    reg              s5a_v, s5a_nf;
+    reg [6:0]        s5a_p [0:31];
+    reg [31:0]       s5a_sgn;
+    reg [4:0]        s5a_n [0:1];
+    reg signed [9:0] s5a_qs [0:1];
+    generate if (SPLIT5) begin : g_s5split
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin s5a_v <= 1'b0; s5_v <= 1'b0; end
+            else begin s5a_v <= s4_v; s5_v <= s5a_v; end
+        end
+        always @(posedge clk) begin
+            s5a_nf <= s4_nf; s5_nf <= s5a_nf;
+            for (b = 0; b < 2; b = b + 1) begin
+                s5a_n[b] <= s4_n[b]; s5a_qs[b] <= s4_qs[b]; s5_n[b] <= s5a_n[b]; s5_qs[b] <= s5a_qs[b];
+            end
+            for (i = 0; i < 32; i = i + 1) begin
+                xm = x4[32*i +: 31];
+                b = i / 16;
+                for (j = 0; j < 7; j = j + 1)
+                    qp = {(!s4_big[7*b + j] && (xm > s4_t[7*b + j] || (xm == s4_t[7*b + j] && (j % 2) == 1))), qp[6:1]};
+                s5a_p[i] <= qp;
+                s5a_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
+                s5_c[i] <= cnt7(s5a_p[i]);
+                s5_sgn[i] <= s5a_sgn[i];
+            end
+        end
+    end else begin : g_s5one
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s5_v <= 1'b0;
         else s5_v <= s4_v;
@@ -242,6 +277,7 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
             s5_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
         end
     end
+    end endgenerate
 
     // Preserve original quantizer provenance, aligned with S6 y/vo. No re-quantization.
     function automatic [7:0] packed_scale(input [4:0] n, input signed [9:0] qs);

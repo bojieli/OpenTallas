@@ -30,7 +30,8 @@
 // 6 = the write precompute trusts the entry count instead of the landed FIFO head (queued != 0, head not yet read out
 // of the macro); both must FAIL the exact gates.  (A stage-validity mutant is not observable: the seat cannot restage
 // on the edge after a stage, so p_ok is always fresh -- kept as a structural guard.)
-module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
+// HOLDLINE=n (hgi-1010/idleB, opt-in): retained hold-floor buffers on the decoder's wide delay lines.
+module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0, HOLDLINE=0)(
  input wire clk,rst_n,input wire [1408:0] cmd,
  output wire ready,output reg done,output reg fault,output wire drained,
  output wire req_v,input wire req_r,output wire [336:0] req,
@@ -52,6 +53,12 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg [63:0] ar_mc,ac_mc,or_mc,oc_mc;
  reg [19:0] ar_count,ac_count,or_count,oc_count;
  wire [127:0] ch=header;
+ // hgi-1010/idleB (route f589c9afa TT -12..-45: 64-bit span products / sums, 23-26 levels): the shape check only asks
+ // whether each end is < 2^18 (then the alias compares), so every span quantity saturates at 2^19 in 20 bits.  Exact:
+ // sat(x + y) = sat(sat x + sat y) and sat(2x) = sat(2 sat x) for x, y >= 0; any saturated term makes its end >= 2^19,
+ // which fails shape_ok whatever the alias / nalias terms say.
+ localparam [19:0] SCAP=20'd524288;
+ function automatic [19:0] s20(input [63:0] v); s20=(|v[63:19])?SCAP:v[19:0]; endfunction
  reg busy,bad;
  reg seat_v;reg [336:0] seat;
  reg response_v;reg [272:0] response;
@@ -63,11 +70,13 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  reg [15:0] ri,wi;
  reg [5:0] read_part,write_part;
  reg [15:0] next_tag;
+ reg [31:0] wpart_oh;                        // hgi-1010/idleB: one-hot copy of write_part
+ reg [7:0] waddr_oh;                         // hgi-1010/idleB: one-hot copy of write_addr[2:0]
  reg [1023:0] x;
  reg launch, launch_q;
  reg [CW-1:0] reserved,queued;
  wire vo,qfault,decode_fault;wire [511:0] y;
- ot_hgi_quant_decode quant(.clk(clk),.rst_n(rn),.v(launch),
+ ot_hgi_quant_decode #(.BQSPLIT(1),.HOLDLINE(HOLDLINE)) quant(.clk(clk),.rst_n(rn),.v(launch),
  .generic_enable(1'b1),.legacy_fp4(1'b0),.header(header),.x(x),
  .vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault));
  wire [15:0] air=a[5]?16'd0:(a[135:120]==0?16'd1:a[135:120]);
@@ -119,14 +128,21 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire w_rowend=w_burst ? (write_left==20'd8) : (write_left==20'd1);
  wire w_last=write_part+w_step==32 || w_rowend;
  wire w_final=w_last&&write_row+1==m&&w_rowend;
- reg [255:0] wd;
+ // hgi-1010/idleB (route f589c9afa TT -58: u_res.oh / write_part -> p_wd 18-20 levels = write_part + j adds, a 32:1
+ // index mux per lane, then the write_addr lane shift): the window is an AND-OR over one-hot registers kept equal to
+ // write_part / write_addr[2:0] (lane j selects value write_part + j = one-hot shifted by j: wiring only).  Exact:
+ // a burst has write_part <= 24, so write_part + j <= 31; write_part never exceeds 31.
+ reg [255:0] wd; reg [15:0] wv [0:7];
  always @* begin
-  wd=0;
-  if(w_burst)for(integer j=0;j<8;j=j+1)
-    wd[j*32+:32]={fhead[(write_part+j)*16+:16],16'd0};
-  else wd[write_addr[2:0]*32+:32]={fhead[write_part*16+:16],16'd0};
+  for(integer j=0;j<8;j=j+1)begin
+   wv[j]=16'd0;
+   for(integer k=j;k<32;k=k+1) wv[j]=wv[j]|({16{wpart_oh[k-j]}}&fhead[k*16+:16]);
+  end
+  for(integer j=0;j<8;j=j+1)
+   wd[j*32+:32]=w_burst?{wv[j],16'd0}:({32{waddr_oh[j]}}&{wv[0],16'd0});
  end
- wire [31:0] wmask=w_burst?32'hffffffff:(32'hf<<(write_addr[2:0]*4));
+ reg [31:0] wmask;
+ always @* for(integer j=0;j<8;j=j+1) wmask[j*4+:4]=(w_burst||waddr_oh[j])?4'hf:4'h0;
  reg p_ok,pw_ok,p_rdone;
  reg [31:0] p_r_addr,p_w_addr; reg [3:0] p_r_step,p_w_step; reg p_r_last,p_w_last,p_w_final;
  reg [5:0] p_r_part,p_w_part,p_r_part_n,p_w_part_n;
@@ -192,7 +208,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    read_row<=0;read_col<=0;write_row<=0;write_col<=0;read_left<=0;write_left<=0;
    read_addr<=0;write_addr<=0;read_rowbase<=0;write_rowbase<=0;rs<=0;ws<=0;ri<=0;wi<=0;
    launched<=0;returned<=0;finished<=0;
-   read_part<=0;write_part<=0;next_tag<=0;seat_d<=0;
+   read_part<=0;write_part<=0;next_tag<=0;seat_d<=0;wpart_oh<=32'd1;waddr_oh<=8'd1;
    launch<=0;launch_q<=0;reserved<=0;queued<=0;done<=0;fault<=0;pd_h<=0;pd_t<=0;pd_n<=0;
    p_ok<=0;pw_ok<=0;p_rdone<=0;
   end else begin
@@ -208,35 +224,37 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     read_row<=0;read_col<=0;write_row<=0;write_col<=0;read_left<=ca[67:48];write_left<=ca[67:48];rs<=ca[119:88];ws<=co[119:88];
     ri<=ca[5]?16'd0:(ca[135:120]==0?16'd1:ca[135:120]);
     wi<=co[135:120]==0?16'd1:co[135:120];
-    launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;
+    launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;wpart_oh<=32'd1;waddr_oh<=8'd1<<co[10:8];
     reserved<=0;
    end
    if(busy&&validating)begin
     if(!shape_active)begin                  // operand station; invalid zero shapes still reject in fields_ok
      shape_active<=1;shape_bit<=0;
      ar_acc<=0;ac_acc<=0;or_acc<=0;oc_acc<=0;
-     ar_mc<={32'd0,a[119:88]};ac_mc<={48'd0,air};
-     or_mc<={32'd0,o[119:88]};oc_mc<={48'd0,oir};
+     ar_mc<={44'd0,s20({32'd0,a[119:88]})};ac_mc<={44'd0,s20({48'd0,air})};
+     or_mc<={44'd0,s20({32'd0,o[119:88]})};oc_mc<={44'd0,s20({48'd0,oir})};
      ar_count<=a[87:68]-20'd1;ac_count<=a[67:48]-20'd1;
      or_count<=o[87:68]-20'd1;oc_count<=o[67:48]-20'd1;
     end else begin                          // four parallel, one-add-per-edge unsigned products
-     ar_acc<=ar_acc+(ar_count[0]?ar_mc:64'd0);
-     ac_acc<=ac_acc+(ac_count[0]?ac_mc:64'd0);
-     or_acc<=or_acc+(or_count[0]?or_mc:64'd0);
-     oc_acc<=oc_acc+(oc_count[0]?oc_mc:64'd0);
-     ar_mc<=ar_mc<<1;ac_mc<=ac_mc<<1;or_mc<=or_mc<<1;oc_mc<=oc_mc<<1;
+     ar_acc<={44'd0,s20({43'd0,ar_acc[19:0]}+{43'd0,(ar_count[0]?ar_mc[19:0]:20'd0)})};
+     ac_acc<={44'd0,s20({43'd0,ac_acc[19:0]}+{43'd0,(ac_count[0]?ac_mc[19:0]:20'd0)})};
+     or_acc<={44'd0,s20({43'd0,or_acc[19:0]}+{43'd0,(or_count[0]?or_mc[19:0]:20'd0)})};
+     oc_acc<={44'd0,s20({43'd0,oc_acc[19:0]}+{43'd0,(oc_count[0]?oc_mc[19:0]:20'd0)})};
+     ar_mc<={44'd0,s20({43'd0,ar_mc[19:0],1'b0})};ac_mc<={44'd0,s20({43'd0,ac_mc[19:0],1'b0})};
+     or_mc<={44'd0,s20({43'd0,or_mc[19:0],1'b0})};oc_mc<={44'd0,s20({43'd0,oc_mc[19:0],1'b0})};
      ar_count<=ar_count>>1;ac_count<=ac_count>>1;or_count<=or_count>>1;oc_count<=oc_count>>1;
      shape_bit<=shape_bit+1'b1;
      if(shape_bit==19)begin shape_active<=0;validating<=0;val_sum<=1;end
     end
    end
    if(busy&&val_sum)begin
-    val_sum<=0;val2<=1;aspan_q<=ar_acc+ac_acc;ospan_q<=or_acc+oc_acc;orow_q<=oc_acc;
+    val_sum<=0;val2<=1;aspan_q<={44'd0,s20({43'd0,ar_acc[19:0]}+{43'd0,ac_acc[19:0]})};ospan_q<={44'd0,s20({43'd0,or_acc[19:0]}+{43'd0,oc_acc[19:0]})};orow_q<=oc_acc;
    end
    if(busy&&val2)begin
     val2<=0;val3<=1;
     fields_q<=fields_ok;same_q<=same_geometry;nalias_q<=(o[87:68]==1 || o[119:88]>orow_q);
-    aend_q<={24'd0,a[47:8]}+aspan_q;oend_q<={24'd0,o[47:8]}+ospan_q;
+    aend_q<={44'd0,(|a[47:27])?SCAP:s20({44'd0,a[26:8]}+{44'd0,aspan_q[19:0]})};
+    oend_q<={44'd0,(|o[47:27])?SCAP:s20({44'd0,o[26:8]}+{44'd0,ospan_q[19:0]})};
    end
    if(busy&&val3)begin val3<=0;val4<=1;shape_q<=shape_ok;end
    if(busy&&val4)begin
@@ -253,7 +271,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
      if(stw)begin
       seat<={1'b1,{p_w_addr[29:3],5'd0},p_wd,p_wmask,next_tag};
       seat_d<={1'b1,p_w_step,p_w_addr[2:0],p_w_part,1'b0,p_w_last,p_w_final,next_tag};
-      write_part<=p_w_part_n;write_row<=p_w_row_n;write_col<=p_w_col_n;write_left<=p_w_left_n;write_rowbase<=p_w_rowbase_n;write_addr<=p_w_addr_n;
+      write_part<=p_w_part_n;wpart_oh<=32'd1<<p_w_part_n[4:0];waddr_oh<=8'd1<<p_w_addr_n[2:0];write_row<=p_w_row_n;write_col<=p_w_col_n;write_left<=p_w_left_n;write_rowbase<=p_w_rowbase_n;write_addr<=p_w_addr_n;
      end else begin
       seat<={1'b0,{p_r_addr[29:3],5'd0},256'd0,32'hffffffff,next_tag};
       seat_d<={1'b0,p_r_step,p_r_addr[2:0],p_r_part,p_r_last,1'b0,1'b0,next_tag};

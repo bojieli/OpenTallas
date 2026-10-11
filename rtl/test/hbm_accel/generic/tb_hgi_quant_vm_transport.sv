@@ -5,7 +5,11 @@
 module tb_hgi_quant_vm_transport;
 `ifdef PIPE
  `define OT_QTR ot_hgi_quant_vm_transport_p
+`ifdef HOLDLINE
+ `define OT_QTR_P #(.ENABLE(1),.MUTANT(`MUTANT),.HOLDLINE(`HOLDLINE))
+`else
  `define OT_QTR_P #(.ENABLE(1),.MUTANT(`MUTANT))
+`endif
 `else
  `define OT_QTR ot_hgi_quant_vm_transport
  `define OT_QTR_P #(.ENABLE(1),.MUTANT(`MUTANT),.SERIAL_SHAPE(`SERIAL_SHAPE))
