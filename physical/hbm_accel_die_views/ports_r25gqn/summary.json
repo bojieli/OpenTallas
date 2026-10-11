@@ -461,11 +461,6 @@
     "S",
     "output"
    ],
-   "llk_S3": [
-    1122,
-    "S",
-    "inout"
-   ],
    "f_su_SW": [
     1024,
     "W",
@@ -532,6 +527,11 @@
     "inout"
    ],
    "llk_S2": [
+    1122,
+    "E",
+    "inout"
+   ],
+   "llk_S3": [
     1122,
     "E",
     "inout"
@@ -855,6 +855,16 @@
     "E",
     "output"
    ],
+   "f_su_ew": [
+    1024,
+    "E",
+    "input"
+   ],
+   "t_su_ew": [
+    1024,
+    "E",
+    "output"
+   ],
    "f_coll": [
     620,
     "E",
@@ -866,16 +876,6 @@
     "input"
    ],
    "t_coll": [
-    1024,
-    "E",
-    "output"
-   ],
-   "f_su_ew": [
-    1024,
-    "E",
-    "input"
-   ],
-   "t_su_ew": [
     1024,
     "E",
     "output"

@@ -45,6 +45,20 @@ SPECS = [
                 ['t_qg', 1, 'output', 'N', 'M5', 1, 0.90],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.05], ['rst', 1, 'input', 'S', 'M5', 1, 0.08],
                 ['f_cfg', 2 * NW, 'input', 'S', 'M5', 4, 0.3], ['t_acc', 2 * NW + UW + 5, 'output', 'S', 'M5', 4, 0.72]]),
+    # mtp-wfc 2026-10-10: VM-side end of the WFC kit's VM channels (posted writes, START doorbell): N = kit side through
+    # the hub stations, S = one VM request port + its fixed-latency read return, E = START toward the capture
+    dict(master='dsfd_vm_wfc_ep', w_um=259.2, h_um=259.2, domain='serial_0p9',
+         note='dsfd_vm_wfc_ep: N kit channels (grant links), S VM port, E START',
+         ports=[['f_swv', 1, 'input', 'N', 'M5', 1, 0.03], ['f_swd', VWA + FLIT, 'input', 'N', 'M5', 4, 0.30],
+                ['t_swg', 1, 'output', 'N', 'M5', 1, 0.57], ['f_srv', 1, 'input', 'N', 'M5', 1, 0.60],
+                ['f_srd', VWA, 'input', 'N', 'M5', 4, 0.63], ['t_srg', 1, 'output', 'N', 'M5', 1, 0.66],
+                ['t_srq', FLIT + 1, 'output', 'N', 'M5', 4, 0.83], ['t_err', 1, 'output', 'N', 'M5', 1, 0.97],
+                ['m_v', 1, 'output', 'S', 'M5', 1, 0.10], ['m_we', 1, 'output', 'S', 'M5', 1, 0.11],
+                ['m_row', VWA, 'output', 'S', 'M5', 4, 0.14], ['m_d', FLIT, 'output', 'S', 'M5', 4, 0.36],
+                ['m_ov', 1, 'input', 'S', 'M5', 1, 0.58], ['m_od', FLIT, 'input', 'S', 'M5', 4, 0.78],
+                ['m_fault', 1, 'input', 'S', 'M5', 1, 0.96], ['ck', 1, 'input', 'S', 'M5', 1, 0.02],
+                ['rst', 1, 'input', 'S', 'M5', 1, 0.04],
+                ['t_ks', USER_W_ := UW + 2 * NW + 1, 'output', 'E', 'M4', 4, 0.5]]),
     dict(master='dsfd_wfc_tok', w_um=108.0, h_um=108.0, domain='stream_1p2',
          note='S0 cfg / prompt / draft store: W = DRAFT flits from dsfd_wfc_lnk, E = the WFC (prompt port in, '
               'response + cfg out; abutting, fixed one-edge read), S = config port / clock',

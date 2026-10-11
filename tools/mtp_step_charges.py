@@ -42,6 +42,7 @@ BINDING = "results/uarch/dsrom_s81_mtp_binding_20261010/verdict.json"
 BINDING_DIES = "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json"
 ROWPACK = "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz"
 P2_MICRO = "results/uarch/dsrom_mtp_p2_20261009/microbench.json"
+SEEDL_GATE = "results/rtl/mtp_seed_launch_20261010/gate.json"
 
 
 def J(p):
@@ -208,6 +209,17 @@ def ds_rom():
         source=[MARKOV_Q + " first_result_cycles_no_bubbles", "results/arch/token_path_20261009/ds_rom_mtp.json draft.markov*"],
         note="lower bound: the measured single-row pipeline latency is a floor the transfer-ratio model is under; the "
              "whole-vocab sweep throughput needs the head full340_A production wrapper (not built)"))
+    # ---- fixed-latency pipelining added on the draft-head step chain (fe-push-ds-1010, 2026-10-10): each of the 5 serial
+    #      draft-head steps crosses the head-driver input relay (HBRELAY=1: +1, kept r_hb copies) and the VM partner end
+    #      (dsfd_vm_mtp_ep u_h OUTPUT_PIPE 1: +1, idle-sweep fix 189894fc2) -> +2 a draft-head step, critical (serial chain)
+    ch.append(charge(
+        "draft_head.pipe_regs", "draft-head step registers: ot_dsrom_markov_head_driver HBRELAY=1 + dsfd_vm_mtp_ep OUTPUT_PIPE 1",
+        5 * (1 + 1), anchor="draft.last", phase="draft",
+        formula="5 draft-head steps x (+1 HBRELAY head-input relay + 1 vm_mtp_ep OUTPUT_PIPE)",
+        source=["results/rtl/mtp_head_hbrelay_20261010/gate (full340 --hard NB4: HBRELAY=1 8,637 vs HBRELAY=0 8,636 cycles)",
+                "~/claude-takeover-20261007/idle-sweep-1010.log (fixlat-vmmtp 189894fc2: u_h OUTPUT_PIPE 1, +1 per draft-head step)"],
+        variant="HBRELAY=1 routes mtp-head340-mkdrv-hbr-{a,b}-d781e7cb0-tc (charged conservatively before adoption); "
+                "vm_mtp_ep 189894fc2 route fixlat-vmmtp-189894fc2-tc-hm20"))
     # ---- S81 MTP binding (mtp-dsbind 2026-10-10): the draft dies the composition assumed, as bound
     if (ROOT / BINDING).exists():
         bv = J(BINDING)
@@ -262,6 +274,21 @@ def ds_rom():
             source=[BINDING_DIES + " topology.draft_head", DRAFT_REC + " stages['mtp.0'].critical_path hop_in"],
             note="P2's primary-on-head-dies home made this hop die-local, but it has no room for the seed (669 > 631 pairs) and "
                  "packs ~8x the words a pair a phase; the bound primary keeps L0's per-phase pair reads"))
+    # ---- DSpark primary die: seed descriptor -> seed program (dsfd_mtp_seed_launch, mtp-dsbind 2026-10-10)
+    if (ROOT / SEEDL_GATE).exists():
+        sg = J(SEEDL_GATE)
+        assert sg["verdict"]["positives_and_rejections"] and sg["verdict"]["mutants_fail"], "seed launch gate not PASS"
+        cy = sg["cycles"]
+        tau = mtp["totals"]["tau"]
+        ch.append(charge(
+            "seedl.launch", "dsfd_mtp_seed_launch (descriptor receive / check, VM hidden-row fetch, x beats, program start)",
+            cy["desc_to_x"] + cy["done_to_ps"] + (tau - 1) * cy["row_gap"], anchor="accept.commit", phase="accept",
+            formula=f"desc_to_x {cy['desc_to_x']} + done_to_ps {cy['done_to_ps']} + (tau {tau} - 1) x row_gap {cy['row_gap']} "
+                    "(the committed rows of a step are seeded one after another; each extra row waits seed_ctl ready + "
+                    "the VM fetch)",
+            source=[SEEDL_GATE + " cycles (pos_basic)"],
+            note="bench stations: descriptor 9/9, VM 6/6 + 12-cycle VM latency, x / join 4/4; the 240 beats and seed_ctl "
+                 "itself are the composition's seed term"))
     # ---- sensitivity: the RTL-sequenced step (draft from the closing result), NOT credited
     old = J(OLD_STEP)["step_model"]["blend_harmonic"]
     sens = dict(rtl_sequenced_over_model=old["rtl_over_model"], source=OLD_STEP + " step_model.blend_harmonic",

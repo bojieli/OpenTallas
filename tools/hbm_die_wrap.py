@@ -86,7 +86,9 @@ def parse_rng(s):
     return port, int(lo), int(hi)
 
 
-TIE_CLASSES = ('debug', 'test', 'by_design')
+# open: an approved functional path whose peer RTL is pending (owner + reason; reported, never a pass for the path);
+# not_adopted: an RTL port of an option the design decided not to use (decision + reason), e.g. the svc DMA stream v2
+TIE_CLASSES = ('debug', 'test', 'by_design', 'open', 'not_adopted')
 
 
 class TieError(SystemExit):

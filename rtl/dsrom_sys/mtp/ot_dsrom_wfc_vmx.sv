@@ -39,6 +39,10 @@ module ot_dsrom_wfc_vmx #(
     parameter integer RQ     = 16,       // slow-side read-response queue
     parameter integer RDEPTH = 8,       // slow -> fast ratio FIFO entries
     parameter integer RQFREE = `ifdef OT_WFCVMX_PRED 2 `elsif OT_WFCVMX_RQ_FREE 1 `else 0 `endif,   // struct-close: vm_rq without the vm_re enable
+    parameter integer POSTED = 0,       // mtp-wfc 2026-10-10 (main decision: posted writes, same-ID rule): 1 = no ACK fence;
+                                        //   START travels the write channel as an in-order doorbell (row all-ones, payload
+                                        //   {user, token, pos}) and the VM endpoint starts the core once every earlier write
+                                        //   is at the VM pins; sw_ack becomes a sticky error level checked at k_done
     parameter integer WOUTW  = 5,       // mtp-wfc 2026-10-10: unACKed-write counter width; >= log2 of the writes in flight over
                                         //   the stationed write / ACK round trip + 1 (5 = the closed abutting-VM value)
     parameter integer LAG    = 0        // ot_ratio_cdc_fifo LAG on both crossings (route variant: mem -> shadow arcs become
@@ -200,13 +204,15 @@ module ot_dsrom_wfc_vmx #(
 `ifdef OT_WFCVMX_MUT_STARTEARLY
     wire s_go = s_is_s && !busy && !k_start;
 `else
-    wire s_go = s_is_s && !busy && !k_start && wout == 0 && !sw_ack;
+    wire s_go = POSTED ? (s_is_s && !busy && !k_start && sw_ready)
+                       : (s_is_s && !busy && !k_start && wout == 0 && !sw_ack);
 `endif
-    assign sw_valid = s_is_w;
-    assign sw_addr = s_d[FLIT +: VWA];
-    assign sw_data = s_d[FLIT-1:0];
+    wire s_mark = POSTED && s_is_s && !busy && !k_start;     // the START doorbell rides the write channel
+    assign sw_valid = s_is_w || s_mark;
+    assign sw_addr = s_mark ? {VWA{1'b1}} : s_d[FLIT +: VWA];
+    assign sw_data = s_mark ? FLIT'(s_d[SP-1:0]) : s_d[FLIT-1:0];
     wire sw_fire = sw_valid && sw_ready;
-    assign s_rdy = sw_fire || s_go;
+    assign s_rdy = POSTED ? sw_fire : (sw_fire || s_go);
     // outbound prefetch after k_done
     reg pf; reg [IB-1:0] pf_i, pf_n; reg [NW-1:0] pf_tok; reg [31:0] pf_val; reg pf_dn;
     reg [RW-1:0] rq [0:RQ-1]; reg [$clog2(RQ):0] rq_n, r_out; reg [$clog2(RQ)-1:0] rq_r, rq_w;
@@ -232,16 +238,19 @@ module ot_dsrom_wfc_vmx #(
             wout <= 0; busy <= 1'b0; pf <= 1'b0; rq_n <= 0; r_out <= 0; rq_r <= 0; rq_w <= 0; wcnt_s <= 0;
             fault_s <= 1'b0; pf_dn <= 1'b0; pf_all <= 1'b1;
         end else begin
-            wout <= wout + (sw_fire ? 1'b1 : 1'b0) - (sw_ack ? 1'b1 : 1'b0);
-            if (sw_fire) wcnt_s <= wcnt_s + 1'b1;
-            if (sw_ack && wout == 0) fault_s <= 1'b1;
-            if (WOUTW != 5 && sw_fire && !sw_ack && &wout) fault_s <= 1'b1;   // would wrap (closed default unchanged)
+            if (!POSTED) begin
+                wout <= wout + (sw_fire ? 1'b1 : 1'b0) - (sw_ack ? 1'b1 : 1'b0);
+                if (sw_ack && wout == 0) fault_s <= 1'b1;
+                if (WOUTW != 5 && sw_fire && !sw_ack && &wout) fault_s <= 1'b1;   // would wrap (closed default unchanged)
+            end
+            if (sw_fire && !(POSTED && s_mark)) wcnt_s <= wcnt_s + 1'b1;
             if (s_go) begin
-                k_start <= 1'b1; busy <= 1'b1;
+                k_start <= !POSTED; busy <= 1'b1;                 // POSTED: the VM endpoint starts the core
                 {k_user, k_token, k_pos} <= s_d[SP-1:0];
             end
             if (k_done) begin
                 if (!busy || pf) fault_s <= 1'b1;
+                if (POSTED && sw_ack) fault_s <= 1'b1;            // sticky VM status checked at the transaction end
                 busy <= 1'b0; pf <= 1'b1; pf_i <= 0; pf_n <= 0; pf_tok <= k_next_token; pf_val <= k_next_val;
                 pf_dn <= 1'b0; pf_all <= 1'b0;
             end
