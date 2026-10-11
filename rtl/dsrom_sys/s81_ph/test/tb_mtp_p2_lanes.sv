@@ -13,7 +13,7 @@
 //   default PASS | OT_P2L_MUT_SEG FAIL (segmentation) | OT_P2L_MUT_CRED FAIL (row class buffer overflow) |
 //   OT_P2L_MUT_DIRECT FAIL (abort blocked behind the pending start = HOL) | OT_FIXLAT_MUT_LAT1 FAIL (link ends)
 module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX=2, START_DELAY=300, NOSTALL=0,
-                         CHB=60, CHU=12, EPER=97, AB0=1700, ABMAX=400, SGHOLD=2500, RS0=4000, RS1=7000);
+                         CHB=60, CHU=12, EPER=97, AB0=1700, ABMAX=400, SGHOLD=2500, RS0=20, RS1=3020);
  reg refclk=0; always #5 refclk=~refclk;
  reg por=0; initial #50 por=1;
  wire clk, rstd;
@@ -59,7 +59,7 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   .lo_v(pl_lov), .lo_r(pl_lor), .lo_d(pl_lod), .li_v(pl_liv), .li_r(pl_lir), .li_d(pl_lid), .flt(pl_flt));
  dsfd_coll_lane_w #(.LCR(1)) u_blt (.ck(clk), .rs(rstd), .chb(1'b0), .rx(b_rx), .tx(b_tx), .tf(),
   .lo_v(bl_lov), .lo_r(bl_lor), .lo_d(bl_lod), .li_v(bl_liv), .li_r(bl_lir), .li_d(bl_lid), .flt(bl_flt));
- reg cs_v=0, c1_v=0, c0_v=0, co_r=0, ab=0; integer starts=0;
+ reg cs_v=0, c1_v=0, c0_v=0, co_r=0, ab=0; integer starts=0, row1=-1;
  wire cs_r, c1_r, c0_r, co_v; wire [593:0] co_d; wire [2:0] p_ev;
  dsfd_coll_p2_lane #(.TXK(6), .TXW(101), .RXK(7), .RXW(594), .EVT(1), .EVR(3), .CRED(8), .TCRED(8)) u_pr (
   .ck(clk), .rs(rstd), .x_v(cs_v), .x_r(cs_r), .x_d({IDN0+starts,IDS}), .r_v(co_v), .r_r(co_r), .r_d(co_d),
@@ -89,9 +89,9 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   cs_v = starts<NTX && cycles>=START_DELAY;
   c1_v = s1<80*NTX  && (NOSTALL || rnd[2:0]!=0);
   c0_v = s0<160*NTX && (NOSTALL || rnd[5:3]!=0);
-  // the result-row consumer: random gaps, 50-cycle windows, and one long window RS0..RS1 while rows flow (the row class
-  // buffer runs full: one credit over its depth overflows it)
-  co_r = NOSTALL || (!(cycles>=RS0 && cycles<RS1) && rnd[9:7]!=0 && !(cycles%300>=250));
+  // the result-row consumer: random gaps, 50-cycle windows, and one long window RS0..RS1 cycles after the first row (rows
+  // are still flowing: the row class buffer runs full, one credit over its capacity overflows it)
+  co_r = NOSTALL || (!(row1>=0 && cycles>=row1+RS0 && cycles<row1+RS1) && rnd[9:7]!=0 && !(cycles%300>=250));
   ab = cycles>=AB0 && cycles<AB0+40;
  end
  // transport monitors at die A's coll_p2_ep core side: every lane-1 word / start equals what the far end sent, in order
@@ -123,6 +123,7 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   pdone_q<=p_ev[0]; if(p_ev[0]&&!pdone_q) done_seen<=done_seen+1;   // done (level-carried pulse) at the primary
   abp_q<=ab_p; if(ab_p&&!abp_q&&ab_arrive<0) ab_arrive=cycles;
   if(cycles==AB0) ab_rise=cycles;
+  if(co_v && row1<0) row1<=cycles;
   if(co_v&&co_r) begin
    if(received>=80*NTX) $fatal(1,"P2L extra/duplicate output row %0d",received);
    if(co_d[81:8]!==IDN0+received/80 || co_d[7:1]!==7'(received%80) || co_d[0]!==(received%80==79))
