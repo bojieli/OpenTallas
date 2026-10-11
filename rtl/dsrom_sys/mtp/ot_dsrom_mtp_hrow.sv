@@ -251,3 +251,92 @@ module dsfd_mtp_hrow #(
     always @(posedge ck[0]) o_rs[1024:1] <= rd;
     assign t_vrs = o_rs; assign t_flt = o_flt;
 endmodule
+
+// dsfd_mtp_hrow_src: the stage-die master on the dies of layers 37 / 38 / 39 (PART 0 / 1 / 2), rank k: for every stage
+// start the WFC kit reports (t_hep: one-cycle {v, user, pos, issue epoch}, dsfd_wfc_hep), read the position's HC-mean
+// row (5,120 BF16 = 80 beats; written into the VM by the SU program at the layer input, VM ring of HR rows a user,
+// address HBASE + {user mod 8, pos mod HR, beat}; the VM read waits for the row's completion -- s81-vm-1011 row-completion counter) and send
+// {user, pos, issue epoch, PART} + the 80 beats on the dedicated hidden lane to P.k (ot_dsrom_mtp_hrow_tx).
+// Events queue in an HQ-deep FIFO (sticky fault[0] on overflow); at most OUT beats are outstanding at the VM, landing in
+// an OUT-deep beat FIFO, so the lane's 2-flits-a-beat pace never loses a response (fault[1] = FIFO overflow).
+// Mutants: OT_HSRC_MUT_NOQ (no event queue: an event arriving while a row is in flight is lost),
+//          OT_HSRC_MUT_STALEEP (the header carries the previous event's epoch).
+module dsfd_mtp_hrow_src #(
+    parameter integer NW = 21, parameter integer USER_W = 10, parameter integer PART = 0, parameter integer HR = 8,
+    parameter integer VM_AW = 24, parameter integer HBASE = 0, parameter integer HQ = 8, parameter integer OUT = 8,
+    parameter integer FWD_V = 6, parameter integer RET_V = 6
+) (
+    input  wire [0:0]          ck, rst,
+    input  wire [USER_W+NW+4:0] f_hep,         // WFC kit t_hep {v, user, pos, epoch}
+    output wire [VM_AW:0]      t_vrq,          // VM read request {addr, valid} (grant protocol)
+    input  wire [0:0]          f_vrq,          // VM grant
+    input  wire [1024:0]       f_vrs,          // VM response {data, valid}, in order
+    output wire [514:0]        t_hp,           // hidden lane {flit 514, valid} (grant protocol)
+    input  wire [0:0]          f_hpg,          // lane grant
+    output wire [1:0]          t_flt
+);
+    localparam integer HW = USER_W + NW + 6;
+    localparam integer RB = $clog2(HR);
+    wire rn;
+    ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
+    reg [USER_W+NW+4:0] i_hep; reg [1024:0] i_vrs;
+    always @(posedge ck[0] or negedge rn) if (!rn) begin i_hep[USER_W+NW+4] <= 1'b0; i_vrs[0] <= 1'b0; end
+                                         else begin i_hep[USER_W+NW+4] <= f_hep[USER_W+NW+4]; i_vrs[0] <= f_vrs[0]; end
+    always @(posedge ck[0]) begin i_hep[USER_W+NW+3:0] <= f_hep[USER_W+NW+3:0]; i_vrs[1024:1] <= f_vrs[1024:1]; end
+    // event FIFO
+    reg [USER_W+NW+3:0] q [0:HQ-1]; reg [$clog2(HQ):0] qn; reg [$clog2(HQ)-1:0] qw, qr;
+    reg [1:0] fault;
+    // row engine
+    reg act; reg [USER_W+NW+3:0] cur; reg [3:0] prev_ep; reg hdr_sent; reg [6:0] nrq; reg [6:0] nsent;
+    reg [$clog2(OUT+1)-1:0] outst;
+    wire rqv, rqr; wire [VM_AW-1:0] rqa;
+    // beat FIFO
+    reg [1023:0] bq [0:OUT-1]; reg [$clog2(OUT):0] bn; reg [$clog2(OUT)-1:0] bw, br_;
+    wire hv, hr, bv, brd;
+    wire pop_ev = !act && qn != 0;
+    wire beat_pop = bv && brd;
+`ifdef OT_HSRC_MUT_NOQ
+    wire push_ev = i_hep[USER_W+NW+4] && !act && qn == 0;
+`else
+    wire push_ev = i_hep[USER_W+NW+4];
+`endif
+    assign rqv = act && nrq != 7'd80 && (outst + bn) < OUT;
+    assign rqa = VM_AW'(HBASE) + {{(VM_AW-3-RB-7){1'b0}}, cur[4+NW +: 3], cur[4 + RB - 1:4], nrq};   // {user mod 8, pos mod HR, beat}
+    always @(posedge ck[0] or negedge rn)
+        if (!rn) begin
+            qn <= 0; qw <= 0; qr <= 0; fault <= 2'b0; act <= 1'b0; hdr_sent <= 1'b0; nrq <= 0; nsent <= 0; outst <= 0;
+            bn <= 0; bw <= 0; br_ <= 0; prev_ep <= 4'd0;
+        end else begin
+            if (push_ev) begin
+                if (qn == HQ) fault[0] <= 1'b1; else begin q[qw] <= i_hep[USER_W+NW+3:0]; qw <= qw + 1'b1; end
+            end
+            if (pop_ev) begin
+                cur <= q[qr]; qr <= qr + 1'b1; act <= 1'b1; hdr_sent <= 1'b0; nrq <= 0; nsent <= 0;
+            end
+            qn <= qn + (push_ev && qn != HQ) - pop_ev;
+            if (rqv && rqr) nrq <= nrq + 1'b1;
+            outst <= outst + (rqv && rqr) - i_vrs[0];
+            if (i_vrs[0]) begin
+                if (bn == OUT) fault[1] <= 1'b1; else begin bq[bw] <= i_vrs[1024:1]; bw <= bw + 1'b1; end
+            end
+            bn <= bn + (i_vrs[0] && bn != OUT) - beat_pop;
+            if (beat_pop) begin br_ <= br_ + 1'b1; nsent <= nsent + 1'b1; end
+            if (hv && hr) hdr_sent <= 1'b1;
+            if (act && beat_pop && nsent == 7'd79) begin act <= 1'b0; prev_ep <= cur[3:0]; end
+        end
+    assign hv = act && !hdr_sent;
+`ifdef OT_HSRC_MUT_STALEEP
+    wire [3:0] hep_e = prev_ep;
+`else
+    wire [3:0] hep_e = cur[3:0];
+`endif
+    wire [HW-1:0] hd = {cur[USER_W+NW+3:4+NW], cur[NW+3:4], hep_e, 2'(PART)};
+    assign bv = act && hdr_sent && bn != 0;
+    ot_dsrom_mtp_ltx #(.W(VM_AW)) u_rq (.clk(ck[0]), .rst_n(rn), .c_valid(rqv), .c_ready(rqr), .c_data(rqa),
+        .l_valid(t_vrq[0]), .l_ready(f_vrq[0]), .l_data(t_vrq[VM_AW:1]));
+    ot_dsrom_mtp_hrow_tx #(.NW(NW), .USER_W(USER_W)) u_tx (.clk(ck[0]), .rst_n(rn), .h_v(hv), .h_r(hr), .h_d(hd),
+        .b_v(bv), .b_r(brd), .b_d(bq[br_]), .l_valid(t_hp[0]), .l_ready(f_hpg[0]), .l_data(t_hp[514:1]));
+    reg [1:0] o_flt;
+    always @(posedge ck[0] or negedge rn) if (!rn) o_flt <= 2'b0; else o_flt <= fault;
+    assign t_flt = o_flt;
+endmodule

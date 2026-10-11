@@ -3082,6 +3082,12 @@ def build_r8(variant=None):
             centre.insert(centre.index('vm') + 1, 'vm_ep')
             centre.insert(centre.index('capture') + 1, 'cap_ep')
             centre_area['vm_ep'] = centre_area['cap_ep'] = MTP_EP_MM2
+    if HROW_SRC is not None:
+        # mtp-dsbind 2026-10-11 (--hrow-src P): the hidden-row source on the stage die of layer 37 + P (rank k), beside the
+        # WFC kit (its t_hep issue-epoch events) and one slab from the VM (HC-mean row reads); its lane leaves through
+        # the collective (one dedicated hidden lane to the DSpark primary P.k)
+        centre.insert(centre.index('collective'), 'hrsrc')
+        centre_area['hrsrc'] = up(HSRC_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
     if SEEDL:
         # mtp-dsbind 2026-10-10 (--seedl, DSpark primary die): the seed-descriptor consumer dsfd_mtp_seed_launch beside
         # the collective (its seed descriptor arrives on the collective's MTP lane, --coll-mtp-far primary) and one
@@ -3147,6 +3153,10 @@ def build_r8(variant=None):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
             slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
             notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
+        elif n == 'hrsrc':
+            slab('hrsrc', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_hrow_src')
+            notes.append('MTP-DIE --hrow-src %d: dsfd_mtp_hrow_src (layer %d HC-mean row -> primary die) %.3f mm2'
+                         % (HROW_SRC, 37 + HROW_SRC, centre_area[n]))
         elif n == 'seedl':
             slab('seedl', centre_area[n], x0_, yy, w0_, master='dsfd_mtp_seed_launch')
             notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
@@ -3709,6 +3719,7 @@ def buses_r8(m):
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
             (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
+            (HSRC_BUSES + (HSRC_HOST_BUSES if 'host' in hub else ()) if 'hrsrc' in hub else ()) + \
             ((SEEDL_BUSES_SPINE if 'hrow' in hub else SEEDL_BUSES) + (SEEDL_HOST_BUSES if 'host' in hub else ())
              if 'seedl' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
@@ -3901,6 +3912,16 @@ SEEDL_BUSES = (('collective', 'seedl', 78, 't_mrs', 'f_mrs'), ('seedl', 'collect
 SEEDL_HOST_BUSES = (('host', 'seedl', 11, 't_seedl_clr', 'f_clr'), ('seedl', 'host', 4, 't_flt', 'f_seedl_flt'),
                     ('collective', 'host', 513, 't_mrt', 'f_mrt'), ('host', 'collective', 1, 't_mrg', 'f_mrt'),
                     ('collective', 'host', 57, 't_macc', 'f_macc'))
+HROW_SRC = None                 # --hrow-src P (mtp-dsbind 2026-10-11): stage die of layer 37 + P: dsfd_mtp_hrow_src
+HSRC_UM = (259.2, 259.2)        #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow_src.json
+# wfc kit t_hep {v, user, pos, epoch} 36 (dsfd_wfc_kit HEP 1, mtp-wfc 248f39b23); VM read like the seed client; the
+# hidden lane {flit 514, valid} + grant to the collective's dedicated hidden lane (t_mhs / f_mhs: one more LCR lane tile
+# + adapter in the collective composition, OPEN in its owner's tree, as on the primary die)
+HSRC_BUSES = (('wfc', 'hrsrc', 36, 't_hep', 'f_hep'),
+              ('hrsrc', 'vm', 25, 't_vrq', 'f_hsrc_rq'), ('vm', 'hrsrc', 1, 't_hsrc_rqg', 'f_vrq'),
+              ('vm', 'hrsrc', 1025, 't_hsrc_rs', 'f_vrs'),
+              ('hrsrc', 'collective', 515, 't_hp', 'f_mhs'), ('collective', 'hrsrc', 1, 't_mhsg', 'f_hpg'))
+HSRC_HOST_BUSES = (('hrsrc', 'host', 2, 't_flt', 'f_hsrc_flt'),)
 HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
 HROW_UM = (3000.96, 751.68)      #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
 # the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
@@ -5272,6 +5293,10 @@ def _hub_at(P, name, master, w, h, slab, side, y, cor):
     """an end / start block beside a hub slab: side 'W' in the S14 W channel, 'E' in the VCH"""
     x = slab.x - w / 2 - 6.0 if side == 'W' else slab.x + slab.w + w / 2 + 6.0
     pl = P.near(x, y, w, h, [cor['s14W'] if side == 'W' else cor['vch']], horiz=False, span=1800.0, rows=6)
+    if not pl and name.startswith('he_h_'):
+        # mtp-dsbind hrow lanes: the channel beside a crowded slab (collective with the MTP lanes) is full near its
+        # centre; search the channel's whole height for the end block (the lane's stations follow it there)
+        pl = P.near(x, y, w, h, [cor['s14W'] if side == 'W' else cor['vch']], horiz=False, span=6000.0, rows=20)
     assert pl, name
     return Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind='hend', region='hub')
 
@@ -6244,6 +6269,8 @@ def die_options(ap):
     ap.add_argument('--seedl', action='store_true', help='mtp-dsbind 2026-10-10: DSpark primary die (--draft P): '
                     'dsfd_mtp_seed_launch slab (seed descriptor from the collective MTP lane -> seed program); needs '
                     '--coll-mtp-far primary')
+    ap.add_argument('--hrow-src', type=int, choices=[0, 1, 2], help='mtp-dsbind 2026-10-11: stage die of layer 37 + P: '
+                    'the hidden-row source dsfd_mtp_hrow_src (t_hep from the WFC kit, VM row reads, one hidden lane)')
     ap.add_argument('--hrow', action='store_true', help='mtp-dsbind 2026-10-10: with --seedl, the main-hidden row store '
                     'dsfd_mtp_hrow (3 part links from the MTP part lanes; the seed client reads it)')
     ap.add_argument('--coll-mtp-far', choices=['s0', 'primary'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
@@ -6360,8 +6387,11 @@ def apply_options(a):
     COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
     global COLL_MTP_FAR
     COLL_MTP_FAR = getattr(a, 'coll_mtp_far', None)
-    global SEEDL, HROW
+    global SEEDL, HROW, HROW_SRC
     SEEDL = bool(getattr(a, 'seedl', False))
+    HROW_SRC = getattr(a, 'hrow_src', None)
+    if HROW_SRC is not None and (getattr(a, 'die', None) != 'layer1' or not getattr(a, 'wfc_kit', False)):
+        raise SystemExit('--hrow-src: a layer1 stage die with --wfc-kit (the t_hep issue-epoch events)')
     HROW = bool(getattr(a, 'hrow', False))
     if HROW and (not SEEDL or not getattr(a, 'fwd_iface', False) or getattr(a, 'die', None) != 'layer1'):
         raise SystemExit('--hrow: with --seedl --fwd-iface on the 1-stack primary die (store in the free SE slot)')
