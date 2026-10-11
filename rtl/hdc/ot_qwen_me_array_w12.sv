@@ -54,6 +54,7 @@ module ot_qwen_me_array_w12 #(
     parameter integer ARPB = 0,           // ot_qwen_rom_tile_logic_w12 ARPB / TMUT (qwen-1010/c)
     parameter integer TMUT = 0,
     parameter integer ANR = 0,            // ot_qwen_rom_tile_logic_w12 ANR (hardcore-1010 D)
+    parameter integer CONS = 0,           // ot_qwen_rom_tile_logic_w12 CONS (conservative-1011): memories one more cycle later
     parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_qwen_w12_matvec_part SCALE_LOCAL)
     parameter integer CODE_BANKS = 2,
     parameter integer KV_LOCAL = 0,       // 1: tiles hold KV slices (ot_qwen_rom_tile_w12); 0: global KV port
@@ -91,6 +92,8 @@ module ot_qwen_me_array_w12 #(
     // tile memory macro pins (the hardened element's code ROM banks; KV_LOCAL = 0: a global KV port)
     output wire [GT/TG*CODE_BANKS-1:0]     t_rom_ce,
     output wire [GT/TG*12-1:0]             t_rom_addr,
+    output wire [GT/TG*2*CODE_BANKS-1:0]    t_rom_ce_m,    // per-macro request (ot_qwen_rom_tile_logic_w12 rom_ce_m / rom_addr_m)
+    output wire [GT/TG*2*CODE_BANKS*12-1:0] t_rom_addr_m,
     input  wire [GT/TG*2*CODE_BANKS*266-1:0] t_rom_rd,
     output wire [GT/TG-1:0]        t_kv_re,
     output wire [GT*AW-1:0]        t_kv_addr,
@@ -115,7 +118,7 @@ module ot_qwen_me_array_w12 #(
     localparam integer LT  = $clog2(TG);
     localparam integer NXC = 1 << SMAX;
     localparam integer NXL = NXC / TG;
-    localparam integer RXA = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2) : 0;
+    localparam integer RXA = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + CONS) : 0;
     localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + RXA;
     localparam integer NPT = GT >> TCUT;                  // tree words into the top
     localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
@@ -205,13 +208,14 @@ module ot_qwen_me_array_w12 #(
             end
             wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
             ot_qwen_rom_tile_logic_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .TMUT(TMUT), .ANR(ANR), .BAW(BAW),
+                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .TMUT(TMUT), .ANR(ANR), .CONS(CONS), .BAW(BAW),
                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
                 .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
                 .t_out(lw[LT][t*W*32 +: W*32]), .t_vout(lvv[LT][t]),
                 .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny), .n_vy(nvy), .fault(tile_fault[t]),
                 .rom_ce(t_rom_ce[t*CODE_BANKS +: CODE_BANKS]), .rom_addr(t_rom_addr[t*12 +: 12]),
+                .rom_ce_m(t_rom_ce_m[t*2*CODE_BANKS +: 2*CODE_BANKS]), .rom_addr_m(t_rom_addr_m[t*2*CODE_BANKS*12 +: 2*CODE_BANKS*12]),
                 .rom_rd(t_rom_rd[t*2*CODE_BANKS*266 +: 2*CODE_BANKS*266]),
                 .kvs_r_ce(), .kvs_r_addr(), .kvs_rd({TG*W*8{1'b0}}),
                 .kv_re(t_kv_re[t]), .kv_addr(t_kv_addr[t*TG*AW +: TG*AW]), .kv_q(kvq));

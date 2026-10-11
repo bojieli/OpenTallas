@@ -45,6 +45,7 @@ module tb_qwen_me_partition_w12;
     parameter integer ROM_PIPE = 0, ROM_ARELAY = 1, LRST = 0, ROM_MUT = 0, BAW = 12, ROM_CAP2 = 0, ROM_CAPX = 0;
     parameter integer ARPB = 0, TMUT = 0;      // qwen-1010/c: per-bank ROM address register / bench mutants
     parameter integer ANR = 0;                 // hardcore-1010 D: valid-only adder resets + HSPLIT
+    parameter integer CONS = 0;                // conservative-1011: per-macro request registers (ROM model reads the per-macro pins)
     localparam integer IL = 8, AW = 24, NW = 16;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, LT = $clog2(TG);
     localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + ((ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2) : 0);
@@ -132,6 +133,8 @@ module tb_qwen_me_partition_w12;
     localparam integer CB = 8192 >> BAW;             // the same 8,192 words in 2^BAW-word banks (2 at BAW 12, 4 at 11)
     wire [NT*CB-1:0] a_t_rom_ce;
     wire [NT*12-1:0] a_t_rom_addr;
+    wire [NT*2*CB-1:0] a_t_rom_ce_m;
+    wire [NT*2*CB*12-1:0] a_t_rom_addr_m;
     reg  [NT*2*CB*266-1:0] a_t_rom_rd;
     wire [NT-1:0] a_t_kv_re;
     reg  [GT*W*32-1:0] a_t_kv_q;
@@ -140,7 +143,7 @@ module tb_qwen_me_partition_w12;
     wire [NW-1:0] a_am_idx; wire [31:0] a_am_val;
     wire [AW-1:0] a_mx_addr; wire [W-1:0] a_mx_mask; wire [W*32-1:0] a_mx_data; wire [15:0] a_progress;
     ot_qwen_me_array_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
-                       .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .TMUT(TMUT), .ANR(ANR), .BAW(BAW),
+                       .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .TMUT(TMUT), .ANR(ANR), .CONS(CONS), .BAW(BAW),
                        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_arr (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(a_ready), .idle(a_idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc), .i_wbase(i_wbase), .i_ts(i_ts),
@@ -149,7 +152,7 @@ module tb_qwen_me_partition_w12;
         .i_mmode(i_mmode), .i_oen(i_oen), .i_amax(i_amax), .i_rmax(i_rmax), .i_mbase(i_mbase),
         .scale_re(a_scale_re), .scale_gre(a_scale_gre), .scale_addr(a_scale_addr), .scale_q(a_scale_q),
         .x_re(a_x_re), .x_addr(a_x_addr), .x_q(a_x_q),
-        .t_rom_ce(a_t_rom_ce), .t_rom_addr(a_t_rom_addr), .t_rom_rd(a_t_rom_rd),
+        .t_rom_ce(a_t_rom_ce), .t_rom_addr(a_t_rom_addr), .t_rom_ce_m(a_t_rom_ce_m), .t_rom_addr_m(a_t_rom_addr_m), .t_rom_rd(a_t_rom_rd),
         .t_kv_re(a_t_kv_re), .t_kv_addr(a_t_kv_addr), .t_kv_q(a_t_kv_q),
         .ov(a_ov), .o_we(a_o_we), .o_addr(a_o_addr), .o_mask(a_o_mask), .o_data(a_o_data),
         .am_idx(a_am_idx), .am_val(a_am_val), .am_any(a_am_any), .mx_we(a_mx_we), .mx_addr(a_mx_addr),
@@ -173,14 +176,15 @@ module tb_qwen_me_partition_w12;
             if (a_t_kv_re[g / TG]) for (l = 0; l < W; l = l + 1) a_t_kv_q[32*(g*W+l) +: 32] <= kvw(a_t_kv_addr[g*AW +: AW], l);
         end
         // tile ROM macros: bank b of pair column p holds words 4096b.. of the pair's 32 lanes
+        //: CONS: every macro answers its OWN request pins (a_t_rom_ce_m / a_t_rom_addr_m, macro pc*CB + b)
         for (g = 0; g < NT; g = g + 1)
             for (b = 0; b < CB; b = b + 1)
-                if (a_t_rom_ce[g*CB + b])
-                    for (pc = 0; pc < 2; pc = pc + 1) begin
+                for (pc = 0; pc < 2; pc = pc + 1)
+                    if ((CONS != 0) ? a_t_rom_ce_m[g*2*CB + pc*CB + b] : a_t_rom_ce[g*CB + b]) begin
                         a_t_rom_rd[((g*2 + pc)*CB + b)*266 +: 266] <= 266'd0;
                         for (l = 0; l < 2 * W; l = l + 1)
                             a_t_rom_rd[((g*2 + pc)*CB + b)*266 + 8*l +: 8] <=
-                                rom(b * (1 << BAW) + a_t_rom_addr[g*12 +: 12],
+                                rom(b * (1 << BAW) + ((CONS != 0) ? a_t_rom_addr_m[(g*2*CB + pc*CB + b)*12 +: 12] : a_t_rom_addr[g*12 +: 12]),
                                     (((MUTANT != 0 && g < 2) ? (1 - g) : g) * TG + 2*pc) * W + l);
                     end
         for (g = 0; g < NXC; g = g + 1)
