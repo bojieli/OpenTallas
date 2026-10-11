@@ -121,6 +121,16 @@ module ot_hgi_coll_tkm #(
         assign del_permit[l] = (cr[l] != 8'd0) && (ph == P_INS);     // flops only (no start -> permit path)
     end
     reg [DEL-1:0] d1_v, d2_v;
+    // el1011-hbm-idx 10-11: pin-flop stage d0 on the delivery lanes and on start / cfg (rtl_boundary: the (src - gbase) x pf
+    // decode was 85 gate levels from del_flit; start cleared the 2,048-entry array straight from the pin)
+    reg [DEL-1:0] d0_v; reg [PWT-1:0] d0_f [0:DEL-1];
+    reg start_p; reg [11:0] cfg_n_p; reg [12:0] cfg_k_p, cfg_nout_p; reg [7:0] cfg_g_p, cfg_gbase_p; reg [15:0] cfg_pf_p;
+    reg [39:0] cfg_obase_p, cfg_rbase_p; reg cfg_has_r_p;
+    always @(posedge clk) begin
+        for (int l = 0; l < DEL; l = l + 1) d0_f[l] <= del_flit[l*PWT +: PWT];
+        cfg_n_p <= cfg_n; cfg_k_p <= cfg_k; cfg_nout_p <= cfg_nout; cfg_g_p <= cfg_g; cfg_gbase_p <= cfg_gbase; cfg_pf_p <= cfg_pf;
+        cfg_obase_p <= cfg_obase; cfg_rbase_p <= cfg_rbase; cfg_has_r_p <= cfg_has_r;
+    end
     reg [7:0] d1_q [0:DEL-1]; reg [15:0] d1_gi [0:DEL-1]; reg [FW-1:0] d1_d [0:DEL-1];
     reg [23:0] d1_qpf [0:DEL-1];
     reg [QW-1:0] d2_e [0:DEL-1];
@@ -233,7 +243,7 @@ module ot_hgi_coll_tkm #(
             stat_cycles <= 32'd0; stat_ins <= 32'd0; stat_surv <= 32'd0;
             n_q <= 12'd1; k_q <= 13'd1; nel <= 19'd0; g_q <= 8'd1; gb_q <= 8'd0; pf_q <= 16'd1; nout_q <= 13'd1; ob_q <= 40'd0; rb_q <= 40'd0; hr_q <= 1'b0;
             tot_q <= 24'd0; cact_q <= '0; tc_q <= '0; ts_q <= 2'd0; rcv <= 24'd0; tau <= '0;
-            d1_v <= '0; d2_v <= '0; fpop_q <= '0; ld_v <= '0; e1_v <= 1'b0; e2_v <= 1'b0;
+            d0_v <= '0; start_p <= 1'b0; d1_v <= '0; d2_v <= '0; fpop_q <= '0; ld_v <= '0; e1_v <= 1'b0; e2_v <= 1'b0;
             shn <= '0; outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 3'd0; lq_h <= 2'd0; lq_t <= 2'd0;
             for (l = 0; l < DEL; l = l + 1) begin cr[l] <= 8'(CAP); st_n[l] <= 2'd0; dn[l] <= 8'd0; occ[l] <= 8'd0; end
             bv <= 1'b0;
@@ -241,6 +251,7 @@ module ot_hgi_coll_tkm #(
             done <= 1'b0;
             if (busy) stat_cycles <= stat_cycles + 32'd1;
             fpop_q <= fpop;
+            start_p <= start; d0_v <= del_valid;
             tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> logic paths)
             cact_q <= CB'((nout_q + 13'd3) >> 2);
             tc_q <= CB'((nout_q - 13'd1) >> 2); ts_q <= 2'(nout_q - 13'd1);
@@ -253,12 +264,12 @@ module ot_hgi_coll_tkm #(
             end
             // ---- decode
             for (l = 0; l < DEL; l = l + 1) begin
-                d1_v[l] <= del_valid[l];
-                d1_q[l] <= del_flit[l*PWT + FW + 16 +: 8] - gb_q;
-                d1_gi[l] <= del_flit[l*PWT + FW +: 16];
-                d1_d[l] <= del_flit[l*PWT +: FW];
-                d1_qpf[l] <= 24'(8'(del_flit[l*PWT + FW + 16 +: 8] - gb_q)) * 24'(pf_q);
-                if (del_valid[l] && !del_flit[l*PWT + PWT - 1]) fault <= 1'b1;
+                d1_v[l] <= d0_v[l];
+                d1_q[l] <= d0_f[l][FW + 16 +: 8] - gb_q;
+                d1_gi[l] <= d0_f[l][FW +: 16];
+                d1_d[l] <= d0_f[l][FW-1:0];
+                d1_qpf[l] <= 24'(8'(d0_f[l][FW + 16 +: 8] - gb_q)) * 24'(pf_q);
+                if (d0_v[l] && !d0_f[l][PWT - 1]) fault <= 1'b1;
                 d2_v[l] <= d1_v[l];
                 begin : dec
                     reg [23:0] f_; reg [31:0] vv, id_; reg [23:0] j_; reg [EW-1:0] e_;
@@ -347,16 +358,16 @@ module ot_hgi_coll_tkm #(
             end
             // ---- phase control
             case (ph)
-                P_IDLE: if (start) begin
-                    n_q <= cfg_n; k_q <= cfg_k; nel <= 19'd0; g_q <= cfg_g; gb_q <= cfg_gbase; pf_q <= cfg_pf; nout_q <= cfg_nout;
-                    ob_q <= cfg_obase; rb_q <= cfg_rbase; hr_q <= cfg_has_r;
+                P_IDLE: if (start_p) begin
+                    n_q <= cfg_n_p; k_q <= cfg_k_p; nel <= 19'd0; g_q <= cfg_g_p; gb_q <= cfg_gbase_p; pf_q <= cfg_pf_p; nout_q <= cfg_nout_p;
+                    ob_q <= cfg_obase_p; rb_q <= cfg_rbase_p; hr_q <= cfg_has_r_p;
                     rcv <= 24'd0;
                     bv <= 1'b0;
                     stat_ins <= 32'd0; stat_surv <= 32'd0; stat_cycles <= 32'd0;
                     outn <= 13'd0; wrn <= 13'd0; line <= 9'd0;
                     ph <= P_INS;
                 end
-                P_INS: if (rcv == tot_q && d1_v == '0 && d2_v == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
+                P_INS: if (rcv == tot_q && d0_v == '0 && d1_v == '0 && d2_v == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
                            st_n[0] == 2'd0 && st_n[1] == 2'd0 && st_n[2] == 2'd0 && st_n[3] == 2'd0)
                     ph <= P_DRAIN;
                 P_DRAIN: if (!e1_v && !e2_v && !bv) begin
@@ -374,10 +385,11 @@ module ot_hgi_coll_tkm #(
         end
     end
     // ---------------------------------------------------------------- the array: reset-free data flops (cleared at start)
+    (* keep *) reg [NB-1:0] clr_r;
+    always @(posedge clk) clr_r <= {NB{(ph == P_IDLE) && start_p}};
     always @(posedge clk) begin : arr_b
         integer c, s;
         if (ph == P_IDLE) begin
-            if (start) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
         end else begin
             case (ph)
                 P_INS, P_DRAIN, P_REINS, P_RDRAIN: begin
@@ -404,6 +416,9 @@ module ot_hgi_coll_tkm #(
                 default: ;
             endcase
         end
+        // array clear one edge after the start pin flop (in P_INS before any insert: bv is 0 until the first staged block),
+        // enable from a replicated flop per entry block (8 cells), not a 2,048-entry fanout
+        for (c = 0; c < C; c = c + 1) if (clr_r[c / (BG / 4)]) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
     end
     // FIFO pop into the landing register: room counted on registered state (3 slots + landing)
     always @* for (integer l2 = 0; l2 < DEL; l2 = l2 + 1)
