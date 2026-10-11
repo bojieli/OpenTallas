@@ -1,0 +1,21 @@
+run_sram_base.log:SEQUENCE 13 gathers in 2950 cycles (LAT 453 CRED 137 rank 37)
+run_sram_base.log:PARK max queue depth 0, max flits parked in one edge 0
+run_sram_base.log:HGI_COLL_PIPE PASS
+run_sram_lead1.log:SEQUENCE 13 gathers in 19805 cycles (LAT 453 CRED 137 rank 37)
+run_sram_lead1.log:PARK max queue depth 380, max flits parked in one edge 4
+run_sram_lead1.log:HGI_COLL_PIPE PASS
+run_sram_lead2.log:SEQUENCE 26 gathers in 78417 cycles (LAT 453 CRED 137 rank 37)
+run_sram_lead2.log:PARK max queue depth 380, max flits parked in one edge 4
+run_sram_lead2.log:HGI_COLL_PIPE PASS
+run_sram_r95.log:SEQUENCE 13 gathers in 2950 cycles (LAT 453 CRED 137 rank 95)
+run_sram_r95.log:PARK max queue depth 0, max flits parked in one edge 0
+run_sram_r95.log:HGI_COLL_PIPE PASS
+run_sram_reps3.log:SEQUENCE 39 gathers in 7727 cycles (LAT 453 CRED 137 rank 37)
+run_sram_reps3.log:PARK max queue depth 0, max flits parked in one edge 0
+run_sram_reps3.log:HGI_COLL_PIPE PASS
+run_mutpark_lead1.log:SEQUENCE 13 gathers in 9018636 cycles (LAT 453 CRED 137 rank 37)
+run_mutpark_lead1.log:PARK max queue depth 380, max flits parked in one edge 4
+run_mutpark_lead1.log:HGI_COLL_PIPE FAIL errors=29483
+run_mutpark_lead2.log:SEQUENCE 26 gathers in 20075662 cycles (LAT 453 CRED 137 rank 37)
+run_mutpark_lead2.log:PARK max queue depth 512, max flits parked in one edge 4
+run_mutpark_lead2.log:HGI_COLL_PIPE FAIL errors=60332
