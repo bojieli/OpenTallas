@@ -5,9 +5,8 @@ expansion (tools/gpu_sys/v41_dspark.py expand), and the golden of one verify ste
 
 THE KERNELS (DYN at a KERNEL doorbell: TOKEN = the launch's token, POS = its pos; the CP translator owns L'):
   swapin  (kind 0, token = slot c, pos = L)   slot c of the column store (HBM COLB + c * CSTR, dyn_sel TOKEN) ->
-          the layer working buffers: h (4 x 5,120 FP32 residual copies), PRE (the pre mix), SELIDX (the index
-          selection, 2,048 U32), CANDM (the layer-20 candidate table, 2 x 2,048): four DMA.LOAD
-  swapout (kind 1, token = slot c, pos = n + c)   the same four buffers back to slot c: four DMA.STORE
+          the layer working buffers: h (4 x 5,120 FP32 residual copies), PRE (the pre mix): two DMA.LOAD
+  swapout (kind 1, token = slot c, pos = n + c)   the same two buffers back to slot c: two DMA.STORE + FENCE
   embed   (kind 2, token = t, pos = n + c)    h <- the BF16 embedding row of t in every residual copy (DMA.LOAD with
           dyn_sel TOKEN over the BF16 table, converted at the load), PRE <- (1, 0, 0, 0) from the table ONE4
   layer   (kind 3, per layer L at kent[3] + L * kstride)   ds_native's lowering of layer L made POSITION-GENERIC:
@@ -216,7 +215,13 @@ MTB = 0x170000000                    # MTP constants (ONE4 = 1, 0, 0, 0)
 COLB = 0x180000000                   # column slot store: COLB + slot * CSTR (dyn_sel TOKEN)
 ROPEB = 1 << 31                      # plain RoPE rows: ROPEB + pos * 256 (cos 32 | sin 32, dyn_sel POS)
 ZT, HT = 261120, 261184              # VM: the END token word of non-head kernels (0); the head stub's table HT[pos]
-SLOT = (("h", 0, 20480), ("PRE", 81920, 4), ("SELIDX", 81952, 2048), ("CANDM", 90144, 4096))
+SLOT = (("h", 0, 20480), ("PRE", 81920, 4))
+# The index selection (SELIDX) and the layer-20 candidate table (CANDM) are per-POSITION transients written by the
+# index-source layers and read by later layers of the same position: they move to position-indexed rows (SELB / CANDB +
+# (POS mod 16) * stride, written by the writer layer's body, loaded by the readers' bodies -- rollback-safe like the
+# window ring) instead of riding every swap (they changed at 4 of 40 layers; 6,144 of 26,628 swapped words).  L0 reads
+# neither.  VM residency of the columns: today's VM map ends at 261,056 of 262,144 words, so 0 columns of 20,484 words
+# fit; the VM-512 macros (2 MiB physical, hgi-1010/f) would hold 12.
 CSTR = 1 << 17
 ATT_TAGS = ("attend.qk", "attend.max", "attend.exp_sum", "attend.bf16_p", "attend.pv")
 
@@ -455,7 +460,7 @@ def sim(a):
             c = e["token"]
             hs = []
             for d in dies:
-                v = d.hbm.view(COLB + c * CSTR, 81952).view(np.uint32)
+                v = d.hbm.view(COLB + c * CSTR, 81936).view(np.uint32)
                 hs.append(v.copy())
             col_out[e["pos"]] = hs
         if e["kind"] == "swapin":
