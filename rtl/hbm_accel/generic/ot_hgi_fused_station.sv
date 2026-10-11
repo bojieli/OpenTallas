@@ -55,16 +55,24 @@ module ot_hgi_fused_station #(
 );
     // ---- FUSED front
     wire f_rdy, f_done, f_fault, mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
-    wire [682:0] q_rec; wire [2:0] q_ret; reg qph; wire qsel = (QWIDE != 0) && qph;
+    wire [682:0] q_rec; wire [2:0] q_ret; reg qph; reg mph; wire qsel = (QWIDE != 0) && qph;
     wire [32*16-1:0] f_wrq; wire [32*280-1:0] f_wwq; wire f_rg_req, f_wg_req, f_wg_gnt;
+    // the body sees lane-group credits / responses / dones only while it owns slot 2: the mover phase (mph) and a forwarded
+    // QDQ (qsel) use the same slot, and their returns must not reach the body's per-lane counters (a gain LOAD's 16 dones
+    // a lane wrapped the body's pending-write count and hung its drain)
+    wire f_rown = !qsel, f_wown = !mph && !qsel;
+    wire [31:0] f_rcr = f_rown ? lg_rdn[32:1] : 32'd0;
+    wire [32*257-1:0] f_rr = f_rown ? lg_rdn[8256:33] : '0;
+    wire [31:0] f_wcr = f_wown ? lg_wdn[32:1] : 32'd0;
+    wire [31:0] f_wdone = f_wown ? lg_wdn[64:33] : 32'd0;
     ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM), .UWIDE(UWIDE), .ULWB(ULWB), .SCR_WORDS(SCR_WORDS)) u_f (.clk(clk), .rst_n(rst_n),
         .cfg_scratch(18'(SCRATCH)), .rec_v(rec[0]), .rec_rdy(f_rdy), .rec_hdr(rec[128:1]), .rec_a(rec[384:129]),
         .rec_b(rec[640:385]), .rec_c(rec[896:641]), .rec_o(rec[1152:897]), .rec_n_a(rec[1173:1153]),
         .rec_n_b(rec[1194:1174]), .rec_n_o(rec[1215:1195]), .rec_done(f_done), .rec_fault(f_fault), .halted(),
         .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
         .op_v(), .op_rdy(1'b0), .op_w(), .su_idle(1'b1), .su_fault(1'b0), .vmq(f_vmq), .vmr(f_vmr),
-        .wrq(f_wrq), .wrq_cr(lg_rdn[32:1]), .wrr(lg_rdn[8256:33]), .wwq(f_wwq), .wwq_cr(lg_wdn[32:1]),
-        .wwq_done(lg_wdn[64:33]), .rg_req(f_rg_req), .rg_gnt(lg_rdn[0] && !qsel), .wg_req(f_wg_req), .wg_gnt(f_wg_gnt),
+        .wrq(f_wrq), .wrq_cr(f_rcr), .wrr(f_rr), .wwq(f_wwq), .wwq_cr(f_wcr),
+        .wwq_done(f_wdone), .rg_req(f_rg_req), .rg_gnt(lg_rdn[0] && !qsel), .wg_req(f_wg_req), .wg_gnt(f_wg_gnt),
         .ne_v(), .ne_rdy(1'b0), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(q_rec), .q_done(q_ret[1]),
         .q_fault(q_ret[2]));
     assign ret = {f_fault, f_done, f_rdy};
@@ -78,7 +86,7 @@ module ot_hgi_fused_station #(
     always @(posedge clk or negedge rst_n)        // a forwarded QDQ owns the lanes until its done / fault
         if (!rst_n) qph <= 1'b0; else if (q_ret[1] || q_ret[2]) qph <= 1'b0; else if (q_rec[0]) qph <= 1'b1;
     // ---- the move phase: the write group is held from the move's request to its done / fault
-    reg mph;                                   // a move is pending or running: the write group belongs to the mover
+    // mph                                    // a move is pending or running: the write group belongs to the mover
     wire own = mph && lg_wdn[0];
     wire m_v = mv_v && own;
     wire m_rdy;

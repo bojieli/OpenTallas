@@ -94,6 +94,16 @@ module tb_hgi_fused_station;
     always @(posedge clk) if (running && cyc % 20000 == 0) begin $display("progress cyc %0d k %0d fused st %0d su span/stage/run/drain %0d%0d%0d%0d rreq %0d rgnt %b wreq %0d wgnt %b", cyc, k, dut.u_fs.u_f.st,
         dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.a_span, dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.a_stage, dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.a_run,
         dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.a_drain, rup[0], rgnt, wup[0], wgnt); $fflush; end
+`ifdef DBG_DRAIN
+    // drain bookkeeping of the SU WIDE controller (lane 0 / 1 credits and pending dones, lanes not yet done)
+    always @(posedge clk) if (running && cyc % 20000 == 10000) begin
+        $display("drain cyc %0d d_ph %0d wdr_go %0d ldone %h wcr0 %0d wcr1 %0d wpend0 %0d wpend1 %0d lane_ovf %0d st_cr0 %0d mph %0d",
+            cyc, dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.d_ph, dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.wdr_go,
+            dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.wdr_ldone, dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.wcr[0],
+            dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.wcr[1], dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.wpend[0],
+            dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.wpend[1], dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.lane_ovf,
+            dut.u_fs.cr[0], dut.u_fs.mph); $fflush; end
+`endif
     integer c, j, t, kind, r0, nr, vi0, nvi, ve0, nve, h0, nh, words = 0, cases = 0, t0;
     reg [31:0] qd;
     initial begin
