@@ -242,7 +242,9 @@ module dsfd_coll_cbh #(parameter integer OD = 16, parameter integer CR = 1, para
     assign fc[0] = 1'b0;
 `ifdef OT_S81PH_CBH_TRACE
     integer tn = 0;
-    always @(posedge ck[0]) if (tn < 40 && (f_vm[0] || bw_v[0] || ts[0] || t_vm[0] || fvm_u[0] || bw_cr[0])) begin
+    reg rs_d = 1'b0;
+    always @(posedge ck[0]) rs_d <= rs[0];
+    always @(posedge ck[0]) if (tn < 60 && (f_vm[0] || bw_v[0] || t_vm[0] || fvm_u[0] || (rs[0] != rs_d))) begin
         tn = tn + 1;
         $display("CBH %m t=%0t rs=%b f_vm0=%b fvm_u0=%b bw_v=%b ts=%b t_vm0=%b bw_cr=%b q0hv=%b", $time, rs[0], f_vm[0],
                  fvm_u[0], bw_v[0], ts, t_vm[0], bw_cr[0], u_q0.u.hv);
