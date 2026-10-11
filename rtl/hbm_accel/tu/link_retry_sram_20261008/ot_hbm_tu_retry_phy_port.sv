@@ -21,7 +21,8 @@ module ot_hbm_tu_retry_phy_port_core #(
  // and the replay read's epoch check reads a per-slot session flag (0 cycles).  See ot_hbm_link_retry_sram SESREG.
  parameter SESREG=`ifdef OT_TU_SESREG 1 `else 0 `endif,
  parameter RDPIPE=0,      // redesign-ds: replay SRAM MUXREG (see the wrapper)
- parameter FB=0           // hardcore-1010 B fallback (see the wrapper)
+ parameter FB=0,          // hardcore-1010 B fallback (see the wrapper)
+ parameter CPIPE=0        // tu-retry-1010: pipelined source-credit counter (see ot_hbm_tu_retry_port CPIPE)
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -91,7 +92,7 @@ module ot_hbm_tu_retry_phy_port_core #(
  assign fec_tx_v=raw_tx_v && !fault;
  assign ph_rx_v=raw_rx_v && !fault;
  assign fec_rx_ready=raw_rx_ready && !fault;
- ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH),.PIPE_FIX(PIPE_FIX),.SESREG(SESREG),.MUXREG(RDPIPE),.RREADY(FB)) u_port(
+ ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH),.PIPE_FIX(PIPE_FIX),.SESREG(SESREG),.MUXREG(RDPIPE),.RREADY(FB),.CPIPE(CPIPE)) u_port(
  .clk(pclk),.rst_n(prst_n),.link_up(phy_link_up),.session(phy_session),
  .in_valid(pq_valid),.in_ready(pq_ready),.in_data(pq_data),
  .tx_valid(raw_tx_v),.tx_ready(fec_tx_ready && !fault),.tx_data(fec_tx_data),.tx_seq(fec_tx_seq),.tx_session(fec_tx_session),
@@ -178,13 +179,23 @@ module ot_hbm_tu_link_tx_k #(parameter integer W=8, CRED=8)(
     input wire i_valid, output wire i_ready, input wire [W-1:0] i_data,
     output wire l_valid, output wire [W-1:0] l_data, input wire l_credit);
     localparam integer CW = $clog2(CRED + 1);
-    (* keep *) reg cr_q; reg [CW-1:0] cnt; (* keep *) reg lv_q; (* keep *) reg [W-1:0] ld_q;
+    (* keep *) reg cr_q; reg [CW-1:0] cnt; (* keep *) reg lv_q; wire [W-1:0] ld_q;
     assign i_ready = cnt != 0; assign l_valid = lv_q; assign l_data = ld_q;
     wire send = i_valid && cnt != 0;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin cr_q <= 1'b0; cnt <= CW'(CRED); lv_q <= 1'b0; end
         else begin cr_q <= l_credit; cnt <= cnt + CW'(cr_q) - CW'(send); lv_q <= send; end
-    always @(posedge clk) ld_q <= i_data;
+    // tu-retry-1010: the l_data pin flops live in a keep_hierarchy cell.  (* keep *) on the reg did NOT stop opt_merge
+    // (it keeps the wire, not the $dff): fb-f63e6e650-a merged the 24 fec_tx_session pin flops (D = ses_q) with the
+    // replay stores' read-epoch pipeline ep[0] (D = r_session = ses_q), so ep[1] loaded the pin flop, io_flop_at_pins
+    // skipped those 24 ports (557 of 581 u_tx flops anchored) and they launched 300 ps from their pins (TT -112).
+    ot_hbm_tu_pin_dq #(.W(W)) u_pin(.clk(clk), .d(i_data), .q(ld_q));
+endmodule
+// tu-retry-1010: a bank of pin flops that synthesis cannot merge with an equal-D register elsewhere (same idiom as
+// ot_sc_rep_ff: keep_hierarchy stops cross-boundary opt_merge).  No reset, no enable: q is d one edge later.
+(* keep_hierarchy *)
+module ot_hbm_tu_pin_dq #(parameter integer W=8)(input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk) q <= d;
 endmodule
 module ot_hbm_tu_retry_phy_port #(
  parameter ENABLE=0,W=545,SW=12,EW=24,CW=10,CAPACITY=256,
@@ -210,7 +221,11 @@ module ot_hbm_tu_retry_phy_port #(
  // prs[1] && pup_q, async assert from prst_n) is the core's only reset/link-up source, so no AND gate sits in the
  // recovery cone of the ~3k async-reset flops (iqs6-b pup_q -> sflag RESETN class).  0 cycles on any fault-free flit;
  // +1 pclk on link-down assertion only.
- parameter FB=`ifdef OT_TU_FB 1 `else 0 `endif
+ parameter FB=`ifdef OT_TU_FB 1 `else 0 `endif,
+ // CPIPE (tu-retry-1010, 2026-10-10, default 0): the retry port's source-credit update is pipelined with a conservative
+ // reservation (ot_hbm_tu_retry_port CPIPE; fb-f63e6e650-a TT -33.9 = 25-level credits/return_ok/put loop).  A returned
+ // credit is usable one pclk later; an over-return faults one pclk later.  0 cycles on the fault-free flit path.
+ parameter CPIPE=`ifdef OT_TU_CPIPE 1 `else 0 `endif
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -253,7 +268,7 @@ module ot_hbm_tu_retry_phy_port #(
  wire c_rx_v,c_cr,c_tx_v,c_tx_r,c_rxin_r,c_nak,c_fault;wire[W-1:0]c_rx_f,c_tx_d;wire[SW-1:0]c_tx_s,c_ack,c_ret,c_ing;
  wire[EW-1:0]c_tx_e,c_ack_e;wire[CW-1:0]c_ack_p,c_debt;
  wire r_v,r_ue;wire[W-1:0]r_d;wire[SW-1:0]r_s;wire[EW-1:0]r_e;
- ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG),.RDPIPE(RDPIPE),.PIPE_FIX(LINK_CREDIT),.FB(FB)) u(
+ ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT),.IQ_SKID(IQ_SKID),.NOEPOCH(NOEPOCH),.SESREG(SESREG),.RDPIPE(RDPIPE),.PIPE_FIX(LINK_CREDIT),.FB(FB),.CPIPE(CPIPE)) u(
  .pclk(pclk),.prst_n(FB ? prun_r:prs[1]),.phy_link_up(FB ? 1'b1:pup_q),.phy_session(ses_q),.clk(clk),.rst_n(FB ? crun_r:crs[1]),.core_link_up(FB ? 1'b1:cup_q),
  .ph_tx_v(tx_v_q),.ph_tx_flit(tx_f_q),.ph_rx_v(c_rx_v),.ph_rx_flit(c_rx_f),.rx_credit(cred_q),.sw_cr_ret(c_cr),
  .fec_tx_v(c_tx_v),.fec_tx_ready(c_tx_r),.fec_tx_data(c_tx_d),.fec_tx_seq(c_tx_s),.fec_tx_session(c_tx_e),
