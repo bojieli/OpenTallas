@@ -1,0 +1,175 @@
+{
+ "schema": "hgi_vm_ports_report/1",
+ "element": "ot_hgi_vm_unit",
+ "op": "VM.PORTS",
+ "model": "DS AR 1M (HBM)",
+ "metric": "sum over VM-touching records of max(VM service time, priced time) / sum of priced time (a record's VM traffic offered from its S2 start on its production port)",
+ "ratio": 1.0142,
+ "records": 3883,
+ "missing": 0,
+ "priced_cycles": 779635,
+ "served_cycles": 790712,
+ "S2_cycles": 566785.1,
+ "ops": {
+  "FUSED.HC_PRE_NORM": {
+   "n": 81,
+   "priced": 52600,
+   "served": 52600,
+   "late": 0,
+   "worst": 0.134,
+   "ratio": 1.0
+  },
+  "SM.MATVEC": {
+   "n": 1095,
+   "priced": 103968,
+   "served": 107666,
+   "late": 513,
+   "worst": 2.65,
+   "ratio": 1.0356
+  },
+  "COLL.ALL_GATHER": {
+   "n": 584,
+   "priced": 227271,
+   "served": 227633,
+   "late": 4,
+   "worst": 108.0,
+   "ratio": 1.0016
+  },
+  "DMA.LOAD": {
+   "n": 340,
+   "priced": 35476,
+   "served": 35476,
+   "late": 0,
+   "worst": 0.817,
+   "ratio": 1.0
+  },
+  "SU.VOP": {
+   "n": 1356,
+   "priced": 136388,
+   "served": 137683,
+   "late": 40,
+   "worst": 2.323,
+   "ratio": 1.0095
+  },
+  "FUSED.QDQ_FP8": {
+   "n": 40,
+   "priced": 2480,
+   "served": 2480,
+   "late": 0,
+   "worst": 0.145,
+   "ratio": 1.0
+  },
+  "DMA.KVWB_DS": {
+   "n": 40,
+   "priced": 2400,
+   "served": 2400,
+   "late": 0,
+   "worst": 0.183,
+   "ratio": 1.0
+  },
+  "ATT.QK": {
+   "n": 40,
+   "priced": 13181,
+   "served": 13181,
+   "late": 0,
+   "worst": 0.054,
+   "ratio": 1.0
+  },
+  "ATT.PV": {
+   "n": 40,
+   "priced": 13182,
+   "served": 13182,
+   "late": 0,
+   "worst": 0.048,
+   "ratio": 1.0
+  },
+  "HC.HC_MIX_POST": {
+   "n": 80,
+   "priced": 43200,
+   "served": 43200,
+   "late": 0,
+   "worst": 0.504,
+   "ratio": 1.0
+  },
+  "COLL.GROUP_REDUCE_MCAST": {
+   "n": 40,
+   "priced": 53038,
+   "served": 53038,
+   "late": 0,
+   "worst": 0.042,
+   "ratio": 1.0
+  },
+  "FUSED.HC_POST": {
+   "n": 80,
+   "priced": 17811,
+   "served": 17811,
+   "late": 0,
+   "worst": 0.482,
+   "ratio": 1.0
+  },
+  "IDX.TOPK": {
+   "n": 40,
+   "priced": 11321,
+   "served": 11321,
+   "late": 0,
+   "worst": 0.318,
+   "ratio": 1.0
+  },
+  "IDX.INDEX": {
+   "n": 8,
+   "priced": 7513,
+   "served": 13216,
+   "late": 8,
+   "worst": 1.875,
+   "ratio": 1.7591
+  },
+  "COLL.TOPK_MERGE": {
+   "n": 9,
+   "priced": 21447,
+   "served": 21466,
+   "late": 1,
+   "worst": 20.0,
+   "ratio": 1.0009
+  },
+  "COLL.ROW_GATHER": {
+   "n": 8,
+   "priced": 33968,
+   "served": 33968,
+   "late": 0,
+   "worst": 0.027,
+   "ratio": 1.0
+  },
+  "ARGMAX.LOCAL": {
+   "n": 1,
+   "priced": 3626,
+   "served": 3626,
+   "late": 0,
+   "worst": 0.002,
+   "ratio": 1.0
+  },
+  "COLL.ARGMAX_MERGE": {
+   "n": 1,
+   "priced": 765,
+   "served": 765,
+   "late": 0,
+   "worst": 0.009,
+   "ratio": 1.0
+  }
+ },
+ "packet_rtt": "idx 9502 ops mean 6.00 edges",
+ "verdict": "PASS",
+ "grade": "measured_unit_bench",
+ "vehicle": "ot_hgi_vm_unit NC 9 WP 32 WDIRECT 1 RP 96 W2 96 LQ 32 (the hgi_vm5 / ot_hgi_vm_die client plan), Verilator 5.050, epyc3",
+ "source_log": "results/rtl/hgi_unit_tput_20261010/vm_ports/run_packet.log",
+ "sources_sha256": {
+  "rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv": "8361749658af1ca2ee03242ec89d3ab12a720afb1764ceef589f5ed5fad677fa",
+  "rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv": "227124aef5f75f3d803b38b2098c95b7fea34679bcce89cb0cea200f87b350ad",
+  "rtl/hbm_accel/generic/vm/tb_hgi_vm_ports_tput.sv": "83091e54d0d608817e51d949033887fc83e97a16e67f7e43d7453655d03f57bd",
+  "tools/hgi_vm_ports_trace.py": "8941fd602ecb8208c79f5fa0a0f64203b2d2820f308f8a9faef890352b8ea30f"
+ },
+ "findings": [
+  "IDX.INDEX q reads on the IDX packet client (OUT 4, measured round trip 6.00 edges = 0.67 sectors/edge) serve at 1.76x the IDX.INDEX price (8 records, 13,216 vs 7,513 cycles); with IDX on the lgE wide lane chain the whole token is 1.0069 and IDX.INDEX 1.00 (report_idx_lgE.json)",
+  "SM.MATVEC x-loads on lgE 1.036 (513 of 1,095 records late, worst 2.65x: lgW/lgE read groups share each bank's single read port)",
+  "SU.VOP 1.0095 (4 records read > 32 sectors an edge: two operands on one 32-lane group)"
+ ]
+}

@@ -47,6 +47,11 @@ module ot_dsrom_wfc_vmx #(
                                         //   channels issued as a pair in one cycle, returned as a pair in one entry (CDC 2 words)
     parameter integer WOUTW  = 5,       // mtp-wfc 2026-10-10: unACKed-write counter width; >= log2 of the writes in flight over
                                         //   the stationed write / ACK round trip + 1 (5 = the closed abutting-VM value)
+    parameter integer RQSRAM = 2,       // mtp-lead 2026-10-11: 1 = the read-response queue (RQ x RWE) in ot_sram_1r1w_128x256
+                                        //   macros (ot_fifo_sram_fwft, 2-entry flop out buffer, bypass when empty): RQ 64 x
+                                        //   1032 (RD2) as flops is 66k flops and exceeds SYNTH_MEMORY_MAX_BITS; same order,
+                                        //   same occupancy accounting (rq_n), overflow -> fault;
+                                        //   2 (default) = auto: SRAM when RQ x RWE > 32768 bits, flops otherwise
     parameter integer LAG    = 0        // ot_ratio_cdc_fifo LAG on both crossings (route variant: mem -> shadow arcs become
 
                                         // a max-delay write-period path with no hold check; +1 write cycle each way)
@@ -101,6 +106,7 @@ module ot_dsrom_wfc_vmx #(
     localparam integer PW = 1 + ((VWA + FLIT > SP) ? VWA + FLIT : SP);
     localparam integer RW = 1 + ((IB + FLIT > NW + 32) ? IB + FLIT : NW + 32);
     localparam integer RWE = RD2 ? RW + 1 + FLIT : RW;   // RD2: {marker, v1, d1, idx0 / d0 or DONE payload}
+    localparam integer RQS = (RQSRAM == 2) ? ((RQ * RWE > 32768) ? 1 : 0) : RQSRAM;
     localparam integer PB = $clog2(PRE);
     initial if (PRE < 2 || (PRE & (PRE - 1)) != 0 || RQ < 2 || (RQ & (RQ - 1)) != 0)
         $fatal(1, "ot_dsrom_wfc_vmx: PRE and RQ powers of two >= 2");
@@ -252,9 +258,25 @@ module ot_dsrom_wfc_vmx #(
     assign sr_addr = pf_a;
     assign sr1_addr = pf_a + 1'b1;
     wire sr_fire = sr_valid && sr_ready;
-    assign q_v = rq_n != 0;
-    assign q_d = rq[rq_r];
     wire q_pop = q_v && q_rdy;
+    // response-queue push (data words in order, then the DONE marker), combinational for the SRAM variant
+    wire rq_push_d = sr_rv;
+`ifdef OT_WFCVMX_MUT_DONEEARLY
+    wire rq_push_m = pf && !pf_dn && !sr_rv;                         // DONE before the outbound words
+`else
+    wire rq_push_m = pf && !pf_dn && pf_n == SD && !sr_rv;
+`endif
+    wire [RWE-1:0] rq_wd = sr_rv ? (RD2 ? {1'b0, sr1_rv, sr1_rq, (RW-1)'({pf_n, sr_rq})} : RWE'({pf_n, sr_rq}))   // data (MSB 0)
+                                 : (RWE'({pf_tok, pf_val}) | (RWE'(1) << (RWE - 1)));                        // DONE (MSB 1)
+    wire rq_ovf;
+    generate if (RQS) begin : g_rqs
+        ot_fifo_sram_fwft #(.W(RWE), .DEPTH(RQ), .MACRO(2)) u_rq (.clk(sclk), .rst_n(srst_n),
+            .push(rq_push_d || rq_push_m), .wdata(rq_wd), .pop(q_pop), .hv(q_v), .head(q_d), .ovf(rq_ovf));
+    end else begin : g_rqf
+        assign q_v = rq_n != 0;
+        assign q_d = rq[rq_r];
+        assign rq_ovf = 1'b0;
+    end endgenerate
     reg fault_s;
     always @(posedge sclk) begin
         k_start <= 1'b0;
@@ -285,17 +307,13 @@ module ot_dsrom_wfc_vmx #(
             // response queue: data words in order, then the DONE marker
             begin : rqq
                 reg push_d, push_m;
-                push_d = sr_rv;
-`ifdef OT_WFCVMX_MUT_DONEEARLY
-                push_m = pf && !pf_dn && !sr_rv;                     // DONE before the outbound words
-`else
-                push_m = pf && !pf_dn && pf_n == SD && !sr_rv;
-`endif
+                push_d = rq_push_d;
+                push_m = rq_push_m;
+                if (RQS == 0 && (push_d || push_m)) rq[rq_w] <= rq_wd;
+                if (rq_ovf) fault_s <= 1'b1;
                 if (sr_rv) begin
-                    rq[rq_w] <= RD2 ? {1'b0, sr1_rv, sr1_rq, (RW-1)'({pf_n, sr_rq})} : RWE'({pf_n, sr_rq});   // data (MSB 0)
                     pf_n <= pf_n + 1'b1 + (RD2 && sr1_rv ? 1'b1 : 1'b0);
                 end else if (push_m) begin
-                    rq[rq_w] <= RWE'({pf_tok, pf_val}) | (RWE'(1) << (RWE - 1));    // DONE marker (MSB 1)
                     pf_dn <= 1'b1;
                 end
                 if (pf && (pf_dn || push_m) && (sr_rv ? pf_n + 1'b1 + (RD2 && sr1_rv ? 1'b1 : 1'b0) : pf_n) == SD) pf <= 1'b0;
