@@ -248,12 +248,18 @@ class Kernels:
                 self.body[r][(4, 0)] = [self.end(HT, POS=True)]
         for L in layers_real:
             for r, recs in enumerate(self.layer(L)):
-                self.body[r][(3, L)] = recs + [self.end()]
+                self.body[r][(3, L)] = recs + [self.fence(), self.end()]
 
     # ---- records
     def end(self, base=ZT, POS=False):
         A = self.MDesc(space="VM", fmt="U32", base=base, n=1, dyn_sel=1 if POS else 0, dyn_mul=1 if POS else 0)
         return self.Rec("CTL", "END", wait=0xFFFE, desc=dict(A=A), tag="end" + (".head_stub" if POS else ""))
+
+    def fence(self):
+        """CTL.FENCE: every unit drained and every POSTED HBM write visible (spec CTL.FENCE / wr_quiet) -- a body that
+        stores to HBM ends with it, so the next launch's reads (the slot's swapin, the next column's window-ring rows)
+        see the writes; END's wait mask alone does not cover posted DMA writes"""
+        return self.Rec("CTL", "FENCE", wait=0xFFFE, tag="fence")
 
     def swap(self, into):
         b = self.Builder(None)
@@ -265,7 +271,7 @@ class Kernels:
             else:
                 b.add(self.Rec("DMA", "STORE", desc=dict(A=vm, O=hb), tag=f"swapout.{nm}", family="swap"),
                       [nm], [f"COL.{nm}"])
-        return b.recs + [self.end()]
+        return b.recs + ([] if into else [self.fence()]) + [self.end()]
 
     def embed(self):
         b = self.Builder(None)

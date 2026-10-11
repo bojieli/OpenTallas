@@ -221,6 +221,11 @@ extern "C" void e2e_stub_retire(int k, long long cyc) {
     apply(r);
 }
 
+// hgi-1010/h: with posted DMA writes (DMA_POSTED 1) a STORE / KVWB_DS retires before its HBM writes land; their HBM
+// bytes are checked at the finish (every golden HBM write range) and, in between, by every later reader's exact check
+// (e.g. a swapin LOAD of the slot a swapout stored), not at the record's retire.
+static int posted_dma = 0;
+extern "C" void e2e_posted(int p) { posted_dma = p; }
 extern "C" int e2e_real_retire(int k, long long cyc) {
     if (k < 0 || k >= (int)recs.size()) return 1;
     Rec& r = recs[k];
@@ -233,7 +238,8 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
         if (vm[a] != v) { if (bad < 8) fprintf(stderr, "E2E REAL %d (%s) VM[%u] = %08x golden %08x\n", k, r.tag.c_str(), a, vm[a], v); bad++; }
     }
     size_t o = r.hbm_off;
-    for (uint64_t i = 0; i < r.hbm_n; i++) {
+    bool defer = posted_dma && r.unit == 8 && (r.op == 1 || r.op == 3);
+    for (uint64_t i = 0; i < r.hbm_n && !defer; i++) {
         uint64_t a, n; memcpy(&a, &hbmw[o], 8); memcpy(&n, &hbmw[o + 8], 8); o += 16;
         for (uint64_t j = 0; j < n; j++) {
             uint8_t g = hbmw[o + j], h = sector((a + j) >> 5)[(a + j) & 31];

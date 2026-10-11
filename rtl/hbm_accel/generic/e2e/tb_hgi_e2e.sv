@@ -51,6 +51,7 @@ module tb_hgi_e2e;
     import "DPI-C" function void e2e_ignore(input int lo, input int hi);
     import "DPI-C" function void e2e_watch(input int a);
     import "DPI-C" function void e2e_vm_wr(input int unit, input int a, input int v);
+    import "DPI-C" function void e2e_posted(input int p);
 
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
@@ -410,6 +411,7 @@ module tb_hgi_e2e;
         $readmemh({dir, "/host.mem"}, host);
         n_rec = e2e_init(dir, outp);
         if (n_rec <= 0) $fatal(1, "E2E init failed");
+        e2e_posted(REAL_DMA && DMA_POSTED);
         if (REAL_FUSED) e2e_ignore(FUSED_SCRATCH, FUSED_SCRATCH + 8192);
         if ($value$plusargs("WATCH=%d", w)) e2e_watch(w);
         t_cpl = 0;
