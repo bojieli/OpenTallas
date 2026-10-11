@@ -305,6 +305,7 @@ module ot_hgi_att_unit #(
     wire [NL*SPRL*256-1:0] l2_head;
     wire l2_iss = (PIPE == 2) && (st == S_KVS) && fi_row < l2_end && (!wq_v || wq_rdy) && (&l2_room);
     wire l2_pop = (PIPE == 2) && (st == S_KVS) && co_row < l2_end && (&(l2_rdy | ~l2_pmask)) && (!kv_v || kv_ready);
+    if (PIPE == 2) begin : g_l2                          // the lanes exist only in the PIPE = 2 build
     for (ls = 0; ls < NL; ls = ls + 1) begin : g_l2s
         assign l2_room[ls] = l2_inf[ls] < RIF;
         reg [7:0] hp;                                   // head pointer (shared by the slot's lanes: rows land in order)
@@ -330,6 +331,9 @@ module ot_hgi_att_unit #(
                 if (l2_pop && l2_pmask[ls]) hp <= hp + 8'd1;
                 l2_inf[ls] <= l2_inf[ls] + ((l2_iss && l2_imask[ls]) ? 8'd1 : 8'd0) - ((l2_pop && l2_pmask[ls]) ? 8'd1 : 8'd0);
             end
+    end
+    end else begin : g_l2n
+        assign l2_room = {NL{1'b1}}; assign l2_rdy = {NL{1'b0}}; assign l2_head = {NL*SPRL*256{1'b0}};
     end
     // whole-row conversion: slot s's lanes -> D E4M3 codes -> the staging row
     reg [NL*ROWW-1:0] l2_row; reg [NL-1:0] l2_bad;
