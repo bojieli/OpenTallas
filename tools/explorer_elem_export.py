@@ -14,6 +14,11 @@ main when merged), the job's final routed DB on its fleet host, and the job's so
         (/api/elements, best closing job), at most 2 at a time per host.
   run   (on the host) --orfs <dir> --src <dir> --out <dir> [--tt-tcl F --ff-tcl F --ss2tt | --nosta]
   pack  (local) --raw <dir> --element <id> --job <job> --dest <data dir> [--rtl rtl.json] [...]
+  trace --job <closure job> [--element <id>] [--host H] [--window N]   element activity replay (Replay tab): re-run the
+        job's exactness bench under Verilator with FST tracing over a window from the first accepted input transaction
+        and pack <element>.trace.json (opentallas.elem_trace.v1; tools/explorer_elem/trace_local.py).  auto runs it after
+        a successful export (CL_ANIM=0 disables); failures are recorded in ~/.local/state/viz-elem/<job>.trace.json only.
+  trace-batch [--only a,b] [--redo] [--per-host 2]                  trace every exported element that has none yet
 
 Big blobs live in the fleet-viz data store (~/.local/share/fleet-viz/explorer/element/data) and on the host
 (<scratch>/viz-elem-store/<job>/raw), never in git.
@@ -29,6 +34,7 @@ MARKS = pathlib.Path.home() / '.local/state/viz-elem'
 DEST = pathlib.Path.home() / '.local/share/fleet-viz/explorer/element/data'
 CACHE = pathlib.Path.home() / '.cache/viz-elem'
 TOOLS = [HERE / 'explorer_elem_export.py', HERE / 'explorer_elem' / 'or_export.py', HERE / 'explorer_elem' / 'rtl_export.py']
+sys.path.insert(0, str(HERE / 'explorer_elem'))
 REF_NAME = re.compile(r'(oracle|golden|ref_model|refmodel|reference_model|_reference\b|_ref\.py$)', re.I)
 PATH_RE = re.compile(r'\b((?:tools|rtl|physical|results|tests|compiler|src)/[A-Za-z0-9_./-]+\.(?:py|sv|svh|v|json|sh|cpp|h|tcl))\b')
 
@@ -282,6 +288,9 @@ def _auto(job, element, dest, reg, log, redo):
          rtl=rtl_local, ref=ref, reg=reg, nosta=nosta)
     mark(job, state='done', element=eid, layout=layout, nosta=nosta, rtl=bool(rtl_local), reference=ref.get('path'), error=None)
     log('%s -> %s done (layout %s, sta %s, rtl %s, ref %s)' % (job, eid, layout, not nosta, bool(rtl_local), ref.get('path')))
+    if rtl_local and os.environ.get('CL_ANIM', '1') != '0':   # anim-1011: activity replay; never raises, own marker
+        import trace_local
+        trace_local.trace(job, eid, dest, log=log)
     return True
 
 
@@ -409,6 +418,24 @@ def cmd_batch(a):
     print('batch done: %d ok, %d failed' % (sum(1 for x in res if x), sum(1 for x in res if not x)), flush=True)
 
 
+def cmd_trace_batch(a):
+    import trace_local
+    idx = json.loads((pathlib.Path(a.dest) / 'index.json').read_text())['elements']
+    todo = []
+    for eid, e in idx.items():
+        if not e.get('rtl') or not e.get('job'): continue
+        if a.only and eid not in a.only.split(','): continue
+        if not a.redo and (pathlib.Path(a.dest) / (eid + '.trace.json')).exists(): continue
+        todo.append((eid, e['job']))
+    print('trace-batch: %d elements' % len(todo), flush=True)
+    sem = threading.Semaphore(a.workers)
+    def one(t):
+        with sem: return trace_local.trace(t[1], t[0], a.dest, log=lambda s: print(time.strftime('%H:%M:%S'), s, flush=True))
+    with cf.ThreadPoolExecutor(max_workers=a.workers) as ex:
+        res = list(ex.map(one, todo))
+    print('trace-batch done: %d ok, %d failed' % (sum(1 for x in res if x), sum(1 for x in res if not x)), flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest='cmd', required=True)
@@ -425,7 +452,15 @@ def main():
     p.add_argument('--raw-remote'); p.add_argument('--db', default=''); p.add_argument('--record-ref'); p.add_argument('--note')
     p.add_argument('--rtl'); p.add_argument('--target'); p.add_argument('--category')
     p.add_argument('--extra-fact', action='append', help='JSON {"k":..,"v":..,"unit":..,"src":..}; repeatable')
+    tr = sp.add_parser('trace'); tr.add_argument('--job', required=True); tr.add_argument('--element'); tr.add_argument('--dest', default=str(DEST))
+    tr.add_argument('--host'); tr.add_argument('--window', type=int, default=256)
+    tb = sp.add_parser('trace-batch'); tb.add_argument('--dest', default=str(DEST)); tb.add_argument('--only'); tb.add_argument('--redo', action='store_true')
+    tb.add_argument('--workers', type=int, default=4)
     a = ap.parse_args()
+    if a.cmd == 'trace':
+        import trace_local
+        sys.exit(0 if trace_local.trace(a.job, a.element, a.dest, host=a.host, window=a.window) else 1)
+    if a.cmd == 'trace-batch': return cmd_trace_batch(a)
     if a.cmd == 'run': sys.exit(cmd_run(a))
     if a.cmd == 'auto':
         ok = auto(a.job, a.element, a.dest)

@@ -27,8 +27,9 @@ const TABS = [
   ['tree', 'Clock tree', 'How one clock pin feeds every flop: each buffer level and clock gate, on the layout and as a level diagram.'],
   ['density', 'Density', 'Cell density, pin density and routed-wire demand per bin.'],
   ['rtl', 'RTL', 'Structure from the elaborated RTL, the reference model the bench names, and the source at the closure\u2019s commit. Select a module to light its cells.'],
+  ['replay', 'Replay', 'Every placed flop, cycle by cycle, from a gate-level simulation of the routed netlist under the element\u2019s exactness bench.'],
   ['facts', 'Facts', 'Key numbers, throughput qualification against the budget, and every sign-off and layout fact with its record.']];
-const LAYOUT_TABS = new Set(['layout', 'timing', 'arrival', 'tree', 'density']);
+const LAYOUT_TABS = new Set(['layout', 'timing', 'arrival', 'tree', 'density', 'replay']);
 const PAL = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#17becf', '#bcbd22', '#8c6bb1'];
 const OTHER = '#7c86a6', UNATTR = '#4a5678';
 const RAMP = ['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725'];
@@ -372,6 +373,7 @@ function lensState(){
   if (T === 'tree') return {base: 'grey', dim: .8, overlays: ['macros', 'ctree', 'root']};
   if (T === 'density') return {base: 'none', overlays: ['heat', 'macros']};
   if (T === 'rtl') return {base: 'rtl', dim: 0, overlays: ['macros']};
+  if (T === 'replay') return {base: 'grey', dim: .8, overlays: ['macros']};
   return {base: 'hier', dim: .45, overlays: ['macros']};
 }
 function draw(E){
@@ -395,6 +397,7 @@ function draw(E){
   P.lab.innerHTML = `<b>${esc(E.d.label + (E.d.role ? ' · ' + E.d.role : ''))}</b><br>${esc(SAFE ? '' : E.d.block + ' · ')}${fmt(E.W, 1)} × ${fmt(E.H, 1)} µm · ${fmt(E.n, 0)} cells` +
     (S.tab === 'tree' ? `<br>${E.cw && S.tview === 'wires' ? `routed clock wires from the DB (${fmt(E.cw.n, 0)} segments)` : 'tree topology: straight lines driver → driven buffer'}` : '') +
     (S.tab === 'rtl' && S.rtlEl === E.k && S.rtlSel != null ? `<br>lit: ${esc(SAFE ? 'selected module' : (S.rtlSel || '(top)'))} · <span style="color:var(--accent)">&#9632;</span> named <span style="color:var(--warn)">&#9632;</span> inferred` : '');
+  if (window.OTXReplay){ if (S.tab === 'replay') window.OTXReplay.draw(E); else if (P.gl && P.gl.cv) P.gl.cv.hidden = true; }
   const bar = niceStep(80 / s); P.scale.textContent = `${bar >= 1 ? fmt(bar, 0) : fmt(bar, 2)} µm ≈ ${fmt(bar * s, 0)} px`;
 }
 function niceStep(v){ const m = Math.pow(10, Math.floor(Math.log10(v))), e = v / m; return (e >= 5 ? 5 : e >= 2 ? 2 : 1) * m; }
@@ -787,6 +790,7 @@ function short(E){ return ((S.page.short || {})[E.id]) || E.d.label; }
 function sec(t, body, sub){ return `<div class="sec"><h3>${t}${sub ? ` <span class="u">${sub}</span>` : ''}</h3>${body}</div>`; }
 function renderSide(){
   const T = S.tab, H = [], ok = S.els.filter(E => !E.err && (!LAYOUT_TABS.has(T) || !E.nolayout));
+  if (T === 'replay' && window.OTXReplay){ $('side').innerHTML = window.OTXReplay.side(); window.OTXReplay.bindSide(); return; }
   if (T === 'layout'){
     H.push(sec('Hierarchy', `<div class="ctl"><label for="dep">Depth</label><select id="dep">${[1, 2, 3, 4, 5, 6].map(d => `<option value="${d}" ${ok[0] && ok[0].depth === d ? 'selected' : ''}>${d}</option>`).join('')}</select>
       <span class="note" style="margin:0">Cells coloured by RTL block (module path below the common prefix). Click a block to isolate it.</span></div>`));
@@ -897,5 +901,6 @@ function histSVG(){
   return `<svg class="hist" viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Clock arrival histogram">${rows}${ticks}</svg><p class="note">Shared x axis from the lowest 1st percentile; each row scaled to its own tallest bin.${clip ? ` ${fmt(clip, 0)} flop${clip > 1 ? 's' : ''} earlier than ${fmt(lo, 0)} ps counted in the first bin (min ${ok.map(E => fmt((S.ccorner === 'ff' ? E.M.ff : E.M.tt).min, 0)).join(' / ')} ps).` : ''}</p>`;
 }
 
+window.OTX = {S, $, esc, fmt, cssv, QS, SAFE, F, sec, redrawAll, renderSide, draw};
 init().catch(e => { $('sum').textContent = 'Failed to load: ' + e; });
 })();
