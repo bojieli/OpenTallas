@@ -22,7 +22,7 @@ set ot_sr [expr {$ot_bmax + 1}]
 set ot_rows [expr {($ot_smax + 1) * $ot_sr}]
 if {[llength $ot_m] < 8 || $ot_rows != 8} { error "place_macros_vm28: [llength $ot_m] macros / $ot_rows rows" }
 set ot_mh 29.736
-set ot_y0 10.8
+set ot_y0 32.4   ;# el1011-ds-vm/bgq28: >= 32 um N / S pin-face channels (the f_d / i_d pin registers and IO buffers sit between the pins and the end macros; at 10.8 the S-face f_d buffers were pushed ~500 ps of wire away) -> pitch 57.24, inter-macro channels 27.5 um
 # pitch on the 1.08-um row grid
 set ot_p [expr {floor(($ot_h - 2 * $ot_y0 - $ot_mh) / ($ot_rows - 1) / 1.08) * 1.08}]
 foreach e $ot_m {
@@ -36,6 +36,6 @@ foreach ot_i [$ot_blk getInsts] {
   if {![[$ot_i getMaster] isBlock]} { continue }
   set ot_bb [$ot_i getBBox]
   set ot_c [expr {min(([$ot_bb xMin] - [$ot_die xMin]), ([$ot_die xMax] - [$ot_bb xMax]), ([$ot_bb yMin] - [$ot_die yMin]), ([$ot_die yMax] - [$ot_bb yMax])) / double($ot_u)}]
-  if {$ot_c < 10.0} { error "place_macros_vm28: [$ot_i getName] only $ot_c um from a die edge (< 10 um macro-edge clearance)" }
+  if {$ot_c < 20.0} { error "place_macros_vm28: [$ot_i getName] only $ot_c um from a die edge (< 20 um macro-edge clearance)" }
 }
 puts "place_macros_vm28: [llength $ot_m] macros, $ot_rows rows, pitch $ot_p (die $ot_w x $ot_h)"

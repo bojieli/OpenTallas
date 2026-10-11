@@ -267,6 +267,20 @@ module dsfd_vm_bgq #(
                     end
                     if (serve) qh <= qh + 1'b1;
                 end
+            // (EP >= 1) queue-pointer replicas, one per 32-bit data word: each updates from its OWN state (so synthesis
+            // cannot merge them) by the same rule as qt / qh, so they are equal to qt / qh every cycle; each drives
+            // only its word's 4-slot write rotate / serve select (~32 x 4 loads instead of ~600 on one net)
+            localparam integer NW = DW / 32;
+            reg [QW-1:0] qtr [0:NW-1];
+            reg [QW-1:0] qhr [0:NW-1];
+            integer wr;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) for (wr = 0; wr < NW; wr = wr + 1) begin qtr[wr] <= 0; qhr[wr] <= 0; end
+                else for (wr = 0; wr < NW; wr = wr + 1) begin
+                    if (need > QD) qtr[wr] <= qtr[wr] + (QD - (occ - serve));
+                    else qtr[wr] <= qtr[wr] + cnt_a;
+                    if (serve) qhr[wr] <= qhr[wr] + 1'b1;
+                end
             if (EP == 0) begin : g_e0
                 assign cnt_a = cnt;
                 always @(posedge clk)
@@ -386,7 +400,7 @@ module dsfd_vm_bgq #(
                     end
                 end
                 // ---- queue write: slot word j lands at (qt + j) if it fits (same rule as EP 0 with pref = j)
-                integer j6;
+                integer j6, j7;
                 always @(posedge clk)
                     for (j6 = 0; j6 < QD; j6 = j6 + 1)
                         if (k_v[j6] && occ - serve + j6 < QD) begin
@@ -394,7 +408,8 @@ module dsfd_vm_bgq #(
                             q_p [(qt + j6) & (QD-1)] <= k_p[j6];
                             q_r [(qt + j6) & (QD-1)] <= k_r[j6];
                             q_m [(qt + j6) & (QD-1)] <= k_m[j6];
-                            q_dd[(qt + j6) & (QD-1)] <= k_d[j6];
+                            for (j7 = 0; j7 < NW; j7 = j7 + 1)
+                                q_dd[(qtr[j7] + j6) & (QD-1)][32*j7 +: 32] <= k_d[j6][32*j7 +: 32];
                         end
             end
             assign b_ovf[gb] = ovf;
@@ -409,7 +424,9 @@ module dsfd_vm_bgq #(
                 if (!rst_i) begin s_we <= 1'b0; s_re <= 1'b0; end
                 else begin s_we <= serve & q_we[qh]; s_re <= serve & ~q_we[qh]; end
             always @(posedge clk) begin
-                s_p <= q_p[qh]; s_r <= q_r[qh]; s_dd <= q_dd[qh];
+                s_p <= q_p[qh]; s_r <= q_r[qh];
+                if (EP == 0) s_dd <= q_dd[qh];
+                else for (e = 0; e < NW; e = e + 1) s_dd[32*e +: 32] <= q_dd[qhr[e]][32*e +: 32];
                 for (e = 0; e < MW; e = e + 1)
 `ifdef OT_S81PH_VM_MUT_MASK
                     s_bm[32*e +: 32] <= {32{1'b1}};                    // MUTANT: element write mask ignored
@@ -447,6 +464,8 @@ module dsfd_vm_bgq #(
             reg [DW-1:0] f_dd [0:RQ-1];
             reg [PW-1:0] f_p [0:RQ-1];
             reg [RW-1:0] fh, ft;
+            reg [RW-1:0] fhr [0:NW-1];                  // (EP >= 1) per-word replicas of fh (own-state update)
+            integer wf, wf2;
             reg [RW:0]   fn;
             reg          und;
             reg [PW:0] dcnt;
@@ -459,17 +478,20 @@ module dsfd_vm_bgq #(
             reg [PW-1:0] dsp [0:KQ-1];
             integer kk;
             always @(posedge clk or negedge rst_i)
-                if (!rst_i) begin fh <= 0; ft <= 0; fn <= 0; und <= 1'b0; end
+                if (!rst_i) begin fh <= 0; ft <= 0; fn <= 0; und <= 1'b0; for (wf = 0; wf < NW; wf = wf + 1) fhr[wf] <= 0; end
                 else begin
                     if (r_vv) ft <= ft + 1'b1;
                     fh <= fh + dcnt;
+                    for (wf = 0; wf < NW; wf = wf + 1) fhr[wf] <= fhr[wf] + dcnt;
                     fn <= fn + r_vv - dcnt;
                     if (dcnt > fn) und <= 1'b1;
                 end
             always @(posedge clk) begin
                 if (r_vv) begin f_dd[ft] <= r_dd; f_p[ft] <= r_p; end
                 for (kk = 0; kk < KQ; kk = kk + 1) begin
-                    ds[kk] <= f_dd[(fh + kk) & (RQ-1)];
+                    if (EP == 0) ds[kk] <= f_dd[(fh + kk) & (RQ-1)];
+                    else for (wf2 = 0; wf2 < NW; wf2 = wf2 + 1)      // (EP >= 1) per-word read-pointer replica
+                        ds[kk][32*wf2 +: 32] <= f_dd[(fhr[wf2] + kk) & (RQ-1)][32*wf2 +: 32];
                     dsp[kk] <= f_p[(fh + kk) & (RQ-1)];
                 end
             end
