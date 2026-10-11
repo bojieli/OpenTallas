@@ -34,6 +34,9 @@ module ot_qwen_rom_core_ctrl_x_bi #(
     parameter integer ICUT = 0,       // qwen-1010/a: registered readiness (ctrl_icut)
     parameter integer PRL = 1,        // qwen-1010/a: program read latency (ctrl_prl)
     parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)
+                                     // 2 (hardcore-1010 fe-h): two head words written in turn while fewer than 2 are held
+                                     // (fill enable from registers only: fq_n, hc), decode reads hq / hq1 by a registered
+                                     // pointer.  Same words, same edges as FQ_HEAD 1 (lockstep bench)
     parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
     parameter integer W    = 16,
     parameter integer G    = 4,
@@ -474,7 +477,11 @@ localparam integer W_ME_AMC = 1;
     reg        pend2;                     // PRL 2: ... the cycle after
     reg  [INSTR_BITS-1:0] hq;            // FQ_HEAD: registered head word
     reg                   hq_v;
-    wire [INSTR_BITS-1:0] ir = (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
+    reg  [INSTR_BITS-1:0] hq1;           // FQ_HEAD 2: second head word
+    reg                   h_rd, h_wr;    // FQ_HEAD 2: head read / write pointers
+    reg  [1:0]            hc;            // FQ_HEAD 2: head words held
+    wire                  hv = (FQ_HEAD >= 2) ? (hc != 2'd0) : hq_v;
+    wire [INSTR_BITS-1:0] ir = (FQ_HEAD >= 2) ? (h_rd ? hq1 : hq) : (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
     reg        nx_v;                      // NEXT holds a decoded instruction
     wire       me_go, su_go;
     wire       me_ready, me_idle, su_ready, su_idle;
@@ -583,9 +590,10 @@ localparam integer W_ME_AMC = 1;
         if (!rst_n) begin osync_r <= 1'b1; opast_r <= 1'b0; end
         else begin osync_r <= skip ? o_eq1 : o_eq0; opast_r <= skip ? o_pa1 : o_pa0; end
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
-    wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hq_v : (fq_n != 0)) && (!nx_v || issue || skip);
+    wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hv : (fq_n != 0)) && (!nx_v || issue || skip);
     // FQ_HEAD: the FIFO pops into hq when hq is empty or being loaded into NEXT
-    wire hq_fill = (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
+    wire hq_fill = (FQ_HEAD >= 2) ? ((st == S_RUN) && (fq_n != 0) && (hc != ((FQ_HEAD == 3) ? 2'd3 : 2'd2))) :
+                  (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
     wire fq_pop = (FQ_HEAD != 0) ? hq_fill : load;
     wire push = (st == S_RUN) && ((PRL > 1) ? pend2 : pend1);
     // ICUT: the readiness of the op at NEXT after this edge, against the status predicted after this edge
@@ -633,7 +641,7 @@ localparam integer W_ME_AMC = 1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; pc <= 0; fpc <= 0; done <= 1'b0; prog_re <= 1'b0; pend1 <= 1'b0; pend2 <= 1'b0;
-            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0;
+            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0; hc <= 2'd0; h_rd <= 1'b0; h_wr <= 1'b0;
             cycles <= 0; next_token <= 0;
         end else begin
             if (st != S_IDLE) cycles <= cycles + 1;
@@ -644,18 +652,25 @@ localparam integer W_ME_AMC = 1;
                 S_IDLE: if (start) begin
                     tok_r <= token; pos_r <= pos; pc <= 0; fpc <= 0; done <= 1'b0; cycles <= 0;
                     fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; pend1 <= 1'b0; pend2 <= 1'b0; hq_v <= 1'b0;
+                    hc <= 2'd0; h_rd <= 1'b0; h_wr <= 1'b0;
                     st <= S_DYN;
                 end
                 S_DYN: st <= S_RUN;
                 S_RUN: begin
                     // fetch: one word a cycle while fewer than NFQ are held or in flight
-                    if ({1'b0, fq_n} + ((FQ_HEAD != 0) ? hq_v : 1'b0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+                    if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
                         prog_re <= 1'b1; prog_addr <= fpc; fpc <= fpc + 1'b1;
                     end
                     if (push) begin fq[fq_wr] <= prog_q; fq_wr <= fq_wr + 1'b1; end
                     if (fq_pop) fq_rd <= fq_rd + 1'b1;
                     fq_n <= fq_n + (push ? 3'd1 : 3'd0) - (fq_pop ? 3'd1 : 3'd0);
-                    if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end
+                    if (FQ_HEAD >= 2) begin
+                        if (hq_fill && !h_wr) hq <= fq[fq_rd];
+                        if (hq_fill && h_wr) hq1 <= fq[fq_rd];
+                        if (hq_fill) h_wr <= !h_wr;
+                        if (load) h_rd <= !h_rd;
+                        hc <= hc + (hq_fill ? 2'd1 : 2'd0) - (load ? 2'd1 : 2'd0);
+                    end else if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end
                     else if (load && FQ_HEAD != 0) hq_v <= 1'b0;
                     if (issue || skip) pc <= pc + 1'b1;
                     if (load) nx_v <= 1'b1;
@@ -973,11 +988,28 @@ module ot_qfd_seq_su_bi #(
     parameter integer W = 16, parameter integer G = 6144, parameter integer AW = 24, parameter integer NW = 18,
     parameter integer PAW = 12, parameter integer SW = 64, parameter integer LV = 7, parameter integer D = 4,
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
-    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4
+    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,
+    // PSRAM = 1 (hardcore-1010 D fallback, 2026-10-10; 0 = unchanged): the 64 x 1,024 program store is two
+    // ot_sram_1r1w_64x512_m1_r2c2 macros (64 x 512, bit-masked 64-bit writes) instead of 65,536 flops; the read is
+    // issued at the prog_re edge with the unregistered address (12-bit add -> macro address pins), the macro output is
+    // captured in prog_q one edge later = the PRL 2 timing of the flop store (0 cycles).  Contract: the store is
+    // written only while no program read of the same word is in flight (boot load; read-before-write macro).
+    // PMUT = 1: bench negative control (the read issued one edge late, with the registered address).
+    parameter integer PSRAM = 0, parameter integer PMUT = 0,
+    // HQ2 = 1 (hardcore-1010 fe-h): the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2):
+    // fba-0ef4d7781 TT -131 / fbb post-CTS -537 on u_ctrl.st -> skip/issue -> load -> hq_fill -> hq[1023:0] enable (26 lv)
+    // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word)
+    parameter integer HQ2 = 0
 ) (
     input  wire clk,
     input  wire rst_n,
     input  wire [1-1:0] h_start,
+    input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs
+    input  wire [1-1:0] cb_st_rdy,        // constant buffer: stage cb_st_rdy_stage resident
+    input  wire [5:0] cb_st_rdy_stage,
+    output wire [5:0] cb_stage,           // to every constant-buffer group: the stage the SU runs
+    output wire [1-1:0] cb_tok_start,
+    output wire [NW-1:0] cb_tpos,
     input  wire [NW-1:0] tp_token,
     input  wire [NW-1:0] tp_pos,
     input  wire [1-1:0] kv_write_drained,
@@ -1069,7 +1101,20 @@ module ot_qfd_seq_su_bi #(
     output wire [24-1:0] su_acc_o,
     output wire [1-1:0] su_idle_o,
     output wire [16-1:0] su_prog_o,
-    output wire [16-1:0] su_rows_o
+    output wire [16-1:0] su_rows_o,
+    output wire [1-1:0] kvd_v,
+    output wire [AW-1:0] kvd_wbase,
+    output wire [AW-1:0] kvd_ts,
+    output wire [AW-1:0] kvd_ks,
+    output wire [AW-1:0] kvd_js,
+    output wire [AW-1:0] kvd_wcs,
+    output wire [4-1:0] kvd_split,
+    output wire [3-1:0] kvd_jsh,
+    output wire [NW-1:0] kvd_tiles,
+    output wire [NW-1:0] kvd_k,
+    output wire [NW-1:0] kvd_nout,
+    output wire [1-1:0] kvd_kindk,
+    output wire [NW-1:0] kvd_pos
 );
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
@@ -1258,6 +1303,32 @@ module ot_qfd_seq_su_bi #(
     wire [16-1:0] b_su_prog_o;
     ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_prog_o (.clk(clk), .rst_n(rs), .d(b_su_prog_o), .q(su_prog_o));
     wire [16-1:0] b_su_rows_o;
+    wire [1-1:0] b_kvd_v;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_v (.clk(clk), .rst_n(rs), .d(b_kvd_v), .q(kvd_v));
+    wire [AW-1:0] b_kvd_wbase;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wbase (.clk(clk), .rst_n(rs), .d(b_kvd_wbase), .q(kvd_wbase));
+    wire [AW-1:0] b_kvd_ts;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ts (.clk(clk), .rst_n(rs), .d(b_kvd_ts), .q(kvd_ts));
+    wire [AW-1:0] b_kvd_ks;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ks (.clk(clk), .rst_n(rs), .d(b_kvd_ks), .q(kvd_ks));
+    wire [AW-1:0] b_kvd_js;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_js (.clk(clk), .rst_n(rs), .d(b_kvd_js), .q(kvd_js));
+    wire [AW-1:0] b_kvd_wcs;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wcs (.clk(clk), .rst_n(rs), .d(b_kvd_wcs), .q(kvd_wcs));
+    wire [4-1:0] b_kvd_split;
+    ot_hdc_delay #(.W(4), .D(OS)) u_o_kvd_split (.clk(clk), .rst_n(rs), .d(b_kvd_split), .q(kvd_split));
+    wire [3-1:0] b_kvd_jsh;
+    ot_hdc_delay #(.W(3), .D(OS)) u_o_kvd_jsh (.clk(clk), .rst_n(rs), .d(b_kvd_jsh), .q(kvd_jsh));
+    wire [NW-1:0] b_kvd_tiles;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_tiles (.clk(clk), .rst_n(rs), .d(b_kvd_tiles), .q(kvd_tiles));
+    wire [NW-1:0] b_kvd_k;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_k (.clk(clk), .rst_n(rs), .d(b_kvd_k), .q(kvd_k));
+    wire [NW-1:0] b_kvd_nout;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_nout (.clk(clk), .rst_n(rs), .d(b_kvd_nout), .q(kvd_nout));
+    wire [1-1:0] b_kvd_kindk;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_kindk (.clk(clk), .rst_n(rs), .d(b_kvd_kindk), .q(kvd_kindk));
+    wire [NW-1:0] b_kvd_pos;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_pos (.clk(clk), .rst_n(rs), .d(b_kvd_pos), .q(kvd_pos));
     ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_rows_o (.clk(clk), .rst_n(rs), .d(b_su_rows_o), .q(su_rows_o));
     wire s_su_ready, s_su_idle; wire [15:0] s_su_progress, s_su_progress_rows; reg [NW-1:0] tok_l; wire es_re_w;
         ot_qfd_issue_shell #(.RT_ME(0), .RT_SU(RT), .COMP(1)) u_shell (.clk(clk), .rst_n(rs),
@@ -1272,20 +1343,47 @@ module ot_qfd_seq_su_bi #(
     assign b_su_tok = tok_l;
     wire prog_re; wire [11:0] prog_addr, prog_base; reg [1023:0] prog_q;
     wire desc_re; wire [5:0] desc_addr; reg [63:0] desc_q;
-    reg [1023:0] prog_mem [0:63];
+    reg [1023:0] prog_mem [0:63];                       // PSRAM 0 (the flop store)
     reg [63:0] desc_mem [0:7];
     wire [11:0] prog_a = prog_base + prog_addr;
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
     always @(posedge clk or negedge rs) if (!rs) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
     always @(posedge clk) prog_a_r <= prog_a;
+    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;
     always @(posedge clk) begin
-        if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;
         if (q_dw_v) desc_mem[q_dw_addr] <= q_dw_data;
-        if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;
         if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;
     end
+    generate if (PSRAM != 0) begin : g_psram
+        //: the program store as two 64 x 512 SRAM macros (bit-masked 64-bit slice writes); prog_q = the captured output
+        reg rng_r;                                       // the read word is inside the store (else prog_q = 0)
+        always @(posedge clk) rng_r <= (PMUT != 0) ? (prog_a_r < 64) : (prog_a < 64);
+        wire [1023:0] p_rd;
+        wire p_rce = (PMUT != 0) ? prog_re_r : prog_re;
+        wire [5:0] p_ra = (PMUT != 0) ? prog_a_r[5:0] : prog_a[5:0];
+        genvar m;
+        for (m = 0; m < 2; m = m + 1) begin : g_m
+            wire w_ce = q_pw_v && (q_pw_addr[3] == ((m != 0) ? 1'b1 : 1'b0));
+            wire [511:0] w_mask = {448'd0, {64{1'b1}}} << (64 * q_pw_addr[2:0]);
+            ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(clk), .r_ce_in(p_rce), .r_addr_in(p_ra), .rd_out(p_rd[512*m +: 512]),
+                .w_ce_in(w_ce), .w_addr_in(q_pw_addr[9:4]), .wd_in({8{q_pw_data}}), .w_mask_in(w_mask),
+                .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+        end
+        if (PMUT != 0) begin : g_pmut
+            reg pre_rr;
+            always @(posedge clk or negedge rs) if (!rs) pre_rr <= 1'b0; else pre_rr <= prog_re_r;
+            always @(posedge clk) if (pre_rr) prog_q <= rng_r ? p_rd : 1024'd0;
+        end else begin : g_pq
+            always @(posedge clk) if (prog_re_r) prog_q <= rng_r ? p_rd : 1024'd0;
+        end
+    end else begin : g_pflop
+        always @(posedge clk) begin
+            if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;
+            if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;
+        end
+    end endgenerate
     wire wrom_re_w; assign b_rom_fault = wrom_re_w; assign b_core_fault = core_fault_w;
-    ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(1)) u_ctrl (
+    ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl (
         .clk(clk),
         .rst_n(rs),
         .start(core_start),
@@ -1347,19 +1445,19 @@ module ot_qfd_seq_su_bi #(
         .vw_mx_mask(),
         .vw_mx_data(),
         .me_ov(),
-        .kvd_v(),
-        .kvd_wbase(),
-        .kvd_ts(),
-        .kvd_ks(),
-        .kvd_js(),
-        .kvd_wcs(),
-        .kvd_split(),
-        .kvd_jsh(),
-        .kvd_tiles(),
-        .kvd_k(),
-        .kvd_nout(),
-        .kvd_kindk(),
-        .kvd_pos(),
+        .kvd_v(b_kvd_v),
+        .kvd_wbase(b_kvd_wbase),
+        .kvd_ts(b_kvd_ts),
+        .kvd_ks(b_kvd_ks),
+        .kvd_js(b_kvd_js),
+        .kvd_wcs(b_kvd_wcs),
+        .kvd_split(b_kvd_split),
+        .kvd_jsh(b_kvd_jsh),
+        .kvd_tiles(b_kvd_tiles),
+        .kvd_k(b_kvd_k),
+        .kvd_nout(b_kvd_nout),
+        .kvd_kindk(b_kvd_kindk),
+        .kvd_pos(b_kvd_pos),
         .kv_ok(1'b0),
         .wrom_su(),
         .wd_v(),
@@ -1472,9 +1570,17 @@ module ot_qfd_seq_su_bi #(
         .o_fin(),
         .o_fidx(),
         .o_fval());
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
+    wire [5:0] q_stage_in, q_cb_st_rdy_stage; wire q_cb_st_rdy;
+    ot_hdc_delay #(.W(12), .D(IS)) u_i_cbs (.clk(clk), .rst_n(rs), .d({stage_in, cb_st_rdy_stage}), .q({q_stage_in, q_cb_st_rdy_stage}));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rs), .d(cb_st_rdy), .q(q_cb_st_rdy));
+    wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;
+    ot_qfd_stage_gate #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rs), .h_start(q_h_start), .stage(q_stage_in),
+        .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
+        .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
+    ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rs), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
+    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (
-        .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),
+        .clk(clk), .rst_n(rs), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
         .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),
@@ -1490,6 +1596,26 @@ module ot_qfd_seq_su_bi #(
     assign b_su_idle_o = q_pi_su_idle;
     assign b_su_prog_o = q_pi_su_progress;
     assign b_su_rows_o = q_pi_su_progress_rows;
+endmodule
+
+// qwen-1010/a: the stage start waits for the SU-local constant buffer (ot_qfd_su_cbuf_g st_rdy / st_rdy_stage): a stage
+// (one layer program, or HEAD) starts only when the buffer reports that stage resident.  The prefetcher fills stage s + 1
+// during stage s, so the wait is normally only at the token's first stage.  MUT 1 (NOWAIT): starts without the buffer.
+module ot_qfd_stage_gate #(parameter integer SW_ = 6, parameter integer NW = 18, parameter integer MUT = 0) (
+    input  wire clk, input wire rst_n,
+    input  wire h_start, input wire [SW_-1:0] stage, input wire [NW-1:0] token, input wire [NW-1:0] pos,
+    input  wire st_rdy, input wire [SW_-1:0] st_rdy_stage,
+    output wire go, output reg [NW-1:0] go_token, output reg [NW-1:0] go_pos,
+    output reg [SW_-1:0] cur_stage, output wire tok_start
+);
+    reg pend;
+    assign go = pend && !h_start && ((MUT != 0) || (st_rdy && st_rdy_stage == cur_stage));
+    assign tok_start = h_start && (stage == {SW_{1'b0}});
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pend <= 1'b0; cur_stage <= {SW_{1'b0}}; end
+        else if (h_start) begin pend <= 1'b1; cur_stage <= stage; end
+        else if (go) pend <= 1'b0;
+    always @(posedge clk) if (h_start) begin go_token <= token; go_pos <= pos; end
 endmodule
 
 `timescale 1ns/1ps
@@ -1526,6 +1652,7 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_qwen_tp_seq_w12_vrl #(
     parameter integer VRL = 1,     // vre -> vrq edges
+    parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits
     parameter integer ENABLE_AR256 = 0,
     parameter integer N    = 4,
     parameter integer NW   = 16,
@@ -1616,11 +1743,15 @@ module ot_qwen_tp_seq_w12_vrl #(
     wire          rd_v = rd_p[VRL-1];
     integer       rd_i, rd_n;
     always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end
-    assign c_valid = (st == S_COLL) && (q_n != 0);
+    reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)
+    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
-    wire   c_fire  = c_valid && c_ready;
+    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) c_cred <= 8'(CRED);
+        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);
     wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rd_n) < QD;
 
     reg [NW-1:0] best_i;

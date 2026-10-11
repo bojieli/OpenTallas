@@ -274,7 +274,8 @@ def export_ds(a):
                   snap={id(dat): dat.copy() for b, dat, nm in regions if dat.size <= (1 << 28)},
                   image=encode_program(progs[0]), pos=pos, token=token, die0=die0)
         cap = Capture(Mach, die0, a.sm_weights)
-        wrapped = {k: cap.wrap(k, fn) for k, fn in units.items()}
+        wrapped = {k: (cap.wrap(k, fn) if isinstance(k, tuple) else fn) for k, fn in units.items()}
+        st["units"] = units
         st["cap"] = cap
         t0 = time.time()
         orig(Mach, progs, wrapped, pos, token, hook, trace)
@@ -299,7 +300,10 @@ def export_ds(a):
         r.layer = lay["layer"]
         recs.append(r)
     assert encode_program(recs) == st["image"], "program dump != rank 0 image"
-    cf = NativeCost(d["ops"], recs)
+    from hgi_sim import ds_native_timing as DT
+    rg = {x["layer"]: s_ for x in run["results"] for s_ in (x.get("row_gather") or [])}
+    DT.apply_dyn_counts(recs, rg)                    # G24: LOOP counts read from VM -> the run's row-gather rounds
+    cf = NativeCost(d["ops"], recs, row_gather=rg)
     sch = T.schedule(recs, st["pos"], "S2", cost_fn=cf)
     sch_nw = T.schedule(recs, st["pos"], "S2", cost_fn=cf, wires=False)
     j = 0
@@ -316,8 +320,35 @@ def export_ds(a):
     # the program ends without CTL.END: the harness appends one (END reads a token word the export plants in VM)
     words = md_words(129280, 1 << 20, 96, len(image) + 64)
 
+    # --sm-weights: the SM line image of every SM record's B rows (the DS sim decodes weights from the checkpoint, so
+    # the bytes are built here: tools/hgi_e2e/sm_lines.py, hgi-1010/d's layout)
+    sm_img = []
+    if a.sm_weights:
+        from hgi_e2e import sm_lines as SL
+        wr, man = st["units"]["_wrows"], st["units"]["_man"]
+        fmtc = {"BF16": 0, "FP8E4M3": 1, "FP4E2M1": 2}
+        for e_ in cap.recs:
+            if e_["unit"] != "SM":
+                continue
+            bb, bn, bm, bst, _, _, bf = e_["eff"]["B"]
+            ent, ex, r0, c0 = man.find(bb)
+            w = wr(ent, ex, r0, bm, c0, bn, e_["L"])
+            img = SL.pack(fmtc[bf], w)
+            assert img.shape == (bm, bst), (e_["tag"], img.shape, bm, bst)
+            sm_img.append((bb, img.reshape(-1).tobytes()))
+            cap.touch.append((bb, bb + bm * bst))
+
+    for b0, img in getattr(die0, "synth_hbm", {}).items():      # e.g. the STRIPE4 HC weight rows
+        sm_img.append((b0, img))
+        cap.touch.append((b0, b0 + len(img)))
+
     def hbm_pre(addr, n):
-        return region_bytes(st["regions"], st["snap"], addr, n)
+        out = bytearray(region_bytes(st["regions"], st["snap"], addr, n))
+        for b0, img in sm_img:
+            lo, hi = max(addr, b0), min(addr + n, b0 + len(img))
+            if lo < hi:
+                out[lo - addr:hi - addr] = img[lo - b0:hi - b0]
+        return bytes(out)
     (a.out / "vm0.bin").write_bytes(st["vm0"].astype("<u4").tobytes())
     res = run["results"][0]
     meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=f"ds_L{a.layer}_1M",
@@ -336,10 +367,134 @@ def export_ds(a):
     print(f"ds L{a.layer}: {len(cap.recs)} dispatched records, sim {res['verdict']}, S2 {sch['total_cycles']:.0f}")
     return rc
 
+# ------------------------------------------------------------------------------------------------------------ DFlash
+DFLASH_DIMS = {
+    # exactness vehicle: the dflash_proof tiny target (6 layers, H 256), 2 drafter layers, captures [1, 3]
+    "tiny": dict(cfg=dict(num_hidden_layers=6), caps=[1, 3], dlayers=2, ctx=96, pos0=24, mask=1000),
+    # production-width vehicle: Qwen3-8B dimensions (H 4,096, 32 / 8 heads, FF 12,288) on 2 target layers and 1
+    # drafter layer (vocab cut to 16,384: the head's width per row is still H); synthetic weights, ctx 8,192
+    "q8d": dict(cfg=dict(num_hidden_layers=2, hidden_size=4096, num_attention_heads=32, num_key_value_heads=8,
+                         head_dim=128, intermediate_size=12288, vocab_size=16384),
+                caps=[0, 1], dlayers=1, ctx=8192, pos0=8192 - 32, mask=16000),
+}
+
+
+def export_dflash(a):
+    """One DFlash block-B speculative STEP (drafter context, draft block, B-slot verify, accept, TOKX, END) on rank 0
+    of TP4, with the CPU golden of hgi_sim.dflash_proof (Gold): draft ids, the B verify outputs (POST) and the
+    committed prefix are planted as independent golden VM words (gold.txt) and expected TOKX beats; --mutant runs a
+    wrong program against the same CPU golden (must FAIL in the bench)."""
+    import tempfile
+    from hgi_sim import dflash as D
+    from hgi_sim import dflash_proof as P
+    from hgi_sim import dflash_timing as DFT
+    from hgi_sim import qwen_compiler as QC
+    from hgi_sim import test_tiny as TT
+    from hgi_sim import timing as T
+    import qwen_r25_golden as R
+    v = DFLASH_DIMS[a.dims]
+    B = a.block
+    tmp = Path(tempfile.mkdtemp(prefix="hgi_e2e_dflash_"))
+    TT.CFG = dict(TT.CFG, **v["cfg"])
+    TT.write_snapshot(tmp)
+    model = R.QwenR25(tmp, tmp / "img")
+    cfg = model.ck.cfg
+    dcfg = dict(hidden_size=cfg["hidden_size"], num_attention_heads=cfg["num_attention_heads"],
+                num_key_value_heads=cfg["num_key_value_heads"], head_dim=cfg["head_dim"],
+                intermediate_size=cfg["intermediate_size"], num_hidden_layers=v["dlayers"], rms_norm_eps=cfg["rms_norm_eps"],
+                dflash_config=dict(mask_token_id=v["mask"], target_layer_ids=v["caps"]), block_size=B)
+    ctx, pos0, tok0 = v["ctx"], v["pos0"], 7
+    g = D.DGeom(cfg, dcfg, ctx, B)
+    md = QC.qwen_params(cfg)
+
+    def mutate(recs):
+        if a.mutant == "no_mask_tail":
+            recs = QC.assign_waits([r for r in recs if not r.tag.startswith("verify.mask_tail")])
+        elif a.mutant == "draft_causal":
+            for r in recs:
+                if r.tag.startswith("draft.qk.") and ".g" in r.tag:
+                    r.desc["C"].n = int(r.tag.split(".g")[1]) + 1
+        elif a.mutant:
+            raise SystemExit(f"unknown mutant {a.mutant}")
+        return recs
+    recs = mutate(D.step_program(g, md))
+    image = encode_program(recs)
+    dr = P.Drafter(dcfg)
+    gold = P.Gold(model, dr, g, pos0)
+    M = P.build_machine(model, dr, g, gold, cfg)
+    words = md_words(cfg["vocab_size"], 40960, QC.TP, len(image))
+    assert M.cfg_commit(list(words)) == 0
+    die0 = M.dies[0]
+    ib = IMAGE_PAGE * 4096
+    for b_, dat, nm in die0.hbm.regions:
+        assert b_ + dat.size <= ib or b_ >= ib + len(image) + 4096, f"image at {ib:#x} overlaps HBM region {nm}"
+    snapshot = {id(dat): dat.copy() for b_, dat, nm in die0.hbm.regions if dat.size <= (1 << 28)}
+    regions = list(die0.hbm.regions)
+    vm0 = die0.vm.copy()
+    cap = Capture(M, die0, a.sm_weights)
+    M.units = {k: cap.wrap(k, fn) for k, fn in M.units.items()}
+    t0 = time.time()
+    fault = None
+    try:
+        tokx, dd = P.run_step(M, recs, image, tok0, pos0, g)
+    except MC.Fault as ex:
+        fault, tokx, dd = str(ex), None, None
+    wall = time.time() - t0
+    gd, gp, gk = gold.step(pos0, tok0, B)                 # the CPU golden (always the CORRECT step)
+    tokx_gold = [int(x) for x in gp[:gk]]
+    sim_ok = fault is None and tokx == tokx_gold and all(x == [int(t) for t in gd[1:]] for x in dd)
+    # independent golden VM words: draft ids D[1..B-1] and the B verify outputs POST (TOKX[2 + s])
+    dv, tv = g.vm["D"][0], g.vm["TOKX"][0]
+    gold_words = [(dv + s, int(gd[s])) for s in range(1, B)] + [(tv + 2 + s, int(gp[s])) for s in range(B)]
+    rec_t = mutate(D.step_program(g, md, timing_pos=pos0))
+    sch = T.schedule(rec_t, pos0, "S2", cost_fn=DFT.make_cost("spec", False))
+    j = 0
+    for i, (k, L, L1) in enumerate(sch["ex"]):
+        if rec_t[k].unit == "CTL":
+            continue
+        if j >= len(cap.recs):
+            break
+        e = cap.recs[j]
+        if e["unit"] != rec_t[k].unit or e["op"] != rec_t[k].op:
+            raise SystemExit(f"timing order differs from the run at {j}: {e['unit']}.{e['op']} vs {rec_t[k].unit}.{rec_t[k].op}")
+        e.update(cost=round(float(sch["costs"][i][0]), 1), cost_how=sch["costs"][i][2],
+                 s2_disp=round(sch["disp"][i], 1), s2_start=round(sch["start"][i], 1), s2_end=round(sch["end"][i], 1))
+        j += 1
+    timed = j == len(cap.recs)
+
+    def hbm_pre(addr, n):
+        return region_bytes(regions, snapshot, addr, n)
+    a.out.mkdir(parents=True, exist_ok=True)
+    (a.out / "vm0.bin").write_bytes(vm0.astype("<u4").tobytes())
+    (a.out / "gold.txt").write_text("".join(f"{x} {y & 0xFFFFFFFF}\n" for x, y in gold_words))
+    ncol = B % 16                # F11 (main 6c1053933): doorbell ncol 0 encodes 16
+    meta = dict(schema="opentallas.hgi_e2e.export.v1", model=f"Qwen3-8B DFlash b{B} ({a.dims} dims)",
+                vehicle=f"dflash_{a.dims}_b{B}" + (f"_mut_{a.mutant}" if a.mutant else ""), dims=a.dims,
+                cfg={k_: cfg[k_] for k_ in ("hidden_size", "num_hidden_layers", "num_attention_heads",
+                                            "num_key_value_heads", "intermediate_size", "vocab_size")},
+                drafter_layers=v["dlayers"], caps=v["caps"], ctx=ctx, position=pos0, rank=0, group=QC.TP, token=tok0,
+                block=B, ncol=ncol, mutant=a.mutant, fault=fault, tokx_sim=tokx, tokx_golden=tokx_gold, k_golden=gk,
+                draft_golden=[int(x) for x in gd[1:]], post_golden=[int(x) for x in gp],
+                sim_equals_cpu_golden=sim_ok, timed_records=timed, sim_wall_s=round(wall, 1),
+                s2_cycles=round(sch["total_cycles"], 1),
+                timing_grade="hgi_sim.dflash_timing make_cost('spec') S2 of this step program",
+                golden="hgi_sim.dflash_proof Gold (CPU: target qwen_r25 layers on synthetic weights, BF16 drafter)",
+                source_sha256={p_: hashlib.sha256((TOOLS / p_).read_bytes()).hexdigest() for p_ in (
+                    "hgi_sim/machine.py", "hgi_sim/dflash.py", "hgi_sim/dflash_proof.py", "hgi_sim/records.py",
+                    "hgi_sim/lib.py", "hgi_sim/timing.py", "hgi_sim/dflash_timing.py", "hgi_e2e/export.py")})
+    write_out(a.out, cap, M.dies, die0, image, words, [0, pos0, pos0 + 1, tok0, 0, 0, 0, pos0], meta, hbm_pre)
+    print(f"dflash {a.dims} b{B} mutant={a.mutant}: {len(cap.recs)} dispatched records, k sim {len(tokx or [])} golden "
+          f"{gk}, sim == cpu golden {sim_ok}, fault {fault}, S2 {sch['total_cycles']:.0f}")
+    return 0 if (sim_ok or a.mutant) else 1
+
+
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("model", choices=("qwen", "ds"))
+    ap.add_argument("model", choices=("qwen", "ds", "dflash"))
+    ap.add_argument("--dims", choices=tuple(DFLASH_DIMS), default="tiny", help="dflash vehicle")
+    ap.add_argument("--block", type=int, default=16, help="dflash block size B")
+    ap.add_argument("--mutant", help="dflash: no_mask_tail | draft_causal (run against the correct CPU golden)")
     ap.add_argument("--snapshot", type=Path)
     ap.add_argument("--cache", type=Path)
     ap.add_argument("--refs", type=Path)
@@ -348,7 +503,7 @@ def main():
     ap.add_argument("--sm-weights", action="store_true", help="also export the SM weight bytes (real SM runs)")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
-    return export_qwen(a) if a.model == "qwen" else export_ds(a)
+    return export_qwen(a) if a.model == "qwen" else export_ds(a) if a.model == "ds" else export_dflash(a)
 
 
 if __name__ == "__main__":

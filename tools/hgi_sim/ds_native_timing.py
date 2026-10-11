@@ -11,7 +11,7 @@ Unit costs (1.2 GHz cycles), per record:
   SU.VOP               the SU depth model per record (timing.su_cost; == the RTL emit -> write depth for every op
         class, hbm_su_c12): the native stream runs every SU template as its own record, where the walk prices a
         fused chain -- the difference is the native lowering's cost
-  FUSED.QDQ_*          ceil(n / 32) + 8 (ot_hdc_fp4qdq / the DS quantiser: 32 elements a cycle, II 1, latency 8)
+  FUSED.QDQ_*          ceil(n / 32) + 46 (ot_hgi_quant_unit WIDE, measured: 32 elements a cycle, II 1, + VM / decode latency)
   DMA.* / CTL.*        timing.cost (first access measured, stores / fences estimates)
 Wait masks are recomputed over the whole token (the per-layer programs' masks do not see the previous layer).
 
@@ -50,6 +50,16 @@ def load(path):
             r.layer = lay["layer"]
             recs.append(r)
     return d, recs
+
+
+def apply_dyn_counts(recs, rg, default=7):
+    """VM-count loops (G24 provisional): the bit-exact run's ceil(M / c) per layer (rg = row_gather stats by layer),
+    else `default` (an estimate: M ~ 13 at c = 2)"""
+    for r in recs:
+        if r.unit == "CTL" and r.op == "LOOP" and r.param & (1 << 17):
+            s = rg.get(getattr(r, "layer", None))
+            r.dyn_count = s["rounds"] if s and "rounds" in s else default
+    return recs
 
 
 ROW_BYTES = 288          # a DS compressed KV row as shipped: 9 sectors of 32 B (spec 6.10)
@@ -112,11 +122,42 @@ class NativeCost:
             return c, "measured_depth_model", how
         if u == "FUSED" and op.startswith("QDQ"):
             n = r.desc["A"].n
-            return math.ceil(n / 32) + 8, "rtl_spec", "DS quantiser: 32 / cycle, latency 8"
+            # tput-gate-1010 (AGENTS throughput qualification): the old ceil(n / 32) + 8 omitted the decode latency (23
+            # edges) and the VM round trip; the production structure (ot_hgi_quant_unit WIDE: lane-group read 4 sectors a
+            # cycle, decode II 1, lane-group write) measures ceil(n / 32) + 46 (tb_hgi_quant_wide_tput, DS shapes)
+            return math.ceil(n / 32) + 46, "measured", "DS quantiser WIDE: 32 / cycle, + 46 (steer 3, VM read, decode 23, write)"
+        if u == "DMA" and op == "LOAD" and r.desc["A"].indexed and r.desc["A"].n_sel == 63:
+            rows = r.desc["O"].m
+            return T.first_access() + rows * r.desc["O"].n * 4 / T.cv("hbm", "bytes_per_cycle"), "measured_budget", \
+                f"indexed row stream, {rows} rows (full-bandwidth service budget)"
         if u in ("DMA",):
             return T.cost(r, dyn, L)
+        if u == "COLL" and op == "ROW_GATHER" and (r.param >> 8) & 1:
+            # G25 hardware form, measured (hgi-1010/a, main 5e588e11e: one real rank of 96 against the switch model,
+            # 4 delivery lanes): ~ K x F / 4 + 150 cycles, F = ceil(S / 2) 64-byte flits a row, S = 256-bit sectors a row
+            K = r.imm_a or r.desc["I"].n
+            S = -(-r.desc["A"].n * T.ESZ[r.desc["A"].fmt] * 8 // 256)
+            F_ = -(-S // 2)
+            return K * F_ / 4 + 150, "measured", f"G25 hardware ROW_GATHER K {K}, {F_} flits a row (4,242 cyc at K 512)"
         if u == "COLL" and op == "ROW_GATHER" and getattr(r, "layer", None) in self.rg:
             return self.row_gather(r, dyn, L)
+        if u == "IDX" and op == "OWNED":
+            K = r.desc["A"].n
+            meas = {512: 1227.0, 2048: 4510.0}
+            return meas.get(K, 1227.0 * K / 512), "measured", f"IDX.OWNED K {K} (hgi-takeover RTL)"
+        if u == "COLL" and op == "ALL_GATHER" and r.src_key and self.ops[r.src_key].get("kind") == "kv_gather":
+            from hgi_sim.perf import coll_cycles
+            n = r.desc["A"].n
+            return coll_cycles("ALL_GATHER", n * 4, 96)[0], "measured_tu_budget", f"row-gather slots ({n} words)"
+        if u == "HC" and op == "HC_MIX_POST":
+            return T.cv("units", "HC.HC_MIX_POST"), "measured", "G22 post (sigmoid + Sinkhorn)"
+        if u == "HC" and op == "HC_MIX_ROWS":
+            c, g, how = self.walk(r)
+            return c / 24, g, "G22 one mix row (1/24 of the measured 24-row mix)"
+        if u == "COLL" and op == "ALL_GATHER" and r.src_key and self.ops[r.src_key].get("fn") == "hc_mixes":
+            from hgi_sim.perf import coll_cycles
+            c, g, how = coll_cycles("ALL_GATHER", 24 * 4, 96)
+            return c, g, "G22 24-word mix gather"
         if u == "ATT":
             c, g, how = self.walk(r, part="tile")
             return c / 2, g, how
@@ -140,6 +181,7 @@ def main():
         for x in json.loads(a.run.read_text())["results"]:
             for s in x.get("row_gather") or []:
                 rg[x["layer"]] = s
+    apply_dyn_counts(recs, rg)
     cf = NativeCost(d["ops"], recs, row_gather=rg)
     image = encode_program(recs)
     walk_us, _ = cf.wc.DA.walk({"layers": []}, cf.wc.sm, cf.wc.su1, cf.wc.coll, cf.wc.local, cf.wc.hbm, use=cf.wc.use)
@@ -157,18 +199,24 @@ def main():
         print(mode, res[mode]["total_cycles"], res[mode]["us"], "races", len(s["races"]), flush=True)
     v = {}
     v["S2_no_wires"] = T.schedule(recs, POS, "S2", wires=False, cost_fn=cf)["total_cycles"]
-    ls = T.list_schedule(recs, POS, cost_fn=cf)
-    sls = T.schedule(ls, POS, "S2", cost_fn=cf)
-    v["S2_list_scheduled"] = sls["total_cycles"]
-    v["S2_list_scheduled_races"] = len(sls["races"])
-    v["S2_list_scheduled_no_wires"] = T.schedule(ls, POS, "S2", wires=False, cost_fn=cf)["total_cycles"]
+    sls = None
+    if any(r.unit == "CTL" and r.op == "LOOP" for r in recs):
+        # the legacy whole-program list scheduler moves records across LOOP bodies (G24 row-gather loops): the
+        # compiler's per-layer CP-aware order (ds_native.schedule_layer) is the scheduled form; variant not applicable
+        v["S2_list_scheduled"] = "n/a: program has CTL.LOOP bodies (G24); the compiler's own order is S2"
+    else:
+        ls = T.list_schedule(recs, POS, cost_fn=cf)
+        sls = T.schedule(ls, POS, "S2", cost_fn=cf)
+        v["S2_list_scheduled"] = sls["total_cycles"]
+        v["S2_list_scheduled_races"] = len(sls["races"])
+        v["S2_list_scheduled_no_wires"] = T.schedule(ls, POS, "S2", wires=False, cost_fn=cf)["total_cycles"]
     res["variants"] = {k: (round(x, 1) if isinstance(x, float) else x) for k, x in v.items()}
     su = sum(c[0] for r, c in zip(recs, (cf(r, T.Dyn(POS), 0) for r in recs)) if r.unit == "SU")
     res["su_record_cycles_sum"] = round(su, 1)
     res["compare"] = dict(
         published_walk_us=460.05, ds_hgi_walk_op_stream_S2_cycles=544648, ds_hgi_list_scheduled_cycles=461646,
         native_S2_vs_walk_op_S2_pct=round(100 * (S["S2"]["total_cycles"] / 544648 - 1), 2),
-        native_list_vs_walk_op_list_pct=round(100 * (sls["total_cycles"] / 461646 - 1), 2))
+        native_list_vs_walk_op_list_pct=round(100 * (sls["total_cycles"] / 461646 - 1), 2) if sls else None)
     res["critical_path_S2_tail"] = T.critical_path(S["S2"], recs)[-30:]
     print(json.dumps(res["variants"]), json.dumps(res["compare"]), flush=True)
     rec = dict(schema="opentallas.hgi_sim.ds_native_timing.v1", position=POS,

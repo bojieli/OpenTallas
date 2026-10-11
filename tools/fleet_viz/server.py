@@ -445,6 +445,85 @@ TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport
 # /explorer/coverage/...: the coverage matrix view (results/arch/coverage_20261008 ledgers, joined with /api/elements)
 COVERAGE_DIR = HERE / 'explorer' / 'coverage'
 COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), ELEMENTS, TOKEN_DIR, log=log)
+# /explorer/element/...: per-element post-route pages (page + pages.json from the repo; data/ written by
+# tools/explorer_elem_export.py pack, never committed).  Share-safe requests get the data with raw names stripped.
+ELEM_DIR = HERE / 'explorer' / 'element'
+_ELEM_CACHE = {}
+
+def elem_redact(o):
+    """share-safe element data: no module / instance / pin / port / job / host / record names"""
+    g = o.get('geom', {})
+    g['modules'] = ['m%d' % i for i in range(len(g.get('modules', [])))]
+    for m in g.get('macros', []): m['name'] = ''
+    for p in g.get('ports', []): p[0] = ''
+    for k in ('job', 'host', 'db', 'record', 'note', 'block'): o[k] = ''
+    o.pop('golden', None); o.pop('rtl_meta', None); o.pop('rtl_file', None)
+    for f in o.get('facts', []): f['src'] = ''
+    o['facts'] = [f for f in o.get('facts', []) if f.get('k') not in ('closure job', 'source commit')]
+    ct = o.get('clock_tt') or {}
+    for n in ct.get('nodes', []): n[6] = ''
+    for l in ct.get('leaves', []): l[4] = ''
+    o['clock_roots'] = []
+    for ps in (o.get('setup_paths') or [], o.get('hold_paths') or []):
+        for p in ps:
+            p['start'] = p['end'] = ''
+            for pt in p['points']: pt[0] = ''
+    return o
+
+_TPUT = {'t': 0, 'd': None, 'commit': None, 'err': None}
+TPUT_REL = 'results/arch/throughput_budget_20261010/budget.json'
+
+def _tput_load():
+    """budget.json from origin/main (the shared checkout may sit on a stale HEAD): git fetch at most every 10 min,
+    then git show origin/main:<path>"""
+    now = time.time()
+    if _TPUT['d'] is not None and now - _TPUT['t'] < 600: return
+    repo = os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas')
+    _TPUT['t'] = now
+    try:
+        subprocess.run(['git', '-C', repo, 'fetch', '-q', 'origin', 'main'], timeout=90, capture_output=True)
+        r = subprocess.run(['git', '-C', repo, 'show', 'origin/main:' + TPUT_REL], timeout=30, capture_output=True)
+        if r.returncode:
+            _TPUT.update(d=None, err='not on origin/main yet'); return
+        c = subprocess.run(['git', '-C', repo, 'log', '-1', '--format=%h %cI', 'origin/main', '--', TPUT_REL], timeout=30, capture_output=True, text=True)
+        _TPUT.update(d=json.loads(r.stdout), commit=c.stdout.strip(), err=None)
+    except Exception as e:
+        _TPUT.update(err=str(e)[:200])
+
+def elem_tput(blocks, safe):
+    """throughput qualification of the element page's blocks, read with the budget's exact keys:
+    elements[<block>] = {status, ratio, limiting{op, model, status, ratio, owner, src}, ops[...]} and the token-path
+    classes (rom.<model>.classes[] with elements[]) that list the block"""
+    _tput_load()
+    d = _TPUT['d']
+    if d is None: return dict(status='pending', path=TPUT_REL, error=_TPUT['err'])
+    out = dict(status='present', path=TPUT_REL, commit=_TPUT['commit'], generated_utc=d.get('generated_utc'), rule=d.get('rule'),
+               qualify_ratio=d.get('qualify_ratio'), elements={}, classes={})
+    for b in blocks:
+        out['elements'][b] = (d.get('elements') or {}).get(b)
+        cl = []
+        for model, md in (d.get('rom') or {}).items():
+            for c in (md or {}).get('classes', []) if isinstance(md, dict) else []:
+                if b in (c.get('elements') or []):
+                    cl.append(dict(model='rom.' + model, **{k: c.get(k) for k in ('cls', 'status', 'critical_cycles_per_token', 'share', 'nodes',
+                                                                                  'measured_fraction', 'n_unmeasured', 'unmeasured_nodes', 'basis')}))
+        out['classes'][b] = cl
+    return out
+
+def elem_body(path, safe, gz):
+    import gzip as _gz
+    st = path.stat(); key = (str(path), st.st_mtime, safe, gz)
+    if key in _ELEM_CACHE: return _ELEM_CACHE[key]
+    b = path.read_bytes()
+    if safe and path.name.endswith('.rtl.json'):
+        b = b'{"redacted":true}'
+    elif safe and path.suffix == '.json' and path.parent.name == 'data':
+        b = json.dumps(elem_redact(json.loads(b)), separators=(',', ':')).encode()
+    if gz: b = _gz.compress(b, 6)
+    for k in [k for k in _ELEM_CACHE if k[0] == str(path)]: _ELEM_CACHE.pop(k)
+    if len(_ELEM_CACHE) > 24: _ELEM_CACHE.clear()
+    _ELEM_CACHE[key] = b
+    return b
 # /landing/...: the public landing page (landing/index.html + recordings), numbers from committed results at request time
 LANDING_DIR = HERE / 'landing'
 LANDING = landing.Landing(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), log=log)
@@ -460,8 +539,9 @@ class H(BaseHTTPRequestHandler):
         proxied = any(self.headers.get(k) for k in ('X-Forwarded-For', 'X-Real-IP', 'Forwarded', 'CF-Connecting-IP'))
         return q.get('safe', ['0'])[0] == '1' or not local or proxied
 
-    def send(self, code, body, ctype):
+    def send(self, code, body, ctype, extra=()):
         self.send_response(code); self.send_header('Content-Type', ctype); self.send_header('Content-Length', str(len(body)))
+        for k, v in extra: self.send_header(k, v)
         self.send_header('Cache-Control', 'no-store'); self.send_header('X-Content-Type-Options', 'nosniff'); self.end_headers()
         if self.command != 'HEAD': self.wfile.write(body)
 
@@ -518,6 +598,12 @@ class H(BaseHTTPRequestHandler):
         if u.path == '/explorer/coverage' or u.path.startswith('/explorer/coverage/'):
             if u.path == '/explorer/coverage': return self.redirect('/explorer/coverage/')
             return self.static_dir(COVERAGE_DIR, u.path[len('/explorer/coverage'):].lstrip('/') or 'index.html', None)
+        if u.path == '/api/explorer/elem_tput':
+            bl = [b for b in q.get('blocks', [''])[0].split(',') if b]
+            return self.send(200, json.dumps(elem_tput(bl, safe)).encode(), 'application/json')
+        if u.path == '/explorer/element' or u.path.startswith('/explorer/element/'):
+            if u.path == '/explorer/element': return self.redirect('/explorer/element/' + ('?' + u.query if u.query else ''))
+            return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
         if u.path.startswith('/api/explorer/'):
@@ -538,6 +624,20 @@ class H(BaseHTTPRequestHandler):
 
     def redirect(self, loc):
         self.send_response(302); self.send_header('Location', loc); self.send_header('Content-Length', '0'); self.end_headers()
+
+    def elem(self, rel, safe):
+        try:
+            p = (ELEM_DIR / rel).resolve()
+            ok = p.is_relative_to(ELEM_DIR.resolve()) and p.is_file() and p.suffix in ('.html', '.js', '.css', '.json', '.bin', '.svg', '.png')
+        except (OSError, ValueError):
+            ok = False
+        if not ok: return self.send(404, b'not found', 'text/plain')
+        gz = 'gzip' in (self.headers.get('Accept-Encoding') or '') and p.stat().st_size > 8192
+        try:
+            body = elem_body(p, safe, gz)
+        except Exception as e:
+            log('elem %s: %s' % (rel, e)); return self.send(500, b'element data error', 'text/plain')
+        return self.send(200, body, TOKEN_TYPES.get(p.suffix, 'application/octet-stream'), (('Content-Encoding', 'gzip'),) if gz else ())
 
     def static_dir(self, base, rel, placeholder):
         try:

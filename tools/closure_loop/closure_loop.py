@@ -61,6 +61,7 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import macro_clk
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -79,7 +80,7 @@ ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
 # EARLY_FAIL_* (stuckscan 2026-10-08): a route stopped by an early-fail gate (stuckscan.py hopeless()): redesign work
-EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC")
+EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC", "EARLY_FAIL_STALL")
 TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID",
             "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
@@ -773,7 +774,8 @@ def lint_at_submit(j):
         ledger(j, f"SUBMIT_LINT {res['fix']} applied: {res['message'][:300]}")
     elif v == "REFUSE":
         j["status"] = "REFUSED"
-        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN"
+        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else (
+            "PIN_TRACK" if (res.get("pin_track") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN")
         j["reason"] = f"SUBMIT_LINT {kind}: {res['message']}"[:1500]
         j["submit_lint"] = res
         event(j, j["reason"])
@@ -1801,7 +1803,8 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
-                                                          "macro_sliver_block.tcl", "edge_sliver_block.tcl")))
+                                                          "macro_sliver_block.tcl", "edge_sliver_block.tcl",
+                                                          "macro_cts_cluster.tcl")))
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1860,14 +1863,15 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
+    # MACRO-CLK (macro-clk-1010): OT_CTS_MACRO_CLUSTER / _SIZE / _DIAM reach physical/common_flow/macro_cts_cluster.tcl
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
     # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
     # OOM-IN-CONTAINER (drive-1010 2026-10-10): the container's own processes (openroad / yosys) get the loop stage's +500
     # too; at 0 the kernel killed ~20 tiny +500 wrappers first (AGIdock 05:17-05:21) before reaching the 17 GB openroad.
     # The host probe still lowers die containers to -900 after start.
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -2115,6 +2119,11 @@ def launch_stage(j, st, cmd):
             # recipes); the verdict re-STA and ECO sessions never see this variable
             env += "export OT_IOREF_INPUT_PF=1\n"
             j["pinflop_ref_applied"] = True       # LOOP-AUTO class c: this job's route used the pin-flop reference
+        if j["spec"].get("macro_cts") is False:
+            # MACRO-CLK (macro-clk-1010 2026-10-10): the macro clock clustering default (physical/common_flow/
+            # macro_cts_cluster.tcl via tools/orfs_hold_mm.tcl) is on for every block with 2+ clocked macros; spec
+            # "macro_cts": false keeps TritonCTS's own macro clustering
+            env += "export OT_CTS_MACRO_CLUSTER=0\n"
         if j["spec"].get("sliver_block"):
             # LOOP-AUTO class d (auto-react successor of a sliver-only FLOORPLAN_MARGIN): the macro-to-macro and
             # macro-to-core-edge sliver hard placement blockages run at ORFS PRE GLOBAL_PLACE, before the floorplan lint
@@ -2490,6 +2499,12 @@ def auto_merge_guard(j):
     if not str(spec['source'].get('branch', '')).startswith('claude/'):
         return f"source branch {spec['source'].get('branch')} is not claude/*"
     benches = j.get('benches') or {}
+    try:
+        waive = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_external_bench_prefixes') or []
+    except (OSError, ValueError):
+        waive = []
+    if not benches and spec.get('no_bench_reason') and any(j['name'].startswith(w) for w in waive):
+        return None if j.get('commit_full') else "no verified source commit"   # owner-approved external bench (BF of record)
     if not benches:
         return "no loop benches ran"
     bad = [k for k, v in benches.items() if not (isinstance(v, dict) and v.get('ok') is True)]
@@ -3580,7 +3595,8 @@ def routed_ioref(j, m):
         rr.update(available=tt is not None and ff is not None and not errs, tt=tt, ff=ff, errors=errs[:5], ioref=io,
                   tt_i2r=res["setup_tt"].get("worst_input_to_reg_slack_ps"), tt_out=res["setup_tt"].get("worst_output_port_slack_ps"),
                   ff_i2r=res["hold_ff"].get("worst_input_to_reg_slack_ps"), ff_out=res["hold_ff"].get("worst_output_port_slack_ps"),
-                  ff_r2r=res["hold_ff"].get("worst_reg_to_reg_slack_ps"), json=out)
+                  ff_r2r=res["hold_ff"].get("worst_reg_to_reg_slack_ps"), json=out,
+                  registers=res["setup_tt"].get("registers"), registers_clocked=res["setup_tt"].get("registers_clocked"))
         if not rr["available"]:
             rr["why"] = f"re-STA incomplete (TT {tt} / FF {ff}; {errs[:2]})"
         # a corner whose SDC has no insertion-reference virtual clock is unchanged by the re-STA: keep the route's own
@@ -3774,6 +3790,7 @@ def cal_track(j, fleet, stl):
     try:
         cj = json.loads(r.stdout)
         j["calibration"] = {k: cj[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+        macro_clk_flag(j, cj)
     except (ValueError, KeyError, TypeError) as ex:
         if r.returncode == 255:
             return
@@ -3966,6 +3983,7 @@ def step(j, fleet):
                         raise ValueError(f"artifact read exited {r.returncode}")
                     c = json.loads(r.stdout)
                     j["calibration"] = {k: c[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+                    macro_clk_flag(j, c)
                     if not isinstance(c["env"], dict):
                         raise ValueError("calibration env must be an object")
                 except (ValueError, KeyError, TypeError) as ex:
@@ -4158,7 +4176,10 @@ def do_verdict(j, fleet, stl):
                f"NEEDS_HUMAN: verdict inputs missing: {json.dumps(m)[:400]}")
         return
     benches_ok = all(b["ok"] for b in j["benches"].values()) and benches_done(j, stl)
-    closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+    closed = real_slack(ss) and real_slack(ff) and ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+    if not (real_slack(ss) and real_slack(ff)):
+        event(j, f"SENTINEL-SLACK: TT {ss} / FF {ff} = no constrained path (constraints not applied or clock not found): "
+                 f"never CLOSED")
     event(j, f"verdict {setup_corner_label(m)} {ss:+.2f} / FF {ff:+.2f} / DRC {drc} / checks failed {failed} -> "
              f"{'CLOSED' if closed else 'NOT CLOSED'}")
     rr = routed_ioref(j, m)
@@ -4170,13 +4191,19 @@ def do_verdict(j, fleet, stl):
             # setup-only post-SDCs (nbr_clk_measured: -source latency) are read after the post-SDCs: re-read it last
             m["setup_post_sdc"] = list(m["setup_post_sdc"]) + [IOREF_SDC]
         ss, ff = rr["tt"], rr["ff"]
-        closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+        closed = real_slack(ss) and real_slack(ff) and ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
         j["metrics"] = m
         event(j, f"verdict at the ROUTED insertion: TT {ss:+.2f} / FF {ff:+.2f} -> {'CLOSED' if closed else 'NOT CLOSED'}")
+    uc = under_constrained(rr)
+    if uc:
+        failed.append("UNDER-CONSTRAINED")
+        j["failed_checks"] = failed
+        closed = False
+        event(j, f"UNDER-CONSTRAINED: {uc}: constraints did not apply; never CLOSED")
     # the calibrate-insertion re-STA / re-route is moot once the route is timed on its own tree
     mr = None if (rr and rr.get("available")) else measured_resta(j, m)
     if mr and mr.get("available"):
-        mclosed = mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
+        mclosed = not uc and real_slack(mr["tt"]) and real_slack(mr["ff"]) and mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
         if mclosed:
             # the finished route signs off on the MEASURED clock: no re-route; its verdict numbers are the measured ones
             m.update(setup_corner="tt", ss_ps=mr["tt"], ff_ps=mr["ff"], measured_resta=mr, assumed_clock=dict(ss_ps=ss, ff_ps=ff))
@@ -4225,13 +4252,40 @@ def do_verdict(j, fleet, stl):
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
 
 
+# SENTINEL-SLACK (drive-1010 2026-10-10): STA reports +1e16-ish slack when NO path is constrained (constraints not
+# applied / clock not found).  hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2 was CLOSED at TT +1e16.  A slack that is not
+# finite or has |slack| >= SENTINEL_PS is never a pass anywhere (route verdict, routed / measured re-STA, ECO results).
+SENTINEL_PS = 1e6
+
+
+def real_slack(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and abs(v) < SENTINEL_PS
+
+
+# UNDER-CONSTRAINED (drive-1010 2026-10-10): a verdict needs real constrained endpoints.  The routed re-STA counts the
+# registers and those clocked by a defined clock; fewer clocked registers than max(UC_MIN_REGS, UC_FRAC x registers)
+# means the constraints did not apply (clock not found / wrong name) -- never CLOSED.  Blocks with no registers at all
+# (pure wiring) are judged by their port paths (SENTINEL-SLACK catches 'no path').
+UC_MIN_REGS = 10
+UC_FRAC = 0.01
+
+
+def under_constrained(rr):
+    """reason string when the routed re-STA census shows too few clocked registers, else None"""
+    n, c = (rr or {}).get("registers"), (rr or {}).get("registers_clocked")
+    if not isinstance(n, int) or not isinstance(c, int) or n <= 0:
+        return None
+    floor = min(n, max(UC_MIN_REGS, UC_FRAC * n))
+    return None if c >= floor else f"only {c} of {n} registers are clocked by a defined clock (< {floor:g})"
+
+
 def eco_passes(res, rc):
     if rc != 0 or not isinstance(res, dict) or res.get("errors"):
         return False
     # option B: setup is judged at TT (tt_ps; older results carry it in ss_ps)
     for key, minimum in (("tt_ps" if "tt_ps" in res else "ss_ps", SS_MIN), ("ff_ps", FF_MIN)):
         value = res.get(key)
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < minimum:
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not real_slack(value) or value < minimum:
             return False
     return type(res.get("drc")) in (int, float) and res["drc"] == 0
 
@@ -4738,6 +4792,9 @@ def requeue_hold_only(jobs):
         e = j.get("eco") or {}
         if j["status"] == "NEEDS_RTL" and e.get("tried") and e.get("result") is None and "hold-eco-reroute-clock" not in j.get("fix_requeued", []):
             j.setdefault("fix_requeued", []).append("hold-eco-reroute-clock")
+            # FRESH-ECO-DIR (drive-1010 2026-10-10, hardcore-1010): the dropped ECO goes to eco_history so the re-run gets
+            # a fresh output dir (eco-combo<n+1> / eco-r<n+1>); clearing it reused eco-combo1 -> rc=10 (qfd_io_collective)
+            j.setdefault("eco_history", []).append(dict(e, requeued="hold-eco-reroute-clock"))
             j["eco"] = {}
             stl = stage_list(j["spec"])
             j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))
@@ -5390,7 +5447,7 @@ def stale24_candidates(jobs, now=None):
     out = []
     for j in jobs:
         st = j.get("status")
-        if st in TERMINAL or j["spec"].get("allow_over_24h"):
+        if st in TERMINAL or j["spec"].get("allow_over_24h") or (protected_jobs() and j["name"].startswith(protected_jobs())):
             continue
         run = j.get("run") or ""
         if re.search(DIE_CONTAINER_RE, j["name"]) or re.search(DIE_MOUNT_RE, run):
@@ -5459,6 +5516,15 @@ MEM_GUARD_EVERY_S = 300
 _MEM_GUARD_LAST = {}
 
 
+def protected_jobs():
+    """STATE/protected_jobs.json {"prefixes": [...]}: owner-priority lines (e.g. the BF of record) that MEM-GUARD and
+    STALE-24H never stop."""
+    try:
+        return tuple(json.loads((STATE / "protected_jobs.json").read_text()).get("prefixes") or [])
+    except (OSError, ValueError):
+        return ()
+
+
 def mem_guard(jobs, fleet, now=None):
     """returns [(host, job name)] stopped this call"""
     now = time.time() if now is None else now
@@ -5471,7 +5537,9 @@ def mem_guard(jobs, fleet, now=None):
         floor = max(MEM_GUARD_GB, MEM_GUARD_FRAC * h.get("ram_gb", 1024))
         if good[1].get("mem_gb", 1e9) >= floor or now - _MEM_GUARD_LAST.get(name, 0) < MEM_GUARD_EVERY_S:
             continue
+        prot = protected_jobs()
         cand = [j for j in jobs if j.get("host") == name and j["status"] == "RUNNING" and j.get("stage_tag")
+                and not (prot and j["name"].startswith(prot))
                 and not re.search(DIE_CONTAINER_RE, j["name"]) and not re.search(DIE_MOUNT_RE, j.get("run") or "")]
         if not cand:
             continue
@@ -5569,6 +5637,11 @@ def release_deep(jobs, now=None):
 #   d  FLOORPLAN_MARGIN whose only failing lint check is "sliver" -> successor <job>-ard with "sliver_block": true (the
 #      macro + core-edge sliver blockage hooks at PRE GLOBAL_PLACE, before the lint);
 #   e  DRT-0073 (no access point) -> successor <job>-are with the recipe's min-width / pin-keepout knob (DRT_RECIPES).
+#   f  MACRO-CLK (macro-clk-1010): EARLY_FAIL_HOLD, or a NEEDS_RTL FF hold miss, whose CTS built the SRAM-macro clock as
+#      a leaf-less shallow tree (CTS log: macro net with 3+ sinks on 0 leaf buffers, >= 150 um average sink wire) or whose
+#      calibrate flagged macro clock-pin slew / lateness (calib.json macro_clk), and whose CTS ran WITHOUT the macro
+#      clustering default -> successor <job>-arf, same commit: the default (macro_cts_cluster.tcl, shipped into the
+#      snapshot by hold_corners_patch.py) now applies.  Checked before c (the macro clock is the root of the stall).
 # A successor is a new spec dropped into DROP: intake (validate, route key, submit lint) applies as for any job.  Never
 # loosens a constraint (no clock / uncertainty / margin / SDC change; hold margins stay the existing defaults).  At most
 # one action per job per class (j["auto_react"] = {class: successor or "in-place"}); a successor (spec
@@ -5583,6 +5656,7 @@ READY_NEXT = Path(os.environ.get("CL_READY_NEXT_DIR", str(TAKEOVER / "READY_NEXT
 AUTO_REACT_FAIL = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
 AUTO_REACT_MAX_AGE_H = 6.0          # < DEEP_RELEASE_AGE_H: an in-place ECO needs the route products
 AR_HOLD_FF_FLOOR = -30.0
+AR_MACRO_TT_FLOOR = -45.0           # class f on a NEEDS_RTL: TT no worse than the combo band
 PINFLOP_SINCE = "2026-10-10T03:05"  # PINFLOP-REF overlay deployed (36795a58e): a route started later used it
 FP_LINT_CHECKS = ("bank_distance", "channel", "macro_edge", "pin_density", "pin_width", "sliver", "util")
 # (cmd regex the recipe must match, env knob, repo file at the job commit that must honour it, marker text in that file)
@@ -5735,6 +5809,56 @@ def _prefix_env(spec, knob):
             st["cmd"] = f"export {knob}=1; " + st["cmd"]
 
 
+def macro_clk_flag(j, calib):
+    """MACRO-CLK after CTS: keep the calibrate's macro clock verdict with the job and flag outliers in its events"""
+    mc = calib.get("macro_clk") if isinstance(calib, dict) else None
+    if not isinstance(mc, dict):
+        return
+    j["calibration"]["macro_clk"] = mc
+    txt = macro_clk.calib_flag_text(mc)
+    if txt:
+        event(j, txt)
+        ledger(j, txt)
+
+
+def macro_clk_sig(j):
+    """macro_clk.signature() of this job's CTS logs (+ calibrate verdict), cached per verdict (one ssh per failure)"""
+    key = str(j.get("finished_at"))
+    c = j.get("macro_clk_sig")
+    if isinstance(c, dict) and c.get("at") == key:
+        return c
+    mc = (j.get("calibration") or {}).get("macro_clk")
+    logs = []
+    if j.get("host") and j.get("run"):
+        try:
+            r = ssh(j["host"], macro_clk.scan_cmd(j["run"]), timeout=120)
+            logs = macro_clk.parse_cts_logs(r.stdout) if r.returncode == 0 else []
+        except Exception as ex:  # noqa: BLE001
+            log(f"[{j['name']}] macro-clk scan failed: {type(ex).__name__}: {str(ex)[:160]}")
+    sig = dict(macro_clk.signature(logs, mc), at=key)
+    j["macro_clk_sig"] = sig
+    return sig
+
+
+def ar_macro_clk(j):
+    """class f applies: (True, detail) / (False, why-not or None when there is no macro clock signature)"""
+    m = j.get("metrics") or {}
+    ff, tt = m.get("ff_ps"), m.get("ss_ps")
+    num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)  # noqa: E731
+    # a NEEDS_RTL counts only when hold is its problem (FF < 0, TT within the combo band): a deep setup miss is not
+    hold_fail = j["status"] == "EARLY_FAIL_HOLD" or (
+        j["status"] == "NEEDS_RTL" and num(ff) and ff < FF_MIN and num(tt) and tt >= AR_MACRO_TT_FLOOR)
+    if not hold_fail or j["spec"].get("macro_cts") is False:
+        return False, None
+    sig = macro_clk_sig(j)
+    if not sig["hit"]:
+        return False, None
+    if sig["clustered"]:
+        return False, f"macro clock outlier WITH the clustering default on ({sig['why']}): structural -- launch the SRAM " \
+                      f"inputs from a flop on the macro's leaf / lockup, or re-place the macros"
+    return True, f"macro clock on a shallow leaf-less tree ({sig['why']}) -> requeue under the macro clustering default"
+
+
 def ar_plan(j):
     """(class, kind, detail) for the first recipe that applies, else (None, None, why)"""
     spec = j["spec"]
@@ -5743,6 +5867,12 @@ def ar_plan(j):
     if ar_combo_window(j):
         return "b", "in-place", "thin TT and FF miss -> combo ECO"
     succ_ok = not spec.get("auto_react_parent")
+    if j["status"] in ("EARLY_FAIL_HOLD", "NEEDS_RTL"):
+        mf, mwhy = ar_macro_clk(j)
+        if mf and succ_ok:
+            return "f", "successor", mwhy
+        if mwhy:
+            return None, None, mwhy if succ_ok else f"auto-react successor (class {spec.get('auto_react_class')}); {mwhy}"
     if j["status"] == "EARLY_FAIL_HOLD":
         if not succ_ok:
             return None, None, "auto-react successor failed again (EARLY_FAIL_HOLD)"
@@ -5913,6 +6043,9 @@ def auto_react(jobs, now=None):
                 elif cls == "d":
                     def mut(s):
                         s["sliver_block"] = True
+                elif cls == "f":
+                    def mut(s):
+                        s["macro_cts"] = True        # marker only: the clustering default applies to every job
                 else:
                     knob = drt_recipe(j)
 
@@ -6414,10 +6547,20 @@ def cmd_reverdict(a):
     if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN"):
         sys.exit(f"{a.name} is {j['status']}")
     m, e = j.get("metrics") or {}, j.get("eco") or {}
-    if j.get("failed_checks"):
-        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss")
     stl = stage_list(j["spec"])
     vidx = next(i for i, x in enumerate(stl) if x["kind"] == "verdict")
+    if j.get("failed_checks") and getattr(a, "recheck", False):
+        # a verdict CHECK was fixed (e.g. LOOP-CORNER TT+SS warn): re-run the verdict stage, which re-runs every check
+        # live on the recorded route and then takes the normal path (closed / hold ECO / NEEDS_RTL)
+        how = f"re-run verdict checks (were {j['failed_checks']}) on the recorded route"
+        j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None,
+                 failed_checks=[])
+        event(j, f"human re-verdict ({a.why}): {how}")
+        save_job(j)
+        ledger(j, f"RE-VERDICT (human, no re-route): {a.why}; {how}")
+        return
+    if j.get("failed_checks"):
+        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss (--recheck re-runs them)")
     if eco_passes(dict(m, errors=[]), 0):
         j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None)
         how = f"route sign-off {setup_corner_label(m)} {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')}"
@@ -6683,6 +6826,7 @@ def main():
     r = sub.add_parser("rebudget-rejudge"); r.add_argument("name"); r.add_argument("--rb", required=True)
     r.add_argument("--sdc", required=True); r.add_argument("--dry", action="store_true")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line TTsetup>=0/FFhold>=0/DRC0; SS sensitivity")
+    r.add_argument("--recheck", action="store_true", help="a failed verdict check was fixed: re-run the verdict stage")
     c = sub.add_parser("cancel"); c.add_argument("name"); c.add_argument("--why")
     ef = sub.add_parser("early-fail"); ef.add_argument("name"); ef.add_argument("--verdict", required=True)
     ef.add_argument("--why", required=True); ef.add_argument("--detail")

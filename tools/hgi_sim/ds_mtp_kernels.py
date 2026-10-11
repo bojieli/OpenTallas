@@ -5,9 +5,8 @@ expansion (tools/gpu_sys/v41_dspark.py expand), and the golden of one verify ste
 
 THE KERNELS (DYN at a KERNEL doorbell: TOKEN = the launch's token, POS = its pos; the CP translator owns L'):
   swapin  (kind 0, token = slot c, pos = L)   slot c of the column store (HBM COLB + c * CSTR, dyn_sel TOKEN) ->
-          the layer working buffers: h (4 x 5,120 FP32 residual copies), PRE (the pre mix), SELIDX (the index
-          selection, 2,048 U32), CANDM (the layer-20 candidate table, 2 x 2,048): four DMA.LOAD
-  swapout (kind 1, token = slot c, pos = n + c)   the same four buffers back to slot c: four DMA.STORE
+          the layer working buffers: h (4 x 5,120 FP32 residual copies), PRE (the pre mix): two DMA.LOAD
+  swapout (kind 1, token = slot c, pos = n + c)   the same two buffers back to slot c: two DMA.STORE + FENCE
   embed   (kind 2, token = t, pos = n + c)    h <- the BF16 embedding row of t in every residual copy (DMA.LOAD with
           dyn_sel TOKEN over the BF16 table, converted at the load), PRE <- (1, 0, 0, 0) from the table ONE4
   layer   (kind 3, per layer L at kent[3] + L * kstride)   ds_native's lowering of layer L made POSITION-GENERIC:
@@ -208,6 +207,99 @@ def golden(a):
 
 
 
+def golden_spec(a):
+    """The DSpark golden of one REAL-drafter step at full shape (Model.generate_spec semantics, prompt [p0], anchor 0):
+    prefill p0 at position 0 (main hidden parts of layers 37..39 -> the seed: every stage's DSpark window row 0),
+    y = argmax; draft(y, 0) (3 stages over the block [y, noise x 4], DLOG rows, the Markov argmax chain);
+    verify [y, d_1 .. d_g] at positions 1 .. g+1 (one position at a time = the golden's own identity, checked by the
+    AR run above), targets, accept, the verify columns' seeds.  Per position and layer the residual / pre after the
+    layer (the die bench's labelled replay of layers 1..39) and the main hidden parts."""
+    npy_check()
+    import hdc_golden_v41 as V
+    import rtl_v41_fullshape_layer_campaign as LC
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    t0 = time.time()
+    ck = LC.Checkpoint()
+    m, init_sha = LC.build_model(ck, engram=True)
+    log = open(out / "golden_spec.log", "a")
+
+    def say(s_):
+        print(s_, flush=True)
+        log.write(s_ + "\n")
+        log.flush()
+
+    def drop(L=None):
+        for k_ in [k_ for k_ in m.w if ".ffn.experts." in k_ or (L is not None and k_.startswith(m.P(L)))]:
+            del m.w[k_]
+
+    def emb(t):
+        return np.repeat(ck.rows("embed.weight", [t]), m.hc, axis=0).astype(F)
+    arrs = {}
+    state = m.new_state(mtp=True)
+
+    def run_pos(t, p):
+        state["tokens"].append(int(t))
+        ctx = {"pos": p, "hist": list(state["tokens"]), "h": emb(t), "pre": np.array([1, 0, 0, 0], dtype=F), "mh": []}
+        for L in range(m.L):
+            m.layer(L, ctx, state)
+            arrs[f"h_{p}_{L}"] = ctx["h"].copy()
+            arrs[f"pre_{p}_{L}"] = ctx["pre"].copy()
+            drop(L)
+        xf = V.rmsnorm_fold(m.hc_pre(ctx["h"], ctx["pre"]), m.w["norm.weight"], m.eps)
+        lg = V.mv(m.w["head.weight"], xf)
+        tr = {}
+        m.dspark_seed(np.concatenate(ctx["mh"]), p, state, tr)
+        arrs[f"mh_{p}"] = np.asarray(tr["main_hidden"], F)
+        arrs[f"mainx_{p}"] = np.asarray(tr["main_x"], F)
+        for st in range(m.n_mtp):
+            arrs[f"dsk_{st}_{p}"] = np.asarray(state["dsk"][st][p], F)
+        tok = int(np.argmax(lg))
+        say(f"pos {p} token {t} -> {tok} ({time.time() - t0:.0f} s)")
+        return tok
+    y = run_pos(a.p0, 0)
+    # the draft at anchor 0 (Model.draft, unrolled to keep every stage's rows)
+    B, q = m.dspark_block, 0
+    ids = [y] + [m.noise_id] * (B - 1)
+    hs = [emb(t) for t in ids]
+    pres = [np.array([1, 0, 0, 0], dtype=F) for _ in ids]
+    for st in range(m.n_mtp):
+        hs, pres = m.dspark_stage(m.L + st, hs, pres, q, state)
+        for i in range(B):
+            arrs[f"dh_{st}_{i}"], arrs[f"dpre_{st}_{i}"] = hs[i].copy(), pres[i].copy()
+        drop(m.L + st)
+        say(f"draft stage {st} ({time.time() - t0:.0f} s)")
+    Lf = m.L + m.n_mtp - 1
+    xh = [V.to_bf16(m.hc_pre(h, p_)) for h, p_ in zip(hs, pres)]
+    logits = [V.mv(m.w["head.weight"], V.rmsnorm_bf16(x, m.lw(Lf, "norm.weight"), m.eps)) for x in xh]
+    for i in range(B):
+        arrs[f"dlog_{i}"] = np.asarray(logits[i], F)
+    embm, mhead = m.lw(Lf, "markov_head.embed.weight"), m.lw(Lf, "markov_head.head.weight")
+    d = [y]
+    for i in range(B):
+        lg = V.add(logits[i], V.mv(mhead, embm[d[i]]))
+        d.append(int(np.argmax(lg)))
+    drafts_all = d[1:]
+    g = a.gamma
+    drafts = drafts_all[:g]
+    say(f"draft: {drafts_all} ({time.time() - t0:.0f} s)")
+    toks = [y] + drafts
+    targets = [run_pos(t, 1 + j) for j, t in enumerate(toks)]
+    acc = 0
+    while acc < g and drafts[acc] == targets[acc]:
+        acc += 1
+    emitted = [y] + targets[:acc + 1]
+    np.savez_compressed(out / "golden_spec.npz", **arrs)
+    summ = dict(schema="opentallas.hgi_sim.ds_mtp_golden_spec.v1", p0=a.p0, gamma=g, y=y, noise=m.noise_id,
+                drafts_block=drafts_all, drafts=drafts, verify_tokens=toks, targets=targets, accepted=acc,
+                emitted=emitted, prompt=[a.p0], drafter="dspark (real)",
+                positions=[dict(pos=p, argmax=(y if p == 0 else targets[p - 1])) for p in range(1 + len(toks))],
+                golden=LC.golden_pin(), init_sha=init_sha, wall_s=round(time.time() - t0, 1))
+    (out / "golden_spec.json").write_text(json.dumps(summ, indent=1) + "\n")
+    say(f"SPEC: y {y} drafts {drafts} targets {targets} accept {acc} emitted {emitted}")
+    return 0
+
+
 # =================================================================================================================
 # the kernels
 # =================================================================================================================
@@ -216,7 +308,13 @@ MTB = 0x170000000                    # MTP constants (ONE4 = 1, 0, 0, 0)
 COLB = 0x180000000                   # column slot store: COLB + slot * CSTR (dyn_sel TOKEN)
 ROPEB = 1 << 31                      # plain RoPE rows: ROPEB + pos * 256 (cos 32 | sin 32, dyn_sel POS)
 ZT, HT = 261120, 261184              # VM: the END token word of non-head kernels (0); the head stub's table HT[pos]
-SLOT = (("h", 0, 20480), ("PRE", 81920, 4), ("SELIDX", 81952, 2048), ("CANDM", 90144, 4096))
+SLOT = (("h", 0, 20480), ("PRE", 81920, 4))
+# The index selection (SELIDX) and the layer-20 candidate table (CANDM) are per-POSITION transients written by the
+# index-source layers and read by later layers of the same position: they move to position-indexed rows (SELB / CANDB +
+# (POS mod 16) * stride, written by the writer layer's body, loaded by the readers' bodies -- rollback-safe like the
+# window ring) instead of riding every swap (they changed at 4 of 40 layers; 6,144 of 26,628 swapped words).  L0 reads
+# neither.  VM residency of the columns: today's VM map ends at 261,056 of 262,144 words, so 0 columns of 20,484 words
+# fit; the VM-512 macros (2 MiB physical, hgi-1010/f) would hold 12.
 CSTR = 1 << 17
 ATT_TAGS = ("attend.qk", "attend.max", "attend.exp_sum", "attend.bf16_p", "attend.pv")
 
@@ -248,12 +346,18 @@ class Kernels:
                 self.body[r][(4, 0)] = [self.end(HT, POS=True)]
         for L in layers_real:
             for r, recs in enumerate(self.layer(L)):
-                self.body[r][(3, L)] = recs + [self.end()]
+                self.body[r][(3, L)] = recs + [self.fence(), self.end()]
 
     # ---- records
     def end(self, base=ZT, POS=False):
         A = self.MDesc(space="VM", fmt="U32", base=base, n=1, dyn_sel=1 if POS else 0, dyn_mul=1 if POS else 0)
         return self.Rec("CTL", "END", wait=0xFFFE, desc=dict(A=A), tag="end" + (".head_stub" if POS else ""))
+
+    def fence(self):
+        """CTL.FENCE: every unit drained and every POSTED HBM write visible (spec CTL.FENCE / wr_quiet) -- a body that
+        stores to HBM ends with it, so the next launch's reads (the slot's swapin, the next column's window-ring rows)
+        see the writes; END's wait mask alone does not cover posted DMA writes"""
+        return self.Rec("CTL", "FENCE", wait=0xFFFE, tag="fence")
 
     def swap(self, into):
         b = self.Builder(None)
@@ -265,7 +369,7 @@ class Kernels:
             else:
                 b.add(self.Rec("DMA", "STORE", desc=dict(A=vm, O=hb), tag=f"swapout.{nm}", family="swap"),
                       [nm], [f"COL.{nm}"])
-        return b.recs + [self.end()]
+        return b.recs + ([] if into else [self.fence()]) + [self.end()]
 
     def embed(self):
         b = self.Builder(None)
@@ -449,7 +553,7 @@ def sim(a):
             c = e["token"]
             hs = []
             for d in dies:
-                v = d.hbm.view(COLB + c * CSTR, 81952).view(np.uint32)
+                v = d.hbm.view(COLB + c * CSTR, 81936).view(np.uint32)
                 hs.append(v.copy())
             col_out[e["pos"]] = hs
         if e["kind"] == "swapin":
@@ -541,7 +645,7 @@ def export_bench(a, K, cap, die0, regions0, snap0, vm0, costs, gd, simrec):
         e.update(c)
     md = dict(magic=HGI.MAGIC, ver_minor=HGI.D_VERSION[1], ver_major=HGI.D_VERSION[0], n_words=HGI.NWORDS,
               cp_vocab=129280, cp_ctx_max=1 << 20, coll_group_size=96, entry_ar=ar, image_base=EX.IMAGE_PAGE,
-              image_pages=-(-len(img) // 4096) + 1, mtp_kstride=ks, **{f"mtp_kernel_{k}": kent[k] for k in range(11)})
+              image_pages=-(-len(img) // 4096) + 1, mtp_kstride=ks, mtp_noise=K.m.noise_id, **{f"mtp_kernel_{k}": kent[k] for k in range(11)})
     words = HGI.d_pack(md)
     assert HGI.d_hw_check(words) == 0
     (out / "image.bin").write_bytes(img)
@@ -607,6 +711,10 @@ def main():
     g.add_argument("--gamma", type=int, default=4)
     g.add_argument("--corrupt", type=int, default=2)
     g.add_argument("--layer-major", action="store_true")
+    gs = sp.add_parser("golden-spec")
+    gs.add_argument("--out", required=True)
+    gs.add_argument("--p0", type=int, default=0)
+    gs.add_argument("--gamma", type=int, default=4)
     q = sp.add_parser("sim")
     q.add_argument("--golden", required=True)
     q.add_argument("--out", required=True)
@@ -614,6 +722,8 @@ def main():
     a = ap.parse_args()
     if a.cmd == "golden":
         return golden(a)
+    if a.cmd == "golden-spec":
+        return golden_spec(a)
     if a.cmd == "sim":
         return sim(a)
     return 1

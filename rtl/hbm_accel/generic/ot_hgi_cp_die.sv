@@ -29,7 +29,10 @@ module ot_hgi_cp_die #(
     parameter integer USE_MACRO = 1,
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
-    parameter integer FQCR = 4         // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer FQCR = 4,        // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer MTP_PINREG = 0   // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
+                                       // FIFOs / flops on f_mtp, t_mtp, mh_* and the translator side; +1 cycle a crossing,
+                                       // controller PRL 4); 0 = the unregistered collar (pinned views unchanged)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -56,7 +59,8 @@ module ot_hgi_cp_die #(
     input  wire [2:0]    sfu_ret,
     output reg  [1471:0] att_rec,       // unit 5  {pos1, n_C, n_B, O, C, B, A, SUT, header, valid}
     input  wire [2:0]    att_ret,
-    output reg  [703:0]  dma_rec,       // unit 8  {pos1, n_O, n_A, O, A, header, valid}
+    output reg  [703:0]  dma_rec,       // unit 8  {pos1, n_O, n_A, O, A, header, valid}; A[255:239,7] = the I-list address
+                                        //   (I effective base + L, 18-bit VM word; MDESC reserved bits, hgi-1010/c)
     input  wire [2:0]    dma_ret,
     output reg  [938:0]  hc_rec,        // unit 10 {n_O, n_A, O, B, A, header, valid}
     input  wire [2:0]    hc_ret,
@@ -84,7 +88,7 @@ module ot_hgi_cp_die #(
     output wire [16:0]   x_am_idx,
     output wire          x_drained_ready,
     input  wire          x_ext_fault,
-    input  wire [16:0]   x_noise,
+    input  wire [16:0]   x_noise,           // unused (hgi-1010/h): the noise / mask id is MD word 53 (mtp_noise)
     // MTP=2: the controller nets (hgi_mtp_native <-> MX1 collar) and the collar's host / provider sides
     input  wire [516:0]  f_mtp,
     output wire [196:0]  t_mtp,
@@ -114,7 +118,7 @@ module ot_hgi_cp_die #(
     reg  db_hold; reg [79:0] db_q;                       // one doorbell station
     reg  [3:0] db_k; reg [31:0] db_lo; reg db_x;         // its kernel / G26 offset / translator-owned flag
     reg  x_run;                                          // the running job is the translator's
-    wire [11*32-1:0] md_kent; wire [31:0] md_kstride;
+    wire [11*32-1:0] md_kent; wire [31:0] md_kstride; wire [17:0] md_noise;
     wire xdb_v, xdb_rdy; wire [17:0] xdb_tok; wire [19:0] xdb_pos; wire [31:0] xdb_job, xdb_off, xdb_loff;
     wire [3:0] xdb_gen, xdb_kind; wire [1:0] xdb_ent;
     reg  [4:0] fq_cr; reg [6:0] fq_in;                  // F5: fetch credits (the loader's 4-entry queue) / sectors in flight (<= 48)
@@ -130,7 +134,7 @@ module ot_hgi_cp_die #(
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),
         .db_gen(db_q[73:70]), .db_entry(db_q[75:74]), .db_ncol(db_q[79:76]), .db_kernel(db_k), .db_loff(MUT == 2 ? 32'd0 : db_lo),
-        .md_kent(md_kent), .md_kstride(md_kstride),
+        .md_kent(md_kent), .md_kstride(md_kstride), .md_noise(md_noise),
         .f_req_v(f_req_v), .f_req_rdy(fq_cr != 5'd0 && fq_in < 7'd48), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
         .vr_v(vr_v), .vr_rdy(!vr_busy), .vr_addr(vr_addr), .vr_rsp_v(vr_rv), .vr_rsp_data(vr_rd),
         .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n), .d_pos1(d_pos1),
@@ -144,12 +148,21 @@ module ot_hgi_cp_die #(
     wire [16:0] xi_am_idx;
     generate if (MTP == 2) begin : g_collar
         wire [270:0] t_be;
+        if (MTP_PINREG) begin : g_pinreg      // fe-push-hgi-1010: registered die boundary (feasibility row, in->reg 15 levels)
+            ot_hgi_cp_mtp_pinreg #(.ENABLE_MTP(1), .MUT(MUT >= 10 ? MUT - 10 : 0)) u_collar (.clk(clk), .rst_n(rst_n),
+                .f_mtp(f_mtp), .t_mtp(t_mtp), .f_host(mh_f_host), .t_host(mh_t_host), .f_provider(mh_f_provider),
+                .t_emit(mh_t_emit), .t_provider(mh_t_provider), .f_emit_host(mh_f_emit_host), .t_emit_host(mh_t_emit_host),
+                .t_abort(mh_t_abort), .t_drained(mh_t_drained), .f_am({xi_am_idx, xi_am_v}),
+                .f_backend({1'b0, xi_drained, xi_cpl_fault, xi_cpl_seq, xi_cpl_gen, xi_cpl_job, xi_cpl_v, xi_cmd_ready}),
+                .t_backend(t_be));
+        end else begin : g_direct
         hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(1)) u_collar (.ck(clk), .rst(~rst_n), .f_mtp(f_mtp),
             .emit_pend(f_mtp[43]), .t_mtp(t_mtp), .f_host(mh_f_host), .t_host(mh_t_host), .f_provider(mh_f_provider),
             .t_emit(mh_t_emit), .t_provider(mh_t_provider), .f_emit_host(mh_f_emit_host), .t_emit_host(mh_t_emit_host),
             .t_abort(mh_t_abort), .t_drained(mh_t_drained), .f_am({xi_am_idx, xi_am_v}),
             .f_backend({1'b0, xi_drained, xi_cpl_fault, xi_cpl_seq, xi_cpl_gen, xi_cpl_job, xi_cpl_v, xi_cmd_ready}),
             .t_backend(t_be));
+        end
         assign xi_cmd_v = t_be[0]; assign xi_cmd = t_be[1 +: 201]; assign xi_cmd_job = t_be[202 +: 32];
         assign xi_cmd_gen = t_be[234 +: 4]; assign xi_cmd_seq = t_be[238 +: 32]; assign xi_cpl_ready = t_be[270];
         assign xi_ext_fault = mh_t_abort;
@@ -167,7 +180,7 @@ module ot_hgi_cp_die #(
     end endgenerate
     generate if (MTP) begin : g_mtp
         ot_hgi_mtp_xlate u_xlate (.clk(clk), .rst_n(rst_n), .external_fault(xi_ext_fault), .backend_quiescent(!units_busy),
-            .kent(md_kent), .kstride(md_kstride), .noise_token(x_noise),
+            .kent(md_kent), .kstride(md_kstride), .noise_token(md_noise),
             .cmd_v(xi_cmd_v), .cmd_ready(xi_cmd_ready), .cmd(xi_cmd), .cmd_job(xi_cmd_job), .cmd_generation(xi_cmd_gen),
             .cmd_sequence(xi_cmd_seq), .cpl_v(xi_cpl_v), .cpl_ready(xi_cpl_ready), .cpl_job(xi_cpl_job),
             .cpl_generation(xi_cpl_gen), .cpl_sequence(xi_cpl_seq), .cpl_fault(xi_cpl_fault), .am_v(xi_am_v), .am_idx(xi_am_idx),
@@ -206,6 +219,11 @@ module ot_hgi_cp_die #(
                  dI = d_desc[6*256 +: 256];
     wire [20:0] nA = d_n[0*21 +: 21], nB = d_n[1*21 +: 21], nC = d_n[2*21 +: 21], nD = d_n[3*21 +: 21], nO = d_n[4*21 +: 21],
                 nR = d_n[5*21 +: 21], nI = d_n[6*21 +: 21];
+    // the DMA record's A descriptor carries the I-list address (I effective base + L) in its reserved bits [255:239] and [7]
+    // (spec 6.4: reserved), for the indexed row stream (hgi-1010/c)
+    function automatic [255:0] a_il(input [255:0] a, input [17:0] il);
+        begin a_il = a; a_il[255:239] = il[17:1]; a_il[7] = il[0]; end
+    endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
@@ -234,7 +252,7 @@ module ot_hgi_cp_die #(
             else if (sfu_ret[1] || sfu_ret[2]) credx[2] <= 1'b1;
             if (u_v[5] && u_rdy[5]) begin att_rec <= {d_pos1, nC, nB, dO, dC, dB, dA, d_sut, d_hdr, 1'b1}; credx[3] <= 1'b0; end
             else if (att_ret[1] || att_ret[2]) credx[3] <= 1'b1;
-            if (u_v[8] && u_rdy[8]) begin dma_rec <= {d_pos1, nO, nA, dO, dA, d_hdr, 1'b1}; credx[4] <= 1'b0; end
+            if (u_v[8] && u_rdy[8]) begin dma_rec <= {d_pos1, nO, nA, dO, a_il(dA, dI[25:8] + {2'd0, d_L}), d_hdr, 1'b1}; credx[4] <= 1'b0; end
             else if (dma_ret[1] || dma_ret[2]) credx[4] <= 1'b1;
             if (u_v[10] && u_rdy[10]) begin hc_rec <= {nO, nA, dO, dB, dA, d_hdr, 1'b1}; credx[5] <= 1'b0; end
             else if (hc_ret[1] || hc_ret[2]) credx[5] <= 1'b1;

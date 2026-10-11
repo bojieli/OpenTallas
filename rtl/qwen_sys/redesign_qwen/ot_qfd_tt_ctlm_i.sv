@@ -1012,8 +1012,16 @@ module ot_qfd_tt_ctlm_i #(
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
     always @(posedge clk or negedge rs) if (!rs) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
     always @(posedge clk) prog_a_r <= prog_a;
+    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;
     always @(posedge clk) begin
-        if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;
+        if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)
+            if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;
+    end
+    // program writes: one-hot row / word selects registered one edge before the store (65,536 enables)
+    always @(posedge clk) begin
+        pw_row2 <= q_pw_v ? (64'd1 << q_pw_addr[9:4]) : 64'd0;
+        pw_word2 <= 16'd1 << q_pw_addr[3:0];
+        pw_d2 <= q_pw_data;
         if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;
     end
     wire [1-1:0] c_me_clk, u_me_clk;
