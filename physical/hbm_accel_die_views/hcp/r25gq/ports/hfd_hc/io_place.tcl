@@ -2051,9 +2051,9 @@ place_pin -pin_name {ck0e[0]} -layer M4 -location {2032.8480 93.7080} -pin_size 
 place_pin -pin_name {ck0w[0]} -layer M4 -location {0.0960 93.7080} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ck1e[0]} -layer M4 -location {2032.8480 281.1000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ck1w[0]} -layer M4 -location {0.0960 281.1000} -pin_size {0.1920 0.0240}
-place_pin -pin_name {ck2e[0]} -layer M6 -location {2032.8480 468.4920} -pin_size {0.1920 0.0320}
+place_pin -pin_name {ck2e[0]} -layer M6 -location {2032.8480 468.4960} -pin_size {0.1920 0.0320}
 place_pin -pin_name {ck2w[0]} -layer M4 -location {0.0960 468.4920} -pin_size {0.1920 0.0240}
-place_pin -pin_name {ck3e[0]} -layer M6 -location {2032.8480 655.8840} -pin_size {0.1920 0.0320}
+place_pin -pin_name {ck3e[0]} -layer M6 -location {2032.8480 655.8880} -pin_size {0.1920 0.0320}
 place_pin -pin_name {ck3w[0]} -layer M4 -location {0.0960 655.8840} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ck4e[0]} -layer M4 -location {2032.8480 843.1800} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ck4w[0]} -layer M4 -location {0.0960 843.1800} -pin_size {0.1920 0.0240}
