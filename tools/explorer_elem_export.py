@@ -118,12 +118,23 @@ def cmd_pack(a):
               geom={k: tt[k] for k in ('die', 'core', 'cells', 'masters', 'modules', 'module_cells', 'macros', 'ports', 'grid',
                                       'quantum_dbu', 'dbu_per_um', 'stats')},
               clocks=tt.get('clocks'), clock_roots=tt.get('clock_roots'),
-              clock_tt=tt['clock_tree'], clock_ff_leaves=ff and [l[3] for l in ff['clock_tree']['leaves']],
+              clock_tt=tt['clock_tree'], clock_wires=tt.get('clock_wires') and dict(tt['clock_wires'], file='%s.clk.bin' % a.element), clock_ff_leaves=ff and [l[3] for l in ff['clock_tree']['leaves']],
               clock_ff_match=bool(ff and len(ff['clock_tree']['leaves']) == len(tt['clock_tree']['leaves'])),
               setup_paths=tt['paths'], hold_paths=ff and ff['paths'])
     el['geom']['cells']['file'] = '%s.cells.bin' % a.element
+    if a.golden:
+        gc, gp = a.golden.split(':', 1)
+        txt = subprocess.run(['git', '-C', str(REPO), 'show', '%s:%s' % (gc, gp)], capture_output=True, text=True, check=True).stdout
+        import hashlib
+        el['golden'] = dict(commit=gc, path=gp, sha256=hashlib.sha256(txt.encode()).hexdigest(), text=txt)
+    if a.rtl:
+        r = json.loads(pathlib.Path(a.rtl).read_text())
+        el['rtl_file'] = '%s.rtl.json' % a.element
+        el['rtl_meta'] = dict(top=r['top'], source_commit=r.get('source_commit'), files=len(r['files']), top_params=r.get('top_params'))
+        (dest / el['rtl_file']).write_text(json.dumps(r, separators=(',', ':')))
     (dest / ('%s.json' % a.element)).write_text(json.dumps(el, separators=(',', ':')))
     shutil.copy(raw / 'cells.bin', dest / ('%s.cells.bin' % a.element))
+    if (raw / 'clk.bin').exists(): shutil.copy(raw / 'clk.bin', dest / ('%s.clk.bin' % a.element))
     print('wrote', dest / ('%s.json' % a.element), os.path.getsize(dest / ('%s.json' % a.element)))
 
 
@@ -137,6 +148,7 @@ def main():
     p.add_argument('--job', required=True); p.add_argument('--dest', required=True); p.add_argument('--label')
     p.add_argument('--role'); p.add_argument('--summary'); p.add_argument('--host', default='')
     p.add_argument('--raw-remote'); p.add_argument('--db', default=''); p.add_argument('--record-ref'); p.add_argument('--note')
+    p.add_argument('--rtl', help='rtl.json from tools/explorer_elem/rtl_export.py'); p.add_argument('--golden', help='<commit>:<path> of the golden model')
     p.add_argument('--extra-fact', action='append', help='JSON {"k":..,"v":..,"unit":..,"src":..}; repeatable')
     a = ap.parse_args()
     sys.exit(cmd_run(a) if a.cmd == 'run' else cmd_pack(a))

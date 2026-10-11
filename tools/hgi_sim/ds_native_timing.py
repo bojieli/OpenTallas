@@ -11,7 +11,7 @@ Unit costs (1.2 GHz cycles), per record:
   SU.VOP               the SU depth model per record (timing.su_cost; == the RTL emit -> write depth for every op
         class, hbm_su_c12): the native stream runs every SU template as its own record, where the walk prices a
         fused chain -- the difference is the native lowering's cost
-  FUSED.QDQ_*          ceil(n / 32) + 8 (ot_hdc_fp4qdq / the DS quantiser: 32 elements a cycle, II 1, latency 8)
+  FUSED.QDQ_*          ceil(n / 32) + 46 (ot_hgi_quant_unit WIDE, measured: 32 elements a cycle, II 1, + VM / decode latency)
   DMA.* / CTL.*        timing.cost (first access measured, stores / fences estimates)
 Wait masks are recomputed over the whole token (the per-layer programs' masks do not see the previous layer).
 
@@ -122,7 +122,10 @@ class NativeCost:
             return c, "measured_depth_model", how
         if u == "FUSED" and op.startswith("QDQ"):
             n = r.desc["A"].n
-            return math.ceil(n / 32) + 8, "rtl_spec", "DS quantiser: 32 / cycle, latency 8"
+            # tput-gate-1010 (AGENTS throughput qualification): the old ceil(n / 32) + 8 omitted the decode latency (23
+            # edges) and the VM round trip; the production structure (ot_hgi_quant_unit WIDE: lane-group read 4 sectors a
+            # cycle, decode II 1, lane-group write) measures ceil(n / 32) + 46 (tb_hgi_quant_wide_tput, DS shapes)
+            return math.ceil(n / 32) + 46, "measured", "DS quantiser WIDE: 32 / cycle, + 46 (steer 3, VM read, decode 23, write)"
         if u == "DMA" and op == "LOAD" and r.desc["A"].indexed and r.desc["A"].n_sel == 63:
             rows = r.desc["O"].m
             return T.first_access() + rows * r.desc["O"].n * 4 / T.cv("hbm", "bytes_per_cycle"), "measured_budget", \
