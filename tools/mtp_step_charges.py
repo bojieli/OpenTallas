@@ -179,6 +179,24 @@ def ds_rom():
         formula=f"{len(p2)} P2 transactions x (+{p2_lnk}: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
         source=["tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0", "~/claude-takeover-20261007/mtp-fixlat-1011.log"],
         note="the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"))
+    # mtp-colllane-1011 (ds-1010 decision): the token return / seed and the P2 die-to-die traffic ride DEDICATED collective
+    # lanes; the lane tiles / link layer / channel are the hop already charged, the new adapter tiles add their pipeline
+    #   head lane dsfd_coll_mtp_lane: TX pin flop + OUTPUT_PIPE + credit_tx = 3, RX landing v_q + FIFO + OREG + token
+    #   buffer bypass + ltx = 5 -> 8 a traversal; the token return (DRAFT flit + held results) and the seed both cross
+    #   P2 lanes dsfd_coll_p2_lane_pa / _ba: start in (8) and the last result row out (8, 2 beats: +1 TX) per transaction;
+    #   the die-B lane-1 words stream ahead of the start (waiting in the lane buffers), off the chain
+    ch.append(charge(
+        "mtp_lane.adapters", "dedicated MTP lane adapter (dsfd_coll_mtp_lane): token return + seed traversals", 2 * (3 + 5),
+        anchor="accept.commit", phase="accept", grade="rtl count (registered stages)",
+        formula="2 traversals (token return, seed) x (TX 3 + RX 5)",
+        source=["rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv", "tools/mtp_colllane_gate.py (exact / HOL / no-block gate)"],
+        note="upper bound: both traversals charged serially; the collective's lanes 0..7 are untouched (coll_done equal)"))
+    ch.append(charge(
+        "p2.lane_adapters", "P2 dedicated lane adapters (dsfd_coll_p2_lane_pa / _ba): start in + last row out", (8 + 9) * len(p2),
+        anchor="draft.blocks", phase="draft", grade="rtl count (registered stages)",
+        formula=f"{len(p2)} P2 transactions x (start 3 + 5, last row 2-beat 4 + 5)",
+        source=["rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv", "tools/mtp_p2lane_gate.py"],
+        note="lane-1 words from die B arrive ahead of the start (buffered), off the chain"))
     # ---- Markov head (MD-6): the composition's transfer ratio vs the measured row-pipeline latency
     mq = J(MARKOV_Q)
     mk_model = next(n["cycles"] for n in mtp["nodes"] if n["id"] == "draft.markov0")
