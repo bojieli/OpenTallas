@@ -909,8 +909,15 @@ def main():
     ap.add_argument('--groups', type=int, default=0, help='groups per half G (tiled: tiles per chain NT = G L); default the quarter preset')
     ap.add_argument('--wct', type=int, default=0, help='tiled: tile accumulator width (>= ceil(WO_mid / chains); the spare '
                     'high bits ride along unused) -- keeps one hardened hfd_su_tile_xl across lane counts')
+    ap.add_argument('--end', action='append', default=[], metavar='PORT=S|N',
+                    help='a port served by the far end of the S (even) / N (odd) chains instead of the centre band '
+                    '(outputs read the far-end broadcast, inputs inject into the far-end accumulator): it does not '
+                    'widen the tile accumulator ([sfu] 0fb82b135; R25GQ SU lgW client tap)')
     a = ap.parse_args()
     q = dict(QUARTERS[a.quarter], qname=a.quarter)
+    if a.end:
+        q['end'] = dict(q.get('end') or {}, **dict(kv.split('=') for kv in a.end))
+        assert all(v in ('S', 'N') for v in q['end'].values()), q['end']
     if a.groups:
         q['G'] = a.groups
     if a.lanes:
