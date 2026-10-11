@@ -843,6 +843,43 @@ def u_coll_topk_merge(M: Machine, r: Rec, L):
                 M.vm_write(rd.desc["R"], d, L, v[top].astype(F))
 
 
+def u_idx_merge(M: Machine, r: Rec, L):
+    """IDX.MERGE (spec 6.x): A (FP32 values) and B (U32 ids) are m rows of n {value, id} pairs (m <= 128), each row
+    already in key order; O / R = the first k of the merged order.  key 0: larger value first (-0 = +0, NaN after every
+    number), equal values to the lower id; key 1: lower id first.  A row out of key order faults (E_RANGE); fewer
+    than k elements in all: O / R hold all of them."""
+    k, key = r.param & 0xFFF, (r.param >> 12) & 1
+    if not 1 <= k <= 2048:
+        raise Fault(3, "MERGE k outside 1..2048")
+    for die in M.dies:
+        rd = M.rec_of(die, r)
+        a, b = rd.desc["A"], rd.desc["B"]
+        _, n, m, _, _ = M.eff(a, die, L)
+        if m > 128:
+            raise Fault(3, "MERGE: more than 128 rows")
+        v = M.read(a, die, L).astype(np.float64).reshape(m, n)
+        ids = die.vm[M.vm_addrs(b, die, L)].astype(np.int64).reshape(m, n)
+        v = np.where(v == 0, 0.0, v)                                   # -0 = +0
+        vk = np.where(np.isnan(v), -np.inf, v)
+        nanm = np.isnan(v)
+        for row in range(m):                                           # each row must already be in key order
+            if key == 0:
+                srt = np.lexsort((ids[row], nanm[row], -vk[row]))
+            else:
+                srt = np.argsort(ids[row], kind="stable")
+            if not np.array_equal(srt, np.arange(n)):
+                raise Fault(3, "E_RANGE: MERGE row out of key order")
+        fv, fi, fn = vk.reshape(-1), ids.reshape(-1), nanm.reshape(-1)
+        order = np.lexsort((fi, fn, -fv)) if key == 0 else np.argsort(fi, kind="stable")
+        top = order[:min(k, order.size)]
+        o = rd.desc["O"]
+        die.vm[M.vm_addrs(MDesc(space="VM", fmt="U32", base=M.eff(o, die, L)[0], n=len(top)), die, L)] = \
+            fi[top].astype(np.uint32)
+        if "R" in rd.desc:
+            rb = M.eff(rd.desc["R"], die, L)[0]
+            die.vm[rb:rb + len(top)] = v.reshape(-1)[top].astype(F).view(np.uint32)
+
+
 def u_coll_all_gather(M: Machine, r: Rec, L):
     """Even-split segments (G9): rank q of a G-rank group contributes A[floor(q n / G), floor((q + 1) n / G))."""
     for grp in M.groups():
@@ -1050,7 +1087,7 @@ def _write_red(M, rd, die, L, vals):
 
 UNITS = {("DMA", "LOAD"): u_dma_load, ("DMA", "STORE"): u_dma_store, ("DMA", "FENCE"): u_dma_fence,
          ("SM", "MATVEC"): u_sm_matvec, ("COLL", "ALL_REDUCE_SUM"): u_coll_all_reduce,
-         ("IDX", "INDEX"): u_idx_index, ("COLL", "TOPK_MERGE"): u_coll_topk_merge, ("IDX", "OWNED"): u_idx_owned,
+         ("IDX", "INDEX"): u_idx_index, ("IDX", "MERGE"): u_idx_merge, ("COLL", "TOPK_MERGE"): u_coll_topk_merge, ("IDX", "OWNED"): u_idx_owned,
          ("ARGMAX", "LOCAL"): u_argmax_local, ("COLL", "ARGMAX_MERGE"): u_coll_argmax_merge,
          ("FUSED", "ROW_NORM"): u_row_norm, ("SFU", "GLU"): u_glu, ("ATT", "QK"): u_att_qk, ("ATT", "PV"): u_att_pv,
          ("SU", "VOP"): u_su_vop, ("IDX", "TOPK"): u_idx_topk, ("COLL", "ALL_GATHER"): u_coll_all_gather,
