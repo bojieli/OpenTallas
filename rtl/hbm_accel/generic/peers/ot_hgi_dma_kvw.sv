@@ -75,6 +75,8 @@ module ot_hgi_dma_kvw #(
     reg st_v; reg [14:0] st_vs, st_vst; reg [31:0] st_ds, st_dst; reg [17:0] st_ns; reg [19:0] st_m;                                // tail, issue head, write head (mod 8 counters, 4 entries)
     // ================================================================ issue (I)
     reg        i_act; reg [14:0] i_vs, i_vnx, i_vst; reg [17:0] i_left, i_ns; reg [19:0] i_rows;
+    wire       i_le1 = i_left == 18'd1, i_eq2 = i_left == 18'd2;      // registered-input compares (parallel to the decision)
+    wire [14:0] i_vs1 = i_vs + 15'd1, i_vs2 = i_vs + 15'd2; wire [17:0] i_lm1 = i_left - 18'd1, i_lm2 = i_left - 18'd2;
     reg [1:0]  occ [0:31];                                  // a lane's sectors issued, not drained (<= 2: its hold entries)
     reg [31:0] kqv, kqv_d;                                  // lanes with a request in kq / one edge earlier (not yet in gcr_q)
     // registered boundary (standalone element): the grant and the mover's credit counters are pin-flopped; the requests of
@@ -84,14 +86,24 @@ module ot_hgi_dma_kvw #(
     reg        buf_ok;                                      // registered: >= 8 free slots
     // issue-order FIFO {lane 5, last of move 1}
     reg [5:0]  iof [0:63]; reg [5:0] o_t, o_h; reg [6:0] o_n;
+    // hbm-fq/dma 10-11 (class 5): the issue decision is made on registered state with the unapplied (previous) decision
+    // counted exactly, registered (pi_*), and applied on the next edge (kq, kqv, the issue-order FIFO, occupancy, slots).
+    // The cursor's next values are computed in parallel with the decision and selected by it.
     reg [1:0]  ok_n; reg [4:0] l0, l1; reg i_rend, i_last;
+    reg [1:0]  pi_n; reg [4:0] pi_l0, pi_l1; reg [14:0] pi_vs; reg pi_last;   // the registered (unapplied) decision
+    function automatic [2:0] ipend(input [4:0] l);           // occupancy / credits the unapplied decision takes on lane l
+        ipend = 3'((pi_n != 2'd0 && pi_l0 == l) ? 1 : 0) + 3'((pi_n == 2'd2 && pi_l1 == l) ? 1 : 0);
+    endfunction
     always @* begin : idec
-        reg ok0, ok1;
+        reg ok0, ok1; reg [2:0] p0, p1;
         l0 = i_vs[4:0]; l1 = 5'(i_vs[4:0] + 5'd1);
-        ok0 = i_act && gnt_q && buf_ok && occ[l0] != 2'd2 && gcr_q[l0*6 +: 6] > 6'(2'(kqv[l0]) + 2'(kqv_d[l0]));
-        ok1 = ok0 && i_left >= 18'd2 && occ[l1] != 2'd2 && gcr_q[l1*6 +: 6] > 6'(2'(kqv[l1]) + 2'(kqv_d[l1]));
+        p0 = ipend(l0); p1 = ipend(l1);
+        ok0 = i_act && gnt_q && buf_ok && 3'(occ[l0]) + p0 < 3'd2 &&
+              gcr_q[l0*6 +: 6] > 6'(3'(kqv[l0]) + 3'(kqv_d[l0]) + p0);
+        ok1 = ok0 && !i_le1 && 3'(occ[l1]) + p1 < 3'd2 &&
+              gcr_q[l1*6 +: 6] > 6'(3'(kqv[l1]) + 3'(kqv_d[l1]) + p1);
         ok_n = ok1 ? 2'd2 : ok0 ? 2'd1 : 2'd0;
-        i_rend = i_left == {16'd0, ok_n};                   // this cycle ends the row
+        i_rend = ok1 ? i_eq2 : ok0 ? i_le1 : 1'b0;          // this decision ends the row
         i_last = i_rend && i_rows == 20'd1;                 // ... and the move
     end
     reg owed;
@@ -101,14 +113,25 @@ module ot_hgi_dma_kvw #(
     reg [31:0] hw, hr; reg [1:0] hc [0:31];                 // write / read entry, held count
     reg        d_v [0:1]; reg [63:0] d_sel [0:1]; reg [7:0] d_a [0:1]; reg d_last [0:1];   // D1 registers, per bank
     reg [9:0]  q_drn;                                       // slots drained (in issue order)
+    // hbm-fq/dma 10-11 (class 5): the drain decides on a REGISTERED 2-entry window of the issue-order FIFO (w0 / w1, wv
+    // valid entries) and on hold counts corrected by the unapplied (registered) previous pop pd_*; the hold counts,
+    // read pointers, occupancy and the one-hot bank selects are applied on the next edge.
     reg [1:0]  dn; reg [5:0] e0, e1; reg e0_ok, e1_ok; reg [5:0] x0, x1;   // drain pick (hold entry indices x = 2 lane + entry)
+    reg [5:0]  w0, w1; reg [1:0] wv;                        // the window: iof[o_h], iof[o_h + 1]
+    reg [1:0]  pd_n; reg [4:0] pd_l0, pd_l1; reg [5:0] pd_x0, pd_x1; reg pd_last0, pd_last1; reg [9:0] pd_q;
+    function automatic [1:0] dpend(input [4:0] l);
+        dpend = 2'((pd_n != 2'd0 && pd_l0 == l) ? 1 : 0) + 2'((pd_n == 2'd2 && pd_l1 == l) ? 1 : 0);
+    endfunction
     always @* begin : dpick
-        e0 = iof[o_h]; e1 = iof[6'(o_h + 6'd1)];
-        e0_ok = o_n != 7'd0 && hc[e0[5:1]] != 2'd0;
-        e1_ok = e0_ok && o_n >= 7'd2 && !e0[0] &&
-                ((e1[5:1] != e0[5:1]) ? hc[e1[5:1]] != 2'd0 : hc[e1[5:1]] == 2'd2);
-        x0 = {e0[5:1], hr[e0[5:1]]};
-        x1 = {e1[5:1], (e1[5:1] == e0[5:1]) ? !hr[e1[5:1]] : hr[e1[5:1]]};
+        reg [1:0] h0, h1, q0, q1; reg r0_, r1_;
+        e0 = w0; e1 = w1;
+        q0 = dpend(e0[5:1]); q1 = dpend(e1[5:1]);
+        h0 = hc[e0[5:1]] - q0; h1 = hc[e1[5:1]] - q1;
+        r0_ = hr[e0[5:1]] ^ q0[0]; r1_ = hr[e1[5:1]] ^ q1[0];
+        e0_ok = wv != 2'd0 && h0 != 2'd0;
+        e1_ok = e0_ok && wv == 2'd2 && !e0[0] && ((e1[5:1] != e0[5:1]) ? h1 != 2'd0 : h1 == 2'd2);
+        x0 = {e0[5:1], r0_};
+        x1 = {e1[5:1], (e1[5:1] == e0[5:1]) ? !r1_ : r1_};
         if (MUT == 5) x1 = x0;
         dn = e1_ok ? 2'd2 : e0_ok ? 2'd1 : 2'd0;
     end
@@ -194,6 +217,7 @@ module ot_hgi_dma_kvw #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             f_t <= 3'd0; f_i <= 3'd0; f_w <= 3'd0; c_rdy <= 1'b0; st_v <= 1'b0;
+            pi_n <= 2'd0; pd_n <= 2'd0; wv <= 2'd0;
             i_act <= 1'b0; kq <= 512'd0; kqv <= 32'd0; kqv_d <= 32'd0; gnt_q <= 1'b0; gcr_q <= '0; q_iss <= 10'd0; buf_ok <= 1'b0;
             o_t <= 6'd0; o_h <= 6'd0; o_n <= 7'd0; hw <= 32'd0; hr <= 32'd0; q_drn <= 10'd0;
             for (integer b = 0; b < 32; b = b + 1) begin occ[b] <= 2'd0; hc[b] <= 2'd0; end
@@ -218,42 +242,58 @@ module ot_hgi_dma_kvw #(
             if (!i_act && f_i != f_t) begin
                 i_act <= 1'b1; i_vs <= f_vs[f_i[1:0]]; i_vnx <= f_vs[f_i[1:0]] + f_vst[f_i[1:0]]; i_vst <= f_vst[f_i[1:0]];
                 i_left <= f_ns[f_i[1:0]]; i_ns <= f_ns[f_i[1:0]]; i_rows <= f_m[f_i[1:0]]; f_i <= f_i + 3'd1;
-                f_q[f_i[1:0]] <= q_iss;
+                f_q[f_i[1:0]] <= q_iss + 10'(pi_n);                 // (the unapplied decision's slots come first)
             end
+            // decide (cursor now; everything else from the registered decision on the next edge)
+            pi_n <= ok_n; pi_l0 <= l0; pi_l1 <= l1; pi_vs <= i_vs; pi_last <= i_last;
             if (ok_n != 2'd0) begin
-                kq[l0*16 +: 16] <= {1'b1, i_vs}; kqv[l0] <= 1'b1;
-                iof[o_t] <= {l0, ok_n == 2'd1 && i_last};
-                if (ok_n == 2'd2) begin
-                    kq[l1*16 +: 16] <= {1'b1, 15'(i_vs + 15'd1)}; kqv[l1] <= 1'b1;
-                    iof[6'(o_t + 6'd1)] <= {l1, i_last};
-                end
-                o_t <= o_t + 6'(ok_n); q_iss <= q_iss + 10'(ok_n);
                 if (i_rend) begin
                     i_left <= i_ns; i_rows <= i_rows - 20'd1; i_vs <= i_vnx; i_vnx <= i_vnx + i_vst;
                     if (i_last) i_act <= 1'b0;
-                end else begin i_vs <= i_vs + 15'(ok_n); i_left <= i_left - 18'(ok_n); end
+                end else begin i_vs <= (ok_n == 2'd2) ? i_vs2 : i_vs1; i_left <= (ok_n == 2'd2) ? i_lm2 : i_lm1; end
             end
-            buf_ok <= 11'({1'b0, used} + 11'(ok_n)) <= 11'd504;
-            o_n <= o_n + 7'(ok_n) - 7'(dn);
+            // apply the registered decision
+            if (pi_n != 2'd0) begin
+                kq[pi_l0*16 +: 16] <= {1'b1, pi_vs}; kqv[pi_l0] <= 1'b1;
+                iof[o_t] <= {pi_l0, pi_n == 2'd1 && pi_last};
+                if (pi_n == 2'd2) begin
+                    kq[pi_l1*16 +: 16] <= {1'b1, 15'(pi_vs + 15'd1)}; kqv[pi_l1] <= 1'b1;
+                    iof[6'(o_t + 6'd1)] <= {pi_l1, pi_last};
+                end
+                o_t <= o_t + 6'(pi_n); q_iss <= q_iss + 10'(pi_n);
+            end
+            buf_ok <= 11'({1'b0, used} + 11'(pi_n) + 11'(ok_n)) <= 11'd504;
+            o_n <= o_n + 7'(pi_n) - 7'(dn);
             // ---- hold counts / lane occupancy
             for (integer b = 0; b < 32; b = b + 1) begin : lanes
                 reg [1:0] dd; reg ii;
-                dd = 2'((dn != 2'd0 && e0[5:1] == 5'(b)) ? 1 : 0) + 2'((dn == 2'd2 && e1[5:1] == 5'(b)) ? 1 : 0);
-                ii = (ok_n != 2'd0 && l0 == 5'(b)) || (ok_n == 2'd2 && l1 == 5'(b));
+                dd = dpend(5'(b));                                 // the registered (unapplied) pop
+                ii = (pi_n != 2'd0 && pi_l0 == 5'(b)) || (pi_n == 2'd2 && pi_l1 == 5'(b));
                 // the group's responses are this engine's only while it is busy (the sector engine reads only while it is idle)
                 hc[b] <= hc[b] + 2'(vr2r[b*257 + 256] && !idle) - dd;
                 if (vr2r[b*257 + 256] && !idle) hw[b] <= !hw[b];
-                if (dd[0] ^ dd[1]) hr[b] <= !hr[b];           // dd = 2 flips twice
+                if (dd[0]) hr[b] <= !hr[b];                         // two pops flip twice
                 occ[b] <= occ[b] + 2'(ii) - dd;
             end
-            // ---- drain D1: the head pair, a bank each (slot q -> bank q[0])
+            // ---- drain: decide (window, pointer, slot cursor), register the decision
             o_h <= o_h + 6'(dn); q_drn <= q_drn + 10'(dn);
+            pd_n <= dn; pd_l0 <= e0[5:1]; pd_l1 <= e1[5:1]; pd_x0 <= x0; pd_x1 <= x1; pd_q <= q_drn;
+            pd_last0 <= dn == 2'd1 && e0[0]; pd_last1 <= dn == 2'd2 && e1[0];
+            begin : win                                          // the next window: candidates o_h + 0..3, by dn
+                reg [5:0] c0, c1, c2, c3; reg [6:0] av;
+                c0 = iof[o_h]; c1 = iof[6'(o_h + 6'd1)]; c2 = iof[6'(o_h + 6'd2)]; c3 = iof[6'(o_h + 6'd3)];
+                w0 <= (dn == 2'd0) ? c0 : (dn == 2'd1) ? c1 : c2;
+                w1 <= (dn == 2'd0) ? c1 : (dn == 2'd1) ? c2 : c3;
+                av = o_n - 7'(dn);                               // present (written, not popped) entries
+                wv <= (av >= 7'd2) ? 2'd2 : 2'(av);
+            end
+            // ---- drain D1 (from the registered decision): the pair, a bank each (slot q -> bank q[0])
             for (integer b = 0; b < 2; b = b + 1) begin : d1
-                reg first; first = q_drn[0] == 1'(b);             // this bank takes the head (else head + 1)
-                d_v[b] <= first ? (dn != 2'd0) : (dn == 2'd2);
-                d_sel[b] <= first ? (64'd1 << x0) : (64'd1 << x1);
-                d_a[b] <= first ? q_drn[8:1] : 8'(10'(q_drn + 10'd1) >> 1);
-                d_last[b] <= first ? (dn == 2'd1 && e0[0]) : (dn == 2'd2 && e1[0]);
+                reg first; first = pd_q[0] == 1'(b);              // this bank takes the head (else head + 1)
+                d_v[b] <= first ? (pd_n != 2'd0) : (pd_n == 2'd2);
+                d_sel[b] <= first ? (64'd1 << pd_x0) : (64'd1 << pd_x1);
+                d_a[b] <= first ? pd_q[8:1] : 8'(10'(pd_q + 10'd1) >> 1);
+                d_last[b] <= first ? pd_last0 : pd_last1;
             end
             // ---- drain D2: the bank write registers
             b0_we <= d_v[0]; b0_wa <= d_a[0]; b0_wd <= d_dat[0];
@@ -305,7 +345,7 @@ module ot_hgi_dma_kvw #(
             end
             // ---- completion
             idle <= !owed && !(c_v && c_rdy) && !st_v;
-            if (owed && f_t == f_w && !i_act && o_n == 7'd0 && !d_v[0] && !d_v[1] && !b0_we && !b1_we && w_act == 4'd0 && !m1_v[0] && !m1_v[1] && !m2_v[0] && !m2_v[1] &&
+            if (owed && f_t == f_w && !i_act && o_n == 7'd0 && pi_n == 2'd0 && pd_n == 2'd0 && !d_v[0] && !d_v[1] && !b0_we && !b1_we && w_act == 4'd0 && !m1_v[0] && !m1_v[1] && !m2_v[0] && !m2_v[1] &&
                 oa_v[0] == 4'd0 && oa_v[1] == 4'd0 && oa_v[2] == 4'd0 && oa_v[3] == 4'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
                 wo[0] == 7'd0 && wo[1] == 7'd0 && wo[2] == 7'd0 && wo[3] == 7'd0 && !st_v) begin
                 // every accepted move drained (a move accepted on this edge stays owed: its own done comes later)
