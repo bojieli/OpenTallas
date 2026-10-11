@@ -11,7 +11,15 @@ module ot_hgi_cp #(
     parameter integer SETTLE = 64,
     parameter integer RW = 4096,
     parameter integer USE_MACRO = 1,
-    parameter integer FETCH_PIN_FIFO = 0
+    parameter integer FETCH_PIN_FIFO = 0,
+    // [cp] 2026-10-10 (route hgi_cp-mtp-0673da5ee hm0 TT -46.11: f_req_rdy input -> 8 levels / fanout -> the 41 front
+    // pin flops): FQ_LOCAL = 1 (with FETCH_PIN_FIFO) keeps the fetch credits HERE: FQCR loader queue slots, returned by
+    // f_req_ack, and at most 48 sectors in flight (f_rsp_v returns one).  f_req_v is a register that is 1 exactly on the
+    // cycle a request is SENT (the credit is checked at the edge before), so no live ready crosses the boundary;
+    // f_req_rdy is unused.  The parent sends on f_req_v alone.  MUT_FQ (bench): a send does not take a credit.
+    parameter integer FQ_LOCAL = 0,
+    parameter integer FQCR = 16,
+    parameter integer MUT_FQ = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -42,6 +50,7 @@ module ot_hgi_cp #(
     // record fetch, VM read, dispatch, retire (ot_hgi_seq)
     output wire          f_req_v,
     input  wire          f_req_rdy,
+    input  wire          f_req_ack,      // FQ_LOCAL: one loader queue slot returned (credit)
     output wire [39:0]   f_req_addr,
     input  wire          f_rsp_v,
     input  wire [255:0]  f_rsp_data,
@@ -97,7 +106,36 @@ module ot_hgi_cp #(
     // Two elastic slots put both address and valid on a register at the pin.
     // Ready reserves the back slot; downstream stalls never lose a request.
     wire sf_v, sf_rdy; wire [39:0] sf_addr;
-    generate if (FETCH_PIN_FIFO) begin : g_fetch_pin
+    generate if (FETCH_PIN_FIFO && FQ_LOCAL) begin : g_fetch_cr
+        // front slot + back slot as g_fetch_pin; the send decision for the NEXT cycle is registered (snd_q = f_req_v)
+        (* keep = 1 *) reg [39:0] front_addr, back_addr;
+        (* keep = 1 *) reg snd_q;
+        reg front_v, back_v;
+        reg [4:0] cr; reg [6:0] inn;
+        wire take_in = sf_v && sf_rdy;
+        wire take_out = snd_q;                               // registered: the front entry leaves this cycle
+        assign sf_rdy = !back_v;
+        assign f_req_v = snd_q;
+        assign f_req_addr = front_addr;
+        // next state (same as g_fetch_pin with take_out = snd_q)
+        wire fv_n = take_out ? (back_v || take_in) : (front_v || take_in);
+        wire [4:0] cr_n = cr - {4'd0, take_out && MUT_FQ == 0} + {4'd0, f_req_ack};
+        wire [6:0] inn_n = inn + {6'd0, take_out} - {6'd0, f_rsp_v};
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin front_v <= 0; back_v <= 0; snd_q <= 0; cr <= 5'(FQCR); inn <= 7'd0; end
+            else begin
+                front_v <= fv_n;
+                if (take_out) back_v <= 0;
+                else if (take_in && front_v) back_v <= 1;
+                cr <= cr_n; inn <= inn_n;
+                snd_q <= fv_n && cr_n != 5'd0 && inn_n < 7'd48;
+            end
+        always @(posedge clk) begin
+            if (take_out && back_v) front_addr <= back_addr;
+            else if (take_in && (!front_v || take_out)) front_addr <= sf_addr;
+            if (take_in && front_v && !take_out) back_addr <= sf_addr;
+        end
+    end else if (FETCH_PIN_FIFO) begin : g_fetch_pin
         (* keep = 1 *) reg [39:0] front_addr, back_addr;
         (* keep = 1 *) reg front_v, back_v;
         wire take_in = sf_v && sf_rdy;
