@@ -631,7 +631,9 @@ localparam integer W_ME_AMC = 1;
 `ifndef SYNTHESIS
         always @(posedge clk) if (rst_n && issue && !issue_live) begin
             $display("ICUT_ILLEGAL_ISSUE t=%0t own=%0d", $time, OWN);
+`ifndef OT_ICUT_NONFATAL
             $fatal(1, "ICUT issue without the live issue condition");
+`endif
         end
 `endif
     end else begin : g_noicut

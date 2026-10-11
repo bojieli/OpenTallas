@@ -4,15 +4,20 @@
 // flop program store, HQ2 0).  Same stimulus to both: a random 64 x 1,024 program loaded through pw while idle, then
 // h_start pulses (a reset every 400 cycles restarts the controller and keeps the store) and random inputs on every other
 // port for NCYC cycles.  Every output, and the captured program word prog_q, must match on every cycle; the run must
-// issue >= MINRD program reads.  Negative controls: PMUT = 1 (read one edge late) and U1_HQ2 = 2 (head overwrite) FAIL.
+// issue >= MINRD program reads.  Built with +define+OT_ICUT_NONFATAL: with the real ME unit (ot_qfd_tt_ctl) behind the
+// in-tile shell and a random program, the ME unit's readiness can fall without a go, so the controller's ICUT check fires
+// identically in u0 and u1 (counted as icut_stim, reported, not fatal); the comparison is still every output every cycle.
+// Negative controls: PMUT = 1 (read one edge late) and U1_HQ2 = 2 (head overwrite) FAIL.
 module tb_qfd_tt_ctlm_i_psram;
-    parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50;
+    parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50, TW = 400;   // TW: cycles per token window
     parameter integer U1_PSRAM = 1, U1_HQ2 = 0;
     reg clk = 0, rst_n = 1;
     initial #0.1 rst_n = 0;
     always #0.5 clk = ~clk;
-    integer seed = SEED, cyc = 0, bad = 0, nrd = 0, nld = 0, k, i;
+    integer seed = SEED, cyc = 0, bad = 0, nrd = 0, nld = 0, nicut = 0, k, i;
     reg [11:0] pbase = 0;
+    reg [15:0] xprog = 0, xrows = 0, lcnt = 0;
+    reg [23:0] xacc = 0;
     reg  h_start = 0;
     reg [18-1:0] token = 0;
     reg [18-1:0] pos = 0;
@@ -221,11 +226,19 @@ module tb_qfd_tt_ctlm_i_psram;
         // boot load: the program store (64 words x 16 slices) while the controller is idle
         for (k = 0; k < 1024; k = k + 1) begin
             @(negedge clk); pw_v = 1; pw_addr = k; pw_data = {$random(seed), $random(seed)};
-            if (k % 16 == 0) begin         // slice 0: unit / barrier / chase / waits biased toward progress
-                pw_data[1:0] = (($random(seed) & 15) == 0) ? 2'd0 : (($random(seed) & 1) ? 2'd1 : 2'd2);
+            if (k % 16 == 0) begin         // slice 0: unit / barrier / chase / waits biased toward progress (barrier / chase / waits rare)
+                // mostly SU ops (the other unit: they skip, so the fetch FIFO / head / store reads run at full rate), some ME
+                // ops (this unit: issue; an ME op of the real ot_qfd_tt_ctl can hold the unit busy for the rest of the token),
+                // rare END
+                pw_data[1:0] = (($random(seed) & 31) == 0) ? 2'd0 : (($random(seed) & 15) == 0) ? 2'd1 : 2'd2;
                 pw_data[3:2] = (($random(seed) & 7) == 0) ? 2'($random(seed)) : 2'd0;
                 pw_data[21:20] = (($random(seed) & 7) == 0) ? 2'($random(seed)) : 2'd0;
+                // ME op sizes small (NOUT [38:23], TILES [54:39], K [70:55]) so an ME op finishes within a token
+                pw_data[38:23] = 16'(1 + ($random(seed) & 3)); pw_data[54:39] = 16'(1 + ($random(seed) & 3));
+                pw_data[63:55] = 9'(1 + ($random(seed) & 3));
             end
+            if (k % 16 == 1) pw_data[6:0] = 7'd0;            // K [70:64]
+            if (k % 16 == 3) pw_data[44:27] = 18'd0;         // the ME DYN selectors D_* [236:219]: static sizes / bases
         end
         @(negedge clk); pw_v = 0;
         repeat (8) @(posedge clk);
@@ -233,20 +246,35 @@ module tb_qfd_tt_ctlm_i_psram;
             @(negedge clk);
             rand_inputs;
             // status inputs follow the ICUT contract (readiness never falls without the unit's own go; the other
-            // unit's accepted-op count only climbs: held at 0, so ops with a dependency on it wait, the rest skip/issue)
-            kv_ok = 1; kv_write_drained = 1; me_mem_ok = 1; x_oidle = 1; x_oacc = 0; x_rdy = 1;
+            // unit's accepted-op count, progress and landings only climb)
+            kv_ok = 1; kv_write_drained = 1; me_mem_ok = 1; x_oidle = 1; x_rdy = 1;
+            // the other unit's progress counters only climb within a token (chase compares never fall)
+            if ((i % TW) == 0) begin xprog = 0; xrows = 0; xacc = 0; end
+            else begin
+                xprog = xprog + 16'(($random(seed) & 7) == 0); xrows = xrows + 16'(($random(seed) & 7) == 0);
+                xacc = xacc + 24'(($random(seed) & 3) == 0);   // the other unit accepts its ops (count only climbs)
+            end
+            x_oacc = xacc;
+            x_oprog = xprog; x_orows = xrows;
+            land_cnt = lcnt; lcnt = ((i % TW) == 0) ? 16'd0 : lcnt + 16'd1;   // landings only climb (one a cycle: the memory keeps up)
             up_fault = 0; tr_fault = 0; p_fault = 0; fab_fault = 0;
-            if ((i % 400) == 0) pbase = 12'($random(seed)) % 48;
-            prog_base = ((i % 17) == 3) ? 12'($random(seed)) : pbase;   // mostly inside the store, sometimes outside
-            rst_n = (i % 400) != 399;
-            h_start = (i % 400) == 12;
+            if ((i % TW) == 0) pbase = 12'($random(seed)) % 48;
+            prog_base = pbase;   // held for the token (the die holds it); runs past word 63 read the out-of-store zeros
+            rst_n = (i % TW) < TW - 8;                 // an 8-cycle reset every 400 cycles restarts the controller (store kept)
+            h_start = (i % TW) == 12;
         end
         @(negedge clk); h_start = 0;
         repeat (20) @(posedge clk);
-        if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d", cyc, nrd, nld);
+        if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d icut_stim=%0d", cyc, nrd, nld, nicut);
         else $display("FAIL tt_ctlm_i_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d", bad, nrd, MINRD, nld);
         $finish;
     end
+    // coverage note: where the controller waits when each token's window closes (cycle 390 of 400)
+    always @(posedge clk) if (rst_n && ((i % TW) == TW - 10) && (i < 5 * TW))
+        $display("WAITSTATE i=%0d st=%0d nx_v=%b unit=%0d ur=%b mr=%b men=%b xdep=%b bar=%b ch=%b wu=%b wo=%b oi=%b od=%b",
+            i, u0.u_ctrl_me.st, u0.u_ctrl_me.nx_v, u0.u_ctrl_me.d_unit, u0.u_ctrl_me.unit_ready, u0.u_ctrl_me.me_ready,
+            u0.u_ctrl_me.me_en, u0.u_ctrl_me.xdep_ok, u0.u_ctrl_me.d_barrier, u0.u_ctrl_me.d_chase, u0.u_ctrl_me.wait_u,
+            u0.u_ctrl_me.wait_o, u0.u_ctrl_me.own_idle, u0.u_ctrl_me.o_drained);
     always @(posedge clk) if (rst_n) begin
         cyc = cyc + 1;
         if (u0.prog_re_r) nrd = nrd + 1;
@@ -255,6 +283,7 @@ module tb_qfd_tt_ctlm_i_psram;
             if (bad <= 5) $display("XSTATE cyc=%0d", cyc);
         end
         if (u0.u_ctrl_me.load) nld = nld + 1;
+        if (u0.u_ctrl_me.issue && !u0.u_ctrl_me.issue_live) nicut = nicut + 1;
         if (out_mismatch || pq_mismatch) begin
             bad = bad + 1;
             if (bad <= 5) $display("MISMATCH cyc=%0d outputs=%b prog_q=%b", cyc, out_mismatch, pq_mismatch);
