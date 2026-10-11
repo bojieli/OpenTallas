@@ -120,7 +120,7 @@ assert TAPS_LONG >= 4 and TAPS_SHORT >= 2
 # each local tree covers ~175 x 143 um and ~1/14 of the sinks; tap_fclat.tcl balances ckg* with the face taps to one REF.
 CG = os.environ.get('VM_CG', '1') != '0'
 CGX = int(os.environ.get('VM_CG_X', '2'))
-CGY = int(os.environ.get('VM_CG_Y', '7'))
+CGY = int(os.environ.get('VM_CG_Y', '10'))   # 2026-10-11 r2: 7 -> 10 (see/sew/nwe 2479794c4: 3.4k-sink region at 293..359 ps set REF 319)
 TAPRE = r'ck[wensg]\d+'
 
 def cgrid(h):
