@@ -39,7 +39,10 @@ module ot_dsrom_wfc_vmx #(
     parameter integer RQ     = 16,       // slow-side read-response queue
     parameter integer RDEPTH = 8,       // slow -> fast ratio FIFO entries
     parameter integer RQFREE = `ifdef OT_WFCVMX_PRED 2 `elsif OT_WFCVMX_RQ_FREE 1 `else 0 `endif,   // struct-close: vm_rq without the vm_re enable
+    parameter integer WOUTW  = 5,       // mtp-wfc 2026-10-10: unACKed-write counter width; >= log2 of the writes in flight over
+                                        //   the stationed write / ACK round trip + 1 (5 = the closed abutting-VM value)
     parameter integer LAG    = 0        // ot_ratio_cdc_fifo LAG on both crossings (route variant: mem -> shadow arcs become
+
                                         // a max-delay write-period path with no hold check; +1 write cycle each way)
 ) (
     // ---- fast (WFC) domain
@@ -190,7 +193,7 @@ module ot_dsrom_wfc_vmx #(
 
     // =========================================================== slow domain
     // writes: issued in FIFO order; a START waits for every earlier write's ACK
-    reg [4:0] wout;                                 // writes issued, not yet ACKed
+    reg [WOUTW-1:0] wout;                           // writes issued, not yet ACKed
     reg       busy;                                 // a job started, k_done not yet seen
     wire s_is_w = s_v && !s_d[PW-1];
     wire s_is_s = s_v && s_d[PW-1];
@@ -232,6 +235,7 @@ module ot_dsrom_wfc_vmx #(
             wout <= wout + (sw_fire ? 1'b1 : 1'b0) - (sw_ack ? 1'b1 : 1'b0);
             if (sw_fire) wcnt_s <= wcnt_s + 1'b1;
             if (sw_ack && wout == 0) fault_s <= 1'b1;
+            if (WOUTW != 5 && sw_fire && !sw_ack && &wout) fault_s <= 1'b1;   // would wrap (closed default unchanged)
             if (s_go) begin
                 k_start <= 1'b1; busy <= 1'b1;
                 {k_user, k_token, k_pos} <= s_d[SP-1:0];

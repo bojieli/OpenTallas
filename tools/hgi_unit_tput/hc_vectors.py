@@ -87,7 +87,7 @@ def main():
     for op, j in seq:
         v0 = len(vmi)
         if op == 2:
-            ab, ob = 145088 + 32 * j, 41024 + 64 * j
+            ab, ob = 145088 + 32 * j, 230000 + 64 * j   # O clear of the staged h regions (20,480 j ..)
             vmi.extend((ab + i, int(u32(mixes[j])[i])) for i in range(24))
             d = H.rec(24, op=2, A_base=ab, B_base=bsec << 5, O_base=ob)
             ex = u32(outs[j])

@@ -123,6 +123,39 @@ def ensure_corner(s):
     return s, msg, True
 
 
+# LOOP-LVT 2026-10-10: the WC-reads-TT var alone is not enough for multi-VT routes.  The asap7 platform config.mk
+# (included after the design config) appends each OTHER_VT with `WC_NLDM_LIB_FILES += $(subst PLACEHOLDER,<vt>,
+# $(WC_NLDM_LIB_FILES_T))` -- the SS template, which the design config cannot override (the platform re-assigns it) --
+# so OT_MULTI_VT routes repaired setup against LVT/SLVT SS cells (qfd sys_v lvt r3).  `override` makes that += a no-op.
+LIBOV_FN = r'''def ot_tt_lib_override(config):
+    """LOOP-LVT (tt_overlay backport): `override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)` so the asap7
+    platform's OTHER_VT `+=` (SS template) cannot add LVT/SLVT SS libraries to the TT-reading WC corner."""
+    return [("override " + line) if re.fullmatch(r"export WC_NLDM_LIB_FILES\s*=\s*\$\(TC_NLDM_LIB_FILES\)\s*", line)
+            else line for line in config]
+
+
+'''
+LIBOV_CALL = "    config = ot_tt_lib_override(config)\n"
+HOOKS_CALL = "    config = apply_cts_fix_hooks(config, case)\n"
+DIRECT_OVERRIDE = ("# tt_overlay LOOP-LVT: no OTHER_VT SS append into the TT-reading WC corner\n"
+                   "override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)")
+
+
+def ensure_lib_override(s):
+    """(text, msgs, ok): run_abi3_physical writes `override export WC_NLDM_LIB_FILES = ...` (main has it since
+    LOOP-LVT; older snapshots get the function + call).  Needs ensure_hooks' call anchor."""
+    if "def ot_tt_lib_override" in s and LIBOV_CALL in s:
+        return s, [], True
+    if s.count(HOOKS_CALL) != 1 or s.count("\ndef apply_cts_fix_hooks") != 1:
+        return s, ["NO anchor for the WC TT lib override (LOOP-LVT)"], False
+    if "def ot_tt_lib_override" not in s:
+        i = s.index("\ndef apply_cts_fix_hooks") + 1
+        s = s[:i] + LIBOV_FN + s[i:]
+    if LIBOV_CALL not in s:
+        s = s.replace(HOOKS_CALL, HOOKS_CALL + LIBOV_CALL)
+    return s, ["WC TT lib override (multi-VT) added"], True
+
+
 def ensure_hooks(s, src):
     fn = HOOKS_FN.replace("@TTB_SRC@", str(src.resolve()))
     if fn in s:
@@ -156,6 +189,37 @@ SMH_NBR = (SMH_CORNER_LINE +
            "$W/w18_sta_ss.tcl; echo \"nbr_measured_rc=$?\" >> $W/status; fi\n")
 
 
+# LOOP-CORNER 2026-10-10: since c10b5fc9a the generator names the corner by OT_SMH_CORNER ({_SC}); it honours ONLY that
+# variable, so a recipe with OT_ORFS_CORNER(_OVERRIDE)=TC routed at SS -- and 48c78e37f's "no WC_LIB_FILES line" skip
+# read this form as "predates corner libs" and left it unpatched (hbm_smh_tile_{wg,eg}_cg hold floods, CLOSED at SS).
+SMH_SC_LIB = 'lib_su = lib_ss if _SC == "WC" else " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)\n'
+SMH_SC_LIB_NEW = ('lib_su = " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)'
+                  '  # tt_overlay LOOP-CORNER: TC route stage reads TT\n')
+SMH_SC_LINE = 'f"export {_SC}_LIB_FILES = $({_SC}_NLDM_LIB_FILES) {lib_su}"'
+SMH_SC_LINE_NEW = 'f"export {_SC}_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_su}"'
+SMH_HONOURS = "LOOP-CORNER (2026-10-10): the closure loop's option-B route env"
+
+
+def _smh_sc_form(s):
+    """(text, msg): patch a c10b5fc9a..LOOP-CORNER generator ({_SC} corner) so corner WC reads the TT liberties;
+    msg None when this is not that form."""
+    if SMH_HONOURS in s:
+        return s, "SMH flow: generator honours OT_ORFS_CORNER (no patch)"
+    if SMH_SC_LIB_NEW in s and SMH_SC_LINE_NEW in s:
+        return s, "SMH flow ({_SC} form): WC reads TT"
+    if SMH_SC_LINE not in s and SMH_SC_LIB not in s:
+        return s, None
+    if s.count(SMH_SC_LIB) != 1 or s.count(SMH_SC_LINE) != 1:
+        return s, "SMH: {_SC} corner-lib anchor missing"
+    return s.replace(SMH_SC_LIB, SMH_SC_LIB_NEW).replace(SMH_SC_LINE, SMH_SC_LINE_NEW), "SMH flow ({_SC} form): WC reads TT"
+
+
+def _smh_mark():
+    if os.environ.get("OT_TTB_CORNER_MARK"):
+        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
+            m.write(f"TC {os.getpid()} smh_config wc_reads_tt\n")
+
+
 def ensure_smh(src):
     """SM piece flow (tools/hbm_accel_smh_physical.py writes its own config.mk, not through run_abi3_physical): in a
     TC route stage, corner WC reads the TT std-cell + macro liberties; the mark is written here."""
@@ -164,6 +228,14 @@ def ensure_smh(src):
     if not f.is_file() or not tc:
         return []
     s = f.read_text()
+    s2, msg = _smh_sc_form(s)
+    if msg is not None:
+        if "missing" in msg:
+            return [msg]
+        if s2 != s:
+            f.write_text(s2)
+        _smh_mark()
+        return [msg]
     if "WC_LIB_FILES" not in s:
         # 2026-10-08 drive-0502: commits predating the SM generator's corner-lib line (e.g. 4b111850a) have nothing to
         # patch; a non-SM route (Qwen die masters) on such a snapshot must not fail the overlay on it
@@ -178,9 +250,7 @@ def ensure_smh(src):
             return ["SMH: corner_rc anchor missing"]
         s = s.replace(SMH_CORNER_LINE, SMH_NBR)
     f.write_text(s)
-    if os.environ.get("OT_TTB_CORNER_MARK"):
-        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
-            m.write(f"TC {os.getpid()} smh_config wc_reads_tt\n")
+    _smh_mark()
     return ["SMH flow: WC reads TT"]
 
 
@@ -195,6 +265,9 @@ def ensure_direct_configs(src):
         t = f.read_text(errors="replace")
         u = "\n".join((l.replace("$(WC_NLDM_LIB_FILES)", "$(TC_NLDM_LIB_FILES)").replace("_ss.lib", "_tt.lib")
                        if re.match(r"\s*export\s+WC_LIB_FILES\s*=", l) else l) for l in t.split("\n"))
+        if re.search(r"^\s*export\s+WC_LIB_FILES\s*=", u, re.M) and DIRECT_OVERRIDE not in u:
+            # LOOP-LVT: a single-corner stage (LIB_FILES += $(WC_NLDM_LIB_FILES)) and any OTHER_VT append read TT too
+            u = u.rstrip("\n") + "\n" + DIRECT_OVERRIDE + "\n"
         if u != t:
             f.write_text(u)
             n += 1
@@ -233,8 +306,9 @@ def main():
         s0 = s = f.read_text()
         s, m1, ok1 = ensure_corner(s)
         s, m2, ok2 = ensure_hooks(s, src)
-        out += m1 + m2
-        ok = ok1 and ok2
+        s, m3, ok3 = ensure_lib_override(s) if ok2 else (s, [], False)
+        out += m1 + m2 + m3
+        ok = ok1 and ok2 and ok3
         if s != s0:
             if not f.with_suffix(".py.pre_ttb").exists():
                 shutil.copy2(f, f.with_suffix(".py.pre_ttb"))

@@ -319,6 +319,39 @@ def hbm_attention_result_valid_model():
                 qualification="analytical sizing only; no physical adoption credit")
 
 
+def hgi_row_gather_hw_model(K=512, F=32, G=96, M=18, DEL=4, gathers_per_token=8, sw_cycles_per_gather=126353 / 8,
+                            lat=110, tail_per_flit=0.003):
+    """G25 hardware COLL.ROW_GATHER (hgi-1010/a, ot_hgi_coll_rgx_src / _sink + the PSG endpoint RGX mode).
+
+    Every destination receives exactly the K selected rows (K F 64-byte flits) on its DEL delivery lanes, so the
+    destination delivery rate is the bound; a rank's own injection (its owned rows only, one flit a cycle) and its HBM
+    reads (2 sectors a cycle) run under it unless one rank owns more than K / DEL of the rows.  Measured fit (one real
+    rank of 96 against the switch model, DEL 4): 167 / 4,242 / 16,690 cycles at K F = 224 / 16,384 / 65,536.
+    The software form (G21 / G24) moves 96 M padded rows in ceil(M / c) gathers, then re-reads K rows into list order.
+    """
+    deliver = K * F / DEL
+    inject = M * F                         # the busiest owner, one flit a cycle
+    cycles = lat + max(deliver, inject) + tail_per_flit * K * F
+    flit_b = 64
+    return dict(schema="opentallas.hgi_row_gather_hw.v1", macs_per_cycle=0, compute_intensity="data movement",
+                cost_formula="110 + max(K*F/DEL, Mmax*F) + 0.003*K*F cycles (DEL 4: ~110 + 0.253 K F)",
+                cycles=round(cycles), K=K, F=F, G=G, M=M, DEL=DEL,
+                rows_moved=K, rows_moved_software_form=G * M,
+                hbm_read_bytes_per_cycle_peak=2 * 32, delivery_bytes_per_cycle=DEL * flit_b,
+                sink_write_bytes_per_cycle=DEL * flit_b,
+                added_boundary_bits=dict(list_read=1 + 32 + 1 + 512, hbm_read_lanes=2 * (1 + 35 + 8) + 2 * (1 + 8 + 256),
+                                         sink_write_lanes=DEL * (1 + 40 + 512 + 1)),
+                macros=dict(source_ring="2 x ot_sram_1r1w_128x256 (256 sectors)",
+                            sink_fifo=f"{DEL} lanes x 3 x ot_sram_1r1w_128x256 (64 x 568 b)"),
+                replicas=dict(source=1, sink_lane=DEL),
+                latency_contribution_cycles=round(cycles),
+                token_cycles=round(gathers_per_token * cycles),
+                token_cycles_software_form=round(gathers_per_token * sw_cycles_per_gather),
+                token_cycles_saved=round(gathers_per_token * (sw_cycles_per_gather - cycles)),
+                del8_option="DEL 8 (8 sink lanes, 512 B/cycle): K 512 2,173, K 2048 8,502 cycles measured",
+                qualification="RTL bench (tb_hgi_coll_rgx, full G 96 shape against the switch model); physical closure pending")
+
+
 def hgi_collective_row_formatter_model(**kwargs):
     from uarch_model_hgi_collective_decode import row_formatter_model
     return row_formatter_model(**kwargs)
@@ -569,6 +602,38 @@ def hbm_loader_kport_address_contract_model():
 
 
 # ---------------------------------------------------------------------------------------------------------
+
+def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
+    """HGI IDX.TOPK (unit 9 op 2) as W banked-SRAM pipelined min-heaps (hgi-1010/g2 2026-10-10,
+    rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv): the structural successor of the 2,048-cell flop insertion /
+    systolic sorter (feasibility 67b2d0326 item (e)).  Exact: the same 53-bit unique keys, rank-order output.
+
+    A heap holds the top k of its sub-stream (score i -> heap (i / iw) mod (heaps / iw) * iw + i mod iw); one heap level
+    a cycle, one op every 2 cycles a heap; a score below the registered max root is dropped at the front end.  After the
+    row: k ascending extractions a heap into a reverse SRAM run (2k cycles), then a registered heaps-way merge (k cycles).
+    Survivors a heap ~ k (1 + ln(n / (heaps k))) for unordered scores, n / heaps for ascending (worst case).
+    Measured (tb_hgi_idx_topk_heap, Verilator, 1 in 8 input beats idle): n 49,152 k 2,048:
+      iw 1 / 2 heaps 62.5k cycles (random / ascending / ties) vs the flop sorter's n + k + 6 = 51.2k;
+      iw 4 / 4 heaps 23.2k random, 31.5k ascending (2.2x / 1.6x faster); iw 8 / 8 heaps 16.4k / 19.2k (3.1x / 2.7x).
+    """
+    import math
+    assert 1 <= k <= 2048 and 1 <= n <= 1048576 and rows >= 1 and heaps % iw == 0
+    surv = min(n / heaps, k * (1 + math.log(max(n / (heaps * k), 1.0))))
+    fill = max(n / iw, 2 * surv)
+    cyc = fill + 2 * k + k + 30
+    macros_per_heap = dict(sram_128x256=3, sram_256x256=1, sram_1024x256=1)   # levels 7-9, level 10, run buffer
+    return dict(candidates_per_cycle=iw, input_bytes_per_cycle=4 * iw, output_bytes_per_cycle=8, heaps=heaps,
+                key_bits=53, entry_bits=54, heap_levels=12, level_ops_per_cycle_per_heap=0.5,
+                flops_per_heap_upper_bound=32 * 216 + 12 * 120 + 10 * 120 + 16 * 54,
+                macros_per_heap=macros_per_heap, sram_bits_per_heap=(32 + 64 + 128 + 256) * 216 + 512 * 216,
+                widest_select="registered heaps-way merge compare; heap stage = 2 x 53 b compares register to register",
+                cycles_per_row_estimate=round(cyc), token_latency_cycles=round(rows * cyc),
+                measured=dict(n49152_k2048=dict(iw1_h2=62549, iw4_h4_random=23230, iw4_h4_ascending=31450,
+                                                iw8_h8_random=16361, iw8_h8_ascending=19168),
+                              flop_sorter_priced=n + k + 6),
+                adoption="structural replacement of hgi_idx_topk_full; wide engine (iw 4-8) needs the IDX reader to hand a "
+                         "VM sector a cycle (item: TOPK 4.3x)")
+
 
 def hbm_index_service_model():
     """Full-stack key source geometry and finite return-reservation obligations."""
@@ -14967,6 +15032,32 @@ def hbm_link_replay_response_cut_model(payload_bits=545, seq_bits=12, session_bi
         physical_qualified=False, adoption='OPEN: full-depth exactness, mutants and TT/FF/DRC route')
 
 
+def hbm_link_retry_rx_slot_sampling_model(payload_bits=545, seq_bits=12, session_bits=24, depth=512):
+    """Before-build pricing for free-slot, valid-qualified receive capture.
+
+    Capture raw payload while the landing slot is empty. All session, sequence,
+    UE, fault and reset admission checks continue to control rxv, never data
+    visibility. A occupied slot retains its payload through every stall.
+    """
+    return dict(candidate='HBM_RETRY_RX_SLOT_SAMPLE', payload_bits=payload_bits,
+        depth=depth, seq_bits=seq_bits, session_bits=session_bits,
+        payload_registers=payload_bits, additional_register_bits=0,
+        added_ff_body_um2=0, fault_free_forward_added_edges=0,
+        receive_added_edges=0, receive_min_accept_interval_edges=2,
+        state_transition_delta=0, external_boundary_bits_delta=0,
+        memory_port_bandwidth_delta=0, routing_tracks_delta_external=0,
+        validation_enable_payload_sinks_before=payload_bits,
+        validation_enable_payload_sinks_after=0,
+        capture_enable='one rxv slot-occupancy register; stable through stalls',
+        bytes_per_receive_edge=payload_bits/8,
+        floorplan_um=[690,460], replica_count=1,
+        added_per_user_token_latency_ns=0, added_mac_per_cycle=0,
+        opt_in='RX_SLOT_SAMPLE off by default, exercised with RSTR=1',
+        design_applicability={'Qwen3-8B ROM':False,'DeepSeek-V4.1 ROM':False,
+            'Qwen3-8B HBM':True,'DeepSeek-V4.1 HBM':True},
+        physical_qualified=False, adoption='OPEN: exactness + TT/FF/DRC at full W545/EW24/DEPTH512')
+
+
 def hbm_ta15_clock_boundary_model(link_ports=9, stages=3):
     """Unified entry for before-build TA15 digital clock/reset boundary sizing."""
     from tools.hbm_ta15_clock_boundary_model import hbm_ta15_clock_boundary_model as model
@@ -15373,6 +15464,9 @@ def hgi_token18_accept_seat_model():
         peak_floorplan_kib=322588, source='377249427', evidence='43b313543')
     d['reason']='rtl_boundary actual source377 input->register34 levels; inputseat required'
     return d
+
+
+from hgi_su_out8_model import hgi_su_out8_model
 
 
 def hgi_token18_fullcore_model():

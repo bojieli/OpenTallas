@@ -1,0 +1,106 @@
+{
+ "instances": 1294,
+ "overlaps": 0,
+ "overlap_examples": [],
+ "outside": 0,
+ "outside_examples": [],
+ "reserved_regions": 32,
+ "reserved_overlaps": 0,
+ "reserved_overlap_examples": []
+}
+{"generated_pin_clashes": 0, "examples": [], "k16_clashes": 0, "k16_examples": []}
+{
+ "weight": {
+  "paths": 32,
+  "max_um": 8281.5,
+  "max_stages_430": 25,
+  "max_stages_504": 19,
+  "worst": "weight_sm13",
+  "what": "HBM -> SM weight stream (stream service -> SM d face)"
+ },
+ "xbcast": {
+  "paths": 56,
+  "max_um": 34176.9,
+  "max_stages_430": 88,
+  "max_stages_504": 72,
+  "worst": "xbcast_sm5",
+  "what": "VM root -> SM activation multicast (x face)"
+ },
+ "result": {
+  "paths": 32,
+  "max_um": 20354.6,
+  "max_stages_430": 54,
+  "max_stages_504": 45,
+  "worst": "result_sm14",
+  "what": "SM -> SU result gather"
+ },
+ "control": {
+  "paths": 32,
+  "max_um": 27577.2,
+  "max_stages_430": 74,
+  "max_stages_504": 61,
+  "worst": "control_sm18",
+  "what": "cmdproc / issue -> SM control (start/op, arrive/release)"
+ },
+ "loader_mem": {
+  "paths": 4,
+  "max_um": 30857.3,
+  "max_stages_430": 77,
+  "max_stages_504": 67,
+  "worst": "loader_mem_NW",
+  "what": "loader -> stream service (memory AXI + request; r25m RQ-ING-4)"
+ },
+ "loader_rsp": {
+  "paths": 4,
+  "max_um": 30001.8,
+  "max_stages_430": 75,
+  "max_stages_504": 67,
+  "worst": "loader_rsp_NW",
+  "what": "stream service -> loader (memory AXI + response; r25m RQ-ING-4)"
+ },
+ "kv": {
+  "paths": 4,
+  "max_um": 9815.7,
+  "max_stages_430": 27,
+  "max_stages_504": 22,
+  "worst": "kv_SW",
+  "what": "stream service -> attention tiles (KV rows)"
+ },
+ "attn_q": {
+  "paths": 4,
+  "max_um": 18995.5,
+  "max_stages_430": 51,
+  "max_stages_504": 41,
+  "worst": "attn_q_SE",
+  "what": "VM -> attention tiles (query operand, r15 attn_rtl: chain + packet hops to the farthest tile)"
+ },
+ "link": {
+  "paths": 9,
+  "max_um": 6531.4,
+  "max_stages_430": 20,
+  "max_stages_504": 17,
+  "worst": "link_lk_S2",
+  "what": "collective endpoint -> SerDes macro"
+ },
+ "host": {
+  "paths": 1,
+  "max_um": 16643.4,
+  "max_stages_430": 47,
+  "max_stages_504": 43,
+  "worst": "host",
+  "what": "loader -> host link"
+ }
+}
+{"die_mm2": 802.33, "W": 31734.288, "H": 25282.8, "notes": ["R25GQ: SM rows at [1812.24, 4153.68, 5847.12] (S), hub blocks 7626.96-17655.84 um, quadrant 4754.16 um; spine gap 142.56 um (+ abut 43.2 / cross 302.4)", "Placement plan only: die nets are the R25GPH logical nets carried over by tools/hbm_r25gq_plan.py (model); the dependent blocks are re-routed after the plan is on main.", "R25GQ network by transplant of R25GPH: 175 attention / pruned waypoint instances removed, 822 waypoints re-placed (0 unplaced), 268 Option A relays"], "power": 362.4}
+{
+ "margin_lint": {
+  "mode": "chains",
+  "chains": 1868,
+  "reach_um": 504.0,
+  "reach_violations": 0,
+  "far_side_relays": 0,
+  "reach_examples": [],
+  "far_side_examples": [],
+  "verdict": "PASS"
+ }
+}

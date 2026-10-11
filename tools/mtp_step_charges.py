@@ -98,6 +98,12 @@ def ds_rom():
     assert hops == hv.get("stages", 120) or hops == 120, hops
     lnk = 3 + 3                                    # dsfd_wfc_lnk +3 in / +3 out (mtp-rom benches)
     vmx = stg["start_mean"] + stg["done_mean"]     # dsfd_wfc_vmx start crossing + done path incl. the 46-word prefetch
+    # mtp-wfc 2026-10-10: on the die the VM sits behind the hub relay stations (13/13); the kit's grant-linked VM channels
+    # (VM_LINK 1, WOUTW 8, VMRQ 64) add the measured stationed delta to the vmx start + done path on every hop
+    vst_p = ROOT / "results/rtl/dsrom_wfc_integration_20261010/vm_station.json"
+    vst = json.loads(vst_p.read_text()) if vst_p.exists() else None
+    vst_d = vst["delta_per_hop_fast_cycles"] if vst else 0.0
+    vmx += vst_d
     per_hop = wfc["hop_delta_cycles"] + lnk + vmx
     busy_cyc = hv["worst_stage"]["busy_us"] * CLK / 1e6
     handoff = busy_cyc * (wfc["measured_interval_overhead"] - 46 / 11271)
@@ -107,7 +113,7 @@ def ds_rom():
         hops * per_hop, anchor="wave.last", phase="verify",
         formula=f"{hops} stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x {per_hop:g} "
                 f"(WFC done->out + entry delta {wfc['hop_delta_cycles']} + lnk {lnk} + vmx start {stg['start_mean']:g} + "
-                f"vmx done/prefetch {stg['done_mean']:g})",
+                f"vmx done/prefetch {stg['done_mean']:g} + VM hub-station delta {vst_d:g})",
         source=[WFC_CLOSURE + " charge.hop_delta_cycles", MTP_ROM_BENCH + " stg_vmnat MTP_STG_CYC",
                 "~/claude-takeover-20261007/mtp-rom.log (lnk +3/+3 a hop)"],
         note="the composition charges the reference ot_rom_pkg_ctrl_wf (46/11,271 handoff, no shims) whose route was rejected; "
@@ -164,6 +170,33 @@ def ds_rom():
         variant="selected P2 path (routes queued, not closed); the composition's draft is the DP1-EP5 recovery placement",
         note="per draft block the rank prefix replaces only the expert return hop; the block's combine all-reduce stays "
              "(no record replaces it): upper bound. Blocks are serial (block k+1 consumes block k's hc_post), so critical."))
+    # mtp-fixlat-1011: P2 die-bus link ends (dsfd_p2_lnk at the core pins + dsfd_coll_p2_ep / dsfd_vm_p2_ep): grant
+    # protocol RTT-sized to draft A's relay stations + transaction gate; the plain valid / ready core is not exact over them
+    p2_lnk = 6122 - 6113
+    ch.append(charge(
+        "p2.link_ends", "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)", p2_lnk * len(p2),
+        anchor="draft.blocks", phase="draft", grade="measured (bench log)",
+        formula=f"{len(p2)} P2 transactions x (+{p2_lnk}: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
+        source=["tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0", "~/claude-takeover-20261007/mtp-fixlat-1011.log"],
+        note="the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"))
+    # mtp-colllane-1011 (ds-1010 decision): the token return / seed and the P2 die-to-die traffic ride DEDICATED collective
+    # lanes; the lane tiles / link layer / channel are the hop already charged, the new adapter tiles add their pipeline
+    #   head lane dsfd_coll_mtp_lane: TX pin flop + OUTPUT_PIPE + credit_tx = 3, RX landing v_q + FIFO + OREG + token
+    #   buffer bypass + ltx = 5 -> 8 a traversal; the token return (DRAFT flit + held results) and the seed both cross
+    #   P2 lanes dsfd_coll_p2_lane_pa / _ba: start in (8) and the last result row out (8, 2 beats: +1 TX) per transaction;
+    #   the die-B lane-1 words stream ahead of the start (waiting in the lane buffers), off the chain
+    ch.append(charge(
+        "mtp_lane.adapters", "dedicated MTP lane adapter (dsfd_coll_mtp_lane): token return + seed traversals", 2 * (3 + 5),
+        anchor="accept.commit", phase="accept", grade="rtl count (registered stages)",
+        formula="2 traversals (token return, seed) x (TX 3 + RX 5)",
+        source=["rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv", "tools/mtp_colllane_gate.py (exact / HOL / no-block gate)"],
+        note="upper bound: both traversals charged serially; the collective's lanes 0..7 are untouched (coll_done equal)"))
+    ch.append(charge(
+        "p2.lane_adapters", "P2 dedicated lane adapters (dsfd_coll_p2_lane_pa / _ba): start in + last row out", (8 + 9) * len(p2),
+        anchor="draft.blocks", phase="draft", grade="rtl count (registered stages)",
+        formula=f"{len(p2)} P2 transactions x (start 3 + 5, last row 2-beat 4 + 5)",
+        source=["rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv", "tools/mtp_p2lane_gate.py"],
+        note="lane-1 words from die B arrive ahead of the start (buffered), off the chain"))
     # ---- Markov head (MD-6): the composition's transfer ratio vs the measured row-pipeline latency
     mq = J(MARKOV_Q)
     mk_model = next(n["cycles"] for n in mtp["nodes"] if n["id"] == "draft.markov0")

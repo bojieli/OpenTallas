@@ -17,7 +17,8 @@ module ot_hgi_vm_lanearb #(
     parameter integer K = 3,              // clients
     parameter integer REQW = 16,          // lane request width (read 16, write 280)
     parameter integer RSPW = 257,         // lane response width (read 257, write 1 = done)
-    parameter integer MUT = 0             // bench mutant: 1 the grant rotates every 64 edges even while the owner holds
+    parameter integer MUT = 0,            // bench mutant: 1 the grant rotates every 64 edges even while the owner holds
+    parameter integer RLY = 0             // extra relay stages each way (die relays + in-block stages to the VM face)
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -26,10 +27,21 @@ module ot_hgi_vm_lanearb #(
     input  wire [K*32*REQW-1:0]   c_q,
     output reg  [K*32-1:0]        c_cr,
     output reg  [K*32*RSPW-1:0]   c_rsp,
-    output reg  [32*REQW-1:0]     g_q,
+    output wire [32*REQW-1:0]     g_q,
     input  wire [31:0]            g_cr,
     input  wire [32*RSPW-1:0]     g_rsp
 );
+    // relay stages (RLY each way): requests toward the VM, credits / responses back
+    reg [32*REQW-1:0] q_rl [0:RLY]; reg [31:0] cr_rl [0:RLY]; reg [32*RSPW-1:0] rs_rl [0:RLY];
+    reg [32*REQW-1:0] g_q0;
+    always @* begin q_rl[0] = g_q0; cr_rl[0] = g_cr; rs_rl[0] = g_rsp; end
+    for (genvar r = 1; r <= RLY; r = r + 1) begin : g_rly
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin q_rl[r] <= '0; cr_rl[r] <= '0; rs_rl[r] <= '0; end
+            else begin q_rl[r] <= q_rl[r-1]; cr_rl[r] <= cr_rl[r-1]; rs_rl[r] <= rs_rl[r-1]; end
+    end
+    assign g_q = q_rl[RLY];
+    wire [31:0] g_cr_r = cr_rl[RLY]; wire [32*RSPW-1:0] g_rsp_r = rs_rl[RLY];
     reg [$clog2(K > 1 ? K : 2)-1:0] rr_ptr;
     reg [5:0] age;
     // ownership: hold while the owner requests; pick the next requester (round robin from rr_ptr) when free
@@ -52,17 +64,17 @@ module ot_hgi_vm_lanearb #(
     // request bus: the owner's lanes (registered); credits / responses back to the owner (registered)
     reg [K-1:0] own_q;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin g_q <= '0; c_cr <= '0; c_rsp <= '0; own_q <= '0; end
+        if (!rst_n) begin g_q0 <= '0; c_cr <= '0; c_rsp <= '0; own_q <= '0; end
         else begin : bus
             reg [32*REQW-1:0] m;
             m = '0;
             for (integer i = 0; i < K; i = i + 1) if (c_gnt[i]) m = m | c_q[i*32*REQW +: 32*REQW];
-            g_q <= m;
+            g_q0 <= m;
             own_q <= c_gnt;
             for (integer i = 0; i < K; i = i + 1) begin
-                c_cr[i*32 +: 32] <= c_gnt[i] || own_q[i] ? g_cr : 32'd0;
+                c_cr[i*32 +: 32] <= c_gnt[i] || own_q[i] ? g_cr_r : 32'd0;
                 for (integer l = 0; l < 32; l = l + 1)
-                    c_rsp[(i*32 + l)*RSPW +: RSPW] <= (c_gnt[i] || own_q[i]) ? g_rsp[l*RSPW +: RSPW] : {RSPW{1'b0}};
+                    c_rsp[(i*32 + l)*RSPW +: RSPW] <= (c_gnt[i] || own_q[i]) ? g_rsp_r[l*RSPW +: RSPW] : {RSPW{1'b0}};
             end
         end
 endmodule

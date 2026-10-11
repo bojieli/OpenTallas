@@ -13,7 +13,11 @@ module mtp_test_relay #(parameter integer W=1,HOPS=0)(
 endmodule
 module tb_mtp_link_rtt;
     parameter integer F=5,R=5,SEL=0,ENABLE=1,STRESS=1,DEPTH=0,OUTPUT_PIPE=0;
-    localparam integer W=512,H=F+R+3,D=DEPTH>0?DEPTH:H+1,TOTAL=1200;
+    // RXF / RXR: the hops the RECEIVER is sized for (default = the relay chain's F / R).  ds-1010 lat-audit: a receiver
+    // sized for fewer hops than the chain really has (stale station count) must overflow.
+    parameter integer RXF=-1,RXR=-1;
+    localparam integer AF=RXF<0?F:RXF,AR=RXR<0?R:RXR;
+    localparam integer W=512,H=AF+AR+3,D=DEPTH>0?DEPTH:H+1,TOTAL=1200;
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0,sv=0,cr=0;
     wire sr,lv,lr,rv,rg,cv,tg;
@@ -34,7 +38,7 @@ module tb_mtp_link_rtt;
         .l_valid(lv),.l_ready(tg),.l_data(ld));
     mtp_test_relay #(.W(W+1),.HOPS(F)) forward(.clk(clk),.rst_n(rst_n),.in_data({lv,ld}),.out_data({rv,rd}));
     mtp_test_relay #(.W(1),.HOPS(R)) reverse(.clk(clk),.rst_n(rst_n),.in_data(rg),.out_data(tg));
-    ot_dsrom_mtp_lrx_rtt #(.W(W),.D(D),.SEL(SEL),.ENABLE_RTT(ENABLE),.OUTPUT_PIPE(OUTPUT_PIPE),.FORWARD_HOPS(F),.RETURN_HOPS(R)) rx(
+    ot_dsrom_mtp_lrx_rtt #(.W(W),.D(D),.SEL(SEL),.ENABLE_RTT(ENABLE),.OUTPUT_PIPE(OUTPUT_PIPE),.FORWARD_HOPS(AF),.RETURN_HOPS(AR)) rx(
         .clk(clk),.rst_n(rst_n),.l_valid(rv),.l_ready(rg),.l_data(rd),.c_valid(cv),.c_ready(cr),.c_data(cd));
     initial begin repeat(8) @(negedge clk);rst_n=1; end
     always @(negedge clk) if(rst_n) begin

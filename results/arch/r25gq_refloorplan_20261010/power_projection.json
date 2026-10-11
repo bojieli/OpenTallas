@@ -2,6 +2,7 @@
  "schema": "opentallas.redesign_hbm.cg_power_projection.v1",
  "evidence": "results/arch/r25gq_refloorplan_20261010/power_evidence_r25gq.json",
  "cooling_limit_w": 474.56,
+ "scale": null,
  "grade": "PROJECTION (measured per-block a20 / a00 + measured duties; gated residual r bracketed) -- to be replaced by die-evidence-2's re-measure of the gated routes",
  "workloads": {
   "ds_v41_1M": {

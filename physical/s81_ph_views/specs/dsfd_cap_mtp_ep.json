@@ -1,0 +1,81 @@
+{
+ "master": "dsfd_cap_mtp_ep",
+ "w_um": 32.4,
+ "h_um": 129.6,
+ "domain": "stream_1p2",
+ "note": "capture end of the sequencer RESULT link (ltx): W = capture core, E = die bus to dsfd_mtp_seq_rtt",
+ "ports": [
+  [
+   "c_rv",
+   1,
+   "input",
+   "W",
+   "M4",
+   1,
+   0.03
+  ],
+  [
+   "c_rd",
+   512,
+   "input",
+   "W",
+   "M4",
+   4,
+   0.5
+  ],
+  [
+   "c_rr",
+   1,
+   "output",
+   "W",
+   "M4",
+   1,
+   0.95
+  ],
+  [
+   "t_rv",
+   1,
+   "output",
+   "E",
+   "M4",
+   1,
+   0.03
+  ],
+  [
+   "t_rd",
+   512,
+   "output",
+   "E",
+   "M4",
+   4,
+   0.5
+  ],
+  [
+   "f_rg",
+   1,
+   "input",
+   "E",
+   "M4",
+   1,
+   0.95
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.2
+  ],
+  [
+   "rst",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.4
+  ]
+ ]
+}

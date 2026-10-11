@@ -89,7 +89,7 @@ class LeafPlan(unittest.TestCase):
         self.assertEqual(K.BINDINGS['qkd_kvwq_ctl_bin_h']['parameters'],dict(FLANE_BINARY=1,HEAD_PIPE=1))
         self.assertEqual(K.port_widths(plan)[('qkd_kvwq_ctl_bin_h','f0')],298)
         self.assertEqual(plan['geo']['edge_channel'],K.CHAN)
-        self.assertEqual(max(plan['relay_stages'][f'kvn_{st}'] for st in K.STACKS),42)
+        self.assertEqual(max(plan['relay_stages'][f'kvn_{st}'] for st in K.STACKS),54)   # qwen-1010/b: pin-to-pin relay spacing (was 42 frame-to-frame)
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'die.v'
             K.write_netlist(plan,1,path)

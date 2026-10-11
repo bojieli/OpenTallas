@@ -7,6 +7,7 @@
 module tb_hgi_cp_die_seq;
     parameter integer MUT = 0;
     parameter integer BURST = 0;       // (MUT 9: the loader burst mutant)
+    parameter integer RUNPRE = 0;      // fe-push-hgi-1010: loader head-run from push-time contiguity bits
     // hgi-1010: loader BURST 1 + CP 16 credits; the lane honours m_req_len, NO in flight
 `include "hgi_seq_sizes.svh"
 `include "hgi_seq_sizes_conf.svh"
@@ -21,7 +22,7 @@ module tb_hgi_cp_die_seq;
     wire c_awvalid, c_wvalid, c_arvalid, c_bready, c_rready; wire [11:0] c_awaddr, c_araddr; wire [31:0] c_wdata; wire [3:0] c_wstrb;
     wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; wire [3:0] m_req_len; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data;
     wire lfault;
-    ot_hgi_loader_cp #(.BURST(BURST), .MUT(MUT == 9 ? 1 : 0)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
+    ot_hgi_loader_cp #(.BURST(BURST), .RUNPRE(RUNPRE), .MUT(MUT == 9 ? 1 : 0)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hf), .s_bvalid(s_bvalid), .s_bready(s_bready),
         .s_arvalid(s_arvalid), .s_arready(s_arready), .s_araddr(s_araddr), .s_rvalid(s_rvalid), .s_rready(s_rready),
         .s_rdata(s_rdata), .c_awvalid(c_awvalid), .c_awready(1'b0), .c_awaddr(c_awaddr), .c_wvalid(c_wvalid), .c_wready(1'b0),
@@ -29,7 +30,7 @@ module tb_hgi_cp_die_seq;
         .c_araddr(c_araddr), .c_rvalid(1'b0), .c_rready(c_rready), .c_rdata(32'd0), .lcp(lcp), .cpl(cplk),
         .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_req_len(m_req_len), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
-    wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
+    wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [2074:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
     wire [690:0] am_rec; reg [2:0] am_ret = 3'b001;
     wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
     reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;
@@ -199,7 +200,8 @@ module tb_hgi_cp_die_seq;
                 if (cu == 2) exp_x = {nA_, I_, R_, O_, D_, C_, B_, A_, d_sut, d_hdr, 1'b1};
                 if (cu == 3) exp_x = {nA_, O_, C_, B_, A_, d_hdr, 1'b1};
                 if (cu == 5) exp_x = {d_pos1, nC_, nB_, O_, C_, B_, A_, d_sut, d_hdr, 1'b1};
-                if (cu == 8) exp_x = {d_pos1, nO_, nA_, O_, A_, d_hdr, 1'b1};
+                if (cu == 8) begin : dx reg [255:0] ai; reg [17:0] il; il = I_[25:8] + {2'd0, d_L}; ai = A_; ai[255:239] = il[17:1]; ai[7] = il[0];
+                    exp_x = {d_pos1, nO_, nA_, O_, ai, d_hdr, 1'b1}; end   // A carries the I-list address (hgi-1010/c)
                 if (cu == 10) exp_x = {nO_, nA_, O_, B_, A_, d_hdr, 1'b1};
                 if (cu == 1 || cu == 2 || cu == 3 || cu == 5 || cu == 8 || cu == 10) begin chk_u = cu; check_x = 1; end
             end

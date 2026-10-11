@@ -26,6 +26,16 @@ module ot_nhb_repr_h #(parameter integer W = 1) (input wire clk, input wire rst_
                                                   output reg [W-1:0] q);
     always @(posedge clk or negedge rst_n) if (!rst_n) q <= {W{1'b0}}; else q <= d;
 endmodule
+// read-pointer copy (pop reaches it through two registered stages, pq then ps): reads at q + ps + pq = the FIFO pointer
+module ot_nhb_rp2_h #(parameter integer AW = 5, parameter integer D = 32) (input wire clk, input wire rst_n,
+                                                                           input wire pq, output wire [AW-1:0] ra);
+    reg [AW-1:0] q;
+    reg          ps;
+    wire [AW-1:0] q1 = (q == D - 1) ? {AW{1'b0}} : q + 1'b1;
+    wire [AW-1:0] q2 = (q1 == D - 1) ? {AW{1'b0}} : q1 + 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin q <= {AW{1'b0}}; ps <= 1'b0; end else begin ps <= pq; if (ps) q <= q1; end
+    assign ra = (ps && pq) ? q2 : ((ps || pq) ? q1 : q);
+endmodule
 // read-pointer copy: advances on pop exactly as the FIFO's own pointer
 module ot_nhb_rp_h #(parameter integer AW = 5, parameter integer D = 32) (input wire clk, input wire rst_n,
                                                                           input wire pop, output reg [AW-1:0] q);
@@ -65,9 +75,14 @@ module ot_nhb_fifo_rows_h #(parameter integer W = 1024, parameter integer D = 32
         for (i = 0; i < D; i = i + 1) if (we[i]) mem[i] <= dr;
     end
     wire [NC*AW-1:0] rpc;
+    localparam integer NQ = (NC >= 4) ? 4 : 1;
+    wire [NQ-1:0] pq;
     genvar c;
+    generate for (c = 0; c < NQ; c = c + 1) begin : g_pq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_pq (.clk(clk), .rst_n(rst_n), .d(pop), .q(pq[c]));
+    end endgenerate
     generate for (c = 0; c < NC; c = c + 1) begin : g_rp
-        (* keep_hierarchy *) ot_nhb_rp_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pop(pop), .q(rpc[AW*c +: AW]));
+        (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));
         assign dout[32*c +: 32] = mem[rpc[AW*c +: AW]][32*c +: 32];
     end endgenerate
     assign nonempty = (count != 0);
@@ -358,10 +373,10 @@ module ot_qwen_nearhbm_ectl_h #(
     input  wire [511:0]         q_data_in,
     input  wire [31:0]          exp_done,     // {g1 gam15..0, g0 gam15..0}: e of group written
     // HBM row requests (in order) and responses (in request order)
-    output reg                  req_valid,
-    output reg                  req_v,        // 0 K row, 1 V row
-    output reg                  req_g,
-    output reg  [12:0]          req_t,
+    output wire                  req_valid,
+    output wire                  req_v,        // 0 K row, 1 V row
+    output wire                  req_g,
+    output wire [12:0]          req_t,
     input  wire                 rsp_valid_in,
     input  wire [HD*8-1:0]      rsp_data_in,
     // e memory read (data one cycle later)
@@ -426,6 +441,8 @@ module ot_qwen_nearhbm_ectl_h #(
     wire [NG-1:0] rgrp;
     (* keep_hierarchy *) ot_nhb_rleaf_h u_r0 (.clk(clk), .arst_n(rst_n), .d(1'b1), .q(r0));
     (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+    wire rsc;                                                         // the score / running-max block's own leaf
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rsc));
     genvar gr;
     generate
         for (gr = 0; gr < 2; gr = gr + 1) begin : g_rhalf
@@ -454,8 +471,11 @@ module ot_qwen_nearhbm_ectl_h #(
     reg  [5:0]        qb_r;
     reg  [511:0]      qd_r;
     reg  [6:0]        qcnt;
-    always @(posedge clk or negedge rst_n) if (!rst_n) qv_r <= 1'b0; else qv_r <= q_valid_in;
-    always @(posedge clk) begin qb_r <= q_beat_in; qd_r <= q_data_in; end
+    reg               qv_p;                    // pin flops (E face); qv_r / qb_r / qd_r are the mid stage
+    reg  [5:0]        qb_p;
+    reg  [511:0]      qd_p;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin qv_p <= 1'b0; qv_r <= 1'b0; end else begin qv_p <= q_valid_in; qv_r <= qv_p; end
+    always @(posedge clk) begin qb_p <= q_beat_in; qd_p <= q_data_in; qb_r <= qb_p; qd_r <= qd_p; end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) qcnt <= 7'd0;
         else if (start) qcnt <= 7'd0;
@@ -488,6 +508,8 @@ module ot_qwen_nearhbm_ectl_h #(
     endfunction
 
     // ---- request generator -------------------------------------------------------------------------------------------
+    reg        rq_valid, rq_v, rq_g;                    // the generator's request (relayed to the W-face pin flops below)
+    reg [12:0] rq_t;
     reg        rg_run, rg_vph, rg_g;
     reg [11:0] rg_idx;                                  // K: local index
     reg [4:0]  rg_gam;
@@ -504,9 +526,9 @@ module ot_qwen_nearhbm_ectl_h #(
     always @(posedge clk or negedge rc) begin
         if (!rc) begin
             rg_run <= 1'b0; rg_vph <= 1'b0; rg_g <= 1'b0; rg_idx <= 0; rg_gam <= 0; rg_k <= 0; rg_j <= 0;
-            req_valid <= 1'b0; er_valid <= 1'b0; credit_used <= 0;
+            rq_valid <= 1'b0; er_valid <= 1'b0; credit_used <= 0;
         end else begin
-            req_valid <= 1'b0; er_valid <= 1'b0;
+            rq_valid <= 1'b0; er_valid <= 1'b0;
             issue = 1'b0;
             if (start) begin
                 rg_run <= 1'b1; rg_vph <= 1'b0; rg_g <= 1'b0; rg_idx <= E; rg_gam <= E; rg_k <= 0; rg_j <= 0;
@@ -514,8 +536,8 @@ module ot_qwen_nearhbm_ectl_h #(
                 if (rg_idx < n_s) begin
                     if (has_credit) begin
                         issue = 1'b1;
-                        req_valid <= 1'b1; req_v <= 1'b0; req_g <= rg_g;
-                        req_t <= tpos(rg_idx[10:7], rg_idx[6:0]);
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_idx[10:7], rg_idx[6:0]);
                         rg_idx <= rg_idx + R;
                     end
                 end else if (!rg_g) begin
@@ -528,7 +550,7 @@ module ot_qwen_nearhbm_ectl_h #(
                     if (!rg_v_valid_row || (rg_v_gate && has_credit)) begin
                         if (rg_v_valid_row) begin
                             issue = 1'b1;
-                            req_valid <= 1'b1; req_v <= 1'b1; req_g <= rg_g; req_t <= rg_vt[12:0];
+                            rq_valid <= 1'b1; rq_v <= 1'b1; rq_g <= rg_g; rq_t <= rg_vt[12:0];
                             er_valid <= 1'b1; er_addr <= {rg_g, rg_k, rg_gam[3:0], rg_j};
                         end
                         rg_j <= rg_j + 3'd1;
@@ -546,6 +568,20 @@ module ot_qwen_nearhbm_ectl_h #(
             credit_used <= credit_used + (issue ? 1 : 0) - (consume ? 1 : 0);
         end
     end
+
+    // ---- request relay: RQD registered stages from the generator to the W-face pin flops (the last stage) -------------
+    localparam integer RQD = 2;
+    wire [RQD:0]        rqv_s;
+    wire [15*(RQD+1)-1:0] rqd_s;
+    assign rqv_s[0] = rq_valid;
+    assign rqd_s[14:0] = {rq_v, rq_g, rq_t};
+    genvar gq;
+    generate for (gq = 0; gq < RQD; gq = gq + 1) begin : g_rq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(15)) u_d (.clk(clk), .d(rqd_s[15*gq +: 15]), .q(rqd_s[15*(gq + 1) +: 15]));
+    end endgenerate
+    assign req_valid = rqv_s[RQD];
+    assign {req_v, req_g, req_t} = rqd_s[15*RQD +: 15];
 
     // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
     wire [HD*8-1:0] row;
@@ -765,8 +801,8 @@ module ot_qwen_nearhbm_ectl_h #(
     ot_hdc_delay #(.W(1), .D(SCD - 1), .RESET(1)) u_scv (.clk(clk), .rst_n(rc), .d(k_issue), .q(sc_v_n));
     reg tf2;
     wire [3:0] tf = 4'd0;
-    always @(posedge clk or negedge rc)
-        if (!rc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end
+    always @(posedge clk or negedge rsc)
+        if (!rsc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end
         else begin sc_valid <= sc_v_n; tf2 <= |t_sf; end
     always @(posedge clk) begin sc_data <= t_sc; sc_addr <= tag_sc; end
 
@@ -782,8 +818,8 @@ module ot_qwen_nearhbm_ectl_h #(
     always @(posedge clk or negedge rc) if (!rc) gfault_any <= 1'b0; else gfault_any <= |t_gf;
     wire mac_fault = gfault_any || tf2;
     integer hh;
-    always @(posedge clk or negedge rc) begin
-        if (!rc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end
+    always @(posedge clk or negedge rsc) begin
+        if (!rsc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end
         else begin
             if (start) begin lmax_any <= 2'b00; fault <= 1'b0; end
             else begin

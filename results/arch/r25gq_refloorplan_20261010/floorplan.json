@@ -37,12 +37,16 @@
   "reserved_overlap_examples": []
  },
  "notes": [
-  "R25GQ: SM rows at [1812.24, 4153.68, 5847.12] (S), hub blocks 7626.96-17655.84 um, quadrant 4754.16 um; spine gap 174.96 um (+ abut 43.2 / cross 302.4)",
+  "R25GQ: SM rows at [1812.24, 4153.68, 5847.12] (S), hub blocks 7626.96-17655.84 um, quadrant 4754.16 um; spine gap 142.56 um (+ abut 43.2 / cross 302.4)",
   "Placement plan only: die nets are the R25GPH logical nets carried over by tools/hbm_r25gq_plan.py (model); the dependent blocks are re-routed after the plan is on main."
  ],
  "variant": {
   "r25gq": true,
   "r25gq_base": "r25gph",
+  "host_h": [
+   406,
+   381
+  ],
   "svc_gap_add": 216.0,
   "sm_colch_add": 172.8,
   "sm_ch01": 1209.6,
@@ -85,9 +89,9 @@
    "mtp",
    "loader",
    "router",
-   "quant",
    "hgi_vm",
    "cmdproc",
+   "quant",
    "barrier",
    "coll",
    "vm8",
@@ -97,26 +101,18 @@
   ],
   "spine_abut": [
    [
-    "quant",
-    "hgi_vm"
-   ],
-   [
     "hgi_vm",
     "cmdproc"
    ],
    [
     "cmdproc",
-    "barrier"
-   ],
-   [
-    "barrier",
-    "coll"
+    "quant"
    ]
   ],
   "spine_cross": [
    [
     "router",
-    "quant"
+    "hgi_vm"
    ],
    [
     "vm8",
@@ -124,6 +120,33 @@
    ]
   ],
   "spine_cross_um": 302.4,
+  "lane_groups": {
+   "W": [
+    "hb_hgi_vm",
+    "hb_su_SW",
+    "hb_sfu_SW",
+    "hb_hc_SW"
+   ],
+   "E": [
+    "hb_hgi_vm",
+    "hb_cmdproc",
+    "hb_quant"
+   ]
+  },
+  "lane_rd_bits": 8800,
+  "lane_wr_bits": 9000,
+  "face_force": {
+   "hfd_hgi_vm|t_lgW": "W",
+   "hfd_hgi_vm|t_lgE": "N",
+   "hfd_cmdproc|f_lgE": "S",
+   "hfd_cmdproc|t_lgE": "N",
+   "hfd_quant|f_lgE": "S",
+   "hfd_su|f_lgW": "E",
+   "hfd_su|t_lgW": "N",
+   "hfd_sfu|f_lgW": "S",
+   "hfd_sfu|t_lgW": "W",
+   "hfd_hc|f_lgW": "E"
+  },
   "W": 31734.288,
   "H": 25282.8
  },
@@ -1188,7 +1211,7 @@
    "name": "hb_mtp",
    "master": "hgi_mtp_native",
    "x": 15202.512,
-   "y": 7970.4,
+   "y": 7938.0,
    "w": 286.56,
    "h": 200.88,
    "orient": "R0",
@@ -1200,7 +1223,7 @@
    "name": "hb_mtp_am",
    "master": "hfd_hgi_am",
    "x": 15489.072,
-   "y": 7970.4,
+   "y": 7938.0,
    "w": 180.0,
    "h": 200.88,
    "orient": "R0",
@@ -1212,7 +1235,7 @@
    "name": "hb_loader",
    "master": "hfd_loader",
    "x": 14735.952,
-   "y": 8346.24,
+   "y": 8281.44,
    "w": 1399.656,
    "h": 237.576,
    "orient": "R0",
@@ -1224,21 +1247,9 @@
    "name": "hb_router",
    "master": "hfd_router",
    "x": 14735.952,
-   "y": 8758.8,
+   "y": 8661.6,
    "w": 1399.656,
    "h": 326.28,
-   "orient": "R0",
-   "kind": "spine",
-   "region": "hub",
-   "domain": "stream_1p2"
-  },
-  {
-   "name": "hb_quant",
-   "master": "hfd_quant",
-   "x": 14735.952,
-   "y": 9389.52,
-   "w": 1399.656,
-   "h": 358.536,
    "orient": "R0",
    "kind": "spine",
    "region": "hub",
@@ -1248,7 +1259,7 @@
    "name": "hb_hgi_vm",
    "master": "hfd_hgi_vm",
    "x": 14735.952,
-   "y": 9791.28,
+   "y": 9292.32,
    "w": 1399.656,
    "h": 1080.0,
    "orient": "R0",
@@ -1260,9 +1271,21 @@
    "name": "hb_cmdproc",
    "master": "hfd_cmdproc",
    "x": 14735.952,
-   "y": 10914.48,
+   "y": 10415.52,
    "w": 1399.656,
    "h": 1403.976,
+   "orient": "R0",
+   "kind": "spine",
+   "region": "hub",
+   "domain": "stream_1p2"
+  },
+  {
+   "name": "hb_quant",
+   "master": "hfd_quant",
+   "x": 14735.952,
+   "y": 11862.72,
+   "w": 1399.656,
+   "h": 358.536,
    "orient": "R0",
    "kind": "spine",
    "region": "hub",
@@ -1272,7 +1295,7 @@
    "name": "hb_barrier",
    "master": "hfd_barrier",
    "x": 14735.952,
-   "y": 12361.68,
+   "y": 12363.84,
    "w": 1399.656,
    "h": 36.696,
    "orient": "R0",
@@ -1284,7 +1307,7 @@
    "name": "hb_coll",
    "master": "hfd_coll",
    "x": 14735.952,
-   "y": 12441.6,
+   "y": 12543.12,
    "w": 1399.656,
    "h": 1403.976,
    "orient": "R0",
@@ -1296,7 +1319,7 @@
    "name": "hb_vm_sww",
    "master": "hfd_vm_sww",
    "x": 14736.384,
-   "y": 14020.56,
+   "y": 14089.68,
    "w": 349.488,
    "h": 1000.056,
    "orient": "R0",
@@ -1308,7 +1331,7 @@
    "name": "hb_vm_swe",
    "master": "hfd_vm_swe",
    "x": 15085.872,
-   "y": 14020.56,
+   "y": 14089.68,
    "w": 349.488,
    "h": 1000.056,
    "orient": "R0",
@@ -1320,7 +1343,7 @@
    "name": "hb_vm_sew",
    "master": "hfd_vm_sew",
    "x": 15436.224,
-   "y": 14020.56,
+   "y": 14089.68,
    "w": 349.488,
    "h": 1000.056,
    "orient": "R0",
@@ -1332,7 +1355,7 @@
    "name": "hb_vm_see",
    "master": "hfd_vm_see",
    "x": 15785.712,
-   "y": 14020.56,
+   "y": 14089.68,
    "w": 349.488,
    "h": 1000.056,
    "orient": "R0",
@@ -1344,7 +1367,7 @@
    "name": "hb_vm_nww",
    "master": "hfd_vm_nww",
    "x": 14736.384,
-   "y": 15020.616,
+   "y": 15089.736,
    "w": 349.488,
    "h": 1000.056,
    "orient": "R0",
@@ -1356,7 +1379,7 @@
    "name": "hb_vm_nwe",
    "master": "hfd_vm_nwe",
    "x": 15085.872,
-   "y": 15020.616,
+   "y": 15089.736,
    "w": 349.488,
    "h": 1000.056,
    "orient": "R0",
@@ -1368,7 +1391,7 @@
    "name": "hb_vm_new",
    "master": "hfd_vm_new",
    "x": 15436.224,
-   "y": 15020.616,
+   "y": 15089.736,
    "w": 349.488,
    "h": 1000.056,
    "orient": "R0",
@@ -1380,7 +1403,7 @@
    "name": "hb_vm_nee",
    "master": "hfd_vm_nee",
    "x": 15785.712,
-   "y": 15020.616,
+   "y": 15089.736,
    "w": 349.488,
    "h": 1000.056,
    "orient": "R0",
@@ -1392,7 +1415,7 @@
    "name": "hb_su_red",
    "master": "hfd_su_red",
    "x": 14735.952,
-   "y": 16323.12,
+   "y": 16392.24,
    "w": 1399.656,
    "h": 218.136,
    "orient": "R0",
@@ -1404,7 +1427,7 @@
    "name": "hb_su_full",
    "master": "hfd_su_full",
    "x": 15262.992,
-   "y": 16716.24,
+   "y": 16752.96,
    "w": 346.008,
    "h": 347.736,
    "orient": "R0",
@@ -1416,7 +1439,7 @@
    "name": "idx_selector",
    "master": "hfd_idx_sel_native_qend",
    "x": 14736.384,
-   "y": 17238.96,
+   "y": 17243.28,
    "w": 1399.656,
    "h": 844.56,
    "orient": "R0",

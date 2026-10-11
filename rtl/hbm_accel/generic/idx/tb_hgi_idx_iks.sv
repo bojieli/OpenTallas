@@ -9,12 +9,12 @@
 // bandwidth (3,166.7 B/cycle a die / 4 stacks) plus the measured first access (104).
 // MUT=1 (issuer: B_q from the previous quarter) must FAIL at QSEL > 0.
 module tb_hgi_idx_iks;
-parameter integer MUT = 0, QSEL = 0;
+parameter integer MUT = 0, QSEL = 0, MISALIGN = 0;   // MISALIGN: low base bits set -> the issuer must fault, issue nothing
 reg clk=0,rst_n=0;always #416 clk=~clk;
 integer N = 9000, LAT = 104, ADV = 0, ROW0 = 4006;
-reg go=0; wire [511:0] e_all; wire [35:0] blocks;
-ot_hgi_idx_iks_issue #(.MUT(MUT)) iss(.clk(clk),.rst_n(rst_n),.go(go),.n(N),.row0({4{15'(ROW0)}}),.tag(13'h0abc),.no_credit(1'b0),
-  .e_d(e_all),.blocks(blocks));
+reg go=0; wire [511:0] e_all; wire [35:0] blocks; wire ifault;
+ot_hgi_idx_iks_issue #(.MUT(MUT)) iss(.clk(clk),.rst_n(rst_n),.go(go),.n(N),.ik_base(40'(ROW0) << 20 | 40'(MISALIGN)),.tag(13'h0abc),.no_credit(1'b0),
+  .e_d(e_all),.blocks(blocks),.fault(ifault));
 wire [127:0] ed = e_all[QSEL*128 +: 128];
 wire[31:0]kv,rrdy,kwe;wire[959:0]addr;wire[127:0]len;wire[543:0]tag;
 wire[8791:0]lines;wire done,fault;reg[7:0]credit=0;
@@ -71,6 +71,7 @@ initial begin
   if(!ADV||t%23==0)begin credit=pend;pend=0;end
   if(fault)begin $display("svc fault got=%0d",got);bad=bad+1;fin=1;end
   if(done)fin=1;
+  if(ifault)begin $display("issuer fault: misaligned key-region base");bad=bad+1;fin=1;end
   t=t+1;if(t>200000)begin $display("timeout got=%0d",got);bad=bad+1;fin=1;end
  end
  if(got!=expect_lines)begin $display("MISMATCH line count %0d expected %0d (issued B %0d)",got,expect_lines,blocks[QSEL*9+:9]);bad=bad+1;end
