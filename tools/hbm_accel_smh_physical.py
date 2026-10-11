@@ -1129,6 +1129,12 @@ def cmd_block(a):
             f"proc ::repair_timing_helper {{args}} {{ ::ot_rth_orig {{*}}$args -max_buffer_percent {a.hold_buffer_pct} }}\n")
         extra["PRE_CTS_TCL"] = "/work/rt_hook.tcl"
         extra["PRE_GLOBAL_ROUTE_TCL"] = "/work/rt_hook.tcl"
+    if getattr(a, "io_vclk", False):
+        # [cg] 2026-10-10: nbr_clk_i re-referenced to the built tree's input pin-flop insertion right after CTS
+        hook = work / "rt_hook.tcl"
+        prev = hook.read_text() if hook.exists() else ""
+        hook.write_text(prev + "source /src/physical/common_flow/nbr_in_ref_cts_hook.tcl\n")
+        extra["PRE_CTS_TCL"] = "/work/rt_hook.tcl"
     if a.grt_allow:
         extra["GLOBAL_ROUTE_ARGS"] = "-congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 60"
     if a.piece == "tile":
