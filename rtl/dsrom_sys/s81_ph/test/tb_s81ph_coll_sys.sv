@@ -7,14 +7,16 @@
 // credits, plus pass-through flits on lanes W3/E0..E3; it accepts t_vm beats under random ts backpressure.
 // CHECK: per die, every reduce word (data, last; err OR per beat) and every all-gather beat equals the reference
 // engine of that rank, in order; every pass-through flit arrives in order at the partner die; no fault.
-// PASS line "TB_S81PH_COLL_SYS PASS".  Cycle report: the last result cycle of DUT and reference.
+// PASS line "TB_S81PH_COLL_SYS PASS".  +define+TB_CTRL (s81-ctl-1011): the slabs are dsfd_sp_collective_c driven by
+// the real stage sequencer (block TB_CTRL below).  Cycle report: the last result cycle of DUT and reference.
 module tb_s81ph_coll_sys;
     parameter integer SPEC = 1, FIXW = 0, FIXM = -1, PERF = 0, NM = 40, MAXW = 12, NPT = 30, CHB = 60, CHU = 12, EPER = 97, SEED = 7, TSR = 7,
                       WARM = 20,   // VM sends nothing before this cycle (pricing: links trained before the first collective)
                       // TB_MTP (mtp-colllane-1011): the dedicated MTP lane W4 (dies d <-> d ^ 1, board channel CHB) with the
                       // head-die sequencer's token / seed / accept traffic at the real 8 / 8 hub stations; MSTALL see
                       // tb_mtp_lane_io.  MTP_HOLD: cycles to wait for MTP after the collective is complete.
-                      NTOK = 300, NSEED = 80, NACC = 24, MSTALL = 0, MTP_HOLD = 40000, TGAP = 0;
+                      NTOK = 300, NSEED = 80, NACC = 24, MSTALL = 0, MTP_HOLD = 40000, TGAP = 0,
+                      CMUT = 0, MAXCYC = 400000;   // MAXCYC: bench time-out (cycles); CMUT: TB_CTRL: ot_s81_coll_job MUT (5 = early done)
     localparam integer FW = 512, PW = 547, W = 552;
     reg [63:0] rs = 64'h243F6A8885A308D3 ^ SEED;
     function [31:0] rnd(input integer d);
@@ -67,10 +69,22 @@ module tb_s81ph_coll_sys;
     reg  [2:0] tsr [0:3];
     wire [2099:0] tvm [0:3];
     wire [511:0] mtx [0:3];
+    // TB_CTRL (s81-ctl-1011): engine-3 die nets between the controller (ot_s81_stage_seq) and the slab
+    wire [84:0] c3a [0:3]; wire [8:0] d3a [0:3]; wire [1:0] csta [0:3];
+`ifdef TB_CTRL
+`ifdef TB_MTP
+    initial $fatal(1, "TB_CTRL with TB_MTP: dsfd_sp_collective_c has no MTP-lane ports yet");
+`endif
+`endif
     genvar gd, gl;
     generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_die
         wire tf0, tf1, tf2, tf3, tf4, tf5, tf6, tf7;
+`ifdef TB_CTRL
+        dsfd_sp_collective_c #(.MUT(CMUT)) u (.refclk(refclk), .por(por), .f_vm(fvm[gd]), .ts(tsr[gd]),
+            .c_ck(cks[gd]), .c_rs(rsts[gd]), .c3(c3a[gd]), .d3(d3a[gd]), .cst(csta[gd]),
+`else
         dsfd_sp_collective u (.refclk(refclk), .por(por), .f_vm(fvm[gd]), .ts(tsr[gd]),
+`endif
             .rW0(rx[gd][0]), .rW1(rx[gd][1]), .rW2(rx[gd][2]), .rW3(rx[gd][3]),
             .rE0(rx[gd][4]), .rE1(rx[gd][5]), .rE2(rx[gd][6]), .rE3(rx[gd][7]),
             .pll_stream(cks[gd]), .pll_serial(), .pll_hbm(), .rst_stream(rsts[gd]), .rst_serial(), .rst_hbm(),
@@ -237,8 +251,8 @@ module tb_s81ph_coll_sys;
         // ---- end
         if (cdone_cyc < 0 && cyc > 1000 && dn[0] == rn[0] && dn[1] == rn[1] && dn[2] == rn[2] && dn[3] == rn[3] &&
              rn[0] > 0 && ridx[0] == TOT_IDX() && all_pt()) cdone_cyc = cyc;
-        if (cyc > 400000 || (cdone_cyc >= 0 && (mtp_done() || cyc > cdone_cyc + MTP_HOLD))) begin
-            mtp_end();
+        if (cyc > MAXCYC || (cdone_cyc >= 0 && ((mtp_done() && ctrl_done()) || cyc > cdone_cyc + MTP_HOLD))) begin
+            mtp_end(); ctrl_end();
             for (d = 0; d < 4; d = d + 1) if (dn[d] != rn[d] || ridx[d] != TOT_IDX()) begin
                 errs = errs + 1; $display("DIE %0d INCOMPLETE dut %0d ref %0d of %0d", d, dn[d], rn[d], TOT_IDX()); end
             if (!all_pt()) begin errs = errs + 1; $display("PT INCOMPLETE"); end
@@ -276,6 +290,102 @@ module tb_s81ph_coll_sys;
 `else
     function mtp_done(); mtp_done = 1'b1; endfunction
     task mtp_end(); endtask
+`endif
+`ifdef TB_CTRL
+    // ------------------------------------------------------------------ TB_CTRL (s81-ctl-1011): real control
+    // Per die: ot_s81_stage_seq (the dsfd_sp_ctrl sequencer: NOPS 128, 12 ports, QD 8) holds the stage program = one
+    // coll job per message {eng 3, arg {mode, records}} and issues the descriptors under credits; the slab's coll
+    // endpoint (ot_s81_coll_job inside dsfd_sp_collective_c) releases a message's records only under its descriptor
+    // and returns the done when the message's last result leaves the slab.  CHECKS (in addition to the data): every
+    // done tag = {slot 0, op k} in program order, done k never before message k's last result left t_vm, exactly NM
+    // dones, one job_done after the last, no command on any other port, no endpoint / sequencer fault, online.
+    // Mutants: TB_MUT_DROPSTART (die 0's 5th coll command never reaches the slab), TB_MUT_WRONGDESC (die 0's 3rd
+    // descriptor names one record more), -GCMUT=5 (early done: the endpoint's done on the first result beat).
+    wire [11:0]     sq_cv [0:3];
+    wire [12*84-1:0] sq_cd [0:3];
+    wire [8:0]      sq_dn [0:3];
+    wire [1:0]      sq_st [0:3];
+    wire [3:0]      sq_jd, sq_flt, sq_rdy;
+    reg             sq_pwv; reg [6:0] sq_pwa; reg [27:0] sq_pwd; reg [7:0] sq_len; reg [3:0] sq_jv;
+    integer         sq_ncmd [0:3], sq_ndn [0:3], sq_lr [0:3], sq_njd [0:3], sq_err;
+    integer         sq_ld, sq_i;
+    reg [2099:0]    sq_b;
+    initial begin
+        sq_pwv = 0; sq_pwa = 0; sq_pwd = 0; sq_len = NM[7:0]; sq_jv = 0; sq_err = 0; sq_ld = 0;
+        for (sq_i = 0; sq_i < 4; sq_i = sq_i + 1) begin sq_ncmd[sq_i] = 0; sq_ndn[sq_i] = 0; sq_lr[sq_i] = 0; sq_njd[sq_i] = 0; end
+        if (NM > 128) $fatal(1, "TB_CTRL: NM <= 128 (stage program size)");
+    end
+    function [84:0] sq_mut(input integer dd, input integer k, input [84:0] c);
+        begin
+            sq_mut = c;
+`ifdef TB_MUT_DROPSTART
+            if (dd == 0 && k == 4) sq_mut[84] = 1'b0;
+`endif
+`ifdef TB_MUT_WRONGDESC
+            if (dd == 0 && k == 2) sq_mut[22:7] = c[22:7] + 16'd1;
+`endif
+        end
+    endfunction
+    generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_sq
+        wire [84:0] c3 = {sq_cv[gd][3], sq_cd[gd][3*84 +: 84]};
+        reg  [84:0] c3m;
+        always @(*) c3m = sq_mut(gd, sq_ncmd[gd], c3);
+        ot_s81_stage_seq #(.NOPS(128), .NENG(12), .ARGW(24), .USER_W(10), .NW(21), .QD(8), .FQ(4)) u_sq (
+            .clk(cks[gd]), .rst_n(rsts[gd]), .pw_v(sq_pwv), .pw_a(sq_pwa), .pw_d(sq_pwd), .prog_len(sq_len),
+            .job_v(sq_jv[gd]), .job_rdy(sq_rdy[gd]), .job_user(10'(gd)), .job_pos(21'd1048575), .job_tok(21'd12345),
+            .job_done(sq_jd[gd]), .cmd_v(sq_cv[gd]), .cmd_d(sq_cd[gd]),
+            .dn_v({8'd0, sq_dn[gd][8], 3'd0}), .dn_tag({64'd0, sq_dn[gd][7:0], 24'd0}),
+            .busy(), .fault(sq_flt[gd]), .fault_code(), .st_jobs(), .st_cmds(), .st_credit_stall());
+        assign c3a[gd] = c3m;
+        assign sq_dn[gd] = d3a[gd];
+        assign sq_st[gd] = csta[gd];
+    end endgenerate
+    // program load (all dies at once), then one job per die
+    always @(posedge clk) begin
+        if (rsts == 4'hF) begin
+            sq_pwv <= 0;
+            if (sq_ld < NM) begin
+                sq_pwv <= 1; sq_pwa <= sq_ld[6:0]; sq_pwd <= {4'd3, 7'd0, nmm[sq_ld], 16'(nmw[sq_ld])}; sq_ld = sq_ld + 1;
+            end else if (sq_ld < NM + 4) sq_ld = sq_ld + 1;
+            else if (sq_ld == NM + 4) begin sq_jv <= 4'hF; sq_ld = sq_ld + 1; end
+            else if (sq_jv != 0) sq_jv <= sq_jv & ~sq_rdy;
+        end
+    end
+    // checks (controller clock = the die's stream clock)
+    always @(posedge clk) begin
+        for (sq_i = 0; sq_i < 4; sq_i = sq_i + 1) begin
+            if (rsts[sq_i]) begin
+                sq_b = tvm[sq_i];
+                if (sq_b[0] && sq_b[2:1] == 2'd1) sq_lr[sq_i] = sq_lr[sq_i] + ((sq_b[13] & sq_b[9]) + (sq_b[12] & sq_b[8]) + (sq_b[11] & sq_b[7]) + (sq_b[10] & sq_b[6]));
+                if ((sq_cv[sq_i] & ~12'h008) != 0) begin sq_err = sq_err + 1; $display("CTRL DIE %0d command on a non-coll port", sq_i); end
+                if (sq_cv[sq_i][3]) sq_ncmd[sq_i] = sq_ncmd[sq_i] + 1;
+                if (sq_dn[sq_i][8]) begin
+                    if (sq_dn[sq_i][7:0] !== {1'b0, 7'(sq_ndn[sq_i])}) begin sq_err = sq_err + 1;
+                        if (sq_err < 20) $display("CTRL DIE %0d done tag %h expected op %0d", sq_i, sq_dn[sq_i][7:0], sq_ndn[sq_i]); end
+                    sq_ndn[sq_i] = sq_ndn[sq_i] + 1;
+                    if (sq_ndn[sq_i] > sq_lr[sq_i]) begin sq_err = sq_err + 1;
+                        if (sq_err < 20) $display("CTRL DIE %0d EARLY done %0d: only %0d message lasts left the slab", sq_i, sq_ndn[sq_i], sq_lr[sq_i]); end
+                end
+                if (sq_jd[sq_i]) begin
+                    sq_njd[sq_i] = sq_njd[sq_i] + 1;
+                    if (sq_ndn[sq_i] != NM) begin sq_err = sq_err + 1; $display("CTRL DIE %0d job_done after %0d of %0d dones", sq_i, sq_ndn[sq_i], NM); end
+                end
+                if (sq_flt[sq_i] || sq_st[sq_i][0]) begin sq_err = sq_err + 1;
+                    if (sq_err < 20) $display("CTRL DIE %0d FAULT seq %b endpoint %b", sq_i, sq_flt[sq_i], sq_st[sq_i][0]); end
+            end
+        end
+    end
+    task ctrl_end();
+        for (sq_i = 0; sq_i < 4; sq_i = sq_i + 1) begin
+            $display("CTRL DIE %0d cmds %0d dones %0d lasts %0d job_done %0d online %b", sq_i, sq_ncmd[sq_i], sq_ndn[sq_i], sq_lr[sq_i], sq_njd[sq_i], sq_st[sq_i][1]);
+            if (sq_ndn[sq_i] != NM || sq_njd[sq_i] != 1 || !sq_st[sq_i][1]) sq_err = sq_err + 1;
+        end
+        errs = errs + sq_err;
+    endtask
+    function ctrl_done(); ctrl_done = sq_njd[0] == 1 && sq_njd[1] == 1 && sq_njd[2] == 1 && sq_njd[3] == 1; endfunction
+`else
+    function ctrl_done(); ctrl_done = 1'b1; endfunction
+    task ctrl_end(); endtask
 `endif
     // outputs per die = reduce words (one per mode-0 record) + gather beats (one per mode-1 record)
     function integer TOT_IDX(); TOT_IDX = TOT; endfunction
