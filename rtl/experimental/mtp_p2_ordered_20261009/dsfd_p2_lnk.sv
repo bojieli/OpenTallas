@@ -115,9 +115,8 @@ endmodule
 // Lane 1 (die B's expert words) is NOT here: dsfd_coll_p2_lane_ba (rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv,
 // OGRANT) is its grant-protocol sender onto the die bus (mtp-colllane-1011 8aa62270c), so this end has no lane-1 port.
 // Core side (the abutting dsfd_coll_p2_lane_pa): start in on valid / ready from one flop (ltx_rc); result row out on
-// valid / ready through an abutting grant pair (ltx_rc -> ot_dsrom_mtp_lrx D 4 SEL 1, no stations: the closed 3-cycle
-// history is exact there), so the core's ready only steers a dozen state flops, never the 594-b row registers
-// (fixlat-collp2-ffbec0c86-tc TT -64.76: c_or -> 594-b c_data / wp enables, 13 levels).
+// valid / ready through ot_dsrom_mtp_pp2 (port data / valid from flops, the core's ready steers 3 flops, never the
+// 594-b row registers: fixlat-collp2-ffbec0c86-tc TT -64.76 c_or -> enables; 5b059065b TT -52.31 D4 mux -> port).
 module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 9,
                          parameter integer D_O = FWD_C + RET_C + 4) (
  input wire [0:0] ck, rst,
@@ -135,13 +134,14 @@ module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 
  ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
  ot_dsrom_mtp_ltx_rc #(.W(101)) u_st(.clk(ck[0]),.rst_n(rn),.c_valid(c_sv),.c_ready(c_sr),.c_data(c_sd),
   .l_valid(t_sv),.l_ready(f_sg),.l_data(t_sd));
- wire ov, orr, gv, gr; wire [593:0] od, gd;
+ wire ov, orr; wire [593:0] od;
  ot_dsrom_mtp_lrx_rtt #(.W(594),.D(D_O),.SEL(1),.ENABLE_RTT(1),.FORWARD_HOPS(OF),.RETURN_HOPS(OR)) u_o(.clk(ck[0]),.rst_n(rn),
   .l_valid(f_ov),.l_ready(t_og),.l_data(f_od),.c_valid(ov),.c_ready(orr),.c_data(od));
- ot_dsrom_mtp_ltx_rc #(.W(594)) u_og(.clk(ck[0]),.rst_n(rn),.c_valid(ov),.c_ready(orr),.c_data(od),
-  .l_valid(gv),.l_ready(gr),.l_data(gd));
- ot_dsrom_mtp_lrx #(.W(594),.D(4),.SEL(1)) u_oc(.clk(ck[0]),.rst_n(rn),.l_valid(gv),.l_ready(gr),.l_data(gd),
-  .c_valid(c_ov),.c_ready(c_or),.c_data(c_od));
+ // core port: 2-entry ping-pong (c_od / c_ov from flops through one 2:1 mux; c_or steers 3 flops).  The abutting
+ // ltx_rc -> lrx D4 pair of 5b059065b put the D4 queue mux on the port (fixlat-collp2-5b059065b-tc TT -52.31,
+ // SS classes u_oc.cnt / rp -> c_od -257).
+ ot_dsrom_mtp_pp2 #(.W(594)) u_oc(.clk(ck[0]),.rst_n(rn),.i_valid(ov),.i_ready(orr),.i_data(od),
+  .o_valid(c_ov),.o_ready(c_or),.o_data(c_od),.g_id(1'b0),.g_ok(1'b0),.g_chg(1'b0));
 endmodule
 
 // VM-slab end: sends lane 0.
