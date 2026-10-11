@@ -34,6 +34,9 @@ module ot_qwen_rom_core_ctrl_x_bi #(
     parameter integer ICUT = 0,       // qwen-1010/a: registered readiness (ctrl_icut)
     parameter integer PRL = 1,        // qwen-1010/a: program read latency (ctrl_prl)
     parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)
+                                     // 2 (hardcore-1010 fe-h): two head words written in turn while fewer than 2 are held
+                                     // (fill enable from registers only: fq_n, hc), decode reads hq / hq1 by a registered
+                                     // pointer.  Same words, same edges as FQ_HEAD 1 (lockstep bench)
     parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
     parameter integer W    = 16,
     parameter integer G    = 4,
@@ -474,7 +477,11 @@ localparam integer W_ME_AMC = 1;
     reg        pend2;                     // PRL 2: ... the cycle after
     reg  [INSTR_BITS-1:0] hq;            // FQ_HEAD: registered head word
     reg                   hq_v;
-    wire [INSTR_BITS-1:0] ir = (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
+    reg  [INSTR_BITS-1:0] hq1;           // FQ_HEAD 2: second head word
+    reg                   h_rd, h_wr;    // FQ_HEAD 2: head read / write pointers
+    reg  [1:0]            hc;            // FQ_HEAD 2: head words held
+    wire                  hv = (FQ_HEAD >= 2) ? (hc != 2'd0) : hq_v;
+    wire [INSTR_BITS-1:0] ir = (FQ_HEAD >= 2) ? (h_rd ? hq1 : hq) : (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
     reg        nx_v;                      // NEXT holds a decoded instruction
     wire       me_go, su_go;
     wire       me_ready, me_idle, su_ready, su_idle;
@@ -583,9 +590,10 @@ localparam integer W_ME_AMC = 1;
         if (!rst_n) begin osync_r <= 1'b1; opast_r <= 1'b0; end
         else begin osync_r <= skip ? o_eq1 : o_eq0; opast_r <= skip ? o_pa1 : o_pa0; end
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
-    wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hq_v : (fq_n != 0)) && (!nx_v || issue || skip);
+    wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hv : (fq_n != 0)) && (!nx_v || issue || skip);
     // FQ_HEAD: the FIFO pops into hq when hq is empty or being loaded into NEXT
-    wire hq_fill = (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
+    wire hq_fill = (FQ_HEAD >= 2) ? ((st == S_RUN) && (fq_n != 0) && (hc != ((FQ_HEAD == 3) ? 2'd3 : 2'd2))) :
+                  (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
     wire fq_pop = (FQ_HEAD != 0) ? hq_fill : load;
     wire push = (st == S_RUN) && ((PRL > 1) ? pend2 : pend1);
     // ICUT: the readiness of the op at NEXT after this edge, against the status predicted after this edge
@@ -633,7 +641,7 @@ localparam integer W_ME_AMC = 1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; pc <= 0; fpc <= 0; done <= 1'b0; prog_re <= 1'b0; pend1 <= 1'b0; pend2 <= 1'b0;
-            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0;
+            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0; hc <= 2'd0; h_rd <= 1'b0; h_wr <= 1'b0;
             cycles <= 0; next_token <= 0;
         end else begin
             if (st != S_IDLE) cycles <= cycles + 1;
@@ -644,18 +652,25 @@ localparam integer W_ME_AMC = 1;
                 S_IDLE: if (start) begin
                     tok_r <= token; pos_r <= pos; pc <= 0; fpc <= 0; done <= 1'b0; cycles <= 0;
                     fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; pend1 <= 1'b0; pend2 <= 1'b0; hq_v <= 1'b0;
+                    hc <= 2'd0; h_rd <= 1'b0; h_wr <= 1'b0;
                     st <= S_DYN;
                 end
                 S_DYN: st <= S_RUN;
                 S_RUN: begin
                     // fetch: one word a cycle while fewer than NFQ are held or in flight
-                    if ({1'b0, fq_n} + ((FQ_HEAD != 0) ? hq_v : 1'b0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+                    if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
                         prog_re <= 1'b1; prog_addr <= fpc; fpc <= fpc + 1'b1;
                     end
                     if (push) begin fq[fq_wr] <= prog_q; fq_wr <= fq_wr + 1'b1; end
                     if (fq_pop) fq_rd <= fq_rd + 1'b1;
                     fq_n <= fq_n + (push ? 3'd1 : 3'd0) - (fq_pop ? 3'd1 : 3'd0);
-                    if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end
+                    if (FQ_HEAD >= 2) begin
+                        if (hq_fill && !h_wr) hq <= fq[fq_rd];
+                        if (hq_fill && h_wr) hq1 <= fq[fq_rd];
+                        if (hq_fill) h_wr <= !h_wr;
+                        if (load) h_rd <= !h_rd;
+                        hc <= hc + (hq_fill ? 2'd1 : 2'd0) - (load ? 2'd1 : 2'd0);
+                    end else if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end
                     else if (load && FQ_HEAD != 0) hq_v <= 1'b0;
                     if (issue || skip) pc <= pc + 1'b1;
                     if (load) nx_v <= 1'b1;
@@ -980,7 +995,11 @@ module ot_qfd_seq_su_bi #(
     // captured in prog_q one edge later = the PRL 2 timing of the flop store (0 cycles).  Contract: the store is
     // written only while no program read of the same word is in flight (boot load; read-before-write macro).
     // PMUT = 1: bench negative control (the read issued one edge late, with the registered address).
-    parameter integer PSRAM = 0, parameter integer PMUT = 0
+    parameter integer PSRAM = 0, parameter integer PMUT = 0,
+    // HQ2 = 1 (hardcore-1010 fe-h): the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2):
+    // fba-0ef4d7781 TT -131 / fbb post-CTS -537 on u_ctrl.st -> skip/issue -> load -> hq_fill -> hq[1023:0] enable (26 lv)
+    // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word)
+    parameter integer HQ2 = 0
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -1318,7 +1337,7 @@ module ot_qfd_seq_su_bi #(
         end
     end endgenerate
     wire wrom_re_w; assign b_rom_fault = wrom_re_w; assign b_core_fault = core_fault_w;
-    ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(1)) u_ctrl (
+    ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl (
         .clk(clk),
         .rst_n(rs),
         .start(core_start),

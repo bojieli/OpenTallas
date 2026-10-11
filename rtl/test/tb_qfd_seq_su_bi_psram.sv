@@ -4,12 +4,16 @@
 // stimulus: a random program (64 x 1,024) and descriptors loaded through pw / dw while idle, then h_start pulses (with a
 // reset every 400 cycles, which restarts the sequencer and keeps the store) and fully random inputs on every other port for NCYC cycles.  Every output, and the captured program word prog_q, must
 // match on every cycle; the run must issue >= MINRD program reads.  PMUT = 1 (read one edge late) must FAIL.
+// fe-h: U1_HQ2 = 1 (two-word FIFO head, register-only fill enable) must also match; U1_HQ2 = 2 (overwrite mutant) must FAIL.
 module tb_qfd_seq_su_bi_psram;
     parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50;
+    parameter integer U1_PSRAM = 1, U1_HQ2 = 0;      // the instance under test (u0 = PSRAM 0, HQ2 0); fe-h: HQ2 1, mutant HQ2 2
     localparam integer W = 16, G = 6144, AW = 24, NW = 18, SW = 64;
-    reg clk = 0, rst_n = 0;
+    reg clk = 0, rst_n = 1;
+    initial #0.1 rst_n = 0;                          // a real negedge: every async reset fires (4-state sim)
     always #0.5 clk = ~clk;
-    integer seed = SEED, cyc = 0, bad = 0, nrd = 0, k, i;
+    integer seed = SEED, cyc = 0, bad = 0, nrd = 0, nld = 0, k, i;
+    reg [23:0] xacc = 0;
     reg  [1-1:0] h_start = 0;
     reg  [NW-1:0] tp_token = 0;
     reg  [NW-1:0] tp_pos = 0;
@@ -198,7 +202,7 @@ module tb_qfd_seq_su_bi_psram;
         .su_idle_o(su_idle_o_0),
         .su_prog_o(su_prog_o_0),
         .su_rows_o(su_rows_o_0));
-    ot_qfd_seq_su_bi #(.PSRAM(1), .PMUT(PMUT)) u1 (
+    ot_qfd_seq_su_bi #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2)) u1 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .tp_token(tp_token),
@@ -333,6 +337,11 @@ module tb_qfd_seq_su_bi_psram;
         // boot load: the program store (64 words x 16 slices) and the 8 descriptors, while the sequencer is idle
         for (k = 0; k < 1024; k = k + 1) begin
             @(negedge clk); pw_v = 1; pw_addr = k; pw_data = {$random(seed), $random(seed)};
+            if (k % 16 == 0) begin         // slice 0: unit / barrier / chase / waits biased toward progress (mostly ME / SU ops)
+                pw_data[1:0] = (($random(seed) & 15) == 0) ? 2'd0 : (($random(seed) & 1) ? 2'd1 : 2'd2);
+                pw_data[3:2] = (($random(seed) & 7) == 0) ? 2'($random(seed)) : 2'd0;
+                pw_data[21:20] = (($random(seed) & 7) == 0) ? 2'($random(seed)) : 2'd0;
+            end
         end
         for (k = 0; k < 8; k = k + 1) begin
             @(negedge clk); pw_v = 0; dw_v = 1; dw_addr = k;
@@ -343,18 +352,30 @@ module tb_qfd_seq_su_bi_psram;
         for (i = 0; i < NCYC; i = i + 1) begin
             @(negedge clk);
             rand_inputs;
+            // status inputs follow the ICUT contract (a unit's ready / idle / drained never fall without its own go; the
+            // other unit's accepted-op count only climbs), else the controllers' own ICUT assertion fires on the stimulus
+            pi_su_ready = 1; pi_su_idle = 1; kv_write_drained = 1; x_oidle = 1; c_ready = 1; pi_su_rt_active = 0;
+            pi_su_rt_inflight = 0;
+            x_oacc = 24'd0;                          // the other unit never advances: ME ops without a dependency skip
+            x_ofin = ($random(seed) & 3) == 0;
             rst_n = (i % 400) != 399;                // a reset every 400 cycles restarts the sequencer (store kept)
             h_start = (i % 400) == 12;
         end
         @(negedge clk); h_start = 0;
         repeat (20) @(posedge clk);
-        if (bad == 0 && nrd >= MINRD) $display("PASS seq_su_bi_psram cycles=%0d program_reads=%0d", cyc, nrd);
-        else $display("FAIL seq_su_bi_psram mismatches=%0d program_reads=%0d (min %0d)", bad, nrd, MINRD);
+        if (bad == 0 && nrd >= MINRD) $display("PASS seq_su_bi_psram cycles=%0d program_reads=%0d loads=%0d", cyc, nrd, nld);
+        else $display("FAIL seq_su_bi_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d", bad, nrd, MINRD, nld);
         $finish;
     end
     always @(posedge clk) if (rst_n) begin
         cyc = cyc + 1;
         if (u0.prog_re_r) nrd = nrd + 1;
+        // 4-state sanity: the controllers' state must be known (else two X instances would match vacuously)
+        if ($isunknown({u0.u_ctrl.st, u0.u_ctrl.fq_n, u0.u_ctrl.nx_v, u0.u_ctrl.issue, u0.u_ctrl.load, u1.u_ctrl.issue, u1.u_ctrl.load})) begin
+            bad = bad + 1;
+            if (bad <= 5) $display("XSTATE cyc=%0d", cyc);
+        end
+        if (u0.u_ctrl.load) nld = nld + 1;
         if (out_mismatch || pq_mismatch) begin
             bad = bad + 1;
             if (bad <= 5) $display("MISMATCH cyc=%0d outputs=%b prog_q=%b", cyc, out_mismatch, pq_mismatch);
