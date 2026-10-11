@@ -457,6 +457,7 @@ def elem_redact(o):
     for m in g.get('macros', []): m['name'] = ''
     for p in g.get('ports', []): p[0] = ''
     for k in ('job', 'host', 'db', 'record', 'note', 'block'): o[k] = ''
+    o.pop('golden', None); o.pop('rtl_meta', None); o.pop('rtl_file', None)
     for f in o.get('facts', []): f['src'] = ''
     o['facts'] = [f for f in o.get('facts', []) if f.get('k') not in ('closure job', 'source commit')]
     ct = o.get('clock_tt') or {}
@@ -469,12 +470,35 @@ def elem_redact(o):
             for pt in p['points']: pt[0] = ''
     return o
 
+def elem_tput(blocks, safe):
+    """throughput qualification for the element page: entries of the committed throughput budget
+    (results/arch/throughput_budget_20261010/budget.json, tput-gate-1010) that name one of the blocks; pending until it exists"""
+    rel = 'results/arch/throughput_budget_20261010/budget.json'
+    p = pathlib.Path(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas')) / rel
+    if not p.exists(): return dict(status='pending', path=rel)
+    try: d = json.loads(p.read_text())
+    except Exception as e: return dict(status='unreadable', path=rel, error=str(e)[:200])
+    hits = []
+    def walk(o, at, depth):
+        if len(hits) >= 40 or depth > 8: return
+        if isinstance(o, dict):
+            s_ = json.dumps(o)
+            if len(s_) < 6000 and any(b in s_ for b in blocks) and any(k in o for k in ('ratio', 'measured', 'budget', 'status', 'qualified', 'verdict')):
+                hits.append(dict(at=at, entry=o)); return
+            for k, v in o.items(): walk(v, at + '/' + str(k), depth + 1)
+        elif isinstance(o, list):
+            for i, v in enumerate(o): walk(v, at + '/%d' % i, depth + 1)
+    walk(d, '', 0)
+    return dict(status='present', path=rel, mtime=p.stat().st_mtime, generated=d.get('generated') if isinstance(d, dict) else None, hits=hits)
+
 def elem_body(path, safe, gz):
     import gzip as _gz
     st = path.stat(); key = (str(path), st.st_mtime, safe, gz)
     if key in _ELEM_CACHE: return _ELEM_CACHE[key]
     b = path.read_bytes()
-    if safe and path.suffix == '.json' and path.parent.name == 'data':
+    if safe and path.name.endswith('.rtl.json'):
+        b = b'{"redacted":true}'
+    elif safe and path.suffix == '.json' and path.parent.name == 'data':
         b = json.dumps(elem_redact(json.loads(b)), separators=(',', ':')).encode()
     if gz: b = _gz.compress(b, 6)
     for k in [k for k in _ELEM_CACHE if k[0] == str(path)]: _ELEM_CACHE.pop(k)
@@ -555,6 +579,9 @@ class H(BaseHTTPRequestHandler):
         if u.path == '/explorer/coverage' or u.path.startswith('/explorer/coverage/'):
             if u.path == '/explorer/coverage': return self.redirect('/explorer/coverage/')
             return self.static_dir(COVERAGE_DIR, u.path[len('/explorer/coverage'):].lstrip('/') or 'index.html', None)
+        if u.path == '/api/explorer/elem_tput':
+            bl = [b for b in q.get('blocks', [''])[0].split(',') if b]
+            return self.send(200, json.dumps(elem_tput(bl, safe)).encode(), 'application/json')
         if u.path == '/explorer/element' or u.path.startswith('/explorer/element/'):
             if u.path == '/explorer/element': return self.redirect('/explorer/element/' + ('?' + u.query if u.query else ''))
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
