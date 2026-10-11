@@ -205,7 +205,12 @@ def variants():
          ("mut_valid_late", "X", dict(D=D_REAL, K=2), "fail"),
          ("mut_cap_below_rtt", "XC", dict(D=D_REAL), "fail"),
          ("mut_legacy_at_real", "L", dict(D=D_REAL), "fail")]
-    return v
+    # fe-push/pqc: --require-pass LABEL[,..] flips a mutant to an expected PASS (the closure loop's negative-control
+    # stage: it must then FAIL, i.e. the mutant is still caught)
+    return [(l_, b, pa, "pass" if l_ in REQUIRE_PASS else e) for l_, b, pa, e in v]
+
+
+REQUIRE_PASS: set = set()
 
 
 def run_one(args):
@@ -327,7 +332,9 @@ def main() -> int:
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--record", type=Path)
     ap.add_argument("--jobs", type=int, default=16)
+    ap.add_argument("--require-pass", default="", help="comma list of mutant labels to expect PASS (negative control)")
     a = ap.parse_args()
+    REQUIRE_PASS.update(x for x in a.require_pass.split(",") if x)
     if a.cmd == "build":
         return cmd_build(a)
     if a.cmd == "images":
