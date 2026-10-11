@@ -33,13 +33,14 @@ module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm
     endtask
     reg [31:0] expv [int];
     integer c, s, i, nda, ndb, t, sr [0:NSM-1], rows, left, w; reg [31:0] va2, vb2;
-    always @(posedge clk) begin if (da) nda = nda + 1; if (db) ndb = ndb + 1; end
+    integer cyc = 0, t0 = 0, ta_ = 0, tb_ = 0;   // cycles from the command to each form's pub_done (added cycles recorded)
+    always @(posedge clk) begin cyc = cyc + 1; if (da) begin nda = nda + 1; ta_ = cyc; end if (db) begin ndb = ndb + 1; tb_ = cyc; end end
     initial begin
         repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk);
         for (c = 0; c < 8; c = c + 1) begin
             pp = 1 + ($unsigned($random(seed)) % 8); pm = 1 + ($unsigned($random(seed)) % 400); pq = (pm + NSM - 1) / NSM;
             pb = 100 * c + ($unsigned($random(seed)) % 50); pst = pm + ($unsigned($random(seed)) % 20); nda = 0; ndb = 0;
-            @(negedge clk); pub_v = 1; @(negedge clk); pub_v = 0;
+            @(negedge clk); pub_v = 1; t0 = cyc; @(negedge clk); pub_v = 0;
             for (s = 0; s < NSM; s = s + 1) sr[s] = 0;
             left = pm;
             while (left > 0) begin
@@ -60,7 +61,7 @@ module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm
                 rd2(w, va2, vb2);
                 if (expv.exists(w) && vb2 !== expv[w]) begin if (errors < 6) $display("ERR cmd %0d VM[%0d] %h expected %h (old %h)", c, w, vb2, expv[w], va2); errors = errors + 1; end
             end
-            $display("cmd %0d P %0d M %0d checked", c, pp, pm);
+            $display("cmd %0d P %0d M %0d checked; done cycles ref %0d dut %0d", c, pp, pm, ta_ - t0, tb_ - t0);
         end
         if (errors == 0) $display("PUB_LOCK PASS"); else $display("PUB_LOCK FAIL %0d", errors);
         $finish;

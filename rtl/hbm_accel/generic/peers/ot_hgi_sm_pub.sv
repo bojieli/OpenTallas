@@ -504,9 +504,538 @@ module ot_hgi_sm_pub_mem #(
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
+// HIER form (el1011-hbm-smh/pub, 2026-10-11; physical spec in claude-takeover-20261007/el1011-hbm-smh.log): the SAME
+// publication contract built from 8 hardened slices of 4 SMs (ot_hgi_sm_pub_slice, own clock tree <= ~13k sinks, own
+// reset relay, pin flops in, registered out) under a parent (ot_hgi_sm_pub_hier) that only relays the command, merges
+// the VM writes per client (2:1) and the STREAM beats (registered 2:1 credit tree) and collects done / fault.
+// Selected by ot_hgi_sm_pub HIER = 1 (default 0; `define OT_HGI_PUB_HIER flips the default for the benches).
+// Differences from MEM 1 (transaction-level exact): added cycles only; a slice PRE-ARMS (rows that arrive before the
+// command reaches it are queued and counted, never dropped).
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_hgi_sm_pub_slice #(
+    parameter integer NSS = 4,             // SMs in the slice
+    parameter integer NC = 8,
+    parameter integer AD = 4,              // arrival FIFO entries an SM
+    parameter integer PQ = 4,              // pending flushes a slot
+    parameter integer SD = 8,              // STREAM credits (the parent's input FIFO depth)
+    parameter integer SIDW = 3,
+    parameter integer MUT_ROW = 0,
+    parameter integer MUT_PAR = 0
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,          // raw port reset -> own ot_rst_relay
+    input  wire [SIDW-1:0]      sid,            // static strap: slice index (global SM = sid x NSS + local)
+    input  wire [NSS-1:0]       sm_en,          // static strap: the local SM exists
+    input  wire                 c_go,           // command (the parent's relay): one-edge pulse, fields valid with it
+    input  wire                 c_sm,
+    input  wire                 c_bf,
+    input  wire [17:0]          c_ob,
+    input  wire [17:0]          c_ost,
+    input  wire [19:0]          c_mm,
+    input  wire [12:0]          c_qq,
+    input  wire [3:0]           c_pp,
+    input  wire [NSS-1:0]       sm_rv,
+    input  wire [NSS*12-1:0]    sm_rrow,
+    input  wire [NSS*NC*32-1:0] sm_rdata,
+    output reg                  w_v,            // one-edge pulse: w_pkt holds a VM sector write (held until w_ack)
+    output reg  [278:0]         w_pkt,          // {sector 15, data 256 (BF16-rounded when O.fmt BF16), word mask 8}
+    input  wire                 w_ack,          // one-edge pulse: that write was acknowledged
+    output reg                  so_v,
+    output reg  [19:0]          so_idx,
+    output reg  [31:0]          so_data,
+    input  wire                 so_cr,          // one-edge pulse: one STREAM credit back
+    output reg                  s_done,         // one-edge pulse: this slice's share of the command is complete
+    output reg                  s_fault         // sticky: an arrival FIFO overrun
+);
+    localparam integer LSL = (NSS > 1) ? $clog2(NSS) : 1, ADW = (AD > 1) ? $clog2(AD) : 1, PQW = (PQ > 1) ? $clog2(PQ) : 1;
+    localparam integer LNC = (NC > 1) ? $clog2(NC) : 1, SDW = $clog2(SD + 1);
+    function automatic [31:0] rb(input [31:0] x, input en);     // to_bf16 (RNE), as a BF16-valued FP32 word
+        reg [31:0] r;
+        begin
+            if (!en) rb = x;
+            else if (x[30:23] == 8'hFF && x[22:0] != 0) rb = {x[31:16] | 16'h0040, 16'd0};
+            else begin r = x + 32'h7FFF + {31'd0, x[16]}; rb = {r[31:16], 16'd0}; end
+        end
+    endfunction
+    function automatic [255:0] rb8(input [255:0] x, input en);
+        integer q; for (q = 0; q < 8; q = q + 1) rb8[32*q +: 32] = rb(x[32*q +: 32], en);
+    endfunction
+    integer s, c, i, p;
+    // ---- reset relay (control only)
+    wire rn;
+    ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    // ---- pin flops: command, SM results, ack / credit
+    reg k_go, k_sm, k_bf; reg [17:0] k_ob, k_ost; reg [19:0] k_mm; reg [12:0] k_qq; reg [3:0] k_pp;
+    reg [NSS-1:0] rv_q; reg [11:0] rr_q [0:NSS-1]; reg [NC*32-1:0] rd_q [0:NSS-1];
+    reg ack_q, cr_q;
+    always @(posedge clk) begin
+        k_sm <= c_sm; k_bf <= c_bf; k_ob <= c_ob; k_ost <= c_ost; k_mm <= c_mm; k_qq <= c_qq; k_pp <= c_pp;
+        for (s = 0; s < NSS; s = s + 1) begin rr_q[s] <= sm_rrow[s*12 +: 12]; rd_q[s] <= sm_rdata[s*NC*32 +: NC*32]; end
+    end
+    always @(posedge clk or negedge rn)
+        if (!rn) begin k_go <= 1'b0; rv_q <= '0; ack_q <= 1'b0; cr_q <= 1'b0; end
+        else begin k_go <= c_go; rv_q <= sm_rv; ack_q <= w_ack; cr_q <= so_cr; end
+    // ---- the held command and its precomputed offsets
+    reg busy, sm_m, obf, nv; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
+    reg [17:0] pofs [0:NC-1]; reg [19:0] pgi [0:NC-1];
+    reg [19:0] sqc [0:NSS-1], need [0:NSS-1], recv [0:NSS-1];
+    wire [19:0] sq [0:NSS-1];                         // s x Q of the global SM (MUT_ROW: 0 in the addresses only)
+    genvar gsq;
+    generate for (gsq = 0; gsq < NSS; gsq = gsq + 1) begin : g_sq
+        assign sq[gsq] = MUT_ROW ? 20'd0 : sqc[gsq];
+    end endgenerate
+    reg [NSS-1:0] rdone; reg all_rows;
+    always @* for (s = 0; s < NSS; s = s + 1) rdone[s] = (recv[s] == need[s]);
+    // ---- arrival FIFOs (data unreset)
+    reg [11:0] af_r [0:NSS-1][0:AD-1]; reg [NC*32-1:0] af_d [0:NSS-1][0:AD-1];
+    reg [ADW:0] af_n [0:NSS-1]; reg [ADW-1:0] af_h [0:NSS-1], af_t [0:NSS-1];
+    // ---- engine: P (pick) -> R (FIFO read, global row) -> D (addresses; coalesce / emit)
+    reg p_v, r_v, d_v; reg [LSL-1:0] p_i, r_i, d_i, rrp; reg [19:0] r_row; reg [NC*32-1:0] r_d, d_d;
+    reg [17:0] d_wa [0:NC-1]; reg [19:0] d_gi [0:NC-1]; reg [3:0] d_sp;
+    // coalescing state per (local SM, slot)
+    reg [14:0] k_sec [0:NSS-1][0:NC-1]; reg [7:0] k_msk [0:NSS-1][0:NC-1];
+    reg        k_par [0:NSS-1][0:NC-1]; reg [1:0] k_pf [0:NSS-1][0:NC-1];
+    // pending flush FIFOs per slot: {local SM, parity, sector, mask}
+    reg [LSL+24-1:0] pq_e [0:NC-1][0:PQ-1]; reg [PQW:0] pq_n [0:NC-1]; reg [PQW-1:0] pq_h [0:NC-1], pq_t [0:NC-1];
+    // SRAM write / read ports (registered); write data = the word replicated, mask = the word lane
+    reg [NC-1:0] m_we, m_re; reg [6:0] m_wa [0:NC-1], m_ra [0:NC-1]; reg [31:0] m_wd [0:NC-1]; reg [2:0] m_ww [0:NC-1];
+    wire [255:0] m_rd [0:NC-1];
+    reg [255:0] m_cap [0:NC-1];                       // capture register at every macro output (no logic before it)
+    genvar gq;
+    generate for (gq = 0; gq < NC; gq = gq + 1) begin : g_m
+        ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(m_re[gq]), .r_addr_in(m_ra[gq]), .rd_out(m_rd[gq]),
+            .w_ce_in(m_we[gq]), .w_addr_in(m_wa[gq]), .wd_in({8{m_wd[gq]}}), .w_mask_in({224'd0, 32'hFFFF_FFFF} << {m_ww[gq], 5'd0}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    end endgenerate
+    // drain: pick (registered) -> SRAM read -> capture -> 2-entry row FIFO -> write packet
+    reg dr_v, dr_v2, dr_v3; reg [LNC-1:0] dr_q, dr_q2, dr_q3, dr_rr; reg [LSL+24-1:0] dr_e, dr_e2, dr_e3;
+    reg [255:0] hq_d [0:1]; reg [14:0] hq_s [0:1]; reg [7:0] hq_m [0:1]; reg [1:0] hq_n; reg hq_h, hq_t;
+    reg tok;                                            // a write is out, not yet acknowledged
+    reg [SDW-1:0] cr;                                   // STREAM credits
+    reg sweep; reg [LSL:0] sw_i;
+    reg pend_any, open_q;
+    always @* begin
+        pend_any = dr_v || dr_v2 || dr_v3 || hq_n != 0 || p_v || r_v || d_v;
+        for (c = 0; c < NC; c = c + 1) if (pq_n[c] != 0) pend_any = 1'b1;
+        for (s = 0; s < NSS; s = s + 1) if (af_n[s] != 0) pend_any = 1'b1;
+    end
+    reg arr_empty;
+    always @* begin arr_empty = 1'b1; for (s = 0; s < NSS; s = s + 1) if (af_n[s] != 0) arr_empty = 1'b0; end
+    // data-only registers (no reset)
+    always @(posedge clk) for (c = 0; c < NC; c = c + 1) if (dr_v2 && dr_q2 == c) m_cap[c] <= m_rd[c];
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
+            busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; nv <= 1'b0; all_rows <= 1'b0; s_done <= 1'b0; s_fault <= 1'b0;
+            w_v <= 1'b0; so_v <= 1'b0; tok <= 1'b0; cr <= SDW'(SD); sweep <= 1'b0; sw_i <= '0; open_q <= 1'b0;
+            p_v <= 1'b0; r_v <= 1'b0; d_v <= 1'b0; rrp <= '0; d_sp <= 4'd0; m_we <= '0; m_re <= '0;
+            dr_v <= 1'b0; dr_v2 <= 1'b0; dr_v3 <= 1'b0; dr_rr <= '0; hq_n <= 2'd0; hq_h <= 1'b0; hq_t <= 1'b0;
+            for (s = 0; s < NSS; s = s + 1) begin af_n[s] <= '0; af_h[s] <= '0; af_t[s] <= '0; recv[s] <= '0; need[s] <= '0; end
+            for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) begin
+                k_msk[i][p] <= 8'd0; k_par[i][p] <= 1'b0; k_pf[i][p] <= 2'b00; end
+            for (c = 0; c < NC; c = c + 1) begin pq_n[c] <= '0; pq_h[c] <= '0; pq_t[c] <= '0; end
+        end else begin : main
+            reg [ADW:0] an [0:NSS-1]; reg [PQW:0] qn_ [0:NC-1]; reg [1:0] pf_ [0:NSS-1][0:NC-1];
+            reg ok, d_stall, r_hold, beat, dr_go, done_now; integer sl;
+            s_done <= 1'b0; w_v <= 1'b0; so_v <= 1'b0; m_we <= '0; m_re <= '0;
+            for (s = 0; s < NSS; s = s + 1) an[s] = af_n[s];
+            for (c = 0; c < NC; c = c + 1) qn_[c] = pq_n[c];
+            for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) pf_[i][p] = k_pf[i][p];
+            begin : opn
+                reg o; o = 1'b0;
+                for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) if (k_msk[i][p] != 0) o = 1'b1;
+                open_q <= o;
+            end
+            // ---- the command (fields from the pin flops); need follows one edge later
+            nv <= busy;
+            all_rows <= nv && busy && &rdone;
+            if (k_go) begin
+                busy <= 1'b1; sm_m <= k_sm; obf <= k_bf; mm <= k_mm; qq <= k_qq; pp <= k_pp; nv <= 1'b0; all_rows <= 1'b0;
+                sweep <= 1'b0;
+                for (p = 0; p < NC; p = p + 1) begin pofs[p] <= k_ob + 18'(p * k_ost); pgi[p] <= 20'(p * k_mm); end
+                for (s = 0; s < NSS; s = s + 1) sqc[s] <= 20'(({17'd0, sid} * NSS + s) * {7'd0, k_qq});
+            end
+            if (busy && !nv)
+                for (s = 0; s < NSS; s = s + 1) begin : nd
+                    reg [19:0] r0; r0 = sqc[s];
+                    need[s] <= !sm_en[s] ? 20'd0 : (mm > r0) ? (((mm - r0) > {7'd0, qq}) ? {7'd0, qq} : mm - r0) : 20'd0;
+                end
+            // ---- arrivals (pre-armed: counted and queued whether or not the command has arrived)
+            for (s = 0; s < NSS; s = s + 1) if (rv_q[s]) begin
+                recv[s] <= recv[s] + 20'd1;
+                if (an[s] == AD) s_fault <= 1'b1;                           // overrun: fail closed
+                else begin af_r[s][af_t[s]] <= rr_q[s]; af_d[s][af_t[s]] <= rd_q[s]; af_t[s] <= af_t[s] + 1'b1; an[s] = an[s] + 1'b1; end
+            end
+            // ---- D: coalesce (VM) / emit (STREAM)
+            ok = 1'b1; beat = 1'b0;
+            if (d_v && !sm_m) begin
+                for (p = 0; p < NC; p = p + 1) if (p < pp) begin : chk
+                    reg [14:0] sc; reg ch; reg np;
+                    sc = d_wa[p][17:3]; ch = (k_msk[d_i][p] != 0) && (k_sec[d_i][p] != sc);
+                    np = MUT_PAR ? k_par[d_i][p] : !k_par[d_i][p];
+                    if (ch && (qn_[p] == PQ || pf_[d_i][p][np])) ok = 1'b0;
+                end
+                if (ok) begin
+                    for (p = 0; p < NC; p = p + 1) if (p < pp) begin : co
+                        reg [14:0] sc; reg [2:0] w; reg ch; reg par;
+                        sl = d_i; sc = d_wa[p][17:3]; w = d_wa[p][2:0];
+                        ch = (k_msk[sl][p] != 0) && (k_sec[sl][p] != sc);
+                        par = k_par[sl][p];
+                        if (ch) begin                                       // the old sector -> a pending flush
+                            pq_e[p][pq_t[p]] <= {LSL'(sl), par, k_sec[sl][p], k_msk[sl][p]};
+                            pq_t[p] <= pq_t[p] + 1'b1; qn_[p] = qn_[p] + 1'b1;
+                            pf_[sl][p][par] = 1'b1;
+                            par = MUT_PAR ? par : !par;
+                            k_par[sl][p] <= par;
+                        end
+                        m_we[p] <= 1'b1; m_wa[p] <= 7'({LSL'(sl), par}); m_wd[p] <= d_d[32*p +: 32]; m_ww[p] <= w;
+                        k_sec[sl][p] <= sc;
+                        k_msk[sl][p] <= (ch || k_msk[sl][p] == 0) ? (8'd1 << w) : (k_msk[sl][p] | (8'd1 << w));
+                    end
+                    d_v <= 1'b0;
+                end
+            end else if (d_v && sm_m) begin
+                ok = 1'b0;
+                if (cr != 0) begin                                          // one beat an edge, against a credit
+                    beat = 1'b1;
+                    so_v <= 1'b1; so_idx <= d_gi[d_sp]; so_data <= rb(d_d[32*d_sp +: 32], obf);
+                    if (d_sp + 4'd1 >= pp) begin d_v <= 1'b0; d_sp <= 4'd0; ok = 1'b1; end
+                    else d_sp <= d_sp + 4'd1;
+                end
+            end
+            cr <= cr - (beat ? 1'b1 : 1'b0) + (cr_q ? 1'b1 : 1'b0);
+            d_stall = d_v && !ok;
+            r_hold = r_v && d_stall;
+            // ---- R -> D: the P addresses
+            if (r_v && !d_stall) begin
+                d_v <= 1'b1; d_i <= r_i; d_d <= r_d;
+                for (p = 0; p < NC; p = p + 1) begin d_wa[p] <= pofs[p] + r_row[17:0]; d_gi[p] <= pgi[p] + r_row; end
+                r_v <= 1'b0;
+            end
+            // ---- P -> R: read (and pop) the picked SM's FIFO head
+            if (p_v && !r_hold) begin
+                r_v <= 1'b1; r_i <= p_i; r_d <= af_d[p_i][af_h[p_i]]; r_row <= sq[p_i] + {8'd0, af_r[p_i][af_h[p_i]]};
+                af_h[p_i] <= af_h[p_i] + 1'b1; an[p_i] = an[p_i] - 1'b1;
+                p_v <= 1'b0;
+            end
+            // ---- P: pick an SM with a queued row (round robin), once the command (and sq) is in
+            if (busy && !k_go && !(p_v && r_hold)) begin : pick
+                reg f; reg [LSL-1:0] ix; integer q2;
+                f = 1'b0; ix = '0;
+                for (i = 0; i < NSS; i = i + 1) begin
+                    q2 = (rrp + 1 + i) % NSS;
+                    if (!f && an[q2] != 0) begin f = 1'b1; ix = LSL'(q2); end
+                end
+                if (f) begin p_v <= 1'b1; p_i <= ix; rrp <= ix; end
+            end
+            for (s = 0; s < NSS; s = s + 1) af_n[s] <= an[s];
+            // ---- end sweep (VM): every open sector -> a pending flush (a local SM an edge)
+            if (busy && !sm_m && nv && all_rows && &rdone && arr_empty && !p_v && !r_v && !d_v && !sweep) begin
+                sweep <= 1'b1; sw_i <= '0;
+            end
+            if (sweep && sw_i < NSS) begin : swp
+                reg go; sl = sw_i; go = 1'b1;
+                for (p = 0; p < NC; p = p + 1) if (k_msk[sl][p] != 0 && qn_[p] == PQ) go = 1'b0;
+                if (go) begin
+                    for (p = 0; p < NC; p = p + 1) if (k_msk[sl][p] != 0) begin
+                        pq_e[p][pq_t[p]] <= {LSL'(sl), k_par[sl][p], k_sec[sl][p], k_msk[sl][p]};
+                        pq_t[p] <= pq_t[p] + 1'b1; qn_[p] = qn_[p] + 1'b1;
+                        pf_[sl][p][k_par[sl][p]] = 1'b1; k_msk[sl][p] <= 8'd0;
+                    end
+                    sw_i <= sw_i + 1'b1;
+                end
+            end
+            // ---- drain: issue the row FIFO head (one write out at a time); capture; read; pick
+            begin : dr
+                reg taken; reg [1:0] n_;
+                taken = hq_n != 0 && !tok;
+                if (taken) begin
+                    w_v <= 1'b1; w_pkt <= {hq_s[hq_h], rb8(hq_d[hq_h], obf), hq_m[hq_h]}; tok <= 1'b1; hq_h <= ~hq_h;
+                end
+                if (ack_q) tok <= 1'b0;
+                n_ = hq_n - (taken ? 2'd1 : 2'd0);
+                if (dr_v3) begin                                            // the captured row -> the row FIFO
+                    hq_d[hq_t] <= m_cap[dr_q3]; hq_s[hq_t] <= dr_e3[22:8]; hq_m[hq_t] <= dr_e3[7:0]; hq_t <= ~hq_t;
+                    n_ = n_ + 2'd1;
+                end
+                if (dr_v2) begin : clr                                      // the row is read (capture this edge): free it
+                    reg [LSL-1:0] lsl; lsl = dr_e2[LSL+23:24]; pf_[lsl][dr_q2][dr_e2[23]] = 1'b0;
+                end
+                hq_n <= n_;
+                dr_v3 <= dr_v2; dr_q3 <= dr_q2; dr_e3 <= dr_e2;
+                dr_v2 <= dr_v; dr_q2 <= dr_q; dr_e2 <= dr_e; dr_v <= 1'b0;
+                dr_go = ({1'b0, n_} + (dr_v ? 3'd1 : 3'd0) + (dr_v2 ? 3'd1 : 3'd0)) < 3'd2;   // room for every read in flight
+            end
+            if (dr_go) begin : pk
+                reg f; integer q_; f = 1'b0;
+                for (c = 0; c < NC; c = c + 1) begin q_ = (dr_rr + 1 + c) % NC;
+                    if (!f && pq_n[q_] != 0) begin
+                        f = 1'b1; dr_rr <= LNC'(q_); dr_q <= LNC'(q_); dr_e <= pq_e[q_][pq_h[q_]]; dr_v <= 1'b1;
+                        m_re[q_] <= 1'b1; m_ra[q_] <= 7'({pq_e[q_][pq_h[q_]][LSL+23:24], pq_e[q_][pq_h[q_]][23]});
+                        pq_h[q_] <= pq_h[q_] + 1'b1; qn_[q_] = qn_[q_] - 1'b1;
+                    end
+                end
+            end
+            for (c = 0; c < NC; c = c + 1) pq_n[c] <= qn_[c];
+            for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) k_pf[i][p] <= pf_[i][p];
+            // ---- done: every row in, swept (VM) / emitted (STREAM), nothing pending, the write acknowledged
+            done_now = busy && !k_go && nv && all_rows && &rdone && !pend_any && !tok && !w_v && !so_v &&
+                       (sm_m || (sweep && sw_i >= NSS && !open_q));
+            if (done_now) begin
+                busy <= 1'b0; s_done <= 1'b1; sweep <= 1'b0; nv <= 1'b0;
+                for (s = 0; s < NSS; s = s + 1) recv[s] <= rv_q[s] ? 20'd1 : 20'd0;
+            end
+        end
+    end
+endmodule
+
+// STREAM merge node of the HIER parent: two 8-deep credit FIFOs (an upstream sends only against a credit; a credit
+// returns, registered, on every pop), a registered 2:1 round-robin pick into the output register (against the
+// downstream's credits; ROOT: no backpressure).  a_out: the time-aligned busy snapshot (own state delayed LVL - 1
+// edges, OR the children's), so the parent's done never needs a one-cycle OR across the die.
+module ot_hgi_sm_pub_smrg #(
+    parameter integer D = 8,
+    parameter integer W = 52,
+    parameter integer ROOT = 0,
+    parameter integer LVL = 1
+) (
+    input  wire           clk,
+    input  wire           rn,
+    input  wire [1:0]     i_v,
+    input  wire [2*W-1:0] i_d,
+    output reg  [1:0]     i_cr,
+    output reg            o_v,
+    output reg  [W-1:0]   o_d,
+    input  wire           o_cr,
+    input  wire           xb,          // ROOT: the relay after this node holds a beat
+    input  wire [1:0]     a_in,
+    output reg            a_out
+);
+    localparam integer DW = (D > 1) ? $clog2(D) : 1, CW = $clog2(D + 1);
+    reg [W-1:0] f0 [0:D-1]; reg [W-1:0] f1 [0:D-1];
+    reg [DW:0] n0, n1; reg [DW-1:0] h0, h1, t0, t1; reg [CW-1:0] cr; reg rr;
+    reg [LVL:0] bd;                                    // bd[d - 1] = own busy d edges ago
+    wire bz = (n0 != 0) || (n1 != 0) || o_v || xb;
+    always @(posedge clk) begin
+        if (i_v[0]) f0[t0] <= i_d[0 +: W];
+        if (i_v[1]) f1[t1] <= i_d[W +: W];
+    end
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
+            n0 <= '0; n1 <= '0; h0 <= '0; h1 <= '0; t0 <= '0; t1 <= '0; cr <= CW'(D); rr <= 1'b0; o_v <= 1'b0; i_cr <= 2'b00;
+            bd <= '0; a_out <= 1'b0;
+        end else begin : m
+            reg go, s1, p0, p1;
+            go = (ROOT != 0) || (cr != 0);
+            // round robin: rr = the input served last
+            s1 = (n1 != 0) && (rr == 1'b0 || n0 == 0);
+            p0 = go && !s1 && (n0 != 0);
+            p1 = go && s1;
+            o_v <= p0 || p1; i_cr <= {p1, p0};
+            if (p0) begin o_d <= f0[h0]; h0 <= h0 + 1'b1; rr <= 1'b0; end
+            if (p1) begin o_d <= f1[h1]; h1 <= h1 + 1'b1; rr <= 1'b1; end
+            if (i_v[0]) t0 <= t0 + 1'b1;
+            if (i_v[1]) t1 <= t1 + 1'b1;
+            n0 <= n0 + (i_v[0] ? 1'b1 : 1'b0) - (p0 ? 1'b1 : 1'b0);
+            n1 <= n1 + (i_v[1] ? 1'b1 : 1'b0) - (p1 ? 1'b1 : 1'b0);
+            if (ROOT == 0) cr <= cr - ((p0 || p1) ? 1'b1 : 1'b0) + (o_cr ? 1'b1 : 1'b0);
+            bd <= {bd[LVL-1:0], bz};
+            a_out <= |a_in || ((LVL == 1) ? bz : bd[(LVL >= 2) ? LVL - 2 : 0]);
+        end
+    end
+endmodule
+
+// The HIER parent: command pin flops + relay chain, slices, per-client VM merge, STREAM credit tree, done / fault.
+module ot_hgi_sm_pub_hier #(
+    parameter integer NSM = 32,
+    parameter integer NC = 8,
+    parameter integer NPC = 4,
+    parameter integer MUT_ROW = 0,
+    parameter integer MUT_PAR = 0,
+    parameter integer NSS = 4,
+    parameter integer SD = 8
+) (
+    input  wire               clk,
+    input  wire               rst_n,
+    input  wire               pub_v,
+    output wire               pub_rdy,
+    input  wire [39:0]        pub_base,
+    input  wire [31:0]        pub_stride,
+    input  wire [1:0]         pub_space,
+    input  wire [19:0]        pub_m,
+    input  wire [12:0]        pub_q,
+    input  wire [3:0]         pub_p,
+    input  wire               pub_bf16,
+    output reg                pub_done,
+    output reg                pub_fault,
+    input  wire [NSM-1:0]     sm_rv,
+    input  wire [NSM*12-1:0]  sm_rrow,
+    input  wire [NSM*NC*32-1:0] sm_rdata,
+    output wire [NPC*338-1:0] vmq,
+    input  wire [NPC*274-1:0] vmr,
+    output reg                s0_v,
+    output reg  [19:0]        s0_idx,
+    output reg  [31:0]        s0_data
+);
+    localparam integer NSL = (NSM + NSS - 1) / NSS;            // slices
+    localparam integer NCOL = (NSL + 1) / 2;                   // columns (slice k: column k % NCOL; N row k < NCOL)
+    localparam integer NIN = (NSL + NPC - 1) / NPC;            // slices a VM client (slice k -> client k % NPC)
+    localparam integer LV = (NSL <= 2) ? 1 : $clog2(NSL);      // STREAM tree levels
+    localparam integer NLF = 1 << LV;                          // tree leaves (leaf 2c = slice c, 2c + 1 = slice c + NCOL)
+    localparam integer W = 52, CW = 76;
+    localparam integer NSMP = NSL * NSS;
+    integer k, j;
+    wire rn;
+    ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    // ---- command: pin flops, accept processed one edge after the handshake
+    reg rel, busy, acc_q; reg [39:0] pf_b; reg [31:0] pf_s; reg [1:0] pf_sp; reg [19:0] pf_m; reg [12:0] pf_q;
+    reg [3:0] pf_p; reg pf_bf;
+    assign pub_rdy = rel && !busy && !acc_q;
+    always @(posedge clk) begin pf_b <= pub_base; pf_s <= pub_stride; pf_sp <= pub_space; pf_m <= pub_m; pf_q <= pub_q;
+                                pf_p <= pub_p; pf_bf <= pub_bf16; end
+    // command chain: cp[0] at the command port, one relay a column
+    // {sm, bf, ob 18, ost 18, mm 20, qq 13, pp 4} fields (no reset) and the go pulse (reset), one stage a column
+    reg [NCOL*(CW-1)-1:0] cfd; reg [NCOL-1:0] cgo;
+    reg r1_v; reg [W-1:0] r1_d; reg agg_r;
+    always @(posedge clk) begin
+        if (acc_q) cfd[0 +: CW-1] <= {pf_sp == 2'd2, pf_bf, pf_b[17:0], pf_s[17:0], pf_m, pf_q, pf_p};
+        for (j = 1; j < NCOL; j = j + 1) cfd[j*(CW-1) +: CW-1] <= cfd[(j-1)*(CW-1) +: CW-1];
+    end
+    // ---- slices
+    wire [NSMP-1:0] rv_p = NSMP'(sm_rv);
+    wire [NSMP*12-1:0] rr_p = (NSMP*12)'(sm_rrow);
+    wire [NSMP*NC*32-1:0] rd_p = (NSMP*NC*32)'(sm_rdata);
+    wire [NSL-1:0] s_wv, s_sov, s_dn, s_ft; wire [NSL*279-1:0] s_wp; wire [NSL*W-1:0] s_sod;
+    wire [NSL-1:0] s_cr;
+    genvar gk, gl, gn, gc, gj;
+    generate for (gk = 0; gk < NSL; gk = gk + 1) begin : g_s
+        localparam integer COL = gk % NCOL;
+        localparam integer NE_ = (NSM - gk * NSS >= NSS) ? NSS : NSM - gk * NSS;
+        localparam [NSS-1:0] EN = NSS'((1 << NE_) - 1);
+        wire [CW-1:0] ci = {cgo[COL], cfd[COL*(CW-1) +: CW-1]};
+`ifdef SYNTHESIS
+        ot_hgi_sm_pub_slice u (
+`else
+        ot_hgi_sm_pub_slice #(.NSS(NSS), .NC(NC), .SD(SD), .MUT_ROW(MUT_ROW), .MUT_PAR(MUT_PAR)) u (
+`endif
+            .clk(clk), .rst_n(rst_n), .sid(3'(gk)), .sm_en(EN), .c_go(ci[CW-1]), .c_sm(ci[CW-2]), .c_bf(ci[CW-3]),
+            .c_ob(ci[72:55]), .c_ost(ci[54:37]), .c_mm(ci[36:17]), .c_qq(ci[16:4]), .c_pp(ci[3:0]),
+            .sm_rv(rv_p[gk*NSS +: NSS]), .sm_rrow(rr_p[gk*NSS*12 +: NSS*12]), .sm_rdata(rd_p[gk*NSS*NC*32 +: NSS*NC*32]),
+            .w_v(s_wv[gk]), .w_pkt(s_wp[gk*279 +: 279]), .w_ack(s_ack[gk]),
+            .so_v(s_sov[gk]), .so_idx(s_sod[gk*W+32 +: 20]), .so_data(s_sod[gk*W +: 32]), .so_cr(s_cr[gk]),
+            .s_done(s_dn[gk]), .s_fault(s_ft[gk]));
+    end endgenerate
+    // ---- done / fault return: col + 1 relays a slice
+    wire [NSL-1:0] dn_l, ft_l;
+    generate for (gk = 0; gk < NSL; gk = gk + 1) begin : g_ret
+        localparam integer DL = gk % NCOL + 1;
+        reg [DL:0] dq, fq;
+        always @(posedge clk or negedge rn)
+            if (!rn) begin dq <= '0; fq <= '0; end
+            else begin dq <= {dq[DL-1:0], s_dn[gk]}; fq <= {fq[DL-1:0], s_ft[gk]}; end
+        assign dn_l[gk] = dq[DL-1]; assign ft_l[gk] = fq[DL-1];
+    end endgenerate
+    // ---- VM: one merge node a client (its slices' held packets; one write out a client, as MEM 1)
+    wire [NPC-1:0] vq_vw; wire [NSL-1:0] s_ack;
+    localparam integer OWW = (NIN > 1) ? $clog2(NIN) : 1;
+    generate for (gc = 0; gc < NPC; gc = gc + 1) begin : g_c
+        reg [NIN-1:0] pend, ak; reg bsy, n_v, va_q, vq_v; reg [278:0] n_p, vq_p; reg [OWW-1:0] own, rr;
+        assign vq_vw[gc] = vq_v;
+        assign vmq[gc*338 +: 338] = {vq_v, 1'b1, 12'd0, vq_p[278:264], 5'd0, vq_p[263:8],
+            {{4{vq_p[7]}}, {4{vq_p[6]}}, {4{vq_p[5]}}, {4{vq_p[4]}}, {4{vq_p[3]}}, {4{vq_p[2]}}, {4{vq_p[1]}}, {4{vq_p[0]}}},
+            16'h5042};
+        always @(posedge clk) if (n_v) vq_p <= n_p;
+        always @(posedge clk or negedge rn) begin
+            if (!rn) begin pend <= '0; ak <= '0; bsy <= 1'b0; n_v <= 1'b0; va_q <= 1'b0; vq_v <= 1'b0; own <= '0; rr <= '0; end
+            else begin : nd
+                reg f; integer q_, jj; reg [NIN-1:0] pn;
+                va_q <= vmr[gc*274 + 273] && vmr[gc*274 + 256];           // port pin flop (MEM 1: vr[273] && vr[256])
+                vq_v <= n_v; n_v <= 1'b0; ak <= '0;
+                pn = pend;
+                for (q_ = 0; q_ < NIN; q_ = q_ + 1) if (gc + q_ * NPC < NSL) if (s_wv[gc + q_ * NPC]) pn[q_] = 1'b1;
+                f = 1'b0;
+                if (!bsy) for (jj = 0; jj < NIN; jj = jj + 1) begin q_ = (rr + 1 + jj) % NIN;
+                    if (!f && pend[q_]) begin
+                        f = 1'b1; pn[q_] = 1'b0; own <= OWW'(q_); rr <= OWW'(q_); bsy <= 1'b1; n_v <= 1'b1;
+                        n_p <= s_wp[(gc + q_ * NPC) * 279 +: 279];
+                    end
+                end
+                if (bsy && va_q) begin bsy <= 1'b0; ak[own] <= 1'b1; end    // acknowledged: back to the owning slice
+                pend <= pn;
+            end
+        end
+        for (gj = 0; gj < NIN; gj = gj + 1) begin : g_a
+            if (gc + gj * NPC < NSL) begin : g_ae assign s_ack[gc + gj * NPC] = ak[gj]; end
+        end
+    end endgenerate
+    // ---- STREAM: credit tree of 2:1 nodes (level 0 = the slices)
+    wire [(LV+1)*NLF-1:0] t_v, t_cr, t_a; wire [(LV+1)*NLF*W-1:0] t_d;
+    generate
+        for (gn = 0; gn < NLF; gn = gn + 1) begin : g_lf
+            localparam integer SK = (gn % 2 == 0) ? gn / 2 : gn / 2 + NCOL;
+            if (gn / 2 < NCOL && SK < NSL) begin : g_e
+                assign t_v[gn] = s_sov[SK]; assign t_d[gn*W +: W] = s_sod[SK*W +: W]; assign s_cr[SK] = t_cr[gn];
+            end else begin : g_z
+                assign t_v[gn] = 1'b0; assign t_d[gn*W +: W] = '0;
+            end
+            assign t_a[gn] = 1'b0;
+        end
+        for (gl = 1; gl <= LV; gl = gl + 1) begin : g_l
+            for (gn = 0; gn < (NLF >> gl); gn = gn + 1) begin : g_n
+                localparam integer B = gl * NLF + gn, C0 = (gl - 1) * NLF + 2 * gn;
+                ot_hgi_sm_pub_smrg #(.D(SD), .W(W), .ROOT(gl == LV), .LVL(gl)) u (
+                    .clk(clk), .rn(rn), .i_v(t_v[C0 +: 2]), .i_d(t_d[C0*W +: 2*W]), .i_cr(t_cr[C0 +: 2]),
+                    .o_v(t_v[B]), .o_d(t_d[B*W +: W]), .o_cr((gl == LV) ? 1'b0 : t_cr[B]), .xb((gl == LV) ? r1_v : 1'b0),
+                    .a_in(t_a[C0 +: 2]), .a_out(t_a[B]));
+            end
+            for (gn = (NLF >> gl); gn < NLF; gn = gn + 1) begin : g_u
+                assign t_v[gl*NLF + gn] = 1'b0; assign t_d[(gl*NLF + gn)*W +: W] = '0; assign t_a[gl*NLF + gn] = 1'b0;
+                if (gl < LV) begin : g_uc assign t_cr[gl*NLF + gn] = 1'b0; end
+            end
+        end
+        for (gn = 0; gn < NLF; gn = gn + 1) begin : g_tc
+            assign t_cr[LV*NLF + gn] = 1'b0;
+        end
+    endgenerate
+    // root -> relay -> s0 (the port register); the root's busy snapshot relayed to the collector
+    always @(posedge clk) begin if (t_v[LV*NLF]) r1_d <= t_d[LV*NLF*W +: W]; if (r1_v) begin s0_idx <= r1_d[51:32]; s0_data <= r1_d[31:0]; end end
+    // ---- control
+    reg [NSL-1:0] sdn; reg [7:0] allc;
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
+            rel <= 1'b0; busy <= 1'b0; acc_q <= 1'b0; pub_done <= 1'b0; pub_fault <= 1'b0; s0_v <= 1'b0; r1_v <= 1'b0;
+            agg_r <= 1'b0; sdn <= '0; allc <= 8'd0; cgo <= '0;
+        end else begin
+            rel <= 1'b1;
+            acc_q <= pub_v && pub_rdy;
+            pub_done <= 1'b0; cgo <= {cgo, 1'b0};
+            r1_v <= t_v[LV*NLF]; s0_v <= r1_v; agg_r <= t_a[LV*NLF];
+            if (|ft_l) pub_fault <= 1'b1;                                   // a slice overrun: fail closed
+            if (acc_q) begin
+                if (!(pf_sp == 2'd1 || pf_sp == 2'd2) || pf_p == 4'd0 || pf_p > NC) pub_fault <= 1'b1;
+                else begin
+                    busy <= 1'b1; sdn <= '0; allc <= 8'd0;
+                    cgo[0] <= 1'b1;
+                end
+            end else if (busy) begin
+                sdn <= sdn | dn_l;
+                if (&sdn && allc != 8'hFF) allc <= allc + 8'd1;
+                if (&sdn && allc >= 8'(LV + 1) && !agg_r && vq_vw == 0) begin busy <= 1'b0; pub_done <= 1'b1; end
+            end
+        end
+    end
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
 // ot_hgi_sm_pub: the publication peer. MEM = 1 (default, hgi-1010/d): the banked-SRAM form ot_hgi_sm_pub_mem; MEM = 0:
 // the flop form ot_hgi_sm_pub_ff (kept as the reference of tb_hgi_pub_lock).  Same ports and transaction contract.
+// HIER = 1 (el1011-hbm-smh/pub, opt-in, default 0; `define OT_HGI_PUB_HIER makes it the default for benches): the
+// hierarchical form ot_hgi_sm_pub_hier (hardened 4-SM slices; needs rtl/lib/ot_rst_relay.sv).
 // ---------------------------------------------------------------------------------------------------------------------
+`ifdef OT_HGI_PUB_HIER
+`define OT_HGI_PUB_HIER_DEF 1
+`else
+`define OT_HGI_PUB_HIER_DEF 0
+`endif
 module ot_hgi_sm_pub #(
     parameter integer NSM = 32,
     parameter integer NC = 8,
@@ -514,7 +1043,8 @@ module ot_hgi_sm_pub #(
     parameter integer MUT_ROW = 0,
     parameter integer MEM = 1,
     parameter integer NE = 2,
-    parameter integer MUT_PAR = 0
+    parameter integer MUT_PAR = 0,
+    parameter integer HIER = `OT_HGI_PUB_HIER_DEF
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -538,7 +1068,13 @@ module ot_hgi_sm_pub #(
     output wire [19:0]        s0_idx,
     output wire [31:0]        s0_data
 );
-    generate if (MEM) begin : g_mem
+    generate if (HIER) begin : g_hier
+        ot_hgi_sm_pub_hier #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW), .MUT_PAR(MUT_PAR)) u (
+            .clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
+            .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done),
+            .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
+            .s0_idx(s0_idx), .s0_data(s0_data));
+    end else if (MEM) begin : g_mem
         ot_hgi_sm_pub_mem #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW), .NE((NSM % NE == 0) ? NE : 1), .MUT_PAR(MUT_PAR)) u (
             .clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
             .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done),
