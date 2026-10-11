@@ -309,14 +309,7 @@ def cmd_run(a):
         obj.mkdir(parents=True, exist_ok=True)
         srcs = [ROOT / s for s in H.FP[a.fp] + RTL + [TB]]
         if a.fp == "dpi":
-            dpi_mods = set()
-            for s_ in H.FP["dpi"]:
-                if s_.endswith(".sv"):
-                    dpi_mods |= set(re.findall(r"^module\s+(\w+)", (ROOT / s_).read_text(), re.M))
-            keep = [b for b in re.split(r"(?m)^(?=module\s)", (ROOT / "rtl/hdc/ot_hdc_fp32_f12.sv").read_text())
-                    if not (re.match(r"module\s+(\w+)", b) and re.match(r"module\s+(\w+)", b).group(1) in dpi_mods)]
-            (obj / "fp32_f12_rest.sv").write_text("".join(keep))
-            srcs = [obj / "fp32_f12_rest.sv"] + srcs
+            srcs = H.dpi_rest(obj) + srcs
         cmd = [H.VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_su_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", *[f"-G{k}={v}" for k, v in sh.items()],
                f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *map(str, srcs), "-CFLAGS", "-O1"]

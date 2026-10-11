@@ -69,6 +69,26 @@ VL = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/opentall
 VERILATOR = str(VL) if VL.exists() else "verilator"
 
 
+def dpi_rest(obj):
+    """The RTL helpers the DPI float models do not replace (f12 cuts / l6 / l7 variants, lzc / ksa / mul24 rows):
+    rtl/hdc/ot_hdc_fp32_f12.sv and rtl/hdc/ot_hdc_fastfp.sv minus every module a DPI source defines."""
+    dpi_mods = set()
+    for s_ in FP["dpi"]:
+        if s_.endswith(".sv"):
+            dpi_mods |= set(re.findall(r"^module\s+(\w+)", (ROOT / s_).read_text(), re.M))
+    out = []
+    for src in ("rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_fastfp.sv"):
+        keep = []
+        for blk in re.split(r"(?m)^(?=module\s)", (ROOT / src).read_text()):
+            m_ = re.match(r"module\s+(\w+)", blk)
+            if not m_ or m_.group(1) not in dpi_mods:
+                keep.append(blk)
+        f = obj / ("rest_" + Path(src).name)
+        f.write_text("".join(keep))
+        out.append(f)
+    return out
+
+
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -298,18 +318,7 @@ def build(out: Path, ng, fp, mut, amut, lvm):
         obj.mkdir(parents=True, exist_ok=True)
         srcs = [ROOT / s for s in FP[fp] + RTL + [TB]]
         if fp == "dpi":
-            # the f12 units the DPI tops do not replace (cuts, l6/l7 variants), from the RTL file itself
-            dpi_mods = set()
-            for s_ in FP["dpi"]:
-                if s_.endswith(".sv"):
-                    dpi_mods |= set(re.findall(r"^module\s+(\w+)", (ROOT / s_).read_text(), re.M))
-            keep = []
-            for blk in re.split(r"(?m)^(?=module\s)", (ROOT / "rtl/hdc/ot_hdc_fp32_f12.sv").read_text()):
-                m_ = re.match(r"module\s+(\w+)", blk)
-                if not m_ or m_.group(1) not in dpi_mods:
-                    keep.append(blk)
-            (obj / "fp32_f12_rest.sv").write_text("".join(keep))
-            srcs = [obj / "fp32_f12_rest.sv"] + srcs
+            srcs = dpi_rest(obj) + srcs
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
                f"-GAMUT={amut}", f"-GLVM={lvm}", *map(str, srcs), "-CFLAGS", "-O1"]
