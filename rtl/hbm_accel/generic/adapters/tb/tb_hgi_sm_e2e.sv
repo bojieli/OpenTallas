@@ -126,7 +126,7 @@ module tb_hgi_sm_e2e;
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .vmq(xq), .vmr(xr),
         .rg_req(rg_req), .rg_gnt(rg_gnt_x), .wrq(wrq_x), .wrq_cr(wcr_x), .wrr(wrr_x));
 `else
-    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .BD(1)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .BD(`ifdef XBD0 0 `else 1 `endif)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(x_fault),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .vmq(xq), .vmr(xr));
 `endif
