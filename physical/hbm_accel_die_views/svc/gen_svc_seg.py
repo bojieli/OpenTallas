@@ -344,6 +344,9 @@ def plan_family(fam):
                 wb = byname[n]['w'] + 1
                 runs[n] = (off, wb)
                 off += wb
+            if NEP:     # [svc-ep] PIN-ON-TRACK (closure-loop lint d0259ee02): M4 pins at y0 + k x 0.096 (0.024 tall) centre
+                        # on the M4 tracks (0.012 + 0.048 n) only when y0 is on the 0.048 grid (the PS faces started at 1.0)
+                y = math.ceil(y / 0.048 - 1e-9) * 0.048
             face[(j, dirn)] = dict(names=names, runs=runs, bits=off, y0=y)
             y += off * PITCH + 1.0
         assert y < H_um - 1.0, (fam, j, y)
