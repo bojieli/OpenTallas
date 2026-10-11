@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.svc_stream_overlap.v1",
+ "tool": "tools/svc_stream_overlap.py",
+ "source": {
+  "program": "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json",
+  "run": "results/arch/hgi_programs_20261010/inputs/ds_native_1M_run.json",
+  "schedule": "ds_sw_seq_pricing approved_path_c2_g22 (S2)"
+ },
+ "token_cycles": 692888.1,
+ "idx_index_windows": 8,
+ "att_windows": 80,
+ "overlapping_pairs": 0,
+ "min_gap_cycles": 11288.2,
+ "idx_after_prev_layer_att": [
+  {
+   "idx_layer": 2,
+   "idx_start": 31014.4,
+   "att_prev_end": 19714.7,
+   "slack": 11299.7
+  },
+  {
+   "idx_layer": 8,
+   "idx_start": 127058.4,
+   "att_prev_end": 115758.7,
+   "slack": 11299.7
+  },
+  {
+   "idx_layer": 14,
+   "idx_start": 227932.3,
+   "att_prev_end": 211802.6,
+   "slack": 16129.6
+  },
+  {
+   "idx_layer": 20,
+   "idx_start": 319577.5,
+   "att_prev_end": 308289.3,
+   "slack": 11288.2
+  },
+  {
+   "idx_layer": 24,
+   "idx_start": 401796.9,
+   "att_prev_end": 390503.3,
+   "slack": 11293.6
+  },
+  {
+   "idx_layer": 28,
+   "idx_start": 471786.9,
+   "att_prev_end": 460493.3,
+   "slack": 11293.6
+  },
+  {
+   "idx_layer": 32,
+   "idx_start": 548284.2,
+   "att_prev_end": 536990.6,
+   "slack": 11293.6
+  },
+  {
+   "idx_layer": 36,
+   "idx_start": 618274.2,
+   "att_prev_end": 606980.6,
+   "slack": 11293.6
+  }
+ ],
+ "examples": [],
+ "verdict": "NO OVERLAP: shared ks (one stream at a time) costs no rate"
+}
