@@ -92,11 +92,12 @@ module ot_s81_svch_attq #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin in_frame <= 0; left <= 0; f_type <= 0; f_mine <= 0; f_idx <= 0; end
         else if (is_hdr) begin
-            f_hdr <= q_d; f_type <= h_type; f_mine <= h_mask[0]; f_idx <= 0; left <= h_len; in_frame <= h_len != 0;
+            f_type <= h_type; f_mine <= h_mask[0]; f_idx <= 0; left <= h_len; in_frame <= h_len != 0;
         end else if (is_pay) begin
             f_idx <= f_idx + 1'b1; left <= left - 1'b1; if (left == 12'd1) in_frame <= 1'b0;
         end
     end
+    always @(posedge clk) if (is_hdr) f_hdr <= q_d;
     wire hdr_mine = is_hdr && h_mask[0];
     wire pay_mine = is_pay && f_mine;
 
@@ -110,11 +111,13 @@ module ot_s81_svch_attq #(
             wj_v <= start && !job_active;
             if (start && !job_active) begin
                 tagj <= q_d[502:495]; posj <= q_d[479:459]; userj <= q_d[458:449];
-                rbase <= q_d[29:0]; rcount <= q_d[59:30]; npub <= q_d[80:60];
                 wcount <= q_d[88:81]; nsel <= q_d[98:89];
-                wj_user <= q_d[458:449]; wj_first <= q_d[119:99]; wj_count <= q_d[88:81];
             end
         end
+    end
+    always @(posedge clk) if (start && !job_active) begin
+        rbase <= q_d[29:0]; rcount <= q_d[59:30]; npub <= q_d[80:60];
+        wj_user <= q_d[458:449]; wj_first <= q_d[119:99]; wj_count <= q_d[88:81];
     end
     wire [15:0] tjob = 16'(wcount) + 16'(nsel);
 
@@ -123,13 +126,15 @@ module ot_s81_svch_attq #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) t_v <= 0;
         else begin
-            t_v <= 1'b0;
-            if (hdr_mine && h_type == 4'd7) begin s_first <= q_d[9:0]; s_cnt <= q_d[19:10]; end
-            if (pay_mine && f_type == 4'd7) begin
-                t_v <= 1'b1; t_ids <= q_d;
-                t_rank <= s_first + KW'(f_idx * 16);
-                t_n <= (32'(s_cnt) - 32'(f_idx) * 16 >= 16) ? 5'd16 : 5'(32'(s_cnt) - 32'(f_idx) * 16);
-            end
+            t_v <= pay_mine && f_type == 4'd7;
+        end
+    end
+    always @(posedge clk) begin
+        if (hdr_mine && h_type == 4'd7) begin s_first <= q_d[9:0]; s_cnt <= q_d[19:10]; end
+        if (pay_mine && f_type == 4'd7) begin
+            t_ids <= q_d;
+            t_rank <= s_first + KW'(f_idx * 16);
+            t_n <= (32'(s_cnt) - 32'(f_idx) * 16 >= 16) ? 5'd16 : 5'(32'(s_cnt) - 32'(f_idx) * 16);
         end
     end
 
@@ -139,9 +144,11 @@ module ot_s81_svch_attq #(
         if (!rst_n) r_v <= 0;
         else begin
             r_v <= pay_mine && f_type == 4'd6;
-            r_rank <= q_d[9:0]; r_gid <= q_d[30:10]; r_pair <= q_d[33:31];
-            r_data <= (q_d[33:32] == 2'(QID)) ? q_d[321:34] : 288'd0;
         end
+    end
+    always @(posedge clk) begin
+        r_rank <= q_d[9:0]; r_gid <= q_d[30:10]; r_pair <= q_d[33:31];
+        r_data <= (q_d[33:32] == 2'(QID)) ? q_d[321:34] : 288'd0;
     end
     // locally fetched row slice -> a 2,304-bit row with the other quarters zero
     reg [2303:0] l_row;
@@ -279,6 +286,8 @@ module ot_s81_svch_attq #(
     reg [3:0] pv_n;                    // engine p.v beats of the job
     always @(posedge clk) if (pv_v) pvq[pvw[PA-1:0]] <= {pv_c, pv_y, pv_f};
     wire [PVB-1:0] pb = pvq[pvr[PA-1:0]];
+    always @(posedge clk) if (PVOWN && (!p_ov || p_or) && pvw != pvr)
+        p_od <= (p_i == 0) ? {1'b1, 248'd0, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             scw <= 0; scr <= 0; pvw <= 0; pvr <= 0; sc_cr <= 0; pv_cr <= 0; p_ov <= 0; p_i <= 0; job_active <= 0;
@@ -294,8 +303,6 @@ module ot_s81_svch_attq #(
                 if (p_ov && p_or) p_ov <= 1'b0;
                 if ((!p_ov || p_or) && pvw != pvr) begin
                     p_ov <= 1'b1;
-                    if (p_i == 0) p_od <= {1'b1, 248'd0, pb[PVB-1 -: 8], pb[NT*H-1:0]};
-                    else p_od <= {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
                     p_i <= (p_i == 5'd16) ? 5'd0 : p_i + 1'b1;
                     if (p_i == 5'd16) begin pvr <= pvr + 1'b1; pv_cr <= 1'b1; end
                 end

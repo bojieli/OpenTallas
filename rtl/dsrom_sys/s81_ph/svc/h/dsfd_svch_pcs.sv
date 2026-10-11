@@ -130,12 +130,13 @@ module ot_s81_svch_ghub #(
                 if (!f && rx_v[3'(32'(rr) + s)]) begin f = 1'b1; pk = 3'(32'(rr) + s); end
         if (f) rx_r[pk] = 1'b1;
     end
+    always @(posedge clk) if (f) o_d <= rx_d[pk];
     reg [5:0] wdc [0:NG-1]; reg [3:0] wadd;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin o_v <= 1'b0; rr <= 0; gwd <= 0; fault <= 1'b0; for (k = 0; k < NG; k = k + 1) wdc[k] <= 0; end
         else begin
             if (o_v && o_r) o_v <= 1'b0;
-            if (f) begin o_v <= 1'b1; o_d <= rx_d[pk]; rr <= pk + 1'b1; end
+            if (f) begin o_v <= 1'b1; rr <= pk + 1'b1; end
             if (i_v && !mine) fault <= 1'b1;
             if (|ovf) fault <= 1'b1;
             for (k = 0; k < NG; k = k + 1) begin

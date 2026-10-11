@@ -40,7 +40,11 @@ module dsfd_svc_idx #(
     reg qv_q; reg [511:0] qd_q; reg [31:0] aq_cq, ar_vq; reg [32*276-1:0] ar_dq; reg xr_q;
     always @(posedge clk or negedge rn)
         if (!rn) begin qv_q <= 1'b0; aq_cq <= 0; ar_vq <= 0; end
+`ifdef SVCH_MUT_ADROP
+        else begin qv_q <= q[0]; aq_cq <= aq_c; ar_vq <= ar_v & ~{32{ar_d[256]}}; end   // MUTANT: A beats with tag bit 0 lost
+`else
         else begin qv_q <= q[0]; aq_cq <= aq_c; ar_vq <= ar_v; end
+`endif
     always @(posedge clk) begin qd_q <= q[512:1]; ar_dq <= ar_d; end
     wire [31:0] req_v, req_rdy, rsp_v, rsp_rdy; wire [32*30-1:0] req_addr; wire [32*4-1:0] req_len, rsp_beat;
     wire [32*16-1:0] req_tag, rsp_tag; wire [32*256-1:0] rsp_data; wire [31:0] ovf;

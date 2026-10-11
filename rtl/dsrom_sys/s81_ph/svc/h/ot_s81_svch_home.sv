@@ -105,7 +105,7 @@ module ot_s81_svch_home #(
     // ---------------- OWN_ROW / CFG parser (ot_s81_svcq_slab) ----------------
     reg in_frame; reg [11:0] left; reg [3:0] f_type; reg f_mine; reg [11:0] f_idx; reg [20:0] f_pos; reg [9:0] f_user;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin in_frame <= 0; left <= 0; f_type <= 0; f_mine <= 0; f_idx <= 0; end
+        if (!rst_n) begin in_frame <= 0; left <= 0; f_type <= 0; f_mine <= 0; f_idx <= 0; f_pos <= 0; f_user <= 0; end
         else if (q_v && !in_frame) begin
             f_type <= q_d[511:508]; f_mine <= q_d[503]; f_idx <= 0; left <= q_d[491:480]; in_frame <= q_d[491:480] != 0;
             f_pos <= q_d[479:459]; f_user <= q_d[458:449];
@@ -143,7 +143,7 @@ module ot_s81_svch_home #(
     reg ws_pend; reg [9:0] ws_user; reg [20:0] ws_first; reg [7:0] ws_count;
     wire ws_ready;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) ws_pend <= 0;
+        if (!rst_n) begin ws_pend <= 0; ws_user <= 0; ws_first <= 0; ws_count <= 0; end
         else if (wj_v) begin ws_pend <= wj_count != 0; ws_user <= wj_user; ws_first <= wj_first; ws_count <= wj_count; end
         else if (ws_ready) ws_pend <= 1'b0;
     wire wsrc_v, wsrc_ready; wire [3:0] wsrc_m; wire [4*16*265-1:0] wsrc_w;
@@ -281,10 +281,11 @@ module ot_s81_svch_home #(
             for (k = 0; k < NG; k = k + 1)
                 if (p_v[k] && p_rdy[k]) begin
                     if (p_bad[k]) begin g_bad <= 1'b1; sl_v[k] <= 1'b0; end      // dropped (fail closed)
-                    else begin sl_v[k] <= 1'b1; sl_d[k] <= p_d[k*344 +: 344]; end
+                    else sl_v[k] <= 1'b1;
                 end else if (taken[k]) sl_v[k] <= 1'b0;
             for (d = 0; d < 4; d = d + 1) if (gsel_v[d]) grr[d] <= (gsel[d] == 4'(NG - 1)) ? 4'd0 : gsel[d] + 1'b1;
         end
+    always @(posedge clk) for (k = 0; k < NG; k = k + 1) if (p_v[k] && p_rdy[k] && !p_bad[k]) sl_d[k] <= p_d[k*344 +: 344];
     generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_gq
         ot_s81_svch_ctx #(.W(344), .DEPTH(dw(gd))) u_tx (.clk(clk), .rst_n(rst_n), .i_v(gsel_v[gd]), .i_r(gq_ir[gd]),
             .i_d(sl_d[gsel[gd]]), .o_v(gq_v[gd]), .o_d(gq_d[gd*344 +: 344]), .c_in(gq_c[gd]));
@@ -314,8 +315,9 @@ module ot_s81_svch_home #(
         if (!rst_n) begin po_v <= 0; for (k = 0; k < NG; k = k + 1) prr[k] <= 0; end
         else for (k = 0; k < NG; k = k + 1) begin
             if (po_v[k] && po_rdy[k]) po_v[k] <= 1'b0;
-            if (psel_v[k]) begin po_v[k] <= 1'b1; po_d[k] <= grx_d[psel[k]][271:0]; prr[k] <= psel[k] + 1'b1; end
+            if (psel_v[k]) begin po_v[k] <= 1'b1; prr[k] <= psel[k] + 1'b1; end
         end
+    always @(posedge clk) for (k = 0; k < NG; k = k + 1) if (psel_v[k]) po_d[k] <= grx_d[psel[k]][271:0];
     generate for (gk = 0; gk < NG; gk = gk + 1) begin : g_po
         if (gk < 4) begin : g_w
             assign ws_v[gk] = po_v[gk]; assign ws_tag[gk*12 +: 12] = po_d[gk][271:260];
@@ -385,7 +387,7 @@ module ot_s81_svch_home #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             a0_v <= 0; od_v <= 0; a_state <= 0; a_i <= 0; xw <= 0; xr <= 0; x_busy <= 0; x_i <= 0; pv_frames <= 0;
-            emit_flt <= 0;
+            emit_flt <= 0; a_mask <= 0; a0_d <= 0; od_d <= 0;   // result registers: emitter state, reset
         end else begin
             if (f_ov && f_or) xw <= xw + 1'b1;
             if (go) pv_frames <= 0;
