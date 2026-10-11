@@ -29,7 +29,9 @@ module ot_qfd_sp_su64_sfu_bv #(
     parameter integer HID = 4096,
     parameter integer CRD = 4,
     parameter integer VL = 7,               // the banked vector memory's extra read latency (answer at 1 + VL)
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer RSRAM = 0,            // ot_qfd_su_embed_pf RSRAM: the embedding row buffer as an SRAM macro
+    parameter integer LOFF = 0              // ot_hdc_vstream LOFF: lane offsets formed in the stream unit, 64 identical lanes
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -116,7 +118,7 @@ module ot_qfd_sp_su64_sfu_bv #(
     wire [SW*32-1:0] e_va_q;
     wire e_pend, e_fault, e_v, e_kind;
     wire [AW-1:0] e_addr;
-    ot_qfd_su_embed_pf #(.SW(SW), .AW(AW), .NW(NW), .HID(HID), .CRD(CRD), .FI(FI)) u_emb (
+    ot_qfd_su_embed_pf #(.SW(SW), .AW(AW), .NW(NW), .HID(HID), .CRD(CRD), .FI(FI), .RSRAM(RSRAM)) u_emb (
         .clk(clk), .rst_n(rs), .go_in(go_q), .a_src(asrc_q), .tok(tok_q), .f_in(f_q), .go_out(go_s), .f_out(f_go),
         .pend(e_pend), .su_va_re(s_va_re), .su_va_addr(s_va_addr), .su_va_q(e_va_q), .va_re(e_va_re),
         .va_addr(e_va_addr), .va_q({(SW*32){1'b0}}), .ea_v(e_v), .ea_kind(e_kind), .ea_addr(e_addr), .ea_cr(cr_q),
@@ -174,7 +176,7 @@ module ot_qfd_sp_su64_sfu_bv #(
     assign sw_a0 = vm_waddr[0 +: AW];
     assign sw_a1 = vm_waddr[AW +: AW];
     wire [15:0] s_progress, s_rows;
-    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML)) u_su (
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LOFF(LOFF)) u_su (
         .clk(clk), .rst_n(rs), .go(go_s), .ready(s_ready), .idle(s_idle),
         .i_nout(q_nout), .i_nin(q_nin),
         .i_asrc(q_asrc), .i_abase(q_abase), .i_aso(q_aso), .i_asi(q_asi),
