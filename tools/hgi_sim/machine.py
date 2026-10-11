@@ -794,10 +794,15 @@ def u_coll_topk_merge(M: Machine, r: Rec, L):
     """COLL.TOPK_MERGE (G18): from VM, A = local values, B = their ids (n each, per die); the group's top imm_a by
     descending value, ties to the lowest id; O = the ids in ascending id order, R (optional) = their values.  The
     contributions move through the collective's exact gather (bypass) path."""
+    Mmax = r.param & 0xFFF                      # G27: the group's per-rank stream length (0 = each rank's own n)
+    if r.param >> 12 & 0x1FFF:
+        raise Fault(3, "TOPK_MERGE param[24:12] must be 0")
     for grp in M.groups():
         vs, ids = [], []
         for d in grp:
             rd = M.rec_of(d, r)
+            if Mmax and M.eff(rd.desc["A"], d, L)[1] > Mmax:
+                raise Fault(3, "E_RANGE: TOPK_MERGE n > M (param[11:0])")
             vs.append(M.read(rd.desc["A"], d, L).astype(np.float64))
             b0, n_, _, _, _ = M.eff(rd.desc["B"], d, L)
             ids.append(d.vm[b0:b0 + n_].astype(np.int64))

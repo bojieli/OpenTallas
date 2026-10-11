@@ -616,13 +616,15 @@ class Lower:
                 elif what == "sel":           # G18: from VM (A = local values, B = local ids), O ascending ids
                     n = self.frame_n
                     kr = min(min(m.topk, n), self.owned_keys(rank, n)[0])
-                    add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="indexer", desc=dict(
+                    Mg = max(min(min(m.topk, n), self.owned_keys(q, n)[0]) for q in range(TP))   # G27 param[11:0]
+                    add(Rec("COLL", "TOPK_MERGE", param=Mg, imm_a=op["k"], tag=op["tag"], family="indexer", desc=dict(
                         A=V("SELT", kr, off=512), B=U32V(lay.vm["SELT"], kr), O=U32V(lay.vm["SELIDX"], op["k"]))),
                         ["SELT"], ["SELIDX"])
                 else:                         # the layer-20 candidate merge: O = block ids ascending, R = values
                     n = self.frame_n
                     kc = min(m.cand_k, -(-n // m.cand_b), self.owned_keys(rank, n)[1])
-                    add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="candidates", desc=dict(
+                    Mg = max(min(m.cand_k, -(-n // m.cand_b), self.owned_keys(q, n)[1]) for q in range(TP))
+                    add(Rec("COLL", "TOPK_MERGE", param=Mg, imm_a=op["k"], tag=op["tag"], family="candidates", desc=dict(
                         A=V("CANDT", kc, off=2048), B=U32V(lay.vm["CANDT"], kc), O=U32V(lay.vm["CANDM"], op["k"]),
                         R=V("CANDM", op["k"], off=2048))), ["zpart"], ["CANDM"])
             elif k == "kv_gather" and self.fuse and RG_SW[0]:
