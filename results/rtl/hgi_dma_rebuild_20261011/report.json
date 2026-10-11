@@ -39,5 +39,14 @@
    "hgi_dma_kvw_b-90e2f2e7a-tc-cl (280 um)",
    "hgi_dma_kvw_c-90e2f2e7a-tc-cl (270 um)"
   ]
+ },
+ "kvw_ebb3d0692": {
+  "change": "issue + drain decisions pipelined (registered decision applied next edge, unapplied decision counted exactly; registered 2-entry FIFO window); hold read-pointer double-pop fix",
+  "kport KVW=1 KVB KVB_MAX=630": "PASS 15 cases, first record 58 cyc, 4-stack 56.1 cyc/rec posted (price 60, ratio 0.94), drain 63.1; 1-stack 96.9 (svc write credits)",
+  "MUT5": "FAIL 22192 errors",
+  "routes": [
+   "hgi_dma_kvw_b-ebb3d0692-tc-cl (280 um)",
+   "hgi_dma_kvw_c-ebb3d0692-tc-cl (270 um)"
+  ]
  }
 }
