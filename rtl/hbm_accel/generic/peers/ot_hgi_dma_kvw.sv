@@ -71,7 +71,8 @@ module ot_hgi_dma_kvw #(
 );
     // ================================================================ descriptor FIFO (two readers: issue, write)
     reg [14:0] f_vs [0:3], f_vst [0:3]; reg [31:0] f_ds [0:3], f_dst [0:3]; reg [17:0] f_ns [0:3]; reg [19:0] f_m [0:3];
-    reg [2:0] f_t, f_i, f_w;                                // tail, issue head, write head (mod 8 counters, 4 entries)
+    reg [2:0] f_t, f_i, f_w;
+    reg st_v; reg [14:0] st_vs, st_vst; reg [31:0] st_ds, st_dst; reg [17:0] st_ns; reg [19:0] st_m;                                // tail, issue head, write head (mod 8 counters, 4 entries)
     // ================================================================ issue (I)
     reg        i_act; reg [14:0] i_vs, i_vnx, i_vst; reg [17:0] i_left, i_ns; reg [19:0] i_rows;
     reg [1:0]  occ [0:31];                                  // a lane's sectors issued, not drained (<= 2: its hold entries)
@@ -182,7 +183,7 @@ module ot_hgi_dma_kvw #(
     end
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            f_t <= 3'd0; f_i <= 3'd0; f_w <= 3'd0; c_rdy <= 1'b0;
+            f_t <= 3'd0; f_i <= 3'd0; f_w <= 3'd0; c_rdy <= 1'b0; st_v <= 1'b0;
             i_act <= 1'b0; kq <= 512'd0; kqv <= 32'd0; kqv_d <= 32'd0; gnt_q <= 1'b0; gcr_q <= '0; q_iss <= 10'd0; buf_ok <= 1'b0;
             o_t <= 6'd0; o_h <= 6'd0; o_n <= 7'd0; hw <= 32'd0; hr <= 32'd0; q_drn <= 10'd0;
             for (integer b = 0; b < 32; b = b + 1) begin occ[b] <= 2'd0; hc[b] <= 2'd0; end
@@ -194,11 +195,14 @@ module ot_hgi_dma_kvw #(
         end else begin
             src <= 1'b0; done <= 1'b0;
             // ---- descriptors
-            if (c_v && c_rdy) begin
-                f_vs[f_t[1:0]] <= c_vs; f_vst[f_t[1:0]] <= c_vst; f_ds[f_t[1:0]] <= c_ds; f_dst[f_t[1:0]] <= c_dst;
-                f_ns[f_t[1:0]] <= c_ns; f_m[f_t[1:0]] <= c_m; f_t <= f_t + 3'd1; owed <= 1'b1;
+            // command station (pin flops): the accepted descriptor enters the FIFO one edge later
+            st_v <= c_v && c_rdy;
+            if (c_v && c_rdy) begin st_vs <= c_vs; st_vst <= c_vst; st_ds <= c_ds; st_dst <= c_dst; st_ns <= c_ns; st_m <= c_m; owed <= 1'b1; end
+            if (st_v) begin
+                f_vs[f_t[1:0]] <= st_vs; f_vst[f_t[1:0]] <= st_vst; f_ds[f_t[1:0]] <= st_ds; f_dst[f_t[1:0]] <= st_dst;
+                f_ns[f_t[1:0]] <= st_ns; f_m[f_t[1:0]] <= st_m; f_t <= f_t + 3'd1;
             end
-            c_rdy <= 3'(f_t + {2'd0, c_v && c_rdy} - f_w) < 3'd3 && !(c_v && c_rdy);   // registered, one accept per two edges
+            c_rdy <= 3'(f_t + {2'd0, st_v} - f_w) < 3'd2 && !(c_v && c_rdy) && !st_v;   // registered: FIFO + station <= 3
             // ---- issue
             kq <= 512'd0; kqv <= 32'd0; kqv_d <= kqv; gnt_q <= g_gnt; gcr_q <= g_cr;
             if (!i_act && f_i != f_t) begin
@@ -282,11 +286,12 @@ module ot_hgi_dma_kvw #(
                 wo[l] <= wo[l] + 7'(w_acc[l]) - 7'(w_ack[l]);
             end
             // ---- completion
-            idle <= !owed && !(c_v && c_rdy);
+            idle <= !owed && !(c_v && c_rdy) && !st_v;
             if (owed && f_t == f_w && !i_act && o_n == 7'd0 && !d_v[0] && !d_v[1] && !b0_we && !b1_we && w_act == 4'd0 && !m1_v[0] && !m1_v[1] && !m2_v[0] && !m2_v[1] &&
                 oa_v[0] == 4'd0 && oa_v[1] == 4'd0 && oa_v[2] == 4'd0 && oa_v[3] == 4'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
-                wo[0] == 7'd0 && wo[1] == 7'd0 && wo[2] == 7'd0 && wo[3] == 7'd0 && !(c_v && c_rdy)) begin
-                owed <= 1'b0; done <= 1'b1; idle <= 1'b1;
+                wo[0] == 7'd0 && wo[1] == 7'd0 && wo[2] == 7'd0 && wo[3] == 7'd0 && !st_v) begin
+                // every accepted move drained (a move accepted on this edge stays owed: its own done comes later)
+                owed <= c_v && c_rdy; done <= 1'b1; idle <= !(c_v && c_rdy);
             end
         end
     end
