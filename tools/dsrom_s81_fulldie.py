@@ -2414,6 +2414,7 @@ MKL_WH = (216.0, 172.8)                     # die Markov root
 MK_SB, MK_RB, MK_DB, MK_HB = 327, 87, 55, 33  # stream word, frame result {seen,valid,key,row,bits,4 status}, driver result, A join
 
 
+MK_XF = ('mkq_', 'mkh_', 'mkd_', 'mkx_', 'mkr_')    # --markov-full340 bundle <-> driver frame bus prefixes
 MK_STN = defaultdict(list)                  # --markov-full340: hop-fix stations per inter-frame Markov bus class (fs3)
 MKD_FRAMES = {}                             # --markov-full340: driver frame -> (bundle frame, bundle)
 MK_STN = defaultdict(list)                  # --markov-full340 (fs3): hop-fix stations per inter-frame Markov bus class
@@ -4229,7 +4230,7 @@ def _hop_fix(m, P):
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
             if cls in ('mk_bc', 'mk_pick'):
                 reg = None                # --markov-full340 die tree: hub -> frame hops take channel stations
-            elif MARKOV_FULL340 and bid.startswith(('mkq_', 'mkh_', 'mkd_', 'mkx_', 'mkr_')) and d0.region != l0.region:
+            elif MARKOV_FULL340 and bid.startswith(MK_XF) and d0.region != l0.region:
                 # mtp-head-1010 fs3: bundle frame <-> driver frame buses cross frames (mkq_2_2_0 2,442 um): channel
                 # stations like the die trees (the two-frame box has no free spot at the SS reach); their counts are
                 # recorded per class in m['markov_full340']['stations'] -- the lockstep contract (glue faults when its
@@ -4603,6 +4604,12 @@ def _col_relays(m, P):
             continue
         d0 = by.get(eps[0][0])
         if d0 is None or d0.region is None or not d0.region.startswith('frame_'):
+            out.append((bid, cls, bits, eps))
+            continue
+        if MARKOV_FULL340 and bid.startswith(MK_XF) and any(e[0] in by and by[e[0]].region != d0.region for e in eps[1:]):
+            # fs3: bundle frame <-> driver frame Markov buses are not column nets: no column relays (mk7_20: the
+            # frame relays of mkq_2_2_0 ran off 1,470 um and hop-fix then found no spot); hop-fix gives them channel
+            # stations like the die trees
             out.append((bid, cls, bits, eps))
             continue
         r = int(d0.region.split('_')[1])
