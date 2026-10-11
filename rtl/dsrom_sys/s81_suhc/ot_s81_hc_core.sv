@@ -32,7 +32,7 @@
 //                  5 GAIN_LOAD  gain set gsel <- VM rows base .. base + D/16 - 1 (binary32)
 //   [19:18] gsel   [15] YOUT   [14] QUANT   [13:0] VM row base
 //
-// MUT (bench negative controls, 0 in silicon): 1 POST does not write h back (stale resident h); 2 the job uses the
+// MUT (bench negative controls, 0 in silicon): 1 POST does not write h back (stale resident h); 2 POST / NORM use the
 // other slot's h; 3 NORM skipped (done without running the norm); 4 done one write early; 5 done tag op bit flipped.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_core #(
@@ -110,7 +110,9 @@ module ot_s81_hc_core #(
     assign busy = run;
     wire take = e_cmd_v && e_cmd_ready;
     wire [23:0] c_arg = e_cmd_d[30:7];
-    wire        hs = (MUT == 2) ? ~jslot : jslot;         // h slot used by the job
+    // h slot used by the job (MUT 2: the compute jobs -- POST / NORM -- address the other slot's h; H_LOAD / H_STORE
+    // keep the right one, so the mutant is not a consistent renaming of the slots)
+    wire        hs = (MUT == 2 && (kind == K_POST || kind == K_NORM)) ? ~jslot : jslot;
 
     // ------------------------------------------------------------------ resident state
     reg [RW_H-1:0] hb0 [0:2*NV-1];
