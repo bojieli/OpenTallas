@@ -31,7 +31,7 @@ module tb_hgi_cp_die_seq;
         .fault(lfault));
     wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [1818:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
     wire [690:0] am_rec; reg [2:0] am_ret = 3'b001;
-    wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
+    wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [735:0] dma_rec;
     reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;
     wire [15:0] ux_v; reg [15:0] ux_rdy = 0, ux_done = 0, ux_fault = 0; reg [2:0] coll_ret = 3'b001, quant_ret = 3'b001;
     ot_hgi_cp_die #(.USE_MACRO(0), .MUT(MUT), .FQCR(BURST ? 16 : 4)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
@@ -199,7 +199,7 @@ module tb_hgi_cp_die_seq;
                 if (cu == 2) exp_x = {nA_, I_, R_, O_, D_, C_, B_, A_, d_sut, d_hdr, 1'b1};
                 if (cu == 3) exp_x = {nA_, O_, C_, B_, A_, d_hdr, 1'b1};
                 if (cu == 5) exp_x = {d_pos1, nC_, nB_, O_, C_, B_, A_, d_sut, d_hdr, 1'b1};
-                if (cu == 8) exp_x = {d_pos1, nO_, nA_, O_, A_, d_hdr, 1'b1};
+                if (cu == 8) exp_x = {I_[39:8] + {16'd0, d_L}, d_pos1, nO_, nA_, O_, A_, d_hdr, 1'b1};   // + ilist (hgi-1010/c)
                 if (cu == 10) exp_x = {nO_, nA_, O_, B_, A_, d_hdr, 1'b1};
                 if (cu == 1 || cu == 2 || cu == 3 || cu == 5 || cu == 8 || cu == 10) begin chk_u = cu; check_x = 1; end
             end

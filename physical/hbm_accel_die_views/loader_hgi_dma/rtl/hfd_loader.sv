@@ -3,7 +3,7 @@
 // instantiates it except the die view route.  HGI loader (hgi-takeover 2026-10-09): ot_hfd_loader_hgi = 37-bit half-rate loader core (ot_hfd_loader_half37) + the host CP window (ot_hgi_loader_cp) + the memory port to the four stack services (ot_hfd_loader_kport; lane 0 loader, lane 1 CP record-ring fetch); stack index (address bits 36:35) 0..3 = SW, SE, NW, NE. Host link binding as the legacy loader wrapper; the host-memory AXI master m_* stays as in the legacy wrapper (TA-14 host link). + the DMA unit (unit 8): ot_hgi_dma_record + ot_hgi_dma_engines (the DMA front for the svc DMA stream, DMA_FRONT 0 until the svc side binds; the F6 full-rate mover on kport lane 2) + one hfd_hgi_vm client + the 32-lane VM wide write port.
 module hfd_loader (
     input wire [0:0] ck,
-    input wire [703:0] f_hgi_cmdproc,
+    input wire [735:0] f_hgi_cmdproc,
     input wire [221:0] f_hgi_cp,
     input wire [273:0] f_hgi_vmr,
     input wire [31:0] f_hgi_vmw,
@@ -25,11 +25,11 @@ module hfd_loader (
     wire clk = ck[0];
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};
     wire rst_n = ~rst_s[1];
-    reg [703:0] i0_f_hgi_cmdproc; always @(posedge clk) i0_f_hgi_cmdproc <= f_hgi_cmdproc;
-    reg [703:0] i1_f_hgi_cmdproc; always @(posedge clk) i1_f_hgi_cmdproc <= i0_f_hgi_cmdproc;
-    reg [703:0] i2_f_hgi_cmdproc; always @(posedge clk) i2_f_hgi_cmdproc <= i1_f_hgi_cmdproc;
-    reg [703:0] i3_f_hgi_cmdproc; always @(posedge clk) i3_f_hgi_cmdproc <= i2_f_hgi_cmdproc;
-    reg [703:0] i_f_hgi_cmdproc; always @(posedge clk) i_f_hgi_cmdproc <= i3_f_hgi_cmdproc;
+    reg [735:0] i0_f_hgi_cmdproc; always @(posedge clk) i0_f_hgi_cmdproc <= f_hgi_cmdproc;
+    reg [735:0] i1_f_hgi_cmdproc; always @(posedge clk) i1_f_hgi_cmdproc <= i0_f_hgi_cmdproc;
+    reg [735:0] i2_f_hgi_cmdproc; always @(posedge clk) i2_f_hgi_cmdproc <= i1_f_hgi_cmdproc;
+    reg [735:0] i3_f_hgi_cmdproc; always @(posedge clk) i3_f_hgi_cmdproc <= i2_f_hgi_cmdproc;
+    reg [735:0] i_f_hgi_cmdproc; always @(posedge clk) i_f_hgi_cmdproc <= i3_f_hgi_cmdproc;
     reg [221:0] i0_f_hgi_cp; always @(posedge clk) i0_f_hgi_cp <= f_hgi_cp;
     reg [221:0] i1_f_hgi_cp; always @(posedge clk) i1_f_hgi_cp <= i0_f_hgi_cp;
     reg [221:0] i2_f_hgi_cp; always @(posedge clk) i2_f_hgi_cp <= i1_f_hgi_cp;
@@ -147,7 +147,7 @@ module hfd_loader (
     wire [221:0] w_ld_cpl;
     wire [1399:0] w_ld_lq;
     wire [1171:0] w_ld_lr;
-    wire [703:0] w_ld_dma_rec;
+    wire [735:0] w_ld_dma_rec;
     wire [3:0] w_ld_dma_ret;
     wire [337:0] w_ld_dma_vmq;
     wire [273:0] w_ld_dma_vmr;
@@ -198,7 +198,7 @@ module hfd_loader (
     assign w_ld_m_bresp = cfg[137:136];
     assign w_ld_cpl = {i_f_hgi_cp[221:0]};
     assign w_ld_lr = {i_rNE[292:0], i_rNW[292:0], i_rSE[292:0], i_rSW[292:0]};
-    assign w_ld_dma_rec = {i_f_hgi_cmdproc[703:0]};
+    assign w_ld_dma_rec = {i_f_hgi_cmdproc[735:0]};
     assign w_ld_dma_vmr = {i_f_hgi_vmr[273:0]};
     assign w_ld_dma_dq_rdy = 4'd0;
     assign w_ld_dma_dd = 8640'd0;

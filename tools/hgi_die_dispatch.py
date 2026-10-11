@@ -26,7 +26,8 @@ UNITS = {
     'su':     (2, 'su_SW', 'ABCDORI', ()),               # ot_hgi_su_unit at the hfd_su SW centre band (one a die)
     'sfu':    (3, 'sfu_SW', 'ABCO', ()),                 # the SU unit in GLU mode (one a die)
     'att':    (5, 'cmdproc', 'ABCO', (('pos1', 21),)),    # Codex ot_hgi_att_record_adapter: IN the CP block until D4
-    'dma':    (8, 'loader', 'AO', (('pos1', 21),)),       # ot_hgi_dma_record + ot_hgi_dma_mover beside the loader
+    'dma':    (8, 'loader', 'AO', (('pos1', 21), ('ilist', 32))),   # ot_hgi_dma_record + engines beside the loader; ilist =
+                                                      #   the I table's effective base + L (VM word): the indexed row stream's id list
     'hc':     (10, 'hc_SW', 'ABO', ()),                  # ot_hgi_hc_unit (one a die)
 }
 # effective n carried per unit (default: every descriptor's) and the units that take the 256-bit SU template

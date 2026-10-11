@@ -47,7 +47,7 @@ module ot_hgi_cp_die #(
     input  wire [2:0]    sfu_ret,
     output reg  [1471:0] att_rec,       // unit 5  {pos1, n_C, n_B, O, C, B, A, SUT, header, valid}
     input  wire [2:0]    att_ret,
-    output reg  [703:0]  dma_rec,       // unit 8  {pos1, n_O, n_A, O, A, header, valid}
+    output reg  [735:0]  dma_rec,       // unit 8  {ilist, pos1, n_O, n_A, O, A, header, valid}; ilist = I effective base + L
     input  wire [2:0]    dma_ret,
     output reg  [938:0]  hc_rec,        // unit 10 {n_O, n_A, O, B, A, header, valid}
     input  wire [2:0]    hc_ret,
@@ -161,7 +161,7 @@ module ot_hgi_cp_die #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1819'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
-            sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 704'd0; hc_rec <= 939'd0;
+            sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 736'd0; hc_rec <= 939'd0;
             db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
         end else begin
@@ -186,7 +186,7 @@ module ot_hgi_cp_die #(
             else if (sfu_ret[1] || sfu_ret[2]) credx[2] <= 1'b1;
             if (u_v[5] && u_rdy[5]) begin att_rec <= {d_pos1, nC, nB, dO, dC, dB, dA, d_sut, d_hdr, 1'b1}; credx[3] <= 1'b0; end
             else if (att_ret[1] || att_ret[2]) credx[3] <= 1'b1;
-            if (u_v[8] && u_rdy[8]) begin dma_rec <= {d_pos1, nO, nA, dO, dA, d_hdr, 1'b1}; credx[4] <= 1'b0; end
+            if (u_v[8] && u_rdy[8]) begin dma_rec <= {dI[39:8] + {16'd0, d_L}, d_pos1, nO, nA, dO, dA, d_hdr, 1'b1}; credx[4] <= 1'b0; end
             else if (dma_ret[1] || dma_ret[2]) credx[4] <= 1'b1;
             if (u_v[10] && u_rdy[10]) begin hc_rec <= {nO, nA, dO, dB, dA, d_hdr, 1'b1}; credx[5] <= 1'b0; end
             else if (hc_ret[1] || hc_ret[2]) credx[5] <= 1'b1;
