@@ -17,7 +17,7 @@ Mutants (must FAIL): OT_HROW_MUT_NOEPOCH on pos_late (serves the stale squashed 
 import argparse, json, re, subprocess
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv',
+SRC = ['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_bank.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv',
        'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv',
        'rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv',
        'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v',
