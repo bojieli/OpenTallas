@@ -89,6 +89,7 @@ module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, para
  end endgenerate
 endmodule
 
+`ifndef OT_TOPK_TILE_HARD   // the hierarchical w8 top reads the tile as a hardened macro (blackbox stub defines this)
 // One pipelined min-heap of capacity k (runtime, <= MAX_K): op = INS (enters only if x > root) or EXT (outputs the root,
 // sifts +INF).  One op every 2 cycles.  Entries {nz, key[52:0]}; key 0 = empty, key all-ones = +INF.
 module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BYP=0, parameter integer MUT_CLR=0) (
@@ -253,6 +254,8 @@ module ot_hgi_topk_heap_tile #(parameter integer MAX_K=2048, parameter integer M
   end
  end
 endmodule
+`endif
+
 
 // Wide engine: IW scores a beat (in_nw valid, the row's last beat may be partial), W heaps (W a multiple of IW).
 module ot_hgi_idx_topk_hw #(
@@ -306,7 +309,11 @@ module ot_hgi_idx_topk_hw #(
    if (!rr[h]) begin cr <= 2'd2; sc <= 2'd3; end
    else begin cr <= cr - iss + t_cr; sc <= (iss || clr_go) ? 2'd3 : (sc != 2'd0 ? sc - 2'd1 : 2'd0); end
   end
+`ifdef OT_TOPK_TILE_HARD
+  ot_hgi_topk_heap_tile u_hp (.clk(clk), .rst_n(rr[h]), .k(k),
+`else
   ot_hgi_topk_heap_tile #(.MAX_K(MAX_K), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_hp (.clk(clk), .rst_n(rr[h]), .k(k),
+`endif
    .op_v(iss), .op_ext(hp_ext), .op_x(hp_x[h]), .op_cr(t_cr), .ext_v(hx_v[h]), .ext_d(hx_d[h]), .root_key(h_root[h]),
    .clr_go(clr_go), .idle(t_idle));
  end endgenerate
