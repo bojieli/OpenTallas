@@ -75,7 +75,10 @@ module ot_hgi_dma_kvw #(
     // ================================================================ issue (I)
     reg        i_act; reg [14:0] i_vs, i_vnx, i_vst; reg [17:0] i_left, i_ns; reg [19:0] i_rows;
     reg [1:0]  occ [0:31];                                  // a lane's sectors issued, not drained (<= 2: its hold entries)
-    reg [31:0] kqv;                                         // lanes with a request in kq (not yet counted by the mover's credits)
+    reg [31:0] kqv, kqv_d;                                  // lanes with a request in kq / one edge earlier (not yet in gcr_q)
+    // registered boundary (standalone element): the grant and the mover's credit counters are pin-flopped; the requests of
+    // the last two edges are not in gcr_q yet, so a lane needs more credits than those
+    reg gnt_q; reg [32*6-1:0] gcr_q;
     reg [9:0]  q_iss;                                       // slots issued (mod 1024, 512 slots)
     reg        buf_ok;                                      // registered: >= 8 free slots
     // issue-order FIFO {lane 5, last of move 1}
@@ -84,8 +87,8 @@ module ot_hgi_dma_kvw #(
     always @* begin : idec
         reg ok0, ok1;
         l0 = i_vs[4:0]; l1 = 5'(i_vs[4:0] + 5'd1);
-        ok0 = i_act && g_gnt && buf_ok && occ[l0] != 2'd2 && g_cr[l0*6 +: 6] > {5'd0, kqv[l0]};
-        ok1 = ok0 && i_left >= 18'd2 && occ[l1] != 2'd2 && g_cr[l1*6 +: 6] > {5'd0, kqv[l1]};
+        ok0 = i_act && gnt_q && buf_ok && occ[l0] != 2'd2 && gcr_q[l0*6 +: 6] > 6'(2'(kqv[l0]) + 2'(kqv_d[l0]));
+        ok1 = ok0 && i_left >= 18'd2 && occ[l1] != 2'd2 && gcr_q[l1*6 +: 6] > 6'(2'(kqv[l1]) + 2'(kqv_d[l1]));
         ok_n = ok1 ? 2'd2 : ok0 ? 2'd1 : 2'd0;
         i_rend = i_left == {16'd0, ok_n};                   // this cycle ends the row
         i_last = i_rend && i_rows == 20'd1;                 // ... and the move
@@ -139,6 +142,7 @@ module ot_hgi_dma_kvw #(
     // straight from the buffer read, presented by a registered head pointer; the lane's ready only clears the head's valid
     // and advances the pointer.  4 reservations (taken at the buffer read) cover the read -> present -> release loop.
     reg [3:0] oa_v [0:3]; reg [31:0] oa_s [0:15]; reg [255:0] oa_d [0:15]; reg [1:0] op [0:3], ot [0:3];
+    reg [3:0] oh [0:3];                                     // the head pointer one-hot (registered): AND-OR output pick
     reg [3:0]  w_acc, w_ack; reg [6:0] wo [0:3];
     // a stream's next slot is readable: written (w_cnt - q in 1 .. 512)
     reg [3:0]  w_rdy; reg [1:0] g_s [0:1]; reg [1:0] g_v;
@@ -165,9 +169,11 @@ module ot_hgi_dma_kvw #(
     end
     genvar gl;
     for (gl = 0; gl < 4; gl = gl + 1) begin : g_lane
-        assign kw_v[gl] = oa_v[gl][op[gl]];
-        assign kw_addr[gl*37 +: 37] = {oa_s[gl*4 + op[gl]], 5'd0};
-        assign kw_wdata[gl*256 +: 256] = oa_d[gl*4 + op[gl]];
+        assign kw_v[gl] = |(oa_v[gl] & oh[gl]);
+        assign kw_addr[gl*37 +: 37] = {(oa_s[gl*4] & {32{oh[gl][0]}}) | (oa_s[gl*4+1] & {32{oh[gl][1]}}) |
+                                       (oa_s[gl*4+2] & {32{oh[gl][2]}}) | (oa_s[gl*4+3] & {32{oh[gl][3]}}), 5'd0};
+        assign kw_wdata[gl*256 +: 256] = (oa_d[gl*4] & {256{oh[gl][0]}}) | (oa_d[gl*4+1] & {256{oh[gl][1]}}) |
+                                         (oa_d[gl*4+2] & {256{oh[gl][2]}}) | (oa_d[gl*4+3] & {256{oh[gl][3]}});
         assign kw_wo[gl] = wo[gl] != 7'd0 || w_acc[gl];
     end
     // ================================================================ registers
@@ -177,13 +183,13 @@ module ot_hgi_dma_kvw #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             f_t <= 3'd0; f_i <= 3'd0; f_w <= 3'd0; c_rdy <= 1'b0;
-            i_act <= 1'b0; kq <= 512'd0; kqv <= 32'd0; q_iss <= 10'd0; buf_ok <= 1'b0;
+            i_act <= 1'b0; kq <= 512'd0; kqv <= 32'd0; kqv_d <= 32'd0; gnt_q <= 1'b0; gcr_q <= '0; q_iss <= 10'd0; buf_ok <= 1'b0;
             o_t <= 6'd0; o_h <= 6'd0; o_n <= 7'd0; hw <= 32'd0; hr <= 32'd0; q_drn <= 10'd0;
             for (integer b = 0; b < 32; b = b + 1) begin occ[b] <= 2'd0; hc[b] <= 2'd0; end
             d_v[0] <= 1'b0; d_v[1] <= 1'b0; b0_we <= 1'b0; b1_we <= 1'b0; b0_re <= 1'b0; b1_re <= 1'b0; bw_last <= 1'b0;
             w_cnt <= 10'd0; w_act <= 4'd0; m1_v[0] <= 1'b0; m1_v[1] <= 1'b0; m2_v[0] <= 1'b0; m2_v[1] <= 1'b0; w_acc <= 4'd0; w_ack <= 4'd0;
             pr[0] <= 2'd0; pr[1] <= 2'd0;
-            for (integer l = 0; l < 4; l = l + 1) begin res[l] <= 3'd0; op[l] <= 2'd0; ot[l] <= 2'd0; wo[l] <= 7'd0; oa_v[l] <= 4'd0; end
+            for (integer l = 0; l < 4; l = l + 1) begin res[l] <= 3'd0; op[l] <= 2'd0; ot[l] <= 2'd0; oh[l] <= 4'd1; wo[l] <= 7'd0; oa_v[l] <= 4'd0; end
             src <= 1'b0; done <= 1'b0; idle <= 1'b1; owed <= 1'b0;
         end else begin
             src <= 1'b0; done <= 1'b0;
@@ -194,7 +200,7 @@ module ot_hgi_dma_kvw #(
             end
             c_rdy <= 3'(f_t + {2'd0, c_v && c_rdy} - f_w) < 3'd3 && !(c_v && c_rdy);   // registered, one accept per two edges
             // ---- issue
-            kq <= 512'd0; kqv <= 32'd0;
+            kq <= 512'd0; kqv <= 32'd0; kqv_d <= kqv; gnt_q <= g_gnt; gcr_q <= g_cr;
             if (!i_act && f_i != f_t) begin
                 i_act <= 1'b1; i_vs <= f_vs[f_i[1:0]]; i_vnx <= f_vs[f_i[1:0]] + f_vst[f_i[1:0]]; i_vst <= f_vst[f_i[1:0]];
                 i_left <= f_ns[f_i[1:0]]; i_ns <= f_ns[f_i[1:0]]; i_rows <= f_m[f_i[1:0]]; f_i <= f_i + 3'd1;
@@ -268,7 +274,7 @@ module ot_hgi_dma_kvw #(
                 push = (m2_v[0] && m2_l[0] == 2'(l)) || pb; pop = kw_v[l] && kw_rdy[l];
                 if (push) begin oa_d[l*4 + ot[l]] <= pb ? b1_rd : b0_rdi; oa_s[l*4 + ot[l]] <= pb ? m2_s[1] : m2_s[0]; ot[l] <= ot[l] + 2'd1; end
                 ov = oa_v[l];
-                if (pop) begin ov[op[l]] = 1'b0; op[l] <= op[l] + 2'd1; end
+                if (pop) begin ov[op[l]] = 1'b0; op[l] <= op[l] + 2'd1; oh[l] <= {oh[l][2:0], oh[l][3]}; end
                 if (push) ov[ot[l]] = 1'b1;
                 oa_v[l] <= ov;
                 res[l] <= res[l] + 3'(((g_v[0] && g_s[0] == 2'(l)) || (g_v[1] && g_s[1] == 2'(l))) ? 1 : 0) - 3'(pop);
