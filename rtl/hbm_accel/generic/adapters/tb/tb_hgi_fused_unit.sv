@@ -6,6 +6,13 @@
 // VM out == expected.  Prints HGI_FUSED_UNIT PASS / FAIL.
 module tb_hgi_fused_unit;
     `include "fu_sizes.svh"
+`ifndef VLQ
+ `ifdef HCE
+  `define VLQ 32
+ `else
+  `define VLQ 8
+ `endif
+`endif
     reg clk = 0; always #1 clk = ~clk;
     reg [1214:0] recm [0:NREC-1]; reg [686:0] expm [0:NREC-1]; reg [287:0] casem [0:NCASE-1];
     reg [63:0] vmim [0:NVMI-1]; reg [63:0] vmem [0:NVME-1]; reg [71:0] hbmm [0:NHBM-1];
@@ -35,7 +42,7 @@ module tb_hgi_fused_unit;
     , .UN(`UN), .UM(`UM)
 `endif
 `ifdef HCE
-    , .HCE(1), .HMUT(`HCE)
+    , .HCE(1), .HMUT(`HCE), .ULQ(`VLQ)
 `endif
     ) u (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'd240000), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]),
@@ -44,10 +51,72 @@ module tb_hgi_fused_unit;
         .mv_fault(mv_fault), .op_v(), .op_rdy(1'b0), .op_w(), .su_idle(1'b1), .su_fault(1'b0), .vmq(fq), .vmr(fr),
         .ne_v(), .ne_rdy(1'b1), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(), .q_done(1'b0), .q_fault(1'b0)
 `ifdef WIDE
-        , .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(w2q), .wwq_cr(w2_cr), .wwq_done(w2_done),
-        .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1)
+        , .wrq(f_rq), .wrq_cr(own ? rq_cr : 32'd0), .wrr(own ? rr : '0), .wwq(f_w2q), .wwq_cr(own ? w2_cr : 32'd0),
+        .wwq_done(own ? w2_done : 32'd0), .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1)
 `endif
         );
+`ifdef WIDE
+    // b-hc LANE_LOAD: the bench preloads / reads back VM through the wide lanes (32 sectors a cycle) while the unit is
+    // idle (own = 0); otherwise the unit owns them
+    wire [32*16-1:0] f_rq; wire [32*280-1:0] f_w2q;
+    reg own = 1; reg [32*16-1:0] t_rq = 0; reg [32*280-1:0] t_wq = 0;
+    assign rq = own ? f_rq : t_rq; assign w2q = own ? f_w2q : t_wq;
+    reg [278:0] lw_q [0:31][$]; reg [278:0] lr_q [0:31][$]; reg [278:0] lr_e [0:31][$];   // {sec 15, mask 8, data 256}
+    integer lwcr [0:31], lrcr [0:31], lerr = 0;
+    task automatic lanes_run(input integer cs);
+        integer b, busy, tw, q2;
+        begin
+            for (b = 0; b < 32; b = b + 1) begin lwcr[b] = `VLQ; lrcr[b] = `VLQ; end
+            busy = 1; tw = 0;
+            while (busy && tw < 400000) begin
+                @(negedge clk);
+                t_rq = 0; t_wq = 0; busy = 0;
+                for (b = 0; b < 32; b = b + 1) begin
+                    if (w2_cr[b]) lwcr[b] = lwcr[b] + 1;
+                    if (rq_cr[b]) lrcr[b] = lrcr[b] + 1;
+                    if (rr[b*257 + 256]) begin : rsp
+                        reg [278:0] e; e = lr_e[b].pop_front();
+                        for (q2 = 0; q2 < 8; q2 = q2 + 1)
+                            if (e[256 + q2] && rr[b*257 + 32*q2 +: 32] !== e[32*q2 +: 32]) begin
+                                if (errors < 20) $display("ERR case %0d VM[%0d] = %h expected %h", cs, {e[278:264], 3'(q2)},
+                                                          rr[b*257 + 32*q2 +: 32], e[32*q2 +: 32]);
+                                errors = errors + 1;
+                            end
+                    end
+                    if (lw_q[b].size() > 0 && lwcr[b] > 0) begin : wr
+                        reg [278:0] x; x = lw_q[b].pop_front();
+                        t_wq[b*280 +: 280] = {1'b1, x[278:264], x[255:0], x[263:256]}; lwcr[b] = lwcr[b] - 1;
+                    end else if (lw_q[b].size() == 0 && lr_q[b].size() > 0 && lrcr[b] > 0 && lwcr[b] == `VLQ) begin : rd
+                        reg [278:0] x; x = lr_q[b].pop_front();
+                        t_rq[b*16 +: 16] = {1'b1, x[278:264]}; lrcr[b] = lrcr[b] - 1; lr_e[b].push_back(x);
+                    end
+                    if (lw_q[b].size() > 0 || lr_q[b].size() > 0 || lr_e[b].size() > 0 || lwcr[b] != `VLQ || lrcr[b] != `VLQ) busy = 1;
+                end
+                tw = tw + 1;
+            end
+            @(negedge clk); t_rq = 0; t_wq = 0;
+            if (busy) begin $display("ERR bench lane traffic hung"); errors = errors + 1; end
+        end
+    endtask
+    // words {addr 32, value 32} sorted by address -> sector entries on the lane queues (wr = 1: writes, 0: checks)
+    task automatic lanes_words(input integer first, input integer n, input integer wr);
+        integer j2; reg [278:0] x; reg [31:0] a2; reg have;
+        begin
+            have = 0; x = 0;
+            for (j2 = 0; j2 < n; j2 = j2 + 1) begin
+                a2 = wr ? vmim[first + j2][63:32] : vmem[first + j2][63:32];
+                if (have && x[278:264] != a2[17:3]) begin
+                    if (wr) lw_q[x[268:264]].push_back(x); else lr_q[x[268:264]].push_back(x);
+                    have = 0;
+                end
+                if (!have) begin x = 0; x[278:264] = a2[17:3]; have = 1; end
+                x[256 + a2[2:0]] = 1'b1;
+                x[32*a2[2:0] +: 32] = wr ? vmim[first + j2][31:0] : vmem[first + j2][31:0];
+            end
+            if (have) begin if (wr) lw_q[x[268:264]].push_back(x); else lr_q[x[268:264]].push_back(x); end
+        end
+    endtask
+`endif
     wire k_req_v, k_req_we, k_rsp_rdy; reg k_req_rdy = 0, k_rsp_v = 0, k_rsp_we = 0; reg [255:0] k_rsp_data = 0;
     wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
     wire [279:0] wl; wire wl_done;   // the VM wide write port (hgi-takeover 2026-10-10)
@@ -57,13 +126,30 @@ module tb_hgi_fused_unit;
         .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we), .k_rsp_data(k_rsp_data), .k_fault(1'b0),
         .vmq(mq), .vmr(mr), .wl(wl), .wl_done(wl_done));
 `ifdef WIDE
-    ot_hgi_vm_unit #(.NC(3), .WP(1), .RP(32), .W2(32)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status(),
+    ot_hgi_vm_unit #(.NC(3), .WP(1), .RP(32), .W2(32), .LQ(`VLQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status(),
         .wq(wl), .wq_done(wl_done), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q), .w2q_cr(w2_cr), .w2q_done(w2_done));
 `else
     ot_hgi_vm_unit #(.NC(3), .WP(1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status(), .wq(wl), .wq_done(wl_done));
 `endif
     reg [31:0] hbm [longint];
     integer klat = -1, q; reg pend = 0; reg [36:0] pa;
+`ifdef KLAT
+    // b-hc: the pipelined kport lane (as tb_hgi_e2e's hgi_e2e_kport): a request a cycle, answered IN ORDER KLAT cycles
+    // later (reads only on this bench)
+    reg [255:0] kq_d [0:255]; longint kq_t [0:255]; integer kq_h = 0, kq_n = 0; longint ktn = 0;
+    always @(posedge clk) begin
+        ktn <= ktn + 1;
+        k_rsp_v <= 0;
+        if (kq_n > 0 && kq_t[kq_h % 256] <= ktn) begin k_rsp_v <= 1; k_rsp_we <= 0; k_rsp_data <= kq_d[kq_h % 256]; kq_h = kq_h + 1; kq_n = kq_n - 1; end
+        if (rst_n && k_req_v && k_req_rdy) begin : acc
+            reg [255:0] rd;
+            for (q = 0; q < 8; q = q + 1) rd[32*q +: 32] = hbm.exists((k_addr >> 2) + q) ? hbm[(k_addr >> 2) + q] : 32'd0;
+            kq_d[(kq_h + kq_n) % 256] = rd; kq_t[(kq_h + kq_n) % 256] = ktn + `KLAT - 1; kq_n = kq_n + 1;
+        end
+        if (!rst_n) begin kq_h = 0; kq_n = 0; end
+        k_req_rdy <= rst_n && (kq_n < 200);
+    end
+`else
     always @(posedge clk) begin
         k_rsp_v <= 0;
         if (rst_n && k_req_v && k_req_rdy && !pend) begin pend = 1; pa = k_addr; klat = 2 + ($random(seed) & 7); end
@@ -74,6 +160,7 @@ module tb_hgi_fused_unit;
         end
         k_req_rdy <= !pend && ($random(seed) & 1);     // hgi-takeover: ready from the state after this edge's accept
     end
+`endif
     task automatic vm_req(input we, input [31:0] word, input [31:0] data, output [31:0] qd);
         integer tw;
         begin
@@ -95,7 +182,11 @@ module tb_hgi_fused_unit;
             nvi = casem[c][159:128]; ve0 = casem[c][127:96]; nve = casem[c][95:64]; h0 = casem[c][63:32]; nh = casem[c][31:0];
             if (kind != 0) continue;
             rst_n = 0; hbm.delete(); repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk);
+`ifdef LANE_LOAD
+            own = 0; lanes_words(vi0, nvi, 1); lanes_run(c); own = 1;
+`else
             for (j = 0; j < nvi; j = j + 1) vm_req(1'b1, vmim[vi0 + j][63:32], vmim[vi0 + j][31:0], qd);
+`endif
             for (j = 0; j < nh; j = j + 1) hbm[hbmm[h0 + j][71:32]] = hbmm[h0 + j][31:0];
             k = 0; nf = 0; t0 = cyc; hce_cyc = 0; mv_cyc = 0;
             for (j = 0; j < nr; j = j + 1) begin
@@ -109,7 +200,12 @@ module tb_hgi_fused_unit;
 `ifdef DUMP_SCR
             for (j = 0; j < 4; j = j + 1) begin vm_req(1'b0, 240000 + `DUMP_SCR + j, 0, qd); $display("SCR %0d = %h", j, qd); end
 `endif
+`ifdef LANE_LOAD
+            own = 0; lanes_words(ve0, nve, 0); lanes_run(c); own = 1;
+            for (j = 0; j < 0; j = j + 1) begin
+`else
             for (j = 0; j < nve; j = j + 1) begin
+`endif
                 vm_req(1'b0, vmem[ve0 + j][63:32], 0, qd);
                 if (qd !== vmem[ve0 + j][31:0]) begin
                     if (errors < 20) $display("ERR case %0d VM[%0d] = %h expected %h", c, vmem[ve0 + j][63:32], qd, vmem[ve0 + j][31:0]);

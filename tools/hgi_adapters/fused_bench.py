@@ -78,7 +78,9 @@ def main():
         vmi.extend(sorted((vm_in or {}).items()))
         vme.extend(sorted((vm_out or {}).items()))
         hbm.extend(sorted((hb or {}).items()))
-    for v, tr, cpl, vm in C.conformance(lambda v: v['row'] == 'CF-NORM'):
+    import os
+    hc_only = os.environ.get('FUSED_HC_ONLY', '0') == '1'       # debug / unit-rate: only the DS HC cases
+    for v, tr, cpl, vm in ([] if hc_only else C.conformance(lambda v: v['row'] == 'CF-NORM')):
         hb = {}
         for base, hexs in v['dies'][0].get('hbm_in', []):
             b = bytes.fromhex(hexs)
@@ -88,9 +90,9 @@ def main():
         add([d for d in tr if C.unit_of(d) == 4], vm, C.vm_out_of(v['expect']['dies'][0]), hb)
     # Qwen token ROW_NORM records with random data (hgi_sim lib.row_norm = the expected VM)
     rng = np.random.default_rng(5)
-    tr, _ = C.qwen_dispatch()
+    tr, _ = C.qwen_dispatch() if not hc_only else ([], None)
     seen = set()
-    for d in tr:
+    for d in ([] if hc_only else tr):
         if C.unit_of(d) != 4 or C.fld(d['hdr'], 'op', C.UOP) != 1:
             continue
         A, B, O = d['eff'][0], d['eff'][1], d['eff'][4]
