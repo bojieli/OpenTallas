@@ -162,8 +162,15 @@ module `OT_S81PH_CBF_M (
     assign fvm_u = {fu_p, fu_v};
 `ifdef OT_S81PH_COLL_JOB
     wire jf_unused;
+    // controller boundary registered both ways (class 3: c_cmd reached the job's state through 43 gate levels)
+    reg [84:0] c_cmd_q; reg [8:0] c_done_q; reg [1:0] c_st_q;
+    wire [8:0] c_done_w; wire [1:0] c_st_w;
+    always @(posedge ck or negedge rs)
+        if (!rs) begin c_cmd_q <= 85'd0; c_done_q <= 9'd0; c_st_q <= 2'd0; end
+        else begin c_cmd_q <= c_cmd; c_done_q <= c_done_w; c_st_q <= c_st_w; end
+    assign c_done = c_done_q; assign c_st = c_st_q;
     ot_s81_coll_job #(.MUT(`ifdef OT_S81PH_COLL_JOB_MUT `OT_S81PH_COLL_JOB_MUT `else 0 `endif)) u_job (.c_clk(ck),
-        .c_rst_n(rs), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .ck(ck), .rs_n(rst_n), .vm_f(fv_r), .core_f(fv_rel),
+        .c_rst_n(rs), .c_cmd(c_cmd_q), .c_done(c_done_w), .c_st(c_st_w), .ck(ck), .rs_n(rst_n), .vm_f(fv_r), .core_f(fv_rel),
         .core_h(hq), .fault(jf_unused));
 `else
     assign fv_rel = fv_r;
