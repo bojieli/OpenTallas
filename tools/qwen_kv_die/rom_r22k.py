@@ -565,6 +565,7 @@ O4_UP4 = (345.6, 388.8)
 O4_SEQ = (518.4, 518.4)
 O4_CBUF = (194.4, 216.0)
 O4_CROM = (194.4, 518.4)
+O4_UP4_LOW = os.environ.get('OT_R22KO4_UP4_LOW') == '1'   # study only (see _option4)
 O4_RROW = 64.8                 # relay row between the buffer rows and the ROM row (>= the 60.48-um wide-word relay frame)
 O4_BITS = dict(me_snap=92, su_snap=57, me_start=49, pw=75, kvd=201, kok=1, meok=1, su_iss=476, su_st=133, su_acc=24,
                cb_su_a=8 + 192 + 6, cb_su_q=512, cb_far_a=8 + 192 + 6, cb_far_q=512 + 1, cb_ctl=6 + 1 + 18, cb_rdy=1 + 6 + 3,
@@ -621,9 +622,11 @@ def _vm_ar(v, m, seq, seq_master):
         vf = 'S' if si.y + si.h <= vi.y + 1.0 and si.x < vi.x + vi.w - 1.0 else 'E'
         if si.x >= vi.x + vi.w - 1.0:
             vf = 'E'
-        so = s.w * 0.15 if sf in 'NS' else s.h * 0.85
+        # clear of the master's other pins on that face (r22ko4 case: vrq on top of seq_su ib -> DRT-0073 ib[305])
+        so = (430.0 if seq_master == 'qfd_seq_su' else s.w * 0.15) if sf in 'NS' else s.h * 0.85
+        step = 30.0 if seq_master == 'qfd_seq_su' else 60.0
         for j, (p, b) in enumerate((('vrd', 9), ('vrq', 512), ('vwr', 521))):
-            s.face(p, b, sf, 'M5' if sf in 'NS' else 'M4', so + j * (60.0 if sf in 'NS' else -60.0), 1)
+            s.face(p, b, sf, 'M5' if sf in 'NS' else 'M4', so + j * (step if sf in 'NS' else -60.0), 1)
         vo = vm.w * 0.85 if vf in 'NS' else 300.0
         for j, (p, b) in enumerate((('svr', 9), ('svq', 512), ('svw', 521))):
             vm.face(p, b, vf, 'M5' if vf in 'NS' else 'M4', vo + j * (-60.0 if vf in 'NS' else 60.0), 1)
@@ -646,10 +649,15 @@ def _option4(v, m, rec):
                  region=tt.region, domain=dom or tt.domain)
         new.append(i)
         return i
-    ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, tt.y, O4_CTLM)
-    # 2 x 2 block N of the control tile: the band words come over the top to the block centre (up4_0's NE corner) and
-    # fan out to the four abutted tiles there (<= 400 um, no stage), as the r21b tree top's bw* area pins
-    y0 = ctl.y + O4_CTLM[1] + v.GY
+    if O4_UP4_LOW:
+        # study: the upper-tile group at the VM top, the control tile N of it (band words to the old tree-top height)
+        y0 = tt.y
+        ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, v.up(tt.y + 2 * O4_UP4[1] + 2 * v.GY, v.GY), O4_CTLM)
+    else:
+        ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, tt.y, O4_CTLM)
+        # 2 x 2 block N of the control tile: the band words come over the top to the block centre (up4_0's NE corner)
+        # and fan out to the four abutted tiles there (<= 400 um, no stage), as the r21b tree top's bw* area pins
+        y0 = ctl.y + O4_CTLM[1] + v.GY
     ups = [add(f'tt_up4_{u}', 'qfd_tt_up4' if u == 0 else 'qfd_tt_up4_g', tt.x + (u % 2) * (O4_UP4[0] + v.GX),
                y0 + (u // 2) * (O4_UP4[1] + v.GY), O4_UP4) for u in range(4)]
     seq = add('seq_su', 'qfd_seq_su', slab.x, v.dn(slab.y - O4_SEQ[1] - v.GY, v.GY), O4_SEQ, dom=sq.domain)
