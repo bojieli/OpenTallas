@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_vm_wfc_ep",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_vm_wfc_ep.lef": "5d50a17de217f2de1b3344b069b7ad59fd4e281aa758d492fa3162eecc6d94ad",
+    "dsfd_vm_wfc_ep_ff.lib": "49448fe0dac2823c496c232a306bf107669dc6a03472b707a2b7215102805f7c",
+    "dsfd_vm_wfc_ep_ss.lib": "01ba03ab36980b76725c3828782887481d5d7bcb55c9f522812feb2e406a208b"
+  },
+  "ok": true
+}
