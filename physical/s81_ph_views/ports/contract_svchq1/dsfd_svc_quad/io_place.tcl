@@ -28306,3 +28306,4 @@ place_pin -pin_name {h_flt[0]} -layer M5 -location {1420.8600 755.8800} -pin_siz
 place_pin -pin_name {h_hw_v[0]} -layer M5 -location {1421.0520 755.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {h_hw_d[0]} -layer M5 -location {1421.2440 755.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {h_hc[0]} -layer M5 -location {1421.4360 755.8800} -pin_size {0.0240 0.1920}
+place_pin -pin_name {live[0]} -layer M5 -location {1421.6280 755.8800} -pin_size {0.0240 0.1920}

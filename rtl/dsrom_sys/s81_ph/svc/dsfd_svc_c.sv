@@ -41,18 +41,21 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
     input  wire [32*4-1:0]   r_beat,
     // per-stack host write face (dsfd_host_sd hw<s> / hc<s>): {cls 2, we, addr 32, d 256, v} in, {ack 8, cr} out
     input  wire [291:0]   hw,
-    output wire [8:0]     hc
+    output wire [8:0]     hc,
+    // HBM controller status ctrl_<st> st {fault, live}: fault folds into jd[1]; live gates the request check
+    input  wire [1:0]     hs
 );
     localparam integer NRH0 = 9, NRH1 = 5, NRH3 = 5, NRS = 5, NRQ = 6, NRX = 6;
     localparam integer NRI0 = 7, NRI1 = 3, NRI2 = 3, NRI3 = 8;
-    localparam integer NG = 13, NRHW = 4;   // NRHW: N-E host pins <-> quadrant 2
+    localparam integer NG = 13, NRHW = 4, NRF = 5;   // NRF: quadrant 2 / index tile faults -> the fold tile   // NRHW: N-E host pins <-> quadrant 2
     function automatic integer nrh(input integer d); nrh = (d == 0) ? NRH0 : (d == 1) ? NRH1 : (d == 3) ? NRH3 : 0; endfunction
     function automatic integer rq_(input integer d); rq_ = (d < 2) ? d : 2; endfunction   // remote-quadrant index (0, 1, 3)
     function automatic integer nri(input integer d); nri = (d == 0) ? NRI0 : (d == 1) ? NRI1 : (d == 2) ? NRI2 : NRI3; endfunction
 
     wire [514:0] qg; wire [2059:0] q_q;
     wire [3:0] od_v, od_r, a0_v, a0_r; wire [2047:0] od_d, a0_d; wire a1_v, a1_r, x_v, x_r; wire [511:0] a1_d, x_d;
-    dsfd_svcio_job #(.MUT(MUT)) u_job (.ck(ck), .rst(rst), .j(j), .jd(jd), .q(q), .q_o(qg),
+    wire [1:0] jd_i; wire live_p; wire [3:0] q_live;
+    dsfd_svcio_job #(.MUT(MUT)) u_job (.ck(ck), .rst(rst), .j(j), .jd(jd_i), .q(q), .q_o(qg),
         .t_a0({ad[492:481], ad[508:496], ad[0]}), .t_a1({ad[1005:994], ad[1021:1009], ad[513]}),
         .t_x({xd[493:482], xd[509:497], xd[1]}), .t_od({od[493:482], od[509:497], od[1]}));
     ot_s81ph_svc_io_t u_io (.ck(ck[0]), .rst(rst[0]), .q(qg), .od(od), .xd(xd), .ad(ad), .fault(fault[0]), .q_q(q_q),
@@ -110,7 +113,7 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
             .h_gq_v(hq_gq_v[g]), .h_gq_d(hq_gq_d[g]), .h_gq_c(h_gq_c), .h_gr_v(h_gr_v), .h_gr_d(h_gr_d), .h_gr_c(hq_gr_c[g]),
             .h_gwd(h_gwd), .h_wb_v(hq_wb_v[g]), .h_wb_d(hq_wb_d[g]), .h_wb_c(h_wb_c), .h_fb_v(hq_fb_v[g]), .h_fb_d(hq_fb_d[g]),
             .h_pv_v(h_pv_v), .h_pv_d(h_pv_d), .h_pv_c(hq_pv_c[g]), .h_flt(h_flt),
-            .h_hw_v(hwq_v), .h_hw_d(hwq_d), .h_hc(hq_hc[g]));
+            .h_hw_v(hwq_v), .h_hw_d(hwq_d), .h_hc(hq_hc[g]), .live(q_live[g]));
     end endgenerate
     assign h_bq_v = hq_bq_v[2]; assign h_bq_d = hq_bq_d[2]; assign h_br_c = hq_br_c[2];
     assign h_gq_v = hq_gq_v[2]; assign h_gq_d = hq_gq_d[2]; assign h_gr_c = hq_gr_c[2];
@@ -185,4 +188,14 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
             .o_v(xs_v[g+1]), .o_d(xs_d[512*(g+1) +: 512]), .o_r(xs_r[g+1]));
     end endgenerate
     assign x_v = xs_v[NRX]; assign x_d = xs_d[512*NRX +: 512]; assign xs_r[NRX] = x_r;
+
+    // ---------------- job-fault fold (jd[1] = job fault | sticky slab fault) + controller live ----------------
+    wire q2f, ixf;
+    dsfd_svch_rly #(.W(1), .NR(NRF), .V(2)) u_rf (.ck(ck), .rst(rst), .i_v({fo[2], ix_f}), .i_d(1'b0), .o_v({q2f, ixf}), .o_d());
+    dsfd_svch_flt u_flt (.ck(ck), .rst(rst), .jd_i(jd_i), .hs(hs), .sf({fault[0], q2f, ixf}), .jd(jd), .live(live_p));
+    // live to every quadrant (relay stages from the N-E pin group: Q3 1, Q2 5, Q1 9, Q0 14)
+    generate for (g = 0; g < 4; g = g + 1) begin : g_lv
+        localparam integer NL = (g == 3) ? 1 : (g == 2) ? 5 : (g == 1) ? 9 : 14;
+        dsfd_svch_rly #(.W(1), .NR(NL)) u_l (.ck(ck), .rst(rst), .i_v(live_p), .i_d(1'b0), .o_v(q_live[g]), .o_d());
+    end endgenerate
 endmodule

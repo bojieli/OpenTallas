@@ -88,7 +88,9 @@ module dsfd_svc_quad #(
     input  wire [HQ-1:0]       h_flt,
     // per-stack host write face (quadrant 2: the home's G port 12): hw without v / {ack 8, cr}
     input  wire [0:0]          h_hw_v, input wire [HHW-1:0] h_hw_d,
-    output wire [HHC-1:0]      h_hc
+    output wire [HHC-1:0]      h_hc,
+    // HBM controller live (hs[0] of ctrl_<st>, relayed): a PC request issued while the controller is not live = fault
+    input  wire [0:0]          live
 );
     function automatic integer dep(input integer nr); dep = 2 * nr + 8; endfunction
     function automatic integer nrh(input integer d); nrh = (d == 0) ? NRH0 : (d == 1) ? NRH1 : (d == 3) ? NRH3 : 0; endfunction
@@ -267,9 +269,22 @@ module dsfd_svc_quad #(
 
     // ---------------- faults ----------------
     reg flt;
-    wire local_fault = in_fault | at_fault | pc_fault | c_fault | w_ovf | g_ovf | pv_ovf;
+    reg live_q; reg [7:0] rqv_q; reg nl_flt;
+    always @(posedge clk or negedge rn_l)
+        if (!rn_l) begin live_q <= 1'b0; rqv_q <= 0; nl_flt <= 1'b0; end
+        else begin
+            live_q <= live[0];
+            for (int i = 0; i < 8; i++) rqv_q[i] <= qrq[341*i];
+            if ((|rqv_q) && !live_q) nl_flt <= 1'b1;
+        end
+    wire local_fault = in_fault | at_fault | pc_fault | c_fault | w_ovf | g_ovf | pv_ovf | nl_flt;
     always @(posedge clk or negedge rn_l) if (!rn_l) flt <= 1'b0; else if (local_fault) flt <= 1'b1;
-    assign fo[0] = flt;
+    // fo: this quadrant's sticky fault; quadrant 2: the whole slab compute fault (its own, the other quadrants' relayed
+    // faults, the home's) -- dsfd_svc_c folds it into the job-done fault jd[1]
+    wire home_f;
+    reg fo_q;
+    always @(posedge clk or negedge rn_l) if (!rn_l) fo_q <= 1'b0; else fo_q <= flt | home_f;
+    assign fo[0] = fo_q;
 
     // ---------------- home (quadrant 2) ----------------
     generate if (HOME) begin : g_home
@@ -292,6 +307,7 @@ module dsfd_svc_quad #(
         wire [4*NG-1:0] gwdv = {hgwd_q[2*NG +: NG], gwd_i, hgwd_q[0 +: 2*NG]};
         wire qf = (|hflt_q) | flt;
         wire hf; wire [31:0] hfc;
+        assign home_f = qf | hf;
         reg hw_vq; reg [290:0] hw_dq; wire hcr; wire [7:0] hack;
         always @(posedge clk or negedge rn_h) if (!rn_h) hw_vq <= 1'b0; else hw_vq <= h_hw_v[0];
         always @(posedge clk) hw_dq <= h_hw_d;
@@ -326,6 +342,6 @@ module dsfd_svc_quad #(
         assign sc_r = 1'b0; assign own_idx = 0;
         assign h_bq_v = 0; assign h_bq_d = 0; assign h_br_c = 0; assign h_gq_v = 0; assign h_gq_d = 0; assign h_gr_c = 0;
         assign h_wb_v = 0; assign h_wb_d = 0; assign h_fb_v = 0; assign h_fb_d = 0; assign h_pv_c = 0;
-        assign a0_v[0] = 1'b0; assign a0_d = 0; assign od_v[0] = 1'b0; assign od_d = 0; assign h_hc = '0;
+        assign a0_v[0] = 1'b0; assign a0_d = 0; assign od_v[0] = 1'b0; assign od_d = 0; assign h_hc = '0; assign home_f = 1'b0;
     end endgenerate
 endmodule

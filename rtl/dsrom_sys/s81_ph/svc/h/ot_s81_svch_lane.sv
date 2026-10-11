@@ -136,3 +136,35 @@ endmodule
 module ot_s81_svch_hinv (input wire a, output wire y);
     assign y = ~a;
 endmodule
+
+// Job-fault FOLD tile of dsfd_svc_c (at the N-E pin group, beside the job tile): jd = {jd_i[1] | slab fault, jd_i[0]},
+// slab fault = sticky OR of the HBM controller fault hs[1], the IO hub fault, the slab compute fault (quadrant 2's
+// aggregate, relayed) and the index reader's fault (relayed).  hs[0] (controller live) is pin-flopped and handed out
+// for the quadrants' request-while-not-live check.  Every input a pin flop, outputs from flops (+1 cycle on jd).
+// Mutant SVCH_MUT_NOFOLD (gate: the fold checks must FAIL): jd = jd_i.
+module dsfd_svch_flt (
+    input  wire [0:0]    ck,
+    input  wire [0:0]    rst,
+    input  wire [1:0]    jd_i,
+    input  wire [1:0]    hs,
+    input  wire [2:0]    sf,
+    output reg  [1:0]    jd,
+    output reg  [0:0]    live
+);
+    reg [1:0] rs;
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+    wire rn = rs[1];
+    reg [1:0] jq, hq; reg [2:0] sq; reg sfl;
+    always @(posedge ck[0] or negedge rn)
+        if (!rn) begin jq <= 0; hq <= 0; sq <= 0; sfl <= 1'b0; jd <= 0; live <= 1'b0; end
+        else begin
+            jq <= jd_i; hq <= hs; sq <= sf;
+            if (hq[1] || (|sq)) sfl <= 1'b1;
+`ifdef SVCH_MUT_NOFOLD
+            jd <= jq;
+`else
+            jd <= {jq[1] | sfl, jq[0]};
+`endif
+            live <= hq[0];
+        end
+endmodule

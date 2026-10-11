@@ -4,7 +4,7 @@
 # tools/v41_ckv_sel_attn_vectors.py golden vectors (same cases / checks as tb_s81_svcq_slab).
 # Usage (repo root, fleet host, under admit.sh):
 #   run_svc_c_bench.sh lint
-#   run_svc_c_bench.sh BUILD VEC "DIE ST [DEFINE]" ...        (ENGDEF=SVCQ_ENG_FG3 for the buildable engine latencies)
+#   run_svc_c_bench.sh BUILD VEC "DIE ST [DEFINE]" ...    (FOLD="1 2": also the jd fault-fold checks)        (ENGDEF=SVCQ_ENG_FG3 for the buildable engine latencies)
 set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 CASES=${CASES:-"full1m short300 skew1m tail46"}; SEEDS=${SEEDS:-"1 2"}; JOBS=${JOBS:-16}
@@ -59,4 +59,8 @@ for cfg in "$@"; do
     "$o/obj/Vtb" +dir="$VEC/$c" +seed=$s >"$o/run_${c}_s$s.log" 2>&1 || true
     echo "$tag $c s$s: $(grep -h SVCC "$o/run_${c}_s$s.log" | tail -1)"
   done; done
+  for m in ${FOLD:-}; do
+    "$o/obj/Vtb" +dir="$VEC/short300" +seed=1 +foldchk=$m >"$o/run_fold$m.log" 2>&1 || true
+    echo "$tag fold$m: $(grep -h SVCC_FOLD "$o/run_fold$m.log" | tail -1)"
+  done
 done

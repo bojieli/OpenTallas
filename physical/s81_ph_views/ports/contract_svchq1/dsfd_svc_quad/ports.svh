@@ -49,6 +49,7 @@
     input wire [0:0] h_wb_c,
     output wire [4227:0] h_wb_d,
     output wire [0:0] h_wb_v,
+    input wire [0:0] live,
     output wire [511:0] od_d,
     input wire [0:0] od_r,
     output wire [0:0] od_v,

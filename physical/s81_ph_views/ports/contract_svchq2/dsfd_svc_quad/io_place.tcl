@@ -39763,3 +39763,4 @@ place_pin -pin_name {h_hc[5]} -layer M4 -location {2124.9120 480.9720} -pin_size
 place_pin -pin_name {h_hc[6]} -layer M4 -location {2124.9120 481.0680} -pin_size {0.1920 0.0240}
 place_pin -pin_name {h_hc[7]} -layer M4 -location {2124.9120 481.1640} -pin_size {0.1920 0.0240}
 place_pin -pin_name {h_hc[8]} -layer M4 -location {2124.9120 481.2600} -pin_size {0.1920 0.0240}
+place_pin -pin_name {live[0]} -layer M4 -location {2124.9120 481.4520} -pin_size {0.1920 0.0240}

@@ -56,7 +56,7 @@ def quad_ports(g):
           ('h_fb_v', HQ, 'output', hf), ('h_fb_d', HQ * 607, 'output', hf),
           ('h_pv_v', HQ, 'input', hf), ('h_pv_d', HQ * 513, 'input', hf), ('h_pv_c', HQ, 'output', hf),
           ('h_flt', HQ, 'input', hf),
-          ('h_hw_v', 1, 'input', 'N'), ('h_hw_d', 291 if home else 1, 'input', 'N'), ('h_hc', 9 if home else 1, 'output', 'N')]
+          ('h_hw_v', 1, 'input', 'N'), ('h_hw_d', 291 if home else 1, 'input', 'N'), ('h_hc', 9 if home else 1, 'output', 'N'), ('live', 1, 'input', 'N')]
     return L
 
 

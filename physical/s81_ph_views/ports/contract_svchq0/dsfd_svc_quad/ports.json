@@ -209963,10 +209963,25 @@
 ],
 "bits": 1,
 "direction": "output"
+},
+"live": {
+"layer": "M5",
+"pins": [
+[
+"live[0]",
+"M5",
+1421.616,
+755.784,
+1421.64,
+755.976
+]
+],
+"bits": 1,
+"direction": "input"
 }
 },
 "generator": {
 "file": "tools/s81_ph/s81_ph_coll_tiles.py",
-"note": "svch quadrant 0 (tools/s81_ph/s81_ph_svch_tiles.py): S = PC tiles, score lanes W/E, rest N; used [('N', 1059.4, 1059.4), ('N', 358.8, 1059.1), ('W', 0.6, 750.0), ('E', 623.7, 750.0)]"
+"note": "svch quadrant 0 (tools/s81_ph/s81_ph_svch_tiles.py): S = PC tiles, score lanes W/E, rest N; used [('N', 1059.4, 1059.4), ('N', 358.9, 1059.1), ('W', 0.6, 750.0), ('E', 623.7, 750.0)]"
 }
 }

@@ -85,11 +85,14 @@ module tb_dsfd_svc_c (input wire clk);
     reg [32*256-1:0] r_data = 0;
     reg [32:0] jcmd = 0; wire [1:0] jd;
     reg [291:0] hw = 0; wire [8:0] hc;
+    // fold checks (+foldchk=1: controller fault on hs[1]; 2: the q pin's fault bit = a slab fault): jd[1] must rise
+    reg hs_f = 0, qf_bit = 0; integer foldchk = 0, fold_cyc = -1;
+    initial if ($value$plusargs("foldchk=%d", foldchk)) ;
     wire [513:0] od, xd; wire [1025:0] ad; wire of, xf, af, hub_fault;
     dsfd_svc_c #(.DIE_ID(DIE), .ST(ST)) dut (
-        .ck(clk), .rst(rst_n), .j(jcmd), .jd(jd), .q({1'b0, 1'b1, q_d, q_v}),
+        .ck(clk), .rst(rst_n), .j(jcmd), .jd(jd), .q({qf_bit, 1'b1, q_d, q_v}),
         .od(od), .of(of), .xd(xd), .xf(xf), .ad(ad), .af(af), .fault(hub_fault),
-        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hw(hw), .hc(hc));
+        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hw(hw), .hc(hc), .hs({hs_f, 1'b1}));
     // ---------------- host writes (dsfd_host_sd hw / hc contract: 8 credits, cr per word, ack per completed sector) ----
     // NHW sector writes (KV class, then RoPE class) to a region no job touches, one KV marker (no write, no ack),
     // interleaved with the job; at the end every written sector must hold its data in the HBM image and the acks must
@@ -127,6 +130,14 @@ module tb_dsfd_svc_c (input wire clk);
     wire [63:0] fault_code = {57'd0, jd[1], hub_fault, cflt};
     integer n_done = 0;
     always @(posedge clk) if (jd[0]) n_done <= n_done + 1;
+    always @(posedge clk) if (foldchk != 0) begin
+        if (cyc == 3000) begin if (foldchk == 1) hs_f <= 1'b1; else qf_bit <= 1'b1; end
+        if (cyc > 3000 && jd[1] && fold_cyc < 0) fold_cyc = cyc;
+        if (cyc == 8000) begin
+            $display("SVCC_FOLD mode=%0d jd_fault_at=%0d verdict=%s", foldchk, fold_cyc, (fold_cyc > 3000) ? "PASS" : "FAIL");
+            $finish;
+        end
+    end
     // ---------------- q frame list (built once) ----------------
     localparam integer QMAX = 8192;
     reg [511:0] qw [0:QMAX-1];
