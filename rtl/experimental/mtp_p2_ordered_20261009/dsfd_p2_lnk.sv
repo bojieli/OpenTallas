@@ -30,6 +30,8 @@
 // know when that is (the VM's lane 0 never sees the start at all), so the lane ends present a word to the core only
 // while its identity equals the identity of the last start the core accepted; later words wait in the credited
 // receiver (OUTPUT_PIPE 1: the compare reads a registered head, not the queue mux).
+// Boundary timing: every receiver facing a core port runs SEL 1 (c_ready selects precomputed next states) and
+// OUTPUT_PIPE 1 (registered c_valid / c_data): +1 cycle per lane word / start / result row, pipelined.
 // OT_FIXLAT_MUT_LAT1 (negative control): every receiver here assumes a latency-1 link (0 hops, the legacy
 // 3-cycle grant history) at the same depth -> must overflow on the stationed bench.
 // OT_FIXLAT_MUT_NOGATE (negative control): no transaction gate -> back-to-back transactions fault the core.
@@ -56,11 +58,11 @@ module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
  wire rst_n;
  ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rst_n));
  wire [1:0] lv, lr, open_;
- ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_l0(.clk(clk),.rst_n(rst_n),
+ ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_l0(.clk(clk),.rst_n(rst_n),
   .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(lv[0]),.c_ready(lr[0]),.c_data(c_in_d[603:0]));
- ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_l1(.clk(clk),.rst_n(rst_n),
+ ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_l1(.clk(clk),.rst_n(rst_n),
   .l_valid(f_l1v),.l_ready(t_l1g),.l_data(f_l1d),.c_valid(lv[1]),.c_ready(lr[1]),.c_data(c_in_d[1207:604]));
- ot_dsrom_mtp_lrx_rtt #(.W(101),.D(D_C),.ENABLE_RTT(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_st(.clk(clk),.rst_n(rst_n),
+ ot_dsrom_mtp_lrx_rtt #(.W(101),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_st(.clk(clk),.rst_n(rst_n),
   .l_valid(f_sv),.l_ready(t_sg),.l_data(f_sd),.c_valid(c_start_v),.c_ready(c_start_r),.c_data(c_start_d));
  // transaction gate: identity of the start the core last accepted (registered compare against the registered heads)
  reg [73:0] cur_id; reg cur_ok;
@@ -101,7 +103,7 @@ module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 
   .l_valid(t_l1v),.l_ready(f_l1g),.l_data(t_l1d));
  ot_dsrom_mtp_ltx #(.W(101)) u_st(.clk(ck[0]),.rst_n(rn),.c_valid(c_sv),.c_ready(c_sr),.c_data(c_sd),
   .l_valid(t_sv),.l_ready(f_sg),.l_data(t_sd));
- ot_dsrom_mtp_lrx_rtt #(.W(594),.D(D_O),.ENABLE_RTT(1),.FORWARD_HOPS(OF),.RETURN_HOPS(OR)) u_o(.clk(ck[0]),.rst_n(rn),
+ ot_dsrom_mtp_lrx_rtt #(.W(594),.D(D_O),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(OF),.RETURN_HOPS(OR)) u_o(.clk(ck[0]),.rst_n(rn),
   .l_valid(f_ov),.l_ready(t_og),.l_data(f_od),.c_valid(c_ov),.c_ready(c_or),.c_data(c_od));
 endmodule
 
