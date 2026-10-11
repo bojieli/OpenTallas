@@ -336,6 +336,13 @@ module ot_hbm_lk_ep #(
     reg                 w_v;
     reg  [W-1:0]        w_d;
     (* keep *) reg [NS*NSL*QD-1:0] w_oh;
+    // el1011-hbm-lkep: per-sub bank copy stage.  dcae4c608 preroute -1,621 ps = w_d -> qs[g] was ONE edge of ~1,800 ps
+    // buffered wire (w_d broadcast to the three subs' queue banks, which sit toward their macros).  Each bank now takes a
+    // registered copy of the write data and of its own one-hot slice enables (keep): w_d -> w_dg[g] -> qs[g] (2 hops).
+    // qn counts a word one edge later (w_v2), so a word is admitted only once it is in its bank; +1 edge die credit loop.
+    (* keep *) reg [NS*W-1:0]       w_dg;
+    (* keep *) reg [NS*NSL*QD-1:0] w_ohg;
+    reg                 w_v2;
     (* keep *) reg [NS*NSL*QD-1:0] hd;
     reg  [NS*QD*W-1:0]  qs;
     reg  [NS*W-1:0]     l0_d;
@@ -361,13 +368,14 @@ module ot_hbm_lk_ep #(
         end
     end
     always @(posedge clk) w_d <= t_flit;
+    always @(posedge clk) w_dg <= {NS{w_d}};
     genvar e, s;
     generate for (g = 0; g < NS; g = g + 1) begin : g_q
         for (s = 0; s < NSL; s = s + 1) begin : g_s
             localparam integer LO = s * SL;
             localparam integer HI = (LO + SL > W) ? W : LO + SL;
             for (e = 0; e < QD; e = e + 1) begin : g_e
-                always @(posedge clk) if (w_oh[(g*NSL+s)*QD+e]) qs[(g*QD+e)*W+LO +: HI-LO] <= w_d[HI-1:LO];
+                always @(posedge clk) if (w_ohg[(g*NSL+s)*QD+e]) qs[(g*QD+e)*W+LO +: HI-LO] <= w_dg[g*W+LO +: HI-LO];
             end
             reg [HI-LO-1:0] x;
             integer j;
@@ -380,7 +388,7 @@ module ot_hbm_lk_ep #(
     end endgenerate
     always @(posedge clk or negedge rtq)
         if (!rtq) begin
-            esel <= 0; w_v <= 1'b0; w_oh <= 0; l0_v <= 0;
+            esel <= 0; w_v <= 1'b0; w_oh <= 0; l0_v <= 0; w_v2 <= 1'b0; w_ohg <= 0;
             for (gg = 0; gg < NS; gg = gg + 1) begin
                 tl[gg*QD +: QD] <= {{(QD-1){1'b0}}, 1'b1};
                 icr[gg*CI +: CI] <= PBD + 1;
@@ -389,6 +397,7 @@ module ot_hbm_lk_ep #(
             qn <= 0; fc <= FCR[8:0]; wsel <= 0; t_cr <= 1'b0; q_ovf <= 1'b0; crp <= 0;
         end else begin
             w_v <= t_v;
+            w_v2 <= w_v; w_ohg <= w_oh;
             for (gg = 0; gg < NS; gg = gg + 1) begin
                 for (ss = 0; ss < NSL; ss = ss + 1)
                     w_oh[(gg*NSL+ss)*QD +: QD] <= (t_v && esel == gg) ? tl[gg*QD +: QD] : {QD{1'b0}};
@@ -399,9 +408,9 @@ module ot_hbm_lk_ep #(
             end
             if (t_v) esel <= (esel == NS - 1) ? 2'd0 : esel + 1'b1;
             l0_v <= admv;
-            qn <= qn + (w_v ? 1'b1 : 1'b0) - nadm;
+            qn <= qn + (w_v2 ? 1'b1 : 1'b0) - nadm;
             wsel <= (wsel + nadm) % NS;
-            if ({1'b0, qn} + w_v + t_v > TXQ + nadm) q_ovf <= 1'b1;
+            if ({1'b0, qn} + w_v2 + w_v + t_v > TXQ + nadm) q_ovf <= 1'b1;
 `ifndef OT_LKEP_MUT_CREDIT
             t_cr <= (crp + nadm) != 0;
             crp <= crp + nadm - (((crp + nadm) != 0) ? 1'b1 : 1'b0);
