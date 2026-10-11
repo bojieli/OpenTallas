@@ -13,7 +13,7 @@
 // ---------------------------------------------------------------------------
 // Clocks come from the C++ harness (physical/sys_takeover/coll_native_harness.cpp): ck 1.2 GHz, ckd 0.9 GHz, unrelated
 // phase; reset releases after 20 ckd edges.
-module tb_qfd_coll_native #(parameter integer CQ_AD = 64, parameter integer CR = 4, parameter integer ENG_IB = 4, parameter integer LCR = 4) (input wire ck, input wire ckd);
+module tb_qfd_coll_native #(parameter integer CQ_AD = 64, parameter integer CR = 4, parameter integer ENG_IB = 4, parameter integer LCR = 4, parameter integer CPIPE = -1, parameter integer MEMM = 0) (input wire ck, input wire ckd);
     localparam integer N = 4, LANES = 16, FW = 512, TAGW = 32, RB = 2, PW = FW + 2 + TAGW, MAXW = 1 << 14;
     localparam integer WSQ = 546, WCQ = 516;
     reg [4:0] rcnt = 0;
@@ -94,7 +94,7 @@ module tb_qfd_coll_native #(parameter integer CQ_AD = 64, parameter integer CR =
         wire [FW-1:0] o_data;
         wire [RB-1:0] o_rank;
         wire [2:0] fcode;
-        ot_qwen_die_io_xfifo #(.WSQ(WSQ), .NCOLL(1), .WCQ(WCQ), .N(N), .MB(FW + 1), .CQ_AD(CQ_AD), .CR(CR), .ENG_IB(ENG_IB), .LCR(LCR)) u_x (
+        ot_qwen_die_io_xfifo #(.WSQ(WSQ), .NCOLL(1), .WCQ(WCQ), .N(N), .MB(FW + 1), .CQ_AD(CQ_AD), .CR(CR), .ENG_IB(ENG_IB), .LCR(LCR), .CPIPE(CPIPE), .MEMM(MEMM)) u_x (
             .ck(ck), .cku(ck), .cks(ck), .ckd(ckd), .rst_n(rst_n),
             .i_ucie_tx_v(1'b0), .i_ucie_tx(1024'b0), .i_ucie_tx_cr(), .o_ucie_tx_v(), .o_ucie_tx(), .o_ucie_tx_cr(1'b0),
             .i_ucie_rx_v(1'b0), .i_ucie_rx(1024'b0), .i_ucie_rx_cr(), .o_ucie_rx_v(), .o_ucie_rx(), .o_ucie_rx_cr(1'b0),
