@@ -137,6 +137,11 @@ def _tie_class(spec, key, errors):
     return t
 
 
+def clock_port(spec):
+    """the die port that is the wrapper clock (spec 'clock', default ck[0]): never registered, never a spare bit"""
+    return spec.get('clock', 'ck[0]').split('[')[0]
+
+
 def tie_ledger(spec, used_in, used_out, dirs, fck, rtl_ties, errors):
     """SYS-1 ledger rows: RTL-port ties (cfg / const / expr / fold / open) and spare die bits, each classed from
     spec['ties'] or gap TIED_OFF.  Unclassed rows are appended to errors."""
@@ -165,7 +170,7 @@ def tie_ledger(spec, used_in, used_out, dirs, fck, rtl_ties, errors):
         return None, None
     for direction, used in (('in', used_in), ('out', used_out)):
         for p in sorted(used):
-            if p in ('ck',) or (p == 'rst' and direction == 'in'):
+            if p in ('ck', clock_port(spec)) or (p == 'rst' and direction == 'in'):
                 continue
             spare = [i for i, d in enumerate(dirs[p]) if d == direction and not used[p][i]
                      and not (direction == 'in' and p in fck and i in fck[p])]
@@ -220,7 +225,7 @@ def gen(spec, strict=True):
            '    wire rst_n = ~rst_s[1];']
     # registered die inputs (input bits of every port)
     for p, v in sorted(ports.items()):
-        if p in ('ck',) or (p == 'rst' and spec.get('rst', 'rst[0]') == 'rst[0]'):
+        if p in ('ck', clock_port(spec)) or (p == 'rst' and spec.get('rst', 'rst[0]') == 'rst[0]'):
             continue
         if any(d == 'in' for d in dirs[p]):
             fs = port_in_stages(spec, p)
@@ -347,7 +352,7 @@ def gen(spec, strict=True):
     if errors and strict:
         raise TieError(master, tie_rows, errors)
     # spare bits
-    spare_in = [(p, i) for p in sorted(ports) if p not in ('ck', 'rst') for i, d in enumerate(dirs[p])
+    spare_in = [(p, i) for p in sorted(ports) if p not in ('ck', 'rst', clock_port(spec)) for i, d in enumerate(dirs[p])
                 if d == 'in' and not used_in[p][i] and not (p in fck and i in fck[p])]
     spare_out = [(p, i) for p in sorted(ports) for i, d in enumerate(dirs[p]) if d == 'out' and not used_out[p][i]]
     L_ += sigs

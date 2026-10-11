@@ -10,7 +10,9 @@
    "params": {
     "USE_MACRO": 1,
     "FQCR": 16,
-    "MTP": 2
+    "MTP": 2,
+    "FUSED": 1,
+    "QRW": 1216
    },
    "bind": {
     "clk": "clk",
@@ -22,7 +24,7 @@
     "vmstat": "die:f_hgi_vmstat[0:19]",
     "coll_rec": "die:t_hgi_coll[0:968]",
     "coll_ret": "die:f_hgi_coll[0:3]",
-    "quant_rec": "die:t_hgi_quant[0:683]",
+    "quant_rec": "die:t_hgi_quant[0:1216]",
     "quant_ret": "die:f_hgi_quant[0:3]",
     "cfg_bus": "die:t_hgi_cfg_coll[0:40]",
     "ux_v": "fold",
@@ -30,7 +32,7 @@
     "ux_done": "cfg",
     "ux_fault": "cfg",
     "wr_quiet": "die:f_hgi_dma[3:4]",
-    "idx_rec": "die:t_hgi_idx[0:1819]",
+    "idx_rec": "die:t_hgi_idx[0:2075]",
     "idx_ret": "die:f_hgi_idx[0:3]",
     "am_rec": "die:t_hgi_argmax[0:691]",
     "am_ret": "die:f_hgi_argmax[0:3]",

@@ -27,7 +27,7 @@
     output wire [938:0] t_hgi_hc,
     output wire [2074:0] t_hgi_idx,
     output wire [221:0] t_hgi_loader,
-    output wire [682:0] t_hgi_quant,
+    output wire [1215:0] t_hgi_quant,
     output wire [1173:0] t_hgi_sfu,
     output wire [2197:0] t_hgi_su,
     output wire [337:0] t_hgi_vmq,

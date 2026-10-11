@@ -1,0 +1,221 @@
+{
+ "master": "hfd_hc",
+ "cfg_bits": 0,
+ "cfg_inputs": [],
+ "folded_output_bits": 51,
+ "folded_outputs": [
+  "w_u_halted",
+  "w_u_hq_v",
+  "w_u_hq_addr",
+  "w_u_hq_len",
+  "w_u_hq_tag"
+ ],
+ "forwarded_clock_outputs": 0,
+ "forwarded_clock_inputs": 0,
+ "die_input_bits": 10568,
+ "die_input_bits_used": 1213,
+ "die_output_bits": 10839,
+ "die_output_bits_driven": 341,
+ "ties": [
+  {
+   "where": "u.cfg_norm_eps",
+   "kind": "const",
+   "bits": 32,
+   "cls": "by_design",
+   "reason": "DS hc_eps = 1e-6 (0x358637BD, the only model with hyper-connections; = ot_hgi_hc_die HC_EPS); static. Open (d): move it into the HC weight-set header",
+   "gap": null
+  },
+  {
+   "where": "u.halted",
+   "kind": "fold",
+   "bits": 1,
+   "cls": "debug",
+   "reason": "sticky halt mirror of rec_fault (the fault rides t_hgi_cmdproc[2]); observation only, kept sink flop",
+   "gap": null
+  },
+  {
+   "where": "u.hq_v",
+   "kind": "fold",
+   "bits": 1,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "u.hq_rdy",
+   "kind": "const",
+   "bits": 1,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "u.hq_addr",
+   "kind": "fold",
+   "bits": 35,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "u.hq_len",
+   "kind": "fold",
+   "bits": 3,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "u.hq_tag",
+   "kind": "fold",
+   "bits": 11,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "u.hr_v",
+   "kind": "const",
+   "bits": 1,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "u.hr_tag",
+   "kind": "const",
+   "bits": 11,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "u.hr_beat",
+   "kind": "const",
+   "bits": 2,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "u.hr_data",
+   "kind": "const",
+   "bits": 256,
+   "cls": "open",
+   "reason": "AUDIT N3 (lead 10-10, main bf6e1a883 / db9ef1603): HC weights come through the VM aperture (DMA.LOAD O >= 2^18 -> the HC weight-window write port), not an HBM lane; the unit's aperture window port (HSRC) is hgi-1010 d's RTL, the VM-side aperture route b's; until then this HBM client is unconnected and an HC record that fetches weights stalls (no die path)",
+   "gap": null
+  },
+  {
+   "where": "die:ck1[0:1]",
+   "kind": "spare_die_input_dropped",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "one clock tree: the unit is rooted at ck0; ck1..ck7 were the legacy per-chain clock sub-tree pins (same clock net clk_serial). hbm-phys [fp]: drop them with the legacy datapath",
+   "gap": null
+  },
+  {
+   "where": "die:ck2[0:1]",
+   "kind": "spare_die_input_dropped",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "one clock tree: the unit is rooted at ck0; ck1..ck7 were the legacy per-chain clock sub-tree pins (same clock net clk_serial). hbm-phys [fp]: drop them with the legacy datapath",
+   "gap": null
+  },
+  {
+   "where": "die:ck3[0:1]",
+   "kind": "spare_die_input_dropped",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "one clock tree: the unit is rooted at ck0; ck1..ck7 were the legacy per-chain clock sub-tree pins (same clock net clk_serial). hbm-phys [fp]: drop them with the legacy datapath",
+   "gap": null
+  },
+  {
+   "where": "die:ck4[0:1]",
+   "kind": "spare_die_input_dropped",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "one clock tree: the unit is rooted at ck0; ck1..ck7 were the legacy per-chain clock sub-tree pins (same clock net clk_serial). hbm-phys [fp]: drop them with the legacy datapath",
+   "gap": null
+  },
+  {
+   "where": "die:ck5[0:1]",
+   "kind": "spare_die_input_dropped",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "one clock tree: the unit is rooted at ck0; ck1..ck7 were the legacy per-chain clock sub-tree pins (same clock net clk_serial). hbm-phys [fp]: drop them with the legacy datapath",
+   "gap": null
+  },
+  {
+   "where": "die:ck6[0:1]",
+   "kind": "spare_die_input_dropped",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "one clock tree: the unit is rooted at ck0; ck1..ck7 were the legacy per-chain clock sub-tree pins (same clock net clk_serial). hbm-phys [fp]: drop them with the legacy datapath",
+   "gap": null
+  },
+  {
+   "where": "die:ck7[0:1]",
+   "kind": "spare_die_input_dropped",
+   "bits": 1,
+   "cls": "by_design",
+   "reason": "one clock tree: the unit is rooted at ck0; ck1..ck7 were the legacy per-chain clock sub-tree pins (same clock net clk_serial). hbm-phys [fp]: drop them with the legacy datapath",
+   "gap": null
+  },
+  {
+   "where": "die:f_lgW_rdn[0:8257]",
+   "kind": "spare_die_input_dropped",
+   "bits": 8257,
+   "cls": "open",
+   "reason": "HC is lgW slot 2 but not yet a wide client (ot_hgi_vm_wclient / HC staging, hgi-1010 d): taps reserved; the HC aperture weight writes may also ride this tap (d/b decision)",
+   "gap": null
+  },
+  {
+   "where": "die:f_lgW_wdn[0:65]",
+   "kind": "spare_die_input_dropped",
+   "bits": 65,
+   "cls": "open",
+   "reason": "HC is lgW slot 2 but not yet a wide client (ot_hgi_vm_wclient / HC staging, hgi-1010 d): taps reserved; the HC aperture weight writes may also ride this tap (d/b decision)",
+   "gap": null
+  },
+  {
+   "where": "die:f_sfu[0:1024]",
+   "kind": "spare_die_input_dropped",
+   "bits": 1024,
+   "cls": "not_adopted",
+   "reason": "legacy r16g hub-quarter datapath (ot_su12_light lanes / quarter rings); on the HGI die no record drives it: the HGI unit takes every operand through its record bus + VM (packet client and the lgW lane group). Die net is an N16 legacy orphan for hbm-phys [fp] to drop in the re-floorplan (AUDIT_behavioural_only_paths.md)",
+   "gap": null
+  },
+  {
+   "where": "die:t_lgW_rup[0:513]",
+   "kind": "spare_die_output_const0",
+   "bits": 513,
+   "cls": "open",
+   "reason": "HC is lgW slot 2 but not yet a wide client (ot_hgi_vm_wclient / HC staging, hgi-1010 d): taps reserved; the HC aperture weight writes may also ride this tap (d/b decision)",
+   "gap": null
+  },
+  {
+   "where": "die:t_lgW_wup[0:8961]",
+   "kind": "spare_die_output_const0",
+   "bits": 8961,
+   "cls": "open",
+   "reason": "HC is lgW slot 2 but not yet a wide client (ot_hgi_vm_wclient / HC staging, hgi-1010 d): taps reserved; the HC aperture weight writes may also ride this tap (d/b decision)",
+   "gap": null
+  },
+  {
+   "where": "die:t_sfu[0:1024]",
+   "kind": "spare_die_output_const0",
+   "bits": 1024,
+   "cls": "not_adopted",
+   "reason": "legacy r16g hub-quarter datapath (ot_su12_light lanes / quarter rings); on the HGI die no record drives it: the HGI unit takes every operand through its record bus + VM (packet client and the lgW lane group). Die net is an N16 legacy orphan for hbm-phys [fp] to drop in the re-floorplan (AUDIT_behavioural_only_paths.md)",
+   "gap": null
+  }
+ ],
+ "tied_off_bits": 0,
+ "classed_tie_bits": {
+  "debug": 1,
+  "test": 0,
+  "by_design": 39,
+  "open": 18117,
+  "not_adopted": 2048
+ }
+}

@@ -90,6 +90,11 @@
     "N",
     "input"
    ],
+   "f_hgi_fmkq": [
+    38,
+    "N",
+    "input"
+   ],
    "f_hgi_rgxq0": [
     38,
     "N",
@@ -117,6 +122,11 @@
    ],
    "t_hgi_cp": [
     419,
+    "N",
+    "output"
+   ],
+   "t_hgi_fmkr": [
+    257,
     "N",
     "output"
    ],
@@ -334,7 +344,7 @@
     "output"
    ],
    "t_hgi_quant": [
-    683,
+    1216,
     "N",
     "output"
    ]
@@ -637,12 +647,32 @@
     "N",
     "input"
    ],
+   "f_hgi_fmv": [
+    338,
+    "N",
+    "input"
+   ],
+   "f_hgi_fused": [
+    338,
+    "N",
+    "input"
+   ],
    "f_hgi_quant": [
     338,
     "N",
     "input"
    ],
    "t_hgi_cp": [
+    274,
+    "N",
+    "output"
+   ],
+   "t_hgi_fmv": [
+    274,
+    "N",
+    "output"
+   ],
+   "t_hgi_fused": [
     274,
     "N",
     "output"
@@ -1194,6 +1224,16 @@
     "S",
     "input"
    ],
+   "f_hgi_vmr_fmv": [
+    274,
+    "S",
+    "input"
+   ],
+   "f_hgi_vmr_fused": [
+    274,
+    "S",
+    "input"
+   ],
    "f_lgE_rdn": [
     8257,
     "S",
@@ -1209,6 +1249,16 @@
     "S",
     "output"
    ],
+   "t_hgi_vmq_fmv": [
+    338,
+    "S",
+    "output"
+   ],
+   "t_hgi_vmq_fused": [
+    338,
+    "S",
+    "output"
+   ],
    "t_lgE_rup": [
     513,
     "S",
@@ -1220,12 +1270,22 @@
     "output"
    ],
    "f_hgi_cmdproc": [
-    683,
+    1216,
+    "S",
+    "input"
+   ],
+   "f_hgi_fmkr": [
+    257,
     "S",
     "input"
    ],
    "t_hgi_cmdproc": [
     3,
+    "S",
+    "output"
+   ],
+   "t_hgi_fmkq": [
+    38,
     "S",
     "output"
    ]
