@@ -29,22 +29,30 @@
 // (6) collective outputs of all 4 dies = C8 reference, in order; (7) y words on the HC bus = golden y, bit-exact;
 // (8) HC NORM output rows and H_STORE rows (the layer output) = CPU golden, bit-exact.
 // MUT (gather endpoint) 2 wrong done tag / 4 dropped done; HMUT (HC core) 1 hc_post does not write h back;
-// +define+OT_S81PH_MUT_SPLIT_LO4FLIP (collective lane-4 relay data bit flip); INP1 (HC f_inp tied 1).  Each must FAIL.
+// +define+OT_S81PH_MUT_TREP (collective output slice 1 pops one cycle early); INP1 (HC f_inp tied 1).  Each must FAIL.
 // Plusargs: +DIR=<stim dir>.
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_s81_die_layer;
-    parameter integer MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 400000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
-    localparam integer NR = 128, XW = 640, MAXC = 16384, JOBS = 1, MAXR = 1024, MAXE = 2048, MAXM = 16, FW = 512,
+    parameter integer MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 45000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
+    localparam integer NR = 128, XW = 640, MAXC = 16384, MAXR = 1024, MAXQ = 4096, MAXE = 2048, MAXM = 16, FW = 512,
                        PW = 547, W = 552, LVM = 10;
     localparam integer S_RD = 2, S_WR = 8, H_BASE = 0, G_BASE = 1280, GROWS = 320, C_BASE = 2560, S_BASE = 6144;
     string dir;
+`ifdef TB_SEQC
+    localparam integer JOBS = 3;         // kit starts (sequential jobs of the same layer): the drop-start mutant loses the 3rd
+`define SEQ u_ctl.u_seq
+`else
+    localparam integer JOBS = 1;
+`define SEQ u_ctl.u.u.u_seq
+`endif
     // ---------------- clocks: the die PLL (die 0's collective slab)
     reg refclk = 0; always #5 refclk = ~refclk;
     reg por = 0; initial #50 por = 1;
     wire [3:0] cks, ckvs, rsts;
     wire ck = cks[0], ckv = ckvs[0];
     reg rst = 0, rsv = 0;
-    integer cyc = 0;
+    integer cyc = 0, e3;
+    integer nxt [0:11];
     always @(posedge ck) cyc <= cyc + 1;
     reg [63:0] rs = 64'h243F6A8885A308D3;
     function [31:0] rnd(input integer d);
@@ -63,12 +71,30 @@ module tb_s81_die_layer;
     reg [31:0]  nm [0:4];
     integer NE, TOT, NMSG, NY, NST;
     integer errors = 0, nwr = 0;
-    integer endt [0:1][0:127], stt [0:1][0:127];
+    integer endt [0:3][0:127], stt [0:3][0:127];
+    integer cj = -1;                     // the current job (jobs run one after another)
     reg pk_v = 0; reg [6:0] pk_a = 0; reg [27:0] pk_d = 0; reg [7:0] pk_len = 0; reg peer_go = 0;
     // ---------------- DUT: control plane
     reg pw_v = 0; reg [6:0] pw_a = 0; reg [27:0] pw_d = 0; reg [7:0] plen = 0;
     reg i_v = 0; wire i_r; reg [511:0] i_d = 0; reg i_l = 0;
     wire [84:0] c [0:11]; wire [8:0] d [0:11]; wire [1:0] est [0:11];
+`ifdef TB_SEQC
+    // decision A: dsfd_stage_seq_c (kit start / done + program write on the serial clock); the kit (bench) writes the
+    // HIDDEN payload rows into the VM after each start
+    reg vwe = 0; reg [13:0] vwa = 0; reg [511:0] vwd = 0;
+    reg [52:0] f_ks = 0; wire [53:0] t_kd; reg [35:0] f_pw = 0; wire [5:0] t_st;
+    wire flt = t_st[5], stk = 1'b0; wire [15:0] fvec = {10'd0, t_st}, snap = 16'd0;
+    dsfd_stage_seq_c u_ctl (.ckv(ckv), .rsv(rsv), .ck(ck), .rst(rst), .f_ks(f_ks), .t_kd(t_kd), .f_pw(f_pw), .f_plen(plen),
+        .t_st(t_st),
+        .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(c[9]),
+        .c10(c[10]), .c11(c[11]),
+        .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
+        .d10(d[10]), .d11(d[11]),
+        .s0(est[0]), .s1(est[1]), .s2(est[2]), .s3(est[3]), .s4(est[4]), .s5(est[5]), .s6(est[6]), .s7(est[7]),
+        .s8(est[8]), .s9(est[9]), .s10(est[10]), .s11(est[11]));
+    integer kdn = 0;
+    always @(posedge ckv) if (t_kd[53]) kdn <= kdn + 1;
+`else
     wire vwe; wire [13:0] vwa; wire [511:0] vwd; wire flt, stk; wire [15:0] fvec, snap;
     dsfd_sp_ctrl_e #(.MY_ID(2), .SRC_LO(1), .SRC_HI(1)) u_ctl (.ck(ck), .rs(rst), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d),
         .prog_len(plen), .cfg_users(12'd4), .i_v(i_v), .i_r(i_r), .i_d(i_d), .i_l(i_l),
@@ -77,6 +103,9 @@ module tb_s81_die_layer;
         .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
         .d10(d[10]), .d11(d[11]),
         .vwe(vwe), .vwa(vwa), .vwd(vwd), .flt(flt), .fvec(fvec), .stk(stk), .snap(snap));
+`endif
+    // job take: the jobs of this bench run one after another; per-port done order restarts with each job
+    always @(posedge ck) if (`SEQ.job_v && `SEQ.job_rdy) begin cj = cj + 1; for (e3 = 0; e3 < 12; e3 = e3 + 1) nxt[e3] = 0; end
     // ---------------- DUT: gather + capture (fld, port 0)
     reg [511:0] f_vm = 0;
     wire [6946:0] tcap; wire [13375:0] tvm; wire [11:0] tcd; wire [10:0] xgo;
@@ -128,7 +157,7 @@ module tb_s81_die_layer;
         // peers (dies 1..3): their own stage sequencer issues the coll messages (one job, all descriptors)
         if (gd > 0) begin : g_peer
             wire [11:0] cv; wire [12*84-1:0] cd; wire jd_, pf, jr;
-            reg jv = 0, started = 0;
+            reg jv = 0; integer started = 0;
             ot_s81_stage_seq #(.NOPS(128), .NENG(12), .ARGW(24), .USER_W(10), .NW(21), .QD(8), .FQ(4)) u_sq (
                 .clk(ck), .rst_n(rst), .pw_v(pk_v), .pw_a(pk_a), .pw_d(pk_d), .prog_len(pk_len),
                 .job_v(jv), .job_rdy(jr), .job_user(10'(gd)), .job_pos(21'd1048575), .job_tok(21'd12345),
@@ -139,10 +168,10 @@ module tb_s81_die_layer;
             integer njd = 0, ndn = 0;
             always @(posedge ck) if (rst) begin
                 if (jv && jr) jv <= 1'b0;
-                if (peer_go && !started) begin jv <= 1'b1; started <= 1'b1; end
+                if (peer_go && !jv && started < JOBS) begin jv <= 1'b1; started <= started + 1; end
                 if (jd_) njd <= njd + 1;
                 if (cdn[gd][8]) begin
-                    if (cdn[gd][7:0] !== {1'b0, 7'(ndn)}) begin errors = errors + 1; $display("ERR peer %0d done tag %h exp %0d", gd, cdn[gd][7:0], ndn); end
+                    if (cdn[gd][6:0] !== 7'(ndn % NMSG)) begin errors = errors + 1; $display("ERR peer %0d done tag %h exp %0d", gd, cdn[gd][7:0], ndn); end
                     ndn <= ndn + 1;
                 end
                 if (pf || cst[gd][0] || (cv & ~12'h008) != 0) begin errors = errors + 1; if (errors < 20) $display("ERR peer %0d fault seq %b ep %b", gd, pf, cst[gd][0]); end
@@ -168,30 +197,30 @@ module tb_s81_die_layer;
         ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(gd), .LANES(16), .TAGW(32),
             .DEPTH(256), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1)) u (
             .clk(ck), .rst_n(rsts[0]),
-            .in_valid(r_iv[gd]), .in_ready(r_ir[gd]), .in_data(own[gd][rptr[gd]]), .in_last(ownl[rptr[gd]]),
-            .in_mode(ownm[rptr[gd]]), .in_tag(ownt[rptr[gd]]),
+            .in_valid(r_iv[gd]), .in_ready(r_ir[gd]), .in_data(own[gd][rptr[gd] % TOT]), .in_last(ownl[rptr[gd] % TOT]),
+            .in_mode(ownm[rptr[gd] % TOT]), .in_tag(ownt[rptr[gd] % TOT]),
             .tx_valid(r_txv[gd]), .tx_rec(r_txr[gd]), .tx_ready(4'hF), .cr_in(cri),
             .rx_valid(rxv), .rx_rec(rxr), .cr_out(r_cro[gd]),
             .rl_tx_valid(), .rl_tx_rec(), .rl_rx_valid(4'd0), .rl_rx_rec({4*PW{1'b0}}),
             .out_valid(r_ov[gd]), .out_ready(1'b1), .out_data(r_od[gd]), .out_last(r_ol[gd]), .out_rank(),
             .out_err(r_oe[gd]), .fault(), .fault_code());
     end endgenerate
-    reg [4*FW+1:0] rq [0:3][0:MAXR];
-    reg            rqe [0:3][0:MAXR];
+    reg [4*FW+1:0] rq [0:3][0:MAXQ];
+    reg            rqe [0:3][0:MAXQ];
     integer rn [0:3], ridx [0:3], rp_n, dd;
     initial for (dd = 0; dd < 4; dd = dd + 1) begin rptr[dd] = 0; rn[dd] = 0; ridx[dd] = 0; end
     always @(posedge ck) for (dd = 0; dd < 4; dd = dd + 1) begin
-        if (r_ov[dd]) begin rq[dd][rn[dd]] = {ownm[ridx[dd]], r_ol[dd], r_od[dd]}; rqe[dd][rn[dd]] = r_oe[dd]; rn[dd] = rn[dd] + 1; ridx[dd] = ridx[dd] + 1; end
+        if (r_ov[dd]) begin rq[dd][rn[dd]] = {ownm[ridx[dd] % TOT], r_ol[dd], r_od[dd]}; rqe[dd][rn[dd]] = r_oe[dd]; rn[dd] = rn[dd] + 1; ridx[dd] = ridx[dd] + 1; end
         rp_n = rptr[dd] + ((r_iv[dd] && r_ir[dd]) ? 1 : 0);
         rptr[dd] <= rp_n;
-        r_iv[dd] <= rsts[0] && (first_send_cyc >= 0) && (rp_n < TOT);
+        r_iv[dd] <= rsts[0] && (first_send_cyc >= 0) && (rp_n < TOT * JOBS);
     end
     // ---------------- collective VM models (all dies): consume t_vm, feed records under credits
     integer cr [0:3][0:5], sp [0:3], dn [0:3], cfgd [0:3], nwv, q, k2, coll_err = 0, msg0 = 0;
     reg [2099:0] b;
     reg acc_err;
     // HC y bus FIFO (die 0's all-reduce words, in order)
-    reg [511:0] yq [0:MAXR-1];
+    reg [511:0] yq [0:MAXQ-1];
     integer ywr = 0, yrd = 0, y_ok = 0, y_bad = 0;
     function automatic integer ready_op(input integer jb, input integer op);
         integer i, r;
@@ -223,7 +252,7 @@ module tb_s81_die_layer;
                             dn[dd] = dn[dd] + 1;
                             if (dd == 0) begin
                                 yq[ywr] = b[52 + k2*FW +: FW];
-                                if (ywr < NY && yq[ywr] === ygold[ywr]) y_ok = y_ok + 1;
+                                if (ywr < NY * JOBS && yq[ywr] === ygold[ywr % NY]) y_ok = y_ok + 1;
                                 else begin y_bad = y_bad + 1; if (y_bad < 5) $display("ERR y word %0d != golden", ywr); end
                                 ywr = ywr + 1;
                             end
@@ -238,13 +267,13 @@ module tb_s81_die_layer;
                 if (cfgd[dd] < 2) begin
                     cfgd[dd] = cfgd[dd] + 1;
                     if (cfgd[dd] == 2) fvm[dd] <= {{(W-3){1'b0}}, 1'b1, dd[1:0], 32'd0, 1'b0, 1'b0, 3'd0, 2'd3, 1'b1};
-                end else if (cr[dd][0] > 0 && sp[dd] < TOT) begin
+                end else if (cr[dd][0] > 0 && sp[dd] < TOT * JOBS) begin
                     // die 0: a message's records exist once its coll job's predecessors have ended (dataflow)
-                    if (dd != 0 || (ctl_up && ready_op(0, m_op[msg0]))) begin
-                        if (dd == 0 && sp[0] == m_r0[msg0]) stt[0][m_op[msg0]] = cyc;
-                        fvm[dd] <= {{(W-FW){1'b0}}, own[dd][sp[dd]], ownt[sp[dd]], ownm[sp[dd]], ownl[sp[dd]], 3'd0, 2'd1, 1'b1};
+                    if (dd != 0 || (ctl_up && ready_op(msg0 / NMSG, m_op[msg0 % NMSG]))) begin
+                        if (dd == 0 && sp[0] % TOT == m_r0[msg0 % NMSG]) stt[msg0 / NMSG][m_op[msg0 % NMSG]] = cyc;
+                        fvm[dd] <= {{(W-FW){1'b0}}, own[dd][sp[dd] % TOT], ownt[sp[dd] % TOT], ownm[sp[dd] % TOT], ownl[sp[dd] % TOT], 3'd0, 2'd1, 1'b1};
                         if (first_send_cyc < 0) first_send_cyc = cyc;
-                        if (dd == 0 && ownl[sp[0]]) msg0 = msg0 + 1;
+                        if (dd == 0 && ownl[sp[0] % TOT]) msg0 = msg0 + 1;
                         sp[dd] = sp[dd] + 1; cr[dd][0] = cr[dd][0] - 1;
                     end
                 end
@@ -261,6 +290,7 @@ module tb_s81_die_layer;
     reg [511:0] vm [0:16383];
     reg vm_ok [0:16383];
     integer hcnt = 0, gcnt [0:1];
+    reg clr_req = 0;
     task automatic mark(input integer r);
         begin
             if (!vm_ok[r]) begin
@@ -274,6 +304,11 @@ module tb_s81_die_layer;
     reg [S_RD*14-1:0] dl_a [0:63];
     integer s, i2;
     always @(posedge ck) begin
+        if (clr_req) begin
+            for (i2 = H_BASE; i2 < H_BASE + XW; i2 = i2 + 1) vm_ok[i2] = 1'b0;
+            for (i2 = C_BASE; i2 < C_BASE + 4; i2 = i2 + 1) vm_ok[i2] = 1'b0;
+            hcnt = 0; clr_req = 0;
+        end
         if (vwe) begin vm[vwa] = vwd; mark(vwa); nwr = nwr + 1; end
         if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0) begin
             vm[o_wr[g_eng[9].g_b.dop_r]] = coefm[o_wr[g_eng[9].g_b.dop_r]]; mark(o_wr[g_eng[9].g_b.dop_r]); end
@@ -301,9 +336,9 @@ module tb_s81_die_layer;
     end
     assign hc_inp = INP1 ? 1'b1 : (hrv && hpres && !htake);     // INP1: negative control, f_inp tied 1
     // HC job start (the core takes the descriptor)
-    always @(posedge ck) if (u_hc.u_hc.e_v && u_hc.u_hc.e_r) stt[u_hc.u_hc.e_d[83]][u_hc.u_hc.e_d[6:0]] = cyc;
+    always @(posedge ck) if (u_hc.u_hc.e_v && u_hc.u_hc.e_r) stt[cj][u_hc.u_hc.e_d[6:0]] = cyc;
     // HC job end: the core's done (the job's last result committed); the controller-pin done follows through the adapter
-    always @(posedge ck) if (u_hc.u_hc.d_v) endt[u_hc.u_hc.d_t[7]][u_hc.u_hc.d_t[6:0]] = cyc;
+    always @(posedge ck) if (u_hc.u_hc.d_v) endt[cj][u_hc.u_hc.d_t[6:0]] = cyc;
     // ---------------- reference roots (as tb_s81ph_gather_capture)
     reg [NR-1:0] s_v; reg [31:0] s_t [0:NR-1]; reg [31:0] s_d [0:NR-1]; reg [NR-1:0] s_e, s_b;
     wire [NR-1:0] rr_v, rr_e, rr_f;
@@ -375,40 +410,39 @@ module tb_s81_die_layer;
                 jdone_r <= 1'b0;
                 if (jv && !jdone_r) begin
                     if (!busy) begin
-                        if (ready_op(jd[83], jd[6:0])) begin
-                            busy <= 1'b1; rem <= (o_dur[jd[6:0]] > 0) ? o_dur[jd[6:0]] : 1; stt[jd[83]][jd[6:0]] = cyc;
+                        if (ready_op(cj, jd[6:0])) begin
+                            busy <= 1'b1; rem <= (o_dur[jd[6:0]] > 0) ? o_dur[jd[6:0]] : 1; stt[cj][jd[6:0]] = cyc;
                             if (o_port[jd[6:0]] != ge) begin errors = errors + 1; $display("ERR engine %0d got op %0d of port %0d", ge, jd[6:0], o_port[jd[6:0]]); end
                         end
                     end else if (rem <= 1) begin
-                        jdone_r <= 1'b1; busy <= 1'b0; endt[jd[83]][jd[6:0]] = cyc; dop_r <= jd[6:0];
+                        jdone_r <= 1'b1; busy <= 1'b0; endt[cj][jd[6:0]] = cyc; dop_r <= jd[6:0];
                     end else rem <= rem - 1;
                 end
             end
         end
     end endgenerate
     always @(posedge ck) begin
-        if (u_g.jnew) stt[u_g.jnd[83]][u_g.jnd[6:0]] = cyc;
-        if (u_g.dn) endt[u_g.jd[83]][u_g.jd[6:0]] = cyc;
+        if (u_g.jnew) stt[cj][u_g.jnd[6:0]] = cyc;
+        if (u_g.dn) endt[cj][u_g.jd[6:0]] = cyc;
     end
     // ---------------- done order at the controller pins (ports 2 / 3: the slab's done is the job's end)
-    integer nxt [0:11][0:1];
     integer ndone = 0, maxlat = 0, t_hstore = -1, t_layer0 = -1;
     integer e2, s2, t2;
     always @(posedge ck) if (rst) for (e2 = 0; e2 < 12; e2 = e2 + 1) if (d[e2][8]) begin
         s2 = d[e2][7]; t2 = d[e2][6:0];
-        if (e2 == 3 && endt[s2][t2] < 0) endt[s2][t2] = cyc;
-        if (e2 == 2 && t2 == nop - 1) t_hstore = cyc;
-        while (nxt[e2][s2] < nop && o_port[nxt[e2][s2]] != e2) nxt[e2][s2] = nxt[e2][s2] + 1;
-        if (nxt[e2][s2] != t2) begin
+        if (e2 == 3 && endt[cj][t2] < 0) endt[cj][t2] = cyc;
+        if (e2 == 2 && t2 == nop - 1 && t_hstore < 0) t_hstore = cyc;
+        while (nxt[e2] < nop && o_port[nxt[e2]] != e2) nxt[e2] = nxt[e2] + 1;
+        if (nxt[e2] != t2) begin
             errors = errors + 1;
-            if (errors < 10) $display("ERR done order: port %0d slot %0d got op %0d expected %0d", e2, s2, t2, nxt[e2][s2]);
-        end else nxt[e2][s2] = nxt[e2][s2] + 1;
-        if (endt[s2][t2] < 0) begin errors = errors + 1; $display("ERR done before engine end: port %0d op %0d", e2, t2); end
-        else if (cyc - endt[s2][t2] > maxlat) maxlat = cyc - endt[s2][t2];
+            if (errors < 10) $display("ERR done order: port %0d slot %0d got op %0d expected %0d", e2, s2, t2, nxt[e2]);
+        end else nxt[e2] = nxt[e2] + 1;
+        if (endt[cj][t2] < 0) begin errors = errors + 1; $display("ERR done before engine end: port %0d op %0d", e2, t2); end
+        else if (cyc - endt[cj][t2] > maxlat) maxlat = cyc - endt[cj][t2];
         ndone = ndone + 1;
     end
     integer jdn = 0;
-    always @(posedge ck) if (u_ctl.u.u.u_seq.job_done) jdn <= jdn + 1;
+    always @(posedge ck) if (`SEQ.job_done) jdn <= jdn + 1;
     // ---------------- bench VM: post the field phase words in fld order when the job's inputs are present
     integer pj = 0, pk = 0, posted = 0, released = 0;
     always @(posedge ck) if (xgo[10]) released <= released + 1;
@@ -480,11 +514,12 @@ module tb_s81_die_layer;
         end
     endtask
     initial begin : main
+        integer kit_ok;
         integer fd, rc, w, jb, e, bad, tot, tr, td, gst_f, n_ok, n_bad, st_ok, st_bad, m, r0, pt, xm;
         reg [8*8-1:0] cmd; reg [63:0] a [0:9];
         reg [511:0] hdr;
-        for (jb = 0; jb < 2; jb = jb + 1) for (w = 0; w < 128; w = w + 1) begin endt[jb][w] = -1; stt[jb][w] = -1; end
-        for (e = 0; e < 12; e = e + 1) begin nxt[e][0] = 0; nxt[e][1] = 0; end
+        for (jb = 0; jb < 4; jb = jb + 1) for (w = 0; w < 128; w = w + 1) begin endt[jb][w] = -1; stt[jb][w] = -1; end
+        for (e = 0; e < 12; e = e + 1) nxt[e] = 0;
         for (w = 0; w < 16384; w = w + 1) begin vm[w] = 0; vm_ok[w] = 0; coefm[w] = 0; end
         gcnt[0] = 0; gcnt[1] = 0;
         for (dd = 0; dd < 4; dd = dd + 1) begin
@@ -547,10 +582,16 @@ module tb_s81_die_layer;
         repeat (10) @(negedge ck);
         rst = 1; rsv = 1; rst_n_ref = 1;
         repeat (60) @(negedge ck);
+`ifdef TB_SEQC
+        for (w = 0; w < nop; w = w + 1) begin f_pw = {1'b1, 7'(w), o_port[w][3:0], o_arg[w][23:0]}; @(negedge ckv); end
+        f_pw = 0; plen = nop;
+        repeat (8) @(negedge ckv);
+`else
         for (w = 0; w < nop; w = w + 1) begin
             pw_v = 1; pw_a = w; pw_d = {o_port[w][3:0], o_arg[w][23:0]}; @(negedge ck);
         end
         pw_v = 0; plen = nop;
+`endif
         // peer programs: the coll messages
         for (m = 0; m < NMSG; m = m + 1) begin pk_v = 1; pk_a = m; pk_d = {4'd3, 7'd0, m_mode[m][0], 16'(m_n[m])}; @(negedge ck); end
         pk_v = 0; pk_len = NMSG;
@@ -559,11 +600,23 @@ module tb_s81_die_layer;
         // the links are trained before the token arrives (collective first-send point of the coll gate)
         while (cyc < 1200) @(negedge ck);
         ctl_up = 1;
+`ifdef TB_SEQC
+        // the kit: start job j after job j-1's kit done, then land the HIDDEN payload rows in the VM (one a cycle)
+        for (jb = 0; jb < JOBS; jb = jb + 1) begin
+            while (kdn < jb && cyc < TMAX) @(negedge ck);
+            if (jb > 0) begin clr_req = 1; @(negedge ck); end
+            @(negedge ckv); f_ks = {1'b1, 10'd0, 21'(1000 + jb), 21'(jb)}; @(negedge ckv); f_ks = 0;
+            if (t_layer0 < 0) t_layer0 = cyc;
+            for (w = 0; w < XW; w = w + 1) begin @(negedge ck); vwe = 1; vwa = H_BASE + w; vwd = payload[w]; end
+            @(negedge ck); vwe = 0;
+        end
+`else
         hdr = 0; hdr[11:0] = 2; hdr[23:12] = 1; hdr[27:24] = 1; hdr[39:28] = XW; hdr[51:40] = 0; hdr[72:52] = 0;
         hdr[146:126] = 1000;
         send_flit(hdr, 1'b0);
         for (w = 0; w < XW; w = w + 1) send_flit(payload[w], w == XW - 1);
         i_v = 0; i_l = 0;
+`endif
         while (jdn < JOBS && cyc < TMAX) @(negedge ck);
         repeat (600) @(negedge ck);
         // ---- compare: capture writes
@@ -599,13 +652,19 @@ module tb_s81_die_layer;
         end
         gst_f = 0; for (e = 0; e < 12; e = e + 1) if (est[e][0]) begin gst_f = gst_f + 1; $display("ERR endpoint %0d fault", e); end
         xm = 0;
-        for (dd = 0; dd < 4; dd = dd + 1) if (dn[dd] != rn[dd] || ridx[dd] != TOT) begin xm = xm + 1; $display("ERR DIE %0d coll INCOMPLETE dut %0d ref %0d of %0d", dd, dn[dd], rn[dd], TOT); end
-        if (g_die[1].g_peer.ndn != NMSG || g_die[2].g_peer.ndn != NMSG || g_die[3].g_peer.ndn != NMSG) begin xm = xm + 1; $display("ERR peer dones incomplete"); end
-        $display("SUMMARY layer_cycles=%0d (header %0d -> H_STORE done %0d) stage_done_cycle=%0d jobs_done=%0d/%0d dones=%0d/%0d phases_released=%0d field_phases=%0d capture_writes=%0d mismatching_roots=%0d coll_words_die0=%0d coll_errors=%0d coll_incomplete=%0d y_exact=%0d/%0d y_bad=%0d y_consumed=%0d norm_rows_exact=%0d/%0d hstore_rows_exact=%0d/%0d ref_fault=%0d dut_fault=%0d ctrl_flt=%0d fvec=%h stuck=%0d ep_faults=%0d gather_stage_fault=%0d hc_fcode=%0d max_done_latency=%0d errors=%0d first_coll_send=%0d",
-                 t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
-                 y_ok, NY, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);
+        for (dd = 0; dd < 4; dd = dd + 1) if (dn[dd] != rn[dd] || ridx[dd] != TOT * JOBS) begin xm = xm + 1; $display("ERR DIE %0d coll INCOMPLETE dut %0d ref %0d of %0d", dd, dn[dd], rn[dd], TOT); end
+        if (g_die[1].g_peer.ndn != NMSG * JOBS || g_die[2].g_peer.ndn != NMSG * JOBS || g_die[3].g_peer.ndn != NMSG * JOBS) begin xm = xm + 1; $display("ERR peer dones incomplete"); end
+`ifdef TB_SEQC
+        kit_ok = (kdn == JOBS);
+        $display("KIT starts %0d kit_dones %0d t_st %b", JOBS, kdn, t_st);
+`else
+        kit_ok = 1;
+`endif
+        $display("SUMMARY jobs=%0d layer_cycles=%0d (header %0d -> H_STORE done %0d) stage_done_cycle=%0d jobs_done=%0d/%0d dones=%0d/%0d phases_released=%0d field_phases=%0d capture_writes=%0d mismatching_roots=%0d coll_words_die0=%0d coll_errors=%0d coll_incomplete=%0d y_exact=%0d/%0d y_bad=%0d y_consumed=%0d norm_rows_exact=%0d/%0d hstore_rows_exact=%0d/%0d ref_fault=%0d dut_fault=%0d ctrl_flt=%0d fvec=%h stuck=%0d ep_faults=%0d gather_stage_fault=%0d hc_fcode=%0d max_done_latency=%0d errors=%0d first_coll_send=%0d",
+                 JOBS, t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
+                 y_ok, NY * JOBS, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);
         if (bad == 0 && errors == 0 && jdn == JOBS && ndone == JOBS * nop && !ref_fault && !dst[3] && !flt && gst_f == 0 && !u_g.sf &&
-            tot > 0 && coll_err == 0 && xm == 0 && y_ok == NY && y_bad == 0 && yrd == NY && n_ok == NE - NST && st_ok == NST && n_bad == 0 && st_bad == 0)
+            tot > 0 && coll_err == 0 && xm == 0 && y_ok == NY * JOBS && y_bad == 0 && yrd == NY * JOBS && kit_ok && n_ok == NE - NST && st_ok == NST && n_bad == 0 && st_bad == 0)
             $display("TB_S81_DIE_LAYER PASS");
         else $display("TB_S81_DIE_LAYER FAIL");
         $finish;

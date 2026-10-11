@@ -4,12 +4,14 @@
 # dsfd_sp_collective_c in a 4-die TP4 group), golden-exact at the layer output.  Stimulus: tools/s81_ctrl/die_layer_stim.py
 # (CASES = the su_cases pickle hc_gate uses; LAYERS default "L0 L2": base runs every layer, mutants run L0).
 # Modes: base (PASS on every layer); mut_ep (gather endpoint wrong done tag), mut_drop (gather dropped done),
-# mut_hc (HC core MUT 1: hc_post does not write h back), mut_coll (collective lane-4 relay data flip), mut_inp (HC
-# f_inp tied 1 instead of the VM row-completion state) -- each must FAIL.
+# mut_hc (HC core MUT 1: hc_post does not write h back), mut_coll (collective OT_S81PH_MUT_TREP: output slice 1 pops one cycle early), mut_inp (HC
+# f_inp tied 1 instead of the VM row-completion state), mut_seqc (TB_SEQC + OT_SSEQC_MUT_DROP_START) -- each must FAIL.
+# seqc (PASS): the decision-A sequencer dsfd_stage_seq_c (kit start / done, program on ckv) replaces dsfd_sp_ctrl_e,
+# 3 sequential jobs of the layer (the kit lands each HIDDEN payload in the VM).
 # Env: CASES (required), NG (16), FP (rtl|dpi, rtl), LAYERS, VL (verilator), J (build jobs, 16), ADMIT ("" or
 # "/srv/opentallas-scratch/admit.sh <GB> --").  Verdict line: DIE_LAYER_GATE PASS|FAIL.  Fleet hosts only.
 set -u
-SRC=$1; OUT=$2; MODES=${3:-"base mut_ep mut_drop mut_hc mut_coll mut_inp"}
+SRC=$1; OUT=$2; MODES=${3:-"base seqc mut_ep mut_drop mut_hc mut_coll mut_inp mut_seqc"}
 NG=${NG:-16}; FP=${FP:-rtl}; LAYERS=${LAYERS:-"L0 L2"}; VL=${VL:-verilator}; J=${J:-16}; ADMIT=${ADMIT:-}
 mkdir -p $OUT
 S=$SRC/rtl/dsrom_sys; P=$S/s81_ph
@@ -20,7 +22,7 @@ done
 FPF="rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv"
 [ $FP = dpi ] && FPF="rtl/test/sim_hdc_v41x_fastfp_dpi.sv rtl/test/sim_hdc_v41x_fastfp_wrap.sv rtl/test/sim_hdc_v41x_fastfp_dpi.cpp rtl/test/sim_hdc_fp32_f12_dpi_tops.sv rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv rtl/test/nearhbm/sim_nhb_fp_lat_dpi.cpp rtl/test/sim_hdc_fp32_lat_tops.sv rtl/test/sim_hdc_prefix_beh.sv rtl/test/sim_dsrom_fp32_add_l6_dpi.sv"
 LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.sv rtl/common/ot_ratio_cdc_fifo.sv
- rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv
+ rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv rtl/dsrom_sys/s81_ctrl/dsfd_stage_seq_c.sv
  rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv rtl/dsrom_sys/s81_ctrl/ot_s81_stage_guard.sv rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv
  rtl/dsrom_sys/s81_ctrl/ot_s81_stop.sv rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv rtl/dsrom_sys/ot_dsrom_stall_export.sv
  rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv physical/s81_ctrl/rtl/dsfd_sp_ctrl_core.sv physical/s81_ctrl/rtl/dsfd_sp_ctrl_e.sv
@@ -54,8 +56,9 @@ fi
 sha256sum $FILES $SRC/tools/s81_ctrl/die_layer_stim.py $SRC/tools/s81_suhc/hc_gate.py > $OUT/sources.sha256
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 for m in $MODES; do
-  case $m in base) X="";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_SPLIT_LO4FLIP";; mut_inp) X="-GINP1=1";; esac
-  RUNL=$LAYERS; [ $m = base ] || RUNL=$(echo $LAYERS | awk '{print $1}')
+  case $m in base) X="";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";;
+    seqc) X="+define+TB_SEQC -GTMAX=110000";; mut_seqc) X="+define+TB_SEQC +define+OT_SSEQC_MUT_DROP_START -GTMAX=110000";; esac
+  RUNL=$LAYERS; [ $m = base ] || [ $m = seqc ] || RUNL=$(echo $LAYERS | awk '{print $1}')
   ( $ADMIT $VL --binary --timing -j $J -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
       -DOT_S81PH_PLL_MODEL +define+OT_S81PH_COLL_JOB $SPL -I$S/s81_ctrl --unroll-count 4 -fno-dfg -CFLAGS -O1 \
       --top-module tb_s81_die_layer -GNG=$NG $X --Mdir $OUT/obj_$m -o sim $FILES > $OUT/build_$m.log 2>&1 \
@@ -63,11 +66,11 @@ for m in $MODES; do
 done
 wait
 for m in $MODES; do
-  RUNL=$LAYERS; [ $m = base ] || RUNL=$(echo $LAYERS | awk '{print $1}')
+  RUNL=$LAYERS; [ $m = base ] || [ $m = seqc ] || RUNL=$(echo $LAYERS | awk '{print $1}')
   for L in $RUNL; do
     v=$(grep -h "TB_S81_DIE_LAYER \(PASS\|FAIL\)" $OUT/run_${m}_$L.log 2>/dev/null | tail -1); s=$(grep -h SUMMARY $OUT/run_${m}_$L.log 2>/dev/null)
     [ -z "$v" ] && v="NO_RESULT (build: $(grep -m1 -i '%Error' $OUT/build_$m.log))"
-    exp=FAIL; [ $m = base ] && exp=PASS
+    exp=FAIL; [ $m = base ] || [ $m = seqc ] && exp=PASS
     echo "$m $L expect $exp: $v | $s"
   done
 done | tee $OUT/verdicts.log
