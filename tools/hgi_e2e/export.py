@@ -274,7 +274,8 @@ def export_ds(a):
                   snap={id(dat): dat.copy() for b, dat, nm in regions if dat.size <= (1 << 28)},
                   image=encode_program(progs[0]), pos=pos, token=token, die0=die0)
         cap = Capture(Mach, die0, a.sm_weights)
-        wrapped = {k: cap.wrap(k, fn) for k, fn in units.items()}
+        wrapped = {k: (cap.wrap(k, fn) if isinstance(k, tuple) else fn) for k, fn in units.items()}
+        st["units"] = units
         st["cap"] = cap
         t0 = time.time()
         orig(Mach, progs, wrapped, pos, token, hook, trace)
@@ -319,8 +320,31 @@ def export_ds(a):
     # the program ends without CTL.END: the harness appends one (END reads a token word the export plants in VM)
     words = md_words(129280, 1 << 20, 96, len(image) + 64)
 
+    # --sm-weights: the SM line image of every SM record's B rows (the DS sim decodes weights from the checkpoint, so
+    # the bytes are built here: tools/hgi_e2e/sm_lines.py, hgi-1010/d's layout)
+    sm_img = []
+    if a.sm_weights:
+        from hgi_e2e import sm_lines as SL
+        wr, man = st["units"]["_wrows"], st["units"]["_man"]
+        fmtc = {"BF16": 0, "FP8E4M3": 1, "FP4E2M1": 2}
+        for e_ in cap.recs:
+            if e_["unit"] != "SM":
+                continue
+            bb, bn, bm, bst, _, _, bf = e_["eff"]["B"]
+            ent, ex, r0, c0 = man.find(bb)
+            w = wr(ent, ex, r0, bm, c0, bn, e_["L"])
+            img = SL.pack(fmtc[bf], w)
+            assert img.shape == (bm, bst), (e_["tag"], img.shape, bm, bst)
+            sm_img.append((bb, img.reshape(-1).tobytes()))
+            cap.touch.append((bb, bb + bm * bst))
+
     def hbm_pre(addr, n):
-        return region_bytes(st["regions"], st["snap"], addr, n)
+        out = bytearray(region_bytes(st["regions"], st["snap"], addr, n))
+        for b0, img in sm_img:
+            lo, hi = max(addr, b0), min(addr + n, b0 + len(img))
+            if lo < hi:
+                out[lo - addr:hi - addr] = img[lo - b0:hi - b0]
+        return bytes(out)
     (a.out / "vm0.bin").write_bytes(st["vm0"].astype("<u4").tobytes())
     res = run["results"][0]
     meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=f"ds_L{a.layer}_1M",

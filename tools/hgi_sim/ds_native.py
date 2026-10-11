@@ -888,6 +888,8 @@ def ds_units(m, man, golib):
             w = (w.q[:, c0:c0 + ncols], w.e) if isinstance(w, V_.Q8) else w[:, c0:c0 + ncols]
         return w
 
+    U["_wrows"], U["_man"] = wrows, man                # the exporter builds the SM line image from these
+
     def sm(M, r, L):
         a, bd, o = r.desc["A"], r.desc["B"], r.desc["O"]
         fmt = r.param & 3
