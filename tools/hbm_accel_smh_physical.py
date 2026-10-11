@@ -1150,6 +1150,7 @@ def cmd_block(a):
             if sorted(Path(x).name for x in hv) != ["ot_hbm_accel_smh_bdc", "ot_hbm_accel_smh_tcc"]:
                 raise ValueError("--hier-views: the two column view dirs (.../ot_hbm_accel_smh_tcc,.../ot_hbm_accel_smh_bdc)")
             macros = [SRAM_X] + hv
+            extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_smh_tile_hier.tcl"
             if "xs_xy" in g:
                 xy = {tuple(int(t) for t in k.split(":")): tuple(v) for k, v in g["xs_xy"].items()}
                 tcl[2:2 + len(xy)] = [f"  {{{j}:{mi}}} {{{x} {y}}}" for (j, mi), (x, y) in xy.items()]
@@ -1161,6 +1162,10 @@ def cmd_block(a):
         # lane-major (i_w[k] beside i_x[k]), M4 every 4 tracks (5.2 b/um); results on the E edge; clk / rst_a north.
         w, h = g[a.piece + "_w"], g[a.piece + "_h"]
         name = "ot_hbm_accel_smh_" + a.piece
+        if a.max_layer != "M6":
+            # layer contract (el1011-hbm-smh, PDN-0006 on 732c417d6): a column routes M2-M6 and powers on M6; the tile
+            # owns M7 (its straps land on the column pins, and its pass-through crosses over the columns)
+            raise ValueError("--piece tcc / bdc: route with --max-layer M6 (the tile owns M7)")
         nw = P["LBS"] * 266 if a.piece == "bdc" else P["LSB"] * 16
         ins = ["i_v", "i_first", "i_last"] + (["i_fp4"] if a.piece == "bdc" else []) + bits("i_tag", P["TAGW"])
         for k in range(nw):
