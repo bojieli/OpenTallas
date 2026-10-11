@@ -4930,7 +4930,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
         hcA, hcB = hcA or ecol_(A), hcB or ecol_(Bk)
     lo, hi = max(A.y, Bk.y) + 20.0, min(A.y + A.h, Bk.y + Bk.h) - 20.0
     same_col = min(A.x + A.w, Bk.x + Bk.w) - max(A.x, Bk.x) > 0.0
-    xcol = [cor[k_] for k_ in ('ecolS', 'ecolN', 'vmW', 'vmE') if k_ in cor]
+    xcol = [cor[k_] for k_ in ('ecolS', 'ecolN', 'vmW', 'vmE', 'hrtxG') if k_ in cor]
     if (hcA != hcB or ((ECOL_SLABS or SU_E) and not same_col)) and hi - lo > 100.0:
         # across the VCH where the two slabs overlap in y: a straight horizontal bus
         lane = m.setdefault('_hb_lane', {}).setdefault('x', [0])
