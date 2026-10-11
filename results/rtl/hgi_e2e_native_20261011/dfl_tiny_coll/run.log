@@ -1,0 +1,20 @@
+E2E: 31 independent golden VM words (gold.txt)
+E2E: 1551 golden records, 7829 HBM sectors loaded
+E2E SUMMARY cycles 255813 token 841 status 0 dispatched 1551/1551 dispatch_mismatch 0 final_vm_mismatch 0 final_hbm_mismatch 0 unloaded_hbm_reads 2046 golden_vm_mismatch 0/31
+E2E CFG status err 0 loaded 1
+E2E PROGRESS cyc 50000 events 647
+E2E PROGRESS cyc 100000 events 1218
+E2E PROGRESS cyc 150000 events 1874
+E2E PROGRESS cyc 200000 events 2500
+E2E PROGRESS cyc 250000 events 3038
+E2E TOKX committed 1 tokens (cpu golden 1)
+E2E TOKX[0] = 841 (cpu golden 841)
+E2E drained 255866 cycles after the doorbell (completion 255813)
+E2E completion token 841 (golden 841) status 0 cp_cycles 255848 doorbell->completion 255813
+E2E real-unit records 65, mismatching 0
+HGI_E2E PASS
+- /srv/opentallas-scratch/claude/hgi-1010-g3/src_1113269a1/rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv:574: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 512us; walltime 15.371 s; speed 33.333 us/s
+- Verilator: cpu 15.370 s on 1 threads; allocated 35 MB
+rc=0

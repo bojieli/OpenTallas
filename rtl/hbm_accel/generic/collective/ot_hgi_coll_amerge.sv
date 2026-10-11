@@ -49,7 +49,11 @@ module ot_hgi_coll_amerge #(
             else if (!av) better = 1'b0;
             else if (an != bn) better = bn;
             else if (an) better = lo;
+`ifdef OT_COLL_AMX_MUT_MIN
+            else if (okey(a) != okey(b)) better = okey(a) < okey(b);     // bench mutant (e2e): the SMALLER value wins
+`else
             else if (okey(a) != okey(b)) better = okey(a) > okey(b);
+`endif
             else better = lo;
         end
     endfunction

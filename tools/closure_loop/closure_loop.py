@@ -2644,6 +2644,9 @@ def schedule_deferred_record_merges():
         _DEFERRED_MERGE_FUTURE = _DEFERRED_MERGE_POOL.submit(retry_deferred_record_merges)
 
 
+RECORD_MAX_FILE_BYTES = 90 << 20
+
+
 def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
@@ -2678,7 +2681,19 @@ def publish(j, metrics):
                     sh(["rsync", "-a", *remote_shell, *excl, rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
                 else:
                     sh(["rsync", "-a", *remote_shell, rpath(j['host'], src), str(dst)], timeout=1800, check=True)
+        # GitHub rejects files > 100 MB (pre-receive hook): drop oversized record files (they stay on the run host) and
+        # list them, so one huge route artefact can never wedge the publish loop.
+        big = []
+        for r in spec.get("record", []):
+            d = cwt / r["to"]
+            for f in ([d] if d.is_file() else (d.rglob("*") if d.is_dir() else [])):
+                if f.is_file() and f.stat().st_size > RECORD_MAX_FILE_BYTES:
+                    big.append(f"{f.relative_to(cwt)} {f.stat().st_size} B (kept on {j['host']}:{j['run']})")
+                    f.unlink()
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
+        if big:
+            (cwt / rec_dir / "LARGE_FILES_EXCLUDED.txt").write_text("\n".join(big) + "\n")
+            log(f"[{j['name']}] record: {len(big)} file(s) > {RECORD_MAX_FILE_BYTES >> 20} MB left out of git")
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=source_branch, record_branch=branch, source_commit=j["commit_full"],
                        host=j["host"], run_dir=j["run"], acceptance=dict(setup_corner=setup_corner_label(metrics), setup_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0, clock_periods_ps=metrics.get("clock_periods_ps"),

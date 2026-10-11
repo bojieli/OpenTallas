@@ -29,9 +29,9 @@
 // identity check), so a word of transaction t+1 must not reach it before start t+1 fires.  Over stations no sender can
 // know when that is (the VM's lane 0 never sees the start at all), so the lane ends present a word to the core only
 // while its identity equals the identity of the last start the core accepted; later words wait in the credited
-// receiver (OUTPUT_PIPE 1: the compare reads a registered head, not the queue mux).
-// Boundary timing: every receiver facing a core port runs SEL 1 (c_ready selects precomputed next states) and
-// OUTPUT_PIPE 1 (registered c_valid / c_data): +1 cycle per lane word / start / result row, pipelined.
+// receiver; the gate lives in each lane's ot_dsrom_mtp_pp2 port stage as a registered per-slot match flag.
+// Boundary timing: stationed receivers SEL 1 + OUTPUT_PIPE 1, then ot_dsrom_mtp_pp2 at every core input port (port
+// valid / data from flops via one 2:1 mux, the core's ready steers 3 flops); the result row leaves via ltx_rc.
 // Core boundary (idle-sweep-1010, fixlat-p2lnk-ffbec0c86-tc TT -280 / SS -594: c_in_v[1] = lv & open_ was a 74-bit
 // identity compare + OR tree straight to the port (-248), and c_in_r / c_start_r reached the 604 / 101-b OUTPUT_PIPE
 // data enables of the receivers (-246, 1,613 D pins)): every core-facing channel now crosses an abutting grant pair
@@ -68,44 +68,40 @@ module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
  wire clk = ck[0];
  wire rst_n;
  ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rst_n));
- wire [1:0] lv, lr, open_, gv, gr;
+ wire [1:0] lv, lr;
  wire [1207:0] ld;                                                       // stationed receivers' registered heads
  ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_l0(.clk(clk),.rst_n(rst_n),
   .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(lv[0]),.c_ready(lr[0]),.c_data(ld[603:0]));
  ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_l1(.clk(clk),.rst_n(rst_n),
   .l_valid(f_l1v),.l_ready(t_l1g),.l_data(f_l1d),.c_valid(lv[1]),.c_ready(lr[1]),.c_data(ld[1207:604]));
- wire sv, sr, sgv, sgr; wire [100:0] sd, sgd;
+ wire sv, sr; wire [100:0] sd;
  ot_dsrom_mtp_lrx_rtt #(.W(101),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_st(.clk(clk),.rst_n(rst_n),
   .l_valid(f_sv),.l_ready(t_sg),.l_data(f_sd),.c_valid(sv),.c_ready(sr),.c_data(sd));
- // start: abutting grant pair to the core pins
- ot_dsrom_mtp_ltx_rc #(.W(101)) u_stx(.clk(clk),.rst_n(rst_n),.c_valid(sv),.c_ready(sr),.c_data(sd),
-  .l_valid(sgv),.l_ready(sgr),.l_data(sgd));
- ot_dsrom_mtp_lrx #(.W(101),.D(4),.SEL(1)) u_sc(.clk(clk),.rst_n(rst_n),.l_valid(sgv),.l_ready(sgr),.l_data(sgd),
-  .c_valid(c_start_v),.c_ready(c_start_r),.c_data(c_start_d));
- // transaction gate: identity of the start the core last accepted, one cycle late (registered take + identity)
- reg [73:0] cur_id, acc_id; reg cur_ok, acc;
- always @(posedge clk) begin acc_id <= c_start_d[100:27]; end
+ // core ports: ot_dsrom_mtp_pp2 2-entry ping-pong stages (port valid / data from flops via one 2:1 mux; the core's
+ // ready steers 3 flops).  fixlat-p2lnk-ffbec0c86-tc TT -280 (74-b compare to c_in_v; ready -> 604/101-b enables); the
+ // ltx_rc -> lrx D4 pairs of 3d7201bc4 put the D4 queue mux on the port (same class measured on collp2 5b059065b).
+ ot_dsrom_mtp_pp2 #(.W(101)) u_sc(.clk(clk),.rst_n(rst_n),.i_valid(sv),.i_ready(sr),.i_data(sd),
+  .o_valid(c_start_v),.o_ready(c_start_r),.o_data(c_start_d),.g_id(1'b0),.g_ok(1'b0),.g_chg(1'b0));
+ // transaction gate: identity of the start the core accepted (registered take), held in each lane stage's slot flags
+ reg [73:0] cur_id, acc_id; reg cur_ok, acc, chg;
+ always @(posedge clk) acc_id <= c_start_d[100:27];
  always @(posedge clk)
-  if(!rst_n) begin acc<=1'b0; cur_ok<=1'b0; cur_id<='0; end
+  if(!rst_n) begin acc<=1'b0; cur_ok<=1'b0; cur_id<='0; chg<=1'b0; end
   else begin
    acc <= c_start_v && c_start_r;
+   chg <= acc;
    if(acc) begin cur_ok<=1'b1; cur_id<=acc_id; end
   end
 `ifdef OT_FIXLAT_MUT_NOGATE
- assign open_=2'b11;
+ localparam integer GATE = 0;
 `else
- assign open_[0]=cur_ok&&(ld[603:530]==cur_id);
- assign open_[1]=cur_ok&&(ld[1207:1134]==cur_id);
+ localparam integer GATE = 74;
 `endif
- assign lr=gr&open_;
- // lanes: gate -> abutting grant pair -> core pins
  genvar k;
  generate for (k=0; k<2; k=k+1) begin: g_lane
-  wire pv_, pr_; wire [603:0] pd_;
-  ot_dsrom_mtp_ltx_rc #(.W(604)) u_tx(.clk(clk),.rst_n(rst_n),.c_valid(lv[k]&&open_[k]),.c_ready(gr[k]),.c_data(ld[604*k +: 604]),
-   .l_valid(pv_),.l_ready(pr_),.l_data(pd_));
-  ot_dsrom_mtp_lrx #(.W(604),.D(4),.SEL(1)) u_rx(.clk(clk),.rst_n(rst_n),.l_valid(pv_),.l_ready(pr_),.l_data(pd_),
-   .c_valid(c_in_v[k]),.c_ready(c_in_r[k]),.c_data(c_in_d[604*k +: 604]));
+  ot_dsrom_mtp_pp2 #(.W(604),.IDG(GATE),.IDL(530)) u_pp(.clk(clk),.rst_n(rst_n),.i_valid(lv[k]),.i_ready(lr[k]),
+   .i_data(ld[604*k +: 604]),.o_valid(c_in_v[k]),.o_ready(c_in_r[k]),.o_data(c_in_d[604*k +: 604]),
+   .g_id(cur_id[(GATE>0?GATE:1)-1:0]),.g_ok(cur_ok),.g_chg(chg));
  end endgenerate
  ot_dsrom_mtp_ltx_rc #(.W(594)) u_o(.clk(clk),.rst_n(rst_n),.c_valid(c_out_v),.c_ready(c_out_r),.c_data(c_out_d),
   .l_valid(t_ov),.l_ready(f_og),.l_data(t_od));

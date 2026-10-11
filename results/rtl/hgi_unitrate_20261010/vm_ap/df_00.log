@@ -1,0 +1,16 @@
+ILOAD f 0 rows 400 n 8: 761 cycles, 16.8 destination B / cycle, 16.8 source B / cycle = 0.5 % of 3.80 TB/s
+ILOAD f 1 rows 300 n 64: 551 cycles, 139.4 destination B / cycle, 69.7 source B / cycle = 2.2 % of 3.80 TB/s
+ILOAD f 2 rows 96 n 512: 219 cycles, 897.8 destination B / cycle, 224.4 source B / cycle = 7.1 % of 3.80 TB/s
+ILOAD f 0 rows 12 n 4096: 513 cycles, 383.3 destination B / cycle, 383.3 source B / cycle = 12.1 % of 3.80 TB/s
+ILOAD f 4 rows 40 n 2048: 356 cycles, 920.4 destination B / cycle, 230.1 source B / cycle = 7.3 % of 3.80 TB/s
+LOAD f 0 m 4 n 512: 62 cycles, 132.1 destination B / cycle, 132.1 source B / cycle = 4.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 1 m 3 n 4096: 141 cycles, 348.6 destination B / cycle, 174.3 source B / cycle = 5.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 2 m 2 n 4096: 63 cycles, 520.1 destination B / cycle, 130.0 source B / cycle = 4.1 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 4 m 5 n 1024: 41 cycles, 499.5 destination B / cycle, 124.9 source B / cycle = 3.9 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 4 n 2048: 64 cycles, 512.0 destination B / cycle, 512.0 source B / cycle = 16.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 2 m 4 n 8192: 144 cycles, 910.2 destination B / cycle, 227.6 source B / cycle = 7.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 64 n 8: 97 cycles, 21.1 destination B / cycle, 21.1 source B / cycle = 0.7 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 4 n 16384: 356 cycles, 736.4 destination B / cycle, 736.4 source B / cycle = 23.3 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 1 m 4 n 32768: 531 cycles, 987.4 destination B / cycle, 493.7 source B / cycle = 15.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+ILOAD f 0 rows 256 n 1024: 1507 cycles, 695.8 destination B / cycle, 695.8 source B / cycle = 22.0 % of 3.80 TB/s
+PASS HGI_DMA_FRONT 2921984 B in 5406 cycles (540.5 B / cycle overall)

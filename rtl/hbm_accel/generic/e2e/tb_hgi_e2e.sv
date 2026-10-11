@@ -34,6 +34,10 @@ module tb_hgi_e2e;
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
     parameter integer ATT_H = 16, ATT_D = 512, ATT_TD = 64, ATT_NL = 4, ATT_PIPE = 0, ATT_MUT_ROW = 0;   // REAL_ATT: r25 engine geometry
     parameter integer WD = 400000;     // stall watchdog: cycles without a dispatch or a retire
+    // hgi-1010/g3: REAL_IDX with IDX_NATIVE = 1 runs IDX.INDEX natively: the unit at NGLOB 1 / IKS 1 drives the die's
+    // selector + 4 stack scorers + 4 svc IKS stripes on a DRAM controller model of the HBM model (hgi_e2e_idxn.sv);
+    // IDX_MUT = the unit's bench mutant (2: the next head's weight, 3: R from the wrong lane; must FAIL)
+    parameter integer IDX_NATIVE = 0, IDX_MUT = 0, IDX_LEG = 24;
     // hgi-1010/h (2026-10-10) MTP=1: the DS DSpark job through the die -- the real native controller hgi_mtp_native, the MX1
     // MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job / provider / emit queue / transaction join) and ot_hgi_cp_die MTP=1
     // (the backend translator: one KERNEL doorbell per launch, G23 entries / G26 per-layer bodies).  The host starts a
@@ -348,13 +352,26 @@ module tb_hgi_e2e;
 `endif
     // IDX (unit 9)
     wire [2:0] i_ret;
-    generate if (REAL_IDX) begin : g_idx
+    wire [3:0] idxn_fault;
+    generate if (REAL_IDX && IDX_NATIVE) begin : g_idx
         wire [337:0] vq; wire [273:0] vr;
+        wire [89:0] s_fs; wire [1047:0] s_qb; wire s_qbr; wire [344:0] s_kin; wire [611:0] s_to; wire s_toc;
+        wire [71:0] s_co; wire s_coc; wire [1:0] s_ev; wire [511:0] s_iks;
+        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
+            .vmq(vq), .vmr(vr), .sel_fs(s_fs), .sel_qb(s_qb), .sel_qbr(s_qbr), .sel_kin(s_kin), .sel_to(s_to),
+            .sel_toc(s_toc), .sel_co(s_co), .sel_coc(s_coc), .sel_ev(s_ev), .iks_e(s_iks));
+        hgi_e2e_vmc #(.UNIT(9), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
+        hgi_e2e_idxn #(.LEG(IDX_LEG)) u_idxn (.clk(clk), .rst_n(rst_n), .fs(s_fs), .qb(s_qb), .qbr(s_qbr), .kin(s_kin),
+            .to(s_to), .toc(s_toc), .co(s_co), .coc(s_coc), .ev(s_ev), .iks_e(s_iks), .ik_fault_seen(idxn_fault));
+    end else if (REAL_IDX) begin : g_idx
+        wire [337:0] vq; wire [273:0] vr;
+        assign idxn_fault = 4'd0;
         ot_hgi_idx_unit u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret), .vmq(vq), .vmr(vr),
             .sel_fs(), .sel_qb(), .sel_qbr(1'b0), .sel_kin(), .sel_to(612'd0), .sel_toc(), .sel_co(72'd0), .sel_coc(),
-            .sel_ev(2'd0));
+            .sel_ev(2'd0), .iks_e());
         hgi_e2e_vmc #(.UNIT(9), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
     end else begin : g_idx_stub
+        assign idxn_fault = 4'd0;
         assign i_ret = 3'b001;
     end endgenerate
     // ---------------------------------------------------------------- dispatch monitor + stub engine + retire checks
@@ -573,6 +590,7 @@ module tb_hgi_e2e;
         $display("E2E completion token %0d (golden %0d) status %0d cp_cycles %0d doorbell->completion %0d", c_tok, host[66], c_st, c_cyc, t_cpl - t_db);
         $display("E2E real-unit records %0d, mismatching %0d", real_recs, real_bad);
         if (!MTP && (c_tok != host[66] || c_st != 0)) errs = errs + 1;
+        if (idxn_fault != 4'd0) begin errs = errs + 1; $display("E2E IDXN svc ik_fault on stacks %b", idxn_fault); end
         if (fin == 0 && errs == 0 && real_bad == 0) $display("HGI_E2E PASS");
         else $display("HGI_E2E FAIL (finish %0d, errors %0d, real mismatching %0d)", fin, errs, real_bad);
         $finish;
