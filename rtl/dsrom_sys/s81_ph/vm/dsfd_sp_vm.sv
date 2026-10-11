@@ -56,6 +56,7 @@
 //   OT_SPVM_MUT_EARLY    the completion counter completes one element early
 //   OT_SPVM_MUT_NOALIGN  the alignment check is removed (a misaligned phase then corrupts silently)
 //   OT_SPVM_MUT_NP16     two lanes share each write port (8 capture ports): must overflow under the burst bench
+//   OT_SPVM_MUT_RLAT     the BE P2 output honours c_l0r one cycle early (ready latency 3, not 4): beats the consumer never granted
 // ---------------------------------------------------------------------------------------------------------------
 
 // ================================================================================================ capture lane
@@ -795,7 +796,8 @@ endmodule
 // v3): no row is ever gathered across the slab.  Control is replicated per slice in lockstep: the X lane ids, the P2
 // metadata, both synchronous resets and the status reach each tile through the parent's registered relay chains, equal
 // length for every tile (R = MD - XT stages, <= ~400 um a stage); every tile has its own ck / cks roots.  The only
-// unregistered slab-wide net is the P2 consumer ready c_l0r (an external valid / ready port, pin centred: <= ~520 um).
+// unregistered slab-wide net: none.  The P2 consumer port is READY-LATENCY 4 (c_l0r pin flop, relay, tile register; a
+// beat leaves on c_l0v only if c_l0r was high 4 cycles earlier and every c_l0v beat is a transfer).
 // Inside a tile: pin flops (1 load each), datapath registers without reset (kept regional reset copies for control),
 // kept one-hot selects / X-row copies per lane group, the ctrl return through a mesochronous ratio FIFO (LAG 1: an entry
 // is stable for a full serial cycle before its pointer is published) with a registered read port, and the P2 FIFO in 2
@@ -937,7 +939,7 @@ module dsfd_vm_be_sl #(
     input  wire [2:0]        o_o,
     input  wire [24:0]       xc,         // {lane id x 5 (4 b each, X port order {p9, p8, p2, p7, p6}), v x 5}
     input  wire [23:0]       pm,         // {this slice's 23 P2 metadata bits, P2 read valid}
-    input  wire [0:0]        c_l0r,
+    input  wire [0:0]        c_l0r,      // the consumer ready, relayed: honoured P2RL serial cycles after the BE pin
     output reg  [255:0]      srq_d,      // {row 1, row 0} slices
     output reg  [1:0]        srq_v,
     output reg  [0:0]        vrv,
@@ -1061,31 +1063,42 @@ module dsfd_vm_be_sl #(
         for (c = 0; c < NC; c = c + 1) vrq[64*c +: 64] <= o_vc1[c] ? o_d1[64*c +: 64] : o_d0[64*c +: 64];
     end
     // ---------------------------------------------------------------- P2 flit FIFO (this slice: 23 metadata + 128 data bits)
-    // every flit is written (no bypass: no c_l0r / reset in the write enables); 2 column chunks, each with kept copies of
-    // the next write / read one-hot, push, ov and non-empty flag
+    // every flit is written (no bypass: no ready / reset in the write enables); 2 column chunks, each with kept copies of
+    // the next write / read one-hot, push and non-empty flag.  READY-LATENCY output (BE S-FACE CONTRACT v3): the ready is
+    // registered here (rq) after the parent's pin flop + relay, a beat is loaded when rq and the FIFO is non-empty and
+    // leaves on c_l0v the next cycle; every c_l0v beat is a transfer (c_l0v(t) only if c_l0r(t - 4) at the BE pin).
     localparam integer PB = $clog2(P2D);
     localparam integer FW = 151, PC = 2, PCB = 76;
     wire mv = q_v[5];
     wire mv_nx = rn_i && o_v[5];
     wire [FW-1:0] flit = {pd_m[XT-1], q_d[5*128 +: 128]};
-    reg [PB-1:0] ph, pt; reg [PB:0] pn; reg ov; reg p_ovf_n, p_mis_n;
-    wire take = ov && c_l0r[0];
-    wire ld = (!ov || take) && (pn != 0);
+    reg [PB-1:0] ph, pt; reg [PB:0] pn; reg ov; reg p_ovf_n, p_mis_n; reg rq;
+    always @(posedge clk) if (!rn_p) rq <= 1'b0; else rq <= c_l0r[0];
+`ifdef OT_SPVM_MUT_RLAT
+    wire rdy = c_l0r[0];                // mutant: honours the ready one cycle early (beats the consumer did not grant)
+`else
+    wire rdy = rq;
+`endif
+    wire ld = rdy && (pn != 0);
     assign c_l0v = ov;
     wire [PB-1:0] pt_nx = !rn_p ? {PB{1'b0}} : mv ? ((pt == P2D - 1) ? {PB{1'b0}} : pt + 1'b1) : pt;
     wire [PB-1:0] ph_nx = !rn_p ? {PB{1'b0}} : ld ? ((ph == P2D - 1) ? {PB{1'b0}} : ph + 1'b1) : ph;
     wire [PB:0]   pn_nx = !rn_p ? {(PB+1){1'b0}} : pn + mv - ld;
-    wire          ov_nx = rn_p && (ld || (ov && !take));
+    wire          ov_nx = rn_p && ld;
     wire [P2D-1:0] pw_oh = {{(P2D-1){1'b0}}, 1'b1} << pt_nx;
     wire [P2D-1:0] pr_oh = {{(P2D-1){1'b0}}, 1'b1} << ph_nx;
     genvar gp;
     generate for (gp = 0; gp < PC; gp = gp + 1) begin : g_pf
         localparam integer O = PCB * gp;
         localparam integer CWD = (gp == PC - 1) ? FW - PCB * (PC - 1) : PCB;
-        wire [P2D-1:0] wo, ro; wire mvc, ovc, pec;
-        dsfd_vm_be_kreg #(.W(2*P2D + 3), .ID(64 + gp)) u_pc (.clk(clk), .d({pw_oh, pr_oh, mv_nx, ov_nx, pn_nx != 0}),
-            .q({wo, ro, mvc, ovc, pec}));
-        wire ldc = (!ovc || c_l0r[0]) && pec;              // = ld
+        wire [P2D-1:0] wo, ro; wire mvc, rqc, pec;
+        dsfd_vm_be_kreg #(.W(2*P2D + 3), .ID(64 + gp)) u_pc (.clk(clk), .d({pw_oh, pr_oh, mv_nx, rn_p && c_l0r[0], pn_nx != 0}),
+            .q({wo, ro, mvc, rqc, pec}));
+`ifdef OT_SPVM_MUT_RLAT
+        wire ldc = c_l0r[0] && pec;
+`else
+        wire ldc = rqc && pec;                             // = ld
+`endif
         reg [CWD-1:0] pf [0:P2D-1]; reg [CWD-1:0] q;
         always @(posedge clk) begin : p_w integer i;
             for (i = 0; i < P2D; i = i + 1) if (mvc && wo[i]) pf[i] <= flit[O +: CWD];
@@ -1101,7 +1114,7 @@ module dsfd_vm_be_sl #(
         if (!rn_p) begin ph <= 0; pt <= 0; pn <= 0; ov <= 1'b0; t_p2c <= 1'b0; p_ovf_n <= 1'b0; p_mis_n <= 1'b0; end
         else begin
             pt <= pt_nx; ph <= ph_nx; pn <= pn_nx; ov <= ov_nx;
-            t_p2c <= take;
+            t_p2c <= ov;                    // every c_l0v beat is a transfer
             p_ovf_n <= mv && pn == P2D;
             p_mis_n <= pd_v[XT-1] != mv;
         end
@@ -1160,6 +1173,9 @@ module dsfd_vm_be #(
     ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns0));
     // forward-metadata pin flops (slice-0 tile-3 f_* at the W end of the N face)
     reg q_fv; reg [91:0] q_fm; reg [4:0] q_xv; reg [19:0] q_xm; reg [15:0] q_fe;
+    // P2 consumer ready: pin flop (the tile registers the relayed copy again: READY LATENCY 4, see dsfd_vm_be_sl)
+    reg q_rdy;
+    always @(posedge clk) q_rdy <= c_l0r[0];
     always @(posedge clk) begin
         if (!rn0) begin q_fv <= 1'b0; q_xv <= 5'd0; q_fe <= 16'd0; end
         else begin q_fv <= f_v5[0] && !f_we5[0]; q_xv <= f_vx & ~f_wex; q_fe <= fe_flt; end
@@ -1173,9 +1189,10 @@ module dsfd_vm_be #(
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_s
         // equal-length registered relays to / from this slice tile (no slab-wide control net)
         reg [DR-1:0] rnc, rns_;
-        reg [24:0] xr [0:R-1]; reg [23:0] pr [0:R-1];
+        reg [24:0] xr [0:R-1]; reg [23:0] pr [0:R-1]; reg rr;
         always @(posedge clk) begin : p_rl integer i;
             rnc <= {rnc[DR-2:0], rn0};
+            rr <= q_rdy;                    // c_l0r relay (pin flop at the centred pin -> this tile, <= ~270 um a stage)
             xr[0] <= {q_xm, q_xv}; pr[0] <= {q_fm[23*gs +: 23], q_fv};
             for (i = 1; i < R; i = i + 1) begin xr[i] <= xr[i-1]; pr[i] <= pr[i-1]; end
         end
@@ -1189,7 +1206,7 @@ module dsfd_vm_be #(
         dsfd_vm_be_sl #(.P2D(P2D), .XT(XT)) u_sl (
             .ck(ck), .cks(cks), .rn_in(rnc[DR-1]), .rns_in(rns_[DR-1]),
             .o_v(o_v[10*gs +: 10]), .o_d(o_d[1280*gs +: 1280]), .o_f(o_f[4*gs +: 4]), .o_o(o_o[3*gs +: 3]),
-            .xc(xr[R-1]), .pm(pr[R-1]), .c_l0r(c_l0r),
+            .xc(xr[R-1]), .pm(pr[R-1]), .c_l0r(rr),
             .srq_d(srq_d[gs]), .srq_v(srq_v[gs]), .vrv(vrv_s[gs]), .vrq(vrq_s[gs]), .bl_d(bl_d[gs]), .bl_v(bl_v[gs]),
             .c_l0v(c_l0v_s[gs]), .c_l0d(p2_s[gs]), .t_p2c(t_p2c_s[gs]), .sflt(sflt[gs]), .sst(sst[gs]));
         // this slice's bits of every response (S-FACE CONTRACT v3: at this tile's x range)
