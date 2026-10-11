@@ -26,6 +26,7 @@ D = ROOT / 'results/arch/qwen_kv_die_20261009'
 CLOCK = 1.2e9
 AR_PER_TOKEN = 72
 FEC = dict(ds_rule=100, hbm_rule=240)
+FECD = json.loads((ROOT / 'tools/qwen_kv_die/fec_derivation.json').read_text())   # extra FEC per all-reduce: headline 0
 
 
 def sha16(p):
@@ -82,7 +83,9 @@ def main():
             r22k_fec_vmar_tok_s=round(CLOCK / (base + fec + vmar_r22k), 1),
             r22k_fecb_vmar_tok_s=round(CLOCK / (base + fec_b + vmar_r22k), 1),
             o4_fec_vmar_tok_s=round(CLOCK / (tok + fec + vmar_o4), 1),
-            o4_fecb_vmar_tok_s=round(CLOCK / (tok + fec_b + vmar_o4), 1))
+            o4_fecb_vmar_tok_s=round(CLOCK / (tok + fec_b + vmar_o4), 1),
+            r22k_fec0_vmar_tok_s=round(CLOCK / (base + vmar_r22k), 1),
+            o4_fec0_vmar_tok_s=round(CLOCK / (tok + vmar_o4), 1))
     out['vm_ar'] = dict(per_token_r22k=vmar_r22k, per_token_o4=vmar_o4, stages_r22ksv=vm_ar(svrec), stages_r22ko4=vm_ar(o4rec),
                         note='the sequencer <-> VM all-reduce word path (read request, word back, write) was not in the r22k '
                              'die or price; each of the 72 all-reduces pays its die relays once (the stream rate is kept: '
@@ -104,6 +107,9 @@ def main():
     c = out['cases']['typical']
     out['headline'] = dict(o4_tok_s=c['o4_tok_s'], o4_fec_tok_s=c['o4_fec_tok_s'], r22k_tok_s=c['r22k_tok_s'],
                            r22k_fec_tok_s=c['r22k_fec_tok_s'], o4_exact=o4['exact'],
+                           fec_headline_cycles=FECD['extra_fec_cycles_per_allreduce']['headline'],
+                           fec_verdict=FECD['verdict'][:120],
+                           price_fec0=dict(r22k=c['r22k_fec0_vmar_tok_s'], o4=c['o4_fec0_vmar_tok_s']),
                            price_fec100=dict(r22k=c['r22k_fec_vmar_tok_s'], o4=c['o4_fec_vmar_tok_s']),
                            price_fec240=dict(r22k=c['r22k_fecb_vmar_tok_s'], o4=c['o4_fecb_vmar_tok_s']),
                            layer_relay_cycles=dict(r22k=adopted['L1'], o4=o4['vs_s22ml7']['L1']))
