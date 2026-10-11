@@ -20,7 +20,21 @@ yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i}
 # fine opt_merge folds identical bits (ot_gpu_router_topk_f: v_r <= {P{in_valid}} 16 bits -> 1 flop even with keep on
 # the vector cell).  Map the kept cells to per-bit gate-level flip-flops first (techmap of the selection only; splitcells
 # is not enough: it splits by output use, and a vector used whole stays one cell), then mark every bit cell.
-yosys techmap {*}{@ot_kc}
+# SYNTH_HIERARCHICAL=1 with SYNTH_MINIMUM_KEEP_SIZE: keep_hierarchy -min_cost costs every cell with yosys CellCosts, which
+# throws std::out_of_range (Cell::getParam) on gate-level async-reset flops ($_DFF_PN0_ ...) and aborts synthesis
+# (hbm-norm-rlyx-*-1fe23df7e: ot_rst_relay's kept relay_q).  There, split the kept cells into ONE-BIT COARSE cells of the
+# same type instead (ot_keep_regs_split.v); one-bit coarse cells cost fine, keep their keep through the later simplemap,
+# and every bit stays a flop (checked: 4 kept copies of one $adff -> 4 $_DFF_PN0_ after synth -flatten).  Any kept cell
+# type the split map does not cover still goes to gate level as before.  Flat synthesis is unchanged.
+if { [info exists ::env(SYNTH_HIERARCHICAL)] && $::env(SYNTH_HIERARCHICAL) == 1 &&
+     [info exists ::env(SYNTH_MINIMUM_KEEP_SIZE)] && $::env(SYNTH_MINIMUM_KEEP_SIZE) ne ""} {
+  yosys techmap -map [file join [file dirname [file normalize [info script]]] ot_keep_regs_split.v] {*}{@ot_kc}
+  yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i r:WIDTH>1 %i}
+  yosys techmap {*}{@ot_kc}
+  puts "OT_KEEP_REGS: SYNTH_HIERARCHICAL min_cost: kept registers split to one-bit coarse cells"
+} else {
+  yosys techmap {*}{@ot_kc}
+}
 yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* t:$_*DFF* t:$_*LATCH* %u %u %u %i}
 yosys setattr -set keep 1 {*}{@ot_kc}
 set ot_kr_n [llength [split [string trim [yosys tee -q -s result.string select -list {*}{@ot_kc}]] "\n"]]
