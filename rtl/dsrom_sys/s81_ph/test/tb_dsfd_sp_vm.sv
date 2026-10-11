@@ -380,9 +380,12 @@ module tb_dsfd_sp_vm;
         end
     endtask
     task automatic p2rd(input integer base, input integer nw, input integer check);
-        reg [7:0] t; reg [89:0] id; integer q;
+        reg [7:0] t; reg [89:0] id; integer q; reg [31:0] r60, r61, r62;
         begin
-            id = {rnd(60), rnd(61), rnd(62)};
+            // one rnd() per statement: the evaluation order of side-effecting operands inside a concatenation is not
+            // defined by IEEE 1800 (Verilator 5.032 and 5.050 differ -> different P2RD ids, the whole stimulus diverged)
+            r60 = rnd(60); r61 = rnd(61); r62 = rnd(62);
+            id = {r60, r61, r62};
             for (q = 0; q < 5; q = q + 1) begin t = ntag(0); cmd_q.push_back(vcmd(3'd4, {q[2:0], id[18*q +: 18]}, 10'd0, t)); pend_tag.push_back(t); end
             t = ntag(0); cmd_q.push_back(vcmd(3'd5, {base[13:0], nw[6:0] - 7'd1}, 10'd0, t)); pend_tag.push_back(t);
             p2c_base.push_back(base); p2c_nw.push_back(nw - 1); p2c_id.push_back(id[73:0]); p2c_ex.push_back(id[82:74]);
