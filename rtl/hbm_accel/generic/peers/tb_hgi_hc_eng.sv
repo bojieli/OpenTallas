@@ -32,7 +32,12 @@ module tb_hgi_hc_eng;
     reg own = 0;                                     // 1: the engine drives the lanes; 0: the bench
     reg [32*16-1:0] t_rq = 0; reg [32*280-1:0] t_wq = 0;
     wire [32*16-1:0] rq = own ? e_rq : t_rq; wire [32*280-1:0] w2q = own ? e_wq : t_wq;
-    ot_hgi_hc_eng #(.D(HD), .LQ(LQ), .MUT(`HMUT)) u_e (.clk(clk), .rst_n(rst_n), .job_v(job_v), .job_rdy(job_rdy), .job(jw),
+`ifdef LL
+    localparam integer LLP = 1;
+`else
+    localparam integer LLP = 0;
+`endif
+    ot_hgi_hc_eng #(.D(HD), .LQ(LQ), .MUT(`HMUT), .LL(LLP)) u_e (.clk(clk), .rst_n(rst_n), .job_v(job_v), .job_rdy(job_rdy), .job(jw),
         .g_rdy(g_rdy), .done(e_done), .fault(e_fault), .idle(e_idle), .wrq(e_rq), .wrq_cr(own ? rq_cr : 32'd0),
         .wrr(own ? rr : '0), .wwq(e_wq), .wwq_cr(own ? w2_cr : 32'd0), .wwq_done(own ? w2_done : 32'd0),
         .rg_req(e_rg), .rg_gnt(1'b1), .wg_req(e_wg), .wg_gnt(1'b1));
@@ -102,20 +107,22 @@ module tb_hgi_hc_eng;
  `define WDOG 200000
 `endif
             t = 0; while (!e_done && !e_fault && t < `WDOG) begin @(posedge clk); t = t + 1; end
+`ifndef LL
             if (!e_done && !e_fault) begin
                 $display("HANG st %0d p1e %0d p2e %0d ab %0d bo %0d oe %0d nwr %0d nexp %0d a_v %0d e_v %0d quiet %0d",
-                         u_e.u_ctl.st, u_e.u_ctl.p1e, u_e.u_ctl.p2e, u_e.u_ctl.ab, u_e.u_ctl.bo, u_e.u_ctl.oe,
-                         u_e.u_ctl.nwr, u_e.u_ctl.nexp, u_e.u_ctl.a_v, u_e.u_ctl.e_v, u_e.u_ctl.quiet);
-                $display("HANG l_quiet %h l_cr_nz %h l_p1_full %h l_scp %h", u_e.u_ctl.l_quiet, u_e.u_ctl.l_cr_nz,
-                         u_e.u_ctl.l_p1_full, u_e.u_ctl.l_scp);
-                $display("HANG lane0 cr %0d wcr %0d wpend %0d occ %0d qcnt %0d qres %0d p1c %0d p2c %0d", u_e.u_ctl.g_ln[0].u_l.cr,
-                         u_e.u_ctl.g_ln[0].u_l.wcr, u_e.u_ctl.g_ln[0].u_l.wpend, u_e.u_ctl.g_ln[0].u_l.occ,
-                         u_e.u_ctl.g_ln[0].u_l.qcnt, u_e.u_ctl.g_ln[0].u_l.qres, u_e.u_ctl.g_ln[0].u_l.p1c, u_e.u_ctl.g_ln[0].u_l.p2c);
-                $display("HANG lane8 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.u_ctl.g_ln[8].u_l.cr, u_e.u_ctl.g_ln[8].u_l.wcr, u_e.u_ctl.g_ln[8].u_l.wpend, u_e.u_ctl.g_ln[8].u_l.occ, u_e.u_ctl.g_ln[8].u_l.f_hv);
-                $display("HANG lane9 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.u_ctl.g_ln[9].u_l.cr, u_e.u_ctl.g_ln[9].u_l.wcr, u_e.u_ctl.g_ln[9].u_l.wpend, u_e.u_ctl.g_ln[9].u_l.occ, u_e.u_ctl.g_ln[9].u_l.f_hv);
-                $display("HANG lane10 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.u_ctl.g_ln[10].u_l.cr, u_e.u_ctl.g_ln[10].u_l.wcr, u_e.u_ctl.g_ln[10].u_l.wpend, u_e.u_ctl.g_ln[10].u_l.occ, u_e.u_ctl.g_ln[10].u_l.f_hv);
-                $display("HANG lane21 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.u_ctl.g_ln[21].u_l.cr, u_e.u_ctl.g_ln[21].u_l.wcr, u_e.u_ctl.g_ln[21].u_l.wpend, u_e.u_ctl.g_ln[21].u_l.occ, u_e.u_ctl.g_ln[21].u_l.f_hv);
+                         u_e.g_c.u_ctl.st, u_e.g_c.u_ctl.p1e, u_e.g_c.u_ctl.p2e, u_e.g_c.u_ctl.ab, u_e.g_c.u_ctl.bo, u_e.g_c.u_ctl.oe,
+                         u_e.g_c.u_ctl.nwr, u_e.g_c.u_ctl.nexp, u_e.g_c.u_ctl.a_v, u_e.g_c.u_ctl.e_v, u_e.g_c.u_ctl.quiet);
+                $display("HANG l_quiet %h l_cr_nz %h l_p1_full %h l_scp %h", u_e.g_c.u_ctl.l_quiet, u_e.g_c.u_ctl.l_cr_nz,
+                         u_e.g_c.u_ctl.l_p1_full, u_e.g_c.u_ctl.l_scp);
+                $display("HANG lane0 cr %0d wcr %0d wpend %0d occ %0d qcnt %0d qres %0d p1c %0d p2c %0d", u_e.g_c.u_ctl.g_ln[0].u_l.cr,
+                         u_e.g_c.u_ctl.g_ln[0].u_l.wcr, u_e.g_c.u_ctl.g_ln[0].u_l.wpend, u_e.g_c.u_ctl.g_ln[0].u_l.occ,
+                         u_e.g_c.u_ctl.g_ln[0].u_l.qcnt, u_e.g_c.u_ctl.g_ln[0].u_l.qres, u_e.g_c.u_ctl.g_ln[0].u_l.p1c, u_e.g_c.u_ctl.g_ln[0].u_l.p2c);
+                $display("HANG lane8 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.g_c.u_ctl.g_ln[8].u_l.cr, u_e.g_c.u_ctl.g_ln[8].u_l.wcr, u_e.g_c.u_ctl.g_ln[8].u_l.wpend, u_e.g_c.u_ctl.g_ln[8].u_l.occ, u_e.g_c.u_ctl.g_ln[8].u_l.f_hv);
+                $display("HANG lane9 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.g_c.u_ctl.g_ln[9].u_l.cr, u_e.g_c.u_ctl.g_ln[9].u_l.wcr, u_e.g_c.u_ctl.g_ln[9].u_l.wpend, u_e.g_c.u_ctl.g_ln[9].u_l.occ, u_e.g_c.u_ctl.g_ln[9].u_l.f_hv);
+                $display("HANG lane10 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.g_c.u_ctl.g_ln[10].u_l.cr, u_e.g_c.u_ctl.g_ln[10].u_l.wcr, u_e.g_c.u_ctl.g_ln[10].u_l.wpend, u_e.g_c.u_ctl.g_ln[10].u_l.occ, u_e.g_c.u_ctl.g_ln[10].u_l.f_hv);
+                $display("HANG lane21 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.g_c.u_ctl.g_ln[21].u_l.cr, u_e.g_c.u_ctl.g_ln[21].u_l.wcr, u_e.g_c.u_ctl.g_ln[21].u_l.wpend, u_e.g_c.u_ctl.g_ln[21].u_l.occ, u_e.g_c.u_ctl.g_ln[21].u_l.f_hv);
             end
+`endif
             cyc_case[c] = cyc - t0;
             begin : landed
                 integer want; want = (jw[148:147] == 2'd1) ? HD / 2 : HD / 8;     // output sectors (HC_POST 4 x D / 8)

@@ -37,6 +37,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default='/tmp/hgi_hc_eng_tb')
     ap.add_argument('--d', type=int, default=5120)
+    ap.add_argument('--ll', action='store_true', help='LL engine: A / B / O at one bank phase, FP32 gain')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -57,7 +58,10 @@ def main():
         exp.extend(sorted(so.items()))
 
     # HC_POST: (y base, res base, C base, O base): bank phases y 0/7, res 0/13, C offset 0/3, O 10/12
-    for yb, rb, mb, ob in ((0, 8192, 40000, 50000), (56, 8192 + 8 * 13, 40003, 60000)):
+    # LL (lane-local engine): every vector operand and the output at one bank phase (sector mod 32): 0 / 7
+    post_cases = ((0, 8192, 40000, 49152), (56, 8192 + 56, 40003, 59960)) if a.ll else \
+        ((0, 8192, 40000, 50000), (56, 8192 + 8 * 13, 40003, 60000))
+    for yb, rb, mb, ob in post_cases:
         yv = (rng.standard_normal(D) * 2).astype(np.float32)
         res = (rng.standard_normal((4, D)) * 2).astype(np.float32)
         post = (rng.random(4) * 2).astype(np.float32)
@@ -69,7 +73,9 @@ def main():
         vin.update({mb + i: v for i, v in enumerate(f32w(np.concatenate([post, comb.reshape(-1)])))})
         add(job(1, 0, D, ob, mb, rb, yb), vin, {ob + i: v for i, v in enumerate(f32w(hout.reshape(-1)))})
     # HC_PRE_NORM: (h base, gain base, packed, C base, O base)
-    for hb, gb, gpk, cb, ob in ((0, 30000, 0, 20544, 40000), (168, 31000, 1, 25001, 45000)):
+    pre_cases = ((0, 29696, 0, 20544, 39936), (168, 31144, 0, 25001, 44968)) if a.ll else \
+        ((0, 30000, 0, 20544, 40000), (168, 31000, 1, 25001, 45000))
+    for hb, gb, gpk, cb, ob in pre_cases:
         h = (rng.standard_normal((4, D)) * 2).astype(np.float32)
         pre = (rng.random(4) * 1.5).astype(np.float32)
         w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))

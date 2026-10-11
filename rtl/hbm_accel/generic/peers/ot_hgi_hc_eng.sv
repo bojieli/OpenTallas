@@ -569,7 +569,9 @@ module ot_hgi_hc_eng #(
     parameter integer LQ  = 32,
     parameter integer QD  = 4,
     parameter integer FD  = 64,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer LL  = 0,           // 1: the lane-local build (ot_hgi_hc_eng_ll.sv; compiler rule: A / B / O at one bank phase)
+    parameter integer RL  = 4            // LL: relay stages each way between the top and a lane
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -591,6 +593,12 @@ module ot_hgi_hc_eng #(
     output wire              wg_req,
     input  wire              wg_gnt
 );
+    generate if (LL != 0) begin : g_ll
+    ot_hgi_hc_eng_ll #(.D(D), .LQ(LQ), .FD(FD), .RL(RL), .MUT(MUT)) u_ll (.clk(clk), .rst_n(rst_n), .job_v(job_v),
+        .job_rdy(job_rdy), .job(job), .g_rdy(g_rdy), .done(done), .fault(fault), .idle(idle), .wrq(wrq), .wrq_cr(wrq_cr),
+        .wrr(wrr), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .rg_req(rg_req), .rg_gnt(rg_gnt), .wg_req(wg_req),
+        .wg_gnt(wg_gnt));
+    end else begin : g_c
     function automatic [31:0] f32i(input integer x);     // binary32 of a positive integer < 2^24 (exact)
         integer e; reg [31:0] r;
         begin
@@ -618,5 +626,6 @@ module ot_hgi_hc_eng #(
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .cos_t({31'd0, g_loaded}), .sin_t(32'd0), .y_v(n_yv), .y_i(n_yi), .y(n_y),
         .r_v(), .r(), .q_v(), .q_i(), .q_codes(), .q_e(), .q_y(), .ro_v(), .ro(), .fault(n_f));
 
+    end endgenerate
 endmodule
 `default_nettype wire
