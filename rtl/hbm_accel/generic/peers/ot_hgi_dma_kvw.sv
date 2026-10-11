@@ -413,10 +413,12 @@ module ot_hgi_dma_kvw_hold #(
 );
     reg [NL-1:0] pv, hw; reg [255:0] pd [0:NL-1]; reg [255:0] hd [0:2*NL-1];
     reg act_q; reg [2*NL-1:0] s0_q, s1_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin pv <= '0; hw <= '0; hv <= '0; act_q <= 1'b0; s0_q <= '0; s1_q <= '0; end
+    wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));   // relayed reset (control only)
+    always @(posedge clk) begin s0_q <= sel0; s1_q <= sel1; end                                    // selects: no reset
+    always @(posedge clk or negedge rr[0])
+        if (!rr[0]) begin pv <= '0; hw <= '0; hv <= '0; act_q <= 1'b0; end
         else begin
-            act_q <= act; s0_q <= sel0; s1_q <= sel1; hv <= pv;
+            act_q <= act; hv <= pv;
             for (integer l = 0; l < NL; l = l + 1) begin
                 pv[l] <= rsp[l*257 + 256] && act_q;
                 if (pv[l]) hw[l] <= !hw[l];
