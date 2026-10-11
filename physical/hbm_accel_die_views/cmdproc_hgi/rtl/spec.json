@@ -1,7 +1,7 @@
 {
  "master": "hfd_cmdproc",
  "hgi_unit": "cp",
- "note": "HGI-1 command processor (hgi-takeover 2026-10-09): ot_hgi_cp_die = hbm-forks ot_hgi_cp (config path + v1.0 sequencer) + loader link stations + VM read client + per-unit dispatch credits. One block (no N / S split). Units without a record adapter yet (ux_*) and the legacy SM launch tree (c*), SU (t_su_*), barrier, router and legacy coll config buses are not driven by the HGI CP: they show as ties until hgi-adapters lands the unit adapters. Bench rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv: all sequencer vectors through the die binding exact. MTP=2 (hgi-1010/h 2026-10-10): the MTP backend translator + the MX1 MTP collar inside: controller nets f_mtp 517 / t_mtp 197 to hgi_mtp_native; RTL sources add physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv (module hfd_cmdproc_s_mtp_native_mx1_mtp + its join / emit queue) and rtl/hbm_accel/generic/ot_hgi_mtp_xlate.sv.",
+ "note": "HGI-1 command processor (hgi-takeover 2026-10-09): ot_hgi_cp_die = hbm-forks ot_hgi_cp (config path + v1.0 sequencer) + loader link stations + VM read client + per-unit dispatch credits. One block (no N / S split). Units without a record adapter yet (ux_*) and the legacy SM launch tree (c*), SU (t_su_*), barrier, router and legacy coll config buses are not driven by the HGI CP: they show as ties until hgi-adapters lands the unit adapters. Bench rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv: all sequencer vectors through the die binding exact. MTP=2 (hgi-1010/h 2026-10-10): the MTP backend translator + the MX1 MTP collar inside: controller nets f_mtp 517 / t_mtp 197 to hgi_mtp_native; RTL sources add physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv (module hfd_cmdproc_s_mtp_native_mx1_mtp + its join / emit queue) and rtl/hbm_accel/generic/ot_hgi_mtp_xlate.sv. hgi-1010/h: the collar's host / provider side rides the loader link (lcp 460 = + MTP window {data 32, word 8, we} [459:419]; cpl 230 = + status [229:222]); no mh_* ports. The loader view instantiates ot_hgi_loader_cp MTPH = 1.",
  "instances": [
   {
    "name": "cpd",
@@ -15,8 +15,8 @@
    "bind": {
     "clk": "clk",
     "rst_n": "rst_n",
-    "lcp": "die:f_hgi_loader[0:419]",
-    "cpl": "die:t_hgi_loader[0:222]",
+    "lcp": "die:f_hgi_loader[0:460]",
+    "cpl": "die:t_hgi_loader[0:230]",
     "vmq": "die:t_hgi_vmq[0:338]",
     "vmr": "die:f_hgi_vmr[0:274]",
     "vmstat": "die:f_hgi_vmstat[0:19]",
@@ -64,16 +64,7 @@
     "x_cpl_fault": "open",
     "x_am_v": "open",
     "x_am_idx": "open",
-    "x_drained_ready": "open",
-    "mh_f_host": "cfg",
-    "mh_f_provider": "cfg",
-    "mh_f_emit_host": "cfg",
-    "mh_t_host": "fold",
-    "mh_t_provider": "fold",
-    "mh_t_emit": "fold",
-    "mh_t_emit_host": "fold",
-    "mh_t_abort": "fold",
-    "mh_t_drained": "fold"
+    "x_drained_ready": "open"
    }
   }
  ],
@@ -82,9 +73,7 @@
  ],
  "kept_out_regs": true,
  "face_stages": 5,
- "open_items": [
-  "MX1 collar host / provider side (mh_*) to the loader link (proposal in hgi-1010.log, hgi-1010/h 2026-10-10)"
- ],
+ "open_items": [],
  "replaced_when_hgi": "argmax",
  "ties": {
   "cpd.am_rec": {
@@ -278,42 +267,6 @@
   "cpd.x_noise": {
    "class": "by_design",
    "reason": "unused port (hgi-1010/h): the translator's noise / mask token id is MD word 53 mtp_noise (programmed per model through the CFG window); x_noise is kept only for the MTP=1 bench form"
-  },
-  "cpd.mh_f_host": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
-  },
-  "cpd.mh_f_provider": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
-  },
-  "cpd.mh_f_emit_host": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
-  },
-  "cpd.mh_t_host": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
-  },
-  "cpd.mh_t_provider": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
-  },
-  "cpd.mh_t_emit": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
-  },
-  "cpd.mh_t_emit_host": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
-  },
-  "cpd.mh_t_abort": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
-  },
-  "cpd.mh_t_drained": {
-   "class": "by_design",
-   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
   }
  }
 }
