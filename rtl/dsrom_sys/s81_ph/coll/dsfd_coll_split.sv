@@ -199,7 +199,11 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
     parameter integer TREP = `ifdef OT_S81PH_COLL_TREP 1 `else 0 `endif,
     // RSL (hardcore-1010 fe G, opt-in): one-hot pointer slices in every credit relay (ot_s81ph_cr_relay RSL), 0 cycles
     parameter integer RSL = `ifdef OT_S81PH_COLL_RSL 8 `else 0 `endif,
-    parameter integer PCR = `ifdef OT_S81PH_COLL_PCR 1 `else 0 `endif
+    parameter integer PCR = `ifdef OT_S81PH_COLL_PCR 1 `else 0 `endif,
+    // TVR (el1011-ds-coll 2026-10-11, default 0): t_vm leaves a pure relay register (no logic in front of the pin flop):
+    // the queue read mux lands in t_vq beside the slices, t_vq -> t_vm is a full-cycle wire to the S-face pins
+    // (kps: u_oq.rp -> 16:1 mux -> anchored t_vm[1287] -47; t_vm[0] pin flop 270 ps from its pin).  +1 cycle on t_vm.
+    parameter integer TVR = `ifdef OT_S81PH_COLL_TVR 1 `else 0 `endif
 ) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
@@ -278,6 +282,7 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
     localparam integer OSW = 256, ONS = (2099 + OSW - 1) / OSW;
     (* keep *) reg [ONS-1:0] pq;
     reg [2099:1] wq;
+    reg [2099:0] t_vq;                                   // the t_vm word before the optional TVR pin relay
     always @(posedge clk or negedge rst_n) if (!rst_n) pq <= {ONS{1'b0}}; else pq <= {ONS{bw_vq}};
     always @(posedge clk) wq <= bw_dq;
     wire [ONS-1:0] s_hv, s_flt, s_pop; wire [2099:1] oq_hd;
@@ -295,8 +300,8 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
             ot_s81ph_rfifo #(.W(WS), .D(OD)) u_oq (.clk(clk), .rst_n(rst_n), .push(pq[j]), .wd(wq[1 + LO +: WS]),
                 .pop(sp), .hv(s_hv[j]), .hd(oq_hd[1 + LO +: WS]), .room(), .room2(), .fault(s_flt[j]));
             always @(posedge clk or negedge rst_n)
-                if (!rst_n) t_vm[1 + LO +: WS] <= {WS{1'b0}};
-                else t_vm[1 + LO +: WS] <= sp ? oq_hd[1 + LO +: WS] : {WS{1'b0}};
+                if (!rst_n) t_vq[1 + LO +: WS] <= {WS{1'b0}};
+                else t_vq[1 + LO +: WS] <= sp ? oq_hd[1 + LO +: WS] : {WS{1'b0}};
             assign s_pop[j] = sp;
         end else begin : g_one
             ot_s81ph_rfifo #(.W(WS), .D(OD)) u_oq (.clk(clk), .rst_n(rst_n), .push(pq[j]), .wd(wq[1 + LO +: WS]),
@@ -305,6 +310,17 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
         end
     end endgenerate
     wire pop = s_pop[0];
+    generate if (TVR != 0) begin : g_tvr
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) t_vm <= 2100'd0;
+`ifdef OT_S81PH_MUT_TVR
+            else t_vm <= {t_vq[2099:1288], t_vm[1287], t_vq[1286:0]};   // negative control: one data bit sticks
+`else
+            else t_vm <= t_vq;
+`endif
+    end else begin : g_tvn
+        always @(*) t_vm = t_vq;
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin bw_cr <= 1'b0; bw_flt <= 1'b0; end
         else begin
@@ -312,11 +328,11 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
             if (|s_flt) bw_flt <= 1'b1;
         end
     generate if (TREP != 0) begin : g_tv0
-        always @(posedge clk or negedge rst_n) if (!rst_n) t_vm[0] <= 1'b0; else t_vm[0] <= pop;
+        always @(posedge clk or negedge rst_n) if (!rst_n) t_vq[0] <= 1'b0; else t_vq[0] <= pop;
     end else begin : g_tvall
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) t_vm <= 0;
-            else t_vm <= pop ? {oq_hd, 1'b1} : 2100'd0;
+            if (!rst_n) t_vq <= 0;
+            else t_vq <= pop ? {oq_hd, 1'b1} : 2100'd0;
     end endgenerate
     wire unused_ok = &{1'b0, ts_r[2:1]};
 endmodule
