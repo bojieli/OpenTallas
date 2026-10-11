@@ -19,10 +19,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hbm_hub_quarter_gen as H
 
 PORTS = 'physical/hbm_accel_die_views/hcp/r25gq/ports/hfd_hc/ports.json'
-STRIP = 64.8           # 150 x 0.432: tile 151.632 x 120.96, macro 9,814 + std ~300 um2 in ~18,180 um2 core = ~55.6 % (30.24: 72 %, FLOORPLAN_MARGIN 31c3923b9)
+STRIP = 30.24          # 70 x 0.432: the W channel (all 359 lane pins face it): 162 bc pins / edge (~5.4 b/um), ~870 flops
 LANE_W, LANE_H = 85.32, 115.02
-TILE_W = round(STRIP + LANE_W + 1.512, 3)      # 117.072 = 2,168 sites
-TILE_H = 120.96                                 # 448 rows; core 119.88 = 1.08 mod 5.4 = the su tile PDN phase (pdn_tile_xl.tcl: a VDD M6 strap below the lane, a VSS strap above it, PSM-0069)
+RING = 20.088                                   # OWNER textbook audit 10-11 (class 6): >= ~20 um macro channel to the core edge on E / N / S
+TILE_W = round(STRIP + LANE_W + RING, 3)       # 135.648 = 2,512 sites
+LANE_Y = 20.736                                 # 108 x 0.192 (on the M4 0.048 / M6 0.064 grid): 20.2 um above the core edge
+TILE_H = 156.33                                 # 579 rows: core top 155.79 = 20.03 um above the lane; ~48 % with the lane macro
 
 
 def rename(s):
@@ -42,10 +44,10 @@ def main():
     (out / 'hfd_hc_tile.sv').write_text(rename(H.emit_tile(p)))
     (out / 'ot_dsrom_su_hcpost_lane_pr_simstub.sv').write_text(H.emit_stub(p))
     (out / 'io_place.tcl').write_text(rename(H.emit_tile_io(p, TILE_W, TILE_H)))
-    (out / 'macro_place.tcl').write_text(f'place_macro -macro_name {{u_lane}} -location {{{STRIP:.3f} {H.TILE_LANE_Y:.3f}}} -orientation R0 -exact\n')
+    (out / 'macro_place.tcl').write_text(f'place_macro -macro_name {{u_lane}} -location {{{STRIP:.3f} {LANE_Y:.3f}}} -orientation R0 -exact\n')
     (out / 'tile.json').write_text(json.dumps(dict(
         master='hfd_hc_tile_xl', lane=q['lane'], lane_params=q['params'], w_um=TILE_W, h_um=TILE_H, strip_w=STRIP,
-        lane_xy=[STRIP, H.TILE_LANE_Y], LB=p.LB, LO=p.LO, WCT=p.WCT, RB=p.RB, RA=p.RA,
+        lane_xy=[STRIP, LANE_Y], LB=p.LB, LO=p.LO, WCT=p.WCT, RB=p.RB, RA=p.RA,
         quarter=dict(tiles=p.N, chains=p.KC, tiles_per_chain=p.NT),
         registered_bits=p.LB + 1 + p.LO + p.WCT, lockup_bits=p.LB + 1 + p.WCT,
         data_cycles_added=0, visibility_half_cycles_added=1), indent=1) + '\n')
