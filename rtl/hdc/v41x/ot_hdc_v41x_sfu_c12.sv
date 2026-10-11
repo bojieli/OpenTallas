@@ -1104,21 +1104,17 @@ endmodule
 
 // el1011-hbm-sfu 2026-10-11: one parity bank of the RING 4 timing wheel: R rows x W bits of single-port SRAM with a
 // registered read port (one access per edge: ce & we write, ce & !we read; rd holds otherwise).  Synthesis maps it on
-// ceil(W/64) ASAP7 fakeram7_128x64 macros (R <= 128); simulation uses the same behaviour as a register array.
+// the compiled ot_sram_1rw_64x128_m1 (R <= 64, W <= 128); simulation uses the same behaviour as a register array.
 module ot_hdc_ins_ram #(parameter integer W = 64, parameter integer R = 64) (
     input  wire clk, input wire ce, input wire we, input wire [$clog2(R)-1:0] addr, input wire [W-1:0] wd,
     output wire [W-1:0] rd
 );
 `ifdef SYNTHESIS
-    localparam integer NM = (W + 63) / 64;
-    initial if (R > 128) $error("ot_hdc_ins_ram: R > 128");
-    wire [64*NM-1:0] wdx = {{(64*NM-W){1'b0}}, wd};
-    wire [64*NM-1:0] rdx;
-    genvar m;
-    for (m = 0; m < NM; m = m + 1) begin : g_m
-        fakeram7_128x64 u_ram (.clk(clk), .addr_in({{(7-$clog2(R)){1'b0}}, addr}), .ce_in(ce), .we_in(we),
-                               .wd_in(wdx[64*m +: 64]), .rd_out(rdx[64*m +: 64]));
-    end
+    // compiled macro tools/mem_compiler: ot_sram_1rw_64x128_m1 (TT/SS/FF liberty, physical/asap7_memory_macros/)
+    initial if (R > 64 || W > 128) $error("ot_hdc_ins_ram: R > 64 or W > 128");
+    wire [127:0] rdx;
+    ot_sram_1rw_64x128_m1 u_ram (.clk(clk), .ce_in(ce), .we_in(we), .addr_in({{(6-$clog2(R)){1'b0}}, addr}),
+                                 .wd_in({{(128-W){1'b0}}, wd}), .w_mask_in({128{1'b1}}), .rd_out(rdx));
     assign rd = rdx[W-1:0];
 `else
     reg [W-1:0] mem [0:R-1];
