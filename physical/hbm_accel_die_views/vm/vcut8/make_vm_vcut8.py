@@ -473,6 +473,15 @@ def free(ly, a):
     return all(not (lo - hw <= r <= hi + hw) and not (lo - hw <= r + per <= hi + hw) and not (lo - hw <= r - per <= hi + hw)
                for lo, hi in bands)
 
+def free_span(ly, a0, a1):
+    """True if [a0, a1] (a pin's extent ACROSS the strap direction) keeps the free() clearance from every strap of ly."""
+    if ly not in STRAP:
+        return True
+    per, bands = STRAP[ly]
+    hw = (0.016 if ly in ('M6', 'M7') else 0.012) + 0.10
+    return all(a1 + hw < lo + n * per or a0 - hw > hi + n * per
+               for lo, hi in bands for n in range(int(a0 // per) - 1, int(a1 // per) + 2))
+
 def lay(runs, L1, L2, lo, hi):
     """runs: [(port, bits)] in order along the face; returns ({port: [coord of bit b]}, {port: layer list}, pitch, span)"""
     n = sum(b for _, b in runs)
@@ -584,6 +593,12 @@ def plan():
                         x = 0.016 + round((xt - 0.016) / 0.064) * 0.064
                         while not free('M7', x) or abs(x - [pp for pp in pins[m] if pp[0] == 'ck'][0][3]) < 1.0:
                             x += 0.064 if (f != 'e' and x < w - 2) else -0.064
+                        # [vm8] 2026-10-10 pin access: the 0.288-um M7 tap pin must not sit over an M6 PG strap (the die
+                        # drops the leaf from M8, the block descends M7 -> M6 right at the pin): hbm_vm8bfq_nwe (rvt and
+                        # lvt) left one DRT short cke5 x VSS on M6 at the pin (y 114.615 over the 114.576 VSS strap);
+                        # 26 tap pins per half sat over M6 straps.  Step along the face (E/W) / inward (N/S) on the row grid.
+                        while not free_span('M6', y - 0.144, y + 0.144):
+                            y = round(y + (0.27 if (f in 'we' or f == 's') else -0.27), 4)
                         pins[m].append((t, 0, 'M7', round(x, 4), y, '0.0320 0.2880'))
                 # rst: M7 area pin 6 um further in than its tap pin (the die drops it from M8 like the clock leaves)
                 t0 = rst_tap(q, h)
@@ -594,6 +609,8 @@ def plan():
                 rx = 0.016 + round((rx - 0.016) / 0.064) * 0.064
                 while not free('M7', rx):
                     rx += 0.064
+                while not free_span('M6', ry - 0.144, ry + 0.144):
+                    ry = round(ry + 0.27, 4)
                 pins[m] = [pp for pp in pins[m] if pp[0] != 'rst'] + [('rst', 0, 'M7', round(rx, 4), round(ry, 4), '0.0320 0.2880')]
     # sanity: every half port has all its bits, no two pins of one layer on one spot, all inside the outline
     for m, ps in pins.items():
