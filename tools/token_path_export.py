@@ -293,6 +293,8 @@ KVD = "results/arch/qwen_kv_die_20261009/reprice.json"
 # qwen-1010/a 2026-10-10: r22ko4 (option 4) is the Qwen ROM plan of record; FEC base +100 a collective (bound +240)
 O4P = "results/arch/qwen_kv_die_20261009/reprice_o4.json"
 O4 = json.loads((ROOT / O4P).read_text()) if (ROOT / O4P).exists() else None
+if O4 is not None and O4.get("kv_basis"):
+    KVD = O4["kv_basis"]        # the KV-die basis the option-4 price is applied to (qwen-1010/b relays + leaf plan + DQ)
 # the extra board-leg FEC per all-reduce: tools/qwen_kv_die/fec_derivation.json (headline 0: the collective LAT 339 already
 # carries the RS-inclusive board hop; band 0 / +100 / +240)
 O4_FEC = json.loads((ROOT / "tools/qwen_kv_die/fec_derivation.json").read_text())["extra_fec_cycles_per_allreduce"]["headline"] \
@@ -485,6 +487,12 @@ def qwen(kv=None):
                                   f"a collective, tools/qwen_kv_die/fec_derivation.json) over {KVD}", source=O4P + " cases.typical",
                             fec_band_tok_s={f"fec+{f}": round(1.2e9 / (total + 72 * (f - O4_FEC)), 1) for f in (0, 100, 240)},
                             fec_cycles_per_allreduce=O4_FEC, fec_derivation="tools/qwen_kv_die/fec_derivation.json")
+            if O4.get("kv_refresh_provisional"):
+                kr = O4["kv_refresh_provisional"]
+                headline.update(kv_die_status="PROVISIONAL", kv_refresh_provisional=dict(
+                    note=kr["status"], step_increase_per_layer=kr["step_increase_per_layer"],
+                    tok_s=dict(mean=round(1.2e9 / (total + 36 * kr["step_increase_per_layer"]["mean"]), 1),
+                               worst=round(1.2e9 / (total + 36 * kr["step_increase_per_layer"]["worst"]), 1))))
         notes = ["EXACTNESS: " + EXACTNESS_QWEN_ROM + ".",
                  f"COST: {kv['per_user_cost']['statement']} (reprice.json per_user_cost / silicon).",
                  "Owner decision 2026-10-09: ROM die + KV die pair; attention (near-HBM row engines) on the KV die; only q, the "
