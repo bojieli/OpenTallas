@@ -1297,7 +1297,7 @@ def cmd_block(a):
         # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
         (work / "hops.tcl").write_text(HOPS)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
-    if a.piece in ("tile", "be", "tcc", "bdc") and a.pin_flops:
+    if a.piece in ("tile", "be", "tcc", "bdc", "pt_w", "pt_e") and a.pin_flops:
         # m2: the pass-through landing registers join the input face's strip (tile W 16 um overflowed: --pin-depth)
         (work / "hops.tcl").write_text(PIN_TCL.replace("ot_pin_place_auto {.*} 16\n", f"ot_pin_place_auto {{.*}} {a.pin_depth}\n"))
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
@@ -1382,7 +1382,7 @@ def cmd_block(a):
 # ---------------- el1011-hbm-smh round 3: the hierarchical SM tile (OT_SMH_HIER), physical spec in el1011-hbm-smh.log ----
 H3_TILE = (587.52, 1080.0)
 H3_YM2 = 1080.024             # 2 x the mirror axis: leaf 1 = MX image of leaf 0 about y 540.012 (tracks map onto tracks)
-H3_DIM = {"pt_w": (302.4, 371.52), "pt_e": (51.84, 371.52), "xs": (302.4, 155.544), "bdc3": (112.32, 142.56),
+H3_DIM = {"pt_w": (302.4, 371.52), "pt_e": (194.4, 371.52), "xs": (302.4, 155.544), "bdc3": (112.32, 142.56),
           "tcl": (86.4, 120.024), "tct": (194.4, 69.144)}
 H3_MASTER = {"pt_w": "ot_hbm_accel_smh_pt_w", "pt_e": "ot_hbm_accel_smh_pt_e", "xs": "ot_hbm_accel_smh_xs",
              "bdc3": "ot_hbm_accel_smh_bdc", "tcl": "ot_hbm_accel_smh_tcl", "tct": "ot_hbm_accel_smh_tct"}
@@ -1395,7 +1395,7 @@ def _h3_pos():
     """leaf-0 / band macro origins (R0); leaf 1 is derived by mirroring."""
     tw = H3_TILE[0]
     xb0 = trk((H3_DIM["bdc3"][0] - 1084 * 0.096) / 2)
-    pos = {"ptw": (10.8, H3_BAND_Y), "pte": (round(tw - 10.8 - 51.84, 3), H3_BAND_Y),
+    pos = {"ptw": (10.8, H3_BAND_Y), "pte": (round(tw - 10.8 - H3_DIM["pt_e"][0], 3), H3_BAND_Y),
            "xs": (H3_XS_X, H3_XS_Y), "bdc": (round(H3_XS_X + trk(20.0) - xb0, 3), 924.48),
            "tct": (H3_TCX, 758.16), "tcl0": (H3_TCX, 849.12), "tcl1": (round(H3_TCX + 86.4 + 21.6, 3), 849.12)}
     return pos
