@@ -7,8 +7,9 @@ OUT=$(realpath -m "${1:-/tmp/hgi_su_prod}"); shift || true
 VL=${VERILATOR:-$( [ -x "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" ] && echo "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" || echo verilator)}
 mkdir -p "$OUT"
 [ -f "$OUT/vec/su_sizes.svh" ] || python3 "$ROOT/tools/hgi_unitrate/su_prod_vec.py" --out "$OUT/vec"
-TAG="n${N:-64}${UNIT:+_$UNIT}${WIDE:+_wide}${WIDE2:+_x}${MUTX:+_mutx$MUTX}${SHARED:+_shared}${CHAIN:+_chain}${ARBMUT:+_arbmut}${RLY:+_rly$RLY}${LQ:+_lq$LQ}${LRLAT:+_lat$LRLAT}${MUTRV:+_mutrv$MUTRV}${MUT:+_$MUT}${MUTW:+_mutw$MUTW}"
+TAG="n${N:-64}${UNIT:+_$UNIT}${WIDE:+_wide}${WIDE2:+_x}${MUTX:+_mutx$MUTX}${SHARED:+_shared}${CHAIN:+_chain}${ARBMUT:+_arbmut}${RLY:+_rly$RLY}${LQ:+_lq$LQ}${LRLAT:+_lat$LRLAT}${MUTRV:+_mutrv$MUTRV}${MUT:+_$MUT}${MUTW:+_mutw$MUTW}${SLICES:+_sl$SLICES}"
 D="-DN=${N:-64} -DM=${M:-64} -DLV=${LV:-7} -DLWB=${LWB:-18}"
+[ -n "${SLICES:-}" ] && D="$D -DOT_CTLW_SLICES=$SLICES"   # el1011-hbm-sfu: ctlw as 4 hardened 8-lane slices
 [ "${UNIT:-su}" = sfu ] && D="$D -DSFU"; [ -n "${WIDE:-}" ] && D="$D -DWIDE"; [ -n "${WIDE2:-}" ] && D="$D -DWIDE -DWIDE2"; [ -n "${MUTX:-}" ] && D="$D -DMUT_X=$MUTX"; [ -n "${XDBG:-}" ] && D="$D -DXDBG -DWDOG=20000"; [ -n "${SHARED:-}" ] && D="$D -DSHARED"; [ -n "${CHAIN:-}" ] && D="$D -DSHARED -DCHAIN"; [ -n "${ARBMUT:-}" ] && D="$D -DARBMUT"; [ -n "${RLY:-}" ] && D="$D -DRLY=$RLY"; [ -n "${LQ:-}" ] && D="$D -DLQ=$LQ"; [ -n "${LRLAT:-}" ] && D="$D -DLRLAT=$LRLAT"; [ -n "${MUTRV:-}" ] && D="$D -DMUT_RV=$MUTRV"; [ -n "${MUT:-}" ] && D="$D -D$MUT"; [ -n "${MUTW:-}" ] && D="$D -DMUT_W=$MUTW"
 L="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv
    rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv
