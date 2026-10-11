@@ -1027,7 +1027,8 @@ module ot_hgi_su_ctlw #(
                                           //   advance), 2 the drain skips the last sector of each lane, 3 the record
                                           //   retires before its drain writes are in VM (no done wait), 4 no source / live-sink hazard check
                                           //   (a record stages an operand an older record has not drained yet)
-    parameter integer SLICES = 0,         // el1011-hbm-sfu: 4 hardened 8-lane slices + 2-stage reduction hub (default off)
+    parameter integer SLICES = 0,         // el1011-hbm-sfu: 1 = 4 hardened 8-lane slices + 2-stage reduction hub, 2 = and
+                                          //   the lanes' landing FIFOs in 64x16 SRAM (default 0: flat)
     parameter integer OVL = 1             // 1: three-slot record pipeline (span + stage | run | drain overlap); 0: one
                                           //   record at a time (each slot waits for the younger ones to empty)
 ) (
@@ -1326,7 +1327,7 @@ module ot_hgi_su_ctlw #(
             assign dlb_v[(q-4)*(LWB+1) +: LWB+1] = d_lb[q]; assign drv_v[q-4] = d_rv[q]; assign ddsec_v[(q-4)*21 +: 21] = d_dsec[q];
         end
         for (genvar g = 0; g < 4; g = g + 1) begin : g_s
-            ot_hgi_su_ctlw_slice #(.SL(g), .NL(8), .LWB(LWB), .LQ(LQ), .MUT_W(MUT_W), .MUT_DIRTY(MUT_DIRTY)) u_slice (
+            ot_hgi_su_ctlw_slice #(.SL(g), .NL(8), .LWB(LWB), .LQ(LQ), .MUT_W(MUT_W), .MUT_DIRTY(MUT_DIRTY), .LQSRAM(SLICES >= 2 ? 1 : 0)) u_slice (
                 .clk(clk), .rst_n(rst_n), .wst_go_i(wst_go), .wdr_go_i(wdr_go),
                 .lo_i(lo_v), .hi_i(hi_v), .lb_i(lb_v), .rv_i(rv_v), .dsec_i(dsec_v),
                 .d_lo_i(dlo_v), .d_hi_i(dhi_v), .d_lb_i(dlb_v), .d_rv_i(drv_v), .d_dsec_i(ddsec_v), .d_os_i(d_os),
@@ -2337,7 +2338,8 @@ endmodule
 // register; the slice's all-lanes-done / overflow reductions leave registered (the hub reduces the four again).
 module ot_hgi_su_ctlw_slice #(
     parameter integer SL = 0, parameter integer NL = 8, parameter integer LWB = 17, parameter integer LQ = 8,
-    parameter integer MUT_W = 0, parameter integer MUT_DIRTY = 0
+    parameter integer MUT_W = 0, parameter integer MUT_DIRTY = 0,
+    parameter integer LQSRAM = 0          // 1: each lane's landing FIFO in a 64x16 1R1W SRAM (FWFT), not 64 x LSW flops
 ) (
     input  wire clk, input wire rst_n,
     input  wire wst_go_i, input wire wdr_go_i,
@@ -2395,6 +2397,26 @@ module ot_hgi_su_ctlw_slice #(
     function automatic [20:0] first_of(input [20:0] lo_s, input integer b);
         first_of = lo_s + 21'((5'(b) - lo_s[4:0]) & 5'd31);
     endfunction
+    // landing FIFO head per lane: flops (LQSRAM 0) or an SRAM first-word-fall-through FIFO (LQSRAM 1); lq_first = slot 0
+    wire [LSW-1:0] lq_head [0:NL-1]; reg [LSW-1:0] lq_first [0:NL-1];
+    generate if (LQSRAM != 0) begin : g_lqm
+        initial if (LFD != 64 || LSW > 16) $error("ot_hgi_su_ctlw_slice LQSRAM: needs LFD 64 and LSW <= 16");
+        for (genvar g = 0; g < NL; g = g + 1) begin : g_l
+            wire push = !wst_go && sg_r[g] < 3'd4 && sg_on[g] && cr[g] != 0;
+            wire pop = wrr_q[g*257 + 256];
+            wire hv, ovf_l;
+            ot_fifo_sram_fwft #(.W(LSW), .DEPTH(64), .MACRO(3)) u_lq (.clk(clk), .rst_n(rst_l), .push(push),
+                .wdata(LSW'(sg_nx[g] + dsec[sg_r[g]])), .pop(pop), .hv(hv), .head(lq_head[g]), .ovf(ovf_l));
+            // synthesis translate_off
+            always @(posedge clk) if (rst_l && pop && !hv)
+                $error("ctlw slice %0d lane %0d: a response landed before its FIFO head was readable", SL, g);
+            // synthesis translate_on
+        end
+    end else begin : g_lqf
+        for (genvar g = 0; g < NL; g = g + 1) begin : g_l
+            assign lq_head[g] = lq[g][lqh[g]];
+        end
+    end endgenerate
     always @(posedge clk or negedge rst_l) begin
         if (!rst_l) begin
             wrq <= '0; wwq <= '0; lsw_v <= '0; ldc_v <= '0; ldr_v <= '0; dp1 <= '0; dp2 <= '0; dp3 <= '0;
@@ -2421,7 +2443,8 @@ module ot_hgi_su_ctlw_slice #(
                     end else if (cr[b] != 0) begin
                         iss = 1'b1;
                         wrq[b*16 +: 16] <= {1'b1, sg_nx[b][14:0]};
-                        lq[b][lqt[b]] <= LSW'(sg_nx[b] + dsec[sg_r[b]]);
+                        if (LQSRAM == 0) lq[b][lqt[b]] <= LSW'(sg_nx[b] + dsec[sg_r[b]]);
+                        if (lqt[b] == '0) lq_first[b] <= LSW'(sg_nx[b] + dsec[sg_r[b]]);
                         lqt[b] <= lqt[b] + 1'b1;
                         if (sg_nx[b] + 21'd32 > sg_end[b]) begin sg_on[b] <= 1'b0; sg_r[b] <= sg_r[b] + 3'd1; end
                         else sg_nx[b] <= sg_nx[b] + 21'd32;
@@ -2430,7 +2453,7 @@ module ot_hgi_su_ctlw_slice #(
                 // responses land in request order
                 if (wrr_q[b*257 + 256]) begin
                     land = 1'b1;
-                    lsw_v[b] <= 1'b1; lsw_sec[b*LSW +: LSW] <= (MUT_W == 1) ? lq[b][0] : lq[b][lqh[b]];
+                    lsw_v[b] <= 1'b1; lsw_sec[b*LSW +: LSW] <= (MUT_W == 1) ? lq_first[b] : lq_head[b];
                     lsw_d[b*256 +: 256] <= wrr_q[b*257 +: 256];
                     lqh[b] <= lqh[b] + 1'b1;
                 end
