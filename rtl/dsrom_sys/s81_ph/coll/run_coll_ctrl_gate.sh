@@ -11,9 +11,13 @@ bash $R $O base -DTB_CTRL -GMAXCYC=200000 & p0=$!
 bash $R $O mut_dropstart -DTB_CTRL -DTB_MUT_DROPSTART -GMAXCYC=60000 & p1=$!
 bash $R $O mut_wrongdesc -DTB_CTRL -DTB_MUT_WRONGDESC -GMAXCYC=60000 & p2=$!
 bash $R $O mut_earlydone -DTB_CTRL -GCMUT=5 -GMAXCYC=60000 & p3=$!
-wait $p0; b=$?; wait $p1; m1=$?; wait $p2; m2=$?; wait $p3; m3=$?
+bash $R $O noctrl -GMAXCYC=200000 & p4=$!      # the same plan without control: the cycle price of the binding
+wait $p0; b=$?; wait $p1; m1=$?; wait $p2; m2=$?; wait $p3; m3=$?; wait $p4; n0=$?
 v=PASS
 [ $b -eq 0 ] || v=FAIL
 for x in $m1 $m2 $m3; do [ $x -eq 1 ] || v=FAIL; done   # a mutant must build and FAIL (exit 1), not BUILD_FAIL (2)
-echo "COLL_CTRL_GATE $v base=$b dropstart=$m1 wrongdesc=$m2 earlydone=$m3" | tee $O/verdict.log
+[ $n0 -eq 0 ] || v=FAIL
+cb=$(grep -oE "dut_last [0-9]+" $O/base.log | awk '{print $2}'); cn=$(grep -oE "dut_last [0-9]+" $O/noctrl.log | awk '{print $2}')
+fs=$(grep -oE "first_send [0-9]+" $O/base.log | awk '{print $2}')
+echo "COLL_CTRL_GATE $v base=$b dropstart=$m1 wrongdesc=$m2 earlydone=$m3 noctrl=$n0 cycles ctrl $cb vs noctrl $cn (first send $fs)" | tee $O/verdict.log
 [ $v = PASS ]

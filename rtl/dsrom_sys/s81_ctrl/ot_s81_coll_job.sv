@@ -19,10 +19,10 @@
 // Credits: the VM sends type-1 records only against the core's q0 credits (QD0 16), returned on q0 pops; a held
 // record has not been popped, so HQ (16 deep) + q0 never hold more than the VM's 16 credits: a push into a full HQ
 // is a fault, never a drop.  Latency: +1 cycle on every f_vm word (output register); a record released the cycle
-// its job is at the head.  A bypass word has the output register first; a held record waits one cycle.
+// its job is at the head, cut through when HQ is empty (+1 cycle total); a held record waits one cycle more.
 // MUT (negative controls): 5 early done (a done on the job's first result beat instead of its last).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_coll_job #(parameter integer HQD = 16, JQ = 4, MUT = 0, EPMUT = 0) (
+module ot_s81_coll_job #(parameter integer HQD = 16, JQ = 8, MUT = 0, EPMUT = 0) (
     // controller side (dsfd_sp_ctrl clock): die pins of engine 3
     input  wire          c_clk, c_rst_n,
     input  wire [84:0]   c_cmd,                 // {cv[3], cd[3*84 +: 84]}
@@ -60,8 +60,12 @@ module ot_s81_coll_job #(parameter integer HQD = 16, JQ = 4, MUT = 0, EPMUT = 0)
     reg [15:0] cnt, need; reg md, abad;
     wire       head_ok = act || (in_ != 0);
     wire [HW-1:0] hd = hq[hr];
-    wire       rel = (hn != 0) && head_ok && !in_byp;   // release one held record (bypass words take the slot first)
-    wire       h_last = hd[0], h_mode = hd[1];
+    // a record arriving with HQ empty and its descriptor present goes straight out (cut-through: +1 cycle, the output
+    // register); otherwise HQ releases its head (bypass words take the output slot first)
+    wire       cut = in_rec && (hn == 0) && head_ok;
+    wire       rel = ((hn != 0) && head_ok && !in_byp) || cut;
+    wire [HW-1:0] hsel = cut ? {vm_f[591:40], vm_f[39:8], vm_f[7], vm_f[6]} : hd;
+    wire       h_last = hsel[0], h_mode = hsel[1];
     // ---- done side: lasts leaving the slab
     wire       ob = core_t[0] && core_t[2:1] == 2'd1;
     wire [3:0] ol = core_t[13:10] & core_t[9:6];
@@ -79,16 +83,16 @@ module ot_s81_coll_job #(parameter integer HQD = 16, JQ = 4, MUT = 0, EPMUT = 0)
             if (j_new) begin iq[iw] <= {j_new_d[23], j_new_d[22:7]}; ibad[iw] <= (j_new_d[30:24] != 0) || (j_new_d[22:7] == 0);
                              iw <= (iw == JQ - 1) ? 0 : iw + 1'b1; end
             // record queue push
-            if (in_rec) begin hq[hw] <= {vm_f[591:40], vm_f[39:8], vm_f[7], vm_f[6]}; hw <= hw + 1'b1;
-                              if (hn == HQD && !rel) jf <= 1'b1; end
-            case ({in_rec, rel}) 2'b10: hn <= hn + 1'b1; 2'b01: hn <= hn - 1'b1; default: hn <= hn; endcase
+            if (in_rec && !cut) begin hq[hw] <= {vm_f[591:40], vm_f[39:8], vm_f[7], vm_f[6]}; hw <= hw + 1'b1;
+                                      if (hn == HQD && !rel) jf <= 1'b1; end
+            case ({in_rec && !cut, rel && !cut}) 2'b10: hn <= hn + 1'b1; 2'b01: hn <= hn - 1'b1; default: hn <= hn; endcase
             if (in_v && in_t == 2'd3 && (hn != 0 || act)) jf <= 1'b1;
             // output word
             core_f <= 592'd0;
             if (in_byp) core_f <= vm_f;
             else if (rel) begin
-                core_f <= {hd[HW-1 -: 552], hd[33:2], h_mode, h_last, 3'd0, 2'd1, 1'b1};
-                hr <= hr + 1'b1;
+                core_f <= {hsel[HW-1 -: 552], hsel[33:2], h_mode, h_last, 3'd0, 2'd1, 1'b1};
+                if (!cut) hr <= hr + 1'b1;
                 // message bookkeeping: open at the first record (descriptor from the issue head), close at last
                 begin : msg
                     reg [15:0] c_; reg [15:0] n_; reg m_; reg b_;
