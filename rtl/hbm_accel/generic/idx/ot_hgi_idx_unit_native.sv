@@ -20,7 +20,7 @@ module ot_hgi_idx_unit_native #(
 ) (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire [1818:0] rec,           // {die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
+    input  wire [2074:0] rec,           // {I 256 (IDX.INDEX key-region descriptor; hgi-1010/g), die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
     output reg  [2:0]    ret,
     output wire [337:0]  vmq,
     input  wire [273:0]  vmr,

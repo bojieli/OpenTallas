@@ -427,7 +427,8 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 | 46 | `coll_group_size` (bits 7:0) | collective |
 | 47–48 | reserved | — |
 | 49 | MTP per-layer kernel stride `kstride` (G26), 16-byte units; 0 = one body per kind | CP (MTP translator) |
-| 53–55 | reserved for MTP parameters (§10.3) | — |
+| 53 | `mtp_noise` [17:0]: the draft-block noise / mask token id the MTP translator puts on the `demb` launches of columns > 0 (DS: `dspark_noise_token_id` mod vocab = 128,799; 0 = none) | CP (MTP translator) |
+| 54–55 | reserved for MTP parameters (§10.3) | — |
 | 50–52 | reserved for window and chunk parameters (§10.2) | — |
 | 56–58 | entry offsets: AR, verify, draft | CP |
 | 59 | reserved | — |
@@ -979,7 +980,7 @@ DYN codes 9–14 (`WIN_N0/1`, `WIN_START0/1`, `CHUNK_START`, `CHUNK_N`) and desc
 
 ### 10.3 Other items to pin
 
-- **Qwen MTP.** DFlash runs as one program per step (§7.4). It needs no descriptor word; words 49 and 53–55 stay reserved. Its one hardware item is `CTL.TOKX` (Q-MTP-1).
+- **Qwen MTP.** DFlash runs as one program per step (§7.4). It needs no descriptor word (words 49 and 53 are the DS translator's; 54–55 stay reserved). Its one hardware item is `CTL.TOKX` (Q-MTP-1).
 - **SM row layout (pinned).** `SM.MATVEC` rows are assigned to the 32 SMs in contiguous blocks of ⌈M / 32⌉ rows (the last SM takes the remainder); results are row-order independent, and the busiest SM sets the time.
 - **DS embedding row stride.** The checkpoint row is 10,240 bytes (BF16 × 5,120). If the DS image keeps the stripe-padded layout of the measured HBM stream bench, the row stride in the embedding descriptor is 12,288 bytes.
 

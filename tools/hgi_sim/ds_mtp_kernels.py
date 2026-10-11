@@ -541,7 +541,7 @@ def export_bench(a, K, cap, die0, regions0, snap0, vm0, costs, gd, simrec):
         e.update(c)
     md = dict(magic=HGI.MAGIC, ver_minor=HGI.D_VERSION[1], ver_major=HGI.D_VERSION[0], n_words=HGI.NWORDS,
               cp_vocab=129280, cp_ctx_max=1 << 20, coll_group_size=96, entry_ar=ar, image_base=EX.IMAGE_PAGE,
-              image_pages=-(-len(img) // 4096) + 1, mtp_kstride=ks, **{f"mtp_kernel_{k}": kent[k] for k in range(11)})
+              image_pages=-(-len(img) // 4096) + 1, mtp_kstride=ks, mtp_noise=K.m.noise_id, **{f"mtp_kernel_{k}": kent[k] for k in range(11)})
     words = HGI.d_pack(md)
     assert HGI.d_hw_check(words) == 0
     (out / "image.bin").write_bytes(img)

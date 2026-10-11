@@ -34,7 +34,7 @@ module ot_hfd_loader_hgi #(
     input  wire [4*293-1:0] lr,
     // hgi-takeover (hgi-e2e DIE GAP / F6): the DMA unit (unit 8) beside the loader: record adapter ot_hgi_dma_record +
     // the full-rate mover ot_hgi_dma_mover on kport lane 2 (HBM) and one hfd_hgi_vm packet client
-    input  wire [735:0] dma_rec,        // {ilist, pos1, n_O, n_A, O, A, header, valid}
+    input  wire [703:0] dma_rec,        // {pos1, n_O, n_A, O, A, header, valid}; A[255:239,7] = the I-list address
     output wire [3:0]   dma_ret,        // {wr_quiet, fault, done, ready} (wr_quiet: no posted DMA write in flight)
     output wire [337:0] dma_vmq,
     input  wire [273:0] dma_vmr,
@@ -62,7 +62,7 @@ module ot_hfd_loader_hgi #(
     wire [226:0] d_mv; wire d_kv, d_kwe, d_krr; wire [36:0] d_ka; wire [255:0] d_kd; wire [31:0] d_ks; wire [15:0] d_kt;
     ot_hgi_dma_record #(.LEGACY(0)) u_dma (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(dma_rec[0]), .rec_rdy(d_rdy),
         .rec_hdr(dma_rec[128:1]), .rec_a(dma_rec[384:129]), .rec_o(dma_rec[640:385]), .rec_n_a(dma_rec[661:641]),
-        .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_ilist(dma_rec[735:704]), .rec_done(d_done), .rec_fault(d_fault), .halted(), .wr_quiet(d_wq),
+        .rec_n_o(dma_rec[682:662]), .rec_pos1(dma_rec[703:683]), .rec_ilist({14'd0, dma_rec[129 + 255 -: 17], dma_rec[129 + 7]}), .rec_done(d_done), .rec_fault(d_fault), .halted(), .wr_quiet(d_wq),
         .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
         .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault),
         .mv_src(d_mv_src), .mv_pdone(d_mv_pdone), .mv_fdone(d_mv_fdone),

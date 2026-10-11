@@ -19,15 +19,17 @@ UNITS = {
     'coll':   (6, 'coll', 'AOI', (('die_id', 8),)),  # COLL.*: A local, O result, I selected row ids; die id strap (seq rank)
     'argmax': (7, 'mtp', 'AO', (('die_id', 8),)),    # ARGMAX.LOCAL (imm_a in the header; global id = local + RANK * imm_a)
                                                       #   -> ot_hgi_argmax_slot (record adapter + ot_hgi_argmax18_m)
-    'idx':    (9, 'hgi_idx', 'ABCDOR', (('pos', 20), ('die_id', 8))),   # IDX unit ot_hgi_idx_unit: TOPK + INDEX frames (G18)
+    'idx':    (9, 'hgi_idx', 'ABCDOR', (('pos', 20), ('die_id', 8), ('desc_I', 256))),   # IDX unit ot_hgi_idx_unit: TOPK + INDEX frames (G18)
+    #   desc_I (hgi-1010/g, lead 10-10): IDX.INDEX operand I = the layer's index-key region (HBM, row-aligned base) ->
+    #   the IKS issuer's ik_base; appended at the MSB so every older field keeps its bit position
     # hgi-takeover 2026-10-09 (hgi-e2e DIE GAP): every record unit has a die record bus (the payload is a die port, not
     # an internal tap); field sets = hgi-adapters' rec_* ports; one credit per unit; placement per hgi-adapters 22:40
     'sm':     (1, 'cmdproc', 'ABO', ()),                  # ot_hgi_sm_record IN the CP block (drives the SM launch tree)
     'su':     (2, 'su_SW', 'ABCDORI', ()),               # ot_hgi_su_unit at the hfd_su SW centre band (one a die)
     'sfu':    (3, 'sfu_SW', 'ABCO', ()),                 # the SU unit in GLU mode (one a die)
     'att':    (5, 'cmdproc', 'ABCO', (('pos1', 21),)),    # Codex ot_hgi_att_record_adapter: IN the CP block until D4
-    'dma':    (8, 'loader', 'AO', (('pos1', 21), ('ilist', 32))),   # ot_hgi_dma_record + engines beside the loader; ilist =
-                                                      #   the I table's effective base + L (VM word): the indexed row stream's id list
+    'dma':    (8, 'loader', 'AO', (('pos1', 21),)),       # ot_hgi_dma_record + engines beside the loader (the indexed row
+                                                      #   stream's I-list address rides A's reserved bits 255:239 + 7)
     'hc':     (10, 'hc_SW', 'ABO', ()),                  # ot_hgi_hc_unit (one a die)
 }
 # effective n carried per unit (default: every descriptor's) and the units that take the 256-bit SU template

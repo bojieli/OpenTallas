@@ -15,7 +15,12 @@ RB=$1; OB=$2; OUT=$3; BLK=$4; shift 4
 D=$(basename $(dirname $RB))
 CLD=$(cd $(dirname $0) && pwd)
 IMG=${ORFS_IMAGE:-openroad/orfs:asap7lock}
-[ ! -e "$OUT" ] || { echo "ECO output already exists; preserving evidence: $OUT"; exit 10; }
+# DEAD-ECO (drive-1010 2026-10-10): an ECO killed by a host hang left $OUT without result.json and every re-run
+# refused (exit 10). A finished ECO (result.json present) is still never overwritten; an unfinished one is moved aside.
+if [ -e "$OUT" ]; then
+  if [ -e "$OUT/result.json" ]; then echo "ECO output already exists; preserving evidence: $OUT"; exit 10; fi
+  mv "$OUT" "$OUT.dead-$(date +%Y%m%dT%H%M%S)" && echo "ECO output without result.json (dead run) moved aside: $OUT"
+fi
 [ -n "${DRC0:-}" ] || { echo "DRC0 (route DRC count) required"; exit 2; }
 mkdir -p "$OUT"
 export SDC_NAME=${SDC_NAME:-6_final.sdc}
