@@ -9,7 +9,9 @@
 // (span / stage / compute / drain), so the measured cost compares against timing.py's price (N1024 / M256 vec).
 // Defines: N, M, LV, LWB (local memory), SFU (run the SFU cases on the GLU body, else the SU cases), WIDE (the wide
 // stage / drain successor: VM wide read lanes + second wide write group), MUT_DIRTY (drain mutant).
-`ifdef WIDE
+`ifdef WIDE2
+`define CTLP u.g_xctl.u_ctl
+`elsif WIDE
 `define CTLP u.g_wctl.u_ctl
 `elsif OLDHIER
 `define CTLP u.u_ctl
@@ -61,7 +63,12 @@ module tb_hgi_su_prod;
     wire [RPL*16-1:0] rq; wire [RPL-1:0] rq_cr; wire [RPL*257-1:0] rr;
     wire [RPL*280-1:0] w2q; wire [RPL-1:0] w2_done, w2_cr;
     ot_hgi_su_unit #(.N(`N), .M(`M), .LV(`LV), .LWB(`LWB), .GLU(GL), .MUT_DIRTY(MD)
-`ifdef WIDE
+`ifdef WIDE2
+        , .WIDE(2), .MACRO(0)
+`ifdef MUT_X
+        , .MUT_X(`MUT_X)
+`endif
+`elsif WIDE
         , .WIDE(1)
 `ifdef LQ
         , .LQ(`LQ)
@@ -104,11 +111,49 @@ module tb_hgi_su_prod;
 `ifndef LQ
 `define LQ 8
 `endif
+`ifdef CHAIN
+    // CHAIN topology (hbm-phys): head at the VM face, RLY relay stations, then station 0 = the SU, 1, 2 (the agents)
+    localparam integer NST = 3 + `RLY;
+    wire [3*NST-1:0] rcq_u, rcq_d; wire [32*16*(NST+1)-1:0] rq_bus; wire [3*(NST+1)-1:0] rreq_bus, rgnt_bus;
+    wire [32*(NST+1)-1:0] rcr_bus; wire [32*257*(NST+1)-1:0] rrsp_bus;
+    wire [32*280*(NST+1)-1:0] wq_bus; wire [3*(NST+1)-1:0] wreq_bus, wgnt_bus; wire [32*(NST+1)-1:0] wcr_bus, wdn_bus;
+    assign rq_bus[32*16*NST +: 32*16] = '0; assign rreq_bus[3*NST +: 3] = '0;
+    assign wq_bus[32*280*NST +: 32*280] = '0; assign wreq_bus[3*NST +: 3] = '0;
+    ot_hgi_vm_lanehead #(.K(3), .REQW(16), .RSPW(257), .MUT(`ifdef ARBMUT 1 `else 0 `endif)) u_hr (.clk(clk), .rst_n(rst_n),
+        .c_req(rreq_bus[2:0]), .c_q(rq_bus[0 +: 32*16]), .c_gnt(rgnt_bus[2:0]), .c_cr(rcr_bus[31:0]), .c_rsp(rrsp_bus[0 +: 32*257]),
+        .g_q(g_rq), .g_cr(g_rcr), .g_rsp(g_rr));
+    ot_hgi_vm_lanehead #(.K(3), .REQW(280), .RSPW(1), .MUT(`ifdef ARBMUT 1 `else 0 `endif)) u_hw (.clk(clk), .rst_n(rst_n),
+        .c_req(wreq_bus[2:0]), .c_q(wq_bus[0 +: 32*280]), .c_gnt(wgnt_bus[2:0]), .c_cr(wcr_bus[31:0]), .c_rsp(wdn_bus[31:0]),
+        .g_q(g_wq), .g_cr(g_wcr), .g_rsp(g_wdone));
+    wire [32*16*3-1:0] cl_rq = {512'd0, a1_q, rq}; wire [32*280*3-1:0] cl_wq = {a2_q, {32*280{1'b0}}, w2q};
+    for (genvar st_ = 0; st_ < NST; st_ = st_ + 1) begin : g_st
+        localparam integer CID = st_ - `RLY;                 // < 0: a relay
+        wire lr_gnt, lw_gnt; wire [31:0] lr_cr, lw_cr; wire [32*257-1:0] lr_rsp; wire [31:0] lw_dn;
+        ot_hgi_vm_lanestation #(.K(3), .ID(CID < 0 ? 0 : CID), .REQW(16), .RSPW(257), .TAP(CID >= 0)) u_sr (.clk(clk), .rst_n(rst_n),
+            .up_req(rreq_bus[3*st_ +: 3]), .up_q(rq_bus[32*16*st_ +: 32*16]), .up_gnt(rgnt_bus[3*st_ +: 3]), .up_cr(rcr_bus[32*st_ +: 32]),
+            .up_rsp(rrsp_bus[32*257*st_ +: 32*257]), .dn_req(rreq_bus[3*(st_+1) +: 3]), .dn_q(rq_bus[32*16*(st_+1) +: 32*16]),
+            .dn_gnt(rgnt_bus[3*(st_+1) +: 3]), .dn_cr(rcr_bus[32*(st_+1) +: 32]), .dn_rsp(rrsp_bus[32*257*(st_+1) +: 32*257]),
+            .l_req(CID >= 0 ? rg_req[CID < 0 ? 0 : CID] : 1'b0), .l_gnt(lr_gnt), .l_q(CID >= 0 ? cl_rq[32*16*(CID < 0 ? 0 : CID) +: 32*16] : '0),
+            .l_cr(lr_cr), .l_rsp(lr_rsp));
+        ot_hgi_vm_lanestation #(.K(3), .ID(CID < 0 ? 0 : CID), .REQW(280), .RSPW(1), .TAP(CID >= 0)) u_sw (.clk(clk), .rst_n(rst_n),
+            .up_req(wreq_bus[3*st_ +: 3]), .up_q(wq_bus[32*280*st_ +: 32*280]), .up_gnt(wgnt_bus[3*st_ +: 3]), .up_cr(wcr_bus[32*st_ +: 32]),
+            .up_rsp(wdn_bus[32*st_ +: 32]), .dn_req(wreq_bus[3*(st_+1) +: 3]), .dn_q(wq_bus[32*280*(st_+1) +: 32*280]),
+            .dn_gnt(wgnt_bus[3*(st_+1) +: 3]), .dn_cr(wcr_bus[32*(st_+1) +: 32]), .dn_rsp(wdn_bus[32*(st_+1) +: 32]),
+            .l_req(CID >= 0 ? wg_req[CID < 0 ? 0 : CID] : 1'b0), .l_gnt(lw_gnt), .l_q(CID >= 0 ? cl_wq[32*280*(CID < 0 ? 0 : CID) +: 32*280] : '0),
+            .l_cr(lw_cr), .l_rsp(lw_dn));
+        if (CID >= 0) begin : g_tap
+            assign rg_gnt[CID] = lr_gnt; assign wg_gnt[CID] = lw_gnt;
+            assign c_rcr[32*CID +: 32] = lr_cr; assign c_rr[32*257*CID +: 32*257] = lr_rsp;
+            assign c_wcr[32*CID +: 32] = lw_cr; assign c_wdone[32*CID +: 32] = lw_dn;
+        end
+    end
+`else
     ot_hgi_vm_lanearb #(.K(3), .REQW(16), .RSPW(257), .RLY(`RLY), .MUT(`ifdef ARBMUT 1 `else 0 `endif)) u_ar (.clk(clk), .rst_n(rst_n),
         .c_req(rg_req), .c_gnt(rg_gnt), .c_q({512'd0, a1_q, rq}), .c_cr(c_rcr), .c_rsp(c_rr), .g_q(g_rq), .g_cr(g_rcr), .g_rsp(g_rr));
     ot_hgi_vm_lanearb #(.K(3), .REQW(280), .RSPW(1), .RLY(`RLY), .MUT(`ifdef ARBMUT 1 `else 0 `endif)) u_aw (.clk(clk), .rst_n(rst_n),
         .c_req(wg_req), .c_gnt(wg_gnt), .c_q({a2_q, {32*280{1'b0}}, w2q}), .c_cr(c_wcr), .c_rsp(c_wdone), .g_q(g_wq), .g_cr(g_wcr),
         .g_rsp(g_wdone));
+`endif
     assign rq_cr = c_rcr[31:0]; assign rr = c_rr[0 +: 32*257]; assign w2_cr = c_wcr[31:0]; assign w2_done = c_wdone[31:0];
     ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(`LQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}),
         .status(vm_status), .wq(280'd0), .wq_done(), .rq(g_rq), .rq_cr(g_rcr), .rr(g_rr), .w2q(g_wq), .w2q_cr(g_wcr), .w2q_done(g_wdone));
@@ -204,10 +249,30 @@ module tb_hgi_su_prod;
         end
     endtask
     integer k, nf; integer t_acc [0:4095]; integer t_ret [0:4095];
+    always @(posedge clk) if (inrec && cyc % 50000 == 0) begin $display("PROGRESS cyc %0d retired %0d", cyc, k); $fflush; end
+`ifdef WIDE2
+`ifdef XDBG
+    reg xf_seen = 0;
+    always @(posedge clk) if (`CTLP.st == 4'd11 && !xf_seen) begin
+        xf_seen <= 1;
+        $display("XFAULT cyc %0d vf_seen %0d vfault_q %0d lane_ovf %0d cfault_q %0d s0 %0d r_v %0d r_gop %0d st_prev? wl_nout %0d wl_nin %0d",
+            cyc, `CTLP.vf_seen, `CTLP.vfault_q, `CTLP.lane_ovf, `CTLP.cfault_q, `CTLP.s0v_q, `CTLP.r_v, `CTLP.r_gop,
+            `CTLP.wl[0 +: 16], `CTLP.wl[16 +: 16]); $fflush;
+    end
+    always @(posedge clk) if (inrec && cyc % 2000 == 0) begin
+        $display("XDBG cyc %0d st %0d r_v %0d r_gop %0d r_cdone %0d d_v %0d d_ph %0d st_busy %0d st_done %0d sk %0d s_rows %0d bq_n %0d rp_on %0d mq0 %0d lq0 %0d cr0 %0d dr_live %0d drk %0d e_rows %0d rg %0d/%0d nexec %0d",
+            cyc, `CTLP.st, `CTLP.r_v, `CTLP.r_gop, `CTLP.r_cdone, `CTLP.d_v, `CTLP.d_ph, `CTLP.st_busy, `CTLP.st_done, `CTLP.sk,
+            `CTLP.s_rows, `CTLP.bq_n, `CTLP.rp_on, `CTLP.mq_n[0], `CTLP.lq_n[0], `CTLP.cr[0], `CTLP.dr_live, `CTLP.drk, `CTLP.e_rows,
+            `CTLP.rg_req, `CTLP.rg_q, `CTLP.u_rec.nexec); $fflush; end
+`endif
+`endif
     // progress watchdog: a record pipeline that stops retiring (a hang) is a FAIL, not a wait
     integer last_prog = 0;
     always @(posedge clk) if (rst_n && (done || !inrec)) last_prog = cyc;
-    always @(posedge clk) if (inrec && cyc - last_prog > 300000) begin
+`ifndef WDOG
+`define WDOG 300000
+`endif
+    always @(posedge clk) if (inrec && cyc - last_prog > `WDOG) begin
         $display("ERR no record retired for 300000 edges (hang): retired %0d", k); $display("HGI_SU_PROD FAIL errors=hang"); $finish;
     end
     always @(posedge clk) begin if (rst_n && done) begin t_ret[k] = cyc; k = k + 1; end if (rst_n && fault) nf = nf + 1; end
