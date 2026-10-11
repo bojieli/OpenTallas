@@ -284,6 +284,14 @@ def validate(spec: dict) -> list[str]:
     for b in st.get("bench", []) if isinstance(st, dict) else []:
         if b.get("expect") not in ("pass", "fail") or not b.get("cmd") or not b.get("name"):
             e.append(f"bench entry needs name, cmd and expect pass|fail: {b}")
+        mcr = b.get("min_count_regex") if isinstance(b, dict) else None
+        if mcr:
+            try:
+                ng = re.compile(mcr).groups
+            except re.error as x:
+                ng = -1; e.append(f"bench {b.get('name')}: min_count_regex does not compile: {x}")
+            if ng == 0:   # bench_work counts the captured group: without one every pass reads as vacuous (suctlw r2 10-11)
+                e.append(f"bench {b.get('name')}: min_count_regex needs one capture group around the count: {mcr!r}")
     benches = st.get("bench", []) if isinstance(st, dict) else []
     if not spec.get("no_bench_reason") and not (any(b.get("expect") == "pass" for b in benches)
                                                 and any(b.get("expect") == "fail" for b in benches)):
