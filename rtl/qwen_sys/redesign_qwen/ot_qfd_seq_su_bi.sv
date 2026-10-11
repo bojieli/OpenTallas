@@ -1674,7 +1674,7 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_qwen_tp_seq_w12_vrl #(
     parameter integer VRL = 1,     // vre -> vrq edges
-    parameter integer RMUT = 0,    // el1011-q-seq negative control: vm_wdata on every receive (drops K_AR)
+    parameter integer RMUT = 0,    // el1011-q-seq negative control: vm_wdata bit 0 flipped on the AR write
     parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits
     parameter integer ENABLE_AR256 = 0,
     parameter integer N    = 4,
@@ -1872,5 +1872,5 @@ module ot_qwen_tp_seq_w12_vrl #(
     // vm_wdata: the AR receive word (the S_COLL / r_valid / K_AR edge of the main block), own reset copy
     always @(posedge clk or negedge rst_nw)
         if (!rst_nw) vm_wdata <= {FW{1'b0}};
-        else if (st == S_COLL && r_valid && (kind == K_AR || RMUT != 0)) vm_wdata <= r_data;
+        else if (st == S_COLL && r_valid && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);
 endmodule

@@ -1170,7 +1170,7 @@ def rst_regions(t: str) -> str:
 def vrl_rst_split(t: str) -> str:
     """u_seq: vm_wdata (FW flops, the bulk of the tile's reset loads) on its own reset copy rst_nw; same write edge."""
     t = one(t, "    parameter integer VRL = 1,     // vre -> vrq edges", "    parameter integer VRL = 1,     // vre -> vrq edges\n"
-               "    parameter integer RMUT = 0,    // el1011-q-seq negative control: vm_wdata on every receive (drops K_AR)")
+               "    parameter integer RMUT = 0,    // el1011-q-seq negative control: vm_wdata bit 0 flipped on the AR write")
     t = one(t, "    input  wire              rst_n,", "    input  wire              rst_n,\n"
                "    input  wire              rst_nw,      // vm_wdata reset copy (el1011-q-seq RRG; logically rst_n)")
     t = one(t, "vm_we <= 1'b0; vm_waddr <= 0; vm_wdata <= 0;", "vm_we <= 1'b0; vm_waddr <= 0;")
@@ -1179,7 +1179,7 @@ def vrl_rst_split(t: str) -> str:
     return (t[:i] + "    // vm_wdata: the AR receive word (the S_COLL / r_valid / K_AR edge of the main block), own reset copy\n"
             "    always @(posedge clk or negedge rst_nw)\n"
             "        if (!rst_nw) vm_wdata <= {FW{1'b0}};\n"
-            "        else if (st == S_COLL && r_valid && (kind == K_AR || RMUT != 0)) vm_wdata <= r_data;\n" + t[i:])
+            "        else if (st == S_COLL && r_valid && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);\n" + t[i:])
 
 
 def emit_seq_su_bi() -> str:
@@ -1201,6 +1201,79 @@ def emit_seq_su_bi() -> str:
     return rst_regions(seq_psram(t)) + "\n" + vrl_rst_split(tp_seq_vrl(cred=True))
 
 
+# el1011-q-seq (2026-10-11): MEREG -- registered engine clock enable.  Root cause (ctlm_i-fpa-772ccf422 early fail, gating
+# check -1,606 @770): me_mem_ok is a raw die input; me_en = !rst_n || (me_mem_ok && idle term) went combinationally through
+# ~1.6 ns of fanout buffering to the ~2,048 CG-pushdown clones of u_me_cg (and the G-wide write masks).  MEREG 1: the
+# supply announces me_mem_ok two edges ahead (die contract, posted to the Qwen die lead); a pin flop and one enable flop
+# (placed at its loads) make me_en a register output with a full cycle to every ICG clone.  The idle gate is off in this
+# mode (its terms are a raw input and controller state).  MEREG 2 = one-edge lookahead (negative control, must FAIL).
+def ctlm_mereg(t: str) -> str:
+    t = one(t, "    parameter integer ME_IDLE_GATE = 0,", "    parameter integer ME_IDLE_GATE = 0,\n"
+               "    parameter integer MEREG = 0,      // el1011-q-seq: me_mem_ok announced 2 edges ahead; me_en a register")
+    old = ("    assign me_en = !rst_n || (((ME_STALL == 0) || me_mem_ok) &&\n"
+           "                              ((ME_IDLE_GATE == 0) || !me_idle || me_wake));")
+    t = one(t, old, "    generate if (MEREG != 0) begin : g_mereg\n"
+               "        reg mo_p;                                       // pin flop (me_mem_ok of edge t+2 at edge t)\n"
+               "        (* keep = \"true\", dont_touch = \"true\" *) reg mo_e;   // enable flop, placed at the ICG clones\n"
+               "        always @(posedge clk) begin mo_p <= me_mem_ok; mo_e <= (MEREG == 2) ? me_mem_ok : mo_p; end\n"
+               "        assign me_en = mo_e;\n"
+               "    end else begin : g_mecomb\n" + old.replace("    assign", "        assign", 1) + "\n    end endgenerate")
+    t = one(t, "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0\n) (",
+               "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0,\n"
+               "    parameter integer MEREG = 0   // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n) (")
+    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .MEREG(MEREG),")
+    return t
+
+
+def ctlm_rrg(t: str) -> str:
+    """el1011-q-seq: ctlm_i RRG 1 -- the tile reset as 8 (* keep *) copies of the IS-edge u_rs release (u_tt and the
+    controller each on their own copy, the stations spread over the rest); the raw rst_n port users (pin / engine-side
+    stations, ctlm_i-fpa: rst_n -> u_is1 recovery -717) move onto the copies too, so the port only clears flops
+    asynchronously.  RRG 0 = the old text's nets."""
+    i = t.index("module ot_qfd_tt_ctlm_i #(")
+    head, tile = t[:i], t[i:]
+    tile = one(tile, "    ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));",
+               "    ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));\n"
+               "    (* keep = \"true\" *) wire [8-1:0] rsv;   // RRG: reset copies (el1011-q-seq)\n"
+               "    wire [8-1:0] rrv;                      // the raw-port users: rsv under RRG, else rst_n\n"
+               "    generate if (RRG != 0 && IS > 0) begin : g_rrg\n"
+               "        genvar rk;\n        for (rk = 0; rk < 8; rk = rk + 1) begin : g_r\n"
+               "            (* keep = \"true\", dont_touch = \"true\" *) reg [IS-1:0] r;\n"
+               "            always @(posedge clk or negedge rst_n)\n"
+               "                if (!rst_n) r <= {IS{1'b0}};\n"
+               "                else r <= {r, 1'b1};\n"
+               "            assign rsv[rk] = r[IS-1];\n"
+               "        end\n"
+               "        assign rrv = rsv;\n"
+               "    end else begin : g_rr0\n        assign rsv = {8{rs}};\n        assign rrv = {8{rst_n}};\n    end endgenerate")
+    out, cur, n = [], None, 0
+    def reg(c):
+        nonlocal n
+        if c == "u_tt": return 0
+        if c == "u_ctrl_me": return 1
+        n += 1
+        return 2 + (n % 6)
+    for ln in tile.split("\n"):
+        m = re.search(r"\b(u_\w+) \(", ln)
+        if m:
+            cur = m.group(1)
+        if "u_rs (" in ln or "rsv[rk]" in ln:
+            out.append(ln); continue
+        if ".rst_n(rs)" in ln:
+            ln = ln.replace(".rst_n(rs)", f".rst_n(rsv[{reg(cur)}])")
+        elif ".rst_n(rst_n)" in ln:
+            ln = ln.replace(".rst_n(rst_n)", f".rst_n(rrv[{reg(cur)}])")
+        ln = ln.replace("negedge rs)", "negedge rsv[7])").replace("(!rs)", "(!rsv[7])")
+        out.append(ln)
+    tile = "\n".join(out)
+    tile = one(tile, "always @(posedge c_me_clk or negedge rst_n) if (!rst_n) me_acc <=",
+               "always @(posedge c_me_clk or negedge rrv[6]) if (!rrv[6]) me_acc <=")
+    tile = one(tile, "    parameter integer MEREG = 0   // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n) (",
+               "    parameter integer MEREG = 0,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n"
+               "    parameter integer RRG = 0     // el1011-q-seq: replicated tile reset (ctlm_rrg)\n) (")
+    return head + tile
+
+
 def emit_tt_ctlm_i(psram: bool = True) -> str:
     """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller (+ HQ2 FQ_HEAD 2/3 in the controller); psram: the
     PSRAM / PMUT / HQ2 tile parameters (fe-push-qwen-1010 F1, defaults 0 = the flop-store tile); psram=False (--no-psram)
@@ -1214,6 +1287,8 @@ def emit_tt_ctlm_i(psram: bool = True) -> str:
         t = tile_psram(t)
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
+    if psram:
+        t = ctlm_rrg(ctlm_mereg(t))
     return t
 
 
