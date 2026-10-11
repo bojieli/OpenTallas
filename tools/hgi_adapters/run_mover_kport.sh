@@ -8,7 +8,7 @@ VL=${VERILATOR:-$( [ -x "$HOME/.local/opentallas-tools/verilator-5.050/bin/veril
 mkdir -p "$OUT"; cd "$ROOT"
 TAG=$(echo "$*" | tr -c 'A-Za-z0-9=_\n' '_' | tr -d '\n'); TAG=${TAG:-default}
 S="rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv
-   rtl/hbm_accel/generic/peers/ot_hgi_dma_kvw.sv
+   rtl/hbm_accel/generic/peers/ot_hgi_dma_kvw.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_el.sv rtl/lib/ot_rst_relay.sv
    rtl/hbm_accel/loader/service_native/ot_hfd_loader_kport.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_core_native.sv
    physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv
    physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_mover_kport.sv"
