@@ -47,7 +47,10 @@ module dsfd_coll_mtp_lane #(
 `ifdef OT_MTPL_MUT_STALE
     parameter integer FWD_C = 6, parameter integer RET_C = 7,
 `else
-    parameter integer FWD_C = 8, parameter integer RET_C = 8,
+    // head631 + --coll-split3-cr --coll-mtp-lane (results/rtl/mtp_colllane_20261011/head631_mtpl.opts): the taller slab
+    // puts its MTP pins one station further: mtp -> collective 9, back 9 (tools/s81/hub_stage_count.py --check-mtp-rtt;
+    // 8 / 8 on the plain head631 slab)
+    parameter integer FWD_C = 9, parameter integer RET_C = 9,
 `endif
 `ifdef OT_MTPL_TCRED
     parameter integer TCRED = `OT_MTPL_TCRED,

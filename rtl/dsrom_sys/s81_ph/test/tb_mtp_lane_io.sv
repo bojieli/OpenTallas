@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // tb_mtp_lane_io (mtp-colllane-1011): one die's MTP side of tb_s81ph_coll_sys TB_MTP.  The head-die sequencer's
 // transmitters (ot_dsrom_mtp_ltx, the sequencer's own link pair) send NTOK token-return flits, NSEED seeds and NACC
-// accept events across the REAL hub chain into the slab (FWD stations forward, RET back: head631 8 / 8), and the
+// accept events across the REAL hub chain into the slab (FWD stations forward, RET back: head631 + MTPL slab 9 / 9), and the
 // far die's received token / seed reach two consumers (ot_dsrom_mtp_lrx_rtt over CF / CR stations) whose ready follows
 // MSTALL.  Checks: every received token / seed / accept equals the partner die's sent stream, in order, nothing extra.
 //   MSTALL 0 random stalls | 1 seed consumer stalled forever (HOL: tokens must still all arrive) | 2 both consumers
@@ -22,8 +22,8 @@ module tb_mtp_relay #(parameter integer W = 1, parameter integer HOPS = 0) (
 endmodule
 
 module tb_mtp_lane_io #(parameter integer DIE = 0, parameter integer NTOK = 300, parameter integer NSEED = 80,
-                        parameter integer NACC = 24, parameter integer MSTALL = 0, parameter integer FWD = 8,
-                        parameter integer RET = 8, parameter integer CF = 5, parameter integer CR = 5,
+                        parameter integer NACC = 24, parameter integer MSTALL = 0, parameter integer FWD = 9,
+                        parameter integer RET = 9, parameter integer CF = 5, parameter integer CR = 5,
                         parameter integer TGAP = 0) (
     input  wire          clk, rst_n,
     input  wire [31:0]   cyc,
