@@ -1447,7 +1447,9 @@ def fc_face_x(g, strip, side, names):
     if not g.get("fc_hier") or (strip, side) not in (("front_n", "s"), ("front_c", "n")):
         return None
     fw = g["front_w"]
-    a = [n for n in names if n.startswith(("fx_b[", "fo_row0[", "fi_row0["))]
+    # row 0 first: its face register (fc_xl u_m0) sits in fc_xl's NW corner, beside both its W-edge input (from fc_t)
+    # and its N-face output (fc_xl 5b228c4a2-cal: TT -95.8 ps at fo_row0 with the bundle on the far side of fx_b)
+    a = ([n for n in names if n.startswith(("fo_row0[", "fi_row0["))] + [n for n in names if n.startswith("fx_b[")])
     b = [n for n in names if n not in set(a)]
     x0 = trk((fw - len(a) * PITCH) / 2)
     xb = trk(FC_POS["u_xl"][1] + FC_DIM["fc_xl"][0] + 10.8)
@@ -1493,7 +1495,7 @@ def fc_pins(m):
             P_ += hf(bits(f"lt{e}", 1082) + fm[6 * e: 6 * e + 3], x, 174.0)
             P_ += hf(bits(f"lb{e}", 570) + fm[6 * e + 3: 6 * e + 6], x, 608.4 + 4.0 - oy)
     elif m == "fc_xl":
-        P_ += at_face(bits("fx_b", 2069) + bits("fo_row0", 818), h)
+        P_ += at_face(bits("fo_row0", 818) + bits("fx_b", 2069), h)
         P_ += hf(bits("xw_w", 2069), 0.0, 4.0) + hf(bits("r0a", 818), 0.0, 210.0)
         P_ += hf(bits("xw_e", 2069), w, 4.0)
         P_ += vf(["clk", "rst_a"], 0.0, w / 2, pitch=0.48)
@@ -1530,6 +1532,8 @@ FC_HOPS = {
     # fc_t: H2 at the S-edge pins (x 30-134), O at the W-edge pins (y 137-216): p1 / p2 / M / P stepped between them
     "fc_t": "ot_place {^u_p1[vd]\\.} 60 150 36 60\not_place {^u_p2[vd]\\.} 60 150 76 100\n"
             "ot_place {^u_m1\\.} 70 130 120 150\not_place {^u_p1\\.} 24 70 150 200\n",
+    # fc_xl: row 0's face register in the NW corner (W-edge input y 210-288, N-face output x 12-91)
+    "fc_xl": "ot_place {^u_m0\\.} 4 90 236 292\n",
     # fc_b: H2 at the E-edge pins (y 230-285), O at the W-edge pins (y 199-277)
     "fc_b": "ot_place {^u_p2[vd]\\.} 150 196 220 270\not_place {^u_m2\\.} 90 130 210 260\n"
             "ot_place {^u_p2\\.} 30 70 205 270\n",

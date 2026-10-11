@@ -1465,33 +1465,36 @@ module ot_hbm_accel_smh_fc_bc #(parameter integer MAX_OUT = 512, parameter integ
     input  wire [802+TAGW-1:0] r3a, output wire [802+TAGW-1:0] fo_row3
 );
     localparam integer PIH = PIO + 1, CHD = 2 * PIH + 3, NSL = 34;
-    wire rn;
-    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rn));
+    // reset: one relay flop per consumer (class 2: the single relay flop's async-clear net failed recovery by
+    // -720 ps across fc_is; same structure here): 0 channels, 1 response / retire chains, 2 bulk copy, 3 skid, 4 row-3 reg
+    wire [4:0] rr;
+    ot_rst_relay #(.REGIONS(5)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rr));
+    wire rn = rr[1];
     wire h_rsp_v; wire [9:0] h_rsp_tag; wire [1087:0] h_rsp_data;
     ot_hbm_accel_smv_chain #(.W(1), .D(2), .RST(1)) u_prv (.clk(clk), .rst_n(rn), .d(fp_v), .q(h_rsp_v));
     ot_hbm_accel_smv_chain #(.W(1098), .D(2), .RST(0)) u_prd (.clk(clk), .rst_n(rn), .d(fp_d), .q({h_rsp_tag, h_rsp_data}));
     ot_hbm_accel_smv_chain #(.W(1), .D(1), .RST(1)) u_sv (.clk(clk), .rst_n(rn), .d(fsv), .q(sv_o));
     wire h_d_valid, h_d_ready; wire [55:0] h_d;
-    ot_hbm_accel_smh_csnk #(.W(56), .PK(1), .PRK(1), .DEPTH(CHD + 1)) u_dch (.clk(clk), .rst_n(rn),
+    ot_hbm_accel_smh_csnk #(.W(56), .PK(1), .PRK(1), .DEPTH(CHD + 1)) u_dch (.clk(clk), .rst_n(rr[0]),
         .i_v(fd_v), .i_d(fd_d), .o_ret(fd_ret), .m_valid(h_d_valid), .m_ready(h_d_ready), .m_data(h_d));
     wire h_req_v, h_req_ready; wire [31:0] h_req_addr; wire [9:0] h_req_tag;
-    ot_hbm_accel_smh_csrc #(.W(42), .PS(PIH - 1), .PR(1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rn),
+    ot_hbm_accel_smh_csrc #(.W(42), .PS(PIH - 1), .PR(1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rr[0]),
         .s_valid(h_req_v), .s_ready(h_req_ready), .s_data({h_req_addr, h_req_tag}),
         .o_v(fq_v), .o_d(fq_d), .i_ret(fq_ret));
     wire b_valid, b_ready; wire [1087:0] b_data; wire [NSL-1:0] b_valid_v, b_ready_v;
     ot_hbm_accel_bulk_copy_oq5 #(.ENABLE(1), .LINE_BITS(1088), .DEPTH(1024), .MAX_OUT(MAX_OUT), .SRAM_RING(1),
                              .RING_MACRO(1)) u_bc (
-        .clk(clk), .rst_n(rn), .d_valid(h_d_valid), .d_ready(h_d_ready), .d_base(h_d[55:24]), .d_lines(h_d[23:0]),
+        .clk(clk), .rst_n(rr[2]), .d_valid(h_d_valid), .d_ready(h_d_ready), .d_base(h_d[55:24]), .d_lines(h_d[23:0]),
         .req_v(h_req_v), .req_ready(h_req_ready), .req_addr(h_req_addr), .req_tag(h_req_tag),
         .rsp_v(h_rsp_v), .rsp_tag(h_rsp_tag), .rsp_data(h_rsp_data),
         .s_valid(b_valid), .s_ready(b_ready), .s_data(b_data), .s_valid_v(b_valid_v), .s_ready_v(b_ready_v),
         .outstanding(), .idle());
     wire [NSL+1:0] k0_sr;
-    ot_hbm_accel_smh_skid3v #(.W(1088)) u_sk0 (.clk(clk), .rst_n(rn), .s_valid_v({b_valid, b_valid, b_valid_v}),
+    ot_hbm_accel_smh_skid3v #(.W(1088)) u_sk0 (.clk(clk), .rst_n(rr[3]), .s_valid_v({b_valid, b_valid, b_valid_v}),
         .s_ready_v(k0_sr), .s_data(b_data), .m_valid_v(k0_mv), .m_ready_v(k1_sr), .m_data(k0_d));
     assign b_ready = k0_sr[NSL];
     assign b_ready_v = k0_sr[NSL-1:0];
-    ot_hbm_accel_smh_bundle_reg #(.W(802+TAGW), .V(4+TAGW), .NV(2), .X(7)) u_m3 (.clk(clk), .rst_n(rn), .d(r3a), .q(fo_row3));
+    ot_hbm_accel_smh_bundle_reg #(.W(802+TAGW), .V(4+TAGW), .NV(2), .X(7)) u_m3 (.clk(clk), .rst_n(rr[4]), .d(r3a), .q(fo_row3));
 endmodule
 
 // fc_is: second line skid, INT8 adapter, issue, op channel sink, release / retire landings, barrier outputs, s1, hop H
@@ -1513,10 +1516,13 @@ module ot_hbm_accel_smh_fc_is #(
     localparam integer SW = $clog2(IL), RW = $clog2(RMAX), XW = $clog2(XD), TAGW = RW + 1 + SW;
     localparam integer OPW = (RW + 1) + 16 + 8 + 1 + 2, OPX = OPW + XW, PIH = PIO + 1, CHD = 2 * PIH + 3, NSL = 34;
     localparam integer S1W = 3 + TAGW + XW;
-    wire rn;
-    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rn));
+    // reset: one relay flop per consumer group (class 2: route 5b228c4a2-cal TT -657 ps = the single relay flop's
+    // async-clear net, recovery to 2,841 flops): 0 op channel, 1 skid, 2 INT8, 3 issue, 4 misc / launch copies
+    wire [4:0] rr;
+    ot_rst_relay #(.REGIONS(5)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rr));
+    wire rn = rr[4];
     wire h_start, h_pop; wire [OPX-1:0] h_opx;
-    ot_hbm_accel_smh_csnk #(.W(OPX), .PK(1), .PRK(1), .DEPTH(CHD + 1)) u_sch (.clk(clk), .rst_n(rn),
+    ot_hbm_accel_smh_csnk #(.W(OPX), .PK(1), .PRK(1), .DEPTH(CHD + 1)) u_sch (.clk(clk), .rst_n(rr[0]),
         .i_v(fs_v), .i_d(fs_d), .o_ret(fs_ret), .m_valid(h_start), .m_ready(h_pop), .m_data(h_opx));
     wire [OPW-1:0] h_op = h_opx[XW +: OPW];
     wire [XW-1:0]  h_xb = h_opx[XW-1:0];
@@ -1533,7 +1539,7 @@ module ot_hbm_accel_smh_fc_is #(
     wire h_release;
     ot_hbm_accel_smv_chain #(.W(1), .D(1), .RST(1)) u_prl (.clk(clk), .rst_n(rn), .d(fr_rl), .q(h_release));
     wire w_valid, w_ready; wire [1087:0] w_data; wire [NSL+1:0] k1_mv;
-    ot_hbm_accel_smh_skid3v #(.W(1088)) u_sk (.clk(clk), .rst_n(rn), .s_valid_v(k0_mv), .s_ready_v(k1_sr),
+    ot_hbm_accel_smh_skid3v #(.W(1088)) u_sk (.clk(clk), .rst_n(rr[1]), .s_valid_v(k0_mv), .s_ready_v(k1_sr),
         .s_data(k0_d), .m_valid_v(k1_mv), .m_ready_v({(NSL+2){w_ready}}), .m_data(w_data));
     assign w_valid = k1_mv[NSL+1];
     reg  [XW-1:0] xb_q;
@@ -1552,14 +1558,14 @@ module ot_hbm_accel_smh_fc_is #(
     generate if (ENABLE_INT8) begin : g_int8
         wire unpack_ready;
         reg input_open;
-        always @(posedge clk or negedge rn)
-            if (!rn) input_open <= 1'b0;
+        always @(posedge clk or negedge rr[2])
+            if (!rr[2]) input_open <= 1'b0;
             else if (h_pop) input_open <= 1'b1;
             else if (issue_line_end) input_open <= 1'b0;
         wire intake_credit;
         if (PIPE_INT8) begin : g_credit
             ot_hbm_accel_int8_credit #(.RW(RW)) u_credit (
-                .clk(clk),.rst_n(rn),.launch(h_pop),.take(w_valid && w_ready),
+                .clk(clk),.rst_n(rr[2]),.launch(h_pop),.take(w_valid && w_ready),
                 .int8_mode(fmt_q==2'd3),.op_rows(h_rows),.op_g(h_g),.op_c(h_c),
                 .intake_credit(intake_credit));
         end else begin : g_credit_legacy
@@ -1575,11 +1581,11 @@ module ot_hbm_accel_smh_fc_is #(
 `endif
         assign w_ready = byp ? issue_w_ready : (unpack_ready && demand && fmt3);
         if (PIPE_INT8 >= 2) begin : g_ob
-            ot_hbm_accel_int8_line_ob u_unpack (.clk(clk), .rst_n(rn), .busy(a_busy),
+            ot_hbm_accel_int8_line_ob u_unpack (.clk(clk), .rst_n(rr[2]), .busy(a_busy),
                 .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
                 .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
         end else begin : g_ln
-            ot_hbm_accel_int8_line #(.PIPE(PIPE_INT8)) u_unpack (.clk(clk), .rst_n(rn), .busy(a_busy),
+            ot_hbm_accel_int8_line #(.PIPE(PIPE_INT8)) u_unpack (.clk(clk), .rst_n(rr[2]), .busy(a_busy),
                 .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
                 .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
         end
@@ -1605,7 +1611,7 @@ module ot_hbm_accel_smh_fc_is #(
     localparam integer DBFX = 11;
 `endif
     ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ), .DBF(DBFX)) u_issue (
-        .clk(clk), .rst_n(rn), .start_v(h_start), .launch(h_pop), .op_rows(h_rows), .op_c(h_c), .op_g(h_g),
+        .clk(clk), .rst_n(rr[3]), .start_v(h_start), .launch(h_pop), .op_rows(h_rows), .op_c(h_c), .op_g(h_g),
         .op_gs(h_gs), .op_bf(h_fmt == 2'd0 || (ENABLE_INT8 && h_fmt == 2'd3)),
         .w_valid(issue_w_valid), .x_rdy(1'b1), .w_ready(issue_w_ready), .rdone(sv), .busy(h_busy), .iss_v(adv),
         .iss_row_ok(row_ok), .iss_slot(si), .iss_row(row_now), .iss_first(i_first), .iss_last(i_last),
