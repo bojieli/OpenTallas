@@ -28,7 +28,7 @@
 //   QN NV_Q beats of QN_N/16 rows; KV 1 beat of KV_N/16; QB count beats of 2*QB_NB; SW count x (g W/16 rows, u W/16);
 //   SE nv beats of SM_H*SM_LPH/16; SO 512/SM_LPH beats; GQ 1280/16 rows, GK 512/16 rows.
 // Result rows (from out_base, in emission order): QN per vector codes QN_N/64 + exps 1; KV codes KV_N/64 + exps 1 +
-// QDQ BF16 KV_N/32; QB per beat codes QB_NB/2 (FP8) | QB_NB/4 (FP4) + exps 1 + y QB_NB; SW per vector codes W/64 +
+// QDQ BF16 KV_N/32; QB per beat codes QB_NB/2 (8-bit slots, FP4 codes zero-extended) + exps 1 + y QB_NB; SW per vector codes W/64 +
 // exps 1 + y BF16 W/32; SE per beat e SM_H*SM_LPH/16 (binary32); SO per beat o BF16 SM_H*SM_LPH/32.
 //
 // MUT (bench negative controls): 1 done one beat early; 2 done tag flipped; 3 SO uses a stale den (SE of the slot not
@@ -107,6 +107,7 @@ module ot_s81_su_core #(
     reg [QN_N*32-1:0] gq [0:4*NVQ-1];
     reg [KV_N*32-1:0] gk [0:3];
     reg               sm_owner_v; reg sm_owner;      // slot whose den the softmax unit holds
+    reg               sm_dn;                         // this SE's den has reached the lanes
 
     // ------------------------------------------------------------------ operand beat assembly
     reg [512*BMAX-1:0] bb;                           // rows landing (blocking: the beat being assembled)
@@ -169,7 +170,7 @@ module ot_s81_su_core #(
         case (k)
             K_QN: rows_out = NVQ * (QN_N / 64 + 1);
             K_KV: rows_out = KV_N / 64 + 1 + KV_N / 32;
-            K_QB: rows_out = c * ((f4 ? QB_NB / 4 : QB_NB / 2) + 1 + QB_NB);
+            K_QB: rows_out = c * (QB_NB / 2 + 1 + QB_NB);        // FP4 codes sit in 8-bit slots as FP8's
             K_SW: rows_out = c * (SW_W / 64 + 1 + SW_W / 32);
             K_SE: rows_out = c * RSM;
             K_SO: rows_out = NPV * (SMW / 32);
@@ -199,7 +200,7 @@ module ot_s81_su_core #(
             e_done_v <= 0; e_done_tag <= 0; fault <= 0; fault_code <= 0; st_jobs <= 0;
             rq_v <= 0; wq_v <= 0; beat_v <= 0; beat_i <= 0; go_pend <= 0;
             qn_go <= 0; qn_in <= 0; qn_wl <= 0; qn_wi <= 0; kv_go <= 0; kv_in <= 0; kv_wl <= 0; qb_v <= 0; sw_v <= 0;
-            sm_sv <= 0; sm_pv <= 0; sm_rst_n <= 1'b1; sm_owner_v <= 0; sm_owner <= 0;
+            sm_sv <= 0; sm_pv <= 0; sm_rst_n <= 1'b1; sm_owner_v <= 0; sm_owner <= 0; sm_dn <= 0;
             oq_n <= 0; oq_w <= 0; oq_r <= 0; ocur <= 0;
         end else begin
             e_done_v <= 0; rq_v <= 0; wq_v <= 0; beat_v <= 0;
@@ -328,10 +329,8 @@ module ot_s81_su_core #(
                     end
                 end
                 if (qb_vo) begin
-                    for (q = 0; q < (fp4 ? QB_NB / 4 : QB_NB / 2); q = q + 1) begin
-                        if (fp4) for (g = 0; g < 4; g = g + 1) row[128 * g +: 128] = qb_q[256 * (4 * q + g) +: 128];
-                        else row = qb_q[512 * q +: 512];
-                        oq[wp] <= {obase + oc, row}; wp = wp + 1; oc = oc + 1; n_in = n_in + 1;
+                    for (q = 0; q < QB_NB / 2; q = q + 1) begin
+                        oq[wp] <= {obase + oc, qb_q[512 * q +: 512]}; wp = wp + 1; oc = oc + 1; n_in = n_in + 1;
                     end
                     row = 0; for (g = 0; g < QB_NB; g = g + 1) row[16 * g +: 16] = {6'd0, qb_e[10 * g +: 10]};
                     oq[wp] <= {obase + oc, row}; wp = wp + 1; oc = oc + 1; n_in = n_in + 1;
@@ -360,13 +359,15 @@ module ot_s81_su_core #(
                 if (oq_n + n_in > OQ) begin fault <= 1; fault_code <= 5; end
                 if (run && ph == 2 && nw != 0) begin
                     cw <= cw + n_out;
-                    if (cw + n_out >= nw - ((MUT == 1) ? 1 : 0) && cw < nw - ((MUT == 1) ? 1 : 0)) begin
+                    // SE completes when its e rows are written AND the denominators are in the lanes (SO reads them)
+                    if (cw + n_out >= nw - ((MUT == 1) ? 1 : 0) && (kind != K_SE || sm_dn || sm_denv)) begin
                         run <= 0; e_done_v <= 1; e_done_tag <= (MUT == 2) ? (jtag ^ 8'h01) : jtag;
                         st_jobs <= st_jobs + 1; go_pend <= 0;
                     end
                 end
             end
             if (take) go_pend <= 0;
+            if (take) sm_dn <= 1'b0; else if (sm_denv) sm_dn <= 1'b1;
         end
     end
 endmodule

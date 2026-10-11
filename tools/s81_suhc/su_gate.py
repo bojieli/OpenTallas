@@ -150,17 +150,14 @@ class Run:
         nb = self.sh["QB_NB"]
         beats = len(x) // (32 * nb)
         a = self.put(rows_of(x))
-        per = (nb // 4 if fp4 else nb // 2) + 1 + nb
+        per = nb // 2 + 1 + nb
         out = self.alloc(beats * per)
         self.job("QB", 0, self.desc(out, a, beats), fp4=fp4)
         q = aq(x, bool(fp4))
         rows = []
         for bt in range(beats):
             blk = q[bt * nb:(bt + 1) * nb]
-            if fp4:
-                rows += [pack([c for b in blk[4 * r:4 * r + 4] for c in (list(b[1]) + [0] * 0)], 4) for r in range(nb // 4)]
-            else:
-                rows += [pack([c for b in blk[2 * r:2 * r + 2] for c in b[1]], 8) for r in range(nb // 2)]
+            rows += [pack([c for b in blk[2 * r:2 * r + 2] for c in b[1]], 8) for r in range(nb // 2)]
             rows.append(pack([b[0] for b in blk], 16))
             rows += [pack(b[2], 16) for b in blk]
         self.expect(out, rows)
@@ -182,8 +179,7 @@ class Run:
             blk = q[v * (W // 32):(v + 1) * (W // 32)]
             rows += [pack([c for b in blk[2 * r:2 * r + 2] for c in b[1]], 8) for r in range(W // 64)]
             rows.append(pack([b[0] for b in blk], 16))
-            yb = bf16bits(act[v * W:(v + 1) * W])
-            rows += [pack(yb[32 * r:32 * r + 32], 16) for r in range(W // 32)]
+            rows += [pack(b[2], 16) for b in blk]                       # the QDQ BF16 (qdq_fp8) of each block
         self.expect(out, rows)
 
     def softmax(self, s_raw, scale, sink, pv, cos, sin):
