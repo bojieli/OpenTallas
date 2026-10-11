@@ -1,7 +1,9 @@
 #!/bin/bash
 # [link] 2026-10-10 hfd_lk_ep die-view route at the R25GQ slot (route_view.sh: die pins at the generator positions,
-# variant r25gqn) with the 3 closed retry macros (view_wpin_hm10) placed by macro_place.tcl.
-#   route.sh <label> [extra run_abi3_physical args]   env: OUT, CORES, PD (0.55), HM (0.010), WSF (wire-stage density)
+# variant r25gqn) with the 3 closed retry macros (view_wpin_hm10) placed by macro_place.tcl; die-pin flops anchored at
+# their pins (io_flop_at_pins / out_flop_release).
+#   route.sh <label> [extra run_abi3_physical args]   env: OUT, CORES, PD (0.55), HM (0.010), WSF (wire-stage density),
+#   DH_OVR (trial outline height; route_view.sh)
 set -u
 lab=$1; shift
 export SRC=${SRC:-$PWD} VARIANT=r25gqn OT_VIEW_PORTS_ROOT=physical/hbm_accel_die_views/ports_r25gqn CKP="clk*" \
@@ -12,4 +14,5 @@ L=${L:-${CK_SS_MEAN:-770}}
 bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $L > /dev/null
 export SDCA=physical/hbm_accel_die_views/common/io_vclk_m_$L.sdc
 bash physical/hbm_accel_die_views/common/route_view.sh $lab hfd_lk_ep rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv \
-  --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_lk_ep_20261010/macro_place.tcl "$@"
+  --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_lk_ep_20261010/macro_place.tcl \
+  --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl "$@"
