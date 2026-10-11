@@ -9,8 +9,9 @@ BW=${BW:-544}
 # idle-sweep-1010: IOTIME=1 times the bank ports instead of false-pathing them. A pure pin-register bank (q <= d) has
 # NO reg-to-reg path, so --false-path-io + the clock-only signoff_833_int.sdc left nothing constrained and corner_sta
 # reported +1e42 sentinel slack (revoked 10-10 18:25). With IOTIME=1 the route keeps the 0.2 T IO budget on d -> flop
-# and flop -> q, and sign-off uses bank_signoff_833.sdc (833, IO 0.2 T in / out for setup and hold) = the die IO budget per hop.
-if [ "${IOTIME:-0}" = 1 ]; then FPIO=""; SIGNOFF=physical/hbm_attn_tile_r/bank/bank_signoff_833.sdc; else FPIO="--false-path-io"; SIGNOFF=physical/hbm_attn_tile_r/signoff_833_int.sdc; fi
+# and flop -> q for setup, appends bank_hold_h1.sdc (rule H1 hold-side IO: input min = sender clk->q min 30 ps, output
+# min 0; main ruling 10-10, flat 0.2 T hold was masking) so hold repair sees it, and signs off with bank_signoff_833.sdc.
+if [ "${IOTIME:-0}" = 1 ]; then FPIO="--sdc-append physical/hbm_attn_tile_r/bank/bank_hold_h1.sdc"; SIGNOFF=physical/hbm_attn_tile_r/bank/bank_signoff_833.sdc; else FPIO="--false-path-io"; SIGNOFF=physical/hbm_attn_tile_r/signoff_833_int.sdc; fi
 if [ $BW = 136 ]; then L=28.08; LC=27.54; else L=105.84; LC=105.3; fi
 if [ $o = sn ]; then DW=$L; DH=11.88; CA="0 0.54 $L 11.34"; else DW=11.88; DH=$L; CA="0.54 0.54 11.34 $LC"; fi
 echo "ot_attn_bank_${o}${BW} $DW x $DH PD=${PD:-0.5} $*" > $W/args
