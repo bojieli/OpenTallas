@@ -604,7 +604,6 @@ localparam integer W_ME_AMC = 1;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) o_cnt <= {XW{1'b0}};
             else if (skip) o_cnt <= o_cnt + 1'b1;
-        reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step
         always @(posedge clk or negedge rst_n)
             if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};
             else if (skip) o_cnt1 <= o_cnt1 + 1'b1;

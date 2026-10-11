@@ -867,16 +867,38 @@ localparam integer W_ME_AMC = 1;
     //: ot_hdc_cg).  The enable is combinational from the supply's view of the
     //: engine's registered requests; it never depends on me_go.
     wire me_wake = (st == S_RUN) && nx_v && (d_unit == 2'd1);
-    generate if (MEREG != 0) begin : g_mereg
+    wire me_clk_en_w;
+    generate if (MEREG != 0 && MEREG < 3) begin : g_mereg
         reg mo_p;                                       // pin flop (me_mem_ok of edge t+2 at edge t)
         (* keep = "true", dont_touch = "true" *) reg mo_e;   // enable flop, placed at the ICG clones
         always @(posedge clk) begin mo_p <= me_mem_ok; mo_e <= (MEREG == 2) ? me_mem_ok : mo_p; end
         assign me_en = !rst_n || (mo_e && ((ME_IDLE_GATE == 0) || !me_idle || me_wake));   // rst_n: the registered tile reset copy
+        assign me_clk_en_w = me_en;
+    end else if (MEREG >= 3) begin : g_merr
+        // MEREG 3 (coordinator decision 10-11): the engine clock enable REGISTERED -- computed one edge early from
+        // the supply word (announced THREE edges ahead: pin flop, central kept flop) and the idle / wake state, so the
+        // engine wakes from idle one edge later (transaction-exact; +1 wake cycle).  16 kept regional copies en_r feed
+        // the pushed-down ICG clones region by region (physical/common_flow/cg_pushdown.tcl OT_CG_ENREP_*); en_c is
+        // the controller's copy, en_o the me_clk_en pin's.  MEREG 4 = negative control (the controller's copy stuck at 1: it issues on edges the engine is not clocked).
+        reg mo_p;
+        (* keep = "true", dont_touch = "true" *) reg mo_m;
+        always @(posedge clk) begin mo_p <= me_mem_ok; mo_m <= mo_p; end
+        // a go in flight keeps the engine clocked until its idle status (a gated-domain delay line) can report it
+        (* keep = "true", dont_touch = "true" *) reg en_c, en_o;
+        // (counted in ENGINE edges: 8 clocked edges cover the 2 issue + 2 status stations and the tree top)
+        reg [3:0] gfl;
+        always @(posedge clk or negedge rst_n) if (!rst_n) gfl <= 4'd0; else if (me_go) gfl <= 4'd8; else if (en_c && gfl != 4'd0) gfl <= gfl - 1'b1;
+        wire en_d = !rst_n || (mo_m && ((ME_IDLE_GATE == 0) || !me_idle || me_wake || me_go || (gfl != 4'd0)));
+        (* keep = "true", dont_touch = "true" *) reg [15:0] en_r;
+        always @(posedge clk) begin en_r <= {16{en_d}}; en_c <= en_d; en_o <= en_d; end
+        assign me_en = (MEREG == 4) ? 1'b1 : en_c;   // MEREG 4 mutant: the controller assumes every edge clocks the engine
+        assign me_clk_en_w = en_o;
     end else begin : g_mecomb
         assign me_en = !rst_n || (((ME_STALL == 0) || me_mem_ok) &&
                               ((ME_IDLE_GATE == 0) || !me_idle || me_wake));
+        assign me_clk_en_w = me_en;
     end endgenerate
-    assign me_clk_en = me_en;
+    assign me_clk_en = me_clk_en_w;   // MEREG 3: the kept pin copy en_o
     wire me_clk;
     generate if (ME_STALL != 0 || ME_IDLE_GATE != 0) begin : g_me_cg
         ot_hdc_cg u_me_cg (.clk(clk), .en(me_en), .gclk(me_clk));

@@ -1207,7 +1207,7 @@ def ctrl_olag(t: str) -> str:
             "            else begin ol_sq <= skip; if (ol_sq) begin ol_c0 <= ol_c0 + 1'b1; ol_c1 <= ol_c1 + 1'b1; ol_c2 <= ol_c2 + 1'b1; end end\n"
             "        always @(*) begin o_cnt = ol_sq ? ol_c1 : ol_c0; o_cnt1 = ol_sq ? ol_c2 : ol_c1; end\n"
             "    end else begin : g_ocnt\n"
-            "    " + old_cnt.replace("\n", "\n    ").rstrip() + "\n"
+            "    " + old_cnt.replace("    reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step\n", "").replace("\n", "\n    ").rstrip() + "\n"
             "    end endgenerate\n")
     old_eq = ("    wire o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});\n"
               "    wire o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});\n")
@@ -1315,12 +1315,33 @@ def ctlm_mereg(t: str) -> str:
                "    parameter integer MEREG = 0,      // el1011-q-seq: me_mem_ok announced 2 edges ahead; me_en a register")
     old = ("    assign me_en = !rst_n || (((ME_STALL == 0) || me_mem_ok) &&\n"
            "                              ((ME_IDLE_GATE == 0) || !me_idle || me_wake));")
-    t = one(t, old, "    generate if (MEREG != 0) begin : g_mereg\n"
+    t = one(t, old, "    wire me_clk_en_w;\n    generate if (MEREG != 0 && MEREG < 3) begin : g_mereg\n"
                "        reg mo_p;                                       // pin flop (me_mem_ok of edge t+2 at edge t)\n"
                "        (* keep = \"true\", dont_touch = \"true\" *) reg mo_e;   // enable flop, placed at the ICG clones\n"
                "        always @(posedge clk) begin mo_p <= me_mem_ok; mo_e <= (MEREG == 2) ? me_mem_ok : mo_p; end\n"
                "        assign me_en = !rst_n || (mo_e && ((ME_IDLE_GATE == 0) || !me_idle || me_wake));   // rst_n: the registered tile reset copy\n"
-               "    end else begin : g_mecomb\n" + old.replace("    assign", "        assign", 1) + "\n    end endgenerate")
+               "        assign me_clk_en_w = me_en;\n"
+               "    end else if (MEREG >= 3) begin : g_merr\n"
+               "        // MEREG 3 (coordinator decision 10-11): the engine clock enable REGISTERED -- computed one edge early from\n"
+               "        // the supply word (announced THREE edges ahead: pin flop, central kept flop) and the idle / wake state, so the\n"
+               "        // engine wakes from idle one edge later (transaction-exact; +1 wake cycle).  16 kept regional copies en_r feed\n"
+               "        // the pushed-down ICG clones region by region (physical/common_flow/cg_pushdown.tcl OT_CG_ENREP_*); en_c is\n"
+               "        // the controller's copy, en_o the me_clk_en pin's.  MEREG 4 = negative control (the controller's copy stuck at 1: it issues on edges the engine is not clocked).\n"
+               "        reg mo_p;\n"
+               "        (* keep = \"true\", dont_touch = \"true\" *) reg mo_m;\n"
+               "        always @(posedge clk) begin mo_p <= me_mem_ok; mo_m <= mo_p; end\n"
+               "        // a go in flight keeps the engine clocked until its idle status (a gated-domain delay line) can report it\n"
+               "        (* keep = \"true\", dont_touch = \"true\" *) reg en_c, en_o;\n"
+               "        // (counted in ENGINE edges: 8 clocked edges cover the 2 issue + 2 status stations and the tree top)\n"
+               "        reg [3:0] gfl;\n"
+               "        always @(posedge clk or negedge rst_n) if (!rst_n) gfl <= 4'd0; else if (me_go) gfl <= 4'd8; else if (en_c && gfl != 4'd0) gfl <= gfl - 1'b1;\n"
+               "        wire en_d = !rst_n || (mo_m && ((ME_IDLE_GATE == 0) || !me_idle || me_wake || me_go || (gfl != 4'd0)));\n"
+               "        (* keep = \"true\", dont_touch = \"true\" *) reg [15:0] en_r;\n"
+               "        always @(posedge clk) begin en_r <= {16{en_d}}; en_c <= en_d; en_o <= en_d; end\n"
+               "        assign me_en = (MEREG == 4) ? 1'b1 : en_c;   // MEREG 4 mutant: the controller assumes every edge clocks the engine\n"
+               "        assign me_clk_en_w = en_o;\n"
+               "    end else begin : g_mecomb\n" + old.replace("    assign", "        assign", 1) + "\n        assign me_clk_en_w = me_en;\n    end endgenerate")
+    t = one(t, "    assign me_clk_en = me_en;\n", "    assign me_clk_en = me_clk_en_w;   // MEREG 3: the kept pin copy en_o\n")
     t = one(t, "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0\n) (",
                "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0,\n"
                "    parameter integer MEREG = 0   // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n) (")
