@@ -19,7 +19,10 @@ module ot_hdc_fp32_add_lat #(
     // CUTS >= 0 picks the extra cuts explicitly, bits {D, C, B, A} (LAT must be 3 + their count); -1: by LAT.
     // W11 serial domain: CUTS = 4'b0001 (C_A, LAT 4) cuts the INPUT side, so an operand multiplexer in front of
     // the unit shares stage 1 with the decode / compare instead of the alignment
-    parameter integer CUTS = -1
+    parameter integer CUTS = -1,
+    // DRST 0 (fe-push-hphys-1010, opt-in via OT_FP_DATA_NORST): only the valid bits are reset (cuts VB, valid_out);
+    // y / err / data cuts are plain flops (consumers qualify them with valid_out).  1: legacy, every stage bit reset.
+    parameter integer DRST = `ifdef OT_FP_DATA_NORST 0 `else 1 `endif
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -64,7 +67,7 @@ module ot_hdc_fp32_add_lat #(
                         a_exp, b_exp, a_man, b_man, dab, dba} ;
     wire          a1_swap = !cmp_c;
     wire [WA:0]   a2_in;
-    ot_hdc_w11_cut #(.W(WA + 1), .CUT(CUT_A)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
+    ot_hdc_w11_cut #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
     // ---- A2 ----------------------------------------------------------------------------------------
     wire        x_v, x_byp, x_sub, x_as, x_bs, x_swap;
     wire [1:0]  x_err;
@@ -117,7 +120,7 @@ module ot_hdc_fp32_add_lat #(
     ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
     localparam integer WB = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
     wire [WB-1:0] b2_in;
-    ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B)) u_cb (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B), .VB(DRST ? -1 : WB - 1)) u_cb (.clk(clk), .rst_n(rst_n),
         .d({s1_v, s1_byp, s1_sub, s1_sign, s1_err, s1_code, s1_exp, sum_w, dif_w}), .q(b2_in));
     // ---- B2 ----------------------------------------------------------------------------------------
     wire        t_v, t_byp, t_sub, t_sign;
@@ -135,7 +138,7 @@ module ot_hdc_fp32_add_lat #(
     // B2a -> B2b boundary (LAT >= 7)
     localparam integer WD = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 6 + 1;
     wire [WD-1:0] d2_in;
-    ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D)) u_cd (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D), .VB(DRST ? -1 : WD - 1)) u_cd (.clk(clk), .rst_n(rst_n),
         .d({t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, lz_w, carry}), .q(d2_in));
     wire        w_v, w_byp, w_sub, w_sign, w_carry;
     wire [1:0]  w_err;
@@ -174,7 +177,7 @@ module ot_hdc_fp32_add_lat #(
     ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(s2_val[26:3]), .b(24'd0), .cin(inc), .s(rnd_w), .cout(rnd_cw));
     localparam integer WC = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 1;
     wire [WC-1:0] c2_in;
-    ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C)) u_cc (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C), .VB(DRST ? -1 : WC - 1)) u_cc (.clk(clk), .rst_n(rst_n),
         .d({s2_v, s2_byp, s2_zero, s2_sign, s2_err, s2_code, s2_exp, rnd_w, rnd_cw}), .q(c2_in));
     // ---- C2 ----------------------------------------------------------------------------------------
     wire        u_v, u_byp, u_zero, u_sign, rnd_c;
@@ -188,29 +191,56 @@ module ot_hdc_fp32_add_lat #(
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (u_exp == 8'hff) || (e >= 9'd255);
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
-        else begin
-            valid_out <= u_v;
+    generate if (DRST != 0) begin : g_yr
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+            else begin
+                valid_out <= u_v;
+                if (u_byp) begin y <= u_code; err <= u_err; end
+                else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
+                else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+                else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+            end
+        end
+    end else begin : g_yn
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) valid_out <= 1'b0;
+            else valid_out <= u_v;
+        end
+        always @(posedge clk) begin
             if (u_byp) begin y <= u_code; err <= u_err; end
             else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
             else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
             else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
         end
-    end
+    end endgenerate
 endmodule
 
 // a W-bit bundle, registered when CUT = 1 (bit 0... the bundle's MSB is the valid, reset to 0), else passed through
-module ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0) (
+// VB >= 0 (fe-push-hphys-1010, opt-in): only bit VB (the bundle's valid) is reset; the data bits are plain flops (a wide
+// datapath costs no reset fan-out; validity travels on the reset bit).  VB < 0 (default): every bit reset, as before.
+module ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0, parameter integer VB = -1) (
     input  wire clk, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q
 );
-    generate if (CUT) begin : g_r
+    generate if (CUT && VB < 0) begin : g_r
         reg [W-1:0] r;
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) r <= {W{1'b0}};
             else r <= d;
         end
         assign q = r;
+    end else if (CUT) begin : g_rv
+        reg rv;
+        reg [W-1:0] rd;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) rv <= 1'b0;
+            else rv <= d[VB];
+        end
+        always @(posedge clk) rd <= d;
+        genvar i;
+        for (i = 0; i < W; i = i + 1) begin : g_b
+            assign q[i] = (i == VB) ? rv : rd[i];
+        end
     end else begin : g_w
         assign q = d;
     end endgenerate
