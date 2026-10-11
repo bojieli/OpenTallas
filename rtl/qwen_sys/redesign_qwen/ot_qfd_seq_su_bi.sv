@@ -978,6 +978,12 @@ module ot_qfd_seq_su_bi #(
     input  wire clk,
     input  wire rst_n,
     input  wire [1-1:0] h_start,
+    input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs
+    input  wire [1-1:0] cb_st_rdy,        // constant buffer: stage cb_st_rdy_stage resident
+    input  wire [5:0] cb_st_rdy_stage,
+    output wire [5:0] cb_stage,           // to every constant-buffer group: the stage the SU runs
+    output wire [1-1:0] cb_tok_start,
+    output wire [NW-1:0] cb_tpos,
     input  wire [NW-1:0] tp_token,
     input  wire [NW-1:0] tp_pos,
     input  wire [1-1:0] kv_write_drained,
@@ -1519,9 +1525,17 @@ module ot_qfd_seq_su_bi #(
         .o_fin(),
         .o_fidx(),
         .o_fval());
+    wire [5:0] q_stage_in, q_cb_st_rdy_stage; wire q_cb_st_rdy;
+    ot_hdc_delay #(.W(12), .D(IS)) u_i_cbs (.clk(clk), .rst_n(rs), .d({stage_in, cb_st_rdy_stage}), .q({q_stage_in, q_cb_st_rdy_stage}));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rs), .d(cb_st_rdy), .q(q_cb_st_rdy));
+    wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;
+    ot_qfd_stage_gate #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rs), .h_start(q_h_start), .stage(q_stage_in),
+        .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
+        .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
+    ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rs), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
     ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (
-        .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),
+        .clk(clk), .rst_n(rs), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
         .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),
@@ -1537,6 +1551,26 @@ module ot_qfd_seq_su_bi #(
     assign b_su_idle_o = q_pi_su_idle;
     assign b_su_prog_o = q_pi_su_progress;
     assign b_su_rows_o = q_pi_su_progress_rows;
+endmodule
+
+// qwen-1010/a: the stage start waits for the SU-local constant buffer (ot_qfd_su_cbuf_g st_rdy / st_rdy_stage): a stage
+// (one layer program, or HEAD) starts only when the buffer reports that stage resident.  The prefetcher fills stage s + 1
+// during stage s, so the wait is normally only at the token's first stage.  MUT 1 (NOWAIT): starts without the buffer.
+module ot_qfd_stage_gate #(parameter integer SW_ = 6, parameter integer NW = 18, parameter integer MUT = 0) (
+    input  wire clk, input wire rst_n,
+    input  wire h_start, input wire [SW_-1:0] stage, input wire [NW-1:0] token, input wire [NW-1:0] pos,
+    input  wire st_rdy, input wire [SW_-1:0] st_rdy_stage,
+    output wire go, output reg [NW-1:0] go_token, output reg [NW-1:0] go_pos,
+    output reg [SW_-1:0] cur_stage, output wire tok_start
+);
+    reg pend;
+    assign go = pend && !h_start && ((MUT != 0) || (st_rdy && st_rdy_stage == cur_stage));
+    assign tok_start = h_start && (stage == {SW_{1'b0}});
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pend <= 1'b0; cur_stage <= {SW_{1'b0}}; end
+        else if (h_start) begin pend <= 1'b1; cur_stage <= stage; end
+        else if (go) pend <= 1'b0;
+    always @(posedge clk) if (h_start) begin go_token <= token; go_pos <= pos; end
 endmodule
 
 `timescale 1ns/1ps
