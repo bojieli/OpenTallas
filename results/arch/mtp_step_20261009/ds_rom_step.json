@@ -114,11 +114,11 @@
   {
    "id": "p2.link_ends",
    "element": "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)",
-   "cycles": 27.0,
+   "cycles": 51.0,
    "critical": true,
    "phase": "draft",
    "anchor": "draft.blocks",
-   "formula": "3 P2 transactions x (+9: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
+   "formula": "3 P2 transactions x (+17: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends rev 2 6,130 vs core direct 6,113; rev 1 was 6,122)",
    "source": [
     "tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0",
     "~/claude-takeover-20261007/mtp-fixlat-1011.log"
@@ -248,14 +248,14 @@
   }
  ],
  "totals": {
-  "critical_cycles": 45596.2,
-  "critical_cycles_lower": 44981.0,
+  "critical_cycles": 45620.2,
+  "critical_cycles_lower": 45005.0,
   "overlapped_cycles": 0,
   "composed_step_cycles": 1146896.4,
-  "charged_step_cycles": 1192492.6,
+  "charged_step_cycles": 1192516.6,
   "tau": 4.159,
   "MTP_tok_s_composed": 4351.6,
-  "MTP_tok_s_charged": 4185.2,
+  "MTP_tok_s_charged": 4185.1,
   "MTP_tok_s_charged_lower_charges": 4187.3
  },
  "inputs": {

@@ -173,11 +173,12 @@ def ds_rom():
              "(no record replaces it): upper bound. Blocks are serial (block k+1 consumes block k's hc_post), so critical."))
     # mtp-fixlat-1011: P2 die-bus link ends (dsfd_p2_lnk at the core pins + dsfd_coll_p2_ep / dsfd_vm_p2_ep): grant
     # protocol RTT-sized to draft A's relay stations + transaction gate; the plain valid / ready core is not exact over them
-    p2_lnk = 6122 - 6113
+    # rev 2 (p2lnk-1011, fixlat-p2lnk-ffbec0c86-tc TT -280 structural fix: gate stage + core-side PINREG pin FIFOs): 6,130
+    p2_lnk = 6130 - 6113
     ch.append(charge(
         "p2.link_ends", "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)", p2_lnk * len(p2),
         anchor="draft.blocks", phase="draft", grade="measured (bench log)",
-        formula=f"{len(p2)} P2 transactions x (+{p2_lnk}: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
+        formula=f"{len(p2)} P2 transactions x (+{p2_lnk}: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends rev 2 6,130 vs core direct 6,113; rev 1 was 6,122)",
         source=["tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0", "~/claude-takeover-20261007/mtp-fixlat-1011.log"],
         note="the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"))
     # mtp-colllane-1011 (ds-1010 decision): the token return / seed and the P2 die-to-die traffic ride DEDICATED collective
