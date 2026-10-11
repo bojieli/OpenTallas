@@ -34,7 +34,6 @@
     output wire [337:0] t_hgi_vmq,
     output wire [17799:0] t_lgE,
     output wire [196:0] t_mtp,
-    output wire [119:0] t_mtpk,
     output wire [63:0] t_su_NE,
     output wire [63:0] t_su_NW,
     output wire [63:0] t_su_SE,
