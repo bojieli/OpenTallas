@@ -22,6 +22,7 @@ module tb_qfd_vm_bv_ports;
     parameter integer ELEMS = 16384, NRB = 16, SMIN = 3, SMAX = 7, XVM = 12, BMAX = 4, SW = 8, VL = 7;
     parameter integer DB = 16, RSD = 4, CRB = 4, MUT = 0, SMUT = 0, TSR = 0, CYCLES = 30000, SEED = 5, XRN = 4096;
     parameter integer ND = 9;
+    parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
     parameter [ND*8-1:0] DSET = {8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0};
     localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NB = 6, NS = 8;
     localparam integer XR0 = 0, RD0 = XRN, SQ0 = XRN + 1024, MX0 = XRN + 2048, RS0 = XRN + 3072, RSN = 5120, SU0 = XRN + 8192;
@@ -65,7 +66,7 @@ module tb_qfd_vm_bv_ports;
             .o_v(l_v[gb]), .o_end(l_end[gb]), .o_nul(l_nul[gb]), .o_row(l_row[gb*RW +: RW]), .o_mask(l_mask[gb*16 +: 16]),
             .o_data(l_data[gb*512 +: 512]), .o_cr(l_cr[gb]), .rok(l_ok[gb]), .fault(l_fault[gb]));
     end endgenerate
-    ot_qfd_sp_vector_memory_bv #(.ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
+    ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
         .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT)) dut (
         .clk(clk), .rst_n(rst_n), .me_en(me_en), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),

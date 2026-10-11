@@ -11,6 +11,7 @@
 // image, no faults.  SMUT = 1: a serializer swaps a slot's mask (must FAIL).
 module tb_qfd_spine_landed;
     parameter integer W = 16, IL = 8, AW = 24, NW = 18;
+    parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
     parameter integer GT = 96, TG = 4, SMIN = 3, SMAX = 5, TCUT = 3, NS = 4;
     parameter integer BD = 4, XVM = 1, NWS = 1, TWS = 2, ORD = 1, MEM_EXTRA = 0, SCALE_LOCAL = 0;
     parameter integer ACC_LAT = 7, TREE_LAT = 7, MUL_LAT = 6, FAST_ISSUE = 1, KV_PREP = 3;
@@ -120,7 +121,7 @@ module tb_qfd_spine_landed;
             .o_data(l_data[gb*512 +: 512]), .o_cr(l_cr[gb]), .rok(l_ok[gb]), .fault(l_fault[gb]));
     end endgenerate
     wire m_xf, m_xh, m_wf, m_wh;
-    ot_qfd_sp_vector_memory_bv #(.ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(3), .SMAX(7), .XVM(12), .BMAX(4), .ND(9),
+    ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(3), .SMAX(7), .XVM(12), .BMAX(4), .ND(9),
         .DSET({8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0}), .SW(8), .NSU(3), .NB(NB), .CRB(CRB)) vm (
         .clk(clk), .rst_n(rst_n), .me_en(me_en), .x_dv(1'b0), .x_dc(24'd0), .x_dcs(24'd1), .x_dsp(4'd3), .x_q(),
         .x_rdy(), .x_fault(m_xf), .x_hazard(m_xh),
