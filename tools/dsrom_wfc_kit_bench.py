@@ -108,6 +108,8 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'post_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 4),
     'post_stg_neg_early': ('stg_r1', 1, ['OT_VMWFC_MUT_EARLY_START'], 'fail', 5),
     'post_s0_neg_early': ('s0_tr_forced', 0, ['OT_VMWFC_MUT_EARLY_START'], 'fail', 5),
+    # TOKIN: the S0 kit's link-in from the collective MTP lane (t_mrt {data, valid} / f_mrt grant)
+    'tokin_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 6), 'tokin_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 6),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
 }
 
@@ -126,7 +128,14 @@ def kit_tb(stage, vmrly=0):
         assert n == 1, (tb, p)
     binds = ''.join(f'    assign {x} = u_kit.{x};\n' for x in INTERNAL if re.search(rf'\b{x}\b', body))
     kit = STG_KIT if stage else SRC_KIT
-    if vmrly in (4, 5):   # posted: endpoint + VM port model; 5 = mutant (the define is in the case)
+    if vmrly == 6:   # TOKIN: the token returns enter as the collective MTP lane's {data, valid} / grant
+        kit = kit.replace('dsfd_wfc_src u_kit (', 'dsfd_wfc_src #(.TOKIN(1)) u_kit (')
+        for a_, b_ in (('.f_liv(li_v), .f_lid(li_d), .t_lir(li_r),', '.f_liv(1\'b0), .f_lid(\'0), .t_lir(), .f_mrt({li_d[FLIT-1:0], li_v}), .t_mrg(li_r),'),):
+            assert a_ in kit, a_
+            kit = kit.replace(a_, b_)
+        kit += '''    always @(posedge fclk) if (li_v && !li_d[FLIT]) begin $display("MTP_S0 FAIL: token-return flit without last"); $finish; end
+'''
+    elif vmrly in (4, 5):   # posted: endpoint + VM port model; 5 = mutant (the define is in the case)
         kit = kit.replace('u_kit (', '#(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1)) u_kit (').replace(
             'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1))',
             'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1))')

@@ -3218,7 +3218,7 @@ def build_r8(variant=None):
     links = []
     for side in 'WE':
         stack = [('ucie', ru_), ('serdes', rs_), ('serdes', rs_), ('serdes', rs_)]
-        if MTP_LINKS and (DIE_KIND == 'head' or DRAFT_SIDE == 'P'):     # MTP-DIE: draft fan-out SerDes, W gets the odd one
+        if MTP_LINKS and (DIE_KIND == 'head' or DRAFT_SIDE == 'P' or COLL_MTP_FAR):     # MTP-DIE: draft fan-out SerDes, W gets the odd one
             stack += [('serdes', rs_)] * ((MTP_LINKS + (side == 'W')) // 2)
         if COLL_P2_LANE:      # mtp-colllane-1011: draft die A's dedicated P2 lanes: W4 board SerDes (primary), E4 UCIe (die B)
             stack += [('serdes', rs_)] if side == 'W' else [('ucie', ru_)]
@@ -3251,7 +3251,7 @@ def build_r8(variant=None):
     if BF_EXPLICIT_IDS is not None:
         variant['bf_pair_ids'] = sorted(BF_EXPLICIT_IDS)
     variant.update(wfc_hard=bool(wfc_die), mtp_seq=(MTP_SEQ_MM2 if MTP_SEQ and DIE_KIND == 'head' else None),
-                   mtp_links=MTP_LINKS if (DIE_KIND == 'head' or DRAFT_SIDE == 'P') else 0, draft=DRAFT_SIDE)
+                   mtp_links=MTP_LINKS if (DIE_KIND == 'head' or DRAFT_SIDE == 'P' or COLL_MTP_FAR) else 0, draft=DRAFT_SIDE)
     if DRAFT_SIDE:
         variant['role'] = ('MD-2 P2 draft die %s (40 = 5 row packages x 4 ranks x A/B; layer1 recipe): %s'
                            % (DRAFT_SIDE, DRAFT_CONTENT[DRAFT_SIDE]))
@@ -3649,9 +3649,10 @@ def buses_r8(m):
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
-            (wfc_kit_buses(WFC_ROLE, 'host' in hub) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg') else ()) + \
+            (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
+            ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
               ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
         if REV == 'r9':
@@ -3786,16 +3787,22 @@ WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f
 # VM <-> vmx (t_swv/t_swd 528 + t_srv/t_srd 16 = 544 out; f_swr f_swa f_srr 3 + f_srq 513 = 516 in), capture <-> vmx
 # (t_ks 53, f_kd 54), SOURCE only: host -> tok cfg f_c 55 and core -> host committed token {valid,user,pos,id} 53.
 # The element-to-element wiring is inside the kit master (dsfd_wfc_kit.sv), every element boundary registered.
-def wfc_kit_buses(role, host):
-    b = [('collective', 'wfc', 514, 't_wfc', 'f_li'), ('wfc', 'collective', 1, 't_lir', 'f_wfcg'),
+def wfc_kit_buses(role, host, far=None):
+    # far 's0' (--coll-mtp-far): the SOURCE kit's link-in is the collective MTP lane's token return (t_mrt {data, valid}
+    # / f_mrt grant; kit TOKIN 1) and the accept word t_macc goes to the host
+    b = ([('collective', 'wfc', 513, 't_mrt', 'f_mrt'), ('wfc', 'collective', 1, 't_mrg', 'f_mrt')] if far == 's0' else
+         [('collective', 'wfc', 514, 't_wfc', 'f_li'), ('wfc', 'collective', 1, 't_lir', 'f_wfcg')]) + [
          ('wfc', 'collective', 514, 't_lo', 'f_wfc'), ('collective', 'wfc', 1, 't_wfcg', 'f_lor'),
          ('wfc', 'vm', 544, 't_sw_sr', 'f_wfc'), ('vm', 'wfc', 516, 't_wfc', 'f_sw_sr'),
          ('wfc', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc', 54, 't_wfc', 'f_kd')]
+    if far == 's0' and host:
+        b += [('collective', 'host', 57, 't_macc', 'f_macc')]
     if role == 'source' and host:
         b += [('host', 'wfc', 55, 't_wfc_c', 'f_c'), ('wfc', 'host', 53, 't_tok', 'f_wfc_tok')]
     return tuple(b)
 
 
+COLL_MTP_FAR = None             # --coll-mtp-far s0 (mtp-wfc 2026-10-10): the S0 die's end of the head die's MTP lane
 MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab master dsfd_mtp_seq_rtt (RTT-sized grant
                                 #   receivers for the head631 relay chains; mtp-seq-rtt-native-61b4bc729 CLOSED), same ports
 SER_STAGE_UM = 640.0            # mtp-wfc 2026-10-10: 0.9 GHz (1,111.1 ps) station spacing = LINK_STAGE_UM x (1111.1 - 261) /
@@ -6090,6 +6097,8 @@ def die_options(ap):
                     help='MTP-DIE: bound, wired WFC slab (dsfd_wfc) on every layer-class STAGE die (layer and layer1; '
                     'not draft dies) instead of the scan-die-only soft reservation; default WFC_HARD_DEFAULT (off '
                     'until the SOURCE HARD partner closes)')
+    ap.add_argument('--coll-mtp-far', choices=['s0'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
+                    '(far end of the head lane): token return -> WFC kit link-in (TOKIN), accept word -> host')
     ap.add_argument('--mtp-ep', action='store_true', help='mtp-wfc 2026-10-10: head-die RTT-sized sequencer partner ends')
     ap.add_argument('--p2-lnk', action='store_true', help='mtp-wfc 2026-10-10: draft-A P2 slab = core + dsfd_p2_lnk')
     ap.add_argument('--mtp-seq-rtt', action='store_true', help='mtp-wfc 2026-10-10: head sequencer slab master '
@@ -6191,10 +6200,17 @@ def apply_options(a):
     global COLL_MTP_LANE, COLL_P2_LANE
     COLL_MTP_LANE = bool(getattr(a, 'coll_mtp_lane', False))
     COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
+    global COLL_MTP_FAR
+    COLL_MTP_FAR = getattr(a, 'coll_mtp_far', None)
+    if COLL_MTP_FAR:   # mtp-wfc 2026-10-10: the far (S0) end of the head die's MTP lane: same lane composition
+        if not (COLL_SPLIT3_CR and int(getattr(a, 'mtp_links', 0) or 0) and getattr(a, 'ctrl_role', None) == 'source'
+                and getattr(a, 'wfc_kit', False)):
+            raise SystemExit('--coll-mtp-far s0: needs --coll-split3-cr --mtp-links >= 1 --ctrl-role source --wfc-kit')
+        COLL_MTP_LANE = True
     if COLL_MTP_LANE or COLL_P2_LANE:
         if not COLL_SPLIT3_CR or (COLL_MTP_LANE and COLL_P2_LANE):
             raise SystemExit('--coll-mtp-lane / --coll-p2-lane: one of them, with --coll-split3-cr (credit seams, LCR lane tiles)')
-        if COLL_MTP_LANE and (getattr(a, 'die', None) != 'head' or not int(getattr(a, 'mtp_links', 0) or 0) or getattr(a, 'mtp_seq', None) is False):
+        if COLL_MTP_LANE and not COLL_MTP_FAR and (getattr(a, 'die', None) != 'head' or not int(getattr(a, 'mtp_links', 0) or 0) or getattr(a, 'mtp_seq', None) is False):
             raise SystemExit('--coll-mtp-lane: head die with --mtp-seq and --mtp-links >= 1 (lane W4 = the first MTP SerDes lk_W4)')
         if COLL_P2_LANE and getattr(a, 'draft', None) != 'A':
             raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
