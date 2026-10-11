@@ -15,4 +15,6 @@ step routes { if {![grt::have_routes]} { error "checkpoint carries no global rou
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 step spef { estimate_parasitics -global_routing -spef_file /work/die_grt.spef }
+# the resizer writes an EMPTY *PORTS section for a die with no top ports; OpenSTA read_spef rejects it (STA-1670)
+step ports { exec sed -i {1,40{/^\*PORTS$/{N;/^\*PORTS\n$/d}}} /work/die_grt.spef }
 puts OT_SPEF_DONE

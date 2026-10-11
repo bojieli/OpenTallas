@@ -224,6 +224,10 @@ if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" &
     }
     set ot_pf_v {}
     set ot_pf_rc [lindex [lindex [dict values $::ot_ir_moved] 0] 1]
+    # svc-fix 2026-10-10 (SE_s3 pspr GRT: 227 "pin flops" mean 329.6 vs boundary 650 -> 3,098 I2R at -299 and a
+    # stalled hold repair; routed I2R hold +18.9): only pin flops clocked by the moved reference clock -- the
+    # forwarded-clock FIFO capture flops (fq / fe / fkq, insertion from their own pins) are not on that tree
+    set ot_pf_pins [lmap p $ot_pf_pins { expr {[lsearch -exact [lmap c [get_property $p clocks] {get_full_name $c}] $ot_pf_rc] >= 0 ? $p : [continue]} }]
     foreach p $ot_pf_pins { set v [ot_ir_arr $p $ot_pf_rc]; if {$v ne "" && $v ne "INF" && $v ne "-INF" && [string is double -strict $v]} { lappend ot_pf_v $v } }
     if {[llength $ot_pf_v]} {
       set s 0.0; foreach v $ot_pf_v { set s [expr {$s + $v}] }

@@ -5,8 +5,11 @@
 // complete un-faulted, every result kind (4, 10) must raise one am with the completion's token, and a non-owned
 // completion / an absent kernel must fault.  Legacy SM model as tb_hbm_native_mtp_mx1_regb_system (paired results).
 // MUT 1 (am from kind 1) must FAIL.
+// G26 (hgi-1010 2026-10-10): KS = kstride; every per-layer launch (kinds 3, 7, 8) must use kent[kind] + L' x KS with
+// L' from the column's preceding swapin (L, or the draft stage st = L - 40); KS 0 = the G23 behaviour.  MUT 2 FAILS.
 module tb_hgi_mtp_xlate;
     parameter integer MUT = 0;
+    parameter integer KS = 7;
     reg clk = 0; always #5 clk = ~clk; reg rst_n = 0;
     // ---- the operation list
     localparam integer NOPS = 12;
@@ -40,15 +43,15 @@ module tb_hgi_mtp_xlate;
     end
     // ---- translator + sequencer model
     reg [351:0] kent; integer kk;
-    initial for (kk = 0; kk < 11; kk = kk + 1) kent[kk*32 +: 32] = 100 * (kk + 1);
+    initial for (kk = 0; kk < 11; kk = kk + 1) kent[kk*32 +: 32] = 100000 * (kk + 1);
     reg xcv = 0; reg [200:0] xc = 0; wire xcr, xcpl_v, xcpl_f, xam_v; wire [16:0] xam;
-    wire dbv; reg dbr = 0; wire [17:0] dbt; wire [19:0] dbp; wire [31:0] dbj, dbo, xj, xs; wire [3:0] dbg, xg; wire [1:0] dbe;
+    wire dbv; reg dbr = 0; wire [17:0] dbt; wire [19:0] dbp; wire [31:0] dbj, dbo, xj, xs; wire [3:0] dbg, xg, dbk; wire [1:0] dbe; wire [31:0] dbl;
     reg cv = 0; reg [17:0] ct = 0; reg [19:0] cp = 0; reg [31:0] cj = 0; reg [3:0] cg = 0, cs = 0; reg ctx = 0;
     ot_hgi_mtp_xlate #(.MUT(MUT)) xt (.clk(clk), .rst_n(rst_n), .external_fault(1'b0), .backend_quiescent(1'b1),
-        .kent(kent), .noise_token(17'd129279), .cmd_v(xcv), .cmd_ready(xcr), .cmd(xc), .cmd_job(32'h12345678),
+        .kent(kent), .kstride(32'(KS)), .noise_token(17'd129279), .cmd_v(xcv), .cmd_ready(xcr), .cmd(xc), .cmd_job(32'h12345678),
         .cmd_generation(4'hb), .cmd_sequence(32'd5), .cpl_v(xcpl_v), .cpl_ready(1'b1), .cpl_job(xj), .cpl_generation(xg),
         .cpl_sequence(xs), .cpl_fault(xcpl_f), .am_v(xam_v), .am_idx(xam), .drained_ready(),
-        .db_v(dbv), .db_rdy(dbr), .db_token(dbt), .db_pos(dbp), .db_job(dbj), .db_gen(dbg), .db_entry(dbe), .db_off(dbo),
+        .db_v(dbv), .db_rdy(dbr), .db_token(dbt), .db_pos(dbp), .db_job(dbj), .db_gen(dbg), .db_entry(dbe), .db_off(dbo), .db_kind(dbk), .db_loff(dbl),
         .c_v(cv), .c_rdy(), .c_token(ct), .c_pos(cp), .c_job(cj), .c_gen(cg), .c_status(cs), .c_tokx(ctx));
     integer sdel = -1; reg [19:0] sp; reg [31:0] soff;
     always @(posedge clk) begin                       // sequencer model: random doorbell accept, completion 3..10 later
@@ -56,17 +59,25 @@ module tb_hgi_mtp_xlate;
         if (dbv && dbr && sdel < 0) begin sdel = 3 + $urandom % 8; sp = dbp; soff = dbo; end
         else if (sdel > 0) sdel = sdel - 1;
         else if (sdel == 0) begin
-            cv <= 1'b1; ct <= ((soff == 500 || soff == 1100) ? 18'd4242 : 18'd0); cp <= sp; cj <= 32'h12345678; cg <= 4'hb;
+            cv <= 1'b1; ct <= ((soff == 500000 || soff == 1100000) ? 18'd4242 : 18'd0); cp <= sp; cj <= 32'h12345678; cg <= 4'hb;
             cs <= 4'd0; ctx <= 1'b0; sdel = -1;
         end
     end
     // ---- capture both launch sequences
-    reg [40:0] lseq [0:4095]; reg [40:0] xseq [0:4095]; integer nl = 0, nx = 0, nlam = 0, nxam = 0, nres = 0, errs = 0;
+    reg [40:0] lseq [0:4095]; reg [40:0] xseq [0:4095]; integer last_l = 0, nlay = 0; integer nl = 0, nx = 0, nlam = 0, nxam = 0, nres = 0, errs = 0;
     always @(posedge clk) if (rst_n) begin
         if (lb.state == 3'd1 && lb.template_valid[lb.kind]) begin lseq[nl] = {lb.kind, lb.token, lb.position}; nl = nl + 1; end
         if (dbv && dbr) begin
-            xseq[nx] = {4'(dbo / 100 - 1), dbt[16:0], dbp}; nx = nx + 1;
-            if (dbo == 500 || dbo == 1100) nres = nres + 1;
+            xseq[nx] = {4'(dbo / 100000 - 1), dbt[16:0], dbp}; nx = nx + 1;
+            if (dbo == 500000 || dbo == 1100000) nres = nres + 1;
+            if (dbo / 100000 == 1) last_l = (dbp >= 40) ? dbp - 40 : dbp;      // a swapin: the column's layer / stage
+            if (dbo / 100000 == 4 || dbo / 100000 == 8 || dbo / 100000 == 9) begin
+                nlay = nlay + 1;
+                if (dbo % 100000 != last_l * KS) begin
+                    if (errs < 5) $display("FAIL G26 kind %0d offset %0d expected L'=%0d x %0d", dbo / 100000 - 1, dbo % 100000, last_l, KS);
+                    errs = errs + 1; end
+            end
+            if (kent[dbk*32 +: 32] + dbl != dbo) begin $display("FAIL kind/loff %0d %0d vs off %0d", dbk, dbl, dbo); errs = errs + 1; end
             if (dbe != 2'd3 || dbj != 32'h12345678 || dbg != 4'hb) begin $display("FAIL doorbell identity / entry"); errs = errs + 1; end
         end
         if (lam_v) nlam = nlam + 1;
@@ -94,7 +105,7 @@ module tb_hgi_mtp_xlate;
         kent[4*32 +: 32] = 0; xc = ops[3]; xcv = 1; while (!xcr) @(negedge clk); @(negedge clk); xcv = 0;
         t = 0; while (!xcpl_v && t < 100000) begin @(negedge clk); t = t + 1; end
         if (!xcpl_f) begin $display("FAIL absent kernel not faulted"); errs = errs + 1; end
-        if (errs == 0) $display("PASS HGI_MTP_XLATE ops=%0d launches=%0d results=%0d (equal to the legacy backend)", NOPS, nx, nres);
+        if (errs == 0) $display("PASS HGI_MTP_XLATE ops=%0d launches=%0d results=%0d per-layer=%0d KS=%0d (equal to the legacy backend)", NOPS, nx, nres, nlay, KS);
         else $display("FATAL HGI_MTP_XLATE errors=%0d", errs);
         $finish;
     end

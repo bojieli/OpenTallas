@@ -8,7 +8,7 @@ reg[31:0]respv=0;reg[127:0]respb=0;reg[543:0]respt=0;reg[8191:0]respd=0;
 assign rv=respv;assign beat=respb;assign rtag=respt;assign data_=respd;
 wire native_fault,native_rdy,native_rsp_v;wire[255:0]native_rsp_data;wire[15:0]native_rsp_tag;
 reg native_v=0,native_rsp_rdy=0;reg[29:0]native_addr=0;integer native_done=0;integer normal_debt[0:31];
-ot_hbm_svc_core_native #(.NATIVE(1),.IKS(1),.E_ST(2),.XST(0))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
+ot_hbm_svc_core_native #(.NATIVE(1),.NATIVE_CHAIN(0),.IKS(1),.E_ST(2),.XST(0))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
 .e_d(ed),.e_fclk(efck),.kv(),.ik(),.phy_clk(),.phy_rst_n(),.k_v(kv),.k_rdy(32'hffffffff),.k_addr(addr),.k_len(len),.k_tag(tag),.k_we(kwe),.k_wdata(),.k_wstrb(),
 .kr_v(rv),.kr_rdy(rrdy),.kr_tag(rtag),.kr_beat(beat),.kr_data(data_),.w_v(),.w_rdy(1'b0),.w_addr(),.w_len(),.w_tag(),.w_room(8'd0),.wr_v(8'd0),.wr_rdy(),.wr_tag(80'd0),.wr_beat(40'd0),.wr_data(2048'd0),
 .wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(32'd0),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault),

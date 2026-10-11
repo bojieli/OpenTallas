@@ -48,7 +48,8 @@ def tick(kind, dry_run=False):
     task = {
         'drive': 'Run python3 /home/ubuntu/claude-takeover-20261007/gaps/registry_gaps.py now. Reconcile every IDLE element against assigned stream owners and give each a concrete action. Collect bench-verified closures and merge/push immediately from central main; service closures require a source-matched independent scoreboard PASS and genuine negative controls; preserve sb4/sb5/sb6 failures and held records. Continue engineering and admitted jobs; preserve progressing work. Check BF full rate and report material changes to owner.',
         'review': 'Perform the owner-authorized hourly review now: fleet CPU/RAM/disk headroom; latest authoritative COLLECT in every stream; resume work without progress for >2h. Run /home/ubuntu/OpenTallas/tools/fleet/hourly_review_48h.py --apply if installed, inspect its results. Retire stale >48h actual compute and idle scratch with .keep/live-use/source/evidence protections. Never git in another agent worktree. Continue all targets; resource guard every large launch.',
-        'deadline': 'BF deadline report is due before 21:30 PT on 2026-10-10 (owner extended by 12 hours). Inspect BF first-pass re-STA, exact bench and closure adoption evidence now; give owner current final status and measured costs in this chat immediately. Full 1.2GHz is preferred; 900MHz is also owner-authorized as a closure target; HALF_PHL fallback remains closed. Continue engineering afterwards.',
+        'deadline': 'BF deadline (09:30 PT 2026-10-10) has PASSED: half-rate HALF_PHL is the BF of record. Full-rate lines (e.g. bfp_pinclk_a re-route) are low-priority upside only and must not displace priority work.',
+
     }[kind]
     message = f'[Codex takeover scheduled {kind}, {now}] {task} Snapshot: {record.get("registry_snapshot", "registry unavailable")}. This is a cadence reminder within the existing active goal, not a new task.'
     if not dry_run:

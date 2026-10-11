@@ -2,6 +2,8 @@
 
 **Owner decision (2026-10-09 ~04:00 PT).** The Qwen3-8B ROM design becomes a TP4 ROM die + KV die pair per package (option 1a). KV never crosses the link.
 
+**Exactness status (2026-10-10): stationed-exact on L0-L2 (option-4 masters); die closure pending.** The option-4 actual masters are token-exact on the L0-L2 chain at the r22ko4 relay counts (16/16/16), with the sequencer <-> VM all-reduce read bus and a read queue sized to the die round trip (main 6359dc7dc; the XMUT and VRL-1 mutants fail). **Plan of record: r22ko4 (option 4)**, 4,908.6 tok/s typical with FEC at +100 cycles per all-reduce, 4,714.2 at +240, until the FEC term is pinned.
+
 **Status.** Every number here is a priced candidate or a generator floorplan, not a closed rate.
 
 **Update 2026-10-10 ~04:30 PT (re-cut H on the die).**

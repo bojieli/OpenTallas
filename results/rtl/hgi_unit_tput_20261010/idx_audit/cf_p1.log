@@ -1,0 +1,14 @@
+IDX topk_k6_n384_m1_asc: exact (477 cycles)
+IDX topk_k512_n4096_m1_asc: fault as expected
+IDX topk_k1_n64_m3: exact (222 cycles)
+IDX topk_k2_n64_m2: exact (173 cycles)
+IDX topk_k8_n128_m2: exact (457 cycles)
+IDX topk_k512_n2048_m2: exact (17382 cycles)
+IDX topk_k8_n128_m1_asc: exact (257 cycles)
+IDX topk_k9_n128_m1_asc: fault as expected
+IDX topk_nan_fails_closed: fault as expected
+PASS HGI-IDX unit CF-TOPK vectors=9 (PREF 1, max VM requests outstanding 4)
+- rtl/hbm_accel/generic/idx/tb_hgi_idx_unit.sv:77: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.609 s; speed 26.013 us/s
+- Verilator: cpu 0.299 s on 1 threads; allocated 13 MB

@@ -38,6 +38,10 @@ HBM_BENCH = "results/rtl/hbm_mtp_20261008/bench/round1.json"
 SPEC_SWEEP = "results/rtl/mtp_exact_20261008/spec_state/sweep.json"
 OLD_STEP = "results/uarch/dsrom_mtp_rom_step_20261008/step.json"
 REPRICE = "results/arch/reprice_20261008/reprice.json"
+BINDING = "results/uarch/dsrom_s81_mtp_binding_20261010/verdict.json"
+BINDING_DIES = "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json"
+ROWPACK = "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz"
+P2_MICRO = "results/uarch/dsrom_mtp_p2_20261009/microbench.json"
 
 
 def J(p):
@@ -94,6 +98,12 @@ def ds_rom():
     assert hops == hv.get("stages", 120) or hops == 120, hops
     lnk = 3 + 3                                    # dsfd_wfc_lnk +3 in / +3 out (mtp-rom benches)
     vmx = stg["start_mean"] + stg["done_mean"]     # dsfd_wfc_vmx start crossing + done path incl. the 46-word prefetch
+    # mtp-wfc 2026-10-10: on the die the VM sits behind the hub relay stations (13/13); the kit's grant-linked VM channels
+    # (VM_LINK 1, WOUTW 8, VMRQ 64) add the measured stationed delta to the vmx start + done path on every hop
+    vst_p = ROOT / "results/rtl/dsrom_wfc_integration_20261010/vm_station.json"
+    vst = json.loads(vst_p.read_text()) if vst_p.exists() else None
+    vst_d = vst["delta_per_hop_fast_cycles"] if vst else 0.0
+    vmx += vst_d
     per_hop = wfc["hop_delta_cycles"] + lnk + vmx
     busy_cyc = hv["worst_stage"]["busy_us"] * CLK / 1e6
     handoff = busy_cyc * (wfc["measured_interval_overhead"] - 46 / 11271)
@@ -103,7 +113,7 @@ def ds_rom():
         hops * per_hop, anchor="wave.last", phase="verify",
         formula=f"{hops} stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x {per_hop:g} "
                 f"(WFC done->out + entry delta {wfc['hop_delta_cycles']} + lnk {lnk} + vmx start {stg['start_mean']:g} + "
-                f"vmx done/prefetch {stg['done_mean']:g})",
+                f"vmx done/prefetch {stg['done_mean']:g} + VM hub-station delta {vst_d:g})",
         source=[WFC_CLOSURE + " charge.hop_delta_cycles", MTP_ROM_BENCH + " stg_vmnat MTP_STG_CYC",
                 "~/claude-takeover-20261007/mtp-rom.log (lnk +3/+3 a hop)"],
         note="the composition charges the reference ot_rom_pkg_ctrl_wf (46/11,271 handoff, no shims) whose route was rejected; "
@@ -160,6 +170,15 @@ def ds_rom():
         variant="selected P2 path (routes queued, not closed); the composition's draft is the DP1-EP5 recovery placement",
         note="per draft block the rank prefix replaces only the expert return hop; the block's combine all-reduce stays "
              "(no record replaces it): upper bound. Blocks are serial (block k+1 consumes block k's hc_post), so critical."))
+    # mtp-fixlat-1011: P2 die-bus link ends (dsfd_p2_lnk at the core pins + dsfd_coll_p2_ep / dsfd_vm_p2_ep): grant
+    # protocol RTT-sized to draft A's relay stations + transaction gate; the plain valid / ready core is not exact over them
+    p2_lnk = 6122 - 6113
+    ch.append(charge(
+        "p2.link_ends", "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)", p2_lnk * len(p2),
+        anchor="draft.blocks", phase="draft", grade="measured (bench log)",
+        formula=f"{len(p2)} P2 transactions x (+{p2_lnk}: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
+        source=["tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0", "~/claude-takeover-20261007/mtp-fixlat-1011.log"],
+        note="the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"))
     # ---- Markov head (MD-6): the composition's transfer ratio vs the measured row-pipeline latency
     mq = J(MARKOV_Q)
     mk_model = next(n["cycles"] for n in mtp["nodes"] if n["id"] == "draft.markov0")
@@ -171,6 +190,60 @@ def ds_rom():
         source=[MARKOV_Q + " first_result_cycles_no_bubbles", "results/arch/token_path_20261009/ds_rom_mtp.json draft.markov*"],
         note="lower bound: the measured single-row pipeline latency is a floor the transfer-ratio model is under; the "
              "whole-vocab sweep throughput needs the head full340_A production wrapper (not built)"))
+    # ---- S81 MTP binding (mtp-dsbind 2026-10-10): the draft dies the composition assumed, as bound
+    if (ROOT / BINDING).exists():
+        bv = J(BINDING)
+        assert bv["PASS"] and bv["primary_phase_reads_not_above_l0"], "S81 MTP binding verdict not PASS"
+        topo = J(BINDING_DIES)["topology"]
+        # (1) routed experts on the 40 MD-2 draft dies, rowpack layout: per block row, its 3 selected experts' GU and
+        #     W2 subphases (the rowpack's worst count) x the measured full-K phase cycles, replacing the DP1-EP5 phases
+        import gzip as _gz
+        rp = json.loads(_gz.open(ROOT / ROWPACK).read())
+        sub = {}
+        for ph in rp["phases"]:
+            k = (ph["stage"], ph["expert"], "gu" if "w1" in ph["ops"] else "w2")
+            sub[k] = sub.get(k, 0) + 1
+        mb = {c["case"]: c["cycles"]["phase_cycles"] for c in J(P2_MICRO)["cases"]}
+        gu_max = max(v for (s, e, o), v in sub.items() if o == "gu")
+        w2_max = max(v for (s, e, o), v in sub.items() if o == "w2")
+        row_gu, row_w2 = 3 * gu_max * mb["gu_packed"], 3 * w2_max * mb["w2_packed"]
+        ex = []
+        for st, s in dr["stages"].items():
+            cp = {p["node"]: p["us"] * CLK / 1e6 for p in s["critical_path"]}
+            ex.append((st, cp["ffn.experts_gu.r0"], cp["ffn.down.r0"]))
+        ch.append(charge(
+            "binding.expert_rowpack", "routed experts on the bound MD-2 draft dies (rowpack whole-superrow layout)",
+            sum(row_gu - g + row_w2 - w for _, g, w in ex), anchor="draft.blocks", phase="draft",
+            grade="measured (component phases)",
+            formula=" + ".join(f"({row_gu:g} - {st} experts_gu {g:.0f} + {row_w2:g} - down {w:.0f})" for st, g, w in ex)
+                    + f"; row = 3 experts x (GU {gu_max} subphases x {mb['gu_packed']} + W2 {w2_max} x {mb['w2_packed']}), "
+                      "all 3 on one die (upper bound; a split mtp.2 row runs A and B in parallel)",
+            source=[BINDING + " (2,401/2,401 mtp.* bound)", ROWPACK + " phases (GU / W2 subphases per expert)",
+                    P2_MICRO + " gu_packed / w2_packed phase_cycles (full-K released operands)",
+                    DRAFT_REC + " stages[*].critical_path ffn.experts_gu.r0 / ffn.down.r0 (DP1-EP5 phases replaced)"],
+            note="the composition timed the experts on DP1-EP5 replicas (L0-pair images, one phase per expert group); the bound "
+                 "40-die P2 home stores them in the rowpack, which needs up to 3 GU + 2 W2 subphases an expert"))
+        # (2) UCIe crossings of the package pair (A <-> B) on the block's critical row
+        hop = dr["rlinks"]["x_row"]
+        sm = dict(re.findall(r"(\w+)=([0-9]+)", hop["summary"]))
+        ucie = int(sm["first_flit"]) - int(sm["leg1_first_flit"])
+        nx = sum(topo["ucie_crossings_a_row"].values())
+        ch.append(charge(
+            "binding.ucie_pair", "MD-2 package-pair UCIe crossings (A -> B forward, B -> A expert return)", nx * ucie,
+            anchor="draft.blocks", phase="draft", grade="measured+vendor",
+            formula=f"{nx} crossings ({topo['ucie_crossings_a_row']}) x {ucie} (UCIe leg: leg1_first_flit -> first_flit, "
+                    "rec_x_row link RTL incl. the 11-cycle vendor channel)",
+            source=[BINDING_DIES + " topology.ucie_crossings_a_row", DRAFT_REC + " rlinks.x_row.summary"]))
+        # (3) the bound primary is its own TP4 group: block output -> head dies is a board hop the composition omitted
+        #     (the seed hop into the primary is already the measured mtp.0 hop_in)
+        hin = next(p["us"] for p in dr["stages"]["mtp.0"]["critical_path"] if p["node"] == "hop_in") * CLK / 1e6
+        ch.append(charge(
+            "binding.primary_to_head", "board hop P.k* -> head group (5 draft rows' hidden state to the LM-head sweep)", hin,
+            anchor="draft.blocks", phase="draft", grade="measured+vendor",
+            formula=f"one 5-row stage hop = the measured mtp.0 hop_in {hin:.1f} cycles (same link, same payload)",
+            source=[BINDING_DIES + " topology.draft_head", DRAFT_REC + " stages['mtp.0'].critical_path hop_in"],
+            note="P2's primary-on-head-dies home made this hop die-local, but it has no room for the seed (669 > 631 pairs) and "
+                 "packs ~8x the words a pair a phase; the bound primary keeps L0's per-phase pair reads"))
     # ---- sensitivity: the RTL-sequenced step (draft from the closing result), NOT credited
     old = J(OLD_STEP)["step_model"]["blend_harmonic"]
     sens = dict(rtl_sequenced_over_model=old["rtl_over_model"], source=OLD_STEP + " step_model.blend_harmonic",
@@ -182,7 +255,8 @@ def ds_rom():
         cycles=hops * per_hop, rule="the WFC kit's per-hop cycles on the AR pass; apply to the AR views when --wfc-hard is "
         "default-on", AR_tok_s_before=hv["AR_tok_s"],
         AR_tok_s_after=round(CLK / (hv["AR_us"] * CLK / 1e6 + hops * per_hop), 1)),
-        inputs=[MTP_ROM_BENCH, WFC_CLOSURE, DRAFT_REC, MARKOV_Q, P2_SRC, P2_MODEL, COMMIT_RTL, OLD_STEP])
+        inputs=[MTP_ROM_BENCH, WFC_CLOSURE, DRAFT_REC, MARKOV_Q, P2_SRC, P2_MODEL, COMMIT_RTL, OLD_STEP]
+        + ([BINDING, BINDING_DIES, ROWPACK, P2_MICRO] if (ROOT / BINDING).exists() else []))
 
 
 # ============================================================================================= HBM accelerator (TP-96)

@@ -1,6 +1,9 @@
 `default_nettype none
 module ot_hbm_svc_core_native #(
-  parameter integer NATIVE=0, ENABLE_NATIVE_BURST=0, NSM = 8, NPC = 32,
+  parameter integer NATIVE=0, ENABLE_NATIVE_BURST=1, NATIVE_NO=8, NSM = 8, NPC = 32,   // [svc] 10-10: bursts ON, 8 native in flight
+  parameter integer NATIVE_CHAIN=1,  // [svc] 10-10: 1 = die-chain protocol (native_v pulses into an NQ-deep queue, native_rdy = credit
+                                     // pulses, native_rsp_rdy ignored: ot_hfd_loader_kport reserves response room); 0 = valid/ready
+  parameter integer NATIVE_NQ=4,     // die-chain request queue depth (= the kport's NQ credits)
   parameter [NSM*5-1:0] SM_PC0 = 0,       // first of SM i's four K pseudo-channels
   parameter [NPC*4-1:0] RSP_ST = 0,       // wire stages, PC p response ingress -> its SM's assembler
   parameter [NSM*4-1:0] REQ_ST = 0,       // wire stages, SM i request port -> its PCs
@@ -122,11 +125,34 @@ module ot_hbm_svc_core_native #(
  .ik_credit(ik_credit),
  .ik_lines(ik_lines),
  .ik_done(ik_done));
- ot_hbm_loader_service_boundary #(.ENABLE(NATIVE),.ENABLE_NATIVE_BURST(ENABLE_NATIVE_BURST),.NPC(NPC)) u_native(
+ // ---- die-chain terminator (hbm-phys [svc] 2026-10-10): lq / lr are multi-cycle forwarded chains, so a combinational
+ // valid / ready pair cannot cross them.  NATIVE_CHAIN 1: the loader sends one native_v pulse per transaction against
+ // NQ credits; a request queue here feeds the boundary and returns one credit pulse (native_rdy) per pop; responses
+ // stream without back-pressure (the kport accepts every response: it reserved buffer room at issue).
+ wire b_v,b_rdy,b_rsp_rdy,q_ovf;wire[4:0]b_pc;wire[29:0]b_addr;wire[15:0]b_tag;wire[3:0]b_len;
+ generate if(NATIVE_CHAIN!=0)begin:g_chain
+  localparam integer QA=(NATIVE_NQ<=1)?1:$clog2(NATIVE_NQ);
+  reg[54:0]nq[0:NATIVE_NQ-1];reg[QA-1:0]qh,qt;reg[QA:0]qn;reg ovf;
+  wire push=native_v&&NATIVE!=0;wire pop=b_v&&b_rdy;
+  always @(posedge ck) if(push&&qn!=(QA+1)'(NATIVE_NQ))nq[qt]<={native_pc,native_addr,native_tag,native_len};
+  always @(posedge ck or negedge phy_rst_n)if(!phy_rst_n)begin qh<=0;qt<=0;qn<=0;ovf<=0;end else begin
+   if(push&&qn==(QA+1)'(NATIVE_NQ))ovf<=1;                       // the loader overran its credits: fail closed
+   if(push&&qn!=(QA+1)'(NATIVE_NQ))qt<=(qt==QA'(NATIVE_NQ-1))?{QA{1'b0}}:qt+1'b1;
+   if(pop)qh<=(qh==QA'(NATIVE_NQ-1))?{QA{1'b0}}:qh+1'b1;
+   qn<=qn+((push&&qn!=(QA+1)'(NATIVE_NQ))?1'b1:1'b0)-(pop?1'b1:1'b0);
+  end
+  assign b_v=qn!=0&&!ovf;assign {b_pc,b_addr,b_tag,b_len}=nq[qh];
+  assign native_rdy=pop;assign b_rsp_rdy=1'b1;assign q_ovf=ovf;
+ end else begin:g_hs
+  assign b_v=native_v;assign native_rdy=b_rdy;assign b_pc=native_pc;assign b_addr=native_addr;assign b_tag=native_tag;
+  assign b_len=native_len;assign b_rsp_rdy=native_rsp_rdy;assign q_ovf=1'b0;
+ end endgenerate
+ wire b_fault;assign native_fault=b_fault||q_ovf;
+ ot_hbm_loader_service_boundary #(.ENABLE(NATIVE),.ENABLE_NATIVE_BURST(ENABLE_NATIVE_BURST),.NPC(NPC),.NATIVE_NO(NATIVE_NO)) u_native(
  .clk(ck),.rst_n(phy_rst_n),.normal_pending_write({NPC{outer_write_pending||n_pending}}|n_busy),
- .native_v(native_v),.native_rdy(native_rdy),.native_pc(native_pc),.native_addr(native_addr),.native_tag(native_tag),.native_len(native_len),
- .native_rsp_v(native_rsp_v),.native_rsp_rdy(native_rsp_rdy),.native_rsp_pc(native_rsp_pc),.native_rsp_tag(native_rsp_tag),
- .native_rsp_beat(native_rsp_beat),.native_rsp_data(native_rsp_data),.native_busy(native_busy),.fault(native_fault),
+ .native_v(b_v),.native_rdy(b_rdy),.native_pc(b_pc),.native_addr(b_addr),.native_tag(b_tag),.native_len(b_len),
+ .native_rsp_v(native_rsp_v),.native_rsp_rdy(b_rsp_rdy),.native_rsp_pc(native_rsp_pc),.native_rsp_tag(native_rsp_tag),
+ .native_rsp_beat(native_rsp_beat),.native_rsp_data(native_rsp_data),.native_busy(native_busy),.fault(b_fault),
  .normal_v(n_k_v),.k_v(k_v),
  .normal_rdy(n_k_rdy),.k_rdy(k_rdy),
  .normal_we(n_k_we),.k_we(k_we),

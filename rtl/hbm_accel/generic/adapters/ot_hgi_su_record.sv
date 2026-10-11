@@ -34,6 +34,10 @@ module ot_hgi_su_record #(
     parameter integer PAYLOAD_RESET = 1, // opt-in0: valid-qualified record/op payloads never drive the reset tree
     parameter integer STREAM_OK = 0,       // 1 (the D1 SU unit): A may be STREAM (stream 0, SM -> SU), O may be STREAM
                                            //    (SU -> ARGMAX); reported on op_strm with the op             // 1: the SFU form (unit 3 SFU.GLU decoded as its one vec op; ot_hgi_sfu_record)
+    parameter integer PIPED = 0,           // hgi-unitrate: 1 = the unit pipelines ops (ot_hgi_su_ctlw): issue whenever it
+                                           //    takes one (op_rdy), up to 3 in flight; retire one per su_ret pulse (the
+                                           //    unit's in-order completion: last drain write landed); refusals / empty
+                                           //    ops retire only with nothing in flight (order kept)
     parameter integer LEGACY = 1           // 1: the static legacy pass-through mux (die wrapper / bench); 0: the routed
                                            //    adapter alone (records only, every output from a register; hgi_en unused)
 ) (
@@ -61,7 +65,8 @@ module ot_hgi_su_record #(
     input  wire          op_rdy,
     output wire [669:0]  op_w,
     input  wire          su_idle,
-    input  wire          su_fault
+    input  wire          su_fault,
+    input  wire          su_ret                // PIPED: one op retired (in order)
 );
     // ---- PFIELDS offsets (tools/rtl_hdc_v41x_vec_campaign.py)
     localparam integer F_NOUT = 0, F_NIN = 16, F_ASRC = 32, F_BSRC = 34, F_CSRC = 36, F_DSRC = 38, F_ABASE = 40,
@@ -81,6 +86,7 @@ module ot_hgi_su_record #(
     // ---- station: raw record (E0), decoded word (E1)
     reg          raw_v, dec_v, exec, halt_q, el_seen;
     reg  [1:0]   exec_ph;                 // edges since the unit accepted (idle is stale for 2 edges)
+    reg  [1:0]   nexec;                   // PIPED: ops in flight in the unit
     reg  [127:0] hdr_q;
     reg  [255:0] sut_q, a_q, b_q, c_q, d_q, o_q, r_q, i_q;
     reg  [20:0]  na_q;
@@ -93,7 +99,7 @@ module ot_hgi_su_record #(
     assign drained = !raw_v && !dec_v && !exec;
     wire   hen     = LEGACY ? hgi_en : 1'b1;
     assign rec_rdy = hen && !raw_v && !dec_v && !halt_q;
-    assign op_v    = hen ? (dec_v && !nop_q && !bad_q && !exec && !halt_q) : lg_v;
+    assign op_v    = hen ? (dec_v && !nop_q && !bad_q && (PIPED ? nexec != 2'd3 : !exec) && !halt_q) : lg_v;
     assign op_w    = hen ? w_q : lg_w;
     assign lg_rdy  = !hen && op_rdy;
 
@@ -163,7 +169,7 @@ module ot_hgi_su_record #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            raw_v <= 1'b0; dec_v <= 1'b0; exec <= 1'b0; halt_q <= 1'b0; el_seen <= 1'b0; exec_ph <= 2'd0;
+            raw_v <= 1'b0; dec_v <= 1'b0; exec <= 1'b0; halt_q <= 1'b0; el_seen <= 1'b0; exec_ph <= 2'd0; nexec <= 2'd0;
             rec_done <= 1'b0; rec_fault <= 1'b0; nop_q <= 1'b0; bad_q <= 1'b0;
             if (PAYLOAD_RESET) begin
                 w_q <= 670'd0;
@@ -188,6 +194,15 @@ module ot_hgi_su_record #(
                 dec_v <= 1'b0;
                 if (bad_q) begin rec_fault <= 1'b1; halt_q <= 1'b1; end else rec_done <= 1'b1;
             end
+            if (PIPED) begin : piped
+                reg take;
+                take = op_v && op_rdy && hen;
+                if (take) dec_v <= 1'b0;
+                nexec <= nexec + {1'b0, take} - {1'b0, su_ret};
+                exec <= (nexec + {1'b0, take} - {1'b0, su_ret}) != 2'd0;
+                if (su_ret && !halt_q) rec_done <= 1'b1;
+                if (in_fault && (exec || take)) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
+            end else
             if (op_v && op_rdy && hen) begin                // the unit took the op
                 dec_v <= 1'b0; exec <= 1'b1; exec_ph <= 2'd0; el_seen <= 1'b0;
                 if (MUT_EARLY) begin rec_done <= 1'b1; exec <= 1'b0; end

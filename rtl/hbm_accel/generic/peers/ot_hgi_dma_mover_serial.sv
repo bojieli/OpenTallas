@@ -159,6 +159,11 @@ module ot_hgi_dma_mover_serial #(
     wire [255:0] put_mask = ((e_n == 4'd4) ? {224'd0, 32'hFFFFFFFF} : (e_n == 4'd2) ? {240'd0, 16'hFFFF} :
                              {248'd0, 8'hFF}) << {e_doff, 3'd0};
     wire last_elem = (o == mm - 20'd1) && (i == nn - 21'd1);
+    reg q_mis, q_smiss, q_dfl, q_last, q_rend;
+    // element steps in bytes, registered from the command fields (route f628d5015: u_ser.sf / dsp -> sa / da 20-21 levels =
+    // the istride x element-size multiply in the address add); the first element step is >= 2 edges after mv_go
+    reg [41:0] s_stp, d_stp;
+    always @(posedge clk) begin s_stp <= {26'd0, sis} * s_es; d_stp <= {26'd0, dis} * ((dsp == 2'd1) ? 3'd4 : d_es); end
     // ---- VM / kport response capture
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
     reg kv_r, kwe_r; reg [255:0] kd_r; reg kf_r;
@@ -188,24 +193,33 @@ module ot_hgi_dma_mover_serial #(
                 end
             end
             if (busy && !mv_fault) case (ph)
+                // hgi-1010/c (route bf6565982: u_ser.sa -> e_raw / k_req_wdata 20-22 levels): phase 0 registers the element's
+                // decisions (alignment, source-sector miss = 37-bit compare, destination flush = 37-bit compare, last);
+                // phase 10 acts on them.  +1 cycle an element on the strided / unaligned engine.
                 4'd0: begin
-                    if ((s_es == 3'd4 && sa[1:0] != 2'd0) || (s_es == 3'd2 && sa[0]) ||
-                        (d_es == 3'd4 && da[1:0] != 2'd0) || (d_es == 3'd2 && da[0])) begin
+                    q_mis <= (s_es == 3'd4 && sa[1:0] != 2'd0) || (s_es == 3'd2 && sa[0]) ||
+                             (d_es == 3'd4 && da[1:0] != 2'd0) || (d_es == 3'd2 && da[0]);
+                    q_smiss <= !sc_ok || sc_sec != s_sec; q_dfl <= db_dirty && db_sec != d_sec;
+                    q_last <= last_elem; q_rend <= i == nn - 21'd1;
+                    ph <= 4'd10;
+                end
+                4'd10: begin
+                    if (q_mis) begin
                         mv_fault <= 1'b1; busy <= 1'b0;                          // an element not naturally aligned
-                    end else if (!sc_ok || sc_sec != s_sec) begin                     // source sector miss: read it
+                    end else if (q_smiss) begin                                       // source sector miss: read it
                         if (ssp == 2'd0) begin k_req_v <= 1'b1; k_req_we <= 1'b0; k_req_addr <= {s_sec[31:0], 5'd0}; end
                         else vmq <= {1'b1, 1'b0, s_sec[26:0], 5'd0, 256'd0, 32'd0, 16'h4D52};
                         ph <= 4'd1;
-                    end else if (db_dirty && db_sec != d_sec) begin          // destination sector change: flush
+                    end else if (q_dfl) begin                                 // destination sector change: flush
                         if (dsp == 2'd0) begin k_req_v <= 1'b1; k_req_we <= 1'b1; k_req_addr <= {db_sec[31:0], 5'd0};
                                                k_req_wdata <= db_dat; k_req_wstrb <= db_strb; end
                         else vmq <= {1'b1, 1'b1, db_sec[26:0], 5'd0, db_dat, db_strb, 16'h4D57};
                         ph <= 4'd2;
                     end else begin                                            // the element: land its source word
-                        e_raw <= raw32; e_soff <= s_off[1:0]; e_doff <= d_off; e_dsec <= d_sec; e_last <= last_elem;
+                        e_raw <= raw32; e_soff <= s_off[1:0]; e_doff <= d_off; e_dsec <= d_sec; e_last <= q_last;
                         ph <= 4'd6;
-                        if (last_elem) ;
-                        else if (i == nn - 21'd1) begin
+                        if (q_last) ;
+                        else if (q_rend) begin
                             i <= 0; o <= o + 20'd1;
                             srow <= srow + ((ssp == 2'd1) ? {8'd0, sst, 2'b00} : {10'd0, sst});
                             sa   <= srow + ((ssp == 2'd1) ? {8'd0, sst, 2'b00} : {10'd0, sst});
@@ -213,8 +227,8 @@ module ot_hgi_dma_mover_serial #(
                             da   <= drow + ((dsp == 2'd1) ? {8'd0, dst, 2'b00} : {10'd0, dst});
                         end else begin
                             i <= i + 21'd1;
-                            sa <= sa + ({26'd0, sis} * s_es);
-                            da <= da + ({26'd0, dis} * ((dsp == 2'd1) ? 3'd4 : d_es));
+                            sa <= sa + s_stp;
+                            da <= da + d_stp;
                         end
                     end
                 end

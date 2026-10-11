@@ -1,0 +1,23 @@
+hgi-1010/d SU lane-local banked lmem (WIDE=0) + valid-driven drain/STREAM-out + sector lanes NS; merged tree on main 64d47d89b-era + b's WIDE; epyc1tb 2026-10-10
+su: case 3: 1 records retired in 1389 cycles (stage + compute + drain) HGI_SU_UNIT PASS 
+subeh: case 3: 1 records retired in 1389 cycles (stage + compute + drain) HGI_SU_UNIT PASS 
+sul1: case 3: 1 records retired in 1429 cycles (stage + compute + drain) HGI_SU_UNIT FAIL errors=2573 
+sul2: case 3: 1 records retired in 1349 cycles (stage + compute + drain) HGI_SU_UNIT FAIL errors=2556 
+sul3: case 3: 1 records retired in 1349 cycles (stage + compute + drain) HGI_SU_UNIT FAIL errors=2572 
+sul4: case 3: 1 records retired in 1429 cycles (stage + compute + drain) HGI_SU_UNIT FAIL errors=1872 
+sud: case 3: 1 records retired in 1389 cycles (stage + compute + drain) HGI_SU_UNIT FAIL errors=11 
+sfu: case 1: 1 records retired in 3316 cycles (stage + compute + drain) HGI_SFU_UNIT PASS 
+st: case 2: n 37984, stream -> scale -> argmax in 67800 cycles HGI_SU_STREAM PASS 
+stl3: case 2: n 37984, stream -> scale -> argmax in 63052 cycles HGI_SU_STREAM FAIL errors=3 
+stl4: case 2: n 37984, stream -> scale -> argmax in 72548 cycles HGI_SU_STREAM PASS 
+fud: case 11: 1 records in 512285 cycles HGI_FUSED_UNIT FAIL errors=5119 
+fudw: case 11: 1 records in 7341 cycles HGI_FUSED_UNIT FAIL errors=5119 
+lm: HGI_SU_LMEM PASS 
+prod: HGI_SU_PROD PASS 
+prodw: HGI_SU_PROD PASS 
+prodw512: HGI_SU_PROD PASS 
+prodd: HGI_SU_PROD PASS 
+
+[exited with code 0]
+fud/fudw: case 10 (FUSED HC_PRE_NORM d 5120, main's new F10 case) fails IDENTICALLY on WIDE=0 and on b's WIDE=1 (same VM words) -> b's open F10 fix, not the lmem; every other FUSED case exact
+keys: su/subeh/sfu/st/lm positives PASS; MUT_LAT 1 (+1 bank edge) 2 (-1) 3 (valid early) 4 (valid late) FAIL on su_unit; stream MUT_LAT 3 FAIL, 4 tolerated (one read outstanding: late valid sees held data); MUT_DIRTY FAIL; b's DS 27-record chain (run_su_prod) PASS at N64 on this lmem (WIDE=0) and on WIDE=1 N64 / N512 M128

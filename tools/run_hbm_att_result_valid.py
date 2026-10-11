@@ -16,6 +16,12 @@ SOURCES=['rtl/test/tb_hbm_att_result_valid.sv',
          'rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv',
          'rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv',
          'rtl/hdc/v41x/ot_hdc_v41x_attn_bank.sv']
+def source_commit():
+    # a closure-loop source snapshot carries no .git: its SOURCE_COMMIT file names the commit (hgi-1010/c: the git call
+    # made the positive bench rc 1 and the negative 'fail' for the wrong reason)
+    f=ROOT/'SOURCE_COMMIT'
+    if f.exists(): return f.read_text().strip()
+    return subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--negative-only", action="store_true"); args=ap.parse_args()
     out=ROOT/'results/rtl/hbm_att_result_valid_20261010_r2'
@@ -33,7 +39,7 @@ def main():
             runs.append(dict(CG=cg,returncode=res.returncode,
                              passed='ATT_VALID PASS' in log and res.returncode==0))
     rec=dict(schema='opentallas.hbm_att_result_valid.v1',
-             parent_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+             parent_commit=source_commit(),
              source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in SOURCES},
              consumer_mechanism='real die tile/hi merge and output bank',
              quad_vehicle='injected hardened-result boundary; arithmetic outside gate',

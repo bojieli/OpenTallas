@@ -72,6 +72,7 @@ class RegistryTest(unittest.TestCase):
             model.option_b = lambda: ({}, {}); model.revoked_jobs = lambda: {}; model.superseded = lambda: {}
             model.registry = lambda: ({}, [])
             model.overrides_path = model.repo / 'overrides.json'; model.ovk = (None, {})
+            model.superseded_path = model.repo / 'superseded'; model.revoked_path = model.repo / 'revoked'
             def job(name, block, status, owner='Codex:t4'):
                 return Elements.reduce(dict(name=name, status=status, spec=dict(block=block, owner=owner),
                                             metrics=dict(setup_corner='tt', ss_ps=1, ff_ps=1, drc=0)))
@@ -100,8 +101,32 @@ class RegistryTest(unittest.TestCase):
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertEqual(rows['hfd_tap']['category'], 'first trial in flight')   # the master instance is required too
             jobs[2] = job('l0', 'hfd_tap', 'CLOSED')
+            model.superseded = lambda: {'ot_hbm_x': dict(by='ot_hbm_x_wide1036', reason='t')}
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(rows['ot_hbm_x_wide1036']['category'], 'first trial in flight')   # unfolded, still open
+            model.superseded = lambda: {}
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertTrue(rows['hfd_tap']['category'].startswith('closed'))   # every instance closed
+
+
+class SupersededInstanceFoldTest(unittest.TestCase):
+    def test_instance_fold_into_superseded_parent_does_not_break_compute(self):
+        """fill-9 2026-10-10: an 'instance' fold whose parent is superseded froze /api/elements (KeyError)."""
+        with tempfile.TemporaryDirectory() as td:
+            model = Elements.__new__(Elements)
+            model.repo = pathlib.Path(td)
+            model.desc = Describer(); model.area = {}
+            model.option_b = lambda: ({}, {})
+            model.revoked_jobs = lambda: {}
+            model.superseded = lambda: {'parent_elem': dict(by='child_blk', reason='adopted')}
+            model.overrides = lambda: dict(variants={'child_blk': dict(of='parent_elem', kind='instance')},
+                                           owner_map={}, owners={})
+            model.overrides_path = model.repo / 'overrides'
+            model.revoked_path = model.repo / 'revoked'; model.superseded_path = model.repo / 'superseded'
+            model.jobs = lambda: [Elements.reduce(dict(name='child_blk-0123456789-tc', status='CLOSED',
+                spec=dict(block='child_blk'), metrics=dict(setup_corner='tt', ss_ps=5, ff_ps=3, drc=0)))]
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertIn('child_blk', rows)
 
 
 if __name__ == '__main__': unittest.main()
