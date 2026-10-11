@@ -298,9 +298,9 @@
       tag_ = $urandom;
       idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
 `ifdef NEP
-      // [svc-ep] N9: the attention entry returns one kq credit per consumed row (hfd_attn_half_lo d590eb8b0), so KV
-      // streams toward it are CREDITED; every other KV stream here is credited on kq (the rest stay no-credit)
-      if (!idx_ && ps_n % 2 == 1) nocr_ = 1'b0;
+      // [svc-ep] N9: consumers return one credit per consumed row (attention entry hfd_attn_half_lo d590eb8b0 on kq, the
+      // index score grid on kc), so KV streams are CREDITED by default; stream 1 stays the one explicit no-credit case
+      if (!idx_) nocr_ = (ps_n == 1);
 `endif
       nsec_ = idx_ ? 0 : 1 + ($urandom % ((ps_n % 4 == 0) ? 1100 : 70));
       m = (ps_n % 2) ? {$urandom} : 32'hFFFF_FFFF;
