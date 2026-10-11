@@ -46,7 +46,12 @@ module ot_qwen_nearhbm_attn_hub_p #(
     // ANR = 1 (hardcore-1010 fe-h, 2026-10-10; 0 = unchanged): the FP32 adders as ot_hdc_fp32_add_lat_nr (cut bundles reset
     // only their valid bit; kept copy for the B2a pass-through).  qkd_ahub_b-eafd37271 FF -25.1 sat on the adders'
     // zero-logic cut hops (s1_code -> u_cb.r, u_cc.r -> y, u_ca.r -> s1_v).  Bit-identical, 0 cycles.
-    parameter integer ANR = 0
+    parameter integer ANR = 0,
+    // PSRAM = 1 (qwen-1010/b 2026-10-11; 0 = unchanged): the P.V beat buffer pb (256 x 512 b = 4 stacks x 64 beats, one
+    // write and one read per stack a cycle) in 8 ot_sram_1r1w_128x256 macros (two per stack, the upper 64 rows unused),
+    // read address = the stage-0 copy, data = the macro's registered output at the stage-1 edge (the flop array's sx):
+    // the same cycle, so bit-identical, 0 cycles.  Removes the SYNTH_MEMORY_MAX_BITS override with zm packed.
+    parameter integer PSRAM = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -121,6 +126,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
     reg [3:0]    siv_c, piv_c;
     reg [7:0]    sit_c;  reg [3:0] sig_c;  reg [3:0] sia_c;  reg [127:0] sid_c;  reg [3:0] pig_c;
     reg [2047:0] pid_c;
+    reg [19:0]   pib_c;                           // PSRAM: the beat of each stack's write
     reg [31:0]   lm_we;
     reg [511:0]  zs_we;
     wire [1023:0] pb_we;                          // one copy per 128-bit quarter of a beat: [256*q + entry]
@@ -129,10 +135,15 @@ module ot_qwen_nearhbm_attn_hub_p #(
         else begin start_c <= start_b; siv_c <= siv_b; piv_c <= piv_b; lm_we <= lm_we_n; zs_we <= zs_we_n; end
     always @(posedge clk) begin
         sit_c <= sit_b; sig_c <= sig_b; sia_c <= sia_b; sid_c <= sid_b; pig_c <= pig_b; pid_c <= pid_b;
+        for (sd_ = 0; sd_ < 4; sd_ = sd_ + 1) pib_c[5*sd_ +: 5] <= pib_b[6*sd_ +: 5];
     end
     genvar gq;
-    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_pbwe
-        (* keep_hierarchy *) ot_nhb_dup_we256 u_we (.clk(clk), .rst_n(rl[0]), .d(pb_we_n), .q(pb_we[256*gq +: 256]));
+    generate if (PSRAM == 0) begin : g_pbwe_f
+        for (gq = 0; gq < 4; gq = gq + 1) begin : g_pbwe
+            (* keep_hierarchy *) ot_nhb_dup_we256 u_we (.clk(clk), .rst_n(rl[0]), .d(pb_we_n), .q(pb_we[256*gq +: 256]));
+        end
+    end else begin : g_pbwe_s
+        assign pb_we = 1024'd0;
     end endgenerate
 
     // ---- max --------------------------------------------------------------------------------------------------------
@@ -200,7 +211,9 @@ module ot_qwen_nearhbm_attn_hub_p #(
     end
 
     // ---- Z: block sums, tree, reciprocal ------------------------------------------------------------------------------
-    reg [31:0] zm [0:511];                        // {g, h, node}
+    // qwen-1010/b 2026-10-11: one packed vector, not an array (512 x 32 b, 9 writers / 33 readers a cycle: flops by
+    // design; as an array it needed SYNTH_MEMORY_MAX_BITS raised so Yosys would map it to flops)
+    reg [32*512-1:0] zm;                          // {g, h, node} x 32 b
     reg [511:0] zv;
     reg [2:0]  zdc0, zdc1;
     reg        zrun, zg, zwait_recip;
@@ -243,7 +256,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
                     wire [5:0] pzz = {1'b0, zp[5:0]} + gz;
                     (* keep_hierarchy *) ot_nhb_dup_a6 u_a (.clk(clk), .d({zg, pzz[4:0]}), .q(a));
                     wire [8:0] ix = {a[5], gh[1:0], a[4:0], gb[0]};
-                    wire [15:0] rd = zv[ix] ? zm[ix][16*gf +: 16] : 16'd0;
+                    wire [15:0] rd = zv[ix] ? zm[32*ix + 16*gf +: 16] : 16'd0;
                     if (gb == 0) begin : g_a
                         always @(posedge clk) za_r[32*(4*gz+gh) + 16*gf +: 16] <= rd;
                     end else begin : g_bb
@@ -288,11 +301,11 @@ module ot_qwen_nearhbm_attn_hub_p #(
     reg        rg_out;
     always @(posedge clk or negedge rl[6]) if (!rl[6]) rv1 <= 1'b0; else rv1 <= rv0;
     always @(posedge clk) begin
-        rx <= zv[{ra0[2], ra0[1:0], 6'd0}] ? zm[{ra0[2], ra0[1:0], 6'd0}] : 32'd0;
+        rx <= zv[{ra0[2], ra0[1:0], 6'd0}] ? zm[32*{ra0[2], ra0[1:0], 6'd0} +: 32] : 32'd0;
         for (e_ = 0; e_ < 512; e_ = e_ + 1) begin
             for (z4_ = 0; z4_ < ZW; z4_ = z4_ + 1)
-                if (zw_oh[z4_][{e_[8], e_[5:0]}]) zm[e_] <= zy_r[32*(4*z4_ + e_[7:6]) +: 32];
-            if (zs_we[e_]) zm[e_] <= sid_c[32*(e_ % 4) +: 32];
+                if (zw_oh[z4_][{e_[8], e_[5:0]}]) zm[32*e_ +: 32] <= zy_r[32*(4*z4_ + e_[7:6]) +: 32];
+            if (zs_we[e_]) zm[32*e_ +: 32] <= sid_c[32*(e_ % 4) +: 32];
         end
         if (rvo) rz[{rg_out, rcnt[1:0]}] <= ry;
     end
@@ -382,12 +395,13 @@ module ot_qwen_nearhbm_attn_hub_p #(
 `endif
 
     // ---- P.V: levels 8-9 and x 1/Z ----------------------------------------------------------------------------------
-    reg [511:0] pb [0:255];                        // {g, s, beat}
+    reg [511:0] pb [0:(PSRAM != 0 ? 0 : 255)];     // {g, s, beat}; PSRAM: in the macros (one unused word left)
     reg [5:0]   pc [0:7];
     reg         pg;
     reg [5:0]   pp;
     reg [1:0]   pdone;
     always @(posedge clk)
+        if (PSRAM == 0)
         for (e3_ = 0; e3_ < 256; e3_ = e3_ + 1)
             for (s4_ = 0; s4_ < 4; s4_ = s4_ + 1)
                 if (pb_we[256*s4_ + e3_]) pb[e3_][128*s4_ +: 128] <= pid_c[512*((e3_ / 32) % 4) + 128*s4_ +: 128];
@@ -412,6 +426,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
     reg [2047:0] sx, sr;                           // {stack s} x 512 bits (packed: Yosys re-elaborates unpacked ports)
     genvar gs, gl;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
+        if (PSRAM == 0) begin : g_f
         for (gl = 0; gl < 16; gl = gl + 1) begin : g_rd
             wire [5:0] a;                          // {g, beat}
             (* keep_hierarchy *) ot_nhb_dup_a6 u_a (.clk(clk), .d({pg, pp[4:0]}), .q(a));
@@ -419,6 +434,22 @@ module ot_qwen_nearhbm_attn_hub_p #(
                 sx[512*gs + 32*gl +: 32] <= pb[{a[5], gs[1:0], a[4:0]}][32*gl +: 32];
                 sr[512*gs + 32*gl +: 32] <= sx[512*gs + 32*gl +: 32];
             end
+        end
+        end else begin : g_m
+        for (gl = 0; gl < 2; gl = gl + 1) begin : g_h
+            wire [5:0]   a;                        // {g, beat}
+            wire [255:0] q;
+            (* keep_hierarchy *) ot_nhb_dup_a6 u_a (.clk(clk), .d({pg, pp[4:0]}), .q(a));
+`ifdef KVD_PBMUT
+            wire [5:0] ar = a ^ 6'd1;              // bench mutant: the neighbouring beat
+`else
+            wire [5:0] ar = a;
+`endif
+            ot_sram_1r1w_128x256_m1_r2c2 u_pb (.clk(clk), .r_ce_in(1'b1), .r_addr_in({1'b0, ar}), .rd_out(q),
+                .w_ce_in(piv_c[gs]), .w_addr_in({1'b0, pig_c[gs], pib_c[5*gs +: 5]}), .wd_in(pid_c[512*gs + 256*gl +: 256]),
+                .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            always @(posedge clk) sr[512*gs + 256*gl +: 256] <= q;
+        end
         end
     end endgenerate
     wire [5:0]   phh6 = pp / BPH;
