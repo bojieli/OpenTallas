@@ -32,6 +32,7 @@ module tb_hbm_stream_bw;
   parameter integer CONS = 0;
   parameter integer WR_EN = 0;                // qwen-1010/b: the KV-die controller element runs WR_EN 1 (WQ 4) and PULLIN
   parameter integer PULLIN = 0;
+  parameter integer WSETP = 1;
   parameter integer OMUT = 0;
   parameter real    ENG_RATE = 1.171875;
   localparam integer NS = 1024;               // sectors per PC per layer
@@ -46,7 +47,7 @@ module tb_hbm_stream_bw;
   wire [31:0] row_v, col_v, busy; wire [95:0] row_op; wire [159:0] row_bank, col_bank, col_col;
   wire [607:0] row_row; reg [95:0] cred_ret = 0; wire fault;
   reg [18:0] desc_row = 0;
-  ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(REF_MODE), .CRED(CRED), .PHASE(PHASE), .WR_EN(WR_EN), .PULLIN(PULLIN)) dut (
+  ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(REF_MODE), .CRED(CRED), .PHASE(PHASE), .WR_EN(WR_EN), .PULLIN(PULLIN), .WSETP(WSETP)) dut (
     .clk(clk), .rst_n(rst_n), .desc_v(desc_v), .desc_r(desc_r), .desc_row(desc_row), .desc_n(11'(NS)),
     .go(go), .next_posted(B2B != 0), .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
     .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .cred_ret(cred_ret), .busy(busy), .fault(fault),
@@ -68,6 +69,10 @@ module tb_hbm_stream_bw;
   longint p_last_act [0:31], p_last_rd [0:31], p_last_ref [0:31], p_last_refpb_any [0:31];
   longint p_act_bg [0:31][0:3], p_rd_bg [0:31][0:3], p_faw [0:31][0:3];
   bit [31:0] p_round [0:31];
+  longint p_nref [0:31]; longint p_t0 [0:31];
+  function automatic longint p_due(input int p);   // REFpb slots due by now (one every REFI / 32 from the PC's first due)
+    p_due = (now < p_t0[p]) ? 0 : (now - p_t0[p]) / (REFI / 32) + 1;
+  endfunction
   longint viol = 0, n_act = 0, n_pre = 0, n_rd = 0, n_ref = 0, n_preall = 0, max_ref_gap = 0;
   task automatic v(input string what, input integer pc, input integer bk);
     if (viol < 20) $display("VIOLATION t=%0d ps pc=%0d bank=%0d %s", now, pc, bk, what);
@@ -151,17 +156,24 @@ module tb_hbm_stream_bw;
             if (now < p_last_refpb_any[p] + RREFD) v("tRREFD (REFpb after REFpb)", p, bk);
             if (p_round[p][bk]) v("REFpb bank twice in one round", p, bk);
             p_round[p][bk] = 1; if (&p_round[p]) p_round[p] = 0;
-            if (now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 2000 : 0)) v("REFpb late", p, bk);
+            // PULLIN > 0 (qwen-1010/b): JEDEC pull-in -- a REFpb may come ahead of its slot and the slot is then skipped;
+            // the rule is cumulative (never fewer REFpb than slots due, at most 8 ahead), not the interval
+            if (PULLIN == 0 && now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 2000 : 0)) v("REFpb late", p, bk);
             if (now - p_last_ref[p] > max_ref_gap) max_ref_gap = now - p_last_ref[p];
-            p_last_ref[p] = now; p_last_refpb_any[p] = now;
+            p_last_ref[p] = now; p_last_refpb_any[p] = now; p_nref[p]++;
+            if (PULLIN != 0 && p_nref[p] > p_due(p) + 8) v("REFpb pulled in more than 8 ahead", p, bk);
             b_ref_end[p][bk] = now + RFCPB;
           end
           default: v("unknown row op", p, bk);
         endcase
       end
       // a refresh may never be overdue (strict schedule), checked every cycle
-      if (now - p_last_ref[p] > (REF_MODE ? REFI / 32 : REFI)) begin
-        v("refresh overdue", p, 0); p_last_ref[p] = now;
+      if (PULLIN == 0 || REF_MODE == 0) begin
+        if (now - p_last_ref[p] > (REF_MODE ? REFI / 32 : REFI)) begin
+          v("refresh overdue", p, 0); p_last_ref[p] = now;
+        end
+      end else if (p_nref[p] < p_due(p) - 1) begin      // cumulative (one slot of issue latency)
+        v("refresh overdue (cumulative)", p, 0); p_nref[p] = p_due(p);
       end
       if (col_v[p]) begin
         automatic int bk = col_bank[p*5 +: 5], cl = col_col[p*5 +: 5], g = bk & 3;
@@ -291,6 +303,7 @@ module tb_hbm_stream_bw;
         automatic int P = REF_MODE ? 118 : 3808;                     // RTL refresh period (cycles)
         automatic int base = (PHASE + (p * P) / 32) % P;
         p_last_ref[p] = longint'(base + ((base + P + p) % 2)) * CYC;  // first due one period later
+        p_t0[p] = p_last_ref[p] + REFI / 32; p_nref[p] = 0;
       end p_last_refpb_any[p] = -1000000;
       p_round[p] = 0; jcnt[p] = 0;
       for (int g = 0; g < 4; g++) begin p_act_bg[p][g] = -1000000; p_rd_bg[p][g] = -1000000; p_faw[p][g] = -1000000; end
