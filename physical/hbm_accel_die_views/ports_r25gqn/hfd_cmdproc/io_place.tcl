@@ -3307,7 +3307,7 @@ place_pin -pin_name {cSW[823]} -layer M4 -location {0.0960 501.8520} -pin_size {
 place_pin -pin_name {cSW[824]} -layer M4 -location {0.0960 501.9480} -pin_size {0.1920 0.0240}
 place_pin -pin_name {cSW[825]} -layer M4 -location {0.0960 502.0440} -pin_size {0.1920 0.0240}
 place_pin -pin_name {cSW[826]} -layer M4 -location {0.0960 502.1400} -pin_size {0.1920 0.0240}
-place_pin -pin_name {ck[0]} -layer M5 -location {261.1800 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck[0]} -layer M5 -location {260.9400 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_barrier[0]} -layer M5 -location {504.0600 1403.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_barrier[1]} -layer M5 -location {504.1080 1403.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_barrier[2]} -layer M5 -location {504.1560 1403.8800} -pin_size {0.0240 0.1920}
@@ -22463,7 +22463,7 @@ place_pin -pin_name {f_mtp[513]} -layer M5 -location {250.9080 0.0960} -pin_size
 place_pin -pin_name {f_mtp[514]} -layer M5 -location {250.9560 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_mtp[515]} -layer M5 -location {251.0040 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_mtp[516]} -layer M5 -location {251.0520 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rst[0]} -layer M5 -location {260.9400 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst[0]} -layer M5 -location {261.1800 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_barrier[0]} -layer M5 -location {962.9880 1403.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_barrier[1]} -layer M5 -location {963.0360 1403.8800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_barrier[2]} -layer M5 -location {963.0840 1403.8800} -pin_size {0.0240 0.1920}
