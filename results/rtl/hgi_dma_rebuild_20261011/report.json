@@ -20,5 +20,15 @@
   "tb_hgi_dma_front XP=1": "PASS 2,921,984 B in 5,319 cycles (549.3 B/cycle; XP=0 540.5)",
   "MUT1/2/3/4/5 (XP=1)": "all FAIL"
  },
- "host": "ot-epyc3, Verilator 5.050, ot-heavy"
+ "host": "ot-epyc3, Verilator 5.050, ot-heavy",
+ "front_nl2_bd89eceb8": {
+  "shape": "NL=2 (8 svc lanes, 4 stacks x 2), NB=32, XP=1: the front sized to its budget (DMA.LOAD 11.05 B/cycle while a load runs; HC rows 23.8)",
+  "tb_hgi_dma_front NL=2 XP=1": "PASS 2,921,984 B in 14,598 cycles = 200.2 B/cycle overall (18x the DMA.LOAD budget)",
+  "NL=2 XP=0": "PASS 202.3 B/cycle",
+  "MUT1-5 (NL=2 XP=1)": "all FAIL",
+  "routes": [
+   "hgi_dma_front_n2a-a2fb5da71-tc-cl (340 um)",
+   "hgi_dma_front_n2b-a2fb5da71-tc-cl (380 um)"
+  ]
+ }
 }
