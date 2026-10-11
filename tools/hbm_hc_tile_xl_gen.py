@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hbm_hub_quarter_gen as H
 
 PORTS = 'physical/hbm_accel_die_views/hcp/r25gq/ports/hfd_hc/ports.json'
-STRIP = 30.24          # 70 x 0.432: 162 bc pins / edge over M5 0.096 + M7 0.128 slots (~5.4 b/um); ~870 flops
+STRIP = 64.8           # 150 x 0.432: tile 151.632 x 120.96, macro 9,814 + std ~300 um2 in ~18,180 um2 core = ~55.6 % (30.24: 72 %, FLOORPLAN_MARGIN 31c3923b9)
 LANE_W, LANE_H = 85.32, 115.02
 TILE_W = round(STRIP + LANE_W + 1.512, 3)      # 117.072 = 2,168 sites
 TILE_H = 120.96                                 # 448 rows; core 119.88 = 1.08 mod 5.4 = the su tile PDN phase (pdn_tile_xl.tcl: a VDD M6 strap below the lane, a VSS strap above it, PSM-0069)
