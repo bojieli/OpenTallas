@@ -53,6 +53,7 @@ endmodule
 //     carrying the BF16 value) or O + 16 gi (BF16 = 0); a gathered flit gi = q pf + m from rank q lands element
 //     e = 16 m + j at O + e iff e is in rank q's even-split slice [floor(q n / G), floor((q + 1) n / G)) (spec 6.7
 //     ALL_GATHER; the SU's selection rule is not specified in RTL);
+//     ARGMAX_MERGE: the endpoint's fold (ot_hgi_coll_amerge) emits ONE flit, the merged token in word 0 -> O word 0;
 //   * the switch tier + the other ranks (the established single-rank method of tb_hbm_accel_tu_endpoint /
 //     tb_hgi_coll_bypass): every departure of this die releases the symmetric peer flits LATC cycles later -- peers'
 //     partials carry their exported A contributions (real operands: this die's owned slice is reduced by the RTL tree
@@ -191,7 +192,10 @@ module hgi_e2e_coll_slot #(
 `ifdef E2E_COLL_DEBUG
                 $display("E2E COLL DBG cyc %0d deliver lane %0d gi %0d src %0d", cyc, l, gi, int'(f[FW+16 +: 8]));
 `endif
-                if (isbyp != 0 && u_ce.g_slice) begin      // F3: {lanes, w}: words O + w .. + lanes - 1
+                if (u_ce.amx_run) begin                    // ARGMAX_MERGE (hgi-1010/g3): the folded token flit -> O word 0
+                    if (gi != 0) $fatal(1, "E2E COLL: ARGMAX_MERGE delivered flit gi %0d (the fold emits one flit, gi 0)", gi);
+                    e2e_vm_wr(6, obase, int'(f[31:0]));
+                end else if (isbyp != 0 && u_ce.g_slice) begin      // F3: {lanes, w}: words O + w .. + lanes - 1
                     for (integer j = 0; j < 16; j = j + 1)
                         if (j < int'(f[FW+24 +: 8])) e2e_vm_wr(6, obase + gi + j, int'(f[32*j +: 32]));
                 end else if (isbyp != 0) begin

@@ -300,13 +300,14 @@ def export_ds(a):
     prog = a.out / "ds_program.json"
     a.out.mkdir(parents=True, exist_ok=True)
     argv = ["ds_native", "--layers", str(a.layer), "--refs", str(a.refs), "--out", str(a.out / "ds_native_run.json"),
-            "--program-out", str(prog)] + (["--iks"] if a.iks else [])
+            "--program-out", str(prog)] + (["--iks"] if a.iks else []) + (["--head"] if a.head else [])
     sys.argv = argv
     rc = DN.main()
     run = json.loads((a.out / "ds_native_run.json").read_text())
     cap, die0 = st["cap"], st["die0"]
     d = json.loads(prog.read_text())
-    lay = d["layers"][0]
+    # the vehicle is the LAST layer run (--head: L39 runs to enter the head; run_per_die keeps the last layer's state)
+    lay = d["layers"][-1]
     recs = []
     for x in lay["records"]:
         r, _ = decode_one(bytes.fromhex(x["hex"]), 0)
@@ -392,8 +393,8 @@ def export_ds(a):
                 out[lo - addr:hi - addr] = img[lo - b0:hi - b0]
         return bytes(out)
     (a.out / "vm0.bin").write_bytes(st["vm0"].astype("<u4").tobytes())
-    res = run["results"][0]
-    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=f"ds_L{a.layer}_1M",
+    res = run["results"][-1]
+    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=("ds_head_1M" if a.head else f"ds_L{a.layer}_1M"),
                 layer=a.layer, position=st["pos"], rank=0, group=96, token=int(st["token"]),
                 layer_verdict_sim_vs_golden=res["verdict"], sim_regions=[(x.get("region"), x.get("bit_exact"))
                                                                          for x in res.get("regions", [])],
@@ -543,6 +544,8 @@ def main():
     ap.add_argument("--layer", type=int, default=0)
     ap.add_argument("--position", type=int, default=8191)
     ap.add_argument("--sm-weights", action="store_true", help="also export the SM weight bytes (real SM runs)")
+    ap.add_argument("--head", action="store_true", help="ds: the vehicle is the LM head (+ ARGMAX.LOCAL / COLL.ARGMAX_MERGE); "
+                    "--layer 39 is run first to enter it")
     ap.add_argument("--iks", action="store_true", help="ds: IKS key regions + IDX.INDEX operand I, and the rank-0 key image "
                     "in the IKS layout (native IDX.INDEX runs)")
     ap.add_argument("--out", type=Path, required=True)
