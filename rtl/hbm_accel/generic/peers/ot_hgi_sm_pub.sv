@@ -576,7 +576,7 @@ module ot_hgi_sm_pub_slice #(
         if (!rn) begin k_go <= 1'b0; rv_q <= '0; ack_q <= 1'b0; cr_q <= 1'b0; end
         else begin k_go <= c_go; rv_q <= sm_rv; ack_q <= w_ack; cr_q <= so_cr; end
     // ---- the held command and its precomputed offsets
-    reg busy, sm_m, obf, nv; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
+    reg busy, sm_m, obf, nv, nv1; reg [20:0] dif [0:NSS-1]; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
     reg [17:0] pofs [0:NC-1]; reg [19:0] pgi [0:NC-1];
     reg [19:0] sqc [0:NSS-1], need [0:NSS-1], recv [0:NSS-1];
     wire [19:0] sq [0:NSS-1];                         // s x Q of the global SM (MUT_ROW: 0 in the addresses only)
@@ -625,7 +625,7 @@ module ot_hgi_sm_pub_slice #(
     always @(posedge clk) for (c = 0; c < NC; c = c + 1) if (dr_v2 && dr_q2 == c) m_cap[c] <= m_rd[c];
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; nv <= 1'b0; all_rows <= 1'b0; s_done <= 1'b0; s_fault <= 1'b0;
+            busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; nv <= 1'b0; nv1 <= 1'b0; all_rows <= 1'b0; s_done <= 1'b0; s_fault <= 1'b0;
             w_v <= 1'b0; so_v <= 1'b0; tok <= 1'b0; cr <= SDW'(SD); sweep <= 1'b0; sw_i <= '0; open_q <= 1'b0;
             p_v <= 1'b0; r_v <= 1'b0; d_v <= 1'b0; rrp <= '0; d_sp <= 4'd0; m_we <= '0; m_re <= '0;
             dr_v <= 1'b0; dr_v2 <= 1'b0; dr_v3 <= 1'b0; dr_rr <= '0; hq_n <= 2'd0; hq_h <= 1'b0; hq_t <= 1'b0;
@@ -635,7 +635,7 @@ module ot_hgi_sm_pub_slice #(
             for (c = 0; c < NC; c = c + 1) begin pq_n[c] <= '0; pq_h[c] <= '0; pq_t[c] <= '0; end
         end else begin : main
             reg [ADW:0] an [0:NSS-1]; reg [PQW:0] qn_ [0:NC-1]; reg [1:0] pf_ [0:NSS-1][0:NC-1];
-            reg ok, d_stall, r_hold, beat, dr_go, done_now; integer sl;
+            reg ok, beat, dr_go, done_now; integer sl;
             s_done <= 1'b0; w_v <= 1'b0; so_v <= 1'b0; m_we <= '0; m_re <= '0;
             for (s = 0; s < NSS; s = s + 1) an[s] = af_n[s];
             for (c = 0; c < NC; c = c + 1) qn_[c] = pq_n[c];
@@ -646,19 +646,24 @@ module ot_hgi_sm_pub_slice #(
                 open_q <= o;
             end
             // ---- the command (fields from the pin flops); need follows one edge later
-            nv <= busy;
             all_rows <= nv && busy && &rdone;
             if (k_go) begin
-                busy <= 1'b1; sm_m <= k_sm; obf <= k_bf; mm <= k_mm; qq <= k_qq; pp <= k_pp; nv <= 1'b0; all_rows <= 1'b0;
+                busy <= 1'b1; sm_m <= k_sm; obf <= k_bf; mm <= k_mm; qq <= k_qq; pp <= k_pp; nv <= 1'b0; nv1 <= 1'b0;
+                all_rows <= 1'b0;
                 sweep <= 1'b0;
                 for (p = 0; p < NC; p = p + 1) begin pofs[p] <= k_ob + 18'(p * k_ost); pgi[p] <= 20'(p * k_mm); end
                 for (s = 0; s < NSS; s = s + 1) sqc[s] <= 20'(({17'd0, sid} * NSS + s) * {7'd0, k_qq});
             end
-            if (busy && !nv)
-                for (s = 0; s < NSS; s = s + 1) begin : nd
-                    reg [19:0] r0; r0 = sqc[s];
-                    need[s] <= !sm_en[s] ? 20'd0 : (mm > r0) ? (((mm - r0) > {7'd0, qq}) ? {7'd0, qq} : mm - r0) : 20'd0;
-                end
+            // need = clamp(M - sQ, 0, Q) over two edges (class 5 split, round 2): the difference, then the clamp
+            if (busy && !k_go && !nv1 && !nv) begin
+                for (s = 0; s < NSS; s = s + 1) dif[s] <= {1'b0, mm} - {1'b0, sqc[s]};
+                nv1 <= 1'b1;
+            end
+            if (busy && nv1 && !nv) begin
+                for (s = 0; s < NSS; s = s + 1)
+                    need[s] <= (!sm_en[s] || dif[s][20] || dif[s] == 21'd0) ? 20'd0 : (dif[s][19:0] > {7'd0, qq}) ? {7'd0, qq} : dif[s][19:0];
+                nv <= 1'b1;
+            end
             // ---- arrivals (pre-armed: counted and queued whether or not the command has arrived)
             for (s = 0; s < NSS; s = s + 1) if (rv_q[s]) begin
                 recv[s] <= recv[s] + 20'd1;
@@ -703,27 +708,27 @@ module ot_hgi_sm_pub_slice #(
                 end
             end
             cr <= cr - (beat ? 1'b1 : 1'b0) + (cr_q ? 1'b1 : 1'b0);
-            d_stall = d_v && !ok;
-            r_hold = r_v && d_stall;
             // ---- R -> D: the P addresses
-            if (r_v && !d_stall) begin
+            // round 2 (class 5): every stage accepts only when it is empty at the edge (registered enables; no stall cone
+            // from the coalesce decision back through R and P): one record per 2 edges per slice
+            if (r_v && !d_v) begin
                 d_v <= 1'b1; d_i <= r_i; d_d <= r_d;
                 for (p = 0; p < NC; p = p + 1) begin d_wa[p] <= pofs[p] + r_row[17:0]; d_gi[p] <= pgi[p] + r_row; end
                 r_v <= 1'b0;
             end
             // ---- P -> R: read (and pop) the picked SM's FIFO head
-            if (p_v && !r_hold) begin
+            if (p_v && !r_v) begin
                 r_v <= 1'b1; r_i <= p_i; r_d <= af_d[p_i][af_h[p_i]]; r_row <= sq[p_i] + {8'd0, af_r[p_i][af_h[p_i]]};
                 af_h[p_i] <= af_h[p_i] + 1'b1; an[p_i] = an[p_i] - 1'b1;
                 p_v <= 1'b0;
             end
             // ---- P: pick an SM with a queued row (round robin), once the command (and sq) is in
-            if (busy && !k_go && !(p_v && r_hold)) begin : pick
+            if (busy && !k_go && !p_v) begin : pick
                 reg f; reg [LSL-1:0] ix; integer q2;
                 f = 1'b0; ix = '0;
                 for (i = 0; i < NSS; i = i + 1) begin
                     q2 = (rrp + 1 + i) % NSS;
-                    if (!f && an[q2] != 0) begin f = 1'b1; ix = LSL'(q2); end
+                    if (!f && af_n[q2] != 0) begin f = 1'b1; ix = LSL'(q2); end
                 end
                 if (f) begin p_v <= 1'b1; p_i <= ix; rrp <= ix; end
             end
@@ -734,7 +739,7 @@ module ot_hgi_sm_pub_slice #(
             end
             if (sweep && sw_i < NSS) begin : swp
                 reg go; sl = sw_i; go = 1'b1;
-                for (p = 0; p < NC; p = p + 1) if (k_msk[sl][p] != 0 && qn_[p] == PQ) go = 1'b0;
+                for (p = 0; p < NC; p = p + 1) if (k_msk[sl][p] != 0 && pq_n[p] == PQ) go = 1'b0;   // D is idle: registered count
                 if (go) begin
                     for (p = 0; p < NC; p = p + 1) if (k_msk[sl][p] != 0) begin
                         pq_e[p][pq_t[p]] <= {LSL'(sl), k_par[sl][p], k_sec[sl][p], k_msk[sl][p]};
@@ -781,7 +786,7 @@ module ot_hgi_sm_pub_slice #(
             done_now = busy && !k_go && nv && all_rows && &rdone && !pend_any && !tok && !w_v && !so_v &&
                        (sm_m || (sweep && sw_i >= NSS && !open_q));
             if (done_now) begin
-                busy <= 1'b0; s_done <= 1'b1; sweep <= 1'b0; nv <= 1'b0;
+                busy <= 1'b0; s_done <= 1'b1; sweep <= 1'b0; nv <= 1'b0; nv1 <= 1'b0;
                 for (s = 0; s < NSS; s = s + 1) recv[s] <= rv_q[s] ? 20'd1 : 20'd0;
             end
         end
