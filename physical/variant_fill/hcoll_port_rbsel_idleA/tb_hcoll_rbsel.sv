@@ -68,9 +68,9 @@ module tb_hcoll_rbsel;
             pushed = pushed + qp_push + qr_push;
             sw_cr_ret = 0;
             if (cred_pend > 0 && ($urandom % 100 < (phase == 1 ? 5 : phase == 2 ? 95 : 60))) begin sw_cr_ret = 1; cred_pend = cred_pend - 1; end
-            // keep the rx stream below what the slowest instance can absorb (rb 256 + land 16)
-            inflight = rx_w - rx_r[2]; if (rx_w - rx_r[0] > inflight) inflight = rx_w - rx_r[0];
-            if (rx_w - rx_r[1] > inflight) inflight = rx_w - rx_r[1];
+            // keep the rx stream below what ref / dut can absorb (rb 256 + land 16); inst 2 (K 8 at the 9-edge loop) is
+            // information only: it drains at 8/9 and may overflow in the saturating phase (its fault is not checked)
+            inflight = rx_w - rx_r[0]; if (rx_w - rx_r[1] > inflight) inflight = rx_w - rx_r[1];
             ph_rx_v = (inflight < 200) && (phase == 4 ? 1'b1 : ($urandom % 100 < (phase == 3 ? 70 : 40)));
             ph_rx_flit = rnd();
             if (ph_rx_v) begin rxq[rx_w % 65536] = ph_rx_flit; rx_w = rx_w + 1; end
