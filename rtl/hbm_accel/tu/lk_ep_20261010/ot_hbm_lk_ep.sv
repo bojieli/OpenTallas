@@ -48,25 +48,31 @@
 // ---------------------------------------------------------------------------
 
 // ot_lkep_relay: N free-running register stages (valid reset, data not); N = 0 is a wire.
-module ot_lkep_relay #(parameter integer W = 1, parameter integer N = 1) (
-    input  wire         clk,
-    input  wire         rst_n,
-    input  wire         i_v,
-    input  wire [W-1:0] i_d,
-    output wire         o_v,
-    output wire [W-1:0] o_d
+// el1011-hbm-lkep 2026-10-11: data and valid are FLAT (* keep *) vectors.  Root cause it removes: the RX per-sub relays
+// (g_rx[g].u_r) and feedback relays (g_fb[g].u_f) all take the SAME i_d (c_h / {fb_nak, fb_seq}); without keep yosys
+// merged the three chains into one, so g_rx[0].u_r.o_d drove the pin queues of all three subs across the die (6cf72efa6
+// preroute -2,452 ps g_rx[0].u_r.o_d[349] -> g_rx[1].u_b.m[1511]).  NV valid copies (o_vr, keep): one per consumer slice,
+// so a slice-local enable never waits on one shared valid net.  Function unchanged (copies of the same register).
+module ot_lkep_relay #(parameter integer W = 1, parameter integer N = 1, parameter integer NV = 1) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          i_v,
+    input  wire [W-1:0]  i_d,
+    output wire          o_v,
+    output wire [NV-1:0] o_vr,
+    output wire [W-1:0]  o_d
 );
     generate if (N == 0) begin : g_w
-        assign o_v = i_v; assign o_d = i_d;
+        assign o_v = i_v; assign o_vr = {NV{i_v}}; assign o_d = i_d;
     end else begin : g_r
-        reg [N-1:0] v;
-        reg [W-1:0] d [0:N-1];
+        (* keep *) reg [N*NV-1:0] v;
+        (* keep *) reg [N*W-1:0]  d;
         integer k;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) v <= {N{1'b0}};
-            else begin v[0] <= i_v; for (k = 1; k < N; k = k + 1) v[k] <= v[k-1]; end
-        always @(posedge clk) begin d[0] <= i_d; for (k = 1; k < N; k = k + 1) d[k] <= d[k-1]; end
-        assign o_v = v[N-1]; assign o_d = d[N-1];
+            if (!rst_n) v <= {(N*NV){1'b0}};
+            else begin v[NV-1:0] <= {NV{i_v}}; for (k = 1; k < N; k = k + 1) v[k*NV +: NV] <= v[(k-1)*NV +: NV]; end
+        always @(posedge clk) begin d[W-1:0] <= i_d; for (k = 1; k < N; k = k + 1) d[k*W +: W] <= d[(k-1)*W +: W]; end
+        assign o_v = v[(N-1)*NV]; assign o_vr = v[(N-1)*NV +: NV]; assign o_d = d[(N-1)*W +: W];
     end endgenerate
 endmodule
 
@@ -78,6 +84,7 @@ module ot_lkep_pinq #(parameter integer W = 545, parameter integer D = 4, parame
     input  wire         clk,
     input  wire         rst_n,
     input  wire         i_v,
+    input  wire [(W+SL-1)/SL-1:0] i_vs,   // per-slice copies of i_v (relay o_vr)
     input  wire [W-1:0] i_d,
     output reg          o_v,
     output reg  [W-1:0] o_d,
@@ -96,35 +103,44 @@ module ot_lkep_pinq #(parameter integer W = 545, parameter integer D = 4, parame
     wire             ld = !o_v && (n != 0);
     assign drop = i_v && full;
     wire [W-1:0]     head;
+    // el1011-hbm-lkep: per-slice control copies (keep).  n / o_v above are the master (macro in_valid pin, cr, drop);
+    // slice s computes its own we / ld from ns / ovs and i_vs[s], so no control net leaves its 64-b slice (6cf72efa6
+    // dh1404 preroute -2,247 ps: u_b.n[1] -> 20 wire repeaters -> u_b.m[987] across the 4 x 545 pin queue).
+    (* keep *) reg [NSL*CB-1:0] ns;
+    (* keep *) reg [NSL-1:0]    ovs;
     genvar s, e;
     generate for (s = 0; s < NSL; s = s + 1) begin : g_s
         localparam integer LO = s * SL;
         localparam integer HI = (LO + SL > W) ? W : LO + SL;
-        for (e = 0; e < D; e = e + 1) begin : g_e
-            always @(posedge clk) if (we && wp[s*D+e]) m[e*W+LO +: HI-LO] <= i_d[HI-1:LO];
-        end
         reg [HI-LO-1:0] x;
         integer j;
+        wire we_s = i_vs[s] && (ns[s*CB +: CB] != D);
+        wire ld_s = !ovs[s] && (ns[s*CB +: CB] != 0);
+        for (e = 0; e < D; e = e + 1) begin : g_e
+            always @(posedge clk) if (we_s && wp[s*D+e]) m[e*W+LO +: HI-LO] <= i_d[HI-1:LO];
+        end
+        always @(posedge clk) if (!ovs[s]) o_d[HI-1:LO] <= x;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ns[s*CB +: CB] <= {CB{1'b0}}; ovs[s] <= 1'b0; wp[s*D +: D] <= {{(D-1){1'b0}}, 1'b1}; rp[s*D +: D] <= {{(D-1){1'b0}}, 1'b1}; end
+            else begin
+                ns[s*CB +: CB] <= ns[s*CB +: CB] + (we_s ? 1'b1 : 1'b0) - (ld_s ? 1'b1 : 1'b0);
+                ovs[s] <= ld_s || (ovs[s] && !o_rdy);
+                if (we_s) wp[s*D +: D] <= {wp[s*D +: D], wp[s*D+D-1]};
+                if (ld_s) rp[s*D +: D] <= {rp[s*D +: D], rp[s*D+D-1]};
+            end
         always @(*) begin
             x = {(HI-LO){1'b0}};
             for (j = 0; j < D; j = j + 1) x = x | ({(HI-LO){rp[s*D+j]}} & m[j*W+LO +: HI-LO]);
         end
         assign head[HI-1:LO] = x;
     end endgenerate
-    always @(posedge clk) if (!o_v) o_d <= head;
-    integer t;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             n <= {CB{1'b0}}; o_v <= 1'b0; cr <= 1'b0;
-            for (t = 0; t < NSL; t = t + 1) begin wp[t*D +: D] <= {{(D-1){1'b0}}, 1'b1}; rp[t*D +: D] <= {{(D-1){1'b0}}, 1'b1}; end
         end else begin
             n <= n + (we ? 1'b1 : 1'b0) - (ld ? 1'b1 : 1'b0);
             o_v <= ld || (o_v && !o_rdy);
             cr <= o_v && o_rdy;
-            for (t = 0; t < NSL; t = t + 1) begin
-                if (we) wp[t*D +: D] <= {wp[t*D +: D], wp[t*D+D-1]};
-                if (ld) rp[t*D +: D] <= {rp[t*D +: D], rp[t*D+D-1]};
-            end
         end
 endmodule
 
@@ -157,7 +173,8 @@ module ot_lkep_sinkq #(parameter integer W = 545, parameter integer D = 4, param
     always @(posedge clk) cap_d <= m_d;
     wire          f_v;
     wire [W-1:0]  f_d;
-    ot_lkep_relay #(.W(W), .N(N)) u_f (.clk(clk), .rst_n(rst_c), .i_v(cap_v), .i_d(cap_d), .o_v(f_v), .o_d(f_d));
+    wire [NSL-1:0] f_vs;
+    ot_lkep_relay #(.W(W), .N(N), .NV(NSL)) u_f (.clk(clk), .rst_n(rst_c), .i_v(cap_v), .i_d(cap_d), .o_v(f_v), .o_vr(f_vs), .o_d(f_d));
     // consumer FIFO (never overflows: the pin side holds at most D credits)
     reg  [D*W-1:0]   m;
     (* keep *) reg [NSL*D-1:0] wp;
@@ -170,7 +187,7 @@ module ot_lkep_sinkq #(parameter integer W = 545, parameter integer D = 4, param
         localparam integer LO = s * SL;
         localparam integer HI = (LO + SL > W) ? W : LO + SL;
         for (e = 0; e < D; e = e + 1) begin : g_e
-            always @(posedge clk) if (f_v && wp[s*D+e]) m[e*W+LO +: HI-LO] <= f_d[HI-1:LO];
+            always @(posedge clk) if (f_vs[s] && wp[s*D+e]) m[e*W+LO +: HI-LO] <= f_d[HI-1:LO];
         end
         reg [HI-LO-1:0] x;
         integer j;
@@ -380,8 +397,9 @@ module ot_hbm_lk_ep #(
     generate for (g = 0; g < NS; g = g + 1) begin : g_ti
         wire         r_v_, cr_p, cr_d, dr;
         wire [W-1:0] r_d;
-        ot_lkep_relay #(.W(W), .N(RL)) u_r (.clk(clk), .rst_n(rl[g]), .i_v(l0_v[g]), .i_d(l0_d[g*W +: W]), .o_v(r_v_), .o_d(r_d));
-        ot_lkep_pinq #(.W(W), .D(PBD), .SL(SL)) u_b (.clk(clk), .rst_n(rl[g]), .i_v(r_v_), .i_d(r_d),
+        wire [NSL-1:0] r_vs;
+        ot_lkep_relay #(.W(W), .N(RL), .NV(NSL)) u_r (.clk(clk), .rst_n(rl[g]), .i_v(l0_v[g]), .i_d(l0_d[g*W +: W]), .o_v(r_v_), .o_vr(r_vs), .o_d(r_d));
+        ot_lkep_pinq #(.W(W), .D(PBD), .SL(SL)) u_b (.clk(clk), .rst_n(rl[g]), .i_v(r_v_), .i_vs(r_vs), .i_d(r_d),
             .o_v(p_in_v[g]), .o_d(p_in_dd[g]), .o_rdy(p_in_r[g]), .cr(cr_p), .drop(dr));
         ot_lkep_relay #(.W(1), .N(RL)) u_c (.clk(clk), .rst_n(rtq), .i_v(cr_p), .i_d(1'b0), .o_v(icr_ret[g]), .o_d(cr_d));
     end endgenerate
@@ -512,9 +530,10 @@ module ot_hbm_lk_ep #(
     generate for (g = 0; g < NS; g = g + 1) begin : g_rx
         wire          q_v, cr_u;
         wire [TW-1:0] q_d;
-        ot_lkep_relay #(.W(TW), .N(RL)) u_r (.clk(clk), .rst_n(rl[g]), .i_v(c_v && (c_sub == g)),
+        wire [(TW+SL-1)/SL-1:0] q_vs;
+        ot_lkep_relay #(.W(TW), .N(RL), .NV((TW+SL-1)/SL)) u_r (.clk(clk), .rst_n(rl[g]), .i_v(c_v && (c_sub == g)), .o_vr(q_vs),
             .i_d({c_h[HB-1:W+2], c_h[W-1:0]}), .o_v(q_v), .o_d(q_d));
-        ot_lkep_pinq #(.W(TW), .D(SQ), .SL(SL)) u_b (.clk(clk), .rst_n(rl[g]), .i_v(q_v), .i_d(q_d),
+        ot_lkep_pinq #(.W(TW), .D(SQ), .SL(SL)) u_b (.clk(clk), .rst_n(rl[g]), .i_v(q_v), .i_vs(q_vs), .i_d(q_d),
             .o_v(p_rx_v[g]), .o_d(p_rx_w[g]), .o_rdy(p_rx_r[g]), .cr(cr_u), .drop(rdrop[g]));
     end endgenerate
     reg           drop;
