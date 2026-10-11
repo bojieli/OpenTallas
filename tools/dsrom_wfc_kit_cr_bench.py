@@ -165,7 +165,9 @@ def run(name, out):
     d = out / name; d.mkdir(parents=True, exist_ok=True)
     meta = B.trace_hex(ROOT / B.TRACES / f"{spec['trace']}.cfg.json", d / 'trace.hex') if 'trace' in spec else None
     (d / 'tb.sv').write_text(body)
-    srcs = [str(ROOT / s) for s in list(B.COMMON) + K.EXTRA + [CR, LINK] + (CRP if harness == 'crp' else [])] + [str(d / 'tb.sv')]
+    # mtp-wfc 2026-10-11: K.EXTRA now carries the vmx SRAM queue (ot_fifo_sram_fwft + the SRAM model): dedupe in order,
+    # else iverilog stops on a re-declared module (every crp_* case BUILD_ERROR)
+    srcs = [str(ROOT / s) for s in dict.fromkeys(list(B.COMMON) + K.EXTRA + [CR, LINK] + (CRP if harness == 'crp' else []))] + [str(d / 'tb.sv')]
     cmd = ['iverilog', '-g2012', '-s', tb, '-o', str(d / 'sim.vvp')] + \
           [f'-D{x}' for x in list(spec.get('defines', [])) + kdefs + defs] + \
           [f'-P{tb}.{k}={v}' for k, v in list(spec.get('params', {}).items()) + list(sp.items())] + srcs
