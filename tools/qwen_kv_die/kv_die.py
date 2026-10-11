@@ -807,6 +807,12 @@ def masters(m, k=1, port_bits=None):
                 # never meets the legal residues mod 240'); M4 alone needs H = 0 mod 6 nm (453.576 is)
                 mm.face(p, 1, 'W', 'M4', mm.h / 2 + (8.0 if p == 'ck' else -8.0), 1)
                 continue
+            if mst in ('qkd_kvwq_leaf_s_w129', 'qkd_kvwq_leaf_s_w129_m') and p in ('ck', 'rst_n'):
+                # qwen-1010/b 2026-10-11 (die_kv15 real case: 'leaf_s_w129_m MX y: site grid never meets the legal residues
+                # mod 240' with M8 area pins): the closed leaf's clock / reset are E-face M4 pins at y 86-97 (its route
+                # cfg), so the MX origin only meets the M4 / M5 grids, as the rhead's W-face M4 clock does
+                mm.face(p, 1, 'E', 'M4', 88.0 if p == 'ck' else 95.0, 1)
+                continue
             if bits == 1 and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n', 'rs') or p.startswith(('pll', 'rso'))):
                 j = len([q for q in mm.order if mm.ports[q][0] == 'area'])
                 mm.area(p, 1, min(mm.w - 1.0, max(1.0, mm.w / 2 + ((j % 12) - 6) * 1.6)),
