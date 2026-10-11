@@ -158,11 +158,12 @@ def prep(d: Path):
     # the FUSED unit's compiler-reserved scratch: the largest VM range no record of this layer touches (>= 16 Ki words)
     import numpy as np
     used = np.zeros(1 << 18, bool)
-    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4") != 0
-    used[np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]] = True
+    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4")[:1 << 18] != 0      # (words past 2^18: the HC aperture)
+    wa = np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]
+    used[wa[wa < (1 << 18)]] = True
     for r in meta["records"]:
         for e in r["eff"].values():
-            if e[5] == "VM":
+            if e[5] == "VM" and e[0] < (1 << 18):
                 b_, n_, m_, st_, ist_ = e[:5]
                 used[b_:b_ + (max(m_, 1) - 1) * st_ + (max(n_, 1) - 1) * max(ist_, 1) + 1] = True
     used[END_TOKEN_VM] = True

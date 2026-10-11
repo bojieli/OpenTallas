@@ -16,7 +16,7 @@ P=$S/rtl/dsrom_sys/s81_ph
   $P/coll/dsfd_coll_mtp_lane.sv $P/test/tb_mtp_lane_io.sv $S/rtl/dsrom_sys/mtp/dsfd_coll_mtp_ep.sv \
   $S/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv $S/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv $S/rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv \
   $S/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv $S/rtl/link/ot_fifo_sram_fwft.sv $S/rtl/hdc/ot_hdc_fastfp.sv \
-  $S/rtl/proto/ot_fp32_add_rne_pipe.sv $S/rtl/link/ot_link_crc32.sv $S/rtl/common/ot_link_credit.sv $S/rtl/dsrom_sys/ot_dsrom_link_chan.sv \
+  $S/rtl/proto/ot_fp32_add_rne_pipe.sv $S/rtl/link/ot_link_crc32.sv $S/rtl/common/ot_link_credit.sv $S/rtl/lib/ot_rst_relay.sv $S/rtl/dsrom_sys/ot_dsrom_link_chan.sv \
   $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v \
   $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v \
   $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \

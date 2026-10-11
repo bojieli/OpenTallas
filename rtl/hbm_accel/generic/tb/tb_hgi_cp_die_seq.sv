@@ -7,6 +7,7 @@
 module tb_hgi_cp_die_seq;
     parameter integer MUT = 0;
     parameter integer BURST = 0;       // (MUT 9: the loader burst mutant)
+    parameter integer RUNPRE = 0;      // fe-push-hgi-1010: loader head-run from push-time contiguity bits
     // hgi-1010: loader BURST 1 + CP 16 credits; the lane honours m_req_len, NO in flight
 `include "hgi_seq_sizes.svh"
 `include "hgi_seq_sizes_conf.svh"
@@ -21,7 +22,7 @@ module tb_hgi_cp_die_seq;
     wire c_awvalid, c_wvalid, c_arvalid, c_bready, c_rready; wire [11:0] c_awaddr, c_araddr; wire [31:0] c_wdata; wire [3:0] c_wstrb;
     wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; wire [3:0] m_req_len; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data;
     wire lfault;
-    ot_hgi_loader_cp #(.BURST(BURST), .MUT(MUT == 9 ? 1 : 0)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
+    ot_hgi_loader_cp #(.BURST(BURST), .RUNPRE(RUNPRE), .MUT(MUT == 9 ? 1 : 0)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hf), .s_bvalid(s_bvalid), .s_bready(s_bready),
         .s_arvalid(s_arvalid), .s_arready(s_arready), .s_araddr(s_araddr), .s_rvalid(s_rvalid), .s_rready(s_rready),
         .s_rdata(s_rdata), .c_awvalid(c_awvalid), .c_awready(1'b0), .c_awaddr(c_awaddr), .c_wvalid(c_wvalid), .c_wready(1'b0),

@@ -88,6 +88,58 @@ module ot_nhb_fifo_rows_h #(parameter integer W = 1024, parameter integer D = 32
     assign nonempty = (count != 0);
 endmodule
 
+// Two-level row FIFO (qwen-1010/b 2026-10-10, DQ > 32): an SRAM level (NM x ot_sram_1r1w_128x256: 128 rows) in front of
+// the D1-row flop level ot_nhb_fifo_rows_h (pipelined read pointers).  Order: a row goes straight to the flop level only
+// while the SRAM level is empty and no refill read is in flight, else to the SRAM level, which refills the flop level
+// one row a cycle (read issued when the flop level, counting its in-flight rows, has room).  count = both levels.
+module ot_nhb_fifo_rows2_h #(parameter integer W = 1024, parameter integer D = 128, parameter integer D1 = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         pop,
+    output wire [W-1:0] dout,
+    output wire         nonempty,
+    output reg  [$clog2(D+D1+1)-1:0] count
+);
+    localparam integer NM = W / 256;
+    localparam integer SD = 128;
+    reg  [6:0] swp, srp;
+    reg  [7:0] scnt;                                   // rows in the SRAM level
+    reg        rd_v;                                   // a refill read issued last edge (its row arrives now)
+    reg  [3:0] l1_pend;                                // rows promised to the flop level (in flight or in it)
+`ifdef KVD_RMUT
+    wire       to_l1   = push && !rd_v && l1_pend < D1;                 // MUTANT: bypasses rows still in the SRAM level
+`else
+    wire       to_l1   = push && scnt == 8'd0 && !rd_v && l1_pend < D1;
+`endif
+    wire       to_sram = push && !to_l1;
+    wire       rd      = (scnt != 8'd0) && (l1_pend + (to_l1 ? 1 : 0) < D1);   // refill when the flop level has room
+    wire [W-1:0] srd;
+    genvar m;
+    generate for (m = 0; m < NM; m = m + 1) begin : g_m
+        ot_sram_1r1w_128x256_m1_r2c2 u_s (.clk(clk), .r_ce_in(rd), .r_addr_in(srp), .rd_out(srd[256*m +: 256]),
+            .w_ce_in(to_sram), .w_addr_in(swp), .wd_in(din[256*m +: 256]), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    end endgenerate
+    wire        l1_push = to_l1 || rd_v;
+    wire [W-1:0] l1_din = rd_v ? srd : din;
+    wire [$clog2(D1+1)-1:0] l1_cnt;
+    ot_nhb_fifo_rows_h #(.W(W), .D(D1)) u_l1 (.clk(clk), .rst_n(rst_n), .push(l1_push), .din(l1_din), .pop(pop),
+                                              .dout(dout), .nonempty(nonempty), .count(l1_cnt));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin swp <= 0; srp <= 0; scnt <= 0; rd_v <= 1'b0; l1_pend <= 0; count <= 0; end
+        else begin
+            if (to_sram) swp <= swp + 7'd1;
+            if (rd) srp <= srp + 7'd1;
+            scnt <= scnt + (to_sram ? 8'd1 : 8'd0) - (rd ? 8'd1 : 8'd0);
+            rd_v <= rd;
+            l1_pend <= l1_pend + ((to_l1 || rd) ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
+            count <= count + (push ? 1 : 0) - (pop ? 1 : 0);
+        end
+    end
+endmodule
+
 // FP32 a > b for finite operands that are never -0 (every unit here canonicalises zeros to +0)
 module ot_nhb_fgt_h (input wire [31:0] a, input wire [31:0] b, output wire gt);
     assign gt = (a[31] != b[31]) ? !a[31] : (!a[31] ? (a[30:0] > b[30:0]) : (a[30:0] < b[30:0]));
@@ -591,8 +643,13 @@ module ot_qwen_nearhbm_ectl_h #(
     wire [63:0]     e_word;
     wire            e_ne;
     always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;
-    ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
-                                             .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    generate if (DQ > 32) begin : g_rows2
+        ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                                 .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    end else begin : g_rows1
+        ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                                 .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    end endgenerate
     wire pop_e;
     ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
                                         .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
