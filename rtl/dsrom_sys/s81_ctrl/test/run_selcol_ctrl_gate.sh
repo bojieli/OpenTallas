@@ -23,16 +23,18 @@ if [ "${2:-}" = one ]; then   # run_selcol_ctrl_gate.sh <out> one <sel|col> [def
   if [ $k = sel ]; then run one_sel tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL "$@"; r=$?; else run one_col tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL "$@"; r=$?; fi
   echo "SELCOL_ONE $k $* rc=$r ($(cat $O/one_$k/rc))"; exit $r
 fi
-run sel_base tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL & a0=$!
-run sel_wrongtag tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DTB_MUT_WRONGTAG & a1=$!
-run sel_mut2 tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=2 & a2=$!
-run sel_mut4 tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=4 & a3=$!
-wait $a0; s0=$?; wait $a1; s1=$?; wait $a2; s2=$?; wait $a3; s3=$?
-run col_base tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL & b0=$!
-run col_wrongtag tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DTB_MUT_WRONGTAG & b1=$!
-run col_mut2 tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=2 & b2=$!
-run col_mut4 tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=4 & b3=$!
-wait $b0; c0=$?; wait $b1; c1=$?; wait $b2; c2=$?; wait $b3; c3=$?
+# SEQ=1: one build at a time (fits a small ot-heavy slot, < 32 GB)
+P_='&'; [ "${SEQ:-0}" = 1 ] && P_=''
+if [ -z "$P_" ]; then run sel_base tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL; echo $? > $O/.a0; else ( run sel_base tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL; echo $? > $O/.a0 ) & fi
+if [ -z "$P_" ]; then run sel_wrongtag tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DTB_MUT_WRONGTAG; echo $? > $O/.a1; else ( run sel_wrongtag tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DTB_MUT_WRONGTAG; echo $? > $O/.a1 ) & fi
+if [ -z "$P_" ]; then run sel_mut2 tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=2; echo $? > $O/.a2; else ( run sel_mut2 tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=2; echo $? > $O/.a2 ) & fi
+if [ -z "$P_" ]; then run sel_mut4 tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=4; echo $? > $O/.a3; else ( run sel_mut4 tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=4; echo $? > $O/.a3 ) & fi
+wait; s0=$(cat $O/.a0); wait; s1=$(cat $O/.a1); wait; s2=$(cat $O/.a2); wait; s3=$(cat $O/.a3)
+if [ -z "$P_" ]; then run col_base tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL; echo $? > $O/.b0; else ( run col_base tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL; echo $? > $O/.b0 ) & fi
+if [ -z "$P_" ]; then run col_wrongtag tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DTB_MUT_WRONGTAG; echo $? > $O/.b1; else ( run col_wrongtag tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DTB_MUT_WRONGTAG; echo $? > $O/.b1 ) & fi
+if [ -z "$P_" ]; then run col_mut2 tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=2; echo $? > $O/.b2; else ( run col_mut2 tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=2; echo $? > $O/.b2 ) & fi
+if [ -z "$P_" ]; then run col_mut4 tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=4; echo $? > $O/.b3; else ( run col_mut4 tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=4; echo $? > $O/.b3 ) & fi
+wait; c0=$(cat $O/.b0); wait; c1=$(cat $O/.b1); wait; c2=$(cat $O/.b2); wait; c3=$(cat $O/.b3)
 v=PASS
 [ $s0 -eq 0 ] && [ $c0 -eq 0 ] || v=FAIL
 for x in $s1 $s2 $s3 $c1 $c2 $c3; do [ $x -eq 1 ] || v=FAIL; done
