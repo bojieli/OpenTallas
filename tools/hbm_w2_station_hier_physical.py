@@ -19,6 +19,7 @@ closed smh tcc/bdc pieces).  60 / 25 ps uncertainty (AGENTS policy); nothing is 
 Reuses tools/hbm_accel_smh_physical.py (config_mk, sdc_block, run_sh, RUN) unchanged.
 """
 import argparse
+import os
 import re
 import shutil
 import subprocess
@@ -31,6 +32,18 @@ sys.path.insert(0, str(ROOT / "tools"))
 import hbm_accel_smh_physical as smh  # noqa: E402
 
 STN = "physical/hbm_w2_rb_station_20261006"
+
+
+def route_hold_margin(arg_ps):
+    """ORFS HOLD_SLACK_MARGIN (ps): the loop's HM (ns) alone, else --hold-margin.  Not smh.loop_hold_margin (HM + 25):
+    the SDC's 25 ps hold uncertainty is already in every slack, so adding it again demanded ~50 ps on every direct flop
+    pair (stnh-*-62a6e35aa-hm0: 4,156 in-margin endpoints at real slack ~+17 ps -> RSZ-0060)."""
+    hm = os.environ.get("HM", "").strip()
+    try:
+        return f"{float(hm) * 1000.0:g}" if hm else str(arg_ps)
+    except ValueError:
+        return str(arg_ps)
+
 SLICE_RTL = [f"{STN}/bank_veto_static.sv", f"{STN}/slice_static.sv"]
 MASTER = {"slice8": "ot_hbm_w2_stn_slice8", "slice5": "ot_hbm_w2_stn_slice5"}
 PIECES = {"slice8": dict(NW=8, NB=512, BASE=0, QOUT=0), "slice5": dict(NW=5, NB=280, BASE=32, QOUT=1)}
@@ -72,7 +85,7 @@ def abstract_tcls(work: Path, name):
 
 
 def cmd_tile(a):
-    a.hold_margin = smh.loop_hold_margin(a.hold_margin)
+    a.hold_margin = route_hold_margin(a.hold_margin)
     work = Path(a.out)
     work.mkdir(parents=True, exist_ok=True)
     p = PIECES[a.piece]
@@ -163,7 +176,7 @@ def cmd_signoff_sdc(a):
 def cmd_top(a):
     """HIER station top: 4 slice8 + 1 slice5 macros in one row (20 um edge / channels), the control core (phase FSM,
     S2, ACK / receipt / permission banks) in a strip below the row, station pins on the flat station's faces."""
-    a.hold_margin = smh.loop_hold_margin(a.hold_margin)
+    a.hold_margin = route_hold_margin(a.hold_margin)
     work, src = Path(a.out), Path(a.src)
     work.mkdir(parents=True, exist_ok=True)
     w8, h8 = lef_size(src, a.view8)
