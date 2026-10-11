@@ -1,4 +1,4 @@
-library (hgi_idx_topk_w8_ff) {
+library (ot_hgi_topk_heap_tile_ff) {
   comment                        : "";
   delay_model                    : table_lookup;
   simulation                     : false;
