@@ -3,7 +3,9 @@ module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm
     localparam integer NSM = 32;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 11, errors = 0;
-    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end
+    integer rate = 48;   // a row from each SM with probability 1/rate an edge (+RATE=<n>; production stress: 8 = the ff bound 8 / (P NSM / NPC) at P 8)
+    initial begin if (!$value$plusargs("RATE=%d", rate)) rate = 48; $display("RATE=%0d", rate); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg pub_v = 0; reg [39:0] pb = 0; reg [31:0] pst = 0; reg [19:0] pm = 0; reg [12:0] pq = 0; reg [3:0] pp = 0;
     reg [NSM-1:0] rv = 0; reg [NSM*12-1:0] rr = 0; reg [NSM*256-1:0] rd = 0;
     wire ra, rb, da, db, fa, fb; wire [4*338-1:0] qa, qb; wire [4*274-1:0] xa, xb; wire [273:0] ta, tb2; reg [337:0] tq = 0;
@@ -47,7 +49,7 @@ module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm
                 @(negedge clk); rv = 0;
                 for (s = 0; s < NSM; s = s + 1) begin
                     rows = (pm > s * pq) ? ((pm - s * pq > pq) ? pq : pm - s * pq) : 0;
-                    if (sr[s] < rows && ($unsigned($random(seed)) % 48) == 0) begin
+                    if (sr[s] < rows && ($unsigned($random(seed)) % rate) == 0) begin
                         rv[s] = 1; rr[s*12 +: 12] = sr[s]; for (i = 0; i < 8; i = i + 1) begin rd[s*256 + 32*i +: 32] = $random(seed);
                             if (i < pp) expv[pb + i * pst + s * pq + sr[s]] = rd[s*256 + 32*i +: 32]; end
                         sr[s] = sr[s] + 1; left = left - 1;
