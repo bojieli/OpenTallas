@@ -40,7 +40,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --macro-view ot_attn_bank_sn544=${BANKD:-$D/bank}/ot_attn_bank_sn544 --macro-view ot_attn_bank_ew544=${BANKD:-$D/bank}/ot_attn_bank_ew544 \
   --macro-view ot_attn_bank_sn136=${BANKD:-$D/bank}/ot_attn_bank_sn136 --macro-view ot_attn_bank_ew136=${BANKD:-$D/bank}/ot_attn_bank_ew136 \
   --macro-place-halo 1 1 \
-  --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
+  --clock-port ck --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 $IOFLAGS --stages pnr \
   --die-area 0 0 $DW ${DH:?} --core-area 0 0 $DW $DH --place-density ${PD:-0.40} --routing-layers M2 M7 \
   --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_placement.tcl --orfs-var PDN_TCL=/src/$D/die_tile/${PDNT:-pdn_dt}.tcl \
@@ -54,6 +54,6 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
 rc=$?; echo "rc=$rc" > $W/exit
 case " $* " in *"stop-after"*) exit $rc ;; esac
 M="--macro $QUADDIR --macro ${BANKD:-$D/bank}/ot_attn_bank_sn544 --macro ${BANKD:-$D/bank}/ot_attn_bank_ew544 --macro ${BANKD:-$D/bank}/ot_attn_bank_sn136 --macro ${BANKD:-$D/bank}/ot_attn_bank_ew136"
-python3 tools/w18/corner_sta.py $M --orfs-dir $W/work/orfs --post-sdc $D/signoff_833_int.sdc --output $W/corner_sta.json > $W/corner.log 2>&1
+python3 tools/w18/corner_sta.py $M --orfs-dir $W/work/orfs --post-sdc $D/half/signoff_833_half.sdc --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
 exit $rc
