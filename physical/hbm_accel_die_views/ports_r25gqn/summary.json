@@ -60,6 +60,26 @@
     "N",
     "input"
    ],
+   "f_hgi_vmr": [
+    274,
+    "N",
+    "input"
+   ],
+   "f_hgi_vmw": [
+    32,
+    "N",
+    "input"
+   ],
+   "t_hgi_vmq": [
+    338,
+    "N",
+    "output"
+   ],
+   "t_hgi_vmw": [
+    8960,
+    "N",
+    "output"
+   ],
    "f_hgi_cmdproc": [
     704,
     "N",
@@ -90,16 +110,6 @@
     "N",
     "input"
    ],
-   "f_hgi_vmr": [
-    274,
-    "N",
-    "input"
-   ],
-   "f_hgi_vmw": [
-    32,
-    "N",
-    "input"
-   ],
    "t_hgi_cmdproc": [
     4,
     "N",
@@ -127,16 +137,6 @@
    ],
    "t_hgi_rgxr1": [
     257,
-    "N",
-    "output"
-   ],
-   "t_hgi_vmq": [
-    338,
-    "N",
-    "output"
-   ],
-   "t_hgi_vmw": [
-    8960,
     "N",
     "output"
    ]
@@ -238,26 +238,6 @@
     "S",
     "input"
    ],
-   "f_coll": [
-    33,
-    "S",
-    "input"
-   ],
-   "f_hgi_coll": [
-    3,
-    "S",
-    "input"
-   ],
-   "f_hgi_dma": [
-    4,
-    "S",
-    "input"
-   ],
-   "f_hgi_loader": [
-    419,
-    "S",
-    "input"
-   ],
    "f_hgi_vmr": [
     274,
     "S",
@@ -275,6 +255,41 @@
    ],
    "f_lgE_wdn": [
     67,
+    "S",
+    "input"
+   ],
+   "t_hgi_vmq": [
+    338,
+    "S",
+    "output"
+   ],
+   "t_lgE_rup": [
+    515,
+    "S",
+    "output"
+   ],
+   "t_lgE_wup": [
+    8963,
+    "S",
+    "output"
+   ],
+   "f_coll": [
+    33,
+    "S",
+    "input"
+   ],
+   "f_hgi_coll": [
+    3,
+    "S",
+    "input"
+   ],
+   "f_hgi_dma": [
+    4,
+    "S",
+    "input"
+   ],
+   "f_hgi_loader": [
+    419,
     "S",
     "input"
    ],
@@ -300,21 +315,6 @@
    ],
    "t_hgi_loader": [
     222,
-    "S",
-    "output"
-   ],
-   "t_hgi_vmq": [
-    338,
-    "S",
-    "output"
-   ],
-   "t_lgE_rup": [
-    515,
-    "S",
-    "output"
-   ],
-   "t_lgE_wup": [
-    8963,
     "S",
     "output"
    ],
@@ -396,6 +396,26 @@
     "N",
     "output"
    ],
+   "f_hgi_vmr": [
+    274,
+    "N",
+    "input"
+   ],
+   "f_hgi_vmw2": [
+    65,
+    "N",
+    "input"
+   ],
+   "t_hgi_vmq": [
+    338,
+    "N",
+    "output"
+   ],
+   "t_hgi_vmw2": [
+    8961,
+    "N",
+    "output"
+   ],
    "pll_serial": [
     1,
     "N",
@@ -421,16 +441,6 @@
     "N",
     "input"
    ],
-   "f_hgi_vmr": [
-    274,
-    "N",
-    "input"
-   ],
-   "f_hgi_vmw2": [
-    65,
-    "N",
-    "input"
-   ],
    "t_cmdproc": [
     33,
     "N",
@@ -438,16 +448,6 @@
    ],
    "t_hgi_cmdproc": [
     3,
-    "N",
-    "output"
-   ],
-   "t_hgi_vmq": [
-    338,
-    "N",
-    "output"
-   ],
-   "t_hgi_vmw2": [
-    8961,
     "N",
     "output"
    ],
@@ -501,6 +501,11 @@
     "S",
     "output"
    ],
+   "llk_S3": [
+    1122,
+    "S",
+    "inout"
+   ],
    "f_su_SW": [
     1024,
     "W",
@@ -521,32 +526,12 @@
     "W",
     "inout"
    ],
-   "llk_S1": [
-    1122,
-    "W",
-    "inout"
-   ],
-   "llk_S2": [
-    1122,
-    "W",
-    "inout"
-   ],
    "llk_N0": [
     1122,
     "W",
     "inout"
    ],
    "llk_N1": [
-    1122,
-    "W",
-    "inout"
-   ],
-   "llk_N2": [
-    1122,
-    "W",
-    "inout"
-   ],
-   "llk_N3": [
     1122,
     "W",
     "inout"
@@ -581,12 +566,27 @@
     "E",
     "output"
    ],
-   "llk_S3": [
+   "llk_S1": [
+    1122,
+    "E",
+    "inout"
+   ],
+   "llk_S2": [
     1122,
     "E",
     "inout"
    ],
    "llk_S4": [
+    1122,
+    "E",
+    "inout"
+   ],
+   "llk_N2": [
+    1122,
+    "E",
+    "inout"
+   ],
+   "llk_N3": [
     1122,
     "E",
     "inout"
@@ -630,8 +630,8 @@
  },
  "hfd_lk_ep": {
   "kind": null,
-  "w": 1503.36,
-  "h": 993.6,
+  "w": 1728.0,
+  "h": 1015.2,
   "instances": 9,
   "ports": {
    "f_lk": [
@@ -658,8 +658,8 @@
  },
  "hfd_hgi_vm": {
   "kind": null,
-  "w": 1399.656,
-  "h": 1296.0,
+  "w": 2073.6,
+  "h": 2073.6,
   "instances": 1,
   "ports": {
    "ck": [
@@ -890,19 +890,24 @@
     "N",
     "output"
    ],
-   "t_router": [
-    2,
+   "f_cmdproc": [
+    64,
+    "N",
+    "input"
+   ],
+   "f_hgi_cmdproc": [
+    2198,
+    "N",
+    "input"
+   ],
+   "t_hgi_cmdproc": [
+    3,
     "N",
     "output"
    ],
-   "f_su_ew": [
-    1024,
-    "E",
-    "input"
-   ],
-   "t_su_ew": [
-    1024,
-    "E",
+   "t_router": [
+    2,
+    "N",
     "output"
    ],
    "f_coll": [
@@ -916,6 +921,16 @@
     "input"
    ],
    "t_coll": [
+    1024,
+    "E",
+    "output"
+   ],
+   "f_su_ew": [
+    1024,
+    "E",
+    "input"
+   ],
+   "t_su_ew": [
     1024,
     "E",
     "output"
@@ -989,21 +1004,6 @@
     1,
     "W",
     "input"
-   ],
-   "f_cmdproc": [
-    64,
-    "E",
-    "input"
-   ],
-   "f_hgi_cmdproc": [
-    2198,
-    "E",
-    "input"
-   ],
-   "t_hgi_cmdproc": [
-    3,
-    "E",
-    "output"
    ],
    "rst": [
     1,
