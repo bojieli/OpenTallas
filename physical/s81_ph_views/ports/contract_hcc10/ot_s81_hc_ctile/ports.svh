@@ -1,4 +1,6 @@
     input wire [0:0] clk,
+    input wire [127:0] cy_in,
+    output wire [127:0] cy_out,
     input wire [2919:0] fd_in,
     output wire [2919:0] fd_out,
     input wire [6:0] fv_in,
