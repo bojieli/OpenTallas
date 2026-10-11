@@ -11,7 +11,8 @@
 module ot_engc_t_io #(
     parameter integer MUT = 0,
     parameter integer EPMUT = 0,
-    parameter [71:0] READ_INJECT = 72'd0
+    parameter [71:0] READ_INJECT = 72'd0,
+    parameter integer PT = 1             // bank 1 = the 3-pair-tile chain (data 3 edges later than the columns)
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -51,13 +52,15 @@ module ot_engc_t_io #(
         else begin jn_o <= {j_new, (j_new_d[30:23] != 8'd0), j_new_d[22:7]}; wn_q <= wn_i; jf_q <= jf_i;
                    pff_r <= {pff_r[0], pf_fault}; end
 
-    // ---------------- rdy / perr delay (stages 3..7)
-    reg [7:0] rdy_3, rdy_4, rdy_5, rdy_6, rdy_p, perr_3, perr_4, perr_5, perr_6, perr_p;
+    // ---------------- rdy / perr delay: stages 3 .. RDN+2 here (2 in T_WIN) = the latest write commit after the sink's
+    // wr_en (PT 0: band tile, bank 2 at t+7; PT 1: pair chain, bank 2 at t+9)
+    localparam integer RDN = PT ? 7 : 5;
+    reg [7:0] rdy_s [0:RDN-1], perr_s [0:RDN-1]; integer q;
     always @(posedge ck or negedge rn)
-        if (!rn) begin rdy_3 <= 0; rdy_4 <= 0; rdy_5 <= 0; rdy_6 <= 0; rdy_p <= 0;
-                       perr_3 <= 0; perr_4 <= 0; perr_5 <= 0; perr_6 <= 0; perr_p <= 0; end
-        else begin rdy_3 <= rdy_i; rdy_4 <= rdy_3; rdy_5 <= rdy_4; rdy_6 <= rdy_5; rdy_p <= rdy_6;
-                   perr_3 <= perr_i; perr_4 <= perr_3; perr_5 <= perr_4; perr_6 <= perr_5; perr_p <= perr_6; end
+        if (!rn) for (q = 0; q < RDN; q = q + 1) begin rdy_s[q] <= 8'd0; perr_s[q] <= 8'd0; end
+        else begin rdy_s[0] <= rdy_i; perr_s[0] <= perr_i;
+                   for (q = 1; q < RDN; q = q + 1) begin rdy_s[q] <= rdy_s[q-1]; perr_s[q] <= perr_s[q-1]; end end
+    wire [7:0] rdy_p = rdy_s[RDN-1], perr_p = perr_s[RDN-1];
 
     // ---------------- VM requests
     reg vrel_q, vrd_q; reg [2:0] vrels_q; reg [10:0] vra_q;
@@ -75,10 +78,15 @@ module ot_engc_t_io #(
     always @(posedge ck) begin r0_a <= rcmp[7:0]; r1_a <= rcmp[7:0]; r2_a <= rcmp[7:0]; end
 
     // ---------------- read data: pin flops, decode, out
+    // column data (banks 0 / 2) arrive 3 edges before the chain's bank 1 under PT: delayed here to meet it
+    localparam integer CD = PT ? 3 : 0, RVN = 9 + CD;
+    reg [319:0] cd_s [0:2];
+    always @(posedge ck) begin cd_s[0] <= {rd2, rd0}; cd_s[1] <= cd_s[0]; cd_s[2] <= cd_s[1]; end
+    wire [319:0] c_al = (CD == 0) ? {rd2, rd0} : cd_s[CD-1];
     reg [575:0] rc_q;
-    always @(posedge ck) rc_q <= {rd2, rd1, rd0};
-    reg [8:0] rv_q;                                  // rv_q[8] aligned with rc_q
-    always @(posedge ck or negedge rn) if (!rn) rv_q <= 9'd0; else rv_q <= {rv_q[7:0], vrd_q && rd_ok};
+    always @(posedge ck) rc_q <= {c_al[319:256], rd1, c_al[255:0]};
+    reg [RVN-1:0] rv_q;                              // rv_q[RVN-1] aligned with rc_q
+    always @(posedge ck or negedge rn) if (!rn) rv_q <= {RVN{1'b0}}; else rv_q <= {rv_q[RVN-2:0], vrd_q && rd_ok};
     wire [511:0] dec; wire [7:0] ce, ue;
     genvar l;
     generate for (l = 0; l < 8; l = l + 1) begin : g_dec
@@ -91,7 +99,7 @@ module ot_engc_t_io #(
         if (!rn) begin v7_q <= 0; ce7_q <= 0; ue7_q <= 0; ov_q <= 0; oce_q <= 0; oue_q <= 0; pf_fault <= 0;
                        tvs_q <= 19'd0; tvv_q <= 1'b0; end
         else begin
-            v7_q <= rv_q[8]; ce7_q <= ce & {8{rv_q[8]}}; ue7_q <= ue & {8{rv_q[8]}};
+            v7_q <= rv_q[RVN-1]; ce7_q <= ce & {8{rv_q[RVN-1]}}; ue7_q <= ue & {8{rv_q[RVN-1]}};
             ov_q <= v7_q; oce_q <= v7_q && (|ce7_q); oue_q <= v7_q && (|ue7_q);
             if (werr_q || rerr_q || oue_q) pf_fault <= 1'b1;
             tvs_q <= {perr_p, rdy_p, pf_fault, oue_q, oce_q}; tvv_q <= ov_q;

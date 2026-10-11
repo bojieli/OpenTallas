@@ -9,10 +9,10 @@
 // ALL-TILE (el1011-ds-misc/engram 2026-10-11, textbook class 1): the top level holds NO register.  Every flop lives in a
 // hardened tile with its own clock tree and registered faces (tiles/): T_WIN (window queue, all-gather, leaf resets,
 // sink seams), T_IO (endpoint, done, VM side, decode), T_WS (sink write port + encode, HBM relays), the prefetch banks
-// T_PBB (bank 1) and T_PBC x2 (banks 0, 2), plus the closed lookup / sink leaves.  The top clock tree drives 8 tile clock
+// the bank-1 pair-tile chain P0..P2 (T_PTH / T_PTB) and T_PBC x2 (banks 0, 2), plus the closed lookup / sink leaves.  The top clock tree drives 10 tile clock
 // pins.  Physical spec: el1011-ds-misc.log "PHYSICAL SPEC dsfd_engram_c ALL-TILE".  Cycle changes vs the HIER version:
-// window -> lookup +1 (registered), write commit t+5/6/7 (bank 1/0/2) -> rdy published 7 edges after the sink's (was 4),
-// VM read out_v 13 edges after rd_v (was 11; valid-tagged).
+// window -> lookup +1 (registered), write commit t+5..7 (bank 1) / t+8 (bank 0) / t+9 (bank 2) -> rdy published 9 edges
+// after the sink's (was 4), VM read out_v 16 edges after rd_v (was 11; valid-tagged).
 // The die buses are ENG_BUSES of tools/dsrom_s81_fulldie.py (names below = the generator's port names).
 //
 // ENGINE SEMANTICS (one job = one token's Engram lookup on this rank):
@@ -91,9 +91,19 @@ module dsfd_engram_c #(
         .ck(ck[0]), .rst(rst[0]), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .werr(werr_ws),
         .w_oh(w_oh), .w_a(w_a), .b1_d(b1_d), .x_d(x_d),
         .lk_hqv(lk_hqv), .lk_hqa(lk_hqa), .lk_hqt(lk_hqt), .t_hq(t_hq), .f_hr(f_hr), .lk_hr(lk_hr));
-    // prefetch banks: band tile = bank 1 (+ write transit {bank 2, bank 0}); columns = bank 0, bank 2
-    ot_engc_t_pbb u_pb1 (.ck(ck[0]), .rst(rst[0]), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
-        .x_oh(x0_oh), .x_a(x0_a), .x_do(x0_d), .r_oh(r1_oh), .r_a(r1_a), .r_d(rd1));
+    // prefetch banks: bank 1 = the 3-pair-tile chain P0 (head, fed by T_WS) -> P1 -> P2 (write + transit W->E, read
+    // request E->W from T_IO, read data W->E OR-merged); columns = bank 0 (fed by P2's transit), bank 2
+    wire [5:0] p0_oh, p1_oh, p2_oh, q2_oh, q1_oh; wire [7:0] p0_a, p1_a, p2_a, q2_a, q1_a;
+    wire [255:0] p0_d, p1_d, p2_d, p0_r, p1_r; wire [319:0] p0_x, p1_x;
+    ot_engc_t_pth u_p0 (.ck(ck[0]), .rst(rst[0]), .pos(2'd2), .wi_oh(w_oh), .wi_a(w_a), .wi_d(b1_d), .xi_d(x_d),
+        .wo_oh(p0_oh), .wo_a(p0_a), .wo_d(p0_d), .xo_d(p0_x), .rq_oh(q1_oh), .rq_a(q1_a), .rqo_oh(), .rqo_a(),
+        .rd_in(256'd0), .r_d(p0_r));
+    ot_engc_t_ptb u_p1 (.ck(ck[0]), .rst(rst[0]), .pos(2'd1), .wi_oh(p0_oh), .wi_a(p0_a), .wi_d(p0_d), .xi_d(p0_x),
+        .wo_oh(p1_oh), .wo_a(p1_a), .wo_d(p1_d), .xo_d(p1_x), .rq_oh(q2_oh), .rq_a(q2_a), .rqo_oh(q1_oh), .rqo_a(q1_a),
+        .rd_in(p0_r), .r_d(p1_r));
+    ot_engc_t_ptb u_p2 (.ck(ck[0]), .rst(rst[0]), .pos(2'd0), .wi_oh(p1_oh), .wi_a(p1_a), .wi_d(p1_d), .xi_d(p1_x),
+        .wo_oh(x0_oh), .wo_a(x0_a), .wo_d(), .xo_d(x0_d), .rq_oh(r1_oh), .rq_a(r1_a), .rqo_oh(q2_oh), .rqo_a(q2_a),
+        .rd_in(p1_r), .r_d(rd1));
     ot_engc_t_pbc u_pb0 (.ck(ck[0]), .rst(rst[0]), .w_oh(x0_oh), .w_a(x0_a), .w_d(x0_d[255:0]), .x_d(x0_d[319:256]),
         .x_oh(x1_oh), .x_a(x1_a), .x_do(x1_d), .r_oh(r0_oh), .r_a(r0_a), .r_d(rd0));
     ot_engc_t_pbc u_pb2 (.ck(ck[0]), .rst(rst[0]), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
