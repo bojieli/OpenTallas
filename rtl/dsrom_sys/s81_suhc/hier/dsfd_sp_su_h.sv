@@ -29,7 +29,10 @@ module dsfd_sp_su_h #(
     parameter integer NQB = (QB_NB >= 32) ? QB_NB / 8 : 2,
     parameter integer NSW = (SW_W >= 128) ? SW_W / 128 : 1,
     parameter integer NSM = (SM_H >= 2) ? SM_H / 2 : 1,
-    parameter integer NPO = (S_RD >= 16 && S_WR >= 16) ? 4 : 1
+    parameter integer NPO = (S_RD >= 16 && S_WR >= 16) ? 4 : 1,
+    // relay stations on every pin owner link (spine slices and control seams), the same depth on every link so the
+    // slots of a cycle stay aligned: the pin owners stack ~1.9 mm along the VM pin edge (<= 500 um a station)
+    parameter integer NRL = (S_RD >= 16) ? 4 : 1
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
@@ -93,25 +96,27 @@ module dsfd_sp_su_h #(
     always @(posedge sk or negedge rst_c) if (!rst_c) rs0 <= 1'b0; else rs0 <= 1'b1;
     assign rst[0] = rs0;
 
-    // ------------------------------------------------------------------ pin owners (+ a relay station each seam way)
+    // ------------------------------------------------------------------ pin owners (+ NRL relay stations every link)
     genvar o;
     generate for (o = 0; o < NPO; o = o + 1) begin : g_po
-        reg  [KR-1:0]    rq_v_r;  reg [KR*14-1:0] rq_row_r;
-        wire [KR-1:0]    rv;      wire [KR*30-1:0] rf;   wire [KW-1:0] uvo;
-        reg  [KR-1:0]    rv_r;    reg [KR*30-1:0] rf_r;  reg [KW-1:0] uv_r;
-        always @(posedge sk) begin rq_row_r <= c_rq_row[KR * 14 * o +: KR * 14]; rf_r <= rf; end
-        always @(posedge sk or negedge rs0)
-            if (!rs0) begin rq_v_r <= 0; rv_r <= 0; uv_r <= 0; end
-            else begin rq_v_r <= c_rq_v[KR * o +: KR]; rv_r <= rv; uv_r <= uvo; end
-        assign p_rv[KR * o +: KR] = rv_r; assign p_rf[KR * 30 * o +: KR * 30] = rf_r; assign p_uv[KW * o +: KW] = uv_r;
+        wire [KR-1:0]    rv, dnv;  wire [KR*30-1:0] rf;   wire [KW-1:0] uvo;
+        wire [KR*512-1:0] dnd;
+        wire [KR-1:0]    rq_v_r;  wire [KR*14-1:0] rq_row_r;
+        wire [KW-1:0]    upv;     wire [KW*14-1:0] upa;   wire [KW*16-1:0] upm;  wire [KW*512-1:0] upd;
+        // control-signal relays (reset), data relays (no reset)
+        ot_hdc_delay #(.W(KR + KR + KW + KR + KW), .D(NRL), .RESET(1)) u_rlc (.clk(sk), .rst_n(rs0),
+            .d({c_rq_v[KR * o +: KR], rv, uvo, dnv, uv[0][KW * o +: KW]}),
+            .q({rq_v_r, p_rv[KR * o +: KR], p_uv[KW * o +: KW], dv[0][KR * o +: KR], upv}));
+        ot_hdc_delay #(.W(KR * 14 + KR * 30 + KR * 512 + KW * (14 + 16 + 512)), .D(NRL)) u_rld (.clk(sk), .rst_n(rs0),
+            .d({c_rq_row[KR * 14 * o +: KR * 14], rf, dnd, ua[0][KW * 14 * o +: KW * 14], um[0][KW * 16 * o +: KW * 16],
+                ud[0][KW * 512 * o +: KW * 512]}),
+            .q({rq_row_r, p_rf[KR * 30 * o +: KR * 30], dd[0][KR * 512 * o +: KR * 512], upa, upm, upd}));
         ot_s81_su_pin #(.KR(KR), .KW(KW)) u_po (
             .clk(sk), .rst_in(rs0),
             .rq_v(rq_v[KR * o +: KR]), .rq_row(rq_row[KR * 14 * o +: KR * 14]), .rs_v(rs_v[KR * o +: KR]),
             .rs_d(rs_d[KR * 512 * o +: KR * 512]), .wq_v(wq_v[KW * o +: KW]), .wq_row(wq_row[KW * 14 * o +: KW * 14]),
             .wq_mask(wq_mask[KW * 16 * o +: KW * 16]), .wq_d(wq_d[KW * 512 * o +: KW * 512]),
-            .dn_v(dv[0][KR * o +: KR]), .dn_d(dd[0][KR * 512 * o +: KR * 512]),
-            .up_v(uv[0][KW * o +: KW]), .up_a(ua[0][KW * 14 * o +: KW * 14]), .up_m(um[0][KW * 16 * o +: KW * 16]),
-            .up_d(ud[0][KW * 512 * o +: KW * 512]),
+            .dn_v(dnv), .dn_d(dnd), .up_v(upv), .up_a(upa), .up_m(upm), .up_d(upd),
             .c_rq_v(rq_v_r), .c_rq_row(rq_row_r), .c_rv(rv), .c_rf(rf), .c_uv(uvo));
     end endgenerate
 
