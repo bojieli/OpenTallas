@@ -8,7 +8,7 @@
 // done arrives at the controller in order with its tag, AFTER the last END of the job on every slab; no slab fault.
 // TBMUT: 1 drop the descriptor of job 3 (dropped start), 2 job 3's descriptor misses source 0 in its END set (wrong
 // descriptor), 3 job 3's descriptor names one q frame too many.  JMUT -> ot_s81_svc_job MUT, JNMUT -> dsfd_svc_join MUT.
-module tb_s81_svc_job #(parameter integer NS = 2, NJ = 40, TBMUT = 0, JMUT = 0, JNMUT = 0, LEAD = 16, SEED = 1);
+module tb_s81_svc_job #(parameter integer TILE = 0, NS = 2, NJ = 40, TBMUT = 0, JMUT = 0, JNMUT = 0, LEAD = 16, SEED = 1);
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst = 0; integer cyc = 0;
     always @(posedge clk) begin cyc <= cyc + 1; if (cyc == 5) rst <= 1; end
@@ -55,11 +55,21 @@ module tb_s81_svc_job #(parameter integer NS = 2, NJ = 40, TBMUT = 0, JMUT = 0, 
         wire [513:0] od, xd; wire [1025:0] ad; wire hf; wire [2059:0] q_q;
         wire [3:0] od_r, a0_r; wire a1_r, x_r;
         reg [3:0] od_v = 0, a0_v = 0; reg [2047:0] od_d = 0, a0_d = 0; reg a1_v = 0, x_v = 0; reg [511:0] a1_d = 0, x_d = 0;
-        ot_s81_svc_job #(.MUT(JMUT)) u_job (.ck(clk), .rs_n(rst), .j_cmd(j_cmd[33*gs +: 33]), .j_dn(j_dn[2*gs +: 2]),
-            .q(q), .core_q(core_q), .ad(ad), .xd(xd), .od(od));
-        ot_s81ph_svc_io #(.NQ(4), .SYNC(1)) u_io (.ck(clk), .rst(rst), .q(core_q), .od(od), .xd(xd), .ad(ad), .fault(hf), .q_q(q_q),
-            .od_v(od_v), .od_d(od_d), .od_r(od_r), .a0_v(a0_v), .a0_d(a0_d), .a0_r(a0_r), .a1_v(a1_v), .a1_d(a1_d), .a1_r(a1_r),
-            .x_v(x_v), .x_d(x_d), .x_r(x_r));
+        if (TILE == 0) begin : g_flat
+            ot_s81_svc_job #(.MUT(JMUT)) u_job (.ck(clk), .rs_n(rst), .j_cmd(j_cmd[33*gs +: 33]), .j_dn(j_dn[2*gs +: 2]),
+                .q(q), .core_q(core_q), .ad(ad), .xd(xd), .od(od));
+            ot_s81ph_svc_io #(.NQ(4), .SYNC(1)) u_io (.ck(clk), .rst(rst), .q(core_q), .od(od), .xd(xd), .ad(ad), .fault(hf), .q_q(q_q),
+                .od_v(od_v), .od_d(od_d), .od_r(od_r), .a0_v(a0_v), .a0_d(a0_d), .a0_r(a0_r), .a1_v(a1_v), .a1_d(a1_d), .a1_r(a1_r),
+                .x_v(x_v), .x_d(x_d), .x_r(x_r));
+        end else begin : g_tile   // the slab composition: job tile + the closed hub tiles (as dsfd_svc_c)
+            wire of_, xf_, af_;
+            dsfd_svcio_job #(.MUT(JMUT)) u_job (.ck(clk), .rst(rst), .j(j_cmd[33*gs +: 33]), .jd(j_dn[2*gs +: 2]), .q(q), .q_o(core_q),
+                .t_a0({ad[492:481], ad[508:496], ad[0]}), .t_a1({ad[1005:994], ad[1021:1009], ad[513]}),
+                .t_x({xd[493:482], xd[509:497], xd[1]}), .t_od({od[493:482], od[509:497], od[1]}));
+            ot_s81ph_svc_io_t u_io (.ck(clk), .rst(rst), .q(core_q), .od(od), .xd(xd), .ad(ad), .fault(hf), .q_q(q_q),
+                .od_v(od_v), .od_d(od_d), .od_r(od_r), .a0_v(a0_v), .a0_d(a0_d), .a0_r(a0_r), .a1_v(a1_v), .a1_d(a1_d), .a1_r(a1_r),
+                .x_v(x_v), .x_d(x_d), .x_r(x_r), .of(of_), .xf(xf_), .af(af_));
+        end
         // VM: job j's q frames after its descriptor + LEAD (one word a cycle, no ready)
         integer vj = 0, vf = 0, vw = 0, vlen; reg [511:0] hdr;
         always @(posedge clk) begin

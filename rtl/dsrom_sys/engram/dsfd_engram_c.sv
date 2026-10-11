@@ -22,8 +22,8 @@
 // the collective ctrl lane).
 // HBM: the lookup's request / response credit pair (hq / hr) is the backend port pair t_hq / f_hr (35 / 265 b), the
 // SE half of ot_dsrom_engram_hbm_backend binds there (rowstripe read service + boot path; the SW half via svc_SW).
-// MUT (negative controls): 5 early done (done when the window is released to the lookup), 6 done on the rdy LEVEL
-// (a slot still ready from window n - 8 completes window n).  EPMUT -> ot_s81_slab_ep (2 tag / 3 early start / 4
+// MUT (negative controls): 5 early done (done when the window is released to the lookup); 6 done on the rdy LEVEL
+// (equivalent in every legal flow: slot n - 8 is released before window n is accepted -- kept as a design note).  EPMUT -> ot_s81_slab_ep (2 tag / 3 early start / 4
 // dropped done).
 // ---------------------------------------------------------------------------------------------------------------
 import ot_hdc_engram_tables_shipped_pkg::*;
@@ -68,7 +68,9 @@ module dsfd_engram_c #(
     reg  j_done, jf;
     ot_s81_slab_ep #(.QD(8), .JQ(8), .MUT(EPMUT)) u_ep (.c_clk(ck[0]), .c_rst_n(rst[0]), .c_cmd(c_cmd), .c_done(c_done),
         .c_st(c_st), .e_clk(ck[0]), .e_rst_n(rn), .j_v(j_v), .j_d(j_d), .j_new(j_new), .j_new_d(j_new_d),
-        .j_present(1'b1), .j_done(j_done), .slab_fault(jf | lk_fault | pf_fault), .ep_fault(ep_fault));
+        .j_present(1'b1), .j_done(j_done), .slab_fault(jf | pf_fault), .ep_fault(ep_fault));
+    // (the lookup's sticky fault is a DATA status -- CRC / address / alignment of a row -- carried on t_ag to the
+    //  collective and per slot as perr on t_vm; it is not an engine-protocol fault)
 
     // ---------------- window hold queue (the collective holds 2 window credits)
     reg wv_q; reg [4*IDW-1:0] wid_q; reg [3:0] rel_q;

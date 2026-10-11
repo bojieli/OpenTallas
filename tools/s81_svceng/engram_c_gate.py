@@ -6,7 +6,7 @@ NgramHashState windows, shipped-table hash, behavioural HBM regions and TP4 all-
 dsfd_engram_c master driven by engine-10 descriptors; the consumer reads each slot through the master's VM port only
 after the 4 ranks' DONE and compares element for element with the golden (the campaign's compare()).
 Base modes must PASS; negative controls must FAIL: dropped start (one descriptor never sent), wrong descriptor
-(window number + 1), early done (done at window release), level done (slot still ready from window n - 8), dropped
+(window number + 1), early done (done at window release), dropped
 done (endpoint MUT 4), wrong done tag (endpoint MUT 2).  Throughput: NSLOT 8, 200 ns HBM, back-to-back windows.
 Usage: engram_c_gate.py --out DIR [--quick]"""
 import argparse, json, subprocess, sys
@@ -31,7 +31,7 @@ BASE = [("ideal_hbm_200ns", dict(LAT=240), None), ("stressed", STRESS, 500),
         ("isolated_local_ag", dict(LAT=240, SPACED=1, AGLAT=4), 60),
         ("throughput_b2b", dict(LAT=240, AGLAT=4), 400)]
 NEG = [("dropstart", dict(TBMUT=1)), ("wrongdesc", dict(TBMUT=2)), ("earlydone", dict(CMUT=5)),
-       ("leveldone", dict(CMUT=6)), ("droppeddone", dict(EPMUT=4)), ("wrongtag", dict(EPMUT=2))]
+       ("droppeddone", dict(EPMUT=4)), ("wrongtag", dict(EPMUT=2))]
 
 
 def build(obj, g):
