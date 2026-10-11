@@ -6,8 +6,13 @@
 //   + the closed row sink dsfd_engram_sink (24 columns x 4 ranks -> BF16 rows, slot ready / poison)
 //   + the prefetch buffer ot_dsrom_engram_prefetch_h (8 slots, the existing SECDED words; no new ECC; registered
 //     SRAM array: per-macro access / capture registers, pipelined bank select -- el1011-ds-misc HIER 2026-10-11)
-// HIER (el1011-ds-misc): the lookup and the sink are placed as their closed hardened views; every path between a
-// leaf and a die pin that crosses the outline is relayed (credit / valid-tagged paths only).
+// ALL-TILE (el1011-ds-misc/engram 2026-10-11, textbook class 1): the top level holds NO register.  Every flop lives in a
+// hardened tile with its own clock tree and registered faces (tiles/): T_WIN (window queue, all-gather, leaf resets,
+// sink seams), T_IO (endpoint, done, VM side, decode), T_WS (sink write port + encode, HBM relays), the prefetch banks
+// T_PBB (bank 1) and T_PBC x2 (banks 0, 2), plus the closed lookup / sink leaves.  The top clock tree drives 8 tile clock
+// pins.  Physical spec: el1011-ds-misc.log "PHYSICAL SPEC dsfd_engram_c ALL-TILE".  Cycle changes vs the HIER version:
+// window -> lookup +1 (registered), write commit t+5/6/7 (bank 1/0/2) -> rdy published 7 edges after the sink's (was 4),
+// VM read out_v 13 edges after rd_v (was 11; valid-tagged).
 // The die buses are ENG_BUSES of tools/dsrom_s81_fulldie.py (names below = the generator's port names).
 //
 // ENGINE SEMANTICS (one job = one token's Engram lookup on this rank):
@@ -38,152 +43,74 @@ module dsfd_engram_c #(
     parameter integer SINK_PIN = 1
 ) (
     input  wire [0:0]    ck,
-    input  wire [0:0]    rst,                // async die reset (active low), synchronised here
-    // engine 10 die pins (dsfd_stage_seq c<10> / d<10> / s<10>, stream clock)
+    input  wire [0:0]    rst,                // async die reset (active low), synchronised in every tile
     input  wire [84:0]   c_cmd,
     output wire [8:0]    c_done,
     output wire [1:0]    c_st,
-    // boot CSR straps (host)
     input  wire [2:0]    f_cfg,              // {cfg_rank 2, cfg_layer}
-    // lead-flit window + rank retirements (collective t_eng): {win_v, win_ids 4 x 17, rel 4}
-    input  wire [72:0]   f_win,
-    output reg  [0:0]    t_collective,       // win_cred
-    // all-gather out (to the collective): {fault, st_bad, st_slot 3, st_v, d 264, slot 3, beat 3, col 5, o_v}
+    input  wire [72:0]   f_win,              // {win_v, win_ids 4 x 17, rel 4}
+    output wire [0:0]    t_collective,       // win_cred
     output wire [281:0]  t_ag,
-    input  wire [0:0]    f_agc,              // o_cred
-    // all-gather in (4 ranks): {st_bad 4, st_slot 12, st_v 4, d 1056, slot 12, beat 12, col 20, in_v 4}
+    input  wire [0:0]    f_agc,
     input  wire [1123:0] f_ai,
-    output wire [3:0]    t_air,              // in_r
-    // VM: prefetch rows {perr 8, rdy 8, fault, ue, ce, data 512, out_v}; requests {rel_slot 3, rel_v, rd_addr 11, rd_v}
+    output wire [3:0]    t_air,
     output wire [531:0]  t_vm,
     input  wire [15:0]   f_vm,
-    // HBM backend port pair: {hq_tag 3, hq_atom 31, hq_v} / {hr_d 256, hr_idx 4, hr_tag 3, hr_v, hq_cred}
     output wire [34:0]   t_hq,
     input  wire [264:0]  f_hr
 );
-    localparam integer NSLOT = 8, SLW = 3, IDW = ENG_ID_W;
-    reg [1:0] rs_q;
-    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
-    wire rn = rs_q[1];
-    // per-leaf reset synchronisers (el1011-ds-misc HIER: the lookup / sink macros sit far from the endpoint)
-    reg [1:0] rsl_q, rss_q;
-    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
-    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rss_q <= 2'b00; else rss_q <= {rss_q[0], 1'b1};
-    wire rn_lk = rsl_q[1], rn_sk = rss_q[1];
-    // HIER relays (credit / valid-tagged paths only: a relay adds latency, never a handshake hazard)
-    reg  [1:0] jf_r;                     // sticky window fault -> endpoint (window queue sits by f_win, the endpoint by c_cmd)
-    reg  [17:0] jn_r1, jn_r2;            // {j_new, reserved != 0, n 16}: endpoint -> descriptor queue
-    reg  [15:0] wn_r1, wn_r2;            // windows released: window queue -> done side
-    reg  [1:0]  pff_r;                   // prefetch fault -> endpoint
-
-    // ---------------- command endpoint
-    wire j_v, j_new; wire [83:0] j_d, j_new_d; wire ep_fault;
-    reg  j_done, jf;
-    ot_s81_slab_ep #(.QD(8), .JQ(8), .MUT(EPMUT)) u_ep (.c_clk(ck[0]), .c_rst_n(rst[0]), .c_cmd(c_cmd), .c_done(c_done),
-        .c_st(c_st), .e_clk(ck[0]), .e_rst_n(rn), .j_v(j_v), .j_d(j_d), .j_new(j_new), .j_new_d(j_new_d),
-        .j_present(1'b1), .j_done(j_done), .slab_fault(jf_r[1] | pff_r[1]), .ep_fault(ep_fault));
-    // (the lookup's sticky fault is a DATA status -- CRC / address / alignment of a row -- carried on t_ag to the
-    //  collective and per slot as perr on t_vm; it is not an engine-protocol fault)
-
-    // ---------------- window hold queue (the collective holds 2 window credits)
-    reg wv_q; reg [4*IDW-1:0] wid_q; reg [3:0] rel_q;
-    always @(posedge ck[0] or negedge rn) if (!rn) begin wv_q <= 1'b0; rel_q <= 4'd0; end
-                                         else begin wv_q <= f_win[72]; rel_q <= f_win[3:0]; end
-    always @(posedge ck[0]) wid_q <= f_win[71:4];
-    reg [4*IDW-1:0] hq_w [0:1]; reg hh, ht; reg [1:0] hn;
-    // descriptors not yet matched to a window (issue side runs ahead of the done side)
-    reg [16:0] ia [0:7]; reg [2:0] iw, ir; reg [3:0] in_;
-    reg [15:0] wn;                         // windows released to the lookup
-    reg [15:0] dn;                         // jobs done
-    reg [1:0]  lc;                         // credits toward the lookup's 2-entry window FIFO
-    wire       lk_wcred;
-    wire       rel_w = (hn != 2'd0) && (in_ != 4'd0) && (lc != 2'd0);
-    wire       lk_wv = rel_w;
-    wire [4*IDW-1:0] lk_wid = hq_w[hh];
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin
-            hh <= 1'b0; ht <= 1'b0; hn <= 2'd0; iw <= 0; ir <= 0; in_ <= 0; wn <= 0; lc <= 2'd2; jf <= 1'b0;
-            t_collective <= 1'b0;
-        end else begin
-            if (wv_q) begin hq_w[ht] <= wid_q; ht <= ~ht; if (hn == 2'd2 && !rel_w) jf <= 1'b1; end
-            if (rel_w) hh <= ~hh;
-            hn <= hn + wv_q - rel_w;
-            t_collective <= rel_w;          // the window credit returns when the window leaves the hold queue
-            if (jn_r2[17]) begin ia[iw] <= jn_r2[16:0]; iw <= iw + 1'b1; end
-            if (rel_w && in_ != 4'd0) begin
-                if (ia[ir][16] || ia[ir][15:0] != wn) jf <= 1'b1;      // wrong descriptor
-                ir <= ir + 1'b1;
-            end
-            in_ <= in_ + jn_r2[17] - (rel_w && in_ != 4'd0);
-            if (rel_w) wn <= wn + 1'b1;
-            lc <= lc - rel_w + lk_wcred;
-        end
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin jf_r <= 2'b00; jn_r1 <= 18'd0; jn_r2 <= 18'd0; wn_r1 <= 16'd0; wn_r2 <= 16'd0; end
-        else begin
-            jf_r  <= {jf_r[0], jf};
-            jn_r1 <= {j_new, (j_new_d[30:23] != 8'd0), j_new_d[22:7]}; jn_r2 <= jn_r1;
-            wn_r1 <= wn; wn_r2 <= wn_r1;
-        end
-    always @(posedge ck[0] or negedge rn) if (!rn) pff_r <= 2'b00; else pff_r <= {pff_r[0], pf_fault};
-
-    // ---------------- lookup element (closed dsfd_engram_lkp)
+    localparam integer NSLOT = 8, SLW = 3;
+    // ---------------- seams
+    wire        lk_wv, lk_wcred, lk_ocred, rn_lk, rn_sk, jf, werr_ws, werr_w;
+    wire [67:0] lk_wid; wire [3:0] lk_rel, vrel_io, vrel_sk; wire [2:0] cfg_io, cfg_lk;
     wire lk_fault, lk_ov, lk_stv, lk_stb, lk_hqv; wire [4:0] lk_oc; wire [2:0] lk_ob, lk_os, lk_sts, lk_hqt;
-    wire [263:0] lk_od; wire [30:0] lk_hqa;
-    // HBM pair relays (die pins on the W edge, the lookup's HBM edge faces S): 2 forward stages each way
-    // HBM pair relays (die pins on the W edge, the lookup's HBM edge faces S): 2 forward stages each way
-    // all-gather out relays (the lookup's output edge faces N, the t_ag pins are left of it) + credit return stage
-    // (TEXTBOOK class 2: relay data carries no reset; only the valid / credit / fault bits are reset)
-    reg  [33:0]  hqd_1, hqd_2; reg hqv_1, hqv_2;                  // {hq_tag, hq_atom} / hq_v
-    reg  [262:0] hrd_1, hrd_2; reg [1:0] hrv_1, hrv_2;            // {hr_d, hr_idx, hr_tag} / {hr_v, hq_cred}
-    reg  [3:0]   ags_1, ags_2;                                     // {st_bad, st_slot}
-    reg  [274:0] agd_1, agd_2;                                     // {d, slot, beat, col}
-    reg  [2:0]   agv_1, agv_2;                                     // {fault, st_v, o_v}
-    reg agc_r;
-    reg  [2:0]   cfg_r1, cfg_r2;             // boot straps (static)
-    always @(posedge ck[0]) begin
-        hqd_1 <= {lk_hqt, lk_hqa}; hqd_2 <= hqd_1;
-        hrd_1 <= f_hr[264:2]; hrd_2 <= hrd_1;
-        ags_1 <= {lk_stb, lk_sts}; ags_2 <= ags_1;
-        agd_1 <= {lk_od, lk_os, lk_ob, lk_oc}; agd_2 <= agd_1;
-    end
-    always @(posedge ck[0] or negedge rn_lk)
-        if (!rn_lk) begin hqv_1 <= 1'b0; hqv_2 <= 1'b0; hrv_1 <= 2'b00; hrv_2 <= 2'b00; agv_1 <= 3'd0; agv_2 <= 3'd0;
-                          agc_r <= 1'b0; end
-        else begin
-            hqv_1 <= lk_hqv; hqv_2 <= hqv_1;
-            hrv_1 <= f_hr[1:0]; hrv_2 <= hrv_1;
-            agv_1 <= {lk_fault, lk_stv, lk_ov}; agv_2 <= agv_1;
-            agc_r <= f_agc[0];
-        end
-    wire [264:0] hr_r2 = {hrd_2, hrv_2};
-    always @(posedge ck[0]) begin cfg_r1 <= f_cfg; cfg_r2 <= cfg_r1; end
-    // HIER: in synthesis the lookup / sink are the closed hardened views (liberty black boxes, no parameters); the
-    // views were built at exactly these values (lkp: defaults = PIPE 0 / NSLOT 8 / HQ_CRED 8 / O_CRED 16 / SLW 3;
-    // sink: PIN_CAPTURE 1 / NSLOT 8 / SLW 3), so the parameterised instance below is what simulation runs.
+    wire [263:0] lk_od; wire [30:0] lk_hqa; wire [264:0] lk_hr;
+    wire [7:0] s_rdy, s_perr, rdy_w, perr_w; wire s_we; wire [10:0] s_wa; wire [511:0] s_wd;
+    wire [17:0] jn; wire [15:0] wn;
+    wire [5:0] w_oh, x0_oh, x1_oh, r0_oh, r1_oh, r2_oh; wire [7:0] w_a, x0_a, x1_a, r0_a, r1_a, r2_a;
+    wire [255:0] b1_d, rd0, rd1, rd2w; wire [319:0] x_d, x0_d; wire [63:0] x1_d;
+
+    ot_engc_t_win u_win (
+        .ck(ck[0]), .rst(rst[0]), .f_win(f_win), .t_collective(t_collective[0]),
+        .lk_wv(lk_wv), .lk_wid(lk_wid), .lk_wcred(lk_wcred), .lk_rel(lk_rel),
+        .lk_ov(lk_ov), .lk_stv(lk_stv), .lk_stb(lk_stb), .lk_fault(lk_fault), .lk_oc(lk_oc), .lk_ob(lk_ob), .lk_os(lk_os),
+        .lk_sts(lk_sts), .lk_od(lk_od), .t_ag(t_ag), .f_agc(f_agc[0]), .lk_ocred(lk_ocred),
+        .cfg_i(cfg_io), .cfg_o(cfg_lk), .rn_lk(rn_lk), .rn_sk(rn_sk),
+        .s_rdy(s_rdy), .s_perr(s_perr), .rdy_o(rdy_w), .perr_o(perr_w), .vrel_i(vrel_io), .vrel_o(vrel_sk),
+        .jn_i(jn), .wn_o(wn), .jf_o(jf), .werr_i(werr_ws), .werr_o(werr_w));
+`ifdef SYNTHESIS
+    ot_engc_t_io u_io (
+`else
+    ot_engc_t_io #(.MUT(MUT), .EPMUT(EPMUT)) u_io (
+`endif
+        .ck(ck[0]), .rst(rst[0]), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cfg(f_cfg), .cfg_o(cfg_io),
+        .f_vm(f_vm), .t_vm(t_vm), .rdy_i(rdy_w), .perr_i(perr_w), .vrel_o(vrel_io), .jn_o(jn), .wn_i(wn), .jf_i(jf),
+        .werr_i(werr_w), .r0_oh(r0_oh), .r1_oh(r1_oh), .r2_oh(r2_oh), .r0_a(r0_a), .r1_a(r1_a), .r2_a(r2_a),
+        .rd0(rd0), .rd1(rd1), .rd2(rd2w[63:0]));
+    ot_engc_t_ws u_ws (
+        .ck(ck[0]), .rst(rst[0]), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .werr(werr_ws),
+        .w_oh(w_oh), .w_a(w_a), .b1_d(b1_d), .x_d(x_d),
+        .lk_hqv(lk_hqv), .lk_hqa(lk_hqa), .lk_hqt(lk_hqt), .t_hq(t_hq), .f_hr(f_hr), .lk_hr(lk_hr));
+    // prefetch banks: band tile = bank 1 (+ write transit {bank 2, bank 0}); columns = bank 0, bank 2
+    ot_engc_t_pbb u_pb1 (.ck(ck[0]), .rst(rst[0]), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
+        .x_oh(x0_oh), .x_a(x0_a), .x_do(x0_d), .r_oh(r1_oh), .r_a(r1_a), .r_d(rd1));
+    ot_engc_t_pbc u_pb0 (.ck(ck[0]), .rst(rst[0]), .w_oh(x0_oh), .w_a(x0_a), .w_d(x0_d[255:0]), .x_d(x0_d[319:256]),
+        .x_oh(x1_oh), .x_a(x1_a), .x_do(x1_d), .r_oh(r0_oh), .r_a(r0_a), .r_d(rd0));
+    ot_engc_t_pbc u_pb2 (.ck(ck[0]), .rst(rst[0]), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
+        .x_oh(), .x_a(), .x_do(), .r_oh(r2_oh), .r_a(r2_a), .r_d(rd2w));
+
+    // ---------------- closed leaves (in synthesis: hardened views, built at exactly these parameter values)
 `ifdef SYNTHESIS
     dsfd_engram_lkp u_lkp (
 `else
     dsfd_engram_lkp #(.PIPE(PIPE), .NSLOT(NSLOT), .HQ_CRED(8), .O_CRED(16), .SLW(SLW)) u_lkp (
 `endif
-        .ck(ck[0]), .rst_n(rn_lk), .cfg_layer(cfg_r2[0]), .cfg_rank(cfg_r2[2:1]),
-        .win_v(lk_wv), .win_ids(lk_wid), .win_cred(lk_wcred), .rel(rel_q),
-        .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(hr_r2[0]),
-        .hr_v(hr_r2[1]), .hr_tag(hr_r2[4:2]), .hr_idx(hr_r2[8:5]), .hr_d(hr_r2[264:9]),
-        .o_v(lk_ov), .o_col(lk_oc), .o_beat(lk_ob), .o_slot(lk_os), .o_d(lk_od), .o_cred(agc_r),
+        .ck(ck[0]), .rst_n(rn_lk), .cfg_layer(cfg_lk[0]), .cfg_rank(cfg_lk[2:1]),
+        .win_v(lk_wv), .win_ids(lk_wid), .win_cred(lk_wcred), .rel(lk_rel),
+        .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(lk_hr[0]),
+        .hr_v(lk_hr[1]), .hr_tag(lk_hr[4:2]), .hr_idx(lk_hr[8:5]), .hr_d(lk_hr[264:9]),
+        .o_v(lk_ov), .o_col(lk_oc), .o_beat(lk_ob), .o_slot(lk_os), .o_d(lk_od), .o_cred(lk_ocred),
         .st_v(lk_stv), .st_slot(lk_sts), .st_bad(lk_stb), .fault(lk_fault));
-    assign t_hq = {hqd_2, hqv_2};
-    assign t_ag = {agv_2[2], ags_2[3], ags_2[2:0], agv_2[1], agd_2, agv_2[0]};
-
-    // ---------------- row sink (closed dsfd_engram_sink) -> prefetch buffer
-    wire s_we; wire [10:0] s_wa; wire [511:0] s_wd; wire [7:0] s_rdy, s_perr;
-    reg  vrel_q; reg [2:0] vrels_q; reg vrd_q; reg [10:0] vra_q;
-    reg  [3:0] vrel_r1, vrel_r2;          // release relays: f_vm pins (by t_vm) -> the sink's W edge
-    always @(posedge ck[0] or negedge rn) if (!rn) begin vrel_q <= 1'b0; vrd_q <= 1'b0; end
-                                         else begin vrel_q <= f_vm[12]; vrd_q <= f_vm[0]; end
-    always @(posedge ck[0]) begin vrels_q <= f_vm[15:13]; vra_q <= f_vm[11:1]; end   // f_vm = {rel_slot 3, rel_v, rd_addr 11, rd_v}
-    always @(posedge ck[0] or negedge rn_sk) if (!rn_sk) begin vrel_r1 <= 4'd0; vrel_r2 <= 4'd0; end
-                                            else begin vrel_r1 <= {vrels_q, vrel_q}; vrel_r2 <= vrel_r1; end
 `ifdef SYNTHESIS
     dsfd_engram_sink u_sink (
 `else
@@ -192,40 +119,5 @@ module dsfd_engram_c #(
         .ck(ck[0]), .rst_n(rn_sk), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
         .in_slot(f_ai[47:36]), .in_d(f_ai[1103:48]), .st_v(f_ai[1107:1104]), .st_slot(f_ai[1119:1108]),
         .st_bad(f_ai[1123:1120]), .wr_en(s_we), .wr_addr(s_wa), .wr_data(s_wd), .rdy(s_rdy), .perr(s_perr),
-        .rel_v(vrel_r2[0]), .rel_slot(vrel_r2[3:1]));
-    wire pf_v, pf_ce, pf_ue, pf_fault; wire [511:0] pf_d; wire pf_wp;
-    ot_dsrom_engram_prefetch_h u_pf (.ck(ck[0]), .rst_n(rn), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .wr_pending(pf_wp),
-        .rd_v(vrd_q), .rd_addr(vra_q), .out_v(pf_v), .out_data(pf_d), .out_ce(pf_ce), .out_ue(pf_ue), .fault(pf_fault));
-    // rdy is published four cycles after the sink's: the sink's rdy and its last wr_en leave the same register stage
-    // and ot_dsrom_engram_prefetch_h commits a write at the 4th edge after wr_en (W1 / W2 / W3), so a slot is READY
-    // only once its rows are in the SRAM.  The chain is a plain shift (relays from the sink's W edge toward the VM
-    // pins): a release drops rdy 4 cycles later; a refill of the slot takes a whole HBM window, so no rising edge is lost.
-    reg [7:0] rdy_1, rdy_2, rdy_3, rdy_p, perr_1, perr_2, perr_3, perr_p;
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin rdy_1 <= 8'd0; rdy_2 <= 8'd0; rdy_3 <= 8'd0; rdy_p <= 8'd0;
-                       perr_1 <= 8'd0; perr_2 <= 8'd0; perr_3 <= 8'd0; perr_p <= 8'd0; end
-        else begin rdy_1 <= s_rdy; rdy_2 <= rdy_1; rdy_3 <= rdy_2; rdy_p <= rdy_3;
-                   perr_1 <= s_perr; perr_2 <= perr_1; perr_3 <= perr_2; perr_p <= perr_3; end
-    // registered VM outputs at the t_vm pins
-    // (data unreset; perr / rdy / fault / ue / ce / v reset)
-    reg [511:0] tvd_q; reg [18:0] tvs_q; reg tvv_q;
-    always @(posedge ck[0]) tvd_q <= pf_d;
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin tvs_q <= 19'd0; tvv_q <= 1'b0; end
-        else     begin tvs_q <= {perr_p, rdy_p, pf_fault, pf_ue, pf_ce}; tvv_q <= pf_v; end
-    assign t_vm = {tvs_q, tvd_q, tvv_q};
-
-    // ---------------- done side: the (n / 8 + 1)-th rising edge of rdy[n mod 8]
-    reg [7:0] rdy_d; reg [12:0] rise [0:7]; integer s;
-    wire [2:0]  dslot = dn[2:0];
-    wire [12:0] depo  = dn[15:3] + 1'b1;
-    wire        dhit  = (MUT == 6) ? rdy_p[dslot] : (rise[dslot] == depo);
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin rdy_d <= 8'd0; dn <= 0; j_done <= 1'b0; for (s = 0; s < 8; s = s + 1) rise[s] <= 13'd0; end
-        else begin
-            rdy_d <= rdy_p;
-            for (s = 0; s < 8; s = s + 1) if (rdy_p[s] && !rdy_d[s]) rise[s] <= rise[s] + 1'b1;
-            j_done <= 1'b0;
-            if (j_v && !j_done && dn != wn_r2 && (MUT == 5 ? 1'b1 : dhit)) begin j_done <= 1'b1; dn <= dn + 1'b1; end
-        end
+        .rel_v(vrel_sk[0]), .rel_slot(vrel_sk[3:1]));
 endmodule

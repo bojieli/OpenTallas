@@ -23,6 +23,7 @@ SRC = C.SOURCES + [E / "dsfd_engram_sink.sv", E / "ot_dsrom_engram_prefetch_h.sv
                    ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
                    ROOT / "rtl/lib/ot_reset_sync.sv", ROOT / "rtl/lib/ot_async_fifo.sv",
                    ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+                   E / "tiles/ot_engc_pbank.sv", E / "tiles/ot_engc_t_ws.sv", E / "tiles/ot_engc_t_win.sv", E / "tiles/ot_engc_t_io.sv",
                    E / "dsfd_engram_c.sv"]
 TB = ROOT / "rtl/test/tb_dsfd_engram_c.sv"
 STRESS = dict(LAT=60, JIT=400, STALL=30, GAP=30, REORD=1, BUB=10, CDEL=300, AGLAT=20, AGJIT=60)
