@@ -234,6 +234,9 @@ module ot_hdc_vstream #(
             //: inbound -- broadcast fields from this lane's group relay (stage 1), then RD - 1 per-lane stages; per-lane
             //: fields (live, offsets, memory answers) RD per-lane stages; the tile adds its pin flop.
             localparam integer PDW = 4*AW + 3*32 + 64;
+            //: OT_LOFF_MUT (bench mutant): the lane offset applied twice, as LANE = l does on the flat lanes (must FAIL)
+            wire [AW-1:0] tcura = lcura + LMUT * l * asi, tcurb = lcurb + LMUT * l * bsi;
+            wire [AW-1:0] tcurc = lcurc + LMUT * l * csi, tcurd = lcurd + LMUT * l * dsi;
             wire [GBW-1:0] b_d = g_grp[l / 8].g_on.gb;
             wire [2:0]     b_v = g_grp[l / 8].g_on.gv;
             wire [GBW-1:0] b_q;
@@ -244,7 +247,7 @@ module ot_hdc_vstream #(
             ot_hdc_delay #(.W(3), .D(RD - 1), .RESET(1)) u_bv (.clk(clk), .rst_n(rst_l), .d(b_v), .q(bv_q));
             ot_hdc_delay #(.W(1), .D(RD), .RESET(1)) u_lv (.clk(clk), .rst_n(rst_l), .d(live), .q(lv_q));
             ot_hdc_delay #(.W(PDW), .D(RD)) u_pd (.clk(clk), .rst_n(rst_l),
-                .d({lcura, lcurb, lcurc, lcurd, va_q[32*l +: 32], vb_q[32*l +: 32], vc_q[32*l +: 32], crom_q[64*l +: 64]}),
+                .d({tcura, tcurb, tcurc, tcurd, va_q[32*l +: 32], vb_q[32*l +: 32], vc_q[32*l +: 32], crom_q[64*l +: 64]}),
                 .q(p_q));
             wire [NW-1:0] t_i; wire [NW:0] t_fin; wire [AW-1:0] t_rrow, t_asi, t_bsi, t_csi, t_dsi;
             wire t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq; wire [1:0] t_ma, t_mb, t_dst, t_red;
