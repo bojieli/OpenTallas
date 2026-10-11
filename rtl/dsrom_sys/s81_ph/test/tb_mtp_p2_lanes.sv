@@ -7,13 +7,13 @@
 // the lane-1 expert words).  Channels are raw beat channels with deterministic bit errors (link-layer replay).
 // Same transaction as tb_mtp_p2_fixlat (start, 80 lane-1 E3 words, 160 lane-0 words, 80 numeric rows vs gold.hex),
 // NTX back-to-back transactions; the primary's result-row consumer stalls (incl. a 200-cycle window).
-// ABORT events: the primary toggles its abort wire at AB0 / AB0 + 40 (one pulse) while start 2 waits in die A; the
+// ABORT events: the primary toggles its abort wire at AB0 / AB0 + 40 (one pulse) while the starts wait in die A (SGHOLD); the
 // pulse must reach die A's t_p2 abort pin within ABMAX cycles (the bench keeps the core's abort tied low: abort
 // semantics are not under test, its transport is).
 //   default PASS | OT_P2L_MUT_SEG FAIL (segmentation) | OT_P2L_MUT_CRED FAIL (row class buffer overflow) |
 //   OT_P2L_MUT_DIRECT FAIL (abort blocked behind the pending start = HOL) | OT_FIXLAT_MUT_LAT1 FAIL (link ends)
 module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX=2, START_DELAY=300, NOSTALL=0,
-                         CHB=60, CHU=12, EPER=97, AB0=1700, ABMAX=400);
+                         CHB=60, CHU=12, EPER=97, AB0=1700, ABMAX=400, SGHOLD=2500, RS0=4000, RS1=7000);
  reg refclk=0; always #5 refclk=~refclk;
  reg por=0; initial #50 por=1;
  wire clk, rstd;
@@ -77,7 +77,10 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
  p2fl_relay #(.W(605),.N(FV)) r0 (clk, rstd, {l0v_s,l0d_s}, {l0v_p,l0d_p});
  p2fl_relay #(.W(1),.N(RV))   r0g(clk, rstd, l0g_p, l0g_s);
  p2fl_relay #(.W(709),.N(FC)) rcp(clk, rstd, t_p2, {og_p, ab_p, sd_p, sv_p, l1d_p, l1v_p});
- p2fl_relay #(.W(600),.N(RC)) rpc(clk, rstd, {corr, fault, done, sg_p, l1g_p, od_p, ov_p}, f_p2);
+ // SGHOLD: the P2 slab grants no start before this cycle (a busy core): starts 1..3 wait in die A's start class buffer
+ // while the primary's abort event crosses the same lane (credited: not blocked; OT_P2L_MUT_DIRECT: blocked = HOL)
+ wire sg_g = sg_p && (cycles >= SGHOLD);
+ p2fl_relay #(.W(600),.N(RC)) rpc(clk, rstd, {corr, fault, done, sg_g, l1g_p, od_p, ov_p}, f_p2);
  dsfd_p2_rtt #(.FWD_V(FV),.RET_V(RV),.FWD_C(FC),.RET_C(RC)) dut(.ck(clk), .rst(rstd),
   .f_l0v(l0v_p), .f_l0d(l0d_p), .t_l0g(l0g_p), .f_l1v(l1v_p), .f_l1d(l1d_p), .t_l1g(l1g_p), .f_sv(sv_p), .f_sd(sd_p), .t_sg(sg_p),
   .t_ov(ov_p), .t_od(od_p), .f_og(og_p), .f_abort(1'b0), .t_done(done), .t_fault(fault), .t_corrected(corr));
@@ -86,7 +89,9 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   cs_v = starts<NTX && cycles>=START_DELAY;
   c1_v = s1<80*NTX  && (NOSTALL || rnd[2:0]!=0);
   c0_v = s0<160*NTX && (NOSTALL || rnd[5:3]!=0);
-  co_r = NOSTALL || (!(cycles>=900 && cycles<1100) && rnd[9:7]!=0 && !(cycles%300>=250));
+  // the result-row consumer: random gaps, 50-cycle windows, and one long window RS0..RS1 while rows flow (the row class
+  // buffer runs full: one credit over its depth overflows it)
+  co_r = NOSTALL || (!(cycles>=RS0 && cycles<RS1) && rnd[9:7]!=0 && !(cycles%300>=250));
   ab = cycles>=AB0 && cycles<AB0+40;
  end
  // transport monitors at die A's coll_p2_ep core side: every lane-1 word / start equals what the far end sent, in order

@@ -71,6 +71,8 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--cases', default=','.join(CASES))
     ap.add_argument('-j', type=int, default=6)
+    ap.add_argument('--raw', action='store_true', help='exit 0 iff every case PASSED its bench (closure-loop bench stages: '
+                    'a negative control is expect=fail there)')
     a = ap.parse_args()
     a.out = a.out.resolve(); a.out.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(a.j) as ex:
@@ -81,6 +83,9 @@ def main():
     (a.out / 'gate.json').write_text(json.dumps(dict(tool='tools/mtp_p2lane_gate.py', defines=DEF, cases=res,
                                                      verdict='PASS' if ok else 'FAIL'), indent=1) + '\n')
     print('MTP_P2LANE_GATE', 'PASS' if ok else 'FAIL')
+    if a.raw:
+        raw = all(r['got'] == 'pass' for r in res.values())
+        print('P2LANE_RAW', 'PASS' if raw else 'FAIL'); sys.exit(0 if raw else 1)
     sys.exit(0 if ok else 1)
 
 
