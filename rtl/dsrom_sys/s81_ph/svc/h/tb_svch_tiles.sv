@@ -12,7 +12,7 @@ module tb_dsfd_svch_pcs;
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst = 0;
     integer cyc = 0, seed = 1, NREQ = 3000, gap = 30;
-    localparam integer DA = 14, DB = 14, DG = 8, NG = 12;
+    localparam integer DA = 14, DB = 14, DG = 8, NG = 13;
     wire [340:0] qrq; reg qrk = 0, qwd = 0, qrv = 0; reg [255:0] qr_data = 0; reg [16:0] qr_tag = 0; reg [3:0] qr_beat = 0;
     reg aq_v = 0, bq_v = 0, gq_v = 0; reg [49:0] aq_d = 0; reg [45:0] bq_d = 0; reg [343:0] gq_d = 0;
     wire aq_c, bq_c, gq_c, ar_v, br_v, gr_v, fo; wire [275:0] ar_d, gr_d; wire [271:0] br_d; wire [NG-1:0] gwd;

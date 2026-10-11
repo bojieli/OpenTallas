@@ -27,7 +27,7 @@ module ot_s81_svch_pcsvc #(
     parameter integer QID = 0,
     parameter integer NP = 8,
     parameter integer PC0 = 0,           // local index (0..7) of this instance's first PC (per-PC slices: NP 1)
-    parameter integer NG = 12,
+    parameter integer NG = 13,
     parameter integer DQ = 8,
     parameter integer DRA = 64,
     parameter integer DRB = 64,

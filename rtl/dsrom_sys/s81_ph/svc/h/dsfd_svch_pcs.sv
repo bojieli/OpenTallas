@@ -14,7 +14,7 @@
 module dsfd_svch_pcs #(
     parameter integer QID = 0,
     parameter integer PCL = 0,               // local PC index 0..7
-    parameter integer NG = 12,
+    parameter integer NG = 13,
     parameter integer DA = 14,               // A request receiver depth (2 NRI + 8)
     parameter integer DB = 14,               // B request receiver depth (2 NRH + 8)
     parameter integer DG = 8,                // G receiver / sender depth to the hub (adjacent)
@@ -85,7 +85,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_svch_ghub #(
     parameter integer QID = 0,
-    parameter integer NG = 12,
+    parameter integer NG = 13,
     parameter integer DG = 8
 ) (
     input  wire              clk,
