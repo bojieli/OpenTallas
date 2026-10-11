@@ -265,8 +265,18 @@ class Machine:
         ni = n if ni is None else ni
         es = ESIZE[d.fmt]
         rows = []
+        code = base >> 37                       # spec 3.6: HBM row-stripe code (DMA.LOAD A only); 0 = linear
+        if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "LOAD"))):
+            raise Fault(3, f"HBM stripe code {code} not allowed here")
+        if code == 1 and (base % 32 or st % 32 or ist != 1):
+            raise Fault(3, "STRIPE4: rows must start 32 B aligned and be contiguous")
         for o in range(no):
             ra = base + o * st
+            if code == 1:                       # STRIPE4: row o on stack (base[36:35] + o) mod 4, stack-local address
+                s0, loc = (base >> 35) & 3, (base & ((1 << 35) - 1)) + o * st
+                if loc >> 35:
+                    raise Fault(3, "STRIPE4: row beyond the stack-local space")
+                ra = (((s0 + o) & 3) << 35) | loc
             if ist == 1:
                 raw = die.hbm.view(ra, ni * es)
             else:

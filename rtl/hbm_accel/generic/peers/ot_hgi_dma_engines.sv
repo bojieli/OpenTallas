@@ -53,6 +53,17 @@ module ot_hgi_dma_engines #(
     output wire                k_rsp_rdy,
     input  wire                k_rsp_we,
     input  wire [255:0]        k_rsp_data,
+    // the mover's HBM read lanes (one kport lane a stack, bursts; hgi-1010/c)
+    output wire [3:0]          r_req_v,
+    input  wire [3:0]          r_req_rdy,
+    output wire [4*37-1:0]     r_req_addr,
+    output wire [4*4-1:0]      r_req_len,
+    output wire [4*16-1:0]     r_req_tag,
+    input  wire [3:0]          r_rsp_v,
+    output wire [3:0]          r_rsp_rdy,
+    input  wire [4*16-1:0]     r_rsp_tag,
+    input  wire [3:0]          r_rsp_last,
+    input  wire [4*256-1:0]    r_rsp_data,
     // the mover's VM packet client
     output wire [337:0]        vmq,
     input  wire [273:0]        vmr,
@@ -123,7 +134,10 @@ module ot_hgi_dma_engines #(
         .mv_fault(m_fault), .mv_src(m_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-        .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(m_vmq), .vmr(rd_act ? 274'd0 : vmr), .wl(m_wl), .wl_done(|wl_done));
+        .k_rsp_data(k_rsp_data), .k_fault(1'b0),
+        .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag),
+        .r_rsp_v(r_rsp_v), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data),
+        .vmq(m_vmq), .vmr(rd_act ? 274'd0 : vmr), .wl(m_wl), .wl_done(|wl_done));
     // ---------------------------------------------------------------- stream command, I-list reader, row sequencer
     assign is_rdy = !rd_act && !sq_act && m_rdy && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
     assign s_id_take = (FRONT != 0) ? (s_id_v && id_rdy_f) : (sq_act && !sq_wait && sq_ph == 2'd0 && s_id_v);
