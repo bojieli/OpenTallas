@@ -136,6 +136,11 @@ TBASE = 1 << 34
 SBASE = 1 << 35                      # selected compressed-KV rows per KV source (persistent across layers)
 SOURCES = [2, 8, 14, 20]
 SELB = 512 * 2048
+SM_LB = 136                          # SM weight line bytes (DS 1,088-b line); groups of Gk K-elements = 8 lines
+SM_GK = {"bf16": 512, "fp8": 1024, "fp4": 2048}
+KBASE = 1 << 32                      # IKS (opt-in --iks): per-source index-key regions, 1 MiB aligned, stack bits [36:35] 0
+KALIGN = 1 << 20
+IKS = [False]                        # --iks: IDX.INDEX carries operand I = the layer's key region (IKS issuer, main 4d2d33086)
 
 
 class Manifest:
@@ -144,14 +149,31 @@ class Manifest:
     def __init__(self):
         self.ent, self.cur = [], WBASE
 
-    def place(self, key, rows, cols, fmt, n_experts=1):
+    def place(self, key, rows, cols, fmt, n_experts=1, lines=False):
         rb = int(cols * ESZ[fmt])
         rb = -(-rb // 32) * 32
+        base = self.cur
+        ex = {}
+        if lines:
+            # SM weight line image (ot_hgi_sm_record): a row is LPR = 8 op_g lines of LB = 136 B (the 1,088-b DS line),
+            # op_g = ceil(K / Gk); B.stride = LPR x LB, B.base a multiple of LB (and of the 32 B sector: 544)
+            gk = SM_GK[fmt]
+            rb = 8 * -(-cols // gk) * SM_LB
+            base = -(-base // 544) * 544
+            ex = dict(lines=True, gk=gk, gbytes=8 * SM_LB)
         size = rb * rows * n_experts
-        e = dict(key=key, base=self.cur, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
-                 estride=rb * rows)
+        e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
+                 estride=rb * rows, **ex)
+        self.cur = base
         self.ent.append(e)
         self.cur += -(-size // 4096) * 4096 + 4096
+        return e
+
+    def place_at(self, key, base, rows, cols, fmt):
+        """a fixed-base extent (IKS key regions: row-aligned, independent of placement order)"""
+        rb = -(-int(cols * ESZ[fmt]) // 32) * 32
+        e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=1, estride=rb * rows)
+        self.ent.append(e)
         return e
 
     def find(self, addr):
@@ -160,6 +182,8 @@ class Manifest:
                 off = addr - e["base"]
                 ex, off = divmod(off, e["estride"])
                 r0, cb = divmod(off, e["rowbytes"])
+                if e.get("lines"):
+                    return e, ex, r0, (cb // e["gbytes"]) * e["gk"]
                 return e, ex, r0, int(cb / ESZ[e["fmt"]])
         raise MC.Fault(3, f"weight address {addr:#x} outside the manifest")
 
@@ -181,9 +205,23 @@ class Lower:
         blocks = np.arange(rank, -(-n // W.KEY_BLOCK), TP)
         return int(np.minimum(n - blocks * W.KEY_BLOCK, W.KEY_BLOCK).clip(0).sum()), len(blocks)
 
-    def W(self, key, rows, cols, fmt, n_experts=1):
+    def ik_region(self, src):
+        """the index-key store of KV source `src`: legacy = a manifest extent; IKS = KBASE + slot x 1 MiB-aligned span"""
+        key = f"IKSTORE{src}"
+        if not IKS[0]:
+            return self.W(key, CK_CAP[1], 128, "fp8", n_experts=1)
         if key not in self.ent:
-            self.ent[key] = self.man.place(key, rows, cols, fmt, n_experts)
+            span = -(-CK_CAP[1] * 128 // KALIGN) * KALIGN
+            base = KBASE + SOURCES.index(src) * span
+            assert base % KALIGN == 0 and (base >> 35) == 0 and base + span <= CKBASE
+            self.ent[key] = self.man.place_at(key, base, CK_CAP[1], 128, "fp8")
+        return self.ent[key]
+
+    def W(self, key, rows, cols, fmt, n_experts=1, lines=False, col_off=0):
+        if key not in self.ent:
+            self.ent[key] = self.man.place(key, rows, cols, fmt, n_experts, lines=lines)
+            if col_off:
+                self.ent[key]["col_off"] = col_off
         return self.ent[key]
 
     def layer(self, L, ops, rank):
@@ -224,13 +262,20 @@ class Lower:
             k = op["k"] if kcols is None else kcols
             r0, r1 = rows
             if expert_slot is not None:
-                e = self.W(w_key, n, op["k"], fmt, n_experts=m.n_exp)
+                e = self.W(w_key, n, op["k"], fmt, n_experts=m.n_exp, lines=True)
                 bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
                            stride=e["rowbytes"], indexed=1, dyn_mul=e["estride"])
+            elif col0 or (wcols and wcols != k):
+                # a column slice is its own dense line image (the SM record needs B.stride = LPR x LB of THIS K)
+                e = self.W(f"{w_key}@c{col0}+{k}", n, k, fmt, lines=True, col_off=col0)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
+                           stride=e["rowbytes"])
             else:
-                e = self.W(w_key, n, wcols or op["k"], fmt)
-                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"] + int(col0 * ESZ[fmt]),
+                e = self.W(w_key, n, op["k"], fmt, lines=True)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"],
                            n=k, m=max(r1 - r0, 1), stride=e["rowbytes"])
+            # the SM record's line-image rules (ot_hgi_sm_record): rows dense in lines, base on a line boundary
+            assert bd.stride == 8 * -(-k // SM_GK[fmt]) * SM_LB and bd.base % SM_LB == 0, (w_key, k, bd.stride, bd.base)
             fp = {"bf16": 0, "fp8": 1, "fp4": 2}[fmt]
             if self.fuse and out == "q":
                 out = "q_own"                 # FUSION 3: the RoPE head is the matvec's own output (tail in place)
@@ -416,6 +461,10 @@ class Lower:
                         desc["C"] = MDesc(space="VM", fmt="U32", base=lay.vm["CANDM"], n=min(m.cand_k, nb20), m=2,
                                           stride=2048)
                         rd.append("CANDM")
+                    if IKS[0]:                     # operand I: the source's key region (row-aligned base, n keys)
+                        ikr = self.ik_region(m.kv_of[L])
+                        desc["I"] = MDesc(space="HBM", fmt="FP32", base=ikr["base"],
+                                          n=max(self.owned_keys(rank, n)[0], 1))   # this die's own key rows
                     add(Rec("IDX", "INDEX", param=kk | (cand_en << 12) | (keep_en << 13), imm_a=n, imm_b=L,
                             desc=desc, tag="index frame (G18)", family="indexer"), rd, wr)
                     self.frame_rec, self.frame_n = b.recs[-1], n
@@ -494,15 +543,22 @@ class Lower:
                     add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="candidates", desc=dict(
                         A=V("CANDT", kc, off=2048), B=U32V(lay.vm["CANDT"], kc), O=U32V(lay.vm["CANDM"], op["k"]),
                         R=V("CANDM", op["k"], off=2048))), ["zpart"], ["CANDM"])
-            elif k == "kv_gather" and self.fuse:
+            elif k == "kv_gather" and self.fuse and RG_SW[0]:
                 self.row_gather_sw(add, op, rank, head)
             elif k == "kv_gather":
+                # G25 hardware form (default): one record, no loop; owners stream their selected rows from their row
+                # store straight into every head die's list-order store (what ATT C reads); then a fence on the
+                # collective's posted HBM writes before the attention reads them
                 kk, si = op["elems"] // 512, SOURCES.index(op["src"])
-                add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK, imm_a=kk, imm_b=HEADS, desc=dict(
+                hw = (1 << 8) if self.fuse else 0
+                add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | hw, imm_a=kk, imm_b=HEADS, desc=dict(
                     A=MDesc(space="HBM", fmt="FP32", base=CKBASE + si * CK_CAP[0], n=512, stride=2048),
                     O=MDesc(space="HBM", fmt="FP32", base=SBASE + si * SELB, n=512, stride=2048),
                     I=U32V(lay.vm["SELIDX"], kk)), tag=op["tag"], family="kv_gather"),
                     ["SELIDX", "kvstore"], [f"SELROWS{op['src']}"])
+                if hw:
+                    add(Rec("CTL", "FENCE", tag="row_gather.fence (posted list-order rows visible)", family="kv_gather"),
+                        [f"SELROWS{op['src']}"], [f"SELROWS{op['src']}"])
             elif k == "expert_fetch":
                 add(Rec("DMA", "FENCE", tag=op["tag"] + " (weights read in place through C3b)",
                         family="expert_fetch"), ["rid"], [])
@@ -668,7 +724,7 @@ class Lower:
         add(Rec("FUSED", "QDQ_FP4_E4M3", param=16, desc=dict(A=V("LR", 512), O=V("CK", 512)), tag="cmp.ckv_qdq",
                 family="compressor"), ["LR"], ["CK"], run)
         # index key: the DS indexer engine's key store (engine-internal, G16), row = group
-        ik = self.W(f"IKSTORE{L}", CK_CAP[1], 128, "fp8", n_experts=1)
+        ik = self.ik_region(L)
         add(Rec("DMA", "STORE", desc=dict(A=V("IK", 128), O=MDesc(space="HBM", fmt="FP32",
                                                                    base=ik["base"] + grp * ik["rowbytes"], n=128)),
                 tag="cmp.store_IK", family="compressor"), ["IK"], ["kvstore"], run)
@@ -772,6 +828,7 @@ class Lower:
 
 
 GBASE = (1 << 35) + (1 << 33)        # the software ROW_GATHER's slot-major gathered rows (row j * 96 + r), per die
+RG_SW = [False]                      # --rg-sw: the software ROW_GATHER (G21 / G24 idiom) instead of the G25 hardware record
 RG_C = 2                             # slots per ALL_GATHER (hgi-takeover 10-10: 2 slots = 393 KB VM)
 RG_SLOTS = 64                        # gathered-row capacity per source pass (M <= 64; a larger M faults)
 GALL_NAMES = ["GALL", "ea", "eg_kv", "eg_rows"] + [f"ea.s{e}" for e in range(7)] + \
@@ -844,16 +901,20 @@ def ds_units(m, man, golib):
     U = dict(MC.UNITS)
 
     def wrows(e, ex, r0, nrows, c0, ncols, L):
-        key = e["key"]
+        key = e["key"].split("@c")[0]                 # a column-slice entry names its matrix + column offset
+        c0 = c0 + e.get("col_off", 0)
         if e["experts"] > 1:
             pre, mat = key.rsplit(".", 1)
             name = f"{pre}.{ex}.{mat}.weight"
         else:
             name = key.split("|") if "|" in key else key
         w = golib.wrows(name, r0, r0 + nrows)
-        if c0 or ncols != e["cols"]:
+        full = (w.q if isinstance(w, V_.Q8) else w).shape[1]      # the source matrix's columns
+        if c0 or ncols != full:
             w = (w.q[:, c0:c0 + ncols], w.e) if isinstance(w, V_.Q8) else w[:, c0:c0 + ncols]
         return w
+
+    U["_wrows"], U["_man"] = wrows, man                # the exporter builds the SM line image from these
 
     def sm(M, r, L):
         a, bd, o = r.desc["A"], r.desc["B"], r.desc["O"]
@@ -1001,7 +1062,7 @@ def ds_units(m, man, golib):
 
     def dma_store(M, r, L):
         o = r.desc["O"]
-        if o.space == "HBM" and o.base >= WBASE:          # index key -> the DS indexer engine's key store (G16)
+        if o.space == "HBM" and (o.base >= WBASE or (IKS[0] and KBASE <= o.base < CKBASE)):   # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
                 golib.st.ik[int(e["key"][7:])][grp] = M.read(r.desc["A"], die, L)
@@ -1074,6 +1135,13 @@ def schedule_layer(rank_recs, ops, L):
         if sig not in SCHED_CACHE and cfile.exists():
             c_ = json.loads(cfile.read_text())
             SCHED_CACHE[sig] = (c_["perm"], dict(c_["info"], disk_cache=cfile.name))
+        elif sig not in SCHED_CACHE and os.environ.get("HGI_SCHED_ANYCOST"):
+            # a permutation found under another cost table is still legal (hazards are structural): reuse it, labelled
+            alt = sorted(Path(cdir).glob(f"{sig[:32]}-*-{POS_DEFAULT[0]}.json"))
+            if alt:
+                c_ = json.loads(alt[-1].read_text())
+                SCHED_CACHE[sig] = (c_["perm"], dict(c_["info"], disk_cache=alt[-1].name,
+                                                     cost_model_of_search=alt[-1].name.split("-")[1]))
     if sig in SCHED_CACHE:
         perm, info0 = SCHED_CACHE[sig]
         info = dict(info0, reused_from_layer=info0.get("layer"))
@@ -1179,11 +1247,15 @@ def main():
     ap.add_argument("--program-out", type=Path, help="write rank 0's record stream (for hgi_sim.ds_native_timing)")
     ap.add_argument("--export-layers", default="0", help="layers (and 'head') whose images --export-images writes")
     ap.add_argument("--no-fuse", action="store_true", help="one SU template a record (the pre-fusion stream)")
+    ap.add_argument("--rg-sw", action="store_true", help="software ROW_GATHER (G21/G24 idiom) instead of the G25 record")
+    ap.add_argument("--iks", action="store_true", help="IKS: row-aligned key regions + IDX.INDEX operand I (opt-in)")
     ap.add_argument("--schedule", choices=("opt", "none"), default="opt",
                     help="opt: per-layer CP-aware order (schedule_layer); none: lowering order")
     ap.add_argument("--export-images", type=Path,
                     help="DIR: per layer, every rank's HGI-1 image + its dispatch trace (RTL sequencer check, CF-PROG DS)")
     a = ap.parse_args()
+    RG_SW[0] = a.rg_sw
+    IKS[0] = a.iks
     prog_dump = dict(rank=0, layers=[], ops={})
     feats = getattr(np, "_core", np.core)._multiarray_umath.__cpu_features__
     if feats.get("AVX512F"):

@@ -2490,6 +2490,12 @@ def auto_merge_guard(j):
     if not str(spec['source'].get('branch', '')).startswith('claude/'):
         return f"source branch {spec['source'].get('branch')} is not claude/*"
     benches = j.get('benches') or {}
+    try:
+        waive = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_external_bench_prefixes') or []
+    except (OSError, ValueError):
+        waive = []
+    if not benches and spec.get('no_bench_reason') and any(j['name'].startswith(w) for w in waive):
+        return None if j.get('commit_full') else "no verified source commit"   # owner-approved external bench (BF of record)
     if not benches:
         return "no loop benches ran"
     bad = [k for k, v in benches.items() if not (isinstance(v, dict) and v.get('ok') is True)]
@@ -5430,7 +5436,7 @@ def stale24_candidates(jobs, now=None):
     out = []
     for j in jobs:
         st = j.get("status")
-        if st in TERMINAL or j["spec"].get("allow_over_24h"):
+        if st in TERMINAL or j["spec"].get("allow_over_24h") or (protected_jobs() and j["name"].startswith(protected_jobs())):
             continue
         run = j.get("run") or ""
         if re.search(DIE_CONTAINER_RE, j["name"]) or re.search(DIE_MOUNT_RE, run):
@@ -5499,6 +5505,15 @@ MEM_GUARD_EVERY_S = 300
 _MEM_GUARD_LAST = {}
 
 
+def protected_jobs():
+    """STATE/protected_jobs.json {"prefixes": [...]}: owner-priority lines (e.g. the BF of record) that MEM-GUARD and
+    STALE-24H never stop."""
+    try:
+        return tuple(json.loads((STATE / "protected_jobs.json").read_text()).get("prefixes") or [])
+    except (OSError, ValueError):
+        return ()
+
+
 def mem_guard(jobs, fleet, now=None):
     """returns [(host, job name)] stopped this call"""
     now = time.time() if now is None else now
@@ -5511,7 +5526,9 @@ def mem_guard(jobs, fleet, now=None):
         floor = max(MEM_GUARD_GB, MEM_GUARD_FRAC * h.get("ram_gb", 1024))
         if good[1].get("mem_gb", 1e9) >= floor or now - _MEM_GUARD_LAST.get(name, 0) < MEM_GUARD_EVERY_S:
             continue
+        prot = protected_jobs()
         cand = [j for j in jobs if j.get("host") == name and j["status"] == "RUNNING" and j.get("stage_tag")
+                and not (prot and j["name"].startswith(prot))
                 and not re.search(DIE_CONTAINER_RE, j["name"]) and not re.search(DIE_MOUNT_RE, j.get("run") or "")]
         if not cand:
             continue
@@ -6454,10 +6471,20 @@ def cmd_reverdict(a):
     if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN"):
         sys.exit(f"{a.name} is {j['status']}")
     m, e = j.get("metrics") or {}, j.get("eco") or {}
-    if j.get("failed_checks"):
-        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss")
     stl = stage_list(j["spec"])
     vidx = next(i for i, x in enumerate(stl) if x["kind"] == "verdict")
+    if j.get("failed_checks") and getattr(a, "recheck", False):
+        # a verdict CHECK was fixed (e.g. LOOP-CORNER TT+SS warn): re-run the verdict stage, which re-runs every check
+        # live on the recorded route and then takes the normal path (closed / hold ECO / NEEDS_RTL)
+        how = f"re-run verdict checks (were {j['failed_checks']}) on the recorded route"
+        j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None,
+                 failed_checks=[])
+        event(j, f"human re-verdict ({a.why}): {how}")
+        save_job(j)
+        ledger(j, f"RE-VERDICT (human, no re-route): {a.why}; {how}")
+        return
+    if j.get("failed_checks"):
+        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss (--recheck re-runs them)")
     if eco_passes(dict(m, errors=[]), 0):
         j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None)
         how = f"route sign-off {setup_corner_label(m)} {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')}"
@@ -6723,6 +6750,7 @@ def main():
     r = sub.add_parser("rebudget-rejudge"); r.add_argument("name"); r.add_argument("--rb", required=True)
     r.add_argument("--sdc", required=True); r.add_argument("--dry", action="store_true")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line TTsetup>=0/FFhold>=0/DRC0; SS sensitivity")
+    r.add_argument("--recheck", action="store_true", help="a failed verdict check was fixed: re-run the verdict stage")
     c = sub.add_parser("cancel"); c.add_argument("name"); c.add_argument("--why")
     ef = sub.add_parser("early-fail"); ef.add_argument("name"); ef.add_argument("--verdict", required=True)
     ef.add_argument("--why", required=True); ef.add_argument("--detail")

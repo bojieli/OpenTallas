@@ -9,6 +9,8 @@ mkdir -p "$dst/stories" "$dst/explorer"
 cp "$src"/stories/*.json "$dst/stories/"
 rm -rf "$dst/explorer/token"; cp -r "$src/explorer/token" "$dst/explorer/token"
 rm -rf "$dst/explorer/coverage"; cp -r "$src/explorer/coverage" "$dst/explorer/coverage"
+# element pages: page + pages.json from the repo; explorer/element/data/ is deploy data (tools/explorer_elem_export.py pack), kept
+mkdir -p "$dst/explorer/element/data"; cp "$src"/explorer/element/{index.html,elem.js,pages.json} "$dst/explorer/element/"
 rm -rf "$dst/landing"; mkdir -p "$dst/landing/recordings"
 cp "$src"/landing/{index.html,landing.css,landing.js} "$dst/landing/"; cp "$src"/landing/recordings/*.json "$dst/landing/recordings/"
 cp "$src"/fleet-viz.service "$HOME/.config/systemd/user/"
