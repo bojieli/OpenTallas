@@ -58,6 +58,11 @@ module ot_s81ph_native_sel_slice #(
     // fq with its own copy, splitting the frp -> mem_wdata fanout (dossier B2: frp[1] -> mem_wdata[205] -1,427).
     // 0 cycles.  0 = the original single pointer.
     parameter integer FRPN = 0,
+    // ds-1010 2026-10-10 (selt_q2 frprck4b TT -56: r_stop / sw_rp -> in_ready -> acc -> 600+ enable pins of the i0
+    // capture registers, and sw_rp -> d_push -> o_push_c -> o0_d enable, 15-17 levels): ILD 1 = the data-only
+    // registers i0_{last,lv,val,idx,rp}, the CMP_RETIME compare nibbles and o0_d load EVERY edge (no enable).  Exact:
+    // every consumer is qualified by i0_v / i1_v / o0_v, which keep their accept / push gating.  0 cycles.
+    parameter integer ILD = 0,
     parameter integer FRPW = 256
 ) (
     input  wire                  clk,
@@ -171,7 +176,7 @@ module ot_s81ph_native_sel_slice #(
         if (!rst_n) i0_v <= 1'b0;
         else i0_v <= acc;
     end
-    always @(posedge clk) if (acc) begin
+    always @(posedge clk) if (ILD != 0 || acc) begin
         i0_last <= in_last; i0_lv <= in_lv; i0_val <= in_val; i0_idx <= in_idx; i0_rp <= rp_acc;
     end
 
@@ -196,7 +201,7 @@ module ot_s81ph_native_sel_slice #(
                 (* keep = 1 *) reg [3:0] cmp_gt, cmp_eq;
                 reg hi_match;
                 integer nib;
-                always @(posedge clk) if (acc) begin
+                always @(posedge clk) if (ILD != 0 || acc) begin
                     for (nib = 0; nib < 4; nib = nib + 1) begin
                         cmp_gt[nib] <= ik[4*nib +: 4] > c_T[4*nib +: 4];
                         cmp_eq[nib] <= ik[4*nib +: 4] == c_T[4*nib +: 4];
@@ -568,7 +573,7 @@ module ot_s81ph_native_sel_slice #(
         if (!rst_n) o0_v <= 1'b0;
         else if (seg_clr) o0_v <= 1'b0;
         else o0_v <= o_push_c;
-    always @(posedge clk) if (o_push_c) o0_d <= o_in_c;
+    always @(posedge clk) if (ILD != 0 || o_push_c) o0_d <= o_in_c;
     wire           o_push = (PIPE2 != 0) ? o0_v : o_push_c;
     wire [EW*W:0]  o_in   = (PIPE2 != 0) ? o0_d : o_in_c;
     wire           o_pop  = (ocnt != 0) && out_ready;
