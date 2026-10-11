@@ -1,0 +1,626 @@
+{
+ "schema": "opentallas.s81-kitseq.pmem.v1",
+ "tool": "tools/s81_ctrl/kit_programs.py",
+ "source": "results/rtl/s81_ctrl_20261008/programs",
+ "source_index_sha256": "fe6d0627dadfa8b9245a8152e1ced623cf96b9275f085e7fd56f2ab4656c19a9",
+ "rule": "hop entry = kit hand-off point (arg {has_pred, pred_op}); spare port unused; one hop per program",
+ "n_programs": 59,
+ "max_jobs": 75,
+ "programs": [
+  {
+   "stage": "S000",
+   "kind": "embed",
+   "n_jobs": 32,
+   "makespan": 10050,
+   "handoff_at": 9044,
+   "after_handoff": 0,
+   "hop_pred": [
+    30
+   ]
+  },
+  {
+   "stage": "S001",
+   "kind": "stage",
+   "n_jobs": 60,
+   "makespan": 15820,
+   "handoff_at": 14814,
+   "after_handoff": 0,
+   "hop_pred": [
+    58
+   ]
+  },
+  {
+   "stage": "S002",
+   "kind": "stage",
+   "n_jobs": 73,
+   "makespan": 26481,
+   "handoff_at": 25475,
+   "after_handoff": 0,
+   "hop_pred": [
+    71
+   ]
+  },
+  {
+   "stage": "S003",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S004",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 24729,
+   "handoff_at": 23723,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S005",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 43615,
+   "handoff_at": 42609,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S006",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S007",
+   "kind": "stage",
+   "n_jobs": 58,
+   "makespan": 63759,
+   "handoff_at": 62499,
+   "after_handoff": 2,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S008",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 82390,
+   "handoff_at": 81384,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S009",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S010",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 102280,
+   "handoff_at": 101274,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S011",
+   "kind": "stage",
+   "n_jobs": 73,
+   "makespan": 29386,
+   "handoff_at": 28380,
+   "after_handoff": 0,
+   "hop_pred": [
+    71
+   ]
+  },
+  {
+   "stage": "S012",
+   "kind": "stage",
+   "n_jobs": 3,
+   "makespan": 1260,
+   "handoff_at": 0,
+   "after_handoff": 2,
+   "hop_pred": []
+  },
+  {
+   "stage": "S013",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 24983,
+   "handoff_at": 23723,
+   "after_handoff": 2,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S014",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 43869,
+   "handoff_at": 42609,
+   "after_handoff": 2,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S015",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 62499,
+   "handoff_at": 61493,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S016",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S017",
+   "kind": "stage",
+   "n_jobs": 58,
+   "makespan": 82644,
+   "handoff_at": 81384,
+   "after_handoff": 2,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S018",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 101274,
+   "handoff_at": 100268,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S019",
+   "kind": "stage",
+   "n_jobs": 3,
+   "makespan": 1260,
+   "handoff_at": 0,
+   "after_handoff": 2,
+   "hop_pred": []
+  },
+  {
+   "stage": "S020",
+   "kind": "stage",
+   "n_jobs": 75,
+   "makespan": 30244,
+   "handoff_at": 29238,
+   "after_handoff": 0,
+   "hop_pred": [
+    73
+   ]
+  },
+  {
+   "stage": "S021",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 23723,
+   "handoff_at": 22717,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S022",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S023",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 43614,
+   "handoff_at": 42608,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S024",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 62499,
+   "handoff_at": 61493,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S025",
+   "kind": "stage",
+   "n_jobs": 3,
+   "makespan": 1260,
+   "handoff_at": 0,
+   "after_handoff": 2,
+   "hop_pred": []
+  },
+  {
+   "stage": "S026",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 82390,
+   "handoff_at": 81384,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S027",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 101274,
+   "handoff_at": 100268,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S028",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S029",
+   "kind": "stage",
+   "n_jobs": 74,
+   "makespan": 33242,
+   "handoff_at": 32181,
+   "after_handoff": 2,
+   "hop_pred": [
+    71
+   ]
+  },
+  {
+   "stage": "S030",
+   "kind": "stage",
+   "n_jobs": 59,
+   "makespan": 23497,
+   "handoff_at": 22237,
+   "after_handoff": 2,
+   "hop_pred": [
+    55
+   ]
+  },
+  {
+   "stage": "S031",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 38105,
+   "handoff_at": 37099,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S032",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S033",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 53973,
+   "handoff_at": 52967,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S034",
+   "kind": "stage",
+   "n_jobs": 62,
+   "makespan": 20087,
+   "handoff_at": 19081,
+   "after_handoff": 0,
+   "hop_pred": [
+    60
+   ]
+  },
+  {
+   "stage": "S035",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S036",
+   "kind": "stage",
+   "n_jobs": 58,
+   "makespan": 25614,
+   "handoff_at": 24354,
+   "after_handoff": 2,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S037",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 40222,
+   "handoff_at": 39216,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S038",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S039",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 56090,
+   "handoff_at": 55084,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S040",
+   "kind": "stage",
+   "n_jobs": 62,
+   "makespan": 20119,
+   "handoff_at": 19113,
+   "after_handoff": 0,
+   "hop_pred": [
+    60
+   ]
+  },
+  {
+   "stage": "S041",
+   "kind": "stage",
+   "n_jobs": 3,
+   "makespan": 1260,
+   "handoff_at": 0,
+   "after_handoff": 2,
+   "hop_pred": []
+  },
+  {
+   "stage": "S042",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 25360,
+   "handoff_at": 24354,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S043",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 40222,
+   "handoff_at": 39216,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S044",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 55084,
+   "handoff_at": 54078,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S045",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S046",
+   "kind": "stage",
+   "n_jobs": 64,
+   "makespan": 20373,
+   "handoff_at": 19113,
+   "after_handoff": 2,
+   "hop_pred": [
+    60
+   ]
+  },
+  {
+   "stage": "S047",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 24354,
+   "handoff_at": 23348,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S048",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S049",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 40222,
+   "handoff_at": 39216,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S050",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 55084,
+   "handoff_at": 54078,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S051",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S052",
+   "kind": "stage",
+   "n_jobs": 64,
+   "makespan": 20373,
+   "handoff_at": 19113,
+   "after_handoff": 2,
+   "hop_pred": [
+    60
+   ]
+  },
+  {
+   "stage": "S053",
+   "kind": "stage",
+   "n_jobs": 54,
+   "makespan": 24354,
+   "handoff_at": 23348,
+   "after_handoff": 0,
+   "hop_pred": [
+    52
+   ]
+  },
+  {
+   "stage": "S054",
+   "kind": "stage",
+   "n_jobs": 1,
+   "makespan": 1006,
+   "handoff_at": 0,
+   "after_handoff": 0,
+   "hop_pred": []
+  },
+  {
+   "stage": "S055",
+   "kind": "stage",
+   "n_jobs": 56,
+   "makespan": 40222,
+   "handoff_at": 39216,
+   "after_handoff": 0,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S056",
+   "kind": "stage",
+   "n_jobs": 58,
+   "makespan": 55338,
+   "handoff_at": 54078,
+   "after_handoff": 2,
+   "hop_pred": [
+    54
+   ]
+  },
+  {
+   "stage": "S057",
+   "kind": "stage",
+   "n_jobs": 24,
+   "makespan": 69620,
+   "handoff_at": 68614,
+   "after_handoff": 0,
+   "hop_pred": [
+    22
+   ]
+  },
+  {
+   "stage": "S058",
+   "kind": "head",
+   "n_jobs": 6,
+   "makespan": 11335,
+   "handoff_at": 9141,
+   "after_handoff": 0,
+   "hop_pred": [
+    4
+   ]
+  }
+ ]
+}
