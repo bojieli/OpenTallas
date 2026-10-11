@@ -58,6 +58,37 @@ foreach i [$mx_blk getInsts] {
     # host job channel pin flops (mtp-mx1 2026-10-10): hv_q <- f_host[0], hd_q[k] <- f_host[k+1]
     if {[regexp {^g_regb\.hv_q} $n]} {set pn "f_host\[0\]";set role input}
     if {[regexp {^g_regb\.hd_q\[([0-9]+)\]} $n -> k]} {set pn "f_host\[[expr {$k+1}]\]";set role input}
+    # MTP-native pin flops (mtp-mx1 2026-10-10, FT13): receivers, transmitters, registered outputs, level pin flops and
+    # the die-reset synchroniser sit at their own pins (design standard: pin flops anchored at their pins)
+    if {[regexp {^g_regb\.u_rx_ef[./]d_q\[([0-9]+)\]} $n -> k]} {set pn "f_mtp\[[expr {$k+44}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rx_ef[./]v_q(\$|$)} $n]} {set pn "f_mtp\[43\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rx_ef[./]in_ready(\$|$)} $n]} {set pn "t_mtp\[139\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rx_cf[./]d_q\[([0-9]+)\]} $n -> k]} {set pn "f_mtp\[[expr {$k+83}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rx_cf[./]v_q(\$|$)} $n]} {set pn "f_mtp\[82\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rx_cf[./]in_ready(\$|$)} $n]} {set pn "t_mtp\[82\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rx_kf[./]d_q\[([0-9]+)\]} $n -> k]} {set pn "f_backend\[[expr {$k+2}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rx_kf[./]v_q(\$|$)} $n]} {set pn "f_backend\[1\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rx_kf[./]in_ready(\$|$)} $n]} {set pn "t_backend\[270\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_tx_bf[./]out_data\[([0-9]+)\]} $n -> k]} {set pn "t_backend\[[expr {$k+1}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_tx_bf[./]out_valid(\$|$)} $n]} {set pn "t_backend\[0\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_tx_hf[./]out_data\[([0-9]+)\]} $n -> k]} {set pn "t_emit_host\[[expr {$k+1}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_tx_hf[./]out_valid(\$|$)} $n]} {set pn "t_emit_host\[0\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_tx_df[./]out_valid(\$|$)} $n]} {set pn "t_emit_host\[74\]";set role mtp_pin}
+    if {[regexp {^g_regb\.tm_q\[([0-9]+)\]} $n -> k]} {set pn "t_mtp\[[expr {$k+0}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.th_q\[([0-9]+)\]} $n -> k]} {set pn "t_host\[[expr {$k+0}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.te_q\[([0-9]+)\]} $n -> k]} {set pn "t_emit\[[expr {$k+0}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.tp_q\[([0-9]+)\]} $n -> k]} {set pn "t_provider\[[expr {$k+0}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.teh_q\[([0-9]+)\]} $n -> k]} {set pn "t_emit_host\[[expr {$k+75}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.ab_q(\$|$)} $n]} {set pn "t_abort\[0\]";set role mtp_pin}
+    if {[regexp {^g_regb\.dr_q(\$|$)} $n]} {set pn "t_drained\[0\]";set role mtp_pin}
+    if {[regexp {^g_regb\.q81(\$|$)} $n]} {set pn "f_mtp\[81\]";set role mtp_pin}
+    if {[regexp {^g_regb\.q71(\$|$)} $n]} {set pn "f_backend\[71\]";set role mtp_pin}
+    if {[regexp {^g_regb\.q72(\$|$)} $n]} {set pn "f_backend\[72\]";set role mtp_pin}
+    if {[regexp {^g_regb\.qam(\$|$)} $n]} {set pn "f_am\[0\]";set role mtp_pin}
+    if {[regexp {^g_regb\.qst\[([0-9]+)\]} $n -> k]} {set pn "f_mtp\[[expr {$k+514}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.qami\[([0-9]+)\]} $n -> k]} {set pn "f_am\[[expr {$k+1}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.qid\[([0-9]+)\]} $n -> k]} {set pn "f_backend\[[expr {$k+2}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.rs\[[01]\]} $n]} {set pn "rst\[0\]";set role mtp_pin}
     if {$pn eq ""} continue
     if {![dict exists $mx_pin $pn]} {error "MX1 pin station $n has no actual pin $pn"}
     lassign [dict get $mx_pin $pn] px py

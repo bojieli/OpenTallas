@@ -76,12 +76,14 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
  generate if (REGB == 0) begin: g_direct
   assign t_hgi_argmax=x_hgi_argmax_rec;assign x_hgi_argmax_ret=f_hgi_argmax;
   hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(ck[0]),.rst(rst[0]),
-   .f_mtp(f_mtp),.emit_pend(f_mtp[43]),.t_mtp(t_mtp),.f_host(f_host),.t_host(t_host),.f_provider(f_provider),
+   .f_mtp(f_mtp),.emit_pend(f_mtp[43]),.cmd_pend(f_mtp[82]),.t_mtp(t_mtp),.f_host(f_host),.t_host(t_host),.f_provider(f_provider),
    .t_emit(t_emit),.t_provider(t_provider),.f_emit_host(f_emit_host),.t_emit_host(t_emit_host),
    .t_abort(t_abort),.t_drained(t_drained),.f_am(f_am),.f_backend(f_backend),.t_backend(t_backend));
  end else begin: g_regb
   wire c=ck[0];
-  // registered reset for the MTP side (async assert, 2-flop deassert)
+  // registered reset for the MTP side (async assert, 2-flop deassert).  mtp-mx1 2026-10-10 (FT11 rst -> rs recovery
+  // -129, fanout 30 from the pin): rs is the ONLY reader of the die reset pin and sits at it (pin_stations.tcl); the
+  // unit leaves re-time rs[1] locally (async assert from a flop, two-flop local deassert).
   reg [1:0] rs;
   always @(posedge c or posedge rst[0]) if (rst[0]) rs<=2'b11; else rs<={rs[0],1'b0};
   wire rm=rs[1];wire rn=~rm;
@@ -99,17 +101,17 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   wire rm_out,rn_out;
   wire rm_argmax,rn_argmax;
   if (LOCALRST) begin: g_localrst
-   ot_mx1_reset_leaf r_level(.clk(c),.rst(rst[0]),.q(rm_level));
-   ot_mx1_reset_leaf r_jf(.clk(c),.rst(rst[0]),.q(rm_jf));
-   ot_mx1_reset_leaf r_ef(.clk(c),.rst(rst[0]),.q(rm_ef));
-   ot_mx1_reset_leaf r_cf(.clk(c),.rst(rst[0]),.q(rm_cf));
-   ot_mx1_reset_leaf r_kf(.clk(c),.rst(rst[0]),.q(rm_kf));
-   ot_mx1_reset_leaf r_bf(.clk(c),.rst(rst[0]),.q(rm_bf));
-   ot_mx1_reset_leaf r_hf(.clk(c),.rst(rst[0]),.q(rm_hf));
-   ot_mx1_reset_leaf r_df(.clk(c),.rst(rst[0]),.q(rm_df));
-   ot_mx1_reset_leaf r_mtp(.clk(c),.rst(rst[0]),.q(rm_mtp));
-   ot_mx1_reset_leaf r_out(.clk(c),.rst(rst[0]),.q(rm_out));
-   ot_mx1_reset_leaf r_argmax(.clk(c),.rst(rst[0]),.q(rm_argmax));
+   ot_mx1_reset_leaf r_level(.clk(c),.rst(rm),.q(rm_level));
+   ot_mx1_reset_leaf r_jf(.clk(c),.rst(rm),.q(rm_jf));
+   ot_mx1_reset_leaf r_ef(.clk(c),.rst(rm),.q(rm_ef));
+   ot_mx1_reset_leaf r_cf(.clk(c),.rst(rm),.q(rm_cf));
+   ot_mx1_reset_leaf r_kf(.clk(c),.rst(rm),.q(rm_kf));
+   ot_mx1_reset_leaf r_bf(.clk(c),.rst(rm),.q(rm_bf));
+   ot_mx1_reset_leaf r_hf(.clk(c),.rst(rm),.q(rm_hf));
+   ot_mx1_reset_leaf r_df(.clk(c),.rst(rm),.q(rm_df));
+   ot_mx1_reset_leaf r_mtp(.clk(c),.rst(rm),.q(rm_mtp));
+   ot_mx1_reset_leaf r_out(.clk(c),.rst(rm),.q(rm_out));
+   ot_mx1_reset_leaf r_argmax(.clk(c),.rst(rm),.q(rm_argmax));
   end else begin: g_sharedrst
    assign rm_level=rm;
    assign rm_jf=rm;
@@ -161,30 +163,42 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   ot_sc_pfifo #(.W(215),.S(2),.G(32)) jf(.clk(c),.rst_n(rn_jf),.in_valid(hv_q),.in_ready(jf_ir),.in_data(hd_q),
    .out_valid(jf_ov),.out_ready(ho[0]),.out_data(jf_od));
   wire ef_ir,ef_ov;wire [36:0] ef_od;
-  ot_sc_pfifo #(.W(37),.S(2),.G(37)) ef(.clk(c),.rst_n(rn_ef),.in_valid(f_mtp[43]&&rn_ef),.in_ready(ef_ir),.in_data(f_mtp[44+:37]),
-   .out_valid(ef_ov),.out_ready(mo[139]),.out_data(ef_od));
+  wire ef_busy;   // mtp-mx1 2026-10-10: every MTP-native channel lands in pin flops (ot_mx1_pin_rx / ot_mx1_pin_tx)
+  ot_mx1_pin_rx #(.W(37),.G(37)) u_rx_ef(.clk(c),.rst_n(rn_ef),.in_valid(f_mtp[43]),.in_ready(ef_ir),.in_data(f_mtp[44+:37]),
+   .out_valid(ef_ov),.out_ready(mo[139]),.out_data(ef_od),.busy(ef_busy));
   wire cf_ir,cf_ov;wire [200:0] cf_od;
-  ot_sc_pfifo #(.W(201),.S(2),.G(32)) cf(.clk(c),.rst_n(rn_cf),.in_valid(f_mtp[82]&&rn_cf),.in_ready(cf_ir),.in_data(f_mtp[83+:201]),
-   .out_valid(cf_ov),.out_ready(mo[82]),.out_data(cf_od));
+  wire cf_busy;
+  ot_mx1_pin_rx #(.W(201),.G(32)) u_rx_cf(.clk(c),.rst_n(rn_cf),.in_valid(f_mtp[82]),.in_ready(cf_ir),.in_data(f_mtp[83+:201]),
+   .out_valid(cf_ov),.out_ready(mo[82]),.out_data(cf_od),.busy(cf_busy));
   wire kf_ir,kf_ov;wire [68:0] kf_od;
-  ot_sc_pfifo #(.W(69),.S(2),.G(35)) kf(.clk(c),.rst_n(rn_kf),.in_valid(f_backend[1]&&rn_kf),.in_ready(kf_ir),.in_data(f_backend[2+:69]),
-   .out_valid(kf_ov),.out_ready(bo[270]),.out_data(kf_od));
+  wire kf_busy;
+  ot_mx1_pin_rx #(.W(69),.G(35)) u_rx_kf(.clk(c),.rst_n(rn_kf),.in_valid(f_backend[1]),.in_ready(kf_ir),.in_data(f_backend[2+:69]),
+   .out_valid(kf_ov),.out_ready(bo[270]),.out_data(kf_od),.busy(kf_busy));
   // ---- output channels
   wire bf_ir,bf_ov;wire [268:0] bf_od;
+  wire bf_qv,bf_ld,bf_busy;wire [268:0] bf_qd;
   ot_sc_pfifo #(.W(269),.S(2),.G(32)) bf(.clk(c),.rst_n(rn_bf),.in_valid(bo[0]),.in_ready(bf_ir),.in_data(bo[1+:269]),
-   .out_valid(bf_ov),.out_ready(f_backend[0]),.out_data(bf_od));
+   .out_valid(bf_qv),.out_ready(bf_ld),.out_data(bf_qd));
+  ot_mx1_pin_tx #(.W(269)) u_tx_bf(.clk(c),.rst_n(rn_bf),.in_valid(bf_qv),.in_ready(bf_ld),.in_data(bf_qd),
+   .out_valid(bf_ov),.out_ready(f_backend[0]),.out_data(bf_od),.busy(bf_busy));
   wire hf_ir,hf_ov;wire [72:0] hf_od;
+  wire hf_qv,hf_ld,hf_busy;wire [72:0] hf_qd;
   ot_sc_pfifo #(.W(73),.S(2),.G(37)) hf(.clk(c),.rst_n(rn_hf),.in_valid(eho[0]),.in_ready(hf_ir),.in_data(eho[1+:73]),
-   .out_valid(hf_ov),.out_ready(f_emit_host[0]),.out_data(hf_od));
-  wire hf_empty=(MUT==2)?1'b1:!hf_ov;
+   .out_valid(hf_qv),.out_ready(hf_ld),.out_data(hf_qd));
+  ot_mx1_pin_tx #(.W(73)) u_tx_hf(.clk(c),.rst_n(rn_hf),.in_valid(hf_qv),.in_ready(hf_ld),.in_data(hf_qd),
+   .out_valid(hf_ov),.out_ready(f_emit_host[0]),.out_data(hf_od),.busy(hf_busy));
+  wire hf_empty=(MUT==2)?1'b1:!(hf_qv||hf_busy);   // records still owed to the host (FIFO or pin beat) hold done back
   wire df_ir,df_ov;wire [2:0] df_od;
+  wire df_qv,df_ld,df_busy;wire [2:0] df_qd;
   ot_sc_pfifo #(.W(3),.S(2),.G(3)) df(.clk(c),.rst_n(rn_df),.in_valid(eho[74]&&hf_empty),.in_ready(df_ir),.in_data(eho[75+:3]),
-   .out_valid(df_ov),.out_ready(f_emit_host[1]),.out_data(df_od));
+   .out_valid(df_qv),.out_ready(df_ld),.out_data(df_qd));
+  ot_mx1_pin_tx #(.W(3)) u_tx_df(.clk(c),.rst_n(rn_df),.in_valid(df_qv),.in_ready(df_ld),.in_data(df_qd),
+   .out_valid(df_ov),.out_ready(f_emit_host[1]),.out_data(df_od),.busy(df_busy));
   // ---- core inputs
   assign mi[42:0]=43'b0;                                   // provider addresses leave through t_provider (below)
   assign mi[43]=ef_ov&&mo[139];                            // the queue pushes exactly the beats the FIFO pops
   assign mi[44+:37]=ef_od;
-  assign mi[81]=q81&&((MUT==1)?1'b1:!ef_ov);               // native done stays behind the last emitted token
+  assign mi[81]=q81&&((MUT==1)?1'b1:!ef_busy);             // native done stays behind the last emitted token (pin stage too)
   assign mi[82]=cf_ov;assign mi[83+:201]=cf_od;
   assign mi[284+:230]=230'b0;assign mi[514+:3]=qst;
   assign hi={jf_od,jf_ov};
@@ -194,28 +208,28 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   // AM ownership compares them during the in-flight command; flopped like the AM pulse, so aligned).  (ot_sc_pfifo's
   // empty head also tracks its input one cycle late; the explicit flops keep this independent of that detail.)
   wire [67:0] id=kf_ov?kf_od[67:0]:qid;
-  assign bi={q72,q71&&!bf_ov&&!kf_ov,kf_od[68],id,kf_ov,bf_ir};
+  assign bi={q72,q71&&!bf_busy&&!bf_qv&&!kf_busy,kf_od[68],id,kf_ov,bf_ir};
   hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(c),.rst(rm_mtp),
-   .f_mtp(mi),.emit_pend(ef_ov),.t_mtp(mo),.f_host(hi),.t_host(ho),.f_provider(f_provider),
+   .f_mtp(mi),.emit_pend(ef_busy),.cmd_pend(cf_busy),.t_mtp(mo),.f_host(hi),.t_host(ho),.f_provider(f_provider),
    .t_emit(eo),.t_provider(po),.f_emit_host(ehi),.t_emit_host(eho),
    .t_abort(ab),.t_drained(dr),.f_am(ami),.f_backend(bi),.t_backend(bo));
   // ---- registered outputs
   reg [196:0] tm_q;reg [4:1] th_q;reg [37:0] te_q;reg [42:0] tp_q;reg [24:0] teh_q;reg ab_q,dr_q;
-  wire fifos_empty=!(jf_ov||ef_ov||cf_ov||kf_ov||bf_ov||hf_ov||df_ov);
+  wire fifos_empty=!(jf_ov||hv_q||ef_busy||cf_busy||kf_busy||bf_qv||bf_busy||hf_qv||hf_busy||df_qv||df_busy);
   always @(posedge c or posedge rm_out) if (rm_out) begin tm_q<=0;th_q<=0;te_q<=0;tp_q<=0;teh_q<=0;ab_q<=0;dr_q<=0;end
    else begin
     tm_q<=mo;th_q<=ho[4:1];te_q<=ENABLE_MTP?{ef_od,ef_ov&&mo[139]}:38'b0;tp_q<=ENABLE_MTP?f_mtp[0+:43]:43'b0;
     teh_q<={eho[99],eho[78+:21],eho[75+:3]};ab_q<=ab;dr_q<=dr&&fifos_empty;
    end
-  assign t_mtp={tm_q[196:140],ef_ir&&rn_ef,tm_q[138:83],cf_ir&&rn_cf,tm_q[81:0]};
+  assign t_mtp={tm_q[196:140],ef_ir,tm_q[138:83],cf_ir,tm_q[81:0]};   // pin-rx readies are reset-gated flops
   assign t_host={th_q,h_rdy};
   assign t_emit=te_q;assign t_provider=tp_q;
   assign t_emit_host={teh_q[24],teh_q[23:3],teh_q[2:0],df_ov,hf_od,hf_ov};
   assign t_abort=ab_q;assign t_drained=dr_q;
-  assign t_backend={kf_ir&&rn_kf,bf_od,bf_ov};
+  assign t_backend={kf_ir,bf_od,bf_ov};
   // ---- HGI ARGMAX dispatch relay (sequencer band -> ARGMAX unit), three 1-entry stages (see header)
   wire rn_t;   // reset replica for the top ready pin (fanout 1)
-  ot_sc_rep_ff #(.RV(1'b0)) u_rn_t(.clk(c),.rst_n(1'b1),.d(~rs[0]),.q(rn_t));
+  ot_sc_rep_ff #(.RV(1'b0)) u_rn_t(.clk(c),.rst_n(1'b1),.d(~rm_argmax),.q(rn_t));   // follows the relay's own (local) reset
   // each stage's data register loads its source every cycle while the stage is empty (enable = a flop, never a pin
   // or a handshake) and holds once full; the full flags carry the handshake
   reg t_full,m_full,b_full,b_v,u_rdy_q;reg [1:0] b_hold;reg [681:0] t_d,m_d,b_d;
@@ -227,7 +241,7 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   end
   always @(posedge c or posedge rm_argmax) if (rm_argmax) begin t_full<=0;m_full<=0;b_full<=0;b_v<=0;u_rdy_q<=0;b_hold<=0; end
    else begin
-    t_full<=t_full ? m_full : (x_hgi_argmax_rec[0]&&rn_argmax);
+    t_full<=t_full ? m_full : (x_hgi_argmax_rec[0]&&rn_t);   // capture exactly when the pin ready (rn_t) offers it
     m_full<=m_full ? b_full : t_full;
     b_full<=b_full ? !b_v : m_full;
     u_rdy_q<=f_hgi_argmax[0];
@@ -246,7 +260,7 @@ endmodule
 // the admission / drain tests read emit_pend (= f_mtp[43] when unregistered, the emit pin FIFO's head when REGB=1).
 module hfd_cmdproc_s_mtp_native_mx1_mtp #(parameter integer ENABLE_MTP=0)(
  input wire ck,rst,
- input wire [516:0] f_mtp,input wire emit_pend,output wire [196:0] t_mtp,
+ input wire [516:0] f_mtp,input wire emit_pend,input wire cmd_pend,output wire [196:0] t_mtp,
  input wire [215:0] f_host,output wire [4:0] t_host,
  input wire [178:0] f_provider,
  output wire [37:0] t_emit,output wire [42:0] t_provider,
@@ -263,9 +277,9 @@ module hfd_cmdproc_s_mtp_native_mx1_mtp #(parameter integer ENABLE_MTP=0)(
  // f_backend[71] is actual backend drained_ready AND SM/service quiescence.
  // Native S_DONE holds done until the coordinated drained reset.
  wire [178:0] provider_owned={f_provider[178:140],queue_ready,f_provider[138:0]};
- wire admit=guard_rdy&&queue_rdy&&f_backend[0]&&f_backend[71]&&!emit_pend&&!f_mtp[81]&&!f_mtp[82];
+ wire admit=guard_rdy&&queue_rdy&&f_backend[0]&&f_backend[71]&&!emit_pend&&!f_mtp[81]&&!cmd_pend;
  assign t_host[0]=admit&&!rst;
- assign t_drained[0]=guard_drained&&queue_drained&&f_backend[71]&&f_mtp[81]&&!emit_pend&&!f_mtp[82]&&!rst;
+ assign t_drained[0]=guard_drained&&queue_drained&&f_backend[71]&&f_mtp[81]&&!emit_pend&&!cmd_pend&&!rst;
  assign t_host[4]=guard_fault||queue_fault;
  assign t_abort[0]=guard_fault||queue_fault;
  ot_hbm_native_mtp_emit_queue_mx1 #(.ENABLE(ENABLE_MTP),.DEPTH(8)) emit_queue(
@@ -299,4 +313,41 @@ module ot_mx1_reset_leaf(input wire clk,input wire rst,output wire q);
  reg [1:0] rs;
  always @(posedge clk or posedge rst) if(rst) rs<=2'b11;else rs<={rs[0],1'b0};
  assign q=rs[1];
+endmodule
+
+// mtp-mx1 2026-10-10: pin receiver.  in_valid / in_data land ONLY in pin flops (v_q = valid AND the registered pin
+// ready, d_q = data every cycle); the beat enters an ot_sc_pfifo one cycle later.  The pin ready is a flop computed
+// from flops with one beat of credit for the beat that may be in flight: ready(N) = n(N) + ready(N-1) <= D-1, so the
+// FIFO (D entries) never overflows (n(N+2) <= n(N) + ready(N-1) + ready(N) <= D).  Full rate; +1 cycle latency.
+module ot_mx1_pin_rx #(parameter integer W=32, parameter integer D=4, parameter integer G=32)(
+ input wire clk,input wire rst_n,
+ input wire in_valid,output reg in_ready,input wire [W-1:0] in_data,
+ output wire out_valid,input wire out_ready,output wire [W-1:0] out_data,output wire busy);
+ localparam integer CB=$clog2(D+1);
+ reg v_q;reg [W-1:0] d_q;reg [CB-1:0] n;
+ wire f_ir;
+ wire pop=out_valid&&out_ready;
+ wire [CB-1:0] n_nx=n+{{(CB-1){1'b0}},v_q}-{{(CB-1){1'b0}},pop};
+ always @(posedge clk) d_q<=in_data;
+ always @(posedge clk) if (!rst_n) begin v_q<=1'b0;n<={CB{1'b0}};in_ready<=1'b0; end
+  else begin v_q<=in_valid&&in_ready;n<=n_nx;in_ready<=({1'b0,n_nx}+{{CB{1'b0}},in_ready})<=D-1; end
+ ot_sc_pfifo #(.W(W),.S(D),.G(G)) q(.clk(clk),.rst_n(rst_n),.in_valid(v_q),.in_ready(f_ir),.in_data(d_q),
+  .out_valid(out_valid),.out_ready(out_ready),.out_data(out_data));
+ assign busy=v_q||out_valid;
+endmodule
+
+// mtp-mx1 2026-10-10: pin transmitter.  out_valid / out_data are pin flops (anchored at their pins).  The pin ready
+// reaches only the out_valid flop (one AND, the ready pin sits next to the valid pin): a presented beat is held until
+// it is taken and valid drops in the cycle after the transfer; the next beat is loaded from the FIFO (enable from flops
+// only) and presented one cycle later.  Valid never drops untaken, no duplicate, data stable while presented; at most
+// one beat per two cycles.
+module ot_mx1_pin_tx #(parameter integer W=32)(
+ input wire clk,input wire rst_n,
+ input wire in_valid,output wire in_ready,input wire [W-1:0] in_data,
+ output reg out_valid,input wire out_ready,output reg [W-1:0] out_data,output wire busy);
+ assign in_ready=!out_valid;
+ assign busy=out_valid;
+ always @(posedge clk) if (!rst_n) out_valid<=1'b0;
+  else out_valid<=out_valid ? !out_ready : in_valid;
+ always @(posedge clk) if (!out_valid&&in_valid) out_data<=in_data;
 endmodule
