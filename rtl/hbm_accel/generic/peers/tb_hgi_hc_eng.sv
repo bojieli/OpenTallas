@@ -110,6 +110,10 @@ module tb_hgi_hc_eng;
                 $display("HANG lane0 cr %0d wcr %0d wpend %0d occ %0d qcnt %0d qres %0d p1c %0d p2c %0d", u_e.u_ctl.g_ln[0].u_l.cr,
                          u_e.u_ctl.g_ln[0].u_l.wcr, u_e.u_ctl.g_ln[0].u_l.wpend, u_e.u_ctl.g_ln[0].u_l.occ,
                          u_e.u_ctl.g_ln[0].u_l.qcnt, u_e.u_ctl.g_ln[0].u_l.qres, u_e.u_ctl.g_ln[0].u_l.p1c, u_e.u_ctl.g_ln[0].u_l.p2c);
+                $display("HANG lane8 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.u_ctl.g_ln[8].u_l.cr, u_e.u_ctl.g_ln[8].u_l.wcr, u_e.u_ctl.g_ln[8].u_l.wpend, u_e.u_ctl.g_ln[8].u_l.occ, u_e.u_ctl.g_ln[8].u_l.f_hv);
+                $display("HANG lane9 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.u_ctl.g_ln[9].u_l.cr, u_e.u_ctl.g_ln[9].u_l.wcr, u_e.u_ctl.g_ln[9].u_l.wpend, u_e.u_ctl.g_ln[9].u_l.occ, u_e.u_ctl.g_ln[9].u_l.f_hv);
+                $display("HANG lane10 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.u_ctl.g_ln[10].u_l.cr, u_e.u_ctl.g_ln[10].u_l.wcr, u_e.u_ctl.g_ln[10].u_l.wpend, u_e.u_ctl.g_ln[10].u_l.occ, u_e.u_ctl.g_ln[10].u_l.f_hv);
+                $display("HANG lane21 cr %0d wcr %0d wpend %0d occ %0d fhv %0d", u_e.u_ctl.g_ln[21].u_l.cr, u_e.u_ctl.g_ln[21].u_l.wcr, u_e.u_ctl.g_ln[21].u_l.wpend, u_e.u_ctl.g_ln[21].u_l.occ, u_e.u_ctl.g_ln[21].u_l.f_hv);
             end
             cyc_case[c] = cyc - t0;
             begin : landed
