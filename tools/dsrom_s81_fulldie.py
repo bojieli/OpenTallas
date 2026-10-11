@@ -3902,6 +3902,9 @@ HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
+RELAY_PROGRESS = False          # --relay-progress (hbmdie-1011, compact199 die fit): a column relay must advance toward its
+                                # next chain point (mh(relay, nxt) <= mh(driver, nxt) + 15 um, inside the margin lint's 20 um
+                                # far-side slack) in EVERY placement attempt incl. the TT and last-resort fallbacks; no site -> assert
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
 # MTP-DIE hub buses (a, b, bits, port at a, port at b).  WFC (ot_rom_pkg_ctrl_wfc ports): VM write xa_we/waddr15/wdata512
@@ -4818,11 +4821,16 @@ def _col_relays(m, P):
         for k in range(n):
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
+            pg = _mh(cur, b) + 15.0 if RELAY_PROGRESS else None     # --relay-progress: never behind the driver
+            if pg is not None:
+                NR = dict(nxt=b, nreach=min(NR.get('nreach', pg), pg))
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
             if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
                 # s81-gen: the unbounded fallback below put y_rt_0_8a_1 773.7 um from its driver (r4c frame 0); a relay
                 # first takes a box within the TT reach (inside the frame, then the strip / channel beside it)
                 nr_tt = dict(nxt=b, nreach=(n - k) * (RELAY_TT_REACH - 10.0)) if NXT_REACH else {}
+                if pg is not None:
+                    nr_tt = dict(nxt=b, nreach=min(nr_tt.get('nreach', pg), pg))
                 pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=RELAY_TT_REACH - 10.0, span=400.0,
                             rows=40, **nr_tt)
                 if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
@@ -4830,8 +4838,15 @@ def _col_relays(m, P):
                 if pl:
                     tt_col.append(f'y_{bid}_{k}')
             if pl is None:
+                pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40,
+                            **(dict(nxt=b, nreach=pg) if pg is not None else {}))
+            if pl is None and pg is not None and os.environ.get('OT_S81_RP_LOG'):
+                # diagnostic only: record the frame / path of a relay with no forward site, then legacy fallback
+                with open(os.environ['OT_S81_RP_LOG'], 'a') as fh_:
+                    fh_.write(json.dumps(dict(bus=bid, k=k, n=n, cls=cls, drv=cur, far=b, mid=(cx, cy), frame=fr,
+                                              region=d0.region)) + '\n')
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
-            assert pl, (bid, k)
+            assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if pg is not None else (bid, k)
             it = P.add(Inst(f'y_{bid}_{k}', f'dsfd_rly_{bits}', pl[0], pl[1], w_, h_, kind='rly',
                             region=d0.region, power_w=bits * FLOP_CLK_W * 1.5))
             out.append((f'{bid}_y{k}', cls, bits, [prev, (it.name, 'i')]))
@@ -6251,6 +6266,8 @@ def die_options(ap):
                     'face; layer die value 2.6599; default off)')
     ap.add_argument('--cfifo-colck', action='store_true', help='with --cfifo-v2: the cfifo column side clocked from its '
                     'own column tree (pin cr); fixes the FF xa/xb -> first relay hold class (sta_v6)')
+    ap.add_argument('--relay-progress', action='store_true', help='column relays only on sites that advance toward the next '
+                    'chain point (no far-side relay); a packed frame without such a site fails loudly')
     ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
@@ -6419,6 +6436,8 @@ def apply_options(a):
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
+    global RELAY_PROGRESS
+    RELAY_PROGRESS = bool(getattr(a, 'relay_progress', False))
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
