@@ -127,6 +127,36 @@
    "note": "the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"
   },
   {
+   "id": "mtp_lane.adapters",
+   "element": "dedicated MTP lane adapter (dsfd_coll_mtp_lane): token return + seed traversals",
+   "cycles": 16.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "2 traversals (token return, seed) x (TX 3 + RX 5)",
+   "source": [
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv",
+    "tools/mtp_colllane_gate.py (exact / HOL / no-block gate)"
+   ],
+   "grade": "rtl count (registered stages)",
+   "note": "upper bound: both traversals charged serially; the collective's lanes 0..7 are untouched (coll_done equal)"
+  },
+  {
+   "id": "p2.lane_adapters",
+   "element": "P2 dedicated lane adapters (dsfd_coll_p2_lane_pa / _ba): start in + last row out",
+   "cycles": 51.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "3 P2 transactions x (start 3 + 5, last row 2-beat 4 + 5)",
+   "source": [
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv",
+    "tools/mtp_p2lane_gate.py"
+   ],
+   "grade": "rtl count (registered stages)",
+   "note": "lane-1 words from die B arrive ahead of the start (buffered), off the chain"
+  },
+  {
    "id": "markov.floor",
    "element": "Markov head PINREG1 (ot_dsrom_markov_row, K 256)",
    "cycles": 562.5,
@@ -189,15 +219,15 @@
   }
  ],
  "totals": {
-  "critical_cycles": 51311.3,
-  "critical_cycles_lower": 50467.7,
+  "critical_cycles": 51378.3,
+  "critical_cycles_lower": 50534.7,
   "overlapped_cycles": 0,
   "composed_step_cycles": 1146896.4,
-  "charged_step_cycles": 1198207.7,
+  "charged_step_cycles": 1198274.7,
   "tau": 4.159,
   "MTP_tok_s_composed": 4351.6,
-  "MTP_tok_s_charged": 4165.2,
-  "MTP_tok_s_charged_lower_charges": 4168.2
+  "MTP_tok_s_charged": 4165.0,
+  "MTP_tok_s_charged_lower_charges": 4167.9
  },
  "inputs": {
   "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json": "3a7db4e5be43cd22",
