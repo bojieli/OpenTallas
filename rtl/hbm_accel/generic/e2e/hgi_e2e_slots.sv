@@ -53,6 +53,7 @@ endmodule
 //     carrying the BF16 value) or O + 16 gi (BF16 = 0); a gathered flit gi = q pf + m from rank q lands element
 //     e = 16 m + j at O + e iff e is in rank q's even-split slice [floor(q n / G), floor((q + 1) n / G)) (spec 6.7
 //     ALL_GATHER; the SU's selection rule is not specified in RTL);
+//     ARGMAX_MERGE: the endpoint's fold (ot_hgi_coll_amerge) emits ONE flit, the merged token in word 0 -> O word 0;
 //   * the switch tier + the other ranks (the established single-rank method of tb_hbm_accel_tu_endpoint /
 //     tb_hgi_coll_bypass): every departure of this die releases the symmetric peer flits LATC cycles later -- peers'
 //     partials carry their exported A contributions (real operands: this die's owned slice is reduced by the RTL tree
@@ -205,7 +206,10 @@ module hgi_e2e_coll_slot #(
 `ifdef E2E_COLL_DEBUG
                 $display("E2E COLL DBG cyc %0d deliver lane %0d gi %0d src %0d", cyc, l, gi, int'(f[FW+16 +: 8]));
 `endif
-                if (isbyp != 0 && u_ce.g_slice) begin      // F3: {lanes, w}: words O + w .. + lanes - 1
+                if (u_ce.amx_run) begin                    // ARGMAX_MERGE (hgi-1010/g3): the folded token flit -> O word 0
+                    if (gi != 0) $fatal(1, "E2E COLL: ARGMAX_MERGE delivered flit gi %0d (the fold emits one flit, gi 0)", gi);
+                    e2e_vm_wr(6, obase, int'(f[31:0]));
+                end else if (isbyp != 0 && u_ce.g_slice) begin      // F3: {lanes, w}: words O + w .. + lanes - 1
                     for (integer j = 0; j < 16; j = j + 1)
                         if (j < int'(f[FW+24 +: 8])) e2e_vm_wr(6, obase + gi + j, int'(f[32*j +: 32]));
                 end else if (isbyp != 0) begin
@@ -271,11 +275,19 @@ module hgi_e2e_fused_slot #(
         .ne_v(), .ne_rdy(1'b0), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(q_rec), .q_done(q_done), .q_fault(q_fault));
     wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
     wire [31:0] k_ws; wire [15:0] k_tag; wire [279:0] wl; wire wl_done;
+    // hgi-1010/c: the mover's four HBM lanes (bursts / full-sector writes) on hgi_e2e_rlanes (the DPI HBM)
+    wire [3:0] r_req_v, r_req_rdy, r_rsp_v, r_rsp_rdy, r_rsp_last; wire [4*37-1:0] r_req_addr; wire [15:0] r_req_len;
+    wire [63:0] r_req_tag, r_rsp_tag; wire [1023:0] r_rsp_data, r_req_wdata; wire [3:0] r_req_we, r_rsp_we; wire [127:0] r_req_wstrb;
+    hgi_e2e_rlanes #(.LAT(KLAT)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
+        .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
+        .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data));
     ot_hgi_dma_mover u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
         .mv_fault(mv_fault), .fence_v(1'b0), .fence_rdy(), .fence_done(),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-        .k_rsp_data(k_rd), .k_fault(1'b0), .vmq(mq), .vmr(mr), .wl(wl), .wl_done(wl_done));
+        .k_rsp_data(k_rd), .k_fault(1'b0), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(), .vr2r(8257'd0),
+        .vmq(mq), .vmr(mr), .wl(wl), .wl_done(wl_done));
     hgi_e2e_kport #(.LAT(KLAT)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(k_req_v), .req_rdy(k_req_rdy), .req_we(k_req_we),
         .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
     hgi_e2e_vmc #(.UNIT(4), .LAT(VLAT)) u_vf (.clk(clk), .rst_n(rst_n), .q(fq), .r(fr));

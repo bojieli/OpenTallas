@@ -127,7 +127,7 @@ module ot_qkvd_kv_wq_ctl #(
         swq = (MUT == 1 && q == 2'd1) ? 2'd2 : (MUT == 1 && q == 2'd2) ? 2'd1 : q;
     endfunction
     function automatic [23:0] sec_of(input [5:0] layer, input [1:0] vg, input [13:0] t);
-        sec_of = {7'd0, layer, vg[0], vg[1], t[13:9], t[6:3]};
+        sec_of = {7'd0, layer, vg[1], vg[0], t[6], t[13:9], t[5:3]};   // qwen-1010/b map v2: {layer, v, g, t[6], t-hi, t[5:3]} = the stream order
     endfunction
     reg              iv;
     reg  [1:0]       ivg;

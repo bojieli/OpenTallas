@@ -15945,3 +15945,19 @@ def qwen_crom_native_group_binding_model():
                         'aggregate_fault_logic': 'new small block needs physical integration/closure; no '
                                                  'in-context claim'},
      'model_before_RTL': True}
+
+
+def ha2_truecredit_capture_collar_model():
+    """Price the local SRAM output capture stage before RTL build."""
+    from tools.ha2_rxs_capture_model import model
+    return model()
+
+
+def ha2_truecredit_capture_return_pin_model():
+    from tools.ha2_rxs_capture_model import return_pin_model
+    return return_pin_model()
+
+
+def ha2_truecredit_local_transport_model():
+    from tools.ha2_rxs_capture_model import local_transport_model
+    return local_transport_model()

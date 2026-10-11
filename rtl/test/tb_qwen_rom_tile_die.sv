@@ -46,6 +46,7 @@ module tb_qwen_rom_tile_die;
     always #1 clk = ~clk;
     reg [983:0] p1, p2;
     integer i, k, bad = 0, checks = 0, writes = 0, seed = 5;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 5; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     initial begin
         repeat (3) @(posedge clk); rst_n = 1;
         for (i = 0; i < N; i = i + 1) begin

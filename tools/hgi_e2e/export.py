@@ -72,6 +72,7 @@ class Capture:
         self.vmw = bytearray()
         self.hbmw = bytearray()
         self.touch = []                      # HBM byte intervals read or written by rank 0
+        self.ik_touch = []                   # IDX.INDEX operand-I spans (the --iks key image supplies their bytes)
         self.coll = {}
         self.collb = {}
 
@@ -95,7 +96,9 @@ class Capture:
                     eff[nm] = [int(b), int(n), int(m), int(st), int(ist), d.space, d.fmt]
                     if d.space == "HBM" and (r0.unit != "SM" or nm != "B" or self.sm_weights):
                         sp = hbm_span(M, d, die0, L)
-                        if sp:
+                        if sp and r0.unit == "IDX" and nm == "I":
+                            self.ik_touch.append(sp)
+                        elif sp:
                             self.touch.append(sp)
                     elif d.space == "HBM" and r0.unit == "SM":
                         pass
@@ -292,16 +295,33 @@ def export_ds(a):
         orig(Mach, progs, wrapped, pos, token, hook, trace)
         st["wall"] = time.time() - t0
     DN.run_per_die = run_per_die
+    if a.iks:
+        # hgi-1010/g3: the keys every rank-0 IDX.INDEX frame scores (the golden's own key rows, captured at the call)
+        from hgi_sim import machine as MC_
+        orig_ix = MC_.u_idx_index
+
+        def u_ix(M, r, L):
+            kf = M.index_keys
+
+            def keys(die, layer, ids):
+                k = kf(die, layer, ids)
+                if die.rank == 0:
+                    st.setdefault("ik", []).append((M.rec_of(die, r), np.asarray(ids).copy(), np.asarray(k).copy()))
+                return k
+            M.index_keys = keys
+            return orig_ix(M, r, L)
+        MC_.u_idx_index = u_ix
     prog = a.out / "ds_program.json"
     a.out.mkdir(parents=True, exist_ok=True)
     argv = ["ds_native", "--layers", str(a.layer), "--refs", str(a.refs), "--out", str(a.out / "ds_native_run.json"),
-            "--program-out", str(prog)]
+            "--program-out", str(prog)] + (["--iks"] if a.iks else []) + (["--head"] if a.head else [])
     sys.argv = argv
     rc = DN.main()
     run = json.loads((a.out / "ds_native_run.json").read_text())
     cap, die0 = st["cap"], st["die0"]
     d = json.loads(prog.read_text())
-    lay = d["layers"][0]
+    # the vehicle is the LAST layer run (--head: L39 runs to enter the head; run_per_die keeps the last layer's state)
+    lay = d["layers"][-1]
     recs = []
     for x in lay["records"]:
         r, _ = decode_one(bytes.fromhex(x["hex"]), 0)
@@ -353,6 +373,34 @@ def export_ds(a):
         sm_img.append((b0, img))
         cap.touch.append((b0, b0 + len(img)))
 
+    # --iks (hgi-1010/g3): the rank-0 index-key image of every IDX.INDEX frame in the IKS layout the issuer streams
+    # (ot_hgi_idx_iks_issue): die-local key k (ascending owned id) -> stack q = (k div 8) div 342, slot s = k - 2,736 q, at
+    # HBM byte (q << 35) | I.base + 68 s, the 544-b key word {4 UE8M0 scale bytes, 128 FP4 codes} little-endian (the
+    # scorer's line = 2 keys); a stack's image covers its B_q blocks x 544 B (pad keys zero)
+    if not st.get("ik"):
+        cap.touch += cap.ik_touch                # no key image: keep the sim's own operand-I bytes
+    for rd, ids, keys in st.get("ik", []):
+        import hbm_idx_die_bench as IB
+        ib = rd.desc["I"].base
+        n = len(ids)
+        want = np.array([8 * (96 * (k // 8)) + k % 8 for k in range(n)], dtype=np.int64)    # rank 0's owned ids
+        assert np.array_equal(np.asarray(ids, np.int64), want), "IKS image: rank-0 key ids"
+        codes, ue = IB.qdq_codes(np.asarray(keys, np.float32))
+        nb = -(-n // 8)
+        for q in range(4):
+            bq = max(0, min(342, nb - 342 * q))
+            if bq == 0:
+                continue
+            img = bytearray(bq * 544)
+            for s_ in range(min(2736, n - 2736 * q)):
+                k = 2736 * q + s_
+                img[68 * s_:68 * s_ + 68] = IB.key_word(codes[k], ue[k]).to_bytes(68, "little")
+            b0 = (q << 35) | ib
+            for lo, hi in cap.touch:
+                assert hi <= b0 or lo >= b0 + len(img), f"IKS image {b0:#x} overlaps a touched range {lo:#x}"
+            sm_img.append((b0, bytes(img)))
+            cap.touch.append((b0, b0 + len(img)))
+
     def hbm_pre(addr, n):
         out = bytearray(region_bytes(st["regions"], st["snap"], addr, n))
         for b0, img in sm_img:
@@ -361,8 +409,8 @@ def export_ds(a):
                 out[lo - addr:hi - addr] = img[lo - b0:hi - b0]
         return bytes(out)
     (a.out / "vm0.bin").write_bytes(st["vm0"].astype("<u4").tobytes())
-    res = run["results"][0]
-    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=f"ds_L{a.layer}_1M",
+    res = run["results"][-1]
+    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=("ds_head_1M" if a.head else f"ds_L{a.layer}_1M"),
                 layer=a.layer, position=st["pos"], rank=0, group=96, token=int(st["token"]),
                 layer_verdict_sim_vs_golden=res["verdict"], sim_regions=[(x.get("region"), x.get("bit_exact"))
                                                                          for x in res.get("regions", [])],
@@ -512,6 +560,10 @@ def main():
     ap.add_argument("--layer", type=int, default=0)
     ap.add_argument("--position", type=int, default=8191)
     ap.add_argument("--sm-weights", action="store_true", help="also export the SM weight bytes (real SM runs)")
+    ap.add_argument("--head", action="store_true", help="ds: the vehicle is the LM head (+ ARGMAX.LOCAL / COLL.ARGMAX_MERGE); "
+                    "--layer 39 is run first to enter it")
+    ap.add_argument("--iks", action="store_true", help="ds: IKS key regions + IDX.INDEX operand I, and the rank-0 key image "
+                    "in the IKS layout (native IDX.INDEX runs)")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     return export_qwen(a) if a.model == "qwen" else export_ds(a) if a.model == "ds" else export_dflash(a)

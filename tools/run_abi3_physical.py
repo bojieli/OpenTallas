@@ -1982,11 +1982,19 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
     # 'a[3]' -- ot_gpu_rf_visibility_fence_p left 4,105 pins without a face.  A pattern now matches a terminal when it
     # matches its full name OR its bus base name (trailing [n] stripped; a scalar and a bus can never share a base),
     # and every pin-region run checks that no bus is left partly assigned (ot_check_bus_complete, always on).
+    # ESCAPED BITS (hgi-1010 2026-10-11): a netlist whose top ports were bit-blasted to escaped scalars
+    # ('\\out_data[5] ', the W11 endpoint netlist) loads into odb as the terminal name 'out_data\\[5\\]' (OpenROAD
+    # keeps the escape on the brackets; PPL prints 'in_data\\[997\\]').  Neither the full name nor ot_pin_base (whose
+    # '[n]$' needs a bare ']') then matched a bit-indexed region such as '^(out_data\\[(...)\\])$', so
+    # w2-rb-safe-no3-nesw-43c045555 failed 'matches no port', and ot_check_bus_complete skipped every such bus.  Names
+    # are now compared in their plain bus spelling (ot_pin_plain); the escaped odb name is still what is placed.
     lines = [
         "# Written by tools/run_abi3_physical.py --pin-region.",
-        "proc ot_pin_base {name} { regsub {\\[[0-9]+\\]$} $name {} base; return $base }",
+        "proc ot_pin_plain {name} { return [string map {\\\\\\[ \\[ \\\\\\] \\]} $name] }",
+        "proc ot_pin_base {name} { regsub {\\[[0-9]+\\]$} [ot_pin_plain $name] {} base; return $base }",
         "proc ot_pin_matches {pattern name} {",
-        "  return [expr {[regexp -- $pattern $name] || [regexp -- $pattern [ot_pin_base $name]]}]",
+        "  return [expr {[regexp -- $pattern $name] || [regexp -- $pattern [ot_pin_plain $name]] ||",
+        "                [regexp -- $pattern [ot_pin_base $name]]}]",
         "}",
         "proc ot_match_pins {pattern} {",
         "  set names {}",
@@ -2003,7 +2011,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
         "    set name [$bterm getName]",
         "    set base [ot_pin_base $name]",
-        "    if {$base eq $name} { continue }",
+        "    if {$base eq [ot_pin_plain $name]} { continue }",
         "    incr all($base)",
         "    foreach p $patterns { if {[ot_pin_matches $p $name]} { incr hit($base); break } }",
         "  }",
