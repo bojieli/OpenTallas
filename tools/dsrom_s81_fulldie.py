@@ -3972,7 +3972,11 @@ def ctrl_adapter_buses(hb):
     eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
     out = []
     for e, k in eng.items():
-        for slab_ in [s_ for s_, it in hb.items() if it.master in bind['engines'].get(e, {}).get('masters', [])]:
+        # band blocks (bk_selector S / bk_collector N) sit in other clock regions across the die: their command lanes
+        # need forwarded-clock lane chains with end blocks (as the svc -> selector / collector chains), not common-clock
+        # hub stations -- NOT BUILT YET: left unbound, so the die control gate reports sel / col UNBOUND (FAIL)
+        for slab_ in [s_ for s_, it in hb.items() if it.master in bind['engines'].get(e, {}).get('masters', [])
+                      and it.kind != 'band_blk']:
             out += [('stage_seq', slab_, 85, f'c{k}', 'c_cmd'), (slab_, 'stage_seq', 9, 'c_done', f'd{k}'),
                     (slab_, 'stage_seq', 2, 'c_st', f's{k}')]
     if 'gather' in hb and hb['gather'].master == 'dsfd_sp_gather_c':
