@@ -856,6 +856,29 @@ def master_pw2(t: str) -> str:
                "        pw_d2 <= q_pw_data;\n")
 
 
+KVD_FIELDS = [("v", "1"), ("wbase", "AW"), ("ts", "AW"), ("ks", "AW"), ("js", "AW"), ("wcs", "AW"), ("split", "4"),
+              ("jsh", "3"), ("tiles", "NW"), ("k", "NW"), ("nout", "NW"), ("kindk", "1"), ("pos", "NW")]
+
+
+def seq_kvd_out(t: str) -> str:
+    """qwen-1010/a: the KV-die launch descriptor (kvd_*) leaves seq_su, not the control tile: the SU-side controller decodes
+    every instruction too, and seq_su sits 25 relay stages from the link end (the q word's path) against the control tile's
+    41 -- so the KV-die step starts no later than the bench's q / CTL assumption.  Out through the OS pin stations."""
+    t = one(t, "    output wire [16-1:0] su_rows_o\n);",
+            "    output wire [16-1:0] su_rows_o,\n" +
+            ",\n".join(f"    output wire [{w}-1:0] kvd_{n}" for n, w in KVD_FIELDS) + "\n);")
+    st = []
+    for n, w in KVD_FIELDS:
+        st.append(f"    wire [{w}-1:0] b_kvd_{n};")
+        st.append(f"    ot_hdc_delay #(.W({w}), .D(OS){', .RESET(1)' if w == '1' else ''}) u_o_kvd_{n} (.clk(clk), .rst_n(rs), "
+                  f".d(b_kvd_{n}), .q(kvd_{n}));")
+    t = one(t, "    wire [16-1:0] b_su_rows_o;\n", "    wire [16-1:0] b_su_rows_o;\n" + "\n".join(st) + "\n")
+    t = one(t, "        .kvd_v(),\n", "        .kvd_v(b_kvd_v),\n")
+    for n, _ in KVD_FIELDS[1:]:
+        t = one(t, f"        .kvd_{n}(),\n", f"        .kvd_{n}(b_kvd_{n}),\n")
+    return t
+
+
 # qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
 # above stay byte-identical.
 def emit_seq_su_bi() -> str:
@@ -863,7 +886,7 @@ def emit_seq_su_bi() -> str:
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_seq_su(boundary=True))))
     t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
-    t = master_pw2(master_prl(t, "prog_base"))
+    t = seq_kvd_out(master_pw2(master_prl(t, "prog_base")))
     t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W)")
     t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)

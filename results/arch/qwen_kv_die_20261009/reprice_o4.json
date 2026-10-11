@@ -5,7 +5,7 @@
  "inputs": {
   "results/arch/qwen_kv_die_20261010/reprice_relays_dq64.json": "0e425c71440da0b4",
   "results/arch/qwen_kv_die_20261009/split_relays.json": "803238edb2d2824f",
-  "results/arch/qwen_kv_die_20261009/rom_r22ko4.json": "e2e56dcd24aade4f",
+  "results/arch/qwen_kv_die_20261009/rom_r22ko4.json": "5142813248d6e2bd",
   "results/arch/qwen_kv_die_20261009/rom_r22ksv.json": "3ed27d09b8306174",
   "results/arch/qwen_kv_die_20261009/option4_die/L3_p17.json": "cddfc762f9287e49"
  },
@@ -36,7 +36,7 @@
    "o4_fec_tok_s": 4894.7,
    "o4_fec_bound_tok_s": 4701.4,
    "r22k_fec_tok_s": 4658.1,
-   "kvd_bound_tok_s": 4850.5,
+   "kvd_bound_tok_s": 4894.7,
    "r22k_fec_vmar_tok_s": 4623.2,
    "r22k_fecb_vmar_tok_s": 4450.4,
    "o4_fec_vmar_tok_s": 4890.4,
@@ -58,11 +58,11 @@
   "note": "the sequencer <-> VM all-reduce word path (read request, word back, write) was not in the r22k die or price; each of the 72 all-reduces pays its die relays once (the stream rate is kept: ot_qwen_tp_seq_w12_vrl), the masters' own stations are in the measured vehicle"
  },
  "bounds": {
-  "kvd_kok_extra_stages_per_layer": 62,
-  "kvd_note": "charged in kvd_bound_tok_s only if the KV-die launch waits on the control tile's descriptor word (36 layers x the extra one-way stages of kvd + kv_ok); fix: announce the KV descriptor from seq_su (its controller decodes the same instruction) or carry it with the q word",
+  "kvd_kok_extra_stages_per_layer": 0,
+  "kvd_note": "the launch descriptor leaves seq_su (r22ko4): stages beyond the q word path (x3), charged per layer in kvd_bound",
   "tree_words": {
-   "pword_0": 47,
-   "tt_ty": 42,
+   "pword_0": 46,
+   "tt_ty": 43,
    "r22k": {
     "pword_0": 39,
     "tt_ty": 39

@@ -1069,7 +1069,20 @@ module ot_qfd_seq_su_bi #(
     output wire [24-1:0] su_acc_o,
     output wire [1-1:0] su_idle_o,
     output wire [16-1:0] su_prog_o,
-    output wire [16-1:0] su_rows_o
+    output wire [16-1:0] su_rows_o,
+    output wire [1-1:0] kvd_v,
+    output wire [AW-1:0] kvd_wbase,
+    output wire [AW-1:0] kvd_ts,
+    output wire [AW-1:0] kvd_ks,
+    output wire [AW-1:0] kvd_js,
+    output wire [AW-1:0] kvd_wcs,
+    output wire [4-1:0] kvd_split,
+    output wire [3-1:0] kvd_jsh,
+    output wire [NW-1:0] kvd_tiles,
+    output wire [NW-1:0] kvd_k,
+    output wire [NW-1:0] kvd_nout,
+    output wire [1-1:0] kvd_kindk,
+    output wire [NW-1:0] kvd_pos
 );
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
@@ -1258,6 +1271,32 @@ module ot_qfd_seq_su_bi #(
     wire [16-1:0] b_su_prog_o;
     ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_prog_o (.clk(clk), .rst_n(rs), .d(b_su_prog_o), .q(su_prog_o));
     wire [16-1:0] b_su_rows_o;
+    wire [1-1:0] b_kvd_v;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_v (.clk(clk), .rst_n(rs), .d(b_kvd_v), .q(kvd_v));
+    wire [AW-1:0] b_kvd_wbase;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wbase (.clk(clk), .rst_n(rs), .d(b_kvd_wbase), .q(kvd_wbase));
+    wire [AW-1:0] b_kvd_ts;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ts (.clk(clk), .rst_n(rs), .d(b_kvd_ts), .q(kvd_ts));
+    wire [AW-1:0] b_kvd_ks;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ks (.clk(clk), .rst_n(rs), .d(b_kvd_ks), .q(kvd_ks));
+    wire [AW-1:0] b_kvd_js;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_js (.clk(clk), .rst_n(rs), .d(b_kvd_js), .q(kvd_js));
+    wire [AW-1:0] b_kvd_wcs;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wcs (.clk(clk), .rst_n(rs), .d(b_kvd_wcs), .q(kvd_wcs));
+    wire [4-1:0] b_kvd_split;
+    ot_hdc_delay #(.W(4), .D(OS)) u_o_kvd_split (.clk(clk), .rst_n(rs), .d(b_kvd_split), .q(kvd_split));
+    wire [3-1:0] b_kvd_jsh;
+    ot_hdc_delay #(.W(3), .D(OS)) u_o_kvd_jsh (.clk(clk), .rst_n(rs), .d(b_kvd_jsh), .q(kvd_jsh));
+    wire [NW-1:0] b_kvd_tiles;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_tiles (.clk(clk), .rst_n(rs), .d(b_kvd_tiles), .q(kvd_tiles));
+    wire [NW-1:0] b_kvd_k;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_k (.clk(clk), .rst_n(rs), .d(b_kvd_k), .q(kvd_k));
+    wire [NW-1:0] b_kvd_nout;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_nout (.clk(clk), .rst_n(rs), .d(b_kvd_nout), .q(kvd_nout));
+    wire [1-1:0] b_kvd_kindk;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_kindk (.clk(clk), .rst_n(rs), .d(b_kvd_kindk), .q(kvd_kindk));
+    wire [NW-1:0] b_kvd_pos;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_pos (.clk(clk), .rst_n(rs), .d(b_kvd_pos), .q(kvd_pos));
     ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_rows_o (.clk(clk), .rst_n(rs), .d(b_su_rows_o), .q(su_rows_o));
     wire s_su_ready, s_su_idle; wire [15:0] s_su_progress, s_su_progress_rows; reg [NW-1:0] tok_l; wire es_re_w;
         ot_qfd_issue_shell #(.RT_ME(0), .RT_SU(RT), .COMP(1)) u_shell (.clk(clk), .rst_n(rs),
@@ -1355,19 +1394,19 @@ module ot_qfd_seq_su_bi #(
         .vw_mx_mask(),
         .vw_mx_data(),
         .me_ov(),
-        .kvd_v(),
-        .kvd_wbase(),
-        .kvd_ts(),
-        .kvd_ks(),
-        .kvd_js(),
-        .kvd_wcs(),
-        .kvd_split(),
-        .kvd_jsh(),
-        .kvd_tiles(),
-        .kvd_k(),
-        .kvd_nout(),
-        .kvd_kindk(),
-        .kvd_pos(),
+        .kvd_v(b_kvd_v),
+        .kvd_wbase(b_kvd_wbase),
+        .kvd_ts(b_kvd_ts),
+        .kvd_ks(b_kvd_ks),
+        .kvd_js(b_kvd_js),
+        .kvd_wcs(b_kvd_wcs),
+        .kvd_split(b_kvd_split),
+        .kvd_jsh(b_kvd_jsh),
+        .kvd_tiles(b_kvd_tiles),
+        .kvd_k(b_kvd_k),
+        .kvd_nout(b_kvd_nout),
+        .kvd_kindk(b_kvd_kindk),
+        .kvd_pos(b_kvd_pos),
         .kv_ok(1'b0),
         .wrom_su(),
         .wd_v(),

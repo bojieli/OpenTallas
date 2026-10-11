@@ -708,8 +708,9 @@ def _option4(v, m, rec):
              ('o4_su_snap', 'sequencer', B['su_snap'], [('seq_su', 'xs'), ('tt_ctlm', 'xs')]),
              ('o4_me_start', 'sequencer', B['me_start'], [('seq_su', 'st'), ('tt_ctlm', 'st')]),
              ('o4_pw', 'sequencer', B['pw'], [('d2d_rom', 'pw'), ('tt_ctlm', 'pw')]),
-             ('o4_kvd', 'sequencer', B['kvd'], [('tt_ctlm', 'kvd'), ('d2d_rom', 'kvd')]),
-             ('o4_kok', 'sequencer', B['kok'], [('d2d_rom', 'kok'), ('tt_ctlm', 'kok')]),
+             # the KV-die launch descriptor leaves seq_su (its SU-side controller decodes every instruction): 25 stages
+             # to the link end, the q word's path, against the control tile's 41 (no ME op on this die waits on kv_ok)
+             ('o4_kvd', 'sequencer', B['kvd'], [('seq_su', 'kvd'), ('d2d_rom', 'kvd')]),
              ('o4_meok', 'spine_local', B['meok'], [('sp_vector_memory', 'mo'), ('tt_ctlm', 'meok')]),
              ('o4_su_iss', 'sequencer', B['su_iss'], [('seq_su', 'su'), ('sp_su64_sfu', 'si')]),
              ('o4_su_st', 'sequencer', B['su_st'], [('sp_su64_sfu', 'sd'), ('seq_su', 'sd')]),
@@ -766,8 +767,7 @@ def _o4_masters(v, m, ghosts):
         for p, bits, off in (('xd', 53, 100.0), ('xr', 1, 140.0), ('ld', 16, 549.6), ('mx', 553, 400.0)):
             c.face(p, bits, 'S', 'M5', off, 2 if bits < 100 else 1)
         y = 30.0
-        for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']),
-                        ('kvd', B['kvd']), ('kok', 1), ('meok', 1)):
+        for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']), ('meok', 1)):
             c.face(p, bits, 'E', 'M4', y + bits * 0.096 / 2, 2)
             y += bits * 0.096 + 4.0
         for b in range(6):
@@ -809,6 +809,7 @@ def _o4_masters(v, m, ghosts):
         s.face('dc', 530, 'S', 'M5', 150.0, 1)
         s.face('dh', 530, 'S', 'M5', 350.0, 1)
         s.face('dflt', 9, 'S', 'M5', 460.0, 2)
+        s.face('kvd', B['kvd'], 'S', 'M5', 30.0, 1)
         s.face('cd', 66, 'E', 'M4', 260.0, 2)
         s.area('ck', 1, s.w / 2, s.h / 2, 1)
         s.area('rsi', 1, s.w / 2, s.h / 2 + 12.0, 1)
@@ -852,7 +853,6 @@ def _o4_masters(v, m, ghosts):
         d2 = M['qfd_d2d_rom']
         d2.face('pw', B['pw'], 'E', 'M4', 80.0, 2)
         d2.face('kvd', B['kvd'], 'E', 'M4', 150.0, 1)
-        d2.face('kok', 1, 'E', 'M4', 170.0, 2)
         cx = M['qfd_clkrx']
         if 'rso_ctlm' not in cx.ports:
             cx.area('rso_ctlm', 1, cx.w / 2, cx.h / 2 - 8.0, 1)
