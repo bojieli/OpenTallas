@@ -21,7 +21,9 @@
 module ot_hgi_dma_engines #(
     parameter integer FRONT = 1,
     parameter integer VR2 = 0,            // 1: the mover's VM-source reads on the VM DMA wide read group (vr2q / vr2r)
+    parameter integer KVW = 0,            // 1 (needs VR2 = 1): the mover's KV write-back engine ot_hgi_dma_kvw (hbm-fq 2026-10-11)
     parameter integer MUT_IL = 0,
+    parameter integer MUT_MV = 0,         // bench: the mover's MUT (5 = the KV write-back engine mutant, hbm-fq)
     parameter integer SBIT = 35,
     parameter [35:0] STACK_BYTES = 36'd22500000000
 ) (
@@ -137,7 +139,7 @@ module ot_hgi_dma_engines #(
     generate for (gl = 0; gl < 32; gl = gl + 1) begin : g_wl
         assign wl[gl*280 +: 280] = f_wl[gl*280 + 279] ? f_wl[gl*280 +: 280] : m_wlx[gl*280 +: 280];
     end endgenerate
-    ot_hgi_dma_mover #(.VR2(VR2)) u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !rd_act)), .mv_rdy(m_rdy),
+    ot_hgi_dma_mover #(.MUT(MUT_MV), .VR2(VR2), .KVW(KVW)) u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !rd_act)), .mv_rdy(m_rdy),
         .mv(sq_act ? sq_mv : mv), .mv_done(m_done),
         .mv_fault(m_fault), .mv_src(m_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
