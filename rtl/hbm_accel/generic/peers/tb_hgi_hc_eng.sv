@@ -41,12 +41,12 @@ module tb_hgi_hc_eng;
 
     // ---- bench lane traffic: per-lane sector queues, LQ credits
     reg [270:0] wq_l [0:31][$]; reg [270:0] rq_l [0:31][$];     // writes {sec, data}; reads {sec, expected}
-    integer wcr [0:31], rcr [0:31], wout = 0, errors = 0, checked = 0;
+    integer wcr [0:31], rcr [0:31], wpd [0:31], wout = 0, errors = 0, checked = 0;
     reg [270:0] rexp [0:31][$];
     task automatic lanes_run();                      // drain every queue (writes first, then reads), wait for the landings
         integer b, busy, tw;
         begin
-            for (b = 0; b < 32; b = b + 1) begin wcr[b] = LQ; rcr[b] = LQ; end
+            for (b = 0; b < 32; b = b + 1) begin wcr[b] = LQ; rcr[b] = LQ; wpd[b] = 0; end
             busy = 1; tw = 0;
             while (busy && tw < 200000) begin
                 @(negedge clk);
@@ -54,6 +54,7 @@ module tb_hgi_hc_eng;
                 for (b = 0; b < 32; b = b + 1) begin
                     if (w2_cr[b]) wcr[b] = wcr[b] + 1;
                     if (rq_cr[b]) rcr[b] = rcr[b] + 1;
+                    if (w2_done[b]) wpd[b] = wpd[b] - 1;     // a preload write landed (dones trail the credits)
                     if (rr[b*257 + 256]) begin : rsp
                         reg [270:0] e; e = rexp[b].pop_front();
                         if (rr[b*257 +: 256] !== e[255:0]) begin
@@ -65,12 +66,12 @@ module tb_hgi_hc_eng;
                     end
                     if (wq_l[b].size() > 0 && wcr[b] > 0) begin : wr
                         reg [270:0] x; x = wq_l[b].pop_front();
-                        t_wq[b*280 +: 280] = {1'b1, x[270:256], x[255:0], 8'hFF}; wcr[b] = wcr[b] - 1;
+                        t_wq[b*280 +: 280] = {1'b1, x[270:256], x[255:0], 8'hFF}; wcr[b] = wcr[b] - 1; wpd[b] = wpd[b] + 1;
                     end else if (wq_l[b].size() == 0 && rq_l[b].size() > 0 && rcr[b] > 0 && wcr[b] == LQ) begin : rd
                         reg [270:0] x; x = rq_l[b].pop_front();
                         t_rq[b*16 +: 16] = {1'b1, x[270:256]}; rcr[b] = rcr[b] - 1; rexp[b].push_back(x);
                     end
-                    if (wq_l[b].size() > 0 || rq_l[b].size() > 0 || rexp[b].size() > 0 || wcr[b] != LQ || rcr[b] != LQ) busy = 1;
+                    if (wq_l[b].size() > 0 || rq_l[b].size() > 0 || rexp[b].size() > 0 || wcr[b] != LQ || rcr[b] != LQ || wpd[b] != 0) busy = 1;
                 end
                 tw = tw + 1;
             end

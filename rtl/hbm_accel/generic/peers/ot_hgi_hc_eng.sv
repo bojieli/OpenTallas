@@ -104,22 +104,31 @@ module ot_hgi_hc_lane #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin wrq_cr_q <= 1'b0; wwq_cr_q <= 1'b0; wwq_done_q <= 1'b0; wrr_q <= '0; end
         else begin wrq_cr_q <= wrq_cr; wwq_cr_q <= wwq_cr; wwq_done_q <= wwq_done; wrr_q <= wrr; end
+    // hbm-hcvm 10-11: control-side pin flops (registered boundary): the write FIFO push / data, the write-group grant and
+    // the job's P1 row count land in flops before any logic (the FIFO's counters were 75 gate levels behind push; pop and
+    // p1_full were combinational outputs of wg_q / p1n).  occ counts the push at the pin, so the top's room check stays
+    // conservative; a push enters the FIFO one cycle later.
+    reg push_q, wg_qq; reg [270:0] pdat_q; reg [$clog2(NR):0] p1n_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin push_q <= 1'b0; wg_qq <= 1'b0; p1n_q <= '0; end
+        else begin push_q <= push; wg_qq <= wg_q; p1n_q <= p1n; end
+    always @(posedge clk) pdat_q <= pdat;
     reg [QB-1:0] cr; reg scp; reg [1:0] scx; reg [RB:0] p1c; reg [7:0] p2c; reg [1:0] qn; reg [767:0] qsh;
     reg [1023:0] qf [0:QD-1]; reg [QDB-1:0] qwp, qrp; reg [$clog2(QD+1)-1:0] qcnt, qres;
     reg [255:0] pb [0:NR-1];
     reg [FB-1:0] occ; reg [QB-1:0] wcr; reg [7:0] wpend;
     // a response that is not a scalar: HC_POST P1 first (then P2); HC_PRE_NORM P2 first (then P1)
-    wire is_p1x = post ? (p1c != p1n) : (p2c == 8'(NB));
+    wire is_p1x = post ? (p1c != p1n_q) : (p2c == 8'(NB));
     assign q_head = qf[qrp]; assign q_nz = qcnt != '0; assign q_full = qres >= QD; assign cr_nz = cr != '0;
-    assign p1_full = p1c == p1n; assign sc_pend = scp;
+    assign p1_full = p1c == p1n_q; assign sc_pend = scp;
     wire rv = wrr_q[256];
     assign sc_v = rv && scp; assign sc_vix = scx; assign sc_d = wrr_q[255:0];
     wire f_hv; wire [270:0] f_hd;
-    ot_fifo_sram_fwft #(.W(271), .DEPTH(FD), .MACRO(0)) u_f (.clk(clk), .rst_n(rst_n), .push(push), .wdata(pdat), .pop(pop),
+    ot_fifo_sram_fwft #(.W(271), .DEPTH(FD), .MACRO(0)) u_f (.clk(clk), .rst_n(rst_n), .push(push_q), .wdata(pdat_q), .pop(pop),
         .hv(f_hv), .head(f_hd), .ovf(ovf));
-    assign pop = wg_q && f_hv && (wcr != '0);
+    assign pop = wg_qq && f_hv && (wcr != '0);
     assign occ_o = occ;
-    assign quiet = !f_hv && occ == '0 && wpend == 8'd0 && wcr == QB'(LQ) && cr == QB'(LQ);
+    assign quiet = !push_q && !f_hv && occ == '0 && wpend == 8'd0 && wcr == QB'(LQ) && cr == QB'(LQ);
     always @(posedge clk) begin
         if (rv && !scp && is_p1x) pb[p1c[RB-1:0]] <= wrr_q[255:0];
         if (rv && !scp && !is_p1x && qn == 2'd3) qf[qwp] <= {wrr_q[255:0], qsh};
