@@ -156,15 +156,25 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     reg  [4*SFW-1:0] gat_d;
     always @(*) for (integer i = 0; i < 4; i = i + 1) gat_d[i*SFW +: SFW] = o_gdat[(i ^ rank)*SFW +: SFW];
     wire         pk_emit = (pk_n != 0) && (pk_n == 4 || !in_red);
+    // pass-through pick REGISTERED one cycle ahead (ce cex / ceh p4 ces0: landing valid -> round robin -> 5:1 x 169
+    // -> b_d -> w1_d -125.5): pk_q = the round robin's one-hot choice among the lanes landed last cycle and not taken
+    // then; such a lane is still landed now (only this packer pops), so the mux is steered by flops.  Per-lane order
+    // is unchanged; a lane that lands this cycle competes from the next.
     reg  [2:0]   rr;
-    reg  [2:0]   pt_lx;                                     // the round robin's pick among the landed lanes
-    always @(*) begin
-        pt_lx = 3'd0;
-        for (integer i = 4; i >= 0; i = i - 1) if (ep_ov[(rr + i) % 5]) pt_lx = (rr + i) % 5;
-    end
-    wire         pt_push = !pk_emit && !in_gat && room2 && (|ep_ov);
+    reg  [4:0]   pk_q;
+    wire         pt_push = !pk_emit && !in_gat && room2 && (|pk_q);
+    reg  [2:0]   pt_lx;
+    always @(*) begin pt_lx = 3'd0; for (integer i = 0; i < 5; i = i + 1) if (pk_q[i]) pt_lx = i; end
     wire [2:0]   pt_l = pt_lx;
-    assign ep_or = pt_push ? (5'd1 << pt_lx) : 5'd0;
+    assign ep_or = pt_push ? pk_q : 5'd0;
+    wire [2:0]   rr_nx = pt_push ? ((pt_l == 4) ? 3'd0 : pt_l + 1'b1) : rr;
+    wire [4:0]   cand = ep_ov & ~ep_or;
+    reg  [4:0]   pk_nx;
+    always @(*) begin
+        pk_nx = 5'd0;
+        for (integer i = 4; i >= 0; i = i - 1) if (cand[(rr_nx + i) % 5]) pk_nx = 5'd1 << ((rr_nx + i) % 5);
+    end
+    always @(posedge ck or negedge erst_n) if (!erst_n) pk_q <= 5'd0; else pk_q <= pk_nx;
     reg  [4:0]   qc [0:5];
     reg  [3:0]   qf [0:5];
     always @(*) for (integer i = 0; i < 6; i = i + 1) qf[i] = (qc[i] > 15) ? 4'd15 : qc[i][3:0];
@@ -211,7 +221,7 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
                 if (pk_emit) begin pk_n <= 1; pk_l <= {3'b000, r_last}; pk_err <= r_err; end
                 else begin pk_n <= pk_n + 1'b1; pk_l[pk_n] <= r_last; pk_err <= pk_err | r_err; end
             end
-            if (pt_push) rr <= (pt_l == 4) ? 3'd0 : pt_l + 1'b1;
+            rr <= rr_nx;
             for (integer i = 0; i < 6; i = i + 1)
                 qc[i] <= qc[i] - (oq_push ? {1'b0, qf[i]} : 5'd0) + (qp_q[i] ? 5'd1 : 5'd0);
             if (|fv_q) fault <= 1'b1;
@@ -357,7 +367,7 @@ endmodule
 module dsfd_coll_ceq #(parameter integer XD = 6, parameter integer QD0 = 16, parameter integer QD = 8) (
     input  wire              ck, input wire rs,
     input  wire [591:0]      fvm_u,                         // from cb (f_vm pass-through)
-    output reg               e_en, output reg [1:0] rank, output reg [5:0] qp, output reg [7:0] fv,
+    output reg               e_en, output reg [1:0] rank, output wire [5:0] qp, output reg [7:0] fv,
     output wire              q_v, output wire [4*162-1:0] q_d, input wire q_cr,
     output wire [4:0]        p_v, output wire [5*553-1:0] p_d, input wire [4:0] p_cr,
     input  wire [8*4-1:0]    lane_f,                        // per lane {tx-buffer fault, lane fault triplet}
@@ -374,14 +384,21 @@ module dsfd_coll_ceq #(parameter integer XD = 6, parameter integer QD0 = 16, par
     always @(posedge ck) fv_p <= fvm_u[591:1];
     wire [591:0] f = {fv_p, fv_v};
     wire fvv = f[0]; wire [1:0] ftype = f[2:1]; wire [2:0] flink = f[5:3];
-    wire [W+33:0] rec = {f[6], f[7], f[39:8], f[40 +: W]};  // {last, mode, tag, data}
+    // decode REGISTERED (ceq p4: fv_v -> type / link compare -> push -> 586-bit FIFO bypass enables -214): one push
+    // flop per queue, the record one register later, then the queue
+    reg [5:0] psh_q; reg [W+33:0] rec;                      // {last, mode, tag, data}
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) psh_q <= 6'd0;
+        else for (integer i = 0; i < 6; i = i + 1)
+            psh_q[i] <= fvv && ((i == 0) ? (ftype == 2'd1) : (ftype == 2'd2 && flink == i - 1));
+    always @(posedge ck) rec <= {f[6], f[7], f[39:8], f[40 +: W]};
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin e_en <= 1'b0; rank <= 2'd0; end
         else if (fvv && ftype == 2'd3) begin rank <= f[41:40]; e_en <= f[42]; end
     wire [5:0] pop, qflt;
     genvar j;
     generate for (j = 0; j < 6; j = j + 1) begin : g_q
-        wire psh = fvv && ((j == 0) ? (ftype == 2'd1) : (ftype == 2'd2 && flink == j - 1));
+        wire psh = psh_q[j];
         wire hv, rdy; wire [W+33:0] hd;
         ot_fifo_sram_fwft #(.W(W + 34), .DEPTH((j == 0) ? QD0 : QD), .MACRO(2)) u_q (.clk(ck), .rst_n(rst_n),
             .push(psh), .wdata(rec), .pop(hv && rdy), .hv(hv), .head(hd), .ovf(qflt[j]));
@@ -403,11 +420,15 @@ module dsfd_coll_ceq #(parameter integer XD = 6, parameter integer QD0 = 16, par
     end endgenerate
     // fault vector {lane, mq, oq, queue, engine, gearbox, endpoint, tx buffer} (the flat core's fv_flt), sticky
     reg [31:0] lf_q; reg [7:0] sf_q; reg [2:0] ff_q; reg bf_q;
+    // kept: qp_k[j] has the same D as the queue's credit-link l_valid, and a merged flop would drive an E-face stream
+    // pin and this W-face broadcast pin (ceq p4 l_valid -> qp[5] -116)
+    (* keep = "true" *) reg [5:0] qp_k;
+    assign qp = qp_k;
     reg [7:0] lane_st;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin qp <= 6'd0; fv <= 8'd0; lf_q <= 0; sf_q <= 0; ff_q <= 0; bf_q <= 1'b0; lane_st <= 0; end
+        if (!rst_n) begin qp_k <= 6'd0; fv <= 8'd0; lf_q <= 0; sf_q <= 0; ff_q <= 0; bf_q <= 1'b0; lane_st <= 0; end
         else begin
-            qp <= pop; lf_q <= lane_f; sf_q <= slice_f; ff_q <= fifo_f; bf_q <= bw_flt;
+            qp_k <= pop; lf_q <= lane_f; sf_q <= slice_f; ff_q <= fifo_f; bf_q <= bw_flt;
             for (integer i = 0; i < 8; i = i + 1) if (lf_q[4*i+2]) lane_st[i] <= 1'b1;
             fv <= fv | {|lane_st, sf_q[0] | sf_q[2] | sf_q[4] | sf_q[6], bf_q, |qflt,
                         sf_q[1] | sf_q[3] | sf_q[5] | sf_q[7] | (|ff_q),
