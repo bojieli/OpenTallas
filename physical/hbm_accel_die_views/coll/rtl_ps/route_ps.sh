@@ -9,6 +9,8 @@
 #         + the core's SRAM macros, PDN pdn_top.tcl; corner_sta reads EVERY macro view (route_view.sh reads the first).
 # env: OUT, CORES, PD, PER (0.833), HM (0.050), IO_ROUTE_SDC / IO_FF_SDC (port), DIEW/DIEH + PHALO (port outline and
 #      macro halo "x y", default 340x340 / "4 4"), route_view.sh env (top)
+#      CTSA (port CTS_ARGS, default "-apply_ndr none"), PINFLOP=1 (with CAPTURE_ADJACENT=1: also anchor every port's pin
+#      flop beside its pin, physical/qwen_die_masters/io_flop_at_pins.tcl + out_flop_release.tcl)
 # coll-fallback 2026-10-08 (all default to the 8-slice behaviour above):
 #   SLICE   slice top module, ot_hcoll_port (default) or ot_hcoll_port2 (the 4-slice fallback: 2 ports a slice, 36 SRAMs;
 #           rtl/hbm_accel/tu/ot_hcoll_port2.sv is added to the sources)
@@ -33,7 +35,11 @@ if [ "$kind" = port ]; then
                    --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5'
                    --orfs-var 'PLACE_PINS_ARGS=-min_distance 4 -min_distance_in_tracks')
   fi
-  if [ "${CAPTURE_ADJACENT:-0}" = 1 ]; then
+  if [ "${CAPTURE_ADJACENT:-0}" = 1 ] && [ "${PINFLOP:-0}" = 1 ]; then
+    # idleA-hcoll 2026-10-10: macro capture flops beside rd_out AND every port's launch / capture flop beside its pin
+    interior_args+=(--step-tcl PRE_GLOBAL_PLACE=$D/capture_adjacent_pinflop.tcl
+                    --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl)
+  elif [ "${CAPTURE_ADJACENT:-0}" = 1 ]; then
     interior_args+=(--step-tcl PRE_GLOBAL_PLACE=$D/capture_adjacent_place.tcl)
   fi
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
@@ -49,7 +55,7 @@ if [ "$kind" = port ]; then
     --sdc-append physical/hbm_contracts_20261007/reset_rst_n.sdc ${IO_ROUTE_SDC:+--sdc-append $IO_ROUTE_SDC} --stages pnr \
     --die-area 0 0 $DW $DH --core-area 1.08 1.08 $(python3 -c "print(round($DW-1.08,3), round($DH-1.08,3))") \
     --place-density ${PD:-0.5} --routing-layers M2 M6 --max-transition-ns library --max-fanout 32 \
-    --orfs-var ADDER_MAP_FILE= --orfs-var "CTS_ARGS=-apply_ndr none" --orfs-var PDN_TCL=/src/$D/pdn_port.tcl \
+    --orfs-var ADDER_MAP_FILE= --orfs-var "CTS_ARGS=${CTSA:--apply_ndr none}" --orfs-var PDN_TCL=/src/$D/pdn_port.tcl \
     --orfs-var "SYNTH_KEEP_MODULES=" \
     --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
     --slew-margin-percent 20 --hold-margin-ns ${HM:-0.050} --purpose signoff_target --nickname-tag hcp_$lab \
