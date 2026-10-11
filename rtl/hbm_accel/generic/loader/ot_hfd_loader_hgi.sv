@@ -13,8 +13,9 @@ module ot_hfd_loader_hgi #(
     parameter integer DMA_FRONT = 1,    // 0: every move on the mover (a die without the svc DMA stream bound)
     parameter integer VR2 = 0,          // 1: the mover's VM-source reads on the VM's DMA wide READ group (dma_vr2q / dma_vr2r, die
                                         //    nets hgi_vmr2_dma 513 b / hgi_vmr2_dma_r 8,257 b; hgi-1010/c + b), else the packet client
-    parameter integer RGX = 0           // 1: the hardware ROW_GATHER's HBM lanes (hfd_coll ot_hgi_coll_rgx_hbm / _snk): 2 read +
+    parameter integer RGX = 0,          // 1: the hardware ROW_GATHER's HBM lanes (hfd_coll ot_hgi_coll_rgx_hbm / _snk): 2 read +
                                         //    2 write servers on kport lanes 3..6 (hgi-1010/c)
+    parameter integer RUNPRE = 0        // fe-push-hgi-1010: 1 = CP window burst head run from push-time contiguity bits
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -98,7 +99,7 @@ module ot_hfd_loader_hgi #(
         .vr2q(dma_vr2q), .vr2r(dma_vr2r), .vmq(dma_vmq), .vmr(dma_vmr), .dq(dma_dq), .dq_rdy(dma_dq_rdy), .dd(dma_dd),
         .dd_cr(dma_dd_cr), .wl(dma_vmw), .wl_done(dma_vmw_done));
     assign dma_ret = {d_wq, d_fault, d_done, d_rdy};
-    ot_hgi_loader_cp #(.BURST(1)) u_cpw (   // 16-deep burst queue: the CP die holds FQCR 16 credits
+    ot_hgi_loader_cp #(.BURST(1), .RUNPRE(RUNPRE)) u_cpw (   // 16-deep burst queue: the CP die holds FQCR 16 credits
    .clk(clk), .rst_n(rst_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr), .s_wvalid(s_wvalid), .s_wready(s_wready),
         .s_wdata(s_wdata), .s_wstrb(s_wstrb), .s_bvalid(s_bvalid), .s_bready(s_bready), .s_arvalid(s_arvalid),

@@ -96,7 +96,7 @@ class Layout:
                  SS=8, RS=8, qr=1280, kvn=512, kvr=512, win_new=512, q=512, ROPE=64, q_own=512, SC=640, MB=8,
                  E=640, SE=8, EB=640, SINK=8, ES=8, DEN=8, PV=512, O=512, o_own=512, zpart=12288, z=12288, y=D,
                  gsc=384, BIAS=384, router=384, rid=8, SEL=8, TOT=8, DENR=8, route_w=8, ea=7 * 2304, yf=D,
-                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=32, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
+                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=144, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
                  RK=8, RST=8, DOTR=8, GATE=8, cmp=1024, iwr=32, iq=4096, SELIDX=2048, SLOTKV=1024, SLOTSC=1024, MXC=512, EC=1024,
                  DENC=512, PC=1024, P2=1024, POOL=512, LAT0=512, LAT=512, GCN=512, KIN=128, GKN=128, KN=128, KR=128,
                  LR=512, IK=128, CK=512, ROPE2=64, logits=1352,
@@ -136,6 +136,55 @@ TBASE = 1 << 34
 SBASE = 1 << 35                      # selected compressed-KV rows per KV source (persistent across layers)
 SOURCES = [2, 8, 14, 20]
 SELB = 512 * 2048
+HC_W, HC_K = 32, 20480                # ot_hgi_hc_unit weight set: W = 32 lanes a group, K = 4 x 5,120
+HC_R = -(-(HC_K // 8) // HC_W)       # words a bank (80)
+HC_RS = HC_R * (HC_W // 8)           # sectors a bank (320)
+HC_ROW_SECT = 8 * HC_RS              # sectors of one fn row (2,560 = 81,920 B = 20,480 words)
+HC_SET_BYTES = (4 + 24 * HC_ROW_SECT) * 32
+HC_STRIPE_LOC = 30 << 30             # STRIPE4 HC rows: stack-local base (24 GiB) of the striped row region (4 stacks)
+HC_STRIPE = {}                       # stack-local row base -> (layer, which, row o)
+# E-HOME (owner rule, lead GO 10-10): each Engram table lives in the HBM of 4 home dies (layer 1: ranks 0-3, layer 14:
+# ranks 4-7), 288 B rows {256 B E4M3 codes | 8 B UE8M0 | 24 B 0}, rows split contiguously over the 4 homes
+EG_HOMES = [[0, 1, 2, 3], [4, 5, 6, 7]]
+EG_ROWB = 288
+EG_TBASE = 96 << 30                  # the home die's table (stack 3), < 2^37
+EG_STG = 2 << 30                     # per Engram layer: the home die's 24-row staging store, then every die's list store
+EG_LIST = EG_STG + (64 << 10)
+EG_LSPAN = 128 << 10
+CUR_LAYER = [0]                      # the layer the per-die machine runs now (E-HOME unit model)
+MAN_END = 94 << 30                   # the weight manifest must end below the HC stripe rows (stack 2 local 30 GiB)
+HC_SLOT = 32768                      # aperture slot stride (words); bank k of a slot at + 4,096 k (spec db9ef1603)
+HC_BANK = 4096
+HC_DB = [True]                       # HC_MIX_ROWS weight row prefetched into the HC aperture (2 slots); --hc-hbm = off
+
+
+def hc_row_words(fn_row):
+    """one fn row in the weight-set layout (hgi-1010/g hc_weights.weight_set; the HC aperture holds it verbatim):
+    word ((k R + r) SPW + s) 8 + l = fn[8 (r W + 8 s + l) + k], zero past the row's K / 8 chunks"""
+    fn_row = np.asarray(fn_row, F)
+    k, r, s_, l = np.meshgrid(np.arange(8), np.arange(HC_R), np.arange(HC_W // 8), np.arange(8), indexing="ij")
+    c = r * HC_W + 8 * s_ + l
+    idx = 8 * c + k
+    out = np.where(c < HC_K // 8, fn_row[np.minimum(idx, HC_K - 1)], F(0)).astype(F)
+    return out.reshape(-1)
+
+
+def hc_row_from_words(w):
+    """the inverse of hc_row_words (what the HC unit reads from its aperture slot)"""
+    w = np.asarray(w, F).reshape(8, HC_R, HC_W // 8, 8)
+    out = np.zeros(HC_K, F)
+    k, r, s_, l = np.meshgrid(np.arange(8), np.arange(HC_R), np.arange(HC_W // 8), np.arange(8), indexing="ij")
+    c = r * HC_W + 8 * s_ + l
+    m_ = c < HC_K // 8
+    out[(8 * c + k)[m_]] = w[m_]
+    return out
+
+
+SM_LB = 136                          # SM weight line bytes (DS 1,088-b line); groups of Gk K-elements = 8 lines
+SM_GK = {"bf16": 512, "fp8": 1024, "fp4": 2048}
+KBASE = 1 << 32                      # IKS (opt-in --iks): per-source index-key regions, 1 MiB aligned, stack bits [36:35] 0
+KALIGN = 1 << 20
+IKS = [False]                        # --iks: IDX.INDEX carries operand I = the layer's key region (IKS issuer, main 4d2d33086)
 
 
 class Manifest:
@@ -144,14 +193,34 @@ class Manifest:
     def __init__(self):
         self.ent, self.cur = [], WBASE
 
-    def place(self, key, rows, cols, fmt, n_experts=1):
+    def place(self, key, rows, cols, fmt, n_experts=1, lines=False):
         rb = int(cols * ESZ[fmt])
         rb = -(-rb // 32) * 32
+        base = self.cur
+        ex = {}
+        if lines:
+            # SM weight line image (ot_hgi_sm_record): a row is LPR = 8 op_g lines of LB = 136 B (the 1,088-b DS line),
+            # op_g = ceil(K / Gk); B.stride = LPR x LB, B.base a multiple of LB (and of the 32 B sector: 544)
+            gk = SM_GK[fmt]
+            rb = 8 * -(-cols // gk) * SM_LB
+            base = -(-base // 544) * 544
+            ex = dict(lines=True, gk=gk, gbytes=8 * SM_LB)
         size = rb * rows * n_experts
-        e = dict(key=key, base=self.cur, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
-                 estride=rb * rows)
+        if base + size > MAN_END:
+            raise MC.Fault(3, f"per-die HBM footprint: {key} ends at {(base + size) / 2**30:.1f} GiB > the "
+                              f"{MAN_END / 2**30:.0f} GiB manifest window of the die's 128 GiB")
+        e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
+                 estride=rb * rows, **ex)
+        self.cur = base
         self.ent.append(e)
         self.cur += -(-size // 4096) * 4096 + 4096
+        return e
+
+    def place_at(self, key, base, rows, cols, fmt):
+        """a fixed-base extent (IKS key regions: row-aligned, independent of placement order)"""
+        rb = -(-int(cols * ESZ[fmt]) // 32) * 32
+        e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=1, estride=rb * rows)
+        self.ent.append(e)
         return e
 
     def find(self, addr):
@@ -160,6 +229,8 @@ class Manifest:
                 off = addr - e["base"]
                 ex, off = divmod(off, e["estride"])
                 r0, cb = divmod(off, e["rowbytes"])
+                if e.get("lines"):
+                    return e, ex, r0, (cb // e["gbytes"]) * e["gk"]
                 return e, ex, r0, int(cb / ESZ[e["fmt"]])
         raise MC.Fault(3, f"weight address {addr:#x} outside the manifest")
 
@@ -181,9 +252,27 @@ class Lower:
         blocks = np.arange(rank, -(-n // W.KEY_BLOCK), TP)
         return int(np.minimum(n - blocks * W.KEY_BLOCK, W.KEY_BLOCK).clip(0).sum()), len(blocks)
 
-    def W(self, key, rows, cols, fmt, n_experts=1):
+    def ik_region(self, src):
+        """the index-key store of KV source `src`: legacy = a manifest extent; IKS = KBASE + slot x 1 MiB-aligned span"""
+        key = f"IKSTORE{src}"
+        if not IKS[0]:
+            return self.W(key, CK_CAP[1], 128, "fp8", n_experts=1)
         if key not in self.ent:
-            self.ent[key] = self.man.place(key, rows, cols, fmt, n_experts)
+            span = -(-CK_CAP[1] * 128 // KALIGN) * KALIGN
+            base = KBASE + SOURCES.index(src) * span
+            assert base % KALIGN == 0 and (base >> 35) == 0 and base + span <= CKBASE
+            self.ent[key] = self.man.place_at(key, base, CK_CAP[1], 128, "fp8")
+        return self.ent[key]
+
+    def hc_set(self, P, w):
+        """the layer's HC weight set: the full ot_hgi_hc_unit W = 32 image span (scale / base sectors + 24 fn rows)"""
+        return self.W(f"{P}hc_{w}", 1, HC_SET_BYTES, "fp8")
+
+    def W(self, key, rows, cols, fmt, n_experts=1, lines=False, col_off=0):
+        if key not in self.ent:
+            self.ent[key] = self.man.place(key, rows, cols, fmt, n_experts, lines=lines)
+            if col_off:
+                self.ent[key]["col_off"] = col_off
         return self.ent[key]
 
     def layer(self, L, ops, rank):
@@ -224,13 +313,20 @@ class Lower:
             k = op["k"] if kcols is None else kcols
             r0, r1 = rows
             if expert_slot is not None:
-                e = self.W(w_key, n, op["k"], fmt, n_experts=m.n_exp)
+                e = self.W(w_key, n, op["k"], fmt, n_experts=m.n_exp, lines=True)
                 bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
                            stride=e["rowbytes"], indexed=1, dyn_mul=e["estride"])
+            elif col0 or (wcols and wcols != k):
+                # a column slice is its own dense line image (the SM record needs B.stride = LPR x LB of THIS K)
+                e = self.W(f"{w_key}@c{col0}+{k}", n, k, fmt, lines=True, col_off=col0)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
+                           stride=e["rowbytes"])
             else:
-                e = self.W(w_key, n, wcols or op["k"], fmt)
-                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"] + int(col0 * ESZ[fmt]),
+                e = self.W(w_key, n, op["k"], fmt, lines=True)
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"],
                            n=k, m=max(r1 - r0, 1), stride=e["rowbytes"])
+            # the SM record's line-image rules (ot_hgi_sm_record): rows dense in lines, base on a line boundary
+            assert bd.stride == 8 * -(-k // SM_GK[fmt]) * SM_LB and bd.base % SM_LB == 0, (w_key, k, bd.stride, bd.base)
             fp = {"bf16": 0, "fp8": 1, "fp4": 2}[fmt]
             if self.fuse and out == "q":
                 out = "q_own"                 # FUSION 3: the RoPE head is the matvec's own output (tail in place)
@@ -255,12 +351,39 @@ class Lower:
                     # G22: the 24 mix rows are sharded by the ALL_GATHER even-split rule (24 over 96: ranks 3, 7, ...
                     # own one row); one exact 24-word gather; every die runs the post stage (sigmoid + Sinkhorn)
                     mix = "MIXa" if w == "attn" else "MIXf"
-                    hcw = self.W(f"{P}hc_{w}", 1, 1, "bf16")
+                    hcw = self.hc_set(P, w)
                     Bw = MDesc(space="HBM", fmt="BF16", base=hcw["base"], n=1)
                     lo, hi = 24 * rank // TP, 24 * (rank + 1) // TP
-                    add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=Bw, O=V("MIXRAW", max(hi - lo, 1),
-                                                                                              off=lo)),
-                            tag=op["tag"] + " rows", family="hc_mixes"), ["h"], ["MIXRAW"], hi > lo)
+                    if HC_DB[0]:
+                        # the weight row double buffer in the HC aperture (main b1a793d75, d's order): FENCE (the
+                        # posted LOAD into this slot is visible); HC_MIX_ROWS reads its slot; LOAD the NEXT HC record's
+                        # row (this layer's ffn row, or the next layer's attn row) into the other slot -- it waits for
+                        # the retire of the last HC reader of that slot and runs under this HC record
+                        slot = 0 if w == "attn" else 1
+                        SL = MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * slot, n=HC_RS * 8, m=8,
+                                   stride=HC_BANK)
+                        add(Rec("DMA", "FENCE", tag=f"hc_{w}.weight_fence", family="hc_mixes"), [f"HCW{slot}"],
+                            [f"HCW{slot}"])
+                        add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=SL, O=V("MIXRAW", max(hi - lo, 1),
+                                                                                                  off=lo)),
+                                tag=op["tag"] + " rows", family="hc_mixes"), ["h", f"HCW{slot}"], ["MIXRAW"], hi > lo)
+                        nL, nw = (L, "ffn") if w == "attn" else ((L + 1) % m.L, "attn")
+                        # STRIPE4 (spec 3.6, hgi-1010/c) 2-D load (spec db9ef1603): the row's 8 bank segments (R W = 2,560
+                        # words each), bank k on stack k mod 4 at stack-local loc + k x 10,240 B, into the slot's banks
+                        # (destination stride 4,096 words)
+                        bw = HC_RS * 8                    # words a bank segment (2,560)
+                        loc = HC_STRIPE_LOC + ((nL * 2 + (nw == "ffn")) * 24 + lo) * 8 * bw * 4
+                        HC_STRIPE[loc] = (nL, nw, lo)
+                        add(Rec("DMA", "LOAD", desc=dict(
+                            A=MDesc(space="HBM", fmt="FP32", base=(1 << 37) | loc, n=bw, m=8, stride=bw * 4),
+                            O=MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * (1 - slot), n=bw, m=8,
+                                    stride=HC_BANK)),
+                            tag=f"hc_{nw}.weight_row_prefetch (layer {nL})", family="hc_mixes"), [],
+                            [f"HCW{1 - slot}"], hi > lo)
+                    else:
+                        add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=Bw, O=V("MIXRAW", max(hi - lo, 1),
+                                                                                                  off=lo)),
+                                tag=op["tag"] + " rows", family="hc_mixes"), ["h"], ["MIXRAW"], hi > lo)
                     add(Rec("COLL", "ALL_GATHER", desc=dict(A=V("MIXRAW", 24), O=V("MIXRAW", 24)),
                             tag=op["tag"] + " gather", family="hc_mixes"), ["MIXRAW"], ["MIXRAW"])
                     add(Rec("HC", "HC_MIX_POST", desc=dict(A=V("MIXRAW", 24), B=Bw, O=V(mix, 24)),
@@ -269,7 +392,7 @@ class Lower:
                        dst=I.DST_VM)
                 elif fn == "hc_mixes":
                     mix = "MIXa" if w == "attn" else "MIXf"
-                    hcw = self.W(f"{P}hc_{w}", 1, 1, "bf16")
+                    hcw = self.hc_set(P, w)
                     add(Rec("HC", "HC_MIX", desc=dict(
                         A=V("h", HC * D), B=MDesc(space="HBM", fmt="BF16", base=hcw["base"], n=1),
                         O=V(mix, 24)), tag=op["tag"], family="hc_mixes"), ["h"], [mix])
@@ -416,6 +539,10 @@ class Lower:
                         desc["C"] = MDesc(space="VM", fmt="U32", base=lay.vm["CANDM"], n=min(m.cand_k, nb20), m=2,
                                           stride=2048)
                         rd.append("CANDM")
+                    if IKS[0]:                     # operand I: the source's key region (row-aligned base, n keys)
+                        ikr = self.ik_region(m.kv_of[L])
+                        desc["I"] = MDesc(space="HBM", fmt="FP32", base=ikr["base"],
+                                          n=max(self.owned_keys(rank, n)[0], 1))   # this die's own key rows
                     add(Rec("IDX", "INDEX", param=kk | (cand_en << 12) | (keep_en << 13), imm_a=n, imm_b=L,
                             desc=desc, tag="index frame (G18)", family="indexer"), rd, wr)
                     self.frame_rec, self.frame_n = b.recs[-1], n
@@ -494,15 +621,22 @@ class Lower:
                     add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="candidates", desc=dict(
                         A=V("CANDT", kc, off=2048), B=U32V(lay.vm["CANDT"], kc), O=U32V(lay.vm["CANDM"], op["k"]),
                         R=V("CANDM", op["k"], off=2048))), ["zpart"], ["CANDM"])
-            elif k == "kv_gather" and self.fuse:
+            elif k == "kv_gather" and self.fuse and RG_SW[0]:
                 self.row_gather_sw(add, op, rank, head)
             elif k == "kv_gather":
+                # G25 hardware form (default): one record, no loop; owners stream their selected rows from their row
+                # store straight into every head die's list-order store (what ATT C reads); then a fence on the
+                # collective's posted HBM writes before the attention reads them
                 kk, si = op["elems"] // 512, SOURCES.index(op["src"])
-                add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK, imm_a=kk, imm_b=HEADS, desc=dict(
+                hw = (1 << 8) if self.fuse else 0
+                add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | hw, imm_a=kk, imm_b=HEADS, desc=dict(
                     A=MDesc(space="HBM", fmt="FP32", base=CKBASE + si * CK_CAP[0], n=512, stride=2048),
                     O=MDesc(space="HBM", fmt="FP32", base=SBASE + si * SELB, n=512, stride=2048),
                     I=U32V(lay.vm["SELIDX"], kk)), tag=op["tag"], family="kv_gather"),
                     ["SELIDX", "kvstore"], [f"SELROWS{op['src']}"])
+                if hw:
+                    add(Rec("CTL", "FENCE", tag="row_gather.fence (posted list-order rows visible)", family="kv_gather"),
+                        [f"SELROWS{op['src']}"], [f"SELROWS{op['src']}"])
             elif k == "expert_fetch":
                 add(Rec("DMA", "FENCE", tag=op["tag"] + " (weights read in place through C3b)",
                         family="expert_fetch"), ["rid"], [])
@@ -565,26 +699,45 @@ class Lower:
 
     # -- Engram (layers 1, 14): rows by host-hashed ids through indexed descriptors, decoded on the SU ----------------
     def engram_fetch(self, add, su, L):
-        V, m = self.lay.V, self.m
-        ids_n = 24
-        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGID"], n=ids_n),
-                                         O=MDesc(space="VM", fmt="U32", base=self.lay.vm["EGID"], n=ids_n)),
-                tag="engram.ids", family="engram"), [], ["EGID"])
-        codes, sc = m.emb_codes[L]
-        width = codes.shape[1]
-        ec = self.W(f"EGC{L}", 1, width, "fp8", n_experts=codes.shape[0])
-        es = self.W(f"EGS{L}", 1, width // 32, "fp8", n_experts=codes.shape[0])
-        for t in range(ids_n):
-            add(Rec("DMA", "LOAD", desc=dict(
-                A=MDesc(space="HBM", fmt="FP8E4M3", base=ec["base"], n=width, indexed=1, dyn_mul=ec["estride"]),
-                O=V("EGC", width, off=t * width), I=U32V(self.lay.vm["EGID"] + t, 1)), tag=f"engram.codes{t}",
-                family="engram"), ["EGID"], ["EGC"])
-            add(Rec("DMA", "LOAD", desc=dict(
-                A=MDesc(space="HBM", fmt="UE8M0", base=es["base"], n=width // 32, indexed=1, dyn_mul=es["estride"]),
-                O=V("EGS", width // 32, off=t * (width // 32)), I=U32V(self.lay.vm["EGID"] + t, 1)),
-                tag=f"engram.scales{t}", family="engram"),
-                ["EGID"], ["EGS"])
-        nb = ids_n * width // 32
+        """E-HOME: the host writes EGHT (spec: G13 + E-HOME host table) per token; the 4 home dies of this Engram layer
+        stream their owned rows (indexed row stream, count from VM) into a 24-row staging store; one G25 ROW_GATHER
+        (slot ids < 2^20) delivers the 24 rows in list order to every die; 2 strided loads decode codes / scales."""
+        V, m, lay = self.lay.V, self.m, self.lay
+        li = m.engram.layer_ids.index(L)
+        homes = EG_HOMES[li]
+        hp = self.rank_now - homes[0]
+        home = 0 <= hp < 4
+        stg, lst = EG_STG + li * EG_LSPAN, EG_LIST + li * EG_LSPAN
+        w = EG_ROWB // 4
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGHT"], n=144),
+                                         O=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=144)),
+                tag="engram.host_table", family="engram"), [], ["EGID"])
+        hq = max(hp, 0)
+        add(Rec("DMA", "LOAD", desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=EG_TBASE, n=w, indexed=1, dyn_mul=EG_ROWB, n_sel=MC.HGI.NSEL_FROM_VM),
+            O=V("EGC", w, m=24, stride=w),
+            I=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"] + 40 + 24 * hq, n=24,
+                    stride=(lay.vm["EGID"] + 32 + hq) - (lay.vm["EGID"] + 40 + 24 * hq))),
+            tag="engram.home_rows", family="engram"), ["EGID"], ["EGC"], home)
+        add(Rec("DMA", "STORE", desc=dict(A=V("EGC", w, m=24, stride=w),
+                                          O=MDesc(space="HBM", fmt="FP32", base=stg, n=w, m=24, stride=EG_ROWB)),
+                tag="engram.stage", family="engram"), ["EGC"], ["EGSTG"], home)
+        add(Rec("DMA", "FENCE", tag="engram.stage_fence", family="engram"), ["EGSTG"], ["EGSTG"], home)
+        add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | (1 << 8), imm_a=24, imm_b=TP, desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=stg, n=w, stride=EG_ROWB),
+            O=MDesc(space="HBM", fmt="FP32", base=lst, n=w, stride=EG_ROWB),
+            I=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=24)), tag="engram.gather", family="engram"),
+            ["EGID", "EGSTG"], ["EGLIST"])
+        add(Rec("CTL", "FENCE", tag="engram.list_fence", family="engram"), ["EGLIST"], ["EGLIST"])
+        width = 256
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="FP8E4M3", base=lst, n=width, m=24, stride=EG_ROWB),
+                                         O=V("EGC", width, m=24, stride=width)), tag="engram.codes", family="engram"),
+            ["EGLIST"], ["EGC"])
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="UE8M0", base=lst + width, n=width // 32, m=24,
+                                                 stride=EG_ROWB),
+                                         O=V("EGS", width // 32, m=24, stride=width // 32)), tag="engram.scales",
+                family="engram"), ["EGLIST"], ["EGS"])
+        nb = 24 * width // 32
         su("engram.decode", "engram", dict(A=V("EGC", 32, m=nb, stride=32), B=V("EGS", 32, m=nb, stride=1, ibcast=1),
                                            O=V("eg_rows", 32, m=nb, stride=32)), ["EGC", "EGS"], ["eg_rows"],
            m1=I.M1_AB, rnd=1, dst=I.DST_VM)
@@ -668,7 +821,7 @@ class Lower:
         add(Rec("FUSED", "QDQ_FP4_E4M3", param=16, desc=dict(A=V("LR", 512), O=V("CK", 512)), tag="cmp.ckv_qdq",
                 family="compressor"), ["LR"], ["CK"], run)
         # index key: the DS indexer engine's key store (engine-internal, G16), row = group
-        ik = self.W(f"IKSTORE{L}", CK_CAP[1], 128, "fp8", n_experts=1)
+        ik = self.ik_region(L)
         add(Rec("DMA", "STORE", desc=dict(A=V("IK", 128), O=MDesc(space="HBM", fmt="FP32",
                                                                    base=ik["base"] + grp * ik["rowbytes"], n=128)),
                 tag="cmp.store_IK", family="compressor"), ["IK"], ["kvstore"], run)
@@ -772,6 +925,7 @@ class Lower:
 
 
 GBASE = (1 << 35) + (1 << 33)        # the software ROW_GATHER's slot-major gathered rows (row j * 96 + r), per die
+RG_SW = [False]                      # --rg-sw: the software ROW_GATHER (G21 / G24 idiom) instead of the G25 hardware record
 RG_C = 2                             # slots per ALL_GATHER (hgi-takeover 10-10: 2 slots = 393 KB VM)
 RG_SLOTS = 64                        # gathered-row capacity per source pass (M <= 64; a larger M faults)
 GALL_NAMES = ["GALL", "ea", "eg_kv", "eg_rows"] + [f"ea.s{e}" for e in range(7)] + \
@@ -784,6 +938,25 @@ CK_CAP = [0, 0]          # per-die row-store bytes per KV source; index-key rows
 
 
 hist_of = [None]
+
+
+def eg_host_table(ids, nrows, li):
+    """E-HOME host table (144 U32 = 18 sectors, written by the host per token beside the G13 ids; words 136..143 = 0): words 0..23 the G25 slot ids
+    (list entry j owned by home rank R as its t-th row: i' = (t div 8) 768 + 8 R + t mod 8, so the ROW_GATHER owner rule
+    (i' div 8) mod 96 = R and local row (i' div 768) 8 + i' mod 8 = t); words 32..35 each home's owned count; words
+    40 + 24 h + t the home h's t-th owned table row (local, list order).  Rows split contiguously: home h = id div RPH."""
+    rph = -(-nrows // 4)
+    out = np.zeros(144, np.uint32)
+    cnt = [0, 0, 0, 0]
+    for j, g in enumerate(np.asarray(ids, np.int64)):
+        h, loc = int(g // rph), int(g % rph)
+        t = cnt[h]
+        R = EG_HOMES[li][h]
+        out[j] = (t // 8) * 768 + 8 * R + t % 8
+        out[40 + 24 * h + t] = loc
+        cnt[h] += 1
+    out[32:36] = cnt
+    return out
 
 
 def build_tables(m, st, L, pos, rank):
@@ -801,7 +974,8 @@ def build_tables(m, st, L, pos, rank):
     if L in m.engram.layer_ids:
         li = m.engram.layer_ids.index(L)
         ids = m.engram.hashes(hist_of[0], li).reshape(-1)             # host-provided per token (G13)
-        items += [("EGID", ids.astype(np.uint32).view(F)), ("EGW", G_.mul(m.lw(L, "engram.q_weight"),
+        items += [("EGHT", eg_host_table(ids, m.emb_codes[L][0].shape[0], li).view(F)),
+                  ("EGW", G_.mul(m.lw(L, "engram.q_weight"),
                                                                             m.lw(L, "engram.k_weight")))]
     r = m.ratio[L]
     if r > 0 and L == m.kv_of[L]:
@@ -844,16 +1018,20 @@ def ds_units(m, man, golib):
     U = dict(MC.UNITS)
 
     def wrows(e, ex, r0, nrows, c0, ncols, L):
-        key = e["key"]
+        key = e["key"].split("@c")[0]                 # a column-slice entry names its matrix + column offset
+        c0 = c0 + e.get("col_off", 0)
         if e["experts"] > 1:
             pre, mat = key.rsplit(".", 1)
             name = f"{pre}.{ex}.{mat}.weight"
         else:
             name = key.split("|") if "|" in key else key
         w = golib.wrows(name, r0, r0 + nrows)
-        if c0 or ncols != e["cols"]:
+        full = (w.q if isinstance(w, V_.Q8) else w).shape[1]      # the source matrix's columns
+        if c0 or ncols != full:
             w = (w.q[:, c0:c0 + ncols], w.e) if isinstance(w, V_.Q8) else w[:, c0:c0 + ncols]
         return w
+
+    U["_wrows"], U["_man"] = wrows, man                # the exporter builds the SM line image from these
 
     def sm(M, r, L):
         a, bd, o = r.desc["A"], r.desc["B"], r.desc["O"]
@@ -891,15 +1069,25 @@ def ds_units(m, man, golib):
     def hc_mix_rows(M, r, L):
         """HC_MIX_ROWS (G22): rows imm_a .. imm_a + O.n - 1 of the raw mixes (x . fn row) x rsqrt(mean(x^2) + eps)
         -- the golden's per-row arithmetic (matvec_c rows are independent dot products)"""
-        Lw, which = hc_layer_of(r)
-        fn = m.lw(Lw, f"hc_{which}_fn")
+        vm_b = r.desc["B"].space == "VM"
+        if not vm_b:
+            Lw, which = hc_layer_of(r)
+            fn = m.lw(Lw, f"hc_{which}_fn")
         for die in M.dies:
             rd = M.rec_of(die, r)
+            M.cur = rd
             flat = M.read(rd.desc["A"], die, L).astype(F)
             rr = V_.rsqrt(V_.add(V_.div(V_.split_sum(V_.mul(flat, flat), V_.HC_SS_SPLIT), F(flat.size)), m.eps))
-            mixes = V_.mul(V_.matvec_c(fn, flat, V_.HC_SPLIT, cls="he"), rr)
             lo, n = rd.imm_a, rd.desc["O"].n
-            M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[lo:lo + n], F))
+            if vm_b:                                    # the aperture slot: one fn row (row lo), decoded from its image
+                if n != 1:
+                    raise MC.Fault(3, "HC_MIX_ROWS from the aperture: O.n must be 1")
+                row = hc_row_from_words(M.vm_read(rd.desc["B"], die, L))
+                mixes = V_.mul(V_.matvec_c(row[None, :], flat, V_.HC_SPLIT, cls="he"), rr)
+                M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[:1], F))
+            else:
+                mixes = V_.mul(V_.matvec_c(fn, flat, V_.HC_SPLIT, cls="he"), rr)
+                M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[lo:lo + n], F))
 
     def hc_mix_post(M, r, L):
         """HC_MIX_POST (G22): the 24 gathered raw mixes -> [pre | post | comb] (golden hc_mixes after the matvec)"""
@@ -984,13 +1172,59 @@ def ds_units(m, man, golib):
 
     base_load, base_store = MC.UNITS[("DMA", "LOAD")], MC.UNITS[("DMA", "STORE")]
 
+    def eg_home_rows(M, r, L):
+        """E-HOME: the home die's indexed row stream from its Engram table (288 B rows, from the checkpoint)"""
+        for die in M.dies:
+            rd = M.rec_of(die, r)
+            a, o, i_ = rd.desc["A"], rd.desc["O"], rd.desc["I"]
+            ib = M._plain_base(i_, die, L)
+            cnt = int(die.vm[ib + i_.stride + L])
+            ob, on, om, ost, _ = M.eff(o, die, L)
+            if cnt > om or on != EG_ROWB // 4:
+                raise MC.Fault(3, "Engram home rows: count / row size")
+            Lw = CUR_LAYER[0]
+            li = m.engram.layer_ids.index(Lw)
+            hp = die.rank - EG_HOMES[li][0]
+            codes, sc = m.emb_codes[Lw]
+            rph = -(-codes.shape[0] // 4)
+            for e in range(cnt):
+                g = hp * rph + int(die.vm[ib + L + e])
+                row = np.zeros(EG_ROWB, np.uint8)
+                row[:256] = np.asarray(codes[np.array([g])]).reshape(-1).astype(np.uint8)
+                row[256:264] = (np.asarray(sc[np.array([g])], dtype=np.int64).reshape(-1) + 127).astype(np.uint8)
+                die.vm[ob + e * ost:ob + e * ost + on] = row.view(np.uint32)
+
     def dma_load(M, r, L):
         a = r.desc["A"]
+        if a.space == "HBM" and EG_TBASE <= a.base < EG_TBASE + (1 << 35) and a.indexed:
+            return eg_home_rows(M, r, L)
         if not (a.space == "HBM" and a.base >= WBASE):
             return base_load(M, r, L)
         for die in M.dies:
             base, n, _, _, _ = M.eff(a, die, L)
+            if base >> 37 == 1 and (base & ((1 << 35) - 1)) in HC_STRIPE:   # STRIPE4 HC weight row, 8 bank segments
+                loc = base & ((1 << 35) - 1)
+                bw = HC_RS * 8
+                if (base >> 35) & 3 or n != bw or a.m != 8 or a.stride != bw * 4:
+                    raise MC.Fault(3, f"STRIPE4 HC row load not as compiled: {base:#x} n {n} m {a.m}")
+                Lw, which, o = HC_STRIPE[loc]
+                vals = hc_row_words(m.lw(Lw, f"hc_{which}_fn")[o])
+                for k in range(8):                       # bank k on stack k mod 4 (the bytes the e2e export places)
+                    die.synth_hbm[((k & 3) << 35) | (loc + k * bw * 4)] = vals[k * bw:(k + 1) * bw].view(np.uint8).tobytes()
+                M.vm_write(M.rec_of(die, r).desc["O"], die, L, vals)
+                continue
             e, ex, r0, c0 = man.find(base)
+            if "hc_" in e["key"]:                       # an HC weight row (the weight-set image, from the checkpoint)
+                sect = (base - e["base"]) // 32 - 4
+                o, rem = divmod(sect, HC_ROW_SECT)
+                if rem or n != HC_K or not 0 <= o < 24:
+                    raise MC.Fault(3, f"HC weight row load not row-aligned: sector {sect} n {n}")
+                pre_, which = e["key"].rsplit("hc_", 1)
+                parts = pre_.strip(".").split(".")
+                Lw = int(parts[1]) if parts[0] == "layers" else m.L + int(parts[1])
+                vals = hc_row_words(m.lw(Lw, f"hc_{which}_fn")[o])
+                M.vm_write(M.rec_of(die, r).desc["O"], die, L, vals)
+                continue
             Lk = int(e["key"][3:])
             codes, sc = m.emb_codes[Lk]
             if e["key"].startswith("EGC"):
@@ -1001,7 +1235,7 @@ def ds_units(m, man, golib):
 
     def dma_store(M, r, L):
         o = r.desc["O"]
-        if o.space == "HBM" and o.base >= WBASE:          # index key -> the DS indexer engine's key store (G16)
+        if o.space == "HBM" and (o.base >= WBASE or (IKS[0] and KBASE <= o.base < CKBASE)):   # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
                 golib.st.ik[int(e["key"][7:])][grp] = M.read(r.desc["A"], die, L)
@@ -1019,7 +1253,33 @@ def ds_units(m, man, golib):
                 golib.st.ckv[src][g] = M.read(r.desc["A"], die, L)   # the indexer engine's row count / model
             golib.st.n[src] = g + 1
 
-    U.update({("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk, ("IDX", "OWNED"): idx_owned,
+    base_rg = MC.UNITS[("COLL", "ROW_GATHER")]
+
+    def row_gather(M, r, L):
+        """the G25 ROW_GATHER; for the E-HOME Engram staging rows the bytes move raw (packed codes / scales)"""
+        a = r.desc["A"]
+        if not (a.space == "HBM" and EG_STG <= a.base < EG_STG + 2 * EG_LSPAN):
+            return base_rg(M, r, L)
+        B = r.param & 0xFF
+        for grp in M.groups():
+            G = len(grp)
+            d0 = grp[0]
+            ib, n_i, _, _, iist = M.eff(M.rec_of(d0, r).desc["I"], d0, L)
+            ids = d0.vm[ib + np.arange(r.imm_a or n_i) * iist].astype(np.int64)
+            nb = a.n * 4
+            rows = []
+            for i in ids:
+                owner = grp[(i // B) % G]
+                loc = (i // (B * G)) * B + i % B
+                rows.append(owner.hbm.view(a.base + loc * a.stride, nb).copy())
+            for q, d in enumerate(grp):
+                if q >= r.imm_b:
+                    continue
+                o = M.rec_of(d, r).desc["O"]
+                for j, row in enumerate(rows):
+                    d.hbm.view(o.base + j * o.stride, nb)[:] = row
+
+    U.update({("COLL", "ROW_GATHER"): row_gather, ("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk, ("IDX", "OWNED"): idx_owned,
               ("COLL", "TOPK_MERGE"): topk_merge, ("DMA", "LOAD"): dma_load, ("DMA", "STORE"): dma_store,
               ("SM", "MATVEC"): sm, ("HC", "HC_MIX"): hc_mix, ("FUSED", "HC_PRE_NORM"): hc_pre_norm,
               ("FUSED", "HC_POST"): hc_post, ("HC", "HC_MIX_ROWS"): hc_mix_rows, ("HC", "HC_MIX_POST"): hc_mix_post})
@@ -1074,6 +1334,13 @@ def schedule_layer(rank_recs, ops, L):
         if sig not in SCHED_CACHE and cfile.exists():
             c_ = json.loads(cfile.read_text())
             SCHED_CACHE[sig] = (c_["perm"], dict(c_["info"], disk_cache=cfile.name))
+        elif sig not in SCHED_CACHE and os.environ.get("HGI_SCHED_ANYCOST"):
+            # a permutation found under another cost table is still legal (hazards are structural): reuse it, labelled
+            alt = sorted(Path(cdir).glob(f"{sig[:32]}-*-{POS_DEFAULT[0]}.json"))
+            if alt:
+                c_ = json.loads(alt[-1].read_text())
+                SCHED_CACHE[sig] = (c_["perm"], dict(c_["info"], disk_cache=alt[-1].name,
+                                                     cost_model_of_search=alt[-1].name.split("-")[1]))
     if sig in SCHED_CACHE:
         perm, info0 = SCHED_CACHE[sig]
         info = dict(info0, reused_from_layer=info0.get("layer"))
@@ -1179,11 +1446,17 @@ def main():
     ap.add_argument("--program-out", type=Path, help="write rank 0's record stream (for hgi_sim.ds_native_timing)")
     ap.add_argument("--export-layers", default="0", help="layers (and 'head') whose images --export-images writes")
     ap.add_argument("--no-fuse", action="store_true", help="one SU template a record (the pre-fusion stream)")
+    ap.add_argument("--rg-sw", action="store_true", help="software ROW_GATHER (G21/G24 idiom) instead of the G25 record")
+    ap.add_argument("--hc-hbm", action="store_true", help="HC_MIX_ROWS reads its weights from HBM (no aperture double buffer)")
+    ap.add_argument("--iks", action="store_true", help="IKS: row-aligned key regions + IDX.INDEX operand I (opt-in)")
     ap.add_argument("--schedule", choices=("opt", "none"), default="opt",
                     help="opt: per-layer CP-aware order (schedule_layer); none: lowering order")
     ap.add_argument("--export-images", type=Path,
                     help="DIR: per layer, every rank's HGI-1 image + its dispatch trace (RTL sequencer check, CF-PROG DS)")
     a = ap.parse_args()
+    RG_SW[0] = a.rg_sw
+    HC_DB[0] = not a.hc_hbm
+    IKS[0] = a.iks
     prog_dump = dict(rank=0, layers=[], ops={})
     feats = getattr(np, "_core", np.core)._multiarray_umath.__cpu_features__
     if feats.get("AVX512F"):
@@ -1257,11 +1530,18 @@ def main():
     for d in dies:
         d.vm[lay.vm["h"]:lay.vm["h"] + HC * D] = np.asarray(h0, F).reshape(-1).view(np.uint32)
         d.vm[lay.vm["PRE"]:lay.vm["PRE"] + 4] = np.asarray(pre0, F).view(np.uint32)
+        if HC_DB[0] and first != "head":              # entering state: the previous layer prefetched this layer's attn row
+            lo = 24 * d.rank // TP
+            if 24 * (d.rank + 1) // TP > lo:
+                w_ = hc_row_words(m.lw(first, "hc_attn_fn")[lo]).view(np.uint32).reshape(8, -1)
+                for k in range(8):
+                    d.vm[MC.VM_WORDS + HC_BANK * k:MC.VM_WORDS + HC_BANK * k + w_.shape[1]] = w_[k]
     sel_hbm, g_hbm = {}, {}
     results = []
     for L in list(layers) + (["head"] if a.head else []):
         tl = time.time()
         Lc = m.L if L == "head" else L
+        CUR_LAYER[0] = Lc
         ops = (W.Compiler(m, pos, VARIANT).compile_head() if L == "head"
                else W.Compiler(m, pos, VARIANT).compile_layer(L, first=(L == first)))
         tabs = [build_tables(m, st, min(Lc, m.L - 1), pos, r) for r in range(TP)]
@@ -1295,6 +1575,8 @@ def main():
                 sel_hbm[r] = np.zeros(SELB * len(SOURCES), dtype=np.uint8)
             d.hbm.add(SBASE, sel_hbm[r], "SELROWS")
             d.hbm.add(CKBASE, ck_regs[r], "CKSTORE")
+            if not any(b_ == EG_STG for b_, _, _ in d.hbm.regions):     # E-HOME staging + list stores (2 layers)
+                d.hbm.add(EG_STG, np.zeros(2 * EG_LSPAN, np.uint8), "EGSTG")
             if r not in g_hbm:                     # the software ROW_GATHER's slot-major rows (j * 96 + r), M <= RG_SLOTS
                 g_hbm[r] = np.zeros(-(-RG_SLOTS // RG_C) * RG_C * TP * 2048, dtype=np.uint8)
             d.hbm.add(GBASE, g_hbm[r], "GROWS")

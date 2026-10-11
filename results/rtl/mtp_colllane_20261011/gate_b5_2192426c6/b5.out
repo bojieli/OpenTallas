@@ -1,0 +1,13 @@
+base        expect pass -> PASS OK coll_done 3011 cyc/tok None 
+pos_rand    expect pass -> PASS OK coll_done 3011 cyc/tok 4.04 
+pos_hol     expect pass -> PASS OK coll_done 3011 cyc/tok 3.853 
+pos_block   expect pass -> PASS OK coll_done 3011 cyc/tok 0.0 
+pos_win     expect pass -> PASS OK coll_done 3011 cyc/tok 4.813 
+pos_rate    expect pass -> PASS OK coll_done 3011 cyc/tok 6.398 
+rate_t64    expect pass -> PASS OK coll_done 3011 cyc/tok 7.238 
+rate_t32    expect pass -> PASS OK coll_done 3011 cyc/tok 8.062 
+neg_shared  expect fail -> FAIL OK coll_done 3011 cyc/tok 9.587 TB_S81PH_COLL_SYS FAIL errs 4
+neg_cred    expect fail -> FAIL OK coll_done 3011 cyc/tok 5.687 TB_S81PH_COLL_SYS FAIL errs 75500
+neg_stale   expect fail -> FAIL OK coll_done None cyc/tok None LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant) | [995000] %Fatal: ot_dsrom_mtp_link_rtt.sv:134: Assertion failed in tb_s81ph_coll_sys.g_die[0].u.u_ma.u_ep.u_t.g_rtt.u_rx: LINK_REG overflow
+NO_BLOCK (pos_block coll_done == base) True 3011 3011
+MTP_COLLLANE_GATE PASS

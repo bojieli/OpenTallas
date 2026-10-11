@@ -22,10 +22,14 @@
 module tb_hgi_e2e;
     parameter integer REAL_DMA = 0, REAL_QUANT = 0, REAL_IDX = 0, REAL_SU = 0, REAL_SFU = 0, REAL_COLL = 0, REAL_FUSED = 0, REAL_ATT = 0, REAL_HC = 0;
     parameter integer HC_W = 32, HC_MUT_POST = 0;   // REAL_HC: HCP lanes per group (8 W MAC lanes); bench mutant (pre without + hc_eps)
-    parameter integer FUSED_SCRATCH = 256064;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
+    parameter integer FUSED_SCRATCH = 256064, FUSED_UN = 32, FUSED_UM = 8;     // compiler-reserved FUSED scratch (unused by both vehicles' programs)
     parameter integer COLL_BF16 = 1, COLL_PFMAX = 512, LATC = 453, CRED = 137;
-    parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
+    parameter integer SU_N = 64, SU_M = 64, SU_LV = 7;
+    parameter integer SU_WIDE = 0, FUSED_UWIDE = 0;      // 1: the D1 body's WIDE successor (32-lane VM stage / drain; hgi-1010/b)   // M x 2^LV >= 8,192: the P8191 exp + sum rows in one reduced segment (N16/M8/LV6 refuses them)
     parameter integer FLAT = 40, KLAT = 40, VLAT = 6, FPIPE = 1;
+    parameter integer REAL_FETCH = 1;  // 1: the record-ring fetch goes through the REAL ot_hfd_loader_kport (lane 1: one
+                                       // transaction outstanding per lane, native endpoint) to a stack-service model at
+                                       // FLAT cycles; 0: the FPIPE lane model (FPIPE 1 hides the CP fetch gap)
     parameter integer DMA_POSTED = 1;    // hgi-1010/c: 0 = STORE / KVWB retire on the last write ack (the pre-posted A/B point)
     parameter integer DMA_FRONT = 1;   // REAL_DMA: unit-stride HBM -> VM LOADs on the DMA front + svc stream (0 = mover only)
     parameter integer ATT_H = 16, ATT_D = 512, ATT_TD = 64, ATT_NL = 4, ATT_PIPE = 0, ATT_MUT_ROW = 0;   // REAL_ATT: r25 engine geometry
@@ -38,6 +42,8 @@ module tb_hgi_e2e;
     // 88.. the golden emitted tokens.  MUT_HT (bench mutant): the head table entry of position 3 = the draft there.
     parameter integer MTP = 0, MUT = 0, MUT_HT = 0;   // MTP 1: collar in the bench (x_* ports); 2: collar inside the CP die
     import "DPI-C" function int e2e_init(input string d, input string outp);
+    import "DPI-C" function void e2e_posted(input int on);
+    initial e2e_posted((REAL_DMA != 0 && DMA_POSTED != 0) ? 1 : 0);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
                                                input bit [31:0] mask, output bit [255:0] rd);
     import "DPI-C" function void e2e_hbm_sector(input longint addr, input bit we, input bit [255:0] wd,
@@ -56,20 +62,21 @@ module tb_hgi_e2e;
     reg rst_n = 0;
     longint cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     reg [8*512-1:0] dir, outp;
-    reg [31:0] host [0:127];       // md words 0..63, token 64, pos 65, expected token 66, rank 67, ncol 68 (MTP: see above)
+    reg [31:0] host [0:127];       // md words 0..63, token 64, pos 65, expected token 66, rank 67, ncol 68 (MTP: see above)   // non-MTP: FUSED scratch 69; CTL.TOKX count k 104, tokens 105..120 (CPU golden)
+    reg [17:0] fscr = 18'd0;
     // ---------------------------------------------------------------- host AXI-lite + loader + CP die
     reg s_awvalid = 0, s_wvalid = 0, s_bready = 1, s_arvalid = 0, s_rready = 1; reg [11:0] s_awaddr = 0, s_araddr = 0;
     reg [31:0] s_wdata = 0; wire s_awready, s_wready, s_bvalid, s_arready, s_rvalid; wire [31:0] s_rdata;
     wire c_awvalid, c_wvalid, c_arvalid, c_bready, c_rready; wire [11:0] c_awaddr, c_araddr; wire [31:0] c_wdata; wire [3:0] c_wstrb;
-    wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data = 0;
+    wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; wire [3:0] m_req_len; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data = 0;
     wire lfault;
-    ot_hgi_loader_cp ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
+    ot_hgi_loader_cp #(.BURST(1)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hf), .s_bvalid(s_bvalid), .s_bready(s_bready),
         .s_arvalid(s_arvalid), .s_arready(s_arready), .s_araddr(s_araddr), .s_rvalid(s_rvalid), .s_rready(s_rready),
         .s_rdata(s_rdata), .c_awvalid(c_awvalid), .c_awready(1'b0), .c_awaddr(c_awaddr), .c_wvalid(c_wvalid), .c_wready(1'b0),
         .c_wdata(c_wdata), .c_wstrb(c_wstrb), .c_bvalid(1'b0), .c_bready(c_bready), .c_arvalid(c_arvalid), .c_arready(1'b0),
         .c_araddr(c_araddr), .c_rvalid(1'b0), .c_rready(c_rready), .c_rdata(32'd0), .lcp(lcp), .cpl(cplk),
-        .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
+        .m_req_v(m_req_v), .m_req_rdy(m_req_rdy), .m_req_addr(m_req_addr), .m_req_len(m_req_len), .m_rsp_v(m_rsp_v), .m_rsp_data(m_rsp_data),
         .fault(lfault));
     wire [337:0] cp_vmq; wire [273:0] cp_vmr;
     wire [967:0] coll_rec; wire [682:0] quant_rec; wire [2074:0] idx_rec; wire [39:0] cfg_bus;
@@ -87,8 +94,7 @@ module tb_hgi_e2e;
     wire [196:0] c_t_mtp; wire [4:0] c_t_host; wire [42:0] c_t_prov; wire [37:0] c_t_emit; wire [99:0] c_t_eh;
     wire c_t_abort, c_t_drained;
     generate if (MTP) begin : g_mtp
-        hgi_mtp_native native (.clk(clk), .rst_n(rst_n), .f_cmdproc(n_f), .t_cmdproc(n_t), .f_router(59'b0), .t_router(),
-            .t_coll(), .f_coll(1'b1));
+        hgi_mtp_native native (.clk(clk), .rst_n(rst_n), .f_cmdproc(n_f), .t_cmdproc(n_t));
         if (MTP == 1) begin : g_ext_collar           // the collar outside the CP die (x_* ports)
             hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(1)) collar (.ck(clk), .rst(~rst_n), .f_mtp(n_t), .emit_pend(n_t[43]),
                 .t_mtp(n_f), .f_host(f_host), .t_host(t_host), .f_provider(prov), .t_emit(t_emit), .t_provider(t_prov),
@@ -102,7 +108,7 @@ module tb_hgi_e2e;
         assign n_t = '0; assign n_f = '0; assign t_host = '0; assign t_prov = '0; assign t_emit = '0; assign t_eh = '0;
         assign t_abort = 1'b0; assign t_drained = 1'b0; assign t_be = '0;
     end endgenerate
-    ot_hgi_cp_die #(.USE_MACRO(0), .MTP(MTP), .MUT(MUT)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
+    ot_hgi_cp_die #(.USE_MACRO(0), .MTP(MTP), .MUT(MUT), .FQCR(16)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret),
         .idx_rec(idx_rec), .idx_ret(idx_ret),
         .am_rec(am_rec), .am_ret({ux_fault[7], ux_done[7], ux_rdy[7]}),
@@ -129,20 +135,69 @@ module tb_hgi_e2e;
     // ---------------------------------------------------------------- record-ring fetch (loader memory lane 1): HBM model
     // F5 (hgi-takeover): the lane takes a request a cycle and answers IN ORDER FLAT cycles later (the pipelined lane-1
     // read path the loader / kport fork provides); FPIPE = 0 is the old one-outstanding lane
+    generate if (!REAL_FETCH) begin : g_fetch_model
     integer fq_t [0:255]; reg [36:0] fq_a [0:255]; integer fq_h = 0, fq_n = 0; longint tn = 0;
-    always @(posedge clk) begin
-        tn <= tn + 1;
-        m_rsp_v <= 1'b0;
-        m_req_rdy <= (FPIPE != 0) ? (fq_n < 200) : (fq_n == 0);
-        if (fq_n > 0 && fq_t[fq_h % 256] <= tn) begin : frsp
-            bit [255:0] rd;
-            e2e_hbm_sector({27'd0, fq_a[fq_h % 256]}, 1'b0, 256'd0, 32'd0, rd);
-            m_rsp_v <= 1'b1; m_rsp_data <= rd; fq_h = fq_h + 1; fq_n = fq_n - 1;
+        always @(posedge clk) begin
+            tn <= tn + 1;
+            m_rsp_v <= 1'b0;
+            m_req_rdy <= (FPIPE != 0) ? (fq_n < 200) : (fq_n == 0);
+            if (fq_n > 0 && fq_t[fq_h % 256] <= tn) begin : frsp
+                bit [255:0] rd;
+                e2e_hbm_sector({27'd0, fq_a[fq_h % 256]}, 1'b0, 256'd0, 32'd0, rd);
+                m_rsp_v <= 1'b1; m_rsp_data <= rd; fq_h = fq_h + 1; fq_n = fq_n - 1;
+            end
+            if (rst_n && m_req_v && m_req_rdy) begin
+                for (int b = 0; b < int'(m_req_len); b++) begin fq_a[(fq_h + fq_n) % 256] = m_req_addr + 37'(32 * b); fq_t[(fq_h + fq_n) % 256] = int'(tn) + FLAT - 1 + b; fq_n = fq_n + 1; end
+            end
         end
-        if (rst_n && m_req_v && m_req_rdy) begin
-            fq_a[(fq_h + fq_n) % 256] = m_req_addr; fq_t[(fq_h + fq_n) % 256] = int'(tn) + FLAT - 1; fq_n = fq_n + 1;
+    end else begin : g_fetch_real
+        // lane 1 of the die's loader memory port (ot_hfd_loader_hgi: kport ND 3, BURST 1, lane 1 = CP record-ring fetch)
+        wire [4*350-1:0] lq; reg [4*293-1:0] lr = '0;
+        wire k_rsp_v, k_rsp_we, k_fault, k_last; wire [15:0] k_rsp_tag; wire [255:0] k_rsp_data; wire k_req_rdy;
+        ot_hfd_loader_kport #(.ENABLE(1), .ND(1), .BURST(1)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(m_req_v), .req_rdy(k_req_rdy),
+            .req_we(1'b0), .req_addr(m_req_addr), .req_wdata(256'd0), .req_wstrb(32'd0), .req_tag(16'hf000), .req_len(m_req_len),
+            .rsp_v(k_rsp_v), .rsp_rdy(1'b1), .rsp_we(k_rsp_we), .rsp_tag(k_rsp_tag), .rsp_data(k_rsp_data), .rsp_last(k_last),
+            .lq(lq), .lr(lr), .fault(k_fault));
+        always @* m_req_rdy = k_req_rdy;
+        always @* begin m_rsp_v = k_rsp_v; m_rsp_data = k_rsp_data; end
+        // stack-service model (svc native read protocol of ot_hbm_svc_core_native as the kport drives it): a native
+        // transaction = an rd_go pulse {len, tag, sector, pc}; one queue credit (native_rdy pulse) returns the next edge;
+        // its len beats {beat, tag, data} come back FLAT cycles later (+FJIT random, in order), one beat a cycle a stack.
+        // Data: the lane's requests are byte addresses; the kport splits each into chunks in order, so the model keeps
+        // the accepted requests as a sector FIFO and each chunk takes the next len sectors of it.
+        integer fjit = 0; longint tn2 = 0;
+        reg [36:0] sq [0:1023]; integer sh = 0, sn = 0;               // sector byte addresses in request order
+        reg [255:0] bd [0:3][0:255]; reg [15:0] bt_ [0:3][0:255]; reg [3:0] bb [0:3][0:255]; reg [4:0] bp [0:3][0:255];
+        longint bdue [0:3][0:255]; integer bh [0:3], bn [0:3]; longint ldue [0:3];
+        initial begin void'($value$plusargs("FJIT=%d", fjit)); for (int i = 0; i < 4; i++) begin bh[i] = 0; bn[i] = 0; ldue[i] = 0; end end
+        always @(posedge clk) begin
+            tn2 <= tn2 + 1;
+            if (rst_n && k_fault) $display("E2E FAIL: loader kport fault");
+            if (rst_n && m_req_v && k_req_rdy) for (int b = 0; b < int'(m_req_len); b++) begin sq[(sh + sn) % 1024] = m_req_addr + 37'(32 * b); sn = sn + 1; end
+            for (int st = 0; st < 4; st++) begin
+                automatic bit [349:0] q = lq[st*350 +: 350];
+                automatic bit [292:0] o = 293'd0;
+                if (rst_n && q[292]) begin : issue
+                    longint d0; int len; len = int'(q[349:346]);
+                    d0 = tn2 + FLAT + ((fjit > 0) ? $urandom_range(0, fjit) : 0); if (d0 < ldue[st]) d0 = ldue[st];
+                    for (int b = 0; b < len; b++) begin
+                        automatic bit [255:0] rd_;
+                        e2e_hbm_sector({27'd0, sq[sh % 1024]}, 1'b0, 256'd0, 32'd0, rd_); sh = sh + 1; sn = sn - 1;
+                        bd[st][(bh[st] + bn[st]) % 256] = rd_; bt_[st][(bh[st] + bn[st]) % 256] = q[343:328];
+                        bb[st][(bh[st] + bn[st]) % 256] = 4'(b); bp[st][(bh[st] + bn[st]) % 256] = q[297:293];
+                        bdue[st][(bh[st] + bn[st]) % 256] = d0 + b; bn[st] = bn[st] + 1;
+                    end
+                    ldue[st] = d0 + len;
+                    o[0] = 1'b1;                                         // the request left the svc queue: one credit back
+                end
+                if (bn[st] > 0 && bdue[st][bh[st] % 256] <= tn2) begin
+                    o[1] = 1'b1; o[6:2] = bp[st][bh[st] % 256]; o[22:7] = bt_[st][bh[st] % 256]; o[26:23] = bb[st][bh[st] % 256];
+                    o[282:27] = bd[st][bh[st] % 256]; bh[st] = bh[st] + 1; bn[st] = bn[st] - 1;
+                end
+                lr[st*293 +: 293] <= o;
+            end
         end
-    end
+    end endgenerate
     // ---------------------------------------------------------------- unit slots
     localparam [15:0] REALM = (REAL_DMA ? 16'h0100 : 16'h0) | (REAL_IDX ? 16'h0200 : 16'h0) |
                               (REAL_SU ? 16'h0004 : 16'h0) | (REAL_SFU ? 16'h0008 : 16'h0) | (REAL_ATT ? 16'h0020 : 16'h0) | (REAL_HC ? 16'h0400 : 16'h0);
@@ -196,7 +251,7 @@ module tb_hgi_e2e;
     // SU (unit 2) / SFU (unit 3): adapter + the reference vec unit on the VM model (hgi_e2e_slots.sv)
 `ifdef E2E_VEC
     generate if (REAL_SU) begin : g_su
-        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(su_rec[0]),
+        hgi_e2e_su_slot #(.UNIT(2), .GLU(0), .N(SU_N), .M(SU_M), .LV(SU_LV), .WIDE(SU_WIDE)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(su_rec[0]),
             .rec_rdy(r_rdy[2]), .rec_hdr(su_rec[128:1]), .rec_sut(su_rec[384:129]), .rec_desc(su_rec[2176:385]), .rec_n_a(su_rec[2197:2177]),
             .rec_done(r_done[2]), .rec_fault(r_fault[2]));
     end else begin : g_su_stub
@@ -207,7 +262,7 @@ module tb_hgi_e2e;
 `endif
 `ifdef E2E_VEC
     generate if (REAL_SFU) begin : g_sfu
-        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M), .LV(SU_LV)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(sfu_rec[0]),
+        hgi_e2e_su_slot #(.UNIT(3), .GLU(1), .N(SU_N), .M(SU_M), .LV(SU_LV), .WIDE(SU_WIDE)) u_s (.clk(clk), .rst_n(rst_n), .rec_v(sfu_rec[0]),
             .rec_rdy(r_rdy[3]), .rec_hdr(sfu_rec[128:1]), .rec_sut(256'd0), .rec_desc({512'd0, sfu_rec[1152:897], 256'd0, sfu_rec[896:129]}), .rec_n_a(sfu_rec[1173:1153]),
             .rec_done(r_done[3]), .rec_fault(r_fault[3]));
     end else begin : g_sfu_stub
@@ -262,9 +317,10 @@ module tb_hgi_e2e;
     wire f_rdy, f_done, f_fault; wire [682:0] fq_rec; reg q_done_s;
 `ifdef E2E_FUSED
     generate if (REAL_FUSED) begin : g_fused
-        hgi_e2e_fused_slot #(.KLAT(KLAT), .VLAT(VLAT), .SCRATCH(FUSED_SCRATCH)) u_fu (.clk(clk), .rst_n(rst_n), .rec_v(f_v),
+        hgi_e2e_fused_slot #(.KLAT(KLAT), .VLAT(VLAT), .SCRATCH(FUSED_SCRATCH), .UN(FUSED_UN), .UM(FUSED_UM), .UWIDE(FUSED_UWIDE)) u_fu (.clk(clk), .rst_n(rst_n), .rec_v(f_v),
             .rec_rdy(f_rdy), .rec_hdr(f_hdr), .rec_desc(f_desc), .rec_n(f_n), .rec_done(f_done), .rec_fault(f_fault),
-            .q_rec(fq_rec), .q_done(REAL_QUANT ? q_ret[1] : q_done_s), .q_fault(REAL_QUANT ? q_ret[2] : 1'b0));
+            .q_rec(fq_rec), .q_done(REAL_QUANT ? q_ret[1] : q_done_s), .q_fault(REAL_QUANT ? q_ret[2] : 1'b0),
+            .scratch(fscr));
     end else begin : g_fused_stub
         assign f_rdy = 1'b0; assign f_done = 1'b0; assign f_fault = 1'b0; assign fq_rec = 683'd0;
     end endgenerate
@@ -410,6 +466,7 @@ module tb_hgi_e2e;
             @(negedge clk); s_arvalid = 0; while (!s_rvalid) @(negedge clk); rd = s_rdata; end
     endtask
     longint t_db, t_cpl, t_drain;
+    integer n_tokx; reg [17:0] tokx_got [0:15];
     always @(posedge clk) if (rst_n && cpd.u_cp.cpl_v && t_cpl == 0) t_cpl = cyc;
     integer w, n_rec, c_tok, c_st, c_cyc, fin, cfgfix;
     initial begin
@@ -418,7 +475,8 @@ module tb_hgi_e2e;
         $readmemh({dir, "/host.mem"}, host);
         n_rec = e2e_init(dir, outp);
         if (n_rec <= 0) $fatal(1, "E2E init failed");
-        if (REAL_FUSED) e2e_ignore(FUSED_SCRATCH, FUSED_SCRATCH + 8192);
+        fscr = (!MTP && host[69] != 0) ? host[69][17:0] : 18'(FUSED_SCRATCH);   // (MTP: host[69] is maxpos)
+        if (REAL_FUSED) e2e_ignore(int'(fscr), int'(fscr) + 16384);
         if ($value$plusargs("WATCH=%d", w)) e2e_watch(w);
         t_cpl = 0;
         repeat (3) @(posedge clk); rst_n = 1; repeat (2) @(posedge clk);
@@ -467,12 +525,33 @@ module tb_hgi_e2e;
             if (rd[10:8] == 0) begin
                 $display("E2E FAIL: no completion (timeout)"); errs = errs + 1; c_tok = -1; c_st = 15; c_cyc = 0;
             end else begin
-                axr(12'hC40); c_tok = rd[17:0]; axr(12'hC4C); c_st = rd[7:4]; axr(12'hC50); c_cyc = rd;
+                            // CTL.TOKX beats (tokx = 1) precede END's completion: collect them, then read END's entry
+            n_tokx = 0;
+            axr(12'hC4C);
+            while (rd[8] && w < 2000000) begin
+                axr(12'hC40);
+                if (n_tokx < 16) tokx_got[n_tokx] = rd[17:0];
+                n_tokx = n_tokx + 1;
+                axr(12'hC50);
+                rd = 0; while (rd[10:8] == 0 && w < 2000000) begin axr(12'hC20); w = w + 1; end
+                axr(12'hC4C);
+            end
+            axr(12'hC40); c_tok = rd[17:0]; axr(12'hC4C); c_st = rd[7:4]; axr(12'hC50); c_cyc = rd;
+            if (host[104] != 0 || n_tokx != 0) begin
+                $display("E2E TOKX committed %0d tokens (cpu golden %0d)", n_tokx, host[104]);
+                if (n_tokx != host[104]) errs = errs + 1;
+                for (w = 0; w < n_tokx && w < 16; w = w + 1) begin
+                    $display("E2E TOKX[%0d] = %0d (cpu golden %0d)", w, tokx_got[w], host[105 + w]);
+                    if (tokx_got[w] != host[105 + w][17:0]) errs = errs + 1;
+                end
+            end
             end
         end
         // END's wait mask may be 0 (the Qwen layer program): the completion can precede the last records' writes;
         // drain every unit (the sequencer's busy = a job runs or a unit has work outstanding) before the final checks
-        w = 0; while (cpd.u_cp.u_seq.busy && w < 2000000) begin @(negedge clk); w = w + 1; end
+        // a fault completion halts the CP by design (outstanding count of the faulted unit is never retired; recovery
+        // = drained reset): do not wait for busy to drop then
+        w = 0; while (c_st == 0 && cpd.u_cp.u_seq.busy && w < 2000000) begin @(negedge clk); w = w + 1; end
         t_drain = cyc;
         repeat (20) @(negedge clk);
         fin = e2e_finish(t_cpl - t_db, c_tok, c_st);
@@ -492,16 +571,71 @@ module hgi_e2e_vmc #(parameter integer UNIT = 0, parameter integer LAT = 6) (
     input wire clk, input wire rst_n, input wire [337:0] q, output reg [273:0] r);
     import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
                                                input bit [31:0] mask, output bit [255:0] rd);
-    reg [272:0] rq [0:15]; longint due [0:15]; integer h = 0, t = 0; longint c = 0;
+    // exactness audit (lead 10-10): +VJIT=j adds a random 0..j extra cycles per response (responses stay in order per
+    // client: a later request never overtakes); +VMAXOUT=n (default 4) faults a client with more than n outstanding;
+    // +MUTLAT=1 (mutant, must FAIL): the response carries the data of the client's previous response (a +-1 pairing slip)
+    reg [272:0] rq [0:15]; longint due [0:15]; integer h = 0, t = 0; longint c = 0; longint last_due = 0;
+    integer jit = 0, maxout = 4, mut = 0, seed = 1; reg [255:0] prev_d = '0;
+    initial begin
+        void'($value$plusargs("VJIT=%d", jit)); void'($value$plusargs("VMAXOUT=%d", maxout));
+        void'($value$plusargs("MUTLAT=%d", mut)); if ($value$plusargs("SEED=%d", seed)) ; seed = seed * 131 + UNIT;
+        void'($urandom(seed));
+    end
     always @(posedge clk) begin
         c <= c + 1;
         r[273] <= 1'b0;
         if (rst_n && q[337]) begin : acc
-            bit [255:0] rd;
+            bit [255:0] rd; longint d;
+            if (t - h >= maxout) $fatal(1, "E2E FAIL: VM packet client unit %0d: more than %0d requests outstanding", UNIT, maxout);
             e2e_vm_sector(UNIT, int'(q[335:304] >> 5), q[336], q[303:48], q[47:16], rd);
-            rq[t % 16] = {q[15:0], q[336], rd}; due[t % 16] = c + LAT; t = t + 1;
+            d = c + LAT + ((jit > 0) ? $urandom_range(0, jit) : 0);
+            if (d < last_due) d = last_due;
+            last_due = d;
+            rq[t % 16] = {q[15:0], q[336], rd}; due[t % 16] = d; t = t + 1;
         end
-        if (h < t && due[h % 16] <= c) begin r <= {1'b1, rq[h % 16]}; h = h + 1; end
+        if (h < t && due[h % 16] <= c) begin
+            r <= (mut != 0) ? {1'b1, rq[h % 16][272:256], prev_d} : {1'b1, rq[h % 16]};
+            prev_d = rq[h % 16][255:0]; h = h + 1;
+        end
+    end
+endmodule
+
+// VM wide lanes model (hgi-1010/e, for ot_hgi_su_unit WIDE = 1; the formats of ot_hgi_vm_unit RP / W2): 32 read lanes
+// rq b {v, sector 15} (bank = sector mod 32 must be b), rr b {v, data 256} in request order LAT edges later (+VJIT
+// random, in order per lane), rq_cr b one edge after the request (it reached its bank); 32 write lanes w2q b {v, sector 15,
+// wdata 256, word mask 8}: the write lands at once, w2q_cr next edge, w2q_done 3 edges later. A lane holding more than LQ
+// requests (the client overran its credits) or a request on the wrong bank is FATAL (protocol check).
+module hgi_e2e_vmlanes #(parameter integer UNIT = 2, parameter integer LAT = 5, parameter integer LQ = 8) (
+    input wire clk, input wire rst_n, input wire [32*16-1:0] rq, output reg [31:0] rq_cr, output reg [32*257-1:0] rr,
+    input wire [32*280-1:0] wq, output reg [31:0] wq_cr, output reg [31:0] wq_done);
+    import "DPI-C" function void e2e_vm_sector(input int unit, input int sec, input bit we, input bit [255:0] wd,
+                                               input bit [31:0] mask, output bit [255:0] rd);
+    reg [255:0] rd_q [0:31][0:63]; longint due [0:31][0:63]; integer h [0:31], t [0:31]; longint ld [0:31];
+    reg [31:0] wd1 = 0, wd2 = 0; longint c = 0; integer jit = 0;
+    initial begin void'($value$plusargs("VJIT=%d", jit)); for (int b = 0; b < 32; b++) begin h[b] = 0; t[b] = 0; ld[b] = 0; end
+        rq_cr = 0; rr = '0; wq_cr = 0; wq_done = 0; end
+    always @(posedge clk) begin
+        c <= c + 1; rr <= '0; rq_cr <= '0; wq_cr <= '0; wd2 <= wd1; wq_done <= wd2; wd1 <= '0;
+        if (rst_n) for (int b = 0; b < 32; b++) begin
+            if (rq[b*16 + 15]) begin : rd
+                bit [255:0] d; longint dd; int sec; sec = int'(rq[b*16 +: 15]);
+                if (sec % 32 != b) $fatal(1, "E2E FAIL: VM wide read lane %0d got sector %0d of bank %0d (unit %0d)", b, sec, sec % 32, UNIT);
+                // the client's LQ credits return at the bank pop (rq_cr, next edge): queue occupancy stays <= 1 here; the
+                // response ring (64) bounds the in-flight reads (LAT + jitter) -- overflow is a model failure
+                if (t[b] - h[b] >= 64) $fatal(1, "E2E FAIL: VM wide read lane %0d response ring overflow (unit %0d)", b, UNIT);
+                e2e_vm_sector(UNIT, sec, 1'b0, 256'd0, 32'd0, d);
+                dd = c + LAT + ((jit > 0) ? $urandom_range(0, jit) : 0); if (dd < ld[b]) dd = ld[b]; ld[b] = dd;
+                rd_q[b][t[b] % 64] = d; due[b][t[b] % 64] = dd; t[b] = t[b] + 1; rq_cr[b] <= 1'b1;
+            end
+            if (h[b] < t[b] && due[b][h[b] % 64] <= c) begin rr[b*257 +: 257] <= {1'b1, rd_q[b][h[b] % 64]}; h[b] = h[b] + 1; end
+            if (wq[b*280 + 279]) begin : wr
+                bit [255:0] x; bit [31:0] m; int sec; sec = int'(wq[b*280 + 264 +: 15]);
+                if (sec % 32 != b) $fatal(1, "E2E FAIL: VM wide write lane %0d got sector %0d (unit %0d)", b, sec, UNIT);
+                for (int k = 0; k < 8; k++) m[4*k +: 4] = {4{wq[b*280 + k]}};
+                e2e_vm_sector(UNIT, sec, 1'b1, wq[b*280 + 8 +: 256], m, x);
+                wq_cr[b] <= 1'b1; wd1[b] <= 1'b1;
+            end
+        end
     end
 endmodule
 
@@ -534,8 +668,10 @@ module hgi_e2e_svc #(parameter integer LAT = 40, parameter integer RATE = 8) (
                                                 input bit [31:0] strb, output bit [255:0] rd);
     reg [49:0] rq [0:3][0:15]; integer rh [0:3], rn [0:3], nx [0:3];
     reg [269:0] lb [0:31][0:1023]; longint lt_due [0:31][0:1023]; integer lh [0:31], lt [0:31], cr [0:31];
-    longint tn = 0;
+    longint tn = 0; integer sjit = 0; longint ldue [0:31];      // +KJIT=j: random 0..j extra cycles, in order per lane
     initial begin
+        void'($value$plusargs("KJIT=%d", sjit));
+        for (integer i = 0; i < 32; i = i + 1) ldue[i] = 0;
         for (integer s = 0; s < 4; s = s + 1) begin rh[s] = 0; rn[s] = 0; nx[s] = 0; end
         for (integer i = 0; i < 32; i = i + 1) begin lh[i] = 0; lt[i] = 0; cr[i] = 4; end
         dq_rdy = 4'd0; dd = '0;
@@ -551,7 +687,8 @@ module hgi_e2e_svc #(parameter integer LAT = 40, parameter integer RATE = 8) (
                     r = rq[s][rh[s] % 16];
                     e2e_hbm_sector({27'd0, r[36:0]} + 32 * nx[s], 1'b0, 256'd0, 32'd0, d);
                     l = s * 8 + nx[s] % 8;
-                    lb[l][lt[l] % 1024] = {1'b1, 1'b0, r[49:46], 8'(nx[s]), d}; lt_due[l][lt[l] % 1024] = tn + LAT; lt[l] = lt[l] + 1;
+                    lb[l][lt[l] % 1024] = {1'b1, 1'b0, r[49:46], 8'(nx[s]), d}; begin : jd longint d_; d_ = tn + LAT + ((sjit > 0) ? $urandom_range(0, sjit) : 0); if (d_ < ldue[l]) d_ = ldue[l]; ldue[l] = d_;
+                    lt_due[l][lt[l] % 1024] = d_; end lt[l] = lt[l] + 1;
                     nx[s] = nx[s] + 1;
                     if (nx[s] == int'(r[45:37])) begin nx[s] = 0; rh[s] = rh[s] + 1; rn[s] = rn[s] - 1; end
                 end
@@ -597,6 +734,8 @@ module hgi_e2e_kport #(parameter integer LAT = 40, parameter integer PIPE = 1) (
     // hgi-takeover F5 / F6: the lane takes a request a cycle and answers IN ORDER LAT cycles later (the pipelined kport
     // lane); PIPE = 0 is the old one-transaction lane.  The memory is accessed at acceptance (program order).
     reg [255:0] qd [0:255]; reg qw [0:255]; longint qt [0:255]; integer qh = 0, qn = 0; longint tn = 0;
+    integer kjit = 0; longint dk, kl = 0;                     // +KJIT=j: random 0..j extra cycles, in order
+    initial void'($value$plusargs("KJIT=%d", kjit));
     always @(posedge clk) begin
         tn <= tn + 1;
         rsp_v <= 1'b0;
@@ -604,7 +743,8 @@ module hgi_e2e_kport #(parameter integer LAT = 40, parameter integer PIPE = 1) (
         if (rst_n && req_v && req_rdy) begin : acc
             bit [255:0] rd;
             e2e_hbm_sector({27'd0, req_addr}, req_we, req_wd, req_ws, rd);
-            qd[(qh + qn) % 256] = rd; qw[(qh + qn) % 256] = req_we; qt[(qh + qn) % 256] = tn + LAT - 1; qn = qn + 1;
+            dk = tn + LAT - 1 + ((kjit > 0) ? $urandom_range(0, kjit) : 0); if (dk < kl) dk = kl; kl = dk;
+            qd[(qh + qn) % 256] = rd; qw[(qh + qn) % 256] = req_we; qt[(qh + qn) % 256] = dk; qn = qn + 1;
         end
         req_rdy <= rst_n && ((PIPE != 0) ? (qn < 200) : (qn == 0));
     end
