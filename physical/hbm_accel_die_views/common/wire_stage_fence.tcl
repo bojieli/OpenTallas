@@ -337,6 +337,11 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
     if {![info exists ws_pin($bn)]} continue
     lassign $ws_pin($bn) px py
     set w [[$i getMaster] getWidth]; set wr [expr {$w + 3*$sitew}]
+    # svc-fix 2026-10-10 (claude/hbmphys-svcfix-20261010, same text): OT_WS_PINREG_DENSITY gives a pin register the
+    # stage blocks' slot pitch (cell width / density, snapped to sites) so the anchoring strip keeps routing room
+    if {[info exists ::env(OT_WS_PINREG_DENSITY)] && $::env(OT_WS_PINREG_DENSITY) > 0} {
+      set wr [expr {max($wr, int(ceil(double($w)/$::env(OT_WS_PINREG_DENSITY)/$sitew))*$sitew)}]
+    }
     # nearest row to the pin, then outward; in each row the free slot nearest the pin x (sliding both ways)
     set r0 [expr {max(0, min($nrows-1, int(($py-$rowy0)/$rowh)))}]
     set done 0

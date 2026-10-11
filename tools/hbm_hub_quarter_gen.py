@@ -738,7 +738,9 @@ def emit_tile_io(P, tw, th):
     return '\n'.join(L_) + '\n'
 
 
-FACED_PIN_PITCH = (('M3', 0.516, 0.144), ('M5', 0.528, 0.144), ('M7', 0.64, 0.128))   # layer, first x, pitch
+FACED_PIN_PITCH = (('M3', 0.513, 0.144), ('M5', 0.540, 0.144), ('M7', 0.656, 0.128))   # layer, first x, pitch
+# R25GQ 10-10 (the SU tile_xl DRT-0255 lesson): every origin on the ASAP7 track grid (M3 0.009 + 0.036 k, M5 0.012 + 0.048 k,
+# M7 0.016 + 0.064 k); the old 0.516 / 0.528 / 0.64 were a quarter track off
 FACED_E_PAD = 8.208      # um east of the lane (19 x 0.432): [sfu] 2026-10-10 the 271.944-um tile measured std 3,566 +
 #                          lane 52,824 um2 = 62.5 % (fp lint gate 60 %); with the widest strip the 480-um rule allows
 #                          and this pad the tile is 314.928 um wide: 54.0 %

@@ -7,6 +7,8 @@
 # 833 ps re-time (tile/signoff833_faced.sdc), then the tile view (LEF + ETMs) for the quarter.
 #   route_tile.sh <label> [run_abi3_physical args]   env: OUT, SRC, CORES, NEED, PD, HM, CP, PDN
 set -u
+# R25GQ 10-10 (the SU tile_xl lessons, same register-bounded pin-flop tile): GPL_ROUTABILITY_DRIVEN=0 (GPL-0305), ENABLE_DPO=0
+# (DPO crash), DONT_BUFFER_PORTS=1 (port buffers vs FIRM pin flops, DPL-0033 on 18d5bc494 hm0), OT_WS_PINREG_DENSITY 0.3.
 lab=$1; shift
 V=physical/hbm_accel_die_views/sfu
 T=$V/rtl_tiled
@@ -27,7 +29,7 @@ export OT_MM_FF_SDC="$V/tile/signoff833_faced.sdc"
   --place-density ${PD:-0.50} --hold-margin-ns ${HM:-0.010} --orfs-var ADDER_MAP_FILE= \
   --orfs-var "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none" \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag sft_$lab \
-  --orfs-var OT_WS_PINREG=1 --orfs-var OT_WS_OUTPUT_PINREG=1 --orfs-var OT_IO_FILE=/src/$T/tile/io_place.tcl \
+  --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var ENABLE_DPO=0 --orfs-var DONT_BUFFER_PORTS=1 --orfs-var OT_WS_PINREG_DENSITY=${PRD:-0.3} --orfs-var OT_WS_PINREG=1 --orfs-var OT_WS_OUTPUT_PINREG=1 --orfs-var OT_IO_FILE=/src/$T/tile/io_place.tcl \
   --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/common/wire_stage_fence.tcl \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
