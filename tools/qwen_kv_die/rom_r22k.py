@@ -589,12 +589,14 @@ def surgery_o4(v, m):
     surgery(v, m)
     _option4(v, m, m['r22k'])
     _vm_ar(v, m, 'seq_su', 'qfd_seq_su')
+    _despan(v, m, m['r22k'])
 
 
 def surgery_vm(v, m):
     """r22ksv: r22k (+ seam_free in the recipe) with the sequencer <-> VM all-reduce word path (_vm_ar)"""
     surgery(v, m)
     _vm_ar(v, m, 'sp_constants_sequencer', 'qfd_sp_constants_sequencer')
+    _despan(v, m, m['r22k'])
 
 
 # qwen-1010/a 2026-10-10 (owner rule: every path end to end): the TP sequencer's all-reduce reads its partial words from
@@ -859,3 +861,45 @@ def _o4_masters(v, m, ghosts):
         del saved
         return M
     v.masters = masters
+
+# qwen-1010/a 2026-10-10: face pin groups that share a face AND a layer must not overlap (the r22ks real case: DRT-0073 on
+# sp_tree_top/c3[111]: c3 (343 b), lc3 (28 b) and lf3 (1 b) span y 1,581.8-1,598.2 on the W face, M4).  Opt-in for the
+# seam-free recipes: each later group (by centre) slides along its face to start one gap after the previous one.
+DESPAN_GAP = 1.0
+
+
+def _despan(v, m, rec):
+    inner = v.masters
+    moved = rec.setdefault('despan', [])
+
+    def masters(model, k=1, port_bits=None):
+        M = inner(model, k, port_bits)
+        for name, mst in M.items():
+            groups = {}
+            for p in mst.order:
+                s = mst.ports.get(p)
+                if s and s[0] == 'face':
+                    groups.setdefault((s[2], s[3]), []).append(p)
+            for (face, layer), ps in groups.items():
+                L_ = mst.h if face in 'EW' else mst.w
+                ps.sort(key=lambda q: mst.ports[q][4])
+                end = -1e9
+                for p in ps:
+                    kind, bits, f, ly, c, pitch = mst.ports[p]
+                    half = bits * pitch * 0.048 / 2
+                    if c - half < end + DESPAN_GAP:
+                        c2 = end + DESPAN_GAP + half
+                        if c2 + half <= L_:
+                            mst.ports[p] = (kind, bits, f, ly, round(c2, 3), pitch)
+                            if len(moved) < 400 and (name, p) not in [(a, b) for a, b, *_ in moved]:
+                                moved.append((name, p, face, layer, round(c, 3), round(c2, 3)))
+                            c = c2
+                    end = c + half
+        return M
+    v.masters = masters
+
+
+def surgery_s(v, m):
+    """r22ks: r22k (+ seam_free in the recipe) with non-overlapping face pin groups"""
+    surgery(v, m)
+    _despan(v, m, m['r22k'])
