@@ -37,10 +37,11 @@ EOF
   OT_VIEW_PORTS_ROOT=$V/ports_r25gqn python3 tools/hbm_die_wrap.py --variant r25gqn --spec "$OUT/spec_fused_mut.json" --out "$OUT/fused_mut_wrap" > /dev/null
   echo prepared; exit 0
 fi
+Y=$(for d in physical/asap7_memory_macros/*/; do printf -- "-y %s " "${d%/}"; done)   # SRAM macro behavioural models
 W="-Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-PINMISSING"
 run() {   # top, vecdir, defines, files...
   local top=$1 vec=$2 defs=$3; shift 3
-  "$VL" --binary --timing -O1 $W $defs --top-module "$top" -I"$vec" -Mdir "$OUT/obj_$CASE" "$@" -j ${J:-32} \
+  "$VL" --binary --timing -O1 $W $Y $defs --top-module "$top" -I"$vec" -Mdir "$OUT/obj_$CASE" "$@" -j ${J:-32} \
     > "$OUT/build_$CASE.log" 2>&1 || { tail -30 "$OUT/build_$CASE.log"; exit 2; }
   "$OUT/obj_$CASE/V$top" +DIR="$vec" | tee "$OUT/run_$CASE.log" | tail -${TAILN:-16}
 }
