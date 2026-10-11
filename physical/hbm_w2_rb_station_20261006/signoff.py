@@ -67,7 +67,8 @@ def acceptance(ss, ff):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); ap.add_argument('--half', action='store_true'); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); ap.add_argument('--half', action='store_true')
+    ap.add_argument('--tt', action='store_true', help='option B: also report setup at TT (TT closes the block; SS is a sensitivity)'); a = ap.parse_args()
     run = a.run.resolve()
     # Preserve every previous verdict, including failures. Use a fresh copied
     # run for a new evaluation; never overwrite a prior signoff.
@@ -88,14 +89,20 @@ def main():
     subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{ss_lat[1]:.2f}',
                     '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--l-ff-max', f'{ff_lat[1]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []),
                    check=True, capture_output=True)
-    for corner, delay in (('SS', 'max'), ('FF', 'min')):
+    for corner, delay in (('SS', 'max'), ('FF', 'min')) + ((('TT', 'max'),) if a.tt else ()):
         log = sta(case, odb, sdc, spef, corner, delay)
         (run/f'signoff_{corner}.log').write_text(log)
         result[corner] = parse(log)
     ss = result['SS']['worst'].get('max'); ff = result['FF']['worst'].get('min')
     result['accept'] = acceptance(ss, ff)
+    if a.tt:  # option B (owner 2026-10-07): setup at TT >= 0, FF hold >= 0; SS kept as the sensitivity
+        tt = result['TT']['worst'].get('max')
+        result['accept_tt'] = dict(TT_setup_ps=tt, FF_hold_ps=ff, SS_sensitivity_ps=ss,
+                                   TT_ok=tt is not None and math.isfinite(tt) and tt >= 0, FF_ok=ff is not None and math.isfinite(ff) and ff >= 0)
     (run/'signoff.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result['accept']))
+    if a.tt:
+        return 0 if result['accept_tt']['TT_ok'] and result['accept_tt']['FF_ok'] else 1
     return 0 if all(result['accept'][k] for k in ('SS_ok', 'FF_ok')) else 1
 
 

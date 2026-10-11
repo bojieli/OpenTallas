@@ -44,7 +44,7 @@
 //    valid, no fault). R_in_r and acked==ALL are stale-safe: acked only rises
 //    until the release, and a release clears active and rel_q on the same edge.
 //    Cost: +1 edge per release.
-module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1,STATUS_PIN=1,LOCAL_PHASE=0,HOLD_SEAT=0,RESET_SEAT=0)(
+module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1,STATUS_PIN=1,LOCAL_PHASE=0,HOLD_SEAT=0,RESET_SEAT=0,GRANT_SEAT=0)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
  input wire [191:0] in_owner,input wire [72:0] in_frame,
@@ -134,9 +134,21 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
   ot_hbm_w2_keep_reg #(.W(1)) u_grd(.clk(clk_sm),.rst_n(rst_n),.d(gr),.q(gr_d));
   wire [PN*64-1:0] raw_in={{(PN*64-PW-1){1'b0}},1'b1,id_p};
   reg [71:0] Ew[0:PN-1];
+  // GRANT_SEAT=1 (hardcore-1010 no3s, routed NO2 c520 e9b376980: TT -128.1 ps, in_v pin -> 4 BUFx12f -> 37 seat
+  // copy flops across the 520 um core, 172 ps of tree against a ~45 ps pin->flop window): the in_v pin lands in ONE
+  // flop (u_iv, iv_p) and the seat words are written on every granted edge (grc copies of gr only), valid-qualified
+  // by E_v. Safe because gr rises only when E_v=0 and take=0, so on the write edge (two edges after gr rose) E_v is
+  // still 0: a grant without in_v overwrites an EMPTY seat, and E_v/take (iv_p&&gr_d) decide occupancy exactly as
+  // before. 0 cycles; 37 fewer flops; the grc copy check stays.
   for(genvar w=0;w<PN;w=w+1)begin:seat
-   ot_hbm_w2_keep_reg #(.W(2)) u_c(.clk(clk_sm),.rst_n(rst_e),.d({in_v,gr}),.q({ivc[w],grc[w]}));
-   always @(posedge clk_sm)if(ivc[w]&&grc[w])Ew[w]<=encode64(raw_in[w*64+:64]);
+   if(GRANT_SEAT)begin:gs
+    ot_hbm_w2_keep_reg #(.W(1)) u_c(.clk(clk_sm),.rst_n(rst_e),.d(gr),.q(grc[w]));
+    assign ivc[w]=iv_p;
+    always @(posedge clk_sm)if(grc[w])Ew[w]<=encode64(raw_in[w*64+:64]);
+   end else begin:vs
+    ot_hbm_w2_keep_reg #(.W(2)) u_c(.clk(clk_sm),.rst_n(rst_e),.d({in_v,gr}),.q({ivc[w],grc[w]}));
+    always @(posedge clk_sm)if(ivc[w]&&grc[w])Ew[w]<=encode64(raw_in[w*64+:64]);
+   end
    assign E[w*72+:72]=Ew[w];
   end
   wire copy_bad=(|(ivc^{PN{iv_p}}))||(|(grc^{PN{gr_d}}));
