@@ -4738,6 +4738,9 @@ def requeue_hold_only(jobs):
         e = j.get("eco") or {}
         if j["status"] == "NEEDS_RTL" and e.get("tried") and e.get("result") is None and "hold-eco-reroute-clock" not in j.get("fix_requeued", []):
             j.setdefault("fix_requeued", []).append("hold-eco-reroute-clock")
+            # FRESH-ECO-DIR (drive-1010 2026-10-10, hardcore-1010): the dropped ECO goes to eco_history so the re-run gets
+            # a fresh output dir (eco-combo<n+1> / eco-r<n+1>); clearing it reused eco-combo1 -> rc=10 (qfd_io_collective)
+            j.setdefault("eco_history", []).append(dict(e, requeued="hold-eco-reroute-clock"))
             j["eco"] = {}
             stl = stage_list(j["spec"])
             j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))
