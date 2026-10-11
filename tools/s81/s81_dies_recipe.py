@@ -145,6 +145,11 @@ def recipes():
                              note='mtp-colllane-1011 P2 variant + mtp-wfc binding'),
         'scankit': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer', '--wfc-kit'],
                         role='scan die (q-only flavour) with the WFC kit', note='dsfd_wfc_stg'),
+        'draftPs': dict(opts=_layer1_opts() + ['--die', 'layer1', '--draft', 'P', '--mtp-links', '5', '--seedl',
+                                               '--coll-mtp-far', 'primary', '--coll-split3-cr'],
+                        role='DSpark primary die with the seed-descriptor consumer (mtp-dsbind 2026-10-10)',
+                        note='draftP + dsfd_mtp_seed_launch slab (rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv) + the '
+                             'collective MTP lane far end (seed class -> seedl; token return / accept word -> host)'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
                        role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '
