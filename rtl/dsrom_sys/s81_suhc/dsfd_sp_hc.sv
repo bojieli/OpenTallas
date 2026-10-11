@@ -10,7 +10,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_hc #(
     parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, WIN = 2, WOUT = 2, ML = 5, AL = 4,
-    parameter integer OQ = 512, MUT = 0, AMUT = 0
+    parameter integer OQ = 512, MUT = 0, AMUT = 0,
+    parameter integer KT = 0,                            // 0: flat engine ot_s81_hc_core; > 0: hierarchical slab
+    parameter integer RS = 1                             //    ot_s81_hc_hier (KT row-group tiles, RS relays a hop)
 ) (
     input  wire                cck, crs,                 // controller clock / reset (dsfd_sp_ctrl domain)
     input  wire                sk, srs,                  // slab clock / reset
@@ -55,11 +57,20 @@ module dsfd_sp_hc #(
     wire [NG*32-1:0] yq_d;
     ot_skid_buffer #(.WIDTH(NG*32), .DEPTH(2)) u_ysk (.clk(sk), .rst_n(srs), .in_valid(y_v), .in_ready(y_rdy),
         .in_data(y_d), .out_valid(yq_v), .out_ready(yq_r), .out_data(yq_d), .overflow(y_ov), .underflow(y_un));
+    generate if (KT > 0) begin : g_hier
+    ot_s81_hc_hier #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .LVM(LVM), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL),
+                     .OQ(OQ), .MUT(MUT), .KT(KT), .RS(RS)) u_core (
+        .clk(sk), .rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_done_v(d_v), .e_done_tag(d_t),
+        .y_v(yq_v), .y_rdy(yq_r), .y_d(yq_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v_q), .rs_d(rs_d_q),
+        .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .busy(bsy), .fault(c_flt), .fault_code(fcode),
+        .st_jobs(jobs));
+    end else begin : g_flat
     ot_s81_hc_core #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .LVM(LVM), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL),
                      .OQ(OQ), .MUT(MUT)) u_core (
         .clk(sk), .rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_done_v(d_v), .e_done_tag(d_t),
         .y_v(yq_v), .y_rdy(yq_r), .y_d(yq_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v_q), .rs_d(rs_d_q),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .busy(bsy), .fault(c_flt), .fault_code(fcode),
         .st_jobs(jobs));
+    end endgenerate
     assign flt = a_flt | c_flt | y_ov | y_un;
 endmodule
