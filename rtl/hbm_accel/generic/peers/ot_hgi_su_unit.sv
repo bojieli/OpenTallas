@@ -156,6 +156,15 @@ module ot_hgi_su_ctl #(
     // registered region operands (hgi-1010/c timing): the multiply's shift registers, the placement, the stage cursor
     reg [15:0] nrm1_s; reg [39:0] lsh_s; reg [15:0] nw_s; reg [2:0] gk_s; reg [LWB:0] lbk_s, gend_s, gsz_s, gsz2_s;
     reg [23:0] c_so, c_si; reg [15:0] c_nw; reg [LWB:0] c_L;
+    // hardcore-1010/c timing r3 (route 02359f0c7 r2 TT -93.8: wl -> nn_q 16x16 multiply 27 lv; c_nw / s_rb / rk -> stage
+    // cursor 28-31 lv; d_rem -> d_cur 25 lv; rk -> gend_s 28 lv): the op multiply in two registered halves, the stage
+    // walk and the drain walk each split into a registered PREP phase and an ISSUE phase (one VM request / one local
+    // read every 2 edges), the placement's lsz[rk] registered before its add.  Exact (same requests, same order).
+    reg [1:0] pre_ph; reg [15:0] no_q, ni_q; reg [23:0] p_lo, p_hi;
+    reg [LWB:0] lsz_s;
+    reg s_ph, s_init, last_q; reg [23:0] nrb_q, qhi_q; reg [26:0] nend_q, sc_q; reg [LWB:0] nlr_q;
+    reg [25:0] qoff_q; reg [LWB-1:0] qla_q; reg [7:0] qmsk_q;
+    reg d_ph; reg [3:0] cnt_q; reg [23:0] nrowb_q; reg [LWB:0] nlrow_q; reg lastrow_q;
     reg [2:0] dk;                                         // drain region (4 O, 5 R)
     reg [26:0] rsec_d, rsec_d2, rsec_d3; reg so_w;
     reg [3:0] rp;                                         // read pipe
@@ -196,7 +205,7 @@ module ot_hgi_su_ctl #(
         if (!rst_n) begin
             st <= S_IDLE; op_rdy_r <= 1'b1; su_idle_r <= 1'b1; su_fault_r <= 1'b0; go <= 1'b0; vmq <= 338'd0;
             sl_v <= 1'b0; sw_v <= 1'b0; sr_v <= 1'b0; rp <= 4'd0; use_p <= 4'd0; nf <= 3'd0; df_h <= 2'd0; df_t <= 2'd0;
-            outst <= 3'd0; q_h <= 2'd0; q_t <= 2'd0; vf_seen <= 1'b0; scount <= 21'd0; s_clr <= 1'b0; am_stream <= 523'd0;
+            outst <= 3'd0; pre_ph <= 2'd0; s_ph <= 1'b0; d_ph <= 1'b0; s_init <= 1'b0; q_h <= 2'd0; q_t <= 2'd0; vf_seen <= 1'b0; scount <= 21'd0; s_clr <= 1'b0; am_stream <= 523'd0;
         end else begin
             vmq[337] <= 1'b0; su_fault_r <= 1'b0; am_stream[0] <= 1'b0; am_stream[1] <= 1'b0;
             sl_v <= s0v_q && s0i_q < SW; sl_addr <= SBASE + s0i_q; sl_data <= s0d_q;
@@ -215,9 +224,14 @@ module ot_hgi_su_ctl #(
                     end
                 end
                 S_PRE: begin                                        // the op's layout (registered once)
-                    l_full_q <= l_el; l_half_q <= flatc ? (ni >> 1) : ((l_el >> 1) == 0 ? 1 : (l_el >> 1));
-                    nn_q <= {16'd0, no} * {16'd0, ni};
-                    st <= S_SPAN;
+                    if (pre_ph == 2'd0) begin
+                        l_full_q <= l_el; l_half_q <= flatc ? (ni >> 1) : ((l_el >> 1) == 0 ? 1 : (l_el >> 1));
+                        no_q <= no; ni_q <= ni; pre_ph <= 2'd1;
+                    end else if (pre_ph == 2'd1) begin           // no x ni in two registered 16 x 8 halves
+                        p_lo <= {8'd0, no_q} * {16'd0, ni_q[7:0]}; p_hi <= {8'd0, no_q} * {16'd0, ni_q[15:8]}; pre_ph <= 2'd2;
+                    end else begin
+                        nn_q <= {8'd0, p_lo} + {p_hi, 8'd0}; pre_ph <= 2'd0; st <= S_SPAN;
+                    end
                 end
                 S_SPAN: begin                                       // region rk: used? its layout
                     rv[rk] <= used_k && !(rk == 3'd0 && a_s);
@@ -245,10 +259,10 @@ module ot_hgi_su_ctl #(
                     end
                 end
                 S_NEXTR: begin                                      // placement: the aligned base (registered)
-                    lbk_s <= (galloc[gk_s] + N - 1) & ~(N - 1); gsz_s <= gsz(gk_s); gsz2_s <= gsz(3'd2);
+                    lbk_s <= (galloc[gk_s] + N - 1) & ~(N - 1); gsz_s <= gsz(gk_s); gsz2_s <= gsz(3'd2); lsz_s <= lsz[rk];
                     st <= rv[rk] ? S_NX1 : S_NX2;
                 end
-                S_NX1: begin gend_s <= lbk_s + lsz[rk]; st <= S_NX2; end
+                S_NX1: begin gend_s <= lbk_s + lsz_s; st <= S_NX2; end
                 S_NX2: begin                                        // place region rk (N-aligned), rewrite its fields
                     if (rv[rk]) begin
                         lb[rk] <= lbk_s;
@@ -279,35 +293,47 @@ module ot_hgi_su_ctl #(
                         s_rows <= nrr[rk]; s_rb <= lo[rk]; s_lr <= lb[rk]; s_j <= 16'd0; s_va <= lo[rk];
                         c_so <= sor[rk]; c_si <= sir[rk]; c_nw <= nir[rk]; c_L <= Lr[rk];
                         s_md <= (sir[rk] == 24'd1) ? 2'd0 : (sir[rk] == 24'd0) ? 2'd1 : 2'd2;
-                        cur_sec <= lo[rk] >> 3; end_sec <= (lo[rk] + nir[rk] - 24'd1) >> 3;
+                        s_ph <= 1'b0; s_init <= 1'b1;               // cur_sec / end_sec from the registered cursor next edge
                     end
                 end
                 S_STW: begin
                     // issue (up to 4 outstanding, in order): run = the row's sectors; rep = one read per 8 copies;
                     // elem = one read per element
                     begin : iss
-                        reg go_; reg [26:0] sc_; reg last_;
-                        go_ = outst < 3'd4 && s_rows != 16'd0 && !(vr[273] && outst == 3'd4);
-                        sc_ = (s_md == 2'd0) ? cur_sec : {3'd0, s_va[23:3]};
-                        if (go_) begin
-                            vmq <= {1'b1, 1'b0, sc_, 5'd0, 256'd0, 32'd0, 16'h5355};
-                            q_sec[q_t] <= sc_; q_md[q_t] <= s_md; q_w[q_t] <= s_va[2:0];
-                            q_lo[q_t] <= s_rb; q_hi[q_t] <= s_rb + c_nw - 24'd1;
-                            q_off[q_t] <= {{(25-LWB){1'b0}}, s_lr} - {2'b00, s_rb};
-                            q_la[q_t] <= s_lr + s_j;
-                            q_msk[q_t] <= (s_md == 2'd1) ? ((c_nw - s_j >= 16'd8) ? 8'hFF :
-                                                            ((8'd1 << (c_nw - s_j)) - 8'd1)) : 8'd1;
+                        reg go_;
+                        go_ = s_ph && outst < 3'd4 && s_rows != 16'd0 && !(vr[273] && outst == 3'd4);
+                        if (!s_ph) begin                              // PREP: everything the issue needs, registered
+                            if (s_init) begin
+                                cur_sec <= {3'd0, s_rb[23:3]}; end_sec <= 27'((s_rb + {8'd0, c_nw} - 24'd1) >> 3); s_init <= 1'b0;
+                            end else begin
+                                case (s_md)
+                                    2'd0: last_q <= (cur_sec == end_sec);
+                                    2'd1: last_q <= (c_nw - s_j <= 16'd8);
+                                    default: last_q <= (s_j + 16'd1 == c_nw);
+                                endcase
+                                sc_q <= (s_md == 2'd0) ? cur_sec : {3'd0, s_va[23:3]};
+                                nrb_q <= s_rb + c_so; nend_q <= 27'((s_rb + c_so + {8'd0, c_nw} - 24'd1) >> 3);
+                                qhi_q <= s_rb + {8'd0, c_nw} - 24'd1;
+                                qoff_q <= {{(25-LWB){1'b0}}, s_lr} - {2'b00, s_rb};
+                                qla_q <= LWB'(s_lr + s_j);
+                                qmsk_q <= (s_md == 2'd1) ? ((c_nw - s_j >= 16'd8) ? 8'hFF : ((8'd1 << (c_nw - s_j)) - 8'd1)) : 8'd1;
+                                nlr_q <= s_lr + c_L;
+                                s_ph <= 1'b1;
+                            end
+                        end
+                        if (go_) begin                                // ISSUE: registered operands only
+                            vmq <= {1'b1, 1'b0, sc_q, 5'd0, 256'd0, 32'd0, 16'h5355};
+                            q_sec[q_t] <= sc_q; q_md[q_t] <= s_md; q_w[q_t] <= s_va[2:0];
+                            q_lo[q_t] <= s_rb; q_hi[q_t] <= qhi_q;
+                            q_off[q_t] <= qoff_q;
+                            q_la[q_t] <= qla_q;
+                            q_msk[q_t] <= qmsk_q;
                             q_t <= q_t + 2'd1;
-                            // advance the cursor
-                            case (s_md)
-                                2'd0: last_ = (cur_sec == end_sec);
-                                2'd1: last_ = (c_nw - s_j <= 16'd8);
-                                default: last_ = (s_j + 16'd1 == c_nw);
-                            endcase
-                            if (last_) begin                              // the next row
-                                s_rows <= s_rows - 16'd1; s_rb <= s_rb + c_so; s_va <= s_rb + c_so;
-                                s_lr <= s_lr + c_L; s_j <= 16'd0;
-                                cur_sec <= (s_rb + c_so) >> 3; end_sec <= (s_rb + c_so + c_nw - 24'd1) >> 3;
+                            s_ph <= 1'b0;
+                            if (last_q) begin                             // the next row
+                                s_rows <= s_rows - 16'd1; s_rb <= nrb_q; s_va <= nrb_q;
+                                s_lr <= nlr_q; s_j <= 16'd0;
+                                cur_sec <= {3'd0, nrb_q[23:3]}; end_sec <= nend_q;
                             end else begin
                                 cur_sec <= cur_sec + 27'd1;
                                 if (s_md == 2'd1) s_j <= s_j + 16'd8;
@@ -359,27 +385,32 @@ module ot_hgi_su_ctl #(
                         d_run <= (dk == 3'd4) && (sir[dk] == 24'd1);
                         d_lcur <= lb[dk]; d_lrow <= lb[dk]; d_L <= Lr[dk];
                         d_live <= (nrr[dk] != 16'd0 && nir[dk] != 16'd0);
-                        st <= S_DRW; outst <= 0; rp <= 4'd0;
+                        st <= S_DRW; outst <= 0; rp <= 4'd0; d_ph <= 1'b0;
                     end
                 end
                 S_DRW: begin                                        // the shape's words back to VM, word-masked
                     begin : dw
-                        reg issue; reg [3:0] cnt; reg [7:0] mk; reg [2:0] off;
+                        reg issue; reg [7:0] mk; reg [2:0] off;
                         off = d_cur[2:0];
-                        cnt = d_run ? (({12'd0, 4'd8} - {13'd0, off} < d_rem) ? 4'd8 - {1'b0, off} : d_rem[3:0]) : 4'd1;
-                        mk = MUT_DIRTY ? 8'hFF : (((8'd1 << cnt) - 8'd1) << off);
-                        issue = d_live && outst + nf < 3'd4;
+                        mk = MUT_DIRTY ? 8'hFF : (((8'd1 << cnt_q) - 8'd1) << off);
+                        issue = d_ph && d_live && outst + nf < 3'd4;
+                        if (!d_ph) begin                              // PREP: the element count and the next-row values
+                            cnt_q <= d_run ? (({12'd0, 4'd8} - {13'd0, off} < d_rem) ? 4'd8 - {1'b0, off} : d_rem[3:0]) : 4'd1;
+                            nrowb_q <= d_rowb + d_so; nlrow_q <= d_lrow + d_L; lastrow_q <= (d_row == 16'd1);
+                            d_ph <= 1'b1;
+                        end
                         if (issue) begin
                             // 8 consecutive local words whose word 'off' is the element at d_cur
                             sr_v <= 1'b1; sr_g <= (dk == 3'd4) ? 2'd1 : 2'd2; sr_addr <= d_lcur[LWB-1:0] - off;
                             df[df_t] <= {27'({3'd0, d_cur[23:3]}), mk}; df_t <= df_t + 2'd1;
-                            if (d_rem == {12'd0, cnt}) begin
-                                if (d_row == 16'd1) d_live <= 1'b0;
-                                else begin d_row <= d_row - 16'd1; d_rowb <= d_rowb + d_so; d_cur <= d_rowb + d_so;
-                                           d_rem <= d_ni; d_lrow <= d_lrow + d_L; d_lcur <= d_lrow + d_L; end
+                            d_ph <= 1'b0;
+                            if (d_rem == {12'd0, cnt_q}) begin
+                                if (lastrow_q) d_live <= 1'b0;
+                                else begin d_row <= d_row - 16'd1; d_rowb <= nrowb_q; d_cur <= nrowb_q;
+                                           d_rem <= d_ni; d_lrow <= nlrow_q; d_lcur <= nlrow_q; end
                             end else begin
-                                d_cur <= d_cur + (d_run ? {20'd0, cnt} : d_si); d_rem <= d_rem - {12'd0, cnt};
-                                d_lcur <= d_lcur + cnt;
+                                d_cur <= d_cur + (d_run ? {20'd0, cnt_q} : d_si); d_rem <= d_rem - {12'd0, cnt_q};
+                                d_lcur <= d_lcur + cnt_q;
                             end
                         end
                         if (sr_rv_q) begin                          // a read's response: its sector to VM, word-masked

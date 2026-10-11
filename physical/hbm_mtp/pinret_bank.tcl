@@ -129,6 +129,7 @@ foreach inst [$ot_blk getInsts] {
  incr ot_prefixed
 }
 puts "PINRET_LEGAL_BANK pre-marked sites of $ot_prefixed fixed cells"
+set ot_pad [expr {[info exists ::env(OT_PINRET_PAD)] ? $::env(OT_PINRET_PAD) : 6}]
 set count 0
 foreach c [lsort -real -index 1 $cand] {
  lassign $c side pos ff px py io
@@ -150,6 +151,9 @@ foreach c [lsort -real -index 1 $cand] {
  foreach option [lsort -integer -index 0 $options] {
   lassign $option distance y x0 x1 site orient
   set sw [$site getWidth]; set sites [expr {int(ceil(double($width)/$sw))}]
+  # hardcore-1010/c: reserve resize headroom to the right of every anchored flop (02359f0c7 cal DPL-0033: the
+  # returned-credit flop was upsized DFFHQNx1 -> x2 in 3_4_place_resized and overlapped its FIRM neighbour)
+  set rsites [expr {$sites + $ot_pad}]
   if {$side eq "L"} {set want [expr {$x0+round($ot_gap*$ot_dbu)}]} elseif {$side eq "R"} {
    set want [expr {$x1-$width-round($ot_gap*$ot_dbu)}]
   } else {set want $targetx}
@@ -158,13 +162,13 @@ foreach c [lsort -real -index 1 $cand] {
   for {set shift 0} {$shift<=$maxshift && !$placed} {incr shift} {
    foreach signed [list $shift [expr {-$shift}]] {
     set begin [expr {$base+$signed}]; set x [expr {$x0+$begin*$sw}]
-    if {$x<$x0 || $x+$width>$x1} continue
+    if {$x<$x0 || $x+$rsites*$sw>$x1} continue
     set free 1
-    for {set k $begin} {$k<$begin+$sites} {incr k} {
+    for {set k $begin} {$k<$begin+$rsites} {incr k} {
      if {[dict exists $used "$y:$k"]} {set free 0; break}
     }
     if {!$free} continue
-    for {set k $begin} {$k<$begin+$sites} {incr k} {dict set used "$y:$k" 1}
+    for {set k $begin} {$k<$begin+$rsites} {incr k} {dict set used "$y:$k" 1}
     $ff setOrient $orient; $ff setLocation $x $y; $ff setPlacementStatus FIRM
     lappend ot_list [$ff getName]; incr count; set placed 1; break
    }
