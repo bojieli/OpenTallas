@@ -1168,9 +1168,17 @@ module ot_hbm_accel_smh_front_c #(
         wire byp = !fmt3 && !a_busy;
 `endif
         assign w_ready = byp ? issue_w_ready : (unpack_ready && demand && fmt3);
+        if (PIPE_INT8 >= 2) begin : g_ob
+            // [cg] PIPE_INT8 = 2: registered-ready output queue (ot_hbm_accel_int8_line_ob): the issue's ready no
+            // longer reaches the adapter's ~2.7k data enables
+            ot_hbm_accel_int8_line_ob u_unpack (.clk(clk), .rst_n(rst_n), .busy(a_busy),
+                .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
+                .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
+        end else begin : g_ln
         ot_hbm_accel_int8_line #(.PIPE(PIPE_INT8)) u_unpack (.clk(clk), .rst_n(rst_n), .busy(a_busy),
             .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
             .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
+        end
         assign issue_w_valid = byp ? w_valid : a_v;
         assign issue_w_data  = byp ? w_data : a_d;
     end else begin : g_no_int8
