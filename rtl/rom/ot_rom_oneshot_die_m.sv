@@ -49,7 +49,20 @@ module ot_rom_oneshot_die_m #(
     // valid (sv[g-1] = red_in delayed exactly D: the adders are fixed-latency), local per-slice write / read pointers
     // reset by the stage's own reset leaf.  Same operand at the same adder edge: values, fold order, faults, cycles
     // unchanged.
-    parameter integer OPQ     = 0
+    parameter integer OPQ     = 0,
+    // el1011-q-coll 2026-10-11 (qfd_io_collective pr2_pf-7f5522d03-f9a routed TT -63.6 / FF -18.0, structural boundary):
+    //   TXK   = 1: tx_rec leaves from its OWN kept pin register (PR != 0 registered txrec_q and lpq from the same ib_head, so
+    //               synthesis merged them into one flop per bit that also feeds the interior local-FIFO write: the
+    //               "pin flop" could not sit at the right-face pins -> 141 tx_rec ports at -63.6 ps over 11 wire levels).
+    //   FPIPE = 1: the reduce-error fault condition (red_out && serr[N-1], a 16-lane OR of spread adder flags) is
+    //               registered one edge before it sets the sticky fault / fault_code[0] (-31.5 ps, 12 levels).  Fault is
+    //               reported one edge later; data, out_err and every other output are unchanged.
+    //   HDLO  = n: n HB4xp67 hold-delay cells (ot_hdly, dont_touch PRE_FLOORPLAN) on out_valid / out_data / out_last /
+    //               out_rank / out_err (FF -18.0 ps over 318 out_data ports; TT setup on that class >= +60 ps).
+    // All three 0 = the unchanged block.
+    parameter integer TXK     = 0,
+    parameter integer FPIPE   = 0,
+    parameter integer HDLO    = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -123,9 +136,16 @@ module ot_rom_oneshot_die_m #(
     reg [PW-1:0] txrec_q;
     generate if (PR != 0) begin : g_txr
         always @(posedge clk) begin txrec_q <= ib_head; lpq <= ib_head; end   // tx_rec meaningful only with tx_valid
+        if (TXK != 0) begin : g_txk
+            // dedicated pin register in a keep_hierarchy leaf: synthesis cannot merge it with lpq
+            (* keep_hierarchy *) ot_coll_pinreg #(.W(PW)) u_txk (.clk(clk), .d(ib_head), .q(tx_rec));
+        end else begin : g_txm
+            assign tx_rec = txrec_q;
+        end
         always @(posedge clk or negedge rst_i) if (!rst_i) lpv <= 1'b0; else lpv <= fire;
     end else begin : g_txo
         always @(posedge clk) if (fire) txrec_q <= ib_head;
+        assign tx_rec = txrec_q;
         always @(*) begin lpv = 1'b0; lpq = {PW{1'b0}}; end
     end endgenerate
     always @(posedge clk or negedge rst_i)
@@ -136,7 +156,6 @@ module ot_rom_oneshot_die_m #(
             if (fire) ir <= ir + 1'b1;
         end
     assign tx_valid = txv_q;
-    assign tx_rec = txrec_q;
     assign in_cr = icr_q;
     // ---- receive FIFOs with registered heads ----------------------------------------------------------------------
     reg [PW-1:0] mem [0:N*DEPTH-1];
@@ -344,7 +363,8 @@ module ot_rom_oneshot_die_m #(
         ol_q <= go_v ? go_last : ldl[DL-1];
         ork_q <= go_v ? go_rank : {RB{1'b0}};
     end
-    assign out_valid = ov_q; assign out_data = od_q; assign out_last = ol_q; assign out_rank = ork_q; assign out_err = oe_q;
+    ot_hdly #(.W(FW + RB + 3), .N(HDLO)) u_hdly_out (.a({ov_q, od_q, ol_q, ork_q, oe_q}),
+        .y({out_valid, out_data, out_last, out_rank, out_err}));
     // ---- faults ------------------------------------------------------------------------------------------------------
     reg ovf;
     always @(*) begin
@@ -356,10 +376,18 @@ module ot_rom_oneshot_die_m #(
     always @(posedge clk or negedge rst_i)
         if (!rst_i) begin txv_d <= 1'b0; txbad <= 1'b0; end
         else begin txv_d <= txv_q; txbad <= txv_d && !(&(txr_q | SELF)); end
+    wire rerr_f;
+    generate if (FPIPE != 0) begin : g_fp
+        reg rerr_q;
+        always @(posedge clk or negedge rst_i) if (!rst_i) rerr_q <= 1'b0; else rerr_q <= red_out && serr[N-1];
+        assign rerr_f = rerr_q;
+    end else begin : g_fc
+        assign rerr_f = red_out && serr[N-1];
+    end endgenerate
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin fault <= 1'b0; fault_code <= 3'b0; end
         else begin
-            if (red_out && serr[N-1]) begin fault <= 1'b1; fault_code[0] <= 1'b1; end
+            if (rerr_f) begin fault <= 1'b1; fault_code[0] <= 1'b1; end
             if (s0_vc && !agree) begin fault <= 1'b1; fault_code[1] <= 1'b1; end
             if (ovf || txbad) begin fault <= 1'b1; fault_code[2] <= 1'b1; end
         end
@@ -500,4 +528,9 @@ module ot_coll_dup16 (input wire clk, input wire arst_n, input wire [15:0] d, ou
 endmodule
 module ot_coll_dup8 (input wire clk, input wire arst_n, input wire [7:0] d, output reg [7:0] q);
     always @(posedge clk or negedge arst_n) if (!arst_n) q <= 8'd0; else q <= d;
+endmodule
+// el1011-q-coll 2026-10-11: enable-free pin register leaf (TXK): kept as its own hierarchy so it is never merged with an
+// identical interior register and the pin-anchoring hook can place it at its port.
+module ot_coll_pinreg #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk) q <= d;
 endmodule

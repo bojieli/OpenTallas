@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_package_tp_campaign as C  # noqa: E402
 
 SRC = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-       ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
+       ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/lib/ot_hdly.sv", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
        ROOT / "rtl/test/tb_rom_oneshot_allreduce.sv"]
 
 

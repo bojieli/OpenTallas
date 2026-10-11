@@ -38,7 +38,8 @@ proc ot_of_fbonly {net cand chain} {
   return 1
 }
 proc ot_of_isff {inst} { return [string match "DFF*" [[$inst getMaster] getName]] }
-proc ot_of_isbuf {inst} { set m [[$inst getMaster] getName]; return [expr {[string match "INV*" $m] || [string match "BUF*" $m]}] }
+proc ot_of_isbuf {inst} { set m [[$inst getMaster] getName]; return [expr {[string match "INV*" $m] || [string match "BUF*" $m] || [string match "HB*" $m]}] }
+# el1011-q-coll 2026-10-11: HB* = the ot_hdly kept hold-delay cells between a pin flop and its port (walked like a buffer)
 # the single input-signal sink of a net (or "" if 0 or > 1 sinks)
 proc ot_of_sink {net} {
   set s ""

@@ -462,7 +462,7 @@ def main():
         # credit-mode collective: the package with the die_m credit port, the die's input buffer = the credit count
         cg = gen / "ot_rom_oneshot_allreduce_cr.sv"
         cg.write_text(oneshot_credit())
-        S4.COLL_RTL[:] = [cg if f == ONESHOT else f for f in S4.COLL_RTL] + [ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv",
+        S4.COLL_RTL[:] = [cg if f == ONESHOT else f for f in S4.COLL_RTL] + [ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/lib/ot_hdly.sv",
                                                                             ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv"]
         F.COLL[:] = F.COLL + ["-GMARGIN=1", "-GCRP=1", f"-GIBP={CFG['cred']}"]
     F.build(bld, a.jobs)
