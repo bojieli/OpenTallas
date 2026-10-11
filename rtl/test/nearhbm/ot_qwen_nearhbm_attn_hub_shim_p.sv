@@ -34,7 +34,10 @@ module ot_qwen_nearhbm_attn_hub #(
     output wire          fault,
     output wire [7:0]    ev
 );
-    ot_qwen_nearhbm_attn_hub_p #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW)) u_p (
+`ifndef KVD_HPSRAM
+`define KVD_HPSRAM 0
+`endif
+    ot_qwen_nearhbm_attn_hub_p #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .PSRAM(`KVD_HPSRAM)) u_p (
         .clk(clk), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
         .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g), .pi_beat(pi_beat),
         .pi_data(pi_data), .mo_valid(mo_valid), .mo_g(mo_g), .mo_hh(mo_hh), .mo_data(mo_data), .out_valid(out_valid),
