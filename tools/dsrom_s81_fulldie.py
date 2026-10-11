@@ -3624,6 +3624,8 @@ def buses_r8(m):
     if REV == 'r9':
         _bank_nets(m)
         _col_relays(m, P)
+        if RELAY_MONO:
+            print('RELAY_MONO ' + json.dumps(RELAY_MONO_STATS), file=sys.stderr)
     by = {it.name: it for it in m['insts']}
     # ---------------- hub glue blocks next to the slabs
     vm, ga, coll = hub['vm'], hub['gather'], hub['collective']
@@ -4314,9 +4316,8 @@ RELAY_TT_REACH = None
 # (+ RELAY_MONO_SLACK) from ANY sink of the bus.  The --lane-equal pad relay of the last-slot cc lane (cc_<r>_9: a
 # latency pad, the lane's own reach needs none) found no box at its path point in the narrowed tier channels of
 # compact199 (--ch-heights 259.2,285.12,302.4,...) and the unconstrained fallback put it 330.5 um behind its driver
-# for 1,545 chains (margin_lint far_side, m_c199a/b).  A violating spot is re-searched inside the monotone box: the
-# intersection of the driver-to-sink bounding boxes (every point in it is no farther from each sink than the driver,
-# Manhattan), grown by half the slack.  No reach or lint limit is relaxed.
+# for 1,545 chains (margin_lint far_side, m_c199a/b).  A violating spot is re-searched in the legal diamond around the
+# tightest sink (see _relay_mono).  No reach or lint limit is relaxed.
 RELAY_MONO = False
 RELAY_MONO_SLACK = 18.0
 RELAY_MONO_STATS = dict(replaced=0, unresolved=0, unresolved_examples=[])
@@ -4354,22 +4355,20 @@ def _hop_paths(a, b, cor):
 
 
 def _relay_mono(P, pl, w_, h_, cur, sinks, cx, cy, reach, NR, name):
-    """--relay-mono: keep pl if no sink sees it farther than the driver (+ slack); else the nearest free box in the
-    monotone box (intersection of the driver-to-sink bounding boxes, grown by slack / 2), within reach of the driver
-    and (with --nxt-reach) of the chain's next point."""
-    pc = (pl[0] + w_ / 2, pl[1] + h_ / 2)
-    if not sinks or all(_mh(pc, s_) <= _mh(cur, s_) + RELAY_MONO_SLACK for s_ in sinks):
+    """--relay-mono: keep pl if no sink sees it farther than the driver (+ slack).  Else the nearest free box in the
+    legal diamond of the tightest sink t (Manhattan ball around t of radius |cur - t| + slack: every point of it is no
+    farther from t than the driver; the ball reaches past t, where the narrowed tier channels still have room -- the
+    driver-to-sink bounding box alone is packed), within reach of the driver, then verified against every sink."""
+    def ok(c_):
+        return all(_mh(c_, s_) <= _mh(cur, s_) + RELAY_MONO_SLACK for s_ in sinks)
+    if not sinks or ok((pl[0] + w_ / 2, pl[1] + h_ / 2)):
         return pl
-    g = RELAY_MONO_SLACK / 2
-    x0 = max(min(cur[0], s_[0]) for s_ in sinks) - g
-    x1 = min(max(cur[0], s_[0]) for s_ in sinks) + g
-    y0 = max(min(cur[1], s_[1]) for s_ in sinks) - g
-    y1 = min(max(cur[1], s_[1]) for s_ in sinks) + g
-    box = [(x0 - w_ / 2, y0 - h_ / 2, x1 + w_ / 2, y1 + h_ / 2)]
-    tx, ty = min(max(cx, x0), x1), min(max(cy, y0), y1)
-    for span_, rows_ in ((400.0, 40), (1200.0, 120)):
-        q = P.near(tx, ty, w_, h_, box, prev=cur, horiz=True, reach=reach, span=span_, rows=rows_, **NR)
-        if q is not None:
+    t = min(sinks, key=lambda s_: _mh(cur, s_))
+    rad = _mh(cur, t) + RELAY_MONO_SLACK - 0.5
+    box = [(t[0] - rad - w_, t[1] - rad - h_, t[0] + rad + w_, t[1] + rad + h_)]
+    for span_, rows_ in ((200.0, 20), (600.0, 60), (1200.0, 120)):
+        q = P.near(t[0], t[1], w_, h_, box, prev=cur, horiz=True, reach=reach, span=span_, rows=rows_, nxt=t, nreach=rad)
+        if q is not None and ok((q[0] + w_ / 2, q[1] + h_ / 2)):
             RELAY_MONO_STATS['replaced'] += 1
             return q
     RELAY_MONO_STATS['unresolved'] += 1
