@@ -18,7 +18,9 @@ module ot_dsrom_window_skid #(parameter integer W = 1, parameter bit ZERO_IDLE =
     // PTR = 1 (MARGIN 2): the same two-entry skid (identical valid / ready / head-data timing) built as a pointer
     // FIFO: a push writes one slot, a pop only moves the read pointer, so no payload register ever depends on the
     // consumer's ready (the shift form's e0_d <= e1_d made every payload bit an endpoint of out_ready).
-    parameter bit PTR = 0) (
+    parameter bit PTR = 0,
+    // NORST_D = 1 (MARGIN 3): the payload slots carry no reset (datapath); only valid / pointers / ready reset.
+    parameter bit NORST_D = 0) (
     input  wire         clk, rst_n,
     input  wire         in_v,
     output wire         in_ready,
@@ -58,9 +60,14 @@ module ot_dsrom_window_skid #(parameter integer W = 1, parameter bit ZERO_IDLE =
                 if (push) wp <= !wp;
                 if (pop) rp <= !rp;
             end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin e0_d <= '0; e1_d <= '0; end
-            else if (push) begin if (wp) e1_d <= cap_d; else e0_d <= cap_d; end
+        if (NORST_D) begin : g_d_nr
+            always @(posedge clk)
+                if (push) begin if (wp) e1_d <= cap_d; else e0_d <= cap_d; end
+        end else begin : g_d_r
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin e0_d <= '0; e1_d <= '0; end
+                else if (push) begin if (wp) e1_d <= cap_d; else e0_d <= cap_d; end
+        end
         wire [W-1:0] head = rp ? e1_d : e0_d;
         assign out_d = ZERO_IDLE ? (head & {W{e0_v}}) : head;
     end else begin : g_shift
@@ -99,6 +106,16 @@ module ot_dsrom_window_source_ctl #(
     // after rst_s2, all copies on the same edge), so no reset net spans the block. Release is one cycle later than
     // RST_TREE = 0; every transaction after reset is unchanged.
     parameter bit RST_TREE = 0
+    // MARGIN = 3 (el1011-ds-misc 2026-10-11, textbook rebuild; implies the registered reset relays): MARGIN 2 +
+    //   * no reset on any datapath register (skid payloads, boundary data flops, mirror write data, the stream
+    //     engine's walk addresses / tags, the writer's tables / codes / write data); reset reaches control only;
+    //   * the 32-lane accepted-beat capture + landing / poison checks live in four hardened 8-lane sub-tiles
+    //     (ot_dsrom_wsrc_land8) whose registered |bad / popcount outputs feed the stream engine;
+    //   * the tag mirror is one banked hardened sub-tile (ot_dsrom_wsrc_mirror): 4 banks x 32, one read per bank
+    //     per cycle (the four rows checked per cycle fall in four distinct banks), replacing the 4 x 32-entry
+    //     register copy stage of MARGIN 2;
+    //   * the writer's metadata read is 16:1 / 4:1 / 2:1 instead of a 32-entry copy stage.
+    // Every transaction is cycle-identical to MARGIN 2 + RST_TREE.
 ) (
     input wire clk, rst_n,
     input wire [SEC_W-1:0] region_base_sector, region_sector_count,
@@ -180,9 +197,10 @@ module ot_dsrom_window_source_ctl #(
     end endgenerate
     // per-unit reset copies: 0 boundary flops, 1 prime/start skids, 2 blk skid, 3 K-port request skid,
     // 4 writer, 5 idle/mirror-write/mv, 6 acc valid, 7 stream engine, 8 FSM, 9 outputs
-    localparam integer NRST = 10;
+    // MARGIN 3: 10 land tile 0, 11 land tile 1, 12 land tile 2, 13 land tile 3, 14 mirror tile, 15 spare (writer table)
+    localparam integer NRST = MARGIN >= 3 ? 16 : 10;
     wire [NRST-1:0] rst_g;
-    generate if (MARGIN && RST_TREE) begin : g_rtree
+    generate if (MARGIN && (RST_TREE || MARGIN >= 3)) begin : g_rtree
         (* keep *) reg [NRST-1:0] rst_r;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) rst_r <= '0; else rst_r <= {NRST{rst_i}};
@@ -209,6 +227,20 @@ module ot_dsrom_window_source_ctl #(
         reg go_q, all_q, sf_q, mr_q, md_q, mf_q;
         reg [11:0] landed_q;
         reg [3:0] wd_q, sv_q; reg [4*TAGW-1:0] st_q; reg [15:0] sb_q; reg [1023:0] sd_q;
+        if (MARGIN >= 3) begin : g_bnd3                // control flops reset, data flops not
+            always @(posedge clk or negedge rst_g[0])
+                if (!rst_g[0]) begin
+                    go_q <= 0; all_q <= 0; sf_q <= 0; mr_q <= 0; md_q <= 0; mf_q <= 0; wd_q <= 0; sv_q <= 0;
+                end else begin
+                    go_q <= stream_go; all_q <= stage_all_rows; sf_q <= stage_fault;
+                    mr_q <= merge_start_ready; md_q <= merge_done; mf_q <= merge_fault;
+                    wd_q <= m_wr_done; sv_q <= s_v;
+                end
+            always @(posedge clk) begin
+                rb_q <= region_base_sector; rc_q <= region_sector_count; landed_q <= stage_landed;
+                st_q <= s_tag; sb_q <= s_beat; sd_q <= s_data;
+            end
+        end else begin : g_bnd2
         always @(posedge clk or negedge rst_g[0])
             if (!rst_g[0]) begin
                 rb_q <= 0; rc_q <= 0; go_q <= 0; all_q <= 0; sf_q <= 0; mr_q <= 0; md_q <= 0; mf_q <= 0;
@@ -219,25 +251,26 @@ module ot_dsrom_window_source_ctl #(
                 mr_q <= merge_start_ready; md_q <= merge_done; mf_q <= merge_fault;
                 wd_q <= m_wr_done; sv_q <= s_v; st_q <= s_tag; sb_q <= s_beat; sd_q <= s_data;
             end
+        end
         assign rg_base = rb_q; assign rg_count = rc_q; assign i_stream_go = go_q;
         assign i_all_rows = all_q; assign i_stage_fault = sf_q; assign i_landed = landed_q;
         assign i_merge_ready = mr_q; assign i_merge_done = md_q; assign i_merge_fault = mf_q;
         assign i_m_wr_done = wd_q; assign i_s_v = sv_q; assign i_s_tag = st_q; assign i_s_beat = sb_q;
         assign i_s_data = sd_q;
-        ot_dsrom_window_skid #(.W(USER_W+POS_W), .PTR(MARGIN >= 2)) u_prime (.clk(clk), .rst_n(rst_g[1]),
+        ot_dsrom_window_skid #(.W(USER_W+POS_W), .PTR(MARGIN >= 2), .NORST_D(MARGIN >= 3)) u_prime (.clk(clk), .rst_n(rst_g[1]),
             .in_v(prime_v), .in_ready(prime_ready), .in_d({prime_user, prime_row}),
             .out_v(i_prime_v), .out_ready(i_prime_ready), .out_d({i_prime_user, i_prime_row}));
-        ot_dsrom_window_skid #(.W(USER_W+POS_W+4+256+8), .PTR(MARGIN >= 2)) u_blk (.clk(clk), .rst_n(rst_g[2]),
+        ot_dsrom_window_skid #(.W(USER_W+POS_W+4+256+8), .PTR(MARGIN >= 2), .NORST_D(MARGIN >= 3)) u_blk (.clk(clk), .rst_n(rst_g[2]),
             .in_v(blk_v), .in_ready(blk_ready), .in_d({blk_user, blk_row, blk_idx, blk_codes, blk_scale}),
             .out_v(i_blk_v), .out_ready(i_blk_ready),
             .out_d({i_blk_user, i_blk_row, i_blk_idx, i_blk_codes, i_blk_scale}));
-        ot_dsrom_window_skid #(.W(USER_W+POS_W+8), .PTR(MARGIN >= 2)) u_start (.clk(clk), .rst_n(rst_g[1]),
+        ot_dsrom_window_skid #(.W(USER_W+POS_W+8), .PTR(MARGIN >= 2), .NORST_D(MARGIN >= 3)) u_start (.clk(clk), .rst_n(rst_g[1]),
             .in_v(start_v), .in_ready(start_ready), .in_d({start_user, start_first, start_count}),
             .out_v(i_start_v), .out_ready(i_start_ready), .out_d({i_start_user, i_start_first, i_start_count}));
         // K-port write request: one lane (WIN_STACK) carries the writer's request; the others stay zero.
         localparam integer MW = HAW + 4 + TAGW + 1 + 256 + 32;
         wire mo_v; wire [MW-1:0] mo_d; wire mi_ready;
-        ot_dsrom_window_skid #(.W(MW), .ZERO_IDLE(1), .PTR(MARGIN >= 2)) u_mreq (.clk(clk), .rst_n(rst_g[3]),
+        ot_dsrom_window_skid #(.W(MW), .ZERO_IDLE(1), .PTR(MARGIN >= 2), .NORST_D(MARGIN >= 3)) u_mreq (.clk(clk), .rst_n(rst_g[3]),
             .in_v(w_m_v[WIN_STACK]), .in_ready(mi_ready),
             .in_d({w_m_addr[WIN_STACK*HAW +: HAW], w_m_len[WIN_STACK*4 +: 4], w_m_tag[WIN_STACK*TAGW +: TAGW],
                    w_m_we[WIN_STACK], w_m_wdata[WIN_STACK*256 +: 256], w_m_wstrb[WIN_STACK*32 +: 32]}),
@@ -288,7 +321,7 @@ module ot_dsrom_window_source_ctl #(
     wire [1023:0] w_s_data = MARGIN >= 2 ? 1024'd0 : i_s_data;
     ot_dsrom_window_writer_pipeline #(.REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
         .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .WIN_STACK(WIN_STACK),
-        .REFILL_CREDITS(REFILL_CREDITS), .BANKED_STAGE(1), .MARGIN(MARGIN != 0), .MARGIN2(MARGIN >= 2)) u_writer (
+        .REFILL_CREDITS(REFILL_CREDITS), .BANKED_STAGE(1), .MARGIN(MARGIN != 0), .MARGIN2(MARGIN >= 2), .MARGIN3(MARGIN >= 3)) u_writer (
         .clk(clk), .rst_n(rst_g[4]),
         .region_base_sector(rg_base), .region_sector_count(rg_count),
         .prime_v(i_prime_v && i_prime_ready), .prime_ready(wr_prime_ready),
@@ -349,6 +382,14 @@ module ot_dsrom_window_source_ctl #(
             mw_mv1_q <= mw_prime || (mw_blk && i_blk_idx == 4'd15);
             mw_mv0_q <= mw_blk && i_blk_idx == 4'd0;
         end
+    generate if (MARGIN >= 3) begin : g_mw3          // command data unreset; the slot stays encoded (the
+        always @(posedge clk or negedge rst_g[5])     // mirror tile decodes it per bank)
+            if (!rst_g[5]) begin mw_prime_q <= 0; mw_blk_q <= 0; end
+            else begin mw_prime_q <= mw_prime; mw_blk_q <= mw_blk; end
+        always @(posedge clk) begin
+            mw_idx_q <= i_blk_idx; mw_row_q <= mw_row; mw_user_q <= mw_prime ? i_prime_user : i_blk_user;
+        end
+    end else begin : g_mw2
     always @(posedge clk or negedge rst_g[5])
         if (!rst_g[5]) begin mw_prime_q <= 0; mw_blk_q <= 0; end
         else begin
@@ -357,12 +398,14 @@ module ot_dsrom_window_source_ctl #(
             mw_user_q <= mw_prime ? i_prime_user : i_blk_user;
             mw_sel_q <= 128'h1 << mw_row[6:0];
         end
+    end endgenerate
     integer mwi;
     wire a_prime = MARGIN ? mw_prime_q : mw_prime;
     wire a_blk = MARGIN ? mw_blk_q : mw_blk;
     wire [3:0] a_idx = MARGIN ? mw_idx_q : i_blk_idx;
     wire [POS_W-1:0] a_row = MARGIN ? mw_row_q : (mw_prime ? i_prime_row : i_blk_row);
     wire [USER_W-1:0] a_user = MARGIN ? mw_user_q : (mw_prime ? i_prime_user : i_blk_user);
+    generate if (MARGIN < 3) begin : g_mirror_regs
     always @(posedge clk or negedge rst_g[5])
         if (!rst_g[5]) mv <= 0;
         else if (MARGIN >= 2) begin
@@ -389,6 +432,7 @@ module ot_dsrom_window_source_ctl #(
                 if (a_idx == 4'd15) mv[a_row[6:0]] <= 1'b1;
             end
         end
+    end endgenerate
     // ---- job admission ----
     reg [SEC_W-1:0] cfg_base, cfg_count;
     reg [SEC_W:0] region_end, user_plus, required_size, user_offset;
@@ -435,7 +479,18 @@ module ot_dsrom_window_source_ctl #(
     reg la_start, stage_job;
     // MARGIN: accepted beats from the staging neighbour are flopped at the pin.
     wire [NPC-1:0] a_v; wire [NPC*WTAGW-1:0] a_tag; wire [NPC*BEATW-1:0] a_beat; wire [NPC*256-1:0] a_data;
-    generate if (MARGIN) begin : g_acc
+    wire [3:0] land_bad, land_simbad; wire [15:0] land_nb; wire [HAW-1:0] la_b;
+    generate if (MARGIN >= 3) begin : g_land     // four hardened 8-lane landing sub-tiles (they capture at the pin)
+        genvar lt;
+        for (lt = 0; lt < 4; lt = lt + 1) begin : g_t
+            ot_dsrom_wsrc_land8 #(.NL(8), .LANE0(8*lt), .NPC(NPC), .AW(HAW), .TAGW(WTAGW), .BEATW(BEATW)) u_land (
+                .clk(clk), .rst_n(rst_g[10+lt]), .b(la_b),
+                .acc_v(acc_v[8*lt +: 8]), .acc_tag(acc_tag[8*lt*WTAGW +: 8*WTAGW]),
+                .acc_beat(acc_beat[8*lt*BEATW +: 8*BEATW]), .acc_data(acc_data[8*lt*256 +: 8*256]),
+                .bad(land_bad[lt]), .nb(land_nb[4*lt +: 4]), .sim_bad(land_simbad[lt]));
+        end
+        assign a_v = '0; assign a_tag = '0; assign a_beat = '0; assign a_data = '0;
+    end else if (MARGIN) begin : g_acc
         reg [NPC-1:0] v_q; reg [NPC*WTAGW-1:0] t_q; reg [NPC*BEATW-1:0] b_q; reg [NPC*256-1:0] d_q;
         always @(posedge clk or negedge rst_g[6])
             if (!rst_g[6]) v_q <= '0; else v_q <= acc_v;
@@ -445,10 +500,12 @@ module ot_dsrom_window_source_ctl #(
         assign a_v = acc_v; assign a_tag = acc_tag; assign a_beat = acc_beat; assign a_data = acc_data;
     end endgenerate
     ot_dsrom_window_stream_la_s81 #(.NPC(NPC), .AW(HAW), .TAGW(WTAGW), .LENW(WLENW), .BEATW(BEATW), .IW(LA_IW),
-        .ISSUE_PC(LA_ISSUE_PC), .MARGIN(MARGIN != 0), .MARGIN2(MARGIN >= 2)) u_la (
+        .ISSUE_PC(LA_ISSUE_PC), .MARGIN(MARGIN != 0), .MARGIN2(MARGIN >= 2), .MARGIN3(MARGIN >= 3)) u_la (
         .clk(clk), .rst_n(rst_g[7]), .start(la_start), .base(HAW'(j_base)), .busy(la_busy), .fault(la_fault),
         .req_v(wl_req_v), .req_rdy(wl_req_rdy), .req_addr(wl_req_addr), .req_len(wl_req_len), .req_tag(wl_req_tag),
-        .rsp_v(a_v), .rsp_tag(a_tag), .rsp_beat(a_beat), .rsp_data(a_data));
+        .rsp_v(a_v), .rsp_tag(a_tag), .rsp_beat(a_beat), .rsp_data(a_data),
+        .land_bad(MARGIN >= 3 ? land_bad : 4'd0), .land_nb(MARGIN >= 3 ? land_nb : 16'd0),
+        .land_simbad(MARGIN >= 3 ? land_simbad : 4'd0), .b_o(la_b));
     assign stage_job_v = stage_job;
     assign stage_job_user = j_user; assign stage_job_first = j_first; assign stage_job_count = j_count;
     assign merge_user = j_user; assign merge_first = j_first; assign merge_count = j_count;
@@ -542,7 +599,7 @@ module ot_dsrom_window_source_ctl #(
             end
         end
     end
-    end else begin : g_fsm2
+    end else if (MARGIN == 2) begin : g_fsm2
     // MARGIN 2.  Control registers (st, ctl_fault/code, the pulses, load_cyc_q, j_*) keep the fault priority
     // exactly; data registers that are only read by the FSM's own later decisions (cfg_*, the ADMIT
     // predicates, j_base, load_cyc, staged_sent, the check pipeline) update without it: FAILED is terminal, so
@@ -639,6 +696,92 @@ module ot_dsrom_window_source_ctl #(
             end
             if(ck_valid[4]) for(ck_l=0;ck_l<4;ck_l=ck_l+1)              // E: compare
                 if(ck_use1[ck_l] && (!ck_mv1[ck_l] || ck_tag1[ck_l]!=ck_row1[ck_l] || ck_user1[ck_l]!=j_user)) ck_bad<=1;
+            if(ck_run && !ck_issue && ck_valid==0) ck_run<=0;
+        end
+    end
+    end else begin : g_fsm3
+    // MARGIN 2.  Control registers (st, ctl_fault/code, the pulses, load_cyc_q, j_*) keep the fault priority
+    // exactly; data registers that are only read by the FSM's own later decisions (cfg_*, the ADMIT
+    // predicates, j_base, load_cyc, staged_sent, the check pipeline) update without it: FAILED is terminal, so
+    // a value written in the faulting cycle is never read.  cfg_* / load_cyc / staged_sent load while IDLE
+    // (their accept-edge value is the same).  The mirror check reads 4:1 (row[1:0]) -> 4:1 ([3:2]) -> 4:1
+    // ([5:4]) -> 2:1 ([6]) -> compare: five edges instead of three, inside LOAD (hidden by the stream load).
+    // MARGIN 3: g_fsm2 with the mirror check on the banked mirror tile.  Bank b checks the row of this cycle's
+    // four with row[1:0] == b, i.e. j_first + {ck_i, (b - j_first[1:0]) mod 4}; ck_bad is set from the tile's
+    // registered per-bank result on the same edge as MARGIN 2's stage E.
+    reg [1:0] ck_off [0:3]; reg [POS_W-1:0] ck_brow [0:3]; reg [3:0] ck_buse; wire [POS_W-1:0] ck_bsum [0:3];
+    wire [3:0] mir_bad;
+    genvar ckb;
+    for (ckb = 0; ckb < 4; ckb = ckb + 1) begin : g_ck_bank
+        ot_hdc_ksadd_k #(.W(POS_W)) u_k_brow (.a(j_first), .b(POS_W'({ck_i, ck_off[ckb]})), .cin(1'b0),
+            .s(ck_bsum[ckb]), .cout());
+    end
+    integer ckb_i;
+    always @(posedge clk) begin
+        for (ckb_i = 0; ckb_i < 4; ckb_i = ckb_i + 1) begin
+            ck_off[ckb_i] <= 2'(ckb_i) - j_first[1:0];
+            if (ck_issue) begin
+                ck_brow[ckb_i] <= ck_bsum[ckb_i];
+                ck_buse[ckb_i] <= {ck_i, ck_off[ckb_i]} < j_count;
+            end
+        end
+    end
+    ot_dsrom_wsrc_mirror #(.POS_W(POS_W), .USER_W(USER_W)) u_mirror (
+        .clk(clk), .rst_n(rst_g[14]),
+        .wr_tag(mw_tagw_q[0]), .wr_set(mw_mv1_q), .wr_clr(mw_mv0_q), .wr_slot(mw_row_q[6:0]),
+        .wr_row(mw_row_q), .wr_user(mw_user_q),
+        .rd_row({ck_brow[3], ck_brow[2], ck_brow[1], ck_brow[0]}), .rd_use(ck_buse), .j_user(j_user),
+        .bad(mir_bad));
+    always @(posedge clk or negedge rst_g[8]) begin
+        if (!rst_g[8]) begin
+            st <= IDLE; j_user <= 0; j_first <= 0; j_count <= 0; j_base <= 0; load_cyc <= 0; load_cyc_q <= 0;
+            staged_sent <= 0; done_r <= 0; ctl_fault <= 0; ctl_code <= 0; la_start <= 0; stage_job<=0;
+            cfg_base<=0; cfg_count<=0; ck_valid<=0; ck_issue<=0;
+            ck_i <= 0; ck_run <= 0; ck_bad <= 0; mstart_q <= 0;
+        end else begin
+            done_r <= 1'b0; la_start <= 1'b0; stage_job<=0; mstart_q <= 1'b0;
+            if (i_staged_v) staged_sent <= 1'b1;
+            // ---- data registers ----
+            case (st)
+                IDLE: begin cfg_base <= rg_base; cfg_count <= rg_count; load_cyc <= 0; staged_sent <= 1'b0; end
+                ADMIT1: begin region_end <= ks_region_end; user_plus <= ks_user_plus; end_pos <= ks_end_pos; end
+                ADMIT2: begin
+                    size_bad_q <= zd[32]; cfg_mismatch_q <= cfg_base != rg_base || cfg_count != rg_count;
+                    required_size <= ks_size; user_offset <= ks_uoff;
+                end
+                ADMIT3: begin j_base <= ks_base; ck_i <= 0; ck_run <= 1; ck_issue <= 1; ck_bad <= 0; end
+                LOAD: load_cyc <= load_cyc_inc;
+                default: begin end
+            endcase
+            // ---- control registers (fault priority unchanged) ----
+            if (st != IDLE && st != FAILED && fsm_fault_c) begin
+                ctl_fault <= 1'b1; if (i_merge_fault) ctl_code[0] <= 1'b1; st <= FAILED;
+            end else case (st)
+                IDLE: if (accept) begin
+                    j_user<=i_start_user; j_first<=i_start_first; j_count<=i_start_count; st<=ADMIT1;
+                end
+                ADMIT1: st<=ADMIT2;
+                ADMIT2: st<=ADMIT3;
+                ADMIT3: begin
+                    if(start_bad) begin ctl_fault<=1; ctl_code[2]<=1; st<=FAILED; end
+                    else begin la_start<=1; stage_job<=1; st<=LOAD; end
+                end
+                LOAD: begin
+                    if (!ck_run && ck_bad) begin ctl_fault <= 1'b1; ctl_code[1] <= 1'b1; st <= FAILED; end
+                    else if (!ck_run && i_all_rows && !la_start && !la_busy) begin load_cyc_q <= load_cyc_inc; st <= ISSUE; end
+                end
+                ISSUE: if (issue_ready) begin st <= RUN; mstart_q <= 1'b1; end
+                RUN: if (i_merge_done) begin done_r <= 1'b1; st <= IDLE; end
+                FAILED: st <= FAILED;
+                default: begin ctl_fault <= 1'b1; st <= FAILED; end
+            endcase
+            // ---- mirror check (banked tile) ----
+            ck_valid<={ck_valid[3:0],ck_issue};
+            if(ck_issue) begin
+                ck_i<=ck_i+1'b1;
+                if(ck_i==31) ck_issue<=0;
+            end
+            if(ck_valid[4] && |mir_bad) ck_bad<=1;
             if(ck_run && !ck_issue && ck_valid==0) ck_run<=0;
         end
     end
