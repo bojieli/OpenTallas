@@ -95,6 +95,10 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   if(cs_v&&cs_r) starts<=starts+1;
   if(c1_v&&c1_r) s1<=s1+1;
   if(c0_v&&c0_r) s0<=s0+1;
+  if(fault) $display("P2L core fault parts tr %0d ar %0d pub %0d broken %0d lost %0d abort %0d cur_id %h c_start %0d/%0d %h c_in_v %b c_in_r %b in_id1 %h in_id0 %h",
+     dut.u_core.enabled.tr_fault, dut.u_core.enabled.ar_fault, dut.u_core.enabled.pub_fault, dut.u_core.enabled.broken,
+     dut.u_core.enabled.lost_q, dut.u_core.enabled.abort_q, dut.u_lnk.cur_id, dut.u_lnk.c_start_v, dut.u_lnk.c_start_r,
+     dut.u_lnk.c_start_d[100:27], dut.u_lnk.c_in_v, dut.u_lnk.c_in_r, dut.u_lnk.c_in_d[1207:1134], dut.u_lnk.c_in_d[603:530]);
   if(fault || p_ev[1]) $fatal(1,"P2L unexpected core fault cycle %0d (core %0d primary-seen %0d) starts %0d s0 %0d s1 %0d sv_p %0d l1v_p %0d l0v_p %0d id_s %h id_1 %h",
                               cycles, fault, p_ev[1], starts, s0, s1, sv_p, l1v_p, l0v_p, sd_p[100:27], l1d_p[603:530]);
   if(p2flt!=0 || p_aflt || b_aflt) begin flt_seen=flt_seen+1; if(flt_seen==1) $display("P2L lane FAULT a=%b p=%b b=%b cycle %0d",p2flt,p_aflt,b_aflt,cycles); end
