@@ -105,8 +105,9 @@ module ot_hgi_hc_lane #(
     localparam integer QDB = (QD <= 1) ? 1 : $clog2(QD);
     reg wrq_cr_q, wwq_cr_q, wwq_done_q; reg [256:0] wrr_q;
     always @(posedge clk or negedge rst_l)
-        if (!rst_l) begin wrq_cr_q <= 1'b0; wwq_cr_q <= 1'b0; wwq_done_q <= 1'b0; wrr_q <= '0; end
-        else begin wrq_cr_q <= wrq_cr; wwq_cr_q <= wwq_cr; wwq_done_q <= wwq_done; wrr_q <= wrr; end
+        if (!rst_l) begin wrq_cr_q <= 1'b0; wwq_cr_q <= 1'b0; wwq_done_q <= 1'b0; wrr_q[256] <= 1'b0; end
+        else begin wrq_cr_q <= wrq_cr; wwq_cr_q <= wwq_cr; wwq_done_q <= wwq_done; wrr_q[256] <= wrr[256]; end
+    always @(posedge clk) wrr_q[255:0] <= wrr[255:0];      // datapath: no reset (textbook class 2)
     // hbm-hcvm 10-11: control-side pin flops (registered boundary): the write FIFO push / data, the write-group grant and
     // the job's P1 row count land in flops before any logic (the FIFO's counters were 75 gate levels behind push; pop and
     // p1_full were combinational outputs of wg_q / p1n).  occ counts the push at the pin, so the top's room check stays
@@ -116,6 +117,10 @@ module ot_hgi_hc_lane #(
         if (!rst_l) begin push_q <= 1'b0; wg_qq <= 1'b0; post_q <= 1'b0; p1n_q <= '0; end
         else begin push_q <= push; wg_qq <= wg_q; post_q <= post; p1n_q <= p1n; end
     always @(posedge clk) pdat_q <= pdat;
+    always @(posedge clk) begin                            // datapath halves of the lane outputs: no reset
+        wrq[14:0] <= iss_sec;
+        if (pop) wwq[278:0] <= {f_hd[270:256], f_hd[255:0], 8'hFF};
+    end
     reg [QB-1:0] cr; reg scp; reg [1:0] scx; reg [RB:0] p1c; reg [7:0] p2c; reg [1:0] qn; reg [767:0] qsh;
     reg [1023:0] qf [0:QD-1]; reg [QDB-1:0] qwp, qrp; reg [$clog2(QD+1)-1:0] qcnt, qres;
     reg [255:0] pb [0:NR-1];
@@ -140,12 +145,12 @@ module ot_hgi_hc_lane #(
     end
     always @(posedge clk or negedge rst_l)
         if (!rst_l) begin
-            wrq <= '0; wwq <= '0; cr <= QB'(LQ); scp <= 1'b0; scx <= '0; p1c <= '0; p2c <= '0; qn <= '0; qwp <= '0; qrp <= '0;
+            wrq[15] <= 1'b0; wwq[279] <= 1'b0; cr <= QB'(LQ); scp <= 1'b0; scx <= '0; p1c <= '0; p2c <= '0; qn <= '0; qwp <= '0; qrp <= '0;
             qcnt <= '0; qres <= '0; occ <= '0; wcr <= QB'(LQ); wpend <= '0;
         end else begin : seq
             reg pu;
-            wrq <= {iss, iss_sec};
-            wwq <= pop ? {1'b1, f_hd[270:256], f_hd[255:0], 8'hFF} : {1'b0, wwq[278:0]};
+            wrq[15] <= iss;
+            wwq[279] <= pop;
             if (iss && !wrq_cr_q) cr <= cr - 1'b1; else if (!iss && wrq_cr_q) cr <= cr + 1'b1;
             if (iss_j0 && !popq) qres <= qres + 1'b1; else if (!iss_j0 && popq) qres <= qres - 1'b1;
             if (sc_set) begin scp <= 1'b1; scx <= sc_ix; end
