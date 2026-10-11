@@ -4,7 +4,10 @@
 // ADAPTER_CONTRACT_1011.  = the pinned command endpoint ot_s81_slab_ep (ot_s81_engine_adapter QD 8, done-credit)
 //   + the closed lookup element dsfd_engram_lkp (hash, address, HBM row requests, CRC, row beats)
 //   + the closed row sink dsfd_engram_sink (24 columns x 4 ranks -> BF16 rows, slot ready / poison)
-//   + the prefetch buffer ot_dsrom_engram_prefetch (8 slots, the existing SECDED words; no new ECC)
+//   + the prefetch buffer ot_dsrom_engram_prefetch_h (8 slots, the existing SECDED words; no new ECC; registered
+//     SRAM array: per-macro access / capture registers, pipelined bank select -- el1011-ds-misc HIER 2026-10-11)
+// HIER (el1011-ds-misc): the lookup and the sink are placed as their closed hardened views; every path between a
+// leaf and a die pin that crosses the outline is relayed (credit / valid-tagged paths only).
 // The die buses are ENG_BUSES of tools/dsrom_s81_fulldie.py (names below = the generator's port names).
 //
 // ENGINE SEMANTICS (one job = one token's Engram lookup on this rank):
@@ -17,7 +20,7 @@
 //           slot still READY from window n - 8 can never complete window n.
 //   descriptor arg (compiler schema "eng_job"): arg[15:0] = window sequence number n (mod 2^16), arg[23:16] = 0.
 //           A released window whose n differs, or a reserved bit set, is a WRONG DESCRIPTOR: sticky fault (c_st[0]).
-// The consumer (VM) reads the slot over f_vm (rd_v / rd_addr {slot, column, beat}, out on t_vm 2 cycles later) after
+// The consumer (VM) reads the slot over f_vm (rd_v / rd_addr {slot, column, beat}, out on t_vm 10 cycles later, valid-tagged by out_v) after
 // the done and releases it (rel_v / rel_slot); the lookup's credit is the 4 ranks' releases (f_win rel, carried by
 // the collective ctrl lane).
 // HBM: the lookup's request / response credit pair (hq / hr) is the backend port pair t_hq / f_hr (35 / 265 b), the
@@ -62,13 +65,22 @@ module dsfd_engram_c #(
     reg [1:0] rs_q;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
     wire rn = rs_q[1];
+    // per-leaf reset synchronisers (el1011-ds-misc HIER: the lookup / sink macros sit far from the endpoint)
+    reg [1:0] rsl_q, rss_q;
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rsl_q <= 2'b00; else rsl_q <= {rsl_q[0], 1'b1};
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rss_q <= 2'b00; else rss_q <= {rss_q[0], 1'b1};
+    wire rn_lk = rsl_q[1], rn_sk = rss_q[1];
+    // HIER relays (credit / valid-tagged paths only: a relay adds latency, never a handshake hazard)
+    reg  [1:0] jf_r;                     // sticky window fault -> endpoint (window queue sits by f_win, the endpoint by c_cmd)
+    reg  [17:0] jn_r1, jn_r2;            // {j_new, reserved != 0, n 16}: endpoint -> descriptor queue
+    reg  [15:0] wn_r1, wn_r2;            // windows released: window queue -> done side
 
     // ---------------- command endpoint
     wire j_v, j_new; wire [83:0] j_d, j_new_d; wire ep_fault;
     reg  j_done, jf;
     ot_s81_slab_ep #(.QD(8), .JQ(8), .MUT(EPMUT)) u_ep (.c_clk(ck[0]), .c_rst_n(rst[0]), .c_cmd(c_cmd), .c_done(c_done),
         .c_st(c_st), .e_clk(ck[0]), .e_rst_n(rn), .j_v(j_v), .j_d(j_d), .j_new(j_new), .j_new_d(j_new_d),
-        .j_present(1'b1), .j_done(j_done), .slab_fault(jf | pf_fault), .ep_fault(ep_fault));
+        .j_present(1'b1), .j_done(j_done), .slab_fault(jf_r[1] | pf_fault), .ep_fault(ep_fault));
     // (the lookup's sticky fault is a DATA status -- CRC / address / alignment of a row -- carried on t_ag to the
     //  collective and per slot as perr on t_vm; it is not an engine-protocol fault)
 
@@ -96,50 +108,84 @@ module dsfd_engram_c #(
             if (rel_w) hh <= ~hh;
             hn <= hn + wv_q - rel_w;
             t_collective <= rel_w;          // the window credit returns when the window leaves the hold queue
-            if (j_new) begin ia[iw] <= {(j_new_d[30:23] != 8'd0), j_new_d[22:7]}; iw <= iw + 1'b1; end
+            if (jn_r2[17]) begin ia[iw] <= jn_r2[16:0]; iw <= iw + 1'b1; end
             if (rel_w && in_ != 4'd0) begin
                 if (ia[ir][16] || ia[ir][15:0] != wn) jf <= 1'b1;      // wrong descriptor
                 ir <= ir + 1'b1;
             end
-            in_ <= in_ + j_new - (rel_w && in_ != 4'd0);
+            in_ <= in_ + jn_r2[17] - (rel_w && in_ != 4'd0);
             if (rel_w) wn <= wn + 1'b1;
             lc <= lc - rel_w + lk_wcred;
+        end
+    always @(posedge ck[0] or negedge rn)
+        if (!rn) begin jf_r <= 2'b00; jn_r1 <= 18'd0; jn_r2 <= 18'd0; wn_r1 <= 16'd0; wn_r2 <= 16'd0; end
+        else begin
+            jf_r  <= {jf_r[0], jf};
+            jn_r1 <= {j_new, (j_new_d[30:23] != 8'd0), j_new_d[22:7]}; jn_r2 <= jn_r1;
+            wn_r1 <= wn; wn_r2 <= wn_r1;
         end
 
     // ---------------- lookup element (closed dsfd_engram_lkp)
     wire lk_fault, lk_ov, lk_stv, lk_stb, lk_hqv; wire [4:0] lk_oc; wire [2:0] lk_ob, lk_os, lk_sts, lk_hqt;
     wire [263:0] lk_od; wire [30:0] lk_hqa;
+    // HBM pair relays (die pins on the W edge, the lookup's HBM edge faces S): 2 forward stages each way
+    reg  [34:0]  hq_r1, hq_r2; reg [264:0] hr_r1, hr_r2;
+    // all-gather out relays (the lookup's output edge faces N, the t_ag pins are left of it) + credit return stage
+    reg  [281:0] ag_r1, ag_r2; reg agc_r;
+    reg  [2:0]   cfg_r1, cfg_r2;             // boot straps (static)
+    always @(posedge ck[0] or negedge rn_lk)
+        if (!rn_lk) begin hq_r1 <= 35'd0; hq_r2 <= 35'd0; hr_r1 <= 265'd0; hr_r2 <= 265'd0; ag_r1 <= 282'd0; ag_r2 <= 282'd0;
+                          agc_r <= 1'b0; end
+        else begin
+            hq_r1 <= {lk_hqt, lk_hqa, lk_hqv}; hq_r2 <= hq_r1;
+            hr_r1 <= f_hr; hr_r2 <= hr_r1;
+            ag_r1 <= {lk_fault, lk_stb, lk_sts, lk_stv, lk_od, lk_os, lk_ob, lk_oc, lk_ov}; ag_r2 <= ag_r1;
+            agc_r <= f_agc[0];
+        end
+    always @(posedge ck[0]) begin cfg_r1 <= f_cfg; cfg_r2 <= cfg_r1; end
     dsfd_engram_lkp #(.PIPE(PIPE), .NSLOT(NSLOT), .HQ_CRED(8), .O_CRED(16), .SLW(SLW)) u_lkp (
-        .ck(ck[0]), .rst_n(rn), .cfg_layer(f_cfg[0]), .cfg_rank(f_cfg[2:1]),
+        .ck(ck[0]), .rst_n(rn_lk), .cfg_layer(cfg_r2[0]), .cfg_rank(cfg_r2[2:1]),
         .win_v(lk_wv), .win_ids(lk_wid), .win_cred(lk_wcred), .rel(rel_q),
-        .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(f_hr[0]),
-        .hr_v(f_hr[1]), .hr_tag(f_hr[4:2]), .hr_idx(f_hr[8:5]), .hr_d(f_hr[264:9]),
-        .o_v(lk_ov), .o_col(lk_oc), .o_beat(lk_ob), .o_slot(lk_os), .o_d(lk_od), .o_cred(f_agc[0]),
+        .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(hr_r2[0]),
+        .hr_v(hr_r2[1]), .hr_tag(hr_r2[4:2]), .hr_idx(hr_r2[8:5]), .hr_d(hr_r2[264:9]),
+        .o_v(lk_ov), .o_col(lk_oc), .o_beat(lk_ob), .o_slot(lk_os), .o_d(lk_od), .o_cred(agc_r),
         .st_v(lk_stv), .st_slot(lk_sts), .st_bad(lk_stb), .fault(lk_fault));
-    assign t_hq = {lk_hqt, lk_hqa, lk_hqv};
-    assign t_ag = {lk_fault, lk_stb, lk_sts, lk_stv, lk_od, lk_os, lk_ob, lk_oc, lk_ov};
+    assign t_hq = hq_r2;
+    assign t_ag = ag_r2;
 
     // ---------------- row sink (closed dsfd_engram_sink) -> prefetch buffer
     wire s_we; wire [10:0] s_wa; wire [511:0] s_wd; wire [7:0] s_rdy, s_perr;
     reg  vrel_q; reg [2:0] vrels_q; reg vrd_q; reg [10:0] vra_q;
+    reg  [3:0] vrel_r1, vrel_r2;          // release relays: f_vm pins (by t_vm) -> the sink's W edge
     always @(posedge ck[0] or negedge rn) if (!rn) begin vrel_q <= 1'b0; vrd_q <= 1'b0; end
                                          else begin vrel_q <= f_vm[12]; vrd_q <= f_vm[0]; end
     always @(posedge ck[0]) begin vrels_q <= f_vm[15:13]; vra_q <= f_vm[11:1]; end   // f_vm = {rel_slot 3, rel_v, rd_addr 11, rd_v}
+    always @(posedge ck[0] or negedge rn_sk) if (!rn_sk) begin vrel_r1 <= 4'd0; vrel_r2 <= 4'd0; end
+                                            else begin vrel_r1 <= {vrels_q, vrel_q}; vrel_r2 <= vrel_r1; end
     dsfd_engram_sink #(.PIN_CAPTURE(SINK_PIN), .NSLOT(NSLOT), .SLW(SLW)) u_sink (
-        .ck(ck[0]), .rst_n(rn), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
+        .ck(ck[0]), .rst_n(rn_sk), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
         .in_slot(f_ai[47:36]), .in_d(f_ai[1103:48]), .st_v(f_ai[1107:1104]), .st_slot(f_ai[1119:1108]),
         .st_bad(f_ai[1123:1120]), .wr_en(s_we), .wr_addr(s_wa), .wr_data(s_wd), .rdy(s_rdy), .perr(s_perr),
-        .rel_v(vrel_q), .rel_slot(vrels_q));
+        .rel_v(vrel_r2[0]), .rel_slot(vrel_r2[3:1]));
     wire pf_v, pf_ce, pf_ue, pf_fault; wire [511:0] pf_d; wire pf_wp;
-    ot_dsrom_engram_prefetch u_pf (.ck(ck[0]), .rst_n(rn), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .wr_pending(pf_wp),
+    ot_dsrom_engram_prefetch_h u_pf (.ck(ck[0]), .rst_n(rn), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .wr_pending(pf_wp),
         .rd_v(vrd_q), .rd_addr(vra_q), .out_v(pf_v), .out_data(pf_d), .out_ce(pf_ce), .out_ue(pf_ue), .fault(pf_fault));
-    // rdy is published two cycles after the sink's (the slot's rows are in the SRAM; a release drops it at once)
-    // (the sink's rdy and its last wr_en leave the same register stage; the prefetch commits the write one cycle later)
-    reg [7:0] rdy_1, rdy_p, perr_1, perr_p;
+    // rdy is published four cycles after the sink's: the sink's rdy and its last wr_en leave the same register stage
+    // and ot_dsrom_engram_prefetch_h commits a write at the 4th edge after wr_en (W1 / W2 / W3), so a slot is READY
+    // only once its rows are in the SRAM.  The chain is a plain shift (relays from the sink's W edge toward the VM
+    // pins): a release drops rdy 4 cycles later; a refill of the slot takes a whole HBM window, so no rising edge is lost.
+    reg [7:0] rdy_1, rdy_2, rdy_3, rdy_p, perr_1, perr_2, perr_3, perr_p;
     always @(posedge ck[0] or negedge rn)
-        if (!rn) begin rdy_1 <= 8'd0; rdy_p <= 8'd0; perr_1 <= 8'd0; perr_p <= 8'd0; end
-        else begin rdy_1 <= s_rdy; rdy_p <= rdy_1 & s_rdy; perr_1 <= s_perr; perr_p <= perr_1; end
-    assign t_vm = {perr_p, rdy_p, pf_fault, pf_ue, pf_ce, pf_d, pf_v};
+        if (!rn) begin rdy_1 <= 8'd0; rdy_2 <= 8'd0; rdy_3 <= 8'd0; rdy_p <= 8'd0;
+                       perr_1 <= 8'd0; perr_2 <= 8'd0; perr_3 <= 8'd0; perr_p <= 8'd0; end
+        else begin rdy_1 <= s_rdy; rdy_2 <= rdy_1; rdy_3 <= rdy_2; rdy_p <= rdy_3;
+                   perr_1 <= s_perr; perr_2 <= perr_1; perr_3 <= perr_2; perr_p <= perr_3; end
+    // registered VM outputs at the t_vm pins
+    reg [531:0] tvm_q;
+    always @(posedge ck[0] or negedge rn)
+        if (!rn) tvm_q <= 532'd0;
+        else     tvm_q <= {perr_p, rdy_p, pf_fault, pf_ue, pf_ce, pf_d, pf_v};
+    assign t_vm = tvm_q;
 
     // ---------------- done side: the (n / 8 + 1)-th rising edge of rdy[n mod 8]
     reg [7:0] rdy_d; reg [12:0] rise [0:7]; integer s;
@@ -152,6 +198,6 @@ module dsfd_engram_c #(
             rdy_d <= rdy_p;
             for (s = 0; s < 8; s = s + 1) if (rdy_p[s] && !rdy_d[s]) rise[s] <= rise[s] + 1'b1;
             j_done <= 1'b0;
-            if (j_v && !j_done && dn != wn && (MUT == 5 ? 1'b1 : dhit)) begin j_done <= 1'b1; dn <= dn + 1'b1; end
+            if (j_v && !j_done && dn != wn_r2 && (MUT == 5 ? 1'b1 : dhit)) begin j_done <= 1'b1; dn <= dn + 1'b1; end
         end
 endmodule
