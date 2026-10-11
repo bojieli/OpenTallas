@@ -25,6 +25,8 @@ foreach i [$b getInsts] {
   set k 0
   if {[regexp {g_(?:aq|ix|ret|bc)\\?\[(\d+)\\?\]} $n -> k]} {}
   if {[regexp {u_prom1} $n]} { set k 1 }
+  if {[regexp {u_obus} $n]} { set k 4 }
+  if {[regexp {u_xin(\d)} $n -> xk]} { set k $xk }
   set inst($m,$k) $i
 }
 proc dim {i} {
@@ -37,20 +39,29 @@ proc put {i x y} {
 }
 foreach need {ot_dsrom_aq12t,0 ot_dsrom_aq12t,1 ot_pqc_t_ix,0 ot_pqc_t_ix,1 ot_pqc_t_ix,2 ot_pqc_t_ix,3 ot_pqc_t_qb,0
               ot_pqc_t_ctl16,0 ot_pqc_t_ret,0 ot_pqc_t_ret,1 ot_pqc_t_bc,0 ot_pqc_t_bc,1 ot_pqc_t_bc,2 ot_pqc_t_bc,3
-              ot_pqc_t_srom,0 ot_pqc_t_prom,0 ot_pqc_t_prom,1} {
+              ot_pqc_t_srom,0 ot_pqc_t_prom,0 ot_pqc_t_prom,1 ot_pqc_t_bc,4 ot_pqc_t_xin,0 ot_pqc_t_xin,1} {
   if {![info exists inst($need)]} { error "pqc macro_place: no tile $need" }
 }
+# x_q pin-register tiles at the N edge (no top-level soft flops), each centred over its half's consumers
+lassign [dim $inst(ot_pqc_t_xin,0)] xw xh
+set ybase [expr {$H - $E - $xh}]
+set HT [expr {$ybase - $G}]
 # top band
 set x $E
 set ytop $H
 foreach key {ot_dsrom_aq12t,0 ot_pqc_t_ix,0 ot_pqc_t_ix,2 ot_pqc_t_ix,1 ot_pqc_t_ix,3 ot_dsrom_aq12t,1} {
   lassign [dim $inst($key)] w h
-  set y [expr {$H - $E - $h}]
+  set y [expr {$HT - $h}]
   put $inst($key) $x $y
+  set cx_($key) [expr {$x + $w / 2.0}]
   set ytop [expr {min($ytop, $y)}]
   set x [expr {$x + $w + $G}]
 }
 if {$x - $G + $E > $W + 0.01} { error "pqc macro_place: top band needs [expr {$x - $G + $E}] um > die $W" }
+set c0 [expr {($cx_(ot_dsrom_aq12t,0) + $cx_(ot_pqc_t_ix,0) + $cx_(ot_pqc_t_ix,2)) / 3.0}]
+set c1 [expr {($cx_(ot_dsrom_aq12t,1) + $cx_(ot_pqc_t_ix,1) + $cx_(ot_pqc_t_ix,3)) / 3.0}]
+put $inst(ot_pqc_t_xin,0) [expr {$c0 - $xw / 2.0}] $ybase
+put $inst(ot_pqc_t_xin,1) [expr {$c1 - $xw / 2.0}] $ybase
 # middle band, centred on the die
 lassign [dim $inst(ot_pqc_t_qb,0)] qw qh
 set qx [expr {$W / 2.0 - $qw / 2.0}]
@@ -66,7 +77,10 @@ foreach k {0 1 2 3} {
   set x [expr {$x + $bw + 20.0}]
   set bhm [expr {max($bhm, $bh)}]
 }
-if {$x - 20.0 + $E > $W + 0.01} { error "pqc macro_place: relay row runs past the E edge" }
+lassign [dim $inst(ot_pqc_t_bc,4)] bw bh
+if {$x + $bw + $E > $W - $E + 0.01} { error "pqc macro_place: relay row runs past the E edge" }
+# the screen's o_bus register (fifth relay) at the E edge, by the o_bus pins
+put $inst(ot_pqc_t_bc,4) [expr {$W - $E - $bw}] [expr {$ytop - $G - $bh}]
 # bottom band
 lassign [dim $inst(ot_pqc_t_ret,0)] rw rh
 set rx [expr {$W / 2.0 - $rw - $G / 2.0}]
@@ -81,4 +95,4 @@ if {$E + $sw + $G + $pw + $G > $rx + 0.01} { error "pqc macro_place: ROM tiles r
 set lowtop [expr {max($E + $rh, $E + 2 * $ph + $G, $E + $sh)}]
 set midbot [expr {$ytop - $G - max($qh, $ch, $bhm)}]
 if {$lowtop + $G > $midbot + 0.01} { error "pqc macro_place: bands overlap (die H $H too small)" }
-puts "pqc macro_place: 17 tiles placed (die $W x $H, top band y >= $ytop)"
+puts "pqc macro_place: 20 tiles placed (die $W x $H, top band y >= $ytop)"
