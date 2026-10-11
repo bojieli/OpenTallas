@@ -209,6 +209,17 @@
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf
     ot_attn_ks_credit u_ent (.clk(ck), .rst_n(rst), .ks_v(ks[gq][0]), .kq(kqf[gq]));
   end endgenerate
+  // credit accounting at the producer side of the line: the credits the entry returns on a port can never exceed the
+  // rows that landed on it (a surplus credit lets the svc group overrun the entry) and must equal them at the end
+  integer ec_rows [0:7], ec_cr [0:7];
+  initial for (pq = 0; pq < 8; pq = pq + 1) begin ec_rows[pq] = 0; ec_cr[pq] = 0; end
+  integer ke;
+  always @(posedge ck) if (rst) for (ke = 0; ke < 8; ke = ke + 1) begin
+    if (ks[ke][0]) ec_rows[ke] = ec_rows[ke] + 1;
+    if (kqf[ke][0] === 1'b1) begin ec_cr[ke] = ec_cr[ke] + 1;
+      if (ec_cr[ke] > ec_rows[ke]) begin err = err + 1; $display("ERR entry credit surplus port %0d credits %0d rows %0d", ke, ec_cr[ke], ec_rows[ke]); end
+    end
+  end
 `else
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf assign kqf[gq] = {fck, kq[gq][0]}; end endgenerate
 `endif
@@ -329,6 +340,10 @@
       if (exp_on[k][j]) $display("MISSING SM=%0d TAG=%0d W=%0d ADDR=%h",k,j,exp_w[k][j],exp_a[k][j]);
     $display("SVC_BENCH lines=%0d kv=%0d ik=%0d e=%0d ps_streams=%0d ps_rows=%0d ps_kd=%0d errors=%0d", done_lines, kv_got,
              ik_got, ne, ps_n, ps_rows, ps_kd, err);
+`ifdef PS_ENTRY_CREDIT
+    for (k = 0; k < 8; k = k + 1) if (ec_cr[k] != ec_rows[k]) begin err = err + 1;
+      $display("ERR entry credits port %0d: %0d credits for %0d rows", k, ec_cr[k], ec_rows[k]); end
+`endif
     if (err != 0 || done_lines == 0) $fatal(1, "SVC_BENCH FAIL");
     $display("SVC_BENCH PASS");
     $finish;
