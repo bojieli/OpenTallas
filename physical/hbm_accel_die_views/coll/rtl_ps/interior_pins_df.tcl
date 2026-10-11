@@ -14,7 +14,8 @@ set dw [expr {double([$die dx])/$units}]
 set dh [expr {double([$die dy])/$units}]
 set mw 94.824
 set mh 41.040
-set gap [expr {[info exists ::env(OT_HCOLL_GAP)] ? double($::env(OT_HCOLL_GAP)) : 24.0}]
+# textbook audit 10-11 (class 6: 31% util at 480x540): compact outlines (< 460 um wide) use 20 um channels
+set gap [expr {[info exists ::env(OT_HCOLL_GAP)] ? double($::env(OT_HCOLL_GAP)) : ($dw < 460.0 ? 20.0 : 24.0)}]
 set array_w [expr {3*$mw+2*$gap}]
 set array_h [expr {6*$mh+5*$gap}]
 set x0 [expr {($dw-$array_w)/2}]
