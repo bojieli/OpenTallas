@@ -146,9 +146,9 @@ module dsfd_sp_collective (
         .lo_v(p_lo_v), .lo_r(p_lo_r), .lo_d(p_lo_d), .li_v(p_li_v), .li_r(p_li_r), .li_d(p_li_d), .flt(p_lflt));
     dsfd_coll_lane_w #(.LCR(1)) u_bl (.ck(pll_stream), .rs(rst_stream), .chb(1'b0), .rx(rE4), .tx(tdE4), .tf(tfE4),
         .lo_v(b_lo_v), .lo_r(b_lo_r), .lo_d(b_lo_d), .li_v(b_li_v), .li_r(b_li_r), .li_d(b_li_d), .flt(b_lflt));
-    wire c_l1v, c_l1r, c_sv, c_sr, c_ov, c_or; wire [603:0] c_l1d; wire [100:0] c_sd; wire [593:0] c_od; wire [0:0] p_abort;
+    wire c_sv, c_sr, c_ov, c_or; wire [100:0] c_sd; wire [593:0] c_od; wire [0:0] p_abort;
     dsfd_coll_p2_ep u_pe (.ck(pll_stream), .rst(rst_stream),
-        .c_l1v(c_l1v), .c_l1r(c_l1r), .c_l1d(c_l1d), .t_l1v(t_p2[0]), .t_l1d(t_p2[604:1]), .f_l1g(f_p2[595]),
+        .c_l1v(1'b0), .c_l1r(), .c_l1d(604'd0), .t_l1v(), .t_l1d(), .f_l1g(1'b0),   // lane 1: u_ba's own grant sender
         .c_sv(c_sv), .c_sr(c_sr), .c_sd(c_sd), .t_sv(t_p2[605]), .t_sd(t_p2[706:606]), .f_sg(f_p2[596]),
         .f_ov(f_p2[0]), .f_od(f_p2[594:1]), .t_og(t_p2[708]), .c_ov(c_ov), .c_or(c_or), .c_od(c_od));
     dsfd_coll_p2_lane_pa u_pa (
@@ -156,7 +156,7 @@ module dsfd_sp_collective (
         .x_ev(f_p2[599:597]), .r_ev(p_abort),
         .lo_v(p_lo_v), .lo_r(p_lo_r), .lo_d(p_lo_d), .li_v(p_li_v), .li_r(p_li_r), .li_d(p_li_d), .f_lflt(p_lflt), .t_flt(p_flt));
     dsfd_coll_p2_lane_ba u_ba (
-        .ck(pll_stream), .rs(rst_stream), .r_v(c_l1v), .r_r(c_l1r), .r_d(c_l1d),
+        .ck(pll_stream), .rs(rst_stream), .r_v(t_p2[0]), .r_r(f_p2[595]), .r_d(t_p2[604:1]),
         .lo_v(b_lo_v), .lo_r(b_lo_r), .lo_d(b_lo_d), .li_v(b_li_v), .li_r(b_li_r), .li_d(b_li_d), .f_lflt(b_lflt), .t_flt(b_flt));
     assign t_p2[707] = p_abort[0];
     assign t_p2flt = {b_flt, p_flt};

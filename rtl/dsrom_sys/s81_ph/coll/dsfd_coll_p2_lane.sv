@@ -155,13 +155,23 @@ module dsfd_coll_p2_lane #(
             if (!rst_n) ov <= 1'b0; else if (!ov || r_r[0]) ov <= cb_v;
         always @(posedge clk) if (cb_pop) od <= cb_d;
     end else begin : g_direct
-        assign cb_flt = 1'b0; assign cb_pop = 1'b0; assign cb_v = 1'b0; assign cb_d = '0; assign cb_room = 1'b1; assign cb_room2 = 1'b1;
-        assign o_free = !ov || r_r[0];
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) ov <= 1'b0; else if (w_in) ov <= 1'b1; else if (r_r[0]) ov <= 1'b0;
-        always @(posedge clk) if (w_in) od <= word[RW_-1:0];
+        // DIRECT (route mtpl-dsfd_coll_p2_lane_ba-0ddaf548b TT -141: the consumer's ready pin r_r fanned out to the
+        // 604-bit output enables and the landing skid, 13-15 levels): the received words land in a 4-word register FIFO
+        // whose REGISTERED room flag gates the landing, and leave through the MTP grant-protocol transmitter
+        // (ot_dsrom_mtp_ltx): r_v / r_d = l_valid / l_data from its flops, r_r = the receiver's GRANT into its pin flop.
+        // So no pin drives an enable.  The die-side receiver (dsfd_p2_lnk lane 1) is RTT-sized for the stations.
+        wire db_v, db_room, db_flt, db_r; wire [RW_-1:0] db_d;
+        ot_s81ph_rfifo #(.W(RW_), .D(4)) u_db (.clk(clk), .rst_n(rst_n), .push(w_in), .wd(word[RW_-1:0]), .pop(db_v && db_r),
+            .hv(db_v), .hd(db_d), .room(db_room), .room2(), .fault(db_flt));
+        ot_dsrom_mtp_ltx #(.W(RW_)) u_ot (.clk(clk), .rst_n(rst_n), .c_valid(db_v), .c_ready(db_r), .c_data(db_d),
+            .l_valid(r_v[0]), .l_ready(r_r[0]), .l_data(r_d));
+        assign cb_flt = db_flt; assign cb_pop = 1'b0; assign cb_v = 1'b0; assign cb_d = '0; assign cb_room = 1'b1; assign cb_room2 = 1'b1;
+        assign o_free = db_room;
+        always @(posedge clk) begin ov <= 1'b0; od <= '0; end
     end endgenerate
-    assign r_v = ov; assign r_d = od;
+    generate if (RCRED > 0) begin : g_out_reg
+        assign r_v = ov; assign r_d = od;
+    end endgenerate
     reg [ERW-1:0] rev;
     always @(posedge clk or negedge rst_n) if (!rst_n) rev <= {ERW{1'b0}}; else if (take && is_e) rev <= lr_d[ERW-1:0];
     assign r_ev = rev;
@@ -203,7 +213,8 @@ module dsfd_coll_p2_lane_pa (
         .x_v(x_v), .x_r(x_r), .x_d(x_d), .r_v(r_v), .r_r(r_r), .r_d(r_d), .x_ev(x_ev), .r_ev(r_ev),
         .lo_v(lo_v), .lo_r(lo_r), .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .f_lflt(f_lflt), .t_flt(t_flt));
 endmodule
-// dsfd_coll_p2_lane_ba: draft die A, lane E4 from die B (UCIe): RX lane-1 words 604 (2 beats, DIRECT: the only class)
+// dsfd_coll_p2_lane_ba: draft die A, lane E4 from die B (UCIe): RX lane-1 words 604 (2 beats, DIRECT: the only class);
+// r_v / r_d / r_r speak the MTP GRANT protocol straight onto the die bus (generator P2_BUSES collective -> p2 lane 1)
 module dsfd_coll_p2_lane_ba (
     input  wire [0:0] ck, rs,
     output wire [0:0] r_v, input wire [0:0] r_r, output wire [603:0] r_d,
