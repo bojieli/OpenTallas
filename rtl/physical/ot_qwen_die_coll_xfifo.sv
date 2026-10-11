@@ -24,7 +24,14 @@ module ot_qwen_die_coll_xfifo #(
     //   LCR    sequencer landing slots = cq downstream credits
     parameter integer CR = 4,
     parameter integer ENG_IB = 4,
-    parameter integer LCR = 4
+    parameter integer LCR = 4,
+    // el1011-q-coll 2026-10-11 (owner easiest-deterministic-fix rule): HDLI / HDLO HB4xp67 hold-delay cells per bit on every
+    // data / valid / credit input (ahead of its pin station) and every output (after its launching flop), ot_hdly,
+    // dont_touch from PRE_FLOORPLAN (physical/qwen_die_masters/hdly_dont_touch.tcl).  Identity in function; 0 / 0 =
+    // the unchanged block.  The routed l8 misses are FF hold on the IO class only (a: outputs -2.9 ps, b: outputs -13.1 /
+    // inputs -6.5) with TT setup room on the same ports (inputs +205, outputs +146).
+    parameter integer HDLI = 0,
+    parameter integer HDLO = 0
 ) (
     input  wire ck, input wire ckd, input wire rst_n,
     input  wire i_seq_coll_v,  input  wire [WSQ-1:0] i_seq_coll,  output wire i_seq_coll_cr,
@@ -33,15 +40,25 @@ module ot_qwen_die_coll_xfifo #(
     output wire o_coll_seq_v,  output wire [WCQ-1:0] o_coll_seq,  input  wire o_coll_seq_cr,
     output wire fault_ck, output wire fault_ckd
 );
+    wire x_i_seq_coll_v, x_o_seq_coll_cr, x_i_coll_seq_v, x_o_coll_seq_cr;
+    wire [WSQ-1:0] x_i_seq_coll; wire [WCQ-1:0] x_i_coll_seq;
+    wire x_i_seq_coll_cr, x_o_seq_coll_v, x_o_coll_seq_v, x_fault_ck, x_fault_ckd;
+    wire [WSQ-1:0] x_o_seq_coll; wire [WCQ-1:0] x_o_coll_seq;
+    ot_hdly #(.W(WSQ + 1), .N(HDLI)) u_hdly_isq (.a({i_seq_coll_v, i_seq_coll}), .y({x_i_seq_coll_v, x_i_seq_coll}));
+    ot_hdly #(.W(WCQ + 1), .N(HDLI)) u_hdly_icq (.a({i_coll_seq_v, i_coll_seq}), .y({x_i_coll_seq_v, x_i_coll_seq}));
+    ot_hdly #(.W(2), .N(HDLI)) u_hdly_icr (.a({o_seq_coll_cr, o_coll_seq_cr}), .y({x_o_seq_coll_cr, x_o_coll_seq_cr}));
+    ot_hdly #(.W(WSQ + 1), .N(HDLO)) u_hdly_osq (.a({x_o_seq_coll_v, x_o_seq_coll}), .y({o_seq_coll_v, o_seq_coll}));
+    ot_hdly #(.W(WCQ + 1), .N(HDLO)) u_hdly_ocq (.a({x_o_coll_seq_v, x_o_coll_seq}), .y({o_coll_seq_v, o_coll_seq}));
+    ot_hdly #(.W(3), .N(HDLO)) u_hdly_octl (.a({x_i_seq_coll_cr, x_fault_ck, x_fault_ckd}), .y({i_seq_coll_cr, fault_ck, fault_ckd}));
     localparam integer CQ_IB = 4;
     localparam integer RRES = CQ_IB + CQ_AD;              // return words the path holds without overflow
     wire sq_icr, wf_sq, rf_sq, wf_cq, rf_cq;
-    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE), .IBUF(CR), .OCRED(ENG_IB), .AD((2 * CR > 8) ? 2 * CR : 8)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(i_seq_coll_v), .i_d(i_seq_coll),
-        .i_cr(sq_icr), .w_fault(wf_sq), .rclk(ck), .rrst_n(rst_n), .o_v(o_seq_coll_v), .o_d(o_seq_coll),
-        .o_cr(o_seq_coll_cr), .r_fault(rf_sq));
-    ot_qwen_die_cdc_ch #(.W(WCQ), .PIPE(PIPE), .IBUF(CQ_IB), .OCRED(LCR), .AD(CQ_AD)) u_cq (.wclk(ck), .wrst_n(rst_n), .i_v(i_coll_seq_v),
-        .i_d(i_coll_seq), .i_cr(), .w_fault(wf_cq), .rclk(ckd), .rrst_n(rst_n), .o_v(o_coll_seq_v), .o_d(o_coll_seq),
-        .o_cr(o_coll_seq_cr), .r_fault(rf_cq));
+    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE), .IBUF(CR), .OCRED(ENG_IB), .AD((2 * CR > 8) ? 2 * CR : 8)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(x_i_seq_coll_v), .i_d(x_i_seq_coll),
+        .i_cr(sq_icr), .w_fault(wf_sq), .rclk(ck), .rrst_n(rst_n), .o_v(x_o_seq_coll_v), .o_d(x_o_seq_coll),
+        .o_cr(x_o_seq_coll_cr), .r_fault(rf_sq));
+    ot_qwen_die_cdc_ch #(.W(WCQ), .PIPE(PIPE), .IBUF(CQ_IB), .OCRED(LCR), .AD(CQ_AD)) u_cq (.wclk(ck), .wrst_n(rst_n), .i_v(x_i_coll_seq_v),
+        .i_d(x_i_coll_seq), .i_cr(), .w_fault(wf_cq), .rclk(ckd), .rrst_n(rst_n), .o_v(x_o_coll_seq_v), .o_d(x_o_coll_seq),
+        .o_cr(x_o_coll_seq_cr), .r_fault(rf_cq));
     // ckd credit gate (pins registered first: refunds and releases land one edge late, which is conservative)
     wire grs_n;
     ot_reset_sync u_grs (.clk(ckd), .async_rst_n(rst_n), .sync_rst_n(grs_n));
@@ -58,16 +75,16 @@ module ot_qwen_die_coll_xfifo #(
     always @(posedge ckd or negedge grs_n)
         if (!grs_n) begin red_q <= 1'b0; ocr_q <= 1'b0; gcr_q <= 1'b0; gf_q <= 1'b0; rr <= RRES - CR * N; pend <= 6'd0; end
         else begin
-            // a reservation is released when its word leaves the cq FIFO for the sequencer's landing buffer (o_coll_seq_v:
+            // a reservation is released when its word leaves the cq FIFO for the sequencer's landing buffer (x_o_coll_seq_v:
             // the word then sits in a slot the sequencer's own OCRED credits cover)
-            red_q <= i_seq_coll_v && !i_seq_coll[MB]; ocr_q <= o_coll_seq_v;
+            red_q <= x_i_seq_coll_v && !x_i_seq_coll[MB]; ocr_q <= x_o_coll_seq_v;
             gcr_q <= grant; pend <= avail - {5'b0, grant}; rr <= rr_n;
             gf_q <= gf_q | (rr_n > RRES);
         end
-    assign i_seq_coll_cr = gcr_q;
+    assign x_i_seq_coll_cr = gcr_q;
     reg f_ck, f_ckd;
     always @(posedge ck)  f_ck  <= rf_sq | wf_cq;
     always @(posedge ckd) f_ckd <= wf_sq | rf_cq | gf_q;
-    assign fault_ck = f_ck; assign fault_ckd = f_ckd;
+    assign x_fault_ck = f_ck; assign x_fault_ckd = f_ckd;
     initial if (RRES < CR * N) $fatal(1, "coll_xfifo: return reservation below the sequencer's initial forward credits");
 endmodule

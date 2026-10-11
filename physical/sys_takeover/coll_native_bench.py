@@ -24,7 +24,7 @@ SRC = [ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROO
        ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
        ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv",
        ROOT / "rtl/physical/ot_qwen_die_coll_xfifo.sv", ROOT / "rtl/physical/ot_qwen_die_cdc_ch.sv", ROOT / "rtl/physical/ot_qwen_async_fifo_w.sv",
-       ROOT / "rtl/lib/ot_async_fifo.sv", ROOT / "rtl/lib/ot_reset_sync.sv", ROOT / "rtl/test/tb_qfd_coll_native.sv"]
+       ROOT / "rtl/lib/ot_async_fifo.sv", ROOT / "rtl/lib/ot_reset_sync.sv", ROOT / "rtl/lib/ot_hdly.sv", ROOT / "rtl/test/tb_qfd_coll_native.sv"]
 CASES = [  # name, msgs, words, gap %, modes, consumer %
     ("reduce_8w", 32, 8, 0, "r", 100),
     ("mixed_gaps", 32, 8, 30, "m", 100),
