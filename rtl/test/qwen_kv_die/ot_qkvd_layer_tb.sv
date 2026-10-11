@@ -146,6 +146,9 @@ module ot_qkvd_layer_tb #(
 `ifdef KVD_SBD
                      , .SBD(`KVD_SBD)                // el1011-q-kvd: SRAM-bodied deep link buffers
 `endif
+`ifdef KVD_HT
+                     , .HT(1)                        // el1011-q-kvd: hardened link-buffer tiles
+`endif
                      ) u_kv (
         .clk(clk), .rst_n(rst_n), .t_v(kt_v), .t_d(kt_d), .t_cr(kt_cr), .r_v(kr_v), .r_d(kr_d), .r_cr(kr_cr),
         .tx_up(kv_up), .tx_v(kv_txv), .tx_flit(kv_txf), .rx_v(kv_rxv), .rx_flit(kv_rxf), .fault(faults[1]),
