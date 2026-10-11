@@ -18,7 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 KIT = 'rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv'
 EXTRA = ['rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv', 'rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv',
          'rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv', KIT,
-         'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/tb_mtp_link_rtt.sv']
+         'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/tb_mtp_link_rtt.sv',
+         'rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv']
 INTERNAL = ['w_in_valid', 'w_in_ready', 'w_in_last', 'w_out_valid', 'w_out_ready', 'w_out_last', 'w_in_data',
             'w_out_data', 'core_start', 'core_done_w', 'core_token', 'core_pos', 'cnt_tok', 'cnt_val', 'core_user',
             'kv_base', 'vm_we', 'vm_re', 'vm_waddr', 'vm_raddr', 'vm_wdata', 'vm_rq', 'pr_re', 'pr_user', 'pr_pos',
@@ -56,6 +57,35 @@ VMRLY = '''    // VM side behind VF / VR registered hub relay stations (serial c
     ot_dsrom_mtp_lrx_rtt #(.W(VWA), .D(VF+VR+4), .ENABLE_RTT(1), .FORWARD_HOPS(VF), .RETURN_HOPS(VR)) v_sr (
         .clk(sclk), .rst_n(rst_n), .l_valid(r_srv), .l_ready(r_srg), .l_data(r_srd), .c_valid(srv), .c_ready(srr), .c_data(srd));
 '''
+POSTED_VM = '''    // POSTED (main decision 10-10): the kit's VM channels behind VF / VR hub stations into the VM-side endpoint
+    // dsfd_vm_wfc_ep (one in-order op pipe to a VM port); START reaches the core from the endpoint (KS stations);
+    // the VM port model applies ops at the pins in order and returns reads RL cycles later; errors are a sticky level.
+    localparam integer VF = 13, VR = 13, KS = 1, RL = 6;
+    wire k_swv, k_swg, k_srv, k_srg, r_swv, r_swg, r_srv, r_srg, k_err, e_err; wire [VWA+FLIT-1:0] k_swd, r_swd;
+    wire [VWA-1:0] k_srd, r_srd; wire [FLIT:0] k_srq, e_srq; wire [USER_W+2*NW:0] e_ks, k_ks_unused;
+    wire e_mv, e_mwe; wire [VWA-1:0] e_mrow; wire [FLIT-1:0] e_md; reg e_mov = 0; reg [FLIT-1:0] e_mod = 0;
+    mtp_test_relay #(.W(VWA+FLIT+1), .HOPS(VF)) y_swf (.clk(sclk), .rst_n(rst_n), .in_data({k_swv, k_swd}), .out_data({r_swv, r_swd}));
+    mtp_test_relay #(.W(1), .HOPS(VR)) y_swr (.clk(sclk), .rst_n(rst_n), .in_data(r_swg), .out_data(k_swg));
+    mtp_test_relay #(.W(VWA+1), .HOPS(VF)) y_srf (.clk(sclk), .rst_n(rst_n), .in_data({k_srv, k_srd}), .out_data({r_srv, r_srd}));
+    mtp_test_relay #(.W(1), .HOPS(VR)) y_srr (.clk(sclk), .rst_n(rst_n), .in_data(r_srg), .out_data(k_srg));
+    mtp_test_relay #(.W(1), .HOPS(VR)) y_err (.clk(sclk), .rst_n(rst_n), .in_data(e_err), .out_data(k_err));
+    mtp_test_relay #(.W(FLIT+1), .HOPS(VR)) y_srq (.clk(sclk), .rst_n(rst_n), .in_data(e_srq), .out_data(k_srq));
+    mtp_test_relay #(.W(USER_W+2*NW+1), .HOPS(KS)) y_ks (.clk(sclk), .rst_n(rst_n), .in_data(e_ks), .out_data(ks));
+    dsfd_vm_wfc_ep #(.VF(VF), .VR(VR), .RL(RL)) u_ep (.ck(sclk), .rst(rst_n), .f_swv(r_swv), .f_swd(r_swd), .t_swg(r_swg),
+        .f_srv(r_srv), .f_srd(r_srd), .t_srg(r_srg), .t_srq(e_srq), .t_err(e_err), .t_ks(e_ks),
+        .m_v(e_mv), .m_we(e_mwe), .m_row(e_mrow), .m_d(e_md), .m_ov(e_mov), .m_od(e_mod), .m_fault(1'b0));
+    reg [RL-1:0] e_rv = 0; reg [VWA-1:0] e_rr [0:RL-1]; integer e_i;
+    always @(posedge sclk) begin             // VM port: ops take effect at the pins in issue order; fixed-latency reads
+        if (e_mv === 1'b1 && e_mwe === 1'b1) begin
+            if (e_mrow >= 64) begin $display("FAIL: VM write address"); $finish; end
+            vmem[e_mrow] = e_md;
+        end
+        e_rv <= rst_n ? {e_rv[RL-2:0], e_mv === 1'b1 && e_mwe === 1'b0} : '0; e_rr[0] <= e_mrow;
+        for (e_i = 1; e_i < RL; e_i = e_i + 1) e_rr[e_i] <= e_rr[e_i-1];
+        e_mov <= rst_n && e_rv[RL-1]; e_mod <= vmem[e_rr[RL-1]];
+    end
+    assign swv = 1'b0; assign srv = 1'b0; assign swd = '0; assign srd = '0;   // the TB's own VM model stays idle
+'''
 CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra defines, expect)
     's0_tr_dspark': ('s0_tr_dspark', 0, [], 'pass'), 's0_tr_forced': ('s0_tr_forced', 0, [], 'pass'),
     's0_tr_forced_w16': ('s0_tr_forced_w16', 0, [], 'pass'), 's0_hash_u3': ('s0_hash_u3', 0, [], 'pass'),
@@ -71,6 +101,13 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'vmrly_stg_r1': ('stg_r1', 1, [], 'pass', 1), 'vmrly_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 1),
     'vmrly_stg_neg_nolink': ('stg_r1', 1, [], 'fail', 2),
     'vmrly_stg_vmnat': ('stg_vmnat', 1, [], 'pass', 1),
+    # POSTED writes (no ACK fence): START as an in-order doorbell through dsfd_vm_wfc_ep; RAW checks are the benches'
+    # own (every RX word in the VM at core start; the outbound prefetch reads what the core wrote)
+    'post_stg_r1': ('stg_r1', 1, [], 'pass', 4), 'post_stg_vmnat': ('stg_vmnat', 1, [], 'pass', 4),
+    'post_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 4), 'post_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 4),
+    'post_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 4),
+    'post_stg_neg_early': ('stg_r1', 1, ['OT_VMWFC_MUT_EARLY_START'], 'fail', 5),
+    'post_s0_neg_early': ('s0_tr_forced', 0, ['OT_VMWFC_MUT_EARLY_START'], 'fail', 5),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
 }
 
@@ -89,7 +126,17 @@ def kit_tb(stage, vmrly=0):
         assert n == 1, (tb, p)
     binds = ''.join(f'    assign {x} = u_kit.{x};\n' for x in INTERNAL if re.search(rf'\b{x}\b', body))
     kit = STG_KIT if stage else SRC_KIT
-    if vmrly:
+    if vmrly in (4, 5):   # posted: endpoint + VM port model; 5 = mutant (the define is in the case)
+        kit = kit.replace('u_kit (', '#(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1)) u_kit (').replace(
+            'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1))',
+            'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1))')
+        for a_, b_ in (('.t_swv(swv)', '.t_swv(k_swv)'), ('.t_swd(swd)', '.t_swd(k_swd)'), ('.f_swr(swr)', '.f_swr(k_swg)'),
+                       ('.f_swa(swa)', '.f_swa(k_err)'), ('.t_srv(srv)', '.t_srv(k_srv)'), ('.t_srd(srd)', '.t_srd(k_srd)'),
+                       ('.f_srr(srr)', '.f_srr(k_srg)'), ('.f_srq(srq)', '.f_srq(k_srq)'), ('.t_ks(ks)', '.t_ks(k_ks_unused)')):
+            assert a_ in kit, a_
+            kit = kit.replace(a_, b_)
+        kit = POSTED_VM + kit
+    elif vmrly:
         kit = VMRLY + (kit if vmrly == 2 else   # 2: negative, valid / ready skids (VM_LINK 0) behind the relays
                        kit.replace('u_kit (', '#(.VM_LINK(1), .WOUTW(WOUTW_K)) u_kit (').replace(
                            'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .WOUTW(WOUTW_K))', 'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .WOUTW(WOUTW_K))'))
