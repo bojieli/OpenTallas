@@ -189,18 +189,24 @@ def main():
         print(mode, res[mode]["total_cycles"], res[mode]["us"], "races", len(s["races"]), flush=True)
     v = {}
     v["S2_no_wires"] = T.schedule(recs, POS, "S2", wires=False, cost_fn=cf)["total_cycles"]
-    ls = T.list_schedule(recs, POS, cost_fn=cf)
-    sls = T.schedule(ls, POS, "S2", cost_fn=cf)
-    v["S2_list_scheduled"] = sls["total_cycles"]
-    v["S2_list_scheduled_races"] = len(sls["races"])
-    v["S2_list_scheduled_no_wires"] = T.schedule(ls, POS, "S2", wires=False, cost_fn=cf)["total_cycles"]
+    sls = None
+    if any(r.unit == "CTL" and r.op == "LOOP" for r in recs):
+        # the legacy whole-program list scheduler moves records across LOOP bodies (G24 row-gather loops): the
+        # compiler's per-layer CP-aware order (ds_native.schedule_layer) is the scheduled form; variant not applicable
+        v["S2_list_scheduled"] = "n/a: program has CTL.LOOP bodies (G24); the compiler's own order is S2"
+    else:
+        ls = T.list_schedule(recs, POS, cost_fn=cf)
+        sls = T.schedule(ls, POS, "S2", cost_fn=cf)
+        v["S2_list_scheduled"] = sls["total_cycles"]
+        v["S2_list_scheduled_races"] = len(sls["races"])
+        v["S2_list_scheduled_no_wires"] = T.schedule(ls, POS, "S2", wires=False, cost_fn=cf)["total_cycles"]
     res["variants"] = {k: (round(x, 1) if isinstance(x, float) else x) for k, x in v.items()}
     su = sum(c[0] for r, c in zip(recs, (cf(r, T.Dyn(POS), 0) for r in recs)) if r.unit == "SU")
     res["su_record_cycles_sum"] = round(su, 1)
     res["compare"] = dict(
         published_walk_us=460.05, ds_hgi_walk_op_stream_S2_cycles=544648, ds_hgi_list_scheduled_cycles=461646,
         native_S2_vs_walk_op_S2_pct=round(100 * (S["S2"]["total_cycles"] / 544648 - 1), 2),
-        native_list_vs_walk_op_list_pct=round(100 * (sls["total_cycles"] / 461646 - 1), 2))
+        native_list_vs_walk_op_list_pct=round(100 * (sls["total_cycles"] / 461646 - 1), 2) if sls else None)
     res["critical_path_S2_tail"] = T.critical_path(S["S2"], recs)[-30:]
     print(json.dumps(res["variants"]), json.dumps(res["compare"]), flush=True)
     rec = dict(schema="opentallas.hgi_sim.ds_native_timing.v1", position=POS,

@@ -114,4 +114,34 @@ module ot_hgi_hc_die #(
         .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_beat(hr_beat),
         .hr_data(hr_data), .xq(xq), .xr(xr));
 endmodule
+// hgi-1010/c 2026-10-10 (hardware ROW_GATHER sink, HBM-space O): the write twin of ot_hgi_hbm_rd_server.
+// The loader side of an HBM write lane: one sector in flight on an ot_hfd_loader_kport lane (we = 1); the acknowledgement
+// returns as a one-edge pulse.  xw {data 256, strb 32, addr 37 (kport byte address), v}.
+module ot_hgi_hbm_wr_server (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [325:0]  xw,
+    output reg           xa,
+    output reg           req_v,
+    input  wire          req_rdy,
+    output reg  [36:0]   req_addr,
+    output reg  [255:0]  req_wdata,
+    output reg  [31:0]   req_wstrb,
+    input  wire          rsp_v,
+    output reg           fault
+);
+    reg pend;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin req_v <= 1'b0; xa <= 1'b0; pend <= 1'b0; fault <= 1'b0; end
+        else begin
+            xa <= 1'b0;
+            if (req_v && req_rdy) req_v <= 1'b0;
+            if (xw[0]) begin
+                if (req_v || pend) fault <= 1'b1;
+                req_v <= 1'b1; req_addr <= xw[37:1]; req_wstrb <= xw[69:38]; req_wdata <= xw[325:70]; pend <= 1'b1;
+            end
+            if (pend && rsp_v) begin pend <= 1'b0; xa <= 1'b1; end
+        end
+    end
+endmodule
 `default_nettype wire
