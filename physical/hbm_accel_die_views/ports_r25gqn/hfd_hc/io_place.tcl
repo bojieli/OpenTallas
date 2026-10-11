@@ -10566,7 +10566,7 @@ place_pin -pin_name {f_sfu[1020]} -layer M4 -location {2032.8480 246.7320} -pin_
 place_pin -pin_name {f_sfu[1021]} -layer M4 -location {2032.8480 246.9240} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_sfu[1022]} -layer M4 -location {2032.8480 247.1160} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_sfu[1023]} -layer M4 -location {2032.8480 247.3080} -pin_size {0.1920 0.0240}
-place_pin -pin_name {rst[0]} -layer M4 -location {2032.8480 1166.5560} -pin_size {0.1920 0.0240}
+place_pin -pin_name {rst[0]} -layer M4 -location {2032.8480 762.7800} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_hgi_cmdproc[0]} -layer M4 -location {2032.8480 1447.5960} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_hgi_cmdproc[1]} -layer M4 -location {2032.8480 1447.7880} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_hgi_cmdproc[2]} -layer M4 -location {2032.8480 1447.9800} -pin_size {0.1920 0.0240}
