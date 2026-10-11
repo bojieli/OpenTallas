@@ -5,7 +5,7 @@
 # Usage (repo root): run_host_sd_gate.sh <out> [one <name> <args...>]   exit 0 iff PASS (one: the run's rc, 1 = FAIL)
 set -u
 O=$1; mkdir -p $O
-F="rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv rtl/test/s81_native_ingest/tb_dsfd_host_sd.sv"
+F="rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv rtl/test/s81_native_ingest/tb_dsfd_host_sd.sv"
 run() { n=$1; shift
   verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_dsfd_host_sd -Mdir $O/obj_$n "$@" $F > $O/$n.build 2>&1 || { echo BUILD_FAIL > $O/$n.log; return 2; }
   $O/obj_$n/Vtb_dsfd_host_sd > $O/$n.log 2>&1; grep -q '^PASS' $O/$n.log && return 0 || return 1; }

@@ -37,10 +37,13 @@ module dsfd_host_sd #(
     output reg  [7:0]        host_ack_n,
     output reg               fault
 );
+    // ---- reset: the port drives only the relay (design standard); release 3 cycles after the port
+    wire rn;
+    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rn));
     // ---- pin flops
     reg iv; reg iwe; reg [31:0] ia; reg [255:0] id; reg [9*NS-1:0] hc_q;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin iv <= 1'b0; hc_q <= {9*NS{1'b0}}; end
+    always @(posedge ck or negedge rn)
+        if (!rn) begin iv <= 1'b0; hc_q <= {9*NS{1'b0}}; end
         else begin iv <= o_v; hc_q <= hc; end
     always @(posedge ck) begin iwe <= o_we; ia <= o_addr; id <= o_d; end
     // ---- FIFO
@@ -84,8 +87,8 @@ module dsfd_host_sd #(
     wire pop = (n != 0) && (bad || ok);
     reg [8:0] asum;
     always @* begin asum = 9'd0; for (s = 0; s < NS; s = s + 1) asum = asum + hc_q[9*s + 1 +: 8]; end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge ck or negedge rn)
+        if (!rn) begin
             wp <= 0; rp <= 0; n <= 0; o_cr <= 1'b0; fault <= 1'b0; host_ack_n <= 8'd0; crn <= 0;
             for (s = 0; s < NS; s = s + 1) begin cr[s] <= SCRED[4:0]; hw[292*s] <= 1'b0; end
         end else begin
