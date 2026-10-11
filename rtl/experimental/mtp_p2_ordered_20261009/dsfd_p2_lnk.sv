@@ -36,7 +36,7 @@
 module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
                      parameter integer FWD_C = 8, parameter integer RET_C = 9,
                      parameter integer D_V = FWD_V + RET_V + 4, parameter integer D_C = FWD_C + RET_C + 4) (
- input wire clk, rst_n,
+ input wire [0:0] ck, rst,                                               // die stream clock, async active-low reset
  // die side
  input wire f_l0v, input wire [603:0] f_l0d, output wire t_l0g,          // vm -> p2 lane 0
  input wire f_l1v, input wire [603:0] f_l1d, output wire t_l1g,          // collective -> p2 lane 1
@@ -52,6 +52,9 @@ module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
 `else
  localparam integer VF = FWD_V, VR = RET_V, CF = FWD_C, CR = RET_C;
 `endif
+ wire clk = ck[0];
+ wire rst_n;
+ ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rst_n));
  wire [1:0] lv, lr, open_;
  ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_l0(.clk(clk),.rst_n(rst_n),
   .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(lv[0]),.c_ready(lr[0]),.c_data(c_in_d[603:0]));
@@ -79,7 +82,7 @@ endmodule
 // P2 slab = core + its link ends (composition used by the stationed bench; the core keeps its closed outline).
 module dsfd_p2_rtt #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
                      parameter integer FWD_C = 8, parameter integer RET_C = 9) (
- input wire clk, rst_n,
+ input wire [0:0] ck, rst,
  input wire f_l0v, input wire [603:0] f_l0d, output wire t_l0g,
  input wire f_l1v, input wire [603:0] f_l1d, output wire t_l1g,
  input wire f_sv,  input wire [100:0] f_sd,  output wire t_sg,
@@ -88,7 +91,10 @@ module dsfd_p2_rtt #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
 );
  wire [1:0] iv, ir; wire [1207:0] id; wire sv, sr; wire [100:0] sd; wire ov, orr; wire [511:0] od; wire [73:0] oid;
  wire [6:0] ow; wire ol;
- dsfd_p2_lnk #(.FWD_V(FWD_V),.RET_V(RET_V),.FWD_C(FWD_C),.RET_C(RET_C)) u_lnk(.clk(clk),.rst_n(rst_n),
+ wire clk = ck[0];
+ wire rst_n;
+ ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rst_n));
+ dsfd_p2_lnk #(.FWD_V(FWD_V),.RET_V(RET_V),.FWD_C(FWD_C),.RET_C(RET_C)) u_lnk(.ck(ck),.rst(rst),
   .f_l0v(f_l0v),.f_l0d(f_l0d),.t_l0g(t_l0g),.f_l1v(f_l1v),.f_l1d(f_l1d),.t_l1g(t_l1g),.f_sv(f_sv),.f_sd(f_sd),.t_sg(t_sg),
   .t_ov(t_ov),.t_od(t_od),.f_og(f_og),.c_in_v(iv),.c_in_r(ir),.c_in_d(id),.c_start_v(sv),.c_start_r(sr),.c_start_d(sd),
   .c_out_v(ov),.c_out_r(orr),.c_out_d({od,oid,ow,ol}));

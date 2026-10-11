@@ -55,7 +55,7 @@ module tb_mtp_p2_fixlat #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NT
  p2fl_relay #(.W(1),.N(RC))   rsg(clk, rst_n, sg_p, sg_s);
  p2fl_relay #(.W(595),.N(RC)) ro (clk, rst_n, {ov_p,od_p}, {ov_s,od_s});
  p2fl_relay #(.W(1),.N(FC))   rog(clk, rst_n, og_s, og_p);
- dsfd_p2_rtt #(.FWD_V(FV),.RET_V(RV),.FWD_C(FC),.RET_C(RC)) dut(.clk(clk), .rst_n(rst_n),
+ dsfd_p2_rtt #(.FWD_V(FV),.RET_V(RV),.FWD_C(FC),.RET_C(RC)) dut(.ck(clk), .rst(rst_n),
   .f_l0v(l0v_p), .f_l0d(l0d_p), .t_l0g(l0g_p), .f_l1v(l1v_p), .f_l1d(l1d_p), .t_l1g(l1g_p), .f_sv(sv_p), .f_sd(sd_p), .t_sg(sg_p),
   .t_ov(ov_p), .t_od(od_p), .f_og(og_p), .f_abort(1'b0), .t_done(done), .t_fault(fault), .t_corrected(corr));
 `else
