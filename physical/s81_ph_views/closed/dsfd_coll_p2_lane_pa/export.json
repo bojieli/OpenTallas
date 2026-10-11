@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_coll_p2_lane_pa",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm0-a/routes/mtpl_dsfd_coll_p2_lane_pa_0ddaf548b_tc_hm0_a/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_coll_p2_lane_pa.lef": "5217109fa6587f8f0062598e47acb909544f964b234cb50a315177a23430ac09",
+    "dsfd_coll_p2_lane_pa_ff.lib": "8a0b7e516ac6951e6359844492fe974915fdd84f626cf34a31b017516b1bdc3c",
+    "dsfd_coll_p2_lane_pa_ss.lib": "5c6bcb520d9a9e36060f51a0d9c35c2743ac0db34b8ad1eaf9172859827fc326"
+  },
+  "ok": true
+}
