@@ -44,12 +44,15 @@ module ot_hdc_v41x_idx_hslice #(
     localparam integer KW = NB * 136;
     localparam integer LAT_SC = QL + FPL * (NB - 1);
     localparam integer LAT_T  = LAT_SC + 1 + FML;
+    // reset standard: the port drives only the relay
+    wire [0:0] srr; wire rs = srr[0];
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(srr));
     // ---- pin flops
     reg rn_p; reg [7:0] hid_p; reg first_p;
     reg qv_p; reg [7:0] qh_p; reg [NB*128-1:0] qc_p; reg [NB*8-1:0] qs_p; reg [15:0] qw_p;
     reg [KW-1:0] key_p; reg [31:0] csi_p; reg cfi_p;
     always @(posedge clk) begin
-        rn_p <= rst_n; hid_p <= hid; first_p <= first;
+        rn_p <= rs; hid_p <= hid; first_p <= first;
         qv_p <= ql_v && rn_p; qh_p <= ql_head; qc_p <= ql_codes; qs_p <= ql_sc; qw_p <= ql_w;
         key_p <= k_key; csi_p <= cs_in; cfi_p <= cf_in;
     end
@@ -66,7 +69,7 @@ module ot_hdc_v41x_idx_hslice #(
     localparam integer QW = 8 + NB * 128 + NB * 8 + 16;
     wire [QW-1:0] qb_d; wire qv_d;
     ot_hdc_delay #(.W(QW), .D(FPL)) u_qp (.clk(clk), .rst_n(1'b1), .d({qh_p, qc_p, qs_p, qw_p}), .q(qb_d));
-    ot_hdc_delay #(.W(1), .D(FPL), .RESET(1)) u_qv (.clk(clk), .rst_n(rst_n), .d(qv_p && rn_p), .q(qv_d));
+    ot_hdc_delay #(.W(1), .D(FPL), .RESET(1)) u_qv (.clk(clk), .rst_n(rs), .d(qv_p && rn_p), .q(qv_d));
     always @(posedge clk) begin
         qo_v <= qv_d && rn_p; {qo_head, qo_codes, qo_sc, qo_w} <= qb_d;
     end
@@ -97,7 +100,7 @@ module ot_hdc_v41x_idx_hslice #(
         end else begin : g_add
             wire [1:0] err; wire vo_unused; wire pf, bo_d;
             ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(clk), .rst_n(1'b1), .d(afault[bb-1]), .q(pf));
-            ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
+            ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rs), .valid_in(1'b1),
                 .a(acc[32*(bb-1) +: 32]), .b(bv), .y(acc[32*bb +: 32]), .err(err), .valid_out(vo_unused));
             ot_hdc_delay #(.W(1), .D(FPL)) u_bf (.clk(clk), .rst_n(1'b1), .d(bo), .q(bo_d));
             assign afault[bb] = pf || bo_d || (err != 2'd0);
@@ -114,7 +117,7 @@ module ot_hdc_v41x_idx_hslice #(
     // ---- running sum: the term is formed LAT_T after key_p, when cs_in (pin flopped) arrives
     wire [1:0] err; wire vo_unused;
     wire [31:0] sum;
-    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
+    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rs), .valid_in(1'b1),
         .a(csi_p), .b({tm, 16'd0}), .y(sum), .err(err), .valid_out(vo_unused));
     wire [32:0] seed_d;
     ot_hdc_delay #(.W(33), .D(FPL)) u_sd (.clk(clk), .rst_n(1'b1),
