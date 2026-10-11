@@ -26,6 +26,9 @@ TILE_H = 120.96                                 # 448 rows; core 119.88 = 1.08 m
 
 
 def rename(s):
+    # the routed lane is a hard macro (ML=7 / AL=6 built in): yosys sees a black box with no parameters, so the override
+    # is simulation-only (yosys defines SYNTHESIS; iverilog runs the real lane RTL at ML=7 / AL=6)
+    s = s.replace('ot_dsrom_su_hcpost_lane_pr #(.ML(7), .AL(6)) u_lane', 'ot_dsrom_su_hcpost_lane_pr `ifndef SYNTHESIS #(.ML(7), .AL(6)) `endif u_lane')
     return s.replace('hfd_su_tile', 'hfd_hc_tile').replace('OT_SU_TILE_MUT_NOLOCKUP', 'OT_HC_TILE_MUT_NOLOCKUP')
 
 
