@@ -55,7 +55,7 @@ SEQS = {"boundary": (RQ / "ot_qfd_seq_su_boundary.sv", "ot_qfd_seq_su_boundary",
 VAR = dict(ctlm="ctlm", seq="boundary")
 SPM = ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv"
 # die relay stations between the masters' pin flops (r22ko4 counts replace these defaults)
-CFG = dict(x_s2m=15, x_m2s=15, dst=15, dcu_s=0, duc_s=0, su_ml=7, xmut=0)
+CFG = dict(x_s2m=15, x_m2s=15, dst=15, dcu_s=0, duc_s=0, su_ml=7, xmut=0, cred=0)
 LIT = {"NW": "18", "AW": "24", "(G >> SMIN)": "48"}
 
 
@@ -192,7 +192,7 @@ def compose(core: str, c: dict) -> str:
         if k in ("in", "dir_ok") and not P._local("su", p):
             L.append(f"    wire [{w}-1:0] d_su_{p};")
     L.append(f"    {SEQS[VAR['seq']][1]} #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SW(SW), .LV(LV), .D(4), .SMIN(SMIN),"
-             " .SMAX(SMAX), .TCUT(TCUT), .IS(1), .OS(1), .RT(4 + DCU_S + DUC_S)) u_seq_su (\n        "
+             " .SMAX(SMAX), .TCUT(TCUT), .IS(1), .OS(1), .RT(4 + DCU_S + DUC_S)" + (", .CRED(CRED)" if VAR["seq"] == "bi" else "") + ") u_seq_su (\n        "
              + ",\n        ".join(sq) + ");")
     # taps for the vehicle die (KV-service layer start, cycles, program base): the sequencer's own nets
     L += ["    assign sq_core_start = u_seq_su.core_start;", "    assign sq_core_token = u_seq_su.core_tokw;",
@@ -353,6 +353,26 @@ def extras(c: dict, core: str) -> str:
     return "\n".join([rst_stn(), S.SPLIT_RTL.read_text(), ctlm_xme(c["xmut"]), seqb, compose(core, c)])
 
 
+ONESHOT = ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv"
+
+
+def oneshot_credit() -> str:
+    """the collective package with a CREDIT local port (qwen-1010/a): MARGIN >= 1 (ot_rom_oneshot_die_m, IB-word input
+    buffer) and CRP 1: in_ready carries the die's in_cr pulse (one per word taken out of its buffer) instead of the
+    package-side credit counter, so the sequencer master (tp_seq_vrl CRED) holds the credits across its pin stations"""
+    t = ONESHOT.read_text()
+    t = one(t, "    parameter integer MARGIN     = 0\n", "    parameter integer MARGIN     = 0,\n"
+            "    parameter integer CRP        = 0,     // qwen-1010/a: 1 = in_ready is the die's credit pulse (credit-mode sender)\n"
+            "    parameter integer IBP        = 4      // the die's input buffer (credits)\n")
+    t = one(t, "            reg [2:0] lcred;", "            reg [7:0] lcred;")
+    t = one(t, "            assign in_ready[s] = (lcred != 0);", "            assign in_ready[s] = (CRP != 0) ? icr : (lcred != 0);")
+    t = one(t, "                if (!rst_n) lcred <= 3'd4;", "                if (!rst_n) lcred <= 8'(IBP);")
+    t = one(t, ".DEPTH(DEPTH), .IB(4), .PR(", ".DEPTH(DEPTH), .IB(IBP), .PR(")
+    t = one(t, "                .in_valid(in_valid[s] && in_ready[s]), .in_cr(icr),",
+            "                .in_valid((CRP != 0) ? in_valid[s] : (in_valid[s] && in_ready[s])), .in_cr(icr),")
+    return t
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("phase", choices=("build", "run", "emit"))
@@ -401,6 +421,13 @@ def main():
         proxy_access(b / "gen" / "rm_access.hpp", b / "die" / "Vdie___024root.h")
         return orig_link(b, steps, prefixes)
     F.link = link
+    if CFG["cred"]:
+        # credit-mode collective: the package with the die_m credit port, the die's input buffer = the credit count
+        cg = gen / "ot_rom_oneshot_allreduce_cr.sv"
+        cg.write_text(oneshot_credit())
+        S4.COLL_RTL[:] = [cg if f == ONESHOT else f for f in S4.COLL_RTL] + [ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv",
+                                                                            ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv"]
+        F.COLL[:] = F.COLL + ["-GMARGIN=1", "-GCRP=1", f"-GIBP={CFG['cred']}"]
     F.build(bld, a.jobs)
     (bld / "O4DIE.json").write_text(json.dumps(dict(CFG, tws=a.tws, seq=VAR["seq"], ctlm_variant=VAR["ctlm"], ctlm=str(CTLMS[VAR["ctlm"]][0].relative_to(ROOT)),
                                                     seq_su=str(SEQS[VAR["seq"]][0].relative_to(ROOT))), indent=1) + "\n")
