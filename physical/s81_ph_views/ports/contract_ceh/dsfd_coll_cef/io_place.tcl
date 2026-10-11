@@ -1,5 +1,5 @@
 # dsfd_coll_cef (contract pin plan, tools/s81_ph/s81_ph_coll_tiles.py)
-place_pin -pin_name {rx_v[0]} -layer M4 -location {0.0960 4.8120} -pin_size {0.1920 0.0240}
+place_pin -pin_name {rx_v} -layer M4 -location {0.0960 4.8120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {rx_d[0]} -layer M4 -location {0.0960 5.0040} -pin_size {0.1920 0.0240}
 place_pin -pin_name {rx_d[1]} -layer M4 -location {0.0960 5.1000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {rx_d[2]} -layer M4 -location {0.0960 5.1960} -pin_size {0.1920 0.0240}
@@ -1855,7 +1855,7 @@ place_pin -pin_name {x_d[1302]} -layer M5 -location {127.6920 279.9040} -pin_siz
 place_pin -pin_name {x_d[1303]} -layer M5 -location {127.7880 279.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_cr[0]} -layer M5 -location {127.9800 279.9040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {x_cr[1]} -layer M5 -location {128.0760 279.9040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {e_en[0]} -layer M5 -location {199.9800 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {flt[0]} -layer M5 -location {200.1720 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {ck[0]} -layer M5 -location {205.1640 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rs[0]} -layer M5 -location {207.6600 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {e_en} -layer M5 -location {199.9800 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {flt} -layer M5 -location {200.1720 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck} -layer M5 -location {205.1640 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rs} -layer M5 -location {207.6600 0.0960} -pin_size {0.0240 0.1920}

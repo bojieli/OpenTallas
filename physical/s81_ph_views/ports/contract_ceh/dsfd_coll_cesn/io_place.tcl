@@ -1,5 +1,5 @@
 # dsfd_coll_cesn (contract pin plan, tools/s81_ph/s81_ph_coll_tiles.py)
-place_pin -pin_name {bw_v[0]} -layer M5 -location {2.4120 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {bw_v} -layer M5 -location {2.4120 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[0]} -layer M5 -location {2.6040 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[1]} -layer M5 -location {2.7000 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[2]} -layer M5 -location {2.7960 0.0960} -pin_size {0.0240 0.1920}
@@ -512,8 +512,8 @@ place_pin -pin_name {bw_d[508]} -layer M5 -location {51.3720 0.0960} -pin_size {
 place_pin -pin_name {bw_d[509]} -layer M5 -location {51.4680 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[510]} -layer M5 -location {51.5640 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[511]} -layer M5 -location {51.6600 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {bw_cr[0]} -layer M5 -location {51.8520 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {q_v[0]} -layer M5 -location {2.4120 340.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {bw_cr} -layer M5 -location {51.8520 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {q_v} -layer M5 -location {2.4120 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q_d[0]} -layer M5 -location {2.6040 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q_d[1]} -layer M5 -location {2.7000 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q_d[2]} -layer M5 -location {2.7960 340.1040} -pin_size {0.0240 0.1920}
@@ -676,8 +676,8 @@ place_pin -pin_name {q_d[158]} -layer M5 -location {17.7720 340.1040} -pin_size 
 place_pin -pin_name {q_d[159]} -layer M5 -location {17.8680 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q_d[160]} -layer M5 -location {17.9640 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q_d[161]} -layer M5 -location {18.0600 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {q_cr[0]} -layer M5 -location {18.2520 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {e_en[0]} -layer M5 -location {18.4440 340.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {q_cr} -layer M5 -location {18.2520 340.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {e_en} -layer M5 -location {18.4440 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {rank_i[0]} -layer M5 -location {18.6360 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {rank_i[1]} -layer M5 -location {18.7320 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {qp[0]} -layer M5 -location {18.9240 340.1040} -pin_size {0.0240 0.1920}
@@ -696,9 +696,9 @@ place_pin -pin_name {fv_i[6]} -layer M5 -location {20.1720 340.1040} -pin_size {
 place_pin -pin_name {fv_i[7]} -layer M5 -location {20.2680 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {lf[0]} -layer M5 -location {20.4600 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {lf[1]} -layer M5 -location {20.5560 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {pe_o[0]} -layer M5 -location {20.7480 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {ck[0]} -layer M5 -location {25.7400 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rs[0]} -layer M5 -location {28.2360 340.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {pe_o} -layer M5 -location {20.7480 340.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck} -layer M5 -location {25.7400 340.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rs} -layer M5 -location {28.2360 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {xl_v[0]} -layer M4 -location {0.0960 4.8120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {xl_v[1]} -layer M4 -location {0.0960 4.9080} -pin_size {0.1920 0.0240}
 place_pin -pin_name {xl_v[2]} -layer M4 -location {0.0960 5.0040} -pin_size {0.1920 0.0240}

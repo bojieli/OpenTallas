@@ -18,6 +18,19 @@ import s81_ph_coll_tiles as T  # noqa: E402
 T.CONTRACT = 'contract_ceh'
 
 
+# 1-bit ports of these masters are scalars in the RTL (netlist pin `x`, not `x[0]`): emit them without the index
+_emit = T.Plan.emit
+
+
+def _emit_scalar(self, note):
+    one = {p for p, (d, b) in self.dirs.items() if b == 1}
+    self.pins = [((nm.split('[')[0],) if nm.split('[')[0] in one else (nm,)) + tuple(rest) for nm, *rest in self.pins]
+    _emit(self, note)
+
+
+T.Plan.emit = _emit_scalar
+
+
 def lay(pl, face, buses, start=2.4, step=2):
     layer = 'M5' if face in 'NS' else 'M4'
     x = start

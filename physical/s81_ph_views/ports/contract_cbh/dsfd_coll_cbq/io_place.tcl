@@ -419,10 +419,10 @@ place_pin -pin_name {t_vm[416]} -layer M5 -location {42.3480 0.0960} -pin_size {
 place_pin -pin_name {t_vm[417]} -layer M5 -location {42.4440 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_vm[418]} -layer M5 -location {42.5400 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_vm[419]} -layer M5 -location {42.6360 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {ts[0]} -layer M5 -location {43.8360 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {ck[0]} -layer M5 -location {45.9960 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rs[0]} -layer M5 -location {50.7960 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {bw_v[0]} -layer M5 -location {2.4120 340.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ts} -layer M5 -location {43.8360 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck} -layer M5 -location {45.9960 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rs} -layer M5 -location {50.7960 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {bw_v} -layer M5 -location {2.4120 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[0]} -layer M5 -location {2.6040 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[1]} -layer M5 -location {2.7000 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[2]} -layer M5 -location {2.7960 340.1040} -pin_size {0.0240 0.1920}
@@ -843,5 +843,5 @@ place_pin -pin_name {bw_d[416]} -layer M5 -location {42.5400 340.1040} -pin_size
 place_pin -pin_name {bw_d[417]} -layer M5 -location {42.6360 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[418]} -layer M5 -location {42.7320 340.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {bw_d[419]} -layer M5 -location {42.8280 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {flt_o[0]} -layer M4 -location {0.0960 170.1240} -pin_size {0.1920 0.0240}
-place_pin -pin_name {flt_i[0]} -layer M4 -location {77.6640 170.1240} -pin_size {0.1920 0.0240}
+place_pin -pin_name {flt_o} -layer M4 -location {0.0960 170.1240} -pin_size {0.1920 0.0240}
+place_pin -pin_name {flt_i} -layer M4 -location {77.6640 170.1240} -pin_size {0.1920 0.0240}

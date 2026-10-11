@@ -1293,5 +1293,5 @@ place_pin -pin_name {hq[10]} -layer M4 -location {64.7040 171.0840} -pin_size {0
 place_pin -pin_name {hq[11]} -layer M4 -location {64.7040 171.1800} -pin_size {0.1920 0.0240}
 place_pin -pin_name {hq[12]} -layer M4 -location {64.7040 171.2280} -pin_size {0.1920 0.0240}
 place_pin -pin_name {hq[13]} -layer M4 -location {64.7040 171.3240} -pin_size {0.1920 0.0240}
-place_pin -pin_name {ck[0]} -layer M4 -location {0.0960 170.1240} -pin_size {0.1920 0.0240}
-place_pin -pin_name {rs[0]} -layer M4 -location {0.0960 174.9240} -pin_size {0.1920 0.0240}
+place_pin -pin_name {ck} -layer M4 -location {0.0960 170.1240} -pin_size {0.1920 0.0240}
+place_pin -pin_name {rs} -layer M4 -location {0.0960 174.9240} -pin_size {0.1920 0.0240}
