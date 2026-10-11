@@ -588,6 +588,9 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              spine_order=('hgi_idx', 'idx_sel', 'mtp', 'loader', 'coll', 'hgi_vm', 'cmdproc', 'quant', 'barrier', 'router',
                           'vm8', 'su_red', 'su_full'),
              hgi_rgx=True, del_obase=True,
+             # [svc-ep] 10-10: PS native-endpoint chains (+~320 b every cut, worst ~2,830 b) at <= 55 % cut use on the
+             # strip's 10.3 b/um (M4 / M6 alternate, 0.096 um a bit): 2,830 / 0.55 / 10.3 = 500 um (was 259.176)
+             svc_h=500.04, split_x_new_port_band=dict(lq=3, lr=3),
              # hgi-1010/b 10-10: a larger hgi_vm outline, single-layer faces at every other track (<= 10.4 b/um)
              hgi_vm_w=2073.6, hgi_vm_h=2073.6,
              lane_chain_nets=(('rdn', 8259), ('wdn', 67), ('rup', 515), ('wup', 8963)),
@@ -634,6 +637,12 @@ def build_r25gq(variant):
     g0 = base['geo']
     W, H = g0['W'], g0['H']
     B = {it.name: it for it in base['insts']}
+    svc_d = 0.0
+    if V.get('svc_h'):      # R25GQ 10-10 ([svc-ep] PS native endpoint chains): taller svc strips, S and N; the die grows
+        h0_ = {round(it.h, 3) for it in base['insts'] if it.kind == 'svc'}
+        assert len(h0_) == 1, h0_
+        svc_d = round(V['svc_h'] - h0_.pop(), 4)
+        H = round(H + 2 * svc_d, 4)
     if V.get('hgi_vm_h') and 'hb_hgi_vm' in B:      # R25GQ 10-10: a larger VM slot for its 19-20 k pins a face
         B['hb_hgi_vm'].h = V['hgi_vm_h']
         if V.get('hgi_vm_w'):       # wider than the spine column: centred on it, overhanging both side channels
@@ -658,13 +667,18 @@ def build_r25gq(variant):
     # ---- side bands: PHY / svc / SerDes / host unchanged; SM rows re-pitched (S side; N mirrored)
     for it in base['insts']:
         if it.kind in ('phy', 'svc', 'link', 'serdes_slab', 'host_slab'):
-            add(it.name, it.name, it.x, it.y)
+            n_ = it.y + it.h / 2 > g0['H'] / 2
+            if it.kind == 'svc':
+                add(it.name, it.name, it.x, it.y + (svc_d if n_ else 0.0), h=it.h + svc_d)
+            else:       # N half +2d, S half fixed, a band across the centre (host) +d
+                add(it.name, it.name, it.x, it.y + (2 * svc_d if it.y > g0['H'] / 2 else 0.0 if it.y + it.h < g0['H'] / 2
+                                                    else svc_d))
             rmap[it.name] = it.name
     sms = [it for it in base['insts'] if it.kind == 'sm']
     smh = sms[0].h
     ys = sorted({round(it.y, 3) for it in sms if it.y < H / 2})
     assert len(ys) == 3, ys
-    row_y = [up(ys[0] + V.get('svc_gap_add', 0.0), GY)]
+    row_y = [up(ys[0] + V.get('svc_gap_add', 0.0) + svc_d, GY)]
     row_y.append(up(row_y[0] + smh + V['sm_ch01'], GY))
     row_y.append(up(row_y[1] + smh + V['sm_ch12'], GY))
     colx = {}
@@ -674,7 +688,7 @@ def build_r25gq(variant):
             colx[(st, x_)] = x_ + (k * V.get('sm_colch_add', 0.0) * (1 if st[1] == 'W' else -1))
     for it in sms:
         s_ = it.y < H / 2
-        yr_ = it.y if s_ else H - it.y - it.h      # the N groups sit 2.16 um off the exact mirror (GY snap)
+        yr_ = it.y if s_ else g0['H'] - it.y - it.h      # the N groups sit 2.16 um off the exact mirror (GY snap)
         r_ = min(range(3), key=lambda k: abs(ys[k] - yr_))
         add(it.name, it.name, colx[(it.region[4:], round(it.x, 3))], row_y[r_] if s_ else my(row_y[r_], it.h), region=it.region)
         rmap[it.name] = it.name
@@ -848,6 +862,8 @@ def build_r25gq_net(variant):
     geo_m = build_r25gq(dict(V, r25gq_net=False))
     bv = dict(variant_arg(V['r25gq_base']), host_h=V['host_h'], hub_ports_file=None, hgi_rgx=V.get('hgi_rgx'),
               del_obase=V.get('del_obase'))
+    if V.get('split_x_new_port_band'):      # [svc-ep] 10-10: lq / lr on band 3 of every svc stack
+        bv['split_x_new_port_band'] = dict(bv.get('split_x_new_port_band') or {}, **V['split_x_new_port_band'])
     base = build(bv, network_probe=True)
     Q = {it.name: it for it in geo_m['insts']}
     kind = {it.name: it.kind for it in base['insts']}
