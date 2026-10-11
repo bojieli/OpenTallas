@@ -268,7 +268,8 @@ module ot_hgi_att_unit #(
     wire [20:0] sc_nv = pc(scm);
     wire [31:0] sc_wa0 = {14'd0, obase} + sch * {14'd0, ostr} + (blk0 + scrow + scl);
     wire [20:0] sc_cnt = ((21'd8 - sc_wa0[2:0]) < (sc_nv - scl)) ? (21'd8 - sc_wa0[2:0]) : (sc_nv - scl);
-    wire sc_iss = sc_hold && qk && vo_n < 3'd4 && sc_kvst && (sc_pk ? (sch != lanes) : (scl != NL && scm[scl]));
+    // PIPE = 2 job-buffer scores issue no VM write here (S_SCO does): never count them as outstanding (vo_n)
+    wire sc_iss = sc_hold && qk && vo_n < 3'd4 && sc_kvst && !(PIPE == 2 && sc_pk) && (sc_pk ? (sch != lanes) : (scl != NL && scm[scl]));
     reg [20:0] blk0, tb; reg [3:0] jb;               // job's first row, rows, job index
     reg [4:0] hq; reg [26:0] sec, sec_end, rsec; reg [2:0] vo_n;   // VM walk
     reg [20:0] row; reg [7:0] nsec, isec; reg [3:0] hout; reg [39:0] rbyte;
