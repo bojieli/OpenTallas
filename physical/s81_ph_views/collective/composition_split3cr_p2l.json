@@ -154,7 +154,7 @@
   },
   {
    "inst": "u_pa",
-   "master": "dsfd_coll_p2_lane",
+   "master": "dsfd_coll_p2_lane_pa",
    "xy": [
     345.6,
     1369.44
@@ -174,7 +174,7 @@
   },
   {
    "inst": "u_ba",
-   "master": "dsfd_coll_p2_lane",
+   "master": "dsfd_coll_p2_lane_ba",
    "xy": [
     680.592,
     1369.44
@@ -217,29 +217,9 @@
   },
   "dsfd_coll_lane_w": {
    "LCR": 1
-  },
-  "dsfd_coll_p2_lane_pa": {
-   "TXK": 7,
-   "TXW": 594,
-   "RXK": 6,
-   "RXW": 101,
-   "EVT": 3,
-   "EVR": 1,
-   "CRED": 8,
-   "TCRED": 8
-  },
-  "dsfd_coll_p2_lane_ba": {
-   "TXK": 0,
-   "TXW": 0,
-   "RXK": 5,
-   "RXW": 604,
-   "EVT": 0,
-   "EVR": 0,
-   "CRED": 0,
-   "TCRED": 0
   }
  },
- "physical_adoption": "UNQUALIFIED: as split3cr, plus the new tile(s) dsfd_coll_p2_lane (two parameter sets) and dsfd_coll_p2_ep must close; the extra lane tile is the same dsfd_coll_lane_w LCR master as lanes 0..7",
+ "physical_adoption": "UNQUALIFIED: as split3cr, plus the new tile(s) dsfd_coll_p2_lane_pa / _ba and dsfd_coll_p2_ep must close; the extra lane tile is the same dsfd_coll_lane_w LCR master as lanes 0..7",
  "source_commits": {
   "core": "a17b27437",
   "lane": "851328e6c"

@@ -187,3 +187,30 @@ module dsfd_coll_p2_lane #(
         else flt <= flt | lr_flt | bad | cb_flt | eq_flt | (ev_ch && !eq_room) | (|f_lflt);
     assign t_flt = flt;
 endmodule
+
+// hardened masters (one per parameter set: the port widths differ)
+// dsfd_coll_p2_lane_pa: draft die A, lane W4 to / from the DSpark primary: TX result row 594 (2 beats) + {corrected,
+// fault, done}; RX start 101 (credited, 8) + abort
+module dsfd_coll_p2_lane_pa (
+    input  wire [0:0] ck, rs,
+    input  wire [0:0] x_v, output wire [0:0] x_r, input wire [593:0] x_d,
+    output wire [0:0] r_v, input wire [0:0] r_r, output wire [100:0] r_d,
+    input  wire [2:0] x_ev, output wire [0:0] r_ev,
+    output wire [0:0] lo_v, input wire [0:0] lo_r, output wire [552:0] lo_d,
+    input  wire [0:0] li_v, output wire [0:0] li_r, input wire [552:0] li_d,
+    input  wire [2:0] f_lflt, output wire [0:0] t_flt);
+    dsfd_coll_p2_lane #(.TXK(7), .TXW(594), .RXK(6), .RXW(101), .EVT(3), .EVR(1), .CRED(8), .TCRED(8)) u (.ck(ck), .rs(rs),
+        .x_v(x_v), .x_r(x_r), .x_d(x_d), .r_v(r_v), .r_r(r_r), .r_d(r_d), .x_ev(x_ev), .r_ev(r_ev),
+        .lo_v(lo_v), .lo_r(lo_r), .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .f_lflt(f_lflt), .t_flt(t_flt));
+endmodule
+// dsfd_coll_p2_lane_ba: draft die A, lane E4 from die B (UCIe): RX lane-1 words 604 (2 beats, DIRECT: the only class)
+module dsfd_coll_p2_lane_ba (
+    input  wire [0:0] ck, rs,
+    output wire [0:0] r_v, input wire [0:0] r_r, output wire [603:0] r_d,
+    output wire [0:0] lo_v, input wire [0:0] lo_r, output wire [552:0] lo_d,
+    input  wire [0:0] li_v, output wire [0:0] li_r, input wire [552:0] li_d,
+    input  wire [2:0] f_lflt, output wire [0:0] t_flt);
+    dsfd_coll_p2_lane #(.TXK(0), .TXW(0), .RXK(5), .RXW(604), .EVT(0), .EVR(0), .CRED(0), .TCRED(0)) u (.ck(ck), .rs(rs),
+        .x_v(1'b0), .x_r(), .x_d(1'b0), .r_v(r_v), .r_r(r_r), .r_d(r_d), .x_ev(1'b0), .r_ev(),
+        .lo_v(lo_v), .lo_r(lo_r), .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .f_lflt(f_lflt), .t_flt(t_flt));
+endmodule

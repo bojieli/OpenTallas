@@ -19,6 +19,7 @@ P=$S/rtl/dsrom_sys/s81_ph
   $S/rtl/proto/ot_fp32_add_rne_pipe.sv $S/rtl/link/ot_link_crc32.sv $S/rtl/common/ot_link_credit.sv $S/rtl/dsrom_sys/ot_dsrom_link_chan.sv \
   $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v \
   $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v \
+  $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
   --Mdir obj > build.log 2>&1 ) || { echo "BUILD_FAIL" > $O/$L.log; tail -30 $O/$L/build.log >> $O/$L.log; cat $O/$L.log; exit 2; }
 $O/$L/obj/Vtb_s81ph_coll_sys > $O/$L.log 2>&1
 grep -E "CYCLES|TB_S81PH_COLL_SYS" $O/$L.log | tail -3

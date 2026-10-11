@@ -35,7 +35,7 @@ CASES = dict(
     pos_block=('pass', ['-GMSTALL=2', '-GMTP_HOLD=9000']),
     pos_win=('pass', ['-GMSTALL=4']),
     pos_rate=('pass', ['-GMSTALL=3', '-GTGAP=6', '-GNTOK=1000']),
-    rate_t128=('pass', ['-GMSTALL=3', '-GTGAP=6', '-GNTOK=1000', '+define+OT_MTPL_TCRED=128']),
+    rate_t64=('pass', ['-GMSTALL=3', '-GTGAP=6', '-GNTOK=1000', '+define+OT_MTPL_TCRED=64']),
     rate_t32=('pass', ['-GMSTALL=3', '-GTGAP=6', '-GNTOK=1000', '+define+OT_MTPL_TCRED=32']),
     neg_shared=('fail', ['-GMSTALL=1', '-GMTP_HOLD=20000', '+define+OT_MTPL_MUT_SHARED']),
     neg_cred=('fail', ['-GMSTALL=4', '+define+OT_MTPL_MUT_CRED']),

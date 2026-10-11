@@ -26,8 +26,9 @@
 // per free remote entry and sends a class flit only with a credit in hand, so the lane's shared landing FIFO always
 // drains (o_ready = 1) whatever either consumer does.  Freed entries return as CREDIT flits (counts of both classes)
 // on the reverse direction of the same lane.  TCRED >= the lane's class credit round trip / the sequencer's fastest
-// emission (one flit per 6 cycles, ot_dsrom_mtp_seq release), measured by the bench (tb_s81ph_coll_sys TB_MTP: class RTT
-// line), so a stalled seed consumer never slows the token return and neither ever touches collective lanes 0..7.
+// emission (one flit per 6 cycles, ot_dsrom_mtp_seq release): measured (tools/mtp_colllane_gate.py rate cases, board
+// channel) 32 -> 8.0, 64 -> 9.0, 128 -> 6.4 cycles / token, so TCRED = 128 (two 128 x 256 SRAM macros); a stalled seed
+// consumer never slows the token return and neither ever touches collective lanes 0..7.
 //
 // Flit {last = 1, type[551:549], payload}: 1 token (td 512 at [511:0]), 2 seed (sd at [SW-1:0]), 3 credit return
 // ([7:0] token credits, [15:8] seed credits), 4 accept word ([AW-1:0]).  Arbitration: round robin over the four kinds.
@@ -51,7 +52,7 @@ module dsfd_coll_mtp_lane #(
 `ifdef OT_MTPL_TCRED
     parameter integer TCRED = `OT_MTPL_TCRED,
 `else
-    parameter integer TCRED = 64,
+    parameter integer TCRED = 128,
 `endif
     parameter integer SCRED = 16, parameter integer AQ = 4,
     parameter integer LCRED = 8
@@ -74,7 +75,7 @@ module dsfd_coll_mtp_lane #(
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs[0]) if (!rs[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_n = rst_s[1];
-    initial if (TCRED > 255 || SCRED > 255) $fatal(1, "dsfd_coll_mtp_lane: class credits exceed the 8-bit credit field");
+    initial if (TCRED > 128 || SCRED > 255) $fatal(1, "dsfd_coll_mtp_lane: class credits exceed the 8-bit credit field");
 
     // ---------------------------------------------------------------- die side: RTT-sized receivers (dsfd_coll_mtp_ep)
     wire ctv, csv, ctr, csr; wire [FLIT-1:0] ctd; wire [SW-1:0] csd;
@@ -148,8 +149,14 @@ module dsfd_coll_mtp_lane #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) bad_k <= 1'b0;
         else if (lr_take && (lk == 3'd0 || lk > K_ACC)) bad_k <= 1'b1;
-    ot_s81ph_rfifo #(.W(FLIT), .D(TCRED)) u_tb (.clk(clk), .rst_n(rst_n), .push(tb_push), .wd(lr_d[FLIT-1:0]),
-        .pop(t_pop_l), .hv(tb_v), .hd(tb_d), .room(tb_room), .room2(), .fault(tb_flt));
+    // token buffer: TCRED x 512 in two ot_sram_1r1w_128x256 macros (ot_fifo_sram_fwft: 2-entry register head, bypass
+    // when empty); occupancy counted here (room for the SHARED mutant, the overflow check is the FIFO's ovf)
+    reg [CW:0] tb_n;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) tb_n <= '0; else tb_n <= tb_n + (CW+1)'(tb_push) - (CW+1)'(t_pop_l);
+    assign tb_room = tb_n < (CW+1)'(TCRED);
+    ot_fifo_sram_fwft #(.W(FLIT), .DEPTH(TCRED), .MACRO(2)) u_tb (.clk(clk), .rst_n(rst_n), .push(tb_push),
+        .wdata(lr_d[FLIT-1:0]), .pop(t_pop_l), .hv(tb_v), .head(tb_d), .ovf(tb_flt));
     ot_s81ph_rfifo #(.W(SW), .D(SCRED)) u_sb (.clk(clk), .rst_n(rst_n), .push(sb_push), .wd(lr_d[SW-1:0]),
         .pop(s_pop_l), .hv(sb_v), .hd(sb_d), .room(sb_room), .room2(), .fault(sb_flt));
     // consumers: the sequencer's grant-protocol transmitter (launch from flops, one flit per grant)

@@ -45,7 +45,44 @@ ABUT = (('lo_v', 'lo_v', 'output'), ('lo_r', 'lo_r', 'input'), ('lo_d', 'lo_d', 
         ('li_v', 'li_v', 'input'), ('li_r', 'li_r', 'output'), ('li_d', 'li_d', 'input'), ('flt', 'f_lflt', 'input'))
 
 
+# P2 variant masters (draft die A): same outline and W-face abutment, die-side ports on the N face
+P2SPECS = [dict(master='dsfd_coll_p2_lane_pa', w_um=W, h_um=H, domain='stream_1p2',
+                note='P2 primary-lane adapter: W = the W4 lane tile (abutting), N = dsfd_coll_p2_ep (row out of it, start into it) '
+                     '+ the P2 core events, S = clock / reset',
+                ports=[['x_v', 1, 'input', 'N', 'M5', 1, 0.01], ['x_d', 594, 'input', 'N', 'M5', 3, 0.15],
+                       ['x_r', 1, 'output', 'N', 'M5', 1, 0.30], ['x_ev', 3, 'input', 'N', 'M5', 2, 0.32],
+                       ['r_v', 1, 'output', 'N', 'M5', 1, 0.50], ['r_d', 101, 'output', 'N', 'M5', 3, 0.55],
+                       ['r_r', 1, 'input', 'N', 'M5', 1, 0.60], ['r_ev', 1, 'output', 'N', 'M5', 1, 0.62],
+                       ['t_flt', 1, 'output', 'N', 'M5', 1, 0.64],
+                       ['ck', 1, 'input', 'S', 'M5', 1, 0.48], ['rs', 1, 'input', 'S', 'M5', 1, 0.50]]),
+           dict(master='dsfd_coll_p2_lane_ba', w_um=W, h_um=H, domain='stream_1p2', orients=['MY'],
+                note='P2 die-B-lane adapter (placed MY beside the mirrored E4 lane tile): W (local) = the lane tile, '
+                     'N = lane-1 words to dsfd_coll_p2_ep, S = clock / reset',
+                ports=[['r_v', 1, 'output', 'N', 'M5', 1, 0.01], ['r_d', 604, 'output', 'N', 'M5', 3, 0.15],
+                       ['r_r', 1, 'input', 'N', 'M5', 1, 0.30], ['t_flt', 1, 'output', 'N', 'M5', 1, 0.32],
+                       ['ck', 1, 'input', 'S', 'M5', 1, 0.48], ['rs', 1, 'input', 'S', 'M5', 1, 0.50]])]
+
+
+def emit(spec):
+    ports = TP.plan(spec)
+    lane = json.loads(LANE.read_text())
+    for lp, ap, d in ABUT:
+        src = lane['ports'][lp]
+        pins = [[nm.replace(lp, ap, 1), ly, 0.0, y0, round(x1 - x0, 4), y1] for nm, ly, x0, y0, x1, y1 in src['pins']]
+        ports[ap] = dict(bits=src['bits'], layer=src['layer'], pins=pins, direction=d, face='W')
+    sp = dict(spec, ports=spec['ports'] + [[ap, lane['ports'][lp]['bits'], d, 'W', 'M4', 'lane E-face y'] for lp, ap, d in ABUT])
+    rec = TP.write(spec['master'], W, H, spec['domain'], ports, sp)
+    rec['generator'] = dict(file='tools/s81_ph/s81_ph_mtp_lane_plan.py', lane_contract=str(LANE.relative_to(ROOT)))
+    d = ROOT / 'physical/s81_ph_views/ports/contract' / spec['master']
+    (d / 'ports.json').write_text(json.dumps(rec, indent=0) + '\n')
+    (d / 'io_place.tcl').write_text((d / 'io_place.tcl').read_text().replace('tools/s81_ph/s81_ph_tiles_plan.py',
+                                                                             'tools/s81_ph/s81_ph_mtp_lane_plan.py'))
+    print(spec['master'], sum(len(p['pins']) for p in ports.values()))
+
+
 def main():
+    for sp in P2SPECS:
+        emit(sp)
     ports = TP.plan(SPEC)
     lane = json.loads(LANE.read_text())
     assert abs(lane['h_um'] - H) < 1e-6, lane['h_um']

@@ -151,13 +151,12 @@ module dsfd_sp_collective (
         .c_l1v(c_l1v), .c_l1r(c_l1r), .c_l1d(c_l1d), .t_l1v(t_p2[0]), .t_l1d(t_p2[604:1]), .f_l1g(f_p2[595]),
         .c_sv(c_sv), .c_sr(c_sr), .c_sd(c_sd), .t_sv(t_p2[605]), .t_sd(t_p2[706:606]), .f_sg(f_p2[596]),
         .f_ov(f_p2[0]), .f_od(f_p2[594:1]), .t_og(t_p2[708]), .c_ov(c_ov), .c_or(c_or), .c_od(c_od));
-    dsfd_coll_p2_lane #(.TXK(7), .TXW(594), .RXK(6), .RXW(101), .EVT(3), .EVR(1), .CRED(8), .TCRED(8)) u_pa (
+    dsfd_coll_p2_lane_pa u_pa (
         .ck(pll_stream), .rs(rst_stream), .x_v(c_ov), .x_r(c_or), .x_d(c_od), .r_v(c_sv), .r_r(c_sr), .r_d(c_sd),
         .x_ev(f_p2[599:597]), .r_ev(p_abort),
         .lo_v(p_lo_v), .lo_r(p_lo_r), .lo_d(p_lo_d), .li_v(p_li_v), .li_r(p_li_r), .li_d(p_li_d), .f_lflt(p_lflt), .t_flt(p_flt));
-    dsfd_coll_p2_lane #(.TXK(0), .TXW(0), .RXK(5), .RXW(604), .EVT(0), .EVR(0), .CRED(0), .TCRED(0)) u_ba (
-        .ck(pll_stream), .rs(rst_stream), .x_v(1'b0), .x_r(), .x_d(1'b0), .r_v(c_l1v), .r_r(c_l1r), .r_d(c_l1d),
-        .x_ev(1'b0), .r_ev(),
+    dsfd_coll_p2_lane_ba u_ba (
+        .ck(pll_stream), .rs(rst_stream), .r_v(c_l1v), .r_r(c_l1r), .r_d(c_l1d),
         .lo_v(b_lo_v), .lo_r(b_lo_r), .lo_d(b_lo_d), .li_v(b_li_v), .li_r(b_li_r), .li_d(b_li_d), .f_lflt(b_lflt), .t_flt(b_flt));
     assign t_p2[707] = p_abort[0];
     assign t_p2flt = {b_flt, p_flt};
