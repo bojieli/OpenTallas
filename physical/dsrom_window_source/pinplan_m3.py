@@ -5,7 +5,7 @@ top (540 x 540): W = clk (mid-face) + rst_n + config / prime / blk / start / sta
   S = acc_* / wl_req_* lanes 0-15; N = lanes 16-31 (each lane's issue + landing pins on one face); E = K-port request m_* (1.4k); the dead K-port response s_* (1.1k) on S.
   Measured edge capacity (PPL-0107 in flat-e29a7cacf / -a012105f0 / land8-670ed3c2a): ~2.55 pins/um on the W/E edges
   (M4+M6), ~12.2 pins/um on the N/S edges (M5+M7) -> die 620: S 6.3k / 7.3k, N 5.2k, E 1.36k / 1.53k, W 0.7k.
-land8: acc lanes 0-3 S / 4-7 N, clk / rst_n / b W, outputs E (140.4 x 43.224 um).
+land8: acc inputs S, clk / rst_n / b / outputs N (140.4 x 43.224 um).
 mirror: write command W, reads S, bad E, clk N."""
 import sys
 def rr(lo, hi):
@@ -55,11 +55,11 @@ def main():
              r'^(rst_n|region_|prime_|blk_|start_|staged_v|stream_go|busy|done|fault|refill_cycles|sectors_|rows_|'
              r'blocks_written|stage_|merge_|la_load_cycles)=left:10-%g' % (dy - 10)]
     elif kind == 'land8':
-        # acc lanes 0-3 on S, 4-7 on N (1,092 pins per face); clk / rst_n / b on W, registered outputs on E
-        lane8 = [('acc_v', 1), ('acc_tag', 13), ('acc_beat', 4), ('acc_data', 256)]
-        r = ['^clk$=left:%g-%g' % (my - 1, my + 1), lanes(lane8, 0, 3) + '=bottom:2-%g' % (dx - 2),
-             lanes(lane8, 4, 7) + '=top:2-%g' % (dx - 2), r'^(rst_n|b\[)=left:2-%g' % (my - 3),
-             r'^(bad$|nb\[|sim_bad$)=right:2-%g' % (dy - 2)]
+        # all acc inputs on S (2,184 pins, ~16/um over 136 um, placed explicitly alternating M5 / M7 -> ~8/um per
+        # layer); clk (mid), rst_n / b and the registered outputs on N.  In the controller the S-row leaves sit R0 and
+        # the N-row leaves MX (H = 43.224 = 0.024 mod 0.048), so the input face always faces the die edge.
+        r = ['^clk$=top:%g-%g' % (mx - 1, mx + 1), '^acc_=bottom:2-%g' % (dx - 2),
+             r'^(rst_n|b\[)=top:2-%g' % (mx - 3), r'^(bad$|nb\[|sim_bad$)=top:%g-%g' % (mx + 3, dx - 2)]
     elif kind == 'mirror':
         r = ['^clk$=top:%g-%g' % (mx - 1, mx + 1), '^(wr_|rst_n)=left:2-%g' % (dy - 2),
              '^(rd_|j_user)=bottom:2-%g' % (dx - 2), r'^bad\[=right:2-%g' % (dy - 2)]
