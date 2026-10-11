@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_wfc_crp",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm25-pr/routes/el1011_wfccrp_bb847e831_tc_hm25_pr/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm25-pr/routes/el1011_wfccrp_bb847e831_tc_hm25_pr/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm25-pr/routes/el1011_wfccrp_bb847e831_tc_hm25_pr/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm25-pr/routes/el1011_wfccrp_bb847e831_tc_hm25_pr/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm25-pr/routes/el1011_wfccrp_bb847e831_tc_hm25_pr/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm25-pr/routes/el1011_wfccrp_bb847e831_tc_hm25_pr/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-wfccrp-bb847e831-tc-hm25-pr/routes/el1011_wfccrp_bb847e831_tc_hm25_pr/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_wfc_crp.lef": "67b1610bba6620fd4e1e6f9964afd0458008fdddbc2918713edbb960ba7858f1",
+    "dsfd_wfc_crp_ff.lib": "32f978865eda0a68eb852690f51f012c2c1656efb99b11afb54c89f20d6194d7",
+    "dsfd_wfc_crp_ss.lib": "cddf238fd5c91bdadc2524ad1eee96903b7d8ed44449c699629731a480e485ba"
+  },
+  "ok": true
+}
