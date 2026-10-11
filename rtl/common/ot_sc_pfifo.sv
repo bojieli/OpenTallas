@@ -54,11 +54,15 @@ module ot_sc_pfifo #(
     wire [SB-1:0] w_nx = push ? ((w == S - 1) ? {SB{1'b0}} : w + 1'b1) : w;
     wire [SB-1:0] r_nx = pop  ? ((r == S - 1) ? {SB{1'b0}} : r + 1'b1) : r;
     wire full_nx = (n_nx == S);
+    // PINREG in_ready = (n_nx + accepted-this-edge) < S, with the pin handshake as the LAST select (fence-1011: the folded
+    // sum widened to 32 bits read 32 gate levels from in_valid in the boundary lint; exact same function).
+    wire rdy_acc  = ({1'b0, n_nx} + 1'b1) < S;
+    wire rdy_idle = n_nx < S;
     always @(posedge clk) begin
         if (!rst_n) begin n <= 0; w <= 0; r <= 0; in_ready <= 1'b1; out_valid <= 1'b0; end   // empty after reset: ready at once
         else begin
             n <= n_nx; w <= w_nx; r <= r_nx;
-            in_ready <= PINREG ? (({1'b0, n_nx} + {{CB{1'b0}}, in_valid && in_ready}) < S) : !full_nx;
+            in_ready <= PINREG ? ((in_valid && in_ready) ? rdy_acc : rdy_idle) : !full_nx;
             out_valid <= (n_nx != 0);
         end
     end

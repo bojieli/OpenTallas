@@ -20,6 +20,7 @@ module tb_fh_margin_addr_pipe;
   .wr_en(we),.wr_addr(wa),.wr_mask(wm),.wr_data(wd),.wr_committed(k1),.fault(f1),.address_fault_bits(a1));
  reg [3:0] a1q1,a1q2,a1q3; always @(posedge clk) begin a1q1<=a1; a1q2<=a1q1; a1q3<=a1q2; end
  integer i,g,seed=11,rv=0;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  initial begin
   re=0;we=0;ra=0;wa=0;wm=0;wd=0;
   repeat(3)@(negedge clk); rst_n=1;

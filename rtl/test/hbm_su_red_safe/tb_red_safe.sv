@@ -31,6 +31,7 @@ module tb_red_safe;
     reg [127:0] hwe [0:D-1]; reg [3071:0] ha [0:D-1]; reg [4095:0] hd [0:D-1]; reg [8:0] hm [0:D-1];
     reg hev [0:D-1]; reg hf [0:D-1]; reg hb [0:D-1];
     integer i, cyc = 0, mism = 0, ev = 0, bmis = 0, seed = SEED, w;
+    initial begin seed = SEED; $display("SEED=%0d", seed); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     always @(posedge clk) begin
         for (i = D-1; i > 0; i = i - 1) begin hwe[i] <= hwe[i-1]; ha[i] <= ha[i-1]; hd[i] <= hd[i-1]; hm[i] <= hm[i-1];
             hev[i] <= hev[i-1]; hf[i] <= hf[i-1]; hb[i] <= hb[i-1]; end

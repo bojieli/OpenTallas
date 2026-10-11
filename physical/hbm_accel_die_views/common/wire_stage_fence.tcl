@@ -317,6 +317,19 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
         set qn [$qit getNet]; set bts [$qn getBTerms]
         # only the pins (and at most one inverter / buffer between: the QN flop's output inverter) load the net
         set nld [expr {[llength [$qn getITerms]] - 1}]
+        # OT_WS_OUTPUT_PINREG_HOLD=1 ([svc] 10-10, route SE_s0 hm0 phy[625] TT -126: a 300 ps buffered wire from an
+        # interior enable flop to its pin): an enable flop's own hold mux (an instance whose output drives this flop's
+        # D) is not a functional load -- it moves with the flop (placement pulls it), so it does not block anchoring
+        if {[info exists ::env(OT_WS_OUTPUT_PINREG_HOLD)] && $::env(OT_WS_OUTPUT_PINREG_HOLD) eq "1" && $dit ne "NULL" && [$dit getNet] ne "NULL"} {
+          set dnet [$dit getNet]
+          foreach it [$qn getITerms] {
+            set ii [$it getInst]
+            if {$ii eq $i} continue
+            foreach it2 [$ii getITerms] {
+              if {[$it2 isOutputSignal] && [$it2 getNet] eq $dnet} { set nld [expr {$nld - 1}]; break }
+            }
+          }
+        }
         if {[llength $bts] >= 1 && [[lindex $bts 0] getIoType] eq "OUTPUT" && $nld <= 0} { set bn [[lindex $bts 0] getName] }
         if {$bn eq "" && $nld == 1} {
           foreach it [$qn getITerms] {

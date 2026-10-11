@@ -51,22 +51,3 @@ module dsfd_vm_mtp_ep #(parameter integer NW = 21, parameter integer USER_W = 10
         .l_valid(t_qv[0]), .l_ready(f_qg[0]), .l_data(t_qd));
 endmodule
 
-// ot_dsrom_mtp_ltx with c_ready straight from one flop (cr <= l_ready && rst_n == rq && live of ot_dsrom_mtp_ltx, the
-// same function cycle for cycle): the VM core port budget (link_budget_hook 0.62 T) leaves no room for the AND gate
-// after the flops (fixlat-vmmtp-ffbec0c86-tc SS live -> c_wr / c_qr -105 / -112 ps).
-module ot_dsrom_mtp_ltx_rc #(parameter integer W = 513) (
-    input  wire         clk, rst_n,
-    input  wire         c_valid,
-    output wire         c_ready,
-    input  wire [W-1:0] c_data,
-    output wire         l_valid,
-    input  wire         l_ready,
-    output wire [W-1:0] l_data
-);
-    reg cr, v;
-    reg [W-1:0] d;
-    always @(posedge clk) cr <= l_ready && rst_n;        // pin flop: the receiver's grant, gated by the reset release
-    assign c_ready = cr;                                 // one flit per grant
-    always @(posedge clk) begin v <= c_valid && c_ready; d <= c_data; end
-    assign l_valid = v; assign l_data = d;
-endmodule

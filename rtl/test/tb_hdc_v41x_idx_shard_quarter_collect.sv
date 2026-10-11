@@ -17,6 +17,7 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
         .o_valid(o_valid),.o_ready(o_ready),.o_kv(o_kv),.o_last(o_last),.o_key(o_key),.o_ref(o_ref));
     integer first[0:15],cnt[0:15],src[0:15],total[0:15],delay_ctr[0:15];
     integer n,qs,received,expected_beats,cycles,seed=32'h31415926;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 32'h31415926; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     integer max_gap,last_accept_cycle;
     reg fast;
     integer s,q,j,i,physical,local_key,global_key,qlen,pos;
