@@ -207,6 +207,99 @@ def golden(a):
 
 
 
+def golden_spec(a):
+    """The DSpark golden of one REAL-drafter step at full shape (Model.generate_spec semantics, prompt [p0], anchor 0):
+    prefill p0 at position 0 (main hidden parts of layers 37..39 -> the seed: every stage's DSpark window row 0),
+    y = argmax; draft(y, 0) (3 stages over the block [y, noise x 4], DLOG rows, the Markov argmax chain);
+    verify [y, d_1 .. d_g] at positions 1 .. g+1 (one position at a time = the golden's own identity, checked by the
+    AR run above), targets, accept, the verify columns' seeds.  Per position and layer the residual / pre after the
+    layer (the die bench's labelled replay of layers 1..39) and the main hidden parts."""
+    npy_check()
+    import hdc_golden_v41 as V
+    import rtl_v41_fullshape_layer_campaign as LC
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    t0 = time.time()
+    ck = LC.Checkpoint()
+    m, init_sha = LC.build_model(ck, engram=True)
+    log = open(out / "golden_spec.log", "a")
+
+    def say(s_):
+        print(s_, flush=True)
+        log.write(s_ + "\n")
+        log.flush()
+
+    def drop(L=None):
+        for k_ in [k_ for k_ in m.w if ".ffn.experts." in k_ or (L is not None and k_.startswith(m.P(L)))]:
+            del m.w[k_]
+
+    def emb(t):
+        return np.repeat(ck.rows("embed.weight", [t]), m.hc, axis=0).astype(F)
+    arrs = {}
+    state = m.new_state(mtp=True)
+
+    def run_pos(t, p):
+        state["tokens"].append(int(t))
+        ctx = {"pos": p, "hist": list(state["tokens"]), "h": emb(t), "pre": np.array([1, 0, 0, 0], dtype=F), "mh": []}
+        for L in range(m.L):
+            m.layer(L, ctx, state)
+            arrs[f"h_{p}_{L}"] = ctx["h"].copy()
+            arrs[f"pre_{p}_{L}"] = ctx["pre"].copy()
+            drop(L)
+        xf = V.rmsnorm_fold(m.hc_pre(ctx["h"], ctx["pre"]), m.w["norm.weight"], m.eps)
+        lg = V.mv(m.w["head.weight"], xf)
+        tr = {}
+        m.dspark_seed(np.concatenate(ctx["mh"]), p, state, tr)
+        arrs[f"mh_{p}"] = np.asarray(tr["main_hidden"], F)
+        arrs[f"mainx_{p}"] = np.asarray(tr["main_x"], F)
+        for st in range(m.n_mtp):
+            arrs[f"dsk_{st}_{p}"] = np.asarray(state["dsk"][st][p], F)
+        tok = int(np.argmax(lg))
+        say(f"pos {p} token {t} -> {tok} ({time.time() - t0:.0f} s)")
+        return tok
+    y = run_pos(a.p0, 0)
+    # the draft at anchor 0 (Model.draft, unrolled to keep every stage's rows)
+    B, q = m.dspark_block, 0
+    ids = [y] + [m.noise_id] * (B - 1)
+    hs = [emb(t) for t in ids]
+    pres = [np.array([1, 0, 0, 0], dtype=F) for _ in ids]
+    for st in range(m.n_mtp):
+        hs, pres = m.dspark_stage(m.L + st, hs, pres, q, state)
+        for i in range(B):
+            arrs[f"dh_{st}_{i}"], arrs[f"dpre_{st}_{i}"] = hs[i].copy(), pres[i].copy()
+        drop(m.L + st)
+        say(f"draft stage {st} ({time.time() - t0:.0f} s)")
+    Lf = m.L + m.n_mtp - 1
+    xh = [V.to_bf16(m.hc_pre(h, p_)) for h, p_ in zip(hs, pres)]
+    logits = [V.mv(m.w["head.weight"], V.rmsnorm_bf16(x, m.lw(Lf, "norm.weight"), m.eps)) for x in xh]
+    for i in range(B):
+        arrs[f"dlog_{i}"] = np.asarray(logits[i], F)
+    embm, mhead = m.lw(Lf, "markov_head.embed.weight"), m.lw(Lf, "markov_head.head.weight")
+    d = [y]
+    for i in range(B):
+        lg = V.add(logits[i], V.mv(mhead, embm[d[i]]))
+        d.append(int(np.argmax(lg)))
+    drafts_all = d[1:]
+    g = a.gamma
+    drafts = drafts_all[:g]
+    say(f"draft: {drafts_all} ({time.time() - t0:.0f} s)")
+    toks = [y] + drafts
+    targets = [run_pos(t, 1 + j) for j, t in enumerate(toks)]
+    acc = 0
+    while acc < g and drafts[acc] == targets[acc]:
+        acc += 1
+    emitted = [y] + targets[:acc + 1]
+    np.savez_compressed(out / "golden_spec.npz", **arrs)
+    summ = dict(schema="opentallas.hgi_sim.ds_mtp_golden_spec.v1", p0=a.p0, gamma=g, y=y, noise=m.noise_id,
+                drafts_block=drafts_all, drafts=drafts, verify_tokens=toks, targets=targets, accepted=acc,
+                emitted=emitted, prompt=[a.p0], drafter="dspark (real)",
+                positions=[dict(pos=p, argmax=(y if p == 0 else targets[p - 1])) for p in range(1 + len(toks))],
+                golden=LC.golden_pin(), init_sha=init_sha, wall_s=round(time.time() - t0, 1))
+    (out / "golden_spec.json").write_text(json.dumps(summ, indent=1) + "\n")
+    say(f"SPEC: y {y} drafts {drafts} targets {targets} accept {acc} emitted {emitted}")
+    return 0
+
+
 # =================================================================================================================
 # the kernels
 # =================================================================================================================
@@ -618,6 +711,10 @@ def main():
     g.add_argument("--gamma", type=int, default=4)
     g.add_argument("--corrupt", type=int, default=2)
     g.add_argument("--layer-major", action="store_true")
+    gs = sp.add_parser("golden-spec")
+    gs.add_argument("--out", required=True)
+    gs.add_argument("--p0", type=int, default=0)
+    gs.add_argument("--gamma", type=int, default=4)
     q = sp.add_parser("sim")
     q.add_argument("--golden", required=True)
     q.add_argument("--out", required=True)
@@ -625,6 +722,8 @@ def main():
     a = ap.parse_args()
     if a.cmd == "golden":
         return golden(a)
+    if a.cmd == "golden-spec":
+        return golden_spec(a)
     if a.cmd == "sim":
         return sim(a)
     return 1

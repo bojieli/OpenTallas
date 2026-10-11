@@ -23,20 +23,20 @@
 // hgi-1010/h 2026-10-10 (audit N14, main ruling DROP): no router / coll ports.  The controller's XSEL inputs (router
 // selections x_*) and its expert-union stream (u_* -> hfd_coll, u_ready) only serve the legacy HFD expert-weight
 // prefetch; on the generic die every verify column / draft row selects its experts with IDX.TOPK and reads them through
-// C3b indexed descriptors (standard records), so nothing consumes them.  Inside this facade the selections are absent
-// (x_v = 0) and the union stream is never back-pressured (u_ready = 1): the union logic has no observable output and
-// synthesis removes it; the control loop never waits on either (ot_dshbm_dspark_top_cp_stop XSEL = 1).
+// C3b indexed descriptors (standard records), so nothing consumes them.  The controller is built with XSEL = 2
+// (ot_dshbm_dspark_top_cp_stop): the selection and expert-union logic is not generated (no internal ties); the
+// inner router / coll ports of hfd_mtp_native_cp_stop are left unconnected (not read / constant 0 with XSEL = 2).
 module hgi_mtp_native #(parameter integer PRL=4) (
   input  wire         clk,
   input  wire         rst_n,
   input  wire [196:0] f_cmdproc,
   output wire [516:0] t_cmdproc
 );
-  hfd_mtp_native_cp_stop #(.ENABLE(1),.PRL(PRL)) u_native (
+  hfd_mtp_native_cp_stop #(.ENABLE(1),.PRL(PRL),.XSEL(2)) u_native (
     .clk(clk), .rst_n(rst_n),
     .f_cmdproc(f_cmdproc), .t_cmdproc(t_cmdproc),
     .f_su_red(523'b0),
-    .f_router(59'b0), .t_router(),
-    .t_coll(), .f_coll(1'b1));
+    .f_router(), .t_router(),
+    .t_coll(), .f_coll());
 endmodule
 `default_nettype wire
