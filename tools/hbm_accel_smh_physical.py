@@ -310,7 +310,7 @@ def strip_pins(g, hcore, strip):
     return pins, h
 
 
-def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io=50):
+def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io=50, io_ref=False):
     """Strip constraints: element pins carry the die budget (as the m2 front), face and tile-facing ports the abutting
     budget (300 ps outside + the intra-element skew), the ring multicycle on front_c."""
     elem = {"front_n": ("start op_* xw_* release_in", "start_ready busy arrive released"),
@@ -320,7 +320,7 @@ def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io
            "front_c": ("fs_v fs_d* fx_b* fr_rl fd_v fd_d* fq_ret fp_* fsv", "rout_* bout_* fs_ret fo_* fd_ret fq_v fq_d*"),
            "front_s": ("qin_* fd_ret fq_v fq_d* fi_*", "rout_* fd_v fd_d* fq_ret fp_* fsv")}[strip]
     base = sdc_block(lat, element_io=False, ring=(strip == "front_c"), nbr_in=nbr[0], lat_ff=lat_ff, period=period,
-                     skew=skew, die_skew=die_skew, hold_io=hold_io)
+                     skew=skew, die_skew=die_skew, hold_io=hold_io, io_ref=io_ref)
     base = base.replace("set nbr_out [all_outputs]", f"set nbr_out [get_ports {{{nbr[1]}}}]")
     if elem[0]:
         add = ["# element pins: the W13 die budget magnitudes (473 / 323 external, 20 % min) plus the die term, referenced",
@@ -416,17 +416,38 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
     else:
         s += [f"set nbr_in [get_ports {{{nbr_in}}}]",
               "set nbr_out [all_outputs]"]
-    if io_ref:
+    if io_ref and io_ref != "vclk":
         s += ["# abutting ports (m2g, 2026-10-06): the neighbour piece's flop sits on the same element clock tree, so its",
               "# clock arrives at THIS block's insertion in EVERY corner.  Reference the abutting port delays to a register",
               "# clock pin of this block (-reference_pin: the propagated arrival at that pin, per corner) instead of nbr_clk",
               "# with the SS insertion as a fixed source latency: the latter made FF input hold optimistic by lat - lat_ff and",
               "# SS input hold pessimistic, which over-filled CTS hold repair (RSZ-0060 max buffer count at hold margin 25).",
-              "set refpin [lindex [all_registers -clock_pins -edge_triggered] 0]",
+              "# hbm-phys-1010 [att] PINFLOP-REF: the reference is the input pin flop of median clock arrival (pinflop_ref.tcl,",
+              "# the loop's route-time default) when the procs are shipped; else the first register (m2g).",
+              "set refpin {}",
+              "if {[file exists /src/physical/qwen_die_masters/pinflop_ref.tcl]} {",
+              "  catch { source /src/physical/qwen_die_masters/pinflop_ref.tcl; set refpin [ot_pf_ref $nbr_in] }",
+              "}",
+              "if {![llength $refpin]} { set refpin [lindex [all_registers -clock_pins -edge_triggered] 0] }",
               "set_input_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_in",
               "set_input_delay -min 30 -clock core_clk -reference_pin $refpin $nbr_in   ;# RULE H1: hold_io on the sender output min only",
               "set_output_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_out",
               "set_output_delay -min [expr 50 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_out   ;# the neighbour lands it >= 50 ps inside",
+              "set_load 2.0 [all_outputs]",
+              "set_max_fanout 32 [current_design]"]
+    elif io_ref == "vclk":
+        s += ["# [cg] 2026-10-10 IO-REF as virtual clocks (the -reference_pin form SEGVs OpenROAD's estimate_parasitics on",
+              "# front_c: sta::Sim::findDisabledEdges -> LibertyCell::timingArcSets; bisected on 3_3 with/without -reference_pin).",
+              "# lat / lat_ff = this block's MEASURED median input pin-flop insertion at TT / FF (the PINFLOP-REF value, from the",
+              "# calibrate CTS db).  Inputs: the neighbour launches at that insertion in each check: nbr_clk_i -max (setup, TT)",
+              "# / -min (hold, FF).  Outputs: nbr_clk at lat with the FF difference dlo in the output min, as before.",
+              f"create_clock -name nbr_clk_i -period $clk_period",
+              f"set_clock_latency -source -max {lat} [get_clocks nbr_clk_i]",
+              f"set_clock_latency -source -min {lat_ff} [get_clocks nbr_clk_i]",
+              "set_input_delay -max [expr 300 + $skew] -clock nbr_clk_i $nbr_in",
+              "set_input_delay -min 30 -clock nbr_clk_i $nbr_in   ;# RULE H1: hold_io on the sender output min only",
+              "set_output_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_out",
+              "set_output_delay -min [expr 50 + $dlo - $hold_io] -clock nbr_clk $nbr_out",
               "set_load 2.0 [all_outputs]",
               "set_max_fanout 32 [current_design]"]
     else:
@@ -1114,6 +1135,12 @@ def cmd_block(a):
             f"proc ::repair_timing_helper {{args}} {{ ::ot_rth_orig {{*}}$args -max_buffer_percent {a.hold_buffer_pct} }}\n")
         extra["PRE_CTS_TCL"] = "/work/rt_hook.tcl"
         extra["PRE_GLOBAL_ROUTE_TCL"] = "/work/rt_hook.tcl"
+    if getattr(a, "io_vclk", False):
+        # [cg] 2026-10-10: nbr_clk_i re-referenced to the built tree's input pin-flop insertion right after CTS
+        hook = work / "rt_hook.tcl"
+        prev = hook.read_text() if hook.exists() else ""
+        hook.write_text(prev + "source /src/physical/common_flow/nbr_in_ref_cts_hook.tcl\n")
+        extra["PRE_CTS_TCL"] = "/work/rt_hook.tcl"
     if a.grt_allow:
         extra["GLOBAL_ROUTE_ARGS"] = "-congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 60"
     if a.piece == "tile":
@@ -1163,16 +1190,21 @@ def cmd_block(a):
             mw, mh = 96.552, 69.66
             ch = float(g.get("front_channel_um", 120.0))
             xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
-            y0 = qd(h / 2 - 2.5 * (mh + 4.32))
+            # [cg] 2026-10-10 front_macro_gap_um (default 4.32 = unchanged): the W / E row bundles (rout_l*/r*,
+            # bout_*: ~3.7k bits a side) cross the ring-macro columns horizontally on M6 over the macros (OBS M1-M4)
+            # and through the 4 inter-macro gaps; every routed front_c failed GRT congestion exactly there (markers
+            # x 50-100 / 350-400, y 250-350 = macro rows 2-3).  Wider gaps open M2 / M4 / M6 channels at the bundles.
+            mgap = float(g.get("front_macro_gap_um", 4.32))
+            y0 = qd(h / 2 - 2.5 * (mh + mgap) + (mgap - 4.32) / 2)
             tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
                    "  if {![[$ot_inst getMaster] isBlock]} { continue }",
                    "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
                    "  if {![regexp {g_grp\\[(\\d+)\\]\\.g_mb\\[(\\d+)\\]\\.u_ring} $n -> gg mb]} { error \"no slot for $n\" }",
-                   f"  set y [expr {{{y0} + $mb * {q(mh + 4.32)}}}]",
+                   f"  set y [expr {{{y0} + $mb * {q(mh + mgap)}}}]",
                    f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                    f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                    "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
+        sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=("vclk" if getattr(a, "io_vclk", False) else a.io_ref))
         hops = STRIP_HOPS[a.piece]
         if g.get("front_channel_um", 120.0) != 120.0:
             if a.piece == "front_c":
@@ -1193,6 +1225,13 @@ def cmd_block(a):
                 # Converter register stations beside skid/issue, in the enlarged
                 # macro corridor. Pin-facing register placement remains literal.
                 hops += f"ot_place {{^g_int8\\.}} {w/2-channel/2:g} {w/2+channel/2:g} 100 140\n"
+        if a.piece == "front_c" and float(g.get("front_macro_gap_um", 4.32)) != 4.32:
+            # the hop bands above / below the ring follow the spread macro span (macro top + halo .. ; below y0 - halo)
+            top = y0 + 4 * q(mh + mgap) + mh
+            hops = re.sub(r"(ot_place \{\^g_h\\\[[02]\\\]\\\.\} [0-9.]+ [0-9.]+) 456 486",
+                          lambda m: f"{m.group(1)} {top + 4:.2f} {min(top + 34, h - 4):.2f}", hops)
+            hops = re.sub(r"(ot_place \{\^u_prd\\\.g_s\\\[1\\\]\} [0-9.]+ [0-9.]+) 42 66",
+                          lambda m: f"{m.group(1)} {min(42.0, y0 - 17):.2f} {y0 - 4:.2f}", hops)
         (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + hops)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     else:
@@ -1399,6 +1438,7 @@ def main(argv=None):
                    "cg_pushdown.tcl clones the ICG per sink cluster before CTS")
     b.add_argument("--cg-nopush", action="store_true", help="--cg: keep the ONE ICG at the root (no cg_pushdown cloning; small pieces: "
                    "the back end's CTS segfaulted with the push-down hook)")
+    b.add_argument("--io-vclk", action="store_true", help="[cg] 2026-10-10: strip IO reference as virtual clocks at the measured pin-flop insertion (--lat / --lat-ff), not -reference_pin (OpenROAD SEGV)")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
