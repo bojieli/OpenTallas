@@ -16,6 +16,7 @@ Writes the tb_hgi_su_prod vector set into --out:
   su_sizes.svh, su_prod.json (manifest with the priced cost of each record: timing.cost at N1024 / M256).
 """
 import argparse
+import dataclasses
 import json
 import sys
 from pathlib import Path
@@ -68,7 +69,14 @@ def main():
                     'overlap them); VM in = the pre-chain state of every touched sector, out = the final sink sectors')
     ap.add_argument('--ds-program', default='', help='a ds_native --program-out dump: use its layer-0 rank-0 records '
                     '(DeepSeek-V4.1 1M) instead of the Qwen3-8B token program')
+    ap.add_argument('--unaligned', default='round_q,pv_normalize',
+                    help='comma list of tags that ALSO get an extra case with every sink (O / R) base moved by '
+                    '--unaligned-shift words, so the sink starts and ends mid-sector (the production layer-0 sinks are '
+                    'all sector-aligned, which makes a whole-sector drain indistinguishable from the word-masked one); '
+                    'run on the pre-op state of the record and discarded afterwards (the die state chain is unchanged)')
+    ap.add_argument('--unaligned-shift', type=int, default=3)
     a = ap.parse_args()
+    unal = set(t for t in a.unaligned.split(',') if t)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     if a.ds_program:
@@ -162,6 +170,48 @@ def main():
                         roles={kk: [int(v.min()), int(v.max()), int(len(v))] for kk, v in sp.items()},
                         vm_in_sectors=int(len(secs)), vm_out_words=int(len(wrote)), vm_out_sectors=int(len(osecs))))
         print(f"{r.unit} {r.tag:28s} priced {c:7.1f}  in sectors {len(secs):6d}  out words {len(wrote):6d}")
+        if r.tag in unal:
+            # the same record with its sinks moved off the sector grid: words 0..shift-1 of the first sink sector and
+            # the tail of the last one are NOT written and must keep their pre-op value (kills a whole-sector drain)
+            after = die.vm.copy()
+            die.vm[:] = before
+            sh = a.unaligned_shift
+            r2 = dataclasses.replace(r, desc={kk: (dataclasses.replace(v, base=v.base + sh) if kk in ('O', 'R') else v)
+                                              for kk, v in r.desc.items()}, tag=f'{r.tag}@sink+{sh}')
+            d2 = dict(d)
+            eff = list(d['eff'])
+            for j, nm in enumerate(C.OPND):
+                if nm in ('O', 'R') and nm in r.desc:
+                    l_, w_ = C.MD['base']
+                    b_ = (eff[j] >> l_) & ((1 << w_) - 1)
+                    eff[j] = (eff[j] & ~(((1 << w_) - 1) << l_)) | (((b_ + sh) & ((1 << w_) - 1)) << l_)
+            d2['eff'] = eff
+            M.cur = r2
+            sp2 = spans(r2, M, die, L)
+            src2 = np.unique(np.concatenate([v for kk, v in sp2.items() if kk not in ('O', 'R')]))
+            snk2 = np.unique(np.concatenate([v for kk, v in sp2.items() if kk in ('O', 'R')]))
+            assert not (set(snk2.tolist()) & set(src2.tolist())), (r2.tag, 'shifted sink overlaps a source')
+            assert (snk2[0] & 7) and ((snk2[-1] + 1) & 7), (r2.tag, 'shifted sink still sector-aligned')
+            MA.UNITS[(r2.unit, r2.op)](M, r2, L)
+            ch2 = np.nonzero(die.vm != before)[0]
+            assert set(ch2) <= set(snk2.tolist()), (r2.tag, 'wrote outside its sinks')
+            secs2 = np.unique(np.concatenate([src2 >> 3, snk2 >> 3]))
+            osecs2 = np.unique(snk2 >> 3)
+            part = int(sum(1 for s_ in osecs2 if not set(range(s_ * 8, s_ * 8 + 8)) <= set(snk2.tolist())))
+            cases.append((len(recl), 1, len(vmi), len(secs2), len(vme), len(osecs2), len(man) | ((r.unit == 'SFU') << 31)))
+            recl.append(SB.pack_rec(d2))
+            for s_ in secs2:
+                vmi.append((int(s_), [int(x) for x in before[s_ * 8:(s_ + 1) * 8]]))
+            for s_ in osecs2:
+                vme.append((int(s_), [int(x) for x in die.vm[s_ * 8:(s_ + 1) * 8]]))
+            man.append(dict(tag=r2.tag, unit=r.unit, priced=round(float(c), 1), priced_how=how, unaligned_shift=sh,
+                            partial_sink_sectors=part,
+                            roles={kk: [int(v.min()), int(v.max()), int(len(v))] for kk, v in sp2.items()},
+                            vm_in_sectors=int(len(secs2)), vm_out_words=int(len(snk2)), vm_out_sectors=int(len(osecs2))))
+            print(f"{r.unit} {r2.tag:28s} priced {c:7.1f}  in sectors {len(secs2):6d}  out words {len(snk2):6d}"
+                  f"  partial sink sectors {part}")
+            die.vm[:] = after
+            M.cur = r
     if a.chain and chain:
         pre = chain[0][2]
         secs = np.unique(np.concatenate([np.concatenate([x[3] >> 3, x[4] >> 3]) for x in chain]))
