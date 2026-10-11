@@ -1147,7 +1147,7 @@ def rst_regions(t: str) -> str:
             "            always @(posedge clk or negedge rst_n)\n"
             "                if (!rst_n) r <= {IS{1'b0}};\n"
             "                else r <= {r, 1'b1};\n"
-            "            assign rsv[rk] = (RRG == 2 && rk == 0) ? 1'b0 : r[IS-1];   // RRG 2: negative control (u_seq copy held)\n"
+            "            assign rsv[rk] = (RRG == 2 && rk == 0) ? 1'b0 : r[IS-1];   // RRG 2: negative control (u_seq copy held); RRG 3: vm_wdata bit flip only\n"
             "        end\n"
             f"    end else begin : g_rr0\n        assign rsv = {{{RRG_NRR}{{rs}}}};\n    end endgenerate")
     out, cur = [], None
@@ -1161,7 +1161,7 @@ def rst_regions(t: str) -> str:
         out.append(ln)
     t = "\n".join(out)
     t = one(t, ".clk(clk), .rst_n(rsv[0]), .start(sg_go),", ".clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go),")
-    t = one(t, ".QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (", ".QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG == 2 ? 1 : 0)) u_seq (")
+    t = one(t, ".QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (", ".QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG >= 2 ? 1 : 0)) u_seq (")
     t = one(t, "module ot_qfd_seq_su_bi #(", "module ot_qfd_seq_su_bi #(\n"
                "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy")
     return t
