@@ -42,13 +42,40 @@ CASES = {
 }
 
 
+# Verilator >= 5.050 is REQUIRED (el1011-ds-vm 2026-10-11): 5.032 (Debian /usr/bin) miscompiles an automatic task that
+# push_back()s into an element of an unpacked array of queues when the task is called for two different indices (the
+# second call starts from a copy of the first queue: tb xrd() -> xs_row[0] gets xs_row[1]'s rows; minimal repro in the
+# commit message).  The bench uses that construct throughout (xs_row / ex_l / ex_q / ex_t), so a 5.032 run is not
+# evidence either way.  Resolution: $VERILATOR, else the fleet's pinned 5.050, else PATH; anything older is refused.
+MIN_VERILATOR = (5, 50)
+
+
+def verilator_bin():
+    import os, shutil
+    cands = [os.environ.get('VERILATOR'), str(Path.home() / '.local/opentallas-tools/verilator-5.050/bin/verilator'),
+             shutil.which('verilator')]
+    for b in cands:
+        if not b or not Path(b).exists():
+            continue
+        v = subprocess.run([b, '--version'], capture_output=True, text=True).stdout
+        m = re.search(r'Verilator (\d+)\.(\d+)', v)
+        if m and (int(m.group(1)), int(m.group(2))) >= MIN_VERILATOR:
+            return b, v.strip()
+    return None, ' / '.join(str(b) for b in cands if b)
+
+
 def build(out, tag, defines, params):
     obj = out / f'obj_{tag}'
-    cmd = ['verilator', '--binary', '--timing', '-O1', '-Wno-UNOPTFLAT', '-Wno-fatal', '-Wno-lint', '-Wno-style', '-j', '8',
+    vbin, vver = verilator_bin()
+    if vbin is None:
+        msg = f'TOOL_VERSION: Verilator >= {MIN_VERILATOR[0]}.{MIN_VERILATOR[1]:03d} required, none found ({vver})'
+        (out / f'build_{tag}.log').write_text(msg + '\n')
+        return 2, None, '%Error ' + msg
+    cmd = [vbin, '--binary', '--timing', '-O1', '-Wno-UNOPTFLAT', '-Wno-fatal', '-Wno-lint', '-Wno-style', '-j', '8',
            '--top-module', 'tb_dsfd_sp_vm', '--Mdir', str(obj), *[f'+define+{d}' for d in defines],
            *[f'-G{k}={v}' for k, v in params.items()], *[str(ROOT / s) for s in SRCS]]
     b = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
-    (out / f'build_{tag}.log').write_text(' '.join(cmd) + '\n' + b.stdout + b.stderr)
+    (out / f'build_{tag}.log').write_text(vver + '\n' + ' '.join(cmd) + '\n' + b.stdout + b.stderr)
     return b.returncode, obj / 'Vtb_dsfd_sp_vm', b.stdout + b.stderr
 
 
