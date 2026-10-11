@@ -175,3 +175,15 @@ its tok/s cost is 0 on either basis.
 - My jobs use block `qfd_seq_su`, so they cannot collide with a's `qfd_seq_su_bi_{a,b}` keys.
 - Lockstep bench: base PASS (50 reads in 4k cycles locally); PMUT FAIL (3,955 mismatches).
 - Contract: the store is written only at boot (macro is read-before-write), the same as the die's program load.
+
+## Status update, 2026-10-10 evening
+
+- **ot_hgi_su_ctl:** CLOSED on the owner's fill-9 line (867fa9c05 RST_RELAY+PRE_PIPE, d4163ebbe). The fallback was cancelled; its best route was TT -93.8 / -67.1 LVT.
+- **ot_hgi_su_ctlw (production WIDE=1):** first routes running, hgi_suctlw-fb-02359f0c7-tc{,-lvt}-cl.
+- **ot_hgi_vm_unit:** both fallback benches failed on a real main bug (vm_core with RP=0 leaves CE at x). Fixed at 93f2ee279 and resubmitted as hgi_vm-fb{a,b}-93f2ee279-tc-cl.
+- **ot_gpu_rf_visibility_fence_p:** the placer upsized a pinned flop onto its pinned neighbour (DPL-0033). The hook now reserves resize headroom; resubmitted as mtp-fence-fb-93f2ee279-tc-hm0{,-lvt}-cl.
+- **ot_hbm_tu_retry_phy_port:** variant b ended EARLY_FAIL at -482. A 24-bit session compare drove the enables of 8 x 545 bits. Fix HWU, 0 cycles: turetryphy-fb-f63e6e650-{a,b}-tc-rd-cl.
+- **NO3 split:** the a440/b440 failures (-631) come from the floorplan; c520 is routing. Fallback only; adopt it only if the main line fails (coordinator ruling).
+- **ot_hcoll_port:** the ECC-off fallback is adoptable (coordinator ruling: it is SRAM ECC on a never-closed block). The clean run_port.sh at 7ea0839ae PASSes.
+- **qfd_seq_su:** the fb routes failed on the u_ctrl.st chain to the 1,024-bit hq enable. Fix HQ2: qfd_seq_su-fe{a,b}-f3e3d6b6f.
+- **ot_mtp_p2_prefix_path:** mtp-p2-path-rb4-fb-9dda063ff-lvt-hm20-cl submitted.
