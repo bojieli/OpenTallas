@@ -1807,7 +1807,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
-           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
+           "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
@@ -2000,10 +2000,11 @@ def snapshot_refresh_sh(run):
 def fp_lint_env(j, t, lint=True, prg=False):
     run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
     env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
-           f"preroute_gate.py preroute_gate.tcl; do "
+           f"preroute_gate.py preroute_gate.tcl textbook_lint.py; do "
            f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; "
            f"{snapshot_refresh_sh(run)}true; }}\nship_fpl\n"
-           f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
+           f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n"
+           f"printf '%s\\n' {shlex.quote(json.dumps(textbook_cfg(j)))} > {d}/textbook_cfg.json\n")
     if lint:
         env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "
                 f"OT_FP_LINT_ARGS={shlex.quote(gate_args(j['spec'].get('fp_lint', True)))}\n")
@@ -2011,6 +2012,56 @@ def fp_lint_env(j, t, lint=True, prg=False):
         env += (f"export OT_PREROUTE_GATE=1 "
                 f"OT_PREROUTE_GATE_ARGS={shlex.quote(gate_args(j['spec'].get('preroute_gate', True)))}\n")
     return env
+
+
+# TEXTBOOK-LINT (owner 2026-10-11, tools/textbook_lint.py): classic unclosable structures (clock root size, high fanout,
+# unregistered boundaries, logic depth, wire reach, util / channels) checked on the synthesis netlist + floorplan inside
+# the floorplan-lint hook (fp_margin_lint.tcl ot_textbook_lint, ORFS PRE GLOBAL_PLACE).  Config per stage in
+# {CL}/fplint/<tag>/textbook_cfg.json (mounted /ot_fplint): mode from spec "textbook_lint" (false = off, {"mode",
+# "set", "waive"}), else STATE/textbook_lint.json {"mode": "warn"|"refuse", "refuse_checks": [...]} (main flips it to
+# refuse without a restart), else WARN.  WARN: the lines are logged to the job events + daemon log (textbook_note);
+# REFUSE: the hook writes FAIL "FLOORPLAN_MARGIN: textbook_lint: ..." and the job finishes FLOORPLAN_MARGIN as for the
+# floorplan lint (no placement / route spent).
+TEXTBOOK_NOTE_S = 600
+
+
+def textbook_cfg(j):
+    try:
+        cfg = json.loads((STATE / "textbook_lint.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    cfg = {"mode": cfg.get("mode", "warn"), **({"refuse_checks": cfg["refuse_checks"]} if cfg.get("refuse_checks") else {})}
+    sp = j["spec"].get("textbook_lint", True)
+    if sp is False:
+        cfg["mode"] = "off"
+    elif isinstance(sp, dict):
+        cfg.update({k: sp[k] for k in ("mode", "set", "waive", "refuse_checks") if k in sp})
+    return cfg
+
+
+def textbook_note(j, force=False):
+    """log the in-flow textbook lint's result for the current stage once (job event + daemon log)"""
+    tag_ = j.get("stage_tag")
+    if not tag_ or not j.get("host") or not j.get("run"):
+        return
+    seen = j.setdefault("textbook_seen", {})
+    if tag_ in seen or (not force and time.time() - j.get("textbook_checked", 0) < TEXTBOOK_NOTE_S):
+        return
+    j["textbook_checked"] = time.time()
+    try:
+        r = ssh(j["host"], f"cat {j['run']}/cl/fplint/{tag_}/TEXTBOOK 2>/dev/null", timeout=60)
+    except Exception:  # noqa: BLE001
+        return
+    lines = [l for l in (r.stdout or "").splitlines() if l.startswith(("textbook_lint:", "TEXTBOOK_LINT:"))]
+    if r.returncode or not lines:
+        return
+    seen[tag_] = lines[0][len("textbook_lint: "):][:120]
+    j["textbook_lint"] = {"tag": tag_, "lines": lines[:12]}
+    head = lines[0]
+    if len(lines) > 1:
+        event(j, f"TEXTBOOK-LINT {tag_}: {head[15:200]} || " + " || ".join(l[15:400] for l in lines[1:8])[:1800])
+    else:
+        event(j, f"TEXTBOOK-LINT {tag_}: {head[15:300]}")
 
 
 def fp_lint_failed(host, run, tag):
@@ -2056,7 +2107,10 @@ def fp_lint_finish(j, tag, text):
            f"report {j['run']}/cl/fplint/{tag}/fp_margin_lint.json)\n" +
            "\n".join(l for l in text.splitlines() if l.startswith("fp_margin_lint:"))[:1500] +
            "\nFIX (REDESIGN_RULES 'floorplan margin targets'): <= 55-60% util, <= 6 bits/um/layer, PDN-clear pin "
-           "columns, channels sized to the crossing nets; spec fp_lint:false opts out")
+           "columns, channels sized to the crossing nets; spec fp_lint:false opts out" +
+           ("\nTEXTBOOK: the textbook lint refused a classic unclosable structure (report "
+            f"{j['run']}/cl/fplint/{tag}/textbook_lint.json; tools/closure_loop/README.md 'Textbook lint'): restructure "
+            "it; spec textbook_lint: {\"waive\": [\"<check>\"]} waives one check" if "textbook_lint" in reasons else ""))
 
 
 # MEM-CAP (drive-0849 2026-10-09, coordinator URGENT "die routes SIGKILLed"): both full-die Qwen r22k GRTs (EPYC3
@@ -3010,6 +3064,11 @@ def first_error(j, st):
 
 
 def crash(j, st, fleet, why):
+    if st["kind"] in ("route", "calibrate"):
+        try:
+            textbook_note(j, force=True)
+        except Exception:  # noqa: BLE001
+            pass
     if preserve_completed_route(j, st, why):
         return
     if st["kind"] in ("calibrate", "route") and j.get("stage_tag") and j.get("host"):
@@ -4002,6 +4061,8 @@ def step(j, fleet):
                 event(j, f"{j['host']} reachable again; {st['key']} still running")
                 j["unreachable"] = 0
             stuck_watchdog(j, st)
+            if st["kind"] in ("route", "calibrate") and state == "RUNNING" and j["spec"].get("fp_lint", True) is not False:
+                textbook_note(j)
             if st["kind"] == "route" and state == "RUNNING":
                 early_fail_gate(j, st)
             return

@@ -80,6 +80,57 @@ applied and the job is REFUSED "rebase the source").  Balanced regions add only 
 window).  `"submit_lint": false` opts out.  `closure_loop.py submit-recheck --since ISO [--requeue] [--log F]` re-judges past
 FLOORPLAN_MARGIN jobs without a live successor.
 
+### Textbook lint (OWNER 2026-10-11): classic unclosable structures before placement
+Inside the same hook, right after the geometry dump, `fp_margin_lint.tcl` (`ot_textbook_lint`) runs
+`tools/textbook_lint.py` on the ORFS synthesis netlist (`RESULTS_DIR/1_2_yosys.v`, else `1_synth.v`, else a `write_verilog`
+of the db) plus that dump. Pure Python on the fleet host: 1-40 s on 3-612 MB netlists. A checker error or a timeout
+(`OT_TEXTBOOK_TIMEOUT`, 1800 s) never stops the flow. Checks, each naming the offending nets / registers:
+clock_domain (flops per clock root vs outline), high_fanout (BUF/INV trees collapsed, constants excluded; reset / port /
+other), boundary (input->output combinational bits, input->register and register->output levels, ICG enable from a
+port), logic_depth (ASAP7 weight sum x `depth_scale` = ps per reg->reg stage), wire_reach (a register whose fixed
+terminals -- placed IO pins, macro pins -- no point is within 500 um of, or a fixed-to-fixed combinational path > 500 um),
+and util_channel (util outside 45-65%, macro channels < 20 um).
+
+Every check has two tiers. The WARN tier holds the owner's textbook lines (15k sinks / 600 um, 256 loads, 3 levels, 600 ps,
+45-65%, 20 um); WARN results are logged once per stage to the job events and the daemon log (`textbook_note`, polled with the
+running stage, and on a crash). The REFUSE tier was calibrated on the 2026-10-11 validation set below so that no CLOSED
+block is refused: > 110,000 flops on one root, a reset net > 8,000 loads, a non-reset port > 2,048, any other net > 50,000,
+input->register > 9 levels, register->output > 3, any input->output bit, an ICG enable from a port, > 700 ps per stage, and
+any wire-reach violation. util_channel never refuses. The textbook WARN lines are NOT closure limits: closed blocks exceed
+them (one root of 94,498 flops; a 33,346-load net; a reset port driving 4,964 flops; util 6-21%; 17 um channels).
+
+Mode: `STATE/textbook_lint.json` `{"mode": "warn"|"refuse", "refuse_checks": [...]}` (default warn; read at each stage
+launch, so no restart is needed). Spec `"textbook_lint": false` turns it off; `{"mode", "set": {...}, "waive": [check]}`
+overrides per job. The loop writes the effective config to `{CL}/fplint/<tag>/textbook_cfg.json` (/ot_fplint). A refusal
+writes FAIL `FLOORPLAN_MARGIN: textbook_lint: ...`, and the job finishes FLOORPLAN_MARGIN (no placement or route
+spent). Report: `{CL}/fplint/<tag>/textbook_lint.json`; the printed lines are in `TEXTBOOK`. Offline:
+`textbook_lint.py check --netlist 1_2_yosys.v --dump fp_margin_lint_dump.json [--mode refuse]` (the dump comes from
+`ot_fp_lint_dump`; for hierarchical flows without a dump, dump the odb as described under the floorplan lint above).
+
+Validation 2026-10-11. "refuse" lists the refuse-tier hits. Closed (P): none refused. Failing (F): five of eight refused.
+| case | job | status | flops / root | refuse-tier hits |
+|---|---|---|---|---|
+| F1 hfd_vm_sw_e (VM8 half) | hbm_vm8bfq_swe_bf62ad44e-tc-rvt-cl | EARLY_FAIL_HOLD | 52,514 / 350x999 um | logic_depth 879 ps (22 levels, u_mr.on.seat -> control_code) |
+| F2 smh_tile_eg | hbm_smh_tile_eg_cg-c7ac635fa-tc-enreg-xlk-drst-rr-pd60-hm010-cl | EARLY_FAIL_HOLD | 124,633 | clock_domain; port xs_a1[7] 4,107 loads; in->reg 10 levels |
+| F3 hbm_norm_grp8 | hbm-norm-grp8-b-x1hm0-79315a431-tc | FLOORPLAN_MARGIN (macro_edge) | 56,805 | none (the same netlist closed as P9) |
+| F4 su64_full64 (mapped.v) | hbm_su_full64_64cda61ab-tt-d1956-f3-hm10-f5-rq | EARLY_FAIL_HOLD | 78,874 | none (693 ps; rst_n port 1,579 loads) |
+| F6 dsfd_wfc_crp | fe-wfccrp-174507588-tc-hm10-os | NEEDS_RTL (TT -58.6) | 3,112 | none (kit enables 1,057 loads = closed P2's 1,054) |
+| F7 dsfd_coll_ce | s81ph-dsfd_coll_ce-split3crpr-f1d9b22e2-tc-rd | PREROUTE_MARGIN -1,594 | 147,062 | clock_domain; logic_depth 775 ps in g_pairwise..u_y (the route's worst unit) |
+| F8 qwen_rom_tile_die | qfd_tile-fba-0ef4d7781-tc-hm0-cl | NEEDS_RTL (TT -59.3) | 131,893 | clock_domain; in->reg 13 levels (tile_id) |
+| F9 qfd_tt_ctlm_i | qfd_tt_ctlm_i-fpbmr-811bd1a67-tc-hm0-cl | PREROUTE_MARGIN -1,347 | 130,715 | clock_domain; in->reg 17; reg->out 5 (me_clk_en); 72,390-load net; 1,020 ps at u_ctrl_me.h_rd (the route's worst register) |
+| P1 smh_tcc (hier) | hbm_smh_tcc-6f7adfcbc-tc-hier-pd50-hm000-hb45-cl | CLOSED | 27,008 | none |
+| P2 dsfd_wfc_crp | el1011-wfccrp-bb847e831-tc-hm10-pr | CLOSED | 4,180 | none |
+| P3 visibility_fence_p | mtp-fence-inpin-5db03a631-tc-hb2-b-lvt-cl | CLOSED | 25,645 | none |
+| P4 qkvd_rom_end | qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2 | CLOSED | 94,498 | none |
+| P5 mtp_p2_prefix_path | mtp-p2-path-rb4v-a978bdba9-tc-hm20 | CLOSED | 32,621 | none |
+| P6 tu_retry_phy_port | turetryphy-xf-8577223b2-b-tc-rd-cl | CLOSED | 26,613 | none (608 ps: the depth calibration point) |
+| P7 hfd_svc_SE_s4 | hbm_svc_SE_s4_pspr_173e47110_tc_hm10-cl | CLOSED | 35,647 / 1009x258 um | none |
+| P8 dsfd_coll_ct | s81ph-dsfd_coll_ct-split3crpd-83e0257a8-tc-rd | CLOSED | 22,206 | none |
+| P9 hbm_norm_grp8 | hbm-norm-grp8-b-inset12-261447f61-tc-hm0-cl | CLOSED | 56,805 | none |
+| P10 hgi_cp | hgi_cp-mtp-ab84dd503-tc-hm10-cl | CLOSED | 12,634 | none |
+The refuse thresholds were fitted on these same 18 blocks; the margins are thin in places (depth 608 closed vs 700;
+in->reg 7 vs 9; reset 4,964 vs 8,000). Recalibrate as further CLOSED / failed routes arrive.
+
 ## Early-fail gates and the stuck scanner (OWNER 2026-10-08, stuckscan)
 The daemon probes every RUNNING route every 15 min (`early_fail_gate`, one ssh; spec `"early_fail": false` opts out) and
 stops a hopeless run at once with a terminal verdict, its diagnosis in `{CL}/early_fail.json`,
