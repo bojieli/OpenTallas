@@ -31,7 +31,7 @@ P=""; for kv in ${PARAMS:-}; do P="$P --param $kv"; done
 echo "TOP=$TOP DW=$DW DH=$DH PARAMS=${PARAMS:-} HALO=${HALO:-1} SLIVER=$SLIVER PADG=${PADG:-} PADD=${PADD:-} CTSA=${CTSA:-} PD=${PD:-0.40} HM=${HM:-0.020} PER=${PER:-0.770} $*" > $W/args
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --source rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv --source rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv \
-  --source $D/quad_parent_phys.sv --source $D/quad_bb.sv --source $D/die_tile/bank_bb.sv \
+  --source rtl/common/ot_fwd_link_stage.sv --source $D/quad_parent_phys.sv --source $D/quad_bb.sv --source $D/die_tile/bank_bb.sv \
   --macro-view ot_attn_tile_m6h1q=$QUADDIR \
   --macro-view ot_attn_bank_sn544=$D/bank/ot_attn_bank_sn544 --macro-view ot_attn_bank_ew544=$D/bank/ot_attn_bank_ew544 \
   --macro-view ot_attn_bank_sn136=$D/bank/ot_attn_bank_sn136 --macro-view ot_attn_bank_ew136=$D/bank/ot_attn_bank_ew136 \
@@ -41,7 +41,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --die-area 0 0 $DW ${DH:?} --core-area 0 0 $DW $DH --place-density ${PD:-0.40} --routing-layers M2 M7 \
   --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_placement.tcl --orfs-var PDN_TCL=/src/$D/die_tile/pdn_dt.tcl \
   --orfs-var IO_CONSTRAINTS=/src/$H/io_place.tcl --orfs-var MACRO_ROWS_HALO_X=${HALO:-1} --orfs-var MACRO_ROWS_HALO_Y=${HALO:-1}$PADV \
-  --orfs-var ADDER_MAP_FILE= --orfs-var "SYNTH_KEEP_MODULES=ot_attn_rp_reg" ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} \
+  --orfs-var ADDER_MAP_FILE= --orfs-var "SYNTH_KEEP_MODULES=ot_attn_rp_reg ot_fwd_clk_inv" ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} \
   --step-tcl POST_PDN=$POSTPDN \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --slew-margin-percent ${SLEWM:-60} --hold-margin-ns ${HM:-0.020} --purpose signoff_target --nickname-tag ah_$lab \
