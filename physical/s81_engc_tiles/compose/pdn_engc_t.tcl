@@ -20,5 +20,5 @@ add_pdn_connect -grid {top} -layers {M6 M7}
 # a leaf grid with only a connect and no layer above the leaf's obstructions has no shapes).
 add_pdn_stripe -grid {top} -layer {M8} -width {0.32} -spacing {5.08} -pitch {10.8} -offset {2.0}
 add_pdn_connect -grid {top} -layers {M7 M8}
-define_pdn_grid -macro -cells {dsfd_engram_lkp dsfd_engram_sink ot_engc_t_win ot_engc_t_io ot_engc_t_ws ot_engc_t_pbb ot_engc_t_pbc} -halo {2 2 2 2} -voltage_domains {CORE} -name {engram_leaves}
+define_pdn_grid -macro -cells {dsfd_engram_lkp dsfd_engram_sink ot_engc_t_win ot_engc_t_io ot_engc_t_ws ot_engc_t_pth ot_engc_t_ptb ot_engc_t_pbc} -halo {2 2 2 2} -voltage_domains {CORE} -name {engram_leaves}
 add_pdn_connect -grid {engram_leaves} -layers {M7 M8}
