@@ -35,7 +35,9 @@ SRC_BASE = [
     "rtl/hbm_accel/loader/service_native/ot_hbm_loader_native_endpoint.sv",
 ]
 SRC_REAL = {
-    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv"],
+    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_kvw.sv",
+            # hgi-1010/c: the mover's landing RAM (a 256 x 256 macro; the sequencer ring stays USE_MACRO 0)
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"],
     "quant": ["rtl/hbm_accel/generic/ot_hgi_quant_unit.sv", "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
               "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv", "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
               "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"],
@@ -65,11 +67,19 @@ SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/h
                     "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv", "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
                     "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
                     "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv", "rtl/hbm_accel/tu/ot_hcoll_port.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-                    "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv"]
+                    "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+                    "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv", "rtl/lib/ot_rst_relay.sv"]       # hgi-1010/k hardware TOPK_MERGE
 SRC_REAL["fused"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv",
                            "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv",
                            "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
-TB = ["rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
+# hgi-1010/g3: --real idxn = REAL_IDX with IDX_NATIVE 1 (IDX.INDEX through the die's selector, 4 stack scorers and 4 svc
+# IKS stripes; tb_hgi_e2e / hgi_e2e_idxn.sv); the selector's SRAM line memories need the macro models
+SRC_REAL["idxn"] = SRC_REAL["idx"] + ["rtl/hbm_accel/generic/idx/ot_hgi_idx_iks_issue.sv",
+                                      "rtl/hbm_accel/generic/e2e/hgi_e2e_idxn.sv",
+                                      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+                                      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"]
+TB = ["rtl/hbm_accel/generic/peers/tb_hgi_rlanes.sv",   # hgi-1010/c: the mover's HBM lane model (hgi_e2e_rlanes)
+      "rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
       "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
 
 
@@ -215,7 +225,8 @@ def script(a):
     if mtp:
         src = list(dict.fromkeys(src + mtp_sources()))
     src = list(dict.fromkeys(src + closure(src)))
-    gp = " ".join(f"-G{'REAL_' + x.upper()}=1" for x in real) + "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG"))
+    gp = " ".join(f"-G{'REAL_' + ('idx' if x == 'idxn' else x).upper()}=1" for x in real)
+    gp += "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG")) + (" -GIDX_NATIVE=1" if "idxn" in real else "")
     gp += (" +define+E2E_COLL_DEBUG +define+E2E_FUSED_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
     gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
     gp += " +define+E2E_FUSED" if "fused" in real else ""
@@ -253,7 +264,7 @@ mkdir -p $O
 {mtp_pre}{wi}VER=${{VERILATOR:-verilator}}
 $VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-BLKSEQ --timing -O2 \\
   {gp} -GFLAT={a.flat} -GKLAT={a.klat} -GVLAT={a.vlat} \\
-  -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb \\
+  -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb{' -I$S/rtl/common' if 'idxn' in real else ''} \\
   {srcs} \\
   {' '.join('$S/' + t for t in TB)} --Mdir $O/obj -o tb > $O/build.log 2>&1
 set +e

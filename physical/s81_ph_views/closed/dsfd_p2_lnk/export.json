@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_p2_lnk",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/fixlat-p2lnk-c917ea78d-tc-hm20/routes/fixlat_p2lnk_c917ea78d_tc_hm20/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/fixlat-p2lnk-c917ea78d-tc-hm20/routes/fixlat_p2lnk_c917ea78d_tc_hm20/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/fixlat-p2lnk-c917ea78d-tc-hm20/routes/fixlat_p2lnk_c917ea78d_tc_hm20/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/fixlat-p2lnk-c917ea78d-tc-hm20/routes/fixlat_p2lnk_c917ea78d_tc_hm20/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/fixlat-p2lnk-c917ea78d-tc-hm20/routes/fixlat_p2lnk_c917ea78d_tc_hm20/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/fixlat-p2lnk-c917ea78d-tc-hm20/routes/fixlat_p2lnk_c917ea78d_tc_hm20/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/fixlat-p2lnk-c917ea78d-tc-hm20/routes/fixlat_p2lnk_c917ea78d_tc_hm20/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_p2_lnk.lef": "239838c413ff3cfe6ea7f89e2e25cfa5e8dc835f98b2353fa42645b684bd627a",
+    "dsfd_p2_lnk_ff.lib": "ad62c5775fa4677583540efb01a380e5cfd4c792f432a9f42c67458e7d436b6a",
+    "dsfd_p2_lnk_ss.lib": "90979134613b15240ea7bfe09d37fc816cac709184e7463371ed3033909caf66"
+  },
+  "ok": true
+}

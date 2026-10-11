@@ -138,7 +138,7 @@ module tb_qkvd_kv_wq #(parameter integer DIST = 0, parameter integer RLY = 1, pa
             t = rid[i][13:0]; vg = rid[i][15:14]; l = rid[i][21:16];
             for (q = 0; q < 4; q++) begin
                 pc = {q[1:0], t[2:0]};
-                sec = {7'd0, l, vg[0], vg[1], t[13:9], t[6:3]};
+                sec = {7'd0, l, vg[1], vg[0], t[6], t[13:9], t[5:3]};   // map v2 (qwen-1010/b)
                 if (!mem.exists((int'(pc) << 24) | sec)) begin missing++; continue; end
                 cw = mem[(int'(pc) << 24) | sec];
                 ex = enc256(rows[i][256*q +: 256]);

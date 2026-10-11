@@ -118,6 +118,21 @@ SSEQ = '''    // main decision A: the kit's start / done through the stage seque
         if (s_st[5]) begin $display("MTP_STG FAIL: stage sequencer fault code %h", s_st[4:1]); $finish; end
     end
 '''
+HEPCHK = '''    // HEP (DSpark hrow versioning): every stage start's issue epoch; a re-issued (user, pos) must carry a strictly higher
+    // epoch than its previous issue (its old row can never be served), a user's epoch never decreases, and in total the
+    // epochs advance exactly once per WFC rejection (checked before PASS)
+    wire [USER_W+NW+4:0] k_hep;
+    integer h_ep [0:1023]; integer h_pe [0:1023][0:255]; integer h_inc = 0, h_i, h_j;
+    initial for (h_i = 0; h_i < 1024; h_i = h_i + 1) begin h_ep[h_i] = 0; for (h_j = 0; h_j < 256; h_j = h_j + 1) h_pe[h_i][h_j] = -1; end
+    always @(posedge sclk) if (k_hep[USER_W+NW+4]) begin : hepchk
+        integer hu, hp, he;
+        hu = k_hep[NW+4 +: USER_W]; hp = k_hep[4 +: NW]; he = k_hep[3:0];
+        if (he < h_ep[hu] && !(h_ep[hu] == 15 && he == 0)) begin TAGFAIL("epoch of u%0d decreased %0d -> %0d", hu, h_ep[hu], he); end
+        if (he != h_ep[hu]) h_inc = h_inc + ((he - h_ep[hu] + 16) % 16);
+        if (h_pe[hu][hp % 256] >= 0 && h_pe[hu][hp % 256] == he) begin TAGFAIL("u%0d pos %0d re-issued under the same epoch %0d (stale row)", hu, hp, he); end
+        h_pe[hu][hp % 256] = he; h_ep[hu] = he;
+    end
+'''
 CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra defines, expect)
     's0_tr_dspark': ('s0_tr_dspark', 0, [], 'pass'), 's0_tr_forced': ('s0_tr_forced', 0, [], 'pass'),
     's0_tr_forced_w16': ('s0_tr_forced_w16', 0, [], 'pass'), 's0_hash_u3': ('s0_hash_u3', 0, [], 'pass'),
@@ -150,6 +165,10 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'sseq_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 9),
     'sseq_stg_neg_dropstart': ('stg_r1', 1, ['OT_SSEQ_MUT_DROP_START'], 'fail', 9),
     'sseq_stg_neg_earlydone': ('stg_r1', 1, ['OT_SSEQ_MUT_EARLY_DONE'], 'fail', 9),
+    # HEP (DSpark hrow): issue epochs per stage start; mutant = the epoch never advances (stale rows)
+    'hep_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 10), 'hep_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 10),
+    'hep_stg_r1': ('stg_r1', 1, [], 'pass', 10),
+    'hep_s0_neg_stale': ('s0_hash_u3', 0, ['OT_WFCHEP_MUT_STALE'], 'fail', 10),
     # TOKIN: the S0 kit's link-in from the collective MTP lane (t_mrt {data, valid} / f_mrt grant)
     'tokin_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 6), 'tokin_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 6),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
@@ -177,6 +196,11 @@ def kit_tb(stage, vmrly=0):
             kit = kit.replace(a_, b_)
         kit += '''    always @(posedge fclk) if (li_v && !li_d[FLIT]) begin $display("MTP_S0 FAIL: token-return flit without last"); $finish; end
 '''
+    elif vmrly == 10:   # HEP: issue epochs for the hidden-row senders
+        kit = kit.replace('dsfd_wfc_stg #(.LAG(LAG)) u_kit (', 'dsfd_wfc_stg #(.LAG(LAG), .HEP(1)) u_kit (').replace(
+            'dsfd_wfc_src u_kit (', 'dsfd_wfc_src #(.HEP(1)) u_kit (').replace('.t_ft(k_ft));', '.t_ft(k_ft), .t_hep(k_hep));')
+        tag = 'MTP_STG' if stage else 'MTP_S0'
+        kit = kit + HEPCHK.replace('TAGFAIL("', '$display("' + tag + ' FAIL: hep ').replace('); end', '); $finish; end')
     elif vmrly == 9:   # main decision A: kit start / done through dsfd_stage_seq (stage dies)
         for a_, b_ in (('.t_ks(ks)', '.t_ks(k_ks)'), ('.f_kd(kd)', '.f_kd(s_kd)')):
             assert a_ in kit, a_
@@ -231,6 +255,10 @@ def kit_tb(stage, vmrly=0):
             kit = kit.replace(a_, b_)
     body, n = re.subn(r'    dsfd_wfc_vmx #\(.*?\) u_vmx \(.*?\);\n', lambda m: kit + binds, body, count=1, flags=re.S)
     assert n == 1, tb
+    if vmrly == 10 and not stage:   # HEP: the epochs advance exactly once per WFC rejection
+        assert body.count('        $display("MTP_S0 PASS mode') == 1
+        body = body.replace('        $display("MTP_S0 PASS mode', '        if (h_inc != rej) begin $display("MTP_S0 FAIL: hep epoch '
+                            'advances %0d != WFC rejections %0d", h_inc, rej); $finish; end\n        $display("MTP_S0 PASS mode')
     return tb, body
 
 

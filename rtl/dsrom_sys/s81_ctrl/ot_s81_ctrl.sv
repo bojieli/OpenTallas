@@ -40,6 +40,7 @@ module ot_s81_ctrl #(
     parameter integer USE_VM_RVALID = 0, OUT_DEPTH = 4,
     parameter integer QD       = 8,
     parameter integer ENG_HOP  = 7,
+    parameter integer HOP_TX   = 1,          // 0 (s81-ctl-1011, decision 10-10 22:02): hop_tx retired; port ENG_HOP is an external engine port
     parameter integer SRC_LO   = 0, SRC_HI = 0, SRC2_LO = 4095, SRC2_HI = 0, GRP_LO = 4095, GRP_HI = 0,
     parameter [15:0]  TYPE_MASK = 16'h000A,
     parameter integer LEN_SIDE_MAX = 64,
@@ -217,6 +218,7 @@ module ot_s81_ctrl #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin rh_v <= 1'b0; rh_tok <= 0; rh_val <= 0; rh_stop <= 1'b0; end
         else if (r_v) begin rh_v <= 1'b1; rh_tok <= r_tok; rh_val <= r_val; rh_stop <= r_stop; end
+    generate if (HOP_TX != 0) begin : g_hoptx
     ot_s81_hop_tx #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .VWA(VWA), .XW(XW), .TXB(TXB),
         .SIDE_TXB(SIDE_TXB), .SIDE_RXB(SIDE_RXB), .CMDW(CMDW), .OPW(OPW), .ARGW(ARGW), .SUW(SUW), .USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .QD(QD)) u_hop (
         .clk(clk), .rst_n(rst_n), .cmd_v(s_cv[ENG_HOP]), .cmd_d(s_cd[ENG_HOP*CMDW +: CMDW]), .dn_v(h_dv), .dn_tag(h_dt),
@@ -228,9 +230,13 @@ module ot_s81_ctrl #(
         .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq), .vm_rvalid(vm_rvalid),
         .out_valid(out_valid), .out_ready(out_ready), .out_data(out_data), .out_last(out_last),
         .fault(h_f), .fault_code(h_fc), .st_msgs(h_msgs));
+    end else begin : g_nohop
+        assign h_dv = 1'b0; assign h_dt = 0; assign h_f = 1'b0; assign h_fc = 4'd0; assign h_msgs = 0;
+        assign vm_re = 1'b0; assign vm_raddr = 0; assign out_valid = 1'b0; assign out_data = 0; assign out_last = 1'b0;
+    end endgenerate
     genvar e;
     generate for (e = 0; e < NENG; e = e + 1) begin : g_port
-        if (e == ENG_HOP) begin : g_hop
+        if (e == ENG_HOP && HOP_TX != 0) begin : g_hop
             assign cmd_v[e] = 1'b0; assign cmd_d[e*CMDW +: CMDW] = 0;
             assign s_dv[e] = h_dv; assign s_dt[e*TAGW +: TAGW] = h_dt;
         end else begin : g_ext

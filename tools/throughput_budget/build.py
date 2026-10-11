@@ -66,10 +66,10 @@ MEASURED = {
                         note="retires on write completion, not acceptance (audit hbm_ds_kvwb)"),
     "FUSED.HC_PRE_NORM": dict(ratio=6.514, grade="unit_bench", src=U + "fused/hc_pre_norm_d5120/report.json"),
     "FUSED.HC_POST": dict(ratio=20.085, grade="unit_bench", src=U + "fused/hc_post_d5120/report.json"),
-    "FUSED.QDQ_FP8": dict(ratio=1.012, grade="unit_bench", src=U + "qdq_wide/report.json",
-                          note="ot_hgi_quant_unit WIDE (lane group), price ceil(n/32)+49; packet unit was 14.6x at the old price"),
-    "FUSED.QDQ_FP4_E8M0": dict(ratio=1.019, grade="unit_bench", src=U + "qdq_wide/report.json"),
-    "FUSED.QDQ_FP4_E4M3": dict(ratio=1.015, grade="unit_bench", src=U + "qdq_wide/report.json"),
+    "FUSED.QDQ_FP8": dict(ratio=2.74, grade="unit_bench", src=U + "qdq_wide/report.json", accepted="owner rule: e2e follows measurement, +1.3k cyc/token, 0.24% (main 2026-10-11)",
+                          note="ot_hgi_quant_unit WIDE (lane group) at the price of record ceil(n/32)+8; packet unit was 14.6x"),
+    "FUSED.QDQ_FP4_E8M0": dict(ratio=4.5, grade="unit_bench", src=U + "qdq_wide/report.json", accepted="owner rule: e2e follows measurement, +1.3k cyc/token, 0.24% (main 2026-10-11)"),
+    "FUSED.QDQ_FP4_E4M3": dict(ratio=2.75, grade="unit_bench", src=U + "qdq_wide/report.json", accepted="owner rule: e2e follows measurement, +1.3k cyc/token, 0.24% (main 2026-10-11)"),
     "HC.HC_MIX_POST": dict(ratio=1.282, grade="unit_bench", src=U + "hc/ds_L0_tput/report.json"),
     "HC.HC_MIX_ROWS": dict(ratio=125.155, grade="unit_bench", src=U + "hc/ds_L0_tput/report.json",
                            interim=dict(ratio=round(482 / 193.3, 3), src="hgi-1010.log 20:04 d: striped fetch SPL 4 (32 lanes) 6,052 -> 482 cyc/record")),
@@ -107,7 +107,7 @@ OWNERS = {
     "HC.HC_MIX_POST": "hgi-1010/d",
     "FUSED.HC_POST": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "FUSED.HC_PRE_NORM": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
-    "FUSED.QDQ_FP8": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+    "FUSED.QDQ_FP8": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
     "FUSED.QDQ_FP4_E8M0": "tput-gate-1010 (with QDQ_FP8)",
     "FUSED.QDQ_FP4_E4M3": "tput-gate-1010 (with QDQ_FP8)",
     "IDX.TOPK": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
@@ -261,6 +261,30 @@ def bench_ii():
                 if blk not in best or ent["t"] > best[blk]["t"]:
                     best[blk] = ent
                 break
+    # ---- automated II harness records (tools/throughput_budget/auto_ii.py, owner 2026-10-11): the recording replay of the
+    # element's own exact bench.  A DENSE stream (input density >= 0.90: an item offered every cycle the element can take
+    # one) is production shape and may qualify; a sparse or accept-spaced stream is a lower bound on cycles an item and is
+    # carried as information only -- it must never turn an element QUALIFIED.
+    DIR = Path(__file__).resolve().parent.parent.parent / "results" / "arch" / "throughput_budget_20261010" / "auto_ii"
+    for f in sorted(_g.glob(str(DIR / "*.json"))):
+        try:
+            r = json.loads(open(f).read())
+        except Exception:  # noqa: BLE001
+            continue
+        a = r.get("auto_ii") or {}
+        if not str(a.get("verdict", "")).startswith("MEASURED") or a.get("ii") is None:
+            continue
+        blk = r["block"]
+        dense = float(a.get("input_density") or 0) >= 0.90
+        ent = dict(job=r.get("job"), commit=str(r.get("job_commit") or r.get("commit") or "")[:9], bench=a.get("bench"),
+                   line="%s, density %s: %.3f cycles an item" % (r.get("verdict"), a.get("input_density"), a["ii"]),
+                   cycles=a.get("cycles_recorded"), item="items", items=a.get("items"), ii=None,
+                   stalled=not dense, owner="auto-II harness", target=None, t=0, kind=a.get("verdict"),
+                   accept_spaced=bool(a.get("accept")), dense=dense)
+        if dense and a["ii"] <= QUAL:
+            ent["ii"] = round(a["ii"], 3)
+        if blk not in best or not str(best[blk].get("kind", "")).startswith("MEASURED"):
+            best[blk] = ent   # the harness record (a real replay of this element's bench) outranks a job-log line
     return best
 
 
@@ -427,11 +451,17 @@ def ds_budget():
         ratio = m.get("ratio")
         grade = m.get("grade")
         st = status_of(ratio, grade)
+        if m.get("accepted") and st == "UNQUALIFIED":
+            st = "ACCEPTED"      # owner decision: measured shortfall accepted, the e2e number follows the measurement
         # sensitivity: d(token)/d(op price) at +10 %, and the token cost of the measured ratio
         el = (sched_with(k, 1.10) - S2) / S2
         impact = (sched_with(k, ratio) - S2) if ratio not in (None, 1.0) else 0.0
         nl = len([L for L in a["layers"] if L is not None])
         price_rec = a["cyc"] / a["n"]
+        if st == "UNQUALIFIED_NO_BENCH" or (st == "UNQUALIFIED" and ratio is not None and ratio <= BOUND_SLOWDOWN):
+            d10 = sched_with(k, BOUND_SLOWDOWN) - S2
+            if d10 / S2 < BOUND_RATE and build_status(k, None)[0] == "BUILT":
+                st = "QUALIFIED_BY_BOUND"
         rows.append(dict(
             op=k, unit=k.split(".")[0], records_per_token=a["n"], layers_with_op=nl,
             price_cycles_per_record=round(price_rec, 1), price_cycles_per_token=round(a["cyc"], 1),
@@ -504,6 +534,9 @@ def qwen_budget():
             continue
         m = MEASURED_QWEN.get(k, {})
         ratio, grade = m.get("ratio"), m.get("grade")
+        st_q = status_of(ratio, grade)
+        if st_q != "QUALIFIED" and (sched_with(k, BOUND_SLOWDOWN) - S2) / S2 < BOUND_RATE and build_status(k, None)[0] == "BUILT":
+            st_q = "QUALIFIED_BY_BOUND"
         impact = (sched_with(k, ratio) - S2) if ratio not in (None, 1.0) else 0.0
         el = (sched_with(k, 1.10) - S2) / S2
         pr = a["cyc"] / a["n"]
@@ -517,7 +550,7 @@ def qwen_budget():
                          measured_ratio=None if grade == "hand_entered" else ratio,
                          claimed_ratio_unmeasured=ratio if grade == "hand_entered" else None,
                          measured_grade=grade, measured_src=m.get("src"),
-                         status=status_of(ratio, grade), impact_cycles_per_token=round(impact, 1),
+                         status=st_q, impact_cycles_per_token=round(impact, 1),
                          impact_tok_s=round(CLK / (S2 + impact) - CLK / S2, 1) if impact else 0.0,
                          owner=OWNERS.get(k, "hgi-1010"), elements=ELEMENTS.get(k, []),
                          variants={v: dict(records=a["varn"][v], price_cycles_per_token=round(c_, 1)) for v, c_ in a["var"].items()}))
@@ -534,6 +567,19 @@ def qwen_budget():
                      "measurements")
 
 
+def _rom_measured(grade):
+    """token-path node grades that ARE RTL measurements at production shape: 'measured*', and 'apportioned' (an op window
+    cut from a measured whole-layer RTL trace, e.g. qwen_plain_ar_stream4 RT_OPTRACE: the window's cycles are measured, only
+    its attribution to an op is by trace position).  'priced' / 'modelled' are not."""
+    return grade.startswith("measured") or grade == "apportioned"
+
+
+# BOUND RULE (main 10-11): an op / class whose price is so small that even a 10x slowdown moves the token rate by < 1 %
+# is QUALIFIED_BY_BOUND (no throughput bench needed); it must still be natively built (the build gate).  HBM ops: S2
+# re-scheduled with the op at 10x its price; ROM classes: 9 x the class's critical cycles / token cycles.
+BOUND_SLOWDOWN, BOUND_RATE = 10.0, 0.01
+
+
 def rom_budget(name):
     d = json.loads((TP / f"{name}.json").read_text())
     tot = d["totals"]["cycles"]
@@ -544,16 +590,18 @@ def rom_budget(name):
         c["grades"][n["src"]["grade"]] += n["cycles"]
         if n.get("critical"):
             c["cycles"] += n["cycles"]
-        if not n["src"]["grade"].startswith("measured") and n["cycles"] > 0:
+        if not _rom_measured(n["src"]["grade"]) and n["cycles"] > 0:
             c["unmeasured"].append(n["id"])
     cls_el = {c["id"]: c["elements"] for c in d["classes"]}
     rows = []
     for k, c in sorted(by.items(), key=lambda kv: -kv[1]["cycles"]):
-        unm = sum(v for g, v in c["grades"].items() if not g.startswith("measured"))
+        unm = sum(v for g, v in c["grades"].items() if not _rom_measured(g))
         allc = sum(c["grades"].values())
         # node prices are measured RTL unit cycles at production shape: a class qualifies when >= 95 % of its cycles
         # are measured; its few modelled nodes are listed as their own unbenched gaps (unmeasured_nodes)
         st = "QUALIFIED" if allc and unm / allc <= 0.05 else "UNQUALIFIED_NO_BENCH"
+        if st != "QUALIFIED" and (BOUND_SLOWDOWN - 1) * c["cycles"] / tot < BOUND_RATE:
+            st = "QUALIFIED_BY_BOUND"
         rows.append(dict(cls=k, critical_cycles_per_token=round(c["cycles"], 1),
                          share=round(c["cycles"] / tot, 4), nodes=c["nodes"],
                          measured_fraction=round(1 - unm / allc, 4) if allc else None,
@@ -588,13 +636,13 @@ def main():
                owner=r.get("owner_stream"), confidence=r.get("confidence"))
           for r in audit["rows"] if r["unit"] in ("CP.fetch", "KV_READ", "SVC", "DMA", "CP.dispatch") and r["target"].startswith("hbm")]
     # ranking: DS measured shortfalls by token cycles; then unmeasured by exposure
-    rank = sorted([r for r in ds["ops"] if r["status"] == "UNQUALIFIED"], key=lambda r: -r["impact_cycles_per_token"])
+    rank = sorted([r for r in ds["ops"] if r["status"] in ("UNQUALIFIED", "ACCEPTED")], key=lambda r: -r["impact_cycles_per_token"])
     nob = sorted([r for r in ds["ops"] if r["status"] == "UNQUALIFIED_NO_BENCH"], key=lambda r: -r.get("exposure_cycles_if_2x", 0))
     ranking = [dict(rank=i + 1, op=r["op"], ratio=r["measured_ratio"], impact_cycles_per_token=r["impact_cycles_per_token"],
                     impact_tok_s=r["impact_tok_s"], budget_cycles_per_record=r["price_cycles_per_record"],
                     budget_at_target=r["budget_cycles_per_record_at_target"], owner=r["owner"]) for i, r in enumerate(rank)]
     # registry gate: element -> worst status over the ops it serves (DS first, then Qwen, then ROM classes)
-    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "QUALIFIED": 2}
+    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "ACCEPTED": 2, "QUALIFIED_BY_BOUND": 3, "QUALIFIED": 4}
     el = {}
 
     def put(e, target, op, st, ratio, owner, src):
@@ -729,6 +777,9 @@ def main():
                                  rate_if_op_free_tok_s=round(CLK / (S2_ - w), 1) if w else None,
                                  inflates=RATES[model] if st != "BUILT" else []))
     rec = dict(schema="opentallas.throughput_budget.v1",
+               bound_rule=dict(slowdown=BOUND_SLOWDOWN, max_rate_change=BOUND_RATE,
+                               rule="QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % "
+                                    "(HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"),
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                rule="AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when "
                     "bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",

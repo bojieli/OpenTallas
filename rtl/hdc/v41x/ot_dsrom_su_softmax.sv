@@ -70,6 +70,8 @@ module ot_dsrom_su_softmax #(
     parameter integer DIVF12 = 1,        // 1: ot_dsrom_su_fdiv_f12 (DEPTH 33, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
     parameter integer MARGIN = 0,        // 1: the margin build (header)
     parameter integer RECUT  = 0,        // 1: the exp units on the re-cut multiplier / adder (ELM must be 11): +2 cuts each
+    parameter integer STALEDEN = 0,      // bench negative control only (0 in silicon): 1 the lanes' den (denl) loads on the
+                                         //    first row group after reset only; later rows divide by the stale den
     parameter integer SAFE   = 0         // 3: exp units and dividers on half-rate clock-gated cores (2 * depth + 1 cycles); 1: exp units and dividers as tiles with registered inputs (+1 cycle each; needs EXP6 and DIVF12); 2: and the divider's steps in two stages (+29 cycles)
 ) (
     input  wire                 clk,
@@ -498,11 +500,14 @@ module ot_dsrom_su_softmax #(
     end
     always @(posedge clk) if (den_vp) den_d <= den_rp;
     (* keep *) reg [NL*32-1:0] denl;             // den of the lane's head, a leaf register per lane (kept)
+    reg den_seen;                                // STALEDEN only: a den has been loaded since reset
+    always @(posedge clk or negedge rst_n) if (!rst_n) den_seen <= 1'b0; else if (dndv[RWD]) den_seen <= 1'b1;
+    wire dl_ld = dndv[RWD] && !(STALEDEN != 0 && den_seen);
     generate for (l = 0; l < NL; l = l + 1) begin : g_dl
         if (MARGIN) begin : g_m
             (* keep *) reg        le;            // lane copies of the load enable and the head's den
             (* keep *) reg [31:0] lv;
-            always @(posedge clk or negedge rst_n) if (!rst_n) le <= 1'b0; else le <= dndv[RWD];
+            always @(posedge clk or negedge rst_n) if (!rst_n) le <= 1'b0; else le <= dl_ld;
             always @(posedge clk) lv <= den_dn[32*(l / LPH) +: 32];
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) denl[32*l +: 32] <= 32'd0;
@@ -510,9 +515,9 @@ module ot_dsrom_su_softmax #(
         end else if (DENK) begin : g_k
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) denl[32*l +: 32] <= 32'd0;
-                else if (dndv[RWD]) denl[32*l +: 32] <= den_dn[32*(l / LPH) +: 32];
+                else if (dl_ld) denl[32*l +: 32] <= den_dn[32*(l / LPH) +: 32];
         end else begin : g_p
-            always @(posedge clk) if (dndv[RWD]) denl[32*l +: 32] <= den_dn[32*(l / LPH) +: 32];
+            always @(posedge clk) if (dl_ld) denl[32*l +: 32] <= den_dn[32*(l / LPH) +: 32];
         end
     end endgenerate
 

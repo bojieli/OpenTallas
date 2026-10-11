@@ -1,0 +1,50 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------------------------------------------------
+// dsfd_sp_hc_c (s81die-1011/ctrl, 2026-10-11): the HC slab master under the die command plane (--ctrl-adapters,
+// physical/s81_ctrl/die_ctrl_bindings.json engine hc = 2).  = dsfd_sp_hc (s81-suhc-1011: ot_s81_engine_adapter QD 8 +
+// ot_s81_hc_core, gate tools/s81_suhc/hc_gate.py PASS) behind the *_c die-pin convention of the other slab masters
+// (ot_s81_slab_ep): c_cmd = {v, descriptor 84} from dsfd_stage_seq c2 (pin flop), c_done = {v, tag 8} to d2 and
+// c_st = {online, fault} to s2 (output flops).  One stream clock (ck) for the controller and the slab (stream_1p2
+// under --suhc-1011; the adapter's pulse CDC stays and runs synchronous).
+// f_inp is the die dependency net of the HC (head descriptor's VM operands present: the VM row-completion event of the
+// producing stage, s81-ctl); it is a die pin, never tied here.  Latency vs dsfd_sp_hc: +1 cycle each way.
+// ---------------------------------------------------------------------------------------------------------------------
+module dsfd_sp_hc_c #(
+    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, MUT = 0, AMUT = 0
+) (
+    input  wire [0:0]          ck,
+    input  wire [0:0]          rst,                    // async die reset (active low)
+    input  wire [84:0]         c_cmd,
+    output reg  [8:0]          c_done,
+    output reg  [1:0]          c_st,
+    input  wire [0:0]          f_inp,
+    input  wire                y_v,
+    output wire                y_rdy,
+    input  wire [NG*32-1:0]    y_d,
+    output wire [S_RD-1:0]     rq_v,
+    output wire [S_RD*14-1:0]  rq_row,
+    input  wire [S_RD-1:0]     rs_v,
+    input  wire [S_RD*512-1:0] rs_d,
+    output wire [S_WR-1:0]     wq_v,
+    output wire [S_WR*14-1:0]  wq_row,
+    output wire [S_WR*16-1:0]  wq_mask,
+    output wire [S_WR*512-1:0] wq_d,
+    output wire [3:0]          fcode
+);
+    reg [1:0] rs_q;
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
+    wire rn = rs_q[1];
+    reg        cv_q;
+    reg [83:0] cd_q;
+    always @(posedge ck[0] or negedge rn) if (!rn) cv_q <= 1'b0; else cv_q <= c_cmd[84];
+    always @(posedge ck[0]) cd_q <= c_cmd[83:0];
+    wire dv, flt, onl;
+    wire [7:0] dt;
+    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT)) u_hc (
+        .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
+        .inp(f_inp[0]), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),
+        .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt), .online(onl), .fcode(fcode));
+    always @(posedge ck[0] or negedge rn)
+        if (!rn) begin c_done <= 9'd0; c_st <= 2'b00; end
+        else begin c_done <= {dv, dt}; c_st <= {onl, flt}; end
+endmodule

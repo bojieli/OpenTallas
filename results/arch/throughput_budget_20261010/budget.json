@@ -1,6 +1,11 @@
 {
  "schema": "opentallas.throughput_budget.v1",
- "generated_utc": "2026-10-11T06:55:30Z",
+ "bound_rule": {
+  "slowdown": 10.0,
+  "max_rate_change": 0.01,
+  "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
+ },
+ "generated_utc": "2026-10-11T10:34:17Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -16,71 +21,71 @@
   "ds_rom": 1447.7
  },
  "ds_hbm": {
-  "S2_cycles": 566881.1,
-  "S2_tok_s": 2116.8,
+  "S2_cycles": 565569.1,
+  "S2_tok_s": 2121.8,
   "target_tok_s": 2208.1,
   "image_bytes": 478720,
   "target_cycles": 543453.6,
-  "price_scale_to_target": 0.9587,
+  "price_scale_to_target": 0.9609,
   "per_unit_S2": {
    "FUSED": {
-    "busy": 73009.7,
-    "idle_true_dep": 486170.5,
+    "busy": 71369.7,
+    "idle_true_dep": 486498.5,
     "idle_issue": 3276.5,
     "records": 201
    },
    "SM": {
     "busy": 103968.3,
-    "idle_true_dep": 442232.4,
+    "idle_true_dep": 440920.4,
     "idle_issue": 19886.0,
     "records": 1095
    },
    "COLL": {
     "busy": 336487.2,
-    "idle_true_dep": 222027.0,
+    "idle_true_dep": 220715.0,
     "idle_issue": 8366.9,
     "records": 642
    },
    "DMA": {
     "busy": 40283.8,
-    "idle_true_dep": 47138.7,
-    "idle_issue": 488759.3,
+    "idle_true_dep": 45498.7,
+    "idle_issue": 489087.3,
     "records": 420
    },
    "SU": {
     "busy": 136388.0,
     "idle_true_dep": 384190.3,
-    "idle_issue": 40185.8,
+    "idle_issue": 38873.8,
     "records": 1356
    },
    "CTL": {
     "busy": 8.0,
     "idle_true_dep": 0.0,
-    "idle_issue": 556161.2,
+    "idle_issue": 554849.2,
     "records": 197
    },
    "ATT": {
     "busy": 26363.5,
-    "idle_true_dep": 524718.2,
+    "idle_true_dep": 523406.2,
     "idle_issue": 2056.0,
     "records": 80
    },
    "HC": {
     "busy": 43200.0,
     "idle_true_dep": 463926.8,
-    "idle_issue": 50356.9,
+    "idle_issue": 49044.9,
     "records": 80
    },
    "IDX": {
     "busy": 18833.9,
-    "idle_true_dep": 538615.7,
+    "idle_true_dep": 537303.7,
     "idle_issue": 1392.0,
     "records": 48
    },
    "ARGMAX": {
     "busy": 3626.0,
     "idle_true_dep": 0.0,
-    "idle_issue": 562480.7,
+    "idle_issue": 561168.7,
     "records": 1
    }
   },
@@ -93,13 +98,13 @@
     "price_cycles_per_record": 389.2,
     "price_cycles_per_token": 227271.2,
     "price_cycles_per_layer": 5681.8,
-    "budget_cycles_per_record_at_target": 373.1,
+    "budget_cycles_per_record_at_target": 373.9,
     "items_per_record": 8519.0,
     "item": "bytes",
     "required_items_per_cycle": 21.891,
-    "required_items_per_cycle_at_target": 22.834,
+    "required_items_per_cycle_at_target": 22.781,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.02818,
+    "token_elasticity_at_plus10pct": 0.02825,
     "measured_ratio": 0.716,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/coll/report.json",
@@ -108,7 +113,7 @@
     "measured_cycles_per_record": 278.6,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -41550.1,
-    "impact_tok_s": 167.4,
+    "impact_tok_s": 168.2,
     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
     "elements": [
      "hfd_coll",
@@ -136,13 +141,13 @@
     "price_cycles_per_record": 100.6,
     "price_cycles_per_token": 136388.0,
     "price_cycles_per_layer": 3409.7,
-    "budget_cycles_per_record_at_target": 96.4,
+    "budget_cycles_per_record_at_target": 96.6,
     "items_per_record": 1584.9,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 15.758,
-    "required_items_per_cycle_at_target": 16.437,
+    "required_items_per_cycle_at_target": 16.399,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.01882,
+    "token_elasticity_at_plus10pct": 0.01887,
     "measured_ratio": 1.067,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/su/report.json",
@@ -151,7 +156,7 @@
     "measured_cycles_per_record": 107.3,
     "status": "QUALIFIED",
     "impact_cycles_per_token": 7149.6,
-    "impact_tok_s": -26.4,
+    "impact_tok_s": -26.5,
     "owner": "hgi-1010/b",
     "elements": [
      "ot_hgi_su_record",
@@ -180,13 +185,13 @@
     "price_cycles_per_record": 94.9,
     "price_cycles_per_token": 103968.3,
     "price_cycles_per_layer": 2535.8,
-    "budget_cycles_per_record_at_target": 91.0,
+    "budget_cycles_per_record_at_target": 91.2,
     "items_per_record": 166974.7,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 1758.587,
-    "required_items_per_cycle_at_target": 1834.397,
+    "required_items_per_cycle_at_target": 1830.151,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00928,
+    "token_elasticity_at_plus10pct": 0.0093,
     "measured_ratio": null,
     "measured_grade": null,
     "measured_src": null,
@@ -226,7 +231,7 @@
       "price_cycles_per_token": 19200.0
      }
     },
-    "exposure_cycles_if_2x": 52606.6
+    "exposure_cycles_if_2x": 52597.9
    },
    {
     "op": "COLL.GROUP_REDUCE_MCAST",
@@ -236,13 +241,13 @@
     "price_cycles_per_record": 1325.9,
     "price_cycles_per_token": 53037.6,
     "price_cycles_per_layer": 1325.9,
-    "budget_cycles_per_record_at_target": 1271.1,
+    "budget_cycles_per_record_at_target": 1274.1,
     "items_per_record": 4096.0,
     "item": "bytes",
     "required_items_per_cycle": 3.089,
-    "required_items_per_cycle_at_target": 3.222,
+    "required_items_per_cycle_at_target": 3.215,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00936,
+    "token_elasticity_at_plus10pct": 0.00938,
     "measured_ratio": 0.908,
     "measured_grade": "e2e",
     "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
@@ -251,7 +256,7 @@
     "measured_cycles_per_record": 1204.0,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -4879.5,
-    "impact_tok_s": 18.4,
+    "impact_tok_s": 18.5,
     "owner": "-",
     "elements": [],
     "variants": {
@@ -273,13 +278,13 @@
     "price_cycles_per_record": 649.3,
     "price_cycles_per_token": 52595.9,
     "price_cycles_per_layer": 1282.8,
-    "budget_cycles_per_record_at_target": 622.5,
+    "budget_cycles_per_record_at_target": 623.9,
     "items_per_record": 20480.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 31.54,
-    "required_items_per_cycle_at_target": 32.9,
+    "required_items_per_cycle_at_target": 32.824,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00928,
+    "token_elasticity_at_plus10pct": 0.0093,
     "measured_ratio": 6.514,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
@@ -288,7 +293,7 @@
     "measured_cycles_per_record": 4229.7,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 290013.7,
-    "impact_tok_s": -716.4,
+    "impact_tok_s": -719.2,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -312,7 +317,7 @@
     "price_cycles_per_record": 540.0,
     "price_cycles_per_token": 43200.0,
     "price_cycles_per_layer": 1080.0,
-    "budget_cycles_per_record_at_target": 517.7,
+    "budget_cycles_per_record_at_target": 518.9,
     "items_per_record": 24.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 0.044,
@@ -353,11 +358,11 @@
     "price_cycles_per_record": 104.4,
     "price_cycles_per_token": 35483.8,
     "price_cycles_per_layer": 887.1,
-    "budget_cycles_per_record_at_target": 100.1,
+    "budget_cycles_per_record_at_target": 100.3,
     "items_per_record": 1153.1,
     "item": "bytes",
     "required_items_per_cycle": 11.049,
-    "required_items_per_cycle_at_target": 11.525,
+    "required_items_per_cycle_at_target": 11.499,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00092,
     "measured_ratio": 0.622,
@@ -368,7 +373,7 @@
     "measured_cycles_per_record": 64.9,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -1927.5,
-    "impact_tok_s": 7.2,
+    "impact_tok_s": 7.3,
     "owner": "-",
     "elements": [],
     "variants": {
@@ -390,13 +395,13 @@
     "price_cycles_per_record": 4246.0,
     "price_cycles_per_token": 33968.0,
     "price_cycles_per_layer": 4246.0,
-    "budget_cycles_per_record_at_target": 4070.5,
+    "budget_cycles_per_record_at_target": 4080.0,
     "items_per_record": 1048576.0,
     "item": "bytes",
     "required_items_per_cycle": 246.956,
-    "required_items_per_cycle_at_target": 257.602,
+    "required_items_per_cycle_at_target": 257.006,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00599,
+    "token_elasticity_at_plus10pct": 0.00601,
     "measured_ratio": 0.997,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_rgx_pipe_merge_20261010/rgx_matrix_SUMMARY.txt",
@@ -429,13 +434,13 @@
     "price_cycles_per_record": 2382.8,
     "price_cycles_per_token": 21445.0,
     "price_cycles_per_layer": 2680.6,
-    "budget_cycles_per_record_at_target": 2284.3,
+    "budget_cycles_per_record_at_target": 2289.6,
     "items_per_record": 2427.6,
     "item": "bytes",
     "required_items_per_cycle": 1.019,
-    "required_items_per_cycle_at_target": 1.063,
+    "required_items_per_cycle_at_target": 1.06,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00378,
+    "token_elasticity_at_plus10pct": 0.00379,
     "measured_ratio": null,
     "measured_grade": null,
     "measured_src": null,
@@ -453,7 +458,7 @@
       "price_cycles_per_token": 21445.0
      }
     },
-    "exposure_cycles_if_2x": 21428.1
+    "exposure_cycles_if_2x": 21435.1
    },
    {
     "op": "FUSED.HC_POST",
@@ -463,13 +468,13 @@
     "price_cycles_per_record": 222.7,
     "price_cycles_per_token": 17813.8,
     "price_cycles_per_layer": 445.3,
-    "budget_cycles_per_record_at_target": 213.5,
+    "budget_cycles_per_record_at_target": 214.0,
     "items_per_record": 20480.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 91.974,
-    "required_items_per_cycle_at_target": 95.939,
+    "required_items_per_cycle_at_target": 95.717,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00306,
+    "token_elasticity_at_plus10pct": 0.00307,
     "measured_ratio": 20.085,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
@@ -478,7 +483,7 @@
     "measured_cycles_per_record": 4472.4,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 339233.8,
-    "impact_tok_s": -792.5,
+    "impact_tok_s": -795.5,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -502,11 +507,11 @@
     "price_cycles_per_record": 329.5,
     "price_cycles_per_token": 13181.8,
     "price_cycles_per_layer": 329.5,
-    "budget_cycles_per_record_at_target": 315.9,
+    "budget_cycles_per_record_at_target": 316.7,
     "items_per_record": 16384.0,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 49.717,
-    "required_items_per_cycle_at_target": 51.86,
+    "required_items_per_cycle_at_target": 51.74,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00233,
     "measured_ratio": null,
@@ -539,7 +544,7 @@
       "price_cycles_per_token": 13181.8
      }
     },
-    "exposure_cycles_if_2x": 13208.3
+    "exposure_cycles_if_2x": 13177.8
    },
    {
     "op": "ATT.PV",
@@ -549,11 +554,11 @@
     "price_cycles_per_record": 329.5,
     "price_cycles_per_token": 13181.8,
     "price_cycles_per_layer": 329.5,
-    "budget_cycles_per_record_at_target": 315.9,
+    "budget_cycles_per_record_at_target": 316.7,
     "items_per_record": 16384.0,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 49.717,
-    "required_items_per_cycle_at_target": 51.86,
+    "required_items_per_cycle_at_target": 51.74,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00233,
     "measured_ratio": null,
@@ -576,7 +581,7 @@
       "price_cycles_per_token": 13181.8
      }
     },
-    "exposure_cycles_if_2x": 13208.3
+    "exposure_cycles_if_2x": 13177.8
    },
    {
     "op": "IDX.TOPK",
@@ -586,11 +591,11 @@
     "price_cycles_per_record": 283.0,
     "price_cycles_per_token": 11320.3,
     "price_cycles_per_layer": 283.0,
-    "budget_cycles_per_record_at_target": 271.3,
+    "budget_cycles_per_record_at_target": 271.9,
     "items_per_record": 384.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 1.357,
-    "required_items_per_cycle_at_target": 1.415,
+    "required_items_per_cycle_at_target": 1.412,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.002,
     "measured_ratio": 4.286,
@@ -604,7 +609,7 @@
     "measured_cycles_per_record": 1213.0,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 37198.6,
-    "impact_tok_s": -130.4,
+    "impact_tok_s": -130.9,
     "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
     "elements": [
      "hgi_idx_topk_full",
@@ -629,11 +634,11 @@
     "price_cycles_per_record": 939.2,
     "price_cycles_per_token": 7513.6,
     "price_cycles_per_layer": 939.2,
-    "budget_cycles_per_record_at_target": 900.4,
+    "budget_cycles_per_record_at_target": 902.5,
     "items_per_record": 851968.0,
     "item": "keys scored",
     "required_items_per_cycle": 907.126,
-    "required_items_per_cycle_at_target": 946.231,
+    "required_items_per_cycle_at_target": 944.041,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00133,
     "measured_ratio": null,
@@ -667,48 +672,7 @@
       "price_cycles_per_token": 7513.6
      }
     },
-    "exposure_cycles_if_2x": 7539.5
-   },
-   {
-    "op": "FUSED.QDQ_FP8",
-    "unit": "FUSED",
-    "records_per_token": 40,
-    "layers_with_op": 40,
-    "price_cycles_per_record": 65.0,
-    "price_cycles_per_token": 2600.0,
-    "price_cycles_per_layer": 65.0,
-    "budget_cycles_per_record_at_target": 62.3,
-    "items_per_record": 512.0,
-    "item": "elements (largest operand)",
-    "required_items_per_cycle": 7.877,
-    "required_items_per_cycle_at_target": 8.216,
-    "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00037,
-    "measured_ratio": 1.012,
-    "measured_grade": "unit_bench",
-    "measured_src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json",
-    "measured_note": "ot_hgi_quant_unit WIDE (lane group), price ceil(n/32)+49; packet unit was 14.6x at the old price",
-    "interim": null,
-    "measured_cycles_per_record": 65.8,
-    "status": "QUALIFIED",
-    "impact_cycles_per_token": 25.0,
-    "impact_tok_s": -0.1,
-    "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
-    "elements": [
-     "hfd_quant",
-     "ot_hgi_quant_decode",
-     "ot_hgi_quant_vm_transport_p"
-    ],
-    "variants": {
-     "null": {
-      "records": 40,
-      "price_cycles_per_token": 2600
-     }
-    },
-    "measured_record": {
-     "path": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json",
-     "commit": "2628ec01a"
-    }
+    "exposure_cycles_if_2x": 7522.1
    },
    {
     "op": "DMA.KVWB_DS",
@@ -718,11 +682,11 @@
     "price_cycles_per_record": 60.0,
     "price_cycles_per_token": 2400.0,
     "price_cycles_per_layer": 60.0,
-    "budget_cycles_per_record_at_target": 57.5,
+    "budget_cycles_per_record_at_target": 57.7,
     "items_per_record": 2048.0,
     "item": "bytes",
     "required_items_per_cycle": 34.133,
-    "required_items_per_cycle_at_target": 35.605,
+    "required_items_per_cycle_at_target": 35.522,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00028,
     "measured_ratio": 3.817,
@@ -733,7 +697,7 @@
     "measured_cycles_per_record": 229.0,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 5376.6,
-    "impact_tok_s": -19.9,
+    "impact_tok_s": -20.0,
     "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
     "elements": [
      "ot_hgi_dma_mover",
@@ -759,7 +723,7 @@
     "price_cycles_per_record": 60.0,
     "price_cycles_per_token": 2400.0,
     "price_cycles_per_layer": 60.0,
-    "budget_cycles_per_record_at_target": 57.5,
+    "budget_cycles_per_record_at_target": 57.7,
     "items_per_record": 0.0,
     "item": "",
     "required_items_per_cycle": 0.0,
@@ -789,6 +753,47 @@
     }
    },
    {
+    "op": "FUSED.QDQ_FP8",
+    "unit": "FUSED",
+    "records_per_token": 40,
+    "layers_with_op": 40,
+    "price_cycles_per_record": 24.0,
+    "price_cycles_per_token": 960.0,
+    "price_cycles_per_layer": 24.0,
+    "budget_cycles_per_record_at_target": 23.1,
+    "items_per_record": 512.0,
+    "item": "elements (largest operand)",
+    "required_items_per_cycle": 21.333,
+    "required_items_per_cycle_at_target": 22.201,
+    "share_of_unit_busy": null,
+    "token_elasticity_at_plus10pct": 0.00014,
+    "measured_ratio": 2.74,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json",
+    "measured_note": "ot_hgi_quant_unit WIDE (lane group) at the price of record ceil(n/32)+8; packet unit was 14.6x",
+    "interim": null,
+    "measured_cycles_per_record": 65.8,
+    "status": "ACCEPTED",
+    "impact_cycles_per_token": 1336.3,
+    "impact_tok_s": -5.0,
+    "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
+    "elements": [
+     "hfd_quant",
+     "ot_hgi_quant_decode",
+     "ot_hgi_quant_vm_transport_p"
+    ],
+    "variants": {
+     "null": {
+      "records": 40,
+      "price_cycles_per_token": 960
+     }
+    },
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json",
+     "commit": "b1c592a1a"
+    }
+   },
+   {
     "op": "COLL.ARGMAX_MERGE",
     "unit": "COLL",
     "records_per_token": 1,
@@ -796,7 +801,7 @@
     "price_cycles_per_record": 765.4,
     "price_cycles_per_token": 765.4,
     "price_cycles_per_layer": 765.4,
-    "budget_cycles_per_record_at_target": 733.8,
+    "budget_cycles_per_record_at_target": 735.5,
     "items_per_record": 8.0,
     "item": "bytes",
     "required_items_per_cycle": 0.01,
@@ -820,7 +825,7 @@
       "price_cycles_per_token": 765.4
      }
     },
-    "exposure_cycles_if_2x": 793.6
+    "exposure_cycles_if_2x": 791.8
    },
    {
     "op": "ARGMAX.LOCAL",
@@ -830,11 +835,11 @@
     "price_cycles_per_record": 142.7,
     "price_cycles_per_token": 142.7,
     "price_cycles_per_layer": 142.7,
-    "budget_cycles_per_record_at_target": 136.8,
+    "budget_cycles_per_record_at_target": 137.1,
     "items_per_record": 1347.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 9.442,
-    "required_items_per_cycle_at_target": 9.849,
+    "required_items_per_cycle_at_target": 9.826,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.0,
     "measured_ratio": null,
@@ -843,7 +848,7 @@
     "measured_note": null,
     "interim": null,
     "measured_cycles_per_record": null,
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "impact_cycles_per_token": 0.0,
     "impact_tok_s": 0.0,
     "owner": "UNOWNED",
@@ -856,16 +861,14 @@
       "records": 1,
       "price_cycles_per_token": 142.7
      }
-    },
-    "exposure_cycles_if_2x": 0.0
+    }
    }
   ],
   "critical_weight_if_zero": {
    "SM.MATVEC|FP8": 20334.9,
    "SM.MATVEC|FP4": 224.0,
-   "IDX.INDEX|None": 4003.5,
-   "COLL.TOPK_MERGE|None": 21021.0,
-   "COLL.ARGMAX_MERGE|None": 765.4
+   "IDX.INDEX|None": 4044.5,
+   "COLL.TOPK_MERGE|None": 21021.0
   },
   "program": "results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json",
   "run": "results/arch/hgi_sim_20261010/g25_proof/ds_full.json"
@@ -876,9 +879,9 @@
    "op": "FUSED.HC_POST",
    "ratio": 20.085,
    "impact_cycles_per_token": 339233.8,
-   "impact_tok_s": -792.5,
+   "impact_tok_s": -795.5,
    "budget_cycles_per_record": 222.7,
-   "budget_at_target": 213.5,
+   "budget_at_target": 214.0,
    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
   },
   {
@@ -886,9 +889,9 @@
    "op": "FUSED.HC_PRE_NORM",
    "ratio": 6.514,
    "impact_cycles_per_token": 290013.7,
-   "impact_tok_s": -716.4,
+   "impact_tok_s": -719.2,
    "budget_cycles_per_record": 649.3,
-   "budget_at_target": 622.5,
+   "budget_at_target": 623.9,
    "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
   },
   {
@@ -896,9 +899,9 @@
    "op": "IDX.TOPK",
    "ratio": 4.286,
    "impact_cycles_per_token": 37198.6,
-   "impact_tok_s": -130.4,
+   "impact_tok_s": -130.9,
    "budget_cycles_per_record": 283.0,
-   "budget_at_target": 271.3,
+   "budget_at_target": 271.9,
    "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)"
   },
   {
@@ -906,26 +909,36 @@
    "op": "DMA.KVWB_DS",
    "ratio": 3.817,
    "impact_cycles_per_token": 5376.6,
-   "impact_tok_s": -19.9,
+   "impact_tok_s": -20.0,
    "budget_cycles_per_record": 60.0,
-   "budget_at_target": 57.5,
+   "budget_at_target": 57.7,
    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)"
   },
   {
    "rank": 5,
+   "op": "FUSED.QDQ_FP8",
+   "ratio": 2.74,
+   "impact_cycles_per_token": 1336.3,
+   "impact_tok_s": -5.0,
+   "budget_cycles_per_record": 24.0,
+   "budget_at_target": 23.1,
+   "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)"
+  },
+  {
+   "rank": 6,
    "op": "HC.HC_MIX_POST",
    "ratio": 1.282,
    "impact_cycles_per_token": 0.0,
    "impact_tok_s": 0.0,
    "budget_cycles_per_record": 540.0,
-   "budget_at_target": 517.7,
+   "budget_at_target": 518.9,
    "owner": "hgi-1010/d"
   }
  ],
  "ds_unbenched_by_exposure": [
   {
    "op": "SM.MATVEC",
-   "exposure_cycles_if_2x": 52606.6,
+   "exposure_cycles_if_2x": 52597.9,
    "price_cycles_per_token": 103968.3,
    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
    "interim": {
@@ -935,14 +948,14 @@
   },
   {
    "op": "COLL.TOPK_MERGE",
-   "exposure_cycles_if_2x": 21428.1,
+   "exposure_cycles_if_2x": 21435.1,
    "price_cycles_per_token": 21445.0,
    "owner": "tput-gate-1010 (taken 10-10: production-shape bench)",
    "interim": null
   },
   {
    "op": "ATT.QK",
-   "exposure_cycles_if_2x": 13208.3,
+   "exposure_cycles_if_2x": 13177.8,
    "price_cycles_per_token": 13181.8,
    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
    "interim": {
@@ -952,7 +965,7 @@
   },
   {
    "op": "ATT.PV",
-   "exposure_cycles_if_2x": 13208.3,
+   "exposure_cycles_if_2x": 13177.8,
    "price_cycles_per_token": 13181.8,
    "owner": "hgi-1010/g2",
    "interim": {
@@ -962,7 +975,7 @@
   },
   {
    "op": "IDX.INDEX",
-   "exposure_cycles_if_2x": 7539.5,
+   "exposure_cycles_if_2x": 7522.1,
    "price_cycles_per_token": 7513.6,
    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
    "interim": {
@@ -972,15 +985,8 @@
   },
   {
    "op": "COLL.ARGMAX_MERGE",
-   "exposure_cycles_if_2x": 793.6,
+   "exposure_cycles_if_2x": 791.8,
    "price_cycles_per_token": 765.4,
-   "owner": "UNOWNED",
-   "interim": null
-  },
-  {
-   "op": "ARGMAX.LOCAL",
-   "exposure_cycles_if_2x": 0.0,
-   "price_cycles_per_token": 142.7,
    "owner": "UNOWNED",
    "interim": null
   }
@@ -1021,12 +1027,12 @@
     "records_per_token": 290,
     "price_cycles_per_token": 54578.4,
     "critical_cycles_if_zero": 20334.9,
-    "rate_if_op_free_tok_s": 2195.6,
+    "rate_if_op_free_tok_s": 2200.9,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2121.8 tok/s"
     ]
    },
    {
@@ -1050,12 +1056,12 @@
     "records_per_token": 720,
     "price_cycles_per_token": 19200.0,
     "critical_cycles_if_zero": 224.0,
-    "rate_if_op_free_tok_s": 2117.7,
+    "rate_if_op_free_tok_s": 2122.6,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2121.8 tok/s"
     ]
    },
    {
@@ -1127,12 +1133,12 @@
     "records_per_token": 9,
     "price_cycles_per_token": 21445.0,
     "critical_cycles_if_zero": 21021.0,
-    "rate_if_op_free_tok_s": 2198.4,
+    "rate_if_op_free_tok_s": 2203.7,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2121.8 tok/s"
     ]
    },
    {
@@ -1191,26 +1197,14 @@
     "evidence": "ot_hgi_idx_index / _native exist; every committed die e2e runs IDX.INDEX as a stub (DS L2 with IDX stub); only the IKS key-stream issuer is benched (hgi_unit_tput_20261010/iks)",
     "records_per_token": 8,
     "price_cycles_per_token": 7513.6,
-    "critical_cycles_if_zero": 4003.5,
-    "rate_if_op_free_tok_s": 2131.9,
+    "critical_cycles_if_zero": 4044.5,
+    "rate_if_op_free_tok_s": 2137.0,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2121.8 tok/s"
     ]
-   },
-   {
-    "model": "DS",
-    "op": "FUSED.QDQ_FP8",
-    "variant": null,
-    "status": "BUILT",
-    "evidence": "results/rtl/hgi_e2e_20261009/runs/ds_L0_coll_dma_idx_quant_sfu_su_COLL_PFMAX512_f40k40_685ae3/report.json; results/rtl/hgi_e2e_20261009/runs/ds_L0_quant_f40k40/report.json; results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
-    "records_per_token": 40,
-    "price_cycles_per_token": 2600,
-    "critical_cycles_if_zero": null,
-    "rate_if_op_free_tok_s": null,
-    "inflates": []
    },
    {
     "model": "DS",
@@ -1238,27 +1232,34 @@
    },
    {
     "model": "DS",
+    "op": "FUSED.QDQ_FP8",
+    "variant": null,
+    "status": "BUILT",
+    "evidence": "results/rtl/hgi_e2e_20261009/runs/ds_L0_coll_dma_idx_quant_sfu_su_COLL_PFMAX512_f40k40_685ae3/report.json; results/rtl/hgi_e2e_20261009/runs/ds_L0_quant_f40k40/report.json; results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
+    "records_per_token": 40,
+    "price_cycles_per_token": 960,
+    "critical_cycles_if_zero": null,
+    "rate_if_op_free_tok_s": null,
+    "inflates": []
+   },
+   {
+    "model": "DS",
     "op": "COLL.ARGMAX_MERGE",
     "variant": null,
-    "status": "NO_NATIVE_EVIDENCE",
-    "evidence": "ot_hgi_coll_record op 3 + ot_hgi_coll_amerge exist; tb_hgi_coll_record checks only the endpoint control with a stubbed endpoint (no exact native data run committed)",
+    "status": "BUILT",
+    "evidence": "results/rtl/hgi_e2e_native_20261011/dfl_tiny_coll/report.json",
     "records_per_token": 1,
     "price_cycles_per_token": 765.4,
-    "critical_cycles_if_zero": 765.4,
-    "rate_if_op_free_tok_s": 2119.7,
-    "inflates": [
-     "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
-     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
-     "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
-    ]
+    "critical_cycles_if_zero": null,
+    "rate_if_op_free_tok_s": null,
+    "inflates": []
    },
    {
     "model": "DS",
     "op": "ARGMAX.LOCAL",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_adapters_20261009/benches/argmax_run.log (41 records, HGI_ARGMAX PASS)",
+    "evidence": "results/rtl/hgi_unit_tput_20261010/argmax/ds/report.json; results/rtl/hgi_unit_tput_20261010/argmax/qwen/report.json",
     "records_per_token": 1,
     "price_cycles_per_token": 142.7,
     "critical_cycles_if_zero": null,
@@ -1282,7 +1283,7 @@
     "op": "COLL.ALL_REDUCE_SUM",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_e2e_20261009/runs/qwen_L0_coll_COLL_PFMAX512_COLL_BF160_f40k40/report.json; results/rtl/hgi_e2e_20261009/runs/qwen_L0_coll_dma_fused_sfu_su_COLL_PFMAX512_COLL_BF160_f40k40/report.json",
+    "evidence": "results/rtl/hgi_e2e_20261009/runs/qwen_L0_coll_COLL_PFMAX512_COLL_BF160_f40k40/report.json; results/rtl/hgi_e2e_20261009/runs/qwen_L0_coll_dma_fused_sfu_su_COLL_PFMAX512_COLL_BF160_f40k40/report.json; results/rtl/hgi_e2e_native_20261011/dfl_tiny_coll/report.json",
     "records_per_token": 72,
     "price_cycles_per_token": 97200,
     "critical_cycles_if_zero": null,
@@ -1366,7 +1367,7 @@
     "op": "ARGMAX.LOCAL",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_adapters_20261009/benches/argmax_run.log (41 records, HGI_ARGMAX PASS)",
+    "evidence": "results/rtl/hgi_unit_tput_20261010/argmax/ds/report.json; results/rtl/hgi_unit_tput_20261010/argmax/qwen/report.json",
     "records_per_token": 1,
     "price_cycles_per_token": 2394.0,
     "critical_cycles_if_zero": null,
@@ -1401,17 +1402,13 @@
     "model": "Qwen",
     "op": "COLL.ARGMAX_MERGE",
     "variant": null,
-    "status": "NO_NATIVE_EVIDENCE",
-    "evidence": "ot_hgi_coll_record op 3 + ot_hgi_coll_amerge exist; tb_hgi_coll_record checks only the endpoint control with a stubbed endpoint (no exact native data run committed)",
+    "status": "BUILT",
+    "evidence": "results/rtl/hgi_e2e_native_20261011/dfl_tiny_coll/report.json",
     "records_per_token": 1,
     "price_cycles_per_token": 586,
-    "critical_cycles_if_zero": 586.0,
-    "rate_if_op_free_tok_s": 946.0,
-    "inflates": [
-     "Qwen AR 953.8 tok/s (results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json S2)",
-     "Qwen DFlash b16 1,791.8 tok/s (dflash_timing.json)",
-     "this budget's Qwen S2 945.5 tok/s"
-    ]
+    "critical_cycles_if_zero": null,
+    "rate_if_op_free_tok_s": null,
+    "inflates": []
    }
   ],
   "priced_not_built": [
@@ -1424,12 +1421,12 @@
     "records_per_token": 290,
     "price_cycles_per_token": 54578.4,
     "critical_cycles_if_zero": 20334.9,
-    "rate_if_op_free_tok_s": 2195.6,
+    "rate_if_op_free_tok_s": 2200.9,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2121.8 tok/s"
     ]
    },
    {
@@ -1441,12 +1438,12 @@
     "records_per_token": 720,
     "price_cycles_per_token": 19200.0,
     "critical_cycles_if_zero": 224.0,
-    "rate_if_op_free_tok_s": 2117.7,
+    "rate_if_op_free_tok_s": 2122.6,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2121.8 tok/s"
     ]
    },
    {
@@ -1458,12 +1455,12 @@
     "records_per_token": 9,
     "price_cycles_per_token": 21445.0,
     "critical_cycles_if_zero": 21021.0,
-    "rate_if_op_free_tok_s": 2198.4,
+    "rate_if_op_free_tok_s": 2203.7,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
+     "this budget's DS S2 2121.8 tok/s"
     ]
    },
    {
@@ -1474,46 +1471,13 @@
     "evidence": "ot_hgi_idx_index / _native exist; every committed die e2e runs IDX.INDEX as a stub (DS L2 with IDX stub); only the IKS key-stream issuer is benched (hgi_unit_tput_20261010/iks)",
     "records_per_token": 8,
     "price_cycles_per_token": 7513.6,
-    "critical_cycles_if_zero": 4003.5,
-    "rate_if_op_free_tok_s": 2131.9,
+    "critical_cycles_if_zero": 4044.5,
+    "rate_if_op_free_tok_s": 2137.0,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
-    ]
-   },
-   {
-    "model": "DS",
-    "op": "COLL.ARGMAX_MERGE",
-    "variant": null,
-    "status": "NO_NATIVE_EVIDENCE",
-    "evidence": "ot_hgi_coll_record op 3 + ot_hgi_coll_amerge exist; tb_hgi_coll_record checks only the endpoint control with a stubbed endpoint (no exact native data run committed)",
-    "records_per_token": 1,
-    "price_cycles_per_token": 765.4,
-    "critical_cycles_if_zero": 765.4,
-    "rate_if_op_free_tok_s": 2119.7,
-    "inflates": [
-     "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
-     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
-     "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2116.8 tok/s"
-    ]
-   },
-   {
-    "model": "Qwen",
-    "op": "COLL.ARGMAX_MERGE",
-    "variant": null,
-    "status": "NO_NATIVE_EVIDENCE",
-    "evidence": "ot_hgi_coll_record op 3 + ot_hgi_coll_amerge exist; tb_hgi_coll_record checks only the endpoint control with a stubbed endpoint (no exact native data run committed)",
-    "records_per_token": 1,
-    "price_cycles_per_token": 586,
-    "critical_cycles_if_zero": 586.0,
-    "rate_if_op_free_tok_s": 946.0,
-    "inflates": [
-     "Qwen AR 953.8 tok/s (results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json S2)",
-     "Qwen DFlash b16 1,791.8 tok/s (dflash_timing.json)",
-     "this budget's Qwen S2 945.5 tok/s"
+     "this budget's DS S2 2121.8 tok/s"
     ]
    }
   ]
@@ -1881,19 +1845,33 @@
    "target": null,
    "t": "2026-10-09T18:19:17-07:00"
   },
+  "hfd_su_tile_xl": {
+   "job": "hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl",
+   "commit": "fa7b65cba",
+   "bench": "bench_tile_xl_phase",
+   "line": "TILE_XL PASS cycles=300 rootskew_ns=0.100",
+   "cycles": 300,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:hardcore-1010",
+   "target": null,
+   "t": "2026-10-11T00:20:26-07:00"
+  },
   "hfd_idx_t4_join": {
-   "job": "hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2",
-   "commit": "ff4827405",
-   "bench": "bench_t4j_sram_exact",
-   "line": "PASS atomic T4 join beats=342 cycles=1013 depth128 downstreamstall500",
+   "job": "hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl",
+   "commit": "f7cabb9b7",
+   "bench": "bench_t4j_fe_exact",
+   "line": "PASS atomic T4 join beats=342 cycles=1013 depth128 downstreamstall500 MEM=1 FE=1",
    "cycles": 1013,
    "item": "beats",
    "items": 342,
    "ii": 2.962,
    "stalled": true,
-   "owner": "Claude:hgi-1010",
+   "owner": "Claude:fe-push-hgi-1010",
    "target": null,
-   "t": "2026-10-10T23:47:03-07:00"
+   "t": "2026-10-11T03:05:01-07:00"
   },
   "ot_dsrom_hc_seed_join": {
    "job": "hcjoin-mc420-lk-d4211f538-tc-cl",
@@ -1991,7 +1969,7 @@
    "stalled": false,
    "owner": "Claude:mtp-fixlat-1011",
    "target": null,
-   "t": "2026-10-10T20:03:33-07:00"
+   "t": "2026-10-11T02:03:53-07:00"
   },
   "qfd_sysctl_stn_pb2": {
    "job": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
@@ -2008,7 +1986,7 @@
    "t": "2026-10-10T19:21:56-07:00"
   },
   "dsfd_colt_lane": {
-   "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12-ttfix",
+   "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12",
    "commit": "e96dd1e56",
    "bench": "bench_exact_ring",
    "line": "COLT_RING PASS cycles=100000 reads=27118",
@@ -2019,7 +1997,7 @@
    "stalled": false,
    "owner": "Codex:s81-slab-continuation",
    "target": null,
-   "t": "2026-10-10T19:58:04-07:00"
+   "t": "2026-10-11T01:15:32-07:00"
   },
   "hgi_att_rows_g12_140": {
    "job": "hgi-att-g12-140-187a8471c-tc-cx",
@@ -2063,19 +2041,36 @@
    "target": null,
    "t": "2026-10-10T01:09:24-07:00"
   },
+  "dsfd_svcio_job": {
+   "job": "svcio_job-a6cf4500f-tc",
+   "commit": "a6cf4500f",
+   "bench": "bench_svc_job_gate",
+   "line": "SVC_JOB_GATE PASS b1=0 b2=0 b3=0 ns1=0 ns4=0 tile1=0 tile4=0 dropstart=1 wrongdesc_end=1 wrongdesc_nq=1 earlydone=1 nogate=1 partialdone=1 lostcmd=1 tile_earlydone=1 tile_dropstart=1 (cycles=3730)",
+   "cycles": 3730,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:s81-svceng-1011",
+   "target": null,
+   "t": "2026-10-11T01:46:21-07:00"
+  },
   "dsfd_coll_p2_lane_pa": {
    "job": "mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b",
    "commit": "0ddaf548b",
-   "bench": "bench_exact_p2l",
-   "line": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=27020 abort_latency=94 starts=3",
-   "cycles": 27020,
-   "item": "rows",
-   "items": 240,
-   "ii": 112.583,
-   "stalled": false,
-   "owner": "Claude:mtp-colllane-1011",
+   "bench": "exact_p2l",
+   "line": "MEASURED_ACCEPT, density 0.321: 34.504 cycles an item",
+   "cycles": 25741,
+   "item": "items",
+   "items": 8313,
+   "ii": null,
+   "stalled": true,
+   "owner": "auto-II harness",
    "target": null,
-   "t": "2026-10-10T21:01:07-07:00"
+   "t": 0,
+   "kind": "MEASURED_ACCEPT",
+   "accept_spaced": true,
+   "dense": false
   },
   "qfd_embed_code_bank_parent": {
    "job": "qfd_embed_code_bank_parent_flat-e510ca8c2tt",
@@ -2092,18 +2087,21 @@
    "t": "2026-10-09T12:17:54-07:00"
   },
   "dsfd_coll_p2_lane_ba": {
-   "job": "qf-p2lba-ogrant-5b059065b-tc-hm10-lvt",
+   "job": "qf-p2lba-ogrant-5b059065b-tc-hm0-lvt",
    "commit": "5b059065b",
-   "bench": "bench_exact_p2l_s1",
-   "line": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26692 abort_latency=94 starts=3",
-   "cycles": 26692,
-   "item": "rows",
-   "items": 240,
-   "ii": 111.217,
-   "stalled": false,
-   "owner": "Claude:mtp-colllane-1011/p2lba",
+   "bench": "exact_p2l_s1",
+   "line": "MEASURED_ACCEPT, density 0.025: 1.079 cycles an item",
+   "cycles": 18894,
+   "item": "items",
+   "items": 480,
+   "ii": null,
+   "stalled": true,
+   "owner": "auto-II harness",
    "target": null,
-   "t": "2026-10-10T23:48:18-07:00"
+   "t": 0,
+   "kind": "MEASURED_ACCEPT",
+   "accept_spaced": true,
+   "dense": false
   },
   "qfd_coll_xfifo": {
    "job": "qfd_coll_xfifo_a-66fd85cda-tc",
@@ -2160,6 +2158,37 @@
    "owner": "Claude:hgi-takeover",
    "target": null,
    "t": "2026-10-10T16:47:31-07:00"
+  },
+  "dsfd_p2_lnk": {
+   "job": "fixlat-p2lnk-c917ea78d-tc-hm20",
+   "commit": "c917ea78d",
+   "bench": "pass_p2_s1",
+   "line": "MEASURED_ACCEPT, density 1.0: 1.000 cycles an item",
+   "cycles": 12743,
+   "item": "items",
+   "items": 12743,
+   "ii": 1.0,
+   "stalled": false,
+   "owner": "auto-II harness",
+   "target": null,
+   "t": 0,
+   "kind": "MEASURED_ACCEPT",
+   "accept_spaced": true,
+   "dense": true
+  },
+  "dsfd_svc_join": {
+   "job": "svc_join-a6cf4500f-tc",
+   "commit": "a6cf4500f",
+   "bench": "bench_svc_job_gate",
+   "line": "SVC_JOB_GATE PASS b1=0 b2=0 b3=0 ns1=0 ns4=0 tile1=0 tile4=0 dropstart=1 wrongdesc_end=1 wrongdesc_nq=1 earlydone=1 nogate=1 partialdone=1 lostcmd=1 tile_earlydone=1 tile_dropstart=1 (cycles=3730)",
+   "cycles": 3730,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:s81-svceng-1011",
+   "target": null,
+   "t": "2026-10-11T02:19:20-07:00"
   },
   "qfd_embed_ingress_code_numeric": {
    "job": "qfd_embed_ingress_code_numeric-82c12047d-lbc",
@@ -2257,7 +2286,7 @@
    "stalled": false,
    "owner": "Claude:hardcore-1010/fe-h",
    "target": null,
-   "t": "2026-10-10T21:00:13-07:00"
+   "t": "2026-10-11T03:01:04-07:00"
   },
   "dsfd_vm_mtp_ep": {
    "job": "fixlat-vmmtp-189894fc2-tc-hm20",
@@ -2271,7 +2300,7 @@
    "stalled": false,
    "owner": "Claude:mtp-fixlat-1011",
    "target": null,
-   "t": "2026-10-10T20:21:46-07:00"
+   "t": "2026-10-11T02:21:55-07:00"
   },
   "ot_su12_sfu": {
    "job": "hbm_sfu_lane_ring3_aa5dd28d5",
@@ -2290,16 +2319,19 @@
   "dsfd_wfc_vmx": {
    "job": "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl",
    "commit": "c39e235bb",
-   "bench": "bench_prd_s0_tr_forced",
-   "line": "{\"case\": \"prd_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [\"OT_WFCVMX_PRED\"], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"p",
-   "cycles": 41423,
-   "item": "issues",
-   "items": 92,
-   "ii": 450.25,
+   "bench": "prd_s0_tr_forced",
+   "line": "MEASURED_RECORDED, density 0.986: 1.015 cycles an item",
+   "cycles": 41275,
+   "item": "items",
+   "items": 40685,
+   "ii": 1.015,
    "stalled": false,
-   "owner": "Claude:struct-close",
+   "owner": "auto-II harness",
    "target": null,
-   "t": "2026-10-10T00:42:23-07:00"
+   "t": 0,
+   "kind": "MEASURED_RECORDED",
+   "accept_spaced": false,
+   "dense": true
   },
   "ot_hgi_cp_mtp_pinreg": {
    "job": "hgi_cp_mtp_pinreg-a-7d9c1b45e-tc-cl-r2",
@@ -2369,7 +2401,7 @@
    "stalled": false,
    "owner": "Claude:mtp-fixlat-1011",
    "target": null,
-   "t": "2026-10-10T20:06:06-07:00"
+   "t": "2026-10-11T02:06:57-07:00"
   },
   "dsfd_wfc_lnk": {
    "job": "mtp-wfc_lnk-b-0cd6caa1b-tc",
@@ -2412,6 +2444,108 @@
    "owner": "Claude:cont-takeover",
    "target": null,
    "t": "2026-10-10T22:52:51-07:00"
+  },
+  "dsfd_mtp_seed_launch": {
+   "job": "mtp-seedl-4b2f329b3-tc",
+   "commit": "4b2f329b3",
+   "bench": "seedl_gate_pos",
+   "line": "MEASURED_ACCEPT, density 0.566: 1.000 cycles an item",
+   "cycles": 7438,
+   "item": "items",
+   "items": 4212,
+   "ii": null,
+   "stalled": true,
+   "owner": "auto-II harness",
+   "target": null,
+   "t": 0,
+   "kind": "MEASURED_ACCEPT",
+   "accept_spaced": true,
+   "dense": false
+  },
+  "ot_dsrom_wfc_tokpipe_src": {
+   "job": "mtp-wfc-src-hard-mxb-910e67c7b-tc-cx",
+   "commit": "910e67c7b",
+   "bench": "source_hard_all10",
+   "line": "MEASURED_ACCEPT, density 0.003: 1.000 cycles an item",
+   "cycles": 64111,
+   "item": "items",
+   "items": 166,
+   "ii": null,
+   "stalled": true,
+   "owner": "auto-II harness",
+   "target": null,
+   "t": 0,
+   "kind": "MEASURED_ACCEPT",
+   "accept_spaced": true,
+   "dense": false
+  },
+  "ot_dsrom_wfc_tokpipe_stg": {
+   "job": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+   "commit": "9f7a7f35e",
+   "bench": "exact_stg",
+   "line": "MEASURED_ACCEPT, density 0.148: 1.051 cycles an item",
+   "cycles": 17320,
+   "item": "items",
+   "items": 2520,
+   "ii": null,
+   "stalled": true,
+   "owner": "auto-II harness",
+   "target": null,
+   "t": 0,
+   "kind": "MEASURED_ACCEPT",
+   "accept_spaced": true,
+   "dense": false
+  },
+  "ot_mtp_p2_prefix_path": {
+   "job": "mtp-p2-path-rb4-s-9dda063ff-tc",
+   "commit": "9dda063ff",
+   "bench": "p2_rootpipe_gate",
+   "line": "MEASURED_ACCEPT, density 0.502: 1.000 cycles an item",
+   "cycles": 6186,
+   "item": "items",
+   "items": 160,
+   "ii": null,
+   "stalled": true,
+   "owner": "auto-II harness",
+   "target": null,
+   "t": 0,
+   "kind": "MEASURED_ACCEPT",
+   "accept_spaced": true,
+   "dense": false
+  },
+  "ot_s81_host_dispatch": {
+   "job": "s81hdisp_rb-937531860-tc-hm25-cl",
+   "commit": "937531860",
+   "bench": "rb_s81_hdisp_exact",
+   "line": "MEASURED_RECORDED, density 1.0: 1.000 cycles an item",
+   "cycles": 240,
+   "item": "items",
+   "items": 240,
+   "ii": 1.0,
+   "stalled": false,
+   "owner": "auto-II harness",
+   "target": null,
+   "t": 0,
+   "kind": "MEASURED_RECORDED",
+   "accept_spaced": false,
+   "dense": true
+  },
+  "ot_s81_ingest_visibility_fence": {
+   "job": "sp-visfence-006e20771-tc-hm10-cl",
+   "commit": "006e20771",
+   "bench": "vis_fence_exact",
+   "line": "MEASURED_RECORDED, density 1.0: 86.000 cycles an item",
+   "cycles": 344,
+   "item": "items",
+   "items": 4,
+   "ii": null,
+   "stalled": false,
+   "owner": "auto-II harness",
+   "target": null,
+   "t": 0,
+   "kind": "MEASURED_RECORDED",
+   "accept_spaced": false,
+   "dense": true
   }
  },
  "bf_hier": {
@@ -2567,17 +2701,22 @@
  "rom_block_coverage": {
   "dsfd_cap_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_cb": "^dsfd_coll_",
+  "dsfd_coll_cbj": "^dsfd_coll_",
   "dsfd_coll_ce": "^dsfd_coll_",
   "dsfd_coll_ct": "^dsfd_coll_",
   "dsfd_coll_mtp_lane": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_p2_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_p2_lane_ba": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_p2_lane_pa": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
+  "dsfd_dw_ep_c": null,
+  "dsfd_dw_ep_s": null,
+  "dsfd_engram_c": "^(dsfd_engram_)",
   "dsfd_engram_lkp": "^(dsfd_engram_)",
   "dsfd_engram_sink": "^(dsfd_engram_)",
   "dsfd_host": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
   "dsfd_host_native": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
   "dsfd_host_protected": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
+  "dsfd_host_sd": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
   "dsfd_hstnh_515": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_m2l_raw_512x1__hl_E1": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_m2l_raw_512x1__hl_E2": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
@@ -2609,6 +2748,11 @@
   "dsfd_stnh_514x1": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_stnh_566x1": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_stnv_514x1": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
+  "dsfd_svc_join": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
+  "dsfd_svcio_job": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
+  "dsfd_vm_be": null,
+  "dsfd_vm_bgq28": null,
+  "dsfd_vm_fe": null,
   "dsfd_vm_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_vm_p2_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_vm_wfc_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -2712,6 +2856,8 @@
   "qfd_res_slot": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_row_merge_native_fence": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_seq_su": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
+  "qfd_seq_su_bi_fea": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
+  "qfd_seq_su_bi_feb": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_sp_constants_sequencer_nc": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_sp_constants_sequencer_sys": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_sp_constants_sequencer_sys_v_t": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
@@ -2961,9 +3107,7 @@
   "S2_cycles": 1269120.1,
   "S2_tok_s": 945.5,
   "target_tok_s": 953.8,
-  "critical_weight_if_zero": {
-   "COLL.ARGMAX_MERGE|None": 586.0
-  },
+  "critical_weight_if_zero": {},
   "price_scale_to_target": 0.9913,
   "ops": [
    {
@@ -3190,7 +3334,7 @@
     "claimed_ratio_unmeasured": 9.204,
     "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json hbm_dma_load",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "impact_cycles_per_token": 861.1,
     "impact_tok_s": -0.6,
     "owner": "hgi-1010",
@@ -3258,7 +3402,7 @@
     "claimed_ratio_unmeasured": 1.263,
     "measured_grade": "hand_entered",
     "measured_src": "budget_audit table.json qwen_head_stream_chain",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "impact_cycles_per_token": 0.0,
     "impact_tok_s": 0.0,
     "owner": "UNOWNED",
@@ -3353,7 +3497,7 @@
     "claimed_ratio_unmeasured": null,
     "measured_grade": null,
     "measured_src": null,
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "impact_cycles_per_token": 0.0,
     "impact_tok_s": 0.0,
     "owner": "UNOWNED",
@@ -3378,23 +3522,10 @@
      "critical_cycles_per_token": 124746.0,
      "share": 0.5001,
      "nodes": 180,
-     "measured_fraction": 0.5259,
-     "unmeasured_nodes": [
-      "L0.qkv",
-      "L0.o_proj",
-      "L0.gate_up",
-      "L0.down",
-      "L1.qkv",
-      "L1.o_proj",
-      "L1.gate_up",
-      "L1.down",
-      "L2.qkv",
-      "L2.o_proj",
-      "L2.gate_up",
-      "L2.down"
-     ],
-     "n_unmeasured": 144,
-     "status": "UNQUALIFIED_NO_BENCH",
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
      "elements": [
       "qfd_tile",
       "qfd_tile_e",
@@ -3438,23 +3569,10 @@
      "critical_cycles_per_token": 45676.0,
      "share": 0.1831,
      "nodes": 216,
-     "measured_fraction": 0.0,
-     "unmeasured_nodes": [
-      "L0.rmsnorm1",
-      "L0.qknorm_rope",
-      "L0.attn_tail",
-      "L0.rmsnorm2",
-      "L0.residual",
-      "L1.rmsnorm1",
-      "L1.qknorm_rope",
-      "L1.attn_tail",
-      "L1.rmsnorm2",
-      "L1.residual",
-      "L2.rmsnorm1",
-      "L2.qknorm_rope"
-     ],
-     "n_unmeasured": 180,
-     "status": "UNQUALIFIED_NO_BENCH",
+     "measured_fraction": 1.0,
+     "unmeasured_nodes": [],
+     "n_unmeasured": 0,
+     "status": "QUALIFIED",
      "elements": [
       "qfd_sp_su64_sfu",
       "qfd_sp_vector_memory",
@@ -3492,7 +3610,7 @@
       "embed"
      ],
      "n_unmeasured": 1,
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "elements": [
       "qfd_io_emb_root",
       "qfd_io_emb_tap",
@@ -4128,7 +4246,7 @@
     "stalled": false,
     "owner": "Claude:mtp-fixlat-1011",
     "target": null,
-    "t": "2026-10-10T20:03:33-07:00"
+    "t": "2026-10-11T02:03:53-07:00"
    }
   },
   "dsfd_capt_ctl": {
@@ -4282,6 +4400,28 @@
    ]
   },
   "dsfd_coll_cb": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cbj": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -4533,18 +4673,21 @@
     }
    ],
    "bench_ii": {
-    "job": "qf-p2lba-ogrant-5b059065b-tc-hm10-lvt",
+    "job": "qf-p2lba-ogrant-5b059065b-tc-hm0-lvt",
     "commit": "5b059065b",
-    "bench": "bench_exact_p2l_s1",
-    "line": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26692 abort_latency=94 starts=3",
-    "cycles": 26692,
-    "item": "rows",
-    "items": 240,
-    "ii": 111.217,
-    "stalled": false,
-    "owner": "Claude:mtp-colllane-1011/p2lba",
+    "bench": "exact_p2l_s1",
+    "line": "MEASURED_ACCEPT, density 0.025: 1.079 cycles an item",
+    "cycles": 18894,
+    "item": "items",
+    "items": 480,
+    "ii": null,
+    "stalled": true,
+    "owner": "auto-II harness",
     "target": null,
-    "t": "2026-10-10T23:48:18-07:00"
+    "t": 0,
+    "kind": "MEASURED_ACCEPT",
+    "accept_spaced": true,
+    "dense": false
    }
   },
   "dsfd_coll_p2_lane_pa": {
@@ -4571,16 +4714,19 @@
    "bench_ii": {
     "job": "mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b",
     "commit": "0ddaf548b",
-    "bench": "bench_exact_p2l",
-    "line": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=27020 abort_latency=94 starts=3",
-    "cycles": 27020,
-    "item": "rows",
-    "items": 240,
-    "ii": 112.583,
-    "stalled": false,
-    "owner": "Claude:mtp-colllane-1011",
+    "bench": "exact_p2l",
+    "line": "MEASURED_ACCEPT, density 0.321: 34.504 cycles an item",
+    "cycles": 25741,
+    "item": "items",
+    "items": 8313,
+    "ii": null,
+    "stalled": true,
+    "owner": "auto-II harness",
     "target": null,
-    "t": "2026-10-10T21:01:07-07:00"
+    "t": 0,
+    "kind": "MEASURED_ACCEPT",
+    "accept_spaced": true,
+    "dense": false
    }
   },
   "dsfd_colt_lane": {
@@ -4613,7 +4759,7 @@
     }
    ],
    "bench_ii": {
-    "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12-ttfix",
+    "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12",
     "commit": "e96dd1e56",
     "bench": "bench_exact_ring",
     "line": "COLT_RING PASS cycles=100000 reads=27118",
@@ -4624,7 +4770,7 @@
     "stalled": false,
     "owner": "Codex:s81-slab-continuation",
     "target": null,
-    "t": "2026-10-10T19:58:04-07:00"
+    "t": "2026-10-11T01:15:32-07:00"
    }
   },
   "dsfd_colt_mrg": {
@@ -4717,6 +4863,72 @@
     }
    ]
   },
+  "dsfd_dw_ep_c": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_dw_ep_s": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_engram_c": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:embed",
+    "model": "ds_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^(dsfd_engram_): ds-1010: engram lookup / sink (embed class)"
+   },
+   "ops": [
+    {
+     "op": "class:embed",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^(dsfd_engram_): ds-1010: engram lookup / sink (embed class)"
+    }
+   ]
+  },
   "dsfd_engram_lkp": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -4806,6 +5018,28 @@
    ]
   },
   "dsfd_host_protected": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:host",
+    "model": "ds_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility): ds-1010: host / ingest path: no per-token price row (prefill / admission), no throughput bench"
+   },
+   "ops": [
+    {
+     "op": "class:host",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility): ds-1010: host / ingest path: no per-token price row (prefill / admission), no throughput bench"
+    }
+   ]
+  },
+  "dsfd_host_sd": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -5517,7 +5751,24 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-seedl-4b2f329b3-tc",
+    "commit": "4b2f329b3",
+    "bench": "seedl_gate_pos",
+    "line": "MEASURED_ACCEPT, density 0.566: 1.000 cycles an item",
+    "cycles": 7438,
+    "item": "items",
+    "items": 4212,
+    "ii": null,
+    "stalled": true,
+    "owner": "auto-II harness",
+    "target": null,
+    "t": 0,
+    "kind": "MEASURED_ACCEPT",
+    "accept_spaced": true,
+    "dense": false
+   }
   },
   "dsfd_mtp_seq": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -5592,24 +5843,24 @@
    }
   },
   "dsfd_p2_lnk": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
-    "op": "class:wave",
-    "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "op": "bench II (items)",
+    "model": "rom",
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "auto-II harness",
+    "src": "closure job fixlat-p2lnk-c917ea78d-tc-hm20 @ c917ea78d: MEASURED_ACCEPT, density 1.0: 1.000 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
    },
    "ops": [
     {
-     "op": "class:wave",
-     "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "op": "bench II (items)",
+     "model": "rom",
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "auto-II harness",
+     "src": "closure job fixlat-p2lnk-c917ea78d-tc-hm20 @ c917ea78d: MEASURED_ACCEPT, density 1.0: 1.000 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
     }
    ]
   },
@@ -5941,6 +6192,42 @@
     }
    ]
   },
+  "dsfd_svc_join": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl): ds-1010: HBM PC path (hbm class)"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl): ds-1010: HBM PC path (hbm class)"
+    }
+   ],
+   "bench_ii": {
+    "job": "svc_join-a6cf4500f-tc",
+    "commit": "a6cf4500f",
+    "bench": "bench_svc_job_gate",
+    "line": "SVC_JOB_GATE PASS b1=0 b2=0 b3=0 ns1=0 ns4=0 tile1=0 tile4=0 dropstart=1 wrongdesc_end=1 wrongdesc_nq=1 earlydone=1 nogate=1 partialdone=1 lostcmd=1 tile_earlydone=1 tile_dropstart=1 (cycles=3730)",
+    "cycles": 3730,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:s81-svceng-1011",
+    "target": null,
+    "t": "2026-10-11T02:19:20-07:00"
+   }
+  },
   "dsfd_svc_pc": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -6031,6 +6318,42 @@
     }
    ]
   },
+  "dsfd_svcio_job": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl): ds-1010: HBM PC path (hbm class)"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl): ds-1010: HBM PC path (hbm class)"
+    }
+   ],
+   "bench_ii": {
+    "job": "svcio_job-a6cf4500f-tc",
+    "commit": "a6cf4500f",
+    "bench": "bench_svc_job_gate",
+    "line": "SVC_JOB_GATE PASS b1=0 b2=0 b3=0 ns1=0 ns4=0 tile1=0 tile4=0 dropstart=1 wrongdesc_end=1 wrongdesc_nq=1 earlydone=1 nogate=1 partialdone=1 lostcmd=1 tile_earlydone=1 tile_dropstart=1 (cycles=3730)",
+    "cycles": 3730,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:s81-svceng-1011",
+    "target": null,
+    "t": "2026-10-11T01:46:21-07:00"
+   }
+  },
   "dsfd_svcio_od": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -6118,6 +6441,28 @@
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
+    }
+   ]
+  },
+  "dsfd_vm_be": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
     }
    ]
   },
@@ -6211,6 +6556,50 @@
     }
    ]
   },
+  "dsfd_vm_bgq28": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_vm_fe": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "dsfd_vm_mtp_ep": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -6244,7 +6633,7 @@
     "stalled": false,
     "owner": "Claude:mtp-fixlat-1011",
     "target": null,
-    "t": "2026-10-10T20:21:46-07:00"
+    "t": "2026-10-11T02:21:55-07:00"
    }
   },
   "dsfd_vm_p2_ep": {
@@ -6280,7 +6669,7 @@
     "stalled": false,
     "owner": "Claude:mtp-fixlat-1011",
     "target": null,
-    "t": "2026-10-10T20:06:06-07:00"
+    "t": "2026-10-11T02:06:57-07:00"
    }
   },
   "dsfd_vm_wfc_ep": {
@@ -6400,40 +6789,26 @@
    ]
   },
   "dsfd_wfc_vmx": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.015,
    "limiting": {
-    "op": "class:wave",
-    "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "op": "bench II (items)",
+    "model": "rom",
+    "status": "QUALIFIED",
+    "ratio": 1.015,
+    "owner": "auto-II harness",
+    "src": "closure job mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl @ c39e235bb: MEASURED_RECORDED, density 0.986: 1.015 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
    },
    "ops": [
     {
-     "op": "class:wave",
-     "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "op": "bench II (items)",
+     "model": "rom",
+     "status": "QUALIFIED",
+     "ratio": 1.015,
+     "owner": "auto-II harness",
+     "src": "closure job mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl @ c39e235bb: MEASURED_RECORDED, density 0.986: 1.015 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
     }
-   ],
-   "bench_ii": {
-    "job": "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl",
-    "commit": "c39e235bb",
-    "bench": "bench_prd_s0_tr_forced",
-    "line": "{\"case\": \"prd_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [\"OT_WFCVMX_PRED\"], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"p",
-    "cycles": 41423,
-    "item": "issues",
-    "items": 92,
-    "ii": 450.25,
-    "stalled": false,
-    "owner": "Claude:struct-close",
-    "target": null,
-    "t": "2026-10-10T00:42:23-07:00"
-   }
+   ]
   },
   "dsrom_mtp_head_full340_A": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -6773,18 +7148,18 @@
     }
    ],
    "bench_ii": {
-    "job": "hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2",
-    "commit": "ff4827405",
-    "bench": "bench_t4j_sram_exact",
-    "line": "PASS atomic T4 join beats=342 cycles=1013 depth128 downstreamstall500",
+    "job": "hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl",
+    "commit": "f7cabb9b7",
+    "bench": "bench_t4j_fe_exact",
+    "line": "PASS atomic T4 join beats=342 cycles=1013 depth128 downstreamstall500 MEM=1 FE=1",
     "cycles": 1013,
     "item": "beats",
     "items": 342,
     "ii": 2.962,
     "stalled": true,
-    "owner": "Claude:hgi-1010",
+    "owner": "Claude:fe-push-hgi-1010",
     "target": null,
-    "t": "2026-10-10T23:47:03-07:00"
+    "t": "2026-10-11T03:05:01-07:00"
    }
   },
   "hfd_index_q_b0": {
@@ -6942,23 +7317,23 @@
    ]
   },
   "hfd_quant": {
-   "status": "QUALIFIED",
-   "ratio": 1.012,
+   "status": "ACCEPTED",
+   "ratio": 2.74,
    "limiting": {
     "op": "FUSED.QDQ_FP8",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.012,
-    "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+    "status": "ACCEPTED",
+    "ratio": 2.74,
+    "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
     "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
    },
    "ops": [
     {
      "op": "FUSED.QDQ_FP8",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.012,
-     "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+     "status": "ACCEPTED",
+     "ratio": 2.74,
+     "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
      "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
     }
    ]
@@ -7095,7 +7470,21 @@
      "owner": "hgi-1010/b",
      "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl",
+    "commit": "fa7b65cba",
+    "bench": "bench_tile_xl_phase",
+    "line": "TILE_XL PASS cycles=300 rootskew_ns=0.100",
+    "cycles": 300,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:hardcore-1010",
+    "target": null,
+    "t": "2026-10-11T00:20:26-07:00"
+   }
   },
   "hfd_svc_SE_s0": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -8737,7 +9126,24 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-wfc-src-hard-mxb-910e67c7b-tc-cx",
+    "commit": "910e67c7b",
+    "bench": "source_hard_all10",
+    "line": "MEASURED_ACCEPT, density 0.003: 1.000 cycles an item",
+    "cycles": 64111,
+    "item": "items",
+    "items": 166,
+    "ii": null,
+    "stalled": true,
+    "owner": "auto-II harness",
+    "target": null,
+    "t": 0,
+    "kind": "MEASURED_ACCEPT",
+    "accept_spaced": true,
+    "dense": false
+   }
   },
   "ot_dsrom_wfc_tokpipe_stg": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -8759,7 +9165,24 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+    "commit": "9f7a7f35e",
+    "bench": "exact_stg",
+    "line": "MEASURED_ACCEPT, density 0.148: 1.051 cycles an item",
+    "cycles": 17320,
+    "item": "items",
+    "items": 2520,
+    "ii": null,
+    "stalled": true,
+    "owner": "auto-II harness",
+    "target": null,
+    "t": 0,
+    "kind": "MEASURED_ACCEPT",
+    "accept_spaced": true,
+    "dense": false
+   }
   },
   "ot_dsrom_window_column_128": {
    "status": "QUALIFIED",
@@ -9428,12 +9851,12 @@
    ]
   },
   "ot_hgi_argmax18_m": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "ARGMAX.LOCAL",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "UNOWNED",
     "src": null
@@ -9442,7 +9865,7 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "UNOWNED",
      "src": null
@@ -9450,7 +9873,7 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "UNOWNED",
      "src": "budget_audit table.json qwen_head_stream_chain"
@@ -9472,12 +9895,12 @@
    }
   },
   "ot_hgi_argmax_record": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "ARGMAX.LOCAL",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "UNOWNED",
     "src": null
@@ -9486,7 +9909,7 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "UNOWNED",
      "src": null
@@ -9494,7 +9917,7 @@
     {
      "op": "ARGMAX.LOCAL",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "UNOWNED",
      "src": "budget_audit table.json qwen_head_stream_chain"
@@ -9862,45 +10285,45 @@
    ]
   },
   "ot_hgi_quant_decode": {
-   "status": "QUALIFIED",
-   "ratio": 1.012,
+   "status": "ACCEPTED",
+   "ratio": 2.74,
    "limiting": {
     "op": "FUSED.QDQ_FP8",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.012,
-    "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+    "status": "ACCEPTED",
+    "ratio": 2.74,
+    "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
     "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
    },
    "ops": [
     {
      "op": "FUSED.QDQ_FP8",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.012,
-     "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+     "status": "ACCEPTED",
+     "ratio": 2.74,
+     "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
      "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
     }
    ]
   },
   "ot_hgi_quant_vm_transport_p": {
-   "status": "QUALIFIED",
-   "ratio": 1.012,
+   "status": "ACCEPTED",
+   "ratio": 2.74,
    "limiting": {
     "op": "FUSED.QDQ_FP8",
     "model": "DS AR 1M (HBM)",
-    "status": "QUALIFIED",
-    "ratio": 1.012,
-    "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+    "status": "ACCEPTED",
+    "ratio": 2.74,
+    "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
     "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
    },
    "ops": [
     {
      "op": "FUSED.QDQ_FP8",
      "model": "DS AR 1M (HBM)",
-     "status": "QUALIFIED",
-     "ratio": 1.012,
-     "owner": "tput-gate-1010 (WIDE built + benched 1.01x; route + hb_quant lgE slot-2 share open)",
+     "status": "ACCEPTED",
+     "ratio": 2.74,
+     "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
      "src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json"
     }
    ]
@@ -10289,7 +10712,24 @@
      "owner": "bf-mtp-1010",
      "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-p2-path-rb4-s-9dda063ff-tc",
+    "commit": "9dda063ff",
+    "bench": "p2_rootpipe_gate",
+    "line": "MEASURED_ACCEPT, density 0.502: 1.000 cycles an item",
+    "cycles": 6186,
+    "item": "items",
+    "items": 160,
+    "ii": null,
+    "stalled": true,
+    "owner": "auto-II harness",
+    "target": null,
+    "t": 0,
+    "kind": "MEASURED_ACCEPT",
+    "accept_spaced": true,
+    "dense": false
+   }
   },
   "ot_qkvd_kv_end": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -10468,12 +10908,12 @@
    ]
   },
   "ot_qwen_rom_core_core_p": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10482,7 +10922,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10490,12 +10930,12 @@
    ]
   },
   "ot_qwen_rom_core_core_pu": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10504,7 +10944,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10512,12 +10952,12 @@
    ]
   },
   "ot_qwen_rom_core_meif_idle_capture": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10526,7 +10966,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10534,12 +10974,12 @@
    ]
   },
   "ot_qwen_slab_port_group_m3_m8": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10548,7 +10988,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10556,12 +10996,12 @@
    ]
   },
   "ot_qwen_slab_port_group_s14_die": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10570,7 +11010,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -10762,24 +11202,24 @@
    ]
   },
   "ot_s81_host_dispatch": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
-    "op": "class:host",
-    "model": "ds_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility): ds-1010: host / ingest path: no per-token price row (prefill / admission), no throughput bench"
+    "op": "bench II (items)",
+    "model": "rom",
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "auto-II harness",
+    "src": "closure job s81hdisp_rb-937531860-tc-hm25-cl @ 937531860: MEASURED_RECORDED, density 1.0: 1.000 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
    },
    "ops": [
     {
-     "op": "class:host",
-     "model": "ds_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility): ds-1010: host / ingest path: no per-token price row (prefill / admission), no throughput bench"
+     "op": "bench II (items)",
+     "model": "rom",
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "auto-II harness",
+     "src": "closure job s81hdisp_rb-937531860-tc-hm25-cl @ 937531860: MEASURED_RECORDED, density 1.0: 1.000 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
     }
    ]
   },
@@ -10803,7 +11243,24 @@
      "owner": "ds-1010",
      "src": "name rule ^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility): ds-1010: host / ingest path: no per-token price row (prefill / admission), no throughput bench"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "sp-visfence-006e20771-tc-hm10-cl",
+    "commit": "006e20771",
+    "bench": "vis_fence_exact",
+    "line": "MEASURED_RECORDED, density 1.0: 86.000 cycles an item",
+    "cycles": 344,
+    "item": "items",
+    "items": 4,
+    "ii": null,
+    "stalled": false,
+    "owner": "auto-II harness",
+    "target": null,
+    "t": 0,
+    "kind": "MEASURED_RECORDED",
+    "accept_spaced": false,
+    "dense": true
+   }
   },
   "ot_s81_native_pc_mux_plain": {
    "status": "QUALIFIED",
@@ -11216,12 +11673,12 @@
    ]
   },
   "qfd_crom_g": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11230,7 +11687,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11238,12 +11695,12 @@
    ]
   },
   "qfd_crom_gs": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11252,7 +11709,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11260,12 +11717,12 @@
    ]
   },
   "qfd_cst": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -11274,7 +11731,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -11282,12 +11739,12 @@
    ]
   },
   "qfd_ctrl_emb_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11296,7 +11753,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11304,12 +11761,12 @@
    ]
   },
   "qfd_ctrl_pc_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11318,7 +11775,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11326,12 +11783,12 @@
    ]
   },
   "qfd_ctrl_pc_01": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11340,7 +11797,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11348,12 +11805,12 @@
    ]
   },
   "qfd_ctrl_pc_02": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11362,7 +11819,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11370,12 +11827,12 @@
    ]
   },
   "qfd_ctrl_pc_03": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11384,7 +11841,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11392,12 +11849,12 @@
    ]
   },
   "qfd_ctrl_pc_04": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11406,7 +11863,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11414,12 +11871,12 @@
    ]
   },
   "qfd_ctrl_pc_05": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11428,7 +11885,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11436,12 +11893,12 @@
    ]
   },
   "qfd_ctrl_pc_06": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11450,7 +11907,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11458,12 +11915,12 @@
    ]
   },
   "qfd_ctrl_pc_07": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11472,7 +11929,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11480,12 +11937,12 @@
    ]
   },
   "qfd_ctrl_pc_08": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11494,7 +11951,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11502,12 +11959,12 @@
    ]
   },
   "qfd_ctrl_pc_09": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11516,7 +11973,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11524,12 +11981,12 @@
    ]
   },
   "qfd_ctrl_pc_10": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11538,7 +11995,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11546,12 +12003,12 @@
    ]
   },
   "qfd_ctrl_pc_11": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11560,7 +12017,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11568,12 +12025,12 @@
    ]
   },
   "qfd_ctrl_pc_12": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11582,7 +12039,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11590,12 +12047,12 @@
    ]
   },
   "qfd_ctrl_pc_13": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11604,7 +12061,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11612,12 +12069,12 @@
    ]
   },
   "qfd_ctrl_pc_14": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11626,7 +12083,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11634,12 +12091,12 @@
    ]
   },
   "qfd_ctrl_pc_15": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11648,7 +12105,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11656,12 +12113,12 @@
    ]
   },
   "qfd_ctrl_pc_16": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11670,7 +12127,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11678,12 +12135,12 @@
    ]
   },
   "qfd_ctrl_pc_17": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11692,7 +12149,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11700,12 +12157,12 @@
    ]
   },
   "qfd_ctrl_pc_18": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11714,7 +12171,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11722,12 +12179,12 @@
    ]
   },
   "qfd_ctrl_pc_19": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11736,7 +12193,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11744,12 +12201,12 @@
    ]
   },
   "qfd_ctrl_pc_20": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11758,7 +12215,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11766,12 +12223,12 @@
    ]
   },
   "qfd_ctrl_pc_21": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11780,7 +12237,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11788,12 +12245,12 @@
    ]
   },
   "qfd_ctrl_pc_22": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11802,7 +12259,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11810,12 +12267,12 @@
    ]
   },
   "qfd_ctrl_pc_23": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11824,7 +12281,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11832,12 +12289,12 @@
    ]
   },
   "qfd_ctrl_pc_24": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11846,7 +12303,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11854,12 +12311,12 @@
    ]
   },
   "qfd_ctrl_pc_25": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11868,7 +12325,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11876,12 +12333,12 @@
    ]
   },
   "qfd_ctrl_pc_26": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11890,7 +12347,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11898,12 +12355,12 @@
    ]
   },
   "qfd_ctrl_pc_27": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11912,7 +12369,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11920,12 +12377,12 @@
    ]
   },
   "qfd_ctrl_pc_28": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11934,7 +12391,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11942,12 +12399,12 @@
    ]
   },
   "qfd_ctrl_pc_29": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11956,7 +12413,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11964,12 +12421,12 @@
    ]
   },
   "qfd_ctrl_pc_30": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11978,7 +12435,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -11986,12 +12443,12 @@
    ]
   },
   "qfd_ctrl_pc_31": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12000,7 +12457,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12008,12 +12465,12 @@
    ]
   },
   "qfd_ctrl_protected_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12022,7 +12479,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12030,12 +12487,12 @@
    ]
   },
   "qfd_ctrl_ready_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12044,7 +12501,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12052,12 +12509,12 @@
    ]
   },
   "qfd_ctrl_shift_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12066,7 +12523,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12118,12 +12575,12 @@
    ]
   },
   "qfd_emb_pc_00": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12132,7 +12589,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12140,12 +12597,12 @@
    ]
   },
   "qfd_emb_pcport": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12154,7 +12611,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12162,12 +12619,12 @@
    ]
   },
   "qfd_emb_pcport_kvw": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12176,7 +12633,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12184,12 +12641,12 @@
    ]
   },
   "qfd_emb_pcport_kvw2": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12198,7 +12655,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12206,12 +12663,12 @@
    ]
   },
   "qfd_embed_code_bank": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12220,7 +12677,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12300,12 +12757,12 @@
    }
   },
   "qfd_embed_ingress_code": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12314,7 +12771,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12408,12 +12865,12 @@
    }
   },
   "qfd_embed_ingress_scale": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12422,7 +12879,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12430,12 +12887,12 @@
    ]
   },
   "qfd_embed_scale_bank": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12444,7 +12901,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12496,12 +12953,12 @@
    ]
   },
   "qfd_io_emb_root": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12510,7 +12967,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12532,12 +12989,12 @@
    }
   },
   "qfd_io_emb_tap": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
     "op": "class:embed",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12546,7 +13003,7 @@
     {
      "op": "class:embed",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12568,12 +13025,12 @@
    }
   },
   "qfd_io_host": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12582,7 +13039,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12780,12 +13237,12 @@
    ]
   },
   "qfd_lst_c": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12794,7 +13251,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12802,12 +13259,12 @@
    ]
   },
   "qfd_lst_h": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12816,7 +13273,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12824,12 +13281,12 @@
    ]
   },
   "qfd_lst_v": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12838,7 +13295,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12846,12 +13303,12 @@
    ]
   },
   "qfd_pc_head_owner": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12860,7 +13317,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12868,12 +13325,12 @@
    ]
   },
   "qfd_q5_landing_ecc": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12882,7 +13339,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12890,12 +13347,12 @@
    ]
   },
   "qfd_res_ctl": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12904,7 +13361,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12926,12 +13383,12 @@
    }
   },
   "qfd_res_slot": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12940,7 +13397,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -12948,12 +13405,12 @@
    ]
   },
   "qfd_rly": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12962,7 +13419,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -12970,12 +13427,12 @@
    ]
   },
   "qfd_row_merge_native_fence": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -12984,7 +13441,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13006,12 +13463,12 @@
    }
   },
   "qfd_seq_su": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13020,7 +13477,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13038,16 +13495,60 @@
     "stalled": false,
     "owner": "Claude:hardcore-1010/fe-h",
     "target": null,
-    "t": "2026-10-10T21:00:13-07:00"
+    "t": "2026-10-11T03:01:04-07:00"
    }
   },
+  "qfd_seq_su_bi_fea": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "qwen-1010",
+    "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "qwen-1010",
+     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
+    }
+   ]
+  },
+  "qfd_seq_su_bi_feb": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "qwen-1010",
+    "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "qwen-1010",
+     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
+    }
+   ]
+  },
   "qfd_sp_band_lanes": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13056,7 +13557,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13064,12 +13565,12 @@
    ]
   },
   "qfd_sp_constants_sequencer": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13078,7 +13579,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13086,12 +13587,12 @@
    ]
   },
   "qfd_sp_constants_sequencer_nc": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13100,7 +13601,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13108,12 +13609,12 @@
    ]
   },
   "qfd_sp_constants_sequencer_sys": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13122,7 +13623,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13144,12 +13645,12 @@
    }
   },
   "qfd_sp_constants_sequencer_sys_v_t": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13158,7 +13659,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13166,12 +13667,12 @@
    ]
   },
   "qfd_sp_res_ser": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13180,7 +13681,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13188,12 +13689,12 @@
    ]
   },
   "qfd_sp_su64_sfu": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13202,7 +13703,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13210,12 +13711,12 @@
    ]
   },
   "qfd_sp_tree_lane": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13224,7 +13725,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13232,12 +13733,12 @@
    ]
   },
   "qfd_sp_tree_top": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13246,7 +13747,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13262,12 +13763,12 @@
    ]
   },
   "qfd_sp_tree_top_b": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13276,7 +13777,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13328,12 +13829,12 @@
    ]
   },
   "qfd_sp_vector_memory": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13342,7 +13843,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13350,12 +13851,12 @@
    ]
   },
   "qfd_su_cbuf": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13364,7 +13865,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13372,12 +13873,12 @@
    ]
   },
   "qfd_su_cbuf_g": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13386,7 +13887,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13416,12 +13917,12 @@
    ]
   },
   "qfd_sysctl_sram": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13430,7 +13931,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13438,12 +13939,12 @@
    ]
   },
   "qfd_sysctl_stn": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13452,7 +13953,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
@@ -13496,12 +13997,12 @@
    }
   },
   "qfd_tile": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13510,7 +14011,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13526,12 +14027,12 @@
    ]
   },
   "qfd_tile_e": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13540,7 +14041,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13548,12 +14049,12 @@
    ]
   },
   "qfd_tt_ctl": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13562,7 +14063,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13570,12 +14071,12 @@
    ]
   },
   "qfd_tt_ctlm": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13584,7 +14085,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13592,12 +14093,12 @@
    ]
   },
   "qfd_tt_up4": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "qwen-1010",
     "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13606,7 +14107,7 @@
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
@@ -13614,12 +14115,12 @@
    ]
   },
   "qfd_vm_bank_checked": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
     "op": "class:su",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
     "src": "results/arch/token_path_20261009/qwen_rom.json"
@@ -13628,7 +14129,7 @@
     {
      "op": "class:su",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"

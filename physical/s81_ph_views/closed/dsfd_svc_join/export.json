@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_svc_join",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/svc_join-a6cf4500f-tc/routes/svc_join_a6cf4500f_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svc_join-a6cf4500f-tc/routes/svc_join_a6cf4500f_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svc_join-a6cf4500f-tc/routes/svc_join_a6cf4500f_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svc_join-a6cf4500f-tc/routes/svc_join_a6cf4500f_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svc_join-a6cf4500f-tc/routes/svc_join_a6cf4500f_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svc_join-a6cf4500f-tc/routes/svc_join_a6cf4500f_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svc_join-a6cf4500f-tc/routes/svc_join_a6cf4500f_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_svc_join.lef": "26377aba571578b99f224865e7c1d42fbd03657ffdd8652f6bdc2186ae53ef39",
+    "dsfd_svc_join_ff.lib": "e5324efd86c05e2fc11205932bf2198e309018f35bd628d2d8ad3df63e468d67",
+    "dsfd_svc_join_ss.lib": "6da28f9d70d7d71e753f362e4665b45ec76d98f819fe05aad164d5c01af5c160"
+  },
+  "ok": true
+}
