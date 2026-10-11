@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/svch_pcs-eccab9f14-tc/cl/eco/pass1/orfs",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/svch_pcs-eccab9f14-pd60-tc/cl/eco/pass1/orfs",
  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design dsfd_svch_pcs\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.3330 [get_ports {ck[0]}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\ncreat",
  "sdc_name": "6_final.sdc",
  "setup_tt": {
@@ -16,7 +16,7 @@
   "errors": [],
   "tool_rc": 0,
   "odb_sha256": "af6a07e38b7a58b338c4b01cad97704b6fb94a7c77d94437c7d0ca88e9172dbc",
-  "spef_sha256": "246d9e202289f2fe7756a1bae9f272c3979582ca92eeb495122ea20448b1a62d",
+  "spef_sha256": "8019a51f0db24c6d6edc711a4358e2817c1503cc97eb878b781c026fa8b98582",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "f840e91e60b4a4df8c0149f924f8f1195790c70fa91e24a5b7c136817c5e9873"
  },
@@ -33,7 +33,7 @@
   "errors": [],
   "tool_rc": 0,
   "odb_sha256": "af6a07e38b7a58b338c4b01cad97704b6fb94a7c77d94437c7d0ca88e9172dbc",
-  "spef_sha256": "246d9e202289f2fe7756a1bae9f272c3979582ca92eeb495122ea20448b1a62d",
+  "spef_sha256": "8019a51f0db24c6d6edc711a4358e2817c1503cc97eb878b781c026fa8b98582",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "f840e91e60b4a4df8c0149f924f8f1195790c70fa91e24a5b7c136817c5e9873"
  },
@@ -50,7 +50,7 @@
   "errors": [],
   "tool_rc": 0,
   "odb_sha256": "af6a07e38b7a58b338c4b01cad97704b6fb94a7c77d94437c7d0ca88e9172dbc",
-  "spef_sha256": "246d9e202289f2fe7756a1bae9f272c3979582ca92eeb495122ea20448b1a62d",
+  "spef_sha256": "8019a51f0db24c6d6edc711a4358e2817c1503cc97eb878b781c026fa8b98582",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "f840e91e60b4a4df8c0149f924f8f1195790c70fa91e24a5b7c136817c5e9873"
  },
