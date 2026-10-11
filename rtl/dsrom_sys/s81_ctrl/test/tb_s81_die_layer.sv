@@ -168,13 +168,13 @@ module tb_s81_die_layer;
             integer njd = 0, ndn = 0;
             always @(posedge ck) if (rst) begin
                 if (jv && jr) jv <= 1'b0;
-                if (peer_go && !jv && started < JOBS) begin jv <= 1'b1; started <= started + 1; end
+                if (peer_go && !jv && started < JOBS && njd >= started) begin   // one peer job at a time (as the kit) jv <= 1'b1; started <= started + 1; end
                 if (jd_) njd <= njd + 1;
                 if (cdn[gd][8]) begin
                     if (cdn[gd][6:0] !== 7'(ndn % NMSG)) begin errors = errors + 1; $display("ERR peer %0d done tag %h exp %0d", gd, cdn[gd][7:0], ndn); end
                     ndn <= ndn + 1;
                 end
-                if (pf || cst[gd][0] || (cv & ~12'h008) != 0) begin errors = errors + 1; if (errors < 20) $display("ERR peer %0d fault seq %b ep %b", gd, pf, cst[gd][0]); end
+                if (pf || cst[gd][0] || (cv & ~12'h008) != 0) begin errors = errors + 1; if (errors < 20) $display("ERR peer %0d fault seq %b ep %b cv %h cyc %0d", gd, pf, cst[gd][0], cv, cyc); end
             end
         end
     end endgenerate
@@ -583,7 +583,8 @@ module tb_s81_die_layer;
         rst = 1; rsv = 1; rst_n_ref = 1;
         repeat (60) @(negedge ck);
 `ifdef TB_SEQC
-        for (w = 0; w < nop; w = w + 1) begin f_pw = {1'b1, 7'(w), o_port[w][3:0], o_arg[w][23:0]}; @(negedge ckv); end
+        // f_pw has no ready: the kit paces program writes (one per 4 ckv cycles) so the 4-deep async FIFO never fills
+        for (w = 0; w < nop; w = w + 1) begin f_pw = {1'b1, 7'(w), o_port[w][3:0], o_arg[w][23:0]}; @(negedge ckv); f_pw = 0; repeat (3) @(negedge ckv); end
         f_pw = 0; plen = nop;
         repeat (8) @(negedge ckv);
 `else
