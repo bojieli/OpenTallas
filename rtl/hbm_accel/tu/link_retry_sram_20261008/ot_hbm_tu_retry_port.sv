@@ -32,7 +32,12 @@ module ot_hbm_tu_retry_port #(
  // ever (credits never exceeds the true free count).  credits_pipe >= 0 since owned + r_ret = owned before the return.
  // Cost: a returned credit becomes usable one pclk later; a forged / over-return faults one pclk later (no state from
  // it is applied: r_ret = 0 on a rejected return).  Fault-free delivered stream unchanged.
- parameter CPIPE=`ifdef OT_TU_CPIPE 1 `else 0 `endif
+ parameter CPIPE=`ifdef OT_TU_CPIPE 1 `else 0 `endif,
+ // XF (tu-retry-1011, default 0; needs CPIPE, SESREG, RREADY): (1) allow_new reads a registered credits!=0 flag formed
+ // at the edge from the two CPIPE sums (credits+r_ret / credits+r_ret-1, both from flops; put is the final select), so
+ // no credit-count reduction sits in in_ready; (2) the retry controller runs FBPRE + SFPIPE (ot_hbm_link_retry_sram).
+ // Cycle-exact.
+ parameter XF=0
 )(
  input wire clk,rst_n,link_up,input wire[EW-1:0] session,
  input wire in_valid,output wire in_ready,input wire[W-1:0] in_data,
@@ -46,6 +51,7 @@ module ot_hbm_tu_retry_port #(
  output wire[CW-1:0] ack_pop,
  input wire fb_valid,fb_good,fb_nak,input wire[SW-1:0] fb_seq,
  input wire[EW-1:0] fb_session,input wire[CW-1:0] fb_pop,input wire fb_m,
+ input wire[SW-1:0] fb_seq_nx,   // XF: next cycle's fb_seq (FBPRE)
  output wire fault,output wire[SW-1:0] retained,
  output wire[CW-1:0] available,output wire[CW-1:0] rx_debt,
  output wire[31:0] replay_count
@@ -66,7 +72,8 @@ module ot_hbm_tu_retry_port #(
  wire return_ok=CPIPE ? (pop_advance && !own_less[CW-1]) : (pop_advance && pop_delta<=tx_owned);
 `endif
  wire core_ready,core_ov,core_fault,core_tv,core_rr;
- wire allow_new=!ENABLE || credits!=0;
+ reg cr_nz;   // XF: registered credits!=0
+ wire allow_new=!ENABLE || (XF ? cr_nz : credits!=0);
  wire put=in_valid && in_ready;
  wire landed=out_valid && out_ready;
  wire consumed=rx_consumed && rx_owned!=0;
@@ -79,13 +86,13 @@ module ot_hbm_tu_retry_port #(
  assign rx_debt=ENABLE ? rx_owned:0;
  assign ack_pop=pop_total;
  assign fault=credit_fault || core_fault;
- ot_hbm_link_retry_sram #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.TIMEOUT(TIMEOUT),.MAX_RETRY(MAX_RETRY),.NOEPOCH(NOEPOCH),.HEAD_FREE(PIPE_FIX),.SESREG(SESREG),.MUXREG(MUXREG),.RREADY(RREADY)) u_retry(
+ ot_hbm_link_retry_sram #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.TIMEOUT(TIMEOUT),.MAX_RETRY(MAX_RETRY),.NOEPOCH(NOEPOCH),.HEAD_FREE(PIPE_FIX),.SESREG(SESREG),.MUXREG(MUXREG),.RREADY(RREADY),.FBPRE(XF),.SFPIPE(XF)) u_retry(
  .clk(clk),.rst_n(run),.session(session),.in_valid(in_valid && allow_new && !credit_fault),.in_ready(core_ready),.in_data(in_data),
  .tx_valid(core_tv),.tx_ready(tx_ready && run && !credit_fault),.tx_data(tx_data),.tx_seq(tx_seq),.tx_session(tx_session),
  .rx_valid(rx_valid && run && !credit_fault),.rx_ready(core_rr),.rx_ue(rx_ue),.rx_data(rx_data),.rx_seq(rx_seq),.rx_session(rx_session),
  .out_valid(core_ov),.out_ready(consumer_ready && !credit_fault),.out_data(out_data),
  .ack_seq(ack_seq),.ack_nak(ack_nak),.ack_session(ack_session),
- .fb_valid(fb_valid),.fb_good(fb_good),.fb_nak(fb_nak),.fb_seq(fb_seq),.fb_session(fb_session),.fb_m(fb_m),
+ .fb_valid(fb_valid),.fb_good(fb_good),.fb_nak(fb_nak),.fb_seq(fb_seq),.fb_session(fb_session),.fb_m(fb_m),.fb_seq_nx(fb_seq_nx),
  .fault(core_fault),.retained(retained),.replay_count(replay_count));
  if(CPIPE)begin:g_cpipe
 `ifdef OT_TU_CPIPE_OVR_MUT
@@ -97,10 +104,16 @@ module ot_hbm_tu_retry_port #(
   wire chg=put;
 `endif
   wire[CW-1:0] c_np=credits+r_ret,c_p=credits+r_ret_m1;
+`ifdef OT_TU_XF_NZ_MUT
+  wire nz_np=1'b1;   // negative control: the flag never drops on an exhausted window (over-issue)
+`else
+  wire nz_np=c_np!=0;
+`endif
   always @(posedge clk or negedge run) begin
-   if(!run) begin credits<=CAPACITY;put_cnt<=0;r_ret<=0;r_ret_m1<={CW{1'b1}};r_bad<=0;end
+   if(!run) begin credits<=CAPACITY;put_cnt<=0;r_ret<=0;r_ret_m1<={CW{1'b1}};r_bad<=0;cr_nz<=1'b1;end
    else if(ENABLE && !credit_fault) begin
     credits<=chg ? c_p:c_np;
+    cr_nz<=chg ? c_p!=0 : nz_np;
     if(put)put_cnt<=put_cnt+1'b1;
     r_ret<=return_ok ? pop_delta:{CW{1'b0}};
     r_ret_m1<=return_ok ? pop_delta-1'b1:{CW{1'b1}};
@@ -113,6 +126,7 @@ module ot_hbm_tu_retry_port #(
   always @(posedge clk) if(ENABLE && run && !credit_fault && !r_bad) begin
    if(owed>CAPACITY) $display("FATAL: CPIPE owed %0d > CAPACITY",owed);
    if(credits+r_ret+owed!=CAPACITY) $display("FATAL: CPIPE reservation credits %0d + in-flight %0d + owed %0d != CAPACITY",credits,r_ret,owed);
+   if(XF && cr_nz!==(credits!=0)) $display("FATAL: XF credits!=0 flag %0d differs (credits %0d)",cr_nz,credits);
   end
 `endif
  end else begin:g_cdir
@@ -125,7 +139,7 @@ module ot_hbm_tu_retry_port #(
     credits<=credits-(put?1'b1:1'b0)+(return_ok?pop_delta:0);
 `endif
   end
-  always @(posedge clk) begin put_cnt<=0;r_ret<=0;r_ret_m1<=0;r_bad<=0;end
+  always @(posedge clk) begin put_cnt<=0;r_ret<=0;r_ret_m1<=0;r_bad<=0;cr_nz<=1'b0;end
  end
  always @(posedge clk or negedge run) begin
   if(!run) begin pop_seen<=0;pop_total<=0;rx_owned<=0;credit_fault<=0;end
@@ -138,5 +152,6 @@ module ot_hbm_tu_retry_port #(
    if(landed && rx_owned>=CAPACITY && !consumed)credit_fault<=1;
   end
  end
+ initial if(XF && !(CPIPE && SESREG && RREADY)) $fatal(1,"XF needs CPIPE, SESREG and RREADY");
  initial if(CAPACITY<2 || (CAPACITY&(CAPACITY-1)) || CAPACITY>=DEPTH) $fatal(1,"invalid conserved landing credit window");
 endmodule

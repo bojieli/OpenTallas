@@ -28,21 +28,22 @@ else
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv"; DEFS=""
 fi
 for a in "$@"; do case $a in -GR=*) RR=${a#-GR=};; -GROM_ST=*) RST=${a#-GROM_ST=};; esac; done
-SRC="$W/test/qwen_kv_die/ot_qkvd_layer_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv \
+SRC="$W/test/qwen_kv_die/ot_qkvd_layer_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_buf_tiles.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sl.sv $W/lib/ot_rst_relay.sv \
  $W/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_cbridge.sv \
  $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv $P/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
  $W/test/nearhbm/ot_qwen_nearhbm_attn_die_tb.sv \
  $STK \
- $W/test/nearhbm/ot_qwen_nearhbm_attn_hub_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv \
+ $W/test/nearhbm/ot_qwen_nearhbm_attn_hub_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_t.sv $W/hdc/ot_hdc_fp32_add_lat_nr.sv $W/hdc/ot_hdc_prefix.sv \
  $W/hdc/nearhbm/ot_qwen_nearhbm_prod.sv $W/hdc/ot_hdc_sfu_q.sv $W/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv \
  $W/hdc/ot_hdc_sfu.sv $W/hdc/ot_hdc_delay.sv $W/hdc/ot_hdc_fpu.sv $W/hdc/ot_hdc_fp32_mul_pipe.sv \
  $W/proto/ot_fp32_add_rne_pipe.sv \
  $W/test/nearhbm/sim_nhb_fp_lat_dpi.sv $W/test/sim_hdc_v41x_fastfp_dpi.sv $W/test/sim_hdc_v41x_fastfp_wrap.sv \
  $W/test/qwen_kv_die/ot_qkvd_hbm_timed_stack.sv $W/hdc/v41x/ot_hdc_v41x_idx_hbm.sv \
- $P/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+ $P/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
+ $P/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
 CPP="$W/test/qwen_kv_die/tb_qkvd_layer.cpp $W/test/nearhbm/sim_nhb_fp_lat_dpi.cpp $W/test/sim_hdc_v41x_fastfp_dpi.cpp"
 mkdir -p $OUT
 $VL --cc --exe --build -j 16 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
-  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS "$@" \
+  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${SBP:++define+KVD_SBP=$SBP} ${HT:++define+KVD_HT} ${HUBT:++define+KVD_HUBT} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
   -CFLAGS "-O1 -DKVD_R=$RR -DKVD_ROM_ST=$RST" --Mdir $OUT -o Vtb $SRC $CPP > $OUT/build.log 2>&1
 echo built $OUT

@@ -147,9 +147,18 @@ module hfd_idx_sel #(
     wire [T-1:0] ne_q;
     for (gt = 0; gt < T; gt = gt + 1) begin : gt_
       localparam integer B = gq * T + gt;
-      wire [LA:0] cnt_;
-      hfd_idx_fifo #(.W(SW-1), .AW(LA)) u_l (.ck(ck), .rst_n(rn), .we(siv[B]), .wd(sid[B]), .re(pop[B]),
-        .rd(lrd[B]), .ne(lne[B]), .cnt(cnt_));
+      // el1011-hbm-idx 10-11 (owner textbook audit, classes 1/2/5): with MEMV the landing FIFO is SRAM (3 x 128x256 macros,
+      // registered 2-entry head buffer) -- the flop FIFO was 128 x 609 b = 78k flops a quarter (312k of the element's 568k)
+      // behind a combinational 128:1 x 609-b read mux.  Same push/pop/head semantics (a pushed record shows next cycle).
+      if (MEMV != 0) begin : g_sf
+        wire ovf_unused;
+        ot_fifo_sram_fwft #(.W(SW-1), .DEPTH(1 << LA), .MACRO(2)) u_l (.clk(ck), .rst_n(rn), .push(siv[B]), .wdata(sid[B]),
+          .pop(pop[B]), .hv(lne[B]), .head(lrd[B]), .ovf(ovf_unused));
+      end else begin : g_ff
+        wire [LA:0] cnt_;
+        hfd_idx_fifo #(.W(SW-1), .AW(LA)) u_l (.ck(ck), .rst_n(rn), .we(siv[B]), .wd(sid[B]), .re(pop[B]),
+          .rd(lrd[B]), .ne(lne[B]), .cnt(cnt_));
+      end
       assign ne_q[gt] = lne[B];
       assign pop[B] = fire[gq];
       // tap beat {idx20 x L, score16 x L, kv L, fault L, last}

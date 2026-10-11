@@ -15,6 +15,10 @@ set ot_die [$ot_blk getDieArea]
 set dx0 [expr {double([$ot_die xMin]) / $ot_dbu}]; set dx1 [expr {double([$ot_die xMax]) / $ot_dbu}]
 set dy0 [expr {double([$ot_die yMin]) / $ot_dbu}]; set dy1 [expr {double([$ot_die yMax]) / $ot_dbu}]
 set ot_gap [expr {[info exists ::env(OT_OFLOP_GAP)] ? $::env(OT_OFLOP_GAP) : 1.0}]
+# OT_OFLOP_COLS (el1011-ds-coll 2026-10-11, default 4): staggered rows/columns per face.  A face whose boundary flops
+# outnumber 4 x (face length / flop width) gets overlapping FIRM sites and DPL pushes the overflow away from the pins
+# (coll cb S face: 2,100 t_vm + 592 f_vm flops on 680 um, t_vm[0] 270 ps of wire from its pin, kps TT -65).
+set ot_cols [expr {[info exists ::env(OT_OFLOP_COLS)] ? $::env(OT_OFLOP_COLS) : 4}]
 proc ot_of_drv {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return $it } }
   return ""
@@ -113,7 +117,7 @@ foreach bt [$ot_blk getBTerms] {
 foreach side {L R B T} { set ot_k($side) 0 }
 foreach c [lsort -real -index 1 $cand] {
   lassign $c side pos ff px py io
-  set col [expr {$ot_k($side) % 4}]; incr ot_k($side)
+  set col [expr {$ot_k($side) % $ot_cols}]; incr ot_k($side)
   set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]
   set h [expr {double([[$ff getMaster] getHeight]) / $ot_dbu}]
   switch $side {

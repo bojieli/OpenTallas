@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 LEGACY = ROOT/'physical/hbm_w2_check_station_20261006/bank_legacy_static.sv'
 BANK = ROOT/'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv'
+SLICE = ROOT/'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_station_slice.sv'
 STATION = ROOT/'physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv'
 
 
@@ -42,11 +43,14 @@ def main():
     station = STATION.read_text()
     assert station.count(one) == 1
     (HERE/'station_rb_static.sv').write_text(station.replace(one, f['encode64']))
-    generated = ['bank_veto_static.sv', 'station_rb_static.sv']
+    sl = SLICE.read_text()
+    assert sl.count(two) == 2   # HIER slice + payload control (el1011-hbm-no3)
+    (HERE/'slice_static.sv').write_text(sl.replace(two, both))
+    generated = ['bank_veto_static.sv', 'station_rb_static.sv', 'slice_static.sv']
     (HERE/'sources.json').write_text(json.dumps(dict(
         schema='w2-rb-station-physical-v1', top='ot_hbm_native_frame_station_rb',
         parameters=dict(ENABLE=1, NO=2),
-        source_pins={str(p.relative_to(ROOT)): sha(p) for p in (BANK, STATION, LEGACY)},
+        source_pins={str(p.relative_to(ROOT)): sha(p) for p in (BANK, SLICE, STATION, LEGACY)},
         generated_pins={g: sha(HERE/g) for g in generated},
         lowering='package imports replaced by the static W6 functions of bank_legacy_static.sv'), indent=2)+'\n')
     print('prepared', *generated)
