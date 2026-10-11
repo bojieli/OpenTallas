@@ -17,7 +17,8 @@ import dsrom_mtp_rom_bench as B
 ROOT = Path(__file__).resolve().parents[1]
 KIT = 'rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv'
 EXTRA = ['rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv', 'rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv',
-         'rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv', KIT]
+         'rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv', KIT,
+         'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/tb_mtp_link_rtt.sv']
 INTERNAL = ['w_in_valid', 'w_in_ready', 'w_in_last', 'w_out_valid', 'w_out_ready', 'w_out_last', 'w_in_data',
             'w_out_data', 'core_start', 'core_done_w', 'core_token', 'core_pos', 'cnt_tok', 'cnt_val', 'core_user',
             'kv_base', 'vm_we', 'vm_re', 'vm_waddr', 'vm_raddr', 'vm_wdata', 'vm_rq', 'pr_re', 'pr_user', 'pr_pos',
@@ -39,6 +40,22 @@ STG_KIT = '''    wire [3:0] k_ft;
     assign tok_valid = u_kit.tok_valid; assign tok_user = u_kit.tok_user; assign tok_pos = u_kit.tok_pos;
     assign tok_id = u_kit.tok_id;
 '''
+VMRLY = '''    // VM side behind VF / VR registered hub relay stations (serial clock): the kit launches requests on grants
+    // (VM_LINK 1), the VM receives them with RTT-sized ot_dsrom_mtp_lrx_rtt; response / ACK pushed back through VR.
+    localparam integer VF = 13, VR = 13;
+    wire k_swv, k_swg, k_srv, k_srg, r_swv, r_swg, r_srv, r_srg, k_swa; wire [VWA+FLIT-1:0] k_swd, r_swd;
+    wire [VWA-1:0] k_srd, r_srd; wire [FLIT:0] k_srq;
+    mtp_test_relay #(.W(VWA+FLIT+1), .HOPS(VF)) y_swf (.clk(sclk), .rst_n(rst_n), .in_data({k_swv, k_swd}), .out_data({r_swv, r_swd}));
+    mtp_test_relay #(.W(1), .HOPS(VR)) y_swr (.clk(sclk), .rst_n(rst_n), .in_data(r_swg), .out_data(k_swg));
+    mtp_test_relay #(.W(VWA+1), .HOPS(VF)) y_srf (.clk(sclk), .rst_n(rst_n), .in_data({k_srv, k_srd}), .out_data({r_srv, r_srd}));
+    mtp_test_relay #(.W(1), .HOPS(VR)) y_srr (.clk(sclk), .rst_n(rst_n), .in_data(r_srg), .out_data(k_srg));
+    mtp_test_relay #(.W(1), .HOPS(VR)) y_swa (.clk(sclk), .rst_n(rst_n), .in_data(swa), .out_data(k_swa));
+    mtp_test_relay #(.W(FLIT+1), .HOPS(VR)) y_srq (.clk(sclk), .rst_n(rst_n), .in_data(srq), .out_data(k_srq));
+    ot_dsrom_mtp_lrx_rtt #(.W(VWA+FLIT), .D(VF+VR+4), .ENABLE_RTT(1), .FORWARD_HOPS(VF), .RETURN_HOPS(VR)) v_sw (
+        .clk(sclk), .rst_n(rst_n), .l_valid(r_swv), .l_ready(r_swg), .l_data(r_swd), .c_valid(swv), .c_ready(swr), .c_data(swd));
+    ot_dsrom_mtp_lrx_rtt #(.W(VWA), .D(VF+VR+4), .ENABLE_RTT(1), .FORWARD_HOPS(VF), .RETURN_HOPS(VR)) v_sr (
+        .clk(sclk), .rst_n(rst_n), .l_valid(r_srv), .l_ready(r_srg), .l_data(r_srd), .c_valid(srv), .c_ready(srr), .c_data(srd));
+'''
 CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra defines, expect)
     's0_tr_dspark': ('s0_tr_dspark', 0, [], 'pass'), 's0_tr_forced': ('s0_tr_forced', 0, [], 'pass'),
     's0_tr_forced_w16': ('s0_tr_forced_w16', 0, [], 'pass'), 's0_hash_u3': ('s0_hash_u3', 0, [], 'pass'),
@@ -49,10 +66,19 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     's0_neg_predoff': ('s0_tr_forced', 0, ['OT_WFCVMX_MUT_PREDOFF'], 'fail'),
     'stg_neg_nocred': ('stg_neg_nocred', 1, [], 'fail'),
     'stg_neg_predoff': ('stg_r1', 1, ['OT_WFCVMX_MUT_PREDOFF'], 'fail'),
+    # VM behind 13/13 hub relay stations + grant links (VM_LINK 1); negative: the short-history receiver overflows
+    'vmrly_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 1), 'vmrly_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 1),
+    'vmrly_stg_r1': ('stg_r1', 1, [], 'pass', 1), 'vmrly_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 1),
+    'vmrly_stg_neg_nolink': ('stg_r1', 1, [], 'fail', 2),
+    'vmrly_stg_vmnat': ('stg_vmnat', 1, [], 'pass', 1),
+    'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
 }
 
 
-def kit_tb(stage):
+VMRQ_K = 64   # vmx read-response queue in the vmrly cases (set by --vmrq); 64 adopted (RQ 16 stalls s0 behind 13/13 stations)
+
+
+def kit_tb(stage, vmrly=0):
     tb = 'tb_mtp_rom_stg_tokpipe' if stage else 'tb_mtp_rom_s0_tokpipe'
     body = (ROOT / f'rtl/dsrom_sys/mtp/tb/{tb}.sv').read_text()
     pats = [r'    ot_rom_pkg_ctrl_wfc_tokpipe #\(.*?wf_squash\)\);\n', r'    dsfd_wfc_lnk u_lnk \(.*?\);\n']
@@ -62,16 +88,27 @@ def kit_tb(stage):
         body, n = re.subn(p, '', body, count=1, flags=re.S)
         assert n == 1, (tb, p)
     binds = ''.join(f'    assign {x} = u_kit.{x};\n' for x in INTERNAL if re.search(rf'\b{x}\b', body))
-    body, n = re.subn(r'    dsfd_wfc_vmx #\(.*?\) u_vmx \(.*?\);\n', lambda m: (STG_KIT if stage else SRC_KIT) + binds,
-                      body, count=1, flags=re.S)
+    kit = STG_KIT if stage else SRC_KIT
+    if vmrly:
+        kit = VMRLY + (kit if vmrly == 2 else   # 2: negative, valid / ready skids (VM_LINK 0) behind the relays
+                       kit.replace('u_kit (', '#(.VM_LINK(1), .WOUTW(WOUTW_K)) u_kit (').replace(
+                           'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .WOUTW(WOUTW_K))', 'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .WOUTW(WOUTW_K))'))
+        kit = kit.replace('WOUTW_K', '4' if vmrly == 3 else '8').replace('.VM_LINK(1), .WOUTW(', f'.VM_LINK(1), .VMRQ({VMRQ_K}), .WOUTW(')
+        for a_, b_ in (('.t_swv(swv)', '.t_swv(k_swv)'), ('.t_swd(swd)', '.t_swd(k_swd)'), ('.f_swr(swr)', '.f_swr(k_swg)'),
+                       ('.f_swa(swa)', '.f_swa(k_swa)'), ('.t_srv(srv)', '.t_srv(k_srv)'), ('.t_srd(srd)', '.t_srd(k_srd)'),
+                       ('.f_srr(srr)', '.f_srr(k_srg)'), ('.f_srq(srq)', '.f_srq(k_srq)')):
+            assert a_ in kit, a_
+            kit = kit.replace(a_, b_)
+    body, n = re.subn(r'    dsfd_wfc_vmx #\(.*?\) u_vmx \(.*?\);\n', lambda m: kit + binds, body, count=1, flags=re.S)
     assert n == 1, tb
     return tb, body
 
 
 def run(name, out):
-    base, stage, defs, expect = CASES[name]
+    base, stage, defs, expect = CASES[name][:4]
+    vmrly = CASES[name][4] if len(CASES[name]) > 4 else 0
     spec = B.cases()[base]
-    tb, body = kit_tb(stage)
+    tb, body = kit_tb(stage, vmrly)
     d = out / name; d.mkdir(parents=True, exist_ok=True)
     meta = B.trace_hex(ROOT / B.TRACES / f"{spec['trace']}.cfg.json", d / 'trace.hex') if 'trace' in spec else None
     (d / 'tb.sv').write_text(body)
@@ -94,7 +131,9 @@ def run(name, out):
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument('--out', type=Path, required=True); p.add_argument('--case'); p.add_argument('--jobs', type=int, default=8)
+    p.add_argument('--vmrq', type=int, default=64, help='vmx RQ in the vmrly cases (power of two; >= stationed read RTT)')
     a = p.parse_args(); a.out = a.out.resolve(); a.out.mkdir(parents=True, exist_ok=True)
+    global VMRQ_K; VMRQ_K = a.vmrq
     names = [a.case] if a.case else list(CASES)
     import concurrent.futures as cf
     with cf.ThreadPoolExecutor(a.jobs) as ex:
