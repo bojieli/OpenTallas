@@ -36,6 +36,9 @@ import hc_gate as H                                          # noqa: E402
 F = np.float32
 SHAPES = dict(reduced=dict(QN_N=64, KV_N=512, QB_NB=4, SW_W=64, SM_H=2, SM_LPH=16, SM_NVMAX=40, S_RD=2, S_WR=4),
               full=dict(QN_N=256, KV_N=512, QB_NB=32, SW_W=1024, SM_H=16, SM_LPH=16, SM_NVMAX=40, S_RD=16, S_WR=16))
+# the DS HBM SU case set the golden runs draw on: tools/dshbm_baseline_measure.py prep (snapshots sha256 cd0fc866...)
+# -> tools/dshbm_chain_levers.py prep (_il) -> prep2 (_ildr); recorded in results/rtl/hbm_su_fused_compiler_20261005/v2_ildr.json
+CASES_SHA256 = "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
 K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7)
 RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_su.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
@@ -72,6 +75,7 @@ class Run:
     def __init__(self, sh):
         self.sh = sh
         self.vm, self.exp, self.prog = {}, {}, []
+        self.jexp = {}                                     # op -> (first expected row, count): the done-time check
         self.top = 64                                      # next free VM row
 
     def alloc(self, n):
@@ -97,6 +101,7 @@ class Run:
         return self.put([pack(words, 32)] + list(prow))
 
     def expect(self, base, rows):
+        self.jexp[len(self.prog) - 1] = (base, len(rows))   # the job just issued owns these rows
         for i, r in enumerate(rows):
             self.exp[base + i] = r
 
@@ -219,6 +224,13 @@ class Run:
             for a_ in sorted(self.exp):
                 fa.write(f"{a_:04x}\n")
                 fd.write(f"{self.exp[a_]:0128x}\n")
+        # per op: index of its first expected row in expa.mem order (rows sorted by address) and its row count; the bench
+        # checks at the core's done pulse that every one of them is already in the VM with its expected value (the
+        # done contract: done fires when the job's last result row has been issued; a consumer may read on done)
+        order = {a_: i for i, a_ in enumerate(sorted(self.exp))}
+        (d / "jexp.mem").write_text("".join(
+            f"{(order[self.jexp[j][0]] if j in self.jexp else 0):08x}{(self.jexp[j][1] if j in self.jexp else 0):08x}\n"
+            for j in range(len(self.prog))))
         (d / "prog.mem").write_text("".join(f"{p:021x}\n" for p in self.prog))
         (d / "n.mem").write_text(f"{len(self.prog):08x}\n{len(self.exp):08x}\n00000000\n")
         (d / "meta.json").write_text(json.dumps(meta, indent=1) + "\n")
@@ -276,6 +288,8 @@ def build_run(sh, rng, gold=None):
 def cmd_prep(a):
     sh = SHAPES[a.shape]
     out = Path(a.out)
+    if H.sha(a.cases) != CASES_SHA256:
+        sys.exit(f"{a.cases}: sha256 {H.sha(a.cases)} is not the pinned su_cases_v2_ildr.pkl {CASES_SHA256}")
     cases = pickle.loads(Path(a.cases).read_bytes())
     by = {c["name"]: c for c in cases["cases"]}
     rng = np.random.default_rng(20261011)
@@ -291,7 +305,7 @@ def cmd_prep(a):
     return 0
 
 
-SUG = re.compile(r"SUG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) code=(\d+) cyc=(\d+) bad_tag=(\d+)")
+SUG = re.compile(r"SUG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) code=(\d+) cyc=(\d+) bad_tag=(\d+) early=(\d+)")
 JOB = re.compile(r"SUJ op=(\d+) kind=(\d+) start=(-?\d+) done=(-?\d+)")
 
 
@@ -325,11 +339,12 @@ def cmd_run(a):
             continue
         g = list(map(int, m.groups()))
         row = dict(run=meta["run"], jobs=g[0], done=g[1], err_rows=g[2], rows=g[3], fault=g[4], fault_code=g[5],
-                   cycles=g[6], bad_tag=g[7], ok=("SUG PASS" in rr.stdout), job_cycles=jobs,
+                   cycles=g[6], bad_tag=g[7], early_done_rows=g[8], ok=("SUG PASS" in rr.stdout), job_cycles=jobs,
                    mismatches=[x for x in rr.stdout.splitlines() if "mismatch" in x][:5])
         res.append(row)
         print(meta["run"], "PASS" if row["ok"] else "FAIL", row["err_rows"], "/", row["rows"], "done", row["done"], "/",
-              row["jobs"], "fault", row["fault"], row["fault_code"], "cyc", row["cycles"], flush=True)
+              row["jobs"], "fault", row["fault"], row["fault_code"], "cyc", row["cycles"],
+              "early", row["early_done_rows"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.su_gate.run.v1", generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
                shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
