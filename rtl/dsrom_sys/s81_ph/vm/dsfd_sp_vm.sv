@@ -1166,7 +1166,7 @@ module dsfd_vm_be #(
     output reg  [2:0]          max_occ
 );
     localparam integer R = MD - XT;     // control relay stages, parent pin flop -> tile pin (every tile alike)
-    initial if (NS != 4 || R < 1 || XT < 2) $error("dsfd_vm_be: NS 4, MD - XT >= 1, XT >= 2");
+    initial if (NS != 4 || R < 1 || XT != 2 || P2D != 40) $error("dsfd_vm_be: NS 4, XT 2, P2D 40 (the hardened slice tile), MD > 2");
     wire clk = ck[0];
     wire rn0, rns0;
     ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn0));
@@ -1203,7 +1203,7 @@ module dsfd_vm_be #(
             for (i = 1; i < DR; i = i + 1) begin fr[i] <= fr[i-1]; sr[i] <= sr[i-1]; end
         end
         assign sflt_r[gs] = fr[DR-1]; assign sst_r[gs] = sr[DR-1];
-        dsfd_vm_be_sl #(.P2D(P2D), .XT(XT)) u_sl (
+        dsfd_vm_be_sl u_sl (                // hard macro at its defaults (P2D 40, XT 2): no parameter overrides
             .ck(ck), .cks(cks), .rn_in(rnc[DR-1]), .rns_in(rns_[DR-1]),
             .o_v(o_v[10*gs +: 10]), .o_d(o_d[1280*gs +: 1280]), .o_f(o_f[4*gs +: 4]), .o_o(o_o[3*gs +: 3]),
             .xc(xr[R-1]), .pm(pr[R-1]), .c_l0r(rr),
