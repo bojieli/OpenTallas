@@ -11,7 +11,7 @@ lab=$1; shift
 C=rtl/hbm_accel/generic/collective; T=rtl/hbm_accel/tu
 export SRC=${SRC:-$PWD} VARIANT=r25gqn OT_VIEW_PORTS_ROOT=physical/hbm_accel_die_views/ports_r25gqn CKP=refclk \
   IOAPP=physical/hbm_accel_die_views/coll_r25gq/io_extra.tcl NEED=${NEED:-96} \
-  MACROS="ot_hcoll_port=physical/hbm_accel_die_views/coll_r25gq_h/views/ot_hcoll_port ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2" DH_OVR=${DH_OVR:-1560} HALO="${HALO:-4 4}" \
+  MACROS="ot_hcoll_port=physical/hbm_accel_die_views/coll_r25gq_h/views/ot_hcoll_port ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2" DH_OVR=${DH_OVR:-1560} PDN=${PDN:-physical/hbm_accel_die_views/common/pdn_view_hier.tcl} HALO="${HALO:-4 4}" \
   POSTSDC="physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc" \
   SRCS="$C/ot_hfd_coll_r25gq.sv $C/ot_hgi_coll_ep.sv $C/ot_hgi_coll_amerge.sv $C/ot_hgi_coll_record.sv $C/ot_hgi_coll_decode.sv
         $C/rgx/ot_hgi_coll_rgx_hbm.sv $C/rgx/ot_hgi_coll_rgx_snk.sv $C/rgx/ot_hgi_coll_rgx.sv $C/rgx/ot_hgi_coll_rgx_src.sv
