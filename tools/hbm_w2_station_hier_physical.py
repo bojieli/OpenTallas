@@ -197,6 +197,8 @@ def cmd_top(a):
     lines.append("export SDC_FILE = /work/station.sdc")
     # hard slice tiles expose M6 power pins: parent grid with M5/M6 stripes + M7 straps, slices strapped M6-M7
     lines.append(f"export PDN_TCL = /src/{STN}/pdn_hier.tcl")
+    # the hardened slices are liberty cells (no parameters): the station instantiates them without #(.NO())
+    lines = [l + " -DOT_STN_HARD" if l.startswith("export VERILOG_DEFINES") else l for l in lines]
     lines.append(f"export VERILOG_TOP_PARAMS = ENABLE 1 NO {a.no} REL_REG 1 SAFE 1 GRANT_SEAT 1 HIER 1")
     lines.append(f"export GDS_ALLOW_EMPTY = (ot_hbm_w2_stn_slice8|ot_hbm_w2_stn_slice5)")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
