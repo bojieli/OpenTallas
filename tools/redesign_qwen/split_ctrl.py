@@ -1205,8 +1205,8 @@ def emit_seq_su_bi() -> str:
 # check -1,606 @770): me_mem_ok is a raw die input; me_en = !rst_n || (me_mem_ok && idle term) went combinationally through
 # ~1.6 ns of fanout buffering to the ~2,048 CG-pushdown clones of u_me_cg (and the G-wide write masks).  MEREG 1: the
 # supply announces me_mem_ok two edges ahead (die contract, posted to the Qwen die lead); a pin flop and one enable flop
-# (placed at its loads) make me_en a register output with a full cycle to every ICG clone.  The idle gate is off in this
-# mode (its terms are a raw input and controller state).  MEREG 2 = one-edge lookahead (negative control, must FAIL).
+# (placed at its loads) replace the raw input in me_en; the other terms (the controller's registered reset copy, the
+# engine idle status and me_wake) are flop outputs inside the tile, so every ICG clone sees a register-launched enable.  MEREG 2 = one-edge lookahead (negative control, must FAIL).
 def ctlm_mereg(t: str) -> str:
     t = one(t, "    parameter integer ME_IDLE_GATE = 0,", "    parameter integer ME_IDLE_GATE = 0,\n"
                "    parameter integer MEREG = 0,      // el1011-q-seq: me_mem_ok announced 2 edges ahead; me_en a register")
@@ -1216,7 +1216,7 @@ def ctlm_mereg(t: str) -> str:
                "        reg mo_p;                                       // pin flop (me_mem_ok of edge t+2 at edge t)\n"
                "        (* keep = \"true\", dont_touch = \"true\" *) reg mo_e;   // enable flop, placed at the ICG clones\n"
                "        always @(posedge clk) begin mo_p <= me_mem_ok; mo_e <= (MEREG == 2) ? me_mem_ok : mo_p; end\n"
-               "        assign me_en = mo_e;\n"
+               "        assign me_en = !rst_n || (mo_e && ((ME_IDLE_GATE == 0) || !me_idle || me_wake));   // rst_n: the registered tile reset copy\n"
                "    end else begin : g_mecomb\n" + old.replace("    assign", "        assign", 1) + "\n    end endgenerate")
     t = one(t, "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0\n) (",
                "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0,\n"

@@ -841,7 +841,7 @@ localparam integer W_ME_AMC = 1;
         reg mo_p;                                       // pin flop (me_mem_ok of edge t+2 at edge t)
         (* keep = "true", dont_touch = "true" *) reg mo_e;   // enable flop, placed at the ICG clones
         always @(posedge clk) begin mo_p <= me_mem_ok; mo_e <= (MEREG == 2) ? me_mem_ok : mo_p; end
-        assign me_en = mo_e;
+        assign me_en = !rst_n || (mo_e && ((ME_IDLE_GATE == 0) || !me_idle || me_wake));   // rst_n: the registered tile reset copy
     end else begin : g_mecomb
         assign me_en = !rst_n || (((ME_STALL == 0) || me_mem_ok) &&
                               ((ME_IDLE_GATE == 0) || !me_idle || me_wake));
