@@ -39,6 +39,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import subprocess
 import sys
@@ -57,7 +58,7 @@ PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 GX, GY = 0.432, 2.16           # macro origin lattice (site 0.054 x 8, row 0.270 x 8; both multiples of 0.048)
 EDGE = 20.0
 SHAVE = 0.024                  # frame -> abstract: W, H = frame - 0.024 (= 0.024 mod 0.048: mirror-legal on M4/M5)
-MINW_PINS = False               # face pins at the layer minimum width (half widths below); kv_die turns it on
+MINW_PINS = os.environ.get('OT_MINW_PINS') == '1'   # face pins at the layer minimum width (half widths below); kv_die turns it on; env OT_MINW_PINS=1 (closure-loop auto-react DRT-0073 successor)
 MIN_HW = dict(M6=0.016, M7=0.016, M8=0.020, M9=0.020)
 COLS, ROWS = 64, 24
 TILE_SLOT = (313.632, 1291.68)

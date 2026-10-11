@@ -1,0 +1,50 @@
+REC 0 0 accept 0 retire 181
+REC 0 1 accept 3 retire 266
+REC 0 2 accept 44 retire 322
+REC 0 3 accept 166 retire 403
+REC 0 4 accept 252 retire 488
+REC 0 5 accept 304 retire 529
+REC 0 6 accept 388 retire 569
+REC 0 7 accept 474 retire 618
+REC 0 8 accept 522 retire 695
+REC 0 9 accept 571 retire 816
+REC 0 10 accept 608 retire 849
+REC 0 11 accept 680 retire 944
+REC 0 12 accept 801 retire 1001
+REC 0 13 accept 848 retire 1033
+REC 0 14 accept 930 retire 1556
+REC 0 15 accept 986 retire 1666
+REC 0 16 accept 1102 retire 1705
+REC 0 17 accept 1454 retire 1772
+REC 0 18 accept 1652 retire 1804
+REC 0 19 accept 1690 retire 1862
+REC 0 20 accept 1757 retire 2479
+REC 0 21 accept 1799 retire 2495
+REC 0 22 accept 2304 retire 2528
+REC 0 23 accept 2411 retire 2577
+REC 0 24 accept 2481 retire 2620
+REC 0 25 accept 2530 retire 3143
+REC 0 26 accept 2573 retire 3159
+CASE 0 service 3160 span 667 stage 1026 compute 2241 drain 647 other 0
+ERR case 0 VM[49920] = 3f2096f1 expected 3f7f1c7f
+ERR case 0 VM[49984] = bd240000 expected 3cdd0000
+ERR case 0 VM[49985] = bfd20000 expected 3f8e0000
+ERR case 0 VM[49986] = 3f2d0000 expected beea0000
+ERR case 0 VM[49987] = 3f2b0000 expected bee80000
+ERR case 0 VM[49988] = 40030000 expected bfb10000
+ERR case 0 VM[49989] = 3f130000 expected bec70000
+ERR case 0 VM[49990] = bd990000 expected 3d4f0000
+ERR case 0 VM[49991] = 3d770000 expected bd270000
+ERR case 0 VM[49992] = bfe30000 expected 3f9a0000
+ERR case 0 VM[49993] = 3fcc0000 expected bf8a0000
+ERR case 0 VM[49994] = bf430000 expected 3f040000
+ERR case 0 VM[49995] = 3f130000 expected bec70000
+ERR case 0 VM[49996] = bf680000 expected 3f1d0000
+ERR case 0 VM[49997] = bf8e0000 expected 3f400000
+ERR case 0 VM[49998] = 3f1c0000 expected bed30000
+ERR case 0 VM[49999] = bd050000 expected 3cb40000
+ERR case 0 VM[50000] = 3d5e0000 expected bd160000
+ERR case 0 VM[50001] = 3f650000 expected bf1b0000
+ERR case 0 VM[50002] = bd340000 expected 3cf40000
+summary: 1 production-shape cases, 23792 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD FAIL errors=2770

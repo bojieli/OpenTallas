@@ -95,8 +95,11 @@ class InputPinflopRouteTime(unittest.TestCase):
     def test_openroad_inputs_move_outputs_stay(self):
         if subprocess.run(["docker", "image", "inspect", IMAGE], capture_output=True).returncode:
             self.skipTest("no ORFS image")
-        net = """module top(input clk, input a, input b, input c, output q1);
+        # svc-fix 2026-10-10: r4 is a pin flop on a FORWARDED clock (fk): not on the moved reference tree, so it is
+        # not averaged into the input reference ("input pin flops 2", not 3)
+        net = """module top(input clk, input fk, input a, input b, input c, input d, output q1);
   wire cd, ck2;
+  DFFHQNx1_ASAP7_75t_R r4 (.CLK(fk), .D(d), .QN());
   BUFx2_ASAP7_75t_R u_ck (.A(clk), .Y(ck2));
   DFFHQNx1_ASAP7_75t_R r1 (.CLK(ck2), .D(a), .QN());
   DFFHQNx1_ASAP7_75t_R r2 (.CLK(ck2), .D(b), .QN());
@@ -105,7 +108,8 @@ class InputPinflopRouteTime(unittest.TestCase):
 endmodule
 """
         head = TCL.split("source /w/pinflop_ref.tcl")[0]
-        body = """create_clock -name vclk -period 833
+        body = """create_clock -name fkc -period 833 [get_ports fk]
+create_clock -name vclk -period 833
 set_clock_latency 100 [get_clocks vclk]
 set_input_delay 316.6 -clock vclk [all_inputs -no_clocks]
 set_input_delay -min 0 -clock vclk [all_inputs -no_clocks]

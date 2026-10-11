@@ -30,10 +30,11 @@
 // Reset = DS (cp_vocab / cp_ctx_max come from the config path's active registers).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_seq #(
-    parameter integer RW   = 512,        // ring words (16 B); a power of two
+    parameter integer RW   = 4096,        // ring words (16 B); a power of two
     parameter integer NOS  = 48,         // fetch sectors outstanding (F5 2026-10-09: 48 x 2 words covers ~128 cycles of
                                          // memory latency at the program's peak record rate; the link must keep them in order)
-    parameter integer USE_MACRO = 0,     // 1: the ring is one ot_sram_1r1w_256x256_m2_r2c2 (RW must be 512)
+    parameter integer USE_MACRO = 0,     // 1: the ring is macros: RW 512 = one ot_sram_1r1w_256x256_m2_r2c2 (8 KB); RW 4096 =
+                                         //    two ot_sram_1r1w_1024x256_m2_r2c2 (64 KB: a DFlash verify body of 39.6 KB fits)
     parameter integer DS_TPL = 2,        // DS full-shape DYN: log2 TP (4)
     parameter integer DS_WIN = 128,      //   window
     parameter integer DS_SCAN = 16384,   //   scan cap
@@ -58,6 +59,7 @@ module ot_hgi_seq #(
     input  wire [1:0]    db_entry,
     input  wire [3:0]    db_ncol,       // verify columns: bounds the TOKX count k
     input  wire [3:0]    db_kernel,     // G23: entry 3 = KERNEL, offset = MD word 16 + db_kernel
+    input  wire [31:0]   db_loff,       // G26: + L' x kstride for kernels 3 / 7 / 8 (the MTP translator; 0 otherwise)
     input  wire [11*32-1:0] md_k,       // G23: MD words 16 .. 26 (cfg master)
     // record fetch: 32 B sectors, in-order responses
     output wire          f_req_v,
@@ -123,7 +125,7 @@ module ot_hgi_seq #(
     // ------------------------------------------------------------------ states
     localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
                      S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13, S_TOKX = 5'd14, S_TKB = 5'd15,
-                     S_HQ = 5'd16, S_DB2 = 5'd17, S_DB3 = 5'd18, S_LOOPWAIT = 5'd19, S_LOOPRD = 5'd20, S_LOOPPUT = 5'd21;     // header pre-evaluation (registered decision flags)
+                     S_HQ = 5'd16, S_DB2 = 5'd17, S_DB3 = 5'd18, S_LOOPWAIT = 5'd19, S_LOOPRD = 5'd20, S_LOOPPUT = 5'd21, S_H1B = 5'd22;     // header pre-evaluation (registered decision flags)
     reg [4:0]  st;
     reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q; reg [20:0] pos1_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
@@ -140,24 +142,51 @@ module ot_hgi_seq #(
     reg avail_ok;                        // rlen comes from h (loaded at S_H2): valid from the S_HQ edge on
     always @(posedge clk) avail_ok <= (avail >= {{(RB-4){1'b0}}, rlen});
     reg [RB:0]  rd_ptr;                  // the ring read address (registered); the sector lands one edge later
-    reg [255:0] rd_sec; reg rd_hi;
+    // [cp] hbm-phys-1010 (route hgi_seq-d6da8d0d5 hm10: TT -122.99 = macro rd_out -> bank mux -> word mux -> dr / h /
+    // d_sut, 9-10 levels from the macro clock-to-q; FF -11.14 = f_rsp_data_r -> u_ring{0,1}/wd_in): the ring has a
+    // macro-side stage on both ports.  READ: each bank's rd_out lands in its own flops (fanout 1 from the macro pins,
+    // loaded only when that bank was read), the bank select is a registered flop, and the word is selected from flops:
+    // a word lands THREE edges after its read issue (S_H1 -> S_H1B -> S_H2; rpipe 3 deep).  WRITE: data / address /
+    // enable are registered per bank next to the macro (wd_in is driven by a flop of its own bank, not by the input
+    // register that fans out to both banks across the die); the write lands one edge after wp advances, and every read
+    // of that sector samples its address at least two edges after wp advanced, so no read can see the old sector.
+    reg [255:0] rd_sec; reg rd_hi, rd_hi2;
     wire        ring_we = f_rsp_v_r && (drop == 7'd0);
-    always @(posedge clk) rd_hi <= rd_ptr[0];
+    always @(posedge clk) begin rd_hi <= rd_ptr[0]; rd_hi2 <= rd_hi; end
     generate if (USE_MACRO) begin : g_ring_m
-        initial if (RW != 512) $fatal(1, "ot_hgi_seq: USE_MACRO needs RW 512");
-        wire [255:0] q;
-        ot_sram_1r1w_256x256_m2_r2c2 u_ring (.clk(clk), .r_ce_in(1'b1), .r_addr_in(rd_ptr[8:1]), .rd_out(q),
-            .w_ce_in(ring_we), .w_addr_in(wp[8:1]), .wd_in(f_rsp_data_r), .w_mask_in({256{1'b1}}),
-            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        always @* rd_sec = q;
+        initial if (RW != 512 && RW != 4096) $fatal(1, "ot_hgi_seq: USE_MACRO needs RW 512 or 4096");
+        if (RW == 512) begin : g_8k
+            wire [255:0] q; reg [255:0] q_r, wd_q; reg we_q; reg [7:0] wa_q;
+            always @(posedge clk) begin q_r <= q; we_q <= ring_we; wa_q <= wp[8:1]; if (ring_we) wd_q <= f_rsp_data_r; end
+            ot_sram_1r1w_256x256_m2_r2c2 u_ring (.clk(clk), .r_ce_in(1'b1), .r_addr_in(rd_ptr[8:1]), .rd_out(q),
+                .w_ce_in(we_q), .w_addr_in(wa_q), .wd_in(wd_q), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            always @* rd_sec = q_r;
+        end else begin : g_64k                                  // bank = word pointer bit 11 (sector bit 10)
+            wire [255:0] q0, q1; reg rb_q, rb_qq; reg [255:0] q0_r, q1_r, wd0_q, wd1_q; reg we0_q, we1_q; reg [9:0] wa0_q, wa1_q;
+            always @(posedge clk) begin
+                rb_q <= rd_ptr[11]; rb_qq <= rb_q;
+                if (!rb_q) q0_r <= q0;                          // the bank read on the previous edge
+                if (rb_q)  q1_r <= q1;
+                we0_q <= ring_we && !wp[11]; wa0_q <= wp[10:1]; if (ring_we && !wp[11]) wd0_q <= f_rsp_data_r;
+                we1_q <= ring_we &&  wp[11]; wa1_q <= wp[10:1]; if (ring_we &&  wp[11]) wd1_q <= f_rsp_data_r;
+            end
+            ot_sram_1r1w_1024x256_m2_r2c2 u_ring0 (.clk(clk), .r_ce_in(!rd_ptr[11]), .r_addr_in(rd_ptr[10:1]), .rd_out(q0),
+                .w_ce_in(we0_q), .w_addr_in(wa0_q), .wd_in(wd0_q), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            ot_sram_1r1w_1024x256_m2_r2c2 u_ring1 (.clk(clk), .r_ce_in(rd_ptr[11]), .r_addr_in(rd_ptr[10:1]), .rd_out(q1),
+                .w_ce_in(we1_q), .w_addr_in(wa1_q), .wd_in(wd1_q), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            always @* rd_sec = rb_qq ? q1_r : q0_r;
+        end
     end else begin : g_ring_r
-        reg [255:0] ring [0:RS-1];
+        reg [255:0] ring [0:RS-1]; reg [255:0] rd_sec0;
         always @(posedge clk) begin
-            rd_sec <= ring[rd_ptr[RB-1:1]];
+            rd_sec0 <= ring[rd_ptr[RB-1:1]]; rd_sec <= rd_sec0;     // the same 3-edge read latency as the macro ring
             if (ring_we) ring[wp[RB-1:1]] <= f_rsp_data_r;
         end
     end endgenerate
-    wire [127:0] rd_word = rd_hi ? rd_sec[255:128] : rd_sec[127:0];
+    wire [127:0] rd_word = rd_hi2 ? rd_sec[255:128] : rd_sec[127:0];
     // ------------------------------------------------------------------ the current record
     reg  [127:0] h;
     reg hq_recbad, hq_bad, hq_skip, hq_ctl, hq_noa, clr_q; reg [4:0] hq_rlen;
@@ -174,8 +203,9 @@ module ot_hgi_seq #(
     wire [4:0]  rlen = 5'd1 + {3'd0, h_tmpl, 1'b0} + {1'b0, npres, 1'b0};
     // ops per unit (spec.json uop.ops), units 0..10 exist on r25
     function automatic [3:0] nops(input [3:0] u);
+        // = hbm_generic_iface D_OPS (hgi-1010: HC 3 ops since G22 HC_MIX_ROWS / HC_MIX_POST; IDX MERGE / OWNED live)
         case (u) 4'd0: nops = 4'd8; 4'd4: nops = 4'd7; 4'd5: nops = 4'd2; 4'd6: nops = 4'd6; 4'd8: nops = 4'd4;
-                 4'd9: nops = 4'd5; 4'd1, 4'd2, 4'd3, 4'd7, 4'd10: nops = 4'd1; default: nops = 4'd0; endcase
+                 4'd9: nops = 4'd5; 4'd10: nops = 4'd3; 4'd1, 4'd2, 4'd3, 4'd7: nops = 4'd1; default: nops = 4'd0; endcase
     endfunction
     // slot of the m-th present descriptor
     function automatic [2:0] mth(input [6:0] o, input [2:0] m);
@@ -344,14 +374,14 @@ module ot_hgi_seq #(
     assign db_rdy = db_rdy_q;
     // timing pass 4: the doorbell is captured at the port (db_v -> the FSM's job-start enables was -239 ps); the FSM
     // starts from the captured copy one edge later
-    reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol, dbq_kernel; reg [1:0] dbq_entry;
+    reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol, dbq_kernel; reg [1:0] dbq_entry; reg [31:0] dbq_loff;
     always @(posedge clk or negedge rn)
         if (!rn) db_pend <= 1'b0;
         else if (db_v && db_rdy_q) db_pend <= 1'b1;
         else if (st == S_IDLE) db_pend <= 1'b0;
     // the fields follow the port while ready is high (enable = the ready flop alone; db_v -> 70 enables was -65 ps)
     always @(posedge clk) if (db_rdy_q) begin
-        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry; dbq_kernel <= db_kernel;
+        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry; dbq_kernel <= db_kernel; dbq_loff <= db_loff;
     end
     // completion outputs leave flops (route: st -> cpl_tokx decode, fanout 20, -88 ps); valid rises one edge after the
     // state is entered and drops on the handshake edge, so back-to-back TOKX beats are separated by one bubble
@@ -388,7 +418,11 @@ module ot_hgi_seq #(
         else u_tk <= (u_vr == 16'd0) ? 16'd0 : (u_tk | (u_v & u_rdy));
     assign u_v = u_vr & ~u_tk;
     reg [3:0] kern_q;
-    wire [31:0] kern_off = (kern_q > 4'd10) ? 32'd0 : md_k_r[kern_q*32 +: 32];
+    // G26: the kernel offset is registered at job start (S_IDLE) from the captured doorbell: md word 16 + kernel, plus
+    // L' x kstride for the per-layer kinds 3 / 7 / 8; an absent entry (0) stays 0 (E: completes with status 3)
+    reg [31:0] kern_off;
+    wire [31:0] kern_base = (dbq_kernel > 4'd10) ? 32'd0 : md_k_r[dbq_kernel*32 +: 32];
+    wire kern_pl = dbq_kernel == 4'd3 || dbq_kernel == 4'd7 || dbq_kernel == 4'd8;
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] :
                              (db_entry_q == 2'd2) ? md_d_r[95:64] : kern_off, 4'd0};
     wire [39:0] img_a = {md_d_r[123:96], 12'd0};                       // image_base pages (word 60)
@@ -437,10 +471,10 @@ module ot_hgi_seq #(
     function automatic [2:0] nxtp(input [6:0] p, input [3:0] j);
         integer q; begin nxtp = 3'd7; for (q = 5; q >= 0; q = q - 1) if (p[q] && q > j) nxtp = q[2:0]; end
     endfunction
-    reg [1:0] rpipe_v; reg [4:0] rpipe_k0, rpipe_k1;
+    reg [2:0] rpipe_v; reg [4:0] rpipe_k0, rpipe_k1, rpipe_k2;
     reg [2:0] ix;
     reg [31:0] xval;
-    wire [4:0]  wk_m  = rpipe_k1 - 5'd1 - {3'd0, h_tmpl, 1'b0};
+    wire [4:0]  wk_m  = rpipe_k2 - 5'd1 - {3'd0, h_tmpl, 1'b0};
     wire [2:0]  wk_sl = hq_sl[wk_m[3:1]];             // the slot table registered in S_HQ (was mth(h_opnd, ..))
     // timing pass 4: the indexed-read addresses and their range checks leave flops (Lc -> 64-bit adds -> fault3 ->
     // st / cpl_* / u_vr / vr_* was -351 ps): ieff, dr[6] and Lc are stable >= 3 edges before S_IDX reads them (iq_cnt)
@@ -502,13 +536,15 @@ module ot_hgi_seq #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             st <= S_IDLE; clr_q <= 1'b0; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0;
-            depth <= 0; Lc <= 0; L1c <= 0; u_vr <= 16'd0; vr_vr <= 1'b0; vr_new <= 1'b0; rpipe_v <= 2'b00; dv_cnt <= 4'd0; m3v <= 1'b0;
+            depth <= 0; Lc <= 0; L1c <= 0; u_vr <= 16'd0; vr_vr <= 1'b0; vr_new <= 1'b0; rpipe_v <= 3'b000; dv_cnt <= 4'd0; m3v <= 1'b0;
             cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; iq_cnt <= 3'd6; faddr <= 0; faddr_n <= 40'd32; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
+            // a record retires on done OR fault (hgi-1010: a faulted record no longer holds its unit; busy drops)
             for (k = 0; k < 16; k = k + 1)                     // +1 / -1 precomputed from flops: u_rdy only selects
-                if (u_acc_q[k] && !u_done_r[k]) outst[k] <= outst[k] + 8'd1;
-                else if (!u_acc_q[k] && u_done_r[k]) outst[k] <= outst[k] - 8'd1;
+                if (u_acc_q[k] && !(u_done_r[k] | u_fault_r[k])) outst[k] <= outst[k] + 8'd1;
+                else if (!u_acc_q[k] && (u_done_r[k] | u_fault_r[k]) && outst[k] != 8'd0) outst[k] <= outst[k] - 8'd1;
+                // (saturating: a unit that also pulses done for its faulted record cannot underflow the count)
             if (st != S_IDLE && st != S_CPL) {cc_c, cc_lo} <= {1'b0, cc_lo} + 17'd1; else cc_c <= 1'b0;
             if (cc_c) cc_hi <= cc_hi + 16'd1;
             inflight <= fl_after;
@@ -529,13 +565,14 @@ module ot_hgi_seq #(
                 else begin wp <= wp + 2'd2; wv <= 1'b1; end         // the ring write: g_ring_*
             end
             // ---- ring read pipe (address registered, sector registered: a word lands two edges after its issue)
-            rpipe_v <= {rpipe_v[0], 1'b0}; rpipe_k1 <= rpipe_k0;
+            rpipe_v <= {rpipe_v[1:0], 1'b0}; rpipe_k1 <= rpipe_k0; rpipe_k2 <= rpipe_k1;
             if (|(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL) begin
                 st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_vr <= 0; vr_vr <= 1'b0; fetching <= 1'b0;
             end else case (st)
                 S_IDLE: if (db_pend) begin
                     token <= dbq_token; pos <= dbq_pos; cpl_job <= dbq_job; cpl_gen <= dbq_gen; cpl_pos <= dbq_pos;
                     db_entry_q <= dbq_entry; kern_q <= dbq_kernel;
+                    kern_off <= (kern_base == 32'd0) ? 32'd0 : kern_pl ? kern_base + dbq_loff : kern_base;
 `ifdef OT_HGI_SEQ_CC_PRESET
                     cc_lo <= 16'hFF00; cc_hi <= 16'd0; cc_c <= 1'b0;   // bench: start near the low half's wrap
 `else
@@ -562,7 +599,8 @@ module ot_hgi_seq #(
                     end
                 end
                 S_DEC: if (avail != 0) begin rd_ptr <= rp; st <= S_H1; end
-                S_H1: st <= S_H2;                                      // the sector read (registered address)
+                S_H1: st <= S_H1B;                                     // the sector read (registered address)
+                S_H1B: st <= S_H2;                                     // the sector lands in the macro-side flops
                 S_H2: begin h <= rd_word; st <= S_HQ; wk <= 5'd0; dv_cnt <= 4'd0;
 `ifdef SEQ_DEBUG
                     $display("SEQDBG t=%0t rp=%0d wp=%0d frp=%0d hdr=%h", $time, rp, wp, frp, rd_word);
@@ -572,8 +610,7 @@ module ot_hgi_seq #(
                 // the d_desc / dr / d_sut clear enables); h, rp, frp, depth, pos and the loop flags are stable here
                 S_HQ: begin
                     hq_recbad <= (depth != 2'd0 && rec_end > RW - 2);
-                    hq_bad <= (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)} ||
-                               (h_unit == 4'd9 && (h_op == 6'd1 || h_op == 6'd3)));   // IDX ops 1 / 3 reserved (HGI-1 6.7)
+                    hq_bad <= (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)});
                     hq_skip <= !pred_ok;
                     hq_ctl <= is_ctl && h_op != 6'd3 && h_op != 6'd5;
                     hq_noa <= is_ctl && !h_opnd[0];
@@ -623,14 +660,14 @@ module ot_hgi_seq #(
                     end
                 end else begin                                         // ---- read words 1 .. rlen-1
                     if (wk < hq_rlen) begin rd_ptr <= rp + wk; rpipe_v[0] <= 1'b1; rpipe_k0 <= wk; wk <= wk + 5'd1; end
-                    if (rpipe_v[1]) begin
+                    if (rpipe_v[2]) begin
 `ifdef SEQ_DEBUG
-                        $display("SEQDBG word k=%0d m=%0d sl=%0d w=%h rd_ptr=%0d", rpipe_k1, wk_m, wk_sl, rd_word, rd_ptr);
+                        $display("SEQDBG word k=%0d m=%0d sl=%0d w=%h rd_ptr=%0d", rpipe_k2, wk_m, wk_sl, rd_word, rd_ptr);
 `endif
-                        if (h_tmpl && rpipe_k1 <= 5'd2) d_sut[(rpipe_k1 - 5'd1) * 128 +: 128] <= rd_word;
+                        if (h_tmpl && rpipe_k2 <= 5'd2) d_sut[(rpipe_k2 - 5'd1) * 128 +: 128] <= rd_word;
                         else dr[wk_sl][wk_m[0] * 128 +: 128] <= rd_word;
                     end
-                    if (wk == hq_rlen && rpipe_v == 2'b00) begin
+                    if (wk == hq_rlen && rpipe_v == 3'b000) begin
                         aj <= h_opnd[6] ? 3'd6 : first0(h_opnd); as <= A_PRE; st <= S_ADDR;
                     end
                 end
@@ -774,7 +811,8 @@ module ot_hgi_seq #(
                 S_TOKX: begin
                     if (vr_rsp_v_r) begin
                         if (tk_k) begin
-                            if (vr_rsp_data_r == 32'd0 || vr_rsp_data_r > {28'd0, ncol}) fault3;
+                            // F11 (hgi-1010): ncol 0 encodes 16 columns (DFlash b16 commits up to k = 16)
+                            if (vr_rsp_data_r == 32'd0 || vr_rsp_data_r > {27'd0, ncol == 4'd0, ncol}) fault3;
                             else begin
                                 tk_k <= 1'b0; tk_n <= vr_rsp_data_r[4:0]; tk_i <= 5'd1;
                                 vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= tk_base + 18'd1;

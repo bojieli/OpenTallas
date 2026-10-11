@@ -42,6 +42,7 @@ module ot_hgi_att_record_adapter #(
     wire bad_ring=hdr_q[72] && ((b[87:68]==0) ||
                    ((b[87:68] & (b[87:68]-1'b1))!=0) ||
                    (b_count_q>{12'b0,b[87:68]}) || (b_count_q>{11'b0,pos1_q}));
+    wire rec_bad=bad_header || bad_range || bad_B_count || bad_C_count || bad_ring;
     assign rec_r=!active && !record_pending && !u_fault;
     assign att_v=active && setup_pending && !u_fault;
     assign att_hdr=att_hdr_q;
@@ -57,26 +58,18 @@ module ot_hgi_att_record_adapter #(
         if(!rst_n) begin
             active<=0;record_pending<=0;setup_pending<=0;rows_pending<=0;setup_sent<=0;rows_sent<=0;
             att_retired<=0;rows_retired<=0;u_done<=0;u_fault<=0;
-            hdr_q<=0;desc_q<=0;att_hdr_q<=0;att_desc_q<=0;pos1_q<=0;b_count_q<=0;c_count_q<=0;bn_q<=0;bm_q<=0;cn_q<=0;ring_q<=0;
         end else begin
             u_done<=0;
             if(u_fault && MUT_FAULT_RELEASE) begin u_fault<=0;active<=0;u_done<=1;end
             if(rec_v && rec_r) begin
-                record_pending<=1;hdr_q<=rec_hdr;desc_q<=rec_desc;pos1_q<=rec_pos1;
-                b_count_q<=rec_b_count;c_count_q<=rec_c_count;
+                record_pending<=1;
             end else if(record_pending) begin
                 record_pending<=0;
-                if(bad_header || bad_range || bad_B_count || bad_C_count || bad_ring) begin
+                if(rec_bad) begin
                     u_fault<=1;
                 end else begin
                     active<=1;setup_pending<=1;rows_pending<=1;setup_sent<=0;rows_sent<=0;
                     att_retired<=0;rows_retired<=0;
-                    // Output station uses the existing decode edge, so no extra cycle.
-                    att_hdr_q<=MUT_FIELDS ? (hdr_q ^ (128'b1<<118)) : hdr_q;
-                    att_desc_q<=desc_q;
-                    bn_q<=MUT_COUNTS ? {1'b0,b_count_q[19:0]} : b_count_q[20:0];
-                    bm_q<={1'b0,b[87:68]};cn_q<=c_present ? c_count_q[20:0] : 21'b0;
-                    ring_q<=MUT_RING ? 1'b0 : hdr_q[72];
                 end
             end else if(active && !u_fault) begin
                 if(att_v && att_r) begin setup_pending<=0;setup_sent<=1;end
@@ -90,6 +83,28 @@ module ot_hgi_att_record_adapter #(
                     active<=0;u_done<=1;
                 end
             end
+        end
+    end
+    // FILL-8 2026-10-10 (physical root cause, cycle-identical): the record capture registers load on rec_r, a function of
+    // this block's own state registers, instead of on rec_v && rec_r.  The routed G12 320/360 masters' worst TT path was
+    // the rec_v PIN -> AND3 -> 10-buffer enable tree onto ~1,460 capture flops (TT +1.08 ps; 418 ps of buffering behind a
+    // 600.75 ps input budget), which left the FF output-hold ECO no setup room (ECO: FF +11.7 but TT -1.8).  Now rec_v
+    // reaches one flop (record_pending) and every data pin reaches one flop D.  The registers capture the same value at the
+    // accepting edge (rec_r=1 there) and hold while rec_r=0 (record_pending / active / u_fault), the only cycles they are
+    // read.  Data-only registers carry no reset (rst_n reaches the 12 control flops only, not ~2,600 data flops); outputs
+    // att_hdr/att_desc/rows_* are qualified by att_v / rows_cmd_v, which are reset.
+    always @(posedge clk) begin
+        if(rec_r) begin
+            hdr_q<=rec_hdr;desc_q<=rec_desc;pos1_q<=rec_pos1;b_count_q<=rec_b_count;c_count_q<=rec_c_count;
+        end
+        // Output station uses the existing decode edge, so no extra cycle (load = the accepting decode edge above;
+        // rst_n is deliberately not in this enable).
+        if(record_pending && !rec_bad) begin
+            att_hdr_q<=MUT_FIELDS ? (hdr_q ^ (128'b1<<118)) : hdr_q;
+            att_desc_q<=desc_q;
+            bn_q<=MUT_COUNTS ? {1'b0,b_count_q[19:0]} : b_count_q[20:0];
+            bm_q<={1'b0,b[87:68]};cn_q<=c_present ? c_count_q[20:0] : 21'b0;
+            ring_q<=MUT_RING ? 1'b0 : hdr_q[72];
         end
     end
 endmodule

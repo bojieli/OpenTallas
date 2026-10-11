@@ -1,0 +1,57 @@
+{
+  "name": "ot_dsrom_mtp_lrx_rtt",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10/routes/mtp_rtt512_f9r10_d23p1_09dc8fad4_hm10/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10/routes/mtp_rtt512_f9r10_d23p1_09dc8fad4_hm10/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10/routes/mtp_rtt512_f9r10_d23p1_09dc8fad4_hm10/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10/routes/mtp_rtt512_f9r10_d23p1_09dc8fad4_hm10/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10/routes/mtp_rtt512_f9r10_d23p1_09dc8fad4_hm10/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10/routes/mtp_rtt512_f9r10_d23p1_09dc8fad4_hm10/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10/routes/mtp_rtt512_f9r10_d23p1_09dc8fad4_hm10/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_mtp_lrx_rtt.lef": "55e321adfce5e3dcd5153cfce417fede14c553329c517ff12e229730960bfb87",
+    "ot_dsrom_mtp_lrx_rtt_ff.lib": "f235de6094bbe5e1f3359df48caf9f23904c27726bc0a0bb4a568618037afd76",
+    "ot_dsrom_mtp_lrx_rtt_ss.lib": "33f8f97b2604167c35e40ec94c7859f55a88fe3258e739d574822ea9051a72f8"
+  },
+  "ok": true
+}

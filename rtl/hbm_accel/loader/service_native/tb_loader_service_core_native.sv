@@ -22,7 +22,7 @@ module tb_loader_service_core_native;
  .rd_v(rd_v),.rd_rdy(rd_rdy),.rd_pc(rd_pc),.rd_addr(rd_addr),.rd_tag(rd_tag),
  .rd_rsp_v(rd_rsp_v),.rd_rsp_rdy(rd_rsp_rdy),.rd_rsp_pc(rd_rsp_pc),.rd_rsp_tag(rd_rsp_tag),.rd_rsp_beat(rd_rsp_beat),.rd_rsp_data(rd_rsp_data),
  .service_fault(native_fault||wq_source_fault),.busy(endpoint_busy),.fault(endpoint_fault));
- ot_hbm_svc_core_native #(.NATIVE(1),.WB(1),.WB_SOURCE_ACK(1),.KVS(1),.XST(0),.WQ_ST(1))service(
+ ot_hbm_svc_core_native #(.NATIVE(1),.NATIVE_CHAIN(0),.WB(1),.WB_SOURCE_ACK(1),.KVS(1),.XST(0),.WQ_ST(1))service(
  .ck(clk),.rst(rst_n),.q_d(336'b0),.q_v(8'b0),.q_fclk(8'b0),.e_d(128'b0),.e_fclk(1'b0),
  .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.k_we(k_we),.k_wdata(k_wdata),.k_wstrb(k_wstrb),
  .kr_v(kr_v),.kr_rdy(kr_rdy),.kr_tag(kr_tag),.kr_beat(kr_beat),.kr_data(kr_data),

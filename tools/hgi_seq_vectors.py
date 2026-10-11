@@ -53,7 +53,7 @@ NFV = G.NSEL_FROM_VM                  # 63
 SPACE = {'HBM': 0, 'VM': 1, 'STREAM': 2, 'NONE': 3}
 FMT = {'FP32': 0, 'BF16': 1, 'FP8E4M3': 2, 'FP4E2M1': 3, 'INT8': 4, 'U32': 5, 'UE8M0': 6}
 M40, M20, M21 = (1 << 40) - 1, (1 << 20) - 1, (1 << 21) - 1
-RW = 512                              # prefetch ring words (16 B) = ot_hgi_seq RW
+RW = 4096                             # prefetch ring words (16 B) = ot_hgi_seq RW (hgi-1010: 64 KB ring)
 NUNIT_OK = 11                         # units 0..10 exist on r25
 # DS full-shape DYN parameters (tools/v41_fullshape_isa.py: TP, WINDOW, SCAN_CAP, TOPK, HD) = ot_hgi_seq parameters
 DS_TP, DS_WIN, DS_SCAN, DS_TOPK, DS_HD = 4, 128, 16384, 512, 512
@@ -251,7 +251,7 @@ class Ref:
                         if b0 + 17 > (1 << 18):
                             raise Fault('TOKX table out of VM')
                         k = self.vmr(b0)
-                        if not 1 <= k <= self.ncol:
+                        if not 1 <= k <= (self.ncol or 16):          # F11: ncol 0 encodes 16
                             raise Fault('TOKX count out of range')
                         for q in range(1, k + 1):
                             t = self.vmr(b0 + q)
@@ -387,11 +387,14 @@ def fault_programs():
     P['rsv_unit13'] = ok + record(header(13, 0)) + end
     P['op_range'] = ok + record(header('SM', 1)) + end
     P['ctl_amax'] = ok + record(header('CTL', 'AMAX')) + end
-    P['idx_rsv1'] = ok + record(header('IDX', 1)) + end
-    P['idx_rsv3'] = ok + record(header('IDX', 3)) + end
+    P['idx_merge_op'] = ok + record(header('IDX', 1)) + end      # IDX.MERGE (G20) dispatches (was reserved)
+    P['idx_owned_op'] = ok + record(header('IDX', 3)) + end      # IDX.OWNED (G24) dispatches (was reserved)
+    P['hc_mix_rows_op'] = ok + record(header('HC', 1)) + end     # HC_MIX_ROWS (G22) dispatches
+    P['hc_op_range'] = ok + record(header('HC', 3)) + end        # HC op 3: outside the unit's list -> status 3
     tk = lambda base, **kw: record(header('CTL', 'TOKX', wait=0xFFFE, **kw), descs=dict(A=mdesc(space=1, fmt=5, base=base, n=17)))  # noqa: E731
     P['tokx_15'] = ok + tk(0x8200) + end            # A[0] = 15 (= ncol, the 4-bit maximum)
     P['tokx_3'] = ok + tk(0x8220) + end             # A[0] = 3
+    P['tokx_16'] = ok + tk(0x82C0) + end            # A[0] = 16, run with ncol 0 (F11: 0 encodes 16; DFlash b16)
     P['tokx_twice'] = ok + tk(0x8220) + tk(0x8240) + end
     P['tokx_k_gt_ncol'] = ok + tk(0x8260) + end     # A[0] = 5 (cases run with ncol 4 fault)
     P['tokx_0'] = ok + tk(0x8280) + end             # A[0] = 0
@@ -423,7 +426,7 @@ def fault_programs():
     P['end_tok_vocab'] = ok + record(header('CTL', 'END', wait=0xFFFE), descs=dict(A=mdesc(space=1, fmt=5, base=0x8002, n=1)))
     P['end_tok_ok'] = ok + record(header('CTL', 'END', wait=0xFFFE), descs=dict(A=mdesc(space=1, fmt=5, base=0x8003, n=1)))
     big = []
-    for q in range(40):        # a 600-word loop body: larger than the 512-word ring
+    for q in range(RW // 15 + 6):  # a loop body of 15-word records larger than the RW-word ring
         big += record(header('SU', 'VOP'), sut=q, descs={k: mdesc(space=1, base=q, n=1) for k in OPND[:7]})
     P['ring_overflow'] = ok + record(header('CTL', 'LOOP', param=2)) + big + record(header('CTL', 'ENDLOOP')) + end
     return P
@@ -439,6 +442,7 @@ def main():
     VM0.update({0x8260: 5, **{0x8260 + q: q for q in range(1, 6)}})
     VM0.update({0x8280: 0})
     VM0.update({0x82A0: 2, 0x82A1: 4, 0x82A2: 151936})
+    VM0.update({0x82C0: 16, **{0x82C0 + q: 500 * q + 3 for q in range(1, 17)}})
 
     def add_prog(name, w):
         meta[name] = (len(words), len(w))
@@ -475,7 +479,7 @@ def main():
             ('synth_ds_p777_r3', se, 5, 777, 3, D, synth_disp, False),
             ('synth_qwen_p0', se, 131072, 0, 1, Q, synth_disp, False)]
     plan += [(n, e, 1, 100, 0, Q, lambda k, u, o: [], False) for n, e in fps.items()]
-    NCOL = {n: (4 if n == 'tokx_k_gt_ncol' else 15) for n in fps if n.startswith('tokx')}   # ncol is 4 bits
+    NCOL = {n: (4 if n == 'tokx_k_gt_ncol' else 0 if n == 'tokx_16' else 15) for n in fps if n.startswith('tokx')}
     plan += [('db_token_range', qe, 151936, 5, 0, Q, qwen_disp, False),
              ('db_pos_range', qe, 1, 40960, 0, Q, qwen_disp, False),
              ('db_ds_token_range', se, 129280, 5, 0, D, synth_disp, False),

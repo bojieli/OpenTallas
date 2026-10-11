@@ -11,7 +11,7 @@ module hfd_cmdproc (
     input wire [32:0] f_coll,
     input wire [2:0] f_hgi_argmax,
     input wire [2:0] f_hgi_coll,
-    input wire [2:0] f_hgi_dma,
+    input wire [3:0] f_hgi_dma,
     input wire [2:0] f_hgi_hc,
     input wire [2:0] f_hgi_idx,
     input wire [418:0] f_hgi_loader,
@@ -84,11 +84,11 @@ module hfd_cmdproc (
     reg [2:0] i2_f_hgi_coll; always @(posedge clk) i2_f_hgi_coll <= i1_f_hgi_coll;
     reg [2:0] i3_f_hgi_coll; always @(posedge clk) i3_f_hgi_coll <= i2_f_hgi_coll;
     reg [2:0] i_f_hgi_coll; always @(posedge clk) i_f_hgi_coll <= i3_f_hgi_coll;
-    reg [2:0] i0_f_hgi_dma; always @(posedge clk) i0_f_hgi_dma <= f_hgi_dma;
-    reg [2:0] i1_f_hgi_dma; always @(posedge clk) i1_f_hgi_dma <= i0_f_hgi_dma;
-    reg [2:0] i2_f_hgi_dma; always @(posedge clk) i2_f_hgi_dma <= i1_f_hgi_dma;
-    reg [2:0] i3_f_hgi_dma; always @(posedge clk) i3_f_hgi_dma <= i2_f_hgi_dma;
-    reg [2:0] i_f_hgi_dma; always @(posedge clk) i_f_hgi_dma <= i3_f_hgi_dma;
+    reg [3:0] i0_f_hgi_dma; always @(posedge clk) i0_f_hgi_dma <= f_hgi_dma;
+    reg [3:0] i1_f_hgi_dma; always @(posedge clk) i1_f_hgi_dma <= i0_f_hgi_dma;
+    reg [3:0] i2_f_hgi_dma; always @(posedge clk) i2_f_hgi_dma <= i1_f_hgi_dma;
+    reg [3:0] i3_f_hgi_dma; always @(posedge clk) i3_f_hgi_dma <= i2_f_hgi_dma;
+    reg [3:0] i_f_hgi_dma; always @(posedge clk) i_f_hgi_dma <= i3_f_hgi_dma;
     reg [2:0] i0_f_hgi_hc; always @(posedge clk) i0_f_hgi_hc <= f_hgi_hc;
     reg [2:0] i1_f_hgi_hc; always @(posedge clk) i1_f_hgi_hc <= i0_f_hgi_hc;
     reg [2:0] i2_f_hgi_hc; always @(posedge clk) i2_f_hgi_hc <= i1_f_hgi_hc;
@@ -167,8 +167,25 @@ module hfd_cmdproc (
     wire [15:0] w_cpd_ux_done;
     wire [15:0] w_cpd_ux_fault;
     wire [0:0] w_cpd_wr_quiet;
-    // configuration chain: 49 RTL input bits the die interface does not carry, shifted from die input cNE[42]
-    reg [48:0] cfg; always @(posedge clk) cfg <= {cfg[47:0], i_cNE[42]};
+    wire [0:0] w_cpd_x_cmd_v;
+    wire [0:0] w_cpd_x_cmd_ready;
+    wire [200:0] w_cpd_x_cmd;
+    wire [31:0] w_cpd_x_cmd_job;
+    wire [3:0] w_cpd_x_cmd_gen;
+    wire [31:0] w_cpd_x_cmd_seq;
+    wire [0:0] w_cpd_x_cpl_v;
+    wire [0:0] w_cpd_x_cpl_ready;
+    wire [31:0] w_cpd_x_cpl_job;
+    wire [3:0] w_cpd_x_cpl_gen;
+    wire [31:0] w_cpd_x_cpl_seq;
+    wire [0:0] w_cpd_x_cpl_fault;
+    wire [0:0] w_cpd_x_am_v;
+    wire [16:0] w_cpd_x_am_idx;
+    wire [0:0] w_cpd_x_drained_ready;
+    wire [0:0] w_cpd_x_ext_fault;
+    wire [16:0] w_cpd_x_noise;
+    // configuration chain: 337 RTL input bits the die interface does not carry, shifted from die input cNE[42]
+    reg [336:0] cfg; always @(posedge clk) cfg <= {cfg[335:0], i_cNE[42]};
     assign w_cpd_clk = {1{clk}};
     assign w_cpd_rst_n = {1{rst_n}};
     assign w_cpd_lcp = {i_f_hgi_loader[418:0]};
@@ -187,8 +204,16 @@ module hfd_cmdproc (
     assign w_cpd_ux_rdy = cfg[15:0];
     assign w_cpd_ux_done = cfg[31:16];
     assign w_cpd_ux_fault = cfg[47:32];
-    assign w_cpd_wr_quiet = cfg[48:48];
-    ot_hgi_cp_die #(.USE_MACRO(1)) u_cpd (.clk(w_cpd_clk), .rst_n(w_cpd_rst_n), .lcp(w_cpd_lcp), .cpl(w_cpd_cpl), .vmq(w_cpd_vmq), .vmr(w_cpd_vmr), .vmstat(w_cpd_vmstat), .coll_rec(w_cpd_coll_rec), .coll_ret(w_cpd_coll_ret), .quant_rec(w_cpd_quant_rec), .quant_ret(w_cpd_quant_ret), .idx_rec(w_cpd_idx_rec), .idx_ret(w_cpd_idx_ret), .am_rec(w_cpd_am_rec), .am_ret(w_cpd_am_ret), .sm_rec(w_cpd_sm_rec), .sm_ret(w_cpd_sm_ret), .su_rec(w_cpd_su_rec), .su_ret(w_cpd_su_ret), .sfu_rec(w_cpd_sfu_rec), .sfu_ret(w_cpd_sfu_ret), .att_rec(w_cpd_att_rec), .att_ret(w_cpd_att_ret), .dma_rec(w_cpd_dma_rec), .dma_ret(w_cpd_dma_ret), .hc_rec(w_cpd_hc_rec), .hc_ret(w_cpd_hc_ret), .cfg_bus(w_cpd_cfg_bus), .ux_v(w_cpd_ux_v), .ux_rdy(w_cpd_ux_rdy), .ux_done(w_cpd_ux_done), .ux_fault(w_cpd_ux_fault), .wr_quiet(w_cpd_wr_quiet));
+    assign w_cpd_wr_quiet = {i_f_hgi_dma[3:3]};
+    assign w_cpd_x_cmd_v = cfg[48:48];
+    assign w_cpd_x_cmd = cfg[249:49];
+    assign w_cpd_x_cmd_job = cfg[281:250];
+    assign w_cpd_x_cmd_gen = cfg[285:282];
+    assign w_cpd_x_cmd_seq = cfg[317:286];
+    assign w_cpd_x_cpl_ready = cfg[318:318];
+    assign w_cpd_x_ext_fault = cfg[319:319];
+    assign w_cpd_x_noise = cfg[336:320];
+    ot_hgi_cp_die #(.USE_MACRO(1), .FQCR(16)) u_cpd (.clk(w_cpd_clk), .rst_n(w_cpd_rst_n), .lcp(w_cpd_lcp), .cpl(w_cpd_cpl), .vmq(w_cpd_vmq), .vmr(w_cpd_vmr), .vmstat(w_cpd_vmstat), .coll_rec(w_cpd_coll_rec), .coll_ret(w_cpd_coll_ret), .quant_rec(w_cpd_quant_rec), .quant_ret(w_cpd_quant_ret), .idx_rec(w_cpd_idx_rec), .idx_ret(w_cpd_idx_ret), .am_rec(w_cpd_am_rec), .am_ret(w_cpd_am_ret), .sm_rec(w_cpd_sm_rec), .sm_ret(w_cpd_sm_ret), .su_rec(w_cpd_su_rec), .su_ret(w_cpd_su_ret), .sfu_rec(w_cpd_sfu_rec), .sfu_ret(w_cpd_sfu_ret), .att_rec(w_cpd_att_rec), .att_ret(w_cpd_att_ret), .dma_rec(w_cpd_dma_rec), .dma_ret(w_cpd_dma_ret), .hc_rec(w_cpd_hc_rec), .hc_ret(w_cpd_hc_ret), .cfg_bus(w_cpd_cfg_bus), .ux_v(w_cpd_ux_v), .ux_rdy(w_cpd_ux_rdy), .ux_done(w_cpd_ux_done), .ux_fault(w_cpd_ux_fault), .wr_quiet(w_cpd_wr_quiet), .x_cmd_v(w_cpd_x_cmd_v), .x_cmd_ready(w_cpd_x_cmd_ready), .x_cmd(w_cpd_x_cmd), .x_cmd_job(w_cpd_x_cmd_job), .x_cmd_gen(w_cpd_x_cmd_gen), .x_cmd_seq(w_cpd_x_cmd_seq), .x_cpl_v(w_cpd_x_cpl_v), .x_cpl_ready(w_cpd_x_cpl_ready), .x_cpl_job(w_cpd_x_cpl_job), .x_cpl_gen(w_cpd_x_cpl_gen), .x_cpl_seq(w_cpd_x_cpl_seq), .x_cpl_fault(w_cpd_x_cpl_fault), .x_am_v(w_cpd_x_am_v), .x_am_idx(w_cpd_x_am_idx), .x_drained_ready(w_cpd_x_drained_ready), .x_ext_fault(w_cpd_x_ext_fault), .x_noise(w_cpd_x_noise));
     for (genvar k = 0; k < 939; k = k + 1) begin : g_sink_w_cpd_sm_rec
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_sm_rec[k]), .q());
     end
@@ -197,6 +222,33 @@ module hfd_cmdproc (
     end
     for (genvar k = 0; k < 16; k = k + 1) begin : g_sink_w_cpd_ux_v
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_ux_v[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_cmd_ready
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cmd_ready[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_cpl_v
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_v[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpd_x_cpl_job
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_job[k]), .q());
+    end
+    for (genvar k = 0; k < 4; k = k + 1) begin : g_sink_w_cpd_x_cpl_gen
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_gen[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpd_x_cpl_seq
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_seq[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_cpl_fault
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_fault[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_am_v
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_am_v[k]), .q());
+    end
+    for (genvar k = 0; k < 17; k = k + 1) begin : g_sink_w_cpd_x_am_idx
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_am_idx[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_drained_ready
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_drained_ready[k]), .q());
     end
     wire fclk_0; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0));
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1));

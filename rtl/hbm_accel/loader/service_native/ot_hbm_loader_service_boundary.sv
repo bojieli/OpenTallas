@@ -1,5 +1,5 @@
 `default_nettype none
-module ot_hbm_loader_service_boundary #(parameter integer ENABLE=0,ENABLE_NATIVE_BURST=0,NPC=32)(
+module ot_hbm_loader_service_boundary #(parameter integer ENABLE=0,ENABLE_NATIVE_BURST=1,NPC=32,NATIVE_NO=8)(
  input wire clk,rst_n,input wire [NPC-1:0] normal_pending_write,
  input wire [NPC-1:0] normal_v,output wire [NPC-1:0] normal_rdy,input wire [NPC-1:0] normal_we,
  input wire [NPC*30-1:0] normal_addr,input wire [NPC*4-1:0] normal_len,input wire [NPC*17-1:0] normal_tag,
@@ -14,15 +14,29 @@ module ot_hbm_loader_service_boundary #(parameter integer ENABLE=0,ENABLE_NATIVE
  input wire [NPC-1:0] kr_v,output wire [NPC-1:0] kr_rdy,input wire [NPC*17-1:0] kr_tag,input wire [NPC*4-1:0] kr_beat,input wire [NPC*256-1:0] kr_data,
  input wire [NPC-1:0] k_wr_done,output wire [NPC-1:0] native_busy,output wire fault
 );
+ // hbm-phys [svc] 2026-10-10 (budget audit hbm_ds_cp_fetch, F5(3)): up to NATIVE_NO native transactions in flight on
+ // the stack (each on its own PC: a PC lease takes one at a time), answered in ACCEPTANCE order through an owner FIFO
+ // {pc, len}; a lease whose transaction is not at the FIFO head holds its reply (and back-pressures its PHY), so the
+ // stack's native responses stay in order.  NATIVE_NO = 1 is the former one-transaction boundary.  Native bursts
+ // (len 1..8 within one PC) are ON by default.
  initial if(NPC!=32)$fatal(1,"production32-PC stack shape required");
+ localparam integer FA=(NATIVE_NO<=1)?1:$clog2(NATIVE_NO);
  wire [NPC-1:0] nr,nrv,pfault;wire [NPC*16-1:0] nrt;wire [NPC*4-1:0] nrb;wire [NPC*256-1:0] nrd;
- reg active;reg[4:0]pc_q;reg[3:0]len_q;
- always @(posedge clk or negedge rst_n)if(!rst_n)begin active<=0;pc_q<=0;len_q<=1;end else begin
- if(native_v&&native_rdy)begin active<=1;pc_q<=native_pc;len_q<=ENABLE_NATIVE_BURST!=0?native_len:4'd1;end
- if(native_rsp_v&&native_rsp_rdy&&native_rsp_beat==len_q-1)active<=0;
+ reg [4:0] fpc[0:NATIVE_NO-1];reg [3:0] flen[0:NATIVE_NO-1];reg [FA-1:0] fh,ft;reg [FA:0] fn;
+ wire [4:0] pc_q=fpc[fh];wire [3:0] len_q=flen[fh];
+ wire head=fn!=0;
+ wire take=native_v&&native_rdy;
+ reg [3:0] bc;   // beats delivered of the head transaction (beats may arrive in any order: count, not index)
+ wire last=native_rsp_v&&native_rsp_rdy&&bc+4'd1==len_q;
+ always @(posedge clk) if(take)begin fpc[ft]<=native_pc;flen[ft]<=ENABLE_NATIVE_BURST!=0?native_len:4'd1;end
+ always @(posedge clk or negedge rst_n)if(!rst_n)begin fh<=0;ft<=0;fn<=0;bc<=0;end else begin
+ if(native_rsp_v&&native_rsp_rdy)bc<=last?4'd0:bc+4'd1;
+ if(take)ft<=(ft==FA'(NATIVE_NO-1))?{FA{1'b0}}:ft+1'b1;
+ if(last)fh<=(fh==FA'(NATIVE_NO-1))?{FA{1'b0}}:fh+1'b1;
+ fn<=fn+(take?1'b1:1'b0)-(last?1'b1:1'b0);
  end
- assign native_rdy=ENABLE!=0&&!active&&nr[native_pc];
- assign native_rsp_v=active&&nrv[pc_q];assign native_rsp_pc=pc_q;
+ assign native_rdy=ENABLE!=0&&fn!=(FA+1)'(NATIVE_NO)&&nr[native_pc];
+ assign native_rsp_v=head&&nrv[pc_q];assign native_rsp_pc=pc_q;
  assign native_rsp_tag=nrt[pc_q*16+:16];assign native_rsp_beat=nrb[pc_q*4+:4];assign native_rsp_data=nrd[pc_q*256+:256];
  assign fault=|pfault;
  for(genvar p=0;p<NPC;p=p+1)begin:pc
@@ -41,8 +55,8 @@ module ot_hbm_loader_service_boundary #(parameter integer ENABLE=0,ENABLE_NATIVE
  .normal_rsp_tag(normal_rsp_tag[p*17+:17]),
  .normal_rsp_beat(normal_rsp_beat[p*4+:4]),
  .normal_rsp_data(normal_rsp_data[p*256+:256]),
- .native_v(native_v&&!active&&native_pc==p),.native_rdy(nr[p]),.native_addr(native_addr),.native_tag(native_tag),.native_len(native_len),
- .native_rsp_v(nrv[p]),.native_rsp_rdy(active&&pc_q==p&&native_rsp_rdy),.native_rsp_tag(nrt[p*16+:16]),
+ .native_v(native_v&&native_rdy&&native_pc==p),.native_rdy(nr[p]),.native_addr(native_addr),.native_tag(native_tag),.native_len(native_len),
+ .native_rsp_v(nrv[p]),.native_rsp_rdy(head&&pc_q==p&&native_rsp_rdy),.native_rsp_tag(nrt[p*16+:16]),
  .native_rsp_beat(nrb[p*4+:4]),.native_rsp_data(nrd[p*256+:256]),
  .k_v(k_v[p]),
  .k_rdy(k_rdy[p]),

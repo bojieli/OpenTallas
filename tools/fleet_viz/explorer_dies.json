@@ -46,6 +46,29 @@
       "reach_note": "REACH_INTER_UM (hbm_die_relays.py; 412 within a block)"
     },
     {
+      "id": "hbm_r25gph",
+      "label": "HBM generic die R25GP (HGI-1 machine, R25GPH)",
+      "target": "HBM accelerator",
+      "kind": "hbm",
+      "variant": "r25gph",
+      "relays": true,
+      "tool": "tools/hbm_die_views.py --variant r25gph die --case sta --relays (generic die R25GP + HGI-1 record dispatch; token-path hbm_gen_*)",
+      "ref": "main",
+      "ref_fallback": [
+        "origin/main"
+      ],
+      "paths": [
+        "tools/hbm_accel_die_fp.py",
+        "tools/hbm_die_views.py",
+        "tools/hbm_die_relays.py",
+        "tools/die_top_lint.py",
+        "physical/hbm_accel_die_views/index.json"
+      ],
+      "index_file": "physical/hbm_accel_die_views/index.json",
+      "reach_um": 359.0,
+      "reach_note": "REACH_INTER_UM (hbm_die_relays.py; 412 within a block)"
+    },
+    {
       "id": "hbm_r25s",
       "label": "HBM accelerator die r25s (attention split)",
       "target": "HBM accelerator",

@@ -1,0 +1,40 @@
+{
+  "source": "11ec31b34aad69f2df8d2d8b2e0f67cff8e17eaa",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch/codex/res-ser/native8-11ec31b34",
+  "gate_rc": 0,
+  "positive": {
+    "rc": 0,
+    "checks": 6527,
+    "QSCALE_reads": 842,
+    "HEAD_reads": 220,
+    "malformed_firstcause_episodes": 10,
+    "read_edges": 5,
+    "data_bits_compared_each_edge": 4096,
+    "fault_bits_compared_each_edge": 3,
+    "all37stages_in_directed_domain": true
+  },
+  "negative": {
+    "MUT1_wrong_LB": {
+      "rc": 1,
+      "mismatch_cycle": 36
+    },
+    "MUT2_data_flip": {
+      "rc": 1,
+      "mismatch_cycle": 4
+    },
+    "MUT3_wrong_fault_priority": {
+      "rc": 1,
+      "mismatch_cycle": 6463
+    },
+    "MUT4_later_cause_overwrite": {
+      "rc": 1,
+      "mismatch_cycle": 6508
+    }
+  },
+  "max_phase_RSS_kB": 639208,
+  "added_read_edges": 0,
+  "added_fault_visibility_edges": 0,
+  "physical_claim": "original group0 wrapper remains byte-identical and directly instantiated; groups1..7 and collector unqualified physically, no PNR submitted",
+  "takeback": "existing admitted batch completed during owner takeback wrap; no new launches after takeback message"
+}

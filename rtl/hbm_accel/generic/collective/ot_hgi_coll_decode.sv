@@ -5,7 +5,8 @@
 // tools/hbm_generic_iface.py D_UOP_FIELDS, COLL unit6/op0..5. Error commands
 // retire as faults without asserting backend_v. Config is quasi-static per model.
 module ot_hgi_coll_decode #(
- parameter integer ENABLE=0, MUT_GROUP=0, MUT_ROW_BLOCK=0, MUT_AR96=0
+ parameter integer ENABLE=0, MUT_GROUP=0, MUT_ROW_BLOCK=0, MUT_AR96=0,
+ parameter integer HWRG=0   // 1: ROW_GATHER param[8] (G25 hardware form) is legal; 0: it faults as before
 )(
  input wire clk,rst_n,
  input wire [7:0] coll_group_size, die_id,
@@ -48,7 +49,7 @@ module ot_hgi_coll_decode #(
  wire reduce_bad=(op==4 && (!subgroup_ok || hdr_q[88:72]!=0));
  // HGI-1 GX11 (spec c80ed5d7c): group 96 reduces as 12 groups of 8 (GROUP_REDUCE_MCAST s=8); a 96-way ALL_REDUCE_SUM is E_RANGE
  wire ar96_bad=(op==0 && group_q==96 && !MUT_AR96);
- wire gather_bad=(op==5 && (!operands[6] || param_lo==0 || hdr_q[88:72]!=0 ||
+ wire gather_bad=(op==5 && (!operands[6] || param_lo==0 || hdr_q[88:73]!=0 || (hdr_q[72] && HWRG==0) ||
                    imm_b==0 || imm_b>group_q ||
                    (count_valid_q ? (count_q==0 || count_q>32'd1048576) : (imm_a==0 || imm_a>32'd1048576))));
  assign cmd_r=(ENABLE!=0) && !pending && !backend_v && !error_v;

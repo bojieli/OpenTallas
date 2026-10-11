@@ -21,7 +21,8 @@
 // with up to 4 requests outstanding (in-order responses into a 4-sector buffer); B / C loads and the packer writes share
 // the same client.
 module ot_hgi_idx_index #(
-    parameter integer MUT = 0     // bench mutants: 1 head weight of the next head, 2 R written from the wrong lane
+    parameter integer MUT = 0     // bench mutants: 1 head weight of the next head, 2 R written from the wrong lane,
+                                  // 3 (hgi-1010/g) the historical 3-bit pointer empty test (a full 8-entry FIFO looks empty)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -100,6 +101,8 @@ module ot_hgi_idx_index #(
     wire [4:0] tl_r = (MUT == 2) ? ((tl + 5'd1) & 5'd15) : tl;
     wire [15:0] t_valr = th[36 + 16*tl_r +: 16]; wire t_ninfr = th[20 + tl_r];
     wire c_lv = ch[4 + cl]; wire [16:0] c_blk = ch[38 + 17*cl +: 17]; wire [15:0] c_val = ch[6 + 16*cl +: 16];
+    wire t_pop = st == S_RUN && (MUT == 3 ? tft != tfh : tfn != 0) && !pk_full[0] && (!has_r || !pk_full[1]) && tl == 15;
+    wire c_pop = st == S_RUN && (MUT == 3 ? cft != cfh : cfn != 0) && !pk_full[2] && !pk_full[3] && cl == 1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; done <= 1'b0; fault <= 1'b0; vmq <= 338'd0; ocnt <= 3'd0; c_ok <= 1'b0; a_fl <= 3'd0; af_n <= 3'd0;
@@ -200,7 +203,7 @@ module ot_hgi_idx_index #(
                         if (qs == 2'd3) begin qfull <= 1'b1; qblk <= qblk + 8'd1; end
                     end
                     // ---- top-k lanes -> O, R
-                    if (tft != tfh && pk_ok(0) && (!has_r || pk_ok(1))) begin
+                    if ((MUT == 3 ? tft != tfh : tfn != 0) && pk_ok(0) && (!has_r || pk_ok(1))) begin
                         if (t_lv) begin
                             pk_d[0][pk_a[0][2:0] * 32 +: 32] <= {12'd0, t_idx}; pk_m[0][pk_a[0][2:0]] <= 1'b1;
                             pk_s[0] <= pk_a[0][17:3]; pk_a[0] <= pk_a[0] + 18'd1;
@@ -218,7 +221,7 @@ module ot_hgi_idx_index #(
                         end else tl <= tl + 5'd1;
                     end
                     // ---- candidate lanes -> D
-                    if (cft != cfh && pk_ok(2) && pk_ok(3)) begin
+                    if ((MUT == 3 ? cft != cfh : cfn != 0) && pk_ok(2) && pk_ok(3)) begin
                         if (c_lv) begin
                             pk_d[2][pk_a[2][2:0] * 32 +: 32] <= {15'd0, c_blk}; pk_m[2][pk_a[2][2:0]] <= 1'b1;
                             pk_s[2] <= pk_a[2][17:3]; pk_a[2] <= pk_a[2] + 18'd1;
@@ -234,7 +237,7 @@ module ot_hgi_idx_index #(
                         end else cl <= cl + 2'd1;
                     end
                     if (bad) begin st <= S_IDLE; fault <= 1'b1; end
-                    else if (sel_done && to_last && co_last && tft == tfh && cft == cfh && qblk == 8'd128 && !qfull) begin
+                    else if (sel_done && to_last && co_last && tfn == 0 && cfn == 0 && qblk == 8'd128 && !qfull) begin
                         st <= S_FLUSH;
                         for (i = 0; i < 4; i = i + 1) if (pk_m[i] != 8'd0) pk_full[i] <= 1'b1;
                     end
@@ -249,6 +252,12 @@ module ot_hgi_idx_index #(
                         {{4{pk_m[wp][7]}}, {4{pk_m[wp][6]}}, {4{pk_m[wp][5]}}, {4{pk_m[wp][4]}},
                          {4{pk_m[wp][3]}}, {4{pk_m[wp][2]}}, {4{pk_m[wp][1]}}, {4{pk_m[wp][0]}}}, 16'h0913};
                 pk_full[wp] <= 1'b0; pk_m[wp] <= 8'd0;
+            end
+            // Occupancy distinguishes full8 from empty even when ring pointers agree.
+            if (st != S_IDLE) begin
+                tfn <= tfn + {3'd0,to[0]} - {3'd0,t_pop};
+                cfn <= cfn + {3'd0,co[0]} - {3'd0,c_pop};
+                if ((to[0] && tfn == 8 && !t_pop) || (co[0] && cfn == 8 && !c_pop)) bad <= 1'b1;
             end
             ocnt <= ocnt + {2'd0, iss} - {2'd0, vmr[273]};
             a_fl <= a_fl + {2'd0, a_iss} - {2'd0, af_push};

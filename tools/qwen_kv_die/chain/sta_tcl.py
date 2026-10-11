@@ -34,7 +34,8 @@ source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 # die-evidence-2 2026-10-09: GRT parasitics from the SPEF the GRT session wrote (grt.tcl step spef).  The old
 # read_guides + estimate_parasitics -global_routing path gave no wire RC (GRT-0008): the run now fails without the SPEF.
 if {{![file exists /work/die_grt.spef]}} {{ puts "OT_STEP_FAIL spef missing: /work/die_grt.spef (GRT-0008: guides carry no RC)"; exit 1 }}
-step spef {{ read_spef /work/die_grt.spef }}
+# ds-1010 10-10: a failed read_spef must stop the run (the step proc only logs): KV11's first STA timed the die with no wire RC
+if {{[catch {{read_spef /work/die_grt.spef}} err]}} {{ puts "OT_STEP_FAIL spef $err"; exit 1 }}
 {clocks}
 {unc}
 step sta {{

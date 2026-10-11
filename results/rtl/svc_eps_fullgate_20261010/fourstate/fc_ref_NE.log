@@ -1,0 +1,3 @@
+SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=0 ps_rows=0 ps_kd=0 errors=0
+SVC_BENCH PASS
+physical/hbm_accel_die_views/svc/tb/tb_svc_ps_body.svh:323: $finish called at 937472000 (1fs)

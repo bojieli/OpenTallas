@@ -9,6 +9,9 @@
 //     ALL_REDUCE_SUM (op 0), GROUP_REDUCE_MCAST (op 4): endpoint control {rank, gsz, mcast_all, mcast_group_size,
 //                       pf = A.n / 16 flits}, go / start_ready, done_valid / done_ready, fault / fault_ack;
 //                       A and O effective bases go to the SU inject / deliver addressing (ep_a_base, ep_o_base).
+//     ROW_GATHER (op 5), param[8] = 1 and RGXHW = 1 (G25 hardware form): the endpoint in RGX mode (bypass, the source's
+//                       tags, K * F deliveries) + the owner-row source and list-order sink started with it; retires
+//                       when the endpoint completed and the sink drained.  K from I's count (n_sel 63) or imm_a.
 //     ROW_GATHER (op 5): row formatter start {G, B, destinations, row count, row words = ceil(A.n * bits(A.fmt) /
 //                       512), context rows = A.m}, done / fault.
 //     ALL_GATHER, TOPK_MERGE, ARGMAX_MERGE (ops 1-3): no generic backend is installed on this collective yet; the
@@ -21,7 +24,11 @@
 module ot_hgi_coll_record #(
     parameter integer MUT_PF = 0,          // mutant: pf from A.n without the /16 flit conversion
     parameter integer MUT_DONE = 0,        // mutant: retire on issue instead of on endpoint completion
-    parameter integer MUT_SLICE = 0        // 1: no slicing (the whole A row from every rank, pre-F3 behaviour)
+    parameter integer MUT_SLICE = 0,       // 1: no slicing (the whole A row from every rank, pre-F3 behaviour)
+    parameter integer PIPE = 0,            // hgi-unitrate: 1 = ALL_GATHER records pipeline (epoch-tagged; the block
+                                           // ot_hgi_coll_ep PIPE retires them in order), every other op waits until
+                                           // no pipelined gather is open
+    parameter integer RGXHW = 0            // 1: ROW_GATHER param[8] runs the hardware form (G25, ot_hgi_coll_rgx_src / _sink)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -75,7 +82,30 @@ module ot_hgi_coll_record #(
     output reg  [31:0]   rf_context_rows,
     input  wire          rf_done_v,
     output reg           rf_done_r,
-    input  wire          rf_fault
+    input  wire          rf_fault,
+    // PIPE: the endpoint's pipelined start ready, the block's open-epoch state, and this go's mode
+    input  wire          ep_start_ready_p,
+    input  wire          pipe_room,          // fewer than EQ pipelined gathers open
+    input  wire          pipe_idle,          // none open
+    output reg           ep_pipe,
+    // hardware ROW_GATHER (G25): endpoint mode + source / sink run configuration
+    output reg           ep_rgx,
+    output reg  [16:0]   ep_rgx_total,   // K * F
+    output reg           rg_start,       // source and sink start (with ep_go)
+    output reg  [11:0]   rg_k,
+    output reg  [2:0]    rg_lb,
+    output reg  [7:0]    rg_g,
+    output reg  [7:0]    rg_rrel,
+    output reg  [7:0]    rg_dests,
+    output reg  [34:0]   rg_abase,       // A: HBM sector address
+    output reg  [15:0]   rg_astride,     // A: sectors between rows
+    output reg  [6:0]    rg_sec,         // S
+    output reg  [5:0]    rg_nflit,       // F
+    output reg  [31:0]   rg_lbase,       // I: VM 512-bit word address
+    output reg  [39:0]   rg_obase,
+    output reg  [31:0]   rg_ostride,
+    output reg           rg_ovm,
+    input  wire          rg_drained
 );
     localparam S_IDLE = 4'd0, S_DEC = 4'd1, S_WAITDEC = 4'd2, S_EPGO = 4'd3, S_EPRUN = 4'd4, S_RFGO = 4'd5,
                S_RFRUN = 4'd6, S_HALT = 4'd7, S_DIV = 4'd8, S_TAB = 4'd9;
@@ -85,13 +115,16 @@ module ot_hgi_coll_record #(
     // record station
     reg [127:0] hdr_q;
     reg [255:0] a_q, i_q;
-    reg [39:0]  o_base_q; reg [2:0] o_fmt_q;
+    reg [39:0]  o_base_q; reg [2:0] o_fmt_q; reg [1:0] o_space_q; reg [31:0] o_stride_q; reg rg_run;
+    reg         in_rg_drained;
     reg [20:0]  n_a_q, n_i_q;
     reg [7:0]   g_q, die_q;
     reg         in_ep_fault, in_ep_done, in_ep_ready, in_rf_start_r, in_rf_done, in_rf_fault;
+    reg         in_ready_p, in_room, in_idle;
     always @(posedge clk) begin
+        in_ready_p <= ep_start_ready_p; in_room <= pipe_room; in_idle <= pipe_idle;
         in_ep_fault <= ep_fault; in_ep_done <= ep_done_valid; in_ep_ready <= ep_start_ready;
-        in_rf_start_r <= rf_start_r; in_rf_done <= rf_done_v; in_rf_fault <= rf_fault;
+        in_rf_start_r <= rf_start_r; in_rf_done <= rf_done_v; in_rf_fault <= rf_fault; in_rg_drained <= rg_drained;
         g_q <= cfg_coll_group_size; die_q <= cfg_die_id;
     end
     assign rec_rdy = (st == S_IDLE);
@@ -103,11 +136,13 @@ module ot_hgi_coll_record #(
     wire [7:0]  dc_g, dc_rank, dc_group, dc_sub, dc_blk, dc_dest;
     wire [20:0] dc_rows;
     reg         dc_cmd_v;
-    ot_hgi_coll_decode #(.ENABLE(1)) u_dec (
+    // PIPE gate: an ALL_GATHER needs a free epoch, any other op an empty pipe (classic collectives never overlap one)
+    wire        gate_ok;
+    ot_hgi_coll_decode #(.ENABLE(1), .HWRG(RGXHW)) u_dec (
         .clk(clk), .rst_n(rst_n), .coll_group_size(g_q), .die_id(die_q),
         .cmd_v(dc_cmd_v), .cmd_r(dc_cmd_r), .hdr(hdr_q),
         .selected_count({11'd0, n_i_q}), .selected_count_valid(opnd[6] && i_q[206:201] == 6'd63),
-        .backend_v(dc_bv), .backend_r(st == S_WAITDEC), .backend_op(dc_op), .backend_gsz(dc_gsz),
+        .backend_v(dc_bv), .backend_r(st == S_WAITDEC && gate_ok), .backend_op(dc_op), .backend_gsz(dc_gsz),
         .backend_group_size(dc_g), .backend_rank(dc_rank), .backend_group(dc_group), .backend_subgroup(dc_sub),
         .backend_owner_block(dc_blk), .backend_destinations(dc_dest), .backend_row_count(dc_rows),
         .error_v(dc_ev), .error_r(st == S_WAITDEC));
@@ -120,29 +155,61 @@ module ot_hgi_coll_record #(
     // ALL_GATHER (bypass): pf = A row bits / 512 in any element format; a partial flit or an empty row faults
     wire        pfg_bad = (a_rowbits[8:0] != 9'd0) || (n_a_q == 21'd0) || (a_rowwords > 17'hFFFF);
     // endpoint rank = the die's position on the 96-rank TU fabric (die mod 96: groups of 1..8 stay aligned)
+    assign gate_ok = (PIPE == 0) || !dc_bv || ((dc_op == 6'd1) ? in_room : in_idle);
     wire [7:0]  rank96 = (die_q >= 8'd192) ? die_q - 8'd192 : (die_q >= 8'd96) ? die_q - 8'd96 : die_q;
     // GROUP_REDUCE_MCAST: the endpoint's gsz is the reduction sub-group s (2 / 4 / 8), the outer group is G
     wire [3:0]  sub_gsz = (dc_sub == 8'd2) ? 4'd1 : (dc_sub == 8'd4) ? 4'd2 : 4'd3;
+    // G25 hardware ROW_GATHER: B a power of two <= 128, K <= 2,048, A in HBM (32 B aligned, stride a 32 B multiple, S <= 64
+    // sectors a row), I in VM (16-word aligned), O in HBM (64 B aligned rows) or VM (16-word aligned rows)
+    wire        hwrg = (RGXHW != 0) && hdr_q[72];
+    wire [2:0]  blg = dc_blk[7] ? 3'd7 : dc_blk[6] ? 3'd6 : dc_blk[5] ? 3'd5 : dc_blk[4] ? 3'd4 : dc_blk[3] ? 3'd3 :
+                      dc_blk[2] ? 3'd2 : dc_blk[1] ? 3'd1 : 3'd0;
+    wire [16:0] a_secs = 17'((a_rowbits + 26'd255) >> 8);
+    wire [31:0] a_stride_b = a_q[119:88];
+    wire [5:0]  rg_f = 6'((a_secs + 17'd1) >> 1);
+    wire        rg_bad = (dc_blk & (dc_blk - 8'd1)) != 8'd0 || dc_rows == 21'd0 || dc_rows > 21'd2048 ||
+                         a_q[1:0] != 2'd0 || a_q[12:8] != 5'd0 || a_stride_b[4:0] != 5'd0 || a_stride_b[31:21] != 11'd0 ||
+                         n_a_q == 21'd0 || a_secs > 17'd64 || i_q[1:0] != 2'd1 || i_q[11:8] != 4'd0 ||
+                         !(o_space_q == 2'd0 || o_space_q == 2'd1) || (o_space_q == 2'd0 ? o_base_q[5:0] != 6'd0 : o_base_q[3:0] != 4'd0);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; dc_cmd_v <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
-            ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_start_v <= 1'b0; rf_done_r <= 1'b0;
+            ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_start_v <= 1'b0; rf_done_r <= 1'b0; ep_pipe <= 1'b0;
             ep_rank <= 8'd0; ep_mcast_group_size <= 8'd96; ep_mcast_all <= 1'b0; ep_gsz <= 4'hF; ep_pf <= 16'd0; ep_byp <= 1'b0; ep_amx <= 1'b0; ep_bf16 <= 1'b1;
             ep_a_base <= 40'd0; ep_o_base <= 40'd0; ep_gslice <= 1'b0; ep_gbase <= 8'd0; gs_we <= 1'b0;
             rf_group_size <= 8'd96; rf_owner_block <= 8'd8; rf_destinations <= 8'd0; rf_row_count <= 21'd0;
             rf_row_words <= 16'd0; rf_context_rows <= 32'd0;
             hdr_q <= 128'd0; a_q <= 256'd0; i_q <= 256'd0; o_base_q <= 40'd0; n_a_q <= 21'd0; n_i_q <= 21'd0;
+            o_space_q <= 2'd0; o_stride_q <= 32'd0; rg_run <= 1'b0; ep_rgx <= 1'b0; ep_rgx_total <= 17'd0; rg_start <= 1'b0;
+            rg_k <= 12'd1; rg_lb <= 3'd0; rg_g <= 8'd96; rg_rrel <= 8'd0; rg_dests <= 8'd0; rg_abase <= 35'd0; rg_astride <= 16'd0;
+            rg_sec <= 7'd1; rg_nflit <= 6'd1; rg_lbase <= 32'd0; rg_obase <= 40'd0; rg_ostride <= 32'd0; rg_ovm <= 1'b0;
         end else begin
-            rec_done <= 1'b0; rec_fault <= 1'b0; ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_done_r <= 1'b0; gs_we <= 1'b0;
+            rec_done <= 1'b0; rec_fault <= 1'b0; ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_done_r <= 1'b0; gs_we <= 1'b0; rg_start <= 1'b0;
             case (st)
                 S_IDLE: if (rec_v) begin
                     hdr_q <= rec_hdr; a_q <= rec_a; i_q <= rec_i; o_base_q <= rec_o[47:8]; o_fmt_q <= rec_o[4:2];
+                    o_space_q <= rec_o[1:0]; o_stride_q <= rec_o[119:88];
                     n_a_q <= rec_n_a; n_i_q <= rec_n_i; st <= S_DEC;
                 end
                 S_DEC: begin dc_cmd_v <= 1'b1; if (dc_cmd_v && dc_cmd_r) begin dc_cmd_v <= 1'b0; st <= S_WAITDEC; end end
                 S_WAITDEC: if (dc_ev) begin rec_fault <= 1'b1; st <= S_HALT; end
-                    else if (dc_bv) begin
-                        if (dc_op == 6'd0 || dc_op == 6'd4) begin
+                    else if (dc_bv && gate_ok) begin
+                        ep_pipe <= (PIPE != 0) && (dc_op == 6'd1);
+                        ep_rgx <= 1'b0; rg_run <= 1'b0;
+                        if (dc_op == 6'd5 && hwrg) begin    // G25: one collective, no loop
+                            if (rg_bad) begin rec_fault <= 1'b1; st <= S_HALT; end
+                            else begin
+                                ep_rank <= rank96; ep_byp <= 1'b1; ep_amx <= 1'b0; ep_gslice <= 1'b0; ep_rgx <= 1'b1; rg_run <= 1'b1;
+                                ep_gsz <= (dc_g == 8'd96) ? 4'd3 : dc_gsz; ep_mcast_all <= (dc_g == 8'd96);
+                                ep_mcast_group_size <= dc_g; ep_pf <= 16'd1;
+                                ep_rgx_total <= 17'(dc_rows) * 17'(rg_f);
+                                rg_k <= 12'(dc_rows); rg_lb <= blg; rg_g <= dc_g; rg_rrel <= dc_rank; rg_dests <= dc_dest;
+                                rg_abase <= 35'(a_q[47:8] >> 5); rg_astride <= 16'(a_stride_b >> 5); rg_sec <= 7'(a_secs); rg_nflit <= rg_f;
+                                rg_lbase <= 32'(i_q[47:8] >> 4);
+                                rg_obase <= o_base_q; rg_ostride <= o_stride_q; rg_ovm <= (o_space_q == 2'd1);
+                                st <= S_EPGO;
+                            end
+                        end else if (dc_op == 6'd0 || dc_op == 6'd4) begin
                             if (pf_bad || (o_fmt_q != 3'd0 && o_fmt_q != 3'd1)) begin rec_fault <= 1'b1; st <= S_HALT; end   // O FP32 / BF16 only
                             else begin
                                 ep_rank <= rank96; ep_gsz <= (dc_op == 6'd4) ? sub_gsz : dc_gsz; ep_mcast_all <= (dc_op == 6'd4);
@@ -207,12 +274,17 @@ module ot_hgi_coll_record #(
                     end else tq <= tq + 8'd1;
                 end
                 S_EPGO: if (in_ep_fault) begin rec_fault <= 1'b1; st <= S_HALT; end
-                    else if (in_ep_ready) begin
-                        ep_go <= 1'b1;
+                    else if (ep_pipe && in_ready_p && !ep_go) begin
+                        ep_go <= 1'b1; st <= S_IDLE;           // the block retires it (in order) when its epoch completes
+                    end
+                    else if (!ep_pipe && in_ep_ready && (!rg_run || in_rg_drained)) begin
+                        ep_go <= 1'b1; rg_start <= rg_run;
                         if (MUT_DONE) begin rec_done <= 1'b1; st <= S_IDLE; end else st <= S_EPRUN;
                     end
                 S_EPRUN: if (in_ep_fault) begin rec_fault <= 1'b1; st <= S_HALT; end
-                    else if (in_ep_done && !ep_done_ready) begin ep_done_ready <= 1'b1; rec_done <= 1'b1; st <= S_IDLE; end
+                    else if (in_ep_done && !ep_done_ready && (!rg_run || (in_rg_drained && rg_drained))) begin
+                        ep_done_ready <= 1'b1; rec_done <= 1'b1; st <= S_IDLE;
+                    end
                 S_RFGO: if (in_rf_start_r) begin rf_start_v <= 1'b0; st <= S_RFRUN; end
                 S_RFRUN: if (in_rf_done && !rf_done_r) begin
                         rf_done_r <= 1'b1;

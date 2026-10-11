@@ -9,8 +9,12 @@ import { attachCoverage, coverageVersion, COV, saveCov, GAPS, COL, covLevel } fr
 export const DESIGNS = [
   { id: 'qwen_rom', label: 'Qwen ROM', die: 'qwen_r21b' },
   { id: 'ds_rom', label: 'DeepSeek ROM (S81 array)', die: 's81_layer_r3' },
-  { id: 'hbm_ds', label: 'HBM accelerator', die: 'hbm_r25' },
+  { id: 'hbm_gen_qwen', label: 'HBM generic die · Qwen3-8B', die: 'hbm_r25gph' },
+  { id: 'hbm_gen_ds', label: 'HBM generic die · DeepSeek', die: 'hbm_r25gph' },
 ];
+/** retired design ids -> their replacement (old #design= links keep working) */
+export const ALIASES = { hbm_ds: 'hbm_gen_ds', hbm_ds_mtp: 'hbm_gen_ds' };
+export const canonDesign = (d) => ALIASES[d] || d;
 
 /** Default geometry sources, tried in order: the Chip Explorer die export (same instance names as /explorer's die
  *  map), then the snapshot the export tool writes beside the data. */
@@ -64,6 +68,7 @@ const T_CSS = `
 .tp-x .covctl button[aria-pressed=true]{color:#e8eefc;background:#10204a}
 .tp-x .covctl a{color:${CRIT}}
 .tp-x .covsum{margin-top:6px;font:12px ui-monospace,Menlo,monospace;color:#8a97b8}.tp-x .covsum b{font-weight:700}
+.tp-x .tp-rec{margin-top:8px}.tp-x .tp-rec pre{margin:4px 0 0;max-height:420px;overflow:auto;background:#05070d;border:1px solid #1b2540;border-radius:8px;padding:8px;font:11px/1.45 ui-monospace,Menlo,monospace;color:#c3cbe0;white-space:pre}
 .tp-x .hatchsw{background:repeating-linear-gradient(45deg,#e66767 0 2px,#2a0f16 2px 5px)!important}
 `;
 
@@ -74,7 +79,7 @@ export async function loadRecord(url) { const r = await fetch(url); if (!r.ok) t
 /**
  * mountTokenExplorer(el, {base, design, group, geometryUrl, onState})
  *   base         URL prefix of the data directory (default './data/'): <base><design>.json
- *   design       'qwen_rom' | 'ds_rom' | 'hbm_ds'
+ *   design       'qwen_rom' | 'ds_rom' | 'hbm_gen_qwen' | 'hbm_gen_ds' (retired ids map through ALIASES)
  *   group        initial drill group id (null = whole token)
  *   geometryUrl  (design, record) => URL (or list of URLs, tried in order) of the die geometry, or null to hide the
  *                die replay (default: /api/explorer/geom?die=<die of the design>, then <base>geo_<design>.json)
@@ -84,8 +89,16 @@ export async function mountTokenExplorer(el, opts = {}) {
   injectCSS('tp-css', CSS); injectCSS('tp-x-css', T_CSS);
   const o = Object.assign({ base: './data/', design: 'qwen_rom', group: null, onState: null,
     geometryUrl: defaultGeometry(opts.base || './data/') }, opts);
-  const state = { design: o.design, group: o.group, mode: o.mode === 'mtp' ? 'mtp' : 'ar' };
-  const cache = {}, gcache = {};
+  const state = { design: canonDesign(o.design), group: o.group, mode: o.mode === 'mtp' ? 'mtp' : 'ar' };
+  const cache = {}, gcache = {}, pcache = {};
+  // generic HBM die: the decoded HGI-1 record behind an operator (tools/hgi_sim/listing.py), loaded on first click
+  async function programRecord(data, n) {
+    const f = data.program && data.program.file;
+    if (!f || n.rec == null) return null;
+    const pr = pcache[f] ||= loadRecord(o.base + f);
+    const L = (await pr).listing[n.rec];
+    return L ? L.text : null;
+  }
   const clock = new Clock({ seconds: 24 });
   const root = h('div', { class: 'tp-x tp-root' });
   el.replaceChildren(root);
@@ -179,7 +192,15 @@ export async function mountTokenExplorer(el, opts = {}) {
     const parts = [tabs, banner, h('div', { class: 'panel' }, ctl), flowP, ganttP, h('div', { class: 'two' }, dieP, selP)];
     if (mtp) parts.push(hwPanel(data, (n) => { state.group = n.group; render(); }));
     root.replaceChildren(...parts, shareP, notes);
-    const onSelect = (n) => { sel.replaceChildren(detail(data, n)); views.forEach((v) => v && v.select && v.select(n.id)); };
+    const onSelect = (n) => {
+      sel.replaceChildren(detail(data, n));
+      if (data.program && n.rec != null) {
+        const box = h('div', { class: 'tp-rec' }, h('div', { class: 'tp-dm' }, `decoded HGI-1 record ${n.rec} of the image${n.iter != null ? ` (loop iteration L = ${n.iter})` : ''} · tools/hgi_sim/listing.py`), h('pre', {}, 'loading…'));
+        sel.append(box);
+        programRecord(data, n).then((t) => { box.querySelector('pre').textContent = t || 'record not in the listing'; }, (e) => { box.querySelector('pre').textContent = 'listing: ' + e.message; });
+      }
+      views.forEach((v) => v && v.select && v.select(n.id));
+    };
     views.push(mountFlow(flowP.querySelector('.fl'), data, { clock, group: state.group, onSelect, onDrill: (gid) => { state.group = gid; render(); } }));
     views.push(mountGantt(ganttP.querySelector('.gn'), data, { clock, range: [t0, t1], onSelect, onZoom: (gid) => { state.group = gid; render(); } }));
     let gurls = o.geometryUrl && o.geometryUrl(state.design, data);
@@ -209,7 +230,7 @@ export async function mountTokenExplorer(el, opts = {}) {
       if (v && covV && v !== covV) { covV = v; for (const k in cache) if (cache[k]) cache[k]._cov = null; if (clock.playing) covPending = true; else rerender(); }
     } catch (e) { /* server restart */ }
   }, 30000);
-  return { clock, show(design, group = null, mode = state.mode) { state.design = design; state.group = group; state.mode = mode; return render(); }, state };
+  return { clock, show(design, group = null, mode = state.mode) { state.design = canonDesign(design); state.group = group; state.mode = mode; return render(); }, state };
 }
 
 /** banner line: critical cycles on operators whose coverage rows have gaps (under the current overlay filter) */

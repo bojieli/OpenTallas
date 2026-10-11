@@ -481,7 +481,7 @@ module hfd_svc_SW_s4 (
   assign phy[340] = 1'b0;
   assign phy[341] = 1'b0;
   assign pc17_kr_v = phy[343];
-  assign phy[344] = rdy_q;
+  ot_svs_rdyp u_rdyp344 (.ck(c), .rn(rn), .q(phy[344]));
   assign pc17_kr_tag[0] = phy[345];
   assign pc17_kr_tag[1] = phy[346];
   assign pc17_kr_tag[2] = phy[347];
@@ -1102,7 +1102,7 @@ module hfd_svc_SW_s4 (
   assign phy[962] = 1'b0;
   assign phy[963] = 1'b0;
   assign pc18_kr_v = phy[965];
-  assign phy[966] = rdy_q;
+  ot_svs_rdyp u_rdyp966 (.ck(c), .rn(rn), .q(phy[966]));
   assign pc18_kr_tag[0] = phy[967];
   assign pc18_kr_tag[1] = phy[968];
   assign pc18_kr_tag[2] = phy[969];
@@ -1723,7 +1723,7 @@ module hfd_svc_SW_s4 (
   assign phy[1584] = 1'b0;
   assign phy[1585] = 1'b0;
   assign pc19_kr_v = phy[1587];
-  assign phy[1588] = rdy_q;
+  ot_svs_rdyp u_rdyp1588 (.ck(c), .rn(rn), .q(phy[1588]));
   assign pc19_kr_tag[0] = phy[1589];
   assign pc19_kr_tag[1] = phy[1590];
   assign pc19_kr_tag[2] = phy[1591];

@@ -125,28 +125,78 @@
    ],
    "grade": "measured",
    "note": "lower bound: the measured single-row pipeline latency is a floor the transfer-ratio model is under; the whole-vocab sweep throughput needs the head full340_A production wrapper (not built)"
+  },
+  {
+   "id": "binding.expert_rowpack",
+   "element": "routed experts on the bound MD-2 draft dies (rowpack whole-superrow layout)",
+   "cycles": 7401.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "(3375 - mtp.0 experts_gu 1429 + 1620 - down 1099) + (3375 - mtp.1 experts_gu 1429 + 1620 - down 1099) + (3375 - mtp.2 experts_gu 1429 + 1620 - down 1099); row = 3 experts x (GU 3 subphases x 375 + W2 2 x 270), all 3 on one die (upper bound; a split mtp.2 row runs A and B in parallel)",
+   "source": [
+    "results/uarch/dsrom_s81_mtp_binding_20261010/verdict.json (2,401/2,401 mtp.* bound)",
+    "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz phases (GU / W2 subphases per expert)",
+    "results/uarch/dsrom_mtp_p2_20261009/microbench.json gu_packed / w2_packed phase_cycles (full-K released operands)",
+    "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json stages[*].critical_path ffn.experts_gu.r0 / ffn.down.r0 (DP1-EP5 phases replaced)"
+   ],
+   "grade": "measured (component phases)",
+   "note": "the composition timed the experts on DP1-EP5 replicas (L0-pair images, one phase per expert group); the bound 40-die P2 home stores them in the rowpack, which needs up to 3 GU + 2 W2 subphases an expert"
+  },
+  {
+   "id": "binding.ucie_pair",
+   "element": "MD-2 package-pair UCIe crossings (A -> B forward, B -> A expert return)",
+   "cycles": 68.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "4 crossings ({'mtp.0': 0, 'mtp.1': 2, 'mtp.2': 2}) x 17 (UCIe leg: leg1_first_flit -> first_flit, rec_x_row link RTL incl. the 11-cycle vendor channel)",
+   "source": [
+    "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json topology.ucie_crossings_a_row",
+    "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json rlinks.x_row.summary"
+   ],
+   "grade": "measured+vendor"
+  },
+  {
+   "id": "binding.primary_to_head",
+   "element": "board hop P.k* -> head group (5 draft rows' hidden state to the LM-head sweep)",
+   "cycles": 3470.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "one 5-row stage hop = the measured mtp.0 hop_in 3470.0 cycles (same link, same payload)",
+   "source": [
+    "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json topology.draft_head",
+    "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json stages['mtp.0'].critical_path hop_in"
+   ],
+   "grade": "measured+vendor",
+   "note": "P2's primary-on-head-dies home made this hop die-local, but it has no room for the seed (669 > 631 pairs) and packs ~8x the words a pair a phase; the bound primary keeps L0's per-phase pair reads"
   }
  ],
  "totals": {
-  "critical_cycles": 30631.7,
-  "critical_cycles_lower": 30161.7,
+  "critical_cycles": 41570.7,
+  "critical_cycles_lower": 41100.7,
   "overlapped_cycles": 0,
   "composed_step_cycles": 1146896.4,
-  "charged_step_cycles": 1177528.1,
+  "charged_step_cycles": 1188467.1,
   "tau": 4.159,
   "MTP_tok_s_composed": 4351.6,
-  "MTP_tok_s_charged": 4238.4,
-  "MTP_tok_s_charged_lower_charges": 4240.1
+  "MTP_tok_s_charged": 4199.4,
+  "MTP_tok_s_charged_lower_charges": 4201.0
  },
  "inputs": {
   "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json": "3a7db4e5be43cd22",
   "results/rtl/dsrom_wfc_split_20261006/closure.json": "be01b4a2e8de0045",
   "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json": "41db75f37da04e24",
   "results/rtl/dsrom_markov_pinreg_20261008/qualification.json": "29bfec70d415eb2d",
-  "physical/mtp_p2_transport/route.sh": "73ddb88791967365",
+  "physical/mtp_p2_transport/route.sh": "70ff1bdaf6aedf18",
   "physical/mtp_p2_transport/model.json": "aa2e67ca6da05e0b",
   "rtl/mtp/rollback/ot_mtp_commit.sv": "e2a525e643954df8",
-  "results/uarch/dsrom_mtp_rom_step_20261008/step.json": "8980bce0e6478734"
+  "results/uarch/dsrom_mtp_rom_step_20261008/step.json": "8980bce0e6478734",
+  "results/uarch/dsrom_s81_mtp_binding_20261010/verdict.json": "09fe8daaa1f0456b",
+  "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json": "927f80e30a04983f",
+  "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz": "6eee0e381b7de8c1",
+  "results/uarch/dsrom_mtp_p2_20261009/microbench.json": "9bbd8863705036c2"
  },
  "sensitivity_not_credited": {
   "rtl_sequenced_over_model": 1.0433,

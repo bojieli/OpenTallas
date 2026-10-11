@@ -2,8 +2,11 @@
 module tb;
 reg clk=0;always #5 clk=~clk;reg rst_n=0;reg [611:0] to=0;reg [71:0] co=0;
 wire done,fault,toc,coc;wire [337:0] vmq;wire [89:0] fs;wire [1047:0] qb;wire [344:0] kin;
+`ifndef IMUT
+ `define IMUT 0
+`endif
 `ifdef LEGACY
- ot_hgi_idx_index
+ ot_hgi_idx_index #(.MUT(`IMUT))
 `else
  ot_hgi_idx_index_native
 `endif

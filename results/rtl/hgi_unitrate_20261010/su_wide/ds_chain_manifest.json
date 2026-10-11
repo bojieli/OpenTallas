@@ -1,0 +1,196 @@
+{
+ "schema": "opentallas.hgi_unitrate.su_prod_vec.v1",
+ "program": "ds_native DeepSeek-V4.1 TP96 P1048575 rank 0 layer 0 (/tmp/ds_L0_program.json)",
+ "seed": 20261010,
+ "cases": [
+  {
+   "tag": "q_norm.ss",
+   "unit": "SU",
+   "priced": 164.0,
+   "stage_sectors": 160,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "q_norm.rs",
+   "unit": "SU",
+   "priced": 152.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "q_norm.y",
+   "unit": "SU",
+   "priced": 61.0,
+   "stage_sectors": 321,
+   "drain_sectors": 160
+  },
+  {
+   "tag": "kv_norm.ss",
+   "unit": "SU",
+   "priced": 151.0,
+   "stage_sectors": 64,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "kv_norm.rs",
+   "unit": "SU",
+   "priced": 152.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "kv_norm.y",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 129,
+   "drain_sectors": 64
+  },
+  {
+   "tag": "kv_rope.tail",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 16,
+   "drain_sectors": 8
+  },
+  {
+   "tag": "q_rope.tail",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 16,
+   "drain_sectors": 8
+  },
+  {
+   "tag": "attend.max",
+   "unit": "SU",
+   "priced": 139.0,
+   "stage_sectors": 16,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "attend.exp_sum",
+   "unit": "SU",
+   "priced": 233.0,
+   "stage_sectors": 17,
+   "drain_sectors": 17
+  },
+  {
+   "tag": "attend.bf16_p",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 16,
+   "drain_sectors": 16
+  },
+  {
+   "tag": "attend.den",
+   "unit": "SU",
+   "priced": 154.0,
+   "stage_sectors": 3,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "attend.norm",
+   "unit": "SU",
+   "priced": 76.0,
+   "stage_sectors": 65,
+   "drain_sectors": 64
+  },
+  {
+   "tag": "attend.inv_rope.tail",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 16,
+   "drain_sectors": 8
+  },
+  {
+   "tag": "attn.res_copy",
+   "unit": "SU",
+   "priced": 79.0,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560
+  },
+  {
+   "tag": "router_act",
+   "unit": "SU",
+   "priced": 339.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "route.scores_bias",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 96,
+   "drain_sectors": 48
+  },
+  {
+   "tag": "route.total",
+   "unit": "SU",
+   "priced": 115.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "route.den",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "route.weights",
+   "unit": "SU",
+   "priced": 75.0,
+   "stage_sectors": 2,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "swiglu",
+   "unit": "SU",
+   "priced": 181.0,
+   "stage_sectors": 43,
+   "drain_sectors": 21
+  },
+  {
+   "tag": "moe_sum.0",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 14,
+   "drain_sectors": 7
+  },
+  {
+   "tag": "moe_sum.2",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 21,
+   "drain_sectors": 7
+  },
+  {
+   "tag": "moe_sum.4",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 21,
+   "drain_sectors": 7
+  },
+  {
+   "tag": "moe_sum.6",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 14,
+   "drain_sectors": 7
+  },
+  {
+   "tag": "ffn.res_copy",
+   "unit": "SU",
+   "priced": 79.0,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560
+  },
+  {
+   "tag": "pre <- ffn mix pre",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+TPUT 0 op 4 n 512 issue 0 ret 349 cost 24
+TPUT 1 op 4 n 512 issue 350 ret 699 cost 24
+TPUT 2 op 5 n 128 issue 700 ret 797 cost 12
+TPUT 3 op 6 n 512 issue 798 ret 1147 cost 24
+TPUT 4 op 4 n 512 issue 1148 ret 1497 cost 24
+TPUT 5 op 6 n 512 issue 1498 ret 1847 cost 24
+TPUT 6 op 4 n 512 issue 1848 ret 2197 cost 24
+TPUT 7 op 5 n 128 issue 2198 ret 2295 cost 12
+EXACT 0 mismatch 0
+EXACT 1 mismatch 0
+EXACT 2 mismatch 0
+EXACT 3 mismatch 0
+EXACT 4 mismatch 0
+EXACT 5 mismatch 0
+EXACT 6 mismatch 0
+EXACT 7 mismatch 0
+PASS HGI_QDQ_TPUT records=8 words=3328 cycles=2295 priced=168
+- rtl/test/hbm_accel/generic/tb_hgi_quant_tput.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 0.087 s; speed 77.517 us/s
+- Verilator: cpu 0.062 s on 1 threads; allocated 10 MB

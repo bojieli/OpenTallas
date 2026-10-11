@@ -19,14 +19,17 @@ UNITS = {
     'coll':   (6, 'coll', 'AOI', (('die_id', 8),)),  # COLL.*: A local, O result, I selected row ids; die id strap (seq rank)
     'argmax': (7, 'mtp', 'AO', (('die_id', 8),)),    # ARGMAX.LOCAL (imm_a in the header; global id = local + RANK * imm_a)
                                                       #   -> ot_hgi_argmax_slot (record adapter + ot_hgi_argmax18_m)
-    'idx':    (9, 'hgi_idx', 'ABCDOR', (('pos', 20), ('die_id', 8))),   # IDX unit ot_hgi_idx_unit: TOPK + INDEX frames (G18)
+    'idx':    (9, 'hgi_idx', 'ABCDOR', (('pos', 20), ('die_id', 8), ('desc_I', 256))),   # IDX unit ot_hgi_idx_unit: TOPK + INDEX frames (G18)
+    #   desc_I (hgi-1010/g, lead 10-10): IDX.INDEX operand I = the layer's index-key region (HBM, row-aligned base) ->
+    #   the IKS issuer's ik_base; appended at the MSB so every older field keeps its bit position
     # hgi-takeover 2026-10-09 (hgi-e2e DIE GAP): every record unit has a die record bus (the payload is a die port, not
     # an internal tap); field sets = hgi-adapters' rec_* ports; one credit per unit; placement per hgi-adapters 22:40
     'sm':     (1, 'cmdproc', 'ABO', ()),                  # ot_hgi_sm_record IN the CP block (drives the SM launch tree)
     'su':     (2, 'su_SW', 'ABCDORI', ()),               # ot_hgi_su_unit at the hfd_su SW centre band (one a die)
     'sfu':    (3, 'sfu_SW', 'ABCO', ()),                 # the SU unit in GLU mode (one a die)
     'att':    (5, 'cmdproc', 'ABCO', (('pos1', 21),)),    # Codex ot_hgi_att_record_adapter: IN the CP block until D4
-    'dma':    (8, 'loader', 'AO', (('pos1', 21),)),       # ot_hgi_dma_record + ot_hgi_dma_mover beside the loader
+    'dma':    (8, 'loader', 'AO', (('pos1', 21),)),       # ot_hgi_dma_record + engines beside the loader (the indexed row
+                                                      #   stream's I-list address rides A's reserved bits 255:239 + 7)
     'hc':     (10, 'hc_SW', 'ABO', ()),                  # ot_hgi_hc_unit (one a die)
 }
 # effective n carried per unit (default: every descriptor's) and the units that take the 256-bit SU template
@@ -35,6 +38,9 @@ SUT_UNITS = {'su', 'att'}
 # units whose adapter sits inside the CP block: their record bus is a CP-die port bound in the CP view, not a die net
 INTERNAL_UNITS = {'sm', 'att'}
 RETURN_FIELDS = [('ready', 1), ('done', 1), ('fault', 1)]
+# the DMA unit's return also carries wr_quiet (hgi-1010/c 2026-10-10): no posted STORE / KVWB HBM write in flight; the
+# CP's CTL.FENCE (S_DRAIN) waits for it.  It rides the same registered word as done, so the two stay aligned.
+RETURN_EXTRA = {'dma': [('wr_quiet', 1)]}
 # units that decode a static MD field (coll: word 46 coll_group_size) get the 40-bit config station bus
 # {cfg_commit, cfg_v, cfg_addr[5:0], cfg_data[31:0]} (ot_hgi_cfg_stn / ot_hgi_cfg_rx)
 CFG_UNITS = {'coll'}
@@ -56,7 +62,8 @@ SVC_DMA_STACKS = ('SW', 'SE', 'NW', 'NE')   # stack index (address bits 36:35) 0
 DSQ_BITS, DSD_LANES, DSD_BITS = 51, 8, 270   # svc DMA stream: request {v, tag 4, nsec 9, addr 37}; lane {v, fault, tag 4, idx 8, data 256}
 HGI_VM_SLOT = (1399.656, 1080.0)       # 64 macros 174.7 x 70.5 um on a 7 x 10 grid with 2.16 um halos (1,261 x 758 um) + logic
 HGI_IDX_SLOT = (640.008, 600.48)        # Codex TOPK K2048 slot (175,534 um2 core) + VM stream engines
-LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
+RGXQ_BITS, RGXR_BITS, RGXW_BITS = 38, 257, 326   # ROW_GATHER HBM lanes: read {addr 37, v}, {data 256, v}; write {data, strb, addr, v}
+LD_MEM_HGI = (350, 293)                # ot_hfd_loader_kport lq / lr per stack
 LCP_BITS, CPL_BITS = 419, 222
 QID = dict(SW=0, NW=1, SE=2, NE=3)       # hfd_su inject-ownership strap values           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
 
@@ -90,7 +97,7 @@ def model(hub, units, reach_um=504.0, unit_block=None):
         if blk not in hub:
             raise ValueError(f'hgi_dispatch: hub block {blk} for unit {u} not on this die')
         cmd, cbits = layout(fields(u, units))
-        ret, rbits = layout(RETURN_FIELDS)
+        ret, rbits = layout(RETURN_FIELDS + RETURN_EXTRA.get(u, []))
         s, t = hub['cmdproc'], hub[blk]
         dist = abs(s.x + s.w / 2 - t.x - t.w / 2) + abs(s.y + s.h / 2 - t.y - t.h / 2)
         relays = max(0, ceil(dist / reach_um) - 1)
@@ -226,6 +233,25 @@ def install(m, buses, paths, units):
         buses.append(('hgi_vmstat', 'hub', VMSTAT_BITS, [(vm, 't_hgi_vmstat'), (cp, 'f_hgi_vmstat')]))
         paths['hgi_vmstat'] = ['hgi_vmstat']
         rec['vm_clients'] = vm_cl
+    # hardware COLL.ROW_GATHER memory lanes (hgi-1010/c 2026-10-10; variant key hgi_rgx, hfd_coll RGXHW = 1): the row source's
+    # 2 HBM read lanes and the sink's 2 HBM write lanes on loader kport lanes 3..6 (ot_hgi_hbm_rd_server / _wr_server), the
+    # list fetch as VM packet client 'coll', the VM-space sink on the shared W2 wide-write group (ot_hgi_vm_lanearb client:
+    # {c_req, 32 lanes x 280} up, {c_gnt, credits 32, dones 32} down)
+    if (m.get('variant') or {}).get('hgi_rgx') and 'coll' in units and 'loader' in hub:
+        ld, co = hub['loader'].name, hub[UNITS['coll'][1]].name
+        for l in (0, 1):
+            for name, bits, eps in ((f'hgi_rgxq{l}', RGXQ_BITS, [(co, f't_hgi_rgxq{l}'), (ld, f'f_hgi_rgxq{l}')]),
+                                    (f'hgi_rgxr{l}', RGXR_BITS, [(ld, f't_hgi_rgxr{l}'), (co, f'f_hgi_rgxr{l}')]),
+                                    (f'hgi_rgxw{l}', RGXW_BITS, [(co, f't_hgi_rgxw{l}'), (ld, f'f_hgi_rgxw{l}')]),
+                                    (f'hgi_rgxa{l}', 1, [(ld, f't_hgi_rgxa{l}'), (co, f'f_hgi_rgxa{l}')])):
+                buses.append((name, 'hub', bits, eps)); paths[name] = [name]
+        if 'hgi_vm' in hub:
+            vm = hub['hgi_vm'].name
+            for name, bits, eps in (('hgi_vmq_coll', VMQ_BITS, [(co, 't_hgi_vmq'), (vm, 'f_hgi_coll')]),
+                                    ('hgi_vmr_coll', VMR_BITS, [(vm, 't_hgi_coll'), (co, 'f_hgi_vmr')]),
+                                    ('hgi_vmw2_coll', VMW_LANES * VMW_BITS + 1, [(co, 't_hgi_vmw2'), (vm, 'f_hgi_vmw2_coll')]),
+                                    ('hgi_vmw2_coll_r', 2 * VMW_LANES + 1, [(vm, 't_hgi_vmw2_coll'), (co, 'f_hgi_vmw2')])):
+                buses.append((name, 'hub', bits, eps)); paths[name] = [name]
     if 'cp' in units and 'loader' in hub:
         ld = hub['loader'].name
         buses.append(('hgi_lcp', 'hub', LCP_BITS, [(ld, 't_hgi_cp'), (cp, 'f_hgi_loader')])); paths['hgi_lcp'] = ['hgi_lcp']

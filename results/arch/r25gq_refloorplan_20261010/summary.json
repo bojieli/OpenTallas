@@ -1,0 +1,1334 @@
+{
+ "schema": "opentallas.r25gq-refloorplan-summary.v1",
+ "grade": {
+  "geometry": "generator plan (measured block outlines), legality checked",
+  "channels": "ESTIMATE (grid-router model on carried-over R25GPH logical nets + Option A nets; no die GRT)",
+  "power": "PROJECTION"
+ },
+ "model": {
+  "cell_um": 100.0,
+  "v_tracks_per_um": 38.61,
+  "h_tracks_per_um": 38.66,
+  "block_cost": 20.0,
+  "rounds": 5,
+  "option_a_nets": [
+   [
+    "vm_grpA_su",
+    "hub_vm_lanes",
+    17792,
+    [
+     "hb_hgi_vm",
+     "hb_su_SW"
+    ]
+   ],
+   [
+    "vm_grpA_sfu",
+    "hub_vm_lanes",
+    17792,
+    [
+     "hb_su_SW",
+     "hb_sfu_SW"
+    ]
+   ],
+   [
+    "vm_grpA_hc",
+    "hub_vm_lanes",
+    17792,
+    [
+     "hb_sfu_SW",
+     "hb_hc_SW"
+    ]
+   ],
+   [
+    "vm_grpB_quant",
+    "hub_vm_lanes",
+    17792,
+    [
+     "hb_quant",
+     "hb_hgi_vm"
+    ]
+   ],
+   [
+    "vm_grpB_cp",
+    "hub_vm_lanes",
+    17792,
+    [
+     "hb_hgi_vm",
+     "hb_cmdproc"
+    ]
+   ],
+   [
+    "cp_mtp_ports",
+    "control",
+    120,
+    [
+     "hb_cmdproc",
+     "hb_mtp"
+    ]
+   ],
+   [
+    "cp_mtp_f_mtp",
+    "control",
+    517,
+    [
+     "hb_mtp",
+     "hb_cmdproc"
+    ]
+   ],
+   [
+    "cp_mtp_t_mtp",
+    "control",
+    197,
+    [
+     "hb_cmdproc",
+     "hb_mtp"
+    ]
+   ],
+   [
+    "loader_h_widen",
+    "host",
+    275,
+    [
+     "hb_loader",
+     "lk_host"
+    ]
+   ],
+   [
+    "att_rec_SW",
+    "att_record",
+    1250,
+    [
+     "hb_cmdproc",
+     "at_SW_00_lo"
+    ]
+   ],
+   [
+    "att_rec_SE",
+    "att_record",
+    1250,
+    [
+     "hb_cmdproc",
+     "at_SE_00_lo"
+    ]
+   ],
+   [
+    "att_rec_NW",
+    "att_record",
+    1250,
+    [
+     "hb_cmdproc",
+     "at_NW_00_lo"
+    ]
+   ],
+   [
+    "att_rec_NE",
+    "att_record",
+    1250,
+    [
+     "hb_cmdproc",
+     "at_NE_00_lo"
+    ]
+   ]
+  ]
+ },
+ "wiring": {
+  "R25GPH": {
+   "nets": 704,
+   "routed_edges": 541,
+   "channels": {
+    "SW_SM_row_ch01": {
+     "kind": "horizontal",
+     "rect_um": [
+      625.1,
+      2728.1,
+      10786.2,
+      3248.6
+     ],
+     "width_um": 520.6,
+     "max_use": 0.058,
+     "p90_use": 0.058,
+     "max_bits": 1147,
+     "at_um": 750.0
+    },
+    "SW_SM_row_ch12": {
+     "kind": "horizontal",
+     "rect_um": [
+      625.1,
+      4380.5,
+      10786.2,
+      4639.7
+     ],
+     "width_um": 259.2,
+     "max_use": 0.759,
+     "p90_use": 0.759,
+     "max_bits": 7039,
+     "at_um": 4150.0
+    },
+    "SW_SM_hub_edge_ch": {
+     "kind": "horizontal",
+     "rect_um": [
+      625.1,
+      5771.5,
+      10786.2,
+      6322.3
+     ],
+     "width_um": 550.8,
+     "max_use": 0.208,
+     "p90_use": 0.208,
+     "max_bits": 4347,
+     "at_um": 1250.0
+    },
+    "SE_SM_row_ch01": {
+     "kind": "horizontal",
+     "rect_um": [
+      20085.4,
+      2728.1,
+      30246.0,
+      3248.6
+     ],
+     "width_um": 520.6,
+     "max_use": 0.261,
+     "p90_use": 0.261,
+     "max_bits": 5139,
+     "at_um": 20150.0
+    },
+    "SE_SM_row_ch12": {
+     "kind": "horizontal",
+     "rect_um": [
+      20085.4,
+      4380.5,
+      30246.0,
+      4639.7
+     ],
+     "width_um": 259.2,
+     "max_use": 0.356,
+     "p90_use": 0.356,
+     "max_bits": 3300,
+     "at_um": 20150.0
+    },
+    "SE_SM_hub_edge_ch": {
+     "kind": "horizontal",
+     "rect_um": [
+      20085.4,
+      5771.5,
+      30246.0,
+      6322.3
+     ],
+     "width_um": 550.8,
+     "max_use": 0.36,
+     "p90_use": 0.264,
+     "max_bits": 8626,
+     "at_um": 20150.0
+    },
+    "SW_svc_gap": {
+     "kind": "horizontal",
+     "rect_um": [
+      625.1,
+      1466.6,
+      10786.2,
+      1596.2
+     ],
+     "width_um": 129.6,
+     "max_use": 1.431,
+     "p90_use": 0.949,
+     "max_bits": 6639,
+     "at_um": 1550.0
+    },
+    "SW_grp_E_strip": {
+     "kind": "vertical",
+     "rect_um": [
+      10786.2,
+      1596.2,
+      11304.6,
+      5771.5
+     ],
+     "width_um": 518.4,
+     "max_use": 0.297,
+     "p90_use": 0.199,
+     "max_bits": 5951,
+     "at_um": 4350.0
+    },
+    "SW_col_ch1": {
+     "kind": "vertical",
+     "rect_um": [
+      3839.2,
+      1596.2,
+      4098.8,
+      5771.5
+     ],
+     "width_um": 259.6,
+     "max_use": 0.264,
+     "p90_use": 0.264,
+     "max_bits": 2549,
+     "at_um": 1650.0
+    },
+    "SW_col_ch2": {
+     "kind": "vertical",
+     "rect_um": [
+      7312.9,
+      1596.2,
+      7572.1,
+      5771.5
+     ],
+     "width_um": 259.2,
+     "max_use": 0.377,
+     "p90_use": 0.377,
+     "max_bits": 3643,
+     "at_um": 1650.0
+    },
+    "W_spine_ch": {
+     "kind": "vertical",
+     "rect_um": [
+      13491.8,
+      6376.3,
+      14736.0,
+      18149.8
+     ],
+     "width_um": 1244.2,
+     "max_use": 0.176,
+     "p90_use": 0.138,
+     "max_bits": 8830,
+     "at_um": 8450.0
+    },
+    "E_spine_ch": {
+     "kind": "vertical",
+     "rect_um": [
+      16135.6,
+      6376.3,
+      17379.8,
+      18149.8
+     ],
+     "width_um": 1244.2,
+     "max_use": 0.226,
+     "p90_use": 0.2,
+     "max_bits": 11062,
+     "at_um": 10150.0
+    },
+    "W_spine_ch_at_VM_face": {
+     "kind": "horizontal",
+     "rect_um": [
+      13491.8,
+      7188.5,
+      14736.0,
+      8268.5
+     ],
+     "width_um": 1080.0,
+     "max_use": 0.022,
+     "p90_use": 0.02,
+     "max_bits": 1025,
+     "at_um": 14050.0
+    },
+    "hub_equator": {
+     "kind": "horizontal",
+     "rect_um": [
+      365.9,
+      12467.5,
+      31368.4,
+      12817.4
+     ],
+     "width_um": 349.9,
+     "max_use": 0.245,
+     "p90_use": 0.207,
+     "max_bits": 4730,
+     "at_um": 13750.0
+    }
+   },
+   "free_cells_over": {
+    "p55": 0.0366,
+    "p80": 0.009,
+    "p100": 0.0024
+   },
+   "worst_cells": [
+    {
+     "x_um": 1850,
+     "y_um": 1450,
+     "use": 1.431
+    },
+    {
+     "x_um": 2150,
+     "y_um": 1450,
+     "use": 1.431
+    },
+    {
+     "x_um": 2050,
+     "y_um": 1450,
+     "use": 1.431
+    },
+    {
+     "x_um": 1750,
+     "y_um": 1450,
+     "use": 1.431
+    },
+    {
+     "x_um": 1650,
+     "y_um": 1450,
+     "use": 1.431
+    },
+    {
+     "x_um": 1950,
+     "y_um": 1450,
+     "use": 1.431
+    },
+    {
+     "x_um": 1750,
+     "y_um": 1550,
+     "use": 1.431
+    },
+    {
+     "x_um": 1650,
+     "y_um": 1550,
+     "use": 1.431
+    },
+    {
+     "x_um": 1850,
+     "y_um": 1550,
+     "use": 1.431
+    },
+    {
+     "x_um": 2150,
+     "y_um": 1550,
+     "use": 1.431
+    },
+    {
+     "x_um": 2050,
+     "y_um": 1550,
+     "use": 1.431
+    },
+    {
+     "x_um": 1950,
+     "y_um": 1550,
+     "use": 1.431
+    }
+   ],
+   "over_block": {
+    "edges": 0,
+    "max_run_um": 0,
+    "runs_over_504um": []
+   },
+   "stages_by_class": {
+    "attn_chain": {
+     "max_stages": 1,
+     "max_length_um": 100.0,
+     "relay_bit_stages": 0.0
+    },
+    "attn_out": {
+     "max_stages": 9,
+     "max_length_um": 4200.0,
+     "relay_bit_stages": 32798.0
+    },
+    "attn_packet": {
+     "max_stages": 1,
+     "max_length_um": 100.0,
+     "relay_bit_stages": 0.0
+    },
+    "attn_query": {
+     "max_stages": 25,
+     "max_length_um": 12500.0,
+     "relay_bit_stages": 51216.0
+    },
+    "attn_root": {
+     "max_stages": 12,
+     "max_length_um": 5600.0,
+     "relay_bit_stages": 17457.0
+    },
+    "control": {
+     "max_stages": 27,
+     "max_length_um": 13300.0,
+     "relay_bit_stages": 68641.0
+    },
+    "host": {
+     "max_stages": 36,
+     "max_length_um": 17700.0,
+     "relay_bit_stages": 17990.0
+    },
+    "hub": {
+     "max_stages": 21,
+     "max_length_um": 10500.0,
+     "relay_bit_stages": 196658.0
+    },
+    "index_native": {
+     "max_stages": 40,
+     "max_length_um": 20000.0,
+     "relay_bit_stages": 681994.0
+    },
+    "kv_rows": {
+     "max_stages": 45,
+     "max_length_um": 22400.0,
+     "relay_bit_stages": 1048266.0
+    },
+    "link": {
+     "max_stages": 17,
+     "max_length_um": 8200.0,
+     "relay_bit_stages": 120048.0
+    },
+    "loader_mem": {
+     "max_stages": 53,
+     "max_length_um": 26500.0,
+     "relay_bit_stages": 104854.0
+    },
+    "result_trunk": {
+     "max_stages": 7,
+     "max_length_um": 3300.0,
+     "relay_bit_stages": 37887.5
+    },
+    "weight": {
+     "max_stages": 26,
+     "max_length_um": 12800.0,
+     "relay_bit_stages": 327018.0
+    },
+    "weight_req": {
+     "max_stages": 26,
+     "max_length_um": 12800.0,
+     "relay_bit_stages": 12733.0
+    },
+    "x_trunk": {
+     "max_stages": 26,
+     "max_length_um": 12900.0,
+     "relay_bit_stages": 167508.0
+    }
+   },
+   "relay_bit_stages": 2885068.5,
+   "density": {
+    "die_mm2": 802.33,
+    "placed_mm2": 487.04,
+    "placed_density": 0.607,
+    "placed_mm2_excl_phy_serdes_host": 413.51,
+    "regions": {
+     "grp_SW": {
+      "rect_um": [
+       365.9,
+       1596.2,
+       11045.0,
+       5769.4
+      ],
+      "area_mm2": 44.57,
+      "density": 0.6527
+     },
+     "svc_SW": {
+      "rect_um": [
+       1455.8,
+       1207.4,
+       9955.9,
+       1466.6
+      ],
+      "area_mm2": 2.2,
+      "density": 0.9995
+     },
+     "grp_SE": {
+      "rect_um": [
+       19825.8,
+       1596.2,
+       30505.0,
+       5769.4
+      ],
+      "area_mm2": 44.57,
+      "density": 0.6527
+     },
+     "svc_SE": {
+      "rect_um": [
+       20915.7,
+       1207.4,
+       29415.8,
+       1466.6
+      ],
+      "area_mm2": 2.2,
+      "density": 0.9996
+     },
+     "grp_NW": {
+      "rect_um": [
+       365.9,
+       19511.3,
+       11045.0,
+       23684.5
+      ],
+      "area_mm2": 44.57,
+      "density": 0.653
+     },
+     "svc_NW": {
+      "rect_um": [
+       1455.8,
+       23816.2,
+       9955.9,
+       24075.4
+      ],
+      "area_mm2": 2.2,
+      "density": 0.9995
+     },
+     "grp_NE": {
+      "rect_um": [
+       19825.8,
+       19511.3,
+       30505.0,
+       23684.5
+      ],
+      "area_mm2": 44.57,
+      "density": 0.653
+     },
+     "svc_NE": {
+      "rect_um": [
+       20915.7,
+       23816.2,
+       29415.8,
+       24075.4
+      ],
+      "area_mm2": 2.2,
+      "density": 0.9996
+     },
+     "hub": {
+      "rect_um": [
+       365.9,
+       5976.7,
+       30505.0,
+       19306.1
+      ],
+      "area_mm2": 401.73,
+      "density": 0.6579
+     },
+     "centre": {
+      "rect_um": [
+       10046.2,
+       6322.3,
+       20825.4,
+       18960.5
+      ],
+      "area_mm2": 136.23,
+      "density": 0.5329
+     },
+     "scan_SW": {
+      "rect_um": [
+       1181.1,
+       6322.3,
+       9700.6,
+       12467.5
+      ],
+      "area_mm2": 52.35,
+      "density": 0.9154
+     },
+     "scan_SE": {
+      "rect_um": [
+       21171.0,
+       6322.3,
+       29690.5,
+       12467.5
+      ],
+      "area_mm2": 52.35,
+      "density": 0.9154
+     },
+     "scan_NW": {
+      "rect_um": [
+       1181.1,
+       12815.3,
+       9700.6,
+       18960.5
+      ],
+      "area_mm2": 52.35,
+      "density": 0.9153
+     },
+     "scan_NE": {
+      "rect_um": [
+       21171.0,
+       12815.3,
+       29690.5,
+       18960.5
+      ],
+      "area_mm2": 52.35,
+      "density": 0.9153
+     },
+     "serdes_S": {
+      "rect_um": [
+       14204.6,
+       21.6,
+       16667.0,
+       5971.9
+      ],
+      "area_mm2": 14.65,
+      "density": 0.8035
+     },
+     "serdes_N": {
+      "rect_um": [
+       14204.6,
+       19310.4,
+       16667.0,
+       25261.2
+      ],
+      "area_mm2": 14.65,
+      "density": 0.7681
+     },
+     "strip_E": {
+      "rect_um": [
+       30850.3,
+       20.0,
+       31714.3,
+       25262.8
+      ],
+      "area_mm2": 21.81,
+      "density": 0.4782
+     }
+    },
+    "by_kind_mm2": {
+     "attn_tile": 171.12,
+     "host_slab": 10.0,
+     "hub": 105.5,
+     "link": 5.5,
+     "phy": 40.03,
+     "serdes_slab": 18.01,
+     "sm": 116.41,
+     "spine": 11.67,
+     "svc": 8.81
+    }
+   }
+  },
+  "R25GQ": {
+   "nets": 717,
+   "routed_edges": 650,
+   "channels": {
+    "SW_SM_row_ch01": {
+     "kind": "horizontal",
+     "rect_um": [
+      625.1,
+      2944.1,
+      11131.8,
+      4153.7
+     ],
+     "width_um": 1209.6,
+     "max_use": 0.247,
+     "p90_use": 0.204,
+     "max_bits": 12409,
+     "at_um": 7750.0
+    },
+    "SW_SM_row_ch12": {
+     "kind": "horizontal",
+     "rect_um": [
+      625.1,
+      5285.5,
+      11131.8,
+      5847.1
+     ],
+     "width_um": 561.6,
+     "max_use": 0.129,
+     "p90_use": 0.01,
+     "max_bits": 3480,
+     "at_um": 7650.0
+    },
+    "SW_SM_hub_edge_ch": {
+     "kind": "horizontal",
+     "rect_um": [
+      625.1,
+      6979.0,
+      11131.8,
+      7627.0
+     ],
+     "width_um": 648.0,
+     "max_use": 0.196,
+     "p90_use": 0.196,
+     "max_bits": 5449,
+     "at_um": 750.0
+    },
+    "SE_SM_row_ch01": {
+     "kind": "horizontal",
+     "rect_um": [
+      19739.8,
+      2944.1,
+      30246.0,
+      4153.7
+     ],
+     "width_um": 1209.6,
+     "max_use": 0.205,
+     "p90_use": 0.157,
+     "max_bits": 9492,
+     "at_um": 22850.0
+    },
+    "SE_SM_row_ch12": {
+     "kind": "horizontal",
+     "rect_um": [
+      19739.8,
+      5285.5,
+      30246.0,
+      5847.1
+     ],
+     "width_um": 561.6,
+     "max_use": 0.109,
+     "p90_use": 0.0,
+     "max_bits": 2694,
+     "at_um": 27050.0
+    },
+    "SE_SM_hub_edge_ch": {
+     "kind": "horizontal",
+     "rect_um": [
+      19739.8,
+      6979.0,
+      30246.0,
+      7627.0
+     ],
+     "width_um": 648.0,
+     "max_use": 0.158,
+     "p90_use": 0.116,
+     "max_bits": 4408,
+     "at_um": 23450.0
+    },
+    "SW_svc_gap": {
+     "kind": "horizontal",
+     "rect_um": [
+      625.1,
+      1466.6,
+      11131.8,
+      1812.2
+     ],
+     "width_um": 345.6,
+     "max_use": 0.558,
+     "p90_use": 0.334,
+     "max_bits": 8843,
+     "at_um": 750.0
+    },
+    "SW_grp_E_strip": {
+     "kind": "vertical",
+     "rect_um": [
+      11131.8,
+      1812.2,
+      11736.6,
+      6979.0
+     ],
+     "width_um": 604.8,
+     "max_use": 0.154,
+     "p90_use": 0.154,
+     "max_bits": 4174,
+     "at_um": 5450.0
+    },
+    "SW_col_ch1": {
+     "kind": "vertical",
+     "rect_um": [
+      3839.2,
+      1812.2,
+      4271.6,
+      6979.0
+     ],
+     "width_um": 432.4,
+     "max_use": 0.334,
+     "p90_use": 0.334,
+     "max_bits": 5549,
+     "at_um": 1950.0
+    },
+    "SW_col_ch2": {
+     "kind": "vertical",
+     "rect_um": [
+      7485.7,
+      1812.2,
+      7917.7,
+      6979.0
+     ],
+     "width_um": 432.0,
+     "max_use": 0.45,
+     "p90_use": 0.45,
+     "max_bits": 7292,
+     "at_um": 1950.0
+    },
+    "W_spine_ch": {
+     "kind": "vertical",
+     "rect_um": [
+      13189.4,
+      7195.0,
+      14736.0,
+      18083.5
+     ],
+     "width_um": 1546.6,
+     "max_use": 0.226,
+     "p90_use": 0.182,
+     "max_bits": 13431,
+     "at_um": 14150.0
+    },
+    "E_spine_ch": {
+     "kind": "vertical",
+     "rect_um": [
+      16135.6,
+      7195.0,
+      17681.5,
+      18083.5
+     ],
+     "width_um": 1545.9,
+     "max_use": 0.328,
+     "p90_use": 0.27,
+     "max_bits": 19522,
+     "at_um": 8850.0
+    },
+    "W_spine_ch_at_VM_face": {
+     "kind": "horizontal",
+     "rect_um": [
+      13189.4,
+      9791.3,
+      14736.0,
+      10871.3
+     ],
+     "width_um": 1080.0,
+     "max_use": 0.404,
+     "p90_use": 0.381,
+     "max_bits": 18756,
+     "at_um": 13350.0
+    },
+    "hub_equator": {
+     "kind": "horizontal",
+     "rect_um": [
+      365.9,
+      12290.4,
+      31368.4,
+      12992.4
+     ],
+     "width_um": 702.0,
+     "max_use": 0.292,
+     "p90_use": 0.116,
+     "max_bits": 9027,
+     "at_um": 16850.0
+    }
+   },
+   "free_cells_over": {
+    "p55": 0.0238,
+    "p80": 0.005,
+    "p100": 0.0014
+   },
+   "worst_cells": [
+    {
+     "x_um": 8450,
+     "y_um": 2950,
+     "use": 1.635
+    },
+    {
+     "x_um": 8350,
+     "y_um": 2950,
+     "use": 1.635
+    },
+    {
+     "x_um": 8250,
+     "y_um": 2950,
+     "use": 1.635
+    },
+    {
+     "x_um": 8150,
+     "y_um": 2950,
+     "use": 1.635
+    },
+    {
+     "x_um": 8550,
+     "y_um": 2950,
+     "use": 1.625
+    },
+    {
+     "x_um": 8650,
+     "y_um": 2950,
+     "use": 1.605
+    },
+    {
+     "x_um": 8750,
+     "y_um": 2950,
+     "use": 1.585
+    },
+    {
+     "x_um": 8050,
+     "y_um": 2950,
+     "use": 1.583
+    },
+    {
+     "x_um": 9150,
+     "y_um": 2950,
+     "use": 1.576
+    },
+    {
+     "x_um": 9250,
+     "y_um": 2950,
+     "use": 1.576
+    },
+    {
+     "x_um": 9350,
+     "y_um": 2950,
+     "use": 1.576
+    },
+    {
+     "x_um": 9050,
+     "y_um": 2950,
+     "use": 1.576
+    }
+   ],
+   "over_block": {
+    "edges": 0,
+    "max_run_um": 0,
+    "runs_over_504um": []
+   },
+   "stages_by_class": {
+    "att_record": {
+     "max_stages": 32,
+     "max_length_um": 15800.0,
+     "relay_bit_stages": 143750.0
+    },
+    "attn_chain": {
+     "max_stages": 1,
+     "max_length_um": 100.0,
+     "relay_bit_stages": 0.0
+    },
+    "attn_out": {
+     "max_stages": 3,
+     "max_length_um": 1300.0,
+     "relay_bit_stages": 8464.0
+    },
+    "attn_packet": {
+     "max_stages": 1,
+     "max_length_um": 100.0,
+     "relay_bit_stages": 0.0
+    },
+    "attn_query": {
+     "max_stages": 35,
+     "max_length_um": 17300.0,
+     "relay_bit_stages": 58782.0
+    },
+    "attn_root": {
+     "max_stages": 20,
+     "max_length_um": 9600.0,
+     "relay_bit_stages": 76705.0
+    },
+    "control": {
+     "max_stages": 22,
+     "max_length_um": 10800.0,
+     "relay_bit_stages": 66632.0
+    },
+    "host": {
+     "max_stages": 37,
+     "max_length_um": 18400.0,
+     "relay_bit_stages": 28129.0
+    },
+    "hub": {
+     "max_stages": 25,
+     "max_length_um": 12100.0,
+     "relay_bit_stages": 324872.0
+    },
+    "hub_vm_lanes": {
+     "max_stages": 4,
+     "max_length_um": 1900.0,
+     "relay_bit_stages": 43491.8
+    },
+    "index_native": {
+     "max_stages": 36,
+     "max_length_um": 17900.0,
+     "relay_bit_stages": 591925.0
+    },
+    "kv_rows": {
+     "max_stages": 36,
+     "max_length_um": 17800.0,
+     "relay_bit_stages": 971435.0
+    },
+    "link": {
+     "max_stages": 19,
+     "max_length_um": 9400.0,
+     "relay_bit_stages": 121024.0
+    },
+    "loader_mem": {
+     "max_stages": 49,
+     "max_length_um": 24400.0,
+     "relay_bit_stages": 96550.0
+    },
+    "result_trunk": {
+     "max_stages": 5,
+     "max_length_um": 2200.0,
+     "relay_bit_stages": 24890.0
+    },
+    "weight": {
+     "max_stages": 25,
+     "max_length_um": 12300.0,
+     "relay_bit_stages": 322631.0
+    },
+    "weight_req": {
+     "max_stages": 25,
+     "max_length_um": 12300.0,
+     "relay_bit_stages": 13100.0
+    },
+    "x_trunk": {
+     "max_stages": 26,
+     "max_length_um": 12800.0,
+     "relay_bit_stages": 167488.0
+    }
+   },
+   "relay_bit_stages": 3059868.8,
+   "density": {
+    "die_mm2": 802.33,
+    "placed_mm2": 373.73,
+    "placed_density": 0.4658,
+    "placed_mm2_excl_phy_serdes_host": 300.2,
+    "regions": {
+     "spine": {
+      "rect_um": [
+       14736.0,
+       7195.0,
+       16135.6,
+       18087.8
+      ],
+      "area_mm2": 15.25,
+      "density": 0.7651
+     },
+     "quad_SW": {
+      "rect_um": [
+       557.3,
+       7627.0,
+       14736.0,
+       12381.1
+      ],
+      "area_mm2": 67.41,
+      "density": 0.5556
+     },
+     "quad_SE": {
+      "rect_um": [
+       16135.6,
+       7627.0,
+       30313.6,
+       12381.1
+      ],
+      "area_mm2": 67.4,
+      "density": 0.5556
+     },
+     "quad_NW": {
+      "rect_um": [
+       557.3,
+       12901.7,
+       14736.0,
+       17655.8
+      ],
+      "area_mm2": 67.41,
+      "density": 0.5556
+     },
+     "quad_NE": {
+      "rect_um": [
+       16135.6,
+       12901.7,
+       30313.6,
+       17655.8
+      ],
+      "area_mm2": 67.4,
+      "density": 0.5556
+     },
+     "grp_SW": {
+      "rect_um": [
+       365.9,
+       1812.2,
+       11390.6,
+       6979.0
+      ],
+      "area_mm2": 56.96,
+      "density": 0.5109
+     },
+     "grp_SE": {
+      "rect_um": [
+       19480.2,
+       1812.2,
+       30505.0,
+       6979.0
+      ],
+      "area_mm2": 56.96,
+      "density": 0.5109
+     },
+     "grp_NW": {
+      "rect_um": [
+       365.9,
+       18303.8,
+       11390.6,
+       23470.6
+      ],
+      "area_mm2": 56.96,
+      "density": 0.5109
+     },
+     "grp_NE": {
+      "rect_um": [
+       19480.2,
+       18303.8,
+       30505.0,
+       23470.6
+      ],
+      "area_mm2": 56.96,
+      "density": 0.5109
+     },
+     "hub": {
+      "rect_um": [
+       365.9,
+       7627.0,
+       30505.0,
+       17655.8
+      ],
+      "area_mm2": 302.26,
+      "density": 0.5313
+     }
+    },
+    "by_kind_mm2": {
+     "attn_tile": 85.56,
+     "host_slab": 10.0,
+     "hub": 77.75,
+     "link": 5.5,
+     "phy": 40.03,
+     "serdes_slab": 18.01,
+     "sm": 116.41,
+     "spine": 11.67,
+     "svc": 8.81
+    }
+   },
+   "strip_model": {
+    "SM_row_ch01": {
+     "base_bits": 24550,
+     "added_bits": 0,
+     "width_um": 1209.6,
+     "use": 0.525,
+     "r25gp_use": 1.221,
+     "source": "SM_row_ch_520"
+    },
+    "SM_row_ch12": {
+     "base_bits": 6069,
+     "added_bits": 0,
+     "width_um": 561.6,
+     "use": 0.28,
+     "r25gp_use": 0.606,
+     "source": "SM_row_ch_259"
+    },
+    "SM_hub_edge_ch": {
+     "base_bits": 11514,
+     "added_bits": 0,
+     "width_um": 648.0,
+     "use": 0.46,
+     "r25gp_use": 0.541,
+     "source": "hub_S_edge_ch(SM N row->hub)"
+    },
+    "SW_grp_E_strip": {
+     "base_bits": 8395,
+     "added_bits": 0,
+     "width_um": 604.8,
+     "use": 0.36,
+     "r25gp_use": 0.824,
+     "source": "SW_grp_E"
+    },
+    "SW_col_ch1": {
+     "base_bits": 2204,
+     "added_bits": 0,
+     "width_um": 260,
+     "use": 0.22,
+     "r25gp_use": 0.22,
+     "source": "SW_col_ch1"
+    },
+    "SW_col_ch2": {
+     "base_bits": 4493,
+     "added_bits": 0,
+     "width_um": 259,
+     "use": 0.449,
+     "r25gp_use": 0.449,
+     "source": "SW_col_ch2"
+    },
+    "W_spine_ch": {
+     "base_bits": 8746,
+     "added_bits": 0,
+     "width_um": 1546.6,
+     "use": 0.146,
+     "r25gp_use": 0.182,
+     "source": "W_spine_ch"
+    },
+    "E_spine_ch": {
+     "base_bits": 7839,
+     "added_bits": 0,
+     "width_um": 1545.9,
+     "use": 0.131,
+     "r25gp_use": 0.163,
+     "source": "E_spine_ch"
+    },
+    "W_spine_ch_at_VM_face": {
+     "base_bits": 1836,
+     "added_bits": 17792,
+     "width_um": 1080.0,
+     "use": 0.47,
+     "r25gp_use": null,
+     "source": "budget item 1 (existing 1,836 b at the VM face)"
+    },
+    "SFU_HC_column_gap": {
+     "base_bits": 0,
+     "added_bits": 17792,
+     "width_um": 1095.1,
+     "use": 0.42,
+     "r25gp_use": null,
+     "source": "new"
+    },
+    "HGI_VM_pins": {
+     "base_bits": 13907,
+     "added_bits": 35584,
+     "perimeter_um": 4959.3,
+     "use": 0.479,
+     "r25gp_use": 0.135,
+     "source": "budget item 1 pin rule (2 tracks a bit on 2 pin layers: perimeter / 0.048 bits)"
+    }
+   }
+  }
+ },
+ "power": {
+  "grade": "PROJECTION (measured R25GP per-master power, right-sized counts; no R25GQ power run)",
+  "peak_in_phase_a20_w": 482.1,
+  "r25gp_peak_in_phase_a20_w": 613.5,
+  "masters_a20_w": 409.4,
+  "relay_w": 10.281,
+  "die_wires_w": 62.4,
+  "die_wires_attn_classes_w_at_activity_1": 26.78,
+  "cooling_limit_w": 474.56,
+  "peak_passes_cooling": false,
+  "duty_mix_projection": {
+   "rc": 0,
+   "verdict": {
+    "built_scenario": "smatt",
+    "envelope_max_w_high_residual": 301.8,
+    "limit_w": 474.56,
+    "passes": true,
+    "note": "the peak in-phase a20 point (613.5 W) assumes every unit busy at once, which the measured workloads never do; gating changes the duty-mix point, not a20"
+   },
+   "workloads": {
+    "ds_v41_1M": {
+     "none_r05": 303.0,
+     "none_r15": 303.0,
+     "smatt_r05": 139.6,
+     "smatt_r15": 151.1,
+     "all_r05": 113.1,
+     "all_r15": 127.4
+    },
+    "qwen3_8b_P8191": {
+     "none_r05": 370.5,
+     "none_r15": 370.5,
+     "smatt_r05": 291.3,
+     "smatt_r15": 294.3,
+     "all_r05": 259.7,
+     "all_r15": 266.1
+    },
+    "envelope_max": {
+     "none_r05": 377.9,
+     "none_r15": 377.9,
+     "smatt_r05": 298.7,
+     "smatt_r15": 301.8,
+     "all_r05": 273.6,
+     "all_r15": 279.3
+    }
+   }
+  }
+ },
+ "ds_attention_32": {
+  "hgi_sim": {
+   "source": "results/arch/hgi_sim_20261009/ds_native_timing_1M.json (S0) + tools/hgi_sim/timing.py ATT",
+   "rule": "ATT priced HBM-stream-bound: first access + bytes / 3166.7 B/cycle + 225 fixed; the tile count is not a model parameter",
+   "att_busy_cycles": 26363.5,
+   "token_cycles": 518645.1,
+   "tok_s": 2313.7,
+   "tile_ingest_32_B_per_cycle": 4096.0,
+   "hbm_B_per_cycle": 3166.7,
+   "stream_bound_at_32": true
+  },
+  "token_path_ar": {
+   "source": "results/arch/token_path_20261009/hbm_ds.json",
+   "attn_cycles": 27966.5,
+   "step_cycles": 699175.7,
+   "tok_s": 1716.31,
+   "tok_s_if_attn_doubles": 1650.3,
+   "delta_pct": -3.85
+  },
+  "token_path_mtp": {
+   "source": "results/arch/token_path_20261009/hbm_ds_mtp.json (P = 6 verify, tau 4.159)",
+   "attn_cycles": 145926.5,
+   "step_cycles": 1348890.6,
+   "tok_s": 3699.93,
+   "tok_s_if_attn_doubles": 3338.7,
+   "delta_pct": -9.76
+  },
+  "verdict": "AR: meets (stream-bound: 32 x 128 B/cycle = 4,096 >= 3,166.7 B/cycle HBM, unchanged). MTP (P = 6): the token-path record runs a 16-row tile job per position (1,350 cycles a layer at 64 tiles); if 32 tiles double the rows a tile walks, the attention class doubles: bound shown in tok_s_if_attn_doubles (no change if the 8 KV stripes a stack map 1:1 onto its 8 tiles and the pairs split heads). Not re-simulated: hgi-sim has no tile-count or MTP-attention term."
+ }
+}
