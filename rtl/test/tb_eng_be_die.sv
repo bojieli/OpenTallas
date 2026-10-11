@@ -68,10 +68,11 @@ module tb_eng_be_die #(parameter integer L = 0, R = 0, EXPECT = 18, D = 12, BASE
     function automatic [255:0] sect(input integer n);
         integer w; reg [255:0] d; begin for (w = 0; w < 8; w = w + 1) d[32*w +: 32] = n * 32'h9E3779B1 ^ (w * 32'h85EBCA77) ^ (L << 20) ^ (R << 24); sect = d; end
     endfunction
-    integer w8; reg [255:0] hs;
+    integer w8, hup = 0; reg [255:0] hs;
     always @(posedge clk) begin
         hw <= 292'd0;
-        if (!rst_n) begin cred = 8; seq = 0; fp = 0; acks <= 0; host_sent <= 0; end
+        if (!rst_n) begin cred = 8; seq = 0; fp = 0; acks <= 0; host_sent <= 0; hup = 0; end
+        else if (hup < 8) hup = hup + 1;          // the receivers' reset synchronisers release first (die reset order)
         else begin
             cred = cred + hc[0];
             acks <= acks + hc[8:1];
