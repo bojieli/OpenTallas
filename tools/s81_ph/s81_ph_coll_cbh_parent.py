@@ -129,11 +129,21 @@ def main():
          f'-pin_size {{{x1 - x0:.4f} {y1 - y0:.4f}}}' for nm, ly, x0, y0, x1, y1 in pins]) + '\n')
     (d / 'ports.svh').write_text(',\n'.join(f'    {ports[p]["direction"]} wire [{ports[p]["bits"] - 1}:0] {p}'
                                             for p in sorted(ports)) + '\n')
-    t = ['# el1011-ds-coll: child placement of the cb parent (tools/s81_ph/s81_ph_coll_cbh_parent.py)', 'set ot_n 0']
+    # generate-block children are named with escaped brackets after synthesis (g_q\\[1\\].u_q): match on the name with the
+    # backslashes removed
+    t = ['# el1011-ds-coll: child placement of the cb parent (tools/s81_ph/s81_ph_coll_cbh_parent.py)',
+         'set ot_at [dict create]']
     for inst, m, o, x in place:
-        esc = inst.replace('[', '\\[').replace(']', '\\]')
-        t.append(f'place_macro -macro_name {{{inst}}} -location {{{x:.4f} {y0:.4f}}} -orientation {o}; incr ot_n')
-    t.append('puts "place_macros_cbh: $ot_n children placed"')
+        t.append(f'dict set ot_at {{{inst}}} [list {x:.4f} {y0:.4f} {o}]')
+    t += ['set ot_n 0',
+          'foreach ot_i [[ord::get_db_block] getInsts] {',
+          '  set ot_nm [$ot_i getName]; set ot_k [string map {"\\\\" ""} $ot_nm]',
+          '  if {![dict exists $ot_at $ot_k]} continue',
+          '  lassign [dict get $ot_at $ot_k] ot_x ot_y ot_o',
+          '  place_macro -macro_name $ot_nm -location [list $ot_x $ot_y] -orientation $ot_o; incr ot_n',
+          '}',
+          f'if {{$ot_n != {len(place)}}} {{ error "place_macros_cbh: placed $ot_n children (expected {len(place)})" }}',
+          'puts "place_macros_cbh: $ot_n children placed"']
     (ROOT / 'physical/redesign_ds/coll_split/place_macros_cbh.tcl').write_text('\n'.join(t) + '\n')
     print(f'dsfd_coll_cbh parent {W} x {H}; children at', [(i, x) for i, _, _, x in place], f'{len(pins)} pins')
 
