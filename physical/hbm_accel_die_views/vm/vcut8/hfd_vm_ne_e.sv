@@ -554,17 +554,18 @@ module hfd_vm_ne_e (
     assign t_su_NE = o_t_su_NE;
     wire [2263:0] od_t_s_wr = {933'd0, x_w2e[817:0], i_f_su_NE[0], i_f_su_NE[1535:1024]};
     wire [2263:0] o_t_s_wr;
+    wire [512:0] oe_t_s_wr = {i1_f_su_NE[0], i1_f_su_NE[1535:1024]};   // one stage early: private core stage in ot_hfd_oreg2x
     for (genvar k = 0; k <= 131; k = k + 1) begin : g_o_t_s_wr_0
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_cks15), .d(od_t_s_wr[k]), .q(o_t_s_wr[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_cks15), .d(oe_t_s_wr[k]), .q(o_t_s_wr[k]));
     end
     for (genvar k = 132; k <= 283; k = k + 1) begin : g_o_t_s_wr_132
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_cks16), .d(od_t_s_wr[k]), .q(o_t_s_wr[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_cks16), .d(oe_t_s_wr[k]), .q(o_t_s_wr[k]));
     end
     for (genvar k = 284; k <= 436; k = k + 1) begin : g_o_t_s_wr_284
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_cks17), .d(od_t_s_wr[k]), .q(o_t_s_wr[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_cks17), .d(oe_t_s_wr[k]), .q(o_t_s_wr[k]));
     end
     for (genvar k = 437; k <= 512; k = k + 1) begin : g_o_t_s_wr_437
-        ot_hfd_oreg1x u (.clk(clk), .clkf(c_cks18), .d(od_t_s_wr[k]), .q(o_t_s_wr[k]));
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_cks18), .d(oe_t_s_wr[k]), .q(o_t_s_wr[k]));
     end
     for (genvar k = 513; k <= 588; k = k + 1) begin : g_o_t_s_wr_513
         ot_hfd_oreg1y u (.clk(clk), .clkf(c_cks18), .d(od_t_s_wr[k]), .q(o_t_s_wr[k]));

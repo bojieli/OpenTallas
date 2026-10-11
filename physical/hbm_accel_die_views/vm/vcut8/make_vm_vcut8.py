@@ -229,8 +229,11 @@ class H(mt.T):
         for k in range(1, n - 1):
             s.a(f'reg [{w-1}:0] i{k}_{p}; always @(posedge clk) i{k}_{p} <= {prev};'); prev = f'i{k}_{p}'
         s.a(f'reg [{w-1}:0] i_{p}; always @(posedge clk) i_{p} <= {prev};')
-    def out(s, p, w, n, expr, fclk=()):   # output through per-bit ot_hfd_oreg<n>x: lockup on ck, pin register on the face leaf
+    def out(s, p, w, n, expr, fclk=(), early=None):   # output through per-bit ot_hfd_oreg<n>x: lockup on ck, pin register on the face leaf
+        # early = (expr_e, k): bits [k-1:0] take their source ONE core stage earlier (expr_e) through ot_hfd_oreg<n+1>x, whose
+        # own posedge stage s0 replaces the shared core register: same cycle, but a private copy per destination face.
         if not FC:
+            assert early is None
             return mt.T.out(s, p, w, n, expr, fclk)
         tp = s.taps_of(p)
         if s.rout and n == 1:
@@ -240,10 +243,16 @@ class H(mt.T):
         # carries the half-cycle hand-off: it goes straight to the pin register (ot_hfd_oreg1y).  A second negedge lockup
         # behind it would make negedge -> negedge = one extra cycle (the 6443bf64f bench: root write data one depth early).
         nb = s.neg_bits(expr, w) if n == 1 else [False] * w
-        for lo_, hi_, (neg, t) in tap_runs(list(zip(nb, tp))):
-            mod = 'ot_hfd_oreg1y' if neg else f'ot_hfd_oreg{n}x'
+        ke = 0
+        if early:
+            ee, ke = early
+            assert n in (1, 2) and not any(nb[:ke]), (p, n)
+            s.a(f'wire [{ke-1}:0] oe_{p} = {ee};   // one stage early: private core stage in ot_hfd_oreg{n+1}x')
+        for lo_, hi_, (eb, neg, t) in tap_runs(list(zip([k < ke for k in range(w)], nb, tp))):
+            mod = f'ot_hfd_oreg{n+1}x' if eb else 'ot_hfd_oreg1y' if neg else f'ot_hfd_oreg{n}x'
+            src = f'oe_{p}[k]' if eb else f'od_{p}[k]'
             s.a(f'for (genvar k = {lo_}; k <= {hi_}; k = k + 1) begin : g_o_{p}_{lo_}')
-            s.a(f'    {mod} u (.clk(clk), .clkf(c_{t}), .d(od_{p}[k]), .q(o_{p}[k]));'); s.a('end')
+            s.a(f'    {mod} u (.clk(clk), .clkf(c_{t}), .d({src}), .q(o_{p}[k]));'); s.a('end')
         for k in range(w):
             if k in fclk:      # forwarded clocks leave on the same tap leaf as their data
                 s.n += 1; s.a(f'wire fclk_{s.n}; ot_fwd_clk_inv u_fclk_{s.n} (.a(c_{tp[k]}), .y(fclk_{s.n})); assign {p}[{k}] = fclk_{s.n};')
@@ -283,7 +292,7 @@ def cross_in(s, p, w):     # cross / seam input: pin register on its tap leaf + 
     else:
         s.negregs.add(f'x_{p}')
 
-def cross_out(s, p, w, expr): s.out(p, w, 1, expr)
+def cross_out(s, p, w, expr, early=None): s.out(p, w, 1, expr, early=early)
 
 # ---------------------------------------------------------------- SW (O = w: die face + slice; I = e: root + cross)
 def sw_w():
@@ -415,7 +424,12 @@ def ne_e():
     for p, w in (('f_s_row', R), ('w2e', 2866)): cross_in(s, p, w)
     mt.x_face(s, 'NE', 'x_f_s_row[2062:0]'); mt.q_face(s, 'NE')
     s.out('t_su_NE', 2048, NF, 'x_w2e[2865:818]')
-    cross_out(s, 't_s_wr', W, cat([(0, 512, 'i_f_su_NE[1535:1024]'), (512, 1, 'i_f_su_NE[0]'), (513, 818, 'x_w2e[817:0]')], W))
+    # [idle-sweep-1011] hbm_vm8bfq_nee_328df2a09 TT -61.8 (78 endpoints, ALL i_f_su_NE -> t_s_wr lockup): the shared core
+    # register i_f_su_NE also feeds e2w (W seam) and qNE (E face), so it sits mid-half and the S-face lockup misses its T/2.
+    # t_s_wr[512:0] now take i<NF-2>_f_su_NE through ot_hfd_oreg2x: a private copy of the i_ stage per S-face bit, same cycle.
+    pre = f'i{NF-2}_f_su_NE'
+    cross_out(s, 't_s_wr', W, cat([(0, 512, 'i_f_su_NE[1535:1024]'), (512, 1, 'i_f_su_NE[0]'), (513, 818, 'x_w2e[817:0]')], W),
+              early=(f'{{{pre}[0], {pre}[1535:1024]}}', 513))
     cross_out(s, 'e2w', 2048, 'i_f_su_NE')
     return s
 
