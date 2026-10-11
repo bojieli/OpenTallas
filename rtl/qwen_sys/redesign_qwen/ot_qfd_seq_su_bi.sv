@@ -989,6 +989,7 @@ module ot_qfd_seq_su_bi #(
     parameter integer PAW = 12, parameter integer SW = 64, parameter integer LV = 7, parameter integer D = 4,
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
     parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,
+    parameter integer RLY = 0, parameter integer CRED = 0,
     // PSRAM = 1 (hardcore-1010 D fallback, 2026-10-10; 0 = unchanged): the 64 x 1,024 program store is two
     // ot_sram_1r1w_64x512_m1_r2c2 macros (64 x 512, bit-masked 64-bit writes) instead of 65,536 flops; the read is
     // issued at the prog_re edge with the unregistered address (12-bit add -> macro address pins), the macro output is
@@ -1378,7 +1379,14 @@ module ot_qfd_seq_su_bi #(
         end
     end else begin : g_pflop
         always @(posedge clk) begin
-            if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;
+            if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)
+                if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;
+        end
+        // program writes: one-hot row / word selects registered one edge before the store (65,536 enables)
+        always @(posedge clk) begin
+            pw_row2 <= q_pw_v ? (64'd1 << q_pw_addr[9:4]) : 64'd0;
+            pw_word2 <= 16'd1 << q_pw_addr[3:0];
+            pw_d2 <= q_pw_data;
             if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;
         end
     end endgenerate
