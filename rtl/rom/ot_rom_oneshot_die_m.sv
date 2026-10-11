@@ -62,7 +62,14 @@ module ot_rom_oneshot_die_m #(
     // All three 0 = the unchanged block.
     parameter integer TXK     = 0,
     parameter integer FPIPE   = 0,
-    parameter integer HDLO    = 0
+    parameter integer HDLO    = 0,
+    // MEMM = 1 (el1011-q-coll 2026-10-11, textbook class 1: N x DEPTH x PW = 4 x 32 x 546 receive-FIFO flops were ~70k of
+    // the 119,632 clock sinks): each source FIFO body is a single-clock 1R1W macro (ot_sram_1r1w_32x546_m1).  PR = 2 only:
+    // the macro is written at control timing from the registered push word / pointer and read with the level-1
+    // registered {refill, index} copy, so its registered output lines up with the level-2 slice refill (the flop body
+    // was read combinationally one edge later); a word pushed at e1 is counted in that cycle's mnz_n, read at e2.
+    // Source 0's mode bit keeps a 32-bit flop shadow for the control's head-mode look-ahead (hm_n).
+    parameter integer MEMM    = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -164,6 +171,8 @@ module ot_rom_oneshot_die_m #(
     reg [PW-1:0] hd [0:N-1];
     wire [N-1:0] push;
     wire [N*PW-1:0] push_rec;
+    reg [DEPTH-1:0] m0mode;              // MEMM: source 0's head-mode bits (control look-ahead; the body is a macro)
+    always @(posedge clk) if (push[0]) m0mode[wp[0]] <= push_rec[FW + 1];
     generate for (g = 0; g < N; g = g + 1) begin : g_src
         if (g == RANK) begin : g_loc
             assign push[g] = (PR != 0) ? lpv : fire;
@@ -202,7 +211,7 @@ module ot_rom_oneshot_die_m #(
             for (r = 0; r < N; r = r + 1) begin
                 if (r != RANK) cr[r] <= cr[r] - (fire ? 1'b1 : 1'b0) + (cri_q[r] ? 1'b1 : 1'b0);
                 if (push[r]) begin
-                    mem[r*DEPTH + wp[r]] <= push_rec[r*PW +: PW];
+                    if (MEMM == 0) mem[r*DEPTH + wp[r]] <= push_rec[r*PW +: PW];
                     wp[r] <= wp[r] + 1'b1;
                 end
                 if (refill[r]) begin
@@ -443,6 +452,7 @@ module ot_rom_oneshot_die_m #(
     end else if (PR >= 2) begin : g_s0r2
         // ---- PR = 2: 2-level registered fanout tree (keep_hierarchy leaves) ------------------------------------------
         initial if (N > 4 || DB > 6) $error("ot_rom_oneshot_die_m PR=2: N <= 4 and DEPTH <= 64 (fixed-width leaves)");
+        initial if (MEMM != 0 && OPQ != 0) $error("ot_rom_oneshot_die_m MEMM: not combined with OPQ");
         reg  [N-1:0] hv_n, mnz_n;
         reg          gb_n, hm_n, iz_n;
         reg  [DB-1:0] rp_n [0:N-1];
@@ -454,7 +464,7 @@ module ot_rom_oneshot_die_m #(
                 rp_n[r] = rp[r] + (refill[r] ? 1'b1 : 1'b0);
             end
             gb_n = g_busy ? (g_cnt != N - 1) : ((s0_v && s0_mode) ? (N != 1) : 1'b0);
-            hm_n = refill[0] ? mem[rp[0]][FW + 1] : hb_c[1];
+            hm_n = refill[0] ? ((MEMM != 0) ? m0mode[rp[0]] : mem[rp[0]][FW + 1]) : hb_c[1];
             inflight_n = inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
             iz_n = (inflight_n == 16'd0);
         end
@@ -474,6 +484,19 @@ module ot_rom_oneshot_die_m #(
             wire popk = (&hvc) && !gbc && ((!(s0vc && s0mc) && !hmc) || (hmc && izc && !s0vc));
             wire refk = mnzc && (!hvc[gr] || popk);
             wire [7:0] l2d = {popk, refk, l1q[5:0]};
+            wire [PW-1:0] mrow_m;                         // MEMM: this source's FIFO body macro, read at level-1 timing
+            if (MEMM != 0) begin : g_mm
+                initial if (DEPTH != 32 || PW != 546) $error("ot_rom_oneshot_die_m MEMM: macro is 32 x 546");
+`ifdef OT_ONESHOT_M_MEMM_MUTANT
+                wire [DB-1:0] mra = rpc + 1'b1;           // negative control: the macro reads the next slot
+`else
+                wire [DB-1:0] mra = rpc;
+`endif
+                ot_sram_1r1w_32x546_m1 u_m (.clk(clk), .r_ce_in(refk), .r_addr_in(mra), .rd_out(mrow_m),
+                    .w_ce_in(push[gr]), .w_addr_in(wp[gr]), .wd_in(push_rec[gr*PW +: PW]), .w_mask_in({PW{1'b1}}));
+            end else begin : g_mf
+                assign mrow_m = {PW{1'b0}};
+            end
             for (gk = 0; gk < NSL; gk = gk + 1) begin : g_k
                 localparam integer LO = gk * SLW;
                 localparam integer SW = (PW - LO < SLW) ? (PW - LO) : SLW;
@@ -483,7 +506,7 @@ module ot_rom_oneshot_die_m #(
                 wire popq = l2q[7], refq = l2q[6];
                 wire [DB-1:0] rpq = l2q[DB-1:0];
                 reg [SW-1:0] hdk, s0k;
-                wire [PW-1:0] mrow = mem[gr*DEPTH + rpq];
+                wire [PW-1:0] mrow = (MEMM != 0) ? mrow_m : mem[gr*DEPTH + rpq];
                 always @(posedge clk) begin
                     if (refq) hdk <= mrow[LO +: SW];
                     if (popq) s0k <= hdk;

@@ -353,6 +353,8 @@ module ot_rom_oneshot_allreduce #(
     // FIFO heads, ADD_LAT 7 adders, credit-based local port); the package models each sequencer's credit counter
     // (IB = 4 credits) so in_valid / in_ready keep their meaning at the package boundary.  MARGIN 3 = PR 2; MARGIN 4 =
     // PR 2 + OPQ 1 (operand queues in place of the fold's shift-register skew lines, fill-9 2026-10-10).
+    // MARGIN 6 (el1011-q-coll) = MARGIN 5 + MEMM 1 (source FIFO bodies as ot_sram_1r1w_32x546_m1 macros; DEPTH 32 only,
+    // the bench DEPTH-16 case keeps the flop body).
     // MARGIN 5 (el1011-q-coll) = PR 2 + TXK 1 (own tx_rec pin register) + FPIPE 1 (reduce-error fault registered), OPQ 0.
     parameter integer MARGIN     = 0
 ) (
@@ -402,7 +404,7 @@ module ot_rom_oneshot_allreduce #(
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) lcred <= 3'd4;
                 else lcred <= lcred - ((in_valid[s] && in_ready[s]) ? 3'd1 : 3'd0) + (icr ? 3'd1 : 3'd0);
-            ot_rom_oneshot_die_m #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .IB(4), .PR((MARGIN >= 3) ? 2 : (MARGIN >= 2) ? 1 : 0), .OPQ((MARGIN == 4) ? 1 : 0), .TXK((MARGIN >= 5) ? 1 : 0), .FPIPE((MARGIN >= 5) ? 1 : 0)) u_die (
+            ot_rom_oneshot_die_m #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .IB(4), .PR((MARGIN >= 3) ? 2 : (MARGIN >= 2) ? 1 : 0), .OPQ((MARGIN == 4) ? 1 : 0), .TXK((MARGIN >= 5) ? 1 : 0), .FPIPE((MARGIN >= 5) ? 1 : 0), .MEMM((MARGIN >= 6 && DEPTH == 32) ? 1 : 0)) u_die (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(in_valid[s] && in_ready[s]), .in_cr(icr), .in_data(in_data[s*FW +: FW]),
                 .in_last(in_last[s]), .in_mode(in_mode[s]), .in_tag(in_tag[s*TAGW +: TAGW]),
