@@ -9,12 +9,13 @@
    "file": "rtl/hbm_accel/generic/ot_hgi_fused_station.sv",
    "params": {
     "UN": 64,
-    "UM": 8,
+    "UM": 16,
     "UWIDE": 1,
     "SCRATCH": 245760,
     "Q": 32,
     "LQ": 32,
-    "SCR_WORDS": 16384
+    "SCR_WORDS": 16384,
+    "ULWB": 18
    },
    "bind": {
     "clk": "clk",

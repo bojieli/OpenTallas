@@ -23,6 +23,7 @@ module tb_hfd_hc;
     hfd_hc dut(.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .f_hgi_cmdproc(f_hgi_cmdproc), .f_hgi_vmr(f_hgi_vmr), .f_lgW_rdn(f_lgW_rdn), .f_lgW_wdn(f_lgW_wdn), .f_sfu(f_sfu), .rst(rst), .t_hgi_cmdproc(t_hgi_cmdproc), .t_hgi_vmq(t_hgi_vmq), .t_lgW_rup(t_lgW_rup), .t_lgW_wup(t_lgW_wup), .t_sfu(t_sfu));
     reg clk = 0; always #0.4165 clk = ~clk;
 
+    always @* ck0[0] = clk;
     reg [0:0] d0_ck0; always @(posedge clk) d0_ck0 <= ck0;
     reg [0:0] d_ck0; always @(posedge clk) d_ck0 <= d0_ck0;
     reg [0:0] d0_ck1; always @(posedge clk) d0_ck1 <= ck1;
@@ -114,7 +115,6 @@ module tb_hfd_hc;
     integer err = 0, nchk = 0, cyc;
     integer seed = 20261006;
     task automatic randomize_inputs; begin
-        ck0[0:0] = $urandom(seed); seed = seed + 1;
         ck1[0:0] = $urandom(seed); seed = seed + 1;
         ck2[0:0] = $urandom(seed); seed = seed + 1;
         ck3[0:0] = $urandom(seed); seed = seed + 1;

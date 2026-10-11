@@ -82,7 +82,7 @@ module hfd_quant (
     assign w_fs_lg_rdn = {i_f_lgE_rdn[8256:0]};
     assign w_fs_lg_wdn = {i_f_lgE_wdn[64:0]};
     assign w_fs_xr = {i_f_hgi_fmkr[256:0]};
-    ot_hgi_fused_station #(.UN(64), .UM(8), .UWIDE(1), .SCRATCH(245760), .Q(32), .LQ(32), .SCR_WORDS(16384)) u_fs (.clk(w_fs_clk), .rst_n(w_fs_rst_n), .rec(w_fs_rec), .ret(w_fs_ret), .q_vmq(w_fs_q_vmq), .q_vmr(w_fs_q_vmr), .f_vmq(w_fs_f_vmq), .f_vmr(w_fs_f_vmr), .m_vmq(w_fs_m_vmq), .m_vmr(w_fs_m_vmr), .lg_rup(w_fs_lg_rup), .lg_rdn(w_fs_lg_rdn), .lg_wup(w_fs_lg_wup), .lg_wdn(w_fs_lg_wdn), .xq(w_fs_xq), .xr(w_fs_xr));
+    ot_hgi_fused_station #(.UN(64), .UM(16), .UWIDE(1), .SCRATCH(245760), .Q(32), .LQ(32), .SCR_WORDS(16384), .ULWB(18)) u_fs (.clk(w_fs_clk), .rst_n(w_fs_rst_n), .rec(w_fs_rec), .ret(w_fs_ret), .q_vmq(w_fs_q_vmq), .q_vmr(w_fs_q_vmr), .f_vmq(w_fs_f_vmq), .f_vmr(w_fs_f_vmr), .m_vmq(w_fs_m_vmq), .m_vmr(w_fs_m_vmr), .lg_rup(w_fs_lg_rup), .lg_rdn(w_fs_lg_rdn), .lg_wup(w_fs_lg_wup), .lg_wdn(w_fs_lg_wdn), .xq(w_fs_xq), .xr(w_fs_xr));
     wire [2:0] od_t_hgi_cmdproc = {w_fs_ret[2:0]};
     wire [2:0] o_t_hgi_cmdproc;
     for (genvar k = 0; k < 3; k = k + 1) begin : g_o_t_hgi_cmdproc

@@ -82,6 +82,18 @@ module tb_hgi_fused_station;
         if (rst_n && ret[2]) nf = nf + 1;
         if (!rst_n) credit <= 1; else if (ret[1] || ret[2]) credit <= 1; else if (rec[0]) credit <= 0;
     end
+    // progress watchdog: no retire / VM traffic for 200,000 edges while a case runs = hang: dump the station and FAIL
+    integer last_prog = 0; reg running = 0;
+    always @(posedge clk) if (!running || ret[1] || ret[2] || xr[0] || fq[337] || mq[337] || qq[337] || wup[0] || rup[0]) last_prog = cyc;
+    always @(posedge clk) if (running && cyc - last_prog > 200000) begin
+        $display("ERR hang: fused st %0d mph %0d own %0d fifo %0d mv_v %0d mv_rdy %0d credit %0d ret %b rup0 %0d wup0 %0d rgnt %b wgnt %b k_v %0d inflight %0d k %0d",
+                 dut.u_fs.u_f.st, dut.u_fs.mph, dut.u_fs.own, dut.u_fs.fn, dut.u_fs.mv_v, dut.u_fs.mv_rdy, credit, ret, rup[0], wup[0],
+                 rgnt, wgnt, k_v, dut.u_fs.u_cl.inf, k);
+        $display("HGI_FUSED_STATION FAIL errors=hang"); $finish;
+    end
+    always @(posedge clk) if (running && cyc % 20000 == 0) begin $display("progress cyc %0d k %0d fused st %0d su span/stage/run/drain %0d%0d%0d%0d rreq %0d rgnt %b wreq %0d wgnt %b", cyc, k, dut.u_fs.u_f.st,
+        dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.a_span, dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.a_stage, dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.a_run,
+        dut.u_fs.u_f.g_unit.u_su.g_wctl.u_ctl.a_drain, rup[0], rgnt, wup[0], wgnt); $fflush; end
     integer c, j, t, kind, r0, nr, vi0, nvi, ve0, nve, h0, nh, words = 0, cases = 0, t0;
     reg [31:0] qd;
     initial begin
@@ -93,7 +105,7 @@ module tb_hgi_fused_station;
             rst_n = 0; hbm.delete(); repeat (4) @(posedge clk); rst_n = 1; repeat (12) @(posedge clk);
             for (j = 0; j < nvi; j = j + 1) vm_req(1'b1, vmim[vi0 + j][63:32], vmim[vi0 + j][31:0], qd);
             for (j = 0; j < nh; j = j + 1) hbm[hbmm[h0 + j][71:32]] = hbmm[h0 + j][31:0];
-            k = 0; nf = 0; t0 = cyc;
+            k = 0; nf = 0; t0 = cyc; running = 1;
             for (j = 0; j < nr; j = j + 1) begin
                 t = 0; while (!(credit && ret[0]) && t < 4000000) begin @(negedge clk); t = t + 1; end
                 @(negedge clk); rec = {recm[r0 + j], 1'b1};
@@ -101,6 +113,7 @@ module tb_hgi_fused_station;
                 t = 0; while (credit && t < 100) begin @(negedge clk); t = t + 1; end      // the credit is taken
             end
             t = 0; while (k < nr && nf == 0 && t < 4000000) begin @(posedge clk); t = t + 1; end
+            running = 0;
             if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", c, k, nr, nf); errors = errors + 1; end
             if (sflt) begin $display("ERR case %0d: remote lane server overflow", c); errors = errors + 1; end
             $display("case %0d: %0d records retired in %0d cycles (die ports, real VM, remote kport lane)", c, k, cyc - t0); $fflush;

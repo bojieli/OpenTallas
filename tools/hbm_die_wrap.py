@@ -614,6 +614,8 @@ def gen_tb(spec, cycles=400, seed=20261006):
                     T.append(f"    assign {p}[{i}] = drv_{p}[{i}];")
     T.append('    reg clk = 0; always #0.4165 clk = ~clk;')
     T.append('    always @* ck[0] = clk;' if 'ck' in ports else '')
+    if clock_port(spec) in ports and clock_port(spec) != 'ck':      # a spec 'clock' pin (e.g. ck0[0]) is the bench clock
+        T.append(f'    always @* {clock_port(spec)}[0] = clk;')
     if spec.get('clock') in xin:
         T.append(f"    always @* {spec['clock']} = clk;")
     # one-cycle delayed copies of every input-capable port
@@ -667,7 +669,7 @@ def gen_tb(spec, cycles=400, seed=20261006):
     T += ['    integer err = 0, nchk = 0, cyc;', f'    integer seed = {seed};',
           '    task automatic randomize_inputs; begin']
     for p, v in sorted(ports.items()):
-        if p == 'ck' or v['direction'] == 'output':
+        if p in ('ck', clock_port(spec)) or v['direction'] == 'output':
             continue
         tgt = f'drv_{p}' if v['direction'] == 'inout' else p
         if p == 'rst':

@@ -25,7 +25,7 @@
 // Return {fault, done, ready} = the FUSED front's (the CP holds one credit for unit 4).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_fused_station #(
-    parameter integer UN = 64, UM = 8,
+    parameter integer UN = 64, UM = 16, ULWB = 18,   // the measured wide FUSED body (UN64 UM16, local 2^18 words)
     parameter integer UWIDE = 1,
     parameter integer SCRATCH = 245760,       // the FUSED scratch: VM words [SCRATCH, SCRATCH + SCR_WORDS), a static compiler
     parameter integer SCR_WORDS = 16384,      //   reservation (no MD word carries it yet: open, lead / e); a record that needs more
@@ -57,7 +57,7 @@ module ot_hgi_fused_station #(
     wire f_rdy, f_done, f_fault, mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
     wire [682:0] q_rec; wire [2:0] q_ret; reg qph; wire qsel = (QWIDE != 0) && qph;
     wire [32*16-1:0] f_wrq; wire [32*280-1:0] f_wwq; wire f_rg_req, f_wg_req, f_wg_gnt;
-    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM), .UWIDE(UWIDE), .SCR_WORDS(SCR_WORDS)) u_f (.clk(clk), .rst_n(rst_n),
+    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM), .UWIDE(UWIDE), .ULWB(ULWB), .SCR_WORDS(SCR_WORDS)) u_f (.clk(clk), .rst_n(rst_n),
         .cfg_scratch(18'(SCRATCH)), .rec_v(rec[0]), .rec_rdy(f_rdy), .rec_hdr(rec[128:1]), .rec_a(rec[384:129]),
         .rec_b(rec[640:385]), .rec_c(rec[896:641]), .rec_o(rec[1152:897]), .rec_n_a(rec[1173:1153]),
         .rec_n_b(rec[1194:1174]), .rec_n_o(rec[1215:1195]), .rec_done(f_done), .rec_fault(f_fault), .halted(),
