@@ -3406,6 +3406,10 @@ def _corridors(m):
             cor['collW'] = (x0c + 4.32, c_.y, c_.x - 4.32, c_.y + c_.h)
         if x1c - (c_.x + c_.w) > 30.0:
             cor['collE'] = (c_.x + c_.w + 4.32, c_.y, x1c - 4.32, c_.y + c_.h)
+    if 'hrtx' in m['hub'] and 'su_n' in m['hub']:
+        # --hrow-tx: the E-column band between hc_n and su_n around the sender is a station channel (su_n <-> hc_n)
+        hn_, sn_ = m['hub']['hc_n'], m['hub']['su_n']
+        cor['hrtxG'] = (m['x_spe'] + 4.32, hn_.y + hn_.h + 4.32, g['x_fe'] - 4.32, sn_.y - 4.32)
     if VM_SLAB:
         # --vm-slab: the VM is narrower than the hub column; the column remainder beside it is a station corridor
         # (layer1e: hb_hc_n_vm had no station spot at the VM's E face)
@@ -4969,7 +4973,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             path = [(xx, A.y + A.h), (xx, Bk.y)] if A.y < Bk.y else [(xx, A.y), (xx, Bk.y + Bk.h)]
             L = _poly_len(path)
             name = hbn
-            sts = CH8.run(name, [bits], path, [cor['hcc']], path[0], reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
+            sts = CH8.run(name, [bits], path, [cor['hcc']] + ([cor['hrtxG']] if 'hrtxG' in cor else []), path[0], reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
             prev = (A.name, pa)
             for k, (it, s_, hop) in enumerate(sts):
                 it.kind, it.domain = 'hstn', A.domain
