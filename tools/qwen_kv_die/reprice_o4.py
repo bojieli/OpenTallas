@@ -41,6 +41,8 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--kv-basis', type=Path, default=D / 'reprice.json',
                     help="the KV-die reprice the option-4 term is applied to (e.g. (b)'s relay + leaf-plan basis)")
+    ap.add_argument('--cbuf-wait', type=int, default=0,
+                    help='constant-buffer stage-start waits a steady-state token (cycles, measured: tb_qfd_crom_lbuf GATE 1)')
     ap.add_argument('--refresh-step', type=int, nargs=2, default=None, metavar=('MEAN', 'WORST'),
                     help='PROVISIONAL timed-REFpb KV step increase per layer (cycles, mean / worst)')
     a = ap.parse_args()
@@ -69,10 +71,16 @@ def main():
                r22k_relay_term=dict(run=sr['adopted_for_price'], L0=adopted['L0'], layer=adopted['L1'],
                                     token=adopted['L0'] + 35 * adopted['L1']),
                o4_run=dict(name=a.o4_name, **o4), cases={})
-    o4_token = o4['vs_s22ml7']['L0'] + 35 * o4['vs_s22ml7']['L1']
-    out['o4_relay_term'] = dict(L0=o4['vs_s22ml7']['L0'], layer=o4['vs_s22ml7']['L1'], token=o4_token)
+    o4_token = o4['vs_s22ml7']['L0'] + 35 * o4['vs_s22ml7']['L1'] + a.cbuf_wait
+    out['o4_relay_term'] = dict(L0=o4['vs_s22ml7']['L0'], layer=o4['vs_s22ml7']['L1'], token=o4_token,
+                                cbuf_wait_per_token=a.cbuf_wait,
+                                cbuf_note='constant-buffer stage-start waits (seq_su ot_qfd_stage_gate + 8 SRAM groups, far ROM 17 '
+                                          'edges): 466 cycles on the first token, 111 a steady token (rtl/test/redesign_qwen/'
+                                          'tb_qfd_crom_lbuf.sv GATE 1, NTOK 1 / 2); the chain vehicle prices the buffer as SU ML 7')
     st = o4rec['crossing_bus_stages']
-    kvd_extra = max(0, st.get('o4_kvd', 0) - 12) + max(0, st.get('o4_kok', 0) - 13)
+    # the KV-die bench prices the step from the q word (x3) leaving the ROM faces; a launch descriptor on a longer path
+    # than x3 delays the step by the difference (r22ko4: kvd from seq_su)
+    kvd_extra = max(0, st.get('o4_kvd', 0) - st.get('x3', 25))
     for case, c in rp['cases'].items():
         base = c['token_cycles']
         tok = base - out['r22k_relay_term']['token'] + o4_token
@@ -97,9 +105,7 @@ def main():
                              'ot_qwen_tp_seq_w12_vrl), the masters\' own stations are in the measured vehicle')
     out['bounds'] = dict(
         kvd_kok_extra_stages_per_layer=kvd_extra,
-        kvd_note='charged in kvd_bound_tok_s only if the KV-die launch waits on the control tile\'s descriptor word '
-                 '(36 layers x the extra one-way stages of kvd + kv_ok); fix: announce the KV descriptor from seq_su '
-                 '(its controller decodes the same instruction) or carry it with the q word',
+        kvd_note='the launch descriptor leaves seq_su (r22ko4): stages beyond the q word path (x3), charged per layer in kvd_bound',
         tree_words=dict(pword_0=st.get('pword_0'), tt_ty=st.get('tt_ty'), r22k=dict(pword_0=39, tt_ty=39),
                         note='band words reach the 2 x 2 upper-tile group +8 stages later than the r22k tree top (TWS '
                              'sensitivity run), tt_ty +3'))

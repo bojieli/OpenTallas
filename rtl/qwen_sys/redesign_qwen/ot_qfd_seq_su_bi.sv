@@ -1004,6 +1004,12 @@ module ot_qfd_seq_su_bi #(
     input  wire clk,
     input  wire rst_n,
     input  wire [1-1:0] h_start,
+    input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs
+    input  wire [1-1:0] cb_st_rdy,        // constant buffer: stage cb_st_rdy_stage resident
+    input  wire [5:0] cb_st_rdy_stage,
+    output wire [5:0] cb_stage,           // to every constant-buffer group: the stage the SU runs
+    output wire [1-1:0] cb_tok_start,
+    output wire [NW-1:0] cb_tpos,
     input  wire [NW-1:0] tp_token,
     input  wire [NW-1:0] tp_pos,
     input  wire [1-1:0] kv_write_drained,
@@ -1095,7 +1101,20 @@ module ot_qfd_seq_su_bi #(
     output wire [24-1:0] su_acc_o,
     output wire [1-1:0] su_idle_o,
     output wire [16-1:0] su_prog_o,
-    output wire [16-1:0] su_rows_o
+    output wire [16-1:0] su_rows_o,
+    output wire [1-1:0] kvd_v,
+    output wire [AW-1:0] kvd_wbase,
+    output wire [AW-1:0] kvd_ts,
+    output wire [AW-1:0] kvd_ks,
+    output wire [AW-1:0] kvd_js,
+    output wire [AW-1:0] kvd_wcs,
+    output wire [4-1:0] kvd_split,
+    output wire [3-1:0] kvd_jsh,
+    output wire [NW-1:0] kvd_tiles,
+    output wire [NW-1:0] kvd_k,
+    output wire [NW-1:0] kvd_nout,
+    output wire [1-1:0] kvd_kindk,
+    output wire [NW-1:0] kvd_pos
 );
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
@@ -1284,6 +1303,32 @@ module ot_qfd_seq_su_bi #(
     wire [16-1:0] b_su_prog_o;
     ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_prog_o (.clk(clk), .rst_n(rs), .d(b_su_prog_o), .q(su_prog_o));
     wire [16-1:0] b_su_rows_o;
+    wire [1-1:0] b_kvd_v;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_v (.clk(clk), .rst_n(rs), .d(b_kvd_v), .q(kvd_v));
+    wire [AW-1:0] b_kvd_wbase;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wbase (.clk(clk), .rst_n(rs), .d(b_kvd_wbase), .q(kvd_wbase));
+    wire [AW-1:0] b_kvd_ts;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ts (.clk(clk), .rst_n(rs), .d(b_kvd_ts), .q(kvd_ts));
+    wire [AW-1:0] b_kvd_ks;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ks (.clk(clk), .rst_n(rs), .d(b_kvd_ks), .q(kvd_ks));
+    wire [AW-1:0] b_kvd_js;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_js (.clk(clk), .rst_n(rs), .d(b_kvd_js), .q(kvd_js));
+    wire [AW-1:0] b_kvd_wcs;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wcs (.clk(clk), .rst_n(rs), .d(b_kvd_wcs), .q(kvd_wcs));
+    wire [4-1:0] b_kvd_split;
+    ot_hdc_delay #(.W(4), .D(OS)) u_o_kvd_split (.clk(clk), .rst_n(rs), .d(b_kvd_split), .q(kvd_split));
+    wire [3-1:0] b_kvd_jsh;
+    ot_hdc_delay #(.W(3), .D(OS)) u_o_kvd_jsh (.clk(clk), .rst_n(rs), .d(b_kvd_jsh), .q(kvd_jsh));
+    wire [NW-1:0] b_kvd_tiles;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_tiles (.clk(clk), .rst_n(rs), .d(b_kvd_tiles), .q(kvd_tiles));
+    wire [NW-1:0] b_kvd_k;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_k (.clk(clk), .rst_n(rs), .d(b_kvd_k), .q(kvd_k));
+    wire [NW-1:0] b_kvd_nout;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_nout (.clk(clk), .rst_n(rs), .d(b_kvd_nout), .q(kvd_nout));
+    wire [1-1:0] b_kvd_kindk;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_kindk (.clk(clk), .rst_n(rs), .d(b_kvd_kindk), .q(kvd_kindk));
+    wire [NW-1:0] b_kvd_pos;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_pos (.clk(clk), .rst_n(rs), .d(b_kvd_pos), .q(kvd_pos));
     ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_rows_o (.clk(clk), .rst_n(rs), .d(b_su_rows_o), .q(su_rows_o));
     wire s_su_ready, s_su_idle; wire [15:0] s_su_progress, s_su_progress_rows; reg [NW-1:0] tok_l; wire es_re_w;
         ot_qfd_issue_shell #(.RT_ME(0), .RT_SU(RT), .COMP(1)) u_shell (.clk(clk), .rst_n(rs),
@@ -1304,6 +1349,7 @@ module ot_qfd_seq_su_bi #(
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
     always @(posedge clk or negedge rs) if (!rs) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
     always @(posedge clk) prog_a_r <= prog_a;
+    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;
     always @(posedge clk) begin
         if (q_dw_v) desc_mem[q_dw_addr] <= q_dw_data;
         if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;
@@ -1399,19 +1445,19 @@ module ot_qfd_seq_su_bi #(
         .vw_mx_mask(),
         .vw_mx_data(),
         .me_ov(),
-        .kvd_v(),
-        .kvd_wbase(),
-        .kvd_ts(),
-        .kvd_ks(),
-        .kvd_js(),
-        .kvd_wcs(),
-        .kvd_split(),
-        .kvd_jsh(),
-        .kvd_tiles(),
-        .kvd_k(),
-        .kvd_nout(),
-        .kvd_kindk(),
-        .kvd_pos(),
+        .kvd_v(b_kvd_v),
+        .kvd_wbase(b_kvd_wbase),
+        .kvd_ts(b_kvd_ts),
+        .kvd_ks(b_kvd_ks),
+        .kvd_js(b_kvd_js),
+        .kvd_wcs(b_kvd_wcs),
+        .kvd_split(b_kvd_split),
+        .kvd_jsh(b_kvd_jsh),
+        .kvd_tiles(b_kvd_tiles),
+        .kvd_k(b_kvd_k),
+        .kvd_nout(b_kvd_nout),
+        .kvd_kindk(b_kvd_kindk),
+        .kvd_pos(b_kvd_pos),
         .kv_ok(1'b0),
         .wrom_su(),
         .wd_v(),
@@ -1524,9 +1570,17 @@ module ot_qfd_seq_su_bi #(
         .o_fin(),
         .o_fidx(),
         .o_fval());
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
+    wire [5:0] q_stage_in, q_cb_st_rdy_stage; wire q_cb_st_rdy;
+    ot_hdc_delay #(.W(12), .D(IS)) u_i_cbs (.clk(clk), .rst_n(rs), .d({stage_in, cb_st_rdy_stage}), .q({q_stage_in, q_cb_st_rdy_stage}));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rs), .d(cb_st_rdy), .q(q_cb_st_rdy));
+    wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;
+    ot_qfd_stage_gate #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rs), .h_start(q_h_start), .stage(q_stage_in),
+        .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
+        .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
+    ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rs), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
+    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (
-        .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),
+        .clk(clk), .rst_n(rs), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
         .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),
@@ -1542,6 +1596,26 @@ module ot_qfd_seq_su_bi #(
     assign b_su_idle_o = q_pi_su_idle;
     assign b_su_prog_o = q_pi_su_progress;
     assign b_su_rows_o = q_pi_su_progress_rows;
+endmodule
+
+// qwen-1010/a: the stage start waits for the SU-local constant buffer (ot_qfd_su_cbuf_g st_rdy / st_rdy_stage): a stage
+// (one layer program, or HEAD) starts only when the buffer reports that stage resident.  The prefetcher fills stage s + 1
+// during stage s, so the wait is normally only at the token's first stage.  MUT 1 (NOWAIT): starts without the buffer.
+module ot_qfd_stage_gate #(parameter integer SW_ = 6, parameter integer NW = 18, parameter integer MUT = 0) (
+    input  wire clk, input wire rst_n,
+    input  wire h_start, input wire [SW_-1:0] stage, input wire [NW-1:0] token, input wire [NW-1:0] pos,
+    input  wire st_rdy, input wire [SW_-1:0] st_rdy_stage,
+    output wire go, output reg [NW-1:0] go_token, output reg [NW-1:0] go_pos,
+    output reg [SW_-1:0] cur_stage, output wire tok_start
+);
+    reg pend;
+    assign go = pend && !h_start && ((MUT != 0) || (st_rdy && st_rdy_stage == cur_stage));
+    assign tok_start = h_start && (stage == {SW_{1'b0}});
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pend <= 1'b0; cur_stage <= {SW_{1'b0}}; end
+        else if (h_start) begin pend <= 1'b1; cur_stage <= stage; end
+        else if (go) pend <= 1'b0;
+    always @(posedge clk) if (h_start) begin go_token <= token; go_pos <= pos; end
 endmodule
 
 `timescale 1ns/1ps
@@ -1578,6 +1652,7 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_qwen_tp_seq_w12_vrl #(
     parameter integer VRL = 1,     // vre -> vrq edges
+    parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits
     parameter integer ENABLE_AR256 = 0,
     parameter integer N    = 4,
     parameter integer NW   = 16,
@@ -1668,11 +1743,15 @@ module ot_qwen_tp_seq_w12_vrl #(
     wire          rd_v = rd_p[VRL-1];
     integer       rd_i, rd_n;
     always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end
-    assign c_valid = (st == S_COLL) && (q_n != 0);
+    reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)
+    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
-    wire   c_fire  = c_valid && c_ready;
+    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) c_cred <= 8'(CRED);
+        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);
     wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rd_n) < QD;
 
     reg [NW-1:0] best_i;
