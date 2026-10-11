@@ -30,27 +30,22 @@ COMMON = dict(export=dict(tool='physical/hbm_mtp/views/run_export.sh + mk_export
 VIEWS = {
     'mtp_hgi': dict(
         master='hgi_mtp_native', kind='mtp_hgi', status='closed',
-        job='hgi_mtp_native-nreg-a-lvt-eaea6da41-tc', record_commit='8ada8c419', merged='331227e92',
-        host='ot-epyc3',
-        base='/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_mtp_native-nreg-a-lvt-eaea6da41-tc/routes/'
-             'hgi_mtp_native_nreg_a_lvt_eaea6da41_tc/work/orfs/results/asap7/'
-             'opentallas_hgi_mtp_native_asap7_mtp_hgi_mtp_native_nreg_a_lvt_eaea6da41_tc/base',
-        eco='installed 2026-10-09T15:57:56-07:00 (combo ECO cl/eco-combo1); exported from the installed 6_final.odb '
-            '(sha256 b0fc83b0e382..., the same db the CLOSED corner_sta timed); 6_final.odb.pre_eco is NOT the view',
-        signoff=dict(tt_setup_ps=10.43, ff_hold_ps=1.80, ss_sensitivity_ps=-389.68, drc=0),
+        job='hgi_mtp_native-n14-lvt-5b9670b6d-tc-hm10', record_commit='db5a8e9a7', merged='ae380d24e',
+        host='ot-epyc4',
+        base='/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_native-n14-lvt-5b9670b6d-tc-hm10/cl/eco/pass1/orfs/'
+             'results/asap7/opentallas_hgi_mtp_native_asap7_mtp_hgi_mtp_native_n14_lvt_5b9670b6d_tc_hm10/base',
+        eco='installed 2026-10-10T22:29:56-07:00 (post-route hold ECO cl/eco/pass1, +2,758 cells); exported from the '
+            'installed 6_final.odb (the db the CLOSED corner_sta timed)',
+        signoff=dict(tt_setup_ps=39.14, ff_hold_ps=8.80, ss_sensitivity_ps=-244.03, drc=0),
         die_binding=dict(
-            variant='R25G preset r25gm (claude/mtp-hbmdie-20261009; spine_slot_masters mtp = GENERIC_MASTER '
-                    '"hgi_mtp_native", MD-7 slot 466.56 x 200.88)',
-            status='VIEW READY, generator check not run: r25gm lives on claude/mtp-hbmdie-20261009, which does not '
-                   'merge onto main cleanly (add/add conflict in tools/hgi_die_dispatch.py + hbm_accel_die_fp.py / '
-                   'RTL hunks); the merge is hgi-takeover\'s (mtp-lead -> hgi-takeover log)',
-            ports='853 pin bits = contract groups CP 197 in / 517 out, router 59 in / 58 out, coll 1 in / 19 out, '
-                  'clk, rst_n (fork F decision.json widths)',
-            size_note='view 286.56 x 200.88 = the master\'s share of the 466.56 x 200.88 MTP slot; the ARGMAX unit '
-                      '(ot_hgi_argmax18_m, hgi-takeover) takes the rest. The generator places one slot master: the '
-                      'slot needs a two-instance wrapper or a slot split before `hbm_die_views.py check` can MATCH'),
-        note='R25G auto-on (_mtp_generic_closed) still also needs the MX1 CP-south band CLOSED '
-             '(hfd_cmdproc_s_mtp_native_mx1_rb-*: hold stall, NEEDS_RTL).'),
+            variant='R25GQN (main d98cc3409 N14 DROP: dedicated MTP <-> router / coll nets removed; the MTP kernels '
+                    'compile onto standard records)',
+            status='VIEW READY; ports = the N14 contract (no router / coll groups)',
+            ports='716 pin bits = clk, rst_n, f_cmdproc 197 in, t_cmdproc 517 out (port_check.json MATCH)',
+            size_note='view 286.56 x 200.88 (unchanged footprint)'),
+        note='N14 re-close at main 5b9670b6d (h deleted the tied XSEL / union logic, 6499df7c8); supersedes the '
+             'nreg-a-lvt eaea6da41 view (853 pins incl. router / coll MTP groups). hm0 sibling also CLOSED '
+             '(TT +42.63 / FF +4.29, record 4cc345c28).'),
     'mtp_hfd': dict(
         master='hfd_mtp_x_stop', kind='mtp_hfd', status='closed',
         job='hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc', record_commit='867da6c5f', merged='0c6d1d0c4',
