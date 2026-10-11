@@ -13,7 +13,8 @@ module ot_hgi_vm_unit #(
     parameter integer WDIRECT = 0,       // lane b -> bank b only (WP 32 with the DMA front)
     parameter integer RP = 0,            // hgi-unitrate: wide READ lanes (lane b <-> bank b): the SU / SFU wide stage
     parameter integer W2 = 0,            // hgi-unitrate: second wide WRITE group (lane b <-> bank b): the SU / SFU drain
-    parameter integer LQ = 8,            // per-lane request queue depth = the credits the lane's client holds
+    parameter integer LQ = 8,            // per-lane request queue depth = the credits the lane's client holds (power of 2)
+    parameter integer QMACRO = 0,        // the write-lane queues' SRAM (ot_fifo_sram_fwft MACRO: 0 = 64x512 macros)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -38,6 +39,11 @@ module ot_hgi_vm_unit #(
     output reg  [(W2>0?W2:1)-1:0]     w2q_done
 );
     localparam integer RPL = RP > 0 ? RP : 1, W2L = W2 > 0 ? W2 : 1;
+    // LQ must be a power of two: the read-queue pointers are $clog2(LQ) bits and wrap at 2^n (lead / d: an LQ of 24 would
+    // index past the queue), and the write queues are ot_fifo_sram_fwft (power-of-two DEPTH)
+    generate if ((1 << $clog2(LQ)) != LQ) begin : g_lq_must_be_pow2
+        ot_hgi_vm_unit_LQ_must_be_a_power_of_two u_trap ();
+    end endgenerate
     // ---- wide read lanes: pin flop -> LQ-deep request queue -> core lane (accepted when no client reads the bank)
     reg [RPL*16-1:0] rq_r; always @(posedge clk or negedge rst_n) if (!rst_n) rq_r <= '0; else rq_r <= rq;
     reg [14:0] rqq [0:RPL-1][0:LQ-1]; reg [$clog2(LQ):0] rqn [0:RPL-1]; reg [$clog2(LQ)-1:0] rqh [0:RPL-1], rqt [0:RPL-1];
@@ -64,29 +70,24 @@ module ot_hgi_vm_unit #(
         end
     // ---- second wide write group: pin flop -> LQ-deep queue -> core lane (after the DMA group); done = credit
     reg [W2L*280-1:0] w2q_r; always @(posedge clk or negedge rst_n) if (!rst_n) w2q_r <= '0; else w2q_r <= w2q;
-    reg [278:0] w2qq [0:W2L-1][0:LQ-1]; reg [$clog2(LQ):0] w2n [0:W2L-1]; reg [$clog2(LQ)-1:0] w2h [0:W2L-1], w2t [0:W2L-1];
+    // per-lane write queues in SRAM (feasibility review: no LQ x 279-b flop arrays behind a wide select): one
+    // ot_fifo_sram_fwft a lane (registered head), DEPTH = LQ = the client's credits; the head feeds the core lane
+    wire [W2L-1:0] w2_hv, w2_qovf; wire [W2L*279-1:0] w2_head;
     reg [W2L-1:0] w2_v; reg [W2L*15-1:0] w2_sec; reg [W2L*256-1:0] w2_d; reg [W2L*8-1:0] w2_m;
     wire [W2L-1:0] w2_acc, w2_done; reg w2_ovf;
+    for (genvar lq_ = 0; lq_ < W2L; lq_ = lq_ + 1) begin : g_w2q
+        ot_fifo_sram_fwft #(.W(279), .DEPTH(LQ), .MACRO(QMACRO)) u_q (.clk(clk), .rst_n(rst_n),
+            .push((W2 > 0) && w2q_r[lq_*280 + 279]), .wdata(w2q_r[lq_*280 +: 279]), .pop(w2_acc[lq_]),
+            .hv(w2_hv[lq_]), .head(w2_head[lq_*279 +: 279]), .ovf(w2_qovf[lq_]));
+    end
     always @* for (integer lb = 0; lb < W2L; lb = lb + 1) begin : w2h_
-        reg [278:0] e; e = w2qq[lb][w2h[lb]];
-        w2_v[lb] = (W2 > 0) && w2n[lb] != 0; w2_m[lb*8 +: 8] = e[7:0]; w2_d[lb*256 +: 256] = e[263:8];
+        reg [278:0] e; e = w2_head[lb*279 +: 279];
+        w2_v[lb] = (W2 > 0) && w2_hv[lb]; w2_m[lb*8 +: 8] = e[7:0]; w2_d[lb*256 +: 256] = e[263:8];
         w2_sec[lb*15 +: 15] = e[278:264];
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
-            w2q_done <= '0; w2q_cr <= '0; w2_ovf <= 1'b0;
-            for (integer lb = 0; lb < W2L; lb = lb + 1) begin w2n[lb] <= 0; w2h[lb] <= 0; w2t[lb] <= 0; end
-        end else begin
-            w2q_done <= w2_done; w2q_cr <= w2_acc;
-            for (integer lb = 0; lb < W2L; lb = lb + 1) begin : w2l
-                reg push, pop;
-                push = (W2 > 0) && w2q_r[lb*280 + 279]; pop = w2_acc[lb];
-                if (push && w2n[lb] == LQ && !pop) w2_ovf <= 1'b1;
-                else if (push) begin w2qq[lb][w2t[lb]] <= w2q_r[lb*280 +: 279]; w2t[lb] <= w2t[lb] + 1'b1; end
-                if (pop) w2h[lb] <= w2h[lb] + 1'b1;
-                w2n[lb] <= w2n[lb] + (push && !(w2n[lb] == LQ && !pop)) - pop;
-            end
-        end
+        if (!rst_n) begin w2q_done <= '0; w2q_cr <= '0; w2_ovf <= 1'b0; end
+        else begin w2q_done <= w2_done; w2q_cr <= w2_acc; if (|w2_qovf) w2_ovf <= 1'b1; end
     reg [WP*280-1:0] wq_r;
     always @(posedge clk or negedge rst_n) if (!rst_n) wq_r <= {WP*280{1'b0}}; else wq_r <= wq;
     wire [WP-1:0] wl_v; wire [WP*15-1:0] wl_sec; wire [WP*256-1:0] wl_d; wire [WP*8-1:0] wl_m; wire wl_conflict;

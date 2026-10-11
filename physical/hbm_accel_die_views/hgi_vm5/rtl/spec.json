@@ -1,0 +1,38 @@
+{
+ "master": "hfd_hgi_vm",
+ "hgi_unit": "argmax",
+ "note": "HGI-1 vector memory, R25GQ (variant r25gqn) with the wide lane groups ON (hgi-1010/b 2026-10-10): ot_hgi_vm_die = ot_hgi_vm_unit (262,144 FP32 words, 32 banks, per-word SECDED; NC 9 packet clients cp quant idx argmax su sfu hc dma coll; DMA wide write WP 32 WDIRECT 1; RP 64 read lanes = chains lgW / lgE; W2 96 write lanes = lgW / lgE / the hardware ROW_GATHER sink; LQ 32) + the chain heads (ot_hgi_vm_lanehead K 3) + the coll sink head (K 1). Every chain node takes f_lg<G>_<suf> and drives t_lg<G>_<suf>; the VM drives t_*dn and takes f_*up.",
+ "instances": [
+  {
+   "name": "vmd",
+   "module": "ot_hgi_vm_die",
+   "file": "rtl/hbm_accel/generic/vm/ot_hgi_vm_lanechain.sv",
+   "params": {
+    "NC": 9,
+    "LQ": 32,
+    "K": 3
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "cq": "die:f_hgi_cp[0:338]+f_hgi_quant[0:338]+f_hgi_idx[0:338]+f_hgi_argmax[0:338]+f_hgi_su[0:338]+f_hgi_sfu[0:338]+f_hgi_hc[0:338]+f_hgi_dma[0:338]+f_hgi_coll[0:338]",
+    "cr": "die:t_hgi_cp[0:274]+t_hgi_quant[0:274]+t_hgi_idx[0:274]+t_hgi_argmax[0:274]+t_hgi_su[0:274]+t_hgi_sfu[0:274]+t_hgi_hc[0:274]+t_hgi_dma[0:274]+t_hgi_coll[0:274]",
+    "status": "die:t_hgi_vmstat[0:19]",
+    "wq": "die:f_hgi_vmw_dma[0:8960]",
+    "wq_done": "die:t_hgi_vmw_dma[0:32]",
+    "lgw_r_up": "die:f_lgW_rup[0:515]",
+    "lgw_r_dn": "die:t_lgW_rdn[0:8259]",
+    "lgw_w_up": "die:f_lgW_wup[0:8963]",
+    "lgw_w_dn": "die:t_lgW_wdn[0:67]",
+    "lge_r_up": "die:f_lgE_rup[0:515]",
+    "lge_r_dn": "die:t_lgE_rdn[0:8259]",
+    "lge_w_up": "die:f_lgE_wup[0:8963]",
+    "lge_w_dn": "die:t_lgE_wdn[0:67]",
+    "coll_w_up": "die:f_hgi_vmw2_coll[0:8961]",
+    "coll_w_dn": "die:t_hgi_vmw2_coll[0:65]"
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 3
+}
