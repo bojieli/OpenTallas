@@ -607,11 +607,11 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # hfd_coll + ot_hbm_link_retry_pipeline 690 x 460 um); the llk die nets become the TU flit bus, each way
              # {valid, flit 545, credit} + a fault bit = 1,095 b (+ 2 forwarded clocks), was 976 b of gearboxed lanes
              # [link] 10-10 (a81f05080): NS = 3 retry macros 690 x 460 um + FMT1 gearbox / CRC / queues: 2 x 2 macro block
-             # (one corner = logic) 1,503.36 x 993.6 um; flit bus {v, flit 545, credit} each way = 1,094 b + session 24
+             # (one corner = logic) 1,503.36 x 1,123.2 um (idle-sweep 10-10: 993.6 was 64.6% util with 952,200 um2 of macro -> 57.0%); flit bus {v, flit 545, credit} each way = 1,094 b + session 24
              # down + {fault, locked} up = 1,120 b; PHY side
              # tx[486:0] out + rx[486:0] in = 974 b, the die's SerDes lane contract (H6 link_rtl: 8 TU ports x 547 b a
              # direction over 9 links); 1,024 b does not fit the SerDes face in the k = 16 GRT bundling
-             link_ep=dict(wh=(1503.36, 993.6), gap=43.2, flit_bits=1120, phy_bits=974),
+             link_ep=dict(wh=(1503.36, 1123.2), gap=43.2, flit_bits=1120, phy_bits=974),
              lane_bypass=dict(W=dict(client='hb_sfu_SW', after='hb_su_SW', toward='hb_hc_SW', stn='hb_stn_lgW',
                                      master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)))
 
