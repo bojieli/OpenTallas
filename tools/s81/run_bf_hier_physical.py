@@ -38,14 +38,14 @@ def command(a):
         pins = ['--pin-region', r'^c0_.*=left', '--pin-region', r'^(c1_|c_qy_bkf_in).*=right',
                 '--pin-region', r'^xb_d.*=top', '--pin-region',
                 r'^(clk|rst_n|cfg_|go|go_bf|xs_|xb_v|xb_b|xb_sv|xb_u|xb_pos|busy|fault|hph).*=bottom']
-    if a.local_clock_pin:
-        # A single root enters the middle of the long interface face. Keep
-        # data/control pin regions identical, excluding clk from their group.
-        pins = [p.replace('^(clk|rst_n_pin|', '^(rst_n_pin|').replace('^(clk|rst_n|', '^(rst_n|') for p in pins]
-        mid = a.die_h/2
-        # PPL-0093 (bf-hier-1011 2026-10-10): a 0.576 um window holds no legal pin slot on one layer; 4.32 um (several M4/M5
-        # tracks) still enters at the face midpoint
-        pins += ['--pin-region', f'^clk$=right:{mid-2.16:g}-{mid+2.16:g}']
+    if a.local_clock_pin and a.block == 'col':
+        # bf-hier-1011 2026-10-10: the right face of the column carries all ~776 abutted inputs, so a clk region there has
+        # no free slot (PPL-0093 at 0.576 AND 4.32 um windows).  The column's LONG face is the top (450 x 220): the single
+        # root enters at the top-face midpoint, which is empty.  The front (100 wide, long faces = the c0 / c1 interfaces)
+        # keeps clk in its bottom control group, as the CLOSED bfh_front280 routes did.
+        pins = [p.replace('^(clk|rst_n_pin|', '^(rst_n_pin|') for p in pins]
+        mid = a.die_w / 2
+        pins += ['--pin-region', f'^clk$=top:{mid-2.16:g}-{mid+2.16:g}']
     ss = a.ins_ss
     io = lambda v: str(round(v / 1000.0, 4))
     W, H = a.die_w, a.die_h
