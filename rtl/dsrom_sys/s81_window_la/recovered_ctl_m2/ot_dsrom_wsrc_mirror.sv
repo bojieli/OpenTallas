@@ -72,6 +72,10 @@ module ot_dsrom_wsrc_mirror #(parameter integer POS_W = 21, USER_W = 10) (
         // ---- e4: compare ----
         always @(posedge clk or negedge rst_n)
             if (!rst_n) bad[bk] <= 1'b0;
+`ifdef OT_MIRROR_MUTANT
+            else bad[bk] <= r_use3 && (!s_mv || s_ent[EW-1:USER_W] != r_row3);   // negative control: user ignored
+`else
             else bad[bk] <= r_use3 && (!s_mv || s_ent[EW-1:USER_W] != r_row3 || s_ent[USER_W-1:0] != ju3);
+`endif
     end endgenerate
 endmodule

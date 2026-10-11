@@ -84,7 +84,11 @@ module ot_dsrom_wsrc_land8 #(
             ps2[p] <= |psa[p]; ps3[p] <= ps2[p]; ps4[p] <= ps3[p]; ps5[p] <= ps4[p];
         end
     // ---- e7: registered lane-group outputs ----
+`ifdef OT_LAND8_MUTANT
+    wire [NL-1:0] bad_beat = v5 & (rng5 | pc5);         // negative control: scale-sector poison check dropped
+`else
     wire [NL-1:0] bad_beat = v5 & (rng5 | ((k16_5 & ps5) | (~k16_5 & pc5)));
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin bad <= 1'b0; nb <= 4'd0; end
         else begin bad <= |bad_beat; nb <= 4'($countones(v4)); end
