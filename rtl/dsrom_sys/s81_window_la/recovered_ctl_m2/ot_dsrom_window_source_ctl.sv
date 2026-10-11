@@ -481,9 +481,19 @@ module ot_dsrom_window_source_ctl #(
     wire [NPC-1:0] a_v; wire [NPC*WTAGW-1:0] a_tag; wire [NPC*BEATW-1:0] a_beat; wire [NPC*256-1:0] a_data;
     wire [3:0] land_bad, land_simbad; wire [15:0] land_nb; wire [HAW-1:0] la_b;
     generate if (MARGIN >= 3) begin : g_land     // four hardened 8-lane landing sub-tiles (they capture at the pin)
+`ifndef SYNTHESIS
+        initial if (NPC != 32 || HAW != 30 || WTAGW != 13 || BEATW != 4 || POS_W != 21 || USER_W != 10)
+            $fatal(1, "ot_dsrom_window_source_ctl MARGIN 3: hardened leaves are built at NPC 32 / HAW 30 / WTAGW 13 / BEATW 4 / POS_W 21 / USER_W 10");
+`endif
         genvar lt;
         for (lt = 0; lt < 4; lt = lt + 1) begin : g_t
+            // parameterless under SYNTHESIS: the hardened view is built at the defaults (NL 8, NPC 32, AW 30, TAGW 13,
+            // BEATW 4); LANE0 feeds only the simulation ownership check
+`ifdef SYNTHESIS
+            ot_dsrom_wsrc_land8 u_land (
+`else
             ot_dsrom_wsrc_land8 #(.NL(8), .LANE0(8*lt), .NPC(NPC), .AW(HAW), .TAGW(WTAGW), .BEATW(BEATW)) u_land (
+`endif
                 .clk(clk), .rst_n(rst_g[10+lt]), .b(la_b),
                 .acc_v(acc_v[8*lt +: 8]), .acc_tag(acc_tag[8*lt*WTAGW +: 8*WTAGW]),
                 .acc_beat(acc_beat[8*lt*BEATW +: 8*BEATW]), .acc_data(acc_data[8*lt*256 +: 8*256]),
@@ -726,7 +736,11 @@ module ot_dsrom_window_source_ctl #(
             end
         end
     end
+`ifdef SYNTHESIS
+    ot_dsrom_wsrc_mirror u_mirror (                  // hardened view built at the defaults (POS_W 21, USER_W 10)
+`else
     ot_dsrom_wsrc_mirror #(.POS_W(POS_W), .USER_W(USER_W)) u_mirror (
+`endif
         .clk(clk), .rst_n(rst_g[14]),
         .wr_tag(mw_tagw_q[0]), .wr_set(mw_mv1_q), .wr_clr(mw_mv0_q), .wr_slot(mw_row_q[6:0]),
         .wr_row(mw_row_q), .wr_user(mw_user_q),

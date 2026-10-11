@@ -2,7 +2,8 @@
 # el1011-ds-misc 2026-10-11: route one hardened leaf of ot_dsrom_window_source_ctl MARGIN 3 (ot_dsrom_wsrc_land8 /
 # ot_dsrom_wsrc_mirror) with the same IO / sign-off recipe as route_ctl.sh (vclk at the measured insertion, 0.2 T +
 # 150 ps, FF-true hold mins; route 770 ps, sign off 833.333), its own outline and the pinplan_m3.py edge plan; exports
-# the abstract view the hierarchical controller composes.
+# the abstract view the hierarchical controller composes.  PDN = s81_ph_views/common/pdn_view.tcl (M7 straps: the leaf exposes
+# VDD / VSS on M7 so the controller grid connects M7-M8 over it, the engram_c_h recipe).
 #   route_leaf.sh <label> [extra run_abi3_physical args]
 # env: SRC, OUT, LEAF (land8 | mirror), CORES (16), DX / DY (um), PD (place density, default 0.50), HM (0.010)
 set -u
@@ -76,7 +77,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${SRCS[@]}" \
   --hold-margin-ns ${HM:-0.010} --max-fanout 32 \
   --die-area 0 0 $DX $DY --core-area 2.16 2.16 $EX $EY --place-density ${PD:-0.50} --orfs-var ADDER_MAP_FILE= \
   --orfs-var "IO_PLACER_H=M4 M6" --orfs-var "IO_PLACER_V=M5 M7" \
-  "${PINARGS[@]}" --orfs-var TMPDIR=/work/tmp \
+  "${PINARGS[@]}" --orfs-var TMPDIR=/work/tmp --orfs-var PDN_TCL=/src/physical/s81_ph_views/common/pdn_view.tcl \
   --routing-layers M2 M7 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --purpose characterization --nickname-tag $lab "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
