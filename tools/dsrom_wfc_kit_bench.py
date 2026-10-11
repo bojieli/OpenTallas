@@ -107,7 +107,7 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'post_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 4), 'post_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 4),
     'post_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 4),
     'post_stg_neg_early': ('stg_r1', 1, ['OT_VMWFC_MUT_EARLY_START'], 'fail', 5),
-    'post_s0_neg_early': ('s0_tr_forced', 0, ['OT_VMWFC_MUT_EARLY_START'], 'fail', 5),
+    # (the s0 bench checks no VM contents at core start, so its early-START mutant cannot discriminate: stg only)
     # TOKIN: the S0 kit's link-in from the collective MTP lane (t_mrt {data, valid} / f_mrt grant)
     'tokin_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 6), 'tokin_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 6),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
@@ -187,6 +187,7 @@ def run(name, out):
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument('--out', type=Path, required=True); p.add_argument('--case'); p.add_argument('--jobs', type=int, default=8)
+    p.add_argument('--raw-negative', action='store_true', help='one expected-FAIL case: exit 1 when it fails as required')
     p.add_argument('--vmrq', type=int, default=64, help='vmx RQ in the vmrly cases (power of two; >= stationed read RTT)')
     a = p.parse_args(); a.out = a.out.resolve(); a.out.mkdir(parents=True, exist_ok=True)
     global VMRQ_K; VMRQ_K = a.vmrq
@@ -201,6 +202,11 @@ def main():
         print(f"{r['verdict']:10s} {r['case']:18s} expect={r['expect']} {str(r.get('result', r.get('log', '')))[:180]}")
     npos = sum(1 for r in recs if r['expect'] == 'pass' and r['verdict'] == 'OK')
     nneg = sum(1 for r in recs if r['expect'] == 'fail' and r['verdict'] == 'OK')
+    if a.raw_negative:
+        assert len(recs) == 1 and recs[0]['expect'] == 'fail', 'raw-negative needs one negative case'
+        if recs[0]['verdict'] == 'OK':
+            print('WFC_KIT_NEGATIVE FAIL_AS_REQUIRED ' + recs[0]['case']); return 1
+        print('WFC_KIT_NEGATIVE UNEXPECTED_PASS ' + recs[0]['case']); return 0
     print(f"WFC_KIT_GATE {'PASS' if ok else 'FAIL'} positives={npos} negatives={nneg}")
     return 0 if ok else 1
 
