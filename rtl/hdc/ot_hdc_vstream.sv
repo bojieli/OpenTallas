@@ -32,9 +32,14 @@ module ot_hdc_vstream #(
     parameter integer LOFF = 0,       // 1: the per-lane address offsets (cur + l x stride) are formed here and every lane is
                                       // instantiated with LANE 0, so all SW lanes are ONE module (one synthesis, kept
                                       // hierarchy); the same AW-bit sums, 0 cycles.  0 = the original per-lane paramods.
-    parameter integer RTREE = 0       // 1: replicated reset registers -- one for the stream control/reducer and one per lane
+    parameter integer RTREE = 0,      // 1: replicated reset registers -- one for the stream control/reducer and one per lane
                                       // (each async-assert / registered-deassert from rst_n), so no reset net spans the SW
                                       // lanes (64 x ~12k flops); every flop's reset deasserts exactly one edge later.
+    parameter integer LT = 0,         // 1: each lane is the hardened tile ot_hdc_vstream_lane_t (pin flops in/out, own reset
+                                      // register and clock tree) behind RD relay stages each way (broadcast fields: one
+                                      // kept relay copy per group of 8 lanes first); requires LOFF = 1.  Lanes see the
+                                      // memories 2 + 2*RD edges later (their ML grows by that); outputs leave 1 + RD later.
+    parameter integer RD = 2          // LT: relay stages each way between the vstream ports / control and each lane tile
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -173,6 +178,21 @@ module ot_hdc_vstream #(
     wire [SW*2-1:0]  l_red;
     wire [SW*AW-1:0] l_raddr, l_wrom_addr;
     wire [NW:0]      i_first = {1'b0, v} << LS;       // the vector's first element
+    // ---- LT: the broadcast fields' group relay (stage 1 of RD): one kept copy per group of 8 lanes ----
+    localparam integer GBW = NW + (NW + 1) + 5*AW + 6 + 8 + 9 + 64 + WR*16;
+    localparam integer NG = (SW + 7) / 8;
+    genvar g;
+    generate for (g = 0; g < NG; g = g + 1) begin : g_grp
+        if (LT != 0) begin : g_on
+            (* keep *) reg [GBW-1:0] gb;
+            (* keep *) reg [2:0]     gv;
+            reg rg;                                   // the group's reset relay
+            always @(posedge clk or negedge rst_n) if (!rst_n) rg <= 1'b0; else rg <= 1'b1;
+            always @(posedge clk or negedge rg) if (!rg) gv <= 3'd0; else gv <= {emit, accept, v_last_r};
+            always @(posedge clk) gb <= {v, fin_th, rrow, asi, bsi, csi, dsi, asrc, bsrc, csrc, mc, md, redsq,
+                                         ma, mb, dst, red, ad, cls, i_sfu, imm1, imm2, wrom_q};
+        end
+    end endgenerate
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_lane
         wire live = ({1'b0, v} << LS) + l < {1'b0, nin_r};
@@ -193,22 +213,74 @@ module ot_hdc_vstream #(
         wire [AW-1:0] lcurb = (LOFF != 0) ? curb + l * bsi : curb;
         wire [AW-1:0] lcurc = (LOFF != 0) ? curc + l * csi : curc;
         wire [AW-1:0] lcurd = (LOFF != 0) ? curd + l * dsi : curd;
-        ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE((LOFF != 0) ? LMUT * l : l), .KV_FP8(KV_FP8), .ML(ML)) u_lane (
-            .clk(clk), .rst_n(rst_l), .emit0(emit), .live(live), .i(v), .fin_th(fin_th), .i_last_r(v_last_r),
-            .cura0(lcura), .curb0(lcurb), .curc0(lcurc), .curd0(lcurd), .rrow(rrow),
-            .asi(asi), .bsi(bsi), .csi(csi), .dsi(dsi),
-            .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq),
-            .ma(ma), .mb(mb), .dst(dst), .red(red), .ad(ad), .imm1(imm1), .imm2(imm2),
-            .cls(cls), .accept(accept), .i_sfu(i_sfu),
-            .va_re(va_re[l]), .va_addr(va_addr[l*AW +: AW]), .va_q(va_q[32*l +: 32]),
-            .vb_re(vb_re[l]), .vb_addr(vb_addr[l*AW +: AW]), .vb_q(vb_q[32*l +: 32]),
-            .vc_re(vc_re[l]), .vc_addr(vc_addr[l*AW +: AW]), .vc_q(vc_q[32*l +: 32]),
-            .wrom_re(l_wrom_re[l]), .wrom_addr(l_wrom_addr[l*AW +: AW]), .wrom_q(wrom_q),
-            .crom_re(crom_re[l]), .crom_addr(crom_addr[l*AW +: AW]), .crom_q(crom_q[64*l +: 64]),
-            .vm_we(vm_we[l]), .vm_waddr(vm_waddr[l*AW +: AW]), .vm_wdata(vm_wdata[32*l +: 32]),
-            .kv_we(kv_we[l]), .kv_waddr(kv_waddr[l*AW +: AW]), .kv_wdata(kv_wdata[32*l +: 32]),
-            .l_ov(l_ov[l]), .l_out(l_out[32*l +: 32]), .l_red(l_red[2*l +: 2]), .l_redsq(l_redsq[l]),
-            .l_raddr(l_raddr[l*AW +: AW]), .l_last(l_last[l]), .retire(l_retire[l]), .l_fault(l_fault[l]));
+        if (LT == 0) begin : g_flat
+            ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE((LOFF != 0) ? LMUT * l : l), .KV_FP8(KV_FP8), .ML(ML)) u_lane (
+                .clk(clk), .rst_n(rst_l), .emit0(emit), .live(live), .i(v), .fin_th(fin_th), .i_last_r(v_last_r),
+                .cura0(lcura), .curb0(lcurb), .curc0(lcurc), .curd0(lcurd), .rrow(rrow),
+                .asi(asi), .bsi(bsi), .csi(csi), .dsi(dsi),
+                .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq),
+                .ma(ma), .mb(mb), .dst(dst), .red(red), .ad(ad), .imm1(imm1), .imm2(imm2),
+                .cls(cls), .accept(accept), .i_sfu(i_sfu),
+                .va_re(va_re[l]), .va_addr(va_addr[l*AW +: AW]), .va_q(va_q[32*l +: 32]),
+                .vb_re(vb_re[l]), .vb_addr(vb_addr[l*AW +: AW]), .vb_q(vb_q[32*l +: 32]),
+                .vc_re(vc_re[l]), .vc_addr(vc_addr[l*AW +: AW]), .vc_q(vc_q[32*l +: 32]),
+                .wrom_re(l_wrom_re[l]), .wrom_addr(l_wrom_addr[l*AW +: AW]), .wrom_q(wrom_q),
+                .crom_re(crom_re[l]), .crom_addr(crom_addr[l*AW +: AW]), .crom_q(crom_q[64*l +: 64]),
+                .vm_we(vm_we[l]), .vm_waddr(vm_waddr[l*AW +: AW]), .vm_wdata(vm_wdata[32*l +: 32]),
+                .kv_we(kv_we[l]), .kv_waddr(kv_waddr[l*AW +: AW]), .kv_wdata(kv_wdata[32*l +: 32]),
+                .l_ov(l_ov[l]), .l_out(l_out[32*l +: 32]), .l_red(l_red[2*l +: 2]), .l_redsq(l_redsq[l]),
+                .l_raddr(l_raddr[l*AW +: AW]), .l_last(l_last[l]), .retire(l_retire[l]), .l_fault(l_fault[l]));
+        end else begin : g_tile
+            //: inbound -- broadcast fields from this lane's group relay (stage 1), then RD - 1 per-lane stages; per-lane
+            //: fields (live, offsets, memory answers) RD per-lane stages; the tile adds its pin flop.
+            localparam integer PDW = 4*AW + 3*32 + 64;
+            wire [GBW-1:0] b_d = g_grp[l / 8].g_on.gb;
+            wire [2:0]     b_v = g_grp[l / 8].g_on.gv;
+            wire [GBW-1:0] b_q;
+            wire [2:0]     bv_q;
+            wire           lv_q;
+            wire [PDW-1:0] p_q;
+            ot_hdc_delay #(.W(GBW), .D(RD - 1)) u_bd (.clk(clk), .rst_n(rst_l), .d(b_d), .q(b_q));
+            ot_hdc_delay #(.W(3), .D(RD - 1), .RESET(1)) u_bv (.clk(clk), .rst_n(rst_l), .d(b_v), .q(bv_q));
+            ot_hdc_delay #(.W(1), .D(RD), .RESET(1)) u_lv (.clk(clk), .rst_n(rst_l), .d(live), .q(lv_q));
+            ot_hdc_delay #(.W(PDW), .D(RD)) u_pd (.clk(clk), .rst_n(rst_l),
+                .d({lcura, lcurb, lcurc, lcurd, va_q[32*l +: 32], vb_q[32*l +: 32], vc_q[32*l +: 32], crom_q[64*l +: 64]}),
+                .q(p_q));
+            wire [NW-1:0] t_i; wire [NW:0] t_fin; wire [AW-1:0] t_rrow, t_asi, t_bsi, t_csi, t_dsi;
+            wire t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq; wire [1:0] t_ma, t_mb, t_dst, t_red;
+            wire [2:0] t_ad, t_cls, t_isfu; wire [31:0] t_imm1, t_imm2; wire [WR*16-1:0] t_wrom;
+            assign {t_i, t_fin, t_rrow, t_asi, t_bsi, t_csi, t_dsi, t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq,
+                    t_ma, t_mb, t_dst, t_red, t_ad, t_cls, t_isfu, t_imm1, t_imm2, t_wrom} = b_q;
+            //: outbound -- the tile's out flops, then RD per-lane stages
+            localparam integer OVW = 11;
+            localparam integer ODW = 7*AW + 2*32 + 32 + 2 + 1 + AW;
+            wire [OVW-1:0] o_v, o_vq;
+            wire [ODW-1:0] o_d, o_dq;
+            ot_hdc_vstream_lane_t #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD)) u_tile (
+                .clk(clk), .rst_n(rst_l), .emit0(bv_q[2]), .live(lv_q), .i(t_i), .fin_th(t_fin), .i_last_r(bv_q[0]),
+                .cura0(p_q[PDW-1 -: AW]), .curb0(p_q[PDW-1-AW -: AW]), .curc0(p_q[PDW-1-2*AW -: AW]),
+                .curd0(p_q[PDW-1-3*AW -: AW]), .rrow(t_rrow),
+                .asi(t_asi), .bsi(t_bsi), .csi(t_csi), .dsi(t_dsi),
+                .asrc(t_asrc), .bsrc(t_bsrc), .csrc(t_csrc), .mc(t_mc), .md(t_md), .redsq(t_redsq),
+                .ma(t_ma), .mb(t_mb), .dst(t_dst), .red(t_red), .ad(t_ad), .imm1(t_imm1), .imm2(t_imm2),
+                .cls(t_cls), .accept(bv_q[1]), .i_sfu(t_isfu),
+                .va_re(o_v[10]), .va_addr(o_d[ODW-1 -: AW]), .va_q(p_q[64+64 +: 32]),
+                .vb_re(o_v[9]), .vb_addr(o_d[ODW-1-AW -: AW]), .vb_q(p_q[64+32 +: 32]),
+                .vc_re(o_v[8]), .vc_addr(o_d[ODW-1-2*AW -: AW]), .vc_q(p_q[64 +: 32]),
+                .wrom_re(o_v[7]), .wrom_addr(o_d[ODW-1-3*AW -: AW]), .wrom_q(t_wrom),
+                .crom_re(o_v[6]), .crom_addr(o_d[ODW-1-4*AW -: AW]), .crom_q(p_q[0 +: 64]),
+                .vm_we(o_v[5]), .vm_waddr(o_d[ODW-1-5*AW -: AW]), .vm_wdata(o_d[ODW-1-6*AW -: 32]),
+                .kv_we(o_v[4]), .kv_waddr(o_d[ODW-1-6*AW-32 -: AW]), .kv_wdata(o_d[ODW-1-7*AW-32 -: 32]),
+                .l_ov(o_v[3]), .l_out(o_d[AW+3 +: 32]), .l_red(o_d[AW+1 +: 2]), .l_redsq(o_d[AW]),
+                .l_raddr(o_d[0 +: AW]), .l_last(o_v[2]), .retire(o_v[1]), .l_fault(o_v[0]));
+            ot_hdc_delay #(.W(OVW), .D(RD), .RESET(1)) u_ov (.clk(clk), .rst_n(rst_l), .d(o_v), .q(o_vq));
+            ot_hdc_delay #(.W(ODW), .D(RD)) u_od (.clk(clk), .rst_n(rst_l), .d(o_d), .q(o_dq));
+            assign {va_re[l], vb_re[l], vc_re[l], l_wrom_re[l], crom_re[l], vm_we[l], kv_we[l], l_ov[l], l_last[l],
+                    l_retire[l], l_fault[l]} = o_vq;
+            assign {va_addr[l*AW +: AW], vb_addr[l*AW +: AW], vc_addr[l*AW +: AW], l_wrom_addr[l*AW +: AW],
+                    crom_addr[l*AW +: AW], vm_waddr[l*AW +: AW], vm_wdata[32*l +: 32], kv_waddr[l*AW +: AW],
+                    kv_wdata[32*l +: 32], l_out[32*l +: 32], l_red[2*l +: 2], l_redsq[l], l_raddr[l*AW +: AW]} = o_dq;
+        end
     end endgenerate
     //: the embedding row: SW consecutive BF16 elements in one weight-ROM word
     //: (the program aligns the row), read at lane 0's address
