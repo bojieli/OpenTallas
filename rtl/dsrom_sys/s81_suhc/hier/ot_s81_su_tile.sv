@@ -9,7 +9,8 @@
 //   TK 4 SM  softmax SE / SO, SM_H / NT heads (every reduction is within a head)             NT tiles
 // The cross-lane reductions (RMSNorm sum of squares, softmax max / sum) stay inside one unit in the golden's order;
 // lane groups are split only where the golden has no cross-lane step, so every value is bit-identical.
-// Boundaries (every one registered; the spines' relay registers are slab-level stations, one at each tile stop):
+// Boundaries (every one registered: pin flops on the down-spine tap, registered write slots / status out; the
+// spines' relay registers are slab-level stations, one at each tile stop):
 //   down spine tap (the relay register at this stop):
 //     dn_st announces a job {kind, gain set, FP4, job id}; parameter rows (ph 0) of its own jobs land in prow; operand
 //     rows (ph 1) of its own lane group land in the local beat buffer; a full beat strobes the unit;
@@ -86,6 +87,21 @@ module ot_s81_su_tile #(
     always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
     wire rst_n = rr1;
 
+    // ------------------------------------------------------------------ pin flops (the down-spine tap)
+    reg                dq_st, dq_fp4, dq_ph;
+    reg  [3:0]         dq_kind;
+    reg  [1:0]         dq_gsel;
+    reg  [7:0]         dq_jid;
+    reg  [S_RD-1:0]    dq_v;
+    reg  [15:0]        dq_idx;
+    reg  [S_RD*512-1:0] dq_d;
+    always @(posedge clk) begin
+        dq_kind <= dn_kind_i; dq_gsel <= dn_gsel_i; dq_fp4 <= dn_fp4_i; dq_jid <= dn_jid_i; dq_ph <= dn_ph_i;
+        dq_idx <= dn_idx_i; dq_d <= dn_d_i;
+    end
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; end
+                                           else begin dq_st <= dn_st_i; dq_v <= dn_v_i; end
+
     function automatic mine_k(input [3:0] k);
         case (TK)
             0: mine_k = (k == K_QN || k == K_GQ);
@@ -116,14 +132,14 @@ module ot_s81_su_tile #(
     integer s, q, g;
     always @(posedge clk) begin                       // parameter rows / beat data: no reset
         for (s = 0; s < S_RD; s = s + 1)
-            if (dn_v_i[s] && !dn_ph_i && mine && dn_idx_i + s < MAXP) prow[dn_idx_i + s] <= dn_d_i[512 * s +: 512];
+            if (dq_v[s] && !dq_ph && mine && dq_idx + s < MAXP) prow[dq_idx + s] <= dq_d[512 * s +: 512];
         begin : asm
             reg [15:0] r;
             for (s = 0; s < S_RD; s = s + 1)
-                if (dn_v_i[s] && dn_ph_i && mine) begin
-                    r = (dn_idx_i + s) & (RPB - 1);
-                    if (r >= A0 && r < A0 + L) bb[512 * (r - A0) +: 512] = dn_d_i[512 * s +: 512];
-                    else if (TK == 3 && r >= B0 && r < B0 + L) bb[512 * (L + r - B0) +: 512] = dn_d_i[512 * s +: 512];
+                if (dq_v[s] && dq_ph && mine) begin
+                    r = (dq_idx + s) & (RPB - 1);
+                    if (r >= A0 && r < A0 + L) bb[512 * (r - A0) +: 512] = dq_d[512 * s +: 512];
+                    else if (TK == 3 && r >= B0 && r < B0 + L) bb[512 * (L + r - B0) +: 512] = dq_d[512 * s +: 512];
                 end
         end
         if (cmp) bq <= bb;                            // the assembled beat (same block: bb is blocking)
@@ -134,7 +150,7 @@ module ot_s81_su_tile #(
         integer i;
         cmp = 1'b0;
         for (i = 0; i < S_RD; i = i + 1)
-            if (dn_v_i[i] && dn_ph_i && mine && (((dn_idx_i + i) & (RPB - 1)) == ((TK == 3) ? B0 + L - 1 : A0 + L - 1)))
+            if (dq_v[i] && dq_ph && mine && (((dq_idx + i) & (RPB - 1)) == ((TK == 3) ? B0 + L - 1 : A0 + L - 1)))
                 cmp = 1'b1;
     end
     always @(posedge clk or negedge rst_n) begin
@@ -142,14 +158,14 @@ module ot_s81_su_tile #(
             jkind <= 0; gsel <= 0; fp4 <= 0; mine <= 0; jid <= 0; pc <= 0; pdone <= 0; beat_v <= 0; bc <= 0; bi <= 0;
         end else begin
             pdone <= 1'b0; beat_v <= 1'b0;
-            if (dn_st_i) begin
-                jkind <= dn_kind_i; gsel <= dn_gsel_i; fp4 <= dn_fp4_i; jid <= dn_jid_i; mine <= mine_k(dn_kind_i);
+            if (dq_st) begin
+                jkind <= dq_kind; gsel <= dq_gsel; fp4 <= dq_fp4; jid <= dq_jid; mine <= mine_k(dq_kind);
                 pc <= 0; bc <= 0;
             end else begin
                 begin : pcnt
                     reg [3:0] c;
                     c = pc;
-                    for (s = 0; s < S_RD; s = s + 1) if (dn_v_i[s] && !dn_ph_i && mine) c = c + 1;
+                    for (s = 0; s < S_RD; s = s + 1) if (dq_v[s] && !dq_ph && mine) c = c + 1;
                     pc <= c;
                     if (mine && c == nparams(jkind) && pc != c) pdone <= 1'b1;
                 end
@@ -311,7 +327,7 @@ module ot_s81_su_tile #(
             if (!rst_n) begin sm_rst_n <= 1'b1; dn <= 1'b0; end
             else begin
                 sm_rst_n <= !(MUT == 3 && pdone && jkind == K_SO);
-                if (dn_st_i) dn <= 1'b0; else if (sm_denv) dn <= 1'b1;
+                if (dq_st) dn <= 1'b0; else if (sm_denv) dn <= 1'b1;
             end
         end
         ot_dsrom_su_softmax #(.H(HPT), .LPH(SM_LPH), .NVMAX(SM_NVMAX), .DIN(1), .DOUT(1), .RWU(1), .RWD(1), .LM(LM),
@@ -364,7 +380,7 @@ module ot_s81_su_tile #(
                 hn <= hrem;
                 if (ev) begin if (tn != 0) ovf <= 1'b1; else tn <= ev_n; end
             end
-            if (dn_st_i) oc <= 0; else if (ev) oc <= oc + 1;
+            if (dq_st) oc <= 0; else if (ev) oc <= oc + 1;
         end
     end
     // QN events count rows (QN_N / 64 + 1 a vector) in the result row offset
