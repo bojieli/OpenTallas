@@ -3,8 +3,8 @@
 // NC 8 WP 32 WDIRECT 1 (die instance hfd_hgi_vm4).  The tiled hub sees cq 2 and wq 3 cycles late, so the reference is fed
 // cq delayed 2 / wq delayed 3; then every DUT output is the reference's shifted: cr +7 (valid bit always, payload when
 // valid), status +8 (all 19 bits), wq_done +4.  Random clients (the outstanding count follows the DUT's responses; up to 6
-// in flight on client 5 in a window, so overflow / proto_fault is hit), random wide lanes incl. misrouted lanes,
-// out-of-range packet addresses.  MUTS != 0 builds the DUT with that mutant: the lockstep must FAIL.
+// in flight on client 5 in a window, so overflow / proto_fault is hit), random wide lanes incl. misrouted lanes.
+// (No out-of-range packet addresses: the reference predates the range check.)  MUTS != 0 builds the DUT with that mutant: the lockstep must FAIL.
 module tb_hgi_vm_tunit_lock;
  parameter integer NC = 8, WP = 32, MUTS = 0, NCYC = 6000;
  localparam integer KQ = 2, KW = 3, ER = 7, ES = 8, EW = 4, H = 16;
@@ -48,7 +48,6 @@ module tb_hgi_vm_tunit_lock;
      q = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed),
           $random(seed), $random(seed), $random(seed)};
      q[335:304] = {12'd0, sec, 5'd0};
-     if (cyc % 1499 == 0) q[335:324] = 12'h001;                           // occasional out-of-range address
      q[47:16] = ($random(seed) & 1) ? 32'hFFFFFFFF : {$random(seed)} & 32'hF0F0FF0F;
      if (q[336]) nwr = nwr + 1; else nrd = nrd + 1;
      cq[c*338 +: 338] = {1'b1, q}; out[c] = out[c] + 1; nreq = nreq + 1;
