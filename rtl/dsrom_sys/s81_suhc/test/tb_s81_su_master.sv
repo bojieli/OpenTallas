@@ -31,12 +31,21 @@ module tb_s81_su_master;
     wire [S_WR*512-1:0] wq_d;
     wire flt, online;
     wire [3:0] fcode;
+`ifdef SU_HIER
+    dsfd_sp_su_h #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX),
+        .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT)) dut (
+        .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
+        .c_done_tag(c_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row),
+        .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt),
+        .online(online), .fcode(fcode));
+`else
     dsfd_sp_su #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX),
         .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT)) dut (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt),
         .online(online), .fcode(fcode));
+`endif
 
     reg [511:0]     vm [0:16383];
     reg [83:0]      prog [0:MAXJ-1];
@@ -49,12 +58,14 @@ module tb_s81_su_master;
     integer n_qn, n_qnq, n_kv, n_kvq, n_qb, n_qbo, n_sw, n_swo, n_ss, n_se, n_sp, n_so, n_beat;
     initial begin n_qn = 0; n_qnq = 0; n_kv = 0; n_kvq = 0; n_qb = 0; n_qbo = 0; n_sw = 0; n_swo = 0; n_ss = 0; n_se = 0;
                   n_sp = 0; n_so = 0; n_beat = 0; end
+`ifndef SU_HIER
     always @(posedge sk) begin
         n_qn += dut.u_core.qn_in; n_qnq += dut.u_core.qn_qv; n_kv += dut.u_core.kv_in; n_kvq += dut.u_core.kv_qv;
         n_qb += dut.u_core.qb_v; n_qbo += dut.u_core.qb_vo; n_sw += dut.u_core.sw_v; n_swo += dut.u_core.sw_vo;
         n_ss += dut.u_core.sm_sv; n_se += dut.u_core.sm_ev; n_sp += dut.u_core.sm_pv; n_so += dut.u_core.sm_ov;
         n_beat += dut.u_core.beat_v;
     end
+`endif
     integer nj, ne, ny, i, s, errs, credits, ip, ndone, yb, bad_tag, scyc, t;
     reg [MAXJ-1:0] pend;
     integer jstart [0:MAXJ-1];
@@ -96,9 +107,12 @@ module tb_s81_su_master;
     always @(posedge sk) if (srs) begin
         scyc = scyc + 1;
         if (dut.u_core.e_cmd_v && dut.u_core.e_cmd_ready) jstart[dut.u_core.e_cmd_d[6:0]] = scyc;
-        // writes take effect at issue (before reads of the same cycle: the core never mixes them in one job)
+        // writes take effect at issue (before reads of the same cycle: the core never mixes them in one job), under
+        // the slot's 32-bit word mask
         for (s = 0; s < S_WR; s = s + 1)
-            if (wq_v[s]) vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512];
+            if (wq_v[s])
+                for (i = 0; i < 16; i = i + 1)
+                    if (wq_mask[16 * s + i]) vm[wq_row[14 * s +: 14]][32 * i +: 32] = wq_d[512 * s + 32 * i +: 32];
         // done contract: the job's rows are all in the VM, with their values, when the core pulses done
         if (dut.u_core.e_done_v)
             for (k = 0; k < jexp[dut.u_core.e_done_tag[6:0]][31:0]; k = k + 1)
