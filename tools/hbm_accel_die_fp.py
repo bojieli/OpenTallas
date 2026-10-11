@@ -578,7 +578,11 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              attn_rows=2, attn_cols=4, attn_col_gap=259.2, attn_row_gap=345.6, hub_col_gap=345.6,
              # hbmdie-1011 (main 10-11: taller attention halves, not M8): lo 1,024.92 / hi 867.24 (tile 1,892.16, +25.9 %)
              # grown into the empty band between the S and N row pairs; die height / hub blocks unchanged
-             attn_tall='physical/hbm_attn_tile_r/half_tall', attn_tall_corridor=345.6,
+             attn_tall='physical/hbm_attn_tile_r/half_v10', attn_tall_corridor=108.0,   # attn v10 (9170f7d5e): lo 1,263.6 / hi 689.04
+             # (tile 1,952.64): the 4 rows take 1,797 of the 1,918 um band; the ~121 um central corridor holds only the E host
+             # wire chain (stations <= 67 um); die routes cross the tiles on M8 / M9. face_coll 1,560 (el1011-hbm-coll: 9 tiles +
+             # core SRAMs, hierarchical hfd_coll): the spine stack re-gaps evenly (cross gap loader -> coll 302.4 kept)
+             coll_h=1560.0,
              idx_cols=((0, 1, 2), (3, 4, 5)), idx_col_gap=172.8, idx_gap=43.2, hc_gap=172.8, sfu_gap=216.0,
              idx_score_dx=432.0, spine_over=864.0, spch_q=1546.56,
              # hgi-1010/b lane groups (ot_hgi_vm_lanearb ace618cd8): VM | CP | quant abut, the W group leaves the VM's W face
@@ -750,6 +754,8 @@ def build_r25gq(variant):
                  quant=['hb_quant'], hgi_vm=['hb_hgi_vm'], cmdproc=['hb_cmdproc'], barrier=['hb_barrier'], coll=['hb_coll'],
                  vm8=['hb_vm_sw', 'hb_vm_nw'], su_red=['hb_su_red'], su_full=['hb_su_full'], idx_sel=['idx_selector'])
     hgt = {k: (B[v[0]].h if k != 'vm8' else B['hb_vm_sw'].h + B['hb_vm_nw'].h) for k, v in stack.items()}
+    if V.get('coll_h'):          # hbmdie-1011: hierarchical hfd_coll slot height (el1011-hbm-coll), the stack re-gaps evenly
+        hgt['coll'] = up(V['coll_h'], GY)
     order = V['spine_order']
     pairs = list(zip(order, order[1:]))
     gap = {p: 43.2 for p in pairs if p in V['spine_abut']}
@@ -772,7 +778,7 @@ def build_r25gq(variant):
         else:
             for nm in stack[k]:
                 s = B[nm]
-                add(nm, nm, s.x, yy)
+                add(nm, nm, s.x, yy, **({'h': hgt['coll']} if nm == 'hb_coll' and V.get('coll_h') else {}))
                 rmap[nm] = nm
         yy = up(yy + hgt[k] + (gap[(k, order[order.index(k) + 1])] if k != order[-1] else 0.0), GY)
     assert yy <= y_hi + GY, ('spine overflows', yy, y_hi)
