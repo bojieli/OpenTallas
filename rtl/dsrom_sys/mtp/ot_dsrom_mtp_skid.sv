@@ -2,7 +2,10 @@
 // ot_dsrom_mtp_skid: 2-entry FIFO used on the valid / ready side of the MTP blocks (stream mtp-rom, 2026-10-08).
 // in_ready and out_valid come straight from the count flops (no input-to-output combinational path); full rate.
 // OREG 1: out_data also straight from a flop (an output register + one skid register; no read mux at the pins).
-module ot_dsrom_mtp_skid #(parameter integer W = 32, parameter integer OREG = 0) (
+// SPUSH 1 (mtp-wfc 2026-10-11): the skid register loads on every push.  The OREG enable `push && !(take && !s_v)` put
+// out_ready (a kit pin on dsfd_wfc_crp: f_klir) on the enable of all W skid flops (pin -> 1,026-flop fan-out, TT -5.6);
+// a load while the data goes straight to the output register is harmless (s_v stays 0), so s_d's enable is push alone.
+module ot_dsrom_mtp_skid #(parameter integer W = 32, parameter integer OREG = 0, parameter bit SPUSH = 0) (
     input  wire         clk,
     input  wire         rst_n,            // synchronous, active low
     input  wire         in_valid,
@@ -26,7 +29,7 @@ generate if (OREG) begin : g_oreg
             else o_v <= push;
         end else if (push) s_v <= 1'b1;
         if (take) o_d <= s_v ? s_d : in_data;
-        if (push && !(take && !s_v)) s_d <= in_data;
+        if (SPUSH ? push : (push && !(take && !s_v))) s_d <= in_data;
     end
 end else begin : g_mux
     reg [W-1:0] m [0:1];

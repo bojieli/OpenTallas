@@ -85,13 +85,24 @@ module dsfd_wfc_crp #(parameter integer FLIT = 512, parameter integer VWA = 15, 
         .l_valid(f_liv[0]), .l_data(f_lid), .l_credit(t_lic[0]), .o_valid(li_v), .o_ready(li_r),
         .o_data(li_d), .fault(t_ft[0]));
     generate if (OSKID) begin : g_oskid
-        ot_dsrom_mtp_skid #(.W(FLIT + 1), .OREG(1)) u_os (.clk(ck[0]), .rst_n(rn[0]), .in_valid(li_v), .in_ready(li_r),
+        ot_dsrom_mtp_skid #(.W(FLIT + 1), .OREG(1), .SPUSH(1)) u_os (.clk(ck[0]), .rst_n(rn[0]), .in_valid(li_v), .in_ready(li_r),
             .in_data(li_d), .out_valid(t_kliv[0]), .out_ready(f_klir[0]), .out_data(t_klid));
     end else begin : g_direct
         assign t_kliv[0] = li_v; assign li_r = f_klir[0]; assign t_klid = li_d;
     end endgenerate
+    // OSKID (mtp-wfc 2026-10-11): f_klod (kit face, N) -> u_lo.l_data -> t_lod (link face, W) was ONE register between two
+    // faces ~245 um apart: the pin-flop hook anchored it at the input pin, leaving 160 um of output wire (TT -58.6, 133
+    // t_lod ports), and t_klor was cnt != 0 straight to the pin (-51.5).  A registered 2-entry skid takes the kit face
+    // (t_klor from a flop); the face-to-face distance is now a reg -> reg hop.  +1 cycle on link out.
+    wire ko_v, ko_r; wire [FLIT:0] ko_d;
+    generate if (OSKID) begin : g_kskid
+        ot_dsrom_mtp_skid #(.W(FLIT + 1), .OREG(1), .SPUSH(1)) u_ks (.clk(ck[0]), .rst_n(rn[1]), .in_valid(f_klov[0]),
+            .in_ready(t_klor[0]), .in_data(f_klod), .out_valid(ko_v), .out_ready(ko_r), .out_data(ko_d));
+    end else begin : g_kdirect
+        assign ko_v = f_klov[0]; assign t_klor[0] = ko_r; assign ko_d = f_klod;
+    end endgenerate
     ot_link_credit_tx #(.W(FLIT + 1), .CRED(LOUT_C), .DFREE(1)) u_lo (.clk(ck[0]), .rst_n(rn[1]),
-        .i_valid(f_klov[0]), .i_ready(t_klor[0]), .i_data(f_klod), .l_valid(t_lov[0]), .l_data(t_lod), .l_credit(f_loc[0]));
+        .i_valid(ko_v), .i_ready(ko_r), .i_data(ko_d), .l_valid(t_lov[0]), .l_data(t_lod), .l_credit(f_loc[0]));
     // ---- serial (ckv) half -----------------------------------------------------------------------------------------
     (* keep *) reg swa_q;
     always @(posedge ckv[0] or negedge sn[0]) if (!sn[0]) swa_q <= 1'b0; else swa_q <= f_swa[0];
