@@ -13,7 +13,8 @@
 // Nothing else derived here leaves the slab, so every emitted value is the engine's full-row / full-T result = the
 // golden's.
 //
-// q frames accepted here (mask bit 0; any other type or mask is skipped by length):
+// q frames accepted here (mask bit 0; the slab's other types 3 OWN_ROW, 4 IDX_Q, 12 CFG and other masks are skipped by
+// length; an unknown type is a fault):
 //   2 WIN_LOAD  job start, len 0. spec [29:0] region base sector (this stack's selected-CKV region), [59:30] its
 //               sector count, [80:60] published source count, [88:81] window count (<= 128), [98:89] n_sel (<= 512),
 //               [119:99] window first position.  Starts the row assembler, the owned-row fetch, the merger, the
@@ -244,9 +245,20 @@ module ot_s81_svcq_attn #(
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
     reg sc_cr, pv_cr;
     generate if (ENGINE != 0) begin : g_eng
+        // Engine configuration: the closing 1.2 GHz configuration by default.  SVCQ_ENG_FG3 selects the as-built
+        // latencies (FPL 3 / FML 3, tile _l: results/rtl/hbm_accel_fmax_inventory_20261004/attn/full_geometry_fpl3_ilv1),
+        // the only full-geometry (D512) configuration whose Verilator model fits a 50 GB build; values are identical
+        // (latency parameters only: the closing configuration is lockstep-verified against it by the attention
+        // owners' gates, gates/verify6_final.json + equiv_*.json), cycles differ.
+`ifdef SVCQ_ENG_FG3
+        localparam integer E_FPL = 3, E_FML = 3, E_TS = 0, E_NAR = 0, E_MF = 0, E_TRX = 0, E_F12 = 0, E_FX = 0;
+`else
+        localparam integer E_FPL = 4, E_FML = 6, E_TS = 1, E_NAR = 1, E_MF = 1, E_TRX = 1, E_F12 = 1, E_FX = 5;
+`endif
         ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(640), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
-                             .ILV(1), .REPL(2), .NSTAGE(2), .FPL(4), .FML(6), .NBANKP(0), .TILE_S(1), .NARROW(1),
-                             .MFAN(1), .TRX(1), .F12(1), .FPLX(5), .SC_CRED(SC_CRED), .PV_CRED(PV_CRED)) u_eng (
+                             .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
+                             .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
+                             .SC_CRED(SC_CRED), .PV_CRED(PV_CRED)) u_eng (
             .clk(clk), .rst_n(rst_n), .job_v(ej_pend), .job_t({1'b0, tjob[14:0]}), .job_ready(ej_ready),
             .q_v(eq_v), .q_w(qmem[q_rd[3:0]]), .q_ready(eq_ready),
             .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
@@ -319,9 +331,9 @@ module ot_s81_svcq_attn #(
             // faults
             if (start && job_active) fc[0] <= 1'b1;
             if (start && (h_len != 0 || q_d[88:81] > 8'd128 || q_d[98:89] > 10'd512)) fc[1] <= 1'b1;
-            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd5, 4'd6, 4'd7})) fc[2] <= 1'b1;
+            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd4, 4'd5, 4'd6, 4'd7, 4'd12})) fc[2] <= 1'b1;
             if (hdr_mine && h_type == 4'd1 && h_len != 12'd128) fc[2] <= 1'b1;
-            if (hdr_mine && h_type != 4'd2 && !job_active) fc[3] <= 1'b1;
+            if (hdr_mine && (h_type inside {4'd1, 4'd5, 4'd6, 4'd7}) && !job_active) fc[3] <= 1'b1;
             if (pay_mine && f_type == 4'd5 && pcnt >= (PFW+1)'(PFIFO)) fc[4] <= 1'b1;
             if (hdr_mine && h_type == 4'd1 && (q_d[448] != q_have[3] || q_have[2:0] != 3'd0)) fc[5] <= 1'b1;
             if (sc_v && sv_n >= 4'(SC_CRED)) fc[6] <= 1'b1;
