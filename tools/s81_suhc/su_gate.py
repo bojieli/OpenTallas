@@ -53,7 +53,7 @@ RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_
        "rtl/hdc/v41/ot_hdc_actquant.sv", "rtl/hdc/v41x/ot_dsrom_aq12.sv", "rtl/hdc/v41x/ot_dsrom_divc.sv"]
 TB = "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_master.sv"
 # the hierarchical slab (s81-suhc-hier-1011): control tile + engine tiles on registered chains, same pins
-HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_tile.sv",
+HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_root.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_tile.sv",
         "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 

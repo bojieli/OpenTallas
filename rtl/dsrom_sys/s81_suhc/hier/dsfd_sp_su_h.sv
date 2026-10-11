@@ -4,7 +4,7 @@
 // and adapter as dsfd_sp_su (contract su_hc v2: c_cmd / c_done / inp / VM rd S_RD rows / VM wr S_WR rows / flt /
 // online / fcode); inside, one control tile and NT hardened engine tiles on two registered chains:
 //
-//   pins -> pin flops -> ot_s81_su_hctl (adapter-side job control, VM read issue, VM write port)
+//   pins -> root tile ot_s81_su_root (adapter, pin flops, ot_s81_su_hctl job control / VM read issue / VM write port)
 //       down spine (VM response rows + job announce, S_RD x 512 b): relay stations at the stops QN, KV, QB 0..NQB-1,
 //         SW 0..NSW-1, SM 0..NSM-1 (one register a stop); each tile taps its stop
 //       up spine (S_WR write row slots): a relay station a stop merges that tile's registered slots into its window
@@ -44,24 +44,6 @@ module dsfd_sp_su_h #(
     output wire [3:0]          fcode
 );
     localparam integer NTL = 2 + NQB + NSW + NSM;
-    wire e_v, e_r, d_v, a_flt, c_flt;
-    wire [83:0] e_d;
-    wire [7:0]  d_t;
-    reg inp_q;
-    reg s0, s1;                                        // slab reset relay (pin)
-    always @(posedge sk or negedge srs) if (!srs) begin s0 <= 1'b0; s1 <= 1'b0; end else begin s0 <= 1'b1; s1 <= s0; end
-    always @(posedge sk or negedge srs) if (!srs) inp_q <= 1'b0; else inp_q <= inp;
-    ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
-        .c_clk(cck), .c_rst_n(crs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v), .c_done_tag(c_done_tag),
-        .fault(a_flt), .online(online),
-        .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),
-        .e_done_v(d_v), .e_done_tag(d_t));
-    // pin flops: VM responses
-    reg  [S_RD-1:0]     rs_v_q;
-    reg  [S_RD*512-1:0] rs_d_q;
-    always @(posedge sk) rs_d_q <= rs_d;
-    always @(posedge sk or negedge s1) if (!s1) rs_v_q <= 0; else rs_v_q <= rs_v;
-
     // spines: stop t = tile t.  Down: dn[t] is the relay register at stop t (dn[0] the control tile's output
     // register); the tile taps it and the next stop re-registers it.  Up: up[t] is the relay register at stop t,
     // = up[t + 1] with tile t's registered write slots merged into its window; up[0] feeds the control tile.
@@ -84,21 +66,16 @@ module dsfd_sp_su_h #(
     assign uv[NTL] = 0; assign ua[NTL] = 0; assign um[NTL] = 0; assign ud[NTL] = 0;
     assign ufu[NTL] = 1'b0; assign ufo[NTL] = 1'b0; assign ual[NTL] = 1'b1; assign ude[NTL] = 1'b1;
     assign urd[NTL] = 1'b0; assign urj[NTL] = 8'd0;
-    assign rst[0] = s1;
-
-    wire [31:0] jobs;
-    wire        bsy;
-    ot_s81_su_hctl #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
-                     .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(NQB), .MUT(MUT)) u_core (
-        .clk(sk), .rst_n(s1), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_done_v(d_v), .e_done_tag(d_t),
-        .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v_q), .rs_d(rs_d_q),
-        .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .busy(bsy), .fault(c_flt), .fault_code(fcode),
-        .st_jobs(jobs),
+    ot_s81_su_root #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
+                     .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(NQB), .MUT(MUT), .AMUT(AMUT)) u_root (
+        .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
+        .c_done_tag(c_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),
+        .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt), .online(online), .fcode(fcode),
+        .rst_o(rst[0]),
         .dn_st(dst[0]), .dn_kind(dkd[0]), .dn_gsel(dgs[0]), .dn_fp4(df4[0]), .dn_jid(dji[0]), .dn_v(dv[0]),
         .dn_ph(dph[0]), .dn_idx(dix[0]), .dn_d(dd[0]),
         .up_v(uv[0]), .up_a(ua[0]), .up_m(um[0]), .up_d(ud[0]), .up_fu(ufu[0]), .up_fo(ufo[0]), .up_alive(ual[0]),
         .up_den(ude[0]), .up_rdy(urd[0]), .up_rjid(urj[0]));
-    assign flt = a_flt | c_flt;
 
     genvar t;
     generate for (t = 0; t < NTL; t = t + 1) begin : g_t
