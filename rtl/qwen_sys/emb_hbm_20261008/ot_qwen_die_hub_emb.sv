@@ -35,7 +35,9 @@ module ot_qwen_die_hub_emb #(
     parameter integer ARC = 4,
     parameter integer AD  = 8,
     parameter integer RQD = 32,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // RXS (fe-push-qwen-1010): the link receive buffers (ot_qwen_die_cdc_ch IBUF = CR = 128 x 523) as SRAM macros
+    parameter integer RXS = 0
 ) (
     input  wire              ck,
     input  wire              rst_n,
@@ -78,7 +80,7 @@ module ot_qwen_die_hub_emb #(
     reg  [3:0]         rcnt [0:NL-1];
     generate for (k = 0; k < NL; k = k + 1) begin : g_rx
         wire [LW-1:0] w = l_i[k*LW +: LW];
-        ot_qwen_die_cdc_ch #(.W(523), .IBUF(CR), .OCRED(OD), .AD(AD)) u_rx (
+        ot_qwen_die_cdc_ch #(.W(523), .IBUF(CR), .OCRED(OD), .AD(AD), .RXS(RXS)) u_rx (
             .wclk(fck[k]), .wrst_n(rst_n), .i_v(w[0]), .i_d({w[15:5], w[LW-1:16]}), .i_cr(rcr[k]), .w_fault(rwf[k]),
             .rclk(ck), .rrst_n(rst_n), .o_v(rv[k]), .o_d(rd[k*523 +: 523]), .o_cr(rtake[k]), .r_fault(rrf[k]));
         reg [3:0] cb, cg;
@@ -226,7 +228,7 @@ endmodule
 // and the embedding status.
 module ot_qwen_die_hub_emb_top #(
     parameter integer CR = 128, parameter integer OD = 8, parameter integer XS = 8, parameter integer ARC = 4,
-    parameter integer RQD = 32, parameter integer MUT = 0
+    parameter integer RQD = 32, parameter integer MUT = 0, parameter integer RXS = 0
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -243,7 +245,7 @@ module ot_qwen_die_hub_emb_top #(
     output wire         eq_v, output wire [511:0] eq_d,
     output wire         emb_ready, output wire emb_fault, output wire [7:0] emb_fault_code
 );
-    ot_qwen_die_hub_emb #(.NL(4), .LW(528), .CR(CR), .OD(OD), .XS(XS), .ARC(ARC), .RQD(RQD), .MUT(MUT)) u (.ck(ck),
+    ot_qwen_die_hub_emb #(.NL(4), .LW(528), .CR(CR), .OD(OD), .XS(XS), .ARC(ARC), .RQD(RQD), .MUT(MUT), .RXS(RXS)) u (.ck(ck),
         .rst_n(rst_n), .fck({fck3, fck2, fck1, fck0}), .l_i({l3_i, l2_i, l1_i, l0_i}), .l_o({l3_o, l2_o, l1_o, l0_o}),
         .x3_v(x3_v), .x3_d(x3_d), .x3_tag(x3_tag), .x3_cr(x3_cr), .ar_v(ar_v), .ar_d(ar_d), .ar_cr(ar_cr),
         .fault(fault), .fault_cause(fault_cause), .ea_v(ea_v), .ea_kind(ea_kind), .ea_addr(ea_addr), .ea_cr(ea_cr),

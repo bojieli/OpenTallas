@@ -90,7 +90,13 @@ module ot_async_fifo #(
             if (wr_fire)
                 mem[wr_bin[ADDR_W-1:0]] <= wr_data;
             wr_bin <= wr_bin_next;
+`ifdef OT_ASYNC_FIFO_MUT_PTR
+            // bench negative control (fe-push-qwen-1010): the published write pointer runs one word ahead of the data,
+            // so the read side pops a slot that has not been written
+            wr_gray <= ((wr_bin_next + (wr_bin_next != 0)) >> 1) ^ (wr_bin_next + (wr_bin_next != 0));
+`else
             wr_gray <= wr_gray_next;
+`endif
             wr_full <= wr_full_next;
         end
     end

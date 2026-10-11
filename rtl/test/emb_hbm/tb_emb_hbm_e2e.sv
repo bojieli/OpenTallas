@@ -29,6 +29,7 @@ module tb_emb_hbm_e2e
     parameter integer TWIN_ROFF = -149;
     parameter integer S_STARVE = 8;
     parameter integer CR = 128;
+    parameter integer RXS = 0;      // hub link receive buffers as SRAM (ot_qwen_die_cdc_ch RXS)
     parameter integer MAXTOK = 512;
     parameter integer MAXBOOT = 80000;
     localparam integer NPC = 32;
@@ -66,7 +67,7 @@ module tb_emb_hbm_e2e
     reg x3_v = 0; reg [511:0] x3_d = 0; reg [10:0] x3_tag = 0; wire x3_cr;
     wire ar_v; wire [511:0] ar_d; wire hub_fault, emb_ready, emb_fault; wire [5:0] hub_fc; wire [7:0] emb_fc;
     wire [4*528-1:0] hl_o, hl_i;
-    ot_qwen_die_hub_emb_top #(.CR(CR), .MUT(MUT_GW)) u_hub (.ck(ck), .rst_n(rst_n), .fck0(ck), .fck1(ck), .fck2(ck),
+    ot_qwen_die_hub_emb_top #(.CR(CR), .MUT(MUT_GW), .RXS(RXS)) u_hub (.ck(ck), .rst_n(rst_n), .fck0(ck), .fck1(ck), .fck2(ck),
         .fck3(ck), .l0_i(hl_i[0 +: 528]), .l0_o(hl_o[0 +: 528]), .l1_i(hl_i[528 +: 528]), .l1_o(hl_o[528 +: 528]),
         .l2_i(hl_i[1056 +: 528]), .l2_o(hl_o[1056 +: 528]), .l3_i(hl_i[1584 +: 528]), .l3_o(hl_o[1584 +: 528]),
         .x3_v(x3_v), .x3_d(x3_d), .x3_tag(x3_tag), .x3_cr(x3_cr), .ar_v(ar_v), .ar_d(ar_d), .ar_cr(1'b0),

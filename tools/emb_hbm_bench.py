@@ -180,7 +180,7 @@ def full(a):
 SRCS = [f'{RTL}/ot_qfd_emb_pkg.sv', f'{RTL}/ot_hbm_r14_stream_pc_srow.sv', f'{RTL}/ot_qwen_ctrl_pc_emb.sv',
         f'{RTL}/ot_qfd_emb_pcport.sv', f'{RTL}/ot_qfd_emb_strip.sv', f'{RTL}/ot_qfd_link_far.sv', f'{RTL}/ot_qfd_emb_gw.sv',
         f'{RTL}/ot_qwen_die_hub_emb.sv', 'rtl/physical/ot_qwen_die_cdc_ch.sv', 'rtl/lib/ot_async_fifo.sv',
-        'rtl/lib/ot_reset_sync.sv', 'rtl/hdc/ot_hdc_delay.sv', 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv',
+        'rtl/lib/ot_reset_sync.sv', 'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v', 'rtl/hdc/ot_hdc_delay.sv', 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv',
         'rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv', 'rtl/test/emb_hbm/tb_emb_dram_pc.sv', 'rtl/test/emb_hbm/tb_emb_hbm_e2e.sv']
 VARIANTS = {  # name: (params, expect)
     'base_kv1': (dict(TWIN=0, KVMODE=1), 'PASS'),
@@ -192,6 +192,10 @@ VARIANTS = {  # name: (params, expect)
     'mut_scale': (dict(MUT_STRIP=2), 'FAIL'),
     'mut_ecc': (dict(MUT_STRIP=3), 'FAIL'),
     'mut_gate': (dict(MUT_GW=4), 'FAIL'),
+    # fe-push-qwen-1010: hub link receive buffers as SRAM (ot_qwen_die_cdc_ch RXS 1); RXS 2 = the read issued one slot off
+    'rxs_kv1': (dict(TWIN=0, KVMODE=1, RXS=1), 'PASS'),
+    'rxs_twin_kv2': (dict(TWIN=1, KVMODE=2, RXS=1), 'PASS'),
+    'mut_rxs': (dict(TWIN=0, KVMODE=1, RXS=2), 'FAIL'),
 }
 
 

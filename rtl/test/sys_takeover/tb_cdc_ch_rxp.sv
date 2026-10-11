@@ -3,7 +3,7 @@
 // a credit-honouring sender (IBUF initial credits, one back per i_cr) with random gaps, an unrelated read clock and a
 // receiver returning o_cr at a random rate (backpressure fills the async FIFO, the staging FIFO and the buffer).  Every
 // word is checked in order (value = f(index)); faults must stay 0; ends when NW words arrived.  -P RXP 0 / 1.
-module tb_cdc_ch_rxp #(parameter integer RXP = 1, parameter integer AFW = 0, parameter integer NW = 2000, parameter integer SEND = 70, parameter integer TAKE = 35);
+module tb_cdc_ch_rxp #(parameter integer RXP = 1, parameter integer RXS = 0, parameter integer AFW = 0, parameter integer NW = 2000, parameter integer SEND = 70, parameter integer TAKE = 35);
     localparam integer W = 523;
     reg wclk = 0, rclk = 0, rst_n = 0;
     always #417 wclk = ~wclk;
@@ -13,7 +13,7 @@ module tb_cdc_ch_rxp #(parameter integer RXP = 1, parameter integer AFW = 0, par
         begin x = 0; for (j = 0; j < W; j = j + 32) x[j +: 32] = n * 32'h9e3779b1 + j * 32'h85ebca6b; word = x; end
     endfunction
     reg i_v = 0; reg [W-1:0] i_d = 0; wire i_cr, w_fault, o_v, r_fault; wire [W-1:0] o_d; reg o_cr = 0;
-    ot_qwen_die_cdc_ch #(.W(W), .IBUF(128), .OCRED(8), .AD(8), .RXP(RXP), .AFW(AFW)) dut (.wclk(wclk), .wrst_n(rst_n), .i_v(i_v),
+    ot_qwen_die_cdc_ch #(.W(W), .IBUF(128), .OCRED(8), .AD(8), .RXP(RXP), .RXS(RXS), .AFW(AFW)) dut (.wclk(wclk), .wrst_n(rst_n), .i_v(i_v),
         .i_d(i_d), .i_cr(i_cr), .w_fault(w_fault), .rclk(rclk), .rrst_n(rst_n), .o_v(o_v), .o_d(o_d), .o_cr(o_cr), .r_fault(r_fault));
     integer cred = 128, sent = 0, got = 0, bad = 0, held = 0, maxheld = 0, cyc = 0;
     reg [31:0] rs = 32'h1234567, rr = 32'h7654321;

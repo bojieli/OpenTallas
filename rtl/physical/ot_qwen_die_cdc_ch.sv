@@ -30,7 +30,18 @@ module ot_qwen_die_cdc_ch #(
     // AND-OR (stage 1: 8 region partial ORs of 16 entries, stage 2: their OR) into a 4-entry staging FIFO ahead of the
     // async FIFO.  A word is issued (credit returned) when the staging FIFO has room for it including the 2 in flight.
     // Cost: +2 wclk latency per word; full rate; order, values, credits and faults unchanged.
-    parameter integer RXP = 0
+    parameter integer RXP = 0,
+    // RXS = 1 (fe-push-qwen-1010, 2026-10-10, opt-in; PIPE 0, AFW 0, RXP 0 only): the IBUF-slot receive buffer is
+    // SRAM, not flops (qfd_hub_emb 4 x 128 x 523 = 267,776 flops + four 128:1 x 523 read muxes stalled global placement
+    // 4.7 h).  W / 256 ot_sram_1r1w_128x256_m1_r2c2 macros (IBUF must be 128) hold bits [256*NM-1:0], the W - 256*NM
+    // remainder bits stay in flops.  The buffer is entirely in the wclk domain (written at the input capture, read into
+    // the async FIFO), so the macro's single clock is wclk: the CDC is unchanged (ot_async_fifo, AD slots, Gray pointers
+    // through 2-flop synchronisers).  Read: a word is issued (macro read at ir, credit returned) when the 4-entry staging
+    // FIFO ahead of the async FIFO has room for it including the one in flight; the registered macro output (+ the
+    // remainder bits registered at the same edge) lands in the staging FIFO one wclk later.  A read never addresses the
+    // slot written at the same edge (issue needs ir != iw).  Cost: +2 wclk latency per word (as RXP 1); full rate;
+    // order, values, credits and faults unchanged.  RXS = 2: bench negative control (each read issued at ir + 1).
+    parameter integer RXS = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -66,18 +77,58 @@ module ot_qwen_die_cdc_ch #(
     end endgenerate
     always @(posedge wclk or negedge wr_n) if (!wr_n) iv_q <= 1'b0; else iv_q <= i_v_p;
     always @(posedge wclk) id_q <= i_d_p;
-    reg [W-1:0] ib [0:IBUF-1];
+    reg [W-1:0] ib [0:((RXS != 0) ? 1 : IBUF) - 1];      // RXS: the buffer is the SRAM (g_rxs); a 1-entry stub
     reg [IA:0]  iw, ir;
     wire        ib_empty = (iw == ir);
     wire        ib_full  = (iw[IA-1:0] == ir[IA-1:0]) && (iw[IA] != ir[IA]);
     wire        af_ready;
     wire        x_issue;                  // RXP: a word leaves the receive buffer into the read pipeline
-    wire        pop = (RXP != 0) ? x_issue : (!ib_empty && af_ready);
+    wire        pop = (RXP != 0 || RXS != 0) ? x_issue : (!ib_empty && af_ready);
     reg         cr_q, wf_q;
     wire        x_wr = iv_q && !ib_full;
     wire [W-1:0] x_af_d;                  // RXP: staging-FIFO head -> async FIFO
     wire         x_af_v, x_af_pop;
-    generate if (RXP == 0) begin : g_ibw
+    generate if (RXS != 0) begin : g_rxs
+        localparam integer NM = W / 256;                  // full-width macros
+        localparam integer RB = W - 256 * NM;             // remainder bits in flops
+        localparam integer SD = 4;
+        if (IBUF != 128 || PIPE != 0 || AFW != 0 || RXP != 0) begin : g_bad
+            initial $fatal(1, "ot_qwen_die_cdc_ch RXS needs IBUF 128, PIPE 0, AFW 0, RXP 0");
+        end
+        reg        v1;
+        reg [2:0]  sn;
+        wire room = ({1'b0, sn} + v1) < SD;
+        assign x_issue = !ib_empty && room;
+        wire [IA-1:0] ra = (RXS == 2) ? (ir[IA-1:0] + 1'b1) : ir[IA-1:0];
+        wire [W-1:0] d1;
+        genvar gm;
+        for (gm = 0; gm < NM; gm = gm + 1) begin : g_m
+            ot_sram_1r1w_128x256_m1_r2c2 u_ib (.clk(wclk), .r_ce_in(x_issue), .r_addr_in(ra), .rd_out(d1[gm*256 +: 256]),
+                .w_ce_in(x_wr), .w_addr_in(iw[IA-1:0]), .wd_in(id_q[gm*256 +: 256]), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        end
+        if (RB > 0) begin : g_rb
+            reg [RB-1:0] ibr [0:IBUF-1];
+            reg [RB-1:0] rq;
+            always @(posedge wclk) if (x_wr) ibr[iw[IA-1:0]] <= id_q[W-1:256*NM];
+            always @(posedge wclk) if (x_issue) rq <= ibr[ra];
+            assign d1[W-1:256*NM] = rq;
+        end
+        reg [W-1:0] st [0:SD-1];
+        reg [1:0]   sw, sr;
+        assign x_af_v = (sn != 0);
+        assign x_af_d = st[sr];
+        assign x_af_pop = x_af_v && af_ready;
+        always @(posedge wclk) if (v1) st[sw] <= d1;
+        always @(posedge wclk or negedge wr_n)
+            if (!wr_n) begin v1 <= 1'b0; sn <= 3'd0; sw <= 2'd0; sr <= 2'd0; end
+            else begin
+                v1 <= x_issue;
+                if (v1) sw <= sw + 1'b1;
+                if (x_af_pop) sr <= sr + 1'b1;
+                sn <= sn + v1 - x_af_pop;
+            end
+    end else if (RXP == 0) begin : g_ibw
         always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
         assign x_issue = 1'b0; assign x_af_v = 1'b0; assign x_af_d = {W{1'b0}}; assign x_af_pop = 1'b0;
     end else begin : g_rxp
@@ -170,14 +221,14 @@ module ot_qwen_die_cdc_ch #(
 `endif
     generate if (PIPE != 0 || AFW != 0) begin : g_afw
         ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0)) u_af (
-            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0 || RXS != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0 || RXS != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS
         assign af_drained = (u_af.wr_bin == u_af.rd_bin);
 `endif
     end else begin : g_af
         ot_async_fifo #(.WIDTH(W), .DEPTH(AD)) u_af (
-            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0 || RXS != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0 || RXS != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS
         assign af_drained = (u_af.wr_bin == u_af.rd_bin);
