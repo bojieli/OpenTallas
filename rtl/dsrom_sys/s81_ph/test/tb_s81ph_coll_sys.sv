@@ -81,7 +81,7 @@ module tb_s81ph_coll_sys;
         wire tf0, tf1, tf2, tf3, tf4, tf5, tf6, tf7;
 `ifdef TB_CTRL
         dsfd_sp_collective_c #(.MUT(CMUT)) u (.refclk(refclk), .por(por), .f_vm(fvm[gd]), .ts(tsr[gd]),
-            .c_ck(cks[gd]), .c_rs(rsts[gd]), .c_cmd(c3a[gd]), .c_done(d3a[gd]), .c_st(csta[gd]),
+            .c_cmd(c3a[gd]), .c_done(d3a[gd]), .c_st(csta[gd]),
 `else
         dsfd_sp_collective u (.refclk(refclk), .por(por), .f_vm(fvm[gd]), .ts(tsr[gd]),
 `endif

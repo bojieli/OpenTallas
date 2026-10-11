@@ -3047,6 +3047,9 @@ def build_r8(variant=None):
         ctrl_model = s81_ctrl_die_model(cw, CTRL_ROLE)
         centre.insert(centre.index('collective'), 'stage_ctrl')
         centre_area['stage_ctrl'] = ctrl_model['area_mm2_nominal']
+    if CTRL_ADAPTERS:
+        centre.insert(centre.index('collective'), 'stage_seq')
+        centre_area['stage_seq'] = CTRL_SEQ_MM2
     wfc_rect = None
     if DIE_KIND == 'layer':
         centre.insert(2, 'wfc')
@@ -3118,7 +3121,11 @@ def build_r8(variant=None):
     centre = [n for n in centre if n not in ecol]
     def put(n, x0_, yy, w0_):
         nonlocal wfc_rect
-        if n == 'stage_ctrl':
+        if n == 'stage_seq':
+            slab(n, centre_area[n], x0_, yy, w0_, master=CTRL_SEQ_MASTER)
+            notes.append('s81-ctl --ctrl-adapters: stage sequencer %s %.3f mm2 (engine ports c/d/s to the *_c slab endpoints)'
+                         % (CTRL_SEQ_MASTER, centre_area[n]))
+        elif n == 'stage_ctrl':
             master = 'dsfd_sp_ctrl' + ('_src' if CTRL_ROLE == 'source' else '_h' if CTRL_ROLE == 'head' else '')
             slab(n, centre_area[n], x0_, yy, w0_, master=master)
             notes.append('S81 stage controller: native shell %s; 1.2 GHz, %.3f mm2 nominal, physical closure pending' % (master, CTRL_MM2))
@@ -3319,6 +3326,10 @@ def build_r8(variant=None):
     if CTRL_SLAB:
         m['ctrl_model'] = ctrl_model
         m['ctrl_binding_shell_sha256'] = CTRL_BINDINGS['shell_sha256']
+    if CTRL_ADAPTERS:
+        for k_, ms_ in CTRL_C_MASTERS.items():
+            if k_ in hub:
+                hub[k_].master = ms_
     m['buses'] = []
     buses_r8(m)
     return m
@@ -3706,7 +3717,8 @@ def buses_r8(m):
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
             ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
-              ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
+              ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
+            (ctrl_adapter_buses(hb) if CTRL_ADAPTERS else ()):
         if REV == 'r9':
             # mtp-wfc 2026-10-10 (ds-1010 finding): the WFC kit's VM / capture buses are 0.9 GHz serial-domain ports
             # (dsfd_wfc_vmx slow side): their stations are clocked in serial_0p9 and spaced at the 0.9 GHz reach
@@ -3939,6 +3951,33 @@ CTRL_SLAB = False
 CTRL_ROLE = 'layer'
 CTRL_MM2 = 0.15                 # preliminary shell/queue reservation; no routed-area claim
 CTRL_BINDINGS = None
+# --ctrl-adapters (s81-ctl-1011, ADAPTER_CONTRACT_1011): the stage sequencer slab (CTRL_SEQ_MASTER, default the WFC
+# agent's dsfd_stage_seq: decision A) binds every engine port c<e> / d<e> / s<e> to the slab endpoint masters listed in
+# physical/s81_ctrl/die_ctrl_bindings.json (c_cmd / c_done / c_st; *_c slab masters), staged by common-clock stations
+# (pulse nets: fixed latency, no back-pressure); the fld path adds capture t_cd -> gather f_cd (drained event) and
+# gather t_xgo -> VM f_xgo (field broadcast go).  The die gate tools/s81_ctrl/die_ctrl_gate.py runs after the build and
+# FAILS the generator on any unbound engine, sequencer port or die_port_audit finding (no placeholder pins).
+CTRL_ADAPTERS = False
+CTRL_SEQ_MASTER = 'dsfd_stage_seq'
+CTRL_SEQ_MM2 = 0.15             # preliminary reservation (program 128 x 28 b, 12 port FIFOs, credits); no routed-area claim
+CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', collective='dsfd_sp_collective_c',
+                      selector='dsfd_bk_selector_c', collector='dsfd_bk_collector_c')
+
+
+def ctrl_adapter_buses(hb):
+    """--ctrl-adapters: (a, b, bits, port a, port b) hub buses of the engine command plane (ADAPTER_CONTRACT_1011):
+    stage_seq c<e> 85 -> slab c_cmd, slab c_done 9 -> d<e>, slab c_st 2 -> s<e> for every engine whose bindings-file
+    master is a slab of this die; the fld path's capture -> gather drained event and gather -> VM field go."""
+    bind = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
+    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
+    out = []
+    for e, k in eng.items():
+        for slab_ in [s_ for s_, it in hb.items() if it.master in bind['engines'].get(e, {}).get('masters', [])]:
+            out += [('stage_seq', slab_, 85, f'c{k}', 'c_cmd'), (slab_, 'stage_seq', 9, 'c_done', f'd{k}'),
+                    (slab_, 'stage_seq', 2, 'c_st', f's{k}')]
+    if 'gather' in hb and hb['gather'].master == 'dsfd_sp_gather_c':
+        out += [('capture', 'gather', 12, 't_cd', 'f_cd'), ('gather', 'vm', 11, 't_xgo', 'f_xgo')]
+    return tuple(out)
 
 
 def _ctrl_native_buses(m, bus):
@@ -4819,7 +4858,8 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     # --ecol-slabs: a second chain between the same slab pair (wfc t_lo + t_lir -> collective: direct face-to-face
     # wires in one column, staged across the VCH once the kit moves) takes its driver port in the name, so its
     # stations do not collide with the first chain's
-    hbn = f'hb_{a_}_{b_}' if not (ECOL_SLABS and f'hb_{a_}_{b_}' in m.get('hub_stations', {})) else f'hb_{a_}_{pa}_{b_}'
+    hbn = f'hb_{a_}_{b_}' if not ((ECOL_SLABS or CTRL_ADAPTERS) and f'hb_{a_}_{b_}' in m.get('hub_stations', {})) \
+        else f'hb_{a_}_{pa}_{b_}'
     # --ecol-slabs: a moved slab stands in the E column (W of the HC halves): it faces the VCH with its W face like HC
     ecol_ = lambda it: bool(ECOL_SLABS) and it.x >= m['x_spe'] - 1.0 and not it.name.startswith('sp_hc_')
     fx = lambda it: it.x if (it.name.startswith('sp_hc_') or ecol_(it)) else it.x + it.w
@@ -6255,6 +6295,10 @@ def die_options(ap):
                     '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--ctrl-adapters', action='store_true', help='s81-ctl-1011: stage sequencer slab + engine c/d/s buses to the '
+                    '*_c slab endpoints (physical/s81_ctrl/die_ctrl_bindings.json); the die control gate FAILS the build on '
+                    'any unbound engine / port-audit finding')
+    ap.add_argument('--ctrl-seq-master', default=None, help='sequencer slab master (default dsfd_stage_seq)')
     ap.add_argument('--ctrl-bindings', type=Path, help='native control-plane endpoint manifest, audited before build')
     ap.add_argument('--mtp-seq-mm2', type=float, help='MTP-DIE: sequencer slab area (default 0.15 mm2)')
     ap.add_argument('--mtp-links', type=int, default=0, help='MTP-DIE: head die extra draft fan-out SerDes '
@@ -6268,6 +6312,13 @@ def apply_options(a):
     CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
     CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
     CTRL_BINDINGS = None
+    global CTRL_ADAPTERS, CTRL_SEQ_MASTER
+    CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
+    CTRL_SEQ_MASTER = getattr(a, 'ctrl_seq_master', None) or 'dsfd_stage_seq'
+    if CTRL_ADAPTERS and (a.gen != 'r8' or a.rev != 'r9'):
+        raise ValueError('--ctrl-adapters requires the r9 wired die (staged hub buses)')
+    if CTRL_ADAPTERS and CTRL_SLAB:
+        raise ValueError('--ctrl-adapters with --ctrl-slab: one stage controller (decision A: dsfd_stage_seq + adapters)')
     if CTRL_SLAB:
         if not (getattr(a, 'hop_fix', False) and getattr(a, 'pin_relay', False)):
             raise ValueError('--ctrl-slab requires implemented --hop-fix --pin-relay endpoint stations')
@@ -6484,6 +6535,14 @@ def main(argv=None):
         if ub:     # build-every-path rule (s81-die-2 2026-10-08, tie-off audit TA-10): no functional pin without a net
             raise SystemExit('UNBOUND functional real-macro pins (master, pin): instances: '
                              + json.dumps({f'{k[0]}.{k[1]}': v for k, v in sorted(ub.items())}))
+        if CTRL_ADAPTERS:  # s81-ctl-1011: engine command plane + port audit (no placeholder pins, no unbound engine)
+            from s81_ctrl.die_ctrl_gate import gate as ctrl_gate
+            cg = ctrl_gate(m, CTRL_ROLE)
+            m['ctrl_gate'] = cg
+            if a.out:
+                Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
+            if cg['verdict'] != 'PASS':
+                raise SystemExit('DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40]))
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
