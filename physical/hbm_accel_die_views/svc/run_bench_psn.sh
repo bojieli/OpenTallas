@@ -10,6 +10,7 @@
 #   neg_land            endpoint mutant: a write lands on the neighbouring PC     -> must FAIL
 #   neg_wcons           N8: index-key credits returned by the idle consumer (kq)  -> must FAIL (stray credit fault)
 #   neg_conc            N8: a second stream launched while one runs (overlap)     -> must FAIL
+#   neg_wrg             WR_G sent as a binary count (not Gray)                    -> must FAIL
 set -u
 O=$1; mkdir -p $O; V=physical/hbm_accel_die_views/svc; T=$V/tb
 rm -f $O/summary.txt
@@ -27,7 +28,7 @@ if command -v yosys >/dev/null; then
       echo "lint_$m rc=$?" > $O/lint_$m.rc ) &
   done
 fi
-for m in 1 2 3; do sed "s/parameter integer MUT = 0) (/parameter integer MUT = $m) (/" $NEPLIB > $O/nep_mut$m.sv
+for m in 1 2 3 4; do sed "s/parameter integer MUT = 0) (/parameter integer MUT = $m) (/" $NEPLIB > $O/nep_mut$m.sv
   cmp -s $O/nep_mut$m.sv $NEPLIB && { echo "endpoint mutant $m not applied" >> $O/summary.txt; rc=1; }; done
 sim() {   # sim <label> <st> <fam> <nep lib> <args...>
   local L=$1 S=$2 F=$3 NL=$4; shift 4
@@ -41,14 +42,14 @@ for c in $POS; do s=${c%%:*}; x=${c##*:}; f=SW; [ $s = NE ] && f=SE
   sim pos_${s}_x$x $s $f $NEPLIB -DPS_STREAMS -GNXL=$x & done
 sim neg_drop SW SW $O/nep_mut1.sv -DPS_STREAMS & sim neg_order SW SW $O/nep_mut2.sv -DPS_STREAMS &
 sim neg_land SW SW $O/nep_mut3.sv -DPS_STREAMS & sim neg_wcons SW SW $NEPLIB -DPS_STREAMS -DNEP_MUT_WCONS &
-sim neg_conc SW SW $NEPLIB -DPS_STREAMS -DOT_PS_MUT_CONC &
+sim neg_conc SW SW $NEPLIB -DPS_STREAMS -DOT_PS_MUT_CONC & sim neg_wrg SW SW $O/nep_mut4.sv -DPS_STREAMS &
 wait
 cat $O/lint_*.rc 2>/dev/null >> $O/summary.txt; grep -q "rc=[1-9]" $O/lint_*.rc 2>/dev/null && rc=1
 for c in $POS; do s=${c%%:*}; x=${c##*:}; L=pos_${s}_x$x
   grep -q "^SVC_BENCH PASS" $O/$L.log; r=$?
   echo "$L rc=$r $(grep -h 'SVC_BENCH lines\|NEP_BENCH\|NEP_RATE\|NEP_WRATE' $O/$L.log | tr '\n' ' ')" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
 done
-for L in neg_drop neg_order neg_land neg_wcons neg_conc; do
+for L in neg_drop neg_order neg_land neg_wcons neg_conc neg_wrg; do
   grep -q "^SVC_BENCH PASS" $O/$L.log && r=0 || r=1
   echo "$L rc=$r (must be nonzero) $(grep -m2 'ERR\|SVC_MUTANT' $O/$L.log | tr '\n' ' ')" >> $O/summary.txt; [ $r -eq 0 ] && rc=1
 done

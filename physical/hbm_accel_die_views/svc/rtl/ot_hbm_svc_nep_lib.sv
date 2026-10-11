@@ -28,7 +28,7 @@
 module ot_svn_ep #(parameter integer NO = 32, parameter integer NQ = 4, parameter integer RING = 128,
                    parameter integer WQ = 16, parameter integer QD = 4, parameter [31:0] WMASK = 32'h0000_0000,
                    parameter integer MUT = 0) (     // MUT 1: drop every 5th read-data flit; 2: return beats out of
-                                                    // order (head skips); 3: write lands at the wrong PC
+                                                    // order (head skips); 3: write lands at the wrong PC; 4: WR_G binary
   input wire ck, input wire rst, input wire rn,
   input wire [350:0] lq,                            // {fclk, lq 350}
   output wire [293:0] lr,                           // {fclk, lr 293}
@@ -92,7 +92,7 @@ module ot_svn_ep #(parameter integer NO = 32, parameter integer NQ = 4, paramete
   wire h_last = h_rdy && (bc + 3'd1 == o_ln[oh]);
   reg rv; reg [4:0] rpc; reg [15:0] rtg; reg [3:0] rbt; reg [255:0] rdt;
   reg [7:0] wcnt;
-  wire [7:0] wg = wcnt ^ (wcnt >> 1);
+  wire [7:0] wg = (MUT == 4) ? wcnt : wcnt ^ (wcnt >> 1);      // MUT 4: WR_G sent binary, not Gray
   integer p;
   always @(posedge ck or negedge rn)
     if (!rn) begin
