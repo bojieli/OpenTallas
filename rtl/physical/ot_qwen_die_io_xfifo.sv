@@ -23,7 +23,8 @@ module ot_qwen_die_io_xfifo #(
     parameter integer WCQ = 516,
     parameter integer N = 4,
     parameter integer MB = 513,
-    parameter integer CQ_AD = 64
+    parameter integer CQ_AD = 64,
+    parameter integer CR = 4, ENG_IB = 4, LCR = 4    // ot_qwen_die_coll_xfifo credit depths (sys-takeover lever)
 ) (
     input  wire ck, input wire cku, input wire cks, input wire ckd, input wire rst_n,
     input  wire i_ucie_tx_v,   input  wire [WIO-1:0] i_ucie_tx,   output wire i_ucie_tx_cr,
@@ -52,7 +53,7 @@ module ot_qwen_die_io_xfifo #(
         .w_fault(wf_sr), .rclk(ck), .rrst_n(rst_n), .o_v(o_serdes_rx_v), .o_d(o_serdes_rx), .o_cr(o_serdes_rx_cr), .r_fault(rf_sr));
     wire wf_cq, rf_cq, gf_cq;   // NCOLL: the coll_xfifo's per-domain sticky faults (wf_cq: ck, rf_cq: ckd)
     generate if (NCOLL != 0) begin : g_coll
-        ot_qwen_die_coll_xfifo #(.WSQ(WSQ), .WCQ(WCQ), .N(N), .MB(MB), .CQ_AD(CQ_AD), .PIPE(PIPE)) u_coll (
+        ot_qwen_die_coll_xfifo #(.WSQ(WSQ), .WCQ(WCQ), .N(N), .MB(MB), .CQ_AD(CQ_AD), .PIPE(PIPE), .CR(CR), .ENG_IB(ENG_IB), .LCR(LCR)) u_coll (
             .ck(ck), .ckd(ckd), .rst_n(rst_n),
             .i_seq_coll_v(i_seq_coll_v), .i_seq_coll(i_seq_coll), .i_seq_coll_cr(i_seq_coll_cr),
             .o_seq_coll_v(o_seq_coll_v), .o_seq_coll(o_seq_coll), .o_seq_coll_cr(o_seq_coll_cr),

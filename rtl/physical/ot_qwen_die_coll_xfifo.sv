@@ -16,7 +16,15 @@ module ot_qwen_die_coll_xfifo #(
     parameter integer N = 4,
     parameter integer MB = 513,
     parameter integer CQ_AD = 64,
-    parameter integer PIPE = 0
+    parameter integer PIPE = 0,
+    // sys-takeover 2026-10-09 lever (CR / ENG_IB / LCR, defaults = the original 4 / 4 / 4): the AR word rate across the
+    // CDC is credit-bound (4 credits per ~8-edge round trip on every hop: 256-word AR 436 vs 296 engine-alone cycles).
+    //   CR     sequencer forward credits = sq receive buffer slots (IBUF), sq async FIFO = max(8, 2 CR)
+    //   ENG_IB engine input buffer / sq downstream credits (ot_rom_oneshot_die_m IB)
+    //   LCR    sequencer landing slots = cq downstream credits
+    parameter integer CR = 4,
+    parameter integer ENG_IB = 4,
+    parameter integer LCR = 4
 ) (
     input  wire ck, input wire ckd, input wire rst_n,
     input  wire i_seq_coll_v,  input  wire [WSQ-1:0] i_seq_coll,  output wire i_seq_coll_cr,
@@ -28,10 +36,10 @@ module ot_qwen_die_coll_xfifo #(
     localparam integer CQ_IB = 4;
     localparam integer RRES = CQ_IB + CQ_AD;              // return words the path holds without overflow
     wire sq_icr, wf_sq, rf_sq, wf_cq, rf_cq;
-    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(i_seq_coll_v), .i_d(i_seq_coll),
+    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE), .IBUF(CR), .OCRED(ENG_IB), .AD((2 * CR > 8) ? 2 * CR : 8)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(i_seq_coll_v), .i_d(i_seq_coll),
         .i_cr(sq_icr), .w_fault(wf_sq), .rclk(ck), .rrst_n(rst_n), .o_v(o_seq_coll_v), .o_d(o_seq_coll),
         .o_cr(o_seq_coll_cr), .r_fault(rf_sq));
-    ot_qwen_die_cdc_ch #(.W(WCQ), .PIPE(PIPE), .IBUF(CQ_IB), .AD(CQ_AD)) u_cq (.wclk(ck), .wrst_n(rst_n), .i_v(i_coll_seq_v),
+    ot_qwen_die_cdc_ch #(.W(WCQ), .PIPE(PIPE), .IBUF(CQ_IB), .OCRED(LCR), .AD(CQ_AD)) u_cq (.wclk(ck), .wrst_n(rst_n), .i_v(i_coll_seq_v),
         .i_d(i_coll_seq), .i_cr(), .w_fault(wf_cq), .rclk(ckd), .rrst_n(rst_n), .o_v(o_coll_seq_v), .o_d(o_coll_seq),
         .o_cr(o_coll_seq_cr), .r_fault(rf_cq));
     // ckd credit gate (pins registered first: refunds and releases land one edge late, which is conservative)
@@ -39,8 +47,8 @@ module ot_qwen_die_coll_xfifo #(
     ot_reset_sync u_grs (.clk(ckd), .async_rst_n(rst_n), .sync_rst_n(grs_n));
     reg red_q, ocr_q, gcr_q, gf_q;
     reg [7:0] rr;                                         // return words not yet reserved
-    reg [2:0] pend;                                       // forward credits withheld for want of return space
-    wire [2:0] avail = pend + {2'b0, sq_icr};
+    reg [5:0] pend;                                       // forward credits withheld for want of return space
+    wire [5:0] avail = pend + {5'b0, sq_icr};
 `ifdef OT_NCOLL_MUT_NOREFUND_CHECK
     wire       grant = (avail != 0);                      // mutant: forward credits ignore the return reservation
 `else
@@ -48,12 +56,12 @@ module ot_qwen_die_coll_xfifo #(
 `endif
     wire [7:0] rr_n  = rr + (red_q ? N - 1 : 0) + {7'b0, ocr_q} - (grant ? N : 0);
     always @(posedge ckd or negedge grs_n)
-        if (!grs_n) begin red_q <= 1'b0; ocr_q <= 1'b0; gcr_q <= 1'b0; gf_q <= 1'b0; rr <= RRES - 4 * N; pend <= 3'd0; end
+        if (!grs_n) begin red_q <= 1'b0; ocr_q <= 1'b0; gcr_q <= 1'b0; gf_q <= 1'b0; rr <= RRES - CR * N; pend <= 6'd0; end
         else begin
             // a reservation is released when its word leaves the cq FIFO for the sequencer's landing buffer (o_coll_seq_v:
             // the word then sits in a slot the sequencer's own OCRED credits cover)
             red_q <= i_seq_coll_v && !i_seq_coll[MB]; ocr_q <= o_coll_seq_v;
-            gcr_q <= grant; pend <= avail - {2'b0, grant}; rr <= rr_n;
+            gcr_q <= grant; pend <= avail - {5'b0, grant}; rr <= rr_n;
             gf_q <= gf_q | (rr_n > RRES);
         end
     assign i_seq_coll_cr = gcr_q;
@@ -61,5 +69,5 @@ module ot_qwen_die_coll_xfifo #(
     always @(posedge ck)  f_ck  <= rf_sq | wf_cq;
     always @(posedge ckd) f_ckd <= wf_sq | rf_cq | gf_q;
     assign fault_ck = f_ck; assign fault_ckd = f_ckd;
-    initial if (RRES < 4 * N) $fatal(1, "coll_xfifo: return reservation below the sequencer's initial forward credits");
+    initial if (RRES < CR * N) $fatal(1, "coll_xfifo: return reservation below the sequencer's initial forward credits");
 endmodule

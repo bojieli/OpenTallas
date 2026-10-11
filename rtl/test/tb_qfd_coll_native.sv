@@ -13,7 +13,7 @@
 // ---------------------------------------------------------------------------
 // Clocks come from the C++ harness (physical/sys_takeover/coll_native_harness.cpp): ck 1.2 GHz, ckd 0.9 GHz, unrelated
 // phase; reset releases after 20 ckd edges.
-module tb_qfd_coll_native #(parameter integer CQ_AD = 64) (input wire ck, input wire ckd);
+module tb_qfd_coll_native #(parameter integer CQ_AD = 64, parameter integer CR = 4, parameter integer ENG_IB = 4, parameter integer LCR = 4) (input wire ck, input wire ckd);
     localparam integer N = 4, LANES = 16, FW = 512, TAGW = 32, RB = 2, PW = FW + 2 + TAGW, MAXW = 1 << 14;
     localparam integer WSQ = 546, WCQ = 516;
     reg [4:0] rcnt = 0;
@@ -45,7 +45,7 @@ module tb_qfd_coll_native #(parameter integer CQ_AD = 64) (input wire ck, input 
     genvar g, t;
     generate for (g = 0; g < N; g = g + 1) begin : g_die
         // ---------------- sequencer model (ckd) ----------------
-        integer m = 0, w = 0, fcr = 4;
+        integer m = 0, w = 0, fcr = CR;
         reg [31:0] rnd = 32'h9e3779b9 * (g + 1);
         wire s_v, s_cr;
         wire [WSQ-1:0] s_d;
@@ -64,7 +64,7 @@ module tb_qfd_coll_native #(parameter integer CQ_AD = 64) (input wire ck, input 
         end
         // return landing buffer (4 = the cq channel's downstream credits) and checker
         wire r_v; wire [WCQ-1:0] r_d;
-        reg [WCQ-1:0] lb [0:3];
+        reg [WCQ-1:0] lb [0:LCR-1];
         integer lw = 0, lr = 0, rm = 0, rk = 0, per;
         reg r_cr = 0;
         reg [FW-1:0] exp;
@@ -72,11 +72,11 @@ module tb_qfd_coll_native #(parameter integer CQ_AD = 64) (input wire ck, input 
         always @(posedge ckd) begin
             r_cr <= 1'b0;
             if (r_v) begin
-                if (lw - lr >= 4) begin bad = bad + 1; $display("LANDING OVERFLOW die=%0d", g); end
-                lb[lw % 4] <= r_d; lw <= lw + 1;
+                if (lw - lr >= LCR) begin bad = bad + 1; $display("LANDING OVERFLOW die=%0d", g); end
+                lb[lw % LCR] <= r_d; lw <= lw + 1;
             end
             if (lr < lw && (xs(rnd + 77) % 100) < CONS) begin
-                hd = lb[lr % 4];
+                hd = lb[lr % LCR];
                 per = mode[rm] ? N * WORDS : WORDS;
                 exp = mode[rm] ? part[(rm*N + rk % N)*WORDS + rk / N] : sum[rm*WORDS + rk];
                 if (hd[FW-1:0] !== exp) begin bad = bad + 1; if (bad < 6) $display("MISMATCH die=%0d msg=%0d word=%0d got=%h exp=%h", g, rm, rk, hd[63:0], exp[63:0]); end
@@ -94,7 +94,7 @@ module tb_qfd_coll_native #(parameter integer CQ_AD = 64) (input wire ck, input 
         wire [FW-1:0] o_data;
         wire [RB-1:0] o_rank;
         wire [2:0] fcode;
-        ot_qwen_die_io_xfifo #(.WSQ(WSQ), .NCOLL(1), .WCQ(WCQ), .N(N), .MB(FW + 1), .CQ_AD(CQ_AD)) u_x (
+        ot_qwen_die_io_xfifo #(.WSQ(WSQ), .NCOLL(1), .WCQ(WCQ), .N(N), .MB(FW + 1), .CQ_AD(CQ_AD), .CR(CR), .ENG_IB(ENG_IB), .LCR(LCR)) u_x (
             .ck(ck), .cku(ck), .cks(ck), .ckd(ckd), .rst_n(rst_n),
             .i_ucie_tx_v(1'b0), .i_ucie_tx(1024'b0), .i_ucie_tx_cr(), .o_ucie_tx_v(), .o_ucie_tx(), .o_ucie_tx_cr(1'b0),
             .i_ucie_rx_v(1'b0), .i_ucie_rx(1024'b0), .i_ucie_rx_cr(), .o_ucie_rx_v(), .o_ucie_rx(), .o_ucie_rx_cr(1'b0),
@@ -106,7 +106,7 @@ module tb_qfd_coll_native #(parameter integer CQ_AD = 64) (input wire ck, input 
             .o_coll_seq_v(r_v), .o_coll_seq(r_d), .o_coll_seq_cr(r_cr),
             .fault_ck(fck[g]), .fault_cku(), .fault_cks(), .fault_ckd(fckd[g]));
         // ---------------- collective engine (ck) ----------------
-        ot_rom_oneshot_die_m #(.N(N), .RANK(g), .LANES(LANES), .TAGW(TAGW), .DEPTH(32), .IB(4)) u_die (
+        ot_rom_oneshot_die_m #(.N(N), .RANK(g), .LANES(LANES), .TAGW(TAGW), .DEPTH(32), .IB(ENG_IB)) u_die (
             .clk(ck), .rst_n(rst_n),
             .in_valid(e_v), .in_cr(e_cr), .in_data(e_d[FW-1:0]), .in_last(e_d[FW]), .in_mode(e_d[FW+1]),
             .in_tag(e_d[FW+2 +: TAGW]),
