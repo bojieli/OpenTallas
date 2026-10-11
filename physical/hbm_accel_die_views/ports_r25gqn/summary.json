@@ -15,6 +15,11 @@
     "W",
     "input"
    ],
+   "f_hgi_vmw_done": [
+    32,
+    "W",
+    "input"
+   ],
    "rNW": [
     294,
     "W",
@@ -672,6 +677,11 @@
     "S",
     "input"
    ],
+   "t_hgi_vmw_done": [
+    32,
+    "S",
+    "output"
+   ],
    "t_hgi_vmw_rdy": [
     32,
     "S",
@@ -787,6 +797,16 @@
     "W",
     "output"
    ],
+   "rst": [
+    1,
+    "E",
+    "input"
+   ],
+   "ck": [
+    1,
+    "E",
+    "input"
+   ],
    "f_lgE_rup": [
     516,
     "E",
@@ -806,16 +826,6 @@
     68,
     "E",
     "output"
-   ],
-   "rst": [
-    1,
-    "E",
-    "input"
-   ],
-   "ck": [
-    1,
-    "E",
-    "input"
    ]
   }
  },

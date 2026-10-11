@@ -1120,7 +1120,12 @@ def build_r25gq_net(variant):
     # (5) [svc] 10-10: cp_mtp_ports (t_mtpk 120 b) had no RTL counterpart (ot_hgi_cp_die: f_mtp 517 / t_mtp 197 only;
     # the mh_* host side goes to the loader): a budget placeholder, dropped
     extra = ([('hgi_vmw_dma', 'hub', 8992, ('hb_loader', 't_hgi_vmw'), ('hb_hgi_vm', 'f_hgi_vmw_dma')),     # DMA lanes
-              ('hgi_vmw_rdy', 'hub', 32, ('hb_hgi_vm', 't_hgi_vmw_rdy'), ('hb_loader', 'f_hgi_vmw'))]       # 32 x 281 b
+              ('hgi_vmw_rdy', 'hub', 32, ('hb_hgi_vm', 't_hgi_vmw_rdy'), ('hb_loader', 'f_hgi_vmw')),       # 32 x 281 b
+              # hbmdie-1011/vmwdone: the per-lane write COMPLETION (ot_hgi_vm_unit wq_done -> ot_hgi_dma_mover wl_done);
+              # dropped with hgi_vmw_dma_done by drop_buses and not re-staged, so the loader view had bound its done
+              # port to the VM's AP stop (wq_rdy).  wq_rdy stays: the AP stop the mover needs once its aperture route
+              # exists (today ap = 0, so it never falls for VM writes).
+              ('hgi_vmw_done', 'hub', 32, ('hb_hgi_vm', 't_hgi_vmw_done'), ('hb_loader', 'f_hgi_vmw_done'))]
              if V.get('vmw_dma') else []) + \
             ([('hgi_vmap', 'hub', 2224, ('hb_hgi_vm', 't_hgi_vmap'), ('hb_hc_SW', 'f_hgi_vmap')),      # b / d 10-11: VM ->
               ('hgi_vmap_r', 'hub', 16, ('hb_hc_SW', 't_hgi_vmap'), ('hb_hgi_vm', 'f_hgi_vmap'))]       # HC aperture, 8 lanes
