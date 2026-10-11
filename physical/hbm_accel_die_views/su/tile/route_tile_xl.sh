@@ -31,7 +31,7 @@ export OT_MM_FF_SDC="$G/signoff.sdc"
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append $G/io.sdc --stages pnr \
   --die-area 0 0 $TW $TH --core-area 0 0.54 $TW $(python3 -c "print(round($TH-0.54,3))") --routing-layers M2 M7 \
   --orfs-var IO_CONSTRAINTS=/src/$T/io_place.tcl \
-  --orfs-var PDN_TCL=/src/${PDN:-$V/pdn_quarter.tcl} --orfs-var PLACE_DENSITY_LB_ADDON= \
+  --orfs-var PDN_TCL=/src/${PDN:-$V/tile/pdn_tile_xl.tcl} --orfs-var PLACE_DENSITY_LB_ADDON= \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --orfs-var ADDER_MAP_FILE= \
   --orfs-var "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none" \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag sut_$lab \
