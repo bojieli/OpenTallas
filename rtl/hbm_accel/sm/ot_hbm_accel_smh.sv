@@ -1610,90 +1610,112 @@ module ot_hbm_accel_smh_tile #(
     localparam integer BBW = 1 + XW + NBEAT + 2048;
     localparam integer GLW = 2 + 32 + TAGW;
     localparam integer NG  = (LBS * 266 + NMG - 1) / NMG + (LSB * 16 + NMG - 1) / NMG;   // mask groups per leaf
+    // fe-push-hphys-1010 OT_SMH_RSTRELAY: the rst_n port drives only ot_rst_relay (async assert, synchronous release
+    // RELEASE = 3 tile edges; the cg tile keeps its gate open HOLD edges after reset).  Region j < RPT = leaf j (its
+    // landing copies, rotator replicas, leaf, gather launch); RPT = the b / r pass-through; RPT + 1 = the G1 lanes.
+    wire [RPT+1:0] rr;
+`ifdef OT_SMH_RSTRELAY
+    ot_rst_relay #(.REGIONS(RPT + 2)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+`else
+    assign rr = {(RPT + 2){rst_n}};
+`endif
     // ---- landing: the x-write bundle (driven on to the next tile from these flops) ----
     // the x-write bundle lands in a pass-through copy (driven on to the next tile) and one copy per leaf (the leaf's
     // rotator), so neither spans the tile; the copies are bit-identical kept registers
     wire [BBW-1:0] bl;
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-1]),
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv (.clk(clk), .rst_n(rr[RPT]), .en(1'b1), .d(bin[BBW-1]),
         .q(bl[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bl[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld (.clk(clk), .rst_n(rr[RPT]), .en(1'b1), .d(bin[BBW-2:0]), .q(bl[BBW-2:0]));
     // (margin m2) the pass-through copy lands at the input pins and launches from a second register at the output
     // pins (+1 per tile hop on the x-write beat, matched by the row bundles' +1 per hop: the margin is unchanged)
     // (margin m3e) a third pass-through register mid-tile (tile_e c2: u_bld -> u_bld2 -10.6 ps across the tile): +1 per
     // tile hop on the x-write beat, matched by the row bundles' third register (rpm), so the margin is unchanged
     wire [BBW-1:0] bm, bm4;
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvm (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-1]), .q(bm[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldm (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bm[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvm (.clk(clk), .rst_n(rr[RPT]), .en(1'b1), .d(bl[BBW-1]), .q(bm[BBW-1]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldm (.clk(clk), .rst_n(rr[RPT]), .en(1'b1), .d(bl[BBW-2:0]), .q(bm[BBW-2:0]));
     generate if (PT4 != 0) begin : g_pt4b
-        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvn (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm[BBW-1]), .q(bm4[BBW-1]));
-        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldn (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm[BBW-2:0]), .q(bm4[BBW-2:0]));
+        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvn (.clk(clk), .rst_n(rr[RPT]), .en(1'b1), .d(bm[BBW-1]), .q(bm4[BBW-1]));
+        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldn (.clk(clk), .rst_n(rr[RPT]), .en(1'b1), .d(bm[BBW-2:0]), .q(bm4[BBW-2:0]));
     end else begin : g_pt3b
         assign bm4 = bm;
     end endgenerate
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm4[BBW-1]),
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv2 (.clk(clk), .rst_n(rr[RPT]), .en(1'b1), .d(bm4[BBW-1]),
         .q(bout[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm4[BBW-2:0]), .q(bout[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld2 (.clk(clk), .rst_n(rr[RPT]), .en(1'b1), .d(bm4[BBW-2:0]), .q(bout[BBW-2:0]));
     genvar j, ln;
     generate for (j = 0; j < RPT; j = j + 1) begin : g_lf
         // the row bundle of row j (landed, driven on)
         // the row bundle lands in a pass-through copy (rout) and the leaf's own copy (kept, bit-identical)
         wire [RBW-1:0] rl, rl1, rp, rpm, rpm4;
-        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp (.clk(clk), .rst_n(rst_n),
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp (.clk(clk), .rst_n(rr[RPT]),
             .d(rin[j*RBW +: RBW]), .q(rp));
         // (margin m2) landing at the input pins (u_rp), launch from a register at the output pins; (m3e) a third
         // register mid-tile (u_rpm, rp -> rp2 was +0.8 ps): 3 per hop, in step with the x-write beat
-        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpm (.clk(clk), .rst_n(rst_n),
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpm (.clk(clk), .rst_n(rr[RPT]),
             .d(rp), .q(rpm));
         if (PT4 != 0) begin : g_pt4r
-            ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpn (.clk(clk), .rst_n(rst_n),
+            ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpn (.clk(clk), .rst_n(rr[RPT]),
                 .d(rpm), .q(rpm4));
         end else begin : g_pt3r
             assign rpm4 = rpm;
         end
-        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp2 (.clk(clk), .rst_n(rst_n),
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp2 (.clk(clk), .rst_n(rr[RPT]),
             .d(rpm4), .q(rout[j*RBW +: RBW]));
-        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl (.clk(clk), .rst_n(rst_n),
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl (.clk(clk), .rst_n(rr[j]),
             .d(rin[j*RBW +: RBW]), .q(rl1));
-        // (m3e) the leaf's row copy one register deeper (+1 on every read), matching the x-write copy's bk2 below
-        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl2 (.clk(clk), .rst_n(rst_n),
-            .d(rl1), .q(rl));
         wire [BBW-1:0] bk, bk1;
-        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-1]),
+        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(bin[BBW-1]),
             .q(bk1[BBW-1]));
-        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-2:0]),
+        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(bin[BBW-2:0]),
             .q(bk1[BBW-2:0]));
-        // (m3e) the leaf's x-write copy registered again inside the leaf before the strap rotation (tile_e c2: the
-        // pin landing u_bkd -> 8:1 rotation -> bf0 / blk0 -92 / -84 ps, 10-12 levels): +1 on the write, matched above
-        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bk1[BBW-1]),
-            .q(bk[BBW-1]));
-        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bk1[BBW-2:0]),
-            .q(bk[BBW-2:0]));
         // one-hot beat group replicas for this leaf's masks (landed straight from the pins, NG copies)
         // (round 5) the beat one-hot lands once per leaf (kept, beside the pins), its NG replicas load one edge later,
         // in step with the leaf's two-stage rotation
         wire [NG*NBEAT-1:0] ohr;
         wire [NBEAT-1:0] ohl, ohl1;
-        ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[2048 +: NBEAT]),
+        ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(bin[2048 +: NBEAT]),
             .q(ohl1));
-        ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(ohl1), .q(ohl));   // (m3e) +1 with bk2
+`ifdef OT_SMH_HIER
+        // el1011-hbm-smh OT_SMH_HIER: the leaf is a HARDENED sub-element (ot_hbm_accel_smh_leafh: its own clock tree,
+        // reset relay and pin-flop boundary).  The tile keeps the pin landings (rl1 / bk1 / ohl1) and the gather
+        // launch; the second landing (rl2 / bk2 / ohl2 + the one-hot replicas) moves into the leaf as its input pin
+        // flops.  0 cycles: the same registers, a different physical owner.
+        wire gv, gf; wire [31:0] gy; wire [TAGW-1:0] gt;
+        ot_hbm_accel_smh_leafh #(.LBS(LBS), .LSB(LSB), .IL(IL), .TAGW(TAGW), .XD(XD), .NBEAT(NBEAT), .TCK(TCK),
+                                 .NMG(NMG), .A1B(A1B), .A2B(A2B)) u_lh (
+            .clk(clk), .rst_n(rst_n), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
+            .xs_a2(xs_a2[j*A2B +: A2B]), .xs_g2(xs_g2[j*5 +: 5]), .rl1(rl1), .bk1(bk1), .ohl1(ohl1),
+            .gv(gv), .gf(gf), .gy(gy), .gt(gt));
+`else
+        // (m3e) the leaf's row copy one register deeper (+1 on every read), matching the x-write copy's bk2 below
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl2 (.clk(clk), .rst_n(rr[j]),
+            .d(rl1), .q(rl));
+        // (m3e) the leaf's x-write copy registered again inside the leaf before the strap rotation (tile_e c2: the
+        // pin landing u_bkd -> 8:1 rotation -> bf0 / blk0 -92 / -84 ps, 10-12 levels): +1 on the write, matched above
+        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv2 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(bk1[BBW-1]),
+            .q(bk[BBW-1]));
+        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd2 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(bk1[BBW-2:0]),
+            .q(bk[BBW-2:0]));
+        ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl2 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(ohl1), .q(ohl));   // (m3e) +1 with bk2
         genvar gi;
         for (gi = 0; gi < NG; gi = gi + 1) begin : g_ohr
-            ot_hbm_accel_smh_kreg #(.W(NBEAT)) u (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(ohl),
+            ot_hbm_accel_smh_kreg #(.W(NBEAT)) u (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(ohl),
                 .q(ohr[gi*NBEAT +: NBEAT]));
         end
         wire gv, gf; wire [31:0] gy; wire [TAGW-1:0] gt;
         ot_hbm_accel_smh_leaf #(.LBS(LBS), .LSB(LSB), .IL(IL), .TAGW(TAGW), .XD(XD), .NBEAT(NBEAT), .TCK(TCK),
                                 .NMG(NMG), .A1B(A1B), .A2B(A2B)) u_leaf (
-            .clk(clk), .rst_n(rst_n), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
+            .clk(clk), .rst_n(rr[j]), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
             .xs_a2(xs_a2[j*A2B +: A2B]), .xs_g2(xs_g2[j*5 +: 5]),
             .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
             .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .ohr(ohr),
             .gv(gv), .gf(gf), .gy(gy), .gt(gt));
+`endif
         // own rows on lanes 0..RPT-1 (lane RPT-1-j = row j): (margin m2) G1 then a launch register at the gout pins
         // (+1 on every gather lane alike: the back end's deskew is unchanged)
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_gov (.clk(clk), .rst_n(rst_n), .en(1'b1), .d({gv, gf}),
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_gov (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d({gv, gf}),
             .q(gout[(RPT-1-j)*GLW + GLW - 2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_god (.clk(clk), .rst_n(rst_n), .en(1'b1), .d({gy, gt}),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_god (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d({gy, gt}),
             .q(gout[(RPT-1-j)*GLW +: GLW-2]));
     end
     // lanes from the tile above moved down one
@@ -1701,18 +1723,18 @@ module ot_hbm_accel_smh_tile #(
     // deskew accounts for 2 per tile hop
     for (ln = RPT; ln < SUB; ln = ln + 1) begin : g_gl
         wire [GLW-1:0] gm;
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
             .d(gin[(ln-RPT)*GLW + GLW - 2 +: 2]), .q(gm[GLW-2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d (.clk(clk), .rst_n(rst_n), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
             .d(gin[(ln-RPT)*GLW +: GLW-2]), .q(gm[0 +: GLW-2]));
         wire [GLW-1:0] gn;                    // (round 5) a third register: 510 um is more than two spans
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v2 (.clk(clk), .rst_n(rst_n), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v2 (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
             .d(gm[GLW-2 +: 2]), .q(gn[GLW-2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d2 (.clk(clk), .rst_n(rst_n), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d2 (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
             .d(gm[0 +: GLW-2]), .q(gn[0 +: GLW-2]));
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v3 (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
             .d(gn[GLW-2 +: 2]), .q(gout[ln*GLW + GLW - 2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d3 (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
             .d(gn[0 +: GLW-2]), .q(gout[ln*GLW +: GLW-2]));
     end endgenerate
 endmodule
@@ -1732,7 +1754,11 @@ module ot_hbm_accel_smh_leaf #(
     parameter integer A2B = 7
 ) (
     input  wire                     clk,
+`ifdef OT_SMH_HIER
+    input  wire                     rst_a,          // raw port reset: the leaf and each column relay it locally
+`else
     input  wire                     rst_n,
+`endif
     input  wire [A1B-1:0]           xs_a1,
     input  wire [4:0]               xs_g1,
     input  wire [A2B-1:0]           xs_a2,
@@ -1750,6 +1776,14 @@ module ot_hbm_accel_smh_leaf #(
     output wire [31:0]              gy,
     output wire [TAGW-1:0]          gt
 );
+`ifdef OT_SMH_HIER
+    wire rst_n;
+`ifdef OT_SMH_RSTRELAY
+    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rst_n));
+`else
+    assign rst_n = rst_a;
+`endif
+`endif
     localparam integer SLW = LBS * 266 + LSB * 16;
     localparam integer WSW = SLW;
     localparam integer NXL = (SLW + 255) / 256;
@@ -1879,9 +1913,30 @@ module ot_hbm_accel_smh_leaf #(
         ot_hbm_accel_smh_kreg #(.W(XW)) u_wa (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(wa_q), .q(wa2));
         ot_hbm_accel_smh_kreg #(.W(256)) u_wd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(wd_m[256*m +: 256]), .q(wd2));
         ot_hbm_accel_smh_kreg #(.W(256)) u_wm (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(wm_m[256*m +: 256]), .q(wm2));
+        // [cg-smt] 2026-10-10 OT_SMH_XLK: a NEGEDGE lockup stage between the kept pin registers and the macro (same values,
+        // same edge at the macro: posedge kreg at t -> negedge at t+0.5 -> macro at t+1; 0 cycles).  Root cause
+        // (hbm_smh_tile_wg_cg-a6d34a72e smtc cal, FF): the macro clock pin sits 59 ps after its pin registers
+        // (shared macro leaf net, 281 ps slew) + 47 ps library hold -> r_addr_in / w_mask_in hold -55..-84 ps that
+        // repair could not buffer; the negedge launch gives the macro inputs a half-cycle hold window (setup slack
+        // at these pins was +668 ps TT, so half a cycle is free).
+        wire          rce3, wce3;
+        wire [XW-1:0] ra3, wa3;
+        wire [255:0]  wd3, wm3;
+`ifdef OT_SMH_XLK
+        reg           rce_n, wce_n;
+        reg  [XW-1:0] ra_n, wa_n;
+        reg  [255:0]  wd_n3, wm_n3;
+        always @(negedge clk or negedge rst_n)
+            if (!rst_n) begin rce_n <= 1'b0; wce_n <= 1'b0; end
+            else begin rce_n <= rce2; wce_n <= wce2; end
+        always @(negedge clk) begin ra_n <= ra2; wa_n <= wa2; wd_n3 <= wd2; wm_n3 <= wm2; end
+        assign rce3 = rce_n; assign wce3 = wce_n; assign ra3 = ra_n; assign wa3 = wa_n; assign wd3 = wd_n3; assign wm3 = wm_n3;
+`else
+        assign rce3 = rce2; assign wce3 = wce2; assign ra3 = ra2; assign wa3 = wa2; assign wd3 = wd2; assign wm3 = wm2;
+`endif
         ot_sram_1r1w_128x256_m1_r2c2 u_x (
-            .clk(clk), .r_ce_in(rce2), .r_addr_in(ra2), .rd_out(xrd[256*m +: 256]),
-            .w_ce_in(wce2), .w_addr_in(wa2), .wd_in(wd2), .w_mask_in(wm2),
+            .clk(clk), .r_ce_in(rce3), .r_addr_in(ra3), .rd_out(xrd[256*m +: 256]),
+            .w_ce_in(wce3), .w_addr_in(wa3), .wd_in(wd3), .w_mask_in(wm3),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     // ---- E4 ----
@@ -1900,6 +1955,20 @@ module ot_hbm_accel_smh_leaf #(
     end
     // ---- E5 (margin m1, +1 on both columns): the macro read lands in E4 at the macro pins, then E5 feeds the
     // columns; the x-store read edge and the write-before-read margin are unchanged ----
+
+`ifdef OT_SMH_HIER
+    // el1011-hbm-smh OT_SMH_HIER: the two columns are HARDENED sub-elements (own clock tree + reset relay); the j stage
+    // (the last operand register) moves into each column as its input pin flops (0 cycles).  TCK = 1 only.
+    wire bov, bfault, fov, ffault;
+    wire [31:0] by, fy;
+    wire [TAGW-1:0] btag, ftag;
+    ot_hbm_accel_smh_bdc #(.LBS(LBS), .IL(IL), .TAGW(TAGW)) u_bdc (.clk(clk), .rst_a(rst_a), .i_v(iv_b), .i_first(ifirst),
+        .i_last(ilast), .i_fp4(ifp4), .i_tag(itag), .i_w(iw[0 +: LBS*266]), .i_x(ix[0 +: LBS*266]),
+        .ov(bov), .y(by), .otag(btag), .fault(bfault));
+    ot_hbm_accel_smh_tcc #(.LSB(LSB), .IL(IL), .TAGW(TAGW)) u_tcc (.clk(clk), .rst_a(rst_a), .i_v(iv_f),
+        .i_first(ifirst), .i_last(ilast), .i_tag(itag), .i_w(iw[LBS*266 +: LSB*16]), .i_x(ix[LBS*266 +: LSB*16]),
+        .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
+`else
     reg              jv_b, jv_f, jfirst, jlast, jfp4;
     reg [TAGW-1:0]   jtag;
     reg [WSW-1:0]    jw;
@@ -1950,6 +2019,7 @@ module ot_hbm_accel_smh_leaf #(
                 .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
         end
     endgenerate
+`endif
 `ifdef OT_SMH_MUT_BFDLY
     // negative-control mutant only (bench --mut-bfdly; never defined in a build): the BF16 column's output 64 cycles
     // late, so a BF16 -> block-dot op pair can collide at G1 / the stack (with c = 8 lines a row the real pipeline's
@@ -1972,6 +2042,119 @@ module ot_hbm_accel_smh_leaf #(
     end
     assign gv = gv_q; assign gf = gf_q; assign gy = gy_q; assign gt = gt_q;
 endmodule
+
+`ifdef OT_SMH_HIER
+// ======== el1011-hbm-smh OT_SMH_HIER: the hardened sub-elements of the SM tile (2026-10-11) ========
+// Root cause (hbm_smh_tile_[ew]g c7ac635fa): one flat 129.6k-sink clock tree (depth 12-13, 413 um mean sink wire) on a
+// tile at ~63 % std utilisation; intra-tree skew put 82.8k short adder-pipeline endpoints in the hold margin and CTS
+// hold repair stalled past 134k buffers.  Structural fix: the tile is hierarchical -- per leaf a hardened leaf
+// (ot_hbm_accel_smh_leafh: landing pin flops, x store, strap rotation, operand registers) holding two hardened
+// columns (ot_hbm_accel_smh_bdc: the 2 block-dot lanes; ot_hbm_accel_smh_tcc: the 16 BF16 lanes).  Every hardened
+// block has its own clock tree, its own reset relay on the raw port reset (release edge unchanged: every relay is 2 + 1)
+// and register pins on its inputs; outputs come from the column's last pipeline register.  0 cycles anywhere.
+module ot_hbm_accel_smh_leafh #(
+    parameter integer LBS = 2, parameter integer LSB = 16, parameter integer IL = 8, parameter integer TAGW = 16,
+    parameter integer XD = 128, parameter integer NBEAT = 13, parameter integer TCK = 1, parameter integer NMG = 32,
+    parameter integer A1B = 9, parameter integer A2B = 7
+) (
+    input  wire clk, input wire rst_n,
+    input  wire [A1B-1:0] xs_a1, input wire [4:0] xs_g1, input wire [A2B-1:0] xs_a2, input wire [4:0] xs_g2,
+    input  wire [6+TAGW+LBS*266+LSB*16+1+$clog2(XD)-1:0] rl1,
+    input  wire [1+$clog2(XD)+NBEAT+2048-1:0]            bk1,
+    input  wire [NBEAT-1:0]                              ohl1,
+    output wire gv, output wire gf, output wire [31:0] gy, output wire [TAGW-1:0] gt
+);
+    localparam integer XW  = $clog2(XD);
+    localparam integer CW  = 6 + TAGW;
+    localparam integer WSW = LBS * 266 + LSB * 16;
+    localparam integer RBW = CW + WSW + 1 + XW;
+    localparam integer BBW = 1 + XW + NBEAT + 2048;
+    localparam integer NG  = (LBS * 266 + NMG - 1) / NMG + (LSB * 16 + NMG - 1) / NMG;
+    wire rl_n;
+`ifdef OT_SMH_RSTRELAY
+    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rl_n));
+`else
+    assign rl_n = rst_n;
+`endif
+    // the input pin flops (were the tile's second landing: u_rl2 / u_bkv2 / u_bkd2 / u_ohl2 + the one-hot replicas)
+    wire [RBW-1:0] rl;
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl2 (.clk(clk), .rst_n(rl_n), .d(rl1), .q(rl));
+    wire [BBW-1:0] bk;
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(bk1[BBW-1]), .q(bk[BBW-1]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(bk1[BBW-2:0]), .q(bk[BBW-2:0]));
+    wire [NBEAT-1:0] ohl;
+    wire [NG*NBEAT-1:0] ohr;
+    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(ohl1), .q(ohl));
+    genvar gi;
+    generate for (gi = 0; gi < NG; gi = gi + 1) begin : g_ohr
+        ot_hbm_accel_smh_kreg #(.W(NBEAT)) u (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(ohl), .q(ohr[gi*NBEAT +: NBEAT]));
+    end endgenerate
+    ot_hbm_accel_smh_leaf #(.LBS(LBS), .LSB(LSB), .IL(IL), .TAGW(TAGW), .XD(XD), .NBEAT(NBEAT), .TCK(TCK),
+                            .NMG(NMG), .A1B(A1B), .A2B(A2B)) u_leaf (
+        .clk(clk), .rst_a(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
+        .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
+        .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .ohr(ohr),
+        .gv(gv), .gf(gf), .gy(gy), .gt(gt));
+endmodule
+
+// the block-dot column: the leaf's j stage as input pin flops, then ot_hbm_accel_smh_bd_col (unchanged)
+module ot_hbm_accel_smh_bdc #(parameter integer LBS = 2, parameter integer IL = 8, parameter integer TAGW = 16) (
+    input  wire clk, input wire rst_a,
+    input  wire i_v, input wire i_first, input wire i_last, input wire i_fp4, input wire [TAGW-1:0] i_tag,
+    input  wire [LBS*266-1:0] i_w, input wire [LBS*266-1:0] i_x,
+    output wire ov, output wire [31:0] y, output wire [TAGW-1:0] otag, output wire fault
+);
+    wire rst_n;
+`ifdef OT_SMH_RSTRELAY
+    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rst_n));
+`else
+    assign rst_n = rst_a;
+`endif
+    reg jv, jfirst, jlast, jfp4;
+    reg [TAGW-1:0] jtag;
+    reg [LBS*266-1:0] jw, jx;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) jv <= 1'b0;
+        else jv <= i_v;
+    always @(posedge clk) begin jfirst <= i_first; jlast <= i_last; jfp4 <= i_fp4; jtag <= i_tag; jw <= i_w; jx <= i_x; end
+    wire [LBS*256-1:0] xq_s;
+    wire [LBS*10-1:0]  xe_s;
+    genvar qq;
+    generate for (qq = 0; qq < LBS; qq = qq + 1) begin : g_bx
+        assign xq_s[256*qq +: 256] = jx[qq*266 +: 256];
+        assign xe_s[10*qq +: 10]   = jx[qq*266 + 256 +: 10];
+    end endgenerate
+    ot_hbm_accel_smh_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
+        .clk(clk), .rst_n(rst_n), .v(jv), .first(jfirst), .last(jlast), .fp4(jfp4), .tag(jtag),
+        .wq(jw[0 +: LBS*256]), .we(jw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
+        .ov(ov), .y(y), .otag(otag), .fault(fault));
+endmodule
+
+// the BF16 column: the leaf's j stage as input pin flops, then ot_hbm_accel_smh_tc_col (unchanged)
+module ot_hbm_accel_smh_tcc #(parameter integer LSB = 16, parameter integer IL = 8, parameter integer TAGW = 16) (
+    input  wire clk, input wire rst_a,
+    input  wire i_v, input wire i_first, input wire i_last, input wire [TAGW-1:0] i_tag,
+    input  wire [LSB*16-1:0] i_w, input wire [LSB*16-1:0] i_x,
+    output wire ov, output wire [31:0] y, output wire [TAGW-1:0] otag, output wire fault
+);
+    wire rst_n;
+`ifdef OT_SMH_RSTRELAY
+    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rst_n));
+`else
+    assign rst_n = rst_a;
+`endif
+    reg jv, jfirst, jlast;
+    reg [TAGW-1:0] jtag;
+    reg [LSB*16-1:0] jw, jx;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) jv <= 1'b0;
+        else jv <= i_v;
+    always @(posedge clk) begin jfirst <= i_first; jlast <= i_last; jtag <= i_tag; jw <= i_w; jx <= i_x; end
+    ot_hbm_accel_smh_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (
+        .clk(clk), .rst_n(rst_n), .v(jv), .first(jfirst), .last(jlast), .tag(jtag), .w(jw), .x(jx),
+        .ov(ov), .y(y), .otag(otag), .fault(fault));
+endmodule
+`endif  // OT_SMH_HIER
 
 // ---------------------------------------------------------------------------
 // One column back end.  gin lane k = row SUB-1-k of this column; it left its G1 P(k) = k / RPT flops ago (one per
@@ -2108,7 +2291,11 @@ module ot_hbm_accel_smh_tile_g #(
     parameter integer NC = 8, parameter integer IL = 8, parameter integer TAGW = 16, parameter integer XD = 128,
     parameter integer NBEAT = 13, parameter integer TCK = 1, parameter integer NMG = 32, parameter integer A1B = 9,
     parameter integer A2B = 7, parameter integer PT4 = 1, parameter integer HOLD = `ifdef OT_SMH_CG_MUT_HOLD0 0 `else 64 `endif,
-    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 32 `else 0 `endif
+    parameter integer MUT_LATE = `ifdef OT_SMH_CG_MUT_LATE 32 `else 0 `endif,
+    // [cg-smt] 2026-10-10 OT_SMH_CG_ENREG: the tile ICG's ENA from one register beside the gate (ot_cg_tile ENREG, 0 cycles).
+    // Root cause (tile_wg cg a6d34a72e smtc cal): ENA from cnt / wq at leaf insertion 670 ps -> ICG CK at 217 ps over
+    // 160 ps of wire (507 ps slew): TT setup -198 / -352 ps.
+    parameter integer ENREG = `ifdef OT_SMH_CG_ENREG 1 `else 0 `endif
 ) (
     input  wire clk, input wire rst_n, input wire cgi, output wire cgo,
     input  wire [RPT*A1B-1:0] xs_a1, input wire [RPT*5-1:0] xs_g1, input wire [RPT*A2B-1:0] xs_a2, input wire [RPT*5-1:0] xs_g2,
@@ -2120,7 +2307,7 @@ module ot_hbm_accel_smh_tile_g #(
     output wire [SUB*(2+32+TAGW)-1:0]                          gout
 );
     wire gclk;
-    ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
+    ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE), .ENREG(ENREG)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
     ot_hbm_accel_smh_tile #(.SUB(SUB), .RPT(RPT), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW), .XD(XD),
                             .NBEAT(NBEAT), .TCK(TCK), .NMG(NMG), .A1B(A1B), .A2B(A2B), .PT4(PT4)) u (
         .clk(gclk), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2), .rin(rin), .bin(bin),

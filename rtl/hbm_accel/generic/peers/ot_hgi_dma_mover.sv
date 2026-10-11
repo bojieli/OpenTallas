@@ -46,7 +46,9 @@ module ot_hgi_dma_mover #(
     parameter integer MUT_RNE = 0,        // mutant: BF16 store truncates (no round to nearest even)
     parameter integer MUT = 0,
     parameter integer KOUT = 64,          // HBM writes in flight (the per-stack lanes)
-    parameter integer VR2 = 0             // 1: VM-source sectors on the VM's DMA wide READ group (vr2q / vr2r), else the packet client
+    parameter integer VR2 = 0,            // 1: VM-source sectors on the VM's DMA wide READ group (vr2q / vr2r), else the packet client
+    parameter integer KVW = 0             // 1 (needs VR2 = 1): the KV write-back engine ot_hgi_dma_kvw takes every raw VM -> HBM row
+                                          // copy (KVWB_DS / FP32 / U32 STORE of whole sectors, linear destination), 64 B a cycle
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -94,7 +96,7 @@ module ot_hgi_dma_mover #(
     // VM wide READ group 2 = DMA (VR2 = 1; b's ot_hgi_vm_die contract): up {c_req, 32 lanes x {v, sector 15}}; down
     // {c_gnt, credits 32, 32 lanes x {v, data 256}}; lane b serves sectors s[4:0] = b, in order a lane, LQ credits a lane;
     // c_req is held until every credit is home (burst ownership).  The mover keeps one sector in flight a lane.
-    output reg  [512:0]  vr2q,
+    output wire [512:0]  vr2q,
     input  wire [8256:0] vr2r,
     // VM packet client
     output wire [337:0]  vmq,
@@ -126,6 +128,17 @@ module ot_hgi_dma_mover #(
         else begin kr_v <= k_rsp_v; vr_q <= vmr; end
     always @(posedge clk) begin kr_we <= k_rsp_we; kr_d <= k_rsp_data; end
     wire fast_cmd = (cm_q[92:77] == 16'd1) && (cm_q[185:170] == 16'd1);     // src istride 1 and dst istride 1
+    // hbm-fq/dma (KVW = 1): a raw VM -> HBM row copy goes to the KV write-back engine: VM source, HBM linear destination,
+    // FP32 / U32 on both sides, istrides 1, VM rows of whole sectors (base, stride, n multiples of 8 words), 32 B aligned
+    // destination rows; any other move waits for that engine to be idle (its posted writes drained)
+    wire kv_ok = KVW != 0 && VR2 != 0 && fast_cmd && cm_q[1:0] == 2'd1 && cm_q[94:93] == 2'd0 && cm_q[137:135] == 3'd0 &&
+                 (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) && (cm_q[97:95] == 3'd0 || cm_q[97:95] == 3'd5) &&
+                 cm_q[7:5] == 3'd0 && cm_q[47:45] == 3'd0 && cm_q[208:206] == 3'd0 && cm_q[102:98] == 5'd0 &&
+                 cm_q[142:138] == 5'd0 && cm_q[205:186] != 20'd0 && cm_q[226:206] != 21'd0;
+    wire kv_c_rdy, kv_idle_w, kv_creq, kv_src, kv_done; wire [511:0] kv_kq;
+    wire kv_idle = (KVW != 0) ? kv_idle_w : 1'b1;
+    wire kv_take = cv_q && kv_ok && kv_c_rdy;                          // into the KV engine's descriptor FIFO
+    wire cv_go = cv_q && !kv_ok && kv_idle;                            // to the sector / serial engines
     reg  busy_f; reg src_sent;
     wire ko_ld;                                                         // the lane output register takes a request                                                        // the sector engine owns the ports
     reg  sel_s;                                                         // the serial engine owns the ports
@@ -133,12 +146,12 @@ module ot_hgi_dma_mover #(
     wire s_kv, s_kwe; wire [36:0] s_ka; wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
     reg  f_fault;
     assign mv_rdy = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
-    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_q && !fast_cmd && cm_q[94:93] != 2'd0),
+    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_go && !fast_cmd && cm_q[94:93] != 2'd0),
         .mv_rdy(s_mv_rdy), .mv(cm_q), .mv_done(s_mv_done), .mv_fault(s_mv_fault), .fence_v(1'b0), .fence_rdy(s_fence_rdy),
         .fence_done(s_fence_done), .k_req_v(s_kv), .k_req_rdy(ko_ld && sel_s), .k_req_we(s_kwe), .k_req_addr(s_ka),
         .k_req_wdata(s_kd), .k_req_wstrb(s_ks), .k_req_tag(s_kt), .k_rsp_v(kr_v && sel_s), .k_rsp_rdy(s_krr),
         .k_rsp_we(kr_we), .k_rsp_data(kr_d), .k_fault(k_fault && sel_s), .vmq(s_vmq), .vmr(sel_s ? vr_q : 274'd0));
-    assign fence_rdy = !busy_f && s_mv_rdy && s_fence_rdy;
+    assign fence_rdy = !busy_f && s_mv_rdy && s_fence_rdy && kv_idle && !cv_q;
     // ================================================================ sector engine
     function automatic [2:0] esz(input [2:0] f);
         esz = (f == 3'd0 || f == 3'd5) ? 3'd4 : (f == 3'd1) ? 3'd2 : 3'd1;
@@ -223,7 +236,8 @@ module ot_hgi_dma_mover #(
     localparam integer GLQ = 32;
     reg [31:0] g_busy, g_hv; reg [7:0] g_slot [0:31]; reg [255:0] g_d [0:31]; reg [5:0] g_cr [0:31]; reg [4:0] g_rr;
     // pin flops (registered boundary: route lint 98f8152b3 counted 96 levels from c_gnt through the reader issue)
-    reg g_gnt; reg [31:0] g_crp;
+    reg g_gnt; reg [31:0] g_crp; reg [512:0] s_vr2q;
+    assign vr2q = {s_vr2q[512], s_vr2q[511:0] | kv_kq};
     always @(posedge clk or negedge rn) if (!rn) begin g_gnt <= 1'b0; g_crp <= 32'd0; end
                                         else begin g_gnt <= vr2r[8256]; g_crp <= vr2r[8255:8224]; end
     reg g_dv; reg [4:0] g_di;                               // the held response drained into the landing RAM this cycle
@@ -417,15 +431,37 @@ module ot_hgi_dma_mover #(
     wire [3:0] w_ack = r_rsp_v & r_rsp_we & l_wo;                // write acknowledgements (taken on a lane with writes in flight)
     genvar gl;
     for (gl = 0; gl < 4; gl = gl + 1) begin : g_rl
-        assign r_req_v[gl] = lq_v[gl]; assign r_req_addr[gl*37 +: 37] = lq_a[gl]; assign r_req_len[gl*4 +: 4] = lq_n[gl];
-        assign r_req_tag[gl*16 +: 16] = {8'h52, lq_t[gl]};
-        assign r_req_we[gl] = lq_we[gl]; assign r_req_wdata[gl*256 +: 256] = lq_d[gl]; assign r_req_wstrb[gl*32 +: 32] = lq_s[gl];
+        // KVW: the KV engine's write requests share the lane (the engines never run together)
+        // (selected by the KV engine's registered busy, not by its valid: registered outputs + one mux)
+        assign r_req_v[gl] = kv_idle ? lq_v[gl] : kv_wv[gl];
+        assign r_req_addr[gl*37 +: 37] = kv_idle ? lq_a[gl] : kv_wa[gl*37 +: 37];
+        assign r_req_len[gl*4 +: 4] = kv_idle ? lq_n[gl] : 4'd1;
+        assign r_req_tag[gl*16 +: 16] = {8'h52, kv_idle ? lq_t[gl] : 8'd0};
+        assign r_req_we[gl] = kv_idle ? lq_we[gl] : 1'b1;
+        assign r_req_wdata[gl*256 +: 256] = kv_idle ? lq_d[gl] : kv_wd[gl*256 +: 256];
+        assign r_req_wstrb[gl*32 +: 32] = kv_idle ? lq_s[gl] : 32'hFFFF_FFFF;
     end
     reg [3:0] l_wo;                                        // lanes with writes in flight (their responses are all write acks)
+    // ---- KV write-back engine (hbm-fq/dma, KVW = 1)
+    wire [3:0] kv_wv, kv_wo; wire [4*37-1:0] kv_wa; wire [4*256-1:0] kv_wd;
+    if (KVW != 0 && VR2 != 0) begin : g_kvw
+        reg [32*6-1:0] gcr_v; always @* for (integer b = 0; b < 32; b = b + 1) gcr_v[b*6 +: 6] = g_cr[b];
+        ot_hgi_dma_kvw #(.MUT(MUT)) u_kvw (.clk(clk), .rn(rn), .c_v(kv_take), .c_rdy(kv_c_rdy),
+            .c_vs(cm_q[22:8]), .c_vst(cm_q[62:48]), .c_ds(cm_q[134:103]), .c_dst({5'd0, cm_q[169:143]}),
+            .c_ns(cm_q[226:209]), .c_m(cm_q[205:186]),
+            .g_gnt(g_gnt), .g_cr(gcr_v), .kq(kv_kq), .kq_creq(kv_creq), .vr2r(vr2r),
+            .b0_we(kb_we), .b0_wa(kb_wa), .b0_wd(kb_wd), .b0_re(kb_re), .b0_ra(kb_ra), .b0_rd(lr_d),
+            .kw_v(kv_wv), .kw_rdy(r_req_rdy), .kw_addr(kv_wa), .kw_wdata(kv_wd), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we),
+            .kw_wo(kv_wo), .src(kv_src), .done(kv_done), .idle(kv_idle_w));
+    end else begin : g_nokvw
+        assign kv_c_rdy = 1'b0; assign kv_idle_w = 1'b1; assign kv_creq = 1'b0; assign kv_src = 1'b0; assign kv_done = 1'b0;
+        assign kv_kq = 512'd0; assign kv_wv = 4'd0; assign kv_wo = 4'd0; assign kv_wa = '0; assign kv_wd = '0;
+        assign kb_we = 1'b0; assign kb_re = 1'b0; assign kb_wa = 8'd0; assign kb_ra = 8'd0; assign kb_wd = 256'd0;
+    end
     reg [5:0] l_wn [0:3];
     reg [3:0] w_acc_q, w_ack_q;                            // write accepted / acknowledged a lane (pin flops of the handshakes)
     always @* for (integer l = 0; l < 4; l = l + 1) l_wo[l] = l_wn[l] != 6'd0 || w_acc_q[l];
-    assign r_rsp_rdy = lg | l_wo;
+    assign r_rsp_rdy = lg | l_wo | kv_wo;
     // the taken sector is registered first (the grant is one-hot: an AND-OR pick), its slot computed from the register
     // (registered boundary: r_rsp_v -> lt_i -> tag[lt_i] + beat -> lw_a was 49 levels)
     reg lt_v; reg [7:0] lt_tag; reg [2:0] lt_bt; reg [255:0] lt_d;
@@ -438,8 +474,10 @@ module ot_hgi_dma_mover #(
         lt_tag <= tg; lt_bt <= bt; lt_d <= dd;
     end
     always @(posedge clk or negedge rn) if (!rn) lt_v <= 1'b0; else lt_v <= |l_take;
-    ot_sram_1r1w_256x256_m2_r2c2 u_land (.clk(clk), .r_ce_in(p1_v), .r_addr_in(p1_h), .rd_out(lr_d),
-        .w_ce_in(lw_v), .w_addr_in(lw_a), .wd_in(lw_d), .w_mask_in({256{1'b1}}),
+    // KVW: bank 0 of the KV engine's buffer (the sector engine is idle while it runs; its enables pick the port)
+    wire kb_we, kb_re; wire [7:0] kb_wa, kb_ra; wire [255:0] kb_wd;
+    ot_sram_1r1w_256x256_m2_r2c2 u_land (.clk(clk), .r_ce_in(p1_v | kb_re), .r_addr_in(kb_re ? kb_ra : p1_h), .rd_out(lr_d),
+        .w_ce_in(lw_v | kb_we), .w_addr_in(kb_we ? kb_wa : lw_a), .wd_in(kb_we ? kb_wd : lw_d), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     always @(posedge clk) begin : lwd
         lw_a <= lt_v ? lt_tag + ((MUT == 3) ? 8'd0 : {5'd0, lt_bt}) : (VR2 != 0) ? g_slot[g_di] : v_ptr;
@@ -453,7 +491,7 @@ module ot_hgi_dma_mover #(
             k_in <= 8'd0; v_in <= 3'd0; v_kind <= 8'd0; rd_in <= 9'd0; wr_in <= 9'd0;
             sf_h <= '0; sf_a <= '0; v_ptr <= '0; sf_n <= 9'd0; lv <= '0; lw_v <= 1'b0; lq_v <= 4'd0; lg <= 4'd0; lgi <= 2'd0; ract <= 4'd0; rrr <= 2'd0;
             cf_h <= 6'd0; cf_t <= 6'd0; cf_n <= 7'd0; cd_v <= 1'b0; u_cv <= 1'b0; go_q4 <= 1'b0; stp <= 1'b0; stpd <= 1'b0;
-            g_busy <= 32'd0; g_hv <= 32'd0; g_rr <= 5'd0; vr2q <= '0; for (integer b = 0; b < 32; b = b + 1) g_cr[b] <= 6'(GLQ);
+            g_busy <= 32'd0; g_hv <= 32'd0; g_rr <= 5'd0; s_vr2q <= '0; for (integer b = 0; b < 32; b = b + 1) g_cr[b] <= 6'(GLQ);
             w_acc_q <= 4'd0; w_ack_q <= 4'd0; for (integer l = 0; l < 4; l = l + 1) l_wn[l] <= 6'd0;
             for (integer l = 0; l < 4; l = l + 1) lbc[l] <= 3'd0;
             wq_h <= 4'd0; wq_t <= 4'd0; wq_n <= 5'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
@@ -464,15 +502,18 @@ module ot_hgi_dma_mover #(
             // ---- the serial engine's completion and ports
             if (s_mv_done) begin mv_done <= 1'b1; mv_src <= 1'b1; sel_s <= 1'b0; end   // serial engine: source = done
             if (s_mv_fault) mv_fault <= 1'b1;
-            cv_q <= 1'b0;
+            cv_q <= cv_q && !kv_take && !cv_go;                       // held while the KV engine is busy / full
             if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
-            if (cv_q && !fast_cmd && cm_q[94:93] == 2'd0) begin mv_fault <= 1'b1; f_fault <= 1'b1; end   // strided HBM writes: partial sectors
-            else if (cv_q && !fast_cmd) sel_s <= 1'b1;
+            if (kv_src) mv_src <= 1'b1;
+            if (kv_done) mv_done <= 1'b1;
+            if (k_fault && !kv_idle) begin mv_fault <= 1'b1; f_fault <= 1'b1; end
+            if (cv_go && !fast_cmd && cm_q[94:93] == 2'd0) begin mv_fault <= 1'b1; f_fault <= 1'b1; end   // strided HBM writes: partial sectors
+            else if (cv_go && !fast_cmd) sel_s <= 1'b1;
             // ---- accept a sector-engine command
             go_f <= 1'b0; go_q2 <= go_f | (go_q2 && busy_f);           // go_q2: the command fields have settled (level while busy)
             go_q3 <= go_q2 && busy_f && !go_f;                         // go_q3: the row registers have settled
             go_q4 <= go_q3 && busy_f && !go_f;                         // go_q4: the reader slots' next-row registers have settled
-            if (cv_q && fast_cmd) begin
+            if (cv_go && fast_cmd) begin
                 busy_f <= 1'b1; go_f <= 1'b1;
                 ssp <= cm_q[1:0]; sf <= cm_q[4:2]; sst <= cm_q[76:45]; dsp <= cm_q[94:93]; df <= cm_q[97:95]; dst <= cm_q[169:138];
                 sstb <= (cm_q[1:0] == 2'd1) ? {cm_q[76:45], 2'b00} : {2'd0, cm_q[76:45]};
@@ -595,16 +636,17 @@ module ot_hgi_dma_mover #(
                 lw_v <= lt_v || v_rd_land || (VR2 != 0 && g_dv);
                 // VM read group: responses held a lane, drained one a cycle; credits; burst ownership
                 for (integer b = 0; b < 32; b = b + 1) begin
-                    if (vr2r[b*257 + 256]) g_hv[b] <= 1'b1;
-                    g_cr[b] <= g_cr[b] + 6'(g_crp[b]) - 6'((r_go && !src_hbm && VR2 != 0 && rsa[r_k][9:5] == 5'(b)) ? 1 : 0);
+                    if (vr2r[b*257 + 256] && kv_idle) g_hv[b] <= 1'b1;     // KVW: the KV engine's responses are its own
+                    g_cr[b] <= g_cr[b] + 6'(g_crp[b]) - 6'((r_go && !src_hbm && VR2 != 0 && rsa[r_k][9:5] == 5'(b)) ? 1 : 0)
+                               - 6'(kv_kq[b*16 + 15]);                // the KV engine's requests (hbm-fq/dma)
                 end
                 if (VR2 != 0 && g_dv) begin g_hv[g_di] <= 1'b0; g_busy[g_di] <= 1'b0; g_rr <= g_di + 5'd1; end
-                vr2q[511:0] <= '0;
+                s_vr2q[511:0] <= '0;
                 if (r_go && !src_hbm && VR2 != 0) begin
                     g_busy[rsa[r_k][9:5]] <= 1'b1; g_slot[rsa[r_k][9:5]] <= sf_a;
-                    vr2q[rsa[r_k][9:5]*16 +: 16] <= {1'b1, rsa[r_k][19:5]};
+                    s_vr2q[rsa[r_k][9:5]*16 +: 16] <= {1'b1, rsa[r_k][19:5]};
                 end
-                vr2q[512] <= VR2 != 0 && ((busy_f && !src_hbm && go_q4 && !r_done) || g_busy != 32'd0 || !g_home);
+                s_vr2q[512] <= VR2 != 0 && ((busy_f && !src_hbm && go_q4 && !r_done) || g_busy != 32'd0 || !g_home || kv_creq);
                 if (v_rd_land) v_ptr <= v_ptr + 8'd1;
                 for (integer l = 0; l < 4; l = l + 1) if (l_take[l]) lbc[l] <= r_rsp_last[l] ? 3'd0 : lbc[l] + 3'd1;
                 // next grant: rotating from the lane after the current grant, among the lanes with a sector waiting
@@ -713,7 +755,7 @@ module ot_hgi_dma_mover #(
     wire unused_ok = &{1'b0, s_kt, s_krr, s_fence_done};
 `ifndef SYNTHESIS
     // a refused move names itself (bench / e2e debugging)
-    always @(posedge clk) if (rn && cv_q && (fast_cmd ? 1'b1 : cm_q[94:93] == 2'd0)) begin : flt
+    always @(posedge clk) if (rn && cv_go && (fast_cmd ? 1'b1 : cm_q[94:93] == 2'd0)) begin : flt
         reg x; x = (cm_q[94:93] == 2'd0) && (!fast_cmd || cm_q[102:98] != 5'd0 || cm_q[142:138] != 5'd0 ||
                     ((cm_q[226:206] << l2(esz(cm_q[97:95]))) & 21'h1F) != 21'd0);
         if (x) $display("MOVER refuses a partial-sector HBM write: src sp %0d fmt %0d dst base %h stride %0d fmt %0d m %0d n %0d istride %0d/%0d",

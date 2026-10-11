@@ -635,6 +635,35 @@ def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
                          "VM sector a cycle (item: TOPK 4.3x)")
 
 
+def hgi_coll_topk_merge_model(G=96, n=512, k=512, kmax=2048, deliver_lanes=4, ser_cycles_per_flit_rank=23.75):
+    """HGI COLL.TOPK_MERGE (unit 6 op 2) in hardware (hgi-1010/k 2026-10-10, rtl/hbm_accel/generic/collective/tkm/
+    ot_hgi_coll_tkm.sv, ot_hgi_coll_ep TKM = 1): a merge sink on the collective's exact gather bypass.
+
+    Every rank injects pf = ceil(M / 8) flits of 8 {value, id} pairs (pad slots past its n); every rank receives the G pf
+    flits on its delivery lanes (credit back-pressured) and keeps the exact top k: survivors (key > tau, tau = the
+    array's k-th key, an exact lower bound) enter a systolic merge array of kmax / 4 cells of 4 sorted elements (one
+    4-element block a cycle); then odd-even transposition by the id key (ceil(k / 4) rounds) and a 4-element-a-cycle
+    shift-out into 16-word O / R lines.  Exact: the 83-bit key {valid, ordered value, ~id, ~rank, ~index} is the golden
+    lexsort's total order.  Survivors ~ k (1 + ln(G n / k)) for unordered values (G n for ascending arrival: worst case,
+    one block of 4 a cycle).
+    """
+    import math
+    assert 1 <= k <= kmax <= 2048 and 1 <= n <= 2048 and 1 <= G <= 96
+    pf = -(-n // 8)
+    flits = G * pf
+    gather = flits / deliver_lanes
+    surv = min(G * n, k * (1 + math.log(max(G * n / k, 1.0))))
+    insert = surv / 4
+    cells = kmax // 4
+    tail = math.ceil(k / 4) * 3 + 20          # drain + id rounds + shift-out + packer / writes
+    return dict(flits_delivered=flits, delivered_elements_per_cycle=8 * deliver_lanes,
+                gather_cycles=round(gather), survivors_estimate=round(surv), insert_cycles=round(insert),
+                tail_cycles=tail, record_cycles_estimate=round(max(gather, insert) + tail),
+                cells=cells, element_bits=84, key_bits=83, comparators_per_cell=16,
+                flops_estimate=cells * 4 * 84 * 2, widest_select="4 x 4 x 83-bit compare + rank + 8:4 one-hot select a cell",
+                price_basis="walk topk_merge(sel) = TU endpoint 1,628.5 + TU 377.6 ns + tail 0.15 us + l20 select 419")
+
+
 def hbm_index_service_model():
     """Full-stack key source geometry and finite return-reservation obligations."""
     from hbm_index_service_model import model
@@ -15932,3 +15961,54 @@ def ha2_truecredit_capture_return_pin_model():
 def ha2_truecredit_local_transport_model():
     from tools.ha2_rxs_capture_model import local_transport_model
     return local_transport_model()
+
+
+def hbm_vm8_pin_clock_bank_model(long_taps=48, short_taps=32):
+    """Fanout-bounded VM8 clock proposal, sized from existing full-width pin plans.
+
+    Clock-only partition: arithmetic, data port widths, register depths and token
+    schedule remain unchanged. Clock-tree area and power await physical evidence.
+    """
+    import re
+    from collections import Counter
+    records = []
+    pin_root = ROOT / 'physical/hbm_accel_die_views/vm/vcut8/ports'
+    for pin_file in sorted(pin_root.glob('*/io_place.tcl')):
+        width = 349.056 if pin_file.parent.name.endswith('_w') else 350.760
+        counts, old_counts, faces = Counter(), Counter(), set()
+        for line in pin_file.read_text().splitlines():
+            match = re.search(r'-pin_name \{([^}]+)\}.*-location \{([0-9.]+) ([0-9.]+)\}', line)
+            if not match or match[1].startswith(('ck', 'rst')):
+                continue
+            x, y = float(match[2]), float(match[3])
+            face = 'w' if x < 1 else 'e' if x > width-1 else 's' if y < 1 else 'n'
+            faces.add(face)
+            length, coordinate = (1000.056, y) if face in 'we' else (width, x)
+            n, old_n = (long_taps, 4) if face in 'we' else (short_taps, 2)
+            counts[face, min(n-1, int(coordinate / length * n))] += 1
+            old_counts[face, min(old_n-1, int(coordinate / length * old_n))] += 1
+        tap_count = sum(long_taps if f in 'we' else short_taps for f in faces)
+        max_pin_load = max(counts.values())
+        records.append(dict(master=pin_file.parent.name, pin_source=str(pin_file.relative_to(ROOT)),
+            pin_sha256=hashlib.sha256(pin_file.read_bytes()).hexdigest(),
+            boundary_bits=sum(counts.values()), clock_taps=tap_count,
+            old_clock_taps=sum(4 if f in 'we' else 2 for f in faces),
+            max_pin_registers_per_tap_upper_bound=max_pin_load+1,
+            max_clock_sinks_per_tap_upper_bound=2*max_pin_load+3,
+            old_max_pin_registers_per_tap_upper_bound=max(old_counts.values())+1,
+            long_segment_um=1000.056/long_taps, short_segment_um=width/short_taps,
+            slot_area_um2=width*1000.056, added_flops=0, added_data_muxes=0,
+            added_clock_port_tracks=tap_count, min_clock_pin_spacing_um=min(1000.056/long_taps,width/short_taps),
+            clock_pin_layer='M7', clock_pin_pitch_um=0.064,
+            slot_fit='unchanged outline; regenerate ports and check die clock drops/physical lint'))
+    return dict(schema='opentallas.vm8-pin-clock-bank-model.v1', opt_in_default=False,
+        long_taps=long_taps, short_taps=short_taps, halves=records,
+        clock_taps=sum(r['clock_taps'] for r in records),
+        old_clock_taps=sum(r['old_clock_taps'] for r in records),
+        added_token_cycles=0, added_boundary_data_bits_per_cycle=0,
+        added_memory_bytes_per_cycle=0, added_MACs_per_cycle=0,
+        compute_communication_intensity='unchanged; same full-width transaction pipelines',
+        clock_fanout_upper_bound=max(r['max_clock_sinks_per_tap_upper_bound'] for r in records),
+        additional_register_area_um2=0,
+        physical_clock_area_power='unmeasured; retain candidate status until actual CTS cells and clock power are priced',
+        adoption='all eight TT setup>=0/FF hold>=0/DRC0 plus transaction/negative gates; no latency or gain credit')
