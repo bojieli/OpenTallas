@@ -3860,7 +3860,15 @@ def buses_r8(m):
     for st, ph in m['phys'].items():
         bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
         cl_ = m['svcs'][st].name if st in m['svcs'] else hub['eng'].name      # the stack's client
-        bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
+        if st in m['svcs'] and m['svcs'][st].master == CTRL_SVC_MASTER:
+            # --ctrl-adapters (s81die-1011/ctrl): dsfd_ctrl rd [8895:0] = {kr_v 32 | kr_beat 32x4 | kr_tag 32x17 |
+            # kr_data 32x256} (the RTL also carries the 32 response valids the 8,864-b default bus dropped) onto
+            # dsfd_svc_c's per-PC response pins r_data / r_tag / r_beat / rv
+            c_ = m['ctrls'][st].name
+            for nm_, lo_, n_ in (('r_data', 0, 8192), ('r_tag', 8192, 544), ('r_beat', 8736, 128), ('rv', 8864, 32)):
+                bus(f'rd_{st}_{nm_}', 'hbm_read', n_, [(c_, f'rd[{lo_}:{lo_ + n_ - 1}]'), (cl_, nm_)])
+        else:
+            bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
         if CTRL_RQ:   # s81-gen: the controller's request side (real dsfd_ctrl rq / rk / wd), abutting faces
             bus(f'rq_{st}', 'hbm_req', HBM_RQ_BITS, [(cl_, 'rq'), (m['ctrls'][st].name, 'rq')])
             bus(f'rk_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'rk'), (cl_, 'rk')])
