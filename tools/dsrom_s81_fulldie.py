@@ -4368,9 +4368,24 @@ def _hop_fix(m, P):
                 RR = R - 10.0 - (30.0 if RELAY_PIN_PATH and k == 0 and d0.name.startswith('y_') else 0.0)
                 Lp = _poly_len(path)
                 (cx, cy), dch = _poly_at(path, pos[k])
+                if RELAY_PIN_PATH and _mh(cur, (cx, cy)) > RR - 10.0:
+                    # fs3: the earlier stations fell behind their path points (mk10_20 mkd_2_0: 4 stations advanced
+                    # 413 um, station 4's point stood 1,500 um from cur, nothing within reach): re-target this station
+                    # from cur, the remaining Manhattan distance split over the remaining stations, x first
+                    st = min(RR - 30.0, _mh(cur, b) / (n - k + 1))
+                    dx, dy = b[0] - cur[0], b[1] - cur[1]
+                    if abs(dx) >= st:
+                        cx, cy, dch = cur[0] + math.copysign(st, dx), cur[1], 'E' if dx > 0 else 'W'
+                    else:
+                        cx, cy = b[0], cur[1] + math.copysign(min(st - abs(dx), abs(dy)), dy)
+                        dch = 'N' if dy > 0 else 'S'
+                    rc['pin_retarget'] = rc.get('pin_retarget', 0) + 1
                 horiz = dch in 'EW'
                 NR = dict(nxt=b, nreach=max(Lp - pos[k], PIN_SEG) + 40.0 if k == n - 1 else (n - k) * (R - 10.0)) \
                     if NXT_REACH else {}
+                if RELAY_PIN_PATH and NR:
+                    # fs3: never let the remaining stations fall short: the load stays within their combined reach
+                    NR['nreach'] = min(NR['nreach'], (n - k) * (R - 20.0))
                 w_, h_ = stn_dims([bits], horiz)
                 if not fwd and (reg is not None or not GEOMETRY_FIX):  # frame relay faces chosen later -> square
                     w_ = h_ = max(w_, h_)
