@@ -19,13 +19,17 @@ module ot_dsrom_aq12t (
     output reg  [511:0]  y,
     output reg           fault
 );
+    // the tile's reset relay (el1011-ds-misc/pqc): rst_n is synchronised and re-driven from a flop next to the tile's
+    // control flops (vline, multiplier valids, ring pointers, vo / fault); no datapath register is reset.
+    wire [0:0] rst_l;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_l));
     localparam integer LATENCY = 29;
     localparam [30:0] FLOOR_FP8 = 31'h38d1b717;   // float32(1e-4)
     localparam [31:0] INV_448   = 32'h3b124925;   // float32(1/448)
     integer i;
 
     wire [LATENCY:0] vl;
-    ot_hdc_vline #(.D(LATENCY)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vl));
+    ot_hdc_vline #(.D(LATENCY)) u_v (.clk(clk), .rst_n(rst_l), .v(v), .vd(vl));
     // register cycle k reads cycle k-1: s0_x at 1; elements wait to the max(fld, 1) stage at 22 (xg at 21: 20 registers)
     reg  [1023:0] s0_x;
     always @(posedge clk) s0_x <= x;
@@ -35,8 +39,8 @@ module ot_dsrom_aq12t (
     //      s0_x(t) written at edge t -> t+1; read issued with ra(t+18) = wp(t); rd valid in cycle t+19; xg_r(t+20) =
     //      s0_x(t), exactly the 20-register line.  The pointers are the only reset flops (14 b, control).
     reg  [6:0] r_wp, r_rp;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin r_wp <= 7'd0; r_rp <= 7'd110; end           // rp = wp - 18 (mod 128)
+    always @(posedge clk or negedge rst_l) begin
+        if (!rst_l) begin r_wp <= 7'd0; r_rp <= 7'd110; end           // rp = wp - 18 (mod 128)
 `ifdef OT_AQ12T_MUT_RA
         else begin r_wp <= r_wp + 7'd1; r_rp <= r_rp + 7'd2; end       // mutant: the read pointer runs away
 `else
@@ -133,11 +137,11 @@ module ot_dsrom_aq12t (
     wire [31:0] prod;
     wire [1:0]  perr;
     wire        pvo;
-    ot_dsrom_aq12m_mul u_scale (.clk(clk), .rst_n(rst_n), .valid_in(vl[11]), .a({1'b0, amax}), .b(INV_448), .y(prod),
+    ot_dsrom_aq12m_mul u_scale (.clk(clk), .rst_n(rst_l), .valid_in(vl[11]), .a({1'b0, amax}), .b(INV_448), .y(prod),
                                 .err(perr), .valid_out(pvo));
     wire pfault = pvo && (perr != 2'd0);
     wire nf20;                                   // nf2 (cycle 3) aligned with prod (cycle 20)
-    ot_hdc_delay #(.W(1), .D(17)) u_nf (.clk(clk), .rst_n(rst_n), .d(nf2), .q(nf20));
+    ot_hdc_delay #(.W(1), .D(17)) u_nf (.clk(clk), .rst_n(rst_l), .d(nf2), .q(nf20));
 
     // -- cycle 21: ce = ceil_log2(prod) + 127 registered once -------------------------------------------------------
     reg [8:0] ce_r;
@@ -285,8 +289,8 @@ module ot_dsrom_aq12t (
         end
     end
     // -- cycle 29 (S17): codes and dequantised BF16 (output registers) ----------------------------------------------
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; end
+    always @(posedge clk or negedge rst_l) begin
+        if (!rst_l) begin vo <= 1'b0; fault <= 1'b0; end
         else begin vo <= vl[LATENCY - 1]; fault <= vl[LATENCY - 1] && s16_nf; end
     end
     always @(posedge clk) begin

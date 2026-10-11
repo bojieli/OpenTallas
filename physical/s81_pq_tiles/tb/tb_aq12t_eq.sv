@@ -35,6 +35,7 @@ module tb_aq12t_eq;
         nv = 0; nerr = 0; x = 0;
         repeat (5) @(posedge clk);
         rst_n = 1;
+        repeat (8) @(posedge clk);                       // the tile reset relay (sync 2 + tree 1) releases first
         for (cyc = 0; cyc < ncyc + 40; cyc = cyc + 1) begin
             @(negedge clk);
             if (cyc < ncyc) begin
