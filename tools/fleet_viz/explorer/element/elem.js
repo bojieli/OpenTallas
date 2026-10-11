@@ -576,12 +576,12 @@ function tputHtml(E){
   const lab = st => st === 'QUALIFIED' ? 'ver' : st === 'UNQUALIFIED_NO_BENCH' ? 'unv' : 'bad';
   const txt = st => st === 'UNQUALIFIED_NO_BENCH' ? 'UNQUALIFIED · no production-shape bench' : st;
   const L = el.limiting || {};
-  const ops = (el.ops || []).map(o => `<tr><td class="m">${esc(o.op)}</td><td class="m">${esc(o.model)}</td><td><span class="lbl ${lab(o.status)}">${esc(txt(o.status))}</span></td><td class="n">${o.ratio == null ? '—' : fmt(o.ratio, 3)}</td><td class="m" style="font-size:10.5px">${esc(o.src || '—')}</td></tr>`).join('');
+  const ops = (el.ops || []).map(o => `<div class="fact"><div class="fr"><span><code>${esc(o.op)}</code> · ${esc(o.model)}</span><b><span class="lbl ${lab(o.status)}">${esc(txt(o.status))}</span> ${o.ratio == null ? '' : 'ratio ' + fmt(o.ratio, 3)}</b></div>${o.owner && o.owner !== '-' ? `<div class="note" style="margin:2px 0 0">owner ${esc(o.owner)}</div>` : ''}<div class="src">${esc(o.src || 'no source recorded')}</div></div>`).join('');
   const cl = cls.map(c => `<tr><td class="m">${esc(c.model)} · ${esc(c.cls)}</td><td><span class="lbl ${lab(c.status)}">${esc(txt(c.status))}</span></td><td class="n">${fmt(c.critical_cycles_per_token, 1)}</td><td class="n">${fmt(100 * c.share, 1)} %</td><td class="n">${fmt(100 * c.measured_fraction, 2)} % of ${fmt(c.nodes, 0)}</td></tr>
     ${c.n_unmeasured ? `<tr><td colspan="5" class="note">unmeasured nodes (${c.n_unmeasured}): ${esc((c.unmeasured_nodes || []).join(', '))}</td></tr>` : ''}`).join('');
   return `<div class="vbox"><p><span class="lbl ${lab(el.status)}">${esc(txt(el.status))}</span> ${el.ratio == null ? 'measured / budget ratio: <b>none recorded</b> (status from the token-path class below)' : `measured / budget = <b>${fmt(el.ratio, 3)}</b> (qualifies at ≤ ${fmt(qr, 2)})`}</p>
     <p class="note" style="margin-top:4px">limiting op ${esc(L.op || '—')} in ${esc(L.model || '—')}${L.owner && L.owner !== '-' ? ' · owner ' + esc(L.owner) : ''}</p>
-    <div class="tw"><table class="t" style="margin-top:6px"><thead><tr><th>op</th><th>model</th><th>status</th><th class="n">ratio</th><th>source</th></tr></thead><tbody>${ops}</tbody></table></div>
+    <div class="facts" style="margin-top:6px">${ops}</div>
     ${cl ? `<div class="tw"><table class="t" style="margin-top:8px"><thead><tr><th>token-path class</th><th>status</th><th class="n">cycles / token</th><th class="n">share</th><th class="n">measured</th></tr></thead><tbody>${cl}</tbody></table></div><p class="note">${esc(cls[0].basis || '')}</p>` : ''}
     ${src}</div>`;
 }
@@ -723,7 +723,7 @@ function rtlSideHtml(){
   const ok = S.els.filter(E => !E.err);
   const E = ok.find(x => x.k === S.rtlEl) || ok[0]; if (!E) return '';
   if (SAFE) return sec('RTL', '<p class="note">The RTL source is not shown in the share-safe view.</p>');
-  if (!E.d.rtl_file) return sec(esc(E.d.label) + ' · RTL', `<p class="note">No RTL export for this element (the job's synthesis config was not found).</p><h4 class="sub">Reference model</h4>${refHtml(E)}`);
+  if (!E.d.rtl_file) return sec(esc(E.d.label) + ' · RTL', `<p class="note">No RTL export for this element: ${esc(E.d.rtl_error || 'the job\'s synthesis config was not found')}.</p><h4 class="sub">Reference model</h4>${refHtml(E)}`);
   if (!E.rtl) return sec('RTL', '<p class="note">Loading the RTL&hellip;</p>');
   S.rtlEl = E.k;
   const R = E.rtl;
