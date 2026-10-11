@@ -3580,7 +3580,8 @@ def routed_ioref(j, m):
         rr.update(available=tt is not None and ff is not None and not errs, tt=tt, ff=ff, errors=errs[:5], ioref=io,
                   tt_i2r=res["setup_tt"].get("worst_input_to_reg_slack_ps"), tt_out=res["setup_tt"].get("worst_output_port_slack_ps"),
                   ff_i2r=res["hold_ff"].get("worst_input_to_reg_slack_ps"), ff_out=res["hold_ff"].get("worst_output_port_slack_ps"),
-                  ff_r2r=res["hold_ff"].get("worst_reg_to_reg_slack_ps"), json=out)
+                  ff_r2r=res["hold_ff"].get("worst_reg_to_reg_slack_ps"), json=out,
+                  registers=res["setup_tt"].get("registers"), registers_clocked=res["setup_tt"].get("registers_clocked"))
         if not rr["available"]:
             rr["why"] = f"re-STA incomplete (TT {tt} / FF {ff}; {errs[:2]})"
         # a corner whose SDC has no insertion-reference virtual clock is unchanged by the re-STA: keep the route's own
@@ -4176,10 +4177,16 @@ def do_verdict(j, fleet, stl):
         closed = real_slack(ss) and real_slack(ff) and ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
         j["metrics"] = m
         event(j, f"verdict at the ROUTED insertion: TT {ss:+.2f} / FF {ff:+.2f} -> {'CLOSED' if closed else 'NOT CLOSED'}")
+    uc = under_constrained(rr)
+    if uc:
+        failed.append("UNDER-CONSTRAINED")
+        j["failed_checks"] = failed
+        closed = False
+        event(j, f"UNDER-CONSTRAINED: {uc}: constraints did not apply; never CLOSED")
     # the calibrate-insertion re-STA / re-route is moot once the route is timed on its own tree
     mr = None if (rr and rr.get("available")) else measured_resta(j, m)
     if mr and mr.get("available"):
-        mclosed = real_slack(mr["tt"]) and real_slack(mr["ff"]) and mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
+        mclosed = not uc and real_slack(mr["tt"]) and real_slack(mr["ff"]) and mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
         if mclosed:
             # the finished route signs off on the MEASURED clock: no re-route; its verdict numbers are the measured ones
             m.update(setup_corner="tt", ss_ps=mr["tt"], ff_ps=mr["ff"], measured_resta=mr, assumed_clock=dict(ss_ps=ss, ff_ps=ff))
@@ -4236,6 +4243,23 @@ SENTINEL_PS = 1e6
 
 def real_slack(v):
     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and abs(v) < SENTINEL_PS
+
+
+# UNDER-CONSTRAINED (drive-1010 2026-10-10): a verdict needs real constrained endpoints.  The routed re-STA counts the
+# registers and those clocked by a defined clock; fewer clocked registers than max(UC_MIN_REGS, UC_FRAC x registers)
+# means the constraints did not apply (clock not found / wrong name) -- never CLOSED.  Blocks with no registers at all
+# (pure wiring) are judged by their port paths (SENTINEL-SLACK catches 'no path').
+UC_MIN_REGS = 10
+UC_FRAC = 0.01
+
+
+def under_constrained(rr):
+    """reason string when the routed re-STA census shows too few clocked registers, else None"""
+    n, c = (rr or {}).get("registers"), (rr or {}).get("registers_clocked")
+    if not isinstance(n, int) or not isinstance(c, int) or n <= 0:
+        return None
+    floor = min(n, max(UC_MIN_REGS, UC_FRAC * n))
+    return None if c >= floor else f"only {c} of {n} registers are clocked by a defined clock (< {floor:g})"
 
 
 def eco_passes(res, rc):
