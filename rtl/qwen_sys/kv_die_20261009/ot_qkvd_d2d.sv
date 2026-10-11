@@ -33,6 +33,9 @@ module ot_qkvd_d2d #(
     parameter [31:0]  RBD = {8'd8, 8'd8, 8'd8, 8'd8},   // receive buffer per RX class
     parameter [31:0]  OCR = {8'd8, 8'd8, 8'd8, 8'd8},   // die-face RX credits per RX class
     parameter integer MUT = 0,
+    // SBD (el1011-q-kvd 2026-10-11; 0 = unchanged): buffers of depth >= SBD use ot_qkvd_fifo_sb (64 x 512 SRAM body +
+    // registered head) instead of the flop array whose binary pointers fanned out to every bit (qkd_d2d_b TT -46.65)
+    parameter integer SBD = 0,
     parameter integer FW  = 8 + 8 + 1 + 3 + W
 ) (
     input  wire            clk,
@@ -97,8 +100,13 @@ module ot_qkvd_d2d #(
     genvar i, j;
     generate for (i = 0; i < NT; i = i + 1) begin : g_tx
         wire [$clog2(IBD[8*i +: 8]+1)-1:0] cnt;
+        if (SBD != 0 && IBD[8*i +: 8] >= SBD) begin : g_sb
+        ot_qkvd_fifo_sb #(.W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ci_v[i]), .din(ci_d[W*i +: W]),
+            .pop(gnt[i]), .dout(ib_head[W*i +: W]), .empty(ib_empty[i]), .full(ib_full[i]), .count(cnt));
+        end else begin : g_ff
         ot_qkvd_fifo #(.RH(1), .W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ci_v[i]), .din(ci_d[W*i +: W]),
             .pop(gnt[i]), .dout(ib_head[W*i +: W]), .empty(ib_empty[i]), .full(ib_full[i]), .count(cnt));
+        end
     end endgenerate
     reg [W-1:0] sel_word;
     reg [2:0]   sel_cls;
@@ -116,8 +124,13 @@ module ot_qkvd_d2d #(
         wire [$clog2(RBD[8*j +: 8]+1)-1:0] cnt;
         assign rb_push[j] = rx_dv && (rx_cls == 3'(RXB + j));
         assign rb_pop[j]  = !rb_empty[j] && (ocred[j] != 0);
+        if (SBD != 0 && RBD[8*j +: 8] >= SBD) begin : g_sb
+        ot_qkvd_fifo_sb #(.W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(rx_word),
+            .pop(rb_pop[j]), .dout(rb_head[W*j +: W]), .empty(rb_empty[j]), .full(rb_full[j]), .count(cnt));
+        end else begin : g_ff
         ot_qkvd_fifo #(.RH(1), .W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(rx_word),
             .pop(rb_pop[j]), .dout(rb_head[W*j +: W]), .empty(rb_empty[j]), .full(rb_full[j]), .count(cnt));
+        end
     end endgenerate
     // credit return fields (2 b each, 4 fields; field j = this die's RX class j)
     reg [7:0] cr_ret;
