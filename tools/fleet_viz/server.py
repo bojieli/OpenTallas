@@ -452,6 +452,12 @@ _ELEM_CACHE = {}
 
 def elem_redact(o):
     """share-safe element data: no module / instance / pin / port / job / host / record names"""
+    if str(o.get('schema', '')).startswith('opentallas.explorer_elem.index'):   # data/index.json (export index)
+        for e in (o.get('elements') or {}).values():
+            for k in ('job', 'block', 'reference'): e[k] = ''
+        return o
+    o['reference'] = dict(found=False, note='not shown in the share-safe view') if o.get('reference') else o.get('reference')
+    o['bench'] = {}
     g = o.get('geom', {})
     g['modules'] = ['m%d' % i for i in range(len(g.get('modules', [])))]
     for m in g.get('macros', []): m['name'] = ''
