@@ -50,7 +50,17 @@ module ot_qwen_nearhbm_head_h #(
     parameter integer MUL_LAT = 6,
     parameter [31:0]  SCALE = 32'h3DB504F3,
     parameter integer LFB = 4,
-    parameter integer LTW = 12
+    parameter integer LTW = 12,
+    // FP = 1 (fe-push-qwen-1010, 2026-10-10; 0 = unchanged, the bench default): three physical-design changes, 0 cycles.
+    //   ANR  the 256 lane FP32 adders as ot_hdc_fp32_add_lat_nr (cut bundles reset only their valid bit; HSPLIT kept
+    //        copy of the zero-logic B2a hop).  qkd_rhead_b/c-60db99084/2dc20f7de: 116 k async-reset flops, floorplan
+    //        -1,799 / place -243 on g_rgrp[*].u_l -> u_a/u_b cut-bundle RESETN.  Bit-identical (tb_hdc_add_lat_nr).
+    //   RQ   one more reset leaf per 4-lane quad under each group leaf: a leaf drives ~4 lanes' valid / output resets.
+    //   NBL  the node-slice select / enable come from each 16-lane group's OWN decision-word delay line (identical
+    //        copies: same lt2, same reset leaves, same depth) instead of group 0's: place -596 / -717 on
+    //        g_s3[0].u_ltd.line[45|46] -> nb_d (2 select bits + the enable to 1,024 flops across the tile).
+    parameter integer FP = 0,
+    parameter integer FPMUT = 0       // bench negative control: 1 = the ANR adders' HSPLIT copy one edge stale
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -77,6 +87,15 @@ module ot_qwen_nearhbm_head_h #(
     genvar gg, d, l;
     generate for (gg = 0; gg < GPH; gg = gg + 1) begin : g_rgrp
         (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rt), .q(rgrp[gg]));
+    end endgenerate
+    // lane-unit reset: FP = 1 -> a quad leaf under the group leaf (RQ); FP = 0 -> the group leaf
+    wire [HD/4-1:0] rlq;
+    generate for (gg = 0; gg < HD / 4; gg = gg + 1) begin : g_rq
+        if (FP != 0) begin : g_l
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rgrp[gg / 4]), .q(rlq[gg]));
+        end else begin : g_w
+            assign rlq[gg] = rgrp[gg / 4];
+        end
     end endgenerate
     // ---- S2: the tile pins ---------------------------------------------------------------------------------------------
     reg  [3:0]       c2;
@@ -181,7 +200,7 @@ module ot_qwen_nearhbm_head_h #(
             wire [15:0] qv = g3g ? q1[d * 16 +: 16] : q0[d * 16 +: 16];
             wire [15:0] ev = e3[16*G +: 16];
             wire        kd = kvz_d[3*G + 2], vd = kvz_d[3*G + 1], czd = kvz_d[3*G];
-            (* keep_hierarchy *) ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rgrp[G]), .valid_in(g3k || g3v),
+            (* keep_hierarchy *) ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rlq[d / 4]), .valid_in(g3k || g3v),
                 .a(g3k ? qv : ev), .k(row3[128*G + 8*(d % 16) +: 8]), .y(p_y[32*d +: 32]), .fault(p_f[d]),
                 .valid_out(p_vo[d]));
             wire [31:0] va = czd ? 32'd0 : fb[32*d +: 32];
@@ -204,10 +223,10 @@ module ot_qwen_nearhbm_head_h #(
                 assign lb = vb;
             end
             wire [1:0] err;
-            (* keep_hierarchy *) ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_a (.clk(clk), .rst_n(rgrp[G]), .valid_in(kt || vd),
+            (* keep_hierarchy *) ot_hdc_fp32_add_lat_sel #(.LAT(ADD_LAT), .NR(FP), .HMUT(FPMUT)) u_a (.clk(clk), .rst_n(rlq[d / 4]), .valid_in(kt || vd),
                 .a(la), .b(lb), .y(l_y[32*d +: 32]), .err(err), .valid_out(l_vo[d]));
             assign l_f[d] = l_vo[d] && (err != 2'd0);
-            ot_hdc_delay #(.W(32), .D(8 - ADD_LAT)) u_pad (.clk(clk), .rst_n(rgrp[G]), .d(l_y[32*d +: 32]),
+            ot_hdc_delay #(.W(32), .D(8 - ADD_LAT)) u_pad (.clk(clk), .rst_n(rlq[d / 4]), .d(l_y[32*d +: 32]),
                                                            .q(fb[32*d +: 32]));
             // the local P.V tree (levels 1-3) of this lane, executing the decision word delayed 8 (see the header)
             wire [LTW-1:0] dw = lt_d[LTW*G +: LTW];
@@ -218,7 +237,7 @@ module ot_qwen_nearhbm_head_h #(
             wire [31:0] lpa = (lal == 2'd0) ? lp0 : ((lal == 2'd1) ? lp1 : lp2);
             wire [1:0]  berr;
             wire        bvo;
-            (* keep_hierarchy *) ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_b (.clk(clk), .rst_n(rgrp[G]), .valid_in(lis),
+            (* keep_hierarchy *) ot_hdc_fp32_add_lat_sel #(.LAT(ADD_LAT), .NR(FP), .HMUT(FPMUT)) u_b (.clk(clk), .rst_n(rlq[d / 4]), .valid_in(lis),
                 .a(lpa), .b(lsel ? ly : fb[32*d +: 32]), .y(ly), .err(berr), .valid_out(bvo));
             assign b_f[d] = bvo && (berr != 2'd0);
             always @(posedge clk) begin
@@ -232,10 +251,13 @@ module ot_qwen_nearhbm_head_h #(
         end
     endgenerate
     // node slice: beat b = the lanes d = LFB k + b, from the decision word {osend, beat} of group 0's delay line
-    wire [LTW-1:0] dw0 = lt_d[0 +: LTW];
-    integer k_;
-    always @(posedge clk) if (dw0[9]) for (k_ = 0; k_ < HD / LFB; k_ = k_ + 1)
-        nb_d[32*k_ +: 32] <= obw[32*(LFB*k_ + dw0[11:10]) +: 32];
+    // (NBL, FP = 1: slice k reads the decision word of the group that holds its lanes LFB k .. LFB k + LFB - 1)
+    genvar kk;
+    generate for (kk = 0; kk < HD / LFB; kk = kk + 1) begin : g_nb
+        localparam integer NG = (FP != 0) ? (LFB * kk) / 16 : 0;
+        wire [LTW-1:0] dwk = lt_d[LTW*NG +: LTW];
+        always @(posedge clk) if (dwk[9]) nb_d[32*kk +: 32] <= obw[32*(LFB*kk + dwk[11:10]) +: 32];
+    end endgenerate
     // ---- K pass: this head's root x SCALE -------------------------------------------------------------------------------
     localparam integer LR = tnode(LV, 0);
     localparam integer GR = LR / 16;
@@ -633,7 +655,13 @@ module ot_qwen_nearhbm_row_engine_h #(
     genvar h;
     generate for (h = 0; h < 4; h = h + 1) begin : g_head
         localparam integer P = h / 2;          // the S1b copy of this head's tile pair
-        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
+        // bench build option KVD_HFP: the head tiles with FP = 1 (fe-push-qwen-1010; the route kits qkd_rhead_fpa / fpb)
+`ifdef KVD_HFP
+        localparam integer HFP = 1;
+`else
+        localparam integer HFP = 0;
+`endif
+        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .FP(HFP)) u_head (
             .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
             .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
             .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),

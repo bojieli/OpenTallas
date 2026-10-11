@@ -72,3 +72,14 @@ module ot_hdc_fp32_mul_lat #(
     assign err = el[LAT-1];
     assign valid_out = vl[LAT-1];
 endmodule
+
+// fe-push-qwen-1010 (2026-10-10): the selector of rtl/hdc/ot_hdc_fp32_add_lat_nr.sv for the DPI bench.  NR = 1
+// (ot_hdc_fp32_add_lat_nr) is bit-identical to ot_hdc_fp32_add_lat (rtl/test/tb_hdc_add_lat_nr.sv), so both map to the
+// stand-in above; the real-unit lockstep of the head tile (rtl/test/qwen_kv_die/tb_rhead_fp.sv) covers NR = 1 itself.
+module ot_hdc_fp32_add_lat_sel #(parameter integer LAT = 3, parameter integer NR = 0, parameter integer HMUT = 0) (
+    input  wire clk, input wire rst_n, input wire valid_in, input wire [31:0] a, input wire [31:0] b,
+    output wire [31:0] y, output wire [1:0] err, output wire valid_out
+);
+    ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(valid_in), .a(a), .b(b), .y(y), .err(err),
+                                        .valid_out(valid_out));
+endmodule
