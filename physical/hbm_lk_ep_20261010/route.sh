@@ -14,5 +14,5 @@ L=${L:-${CK_SS_MEAN:-770}}
 bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $L > /dev/null
 export SDCA=physical/hbm_accel_die_views/common/io_vclk_m_$L.sdc
 bash physical/hbm_accel_die_views/common/route_view.sh $lab hfd_lk_ep rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv \
-  --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_lk_ep_20261010/macro_place.tcl \
+  --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_lk_ep_20261010/${MPL:-macro_place.tcl} \
   --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl "$@"

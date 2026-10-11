@@ -229,6 +229,9 @@ module ot_hbm_lk_ep #(
     parameter integer TFD    = 4,          // per-sub TX-out FIFO depth (macro tx_ready credits)
     parameter integer OFD    = 4,          // per-sub RX-out FIFO depth (macro out_ready credits)
     parameter integer SL     = 64,         // data bits per replicated select copy
+    parameter integer XR     = 2,          // lane relay stages each way between the east-face pin flops and the gearbox
+                                           // (el1011-hbm-lkep centre-channel floorplan: the gearbox sits between the macros,
+                                           // ~900 um from the phy pins; pin flop + XR relays keep every hop < ~350 um)
     // retry pipeline parameters (simulation only; the hard macro is the closed view_wpin_hm10)
     parameter integer TIMEOUT = 8192,
     parameter integer MAX_RETRY = 8
@@ -477,14 +480,18 @@ module ot_hbm_lk_ep #(
     always @(posedge clk) r_tx <= {r_crc, rbody};
 
     // ---------------------------------------------------------------- gearbox (closed S81 lane format, FMT 1)
-    reg  [LW-1:0] x_rx_q; reg x_rx_vq;
-    always @(posedge clk) x_rx_q <= x_rx;
-    always @(posedge clk or negedge rgb) if (!rgb) x_rx_vq <= 1'b0; else x_rx_vq <= 1'b1;
+    reg  [LW-1:0] x_rx_p; reg x_rx_vp;                 // pin capture (io_flop_at_pins), then XR relay stages
+    always @(posedge clk) x_rx_p <= x_rx;
+    always @(posedge clk or negedge rgb) if (!rgb) x_rx_vp <= 1'b0; else x_rx_vp <= 1'b1;
+    wire [LW-1:0] x_rx_q; wire x_rx_vq;
+    ot_lkep_relay #(.W(LW), .N(XR)) u_xrr (.clk(clk), .rst_n(rgb), .i_v(x_rx_vp), .i_d(x_rx_p), .o_v(x_rx_vq), .o_vr(), .o_d(x_rx_q));
+    wire [LW-1:0] x_tx_g; wire x_tx_gv;
+    ot_lkep_relay #(.W(LW), .N(XR)) u_xtr (.clk(clk), .rst_n(rgb), .i_v(1'b1), .i_d(x_tx_g), .o_v(x_tx_gv), .o_vr(), .o_d(x_tx));
     wire          f_rx_v, r_rx_v, gbx_fault;
     wire [FFW-1:0] f_rx;
     wire [RFW-1:0] r_rx;
     ot_s81ph_link_gbx #(.FMT(1), .FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P), .BW(LW)) u_gbx (
-        .clk(clk), .rst_n(rgb), .f_tx_v(b_v), .f_tx(b_f), .r_tx_v(1'b1), .r_tx(r_tx), .beat_tx(x_tx),
+        .clk(clk), .rst_n(rgb), .f_tx_v(b_v), .f_tx(b_f), .r_tx_v(1'b1), .r_tx(r_tx), .beat_tx(x_tx_g),
         .beat_rx_v(x_rx_vq), .beat_rx(x_rx_q), .f_rx_v(f_rx_v), .f_rx(f_rx), .r_rx_v(r_rx_v), .r_rx(r_rx),
         .locked(locked), .fault(gbx_fault));
 
