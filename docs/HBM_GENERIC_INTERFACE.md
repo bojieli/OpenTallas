@@ -737,7 +737,7 @@ DS runs on r25 as a record stream of native unit operations only, one image per 
 | Indexer query, scores and select | SU records apply RoPE to the index query and scale the head weights; then one `IDX.INDEX` frame (k = 512, the candidate pass at layer 20 and the keep mask at layers 24 … 36) writes the local selection to VM |
 | Router top-6 | `IDX.TOPK` k = 6, `order` = 1 (ascending id order, the golden's expert-slot order) |
 | Selected compressed KV rows | `COLL.TOPK_MERGE` of the dies' local selections, then `COLL.ROW_GATHER` from the owner dies (compressed rows and index keys are sharded by position in blocks of 8: block j lives on rank j mod 96) into each head die's HBM; the indexed stream `DMA.LOAD` (§3.3) serves rows held locally |
-| Engram rows | `IDX.EHASH` per Engram layer, then indexed `DMA.LOAD`s of the codes and scales and an SU decode |
+| Engram rows | E-HOME (below): the 4 home dies stream their owned rows into a staging store, one G25 `COLL.ROW_GATHER` delivers the 24 rows in list order to every die, then two strided `DMA.LOAD`s (codes, scales) and an SU decode |
 | Window and compressed rows, KV write-back | `DMA.LOAD`, `DMA.KVWB_DS` |
 | Expert fetch by id | `SM.MATVEC` with an indexed B descriptor over the `IDX.TOPK` ids, in a `CTL.LOOP` over the 6 experts |
 | HC mixes | `HC.HC_MIX` |
@@ -745,6 +745,20 @@ DS runs on r25 as a record stream of native unit operations only, one image per 
 | Head and token | `ARGMAX.LOCAL`, `COLL.ARGMAX_MERGE`, `CTL.END` reading A |
 
 The acceptance test is identical tokens and per-unit outputs against the existing DS evidence (`hdc_golden_v41`, chunk8).
+
+**Engram placement (E-HOME, hgi-1010, 2026-10-10).** A layer's Engram table, 384 M rows (about 98 GB), cannot sit in every die's 128 GiB, so it lives in the HBM of 4 home dies. Engram layer li (li 0 = layer 1, li 1 = layer 14) uses ranks 4·li … 4·li + 3, and rows are split contiguously: with RPH = ⌈N / 4⌉, row g sits on home h = g div RPH at local row g mod RPH.
+- **Row format** (288 B, whole sectors): bytes 0 … 255 are the E4M3 codes in column order; bytes 256 … 263 are the UE8M0 scales (e + 127), one per 32 columns; bytes 264 … 287 are 0. The table sits at HBM 96 GiB on stack 3, so every address is below 2³⁷.
+- **Integrity:** HBM ECC on every read, plus a per-row CRC-32 over bytes 0 … 263 held in the boot image. A CRC mismatch poisons the row's slot: that list entry's row is delivered as a fault, and the token completes with status 1.
+- **Host table EGHT:** 144 U32 words (18 sectors) per Engram layer per token. The host writes it into the TABLES region beside the G13 ids before the doorbell; the ids depend only on the last 4 tokens.
+  - Words 0 … 23: the G25 slot id of list entry j. If entry j is the t-th row owned by home rank R, i′ = (t div 8) · 768 + 8 R + (t mod 8). Under the ROW_GATHER owner rule (B 8, G 96) this is owner R at staging row t, and i′ < 2²⁰.
+  - Words 32 … 35: home h's owned-row count c_h (their sum is 24).
+  - Words 40 + 24 h + t: home h's t-th owned local row, in list order (t < c_h).
+  - Words 24 … 31, 36 … 39 and every unused word up to 143 are 0.
+- **Program per Engram layer:**
+  1. `DMA.LOAD` EGHT into VM.
+  2. Home dies only: one indexed-row-stream `DMA.LOAD` (§3.3; count = word 32 + h, ids = words 40 + 24 h …) of 288 B rows, then a `DMA.STORE` to the 24-row staging store, then `DMA.FENCE`.
+  3. Every die: `COLL.ROW_GATHER` in the G25 form (I = words 0 … 23, K 24, A = the staging store, O = the list store, `imm_b` 96), then `CTL.FENCE`.
+  4. Every die: `DMA.LOAD` FP8E4M3 (n 256, m 24, stride 288 B) and `DMA.LOAD` UE8M0 (n 8, m 24, stride 288 B), then the SU decode as before.
 
 **What the DS lowering needs beyond the generic set.** Most items map onto DS engines the die already carries:
 
