@@ -1,4 +1,8 @@
 `timescale 1ns/1ps
+// The screen and its tiles always use the ROM macro ports (read before the spine file: defines persist).
+`ifndef OT_PQ_ROM_PORTS
+`define OT_PQ_ROM_PORTS
+`endif
 // el1011-ds-misc/pqc 2026-10-11: fixed-name, parameter-free tops of the v15 spine tiles at the physical-screen shape
 // (PHW 6, SAW 8, VAW 19, VRD 64, KMAX 256, R 16, BW 1630, PQ 1, XRV 1, XCAP 16, RPT 2).  Each is routed as a hard
 // macro (physical/qwen_die_masters/cfg/pqc_*), and the screen composition (spine TT = 1) instantiates these names so
@@ -29,7 +33,6 @@ module ot_pqc_t_prom (input wire clk, rst_n, we, input wire [6:0] wa, input wire
                       output wire [63:0] q);
     ot_v41_pqc_rom2_model #(.AW(7), .DW(64)) u (.*);
 endmodule
-`ifdef OT_PQ_ROM_PORTS
 module ot_pqc_t_ctl16 (
     input  wire clk, rst_n,
     output wire aq_vin, input wire [1:0] aqf, output wire [4:0] aqi_o, output wire ba_v_o, output wire [2:0] ba_blk_o,
@@ -43,4 +46,3 @@ module ot_pqc_t_ctl16 (
     ot_v41_pqc_ctl #(.PHW(6), .SAW(8), .R(16), .VAW(19), .VRD(64), .KMAX(256), .BST(2), .PQ(1), .XRV(1), .XCAP(16))
         u (.*);
 endmodule
-`endif
