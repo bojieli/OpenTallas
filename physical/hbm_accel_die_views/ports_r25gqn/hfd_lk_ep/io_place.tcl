@@ -1,5 +1,5 @@
 # hfd_lk_ep: every die pin at the generator's position (tools/hbm_die_views.py ports, r25)
-place_pin -pin_name {clk[0]} -layer M5 -location {1502.2200 993.5040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {clk[0]} -layer M5 -location {1502.2200 1123.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_lk[0]} -layer M4 -location {1503.2640 0.6360} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_lk[1]} -layer M4 -location {1503.2640 0.8280} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_lk[2]} -layer M4 -location {1503.2640 1.0200} -pin_size {0.1920 0.0240}
@@ -2094,4 +2094,4 @@ place_pin -pin_name {phy[970]} -layer M4 -location {1503.2640 402.1080} -pin_siz
 place_pin -pin_name {phy[971]} -layer M4 -location {1503.2640 402.3000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {phy[972]} -layer M4 -location {1503.2640 402.4920} -pin_size {0.1920 0.0240}
 place_pin -pin_name {phy[973]} -layer M4 -location {1503.2640 402.6840} -pin_size {0.1920 0.0240}
-place_pin -pin_name {rst_n[0]} -layer M5 -location {1502.6040 993.5040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst_n[0]} -layer M5 -location {1502.6040 1123.1040} -pin_size {0.0240 0.1920}
