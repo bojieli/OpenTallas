@@ -98,3 +98,24 @@ module ot_dsrom_mtp_ltx #(parameter integer W = 513) (
     always @(posedge clk) begin v <= c_valid && c_ready; d <= c_data; end
     assign l_valid = v; assign l_data = d;
 endmodule
+
+// (moved from dsfd_mtp_partner_ep.sv by mtp-fixlat-1011 so every link end compiles it from the link-pair file)
+// ot_dsrom_mtp_ltx with c_ready straight from one flop (cr <= l_ready && rst_n == rq && live of ot_dsrom_mtp_ltx, the
+// same function cycle for cycle): the VM core port budget (link_budget_hook 0.62 T) leaves no room for the AND gate
+// after the flops (fixlat-vmmtp-ffbec0c86-tc SS live -> c_wr / c_qr -105 / -112 ps).
+module ot_dsrom_mtp_ltx_rc #(parameter integer W = 513) (
+    input  wire         clk, rst_n,
+    input  wire         c_valid,
+    output wire         c_ready,
+    input  wire [W-1:0] c_data,
+    output wire         l_valid,
+    input  wire         l_ready,
+    output wire [W-1:0] l_data
+);
+    reg cr, v;
+    reg [W-1:0] d;
+    always @(posedge clk) cr <= l_ready && rst_n;        // pin flop: the receiver's grant, gated by the reset release
+    assign c_ready = cr;                                 // one flit per grant
+    always @(posedge clk) begin v <= c_valid && c_ready; d <= c_data; end
+    assign l_valid = v; assign l_data = d;
+endmodule
