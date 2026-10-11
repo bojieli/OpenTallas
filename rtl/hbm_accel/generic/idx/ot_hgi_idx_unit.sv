@@ -168,6 +168,7 @@ module ot_hgi_idx_unit #(
     wire [255:0] tw_hd = pf_q_dat[pf_h] >> (32 * rw_now[2:0]);
     wire pf_feed = !r_done && (!e_in_v || e_in_r) && pf_cnt != 3'd0;
     wire pf_dpop = TOPKW != 0 ? tw_pop : pf_pop;
+    wire pf_iss = pf_act && !pf_done && !w_v && !vm_pend && !pk_seal[0] && !pk_seal[1] && (pf_out + pf_cnt) < 3'd4;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -197,9 +198,9 @@ module ot_hgi_idx_unit #(
             end
             // PREF reader (opt-in): prefetch + back-to-back engine feed
             if (pf_on && busy && started) begin
-                if (pf_act && !pf_done && !w_v && !vm_pend && !pk_seal[0] && !pk_seal[1] && (pf_out + pf_cnt) < 3'd4) begin
+                if (pf_iss) begin
                     vmq_t <= {1'b1, 1'b0, {12'd0, pf_sec, 5'd0}, 256'd0, 32'd0, 16'h0902};
-                    pf_out <= pf_out + 3'd1; vm_sec_q[pf_it] <= pf_sec; pf_it <= pf_it + 2'd1;
+                    vm_sec_q[pf_it] <= pf_sec; pf_it <= pf_it + 2'd1;
                     if (pf_sec == pf_end) begin
                         if (pf_row + 20'd1 == a_m) pf_done <= 1'b1;
                         else begin pf_row <= pf_row + 20'd1; pf_rb <= pf_rb + {8'd0, a_str};
@@ -217,8 +218,12 @@ module ot_hgi_idx_unit #(
                     end else r_col <= r_col + (TOPKW != 0 ? {17'd0, tw_nw} : 20'd1);
                 end
                 if (vmr[273] && pf_out != 3'd0) begin
-                    pf_q_sec[pf_t] <= vm_sec_q[pf_t]; pf_q_dat[pf_t] <= vmr[255:0]; pf_t <= pf_t + 2'd1; pf_out <= pf_out - 3'd1;
+                    pf_q_sec[pf_t] <= vm_sec_q[pf_t]; pf_q_dat[pf_t] <= vmr[255:0]; pf_t <= pf_t + 2'd1;
                 end
+                // hgi-1010/g2: ONE update of the in-flight count (a read issued and a response landing in the same cycle used
+                // to be two non-blocking writes of pf_out, the landing one winning: the count lost the issue and the
+                // 4-entry FIFO was overrun once the consumer kept up -- latent at one word a cycle, hit at 4)
+                pf_out <= pf_out + (pf_iss ? 3'd1 : 3'd0) - ((vmr[273] && pf_out != 3'd0) ? 3'd1 : 3'd0);
                 pf_cnt <= pf_cnt + ((vmr[273] && pf_out != 3'd0) ? 3'd1 : 3'd0)
                                  - ((pf_feed && pf_dpop) ? 3'd1 : 3'd0);
             end
