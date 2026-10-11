@@ -44,5 +44,15 @@
   "hfd_hgi_vm: two more VM packet clients f_hgi_fused / f_hgi_fmv (NC +2) -- hgi-1010 b (hgi_vm5 view)",
   "loader kport lane for hgi_fmk_q / hgi_fmk_r: ot_hgi_hbm_rdq_server, FMV 1 (lane 7 on main with RGX; 11 after hgi-1010/c mover lanes)",
   "lgE station view (hfd_stn_lgE0) must use the tap packing in ot_hgi_fused_station"
- ]
+ ],
+ "ties": {
+  "die:t_fused_ne": {
+   "class": "open",
+   "reason": "FUSED HCE dispatch to hfd_hc_eng (die nets added 98020a3e2 lineage: fused_ne 151 / 3 b; hgi-1010/b ot_hgi_hc_eng, not gated): the station issues no HCE records yet (outputs const 0, the 3-b return unused) until the hc_eng unit is gated and bound"
+  },
+  "die:f_fused_ne": {
+   "class": "open",
+   "reason": "FUSED HCE dispatch to hfd_hc_eng (die nets added 98020a3e2 lineage: fused_ne 151 / 3 b; hgi-1010/b ot_hgi_hc_eng, not gated): the station issues no HCE records yet (outputs const 0, the 3-b return unused) until the hc_eng unit is gated and bound"
+  }
+ }
 }

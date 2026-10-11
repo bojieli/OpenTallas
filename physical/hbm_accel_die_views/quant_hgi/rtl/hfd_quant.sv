@@ -3,6 +3,7 @@
 // instantiates it except the die view route.  HGI-1 quant view with the FUSED station (hgi-1010/c2, AUDIT N5; supersedes the QDQ-only view of hgi-takeover 10-09): ot_hgi_fused_station = ot_hgi_fused_record (UNIT 1, UWIDE 1: unit 4 front, record hgi_quant_cmd 1,216 b {n_O, n_B, n_A, O, C, B, A, header, valid} from ot_hgi_cp_die FUSED 1) -> ROW_NORM / HC_PRE_NORM / HC_POST on its internal stream unit (VM packet client hgi_vmq_fused, wide lanes on the lgE tap, slot 2), QDQ_* forwarded on q_rec to the unchanged ot_hgi_quant_unit (VM client hgi_vmq_quant, as before); the FUSED mover (ot_hgi_dma_mover, gain LOAD) on its own remote kport read lane hgi_fmk_q 38 / hgi_fmk_r 257 (ot_hgi_hbm_rdq_server on the loader kport lane after the mover HBM lanes), its VM client hgi_vmq_fmv, its VM write lane on the lgE write group. Unit bench rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_station.sv.
 module hfd_quant (
     input wire [0:0] ck,
+    input wire [1:0] f_fused_ne,
     input wire [1215:0] f_hgi_cmdproc,
     input wire [256:0] f_hgi_fmkr,
     input wire [273:0] f_hgi_vmr,
@@ -11,6 +12,7 @@ module hfd_quant (
     input wire [8256:0] f_lgE_rdn,
     input wire [64:0] f_lgE_wdn,
     input wire [0:0] rst,
+    output wire [148:0] t_fused_ne,
     output wire [2:0] t_hgi_cmdproc,
     output wire [37:0] t_hgi_fmkq,
     output wire [337:0] t_hgi_vmq,
@@ -22,6 +24,11 @@ module hfd_quant (
     wire clk = ck[0];
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};
     wire rst_n = ~rst_s[1];
+    reg [1:0] i0_f_fused_ne; always @(posedge clk) i0_f_fused_ne <= f_fused_ne;
+    reg [1:0] i1_f_fused_ne; always @(posedge clk) i1_f_fused_ne <= i0_f_fused_ne;
+    reg [1:0] i2_f_fused_ne; always @(posedge clk) i2_f_fused_ne <= i1_f_fused_ne;
+    reg [1:0] i3_f_fused_ne; always @(posedge clk) i3_f_fused_ne <= i2_f_fused_ne;
+    reg [1:0] i_f_fused_ne; always @(posedge clk) i_f_fused_ne <= i3_f_fused_ne;
     reg [1215:0] i0_f_hgi_cmdproc; always @(posedge clk) i0_f_hgi_cmdproc <= f_hgi_cmdproc;
     reg [1215:0] i1_f_hgi_cmdproc; always @(posedge clk) i1_f_hgi_cmdproc <= i0_f_hgi_cmdproc;
     reg [1215:0] i2_f_hgi_cmdproc; always @(posedge clk) i2_f_hgi_cmdproc <= i1_f_hgi_cmdproc;
@@ -83,6 +90,12 @@ module hfd_quant (
     assign w_fs_lg_wdn = {i_f_lgE_wdn[64:0]};
     assign w_fs_xr = {i_f_hgi_fmkr[256:0]};
     ot_hgi_fused_station #(.UN(64), .UM(16), .UWIDE(1), .SCRATCH(245760), .Q(32), .LQ(32), .SCR_WORDS(16384), .ULWB(18)) u_fs (.clk(w_fs_clk), .rst_n(w_fs_rst_n), .rec(w_fs_rec), .ret(w_fs_ret), .q_vmq(w_fs_q_vmq), .q_vmr(w_fs_q_vmr), .f_vmq(w_fs_f_vmq), .f_vmr(w_fs_f_vmr), .m_vmq(w_fs_m_vmq), .m_vmr(w_fs_m_vmr), .lg_rup(w_fs_lg_rup), .lg_rdn(w_fs_lg_rdn), .lg_wup(w_fs_lg_wup), .lg_wdn(w_fs_lg_wdn), .xq(w_fs_xq), .xr(w_fs_xr));
+    wire [148:0] od_t_fused_ne = {149'd0};
+    wire [148:0] o_t_fused_ne;
+    for (genvar k = 0; k < 149; k = k + 1) begin : g_o_t_fused_ne
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_fused_ne[k]), .q(o_t_fused_ne[k]));
+    end
+    assign t_fused_ne[148:0] = o_t_fused_ne[148:0];
     wire [2:0] od_t_hgi_cmdproc = {w_fs_ret[2:0]};
     wire [2:0] o_t_hgi_cmdproc;
     for (genvar k = 0; k < 3; k = k + 1) begin : g_o_t_hgi_cmdproc
