@@ -96,10 +96,10 @@ module dsfd_vm_cl #(
     reg [15:0]   q_m [0:WQ-1];
     reg [511:0]  q_d [0:WQ-1];
     reg [QB-1:0] qh, qt; reg [QB:0] qn;
-    integer k, e, j, f;
+    // every procedural block below owns its loop indices and temporaries (no variable is written by two processes)
     // ---- element qualification
     reg [15:0] ok; reg f_al, f_rg;
-    always @* begin
+    always @* begin : p_qual integer k;
         ok = 16'd0; f_al = 1'b0; f_rg = 1'b0;
         for (k = 0; k < 16; k = k + 1) if (ev[k]) begin
             if (ea[19*k + 18]) f_rg = 1'b1;
@@ -117,9 +117,9 @@ module dsfd_vm_cl #(
     reg [9:0]    at [0:LA-1];
     reg          evn, f_al2;            // an eviction is needed this cycle / a second one was needed
     reg [LB-1:0] evi;
-    reg          found; reg [LB-1:0] fi;
-    reg [AW-1:0] best;
-    always @* begin
+    // (found / fi / best: locals of p_match)
+
+    always @* begin : p_match integer k, e; reg found; reg [LB-1:0] fi; reg [AW-1:0] best;
         hitd = {LA{1'b0}}; al = {LA{1'b0}}; gk = 16'd0; evn = 1'b0; f_al2 = 1'b0; evi = {LB{1'b0}};
         for (e = 0; e < LA; e = e + 1) at[e] = 10'd0;
         for (k = 0; k < 16; k = k + 1) begin
@@ -150,8 +150,8 @@ module dsfd_vm_cl #(
     // ---- merged content of every entry
     reg [15:0]  hm [0:LA-1];
     reg [511:0] hd [0:LA-1];
-    reg [3:0]   sl;
-    always @* begin
+
+    always @* begin : p_merge integer k, e; reg [3:0] sl;
         for (e = 0; e < LA; e = e + 1) begin hm[e] = 16'd0; hd[e] = 512'd0; end
         for (k = 0; k < 16; k = k + 1) if (gk[k]) begin
             sl = ea[19*k +: 4];
@@ -164,10 +164,9 @@ module dsfd_vm_cl #(
     wire q_room = (qn - q_pop) < WQ;
     reg          mv; reg [LB-1:0] mi; reg mv_ev;
     reg [15:0]   nm_ [0:LA-1];
-    reg [511:0]  bm;
-    always @* begin
+
+    always @* begin : p_move integer e;
         for (e = 0; e < LA; e = e + 1) begin
-            for (j = 0; j < 16; j = j + 1) bm[32*j +: 32] = {32{hm[e][j]}};
             nm_[e] = al[e] ? hm[e] : (e_m[e] | hm[e]);
         end
         mv = 1'b0; mi = {LB{1'b0}}; mv_ev = 1'b0;
@@ -181,8 +180,8 @@ module dsfd_vm_cl #(
         end
     end
     // ---- state update
-    reg [511:0] md_;
-    always @(posedge clk) begin
+
+    always @(posedge clk) begin : p_state integer e, j; reg [511:0] bm, md_;
         if (!rn) begin
             for (e = 0; e < LA; e = e + 1) e_v[e] <= 1'b0;
             qh <= 0; qt <= 0; qn <= 0; w_v <= 1'b0; flt <= 4'd0;
@@ -504,8 +503,8 @@ module dsfd_vm_fe #(
     generate for (gx = 0; gx < 5; gx = gx + 1) begin : g_xl
         assign x_last[gx] = x_act[gx] && x_c[gx] == x_n[gx];
     end endgenerate
-    integer xi;
-    always @(posedge clk) begin
+
+    always @(posedge clk) begin : p_l507 integer xi;
         if (!rn) x_act <= 5'd0;
         else for (xi = 0; xi < 5; xi = xi + 1) begin
             if (is_xmap && xp_c == xi[2:0]) begin x_bus[xi] <= arg[16:13]; x_n[xi] <= arg[12:0]; end
@@ -559,8 +558,8 @@ module dsfd_vm_fe #(
     end endgenerate
     // drain: up to NLP heads a cycle, rotating priority
     reg [$clog2(NLL)-1:0] ll_ptr; reg [NLP-1:0] lp_v; reg [NLP*14-1:0] lp_row; reg [NLP*512-1:0] lp_d;
-    integer li, lj, lk; reg [NLP-1:0] lsel_v; reg [$clog2(NLL)-1:0] lsel [0:NLP-1];
-    always @* begin
+    reg [NLP-1:0] lsel_v; reg [$clog2(NLL)-1:0] lsel [0:NLP-1];
+    always @* begin : p_l562 integer li, lj, lk;
         ll_tk = {NLL{1'b0}}; lsel_v = {NLP{1'b0}};
         for (lk = 0; lk < NLP; lk = lk + 1) lsel[lk] = {$clog2(NLL){1'b0}};
         lk = 0;
@@ -576,7 +575,7 @@ module dsfd_vm_fe #(
             if (ll_rq[lj] && lk < NLP) begin ll_tk[lj] = 1'b1; lsel_v[lk] = 1'b1; lsel[lk] = lj; lk = lk + 1; end
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_l578 integer lk;
         if (!rn) begin lp_v <= {NLP{1'b0}}; ll_ptr <= 0; end
         else begin
             lp_v <= lsel_v;
@@ -594,7 +593,7 @@ module dsfd_vm_fe #(
     end
     always @(posedge clk) if (!rn) t_cts <= 3'd0; else t_cts <= {1'b0, 1'b1, cts_ok};
     reg l_src_flt;
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_l596 integer li;
         if (!rn) l_src_flt <= 1'b0;
         else begin
             for (li = 0; li < NSVC; li = li + 1) if (q_svc[1027*li + 1026]) l_src_flt <= 1'b1;
@@ -604,7 +603,7 @@ module dsfd_vm_fe #(
 
     // ---------------------------------------------------------------- stage B: the order register (all ports)
     reg [NP-1:0] b_v, b_we; reg [NP*RA-1:0] b_row; reg [NP*16-1:0] b_m; reg [NP*512-1:0] b_d;
-    integer l;
+
     always @(posedge clk) begin
         if (!rn) b_v <= {NP{1'b0}};
         else begin
@@ -644,8 +643,8 @@ module dsfd_vm_fe #(
     wire [NP*16-1:0] c_m = b_m;
     wire [NP*512-1:0] c_dd = b_d;
 `endif
-    integer s, p;
-    always @(posedge clk) begin
+    integer s;
+    always @(posedge clk) begin : p_l647 integer s, p;
         for (s = 0; s < NS; s = s + 1) begin
             if (!rn) m_v[s*NP +: NP] <= {NP{1'b0}}; else m_v[s*NP +: NP] <= c_vv;
             m_we[s*NP +: NP] <= c_we;
@@ -667,10 +666,10 @@ module dsfd_vm_fe #(
     reg [NP*5-1:0] k_pc;                // registered popcount of each port's mask
     reg [NP-1:0] k_v, k_we;
     reg [NSLOT-1:0] k_ok;
-    integer kk, q, b;
+    integer kk, b;
     reg [4:0] pc;
     reg [15:0] wm;
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_l672 integer kk, q, b;
         for (q = 0; q < NP; q = q + 1) begin
             wm = b_m[q*16 +: 16];
             pc = 5'd0; for (b = 0; b < 16; b = b + 1) pc = pc + {4'd0, wm[b]};
@@ -689,7 +688,7 @@ module dsfd_vm_fe #(
     end
     reg [9:0] inc [0:NSLOT-1];
     reg [NSLOT-1:0] hit_r, cmpl;
-    always @* begin
+    always @* begin : p_l691 integer kk, q;
         for (kk = 0; kk < NSLOT; kk = kk + 1) begin
             inc[kk] = 10'd0; hit_r[kk] = 1'b0;
             for (q = 0; q < NP; q = q + 1) begin
@@ -707,7 +706,7 @@ module dsfd_vm_fe #(
     reg [7:0] pd_q [0:CQD]; reg [$clog2(CQD+2)-1:0] pd_h, pd_t, pd_n;
     reg early, ovf_cr, rearm, ovf_pd;
     reg [NSLOT-1:0] dsel, rsel;
-    always @* begin
+    always @* begin : p_l709 integer kk;
         dsel = {NSLOT{1'b0}}; rsel = {NSLOT{1'b0}};
         for (kk = NSLOT - 1; kk >= 0; kk = kk - 1) begin
             if (sl_dp[kk]) dsel = {{(NSLOT-1){1'b0}}, 1'b1} << kk;
@@ -722,14 +721,14 @@ module dsfd_vm_fe #(
     wire d_imm = !d_slot && !d_p2 && !d_x && imm_v;
     wire c_w_go = !c_wv[0] || c_wr[0];
     reg [7:0] dsel_tag; reg [9:0] rsel_user;
-    always @* begin
+    always @* begin : p_l724 integer kk;
         dsel_tag = 8'd0; rsel_user = 10'd0;
         for (kk = 0; kk < NSLOT; kk = kk + 1) begin
             if (dsel[kk]) dsel_tag = dsel_tag | sl_tag[kk];
             if (rsel[kk]) rsel_user = rsel_user | sl_user[kk];
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_l731 integer kk;
         if (!rn) begin
             sl_arm <= 0; sl_dp <= 0; sl_rp <= 0; sl_ntf <= 0; ed_v <= 1'b0; c_wv <= 1'b0; t_rdy <= 0; imm_v <= 1'b0; x_dp <= 5'd0;
             pd_h <= 0; pd_t <= 0; pd_n <= 0;
@@ -779,7 +778,7 @@ module dsfd_vm_fe #(
     // ---------------------------------------------------------------- FE status
     reg rbad; reg [3:0] clf;
     always @(posedge clk) if (!rn) rbad <= 1'b0; else if ((e_v && e_row[14]) || (e1_v && e1_row[14])) rbad <= 1'b1;
-    always @* begin clf = 4'd0; for (l = 0; l < 16; l = l + 1) clf = clf | cl_f[4*l +: 4]; end
+    always @* begin : p_l781 integer l; clf = 4'd0; for (l = 0; l < 16; l = l + 1) clf = clf | cl_f[4*l +: 4]; end
     always @(posedge clk) begin
         if (!rn) fe_flt <= 16'd0;
         else fe_flt <= fe_flt | {so_s[1], |ll_ov, ad_flt, cap_src_flt, clf, is_bad, ovf_pd, rearm, l_src_flt, ovf_cr, 1'b0,
@@ -867,7 +866,7 @@ module dsfd_vm_be #(
         begin xport = (x == 0) ? 6 : (x == 1) ? 7 : (x == 2) ? 2 : (x == 3) ? 8 : 9; end
     endfunction
     reg x_mis, x_col; reg [15:0] bl_v; integer bl;
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_l869 integer xi2;
         if (!rn) begin x_mis <= 1'b0; x_col <= 1'b0; for (bl = 0; bl < 16; bl = bl + 1) t_bl[513*bl] <= 1'b0; end
         else begin
             bl_v = 16'd0;
@@ -916,8 +915,8 @@ module dsfd_vm_be #(
     end
     // ---------------------------------------------------------------- P2: metadata delay line + flit FIFO
     reg [MD-1:0] md_v; reg [91:0] md_m [0:MD-1];
-    integer i;
-    always @(posedge clk) begin
+
+    always @(posedge clk) begin : p_l919 integer i;
         if (!rn) md_v <= 0; else md_v <= {md_v[MD-2:0], q_fv};
         md_m[0] <= q_fm;
         for (i = 1; i < MD; i = i + 1) md_m[i] <= md_m[i-1];

@@ -531,7 +531,7 @@ module tb_dsfd_sp_vm;
     always @(posedge clk) begin
         cyc <= cyc + 1;
         if (cyc == 6) begin rst_n <= 1'b1; rss_n <= 1'b1; end
-        if (rst_n && cyc > 4) begin observe_b(); check_returns(); end
+        if (rst_n && cyc > 4) begin observe_b(); xfer_ctrl(); check_returns(); end
         if (rst_n && cyc > 8) begin
             cap_step(MODE == 0);
             // ---------------- landing producers (start l_start; svc / hc 2 rows a beat, coll 4 words when t_cts room)
@@ -763,7 +763,9 @@ module tb_dsfd_sp_vm;
     end
     // ctrl reads ride the generic per-port queues (ex_q[3] / ex_q[4]) filled by observe_b in the right order; move
     // them, in (cycle, port 3 then 4) order, to the stream-domain expectation queue
-    always @(posedge clk) if (rst_n && cyc > 4) begin
+    // (called from the main clk process right after observe_b: one process owns ex_q / ex_t, so the hand-off order is
+    // defined; a second always @(posedge clk) here raced observe_b on the same edge -- simulator-dependent order)
+    task automatic xfer_ctrl();
         while (ex_q[3].size() != 0 || ex_q[4].size() != 0) begin
             if (ex_q[3].size() != 0 && (ex_q[4].size() == 0 || ex_t[3][0] <= ex_t[4][0])) begin
                 ex_q_c.push_back(ex_q[3].pop_front()); void'(ex_t[3].pop_front());
@@ -771,7 +773,7 @@ module tb_dsfd_sp_vm;
                 ex_q_c.push_back(ex_q[4].pop_front()); void'(ex_t[4].pop_front());
             end
         end
-    end
+    endtask
     initial begin
         for (k = 0; k < 8; k = k + 1) lat[k] = -1;
         for (k = 0; k < 16; k = k + 1) lat_l[k] = -1;

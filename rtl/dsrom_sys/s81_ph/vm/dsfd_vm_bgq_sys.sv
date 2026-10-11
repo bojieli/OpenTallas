@@ -99,7 +99,7 @@ module dsfd_vm_bgq #(
             rb_v[0] <= i_v;
             for (s = 1; s <= NSTG; s = s + 1) rb_v[s] <= rb_v[s-1];
         end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_l102 integer s;
         rb_we[0] <= i_we; rb_row[0] <= i_row; rb_m[0] <= i_mask; rb_d[0] <= i_d;
         for (s = 1; s <= NSTG; s = s + 1) begin
             rb_we[s] <= rb_we[s-1]; rb_row[s] <= rb_row[s-1]; rb_m[s] <= rb_m[s-1]; rb_d[s] <= rb_d[s-1];
