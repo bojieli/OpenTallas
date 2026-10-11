@@ -1,0 +1,15 @@
+{
+  "source_base": "01dd3f8bf2bc9effeeaf8910e6657dd77ffed00f",
+  "opt_in": "RX_SLOT_SAMPLE=1, RSTR=1",
+  "exactness_gate": "PASS",
+  "pipeline_records": 1300,
+  "replay_retention_depth": 512,
+  "mechanism_records_each": 100,
+  "hostile_held_edges_each": 800,
+  "receive_added_edges": 0,
+  "occupied_payload_stability": "PASS",
+  "legacy_default_off": "PASS",
+  "duplicate_negative": "FAIL as required",
+  "occupied_slot_negative": "FAIL as required",
+  "physical_qualified": false
+}

@@ -425,7 +425,8 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 | 41 | `cp_ctx_max` (bits 20:0) | CP |
 | 42–45 | reserved | — |
 | 46 | `coll_group_size` (bits 7:0) | collective |
-| 47–48 | reserved | — |
+| 47 | `link_session` (bits 23:0) | collective (die-to-die links) |
+| 48 | reserved | — |
 | 49 | MTP per-layer kernel stride `kstride` (G26), 16-byte units; 0 = one body per kind | CP (MTP translator) |
 | 53 | `mtp_noise` [17:0]: the draft-block noise / mask token id the MTP translator puts on the `demb` launches of columns > 0 (DS: `dspark_noise_token_id` mod vocab = 128,799; 0 = none) | CP (MTP translator) |
 | 54–55 | reserved for MTP parameters (§10.3) | — |
@@ -443,6 +444,7 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 | `cp_vocab` (40.0) | 18 | 1 … 2¹⁸ − 1 | 129,280 | 151,936 | Range check for doorbell and completion tokens. A token id is 18 bits everywhere (doorbell, completion, argmax). The limit is a safety check on the host interface, so it is per model, not per operation. |
 | `cp_ctx_max` (41.0) | 21 | 1 … 2²⁰ | 2²⁰ | 40,960 | Range check for the doorbell position. Positions are 20 bits. |
 | `coll_group_size` (46.0) | 8 | 1, 2, 4, 8, 96 | 96 | 4 | Which dies form a group. Membership is genuinely static configuration: every collective on a die uses the same group. At 96, reductions run as 12 sub-groups of 8 (`GROUP_REDUCE_MCAST` s = 8); `ALL_REDUCE_SUM` at 96 is rejected. The values 16, 32 and 64 are defined encodings that the range check rejects until a collective engine that builds them exists. |
+| `link_session` (47.0) | 24 | any | 0 | 0 | The session id every die-to-die link carries (the link endpoints check it); software sets it per job. |
 
 Each static field resets to the DS value. DS programs also carry DS's own per-operation settings in their records, so loading the DS descriptor changes nothing, and a DS test bench that never loads a descriptor still runs. The static fields change only when a model is loaded while the die is idle; they never change while it is decoding.
 
@@ -689,7 +691,7 @@ The SU template carries the pipeline fields of the SU operation set (`tools/hdc_
 | STATE | Linear-attention layers: per layer and local head, the FP32 state stored transposed (`[dv][dk]`), and the FP32 convolution ring (`[conv_k − 1][channels]`). Base = STATE + layer · layer bytes. |
 | SCRATCH | Spills and collective staging |
 
-**VM** is FP32-word addressed (262,144 words per die) and allocated by the compiler. **Alignment:** HBM bases are 32-byte aligned; KV rows are whole sectors.
+**VM** is FP32-word addressed (262,144 words per die) and allocated by the compiler. **HC weight aperture (hgi-1010, 2026-10-10):** VM word addresses 262,144 … 327,679 (2¹⁸ … 2¹⁸ + 2¹⁶ − 1) are not VM: they map to the HC unit's second weight-window set (2 rows × 20,480 words at 262,144 and 282,624, layout = the HBM weight-set sectors of one row). Only a `DMA.LOAD` destination (O) may address it; the VM unit faults any other client there, and the CP's own VM reads (I tables, END / TOKX / LOOP counts) must stay below 2¹⁸. The compiler double-buffers HC weight rows through it: FENCE; HC row o (slot o mod 2); LOAD row o + 1 after HC row o − 1 retires. **Alignment:** HBM bases are 32-byte aligned; KV rows are whole sectors.
 
 ### 6.11 Doorbell and completion
 
