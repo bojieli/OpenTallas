@@ -80,15 +80,21 @@ module ot_ha2_truecredit_receiver_s #(
   wire[TAGW-1:0] raw_tag=raw_q[W+:TAGW];
   wire deliver=v3&&!bad;
   reg ret_v_q;reg[TAGW-1:0] ret_tag_q;
-  assign bads[i]=bad||ovf||cr_ovf;
-  assign idle[i]=empty&&!av_q&&!w_ce_q&&!v0&&!v1&&!v2&&!v3&&!send_v[i]&&!return_v[i]&&cr_home;
+  // [link] 2026-10-10 PORT REGS (cplh hm0-f9a TT -25.81 = u_core.return_v[0] -> port, 220 ps of wire: the port flop also
+  // fed idle, so output pin anchoring could not seat it at the pin): idle reads kept internal twins sv_i / rv_i (same
+  // values, same edges), the send_v / return_v flops drive only their ports.
+  // fault: per-lane registered bads_q beside the lane (cplh hm0-f9a reg2reg -5.12 = lane1 bad -> fault over 125 ps of wire);
+  // fault rises one edge later (sticky status), nothing else changes.
+  (* keep = 1 *) reg sv_i, rv_i, bads_q;
+  assign bads[i]=bads_q;
+  assign idle[i]=empty&&!av_q&&!w_ce_q&&!v0&&!v1&&!v2&&!v3&&!sv_i&&!rv_i&&cr_home;
   always @(posedge clk or negedge rst_l)
    if(!rst_l)begin
     expect_arrival<=0;expect_retire<=0;bad<=0;ovf<=0;wp<=0;rp<=0;wp_q<=0;v0<=0;v1<=0;v2<=0;v3<=0;
-    send_v[i]<=0;
+    send_v[i]<=0;sv_i<=0;bads_q<=0;
    end else begin
     wp_q<=wp;v0<=fetch;v1<=v0;v2<=v1;v3<=(MUTANT==9)?v1:v2;
-    send_v[i]<=deliver;
+    send_v[i]<=deliver;sv_i<=deliver;bads_q<=bad||ovf||cr_ovf;
     if(av_q&&!valid_arrival)bad<=1;
     if(valid_arrival)begin
      expect_arrival<=expect_arrival+1'b1;
@@ -101,9 +107,9 @@ module ot_ha2_truecredit_receiver_s #(
     end
    end
   always @(posedge clk or negedge rst_l)
-   if(!rst_l)begin ret_v_q<=0;ret_tag_q<=0;return_v[i]<=0;return_tag[i*TAGW+:TAGW]<=0;end
+   if(!rst_l)begin ret_v_q<=0;ret_tag_q<=0;return_v[i]<=0;rv_i<=0;return_tag[i*TAGW+:TAGW]<=0;end
    else begin
-    ret_v_q<=deliver;return_v[i]<=ret_v_q;return_tag[i*TAGW+:TAGW]<=ret_tag_q;
+    ret_v_q<=deliver;return_v[i]<=ret_v_q;rv_i<=ret_v_q;return_tag[i*TAGW+:TAGW]<=ret_tag_q;
     if(deliver)ret_tag_q<=raw_tag ^ ((MUTANT==2)?TAGW'(1):TAGW'(0));
    end
   always @(posedge clk)send_data[i*W+:W]<=raw_q[W-1:0];
