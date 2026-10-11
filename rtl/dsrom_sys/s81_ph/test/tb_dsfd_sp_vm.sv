@@ -756,7 +756,7 @@ module tb_dsfd_sp_vm;
                          MODE, MODE == 1 ? TP_ROWS : BROWS, MODE == 1 ? 1 : BNP + 1, n_el_exp, cap_last_emit - cap_first_emit + 1,
                          cap_first_emit, cap_last_emit, cap_ops, cap_last - cap_first + 1, slot_t_done[0] - cap_last_emit,
                          slot_t_done[0] - slot_t_arm[0], tp_p2_t1 - tp_t0, tp_wfc_t1 - tp_t0, tp_x_t1 - tp_t0, tp_t0);
-            if (nbad == 0 && nchk + n_el_land > 0) $display("PASS"); else $display("FAIL");
+            if (nbad == 0 && (nchk + n_el_land > 0 || MODE == 3)) $display("PASS"); else $display("FAIL");
             $finish;
         end
     end

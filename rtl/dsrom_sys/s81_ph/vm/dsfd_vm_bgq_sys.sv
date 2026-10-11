@@ -433,7 +433,8 @@ endmodule
 
 // dsfd_vm_bgq28 (s81-vm-1011, 2026-10-11): the hard tile of the VM master dsfd_sp_vm v3 = dsfd_vm_bgq at NP 28 (ports
 // 0 .. 9 read / write, 10 .. 27 write-only: 2 landing drains + 16 capture lanes: NPR 10), NSTG 2, DW 128 (one bit
-// slice), 8 banks / 8 macros.  A separate master name so the closed NP 8 view (dsfd_vm_bgq, contract_vmh) stays valid.
+// slice), 8 banks / 8 macros, 345.6 x 500.04 (contract_vm28: N / S pins on M5 + M7).  A separate master name so the closed
+// NP 8 view (dsfd_vm_bgq, contract_vmh) stays valid.
 module dsfd_vm_bgq28 (
     input  wire [0:0]        ck,
     input  wire [0:0]        rs,

@@ -1,4 +1,4 @@
-# s81-vm-1011 2026-10-11: dsfd_vm_bgq24 (460.8 x 500.04): copy of place_macros_vmsys.tcl with the macro column fixed at the W edge.
+# s81-vm-1011 2026-10-11: dsfd_vm_bgq28 (537.6 x 500.04): copy of place_macros_vmsys.tcl with the macro column fixed at the W edge.
 # redesign-ds 2026-10-09: macro rows for the SYSTOLIC VM tile (rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv, instance
 # names g_s[s].g_bank[b].g_m[c].g_sram.u_m).  Bank row r = s * SR + b counts from the NORTH face (requests and read data
 # flow N -> S, stage 0 sits under the input pins), x 39.744 (bgq, one 174.12-um column) as place_macros_vms.tcl, rows
@@ -20,7 +20,7 @@ foreach ot_i [$ot_blk getInsts] {
 }
 set ot_sr [expr {$ot_bmax + 1}]
 set ot_rows [expr {($ot_smax + 1) * $ot_sr}]
-if {[llength $ot_m] < 8 || $ot_rows != 8} { error "place_macros_vm24: [llength $ot_m] macros / $ot_rows rows" }
+if {[llength $ot_m] < 8 || $ot_rows != 8} { error "place_macros_vm28: [llength $ot_m] macros / $ot_rows rows" }
 set ot_mh 29.736
 set ot_y0 10.8
 # pitch on the 1.08-um row grid
@@ -36,6 +36,6 @@ foreach ot_i [$ot_blk getInsts] {
   if {![[$ot_i getMaster] isBlock]} { continue }
   set ot_bb [$ot_i getBBox]
   set ot_c [expr {min(([$ot_bb xMin] - [$ot_die xMin]), ([$ot_die xMax] - [$ot_bb xMax]), ([$ot_bb yMin] - [$ot_die yMin]), ([$ot_die yMax] - [$ot_bb yMax])) / double($ot_u)}]
-  if {$ot_c < 10.0} { error "place_macros_vm24: [$ot_i getName] only $ot_c um from a die edge (< 10 um macro-edge clearance)" }
+  if {$ot_c < 10.0} { error "place_macros_vm28: [$ot_i getName] only $ot_c um from a die edge (< 10 um macro-edge clearance)" }
 }
-puts "place_macros_vm24: [llength $ot_m] macros, $ot_rows rows, pitch $ot_p (die $ot_w x $ot_h)"
+puts "place_macros_vm28: [llength $ot_m] macros, $ot_rows rows, pitch $ot_p (die $ot_w x $ot_h)"
