@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_coll_ct",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ct-split3crpd-83e0257a8-tc-rd/routes/s81ph_dsfd_coll_ct_split3crpd_83e0257a8_tc_rd/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ct-split3crpd-83e0257a8-tc-rd/routes/s81ph_dsfd_coll_ct_split3crpd_83e0257a8_tc_rd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ct-split3crpd-83e0257a8-tc-rd/routes/s81ph_dsfd_coll_ct_split3crpd_83e0257a8_tc_rd/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ct-split3crpd-83e0257a8-tc-rd/routes/s81ph_dsfd_coll_ct_split3crpd_83e0257a8_tc_rd/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ct-split3crpd-83e0257a8-tc-rd/routes/s81ph_dsfd_coll_ct_split3crpd_83e0257a8_tc_rd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ct-split3crpd-83e0257a8-tc-rd/routes/s81ph_dsfd_coll_ct_split3crpd_83e0257a8_tc_rd/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ct-split3crpd-83e0257a8-tc-rd/routes/s81ph_dsfd_coll_ct_split3crpd_83e0257a8_tc_rd/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_coll_ct.lef": "f976b1a22fd8e8df1090f0a71e07ba3690101f014b7b8f3b3b661c14299f7d26",
+    "dsfd_coll_ct_ff.lib": "891d353ee571b9842725a1134f9df6610ab2c29eca22a7b66fa6eaeab6870137",
+    "dsfd_coll_ct_ss.lib": "380c8fd727d583be371350ce2487400cc0a9149c054fe6083a598a48a8674d3d"
+  },
+  "ok": true
+}
