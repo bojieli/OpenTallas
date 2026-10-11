@@ -938,6 +938,42 @@ def seq_stage_gate(t: str) -> str:
     return t[:i] + gate + t[i:] + STAGE_GATE
 
 
+def master_prog_sram(t: str) -> str:
+    """qwen-1010/a: the 64 x 1,024-b program store as two ot_sram_1r1w_64x512 macros (bit-masked 64-b writes, registered
+    read = PRL 2 timing) instead of 65,536 flops (SYNTH_MEMORY_MAX_BITS class); OT_PROG_FLOPS keeps the flop store (the
+    token vehicle preloads it; tools/redesign_qwen/prog_sram_gate.py proves the two equal cycle for cycle)"""
+    t = one(t, "        if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)\n"
+               "            if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;\n",
+            "`ifdef OT_PROG_FLOPS\n"
+            "        if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)\n"
+            "            if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;\n`endif\n")
+    t = one(t, "        if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;\n",
+            "`ifdef OT_PROG_FLOPS\n        if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;\n`endif\n")
+    t = one(t, "        pw_d2 <= q_pw_data;\n",
+            "        pw_d2 <= q_pw_data;\n        pw_v2 <= q_pw_v; pw_a2 <= q_pw_addr;\n")
+    t = one(t, "    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;\n",
+            "    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w; reg pw_v2; reg [9:0] pw_a2;\n"
+            "`ifndef OT_PROG_FLOPS\n"
+            "    // program store in two 64 x 512 SRAM macros (words 0-7 / 8-15 of a 1,024-b row), 64-b masked writes\n"
+            "    wire [511:0] pm_q0, pm_q1; reg pm_oob;\n"
+            "    wire [511:0] pm_mask = {448'd0, 64'hffff_ffff_ffff_ffff} << (pw_a2[2:0] * 64);\n"
+            "    ot_sram_1r1w_64x512_m1_r2c2 u_pm0 (.clk(clk), .r_ce_in(prog_re_r), .r_addr_in(prog_a_r[5:0]), .rd_out(pm_q0),\n"
+            "        .w_ce_in(pw_v2 && !pw_a2[3]), .w_addr_in(pw_a2[9:4]), .wd_in({8{pw_d2}}), .w_mask_in(pm_mask),\n"
+            "        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));\n"
+            "    ot_sram_1r1w_64x512_m1_r2c2 u_pm1 (.clk(clk), .r_ce_in(prog_re_r), .r_addr_in(prog_a_r[5:0]), .rd_out(pm_q1),\n"
+            "        .w_ce_in(pw_v2 && pw_a2[3]), .w_addr_in(pw_a2[9:4]), .wd_in({8{pw_d2}}), .w_mask_in(pm_mask),\n"
+            "        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));\n"
+            "    always @(posedge clk) if (prog_re_r) pm_oob <= (prog_a_r >= 64);\n"
+            "    always @(*) prog_q = pm_oob ? 1024'd0 : {pm_q1, pm_q0};\n"
+            "`endif\n")
+    if "reg [1023:0] prog_q; reg [1023:0] prog_mem [0:63];" in t:       # ctlm: one declaration line
+        t = one(t, "reg [1023:0] prog_q; reg [1023:0] prog_mem [0:63];",
+                "reg [1023:0] prog_q;\n`ifdef OT_PROG_FLOPS\n    reg [1023:0] prog_mem [0:63];\n`endif")
+    else:
+        t = one(t, "    reg [1023:0] prog_mem [0:63];", "`ifdef OT_PROG_FLOPS\n    reg [1023:0] prog_mem [0:63];\n`endif")
+    return t
+
+
 # qwen-1010/a successors with ICUT (ctrl_icut) and locally registered station resets; the released / boundary masters
 # above stay byte-identical.
 def emit_seq_su_bi() -> str:
@@ -945,7 +981,7 @@ def emit_seq_su_bi() -> str:
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_seq_su(boundary=True))))
     t = t.replace("ot_qwen_rom_core_ctrl_x_boundary", "ot_qwen_rom_core_ctrl_x_bi")
-    t = seq_stage_gate(seq_kvd_out(master_pw2(master_prl(t, "prog_base"))))
+    t = seq_stage_gate(seq_kvd_out(master_prog_sram(master_pw2(master_prl(t, "prog_base")))))
     t = one(t, "module ot_qfd_seq_su_boundary #(", "module ot_qfd_seq_su_bi #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(W)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W)")
     t = re.sub(r"(ot_hdc_delay #\([^;]*?\) u_[io]_\w+ \(\.clk\(clk\), )\.rst_n\(rst_n\)", r"\1.rst_n(rs)", t)
@@ -963,7 +999,7 @@ def emit_tt_ctlm_i() -> str:
     """ot_qfd_tt_ctlm_i = ot_qfd_tt_ctlm + ICUT on its ME-side controller"""
     t = ctrl_skipmux(ctrl_prl(ctrl_icut(emit_tt_ctlm())))
     t = t.replace("ot_qwen_rom_core_ctrl_x", "ot_qwen_rom_core_ctrl_x_i")
-    t = master_pw2(master_prl(t, "q_prog_base"))
+    t = master_prog_sram(master_pw2(master_prl(t, "q_prog_base")))
     t = one(t, "module ot_qfd_tt_ctlm #(", "module ot_qfd_tt_ctlm_i #(")
     t = one(t, ".XMUT(0), .XREG(1), .W(16)", ".XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16)")
     return t

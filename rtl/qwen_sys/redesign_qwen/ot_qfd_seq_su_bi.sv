@@ -1318,24 +1318,44 @@ module ot_qfd_seq_su_bi #(
     assign b_su_tok = tok_l;
     wire prog_re; wire [11:0] prog_addr, prog_base; reg [1023:0] prog_q;
     wire desc_re; wire [5:0] desc_addr; reg [63:0] desc_q;
+`ifdef OT_PROG_FLOPS
     reg [1023:0] prog_mem [0:63];
+`endif
     reg [63:0] desc_mem [0:7];
     wire [11:0] prog_a = prog_base + prog_addr;
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
     always @(posedge clk or negedge rs) if (!rs) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
     always @(posedge clk) prog_a_r <= prog_a;
-    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;
+    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w; reg pw_v2; reg [9:0] pw_a2;
+`ifndef OT_PROG_FLOPS
+    // program store in two 64 x 512 SRAM macros (words 0-7 / 8-15 of a 1,024-b row), 64-b masked writes
+    wire [511:0] pm_q0, pm_q1; reg pm_oob;
+    wire [511:0] pm_mask = {448'd0, 64'hffff_ffff_ffff_ffff} << (pw_a2[2:0] * 64);
+    ot_sram_1r1w_64x512_m1_r2c2 u_pm0 (.clk(clk), .r_ce_in(prog_re_r), .r_addr_in(prog_a_r[5:0]), .rd_out(pm_q0),
+        .w_ce_in(pw_v2 && !pw_a2[3]), .w_addr_in(pw_a2[9:4]), .wd_in({8{pw_d2}}), .w_mask_in(pm_mask),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    ot_sram_1r1w_64x512_m1_r2c2 u_pm1 (.clk(clk), .r_ce_in(prog_re_r), .r_addr_in(prog_a_r[5:0]), .rd_out(pm_q1),
+        .w_ce_in(pw_v2 && pw_a2[3]), .w_addr_in(pw_a2[9:4]), .wd_in({8{pw_d2}}), .w_mask_in(pm_mask),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    always @(posedge clk) if (prog_re_r) pm_oob <= (prog_a_r >= 64);
+    always @(*) prog_q = pm_oob ? 1024'd0 : {pm_q1, pm_q0};
+`endif
     always @(posedge clk) begin
+`ifdef OT_PROG_FLOPS
         if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)
             if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;
+`endif
     end
     // program writes: one-hot row / word selects registered one edge before the store (65,536 enables)
     always @(posedge clk) begin
         pw_row2 <= q_pw_v ? (64'd1 << q_pw_addr[9:4]) : 64'd0;
         pw_word2 <= 16'd1 << q_pw_addr[3:0];
         pw_d2 <= q_pw_data;
+        pw_v2 <= q_pw_v; pw_a2 <= q_pw_addr;
         if (q_dw_v) desc_mem[q_dw_addr] <= q_dw_data;
+`ifdef OT_PROG_FLOPS
         if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;
+`endif
         if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;
     end
     wire wrom_re_w; assign b_rom_fault = wrom_re_w; assign b_core_fault = core_fault_w;
