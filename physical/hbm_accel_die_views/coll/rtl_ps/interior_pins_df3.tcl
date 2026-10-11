@@ -40,9 +40,9 @@ set tx1 [expr {min($dh - 12.0, [ot_rowy 4] + $mh)}]
 set rb1 [expr {[ot_rowy 3] - $gap/2}]
 set tx1 [expr {min($dh - 24.0, [ot_rowy 5] + $mh)}]
 set rb0 [expr {[ot_rowy 1] - $gap}]
-set_io_pin_constraint -region top:[ot_r [expr {$x0 - 24}]]-[ot_r [expr {$x0 + $array_w + 24}]] -pin_names {qp_din* qr_din* qp_push qr_push}
+set_io_pin_constraint -region top:[ot_r [expr {max(4.0, $x0 - 24)}]]-[ot_r [expr {min($dw - 4.0, $x0 + $array_w + 24)}]] -pin_names {qp_din* qr_din* qp_push qr_push}
 set_io_pin_constraint -region right:[ot_r $rb0]-[ot_r $rb1] -pin_names {rb_d* rb_v}
 set_io_pin_constraint -region right:[ot_r $rb1]-[ot_r $tx1] -pin_names {ph_tx_flit* ph_tx_v stall fault}
 set_io_pin_constraint -region bottom:[ot_r [expr {$x0 - 12}]]-[ot_r [expr {$x0 + $array_w + 12}]] -pin_names {ph_rx_flit* ph_rx_v}
 set_io_pin_constraint -region left:[ot_r [ot_rowy 2]]-[ot_r [ot_rowy 4]] -pin_names {clk rst_n sw_cr_ret rb_cr}
-puts "HCOLL_PINS_DF3 top-tx [ot_r [expr {$x0 - 24}]]-[ot_r [expr {$x0 + $array_w + 24}]] rb [ot_r $rb0]-[ot_r $rb1] tx [ot_r $rb1]-[ot_r $tx1] die ${dw}x${dh}"
+puts "HCOLL_PINS_DF3 top-tx [ot_r [expr {max(4.0, $x0 - 24)}]]-[ot_r [expr {min($dw - 4.0, $x0 + $array_w + 24)}]] rb [ot_r $rb0]-[ot_r $rb1] tx [ot_r $rb1]-[ot_r $tx1] die ${dw}x${dh}"
