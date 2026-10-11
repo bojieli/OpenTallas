@@ -316,7 +316,10 @@ module dsfd_coll_ce #(
     //  PCOPY : engine per-source (* keep *) pop copies (ot_w15 PCOPY): each source's landing queues, head mux and s0
     //          load enables follow a local pop_k[r] instead of one pop / ppar net across the tile.  0 cycles.
     parameter integer RSTR = `ifdef OT_S81PH_COLL_RSTR 1 `else 0 `endif,
-    parameter integer PCOPY = `ifdef OT_S81PH_COLL_PCOPY 1 `else 0 `endif
+    parameter integer PCOPY = `ifdef OT_S81PH_COLL_PCOPY 1 `else 0 `endif,
+    // CEX (el1011-ds-coll 2026-10-11, opt-in, needs PULL + PCOPY): engine pop control copied per 128-bit s0 slice
+    // (PSL 4), registered-flag landing queues (WFREE 2), registered reduce word + per-slice packer select (core ORX)
+    parameter integer CEX = `ifdef OT_S81PH_COLL_CEX 1 `else 0 `endif
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rs,
@@ -413,7 +416,8 @@ module dsfd_coll_ce #(
       end
     end endgenerate
     wire c_bw_v; wire [2099:1] c_bw_d;
-    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD), .EPULL(PULL), .EPCOPY(PCOPY)) u_core (.clk(clk), .rst_n(rst_cn),
+    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD), .EPULL(PULL), .EPCOPY(PCOPY),
+        .EPSL(CEX ? 4 : 1), .ELQW(CEX ? 2 : 1), .ORX(CEX)) u_core (.clk(clk), .rst_n(rst_cn),
         .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r), .ts(3'd0), .t_vm(), .fault(), .rank(), .eng_en(),
         .x_lo_v(x_lo_v), .x_lo_r(x_lo_r), .x_lo_d(x_lo_d), .x_lo_l(x_lo_l),
         .x_li_v(x_li_v), .x_li_r(x_li_r), .x_li_d(x_li_d), .x_li_l(x_li_l), .x_lflt(flt_r),
