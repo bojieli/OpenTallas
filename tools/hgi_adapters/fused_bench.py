@@ -133,7 +133,7 @@ def main():
         x = GV.to_bf16(GV.seqsum([GV.mul(pre[j], h[j]) for j in range(4)]))
         y = GV.rmsnorm_bf16(x, w, eps)
         # pre must not overlap h (4 D words at 0): at D 5120 the old cb 20000 overwrote h[3][4640..4643] (bench bug)
-        ab, cb, ob, bb = 0, (20000 if 4 * D <= 20000 else 4 * D + 64), 30000, 0x4_0000_0000
+        ab, cb, ob, bb = 0, (20000 if 4 * D <= 20000 else 4 * D + 64), 30720, 0x4_0000_0000   # ob bank phase 0 (= ab's): lane-local rule
         vin = {ab + i: int(v) for i, v in enumerate(f32w(h.reshape(-1)))}
         vin.update({cb + j: int(f32w(pre)[j]) for j in range(4)})
         gb = (f32w(w) >> 16).astype(np.uint32)
@@ -147,7 +147,7 @@ def main():
         comb = (rng.random((4, 4)) * 0.5).astype(np.float32)
         mix = [GV.seqsum([GV.mul(comb[j, k], res[j]) for j in range(4)]) for k in range(4)]
         hout = GV.to_bf16(np.stack([GV.add(GV.mul(post[k], yv), mix[k]) for k in range(4)]))
-        yb, rb, mb, ob2 = 0, 8192, 40000, 50000
+        yb, rb, mb, ob2 = 0, 8192, 40000, 51200   # y / res / out at bank phase 0 (lane-local rule)
         vin = {yb + i: int(v) for i, v in enumerate(f32w(yv))}
         vin.update({rb + i: int(v) for i, v in enumerate(f32w(res.reshape(-1)))})
         mixv = np.concatenate([post, comb.reshape(-1)])

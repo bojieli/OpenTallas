@@ -39,6 +39,9 @@ module ot_hgi_fused_record #(
                                            //   the micro-op lowering; other shapes keep the lowering
     parameter integer HCD = 5120,
     parameter integer HMUT = 0,            // ot_hgi_hc_eng MUT (bench negatives)
+    parameter integer HLL = 0,             // hbm-hcvm 10-11: 1 = the lane-local HC engine build (ot_hgi_hc_eng LL = 1); it takes
+                                           //   only bank-phase-aligned A / B (or the gain scratch) / O (compiler rule), else lowering
+    parameter integer HRL = 10,            // HLL: relay stages each way between the engine top and a lane
     parameter integer ULQ = 8,             // UWIDE / HCE: credits a wide VM lane holds (= the VM lane queue depth)
     parameter integer URWB = 6             // UWIDE = 0: log2 rows of the internal SU's reducer-result file: a reduction whose
                                            //   result rows exceed it (the HC mix: d rows; ROW_NORM sum of squares: nseg rows)
@@ -159,7 +162,7 @@ module ot_hgi_fused_record #(
     generate if (HCE != 0 && UNIT != 0 && UWIDE != 0) begin : g_hce
         assign wrq = own ? e_wrq : u_wrq; assign wwq = own ? e_wwq : u_wwq;
         assign rg_req = own ? e_rg : u_rg; assign wg_req = own ? e_wg : u_wg;
-        ot_hgi_hc_eng #(.D(HCD), .LQ(ULQ), .MUT(HMUT)) u_hce (.clk(clk), .rst_n(rst_n), .job_v(ne_v), .job_rdy(e_rdy),
+        ot_hgi_hc_eng #(.D(HCD), .LQ(ULQ), .MUT(HMUT), .LL(HLL), .RL(HRL)) u_hce (.clk(clk), .rst_n(rst_n), .job_v(ne_v), .job_rdy(e_rdy),
             .job(ne_job), .g_rdy(hg_rdy), .done(e_done), .fault(e_fault), .idle(), .wrq(e_wrq), .wrq_cr(own ? wrq_cr : 32'd0), .wrr(own ? wrr : '0),
             .wwq(e_wwq), .wwq_cr(own ? wwq_cr : 32'd0), .wwq_done(own ? wwq_done : 32'd0), .rg_req(e_rg), .rg_gnt(rg_gnt),
             .wg_req(e_wg), .wg_gnt(wg_gnt));
@@ -198,7 +201,8 @@ module ot_hgi_fused_record #(
     // the gain streamed packed (the raw HBM BF16 row as U32 words, concurrent with the engine's h pass): 4-byte aligned
     wire hgp_ok = (HCD % 512 == 0) && (dB[9:8] == 2'd0);
     wire hce_ok = (HCE != 0) && (UNIT != 0) && (UWIDE != 0) && (d == 21'(HCD)) && (dA[10:8] == 3'd0) && (dO[10:8] == 3'd0) &&
-                  ((op == 6'd2) ? (dB[10:8] == 3'd0) : (scr_q[2:0] == 3'd0));
+                  ((op == 6'd2) ? (dB[10:8] == 3'd0) : (scr_q[2:0] == 3'd0)) &&
+                  ((HLL == 0) || ((dA[15:11] == dO[15:11]) && ((op == 6'd2) ? (dB[15:11] == dO[15:11]) : (scr_q[7:3] == dO[15:11]))));
     // F10: the end of the scratch this record uses (exclusive), against the reserved limit (SCR_WORDS words from the base,
     // 0 = up to the end of VM): an over-size record FAULTS instead of wrapping its scratch over live VM words
     wire [20:0] scr_end = {3'd0, scr_q} + d + ((op == 6'd0) ? (21'd2 + d) : {4'd0, nseg, 1'b0});
