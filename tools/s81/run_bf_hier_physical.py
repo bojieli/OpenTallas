@@ -43,7 +43,9 @@ def command(a):
         # data/control pin regions identical, excluding clk from their group.
         pins = [p.replace('^(clk|rst_n_pin|', '^(rst_n_pin|').replace('^(clk|rst_n|', '^(rst_n|') for p in pins]
         mid = a.die_h/2
-        pins += ['--pin-region', f'^clk$=right:{mid-.288:g}-{mid+.288:g}']
+        # PPL-0093 (bf-hier-1011 2026-10-10): a 0.576 um window holds no legal pin slot on one layer; 4.32 um (several M4/M5
+        # tracks) still enters at the face midpoint
+        pins += ['--pin-region', f'^clk$=right:{mid-2.16:g}-{mid+2.16:g}']
     ss = a.ins_ss
     io = lambda v: str(round(v / 1000.0, 4))
     W, H = a.die_w, a.die_h
