@@ -39,7 +39,14 @@ module dsfd_vm_bgq #(
     // s81-vm-1011 (opt-in): ports NPR .. NP-1 are WRITE-ONLY (the VM master's capture landing ports): no read history,
     // no read-return lane (r_* / o_* carry ports 0 .. NPR-1 only).  A read op on such a port is a schedule violation
     // -> sticky fault (code bit 0, with the queue faults).  Default NPR = NP: the closed tile, unchanged.
-    parameter integer NPR = NP
+    parameter integer NPR = NP,
+    // el1011-ds-vm/bgq28 (opt-in): ENQUEUE PIPELINE.  EP 0 = the closed single-cycle enqueue (default, unchanged).
+    // EP >= 1: the per-bank NP-port enqueue (bank match -> port-order prefix count -> NP:1 slot select -> queue write,
+    // ~2.1 ns placed at NP 28) is cut into registered rungs: E1 bank-match vector (per-bank replicated group id),
+    // E2 prefix count -> one-hot slot selects + saturated count, E3 NP-input AND-OR slot data select fused with the
+    // 4-slot queue write (EP 1) or registered first (EP 2).  Every op of every bank moves ED = EP + 1 cycles later,
+    // and so does the read history (HL), so (issue cycle, port) order and the fixed read latency hold (+ED cycles).
+    parameter integer EP = 0
 ) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rs,
@@ -72,7 +79,8 @@ module dsfd_vm_bgq #(
     localparam integer KQ = (NP < QD) ? NP : QD;
     localparam integer KW = (KQ > 1) ? $clog2(KQ) : 1;
     localparam integer LB = $clog2(NBL);
-    localparam integer HL = QD + 4;                // = ot_s81ph_vm_mem L - 2
+    localparam integer ED = (EP == 0) ? 0 : EP + 1; // enqueue pipeline cycles added
+    localparam integer HL = QD + 4 + ED;           // = ot_s81ph_vm_mem L - 2 (+ ED)
     localparam integer MW = DW / 32, NC = DW / 128;
     localparam integer SR = NBL / NSTG;            // bank rows per bus stage
     localparam integer OW = $clog2(QD) + 1;
@@ -140,6 +148,27 @@ module dsfd_vm_bgq #(
         wire [NP*RA-1:0] a_row = rb_row[gs];
         wire [NP*MW-1:0] a_m = rb_m[gs];
         wire [NP*DW-1:0] a_d = rb_d[gs];
+        // ---- (EP >= 1) per-stage group-id copy (a register chain, so synthesis cannot merge the replicas back into
+        // one high-fanout flop) and the request fields the E3 slot select reads, delayed 2 cycles (E1, E2)
+        reg [GW-1:0] sg;
+        if (gs == 0) begin : g_sg0
+            always @(posedge clk) sg <= grp_q;
+        end else begin : g_sgn
+            always @(posedge clk) sg <= g_s[gs-1].sg;
+        end
+        wire [GW-1:0] grp_s = (EP == 0) ? grp_q : sg;
+        reg [NP-1:0]    x1_we, x2_we;
+        reg [NP*9-1:0]  x1_r, x2_r;
+        reg [NP*MW-1:0] x1_m, x2_m;
+        reg [NP*DW-1:0] x1_d, x2_d;
+        if (EP > 0) begin : g_x
+            integer xp;
+            always @(posedge clk) begin
+                x1_we <= a_we; x1_m <= a_m; x1_d <= a_d;
+                for (xp = 0; xp < NP; xp = xp + 1) x1_r[xp*9 +: 9] <= a_row[xp*RA + BB +: 9];
+                x2_we <= x1_we; x2_r <= x1_r; x2_m <= x1_m; x2_d <= x1_d;
+            end
+        end
         // ---- read history (per stage): (read issued, bank) per port; position HL-1 is due at the slot stage
         reg [NP-1:0] h_v [0:HL-1];
         reg [BB-1:0] h_b [0:HL-1][0:NP-1];
@@ -185,8 +214,17 @@ module dsfd_vm_bgq #(
         wire [PW*KQ-1:0] b_dp [0:SR-1];
         for (gb = 0; gb < SR; gb = gb + 1) begin : g_bank
             localparam integer LBI = gs * SR + gb;              // local bank index in the tile
-            wire [BB+GW:0] gidw = grp_q * NBL + LBI;
+            wire [BB+GW:0] gidw = grp_s * NBL + LBI;
             wire [BB-1:0] gid = gidw[BB-1:0];
+            // (EP >= 1) per-bank group-id replica (chain: bank gb copies bank gb-1, bank 0 copies the stage copy)
+            reg [GW-1:0] gq;
+            if (gb == 0) begin : g_gq0
+                always @(posedge clk) gq <= sg;
+            end else begin : g_gqn
+                always @(posedge clk) gq <= g_bank[gb-1].gq;
+            end
+            wire [BB+GW:0] gqw = gq * NBL + LBI;
+            wire [BB-1:0] gidq = gqw[BB-1:0];
             reg [NP-1:0] hit;
             reg [QW:0]   pref [0:NP-1];
             reg [QW+PW:0] cnt;
@@ -212,7 +250,9 @@ module dsfd_vm_bgq #(
             reg [QW:0]   occ;
             reg          ovf;
             wire         serve = occ != 0;
-            wire [QW+PW+1:0] need = occ - serve + cnt;
+            // the count the queue state applies this cycle: EP 0 = this cycle's, EP >= 1 = the pipelined e_cnt
+            wire [QW+PW:0] cnt_a;
+            wire [QW+PW+1:0] need = occ - serve + cnt_a;
             integer ps;
             always @(posedge clk or negedge rst_i)
                 if (!rst_i) begin qh <= 0; qt <= 0; occ <= 0; ovf <= 1'b0; end
@@ -222,20 +262,141 @@ module dsfd_vm_bgq #(
                         qt <= qt + (QD - (occ - serve));
                         occ <= QD;
                     end else begin
-                        qt <= qt + cnt;
+                        qt <= qt + cnt_a;
                         occ <= need;
                     end
                     if (serve) qh <= qh + 1'b1;
                 end
-            always @(posedge clk)
-                for (ps = 0; ps < NP; ps = ps + 1)
-                    if (hit[ps] && occ - serve + pref[ps] < QD) begin
-                        q_we[(qt + pref[ps]) & (QD-1)] <= a_we[ps];
-                        q_p [(qt + pref[ps]) & (QD-1)] <= ps;
-                        q_r [(qt + pref[ps]) & (QD-1)] <= a_row[ps*RA + BB +: 9];
-                        q_m [(qt + pref[ps]) & (QD-1)] <= a_m[ps*MW +: MW];
-                        q_dd[(qt + pref[ps]) & (QD-1)] <= a_d[ps*DW +: DW];
+            if (EP == 0) begin : g_e0
+                assign cnt_a = cnt;
+                always @(posedge clk)
+                    for (ps = 0; ps < NP; ps = ps + 1)
+                        if (hit[ps] && occ - serve + pref[ps] < QD) begin
+                            q_we[(qt + pref[ps]) & (QD-1)] <= a_we[ps];
+                            q_p [(qt + pref[ps]) & (QD-1)] <= ps;
+                            q_r [(qt + pref[ps]) & (QD-1)] <= a_row[ps*RA + BB +: 9];
+                            q_m [(qt + pref[ps]) & (QD-1)] <= a_m[ps*MW +: MW];
+                            q_dd[(qt + pref[ps]) & (QD-1)] <= a_d[ps*DW +: DW];
+                        end
+            end else begin : g_ep
+                // ---- E1: bank-match vector (registered; the group id is this bank's own replica)
+                reg [NP-1:0] e_hit;
+                integer i1;
+                always @(posedge clk or negedge rst_i)
+                    if (!rst_i) e_hit <= {NP{1'b0}};
+                    else for (i1 = 0; i1 < NP; i1 = i1 + 1) e_hit[i1] <= a_v[i1] && a_row[i1*RA +: BB] == gidq;
+                // ---- E2: port-order prefix count in 4 groups (local ripple <= 6 + group offsets), one-hot slot
+                // selects e_sel[j][p] = "p is the j-th hit port" (j < QD), count saturated at QD + 1 (need > QD is
+                // exact: with no overflow the count is <= QD)
+                localparam integer NG = 4, GZ = (NP + NG - 1) / NG, CW = $clog2(NP + 1);
+                reg [NP-1:0] ho;                         // hits in queue order (MUT_ORDER: reverse port order)
+                reg [CW-1:0] lpre [0:NP-1];
+                reg [CW-1:0] gt [0:NG-1];
+                reg [CW-1:0] goff [0:NG-1];
+                reg [CW-1:0] opre [0:NP-1];
+                reg [CW-1:0] tot;
+                reg [NP-1:0] sel_c [0:QD-1];
+                integer g2, i2, j2;
+                always @* begin
+                    for (i2 = 0; i2 < NP; i2 = i2 + 1)
+`ifdef OT_S81PH_VM_MUT_ORDER
+                        ho[i2] = e_hit[NP-1-i2];                 // MUTANT: same-cycle ops queued in reverse port order
+`else
+                        ho[i2] = e_hit[i2];
+`endif
+                    for (g2 = 0; g2 < NG; g2 = g2 + 1) begin
+                        gt[g2] = {CW{1'b0}};
+                        for (i2 = g2 * GZ; i2 < (g2 + 1) * GZ && i2 < NP; i2 = i2 + 1) begin
+                            lpre[i2] = gt[g2];
+                            gt[g2] = gt[g2] + ho[i2];
+                        end
                     end
+                    goff[0] = {CW{1'b0}};
+                    for (g2 = 1; g2 < NG; g2 = g2 + 1) goff[g2] = goff[g2-1] + gt[g2-1];
+                    tot = goff[NG-1] + gt[NG-1];
+                    for (i2 = 0; i2 < NP; i2 = i2 + 1) opre[i2] = goff[i2 / GZ] + lpre[i2];
+                    for (j2 = 0; j2 < QD; j2 = j2 + 1)
+                        for (i2 = 0; i2 < NP; i2 = i2 + 1)
+`ifdef OT_S81PH_VM_MUT_ORDER
+                            sel_c[j2][NP-1-i2] = ho[i2] && opre[i2] == j2;
+`else
+                            sel_c[j2][i2] = ho[i2] && opre[i2] == j2;
+`endif
+                end
+                reg [NP-1:0] e_sel [0:QD-1];
+                reg [QW+PW:0] e_cnt;
+                integer j3;
+                always @(posedge clk or negedge rst_i)
+                    if (!rst_i) begin
+                        e_cnt <= 0;
+                        for (j3 = 0; j3 < QD; j3 = j3 + 1) e_sel[j3] <= {NP{1'b0}};
+                    end else begin
+                        e_cnt <= (tot > QD) ? QD + 1 : tot;
+                        for (j3 = 0; j3 < QD; j3 = j3 + 1) e_sel[j3] <= sel_c[j3];
+                    end
+                // ---- E3: slot data select (NP-input AND-OR per slot; the selects are one-hot)
+                reg [QD-1:0] w_v, w_we;
+                reg [PW-1:0] w_p [0:QD-1];
+                reg [8:0]    w_r [0:QD-1];
+                reg [MW-1:0] w_m [0:QD-1];
+                reg [DW-1:0] w_d [0:QD-1];
+                integer j4, p4;
+                always @* for (j4 = 0; j4 < QD; j4 = j4 + 1) begin
+                    w_v[j4] = |e_sel[j4];
+                    w_we[j4] = |(e_sel[j4] & x2_we);
+                    w_p[j4] = {PW{1'b0}}; w_r[j4] = 9'd0; w_m[j4] = {MW{1'b0}}; w_d[j4] = {DW{1'b0}};
+                    for (p4 = 0; p4 < NP; p4 = p4 + 1) begin
+                        if (e_sel[j4][p4]) w_p[j4] = w_p[j4] | p4;   // one-hot: at most one port per slot
+                        w_r[j4] = w_r[j4] | ({9{e_sel[j4][p4]}} & x2_r[p4*9 +: 9]);
+                        w_m[j4] = w_m[j4] | ({MW{e_sel[j4][p4]}} & x2_m[p4*MW +: MW]);
+                        w_d[j4] = w_d[j4] | ({DW{e_sel[j4][p4]}} & x2_d[p4*DW +: DW]);
+                    end
+                end
+                // the slot words the queue write takes: EP 1 = w_* (fused), EP 2 = w_* registered (+1 cycle)
+                wire [QD-1:0] k_v, k_we;
+                wire [PW-1:0] k_p [0:QD-1];
+                wire [8:0]    k_r [0:QD-1];
+                wire [MW-1:0] k_m [0:QD-1];
+                wire [DW-1:0] k_d [0:QD-1];
+                if (EP == 1) begin : g_k1
+                    assign k_v = w_v; assign k_we = w_we; assign cnt_a = e_cnt;
+                    for (gc = 0; gc < QD; gc = gc + 1) begin : g_kw
+                        assign k_p[gc] = w_p[gc]; assign k_r[gc] = w_r[gc]; assign k_m[gc] = w_m[gc]; assign k_d[gc] = w_d[gc];
+                    end
+                end else begin : g_k2
+                    reg [QD-1:0] y_v, y_we;
+                    reg [PW-1:0] y_p [0:QD-1];
+                    reg [8:0]    y_r [0:QD-1];
+                    reg [MW-1:0] y_m [0:QD-1];
+                    reg [DW-1:0] y_d [0:QD-1];
+                    reg [QW+PW:0] y_cnt;
+                    integer j5;
+                    always @(posedge clk or negedge rst_i)
+                        if (!rst_i) begin y_v <= {QD{1'b0}}; y_cnt <= 0; end
+                        else begin y_v <= w_v; y_cnt <= e_cnt; end
+                    always @(posedge clk) begin
+                        y_we <= w_we;
+                        for (j5 = 0; j5 < QD; j5 = j5 + 1) begin
+                            y_p[j5] <= w_p[j5]; y_r[j5] <= w_r[j5]; y_m[j5] <= w_m[j5]; y_d[j5] <= w_d[j5];
+                        end
+                    end
+                    assign k_v = y_v; assign k_we = y_we; assign cnt_a = y_cnt;
+                    for (gc = 0; gc < QD; gc = gc + 1) begin : g_kw
+                        assign k_p[gc] = y_p[gc]; assign k_r[gc] = y_r[gc]; assign k_m[gc] = y_m[gc]; assign k_d[gc] = y_d[gc];
+                    end
+                end
+                // ---- queue write: slot word j lands at (qt + j) if it fits (same rule as EP 0 with pref = j)
+                integer j6;
+                always @(posedge clk)
+                    for (j6 = 0; j6 < QD; j6 = j6 + 1)
+                        if (k_v[j6] && occ - serve + j6 < QD) begin
+                            q_we[(qt + j6) & (QD-1)] <= k_we[j6];
+                            q_p [(qt + j6) & (QD-1)] <= k_p[j6];
+                            q_r [(qt + j6) & (QD-1)] <= k_r[j6];
+                            q_m [(qt + j6) & (QD-1)] <= k_m[j6];
+                            q_dd[(qt + j6) & (QD-1)] <= k_d[j6];
+                        end
+            end
             assign b_ovf[gb] = ovf;
             assign b_occ[gb] = occ;
             // serve register: drives the macro pins (no logic between flop and macro pin)
@@ -292,7 +453,7 @@ module dsfd_vm_bgq #(
             integer pd;
             always @* begin
                 dcnt = 0;
-                for (pd = 0; pd < NP; pd = pd + 1) if (h_v[HL-1][pd] && h_b[HL-1][pd] == gid) dcnt = dcnt + 1'b1;
+                for (pd = 0; pd < NP; pd = pd + 1) if (h_v[HL-1][pd] && h_b[HL-1][pd] == ((EP == 0) ? gid : gidq)) dcnt = dcnt + 1'b1;
             end
             reg [DW-1:0] ds [0:KQ-1];
             reg [PW-1:0] dsp [0:KQ-1];
@@ -325,7 +486,7 @@ module dsfd_vm_bgq #(
         reg [LB-1:0] lb [0:NPR-1];
         always @* for (p = 0; p < NPR; p = p + 1) begin
             lb[p] = d_b[p][LB-1:0];
-            own[p] = d_v[p] && (d_b[p] >> LB) == grp_q && (lb[p] / SR) == gs;
+            own[p] = d_v[p] && (d_b[p] >> LB) == grp_s && (lb[p] / SR) == gs;
         end
         reg [NPR*DW-1:0] part;
         integer bb2;
@@ -458,7 +619,14 @@ module dsfd_vm_bgq28 (
     output wire [3:0]        o_f,
     output wire [2:0]        o_o
 );
-    dsfd_vm_bgq #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(1), .DW(128), .NSTG(2)) u (
+    // el1011-ds-vm/bgq28: EP 2 (enqueue pipeline, +3 cycles on every op; the master's MD follows).  OT_VM28_EP1 selects
+    // the fused-select EP 1 (+2) for a route variant.
+`ifdef OT_VM28_EP1
+    localparam integer EP = 1;
+`else
+    localparam integer EP = 2;
+`endif
+    dsfd_vm_bgq #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(1), .DW(128), .NSTG(2), .EP(EP)) u (
         .ck(ck), .rs(rs), .grp(grp), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
         .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));

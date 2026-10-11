@@ -991,7 +991,14 @@ module dsfd_sp_vm_m #(
     output wire [0:0]    flt, output wire [31:0] fvec, output wire [2:0] max_occ
 );
     localparam integer NP = 28, NPR = 10, NT = 4, RA = 14, OW = 3;
-    localparam integer MD = 4 * NSTG + QD + 9 - 4 * (NSTG + 1);
+    // el1011-ds-vm/bgq28: the hard tile's enqueue pipeline (EP, = dsfd_vm_bgq28) adds ED = EP + 1 cycles to every op
+`ifdef OT_VM28_EP1
+    localparam integer EP = 1;
+`else
+    localparam integer EP = 2;
+`endif
+    localparam integer ED = (EP == 0) ? 0 : EP + 1;
+    localparam integer MD = 4 * NSTG + QD + 9 - 4 * (NSTG + 1) + ED;
     wire [NS*NP-1:0] mv, mwe; wire [NS*NP*RA-1:0] mrow; wire [NS*NP*4-1:0] mm; wire [NS*NP*128-1:0] md;
     wire [NS*4-1:0] mrf; wire [15:0] fe_flt;
     wire p2c;
@@ -1019,7 +1026,7 @@ module dsfd_sp_vm_m #(
         for (t = 0; t < NT; t = t + 1) begin : g_t
             wire [1:0] gid = t;
             // = dsfd_vm_bgq28 (the hard tile) at the default parameters
-            dsfd_vm_bgq #(.NP(NP), .NPR(NPR), .NB(32), .NBL(8), .QD(QD), .RQ(8), .MACRO(MACRO), .DW(128), .NSTG(NSTG)) u_bg (
+            dsfd_vm_bgq #(.NP(NP), .NPR(NPR), .NB(32), .NBL(8), .QD(QD), .RQ(8), .MACRO(MACRO), .DW(128), .NSTG(NSTG), .EP(EP)) u_bg (
                 .ck(ck), .rs(rst), .grp(gid),
                 .i_v(cv_[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cm[t]), .i_d(cd_[t]),
                 .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),
