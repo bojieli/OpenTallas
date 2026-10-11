@@ -14,8 +14,8 @@ phase compare into s_cbad and the u_cp enable copies):
   bottom face : din (station input data, captured by id_p), control seam inputs (gr, rst_p, rst_e, go_*, ph4) and
                 outputs (grc_o, v_*, q for the last slice) toward the station control strip
   top face    : dout (the NO kept output launch copies -> station out_* pins)
-Seam IO is referenced to the tile's own register clock pin (smh sdc_block io_ref=True): the neighbour flop sits on the
-same element clock tree.  60 / 25 ps uncertainty (AGENTS policy); nothing is false-pathed (the reset copies are timed).
+Seam IO is referenced to a neighbour virtual clock at the tile's planning insertion (smh sdc_block nbr_clk form, as the
+closed smh tcc/bdc pieces).  60 / 25 ps uncertainty (AGENTS policy); nothing is false-pathed (the reset copies are timed).
 Reuses tools/hbm_accel_smh_physical.py (config_mk, sdc_block, run_sh, RUN) unchanged.
 """
 import argparse
@@ -90,7 +90,9 @@ def cmd_tile(a):
     (work / "config.mk").write_text("\n".join(lines) + "\n")
     (work / "pins.tcl").write_text(pins_tcl(a.piece, a.no))
     bi, bo, to, nb, nt = ports(a.piece, a.no)
-    sdc = smh.sdc_block(a.lat, nbr_in=" ".join(x for x in bi), period=a.period, skew=a.skew, io_ref=True)
+    # nbr_clk form (as the CLOSED smh tcc/bdc pieces): io_ref's -reference_pin delays crash ORFS port buffering
+    # (rsz::Resizer::bufferInputs SIGSEGV at 3_3_place_gp, stnh-*-148f24a40 x4)
+    sdc = smh.sdc_block(a.lat, nbr_in=" ".join(x for x in bi), lat_ff=a.lat_ff, period=a.period, skew=a.skew)
     # no false path: the reset copies are registered releases from the control core and stay timed
     sdc = sdc.replace("set_false_path -from [get_ports rst_n]",
                       "# (no false path: rst_p / rst_e are registered release copies from the station control, timed)")
@@ -259,7 +261,8 @@ def main(argv=None):
     t.add_argument("--pd", type=float, default=0.55)
     t.add_argument("--period", type=float, default=770)
     t.add_argument("--skew", type=float, default=60)
-    t.add_argument("--lat", type=float, default=200)
+    t.add_argument("--lat", type=float, default=250)
+    t.add_argument("--lat-ff", type=float, default=150)
     t.add_argument("--hold-margin", default="10")
     t.add_argument("--make-var", action="append")
     t.add_argument("--stop-after", default=None)
