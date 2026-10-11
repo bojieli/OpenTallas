@@ -111,7 +111,7 @@ module ot_hgi_coll_tkm #(
     // ---------------------------------------------------------------- delivery credits + decode + FIFO
     reg [7:0] cr [0:DEL-1];
     for (genvar l = 0; l < DEL; l = l + 1) begin : g_perm
-        assign del_permit[l] = (cr[l] != 8'd0) && (ph == P_INS || start);
+        assign del_permit[l] = (cr[l] != 8'd0) && (ph == P_INS);     // flops only (no start -> permit path)
     end
     reg [DEL-1:0] d1_v, d2_v;
     reg [7:0] d1_q [0:DEL-1]; reg [15:0] d1_gi [0:DEL-1]; reg [FW-1:0] d1_d [0:DEL-1];
@@ -143,7 +143,7 @@ module ot_hgi_coll_tkm #(
     // ---------------------------------------------------------------- the array
     reg [EW-1:0] X [0:C-1][0:3];
     // the entry block, rank-sorted, registered once per group of BG positions (broadcast fanout replicated at the flops)
-    localparam integer BG = 64, NB = (KMAX + BG - 1) / BG, P = KMAX;
+    localparam integer BG = 32, NB = (KMAX + BG - 1) / BG, P = KMAX;
     reg [EW-1:0] bk [0:NB-1][0:3];
     reg          bv;
     reg [CB:0]   rnd;                          // OETS rounds done
@@ -277,11 +277,11 @@ module ot_hgi_coll_tkm #(
             rnd <= '0; par <= 1'b0; outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 3'd0; lq_h <= 2'd0; lq_t <= 2'd0;
             for (l = 0; l < DEL; l = l + 1) begin cr[l] <= 8'(CAP); st_n[l] <= 2'd0; dn[l] <= 8'd0; occ[l] <= 8'd0; end
             bv <= 1'b0;
-            for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
         end else begin
             done <= 1'b0;
             if (busy) stat_cycles <= stat_cycles + 32'd1;
             fpop_q <= fpop;
+            tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> multiplier path)
             // ---- credits: reserve at dispatch, return one edge after a FIFO pop
             for (l = 0; l < DEL; l = l + 1) begin
                 cr[l] <= cr[l] - ((MUT == 3) ? 8'd0 : 8'(del_reserve[l])) + 8'(fpop_q[l]);
@@ -355,46 +355,11 @@ module ot_hgi_coll_tkm #(
             for (s = 0; s < 4; s = s + 1) e2[s] <= e1[s];
             e2_ge[0] <= vkey(e1[0]) >= vkey(e1[1]); e2_ge[1] <= vkey(e1[0]) >= vkey(e1[2]); e2_ge[2] <= vkey(e1[0]) >= vkey(e1[3]);
             e2_ge[3] <= vkey(e1[1]) >= vkey(e1[2]); e2_ge[4] <= vkey(e1[1]) >= vkey(e1[3]); e2_ge[5] <= vkey(e1[2]) >= vkey(e1[3]);
-            // ---- the array
-            case (ph)
-                P_INS, P_DRAIN: begin
-                    begin : entry
-                        reg [1:0] r0, r1, r2, r3;
-                        r0 = 2'(!e2_ge[0]) + 2'(!e2_ge[1]) + 2'(!e2_ge[2]);
-                        r1 = 2'(e2_ge[0]) + 2'(!e2_ge[3]) + 2'(!e2_ge[4]);
-                        r2 = 2'(e2_ge[1]) + 2'(e2_ge[3]) + 2'(!e2_ge[5]);
-                        r3 = 2'(e2_ge[2]) + 2'(e2_ge[4]) + 2'(e2_ge[5]);
-                        bv <= e2_v;
-                        for (integer g = 0; g < NB; g = g + 1)
-                            for (s = 0; s < 4; s = s + 1)
-                                bk[g][s] <= ((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
-                                            ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}});
-                        if (e2_v) stat_ins <= stat_ins + 32'd1;
-                    end
-                    if (bv) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= ins[c * 4 + s];
-                end
-                P_INV: begin
-                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1)
-                        if (13'(c * 4 + s) >= nout_q) X[c][s] <= {EW{1'b0}};
-                end
-                P_RS: begin
-                    for (c = 0; c < C; c = c + 1) begin : rs
-                        reg [4*EW-1:0] o_;
-                        o_ = rsort({X[c][3], X[c][2], X[c][1], X[c][0]});
-                        for (s = 0; s < 4; s = s + 1) X[c][s] <= o_[EW*s +: EW];
-                    end
-                end
-                P_OETS: begin
-                    for (c = 0; c < C; c = c + 1) begin
-                        if (lowc(c, par)) for (s = 0; s < 4; s = s + 1) X[c][s] <= mb[c][s];
-                        else if (c + 1 < C && lowc(c + 1, par)) for (s = 0; s < 4; s = s + 1) X[c][s] <= mt[(c + 1 < C) ? c + 1 : c][s];
-                    end
-                end
-                P_OUT: if (pgo) begin
-                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= (c + 4 < C) ? X[(c + 4 < C) ? c + 4 : c][s] : {EW{1'b0}};
-                end
-                default: ;
-            endcase
+            // ---- the array (X / bk: reset-free data flops in their own block below)
+            if (ph == P_INS || ph == P_DRAIN) begin
+                bv <= e2_v;
+                if (e2_v) stat_ins <= stat_ins + 32'd1;
+            end
             // ---- output (P_OUT): cells 0 .. 3 -> one O line (+ one R line) an edge
             begin : pk
                 reg [2:0] n_; reg [1:0] t_; reg [12:0] cnt_; reg [FW-1:0] od_, rd_; reg [15:0] m_;
@@ -421,14 +386,13 @@ module ot_hgi_coll_tkm #(
                 P_IDLE: if (start) begin
                     n_q <= cfg_n; k_q <= cfg_k; nel <= 19'd0; g_q <= cfg_g; gb_q <= cfg_gbase; pf_q <= cfg_pf; nout_q <= cfg_nout;
                     ob_q <= cfg_obase; rb_q <= cfg_rbase; hr_q <= cfg_has_r;
-                    tot_q <= 24'(cfg_g) * 24'(cfg_pf); rcv <= 24'd0;
+                    rcv <= 24'd0;
                     cact_q <= CB'((cfg_nout + 13'd3) >> 2);
                     begin : tp
                         reg [12:0] p_;
                         p_ = cfg_nout - 13'd1;
                         tc_q <= CB'(p_ >> 2); ts_q <= p_[1:0];
                     end
-                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
                     bv <= 1'b0;
                     stat_ins <= 32'd0; stat_surv <= 32'd0; stat_cycles <= 32'd0;
                     outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; rnd <= '0; par <= 1'b0;
@@ -451,6 +415,51 @@ module ot_hgi_coll_tkm #(
                 P_OUT: if (outn == nout_q && lq_n == 3'd0) ph <= P_FLUSH;
                 P_FLUSH: if (!w_v) begin ph <= P_IDLE; done <= 1'b1; end
                 default: ph <= P_IDLE;
+            endcase
+        end
+    end
+    // ---------------------------------------------------------------- the array: reset-free data flops (cleared at start)
+    always @(posedge clk) begin : arr_b
+        integer c, s;
+        if (ph == P_IDLE) begin
+            if (start) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
+        end else begin
+            case (ph)
+                P_INS, P_DRAIN: begin
+                    begin : entry
+                        reg [1:0] r0, r1, r2, r3;
+                        r0 = 2'(!e2_ge[0]) + 2'(!e2_ge[1]) + 2'(!e2_ge[2]);
+                        r1 = 2'(e2_ge[0]) + 2'(!e2_ge[3]) + 2'(!e2_ge[4]);
+                        r2 = 2'(e2_ge[1]) + 2'(e2_ge[3]) + 2'(!e2_ge[5]);
+                        r3 = 2'(e2_ge[2]) + 2'(e2_ge[4]) + 2'(e2_ge[5]);
+                        for (integer g = 0; g < NB; g = g + 1)
+                            for (s = 0; s < 4; s = s + 1)
+                                bk[g][s] <= ((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
+                                            ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}});
+                    end
+                    if (bv) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= ins[c * 4 + s];
+                end
+                P_INV: begin
+                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1)
+                        if (13'(c * 4 + s) >= nout_q) X[c][s] <= {EW{1'b0}};
+                end
+                P_RS: begin
+                    for (c = 0; c < C; c = c + 1) begin : rs
+                        reg [4*EW-1:0] o_;
+                        o_ = rsort({X[c][3], X[c][2], X[c][1], X[c][0]});
+                        for (s = 0; s < 4; s = s + 1) X[c][s] <= o_[EW*s +: EW];
+                    end
+                end
+                P_OETS: begin
+                    for (c = 0; c < C; c = c + 1) begin
+                        if (lowc(c, par)) for (s = 0; s < 4; s = s + 1) X[c][s] <= mb[c][s];
+                        else if (c + 1 < C && lowc(c + 1, par)) for (s = 0; s < 4; s = s + 1) X[c][s] <= mt[(c + 1 < C) ? c + 1 : c][s];
+                    end
+                end
+                P_OUT: if (pgo) begin
+                    for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= (c + 4 < C) ? X[(c + 4 < C) ? c + 4 : c][s] : {EW{1'b0}};
+                end
+                default: ;
             endcase
         end
     end
