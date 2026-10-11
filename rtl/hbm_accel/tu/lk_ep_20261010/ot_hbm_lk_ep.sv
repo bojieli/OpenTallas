@@ -70,18 +70,7 @@ module ot_hbm_lk_ep #(
     initial if (NS < 1 || NS > 3 || HB + 14 != FFW || (1 << QB) != TXQ || (1 << SB) != SQ) $fatal(1, "hfd_lk_ep: geometry");
 `endif
     // ---------------------------------------------------------------- CRCs (parallel, MSB first)
-    function automatic [13:0] crc14(input [HB-1:0] d);
-        reg [13:0] c; integer i;
-        begin c = 14'h3FFF;
-            for (i = HB - 1; i >= 0; i = i - 1) c = {c[12:0], 1'b0} ^ ((c[13] ^ d[i]) ? 14'h0805 : 14'h0000);
-            crc14 = c; end
-    endfunction
-    function automatic [11:0] crc12(input [46:0] d);
-        reg [11:0] c; integer i;
-        begin c = 12'hFFF;
-            for (i = 46; i >= 0; i = i - 1) c = {c[10:0], 1'b0} ^ ((c[11] ^ d[i]) ? 12'h80F : 12'h000);
-            crc12 = c; end
-    endfunction
+    // CRCs: ot_crc_par (balanced XOR matrices; ac60951fc preroute -4,178 ps was the serial-loop CRC-14 a_h -> b_f)
     // ---------------------------------------------------------------- retry pipelines
     wire [NS-1:0]    p_in_v, p_in_r, p_tx_v, p_tx_r, p_rx_v, p_rx_r, p_out_v, p_out_r, p_fb_v, p_fault;
     wire [W-1:0]     p_in_dd [0:NS-1];
@@ -185,12 +174,14 @@ module ot_hbm_lk_ep #(
     end
     assign p_tx_r = gnt;
     reg  [HB-1:0] a_h;
+    wire [13:0]   a_crc;
     reg  [FFW-1:0] b_f;
+    ot_crc_par #(.W(HB), .N(14), .POLY(14'h0805), .INIT(14'h3FFF)) u_crc_t (.d(a_h), .crc(a_crc));
     integer s;
     always @(posedge clk) begin
         for (s = 0; s < NS; s = s + 1)
-            if (gnt[s]) a_h <= {p_tx_e[s], p_tx_s[s], 2'(s), p_tx_d[s]};
-        b_f <= {crc14(a_h), a_h};
+            if (gnt[s]) a_h <= {p_tx_e[s], p_tx_s[s], s[1:0], p_tx_d[s]};
+        b_f <= {a_crc, a_h};
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
@@ -215,7 +206,9 @@ module ot_hbm_lk_ep #(
             rsub <= (rsub == NS - 1) ? 2'd0 : rsub + 1'b1;
             if (r_cr) ccnt <= ccnt + 1'b1;
         end
-    always @(posedge clk) r_tx <= {crc12({p_ack_e[rsub], rbody}), rbody};
+    wire [11:0] r_crc;
+    ot_crc_par #(.W(47), .N(12), .POLY(12'h80F), .INIT(12'hFFF)) u_crc_r (.d({p_ack_e[rsub], rbody}), .crc(r_crc));
+    always @(posedge clk) r_tx <= {r_crc, rbody};
 
     // ---------------------------------------------------------------- gearbox (closed S81 lane format, FMT 1)
     reg  [LW-1:0] x_rx_q; reg x_rx_vq;
@@ -232,7 +225,9 @@ module ot_hbm_lk_ep #(
     // ---------------------------------------------------------------- reverse frame in -> feedback, credits
     reg  [NS-1:0] fbv;
     reg  [7:0]    ccnt_far;
-    wire          r_ok = r_rx_v && (crc12({session, r_rx[22:0]}) == r_rx[34:23]);
+    wire [11:0]   r_crc_rx;
+    ot_crc_par #(.W(47), .N(12), .POLY(12'h80F), .INIT(12'hFFF)) u_crc_rr (.d({session, r_rx[22:0]}), .crc(r_crc_rx));
+    wire          r_ok = r_rx_v && (r_crc_rx == r_rx[34:23]);
     assign p_fb_v = fbv;
     always @(posedge clk) begin fb_nak <= r_rx[14]; fb_seq <= r_rx[13:2]; fb_ses <= session; end
     always @(posedge clk or negedge rst_n)
@@ -245,7 +240,9 @@ module ot_hbm_lk_ep #(
 
     // ---------------------------------------------------------------- forward frame in -> CRC -> per-sub FIFO
     reg           c_v; reg [HB-1:0] c_h;
-    wire          f_ok = (crc14(f_rx[HB-1:0]) == f_rx[FFW-1:HB]);
+    wire [13:0]   f_crc;
+    ot_crc_par #(.W(HB), .N(14), .POLY(14'h0805), .INIT(14'h3FFF)) u_crc_f (.d(f_rx[HB-1:0]), .crc(f_crc));
+    wire          f_ok = (f_crc == f_rx[FFW-1:HB]);
     always @(posedge clk) c_h <= f_rx[HB-1:0];
     always @(posedge clk or negedge rst_n)
         if (!rst_n) c_v <= 1'b0;

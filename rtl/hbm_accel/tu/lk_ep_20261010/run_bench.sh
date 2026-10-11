@@ -5,7 +5,7 @@ set -u; O=$1; NS=${2:-3}; N=${3:-3000}; E=${4:-0}; SD=${5:-1}; shift $(( $# < 5 
 mkdir -p $O; D=rtl/hbm_accel/tu
 S="rtl/common/ot_secded.sv rtl/common/ot_secded_dec_dp.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
    $D/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv $D/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv
-   rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv $D/lk_ep_20261010/ot_hbm_lk_ep.sv $D/lk_ep_20261010/tb_hfd_lk_ep.sv"
+   rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv $D/lk_ep_20261010/ot_crc_par.sv $D/lk_ep_20261010/ot_hbm_lk_ep.sv $D/lk_ep_20261010/tb_hfd_lk_ep.sv"
 if [ "${SIM:-verilator}" = verilator ]; then
   verilator --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Irtl/common --top-module tb_hfd_lk_ep -GNS=$NS $DEFS \
     --Mdir $O/obj -j ${JOBS:-8} -o sim $S > $O/build.log 2>&1 || { tail -20 $O/build.log; echo "LKEP_BENCH FAIL (build)"; exit 1; }
