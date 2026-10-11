@@ -683,6 +683,12 @@ def run_synthesis(
     # byte-identical to before.
     icg_lib = [f"read_liberty -lib {dff_lib}"] if any(
         "ICGx" in path.read_text(encoding="utf-8", errors="replace") for path in sources) else []
+    # A retained standard cell the RTL instantiates by name (ot_s81_head_min_buffer: BUFx2_ASAP7_75t_R hold-floor
+    # cells, hgi-1010/idleB) is a liberty cell too: read every corner library as black boxes (once) so hierarchy -check
+    # accepts it.  Only when a non-comment source line names one, so every other synth.ys is byte-identical.
+    if any(re.search(r"^\s*(?:\(\*[^)]*\*\)\s*)?[A-Za-z0-9]+_ASAP7_75t_[RLS]\s+\w+\s*\(",
+                     path.read_text(encoding="utf-8", errors="replace"), re.M) for path in sources):
+        icg_lib = [f"read_liberty -lib {p}" for p in liberty]
     script.write_text(
         "\n".join(
             [
