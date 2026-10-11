@@ -1953,8 +1953,27 @@ def _pg_only_m7(text):
     return re.sub(r'  PIN (VDD|VSS)\n(.*?)\n  END \1', fix, text, flags=re.S)
 
 
+PG_M8_MASTERS = set()          # hbmdie-1011 (conservative-1011 a0bda978e): masters whose PG pins are M8 straps (tiled hfd_hc)
+
+
 def _gen_pg_lef(mst):
-    """Generated abstract with M7 PG stripes (0.288 um, 10.8 um pitch, as the routed q element) for the PSM window."""
+    """Generated abstract with M7 PG stripes (0.288 um, 10.8 um pitch, as the routed q element) for the PSM window.
+    PG_M8_MASTERS (incl. their window clips): horizontal M8 PG straps instead (0.48 um, 10.8 um pitch) and M1-M7 owned
+    by the block; the die joins them with its M9 straps (via89 at every same-net crossing)."""
+    if mst.name.split('_clip_')[0] in PG_M8_MASTERS:
+        L = [f'MACRO {mst.name}', '  CLASS BLOCK ;', f'  FOREIGN {mst.name} 0 0 ;', f'  SIZE {mst.w:.3f} BY {mst.h:.3f} ;',
+             '  SYMMETRY X Y ;']
+        for net, off in (('VDD', 1.0), ('VSS', 6.4)):
+            L += [f'  PIN {net}', '    DIRECTION INOUT ;', f'    USE {"POWER" if net == "VDD" else "GROUND"} ;', '    PORT',
+                  '      LAYER M8 ;']
+            y = off
+            while y + 0.48 < mst.h - 0.2:
+                L.append(f'        RECT 0.300 {y:.3f} {mst.w - 0.3:.3f} {y + 0.48:.3f} ;')
+                y += 10.8
+            L += ['    END', f'  END {net}']
+        L += ['  OBS'] + [f'    LAYER M{i} ;\n      RECT 0 0 {mst.w:.3f} {mst.h:.3f} ;' for i in range(1, 8)] + ['  END',
+                                                                                                      f'END {mst.name}', '']
+        return '\n'.join(L)
     L = [f'MACRO {mst.name}', '  CLASS BLOCK ;', f'  FOREIGN {mst.name} 0 0 ;', f'  SIZE {mst.w:.3f} BY {mst.h:.3f} ;',
          '  SYMMETRY X Y ;']
     for net, off in (('VDD', 1.0), ('VSS', 6.4)):
@@ -2031,7 +2050,10 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
                                                      for x, y in sites[net]))
     off = round((vp / 2) % pitch, 4)
     cfgm = real_lef(CFG_LEF)['name']
-    other = ' '.join(x for x in masters_used if x != cfgm)
+    m8m = [x for x in masters_used if x.split('_clip_')[0] in PG_M8_MASTERS]
+    other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m)
+    m8grid = ('define_pdn_grid -macro -name m8 -cells {' + ' '.join(m8m) + '} -halo {0 0 0 0} -voltage_domains CORE\n'
+              'add_pdn_connect -grid m8 -layers {M8 M9}\n') if m8m else ''
     power = {it.name: (clip_pw[it.name] if it.name in clip_pw else inst_power(it)) * (1.0 if peak else 0.25) for it in ins}
     tcl = f"""
 set t0 [clock seconds]
@@ -2051,7 +2073,7 @@ add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch / 
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name m7 -cells {{{other}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid m7 -layers {{M7 M8}}
-define_pdn_grid -macro -name mcfg -cells {{{cfgm}}} -halo {{0 0 0 0}} -voltage_domains CORE
+{m8grid}define_pdn_grid -macro -name mcfg -cells {{{cfgm}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_stripe -grid mcfg -layer M5 -width 0.12 -pitch 2.4 -spacing 1.08 -offset 0.6
 add_pdn_connect -grid mcfg -layers {{M4 M5}}
 add_pdn_connect -grid mcfg -layers {{M5 M8}}

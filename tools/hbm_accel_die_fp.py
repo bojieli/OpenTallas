@@ -583,7 +583,8 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # wire chain (stations <= 67 um); die routes cross the tiles on M8 / M9. face_coll 1,560 (el1011-hbm-coll: 9 tiles +
              # core SRAMs, hierarchical hfd_coll): the spine stack re-gaps evenly (cross gap loader -> coll 302.4 kept)
              coll_h=1560.0,
-             phys_trees=True,      # hbmdie-1011 textbook audit rows 2-3: regional pipelined reset tree + clock H-tree per domain
+             phys_trees=True,
+             pg_m8_masters=('hfd_hc',),   # conservative-1011 a0bda978e: tiled hfd_hc PG pins on M8 (die M9 straps join by via89)      # hbmdie-1011 textbook audit rows 2-3: regional pipelined reset tree + clock H-tree per domain
              # (phys_relays, row 1, stays OFF: fully physical relaying of the hub's wide buses does not fit this
              # floorplan's channels -- relays reach 64.5 % of a 2 x 2 mm hub cell; needs the row-4 re-floorplan)
              idx_cols=((0, 1, 2), (3, 4, 5)), idx_col_gap=172.8, idx_gap=43.2, hc_gap=172.8, sfu_gap=216.0,
@@ -5348,6 +5349,7 @@ def _s_adapter(m):
     """Present this die to S.case_ir (geometry, power, kind map) without touching S's globals beyond DIE."""
     S.DIE = (m['geo']['W'], m['geo']['H'])
     S.inst_power = inst_power
+    S.PG_M8_MASTERS = set((m.get('variant') or {}).get('pg_m8_masters', ()))   # hbmdie-1011: M8 PG pins (hfd_hc)
 
     def kind_at(_m, x, y):
         for it in m['insts']:
