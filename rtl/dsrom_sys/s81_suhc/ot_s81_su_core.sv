@@ -109,7 +109,9 @@ module ot_s81_su_core #(
     reg               sm_owner_v; reg sm_owner;      // slot whose den the softmax unit holds
 
     // ------------------------------------------------------------------ operand beat assembly
-    reg [512*BMAX-1:0] bb;
+    reg [512*BMAX-1:0] bb;                           // rows landing (blocking: the beat being assembled)
+    reg [512*BMAX-1:0] bq;                           // the completed beat
+    reg [512*BMAX-1:0] be;                           // the beat at the engine pins, with its strobe
     reg                beat_v;                       // a full beat assembled this cycle (registered strobe)
     reg [15:0]         beat_i;
 
@@ -135,13 +137,13 @@ module ot_s81_su_core #(
     // QB
     reg qb_v; wire qb_vo, qb_f; wire [256*QB_NB-1:0] qb_q; wire [10*QB_NB-1:0] qb_e; wire [512*QB_NB-1:0] qb_y;
     ot_dsrom_su_qbank #(.NB(QB_NB), .NIN(1), .NOUT(1), .ROPE(0), .LM(LM), .LA(LA)) u_qb (
-        .clk(clk), .rst_n(rst_n), .v(qb_v), .fp4(fp4), .x(bb[0 +: 1024 * QB_NB]), .cs(2048'd0), .vo(qb_vo), .q(qb_q),
+        .clk(clk), .rst_n(rst_n), .v(qb_v), .fp4(fp4), .x(be[0 +: 1024 * QB_NB]), .cs(2048'd0), .vo(qb_vo), .q(qb_q),
         .e(qb_e), .y(qb_y), .fault(qb_f));
     // SW
     reg sw_v; reg [32*SW_W-1:0] sw_w;
     wire sw_vo, sw_f; wire [8*SW_W-1:0] sw_q; wire [10*SW_W/32-1:0] sw_e; wire [16*SW_W-1:0] sw_y;
     ot_dsrom_su_swiglu #(.W(SW_W), .NIN(1), .NOUT(1), .ROUTED(1), .LM(LM), .LA(LA)) u_sw (
-        .clk(clk), .rst_n(rst_n), .v(sw_v), .g(bb[0 +: 32 * SW_W]), .u(bb[32 * SW_W +: 32 * SW_W]), .w(sw_w), .lim(w3),
+        .clk(clk), .rst_n(rst_n), .v(sw_v), .g(be[0 +: 32 * SW_W]), .u(be[32 * SW_W +: 32 * SW_W]), .w(sw_w), .lim(w3),
         .vo(sw_vo), .q(sw_q), .e(sw_e), .y(sw_y), .fault(sw_f));
     // SE / SO
     reg sm_sv, sm_pv;
@@ -153,8 +155,8 @@ module ot_s81_su_core #(
     ot_dsrom_su_softmax #(.H(SM_H), .LPH(SM_LPH), .NVMAX(SM_NVMAX), .DIN(1), .DOUT(1), .RWU(1), .RWD(1), .LM(LM),
                           .LA(LA)) u_sm (
         .clk(clk), .rst_n(rst_n && sm_rst_n), .nv(sm_nv), .lt(sm_lt), .scale(sm_scale), .sink(sm_sink),
-        .cosv(sm_cos), .sinv(sm_sin), .s_v(sm_sv), .s_d(bb[0 +: SMW * 32]), .e_v(sm_ev), .e_d(sm_ed), .mx_v(sm_mxv),
-        .mx_d(sm_mx), .es_v(sm_esv), .es_d(sm_es), .den_v(sm_denv), .den_d(sm_den), .pv_v(sm_pv), .pv_d(bb[0 +: SMW * 32]),
+        .cosv(sm_cos), .sinv(sm_sin), .s_v(sm_sv), .s_d(be[0 +: SMW * 32]), .e_v(sm_ev), .e_d(sm_ed), .mx_v(sm_mxv),
+        .mx_d(sm_mx), .es_v(sm_esv), .es_d(sm_es), .den_v(sm_denv), .den_d(sm_den), .pv_v(sm_pv), .pv_d(be[0 +: SMW * 32]),
         .o_v(sm_ov), .o_d(sm_od), .fault(sm_f));
 
     // ------------------------------------------------------------------ result row FIFO
@@ -258,18 +260,19 @@ module ot_s81_su_core #(
                             if (rs_v[s]) begin bb[512 * (c % rpb) +: 512] = rs_d[512 * s +: 512]; c = c + 1; end
                         rr <= c;
                         if (c != rr && c % rpb == 0) begin
-                            beat_v <= 1; beat_i <= (c / rpb) - 1;
+                            beat_v <= 1; beat_i <= (c / rpb) - 1; bq <= bb;
                         end
                     end
                 end
                 // ---------------------------------------------------------- beat -> engine strobe
                 if (beat_v) begin
+                    be <= bq;
                     case (kind)
                         K_QN: begin
                             // go a cycle ahead of the first vector, gain vector beat_i loaded beside it
-                            qn_in <= 1; qn_x <= bb[0 +: QN_N * 32];
+                            qn_in <= 1; qn_x <= bq[0 +: QN_N * 32];
                         end
-                        K_KV: begin kv_in <= 1; kv_x <= bb[0 +: KV_N * 32]; end
+                        K_KV: begin kv_in <= 1; kv_x <= bq[0 +: KV_N * 32]; end
                         K_QB: qb_v <= 1;
                         K_SW: begin
                             sw_v <= 1;
@@ -277,8 +280,8 @@ module ot_s81_su_core #(
                         end
                         K_SE: sm_sv <= 1;
                         K_SO: sm_pv <= 1;
-                        K_GQ: gq[gsel * NVQ + beat_i] <= bb[0 +: QN_N * 32];
-                        K_GK: gk[gsel] <= bb[0 +: KV_N * 32];
+                        K_GQ: gq[gsel * NVQ + beat_i] <= bq[0 +: QN_N * 32];
+                        K_GK: gk[gsel] <= bq[0 +: KV_N * 32];
                         default: ;
                     endcase
                     beats <= beats + 1;
