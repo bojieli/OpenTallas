@@ -18,6 +18,11 @@ run() {   # run <label> <tb> <srcs> <plusargs> <pass regex> [defines...]
   if grep -q "$re" $O/$l/run.log && ! grep -q "^FAIL\|^ERR ctrl" $O/$l/run.log; then echo PASS > $O/$l/rc; return 0; fi
   echo FAIL > $O/$l/rc; return 1
 }
+if [ "${2:-}" = one ]; then   # run_selcol_ctrl_gate.sh <out> one <sel|col> [defines]: one case, exit 0 iff PASS
+  k=$3; shift 3
+  if [ $k = sel ]; then run one_sel tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL "$@"; r=$?; else run one_col tb_s81ph_col "$COL" "+jobs=40" "^RESULT PASS" -DTB_CTRL "$@"; r=$?; fi
+  echo "SELCOL_ONE $k $* rc=$r ($(cat $O/one_$k/rc))"; exit $r
+fi
 run sel_base tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL & a0=$!
 run sel_wrongtag tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DTB_MUT_WRONGTAG & a1=$!
 run sel_mut2 tb_s81ph_sel "$SEL" "" "^RESULT PASS" -DTB_CTRL -DOT_S81_DW_MUT=2 & a2=$!
