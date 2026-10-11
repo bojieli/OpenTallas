@@ -424,14 +424,24 @@ module ot_hgi_dma_mover #(
     reg [3:0] l_wo;                                        // lanes with writes in flight (their responses are all write acks)
     reg [5:0] l_wn [0:3];
     assign r_rsp_rdy = lg | l_wo;
-    reg [1:0] lt_i; reg lt_v;
-    always @* begin lt_v = 1'b0; lt_i = 2'd0; for (integer l = 3; l >= 0; l = l - 1) if (l_take[l]) begin lt_v = 1'b1; lt_i = 2'(l); end end
+    // the taken sector is registered first (the grant is one-hot: an AND-OR pick), its slot computed from the register
+    // (registered boundary: r_rsp_v -> lt_i -> tag[lt_i] + beat -> lw_a was 49 levels)
+    reg lt_v; reg [7:0] lt_tag; reg [2:0] lt_bt; reg [255:0] lt_d;
+    always @(posedge clk) begin : ltk
+        reg [7:0] tg; reg [2:0] bt; reg [255:0] dd;
+        tg = 8'd0; bt = 3'd0; dd = 256'd0;
+        for (integer l = 0; l < 4; l = l + 1) if (l_take[l]) begin
+            tg = tg | r_rsp_tag[l*16 +: 8]; bt = bt | lbc[l]; dd = dd | r_rsp_data[l*256 +: 256];
+        end
+        lt_tag <= tg; lt_bt <= bt; lt_d <= dd;
+    end
+    always @(posedge clk or negedge rn) if (!rn) lt_v <= 1'b0; else lt_v <= |l_take;
     ot_sram_1r1w_256x256_m2_r2c2 u_land (.clk(clk), .r_ce_in(p1_v), .r_addr_in(p1_h), .rd_out(lr_d),
         .w_ce_in(lw_v), .w_addr_in(lw_a), .wd_in(lw_d), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     always @(posedge clk) begin : lwd
-        lw_a <= lt_v ? r_rsp_tag[lt_i*16 +: 8] + ((MUT == 3) ? 8'd0 : {5'd0, lbc[lt_i]}) : (VR2 != 0) ? g_slot[g_di] : v_ptr;
-        lw_d <= lt_v ? r_rsp_data[lt_i*256 +: 256] : (VR2 != 0) ? g_d[g_di] : vr_q[255:0];
+        lw_a <= lt_v ? lt_tag + ((MUT == 3) ? 8'd0 : {5'd0, lt_bt}) : (VR2 != 0) ? g_slot[g_di] : v_ptr;
+        lw_d <= lt_v ? lt_d : (VR2 != 0) ? g_d[g_di] : vr_q[255:0];
         for (integer b = 0; b < 32; b = b + 1) if (vr2r[b*257 + 256]) g_d[b] <= vr2r[b*257 +: 256];   // the lane's response (pin flop)
     end
     always @(posedge clk or negedge rn) begin
