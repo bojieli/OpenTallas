@@ -17,8 +17,12 @@ module tb_hcoll_rfetch;
     ot_hcoll_port #(.RFETCH(1)) u_dut (.clk(clk), .rst_n(rst_n), .qp_push(qp_push), .qp_din(qp_din), .qr_push(qr_push),
         .qr_din(qr_din), .sw_cr_ret(sw_cr_ret), .ph_tx_v(tv1), .ph_tx_flit(tf1), .ph_rx_v(ph_rx_v), .ph_rx_flit(ph_rx_flit),
         .rb_v(rbv1), .rb_d(rbd1), .rb_cr(rb_cr), .stall(st1), .fault(f1));
+    // idle-sweep-1010: fill a 576-bit word, then truncate.  rnd[544 +: 32] wrote 31 bits past the 545-bit return value:
+    // Icarus 11 dropped them silently, Icarus 12 vvp aborts (of_RET_VEC4 assertion), which failed the bench on EPYC4.
     function automatic [PWT-1:0] rnd();
-        for (integer i = 0; i < PWT; i = i + 32) rnd[i +: 32] = $urandom;
+        reg [((PWT + 31) / 32) * 32 - 1:0] w;
+        for (integer i = 0; i < PWT; i = i + 32) w[i +: 32] = $urandom;
+        rnd = w[PWT-1:0];
     endfunction
     // scoreboards
     reg [PWT-1:0] rxq [0:65535]; integer rx_w = 0, rx_r = 0;
