@@ -89,11 +89,12 @@ D_MD_FIELDS = [
     ("mtp_kernel_9", 25, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 9 entry (16 B units; 0 = absent)"),
     ("mtp_kernel_10", 26, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 10 entry (16 B units; 0 = absent)"),
     ("mtp_kstride", 49, 0, 32, "u", "hfd_cmdproc", "G26 MTP per-layer kernel stride for kinds 3 / 7 / 8 (16 B units; 0 = one body a kind)"),
+    ("mtp_noise", 53, 0, 18, "u", "hfd_cmdproc", "MTP draft-block noise / mask token id the translator puts on the demb launches of columns > 0 (DS: dspark_noise_token_id mod vocab = 128,799; 0 = none)"),
     ("manifest_sha256", 32, 0, 256, "u", "sw", "sha256 of the model manifest JSON (C8); binds MD to one model"),
     ("cp_vocab", 40, 0, 18, "u", "hfd_cmdproc", "doorbell / completion token range check (width 18 everywhere)"),
     ("cp_ctx_max", 41, 0, 21, "u", "hfd_cmdproc", "doorbell position range check"),
     ("coll_group_size", 46, 0, 8, "u", "hfd_coll", "aligned groups (C6 set); rank = die_id mod size"),
-    # words 53-55: reserved for Qwen MTP (D4); word 49 = G26 mtp_kstride; words 50-52: reserved for C4 window/chunk parameters
+    # word 53 = mtp_noise (hgi-1010/h); words 54-55: reserved for MTP; word 49 = G26 mtp_kstride; words 50-52: reserved for C4 window/chunk parameters
     ("entry_ar", 56, 0, 32, "u", "hfd_cmdproc", "AR decode step: record offset in the image (16 B units)"),
     ("entry_verify", 57, 0, 32, "u", "hfd_cmdproc", "MTP verify pass (0 = absent)"),
     ("entry_draft", 58, 0, 32, "u", "hfd_cmdproc", "MTP draft pass (0 = absent)"),

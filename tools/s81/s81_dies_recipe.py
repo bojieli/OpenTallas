@@ -117,6 +117,19 @@ def recipes():
                        role='DSpark primary die (4 = TP4 group P.k0..k3; mtp-dsbind 2026-10-10)',
                        note='layer1 recipe + primary image (non-expert mtp.0..2 on the S81 L0 runs + seed main_proj, '
                             'results/uarch/dsrom_s81_mtp_binding_20261010) + 5 draft fan-out SerDes (one a row package); no WFC'),
+        # mtp-wfc 2026-10-10: WFC + accept integration (budget-audit dsrom_mtp_draft_hw (b))
+        'head631rtt': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '631', '--mtp-seq', '--mtp-links', '5',
+                                      '--mtp-seq-rtt'],
+                           role='head631 with the native sequencer dsfd_mtp_seq_rtt (accept/commit, RTT-sized receivers)',
+                           note='mtp-seq-rtt-native-61b4bc729-tc CLOSED; same ports as dsfd_mtp_seq'),
+        'layer1kit': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit'],
+                          role='stage die with the WFC kit (STG tokpipe + lnk + vmx as own masters, exact ports)',
+                          note='rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv dsfd_wfc_stg; gate tools/dsrom_wfc_kit_bench.py'),
+        'layer1srckit': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--ctrl-role', 'source'],
+                             role='S0 (source) stage die with the WFC kit (SOURCE tokpipe + tok_hard + lnk + vmx)',
+                             note='dsfd_wfc_src; host cfg in + committed-token egress to the host slab'),
+        'scankit': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer', '--wfc-kit'],
+                        role='scan die (q-only flavour) with the WFC kit', note='dsfd_wfc_stg'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
                        role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '

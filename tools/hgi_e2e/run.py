@@ -44,6 +44,17 @@ VEC = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_
        "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
        "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec.sv"]
+SRC_REAL["att"] = ["rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv",
+                   "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv", "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+                   "rtl/hdc/v41x/ot_hdc_v41x_attn.sv", "rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv"]
+SRC_REAL["hc"] = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+                  "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+                  "rtl/hdc/ot_hdc_fastfp_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+                  "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
+                  "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+                  "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv", "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+                  "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv", "rtl/hdc/v41/ot_hdc_sinkhorn.sv", "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+                  "rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv"]
 SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv"]
 SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_sfu_record.sv"]
 SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
@@ -145,6 +156,18 @@ def prep(d: Path):
     print(f"prep {d}: {len(lines)} records, image {len(image)} B, expected token {exp_tok}")
 
 
+COLLAR = "physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv"
+TOKEDGE = "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv"
+
+
+def mtp_sources():
+    """MTP=1 (hgi-1010/h): the native controller (tools/hgi_mtp_native_gate.py's source set) + the MX1 MTP collar's
+    queue / join; the collar module itself is extracted from its physical top file at script time (COLLAR)"""
+    import hgi_mtp_native_gate as GT
+    return ["rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv"] + GT.NATIVE + GT.FACADE + ["rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv",
+                                    "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv"]
+
+
 def script(a):
     gd = dict(g.split("=", 1) for g in a.g)
     for key in ("FLAT", "KLAT", "VLAT"):                 # latency knobs are script flags, not extra -G
@@ -153,12 +176,26 @@ def script(a):
             a.g = [g for g in a.g if not g.startswith(key + "=")]
     real = [x for x in a.real.split(",") if x]
     src = list(dict.fromkeys(SRC_BASE + sum((SRC_REAL[x] for x in real), [])))
+    mtp = int(getattr(a, "mtp", 0) or 0)
+    if mtp:
+        src = list(dict.fromkeys(src + mtp_sources()))
     src = list(dict.fromkeys(src + closure(src)))
     gp = " ".join(f"-G{'REAL_' + x.upper()}=1" for x in real) + "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG"))
     gp += (" +define+E2E_COLL_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
     gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
     gp += " +define+E2E_FUSED" if "fused" in real else ""
-    tag = ("_".join(sorted(real)) or "stubs") + "".join("_" + g.replace("=", "") for g in a.g)
+    gp += " +define+E2E_ATT" if "att" in real else ""
+    gp += " +define+E2E_HC" if "hc" in real else ""
+    tag = (f"mtp{mtp}_" if mtp else "") + ("_".join(sorted(real)) or "stubs") + "".join("_" + g.replace("=", "") for g in a.g)
+    mtp_pre = ""
+    if mtp:
+        gp += f" -GMTP={mtp}"
+        mtp_pre = (f"awk '/^module hfd_cmdproc_s_mtp_native_mx1_mtp /,/^endmodule/' $S/{COLLAR} > $O/collar_mtp.sv\n"
+               f"grep -q endmodule $O/collar_mtp.sv\n"
+               # Verilator 5.032 internal error (V3Delayed 'Multiple Write refs on LHS of NBA' on wrapfix's argument t when
+               # it is inlined into the NBAs) in the controller's spec-state edge: a bench-only copy with wrapfix as a
+               # macro of the same expression (t taken as 32 bits, as the function's input)
+               f"python3 $S/tools/hgi_e2e/wrapfix_copy.py $S/{TOKEDGE} $O/token_edge.sv\n")
     wi = ""
     if "coll" in real and ("COLL_BF16" in gd or "COLL_PFMAX" in gd):
         # what-if copy of the collective block body: the PSG endpoint built with these parameters
@@ -169,13 +206,16 @@ def script(a):
               f".PFMAX({pfm}),/' $S/{orig} > $O/ot_hgi_coll_ep_whatif.sv\ngrep -q 'PFMAX({pfm})' $O/ot_hgi_coll_ep_whatif.sv\n")
         src.append("WHATIF")
     srcs = " ".join(("$O/ot_hgi_coll_ep_whatif.sv" if s_ == "WHATIF" else "$S/" + s_) for s_ in src)
-    LAST_SRC[:] = [x for x in src if x != "WHATIF"] + (["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"] if wi else [])
+    if mtp:
+        srcs = srcs.replace("$S/" + TOKEDGE, "$O/token_edge.sv") + " $O/collar_mtp.sv"
+    LAST_SRC[:] = [x for x in src if x != "WHATIF"] + (["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"]
+                                                       if "WHATIF" in src else []) + ([COLLAR] if mtp else [])
     return f"""#!/bin/bash
 # hgi-e2e run: vehicle {a.vehicle}, real units [{', '.join(real) or 'none'}]; FLAT {a.flat} KLAT {a.klat} VLAT {a.vlat}
 set -e
 S=${{SRC:-src}}; V=${{VEC:-vec}}/{a.vehicle}; O=${{OUT:-out}}/{a.vehicle}_{tag}_f{a.flat}k{a.klat}
 mkdir -p $O
-{wi}VER=${{VERILATOR:-verilator}}
+{mtp_pre}{wi}VER=${{VERILATOR:-verilator}}
 $VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-BLKSEQ --timing -O2 \\
   {gp} -GFLAT={a.flat} -GKLAT={a.klat} -GVLAT={a.vlat} \\
   -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb \\
@@ -234,6 +274,8 @@ def main():
     s.add_argument("--flat", type=int, default=40); s.add_argument("--klat", type=int, default=40)
     s.add_argument("--vlat", type=int, default=6); s.add_argument("--out", type=Path, required=True)
     s.add_argument("--g", action="append", default=[], help="extra tb parameter KEY=VAL")
+    s.add_argument("--mtp", type=int, nargs="?", const=1, default=0,
+                   help="1: controller + collar (bench) + CP die translator (DS MTP job); 2: the collar inside the CP die")
     r = sp.add_parser("report"); r.add_argument("run", type=Path); r.add_argument("--out", type=Path)
     a = ap.parse_args()
     if a.cmd == "prep":

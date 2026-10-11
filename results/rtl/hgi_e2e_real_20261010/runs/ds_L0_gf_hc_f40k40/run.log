@@ -1,0 +1,13 @@
+E2E: 93 golden records, 9358 HBM sectors loaded
+E2E: hcw.bin 8 HC weight-set sectors
+E2E SUMMARY cycles 13451 token 1234 status 0 dispatched 93/93 dispatch_mismatch 0 final_vm_mismatch 0 final_hbm_mismatch 0 unloaded_hbm_reads 2046
+E2E CFG status err 0 loaded 1
+E2E drained 13460 cycles after the doorbell (completion 13451)
+E2E completion token 1234 (golden 1234) status 0 cp_cycles 13445 doorbell->completion 13451
+E2E real-unit records 2, mismatching 0
+HGI_E2E PASS
+- /srv/opentallas-scratch/claude/hgi-tput-1010/src_e2e/rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv:409: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 28us; walltime 36.147 s; speed 761.834 ns/s
+- Verilator: cpu 9.359 s on 1 threads; allocated 46 MB
+rc=0

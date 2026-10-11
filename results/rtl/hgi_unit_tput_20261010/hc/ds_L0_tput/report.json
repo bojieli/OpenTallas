@@ -1,0 +1,173 @@
+{
+ "schema": "opentallas.hgi_unit_tput.v1 (hgi-e2e report.json compatible)",
+ "pass_": true,
+ "summary": {
+  "cycles": 102286,
+  "records": 9,
+  "exact_records": 9
+ },
+ "per_unit": {
+  "HC": {
+   "records": 9,
+   "real": 9,
+   "exact": 9,
+   "rtl_busy": 102286,
+   "sim_cost": 3513.344
+  }
+ },
+ "per_op": {
+  "HC.HC_MIX_ROWS": {
+   "records": 4,
+   "rtl_service": 24197,
+   "sim_cost": 193.336,
+   "ratio": 125.155
+  },
+  "HC.HC_MIX_POST": {
+   "records": 4,
+   "rtl_service": 2769,
+   "sim_cost": 2160.0,
+   "ratio": 1.282
+  },
+  "HC.HC_MIX": {
+   "records": 1,
+   "rtl_service": 75320,
+   "sim_cost": 1160.008,
+   "ratio": 64.931
+  }
+ },
+ "records": [
+  {
+   "k": 0,
+   "unit": "HC",
+   "op": 1,
+   "tag": "HC_MIX_ROWS x0 row 0",
+   "real": 1,
+   "disp": 0,
+   "issue": 1,
+   "ret": 6050,
+   "service": 6050,
+   "cost": 48.334,
+   "ratio": 125.171,
+   "mismatch": 0
+  },
+  {
+   "k": 1,
+   "unit": "HC",
+   "op": 2,
+   "tag": "HC_MIX_POST x0",
+   "real": 1,
+   "disp": 0,
+   "issue": 2,
+   "ret": 6743,
+   "service": 693,
+   "cost": 540.0,
+   "ratio": 1.283,
+   "mismatch": 0
+  },
+  {
+   "k": 2,
+   "unit": "HC",
+   "op": 1,
+   "tag": "HC_MIX_ROWS x1 row 7",
+   "real": 1,
+   "disp": 0,
+   "issue": 6051,
+   "ret": 12792,
+   "service": 6049,
+   "cost": 48.334,
+   "ratio": 125.15,
+   "mismatch": 0
+  },
+  {
+   "k": 3,
+   "unit": "HC",
+   "op": 2,
+   "tag": "HC_MIX_POST x1",
+   "real": 1,
+   "disp": 0,
+   "issue": 6744,
+   "ret": 13484,
+   "service": 692,
+   "cost": 540.0,
+   "ratio": 1.281,
+   "mismatch": 0
+  },
+  {
+   "k": 4,
+   "unit": "HC",
+   "op": 1,
+   "tag": "HC_MIX_ROWS x2 row 15",
+   "real": 1,
+   "disp": 0,
+   "issue": 12793,
+   "ret": 19533,
+   "service": 6049,
+   "cost": 48.334,
+   "ratio": 125.15,
+   "mismatch": 0
+  },
+  {
+   "k": 5,
+   "unit": "HC",
+   "op": 2,
+   "tag": "HC_MIX_POST x2",
+   "real": 1,
+   "disp": 0,
+   "issue": 13485,
+   "ret": 20225,
+   "service": 692,
+   "cost": 540.0,
+   "ratio": 1.281,
+   "mismatch": 0
+  },
+  {
+   "k": 6,
+   "unit": "HC",
+   "op": 1,
+   "tag": "HC_MIX_ROWS x3 row 23",
+   "real": 1,
+   "disp": 0,
+   "issue": 19534,
+   "ret": 26274,
+   "service": 6049,
+   "cost": 48.334,
+   "ratio": 125.15,
+   "mismatch": 0
+  },
+  {
+   "k": 7,
+   "unit": "HC",
+   "op": 2,
+   "tag": "HC_MIX_POST x3",
+   "real": 1,
+   "disp": 0,
+   "issue": 20226,
+   "ret": 26966,
+   "service": 692,
+   "cost": 540.0,
+   "ratio": 1.281,
+   "mismatch": 0
+  },
+  {
+   "k": 8,
+   "unit": "HC",
+   "op": 0,
+   "tag": "HC_MIX x0",
+   "real": 1,
+   "disp": 0,
+   "issue": 26275,
+   "ret": 102286,
+   "service": 75320,
+   "cost": 1160.008,
+   "ratio": 64.931,
+   "mismatch": 0
+  }
+ ],
+ "mutants": "MUT_POST (pre without + hc_eps)",
+ "bench": "rtl/hbm_accel/generic/adapters/tb/tb_hgi_hc_tput.sv (ot_hgi_hc_unit W 32 on the REAL ot_hgi_vm_unit; HBM lane FA 160 + one beat a cycle in order), tools/hgi_unit_tput/run_hc.sh, vectors tools/hgi_unit_tput/hc_vectors.py",
+ "source_base": "origin/main 28e5bc0bd",
+ "host": "ot-epyc3 Verilator 5.050",
+ "shapes": "DS-V4.1 1M G22: HC_MIX_ROWS one 20,480-K row of h [4 x 5,120] (x4), HC_MIX_POST 24 mixes (x4), legacy HC_MIX (x1); golden Model.hc_mixes chunk8",
+ "price": "NativeCost (6dd28b4a7): POST calibration 540, ROWS walk 1,160.008 / 24, MIX walk 1,160.008",
+ "vehicle": "ds_L0"
+}
