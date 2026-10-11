@@ -96,7 +96,7 @@ class Layout:
                  SS=8, RS=8, qr=1280, kvn=512, kvr=512, win_new=512, q=512, ROPE=64, q_own=512, SC=640, MB=8,
                  E=640, SE=8, EB=640, SINK=8, ES=8, DEN=8, PV=512, O=512, o_own=512, zpart=12288, z=12288, y=D,
                  gsc=384, BIAS=384, router=384, rid=8, SEL=8, TOT=8, DENR=8, route_w=8, ea=7 * 2304, yf=D,
-                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=32, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
+                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=128, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
                  RK=8, RST=8, DOTR=8, GATE=8, cmp=1024, iwr=32, iq=4096, SELIDX=2048, SLOTKV=1024, SLOTSC=1024, MXC=512, EC=1024,
                  DENC=512, PC=1024, P2=1024, POOL=512, LAT0=512, LAT=512, GCN=512, KIN=128, GKN=128, KN=128, KR=128,
                  LR=512, IK=128, CK=512, ROPE2=64, logits=1352,
@@ -141,8 +141,18 @@ HC_R = -(-(HC_K // 8) // HC_W)       # words a bank (80)
 HC_RS = HC_R * (HC_W // 8)           # sectors a bank (320)
 HC_ROW_SECT = 8 * HC_RS              # sectors of one fn row (2,560 = 81,920 B = 20,480 words)
 HC_SET_BYTES = (4 + 24 * HC_ROW_SECT) * 32
-HC_STRIPE_LOC = 24 << 30             # STRIPE4 HC rows: stack-local base (24 GiB) of the striped row region (4 stacks)
+HC_STRIPE_LOC = 30 << 30             # STRIPE4 HC rows: stack-local base (24 GiB) of the striped row region (4 stacks)
 HC_STRIPE = {}                       # stack-local row base -> (layer, which, row o)
+# E-HOME (owner rule, lead GO 10-10): each Engram table lives in the HBM of 4 home dies (layer 1: ranks 0-3, layer 14:
+# ranks 4-7), 288 B rows {256 B E4M3 codes | 8 B UE8M0 | 24 B 0}, rows split contiguously over the 4 homes
+EG_HOMES = [[0, 1, 2, 3], [4, 5, 6, 7]]
+EG_ROWB = 288
+EG_TBASE = 96 << 30                  # the home die's table (stack 3), < 2^37
+EG_STG = 2 << 30                     # per Engram layer: the home die's 24-row staging store, then every die's list store
+EG_LIST = EG_STG + (64 << 10)
+EG_LSPAN = 128 << 10
+CUR_LAYER = [0]                      # the layer the per-die machine runs now (E-HOME unit model)
+MAN_END = 94 << 30                   # the weight manifest must end below the HC stripe rows (stack 2 local 30 GiB)
 HC_SLOT = 32768                      # aperture slot stride (words); bank k of a slot at + 4,096 k (spec db9ef1603)
 HC_BANK = 4096
 HC_DB = [True]                       # HC_MIX_ROWS weight row prefetched into the HC aperture (2 slots); --hc-hbm = off
@@ -196,6 +206,9 @@ class Manifest:
             base = -(-base // 544) * 544
             ex = dict(lines=True, gk=gk, gbytes=8 * SM_LB)
         size = rb * rows * n_experts
+        if base + size > MAN_END:
+            raise MC.Fault(3, f"per-die HBM footprint: {key} ends at {(base + size) / 2**30:.1f} GiB > the "
+                              f"{MAN_END / 2**30:.0f} GiB manifest window of the die's 128 GiB")
         e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
                  estride=rb * rows, **ex)
         self.cur = base
@@ -686,26 +699,45 @@ class Lower:
 
     # -- Engram (layers 1, 14): rows by host-hashed ids through indexed descriptors, decoded on the SU ----------------
     def engram_fetch(self, add, su, L):
-        V, m = self.lay.V, self.m
-        ids_n = 24
-        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGID"], n=ids_n),
-                                         O=MDesc(space="VM", fmt="U32", base=self.lay.vm["EGID"], n=ids_n)),
-                tag="engram.ids", family="engram"), [], ["EGID"])
-        codes, sc = m.emb_codes[L]
-        width = codes.shape[1]
-        ec = self.W(f"EGC{L}", 1, width, "fp8", n_experts=codes.shape[0])
-        es = self.W(f"EGS{L}", 1, width // 32, "fp8", n_experts=codes.shape[0])
-        for t in range(ids_n):
-            add(Rec("DMA", "LOAD", desc=dict(
-                A=MDesc(space="HBM", fmt="FP8E4M3", base=ec["base"], n=width, indexed=1, dyn_mul=ec["estride"]),
-                O=V("EGC", width, off=t * width), I=U32V(self.lay.vm["EGID"] + t, 1)), tag=f"engram.codes{t}",
-                family="engram"), ["EGID"], ["EGC"])
-            add(Rec("DMA", "LOAD", desc=dict(
-                A=MDesc(space="HBM", fmt="UE8M0", base=es["base"], n=width // 32, indexed=1, dyn_mul=es["estride"]),
-                O=V("EGS", width // 32, off=t * (width // 32)), I=U32V(self.lay.vm["EGID"] + t, 1)),
-                tag=f"engram.scales{t}", family="engram"),
-                ["EGID"], ["EGS"])
-        nb = ids_n * width // 32
+        """E-HOME: the host writes EGHT (spec: G13 + E-HOME host table) per token; the 4 home dies of this Engram layer
+        stream their owned rows (indexed row stream, count from VM) into a 24-row staging store; one G25 ROW_GATHER
+        (slot ids < 2^20) delivers the 24 rows in list order to every die; 2 strided loads decode codes / scales."""
+        V, m, lay = self.lay.V, self.m, self.lay
+        li = m.engram.layer_ids.index(L)
+        homes = EG_HOMES[li]
+        hp = self.rank_now - homes[0]
+        home = 0 <= hp < 4
+        stg, lst = EG_STG + li * EG_LSPAN, EG_LIST + li * EG_LSPAN
+        w = EG_ROWB // 4
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGHT"], n=128),
+                                         O=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=128)),
+                tag="engram.host_table", family="engram"), [], ["EGID"])
+        hq = max(hp, 0)
+        add(Rec("DMA", "LOAD", desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=EG_TBASE, n=w, indexed=1, dyn_mul=EG_ROWB, n_sel=MC.HGI.NSEL_FROM_VM),
+            O=V("EGC", w, m=24, stride=w),
+            I=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"] + 40 + 24 * hq, n=24,
+                    stride=(lay.vm["EGID"] + 32 + hq) - (lay.vm["EGID"] + 40 + 24 * hq))),
+            tag="engram.home_rows", family="engram"), ["EGID"], ["EGC"], home)
+        add(Rec("DMA", "STORE", desc=dict(A=V("EGC", w, m=24, stride=w),
+                                          O=MDesc(space="HBM", fmt="FP32", base=stg, n=w, m=24, stride=EG_ROWB)),
+                tag="engram.stage", family="engram"), ["EGC"], ["EGSTG"], home)
+        add(Rec("DMA", "FENCE", tag="engram.stage_fence", family="engram"), ["EGSTG"], ["EGSTG"], home)
+        add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | (1 << 8), imm_a=24, imm_b=TP, desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=stg, n=w, stride=EG_ROWB),
+            O=MDesc(space="HBM", fmt="FP32", base=lst, n=w, stride=EG_ROWB),
+            I=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=24)), tag="engram.gather", family="engram"),
+            ["EGID", "EGSTG"], ["EGLIST"])
+        add(Rec("CTL", "FENCE", tag="engram.list_fence", family="engram"), ["EGLIST"], ["EGLIST"])
+        width = 256
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="FP8E4M3", base=lst, n=width, m=24, stride=EG_ROWB),
+                                         O=V("EGC", width, m=24, stride=width)), tag="engram.codes", family="engram"),
+            ["EGLIST"], ["EGC"])
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="UE8M0", base=lst + width, n=width // 32, m=24,
+                                                 stride=EG_ROWB),
+                                         O=V("EGS", width // 32, m=24, stride=width // 32)), tag="engram.scales",
+                family="engram"), ["EGLIST"], ["EGS"])
+        nb = 24 * width // 32
         su("engram.decode", "engram", dict(A=V("EGC", 32, m=nb, stride=32), B=V("EGS", 32, m=nb, stride=1, ibcast=1),
                                            O=V("eg_rows", 32, m=nb, stride=32)), ["EGC", "EGS"], ["eg_rows"],
            m1=I.M1_AB, rnd=1, dst=I.DST_VM)
@@ -908,6 +940,25 @@ CK_CAP = [0, 0]          # per-die row-store bytes per KV source; index-key rows
 hist_of = [None]
 
 
+def eg_host_table(ids, nrows, li):
+    """E-HOME host table (128 U32, written by the host per token beside the G13 ids): words 0..23 the G25 slot ids
+    (list entry j owned by home rank R as its t-th row: i' = (t div 8) 768 + 8 R + t mod 8, so the ROW_GATHER owner rule
+    (i' div 8) mod 96 = R and local row (i' div 768) 8 + i' mod 8 = t); words 32..35 each home's owned count; words
+    40 + 24 h + t the home h's t-th owned table row (local, list order).  Rows split contiguously: home h = id div RPH."""
+    rph = -(-nrows // 4)
+    out = np.zeros(128, np.uint32)
+    cnt = [0, 0, 0, 0]
+    for j, g in enumerate(np.asarray(ids, np.int64)):
+        h, loc = int(g // rph), int(g % rph)
+        t = cnt[h]
+        R = EG_HOMES[li][h]
+        out[j] = (t // 8) * 768 + 8 * R + t % 8
+        out[40 + 24 * h + t] = loc
+        cnt[h] += 1
+    out[32:36] = cnt
+    return out
+
+
 def build_tables(m, st, L, pos, rank):
     """Per-die HBM tables (real bytes): gains, RoPE row at the position, the head's sink, gate bias, window ring."""
     P = m.P(L)
@@ -923,7 +974,8 @@ def build_tables(m, st, L, pos, rank):
     if L in m.engram.layer_ids:
         li = m.engram.layer_ids.index(L)
         ids = m.engram.hashes(hist_of[0], li).reshape(-1)             # host-provided per token (G13)
-        items += [("EGID", ids.astype(np.uint32).view(F)), ("EGW", G_.mul(m.lw(L, "engram.q_weight"),
+        items += [("EGHT", eg_host_table(ids, m.emb_codes[L][0].shape[0], li).view(F)),
+                  ("EGW", G_.mul(m.lw(L, "engram.q_weight"),
                                                                             m.lw(L, "engram.k_weight")))]
     r = m.ratio[L]
     if r > 0 and L == m.kv_of[L]:
@@ -1120,8 +1172,32 @@ def ds_units(m, man, golib):
 
     base_load, base_store = MC.UNITS[("DMA", "LOAD")], MC.UNITS[("DMA", "STORE")]
 
+    def eg_home_rows(M, r, L):
+        """E-HOME: the home die's indexed row stream from its Engram table (288 B rows, from the checkpoint)"""
+        for die in M.dies:
+            rd = M.rec_of(die, r)
+            a, o, i_ = rd.desc["A"], rd.desc["O"], rd.desc["I"]
+            ib = M._plain_base(i_, die, L)
+            cnt = int(die.vm[ib + i_.stride + L])
+            ob, on, om, ost, _ = M.eff(o, die, L)
+            if cnt > om or on != EG_ROWB // 4:
+                raise MC.Fault(3, "Engram home rows: count / row size")
+            Lw = CUR_LAYER[0]
+            li = m.engram.layer_ids.index(Lw)
+            hp = die.rank - EG_HOMES[li][0]
+            codes, sc = m.emb_codes[Lw]
+            rph = -(-codes.shape[0] // 4)
+            for e in range(cnt):
+                g = hp * rph + int(die.vm[ib + L + e])
+                row = np.zeros(EG_ROWB, np.uint8)
+                row[:256] = np.asarray(codes[np.array([g])]).reshape(-1).astype(np.uint8)
+                row[256:264] = (np.asarray(sc[np.array([g])], dtype=np.int64).reshape(-1) + 127).astype(np.uint8)
+                die.vm[ob + e * ost:ob + e * ost + on] = row.view(np.uint32)
+
     def dma_load(M, r, L):
         a = r.desc["A"]
+        if a.space == "HBM" and EG_TBASE <= a.base < EG_TBASE + (1 << 35) and a.indexed:
+            return eg_home_rows(M, r, L)
         if not (a.space == "HBM" and a.base >= WBASE):
             return base_load(M, r, L)
         for die in M.dies:
@@ -1177,7 +1253,33 @@ def ds_units(m, man, golib):
                 golib.st.ckv[src][g] = M.read(r.desc["A"], die, L)   # the indexer engine's row count / model
             golib.st.n[src] = g + 1
 
-    U.update({("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk, ("IDX", "OWNED"): idx_owned,
+    base_rg = MC.UNITS[("COLL", "ROW_GATHER")]
+
+    def row_gather(M, r, L):
+        """the G25 ROW_GATHER; for the E-HOME Engram staging rows the bytes move raw (packed codes / scales)"""
+        a = r.desc["A"]
+        if not (a.space == "HBM" and EG_STG <= a.base < EG_STG + 2 * EG_LSPAN):
+            return base_rg(M, r, L)
+        B = r.param & 0xFF
+        for grp in M.groups():
+            G = len(grp)
+            d0 = grp[0]
+            ib, n_i, _, _, iist = M.eff(M.rec_of(d0, r).desc["I"], d0, L)
+            ids = d0.vm[ib + np.arange(r.imm_a or n_i) * iist].astype(np.int64)
+            nb = a.n * 4
+            rows = []
+            for i in ids:
+                owner = grp[(i // B) % G]
+                loc = (i // (B * G)) * B + i % B
+                rows.append(owner.hbm.view(a.base + loc * a.stride, nb).copy())
+            for q, d in enumerate(grp):
+                if q >= r.imm_b:
+                    continue
+                o = M.rec_of(d, r).desc["O"]
+                for j, row in enumerate(rows):
+                    d.hbm.view(o.base + j * o.stride, nb)[:] = row
+
+    U.update({("COLL", "ROW_GATHER"): row_gather, ("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk, ("IDX", "OWNED"): idx_owned,
               ("COLL", "TOPK_MERGE"): topk_merge, ("DMA", "LOAD"): dma_load, ("DMA", "STORE"): dma_store,
               ("SM", "MATVEC"): sm, ("HC", "HC_MIX"): hc_mix, ("FUSED", "HC_PRE_NORM"): hc_pre_norm,
               ("FUSED", "HC_POST"): hc_post, ("HC", "HC_MIX_ROWS"): hc_mix_rows, ("HC", "HC_MIX_POST"): hc_mix_post})
@@ -1439,6 +1541,7 @@ def main():
     for L in list(layers) + (["head"] if a.head else []):
         tl = time.time()
         Lc = m.L if L == "head" else L
+        CUR_LAYER[0] = Lc
         ops = (W.Compiler(m, pos, VARIANT).compile_head() if L == "head"
                else W.Compiler(m, pos, VARIANT).compile_layer(L, first=(L == first)))
         tabs = [build_tables(m, st, min(Lc, m.L - 1), pos, r) for r in range(TP)]
@@ -1472,6 +1575,8 @@ def main():
                 sel_hbm[r] = np.zeros(SELB * len(SOURCES), dtype=np.uint8)
             d.hbm.add(SBASE, sel_hbm[r], "SELROWS")
             d.hbm.add(CKBASE, ck_regs[r], "CKSTORE")
+            if not any(b_ == EG_STG for b_, _, _ in d.hbm.regions):     # E-HOME staging + list stores (2 layers)
+                d.hbm.add(EG_STG, np.zeros(2 * EG_LSPAN, np.uint8), "EGSTG")
             if r not in g_hbm:                     # the software ROW_GATHER's slot-major rows (j * 96 + r), M <= RG_SLOTS
                 g_hbm[r] = np.zeros(-(-RG_SLOTS // RG_C) * RG_C * TP * 2048, dtype=np.uint8)
             d.hbm.add(GBASE, g_hbm[r], "GROWS")
