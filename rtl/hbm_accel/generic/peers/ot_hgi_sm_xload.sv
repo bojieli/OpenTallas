@@ -163,11 +163,19 @@ module ot_hgi_sm_xload #(
         integer x; in_slot = 1'b0;
         for (x = 0; x < NBMAX; x = x + 1) if (bb == x && bslot(x) >= 0 && bslot(x) < np) in_slot = 1'b1;
     endfunction
-    // ---- command pin flop (the x_* decode does not run from the pins): +1 edge a command
+    // ---- command pin flops (r2, 60dab0b68 route a TT input->reg -58: x_v drove the enable of all 133 c_* flops from
+    //      the pin through a buffer tree).  Now every x_* port lands in a plain pin flop (no enable: port -> D), the
+    //      accept (x_v AND x_rdy) is one gate into one flop, and c_* load from the pin flops one edge later under that
+    //      registered accept.  x_rdy drops the edge after an accept, as before (p_acc covers the extra edge): +1 edge a
+    //      command.
+    reg p_acc; reg [39:0] p_base; reg [20:0] p_n; reg [3:0] p_p; reg [31:0] p_stride; reg [1:0] p_space, p_fmt;
     reg cmd_v; reg [39:0] c_base; reg [20:0] c_n; reg [3:0] c_p; reg [31:0] c_stride; reg [1:0] c_space, c_fmt;
-    assign x_rdy = !busy && !cmd_v;
-    always @(posedge clk) if (x_v && x_rdy) begin
-        c_base <= x_base; c_n <= x_n; c_p <= x_p; c_stride <= x_stride; c_space <= x_space; c_fmt <= x_fmt;
+    assign x_rdy = !busy && !cmd_v && !p_acc;
+    always @(posedge clk) begin
+        p_base <= x_base; p_n <= x_n; p_p <= x_p; p_stride <= x_stride; p_space <= x_space; p_fmt <= x_fmt;
+        if (p_acc) begin
+            c_base <= p_base; c_n <= p_n; c_p <= p_p; c_stride <= p_stride; c_space <= p_space; c_fmt <= p_fmt;
+        end
     end
     wire c_bad = c_fmt == 2'd1 || c_fmt == 2'd2 || c_space != 2'd1 || |c_base[2:0] || |c_stride[2:0] || c_p > PMAX ||
                  c_p == 4'd0;
@@ -198,7 +206,7 @@ module ot_hgi_sm_xload #(
     wire fin = busy && ph == 2'd2 && !(|rv);                  // last beat out
     // ---- control (reset)
     always @(posedge clk or negedge rst_c) begin
-        if (!rst_c) begin cmd_v <= 1'b0; busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vq_v <= 0;
+        if (!rst_c) begin p_acc <= 1'b0; cmd_v <= 1'b0; busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vq_v <= 0;
                           cbusy <= 0; ph <= 0; hv <= 0; rv <= 0; l1_v <= 1'b0; l2_v <= 1'b0; w1_v <= 4'd0;
                           end
         else begin
@@ -206,7 +214,8 @@ module ot_hgi_sm_xload #(
             rv <= {rv[RD-2:0], em_ph}; xw_en <= rv[RD-1];
             l1_v <= land; l2_v <= l1_v;
             for (integer wq = 0; wq < 4; wq = wq + 1) w1_v[wq] <= l2_v && l2_q == wq;
-            cmd_v <= (x_v && x_rdy) ? 1'b1 : 1'b0;
+            p_acc <= x_v && x_rdy;
+            cmd_v <= p_acc;
             if (cmd_v && c_bad) x_fault <= 1'b1;
             if (start) begin busy <= 1'b1; ph <= 2'd0; end
             vq_v <= {NXC{1'b0}};
@@ -266,7 +275,10 @@ module ot_hgi_sm_xload #(
         end
         // r7 (xb): the beat assembled from rw (r6) under its stage-6 beat index; xw_* = pin flops of xb
         if (rv[RD-2]) xb <= rm_ok[RD-2] ? beats[rm_b[RD-2]] : 2048'd0;
-        if (rv[RD-1]) begin xw_addr <= rm_addr[RD-1]; xw_grp <= rm_b[RD-1]; xw_data <= xb; end
+        // xw_data: plain pin flops (r2: no rv[7] enable fanning out to 2,048 muxes; xw_data is only meaningful under
+        // xw_en, and xb only changes under rv[6], so the value at every xw_en edge is unchanged)
+        if (rv[RD-1]) begin xw_addr <= rm_addr[RD-1]; xw_grp <= rm_b[RD-1]; end
+        xw_data <= xb;
     end
 endmodule
 `default_nettype wire
