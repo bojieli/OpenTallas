@@ -341,11 +341,14 @@ module ot_s81_hc_core #(
                         if (ci < NV) begin
                             nm_wl_v <= 1'b1; nm_wl_i <= ci[7:0]; nm_wl_d <= gtab[gsel * NV + ci];
                             ci <= ci + 1;
-                        end else if (ci < 2 * NV) begin
-                            nm_in_v <= 1'b1; nm_go <= (ci == NV);
-                            nm_x <= norm_x(hb0[hs * NV + ci - NV], hb1[hs * NV + ci - NV], hb2[hs * NV + ci - NV],
-                                           hb3[hs * NV + ci - NV]);
-                            nm_pre <= cf_pre[jslot]; nm_eps <= cf_eps[jslot];
+                        end else if (ci == NV) begin
+                            // go a cycle ahead of the first vector (ot_dsrom_su_norm clears its vector index on go)
+                            nm_go <= 1'b1; nm_pre <= cf_pre[jslot]; nm_eps <= cf_eps[jslot];
+                            ci <= ci + 1;
+                        end else if (ci < 2 * NV + 1) begin
+                            nm_in_v <= 1'b1;
+                            nm_x <= norm_x(hb0[hs * NV + ci - NV - 1], hb1[hs * NV + ci - NV - 1],
+                                           hb2[hs * NV + ci - NV - 1], hb3[hs * NV + ci - NV - 1]);
                             ci <= ci + 1;
                         end
                         // outputs -> row FIFO
@@ -387,7 +390,7 @@ module ot_s81_hc_core #(
                                 oq_n <= oq_n + n_in - n_out;
                                 if (oq_n + n_in > OQ) begin fault <= 1'b1; fault_code <= 4'd5; end
                                 cw <= cw + n_out;
-                                if (cw + n_out >= nw - ((MUT == 4) ? S_WR : 0) && ci == 2 * NV) begin
+                                if (cw + n_out >= nw - ((MUT == 4) ? S_WR : 0) && ci == 2 * NV + 1) begin
                                     run <= 1'b0; e_done_v <= 1'b1; e_done_tag <= (MUT == 5) ? (jtag ^ 8'h01) : jtag;
                                     st_jobs <= st_jobs + 1;
                                 end
