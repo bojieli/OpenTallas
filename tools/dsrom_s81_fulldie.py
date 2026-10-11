@@ -3838,14 +3838,14 @@ P2_BUSES = (('collective', 'p2', 709, 't_p2', 'f_collective'), ('vm', 'p2', 605,
             ('p2', 'collective', 600, 't_collective', 'f_p2'), ('p2', 'vm', 1, 't_vm', 'f_p2'))
 # mtp-wfc 2026-10-10 (fixlat a7961fc6d, rtl/dsrom_sys/mtp/dsfd_mtp_partner_ep.sv, dsfd_p2_lnk.sv): RTT-sized ends.
 MTP_EP = False                  # --mtp-ep: head-die dsfd_cap_mtp_ep / dsfd_vm_mtp_ep slabs carry the sequencer buses
-MTP_EP_MM2 = 0.052              #   each a 30 um strip of the hub column (cap: 513 b pin flops; vm: D26 35 b receiver)
+MTP_EP_MM2 = 0.112              #   each a 64.8 um strip (cap_ep E face 55 um of pins) of the hub column (cap: 513 b pin flops; vm: D26 35 b receiver)
 MTP_SEQ_EP_BUSES = tuple((('cap_ep' if a == 'capture' else 'vm_ep' if a == 'vm' else a),
                           ('cap_ep' if b == 'capture' else 'vm_ep' if b == 'vm' else b), w, pa, pb)
                          for a, b, w, pa, pb in MTP_SEQ_BUSES) + (
     ('capture', 'cap_ep', 513, 't_cap_ep', 'f_c_r'), ('cap_ep', 'capture', 1, 't_c_rr', 'f_cap_ep'),
     ('vm_ep', 'vm', 37, 't_c_h', 'f_vm_ep'), ('vm', 'vm_ep', 47, 't_vm_ep', 'f_c_wq'))
 P2_LNK = False                  # --p2-lnk: draft-A P2 slab = dsfd_p2 core + dsfd_p2_lnk (die side 12/14 D30, 8/9 D21)
-P2_LNK_MM2 = 0.15               #   ~40k receiver flops (2 x 604 b x D30 + 101 b x D21) at ~50 % density
+P2_LNK_MM2 = 0.38               #   ~40k receiver flops (2 x 604 b x D30 + 101 b x D21); 220 um strip (E face 199 um of pins)
 P2_LNK_BUSES = (('vm', 'p2_lnk', 605, 't_p2', 'f_l0'), ('p2_lnk', 'vm', 1, 't_vm', 'f_p2g'),
                 ('collective', 'p2_lnk', 707, 't_p2', 'f_l1s'), ('p2_lnk', 'collective', 2, 't_collective', 'f_p2g'),
                 ('p2_lnk', 'collective', 595, 't_o', 'f_p2'), ('collective', 'p2_lnk', 1, 't_p2g', 'f_og'),

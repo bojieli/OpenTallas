@@ -70,11 +70,12 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'vmrly_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 1), 'vmrly_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 1),
     'vmrly_stg_r1': ('stg_r1', 1, [], 'pass', 1), 'vmrly_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 1),
     'vmrly_stg_neg_nolink': ('stg_r1', 1, [], 'fail', 2), 'vmrly_s0_neg_wout4': ('s0_hash_u3', 0, [], 'fail', 3),
+    'vmrly_stg_vmnat': ('stg_vmnat', 1, [], 'pass', 1),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3), 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
 }
 
 
-VMRQ_K = 16   # vmx read-response queue in the vmrly cases (set by --vmrq)
+VMRQ_K = 64   # vmx read-response queue in the vmrly cases (set by --vmrq); 64 adopted (RQ 16 stalls s0 behind 13/13 stations)
 
 
 def kit_tb(stage, vmrly=0):
@@ -130,7 +131,7 @@ def run(name, out):
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument('--out', type=Path, required=True); p.add_argument('--case'); p.add_argument('--jobs', type=int, default=8)
-    p.add_argument('--vmrq', type=int, default=16, help='vmx RQ in the vmrly cases (power of two; >= stationed read RTT)')
+    p.add_argument('--vmrq', type=int, default=64, help='vmx RQ in the vmrly cases (power of two; >= stationed read RTT)')
     a = p.parse_args(); a.out = a.out.resolve(); a.out.mkdir(parents=True, exist_ok=True)
     global VMRQ_K; VMRQ_K = a.vmrq
     names = [a.case] if a.case else list(CASES)
