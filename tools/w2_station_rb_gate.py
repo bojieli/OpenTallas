@@ -65,6 +65,12 @@ CHAIN_MUTANTS = {
  'S8_rel_q_decision_removed': (STATION, 'rel_q<=rel_ok_d&&!release_all;', "rel_q<=1'b1;"),
  'S5_learned_send_not_recorded': (STATION, '    if(learned[t]||pend[t])ns[t]=1;', '    if(1\'b0)ns[t]=1;'),
 }
+# GRANT_SEAT=1 negative controls (only run with --grant-seat; the edited lines exist in the gs branch only).
+GRANT_MUTANTS = {
+# (A seat written on EVERY edge is not a negative here: the upstream rb station holds in_data while it offers, so the
+#  quarter bench cannot see it; measured 2026-10-11: S9 'if(1'b1)Ew<=' PASSES PASS19. Occupancy (take) is the check.)
+ 'S10_take_ignores_valid': (STATION, '  assign take=iv_p&&gr_d;', '  assign take=gr_d;'),
+}
 
 
 def sha(p):
@@ -86,6 +92,7 @@ CHAIN_DEF_OLD = 'module ot_hbm_native_quarter_chain_rb #(parameter integer ENABL
 DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0'
 SAFEV = False
 PHASE_SEAT = False
+GRANT = False
 
 
 def relreg(out, files):
@@ -102,6 +109,10 @@ def relreg(out, files):
             t=Path(f).read_text(); t=t.replace('LOCAL_PHASE=0,HOLD_SEAT=0','LOCAL_PHASE=1,HOLD_SEAT=1').replace('RESET_SEAT=0','RESET_SEAT=1')
             d=out/('seats_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
             m=d/Path(f).name;m.write_text(t);f=str(m)
+        if GRANT and f.endswith('ot_hbm_native_frame_station_rb.sv'):
+            t=Path(f).read_text(); assert t.count('GRANT_SEAT=0)(')==1; t=t.replace('GRANT_SEAT=0)(','GRANT_SEAT=1)(')
+            d=out/('grant_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
+            m=d/Path(f).name;m.write_text(t);f=str(m)
         res.append(f)
     return res
 
@@ -110,7 +121,7 @@ def mutate(out, name, files):
     """Return file list with at most one mutated copy written under out/name."""
     if name is None:
         return relreg(out, files)
-    path, old, new = {**BANK_MUTANTS, **CHAIN_MUTANTS}[name]
+    path, old, new = {**BANK_MUTANTS, **CHAIN_MUTANTS, **GRANT_MUTANTS}[name]
     text = (ROOT/path).read_text()
     assert text.count(old) == 1, (name, old)
     d = out/name; d.mkdir(exist_ok=True)
@@ -207,8 +218,9 @@ def main():
     ap.add_argument('--safe', action='store_true', help='SAFE=1 (registered permission decision), implies --rel-reg')
     ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
     ap.add_argument('--no2-chain', action='store_true', help='FALLBACK: quarter as 7 NO2 stations (chain NO2_CHAIN=1)')
+    ap.add_argument('--grant-seat', action='store_true', help='GRANT_SEAT=1: in_v pin lands in one flop, seat written on grant (no3s)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
-    global RELREG, SAFEV, HALFV, PHASE_SEAT, NO2CHAIN; NO2CHAIN=a.no2_chain; PHASE_SEAT=a.phase_seat; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
+    global RELREG, SAFEV, HALFV, PHASE_SEAT, NO2CHAIN, GRANT; NO2CHAIN=a.no2_chain; GRANT=a.grant_seat; PHASE_SEAT=a.phase_seat; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
     if a.quarter_only:
         r = quarter_bench(out, 'quarter_rb', True)
@@ -229,13 +241,14 @@ def main():
     for name in BANK_MUTANTS:
         r = bank_bench(out, 'neg_'+name, 0, 1, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
-    for name in CHAIN_MUTANTS:
+    for name in list(CHAIN_MUTANTS) + (list(GRANT_MUTANTS) if GRANT else []):
         if name == 'S8_rel_q_decision_removed' and not RELREG:
             continue
         r = veto_bench(out, 'neg_'+name, name) if name in VETO_MUTANTS else quarter_bench(out, 'neg_'+name, True, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
     rb, leg = res['quarter']['rb'].get('calendar', {}), res['quarter'].get('legacy_same_bench', {}).get('calendar', {})
     res['no2_chain'] = NO2CHAIN
+    res['grant_seat'] = GRANT
     res['calendar_delta_edges_vs_legacy'] = {k: rb[k]-leg[k] for k in rb if k in leg}
     res['bench_edits'] = [e[2] for e in BENCH_EDITS]
     pin_paths = [BANK, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/tb_native_quarter_publication.sv', *PKG]
