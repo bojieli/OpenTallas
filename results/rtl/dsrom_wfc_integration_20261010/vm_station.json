@@ -64,5 +64,18 @@
   "cycles": {
    "rd2_stg_vmnat": 12031
   }
- }
+ },
+ "stage_seq": {
+  "what": "main decision A: the kit's start / done through dsfd_stage_seq (ot_s81_stage_seq) to the engines",
+  "bench": "sseq_stg_vmnat vs stg_vmnat (kit gate sseq-gate-5021e7c22 on EPYC4: WFC_KIT_GATE PASS positives=30 negatives=11; mutants drop-start / early-done FAIL)",
+  "abutting": {
+   "start_mean": 15.0,
+   "done_mean": 79.0
+  },
+  "with_stage_seq": {
+   "start_mean": 25.0,
+   "done_mean": 87.5
+  }
+ },
+ "stage_seq_delta_per_hop_fast_cycles": 18.5
 }
