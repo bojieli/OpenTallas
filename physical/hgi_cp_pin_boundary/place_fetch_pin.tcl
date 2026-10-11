@@ -10,23 +10,28 @@ foreach y [lsort -integer [dict keys $::ot_ry]] { lappend ::ot_rows [list $y [di
 # in an edge strip `depth` um wide at the pin's row, N / S pins in the `depth` um of rows next to that edge at the
 # pin's x.  Run before any other FIRM placement in the strips.
 proc ::ot_net_port {net dir} {
+    # breadth-first over every BUF / INV / HB branch (depth <= 4): a pin flop whose Q also feeds internal logic may
+    # reach its port through any of several inverters / buffers (the first one found is not always the port's)
+    set front [list $net]
     for {set d 0} {$d < 4} {incr d} {
-        if {$net eq "NULL" || $net eq ""} { return "" }
-        set bts [$net getBTerms]
-        if {[llength $bts] > 0} { return [lindex $bts 0] }
-        set nx "NULL"
-        foreach it [$net getITerms] {
-            set out [$it isOutputSignal]
-            if {($dir eq "q" && $out) || ($dir eq "d" && !$out)} { continue }
-            set inst [$it getInst]
-            if {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} { continue }
-            foreach o [$inst getITerms] {
-                if {![$o isInputSignal] && ![$o isOutputSignal]} { continue }
-                if {($dir eq "q" && [$o isOutputSignal]) || ($dir eq "d" && [$o isInputSignal])} { set nx [$o getNet] }
+        set nxt {}
+        foreach net $front {
+            if {$net eq "NULL" || $net eq ""} { continue }
+            set bts [$net getBTerms]
+            if {[llength $bts] > 0} { return [lindex $bts 0] }
+            foreach it [$net getITerms] {
+                set out [$it isOutputSignal]
+                if {($dir eq "q" && $out) || ($dir eq "d" && !$out)} { continue }
+                set inst [$it getInst]
+                if {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} { continue }
+                foreach o [$inst getITerms] {
+                    if {![$o isInputSignal] && ![$o isOutputSignal]} { continue }
+                    if {($dir eq "q" && [$o isOutputSignal]) || ($dir eq "d" && [$o isInputSignal])} { lappend nxt [$o getNet] }
+                }
             }
-            break
         }
-        set net $nx
+        if {[llength $nxt] == 0} { return "" }
+        set front $nxt
     }
     return ""
 }
