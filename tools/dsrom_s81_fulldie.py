@@ -2341,6 +2341,12 @@ CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck 
 COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
 COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
 COLL_SPLIT3_CR = False         # explicit planning candidate, never a closure claim
+COLL_MTP_LANE = False          # --coll-mtp-lane (mtp-colllane-1011): head die: collective slab composition_split3cr_mtpl = split3cr +
+                               #   a dedicated MTP lane row (lane tile W4 on lk_W4 + dsfd_coll_mtp_lane: the MTP_SEQ_BUSES
+                               #   mtp <-> collective end, dsfd_coll_mtp_ep RTT-sized 8 / 8); RTL define OT_S81PH_COLL_MTPL
+COLL_P2_LANE = False           # --coll-p2-lane (mtp-colllane-1011): draft die A: composition_split3cr_p2l = split3cr + P2 lanes W4
+                               #   (primary, board) / E4 (die B, UCIe) + dsfd_coll_p2_lane x2 + dsfd_coll_p2_ep (the P2_BUSES
+                               #   collective <-> p2 end); RTL define OT_S81PH_COLL_P2L
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -2849,7 +2855,7 @@ def hop_plan(m):
 
 def collective_variant_binding():
     """Carry the actual candidate interface into downstream assembly selection."""
-    return dict(coll_split3=COLL_SPLIT3, coll_split3_cr=COLL_SPLIT3_CR,
+    return dict(coll_split3=COLL_SPLIT3, coll_split3_cr=COLL_SPLIT3_CR, coll_mtp_lane=COLL_MTP_LANE, coll_p2_lane=COLL_P2_LANE,
                 collective_composition=COLL_SPLIT3_COMP if COLL_SPLIT3 else None)
 
 
@@ -3191,6 +3197,8 @@ def build_r8(variant=None):
         stack = [('ucie', ru_), ('serdes', rs_), ('serdes', rs_), ('serdes', rs_)]
         if MTP_LINKS and (DIE_KIND == 'head' or DRAFT_SIDE == 'P'):     # MTP-DIE: draft fan-out SerDes, W gets the odd one
             stack += [('serdes', rs_)] * ((MTP_LINKS + (side == 'W')) // 2)
+        if COLL_P2_LANE:      # mtp-colllane-1011: draft die A's dedicated P2 lanes: W4 board SerDes (primary), E4 UCIe (die B)
+            stack += [('serdes', rs_)] if side == 'W' else [('ucie', ru_)]
         tot = sum(m_['h'] for _, m_ in stack) + (len(stack) - 1) * 43.2
         y = up(mid - tot / 2, GY)
         for i, (kind, m_) in enumerate(stack):
@@ -5992,6 +6000,12 @@ def die_options(ap):
                     'master with a side >= 300 um takes its clock pin on a long face in the middle third; default off')
     ap.add_argument('--coll-split3', action='store_true', help='s81-gen 2026-10-09 (redesign-ds): collective slab outline from '
                     'physical/s81_ph_views/collective/composition_split3.json (three-tile core column); default off')
+    ap.add_argument('--coll-mtp-lane', action='store_true', help='mtp-colllane-1011: head die collective with the dedicated MTP '
+                    'lane row (composition_split3cr_mtpl.json, lane W4 = lk_W4, RTL OT_S81PH_COLL_MTPL); needs --coll-split3-cr, '
+                    '--mtp-seq, --mtp-links >= 1; default off')
+    ap.add_argument('--coll-p2-lane', action='store_true', help='mtp-colllane-1011: draft die A collective with the P2 lanes '
+                    '(composition_split3cr_p2l.json, W4 primary / E4 die B, RTL OT_S81PH_COLL_P2L); needs --coll-split3-cr '
+                    'and --draft A; default off')
     ap.add_argument('--coll-split3-cr', action='store_true', help='opt-in planning candidate: use composition_split3cr.json with credit seams and LCR lane tiles; implies --coll-split3, all four routed masters required for adoption')
     ap.add_argument('--bf-hier', type=float, choices=[520.128, 600.264], help='s81-gen 2026-10-09 (bf-arch): BF pair as '
                     'dsfd_bf_col | dsfd_bf_front | dsfd_bf_col (MY), 190.08 um tall; frames and die widen; default off')
@@ -6105,6 +6119,18 @@ def apply_options(a):
     COLL_SPLIT3_CR = bool(getattr(a, 'coll_split3_cr', False))
     COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False)) or COLL_SPLIT3_CR
     COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr.json' if COLL_SPLIT3_CR else 'physical/s81_ph_views/collective/composition_split3.json'
+    # mtp-colllane-1011 (ds-1010 decision: DEDICATED MTP lanes, never a pass-through queue in the collective core)
+    global COLL_MTP_LANE, COLL_P2_LANE
+    COLL_MTP_LANE = bool(getattr(a, 'coll_mtp_lane', False))
+    COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
+    if COLL_MTP_LANE or COLL_P2_LANE:
+        if not COLL_SPLIT3_CR or (COLL_MTP_LANE and COLL_P2_LANE):
+            raise SystemExit('--coll-mtp-lane / --coll-p2-lane: one of them, with --coll-split3-cr (credit seams, LCR lane tiles)')
+        if COLL_MTP_LANE and (getattr(a, 'die', None) != 'head' or not int(getattr(a, 'mtp_links', 0) or 0) or getattr(a, 'mtp_seq', None) is False):
+            raise SystemExit('--coll-mtp-lane: head die with --mtp-seq and --mtp-links >= 1 (lane W4 = the first MTP SerDes lk_W4)')
+        if COLL_P2_LANE and getattr(a, 'draft', None) != 'A':
+            raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
+        COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr_%s.json' % ('mtpl' if COLL_MTP_LANE else 'p2l')
     global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
     BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
