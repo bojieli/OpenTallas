@@ -1962,10 +1962,16 @@ module ot_hbm_accel_smh_leaf #(
     wire bov, bfault, fov, ffault;
     wire [31:0] by, fy;
     wire [TAGW-1:0] btag, ftag;
-    ot_hbm_accel_smh_bdc #(.LBS(LBS), .IL(IL), .TAGW(TAGW)) u_bdc (.clk(clk), .rst_a(rst_a), .i_v(iv_b), .i_first(ifirst),
+    // the columns are hardened masters (a liberty cell has no parameters): instantiated at their defaults, which are
+    // the production values; any other configuration is refused here
+`ifndef SYNTHESIS
+    initial if (LBS != 2 || LSB != 16 || IL != 8 || TAGW != 16)
+        $error("OT_SMH_HIER: the hardened columns are built for LBS 2, LSB 16, IL 8, TAGW 16");
+`endif
+    ot_hbm_accel_smh_bdc u_bdc (.clk(clk), .rst_a(rst_a), .i_v(iv_b), .i_first(ifirst),
         .i_last(ilast), .i_fp4(ifp4), .i_tag(itag), .i_w(iw[0 +: LBS*266]), .i_x(ix[0 +: LBS*266]),
         .ov(bov), .y(by), .otag(btag), .fault(bfault));
-    ot_hbm_accel_smh_tcc #(.LSB(LSB), .IL(IL), .TAGW(TAGW)) u_tcc (.clk(clk), .rst_a(rst_a), .i_v(iv_f),
+    ot_hbm_accel_smh_tcc u_tcc (.clk(clk), .rst_a(rst_a), .i_v(iv_f),
         .i_first(ifirst), .i_last(ilast), .i_tag(itag), .i_w(iw[LBS*266 +: LSB*16]), .i_x(ix[LBS*266 +: LSB*16]),
         .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
 `else
