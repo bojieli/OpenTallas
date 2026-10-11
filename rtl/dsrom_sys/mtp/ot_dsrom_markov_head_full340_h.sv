@@ -9,6 +9,7 @@ module ot_dsrom_markov_head_bundle_h #(
     parameter integer VALID_ROWS = 128, parameter integer A_INPUT_STAGES = 4,
     parameter [8:0] CUT = 511, parameter integer SPLIT9 = 1,
     parameter integer GLUE_RING = 1,
+    parameter integer HBRELAY = 0,             // driver head rowstream relay (ot_dsrom_markov_head_driver HBRELAY)
     parameter [39:0] PFX = "b000_"
 ) (
     input wire clk, rst_n,
@@ -43,7 +44,7 @@ module ot_dsrom_markov_head_bundle_h #(
             .INSTANCE({PFX, (q==0 ? "ha0" : q==1 ? "ha1" : q==2 ? "ha2" : "ha3")}), .SAFE(1)) a (
             .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(a_row[17*q+:17]), .x(a_x[256*q+:256]), .b_v(a_bv[q]), .b_d(a_bd[32*q+:32]),
             .o_v(), .o_d(), .l_v(hv), .l_d(hb), .done(), .best_row(), .best_bits(), .best_key(), .fault(af[q]));
-        ot_dsrom_markov_head_driver #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .IOREG(IOREG), .RINGDLY(RINGDLY), .VALID_ROWS(NVALID),
+        ot_dsrom_markov_head_driver #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .IOREG(IOREG), .RINGDLY(RINGDLY), .HBRELAY(HBRELAY), .VALID_ROWS(NVALID),
             .CUT(CUT), .SPLIT9(SPLIT9), .INSTANCE({PFX, (q==0 ? "mk0" : q==1 ? "mk1" : q==2 ? "mk2" : "mk3")})) markov (
             .clk(clk), .rst_n(rst_n), .start(d_start[q]), .start_ready(sr[q]), .row0(d_row0[17*q+:17]), .transaction(transaction),
             .embed_valid(embed_valid), .embed_ready(er[q]), .embed_data(embed_data), .embed_beat(embed_beat),
@@ -73,7 +74,8 @@ module ot_dsrom_markov_head_full340_h #(
     parameter integer FAN = 8,
     parameter integer LOOKUP = 1,            // 1: the die's shared lookup is inside; 0: embed_* pins (MD6 element)
     parameter integer MUTANT = 0, parameter integer MUTANT_BUNDLE = 0,
-    parameter integer GLUE_RING = 1
+    parameter integer GLUE_RING = 1,
+    parameter integer HBRELAY = 0
 ) (
     input wire clk, rst_n,
     input wire start, output wire start_ready,
@@ -144,7 +146,7 @@ module ot_dsrom_markov_head_full340_h #(
         ot_hdc_delay #(.W(WS-2), .D(2)) u_hd (.clk(clk), .rst_n(rst_n), .d(s_m[WS-1:2]), .q(s_h[WS-1:2]));
         assign s_h[0] = s_m[0];
         ot_dsrom_markov_head_bundle_h #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .IOREG(IOREG), .RINGDLY(RINGDLY), .VALID_ROWS(VR),
-            .A_INPUT_STAGES(A_INPUT_STAGES), .CUT(CUT), .SPLIT9(SPLIT9), .GLUE_RING(GLUE_RING),
+            .A_INPUT_STAGES(A_INPUT_STAGES), .CUT(CUT), .SPLIT9(SPLIT9), .GLUE_RING(GLUE_RING), .HBRELAY(HBRELAY),
             .PFX(PFX)) u (
             .clk(clk), .rst_n(rst_n), .start(s_m[0]), .start_ready(b_rdy[b]),
             .row0(17'(ROW_BASE + 128*b)), .transaction(s_h[33:2]),
