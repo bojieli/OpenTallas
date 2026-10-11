@@ -78,7 +78,7 @@ def abstract_tcls(work: Path, name):
              "create_clock -name core_clk -period 833 [get_ports clk]", "set_propagated_clock [all_clocks]",
              f"write_timing_model -library_name {name}_{c} /work/views/{name}_{c}.lib"]
         if c == "ss":
-            t.append(f"write_abstract_lef -bloat_occupied_layers /work/views/{name}.lef")
+            t.append(f"write_abstract_lef /work/views/{name}.lef")
         t.append("exit")
         (work / f"abstract_{c}.tcl").write_text("\n".join(t) + "\n")
     (work / "abstract.tcl").write_text("source /work/abstract_ss.tcl\n")
