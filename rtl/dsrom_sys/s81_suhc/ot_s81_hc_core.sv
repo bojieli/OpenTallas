@@ -221,7 +221,7 @@ module ot_s81_hc_core #(
 
     // ------------------------------------------------------------------ main sequencer
     integer s, q, k, gg;
-    reg [7:0] post_ob;                                    // POST output beats written back
+    reg [15:0] post_ob;                                    // POST output beats written back
     reg [15:0] norm_out_vecs;
     assign y_rdy = run && (kind == K_POST) && (ci < NR) && !fault;
     wire y_take = y_v && y_rdy;
