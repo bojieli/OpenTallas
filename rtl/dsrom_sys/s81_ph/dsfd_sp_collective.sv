@@ -40,7 +40,27 @@ module dsfd_sp_collective (
     input  wire [0:0]    f_mrs,
     output wire [56:0]   t_macc
 `endif
+`ifdef OT_S81PH_COLL_P2L
+    // mtp-colllane-1011, P2 variant (MD-2 P2 draft die A): the P2 selected-path traffic on two DEDICATED lanes
+    // (dsfd_coll_p2_lane adapters, rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv): W4 = board lane to / from the DSpark
+    // primary (start 101 b in, result row 594 b out, abort in, done / fault / corrected out), E4 = UCIe lane from die B
+    // (lane-1 expert words 604 b in).  Die side = dsfd_coll_p2_ep (the grant-protocol end of dsfd_p2_lnk, mtp-fixlat):
+    //   t_p2 = generator bus collective -> p2 709 = {f_og, abort, t_sd 101, t_sv, t_l1d 604, t_l1v}
+    //   f_p2 = generator bus p2 -> collective 600 = {corrected, fault, done, f_sg, f_l1g, f_od 594, f_ov}
+    ,
+    output wire [708:0]  t_p2,
+    input  wire [599:0]  f_p2,
+    input  wire [514:0]  rW4, rE4,
+    output wire [511:0]  tdW4, tdE4,
+    output wire [0:0]    tfW4, tfE4,
+    output wire [1:0]    t_p2flt             // {die-B lane, primary lane} sticky faults (adapter flops)
+`endif
 );
+`ifdef OT_S81PH_COLL_MTPL
+`ifdef OT_S81PH_COLL_P2L
+    initial $fatal(1, "dsfd_sp_collective: MTPL (head die) and P2L (draft die A) both claim lane W4");
+`endif
+`endif
 `ifndef S81PH_COLL_V1
     // CLAUDE S81-PH coll v2 (redesign pass, coll_m1 7 h in timing-driven placement at ~1M nets): the slab is a
     // composition of tiles: dsfd_coll_ck (PLL, reset sequencer), dsfd_coll_core (engine, VM queues, packer) and 8
@@ -117,6 +137,30 @@ module dsfd_sp_collective (
         .lo_v(m_lo_v), .lo_r(m_lo_r), .lo_d(m_lo_d), .li_v(m_li_v), .li_r(m_li_r), .li_d(m_li_d),
         .t_rtv(t_mrt[0]), .t_rtd(t_mrt[512:1]), .f_rtg(f_mrt), .t_rsv(t_mrs[0]), .t_rsd(t_mrs[77:1]), .f_rsg(f_mrs),
         .t_racc(t_macc), .f_lflt(m_lflt));
+`endif
+`ifdef OT_S81PH_COLL_P2L
+    // P2 lanes: two closed lane tiles (LCR 1; W4 board ch_b 1, E4 UCIe ch_b 0) + two P2 adapters + dsfd_coll_p2_ep
+    wire p_lo_v, p_lo_r, p_li_v, p_li_r, b_lo_v, b_lo_r, b_li_v, b_li_r; wire [552:0] p_lo_d, p_li_d, b_lo_d, b_li_d;
+    wire [2:0] p_lflt, b_lflt; wire p_flt, b_flt;
+    dsfd_coll_lane_w #(.LCR(1)) u_pl (.ck(pll_stream), .rs(rst_stream), .chb(1'b1), .rx(rW4), .tx(tdW4), .tf(tfW4),
+        .lo_v(p_lo_v), .lo_r(p_lo_r), .lo_d(p_lo_d), .li_v(p_li_v), .li_r(p_li_r), .li_d(p_li_d), .flt(p_lflt));
+    dsfd_coll_lane_w #(.LCR(1)) u_bl (.ck(pll_stream), .rs(rst_stream), .chb(1'b0), .rx(rE4), .tx(tdE4), .tf(tfE4),
+        .lo_v(b_lo_v), .lo_r(b_lo_r), .lo_d(b_lo_d), .li_v(b_li_v), .li_r(b_li_r), .li_d(b_li_d), .flt(b_lflt));
+    wire c_l1v, c_l1r, c_sv, c_sr, c_ov, c_or; wire [603:0] c_l1d; wire [100:0] c_sd; wire [593:0] c_od; wire [0:0] p_abort;
+    dsfd_coll_p2_ep u_pe (.ck(pll_stream), .rst(rst_stream),
+        .c_l1v(c_l1v), .c_l1r(c_l1r), .c_l1d(c_l1d), .t_l1v(t_p2[0]), .t_l1d(t_p2[604:1]), .f_l1g(f_p2[595]),
+        .c_sv(c_sv), .c_sr(c_sr), .c_sd(c_sd), .t_sv(t_p2[605]), .t_sd(t_p2[706:606]), .f_sg(f_p2[596]),
+        .f_ov(f_p2[0]), .f_od(f_p2[594:1]), .t_og(t_p2[708]), .c_ov(c_ov), .c_or(c_or), .c_od(c_od));
+    dsfd_coll_p2_lane #(.TXK(7), .TXW(594), .RXK(6), .RXW(101), .EVT(3), .EVR(1), .CRED(8), .TCRED(8)) u_pa (
+        .ck(pll_stream), .rs(rst_stream), .x_v(c_ov), .x_r(c_or), .x_d(c_od), .r_v(c_sv), .r_r(c_sr), .r_d(c_sd),
+        .x_ev(f_p2[599:597]), .r_ev(p_abort),
+        .lo_v(p_lo_v), .lo_r(p_lo_r), .lo_d(p_lo_d), .li_v(p_li_v), .li_r(p_li_r), .li_d(p_li_d), .f_lflt(p_lflt), .t_flt(p_flt));
+    dsfd_coll_p2_lane #(.TXK(0), .TXW(0), .RXK(5), .RXW(604), .EVT(0), .EVR(0), .CRED(0), .TCRED(0)) u_ba (
+        .ck(pll_stream), .rs(rst_stream), .x_v(1'b0), .x_r(), .x_d(1'b0), .r_v(c_l1v), .r_r(c_l1r), .r_d(c_l1d),
+        .x_ev(1'b0), .r_ev(),
+        .lo_v(b_lo_v), .lo_r(b_lo_r), .lo_d(b_lo_d), .li_v(b_li_v), .li_r(b_li_r), .li_d(b_li_d), .f_lflt(b_lflt), .t_flt(b_flt));
+    assign t_p2[707] = p_abort[0];
+    assign t_p2flt = {b_flt, p_flt};
 `endif
 `else
     wire ck_s, ck_v, ck_h, lock, pd;
