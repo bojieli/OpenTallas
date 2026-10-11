@@ -27,7 +27,7 @@ Each record is charged its simulator price. Per unit and op class, the budget is
 - the items a record moves or computes at production shape;
 - the items per cycle the unit must sustain to meet the price.
 
-The DeepSeek target is the table rate, 2,208.1 tok/s (543,454 cycles). The current G25 S2 price is 2,117.2 tok/s (566,785 cycles, with the corrected QDQ price below; 2,121.8 before), so each record's budget at target is its price × 0.9588. DS MTP uses τ = 4.159 on the same per-record prices (`hgi_sim_20261010/ds_rates_g25.json`: fixed RTL 3,640.3 tok/s).
+The DeepSeek target is the table rate, 2,208.1 tok/s (543,454 cycles). The current G25 S2 price is 2,116.8 tok/s (with the corrected QDQ price below; 2,121.8 before), so each record's budget at target is its price × about 0.959. DS MTP uses τ = 4.159 on the same per-record prices (`hgi_sim_20261010/ds_rates_g25.json`: fixed RTL 3,640.3 tok/s).
 
 **HBM fetch overlap.** Fetches overlap exactly as S2 models them. No fixed fraction of HBM peak is assumed: a weight or KV stream needs only its overlap-aware minimum (owner rule, 10-10 06:58).
 
@@ -46,9 +46,9 @@ Numbers that appear only in a stream log are listed as `interim` and never quali
    - Budgets: HC_POST ≤ 213.5 cycles and HC_PRE_NORM ≤ 622.6 cycles a record at the target (92 and 31.5 elements a cycle).
    - b's root cause (21:30): FUSED issues its micro-ops serially, and the HC_POST mix is a 4-term SEQ reduction on half the lanes. The fix, pipelined micro-op issue plus an elementwise mix chain, is b's.
 2. **IDX.TOPK** (g2) is at 4.29×, +37k cycles. Budget: ≤ 271 cycles for a 384-score top-6. g2's TOPKW=1 heap with IW4 packed writes is under test.
-3. **FUSED.QDQ_*** was at 14.6× (+10.4k cycles): the packet transport moved one sector every 2 cycles with ≤ 4 outstanding. Nobody was raising its rate, so **tput-gate-1010 took it** and built `ot_hgi_quant_unit` WIDE (`results/rtl/hgi_unit_tput_20261010/qdq_wide/`): 32 elements a cycle on the VM lane group, bit-exact, mutants fail, 62 cycles for a 512-element row (5.7× faster).
-   - The old price, ceil(n/32) + 8, left out the decode's 23-edge latency and the VM round trip, so it was unreachable by any structure. It is corrected to the measured ceil(n/32) + 46.
-   - Measured/price is now 1.01–1.02, which qualifies the throughput. The route and the hb_quant lgE slot-2 share are still open.
+3. **FUSED.QDQ_*** was at 14.6× (+10.4k cycles): the packet transport moved one sector every 2 cycles with ≤ 4 outstanding. Nobody was raising its rate, so **tput-gate-1010 took it** and built `ot_hgi_quant_unit` WIDE (`results/rtl/hgi_unit_tput_20261010/qdq_wide/`): 32 elements a cycle on the VM lane group, bit-exact, mutants fail, 65 cycles for a 512-element row with a registered boundary (5.4× faster).
+   - The old price, ceil(n/32) + 8, left out the decode's 23-edge latency and the VM round trip, so it was unreachable by any structure. It is corrected to the measured ceil(n/32) + 49.
+   - Measured/price is now 1.012–1.019, which qualifies the throughput. The route and the hb_quant lgE slot-2 share are still open.
 4. **DMA.KVWB_DS** is at 3.8×, +5.4k cycles. The measurement predates c's posted KVWB retire (87b97e35e, `DMA_POSTED`), so it needs a regrade on the posted mover (c / e).
 5. **HC.HC_MIX_POST** is at 1.28×, so UNQUALIFIED, but S2 has it off the critical path: it costs 0 token cycles.
 6. **SU.VOP** at 1.067 and **COLL.ALL_GATHER** at 0.716 are qualified. So are GROUP_REDUCE_MCAST, DMA.LOAD, DMA.FENCE and ROW_GATHER (the last by price fit).
@@ -64,7 +64,7 @@ Numbers that appear only in a stream log are listed as `interim` and never quali
 
 **Today's whole-token composition** (`e2e_calibration.json`, all measured ratios together): 994.0 tok/s, against 2,121.8 at price. The FUSED pair accounts for almost all of the gap.
 
-**DS S2 price change:** the corrected QDQ price moves S2 from 565,569 to 566,785 cycles (−4.6 tok/s). `ds_rates_g25.json` (hgi-1010/e) is not regenerated here.
+**DS S2 price change:** the corrected QDQ price (ceil(n/32) + 49, the registered-boundary successor; its RTL commit follows its gate) moves S2 by about −5 tok/s. `ds_rates_g25.json` (hgi-1010/e) is not regenerated here.
 
 **The CP fetch** needs 0.867 B/cycle a die, overlap-aware (audit `hbm_ds_cp_fetch`). The one-sector native port gives 0.308, which is 2.8× short. Fixes in flight:
 - hbm-phys `[svc-ep]` PS native endpoint;
@@ -72,6 +72,14 @@ Numbers that appear only in a stream log are listed as `interim` and never quali
 - kport NO 16 (bee505fe4).
 
 **HBM loader / svc endpoint, per stack** (the table below): the reads that must keep their price are DMA.LOAD at 11.0 B/cycle a die while a load runs (2.8 a stack striped) and the CP fetch at 0.87 a die. The token averages are far lower: 0.72 and 0.15 B/cycle a die. The `[svc-ep]` sizing in hbm-phys-1010 (reads ≥ 6.2 B/cycle a stack, which includes the HC prefetch; writes ≥ 6) covers the DS AR program's needs.
+
+## Build gate (PRICED-NOT-BUILT)
+
+Every op the simulator prices must run natively in a committed RTL bench (unit or die e2e, real and exact, no stub, no behavioural model, no unsupported status). An op without one is PRICED-NOT-BUILT, and every rate that prices it is inflated by an unbuilt unit. The table under "Tables" lists the offenders with their priced cycles and their critical-path weight (S2 with the op at zero cost). `gaps/registry_gaps.py` prints the same list.
+
+- **DS SM.MATVEC FP8/FP4 block-dot** (54.6k + 19.2k priced cycles, 20.3k on the critical path): `ot_hgi_sm_xload` refuses x fmt 1/2.
+- **COLL.TOPK_MERGE** (21.4k priced, 21.0k critical): `ot_hgi_coll_record` refuses op 2.
+- **IDX.INDEX** and **COLL.ARGMAX_MERGE**: RTL exists but no committed native bench.
 
 ## Registry gate
 
@@ -90,50 +98,50 @@ Numbers that appear only in a stream log are listed as `interim` and never quali
 
 ### DeepSeek-V4.1 1M on the generic HBM die (rank-0 head die, S2)
 
-S2 price 566,785.1 cycles = 2,117.2 tok/s; target 2,208.1 tok/s = 543,453.6 cycles, so every budget is the price × 0.9588.
+S2 price 566,881.1 cycles = 2,116.8 tok/s; target 2,208.1 tok/s = 543,453.6 cycles, so every budget is the price × 0.9587.
 
 | op | records / token | layers | price cyc / record | budget cyc / record at target | cyc / layer | items / record | required items / cycle | elasticity (+10 % price) | measured / price | grade | status | token cycles at measured | owner |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---|---:|---|
 | COLL.ALL_GATHER | 584 | 40 | 389.2 | 373.1 | 5,681.8 | 8,519 bytes | 21.89 | 2.82 % | 0.716 | unit_bench | **QUALIFIED** | -41,550.1 | hgi-1010/c + fe-push-hgi-1010 |
 | SU.VOP | 1,356 | 40 | 100.6 | 96.4 | 3,409.7 | 1,585 elements | 15.76 | 1.88 % | 1.067 | unit_bench | **QUALIFIED** | +7,149.6 | hgi-1010/b |
 | SM.MATVEC | 1,095 | 41 | 94.9 | 91.0 | 2,535.8 | 166,975 MACs | 1,758.59 | 0.93 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | hgi-1010/d |
-| COLL.GROUP_REDUCE_MCAST | 40 | 40 | 1,325.9 | 1,271.4 | 1,325.9 | 4,096 bytes | 3.09 | 0.94 % | 0.908 | e2e | **QUALIFIED** | -4,879.5 | - |
-| FUSED.HC_PRE_NORM | 81 | 41 | 649.3 | 622.6 | 1,282.8 | 20,480 elements | 31.54 | 0.93 % | 6.514 | unit_bench | **UNQUALIFIED** | +290,013.7 | hgi-1010/b |
-| HC.HC_MIX_POST | 80 | 40 | 540.0 | 517.8 | 1,080.0 | 24 elements | 0.04 | 0.00 % | 1.282 | unit_bench | **UNQUALIFIED** | 0.0 | hgi-1010/d |
+| COLL.GROUP_REDUCE_MCAST | 40 | 40 | 1,325.9 | 1,271.1 | 1,325.9 | 4,096 bytes | 3.09 | 0.94 % | 0.908 | e2e | **QUALIFIED** | -4,879.5 | - |
+| FUSED.HC_PRE_NORM | 81 | 41 | 649.3 | 622.5 | 1,282.8 | 20,480 elements | 31.54 | 0.93 % | 6.514 | unit_bench | **UNQUALIFIED** | +290,013.7 | hgi-1010/b |
+| HC.HC_MIX_POST | 80 | 40 | 540.0 | 517.7 | 1,080.0 | 24 elements | 0.04 | 0.00 % | 1.282 | unit_bench | **UNQUALIFIED** | 0.0 | hgi-1010/d |
 | DMA.LOAD | 340 | 40 | 104.4 | 100.1 | 887.1 | 1,153 bytes | 11.05 | 0.09 % | 0.622 | e2e | **QUALIFIED** | -1,927.5 | - |
-| COLL.ROW_GATHER | 8 | 8 | 4,246.0 | 4,071.2 | 4,246.0 | 1,048,576 bytes | 246.96 | 0.60 % | 1.000 | price_fit | **QUALIFIED** | 0.0 | hgi-1010/c |
-| COLL.TOPK_MERGE | 9 | 8 | 2,382.8 | 2,284.7 | 2,680.6 | 2,428 bytes | 1.02 | 0.38 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | tput-gate-1010 |
+| COLL.ROW_GATHER | 8 | 8 | 4,246.0 | 4,070.5 | 4,246.0 | 1,048,576 bytes | 246.96 | 0.60 % | 1.000 | price_fit | **QUALIFIED** | 0.0 | hgi-1010/c |
+| COLL.TOPK_MERGE | 9 | 8 | 2,382.8 | 2,284.3 | 2,680.6 | 2,428 bytes | 1.02 | 0.38 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | tput-gate-1010 |
 | FUSED.HC_POST | 80 | 40 | 222.7 | 213.5 | 445.3 | 20,480 elements | 91.97 | 0.31 % | 20.085 | unit_bench | **UNQUALIFIED** | +339,233.8 | hgi-1010/b |
-| ATT.QK | 40 | 40 | 329.5 | 316.0 | 329.5 | 16,384 MACs | 49.72 | 0.23 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | hgi-1010/g2 |
-| ATT.PV | 40 | 40 | 329.5 | 316.0 | 329.5 | 16,384 MACs | 49.72 | 0.23 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | hgi-1010/g2 |
-| IDX.TOPK | 40 | 40 | 283.0 | 271.4 | 283.0 | 384 elements | 1.36 | 0.20 % | 4.286 | unit_bench | **UNQUALIFIED** | +37,198.6 | hgi-1010/g2 |
-| IDX.INDEX | 8 | 8 | 939.2 | 900.5 | 939.2 | 851,968 keys scored | 907.13 | 0.13 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | hgi-1010/g2 |
-| FUSED.QDQ_FP8 | 40 | 40 | 62.0 | 59.4 | 62.0 | 512 elements | 8.26 | 0.03 % | 1.012 | unit_bench | **QUALIFIED** | +23.8 | tput-gate-1010 |
+| ATT.QK | 40 | 40 | 329.5 | 315.9 | 329.5 | 16,384 MACs | 49.72 | 0.23 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | hgi-1010/g2 |
+| ATT.PV | 40 | 40 | 329.5 | 315.9 | 329.5 | 16,384 MACs | 49.72 | 0.23 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | hgi-1010/g2 |
+| IDX.TOPK | 40 | 40 | 283.0 | 271.3 | 283.0 | 384 elements | 1.36 | 0.20 % | 4.286 | unit_bench | **UNQUALIFIED** | +37,198.6 | hgi-1010/g2 |
+| IDX.INDEX | 8 | 8 | 939.2 | 900.4 | 939.2 | 851,968 keys scored | 907.13 | 0.13 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | hgi-1010/g2 |
+| FUSED.QDQ_FP8 | 40 | 40 | 65.0 | 62.3 | 65.0 | 512 elements | 7.88 | 0.04 % | 1.012 | unit_bench | **QUALIFIED** | +25.0 | tput-gate-1010 |
 | DMA.KVWB_DS | 40 | 40 | 60.0 | 57.5 | 60.0 | 2,048 bytes | 34.13 | 0.03 % | 3.817 | e2e | **UNQUALIFIED** | +5,376.6 | hgi-1010/c |
 | DMA.FENCE | 40 | 40 | 60.0 | 57.5 | 60.0 | 0  | 0.00 | 0.00 % | 0.117 | e2e | **QUALIFIED** | 0.0 | - |
-| COLL.ARGMAX_MERGE | 1 | 1 | 765.4 | 733.9 | 765.4 | 8 bytes | 0.01 | 0.01 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | UNOWNED |
+| COLL.ARGMAX_MERGE | 1 | 1 | 765.4 | 733.8 | 765.4 | 8 bytes | 0.01 | 0.01 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | UNOWNED |
 | ARGMAX.LOCAL | 1 | 1 | 142.7 | 136.8 | 142.7 | 1,347 elements | 9.44 | 0.00 % | – | none | **UNQUALIFIED_NO_BENCH** | 0.0 | UNOWNED |
 
 ### DS bottleneck ranking (measured shortfalls, token cycles on S2 with only that op at its measured ratio)
 
 | # | op | measured / price | + cycles / token | tok/s lost | budget cyc / record (at target) | owner |
 |---:|---|---:|---:|---:|---:|---|
-| 1 | FUSED.HC_POST | 20.085 | 339,233.8 | -792.7 | 222.7 (213.5) | hgi-1010/b (FUSED UWIDE / wide VM lanes) |
-| 2 | FUSED.HC_PRE_NORM | 6.514 | 290,013.7 | -716.6 | 649.3 (622.6) | hgi-1010/b (FUSED UWIDE / wide VM lanes) |
-| 3 | IDX.TOPK | 4.286 | 37,198.6 | -130.4 | 283.0 (271.4) | hgi-1010/g2 (TOPKW=1 heap, 9473077de) |
+| 1 | FUSED.HC_POST | 20.085 | 339,233.8 | -792.5 | 222.7 (213.5) | hgi-1010/b (FUSED UWIDE / wide VM lanes) |
+| 2 | FUSED.HC_PRE_NORM | 6.514 | 290,013.7 | -716.4 | 649.3 (622.5) | hgi-1010/b (FUSED UWIDE / wide VM lanes) |
+| 3 | IDX.TOPK | 4.286 | 37,198.6 | -130.4 | 283.0 (271.3) | hgi-1010/g2 (TOPKW=1 heap, 9473077de) |
 | 4 | DMA.KVWB_DS | 3.817 | 5,376.6 | -19.9 | 60.0 (57.5) | hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e) |
-| 5 | HC.HC_MIX_POST | 1.282 | 0.0 | 0.0 | 540.0 (517.8) | hgi-1010/d |
+| 5 | HC.HC_MIX_POST | 1.282 | 0.0 | 0.0 | 540.0 (517.7) | hgi-1010/d |
 
 ### DS ops with no production-shape bench (UNQUALIFIED_NO_BENCH), by exposure (token cycles if 2× price)
 
 | op | price cyc / token | exposure if 2× | owner | interim |
 |---|---:|---:|---|---|
-| SM.MATVEC | 103,968.3 | 52,597.7 | hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path) | hgi-1010.log 20:04: SM DS ratio rerun with tb_hgi_sm_tput on exp_2c9860e12 -> d (pending) |
-| COLL.TOPK_MERGE | 21,445.0 | 21,424.5 | tput-gate-1010 (taken 10-10: production-shape bench) |  |
-| ATT.QK | 13,181.8 | 13,206.1 | hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open) | main a7613320f ATT PIPE=2: H4 D128 NL2 vehicle QK T512 1,951 cyc (not DS production shape hd512 / 1M) |
-| ATT.PV | 13,181.8 | 13,206.1 | hgi-1010/g2 | main a7613320f ATT PIPE=2: PV T512 2,968 cyc (vehicle, not production shape) |
-| IDX.INDEX | 7,513.6 | 7,538.2 | hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea) | results/rtl/hgi_unit_tput_20261010/iks/README.md: key-stream issuer q0 460 vs 339 priced (one stack; not the whole record) (ratio 1.36) |
-| COLL.ARGMAX_MERGE | 765.4 | 793.5 | UNOWNED |  |
+| SM.MATVEC | 103,968.3 | 52,606.6 | hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path) | hgi-1010.log 20:04: SM DS ratio rerun with tb_hgi_sm_tput on exp_2c9860e12 -> d (pending) |
+| COLL.TOPK_MERGE | 21,445.0 | 21,428.1 | tput-gate-1010 (taken 10-10: production-shape bench) |  |
+| ATT.QK | 13,181.8 | 13,208.3 | hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open) | main a7613320f ATT PIPE=2: H4 D128 NL2 vehicle QK T512 1,951 cyc (not DS production shape hd512 / 1M) |
+| ATT.PV | 13,181.8 | 13,208.3 | hgi-1010/g2 | main a7613320f ATT PIPE=2: PV T512 2,968 cyc (vehicle, not production shape) |
+| IDX.INDEX | 7,513.6 | 7,539.5 | hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea) | results/rtl/hgi_unit_tput_20261010/iks/README.md: key-stream issuer q0 460 vs 339 priced (one stack; not the whole record) (ratio 1.36) |
+| COLL.ARGMAX_MERGE | 765.4 | 793.6 | UNOWNED |  |
 | ARGMAX.LOCAL | 142.7 | 0.0 | UNOWNED |  |
 
 ### HBM loader / svc endpoint budget (DS AR, per die; stack figures assume the 4-stack stripe)
@@ -189,7 +197,50 @@ S2 price 1,269,120.1 cycles = 945.5 tok/s; target 953.8 tok/s. Qwen on HBM is de
 | head | 8,765.5 | 1.1 % | 100.0 % | QUALIFIED | 0 () |
 | embed | 1,074.3 | 0.1 % | 51.8 % | UNQUALIFIED_NO_BENCH | 4 (E1.hash, E1.hbm_read, E14.hash, E14.hbm_read) |
 
+**ds_rom_mtp** (4238.4 tok/s, 1,177,528.1 cycles; 58 stage groups; II limiter verify Stage 29: L19, L20.ffn = 33,183.5 cycles)
+
+| class | critical cyc / token | share | measured fraction | status | unbenched nodes |
+|---|---:|---:|---:|---|---|
+| field | 462,327.0 | 39.3 % | 99.2 % | QUALIFIED | 1 (accept.seed) |
+| wave | 161,546.0 | 13.7 % | 100.0 % | QUALIFIED | 0 () |
+| su | 149,594.7 | 12.7 % | 100.0 % | QUALIFIED | 0 () |
+| coll | 135,421.7 | 11.5 % | 100.0 % | QUALIFIED | 0 () |
+| hop | 135,397.6 | 11.5 % | 100.0 % | QUALIFIED | 0 () |
+| head | 51,223.0 | 4.3 % | 99.0 % | QUALIFIED | 6 (draft.markov0, draft.markov1, draft.markov2, draft.markov3) |
+| ctl | 30,651.0 | 2.6 % | 99.9 % | QUALIFIED | 2 (accept.commit, accept.round) |
+| hbm | 26,399.8 | 2.2 % | 100.0 % | QUALIFIED | 0 () |
+| select | 23,881.0 | 2.0 % | 100.0 % | QUALIFIED | 0 () |
+| embed | 1,074.3 | 0.1 % | 99.9 % | QUALIFIED | 1 (accept.engram_rewind) |
+
+### Build gate: priced ops with no native RTL bench (PRICED-NOT-BUILT)
+
+every op the simulator prices needs a committed bench that executes it natively in RTL (no stub, no behavioural model, no unsupported status); else PRICED-NOT-BUILT.
+
+| model | op | variant | status | records / token | priced cycles / token | critical-path cycles (op at 0) | rate if the op were free | evidence |
+|---|---|---|---|---:|---:|---:|---:|---|
+| DS | COLL.TOPK_MERGE |  | NOT_BUILT | 9 | 21,445.0 | 21,021.0 | 2,198.4 | rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv refuses op 2 ('merge stage not installed yet'); the IDX.MERGE engine (ot_hgi_idx_merge) is not reachable from the record path |
+| DS | SM.MATVEC | FP8 | NOT_BUILT | 290 | 54,578.4 | 20,334.9 | 2,195.6 | rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv refuses x fmt 1 / 2 (x_fault): no FP8 block-dot x path (audit ds_sm_xload_fp8_fp4_no_peer; FP8 x-path rebase = fe-push-hgi-1010 / hgi-1010/d) |
+| DS | IDX.INDEX |  | NO_NATIVE_EVIDENCE | 8 | 7,513.6 | 4,003.5 | 2,131.9 | ot_hgi_idx_index / _native exist; every committed die e2e runs IDX.INDEX as a stub (DS L2 with IDX stub); only the IKS key-stream issuer is benched (hgi_unit_tput_20261010/iks) |
+| DS | COLL.ARGMAX_MERGE |  | NO_NATIVE_EVIDENCE | 1 | 765.4 | 765.4 | 2,119.7 | ot_hgi_coll_record op 3 + ot_hgi_coll_amerge exist; tb_hgi_coll_record checks only the endpoint control with a stubbed endpoint (no exact native data run committed) |
+| Qwen | COLL.ARGMAX_MERGE |  | NO_NATIVE_EVIDENCE | 1 | 586 | 586.0 | 946.0 | ot_hgi_coll_record op 3 + ot_hgi_coll_amerge exist; tb_hgi_coll_record checks only the endpoint control with a stubbed endpoint (no exact native data run committed) |
+| DS | SM.MATVEC | FP4 | NOT_BUILT | 720 | 19,200.0 | 224.0 | 2,117.7 | rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv refuses x fmt 2 |
+
+Rate figures these ops inflate (each prices the op at its simulator cost although no RTL runs it): DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl); DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds); DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl); Qwen AR 953.8 tok/s (results/arch/hgi_sim_20261009/qwen_timing_P8191_v10.json S2); Qwen DFlash b16 1,791.8 tok/s (dflash_timing.json); this budget's DS S2 2116.8 tok/s; this budget's Qwen S2 945.5 tok/s.
+
+### DS ROM BF of record: hierarchical full-rate (ot_v41_bf_col + ot_s81_bf_front)
+
+| item | value |
+|---|---|
+| target | AR 1,553.4 / MTP 4,443.6 tok/s (hier_compact on the current base; Option A (compact column + front <= 198.72 um tall, pair <= 1,031.6 um); else HALF_PHL fallback) |
+| budget (bench workload: 456 rows, 232 partials, 4,288 issues) | 124,422 issue cycles + 3 cycles a partial |
+| measured | 124,422 issue cycles; partial lag +2.499 ns mean / +2.499 ns max = +3.0 cycles |
+| measured / price | 1.0 (QUALIFIED) |
+| timing | column: bfh_col600_28fa6290c-cl CLOSED TT +34.26 / FF +0.67 (compact col: bfh_compact220_col_a1200); front: bfh_compact220_front_a1200_84d63c93f-cl CLOSED TT +87.90 / FF +9.98 (main 943cad2b2); results/rtl/s81_bf_arch_20261009/compose/summary.json: interface TT +265.8 / FF +45.1 balanced |
+| evidence | results/rtl/s81_bf_arch_20261009/bench/tcg0.json, results/rtl/s81_bf_arch_20261009/bench/hcol.json, results/rtl/s81_bf_arch_20261009/bench/full.json |
+
+ROM blocks outside the token-path classes: 162 covered by name rules (`rom_block_rules`); unmapped: ot_dsrom_engram_lead_producer, qfd_sp_tree_top_b_f1a, qfd_sp_tree_top_b_f1b.
+
 ### Registry gate (elements)
 
-190 elements mapped: QUALIFIED 91, UNQUALIFIED 35, UNQUALIFIED_NO_BENCH 64.
+360 elements mapped: QUALIFIED 146, UNQUALIFIED 49, UNQUALIFIED_NO_BENCH 165.
 
