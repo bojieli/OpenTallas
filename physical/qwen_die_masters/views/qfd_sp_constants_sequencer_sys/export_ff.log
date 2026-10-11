@@ -28,30 +28,30 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 14814, timing group from output port.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-QDM reference pin b_su_tok[0]$_DFFE_PP_/CLK clock arrival max 273.786896 min 261.740936 skew 90 hold 50
+QDM reference pin b_su_tok[0]$_DFFE_PP_/CLK clock arrival max 276.509552 min 263.881561 skew 90 hold 50
 [WARNING STA-0441] set_input_delay relative to a clock defined on the same port/pin not allowed.
 [WARNING STA-0440] set_output_delay not allowed on power port 'VDD'.
 [WARNING STA-0440] set_output_delay not allowed on ground port 'VSS'.
 OT_IO_INTER 1302 inputs 2309 outputs at 150 ps
-OT_WS_MAX 1.9434859277467353e-10 OT_WS_MIN 4.159228517153224e-12
+OT_WS_MAX 1.716696229614456e-10 OT_WS_MIN 2.700201173766459e-12
 Clock core_clk
 rise -> rise
     min     max
    0.00    0.00 source latency
- 258.42         network latency u_ctrl.fq[2][201]$_DFFE_PP_/CLK
-         308.70 network latency u_i_vm_rq.q[368]$_DFF_P_/CLK
+ 254.08         network latency u_seq.u_base.q_d[5][238]$_DFFE_PP_/CLK
+         310.32 network latency u_seq.u_base.vm_wdata[422]$_DFFE_PN0P_/CLK
 ---------------
- 258.42  308.70 latency
-          50.28 skew
+ 254.08  310.32 latency
+          56.24 skew
 
 fall -> fall
     min     max
    0.00    0.00 source latency
- 271.90         network latency u_ctrl.fq[2][201]$_DFFE_PP_/CLK
-         325.87 network latency u_i_vm_rq.q[368]$_DFF_P_/CLK
+ 267.70         network latency u_seq.u_base.q_d[5][238]$_DFFE_PP_/CLK
+         328.23 network latency u_seq.u_base.vm_wdata[422]$_DFFE_PN0P_/CLK
 ---------------
- 271.90  325.87 latency
-          53.97 skew
+ 267.70  328.23 latency
+          60.53 skew
 
 
 Clock ot_lb_v_core_clk
