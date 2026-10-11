@@ -1339,7 +1339,7 @@ def ctlm_aud(t: str) -> str:
     head, tile = t[:i], t[i:]
     tile = one(tile, "    parameter integer PCUT = 0    // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n) (",
                "    parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n"
-               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops (7 = all); 8 = SRAM one-short mutant\n) (")
+               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (23 = all); 8 = SRAM one-short mutant\n) (")
     tile = one(tile, "        .kv_write_drained(kv_write_drained),", "        .kv_write_drained(kvwd_c),")
     tile = one(tile, "        .kv_ok(kv_ok),", "        .kv_ok(kv_ok_c),")
     tile = one(tile, "    (* keep = \"true\" *) wire [8-1:0] rsv;",
@@ -1353,6 +1353,23 @@ def ctlm_aud(t: str) -> str:
                "    end endgenerate\n"
                "    (* keep = \"true\" *) wire [8-1:0] rsv;")
     tile = one(tile, ".SPRE(2), .IS(0), .OS(OS)) u_tt (", ".SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0)) u_tt (")
+    # AUD & 16: the die-facing tree-top inputs pin-flopped (ctlm_i-fpaau-f62cd33ac post-CTS -867: land_cnt[0] raw port ->
+    # u_tt.u_ctl.progress, 890 ps; u_tt runs IS 0 so none of them had a station).  The memory / port elements announce
+    # them one edge ahead (the kv_ok contract).
+    tile = one(tile, "    (* keep = \"true\" *) wire [8-1:0] rsv;",
+               "    wire up_fault_c, x_rdy_c, fab_fault_c; wire [15:0] land_cnt_c; wire [16-1:0] tr_fault_c;\n"
+               "    wire [12*51-1:0] p_am_c; wire [12-1:0] p_fault_c;\n"
+               "    wire [658:0] dpin = {up_fault, land_cnt, x_rdy, tr_fault, p_am, p_fault, fab_fault};\n"
+               "    generate if ((AUD & 16) != 0) begin : g_dpin\n"
+               "        reg [658:0] dpin_q;   // AUD 16: die-input pin flops (announced one edge ahead)\n"
+               "        always @(posedge clk) dpin_q <= dpin;\n"
+               "        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_am_c, p_fault_c, fab_fault_c} = dpin_q;\n"
+               "    end else begin : g_ddir\n"
+               "        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_am_c, p_fault_c, fab_fault_c} = dpin;\n"
+               "    end endgenerate\n"
+               "    (* keep = \"true\" *) wire [8-1:0] rsv;")
+    for nm in ("up_fault", "land_cnt", "x_rdy", "tr_fault", "p_am", "p_fault", "fab_fault"):
+        tile = one(tile, f".{nm}({nm})", f".{nm}({nm}_c)")
     return head + tile
 
 

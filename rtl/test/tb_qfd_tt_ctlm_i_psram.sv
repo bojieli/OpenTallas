@@ -88,6 +88,21 @@ module tb_qfd_tt_ctlm_i_psram;
     wire [24-1:0] mx_addr_0, mx_addr_1;
     wire [16-1:0] mx_mask_0, mx_mask_1;
     wire [16*32-1:0] mx_data_0, mx_data_1;
+    // el1011-q-seq AUD 16: u0 sees the die-facing tree-top inputs one edge after u1 (u1 pin-flops them)
+    reg [$bits(up_fault)-1:0] up_fault_d1; always @(posedge clk) up_fault_d1 <= up_fault;
+    wire [$bits(up_fault)-1:0] up_fault_u0 = ((U1_AUD & 16) != 0) ? up_fault_d1 : up_fault;
+    reg [$bits(land_cnt)-1:0] land_cnt_d1; always @(posedge clk) land_cnt_d1 <= land_cnt;
+    wire [$bits(land_cnt)-1:0] land_cnt_u0 = ((U1_AUD & 16) != 0) ? land_cnt_d1 : land_cnt;
+    reg [$bits(x_rdy)-1:0] x_rdy_d1; always @(posedge clk) x_rdy_d1 <= x_rdy;
+    wire [$bits(x_rdy)-1:0] x_rdy_u0 = ((U1_AUD & 16) != 0) ? x_rdy_d1 : x_rdy;
+    reg [$bits(tr_fault)-1:0] tr_fault_d1; always @(posedge clk) tr_fault_d1 <= tr_fault;
+    wire [$bits(tr_fault)-1:0] tr_fault_u0 = ((U1_AUD & 16) != 0) ? tr_fault_d1 : tr_fault;
+    reg [$bits(p_am)-1:0] p_am_d1; always @(posedge clk) p_am_d1 <= p_am;
+    wire [$bits(p_am)-1:0] p_am_u0 = ((U1_AUD & 16) != 0) ? p_am_d1 : p_am;
+    reg [$bits(p_fault)-1:0] p_fault_d1; always @(posedge clk) p_fault_d1 <= p_fault;
+    wire [$bits(p_fault)-1:0] p_fault_u0 = ((U1_AUD & 16) != 0) ? p_fault_d1 : p_fault;
+    reg [$bits(fab_fault)-1:0] fab_fault_d1; always @(posedge clk) fab_fault_d1 <= fab_fault;
+    wire [$bits(fab_fault)-1:0] fab_fault_u0 = ((U1_AUD & 16) != 0) ? fab_fault_d1 : fab_fault;
     ot_qfd_tt_ctlm_i #(.PSRAM(0), .PMUT(0), .HQ2(0)) u0 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
@@ -104,13 +119,13 @@ module tb_qfd_tt_ctlm_i_psram;
         .kv_ok(kv_u0),
         .kv_write_drained(kvwd_u0),
         .me_mem_ok(mo_u0),
-        .up_fault(up_fault),
-        .land_cnt(land_cnt),
-        .x_rdy(x_rdy),
-        .tr_fault(tr_fault),
-        .p_am(p_am),
-        .p_fault(p_fault),
-        .fab_fault(fab_fault),
+        .up_fault(up_fault_u0),
+        .land_cnt(land_cnt_u0),
+        .x_rdy(x_rdy_u0),
+        .tr_fault(tr_fault_u0),
+        .p_am(p_am_u0),
+        .p_fault(p_fault_u0),
+        .fab_fault(fab_fault_u0),
         .me_acc_o(me_acc_o_0),
         .me_idle_o(me_idle_o_0),
         .me_prog_o(me_prog_o_0),
