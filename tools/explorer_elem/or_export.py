@@ -21,7 +21,8 @@ T0 = time.time()
 CORNER = os.environ.get('OT_CORNER', 'tt')
 OUT = os.environ.get('OT_OUT', '/out')
 NPATH = int(os.environ.get('OT_NPATH', '40'))
-GEOM = CORNER == 'tt'
+NOSTA = os.environ.get('OT_NOSTA') == '1'   # geometry / clock topology only (no liberty, no SDC / SPEF available)
+GEOM = CORNER in ('tt', 'geom')
 
 
 def log(*a):
@@ -77,6 +78,8 @@ masters_buf = {}
 
 def is_seq(m):
     k = m.getName()
+    if k not in masters_seq and NOSTA:   # no liberty loaded: ASAP7 sequential cell names
+        masters_seq[k] = bool(re.match(r'(DFF|SDF|DHL|DLL|ASYNC_DFF)', k))
     if k not in masters_seq:
         masters_seq[k] = bool(design.isSequential(m)) and 'ICG' not in k
     return masters_seq[k]
@@ -91,15 +94,18 @@ def is_bufinv(m):
 
 # ------------------------------------------------------------------ clock tree (both corners)
 MAXMIN = Timing.Max if CORNER != 'ff' else Timing.Min
-clock_roots = [r for r in design.evalTclString(
+if NOSTA:
+    timing = None
+clock_roots = [] if NOSTA else [r for r in design.evalTclString(
     'set r {}; foreach c [all_clocks] { foreach s [get_property $c sources] { lappend r [get_full_name $s] } }; '
     'join [lsort -unique $r] " "').split() if r]
-clock_names = design.evalTclString('set r {}; foreach c [all_clocks] { lappend r [get_name $c] [get_property $c period] }; '
+clock_names = [] if NOSTA else design.evalTclString('set r {}; foreach c [all_clocks] { lappend r [get_name $c] [get_property $c period] }; '
                                    'join $r " "').split()
 log('clock roots', clock_roots, 'clocks', clock_names)
 
 
 def arr(iterm):
+    if NOSTA: return None
     try:
         v = timing.getPinArrival(iterm, Timing.Rise, MAXMIN)
         if timing.isTimeInf(v) or abs(v) > 1e20: return None
@@ -114,6 +120,8 @@ node_of_inst = {}
 leaf_insts = set()
 seen_nets = set()
 queue = collections.deque()
+if NOSTA:   # no SDC: clock roots are the input ports whose net is a CLOCK net
+    clock_roots = [clean(bt.getName()) for bt in block.getBTerms() if bt.getNet() is not None and bt.getNet().getSigType() == 'CLOCK' and bt.getIoType() == 'INPUT']
 for r in clock_roots:
     bt = block.findBTerm(r)
     if bt is None or bt.getNet() is None: continue
@@ -216,7 +224,7 @@ def clock_pin_arrival(inst):
 
 
 paths = []
-raw = tcl_paths('max' if CORNER != 'ff' else 'min', NPATH)
+raw = '' if NOSTA else tcl_paths('max' if CORNER != 'ff' else 'min', NPATH)
 for ln in raw.splitlines():
     f = ln.split('\t')
     if not f or f[0] != 'PATH': continue
@@ -251,18 +259,18 @@ paths.sort(key=lambda p: p['slack'])
 paths = paths[:NPATH]
 log('paths:', len(paths), 'worst', paths[0]['slack'] if paths else None)
 
-ws = design.evalTclString('sta::worst_slack_cmd %s' % ('max' if CORNER != 'ff' else 'min'))
+ws = '' if NOSTA else design.evalTclString('sta::worst_slack_cmd %s' % ('max' if CORNER != 'ff' else 'min'))
 try:
     ws = float(ws); ws = ws * 1e12 if abs(ws) < 1e-3 else ws  # worst_slack_cmd returns seconds
 except ValueError:
     ws = None
-part = dict(schema='opentallas.explorer_elem.corner.v1', corner=CORNER, worst_slack_ps=None if ws is None else round(ws, 3),
+part = dict(schema='opentallas.explorer_elem.corner.v1', corner=CORNER, nosta=NOSTA, worst_slack_ps=None if ws is None else round(ws, 3),
             clocks=clock_names, clock_roots=clock_roots,
             clock_tree=dict(nodes=[[n[0], n[1], n[2], n[3], n[4], None if n[5] is None else round(n[5], 1), n[6]] for n in nodes],
                             leaves=[[l[0], l[1], l[2], None if l[3] is None else round(l[3], 1), l[4], l[5]] for l in leaves]),
             paths=paths, clock_wires=CLKSEG)
 
-if CORNER == 'tt':
+if CORNER == 'tt' and not NOSTA:
     try:
         design.evalTclString('report_power > %s/power_tt.rpt' % OUT)
         txt = open('%s/power_tt.rpt' % OUT).read()
@@ -446,6 +454,6 @@ else:
                 if pt[5] is not None: pt[5] -= ox; pt[6] -= oy
 
 part['elapsed_s'] = round(time.time() - T0, 1)
-with open(os.path.join(OUT, '%s.json' % CORNER), 'w') as fh:
+with open(os.path.join(OUT, '%s.json' % ('tt' if CORNER == 'geom' else CORNER)), 'w') as fh:
     json.dump(part, fh, separators=(',', ':'))
 log('done')

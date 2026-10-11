@@ -391,9 +391,17 @@ def main():
     for e in ELEMENTS["CP.FETCH"]:
         put(e, "DS AR 1M (HBM)", "CP.FETCH", "UNQUALIFIED" if cp and (cp["ratio"] or 0) > QUAL else "UNQUALIFIED_NO_BENCH",
             cp["ratio"] if cp else None, OWNERS["CP.FETCH"], "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)")
+    # VM.PORTS (hgi-1010/vm): the DS token's VM traffic replayed on the production client ports
+    # (tools/hgi_vm_ports_trace.py + tb_hgi_vm_ports_tput); ratio = served / priced record time over VM-touching records
+    vmp = ROOT / U / "vm_ports/report.json"
+    vr = json.loads(vmp.read_text()) if vmp.exists() else None
     for e in ELEMENTS["VM.PORTS"]:
-        put(e, "DS AR 1M (HBM)", "VM.PORTS", "UNQUALIFIED_NO_BENCH", None, "hgi-1010/b (wide VM lanes)",
-            "no production-shape VM lane-group bench against the client budget yet")
+        if vr:
+            put(e, "DS AR 1M (HBM)", "VM.PORTS", status_of(vr["ratio"], "unit_bench"), vr["ratio"], "hgi-1010/vm",
+                U + "vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)")
+        else:
+            put(e, "DS AR 1M (HBM)", "VM.PORTS", "UNQUALIFIED_NO_BENCH", None, "hgi-1010/vm",
+                "no production-shape VM lane-group bench against the client budget yet")
     for e in ELEMENTS["MTP.VERIFY"]:
         put(e, "DS MTP (HBM)", "MTP.VERIFY", "UNQUALIFIED_NO_BENCH", None, "hgi-1010/h + bf-mtp-1010",
             "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program")
