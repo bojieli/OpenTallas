@@ -55,8 +55,8 @@ MEASURED = {
                             note="ot_hgi_coll_ep PIPE=1 on the 13 DS L0 gather records (main 86ee9156a / ca33eaa6e)"),
     "COLL.GROUP_REDUCE_MCAST": dict(ratio=0.908, grade="e2e", src="results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
                                     note="one record, die e2e all-real"),
-    "COLL.ROW_GATHER": dict(ratio=1.0, grade="price_fit", src="main 5e588e11e (hgi-1010/a, G25 HW ROW_GATHER, one real rank of 96)",
-                            note="price = K x F / 4 + 150 fitted to the measured 4,242 cycles at K 512"),
+    "COLL.ROW_GATHER": dict(ratio=round(4233 / 4246.0, 3), grade="unit_bench", src="results/rtl/hgi_rgx_pipe_merge_20261010/rgx_matrix_SUMMARY.txt",
+                            note="g96_b1 G96 K512: 4,233 cycles vs the 4,246 price (K x F / 4 + 150)"),
     "SU.VOP": dict(ratio=1.067, grade="unit_bench", src=U + "su/report.json",
                    note="27-record DS L0 SU chain, production width"),
     "DMA.LOAD": dict(ratio=0.622, grade="e2e", src="results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
@@ -87,15 +87,17 @@ MEASURED = {
                       interim=dict(ratio=None, src="hgi-1010.log 20:04: SM DS ratio rerun with tb_hgi_sm_tput on exp_2c9860e12 -> d (pending)")),
 }
 # Qwen-on-HBM ops: the audit's measured rows (Qwen-shape benches) where they exist
+# HAND-ENTERED (main 10-10): these Qwen ratios were copied from budget_audit rows, not from a committed bench record of
+# this unit at Qwen shape -> grade 'hand_entered': shown as a claim, never qualifying; listed in build_gate['hand_entered'].
 MEASURED_QWEN = {
-    "SU.VOP": dict(ratio=2.896, grade="e2e", src="budget_audit table.json qwen_su_sfu (measured rtl/sim)"),
-    "SFU.GLU": dict(ratio=2.896, grade="e2e", src="budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"),
-    "DMA.LOAD": dict(ratio=9.204, grade="e2e", src="budget_audit table.json hbm_dma_load"),
-    "DMA.STORE": dict(ratio=round(129.0 / 30, 3), grade="e2e", src="budget_audit table.json hbm_qwen_dma_store"),
-    "COLL.ALL_REDUCE_SUM": dict(ratio=round(1230 / 1350, 3), grade="e2e", src="budget_audit table.json hbm_qwen_allreduce"),
-    "SM.MATVEC": dict(ratio=round(2762 / 1372.0, 3), grade="unit_bench",
+    "SU.VOP": dict(ratio=2.896, grade="hand_entered", src="budget_audit table.json qwen_su_sfu (measured rtl/sim)"),
+    "SFU.GLU": dict(ratio=2.896, grade="hand_entered", src="budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"),
+    "DMA.LOAD": dict(ratio=9.204, grade="hand_entered", src="budget_audit table.json hbm_dma_load"),
+    "DMA.STORE": dict(ratio=round(129.0 / 30, 3), grade="hand_entered", src="budget_audit table.json hbm_qwen_dma_store"),
+    "COLL.ALL_REDUCE_SUM": dict(ratio=round(1230 / 1350, 3), grade="hand_entered", src="budget_audit table.json hbm_qwen_allreduce"),
+    "SM.MATVEC": dict(ratio=round(2762 / 1372.0, 3), grade="hand_entered",
                       src="budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"),
-    "ARGMAX.LOCAL": dict(ratio=round(96502 / 76394, 3), grade="e2e", src="budget_audit table.json qwen_head_stream_chain"),
+    "ARGMAX.LOCAL": dict(ratio=round(96502 / 76394, 3), grade="hand_entered", src="budget_audit table.json qwen_head_stream_chain"),
 }
 
 # unit.op -> owner stream raising its throughput (from the stream logs, 2026-10-10 evening)
@@ -190,8 +192,8 @@ ROM_RULES = [
     (r"^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)", "ds_rom", "hbm", None, None, "ds-1010: HBM PC path (hbm class)"),
     (r"^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)", "ds_rom", "host", "UNQUALIFIED_NO_BENCH", None,
      "ds-1010: host / ingest path: no per-token price row (prefill / admission), no throughput bench"),
-    (r"^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)", "qwen_rom", "me", "UNQUALIFIED", 1.124,
-     "qwen-1010: KV die / attention step: KV sweep needs 0.90 of peak, timed REFpb HBM delivers 0.80 (audit qrom_kvdie_hbm_model)"),
+    (r"^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)", "qwen_rom", "kv_die", "UNQUALIFIED_NO_BENCH", None,
+     "qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"),
     (r"^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc)", "qwen_rom", "link", None, None, "qwen-1010: link / collective FIFOs (link class)"),
     (r"^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)", "qwen_rom", "me", None, None,
      "qwen-1010: tile-tree / PC control of the matrix engine (me class)"),
@@ -212,6 +214,54 @@ def rom_blocks():
 
 
 ROM_BLOCKS = rom_blocks()
+
+
+def prov(path):
+    """short commit of the last change to a committed record path, else None"""
+    import subprocess
+    if not path or not (ROOT / path).exists():
+        return None
+    out = subprocess.run(["git", "-C", str(ROOT), "log", "-1", "--format=%h", "--", path], capture_output=True, text=True).stdout.strip()
+    return out or None
+
+
+_CYC = re.compile(r"\b(cycles|CYCLES|cyc)\s*[=:]\s*(\d+)")
+_ITEMS = re.compile(r"\b(beats|words|flits|rows|tuples|packets|elements|sectors|keys|transactions|requests|responses|reads|"
+                    r"halves|bursts|issues|records|tokens|frames|blocks)\s*[=:]\s*(\d+)", re.I)
+
+
+def bench_ii():
+    """element -> the cycles-per-item line of its newest passing exact bench (closure-loop job state, CLOSED jobs first).
+    The item kind is the largest-count item on the line; 'stalled' = the stimulus injects stalls (II not intrinsic)."""
+    import glob as _g
+    jd = Path.home() / ".local/state/closure_loop/jobs"
+    best = {}
+    for f in _g.glob(str(jd / "*.json")):
+        try:
+            j = json.loads(open(f).read())
+        except Exception:  # noqa: BLE001
+            continue
+        if j.get("status") not in ("CLOSED",):
+            continue
+        blk = (j.get("spec") or {}).get("block")
+        for bn, b in (j.get("benches") or {}).items():
+            if b.get("expect") != "pass" or not b.get("ok"):
+                continue
+            for ln in (b.get("tail") or "").splitlines():
+                m = _CYC.search(ln)
+                if not m:
+                    continue
+                its = [(k.lower(), int(v)) for k, v in _ITEMS.findall(ln) if int(v) > 0]
+                it = max(its, key=lambda x: x[1]) if its else None
+                cyc = int(m.group(2))
+                ent = dict(job=j["name"], commit=str(j.get("commit_full") or (j["spec"].get("source") or {}).get("commit", ""))[:9],
+                           bench=bn, line=ln.strip()[:200], cycles=cyc, item=it[0] if it else None, items=it[1] if it else None,
+                           ii=round(cyc / it[1], 3) if it else None, stalled=bool(re.search(r"stall|STALL|jitter", ln)),
+                           owner=str((j.get("spec") or {}).get("owner", "")), target=None, t=j.get("updated", 0))
+                if blk not in best or ent["t"] > best[blk]["t"]:
+                    best[blk] = ent
+                break
+    return best
 
 
 def variant_of(r):
@@ -302,7 +352,7 @@ def BUILD_EVIDENCE_KEYS(acc):
 
 
 def status_of(ratio, grade):
-    if ratio is None or grade in (None, "interim_log"):
+    if ratio is None or grade in (None, "interim_log", "hand_entered"):
         return "UNQUALIFIED_NO_BENCH"
     return "QUALIFIED" if ratio <= QUAL else "UNQUALIFIED"
 
@@ -382,6 +432,10 @@ def ds_budget():
         impact = (sched_with(k, ratio) - S2) if ratio not in (None, 1.0) else 0.0
         nl = len([L for L in a["layers"] if L is not None])
         price_rec = a["cyc"] / a["n"]
+        if st == "UNQUALIFIED_NO_BENCH" or (st == "UNQUALIFIED" and ratio is not None and ratio <= BOUND_SLOWDOWN):
+            d10 = sched_with(k, BOUND_SLOWDOWN) - S2
+            if d10 / S2 < BOUND_RATE and build_status(k, None)[0] == "BUILT":
+                st = "QUALIFIED_BY_BOUND"
         rows.append(dict(
             op=k, unit=k.split(".")[0], records_per_token=a["n"], layers_with_op=nl,
             price_cycles_per_record=round(price_rec, 1), price_cycles_per_token=round(a["cyc"], 1),
@@ -454,6 +508,9 @@ def qwen_budget():
             continue
         m = MEASURED_QWEN.get(k, {})
         ratio, grade = m.get("ratio"), m.get("grade")
+        st_q = status_of(ratio, grade)
+        if st_q != "QUALIFIED" and (sched_with(k, BOUND_SLOWDOWN) - S2) / S2 < BOUND_RATE and build_status(k, None)[0] == "BUILT":
+            st_q = "QUALIFIED_BY_BOUND"
         impact = (sched_with(k, ratio) - S2) if ratio not in (None, 1.0) else 0.0
         el = (sched_with(k, 1.10) - S2) / S2
         pr = a["cyc"] / a["n"]
@@ -464,8 +521,10 @@ def qwen_budget():
                          items_per_record=round(a["items"] / a["n"], 1), item=a["what"],
                          required_items_per_cycle=round(a["items"] / a["cyc"], 3) if a["cyc"] else None,
                          token_elasticity_at_plus10pct=round(el, 5),
-                         measured_ratio=ratio, measured_grade=grade, measured_src=m.get("src"),
-                         status=status_of(ratio, grade), impact_cycles_per_token=round(impact, 1),
+                         measured_ratio=None if grade == "hand_entered" else ratio,
+                         claimed_ratio_unmeasured=ratio if grade == "hand_entered" else None,
+                         measured_grade=grade, measured_src=m.get("src"),
+                         status=st_q, impact_cycles_per_token=round(impact, 1),
                          impact_tok_s=round(CLK / (S2 + impact) - CLK / S2, 1) if impact else 0.0,
                          owner=OWNERS.get(k, "hgi-1010"), elements=ELEMENTS.get(k, []),
                          variants={v: dict(records=a["varn"][v], price_cycles_per_token=round(c_, 1)) for v, c_ in a["var"].items()}))
@@ -482,6 +541,19 @@ def qwen_budget():
                      "measurements")
 
 
+def _rom_measured(grade):
+    """token-path node grades that ARE RTL measurements at production shape: 'measured*', and 'apportioned' (an op window
+    cut from a measured whole-layer RTL trace, e.g. qwen_plain_ar_stream4 RT_OPTRACE: the window's cycles are measured, only
+    its attribution to an op is by trace position).  'priced' / 'modelled' are not."""
+    return grade.startswith("measured") or grade == "apportioned"
+
+
+# BOUND RULE (main 10-11): an op / class whose price is so small that even a 10x slowdown moves the token rate by < 1 %
+# is QUALIFIED_BY_BOUND (no throughput bench needed); it must still be natively built (the build gate).  HBM ops: S2
+# re-scheduled with the op at 10x its price; ROM classes: 9 x the class's critical cycles / token cycles.
+BOUND_SLOWDOWN, BOUND_RATE = 10.0, 0.01
+
+
 def rom_budget(name):
     d = json.loads((TP / f"{name}.json").read_text())
     tot = d["totals"]["cycles"]
@@ -492,16 +564,18 @@ def rom_budget(name):
         c["grades"][n["src"]["grade"]] += n["cycles"]
         if n.get("critical"):
             c["cycles"] += n["cycles"]
-        if not n["src"]["grade"].startswith("measured") and n["cycles"] > 0:
+        if not _rom_measured(n["src"]["grade"]) and n["cycles"] > 0:
             c["unmeasured"].append(n["id"])
     cls_el = {c["id"]: c["elements"] for c in d["classes"]}
     rows = []
     for k, c in sorted(by.items(), key=lambda kv: -kv[1]["cycles"]):
-        unm = sum(v for g, v in c["grades"].items() if not g.startswith("measured"))
+        unm = sum(v for g, v in c["grades"].items() if not _rom_measured(g))
         allc = sum(c["grades"].values())
         # node prices are measured RTL unit cycles at production shape: a class qualifies when >= 95 % of its cycles
         # are measured; its few modelled nodes are listed as their own unbenched gaps (unmeasured_nodes)
         st = "QUALIFIED" if allc and unm / allc <= 0.05 else "UNQUALIFIED_NO_BENCH"
+        if st != "QUALIFIED" and (BOUND_SLOWDOWN - 1) * c["cycles"] / tot < BOUND_RATE:
+            st = "QUALIFIED_BY_BOUND"
         rows.append(dict(cls=k, critical_cycles_per_token=round(c["cycles"], 1),
                          share=round(c["cycles"] / tot, 4), nodes=c["nodes"],
                          measured_fraction=round(1 - unm / allc, 4) if allc else None,
@@ -542,7 +616,7 @@ def main():
                     impact_tok_s=r["impact_tok_s"], budget_cycles_per_record=r["price_cycles_per_record"],
                     budget_at_target=r["budget_cycles_per_record_at_target"], owner=r["owner"]) for i, r in enumerate(rank)]
     # registry gate: element -> worst status over the ops it serves (DS first, then Qwen, then ROM classes)
-    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "QUALIFIED": 2}
+    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "QUALIFIED_BY_BOUND": 2, "QUALIFIED": 3}
     el = {}
 
     def put(e, target, op, st, ratio, owner, src):
@@ -563,26 +637,18 @@ def main():
             put(e, "Qwen AR 8K (HBM)", r["op"], r["status"], r["measured_ratio"], r["owner"], r["measured_src"])
     cp = next((x for x in dc if x["id"] == "hbm_ds_cp_fetch"), None)
     for e in ELEMENTS["CP.FETCH"]:
-        put(e, "DS AR 1M (HBM)", "CP.FETCH", "UNQUALIFIED" if cp and (cp["ratio"] or 0) > QUAL else "UNQUALIFIED_NO_BENCH",
-            cp["ratio"] if cp else None, OWNERS["CP.FETCH"], "budget_audit hbm_ds_cp_fetch (0.867 B/cyc needed, 0.308 designed)")
-    # VM.PORTS (hgi-1010/vm): the DS token's VM traffic replayed on the production client ports
-    # (tools/hgi_vm_ports_trace.py + tb_hgi_vm_ports_tput); ratio = served / priced record time over VM-touching records
-    vmp = ROOT / U / "vm_ports/report.json"
-    vr = json.loads(vmp.read_text()) if vmp.exists() else None
+        put(e, "DS AR 1M (HBM)", "CP.FETCH", "UNQUALIFIED_NO_BENCH", None, OWNERS["CP.FETCH"],
+            "HAND-ENTERED (unmeasured): budget_audit hbm_ds_cp_fetch claims 0.867 B/cyc needed vs 0.308 designed (2.8x); no committed CP-fetch bench record")
     for e in ELEMENTS["VM.PORTS"]:
-        if vr:
-            put(e, "DS AR 1M (HBM)", "VM.PORTS", status_of(vr["ratio"], "unit_bench"), vr["ratio"], "hgi-1010/vm",
-                U + "vm_ports/report.json (IDX.INDEX on its packet client 1.76x: q reads at OUT 4)")
-        else:
-            put(e, "DS AR 1M (HBM)", "VM.PORTS", "UNQUALIFIED_NO_BENCH", None, "hgi-1010/vm",
-                "no production-shape VM lane-group bench against the client budget yet")
+        put(e, "DS AR 1M (HBM)", "VM.PORTS", "UNQUALIFIED_NO_BENCH", None, "hgi-1010/b (wide VM lanes)",
+            "no production-shape VM lane-group bench against the client budget yet")
     for e in ELEMENTS["MTP.VERIFY"]:
         put(e, "DS MTP (HBM)", "MTP.VERIFY", "UNQUALIFIED_NO_BENCH", None, "hgi-1010/h + bf-mtp-1010",
             "hgi-1010.log 20:22 h: L0 verify 5 cols ~145k RTL vs 63.8k sim (interim); no native DS verify program")
     ws = next((x for x in dc if x["id"] == "hbm_qwen_weight_stream"), None)
     for e in ELEMENTS["SVC.STREAM"]:
-        put(e, "Qwen AR 8K (HBM)", "SVC.STREAM", "QUALIFIED" if ws else "UNQUALIFIED_NO_BENCH",
-            round(1 / ws["margin"], 3) if ws else None, "hbm-phys-1010", "budget_audit hbm_qwen_weight_stream (0.775 needed vs 0.862 bench)")
+        put(e, "Qwen AR 8K (HBM)", "SVC.STREAM", "UNQUALIFIED_NO_BENCH", None, "hbm-phys-1010",
+            "HAND-ENTERED (unmeasured): budget_audit hbm_qwen_weight_stream claims 0.775 needed vs 0.862 bench proxy; no committed svc stream bench record cited")
     for name, rb in rom.items():
         for c in rb["classes"]:
             for e in c["elements"]:
@@ -629,6 +695,40 @@ def main():
         else:
             put(e, "rom", "unmapped", "UNQUALIFIED_NO_BENCH", None, "-", "no token-path class and no name rule")
             rom_cov[e] = None
+    # ---- provenance (main 10-10): every ratio must come from a committed bench record (path + commit)
+    hand = []
+    for model, part, table in (("DS", ds, MEASURED), ("Qwen", qw, MEASURED_QWEN)):
+        for r in part["ops"]:
+            m = table.get(r["op"], {})
+            if r.get("measured_ratio") is None and not r.get("claimed_ratio_unmeasured"):
+                continue
+            path = (m.get("src") or "").split(" ")[0]
+            c = prov(path)
+            r["measured_record"] = dict(path=path, commit=c)
+            if m.get("grade") == "hand_entered" or c is None:
+                hand.append(dict(model=model, op=r["op"], claimed_ratio=r.get("measured_ratio") or r.get("claimed_ratio_unmeasured"),
+                                 src=m.get("src"), owner=r.get("owner"), why="not a committed bench record of this op at this shape"))
+    for e, v in el.items():
+        for o in v["ops"]:
+            if "HAND-ENTERED" in str(o.get("src")):
+                hand.append(dict(model=o["model"], op=o["op"], element=e, claimed_ratio=None, src=o["src"], owner=o["owner"],
+                                 why="audit-derived claim"))
+    hand.append(dict(model="qwen_rom", op="KV die (name rule)", claimed_ratio=1.124, src="removed hand rule (superseded audit model)",
+                     owner="qwen-1010/b", why="replaced by the measured KV-die record (pending)"))
+    # ---- bench II (automated): the cycles / items line of every element's passing exact bench (closure-loop job state)
+    bii = bench_ii()
+    for e, b in bii.items():
+        cur = el.get(e)
+        if b["ii"] is not None and b["ii"] <= QUAL and not b["stalled"] and (cur is None or cur["status"] == "UNQUALIFIED_NO_BENCH"):
+            el.pop(e, None)
+            put(e, b["target"] or "rom", "bench II (" + b["item"] + ")", "QUALIFIED", round(b["ii"], 3), b["owner"],
+                f"closure job {b['job']} @ {b['commit']}: {b['line'][:140]} (fixed-pipeline full-rate rule: <= 1.10 cycles an item)")
+        elif cur is not None:
+            cur["bench_ii"] = b
+        else:
+            put(e, b["target"] or "rom", "bench II (" + (b["item"] or "no items") + ")", "UNQUALIFIED_NO_BENCH", None, b["owner"],
+                f"closure job {b['job']}: {b['line'][:140]} (II {b['ii']} > 1.10 or stalled stimulus: budget not mapped)")
+            el[e]["bench_ii"] = b
     # ---- build gate: priced ops (per variant) with their native-RTL evidence
     RATES = {"DS": ["DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
                     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
@@ -651,6 +751,9 @@ def main():
                                  rate_if_op_free_tok_s=round(CLK / (S2_ - w), 1) if w else None,
                                  inflates=RATES[model] if st != "BUILT" else []))
     rec = dict(schema="opentallas.throughput_budget.v1",
+               bound_rule=dict(slowdown=BOUND_SLOWDOWN, max_rate_change=BOUND_RATE,
+                               rule="QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % "
+                                    "(HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"),
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                rule="AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when "
                     "bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
@@ -667,6 +770,7 @@ def main():
                build_gate=dict(rule="every op the simulator prices needs a committed bench that executes it natively in RTL "
                                     "(no stub, no behavioural model, no unsupported status); else PRICED-NOT-BUILT",
                                rows=gate, priced_not_built=[g for g in gate if g["status"] != "BUILT"]),
+               hand_entered=hand, bench_ii=bii,
                bf_hier=BF_HIER, rom_block_rules=rom_rules, rom_block_coverage=rom_cov,
                hbm_datactl_rows=dc, svc_endpoint_budget_ds=svc, qwen_hbm=qw, rom=rom, rom_audit_rows=rom_audit,
                elements=dict(sorted(el.items())))

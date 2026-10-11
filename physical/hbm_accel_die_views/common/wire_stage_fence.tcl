@@ -350,10 +350,8 @@ if {[info exists ::env(OT_WS_PINREG)] && $::env(OT_WS_PINREG) eq "1"} {
     if {![info exists ws_pin($bn)]} continue
     lassign $ws_pin($bn) px py
     set w [[$i getMaster] getWidth]; set wr [expr {$w + 3*$sitew}]
-    # svc-fix 2026-10-10 (routed SW_s3 / SW_s2 psfcpr GRT-0116: every overflow gcell in the 10-um strip beside the
-    # E face, where ~1,900 pin registers sat at ~100% local density with their pin and Q nets all turning inward):
-    # OT_WS_PINREG_DENSITY gives a pin register the stage blocks' slot pitch (cell width / density, snapped to sites)
-    # so the anchoring strip keeps room for routing and the resizer, as the stage blocks do (OT_WS_DENSITY).
+    # svc-fix 2026-10-10 (claude/hbmphys-svcfix-20261010, same text): OT_WS_PINREG_DENSITY gives a pin register the
+    # stage blocks' slot pitch (cell width / density, snapped to sites) so the anchoring strip keeps routing room
     if {[info exists ::env(OT_WS_PINREG_DENSITY)] && $::env(OT_WS_PINREG_DENSITY) > 0} {
       set wr [expr {max($wr, int(ceil(double($w)/$::env(OT_WS_PINREG_DENSITY)/$sitew))*$sitew)}]
     }

@@ -23,6 +23,7 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
                       parameter integer VWA = 15, parameter bit VM_LINK = 0,
                       parameter integer WOUTW = 5, parameter integer VMRQ = 16,
                       parameter integer POSTED = 0, parameter integer RD2 = 0,
+                      parameter bit HEP = 0,
                       parameter bit TOKIN = 0) (   // 1: link-in from the collective MTP lane token return (f_mrt / t_mrg)
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [0:0] f_liv, input  wire [FLIT:0] f_lid, output wire [0:0] t_lir,
@@ -31,6 +32,7 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
     output wire [0:0] t_srv, output wire [(RD2 ? 2*VWA+1 : VWA)-1:0] t_srd, input wire [0:0] f_srr,
     input wire [(RD2 ? 2*FLIT+2 : FLIT+1)-1:0] f_srq,
     output wire [USER_W+2*NW:0] t_ks, input wire [NW+32:0] f_kd,
+    output wire [USER_W+NW+4:0] t_hep,                       // HEP: {v, user, pos, issue epoch} per stage start (0 if HEP 0)
     input  wire [2+USER_W+2*NW:0] f_c,
     input  wire [FLIT:0] f_mrt, output wire [0:0] t_mrg,      // TOKIN: {data, valid} from dsfd_sp_collective t_mrt
     output wire [USER_W+2*NW:0] t_tok,
@@ -100,12 +102,18 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
         ft_q <= {proto_fault, lnk_ft, tok_ft, vmx_ft};
     end
     assign t_tok = tok_q; assign t_ft = ft_q; assign t_cfg = {cfg_users, cfg_plen, cfg_glen};
+    generate if (HEP) begin : g_hep
+        dsfd_wfc_hep #(.NW(NW), .USER_W(USER_W)) u_hep (.clk(ckv[0]), .rst_n(rsv[0]), .ks(t_ks), .hep(t_hep));
+    end else begin : g_nohep
+        assign t_hep = '0;
+    end endgenerate
 endmodule
 
 module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
                       parameter integer VWA = 15, parameter integer LAG = 0, parameter bit VM_LINK = 0,
                       parameter integer WOUTW = 5, parameter integer VMRQ = 16,
-                      parameter integer POSTED = 0, parameter integer RD2 = 0) (
+                      parameter integer POSTED = 0, parameter integer RD2 = 0,
+                      parameter bit HEP = 0) (
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [0:0] f_liv, input  wire [FLIT:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [FLIT:0] t_lod, input  wire [0:0] f_lor,
@@ -113,6 +121,7 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
     output wire [0:0] t_srv, output wire [(RD2 ? 2*VWA+1 : VWA)-1:0] t_srd, input wire [0:0] f_srr,
     input wire [(RD2 ? 2*FLIT+2 : FLIT+1)-1:0] f_srq,
     output wire [USER_W+2*NW:0] t_ks, input wire [NW+32:0] f_kd,
+    output wire [USER_W+NW+4:0] t_hep,                       // HEP: {v, user, pos, issue epoch} per stage start (0 if HEP 0)
     output wire [3:0] t_ft
 );
     wire clk = ck[0];
@@ -166,4 +175,37 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
     end endgenerate
     reg [3:0] ft_q; always @(posedge clk) ft_q <= {proto_fault, lnk_ft, 1'b0, vmx_ft};
     assign t_ft = ft_q;
+    generate if (HEP) begin : g_hep
+        dsfd_wfc_hep #(.NW(NW), .USER_W(USER_W)) u_hep (.clk(ckv[0]), .rst_n(rsv[0]), .ks(t_ks), .hep(t_hep));
+    end else begin : g_nohep
+        assign t_hep = '0;
+    end endgenerate
+endmodule
+
+// dsfd_wfc_hep (mtp-wfc 2026-10-11; DSpark hrow 624e71528): the ISSUE EPOCH of every stage start, for the hidden-row
+// senders ot_dsrom_mtp_hrow_tx on the layer 37 / 38 / 39 stage dies (rows versioned {user, pos, issue epoch}).
+// Definition (= ot_dsrom_mtp_seq's epoch: +1 on every rejection): every stage sees one user's positions in issue order;
+// a rejection squashes and re-issues from b + a + 1 <= the last issued position, so a start whose position is <= the
+// user's last started position opens the user's next epoch.  Output {v, user, pos, epoch} from a flop, one per start.
+module dsfd_wfc_hep #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
+    input  wire clk, rst_n,
+    input  wire [USER_W+2*NW:0] ks,          // the kit's stage start {start, user, token, pos}
+    output reg  [USER_W+NW+EW:0] hep         // {v, user, pos, epoch}
+);
+    localparam integer NU = 1 << USER_W;
+    reg [NW-1:0] last [0:NU-1]; reg [EW-1:0] ep [0:NU-1]; reg [NU-1:0] seen;
+    wire st = ks[USER_W+2*NW]; wire [USER_W-1:0] u = ks[2*NW +: USER_W]; wire [NW-1:0] p = ks[NW-1:0];
+`ifdef OT_WFCHEP_MUT_STALE
+    wire rew = 1'b0;                                       // MUTANT: the epoch never advances (stale rows served)
+`else
+    wire rew = seen[u] && p <= last[u];
+`endif
+    wire [EW-1:0] e_n = rew ? ep[u] + 1'b1 : ep[u];
+    always @(posedge clk) begin
+        if (!rst_n) begin seen <= '0; hep <= '0; end
+        else begin
+            hep <= st ? {1'b1, u, p, e_n} : '0;
+            if (st) begin last[u] <= p; ep[u] <= seen[u] ? e_n : '0; seen[u] <= 1'b1; end
+        end
+    end
 endmodule

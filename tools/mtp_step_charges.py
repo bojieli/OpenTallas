@@ -43,6 +43,7 @@ BINDING_DIES = "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json"
 ROWPACK = "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz"
 P2_MICRO = "results/uarch/dsrom_mtp_p2_20261009/microbench.json"
 SEEDL_GATE = "results/rtl/mtp_seed_launch_20261010/gate.json"
+HROW_GATE = "results/rtl/mtp_hrow_20261010/gate.json"
 
 
 def J(p):
@@ -104,7 +105,9 @@ def ds_rom():
     vst_p = ROOT / "results/rtl/dsrom_wfc_integration_20261010/vm_station.json"
     vst = json.loads(vst_p.read_text()) if vst_p.exists() else None
     vst_d = vst["delta_per_hop_fast_cycles"] if vst else 0.0
-    vmx += vst_d
+    # main decision A (2026-10-11): the stage start / done passes the stage-program sequencer dsfd_stage_seq (measured)
+    vst_s = vst.get("stage_seq_delta_per_hop_fast_cycles", 0.0) if vst else 0.0
+    vmx += vst_d + vst_s
     per_hop = wfc["hop_delta_cycles"] + lnk + vmx
     busy_cyc = hv["worst_stage"]["busy_us"] * CLK / 1e6
     handoff = busy_cyc * (wfc["measured_interval_overhead"] - 46 / 11271)
@@ -114,7 +117,7 @@ def ds_rom():
         hops * per_hop, anchor="wave.last", phase="verify",
         formula=f"{hops} stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x {per_hop:g} "
                 f"(WFC done->out + entry delta {wfc['hop_delta_cycles']} + lnk {lnk} + vmx start {stg['start_mean']:g} + "
-                f"vmx done/prefetch {stg['done_mean']:g} + VM hub-station delta {vst_d:g})",
+                f"vmx done/prefetch {stg['done_mean']:g} + VM hub-station delta {vst_d:g} + stage sequencer {vst_s:g})",
         source=[WFC_CLOSURE + " charge.hop_delta_cycles", MTP_ROM_BENCH + " stg_vmnat MTP_STG_CYC",
                 "~/claude-takeover-20261007/mtp-rom.log (lnk +3/+3 a hop)"],
         note="the composition charges the reference ot_rom_pkg_ctrl_wf (46/11,271 handoff, no shims) whose route was rejected; "
@@ -289,6 +292,19 @@ def ds_rom():
             source=[SEEDL_GATE + " cycles (pos_basic)"],
             note="bench stations: descriptor 9/9, VM 6/6 + 12-cycle VM latency, x / join 4/4; the 240 beats and seed_ctl "
                  "itself are the composition's seed term"))
+    # ---- main-hidden rows to the primary die (dsfd_mtp_hrow + ot_dsrom_mtp_hrow_tx, mtp-dsbind 2026-10-10)
+    if (ROOT / HROW_GATE).exists():
+        hg = J(HROW_GATE)
+        assert hg["verdict"]["positives_and_rejections"] and hg["verdict"]["mutants_fail"], "hrow gate not PASS"
+        ch.append(charge(
+            "hrow.transport", "main-hidden row parts (L37/38/39 stage dies -> primary row store, one dedicated MTP lane a part)",
+            1 + 160 + 4, critical=False, anchor="accept.commit", phase="draft", grade="measured",
+            formula="per committed row and part: 1 header + 160 data flits on its own lane + 4 store cycles (write, complete)",
+            source=[HROW_GATE + " pos_steady / pos_late"],
+            proof="a position's three parts leave the layer-37/38/39 stage dies when that position passes them in verify; "
+                  "they reach the primary after ONE board hop + 161 flits, while the same position's result still crosses "
+                  "every later stage to the head and the head -> primary seed lane before the seed descriptor can read the "
+                  "row; a late row only delays the read (pos_late), never changes the value"))
     # ---- sensitivity: the RTL-sequenced step (draft from the closing result), NOT credited
     old = J(OLD_STEP)["step_model"]["blend_harmonic"]
     sens = dict(rtl_sequenced_over_model=old["rtl_over_model"], source=OLD_STEP + " step_model.blend_harmonic",

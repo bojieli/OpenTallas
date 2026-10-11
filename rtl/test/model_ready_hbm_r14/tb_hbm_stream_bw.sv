@@ -73,6 +73,9 @@ module tb_hbm_stream_bw;
   function automatic longint p_due(input int p);   // REFpb slots due by now (one every REFI / 32 from the PC's first due)
     p_due = (now < p_t0[p]) ? 0 : (now - p_t0[p]) / (REFI / 32) + 1;
   endfunction
+  function automatic longint p_due_rtl(input int p);   // slots of the RTL's own (faster) period: 118 cycles = 120.8 ns
+    p_due_rtl = (now < p_t0[p]) ? 0 : (now - p_t0[p] + REFI / 32 - 118 * CYC) / (118 * CYC) + 1;
+  endfunction
   longint viol = 0, n_act = 0, n_pre = 0, n_rd = 0, n_ref = 0, n_preall = 0, max_ref_gap = 0;
   task automatic v(input string what, input integer pc, input integer bk);
     if (viol < 20) $display("VIOLATION t=%0d ps pc=%0d bank=%0d %s", now, pc, bk, what);
@@ -161,7 +164,7 @@ module tb_hbm_stream_bw;
             if (PULLIN == 0 && now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 2000 : 0)) v("REFpb late", p, bk);
             if (now - p_last_ref[p] > max_ref_gap) max_ref_gap = now - p_last_ref[p];
             p_last_ref[p] = now; p_last_refpb_any[p] = now; p_nref[p]++;
-            if (PULLIN != 0 && p_nref[p] > p_due(p) + 8) v("REFpb pulled in more than 8 ahead", p, bk);
+            if (PULLIN != 0 && p_nref[p] > p_due_rtl(p) + 8) v("REFpb pulled in more than 8 ahead", p, bk);
             b_ref_end[p][bk] = now + RFCPB;
           end
           default: v("unknown row op", p, bk);

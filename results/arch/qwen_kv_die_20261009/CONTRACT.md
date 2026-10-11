@@ -79,7 +79,7 @@ Idle flits carry credits only.
 No timing assumption remains: a KVN credit stall of any length is a stall, not a fault (bench `mut8`: rows held 400 cycles, still exact; `mut7`: fence off, caught). Measured cost: +8 cycles a layer (run7 against run5, ctx 8192). RTL `rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv`.
 
 **KV write path (review-1149 KV14).** Each landing writes the posted rows to its stack's HBM through `ot_qkvd_kv_wq`:
-- layout: a row (HD x FP8 = 1,024 b) is 4 sectors of 256 b; sector q of row (layer, g, v, t) goes to PC {q, t[2:0]} of stack t[8:7] at sector {layer, g, v, t[13:9], t[6:3]}; the landing read crossbar uses the same map;
+- layout: a row (HD x FP8 = 1,024 b) is 4 sectors of 256 b; sector q of row (layer, g, v, t) goes to PC {q, t[2:0]} of stack t[8:7] at sector {layer, v, g, t[6], t[13:9], t[5:3]} (map v2, qwen-1010/b 2026-10-10: the per-PC stream order is the row engines' consumption order -- both heads' K rows (the K / max pass consumed in stream order, order-free), then V by gam half -- so the KV-die stream controller (WSETP 0) holds 0.966 TB/s worst over 8 refresh phases); the landing read crossbar uses the same map;
 - the queue holds 4 rows (credits to the sequencer), pushes a row's 4 sectors in parallel into the per-PC STREAM4 CDC write side (`w_room` credits), tags each with {slot, q}, and retires the row (`rw_v`) when its 4 write-done tags return;
 - on the HBM side the per-PC port runs KVW = 2 (`ot_qfd_emb_pcport`: SECDED encode of the CDC's write data, PHY data two edges after the WR column).
 Bench `kv_write_bench.json`: base and a 144-row run (36 layers x 4) exact, 4 mutants fail. Posted: 67 cycles a row, off the token path.

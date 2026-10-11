@@ -257,7 +257,39 @@
   wire [1:0] kcf [0:7];
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkcf assign kcf[gq] = {fck, kcr[gq][0]}; end endgenerate
   wire [1:0] kqf [0:7];
+`ifdef PS_ENTRY_CREDIT
+  // hgi-1010/g2 (audit N9): the consumer is the attention entry's REAL credit RTL (ot_attn_ks_credit, the unit inside
+  // hfd_attn_half_lo): one credit per row landed, every stream credited (KV too)
+  generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf
+    ot_attn_ks_credit u_ent (.clk(ck), .rst_n(rst), .ks_v(ks[gq][0]), .kq(kqf[gq]));
+  end endgenerate
+  // credit accounting at the producer side of the line: the credits the entry returns on a port can never exceed the
+  // rows that landed on it (a surplus credit lets the svc group overrun the entry) and must equal them at the end
+  integer ec_rows [0:7], ec_cr [0:7];
+  initial for (pq = 0; pq < 8; pq = pq + 1) begin ec_rows[pq] = 0; ec_cr[pq] = 0; end
+  integer ke;
+  always @(posedge ck) if (rst) for (ke = 0; ke < 8; ke = ke + 1) begin
+    if (ks[ke][0]) ec_rows[ke] = ec_rows[ke] + 1;
+    if (kqf[ke][0] === 1'b1) begin ec_cr[ke] = ec_cr[ke] + 1;
+      if (ec_cr[ke] > ec_rows[ke]) begin err = err + 1; $display("ERR entry credit surplus port %0d credits %0d rows %0d", ke, ec_cr[ke], ec_rows[ke]); end
+    end
+  end
+  // hgi-1010/g3: credit-deadlock watchdog.  A current stream with rows still owed that lands no row on any port for
+  // 8,192 cycles is stalled on credits (a lost credit never comes back); the 1.2 M-cycle completion timeout below would
+  // take ~2 days of iverilog, so OT_ATTN_MUT_KQ_DROP must fail here.
+  integer ps_stall = 0, kw;
+  always @(posedge ck) if (rst) begin : wdog
+    reg any; any = 1'b0;
+    for (kw = 0; kw < 8; kw = kw + 1) any = any | ks[kw][0];
+    if (ps_busy && ps_rows < ps_want && !any) ps_stall = ps_stall + 1; else ps_stall = 0;
+    if (ps_stall == 8192) begin err = err + 1;
+      $display("ERR PS credit stall: no row for 8192 cycles, rows %0d/%0d streams %0d", ps_rows, ps_want, ps_n);
+      $display("SVC_BENCH lines=%0d errors=%0d", done_lines, err);
+      $fatal(1, "SVC_BENCH FAIL"); end
+  end
+`else
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf assign kqf[gq] = {fck, kq[gq][0]}; end endgenerate
+`endif
   // ---------------------------------------------------------------- stimulus
   localparam integer NREQ = 24;        // per SM
   reg [9:0] ntag [0:7];
@@ -312,6 +344,9 @@
       // [svc-ep] N9: consumers return one credit per consumed row (attention entry hfd_attn_half_lo d590eb8b0 on kq, the
       // index score grid on kc), so KV streams are CREDITED by default; stream 1 stays the one explicit no-credit case
       if (!idx_) nocr_ = (ps_n == 1);
+`endif
+`ifdef PS_ENTRY_CREDIT
+      nocr_ = 1'b0;
 `endif
       nsec_ = idx_ ? 0 : 1 + ($urandom % ((ps_n % 4 == 0) ? 1100 : 70));
       m = (ps_n % 2) ? {$urandom} : 32'hFFFF_FFFF;
@@ -409,6 +444,10 @@
 `endif
     $display("SVC_BENCH lines=%0d kv=%0d ik=%0d e=%0d ps_streams=%0d ps_rows=%0d ps_kd=%0d errors=%0d", done_lines, kv_got,
              ik_got, ne, ps_n, ps_rows, ps_kd, err);
+`ifdef PS_ENTRY_CREDIT
+    for (k = 0; k < 8; k = k + 1) if (ec_cr[k] != ec_rows[k]) begin err = err + 1;
+      $display("ERR entry credits port %0d: %0d credits for %0d rows", k, ec_cr[k], ec_rows[k]); end
+`endif
     if (err != 0 || done_lines == 0) $fatal(1, "SVC_BENCH FAIL");
     $display("SVC_BENCH PASS");
     $finish;

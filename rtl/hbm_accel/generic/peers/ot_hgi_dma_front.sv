@@ -40,6 +40,7 @@
 // MUT (bench): 1 BF16 halves mirrored within the sector: must FAIL; 2 a tag freed 8 beats early: must FAIL;
 //   3 the id's high partial product dropped (ids >= 2^16 alias): must FAIL; 4 the destination row pointer advances on
 //   every second row only: must FAIL; 5 the rebase (id_0 x dyn_mul) not removed: must FAIL.
+//   AP (hgi-1010 b): 6 the VM's per-bank stop ignored, 7 the ap bit never set (the slot load lands in VM): must FAIL.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_front #(
     parameter integer NS = 4,
@@ -50,6 +51,10 @@ module ot_hgi_dma_front #(
     parameter integer LD = 16,            // lane buffer depth = the svc's initial credit a lane (power of 2); must cover the
                                           // credit round trip (svc lane reg -> die hops -> pin flop -> land -> pop -> credit
                                           // reg -> die hops -> svc pin flop): 4 + 2 x hops + svc cycles; 4 caps a lane at 4 / RTT
+    parameter integer AP = 0,             // hgi-1010 b: 1 = the HC weight APERTURE (VM words >= 2^18): the VM lane grows an ap
+                                          //   bit {v, ap, sector 15, data, mask} (ap = the 18-bit VM sector >= 32,768; sector =
+                                          //   that minus 32,768); a sector past the two slots (>= 40,960) faults; bank b picks
+                                          //   only while wl_rdy[b] (the VM unit's aperture queue stop, pin-flopped here)
     parameter integer MUT = 0
 ) (
     input  wire                  clk,
@@ -73,9 +78,12 @@ module ot_hgi_dma_front #(
     input  wire [NS*NL*270-1:0]  dd,
     output wire [NS*NL-1:0]      dd_cr,
     // VM wide write port, NB lanes {v, sector 15, wdata 256, word mask 8}
-    output wire [NB*280-1:0]     wl,
-    input  wire [NB-1:0]         wl_done
+    output wire [NB*(280+AP)-1:0] wl,
+    input  wire [NB-1:0]         wl_done,
+    input  wire [NB-1:0]         wl_rdy
 );
+    reg [NB-1:0] wl_rdy_q; reg ap_rng;
+    always @(posedge clk or negedge rst_n) if (!rst_n) wl_rdy_q <= '1; else wl_rdy_q <= wl_rdy;
     localparam integer NIN = NS * NL;
     localparam integer LW = $clog2(LD);
     localparam integer BW = $clog2(NB);
@@ -161,7 +169,7 @@ module ot_hgi_dma_front #(
     wire [NIN*4-1:0]   ov_w;                                // active buffer: slots still to go
     wire [NIN*18-1:0]  ob_w;                                // active buffer: VM sector of slot 0
     wire [NIN*274-1:0] ls_w;                                // the buffer active last cycle {sector 18, source 256}
-    reg [NB-1:0] wl_v; reg [278:0] wl_d [0:NB-1];
+    reg [NB-1:0] wl_v; reg [278+AP:0] wl_d [0:NB-1]; reg [NB-1:0] ap_bad;
     function automatic [255:0] conv(input [255:0] s, input [2:0] f, input [1:0] j);
         reg [255:0] o; integer w; reg [7:0] b; reg [15:0] h;
         begin
@@ -189,7 +197,7 @@ module ot_hgi_dma_front #(
             for (integer i = 0; i < NIN; i = i + 1) begin
                 reg [BW-1:0] d; reg [3:0] v; d = BW'(b) - ob_w[i*18 +: BW]; v = ov_w[i*4 +: 4];
                 rslot[b][i] = d[1:0];
-                req[b][i] = d < BW'(4) && v[d[1:0]];
+                req[b][i] = d < BW'(4) && v[d[1:0]] && (AP == 0 || MUT == 6 || wl_rdy_q[b]);
             end
             hi = req[b] & ~((NIN'(1) << rr) - NIN'(1));
             pk = (hi != '0) ? hi : req[b];
@@ -253,14 +261,17 @@ module ot_hgi_dma_front #(
     // ---------------------------------------------------------------- X2
     genvar xb;
     generate for (xb = 0; xb < NB; xb = xb + 1) begin : xg
-        assign wl[xb*280 +: 280] = {wl_v[xb], wl_d[xb]};
+        assign wl[xb*(280+AP) +: 280+AP] = {wl_v[xb], wl_d[xb]};
         always @(posedge clk) begin : x2
-            reg [273:0] sv; reg [BW-1:0] d;
+            reg [273:0] sv; reg [BW-1:0] d; reg [17:0] s18;
             x_oh[xb] <= oh[xb];
             sv = 274'd0;
             for (integer i = 0; i < NIN; i = i + 1) if (x_oh[xb][i]) sv = sv | ls_w[i*274 +: 274];
             d = BW'(xb) - sv[256 +: BW];
-            wl_d[xb] <= {15'(sv[273:256] + {16'd0, d[1:0]}), conv(sv[255:0], sf, d[1:0]), 8'hFF};
+            s18 = sv[273:256] + {16'd0, d[1:0]};
+            if (AP != 0) wl_d[xb] <= (279+AP)'({s18[17:15] == 3'd1 && MUT != 7, s18[14:0], conv(sv[255:0], sf, d[1:0]), 8'hFF});
+            else         wl_d[xb] <= (279+AP)'({s18[14:0], conv(sv[255:0], sf, d[1:0]), 8'hFF});
+            ap_bad[xb] <= (AP != 0) && x_v[xb] && (s18 >= 18'd40960);       // past the aperture's two slots
         end
     end endgenerate
     // the indexed request of this cycle (head row of the queue, its next run of <= 256 sectors)
@@ -396,7 +407,7 @@ module ot_hgi_dma_front #(
                 rq_n <= rq_n + {2'd0, psh} - {2'd0, pp};
             end
             // ---- lanes: a beat that is a fault or finds its lane FIFO full
-            if (lflt_w != '0) mv_fault <= 1'b1;
+            if (lflt_w != '0 || ap_bad != '0) mv_fault <= 1'b1;
             // ---- tags: free once every beat landed
             for (t = 0; t < 16; t = t + 1) begin : tg
                 integer k; k = 0;
