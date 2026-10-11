@@ -32,7 +32,6 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
     output wire [513:0]   od, output wire [0:0] of,
     output wire [513:0]   xd, output wire [0:0] xf,
     output wire [1025:0]  ad, output wire [0:0] af,
-    output wire [0:0]     fault,
     // HBM controller (ctrl_<st>) per-PC faces
     output wire [32*341-1:0] rq,
     input  wire [31:0]    rk, wd, rv,
@@ -54,7 +53,7 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
 
     wire [514:0] qg; wire [2059:0] q_q;
     wire [3:0] od_v, od_r, a0_v, a0_r; wire [2047:0] od_d, a0_d; wire a1_v, a1_r, x_v, x_r; wire [511:0] a1_d, x_d;
-    wire [1:0] jd_i; wire live_p; wire [3:0] q_live;
+    wire [1:0] jd_i; wire live_p; wire [3:0] q_live; wire [0:0] fault;   // IO hub fault: internal, folded into jd[1]
     dsfd_svcio_job #(.MUT(MUT)) u_job (.ck(ck), .rst(rst), .j(j), .jd(jd_i), .q(q), .q_o(qg),
         .t_a0({ad[492:481], ad[508:496], ad[0]}), .t_a1({ad[1005:994], ad[1021:1009], ad[513]}),
         .t_x({xd[493:482], xd[509:497], xd[1]}), .t_od({od[493:482], od[509:497], od[1]}));

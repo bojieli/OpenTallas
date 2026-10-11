@@ -88,10 +88,10 @@ module tb_dsfd_svc_c (input wire clk);
     // fold checks (+foldchk=1: controller fault on hs[1]; 2: the q pin's fault bit = a slab fault): jd[1] must rise
     reg hs_f = 0, qf_bit = 0; integer foldchk = 0, fold_cyc = -1;
     initial if ($value$plusargs("foldchk=%d", foldchk)) ;
-    wire [513:0] od, xd; wire [1025:0] ad; wire of, xf, af, hub_fault;
+    wire [513:0] od, xd; wire [1025:0] ad; wire of, xf, af; wire hub_fault = dut.fault[0];
     dsfd_svc_c #(.DIE_ID(DIE), .ST(ST)) dut (
         .ck(clk), .rst(rst_n), .j(jcmd), .jd(jd), .q({qf_bit, 1'b1, q_d, q_v}),
-        .od(od), .of(of), .xd(xd), .xf(xf), .ad(ad), .af(af), .fault(hub_fault),
+        .od(od), .of(of), .xd(xd), .xf(xf), .ad(ad), .af(af),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hw(hw), .hc(hc), .hs({hs_f, 1'b1}));
     // ---------------- host writes (dsfd_host_sd hw / hc contract: 8 credits, cr per word, ack per completed sector) ----
     // NHW sector writes (KV class, then RoPE class) to a region no job touches, one KV marker (no write, no ack),
