@@ -265,7 +265,7 @@ class Machine:
         ni = n if ni is None else ni
         es = ESIZE[d.fmt]
         rows = []
-        code = base >> 37                       # spec 3.6: HBM row-stripe code (DMA.LOAD A only); 0 = linear
+        code = base >> 37                       # spec 6.4: HBM row-stripe code (DMA.LOAD A only); 0 = linear
         if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "LOAD"))):
             raise Fault(3, f"HBM stripe code {code} not allowed here")
         if code == 1 and (base % 32 or st % 32 or ist != 1):
@@ -299,13 +299,24 @@ class Machine:
         base, n, m, st, ist = self.eff(d, die, L)
         es = ESIZE[d.fmt]
         v = np.asarray(vals, dtype=F).reshape(m, n)
+        code = base >> 37                       # spec 6.4: HBM row-stripe code (DMA.STORE O only); 0 = linear
+        if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "STORE"))):
+            raise Fault(3, f"HBM stripe code {code} not allowed here")
+        if self.cur is not None and (self.cur.unit, self.cur.op) == ("DMA", "STORE") and (base % 32 or st % 32 or ist != 1 or (n * es) % 32):
+            raise Fault(3, "DMA.STORE: HBM rows must be whole 32-byte sectors (aligned start, stride, length; istride 1)")
         for o in range(m):
             raw = encode_fmt(v[o], d.fmt)
+            ra = base + o * st
+            if code == 1:                       # STRIPE4: row o on stack (base[36:35] + o) mod 4, stack-local address
+                s0, loc = (base >> 35) & 3, (base & ((1 << 35) - 1)) + o * st
+                if loc >> 35:
+                    raise Fault(3, "STRIPE4: row beyond the stack-local space")
+                ra = (((s0 + o) & 3) << 35) | loc
             if ist == 1:
-                die.hbm.view(base + o * st, n * es)[:] = raw
+                die.hbm.view(ra, n * es)[:] = raw
             else:
                 for i in range(n):
-                    die.hbm.view(base + o * st + i * ist * es, es)[:] = raw[i * es:(i + 1) * es]
+                    die.hbm.view(ra + i * ist * es, es)[:] = raw[i * es:(i + 1) * es]
             die.hbm.writes += n * es
 
     def read(self, d, die, L, no=None, ni=None):

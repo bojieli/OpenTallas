@@ -8,13 +8,13 @@
 //
 //   lq_<st> = {native_len 4, outer_write_pending, native_rsp_rdy, native_tag 16, native_addr 30, native_pc 5, native_v,
 //              wq_d 292 = {wr_packet 291, wr_v}}                                      (350 b, loader -> svc)
-//   lr_<st> = {wq_source_fault, ack_gray 8 (wq_source_g[31:24], source 2), native_fault,
+//   lr_<st> = {wq_source_fault, WR_G 8 (writes popped into their PC queue, Gray), native_fault,
 //              native_rsp_data 256, native_rsp_beat 4, native_rsp_tag 16, native_rsp_pc 5, native_rsp_v, native_rdy}
 //                                                                                      (293 b, svc -> loader)
 // Lane protocol: req_v / req_rdy (acceptance), req_len = 1..8 consecutive sectors for a read (0 = 1; writes are one
 // sector); a read of length L answers with L responses (one sector each, address order, rsp_tag = the request's tag,
 // rsp_last on the L-th).  A lane may hold up to NO reads outstanding, all on ONE stack (a request for another stack
-// waits until the lane drained), answered in request order; a write is alone on its lane and on its stack.
+// waits until the lane drained), answered in request order; writes: see WRITES below.
 // Per stack: READS -- a request FIFO (4) -> splitter at the 4-sector row boundaries (a row is one PC,
 // ot_hbm_loader_kport_address) -> native transactions <= 4 sectors (bursts, ot_hbm_loader_service_boundary).  The lq / lr
 // chains are forwarded multi-cycle wires, so the native channel is CREDITED (ot_hbm_svc_core_native NATIVE_CHAIN 1):
@@ -22,10 +22,17 @@
 // pulse a pop, and the kport reserves RB sectors of response FIFO at issue so the svc streams responses without
 // back-pressure (lq native_rsp_rdy is held 1).  Up to NO transactions issued-not-consumed, answered in issue order (the
 // svc boundary's owner FIFO; every arriving beat is checked against the oldest unarrived transaction's tag + beat),
-// steered to the lanes by the in-flight FIFO {lane, tag, len, last}.  WRITES -- the qualified one-transaction endpoint
-// (ot_hbm_loader_native_endpoint, Gray write acknowledgement: latency tolerant) exactly as before; a stack runs reads
-// or one write, never both.  Rate: min(NO x 4, RB) sectors per round trip a stack (RB 16, RTT 160: ~3.2 B/cycle)
-// against one sector per round trip before.  BURST = 0: one-sector reads (len ignored).
+// steered to the lanes by the in-flight FIFO {lane, tag, len, last}.  Rate: min(NO x 4, RB) sectors per round trip a
+// stack (RB 16, RTT 160: ~3.2 B/cycle) against one sector per round trip before.  BURST = 0: one-sector reads.
+// WRITES (hgi-1010/c 2026-10-10, protocol agreed with hbm-phys [svc] for the PS native endpoint): one FULL sector a
+// write (a partial strobe is refused and faults), one packet a cycle a stack on lq wq_d {data 256, addr 30, pc 5, v}
+// (registered), up to WNO written-but-not-popped a stack against the svc's WNO-deep wq.  lr[291:284] = WR_G, the Gray
+// count of writes popped into their PC request queue: a popped write is ordered ahead of every later request to its PC
+// (the svc keeps per-PC arrival order), so it is VISIBLE; each WR_G step returns a credit and acknowledges the oldest
+// outstanding write to its lane (rsp_we, its tag).  One writer lane a stack at a time (exact attribution); a lane's
+// writes are all on one stack and never mixed with its reads; a read is admitted on a stack only while no write is
+// written-but-unpopped there (the cross-PC hazard fence).  Reads and writes otherwise overlap on a stack.  With the
+// behavioural one-write svc model (lr = its LANDED count, wq 8) use WNO <= 8.
 module ot_hfd_loader_kport #(
     parameter integer ENABLE = 0,
     parameter integer ND = 2,
@@ -34,8 +41,10 @@ module ot_hfd_loader_kport #(
     parameter integer NO = 8,          // native read transactions issued and not consumed per stack (svc NATIVE_NO)
     parameter integer NQ = 4,          // svc request queue credits (= ot_hbm_svc_core_native NATIVE_NQ)
     parameter integer RB = 16,         // response FIFO a stack, sectors (reserved at issue; the rate is ~RB x 32 B / RTT)
+    parameter integer WNO = 16,        // writes written-but-not-popped a stack (= the svc wq depth)
     parameter integer MUT = 0          // bench mutants: 1 every response to lane 0; 2 stack bit 1 ignored;
                                        // 3 the splitter ignores the row boundary (a burst crosses PCs); 4 credits ignored
+                                       // 5 a write is acknowledged when sent, not when popped (visible) at the svc
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -72,7 +81,8 @@ module ot_hfd_loader_kport #(
     reg  [ND-1:0] l_bad;                                   // sticky: an untranslatable request (fail closed)
     reg  [CW-1:0] l_cnt [0:ND-1];                          // reads outstanding on the lane
     reg  [1:0]  l_stk [0:ND-1];                            // ... all on this stack
-    reg  [ND-1:0] l_wr;                                    // a write outstanding on the lane
+    reg  [4:0]  l_wn [0:ND-1];                             // writes outstanding on the lane (not yet acknowledged)
+    reg  [1:0]  l_wstk [0:ND-1];                           // ... all on this stack
     for (d = 0; d < ND; d = d + 1) begin : g_map
         ot_hbm_loader_kport_address #(.ENABLE(ENABLE)) u_map (.byte_address(req_addr[d*37 +: 37]),
             .stack_bytes(STACK_BYTES), .stack(l_stack_m[d]), .pc(l_pc[d]), .sector_address(l_sec[d]), .valid(l_ok[d]));
@@ -81,11 +91,10 @@ module ot_hfd_loader_kport #(
         assign l_len[d] = (req_we[d] || BURST == 0 || ln_ == 4'd0) ? 4'd1 : (ln_ > 4'd8 ? 4'd8 : ln_);
     end
     // ---- per stack
-    wire [3:0]  e_req_rdy_raw, acc_s;
-    wire [3:0]  e_req_rdy, e_rsp_v, e_rsp_we, e_busy, e_fault, r_fault, r_idle;
+    wire [3:0]  acc_s;
+    wire [3:0]  e_rsp_v, r_fault, r_idle;
     wire [15:0] e_rsp_tag [0:3];
-    wire [255:0] e_rsp_data [0:3];
-    reg  [ND-1:0] owner [0:3];                             // lane holding the stack's WRITE (one-hot)
+    reg  [ND-1:0] owner [0:3];                             // the stack's writer lane (one-hot), while it has writes outstanding
     reg  [LN-1:0] rr [0:3];
     wire [ND-1:0] grant [0:3];
     wire [3:0]  r_hv;                                      // read response head valid (n_rsp_v steered)
@@ -106,22 +115,28 @@ module ot_hfd_loader_kport #(
         wire n_fault = r[283];
         wire [7:0] ack_g = r[291:284];
         wire src_fault = r[292];
-        reg [7:0] ack_prev; wire [7:0] ack_now;
+        reg [7:0] ack_prev; wire [7:0] ack_now;               // WR_G: writes popped into their PC queue (binary)
         assign ack_now[7] = ack_g[7];
         for (d = 6; d >= 0; d = d - 1) begin : g_ungray
             assign ack_now[d] = ack_now[d + 1] ^ ack_g[d];
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) ack_prev <= 8'd0; else ack_prev <= ack_now;
-        wire wr_ack = ack_now != ack_prev;
+        wire [7:0] wpop = ack_now - ack_prev;                 // pops this edge
+        reg [4:0] wn;                                          // written, not popped
+        reg [4:0] wa;                                          // popped, acknowledgement not yet taken by the lane
+        reg [15:0] wt [0:WNO-1]; reg [$clog2(WNO)-1:0] wth, wtt;   // the outstanding writes' tags, in order
+        reg wp_v; reg [290:0] wp;                              // the write packet register (one a cycle)
+        reg wsticky;                                           // a WR_G step without an outstanding write
         reg [50+LN:0] rq [0:3]; reg [1:0] rqh, rqt; reg [2:0] rqn;   // {lane LN, tag 16, sector 30, len 4, spare}
         reg [22+LN:0] fl [0:NO-1]; reg [NA-1:0] fh, ft; reg [CW-1:0] fn;  // issued, not consumed {lane LN, tag 16, len 4, last, spare 2}
         // ---------------- lane grant (rotating): a read into the request FIFO, or a write to the endpoint
         wire [ND-1:0] want;
         for (d = 0; d < ND; d = d + 1) begin : g_want
-            wire rd_ok = !req_we[d] && rqn != 3'd4 && !e_busy[s] && !(|owner[s]) &&
+            wire rd_ok = !req_we[d] && rqn != 3'd4 && l_wn[d] == 5'd0 &&
                          (l_cnt[d] == 0 || (l_stk[d] == s && l_cnt[d] != CW'(NO)));
-            wire wr_ok = req_we[d] && r_idle[s] && !(|owner[s]) && l_cnt[d] == 0 && e_req_rdy_raw[s];
-            assign want[d] = ENABLE && req_v[d] && !l_wr[d] && l_ok[d] && l_stack[d] == s && (rd_ok || wr_ok);
+            wire wr_ok = req_we[d] && l_cnt[d] == 0 && req_wstrb[d*32 +: 32] == 32'hFFFFFFFF &&
+                         (owner[s] == '0 || owner[s][d]) && wn < 5'(WNO) && (l_wn[d] == 5'd0 || l_wstk[d] == s) && l_wn[d] != 5'd31;
+            assign want[d] = ENABLE && req_v[d] && l_ok[d] && l_stack[d] == s && (rd_ok || wr_ok);
         end
         reg [ND-1:0] gr_; reg [LN-1:0] gs_;
         always @* begin : arb
@@ -136,7 +151,7 @@ module ot_hfd_loader_kport #(
         wire [LN-1:0] gsel_s = gs_;
         assign r_acc[s] = |gr_ && !req_we[gs_];
         wire        ev   = |gr_ && req_we[gs_];
-        assign acc_s[s] = r_acc[s] || (ev && e_req_rdy[s]);
+        assign acc_s[s] = |gr_;
         wire [36:0] ea   = req_addr[gs_*37 +: 37];
         wire [255:0] ed  = req_wdata[gs_*256 +: 256];
         wire [31:0] es   = req_wstrb[gs_*32 +: 32];
@@ -164,7 +179,7 @@ module ot_hfd_loader_kport #(
         wire [3:0] chunk = (MUT == 3) ? rm : ((rm < room4) ? rm : room4);
         wire [4:0] cpc = sc[6:2] ^ sc[11:7] ^ sc[16:12];
         wire rd_go = ENABLE && rqn != 3'd0 && fn != CW'(NO) && (cr != 0 || MUT == 4) && (rres + (RA+1)'(chunk) <= (RA+1)'(RB)) &&
-                     !rsticky && !n_fault;
+                     !rsticky && !n_fault && wn == 5'd0 && !ev;     // the write fence: no written-but-unpopped write
         wire rlast = chunk == rm;
         wire [22+LN:0] fh_ = fl[fh];
         wire [22+LN:0] fa_ = fl[fa];
@@ -182,7 +197,6 @@ module ot_hfd_loader_kport #(
         assign r_take[s] = r_hv[s] && rsp_rdy[r_hl[s]];
         wire c_end = r_take[s] && bt + 4'd1 == fh_[6:3];
         assign r_idle[s] = rqn == 3'd0 && fn == 0;
-        assign r_fault[s] = rsticky;
         always @(posedge clk) begin
             if (r_acc[s]) rq[rqt] <= {gsel_s, req_tag[gsel_s*16 +: 16], l_sec[gsel_s], l_len[gsel_s], 1'b0};
             if (rd_go) begin fl[ft] <= {qh_[51 +: LN], qh_[50:35], chunk, rlast, 2'b00}; fb[ft] <= rbi; end
@@ -222,29 +236,25 @@ module ot_hfd_loader_kport #(
                 end
                 fn <= fn + (rd_go ? 1'b1 : 1'b0) - (c_end ? 1'b1 : 1'b0);
             end
-        wire wr_v; wire [290:0] wr_packet; wire e_rd_v, e_rd_rsp_rdy; wire [4:0] e_rd_pc; wire [29:0] e_rd_addr; wire [15:0] e_rd_tag;
-        ot_hbm_loader_native_endpoint #(.ENABLE(ENABLE), .ADDR_W(37)) u_ep (
-            .clk(clk), .rst_n(rst_n), .req_v(ev), .req_rdy(e_req_rdy[s]), .req_we(1'b1), .req_addr(ea),
-            .req_wdata(ed), .req_wstrb(es), .req_tag(et),
-            .translation_valid(ev && l_ok[gs_]), .translated_pc(l_pc[gs_]), .translated_addr(l_sec[gs_]),
-            .rsp_v(e_rsp_v[s]), .rsp_rdy(|(owner[s] & rsp_rdy)), .rsp_we(e_rsp_we[s]), .rsp_tag(e_rsp_tag[s]),
-            .rsp_data(e_rsp_data[s]),
-            .wr_v(wr_v), .wr_rdy(1'b1), .wr_packet(wr_packet), .wr_ack(wr_ack),   // svc wq: one write in flight (endpoint waits for its ack)
-            .rd_v(e_rd_v), .rd_rdy(1'b0), .rd_pc(e_rd_pc), .rd_addr(e_rd_addr), .rd_tag(e_rd_tag),
-            .rd_rsp_v(1'b0), .rd_rsp_rdy(e_rd_rsp_rdy), .rd_rsp_pc(5'd0), .rd_rsp_tag(16'd0),
-            .rd_rsp_beat(4'd0), .rd_rsp_data(256'd0),
-            .service_fault(n_fault || src_fault), .busy(e_busy[s]), .fault(e_fault[s]));
-        // the endpoint's own readiness (IDLE, no fault), without the write-only translation check of this cycle
-        wire e_req_rdy_raw_ = !e_busy[s] && !e_fault[s];
-        assign e_req_rdy_raw[s] = e_req_rdy_raw_;
-        wire owp = e_busy[s] && |(owner[s]) && !e_rsp_v[s];
-        assign lq[s*350 +: 350] = {(BURST != 0) ? chunk : 4'd1, owp, 1'b1, qh_[50:35], sc, cpc, rd_go, wr_packet, wr_v};
+        // ---------------- writes: packet register, credits (WR_G pops), in-order acknowledgements to the writer lane
+        assign e_rsp_v[s] = wa != 5'd0;
+        assign e_rsp_tag[s] = wt[wth];
+        wire w_take = e_rsp_v[s] && |(owner[s] & rsp_rdy);
+        wire owp = wn != 5'd0 || wp_v;
+        assign lq[s*350 +: 350] = {(BURST != 0) ? chunk : 4'd1, owp, 1'b1, qh_[50:35], sc, cpc, rd_go, wp, wp_v};
+        assign r_fault[s] = rsticky || wsticky;
+        always @(posedge clk) if (ev) begin wp <= {ed, l_sec[gs_], l_pc[gs_]}; wt[wtt] <= et; end
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin owner[s] <= {ND{1'b0}}; rr[s] <= '0; end
+            if (!rst_n) begin owner[s] <= {ND{1'b0}}; rr[s] <= '0; wn <= 5'd0; wa <= 5'd0; wth <= '0; wtt <= '0; wp_v <= 1'b0; wsticky <= 1'b0; end
             else begin
                 if (acc_s[s]) rr[s] <= LN'((32'(gs_) + 1) % ND);
-                if (ev && e_req_rdy[s]) owner[s] <= gr_;
-                else if (e_rsp_v[s] && |(owner[s] & rsp_rdy)) owner[s] <= {ND{1'b0}};
+                wp_v <= ev;
+                if (ev) begin owner[s] <= gr_; wtt <= wtt + 1'b1; end
+                else if (wn == 5'd0 && wa == 5'd0 && !wp_v) owner[s] <= {ND{1'b0}};
+                if (wpop > 8'(wn)) wsticky <= 1'b1;                             // a pop nobody wrote
+                wn <= wn + (ev ? 5'd1 : 5'd0) - wpop[4:0];
+                wa <= wa + ((MUT == 5) ? (ev ? 5'd1 : 5'd0) : wpop[4:0]) - (w_take ? 5'd1 : 5'd0);   // MUT 5: acknowledged at send
+                if (w_take) wth <= wth + 1'b1;
             end
     end
     // ---- lanes: ready, response return, outstanding state
@@ -257,29 +267,29 @@ module ot_hfd_loader_kport #(
         end
         assign req_rdy[d] = |(g_d & acc_s);
         assign rsp_v[d] = |(o_w & e_rsp_v) | |o_r;
-        assign rsp_we[d] = |(o_w & e_rsp_we);
+        assign rsp_we[d] = |(o_w & e_rsp_v);
         assign rsp_last[d] = |(o_w & e_rsp_v) | |(o_r & r_hlast);
         assign rsp_tag[d*16 +: 16] = ({16{o_w[0]}} & e_rsp_tag[0]) | ({16{o_w[1]}} & e_rsp_tag[1]) |
                                      ({16{o_w[2]}} & e_rsp_tag[2]) | ({16{o_w[3]}} & e_rsp_tag[3]) |
                                      ({16{o_r[0]}} & r_ht[0]) | ({16{o_r[1]}} & r_ht[1]) |
                                      ({16{o_r[2]}} & r_ht[2]) | ({16{o_r[3]}} & r_ht[3]);
-        assign rsp_data[d*256 +: 256] = ({256{o_w[0]}} & e_rsp_data[0]) | ({256{o_w[1]}} & e_rsp_data[1]) |
-                                        ({256{o_w[2]}} & e_rsp_data[2]) | ({256{o_w[3]}} & e_rsp_data[3]) |
+        assign rsp_data[d*256 +: 256] =
                                         ({256{o_r[0]}} & r_hd[0]) | ({256{o_r[1]}} & r_hd[1]) |
                                         ({256{o_r[2]}} & r_hd[2]) | ({256{o_r[3]}} & r_hd[3]);
         wire [CW-1:0] l_cnt_dbg = l_cnt[d];
         wire acc_r = req_v[d] && req_rdy[d] && !req_we[d];
         wire done_r = |(o_r & r_hlast) && rsp_rdy[d];
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin l_cnt[d] <= {CW{1'b0}}; l_stk[d] <= 2'd0; l_wr[d] <= 1'b0; l_bad[d] <= 1'b0; end
+            if (!rst_n) begin l_cnt[d] <= {CW{1'b0}}; l_stk[d] <= 2'd0; l_wn[d] <= 5'd0; l_wstk[d] <= 2'd0; l_bad[d] <= 1'b0; end
             else begin
                 l_cnt[d] <= l_cnt[d] + (acc_r ? 1'b1 : 1'b0) - (done_r ? 1'b1 : 1'b0);
                 if (acc_r) l_stk[d] <= l_stack[d];
-                if (req_v[d] && req_rdy[d] && req_we[d]) l_wr[d] <= 1'b1;
-                else if (|(o_w & e_rsp_v) && rsp_rdy[d]) l_wr[d] <= 1'b0;
+                l_wn[d] <= l_wn[d] + ((req_v[d] && req_rdy[d] && req_we[d]) ? 5'd1 : 5'd0) - ((|(o_w & e_rsp_v) && rsp_rdy[d]) ? 5'd1 : 5'd0);
+                if (req_v[d] && req_rdy[d] && req_we[d]) l_wstk[d] <= l_stack[d];
+                if (ENABLE && req_v[d] && req_we[d] && req_wstrb[d*32 +: 32] != 32'hFFFFFFFF) l_bad[d] <= 1'b1;   // partial sector
                 if (ENABLE && req_v[d] && !l_ok[d]) l_bad[d] <= 1'b1;
             end
     end
-    assign fault = |e_fault | |r_fault | |l_bad;
+    assign fault = |r_fault | |l_bad;
 endmodule
 `default_nettype wire

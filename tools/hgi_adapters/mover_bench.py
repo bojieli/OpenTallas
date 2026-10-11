@@ -79,6 +79,11 @@ def main():
         vb = rng.randrange(0, 200000)
         vist = rng.choice([0, 1, 1, 2])
         vst = n * max(1, vist) + rng.randint(0, 9)
+        if not load:      # hgi-1010/c: a STORE writes whole HBM sectors (the kport refuses partial ones; the mover faults)
+            n = (n * es + 31) // 32 * 32 // es
+            hist, vist = 1, 1
+            hst = (n * es + 32 * rng.randint(0, 2))
+            vst = n + rng.randint(0, 9)
         hdesc = C.SV.mdesc(space=0, fmt=f, base=hb, n=n, m=m, stride=hst, istride=hist)
         vdesc = C.SV.mdesc(space=1, fmt=5 if f == 5 else 0, base=vb, n=n, m=m, stride=vst, istride=vist)
         A, O = (hdesc, vdesc) if load else (vdesc, hdesc)
@@ -118,7 +123,7 @@ def main():
                     for k in range(es):
                         hbe[haddr[o][i] + k] = int(raw[k])
         add([d], vmi, hbi, vme, hbe)
-    # hgi-1010/c: STRIPE4 LOADs (spec 3.6; HBM base bits [39:37] = 1): row o from stack (base[36:35] + o) mod 4 at the
+    # hgi-1010/c: STRIPE4 LOADs (spec 6.4; HBM base bits [39:37] = 1): row o from stack (base[36:35] + o) mod 4 at the
     # stack-local address base[34:0] + o x stride; 32 B row starts, VM destination rows 32 B aligned.  The last case is
     # the HC weight row shape (4 x 5,120 FP32, stride 0).
     for t in range(13):

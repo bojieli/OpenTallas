@@ -20,6 +20,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_engines #(
     parameter integer FRONT = 1,
+    parameter integer VR2 = 0,            // 1: the mover's VM-source reads on the VM DMA wide read group (vr2q / vr2r)
     parameter integer MUT_IL = 0,
     parameter integer SBIT = 35,
     parameter [35:0] STACK_BYTES = 36'd22500000000
@@ -53,17 +54,24 @@ module ot_hgi_dma_engines #(
     output wire                k_rsp_rdy,
     input  wire                k_rsp_we,
     input  wire [255:0]        k_rsp_data,
-    // the mover's HBM read lanes (one kport lane a stack, bursts; hgi-1010/c)
+    // the mover's HBM lanes (one kport lane a stack: burst reads, full-sector writes; hgi-1010/c)
     output wire [3:0]          r_req_v,
     input  wire [3:0]          r_req_rdy,
     output wire [4*37-1:0]     r_req_addr,
     output wire [4*4-1:0]      r_req_len,
     output wire [4*16-1:0]     r_req_tag,
+    output wire [3:0]          r_req_we,
+    output wire [4*256-1:0]    r_req_wdata,
+    output wire [4*32-1:0]     r_req_wstrb,
     input  wire [3:0]          r_rsp_v,
+    input  wire [3:0]          r_rsp_we,
     output wire [3:0]          r_rsp_rdy,
     input  wire [4*16-1:0]     r_rsp_tag,
     input  wire [3:0]          r_rsp_last,
     input  wire [4*256-1:0]    r_rsp_data,
+    // the mover's VM wide READ group 2 (VR2 = 1; b's ot_hgi_vm_die DMA group)
+    output wire [512:0]        vr2q,
+    input  wire [8256:0]       vr2r,
     // the mover's VM packet client
     output wire [337:0]        vmq,
     input  wire [273:0]        vmr,
@@ -129,14 +137,14 @@ module ot_hgi_dma_engines #(
     generate for (gl = 0; gl < 32; gl = gl + 1) begin : g_wl
         assign wl[gl*280 +: 280] = f_wl[gl*280 + 279] ? f_wl[gl*280 +: 280] : m_wlx[gl*280 +: 280];
     end endgenerate
-    ot_hgi_dma_mover u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !rd_act)), .mv_rdy(m_rdy),
+    ot_hgi_dma_mover #(.VR2(VR2)) u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !rd_act)), .mv_rdy(m_rdy),
         .mv(sq_act ? sq_mv : mv), .mv_done(m_done),
         .mv_fault(m_fault), .mv_src(m_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data), .k_fault(1'b0),
-        .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag),
-        .r_rsp_v(r_rsp_v), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data),
+        .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(vr2q), .vr2r(vr2r),
         .vmq(m_vmq), .vmr(rd_act ? 274'd0 : vmr), .wl(m_wl), .wl_done(|wl_done));
     // ---------------------------------------------------------------- stream command, I-list reader, row sequencer
     assign is_rdy = !rd_act && !sq_act && m_rdy && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
