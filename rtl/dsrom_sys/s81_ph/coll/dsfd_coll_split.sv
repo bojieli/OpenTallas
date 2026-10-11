@@ -83,6 +83,13 @@ module dsfd_coll_cb #(parameter integer OD = 16,
     input  wire [2099:1]  bw_d,
     output reg [0:0] bw_cr,
     output reg [0:0] bw_flt
+`ifdef OT_S81PH_COLL_JOB
+    // s81-ctl-1011: the coll command endpoint (ADAPTER_CONTRACT_1011 engine 3), S face beside t_vm (x 522..680)
+    ,
+    input  wire [84:0]    c_cmd,
+    output wire [8:0]     c_done,
+    output wire [1:0]     c_st
+`endif
 );
     wire clk = ck[0];
     reg [1:0] rst_s;
@@ -90,9 +97,20 @@ module dsfd_coll_cb #(parameter integer OD = 16,
     wire rst_n = rst_s[1];
     // VM input: pin register, then the seam register (two edges, no handshake: the VM sends only with credits)
     reg [591:0] fv_r; reg [2:0] ts_r; reg [5:0] flt_r;
+    wire [591:0] fv_rel;
+`ifdef OT_S81PH_COLL_JOB
+    // the endpoint's release mux sits between the pin register and the seam register: records reach the core only under
+    // their coll descriptor (+0 cycles); the done is taken from this tile's t_vm output flops (the slab's VM-edge pins)
+    wire jf_unused;
+    ot_s81_coll_job #(.MUT(`ifdef OT_S81PH_COLL_JOB_MUT `OT_S81PH_COLL_JOB_MUT `else 0 `endif)) u_job (.c_clk(clk), .c_rst_n(rs[0]),
+        .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .ck(clk), .rs_n(rst_n), .vm_f(fv_r), .core_f(fv_rel),
+        .core_h(t_vm[13:0]), .fault(jf_unused));
+`else
+    assign fv_rel = fv_r;
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fv_r <= 0; fvm_u <= 0; ts_r <= 0; flt_r <= 0; flt_u <= 0; end
-        else begin fv_r <= f_vm; fvm_u <= fv_r; ts_r <= ts; flt_r <= {eflt, wflt}; flt_u <= flt_r; end
+        else begin fv_r <= f_vm; fvm_u <= fv_rel; ts_r <= ts; flt_r <= {eflt, wflt}; flt_u <= flt_r; end
     // lane relays (lane-face skid + seam-face skid; CR: credit relays, the *_r pins carry credit pulses)
     generate if (CR != 0) begin : g_cr
     ot_s81ph_cr_relay #(.W(553)) u_lo0 (.clk(clk), .rst_n(rst_n), .i_v(lo0_v), .i_cr(lo0_r), .i_d(lo0_d), .o_v(wlo_v), .o_cr(wlo_r), .o_d(wlo_d));

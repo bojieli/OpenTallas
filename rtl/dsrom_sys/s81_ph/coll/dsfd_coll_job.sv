@@ -9,7 +9,7 @@
 // header [13:0] (the beat is on the slab's VM-edge pins that cycle: a done is never early).
 // Controller clock = the die stream clock (ck), as every slab endpoint.
 // Flow control unchanged: t_vm adds no stage (the VM CDC end block's room rule stays room >= 4).
-module dsfd_coll_job #(parameter integer MUT = 0) (
+module dsfd_coll_job #(parameter integer MUT = `ifdef OT_S81PH_COLL_JOB_MUT `OT_S81PH_COLL_JOB_MUT `else 0 `endif) (
     input  wire [0:0]    ck,
     input  wire [0:0]    rs,
     input  wire [591:0]  f_vm,

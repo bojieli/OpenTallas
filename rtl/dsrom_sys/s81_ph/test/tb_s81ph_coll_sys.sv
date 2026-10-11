@@ -16,7 +16,7 @@ module tb_s81ph_coll_sys;
                       // head-die sequencer's token / seed / accept traffic at the real 8 / 8 hub stations; MSTALL see
                       // tb_mtp_lane_io.  MTP_HOLD: cycles to wait for MTP after the collective is complete.
                       NTOK = 300, NSEED = 80, NACC = 24, MSTALL = 0, MTP_HOLD = 40000, TGAP = 0,
-                      CMUT = 0, MAXCYC = 400000;   // MAXCYC: bench time-out (cycles); CMUT: TB_CTRL: ot_s81_coll_job MUT (5 = early done)
+                      MAXCYC = 400000;   // bench time-out (cycles)
     localparam integer FW = 512, PW = 547, W = 552;
     reg [63:0] rs = 64'h243F6A8885A308D3 ^ SEED;
     function [31:0] rnd(input integer d);
@@ -80,7 +80,7 @@ module tb_s81ph_coll_sys;
     generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_die
         wire tf0, tf1, tf2, tf3, tf4, tf5, tf6, tf7;
 `ifdef TB_CTRL
-        dsfd_sp_collective_c #(.MUT(CMUT)) u (.refclk(refclk), .por(por), .f_vm(fvm[gd]), .ts(tsr[gd]),
+        dsfd_sp_collective_c u (.refclk(refclk), .por(por), .f_vm(fvm[gd]), .ts(tsr[gd]),
             .c_cmd(c3a[gd]), .c_done(d3a[gd]), .c_st(csta[gd]),
 `else
         dsfd_sp_collective u (.refclk(refclk), .por(por), .f_vm(fvm[gd]), .ts(tsr[gd]),
@@ -300,7 +300,7 @@ module tb_s81ph_coll_sys;
     // done tag = {slot 0, op k} in program order, done k never before message k's last result left t_vm, exactly NM
     // dones, one job_done after the last, no command on any other port, no endpoint / sequencer fault, online.
     // Mutants: TB_MUT_DROPSTART (die 0's 5th coll command never reaches the slab), TB_MUT_WRONGDESC (die 0's 3rd
-    // descriptor names one record more), -GCMUT=5 (early done: the endpoint's done on the first result beat).
+    // descriptor names one record more), +define+OT_S81PH_COLL_JOB_MUT=5 (early done: the endpoint done on the first result beat).
     wire [11:0]     sq_cv [0:3];
     wire [12*84-1:0] sq_cd [0:3];
     wire [8:0]      sq_dn [0:3];
