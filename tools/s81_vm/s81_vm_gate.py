@@ -39,6 +39,7 @@ CASES = {
     'land_hc': dict(params=dict(MODE=5), expect='pass'),
     'mut_lsmall': dict(params=dict(MODE=4), defines=['OT_SPVM_MUT_LSMALL'], expect='fail'),
     'mut_np16': dict(params=dict(MODE=2, BROWS=128, BNP=0, BSKEW=3), defines=['OT_SPVM_MUT_NP16'], expect='fail'),
+    'mut_rlat': dict(params=dict(SEED=1, NCYC=20000), defines=['OT_SPVM_MUT_RLAT'], expect='fail'),
 }
 
 
