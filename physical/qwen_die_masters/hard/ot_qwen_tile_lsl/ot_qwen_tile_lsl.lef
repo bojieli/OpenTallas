@@ -1,0 +1,3819 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 1000 ;
+END UNITS
+
+MACRO ot_qwen_tile_lsl
+  FOREIGN ot_qwen_tile_lsl 0 0 ;
+  CLASS BLOCK ;
+  SIZE 99.792 BY 140.4 ;
+  PIN clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 62.976 99.792 63 ;
+    END
+  END clk
+  PIN first_d
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 64.992 99.792 65.016 ;
+    END
+  END first_d
+  PIN lfault[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 104.208 99.792 104.232 ;
+    END
+  END lfault[0]
+  PIN lfault[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 104.592 99.792 104.616 ;
+    END
+  END lfault[1]
+  PIN lfault[2]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 105.024 99.792 105.048 ;
+    END
+  END lfault[2]
+  PIN lfault[3]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 105.408 99.792 105.432 ;
+    END
+  END lfault[3]
+  PIN lfault[4]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 105.84 99.792 105.864 ;
+    END
+  END lfault[4]
+  PIN lfault[5]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 106.272 99.792 106.296 ;
+    END
+  END lfault[5]
+  PIN lfault[6]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 106.656 99.792 106.68 ;
+    END
+  END lfault[6]
+  PIN lfault[7]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 107.088 99.792 107.112 ;
+    END
+  END lfault[7]
+  PIN rst_n
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 67.008 99.792 67.032 ;
+    END
+  END rst_n
+  PIN split_d[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 68.976 99.792 69 ;
+    END
+  END split_d[0]
+  PIN split_d[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 70.992 99.792 71.016 ;
+    END
+  END split_d[1]
+  PIN split_d[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 73.008 99.792 73.032 ;
+    END
+  END split_d[2]
+  PIN split_d[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 74.976 99.792 75 ;
+    END
+  END split_d[3]
+  PIN t_out[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 107.472 99.792 107.496 ;
+    END
+  END t_out[0]
+  PIN t_out[10]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 111.6 99.792 111.624 ;
+    END
+  END t_out[10]
+  PIN t_out[11]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 111.984 99.792 112.008 ;
+    END
+  END t_out[11]
+  PIN t_out[12]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 112.416 99.792 112.44 ;
+    END
+  END t_out[12]
+  PIN t_out[13]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 112.848 99.792 112.872 ;
+    END
+  END t_out[13]
+  PIN t_out[14]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 113.232 99.792 113.256 ;
+    END
+  END t_out[14]
+  PIN t_out[15]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 113.664 99.792 113.688 ;
+    END
+  END t_out[15]
+  PIN t_out[16]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 114.048 99.792 114.072 ;
+    END
+  END t_out[16]
+  PIN t_out[17]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 114.48 99.792 114.504 ;
+    END
+  END t_out[17]
+  PIN t_out[18]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 114.864 99.792 114.888 ;
+    END
+  END t_out[18]
+  PIN t_out[19]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 115.296 99.792 115.32 ;
+    END
+  END t_out[19]
+  PIN t_out[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 107.904 99.792 107.928 ;
+    END
+  END t_out[1]
+  PIN t_out[20]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 115.68 99.792 115.704 ;
+    END
+  END t_out[20]
+  PIN t_out[21]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 116.112 99.792 116.136 ;
+    END
+  END t_out[21]
+  PIN t_out[22]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 116.544 99.792 116.568 ;
+    END
+  END t_out[22]
+  PIN t_out[23]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 116.928 99.792 116.952 ;
+    END
+  END t_out[23]
+  PIN t_out[24]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 117.312 99.792 117.344 ;
+    END
+  END t_out[24]
+  PIN t_out[25]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 117.76 99.792 117.792 ;
+    END
+  END t_out[25]
+  PIN t_out[26]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 118.144 99.792 118.176 ;
+    END
+  END t_out[26]
+  PIN t_out[27]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 118.592 99.792 118.624 ;
+    END
+  END t_out[27]
+  PIN t_out[28]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 118.976 99.792 119.008 ;
+    END
+  END t_out[28]
+  PIN t_out[29]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 119.424 99.792 119.456 ;
+    END
+  END t_out[29]
+  PIN t_out[2]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 108.288 99.792 108.312 ;
+    END
+  END t_out[2]
+  PIN t_out[30]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 119.808 99.792 119.84 ;
+    END
+  END t_out[30]
+  PIN t_out[31]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 120.192 99.792 120.224 ;
+    END
+  END t_out[31]
+  PIN t_out[32]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 120.64 99.792 120.672 ;
+    END
+  END t_out[32]
+  PIN t_out[33]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 121.024 99.792 121.056 ;
+    END
+  END t_out[33]
+  PIN t_out[34]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 121.472 99.792 121.504 ;
+    END
+  END t_out[34]
+  PIN t_out[35]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 121.856 99.792 121.888 ;
+    END
+  END t_out[35]
+  PIN t_out[36]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 122.304 99.792 122.336 ;
+    END
+  END t_out[36]
+  PIN t_out[37]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 122.688 99.792 122.72 ;
+    END
+  END t_out[37]
+  PIN t_out[38]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 123.072 99.792 123.104 ;
+    END
+  END t_out[38]
+  PIN t_out[39]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 123.52 99.792 123.552 ;
+    END
+  END t_out[39]
+  PIN t_out[3]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 108.72 99.792 108.744 ;
+    END
+  END t_out[3]
+  PIN t_out[40]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 123.904 99.792 123.936 ;
+    END
+  END t_out[40]
+  PIN t_out[41]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 124.352 99.792 124.384 ;
+    END
+  END t_out[41]
+  PIN t_out[42]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 124.736 99.792 124.768 ;
+    END
+  END t_out[42]
+  PIN t_out[43]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 125.12 99.792 125.152 ;
+    END
+  END t_out[43]
+  PIN t_out[44]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 125.568 99.792 125.6 ;
+    END
+  END t_out[44]
+  PIN t_out[45]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 125.952 99.792 125.984 ;
+    END
+  END t_out[45]
+  PIN t_out[46]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 126.4 99.792 126.432 ;
+    END
+  END t_out[46]
+  PIN t_out[47]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 126.784 99.792 126.816 ;
+    END
+  END t_out[47]
+  PIN t_out[48]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 127.232 99.792 127.264 ;
+    END
+  END t_out[48]
+  PIN t_out[49]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 127.616 99.792 127.648 ;
+    END
+  END t_out[49]
+  PIN t_out[4]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 109.104 99.792 109.128 ;
+    END
+  END t_out[4]
+  PIN t_out[50]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 128 99.792 128.032 ;
+    END
+  END t_out[50]
+  PIN t_out[51]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 128.448 99.792 128.48 ;
+    END
+  END t_out[51]
+  PIN t_out[52]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 128.832 99.792 128.864 ;
+    END
+  END t_out[52]
+  PIN t_out[53]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 129.28 99.792 129.312 ;
+    END
+  END t_out[53]
+  PIN t_out[54]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 129.664 99.792 129.696 ;
+    END
+  END t_out[54]
+  PIN t_out[55]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 130.112 99.792 130.144 ;
+    END
+  END t_out[55]
+  PIN t_out[56]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 130.512 99.792 130.536 ;
+    END
+  END t_out[56]
+  PIN t_out[57]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 130.896 99.792 130.92 ;
+    END
+  END t_out[57]
+  PIN t_out[58]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 131.328 99.792 131.352 ;
+    END
+  END t_out[58]
+  PIN t_out[59]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 131.712 99.792 131.736 ;
+    END
+  END t_out[59]
+  PIN t_out[5]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 109.536 99.792 109.56 ;
+    END
+  END t_out[5]
+  PIN t_out[60]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 132.144 99.792 132.168 ;
+    END
+  END t_out[60]
+  PIN t_out[61]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 132.528 99.792 132.552 ;
+    END
+  END t_out[61]
+  PIN t_out[62]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 132.96 99.792 132.984 ;
+    END
+  END t_out[62]
+  PIN t_out[63]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 133.392 99.792 133.416 ;
+    END
+  END t_out[63]
+  PIN t_out[6]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 109.968 99.792 109.992 ;
+    END
+  END t_out[6]
+  PIN t_out[7]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 110.352 99.792 110.376 ;
+    END
+  END t_out[7]
+  PIN t_out[8]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 110.784 99.792 110.808 ;
+    END
+  END t_out[8]
+  PIN t_out[9]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 111.168 99.792 111.192 ;
+    END
+  END t_out[9]
+  PIN tfault
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 133.776 99.792 133.8 ;
+    END
+  END tfault
+  PIN v_d
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 76.992 99.792 77.016 ;
+    END
+  END v_d
+  PIN w_d[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 6.096 99.792 6.12 ;
+    END
+  END w_d[0]
+  PIN w_d[100]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 27.968 99.792 28 ;
+    END
+  END w_d[100]
+  PIN w_d[101]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 28.16 99.792 28.192 ;
+    END
+  END w_d[101]
+  PIN w_d[102]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 28.416 99.792 28.448 ;
+    END
+  END w_d[102]
+  PIN w_d[103]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 28.608 99.792 28.64 ;
+    END
+  END w_d[103]
+  PIN w_d[104]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 28.864 99.792 28.896 ;
+    END
+  END w_d[104]
+  PIN w_d[105]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 29.056 99.792 29.088 ;
+    END
+  END w_d[105]
+  PIN w_d[106]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 29.312 99.792 29.344 ;
+    END
+  END w_d[106]
+  PIN w_d[107]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 29.504 99.792 29.536 ;
+    END
+  END w_d[107]
+  PIN w_d[108]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 29.696 99.792 29.728 ;
+    END
+  END w_d[108]
+  PIN w_d[109]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 29.952 99.792 29.984 ;
+    END
+  END w_d[109]
+  PIN w_d[10]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 8.304 99.792 8.328 ;
+    END
+  END w_d[10]
+  PIN w_d[110]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 30.144 99.792 30.176 ;
+    END
+  END w_d[110]
+  PIN w_d[111]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 30.4 99.792 30.432 ;
+    END
+  END w_d[111]
+  PIN w_d[112]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 30.592 99.792 30.624 ;
+    END
+  END w_d[112]
+  PIN w_d[113]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 30.784 99.792 30.816 ;
+    END
+  END w_d[113]
+  PIN w_d[114]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 31.04 99.792 31.072 ;
+    END
+  END w_d[114]
+  PIN w_d[115]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 31.232 99.792 31.264 ;
+    END
+  END w_d[115]
+  PIN w_d[116]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 31.488 99.792 31.52 ;
+    END
+  END w_d[116]
+  PIN w_d[117]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 31.68 99.792 31.712 ;
+    END
+  END w_d[117]
+  PIN w_d[118]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 31.936 99.792 31.968 ;
+    END
+  END w_d[118]
+  PIN w_d[119]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 32.128 99.792 32.16 ;
+    END
+  END w_d[119]
+  PIN w_d[11]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 8.496 99.792 8.52 ;
+    END
+  END w_d[11]
+  PIN w_d[120]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 32.32 99.792 32.352 ;
+    END
+  END w_d[120]
+  PIN w_d[121]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 32.576 99.792 32.608 ;
+    END
+  END w_d[121]
+  PIN w_d[122]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 32.768 99.792 32.8 ;
+    END
+  END w_d[122]
+  PIN w_d[123]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 33.024 99.792 33.056 ;
+    END
+  END w_d[123]
+  PIN w_d[124]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 33.216 99.792 33.248 ;
+    END
+  END w_d[124]
+  PIN w_d[125]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 33.408 99.792 33.44 ;
+    END
+  END w_d[125]
+  PIN w_d[126]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 33.664 99.792 33.696 ;
+    END
+  END w_d[126]
+  PIN w_d[127]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 33.856 99.792 33.888 ;
+    END
+  END w_d[127]
+  PIN w_d[128]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 34.08 99.792 34.104 ;
+    END
+  END w_d[128]
+  PIN w_d[129]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 34.32 99.792 34.344 ;
+    END
+  END w_d[129]
+  PIN w_d[12]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 8.736 99.792 8.76 ;
+    END
+  END w_d[12]
+  PIN w_d[130]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 34.512 99.792 34.536 ;
+    END
+  END w_d[130]
+  PIN w_d[131]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 34.752 99.792 34.776 ;
+    END
+  END w_d[131]
+  PIN w_d[132]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 34.992 99.792 35.016 ;
+    END
+  END w_d[132]
+  PIN w_d[133]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 35.184 99.792 35.208 ;
+    END
+  END w_d[133]
+  PIN w_d[134]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 35.424 99.792 35.448 ;
+    END
+  END w_d[134]
+  PIN w_d[135]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 35.616 99.792 35.64 ;
+    END
+  END w_d[135]
+  PIN w_d[136]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 35.856 99.792 35.88 ;
+    END
+  END w_d[136]
+  PIN w_d[137]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 36.048 99.792 36.072 ;
+    END
+  END w_d[137]
+  PIN w_d[138]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 36.288 99.792 36.312 ;
+    END
+  END w_d[138]
+  PIN w_d[139]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 36.528 99.792 36.552 ;
+    END
+  END w_d[139]
+  PIN w_d[13]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 8.928 99.792 8.952 ;
+    END
+  END w_d[13]
+  PIN w_d[140]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 36.72 99.792 36.744 ;
+    END
+  END w_d[140]
+  PIN w_d[141]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 36.96 99.792 36.984 ;
+    END
+  END w_d[141]
+  PIN w_d[142]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 37.152 99.792 37.176 ;
+    END
+  END w_d[142]
+  PIN w_d[143]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 37.392 99.792 37.416 ;
+    END
+  END w_d[143]
+  PIN w_d[144]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 37.584 99.792 37.608 ;
+    END
+  END w_d[144]
+  PIN w_d[145]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 37.824 99.792 37.848 ;
+    END
+  END w_d[145]
+  PIN w_d[146]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 38.016 99.792 38.04 ;
+    END
+  END w_d[146]
+  PIN w_d[147]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 38.256 99.792 38.28 ;
+    END
+  END w_d[147]
+  PIN w_d[148]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 38.496 99.792 38.52 ;
+    END
+  END w_d[148]
+  PIN w_d[149]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 38.688 99.792 38.712 ;
+    END
+  END w_d[149]
+  PIN w_d[14]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 9.168 99.792 9.192 ;
+    END
+  END w_d[14]
+  PIN w_d[150]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 38.928 99.792 38.952 ;
+    END
+  END w_d[150]
+  PIN w_d[151]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 39.12 99.792 39.144 ;
+    END
+  END w_d[151]
+  PIN w_d[152]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 39.36 99.792 39.384 ;
+    END
+  END w_d[152]
+  PIN w_d[153]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 39.552 99.792 39.576 ;
+    END
+  END w_d[153]
+  PIN w_d[154]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 39.792 99.792 39.816 ;
+    END
+  END w_d[154]
+  PIN w_d[155]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 39.984 99.792 40.008 ;
+    END
+  END w_d[155]
+  PIN w_d[156]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 40.224 99.792 40.248 ;
+    END
+  END w_d[156]
+  PIN w_d[157]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 40.464 99.792 40.488 ;
+    END
+  END w_d[157]
+  PIN w_d[158]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 40.656 99.792 40.68 ;
+    END
+  END w_d[158]
+  PIN w_d[159]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 40.896 99.792 40.92 ;
+    END
+  END w_d[159]
+  PIN w_d[15]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 9.36 99.792 9.384 ;
+    END
+  END w_d[15]
+  PIN w_d[160]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 41.088 99.792 41.12 ;
+    END
+  END w_d[160]
+  PIN w_d[161]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 41.344 99.792 41.376 ;
+    END
+  END w_d[161]
+  PIN w_d[162]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 41.536 99.792 41.568 ;
+    END
+  END w_d[162]
+  PIN w_d[163]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 41.728 99.792 41.76 ;
+    END
+  END w_d[163]
+  PIN w_d[164]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 41.984 99.792 42.016 ;
+    END
+  END w_d[164]
+  PIN w_d[165]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 42.176 99.792 42.208 ;
+    END
+  END w_d[165]
+  PIN w_d[166]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 42.432 99.792 42.464 ;
+    END
+  END w_d[166]
+  PIN w_d[167]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 42.624 99.792 42.656 ;
+    END
+  END w_d[167]
+  PIN w_d[168]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 42.816 99.792 42.848 ;
+    END
+  END w_d[168]
+  PIN w_d[169]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 43.072 99.792 43.104 ;
+    END
+  END w_d[169]
+  PIN w_d[16]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 9.6 99.792 9.624 ;
+    END
+  END w_d[16]
+  PIN w_d[170]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 43.264 99.792 43.296 ;
+    END
+  END w_d[170]
+  PIN w_d[171]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 43.52 99.792 43.552 ;
+    END
+  END w_d[171]
+  PIN w_d[172]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 43.712 99.792 43.744 ;
+    END
+  END w_d[172]
+  PIN w_d[173]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 43.968 99.792 44 ;
+    END
+  END w_d[173]
+  PIN w_d[174]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 44.16 99.792 44.192 ;
+    END
+  END w_d[174]
+  PIN w_d[175]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 44.352 99.792 44.384 ;
+    END
+  END w_d[175]
+  PIN w_d[176]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 44.608 99.792 44.64 ;
+    END
+  END w_d[176]
+  PIN w_d[177]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 44.8 99.792 44.832 ;
+    END
+  END w_d[177]
+  PIN w_d[178]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 45.056 99.792 45.088 ;
+    END
+  END w_d[178]
+  PIN w_d[179]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 45.248 99.792 45.28 ;
+    END
+  END w_d[179]
+  PIN w_d[17]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 9.84 99.792 9.864 ;
+    END
+  END w_d[17]
+  PIN w_d[180]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 45.44 99.792 45.472 ;
+    END
+  END w_d[180]
+  PIN w_d[181]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 45.696 99.792 45.728 ;
+    END
+  END w_d[181]
+  PIN w_d[182]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 45.888 99.792 45.92 ;
+    END
+  END w_d[182]
+  PIN w_d[183]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 46.144 99.792 46.176 ;
+    END
+  END w_d[183]
+  PIN w_d[184]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 46.336 99.792 46.368 ;
+    END
+  END w_d[184]
+  PIN w_d[185]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 46.592 99.792 46.624 ;
+    END
+  END w_d[185]
+  PIN w_d[186]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 46.784 99.792 46.816 ;
+    END
+  END w_d[186]
+  PIN w_d[187]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 46.976 99.792 47.008 ;
+    END
+  END w_d[187]
+  PIN w_d[188]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 47.232 99.792 47.264 ;
+    END
+  END w_d[188]
+  PIN w_d[189]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 47.424 99.792 47.456 ;
+    END
+  END w_d[189]
+  PIN w_d[18]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 10.032 99.792 10.056 ;
+    END
+  END w_d[18]
+  PIN w_d[190]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 47.68 99.792 47.712 ;
+    END
+  END w_d[190]
+  PIN w_d[191]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 47.872 99.792 47.904 ;
+    END
+  END w_d[191]
+  PIN w_d[192]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 48.096 99.792 48.12 ;
+    END
+  END w_d[192]
+  PIN w_d[193]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 48.336 99.792 48.36 ;
+    END
+  END w_d[193]
+  PIN w_d[194]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 48.528 99.792 48.552 ;
+    END
+  END w_d[194]
+  PIN w_d[195]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 48.768 99.792 48.792 ;
+    END
+  END w_d[195]
+  PIN w_d[196]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 48.96 99.792 48.984 ;
+    END
+  END w_d[196]
+  PIN w_d[197]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 49.2 99.792 49.224 ;
+    END
+  END w_d[197]
+  PIN w_d[198]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 49.392 99.792 49.416 ;
+    END
+  END w_d[198]
+  PIN w_d[199]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 49.632 99.792 49.656 ;
+    END
+  END w_d[199]
+  PIN w_d[19]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 10.272 99.792 10.296 ;
+    END
+  END w_d[19]
+  PIN w_d[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 6.336 99.792 6.36 ;
+    END
+  END w_d[1]
+  PIN w_d[200]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 49.824 99.792 49.848 ;
+    END
+  END w_d[200]
+  PIN w_d[201]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 50.064 99.792 50.088 ;
+    END
+  END w_d[201]
+  PIN w_d[202]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 50.304 99.792 50.328 ;
+    END
+  END w_d[202]
+  PIN w_d[203]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 50.496 99.792 50.52 ;
+    END
+  END w_d[203]
+  PIN w_d[204]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 50.736 99.792 50.76 ;
+    END
+  END w_d[204]
+  PIN w_d[205]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 50.928 99.792 50.952 ;
+    END
+  END w_d[205]
+  PIN w_d[206]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 51.168 99.792 51.192 ;
+    END
+  END w_d[206]
+  PIN w_d[207]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 51.36 99.792 51.384 ;
+    END
+  END w_d[207]
+  PIN w_d[208]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 51.6 99.792 51.624 ;
+    END
+  END w_d[208]
+  PIN w_d[209]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 51.84 99.792 51.864 ;
+    END
+  END w_d[209]
+  PIN w_d[20]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 10.464 99.792 10.488 ;
+    END
+  END w_d[20]
+  PIN w_d[210]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 52.032 99.792 52.056 ;
+    END
+  END w_d[210]
+  PIN w_d[211]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 52.272 99.792 52.296 ;
+    END
+  END w_d[211]
+  PIN w_d[212]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 52.464 99.792 52.488 ;
+    END
+  END w_d[212]
+  PIN w_d[213]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 52.704 99.792 52.728 ;
+    END
+  END w_d[213]
+  PIN w_d[214]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 52.896 99.792 52.92 ;
+    END
+  END w_d[214]
+  PIN w_d[215]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 53.136 99.792 53.16 ;
+    END
+  END w_d[215]
+  PIN w_d[216]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 53.328 99.792 53.352 ;
+    END
+  END w_d[216]
+  PIN w_d[217]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 53.568 99.792 53.592 ;
+    END
+  END w_d[217]
+  PIN w_d[218]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 53.808 99.792 53.832 ;
+    END
+  END w_d[218]
+  PIN w_d[219]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 54 99.792 54.024 ;
+    END
+  END w_d[219]
+  PIN w_d[21]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 10.704 99.792 10.728 ;
+    END
+  END w_d[21]
+  PIN w_d[220]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 54.24 99.792 54.264 ;
+    END
+  END w_d[220]
+  PIN w_d[221]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 54.432 99.792 54.456 ;
+    END
+  END w_d[221]
+  PIN w_d[222]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 54.672 99.792 54.696 ;
+    END
+  END w_d[222]
+  PIN w_d[223]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 54.864 99.792 54.888 ;
+    END
+  END w_d[223]
+  PIN w_d[224]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 55.104 99.792 55.136 ;
+    END
+  END w_d[224]
+  PIN w_d[225]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 55.296 99.792 55.328 ;
+    END
+  END w_d[225]
+  PIN w_d[226]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 55.552 99.792 55.584 ;
+    END
+  END w_d[226]
+  PIN w_d[227]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 55.744 99.792 55.776 ;
+    END
+  END w_d[227]
+  PIN w_d[228]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 56 99.792 56.032 ;
+    END
+  END w_d[228]
+  PIN w_d[229]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 56.192 99.792 56.224 ;
+    END
+  END w_d[229]
+  PIN w_d[22]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 10.896 99.792 10.92 ;
+    END
+  END w_d[22]
+  PIN w_d[230]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 56.384 99.792 56.416 ;
+    END
+  END w_d[230]
+  PIN w_d[231]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 56.64 99.792 56.672 ;
+    END
+  END w_d[231]
+  PIN w_d[232]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 56.832 99.792 56.864 ;
+    END
+  END w_d[232]
+  PIN w_d[233]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 57.088 99.792 57.12 ;
+    END
+  END w_d[233]
+  PIN w_d[234]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 57.28 99.792 57.312 ;
+    END
+  END w_d[234]
+  PIN w_d[235]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 57.472 99.792 57.504 ;
+    END
+  END w_d[235]
+  PIN w_d[236]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 57.728 99.792 57.76 ;
+    END
+  END w_d[236]
+  PIN w_d[237]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 57.92 99.792 57.952 ;
+    END
+  END w_d[237]
+  PIN w_d[238]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 58.176 99.792 58.208 ;
+    END
+  END w_d[238]
+  PIN w_d[239]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 58.368 99.792 58.4 ;
+    END
+  END w_d[239]
+  PIN w_d[23]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 11.136 99.792 11.16 ;
+    END
+  END w_d[23]
+  PIN w_d[240]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 58.624 99.792 58.656 ;
+    END
+  END w_d[240]
+  PIN w_d[241]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 58.816 99.792 58.848 ;
+    END
+  END w_d[241]
+  PIN w_d[242]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 59.008 99.792 59.04 ;
+    END
+  END w_d[242]
+  PIN w_d[243]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 59.264 99.792 59.296 ;
+    END
+  END w_d[243]
+  PIN w_d[244]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 59.456 99.792 59.488 ;
+    END
+  END w_d[244]
+  PIN w_d[245]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 59.712 99.792 59.744 ;
+    END
+  END w_d[245]
+  PIN w_d[246]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 59.904 99.792 59.936 ;
+    END
+  END w_d[246]
+  PIN w_d[247]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 60.096 99.792 60.128 ;
+    END
+  END w_d[247]
+  PIN w_d[248]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 60.352 99.792 60.384 ;
+    END
+  END w_d[248]
+  PIN w_d[249]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 60.544 99.792 60.576 ;
+    END
+  END w_d[249]
+  PIN w_d[24]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 11.328 99.792 11.352 ;
+    END
+  END w_d[24]
+  PIN w_d[250]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 60.8 99.792 60.832 ;
+    END
+  END w_d[250]
+  PIN w_d[251]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 60.992 99.792 61.024 ;
+    END
+  END w_d[251]
+  PIN w_d[252]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 61.248 99.792 61.28 ;
+    END
+  END w_d[252]
+  PIN w_d[253]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 61.44 99.792 61.472 ;
+    END
+  END w_d[253]
+  PIN w_d[254]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 61.632 99.792 61.664 ;
+    END
+  END w_d[254]
+  PIN w_d[255]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 61.888 99.792 61.92 ;
+    END
+  END w_d[255]
+  PIN w_d[25]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 11.568 99.792 11.592 ;
+    END
+  END w_d[25]
+  PIN w_d[26]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 11.808 99.792 11.832 ;
+    END
+  END w_d[26]
+  PIN w_d[27]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 12 99.792 12.024 ;
+    END
+  END w_d[27]
+  PIN w_d[28]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 12.24 99.792 12.264 ;
+    END
+  END w_d[28]
+  PIN w_d[29]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 12.432 99.792 12.456 ;
+    END
+  END w_d[29]
+  PIN w_d[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 6.528 99.792 6.552 ;
+    END
+  END w_d[2]
+  PIN w_d[30]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 12.672 99.792 12.696 ;
+    END
+  END w_d[30]
+  PIN w_d[31]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 12.864 99.792 12.888 ;
+    END
+  END w_d[31]
+  PIN w_d[32]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 13.12 99.792 13.152 ;
+    END
+  END w_d[32]
+  PIN w_d[33]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 13.312 99.792 13.344 ;
+    END
+  END w_d[33]
+  PIN w_d[34]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 13.504 99.792 13.536 ;
+    END
+  END w_d[34]
+  PIN w_d[35]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 13.76 99.792 13.792 ;
+    END
+  END w_d[35]
+  PIN w_d[36]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 13.952 99.792 13.984 ;
+    END
+  END w_d[36]
+  PIN w_d[37]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 14.208 99.792 14.24 ;
+    END
+  END w_d[37]
+  PIN w_d[38]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 14.4 99.792 14.432 ;
+    END
+  END w_d[38]
+  PIN w_d[39]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 14.656 99.792 14.688 ;
+    END
+  END w_d[39]
+  PIN w_d[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 6.768 99.792 6.792 ;
+    END
+  END w_d[3]
+  PIN w_d[40]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 14.848 99.792 14.88 ;
+    END
+  END w_d[40]
+  PIN w_d[41]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 15.04 99.792 15.072 ;
+    END
+  END w_d[41]
+  PIN w_d[42]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 15.296 99.792 15.328 ;
+    END
+  END w_d[42]
+  PIN w_d[43]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 15.488 99.792 15.52 ;
+    END
+  END w_d[43]
+  PIN w_d[44]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 15.744 99.792 15.776 ;
+    END
+  END w_d[44]
+  PIN w_d[45]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 15.936 99.792 15.968 ;
+    END
+  END w_d[45]
+  PIN w_d[46]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 16.128 99.792 16.16 ;
+    END
+  END w_d[46]
+  PIN w_d[47]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 16.384 99.792 16.416 ;
+    END
+  END w_d[47]
+  PIN w_d[48]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 16.576 99.792 16.608 ;
+    END
+  END w_d[48]
+  PIN w_d[49]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 16.832 99.792 16.864 ;
+    END
+  END w_d[49]
+  PIN w_d[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 6.96 99.792 6.984 ;
+    END
+  END w_d[4]
+  PIN w_d[50]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 17.024 99.792 17.056 ;
+    END
+  END w_d[50]
+  PIN w_d[51]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 17.28 99.792 17.312 ;
+    END
+  END w_d[51]
+  PIN w_d[52]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 17.472 99.792 17.504 ;
+    END
+  END w_d[52]
+  PIN w_d[53]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 17.664 99.792 17.696 ;
+    END
+  END w_d[53]
+  PIN w_d[54]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 17.92 99.792 17.952 ;
+    END
+  END w_d[54]
+  PIN w_d[55]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 18.112 99.792 18.144 ;
+    END
+  END w_d[55]
+  PIN w_d[56]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 18.368 99.792 18.4 ;
+    END
+  END w_d[56]
+  PIN w_d[57]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 18.56 99.792 18.592 ;
+    END
+  END w_d[57]
+  PIN w_d[58]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 18.752 99.792 18.784 ;
+    END
+  END w_d[58]
+  PIN w_d[59]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 19.008 99.792 19.04 ;
+    END
+  END w_d[59]
+  PIN w_d[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 7.2 99.792 7.224 ;
+    END
+  END w_d[5]
+  PIN w_d[60]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 19.2 99.792 19.232 ;
+    END
+  END w_d[60]
+  PIN w_d[61]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 19.456 99.792 19.488 ;
+    END
+  END w_d[61]
+  PIN w_d[62]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 19.648 99.792 19.68 ;
+    END
+  END w_d[62]
+  PIN w_d[63]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 19.904 99.792 19.936 ;
+    END
+  END w_d[63]
+  PIN w_d[64]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 20.112 99.792 20.136 ;
+    END
+  END w_d[64]
+  PIN w_d[65]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 20.304 99.792 20.328 ;
+    END
+  END w_d[65]
+  PIN w_d[66]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 20.544 99.792 20.568 ;
+    END
+  END w_d[66]
+  PIN w_d[67]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 20.736 99.792 20.76 ;
+    END
+  END w_d[67]
+  PIN w_d[68]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 20.976 99.792 21 ;
+    END
+  END w_d[68]
+  PIN w_d[69]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 21.168 99.792 21.192 ;
+    END
+  END w_d[69]
+  PIN w_d[6]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 7.392 99.792 7.416 ;
+    END
+  END w_d[6]
+  PIN w_d[70]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 21.408 99.792 21.432 ;
+    END
+  END w_d[70]
+  PIN w_d[71]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 21.648 99.792 21.672 ;
+    END
+  END w_d[71]
+  PIN w_d[72]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 21.84 99.792 21.864 ;
+    END
+  END w_d[72]
+  PIN w_d[73]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 22.08 99.792 22.104 ;
+    END
+  END w_d[73]
+  PIN w_d[74]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 22.272 99.792 22.296 ;
+    END
+  END w_d[74]
+  PIN w_d[75]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 22.512 99.792 22.536 ;
+    END
+  END w_d[75]
+  PIN w_d[76]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 22.704 99.792 22.728 ;
+    END
+  END w_d[76]
+  PIN w_d[77]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 22.944 99.792 22.968 ;
+    END
+  END w_d[77]
+  PIN w_d[78]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 23.184 99.792 23.208 ;
+    END
+  END w_d[78]
+  PIN w_d[79]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 23.376 99.792 23.4 ;
+    END
+  END w_d[79]
+  PIN w_d[7]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 7.632 99.792 7.656 ;
+    END
+  END w_d[7]
+  PIN w_d[80]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 23.616 99.792 23.64 ;
+    END
+  END w_d[80]
+  PIN w_d[81]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 23.808 99.792 23.832 ;
+    END
+  END w_d[81]
+  PIN w_d[82]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 24.048 99.792 24.072 ;
+    END
+  END w_d[82]
+  PIN w_d[83]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 24.24 99.792 24.264 ;
+    END
+  END w_d[83]
+  PIN w_d[84]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 24.48 99.792 24.504 ;
+    END
+  END w_d[84]
+  PIN w_d[85]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 24.672 99.792 24.696 ;
+    END
+  END w_d[85]
+  PIN w_d[86]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 24.912 99.792 24.936 ;
+    END
+  END w_d[86]
+  PIN w_d[87]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 25.152 99.792 25.176 ;
+    END
+  END w_d[87]
+  PIN w_d[88]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 25.344 99.792 25.368 ;
+    END
+  END w_d[88]
+  PIN w_d[89]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 25.584 99.792 25.608 ;
+    END
+  END w_d[89]
+  PIN w_d[8]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 7.824 99.792 7.848 ;
+    END
+  END w_d[8]
+  PIN w_d[90]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 25.776 99.792 25.8 ;
+    END
+  END w_d[90]
+  PIN w_d[91]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 26.016 99.792 26.04 ;
+    END
+  END w_d[91]
+  PIN w_d[92]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 26.208 99.792 26.232 ;
+    END
+  END w_d[92]
+  PIN w_d[93]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 26.448 99.792 26.472 ;
+    END
+  END w_d[93]
+  PIN w_d[94]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 26.64 99.792 26.664 ;
+    END
+  END w_d[94]
+  PIN w_d[95]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 26.88 99.792 26.904 ;
+    END
+  END w_d[95]
+  PIN w_d[96]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 27.072 99.792 27.104 ;
+    END
+  END w_d[96]
+  PIN w_d[97]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 27.328 99.792 27.36 ;
+    END
+  END w_d[97]
+  PIN w_d[98]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 27.52 99.792 27.552 ;
+    END
+  END w_d[98]
+  PIN w_d[99]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 27.776 99.792 27.808 ;
+    END
+  END w_d[99]
+  PIN w_d[9]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 8.064 99.792 8.088 ;
+    END
+  END w_d[9]
+  PIN x_d[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 78.096 99.792 78.12 ;
+    END
+  END x_d[0]
+  PIN x_d[100]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 95.232 99.792 95.264 ;
+    END
+  END x_d[100]
+  PIN x_d[101]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 95.424 99.792 95.456 ;
+    END
+  END x_d[101]
+  PIN x_d[102]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 95.616 99.792 95.648 ;
+    END
+  END x_d[102]
+  PIN x_d[103]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 95.744 99.792 95.776 ;
+    END
+  END x_d[103]
+  PIN x_d[104]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 95.936 99.792 95.968 ;
+    END
+  END x_d[104]
+  PIN x_d[105]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 96.128 99.792 96.16 ;
+    END
+  END x_d[105]
+  PIN x_d[106]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 96.32 99.792 96.352 ;
+    END
+  END x_d[106]
+  PIN x_d[107]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 96.448 99.792 96.48 ;
+    END
+  END x_d[107]
+  PIN x_d[108]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 96.64 99.792 96.672 ;
+    END
+  END x_d[108]
+  PIN x_d[109]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 96.832 99.792 96.864 ;
+    END
+  END x_d[109]
+  PIN x_d[10]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 79.776 99.792 79.8 ;
+    END
+  END x_d[10]
+  PIN x_d[110]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 96.96 99.792 96.992 ;
+    END
+  END x_d[110]
+  PIN x_d[111]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 97.152 99.792 97.184 ;
+    END
+  END x_d[111]
+  PIN x_d[112]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 97.344 99.792 97.376 ;
+    END
+  END x_d[112]
+  PIN x_d[113]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 97.472 99.792 97.504 ;
+    END
+  END x_d[113]
+  PIN x_d[114]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 97.664 99.792 97.696 ;
+    END
+  END x_d[114]
+  PIN x_d[115]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 97.856 99.792 97.888 ;
+    END
+  END x_d[115]
+  PIN x_d[116]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 97.984 99.792 98.016 ;
+    END
+  END x_d[116]
+  PIN x_d[117]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 98.176 99.792 98.208 ;
+    END
+  END x_d[117]
+  PIN x_d[118]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 98.368 99.792 98.4 ;
+    END
+  END x_d[118]
+  PIN x_d[119]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 98.496 99.792 98.528 ;
+    END
+  END x_d[119]
+  PIN x_d[11]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 79.968 99.792 79.992 ;
+    END
+  END x_d[11]
+  PIN x_d[120]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 98.688 99.792 98.72 ;
+    END
+  END x_d[120]
+  PIN x_d[121]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 98.88 99.792 98.912 ;
+    END
+  END x_d[121]
+  PIN x_d[122]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 99.008 99.792 99.04 ;
+    END
+  END x_d[122]
+  PIN x_d[123]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 99.2 99.792 99.232 ;
+    END
+  END x_d[123]
+  PIN x_d[124]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 99.392 99.792 99.424 ;
+    END
+  END x_d[124]
+  PIN x_d[125]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 99.584 99.792 99.616 ;
+    END
+  END x_d[125]
+  PIN x_d[126]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 99.712 99.792 99.744 ;
+    END
+  END x_d[126]
+  PIN x_d[127]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 99.904 99.792 99.936 ;
+    END
+  END x_d[127]
+  PIN x_d[12]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 80.16 99.792 80.184 ;
+    END
+  END x_d[12]
+  PIN x_d[13]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 80.304 99.792 80.328 ;
+    END
+  END x_d[13]
+  PIN x_d[14]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 80.496 99.792 80.52 ;
+    END
+  END x_d[14]
+  PIN x_d[15]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 80.64 99.792 80.664 ;
+    END
+  END x_d[15]
+  PIN x_d[16]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 80.832 99.792 80.856 ;
+    END
+  END x_d[16]
+  PIN x_d[17]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 80.976 99.792 81 ;
+    END
+  END x_d[17]
+  PIN x_d[18]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 81.168 99.792 81.192 ;
+    END
+  END x_d[18]
+  PIN x_d[19]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 81.36 99.792 81.384 ;
+    END
+  END x_d[19]
+  PIN x_d[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 78.24 99.792 78.264 ;
+    END
+  END x_d[1]
+  PIN x_d[20]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 81.504 99.792 81.528 ;
+    END
+  END x_d[20]
+  PIN x_d[21]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 81.696 99.792 81.72 ;
+    END
+  END x_d[21]
+  PIN x_d[22]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 81.84 99.792 81.864 ;
+    END
+  END x_d[22]
+  PIN x_d[23]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 82.032 99.792 82.056 ;
+    END
+  END x_d[23]
+  PIN x_d[24]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 82.176 99.792 82.2 ;
+    END
+  END x_d[24]
+  PIN x_d[25]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 82.368 99.792 82.392 ;
+    END
+  END x_d[25]
+  PIN x_d[26]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 82.56 99.792 82.584 ;
+    END
+  END x_d[26]
+  PIN x_d[27]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 82.704 99.792 82.728 ;
+    END
+  END x_d[27]
+  PIN x_d[28]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 82.896 99.792 82.92 ;
+    END
+  END x_d[28]
+  PIN x_d[29]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 83.04 99.792 83.064 ;
+    END
+  END x_d[29]
+  PIN x_d[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 78.432 99.792 78.456 ;
+    END
+  END x_d[2]
+  PIN x_d[30]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 83.232 99.792 83.256 ;
+    END
+  END x_d[30]
+  PIN x_d[31]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 83.424 99.792 83.448 ;
+    END
+  END x_d[31]
+  PIN x_d[32]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 83.584 99.792 83.616 ;
+    END
+  END x_d[32]
+  PIN x_d[33]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 83.712 99.792 83.744 ;
+    END
+  END x_d[33]
+  PIN x_d[34]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 83.904 99.792 83.936 ;
+    END
+  END x_d[34]
+  PIN x_d[35]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 84.096 99.792 84.128 ;
+    END
+  END x_d[35]
+  PIN x_d[36]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 84.288 99.792 84.32 ;
+    END
+  END x_d[36]
+  PIN x_d[37]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 84.416 99.792 84.448 ;
+    END
+  END x_d[37]
+  PIN x_d[38]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 84.608 99.792 84.64 ;
+    END
+  END x_d[38]
+  PIN x_d[39]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 84.8 99.792 84.832 ;
+    END
+  END x_d[39]
+  PIN x_d[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 78.576 99.792 78.6 ;
+    END
+  END x_d[3]
+  PIN x_d[40]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 84.928 99.792 84.96 ;
+    END
+  END x_d[40]
+  PIN x_d[41]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 85.12 99.792 85.152 ;
+    END
+  END x_d[41]
+  PIN x_d[42]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 85.312 99.792 85.344 ;
+    END
+  END x_d[42]
+  PIN x_d[43]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 85.44 99.792 85.472 ;
+    END
+  END x_d[43]
+  PIN x_d[44]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 85.632 99.792 85.664 ;
+    END
+  END x_d[44]
+  PIN x_d[45]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 85.824 99.792 85.856 ;
+    END
+  END x_d[45]
+  PIN x_d[46]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 85.952 99.792 85.984 ;
+    END
+  END x_d[46]
+  PIN x_d[47]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 86.144 99.792 86.176 ;
+    END
+  END x_d[47]
+  PIN x_d[48]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 86.336 99.792 86.368 ;
+    END
+  END x_d[48]
+  PIN x_d[49]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 86.464 99.792 86.496 ;
+    END
+  END x_d[49]
+  PIN x_d[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 78.768 99.792 78.792 ;
+    END
+  END x_d[4]
+  PIN x_d[50]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 86.656 99.792 86.688 ;
+    END
+  END x_d[50]
+  PIN x_d[51]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 86.848 99.792 86.88 ;
+    END
+  END x_d[51]
+  PIN x_d[52]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 86.976 99.792 87.008 ;
+    END
+  END x_d[52]
+  PIN x_d[53]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 87.168 99.792 87.2 ;
+    END
+  END x_d[53]
+  PIN x_d[54]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 87.36 99.792 87.392 ;
+    END
+  END x_d[54]
+  PIN x_d[55]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 87.552 99.792 87.584 ;
+    END
+  END x_d[55]
+  PIN x_d[56]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 87.68 99.792 87.712 ;
+    END
+  END x_d[56]
+  PIN x_d[57]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 87.872 99.792 87.904 ;
+    END
+  END x_d[57]
+  PIN x_d[58]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 88.064 99.792 88.096 ;
+    END
+  END x_d[58]
+  PIN x_d[59]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 88.192 99.792 88.224 ;
+    END
+  END x_d[59]
+  PIN x_d[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 78.912 99.792 78.936 ;
+    END
+  END x_d[5]
+  PIN x_d[60]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 88.384 99.792 88.416 ;
+    END
+  END x_d[60]
+  PIN x_d[61]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 88.576 99.792 88.608 ;
+    END
+  END x_d[61]
+  PIN x_d[62]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 88.704 99.792 88.736 ;
+    END
+  END x_d[62]
+  PIN x_d[63]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 88.896 99.792 88.928 ;
+    END
+  END x_d[63]
+  PIN x_d[64]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 89.088 99.792 89.112 ;
+    END
+  END x_d[64]
+  PIN x_d[65]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 89.232 99.792 89.256 ;
+    END
+  END x_d[65]
+  PIN x_d[66]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 89.424 99.792 89.448 ;
+    END
+  END x_d[66]
+  PIN x_d[67]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 89.568 99.792 89.592 ;
+    END
+  END x_d[67]
+  PIN x_d[68]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 89.76 99.792 89.784 ;
+    END
+  END x_d[68]
+  PIN x_d[69]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 89.952 99.792 89.976 ;
+    END
+  END x_d[69]
+  PIN x_d[6]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 79.104 99.792 79.128 ;
+    END
+  END x_d[6]
+  PIN x_d[70]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 90.096 99.792 90.12 ;
+    END
+  END x_d[70]
+  PIN x_d[71]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 90.288 99.792 90.312 ;
+    END
+  END x_d[71]
+  PIN x_d[72]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 90.432 99.792 90.456 ;
+    END
+  END x_d[72]
+  PIN x_d[73]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 90.624 99.792 90.648 ;
+    END
+  END x_d[73]
+  PIN x_d[74]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 90.816 99.792 90.84 ;
+    END
+  END x_d[74]
+  PIN x_d[75]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 90.96 99.792 90.984 ;
+    END
+  END x_d[75]
+  PIN x_d[76]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 91.152 99.792 91.176 ;
+    END
+  END x_d[76]
+  PIN x_d[77]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 91.296 99.792 91.32 ;
+    END
+  END x_d[77]
+  PIN x_d[78]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 91.488 99.792 91.512 ;
+    END
+  END x_d[78]
+  PIN x_d[79]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 91.632 99.792 91.656 ;
+    END
+  END x_d[79]
+  PIN x_d[7]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 79.296 99.792 79.32 ;
+    END
+  END x_d[7]
+  PIN x_d[80]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 91.824 99.792 91.848 ;
+    END
+  END x_d[80]
+  PIN x_d[81]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 92.016 99.792 92.04 ;
+    END
+  END x_d[81]
+  PIN x_d[82]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 92.16 99.792 92.184 ;
+    END
+  END x_d[82]
+  PIN x_d[83]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 92.352 99.792 92.376 ;
+    END
+  END x_d[83]
+  PIN x_d[84]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 92.496 99.792 92.52 ;
+    END
+  END x_d[84]
+  PIN x_d[85]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 92.688 99.792 92.712 ;
+    END
+  END x_d[85]
+  PIN x_d[86]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 92.832 99.792 92.856 ;
+    END
+  END x_d[86]
+  PIN x_d[87]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 93.024 99.792 93.048 ;
+    END
+  END x_d[87]
+  PIN x_d[88]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 93.216 99.792 93.24 ;
+    END
+  END x_d[88]
+  PIN x_d[89]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 93.36 99.792 93.384 ;
+    END
+  END x_d[89]
+  PIN x_d[8]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 79.44 99.792 79.464 ;
+    END
+  END x_d[8]
+  PIN x_d[90]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 93.552 99.792 93.576 ;
+    END
+  END x_d[90]
+  PIN x_d[91]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 93.696 99.792 93.72 ;
+    END
+  END x_d[91]
+  PIN x_d[92]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 93.888 99.792 93.912 ;
+    END
+  END x_d[92]
+  PIN x_d[93]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 94.08 99.792 94.104 ;
+    END
+  END x_d[93]
+  PIN x_d[94]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 94.224 99.792 94.248 ;
+    END
+  END x_d[94]
+  PIN x_d[95]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 94.416 99.792 94.44 ;
+    END
+  END x_d[95]
+  PIN x_d[96]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 94.592 99.792 94.624 ;
+    END
+  END x_d[96]
+  PIN x_d[97]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 94.72 99.792 94.752 ;
+    END
+  END x_d[97]
+  PIN x_d[98]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 94.912 99.792 94.944 ;
+    END
+  END x_d[98]
+  PIN x_d[99]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT  99.722 95.104 99.792 95.136 ;
+    END
+  END x_d[99]
+  PIN x_d[9]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  99.708 79.632 99.792 79.656 ;
+    END
+  END x_d[9]
+  PIN VSS
+    DIRECTION INOUT ;
+    USE GROUND ;
+    PORT
+      LAYER M6 ;
+        RECT  2.16 137.529 97.632 137.817 ;
+        RECT  2.16 132.129 97.632 132.417 ;
+        RECT  2.16 126.729 97.632 127.017 ;
+        RECT  2.16 121.329 97.632 121.617 ;
+        RECT  2.16 115.929 97.632 116.217 ;
+        RECT  2.16 110.529 97.632 110.817 ;
+        RECT  2.16 105.129 97.632 105.417 ;
+        RECT  2.16 99.729 97.632 100.017 ;
+        RECT  2.16 94.329 97.632 94.617 ;
+        RECT  2.16 88.929 97.632 89.217 ;
+        RECT  2.16 83.529 97.632 83.817 ;
+        RECT  2.16 78.129 97.632 78.417 ;
+        RECT  2.16 72.729 97.632 73.017 ;
+        RECT  2.16 67.329 97.632 67.617 ;
+        RECT  2.16 61.929 97.632 62.217 ;
+        RECT  2.16 56.529 97.632 56.817 ;
+        RECT  2.16 51.129 97.632 51.417 ;
+        RECT  2.16 45.729 97.632 46.017 ;
+        RECT  2.16 40.329 97.632 40.617 ;
+        RECT  2.16 34.929 97.632 35.217 ;
+        RECT  2.16 29.529 97.632 29.817 ;
+        RECT  2.16 24.129 97.632 24.417 ;
+        RECT  2.16 18.729 97.632 19.017 ;
+        RECT  2.16 13.329 97.632 13.617 ;
+        RECT  2.16 7.929 97.632 8.217 ;
+        RECT  2.16 2.529 97.632 2.817 ;
+    END
+  END VSS
+  PIN VDD
+    DIRECTION INOUT ;
+    USE POWER ;
+    PORT
+      LAYER M6 ;
+        RECT  2.16 137.913 97.632 138.201 ;
+        RECT  2.16 132.513 97.632 132.801 ;
+        RECT  2.16 127.113 97.632 127.401 ;
+        RECT  2.16 121.713 97.632 122.001 ;
+        RECT  2.16 116.313 97.632 116.601 ;
+        RECT  2.16 110.913 97.632 111.201 ;
+        RECT  2.16 105.513 97.632 105.801 ;
+        RECT  2.16 100.113 97.632 100.401 ;
+        RECT  2.16 94.713 97.632 95.001 ;
+        RECT  2.16 89.313 97.632 89.601 ;
+        RECT  2.16 83.913 97.632 84.201 ;
+        RECT  2.16 78.513 97.632 78.801 ;
+        RECT  2.16 73.113 97.632 73.401 ;
+        RECT  2.16 67.713 97.632 68.001 ;
+        RECT  2.16 62.313 97.632 62.601 ;
+        RECT  2.16 56.913 97.632 57.201 ;
+        RECT  2.16 51.513 97.632 51.801 ;
+        RECT  2.16 46.113 97.632 46.401 ;
+        RECT  2.16 40.713 97.632 41.001 ;
+        RECT  2.16 35.313 97.632 35.601 ;
+        RECT  2.16 29.913 97.632 30.201 ;
+        RECT  2.16 24.513 97.632 24.801 ;
+        RECT  2.16 19.113 97.632 19.401 ;
+        RECT  2.16 13.713 97.632 14.001 ;
+        RECT  2.16 8.313 97.632 8.601 ;
+        RECT  2.16 2.913 97.632 3.201 ;
+    END
+  END VDD
+  OBS
+    LAYER RVTN ;
+     RECT  2.16 2.101 99.792 138.263 ;
+    LAYER RVTP ;
+     RECT  2.16 2.101 99.792 138.263 ;
+    LAYER M1 ;
+     RECT  2.16 2.101 99.792 138.263 ;
+    LAYER M2 ;
+     RECT  2.16 2.101 99.792 138.263 ;
+    LAYER M3 ;
+     RECT  2.16 2.101 99.792 138.263 ;
+    LAYER M4 ;
+     RECT  2.16 2.101 99.792 138.263 ;
+    LAYER M5 ;
+     RECT  2.16 2.101 99.792 138.263 ;
+    LAYER M6 ;
+     RECT  2.16 2.101 99.792 138.263 ;
+    LAYER M7 ;
+     RECT  2.16 2.101 99.792 138.263 ;
+  END
+END ot_qwen_tile_lsl
+END LIBRARY
