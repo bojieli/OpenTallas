@@ -4,7 +4,8 @@
 // same operation script: epochs, vector counts, capture data, an illegal op and a wrong-epoch producer_done near the
 // end) drive the two DUTs; the host-write stream (dst, data hash), the ACK-visible stream (addr, epoch), the fence
 // stream (epoch) and the final fault must be identical.  +MUT=1 (fence_p MUT 1) must FAIL.
-module fence_pinret_env #(parameter integer PV = 0, parameter integer MUT = 0, parameter integer SEED = 1, parameter integer NOP = 40) (
+module fence_pinret_env #(parameter integer PV = 0, parameter integer MUT = 0, parameter integer SEED = 1, parameter integer NOP = 40,
+    parameter integer INPIN = 0, parameter integer HOLDBUF = 0) (
     input wire clk, input wire rst_n, output reg fin);
     reg op_valid = 0; reg [7:0] op_epoch = 0; reg [9:0] op_vectors = 0;
     reg cap_valid = 0; reg [7:0] cap_epoch = 0; reg [8:0] cap_addr = 0; reg cap_last = 0; reg [4095:0] cap_data = 0;
@@ -22,7 +23,7 @@ module fence_pinret_env #(parameter integer PV = 0, parameter integer MUT = 0, p
             .writes_visible(wv), .fence_valid(fence_valid), .fence_ready(fence_ready), .fence_epoch(fence_epoch),
             .pending_write(pw), .fault(fault));
     end else begin : g_p
-        ot_gpu_rf_visibility_fence_p #(.MUT(MUT), .PINRET(1), .MUT_RETURN(MUT == 2)) dut (.clk(clk), .rst_n(rst_n), .op_valid(op_valid), .op_ready(op_ready),
+        ot_gpu_rf_visibility_fence_p #(.MUT(MUT), .PINRET(1), .MUT_RETURN(MUT == 2), .INPIN(INPIN), .HOLDBUF(HOLDBUF)) dut (.clk(clk), .rst_n(rst_n), .op_valid(op_valid), .op_ready(op_ready),
             .op_epoch(op_epoch), .op_vectors(op_vectors), .cap_valid(cap_valid), .cap_ready(cap_ready), .cap_epoch(cap_epoch),
             .cap_addr(cap_addr), .cap_last(cap_last), .cap_data(cap_data), .producer_done_valid(producer_done_valid),
             .producer_done_epoch(producer_done_epoch), .host_wr_valid(host_wr_valid), .host_wr_ready(host_wr_ready),
@@ -109,11 +110,11 @@ module fence_pinret_env #(parameter integer PV = 0, parameter integer MUT = 0, p
     end
 endmodule
 module tb_fence_pinret;
-    parameter integer MUT = 0, SEED = 7;
+    parameter integer MUT = 0, SEED = 7, INPIN = 0, HOLDBUF = 0;
     reg clk = 0, rst_n = 0; always #0.5 clk = ~clk;
     wire f0, f1;
     fence_pinret_env #(.PV(0), .SEED(SEED)) e0 (.clk(clk), .rst_n(rst_n), .fin(f0));
-    fence_pinret_env #(.PV(1), .MUT(MUT), .SEED(SEED + 1000)) e1 (.clk(clk), .rst_n(rst_n), .fin(f1));
+    fence_pinret_env #(.PV(1), .MUT(MUT), .SEED(SEED + 1000), .INPIN(INPIN), .HOLDBUF(HOLDBUF)) e1 (.clk(clk), .rst_n(rst_n), .fin(f1));
     integer i, bad = 0;
     initial begin
         repeat (4) @(posedge clk); rst_n = 1;

@@ -18,6 +18,7 @@
 // Copies are ot_sc_rep_ff instances (keep_hierarchy) so synthesis (opt_merge) cannot merge them back into one
 // high-fanout net; checked with the ORFS yosys 0.68 (plain (* keep *) regs were merged: 22 -> 9 control flops).
 // MUT 1 (bench mutant): the write slot is not protected when full (a full FIFO overwrites its tail).
+// MUT 2 (bench mutant, PINREG=2): in_ready ignores the in-flight pin-flop beat (overflow under back-pressure).
 module ot_sc_pfifo #(
     parameter integer W = 32,
     parameter integer S = 2,       // entries (>= 2)
@@ -26,6 +27,12 @@ module ot_sc_pfifo #(
     // PINREG=1 (sys-takeover 2026-10-10, opt-in): in_valid / in_data are captured by a bare pin flop first and pushed one
     // edge later (no handshake logic between the pin and a flop: collvmpub rsp_valid pin -> we copies 11 levels); in_ready
     // reserves room for that in-flight word (ready while count + in-flight < S; use S >= 3 for full rate).
+    // PINREG=2 (hgi-1010/idleB 2026-10-10, opt-in): BARE pin capture -- in_valid and every in_data bit reach exactly one
+    // plain D flop (no reset, no gate), so the pin flop anchors at the pin and the handshake logic sees flops only
+    // (fence_p 93f2ee279 TT -42: cap_valid / host_ack_valid -> push -> {push,pop} copy select -> we copies / in_ready,
+    // 10-12 levels after a 518 ps link-budget input delay).  The beat accepted at edge t is pushed at t+1
+    // (push = pin flop & the registered copy of in_ready); in_ready reserves room for it from flops alone
+    // (ready while count_next + in_ready < S, i.e. it assumes in_valid).  +1 edge input latency; S >= 3 for full rate.
     parameter integer PINREG = 0
 ) (
     input  wire         clk,
@@ -47,7 +54,12 @@ module ot_sc_pfifo #(
         if (!rst_n) pv <= 1'b0; else pv <= in_valid && in_ready;
         pd <= in_data;
     end
-    wire push = PINREG ? pv : (in_valid && in_ready);
+    reg          pvr, rdy_d;                  // PINREG=2: bare pin flop of in_valid, registered copy of in_ready
+    always @(posedge clk) begin
+        pvr <= in_valid;
+        if (!rst_n) rdy_d <= 1'b0; else rdy_d <= in_ready;
+    end
+    wire push = (PINREG == 2) ? (pvr && rdy_d) : PINREG ? pv : (in_valid && in_ready);
     wire [W-1:0] wdat = PINREG ? pd : in_data;
     wire pop  = out_valid && out_ready;
     wire [CB-1:0] n_nx = n + {{(CB-1){1'b0}}, push} - {{(CB-1){1'b0}}, pop};
@@ -58,7 +70,8 @@ module ot_sc_pfifo #(
         if (!rst_n) begin n <= 0; w <= 0; r <= 0; in_ready <= 1'b1; out_valid <= 1'b0; end   // empty after reset: ready at once
         else begin
             n <= n_nx; w <= w_nx; r <= r_nx;
-            in_ready <= PINREG ? (({1'b0, n_nx} + {{CB{1'b0}}, in_valid && in_ready}) < S) : !full_nx;
+            in_ready <= (PINREG == 2) ? ((MUT == 2) ? !full_nx : (({1'b0, n_nx} + {{CB{1'b0}}, in_ready}) < S))
+                      : PINREG ? (({1'b0, n_nx} + {{CB{1'b0}}, in_valid && in_ready}) < S) : !full_nx;
             out_valid <= (n_nx != 0);
         end
     end
