@@ -43,6 +43,15 @@ KS = (1, 2)
 BAD = 3
 ORDER, CFG = "basic", "cfg_stage2"
 ROLLBACK_RING_DYN = False
+# --sseq (s81-ctl-1011, main decision A interim "real stage control, W17 engine core"): every package's stage start /
+# done passes the real stage sequencer dsfd_stage_seq (rtl/dsrom_sys/mtp, ot_s81_stage_seq inside) between the closed
+# WFC controller and the core: ctrl core_start {user, token, pos} -> f_ks (job_v), the program's engine port 0 command
+# = the core's start with the job context from the DESCRIPTOR, the core's done -> dn port 0 (tag of the started op),
+# job_done -> t_kd -> the controller's core_done (a level, dropped on the controller's next core_start: the
+# ot_dsrom_wfc_vmx core contract).  Single-clock vehicle: the kit's vmx / lnk crossings are not in this bench.
+# SSEQ_MUT: 'drop' = OT_SSEQ_MUT_DROP_START, 'early' = OT_SSEQ_MUT_EARLY_DONE (both must FAIL).
+SSEQ = None
+SSEQ_SRC = [ROOT / "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv", ROOT / "rtl/dsrom_sys/mtp/dsfd_stage_seq.sv"]
 WFC = ROOT / "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv"
 WFC_SHA = "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8"
 # the closed stg r11 element's knobs (results/rtl/dsrom_wfc_split_20261006/stage/stage_w1_r11.json)
@@ -223,9 +232,61 @@ def bench_copy(run: Path) -> Path:
     for o, n_ in ((old_ports, new_ports), (old_sink, new_sink), (old_last, new_last)):
         assert src.count(o) == 1, "bench changed: re-anchor tools/mtp_exact_wavefront2.py"
         src = src.replace(o, n_)
+    if SSEQ is not None:
+        src = sseq_patch(src)
     out = run / "tb_dsrom_wavefront_array_stage2.sv"
     out.write_text(src)
     return out
+
+
+SSEQ_BLOCK = """
+            // ---- s81-ctl-1011 --sseq: stage start / done through dsfd_stage_seq (real stage control, W17 engine core)
+            localparam integer SSEQ_MAXC = 400000;
+            wire          w_cs; wire [NW-1:0] w_ctok, w_cpos; reg w_cd = 1'b0;
+            wire [42:0]   s_ks = {w_cs, 10'(ctrl.st_user), w_ctok, w_cpos};   // {start, user 10, token 21, pos 21}
+            wire [53:0]   s_kd; wire [0:0] s_cv; wire [83:0] s_cd; wire [5:0] s_st;
+            reg  [35:0]   s_pw = 36'd0; reg [7:0] s_plen = 8'd0; reg [3:0] s_ld = 4'd0;
+            reg           s_dq = 1'b0, s_dv = 1'b0; reg [7:0] s_tag = 8'd0, s_dt = 8'd0;
+            dsfd_stage_seq #(.NOPS(128), .NENG(1), .QD(8)) u_sseq (.ckv(clk), .rsv(rst_n), .f_ks(s_ks), .t_kd(s_kd),
+                .f_pw(s_pw), .f_plen(s_plen), .t_cmdv(s_cv), .t_cmdd(s_cd), .f_dnv(s_dv), .f_dntag(s_dt), .t_st(s_st));
+            // the core's start and job context come from the sequencer's port-0 descriptor {slot, user, pos, tok, arg, op}
+            assign c_start = s_cv[0];
+            assign c_pos   = s_cd[72:52];
+            assign c_token = s_cd[51:31];
+            always @(posedge clk) begin
+                // program (boot cfg path): one entry {engine 0 = the stage core, arg 0}, then prog_len 1
+                s_pw <= 36'd0;
+                if (rst_n && s_ld != 4'd15) begin
+                    s_ld <= s_ld + 1'b1;
+                    if (s_ld == 4'd6) s_pw <= {1'b1, 7'd0, 4'd0, 24'd0};
+                    if (s_ld == 4'd8) s_plen <= 8'd1;
+                end
+                if (s_cv[0]) s_tag <= {s_cd[83], s_cd[6:0]};
+                // completion: the core's done (level) rising -> one dn pulse with the started op's tag
+                s_dq <= c_done; s_dv <= c_done && !s_dq && !c_start; s_dt <= s_tag;
+                // controller core_done: a level, set by the sequencer's job done, dropped on the controller's start
+                if (w_cs) w_cd <= 1'b0; else if (s_kd[53]) w_cd <= 1'b1;
+                if (rst_n && s_st[5]) begin $display("SSEQ FAIL node=%0d sequencer fault code %h", n, s_st[4:1]); $finish; end
+                if (rst_n && w_cs && s_ld != 4'd15) begin $display("SSEQ FAIL node=%0d start before the program load", n); $finish; end
+                // a dropped start leaves the controller waiting forever: bound the run (ctrl-driven reference 83,925 cycles)
+                if (n == 0 && cyc > SSEQ_MAXC) begin $display("SSEQ FAIL TIMEOUT cyc=%0d", cyc); $finish; end
+            end
+"""
+
+
+def sseq_patch(src):
+    """--sseq: route each package's controller start / done through dsfd_stage_seq (see SSEQ above)"""
+    o1 = """                .core_start(c_start), .core_token(c_token), .core_pos(c_pos), .core_done(c_done),"""
+    n1 = """                .core_start(w_cs), .core_token(w_ctok), .core_pos(w_cpos), .core_done(w_cd),"""
+    o2 = """            // controller <-> (context restore) <-> core
+            wire          c_start, c_done;
+            wire [NW-1:0] c_token, c_pos;
+"""
+    n2 = o2 + SSEQ_BLOCK
+    for o, n_ in ((o1, n1), (o2, n2)):
+        assert src.count(o) == 1, "bench changed: re-anchor --sseq in tools/mtp_exact_wavefront2.py"
+        src = src.replace(o, n_)
+    return src
 
 
 def ctrl_copy(run: Path) -> Path:
@@ -241,12 +302,14 @@ def ctrl_copy(run: Path) -> Path:
 def run(scratch: Path, wave: int, ctrl: str, jobs: int):
     tag = f"stage2_{ctrl}_w{wave}" + ("" if ORDER == "basic" else f"_{ORDER}")
     tag += "_ringdyn" if ROLLBACK_RING_DYN else ""
+    tag += "" if SSEQ is None else ("_sseq" if SSEQ == "base" else f"_sseq{SSEQ}")
     obj = scratch / f"obj_{tag}"
     obj.mkdir(parents=True, exist_ok=True)
     (obj / "v41_array_cfg.svh").write_text((scratch / "stage2_cfg.svh").read_text())
     tb = bench_copy(obj)
     cfile = ctrl_copy(obj) if ctrl == "wfc" else W.CTRL
     defs = WFC_DEFINES if ctrl == "wfc" else []
+    defs = defs + {"drop": ["OT_SSEQ_MUT_DROP_START"], "early": ["OT_SSEQ_MUT_EARLY_DONE"]}.get(SSEQ, [])
     core = W.core
     cmd = ["verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
            "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MULTIDRIVEN", "-Wno-TIMESCALEMOD",
@@ -258,6 +321,7 @@ def run(scratch: Path, wave: int, ctrl: str, jobs: int):
            "+define+HDC_W_HBM=1", "+define+HDC_KV_HBM=1", *[f"+define+{d}" for d in defs],
            *map(str, core.rtl_sources(True)), *map(str, AC.BENCH_AUX_RTL), *map(str, AC.KV_HBM_RTL),
            str(AC.LINK), str(AC.ROUTER), str(cfile), str(tb), str(W.HARNESS),
+           *([str(x) for x in SSEQ_SRC] if SSEQ is not None else []),
            "-CFLAGS", "-O1", "-MAKEFLAGS", "OPT_FAST=-O1 OPT_GLOBAL=-O1", "-j", str(jobs)]
     (obj / "build_cmd.json").write_text(json.dumps(cmd))
     t0 = time.time()
@@ -279,7 +343,9 @@ def run(scratch: Path, wave: int, ctrl: str, jobs: int):
                                                              wave=wave, defines=defs, tb_sha256=sha(tb),
                                                              ctrl_sha256=sha(cfile),
                                                              core_sha256=sha(ROOT / 'rtl/hdc/v41x/ot_hdc_core_v41x.sv'),
-                                                             rollback_ring_dyn=ROLLBACK_RING_DYN)) + "\n")
+                                                             rollback_ring_dyn=ROLLBACK_RING_DYN, sseq=SSEQ,
+                                                             sseq_sha256={str(x.relative_to(ROOT)): sha(x) for x in SSEQ_SRC}
+                                                             if SSEQ is not None else None)) + "\n")
     return rc
 
 
@@ -335,6 +401,18 @@ def record(scratch: Path, output: Path):
     res["negative_control_wave0_detected"] = (not w0.get("passed")) if w0 else None
     if ROLLBACK_RING_DYN:
         res["pass"] = res["pass"] and bool(w0 and not w0.get("passed"))
+    sq = {k: res["runs"].get(f"stage2_wfc_w1_{k}") for k in ("sseq", "sseqdrop", "sseqearly")}
+    if sq["sseq"] is not None:   # s81-ctl-1011 real stage control: base exact, both sequencer mutants FAIL
+        b_ = sq["sseq"]
+        res["sseq"] = dict(label="real stage control, W17 engine core (reduced V4.1 two-stage vehicle, single clock)",
+                           base_exact=bool(b_.get("passed") and b_.get("out_mismatch") == 0 and b_.get("mismatches") == 0
+                                           and b_.get("state_mismatch") == 0),
+                           base_cycles=b_.get("total_cycles"), host_or_ctrl_driven_cycles=w1.get("total_cycles"),
+                           drop_start_detected=(not sq["sseqdrop"].get("passed")) if sq["sseqdrop"] else None,
+                           early_done_detected=(not sq["sseqearly"].get("passed")) if sq["sseqearly"] else None,
+                           per_stage=b_.get("per_stage"), per_stage_ref=w1.get("per_stage"))
+        res["sseq"]["pass"] = bool(res["sseq"]["base_exact"] and res["sseq"]["drop_start_detected"]
+                                   and res["sseq"]["early_done_detected"])
     deep = res["runs"].get("stage2_wfc_w1_deep" + ("_ringdyn" if ROLLBACK_RING_DYN else ""))
     if deep is not None:      # MR-5: squashed successors already in flight, re-issued after the corrected position
         res["mr5_deep_order_exact"] = bool(deep.get("passed") and deep.get("out_mismatch") == 0
@@ -355,13 +433,16 @@ def main():
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--output", type=Path)
     ap.add_argument("--order", default="basic", choices=("basic", "deep"))
+    ap.add_argument("--sseq", choices=("base", "drop", "early"),
+                    help="s81-ctl-1011: stage start / done through dsfd_stage_seq (drop / early = sequencer mutants)")
     ap.add_argument("--rollback-ring-dyn", action="store_true",
                     help="Explicit ring addressing and immutable _ringdyn records; original failure requires its pinned source")
     ap.add_argument("--source-layer", type=int, default=19, choices=(8, 14, 19),
                     help="First measured stage; 14 exercises ratio2 compressor rollback plus Engram, 19 is original WFC vehicle")
     a, rest = ap.parse_known_args()
     assert set(rest) <= {"--all-unit", "--kv-hbm"}, rest   # appended by the array campaign import
-    global ORDER, CFG, SOURCE_LAYER, ROLLBACK_RING_DYN
+    global ORDER, CFG, SOURCE_LAYER, ROLLBACK_RING_DYN, SSEQ
+    SSEQ = a.sseq
     ROLLBACK_RING_DYN = a.rollback_ring_dyn
     SOURCE_LAYER = a.source_layer
     ORDER, CFG = a.order, ("cfg_stage2" if a.order == "basic" else f"cfg_stage2_{a.order}")
