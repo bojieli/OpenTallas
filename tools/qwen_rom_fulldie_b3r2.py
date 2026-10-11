@@ -254,6 +254,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if seam_free:
         _seam_free(v, m)      # after every pin-plan rule, before the relays (they are derived from the moved pins)
     m['b3r2']['r22ks_seam_free'] = seam_free
+    if before_relays is not None:
+        _regions_from_placement(m)   # the surgery moved blocks: region clocks follow the FINAL placement
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
@@ -976,12 +978,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     regs = m['clock_regions']
 
     def region_of(cx, cy):
-        for k, r in enumerate(regs):
-            a, b_, c, d = r['rect']
-            if a <= cx <= c and b_ <= cy <= d:
-                return k
-        return min(range(len(regs)), key=lambda k: abs((regs[k]['rect'][0] + regs[k]['rect'][2]) / 2 - cx)
-                   + abs((regs[k]['rect'][1] + regs[k]['rect'][3]) / 2 - cy))
+        return region_at(regs, cx, cy)
     ck_add = {}
     stats, B, fck_drop, fck_new, insts, worst, spill = {}, [], set(), [], [], [], []
     stage_of = {}
@@ -1391,13 +1388,7 @@ def _r18_post(v, m):
     regs = m['clock_regions']
 
     def region_of(it):
-        cx, cy = it.x + it.w / 2, it.y + it.h / 2
-        for k, r in enumerate(regs):
-            a, b_, c, d = r['rect']
-            if a <= cx <= c and b_ <= cy <= d:
-                return k
-        return min(range(len(regs)), key=lambda k: abs((regs[k]['rect'][0] + regs[k]['rect'][2]) / 2 - cx)
-                   + abs((regs[k]['rect'][1] + regs[k]['rect'][3]) / 2 - cy))
+        return region_at(regs, it.x + it.w / 2, it.y + it.h / 2)
     per = {}
     for it in m['insts']:
         if it.domain == 'stream_1p2' and it.name != 'hub_el':
@@ -2645,6 +2636,64 @@ def _slab_entry(v, obs_top=7, strip=0.0):
 
 
 # ------------------------------------------------------------------------------------------------ clock regions
+def region_at(regs, cx, cy):
+    """clock region of a point: the region whose rectangle contains it, else the one whose rectangle is NEAREST (edge
+    distance).  qwendie-1011 textbook audit (class 1): the old nearest-CENTRE fallback put a channel relay / ROM group
+    outside every rectangle into a region whose centre was nearer but whose rectangle was far (spine bands r97 / r98
+    of r22ko4 grew to 6.6 / 6.3 mm sink spans against REGION_MAX_MM 5.25)."""
+    def dist(r):
+        a, b_, c, d = r['rect']
+        return max(a - cx, 0.0, cx - c) + max(b_ - cy, 0.0, cy - d)
+    return min(range(len(regs)), key=lambda k: (dist(regs[k]), k))
+
+
+def _regions_from_placement(m):
+    """qwendie-1011 textbook audit (class 1): re-derive every region clock net (clk_r<k>) from the final placement.
+    The r18 pass assigns region clocks from the placement it sees; a later surgery (r22ko4 surgery_o4: seq_su,
+    cbuf_g / crom_g groups, spine parts) moves blocks without moving their clock pin, so a block kept the clock of a
+    region it no longer sits in (r22ko4: creg_spine_1 / _2 sink spans 6.6 / 6.3 mm vs REGION_MAX_MM 5.25).  Every
+    sink pin is re-filed under region_at(its centre); the root keeps one pll_r<k> output per non-empty region."""
+    regs = m['clock_regions']
+    by = {i.name: i for i in m['insts']}
+    keep, root, sinks = [], None, []
+    for bus in m['buses']:
+        bid, cl, bits, eps = bus
+        if re.fullmatch(r'clk_r\d+', bid):
+            for i, p in eps:
+                if p.startswith('pll_r'):
+                    root = root or i
+                else:
+                    sinks.append((i, p))
+        else:
+            keep.append(bus)
+    if root is None:
+        return
+    per = {}
+    for i, p in sinks:
+        it = by[i]
+        per.setdefault(region_at(regs, it.x + it.w / 2, it.y + it.h / 2), []).append((i, p))
+    moved = sum(1 for bus in m['buses'] if re.fullmatch(r'clk_r\d+', bus[0])
+                for i, p in bus[3] if not p.startswith('pll_r')
+                and f'clk_r{region_at(regs, by[i].x + by[i].w / 2, by[i].y + by[i].h / 2)}' != bus[0])
+    m['buses'] = keep + [(f'clk_r{k}', 'clock_trunk', 1, [(root, f'pll_r{k}')] + per[k]) for k in sorted(per)]
+    m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), refiled=moved, region_nets=len(per))
+
+
+def region_spans(m):
+    """measured sink span per region clock net (clk_r<k>: every pin but the hub's pll_r<k>), from the placement."""
+    by = {i.name: i for i in m['insts']}
+    out = {}
+    for bid, cl, bits, eps in m['buses']:
+        if not re.fullmatch(r'clk_r\d+', bid):
+            continue
+        pts = [by[i] for i, p in eps if i in by and not p.startswith('pll_')]
+        if pts:
+            xs = [i.x + i.w / 2 for i in pts]
+            ys = [i.y + i.h / 2 for i in pts]
+            out[bid] = dict(sinks=len(pts), span_um=[round(max(xs) - min(xs), 1), round(max(ys) - min(ys), 1)])
+    return out
+
+
 def clock_regions(v, m):
     """Decision C regions: 4 x 4-tile blocks (with their corridors), spine bands, strip thirds, IO blocks."""
     g = m['geo']
@@ -2990,6 +3039,9 @@ def record(v, m):
         e['max_extent_mm'] = max(e['max_extent_mm'], r['extent_mm'])
         if not r['within_5p25']:
             e['over_5p25'].append(r['name'])
+    # qwendie-1011 (textbook class 1): the MEASURED sink span of every region clock net, not only the rectangle's
+    spans = region_spans(m)
+    span_max = max((max(s['span_um']) for s in spans.values()), default=0.0)
     return dict(schema=SCHEMA, tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 b2_generator_sha256=F.sha('tools/qwen_rom_fulldie.py'), b3_selection_sha256=F.sha('tools/qwen_rom_fulldie_b3.py'),
                 die=die, vch_um=v.VCH, corridor_bits=v.CORRIDOR_BITS, tap_bits=v.TAP_BITS, band_repack=m['b3r2']['band'],
@@ -2997,6 +3049,8 @@ def record(v, m):
                 group_map={k: v_ for k, v_ in m['b3r2']['groups'].items() if k in ('primary', 'overflow_groups', 'overflow_slab')},
                 spine_parts=m['geo'].get('spine_parts_band') or m['geo']['spine_parts'],
                 fifo=fifo_accounting(v, m), clock_regions_summary=by_kind, clock_regions=m['clock_regions'],
+                region_sink_spans=spans, region_sink_span_max_mm=round(span_max / 1000, 4),
+                regions_over_5p25_measured=sorted(k for k, s in spans.items() if max(s['span_um']) > REGION_MAX_MM * 1000),
                 spine_vertical_cut_bits=spine_cut(m, [3000, 8800, 12000, 18000, 25000]),
                 link_stages=v.link_stages(m), bword_stages=bword_stages(v, m))
 
