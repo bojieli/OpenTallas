@@ -11,7 +11,7 @@ transaction of tb_mtp_p2_fixlat (gold.hex from tools/mtp_p2_prefix_fixture.py), 
                      errors, done events at the primary, abort event within ABMAX while start 3 waits in die A
   p2l_s5     pass    same, another stall / gap seed
   neg_seg    FAIL    OT_P2L_MUT_SEG: second beat not shifted (segmentation)
-  neg_cred   FAIL    OT_P2L_MUT_CRED: one credit over the row / start class buffer (overflow fault)
+  neg_cred   FAIL    OT_P2L_MUT_CRED: one credit over the row / start class buffer + output register (overflow fault)
   neg_hol    FAIL    OT_P2L_MUT_DIRECT: no end-to-end class credits: the abort event waits behind the pending start (HOL)
   neg_lat1   FAIL    OT_FIXLAT_MUT_LAT1: coll_p2_ep / p2_lnk receivers sized for latency 1 on the stations
 

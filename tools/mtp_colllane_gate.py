@@ -15,7 +15,7 @@ transmitters at the real 8 / 8 hub stations, consumers over 5 / 5 stations (rtl/
   pos_win     pass    long stall windows: class credits, receiver grants and class buffers run full, exact
   pos_rate    pass    no stalls, the sequencer's fastest emission (1 token / 6 cycles): rate + first-token latency
   neg_shared  FAIL    OT_MTPL_MUT_SHARED (classes share the landing FIFO = HOL design) under pos_hol's stalls
-  neg_cred    FAIL    OT_MTPL_MUT_CRED (TCRED + 1 token credits) under pos_win's stalls: class buffer overflow
+  neg_cred    FAIL    OT_MTPL_MUT_CRED (TCRED + 3 token credits, one over the SRAM FIFO's TCRED + 2) under pos_win's stalls: class buffer overflow
   neg_stale   FAIL    OT_MTPL_MUT_STALE (receivers sized for the chain-record 6 / 7 on the real 8 / 8): overflow
 
     python3 tools/mtp_colllane_gate.py --out DIR [--cases a,b] [-j N]     (run from the repo root on a fleet host)

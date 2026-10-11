@@ -37,7 +37,7 @@
 // Mutants (negative controls, never in a build):
 //   OT_MTPL_MUT_SHARED  per-class credits off: classes share the landing FIFO, which stalls when the head flit's class
 //                       buffer is full (the HOL design): a stalled seed consumer blocks the token return
-//   OT_MTPL_MUT_CRED    the sender starts with TCRED + 1 token credits: the token buffer overflows
+//   OT_MTPL_MUT_CRED    the sender starts with TCRED + 3 token credits (one over the buffer's TCRED + 2 head capacity): overflow
 //   OT_MTPL_MUT_STALE   receivers sized for the chain-record 6 / 7 stages on the real 8 / 8: grant overflow
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_coll_mtp_lane #(
@@ -181,7 +181,7 @@ module dsfd_coll_mtp_lane #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
 `ifdef OT_MTPL_MUT_CRED
-            tcr <= CW'(TCRED + 1);
+            tcr <= CW'(TCRED + 3);   // one over the buffer's real capacity (TCRED SRAM words + the 2-entry head register)
 `else
             tcr <= CW'(TCRED);
 `endif

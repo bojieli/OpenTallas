@@ -25,7 +25,7 @@
 // the previous change keeps its edge order; queue depth EQ, overflow = fault).
 // Faults (sticky): landing overflow, unexpected type / segment, class buffer overflow, event queue overflow, the
 // lane tile's faults (f_lflt) -> t_flt (from a flop).
-// Mutants: OT_P2L_MUT_CRED (sender starts with CRED + 1 credits: class buffer overflow), OT_P2L_MUT_SEG (the second
+// Mutants: OT_P2L_MUT_CRED (sender starts with CRED + 2 credits, one over buffer + output register: overflow), OT_P2L_MUT_SEG (the second
 // beat's payload is not shifted: segmentation corrupts the high word), OT_P2L_MUT_DIRECT (credited direction run
 // DIRECT: a stalled data consumer blocks the events behind it = HOL).
 // ---------------------------------------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ module dsfd_coll_p2_lane #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
 `ifdef OT_P2L_MUT_CRED
-            tcr <= CW'(SCRED + 1);
+            tcr <= CW'(SCRED + 2);   // one over the peer's real capacity (CRED buffer words + its output register)
 `else
             tcr <= CW'(SCRED);
 `endif
