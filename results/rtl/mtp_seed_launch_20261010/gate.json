@@ -1,0 +1,172 @@
+{
+ "schema": "opentallas.mtp-seed-launch-gate.v1",
+ "sources": [
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+  "rtl/dsrom_sys/mtp/tb_mtp_seed_launch.sv"
+ ],
+ "cases": [
+  {
+   "case": "pos_basic",
+   "rc": 0,
+   "line": "case=pos_basic result=PASS rows=17 starts=6 fault=0000 cyc=16325 desc_to_x=34 done_to_ps=3 row_gap=35",
+   "result": "PASS",
+   "rows": "17",
+   "starts": "6",
+   "fault": "0000",
+   "cyc": "16325",
+   "desc_to_x": "34",
+   "done_to_ps": "3",
+   "row_gap": "35",
+   "errors": []
+  },
+  {
+   "case": "pos_win",
+   "rc": 0,
+   "line": "case=pos_win result=PASS rows=258 starts=2 fault=0000 cyc=209951 desc_to_x=34 done_to_ps=3 row_gap=36",
+   "result": "PASS",
+   "rows": "258",
+   "starts": "2",
+   "fault": "0000",
+   "cyc": "209951",
+   "desc_to_x": "34",
+   "done_to_ps": "3",
+   "row_gap": "36",
+   "errors": []
+  },
+  {
+   "case": "neg_drop",
+   "rc": 0,
+   "line": "case=neg_drop result=PASS rows=3 starts=1 fault=0001 cyc=5023 desc_to_x=34 done_to_ps=3 row_gap=33",
+   "result": "PASS",
+   "rows": "3",
+   "starts": "1",
+   "fault": "0001",
+   "cyc": "5023",
+   "desc_to_x": "34",
+   "done_to_ps": "3",
+   "row_gap": "33",
+   "errors": []
+  },
+  {
+   "case": "neg_stale",
+   "rc": 0,
+   "line": "case=neg_stale result=PASS rows=6 starts=2 fault=0010 cyc=7450 desc_to_x=34 done_to_ps=3 row_gap=33",
+   "result": "PASS",
+   "rows": "6",
+   "starts": "2",
+   "fault": "0010",
+   "cyc": "7450",
+   "desc_to_x": "34",
+   "done_to_ps": "3",
+   "row_gap": "33",
+   "errors": []
+  },
+  {
+   "case": "neg_replay",
+   "rc": 0,
+   "line": "case=neg_replay result=PASS rows=6 starts=2 fault=0001 cyc=7450 desc_to_x=34 done_to_ps=3 row_gap=33",
+   "result": "PASS",
+   "rows": "6",
+   "starts": "2",
+   "fault": "0001",
+   "cyc": "7450",
+   "desc_to_x": "34",
+   "done_to_ps": "3",
+   "row_gap": "33",
+   "errors": []
+  }
+ ],
+ "mutants": [
+  {
+   "case": "neg_drop",
+   "rc": 0,
+   "line": "case=neg_drop result=FAIL rows=3 starts=2 fault=0000 cyc=5023 desc_to_x=34 done_to_ps=3 row_gap=33",
+   "result": "FAIL",
+   "rows": "3",
+   "starts": "2",
+   "fault": "0000",
+   "cyc": "5023",
+   "desc_to_x": "34",
+   "done_to_ps": "3",
+   "row_gap": "33",
+   "errors": [
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row"
+   ],
+   "define": "OT_SEEDL_MUT_NOGAP"
+  },
+  {
+   "case": "neg_replay",
+   "rc": 0,
+   "line": "case=neg_replay result=FAIL rows=6 starts=3 fault=0000 cyc=7450 desc_to_x=34 done_to_ps=3 row_gap=33",
+   "result": "FAIL",
+   "rows": "6",
+   "starts": "3",
+   "fault": "0000",
+   "cyc": "7450",
+   "desc_to_x": "34",
+   "done_to_ps": "3",
+   "row_gap": "33",
+   "errors": [
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row"
+   ],
+   "define": "OT_SEEDL_MUT_NOGAP"
+  },
+  {
+   "case": "neg_stale",
+   "rc": 0,
+   "line": "case=neg_stale result=FAIL rows=6 starts=3 fault=0000 cyc=7450 desc_to_x=34 done_to_ps=3 row_gap=33",
+   "result": "FAIL",
+   "rows": "6",
+   "starts": "3",
+   "fault": "0000",
+   "cyc": "7450",
+   "desc_to_x": "34",
+   "done_to_ps": "3",
+   "row_gap": "33",
+   "errors": [
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row",
+    "SEEDL_ERR unexpected row"
+   ],
+   "define": "OT_SEEDL_MUT_NOEPOCH"
+  }
+ ],
+ "cycles": {
+  "desc_to_x": 34,
+  "done_to_ps": 3,
+  "row_gap": 35,
+  "basis": "bench stations: descriptor FWD/RET 9/9, VM link 6/6 + 12-cycle VM latency, x / join 4 stations each way (desc_to_x = descriptor at the slab pin -> first x beat at its pin)"
+ },
+ "verdict": {
+  "positives_and_rejections": true,
+  "mutants_fail": true
+ }
+}

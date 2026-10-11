@@ -48,7 +48,18 @@ module ot_hgi_att_unit #(
     // cycle, bounded by the HBM bandwidth, never by a lane.  RIF rows in flight a slot (the landing FIFO depth).
     // MUT_LANE (bench): lane 1's data taken from lane 0 -> must FAIL.
     parameter integer RIF = 64,
-    parameter integer MUT_LANE = 0
+    parameter integer MUT_LANE = 0,
+    // KV8 (fe-push-hgi-1010/kv8, opt-in, default 0 = the as-built unit): B / C fmt 7 = the FP8 KV ROW of the DS packed
+    // window contract (docs/V41X_PACKED_WINDOW_KV_INTERFACE.md, hdc_golden_v41 quant_fp8): hd E4M3 code bytes (hd / 32
+    // sectors) then hd / 32 UE8M0 block scales in byte order in ONE trailing sector (row = hd / 32 + 1 sectors, B/C
+    // stride >= that).  Element t of a row = E4M3[code] x 2^(scale(t / 32) - 127), carried to the engine as the group
+    // word's scale byte (the as-built rows pin it at 127) -- the engine dequantises exactly as the golden's qdq_fp8.
+    // Scale 0xFF (E8M0 NaN) faults (fail closed); codes keep the engine's own rules.  B and C must agree (7 or not).
+    // KV8 = 1 also lands the PIPE = 0 sector path through ot_hgi_att_sector_codec (registered conversion + bank
+    // address, the closed codec element) instead of the inline e4m3 at the bank write.  fmt 7 with KV8 = 0 faults.
+    // MUT_KV8 (bench): group g takes group g+1's scale -> must FAIL.
+    parameter integer KV8 = 0,
+    parameter integer MUT_KV8 = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -97,7 +108,7 @@ module ot_hgi_att_unit #(
     wire [24:0] prm = hdr[88:64];
     wire hasc = opnd[2];
     // ---- decoded record
-    reg qk; reg [4:0] lanes; reg [9:0] hd; reg ring; reg [20:0] tt; reg [1:0] bfmt, cfmt;
+    reg qk; reg [4:0] lanes; reg [9:0] hd; reg ring; reg [20:0] tt; reg [1:0] bfmt, cfmt; reg bk8, ck8;
     reg [17:0] abase, astr, obase, ostr, oist; reg [39:0] bbase, cbase; reg [31:0] bstr, cstr; reg [19:0] bm;
     // ---- the engine
     reg job_v; reg [15:0] job_t; wire job_ready;
@@ -145,11 +156,12 @@ module ot_hgi_att_unit #(
     endfunction
     // the staging row: D / 32 groups {fmt 0, scale 127, 32 codes}, codes past hd zero (static wiring)
     reg [ROWW-1:0] kv_row;
+    reg [255:0] s8r;                         // KV8: the row's scale sector (byte g = group g's UE8M0)
     integer gx, xx;
     always @* begin
         kv_row = {ROWW{1'b0}};
         for (gx = 0; gx < G; gx = gx + 1) begin
-            kv_row[gx * 265 + 256 +: 8] = 8'd127;
+            kv_row[gx * 265 + 256 +: 8] = (bk8 && gx < hd[9:5]) ? s8r[8 * ((gx + MUT_KV8) % G) +: 8] : 8'd127;
             for (xx = 0; xx < 32; xx = xx + 1) kv_row[gx * 265 + 8 * xx +: 8] = (gx * 32 + xx < hd) ? c_flat[8 * (gx * 32 + xx) +: 8] : 8'd0;
         end
     end
@@ -198,13 +210,22 @@ module ot_hgi_att_unit #(
     end
     assign p_word = p_word_r;
     reg [31:0] cflt;
+    // KV8: the PIPE = 0 landing goes through the registered sector codec; a fmt 7 row's trailing sector (index
+    // hd / 32) is the scale sector: it loads s8r, never the code banks.
+    wire codec_v; wire [255:0] codec_codes; wire [31:0] codec_mask, codec_bad; wire [7:0] codec_addr;
+    wire use_codec = (KV8 != 0) && (PIPE == 0);
+    wire [7:0] k8_tq; wire k8_ssec, k8_land; reg s8f;
     generate for (gb = 0; gb < 32; gb = gb + 1) begin : g_cb
         wire [8:0] c16 = e4m3({c_dq[16 * (gb % 16) +: 16], 16'd0});
         wire [8:0] c32 = e4m3(c_dq[32 * (gb % 8) +: 32]);
         reg [7:0] m [0:D/32-1];
         always @(posedge clk) begin
             cflt[gb] <= 1'b0;
-            if (land_c) begin
+            if (use_codec) begin
+                if (codec_v && st == S_KVC && codec_mask[gb] && !k8_ssec) begin
+                    m[codec_addr] <= codec_codes[8*gb +: 8]; cflt[gb] <= codec_bad[gb];
+                end
+            end else if (land_c && !(KV8 != 0 && k8_ssec)) begin
                 if (es_b == 2'd0) m[c_tq] <= c_dq[8*gb +: 8];
                 else if (es_b == 2'd1 && c_tq[0] == gb / 16) begin m[c_tq >> 1] <= c16[7:0]; cflt[gb] <= c16[8]; end
                 else if (es_b == 2'd2 && c_tq[1:0] == gb / 8) begin m[c_tq >> 2] <= c32[7:0]; cflt[gb] <= c32[8]; end
@@ -242,10 +263,33 @@ module ot_hgi_att_unit #(
     reg hr_vq; reg [7:0] hr_tq; reg [255:0] hr_dq;
     always @(posedge clk) begin hr_tq <= hr_tag; hr_dq <= hr_data; end
     always @(posedge clk or negedge rst_n) if (!rst_n) hr_vq <= 1'b0; else hr_vq <= hr_v;
+    generate if (KV8 != 0 && PIPE == 0) begin : g_codec
+        ot_hgi_att_sector_codec u_codec (.clk(clk), .rst_n(rst_n), .in_v(hr_vq && st == S_KVC), .in_data(hr_dq),
+            .in_tag(hr_tq), .in_es(es_b), .out_v(codec_v), .out_codes(codec_codes), .out_mask(codec_mask),
+            .out_bad(codec_bad), .out_addr(codec_addr));
+    end else begin : g_no_codec
+        assign codec_v = 1'b0; assign codec_codes = 256'd0; assign codec_mask = 32'd0; assign codec_bad = 32'd0;
+        assign codec_addr = 8'd0;
+    end endgenerate
+    assign k8_tq = use_codec ? codec_addr : c_tq;                  // the landing sector's index in the row
+    assign k8_ssec = bk8 && k8_tq == hd[9:5];                            // fmt 7: the scale sector
+    assign k8_land = use_codec ? (codec_v && st == S_KVC) : land_c;
+    always @(posedge clk) if (KV8 != 0 && k8_land && k8_ssec) s8r <= s8d;
+    // s8f: a used group's scale is 0xFF
+    wire [255:0] s8d = use_codec ? codec_codes : c_dq;
+    integer s8i;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) s8f <= 1'b0;
+        else begin
+            s8f <= 1'b0;
+            if (KV8 != 0 && k8_land && k8_ssec)
+                for (s8i = 0; s8i < 32; s8i = s8i + 1)
+                    if (s8i < hd[9:5] && s8d[8 * s8i +: 8] == 8'hFF) s8f <= 1'b1;
+        end
     // ---- PIPE row stream: issuer (fi_*) -> reorder slots (rob) -> in-order converter (co_*)
     reg [255:0] rob [0:RBD-1]; reg [RBD-1:0] rv; reg [7:0] fi_t, co_h; reg [8:0] occ;
     reg [20:0] fi_row, co_row; reg [7:0] fi_sec, co_sec; reg pend_row;
-    wire [7:0] nsec_w = ({8'd0, hd} << es_b) >> 5;
+    wire [7:0] nsec_w = (({8'd0, hd} << es_b) >> 5) + ((KV8 != 0 && bk8) ? 8'd1 : 8'd0);
     function automatic [39:0] rowbyte(input [20:0] t);
         reg [20:0] slot;
         begin
@@ -288,6 +332,7 @@ module ot_hgi_att_unit #(
     reg [9:0] dq; reg [4:0] hd_o;
     integer k, j, q, e2;
     wire [1:0] es_b = (bfmt == 2'd2) ? 2'd0 : (bfmt == 2'd1) ? 2'd1 : 2'd2;    // log2 bytes an element
+    wire s_land = use_codec ? codec_v : hr_vq;                         // PIPE 0: a sector has landed in cb
     wire [3:0] njobs = (tt + BLK - 1) / BLK;
     // ---- PIPE = 2: striped row lanes
     localparam integer SPRL = D * 4 / 32;
@@ -341,7 +386,12 @@ module ot_hgi_att_unit #(
     always @* begin
         l2_row = {NL*ROWW{1'b0}}; l2_bad = {NL{1'b0}};
         for (cs = 0; cs < NL; cs = cs + 1) begin
-            for (cg = 0; cg < G; cg = cg + 1) l2_row[cs * ROWW + cg * 265 + 256 +: 8] = 8'd127;
+            for (cg = 0; cg < G; cg = cg + 1) begin
+                l2_row[cs * ROWW + cg * 265 + 256 +: 8] = (KV8 != 0 && bk8 && cg < hd[9:5]) ?
+                    l2_head[(cs * SPRL + hd[9:5]) * 256 + 8 * ((cg + MUT_KV8) % G) +: 8] : 8'd127;
+                if (KV8 != 0 && bk8 && l2_pmask[cs] && cg < hd[9:5] && l2_head[(cs * SPRL + hd[9:5]) * 256 + 8 * cg +: 8] == 8'hFF)
+                    l2_bad[cs] = 1'b1;
+            end
             for (ce = 0; ce < D; ce = ce + 1) if (ce < hd) begin : one
                 reg [8:0] c; reg [31:0] lane0; integer bi;
                 bi = (ce << es_b);                                   // byte offset of element ce in the row
@@ -365,7 +415,7 @@ module ot_hgi_att_unit #(
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0; vmq[337] <= 1'b0; job_v <= 1'b0; sc_cr <= 1'b0; pv_cr <= 1'b0;
             ad_v <= 1'b0;
-            if (|cflt) flt <= 1'b1;
+            if (|cflt || s8f) flt <= 1'b1;
             if (ad_o) begin ar <= ar + 6'd1; if (ad_e != 2'd0) flt <= 1'b1; end
             if (rec_v && rec_rdy) raw_v <= 1'b1;
             if (hq_v && hq_rdy) hq_v <= 1'b0;
@@ -465,7 +515,9 @@ module ot_hgi_att_unit #(
                     qk <= (op == 6'd0); lanes <= (prm[3:0] == 4'd0) ? 5'd16 : {1'b0, prm[3:0]}; ring <= prm[8];
                     hd <= (op == 6'd0) ? mn(da)[9:0] : mn(dout)[9:0];
                     tt <= nb + (hasc ? nc : 21'd0);
-                    bfmt <= !db[4] ? db[3:2] : 2'd3; cfmt <= !dc[4] ? dc[3:2] : 2'd3;
+                    bfmt <= (KV8 != 0 && db[4:2] == 3'd7) ? 2'd2 : (!db[4] ? db[3:2] : 2'd3);
+                    cfmt <= (KV8 != 0 && dc[4:2] == 3'd7) ? 2'd2 : (!dc[4] ? dc[3:2] : 2'd3);
+                    bk8 <= (KV8 != 0) && db[4:2] == 3'd7; ck8 <= (KV8 != 0) && dc[4:2] == 3'd7;
                     abase <= mbase(da)[17:0]; astr <= mst(da)[17:0]; obase <= mbase(dout)[17:0]; ostr <= mst(dout)[17:0];
                     oist <= {2'b00, mist(dout)}; bbase <= mbase(db); cbase <= mbase(dc); bstr <= mst(db); cstr <= mst(dc);
                     bm <= mm(db);
@@ -474,7 +526,7 @@ module ot_hgi_att_unit #(
                 S_CHK: begin
                     if (hdr[127:124] != 4'd5 || op > 6'd1 || !opnd[0] || !opnd[1] || !opnd[4] || da[1:0] != 2'd1 ||
                         dout[1:0] != 2'd1 || db[1:0] != 2'd0 || (hasc && dc[1:0] != 2'd0) || bfmt == 2'd3 ||
-                        (hasc && cfmt != bfmt) || hd == 0 || hd > D || hd[4:0] != 0 || tt == 0 ||
+                        (hasc && (cfmt != bfmt || ck8 != bk8)) || hd == 0 || hd > D || hd[4:0] != 0 || tt == 0 ||
                         lanes > H || (ring && (bm == 0 || (bm & (bm - 1)) != 0 || {1'b0, bm} < nb)) ||
                         (!qk && mn(da) != tt[19:0]) || (qk && mn(dout) != tt[19:0]) || bbase[4:0] != 0 ||
                         bstr[4:0] != 0 || (hasc && (cbase[4:0] != 0 || cstr[4:0] != 0)))
@@ -536,15 +588,15 @@ module ot_hgi_att_unit #(
                         end else b = cbase + (t - nb) * cstr;
                         rbyte <= b;
                     end
-                    nsec <= ({8'd0, hd} << es_b) >> 5; isec <= 8'd0; hout <= 4'd0;
+                    nsec <= nsec_w; isec <= 8'd0; hout <= 4'd0;
                     st <= S_KVC;
                 end
                 S_KVC: begin
                     if ((!hq_v || hq_rdy) && isec < nsec && hout < NOUT) begin
                         hq_v <= 1'b1; hq_addr <= (rbyte >> 5) + isec; hq_tag <= isec; isec <= isec + 8'd1;
                     end
-                    hout <= hout + (((!hq_v || hq_rdy) && isec < nsec && hout < NOUT) ? 4'd1 : 4'd0) - (hr_vq ? 4'd1 : 4'd0);
-                    if (isec == nsec && hout == 4'd0 && !hr_vq && (!kv_v || kv_ready)) begin
+                    hout <= hout + (((!hq_v || hq_rdy) && isec < nsec && hout < NOUT) ? 4'd1 : 4'd0) - (s_land ? 4'd1 : 4'd0);
+                    if (isec == nsec && hout == 4'd0 && !s_land && (!kv_v || kv_ready)) begin
                         // the row -> staging slot kl; a beat leaves with NL rows (or the job's last rows)
                         kv_w[kl * ROWW +: ROWW] <= kv_row;
                         if (kl == NL - 1 || row == blk0 + tb - 21'd1) begin

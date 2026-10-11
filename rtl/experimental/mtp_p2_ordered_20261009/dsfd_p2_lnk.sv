@@ -99,12 +99,19 @@ module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 
 `endif
  wire rn;
  ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
- ot_dsrom_mtp_ltx #(.W(604)) u_l1(.clk(ck[0]),.rst_n(rn),.c_valid(c_l1v),.c_ready(c_l1r),.c_data(c_l1d),
+ // core-facing ports from single flops (ltx_rc: c_ready = the registered grant).  The result row reaches the
+ // collective core on the same grant protocol: c_or is the core's GRANT (one row per grant, launched from flops two
+ // edges later; the abutting core sizes its own buffer for that fixed 3-cycle loop), so no core-port input fans out
+ // into the 594-b row registers (fixlat-collp2-ffbec0c86-tc TT -64.76: c_or -> c_data / wp enables, 13 levels).
+ ot_dsrom_mtp_ltx_rc #(.W(604)) u_l1(.clk(ck[0]),.rst_n(rn),.c_valid(c_l1v),.c_ready(c_l1r),.c_data(c_l1d),
   .l_valid(t_l1v),.l_ready(f_l1g),.l_data(t_l1d));
- ot_dsrom_mtp_ltx #(.W(101)) u_st(.clk(ck[0]),.rst_n(rn),.c_valid(c_sv),.c_ready(c_sr),.c_data(c_sd),
+ ot_dsrom_mtp_ltx_rc #(.W(101)) u_st(.clk(ck[0]),.rst_n(rn),.c_valid(c_sv),.c_ready(c_sr),.c_data(c_sd),
   .l_valid(t_sv),.l_ready(f_sg),.l_data(t_sd));
- ot_dsrom_mtp_lrx_rtt #(.W(594),.D(D_O),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(OF),.RETURN_HOPS(OR)) u_o(.clk(ck[0]),.rst_n(rn),
-  .l_valid(f_ov),.l_ready(t_og),.l_data(f_od),.c_valid(c_ov),.c_ready(c_or),.c_data(c_od));
+ wire ov, orr; wire [593:0] od;
+ ot_dsrom_mtp_lrx_rtt #(.W(594),.D(D_O),.SEL(1),.ENABLE_RTT(1),.FORWARD_HOPS(OF),.RETURN_HOPS(OR)) u_o(.clk(ck[0]),.rst_n(rn),
+  .l_valid(f_ov),.l_ready(t_og),.l_data(f_od),.c_valid(ov),.c_ready(orr),.c_data(od));
+ ot_dsrom_mtp_ltx_rc #(.W(594)) u_oc(.clk(ck[0]),.rst_n(rn),.c_valid(ov),.c_ready(orr),.c_data(od),
+  .l_valid(c_ov),.l_ready(c_or),.l_data(c_od));
 endmodule
 
 // VM-slab end: sends lane 0.

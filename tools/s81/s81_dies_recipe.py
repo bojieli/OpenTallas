@@ -143,8 +143,17 @@ def recipes():
                              role='draft die A with the collective P2 lanes (the P2 link end dsfd_coll_p2_ep is inside the '
                                   'collective composition: an alternative to --p2-lnk); t_p2flt -> host',
                              note='mtp-colllane-1011 P2 variant + mtp-wfc binding'),
+        'layer1srccrp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp', '--ctrl-role', 'source'],
+                             role='S0 die: WFC slab = dsfd_wfc_cr2 (crp credit-boundary tile + SOURCE kit)', note='main 10-11'),
+        'layer1crp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp'],
+                          role='stage die: WFC slab = dsfd_wfc_cr2 (crp + STG kit)', note='main 10-11'),
         'scankit': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer', '--wfc-kit'],
                         role='scan die (q-only flavour) with the WFC kit', note='dsfd_wfc_stg'),
+        'draftPs': dict(opts=_layer1_opts() + ['--die', 'layer1', '--draft', 'P', '--mtp-links', '5', '--seedl',
+                                               '--coll-mtp-far', 'primary', '--coll-split3-cr'],
+                        role='DSpark primary die with the seed-descriptor consumer (mtp-dsbind 2026-10-10)',
+                        note='draftP + dsfd_mtp_seed_launch slab (rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv) + the '
+                             'collective MTP lane far end (seed class -> seedl; token return / accept word -> host)'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
                        role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '
