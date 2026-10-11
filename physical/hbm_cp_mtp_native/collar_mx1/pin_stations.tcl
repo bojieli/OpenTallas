@@ -89,6 +89,14 @@ foreach i [$mx_blk getInsts] {
     if {[regexp {^g_regb\.qami\[([0-9]+)\]} $n -> k]} {set pn "f_am\[[expr {$k+1}]\]";set role mtp_pin}
     if {[regexp {^g_regb\.qid\[([0-9]+)\]} $n -> k]} {set pn "f_backend\[[expr {$k+2}]\]";set role mtp_pin}
     if {[regexp {^g_regb\.rs\[[01]\]} $n]} {set pn "rst\[0\]";set role mtp_pin}
+    # HGI ARGMAX dispatch relay pin stages (FT11 TT x_hgi_argmax_rec -> t_d -85.8): first and last stage at their pins
+    if {[regexp {^g_regb\.t_d\[([0-9]+)\]} $n -> k]} {set pn "x_hgi_argmax_rec\[[expr {$k+1}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.ar_t\[([0-9]+)\]} $n -> k]} {set pn "x_hgi_argmax_ret\[[expr {$k+0}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.b_d\[([0-9]+)\]} $n -> k]} {set pn "t_hgi_argmax\[[expr {$k+1}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.ar_b\[([0-9]+)\]} $n -> k]} {set pn "f_hgi_argmax\[[expr {$k+0}]\]";set role mtp_pin}
+    if {[regexp {^g_regb\.t_full(\$|$)} $n]} {set pn "x_hgi_argmax_rec\[0\]";set role mtp_pin}
+    if {[regexp {^g_regb\.b_v(\$|$)} $n]} {set pn "t_hgi_argmax\[0\]";set role mtp_pin}
+    if {[regexp {^g_regb\.u_rdy_q(\$|$)} $n]} {set pn "f_hgi_argmax\[0\]";set role mtp_pin}
     if {$pn eq ""} continue
     if {![dict exists $mx_pin $pn]} {error "MX1 pin station $n has no actual pin $pn"}
     lassign [dict get $mx_pin $pn] px py
