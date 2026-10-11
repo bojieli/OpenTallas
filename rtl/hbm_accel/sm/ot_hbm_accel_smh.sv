@@ -2203,15 +2203,21 @@ module ot_hbm_accel_smh_xs #(parameter integer TAGW = 16) (
 `else
     assign rl_n = rst_a;
 `endif
+    // input lockups (el1011-hbm-smh, xs -cal route: -72 ps hold at the u_bkd2 landing, TNS -54 ns): the 2,900 landing bits
+    // hop 21.6 um from pt_w's posedge launch flops on a DIFFERENT clock tree; a NEGEDGE stage at the pins gives every bit a
+    // half-cycle hold window whatever the tree skew (posedge t -> negedge t + 0.5 -> posedge t + 1: 0 cycles; setup has
+    // ~385 ps for the 22 um hop).  Data-only registers (the posedge stage behind them keeps the valid resets).
+    reg [RBW-1:0] rl1_n; reg [BBW-1:0] bk1_n; reg [NBEAT-1:0] ohl1_n;
+    always @(negedge clk) begin rl1_n <= rl1; bk1_n <= bk1; ohl1_n <= ohl1; end
     // the input pin flops (the tile's second landing: u_rl2 / u_bkv2 / u_bkd2 / u_ohl2 + the one-hot replicas)
     wire [RBW-1:0] rl;
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl2 (.clk(clk), .rst_n(rl_n), .d(rl1), .q(rl));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl2 (.clk(clk), .rst_n(rl_n), .d(rl1_n), .q(rl));
     wire [BBW-1:0] bk;
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(bk1[BBW-1]), .q(bk[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(bk1[BBW-2:0]), .q(bk[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(bk1_n[BBW-1]), .q(bk[BBW-1]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(bk1_n[BBW-2:0]), .q(bk[BBW-2:0]));
     wire [NBEAT-1:0] ohl;
     wire [NG*NBEAT-1:0] ohr;
-    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(ohl1), .q(ohl));
+    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohl2 (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(ohl1_n), .q(ohl));
     genvar gi;
     generate for (gi = 0; gi < NG; gi = gi + 1) begin : g_ohr
         ot_hbm_accel_smh_kreg #(.W(NBEAT)) u (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(ohl), .q(ohr[gi*NBEAT +: NBEAT]));
