@@ -26,8 +26,7 @@ TB_A = 'rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control_mx1.sv'
 TB_B = 'rtl/test/hbm_accel/tb_hfd_mtp_x_cp_stop.sv'
 OLD_INST = ("hfd_mtp_native_cp_stop #(.ENABLE(1)) native(.clk(clk),.rst_n(rst_n),.f_cmdproc(tm),.t_cmdproc(fm),"
             ".f_su_red(523'b0),.f_router(59'b0),.f_coll(1'b1));")
-NEW_INST = ("hgi_mtp_native native(.clk(clk),.rst_n(rst_n),.f_cmdproc(tm),.t_cmdproc(fm),"
-            ".f_router(59'b0),.t_router(),.t_coll(),.f_coll(1'b1));")
+NEW_INST = "hgi_mtp_native native(.clk(clk),.rst_n(rst_n),.f_cmdproc(tm),.t_cmdproc(fm));"
 MUT_NEEDLE = 'cpl_job=raw[232:201]'
 
 

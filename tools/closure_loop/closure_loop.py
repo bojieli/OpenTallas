@@ -61,6 +61,7 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import macro_clk
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -773,7 +774,8 @@ def lint_at_submit(j):
         ledger(j, f"SUBMIT_LINT {res['fix']} applied: {res['message'][:300]}")
     elif v == "REFUSE":
         j["status"] = "REFUSED"
-        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN"
+        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else (
+            "PIN_TRACK" if (res.get("pin_track") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN")
         j["reason"] = f"SUBMIT_LINT {kind}: {res['message']}"[:1500]
         j["submit_lint"] = res
         event(j, j["reason"])
@@ -1801,7 +1803,8 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
-                                                          "macro_sliver_block.tcl", "edge_sliver_block.tcl")))
+                                                          "macro_sliver_block.tcl", "edge_sliver_block.tcl",
+                                                          "macro_cts_cluster.tcl")))
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1860,14 +1863,15 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
+    # MACRO-CLK (macro-clk-1010): OT_CTS_MACRO_CLUSTER / _SIZE / _DIAM reach physical/common_flow/macro_cts_cluster.tcl
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
     # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
     # OOM-IN-CONTAINER (drive-1010 2026-10-10): the container's own processes (openroad / yosys) get the loop stage's +500
     # too; at 0 the kernel killed ~20 tiny +500 wrappers first (AGIdock 05:17-05:21) before reaching the 17 GB openroad.
     # The host probe still lowers die containers to -900 after start.
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -2115,6 +2119,11 @@ def launch_stage(j, st, cmd):
             # recipes); the verdict re-STA and ECO sessions never see this variable
             env += "export OT_IOREF_INPUT_PF=1\n"
             j["pinflop_ref_applied"] = True       # LOOP-AUTO class c: this job's route used the pin-flop reference
+        if j["spec"].get("macro_cts") is False:
+            # MACRO-CLK (macro-clk-1010 2026-10-10): the macro clock clustering default (physical/common_flow/
+            # macro_cts_cluster.tcl via tools/orfs_hold_mm.tcl) is on for every block with 2+ clocked macros; spec
+            # "macro_cts": false keeps TritonCTS's own macro clustering
+            env += "export OT_CTS_MACRO_CLUSTER=0\n"
         if j["spec"].get("sliver_block"):
             # LOOP-AUTO class d (auto-react successor of a sliver-only FLOORPLAN_MARGIN): the macro-to-macro and
             # macro-to-core-edge sliver hard placement blockages run at ORFS PRE GLOBAL_PLACE, before the floorplan lint
@@ -2490,6 +2499,12 @@ def auto_merge_guard(j):
     if not str(spec['source'].get('branch', '')).startswith('claude/'):
         return f"source branch {spec['source'].get('branch')} is not claude/*"
     benches = j.get('benches') or {}
+    try:
+        waive = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_external_bench_prefixes') or []
+    except (OSError, ValueError):
+        waive = []
+    if not benches and spec.get('no_bench_reason') and any(j['name'].startswith(w) for w in waive):
+        return None if j.get('commit_full') else "no verified source commit"   # owner-approved external bench (BF of record)
     if not benches:
         return "no loop benches ran"
     bad = [k for k, v in benches.items() if not (isinstance(v, dict) and v.get('ok') is True)]
@@ -2787,6 +2802,51 @@ def finish(j, status, reason, ledger_text):
     term = {"CLOSED": "completed: CLOSED", "NEEDS_RTL": "failed: NEEDS_RTL", "NEEDS_HUMAN": "failed: NEEDS_HUMAN",
             "NEEDS_BUDGET": "failed: NEEDS_BUDGET", "CANCELLED": "cancelled"}.get(status, "stopped: " + status)
     experiment(j, f"{term} {reason[:120]}")
+    if status == "CLOSED":
+        viz_elem_export(j)
+
+
+# VIZ-ELEM (owner 2026-10-10, viz-elem-1010): every CLOSED job gets its Chip Explorer element page.  finish() starts
+# tools/explorer_elem_export.py auto --job <name> detached (own session, nice 19; the heavy OpenROAD export runs on the
+# job's host under ot-heavy), so a closure never waits on it and an exporter failure only lands in its marker
+# ~/.local/state/viz-elem/<job>.json and VIZ_ELEM_LOG.  Deep release keeps the run dir while the marker says running.
+# CL_VIZ_ELEM=0 disables.  Backlog / retries: explorer_elem_export.py batch.
+VIZ_ELEM_MARKS = Path.home() / ".local/state/viz-elem"
+VIZ_ELEM_LOG = STATE / "viz_elem.log"
+
+
+def viz_elem_export(j):
+    if os.environ.get("CL_VIZ_ELEM", "1") == "0" or not j.get("host") or not j.get("run"):
+        return
+    tool = HERE.parent / "explorer_elem_export.py"
+    if not tool.exists():
+        return
+    try:
+        VIZ_ELEM_MARKS.mkdir(parents=True, exist_ok=True)
+        (VIZ_ELEM_MARKS / (j["name"] + ".json")).write_text(json.dumps(dict(state="running", queued_by="closure_loop",
+                                                                            updated=now_iso())))
+        with open(VIZ_ELEM_LOG, "a") as lg:
+            lg.write(f"{now_iso()} {j['name']}: export started\n")
+            lg.flush()
+            subprocess.Popen(["nice", "-n", "19", sys.executable, str(tool), "auto", "--job", j["name"]],
+                             stdout=lg, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, start_new_session=True,
+                             env=dict(os.environ, CL_REPO=str(REPO)))
+        event(j, "viz-elem: element page export started (explorer_elem_export.py auto)")
+    except Exception as e:      # never into the caller
+        event(j, f"viz-elem: export not started ({type(e).__name__}: {str(e)[:120]})")
+
+
+def viz_elem_running(j):
+    try:
+        m = json.loads((VIZ_ELEM_MARKS / (j["name"] + ".json")).read_text())
+    except (OSError, ValueError):
+        return False
+    if m.get("state") != "running":
+        return False
+    try:                        # a marker older than 12 h is a dead exporter, not a live one
+        return (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(m.get("updated"))).total_seconds() < 12 * 3600
+    except (TypeError, ValueError):
+        return False
 
 
 def preserve_completed_route(j, st, why):
@@ -3775,6 +3835,7 @@ def cal_track(j, fleet, stl):
     try:
         cj = json.loads(r.stdout)
         j["calibration"] = {k: cj[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+        macro_clk_flag(j, cj)
     except (ValueError, KeyError, TypeError) as ex:
         if r.returncode == 255:
             return
@@ -3967,6 +4028,7 @@ def step(j, fleet):
                         raise ValueError(f"artifact read exited {r.returncode}")
                     c = json.loads(r.stdout)
                     j["calibration"] = {k: c[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+                    macro_clk_flag(j, c)
                     if not isinstance(c["env"], dict):
                         raise ValueError("calibration env must be an object")
                 except (ValueError, KeyError, TypeError) as ex:
@@ -5392,6 +5454,8 @@ def deep_release_mode(j, closed, ev, now=None):
         return None
     if _terminal_age_h(j, now) < DEEP_RELEASE_AGE_H:
         return None
+    if viz_elem_running(j):                             # VIZ-ELEM: the element page export still reads the DB
+        return None
     if j["status"] == "CLOSED":
         if closure_counts(j):
             return "closed" if closure_on_main(j, ev) else None
@@ -5430,7 +5494,7 @@ def stale24_candidates(jobs, now=None):
     out = []
     for j in jobs:
         st = j.get("status")
-        if st in TERMINAL or j["spec"].get("allow_over_24h"):
+        if st in TERMINAL or j["spec"].get("allow_over_24h") or (protected_jobs() and j["name"].startswith(protected_jobs())):
             continue
         run = j.get("run") or ""
         if re.search(DIE_CONTAINER_RE, j["name"]) or re.search(DIE_MOUNT_RE, run):
@@ -5499,6 +5563,15 @@ MEM_GUARD_EVERY_S = 300
 _MEM_GUARD_LAST = {}
 
 
+def protected_jobs():
+    """STATE/protected_jobs.json {"prefixes": [...]}: owner-priority lines (e.g. the BF of record) that MEM-GUARD and
+    STALE-24H never stop."""
+    try:
+        return tuple(json.loads((STATE / "protected_jobs.json").read_text()).get("prefixes") or [])
+    except (OSError, ValueError):
+        return ()
+
+
 def mem_guard(jobs, fleet, now=None):
     """returns [(host, job name)] stopped this call"""
     now = time.time() if now is None else now
@@ -5511,7 +5584,9 @@ def mem_guard(jobs, fleet, now=None):
         floor = max(MEM_GUARD_GB, MEM_GUARD_FRAC * h.get("ram_gb", 1024))
         if good[1].get("mem_gb", 1e9) >= floor or now - _MEM_GUARD_LAST.get(name, 0) < MEM_GUARD_EVERY_S:
             continue
+        prot = protected_jobs()
         cand = [j for j in jobs if j.get("host") == name and j["status"] == "RUNNING" and j.get("stage_tag")
+                and not (prot and j["name"].startswith(prot))
                 and not re.search(DIE_CONTAINER_RE, j["name"]) and not re.search(DIE_MOUNT_RE, j.get("run") or "")]
         if not cand:
             continue
@@ -5609,6 +5684,11 @@ def release_deep(jobs, now=None):
 #   d  FLOORPLAN_MARGIN whose only failing lint check is "sliver" -> successor <job>-ard with "sliver_block": true (the
 #      macro + core-edge sliver blockage hooks at PRE GLOBAL_PLACE, before the lint);
 #   e  DRT-0073 (no access point) -> successor <job>-are with the recipe's min-width / pin-keepout knob (DRT_RECIPES).
+#   f  MACRO-CLK (macro-clk-1010): EARLY_FAIL_HOLD, or a NEEDS_RTL FF hold miss, whose CTS built the SRAM-macro clock as
+#      a leaf-less shallow tree (CTS log: macro net with 3+ sinks on 0 leaf buffers, >= 150 um average sink wire) or whose
+#      calibrate flagged macro clock-pin slew / lateness (calib.json macro_clk), and whose CTS ran WITHOUT the macro
+#      clustering default -> successor <job>-arf, same commit: the default (macro_cts_cluster.tcl, shipped into the
+#      snapshot by hold_corners_patch.py) now applies.  Checked before c (the macro clock is the root of the stall).
 # A successor is a new spec dropped into DROP: intake (validate, route key, submit lint) applies as for any job.  Never
 # loosens a constraint (no clock / uncertainty / margin / SDC change; hold margins stay the existing defaults).  At most
 # one action per job per class (j["auto_react"] = {class: successor or "in-place"}); a successor (spec
@@ -5623,6 +5703,7 @@ READY_NEXT = Path(os.environ.get("CL_READY_NEXT_DIR", str(TAKEOVER / "READY_NEXT
 AUTO_REACT_FAIL = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
 AUTO_REACT_MAX_AGE_H = 6.0          # < DEEP_RELEASE_AGE_H: an in-place ECO needs the route products
 AR_HOLD_FF_FLOOR = -30.0
+AR_MACRO_TT_FLOOR = -45.0           # class f on a NEEDS_RTL: TT no worse than the combo band
 PINFLOP_SINCE = "2026-10-10T03:05"  # PINFLOP-REF overlay deployed (36795a58e): a route started later used it
 FP_LINT_CHECKS = ("bank_distance", "channel", "macro_edge", "pin_density", "pin_width", "sliver", "util")
 # (cmd regex the recipe must match, env knob, repo file at the job commit that must honour it, marker text in that file)
@@ -5775,6 +5856,56 @@ def _prefix_env(spec, knob):
             st["cmd"] = f"export {knob}=1; " + st["cmd"]
 
 
+def macro_clk_flag(j, calib):
+    """MACRO-CLK after CTS: keep the calibrate's macro clock verdict with the job and flag outliers in its events"""
+    mc = calib.get("macro_clk") if isinstance(calib, dict) else None
+    if not isinstance(mc, dict):
+        return
+    j["calibration"]["macro_clk"] = mc
+    txt = macro_clk.calib_flag_text(mc)
+    if txt:
+        event(j, txt)
+        ledger(j, txt)
+
+
+def macro_clk_sig(j):
+    """macro_clk.signature() of this job's CTS logs (+ calibrate verdict), cached per verdict (one ssh per failure)"""
+    key = str(j.get("finished_at"))
+    c = j.get("macro_clk_sig")
+    if isinstance(c, dict) and c.get("at") == key:
+        return c
+    mc = (j.get("calibration") or {}).get("macro_clk")
+    logs = []
+    if j.get("host") and j.get("run"):
+        try:
+            r = ssh(j["host"], macro_clk.scan_cmd(j["run"]), timeout=120)
+            logs = macro_clk.parse_cts_logs(r.stdout) if r.returncode == 0 else []
+        except Exception as ex:  # noqa: BLE001
+            log(f"[{j['name']}] macro-clk scan failed: {type(ex).__name__}: {str(ex)[:160]}")
+    sig = dict(macro_clk.signature(logs, mc), at=key)
+    j["macro_clk_sig"] = sig
+    return sig
+
+
+def ar_macro_clk(j):
+    """class f applies: (True, detail) / (False, why-not or None when there is no macro clock signature)"""
+    m = j.get("metrics") or {}
+    ff, tt = m.get("ff_ps"), m.get("ss_ps")
+    num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)  # noqa: E731
+    # a NEEDS_RTL counts only when hold is its problem (FF < 0, TT within the combo band): a deep setup miss is not
+    hold_fail = j["status"] == "EARLY_FAIL_HOLD" or (
+        j["status"] == "NEEDS_RTL" and num(ff) and ff < FF_MIN and num(tt) and tt >= AR_MACRO_TT_FLOOR)
+    if not hold_fail or j["spec"].get("macro_cts") is False:
+        return False, None
+    sig = macro_clk_sig(j)
+    if not sig["hit"]:
+        return False, None
+    if sig["clustered"]:
+        return False, f"macro clock outlier WITH the clustering default on ({sig['why']}): structural -- launch the SRAM " \
+                      f"inputs from a flop on the macro's leaf / lockup, or re-place the macros"
+    return True, f"macro clock on a shallow leaf-less tree ({sig['why']}) -> requeue under the macro clustering default"
+
+
 def ar_plan(j):
     """(class, kind, detail) for the first recipe that applies, else (None, None, why)"""
     spec = j["spec"]
@@ -5783,6 +5914,12 @@ def ar_plan(j):
     if ar_combo_window(j):
         return "b", "in-place", "thin TT and FF miss -> combo ECO"
     succ_ok = not spec.get("auto_react_parent")
+    if j["status"] in ("EARLY_FAIL_HOLD", "NEEDS_RTL"):
+        mf, mwhy = ar_macro_clk(j)
+        if mf and succ_ok:
+            return "f", "successor", mwhy
+        if mwhy:
+            return None, None, mwhy if succ_ok else f"auto-react successor (class {spec.get('auto_react_class')}); {mwhy}"
     if j["status"] == "EARLY_FAIL_HOLD":
         if not succ_ok:
             return None, None, "auto-react successor failed again (EARLY_FAIL_HOLD)"
@@ -5953,6 +6090,9 @@ def auto_react(jobs, now=None):
                 elif cls == "d":
                     def mut(s):
                         s["sliver_block"] = True
+                elif cls == "f":
+                    def mut(s):
+                        s["macro_cts"] = True        # marker only: the clustering default applies to every job
                 else:
                     knob = drt_recipe(j)
 
@@ -6454,10 +6594,20 @@ def cmd_reverdict(a):
     if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN"):
         sys.exit(f"{a.name} is {j['status']}")
     m, e = j.get("metrics") or {}, j.get("eco") or {}
-    if j.get("failed_checks"):
-        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss")
     stl = stage_list(j["spec"])
     vidx = next(i for i, x in enumerate(stl) if x["kind"] == "verdict")
+    if j.get("failed_checks") and getattr(a, "recheck", False):
+        # a verdict CHECK was fixed (e.g. LOOP-CORNER TT+SS warn): re-run the verdict stage, which re-runs every check
+        # live on the recorded route and then takes the normal path (closed / hold ECO / NEEDS_RTL)
+        how = f"re-run verdict checks (were {j['failed_checks']}) on the recorded route"
+        j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None,
+                 failed_checks=[])
+        event(j, f"human re-verdict ({a.why}): {how}")
+        save_job(j)
+        ledger(j, f"RE-VERDICT (human, no re-route): {a.why}; {how}")
+        return
+    if j.get("failed_checks"):
+        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss (--recheck re-runs them)")
     if eco_passes(dict(m, errors=[]), 0):
         j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None)
         how = f"route sign-off {setup_corner_label(m)} {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')}"
@@ -6723,6 +6873,7 @@ def main():
     r = sub.add_parser("rebudget-rejudge"); r.add_argument("name"); r.add_argument("--rb", required=True)
     r.add_argument("--sdc", required=True); r.add_argument("--dry", action="store_true")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line TTsetup>=0/FFhold>=0/DRC0; SS sensitivity")
+    r.add_argument("--recheck", action="store_true", help="a failed verdict check was fixed: re-run the verdict stage")
     c = sub.add_parser("cancel"); c.add_argument("name"); c.add_argument("--why")
     ef = sub.add_parser("early-fail"); ef.add_argument("name"); ef.add_argument("--verdict", required=True)
     ef.add_argument("--why", required=True); ef.add_argument("--detail")

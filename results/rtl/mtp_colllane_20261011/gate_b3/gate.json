@@ -1,0 +1,214 @@
+{
+ "tool": "tools/mtp_colllane_gate.py",
+ "defines": [
+  "+define+OT_S81PH_GBX_FMT1",
+  "+define+OT_S81PH_EP_PIPE2",
+  "+define+OT_S81PH_COLL_OQPIPE",
+  "+define+OT_S81PH_COLL_QPIPE",
+  "+define+OT_S81PH_COLL_SPLIT",
+  "+define+OT_S81PH_COLL_CR",
+  "+define+OT_S81PH_LANE_CR",
+  "+define+OT_S81PH_COLL_PULL",
+  "+define+OT_S81PH_COLL_TREP",
+  "+define+OT_S81PH_COLL_MTPL",
+  "+define+TB_MTP"
+ ],
+ "cases": {
+  "base": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GNTOK=0",
+    "-GNSEED=0",
+    "-GNACC=0"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 0 / 0 (peer sent 0) seeds 0 / 0 accepts 0 / 0 errs 0 first_tok_latency 0 last_tok -1 second_half_tokens 0 in 0 cycles",
+    "MTP DIE 1 rx tokens 0 / 0 (peer sent 0) seeds 0 / 0 accepts 0 / 0 errs 0 first_tok_latency 0 last_tok -1 second_half_tokens 0 in 0 cycles",
+    "MTP DIE 2 rx tokens 0 / 0 (peer sent 0) seeds 0 / 0 accepts 0 / 0 errs 0 first_tok_latency 0 last_tok -1 second_half_tokens 0 in 0 cycles",
+    "MTP DIE 3 rx tokens 0 / 0 (peer sent 0) seeds 0 / 0 accepts 0 / 0 errs 0 first_tok_latency 0 last_tok -1 second_half_tokens 0 in 0 cycles"
+   ],
+   "tail": []
+  },
+  "pos_rand": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=0"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 3772 second_half_tokens 150 in 1144 cycles",
+    "MTP DIE 1 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 3763 second_half_tokens 150 in 1135 cycles",
+    "MTP DIE 2 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 3762 second_half_tokens 150 in 1136 cycles",
+    "MTP DIE 3 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 3760 second_half_tokens 150 in 1133 cycles"
+   ],
+   "tail": []
+  },
+  "pos_hol": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=1"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 300 / 300 (peer sent 300) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 3572 second_half_tokens 150 in 959 cycles",
+    "MTP DIE 1 rx tokens 300 / 300 (peer sent 300) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 3565 second_half_tokens 150 in 951 cycles",
+    "MTP DIE 2 rx tokens 300 / 300 (peer sent 300) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 3295 second_half_tokens 150 in 676 cycles",
+    "MTP DIE 3 rx tokens 300 / 300 (peer sent 300) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 3435 second_half_tokens 150 in 819 cycles"
+   ],
+   "tail": []
+  },
+  "pos_block": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=2",
+    "-GMTP_HOLD=9000"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 0 / 300 (peer sent 99) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency -1123 last_tok -1 second_half_tokens 150 in 0 cycles",
+    "MTP DIE 1 rx tokens 0 / 300 (peer sent 99) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency -1123 last_tok -1 second_half_tokens 150 in 0 cycles",
+    "MTP DIE 2 rx tokens 0 / 300 (peer sent 99) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency -1123 last_tok -1 second_half_tokens 150 in 0 cycles",
+    "MTP DIE 3 rx tokens 0 / 300 (peer sent 99) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency -1123 last_tok -1 second_half_tokens 150 in 0 cycles"
+   ],
+   "tail": []
+  },
+  "pos_win": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=4"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 13878 last_tok 17158 second_half_tokens 150 in 1085 cycles",
+    "MTP DIE 1 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 13878 last_tok 17160 second_half_tokens 150 in 1087 cycles",
+    "MTP DIE 2 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 13878 last_tok 17161 second_half_tokens 150 in 1087 cycles",
+    "MTP DIE 3 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 13878 last_tok 17161 second_half_tokens 150 in 1087 cycles"
+   ],
+   "tail": []
+  },
+  "pos_rate": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=3",
+    "-GTGAP=6",
+    "-GNTOK=1000"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 9220 second_half_tokens 500 in 3795 cycles",
+    "MTP DIE 1 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 9289 second_half_tokens 500 in 3923 cycles",
+    "MTP DIE 2 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 8981 second_half_tokens 500 in 3606 cycles",
+    "MTP DIE 3 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 220 last_tok 9485 second_half_tokens 500 in 4038 cycles"
+   ],
+   "tail": []
+  },
+  "neg_shared": {
+   "expect": "fail",
+   "passed": false,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=1",
+    "-GMTP_HOLD=20000",
+    "+define+OT_MTPL_MUT_SHARED"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 37 / 300 (peer sent 300) seeds 0 / 80 accepts 1 / 24 errs 0 first_tok_latency 220 last_tok 1434 second_half_tokens 150 in 1435 cycles",
+    "MTP DIE 0 INCOMPLETE",
+    "MTP DIE 1 rx tokens 37 / 300 (peer sent 300) seeds 0 / 80 accepts 1 / 24 errs 0 first_tok_latency 220 last_tok 1434 second_half_tokens 150 in 1435 cycles",
+    "MTP DIE 1 INCOMPLETE",
+    "MTP DIE 2 rx tokens 37 / 300 (peer sent 300) seeds 0 / 80 accepts 1 / 24 errs 0 first_tok_latency 220 last_tok 1434 second_half_tokens 150 in 1435 cycles",
+    "MTP DIE 2 INCOMPLETE",
+    "MTP DIE 3 rx tokens 37 / 300 (peer sent 300) seeds 0 / 80 accepts 1 / 24 errs 0 first_tok_latency 220 last_tok 1434 second_half_tokens 150 in 1435 cycles",
+    "MTP DIE 3 INCOMPLETE"
+   ],
+   "tail": [
+    "TB_S81PH_COLL_SYS FAIL errs 4"
+   ]
+  },
+  "neg_cred": {
+   "expect": "fail",
+   "passed": false,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=4",
+    "+define+OT_MTPL_MUT_CRED"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 1 lane / adapter FAULT",
+    "MTP DIE 1 lane / adapter FAULT",
+    "MTP DIE 0 lane / adapter FAULT",
+    "MTP DIE 1 lane / adapter FAULT",
+    "MTP DIE 0 lane / adapter FAULT",
+    "MTP DIE 1 lane / adapter FAULT",
+    "MTP DIE 2 lane / adapter FAULT",
+    "MTP DIE 0 lane / adapter FAULT",
+    "MTP DIE 1 lane / adapter FAULT",
+    "MTP DIE 2 lane / adapter FAULT",
+    "MTP DIE 0 lane / adapter FAULT",
+    "MTP DIE 1 lane / adapter FAULT"
+   ],
+   "tail": [
+    "TB_S81PH_COLL_SYS FAIL errs 76868"
+   ]
+  },
+  "neg_stale": {
+   "expect": "fail",
+   "passed": false,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=4",
+    "+define+OT_MTPL_MUT_STALE"
+   ],
+   "coll_done": null,
+   "dut_last": null,
+   "ref_last": null,
+   "mtp": [],
+   "tail": [
+    "LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)",
+    "[994000] %Fatal: ot_dsrom_mtp_link_rtt.sv:134: Assertion failed in tb_s81ph_coll_sys.g_die[0].u.u_ma.u_ep.u_t.g_rtt.u_rx: LINK_REG overflow"
+   ]
+  }
+ },
+ "no_block_of_collective": true,
+ "verdict": "PASS"
+}

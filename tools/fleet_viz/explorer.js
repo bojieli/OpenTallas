@@ -41,6 +41,16 @@ function ago(t){ if (!t) return ''; const s = Date.now() / 1000 - t; return s < 
 /* ------------------------------------------------------------------ meta */
 const FV = window.FVStale || null;   // staleness guard (fv_stale.js)
 let metaOK = null, visibleAt = Date.now() / 1000;
+// element pages with a real post-route view (tools/fleet_viz/explorer/element/pages.json): block -> {id, title}
+const ELEMPAGES = {};
+fetch('/explorer/element/pages.json', {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(j => {
+  if (!j) return; (j.pages || []).forEach(p => (p.blocks || []).forEach(b => { if (!ELEMPAGES[b]) ELEMPAGES[b] = {q: 'p=' + encodeURIComponent(p.id), title: p.title}; }));
+}).catch(() => {});
+// every CLOSED element exported by tools/explorer_elem_export.py (auto / batch; data/index.json): element -> its own page
+fetch('/explorer/element/data/index.json' + (SAFE ? '?safe=1' : ''), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(j => {
+  if (!j) return; Object.entries(j.elements || {}).forEach(([e, x]) => { ELEMPAGES[e] = {q: 'e=' + encodeURIComponent(e),
+    title: (x.layout ? 'Routed layout' : 'Layout data released; RTL and facts') + (x.job ? ' of ' + x.job : '')}; });
+}).catch(() => {});
 async function loadMeta(){
   let m;
   try { m = FV ? await FV.getJSON('/api/explorer/meta?' + QS, 20000) : await getJSON('/api/explorer/meta?' + QS); }
@@ -551,6 +561,8 @@ function renderCard(c){
       ${c.latest ? `<dt>latest</dt><dd>${when(c.latest.t)} ${esc(c.latest.status)}: ${esc(c.latest.text)}</dd>` : ''}
     </dl></div>`);
   }
+  const ep = c.element && ELEMPAGES[c.element];
+  if (ep) H.push(`<div class="sec"><h3>Routed layout</h3><p style="margin:0 0 6px;font-size:13px;color:#d4dcf2">${esc(SAFE ? '' : ep.title)}</p><a class="btn" style="text-decoration:none;display:inline-block" href="/explorer/element/?${ep.q}${SAFE ? '&safe=1' : ''}">Open the post-route view &#9654;</a></div>`);
   const vw = c.views || {};
   const vrows = Object.entries(vw).flatMap(([die, ms]) => Object.entries(ms).map(([m, v]) => `<tr><td class="m">${esc(m)}</td><td>${esc(v.status || '')}${v.verdict ? ' · ' + esc(v.verdict) : ''}</td><td class="m">${esc(v.dir || (v.tiles || []).join(', '))}</td></tr>`));
   if (vrows.length && !SAFE) H.push(`<div class="sec"><h3>Die view</h3><table class="t"><tbody>${vrows.join('')}</tbody></table></div>`);

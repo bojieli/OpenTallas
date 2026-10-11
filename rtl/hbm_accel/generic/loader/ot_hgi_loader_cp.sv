@@ -30,6 +30,9 @@
 module ot_hgi_loader_cp #(
     parameter integer CPL_DEPTH = 4,
     parameter integer BURST = 0,
+    parameter integer RUNPRE = 0,      // fe-push-hgi-1010 (feasibility (b)): 1 = contiguity bit computed at push (entry ==
+                                       //   previous push + 32 B) and the head run is a leading-ones count of those bits,
+                                       //   instead of 7 chained 16:1 x 37-b selects + 37-b add / compare in one cycle
     parameter integer MUT = 0          // bench mutant: 1 a burst one sector longer than its contiguous run
 ) (
     input  wire          clk,
@@ -93,10 +96,18 @@ module ot_hgi_loader_cp #(
     reg [36:0] fq [0:15]; reg [3:0] fq_h, fq_t; reg [4:0] fq_n; reg [4:0] ack_bl;
     // BURST: the run of contiguous sectors at the head (1 .. 8, at most fq_n)
     reg [3:0] run; integer j;
+    // RUNPRE: fq_c[k] = entry k is the previous push + 32 (registered at push; a head's own bit is never read, and a
+    // non-head entry's predecessor in the queue is exactly the push before it, so the chain equals the head compare)
+    reg [15:0] fq_c; reg [36:0] fq_nx;
     always @* begin
         run = (fq_n != 5'd0) ? 4'd1 : 4'd0;
         if (BURST) for (j = 1; j < 8; j = j + 1)
-            if (run == 4'(j) && fq_n > 5'(j) && fq[4'(fq_h + 4'(j))] == fq[fq_h] + 37'(32 * j)) run = 4'(j + 1);
+            if (run == 4'(j) && fq_n > 5'(j) && (RUNPRE != 0 ? fq_c[4'(fq_h + 4'(j))] :
+                                                  fq[4'(fq_h + 4'(j))] == fq[fq_h] + 37'(32 * j))) run = 4'(j + 1);
+    end
+    always @(posedge clk) if (RUNPRE != 0 && c_freq_v) begin
+        fq_c[FQD == 4 ? {2'd0, fq_t[1:0]} : fq_t] <= c_freq_a[36:0] == fq_nx;
+        fq_nx <= c_freq_a[36:0] + 37'd32;
     end
     integer i;
     always @(posedge clk or negedge rst_n) begin

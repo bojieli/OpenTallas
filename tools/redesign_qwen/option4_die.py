@@ -426,10 +426,6 @@ def main():
     for k in CFG:
         if getattr(a, k) is not None:
             CFG[k] = getattr(a, k)
-    # the masters' program stores are SRAM macros in the netlist; the vehicle preloads them as public arrays, so it builds
-    # the flop store (cycle-identical to the SRAM store: rtl/test/qwen_1010/tb_prog_store.sv)
-    if "-DOT_PROG_FLOPS" not in F.DIE:
-        F.DIE.append("-DOT_PROG_FLOPS")
     if a.tws is not None:
         F.DIE[:] = [x if not x.startswith("-GTWS=") else f"-GTWS={a.tws}" for x in F.DIE]
     if a.phase == "run":

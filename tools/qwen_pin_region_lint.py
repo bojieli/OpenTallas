@@ -85,8 +85,10 @@ def lint(cfg):
             hit = [r for r, p in pats if p.search(bt)]
             if len(hit) != 1:
                 errs.append(dict(port=bt, matches=hit))
-    dead = [r for r, p in pats if not any(p.search(b) for n, bus in top_ports(srcs, top)
-                                           for b in ([f'{n}[{k}]' for k in range(12)] if bus else [n]))]
+    # dead-region probe: bit names up to 16,383 (a region may legally own only the high bits of a wide bus, e.g. the
+    # hgi_vm wq lanes 16-31 = bits 4,480..8,959); bus widths are parameter-dependent so this only proves non-emptiness
+    names = [b for n, bus in top_ports(srcs, top) for b in ([f'{n}[{k}]' for k in range(16384)] if bus else [n])]
+    dead = [r for r, p in pats if not any(p.search(b) for b in names)]
     return dict(cfg=cfg, top=top, regions=len(regions), errors=errs, empty_regions=dead,
                 ok=not errs and not dead)
 
