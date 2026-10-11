@@ -311,15 +311,37 @@ module ot_hgi_dma_mover #(
             c_ea[k] = stp ? {st, rsa[k][34:0]} : rsa[k][36:0];
             c_bad[k] = (stp && rsa[k][41:35] != 7'd0) || (stpd && rdd[k][41:35] != 7'd0);   // STRIPE4: beyond the stack-local space
             c_ds[k] = stpd ? {5'd0, (MUT == 4) ? d0 : 2'(d0 + 2'(k)), rdd[k][34:5]} : rdd[k][41:5];
-            c_ok[k] = ract[k] && (src_hbm ? !lq_v[c_ea[k][36:35]] && !(iss_kw && w_l == c_ea[k][36:35]) :
-                                  (VR2 != 0) ? g_gnt && !g_busy[rsa[k][9:5]] && g_cr[rsa[k][9:5]] != 6'd0 : v_in < 3'd4);
+            // the slot's own readiness (the parts that change only with the slot's state or the read group's lane state)
+            c_ok[k] = ract[k] && (src_hbm || VR2 == 0 || (!g_busy[rsa[k][9:5]] && g_cr[rsa[k][9:5]] != 6'd0));
         end
     end
-    reg r_go; reg [1:0] r_k;
+    // hbm-fq/dma 2026-10-11 (textbook audit class 5, route e666b2c25 TT -616.7 ps on rsa[2][9] -> rdd[2][35], 1,784 ps
+    // arrival: the lane-indexed busy / credit lookup, the 4-slot rotating pick and the r_k-selected chunk add in one cycle):
+    // the reader decision is PIPELINED.  R0 registers each slot's next chunk (q_*) and its readiness; R1 picks among the
+    // registered slots.  A slot that issued in the previous cycle is masked (its q_* predate the issue), and so is any slot
+    // on the read-group lane issued in the previous cycle (its busy / credit predate it); the kport lane, the write issue
+    // and the packet client's count stay live (one register compare each).  +1 cycle per chunk on one slot.
+    reg [3:0] q_ok, q_rend, q_bad; reg [36:0] q_ea [0:3]; reg [3:0] q_ns [0:3]; reg [8:0] q_by [0:3]; reg [36:0] q_ds [0:3];
+    reg [4:0] q_ln [0:3]; reg l_v; reg [1:0] l_k; reg [4:0] l_ln;
+    always @(posedge clk) begin
+        for (integer k = 0; k < 4; k = k + 1) begin
+            q_ok[k] <= c_ok[k]; q_rend[k] <= c_rend[k]; q_bad[k] <= c_bad[k]; q_ea[k] <= c_ea[k]; q_ns[k] <= c_ns[k];
+            q_by[k] <= c_by[k]; q_ds[k] <= c_ds[k]; q_ln[k] <= rsa[k][9:5];
+        end
+        l_k <= r_k; l_ln <= rsa[r_k][9:5];
+    end
+    reg go_q5;                                                         // R0 holds the set-up slots
+    always @(posedge clk or negedge rn) if (!rn) begin l_v <= 1'b0; go_q5 <= 1'b0; end
+                                        else begin l_v <= r_go; go_q5 <= go_q4 && busy_f && !go_f; end
+    reg r_go; reg [1:0] r_k; reg [3:0] r_ok;
     always @* begin : rpick
+        for (integer k = 0; k < 4; k = k + 1)
+            r_ok[k] = q_ok[k] && !(l_v && l_k == 2'(k)) &&
+                      (src_hbm ? !lq_v[q_ea[k][36:35]] && !(iss_kw && w_l == q_ea[k][36:35]) :
+                       (VR2 != 0) ? g_gnt && !(l_v && l_ln == q_ln[k]) : v_in < 3'd4);
         r_go = 1'b0; r_k = 2'd0;
-        for (integer t = 3; t >= 0; t = t - 1) if (c_ok[2'(rrr + 2'(t))]) begin r_go = 1'b1; r_k = 2'(rrr + 2'(t)); end
-        r_go = r_go && busy_f && go_q4 && !f_fault && sf_n <= 9'(SFD - 10) && cf_n < 7'(CF - 2);
+        for (integer t = 3; t >= 0; t = t - 1) if (r_ok[2'(rrr + 2'(t))]) begin r_go = 1'b1; r_k = 2'(rrr + 2'(t)); end
+        r_go = r_go && busy_f && go_q5 && !f_fault && sf_n <= 9'(SFD - 10) && cf_n < 7'(CF - 2);
     end
     reg go_q3;                                                         // one more setup edge: the row-end registers settle
     reg go_q4;                                                         // the reader slots are set up
@@ -446,7 +468,7 @@ module ot_hgi_dma_mover #(
     wire [3:0] kv_wv, kv_wo; wire [4*37-1:0] kv_wa; wire [4*256-1:0] kv_wd;
     if (KVW != 0 && VR2 != 0) begin : g_kvw
         reg [32*6-1:0] gcr_v; always @* for (integer b = 0; b < 32; b = b + 1) gcr_v[b*6 +: 6] = g_cr[b];
-        ot_hgi_dma_kvw #(.MUT(MUT)) u_kvw (.clk(clk), .rn(rn), .c_v(kv_take), .c_rdy(kv_c_rdy),
+        ot_hgi_dma_kvw #(.MUT(MUT), .OWN_B0(1)) u_kvw (.clk(clk), .rn(rn), .c_v(kv_take), .c_rdy(kv_c_rdy),
             .c_vs(cm_q[22:8]), .c_vst(cm_q[62:48]), .c_ds(cm_q[134:103]), .c_dst({5'd0, cm_q[169:143]}),
             .c_ns(cm_q[226:209]), .c_m(cm_q[205:186]),
             .g_gnt(g_gnt), .g_cr(gcr_v), .kq(kv_kq), .kq_creq(kv_creq), .vr2r(vr2r),
@@ -475,9 +497,10 @@ module ot_hgi_dma_mover #(
     end
     always @(posedge clk or negedge rn) if (!rn) lt_v <= 1'b0; else lt_v <= |l_take;
     // KVW: bank 0 of the KV engine's buffer (the sector engine is idle while it runs; its enables pick the port)
+    // (textbook audit 10-11: the KV engine owns both its buffer banks, OWN_B0 1: no shared macro port across the split)
     wire kb_we, kb_re; wire [7:0] kb_wa, kb_ra; wire [255:0] kb_wd;
-    ot_sram_1r1w_256x256_m2_r2c2 u_land (.clk(clk), .r_ce_in(p1_v | kb_re), .r_addr_in(kb_re ? kb_ra : p1_h), .rd_out(lr_d),
-        .w_ce_in(lw_v | kb_we), .w_addr_in(kb_we ? kb_wa : lw_a), .wd_in(kb_we ? kb_wd : lw_d), .w_mask_in({256{1'b1}}),
+    ot_sram_1r1w_256x256_m2_r2c2 u_land (.clk(clk), .r_ce_in(p1_v), .r_addr_in(p1_h), .rd_out(lr_d),
+        .w_ce_in(lw_v), .w_addr_in(lw_a), .wd_in(lw_d), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     always @(posedge clk) begin : lwd
         lw_a <= lt_v ? lt_tag + ((MUT == 3) ? 8'd0 : {5'd0, lt_bt}) : (VR2 != 0) ? g_slot[g_di] : v_ptr;
@@ -596,22 +619,22 @@ module ot_hgi_dma_mover #(
                 // reader: the chunk of slot r_k -> its lane request (HBM) / VM read, its descriptor, its landing slots
                 if (r_go) begin : radv
                     reg [41:0] w;
-                    cf[cf_t] <= {r_k, c_rend[r_k], 1'b0, rdd[r_k][4:0], c_ds[r_k], rsa[r_k][4:0], c_by[r_k] >> sl2};
+                    cf[cf_t] <= {r_k, q_rend[r_k], 1'b0, rdd[r_k][4:0], q_ds[r_k], rsa[r_k][4:0], q_by[r_k] >> sl2};
                     cf_t <= cf_t + 6'd1;
-                    sf_a <= sf_a + 8'(c_ns[r_k]);
+                    sf_a <= sf_a + 8'(q_ns[r_k]);
                     if (src_hbm) begin
-                        lq_v[c_ea[r_k][36:35]] <= 1'b1; lq_we[c_ea[r_k][36:35]] <= 1'b0; lq_a[c_ea[r_k][36:35]] <= {c_ea[r_k][36:5], 5'd0};
-                        lq_n[c_ea[r_k][36:35]] <= c_ns[r_k]; lq_t[c_ea[r_k][36:35]] <= sf_a;
+                        lq_v[q_ea[r_k][36:35]] <= 1'b1; lq_we[q_ea[r_k][36:35]] <= 1'b0; lq_a[q_ea[r_k][36:35]] <= {q_ea[r_k][36:5], 5'd0};
+                        lq_n[q_ea[r_k][36:35]] <= q_ns[r_k]; lq_t[q_ea[r_k][36:35]] <= sf_a;
                     end
-                    if (c_bad[r_k]) begin f_fault <= 1'b1; mv_fault <= 1'b1; end
+                    if (q_bad[r_k]) begin f_fault <= 1'b1; mv_fault <= 1'b1; end
                     rrr <= r_k + 2'd1;
-                    if (c_rend[r_k]) begin                                       // the slot's next row (precomputed)
+                    if (q_rend[r_k]) begin                                       // the slot's next row (precomputed)
                         if (ro[r_k] + ((stp || stpd) ? 20'd4 : 20'd1) >= mm) ract[r_k] <= 1'b0;
                         ro[r_k] <= ro[r_k] + ((stp || stpd) ? 20'd4 : 20'd1); rrl[r_k] <= nnb;
                         rsa[r_k] <= rnsa[r_k]; rnsa[r_k] <= rnsa[r_k] + sstw; rdd[r_k] <= rndd[r_k]; rndd[r_k] <= rndd[r_k] + dstw;
                     end else begin
-                        rsa[r_k] <= rsa[r_k] + {33'd0, c_by[r_k]}; rrl[r_k] <= rrl[r_k] - {15'd0, c_by[r_k]};
-                        w = {33'd0, c_by[r_k] >> sl2}; rdd[r_k] <= rdd[r_k] + (w << dl2);
+                        rsa[r_k] <= rsa[r_k] + {33'd0, q_by[r_k]}; rrl[r_k] <= rrl[r_k] - {15'd0, q_by[r_k]};
+                        w = {33'd0, q_by[r_k] >> sl2}; rdd[r_k] <= rdd[r_k] + (w << dl2);
                     end
                 end
                 // in-flight accounting (kind shift registers: push at the tail, pop at the head)
@@ -623,7 +646,7 @@ module ot_hgi_dma_mover #(
                     if (vpush) t[v_in - {2'd0, v_rv}] = vkind;
                     v_kind <= t;
                 end
-                rd_in <= rd_in + (r_go ? {5'd0, c_ns[r_k]} : 9'd0) - {8'd0, lw_v};
+                rd_in <= rd_in + (r_go ? {5'd0, q_ns[r_k]} : 9'd0) - {8'd0, lw_v};
                 wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, v_wr_ack | (wld_q & busy_f & !dst_hbm)}
                          - {6'd0, 3'(w_ack_q[0]) + 3'(w_ack_q[1]) + 3'(w_ack_q[2]) + 3'(w_ack_q[3])};
             end
@@ -658,7 +681,7 @@ module ot_hgi_dma_mover #(
                 lg <= nf ? (4'd1 << nx) : 4'd0; if (nf) lgi <= nx;
                 if (lw_v) lv[lw_a] <= 1'b1;
                 if (pop_) begin lv[sf_h] <= 1'b0; sf_h <= sf_h + 8'd1; end
-                sf_n <= sf_n + (r_go ? {5'd0, c_ns[r_k]} : 9'd0) - {8'd0, pop_};
+                sf_n <= sf_n + (r_go ? {5'd0, q_ns[r_k]} : 9'd0) - {8'd0, pop_};
             end
             // ---- unpack (stage U -> p1): the current chunk; the staged descriptor becomes current at the chunk end
             p1_v <= 1'b0;
