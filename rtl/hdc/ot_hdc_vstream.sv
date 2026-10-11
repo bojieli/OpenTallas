@@ -29,9 +29,12 @@ module ot_hdc_vstream #(
     parameter integer NW = 16,
     parameter integer KV_FP8 = 1,     // KV cache in FP8 E4M3 (else BF16): hdc_golden.KV_FMT
     parameter integer ML = 0,         // lane memory-read latency (ot_hdc_vstream_lane ML): memories answer 1 + ML edges late
-    parameter integer LOFF = 0        // 1: the per-lane address offsets (cur + l x stride) are formed here and every lane is
+    parameter integer LOFF = 0,       // 1: the per-lane address offsets (cur + l x stride) are formed here and every lane is
                                       // instantiated with LANE 0, so all SW lanes are ONE module (one synthesis, kept
                                       // hierarchy); the same AW-bit sums, 0 cycles.  0 = the original per-lane paramods.
+    parameter integer RTREE = 0       // 1: replicated reset registers -- one for the stream control/reducer and one per lane
+                                      // (each async-assert / registered-deassert from rst_n), so no reset net spans the SW
+                                      // lanes (64 x ~12k flops); every flop's reset deasserts exactly one edge later.
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -92,6 +95,15 @@ module ot_hdc_vstream #(
     output wire              obs_active,
     output wire [7:0]        obs_inflight
 );
+    // ---- reset: the control/reducer copy (RTREE: its own register; each lane registers its own copy below) ----
+    wire rst_c;
+    generate if (RTREE != 0) begin : g_rc
+        reg rc;
+        always @(posedge clk or negedge rst_n) if (!rst_n) rc <= 1'b0; else rc <= 1'b1;
+        assign rst_c = rc;
+    end else begin : g_rcw
+        assign rst_c = rst_n;
+    end endgenerate
     localparam integer LS = $clog2(SW);
 
     // -- issue loop: vectors --------------------------------------------------------
@@ -116,8 +128,8 @@ module ot_hdc_vstream #(
     wire   emit = active;
     wire [NW-1:0] nvec_in = (i_nin + (SW - 1)) >> LS;
 
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) begin
             active <= 1'b0; cls <= 3'd0; inflight <= 0;
         end else begin
             inflight <= inflight + (emit ? 8'd1 : 8'd0) - (retire ? 8'd1 : 8'd0);
@@ -164,6 +176,14 @@ module ot_hdc_vstream #(
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_lane
         wire live = ({1'b0, v} << LS) + l < {1'b0, nin_r};
+        wire rst_l;                                   // this lane's reset (RTREE: its own register)
+        if (RTREE != 0) begin : g_rl
+            reg rl;
+            always @(posedge clk or negedge rst_n) if (!rst_n) rl <= 1'b0; else rl <= 1'b1;
+            assign rst_l = rl;
+        end else begin : g_rw
+            assign rst_l = rst_n;
+        end
 `ifdef OT_LOFF_MUT
         localparam integer LMUT = 1;   // bench mutant: the offset applied twice (must FAIL)
 `else
@@ -174,7 +194,7 @@ module ot_hdc_vstream #(
         wire [AW-1:0] lcurc = (LOFF != 0) ? curc + l * csi : curc;
         wire [AW-1:0] lcurd = (LOFF != 0) ? curd + l * dsi : curd;
         ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE((LOFF != 0) ? LMUT * l : l), .KV_FP8(KV_FP8), .ML(ML)) u_lane (
-            .clk(clk), .rst_n(rst_n), .emit0(emit), .live(live), .i(v), .fin_th(fin_th), .i_last_r(v_last_r),
+            .clk(clk), .rst_n(rst_l), .emit0(emit), .live(live), .i(v), .fin_th(fin_th), .i_last_r(v_last_r),
             .cura0(lcura), .curb0(lcurb), .curc0(lcurc), .curd0(lcurd), .rrow(rrow),
             .asi(asi), .bsi(bsi), .csi(csi), .dsi(dsi),
             .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq),
@@ -200,8 +220,8 @@ module ot_hdc_vstream #(
     reg [AW-1:0]     rd_addr;
     reg [SW*32-1:0]  rd_x;
     integer li;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) rd_v <= 1'b0;
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) rd_v <= 1'b0;
         else rd_v <= l_ov[0] && l_red[1:0] != 2'd0;
     end
     always @(posedge clk) begin
@@ -210,7 +230,7 @@ module ot_hdc_vstream #(
             rd_x[32*li +: 32] <= l_ov[li] ? l_out[32*li +: 32] : (l_red[1:0] == 2'd2) ? l_out[31:0] : 32'd0;
     end
     wire f_red;
-    ot_hdc_vreduce #(.SW(SW), .LV(LV), .AW(AW)) u_red (.clk(clk), .rst_n(rst_n), .v_in(rd_v), .mx_in(rd_mx),
+    ot_hdc_vreduce #(.SW(SW), .LV(LV), .AW(AW)) u_red (.clk(clk), .rst_n(rst_c), .v_in(rd_v), .mx_in(rd_mx),
         .sq_in(rd_sq), .last_in(rd_last), .addr_in(rd_addr), .x_in(rd_x),
         .o_we(red_we), .o_addr(red_addr), .o_data(red_data), .busy(reducer_busy), .fault(f_red));
 
@@ -221,8 +241,8 @@ module ot_hdc_vstream #(
     //: rows: a row's last vector carries l_last; rows retire in order too
     reg [15:0] r_emit, r_retire, r_mark;
     wire [15:0] rdone_n = r_retire - r_mark;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) begin
             n_emit <= 0; n_retire <= 0; first_mark <= 0; progress <= 0;
             r_emit <= 0; r_retire <= 0; r_mark <= 0; progress_rows <= 0;
         end else begin
@@ -241,13 +261,13 @@ module ot_hdc_vstream #(
     end
 
     wire idle_c = !active && inflight == 0 && !(|vm_we) && !(|kv_we) && !rd_v && !reducer_busy;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) idle <= 1'b1;
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) idle <= 1'b1;
         else idle <= idle_c && !(accept);
     end
     reg fault_q;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin fault_q <= 1'b0; fault <= 1'b0; end
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) begin fault_q <= 1'b0; fault <= 1'b0; end
         else begin
             fault_q <= (|l_fault) || f_red;
             fault <= fault_q;
