@@ -112,6 +112,51 @@
    "note": "per draft block the rank prefix replaces only the expert return hop; the block's combine all-reduce stays (no record replaces it): upper bound. Blocks are serial (block k+1 consumes block k's hc_post), so critical."
   },
   {
+   "id": "p2.link_ends",
+   "element": "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)",
+   "cycles": 27.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "3 P2 transactions x (+9: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
+   "source": [
+    "tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0",
+    "~/claude-takeover-20261007/mtp-fixlat-1011.log"
+   ],
+   "grade": "measured (bench log)",
+   "note": "the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"
+  },
+  {
+   "id": "mtp_lane.adapters",
+   "element": "dedicated MTP lane adapter (dsfd_coll_mtp_lane): token return + seed traversals",
+   "cycles": 16.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "2 traversals (token return, seed) x (TX 3 + RX 5)",
+   "source": [
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv",
+    "tools/mtp_colllane_gate.py (exact / HOL / no-block gate)"
+   ],
+   "grade": "rtl count (registered stages)",
+   "note": "upper bound: both traversals charged serially; the collective's lanes 0..7 are untouched (coll_done equal)"
+  },
+  {
+   "id": "p2.lane_adapters",
+   "element": "P2 dedicated lane adapters (dsfd_coll_p2_lane_pa / _ba): start in + last row out",
+   "cycles": 51.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "3 P2 transactions x (start 3 + 5, last row 2-beat 4 + 5)",
+   "source": [
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv",
+    "tools/mtp_p2lane_gate.py"
+   ],
+   "grade": "rtl count (registered stages)",
+   "note": "lane-1 words from die B arrive ahead of the start (buffered), off the chain"
+  },
+  {
    "id": "markov.floor",
    "element": "Markov head PINREG1 (ot_dsrom_markov_row, K 256)",
    "cycles": 562.5,
@@ -174,15 +219,15 @@
   }
  ],
  "totals": {
-  "critical_cycles": 41570.7,
-  "critical_cycles_lower": 41100.7,
+  "critical_cycles": 41664.7,
+  "critical_cycles_lower": 41194.7,
   "overlapped_cycles": 0,
   "composed_step_cycles": 1146896.4,
-  "charged_step_cycles": 1188467.1,
+  "charged_step_cycles": 1188561.1,
   "tau": 4.159,
   "MTP_tok_s_composed": 4351.6,
-  "MTP_tok_s_charged": 4199.4,
-  "MTP_tok_s_charged_lower_charges": 4201.0
+  "MTP_tok_s_charged": 4199.0,
+  "MTP_tok_s_charged_lower_charges": 4200.7
  },
  "inputs": {
   "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json": "3a7db4e5be43cd22",
