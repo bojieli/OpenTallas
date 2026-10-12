@@ -50,7 +50,8 @@ HROWS = HC * D * 16 // 512          # 640
 GROWS = D // 16                     # 320
 
 RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
-       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv", "rtl/link/ot_fifo_sram_fwft.sv",
+       "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_croot.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv",

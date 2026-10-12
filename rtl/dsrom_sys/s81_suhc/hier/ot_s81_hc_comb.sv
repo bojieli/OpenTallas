@@ -237,9 +237,18 @@ module ot_s81_hc_comb #(
     wire [FSW-1:0] fd_p;
     ot_hdc_delay #(.W(FVW), .D(FP), .RESET(1)) u_pfv (.clk(sk), .rst_n(rs_n), .d(fv), .q(fv_p));
     ot_hdc_delay #(.W(FSW), .D(FP)) u_pfd (.clk(sk), .rst_n(rs_n), .d(fd), .q(fd_p));
-    reg  [YS1-1:0] yf [0:YDC-1];
+    // y slice FIFO of the centre chain (YS1 = L1 x GS x 32 b wide, YDC deep: 81,920 b at NG 256) in 1R1W SRAM macros
+    // (ot_sram_1r1w_64x512_m1_r2c2 x ceil(YS1 / 512)) behind the FWFT 2-register capture / output buffer, not flops
     reg  [YB-1:0]  yw, yr;
     wire pop = fv_p[S_RD];
+    wire [YS1-1:0] yf_head;
+    wire           yf_hv, yf_ovf;
+    generate if (L1 > 0) begin : g_yf
+        ot_fifo_sram_fwft #(.W(YS1), .DEPTH(YDC), .MACRO(0)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(y1),
+            .pop(pop), .hv(yf_hv), .head(yf_head), .ovf(yf_ovf));
+    end else begin : g_nyf
+        assign yf_head = {YS1{1'b0}}; assign yf_hv = 1'b0; assign yf_ovf = 1'b0;
+    end endgenerate
     always @(posedge sk or negedge rs_n)
         if (!rs_n) begin ch_fv <= 0; yn1 <= 0; yw <= 0; yr <= 0; yfl <= 1'b0; end
         else begin
@@ -247,15 +256,14 @@ module ot_s81_hc_comb #(
             if (ya) yw <= yw + 1'b1;
             if (pop) yr <= yr + 1'b1;
             yn1 <= yn1 + ya - pop;
-            if (L1 > 0 && ((ya && !pop && yn1 == YDC) || (pop && yn1 == 0))) yfl <= 1'b1;
+            if (L1 > 0 && ((ya && !pop && yn1 == YDC) || (pop && yn1 == 0) || (pop && !yf_hv) || yf_ovf)) yfl <= 1'b1;
         end
     always @(posedge sk) begin
-        if (ya) yf[yw] <= y1;
         ch_fd[O_D-1:0] <= fd_p[O_D-1:0];
         begin : dfield
             reg [FDD-1:0] t;
             t = {FDD{1'b0}};
-            if (pop) t[YS1-1:0] = yf[yr];
+            if (pop) t[YS1-1:0] = yf_head;
             else t[S_RD*512-1:0] = fd_p[O_D +: S_RD * 512];
             ch_fd[O_D +: FDD] <= t;
         end
