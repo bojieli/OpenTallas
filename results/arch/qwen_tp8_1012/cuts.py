@@ -29,7 +29,9 @@ def dump(out):
         ins = [dict(n=i.name, m=getattr(i, 'master', ''), x=i.x, y=i.y, w=i.w, h=i.h) for i in m['insts']]
         json.dump(dict(insts=ins, buses=[(b, c, bits, [e[0] for e in eps]) for b, c, bits, eps in m['buses']]), open(out / name, 'w'))
     wr(KV.build(kv_wq_leaves=True, kv_wq_binary=True, kv_wq_leaf_s=True, kv_wq_wide=True, kv_wq_mirror=True), 'kv.json')
-    for rec, name in (('tp8a', 'rom_tp8a.json'), ('r22ko4', 'r22ko4.json')):
+    for rec, name in (('tp8b', 'rom_tp8b.json'), ('tp8a', 'rom_tp8a.json'), ('r22ko4', 'r22ko4.json')):
+        if rec not in D.QWEN_RECIPES:
+            continue
         D.QWEN_RECIPE = rec; D._QW.clear(); D.QSRC = None
         wr(D.load_qwen()[1], name)
 
@@ -94,23 +96,12 @@ class Net:
 
 def scan(md):
     md = Path(md); R = {}
-    A = Net(md / 'rom_tp8a.json')
-    t = sorted((i for i in A.I.values() if i['m'] == 'qfd_tile_nk'), key=lambda i: (i['y'], i['x']))
-    rows = sorted({round(i['y'], 1) for i in t}); cols = sorted({round(i['x'], 1) for i in t}); th, tw = t[0]['h'], t[0]['w']
-    sp = (max(c for c in cols if c < A.W / 2) + tw, min(c for c in cols if c > A.W / 2))
-    gap = rows[1] - rows[0] - th
-    rr = []
-    for y in rows:
-        best = max((A.window('x', x, y - gap / 2, y + th + gap / 2) for x in [c + f for c in cols for f in (tw / 2, tw + 26)] + [sp[0] + 5, sp[1] - 5]),
-                   key=lambda r: r['util'])
-        rr.append(best)
-    R['tp8a'] = dict(geometry=dict(rows=len(rows), cols=len(cols), tile=[round(tw, 2), round(th, 2)], row_pitch=round(rows[1] - rows[0], 1),
-                                   col_pitch=round(cols[1] - cols[0], 2), spine_x=[round(sp[0]), round(sp[1])], die=[round(A.W), round(A.H)]),
-                     row_H=rr, row_H_max=max(rr, key=lambda r: r['util']),
-                     spine_V_max=max((A.window('y', y, *sp) for y in range(300, int(rows[-1]), 200)), key=lambda r: r['util']),
-                     col_V_max=max((A.window('y', (rows[k] + th + rows[k + 1]) / 2, c - 26, c + tw + 26) for k in range(len(rows) - 1) for c in cols), key=lambda r: r['util']),
-                     io_band=A.window('y', rows[-1] + th + 1, 0, A.W),
-                     fine=A.fine(), fine_tree=Net.fine(_sub(A, ('io', 'crom'))))
+    R['tp8a'] = rom_cuts(Net(md / 'rom_tp8a.json'))
+    if (md / 'rom_tp8b.json').exists():
+        B = Net(md / 'rom_tp8b.json')
+        R['tp8b'] = rom_cuts(B)
+        kvx = sorted({round(i['x'] + i['w']) for i in B.I.values() if i['n'] == 'land_WS'} | {round(i['x']) for i in B.I.values() if i['n'] == 'land_ES'})
+        R['tp8b']['kv_strip_x_max'] = max((B.window('x', x, y, y + 1486) for x in (3650, B.W - 3650) for y in range(0, int(B.H) - 1486, 200)), key=lambda r: r['util'])
     K = Net(md / 'kv.json')
     R['kv_die'] = dict(die=[round(K.W), round(K.H)], half_boundary_x=dict(W=3700, E=4650),
                        W_rows_1496=[int(b) for b in K.cut('x', 3700, np.arange(0, K.H + 1496, 1496))[0]],
@@ -123,6 +114,27 @@ def scan(md):
     R['kv_die']['grt'] = 'overflow 0, TT +88.90 / FF +17.51 (KV die, contract qwen_kv v5)'
     json.dump(R, open(HERE / 'cuts.json', 'w'), indent=1)
     print(json.dumps({k: (v.get('row_H_max'), v.get('fine', [None])[0]) if isinstance(v, dict) else v for k, v in R.items()}, default=str)[:3000])
+
+
+def rom_cuts(A):
+    """Coarse row / spine / column / IO-band windows + the fine scan on a ROM-family die (tp8a, tp8b)."""
+    t = sorted((i for i in A.I.values() if i['m'] == 'qfd_tile_nk'), key=lambda i: (i['y'], i['x']))
+    rows = sorted({round(i['y'], 1) for i in t}); cols = sorted({round(i['x'], 1) for i in t}); th, tw = t[0]['h'], t[0]['w']
+    j = max(range(len(cols) - 1), key=lambda k: cols[k + 1] - cols[k])     # the spine: the widest gap between columns
+    sp = (cols[j] + tw, cols[j + 1])
+    gap = rows[1] - rows[0] - th
+    rr = []
+    for y in rows:
+        best = max((A.window('x', x, y - gap / 2, y + th + gap / 2) for x in [c + f for c in cols for f in (tw / 2, tw + 26)] + [sp[0] + 5, sp[1] - 5]),
+                   key=lambda r: r['util'])
+        rr.append(best)
+    return dict(geometry=dict(rows=len(rows), cols=len(cols), tile=[round(tw, 2), round(th, 2)], row_pitch=round(rows[1] - rows[0], 1),
+                                   col_pitch=round(cols[1] - cols[0], 2), spine_x=[round(sp[0]), round(sp[1])], die=[round(A.W), round(A.H)]),
+                     row_H=rr, row_H_max=max(rr, key=lambda r: r['util']),
+                     spine_V_max=max((A.window('y', y, *sp) for y in range(int(rows[0]), int(rows[-1] + th), 200)), key=lambda r: r['util']),
+                     col_V_max=max((A.window('y', (rows[k] + th + rows[k + 1]) / 2, c - 26, c + tw + 26) for k in range(len(rows) - 1) for c in cols), key=lambda r: r['util']),
+                     io_band=A.window('y', rows[-1] + th + 1, 0, A.W), io_band_S=A.window('y', rows[0] - 1, 0, A.W),
+                     fine=A.fine(), fine_tree=Net.fine(_sub(A, ('io', 'crom'))))
 
 
 def _sub(n, drop):

@@ -274,6 +274,162 @@ def _tp8b_f2(v, m):
         raise SystemExit(f'tp8b: {len(ov)} overlaps, e.g. {ov[:6]}')
 
 
+KV_DROP = ('d2d_kv', 'ucie_rom', 'ckb_kv', 'serdes_host')       # KV-die D2D / UCIe / clock bump / host SerDes: gone on one die
+ROM_DROP = ('ucie_kv', 'd2d_rom', 'ckb_rom', 'rs_bump')
+KV_CENTRE = ('pll', 'embgw', 'seq', 'ahub', 'host')              # N -> S in the KV-centre sub-column (the KV PLL is the die PLL)
+# ROM-side D2D words re-terminated on the KV centre (the D2D pair is a wire on one die): bus -> (KV inst, port, bits or None)
+KV_SHORT = dict(x3=('seq', 'r_x3', None), seq_d2d=('seq', 'r_sd', None), o4_kvd=('seq', 'r_kvd', None),
+                attn_ret=('seq', 't_ar', None), d2d_seq=('seq', 't_ds', None), d2d_flt=('seq', 't_flt', None),
+                o4_pw=('seq', 't_pw', None), emb=('embgw', 't_eq', 1024), emb_a=('embgw', 'r_ea', None),
+                emb_cr=('embgw', 't_ecr', None))
+
+
+def _tp8b_kv(v, m):
+    """tp8b (track B, single die type): the KV die's two halves (HBM PHYs + CDC strips + landings + attention stacks,
+    their own buses and relays) land unrotated in the W / E strips reserved by _tp8b_f2, the KV centre blocks (PLL,
+    embedding gateway, KV sequencer, attention hub, host) in the KV-centre sub-column E of the ROM spine; the D2D pair
+    (ROM d2d_rom/ucie_kv, KV d2d_kv/ucie_rom), the clock / reset bumps and the KV host SerDes are dropped and their words
+    re-terminated directly (ROM peers <-> KV seq / embgw).  Embedding ingress is 1,024 b (embgw -> su64 eq).  Every
+    word between the centre and a half is a new die wire, relayed by _relays (classes as on the KV die); the halves'
+    own relayed words keep their KV-die relays (class '<cl>@kv', in RELAY_SKIP)."""
+    global RELAY_SKIP
+    from qwen_kv_die import kv_die as K
+    g = m['geo']
+    mk = K.build(kv_wq_mirror=True)
+    KM = dict(K.masters(mk, 1))         # pins from the KV-die placement (same W | centre | E order on this die)
+    KPW = dict(K.port_widths(mk, 1))
+    Wk, Hk = mk['die']['w'], mk['die']['h']
+    W, H = m['die']['w'], m['die']['h']
+    kby = {i.name: i for i in mk['insts']}
+    xs = [(i.x, i.x + i.w) for i in mk['insts'] if i.name not in KV_DROP + KV_CENTRE and not i.master.startswith('qkd_rly')]
+    w_end = max(b for a, b in xs if a < Wk / 2)
+    e_beg = min(a for a, b in xs if a >= Wk / 2)
+    assert w_end <= g['tp8b_kv_w'][1] - 50 and Wk - e_beg <= g['tp8b_kv_e'][1] - g['tp8b_kv_e'][0] - 50, (w_end, Wk - e_beg)
+    dy = v.dn((g['y0'] + g['y_top'] - Hk) / 2 if Hk <= g['y_top'] - g['y0'] else (H - Hk) / 2, v.GY)
+    dxe = v.dn(W - Wk, v.GX)
+    side = {}
+    for i in mk['insts']:
+        if i.name in KV_DROP or i.name in KV_CENTRE:
+            continue
+        cx = i.x + i.w / 2
+        side[i.name] = 'W' if cx < Wk / 2 else 'E'
+    # chains: base bus -> its segments; a chain touching a centre / dropped block loses its KV relays (re-relayed here)
+    def base(b):
+        return b.split('__r')[0]
+    chains = {}
+    for bus in mk['buses']:
+        chains.setdefault(base(bus[0]), []).append(bus)
+    keep_rly, nb = set(), []
+    for b0, segs in chains.items():
+        ends = [e for s_ in segs for e in s_[3] if not kby[e[0]].master.startswith('qkd_rly')]
+        rl = {e[0] for s_ in segs for e in s_[3] if kby[e[0]].master.startswith('qkd_rly')}
+        cl, bits = segs[0][1], segs[0][2]
+        if any(e[0] in KV_DROP for e in ends):
+            continue                                   # D2D / bump / SerDes words: re-terminated below or gone
+        if len(segs) == 1 and len(segs[0][3]) != 2:
+            nb.append((b0, cl, bits, [e for e in segs[0][3] if e[0] not in KV_DROP]))
+            continue
+        if any(e[0] in KV_CENTRE for e in ends) or len({side.get(e[0]) for e in ends}) > 1:
+            nb.append((b0, cl, bits, [segs[0][3][0], segs[-1][3][-1]] if len(segs) > 1 else segs[0][3]))
+            continue
+        keep_rly |= rl
+        nb += [(bid, cl if cl in RELAY_SKIP else f'{cl}@kv', bt, eps) for bid, cl_, bt, eps in segs for cl in (cl_,)]
+    RELAY_SKIP = tuple(RELAY_SKIP) + tuple(sorted({b[1] for b in nb if b[1].endswith('@kv')}))
+    new = []
+    for i in mk['insts']:
+        if i.name in KV_DROP or i.name in KV_CENTRE:
+            continue
+        if i.master.startswith('qkd_rly') and i.name not in keep_rly:
+            continue
+        sd = side.get(i.name, 'W' if i.x < Wk / 2 else 'E')
+        i.x = round(i.x + (dxe if sd == 'E' else 0.0), 4)
+        i.y = round(i.y + dy, 4)
+        new.append(i)
+    # KV centre column (E of the ROM spine), centred on the die's mid-height
+    x0, x1 = g['tp8b_kvc_x']
+    gap = 2 * v.GY
+    tot = sum(kby[n].h for n in KV_CENTRE) + gap * (len(KV_CENTRE) - 1)
+    y = v.dn((g['y0'] + g['y_top']) / 2 + tot / 2, v.GY)
+    for n in KV_CENTRE:
+        i = kby[n]
+        y = v.dn(y - i.h, v.GY)
+        i.x, i.y = round(v.dn((x0 + x1) / 2 - i.w / 2, v.GX), 4), round(y, 4)
+        y -= gap
+        new.append(i)
+    gone = [i for i in m['insts'] if i.name in ROM_DROP]
+    m['insts'] = [i for i in m['insts'] if i.name not in ROM_DROP] + new
+    # ROM-side buses: drop the D2D / bump words, re-terminate the D2D peers on the KV centre
+    rb, short = [], {}
+    for bid, cl, bits, eps in m['buses']:
+        if bid in KV_SHORT:
+            kn, kp, kb = KV_SHORT[bid]
+            eps = [(kn, kp) if e[0] == 'd2d_rom' else e for e in eps]
+            bits = kb or bits
+            short[bid] = (kn, kp, bits, 'W')
+            rb.append((bid, cl, bits, eps))
+            continue
+        if bid == 'pll_fwd':
+            rb.append((bid, cl, bits, [('pll', 'pll_fwd')] + [e for e in eps if e[0] not in ROM_DROP]))
+            continue
+        if bid == 'rst_fwd_s':
+            rb.append((bid, cl, bits, [('pll', 'rso_fwd')] + [e for e in eps if e[0] not in ROM_DROP]))
+            continue
+        eps = [e for e in eps if e[0] not in ROM_DROP]
+        if len(eps) >= 2:
+            rb.append((bid, cl, bits, eps))
+    m['buses'] = rb + [(f'kv.{b}' if b in {x[0] for x in rb} else b, cl, bits, eps) for b, cl, bits, eps in nb]
+    m['regions'] += [dict(name='kv_w', kind='kv_half', rect=[0.0, dy, w_end, dy + Hk]),
+                     dict(name='kv_e', kind='kv_half', rect=[e_beg + dxe, dy, W, dy + Hk]),
+                     dict(name='kv_centre', kind='kv_centre', rect=[x0, y, x1, y + tot + gap])]
+    m['tp8b_kv'] = dict(kv_die_um=[Wk, Hk], dy=dy, dxe=dxe, w_end=round(w_end, 3), e_beg=round(e_beg + dxe, 3),
+                        kept_relays=len(keep_rly), insts=len(new), buses=len(nb), short=sorted(short), emb_ingress_b=1024)
+    ins = sorted(m['insts'], key=lambda i: i.x)
+    ov = []
+    for a_ in range(len(ins)):
+        p = ins[a_]
+        for b_ in range(a_ + 1, len(ins)):
+            q = ins[b_]
+            if q.x >= p.x + p.w - 1e-3:
+                break
+            if q.y < p.y + p.h - 1e-3 and p.y < q.y + q.h - 1e-3:
+                ov.append((p.name, q.name))
+    out = [i.name for i in ins if i.x < -1e-3 or i.y < -1e-3 or i.x + i.w > W + 1e-3 or i.y + i.h > H + 1e-3]
+    m['tp8b_kv'].update(n_overlaps=len(ov), overlaps=ov[:20], n_outside=len(out), outside=out[:20])
+    if ov or out:
+        raise SystemExit(f'tp8b kv: {len(ov)} overlaps {ov[:6]}, {len(out)} outside {out[:6]}')
+    base_m, base_pw = v.masters, v.port_widths
+
+    def masters(model, k=1, port_bits=None):
+        # the TP4 master builders still read the dropped D2D frames by name: give them a view that has them
+        o = base_m(dict(model, insts=list(model['insts']) + gone), k, port_bits)
+        for name, q in KM.items():
+            o.setdefault(name, q)
+        sq, eg = o['qkd_seq'], o['qkd_embgw']
+        ref = sq.ports.get('rf') or sq.ports.get('d2df')
+        lay = ref[3] if ref and ref[0] == 'face' else 'M5'
+        c = {'qkd_seq': 8.0, 'qkd_embgw': 8.0}
+        for bid, (kn, kp, bits, face) in sorted(short.items()):
+            mm = sq if kn == 'seq' else eg
+            span = bits * 0.048 * 2 + 4.0
+            if kp not in mm.ports:
+                mm.face(kp, bits, face, lay, c[mm.name] + span / 2, 2)
+            c[mm.name] += span + 4.0
+        su = o.get('qfd_sp_su64_sfu') or next((q for q in o.values() if 'eq' in q.ports and q.name.endswith('su64_sfu')), None)
+        if su is not None and su.ports['eq'][0] == 'face':
+            sp = su.ports['eq']
+            su.ports['eq'] = (sp[0], 1024) + sp[2:]
+        return o
+
+    def port_widths(model, k=1):
+        w = base_pw(model, k)
+        for key, val in KPW.items():
+            w.setdefault(key, val)
+        for bid, (kn, kp, bits, face) in short.items():
+            w[('qkd_seq' if kn == 'seq' else 'qkd_embgw', kp)] = bits
+        return w
+    v.masters, v.port_widths = masters, port_widths
+
+
 def _tp8_io(v, m):
     """qwen-tp8 IO band: 3 SerDes ports (one per remote package, K4 board; TP4: 1 adapter for 2 destinations).  SerDes
     k = 1, 2 are placed W of the collective (MY: their S-face word pins at the end toward the collective); each gets
@@ -659,6 +815,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             _tp8_io(v_, m_)
             if TP8.get('f2'):
                 _tp8b_f2(v_, m_)
+                if TP8['f2'].get('kv'):
+                    _tp8b_kv(v_, m_)
     if before_relays is not None:
         # Opt-in system composition: actual slots/ports precede relay discovery.
         # Default recipes retain their existing geometry and master contracts.
