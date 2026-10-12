@@ -26,6 +26,10 @@ HARD_IP = ('ot_hbm3e_phy', 'qfd_io_serdes', 'qfd_io_ucie', 'qkd_pll', 'qfd_clkrx
 # coordinator DECISION 2026-10-12 12:15: qfd_tile_nk / h3c / h3s is a CLUSTER slot (hard ROM/SRAM/leaf children, M2-M7,
 # PG M7): the die routes over it on M8+ only, so for the die cut model it counts like hard IP (die layer only).
 CLUSTER = ('qfd_tile_nk', 'qfd_tile_h3c', 'qfd_tile_h3s')
+# layer plan B (coordinator 2026-10-12 relaxation, evaluated): tile_nk capped at M6 (leaves M5 incl. PG; tile PG strap
+# + horizontal ROM-band crossing on M6) -> the die owns M7 + M8 (+M9) over the cluster.  CLUSTER_PLAN 'B' adds M7 (75 %)
+# to vertical-wire (horizontal-cut) capacity over CLUSTER blocks; horizontal wires still see M8 only (M6 is the tile's).
+CLUSTER_PLAN = 'A'
 
 
 def dump(out):
@@ -50,6 +54,7 @@ class Net:
         bl = [i for i in d['insts'] if i['w'] * i['h'] > 4e4]
         self.blocks = np.array([(i['x'], i['y'], i['x'] + i['w'], i['y'] + i['h']) for i in bl])
         self.cap5 = np.array([CAP_MODE == 'v3' and i.get('m', '') not in HARD_IP + CLUSTER for i in bl])
+        self.clB = np.array([CLUSTER_PLAN == 'B' and i.get('m', '') in CLUSTER for i in bl])
         self.W = max(i['x'] + i['w'] for i in d['insts']); self.H = max(i['y'] + i['h'] for i in d['insts'])
         cen = lambda i: (i['x'] + i['w'] / 2, i['y'] + i['h'] / 2)
         cl = lambda i, P: (min(max(P[0], i['x']), i['x'] + i['w']), min(max(P[1], i['y']), i['y'] + i['h']))
@@ -71,7 +76,8 @@ class Net:
         k = np.digitize(oc, edges) - 1
         bits = np.bincount(np.clip(k, 0, len(edges) - 2), weights=T[:, 4] * ((k >= 0) & (k < len(edges) - 1)), minlength=len(edges) - 1)
         B = self.blocks[(self.blocks[:, p0] < cp) & (cp < self.blocks[:, p0 + 2])]
-        K5 = self.cap5[(self.blocks[:, p0] < cp) & (cp < self.blocks[:, p0 + 2])]
+        sel = (self.blocks[:, p0] < cp) & (cp < self.blocks[:, p0 + 2])
+        K5 = self.cap5[sel] | (self.clB[sel] & (ax == 'y'))   # plan B: die M7 over the cluster serves vertical wires only
         cov = np.zeros(len(edges) - 1); cov5 = np.zeros(len(edges) - 1)
         for b, k5 in zip(B, K5):
             o = np.clip(np.minimum(edges[1:], b[o0 + 2]) - np.maximum(edges[:-1], b[o0]), 0, None)

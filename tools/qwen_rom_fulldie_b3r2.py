@@ -404,6 +404,40 @@ def _tp8b_kv(v, m):
         i.x = round(i.x + (dxe if sd == 'E' else 0.0), 4)
         i.y = round(i.y + dy, 4)
         new.append(i)
+    # it17 (layer plan A, die M8+ over the tile_nk clusters): the KV strip head stacks (4 groups of 4 qkd_rhead + 1
+    # qkd_ectl per stack column, abutted 7.8 mm) left KV-half words no crossing height but the stack ends (it16: all
+    # W words in ONE row gap, 0.875).  Open a crossing channel of kv_xch um between consecutive head groups (groups
+    # shift up by j * kv_xch, astk spans the stack unchanged); the channels (M4-M9 free, relay sites) are recorded in
+    # v.KV_XCH per strip side for _relays (<= KV_XCH_CAP b per channel)
+    xch = TP8['f2'].get('kv_xch')
+    v.KV_XCH = {}
+    if xch:
+        import re as _re
+        heads = [i for i in new if _re.match(r'(head|ectl)_[WE][SN]_\d+', i.name)]
+        cols = {}
+        for i in heads:
+            sd, sn, c = _re.match(r'\w+?_([WE])([SN])_(\d+)', i.name).groups()
+            cols.setdefault((sd, sn, round(i.x, 1)), {}).setdefault(int(c), []).append(i)
+        for (sd, sn, cx), grp in sorted(cols.items()):
+            order = sorted(grp, key=lambda c: min(i.y for i in grp[c]))
+            spans = [(min(i.y for i in grp[c]), max(i.y + i.h for i in grp[c])) for c in order]
+            x0_, x1_ = cx, max(i.x + i.w for c in order for i in grp[c])
+            mv = []
+            for j, c in enumerate(order):
+                ya, yb = spans[j]
+                yb = yb + 2000.0 if j == len(order) - 1 else yb     # the top group carries the relays above the stack
+                sh = round(j * xch, 4)
+                # the group and every short block / kept relay over its span in the column (astk is taller than a
+                # group and stays); membership on the unshifted placement
+                mv += [(i, sh) for i in new if sh and i.h < 1000.0 and i.x < x1_ - 1.0 and x0_ + 1.0 < i.x + i.w
+                       and ya - 1.0 <= i.y + i.h / 2 <= yb + 1.0]
+            for i, sh in mv:
+                i.y = round(i.y + sh, 4)
+            chs = [round(spans[j][0] + (j - 0.5) * xch, 3) for j in range(1, len(order))]
+            v.KV_XCH.setdefault(sd, set()).update(chs)
+        v.KV_XCH = {k: sorted(x) for k, x in v.KV_XCH.items()}
+        v.KV_XCH_STRIP = {sd: (min(i.x for i in heads if f'_{sd}' in i.name[4:7]), max(i.x + i.w for i in heads if f'_{sd}' in i.name[4:7]))
+                          for sd in v.KV_XCH}
     # KV centre column (E of the ROM spine), centred on the die's mid-height
     x0, x1 = g['tp8b_kvc_x']
     gap = 2 * v.GY
@@ -1688,6 +1722,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # channel (pass-2 search sent kvn_* down to the IO channel and back up: 80 relays, 1 kb stacked on the serdes words)
     KVC_NAMES = ('pll', 'embgw', 'seq', 'ahub', 'host')
     gap_bits = {}
+    gap_tot, gap_id, xch_bits = {}, {}, {}     # it17: aggregate per row gap; bits per head-stack crossing channel
+    KV_GAP_CAP, KV_XCH_CAP = 4000.0, 1600.0
     kv_gaps = []
     gap_set = set()
     cur_tight = [False]
@@ -1704,6 +1740,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             kv_gaps = sorted(round(a + th + (b - a - th) * f, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0
                              for f in (0.25, 0.5, 0.75))
             gap_set = set(kv_gaps)
+            gap_id = {round(a + th + (b - a - th) * f, 3): k for k, (a, b) in enumerate(zip(ry, ry[1:])) for f in (0.25, 0.5, 0.75)}
         else:
             kv_gaps = [round((a + th + b) / 2, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0]
             # over-tile runs too (M6+ over the M5-capped tiles, relays in the corridors): the KV strips' head stacks
@@ -1732,19 +1769,138 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             lb[x][k] += cur_bits[0]
         return x
 
-    def io_lane(lo, hi, subs):
-        """it4: the IO sub-lane whose 260-um bin, then lane, carries the fewest bits over this word's x span"""
+    def io_lane(lo, hi, subs, allow=None):
+        """it4: the IO sub-lane whose 260-um bin, then lane, carries the fewest bits over this word's x span.
+        it17: the KV host link (host_fdi, 2,085 b) owns the top sub-lane; the SerDes / IO words share the two bottom
+        ones (> 260 um from it), so no fine window holds the 4 kb of SerDes words and the host link together"""
         def ov(j):
             return sum(b_ for a_, c_, b_ in io_sub[j] if a_ < hi and lo < c_)
         binl = lambda j: sum(ov(q) for q in range(len(subs)) if int(subs[q] // 260.0) == int(subs[j] // 260.0))  # noqa: E731
-        k = min(range(len(subs)), key=lambda j: (binl(j), ov(j), j))
+        k = min(allow if allow is not None else range(len(subs)), key=lambda j: (binl(j), ov(j), j))
         io_sub[k].append((lo, hi, cur_bits[0]))
         return k
+
+    # it17 (layer plan A: die M8 H / M9 V only over the tile_nk clusters): a field allocator.  Every routed path's
+    # horizontal / vertical legs are booked per 260-um window (the fine-cut grid: windows at multiples of 260 um);
+    # an over-tile horizontal leg is admitted only while its windows stay <= HCAP (2 x 512 b + slack of M8's 2,438
+    # tracks), else it jogs into the nearest row-gap sub-lane (M4-M8 free, <= GCAP); a vertical corridor leg takes the
+    # corridor (column) whose windows stay lowest, capped at VCAP.  Classes it places: tree words and every other
+    # field-to-field / field-to-spine word (corridor-class words keep their own corridor and are only booked).
+    FBIN = 260.0
+    hb, vb = {}, {}
+    HCAP, GCAP, VCAP = 1400.0, 4000.0, 1800.0
+    FIELD_ALLOC = bool(getattr(v, 'TILE_CLUSTER', False)) and bool(kv_gaps)
+    ry_ = sorted(g.get('row_y') or [])
+    th_ = v.TILE_SLOT[1]
+
+    def over_tile(y):
+        k = bisect.bisect_right(ry_, y) - 1
+        return k >= 0 and ry_[k] - 1.0 <= y <= ry_[k] + th_ + 1.0
+
+    def _bins(a, b):
+        a, b = sorted((a, b))
+        return range(int(a // FBIN), int(b // FBIN) + 1)
+
+    def hload(y, xa, xb):
+        yb_ = int(y // FBIN)
+        return max((hb.get((yb_, k), 0.0) for k in _bins(xa, xb)), default=0.0)
+
+    def vload(x, ya, yb):
+        xb_ = int(x // FBIN)
+        return max((vb.get((xb_, k), 0.0) for k in _bins(ya, yb)), default=0.0)
+
+    def book(path, bits):
+        for (xa, ya), (xb, yb) in zip(path, path[1:]):
+            if abs(ya - yb) < 1e-6 and abs(xa - xb) > 1e-6:
+                for k in _bins(xa, xb):
+                    hb[(int(ya // FBIN), k)] = hb.get((int(ya // FBIN), k), 0.0) + bits
+            elif abs(xa - xb) < 1e-6 and abs(ya - yb) > 1e-6:
+                for k in _bins(ya, yb):
+                    vb[(int(xa // FBIN), k)] = vb.get((int(xa // FBIN), k), 0.0) + bits
+
+    def near_corr(x, toward):
+        """the corridor next to a tile face pin at x, on the side toward `toward`"""
+        sc = side_cols(x)
+        cand = [cx_list[c] for c in sc if (cx_list[c] >= x - 1.0 if toward >= x else cx_list[c] <= x + 1.0)]
+        return min(cand, key=lambda q: abs(q - x)) if cand else min((cx_list[c] for c in sc), key=lambda q: abs(q - x))
+
+    def hleg(P, xt, bits):
+        """legs taking pin P horizontally to corridor x = xt: at the pin's height when its windows have room (or the
+        run stays within one column pitch), else via the nearest row-gap sub-lane with room. -> (points, cost)"""
+        xa, ya = P
+        if abs(xt - xa) < 1.0:
+            return [], 0.0
+        if not over_tile(ya) or abs(xt - xa) < 420.0 or hload(ya, xa, xt) + bits <= HCAP:
+            return [(xt, ya)], 0.0
+        xn = near_corr(xa, xt)
+        best = None
+        for yg in kv_gaps:
+            if hload(yg, xn, xt) + bits > GCAP or vload(xn, ya, yg) + bits > VCAP:
+                continue
+            c_ = 2.0 * abs(yg - ya) + 3000.0 * hload(yg, xn, xt) / GCAP
+            if best is None or c_ < best[0]:
+                best = (c_, yg)
+        if best is None:
+            return [(xt, ya)], 5000.0
+        yg = best[1]
+        return [(xn, ya), (xn, yg), (xt, yg)], best[0]
+
+    def field_route(P0, P1, bits):
+        lo, hi = sorted((P0[0], P1[0]))
+        sc = side_cols(P0[0])
+        cs = [c for c in sc if lo - 800.0 <= cx_list[c] <= hi + 800.0] or \
+            [min(sc, key=lambda c: abs(cx_list[c] - (lo + hi) / 2))]
+        best = None
+        for c in cs:
+            xc = cx_list[c]
+            la, ca = hleg(P0, xc, bits)
+            lb, cb = hleg(P1, xc, bits)
+            ya_ = la[-1][1] if la else P0[1]
+            yb_ = lb[-1][1] if lb else P1[1]
+            vl = vload(xc, ya_, yb_)
+            cost = ca + cb + 2.0 * max(0.0, lo - xc, xc - hi) + 4000.0 * max(0.0, vl + bits - VCAP) / VCAP + 600.0 * vl / VCAP
+            if best is None or cost < best[0]:
+                best = (cost, la, lb)
+        _, la, lb = best
+        return [P0] + la + lb[::-1] + [P1]
+
+    def field_exit(Pf, Po, bits):
+        """a field pin to a block outside the field (spine / KV centre): vertical in the column corridor whose windows
+        stay lowest, the over-tile leg toward Po at Po's height while it has room, else in a row gap to the field edge
+        corridor and up / down that corridor."""
+        sc = side_cols(Pf[0])
+        edge = min(sc, key=lambda c: abs(cx_list[c] - Po[0]))
+        cs = sorted(sc, key=lambda c: abs(cx_list[c] - Po[0]))[:10]
+        best = None
+        for c in cs:
+            xc = cx_list[c]
+            la, ca = hleg(Pf, xc, bits)
+            ya_ = la[-1][1] if la else Pf[1]
+            xe = cx_list[edge]
+            run = abs(xc - xe) > 420.0 and over_tile(Po[1]) and hload(Po[1], xc, xe) + bits > HCAP
+            if run:
+                lb, cb = hleg((xe, Po[1]), xc, bits)     # same rule mirrored: the edge corridor carries the jog
+                tail = lb[::-1] + [(xe, Po[1])]
+                vl = max(vload(xc, ya_, lb[-1][1]), vload(xe, lb[-1][1], Po[1]))
+            else:
+                tail, cb = [(xc, Po[1])], 0.0
+                vl = vload(xc, ya_, Po[1])
+            cost = ca + cb + abs(xc - Po[0]) / 4.0 + 4000.0 * max(0.0, vl + bits - VCAP) / VCAP + 600.0 * vl / VCAP
+            if best is None or cost < best[0]:
+                best = (cost, la, tail)
+        _, la, tail = best
+        return [Pf] + la + tail + [Po]
 
     def poly_of(cl, P0, P1, bid=None, eps=None):
         f0, f1 = in_field(*P0), in_field(*P1)
         if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0):
             return [P0, P1]
+        if FIELD_ALLOC and cl != 'corridor' and not cl.startswith('kvn') and f0 and f1 and side_cols(P0[0]) == side_cols(P1[0]):
+            return field_route(P0, P1, cur_bits[0])
+        if FIELD_ALLOC and f0 != f1 and not cl.startswith('kvn'):
+            Pf, Po = (P0, P1) if f0 else (P1, P0)
+            path = field_exit(Pf, Po, cur_bits[0])
+            return path if f0 else path[::-1]
         if f0 and f1 and side_cols(P0[0]) == side_cols(P1[0]):
             xm = (P0[0] + P1[0]) / 2
             lo, hi = sorted((P0[0], P1[0]))
@@ -1769,7 +1925,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # it4: four sub-lanes (one word per lane where possible: shared lanes stacked relays at the faces)
                 hch = io_ch[1] - io_ch[0]
                 subs = [io_ch[0] + hch * f for f in IO_SUB_F]
-                k_ = io_lane(lo_, hi_, subs)
+                k_ = io_lane(lo_, hi_, subs, allow=(0, 1) if FIELD_ALLOC else None)
                 return [P0, (P0[0], subs[k_]), (P1[0], subs[k_]), P1]
         if io_ch is not None and bid is not None and bid.split('__r')[0] == 'host_fdi' and abs(P0[0] - P1[0]) > 500.0 \
                 and (P0[1] < io_ch[0]) != (P1[1] < io_ch[0]):
@@ -1778,7 +1934,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             Pa, Pi = (P0, P1) if P1[1] < io_ch[0] else (P1, P0)
             hch = io_ch[1] - io_ch[0]
             subs = [io_ch[0] + hch * f for f in IO_SUB_F]
-            k_ = io_lane(*sorted((P0[0], P1[0])), subs)
+            k_ = io_lane(*sorted((P0[0], P1[0])), subs, allow=(3,) if FIELD_ALLOC else None)
             chx = getattr(v, 'SPINE_CHANNEL_X', None)
             xl = lane_pick(chx, Pa, (Pa[0], subs[k_]), lane_bits) if chx else Pa[0]
             path = [Pa, (xl, Pa[1]), (xl, subs[k_]), (Pi[0], subs[k_]), Pi]
@@ -1793,20 +1949,44 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 chx = getattr(v, 'SPINE_CHANNEL_X', None) or [Pc[0]]
                 kvl = [x for x in chx if abs(x - Pc[0]) < 1500.0] or [Pc[0]]
                 best = None
+                sd_ = 'W' if Ps[0] < Pc[0] else 'E'
+                xs_ = (getattr(v, 'KV_XCH_STRIP', None) or {}).get(sd_)
+                # it17: the jog column between the field and the strip's head stacks (W: E of the stacks; E: W of them)
+                fe_ = F[0] if sd_ == 'W' else F[2] + v.CORR
+                xj = round((xs_[1] + fe_) / 2 if sd_ == 'W' else (xs_[0] + fe_) / 2, 3) if xs_ else None
+
+                def clear(y_, xa_, xb_):
+                    lo_, hi_ = sorted((xa_, xb_))
+                    return not any(a < hi_ - 1.0 and lo_ + 1.0 < c and b < y_ + 35.0 and y_ - 35.0 < d and c - a > 350.0
+                                   and not (a <= Ps[0] <= c)
+                                   and not (a <= Pc[0] <= c and b <= Pc[1] <= d) and not (F[0] - 1 <= a and c <= F[2] + v.CORR + 1)
+                                   for a, b, c, d in big)
                 for yg in kv_gaps:
-                    lo_, hi_ = sorted((Pc[0], Ps[0]))
-                    if any(a < hi_ - 1.0 and lo_ + 1.0 < c and b < yg + 35.0 and yg - 35.0 < d and c - a > 350.0
-                           and not (a <= Ps[0] <= c)
-                           and not (a <= Pc[0] <= c and b <= Pc[1] <= d) and not (F[0] - 1 <= a and c <= F[2] + v.CORR + 1)
-                           for a, b, c, d in big):
+                    gid = gap_id.get(yg)
+                    if gid is not None and gap_tot.get(gid, 0.0) + cur_bits[0] > KV_GAP_CAP:
+                        continue                 # it17: <= ~4 kb aggregate per row gap (all its sub-lanes)
+                    if clear(yg, Pc[0], Ps[0]):
+                        opts = [(yg, None)]
+                    elif xj is not None and clear(yg, Pc[0], xj):
+                        opts = [(yg, yc) for yc in v.KV_XCH.get(sd_, ())
+                                if xch_bits.get((sd_, yc), 0.0) + cur_bits[0] <= KV_XCH_CAP]
+                    else:
                         continue
-                    det = abs(yg - Pc[1]) + abs(yg - Ps[1])
-                    cost = det + 6000.0 * (gap_bits.get(yg, 0.0) + cur_bits[0]) / 1000.0 + (0.0 if yg in gap_set else 600.0)
-                    if best is None or cost < best[0]:
-                        best = (cost, yg)
+                    for yg_, yc in opts:
+                        yr = yg_ if yc is None else yc
+                        det = abs(yg_ - Pc[1]) + abs(yg_ - yr) + abs(yr - Ps[1])
+                        cost = det + 6000.0 * (gap_bits.get(yg_, 0.0) + cur_bits[0]) / 1000.0 + (0.0 if yg_ in gap_set else 600.0) \
+                            + (6000.0 * (xch_bits.get((sd_, yc), 0.0) + cur_bits[0]) / 1000.0 if yc is not None else 0.0)
+                        if best is None or cost < best[0]:
+                            best = (cost, yg_, yc)
                 if best is not None:
-                    yg = best[1]
+                    yg, yc = best[1], best[2]
                     gap_bits[yg] = gap_bits.get(yg, 0.0) + cur_bits[0]
+                    if gap_id.get(yg) is not None:
+                        gap_tot[gap_id[yg]] = gap_tot.get(gap_id[yg], 0.0) + cur_bits[0]
+                    if yc is not None:
+                        xch_bits[(sd_, yc)] = xch_bits.get((sd_, yc), 0.0) + cur_bits[0]
+                    yr = yg if yc is None else yc
                     tight_stride.add(bid)
                     if Ps[0] > Pc[0]:
                         # E-bound: the KV centre's E face is next to the E field: run up / down its first corridor
@@ -1818,19 +1998,20 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     else:
                         xl = lane_pick(kvl, Pc, (Pc[0], yg), lane_bits) if all(x in lane_bits for x in kvl) else kvl[0]
                     fa, fb = (F[2] + v.CORR, F[0]) if Ps[0] < Pc[0] else (xl, F[2] + v.CORR)
-                    path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg), (Ps[0], yg), Ps]
+                    jog = [] if yc is None else [(xj, yg), (xj, yc)]
+                    path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg)] + jog + [(Ps[0], yr), Ps]
                     bs = by.get(eps[1][0] if kc0 else eps[0][0])
-                    if bs is not None and abs(Ps[1] - yg) > 1.0:
+                    if bs is not None and abs(Ps[1] - yr) > 1.0:
                         # it4: approach a strip pin from its own face: a pin on the N / S face of a block between the
                         # run height and the pin (wctl: the kvn leg ran up through its 518-um body, hop 575 um) is
                         # reached from a side channel beside the block, then along the face
                         top, bot = bs.y + bs.h, bs.y
                         face_n = abs(Ps[1] - top) < 2.0
                         face_s = abs(Ps[1] - bot) < 2.0
-                        if (face_n and yg < bot) or (face_s and yg > top):
+                        if (face_n and yr < bot) or (face_s and yr > top):
                             xs = bs.x + bs.w + 65.0 if Ps[0] < Pc[0] else bs.x - 65.0
                             ya = Ps[1] + (60.0 if face_n else -60.0)
-                            path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg), (xs, yg), (xs, ya), (Ps[0], ya), Ps]
+                            path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg)] + jog + [(xs, yr), (xs, ya), (Ps[0], ya), Ps]
                     return path if Pc is P0 else path[::-1]
         chx = getattr(v, 'SPINE_CHANNEL_X', None)
         if chx and abs(P0[1] - P1[1]) > 1000.0 and min(chx) - 1500.0 < P0[0] < max(chx) + 1500.0 \
@@ -1952,6 +2133,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             continue
         cur_bits[0] = bits
         path = poly_of(cl, P0, P1, bid=bid, eps=eps)
+        if FIELD_ALLOC:
+            book(path, bits)
         cands, L = candidates(path)
         span1 = bits * 0.048 + 4.0
         span2 = bits * 0.096 + 4.0

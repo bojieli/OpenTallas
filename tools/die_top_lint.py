@@ -149,7 +149,7 @@ QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=669.6, 
 QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=190.08, tile_body=311.04, tile_h=1296.0,
                                        spine_gap=171.936, root_spread=True,
                                        f2=dict(cols=48, rows=16, col_pitch=394.848, spine_w=4589.0, kv_w=3700.0,
-                                               kv_ch=100.0, io_chan=400.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True)))
+                                               kv_ch=100.0, io_chan=400.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4)))
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
