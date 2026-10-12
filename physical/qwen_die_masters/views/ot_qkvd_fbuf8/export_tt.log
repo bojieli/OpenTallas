@@ -16,28 +16,28 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-QDM REFGLOB *push_q* reference: 1 registers, median arrival 126.369446 (range 126.369446 .. 126.369446)
-QDM reference pin push_q$_DFF_PN0_/CLK clock arrival max 126.369446 min 116.933853 skew 90 hold 50
+QDM REFGLOB *push_q* reference: 1 registers, median arrival 136.391632 (range 136.391632 .. 136.391632)
+QDM reference pin push_q$_DFF_PN0_/CLK clock arrival max 136.391632 min 127.471031 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
-OT_WS_MAX 2.0911744558205214e-10 OT_WS_MIN 2.2039536862195064e-11
+OT_WS_MAX 2.1415630380161588e-10 OT_WS_MIN 2.463516890482964e-11
 Clock core_clk
 rise -> rise
     min     max
    0.00    0.00 source latency
- 114.20         network latency u_f.g_s[2].u_sl/dout[58]$_DFFE_PP_/CLK
-         137.68 network latency din_q[166]$_DFF_P_/CLK
+ 124.39         network latency u_f.g_s[6].u_sl/mem[2][2]$_DFFE_PP_/CLK
+         150.37 network latency din_q[4]$_DFF_P_/CLK
 ---------------
- 114.20  137.68 latency
-          23.47 skew
+ 124.39  150.37 latency
+          25.98 skew
 
 fall -> fall
     min     max
    0.00    0.00 source latency
- 120.34         network latency u_f.g_s[5].u_sl/mem[2][1]$_DFFE_PP_/CLK
-         143.99 network latency din_q[166]$_DFF_P_/CLK
+ 133.08         network latency u_f.g_s[6].u_sl/mem[2][2]$_DFFE_PP_/CLK
+         159.78 network latency din_q[406]$_DFF_P_/CLK
 ---------------
- 120.34  143.99 latency
-          23.64 skew
+ 133.08  159.78 latency
+          26.70 skew
 
 
 Clock ot_lb_v_core_clk
