@@ -16,7 +16,7 @@ twins, _s2/_t/_split/... alternatives) folded into their master. Each element ge
   cancelled only             every job was cancelled
   superseded                 listed in $FLEET_VIZ_SUPERSEDED (default ~/claude-takeover-20261007/superseded_elements.json,
                              {element: {by, reason}}): replaced by another element or not used by any die; overrides every
-                             non-closed category and is excluded from the open counts (summary 'open' = all but closed/superseded)
+                             category (closed included, owner 10-11) and is excluded from every count; 'cancelled only' is also excluded
 
 Overrides from $FLEET_VIZ_OVERRIDES (default ~/claude-takeover-20261007/element_overrides.json):
   variants   {block: {of, kind, reason}}: fold a differently named block into element `of` (checked before the VARIANT
@@ -463,7 +463,7 @@ class Elements:
             r['owner'] = ov['owners'].get(m) or self.remap_owner(r['owner'] or '', ov)
             sv = sup.get(m) or next((sup[b] for b in [m] + r['variants'] if b in sup), None)
             r['superseded'] = None
-            if sv and not r['category'].startswith('closed'):
+            if sv:   # owner 10-11: superseded overrides closed too; such rows are not counted anywhere
                 r['category'] = 'superseded'; r['superseded'] = dict(by=sv.get('by'), reason=sv.get('reason'))
                 r['via'] = 'superseded by %s' % sv.get('by')
             tq = tput.get(m) or next((tput[b] for b in r['variants'] if b in tput), None)
