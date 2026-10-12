@@ -27,7 +27,7 @@
 // Every die-facing input lands in a flop, every output leaves a flop; wide datapath registers carry no reset.
 module ot_hgi_idx_index_w #(
     parameter integer MUT = 0,      // bench mutants: 1 head weight of the next head, 2 R written from the wrong lane
-    parameter integer DL  = 4,      // landing FIFO depth a read lane (power of 2)
+    parameter integer DL  = 2,      // landing FIFO depth a read lane (power of 2; 64 sectors in flight >= 4 a cycle x RT 16)
     parameter integer LQ  = 8       // VM lane queue credits a lane (read and write groups)
 ) (
     input  wire          clk,
@@ -161,7 +161,7 @@ module ot_hgi_idx_index_w #(
     // ================================================================ KEEP walk
     reg h0_v; reg [1023:0] h0_d; reg [1:0] h0_slot; reg [2:0] h0_cnt; reg [12:0] h0_shi;      // the held id chunk
     reg k1_v; reg [31:0] k1_ok; reg [14:0] k1_q [0:31]; reg [4:0] k1_lo [0:31];
-    reg k2_v; reg [31:0] k2_ok; reg [13:0] k2_ord [0:31]; reg [1:0] k2_r3 [0:31]; reg [4:0] k2_lo [0:31];
+    reg k2_v; reg [31:0] k2_ok; reg [13:0] k2_ord [0:31]; reg [14:0] k2_q [0:31]; reg [4:0] k2_lo [0:31];
     reg k3_v; reg [31:0] k3_m; reg [10:0] k3_ord [0:31];
     reg [31:0] mb; reg [10:0] mb_ord [0:31];
     reg [4:0] pk; reg pk_v;
@@ -170,7 +170,8 @@ module ot_hgi_idx_index_w #(
         for (l = 31; l >= 0; l = l - 1) if (mb[l]) begin pk_v = 1'b1; pk = 5'(l); end
     end
     wire [31:0] mb_left = mb & ~((pk_v ? 32'd1 : 32'd0) << pk);
-    wire k3_ld = k3_v && mb_left == 32'd0;
+    reg mb_z;                               // registered: the match buffer is empty
+    wire k3_ld = k3_v && mb_z;
     wire k3_free = !k3_v || k3_ld;
     wire k2_free = !k2_v || k3_free;
     wire k1_free = !k1_v || k2_free;
@@ -181,13 +182,14 @@ module ot_hgi_idx_index_w #(
     reg [11:0] c_iss, c_done;               // C chunks (id + value) issued / consumed this frame
     reg [17:0] cw_w; reg [31:0] cv_w; reg [14:0] cq;
     always @(posedge clk or negedge rn) begin
-        if (!rn) begin h0_v <= 1'b0; k1_v <= 1'b0; k2_v <= 1'b0; k3_v <= 1'b0; mb <= 32'd0; ks_v <= 1'b0; end
+        if (!rn) begin h0_v <= 1'b0; k1_v <= 1'b0; k2_v <= 1'b0; k3_v <= 1'b0; mb <= 32'd0; mb_z <= 1'b1; ks_v <= 1'b0; end
         else begin
             if (g_ci && !h0_v) h0_v <= 1'b1; else if (k1_ld) h0_v <= 1'b0;
             if (k1_free) k1_v <= k1_ld;
             if (k2_free) k2_v <= k1_v;
             if (k3_free) k3_v <= k2_v;
             mb <= k3_ld ? k3_m : mb_left;
+            mb_z <= (k3_ld ? k3_m : mb_left) == 32'd0;
             ks_v <= pk_v;
         end
     end
@@ -206,18 +208,19 @@ module ot_hgi_idx_index_w #(
             for (p = 0; p < 32; p = p + 1) begin
                 k2_ok[p] <= k1_ok[p];
                 k2_ord[p] <= 14'(({17'd0, k1_q[p]} * 32'd43691) >> 17);
-                k2_r3[p] <= 2'(k1_q[p] - 15'(15'd3 * 15'(({17'd0, k1_q[p]} * 32'd43691) >> 17)));
+                k2_q[p] <= k1_q[p];
                 k2_lo[p] <= k1_lo[p];
             end
         if (k3_free && k2_v)
             for (p = 0; p < 32; p = p + 1) begin
-                k3_m[p] <= k2_ok[p] && {k2_r3[p], k2_lo[p]} == rank && k2_ord[p] < 14'd1368;
+                k3_m[p] <= k2_ok[p] && {2'(k2_q[p] - 15'(k2_ord[p] + {k2_ord[p], 1'b0})), k2_lo[p]} == rank &&
+                           k2_ord[p] < 14'd1368;
                 k3_ord[p] <= k2_ord[p][10:0];
             end
         if (k3_ld) for (p = 0; p < 32; p = p + 1) mb_ord[p] <= k3_ord[p];
         if (pk_v) ks_ord <= mb_ord[pk];
     end
-    wire k_busy = h0_v || k1_v || k2_v || k3_v || mb != 32'd0 || ks_v;
+    wire k_busy = h0_v || k1_v || k2_v || k3_v || !mb_z || ks_v;
     wire walk_done = !keep_en || (is_kind == K_A || !is_on) && c_iss == c_done && !k_busy && !g_ci && !g_cv;
     // ================================================================ QUERY (A sectors -> 8-sector ring -> blocks)
     reg [255:0] ring [0:7]; reg [2:0] rg_wp, rg_rp; reg [3:0] rg_n;
@@ -231,7 +234,7 @@ module ot_hgi_idx_index_w #(
     reg [611:0] tf [0:7]; reg [2:0] tfh, tft; reg [3:0] tfn;
     reg [71:0]  cf [0:7]; reg [2:0] cfh, cft; reg [3:0] cfn;
     reg hb;
-    reg t1_v; reg [7:0] t1_lv; reg [31:0] t1_o [0:7]; reg [31:0] t1_r [0:7];
+    reg t1_v; reg [7:0] t1_lv; reg [31:0] t1_o [0:7]; reg [31:0] t1_r [0:7]; reg [2:0] t1_pf [0:7]; reg [3:0] t1_n;
     reg t2_v; reg [3:0] t2_n; reg [255:0] t2_o, t2_r;
     reg d1_v; reg [3:0] d1_n; reg [255:0] d1_i, d1_x;
     wire [3:0] pk_rdy, pk_ev, pk_empty; wire [3*15-1+15:0] pk_sec; wire [4*256-1:0] pk_d; wire [4*8-1:0] pk_m;
@@ -375,16 +378,26 @@ module ot_hgi_idx_index_w #(
                     pref = (MUT == 2) ? 4'(p + 1) : 4'(p);
                     t1_r[l] <= th[20 + pref] ? 32'hFF80_0000 : {th[36 + 16*pref +: 16], 16'd0};
                 end
+                // prefix counts of the half beat's valid lanes (parallel popcounts, not a chained increment)
+                for (l = 0; l < 8; l = l + 1) begin
+                    cntv = 4'd0;
+                    for (i = 0; i < 8; i = i + 1) if (i < l) cntv = cntv + 4'(th[4 + (hb ? i + 8 : i)]);
+                    t1_pf[l] <= cntv[2:0];
+                end
+                cntv = 4'd0;
+                for (i = 0; i < 8; i = i + 1) cntv = cntv + 4'(th[4 + (hb ? i + 8 : i)]);
+                t1_n <= cntv;
                 hb <= !hb;
                 if (hb) begin tfh <= tfh + 3'd1; toc <= 1'b1; if (th[1]) to_last <= 1'b1; end
             end
             if (t2_free) t2_v <= t1_v;
             if (t2_free && t1_v) begin
-                cntv = 4'd0; o_acc = 256'd0; r_acc = 256'd0;
-                for (l = 0; l < 8; l = l + 1) if (t1_lv[l]) begin
-                    o_acc[cntv[2:0]*32 +: 32] = t1_o[l]; r_acc[cntv[2:0]*32 +: 32] = t1_r[l]; cntv = cntv + 4'd1;
-                end
-                t2_n <= cntv; t2_o <= o_acc; t2_r <= r_acc;
+                o_acc = 256'd0; r_acc = 256'd0;
+                for (i = 0; i < 8; i = i + 1)              // output word i = the valid lane whose prefix count is i
+                    for (l = 0; l < 8; l = l + 1)
+                        if (t1_lv[l] && t1_pf[l] == 3'(i)) begin o_acc[i*32 +: 32] = o_acc[i*32 +: 32] | t1_o[l];
+                                                                 r_acc[i*32 +: 32] = r_acc[i*32 +: 32] | t1_r[l]; end
+                t2_n <= t1_n; t2_o <= o_acc; t2_r <= r_acc;
             end
             // ---- candidate beats -> D1 (2 lanes compacted)
             if (d1_free) d1_v <= c_pop;
