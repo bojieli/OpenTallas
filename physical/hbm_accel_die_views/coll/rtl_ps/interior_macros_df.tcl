@@ -26,6 +26,11 @@ set mw 94.824
 set mh 41.040
 # textbook audit 10-11 (class 6: 31% util at 480x540): compact outlines (< 460 um wide) use 20 um channels
 set gap [expr {[info exists ::env(OT_HCOLL_GAP)] ? double($::env(OT_HCOLL_GAP)) : ($dw < 460.0 ? 20.0 : 24.0)}]
+# M4 pin access (tools/check_macro_track_alignment.py: this SRAM in R0 needs origin y = 0 mod 48 nm; its M4 pin
+# centres sit at 12 mod 48 nm, on the M4 tracks only then).  Tiles g/g3/g4a-c used gap 20 and y0 19.88:
+# every row off track -> DRT-0419 on all pins and DRT-0255 on the dense (every-track) right-edge wd_in/w_mask_in
+# pins.  Snap the row gap and y0 to the 48 nm grid (gap 24 / y0 86.88 of df-a were already on it).
+set gap [expr {round($gap/0.048)*0.048}]
 # column channel (x) can differ from the row channel: INTERIOR=4 tiles g / g3 died in DRT-0255 (u_wtx/rd[542] pin access at
 # the col1|col2 channel: one macro's 119 right-edge wd_in + the next one's 256 rd_out + 137 wd_in pins and the capture flops
 # in 20 um) -> OT_HCOLL_GAPX (env) or ::ot_hcoll_gapx (hook wrapper) widens only the column channels
@@ -36,7 +41,7 @@ set x0 [expr {($dw-$array_w)/2}]
 # INTERIOR=4 die tile (10-11, g2ck-r2 GPL-0305 / routability 1.13 top-2%): the LEFT (core) face carries 1,640 pins + their
 # FIRM pin flops, the right (link) face 1,092 -> a 20 um link corridor and every other um on the core side (384 wide: 40 um)
 if {[info exists ::ot_hcoll_m0_left]} { set x0 [expr {$dw - 20.0 - $array_w}] }
-set y0 [expr {($dh-$array_h)/2}]
+set y0 [expr {floor(($dh-$array_h)/2/0.048)*0.048}]
 # compact slice (< 400 um wide, the hierarchical hfd_coll tile: 364 x 386 = ~57% util): 20 um pin corridors suffice for
 # one face of pin flops (qp/qr 1,092 flops on the 364 um top face = 4 rows of DFFs)
 set cmin [expr {$dw < 460.0 ? 18.0 : 48.0}]
@@ -61,6 +66,8 @@ foreach name $macros {
     set col [expr {[info exists ::ot_hcoll_m0_left] ? $m : 2 - $m}]
     set x [expr {$x0+$col*($mw+$gapx)}]
     set y [expr {$y0+$row*($mh+$gap)}]
+    set ydbu [expr {int(round($y*$units))}]
+    if {$ydbu % int(round(0.048*$units)) != 0} { error "hcoll interior_df: $name origin y $y off the 48 nm M4 grid" }
     $inst setPlacementStatus PLACED
     $inst setOrient R0
     $inst setLocation [expr {int(round($x*$units))}] [expr {int(round($y*$units))}]
