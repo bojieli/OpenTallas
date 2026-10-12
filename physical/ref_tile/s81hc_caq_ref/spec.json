@@ -36,7 +36,7 @@
  "reset_ports": [
   "srs"
  ],
- "std_area_um2": 4731,
+ "std_area_um2": 5600,
  "util": 0.52,
  "pg_layer": "M6",
  "macros": [],
@@ -46,19 +46,25 @@
    "kind",
    "rv_u",
    "t_u",
-   "x",
-   "iq"
-  ],
-  "S": [
-   "vo",
-   "q",
-   "e",
-   "f",
-   "iqo"
+   "iq",
+   "odd",
+   "c_d"
   ],
   "W": [
    "sk",
-   "srs"
+   "srs",
+   "w_d"
+  ],
+  "E": [
+   "e_d"
+  ],
+  "S": [
+   "vo",
+   "e",
+   "f",
+   "iqo",
+   "wd",
+   "cq"
   ]
  },
  "refglob": "*x_q*",
