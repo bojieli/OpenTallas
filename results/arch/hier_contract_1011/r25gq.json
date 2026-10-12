@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "hbm_r25gq",
- "version": 6,
+ "version": 7,
  "owner": "hbmdie-1011",
- "updated": "2026-10-12T00:20-07:00",
+ "updated": "2026-10-12T01:20-07:00",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -90,6 +90,10 @@
   {
    "version": 5,
    "change": "D17 hfd_hc_eng: lane-major N-face re-pin accepted; needs per-lane ports in the die bus model (generator places each port contiguous) and the lgE station spanning the full 4,384.8 face [open]"
+  },
+  {
+   "version": 7,
+   "change": "D19 SM.MATVEC x load (step 3b) = client of the E lane group lgE (hgi_vm E face, 32 lanes, KE = 4), slot 0 \"cp\", which has no wide client today (views 10-11 21:22: lgEcp OPEN). ot_hgi_sm_xload (in hfd_cmdproc) binds the EXISTING cmdproc N-face ports: f_lgEcp_rdn 8,257 b (wrr 32 x 257 + wrq_cr 32 + 1) and t_lgEcp_rup 513 b (wrq 32 x 16 + rg_req); f_lgEcp_wdn / t_lgEcp_wup stay with CP (x load is read-only). No new die pins. Seam: hgi_vm E face -> hb_stn_lgE_hce (hc_eng N) -> hb_stn_lgE_cp (abuts cmdproc N face), every hop a registered station <= 504 um (r25gqn_pr check: data segments > 504 um = 0); x load registers its tap at the cmdproc N-face pins (pin flops in/out). Why E: physically nearest the SM adapter (cmdproc abuts hgi_vm) and slot 0 is idle; the other E clients (ATT, quant, HC_ENG) do not run during SM.MATVEC; lgW serves SU/SFU/HC on the far W quarter [v7]"
   }
  ],
  "slots": [
@@ -2173,8 +2177,8 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 5,
-   "notes": "hierarchy hardened_block",
+   "version": 7,
+   "notes": "hierarchy hardened_block; v7 D19: lgE slot 0 (f_lgEcp_rdn / t_lgEcp_rup) = SM.MATVEC x load client",
    "pins": [
     {
      "name": "f_hgi_su[2:0]",
