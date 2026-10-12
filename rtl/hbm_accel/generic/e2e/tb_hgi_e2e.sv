@@ -59,6 +59,7 @@ module tb_hgi_e2e;
     // job (forced drafter) instead of a doorbell; vectors: tools/hgi_sim/ds_mtp_kernels.py sim --export.  host.mem words
     // 64.. : plen, gamma, ngen, rank, force (0 = real DSpark drafter), maxpos, n emitted, final commit n; 72.. prompt; 80.. forced drafts (f_addr);
     // 88.. the golden emitted tokens.  MUT_HT (bench mutant): the head table entry of position 3 = the draft there.
+    parameter integer HT_VM = 261760;   // VM word of the head stub table HT[0] = ds_mtp_kernels.bind_vm_tail() HT (ds_native map end 261,696)
     parameter integer MTP = 0, MUT = 0, MUT_HT = 0;   // MTP 1: collar in the bench (x_* ports); 2: collar inside the CP die
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_posted(input int on);
@@ -551,7 +552,7 @@ module tb_hgi_e2e;
         if (rd[3:1] != 0 || !rd[0]) begin errs = errs + 1; end
         if (MTP == 2) begin : mtpjob2          // the host through the loader's MTP window (0xE00) + completion FIFO
             integer ne, nk, done; reg [16:0] em [0:15]; reg [191:0] jc; integer stat;
-            if (MUT_HT) e2e_vm_wr(0, 261440 + 3, int'(host[80 + 2]));
+            if (MUT_HT) e2e_vm_wr(0, HT_VM + 3, int'(host[80 + 2]));
             jc = 0; jc[1 +: 4] = host[65][3:0]; jc[5] = (host[68] != 0); jc[6 +: 21] = host[66][20:0];
             jc[27 +: 21] = host[64][20:0]; jc[158 +: 21] = host[69][20:0];
             for (w = 0; w < 6; w = w + 1) axw(12'hE00 + 4 * w, jc[32 * w +: 32]);
@@ -586,7 +587,7 @@ module tb_hgi_e2e;
                 if (em[i] != host[88 + i][16:0]) begin $display("E2E MTP FAIL: emitted %0d = %0d golden %0d", i, em[i], host[88 + i]); errs = errs + 1; end
         end else         if (MTP) begin : mtpjob
             integer ne, nk; reg [16:0] em [0:15];
-            if (MUT_HT) e2e_vm_wr(0, 261440 + 3, int'(host[80 + 2]));         // head table HT[3] := the draft there
+            if (MUT_HT) e2e_vm_wr(0, HT_VM + 3, int'(host[80 + 2]));         // head table HT[3] := the draft there
             // job config (179 b): gamma [1+:4], force [5], ngen [6+:21], plen [27+:21], eos off, maxpos [158+:21]
             f_host = 0; f_host[37 + 1 +: 4] = host[65][3:0]; f_host[37 + 5] = (host[68] != 0); f_host[37 + 6 +: 21] = host[66][20:0];   // host[68]: 0 = real DSpark drafter
             f_host[37 + 27 +: 21] = host[64][20:0]; f_host[37 + 158 +: 21] = host[69][20:0];
