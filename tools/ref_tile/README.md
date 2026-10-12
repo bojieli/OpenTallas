@@ -30,13 +30,15 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `pins {N,S,E,W: [port base names]}` | per-face port groups; base names only (`ck`, never `ck[0]`); every port exactly once |
 | `macros [{view, count, at?, orient?, inst?}]` | SRAM/ROM views (DIR holds NAME.lef + NAME_{ss,ff,tt}.lib) |
 | `children [{view, count, at?, inst?}]` | hard children (cluster): views exported by this flow |
-| `pg_layer` | leaf: M6 (default) or M7; cluster: M7 |
+| `layer_cap` | leaf (2026-10-12 contract, `results/arch/hier_contract_1011/layer_usage_1012.md`): signals AND PG stop at M5 (default; PG stripes on M5 as pins, pins on M4/M5, parent straps M6, die signals M6/M7 over the tile, M8/M9 die power + global). `M6` only as a die-lead exception with `layer_cap_grant: "<lead>: <reason>"` (pin-dense edge relays / stations). Kits generated before the cut (`legacy_layer_kits.json`) keep PG M6/M7, signals <= M6; a new spec with `pg_layer` M6/M7 and no grant is refused. Contract slots carry `layer_cap` (new routes) and `view_cap` (the closed view's own cap, valid while child_lint passes at it) |
+| `pg_layer` | leaf: derived from `layer_cap` (legacy kits only: M6 or M7); cluster: M7 |
 | `defines` | extra Verilog defines for synthesis (`VERILOG_DEFINES=-DSYNTHESIS -D<d>...`), e.g. `OT_WW_MACRO` |
 | `inhold` | true: one dont_touch hold buffer per data input -> capture flop before global placement (leaf_inhold.tcl; hold-only input-capture misses on a sound tile) |
+| `outhold` | true: flop-driven outputs get lead BUF -> HB4 -> BUF FIRM at the pin before global placement (leaf_iohold.tcl, runs leaf_inhold.tcl too when `inhold`; hold-only reg->output misses at the routed IO ref) |
 | `sdc_extra` | repo SDC files inlined at the end of clock.sdc and signoff.sdc (a second clock domain, e.g. a CDC adapter's controller clock; s81 hc cseq) |
 | `inter`, `refglob`, `io_budget {in,out}` | die-context IO (io_ref_skew.sdc), 0.2 / 0.2 T default |
 | `forwarded_clock` | cluster with a forwarded-clock subtree (keeps the forwarding inverter, own root) |
-| `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v}` | route knobs (770 ps over-constraint) |
+| `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v, pin_balance}` | route knobs (770 ps over-constraint); `pin_balance: true` places pins uniformly over each face region alternating the pin_h / pin_v layers per 32-pin chunk (OT_PIN_BALANCE_H/V) for dense faces |
 | `job {owner, branch, tag, purpose, benches, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields |
 
 ## What the kit does by construction (pitfall -> mechanism)
@@ -46,7 +48,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | PDN stops below the child PG pins (PDN-0233) | cluster grid: M5/M6 stripes + M7 stripes as pins; each child strapped from the layer above its own PG pins (read from its LEF) |
 | PDN grid for an absent macro (PDN-0217) | every macro/child grid created only if `ot_ref_present` finds the master |
 | bloated abstracts (PDN-0006) | export = `write_abstract_lef` without `-bloat_occupied_layers` (tools/tt_views/view_export.py) |
-| child signals on the parent strap layer / over its own PG | leaf: explicit `RLAYERS M2 M6`, PG on M6 (signals around) or M7 (PG only); cluster: PG M7, children <= M6; child_lint (c) on the output |
+| child signals on the parent strap layer / over its own PG | leaf: explicit `RLAYERS M2 <cap>` (M5; M6 granted), PG stripes on the cap layer (signals around), pins <= cap (gate FAILs a pin layer above it), strap = cap + 1; legacy kits `RLAYERS M2 M6`, PG M6 or M7; cluster: PG M7, children <= M6; child_lint (c) on the output |
 | child edge pins covered on pin layer +-1 (DRT-0073) | pin-access keepout on the layer ABOVE the outer half of the face-pin column (OT_PK_ABOVE_ONLY=1; the layer below stays free for the tile's own access, hfd_hc c95527ec0) at PRE_GLOBAL_ROUTE, removed at POST_DETAIL_ROUTE (stn_pin_keepout.tcl, OT_PK_FRAC 0.5); child_lint (f) |
 | macros / tiles off the track grid (DRT-0255/0418/0419/0421) | macros: (0.432, 2.16) um lattice + the best origin shift over EVERY layer's tracks (check_macro_track_alignment); hard children: 43.2 um lattice = lcm(site, row, M1-M7 track pitches, PG strap pitch); all-layer pin check in gen + gate |
 | escaped vs unescaped instance names | place.tcl matches with backslashes stripped on both sides |

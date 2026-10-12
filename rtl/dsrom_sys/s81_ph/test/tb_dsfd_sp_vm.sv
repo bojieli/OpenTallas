@@ -591,8 +591,16 @@ module tb_dsfd_sp_vm;
                 for (k = 0; k < 5; k = k + 1) if (x_busy[k] == r) x_busy[k] = -1;
                 for (k = 0; k < 4; k = k + 1) if (slot_busy[k] == 1 && slot_tag[k] == r) begin
                     slot_busy[k] = 2; slot_t_done[k] = cyc; region_q.push_back(k);
-                    if (cap_pend != 0 && MODE != 3) begin
-                        // done while elements of a phase are still unsent: only legal if they are not this slot's
+                    if (MODE != 3) begin : dchk
+                        // done => every expected element of the slot's region has landed at the bank ports (direct
+                        // contract check: an early done is caught whether or not the region read-back hits the late row)
+                        integer aa, nmiss, amiss; nmiss = 0; amiss = -1;
+                        for (aa = slot_base[k] * 16; aa < (slot_base[k] + slot_n[k]) * 16; aa = aa + 1)
+                            if (exp_el.exists(aa) && !landed.exists(aa)) begin nmiss = nmiss + 1; if (amiss < 0) amiss = aa; end
+                        if (nmiss != 0) begin
+                            $display("FAIL cyc %0d: EARLY_DONE slot %0d tag %0d with %0d region elements not landed (first %0d)",
+                                     cyc, k, r, nmiss, amiss); nbad = nbad + 1;
+                        end
                     end
                 end
             end

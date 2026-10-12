@@ -14,8 +14,13 @@ if [ "${STACK:-p}" = c ]; then
   DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_LBD=${LBD:-2}"
 elif [ "${STACK:-p}" = h ]; then
   # STACK=h: re-cut H (re-cut D with the row engine as hard sub-tiles: 4 head tiles + an engine control tile)
-  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv"
-  DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_ND=${ND:-1} ${HMUT:++define+KVD_HMUT} ${RMUT:++define+KVD_RMUT} ${VMUT:++define+KVD_VMUT}"
+  # el1011-q-kvd-head: env HSUB=1 -> the hierarchical head tile (ot_qwen_nearhbm_head_hs, KVD_HSUB); HSMUT=1 its mutant
+  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv $W/hdc/nearhbm/ot_qkh_subtiles.sv $W/lib/ot_rst_relay.sv"
+  DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_ND=${ND:-1} ${HMUT:++define+KVD_HMUT} ${RMUT:++define+KVD_RMUT} ${VMUT:++define+KVD_VMUT} ${HSUB:++define+KVD_HSUB} ${HSMUT:++define+KVD_HSMUT}"
+  # the head_hs sub-tiles use the real ot_hdc_fp32_add_lat_nr, whose ot_hdc_lzc32 lives in ot_hdc_fastfp.sv (the rest of
+  # that file collides with the bench's fast-FP stand-ins): extract that one module verbatim
+  mkdir -p $OUT && awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > $OUT/ot_hdc_lzc32_x.sv
+  STK="$STK $OUT/ot_hdc_lzc32_x.sv"
 elif [ "${STACK:-p}" = e ]; then
   # STACK=e: re-cut E (D with levels 1-3 on the lane loop adders; rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv)
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_e.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv"
@@ -48,6 +53,15 @@ mkdir -p $OUT
 # self-contained module is extracted from it here.
 awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > $OUT/ot_hdc_lzc32_only.sv
 SRC="$SRC $OUT/ot_hdc_lzc32_only.sv"
+# el1011-q-kvd 2026-10-12: HSUB=1 puts ~3,800 real ot_hdc_fp32_add_lat_nr (bit-level prefix networks) into the HD 128
+# 4-stack bench (16 ot_qkh_lane8 per head); Verilator peaked at 491 GiB and never finished.  As for ot_hdc_fp32_add_lat
+# (sim_nhb_fp_lat_dpi.sv), the bench runs the DPI stand-in rtl/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv, checked
+# cycle-exact against the real unit by rtl/test/nearhbm/run_nr_standin_equiv.sh; the rest of the real file
+# (ot_hdc_fp32_add_lat_sel, ot_hdc_w11_cut_v, ot_hdc_add_hcopy36) is kept.  NR_REAL=1 forces the real units.
+if [ -n "${HSUB:-}" ] && [ -z "${NR_REAL:-}" ]; then
+  awk '/^module ot_hdc_fp32_add_lat_nr /{s=1} !s{print} s&&/^endmodule/{s=0}' $W/hdc/ot_hdc_fp32_add_lat_nr.sv > $OUT/ot_hdc_fp32_add_lat_nr_rest.sv
+  SRC="${SRC/$W\/hdc\/ot_hdc_fp32_add_lat_nr.sv/$OUT/ot_hdc_fp32_add_lat_nr_rest.sv $W/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv}"
+fi
 $VL --cc --exe --build -j 16 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
   --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${SBP:++define+KVD_SBP=$SBP} ${HT:++define+KVD_HT} ${HUBT:++define+KVD_HUBT} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
   -CFLAGS "-O1 -DKVD_R=$RR -DKVD_ROM_ST=$RST" --Mdir $OUT -o Vtb $SRC $CPP > $OUT/build.log 2>&1

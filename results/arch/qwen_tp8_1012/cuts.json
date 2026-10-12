@@ -1,0 +1,832 @@
+{
+ "tp8a": {
+  "geometry": {
+   "rows": 12,
+   "cols": 64,
+   "tile": [
+    266.95,
+    1291.66
+   ],
+   "row_pitch": 1810.1,
+   "col_pitch": 319.7,
+   "spine_x": [
+    10199,
+    14788
+   ],
+   "die": [
+    25026,
+    22985
+   ]
+  },
+  "row_H": [
+   {
+    "ax": "x",
+    "pos": 24832,
+    "win": [
+     -238,
+     1572
+    ],
+    "bits": 1536,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.054,
+    "fam": {
+     "tree_block": 1536
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 3352,
+    "win": [
+     1572,
+     3383
+    ],
+    "bits": 2560,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.09,
+    "fam": {
+     "tree_block": 1536,
+     "tree_spine": 1024
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 9426,
+    "win": [
+     3480,
+     5290
+    ],
+    "bits": 3584,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.126,
+    "fam": {
+     "tree_spine": 3584
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 14922,
+    "win": [
+     5290,
+     7100
+    ],
+    "bits": 1024,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.036,
+    "fam": {
+     "tree_block": 1024
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 8467,
+    "win": [
+     7100,
+     8910
+    ],
+    "bits": 2560,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.09,
+    "fam": {
+     "tree_spine": 2560
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 15561,
+    "win": [
+     8910,
+     10720
+    ],
+    "bits": 3584,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.126,
+    "fam": {
+     "tree_spine": 2048,
+     "tree_block": 1536
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 18118,
+    "win": [
+     10720,
+     12530
+    ],
+    "bits": 3516,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.124,
+    "fam": {
+     "tree_spine": 2048,
+     "tree_block": 1024,
+     "head_chain": 444
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 14922,
+    "win": [
+     12530,
+     14340
+    ],
+    "bits": 1024,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.036,
+    "fam": {
+     "tree_block": 1024
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 24832,
+    "win": [
+     14340,
+     16150
+    ],
+    "bits": 1536,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.054,
+    "fam": {
+     "tree_block": 1536
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 20676,
+    "win": [
+     16150,
+     17960
+    ],
+    "bits": 4096,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.144,
+    "fam": {
+     "tree_block": 2048,
+     "tree_spine": 2048
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 14922,
+    "win": [
+     18058,
+     19868
+    ],
+    "bits": 4096,
+    "block_um": 1292,
+    "usable": 28446,
+    "util": 0.144,
+    "fam": {
+     "tree_spine": 3584,
+     "tree_block": 512
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10065,
+    "win": [
+     19868,
+     21678
+    ],
+    "bits": 4608,
+    "block_um": 1551,
+    "usable": 22708,
+    "util": 0.203,
+    "fam": {
+     "io": 4096,
+     "tree_block": 512
+    }
+   }
+  ],
+  "row_H_max": {
+   "ax": "x",
+   "pos": 10065,
+   "win": [
+    19868,
+    21678
+   ],
+   "bits": 4608,
+   "block_um": 1551,
+   "usable": 22708,
+   "util": 0.203,
+   "fam": {
+    "io": 4096,
+    "tree_block": 512
+   }
+  },
+  "spine_V_max": {
+   "ax": "y",
+   "pos": 10700,
+   "win": [
+    10199,
+    14788
+   ],
+   "bits": 9109,
+   "block_um": 2333,
+   "usable": 92983,
+   "util": 0.098,
+   "fam": {
+    "tree_spine": 4959,
+    "sequencer": 3250,
+    "corridor": 444,
+    "head_chain": 444,
+    "spine_local": 12
+   }
+  },
+  "col_V_max": {
+   "ax": "y",
+   "pos": 8910,
+   "win": [
+    4791,
+    5110
+   ],
+   "bits": 512,
+   "block_um": 0,
+   "usable": 10050,
+   "util": 0.051,
+   "fam": {
+    "tree_spine": 512
+   }
+  },
+  "io_band": {
+   "ax": "y",
+   "pos": 21420,
+   "win": [
+    0,
+    25026
+   ],
+   "bits": 4096,
+   "block_um": 18222,
+   "usable": 385232,
+   "util": 0.011,
+   "fam": {
+    "io": 4096
+   }
+  },
+  "fine": [
+   {
+    "ax": "y",
+    "pos": 21750,
+    "win": [
+     12480,
+     12740
+    ],
+    "bits": 3072,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.26,
+    "fam": {
+     "io": 3072
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 12550,
+    "win": [
+     21580,
+     21840
+    ],
+    "bits": 3072,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.26,
+    "fam": {
+     "io": 3072
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10150,
+    "win": [
+     21060,
+     21320
+    ],
+    "bits": 2560,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.05,
+    "fam": {
+     "io": 2048,
+     "tree_block": 512
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 12800,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2532,
+    "block_um": 247,
+    "usable": 2736,
+    "util": 0.926,
+    "fam": {
+     "crom": 2462,
+     "sequencer": 70
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11400,
+    "win": [
+     21320,
+     21580
+    ],
+    "bits": 4096,
+    "block_um": 161,
+    "usable": 4619,
+    "util": 0.887,
+    "fam": {
+     "io": 4096
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10950,
+    "win": [
+     21320,
+     21580
+    ],
+    "bits": 4096,
+    "block_um": 161,
+    "usable": 4619,
+    "util": 0.887,
+    "fam": {
+     "io": 4096
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10550,
+    "win": [
+     21320,
+     21580
+    ],
+    "bits": 4096,
+    "block_um": 161,
+    "usable": 4619,
+    "util": 0.887,
+    "fam": {
+     "io": 4096
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 22350,
+    "win": [
+     13000,
+     13260
+    ],
+    "bits": 2048,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.84,
+    "fam": {
+     "io": 2048
+    }
+   }
+  ],
+  "fine_tree": [
+   {
+    "ax": "y",
+    "pos": 4850,
+    "win": [
+     18200,
+     18460
+    ],
+    "bits": 3004,
+    "block_um": 207,
+    "usable": 3605,
+    "util": 0.833,
+    "fam": {
+     "tree_block": 2048,
+     "tree_spine": 512,
+     "corridor": 444
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 20550,
+    "win": [
+     18980,
+     19240
+    ],
+    "bits": 2492,
+    "block_um": 231,
+    "usable": 3079,
+    "util": 0.809,
+    "fam": {
+     "tree_block": 2048,
+     "corridor": 444
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 8600,
+    "win": [
+     9880,
+     10140
+    ],
+    "bits": 2492,
+    "block_um": 208,
+    "usable": 3581,
+    "util": 0.696,
+    "fam": {
+     "tree_block": 1536,
+     "tree_spine": 512,
+     "corridor": 444
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 5000,
+    "win": [
+     9880,
+     10140
+    ],
+    "bits": 2492,
+    "block_um": 208,
+    "usable": 3581,
+    "util": 0.696,
+    "fam": {
+     "tree_block": 1536,
+     "tree_spine": 512,
+     "corridor": 444
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 20550,
+    "win": [
+     21580,
+     21840
+    ],
+    "bits": 2492,
+    "block_um": 207,
+    "usable": 3605,
+    "util": 0.691,
+    "fam": {
+     "tree_block": 2048,
+     "corridor": 444
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 16450,
+    "win": [
+     15600,
+     15860
+    ],
+    "bits": 2492,
+    "block_um": 207,
+    "usable": 3605,
+    "util": 0.691,
+    "fam": {
+     "tree_block": 2048,
+     "corridor": 444
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 13200,
+    "win": [
+     24180,
+     24440
+    ],
+    "bits": 2492,
+    "block_um": 207,
+    "usable": 3605,
+    "util": 0.691,
+    "fam": {
+     "tree_block": 2048,
+     "corridor": 444
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 13200,
+    "win": [
+     22880,
+     23140
+    ],
+    "bits": 2492,
+    "block_um": 207,
+    "usable": 3605,
+    "util": 0.691,
+    "fam": {
+     "tree_block": 2048,
+     "corridor": 444
+    }
+   }
+  ]
+ },
+ "kv_die": {
+  "die": [
+   8350,
+   24566
+  ],
+  "half_boundary_x": {
+   "W": 3700,
+   "E": 4650
+  },
+  "W_rows_1496": [
+   0,
+   1060,
+   0,
+   0,
+   5,
+   4,
+   568,
+   5,
+   604,
+   567,
+   10,
+   13,
+   21,
+   27,
+   560,
+   4326,
+   5
+  ],
+  "E_rows_1496": [
+   0,
+   1060,
+   0,
+   0,
+   0,
+   0,
+   563,
+   0,
+   72,
+   564,
+   0,
+   0,
+   0,
+   0,
+   1060,
+   3245,
+   0
+  ],
+  "centre_col_V_max": {
+   "ax": "y",
+   "pos": 12500,
+   "win": [
+    3700,
+    4650
+   ],
+   "bits": 2153,
+   "block_um": 648,
+   "usable": 15592,
+   "util": 0.138,
+   "fam": {
+    "kvn": 2120,
+    "reset": 21,
+    "spine_local": 12
+   }
+  },
+  "half_V_max": {
+   "ax": "y",
+   "pos": 20900,
+   "win": [
+    0,
+    3700
+   ],
+   "bits": 10119,
+   "block_um": 2770,
+   "usable": 55273,
+   "util": 0.183,
+   "fam": {
+    "stack_local": 5266,
+    "kvn": 2659,
+    "spine_local": 2155,
+    "reset": 39
+   }
+  },
+  "centre_x_full": {
+   "ax": "x",
+   "pos": 4175,
+   "win": [
+    0,
+    24566
+   ],
+   "bits": 683,
+   "block_um": 4881,
+   "usable": 666022,
+   "util": 0.001,
+   "fam": {
+    "kvn": 530,
+    "reset": 153
+   }
+  },
+  "fine": [
+   {
+    "ax": "y",
+    "pos": 19300,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2141,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.871,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 23
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 17450,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2141,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.871,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 23
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 9150,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2135,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.869,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 17
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 21250,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2132,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.867,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 14
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 7150,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2130,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.867,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 12
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 5300,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2125,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.865,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 7
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 15450,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2121,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.863,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 3
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 3350,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2120,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.863,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 2
+    }
+   }
+  ],
+  "grt": "overflow 0, TT +88.90 / FF +17.51 (KV die, contract qwen_kv v5)"
+ },
+ "r22ko4_calibration": {
+  "grt_overflow": "155k (M6/M8 H), r22ko4 e6/e7 die chains",
+  "fine": [
+   {
+    "ax": "x",
+    "pos": 22050,
+    "win": [
+     22880,
+     23140
+    ],
+    "bits": 2560,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.05,
+    "fam": {
+     "tree_spine": 1536,
+     "tree_block": 1024
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 20800,
+    "win": [
+     22880,
+     23140
+    ],
+    "bits": 2560,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.05,
+    "fam": {
+     "tree_spine": 2048,
+     "tree_block": 512
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19500,
+    "win": [
+     22880,
+     23140
+    ],
+    "bits": 2560,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.05,
+    "fam": {
+     "tree_spine": 2048,
+     "tree_block": 512
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 18250,
+    "win": [
+     22880,
+     23140
+    ],
+    "bits": 2560,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.05,
+    "fam": {
+     "tree_spine": 1536,
+     "tree_block": 1024
+    }
+   }
+  ]
+ }
+}
