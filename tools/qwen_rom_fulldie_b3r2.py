@@ -2353,6 +2353,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     for j, (bid, cl, bits, eps) in enumerate(B):
         if bid in ck_add:
             B[j] = (bid, cl, bits, eps + ck_add.pop(bid))
+    # qwen-tp8/die it4 (relay ck audit, coordinator 10-12): a stream relay in a clock region that had no sink yet (the
+    # KV-strip tail relays of the E KV-half words: 100 relays) named a clk_r<k> net that did not exist and was left with
+    # its ck unconnected; such a region now gets its own net from the region-clock root (pll_r<k>, as _regions_from_placement)
+    root_ = next((e[0] for b_ in B if re.fullmatch(r'clk_r\d+', b_[0]) for e in b_[3] if e[1].startswith('pll_r')), None)
+    for key in [k_ for k_ in ck_add if re.fullmatch(r'clk_r\d+', k_)]:
+        if root_ is not None:
+            B.append((key, 'clock_trunk', 1, [(root_, 'pll_' + key[4:])] + ck_add.pop(key)))
     missing = sorted(ck_add)
     m['buses'] = B + fck_new
     m['r21_stage_of'] = stage_of
