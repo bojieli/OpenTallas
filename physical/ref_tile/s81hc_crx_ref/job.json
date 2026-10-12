@@ -1,5 +1,5 @@
 {
- "name": "s81hc_crx_ref-v1-COMMIT",
+ "name": "s81hc_crx_ref-v1-d02b035e3",
  "block": "ot_s81_hc_crx",
  "ref_tile": true,
  "owner": "Claude:s81-suhc-hier-1011",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "commit": "COMMIT"
+  "commit": "d02b035e3"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_crx_ref/s81hc_crx_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_crx_ref/s81hc_crx_ref-v1-d02b035e3"
   }
  ],
  "cycles_added": 0,
