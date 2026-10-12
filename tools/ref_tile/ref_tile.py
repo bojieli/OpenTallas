@@ -441,7 +441,17 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             f"set_input_delay {833.333 * fin:.3f} -clock core_clk [all_inputs -no_clocks]\n"
             f"set_output_delay {833.333 * fout:.3f} -clock core_clk [all_outputs]\n"
             "set_max_fanout 32 [current_design]\nset_load 80 [all_outputs]\n"
-            "set_input_transition 150 [all_inputs -no_clocks]\nset_max_transition 260 [current_design]\n")
+            "set_input_transition 150 [all_inputs -no_clocks]\nset_max_transition 260 [current_design]\n"
+            + sdc_extra(s))
+
+
+def sdc_extra(s: dict) -> str:
+    """spec 'sdc_extra': repo SDC files appended (inlined) to clock.sdc and signoff.sdc -- a second clock domain
+    (e.g. a CDC adapter's controller clock) after core_clk exists"""
+    out = ""
+    for f in s.get("sdc_extra", []):
+        out += f"# ---- sdc_extra {f}\n" + (ROOT / f).read_text()
+    return out
 
 
 def gen_signoff(s: dict, refglob: str, inter: str) -> str:
@@ -453,7 +463,7 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             "set_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\n"
             "set_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\n"
             f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
-            + io)
+            + io + sdc_extra(s))
 
 
 def child_insertions(s: dict) -> dict:
