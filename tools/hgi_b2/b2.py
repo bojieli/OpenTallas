@@ -221,7 +221,10 @@ def split_of(M, r, die, L):
         else:
             mode = "RSPLIT"
     else:
-        mode = "RSPLIT" if no >= NQ else "ESPLIT"
+        # elementwise: any partition is exact, so follow the long axis -- a [heads x positions] softmax buffer splits by
+        # POSITION like its QK producer / ESPLIT reductions / PV consumer (a head split here made every P word needed by
+        # two clusters: 65,536 MIRROR words at Qwen P8191, 2.3x the REPL window)
+        mode = "ESPLIT" if ni >= NQ * 64 else ("RSPLIT" if no >= NQ else "ESPLIT")
     s = Split(mode, (no, ni), chain)
     for q in range(NQ):
         s.part[q] = (rng(no, q), (0, ni)) if mode == "RSPLIT" else ((0, no), rng(ni, q))
@@ -681,7 +684,8 @@ class Check:
 
 def write(out, pl, chk, collect, vm0, vm_final, meta_extra):
     out.mkdir(parents=True, exist_ok=True)
-    for q in range(NQ):
+    cap = pl.capacity()
+    for q in range(NQ if cap["fits"] else 0):   # an over-capacity placement has no slice image: refused below
         (out / f"vm0_s{q}.bin").write_bytes(pl.slice_image(vm0, q).astype("<u4").tobytes())
         (out / f"vm_final_s{q}.bin").write_bytes(pl.slice_image(vm_final, q).astype("<u4").tobytes())
     (out / "placement.json").write_text(json.dumps(pl.table(), default=int) + "\n")
@@ -689,11 +693,15 @@ def write(out, pl, chk, collect, vm0, vm_final, meta_extra):
     np.save(out / "slice.npy", sl)          # per logical VM word: slice 0..3, -1 = mirror, -2 = untouched
     (out / "records_b2.json").write_text(json.dumps(chk.recs, default=int) + "\n")
     v = chk.finish()
+    if not cap["fits"]:
+        v["violations"] += 1
+        v["first_violations"].insert(0, f"capacity: local {cap['local_words']} / {LOCAL_W}, mirror {cap['mirror_words']} / "
+                                        f"{MIRROR_W} (SPEC 2a slice map)")
     split_work = defaultdict(lambda: [0] * NQ)
     for e in chk.recs:
         for q, w in (e.get("work") or {}).items():
             split_work[e["unit"]][int(q)] += w
-    verdict = dict(schema="opentallas.hgi_b2.verdict.v1", **meta_extra, capacity=pl.capacity(),
+    verdict = dict(schema="opentallas.hgi_b2.verdict.v1", **meta_extra, capacity=cap,
                    modes={f"{k[0]}:{k[1]}": n for k, n in sorted(collect.modes.items())},
                    work_per_cluster=dict(split_work), ring_cycles=chk.ring_report(meta_extra.get("model")), **v,
                    exact=bool(v["violations"] == 0))
