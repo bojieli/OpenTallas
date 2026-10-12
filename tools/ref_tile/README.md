@@ -33,7 +33,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `pg_layer` | leaf: M6 (default) or M7; cluster: M7 |
 | `inter`, `refglob`, `io_budget {in,out}` | die-context IO (io_ref_skew.sdc), 0.2 / 0.2 T default |
 | `forwarded_clock` | cluster with a forwarded-clock subtree (keeps the forwarding inverter, own root) |
-| `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v}` | route knobs (770 ps over-constraint) |
+| `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v, pin_balance}` | route knobs (770 ps over-constraint); `pin_balance: true` places pins uniformly over each face region alternating the pin_h / pin_v layers per 32-pin chunk (OT_PIN_BALANCE_H/V) for dense faces |
 | `job {owner, branch, tag, purpose, benches, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields |
 
 ## What the kit does by construction (pitfall -> mechanism)
