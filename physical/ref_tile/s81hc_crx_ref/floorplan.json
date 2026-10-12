@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  116.64,
-  116.64
+  110.16,
+  69.12
  ],
  "core": [
   2.16,
   2.16,
-  114.48,
-  114.48
+  108.0,
+  66.96000000000001
  ],
- "why": "util 0.52 of std 6517 + macros 0 um2",
- "std_area_um2": 6517,
+ "why": "spec outline",
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M6",
@@ -32,19 +32,18 @@
    "srs",
    "w_rv",
    "w_rd",
-   "w_w"
+   "w_h"
   ],
   "E": [
    "e_rv",
    "e_rd",
-   "e_w"
+   "e_h"
   ],
   "S": [
    "c_rv",
    "c_rd",
    "a_vo",
    "a_f",
-   "a_q",
    "a_e",
    "a_iq",
    "o_rv",
@@ -64,7 +63,8 @@
    "x_wdone",
    "x_pob",
    "x_f1",
-   "x_f4"
+   "x_f4",
+   "e_x"
   ]
  },
  "clock_port": "sk",

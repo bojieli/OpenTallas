@@ -13,8 +13,8 @@
  "name": "qend_pack_k_rt_b",
  "top": "hfd_qsel_pack_k",
  "outline": {
-  "w": 216.0,
-  "h": 69.12
+  "w": 129.6,
+  "h": 51.84
  },
  "pins": {
   "N": [
@@ -34,7 +34,7 @@
   ]
  },
  "route": {
-  "pd": 0.45,
+  "pd": 0.66,
   "threads": 16,
   "peak_ram_gb": 40,
   "hold_margin_ns": 0.01
@@ -43,7 +43,7 @@
   "owner": "Claude:el1011-hbm-idx",
   "branch": "claude/el1011-hbm-idx",
   "tag": "q1012",
-  "purpose": "el1011-hbm-idx idle1012/qend: textbook rebuild of hfd_idx_sel_native_qend (260k flops one root -> quarter clusters of hard tiles); leaf tile topk slice packer W16 PW37 (8 per element), unchanged RTL leaf, variant b 216.0x69.12 PD 0.45",
+  "purpose": "el1011-hbm-idx idle1012/qend: textbook rebuild of hfd_idx_sel_native_qend (260k flops one root -> quarter clusters of hard tiles); leaf tile topk slice packer W16 PW37 (8 per element), unchanged RTL leaf, variant b 129.6x51.84 PD 0.66 (std area 3165 um2 from the remote gate)",
   "benches": [
    {
     "name": "sel_capture_exact",

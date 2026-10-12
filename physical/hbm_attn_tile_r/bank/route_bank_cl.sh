@@ -19,8 +19,8 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_attn_bank_${o}${BW} \
   --source rtl/hdc/v41x/ot_hdc_v41x_attn_bank.sv \
   --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 $FPIO --stages synth,pnr \
-  --die-area 0 0 $DW $DH --core-area $CA --place-density ${PD:-0.50} --routing-layers M2 M5 \
-  --orfs-var IO_CONSTRAINTS=/src/physical/hbm_attn_tile_r/bank/io_${o}${BW}.tcl --orfs-var PDN_TCL=/src/physical/hbm_attn_tile_r/bank/pdn_bank_${o}${PDNV:-}.tcl \
+  --die-area 0 0 $DW $DH --core-area $CA --place-density ${PD:-0.50} --routing-layers ${RL:-M2 M5} \
+  --orfs-var IO_CONSTRAINTS=/src/physical/hbm_attn_tile_r/bank/io_${o}${BW}${IOV:-}.tcl --orfs-var PDN_TCL=/src/physical/hbm_attn_tile_r/bank/pdn_bank_${o}${PDNV:-}.tcl \
   --orfs-var ADDER_MAP_FILE= "$@" --slew-margin-percent 30 --hold-margin-ns ${HM:-0.015} --purpose signoff_target --nickname-tag bk_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
