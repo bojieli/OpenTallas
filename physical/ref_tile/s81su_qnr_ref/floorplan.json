@@ -6,25 +6,27 @@
  "die": [
   0,
   0,
-  345.6,
-  345.6
+  153.36,
+  153.36
  ],
  "core": [
   2.16,
   2.16,
-  343.44,
-  343.44
+  151.20000000000002,
+  151.20000000000002
  ],
- "why": "spec outline",
- "std_area_um2": null,
+ "why": "util 0.52 of std 11346 + macros 0 um2",
+ "std_area_um2": 11346,
  "layer_contract": {
   "children": {},
-  "pg_layer": "M6",
+  "pg_layer": "M5",
   "rlayers": [
    "M2",
-   "M6"
+   "M5"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
  },
  "pins": {
   "S": [
@@ -34,7 +36,8 @@
    "i_eps",
    "p_v",
    "p_p",
-   "p_d"
+   "p_d",
+   "p_f"
   ],
   "N": [
    "r_v",

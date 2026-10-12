@@ -16,7 +16,8 @@
 // routing) must FAIL (mismatch or timeout).
 module tb_vms_ring4;
     parameter integer S = 2, HMUT = 0, BMUT = 0, CMUT = 0, SEED = 1, NPK = 300, NWG = 200, NKQ = 40;
-    localparam integer NC = 4, RG = 2, WG = 2;
+    parameter integer RS = 3;                       // lane-group relay stages: credits 4 + 2 RS a wide lane (SPEC v0.8)
+    localparam integer NC = 4, RG = 2, WG = 2, LQC = 4 + 2 * RS;
     reg clk = 1'b0, rst_n = 1'b0;
     always #1 clk = ~clk;
     // ---------------------------------------------------------------- 4 slices + ring
@@ -31,7 +32,7 @@ module tb_vms_ring4;
         wire [RG*8-1:0] rqcr; wire [RG*8*257-1:0] rr; wire [7:0] dqd;
         wire [2129:0] sf [0:S]; wire scr [0:S];
         assign sf[0] = vcb[s]; assign vcb_cr[s] = scr[0];
-        ot_vms_slice #(.NC(NC), .RG(RG), .WG(WG), .BMUT(BMUT), .HMUT(HMUT), .CMUT(CMUT)) u (.clk(clk), .rst_n(rst_n), .sid(2'(s)),
+        ot_vms_slice #(.NC(NC), .RG(RG), .WG(WG), .RRS({RG{4'(RS)}}), .WRS({WG{4'(RS)}}), .BMUT(BMUT), .HMUT(HMUT), .CMUT(CMUT)) u (.clk(clk), .rst_n(rst_n), .sid(2'(s)),
             .cq(cq[s]), .cr(cr[s]), .rq('0), .rq_cr(rqcr), .rr(rr), .wq(wq[s]), .wq_cr(wq_cr[s]), .wq_done(wq_done[s]),
             .dq('0), .dq_done(dqd), .vcb(sf[S]), .vcb_cr(scr[S]), .kq_done(kq_done[s]),
             .cw_in(cwi[s]), .cw_in_cr(cwi_cr[s]), .cw_out(cwo[s]), .cw_out_cr(cwo_cr[s]),
@@ -77,7 +78,7 @@ module tb_vms_ring4;
         for (integer a = 0; a < 4; a = a + 1) begin
             for (integer c = 0; c < NC; c = c + 1) begin pi[a][c] = 0; po[a][c] = 0; pd[a][c] = 0; eh[a][c] = 0; et[a][c] = 0; end
             for (integer g = 0; g < WG; g = g + 1) wi[a][g] = 0;
-            for (integer l = 0; l < WG*8; l = l + 1) wcr[a][l] = 4;
+            for (integer l = 0; l < WG*8; l = l + 1) wcr[a][l] = LQC;
             kcr[a] = 2;
             wdn[a] = 0; kdn[a] = 0; bi[a] = 0; bd[a] = 0;
         end

@@ -29,12 +29,22 @@ endmodule
 module dsfd_su_t_qnr (
     input  wire          ck, rst,
     input  wire          i_go, input wire [31:0] i_eps,
-    input  wire [31:0]   p_v, input wire [31:0] p_p, input wire [1023:0] p_d,
+    input  wire [1:0]    p_v, input wire [1:0] p_p, input wire [63:0] p_d, input wire [1:0] p_f,
     output wire          r_v, output wire [31:0] r_d, output wire o_f
 );
-    ot_s81_su_qnr #(.NE(32), .NV(5), .D(1280), .LM(5), .LA(4)) u_r (
-        .clk(ck), .rst_in(rst), .i_go(i_go), .i_eps(i_eps), .p_v(p_v), .p_p(p_p), .p_d(p_d), .r_v(r_v), .r_d(r_d),
-        .o_f(o_f));
+    ot_s81_su_qnr #(.NE(2), .NV(5), .D(1280), .LM(5), .LA(4)) u_r (
+        .clk(ck), .rst_in(rst), .i_go(i_go), .i_eps(i_eps), .p_v(p_v), .p_p(p_p), .p_d(p_d), .p_f(p_f), .r_v(r_v),
+        .r_d(r_d), .o_f(o_f));
+endmodule
+
+module dsfd_su_t_qnh (
+    input  wire          ck, rst,
+    input  wire          i_go,
+    input  wire [15:0]   p_v, input wire [15:0] p_p, input wire [511:0] p_d,
+    output wire          s_v, output wire s_p, output wire [31:0] s_d, output wire o_f
+);
+    ot_s81_su_qnh #(.NE(16), .LA(4)) u_h (
+        .clk(ck), .rst_in(rst), .i_go(i_go), .p_v(p_v), .p_p(p_p), .p_d(p_d), .s_v(s_v), .s_p(s_p), .s_d(s_d), .o_f(o_f));
 endmodule
 module dsfd_su_t_qnq (
     input  wire          ck, rst,

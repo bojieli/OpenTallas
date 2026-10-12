@@ -596,7 +596,11 @@ def gen_hooks(s: dict, kd: str) -> dict:
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
                "# column; created here, removed by post_drt.tcl, so the abstract carries only real metal: DRT-0073 at the parent)",
                f"source /src/{QDM}/pre_ref_skew.tcl",
-               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"] + btcl
+               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+               # el1011-ds-mtp-cbw 2026-10-12: with MAX_ROUTING_LAYER as GRT's top layer FastRoute zeroes that layer over
+               # every hard macro (M5 cap + SRAM OBS M1-M4 = full wall; hrow5_cbw-r5b / hgi_seq v2.4 GRT-0116); GRT to
+               # MAX+1 at zero capacity restores it, detailed route still stops at MAX (no-op without macros)
+               "source /src/physical/common_flow/grt_macro_top_layer.tcl"] + btcl
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"] + btcl
@@ -748,7 +752,7 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
-           "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
+           "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
