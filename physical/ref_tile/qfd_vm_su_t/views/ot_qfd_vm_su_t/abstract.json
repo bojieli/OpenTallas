@@ -1,0 +1,93 @@
+{
+  "name": "ot_qfd_vm_su_t",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/routes/qfd_vm_su_t_r6_b9e44cb62_g2/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -9.79799019695804e-11 min -2.0400925393460057e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/routes/qfd_vm_su_t_r6_b9e44cb62_g2/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/record/views/ot_qfd_vm_su_t:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/src/physical/ref_tile/qfd_vm_su_t/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.0571271635839707e-10 min -1.8321399952725415e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/routes/qfd_vm_su_t_r6_b9e44cb62_g2/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/record/views/ot_qfd_vm_su_t:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/src/physical/ref_tile/qfd_vm_su_t/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 3.182137886525993e-11 min -1.8989321226570155e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/routes/qfd_vm_su_t_r6_b9e44cb62_g2/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/record/views/ot_qfd_vm_su_t:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/src/physical/ref_tile/qfd_vm_su_t/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/src/physical/ref_tile/qfd_vm_su_t/signoff.sdc",
+    "sha256": "a1ece382412e07bedb59ee7efb4127aa0fd3018e17b5bd85b19ae0ffcf086911",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/qfd_vm_su_t-r6-b9e44cb62-g2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "files": {
+    "ot_qfd_vm_su_t.lef": "7cf743b2f4ffa8e052573dbc7bb6b1ba4ba166fc1c6bc7bf69c11daf417173d5",
+    "ot_qfd_vm_su_t_ff.lib": "47a0b6534bcd4cfc351a627c1dfc9177f66ee82f4f22669bb7a1fe78a7f362ec",
+    "ot_qfd_vm_su_t_ss.lib": "43b5adf7128044401a7b11e5a914ee8581d7ef29d896d98aa2913b839a873292",
+    "ot_qfd_vm_su_t_tt.lib": "3b4b6d46ca8c3455b69bce57aae6ee34f236388e9831766a035d095f02aeb3f1"
+  },
+  "ok": true
+}

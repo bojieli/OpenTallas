@@ -26,7 +26,11 @@ module tb_hgi_sm_tput;
     localparam integer NSM = 32, NREAL = 2, CW = 106, NXC = 4, NPC = 4;
     // smmv 2026-10-11 row credits: ADP = per-SM pub arrival depth = adapter credits (+define+TB_AD4: the old depth 4);
     // +define+MUT_NOCR: the adapter describes the whole slice at once (the pre-fix behaviour: the overrun reproduces)
-`ifdef TB_AD4
+// smmv-cr (2026-10-12): +define+TB_AD=<n> any depth (AD < 8 is refused at elaboration unless MUT_CRDL);
+// +define+MUT_CRDL: the pre-fix chunk rule min(CH, AD), not wave-aligned (at AD 4 it must DEADLOCK -> watchdog FAIL)
+`ifdef TB_AD
+    localparam integer ADP = `TB_AD;
+`elsif TB_AD4
     localparam integer ADP = 4;
 `else
     localparam integer ADP = 32;
@@ -40,6 +44,11 @@ module tb_hgi_sm_tput;
     localparam integer NOCR = 1;
 `else
     localparam integer NOCR = 0;
+`endif
+`ifdef MUT_CRDL
+    localparam integer CRDL = 1;
+`else
+    localparam integer CRDL = 0;
 `endif
     wire [NSM-1:0] pcr; reg [NSM-1:0] acr = 0;
     reg clk = 0;
@@ -66,7 +75,7 @@ module tb_hgi_sm_tput;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
     wire [1:0] x_space, x_fmt, pub_space; wire [6:0] x_xb; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret;
-    ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME), .AD(ADP), .MUT_NOCR(NOCR), .MUT_XB(MXB)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME), .AD(ADP), .MUT_CRDL(CRDL), .MUT_NOCR(NOCR), .MUT_XB(MXB)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
         .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
         .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
@@ -90,15 +99,45 @@ module tb_hgi_sm_tput;
     wire [2047:0] xw_data = proxy_q ? tx_data : xl_data;
     wire [NXC*338-1:0] xq; wire [NXC*274-1:0] xr; wire [NPC*338-1:0] pq; wire [NPC*274-1:0] pr;
     wire [273:0] tr; reg [337:0] tq = 0;
+`ifdef WVM
+    // smmv 3b: BF16 x over the VM wide read lane group lgE slot 0 (die contract r25gq v7 D19): x-load = client 0 of a
+    // KE = 4 ot_hgi_vm_lanearb (slots 1-3 idle here: hce / CP) with WRLY relay stages each way (stn_lgE_hce, stn_lgE_cp)
+`ifndef WLQ
+`define WLQ 16
+`endif
+`ifndef WRLY
+`define WRLY 2
+`endif
+`ifdef MUT_WV
+    localparam integer MWV = `MUT_WV;
+`else
+    localparam integer MWV = 0;
+`endif
+    wire rg_req; wire [32*16-1:0] wrq_x, g_q; wire [31:0] g_cr; wire [32*257-1:0] g_rsp;
+    wire [3:0] a_gnt; wire [4*32-1:0] a_cr; wire [4*32*257-1:0] a_rsp;
+    ot_hgi_vm_lanearb #(.K(4), .REQW(16), .RSPW(257), .RLY(`WRLY)) u_arb (.clk(clk), .rst_n(rst_n), .c_req({3'b000, rg_req}),
+        .c_gnt(a_gnt), .c_q({{3*32*16{1'b0}}, wrq_x}), .c_cr(a_cr), .c_rsp(a_rsp), .g_q(g_q), .g_cr(g_cr), .g_rsp(g_rsp));
+    ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .WVM(1), .WLQ(`WLQ), .MUT_WV(MWV)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+        .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(proxy_f ? 2'd0 : x_fmt), .x_xb(x_xb), .x_done(x_done),
+        .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr),
+        .rg_req(rg_req), .rg_gnt(a_gnt[0]), .wrq(wrq_x), .wrq_cr(a_cr[0 +: 32]), .wrr(a_rsp[0 +: 32*257]));
+`else
     ot_hgi_sm_xload #(.NXC(NXC), .BD(XB)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(proxy_f ? 2'd0 : x_fmt), .x_xb(x_xb), .x_done(x_done),
-        .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr));
+        .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr),
+        .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
+`endif
     wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
     ot_hgi_sm_pub #(.NSM(NSM), .NPC(NPC), .MUT_ROW(MW), .AD(ADP)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
         .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr),
         .s0_v(), .s0_idx(), .s0_data(), .sm_cr(pcr));
+`ifdef WVM
+    ot_hgi_vm_unit #(.NC(NXC + NPC + 1), .RP(32), .LQ(`WLQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status(),
+        .rq(g_q), .rq_cr(g_cr), .rr(g_rsp));
+`else
     ot_hgi_vm_unit #(.NC(NXC + NPC + 1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
+`endif
     // current record's M / Q (for the shadows' row clamp)
     reg [19:0] cur_m = 0; reg [15:0] cur_q = 0;
     // CREDITS UNDER SHADOWING: shadows replay real SM (s mod 2), so every SM of a class must see the SAME credits: the
@@ -190,6 +229,26 @@ module tb_hgi_sm_tput;
         if (rv[0]) begin if (e_rv0 < 0) e_rv0 = cyc; e_rv1 = cyc; end
         if (pub_done && e_pd < 0) e_pd = cyc;
     end
+    // DEADLOCK WATCHDOG (smmv-cr 2026-10-12): no result row (any real SM), no HBM line request and no retire for WD
+    // cycles (+WD=, default 20000) while a record is in flight -> dump the credit loop and FAIL (a hang is a FAIL, never
+    // a 2M-cycle stall).  Dump: per real SM the adapter's credits cr_s, rows left rr_s, rr_nz, d_pend, lines requested,
+    // rows emitted this record, the pub's credit pulses ccnt and the class credits sent csent.
+    integer wd, wd_last = 0, rows_rec [0:NREAL-1], wi; reg wd_on = 0;
+    initial begin if (!$value$plusargs("WD=%d", wd)) wd = 20000; rows_rec[0] = 0; rows_rec[1] = 0; end
+    always @(posedge clk) if (rst_n) begin
+        for (wi = 0; wi < NREAL; wi = wi + 1) if (rv[wi]) rows_rec[wi] = rows_rec[wi] + 1;
+        if (!wd_on || done || (|rv) || g_sm[0].req_v || g_sm[1].req_v) wd_last = cyc;
+        else if (cyc - wd_last > wd) begin
+            $display("ERR DEADLOCK: no row / line request / retire for %0d cycles at cycle %0d (record %0d, AD %0d)", wd, cyc, r, ADP);
+            for (wi = 0; wi < NREAL; wi = wi + 1)
+                $display("  SM %0d: cr_s %0d rr_s %0d rr_nz %0d d_pend %0d st_pend %0d lines_req %0d rows_emitted_total %0d ccnt %0d csent %0d",
+                         wi, u_a.cr_s[wi*$clog2(ADP+1) +: $clog2(ADP+1)], u_a.rr_s[wi*13 +: 13], u_a.rr_nz[wi], u_a.d_pend[wi],
+                         u_a.st_pend[wi], lines_req[wi], rows_rec[wi], ccnt[wi], csent[wi]);
+            $display("  adapter busy %0d fld_ph %0d started %0d go_ok %0d pd_seen %0d all_arr_r %0d pend0_r %0d; pub_fault %0d",
+                     u_a.busy, u_a.fld_ph, u_a.started, u_a.go_ok, u_a.pd_seen, u_a.all_arr_r, u_a.pend0_r, pub_fault);
+            $display("HGI_SM_TPUT FAIL deadlock"); $finish;
+        end
+    end
     reg [255:0] qd; reg [31:0] lastsec; reg [119:0] inf;
     always @(posedge clk) begin if (rst_n && done) k = k + 1; if (rst_n && fault) nf = nf + 1; end
     // proxy fragment writer: one beat an edge from dispatch; checked to finish before the x-load's x_done
@@ -215,10 +274,10 @@ module tb_hgi_sm_tput;
             cur_q = inf[115:100]; cur_m = inf[99:80]; cr_missing(inf[115:100], inf[99:80]);
             t = 0; while (!rec_rdy && t < 100000) begin @(negedge clk); t = t + 1; end
             e_xi = -1; e_xd = -1; e_st = -1; e_rq0 = -1; e_rq1 = -1; e_rs1 = -1; e_rv0 = -1; e_rv1 = -1; e_pd = -1;
-            @(posedge clk); td = cyc; #0.1 rec_v = 0;
+            @(posedge clk); td = cyc; #0.1 rec_v = 0; wd_on = 1; wd_last = cyc;
             proxy_q = (XB == 0) && (inf[119:116] == 1 || inf[119:116] == 2); px0 = inf[47:16]; pxn = inf[15:0]; pxi = 0; px_go = proxy_q;
             t = 0; while (k < r + 1 && nf == 0 && t < 2000000) begin @(posedge clk); t = t + 1; end
-            tr_ = cyc; px_go = 0; proxy_q = 0;
+            tr_ = cyc; px_go = 0; proxy_q = 0; wd_on = 0;
             if (k != r + 1 || nf != 0) begin $display("ERR record %0d: retired %0d faults %0d (x_fault %0d pub_fault %0d)", r, k, nf, x_fault, pub_fault); errors = errors + 1; r = NREC; end
             else begin
                 $display("TPUT %0d disp %0d ret %0d service %0d lines %0d %0d", r, td, tr_, tr_ - (td > prev_ret ? td : prev_ret), lines_req[0], lines_req[1]); $fflush;

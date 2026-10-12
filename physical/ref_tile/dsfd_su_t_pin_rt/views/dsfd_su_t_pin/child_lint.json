@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/record/views/dsfd_su_t_pin/dsfd_su_t_pin.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "dsfd_su_t_pin 572.4 x 475.2: PG M7 VDD 53 stripes (98% spread, 100% cov) / VSS 53 stripes (98% spread, 100% cov); strap M8; face pins 8698 blocked-above 0; clock ck insertion 497 ps",
+ "info": {
+  "cell": "dsfd_su_t_pin",
+  "W": 572.4,
+  "H": 475.2,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M7",
+     "stripes": 53,
+     "dir": "V",
+     "spread": 0.981,
+     "coverage": 1.0,
+     "shapes_on_top": 53
+    },
+    "VSS": {
+     "top_layer": "M7",
+     "stripes": 53,
+     "dir": "V",
+     "spread": 0.981,
+     "coverage": 1.0,
+     "shapes_on_top": 53
+    }
+   },
+   "top_layer": "M7",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M7",
+  "strap_layer": "M8",
+  "face": {
+   "face_pins": 8698,
+   "blocked_above": 0,
+   "covered_below": 3324,
+   "examples": []
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 496.55,
+    "min_ps": 377.56
+   }
+  }
+ }
+}

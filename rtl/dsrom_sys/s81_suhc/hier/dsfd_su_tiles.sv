@@ -111,7 +111,7 @@ module dsfd_su_t_ctl (
     input  wire up_fu, up_fo, up_alive, up_den, up_rdy, input wire [7:0] up_rjid
 );
     ot_s81_su_ctl #(.QN_N(256), .KV_N(512), .QB_NB(32), .SW_W(1024), .SM_H(16), .SM_LPH(16), .S_RD(16), .S_WR(16),
-                    .NSW(8), .NQB(4), .NQN(4), .NKV(2), .MUT(0), .AMUT(0)) u_c (
+                    .NSW(8), .NQB(16), .NQN(4), .NKV(2), .MUT(0), .AMUT(0)) u_c (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_o),
         .p_rq_v(p_rq_v), .p_rq_row(p_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),

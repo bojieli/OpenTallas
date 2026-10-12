@@ -34,7 +34,7 @@ TT_LIB = '''library(x) { time_unit : "1ps"; cell ("tile") { pin("clk") { directi
 
 
 class ChildLint(unittest.TestCase):
-    def run_lint(self, text, libs=None, contract=None, slot=None, skip=None):
+    def run_lint(self, text, libs=None, contract=None, slot=None, skip=None, cap=None):
         with tempfile.TemporaryDirectory() as td:
             p = Path(td) / "tile.lef"
             p.write_text(text)
@@ -45,7 +45,7 @@ class ChildLint(unittest.TestCase):
             if contract:
                 cp = Path(td) / "die.json"
                 cp.write_text(json.dumps(contract))
-            return child_lint.lint(str(p), td if libs is not None else None, str(cp) if cp else None, slot, skip)
+            return child_lint.lint(str(p), td if libs is not None else None, str(cp) if cp else None, slot, skip, cap)
 
     def checks(self, r):
         return {f[1] for f in r["fails"]}
@@ -97,6 +97,35 @@ class ChildLint(unittest.TestCase):
         e = [f for f in r["fails"] if f.startswith("(e)")]
         self.assertTrue(any("outline" in f for f in e) and any("PG layer" in f for f in e))
         self.assertTrue(any("missing" in f for f in e) and any("face/layer" in f for f in e))
+
+    # 2026-10-12 layer contract: tiles cap signals AND PG at M5 (strap M6); closed legacy views lint at their own view_cap
+    def test_cap_m5_clean_and_strap_m6(self):
+        r = self.run_lint(lef(pg="M5", sig=(("a", "M4", 0.0, 5.0),)), cap="M5")
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertEqual((r["info"]["cap"], r["info"]["strap_layer"]), ("M5", "M6"))
+        r = self.run_lint(lef(pg="M5", obs=[("M6", 8, 2, 9, 3)]), cap="M5")
+        self.assertIn("c", self.checks(r))
+
+    def test_cap_m5_signal_pin_above_cap_fails(self):
+        r = self.run_lint(lef(pg="M5", sig=(("a", "M6", 0.0, 5.0),)), cap="M5")
+        self.assertIn("c", self.checks(r))
+
+    def test_slot_view_cap_keeps_legacy_view_valid(self):
+        slot = {"name": "u_t", "cell": "tile", "outline": {"w": 20.0, "h": 10.0}, "pg_layer": "M5", "strap_layer": "M6",
+                "signal_max_layer": "M5", "layer_cap": "M5", "view_cap": "M7",
+                "pins": [{"name": "a", "face": "S", "layer": "M5"}]}
+        c = {"die": "d", "version": 3, "slots": [slot]}
+        r = self.run_lint(lef(pg="M7"), contract=c, slot="u_t")          # legacy M7 view, clean at its own cap
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertEqual((r["info"]["cap"], r["info"]["strap_layer"]), ("M7", "M8"))
+        r = self.run_lint(lef(pg="M7", obs=[("M8", 1, 1, 2, 2)]), contract=c, slot="u_t")   # breaks even its own cap
+        self.assertIn("c", self.checks(r))
+        r = self.run_lint(lef(pg="M5"), contract=c, slot="u_t")          # a new M5 route
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertEqual(r["info"]["cap"], "M5")
+        c2 = {"die": "d", "version": 3, "slots": [dict(slot, view_cap=None)]}
+        r = self.run_lint(lef(pg="M7"), contract=c2, slot="u_t")         # no recorded view cap: M7 view fails the M5 slot
+        self.assertTrue({"c", "e"} <= self.checks(r), r["fails"])
 
 
 class FakeGit:
