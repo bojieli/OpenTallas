@@ -2,7 +2,7 @@
 # [smmv-b/smt] one-command submit of the SM tile clusters (smh_tile_eg_ref / smh_tile_wg_ref) once their two open
 # children are CLOSED with child_lint (c)+(f) clean:
 #   pt_w  smh_pt_w_ref_p45h-r1-6332f4e44  (views -> physical/ref_tile/smh_pt_w_ref_p45h/views)
-#   xs    smh_xs_ref_p40x-r1-c2250fec8 or smh_xs_ref_t40-r1-c2250fec8 (exact io_tcl pins, needed for the leaf-1 MX copy)
+#   xs    smh_xs_ref_p40x-r1-9315ade96 (regen on main >= eb642d870 after c2250fec8 GRT-0116) or smh_xs_ref_t40-r1-c2250fec8 (exact io_tcl pins, needed for the leaf-1 MX copy)
 # Merges their closure records, re-generates both kits on the real views (sizes, pins on track per orientation, spine
 # child-insertion targets), lints, commits, writes the job specs and drops them into the closure-loop intake.
 # Usage: bash physical/ref_tile_specs/smh/smh_tile_submit.sh   (run from the claude/el1011-hbm-smt worktree)
@@ -13,8 +13,8 @@ J=~/.local/state/closure_loop/jobs
 st() { python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['status'])" "$J/$1.json" 2>/dev/null || echo MISSING; }
 [ "$(st smh_pt_w_ref_p45h-r1-6332f4e44)" = CLOSED ] || { echo "BLOCKED: pt_w p45h not CLOSED"; exit 2; }
 XS=""
-for k in p40x t40; do [ "$(st smh_xs_ref_$k-r1-c2250fec8)" = CLOSED ] && { XS=smh_xs_ref_$k; XJ=smh_xs_ref_$k-r1-c2250fec8; break; }; done
-[ -n "$XS" ] || { echo "BLOCKED: no exact-pin xs closed (p40x: $(st smh_xs_ref_p40x-r1-c2250fec8), t40: $(st smh_xs_ref_t40-r1-c2250fec8))"; exit 2; }
+for kj in p40x:9315ade96 t40:c2250fec8; do k=${kj%%:*}; c=${kj##*:}; [ "$(st smh_xs_ref_$k-r1-$c)" = CLOSED ] && { XS=smh_xs_ref_$k; XJ=smh_xs_ref_$k-r1-$c; break; }; done
+[ -n "$XS" ] || { echo "BLOCKED: no exact-pin xs closed (p40x: $(st smh_xs_ref_p40x-r1-9315ade96), t40: $(st smh_xs_ref_t40-r1-c2250fec8))"; exit 2; }
 export SMT_XS_KIT=$XS
 # gate-only xs placeholders must go before the record lands
 rm -rf physical/ref_tile/smh_xs_ref_p50x/views physical/ref_tile/smh_xs_ref_p40x/views physical/ref_tile/smh_xs_ref_t40/views
