@@ -1134,14 +1134,22 @@ module ot_qfd_vm_grp #(
     //      r6: hard leaf children (pin flop + macros + capture + registered q = 1 input + 1 + 1 + 1 output relay of r5)
     wire [NBK*512-1:0] bq;
     generate for (g = 0; g < NBK; g = g + 1) begin : g_b
+`ifndef OT_QFD_VM_HARD
         ot_qfd_vm_bank_t #(.DEPTH(DEPTH), .LAW(LAW), .USE_MACRO(USE_MACRO)) u_bt (.clk(clk), .rst_n(rtg[g]),
+`else   // hardened cluster: the leaf view is built with the TP4 defaults (DEPTH 174 / LAW 8); no parameters on a hard child
+        ot_qfd_vm_bank_t u_bt (.clk(clk), .rst_n(rtg[g]),
+`endif
             .re(m_re[g]), .ra(m_ra[g*LAW +: LAW]), .q(bq[g*512 +: 512]),
             .we(m_we[g]), .wl(m_wl[g*LAW +: LAW]), .wm(m_wm[g*16 +: 16]), .wd(m_wd[g*512 +: 512]));
     end endgenerate
     // ---- SU copy banks ----
     wire [NSU*NSB*512-1:0] sq;
     generate for (c = 0; c < NSU; c = c + 1) begin : g_c
+`ifndef OT_QFD_VM_HARD
         ot_qfd_vm_su_t #(.NSB(NSB), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(USE_MACRO)) u_st (.clk(clk),
+`else   // hardened cluster: leaf view built with the TP4 defaults (NSB 2 / DEPTHS 695 / LAWS 10)
+        ot_qfd_vm_su_t u_st (.clk(clk),
+`endif
             .rst_n(rtg[c % NBK]), .sre(m_sre[c*NSB +: NSB]), .sra(m_sra[c*NSB*LAWS +: NSB*LAWS]),
             .swe(m_swe), .swl(m_swl), .swm(m_swm), .swd(m_swd), .q(sq[c*NSB*512 +: NSB*512]));
     end endgenerate
