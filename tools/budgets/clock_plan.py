@@ -720,6 +720,18 @@ def balance(a):
             continue
         pad = max(0.0, need[v] + L - tt(v))
         out[v] = [si[v][0] + pad * kss, si[v][1] + 0.53 * pad * kss]
+    # own-tree partners of an early view (r22ko4 rs_bump reset sync, ucie_kv FDI -> d2d_rom) moved early with the
+    # tree but the view's registers sit one insertion later: pad their entries up to the view register instant
+    # (it3: rs_bump -> d2d_rom FF hold -449.9, rs_bump -> lifted rly_rst_fwd -311.1)
+    own_pad = {}
+    for t in early:
+        vs = [v for v in tsinks[t] if v in deficit]
+        tgt = sum(flop(v, out) for v in vs) / len(vs)
+        for k in tsinks[t]:
+            if k not in deficit and tgt - flop(k, out) > 0:
+                p_ = tgt - flop(k, out)
+                out[k] = [out[k][0] + p_ * kss, out[k][1] + 0.53 * p_ * kss]
+                own_pad[k] = round(p_, 1)
     for v in deficit:
         pt = [p for p in partners[v] if tree_of(p) != tree_of(v) and dom.get(tree_of(p)) == dom[tree_of(v)]]
         rows[v] = dict(master=m_of(v), view_insertion_tt=vi[v][0], view_insertion_ff=vi[v][1], early_tree=tree_of(v) in early,
@@ -732,7 +744,7 @@ def balance(a):
     P['view_pin_insertion'] = {k: dict(tt=list(x[0]), ff=list(x[1])) for k, x in vi.items()}
     P['view_balance'] = dict(method=balance.__doc__.strip(), libs=str(lib), min_late_ps=a.min_late_ps,
                              lift_clock_roots=sorted(doms), lift_tt_ps=round(L, 1), lift_ss_ps=round(L * kss, 1), lift_ff_ps=round(0.53 * L * kss, 1),
-                             early_trees=sorted(early), own_tree_partners_moved=mixed, views=len(vi),
+                             early_trees=sorted(early), own_tree_partners_moved=mixed, own_tree_entry_pad_tt=own_pad, views=len(vi),
                              late_left_on_shared_trees={v: round(deficit[v], 1) for v in sorted(left)}, rows=rows)
     Path(a.out).write_text(json.dumps(P, indent=1, default=str) + '\n')
     er = [r for r in rows.values() if r['early_tree']]
