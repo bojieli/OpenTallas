@@ -1,0 +1,19 @@
+{
+  "source_commit": "c8a5b43521238462656bf9583bd30ad78d3be660",
+  "source_hashes": {
+    "rtl/s81/ot_s81_bf_native.sv": "a8d7593ad80dc3823187d009a95fdebe6efd332f319886a21248023776ebd7dd",
+    "rtl/s81/ot_s81_bf_front.sv": "aeb9a86e8a2724f2450050f183f438d49566f9fc72a1308a5316ce25ba5311ce",
+    "rtl/v41rom/ot_v41_bf_col.sv": "fd29d97a5a9dfd21a9fd6dae6cb6602f12191b6f643272f5ac57927e15d86ea0"
+  },
+  "gate": "positive exact + six true DIFF mutants",
+  "mechanism": "native HCOL1/PINLAT1 full pair; generated front byte-identical after regeneration",
+  "rows": 456,
+  "value_assertions": 912,
+  "partial_added_edges_vs_full948": 1,
+  "measured_lag_ns": {
+    "min": 5.831,
+    "max": 14.994,
+    "mean": 9.09
+  },
+  "physical_qualified": false
+}
