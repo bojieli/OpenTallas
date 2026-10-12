@@ -179,6 +179,9 @@ module ot_hgi_dma_kvw_core #(
     reg [3:0] oa_v [0:3]; reg [31:0] oa_s [0:15]; reg [255:0] oa_d [0:15]; reg [1:0] op [0:3], ot [0:3];
     reg [3:0] oh [0:3];                                     // the head pointer one-hot (registered): AND-OR output pick
     reg [3:0]  w_acc, w_ack; reg [6:0] wo [0:3];
+    wire [3:0] rl;
+    wire [3:0] oh_v, x_v, q_ld; wire [31:0] oh_s [0:3]; wire [255:0] oh_d [0:3];
+    reg  [3:0] q_v, k_v; reg [31:0] q_s [0:3], k_s [0:3]; reg [255:0] q_d [0:3], k_d [0:3];
     // a stream's next slot is readable: written (w_cnt - q in 1 .. 512)
     // hbm-fq/dma 10-11 (cal cbf118fb5 2_1_floorplan WNS -361 ps into w_ds[1][31]: slot-distance subtract + compare + the
     // rotating pick + the 32-b destination increment / row-end mux in one cycle): the write-side decision is PIPELINED.
@@ -213,17 +216,36 @@ module ot_hgi_dma_kvw_core #(
     reg  [9:0] ud [0:4]; reg [9:0] used;
     genvar gl;
     for (gl = 0; gl < 4; gl = gl + 1) begin : g_lane
-        assign kw_v[gl] = |(oa_v[gl] & oh[gl]);
-        assign kw_addr[gl*37 +: 37] = {(oa_s[gl*4] & {32{oh[gl][0]}}) | (oa_s[gl*4+1] & {32{oh[gl][1]}}) |
-                                       (oa_s[gl*4+2] & {32{oh[gl][2]}}) | (oa_s[gl*4+3] & {32{oh[gl][3]}}), 5'd0};
-        assign kw_wdata[gl*256 +: 256] = (oa_d[gl*4] & {256{oh[gl][0]}}) | (oa_d[gl*4+1] & {256{oh[gl][1]}}) |
-                                         (oa_d[gl*4+2] & {256{oh[gl][2]}}) | (oa_d[gl*4+3] & {256{oh[gl][3]}});
+        // ring head (registered pointer, AND-OR pick) -> the lane's OUTPUT REGISTER pair (route 89c140d31: the AND-OR to the
+        // kw_wdata pins missed the 0.2 T output budget by 35-75 ps, and kw_rdy -> pop -> res / ring state missed the input
+        // budget by 63 ps).  q = presented request (drives the pins straight from flops), k = skid entry.  The ring hands its
+        // head over when the skid is empty (registered); kw_rdy only enables the q load and the two valids.
+        assign oh_v[gl] = |(oa_v[gl] & oh[gl]);
+        assign oh_s[gl] = (oa_s[gl*4] & {32{oh[gl][0]}}) | (oa_s[gl*4+1] & {32{oh[gl][1]}}) |
+                         (oa_s[gl*4+2] & {32{oh[gl][2]}}) | (oa_s[gl*4+3] & {32{oh[gl][3]}});
+        assign oh_d[gl] = (oa_d[gl*4] & {256{oh[gl][0]}}) | (oa_d[gl*4+1] & {256{oh[gl][1]}}) |
+                         (oa_d[gl*4+2] & {256{oh[gl][2]}}) | (oa_d[gl*4+3] & {256{oh[gl][3]}});
+        assign x_v[gl] = oh_v[gl] && !k_v[gl];
+        assign q_ld[gl] = !q_v[gl] || kw_rdy[gl];
+        assign kw_v[gl] = q_v[gl];
+        assign kw_addr[gl*37 +: 37] = {q_s[gl], 5'd0};
+        assign kw_wdata[gl*256 +: 256] = q_d[gl];
+        always @(posedge clk) begin : oq_d                      // datapath: no reset
+            if (x_v[gl]) begin k_s[gl] <= oh_s[gl]; k_d[gl] <= oh_d[gl]; end
+            if (q_ld[gl] && (k_v[gl] || x_v[gl])) begin q_s[gl] <= k_v[gl] ? k_s[gl] : oh_s[gl]; q_d[gl] <= k_v[gl] ? k_d[gl] : oh_d[gl]; end
+        end
+        always @(posedge clk or negedge rl[3]) begin : oq_v
+            if (!rl[3]) begin q_v[gl] <= 1'b0; k_v[gl] <= 1'b0; end
+            else begin
+                if (q_ld[gl]) q_v[gl] <= k_v[gl] || x_v[gl];
+                k_v[gl] <= (k_v[gl] || x_v[gl]) && !q_ld[gl];
+            end
+        end
         assign kw_wo[gl] = wo[gl] != 7'd0 || w_acc[gl];
     end
     // ================================================================ registers
     // reset: four relayed regions (textbook audit 10-11: the port reset reached 3,418 loads), one a section; datapath
     // registers carry no reset
-    wire [3:0] rl;
     ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rn), .rst_n(rl));
     always @(posedge clk or negedge rl[0]) begin
         if (!rl[0]) begin
@@ -243,7 +265,7 @@ module ot_hgi_dma_kvw_core #(
             idle <= !owed && !(c_v && c_rdy) && !st_v;
             if (owed && f_t == f_w && !i_act && o_n == 7'd0 && pi_n == 2'd0 && pd_n == 2'd0 && !d_v[0] && !d_v[1] &&
                 !d_v2[0] && !d_v2[1] && !d_v3[0] && !d_v3[1] && !b0_we && !b1_we && w_act == 4'd0 && !m1_v[0] && !m1_v[1] && !m2_v[0] && !m2_v[1] &&
-                oa_v[0] == 4'd0 && oa_v[1] == 4'd0 && oa_v[2] == 4'd0 && oa_v[3] == 4'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
+                oa_v[0] == 4'd0 && q_v == 4'd0 && k_v == 4'd0 && oa_v[1] == 4'd0 && oa_v[2] == 4'd0 && oa_v[3] == 4'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
                 wo[0] == 7'd0 && wo[1] == 7'd0 && wo[2] == 7'd0 && wo[3] == 7'd0 && !st_v) begin
                 // every accepted move drained (a move accepted on this edge stays owed: its own done comes later)
                 owed <= c_v && c_rdy; done <= 1'b1; idle <= !(c_v && c_rdy);
@@ -374,14 +396,14 @@ module ot_hgi_dma_kvw_core #(
             for (integer l = 0; l < 4; l = l + 1) begin : lf
                 reg push, pop, pb; reg [3:0] ov;
                 pb = m2_v[1] && m2_l[1] == 2'(l);              // a stream (= stack) reads one bank a cycle
-                push = (m2_v[0] && m2_l[0] == 2'(l)) || pb; pop = kw_v[l] && kw_rdy[l];
+                push = (m2_v[0] && m2_l[0] == 2'(l)) || pb; pop = x_v[l];
                 if (push) begin oa_d[l*4 + ot[l]] <= pb ? b1_rd : b0_rdi; oa_s[l*4 + ot[l]] <= pb ? m2_s[1] : m2_s[0]; ot[l] <= ot[l] + 2'd1; end
                 ov = oa_v[l];
                 if (pop) begin ov[op[l]] = 1'b0; op[l] <= op[l] + 2'd1; oh[l] <= {oh[l][2:0], oh[l][3]}; end
                 if (push) ov[ot[l]] = 1'b1;
                 oa_v[l] <= ov;
                 res[l] <= res[l] + 3'(((g_v[0] && g_s[0] == 2'(l)) || (g_v[1] && g_s[1] == 2'(l))) ? 1 : 0) - 3'(pop);
-                w_acc[l] <= pop; w_ack[l] <= r_rsp_v[l] && r_rsp_we[l] && kw_wo[l];
+                w_acc[l] <= q_v[l] && kw_rdy[l]; w_ack[l] <= r_rsp_v[l] && r_rsp_we[l] && kw_wo[l];
                 wo[l] <= wo[l] + 7'(w_acc[l]) - 7'(w_ack[l]);
             end
         end

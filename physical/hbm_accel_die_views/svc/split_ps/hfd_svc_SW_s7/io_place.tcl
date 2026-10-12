@@ -5089,3 +5089,4 @@ place_pin -pin_name {wo[0]} -layer M4 -location {0.0960 35.5160} -pin_size {0.19
 place_pin -pin_name {wo[1]} -layer M6 -location {0.0960 35.6000} -pin_size {0.1920 0.0320}
 place_pin -pin_name {wo[2]} -layer M4 -location {0.0960 35.7080} -pin_size {0.1920 0.0240}
 place_pin -pin_name {wo[3]} -layer M6 -location {0.0960 35.7920} -pin_size {0.1920 0.0320}
+place_pin -pin_name {wo[4]} -layer M4 -location {0.0960 35.9000} -pin_size {0.1920 0.0240}

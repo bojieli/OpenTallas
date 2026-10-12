@@ -182,7 +182,12 @@ function automatic [71:0] encode64(input [63:0] data);
   wire [319:0] q4;
   for(genvar s=0;s<4;s=s+1)begin:sl
    wire [NO*512-1:0] d;
+   // OT_STN_HARD (station top on the hardened slice views): the liberty cells carry the port widths, no parameter
+`ifdef OT_STN_HARD
+   ot_hbm_w2_stn_slice8 u_sl(
+`else
    ot_hbm_w2_stn_slice8 #(.NO(NO)) u_sl(
+`endif
     .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),
     .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4),
     .din(pin_d[s*512+:512]),.dout(d),
@@ -190,7 +195,11 @@ function automatic [71:0] encode64(input [63:0] data);
    for(genvar t=0;t<NO;t=t+1)begin:o assign out_q[t*PW+s*512+:512]=d[t*512+:512]; end
   end
   wire [NO*280-1:0] d4;
+`ifdef OT_STN_HARD
+  ot_hbm_w2_stn_slice5 u_sl4(
+`else
   ot_hbm_w2_stn_slice5 #(.NO(NO)) u_sl4(
+`endif
    .clk(clk_sm),.rst_p(rst_p),.rst_e(rst_e),.gr(gr),
    .go_commit(go_c),.go_repair(go_r),.go_check(go_k),.go_sel(go_s),.ph4(ph4),
    .din(pin_d[2048+:280]),.dout(d4),.q(q4),

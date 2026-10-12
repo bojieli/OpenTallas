@@ -2443,6 +2443,7 @@ COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin fa
 # 36ccf0cb0: 3 x 572.4 columns, 29 tiles); HC root split (5db4c7ec6 / 597e34cac, ds-1010.log 14:14): 3 x 575.992 columns
 SU_V2_UM = (1727.976, 6069.6)
 HC_V2_UM = (1727.976, 9640.0)
+CONTRACT_SLABS = {}             # --contract FILE (s81-die-iter): centre slab outlines {name: (w, h)} from the hier contract
 SUHC_V2_HC_N = False            # --suhc-v2-hc-north: the v2 HC in the slot above the corridor (default: hc_s floor slot)
 SUHC_V2 = False                 # --suhc-v2 (s81die-1011/ctrl, die lead decision 3): su_hc contract v2 = ONE SU master
                                 #   (dsfd_sp_su_c, su_s W-floor slot) + ONE HC master (dsfd_sp_hc_c, hc_s E-column slot);
@@ -3214,15 +3215,18 @@ def build_r8(variant=None):
             centre.insert(centre.index('vm') + 1, 'vm_ep')
             centre.insert(centre.index('capture') + 1, 'cap_ep')
             centre_area['vm_ep'] = centre_area['cap_ep'] = MTP_EP_MM2
+    if HROW_SRC is not None:
+        # mtp-dsbind 2026-10-11 (--hrow-src P): the hidden-row source on the stage die of layer 37 + P (rank k), beside the
+        # WFC kit (its t_hep issue-epoch events) and one slab from the VM (HC-mean row reads); its lane leaves through
+        # the collective (one dedicated hidden lane to the DSpark primary P.k)
+        centre.insert(centre.index('collective'), 'hrsrc')
+        centre_area['hrsrc'] = up(HSRC_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
     if SEEDL:
         # mtp-dsbind 2026-10-10 (--seedl, DSpark primary die): the seed-descriptor consumer dsfd_mtp_seed_launch beside
         # the collective (its seed descriptor arrives on the collective's MTP lane, --coll-mtp-far primary) and one
         # slab from the VM (hidden-row reads, x beats to the seed elements, program start)
         centre.insert(centre.index('collective'), 'seedl')
         centre_area['seedl'] = up(SEEDL_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
-        if HROW:   # the main-hidden row store (seed client memory) between the VM and the seed launcher
-            centre.insert(centre.index('seedl'), 'hrow')
-            centre_area['hrow'] = up(HROW_UM[1] + 2 * WFC_HALO, GY) * cw / 1e6
     if DRAFT_SIDE == 'A':
         # MD-2 P2 (mtp-draftdie 2026-10-09): the selected-path transport (ot_mtp_p2_prefix_path: PRIMARY_SHARED1
         # 9-SRAM ordered transport + 3-SRAM 16-lane A-prefix + native publisher) on the A die of every draft row
@@ -3258,6 +3262,14 @@ def build_r8(variant=None):
         assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
         slab_w['vm'] = up(VM_SLAB[0], GX)
         centre_area['vm'] = slab_w['vm'] * up(VM_SLAB[1], GY) / 1e6
+    if CONTRACT_SLABS:
+        # --contract FILE (s81-die-iter 2026-10-12): centre hard elements keep their contract outline (w x h) inside a
+        # hub column widened for the v3 SU / HC slabs (column channels); each is centred in the column
+        for n_, (w_, h_) in CONTRACT_SLABS.items():
+            if n_ in centre_area and n_ not in ('su_s', 'hc_s'):
+                assert w_ <= cw + 1e-6, ('contract slab wider than the hub column', n_, w_, cw)
+                slab_w[n_] = up(w_, GX)
+                centre_area[n_] = slab_w[n_] * up(h_, GY) / 1e6
     # --ecol-slabs (ds-1010/s81die 2026-10-10): W-column centre slabs moved to a sub-column of the E (HC) column, beside
     # the HC slabs, next to the crossing corridor (the W column overflowed: split3cr collective + WFC kit + host)
     if RTL_HUB_WIDTHS:
@@ -3283,7 +3295,7 @@ def build_r8(variant=None):
             # --wfc-crp (main 10-11): the slab master is dsfd_wfc_cr2 = the routed credit-boundary tile dsfd_wfc_crp at the
             # slab's die edge (every die link / VM signal lands in its pin flops / SRAM landing) + the kit behind it
             ms_ = 'dsfd_wfc_cr2' if WFC_CRP else ('dsfd_wfc_src' if WFC_ROLE == 'source' else 'dsfd_wfc_stg')
-            slab('wfc', centre_area[n], x0_, yy, w0_, master=ms_)
+            slab('wfc', centre_area[n], up(x0_ + (w0_ - slab_w.get(n, w0_)) / 2, GX), yy, slab_w.get(n, w0_), master=ms_)
             notes.append('MTP-WFC --wfc-kit (%s): %s = %s in a %.2f um slab (%.3f mm2)' % (
                 WFC_ROLE, ms_, 'SOURCE tokpipe + tok_hard + lnk + vmx' if WFC_ROLE == 'source' else 'STG tokpipe + lnk + vmx',
                 WFC_SLAB_H, centre_area[n]))
@@ -3303,10 +3315,10 @@ def build_r8(variant=None):
             ms_ = dict(vm_ep='dsfd_vm_mtp_ep', cap_ep='dsfd_cap_mtp_ep', p2_lnk='dsfd_p2_lnk')[n]
             slab(n, centre_area[n], x0_, yy, w0_, master=ms_)
             notes.append('fixlat partner end %s (%s) %.3f mm2' % (n, ms_, centre_area[n]))
-        elif n == 'hrow':
-            slab('hrow', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_hrow')
-            notes.append('MTP-DIE --hrow: dsfd_mtp_hrow (main-hidden row store, 120 x 1024x256 SRAM, contract %s um) %.3f mm2'
-                         % (HROW_UM, centre_area[n]))
+        elif n == 'hrsrc':
+            slab('hrsrc', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_hrow_src')
+            notes.append('MTP-DIE --hrow-src %d: dsfd_mtp_hrow_src (layer %d HC-mean row -> primary die) %.3f mm2'
+                         % (HROW_SRC, 37 + HROW_SRC, centre_area[n]))
         elif n == 'seedl':
             slab('seedl', centre_area[n], x0_, yy, w0_, master='dsfd_mtp_seed_launch')
             notes.append('MTP-DIE --seedl: dsfd_mtp_seed_launch (seed descriptor -> seed program, contract %s um) %.3f mm2'
@@ -3335,16 +3347,20 @@ def build_r8(variant=None):
     ch_ = sum(up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
     su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
+    # --contract (s81-die-iter, contract v4): a v2 SU wider than the hub column grows WEST (E edge on the column's E edge,
+    # clear of the xE trunk / sseq stations by the VCH); the free strip W of the column holds it (10.5 um to the xW stations)
+    su_w_ = up(SU_V2_UM[0], GX) if (SUHC_V2 and SU_V2_UM[0] > cw + 1e-6) else cw
+    su_x_ = x_sp - (su_w_ - cw)
     if SU_E:
         # --su-e MM2 (ds-1010/s81die 2026-10-11): su_n (MM2) moves to the E column above hc_n; su_s (the rest) sits at the
         # W column floor with the centre stack right above it (the 2.42 mm VM of s81-vm-1011 overflowed the W column)
         su_lo = su_area - SU_E
         if SUHC_V2:     # the one v2 SU: its hierarchical outline (the su_s W-floor slot)
             su_lo = SU_V2_UM[0] * SU_V2_UM[1] / 1e6
-        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / cw, GY) + SPINE_GAP, GY)
+        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / su_w_, GY) + SPINE_GAP, GY)
     # --rtl-hub-widths (order A): the SU's VM row slots (~17.1 kb) are face-to-face with the VM right above it
     su_gap = RTL_ABUT_GAP if (RTL_HUB_WIDTHS and SUHC_V2 and centre and centre[0] == 'vm') else SPINE_GAP
-    slab('su_s', su_lo, x_sp, dn(yc - su_gap - up(su_lo * 1e6 / cw, GY), GY), cw, dom=SUHC_DOM)
+    slab('su_s', su_lo, su_x_, dn(yc - su_gap - up(su_lo * 1e6 / su_w_, GY), GY), su_w_, dom=SUHC_DOM)
     yy = yc
     for i_, n in enumerate(centre):
         put(n, x_sp, yy, cw)
@@ -3370,11 +3386,11 @@ def build_r8(variant=None):
         # --suhc-v2 n (s81die-1011/ctrl): the one HC in the freed slot ABOVE the corridor, facing the VM rows (order A puts
         # the VM at the corridor): VM row slots run straight across the VCH, the collective's 8,192-b y is ~2.5 mm
         # shorter than to the floor slot (hb_collective_t_hc_y_hc_s: no station spot over a 7,451 um path)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, hcw, dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, up(HC_V2_UM[0], GX), dom=SUHC_DOM)
     elif SUHC_V2:   # the floor slot holds c0 - floor um: the 9,640 um HC outline fits only if the corridor sits above it
         assert c0 - (band + SPINE_GAP) >= HC_V2_UM[1], ('v2 HC outline taller than the hc_s floor slot: use '
                                                         '--suhc-v2-hc-north', round(c0 - band - SPINE_GAP, 1), HC_V2_UM)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), hcw, dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), up(HC_V2_UM[0], GX), dom=SUHC_DOM)
     else:
         slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom=SUHC_DOM)
     if not SUHC_V2:     # --suhc-v2: one HC (hc_s slot); the hc_n slot is free
@@ -3417,6 +3433,17 @@ def build_r8(variant=None):
                 ys_ = dn(yc_ - 8.64 - SVC_D, GY)
                 orient = 'MX'
             band_ys[side] = ys_
+            if HROW and st == 'SE' and st not in STACKS[DIE_KIND]:
+                # mtp-dsbind 2026-10-10 (main decision (a): the store off the full hub spine): the main-hidden row
+                # store in the FREE SE service slot of the 1-stack primary die (no PHY / ctrl / svc there; precedent:
+                # layer1e eng_SE), at the slot's spine end; its field-facing (N) face carries every port
+                hub['hrow'] = Inst(f'hrow_{st}', 'dsfd_mtp_hrow', up(xp, GX), up(ys_ + HROW_TOP_REF - HROW_UM[1], GY), HROW_UM[0], HROW_UM[1], 'R0',
+                                   kind='svc', region='svc', power_w=0.4)
+                insts.append(hub['hrow'])
+                regions.append(dict(name=f'hrow_{st}', kind='svc', rect=[xp, min(ys_, ys_ + HROW_TOP_REF - HROW_UM[1]), xp + PHY_W, ys_ + SVC_D]))
+                notes.append('MTP-DIE --hrow: hrow_SE = dsfd_mtp_hrow (main-hidden row store, 120 x 1024x256 SRAM in 3 '
+                             'banked part arrays) %.1f x %.1f um in the free SE service slot' % HROW_UM)
+                continue
             if st not in STACKS[DIE_KIND]:
                 continue           # 1-stack layer die (scenario C): only the SW stack is built
             phys[st] = Inst(f'phy_{st}', rp['name'], xp, yp, rp['w'], rp['h'], orient, kind='phy', region='phy',
@@ -3611,6 +3638,10 @@ def _corridors(m):
         e_ = m['hub']['eng']
         cor['engS'] = (e_.x - (PHY_W - e_.w) / 2 + 4.32, e_.y,
                        e_.x + e_.w + (PHY_W - e_.w) / 2 - 4.32, g['band_depth'] + 4.32)
+    if 'hrow' in m['hub']:
+        # the SE slot around hrow_SE is free: end blocks / stations stand above its N face and climb into stripS
+        e_ = m['hub']['hrow']
+        cor['hrowS'] = (e_.x + 4.32, e_.y + e_.h + 4.32, e_.x + PHY_W - 4.32, g['band_depth'] + 4.32)
     for t, c in enumerate(g['ch_y']):
         cor[f'ch{t}'] = (g['x_lw'] + LINK_COL + 4.32, c + 4.32, g['x_le'] - 4.32, c + chh(t) - 4.32 - CF_WH[1] - 2.16)
     return cor
@@ -3960,8 +3991,9 @@ def buses_r8(m):
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
             (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
-            ((SEEDL_BUSES_HROW + HROW_BUSES if 'hrow' in hub else SEEDL_BUSES) + (SEEDL_HOST_BUSES if 'host' in hub else ())
-             + (HROW_HOST_BUSES if 'hrow' in hub and 'host' in hub else ()) if 'seedl' in hub else ()) + \
+            (HSRC_BUSES + (HSRC_HOST_BUSES if 'host' in hub else ()) if 'hrsrc' in hub else ()) + \
+            ((SEEDL_BUSES_SPINE if 'hrow' in hub else SEEDL_BUSES) + (SEEDL_HOST_BUSES if 'host' in hub else ())
+             if 'seedl' in hub else ()) + \
             ((P2_LNK_BUSES if 'p2_lnk' in hub else P2_BUSES) if 'p2' in hub else ()) + \
             ((('collective', 'host', 2, 't_p2flt', 'f_p2flt'),) if COLL_P2_LANE and 'host' in hub else ()) + \
             (SUHC_BUSES if SUHC_1011 and not SUHC_V2 else ()) + (SUHC_V2_BUSES if SUHC_V2 else ()) + \
@@ -4000,7 +4032,11 @@ def buses_r8(m):
             # dsfd_svc_join c_st -> sequencer s4) and gating its PC issue on live (composition.json nets.status)
             bus(f'st_{st}', 'hbm_req', 2, [(c_, 'st'), (cl_, 'hs')])
         else:
-            bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
+            # s81-die-iter 2026-10-12 (c1e plan: dsfd_ctrl.rd 8,896 on ctrl_SW vs 8,864 on ctrl_SE): one master, one
+            # port width -- under --ctrl-adapters dsfd_ctrl rd is its RTL [8895:0] (32 response valids included) on every
+            # stack, so the layer1e Engram client (eng_SE) takes the full word too (dsfd_engram_c has no HBM response
+            # port yet: recorded by the ctrl port audit for the svceng stream, OT_S81_CTRL_GATE_WARN=phys)
+            bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS + (32 if CTRL_ADAPTERS else 0), [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
         if CTRL_RQ:   # s81-gen: the controller's request side (real dsfd_ctrl rq / rk / wd), abutting faces
             bus(f'rq_{st}', 'hbm_req', HBM_RQ_BITS, [(cl_, 'rq'), (m['ctrls'][st].name, 'rq')])
             bus(f'rk_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'rk'), (cl_, 'rk')])
@@ -4184,15 +4220,29 @@ SEEDL_BUSES = (('collective', 'seedl', 78, 't_mrs', 'f_mrs'), ('seedl', 'collect
 SEEDL_HOST_BUSES = (('host', 'seedl', 11, 't_seedl_clr', 'f_clr'), ('seedl', 'host', 4, 't_flt', 'f_seedl_flt'),
                     ('collective', 'host', 513, 't_mrt', 'f_mrt'), ('host', 'collective', 1, 't_mrg', 'f_mrt'),
                     ('collective', 'host', 57, 't_macc', 'f_macc'))
+HROW_SRC = None                 # --hrow-src P (mtp-dsbind 2026-10-11): stage die of layer 37 + P: dsfd_mtp_hrow_src
+HSRC_UM = (259.2, 259.2)        #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow_src.json
+# wfc kit t_hep {v, user, pos, epoch} 36 (dsfd_wfc_kit HEP 1, mtp-wfc 248f39b23); VM read like the seed client; the
+# hidden lane {flit 514, valid} + grant to the collective's dedicated hidden lane (t_mhs / f_mhs: one more LCR lane tile
+# + adapter in the collective composition, OPEN in its owner's tree, as on the primary die)
+HSRC_BUSES = (('wfc', 'hrsrc', 36, 't_hep', 'f_hep'),
+              ('hrsrc', 'vm', 25, 't_vrq', 'f_hsrc_rq'), ('vm', 'hrsrc', 1, 't_hsrc_rqg', 'f_vrq'),
+              ('vm', 'hrsrc', 1025, 't_hsrc_rs', 'f_vrs'),
+              ('hrsrc', 'collective', 515, 't_hp', 'f_mhs'), ('collective', 'hrsrc', 1, 't_mhsg', 'f_hpg'))
+HSRC_HOST_BUSES = (('hrsrc', 'host', 2, 't_flt', 'f_hsrc_flt'),)
 HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
-HROW_UM = (1500.48, 1500.48)    #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json
+HROW_UM = (2998.08, 1438.56)     #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
+HROW_TOP_REF = 950.4            # el1011-ds-mtp rev 3 (30 hardened banks): the store grows DOWN into the slot's free PHY / ctrl
+                                #   space; its N face (pins, the end-block corridor above it) stays where the 950.4 um store had it
 # the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
 # (t_mhp<k> {flit 514, valid} / f_mhp<k> grant: three more LCR lane tiles + adapters in the MTPL composition, OPEN in
 # the collective composition owner's tree)
 SEEDL_BUSES_HROW = tuple(b for b in SEEDL_BUSES if 'vm' not in (b[0], b[1]) or b[2] in (1025 if b[3] == 't_x' else -1, 2, 57)) + (
     ('seedl', 'hrow', 25, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1, 't_vrq', 'f_vrq'), ('hrow', 'seedl', 1025, 't_vrs', 'f_vrs'))
-HROW_BUSES = tuple(x for k in range(3) for x in (('collective', 'hrow', 515, 't_mhp%d' % k, 'f_hp%d' % k),
-                                                ('hrow', 'collective', 1, 't_hpg', 'f_mhp%d' % k)))
+HROW_BUSES = tuple(('collective', 'hrow', 515, 't_mhp%d' % k, 'f_hp%d' % k) for k in range(3)) + (
+    ('hrow', 'collective', 3, 't_hpg', 'f_mhpg'),)      # the three part grants, one 3-bit lane back
+SEEDL_BUSES_SPINE = tuple(b for b in SEEDL_BUSES_HROW if 'hrow' not in b[:2])     # spine-internal (hub chains)
+HROW_LANES = tuple(b for b in SEEDL_BUSES_HROW if 'hrow' in b[:2]) + HROW_BUSES     # forwarded lanes to the SE slot
 HROW_HOST_BUSES = (('host', 'hrow', 11, 't_hrow_clr', 'f_clr'), ('hrow', 'host', 3, 't_flt', 'f_hrow_flt'))
 COLL_MTP_FAR = None             # --coll-mtp-far s0 (mtp-wfc 2026-10-10): the S0 die's end of the head die's MTP lane
 MTP_SEQ_RTT = False             # --mtp-seq-rtt (mtp-wfc 2026-10-10): head slab master dsfd_mtp_seq_rtt (RTT-sized grant
@@ -4242,6 +4292,7 @@ CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', co
                       # s81die-1011/ctrl: HC (engine 2) endpoint in hc_s = dsfd_sp_hc_c (dsfd_sp_hc, hc_gate PASS); the
                       # su_hc contract v2 makes HC one logical slab (hc_n folds into it when the suhc floorplan lands)
                       hc_s='dsfd_sp_hc_c', su_s='dsfd_sp_su_c', eng='dsfd_engram_c')
+PEER_SPAN_CENTRE = False        # --peer-span-centre (s81-die-iter 2026-10-12): wide face-to-face groups centred on the span shared with the peer
 RTL_HUB_WIDTHS = False          # --rtl-hub-widths (s81die-1011/ctrl, die lead decision 2026-10-11)
 # the gated hub masters' real interfaces (DIE_FLD_GATE: 12 root lanes gather -> capture, the tiled capture's VM writes;
 # the collective contract results/rtl/s81_ph_20261006/collective/contract.json: f_vm 592 / ts 3 in, t_vm 2,100 out)
@@ -5725,8 +5776,9 @@ def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, 
         nm, w, h = end_spec(kind, [payload], 'vr')
         if band(dst):
             x, y = face_pt(dst, nxt_off(dst))
-            if dst is hub.get('eng'):          # layer1e: end blocks in the free SE slot, on eng_SE's top face
-                pl = P.near(x, y + h / 2 + 6.0, w, h, [cor['engS']], horiz=True, span=1200.0, rows=20)
+            if dst is hub.get('eng') or dst is hub.get('hrow'):   # end blocks in the free SE slot, on the block's top face
+                pl = P.near(x, y + h / 2 + 6.0, w, h, [cor['engS' if dst is hub.get('eng') else 'hrowS']], horiz=True,
+                            span=1200.0, rows=20)
                 assert pl, tag
                 return P.add(Inst(f'he_{tag}', nm, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
             return beside_svc(f'he_{tag}', nm, w, h, dst, dst.x + dst.w - x)
@@ -5778,6 +5830,11 @@ def _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, 
             side = 'W' if st[1] == 'W' else 'E'
             lane(f'hw{st}', 512 + 64 + 2, hub['host'], f'tw{st}', cl, 'hw', side)
             lane(f'hc{st}', 18, cl, 'hc', hub['host'], f'fc{st}', side)
+    if 'hrow' in hub:      # mtp-dsbind: the row store's lanes (SE slot <-> spine slabs / host), forwarded like Engram's
+        for a_, b_, bits, pa, pb in HROW_LANES + (HROW_HOST_BUSES if 'host' in hub else ()):
+            # into a spine slab: the end block in the S14 W channel (the VCH beside the collective is taken by the
+            # collective's own lane ends); out of the spine / into the SE slot: the E (VCH) side
+            lane(f'h_{a_}_{pa}_{pb}', bits, hub[a_], pa, hub[b_], pb, 'W' if hub[b_].kind != 'svc' else 'E')
     if CTRL_ADAPTERS:
         _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, sink_end, band)
     if 'eng' in hub:
@@ -5835,8 +5892,13 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
         elif band(at):
             x, y = face_pt(at, nxt_off_c(at))
             yy = y + h / 2 + 6.0 if at.orient == 'R0' else y - h / 2 - 6.0
-            pl = P.near(x, yy, w, h, [cor['stripS'] if at.orient == 'R0' else cor['stripN']], horiz=True, span=1200.0,
-                        rows=12)
+            strip_ = cor['stripS'] if at.orient == 'R0' else cor['stripN']
+            # s81-die-iter 10-12 (c1e plan: AssertionError d10_eng_SE): a band slab in the free SE service slot (layer1e
+            # eng_SE / hrow_SE) sits below stripS, so its start blocks stand in the slot box around it (engS / hrowS, as
+            # the fwd-iface sink ends do) before climbing into the strip
+            slot_ = cor.get('engS') if at is hub.get('eng') else cor.get('hrowS') if at is hub.get('hrow') else None
+            pl = P.near(x, yy, w, h, ([slot_] if slot_ else []) + [strip_], horiz=True, span=1200.0,
+                        rows=20 if slot_ else 12)
             assert pl, tag
             st_ = P.add(Inst(f'hs_{tag}', nm, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
         else:
@@ -5932,6 +5994,10 @@ def _hub_at(P, name, master, w, h, slab, side, y, cor):
     """an end / start block beside a hub slab: side 'W' in the S14 W channel, 'E' in the VCH"""
     x = slab.x - w / 2 - 6.0 if side == 'W' else slab.x + slab.w + w / 2 + 6.0
     pl = P.near(x, y, w, h, [cor['s14W'] if side == 'W' else cor['vch']], horiz=False, span=1800.0, rows=6)
+    if not pl and name.startswith('he_h_'):
+        # mtp-dsbind hrow lanes: the channel beside a crowded slab (collective with the MTP lanes) is full near its
+        # centre; search the channel's whole height for the end block (the lane's stations follow it there)
+        pl = P.near(x, y, w, h, [cor['s14W'] if side == 'W' else cor['vch']], horiz=False, span=6000.0, rows=20)
     assert pl, name
     return Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind='hend', region='hub')
 
@@ -6461,7 +6527,28 @@ def _faces_r8(m, Mx, it, ports):
             resv = []
             if wide:
                 tw_ = sum(bwf(ports[p_][1]) + 2.0 for p_ in wide) - 2.0
-                c_ = min(max(L / 2 - tw_ / 2, 0.4), L - 0.4 - tw_)
+                ctr_ = L / 2
+                if PEER_SPAN_CENTRE:
+                    # s81-die-iter 2026-10-12 (--contract: SU 1,890 grows W of the 1,728 column, VM 1,520): centring
+                    # on each OWN face put the abutting pair's wide groups 81 um apart (rs_d 102.8 um > PIN_SEG -> a
+                    # 103.7 um pin relay with no room in the 21.6 um abut gap).  Centre the group on the centre of the
+                    # die span the face shares with its wide-port peers: the same point at both ends of the pair.
+                    by_ = m['_by']
+                    pe_ = {i_ for p_ in wide for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p_), [])
+                           for i_, _q in eps_ if i_ != it.name and i_ in by_}
+                    if pe_:
+                        if f in 'NS':
+                            lo_ = max(it.x, min(by_[i_].x for i_ in pe_))
+                            hi_ = min(it.x + it.w, max(by_[i_].x + by_[i_].w for i_ in pe_))
+                            org_, flip_ = it.x, it.orient in ('MY', 'R180')
+                        else:
+                            lo_ = max(it.y, min(by_[i_].y for i_ in pe_))
+                            hi_ = min(it.y + it.h, max(by_[i_].y + by_[i_].h for i_ in pe_))
+                            org_, flip_ = it.y, it.orient in ('MX', 'R180')
+                        if hi_ - lo_ >= tw_ + 0.8:
+                            ctr_ = (lo_ + hi_) / 2 - org_
+                            ctr_ = L - ctr_ if flip_ else ctr_
+                c_ = min(max(ctr_ - tw_ / 2, 0.4), L - 0.4 - tw_)
                 if '_bus_of' not in m:
                     bo_ = {}
                     for bid_, _c, _b, eps_ in m['buses']:
@@ -6971,6 +7058,8 @@ def die_options(ap):
     ap.add_argument('--seedl', action='store_true', help='mtp-dsbind 2026-10-10: DSpark primary die (--draft P): '
                     'dsfd_mtp_seed_launch slab (seed descriptor from the collective MTP lane -> seed program); needs '
                     '--coll-mtp-far primary')
+    ap.add_argument('--hrow-src', type=int, choices=[0, 1, 2], help='mtp-dsbind 2026-10-11: stage die of layer 37 + P: '
+                    'the hidden-row source dsfd_mtp_hrow_src (t_hep from the WFC kit, VM row reads, one hidden lane)')
     ap.add_argument('--hrow', action='store_true', help='mtp-dsbind 2026-10-10: with --seedl, the main-hidden row store '
                     'dsfd_mtp_hrow (3 part links from the MTP part lanes; the seed client reads it)')
     ap.add_argument('--coll-mtp-far', choices=['s0', 'primary'], help='mtp-wfc 2026-10-10: S0 die collective with the MTP lane '
@@ -6998,10 +7087,13 @@ def die_options(ap):
                     '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--contract', help='s81-die-iter 2026-10-12: hier contract JSON (repo path): SU / HC / VM / centre slab outlines')
     ap.add_argument('--suhc-v2', action='store_true', help='s81die-1011: su_hc contract v2 (one SU in su_s, one HC in hc_s, VM '
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
+    ap.add_argument('--peer-span-centre', action='store_true', help='s81-die-iter: with --rtl-hub-widths, centre each '
+                    'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--rtl-hub-widths', action='store_true', help='s81die-1011 (die lead decision): W hub column gather -> '
                     'capture -> VM (capture directly above gather) and the hub buses at the RTL widths: gather t_capture 6,947 '
                     '(12 root lanes), capture t_vm 13,376, collective t_vm 2,100, VM -> collective f_vm 592 + ts 3')
@@ -7025,6 +7117,8 @@ def apply_options(a):
     global CTRL_ADAPTERS, RTL_HUB_WIDTHS
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
     RTL_HUB_WIDTHS = bool(getattr(a, 'rtl_hub_widths', False))
+    global PEER_SPAN_CENTRE
+    PEER_SPAN_CENTRE = bool(getattr(a, 'peer_span_centre', False))
     global SUHC_V2, SUHC_V2_HC_N
     SUHC_V2 = bool(getattr(a, 'suhc_v2', False))
     SUHC_V2_HC_N = bool(getattr(a, 'suhc_v2_hc_north', False))
@@ -7118,11 +7212,14 @@ def apply_options(a):
     COLL_P2_LANE = bool(getattr(a, 'coll_p2_lane', False))
     global COLL_MTP_FAR
     COLL_MTP_FAR = getattr(a, 'coll_mtp_far', None)
-    global SEEDL, HROW
+    global SEEDL, HROW, HROW_SRC
     SEEDL = bool(getattr(a, 'seedl', False))
+    HROW_SRC = getattr(a, 'hrow_src', None)
+    if HROW_SRC is not None and (getattr(a, 'die', None) != 'layer1' or not getattr(a, 'wfc_kit', False)):
+        raise SystemExit('--hrow-src: a layer1 stage die with --wfc-kit (the t_hep issue-epoch events)')
     HROW = bool(getattr(a, 'hrow', False))
-    if HROW and not SEEDL:
-        raise SystemExit('--hrow: with --seedl (the row store is the seed client memory)')
+    if HROW and (not SEEDL or not getattr(a, 'fwd_iface', False) or getattr(a, 'die', None) != 'layer1'):
+        raise SystemExit('--hrow: with --seedl --fwd-iface on the 1-stack primary die (store in the free SE slot)')
     if SEEDL and (getattr(a, 'draft', None) != 'P' or COLL_MTP_FAR != 'primary'):
         raise SystemExit('--seedl: DSpark primary die (--draft P) with --coll-mtp-far primary')
     if COLL_MTP_FAR == 'primary':   # mtp-dsbind: the primary die's end of a head MTP lane (seed descriptor class)
@@ -7156,6 +7253,24 @@ def apply_options(a):
     COL_PITCH8 = COL_W8 + 8.64
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
     COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
+    global SU_V2_UM, HC_V2_UM, HROW_UM
+    if getattr(a, 'contract', None):
+        # --contract (s81-die-iter 2026-10-12): slab outlines from results/arch/hier_contract_1011/s81.json (v3+): SU / HC v2
+        # slabs (column channels), centre hard elements, VM slab (overrides --vm-slab), MTP hrow
+        cslots_ = {s_['name']: s_ for s_ in json.loads((ROOT / a.contract).read_text())['slots']}
+        def _o(n_):
+            return (float(cslots_[n_]['outline']['w']), float(cslots_[n_]['outline']['h']))
+        SU_V2_UM, HC_V2_UM = _o('sp_su_s'), _o('sp_hc_s')
+        CONTRACT_SLABS.clear()
+        for n_, k_ in (('capture', 'sp_capture'), ('gather', 'sp_gather'), ('collective', 'sp_collective'), ('wfc_hard', 'sp_wfc')):
+            if k_ in cslots_ and _o(k_)[0] > 0:
+                CONTRACT_SLABS[n_] = _o(k_)
+        if 'sp_vm' in cslots_:
+            a.vm_slab = '%.3f,%.3f' % _o('sp_vm')
+        for k_ in ('rep/hrow', 'hrow'):      # v6: the replicated-slot key (the bare key never matched)
+            if k_ in cslots_ and _o(k_)[0] > 0:
+                HROW_UM = _o(k_)
+                break
     SUHC_1011 = bool(getattr(a, 'suhc_1011', False))
     SUHC_DOM, SUHC_HC_VM = ('stream_1p2', 2048) if SUHC_1011 else ('serial_0p9', 1024)
     global SU_E, HROW_TX
@@ -7276,7 +7391,10 @@ def main(argv=None):
                 Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
             if cg['verdict'] != 'PASS':
                 msg_ = 'DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40])
-                if os.environ.get('OT_S81_CTRL_GATE_WARN') == '1' and a.mode == 'plan':
+                wv_ = os.environ.get('OT_S81_CTRL_GATE_WARN')
+                if (wv_ == '1' and a.mode == 'plan') or (wv_ == 'phys' and a.mode in ('plan', 'real', 'irm', 'check')):
+                    # s81-die-iter 2026-10-12 ('phys'): the die PHYSICAL chain (assembly / GRT / STA / IR) also proceeds;
+                    # the RTL port-audit findings stay a FAIL record (<out>.ctrl_gate.json / the die README), not waived
                     # s81die-1011: geometry-only die-fit (plan) proceeds; the port-audit findings stay a FAIL record
                     print('WARNING ' + msg_, file=sys.stderr)
                 else:

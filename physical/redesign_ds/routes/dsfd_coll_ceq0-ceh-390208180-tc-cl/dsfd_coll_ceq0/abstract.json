@@ -1,0 +1,63 @@
+{
+  "name": "dsfd_coll_ceq0",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/routes/dsfd_coll_ceq0_ceh_390208180_tc_cl/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/routes/dsfd_coll_ceq0_ceh_390208180_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/routes/dsfd_coll_ceq0_ceh_390208180_tc_cl/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/routes/dsfd_coll_ceq0_ceh_390208180_tc_cl/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/routes/dsfd_coll_ceq0_ceh_390208180_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/routes/dsfd_coll_ceq0_ceh_390208180_tc_cl/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/routes/dsfd_coll_ceq0_ceh_390208180_tc_cl/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_coll_ceq0-ceh-390208180-tc-cl/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "dsfd_coll_ceq0.lef": "3b9c5725175375e158fb749e3cf12624f7d123ffa4bc671eba12f348f9d2fb29",
+    "dsfd_coll_ceq0_ff.lib": "956b893ca7688c540f9a132ee8e990257dddce44527810604811a6abee5c6984",
+    "dsfd_coll_ceq0_ss.lib": "5393162c2ad29ac008d5da3c344d6643a59935bdd2189a945a9695be026b36e3"
+  },
+  "ok": true
+}

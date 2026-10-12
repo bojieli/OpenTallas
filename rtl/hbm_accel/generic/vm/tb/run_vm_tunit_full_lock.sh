@@ -11,7 +11,7 @@ V=rtl/hbm_accel/generic/vm
 O="$OUT/obj_${CFG}_$MUTS"
 verilator --binary --timing -O1 -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module $P $PP -GMUTS=$MUTS \
   -Mdir "$O" rtl/lib/ot_rst_relay.sv rtl/link/ot_fifo_sram_fwft.sv $V/ot_hgi_vm_core.sv $V/ot_hgi_vm_unit.sv \
-  $V/ot_hgi_vm_btile.sv $V/ot_hgi_vm_tunit.sv $V/tb/$P.sv $M/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v \
+  rtl/lib/ot_hdly.sv $V/ot_hgi_vm_btile.sv $V/ot_hgi_vm_tunit.sv $V/tb/$P.sv $M/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v \
   $M/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v > "$OUT/build_${CFG}_$MUTS.log" 2>&1
 "$O/V$P" +SEED=$SEED | tee "$OUT/flock_${CFG}_$MUTS.log" | tail -9
 grep -q '^PASS VM tunit full lockstep' "$OUT/flock_${CFG}_$MUTS.log"

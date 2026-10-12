@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_su_t_ctl",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81su-tctl-4be685202-tc-pd45/routes/s81su_tctl_4be685202_tc_pd45/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81su-tctl-4be685202-tc-pd45/routes/s81su_tctl_4be685202_tc_pd45/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81su-tctl-4be685202-tc-pd45/routes/s81su_tctl_4be685202_tc_pd45/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81su-tctl-4be685202-tc-pd45/routes/s81su_tctl_4be685202_tc_pd45/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81su-tctl-4be685202-tc-pd45/routes/s81su_tctl_4be685202_tc_pd45/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81su-tctl-4be685202-tc-pd45/routes/s81su_tctl_4be685202_tc_pd45/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81su-tctl-4be685202-tc-pd45/routes/s81su_tctl_4be685202_tc_pd45/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_su_t_ctl.lef": "320ed6d75c320511e1c8435d9157e238efd8e846e81b89a16aa2a013976a3dd4",
+    "dsfd_su_t_ctl_ff.lib": "f0ed4aac4bb91cdc3caab7147f934437954eacce04da94b00e0c9f041c60f97e",
+    "dsfd_su_t_ctl_ss.lib": "34207dc9dd9c75e89a0648e11e5bff7d6d261501ae0c442ea93e13a661846457"
+  },
+  "ok": true
+}

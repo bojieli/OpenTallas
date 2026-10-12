@@ -124,7 +124,8 @@ module ot_hgi_dma_front #(
     // ---------------------------------------------------------------- command station (registered)
     reg cv_q; reg [226:0] cm_q;
     reg busy; reg [2:0] sf; reg [1:0] ks;                  // ks = log2 K (destination sectors per source sector)
-    reg [36:0] ra; reg [31:0] sst;                          // the current row's source byte address, row stride
+    reg [36:0] ra; reg [36:0] sst;                          // the current row's source byte address, row step (STRIPE4:
+                                                            // stride + one stack, mod 2^37 = row o on stack s0 + o)
     reg [31:0] rdw; reg [31:0] dst_w;                       // the current row's VM word address, row stride
     // rows are issued in windows of up to 4 (round robin chunk by chunk: rows striped over the stacks keep all stacks busy)
     reg [19:0] r_left;                                      // rows left after the current window
@@ -396,7 +397,7 @@ module ot_hgi_dma_front #(
             if (cv_q) begin
                 cv_q <= 1'b0; busy <= 1'b1; sf <= cm_q[4:2];
                 ks <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 2'd0 : (cm_q[4:2] == 3'd1) ? 2'd1 : 2'd2;
-                ra <= cm_q[41:5]; sst <= cm_q[76:45]; rdw <= cm_q[129:98]; dst_w <= cm_q[169:138];
+                ra <= cm_q[41:5]; sst <= {5'd0, cm_q[76:45]} + ((cm_q[44:42] == 3'd1) ? (37'd1 << SBIT) : 37'd0); rdw <= cm_q[129:98]; dst_w <= cm_q[169:138];
                 // sectors a row = n x esize / 32
                 rsec <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 24'(cm_q[226:206] >> 3) :
                         (cm_q[4:2] == 3'd1) ? 24'(cm_q[226:206] >> 4) : 24'(cm_q[226:206] >> 5);
@@ -437,12 +438,12 @@ module ot_hgi_dma_front #(
                     tg_dsec[ft[3:0]] <= 18'(wd >> 3) + (18'(r_off) << ks);
                     tg_left[ft[3:0]] <= rn;
                     issued <= issued + ({23'd0, rn} << ks);
-                    if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + {5'd0, sst}; wd <= wd + dst_w; end
+                    if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + sst; wd <= wd + dst_w; end
                     else if (r_off + {15'd0, rn} != rsec) begin            // next chunk of the window
                         wi <= 2'd0; wa <= ra; wd <= rdw; r_off <= r_off + {15'd0, rn};
                     end else begin                                         // next window
-                        wi <= 2'd0; r_off <= 24'd0; ra <= wa + {5'd0, sst}; rdw <= wd + dst_w;
-                        wa <= wa + {5'd0, sst}; wd <= wd + dst_w;
+                        wi <= 2'd0; r_off <= 24'd0; ra <= wa + sst; rdw <= wd + dst_w;
+                        wa <= wa + sst; wd <= wd + dst_w;
                         if (r_left == 20'd0) r_done <= 1'b1;
                         else begin
                             wn <= (r_left >= 20'd4) ? 2'd3 : 2'(r_left - 20'd1);
