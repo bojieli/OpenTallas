@@ -49,6 +49,7 @@ VMW = MC.VM_WORDS
 LOCAL_W = 65536
 MIRROR_W = 32768
 SLICE_W = LOCAL_W + MIRROR_W
+REPL_BASE = 262144          # SPEC.md 2a (6e74fb706): REPL window 262,144 .. 294,911, owner of a word < 2^18 = addr[17:16]
 MIR = NQ
 SPLIT_UNITS = {"SM", "SU", "SFU", "ATT"}
 VEC_HOME = 0                # the vector home cluster: small vector records run there, on operands LOCAL to it
@@ -375,7 +376,8 @@ class Placement:
             ends = np.concatenate([brk + 1, [len(t)]])
             for s0, e0 in zip(starts, ends):
                 lo = int(t[s0])
-                segs.append([lo, int(e0 - s0), int(cls[lo]), int(self.phys[lo])])
+                c, ph = int(cls[lo]), int(self.phys[lo])
+                segs.append([lo, int(e0 - s0), c, ph, spec_addr(c, ph)])
         self.segs = segs
 
     def capacity(self):
@@ -388,7 +390,8 @@ class Placement:
     def table(self):
         return dict(schema="opentallas.hgi_b2.placement.v1", nq=NQ, vm_words=VMW, local_w=LOCAL_W, mirror_w=MIRROR_W,
                     mirror_phys_base=LOCAL_W, cls_codes={"0..3": "LOCAL slice q", "4": "MIRROR (every slice)"},
-                    segments_fields=["logical_lo", "len", "cls", "phys_lo"], segments=self.segs,
+                    segments_fields=["logical_lo", "len", "cls", "phys_lo", "spec_addr_lo"],
+                    spec="results/arch/hbm_b2_1012/SPEC.md 2a: slice = addr[17:16], REPL 262,144..294,911", segments=self.segs,
                     capacity=self.capacity())
 
     def slice_image(self, vm, q):
@@ -400,6 +403,12 @@ class Placement:
 
     def avail(self, q):
         return (self.cls == q) | (self.cls == MIR)
+
+
+def spec_addr(c, ph):
+    """SPEC.md 2a word address of physical word ph of region c: slice q = addr[17:16] (q * LOCAL_W + ph); the REPL
+    window (mirror) at 262,144 + (ph - LOCAL_W)"""
+    return REPL_BASE + ph - LOCAL_W if c == MIR else c * LOCAL_W + ph
 
 
 def affine(ph, rows, cols):

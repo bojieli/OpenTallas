@@ -6,7 +6,13 @@
 import argparse
 import json
 import shutil
+import sys
 from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from hgi_b2 import b2 as B  # noqa: E402
 
 OUT = Path(__file__).resolve().parents[2] / "results/rtl/hbm_b2_1012"
 
@@ -38,8 +44,10 @@ def main():
         if not v.get("mutant"):
             dst = OUT / d.name
             dst.mkdir(parents=True, exist_ok=True)
-            for f in ("placement.json", "verdict.json", "pass1.json", "slice.npy"):
+            for f in ("verdict.json", "pass1.json", "slice.npy"):
                 shutil.copy(d / "b2" / f, dst / f)
+            # the segment table in SPEC.md 2a addresses (re-derived from the pass-1 classes; same placement)
+            (dst / "placement.json").write_text(json.dumps(B.Placement(np.load(d / "b2" / "cls.npy")).table(), default=int) + "\n")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "summary.json").write_text(json.dumps(dict(
         schema="opentallas.hgi_b2.summary.v1",
