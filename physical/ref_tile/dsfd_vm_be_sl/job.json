@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_be_sl-r2-COMMIT",
+ "name": "dsfd_vm_be_sl-r2-698f866c5",
  "block": "dsfd_vm_be_sl",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/be",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-vm-be",
-  "commit": "COMMIT"
+  "commit": "698f866c5"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r2-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r2-698f866c5"
   }
  ],
  "cycles_added": 0,
