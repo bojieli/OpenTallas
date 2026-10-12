@@ -193,6 +193,19 @@ module dsfd_sp_hc #(
             wire [127:0]   cyo [0:LC-1];
             for (p = 0; p < LC; p = p + 1) begin : g_p
                 localparam [7:0] TID = BC + p;
+                if (HALF) begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
+                ot_s81_hc_cth #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
+                                .ML(ML), .AL(AL), .RLY(RLY)) u_t (
+                    .clk(sk), .rst_in(p == 0 ? ch_rst[c] : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
+                    .last(p == LC - 1),
+                    .fv_in(p == 0 ? ch_fv[c * FVW +: FVW] : fvo[p > 0 ? p - 1 : 0]),
+                    .fd_in(p == 0 ? ch_fd[c * FDW +: FDW] : fdo[p > 0 ? p - 1 : 0]),
+                    .fv_out(fvo[p]), .fd_out(fdo[p]),
+                    .rv_in(p == LC - 1 ? {RVW{1'b0}} : rvo[p < LC - 1 ? p + 1 : 0]),
+                    .rd_in(p == LC - 1 ? {RDW{1'b0}} : rdo[p < LC - 1 ? p + 1 : 0]),
+                    .rv_out(rvo[p]), .rd_out(rdo[p]),
+                    .cy_out(cyo[p]), .cy_in(p == 0 ? 128'd0 : cyo[p > 0 ? p - 1 : 0]));
+                end else begin : g_f
                 ot_s81_hc_ctile #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
                                   .ML(ML), .AL(AL), .HALF(HALF), .RLY(RLY)) u_t (
                     .clk(sk), .rst_in(p == 0 ? ch_rst[c] : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
@@ -204,6 +217,7 @@ module dsfd_sp_hc #(
                     .rd_in(p == LC - 1 ? {RDW{1'b0}} : rdo[p < LC - 1 ? p + 1 : 0]),
                     .rv_out(rvo[p]), .rd_out(rdo[p]),
                     .cy_out(cyo[p]), .cy_in(p == 0 ? 128'd0 : cyo[p > 0 ? p - 1 : 0]));
+                end
             end
             assign ch_rv[c * RVW +: RVW] = rvo[0];
             assign ch_rd[c * RDW +: RDW] = rdo[0];
