@@ -18,7 +18,6 @@
   "h": 200.0
  },
  "util": 0.52,
- "pg_layer": "M6",
  "macros": [],
  "pins": {
   "N": [
@@ -77,13 +76,15 @@
  ],
  "job": {
   "owner": "Claude:s81-suhc-hier-1011",
-  "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "tag": "v1",
-  "purpose": "s81-suhc-hier-1011 HC centre pin tile ot_s81_hc_cpin re-route via the reference tile flow (contract_hcc slot 575.992 x 200, faces from ports.json; clocks sk + cck via cck_cpin_ref.sdc): the CLOSED pd30 view (5db4c7ec6) fails child_lint (f) 1161/7444 (pre-a804fc09b hold ECO blocked pins above)",
+  "branch": "claude/el1011-s81hc-cpin",
+  "tag": "v2",
+  "purpose": "s81-suhc-hier-1011 HC centre pin tile ot_s81_hc_cpin via the reference tile flow (contract_hcc slot 575.992 x 200, M5 layer cap; clocks sk + cck via cck_cpin_ref.sdc): v1-89a4bcc13 TT +117.89 / FF -7.14 / DRC 0, R2R +40.43; FF misses are only boundary pin flops (R2O pin flop->port 71 ps -7.14, I2R port->pin flop 48 ps -2.42), hold ECO -1.61 -> deterministic IO hold stages: inhold (port->HB4->BUF->D) + outhold (Q->BUF->HB4->BUF->port), FIRM at the pins",
   "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_cpin_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_cpin_ref"
  },
+ "inhold": true,
+ "outhold": true,
  "children": [],
  "inter": []
 }
