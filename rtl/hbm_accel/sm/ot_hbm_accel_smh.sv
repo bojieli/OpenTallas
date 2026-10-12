@@ -2495,7 +2495,9 @@ module ot_hbm_accel_smh_leaf #(
     localparam integer NA1 = N0K + NHK + 2 * NLK, NA2 = N0F + NHF + 2 * NLF;
     (* keep *) reg [10:0] a1p;
     (* keep *) reg [10:0] a2p;
-    always @(posedge clk) begin a1p <= {xs_a1, {G1S{1'b0}}}; a2p <= {xs_a2, {G2S{1'b0}}}; end
+    (* keep *) reg [4:0] g1p;
+    (* keep *) reg [4:0] g2p;
+    always @(posedge clk) begin a1p <= {xs_a1, {G1S{1'b0}}}; a2p <= {xs_a2, {G2S{1'b0}}}; g1p <= xs_g1; g2p <= xs_g2; end
     wire [8*11-1:0] a1m, a2m;
     wire [NA1*11-1:0] a1c;
     wire [NA2*11-1:0] a2c;
@@ -2570,7 +2572,8 @@ module ot_hbm_accel_smh_leaf #(
     genvar b, m;
     generate for (b = 0; b < NGR; b = b + 1) begin : g_mg
         wire [NBEAT-1:0] oh = ohr[b*NBEAT +: NBEAT];
-        wire [4:0] g0 = (b < NG1) ? xs_g1 : xs_g2;
+        (* keep *) reg [4:0] g0;                                // per-group kept copy of the static strap (fan-out)
+        always @(posedge clk) g0 <= (b < NG1) ? g1p : g2p;
         wire [5:0] g1n = {1'b0, g0} + 6'd1;
         always @(posedge clk) begin
             ml1[b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
@@ -2588,20 +2591,23 @@ module ot_hbm_accel_smh_leaf #(
     // stage l (a[5:0]) and the carry mask (1 where the field bit is in beat g + 1), chunked as stage 0
     wire [NLK*CK+63:0] blk1x = {{(NLK*CK+64-(NBK+63)){1'b0}}, blk1};
     wire [NLF*CK+63:0] bf1x  = {{(NLF*CK+64-(NBF+63)){1'b0}}, bf1};
-    wire [4095:0] cpat = {{2048{1'b1}}, {2048{1'b0}}};
     wire [NLK*CK-1:0] blk_l, blk_c;
     wire [NLF*CK-1:0] bf_l, bf_c;
     generate for (sk = 0; sk < NLK; sk = sk + 1) begin : g_rlk
         wire [10:0] a = a1c[(N0K + NHK + sk)*11 +: 11];
         wire [10:0] ac = a1c[(N0K + NHK + NLK + sk)*11 +: 11];
         assign blk_l[sk*CK +: CK] = blk1x[sk*CK + a[RH-1:0] +: CK];
-        assign blk_c[sk*CK +: CK] = cpat[sk*CK + ac +: CK];
+        for (genvar ci = 0; ci < CK; ci = ci + 1) begin : g_c
+            assign blk_c[sk*CK + ci] = ({21'd0, ac} + 32'(sk*CK + ci)) >= 32'd2048;
+        end
     end endgenerate
     generate for (sk = 0; sk < NLF; sk = sk + 1) begin : g_rlf
         wire [10:0] a = a2c[(N0F + NHF + sk)*11 +: 11];
         wire [10:0] ac = a2c[(N0F + NHF + NLF + sk)*11 +: 11];
         assign bf_l[sk*CK +: CK] = bf1x[sk*CK + a[RH-1:0] +: CK];
-        assign bf_c[sk*CK +: CK] = cpat[sk*CK + ac +: CK];
+        for (genvar ci = 0; ci < CK; ci = ci + 1) begin : g_c
+            assign bf_c[sk*CK + ci] = ({21'd0, ac} + 32'(sk*CK + ci)) >= 32'd2048;
+        end
     end endgenerate
     wire [SLW-1:0] wd_n = {bf_l[NBF-1:0], blk_l[NBK-1:0]};
     wire [SLW-1:0] car  = {bf_c[NBF-1:0], blk_c[NBK-1:0]};
