@@ -62,8 +62,8 @@ MEASURED = {
     "DMA.LOAD": dict(ratio=0.622, grade="e2e", src="results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
                      note="6 records"),
     "DMA.FENCE": dict(ratio=0.117, grade="e2e", src="results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"),
-    "DMA.KVWB_DS": dict(ratio=3.817, grade="e2e", src="results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
-                        note="retires on write completion, not acceptance (audit hbm_ds_kvwb)"),
+    "DMA.KVWB_DS": dict(ratio=1.05, grade="unit_bench", src="results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json",
+                        note="tb_hgi_mover_kport die config (real kport + 4 svc stacks), posted retire: first record 63 cyc, 4-stack 61.1 cyc/record; KMUT5 FAIL"),
     "FUSED.HC_PRE_NORM": dict(ratio=6.514, grade="unit_bench", src=U + "fused/hc_pre_norm_d5120/report.json"),
     "FUSED.HC_POST": dict(ratio=20.085, grade="unit_bench", src=U + "fused/hc_post_d5120/report.json"),
     "FUSED.QDQ_FP8": dict(ratio=2.74, grade="unit_bench", src=U + "qdq_wide/report.json", accepted="owner rule: e2e follows measurement, +1.3k cyc/token, 0.24% (main 2026-10-11)",
@@ -112,7 +112,7 @@ OWNERS = {
     "FUSED.QDQ_FP4_E4M3": "tput-gate-1010 (with QDQ_FP8)",
     "IDX.TOPK": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
     "IDX.INDEX": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "DMA.KVWB_DS": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+    "DMA.KVWB_DS": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
     "ATT.QK": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
     "ATT.PV": "hgi-1010/g2",
     "SM.MATVEC": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
@@ -264,8 +264,16 @@ def bench_ii():
     """element -> the cycles-per-item line of its newest passing exact bench (closure-loop job state, CLOSED jobs first).
     The item kind is the largest-count item on the line; 'stalled' = the stimulus injects stalls (II not intrinsic)."""
     import glob as _g
+    import urllib.request
     jd = Path.home() / ".local/state/closure_loop/jobs"
     best = {}
+    # the element's ADOPTED record (registry best.job) outranks a newer-finishing sibling: a superseded variant whose
+    # hold ECO finished later (e.g. qfd_coll_xfifo_l8m vs the adopted l8n) must not be cited as the element's bench
+    try:
+        adopted = {(r.get("best") or {}).get("job") for r in
+                   json.load(urllib.request.urlopen("http://127.0.0.1:8765/api/elements", timeout=60))["rows"]} - {None}
+    except Exception:  # noqa: BLE001
+        adopted = set()
     for f in _g.glob(str(jd / "*.json")):
         try:
             j = json.loads(open(f).read())
@@ -288,7 +296,8 @@ def bench_ii():
                            bench=bn, line=ln.strip()[:200], cycles=cyc, item=it[0] if it else None, items=it[1] if it else None,
                            ii=round(cyc / it[1], 3) if it else None, stalled=bool(re.search(r"stall|STALL|jitter", ln)),
                            owner=str((j.get("spec") or {}).get("owner", "")), target=None, t=j.get("updated", 0))
-                if blk not in best or ent["t"] > best[blk]["t"]:
+                ent["adopted"] = j["name"] in adopted
+                if blk not in best or (ent["adopted"], ent["t"]) > (best[blk].get("adopted", False), best[blk]["t"]):
                     best[blk] = ent
                 break
     # ---- automated II harness records (tools/throughput_budget/auto_ii.py, owner 2026-10-11): the recording replay of the

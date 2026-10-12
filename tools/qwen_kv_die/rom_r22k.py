@@ -636,7 +636,10 @@ def surgery_o4(v, m):
     # pairs pinned (VM sa / sq <-> SU va / vq, VM N <-> control tile S groups)
     v.CK_AREA_PITCH = 3.2
     # el1011-q-tile 2406851bf: the hierarchical tile's power pins are its parent grid's M7 straps (pdn_tile_h2.tcl)
-    v.PG_STRAPS = {'qfd_tile_nk': dict(layer='M7', width=.288, spacing=.096, pitch=10.8, offset=1.0)}
+    # el1011-q-coll qfd_io_collective_pr2h (pdn_icoll_hier.tcl): the hierarchical collective (hard fold slices + source
+    # FIFOs, children xfifo l8n / io_host closed) ends in the same M7 straps (-pins M7) -> same die contract.
+    _m7 = dict(layer='M7', width=.288, spacing=.096, pitch=10.8, offset=1.0)
+    v.PG_STRAPS = {'qfd_tile_nk': _m7, 'qfd_io_collective': _m7}
     # ctlm_i keeps p_am UNREGISTERED (fixed-latency argmax loop, el1011-q-seq 9d6bfc082).  A terminal-tight last relay
     # (v.TERMINAL_TIGHT {('tt_ctlm', 'c<b>'): 100}) costs +1 relay on 5 of 6 c* chains (discrete relay sites) = the
     # same +1 loop latency as a pin flop, so it is NOT enabled: the c* words keep their relay count (last hop ~400 um)

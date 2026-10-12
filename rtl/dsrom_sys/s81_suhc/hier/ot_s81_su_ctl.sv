@@ -102,8 +102,14 @@ module ot_s81_su_ctl #(
     always @(posedge sk or negedge srs) if (!srs) begin s0 <= 1'b0; s1 <= 1'b0; end else begin s0 <= 1'b1; s1 <= s0; end
     assign rst_o = s1;
     always @(posedge sk or negedge srs) if (!srs) inp_q <= 1'b0; else inp_q <= inp;
+    // controller-side pin flops: the adapter's admit logic (256:1 pending lookup, FIFO write enables) starts from a
+    // register, never from the slab pins
+    reg        cmd_v_q;
+    reg [83:0] cmd_d_q;
+    always @(posedge cck or negedge crs) if (!crs) cmd_v_q <= 1'b0; else cmd_v_q <= c_cmd_v;
+    always @(posedge cck) cmd_d_q <= c_cmd_d;
     ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
-        .c_clk(cck), .c_rst_n(crs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v), .c_done_tag(c_done_tag),
+        .c_clk(cck), .c_rst_n(crs), .c_cmd_v(cmd_v_q), .c_cmd_d(cmd_d_q), .c_done_v(c_done_v), .c_done_tag(c_done_tag),
         .fault(a_flt), .online(online),
         .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),
         .e_done_v(d_v), .e_done_tag(d_t));
