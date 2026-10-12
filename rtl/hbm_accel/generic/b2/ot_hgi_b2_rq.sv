@@ -27,6 +27,7 @@ module ot_hgi_b2_rqu #(
 );
     localparam integer DB = (D > 1) ? $clog2(D) : 1;
     localparam integer DN = DB + 1;
+    localparam [DB-1:0] DM1 = D - 1;
     reg [BW+8:0] c; reg [2:0] u_q; reg [1:0] q_q;      // pin flops
     wire cv = c[0] && c[5 + q_q] && c[4:2] == u_q;
     reg [1:0] cbt;
@@ -34,13 +35,18 @@ module ot_hgi_b2_rqu #(
     reg [DB-1:0] hp, tp, es;
     reg [DN-1:0] n;
     reg run, iv;
-    function automatic [DB-1:0] inc(input [DB-1:0] p); inc = (p == DB'(D - 1)) ? '0 : p + 1'b1; endfunction
-    function automatic [DB-1:0] dec(input [DB-1:0] p); dec = (p == '0) ? DB'(D - 1) : p - 1'b1; endfunction
+    function automatic [DB-1:0] inc(input [DB-1:0] p); inc = (p == DM1) ? '0 : p + 1'b1; endfunction
+    function automatic [DB-1:0] dec(input [DB-1:0] p); dec = (p == '0) ? DM1 : p - 1'b1; endfunction
     wire [PW-1:0] hd = qd[es];
     assign rec = {hd[PW-1:1], iv};
     wire cm  = cv && c[1];
     wire fin = run && (ret[1] || ret[2]);
-    always @(posedge clk) if (cv) qd[tp][cbt*BW +: BW] <= c[9 +: BW];
+    // beat writes with constant part-selects (the last beat is PW - 2 BW wide; PW in (2 BW, 3 BW])
+    always @(posedge clk) if (cv) begin
+        if (cbt == 2'd0) qd[tp][0 +: BW] <= c[9 +: BW];
+        if (cbt == 2'd1) qd[tp][BW +: BW] <= c[9 +: BW];
+        if (cbt == 2'd2) qd[tp][2*BW +: (PW - 2*BW)] <= c[9 +: (PW - 2*BW)];
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             c <= '0; u_q <= 3'd0; q_q <= 2'd0; cbt <= 2'd0; rb <= 2'd0; run <= 1'b0; iv <= 1'b0;
@@ -54,7 +60,7 @@ module ot_hgi_b2_rqu #(
             else if (!run && n != 0 && ret[0]) begin
                 run <= 1'b1; iv <= 1'b1; es <= (MUT == 2) ? dec(cm ? inc(tp) : tp) : hp;
             end
-            n <= n + DN'(cm) - DN'(fin);
+            n <= n + {{DB{1'b0}}, cm} - {{DB{1'b0}}, fin};
         end
     end
 endmodule
@@ -85,8 +91,10 @@ module ot_hgi_b2_rq #(
     wire [2:0] rt [0:4];
     assign rt[0] = sm_ret; assign rt[1] = su_ret; assign rt[2] = sfu_ret; assign rt[3] = att_ret; assign rt[4] = dma_ret;
     genvar g;
+    localparam [1:0] QB = Q;
     generate for (g = 0; g < 5; g = g + 1) begin : u
-        ot_hgi_b2_rqu #(.D(D), .BW(BW), .MUT(MUT)) st (.clk(clk), .rst_n(rst_n), .uid(3'(g)), .qid(2'(Q)), .cb(cb),
+        localparam [2:0] UG = g;
+        ot_hgi_b2_rqu #(.D(D), .BW(BW), .MUT(MUT)) st (.clk(clk), .rst_n(rst_n), .uid(UG), .qid(QB), .cb(cb),
             .rb(b[g]), .rec(r[g]), .ret(rt[g]));
     end endgenerate
     assign rb = {b[4][1], b[3][1], b[2][1], b[1][1], b[0][1], b[4][0], b[3][0], b[2][0], b[1][0], b[0][0]};

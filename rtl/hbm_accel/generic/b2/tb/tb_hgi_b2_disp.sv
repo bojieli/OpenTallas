@@ -12,9 +12,9 @@ module tb_hgi_b2_disp;
     wire [2:0] sm_ret, su_ret, sfu_ret, att_ret, dma_ret;
     wire [BW+8:0] cb; wire [39:0] rb;
     localparam [17:0] MLO = 18'h3C000, MHI = 18'h3E000;
-    ot_hgi_b2_disp #(.MUT(DMUT), .BW(BW)) dut (.clk(clk), .rst_n(rst_n), .sm_rec(sm_rec), .sm_ret(sm_ret), .su_rec(su_rec),
-        .su_ret(su_ret), .sfu_rec(sfu_rec), .sfu_ret(sfu_ret), .att_rec(att_rec), .att_ret(att_ret), .dma_rec(dma_rec),
-        .dma_ret(dma_ret), .mlo(MLO), .mhi(MHI), .cb(cb), .rb(rb), .busy());
+    reg [4:0] r_v = 0; reg [2197:0] r_p = 0;          // cp_die's shared record register
+    ot_hgi_b2_disp #(.MUT(DMUT), .BW(BW)) dut (.clk(clk), .rst_n(rst_n), .r_v(r_v), .r_p(r_p), .sm_ret(sm_ret),
+        .su_ret(su_ret), .sfu_ret(sfu_ret), .att_ret(att_ret), .dma_ret(dma_ret), .mlo(MLO), .mhi(MHI), .cb(cb), .rb(rb), .busy());
     // relays (die distance)
     reg [BW+8:0] cbr [0:RL]; reg [39:0] rbr [0:RL]; wire [9:0] rbq [0:3];
     integer i;
@@ -91,7 +91,9 @@ module tb_hgi_b2_disp;
             end else begin
                 id = eq[qq][uu][eh[qq][uu] % 4096]; eh[qq][uu] = eh[qq][uu] + 1;
                 if (w != rp[id]) begin fails = fails + 1;
-                    if (nmsg < 10) begin nmsg = nmsg + 1; $display("FAIL cluster %0d unit %0d record %0d payload mismatch", qq, uu, id); end
+                    if (nmsg < 10) begin : dbg integer z, m; m = -1; for (z = 0; z < nrec; z = z + 1) if (rp[z] == w) m = z;
+                        nmsg = nmsg + 1; $display("FAIL cluster %0d unit %0d record %0d payload mismatch (matches record %0d) diff bits %0d t=%0d", qq, uu, id, m, $countones(w ^ rp[id]), cyc);
+                        $display("  got hdr %h A %h C %h\n  exp hdr %h A %h C %h", w[128:1], w[129 +: 256], w[641 +: 256], rp[id][128:1], rp[id][129 +: 256], rp[id][641 +: 256]); end
                 end
             end
             mid[qq][uu] = id; mbusy[qq][uu] = 1'b1; mlat[qq][uu] = 1 + ($urandom % 24);
@@ -108,6 +110,10 @@ module tb_hgi_b2_disp;
                 end else mlat[q][u] = mlat[q][u] - 1;
             end
         end
+    end
+    // station record buses are sampled at the negedge (no race with the stations' posedge updates)
+    always @(negedge clk) if (rst_n) begin : smp
+        integer q;
         for (q = 0; q < 4; q = q + 1) begin
             if (q_sm[q][0])  got(q, 0, q_sm[q]);
             if (q_su[q][0])  got(q, 1, q_su[q]);
@@ -141,7 +147,7 @@ module tb_hgi_b2_disp;
         repeat (4) @(posedge clk); rst_n = 1;
         while (nrec < N) begin
             @(posedge clk); #0.1;
-            sm_rec[0] = 0; su_rec[0] = 0; sfu_rec[0] = 0; att_rec[0] = 0; dma_rec[0] = 0;
+            r_v = 0;
             if (sm_ret[0] && ($urandom % 3 != 0)) begin
                 uu = $urandom % 5;
                 p = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom,
@@ -162,11 +168,11 @@ module tb_hgi_b2_disp;
                 for (q = 0; q < 4; q = q + 1) if (rm[nrec][q]) begin eq[q][uu][et[q][uu] % 4096] = nrec; et[q][uu] = et[q][uu] + 1; end
                 uq[uu][ut[uu]] = nrec; ut[uu] = ut[uu] + 1;
                 @(posedge clk); #0.1;      // the cp_die register loads one cycle after the decision
-                case (uu) 0: sm_rec = W0'(p); 1: su_rec = p; 2: sfu_rec = W2'(p); 3: att_rec = W3'(p); default: dma_rec = W4'(p); endcase
+                r_p = p; r_v = 5'd1 << uu;
                 nrec = nrec + 1;
             end
         end
-        @(posedge clk); #0.1; sm_rec[0] = 0; su_rec[0] = 0; sfu_rec[0] = 0; att_rec[0] = 0; dma_rec[0] = 0;
+        @(posedge clk); #0.1; r_v = 0;
         k = 0; while (nret < nrec && k < 200000) begin @(posedge clk); k = k + 1; end
         for (q = 0; q < 4; q = q + 1) for (u = 0; u < 5; u = u + 1) if (eh[q][u] != et[q][u]) begin fails = fails + 1;
             if (nmsg < 20) begin nmsg = nmsg + 1; $display("FAIL cluster %0d unit %0d delivered %0d of %0d", q, u, eh[q][u], et[q][u]); end end

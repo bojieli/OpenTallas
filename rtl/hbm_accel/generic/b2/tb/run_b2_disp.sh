@@ -7,4 +7,4 @@ mkdir -p $O/$T
 verilator --binary -j 8 -Wno-fatal -Wno-WIDTH -Wno-lint --timing -O2 --top-module tb_hgi_b2_disp -GDMUT=$DM -GRMUT=$RM \
   --Mdir $O/$T/obj $B/ot_hgi_b2_disp.sv $B/ot_hgi_b2_rq.sv $B/tb/tb_hgi_b2_disp.sv > $O/$T/build.log 2>&1 || { tail -30 $O/$T/build.log; exit 1; }
 $O/$T/obj/Vtb_hgi_b2_disp +N=$N +SEED=$S > $O/$T/run.log 2>&1 || true
-grep -E "B2DISP|FAIL" $O/$T/run.log | head -5
+grep -E "B2DISP|FAIL" $O/$T/run.log | head -5; grep -q "B2DISP PASS" $O/$T/run.log

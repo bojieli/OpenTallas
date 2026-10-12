@@ -146,10 +146,10 @@ module ot_hgi_cp_die #(
     reg  halt;
     wire [5:0] cx = credx | ((B2 != 0) ? 6'b011111 : 6'b000000);   // B2: the dispatcher holds the per-cluster credits
     wire [2:0] sm_rt, su_rt, sfu_rt, att_rt, dma_rt;                // the per-cluster units' {fault, done, ready}
+    reg  [4:0] b2_v; reg [2197:0] b2_p;                              // B2: one shared record register (the dispatcher's input)
     generate if (B2 != 0) begin : b2
-        ot_hgi_b2_disp #(.D(4), .BW(1024)) u_disp (.clk(clk), .rst_n(rst_n), .sm_rec(sm_rec), .sm_ret(sm_rt),
-            .su_rec(su_rec), .su_ret(su_rt), .sfu_rec(sfu_rec), .sfu_ret(sfu_rt), .att_rec(att_rec), .att_ret(att_rt),
-            .dma_rec(dma_rec), .dma_ret(dma_rt), .mlo(b2_mir[17:0]), .mhi(b2_mir[35:18]), .cb(b2_cb), .rb(b2_rb), .busy());
+        ot_hgi_b2_disp #(.D(4), .BW(1024)) u_disp (.clk(clk), .rst_n(rst_n), .r_v(b2_v), .r_p(b2_p), .sm_ret(sm_rt),
+            .su_ret(su_rt), .sfu_ret(sfu_rt), .att_ret(att_rt), .dma_ret(dma_rt), .mlo(b2_mir[17:0]), .mhi(b2_mir[35:18]), .cb(b2_cb), .rb(b2_rb), .busy());
     end else begin : nb2
         assign sm_rt = sm_ret; assign su_rt = su_ret; assign sfu_rt = sfu_ret; assign att_rt = att_ret; assign dma_rt = dma_ret;
         assign b2_cb = '0;
@@ -281,6 +281,19 @@ module ot_hgi_cp_die #(
     function automatic [255:0] a_il(input [255:0] a, input [17:0] il);
         begin a_il = a; a_il[255:239] = il[17:1]; a_il[7] = il[0]; end
     endfunction
+    // B2: the five per-cluster units' records into ONE register (same packing as their legacy buses)
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) b2_v <= 5'd0;
+        else b2_v <= (B2 != 0) ? {u_v[8] && u_rdy[8], u_v[5] && u_rdy[5], u_v[3] && u_rdy[3], u_v[2] && u_rdy[2], u_v[1] && u_rdy[1]} : 5'd0;
+    end
+    always @(posedge clk)
+        if (B2 != 0) begin
+            if (u_v[1] && u_rdy[1]) b2_p <= 2198'({nB, nA, dO, dB, dA, d_hdr, 1'b1});
+            if (u_v[2] && u_rdy[2]) b2_p <= {nA, dI, dR, dO, dD, dC, dB, dA, d_sut, d_hdr, 1'b1};
+            if (u_v[3] && u_rdy[3]) b2_p <= 2198'({nA, dO, dC, dB, dA, d_hdr, 1'b1});
+            if (u_v[5] && u_rdy[5]) b2_p <= 2198'({d_pos1, nC, nB, dO, dC, dB, dA, d_sut, d_hdr, 1'b1});
+            if (u_v[8] && u_rdy[8]) b2_p <= 2198'({d_pos1, nO, nA, dO, a_il(dA, dI[25:8] + {2'd0, d_L}), d_hdr, 1'b1});
+        end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; coll_recx <= 554'd0; quant_rec <= '0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
