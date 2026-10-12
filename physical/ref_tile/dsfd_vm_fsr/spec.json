@@ -41,13 +41,17 @@
   "hold_margin_ns": 0.01,
   "pin_v": "M3 M5",
   "pin_h": "M4 M6",
-  "pin_balance": true
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4 M6",
+   "v": "M3 M5"
+  }
  },
  "job": {
   "owner": "Claude:el1011-ds-vm/fe6",
   "branch": "claude/el1011-ds-vm-fe",
-  "tag": "r2",
-  "purpose": "el1011-ds-vm/fe6 FE v6: dsfd_vm_fsr = the FE per-slice request relay stages 1..2 (FRL 2) as ONE hard tile, 4 instances in dsfd_vm_fe (one above each bgq column); N face = slice request bus from the FE stage-0 kreg, S face = same bus to the FE m_* S pins; pin flop + output flop on every bit, valid reset by pin-flopped rn",
+  "tag": "r3",
+  "purpose": "el1011-ds-vm/fe6 FE v6: dsfd_vm_fsr = the FE per-slice request relay stages 1..2 (FRL 2) as ONE hard tile, 4 instances in dsfd_vm_fe (one above each bgq column); N face = slice request bus from the FE stage-0 kreg, S face = same bus to the FE m_* S pins; pin flop + output flop on every bit, valid reset by pin-flopped rn | r3: r2 (5452e1b2c) TT +347.63 / FF -2.66 / DRC 0 = hold-only near-miss on input->reg captures (ff_i2r -2.66, r2r +3.51, out +8.77) on a structurally sound tile -> spec inhold + inhold_drv (VM8 r11 pattern: dont_touch HB4 hold cell + resizable BUFx4f driver per data input, seeded FIRM at the pin, released before DPL; leaf_inhold.tcl + leaf_inhold_release.tcl); RTL/outline unchanged",
   "benches": [
    {
     "name": "exact_gold",
@@ -72,5 +76,7 @@
  "params": {},
  "macros": [],
  "children": [],
- "inter": []
+ "inter": [],
+ "inhold": true,
+ "inhold_drv": "BUFx4f_ASAP7_75t_R"
 }

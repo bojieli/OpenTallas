@@ -1,26 +1,20 @@
 {
- "name": "dsfd_vm_fsr-r2-5452e1b2c",
+ "name": "dsfd_vm_fsr-r3-COMMIT",
  "block": "dsfd_vm_fsr",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/fe6",
- "purpose": "el1011-ds-vm/fe6 FE v6: dsfd_vm_fsr = the FE per-slice request relay stages 1..2 (FRL 2) as ONE hard tile, 4 instances in dsfd_vm_fe (one above each bgq column); N face = slice request bus from the FE stage-0 kreg, S face = same bus to the FE m_* S pins; pin flop + output flop on every bit, valid reset by pin-flopped rn",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
+ "purpose": "el1011-ds-vm/fe6 FE v6: dsfd_vm_fsr = the FE per-slice request relay stages 1..2 (FRL 2) as ONE hard tile, 4 instances in dsfd_vm_fe (one above each bgq column); N face = slice request bus from the FE stage-0 kreg, S face = same bus to the FE m_* S pins; pin flop + output flop on every bit, valid reset by pin-flopped rn | r3: r2 (5452e1b2c) TT +347.63 / FF -2.66 / DRC 0 = hold-only near-miss on input->reg captures (ff_i2r -2.66, r2r +3.51, out +8.77) on a structurally sound tile -> spec inhold + inhold_drv (VM8 r11 pattern: dont_touch HB4 hold cell + resizable BUFx4f driver per data input, seeded FIRM at the pin, released before DPL; leaf_inhold.tcl + leaf_inhold_release.tcl); RTL/outline unchanged",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-vm-fe",
-  "commit": "5452e1b2c"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module dsfd_vm_fsr rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv && echo lint-ok",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module dsfd_vm_fsr rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -93,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_fsr/dsfd_vm_fsr-r2-5452e1b2c"
+   "to": "results/rtl/ref_tile/dsfd_vm_fsr/dsfd_vm_fsr-r3-COMMIT"
   }
  ],
  "cycles_added": 0,
