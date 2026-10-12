@@ -34,13 +34,24 @@ module tb_hgi_cp_die_seq;
     wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [2074:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
     wire [690:0] am_rec; reg [2:0] am_ret = 3'b001;
     wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
+`ifdef B2
+    // el1011-hbm-b2-cp: units 1/2/3/5/8 through ot_hgi_b2_disp -> B2RL relay stages -> 4 cluster stations ot_hgi_b2_rq ->
+    // mock cluster units (ready / done like the bench's unit model); their retire reaches cp_die from the dispatcher
     reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;
+    localparam integer B2P = 1;
+    wire [1032:0] cb; wire [39:0] rb;
+`else
+    reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;
+    localparam integer B2P = 0;
+    wire [1032:0] cb; wire [39:0] rb = 40'd0;
+`endif
     wire [15:0] ux_v; reg [15:0] ux_rdy = 0, ux_done = 0, ux_fault = 0; reg [2:0] coll_ret = 3'b001, quant_ret = 3'b001;
-    ot_hgi_cp_die #(.USE_MACRO(0), .NOS(NOS), .MUT(MUT), .FQCR(BURST ? 16 : 4)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
+    ot_hgi_cp_die #(.B2(B2P), .USE_MACRO(0), .NOS(NOS), .MUT(MUT), .FQCR(BURST ? 16 : 4)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret), .idx_rec(idx_rec), .idx_ret(idx_ret),
         .am_rec(am_rec), .am_ret(am_ret),
         .sm_rec(sm_rec), .sm_ret(sm_ret), .su_rec(su_rec), .su_ret(su_ret), .sfu_rec(sfu_rec), .sfu_ret(sfu_ret),
-        .att_rec(att_rec), .att_ret(att_ret), .dma_rec(dma_rec), .dma_ret(dma_ret), .hc_rec(hc_rec), .hc_ret(hc_ret), .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
+        .att_rec(att_rec), .att_ret(att_ret), .dma_rec(dma_rec), .dma_ret(dma_ret), .hc_rec(hc_rec), .hc_ret(hc_ret), .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1),
+        .b2_cb(cb), .b2_rb(rb), .b2_mir(36'd0));
     // the sequencer-side view the vector checks use
     wire [15:0] u_v = cpd.u_cp.u_v; wire [15:0] u_rdy = cpd.u_rdy; wire [127:0] d_hdr = cpd.u_cp.d_hdr;
     wire [255:0] d_sut = cpd.u_cp.d_sut; wire [1791:0] d_desc = cpd.u_cp.d_desc; wire [146:0] d_n = cpd.u_cp.d_n;
@@ -50,8 +61,11 @@ module tb_hgi_cp_die_seq;
     always @* begin
         ux_done = u_done & ~16'h07FE; ux_fault = u_fault & ~16'h07FE;
         am_ret = {u_fault[7], u_done[7], 1'b1};
+`ifndef B2
         sm_ret = {u_fault[1], u_done[1], 1'b1}; su_ret = {u_fault[2], u_done[2], 1'b1}; sfu_ret = {u_fault[3], u_done[3], 1'b1};
-        att_ret = {u_fault[5], u_done[5], 1'b1}; dma_ret = {u_fault[8], u_done[8], 1'b1}; hc_ret = {u_fault[10], u_done[10], 1'b1};
+        att_ret = {u_fault[5], u_done[5], 1'b1}; dma_ret = {u_fault[8], u_done[8], 1'b1};
+`endif
+        hc_ret = {u_fault[10], u_done[10], 1'b1};
         coll_ret = {u_fault[6], u_done[6], 1'b1}; quant_ret = {u_fault[4], u_done[4], 1'b1}; idx_ret = {u_fault[9], u_done[9], 1'b1};
     end
     reg [63:0] tks [0:NCASE*16-1];
@@ -157,6 +171,40 @@ module tb_hgi_cp_die_seq;
     integer outst [0:15]; integer pend [0:15][0:31]; integer pdi [0:15][0:31]; integer pn [0:15];
     integer ei = 0, nd = 0, fails = 0, w, k, uu, j, fault_at = -1;
     reg [3:0] cu;
+`ifdef B2
+    localparam [15:0] B2U = 16'b0000_0001_0010_1110;            // units 1, 2, 3, 5, 8
+`ifndef B2RL
+`define B2RL 6
+`endif
+    localparam integer RL = `B2RL;                                // relay edges cmdproc <-> cluster (die centre -> cluster, 504 um each)
+    wire [9:0] rbq [0:3];
+    // the dispatcher lives in cp_die (B2 = 1); its retire pulses are the tb unit model's retire for these units
+    wire [15:0] b2_rt = {7'd0, |cpd.dma_rt[2:1], 2'd0, |cpd.att_rt[2:1], 1'b0, |cpd.sfu_rt[2:1], |cpd.su_rt[2:1], |cpd.sm_rt[2:1], 1'b0};
+    reg [1032:0] cbr [0:RL]; reg [39:0] rbr [0:RL];
+    always @* begin cbr[0] = cb; rbr[0] = {rbq[3], rbq[2], rbq[1], rbq[0]}; end
+    genvar gr;
+    generate for (gr = 1; gr <= RL; gr = gr + 1) begin : b2rl
+        always @(posedge clk) begin cbr[gr] <= cbr[gr-1]; rbr[gr] <= rbr[gr-1]; end
+    end endgenerate
+    assign rb = rbr[RL];
+    generate for (gr = 0; gr < 4; gr = gr + 1) begin : b2q
+        wire [938:0] qsm; wire [2197:0] qsu; wire [1173:0] qsfu; wire [1471:0] qatt; wire [703:0] qdma;
+        reg [4:0] mb; reg [4:0] md, mrdy; integer ml [0:4]; integer mu;
+        wire [4:0] iv = {qdma[0], qatt[0], qsfu[0], qsu[0], qsm[0]};
+        ot_hgi_b2_rq #(.Q(gr), .D(4)) rq (.clk(clk), .rst_n(rst_n), .cb(cbr[RL]), .rb(rbq[gr]),
+            .sm_rec(qsm), .sm_ret({1'b0, md[0], mrdy[0]}), .su_rec(qsu), .su_ret({1'b0, md[1], mrdy[1]}),
+            .sfu_rec(qsfu), .sfu_ret({1'b0, md[2], mrdy[2]}), .att_rec(qatt), .att_ret({1'b0, md[3], mrdy[3]}),
+            .dma_rec(qdma), .dma_ret({1'b0, md[4], mrdy[4]}));
+        initial begin mb = 0; md = 0; mrdy = 0; end
+        always @(posedge clk) for (mu = 0; mu < 5; mu = mu + 1) begin
+            mrdy[mu] <= FAST ? 1'b1 : ($urandom % 4 != 0); md[mu] <= 1'b0;
+            if (iv[mu]) begin mb[mu] = 1'b1; ml[mu] = FAST ? 0 : $urandom % 21; end
+            else if (mb[mu]) begin if (ml[mu] <= 0) begin md[mu] <= 1'b1; mb[mu] = 1'b0; end else ml[mu] = ml[mu] - 1; end
+        end
+    end endgenerate
+`else
+    localparam [15:0] B2U = 16'd0; wire [15:0] b2_rt = 16'd0;
+`endif
     task automatic retire_writes(input integer di);
         integer q; begin
             for (q = 0; q < 4096; q = q + 1)
@@ -167,7 +215,7 @@ module tb_hgi_cp_die_seq;
         ux_rdy <= FAST ? 16'hFFFF : $urandom; u_done <= 0; u_fault <= 0;
         for (uu = 1; uu < 16; uu = uu + 1) begin
             for (k = 0; k < pn[uu]; k = k + 1) pend[uu][k] = pend[uu][k] - 1;
-            if (pn[uu] > 0 && pend[uu][0] <= 0) begin
+            if (pn[uu] > 0 && (B2U[uu] ? b2_rt[uu] : (pend[uu][0] <= 0))) begin
                 u_done[uu] <= 1'b1; outst[uu] = outst[uu] - 1;
                 retire_writes(pdi[uu][0]);
                 for (k = 0; k < 31; k = k + 1) begin pend[uu][k] = pend[uu][k + 1]; pdi[uu][k] = pdi[uu][k + 1]; end

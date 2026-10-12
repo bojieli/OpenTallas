@@ -1766,6 +1766,14 @@ def kind_at(m, x, y):
     return 'field'
 
 
+def pg_pitch_grid(p):
+    """M8/M9 PG stripe pitch on the manufacturing grid (0.001 um): pdngen snaps the pitch DOWN and the derived spacing
+    (pitch/2 - width) UP to the grid and then requires pitch >= 2 x (width + spacing) -- an off-grid bump-aligned pitch
+    (63.6396 / 7 = 9.0914) failed PDN-0175 (9.0910 < 9.0920).  Rounded UP to 0.002 um so pitch/2 - 0.48 is on grid
+    (the stripe lattice drifts < 0.001 um per bump period from the bump pitch; the vsrc sites stay on the bumps)."""
+    return round(math.ceil(round(p / 0.002, 6) - 1e-9) * 0.002, 3)
+
+
 def case_ir(m, work, window, cov, peak=True, vdd_pitch=None, align=True, signal_bumps_phy=True, scale=1.0):
     work.mkdir(parents=True, exist_ok=True)
     x0, y0, x1, y1 = windows(m)[window]
@@ -1780,7 +1788,7 @@ def case_ir(m, work, window, cov, peak=True, vdd_pitch=None, align=True, signal_
             return raw
         n = math.ceil(vp / raw - 1e-9)
         n += (n % 2 == 0)
-        return round(vp / n, 4)
+        return pg_pitch_grid(vp / n)
     sites = {'VDD': [], 'VSS': []}
     for net, off in (('VDD', vp / 2), ('VSS', 0.0)):
         yy = off if off > 0 else vp
@@ -2040,7 +2048,7 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     raw = dn(0.48 / p, 0.160)
     n = math.ceil(vp / raw - 1e-9)
     n += (n % 2 == 0)
-    pitch = round(vp / n, 4)
+    pitch = pg_pitch_grid(vp / n)
     _init_real()
     M = masters(m, 1)
     ins, clip_pw = [], {}
@@ -2086,7 +2094,7 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     for net in ('VDD', 'VSS'):
         (work / f'vsrc_{net}.loc').write_text(''.join(f'{x:.3f}, {y:.3f}, {BUMP_SIZE:.1f}, {VDD_V if net == "VDD" else 0.0}\n'
                                                      for x, y in sites[net]))
-    off = round((vp / 2) % pitch, 4)
+    off = round((vp / 2) % pitch, 3)
     cfgm = real_lef(CFG_LEF)['name']
     m8m = [x for x in masters_used if x.split('_clip_')[0] in PG_M8_MASTERS]
     other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m)
@@ -2106,8 +2114,8 @@ add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name top -voltage_domains CORE
-add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch} -spacing {pitch / 2 - 0.48:.4f} -offset {off}
-add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch / 2 - 0.48:.4f} -offset {off}
+add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch:.3f} -spacing {pitch / 2 - 0.48:.3f} -offset {off:.3f}
+add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch:.3f} -spacing {pitch / 2 - 0.48:.3f} -offset {off:.3f}
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name m7 -cells {{{other}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid m7 -layers {{M7 M8}}
@@ -2182,7 +2190,7 @@ def case_psmt(out, mode):
                 s.append(f'{x:.3f}, {y:.3f}, 20.0, {0.7 if net=="VDD" else 0.0}\n'); x += vp
             y += vp
         (out / f'vsrc_{net}.loc').write_text(''.join(s))
-    pitch = 3.7435; PL = '/OpenROAD-flow-scripts/flow/platforms/asap7'
+    pitch = pg_pitch_grid(3.7435); PL = '/OpenROAD-flow-scripts/flow/platforms/asap7'
     t = f"""read_lef {PL}/lef/asap7_tech_1x_201209.lef
 read_lef /work/x.lef
 read_def /work/t.def
@@ -2191,8 +2199,8 @@ add_global_connection -net VSS -inst_pattern .* -pin_pattern ^VSS$ -ground
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name top -voltage_domains CORE
-add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch} -spacing {pitch/2-0.48:.4f} -offset {(vp/2)%pitch:.4f}
-add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch/2-0.48:.4f} -offset {(vp/2)%pitch:.4f}
+add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch:.3f} -spacing {pitch/2-0.48:.3f} -offset {(vp/2)%pitch:.3f}
+add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch:.3f} -spacing {pitch/2-0.48:.3f} -offset {(vp/2)%pitch:.3f}
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name m7 -cells {{{comps[0][1]}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid m7 -layers {{M7 M8}}
@@ -3497,7 +3505,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH, rt_strip=RT_STRIP,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -4155,6 +4163,12 @@ SSTN_CCPAD = False              # --sstn-ccpad (hbmdie-1011, compact199): a --la
 RELAY_PROGRESS = False          # --relay-progress (hbmdie-1011, compact199 die fit): a column relay must advance toward its
                                 # next chain point (mh(relay, nxt) <= mh(driver, nxt) + 15 um, inside the margin lint's 20 um
                                 # far-side slack) in EVERY placement attempt incl. the TT and last-resort fallbacks; no site -> assert
+RT_STRIP = 0.0                  # --rt-strip UM (s81-die-iter 2026-10-12): return-tree relays ('rt' nets) may also take relay
+                                # sites in the UM-high channel strip just above their column frame.  Root cause of the last
+                                # 128 SS-reach hops (bn<c> -> y_rt_<c>_<n>b_0, 515.0 um, one per column): the top slot's
+                                # L-lane qbank bn<c> sits on the frame's top edge and its return leaf runs east along that
+                                # edge to the trunk, but the frame under it is packed (q element, then the cfg / sstn row
+                                # 262 um down, saturated with relays), so relay 0 fell to the TT tier in the cfg row.
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
 # MTP-DIE hub buses (a, b, bits, port at a, port at b).  WFC (ot_rom_pkg_ctrl_wfc ports): VM write xa_we/waddr15/wdata512
@@ -4711,7 +4725,12 @@ def _hop_fix(m, P):
                 Lp = _poly_len(path)
                 (cx, cy), dch = _poly_at(path, pos[k])
                 horiz = dch in 'EW'
-                NR = dict(nxt=b, nreach=max(Lp - pos[k], PIN_SEG) + 40.0 if k == n - 1 else (n - k) * (R - 10.0)) \
+                # s81-die-iter 2026-10-12: a FRAME relay's last station needs only the reach to its load (R - 10), not
+                # the remaining path + 40 (a pin-relay rule): on rt_<c>_24b_y1 (y0 -> y1 546 um across a packed slot) the
+                # lens <= 490 um from y0 and <= 316 um from y1 was empty, so the TT tier put g_rt_<c>_24b_y1 beside y0
+                # and left a 518.4 um hop into y1 (> the 504 um SS reach) on all 128 columns.
+                last_nr = (R - 10.0) if (reg is not None and not fwd) else max(Lp - pos[k], PIN_SEG) + 40.0
+                NR = dict(nxt=b, nreach=last_nr if k == n - 1 else (n - k) * (R - 10.0)) \
                     if NXT_REACH else {}
                 w_, h_ = stn_dims([bits], horiz)
                 if not fwd and (reg is not None or not GEOMETRY_FIX):  # frame relay faces chosen later -> square
@@ -5158,10 +5177,19 @@ def _col_relays(m, P):
     by = {it.name: it for it in m['insts']}
     cen = lambda it: (it.x + it.w / 2, it.y + it.h / 2)
 
-    def ep_pt(e):
+    lpt_ = _lint_pin_pt(m) if PIN_NEED else None
+
+    def ep_pt(e, load=False):
         it_ = by[e[0]]
         if PIN_NEED and it_.kind == 'q':
             pt_ = _q_pin_pt(it_, e[1])
+            if pt_ is not None:
+                return pt_
+        if load and lpt_ is not None:
+            # s81-die-iter 2026-10-12: a load's real LEF pin (the margin lint's next chain point): the column relays of
+            # go / cfg nets (seq -> bf / cfg element) were placed toward the load CENTRE and judged against its pin
+            # (512 y_go + 384 y_cfg far-side relays, up to 169.3 um back)
+            pt_ = lpt_(e[0], e[1])
             if pt_ is not None:
                 return pt_
         return cen(it_)
@@ -5180,10 +5208,10 @@ def _col_relays(m, P):
         if d0 is None or d0.region is None or not d0.region.startswith('frame_'):
             return None
         a0 = ep_pt(eps[0])
-        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e)), default=None)
+        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e, True)), default=None)
         if fe is None:
             return None
-        L = _mh(a0, ep_pt(fe))
+        L = _mh(a0, ep_pt(fe, True))
         return math.ceil(L / BANK_RULE_UM - 1e-9) - 1
     # --lane-equal (ds-1010 lat-audit 2026-10-10): the x0 / x1 / cc lanes of one slot segment carry ONE transaction
     # (the element takes x0 and x1 in the same cycle; go rides cc through the pair sequencer), so each of them takes
@@ -5213,13 +5241,16 @@ def _col_relays(m, P):
             # column FIFO) may take relay sites between its endpoints there, not only inside the frame box
             ends_ = [by[eps[0][0]]] + [by[e[0]] for e in eps[1:] if e[0] in by]
             fr = (fr[0], min([fr[1]] + [i_.y for i_ in ends_]), fr[2], max([fr[3]] + [i_.y + i_.h for i_ in ends_]))
+        if RT_STRIP and RSV_ALLOW == 'rt':
+            # --rt-strip: the channel strip above the frame top (the return leaves of the top slot run along that edge)
+            fr = (fr[0], fr[1], fr[2], max(fr[3], min(f['y'] + column_height() + RT_STRIP, DIE[1] - EDGE)))
         a0 = ep_pt(eps[0])
-        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e)), default=None)
+        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e, True)), default=None)
         far = by[fe[0]] if fe is not None else None
         if far is None:
             out.append((bid, cls, bits, eps))
             continue
-        L = _mh(a0, ep_pt(fe))
+        L = _mh(a0, ep_pt(fe, True))
         n = math.ceil(L / BANK_RULE_UM - 1e-9) - 1
         mm = re.fullmatch(r'(xa|xb|cc)_(\d+)_(\d+)', bid) if LANE_EQUAL else None
         if mm:
@@ -5232,20 +5263,21 @@ def _col_relays(m, P):
         if n <= 0:
             out.append((bid, cls, bits, eps))
             continue
-        a, b = a0, ep_pt(fe)
-        path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
-        prev, cur = eps[0], a
-        chain = [a]
-        Lp = _poly_len(path)
+        a, b = a0, ep_pt(fe, True)
         w_, h_ = stn_dims([bits], True)
-        for k in range(n):
+
+        def _pick(path, cur, k, Lp, log=True):
+            """one column relay on `path`: (placement, tier) -- tier 'first' = within the column reach of the previous
+            point (and the load-side reach under --nxt-reach / --relay-progress); later tiers are the TT / legacy ones"""
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
             pg = _mh(cur, b) + 15.0 if RELAY_PROGRESS else None     # --relay-progress: never behind the driver
             if pg is not None:
                 NR = dict(nxt=b, nreach=min(NR.get('nreach', pg), pg))
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
-            if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
+            if pl is not None:
+                return pl, 'first'
+            if RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
                 # s81-gen: the unbounded fallback below put y_rt_0_8a_1 773.7 um from its driver (r4c frame 0); a relay
                 # first takes a box within the TT reach (inside the frame, then the strip / channel beside it)
                 nr_tt = dict(nxt=b, nreach=(n - k) * (RELAY_TT_REACH - 10.0)) if NXT_REACH else {}
@@ -5256,21 +5288,54 @@ def _col_relays(m, P):
                 if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
                     pl = _tt_place(P, cx, cy, w_, h_, cur, RELAY_TT_REACH, nr_tt.get('nxt'), nr_tt.get('nreach'), True)
                 if pl:
-                    tt_col.append(f'y_{bid}_{k}')
-            if pl is None:
-                pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40,
-                            **(dict(nxt=b, nreach=pg) if pg is not None else {}))
-            if pl is None and pg is not None and os.environ.get('OT_S81_RP_LOG'):
+                    return pl, 'tt'
+            pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40,
+                        **(dict(nxt=b, nreach=pg) if pg is not None else {}))
+            if pl is None and pg is not None and log and os.environ.get('OT_S81_RP_LOG'):
                 # diagnostic only: record the frame / path of a relay with no forward site, then legacy fallback
                 with open(os.environ['OT_S81_RP_LOG'], 'a') as fh_:
                     bx_ = (min(cur[0], b[0]) - 30, min(cur[1], b[1]) - 30, max(cur[0], b[0]) + 30, max(cur[1], b[1]) + 30)
                     occ_ = [(i_.name, i_.kind, round(i_.x, 2), round(i_.y, 2), round(i_.w, 2), round(i_.h, 2))
-                            for i_ in P.m["insts"] if i_.x < bx_[2] and bx_[0] < i_.x + i_.w and i_.y < bx_[3] and bx_[1] < i_.y + i_.h] \
-                        if True else None
+                            for i_ in P.m["insts"] if i_.x < bx_[2] and bx_[0] < i_.x + i_.w and i_.y < bx_[3] and bx_[1] < i_.y + i_.h]
                     fh_.write(json.dumps(dict(bus=bid, k=k, n=n, cls=cls, drv=cur, far=b, mid=(cx, cy), frame=fr,
                                               region=d0.region, wh=(w_, h_), occ=occ_)) + '\n')
+            if pl is None:
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
-            assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if pg is not None else (bid, k)
+            return pl, 'legacy'
+        path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
+        if cls == 'ret_tree' and RELAY_PROGRESS:
+            # s81-die-iter 2026-10-12: the return tree's vertical-first L crosses the packed q slots where relay rows lie
+            # ~546 um apart (rt_<c>_24b: y0 -> y1 546 um, TT tier, 518.4 um hop on all 128 columns).  Dry-run both L
+            # paths and keep the one whose relays all place in the first (column-reach) tier, default L on ties.
+            best_ = None
+            for j_, cand in enumerate((path, [a, (b[0], a[1]), b])):
+                Lc, cur_, bad = _poly_len(cand), a, 0
+                for k in range(n):
+                    pl_, tier_ = _pick(cand, cur_, k, Lc, log=False)
+                    if pl_ is None:
+                        bad += 100
+                        break
+                    bad += tier_ != 'first'
+                    cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
+                if best_ is None or bad < best_[0]:
+                    best_ = (bad, j_, cand)
+                if bad == 0:
+                    break
+            if best_[1]:
+                path = best_[2]
+                m.setdefault('col_relay_path_pick', []).append(bid)
+        prev, cur = eps[0], a
+        chain = [a]
+        Lp = _poly_len(path)
+        for k in range(n):
+            pl, tier = _pick(path, cur, k, Lp)
+            if HOPDBG and bid.startswith(HOPDBG):    # OT_S81_HOPDBG=<bus prefix>: column relay trace (stderr)
+                print('COLDBG', bid, cls, d0.name, d0.kind, k, n, round(Lp, 1), [tuple(round(v, 1) for v in q) for q in path],
+                      tuple(round(v, 1) for v in cur), pl and tuple(round(v, 1) for v in pl), (w_, h_), tier, fr,
+                      file=sys.stderr)
+            if tier == 'tt' and pl:
+                tt_col.append(f'y_{bid}_{k}')
+            assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if RELAY_PROGRESS else (bid, k)
             it = P.add(Inst(f'y_{bid}_{k}', f'dsfd_rly_{bits}', pl[0], pl[1], w_, h_, kind='rly',
                             region=d0.region, power_w=bits * FLOP_CLK_W * 1.5))
             out.append((f'{bid}_y{k}', cls, bits, [prev, (it.name, 'i')]))
@@ -6658,6 +6723,8 @@ def glue_rtl(m):
                      '    // crossing is bounded at 382-385 ps, beyond a single-register window (data changes every cycle), so',
                      '    // it crosses through the d8g1 meso FIFO (the closed die crossing: arcs settle in 1.5 T - 60 ps, low',
                      '    // guard flop at 1.5 T) with registered pins.  Lane vr: i[0] rst_n, i[1] valid.',
+                     '    // Hold pad (s81-die-iter 2026-10-12): i -> ir passes a 120 ps (FF) dont_touch delay chain placed in',
+                     '    // this stage (its feeder is the adjacent end block\'s boundary flops); tools/s81/die_sta.py INPUT_PAD.',
                      _sync('rsync', 'ck[0]', 'i[0]'),
                      f'    reg [{w - 1}:0] ir; always @(posedge cw[0]) ir <= i;',
                      '    wire rv, wl, rl, wf, rf_, wr; wire [%d:0] rq;' % (w - 3),
@@ -6962,6 +7029,8 @@ def die_options(ap):
                     'real LEF pin centroid (not the element centre)')
     ap.add_argument('--sstn-ccpad', action='store_true', help='--lane-equal cc padding as extra cc registers in the '
                     'driving slot station (no floating pad relay)')
+    ap.add_argument('--rt-strip', type=float, default=0.0, help='return-tree relays may use a UM-high strip above their '
+                    'column frame (the top-edge return leaves run there; s81-die-iter 10-12)')
     ap.add_argument('--relay-progress', action='store_true', help='column relays only on sites that advance toward the next '
                     'chain point (no far-side relay); a packed frame without such a site fails loudly')
     ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
@@ -7155,8 +7224,9 @@ def apply_options(a):
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
-    global RELAY_PROGRESS
+    global RELAY_PROGRESS, RT_STRIP
     RELAY_PROGRESS = bool(getattr(a, 'relay_progress', False))
+    RT_STRIP = float(getattr(a, 'rt_strip', 0.0) or 0.0)
     global SSTN_CCPAD
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     global PIN_NEED

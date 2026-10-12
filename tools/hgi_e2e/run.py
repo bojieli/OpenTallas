@@ -35,7 +35,7 @@ SRC_BASE = [
     "rtl/hbm_accel/loader/service_native/ot_hbm_loader_native_endpoint.sv",
 ]
 SRC_REAL = {
-    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_kvw.sv",
+    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_back.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_kvw.sv",
             # hgi-1010/c: the mover's landing RAM (a 256 x 256 macro; the sequencer ring stays USE_MACRO 0)
             "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"],
     "quant": ["rtl/hbm_accel/generic/ot_hgi_quant_unit.sv", "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
@@ -262,6 +262,8 @@ def script(a):
         srcs = srcs.replace("$S/" + TOKEDGE, "$O/token_edge.sv") + " $O/collar_mtp.sv"
     LAST_SRC[:] = [x for x in src if x != "WHATIF"] + (["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"]
                                                        if "WHATIF" in src else []) + ([COLLAR] if mtp else [])
+    b2 = int(gd.get("B2", "0"))
+    b2pre = (f"${{PY:-python3}} $S/tools/hgi_e2e/b2.py traffic $V --out $O/b2_traffic.json > $O/b2.log 2>&1\n" if b2 else "")
     return f"""#!/bin/bash
 # hgi-e2e run: vehicle {a.vehicle}, real units [{', '.join(real) or 'none'}]; FLAT {a.flat} KLAT {a.klat} VLAT {a.vlat}
 set -e
@@ -274,7 +276,7 @@ $VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno
   {srcs} \\
   {' '.join('$S/' + t for t in TB)} --Mdir $O/obj -o tb > $O/build.log 2>&1
 set +e
-$O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt ${{E2E_PLUS:-}} > $O/run.log 2>&1; rc=$?
+{b2pre}$O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt ${{E2E_PLUS:-}} > $O/run.log 2>&1; rc=$?
 echo "rc=$rc" >> $O/run.log
 """
 
@@ -286,10 +288,16 @@ def report(run: Path, vec: Path | None):
     for line in (run / "e2e_records.txt").read_text().splitlines():
         if line.startswith("#"):
             continue
+        if line.startswith("B2"):
+            t = line.split()
+            b2r = summ.setdefault("b2", {}) if t[0] == "B2" else summ.setdefault("b2_units", {}).setdefault(t[1], {})
+            for i in range(1 if t[0] == "B2" else 2, len(t) - 1, 2):
+                b2r[t[i]] = int(t[i + 1])
+            continue
         if line.startswith("SUMMARY"):
             t = line.split()[1:]
-            summ = {t[i]: (int(t[i + 1]) if re.fullmatch(r"-?\d+", t[i + 1]) else t[i + 1]) for i in range(0, len(t) - 1, 2)
-                    if not t[i].startswith("dispatched")}
+            summ = {**{k_: v_ for k_, v_ in summ.items() if k_.startswith("b2")}, **{t[i]: (int(t[i + 1]) if re.fullmatch(r"-?\d+", t[i + 1]) else t[i + 1]) for i in range(0, len(t) - 1, 2)
+                    if not t[i].startswith("dispatched")}}
             m = re.search(r"dispatched (\d+)/(\d+)", line)
             summ["dispatched"], summ["golden_records"] = int(m.group(1)), int(m.group(2))
             continue
@@ -313,6 +321,8 @@ def report(run: Path, vec: Path | None):
                                     r"doorbell->completion (-?\d+)", log).groups() if "E2E completion" in log else None,
                per_unit={k: dict(v, sim_cost=round(v["sim_cost"], 1)) for k, v in per_unit.items()},
                records=rows, first_dispatch_cycle=t0,
+               b2_traffic=({k_: v_ for k_, v_ in json.loads((run / "b2_traffic.json").read_text()).items() if k_ != "rows"}
+                           if (run / "b2_traffic.json").exists() else None),
                rtl_lines=[x for x in log.splitlines() if x.startswith("E2E") or "HGI_E2E" in x][:200])
     return out
 

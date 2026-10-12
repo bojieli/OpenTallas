@@ -37,6 +37,7 @@ module tb_hgi_mover_kport;
     parameter integer KVB_N = 16;                       // records a KVWB burst
     parameter integer KVB_MAX = 0;                      // gate: posted cycles / record x 10 (0: report only)
     parameter integer ONLY_KVB = 0;                     // 1: the KVWB cases only
+    parameter integer PX = 0;                           // the mover's registered issue decisions + vmq output (hbm-fq/mvf)
     reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
     // ---- mover
     reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_done, mv_fault, mv_src;
@@ -46,7 +47,7 @@ module tb_hgi_mover_kport;
     wire [337:0] vmq; wire [279:0] wl; reg wl_done = 0; reg [273:0] vmr = 0;
     wire [4:0] kp_rdy, kp_rsp_v, kp_rsp_we, kp_last; wire [79:0] kp_rtag; wire [5*256-1:0] kp_rdata; wire kp_fault;
     wire [512:0] vr2q; reg [8256:0] vr2r = '0;
-    ot_hgi_dma_mover #(.MUT(MUT), .VR2(VR2), .SVR2(SVR2), .KVW(KVW)) u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
+    ot_hgi_dma_mover #(.MUT(MUT), .VR2(VR2), .SVR2(SVR2), .KVW(KVW), .PX(PX)) u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
         .mv_fault(mv_fault), .mv_src(mv_src), .fence_v(1'b0), .fence_rdy(), .fence_done(),
         .k_req_v(k_req_v), .k_req_rdy(kp_rdy[0]), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(kp_rsp_v[0]), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(kp_rsp_we[0]),

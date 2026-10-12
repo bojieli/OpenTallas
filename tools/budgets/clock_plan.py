@@ -720,6 +720,18 @@ def balance(a):
             continue
         pad = max(0.0, need[v] + L - tt(v))
         out[v] = [si[v][0] + pad * kss, si[v][1] + 0.53 * pad * kss]
+    # own-tree partners of an early view (r22ko4 rs_bump reset sync, ucie_kv FDI -> d2d_rom) moved early with the
+    # tree but the view's registers sit one insertion later: pad their entries up to the view register instant
+    # (it3: rs_bump -> d2d_rom FF hold -449.9, rs_bump -> lifted rly_rst_fwd -311.1)
+    own_pad = {}
+    for t in early:
+        vs = [v for v in tsinks[t] if v in deficit]
+        tgt = sum(flop(v, out) for v in vs) / len(vs)
+        for k in tsinks[t]:
+            if k not in deficit and tgt - flop(k, out) > 0:
+                p_ = tgt - flop(k, out)
+                out[k] = [out[k][0] + p_ * kss, out[k][1] + 0.53 * p_ * kss]
+                own_pad[k] = round(p_, 1)
     for v in deficit:
         pt = [p for p in partners[v] if tree_of(p) != tree_of(v) and dom.get(tree_of(p)) == dom[tree_of(v)]]
         rows[v] = dict(master=m_of(v), view_insertion_tt=vi[v][0], view_insertion_ff=vi[v][1], early_tree=tree_of(v) in early,
@@ -728,12 +740,63 @@ def balance(a):
                        flop_tt_minus_partners=round(flop(v, out) - sum(flop(p, out) for p in pt) / len(pt), 1),
                        flop_ff_minus_partners=round(out[v][1] + mid(v, 1) - sum(out[p][1] + mid(p, 1) for p in pt) / len(pt), 1))
     mixed = sorted(k for k in si if tree_of(k) in early and k not in deficit)
+    tgt_rep = {}
+    if getattr(a, 'sink_target', False):
+        # qwendie-1012 per-sink TARGET LATENCY (supersedes the early-tree/lift result for every synchronous domain):
+        # it3 left 196 deep views / relays on SHARED trees up to 527 ps late (port_tiles: 461-683 ps own trees;
+        # rly_seq_coll_50 on clk_r101 vs its clk_r114 partner = tree-to-tree imbalance, TT -194.85).  One register
+        # instant T_D per clock domain: every die clock pin k gets pin arrival p(k) = T_D - insertion(k) (relay /
+        # plain sink: insertion 0 at die level beyond its ETM).  Realisation: k's region root BEFORE its planned
+        # pad is the earliest tap (min_tt = recorded arrival - region pad, same branch depth as the recorded tree);
+        # T_D = max_k(min_tt(k) + insertion(k)) is the earliest feasible instant; each region keeps ONE delay line
+        # (its median need) and a sink whose need differs from it by > branch_tol_ps gets a dedicated branch from the
+        # pre-pad region root with its own delay line (CTS pin insertion-delay target = the die contract's clock-
+        # entry target latency).  SS : FF of every added delay 1 : 0.53 (as the region pads); FF residual reported.
+        R_ = P.get('regions', {})
+        padtt = lambda k: R_.get(sr[k], {}).get('planned_root_pad_ss_ps', 0.0) / kss
+        def floor_(k):        # earliest tap: pre-pad region root + the region tree's shortest root->sink path
+            r_ = R_.get(sr[k], {})
+            ins_, rt_ = r_.get('insertion_ss') or {}, r_.get('region_tree_ss') or {}
+            m_ = tt(k) - padtt(k)
+            if ins_ and rt_:
+                m_ = min(m_, (ins_['mean'] - r_.get('planned_root_pad_ss_ps', 0.0) - rt_['mean'] + rt_['min']) / kss)
+            return max(0.0, m_)
+        mn = {k: floor_(k) for k in si}
+        byd = defaultdict(list)
+        for k in si:
+            if tt(k) > 0 or k in vi:           # clock source pins (pll outputs, tree roots) are not register sinks
+                byd[dom.get(tree_of(k), '?')].append(k)
+        nbr, worst_br = 0, 0.0
+        for D_, ks in byd.items():
+            T_ = max(mn[k] + mid(k, 0) for k in ks)
+            need_ = {k: T_ - mid(k, 0) - mn[k] for k in ks}
+            byr = defaultdict(list)
+            for k in ks:
+                byr[sr[k]].append(need_[k])
+            med = {r_: sorted(l)[len(l) // 2] for r_, l in byr.items()}
+            br = [k for k in ks if abs(need_[k] - med[sr[k]]) > a.branch_tol_ps]
+            nbr += len(br)
+            worst_br = max([worst_br] + [abs(need_[k] - med[sr[k]]) for k in br])
+            for k in ks:
+                dl = T_ - mid(k, 0) - tt(k)
+                out[k] = [si[k][0] + dl * kss, si[k][1] + 0.53 * dl * kss]
+            ffi = [out[k][1] + mid(k, 1) for k in ks]
+            ocv_ = max([C.OCV * kss * (need_[v] + need_[p]) for v in ks for p in partners.get(v, ())
+                        if p in need_ and sr[p] != sr[v]], default=0.0)
+            tgt_rep[D_] = dict(sinks=len(ks), target_register_instant_tt_ps=round(T_, 1),
+                               max_region_delay_line_tt_ps=round(max(med.values()), 1),
+                               dedicated_branches=len(br), ff_register_instant_spread_ps=round(max(ffi) - min(ffi), 1),
+                               worst_pair_added_ocv_ss_ps=round(ocv_, 1),
+                               branches=sorted(br)[:400])
+        print(json.dumps(dict(sink_target={D_: {k_: v_ for k_, v_ in r_.items() if k_ != 'branches'} for D_, r_ in tgt_rep.items()},
+                              branches=nbr, worst_branch_offset_tt=round(worst_br, 1))))
     P['sink_insertion'] = {k: [round(x[0], 1), round(x[1], 1)] for k, x in out.items()}
     P['view_pin_insertion'] = {k: dict(tt=list(x[0]), ff=list(x[1])) for k, x in vi.items()}
     P['view_balance'] = dict(method=balance.__doc__.strip(), libs=str(lib), min_late_ps=a.min_late_ps,
                              lift_clock_roots=sorted(doms), lift_tt_ps=round(L, 1), lift_ss_ps=round(L * kss, 1), lift_ff_ps=round(0.53 * L * kss, 1),
-                             early_trees=sorted(early), own_tree_partners_moved=mixed, views=len(vi),
-                             late_left_on_shared_trees={v: round(deficit[v], 1) for v in sorted(left)}, rows=rows)
+                             early_trees=sorted(early), own_tree_partners_moved=mixed, own_tree_entry_pad_tt=own_pad, views=len(vi),
+                             late_left_on_shared_trees={v: round(deficit[v], 1) for v in sorted(left)}, rows=rows,
+                             sink_target=tgt_rep or None, branch_tol_ps=getattr(a, 'branch_tol_ps', None))
     Path(a.out).write_text(json.dumps(P, indent=1, default=str) + '\n')
     er = [r for r in rows.values() if r['early_tree']]
     print(json.dumps(dict(views=len(vi), late=len(deficit), lift_tt=round(L, 1), early=sorted(early), moved=len(mixed),
@@ -750,6 +813,8 @@ def main():
     ap.add_argument('--plan', help='balance: recorded plan.json')
     ap.add_argument('--libs', help='balance: the STA libs dir (qfd_etm_{tt,ff}.lib [+ qfd_etm_<master>_{tt,ff}.lib])')
     ap.add_argument('--min-late-ps', type=float, default=60.0, help='balance: register-instant lateness vs partners that gets balanced (the setup uncertainty)')
+    ap.add_argument('--sink-target', action='store_true', help='balance: one register instant per clock domain, per-sink pin target latency (region delay line + dedicated branches)')
+    ap.add_argument('--branch-tol-ps', type=float, default=25.0, help='balance --sink-target: need offset from the region delay line that gets a dedicated branch')
     ap.add_argument('--group', default='trunk', choices=['trunk', 'region', 'htop', 'hreg'])
     ap.add_argument('--buffer-um', type=float, default=150.0)
     ap.add_argument('--shards', type=int, default=0, help='emit: split the trees into N independent CTS cases run in parallel')
