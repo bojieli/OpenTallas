@@ -119,6 +119,7 @@ def main():
             for x in json.loads(a.ds_run.read_text())["results"]:
                 for s_ in x.get("row_gather") or []:
                     rg[x["layer"]] = s_
+        DT.apply_dyn_counts(recs, rg)
         cf = DT.NativeCost(d["ops"], recs, row_gather=rg)
         k = {u: v["ds_L0"]["ratio"] for u, v in rt.items() if "ds_L0" in v}
         s0 = T.schedule(recs, DT.POS, "S2", cost_fn=cf)["total_cycles"]
