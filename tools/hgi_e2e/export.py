@@ -590,7 +590,7 @@ def main():
     ap.add_argument("--layout", choices=("flat", "b2"), default="flat",
                     help="flat (default, the one-VM die: fallback) or b2 (4 clusters, distributed VM: also writes OUT/b2/)")
     ap.add_argument("--b2-pass", type=int, default=1, help=argparse.SUPPRESS)
-    ap.add_argument("--b2-mutant", choices=("stale_mirror", "chain_naive"), help="b2: a broken B2 machine the check must refuse")
+    ap.add_argument("--b2-mutant", choices=("stale_mirror", "chain_naive", "alias_dead"), help="b2: a broken B2 machine the check must refuse")
     ap.add_argument("--b2-allow", action="store_true", help="b2: write the verdict but do not refuse a placement violation")
     a = ap.parse_args()
     if a.layout == "b2":
@@ -611,7 +611,7 @@ def export_b2(a):
     b2o = a.out / "b2"
     b2o.mkdir(parents=True, exist_ok=True)
     if a.b2_pass == 1:
-        B2 = B.Collect()
+        B2 = B.Collect(mutant=a.b2_mutant)
         t0 = time.time()
         rc = run(a)
         B2.placement().save(b2o / "cls_per_die.npz")

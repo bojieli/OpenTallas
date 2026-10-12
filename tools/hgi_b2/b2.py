@@ -338,24 +338,51 @@ def split_of(M, r, die, L):
 class Collect:
     """Pass 1: run the golden program, record which clusters need every VM word."""
 
-    def __init__(self):
+    def __init__(self, mutant=None):
+        """mutant alias_dead (the alias proof's teeth): every word's lifetime collapsed to its first touch, so the
+        allocator reuses words that are still live; the rank-0 alias proof must refuse it"""
+        self.mutant = mutant
         # PER DIE (rank): every HBM die is its own VM address space with its own cmdproc slice map, and an SPMD
         # program's rank-dependent bases (EP slot rows, per-rank expert columns) touch different words on every die.
         # The union over the 96 ranks counted every rank's private rows against ONE die's mirror (DS L2: 125,091 /
         # 32,768); the per-die maps are what each die loads.
         self.rk = {}
         self.modes = Counter()
+        self.t = 0                  # record clock (program order), shared by every die
+        self.trace = []             # rank 0: (touched words, values before, values after) per record: the alias proof
+        self.vm0 = None             # rank 0 VM before the first record
+        self.outside = []           # rank 0: records that changed VM words outside their tracked operands
 
     def _r(self, rank):
         if rank not in self.rk:
             self.rk[rank] = dict(need=np.zeros(VMW, np.uint8),   # bit q: cluster q reads / writes it in a split record
                                  central=np.zeros(VMW, bool),    # a central ring client reads / writes it
                                  subs=set(),                     # per-cluster VM sub-operands (one descriptor each)
-                                 crecs=[])                       # the VM words of every central record, program order
+                                 crecs=[],                       # the VM words of every central record, program order
+                                 # liveness (record clock): first / last touch, first touch a pure write, last touch
+                                 # writes, ever written
+                                 first=np.full(VMW, np.iinfo(np.int32).max, np.int32), last=np.full(VMW, -1, np.int32),
+                                 fw=np.zeros(VMW, bool), lw=np.zeros(VMW, bool), wr=np.zeros(VMW, bool))
         return self.rk[rank]
 
+    def _touch(self, D, rd, wr):
+        """liveness: this record (clock self.t) reads rd and writes wr (logical VM words)"""
+        rd = np.unique(rd[(rd >= 0) & (rd < VMW)]) if len(rd) else np.zeros(0, np.int64)
+        wr = np.unique(wr[(wr >= 0) & (wr < VMW)]) if len(wr) else np.zeros(0, np.int64)
+        a = np.union1d(rd, wr)
+        if not a.size:
+            return a, np.zeros(0, bool)
+        isw = np.isin(a, wr)
+        new = D["first"][a] > self.t
+        D["first"][a[new]] = self.t
+        D["fw"][a[new]] = isw[new] & ~np.isin(a[new], rd)
+        D["last"][a] = self.t
+        D["lw"][a] = isw
+        D["wr"][wr] = True
+        return a, np.isin(a, rd)
+
     def _central(self, M, r, die, L):
-        xs = []
+        xs, rd, wr = [], [], []
         for nm, d in r.desc.items():
             if d.space == "VM":
                 try:
@@ -363,19 +390,26 @@ class Collect:
                     a = a[(a >= 0) & (a < VMW)]
                     self._r(die.rank)["central"][a] = True
                     xs.append(a)
-                except MC.Fault:
+                    (wr if nm in ("O", "R") else rd).append(a)      # a central client's O / R: written (the alias
+                except MC.Fault:                                    # proof refuses it if one is also read)
                     pass
+        rd.append(_cp_words(M, r, die, L))
         if xs:
             self._r(die.rank)["crecs"].append(np.unique(np.concatenate(xs)))
+        cat = lambda xs_: np.concatenate(xs_) if xs_ else np.zeros(0, np.int64)   # noqa: E731
+        return self._touch(self._r(die.rank), cat(rd), cat(wr))
 
     def wrap(self, key, fn):
         def run(M, r, L):
             dies, cur = M.dies, M.cur
+            t0 = None
             try:
                 if central(M, M.rec_of(dies[0], r), dies[0], L):
                     for die in dies:
                         M.dies, M.cur = [die], M.rec_of(die, r)
-                        self._central(M, M.cur, die, L)
+                        a = self._central(M, M.cur, die, L)
+                        if die.rank == 0:
+                            t0 = (die, a)
                     self.modes[(r.unit, "CENTRAL" if r.unit not in SPLIT_UNITS else "HOME")] += 1
                 else:
                     for die in dies:
@@ -387,21 +421,49 @@ class Collect:
                         for (nm, q), t in s.sub.items():
                             if nm != "B" and t[1] > 0 and t[2] > 0:
                                 D["subs"].add(tuple(int(x) for x in t))
+                        rd, wr = [_cp_words(M, M.cur, die, L)], []
                         for nm, role, kind, per in s.ops:
                             if kind == "grid":
                                 for q in range(NQ):
                                     D["need"][per[q]] |= np.uint8(1 << q)
+                                    (rd if role == "in" else wr).append(np.asarray(per[q], np.int64))
                             elif kind == "whole":
                                 D["need"][per] |= np.uint8(0xF)
+                                (rd if role == "in" else wr).append(np.asarray(per, np.int64))
+                        a = self._touch(D, np.concatenate(rd), np.concatenate(wr) if wr else np.zeros(0, np.int64))
+                        if die.rank == 0:
+                            t0 = (die, a)
             finally:
                 M.dies, M.cur = dies, cur
-            return fn(M, r, L)
+            if t0 is None:
+                d0 = next((d for d in dies if d.rank == 0), None)
+                t0 = (d0, (np.zeros(0, np.int64), np.zeros(0, bool))) if d0 is not None else None
+            if t0 is not None:
+                die0, a = t0
+                full = die0.vm[:VMW].copy()
+                if self.vm0 is None:
+                    self.vm0 = full.copy()
+                a, rm = a
+                before = full[a]
+            out = fn(M, r, L)
+            if t0 is not None:
+                now = die0.vm[:VMW]
+                extra = np.setdiff1d(np.nonzero(now != full)[0], a)
+                if extra.size:
+                    self.outside.append(f"alias proof: {r.unit}.{r.op} changed {extra.size} VM words outside its "
+                                        f"tracked operands (first {int(extra[0])})")
+                self.trace.append((a, rm, before, now[a].copy()))
+                self.vm_final = now.copy()
+            self.t += 1
+            return out
         return run
 
     def placement(self):
         """one Placement per die (rank); PlacementSet.of(rank)"""
         self.promoted = 0
-        return PlacementSet({rk: self._placement(D) for rk, D in sorted(self.rk.items())} or {0: self._placement(self._r(0))})
+        ps = PlacementSet({rk: self._placement(D) for rk, D in sorted(self.rk.items())} or {0: self._placement(self._r(0))})
+        ps.proof = self.proof(ps.of(0))
+        return ps
 
     def _placement(self, D):
         cls = np.full(VMW, -1, np.int8)
@@ -438,7 +500,55 @@ class Collect:
             self.promoted += ch
             if not ch:
                 break
-        return Placement(cls)
+        end = np.iinfo(np.int32).max
+        touched = cls >= 0
+        live_in = touched & ~D["fw"]                             # first touch reads it: in the VM image at entry
+        live_out = touched & (D["lw"] | ~D["wr"])                # last touch writes it, or never written (persistent)
+        s_w = np.where(live_in, -1, D["first"]).astype(np.int64)
+        e_w = np.where(live_out, end, D["last"]).astype(np.int64)
+        if self.mutant == "alias_dead":
+            e_w = np.maximum(s_w, D["first"]).astype(np.int64)
+        return Placement(cls, *allocate(cls, D["subs"], s_w, e_w), live_in=live_in, live_out=live_out)
+
+    def proof(self, pl):
+        """rank 0 alias proof (value level): replay every record on the PHYSICAL slices (a word aliased with a dead
+        one shares its physical address): each record must see, on every word it touches, the value the logical run
+        saw, and every live-out word must end with the logical final value.  Returns violation strings."""
+        if self.vm0 is None:
+            return []
+        out = list(self.outside[:5])
+        sa = np.where(pl.cls == MIR, REPL_BASE + pl.phys - LOCAL_W, pl.cls.astype(np.int64) * LOCAL_W + pl.phys)
+        ph = np.zeros(SPEC_WORDS, np.uint32)
+        li = np.nonzero(pl.live_in)[0]
+        if np.unique(sa[li]).size != li.size:
+            out.append(f"alias proof: {li.size - np.unique(sa[li]).size} live-in words share a physical word")
+        ph[sa[li]] = self.vm0[li]
+        own = np.full(SPEC_WORDS, -1, np.int64)                 # the logical word last written to each physical word
+        own[sa[li]] = li
+        D0 = self._r(0)
+        bad = 0
+        for i, (a, rm, before, after) in enumerate(self.trace):
+            k = pl.cls[a] >= 0
+            a_, b_ = a[k], before[k]
+            m = (ph[sa[a_]] != b_) & rm[k]                     # only what the record READS must be intact
+            if m.any():
+                bad += 1
+                if bad <= 3:
+                    w0 = int(a_[m][0])
+                    o = int(own[sa[w0]])
+                    lv = lambda x: (int(D0["first"][x]), int(D0["last"][x]), bool(pl.live_in[x]), bool(pl.live_out[x]))  # noqa: E731
+                    out.append(f"alias proof: record #{i} reads {int(m.sum())} words whose physical copy was "
+                               f"clobbered (first logical {w0} life {lv(w0)}, physical owner {o} life "
+                               f"{lv(o) if o >= 0 else None})")
+            ph[sa[a_]] = after[k]
+            own[sa[a_]] = a_
+        lo = np.nonzero(pl.live_out)[0]
+        m = ph[sa[lo]] != self.vm_final[lo]
+        if m.any():
+            out.append(f"alias proof: {int(m.sum())} live-out words end with a wrong physical value")
+        if bad > 3:
+            out.append(f"alias proof: {bad} records in all read a clobbered word")
+        return out
 
 
 # ------------------------------------------------------------------------------------------------ the map
@@ -471,37 +581,124 @@ class PlacementSet:
         t["per_die"] = "rank 0 shown; every die has its own map (SPMD rank-dependent bases)"
         return t
 
-    def slice_image(self, vm, q):
-        return self.r0.slice_image(vm, q)
+    def slice_image(self, vm, q, live=None):
+        return self.r0.slice_image(vm, q, live)
 
-    def spec_image(self, vm):
-        return self.r0.spec_image(vm)
+    def spec_image(self, vm, live=None):
+        return self.r0.spec_image(vm, live)
 
     def save(self, f):
         rks = sorted(self.by_rank)
-        np.savez_compressed(f, ranks=np.array(rks), cls=np.stack([self.by_rank[r].cls for r in rks]))
+        P = [self.by_rank[r] for r in rks]
+        ex = json.dumps(dict(ext=[{str(k): v for k, v in p.use.items()} for p in P],
+                             peak=[{str(k): v for k, v in p.peak.items()} for p in P], proof=getattr(self, "proof", [])))
+        np.savez_compressed(f, ranks=np.array(rks), cls=np.stack([p.cls for p in P]), phys=np.stack([p.phys for p in P]),
+                            live_in=np.stack([p.live_in for p in P]), live_out=np.stack([p.live_out for p in P]),
+                            extra=np.array(ex))
 
     @staticmethod
     def load(f):
         z = np.load(f)
-        return PlacementSet({int(r): Placement(c) for r, c in zip(z["ranks"], z["cls"])})
+        if "phys" not in z:
+            return PlacementSet({int(r): Placement(c) for r, c in zip(z["ranks"], z["cls"])})
+        ex = json.loads(str(z["extra"]))
+        dk = lambda d: {int(k): v for k, v in d.items()}   # noqa: E731
+        ps = PlacementSet({int(r): Placement(c, ph, dk(e), dk(pk), li, lo) for r, c, ph, li, lo, e, pk in
+                           zip(z["ranks"], z["cls"], z["phys"], z["live_in"], z["live_out"], ex["ext"], ex["peak"])})
+        ps.proof = ex["proof"]
+        return ps
+
+
+def packed(cls):
+    """every class's words packed in logical order (no reuse): the layout the affine check was written against"""
+    pp = np.full(VMW, -1, np.int64)
+    for c in range(NQ + 1):
+        w = np.nonzero(cls == c)[0]
+        pp[w] = np.arange(len(w))
+    return pp
+
+
+def allocate(cls, subs, s_w, e_w):
+    """LIVENESS-based physical allocation per region (local q, mirror).  Blocks: the packed layout's intervals covered
+    by one cluster sub-descriptor are merged (a block moves as a whole, a translation, so every per-cluster descriptor
+    stays 2-D affine); words no descriptor covers (central-only) form runs of equal lifetime.  A block lives
+    [min start, max end] on the record clock (start -1 = live-in, end int32 max = live-out); blocks whose lifetimes
+    are disjoint share physical words (first fit by offset, in start order).  Returns (phys, extent per class,
+    peak live words per class)."""
+    pp = packed(cls)
+    phys = np.full(VMW, -1, np.int64)
+    ext, peak = {}, {}
+    END = np.iinfo(np.int32).max
+    for c in range(NQ + 1):
+        w = np.nonzero(cls == c)[0]
+        n = w.size
+        ext[c] = peak[c] = 0
+        if not n:
+            continue
+        cov = np.zeros(n + 1, np.int64)              # interval cover on the packed axis (difference array)
+        for b, nn, m, st, ist in subs:
+            la = ga(b, st, ist, range(m), range(nn))
+            la = la[(la >= 0) & (la < VMW)]
+            if not la.size or cls[la[0]] != c:
+                continue
+            lo, hi = int(pp[la].min()), int(pp[la].max())
+            if hi > lo:
+                cov[lo + 1] += 1                     # words lo+1..hi continue lo's block
+                cov[hi + 1] -= 1
+        join = np.cumsum(cov)[:n] > 0
+        sw, ew = s_w[w], e_w[w]
+        diff = np.ones(n, bool)
+        diff[1:] = (sw[1:] != sw[:-1]) | (ew[1:] != ew[:-1])
+        newblk = ~join & diff                        # an uncovered word continues a run of equal lifetime
+        newblk[0] = True
+        bid = np.cumsum(newblk) - 1
+        nb = int(bid[-1]) + 1
+        bs = np.full(nb, np.iinfo(np.int64).max, np.int64)
+        be = np.full(nb, np.iinfo(np.int64).min, np.int64)
+        np.minimum.at(bs, bid, sw)
+        np.maximum.at(be, bid, ew)
+        blo = np.nonzero(newblk)[0]
+        bsz = np.diff(np.concatenate([blo, [n]]))
+        placed = []                                  # (off, size, start, end)
+        off_of = np.zeros(nb, np.int64)
+        for i in sorted(range(nb), key=lambda i: (bs[i], -bsz[i])):
+            s0, e0, z = bs[i], be[i], int(bsz[i])
+            busy = sorted((o, o + zz) for o, zz, ss, ee in placed if not (ee < s0 or e0 < ss))
+            off = 0
+            for o, oe in busy:
+                if off + z <= o:
+                    break
+                off = max(off, oe)
+            placed.append((off, z, s0, e0))
+            off_of[i] = off
+        phys[w] = (LOCAL_W if c == MIR else 0) + off_of[bid] + (np.arange(n) - blo[bid])
+        ext[c] = int(max(o + z for o, z, _, _ in placed))
+        ev = [(int(ss), z) for _, z, ss, _ in placed] + [(int(ee) + 1 if ee < END else 1 << 62, -z)
+                                                          for _, z, _, ee in placed]
+        cur = 0
+        for _, dz in sorted(ev):
+            cur += dz
+            peak[c] = max(peak[c], cur)
+    return phys, ext, peak
 
 
 class Placement:
-    def __init__(self, cls):
+    def __init__(self, cls, phys=None, ext=None, peak=None, live_in=None, live_out=None):
         self.cls = cls
-        self.phys = np.full(VMW, -1, np.int64)
-        use = {}
-        for c in range(NQ + 1):
-            w = np.nonzero(cls == c)[0]
-            base = LOCAL_W if c == MIR else 0
-            self.phys[w] = base + np.arange(len(w))
-            use[c] = len(w)
-        self.use = use
+        if phys is None:                             # no liveness: packed, no reuse
+            phys = packed(cls) + np.where(cls == MIR, LOCAL_W, 0)
+            phys[cls < 0] = -1
+            ext = {c: int(np.sum(cls == c)) for c in range(NQ + 1)}
+        self.phys = phys
+        self.use = ext
+        self.peak = peak or ext
+        self.words = {c: int(np.sum(cls == c)) for c in range(NQ + 1)}
+        self.live_in = live_in if live_in is not None else cls >= 0
+        self.live_out = live_out if live_out is not None else cls >= 0
         segs = []
         t = np.nonzero(cls >= 0)[0]
         if len(t):
-            brk = np.nonzero((np.diff(t) != 1) | (np.diff(cls[t]) != 0))[0]
+            brk = np.nonzero((np.diff(t) != 1) | (np.diff(cls[t]) != 0) | (np.diff(phys[t]) != 1))[0]
             starts = np.concatenate([[0], brk + 1])
             ends = np.concatenate([brk + 1, [len(t)]])
             for s0, e0 in zip(starts, ends):
@@ -513,6 +710,9 @@ class Placement:
     def capacity(self):
         loc = [self.use[q] for q in range(NQ)]
         return dict(local_words=loc, mirror_words=self.use[MIR], local_cap=LOCAL_W, mirror_cap=MIRROR_W,
+                    allocation="liveness (record clock; blocks keep every cluster descriptor affine)",
+                    logical_local_words=[self.words[q] for q in range(NQ)], logical_mirror_words=self.words[MIR],
+                    peak_live_local=[self.peak[q] for q in range(NQ)], peak_live_mirror=self.peak[MIR],
                     slice_words=[x + self.use[MIR] for x in loc], slice_cap=SLICE_W,
                     fits=bool(max(loc) <= LOCAL_W and self.use[MIR] <= MIRROR_W),
                     fits_slice=bool(max(loc) + self.use[MIR] <= SLICE_W), segments=len(self.segs))
@@ -525,19 +725,22 @@ class Placement:
                     repl_base=REPL_BASE, repl_w=REPL_W, hcap_base=HCAP_BASE, hcap_w=HCAP_W, spec_words=SPEC_WORDS, segments=self.segs,
                     capacity=self.capacity())
 
-    def slice_image(self, vm, q):
+    def slice_image(self, vm, q, live=None):
+        """live: the words resident at that moment (live_in for the entry image, live_out for the final one); aliased
+        words share a physical word, so only the resident one is written"""
+        live = self.cls >= 0 if live is None else live
         img = np.zeros(SLICE_W, np.uint32)
         for c in (q, MIR):
-            w = np.nonzero(self.cls == c)[0]
+            w = np.nonzero((self.cls == c) & live)[0]
             img[self.phys[w]] = vm[w]
         return img
 
-    def spec_image(self, vm):
+    def spec_image(self, vm, live=None):
         """the whole die VM in SPEC.md v0.5 addresses (SPEC_WORDS = 360,448): slice q LOCAL at q * LOCAL_W + phys, the
         REPL window (one copy; every slice's mirror holds it) at REPL_BASE + phys - LOCAL_W, and the HC weight aperture
         (logical [VM_WORDS, VM_WORDS + VM_AP) when the image carries it) relocated to HCAP_BASE"""
         img = np.zeros(SPEC_WORDS, np.uint32)
-        w = np.nonzero(self.cls >= 0)[0]
+        w = np.nonzero((self.cls >= 0) & (self.cls >= 0 if live is None else live))[0]
         img[[spec_addr(int(c), int(p)) for c, p in zip(self.cls[w], self.phys[w])]] = vm[w]
         ap = vm[VMW:VMW + HCAP_W]
         img[HCAP_BASE:HCAP_BASE + ap.size] = ap
@@ -866,16 +1069,19 @@ def write(out, pl, chk, collect, vm0, vm_final, meta_extra):
     out.mkdir(parents=True, exist_ok=True)
     cap = pl.capacity()
     for q in range(NQ if cap["fits"] else 0):   # an over-capacity placement has no slice image: refused below
-        (out / f"vm0_s{q}.bin").write_bytes(pl.slice_image(vm0, q).astype("<u4").tobytes())
-        (out / f"vm_final_s{q}.bin").write_bytes(pl.slice_image(vm_final, q).astype("<u4").tobytes())
+        (out / f"vm0_s{q}.bin").write_bytes(pl.slice_image(vm0, q, pl.r0.live_in).astype("<u4").tobytes())
+        (out / f"vm_final_s{q}.bin").write_bytes(pl.slice_image(vm_final, q, pl.r0.live_out).astype("<u4").tobytes())
     if cap["fits"]:                             # SPEC 2a die image: what the native die TB / cmdproc address map loads
-        (out / "vm0_spec.bin").write_bytes(pl.spec_image(vm0).astype("<u4").tobytes())
-        (out / "vm_final_spec.bin").write_bytes(pl.spec_image(vm_final).astype("<u4").tobytes())
+        (out / "vm0_spec.bin").write_bytes(pl.spec_image(vm0, pl.r0.live_in).astype("<u4").tobytes())
+        (out / "vm_final_spec.bin").write_bytes(pl.spec_image(vm_final, pl.r0.live_out).astype("<u4").tobytes())
     (out / "placement.json").write_text(json.dumps(pl.table(), default=int) + "\n")
     sl = np.where(pl.cls == MIR, -1, np.where(pl.cls < 0, -2, pl.cls)).astype(np.int8)
     np.save(out / "slice.npy", sl)          # per logical VM word: slice 0..3, -1 = mirror, -2 = untouched
     (out / "records_b2.json").write_text(json.dumps(chk.recs, default=int) + "\n")
     v = chk.finish()
+    for msg in getattr(pl, "proof", []) or []:   # rank 0 alias proof (pass 1): physical reuse must not change a value
+        v["violations"] += 1
+        v["first_violations"].insert(0, msg)
     if not cap["fits"]:
         v["violations"] += 1
         v["first_violations"].insert(0, f"capacity: local {cap['local_words']} / {LOCAL_W}, mirror {cap['mirror_words']} / "

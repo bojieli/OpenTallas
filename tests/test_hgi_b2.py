@@ -48,7 +48,9 @@ def test_tiny_qwen_b2_exact_and_mutants_refused(tmp_path):
         s = np.frombuffer((out / "b2" / f"vm0_s{q}.bin").read_bytes(), "<u4")
         assert np.array_equal(s[:65536], spec[q * 65536:(q + 1) * 65536]) and np.array_equal(s[65536:], spec[262144:294912])
     assert "REPLX" in str(v["modes"])
-    for m in ("stale_mirror", "chain_naive"):
+    cap = v["capacity"]                                                            # liveness reuse
+    assert cap["mirror_words"] <= cap["logical_mirror_words"] and cap["peak_live_mirror"] <= cap["mirror_words"]
+    for m in ("stale_mirror", "chain_naive", "alias_dead"):
         rc, out = _export(tmp_path, "--b2-mutant", m)
         assert rc == 3, m
         assert json.loads((out / "b2" / "verdict.json").read_text())["violations"] > 0
