@@ -50,6 +50,9 @@ module ot_dsrom_su_norm #(
                                         //    memory.  The macro read is issued one cycle earlier and its output registered
                                         //    at the old xo / wo flops, so the operand timing is cycle-identical to MEM=0.
                                         //    Needs NV <= 128, N a multiple of 8, LM + SXC >= 2.
+    parameter integer GH = 0,           // 1 (RD = 0 only; hgi-1010 HC engine): cos_t[0] = "the gain ROM is loaded": the scale
+                                        //    sequencer starts when the rstd has landed AND cos_t[0], so the gain may stream in
+                                        //    while the row's sum is formed.  0: unchanged (cos_t unused at RD = 0)
     parameter integer RW = 9,           // result wire stages (lane tree -> scalar tail)
     parameter integer BW = 9,           // broadcast wire stages (scalar tail -> lanes)
     parameter integer LM = 5,
@@ -145,6 +148,7 @@ module ot_dsrom_su_norm #(
     wire        rb_v;
     reg  [31:0] rh;
     wire [32:0] rbw;                    // BW - 1 pipeline stages, then the hold register rh (the BW-th stage)
+    wire        rbs;                    // the scale start (= rbw[32]; GH = 1: held until cos_t[0])
     reg         sc_run;
     reg  [7:0]  sc_i;
     always @(posedge clk or negedge rst_n) begin
@@ -165,7 +169,7 @@ module ot_dsrom_su_norm #(
 `ifdef OT_SUN_MEM_MUT_LATE
     wire [7:0]  sc_nn    = sc_nx;                                  // NEGATIVE CONTROL: read not issued ahead
 `else
-    wire [7:0]  sc_nn    = rbw[32] ? 8'd1 : sc_run_n ? sc_i_n + 8'd1 : 8'd0;
+    wire [7:0]  sc_nn    = rbs ? 8'd1 : sc_run_n ? sc_i_n + 8'd1 : 8'd0;
 `endif
     wire [DY:0] vy;
     ot_hdc_vline #(.D(DY)) u_vy (.clk(clk), .rst_n(rst_n), .v(sc_go), .vd(vy));
@@ -378,7 +382,17 @@ module ot_dsrom_su_norm #(
     assign r = rr;
     ot_hdc_delay #(.W(33), .D(BW - 1), .RESET(1)) u_bw (.clk(clk), .rst_n(rst_n), .d({rr_v, rr}), .q(rbw));
     reg rbv;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rbv <= 1'b0; else rbv <= rbw[32];
+    generate if (GH != 0) begin : g_gh
+        if (RD != 0) begin : g_bad ot_dsrom_su_norm_GH_needs_RD_0 u_trap (); end
+        reg rpend;                      // the rstd landed, the gain not yet loaded
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) rpend <= 1'b0;
+            else rpend <= !go && (rbw[32] || rpend) && !cos_t[0];
+        assign rbs = (rbw[32] || rpend) && cos_t[0];
+    end else begin : g_nogh
+        assign rbs = rbw[32];
+    end endgenerate
+    always @(posedge clk or negedge rst_n) if (!rst_n) rbv <= 1'b0; else rbv <= rbs;
     always @(posedge clk) if (rbw[32]) rh <= rbw[31:0];
     assign rb_v = rbv;
     assign y_v = vy[DY];

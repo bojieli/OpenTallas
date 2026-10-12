@@ -39,6 +39,9 @@ module ot_hgi_idx_unit #(
     // hgi-1010/g3 (opt-in, defaults 0 = unchanged): see the IDX.INDEX front below
     parameter integer NGLOB = 0,
     parameter integer IKS = 0,
+    // hbm-relaunch-1011 (opt-in, default 0 = unchanged): IKS_EVEN = 1 streams whole scorer beats (B_q rounded up to
+    // an even block count; ot_hgi_idx_iks_issue EVEN) so an odd-block quarter retires
+    parameter integer IKS_EVEN = 0,
     // el1011-hbm-idxs (opt-in, default 0 = the packet-client adapter above, unchanged): IXW = 1 runs IDX.INDEX on
     // ot_hgi_idx_index_w, whose VM traffic rides the die's 32-lane VM wide read / write groups (the wr* / ww* ports,
     // ot_hgi_vm_lanestation client format; tie the grants high for a dedicated group).  IXW = 0 ties them off.
@@ -154,7 +157,7 @@ module ot_hgi_idx_unit #(
     wire x_n_ok = (NGLOB == 0) || (x_ng != 32'd0 && x_ng <= 32'h0010_0000);
     generate if (IKS != 0) begin : g_iks
         wire [35:0] iks_blocks; wire iks_fault;
-        ot_hgi_idx_iks_issue u_iks (.clk(clk), .rst_n(rst_n), .go(x_go2 && opnd[6]), .n({18'd0, x_ndie}), .ik_base(x_ikb),
+        ot_hgi_idx_iks_issue #(.EVEN(IKS_EVEN)) u_iks (.clk(clk), .rst_n(rst_n), .go(x_go2 && opnd[6]), .n({18'd0, x_ndie}), .ik_base(x_ikb),
             .tag(13'd0), .no_credit(1'b0), .e_d(iks_e), .blocks(iks_blocks), .fault(iks_fault));
     end else begin : g_no_iks
         assign iks_e = 512'd0;

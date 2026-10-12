@@ -147,12 +147,10 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     reg  [SFW-1:0] r_d;
     always @(posedge ck or negedge erst_n) if (!erst_n) r_v <= 1'b0; else r_v <= o_red;
     always @(posedge ck) begin r_d <= o_rdat; r_last <= o_last; r_err <= o_err; end
-    reg  signed [7:0] cred;
     // room2 = (cred - w_r) >= 2, registered from the next values: w_r = reduce words popped and not yet emitted, each
     // holding a reserved output slot (reduce words are not back-pressured at the output); also the engine's reduce-pop
     // gate (red_hold).  Slow-VM-drain fix (1-in-8 take overflowed the remote queue in the flat and the split designs).
     reg          room2;
-    reg  [7:0]   w_r;
     wire         in_red = r_v && !hm;
     always @(*) o_rdy = hm && (pk_n == 0) && room2;
     wire         in_gat = o_v && !o_red && hm && o_rdy;
@@ -203,18 +201,36 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     wire         pe = pk_emit ? pk_err : 1'b0;
     wire [50:0]  hdr = {rank, fv_q, fault, b_cr, pe, in_gat && !pk_emit, pt_push ? ptw[PTW-1] : 1'b0, b_last, b_mask,
                         pt_push ? pt_l : 3'd0, b_type};
+`ifdef OT_S81PH_MUT_ORC
+    reg  signed [7:0] cred;
+    reg  [7:0]   w_r;
     wire [7:0]   cred_nx = cred - (oq_push ? 8'sd1 : 8'sd0) + (bcr_q ? 8'sd1 : 8'sd0);
     wire [7:0]   w_nx = w_r + (e_rpop ? 8'd1 : 8'd0) - (pk_emit ? {5'd0, pk_n} : 8'd0);
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin cred <= OQX_D; room2 <= 1'b1; w_r <= 8'd0; end
         else begin
             cred <= cred_nx; w_r <= w_nx;
-`ifdef OT_S81PH_MUT_ORC
             room2 <= $signed(cred_nx) >= 8'sd2;                              // negative control: no reservation
-`else
-            room2 <= ($signed({cred_nx[7], cred_nx}) - $signed({1'b0, w_nx})) >= 9'sd2;
-`endif
         end
+`else
+    // ces0 pb TT -46.34 (SS -109.3): qc -> st_need -> st_push -> oq_push -> cred_nx adder -> (cred_nx - w_nx) 9-bit
+    // subtract -> >= 2 -> room2, one cycle.  Restructured as ONE available-slot counter av = cred - w_r (identical
+    // value, 10-bit signed) whose early part av_e = av + bcr_q + emit-release is computed from flops, while the two
+    // late decrements (oq_push, e_rpop: k = 0..2) only SELECT among precomputed av_e - k and (av_e >= 2 + k)
+    // (carry-select).  Cycle-exact: room2 / red_hold are the same bits every cycle as before.
+    reg  signed [9:0] av;
+    wire signed [9:0] av_e = av + $signed({9'd0, bcr_q}) + (pk_emit ? $signed({7'd0, pk_n}) : 10'sd0);
+    wire signed [9:0] av_m1 = av_e - 10'sd1;
+    wire signed [9:0] av_m2 = av_e - 10'sd2;
+    wire         ge2 = av_e >= 10'sd2, ge3 = av_e >= 10'sd3, ge4 = av_e >= 10'sd4;
+    wire         dk1 = oq_push ^ e_rpop, dk2 = oq_push & e_rpop;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin av <= OQX_D; room2 <= 1'b1; end
+        else begin
+            av <= dk2 ? av_m2 : dk1 ? av_m1 : av_e;
+            room2 <= dk2 ? ge4 : dk1 ? ge3 : ge2;
+        end
+`endif
     always @(posedge ck) if (in_red) pk_d[(pk_emit ? 0 : pk_n) * SFW +: SFW] <= r_d;
     always @(posedge ck or negedge erst_n) begin
         if (!erst_n) begin
@@ -376,10 +392,121 @@ module dsfd_coll_cel #(parameter integer KIND = 0, parameter integer XD = 6) (
 endmodule
 
 // ------------------------------------------------------------------------------------------------ VM queue tile
+// ------------------------------------------------------------------------------------------------ VM queue tiles
+// el1011-ds-coll 21:45 (ceq p7 -29.4 / FF -50.7: the 586-bit record broadcast to 6 queues stacked over 680 um + one
+// 11.3k-flop clock root over 679 um).  ceq is split into one hardened tile PER QUEUE (140.4 x 203.04, 3 macros in one
+// column); f_vm reaches the queues as an abutted, registered nearest-neighbour chain (each tile forwards a kept copy
+// of its input one cycle later), the overflow faults return along a registered chain into ceq0's fault collector.
+module dsfd_coll_ceqt #(parameter integer Q0 = 0, parameter integer XD = 6, parameter integer QD = 8,
+                        parameter integer OW = Q0 ? 4 * 162 : 553) (
+    input  wire          ck, input wire rs,
+    input  wire [591:0]  f_i,                               // pin side (S)
+    output wire [591:0]  f_o,                               // registered copy to the next tile (N)
+    input  wire [2:0]    lid,                               // p tile: link id strap (queue j: j - 1)
+    output wire          o_v, output wire [OW-1:0] o_d, input wire o_cr,
+    output wire          qp,                                // queue pop, registered
+    output wire          rst_n_o,                           // synchronised reset (tile-local)
+    output wire [591:0]  f,                                 // pin-flopped record (tile-local)
+    output reg           qf                                 // queue overflow, registered
+);
+    localparam integer W = 552;
+    reg [1:0] rst_s;
+    always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    wire rst_n = rst_s[1];
+    assign rst_n_o = rst_n;
+    reg fv_v; reg [591:1] fv_p;                             // pin flops
+    always @(posedge ck or negedge rst_n) if (!rst_n) fv_v <= 1'b0; else fv_v <= f_i[0];
+    always @(posedge ck) fv_p <= f_i[591:1];
+    assign f = {fv_p, fv_v};
+    // forward copy: separate kept flops straight from the pins (a merged flop would drive the N face and the local
+    // decode from one Q)
+    (* keep = "true" *) reg fo_v; (* keep = "true" *) reg [591:1] fo_p;
+    always @(posedge ck or negedge rst_n) if (!rst_n) fo_v <= 1'b0; else fo_v <= f_i[0];
+    always @(posedge ck) fo_p <= f_i[591:1];
+    assign f_o = {fo_p, fo_v};
+    reg [2:0] lid_q; always @(posedge ck) lid_q <= lid;
+    wire fvv = f[0]; wire [1:0] ftype = f[2:1]; wire [2:0] flink = f[5:3];
+    reg psh_q; reg [W+33:0] rec;                            // {last, mode, tag, data}
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) psh_q <= 1'b0;
+        else psh_q <= fvv && ((Q0 != 0) ? (ftype == 2'd1) : (ftype == 2'd2 && flink == lid_q));
+    always @(posedge ck) rec <= {f[6], f[7], f[39:8], f[40 +: W]};
+    wire hv, rdy, ovf; wire [W+33:0] hd;
+    ot_fifo_sram_fwft #(.W(W + 34), .DEPTH(QD), .MACRO(2)) u_q (.clk(ck), .rst_n(rst_n),
+        .push(psh_q), .wdata(rec), .pop(hv && rdy), .hv(hv), .head(hd), .ovf(ovf));
+    reg cr_q; always @(posedge ck or negedge rst_n) if (!rst_n) cr_q <= 1'b0; else cr_q <= o_cr;
+    wire [OW-1:0] od;
+    generate if (Q0 != 0) begin : g_q0
+        assign od = {{hd[W+33], hd[W+32], hd[W +: 32], hd[384 +: 128]}, {hd[W+33], hd[W+32], hd[W +: 32], hd[256 +: 128]},
+                     {hd[W+33], hd[W+32], hd[W +: 32], hd[128 +: 128]}, {hd[W+33], hd[W+32], hd[W +: 32], hd[0 +: 128]}};
+    end else begin : g_qp
+        assign od = {hd[W+33], hd[W-1:0]};
+    end endgenerate
+    ot_link_credit_tx #(.W(OW), .CRED(XD), .DFREE(1)) u_t (.clk(ck), .rst_n(rst_n), .i_valid(hv),
+        .i_ready(rdy), .i_data(od), .l_valid(o_v), .l_data(o_d), .l_credit(cr_q));
+    (* keep = "true" *) reg qp_k;
+    always @(posedge ck or negedge rst_n) if (!rst_n) begin qp_k <= 1'b0; qf <= 1'b0; end
+                                          else begin qp_k <= hv && rdy; qf <= ovf; end
+    assign qp = qp_k;
+endmodule
+
+// queue 0 (-> the engine slices) + rank / enable decode + fault collector.  Hard tile: no parameters.
+module dsfd_coll_ceq0 (
+    input  wire              ck, input wire rs,
+    input  wire [591:0]      fvm_u,                         // S: from cb (f_vm pass-through)
+    output wire [591:0]      f_o,                           // N: to ceqp 1
+    output reg               e_en, output reg [1:0] rank, output wire qp, output reg [7:0] fv,
+    output wire              q_v, output wire [4*162-1:0] q_d, input wire q_cr,
+    input  wire [8*4-1:0]    lane_f, input wire [4*2-1:0] slice_f, input wire [2:0] fifo_f, input wire bw_flt,
+    input  wire              qf_i                           // N: overflow chain from ceqp 1
+);
+    wire rst_n, qf0; wire [591:0] f;
+    dsfd_coll_ceqt #(.Q0(1), .QD(16)) u_c (.ck(ck), .rs(rs), .f_i(fvm_u), .f_o(f_o), .lid(3'd0), .o_v(q_v), .o_d(q_d),
+        .o_cr(q_cr), .qp(qp), .rst_n_o(rst_n), .f(f), .qf(qf0));
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin e_en <= 1'b0; rank <= 2'd0; end
+        else if (f[0] && f[2:1] == 2'd3) begin rank <= f[41:40]; e_en <= f[42]; end
+    // fault vector {lane, mq, oq, queue, engine, gearbox, endpoint, tx buffer} (the flat core's fv_flt), sticky
+    reg [31:0] lf_q; reg [7:0] sf_q; reg [2:0] ff_q; reg bf_q, qi_q;
+    reg [7:0] lane_st;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin fv <= 8'd0; lf_q <= 0; sf_q <= 0; ff_q <= 0; bf_q <= 1'b0; qi_q <= 1'b0; lane_st <= 0; end
+        else begin
+            lf_q <= lane_f; sf_q <= slice_f; ff_q <= fifo_f; bf_q <= bw_flt; qi_q <= qf_i;
+            for (integer i = 0; i < 8; i = i + 1) if (lf_q[4*i+2]) lane_st[i] <= 1'b1;
+            fv <= fv | {|lane_st, sf_q[0] | sf_q[2] | sf_q[4] | sf_q[6], bf_q, qf0 | qi_q,
+                        sf_q[1] | sf_q[3] | sf_q[5] | sf_q[7] | (|ff_q),
+                        lf_q[1] | lf_q[5] | lf_q[9] | lf_q[13] | lf_q[17] | lf_q[21] | lf_q[25] | lf_q[29],
+                        lf_q[0] | lf_q[4] | lf_q[8] | lf_q[12] | lf_q[16] | lf_q[20] | lf_q[24] | lf_q[28],
+                        lf_q[3] | lf_q[7] | lf_q[11] | lf_q[15] | lf_q[19] | lf_q[23] | lf_q[27] | lf_q[31]};
+        end
+endmodule
+
+// one pass-through VM queue (queue j = lid + 1 -> lane).  Hard tile: no parameters.
+module dsfd_coll_ceqp (
+    input  wire          ck, input wire rs,
+    input  wire [591:0]  f_i,                               // S
+    output wire [591:0]  f_o,                               // N
+    input  wire [2:0]    lid,                               // W strap
+    output wire          p_v, output wire [552:0] p_d, input wire p_cr,
+    output wire          qp,
+    input  wire          qf_i,                              // N
+    output reg           qf_o                               // S
+);
+    wire rst_n, qf; wire [591:0] f;
+    dsfd_coll_ceqt #(.Q0(0), .QD(8)) u_c (.ck(ck), .rs(rs), .f_i(f_i), .f_o(f_o), .lid(lid), .o_v(p_v), .o_d(p_d),
+        .o_cr(p_cr), .qp(qp), .rst_n_o(rst_n), .f(f), .qf(qf));
+    reg qi_q;
+    always @(posedge ck or negedge rst_n) if (!rst_n) begin qi_q <= 1'b0; qf_o <= 1'b0; end
+                                          else begin qi_q <= qf_i; qf_o <= qi_q | qf; end
+    wire unused_ok = &{1'b0, f};
+endmodule
+
+// composition (wiring only): ceq0 + 5 x ceqp, abutted S -> N
 module dsfd_coll_ceq #(parameter integer XD = 6, parameter integer QD0 = 16, parameter integer QD = 8) (
     input  wire              ck, input wire rs,
     input  wire [591:0]      fvm_u,                         // from cb (f_vm pass-through)
-    output reg               e_en, output reg [1:0] rank, output wire [5:0] qp, output reg [7:0] fv,
+    output wire              e_en, output wire [1:0] rank, output wire [5:0] qp, output wire [7:0] fv,
     output wire              q_v, output wire [4*162-1:0] q_d, input wire q_cr,
     output wire [4:0]        p_v, output wire [5*553-1:0] p_d, input wire [4:0] p_cr,
     input  wire [8*4-1:0]    lane_f,                        // per lane {tx-buffer fault, lane fault triplet}
@@ -387,68 +514,20 @@ module dsfd_coll_ceq #(parameter integer XD = 6, parameter integer QD0 = 16, par
     input  wire [2:0]        fifo_f,                        // remote FIFO tiles
     input  wire              bw_flt
 );
-    localparam integer W = 552;
-    reg [1:0] rst_s;
-    always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
-    wire rst_n = rst_s[1];
-    reg fv_v; reg [591:1] fv_p;                             // pin flops
-    always @(posedge ck or negedge rst_n) if (!rst_n) fv_v <= 1'b0; else fv_v <= fvm_u[0];
-    always @(posedge ck) fv_p <= fvm_u[591:1];
-    wire [591:0] f = {fv_p, fv_v};
-    wire fvv = f[0]; wire [1:0] ftype = f[2:1]; wire [2:0] flink = f[5:3];
-    // decode REGISTERED (ceq p4: fv_v -> type / link compare -> push -> 586-bit FIFO bypass enables -214): one push
-    // flop per queue, the record one register later, then the queue
-    reg [5:0] psh_q; reg [W+33:0] rec;                      // {last, mode, tag, data}
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) psh_q <= 6'd0;
-        else for (integer i = 0; i < 6; i = i + 1)
-            psh_q[i] <= fvv && ((i == 0) ? (ftype == 2'd1) : (ftype == 2'd2 && flink == i - 1));
-    always @(posedge ck) rec <= {f[6], f[7], f[39:8], f[40 +: W]};
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin e_en <= 1'b0; rank <= 2'd0; end
-        else if (fvv && ftype == 2'd3) begin rank <= f[41:40]; e_en <= f[42]; end
-    wire [5:0] pop, qflt;
-    genvar j;
-    generate for (j = 0; j < 6; j = j + 1) begin : g_q
-        wire psh = psh_q[j];
-        wire hv, rdy; wire [W+33:0] hd;
-        ot_fifo_sram_fwft #(.W(W + 34), .DEPTH((j == 0) ? QD0 : QD), .MACRO(2)) u_q (.clk(ck), .rst_n(rst_n),
-            .push(psh), .wdata(rec), .pop(hv && rdy), .hv(hv), .head(hd), .ovf(qflt[j]));
-        assign pop[j] = hv && rdy;
-        if (j == 0) begin : g_q0
-            reg cr_q; always @(posedge ck or negedge rst_n) if (!rst_n) cr_q <= 1'b0; else cr_q <= q_cr;
-            wire [161:0] s0 = {hd[W+33], hd[W+32], hd[W +: 32], hd[0 +: 128]};
-            wire [161:0] s1 = {hd[W+33], hd[W+32], hd[W +: 32], hd[128 +: 128]};
-            wire [161:0] s2 = {hd[W+33], hd[W+32], hd[W +: 32], hd[256 +: 128]};
-            wire [161:0] s3 = {hd[W+33], hd[W+32], hd[W +: 32], hd[384 +: 128]};
-            ot_link_credit_tx #(.W(4*162), .CRED(XD), .DFREE(1)) u_t (.clk(ck), .rst_n(rst_n), .i_valid(hv),
-                .i_ready(rdy), .i_data({s3, s2, s1, s0}), .l_valid(q_v), .l_data(q_d), .l_credit(cr_q));
-        end else begin : g_qp
-            reg cr_q; always @(posedge ck or negedge rst_n) if (!rst_n) cr_q <= 1'b0; else cr_q <= p_cr[j-1];
-            ot_link_credit_tx #(.W(553), .CRED(XD), .DFREE(1)) u_t (.clk(ck), .rst_n(rst_n), .i_valid(hv),
-                .i_ready(rdy), .i_data({hd[W+33], hd[W-1:0]}), .l_valid(p_v[j-1]), .l_data(p_d[(j-1)*553 +: 553]),
-                .l_credit(cr_q));
-        end
+    generate if (XD != 6 || QD0 != 16 || QD != 8) begin : g_bad
+        initial $error("dsfd_coll_ceq: hard tiles are built at XD 6 / QD0 16 / QD 8");
     end endgenerate
-    // fault vector {lane, mq, oq, queue, engine, gearbox, endpoint, tx buffer} (the flat core's fv_flt), sticky
-    reg [31:0] lf_q; reg [7:0] sf_q; reg [2:0] ff_q; reg bf_q;
-    // kept: qp_k[j] has the same D as the queue's credit-link l_valid, and a merged flop would drive an E-face stream
-    // pin and this W-face broadcast pin (ceq p4 l_valid -> qp[5] -116)
-    (* keep = "true" *) reg [5:0] qp_k;
-    assign qp = qp_k;
-    reg [7:0] lane_st;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin qp_k <= 6'd0; fv <= 8'd0; lf_q <= 0; sf_q <= 0; ff_q <= 0; bf_q <= 1'b0; lane_st <= 0; end
-        else begin
-            qp_k <= pop; lf_q <= lane_f; sf_q <= slice_f; ff_q <= fifo_f; bf_q <= bw_flt;
-            for (integer i = 0; i < 8; i = i + 1) if (lf_q[4*i+2]) lane_st[i] <= 1'b1;
-            fv <= fv | {|lane_st, sf_q[0] | sf_q[2] | sf_q[4] | sf_q[6], bf_q, |qflt,
-                        sf_q[1] | sf_q[3] | sf_q[5] | sf_q[7] | (|ff_q),
-                        lf_q[1] | lf_q[5] | lf_q[9] | lf_q[13] | lf_q[17] | lf_q[21] | lf_q[25] | lf_q[29],
-                        lf_q[0] | lf_q[4] | lf_q[8] | lf_q[12] | lf_q[16] | lf_q[20] | lf_q[24] | lf_q[28],
-                        lf_q[3] | lf_q[7] | lf_q[11] | lf_q[15] | lf_q[19] | lf_q[23] | lf_q[27] | lf_q[31]};
-        end
-    wire unused_ok = &{1'b0, f[591:592-1]};
+    wire [591:0] fc [0:5]; wire [6:1] qfc;
+    assign qfc[6] = 1'b0;
+    dsfd_coll_ceq0 u_q0 (.ck(ck), .rs(rs), .fvm_u(fvm_u), .f_o(fc[0]), .e_en(e_en), .rank(rank), .qp(qp[0]), .fv(fv),
+        .q_v(q_v), .q_d(q_d), .q_cr(q_cr), .lane_f(lane_f), .slice_f(slice_f), .fifo_f(fifo_f), .bw_flt(bw_flt),
+        .qf_i(qfc[1]));
+    genvar j;
+    generate for (j = 1; j < 6; j = j + 1) begin : g_p
+        localparam [2:0] LID = j - 1;
+        dsfd_coll_ceqp u_p (.ck(ck), .rs(rs), .f_i(fc[j-1]), .f_o(fc[j]), .lid(LID), .p_v(p_v[j-1]),
+            .p_d(p_d[(j-1)*553 +: 553]), .p_cr(p_cr[j-1]), .qp(qp[j]), .qf_i(qfc[j+1]), .qf_o(qfc[j]));
+    end endgenerate
 endmodule
 
 // ------------------------------------------------------------------------------------------------ composition
