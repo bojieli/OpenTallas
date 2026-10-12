@@ -641,6 +641,7 @@ def export_b2(a):
     if len(recs) == len(B2.recs) and all((x["unit"], x["op"]) == (y["unit"], y["op"]) for x, y in zip(recs, B2.recs)):
         for x, y in zip(recs, B2.recs):
             x["cluster"] = y["cluster"]
+            x["b2mode"] = y["mode"]                 # REPLX / QSPLIT: mirror words written locally on every cluster
         meta["b2"] = dict(slice_map="b2/slice.npy", placement="b2/placement.json", records="b2/records_b2.json",
                           ring_cycles=v["ring_cycles"])
         (a.out / "meta.json").write_text(json.dumps(meta, indent=1, default=int) + "\n")

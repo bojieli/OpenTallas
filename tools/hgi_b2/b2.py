@@ -53,27 +53,57 @@ REPL_BASE = 262144          # SPEC.md 2a (6e74fb706): REPL window 262,144 .. 294
 MIR = NQ
 SPLIT_UNITS = {"SM", "SU", "SFU", "ATT"}
 VEC_HOME = 0                # the vector home cluster: small vector records run there, on operands LOCAL to it
-SMALL_VEC = 16384           # an SU / SFU record of at most this many elements is a home record (no split, no chain)
 
 
-def is_home_vec(M, r, die, L):
-    """a small SU.VOP / SFU record runs whole on VEC_HOME: splitting a decode-size vector 4 ways buys no time and
-    costs a chained reduction and a mirror broadcast per record (the verification harness measured SU.VOP ring
-    traffic as a top driver); its operands are LOCAL to VEC_HOME, so it never crosses the ring"""
-    if r.unit not in ("SU", "SFU"):
-        return False
+REPLX_MAX_IN = 16384        # REPLX operands (all MIRROR) at most this many words
+SPLIT_MIN = 3072            # a vector producer splits only if its quarter covers the hop: N / 4 / 64 >= 12 cycles
+
+
+def out_words(M, r, die, L):
+    """number of VM words the record writes (O, or SU.VOP's R when it has no O)"""
     try:
-        if r.unit == "SU":
-            _, ni, no, _, _ = M.eff(r.desc["A"], die, L)
+        if r.unit == "SU" and not r.sut["dst"]:
+            _, n, m, _, _ = M.eff(r.desc["R"], die, L) if int(r.sut["red"]) else (0, 0, 0, 0, 0)
         else:
-            _, ni, no, _, _ = M.eff(r.desc["O"], die, L)
+            _, n, m, _, _ = M.eff(r.desc["O"], die, L)
     except (MC.Fault, KeyError):
+        return 0
+    return n * m
+
+
+def replx(M, r, die, L):
+    """REPLX: a small vector record (SU.VOP / SFU / FUSED.ROW_NORM writing < SPLIT_MIN words) runs WHOLE on every
+    cluster from MIRROR operands, each cluster writing its own mirror copy of the result: no ring, no broadcast, no
+    chain (a reduction is recomputed in the golden order, bit-exact by construction).  A split would leave each
+    cluster a local lead of N/4/64 < 12 cycles (exposed), a single home would expose the full hop on 3 clusters
+    (Qwen L0 measured 12 x ~10 records)"""
+    if r.unit not in ("SU", "SFU") and not osplit(r):
         return False
-    return ni * no <= SMALL_VEC
+    n = out_words(M, r, die, L)
+    if not 0 < n < SPLIT_MIN:
+        return False
+    rd = 0                                  # every operand goes MIRROR: only small operands (a softmax.max over a
+    for nm, d in r.desc.items():            # [heads x positions] buffer stays a chained ESPLIT)
+        if d is not None and d.space == "VM" and nm != "O":
+            try:
+                _, a_n, a_m, _, _ = M.eff(d, die, L)
+            except MC.Fault:
+                return False
+            rd += a_n * a_m
+    return rd <= REPLX_MAX_IN
+
+
+def osplit(r):
+    """FUSED.ROW_NORM of a long vector runs on every cluster (OSPLIT): the whole input is MIRROR, each cluster
+    recomputes the row statistic in the golden order (bit-exact by construction, no chain) and writes only its quarter
+    of the output (local lead N/4/64 >= 12 cycles covers the mirror stream of the other three quarters)"""
+    return (r.unit, r.op) == ("FUSED", "ROW_NORM")
 
 
 def central(M, r, die, L):
-    return r.unit not in SPLIT_UNITS or is_home_vec(M, r, die, L)
+    return not (r.unit in SPLIT_UNITS or osplit(r))
+
+
 F = np.float32
 
 # ring / broadcast cost model: the verification harness's (tools/hgi_e2e/b2.py on el1012-b2verif), same constants;
@@ -144,6 +174,37 @@ def split_of(M, r, die, L):
     if central(M, r, die, L):
         return Split("CENTRAL")
     E = lambda nm: M.eff(r.desc[nm], die, L)          # noqa: E731
+    if replx(M, r, die, L):
+        s = Split("REPLX", (1, out_words(M, r, die, L)))
+        outs = {"O"} if not (u == "SU" and not r.sut["dst"]) else set()
+        if u == "SU" and int(r.sut["red"]):
+            outs.add("R")
+        for nm, d in r.desc.items():
+            if d is None or d.space != "VM":
+                continue
+            a_ = M.vm_addrs(d, die, L)
+            if nm in outs:
+                s.ops.append((nm, "out", "grid", {q: a_ for q in range(NQ)}))
+            if nm not in outs or (u == "SU" and nm == "O"):
+                s.ops.append((nm, "in", "whole", a_))
+        for q in range(NQ):
+            s.part[q] = ((0, 1), (0, s.grid[1]))
+        return s
+    if osplit(r):
+        ob, on, om, ost, oist = E("O")
+        rows = om >= NQ
+        s = Split("OSPLIT", (om, on))
+        for q in range(NQ):
+            s.part[q] = (rng(om, q), (0, on)) if rows else ((0, om), rng(on, q))
+        s.ops.append(("A", "in", "whole", M.vm_addrs(r.desc["A"], die, L)))
+        s.ops.append(("O", "out", "grid", {q: ga(ob, ost, oist, range(*s.part[q][0]), range(*s.part[q][1]))
+                                           for q in range(NQ)}))
+        bb, bn, bm, bst, bist = E("B")
+        s.ops.append(("B", "in", "hbm", {q: (rng(bn, q), (rng(bn, q)[1] - rng(bn, q)[0]) * 2) for q in range(NQ)}))
+        for q in range(NQ):
+            (r0, r1), (c0, c1) = s.part[q]
+            s.sub[("O", q)] = [ob + r0 * ost + c0 * oist, c1 - c0, r1 - r0, ost, oist]
+        return s
     if u == "SM":
         o = r.desc["O"]
         ob, on, om, ost, oist = E("O")
@@ -404,6 +465,14 @@ class Placement:
             img[self.phys[w]] = vm[w]
         return img
 
+    def spec_image(self, vm):
+        """the whole die VM in SPEC.md 2a addresses (294,912 words): slice q LOCAL at q * LOCAL_W + phys, the REPL
+        window (one copy; every slice's mirror holds it) at REPL_BASE + phys - LOCAL_W"""
+        img = np.zeros(REPL_BASE + MIRROR_W, np.uint32)
+        w = np.nonzero(self.cls >= 0)[0]
+        img[[spec_addr(int(c), int(p)) for c, p in zip(self.cls[w], self.phys[w])]] = vm[w]
+        return img
+
     def avail(self, q):
         return (self.cls == q) | (self.cls == MIR)
 
@@ -490,7 +559,8 @@ class Check:
                 self.fail(f"rank {rank} {s.tag} {nm}: cluster {q} sub-operand not affine in slice space")
                 continue
             out[f"{nm}{q}"] = dict(logical=[int(b), int(n), int(m), int(st), int(ist)], region=region,
-                                   phys=[af[0], int(n), int(m), af[1], af[2]])
+                                   phys=[af[0], int(n), int(m), af[1], af[2]],
+                                   spec=[int(spec_addr(region, af[0])), int(n), int(m), af[1], af[2]])
         return out
 
     def wrap(self, key, fn):
@@ -529,6 +599,17 @@ class Check:
             allc = np.concatenate([c for _, c in ops]) if ops else np.zeros(0, np.int8)
             v = np.bincount(allc[(allc >= 0) & (allc < NQ)].astype(np.int64), minlength=NQ)
             home = VEC_HOME if r.unit in SPLIT_UNITS else (int(np.argmax(v)) if v.any() else VEC_HOME)
+            wq = sorted(set(int(x) for w_, c in ops if w_ for x in c[(c >= 0) & (c < NQ)]))
+            nmir = sum(int(np.sum(c == MIR)) for w_, c in ops if w_)
+            if r.unit == "DMA" and r.op == "LOAD" and (len(wq) > 1 or nmir):
+                # SPEC 1 DMA: the loader is per quadrant (lq_<q> ends at slice q): each cluster's loader writes its
+                # own slice's words, and a REPL word is loaded by every quadrant from its own stack (the constant is
+                # replicated per stack: a few KB a layer), so neither is a ring write nor a mirror broadcast
+                self.ring["dma_repl_load"] += nmir
+                self.recs.append(dict(unit=r.unit, op=r.op, tag=getattr(M.cur, "tag", ""), L=int(L), mode="QSPLIT",
+                                      cluster=list(range(NQ)) if nmir else wq, ring_read=0, ring_write=0,
+                                      mirror_write=0, repl_load=nmir, **self._cycles(Counter(), 0, 0)))
+                continue
             pair, bc = Counter(), 0
             for is_w, c in ops:
                 for q in range(NQ):
@@ -636,7 +717,7 @@ class Check:
         if die.rank == 0:
             mb = 0
             for nm, role, kind, per in s.ops:
-                if role == "out" and kind == "grid":
+                if role == "out" and kind == "grid" and s.mode != "REPLX":   # REPLX: every cluster writes its own copy
                     for q in range(NQ):
                         mb += int(np.sum(self.pl.cls[per[q]] == MIR)) * (NQ - 1)
                 elif role == "red":
@@ -688,6 +769,9 @@ def write(out, pl, chk, collect, vm0, vm_final, meta_extra):
     for q in range(NQ if cap["fits"] else 0):   # an over-capacity placement has no slice image: refused below
         (out / f"vm0_s{q}.bin").write_bytes(pl.slice_image(vm0, q).astype("<u4").tobytes())
         (out / f"vm_final_s{q}.bin").write_bytes(pl.slice_image(vm_final, q).astype("<u4").tobytes())
+    if cap["fits"]:                             # SPEC 2a die image: what the native die TB / cmdproc address map loads
+        (out / "vm0_spec.bin").write_bytes(pl.spec_image(vm0).astype("<u4").tobytes())
+        (out / "vm_final_spec.bin").write_bytes(pl.spec_image(vm_final).astype("<u4").tobytes())
     (out / "placement.json").write_text(json.dumps(pl.table(), default=int) + "\n")
     sl = np.where(pl.cls == MIR, -1, np.where(pl.cls < 0, -2, pl.cls)).astype(np.int8)
     np.save(out / "slice.npy", sl)          # per logical VM word: slice 0..3, -1 = mirror, -2 = untouched

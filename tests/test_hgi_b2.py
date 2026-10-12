@@ -1,6 +1,8 @@
 """hgi_b2 (B2 four-cluster distributed-VM die): the chained reduction is the golden csum8 order for any split, and the
 B2 export of a tiny Qwen layer is exact on every rank while both broken machines are refused."""
 import json
+
+import numpy as np
 import subprocess
 import sys
 from pathlib import Path
@@ -36,6 +38,12 @@ def test_tiny_qwen_b2_exact_and_mutants_refused(tmp_path):
     meta = json.loads((out / "meta.json").read_text())
     assert all("cluster" in r for r in meta["records"])                           # the harness's placement input
     assert (out / "b2" / "slice.npy").exists() and v["ring_cycles"]["per_layer"]
+    spec = np.frombuffer((out / "b2" / "vm0_spec.bin").read_bytes(), "<u4")       # SPEC 2a die image
+    assert spec.size == 294912
+    for q in range(4):
+        s = np.frombuffer((out / "b2" / f"vm0_s{q}.bin").read_bytes(), "<u4")
+        assert np.array_equal(s[:65536], spec[q * 65536:(q + 1) * 65536]) and np.array_equal(s[65536:], spec[262144:])
+    assert "REPLX" in str(v["modes"])
     for m in ("stale_mirror", "chain_naive"):
         rc, out = _export(tmp_path, "--b2-mutant", m)
         assert rc == 3, m
