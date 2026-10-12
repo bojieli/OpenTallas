@@ -1,0 +1,235 @@
+{
+ "name": "dsfd_vm_be_sl",
+ "top": "dsfd_vm_be_sl",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn_in",
+  "rns_in"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 92.88
+ },
+ "pg_layer": "M6",
+ "pins": {
+  "N": [
+   "o_v",
+   "o_d",
+   "o_f",
+   "o_o"
+  ],
+  "S": [
+   "srq_d",
+   "srq_v",
+   "vrv",
+   "vrq",
+   "bl_d",
+   "bl_v",
+   "c_l0r",
+   "c_l0v",
+   "c_l0d"
+  ],
+  "W": [
+   "ck",
+   "cks",
+   "rn_in",
+   "rns_in",
+   "f_vx",
+   "f_wex",
+   "f_mx",
+   "f_v5",
+   "f_we5",
+   "f_m5s",
+   "fe_flt",
+   "st_i"
+  ],
+  "E": [
+   "st_o",
+   "t_err",
+   "flt",
+   "fvec",
+   "max_occ",
+   "t_p2c"
+  ]
+ },
+ "pin_ranges": {
+  "o_v": [
+   44.416,
+   47.632
+  ],
+  "o_d": [
+   47.632,
+   235.536
+  ],
+  "o_f": [
+   235.536,
+   236.048
+  ],
+  "o_o": [
+   236.048,
+   238.368
+  ],
+  "srq_d": [
+   2.0,
+   26.94
+  ],
+  "srq_v": [
+   26.94,
+   27.132
+  ],
+  "vrv": [
+   27.132,
+   27.228
+  ],
+  "vrq": [
+   27.228,
+   39.516
+  ],
+  "bl_d": [
+   39.516,
+   250.812
+  ],
+  "bl_v": [
+   250.812,
+   252.396
+  ],
+  "c_l0r": [
+   252.396,
+   252.54
+  ],
+  "c_l0v": [
+   252.54,
+   252.636
+  ],
+  "c_l0d": [
+   252.636,
+   269.084
+  ],
+  "ck": [
+   4.012,
+   6.252
+  ],
+  "cks": [
+   6.252,
+   6.732
+  ],
+  "rn_in": [
+   6.732,
+   7.212
+  ],
+  "rns_in": [
+   7.212,
+   7.692
+  ],
+  "f_vx": [
+   7.692,
+   9.708
+  ],
+  "f_wex": [
+   9.708,
+   11.724
+  ],
+  "f_mx": [
+   11.724,
+   19.5
+  ],
+  "f_v5": [
+   19.5,
+   19.98
+  ],
+  "f_we5": [
+   19.98,
+   20.46
+  ],
+  "f_m5s": [
+   20.46,
+   29.388
+  ],
+  "fe_flt": [
+   29.388,
+   36.612
+  ],
+  "st_i": [
+   36.612,
+   54.812
+  ],
+  "st_o": [
+   35.836,
+   53.052
+  ],
+  "t_err": [
+   53.052,
+   53.532
+  ],
+  "flt": [
+   53.532,
+   54.012
+  ],
+  "fvec": [
+   54.012,
+   66.396
+  ],
+  "max_occ": [
+   66.396,
+   67.644
+  ],
+  "t_p2c": [
+   67.644,
+   69.884
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_ph_views/vm_master/be_sl_clock_ref.sdc"
+ ],
+ "inhold": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4 M6",
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4 M6",
+   "v": "M3 M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:el1011-ds-vm/be",
+  "branch": "claude/el1011-ds-vm-be",
+  "tag": "r2",
+  "purpose": "el1011-ds-vm/be r2: r1 df88d1e26 crashed STA-0562 'set_output_delay -Inf' (pre-CTS str_clk arrival = -Inf passed the double check) -> finite guard; + boundary_tcl re-applies the str_clk boundary after every io_ref switch (post-CTS/pre-GRT/post-DRT) so the route times vrv/vrq/rns_in on the propagated str_clk. | el1011-ds-vm/be: dsfd_vm_be_sl v4 (BE slice, glue inside; RTL = besl4/5/7) re-routed through tools/ref_tile: N/S face pins on VERTICAL layers M3/M5 (pin_balance group 32) instead of the hand-flow N-face M6 pins at 0.128 pitch that stalled besl5/besl7 at 1,300-3,452 M7 spacing DRC; PG M6 stripes as pins; contract slot outline 302.4 x 92.88; str_clk (cks, 3/4 T) via sdc_extra be_sl_clock_ref.sdc; inhold on the single-capture inputs (besl5 FF miss was rns_in -> u_rns). CONTRACT CHANGE: N/S pins M6/M5 -> M3/M5 balanced; c_l0r/c_l0v/c_l0d moved from the middle of bl_d to right of bl_v (x 252.5-267.2).",
+  "benches": [
+   {
+    "name": "exact_gold",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one gold_s1 --out {RUN}/bench/gold_s1",
+    "expect": "pass",
+    "pass_regex": "SPVM_gold_s1: PASS",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "neg_stale",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one mut_stale --out {RUN}/bench/mut_stale",
+    "expect": "fail",
+    "fail_regex": "SPVM_mut_stale: FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24
+   }
+  ],
+  "views_to": "physical/ref_tile/dsfd_vm_be_sl/views",
+  "record_to": "results/rtl/ref_tile/dsfd_vm_be_sl"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "boundary_tcl": [
+  "physical/s81_ph_views/vm_master/be_sl_str_boundary.tcl"
+ ]
+}
