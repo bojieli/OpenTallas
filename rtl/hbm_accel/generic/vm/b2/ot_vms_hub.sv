@@ -11,6 +11,15 @@
 //   mirror write            -> local bank + one CW broadcast PREQ to the other 3 slices (each answers on the reverse ring: the
 //                              client's response waits for the local write and all 3 remote writes = global visibility)
 //   main, slice d = S[14:13] == sid -> local bank;  d == sid+1 / sid+2 -> CW PREQ;  d == sid+3 -> CCW PREQ (1 hop)
+// Dispatch is TWO pipeline stages (v05, 2026-10-12: the v04 route missed TT -57.8 on grant -> 2.8 kb payload mux):
+//   G: arbitrate on registered entry state; register the one-hot grant per bank / ring port and the granted entry index
+//      (credits and entry state update here, so the next grant sees them);
+//   P: AND-OR the granted entry's payload (4:1 by the registered index, then one-hot over clients) into the output flops.
+// An entry's fields cannot change between G and P (it is freed only after all of its responses, which follow P).
+// Behind the pin flops two more registered stages (v05) keep decode off the 5 kb entry-data write mux:
+//   A (requests): the request payload is re-registered with a ONE-HOT allocation entry aw = onehot(tp + A-valid);
+//   R (responses): every bank PR / ring PRSP is re-registered with its decoded one-hot entry hit (count) and data hit.
+// The head's response payload is selected by a one-hot head pointer (no binary decode on the 1.1 kb cr mux).
 // Per client a 4-entry reorder buffer; entries dispatch IN ORDER (an entry's local and ring parts both leave before the
 // next entry), so a client's ops to one bank/slice keep their order; responses (bank pr, PRSPs from either ring stop) fill entries in any
 // order and are delivered in request order.  All bank / ring ports are credit-based (no combinational ready crosses a
@@ -51,6 +60,44 @@ module ot_vms_hub #(
     end
     wire [263:0] cco_r [0:1];
     assign cco_r[0] = {cc0_v, cc0_d}; assign cco_r[1] = {cc1_v, cc1_d};
+    // ---- stage A (requests) and stage R (responses); sources 0..7 = banks, 8/9 = CW / CCW stop
+    reg [N*338-1:0] cq_s; reg [N-1:0] cq_av; reg [3:0] aw [0:N-1];
+    reg [255:0] rs_d [0:9]; reg [N*4-1:0] rh [0:9]; reg [N*4-1:0] rhd [0:9];
+    reg [1:0] tp [0:N-1];
+    always @(posedge clk) begin : sar
+        cq_s <= cq_d;
+        for (integer b = 0; b < 8; b = b + 1) rs_d[b] <= pr_d[b*266 +: 256];
+        rs_d[8] <= cc0_d[255:0]; rs_d[9] <= cc1_d[255:0];
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            cq_av <= '0;
+            for (integer c = 0; c < N; c = c + 1) aw[c] <= 4'd0;
+            for (integer x = 0; x < 10; x = x + 1) begin rh[x] <= '0; rhd[x] <= '0; end
+        end else begin : sarc
+            reg [1:0] nx;
+            cq_av <= cq_v;
+            for (integer c = 0; c < N; c = c + 1) begin
+                nx = tp[c] + (cq_av[c] ? 2'd1 : 2'd0);                  // tp after the request now in stage A allocates
+                aw[c] <= cq_v[c] ? (4'd1 << nx) : 4'd0;
+            end
+            for (integer b = 0; b < 8; b = b + 1) begin
+                rh[b] <= '0; rhd[b] <= '0;
+                for (integer c = 0; c < N; c = c + 1) for (integer k = 0; k < 4; k = k + 1)
+                    if (pr_r[b*266 + 265] && pr_r[b*266 + 260 +: 4] == 4'(c) && pr_r[b*266 + 256 +: 2] == 2'(k)) begin
+                        rh[b][c*4 + k] <= 1'b1; rhd[b][c*4 + k] <= !pr_r[b*266 + 264];
+                    end
+            end
+            for (integer r = 0; r < 2; r = r + 1) begin
+                rh[8 + r] <= '0; rhd[8 + r] <= '0;
+                for (integer c = 0; c < N; c = c + 1) for (integer k = 0; k < 4; k = k + 1)
+                    if (cco_r[r][263] && cco_r[r][262:259] == 4'(c) && cco_r[r][258:257] == 2'(k)) begin
+                        rh[8 + r][c*4 + k] <= 1'b1; rhd[8 + r][c*4 + k] <= !cco_r[r][256];
+                    end
+            end
+        end
+    reg [N*338-1:0] cq_a;
+    always @* begin cq_a = cq_s; for (integer c = 0; c < N; c = c + 1) cq_a[c*338 + 337] = cq_av[c]; end
     always @(posedge clk) begin cq_d <= cq; pr_d <= pr; cc0_d <= cco0[262:0]; cc1_d <= cco1[262:0]; me <= sid; end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin cq_v <= '0; pr_v <= '0; cc0_v <= 1'b0; cc1_v <= 1'b0; pq_cr_r <= '0; cwi_cr_r <= 1'b0; cci_cr_r <= 1'b0; end
@@ -61,6 +108,8 @@ module ot_vms_hub #(
         end
     // output registers: control valid + payload
     reg [N-1:0] cr_v; reg [N*274-1:0] cr_d; reg [7:0] pq_v; reg [8*285-1:0] pq_d; reg cwi_v, cci_v; reg [288:0] cwi_d, cci_d;
+    // stage-G grant registers (control: reset) and the granted entry index per client (payload select: no reset)
+    reg [N-1:0] gs_b [0:7]; reg [N-1:0] gs_cw, gs_ccw; reg [1:0] gs_e [0:N-1];
     assign cwi = {cwi_v, cwi_d}; assign cci = {cci_v, cci_d};
     genvar go;
     for (go = 0; go < N; go = go + 1) begin : g_cr
@@ -84,7 +133,7 @@ module ot_vms_hub #(
     reg [2:0]    e_cnt  [0:N-1][0:3];    // responses still to come
     reg          e_sl   [0:N-1][0:3];    // local part sent
     reg          e_sr   [0:N-1][0:3];    // ring part sent
-    reg [1:0] tp [0:N-1], dp [0:N-1], hp [0:N-1];
+    reg [1:0] dp [0:N-1], hp [0:N-1]; reg [3:0] h1 [0:N-1];   // h1 = one-hot hp
     reg [2:0] pqc [0:7]; reg [2:0] cwic, ccic;
     reg [2:0] rot;                                       // rotating client priority
 
@@ -124,10 +173,7 @@ module ot_vms_hub #(
     always @* begin
         for (integer c = 0; c < N; c = c + 1) for (integer e = 0; e < 4; e = e + 1) begin
             dec[c][e] = 3'd0;
-            for (integer b = 0; b < 8; b = b + 1)
-                if (pr_r[b*266 + 265] && pr_r[b*266 + 260 +: 4] == 4'(c) && pr_r[b*266 + 256 +: 2] == 2'(e)) dec[c][e] = dec[c][e] + 3'd1;
-            for (integer r = 0; r < 2; r = r + 1)
-                if (cco_r[r][263] && cco_r[r][262:259] == 4'(c) && cco_r[r][258:257] == 2'(e)) dec[c][e] = dec[c][e] + 3'd1;
+            for (integer x = 0; x < 10; x = x + 1) dec[c][e] = dec[c][e] + {2'd0, rh[x][c*4 + e]};
         end
     end
 
@@ -143,21 +189,23 @@ module ot_vms_hub #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             proto <= 1'b0; mflt <= 1'b0; rflt <= 1'b0; rot <= 3'd0; cwic <= 3'(CWI); ccic <= 3'(CCI);
-            pq_v <= '0; cwi_v <= 1'b0; cci_v <= 1'b0; cr_v <= '0; status <= 3'd0;
+            pq_v <= '0; cwi_v <= 1'b0; cci_v <= 1'b0; cr_v <= '0; status <= 3'd0; gs_cw <= '0; gs_ccw <= '0;
+            for (integer b = 0; b < 8; b = b + 1) gs_b[b] <= '0;
             for (integer b = 0; b < 8; b = b + 1) pqc[b] <= 3'(PQ);
             for (integer c = 0; c < N; c = c + 1) begin
-                tp[c] <= 2'd0; dp[c] <= 2'd0; hp[c] <= 2'd0;
+                tp[c] <= 2'd0; dp[c] <= 2'd0; hp[c] <= 2'd0; h1[c] <= 4'd1;
                 for (integer e = 0; e < 4; e = e + 1) begin e_v[c][e] <= 1'b0; e_cnt[c][e] <= 3'd0; e_sl[c][e] <= 1'b0; e_sr[c][e] <= 1'b0; end
             end
         end else begin : seq
-            reg [7:0] pqd;
+            reg [7:0] pqd; reg [N-1:0] gb [0:7];
+            for (integer b = 0; b < 8; b = b + 1) gb[b] = '0;
             rot <= (rot + 3'd1 == 3'(NC)) ? 3'd0 : rot + 3'd1;
             pqd = 8'd0;
             for (integer c = 0; c < N; c = c + 1) begin : cl
                 reg [336:0] q; reg [14:0] s; reg m; reg [1:0] d; reg [7:0] wm; reg [31:0] bx; reg [1:0] e;
                 // ---- allocate a new request
-                q = cq_r[c*338 +: 337];
-                if (cq_r[c*338 + 337]) begin
+                q = cq_a[c*338 +: 337];
+                if (cq_a[c*338 + 337]) begin
                     s = q[323:309]; m = q[324]; d = (MUT == 1) ? s[13:12] : s[14:13];
                     for (integer k = 0; k < 8; k = k + 1) begin wm[k] = &q[16 + 4*k +: 4]; bx[4*k +: 4] = {4{wm[k]}}; end
                     if (|(q[47:16] & ~bx) && q[336]) mflt <= 1'b1;
@@ -169,18 +217,19 @@ module ot_vms_hub #(
                 end
                 // ---- dispatch entry dp[c]
                 e = dp[c];
-                if (gl[c]) begin pqd[cb[c]] = 1'b1; e_sl[c][e] <= 1'b1; end
+                if (gl[c]) begin pqd[cb[c]] = 1'b1; gb[cb[c]][c] = 1'b1; e_sl[c][e] <= 1'b1; end
                 if (gcw[c] || gccw[c]) e_sr[c][e] <= 1'b1;
                 if (dadv[c]) dp[c] <= dp[c] + 2'd1;
                 // ---- response counts
                 for (integer k = 0; k < 4; k = k + 1) e_cnt[c][k] <= e_cnt[c][k] - dec[c][k];
-                if (cq_r[c*338 + 337])                                      // the new entry's count (no response yet)
+                if (cq_a[c*338 + 337])                                      // the new entry's count (no response yet)
                     e_cnt[c][tp[c]] <= (q[324] && q[336] && c != NC) ? 3'd4 : 3'd1;
                 // ---- deliver the head
                 cr_v[c] <= dlv[c];
-                if (dlv[c]) begin e_v[c][hp[c]] <= 1'b0; hp[c] <= hp[c] + 2'd1; end
+                if (dlv[c]) begin e_v[c][hp[c]] <= 1'b0; hp[c] <= hp[c] + 2'd1; h1[c] <= {h1[c][2:0], h1[c][3]}; end
             end
-            pq_v <= pqd; cwi_v <= |gcw; cci_v <= |gccw;
+            for (integer b = 0; b < 8; b = b + 1) begin gs_b[b] <= gb[b]; pq_v[b] <= |gs_b[b]; end   // G -> P
+            gs_cw <= gcw; gs_ccw <= gccw; cwi_v <= |gs_cw; cci_v <= |gs_ccw;
             for (integer b = 0; b < 8; b = b + 1) pqc[b] <= pqc[b] - (pqd[b] ? 3'd1 : 3'd0) + (pq_cr_r[b] ? 3'd1 : 3'd0);
             cwic <= cwic - (|gcw ? 3'd1 : 3'd0) + (cwi_cr_r ? 3'd1 : 3'd0);
             ccic <= ccic - (|gccw ? 3'd1 : 3'd0) + (cci_cr_r ? 3'd1 : 3'd0);
@@ -190,38 +239,57 @@ module ot_vms_hub #(
     always @(posedge clk) begin : dat
         for (integer c = 0; c < N; c = c + 1) begin : cl
             reg [336:0] q; reg [14:0] s; reg m; reg [1:0] d; reg [7:0] wm; reg [1:0] e;
-            q = cq_r[c*338 +: 337];
-            if (cq_r[c*338 + 337]) begin
+            q = cq_a[c*338 +: 337];
+            for (integer a = 0; a < 4; a = a + 1) if (aw[c][a]) begin
                 s = q[323:309]; m = q[324]; d = (MUT == 1) ? s[13:12] : s[14:13];
                 for (integer k = 0; k < 8; k = k + 1) wm[k] = &q[16 + 4*k +: 4];
-                e_we[c][tp[c]] <= q[336]; e_bank[c][tp[c]] <= s[2:0];
-                e_row[c][tp[c]] <= {m, s[12:3]}; e_wm[c][tp[c]] <= wm; e_d[c][tp[c]] <= q[303:48]; e_tag[c][tp[c]] <= q[15:0];
+                e_we[c][a] <= q[336]; e_bank[c][a] <= s[2:0];
+                e_row[c][a] <= {m, s[12:3]}; e_wm[c][a] <= wm; e_d[c][a] <= q[303:48]; e_tag[c][a] <= q[15:0];
                 if (m) begin
-                    e_nl[c][tp[c]] <= 1'b1;
-                    if (q[336] && c != NC) begin e_nr[c][tp[c]] <= 2'd1; e_dm[c][tp[c]] <= 4'hf & ~(4'd1 << me); end
-                    else e_nr[c][tp[c]] <= 2'd0;
+                    e_nl[c][a] <= 1'b1;
+                    if (q[336] && c != NC) begin e_nr[c][a] <= 2'd1; e_dm[c][a] <= 4'hf & ~(4'd1 << me); end
+                    else e_nr[c][a] <= 2'd0;
                 end else if (d == me || c == NC) begin
-                    e_nl[c][tp[c]] <= 1'b1; e_nr[c][tp[c]] <= 2'd0;
+                    e_nl[c][a] <= 1'b1; e_nr[c][a] <= 2'd0;
                 end else begin
-                    e_nl[c][tp[c]] <= 1'b0; e_dm[c][tp[c]] <= 4'd1 << d;
-                    e_nr[c][tp[c]] <= (d == me + 2'd3) ? 2'd2 : 2'd1;
+                    e_nl[c][a] <= 1'b0; e_dm[c][a] <= 4'd1 << d;
+                    e_nr[c][a] <= (d == me + 2'd3) ? 2'd2 : 2'd1;
                 end
             end
             // ---- dispatch payloads
             e = dp[c];
-            if (gl[c]) pq_d[cb[c]*285 +: 284] <= {e_we[c][e], e_row[c][e], e_d[c][e], e_wm[c][e], 4'(c), 2'b00, e};
-            if (gcw[c])  cwi_d <= {e_dm[c][e], 4'(c), e, e_we[c][e], e_bank[c][e], e_row[c][e], e_wm[c][e], e_d[c][e]};
-            if (gccw[c]) cci_d <= {e_dm[c][e], 4'(c), e, e_we[c][e], e_bank[c][e], e_row[c][e], e_wm[c][e], e_d[c][e]};
+            gs_e[c] <= e;                                               // stage G: the entry a grant (if any) refers to
             // ---- responses
-            for (integer k = 0; k < 4; k = k + 1) begin
-                for (integer b = 0; b < 8; b = b + 1)
-                    if (pr_r[b*266 + 265] && pr_r[b*266 + 260 +: 4] == 4'(c) && pr_r[b*266 + 256 +: 2] == 2'(k) && !pr_r[b*266 + 264])
-                        e_d[c][k] <= pr_r[b*266 +: 256];
-                for (integer r = 0; r < 2; r = r + 1)
-                    if (cco_r[r][263] && cco_r[r][262:259] == 4'(c) && cco_r[r][258:257] == 2'(k) && !cco_r[r][256]) e_d[c][k] <= cco_r[r][255:0];
+            for (integer k = 0; k < 4; k = k + 1) begin : rw
+                reg [255:0] o; o = '0;
+                for (integer x = 0; x < 10; x = x + 1) o = o | ({256{rhd[x][c*4 + k]}} & rs_d[x]);
+                if (|{rhd[0][c*4+k], rhd[1][c*4+k], rhd[2][c*4+k], rhd[3][c*4+k], rhd[4][c*4+k], rhd[5][c*4+k], rhd[6][c*4+k],
+                      rhd[7][c*4+k], rhd[8][c*4+k], rhd[9][c*4+k]}) e_d[c][k] <= o;
             end
             // ---- the head's response payload
-            cr_d[c*274 +: 273] <= {e_tag[c][hp[c]], e_we[c][hp[c]], e_we[c][hp[c]] ? 256'd0 : e_d[c][hp[c]]};
+            begin : hd
+                reg [272:0] o; o = '0;
+                for (integer k = 0; k < 4; k = k + 1) o = o | ({273{h1[c][k]}} & {e_tag[c][k], e_we[c][k], e_we[c][k] ? 256'd0 : e_d[c][k]});
+                cr_d[c*274 +: 273] <= o;
+            end
+        end
+        // ---- stage P: one-hot AND-OR of the granted entries' payloads into the bank / ring output flops
+        begin : sp
+            reg [283:0] pl [0:N-1]; reg [288:0] rl [0:N-1]; reg [283:0] ob; reg [288:0] ow, oc; reg [1:0] e;
+            for (integer c = 0; c < N; c = c + 1) begin
+                e = gs_e[c];
+                pl[c] = {e_we[c][e], e_row[c][e], e_d[c][e], e_wm[c][e], 4'(c), 2'b00, e};
+                rl[c] = {e_dm[c][e], 4'(c), e, e_we[c][e], e_bank[c][e], e_row[c][e], e_wm[c][e], e_d[c][e]};
+            end
+            for (integer b = 0; b < 8; b = b + 1) begin
+                ob = '0;
+                for (integer c = 0; c < N; c = c + 1) ob = ob | ({284{gs_b[b][c]}} & pl[c]);
+                if (|gs_b[b]) pq_d[b*285 +: 284] <= ob;
+            end
+            ow = '0; oc = '0;
+            for (integer c = 0; c < N; c = c + 1) begin ow = ow | ({289{gs_cw[c]}} & rl[c]); oc = oc | ({289{gs_ccw[c]}} & rl[c]); end
+            if (|gs_cw) cwi_d <= ow;
+            if (|gs_ccw) cci_d <= oc;
         end
     end
 endmodule

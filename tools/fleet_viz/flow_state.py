@@ -125,21 +125,23 @@ class FlowState:
         names = [r["element"]] + list(r.get("variants") or [])
         blocks = set(names) | {j["block"] for j in g}
         r["die_used"] = bool(blocks & self.used)
-        tile = next((self.state[b] for b in names if b in self.state), None) or \
-            next((self.state[b] for b in sorted(blocks) if b in self.state), None)
-        rr = None
-        if tile:
-            rr = {k: tile.get(k) for k in ("state", "job", "kit", "closed_job", "gate", "priority", "reason",
-                                            "compare", "submitted_at")}
-            r["m5_reroute"] = rr
-        else:
-            r["m5_reroute"] = None
+        # an element can own several re-routed tiles (variants / job blocks): keep each tile's own M5 state
+        # (r['m5_by_block']) and use the element's own tile, else its first variant's, for the element badge
+        order = names + sorted(blocks - set(names))
+        tiles = [(b, self.state[b]) for b in order if b in self.state]
+        keys = ("state", "job", "kit", "closed_job", "gate", "priority", "reason", "compare", "submitted_at")
+        r["m5_by_block"] = {b: {k: t.get(k) for k in keys} for b, t in tiles}
+        tile = tiles[0][1] if tiles else None
+        r["m5_reroute"] = r["m5_by_block"][tiles[0][0]] if tiles else None
         live_m5 = [j for j in g if j["status"] in LIVE and j.get("ref_tile") and j.get("kit")
                    and self.kit_cap(j.get("source_commit"), j["kit"]) == "M5"]
         byname = {j["name"]: j for j in g}
-        sub_live = bool(tile and tile.get("state") == "submitted" and
-                        (byname.get(tile.get("job")) or {}).get("status", "QUEUED") in LIVE | {None, "QUEUED"}
-                        and not (tile.get("compare") or {}).get("final"))
+        live_tiles = [t for _, t in tiles if t.get("state") == "submitted" and
+                      (byname.get(t.get("job")) or {}).get("status", "QUEUED") in LIVE | {None, "QUEUED"}
+                      and not (t.get("compare") or {}).get("final")]
+        sub_live = bool(live_tiles)
+        if live_tiles:
+            tile = live_tiles[0]
         closed_flow, detail = None, ""
         if str(r.get("category", "")).startswith("closed"):
             bj = byname.get((r.get("best") or {}).get("job") or "")

@@ -1,5 +1,5 @@
 {
- "name": "smh_pt_e_ref_p40s-r1-c3cc25090",
+ "name": "smh_pt_e_ref_p40s-r1-6332f4e44",
  "block": "ot_hbm_accel_smh_pt_e",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-smh",
@@ -7,8 +7,8 @@
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
-  "branch": "claude/el1011-hbm-smh",
-  "commit": "c3cc25090"
+  "branch": "main",
+  "commit": "6332f4e44"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_pt_e_ref_p40s/smh_pt_e_ref_p40s-r1-c3cc25090"
+   "to": "results/rtl/ref_tile/smh_pt_e_ref_p40s/smh_pt_e_ref_p40s-r1-6332f4e44"
   }
  ],
  "cycles_added": 0,

@@ -1,23 +1,55 @@
 {
- "name": "dscoll_lane_w_rt-rtg-bdce12658",
+ "name": "dscoll_lane_w_rt-rtm-c57fb7c06",
  "block": "dsfd_coll_lane_w",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-coll",
- "purpose": "ds-coll RELAUNCH5: dsfd_coll_lane_w ref_tile re-route on a GROWN slot 432 x 336.96 (S81 contract v8 5a576c265) (contract 345.6 x 340.2 cannot hold the 10 ot_sram_1r1w_512x128_m4_r2c2 under ref_tile >= 20 um channels: needs 2 columns x 5 rows = 408.2 um + face margins; rr1012 04:17). Closed s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt failed child_lint (f). RTL snapshotted from 9ac26e269 (the closed route's RTL), same faces (die lanes W, core E, ck/rs/chb N). Slot growth +86.4 um per W-column instance posted to el1011-s81die.log.",
+ "purpose": "ds-coll M5 re-route of dsfd_coll_lane_w (432 x 336.96, S81 v8 slot): g2 (0fdf6f3c2) GRT-0116 -- hotspot = west end of the row-4/5 channel (x 20-40, y 220-260; GRT 19/18 per gcell, 122 + 18 overflowed gcells): the dictionary-order macro fill split the replay buffer's 553-bit word across BOTH columns (u_rb g_t0/2/4 E, g_t1/3 W), so its read/write slices converged horizontally through 22 um row channels with M2/M4 blocked over the macros under the M5 cap. Fix: one memory per column (u_rb's 5 slices stacked in the W column next to the gearbox it feeds, u_fifo's 5 in the E column next to li_d), so each 553-bit word is distributed vertically (M3/M5) along its column and only the registered W<->E datapaths cross a column (~1.4k bits over ~184 um of channel = ~6.4k H tracks, 0.22). RTL: reset synchroniser replicated per consumer (6 kept copies; was one 6,822-load net); lane-pair bench gates it.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-ds-coll",
-  "commit": "bdce12658"
+  "commit": "c57fb7c06"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module dsfd_coll_lane_w physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/link/ot_link_crc32.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_coll_lane_w #(.GFMT(1), .EPPIPE(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/link/ot_link_crc32.sv physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_pair_ch100",
+    "cmd": "bash physical/ref_tile/dscoll_lane_w_rt/bench/lane_pair.sh $PWD {RUN}/p100 100",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "records=(\\d+)"
+   },
+   {
+    "name": "lane_pair_ch400",
+    "cmd": "bash physical/ref_tile/dscoll_lane_w_rt/bench/lane_pair.sh $PWD {RUN}/p400 400",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "records=(\\d+)"
+   },
+   {
+    "name": "neg_gb_reset_stuck",
+    "cmd": "mkdir -p {RUN}/neg && sed \"s/rst_gb = rst_b\\[4\\]/rst_gb = 1'b0/\" physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv > {RUN}/neg/lane.sv ; grep -q \"rst_gb = 1'b0\" {RUN}/neg/lane.sv || exit 0 ; bash physical/ref_tile/dscoll_lane_w_rt/bench/lane_pair.sh $PWD {RUN}/neg 100 {RUN}/neg/lane.sv",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 12,
     "needs": [
      "verilator"
     ]
@@ -73,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_lane_w_rt/dscoll_lane_w_rt-rtg-bdce12658"
+   "to": "results/rtl/ref_tile/dscoll_lane_w_rt/dscoll_lane_w_rt-rtm-c57fb7c06"
   }
  ],
  "cycles_added": 0,
@@ -81,6 +113,5 @@
  "route_hold_margin_ns": 0.01,
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
- "merge_target": null,
- "no_bench_reason": "physical re-implementation of the closed lane_w RTL (sources snapshotted byte-for-byte from 9ac26e269, params GFMT=1 EPPIPE=2 as the closed route); no RTL change; the closed job ran no loop benches"
+ "merge_target": null
 }

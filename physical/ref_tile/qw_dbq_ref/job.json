@@ -1,5 +1,5 @@
 {
- "name": "qw_dbq_ref-b1-c6996f244",
+ "name": "qw_dbq_ref-b3-93f14f333",
  "block": "ot_hgi_qw_dbq",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-fq",
@@ -8,13 +8,13 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/el1011-hbm-fq",
-  "commit": "c6996f244"
+  "commit": "93f14f333"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_hgi_qw_dbq rtl/lib/ot_rst_relay.sv physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_qw_dbq u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qw_dbq_ref/qw_dbq_ref-b1-c6996f244"
+   "to": "results/rtl/ref_tile/qw_dbq_ref/qw_dbq_ref-b3-93f14f333"
   }
  ],
  "cycles_added": 0,

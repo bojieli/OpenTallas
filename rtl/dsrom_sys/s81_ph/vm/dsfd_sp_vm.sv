@@ -1572,7 +1572,9 @@ module dsfd_sp_vm_m #(
         for (t = 0; t < NT; t = t + 1) begin : g_t
             wire [1:0] gid = t;
             // = dsfd_vm_bgq28 (the hard tile) at the default parameters
-            dsfd_vm_bgq #(.NP(NP), .NPR(NPR), .NB(32), .NBL(8), .QD(QD), .RQ(8), .MACRO(MACRO), .DW(128), .NSTG(NSTG), .EP(EP)) u_bg (
+            // v4 (el1011-ds-vm/bgq28 2026-10-12): dsfd_vm_bgr, 4 bank-pair stages + 2-stage control lead (hop 6); its
+            // o_* -> f_* skew is HL + 1 = QD + 5 + ED, the MD below (NSTG-independent), so the BE is unchanged
+            dsfd_vm_bgr #(.NP(NP), .NPR(NPR), .NB(32), .NBL(8), .QD(QD), .RQ(8), .MACRO(MACRO), .DW(128), .NSTG(4), .EP(EP)) u_bg (
                 .ck(ck), .rs(rst), .grp(gid),
                 .i_v(cv_[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cm[t]), .i_d(cd_[t]),
                 .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),

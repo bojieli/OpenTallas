@@ -13,7 +13,6 @@
  "reset_ports": [
   "rst_n"
  ],
- "pg_layer": "M6",
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -91,8 +90,8 @@
  "job": {
   "owner": "Claude:el1011-hbm-b2-cp",
   "branch": "claude/el1011-hbm-b2-cp",
-  "tag": "v23",
-  "purpose": "ot_hgi_seq v2.3 (prefetching fetch sequencer for CP.FETCH, 0.794x of price; B2 dispatch path 0.828x): v2.2 route 905100ec5 TT -186.91 fixed structurally (registered header alloc, thermometer FIFO control, staged writes, registered DYN row / resolver operands, hold-delay cells on inputs)",
+  "tag": "v24",
+  "purpose": "ot_hgi_seq v2.4 (CP.FETCH prefetching sequencer, cycle-identical to v2.3 on the 43-case bench): v2.3 route 8447139d1 TT -48.25 (run_q -> be_inj -> pop count pc -> 1.5k FIFO data flops, 22-24 lv, pc ~4.6k selects) fixed structurally by a LAZY-SHIFT FIFO (storage lags the view by the registered pop count, replicated per entry/reader; fq_th moved by a 5-way shift select); FF -15.5 (flop->ring macro wd/we, input pins) by 2 kept HB4 stages on inputs and macro write data/enables; M5 layer cap; main flow fixes (hold measured after parasitics)",
   "extra_paths": [
    "rtl/hbm_accel/generic/tb",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
@@ -121,5 +120,6 @@
  },
  "std_area_um2": 17742,
  "children": [],
- "inter": []
+ "inter": [],
+ "layer_cap": "M5"
 }

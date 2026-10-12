@@ -76,7 +76,7 @@
  },
  "job": {
   "owner": "Claude:el1011-hbm-smh",
-  "branch": "claude/el1011-hbm-smh",
+  "branch": "main",
   "tag": "r1",
   "purpose": "[T4 el1012] ot_hbm_accel_smh_pt_e: p40 ref_tile kits stalled at ~3,000 GRT markers because the POST_TAPCELL pin-flop hook ran before the io_tcl pins existed (W 7410 / E 0: both register stages + 6,860 hold buffers in one W strip). ref_tile now places the exact pins in post_tapcell.tcl before the hook (W 3705 / E 3705 as in the closed hand route); M5 tile cap",
   "no_bench_reason": "exactness is gated by the SM tile cluster lockstep bench under OT_SMH_HIER (ec948f1fc, ot-epyc4 w_hier2: 12 ops exact, CG_LOCKSTEP mismatches 0, PASS 8270 cycles) plus its late32/hold0 mutants, carried by the tile-cluster job; this child job re-routes unchanged RTL",

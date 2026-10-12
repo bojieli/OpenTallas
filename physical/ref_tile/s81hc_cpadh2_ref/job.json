@@ -1,20 +1,20 @@
 {
- "name": "s81hc_cpadh2_ref-v1-COMMIT",
+ "name": "s81hc_cpadh2_ref-v1rf5-COMMIT",
  "block": "ot_s81_hc_cpad",
  "ref_tile": true,
  "owner": "Claude:s81-suhc-hier-1011",
- "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_cpad at the HIER2 parameters; reference tile flow",
+ "purpose": "[hc-crootr] RF5 pad +1128 flops: outline 125.28^2 -> 155.52^2 (util 85% -> ~51%); [hc-crootr] RF 4->5 (crootr v2 mid-height y relay): forward pad FP 14->15; s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_cpad at the HIER2 parameters; reference tile flow",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/s81-suhc-hier-1011-hc-mp",
+  "branch": "claude/el1011-s81hc-crootr",
   "commit": "COMMIT"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_hc_cpad #(.HALF(1), .RLY(2), .RF(4), .DW(6)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpad.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/link/ot_fifo_sram_fwft.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_skid_buffer.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/hdc/v41x/ot_dsrom_divc.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_hc_cpad #(.HALF(1), .RLY(2), .RF(5), .DW(6)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpad.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/link/ot_fifo_sram_fwft.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_skid_buffer.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/hdc/v41x/ot_dsrom_divc.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_cpadh2_ref/s81hc_cpadh2_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_cpadh2_ref/s81hc_cpadh2_ref-v1rf5-COMMIT"
   }
  ],
  "cycles_added": 0,

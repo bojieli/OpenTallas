@@ -13,7 +13,7 @@
 //   B[row] = {free 144, mirror [311:256], main [311:256]}.  Each FP32 word carries its own (39,32) SECDED code (8 x 39 =
 //   312 b a sector), so word-masked writes need no read-modify-write.  1R1W per bank per cycle.
 // Ports (every input pin-flopped, every output a flop):
-//   rq  [RG]  wide read lanes {v, sec16}; rq_cr = one credit back when the request leaves its LQ-deep queue;
+//   rq  [RG]  wide read lanes {v, sec16}; rq_cr = one credit back when the request leaves its lane queue;
 //             rr {v, data 256} in request order, no back-pressure.
 //   wq  [WG]  client wide write lanes {v, sec16, data 256, wmask 8}; wq_cr = credit (left the queue), wq_done = in the
 //             macro.  A MIRROR write is also sent on the egress port (the ring broadcasts it to the other 3 slices); it
@@ -36,12 +36,18 @@
 module ot_vms_bank #(
     parameter integer RG  = 2,
     parameter integer WG  = 2,
-    parameter integer LQ  = 4,      // wide lane queue depth = credits a lane's client holds
+    // Wide lane credits (B2 SPEC v0.8, D-B2-12): lane g's queue depth = the credits its client holds = 4 + 2 x the relay
+    // stages each way between the lane's farthest client and this tile (contract relay count; RRS / WRS, 4 b a lane).
+    // 4 + 2 S covers the credit round trip, so a client S stages away keeps 1 op / lane / cycle.  Default S = 3 = the
+    // local lane group's far station (slice -> SU -> SFU -> HC); the hardened tile is built at these defaults.
+    parameter [RG*4-1:0] RRS = {RG{4'd3}},
+    parameter [WG*4-1:0] WRS = {WG{4'd3}},
     parameter integer KQD = 2,      // coll queue depth
     parameter integer XQD = 2,      // ring write queue depth
     parameter integer PQ  = 4,      // packet queue depth = hub credits for this bank
     parameter integer EGC = 2,      // egress credits = the CW stop's lane buffer depth
-    parameter integer MUT = 0       // 1: mirror writes are NOT sent on egress (broadcast lost: must FAIL)
+    parameter integer MUT = 0       // 1: mirror writes are NOT sent on egress (broadcast lost: must FAIL);
+                                    // 2: every wide lane queue one entry shorter than its credits (overrun: must FAIL)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -143,6 +149,15 @@ module ot_vms_bank #(
     // ------------------------------------------------------------------ queues
     // write-queue entry {bad, rowm 11, data 256, wmask 8} = 276 b
     localparam integer NWQ = WG + 4;              // writers in the round robin: WG lanes, kq, xq, packet (index WG+2), xq2
+    // per-lane depths (credits) and the deepest one (array size); pointers wrap at the lane's own depth
+    function automatic integer rlq(input integer g); rlq = 4 + 2 * RRS[g*4 +: 4] - (MUT == 2 ? 1 : 0); endfunction
+    function automatic integer wlq(input integer g); wlq = 4 + 2 * WRS[g*4 +: 4] - (MUT == 2 ? 1 : 0); endfunction
+    function automatic integer lqmax(input integer dummy);
+        lqmax = 1;
+        for (integer g = 0; g < RG; g = g + 1) if (4 + 2 * RRS[g*4 +: 4] > lqmax) lqmax = 4 + 2 * RRS[g*4 +: 4];
+        for (integer g = 0; g < WG; g = g + 1) if (4 + 2 * WRS[g*4 +: 4] > lqmax) lqmax = 4 + 2 * WRS[g*4 +: 4];
+    endfunction
+    localparam integer LQ = lqmax(0);
     localparam integer LQB = (LQ > 1) ? $clog2(LQ) : 1, KQB = (KQD > 1) ? $clog2(KQD) : 1, XQB = (XQD > 1) ? $clog2(XQD) : 1;
     localparam integer PQB = (PQ > 1) ? $clog2(PQ) : 1;
     reg [275:0] wqm [0:WG-1][0:LQ-1]; reg [LQB-1:0] wqh [0:WG-1], wqt [0:WG-1]; reg [LQB:0] wqn [0:WG-1];
@@ -209,19 +224,19 @@ module ot_vms_bank #(
             // queue pointers (the entries are written by the payload block below; decode at push)
             for (integer g = 0; g < WG; g = g + 1) begin
                 if (wq_r[g*281 + 280]) begin
-                    wqt[g] <= wqt[g] + 1'b1;
-                    if (wqn[g] == (LQB+1)'(LQ) && !w_pop[g]) flt <= 1'b1;        // client exceeded its credits
+                    wqt[g] <= (wqt[g] == LQB'(wlq(g) - 1)) ? '0 : wqt[g] + 1'b1;
+                    if (wqn[g] == (LQB+1)'(wlq(g)) && !w_pop[g]) flt <= 1'b1;    // client exceeded its credits
                 end
                 wqn[g] <= wqn[g] + (wq_r[g*281 + 280] ? 1 : 0) - (w_pop[g] ? 1 : 0);
-                if (w_pop[g]) wqh[g] <= wqh[g] + 1'b1;
+                if (w_pop[g]) wqh[g] <= (wqh[g] == LQB'(wlq(g) - 1)) ? '0 : wqh[g] + 1'b1;
             end
             for (integer g = 0; g < RG; g = g + 1) begin
                 if (rq_r[g*17 + 16]) begin
-                    rqt[g] <= rqt[g] + 1'b1;
-                    if (rqn[g] == (LQB+1)'(LQ) && !r_pop[g]) flt <= 1'b1;
+                    rqt[g] <= (rqt[g] == LQB'(rlq(g) - 1)) ? '0 : rqt[g] + 1'b1;
+                    if (rqn[g] == (LQB+1)'(rlq(g)) && !r_pop[g]) flt <= 1'b1;
                 end
                 rqn[g] <= rqn[g] + (rq_r[g*17 + 16] ? 1 : 0) - (r_pop[g] ? 1 : 0);
-                if (r_pop[g]) rqh[g] <= rqh[g] + 1'b1;
+                if (r_pop[g]) rqh[g] <= (rqh[g] == LQB'(rlq(g) - 1)) ? '0 : rqh[g] + 1'b1;
             end
             if (kq_r[280]) begin kqt <= kqt + 1'b1; if (kqn == (KQB+1)'(KQD) && !w_pop[WG]) flt <= 1'b1; end
             kqn <= kqn + (kq_r[280] ? 1 : 0) - (w_pop[WG] ? 1 : 0); if (w_pop[WG]) kqh <= kqh + 1'b1;
