@@ -1,5 +1,5 @@
 {
- "name": "vm_btile_refb-b-COMMIT",
+ "name": "vm_btile_refb-b-60e5d73b4",
  "block": "ot_hgi_vm_btile",
  "ref_tile": true,
  "owner": "Claude:idle1012 (el1011-hbm-hcvm/vm)",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hcvm-vm2",
-  "commit": "COMMIT"
+  "commit": "60e5d73b4"
  },
  "stages": {
   "bench": [
@@ -124,7 +124,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vm_btile_refb/vm_btile_refb-b-COMMIT"
+   "to": "results/rtl/ref_tile/vm_btile_refb/vm_btile_refb-b-60e5d73b4"
   }
  ],
  "cycles_added": 0,
