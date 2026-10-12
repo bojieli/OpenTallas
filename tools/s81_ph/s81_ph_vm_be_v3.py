@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """el1011-ds-vm/be (2026-10-11): pin plans of the BIT-SLICED VM back end v3 (ds-1010 decision).
 
-dsfd_vm_be (1,520.064 x 108, contract_vm28) = 4 identical hardened slice tiles dsfd_vm_be_sl (TW x TH) + a thin parent.
-Tile s sits under bgq column s at x = s * 345.6 + OX, y = YB (S channel YB for the die-pin stubs, N channel 108 - YB - TH
-for the parent's horizontal relays).  Tile N face = the column's tile-3 S pins (o_v / o_d / o_f / o_o, same x and layer
+dsfd_vm_be (1,520.064 x 136.08, contract_vm28) = 4 identical hardened slice tiles dsfd_vm_be_sl (TW x TH) + a thin parent.
+Tile s sits under bgq column s at x = s * 345.6 + OX, y = YB (21.6-um S channel: die-pin stubs; 21.6-um N channel: the
+parent's horizontal relays; outline 1,520.064 x 136.08).  Tile N face = the column's tile-3 S pins (o_v / o_d / o_f / o_o, same x and layer
 as the BE die pins above it); tile S face = this slice's bits of every response; tile W face = clocks, synchronous resets,
 the relayed control (xc / pm) and the status back; tile E face = the P2 credit.
 
@@ -18,10 +18,13 @@ import s81_ph_coll_tiles as T          # noqa: E402
 import s81_ph_vm_master_tiles as V     # noqa: E402
 
 T.CONTRACT = 'contract_vm28'
-SLAB_W, BE_H, COL, NS = V.SLAB_W, V.BE_H, V.W, V.NS
+SLAB_W, COL, NS = V.SLAB_W, V.W, V.NS
 PX = V.PX                              # s81die-1011 contract v3: bgq column pitch 388.8 (345.6 tile + 43.2 channel)
+# BE v3 outline (ds-1010 FLOORPLAN_MARGIN 2026-10-11: 4 tiles = 112,348 um2 were 69.4% of the 1,520 x 108 core):
+# 136.08 tall (504 rows) -> 21.6-um N / S channels around the tiles.
+BE_H = 136.08
 TW, TH = 302.4, 92.88                  # tile outline (28 x the 10.8-um M7 PG pitch; 344 rows)
-OX, YB = 43.2, 4.32                    # tile origin in its column; S channel height (N channel = 108 - YB - TH = 10.8)
+OX, YB = 43.2, 21.6                    # tile origin in its column; S channel height (N channel = BE_H - YB - TH = 21.6)
 CL0R_X = (PX + OX + TW + 2 * PX + OX) / 2   # die c_l0r pin: middle of the channel between slice tiles 1 and 2 (<= ~530 um to any tile pin)
 
 
