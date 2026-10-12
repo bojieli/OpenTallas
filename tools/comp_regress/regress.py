@@ -127,6 +127,7 @@ def emit(R, sha, root, run_ids, budget, par, reexport=False):
           "export QWEN_FX_HISTORY=$QWEN_FX/fx/history QWEN_FX_GOLD=$QWEN_FX/gold/tp4_hs/P8191 "
           "QWEN_FX_REF=$QWEN_FX/gold/tp4_hs/oracle.json",
           'export PATH=$(dirname $VERILATOR):$PATH',
+          '[ -x "$PY" ] || export PY=python3                  # a host without the fixture venv (b2.py / tput generators)',
           f'st "start src {sha} runs {len(runs)}"',
           # coverage: every repo file a build's Verilator read (all __ver.d under the build dir)
           "cover(){ find $G/bld/$1 -name '*__ver.d' -exec cat {} + 2>/dev/null | tr ' ' '\\n' | "
