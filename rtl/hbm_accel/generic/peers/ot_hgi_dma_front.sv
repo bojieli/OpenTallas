@@ -59,6 +59,11 @@ module ot_hgi_dma_front #(
                                           //   request vectors and a two-level (4 x 8) rotating pick; X2 split into the AND-OR rung
                                           //   (registered) and the conversion rung; tag beat counts and the done count in
                                           //   registered rungs (match matrix -> popcount -> update).  +1 cycle out, +2 on tag free.
+    parameter integer XQ = 0,             // hbm-fq/mvf (route n2b-a2fb5da71 post-CTS -471 ps x2s -> wl_d: lane subtract -> quarter
+                                          //   select -> int8 / e4m3 conversion in one cycle; wl_d -> wl pin 462 ps of wire): 1 (needs
+                                          //   XP) = a SELECT rung (lane offset, the quarter / half of the sector, s18 registered), the
+                                          //   CONVERSION rung on the pre-selected bits, and a pure output register at the VM-lane pins.
+                                          //   +2 cycles out.
     parameter integer MUT = 0
 ) (
     input  wire                  clk,
@@ -124,7 +129,8 @@ module ot_hgi_dma_front #(
     // ---------------------------------------------------------------- command station (registered)
     reg cv_q; reg [226:0] cm_q;
     reg busy; reg [2:0] sf; reg [1:0] ks;                  // ks = log2 K (destination sectors per source sector)
-    reg [36:0] ra; reg [31:0] sst;                          // the current row's source byte address, row stride
+    reg [36:0] ra; reg [36:0] sst;                          // the current row's source byte address, row step (STRIPE4:
+                                                            // stride + one stack, mod 2^37 = row o on stack s0 + o)
     reg [31:0] rdw; reg [31:0] dst_w;                       // the current row's VM word address, row stride
     // rows are issued in windows of up to 4 (round robin chunk by chunk: rows striped over the stacks keep all stacks busy)
     reg [19:0] r_left;                                      // rows left after the current window
@@ -149,7 +155,11 @@ module ot_hgi_dma_front #(
     reg [1:0] rq_h, rq_t; reg [2:0] rq_n;
     wire [3:0] ix_inflight = {1'b0, rq_n} + {3'd0, i1_v} + {3'd0, i2_v} + {3'd0, i3_v} + {3'd0, i4_v};
     assign ix_rdy = rc && !busy && !cv_q && !ixc_q && !mv_fault;
-    assign id_rdy = busy && ixm && !mv_fault && ids_left != 20'd0 && ix_inflight < 4'd4;
+    reg idok_r;                                             // XQ: ids left and pipeline room, registered (conservative by one take)
+    assign id_rdy = busy && ixm && !mv_fault && ((XQ != 0) ? idok_r : (ids_left != 20'd0 && ix_inflight < 4'd4));
+    // XQ: per-stack request skid behind the dq output register; the request generators decide on the registered !sk_v
+    // (dq_rdy only steers the output / skid registers: no logic between the dq_rdy pins and the issue decision)
+    reg [NS-1:0] sk_v; reg [50:0] sk_d [0:NS-1]; reg pu; reg [1:0] pu_s; reg [50:0] pu_d;
     wire id_take = id_v && id_rdy;
     // ---------------------------------------------------------------- tags
     reg [15:0] tag_busy;
@@ -250,7 +260,7 @@ module ot_hgi_dma_front #(
             for (integer i = 0; i < NIN; i = i + 1) if (oh[b][i]) gnt[i][rslot[b][i]] = 1'b1;
         end
     end
-    reg [NIN-1:0] x_oh [0:NB-1]; reg [NB-1:0] x_v, x2_v;    // the registered pick (x2_v: XP's AND-OR rung)
+    reg [NIN-1:0] x_oh [0:NB-1]; reg [NB-1:0] x_v, x2_v, x3_v, wo_v;    // the registered pick (x2_v: XP's AND-OR rung)
     wire [3:0] kmask = (ks == 2'd0) ? 4'b0001 : (ks == 2'd1) ? 4'b0011 : 4'b1111;
     genvar g;
     generate for (g = 0; g < NIN; g = g + 1) begin : lg
@@ -309,8 +319,11 @@ module ot_hgi_dma_front #(
     // ---------------------------------------------------------------- X2
     genvar xb;
     generate for (xb = 0; xb < NB; xb = xb + 1) begin : xg
-        assign wl[xb*(280+AP) +: 280+AP] = {wl_v[xb], wl_d[xb]};
         reg [273:0] x2s;                                      // XP: the AND-OR rung's register
+        reg [278+AP:0] wo_d;                                  // XQ: the pin output register
+        reg [255:0] p_s; reg [17:0] p_s18;                    // XQ: the select rung
+        always @(posedge clk) wo_d <= wl_d[xb];
+        assign wl[xb*(280+AP) +: 280+AP] = (XQ != 0) ? {wo_v[xb], wo_d} : {wl_v[xb], wl_d[xb]};
         always @(posedge clk) begin : x2
             reg [273:0] sv; reg [BW-1:0] d; reg [17:0] s18;
             x_oh[xb] <= oh[xb];
@@ -318,11 +331,23 @@ module ot_hgi_dma_front #(
             for (integer i = 0; i < NIN; i = i + 1) if (x_oh[xb][i]) sv = sv | ls_w[i*274 +: 274];
             x2s <= sv;
             if (XP != 0) sv = x2s;
+            if (XQ != 0) begin : xq
+                reg [BW-1:0] e; reg [255:0] x2d;
+                x2d = x2s[255:0];
+                e = BW'(xb) - x2s[256 +: BW];
+                p_s18 <= x2s[273:256] + {16'd0, e[1:0]};
+                p_s <= (sf == 3'd1) ? {128'd0, x2d[{e[1:0], 7'd0} +: 128]} :
+                       (sf == 3'd2 || sf == 3'd4) ? {192'd0, x2d[{e[1:0], 6'd0} +: 64]} : x2s[255:0];
+                if (AP != 0) wl_d[xb] <= (279+AP)'({p_s18[17:15] == 3'd1 && MUT != 7, p_s18[14:0], conv(p_s, sf, 2'd0), 8'hFF});
+                else         wl_d[xb] <= (279+AP)'({p_s18[14:0], conv(p_s, sf, 2'd0), 8'hFF});
+                ap_bad[xb] <= (AP != 0) && x3_v[xb] && (p_s18 >= 18'd40960);
+            end else begin
             d = BW'(xb) - sv[256 +: BW];
             s18 = sv[273:256] + {16'd0, d[1:0]};
             if (AP != 0) wl_d[xb] <= (279+AP)'({s18[17:15] == 3'd1 && MUT != 7, s18[14:0], conv(sv[255:0], sf, d[1:0]), 8'hFF});
             else         wl_d[xb] <= (279+AP)'({s18[14:0], conv(sv[255:0], sf, d[1:0]), 8'hFF});
             ap_bad[xb] <= (AP != 0) && ((XP != 0) ? x2_v[xb] : x_v[xb]) && (s18 >= 18'd40960);       // past the aperture's two slots
+            end
         end
     end endgenerate
     // the indexed request of this cycle (head row of the queue, its next run of <= 256 sectors)
@@ -337,21 +362,22 @@ module ot_hgi_dma_front #(
         ix_st = ix_a[SBIT +: 2];
         ix_bad = ix_try && (e[SBIT +: 2] != ix_st ||
                             ({1'b0, ix_a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, ix_rn, 5'd0}) > (SBIT+1)'(STACK_BYTES));
-        ix_go = ix_try && !ix_bad && (!dq[ix_st*51 + 50] || dq_rdy[ix_st]);
+        ix_go = ix_try && !ix_bad && ((XQ != 0) ? !sk_v[ix_st] : (!dq[ix_st*51 + 50] || dq_rdy[ix_st]));
         ix_pop = r_off + {15'd0, ix_rn} == rsec;
     end
     // ---------------------------------------------------------------- sequential
     integer i, s, t;
     always @(posedge clk or negedge rc) begin
         if (!rc) begin
-            cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; wl_v <= '0; x_v <= '0; x2_v <= '0; rr_ge <= '1;
+            cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; wl_v <= '0; x_v <= '0; x2_v <= '0; x3_v <= '0; wo_v <= '0; rr_ge <= '1;
             tag_busy <= 16'd0; rr <= '0; r_done <= 1'b1;
             issued <= 32'd0; wrote <= 32'd0;
             ixc_q <= 1'b0; ixm <= 1'b0; ids_left <= 20'd0; i1_v <= 1'b0; i2_v <= 1'b0; i3_v <= 1'b0; i4_v <= 1'b0; ix_first <= 1'b0;
-            rq_h <= 2'd0; rq_t <= 2'd0; rq_n <= 3'd0;
+            rq_h <= 2'd0; rq_t <= 2'd0; rq_n <= 3'd0; sk_v <= '0; idok_r <= 1'b0;
         end else begin
             mv_done <= 1'b0;
             for (s = 0; s < NS; s = s + 1) if (dq_rdy[s]) dq[s*51 + 50] <= 1'b0;
+            pu = 1'b0; pu_s = 2'd0; pu_d = 51'd0;
             // ---- accept (command station, then the decode)
             if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
             if (ix_v && ix_rdy && !(mv_v && mv_rdy)) begin ixc_q <= 1'b1; ixm_q <= ix_cmd; end
@@ -396,7 +422,7 @@ module ot_hgi_dma_front #(
             if (cv_q) begin
                 cv_q <= 1'b0; busy <= 1'b1; sf <= cm_q[4:2];
                 ks <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 2'd0 : (cm_q[4:2] == 3'd1) ? 2'd1 : 2'd2;
-                ra <= cm_q[41:5]; sst <= cm_q[76:45]; rdw <= cm_q[129:98]; dst_w <= cm_q[169:138];
+                ra <= cm_q[41:5]; sst <= {5'd0, cm_q[76:45]} + ((cm_q[44:42] == 3'd1) ? (37'd1 << SBIT) : 37'd0); rdw <= cm_q[129:98]; dst_w <= cm_q[169:138];
                 // sectors a row = n x esize / 32
                 rsec <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 24'(cm_q[226:206] >> 3) :
                         (cm_q[4:2] == 3'd1) ? 24'(cm_q[226:206] >> 4) : 24'(cm_q[226:206] >> 5);
@@ -410,7 +436,8 @@ module ot_hgi_dma_front #(
             if (ix_try) begin
                 if (ix_bad) mv_fault <= 1'b1;
                 else if (ix_go) begin
-                    dq[ix_st*51 +: 51] <= {1'b1, ft[3:0], ix_rn, ix_a};
+                    if (XQ != 0) begin pu = 1'b1; pu_s = ix_st; pu_d = {1'b1, ft[3:0], ix_rn, ix_a}; end
+                    else dq[ix_st*51 +: 51] <= {1'b1, ft[3:0], ix_rn, ix_a};
                     tag_busy[ft[3:0]] <= 1'b1;
                     tg_dsec[ft[3:0]] <= rq_ds[rq_h] + (18'(r_off) << ks);
                     tg_left[ft[3:0]] <= ix_rn;
@@ -431,18 +458,19 @@ module ot_hgi_dma_front #(
                 st = a[SBIT +: 2];
                 if (e[SBIT +: 2] != st || ({1'b0, a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, rn, 5'd0}) > (SBIT+1)'(STACK_BYTES))
                     mv_fault <= 1'b1;
-                else if (!dq[st*51 + 50] || dq_rdy[st]) begin
-                    dq[st*51 +: 51] <= {1'b1, ft[3:0], rn, a};
+                else if ((XQ != 0) ? !sk_v[st] : (!dq[st*51 + 50] || dq_rdy[st])) begin
+                    if (XQ != 0) begin pu = 1'b1; pu_s = st; pu_d = {1'b1, ft[3:0], rn, a}; end
+                    else dq[st*51 +: 51] <= {1'b1, ft[3:0], rn, a};
                     tag_busy[ft[3:0]] <= 1'b1;
                     tg_dsec[ft[3:0]] <= 18'(wd >> 3) + (18'(r_off) << ks);
                     tg_left[ft[3:0]] <= rn;
                     issued <= issued + ({23'd0, rn} << ks);
-                    if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + {5'd0, sst}; wd <= wd + dst_w; end
+                    if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + sst; wd <= wd + dst_w; end
                     else if (r_off + {15'd0, rn} != rsec) begin            // next chunk of the window
                         wi <= 2'd0; wa <= ra; wd <= rdw; r_off <= r_off + {15'd0, rn};
                     end else begin                                         // next window
-                        wi <= 2'd0; r_off <= 24'd0; ra <= wa + {5'd0, sst}; rdw <= wd + dst_w;
-                        wa <= wa + {5'd0, sst}; wd <= wd + dst_w;
+                        wi <= 2'd0; r_off <= 24'd0; ra <= wa + sst; rdw <= wd + dst_w;
+                        wa <= wa + sst; wd <= wd + dst_w;
                         if (r_left == 20'd0) r_done <= 1'b1;
                         else begin
                             wn <= (r_left >= 20'd4) ? 2'd3 : 2'(r_left - 20'd1);
@@ -469,8 +497,17 @@ module ot_hgi_dma_front #(
                     if ({23'd0, tg_left[t]} <= ((MUT == 2) ? k + 8 : k)) tag_busy[t] <= 1'b0;
                 end
             end
+            // ---- XQ: the dq output register and its skid (one push a cycle; a stack with a held skid takes no push)
+            if (XQ != 0) for (s = 0; s < NS; s = s + 1) begin
+                if (sk_v[s] && (!dq[s*51 + 50] || dq_rdy[s])) begin dq[s*51 +: 51] <= sk_d[s]; sk_v[s] <= 1'b0; end
+                else if (pu && pu_s == 2'(s)) begin
+                    if (!dq[s*51 + 50] || dq_rdy[s]) dq[s*51 +: 51] <= pu_d;
+                    else begin sk_d[s] <= pu_d; sk_v[s] <= 1'b1; end
+                end
+            end
+            idok_r <= !ixc_q && (id_take ? (ids_left > 20'd1 && ix_inflight < 4'd3) : (ids_left != 20'd0 && ix_inflight < 4'd4));
             // ---- crossbar
-            x_v <= bsel_v; x2_v <= x_v; wl_v <= (XP != 0) ? x2_v : x_v;
+            x_v <= bsel_v; x2_v <= x_v; x3_v <= x2_v; wo_v <= wl_v; wl_v <= (XQ != 0) ? x3_v : (XP != 0) ? x2_v : x_v;
             rr <= (rr == RW'(NIN - 1)) ? '0 : rr + 1'b1;
             begin : rrg
                 reg [RW-1:0] nr; nr = (rr == RW'(NIN - 1)) ? '0 : rr + 1'b1;

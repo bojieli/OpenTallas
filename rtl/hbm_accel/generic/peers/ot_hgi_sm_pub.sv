@@ -45,7 +45,8 @@ module ot_hgi_sm_pub_ff #(
     input  wire [NPC*274-1:0] vmr,
     output reg                s0_v,
     output reg  [19:0]        s0_idx,
-    output reg  [31:0]        s0_data
+    output reg  [31:0]        s0_data,
+    output reg  [NSM-1:0]     sm_cr          // smmv 2026-10-11: one pulse per arrival entry consumed, per SM (row credits)
 );
     localparam integer NB = NSM * NC, QD = 16;
     reg busy, sm_m; reg [17:0] ob, ost; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
@@ -65,6 +66,7 @@ module ot_hgi_sm_pub_ff #(
     function automatic [255:0] rb8(input [255:0] x, input en);
         integer q; for (q = 0; q < 8; q = q + 1) rb8[32*q +: 32] = rb(x[32*q +: 32], en);
     endfunction
+    always @(posedge clk) sm_cr <= rv_q;                     // the flop form takes a row on its arrival edge
     always @(posedge clk) for (s = 0; s < NSM; s = s + 1) begin rv_q[s] <= sm_rv[s]; rr_q[s] <= sm_rrow[s*12 +: 12];
                                                                 rd_q[s] <= sm_rdata[s*NC*32 +: NC*32]; end
     // per-SM rows expected / received; all_rows registered
@@ -232,7 +234,8 @@ module ot_hgi_sm_pub_mem #(
     input  wire [NPC*274-1:0] vmr,
     output reg                s0_v,
     output reg  [19:0]        s0_idx,
-    output reg  [31:0]        s0_data
+    output reg  [31:0]        s0_data,
+    output reg  [NSM-1:0]     sm_cr          // smmv 2026-10-11: one pulse per arrival entry consumed, per SM (row credits)
 );
     localparam integer NSL = NSM / NE, LSL = (NSL > 1) ? $clog2(NSL) : 1, ADW = $clog2(AD), PQW = $clog2(PQ);
     localparam integer NQ = NE * NC;                       // pending FIFOs
@@ -316,6 +319,7 @@ module ot_hgi_sm_pub_mem #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; pub_done <= 1'b0; pub_fault <= 1'b0; vmq <= '0; s0_v <= 1'b0;
+            sm_cr <= '0;
             s0_idx <= '0; s0_data <= '0; all_rows <= 1'b0; ovr <= 1'b0; cbusy <= '0; dr_v <= 1'b0; dr_rr <= '0;
             dr_v2 <= 1'b0; hq_n <= 3'd0; hq_h <= 2'd0; hq_t <= 2'd0;
             b_v <= '0; c_v <= '0; d_v <= '0; sweep <= 1'b0; s_rr <= '0; m_we <= '0; m_re <= '0;
@@ -328,7 +332,8 @@ module ot_hgi_sm_pub_mem #(
         end else begin : main
             reg [ADW:0] an [0:NSM-1]; reg [ADW:0] atk [0:NSM-1]; reg [PQW:0] qn_ [0:NQ-1];
             reg [1:0] pf_ [0:NE-1][0:NSL-1][0:NC-1];
-            reg ok, dr_go; integer e, q_, sl;
+            reg ok, dr_go; integer e, q_, sl; reg [NSM-1:0] crp;
+            crp = '0;
             pub_done <= 1'b0; s0_v <= 1'b0; m_we <= '0; m_re <= '0;
             for (c = 0; c < NPC; c = c + 1) vmq[c*338 + 337] <= 1'b0;
             all_rows <= &rdone;
@@ -396,13 +401,13 @@ module ot_hgi_sm_pub_mem #(
                             k_msk[e][sl][p] <= (ch || k_msk[e][sl][p] == 0) ? (8'd1 << w) : (k_msk[e][sl][p] | (8'd1 << w));
                         end
                         d_v[e] <= 1'b0;
-                        s = e + NE * d_i[e]; atk[s] = atk[s] - 1'b1; an[s] = an[s] - 1'b1;     // the entry is consumed
+                        s = e + NE * d_i[e]; atk[s] = atk[s] - 1'b1; an[s] = an[s] - 1'b1; crp[s] = 1'b1;  // consumed
                     end
                 end else if (d_v[e] && sm_m) begin
                     ok = 1'b0;
                     if (s_req[e]) begin                           // granted this edge (below): one beat out
                         if (d_sp[e] + 4'd1 >= pp) begin d_v[e] <= 1'b0; d_sp[e] <= 4'd0; ok = 1'b1;
-                            s = e + NE * d_i[e]; atk[s] = atk[s] - 1'b1; an[s] = an[s] - 1'b1; end
+                            s = e + NE * d_i[e]; atk[s] = atk[s] - 1'b1; an[s] = an[s] - 1'b1; crp[s] = 1'b1; end
                         else d_sp[e] <= d_sp[e] + 4'd1;
                     end
                 end
@@ -495,6 +500,7 @@ module ot_hgi_sm_pub_mem #(
             for (c = 0; c < NQ; c = c + 1) pq_n[c] <= qn_[c];
             for (e = 0; e < NE; e = e + 1) for (i = 0; i < NSL; i = i + 1) for (p = 0; p < NC; p = p + 1)
                 k_pf[e][i][p] <= pf_[e][i][p];
+            sm_cr <= crp;
             // ---- done: every row in, swept (VM) / emitted (STREAM), nothing pending, every write acknowledged
             if (busy && all_rows && &rdone && !pend_any && cbusy == 0 && (sm_m || (sweep && !open_any && sw_all))) begin
                 busy <= 1'b0; pub_done <= 1'b1; sweep <= 1'b0;
@@ -515,7 +521,7 @@ endmodule
 module ot_hgi_sm_pub_slice #(
     parameter integer NSS = 4,             // SMs in the slice
     parameter integer NC = 8,
-    parameter integer AD = 4,              // arrival FIFO entries an SM
+    parameter integer AD = 32,             // arrival FIFO entries an SM (smmv 10-11: = ot_hgi_sm_record AD; row credits)
     parameter integer PQ = 4,              // pending flushes a slot
     parameter integer SD = 8,              // STREAM credits (the parent's input FIFO depth)
     parameter integer SIDW = 3,
@@ -545,7 +551,8 @@ module ot_hgi_sm_pub_slice #(
     output reg  [31:0]          so_data,
     input  wire                 so_cr,          // one-edge pulse: one STREAM credit back
     output reg                  s_done,         // one-edge pulse: this slice's share of the command is complete
-    output reg                  s_fault         // sticky: an arrival FIFO overrun
+    output reg                  s_fault,        // sticky: an arrival FIFO overrun
+    output reg  [NSS-1:0]       sm_cr           // smmv 10-11: registered pulse per arrival entry consumed (row credit), per SM
 );
     localparam integer LSL = (NSS > 1) ? $clog2(NSS) : 1, ADW = (AD > 1) ? $clog2(AD) : 1, PQW = (PQ > 1) ? $clog2(PQ) : 1;
     localparam integer LNC = (NC > 1) ? $clog2(NC) : 1, SDW = $clog2(SD + 1);
@@ -593,13 +600,17 @@ module ot_hgi_sm_pub_slice #(
     end endgenerate
     reg [NSS-1:0] rdone; reg all_rows;
     always @* for (s = 0; s < NSS; s = s + 1) rdone[s] = (recv[s] == need[s]);
-    // ---- arrival FIFOs (data unreset)
-    reg [11:0] af_r [0:NSS-1][0:AD-1]; reg [NC*32-1:0] af_d [0:NSS-1][0:AD-1];
+    // ---- arrival FIFOs (smmv 10-11, AD 32): data in one 1R1W SRAM pair a local SM (2 x ot_sram_1r1w_32x128_m1: one
+    // arrival write + at most one engine read an edge, each its own macro -> no write mux, no 128:1 read mux); the
+    // 12-b row index stays in flops.  The read is issued on the P->R transfer; R holds the macro output; R->C captures
+    // it next to the macros (zero unless this SM was read) and C ORs the four captures.
+    reg [11:0] af_r [0:NSS-1][0:AD-1];
+    wire [NC*32-1:0] af_q [0:NSS-1]; reg [NC*32-1:0] af_c [0:NSS-1];
     reg [ADW:0] af_n [0:NSS-1]; reg [ADW-1:0] af_h [0:NSS-1], af_t [0:NSS-1];
     // ---- engine: P (pick) -> R (FIFO read) -> A (base select) -> D (base + row; sector-change flags) -> E (decide, commit)
     // every stage accepts only when empty at the edge (registered transfer conditions x_*): one record / 2 edges / slice
-    reg p_v, r_v, a_v, d_v, e_v; reg [LSL-1:0] p_i, r_i, a_i, d_i, e_i, rrp; reg [11:0] r_row, a_row;
-    reg [NC*32-1:0] r_d, a_d, d_d, e_d;
+    reg p_v, r_v, c_v, a_v, d_v, e_v; reg [LSL-1:0] p_i, r_i, c_i, a_i, d_i, e_i, rrp; reg [11:0] r_row, c_row, a_row;
+    reg [NC*32-1:0] a_d, d_d, e_d;
     reg [17:0] a_ba [0:NC-1], d_wa [0:NC-1], e_wa [0:NC-1]; reg [19:0] a_bg [0:NC-1], d_gi [0:NC-1], e_gi [0:NC-1];
     reg [3:0] e_sp; reg [NC-1:0] e_ch;
     // coalescing state per (local SM, slot)
@@ -628,7 +639,7 @@ module ot_hgi_sm_pub_slice #(
     reg sweep, sw_ph; reg [LSL:0] sw_i; reg [LSL-1:0] sw_l; reg [7:0] sw_m [0:NC-1]; reg [14:0] sw_s [0:NC-1]; reg [NC-1:0] sw_p;
     reg pend_any, open_q;
     always @* begin
-        pend_any = dk_v || dr_v || dr_v2 || dr_v3 || hq_n != 0 || p_v || r_v || a_v || d_v || e_v || pq_ne != 0;
+        pend_any = dk_v || dr_v || dr_v2 || dr_v3 || hq_n != 0 || p_v || r_v || c_v || a_v || d_v || e_v || pq_ne != 0;
         for (s = 0; s < NSS; s = s + 1) if (af_n[s] != 0) pend_any = 1'b1;
     end
     wire [NC-1:0] d_ch;
@@ -639,7 +650,24 @@ module ot_hgi_sm_pub_slice #(
     reg arr_empty;
     always @* begin arr_empty = 1'b1; for (s = 0; s < NSS; s = s + 1) if (af_n[s] != 0) arr_empty = 1'b0; end
     // ---- transfer / decision terms (registered inputs only)
-    wire x_pr = p_v && !r_v, x_ra = r_v && !a_v && nv, x_ad = a_v && !d_v, x_de = d_v && !e_v;
+    wire x_pr = p_v && !r_v, x_rc = r_v && !c_v, x_ra = c_v && !a_v && nv, x_ad = a_v && !d_v, x_de = d_v && !e_v;
+    // arrival SRAMs: write = the pin-flopped arrival (no logic but the full check), read = the P->R transfer
+    genvar ga;
+    generate for (ga = 0; ga < NSS; ga = ga + 1) begin : g_af
+        wire we = rv_q[ga] && af_n[ga] != (ADW+1)'(AD), re = x_pr && p_i == LSL'(ga);
+        wire [4:0] wa = 5'(af_t[ga]), ra = 5'(af_h[ga]);
+        ot_sram_1r1w_32x128_m1 u_lo (.clk(clk), .r_ce_in(re), .r_addr_in(ra), .rd_out(af_q[ga][127:0]),
+            .w_ce_in(we), .w_addr_in(wa), .wd_in(rd_q[ga][127:0]), .w_mask_in({128{1'b1}}));
+        ot_sram_1r1w_32x128_m1 u_hi (.clk(clk), .r_ce_in(re), .r_addr_in(ra), .rd_out(af_q[ga][255:128]),
+            .w_ce_in(we), .w_addr_in(wa), .wd_in(rd_q[ga][255:128]), .w_mask_in({128{1'b1}}));
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (AD > 32 || (AD & (AD - 1)) != 0 || NC != 8) $fatal(1, "ot_hgi_sm_pub_slice: AD must be a power of two <= 32 and NC 8 (32x128 macro pair)");
+`endif
+    reg [NC*32-1:0] c_or;
+    always @* begin : cro
+        integer j; c_or = '0; for (j = 0; j < NSS; j = j + 1) c_or = c_or | af_c[j];
+    end
     wire x_bt = e_v && sm_m && cr != 0;                 // a STREAM beat
     reg e_ok;
     always @* begin : eok
@@ -675,8 +703,8 @@ module ot_hgi_sm_pub_slice #(
     always @(posedge clk) begin : dat
         integer q, j;
         for (q = 0; q < NC; q = q + 1) m_cap[q] <= (dr_v2 && dr_q2 == LNC'(q)) ? m_rd[q] : 256'd0;
-        for (j = 0; j < NSS; j = j + 1) if (rv_q[j] && af_n[j] != AD) begin
-            af_r[j][af_t[j]] <= rr_q[j]; af_d[j][af_t[j]] <= rd_q[j]; end
+        for (j = 0; j < NSS; j = j + 1) if (rv_q[j] && af_n[j] != AD) af_r[j][af_t[j]] <= rr_q[j];
+        if (x_rc) for (j = 0; j < NSS; j = j + 1) af_c[j] <= (r_i == LSL'(j)) ? af_q[j] : '0;   // capture at the macros
         // start sequence arithmetic
         if (so[1]) begin
             for (q = 0; q < NC; q = q + 1) begin pm[q] <= 18'(q * ost_h); pg[q] <= 20'(q * mm); end
@@ -702,10 +730,11 @@ module ot_hgi_sm_pub_slice #(
             end
         end
         // engine records
-        if (x_pr) begin r_i <= p_i; r_d <= af_d[p_i][af_h[p_i]]; r_row <= af_r[p_i][af_h[p_i]]; end
+        if (x_pr) begin r_i <= p_i; r_row <= af_r[p_i][af_h[p_i]]; end
+        if (x_rc) begin c_i <= r_i; c_row <= r_row; end
         if (x_ra) begin
-            a_i <= r_i; a_d <= r_d; a_row <= r_row;
-            for (q = 0; q < NC; q = q + 1) begin a_ba[q] <= bs_a[r_i][q]; a_bg[q] <= bs_g[r_i][q]; end
+            a_i <= c_i; a_d <= c_or; a_row <= c_row;
+            for (q = 0; q < NC; q = q + 1) begin a_ba[q] <= bs_a[c_i][q]; a_bg[q] <= bs_g[c_i][q]; end
         end
         if (x_ad) begin
             d_i <= a_i; d_d <= a_d;
@@ -744,7 +773,7 @@ module ot_hgi_sm_pub_slice #(
         if (!rn) begin
             busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; nv <= 1'b0; so <= '0; all_rows <= 1'b0; s_done <= 1'b0; s_fault <= 1'b0;
             w_v <= 1'b0; so_v <= 1'b0; tok <= 1'b0; cr <= SDW'(SD); sweep <= 1'b0; sw_ph <= 1'b0; sw_i <= '0; open_q <= 1'b0;
-            p_v <= 1'b0; r_v <= 1'b0; a_v <= 1'b0; d_v <= 1'b0; e_v <= 1'b0; rrp <= '0; e_sp <= 4'd0; m_we <= '0; m_re <= '0;
+            p_v <= 1'b0; r_v <= 1'b0; c_v <= 1'b0; a_v <= 1'b0; sm_cr <= '0; d_v <= 1'b0; e_v <= 1'b0; rrp <= '0; e_sp <= 4'd0; m_we <= '0; m_re <= '0;
             dk_v <= 1'b0; dr_v <= 1'b0; dr_v2 <= 1'b0; dr_v3 <= 1'b0; dr_rr <= '0; hq_n <= 2'd0; hq_h <= 1'b0; hq_t <= 1'b0;
             pq_f <= '0; pq_ne <= '0;
             for (s = 0; s < NSS; s = s + 1) begin af_n[s] <= '0; af_h[s] <= '0; af_t[s] <= '0; recv[s] <= '0; need[s] <= '0; end
@@ -802,7 +831,13 @@ module ot_hgi_sm_pub_slice #(
             cr <= cr - (x_bt ? 1'b1 : 1'b0) + (cr_q ? 1'b1 : 1'b0);
             if (x_de) begin e_v <= 1'b1; d_v <= 1'b0; end
             if (x_ad) begin d_v <= 1'b1; a_v <= 1'b0; end
-            if (x_ra) begin a_v <= 1'b1; r_v <= 1'b0; end
+            if (x_ra) begin a_v <= 1'b1; c_v <= 1'b0; end
+            if (x_rc) begin c_v <= 1'b1; r_v <= 1'b0; end
+            sm_cr <= '0;
+            if (x_pr) sm_cr[p_i] <= 1'b1;                                     // the entry is free: one row credit
+`ifdef OT_PUB_MUT_CR
+            sm_cr <= rv_q;                                                    // MUTANT: credit on arrival, not consumption
+`endif
             if (x_pr) begin
                 r_v <= 1'b1; af_h[p_i] <= af_h[p_i] + 1'b1; an[p_i] = an[p_i] - 1'b1; p_v <= 1'b0;
             end
@@ -818,7 +853,7 @@ module ot_hgi_sm_pub_slice #(
             end
             for (s = 0; s < NSS; s = s + 1) af_n[s] <= an[s];
             // ---- end sweep (VM): every open sector -> a pending flush (a local SM / 2 edges)
-            if (busy && !sm_m && nv && all_rows && &rdone && arr_empty && !p_v && !r_v && !a_v && !d_v && !e_v && !sweep) begin
+            if (busy && !sm_m && nv && all_rows && &rdone && arr_empty && !p_v && !r_v && !c_v && !a_v && !d_v && !e_v && !sweep) begin
                 sweep <= 1'b1; sw_i <= '0; sw_ph <= 1'b0;
             end
             if (sw_a) sw_ph <= 1'b1;
@@ -921,7 +956,8 @@ module ot_hgi_sm_pub_hier #(
     parameter integer MUT_ROW = 0,
     parameter integer MUT_PAR = 0,
     parameter integer NSS = 4,
-    parameter integer SD = 8
+    parameter integer SD = 8,
+    parameter integer AD = 32              // per-SM arrival entries in every slice (= the slice default; row credits)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -943,7 +979,8 @@ module ot_hgi_sm_pub_hier #(
     input  wire [NPC*274-1:0] vmr,
     output reg                s0_v,
     output reg  [19:0]        s0_idx,
-    output reg  [31:0]        s0_data
+    output reg  [31:0]        s0_data,
+    output reg  [NSM-1:0]     sm_cr          // row credits to ot_hgi_sm_record: slice pulses, one output flop
 );
     localparam integer NSL = (NSM + NSS - 1) / NSS;            // slices
     localparam integer NCOL = (NSL + 1) / 2;                   // columns (slice k: column k % NCOL; N row k < NCOL)
@@ -974,7 +1011,8 @@ module ot_hgi_sm_pub_hier #(
     wire [NSMP*12-1:0] rr_p = (NSMP*12)'(sm_rrow);
     wire [NSMP*NC*32-1:0] rd_p = (NSMP*NC*32)'(sm_rdata);
     wire [NSL-1:0] s_wv, s_sov, s_dn, s_ft; wire [NSL*279-1:0] s_wp; wire [NSL*W-1:0] s_sod;
-    wire [NSL-1:0] s_cr;
+    wire [NSL-1:0] s_cr; wire [NSMP-1:0] s_smcr;
+    always @(posedge clk or negedge rn) if (!rn) sm_cr <= '0; else sm_cr <= NSM'(s_smcr);
     genvar gk, gl, gn, gc, gj;
     generate for (gk = 0; gk < NSL; gk = gk + 1) begin : g_s
         localparam integer COL = gk % NCOL;
@@ -984,14 +1022,14 @@ module ot_hgi_sm_pub_hier #(
 `ifdef SYNTHESIS
         ot_hgi_sm_pub_slice u (
 `else
-        ot_hgi_sm_pub_slice #(.NSS(NSS), .NC(NC), .SD(SD), .MUT_ROW(MUT_ROW), .MUT_PAR(MUT_PAR)) u (
+        ot_hgi_sm_pub_slice #(.NSS(NSS), .NC(NC), .SD(SD), .AD(AD), .MUT_ROW(MUT_ROW), .MUT_PAR(MUT_PAR)) u (
 `endif
             .clk(clk), .rst_n(rst_n), .sid(3'(gk)), .sm_en(EN), .c_go(ci[CW-1]), .c_sm(ci[CW-2]), .c_bf(ci[CW-3]),
             .c_ob(ci[72:55]), .c_ost(ci[54:37]), .c_mm(ci[36:17]), .c_qq(ci[16:4]), .c_pp(ci[3:0]),
             .sm_rv(rv_p[gk*NSS +: NSS]), .sm_rrow(rr_p[gk*NSS*12 +: NSS*12]), .sm_rdata(rd_p[gk*NSS*NC*32 +: NSS*NC*32]),
             .w_v(s_wv[gk]), .w_pkt(s_wp[gk*279 +: 279]), .w_ack(s_ack[gk]),
             .so_v(s_sov[gk]), .so_idx(s_sod[gk*W+32 +: 20]), .so_data(s_sod[gk*W +: 32]), .so_cr(s_cr[gk]),
-            .s_done(s_dn[gk]), .s_fault(s_ft[gk]));
+            .s_done(s_dn[gk]), .s_fault(s_ft[gk]), .sm_cr(s_smcr[gk*NSS +: NSS]));
     end endgenerate
     // ---- done / fault return: col + 1 relays a slice
     wire [NSL-1:0] dn_l, ft_l;
@@ -1113,7 +1151,8 @@ module ot_hgi_sm_pub #(
     parameter integer MEM = 1,
     parameter integer NE = 2,
     parameter integer MUT_PAR = 0,
-    parameter integer HIER = `OT_HGI_PUB_HIER_DEF
+    parameter integer HIER = `OT_HGI_PUB_HIER_DEF,
+    parameter integer AD = 32              // per-SM arrival entries (MEM 1 / HIER 1) = ot_hgi_sm_record AD (row credits)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -1135,26 +1174,27 @@ module ot_hgi_sm_pub #(
     input  wire [NPC*274-1:0] vmr,
     output wire               s0_v,
     output wire [19:0]        s0_idx,
-    output wire [31:0]        s0_data
+    output wire [31:0]        s0_data,
+    output wire [NSM-1:0]     sm_cr          // row credits to ot_hgi_sm_record (CR = 1; its AD must equal this AD)
 );
     generate if (HIER) begin : g_hier
-        ot_hgi_sm_pub_hier #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW), .MUT_PAR(MUT_PAR)) u (
+        ot_hgi_sm_pub_hier #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW), .MUT_PAR(MUT_PAR), .AD(AD)) u (
             .clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
             .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done),
             .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
-            .s0_idx(s0_idx), .s0_data(s0_data));
+            .s0_idx(s0_idx), .s0_data(s0_data), .sm_cr(sm_cr));
     end else if (MEM) begin : g_mem
         ot_hgi_sm_pub_mem #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW), .NE((NSM % NE == 0) ? NE : 1), .MUT_PAR(MUT_PAR)) u (
             .clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
             .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done),
             .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
-            .s0_idx(s0_idx), .s0_data(s0_data));
+            .s0_idx(s0_idx), .s0_data(s0_data), .sm_cr(sm_cr));
     end else begin : g_ff
         ot_hgi_sm_pub_ff #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW)) u (
             .clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
             .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done),
             .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
-            .s0_idx(s0_idx), .s0_data(s0_data));
+            .s0_idx(s0_idx), .s0_data(s0_data), .sm_cr(sm_cr));
     end endgenerate
 endmodule
 `default_nettype wire

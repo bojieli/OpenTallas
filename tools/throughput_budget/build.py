@@ -84,8 +84,8 @@ MEASURED = {
                    interim=dict(ratio=None, src="main a7613320f ATT PIPE=2: H4 D128 NL2 vehicle QK T512 1,951 cyc (not DS production shape hd512 / 1M)")),
     "ATT.PV": dict(ratio=None, grade=None, src=None,
                    interim=dict(ratio=None, src="main a7613320f ATT PIPE=2: PV T512 2,968 cyc (vehicle, not production shape)")),
-    "SM.MATVEC": dict(ratio=32.903, grade="unit_bench", src=U + "sm/report.json",
-                      note="tb_hgi_sm_tput (32 SMs + xload BD + sm_pub + real VM) on the priced g25 DS records: 1,015/1,095 rec; >= 23.0x full token; "
+    "SM.MATVEC": dict(ratio=round(2392946 / 87969.6, 3), grade="unit_bench", src=U + "sm/report.json",
+                      note="ratio vs the HBM-floored price (owner 10-12, results/arch/hbm_bw_reprice_1012): the 1,015 matched records price 87,969.6 (was 72,728 at 1 line / cycle; report.json 32.903x is vs the old price); tb_hgi_sm_tput (32 SMs + xload BD + sm_pub + real VM) on the priced g25 DS records: 1,015/1,095 rec; >= 23.0x full token; "
                            "wq_b / wo_a fail closed (sm_pub arrival overrun); MUT_ROW FAILS. Owner el1011-hbm-smmv"),
     "COLL.TOPK_MERGE": dict(ratio=round(2834 / 2680.6, 3), grade="unit_bench", src=U + "coll/tkm_tput_480f631d5.json",
                             note="ot_hgi_coll_tkm r2 (32 hardened 64-position tiles) via ot_hgi_coll_ep TKM 1: syn_sel G8 k512 2,834 vs 2,680.6 per merge; "

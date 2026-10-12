@@ -290,6 +290,17 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
     out = dict(mode='edges' if edges else 'chains', chains=n_chains, reach_um=reach_um, reach_violations=len(reach_bad), far_side_relays=len(far_bad),
                reach_examples=sorted(reach_bad, key=lambda r: -r['um'])[:limit],
                far_side_examples=sorted(far_bad, key=lambda r: -r['back_um'])[:limit])
+    # per relay class (name with digits dropped: y_go_#_#, g_rt_#_#b_y#_y_rt_#_#b_#_#, ...): count and worst
+    def cls_(n_):
+        return re.sub(r'\d+', '#', n_)
+    for key_, rows_, val_ in (('reach_by_class', reach_bad, 'um'), ('far_side_by_class', far_bad, 'back_um')):
+        agg = {}
+        for r_ in rows_:
+            k_ = cls_(r_.get('relay') or r_.get('seg') or r_.get('chain', ''))
+            a_ = agg.setdefault(k_, [0, 0.0])
+            a_[0] += 1
+            a_[1] = max(a_[1], r_[val_])
+        out[key_] = {k_: dict(n=v[0], worst=round(v[1], 1)) for k_, v in sorted(agg.items(), key=lambda kv: -kv[1][0])[:30]}
     if sliver_um > 0:
         sl = sliver_gaps([(it.name, [it.x, it.y, it.x + it.w, it.y + it.h]) for it in insts], sliver_um)
         out.update(slivers=len(sl), sliver_examples=[(a, b, round(g, 2)) for a, b, _, g in sl[:limit]])

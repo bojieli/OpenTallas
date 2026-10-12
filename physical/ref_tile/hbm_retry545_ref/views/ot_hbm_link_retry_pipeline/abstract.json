@@ -1,0 +1,93 @@
+{
+  "name": "ot_hbm_link_retry_pipeline",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/routes/hbm_retry545_ref_r1_9357f2d4b/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.4072654980500374e-10 min -1.2814133087957202e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/routes/hbm_retry545_ref_r1_9357f2d4b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/record/views/ot_hbm_link_retry_pipeline:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/src/physical/ref_tile/hbm_retry545_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 5.764783095330017e-11 min -1.3706233370491816e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/routes/hbm_retry545_ref_r1_9357f2d4b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/record/views/ot_hbm_link_retry_pipeline:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/src/physical/ref_tile/hbm_retry545_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -3.593858544093109e-11 min -1.340662858506647e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/routes/hbm_retry545_ref_r1_9357f2d4b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/record/views/ot_hbm_link_retry_pipeline:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/src/physical/ref_tile/hbm_retry545_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/src/physical/ref_tile/hbm_retry545_ref/signoff.sdc",
+    "sha256": "0cc9703632ae64c35d5667ee9592740285907c028a073c41dff4328b35fe3857",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_retry545_ref-r1-9357f2d4b/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_hbm_link_retry_pipeline.lef": "970a959b15f4ffbfd5da427f4c36e80c47fe0ac9628ddc8a7ffc941e46598882",
+    "ot_hbm_link_retry_pipeline_ff.lib": "0d36251c2d14a6d0ce1063bca5b67b863908b7f391434f6ed48f18a747492b7c",
+    "ot_hbm_link_retry_pipeline_ss.lib": "ccd76eeacddd06e6b732e7cbdb6fcc6d69b6ac42ba1b9666fa6232cfc7a3e067",
+    "ot_hbm_link_retry_pipeline_tt.lib": "e2443e71a028a6a6a2f851c6e5524aaf45b46e3e4e5608dd35bdba07b4019b66"
+  },
+  "ok": true
+}

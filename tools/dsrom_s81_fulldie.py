@@ -1766,6 +1766,14 @@ def kind_at(m, x, y):
     return 'field'
 
 
+def pg_pitch_grid(p):
+    """M8/M9 PG stripe pitch on the manufacturing grid (0.001 um): pdngen snaps the pitch DOWN and the derived spacing
+    (pitch/2 - width) UP to the grid and then requires pitch >= 2 x (width + spacing) -- an off-grid bump-aligned pitch
+    (63.6396 / 7 = 9.0914) failed PDN-0175 (9.0910 < 9.0920).  Rounded UP to 0.002 um so pitch/2 - 0.48 is on grid
+    (the stripe lattice drifts < 0.001 um per bump period from the bump pitch; the vsrc sites stay on the bumps)."""
+    return round(math.ceil(round(p / 0.002, 6) - 1e-9) * 0.002, 3)
+
+
 def case_ir(m, work, window, cov, peak=True, vdd_pitch=None, align=True, signal_bumps_phy=True, scale=1.0):
     work.mkdir(parents=True, exist_ok=True)
     x0, y0, x1, y1 = windows(m)[window]
@@ -1780,7 +1788,7 @@ def case_ir(m, work, window, cov, peak=True, vdd_pitch=None, align=True, signal_
             return raw
         n = math.ceil(vp / raw - 1e-9)
         n += (n % 2 == 0)
-        return round(vp / n, 4)
+        return pg_pitch_grid(vp / n)
     sites = {'VDD': [], 'VSS': []}
     for net, off in (('VDD', vp / 2), ('VSS', 0.0)):
         yy = off if off > 0 else vp
@@ -2040,7 +2048,7 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     raw = dn(0.48 / p, 0.160)
     n = math.ceil(vp / raw - 1e-9)
     n += (n % 2 == 0)
-    pitch = round(vp / n, 4)
+    pitch = pg_pitch_grid(vp / n)
     _init_real()
     M = masters(m, 1)
     ins, clip_pw = [], {}
@@ -2086,7 +2094,7 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     for net in ('VDD', 'VSS'):
         (work / f'vsrc_{net}.loc').write_text(''.join(f'{x:.3f}, {y:.3f}, {BUMP_SIZE:.1f}, {VDD_V if net == "VDD" else 0.0}\n'
                                                      for x, y in sites[net]))
-    off = round((vp / 2) % pitch, 4)
+    off = round((vp / 2) % pitch, 3)
     cfgm = real_lef(CFG_LEF)['name']
     m8m = [x for x in masters_used if x.split('_clip_')[0] in PG_M8_MASTERS]
     other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m)
@@ -2106,8 +2114,8 @@ add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name top -voltage_domains CORE
-add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch} -spacing {pitch / 2 - 0.48:.4f} -offset {off}
-add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch / 2 - 0.48:.4f} -offset {off}
+add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch:.3f} -spacing {pitch / 2 - 0.48:.3f} -offset {off:.3f}
+add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch:.3f} -spacing {pitch / 2 - 0.48:.3f} -offset {off:.3f}
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name m7 -cells {{{other}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid m7 -layers {{M7 M8}}
@@ -2182,7 +2190,7 @@ def case_psmt(out, mode):
                 s.append(f'{x:.3f}, {y:.3f}, 20.0, {0.7 if net=="VDD" else 0.0}\n'); x += vp
             y += vp
         (out / f'vsrc_{net}.loc').write_text(''.join(s))
-    pitch = 3.7435; PL = '/OpenROAD-flow-scripts/flow/platforms/asap7'
+    pitch = pg_pitch_grid(3.7435); PL = '/OpenROAD-flow-scripts/flow/platforms/asap7'
     t = f"""read_lef {PL}/lef/asap7_tech_1x_201209.lef
 read_lef /work/x.lef
 read_def /work/t.def
@@ -2191,8 +2199,8 @@ add_global_connection -net VSS -inst_pattern .* -pin_pattern ^VSS$ -ground
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name top -voltage_domains CORE
-add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch} -spacing {pitch/2-0.48:.4f} -offset {(vp/2)%pitch:.4f}
-add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch/2-0.48:.4f} -offset {(vp/2)%pitch:.4f}
+add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch:.3f} -spacing {pitch/2-0.48:.3f} -offset {(vp/2)%pitch:.3f}
+add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch:.3f} -spacing {pitch/2-0.48:.3f} -offset {(vp/2)%pitch:.3f}
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name m7 -cells {{{comps[0][1]}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid m7 -layers {{M7 M8}}
@@ -2443,6 +2451,7 @@ COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin fa
 # 36ccf0cb0: 3 x 572.4 columns, 29 tiles); HC root split (5db4c7ec6 / 597e34cac, ds-1010.log 14:14): 3 x 575.992 columns
 SU_V2_UM = (1727.976, 6069.6)
 HC_V2_UM = (1727.976, 9640.0)
+CONTRACT_SLABS = {}             # --contract FILE (s81-die-iter): centre slab outlines {name: (w, h)} from the hier contract
 SUHC_V2_HC_N = False            # --suhc-v2-hc-north: the v2 HC in the slot above the corridor (default: hc_s floor slot)
 SUHC_V2 = False                 # --suhc-v2 (s81die-1011/ctrl, die lead decision 3): su_hc contract v2 = ONE SU master
                                 #   (dsfd_sp_su_c, su_s W-floor slot) + ONE HC master (dsfd_sp_hc_c, hc_s E-column slot);
@@ -3261,6 +3270,14 @@ def build_r8(variant=None):
         assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
         slab_w['vm'] = up(VM_SLAB[0], GX)
         centre_area['vm'] = slab_w['vm'] * up(VM_SLAB[1], GY) / 1e6
+    if CONTRACT_SLABS:
+        # --contract FILE (s81-die-iter 2026-10-12): centre hard elements keep their contract outline (w x h) inside a
+        # hub column widened for the v3 SU / HC slabs (column channels); each is centred in the column
+        for n_, (w_, h_) in CONTRACT_SLABS.items():
+            if n_ in centre_area and n_ not in ('su_s', 'hc_s'):
+                assert w_ <= cw + 1e-6, ('contract slab wider than the hub column', n_, w_, cw)
+                slab_w[n_] = up(w_, GX)
+                centre_area[n_] = slab_w[n_] * up(h_, GY) / 1e6
     # --ecol-slabs (ds-1010/s81die 2026-10-10): W-column centre slabs moved to a sub-column of the E (HC) column, beside
     # the HC slabs, next to the crossing corridor (the W column overflowed: split3cr collective + WFC kit + host)
     if RTL_HUB_WIDTHS:
@@ -3286,7 +3303,7 @@ def build_r8(variant=None):
             # --wfc-crp (main 10-11): the slab master is dsfd_wfc_cr2 = the routed credit-boundary tile dsfd_wfc_crp at the
             # slab's die edge (every die link / VM signal lands in its pin flops / SRAM landing) + the kit behind it
             ms_ = 'dsfd_wfc_cr2' if WFC_CRP else ('dsfd_wfc_src' if WFC_ROLE == 'source' else 'dsfd_wfc_stg')
-            slab('wfc', centre_area[n], x0_, yy, w0_, master=ms_)
+            slab('wfc', centre_area[n], up(x0_ + (w0_ - slab_w.get(n, w0_)) / 2, GX), yy, slab_w.get(n, w0_), master=ms_)
             notes.append('MTP-WFC --wfc-kit (%s): %s = %s in a %.2f um slab (%.3f mm2)' % (
                 WFC_ROLE, ms_, 'SOURCE tokpipe + tok_hard + lnk + vmx' if WFC_ROLE == 'source' else 'STG tokpipe + lnk + vmx',
                 WFC_SLAB_H, centre_area[n]))
@@ -3338,16 +3355,20 @@ def build_r8(variant=None):
     ch_ = sum(up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
     su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
+    # --contract (s81-die-iter, contract v4): a v2 SU wider than the hub column grows WEST (E edge on the column's E edge,
+    # clear of the xE trunk / sseq stations by the VCH); the free strip W of the column holds it (10.5 um to the xW stations)
+    su_w_ = up(SU_V2_UM[0], GX) if (SUHC_V2 and SU_V2_UM[0] > cw + 1e-6) else cw
+    su_x_ = x_sp - (su_w_ - cw)
     if SU_E:
         # --su-e MM2 (ds-1010/s81die 2026-10-11): su_n (MM2) moves to the E column above hc_n; su_s (the rest) sits at the
         # W column floor with the centre stack right above it (the 2.42 mm VM of s81-vm-1011 overflowed the W column)
         su_lo = su_area - SU_E
         if SUHC_V2:     # the one v2 SU: its hierarchical outline (the su_s W-floor slot)
             su_lo = SU_V2_UM[0] * SU_V2_UM[1] / 1e6
-        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / cw, GY) + SPINE_GAP, GY)
+        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / su_w_, GY) + SPINE_GAP, GY)
     # --rtl-hub-widths (order A): the SU's VM row slots (~17.1 kb) are face-to-face with the VM right above it
     su_gap = RTL_ABUT_GAP if (RTL_HUB_WIDTHS and SUHC_V2 and centre and centre[0] == 'vm') else SPINE_GAP
-    slab('su_s', su_lo, x_sp, dn(yc - su_gap - up(su_lo * 1e6 / cw, GY), GY), cw, dom=SUHC_DOM)
+    slab('su_s', su_lo, su_x_, dn(yc - su_gap - up(su_lo * 1e6 / su_w_, GY), GY), su_w_, dom=SUHC_DOM)
     yy = yc
     for i_, n in enumerate(centre):
         put(n, x_sp, yy, cw)
@@ -3373,11 +3394,11 @@ def build_r8(variant=None):
         # --suhc-v2 n (s81die-1011/ctrl): the one HC in the freed slot ABOVE the corridor, facing the VM rows (order A puts
         # the VM at the corridor): VM row slots run straight across the VCH, the collective's 8,192-b y is ~2.5 mm
         # shorter than to the floor slot (hb_collective_t_hc_y_hc_s: no station spot over a 7,451 um path)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, hcw, dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, up(HC_V2_UM[0], GX), dom=SUHC_DOM)
     elif SUHC_V2:   # the floor slot holds c0 - floor um: the 9,640 um HC outline fits only if the corridor sits above it
         assert c0 - (band + SPINE_GAP) >= HC_V2_UM[1], ('v2 HC outline taller than the hc_s floor slot: use '
                                                         '--suhc-v2-hc-north', round(c0 - band - SPINE_GAP, 1), HC_V2_UM)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), hcw, dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), up(HC_V2_UM[0], GX), dom=SUHC_DOM)
     else:
         slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom=SUHC_DOM)
     if not SUHC_V2:     # --suhc-v2: one HC (hc_s slot); the hc_n slot is free
@@ -4019,7 +4040,11 @@ def buses_r8(m):
             # dsfd_svc_join c_st -> sequencer s4) and gating its PC issue on live (composition.json nets.status)
             bus(f'st_{st}', 'hbm_req', 2, [(c_, 'st'), (cl_, 'hs')])
         else:
-            bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
+            # s81-die-iter 2026-10-12 (c1e plan: dsfd_ctrl.rd 8,896 on ctrl_SW vs 8,864 on ctrl_SE): one master, one
+            # port width -- under --ctrl-adapters dsfd_ctrl rd is its RTL [8895:0] (32 response valids included) on every
+            # stack, so the layer1e Engram client (eng_SE) takes the full word too (dsfd_engram_c has no HBM response
+            # port yet: recorded by the ctrl port audit for the svceng stream, OT_S81_CTRL_GATE_WARN=phys)
+            bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS + (32 if CTRL_ADAPTERS else 0), [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
         if CTRL_RQ:   # s81-gen: the controller's request side (real dsfd_ctrl rq / rk / wd), abutting faces
             bus(f'rq_{st}', 'hbm_req', HBM_RQ_BITS, [(cl_, 'rq'), (m['ctrls'][st].name, 'rq')])
             bus(f'rk_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'rk'), (cl_, 'rk')])
@@ -4275,6 +4300,7 @@ CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', co
                       # s81die-1011/ctrl: HC (engine 2) endpoint in hc_s = dsfd_sp_hc_c (dsfd_sp_hc, hc_gate PASS); the
                       # su_hc contract v2 makes HC one logical slab (hc_n folds into it when the suhc floorplan lands)
                       hc_s='dsfd_sp_hc_c', su_s='dsfd_sp_su_c', eng='dsfd_engram_c')
+PEER_SPAN_CENTRE = False        # --peer-span-centre (s81-die-iter 2026-10-12): wide face-to-face groups centred on the span shared with the peer
 RTL_HUB_WIDTHS = False          # --rtl-hub-widths (s81die-1011/ctrl, die lead decision 2026-10-11)
 # the gated hub masters' real interfaces (DIE_FLD_GATE: 12 root lanes gather -> capture, the tiled capture's VM writes;
 # the collective contract results/rtl/s81_ph_20261006/collective/contract.json: f_vm 592 / ts 3 in, t_vm 2,100 out)
@@ -4693,7 +4719,12 @@ def _hop_fix(m, P):
                 Lp = _poly_len(path)
                 (cx, cy), dch = _poly_at(path, pos[k])
                 horiz = dch in 'EW'
-                NR = dict(nxt=b, nreach=max(Lp - pos[k], PIN_SEG) + 40.0 if k == n - 1 else (n - k) * (R - 10.0)) \
+                # s81-die-iter 2026-10-12: a FRAME relay's last station needs only the reach to its load (R - 10), not
+                # the remaining path + 40 (a pin-relay rule): on rt_<c>_24b_y1 (y0 -> y1 546 um across a packed slot) the
+                # lens <= 490 um from y0 and <= 316 um from y1 was empty, so the TT tier put g_rt_<c>_24b_y1 beside y0
+                # and left a 518.4 um hop into y1 (> the 504 um SS reach) on all 128 columns.
+                last_nr = (R - 10.0) if (reg is not None and not fwd) else max(Lp - pos[k], PIN_SEG) + 40.0
+                NR = dict(nxt=b, nreach=last_nr if k == n - 1 else (n - k) * (R - 10.0)) \
                     if NXT_REACH else {}
                 w_, h_ = stn_dims([bits], horiz)
                 if not fwd and (reg is not None or not GEOMETRY_FIX):  # frame relay faces chosen later -> square
@@ -5140,10 +5171,19 @@ def _col_relays(m, P):
     by = {it.name: it for it in m['insts']}
     cen = lambda it: (it.x + it.w / 2, it.y + it.h / 2)
 
-    def ep_pt(e):
+    lpt_ = _lint_pin_pt(m) if PIN_NEED else None
+
+    def ep_pt(e, load=False):
         it_ = by[e[0]]
         if PIN_NEED and it_.kind == 'q':
             pt_ = _q_pin_pt(it_, e[1])
+            if pt_ is not None:
+                return pt_
+        if load and lpt_ is not None:
+            # s81-die-iter 2026-10-12: a load's real LEF pin (the margin lint's next chain point): the column relays of
+            # go / cfg nets (seq -> bf / cfg element) were placed toward the load CENTRE and judged against its pin
+            # (512 y_go + 384 y_cfg far-side relays, up to 169.3 um back)
+            pt_ = lpt_(e[0], e[1])
             if pt_ is not None:
                 return pt_
         return cen(it_)
@@ -5162,10 +5202,10 @@ def _col_relays(m, P):
         if d0 is None or d0.region is None or not d0.region.startswith('frame_'):
             return None
         a0 = ep_pt(eps[0])
-        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e)), default=None)
+        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e, True)), default=None)
         if fe is None:
             return None
-        L = _mh(a0, ep_pt(fe))
+        L = _mh(a0, ep_pt(fe, True))
         return math.ceil(L / BANK_RULE_UM - 1e-9) - 1
     # --lane-equal (ds-1010 lat-audit 2026-10-10): the x0 / x1 / cc lanes of one slot segment carry ONE transaction
     # (the element takes x0 and x1 in the same cycle; go rides cc through the pair sequencer), so each of them takes
@@ -5196,12 +5236,12 @@ def _col_relays(m, P):
             ends_ = [by[eps[0][0]]] + [by[e[0]] for e in eps[1:] if e[0] in by]
             fr = (fr[0], min([fr[1]] + [i_.y for i_ in ends_]), fr[2], max([fr[3]] + [i_.y + i_.h for i_ in ends_]))
         a0 = ep_pt(eps[0])
-        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e)), default=None)
+        fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e, True)), default=None)
         far = by[fe[0]] if fe is not None else None
         if far is None:
             out.append((bid, cls, bits, eps))
             continue
-        L = _mh(a0, ep_pt(fe))
+        L = _mh(a0, ep_pt(fe, True))
         n = math.ceil(L / BANK_RULE_UM - 1e-9) - 1
         mm = re.fullmatch(r'(xa|xb|cc)_(\d+)_(\d+)', bid) if LANE_EQUAL else None
         if mm:
@@ -5214,20 +5254,21 @@ def _col_relays(m, P):
         if n <= 0:
             out.append((bid, cls, bits, eps))
             continue
-        a, b = a0, ep_pt(fe)
-        path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
-        prev, cur = eps[0], a
-        chain = [a]
-        Lp = _poly_len(path)
+        a, b = a0, ep_pt(fe, True)
         w_, h_ = stn_dims([bits], True)
-        for k in range(n):
+
+        def _pick(path, cur, k, Lp, log=True):
+            """one column relay on `path`: (placement, tier) -- tier 'first' = within the column reach of the previous
+            point (and the load-side reach under --nxt-reach / --relay-progress); later tiers are the TT / legacy ones"""
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
             pg = _mh(cur, b) + 15.0 if RELAY_PROGRESS else None     # --relay-progress: never behind the driver
             if pg is not None:
                 NR = dict(nxt=b, nreach=min(NR.get('nreach', pg), pg))
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
-            if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
+            if pl is not None:
+                return pl, 'first'
+            if RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
                 # s81-gen: the unbounded fallback below put y_rt_0_8a_1 773.7 um from its driver (r4c frame 0); a relay
                 # first takes a box within the TT reach (inside the frame, then the strip / channel beside it)
                 nr_tt = dict(nxt=b, nreach=(n - k) * (RELAY_TT_REACH - 10.0)) if NXT_REACH else {}
@@ -5238,21 +5279,54 @@ def _col_relays(m, P):
                 if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
                     pl = _tt_place(P, cx, cy, w_, h_, cur, RELAY_TT_REACH, nr_tt.get('nxt'), nr_tt.get('nreach'), True)
                 if pl:
-                    tt_col.append(f'y_{bid}_{k}')
-            if pl is None:
-                pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40,
-                            **(dict(nxt=b, nreach=pg) if pg is not None else {}))
-            if pl is None and pg is not None and os.environ.get('OT_S81_RP_LOG'):
+                    return pl, 'tt'
+            pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40,
+                        **(dict(nxt=b, nreach=pg) if pg is not None else {}))
+            if pl is None and pg is not None and log and os.environ.get('OT_S81_RP_LOG'):
                 # diagnostic only: record the frame / path of a relay with no forward site, then legacy fallback
                 with open(os.environ['OT_S81_RP_LOG'], 'a') as fh_:
                     bx_ = (min(cur[0], b[0]) - 30, min(cur[1], b[1]) - 30, max(cur[0], b[0]) + 30, max(cur[1], b[1]) + 30)
                     occ_ = [(i_.name, i_.kind, round(i_.x, 2), round(i_.y, 2), round(i_.w, 2), round(i_.h, 2))
-                            for i_ in P.m["insts"] if i_.x < bx_[2] and bx_[0] < i_.x + i_.w and i_.y < bx_[3] and bx_[1] < i_.y + i_.h] \
-                        if True else None
+                            for i_ in P.m["insts"] if i_.x < bx_[2] and bx_[0] < i_.x + i_.w and i_.y < bx_[3] and bx_[1] < i_.y + i_.h]
                     fh_.write(json.dumps(dict(bus=bid, k=k, n=n, cls=cls, drv=cur, far=b, mid=(cx, cy), frame=fr,
                                               region=d0.region, wh=(w_, h_), occ=occ_)) + '\n')
+            if pl is None:
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
-            assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if pg is not None else (bid, k)
+            return pl, 'legacy'
+        path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
+        if cls == 'ret_tree' and RELAY_PROGRESS:
+            # s81-die-iter 2026-10-12: the return tree's vertical-first L crosses the packed q slots where relay rows lie
+            # ~546 um apart (rt_<c>_24b: y0 -> y1 546 um, TT tier, 518.4 um hop on all 128 columns).  Dry-run both L
+            # paths and keep the one whose relays all place in the first (column-reach) tier, default L on ties.
+            best_ = None
+            for j_, cand in enumerate((path, [a, (b[0], a[1]), b])):
+                Lc, cur_, bad = _poly_len(cand), a, 0
+                for k in range(n):
+                    pl_, tier_ = _pick(cand, cur_, k, Lc, log=False)
+                    if pl_ is None:
+                        bad += 100
+                        break
+                    bad += tier_ != 'first'
+                    cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
+                if best_ is None or bad < best_[0]:
+                    best_ = (bad, j_, cand)
+                if bad == 0:
+                    break
+            if best_[1]:
+                path = best_[2]
+                m.setdefault('col_relay_path_pick', []).append(bid)
+        prev, cur = eps[0], a
+        chain = [a]
+        Lp = _poly_len(path)
+        for k in range(n):
+            pl, tier = _pick(path, cur, k, Lp)
+            if HOPDBG and bid.startswith(HOPDBG):    # OT_S81_HOPDBG=<bus prefix>: column relay trace (stderr)
+                print('COLDBG', bid, cls, d0.name, d0.kind, k, n, round(Lp, 1), [tuple(round(v, 1) for v in q) for q in path],
+                      tuple(round(v, 1) for v in cur), pl and tuple(round(v, 1) for v in pl), (w_, h_), tier, fr,
+                      file=sys.stderr)
+            if tier == 'tt' and pl:
+                tt_col.append(f'y_{bid}_{k}')
+            assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if RELAY_PROGRESS else (bid, k)
             it = P.add(Inst(f'y_{bid}_{k}', f'dsfd_rly_{bits}', pl[0], pl[1], w_, h_, kind='rly',
                             region=d0.region, power_w=bits * FLOP_CLK_W * 1.5))
             out.append((f'{bid}_y{k}', cls, bits, [prev, (it.name, 'i')]))
@@ -5874,8 +5948,13 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
         elif band(at):
             x, y = face_pt(at, nxt_off_c(at))
             yy = y + h / 2 + 6.0 if at.orient == 'R0' else y - h / 2 - 6.0
-            pl = P.near(x, yy, w, h, [cor['stripS'] if at.orient == 'R0' else cor['stripN']], horiz=True, span=1200.0,
-                        rows=12)
+            strip_ = cor['stripS'] if at.orient == 'R0' else cor['stripN']
+            # s81-die-iter 10-12 (c1e plan: AssertionError d10_eng_SE): a band slab in the free SE service slot (layer1e
+            # eng_SE / hrow_SE) sits below stripS, so its start blocks stand in the slot box around it (engS / hrowS, as
+            # the fwd-iface sink ends do) before climbing into the strip
+            slot_ = cor.get('engS') if at is hub.get('eng') else cor.get('hrowS') if at is hub.get('hrow') else None
+            pl = P.near(x, yy, w, h, ([slot_] if slot_ else []) + [strip_], horiz=True, span=1200.0,
+                        rows=20 if slot_ else 12)
             assert pl, tag
             st_ = P.add(Inst(f'hs_{tag}', nm, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
         else:
@@ -6504,7 +6583,28 @@ def _faces_r8(m, Mx, it, ports):
             resv = []
             if wide:
                 tw_ = sum(bwf(ports[p_][1]) + 2.0 for p_ in wide) - 2.0
-                c_ = min(max(L / 2 - tw_ / 2, 0.4), L - 0.4 - tw_)
+                ctr_ = L / 2
+                if PEER_SPAN_CENTRE:
+                    # s81-die-iter 2026-10-12 (--contract: SU 1,890 grows W of the 1,728 column, VM 1,520): centring
+                    # on each OWN face put the abutting pair's wide groups 81 um apart (rs_d 102.8 um > PIN_SEG -> a
+                    # 103.7 um pin relay with no room in the 21.6 um abut gap).  Centre the group on the centre of the
+                    # die span the face shares with its wide-port peers: the same point at both ends of the pair.
+                    by_ = m['_by']
+                    pe_ = {i_ for p_ in wide for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p_), [])
+                           for i_, _q in eps_ if i_ != it.name and i_ in by_}
+                    if pe_:
+                        if f in 'NS':
+                            lo_ = max(it.x, min(by_[i_].x for i_ in pe_))
+                            hi_ = min(it.x + it.w, max(by_[i_].x + by_[i_].w for i_ in pe_))
+                            org_, flip_ = it.x, it.orient in ('MY', 'R180')
+                        else:
+                            lo_ = max(it.y, min(by_[i_].y for i_ in pe_))
+                            hi_ = min(it.y + it.h, max(by_[i_].y + by_[i_].h for i_ in pe_))
+                            org_, flip_ = it.y, it.orient in ('MX', 'R180')
+                        if hi_ - lo_ >= tw_ + 0.8:
+                            ctr_ = (lo_ + hi_) / 2 - org_
+                            ctr_ = L - ctr_ if flip_ else ctr_
+                c_ = min(max(ctr_ - tw_ / 2, 0.4), L - 0.4 - tw_)
                 if '_bus_of' not in m:
                     bo_ = {}
                     for bid_, _c, _b, eps_ in m['buses']:
@@ -6614,6 +6714,8 @@ def glue_rtl(m):
                      '    // crossing is bounded at 382-385 ps, beyond a single-register window (data changes every cycle), so',
                      '    // it crosses through the d8g1 meso FIFO (the closed die crossing: arcs settle in 1.5 T - 60 ps, low',
                      '    // guard flop at 1.5 T) with registered pins.  Lane vr: i[0] rst_n, i[1] valid.',
+                     '    // Hold pad (s81-die-iter 2026-10-12): i -> ir passes a 120 ps (FF) dont_touch delay chain placed in',
+                     '    // this stage (its feeder is the adjacent end block\'s boundary flops); tools/s81/die_sta.py INPUT_PAD.',
                      _sync('rsync', 'ck[0]', 'i[0]'),
                      f'    reg [{w - 1}:0] ir; always @(posedge cw[0]) ir <= i;',
                      '    wire rv, wl, rl, wf, rf_, wr; wire [%d:0] rq;' % (w - 3),
@@ -7043,10 +7145,13 @@ def die_options(ap):
                     '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--contract', help='s81-die-iter 2026-10-12: hier contract JSON (repo path): SU / HC / VM / centre slab outlines')
     ap.add_argument('--suhc-v2', action='store_true', help='s81die-1011: su_hc contract v2 (one SU in su_s, one HC in hc_s, VM '
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
+    ap.add_argument('--peer-span-centre', action='store_true', help='s81-die-iter: with --rtl-hub-widths, centre each '
+                    'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--rtl-hub-widths', action='store_true', help='s81die-1011 (die lead decision): W hub column gather -> '
                     'capture -> VM (capture directly above gather) and the hub buses at the RTL widths: gather t_capture 6,947 '
                     '(12 root lanes), capture t_vm 13,376, collective t_vm 2,100, VM -> collective f_vm 592 + ts 3')
@@ -7070,6 +7175,8 @@ def apply_options(a):
     global CTRL_ADAPTERS, RTL_HUB_WIDTHS
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
     RTL_HUB_WIDTHS = bool(getattr(a, 'rtl_hub_widths', False))
+    global PEER_SPAN_CENTRE
+    PEER_SPAN_CENTRE = bool(getattr(a, 'peer_span_centre', False))
     global SUHC_V2, SUHC_V2_HC_N
     SUHC_V2 = bool(getattr(a, 'suhc_v2', False))
     SUHC_V2_HC_N = bool(getattr(a, 'suhc_v2_hc_north', False))
@@ -7204,6 +7311,24 @@ def apply_options(a):
     COL_PITCH8 = COL_W8 + 8.64
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
     COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
+    global SU_V2_UM, HC_V2_UM, HROW_UM
+    if getattr(a, 'contract', None):
+        # --contract (s81-die-iter 2026-10-12): slab outlines from results/arch/hier_contract_1011/s81.json (v3+): SU / HC v2
+        # slabs (column channels), centre hard elements, VM slab (overrides --vm-slab), MTP hrow
+        cslots_ = {s_['name']: s_ for s_ in json.loads((ROOT / a.contract).read_text())['slots']}
+        def _o(n_):
+            return (float(cslots_[n_]['outline']['w']), float(cslots_[n_]['outline']['h']))
+        SU_V2_UM, HC_V2_UM = _o('sp_su_s'), _o('sp_hc_s')
+        CONTRACT_SLABS.clear()
+        for n_, k_ in (('capture', 'sp_capture'), ('gather', 'sp_gather'), ('collective', 'sp_collective'), ('wfc_hard', 'sp_wfc')):
+            if k_ in cslots_ and _o(k_)[0] > 0:
+                CONTRACT_SLABS[n_] = _o(k_)
+        if 'sp_vm' in cslots_:
+            a.vm_slab = '%.3f,%.3f' % _o('sp_vm')
+        for k_ in ('rep/hrow', 'hrow'):      # v6: the replicated-slot key (the bare key never matched)
+            if k_ in cslots_ and _o(k_)[0] > 0:
+                HROW_UM = _o(k_)
+                break
     SUHC_1011 = bool(getattr(a, 'suhc_1011', False))
     SUHC_DOM, SUHC_HC_VM = ('stream_1p2', 2048) if SUHC_1011 else ('serial_0p9', 1024)
     global SU_E, HROW_TX
@@ -7324,7 +7449,10 @@ def main(argv=None):
                 Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
             if cg['verdict'] != 'PASS':
                 msg_ = 'DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40])
-                if os.environ.get('OT_S81_CTRL_GATE_WARN') == '1' and a.mode == 'plan':
+                wv_ = os.environ.get('OT_S81_CTRL_GATE_WARN')
+                if (wv_ == '1' and a.mode == 'plan') or (wv_ == 'phys' and a.mode in ('plan', 'real', 'irm', 'check')):
+                    # s81-die-iter 2026-10-12 ('phys'): the die PHYSICAL chain (assembly / GRT / STA / IR) also proceeds;
+                    # the RTL port-audit findings stay a FAIL record (<out>.ctrl_gate.json / the die README), not waived
                     # s81die-1011: geometry-only die-fit (plan) proceeds; the port-audit findings stay a FAIL record
                     print('WARNING ' + msg_, file=sys.stderr)
                 else:
