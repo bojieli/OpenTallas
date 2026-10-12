@@ -4,12 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-fq",
  "purpose": "ot_hgi_qw_wq (write quad of ot_hgi_quant_wide_h) via ref_tile: exact abstract + child_lint-clean view for the cluster",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 12,
  "source": {
