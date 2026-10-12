@@ -37,10 +37,10 @@
  "reset_ports": [],
  "outline": {
   "w": 141.84,
-  "h": 125.28
+  "h": 106.92
  },
- "std_area_um2": 9869,
- "why_floorplan": "hc_post group g x half (8 per slot, one 4-column row each side of the centre band, column g under lane column g); core util 59.3%",
+ "std_area_um2": 8492,
+ "why_floorplan": "hc_post group g x half (8 per slot, one 4-column row each side of the centre band, column g under lane column g); std 8492 um2 (ref_tile gate synth @5fc2f656b, cth shrink), core util ~0.599 at 142.56 x 106.92",
  "macros": [],
  "pins": {
   "N": [
