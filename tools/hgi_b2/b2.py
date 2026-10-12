@@ -49,7 +49,14 @@ VMW = MC.VM_WORDS
 LOCAL_W = 65536
 MIRROR_W = 32768
 SLICE_W = LOCAL_W + MIRROR_W
-REPL_BASE = 262144          # SPEC.md 2a (6e74fb706): REPL window 262,144 .. 294,911, owner of a word < 2^18 = addr[17:16]
+# SPEC.md v0.5 (main 87eead465) address map, PARAMETERS (RTL / compiler / sim agree); decode by RANGE, never by a bit:
+#   addr < REPL_BASE -> slice addr[17:16]; [REPL_BASE, +REPL_W) -> local mirror; [HCAP_BASE, +HCAP_W) -> HC aperture
+REPL_BASE = 262144
+REPL_W = MIRROR_W
+HCAP_BASE = 294912          # v0.5: HC weight aperture moved up from HGI-1's 262,144 (overlapped REPL)
+HCAP_W = MC.VM_AP           # 65,536; the simulator's logical aperture is [VM_WORDS, VM_WORDS + VM_AP)
+SPEC_WORDS = HCAP_BASE + HCAP_W   # 360,448: the die VM image / simulated address space
+assert REPL_BASE + REPL_W <= HCAP_BASE and NQ * LOCAL_W <= REPL_BASE
 MIR = NQ
 SPLIT_UNITS = {"SM", "SU", "SFU", "ATT"}
 VEC_HOME = 0                # the vector home cluster: small vector records run there, on operands LOCAL to it
@@ -455,7 +462,8 @@ class Placement:
         return dict(schema="opentallas.hgi_b2.placement.v1", nq=NQ, vm_words=VMW, local_w=LOCAL_W, mirror_w=MIRROR_W,
                     mirror_phys_base=LOCAL_W, cls_codes={"0..3": "LOCAL slice q", "4": "MIRROR (every slice)"},
                     segments_fields=["logical_lo", "len", "cls", "phys_lo", "spec_addr_lo"],
-                    spec="results/arch/hbm_b2_1012/SPEC.md 2a: slice = addr[17:16], REPL 262,144..294,911", segments=self.segs,
+                    spec="results/arch/hbm_b2_1012/SPEC.md v0.5: range decode; slice = addr[17:16] below REPL_BASE",
+                    repl_base=REPL_BASE, repl_w=REPL_W, hcap_base=HCAP_BASE, hcap_w=HCAP_W, spec_words=SPEC_WORDS, segments=self.segs,
                     capacity=self.capacity())
 
     def slice_image(self, vm, q):
@@ -466,11 +474,14 @@ class Placement:
         return img
 
     def spec_image(self, vm):
-        """the whole die VM in SPEC.md 2a addresses (294,912 words): slice q LOCAL at q * LOCAL_W + phys, the REPL
-        window (one copy; every slice's mirror holds it) at REPL_BASE + phys - LOCAL_W"""
-        img = np.zeros(REPL_BASE + MIRROR_W, np.uint32)
+        """the whole die VM in SPEC.md v0.5 addresses (SPEC_WORDS = 360,448): slice q LOCAL at q * LOCAL_W + phys, the
+        REPL window (one copy; every slice's mirror holds it) at REPL_BASE + phys - LOCAL_W, and the HC weight aperture
+        (logical [VM_WORDS, VM_WORDS + VM_AP) when the image carries it) relocated to HCAP_BASE"""
+        img = np.zeros(SPEC_WORDS, np.uint32)
         w = np.nonzero(self.cls >= 0)[0]
         img[[spec_addr(int(c), int(p)) for c, p in zip(self.cls[w], self.phys[w])]] = vm[w]
+        ap = vm[VMW:VMW + HCAP_W]
+        img[HCAP_BASE:HCAP_BASE + ap.size] = ap
         return img
 
     def avail(self, q):
@@ -478,9 +489,26 @@ class Placement:
 
 
 def spec_addr(c, ph):
-    """SPEC.md 2a word address of physical word ph of region c: slice q = addr[17:16] (q * LOCAL_W + ph); the REPL
-    window (mirror) at 262,144 + (ph - LOCAL_W)"""
+    """SPEC.md v0.5 word address of physical word ph of region c: slice q (q * LOCAL_W + ph); the REPL window (mirror)
+    at REPL_BASE + (ph - LOCAL_W)"""
     return REPL_BASE + ph - LOCAL_W if c == MIR else c * LOCAL_W + ph
+
+
+def spec_of_logical_aperture(a):
+    """an HC-aperture logical address (simulator [VM_WORDS, VM_WORDS + VM_AP)) -> its SPEC v0.5 address"""
+    assert VMW <= a < VMW + HCAP_W
+    return HCAP_BASE + (a - VMW)
+
+
+def decode(addr):
+    """SPEC v0.5 range decode -> ("slice", q, offset) | ("repl", offset) | ("hcap", offset); a hole faults"""
+    if 0 <= addr < REPL_BASE:
+        return ("slice", addr >> 16 & 3, addr & 0xFFFF)
+    if REPL_BASE <= addr < REPL_BASE + REPL_W:
+        return ("repl", addr - REPL_BASE)
+    if HCAP_BASE <= addr < HCAP_BASE + HCAP_W:
+        return ("hcap", addr - HCAP_BASE)
+    raise ValueError(f"SPEC v0.5 address {addr} decodes to no region (fault)")
 
 
 def affine(ph, rows, cols):
