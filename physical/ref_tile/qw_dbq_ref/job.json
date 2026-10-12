@@ -4,12 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-fq",
  "purpose": "ot_hgi_qw_dbq: track B tile of the 3-tile qw decoder (ot_hgi_qw_dec3; replaces the 35,679-flop one-root qw_dec) for ot_hgi_quant_wide_h",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
