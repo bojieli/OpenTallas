@@ -252,7 +252,11 @@ def gen_pdn(s: dict, lc: dict) -> str:
         body = "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
     elif s["kind"] == "tile" and pg == "M6":
         note = "signals M2-M6 route around the M6 stripes; the parent straps M7 (recipe pdn_qkvd_tile_m6.tcl)."
-        body = ("add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {10.8} -offset {2.0}\n"
+        # route.pg_pitch (5.4 or 10.8, both on the strap lattice): short tiles (< ~3 pitches tall) need 5.4 so the M6
+        # PG pins span >= 50% of the height (child_lint (b); dsfd_vm_fsr r4 at 25.92 um: 2 stripes per net = 42%)
+        pp = float(s.get("route", {}).get("pg_pitch", 10.8))
+        assert pp in (5.4, 10.8), "route.pg_pitch must be 5.4 or 10.8"
+        body = (f"add_pdn_stripe -grid {{top}} -layer {{M6}} -width {{0.288}} -spacing {{0.096}} -pitch {{{pp}}} -offset {{2.0}}\n"
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
                 "add_pdn_connect -grid {top} -layers {M5 M6}\n")
     elif s["kind"] == "tile":
