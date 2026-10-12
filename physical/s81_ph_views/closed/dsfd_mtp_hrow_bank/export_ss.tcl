@@ -8,9 +8,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SI
 read_liberty /mv0/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib
 read_lef /mv0/ot_sram_1r1w_1024x256_m2_r2c2.lef
 
-read_db /in/results/asap7/opentallas_dsfd_mtp_hrow_bank_asap7_s81ph_mtp_hrowbank_a7570f3f8_tc_pdn/base/6_final.odb
-read_sdc /in/results/asap7/opentallas_dsfd_mtp_hrow_bank_asap7_s81ph_mtp_hrowbank_a7570f3f8_tc_pdn/base/6_final.sdc
-read_spef /in/results/asap7/opentallas_dsfd_mtp_hrow_bank_asap7_s81ph_mtp_hrowbank_a7570f3f8_tc_pdn/base/6_final.spef
+read_db /in/results/asap7/opentallas_dsfd_mtp_hrow_bank_asap7_s81ph_mtp_hrowbank_26a4fc79b_tc_pa/base/6_final.odb
+read_sdc /in/results/asap7/opentallas_dsfd_mtp_hrow_bank_asap7_s81ph_mtp_hrowbank_26a4fc79b_tc_pa/base/6_final.sdc
+read_spef /in/results/asap7/opentallas_dsfd_mtp_hrow_bank_asap7_s81ph_mtp_hrowbank_26a4fc79b_tc_pa/base/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS [sta::worst_slack_cmd max]"
 write_timing_model -library_name dsfd_mtp_hrow_bank_ss /out/dsfd_mtp_hrow_bank_ss.lib
