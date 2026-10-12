@@ -204,6 +204,12 @@ def cmd_top(a):
     lines.append("export SDC_FILE = /work/station.sdc")
     # hard slice tiles expose M6 power pins: parent grid with M5/M6 stripes + M7 straps, slices strapped M6-M7
     lines.append(f"export PDN_TCL = /src/{STN}/" + ("pdn_hier_m8.tcl" if a.pdn == "m8" else "pdn_hier.tcl"))
+    # forwarded clock (ot_fwd_clk_inv u_clk0..3 -> fclk_o): keep ORFS repair_clock_inverters from cloning the forwarding
+    # inverters into the register tree (as run_owned.py's flat station).  Without it (stnh-top-*-60091125e-m8) the
+    # forwarded generated clocks lose their master (STA-1062 forwarded3 at clkbuf_regs_0_clk_sm/Y), ~1,000 control
+    # registers have no clock path (CTS-0179), latency balancing against the slice macros' insertion delay
+    # (min/max_clock_tree_path in the tile ETMs) fails -> NO3 hold -200 ps at slice pins / RSZ-0060, NO2 setup -264.
+    lines.append(f"export PRE_CTS_TCL = /src/{STN}/forwarded_subtree.tcl")
     # the hardened slices are liberty cells (no parameters): the station instantiates them without #(.NO())
     lines = [l + " -DOT_STN_HARD" if l.startswith("export VERILOG_DEFINES") else l for l in lines]
     lines.append(f"export VERILOG_TOP_PARAMS = ENABLE 1 NO {a.no} REL_REG 1 SAFE 1 GRANT_SEAT 1 HIER 1")
