@@ -2051,27 +2051,71 @@ def pdn_thin_pitch(h, p8):
     return round(min(p, p8), 3)
 
 
-def pg_tile_split(ins, power, M, keep=()):
-    """Generated blocks (incl. window clips) larger than PG_TILE as PG_TILE sub-tiles: same M7 (or PG_M8 M8) lattice
-    phase (tile sides are multiples of 10.8 um), each tile carrying its area share of the block power, so PSM
-    injects the block current over its area as the block's cells draw it.  Real abstracts are left whole."""
+def _lef_pg_m7(text):
+    """{macro: {'VDD'|'VSS': [(x0, y0, x1, y1)]}} of the M7 PG rects of a LEF (after _pg_only_m7)."""
+    out = {}
+    for mm in re.finditer(r'^MACRO (\S+)\n(.*?)^END \1', text, flags=re.S | re.M):
+        d = out.setdefault(mm.group(1), {})
+        for pm in re.finditer(r'  PIN (VDD|VSS)\n(.*?)\n  END \1', mm.group(2), flags=re.S):
+            cur = None
+            for line in pm.group(2).splitlines():
+                st = line.strip().rstrip(';').split()
+                if st and st[0] == 'LAYER':
+                    cur = st[1]
+                elif st and st[0] == 'RECT' and cur == 'M7':
+                    d.setdefault(pm.group(1), []).append(tuple(float(v) for v in st[1:5]))
+    return out
+
+
+def _pgt_lef(nm, tw, th, rects):
+    """A real abstract's PG current tile: SIZE tw x th, PG pins = the real M7 PG rects clipped to the tile."""
+    L = [f'MACRO {nm}', '  CLASS BLOCK ;', f'  FOREIGN {nm} 0 0 ;', f'  SIZE {tw:.3f} BY {th:.3f} ;', '  SYMMETRY X Y ;']
+    for net in ('VDD', 'VSS'):
+        L += [f'  PIN {net}', '    DIRECTION INOUT ;', f'    USE {"POWER" if net == "VDD" else "GROUND"} ;', '    PORT',
+              '      LAYER M7 ;']
+        L += [f'        RECT {a:.3f} {b:.3f} {c:.3f} {e:.3f} ;' for a, b, c, e in rects.get(net, [])]
+        L += ['    END', f'  END {net}']
+    return '\n'.join(L + [f'END {nm}', ''])
+
+
+def pg_tile_split(ins, power, M, keep=(), real_pg=None, pgt_lef=None):
+    """Every block larger than 1.5 PG_TILE as PG_TILE current tiles, each carrying its area share of the block power,
+    so PSM injects the block current over its area as the block's cells draw it (PSM puts an instance's whole current
+    on one node).  Generated blocks (incl. window clips): sub-tiles on the same M7 (or PG_M8 M8) lattice phase (tile
+    sides are multiples of 10.8 um).  Real abstracts in real_pg ({master: {net: M7 rects}}): the instance is replaced
+    by tiles whose PG pins are its own M7 PG rects clipped to the tile (LEF text into pgt_lef), placed through the
+    instance orientation -- the same metal, the current spread over it."""
     out, pw = [], {}
+    real_pg = real_pg or {}
+
+    def cuts(L):
+        n = max(1, round(L / PG_TILE))
+        e = [0.0] + [round(k * PG_TILE, 3) for k in range(1, n)] + [L]
+        return [(a, round(b - a, 3)) for a, b in zip(e, e[1:])]
     for it in ins:
-        if it.master in REAL_FILES or it.master in keep or (it.w <= 1.5 * PG_TILE and it.h <= 1.5 * PG_TILE):
+        real = it.master in REAL_FILES
+        if it.master in keep or (real and it.master not in real_pg) or (it.w <= 1.5 * PG_TILE and it.h <= 1.5 * PG_TILE):
             out.append(it); pw[it.name] = power[it.name]; continue
         base = it.master.split('_clip_')[0]
-
-        def cuts(L):
-            n = max(1, round(L / PG_TILE))
-            e = [0.0] + [round(k * PG_TILE, 3) for k in range(1, n)] + [L]
-            return [(a, b - a) for a, b in zip(e, e[1:])]
         for i, (dx, tw) in enumerate(cuts(it.w)):
             for j, (dy, th) in enumerate(cuts(it.h)):
-                nm = f'{base}_clip_t{round(tw * 1000)}x{round(th * 1000)}'
-                if nm not in M:
-                    M[nm] = Q.Master(nm, round(tw, 3), round(th, 3), M[it.master].obs_top, 'PG current tile of ' + base)
-                t = Inst(f'{it.name}__t{i}_{j}', nm, it.x + dx, it.y + dy, round(tw, 3), round(th, 3), it.orient,
-                         it.kind, it.region, it.domain)
+                if real:
+                    nm = f'{base}_pgt{i}_{j}'
+                    if nm not in M:
+                        rc = {net: [(max(a, dx) - dx, max(b, dy) - dy, min(c, dx + tw) - dx, min(e, dy + th) - dy)
+                                    for a, b, c, e in rr if min(c, dx + tw) - max(a, dx) > 0.05 and
+                                    min(e, dy + th) - max(b, dy) > 0.05] for net, rr in real_pg[it.master].items()}
+                        M[nm] = Q.Master(nm, tw, th, M[it.master].obs_top, 'PG current tile of real ' + base)
+                        pgt_lef[nm] = _pgt_lef(nm, tw, th, rc)
+                    px = it.x + (it.w - dx - tw if it.orient in ('MY', 'R180') else dx)
+                    py = it.y + (it.h - dy - th if it.orient in ('MX', 'R180') else dy)
+                else:
+                    nm = f'{base}_clip_t{round(tw * 1000)}x{round(th * 1000)}'
+                    if nm not in M:
+                        M[nm] = Q.Master(nm, tw, th, M[it.master].obs_top, 'PG current tile of ' + base)
+                    px, py = it.x + dx, it.y + dy
+                t = Inst(f'{it.name}__t{i}_{j}', nm, round(px, 3), round(py, 3), tw, th, it.orient, it.kind, it.region,
+                         it.domain)
                 out.append(t); pw[t.name] = power[it.name] * tw * th / (it.w * it.h)
     return out, pw
 
@@ -2116,12 +2160,16 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     # single-node injection, case_psmt measured 54.8 vs 2.4 mV); (2) blocks too thin for the die M8 lattice to
     # cross them twice per net get a local die-M8 strap set (pdn_thin_pitch), joined M7-M8 and M8-M9.
     power0 = {it.name: (clip_pw[it.name] if it.name in clip_pw else inst_power(it)) for it in ins}
-    ins, power0 = pg_tile_split(ins, power0, M, keep={real_lef(CFG_LEF)['name']})
+    q_pg = _pg_only_m7(_lef_text(Q_LEF))
+    pgt = {}
+    ins, power0 = pg_tile_split(ins, power0, M, keep={real_lef(CFG_LEF)['name']}, real_pg=_lef_pg_m7(q_pg), pgt_lef=pgt)
     masters_used = sorted({it.master for it in ins})
-    gen = [M[n_] for n_ in masters_used if n_ not in REAL_FILES]
+    (work / 'pgt.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' +
+                                  '\n'.join(pgt[n_] for n_ in masters_used if n_ in pgt) + 'END LIBRARY\n')
+    gen = [M[n_] for n_ in masters_used if n_ not in REAL_FILES and n_ not in pgt]
     (work / 'gen_pg.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' +
                                      '\n'.join(_gen_pg_lef(g_) for g_ in gen) + 'END LIBRARY\n')
-    (work / 'q_pg.lef').write_text(_pg_only_m7(_lef_text(Q_LEF)))
+    (work / 'q_pg.lef').write_text(q_pg)
     (work / 'cfg.lef').write_text(_lef_text(CFG_LEF))
     o = {'R0': 'N', 'MY': 'FN', 'MX': 'FS'}
     d = ['VERSION 5.8 ;', 'DIVIDERCHAR "/" ;', 'BUSBITCHARS "[]" ;', 'DESIGN qirm ;', 'UNITS DISTANCE MICRONS 1000 ;',
@@ -2170,6 +2218,7 @@ read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 read_lef /work/q_pg.lef
 read_lef /work/cfg.lef
 read_lef /work/gen_pg.lef
+read_lef /work/pgt.lef
 read_def /work/win.def
 add_global_connection -net {{VDD}} -inst_pattern {{.*}} -pin_pattern {{^VDD$}} -power
 add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -ground
