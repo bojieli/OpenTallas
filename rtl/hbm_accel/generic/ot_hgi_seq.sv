@@ -56,7 +56,10 @@ module ot_hgi_seq #(
     parameter integer DS_TOPK = 512,     //   top-k
     parameter integer DS_HDL = 9,        //   log2 head dim (512)
     parameter integer QD = 4,            // record queue entries (a power of two, 2..8; 8 measured 0.747x vs 4 0.789x)
-    parameter integer FD = 12            // FE word FIFO depth (>= 8)
+    parameter integer FD = 12,           // FE word FIFO depth (>= 8)
+    parameter integer IKS_I = 0          // 1 (hbmdie-1011): operand I (slot 6) may be HBM space (IDX.INDEX IKS key region): passed
+                                         //   through range-checked like any HBM operand, no indexed-read source (an indexed operand
+                                         //   of such a record faults as one without I); 0: I must be VM (the legacy rule)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -561,7 +564,7 @@ module ot_hgi_seq #(
     wire [TRW-1:0] a0_row = trow_of(trow, a0_slot);
     wire [31:0] dyn_d = dynx(a0_dsel, a0_row, a0_slot, a0_L, a0_L1, pos, pos1_q, token, rank_r),
                 dyn_n = dynx(a0_nsel, a0_row, a0_slot, a0_L, a0_L1, pos, pos1_q, token, rank_r);
-    wire a0_flt = !a0_be && ((a0_isI && (a0_idx || a0_nsel == 6'd63 || a0_sp != 2'd1)) ||
+    wire a0_flt = !a0_be && ((a0_isI && (a0_idx || a0_nsel == 6'd63 || (a0_sp != 2'd1 && !(IKS_I != 0 && a0_sp == 2'd0)))) ||
                              (!a0_isI && (a0_idx || a0_nsel == 6'd63) && !a0_hi) ||
                              (!a0_idx && dyn_rsv(a0_dsel)) ||
                              (a0_nsel != 6'd0 && a0_nsel != 6'd63 && dyn_rsv(a0_nsel)) ||
@@ -668,7 +671,8 @@ module ot_hgi_seq #(
     wire        a6_ixb = (a6_iax[63:18] != 46'd0), a6_inb = (a5_ian[63:18] != 46'd0);
     wire        a6_fe = av[5] && !a5_be;
     wire        a6_be = av[5] && a5_be;
-    wire        a6_flt = a5_flt || (a5_isI ? a6_bad_vm : (!(a5_px || a5_pn) && a6_bad_d));
+    wire        a6_ihbm = (IKS_I != 0) && a5_isI && a5_sp == 2'd0;      // IKS: an HBM-space I (range-checked as HBM)
+    wire        a6_flt = a5_flt || (a5_isI ? (a6_ihbm ? a6_bad_d : a6_bad_vm) : (!(a5_px || a5_pn) && a6_bad_d));
     // ================================================================== RQ: the record queue (one generate block an entry)
     localparam integer EW_D = 7*256, EW_N = 7*21, EW_PH = 6*24;
     wire [QD*128-1:0] all_hdr; wire [QD*3-1:0] all_kind; wire [QD*256-1:0] all_sut; wire [QD*EW_D-1:0] all_dsc;
@@ -700,6 +704,8 @@ module ot_hgi_seq #(
                 if (a5_last) e_rdy <= 1'b1;
             end
             if ((ir_flt && rd_e == ge) || (bw && a6_bad_d)) e_flt <= 1'b1;
+            // IKS: an HBM-space I is no indexed-read source: an indexed / N_FROM_VM operand of the record faults (as without I)
+            if (fw && a6_ihbm && ((|e_px7[5:0]) || (|e_pn7[5:0]))) e_flt <= 1'b1;
         end
         // one descriptor slot: raw at the pop, base / n patched by the AU (FE pass) and by the BE (indexed pass)
         for (gs = 0; gs < 7; gs = gs + 1) begin : g_s

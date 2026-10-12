@@ -21,6 +21,11 @@ T.CONTRACT = 'contract_vm28'
 W, H, NT, NS = 345.6, 500.04, 4, 4    # W = 32 x the 10.8-um M7 PG pitch (tile M7 pins stay clear of every block's stripes)
 SLAB_W = 1520.064                  # ds-1010 hub-column VM slab width (FE / BE span it; the 4 tile columns are centred)
 X0 = 0.0                            # tile columns from the slab's W edge (M7 / M5 / PG grids coincide)
+CH = 43.2                           # s81die-1011 contract v3: channel between tile columns so every tile W-face pin (ck / rs /
+                                    # grp, M4) is reachable from die-level routing (abutted columns 1-3 buried them);
+                                    # 43.2 = 4 x the 10.8 M7 PG pitch = 675 x 0.064 (M7) = 450 x 0.096 (M5 pin grid) = 800 sites
+PX = W + CH                         # column pitch 388.8; 4 columns + 3 channels = 1,512.0 <= SLAB_W
+assert X0 + 4 * W + 3 * CH <= SLAB_W, "VM tile columns + channels exceed the slab"
 NP, NPR, RA, DW = 28, 10, 14, 128
 FE_H, BE_H = 473.04, 108.0         # el1011-ds-vm/fe 10-11: FE 311.04 -> 473.04 (hierarchical FE: 16 x dsfd_vm_clt 230.04-um tiles under the N face + landing macros / parent band below); was         # slab height 2,419.2 (ds-1010: 2.42 mm)          # FE / BE outline heights (first estimate: FE ~125k flops + 16.8k die pins; BE ~10k)
 
@@ -105,7 +110,7 @@ def place_die_face(pl, ports, face, w):
 
 def put_t(pl, port, bit, face, h, xs, tname):
     ly, x = xs[tname]
-    pl.put(port, bit, face, ly, X0 + h * W + x)
+    pl.put(port, bit, face, ly, X0 + h * PX + x)
 
 
 def fe(xs):
@@ -185,7 +190,7 @@ def main():
         source='rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv module dsfd_sp_vm_m (the exact composition netlist; gate '
                'tools/s81_vm/s81_vm_gate.py)',
         instances=[dict(inst='u_fe', master='dsfd_vm_fe', xy=[0.0, T.r4(BE_H + NT * H)], orient='R0', um=[SLAB_W, FE_H])]
-        + [dict(inst=f'g_h[{h}].g_t[{t}].u_bg', master='dsfd_vm_bgq28', xy=[T.r4(X0 + h * W), T.r4(BE_H + (NT - 1 - t) * H)],
+        + [dict(inst=f'g_h[{h}].g_t[{t}].u_bg', master='dsfd_vm_bgq28', xy=[T.r4(X0 + h * PX), T.r4(BE_H + (NT - 1 - t) * H)],
                 orient='R0', grp=t, slice=h) for h in range(NS) for t in range(NT)]
         + [dict(inst='u_be', master='dsfd_vm_be', xy=[0.0, 0.0], orient='R0', um=[SLAB_W, BE_H])],
         nets=dict(chain='per slice h: g_t[t].f_* -> g_t[t+1].i_*, g_t[t].o_* -> g_t[t+1].r_* by abutment; FE m_* slice h -> '

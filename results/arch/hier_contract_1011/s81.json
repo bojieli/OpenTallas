@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 1,
+ "version": 3,
  "owner": "s81die-1011",
- "updated": "2026-10-11T21:45-07:00",
+ "updated": "2026-10-12T00:30-07:00",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -25,13 +25,24 @@
   "relays": "longer seams get die-top relay stations (last segment <= ~100 um at a die pin)",
   "io_budget": "0.2 T in / 0.2 T out per tile; the die top owns the remaining 0.6 T per seam stage",
   "clock": "each tile clock pin balanced to target_insertion_ps (provisional 120 ps; re-budget from routed CTS)",
-  "check": "die closure, not element closure: die-region routes (tiles as fixed macros, relays/stations only logic, M8/M9 straps) signed off TT setup >= 0 / FF hold >= 0 / DRC 0; prerequisite: tools/hier_contract/child_lint.py PASS on every placed tile"
+  "check": "die closure, not element closure: die-region routes (tiles as fixed macros, relays/stations only logic, M8/M9 straps) signed off TT setup >= 0 / FF hold >= 0 / DRC 0; prerequisite: tools/hier_contract/child_lint.py PASS on every placed tile",
+  "channels": "every column boundary of an abutted tile array whose tiles carry W- or E-face pins is a >= 20-um channel on the M7 PG / 0.064 M7 / 0.096 M5 / 0.054 site grids (43.2 = lcm multiple): VM bgq28 43.2, HC 43.2, SU 86.4 (spine jogs); N/S abutment chains keep zero gap; die-level nets into a channel are relayed <= 500 um a stage"
  },
  "changelog": [
   {
    "version": 1,
    "when": "2026-10-11 21:45 PT",
    "change": "v1 from die-fit v2b: VM slab 2,609.28 (BE 136.08 + FE v4), collective 1,727.976 x 2,721.576 (lanes W, core column 1,360.8, cb 8 tiles direct 972.4-wide row, ce region pending), SU 29 tiles direct, cb clock targets from measured TT libs (217-302 ps), direct, HC split variant tiles direct, P2 ready-latency 4 consumer, layer contract M7 PG / M8 straps"
+  },
+  {
+   "version": 2,
+   "when": "2026-10-12 00:00 PT",
+   "change": "el1011-ds-vm/bgq28-B: + 16 dsfd_vm_bgq28 tile slots under sp_vm (clock_entry ck[0] W 249.996 M4, target_insertion_ps 610 from the clock-spine CTS replay; spine replaces the single 59,040-sink TritonCTS tree)"
+  },
+  {
+   "version": 3,
+   "when": "2026-10-12 00:30 PT",
+   "change": "s81die-1011: column channels for W/E-face pin access (coordinator decision, area not scarce): sp_vm 16 dsfd_vm_bgq28 tiles at pitch 388.8 (43.2 channels; ck/rs/grp W pins of columns 1-3 were buried by abutment); sp_hc_s 3 x 575.992 columns + 43.2 channels (ctile_half W-face clk/last/tid of columns 1-2 buried) -> slab 1,814.376 wide; sp_su_s 3 x 572.4 columns + 86.4 channels (dn_dl W / o_* E spine faces buried; composition declared 21.6 channels but placed 0) -> slab 1,890.0 wide. Tile outlines and pins unchanged; collective (lanes single column, cb tiles 30-um gaps) already clear; sp_collective h 2,721.576 -> 2,721.6 (the 8 x 340.2 lane stack overhung it by 0.024 um)"
   }
  ],
  "slots": [
@@ -72,7 +83,7 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 1727.976,
+    "w": 1890.0,
     "h": 6069.576
    },
    "origin": {
@@ -92,7 +103,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
@@ -198,7 +209,7 @@
    ],
    "assembly": "tiles_direct",
    "owner": "el1011 s81 suhc-hier (claude/s81-suhc-hier-1011-su)",
-   "notes": "tiles from physical/s81_ph_views/su_hier/su_slab_composition.json; the slab outline is the die region they fill"
+   "notes": "tiles from physical/s81_ph_views/su_hier/su_slab_composition.json; the slab outline is the die region they fill; v3: 3 columns x 572.4 + 2 x 86.4 channels = 1,890.0 wide (grows E inside the 1,944-um W hub column, 54 um to the VCH): tile W-face (dn_dl 4,096 b) / E-face (o_*) spine pins reachable, spine relay stations + jogs in the channels"
   },
   {
    "name": "sp_su_s/po0",
@@ -210,7 +221,7 @@
     "h": 475.2
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 5572.8,
     "orient": "R0"
    },
@@ -226,7 +237,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -241,7 +252,7 @@
     "h": 475.2
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 5076.0,
     "orient": "R0"
    },
@@ -257,7 +268,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -272,7 +283,7 @@
     "h": 475.2
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 4579.2,
     "orient": "R0"
    },
@@ -288,7 +299,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -303,7 +314,7 @@
     "h": 475.2
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 4082.4,
     "orient": "R0"
    },
@@ -319,7 +330,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -334,7 +345,7 @@
     "h": 216.0
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 3844.8,
     "orient": "R0"
    },
@@ -350,7 +361,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -365,7 +376,7 @@
     "h": 604.8
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 3218.4,
     "orient": "R0"
    },
@@ -381,7 +392,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -396,7 +407,7 @@
     "h": 604.8
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 2592.0,
     "orient": "R0"
    },
@@ -412,7 +423,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -427,7 +438,7 @@
     "h": 604.8
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 1965.6,
     "orient": "R0"
    },
@@ -443,7 +454,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -458,7 +469,7 @@
     "h": 604.8
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 1339.2,
     "orient": "R0"
    },
@@ -474,7 +485,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -489,7 +500,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 680.4,
     "orient": "R0"
    },
@@ -505,7 +516,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -520,7 +531,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 1144.8,
+    "x": 1317.6,
     "y": 21.6,
     "orient": "R0"
    },
@@ -536,7 +547,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -551,7 +562,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 21.6,
     "orient": "R0"
    },
@@ -567,7 +578,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -582,7 +593,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 680.4,
     "orient": "R0"
    },
@@ -598,7 +609,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -613,7 +624,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 1339.2,
     "orient": "R0"
    },
@@ -629,7 +640,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -644,7 +655,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 1998.0,
     "orient": "R0"
    },
@@ -660,7 +671,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -675,7 +686,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 2656.8,
     "orient": "R0"
    },
@@ -691,7 +702,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -706,7 +717,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 3315.6,
     "orient": "R0"
    },
@@ -722,7 +733,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -737,7 +748,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 3974.4,
     "orient": "R0"
    },
@@ -753,7 +764,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -768,7 +779,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 4633.2,
     "orient": "R0"
    },
@@ -784,7 +795,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -799,7 +810,7 @@
     "h": 637.2
    },
    "origin": {
-    "x": 572.4,
+    "x": 658.8,
     "y": 5292.0,
     "orient": "R0"
    },
@@ -815,7 +826,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -846,7 +857,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -877,7 +888,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -908,7 +919,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -939,7 +950,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -970,7 +981,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1001,7 +1012,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1032,7 +1043,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1063,7 +1074,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1094,7 +1105,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1105,7 +1116,7 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 1727.976,
+    "w": 1814.376,
     "h": 9640.056
    },
    "origin": {
@@ -1125,7 +1136,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
@@ -1252,7 +1263,7 @@
    ],
    "assembly": "tiles_direct",
    "owner": "el1011 s81 suhc-hier (claude/s81-suhc-hier-1011-hc)",
-   "notes": "split variant outline 1,727.976 x (22 H_half + 840), H_half 400 -> 9,640; roots on the N edge"
+   "notes": "split variant outline 1,727.976 x (22 H_half + 840), H_half 400 -> 9,640; roots on the N edge; v3: 3 columns x 575.992 + 2 x 43.2 channels = 1,814.376 wide (grows E by 86.4 into the 518.4-um spine/field SPF channel -> 432.0): ctile W-face clk/last/tid of columns 1-2 reachable; root-row W/E links (crootr s_* <-> comb w_*/e_*, yacc) cross the channel as 43.2-um straight register-to-register wires"
   },
   {
    "name": "sp_hc_s/crooty_c0",
@@ -1264,7 +1275,7 @@
     "h": 200
    },
    "origin": {
-    "x": 0,
+    "x": 0.0,
     "y": 9440.056,
     "orient": "R0"
    },
@@ -1280,7 +1291,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1295,7 +1306,7 @@
     "h": 640
    },
    "origin": {
-    "x": 0,
+    "x": 0.0,
     "y": 8800.056,
     "orient": "R0"
    },
@@ -1311,7 +1322,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1326,7 +1337,7 @@
     "h": 200
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 9440.056,
     "orient": "R0"
    },
@@ -1342,7 +1353,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1357,7 +1368,7 @@
     "h": 640
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 8800.056,
     "orient": "R0"
    },
@@ -1373,7 +1384,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1388,7 +1399,7 @@
     "h": 200
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 9440.056,
     "orient": "R0"
    },
@@ -1404,7 +1415,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1419,7 +1430,7 @@
     "h": 640
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 8800.056,
     "orient": "R0"
    },
@@ -1435,7 +1446,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1466,7 +1477,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1497,7 +1508,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1528,7 +1539,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1559,7 +1570,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1590,7 +1601,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1621,7 +1632,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1652,7 +1663,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1683,7 +1694,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1714,7 +1725,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1745,7 +1756,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1776,7 +1787,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1807,7 +1818,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1838,7 +1849,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1869,7 +1880,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1900,7 +1911,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1931,7 +1942,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1962,7 +1973,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -1993,7 +2004,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2024,7 +2035,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2055,7 +2066,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2086,7 +2097,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2117,7 +2128,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2132,7 +2143,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 8400.056,
     "orient": "R0"
    },
@@ -2148,7 +2159,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2163,7 +2174,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 8000.056,
     "orient": "R0"
    },
@@ -2179,7 +2190,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2194,7 +2205,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 7600.056,
     "orient": "R0"
    },
@@ -2210,7 +2221,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2225,7 +2236,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 7200.056,
     "orient": "R0"
    },
@@ -2241,7 +2252,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2256,7 +2267,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 6800.056,
     "orient": "R0"
    },
@@ -2272,7 +2283,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2287,7 +2298,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 6400.056,
     "orient": "R0"
    },
@@ -2303,7 +2314,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2318,7 +2329,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 6000.056,
     "orient": "R0"
    },
@@ -2334,7 +2345,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2349,7 +2360,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 5600.056,
     "orient": "R0"
    },
@@ -2365,7 +2376,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2380,7 +2391,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 5200.056,
     "orient": "R0"
    },
@@ -2396,7 +2407,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2411,7 +2422,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 4800.056,
     "orient": "R0"
    },
@@ -2427,7 +2438,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2442,7 +2453,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 4400.056,
     "orient": "R0"
    },
@@ -2458,7 +2469,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2473,7 +2484,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 4000.056,
     "orient": "R0"
    },
@@ -2489,7 +2500,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2504,7 +2515,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 3600.056,
     "orient": "R0"
    },
@@ -2520,7 +2531,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2535,7 +2546,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 3200.056,
     "orient": "R0"
    },
@@ -2551,7 +2562,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2566,7 +2577,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 2800.056,
     "orient": "R0"
    },
@@ -2582,7 +2593,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2597,7 +2608,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 2400.056,
     "orient": "R0"
    },
@@ -2613,7 +2624,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2628,7 +2639,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 2000.056,
     "orient": "R0"
    },
@@ -2644,7 +2655,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2659,7 +2670,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 1600.056,
     "orient": "R0"
    },
@@ -2675,7 +2686,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2690,7 +2701,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 1200.056,
     "orient": "R0"
    },
@@ -2706,7 +2717,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2721,7 +2732,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 575.992,
+    "x": 619.192,
     "y": 800.056,
     "orient": "R0"
    },
@@ -2737,7 +2748,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2752,7 +2763,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 8400.056,
     "orient": "R0"
    },
@@ -2768,7 +2779,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2783,7 +2794,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 8000.056,
     "orient": "R0"
    },
@@ -2799,7 +2810,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2814,7 +2825,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 7600.056,
     "orient": "R0"
    },
@@ -2830,7 +2841,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2845,7 +2856,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 7200.056,
     "orient": "R0"
    },
@@ -2861,7 +2872,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2876,7 +2887,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 6800.056,
     "orient": "R0"
    },
@@ -2892,7 +2903,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2907,7 +2918,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 6400.056,
     "orient": "R0"
    },
@@ -2923,7 +2934,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2938,7 +2949,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 6000.056,
     "orient": "R0"
    },
@@ -2954,7 +2965,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -2969,7 +2980,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 5600.056,
     "orient": "R0"
    },
@@ -2985,7 +2996,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3000,7 +3011,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 5200.056,
     "orient": "R0"
    },
@@ -3016,7 +3027,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3031,7 +3042,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 4800.056,
     "orient": "R0"
    },
@@ -3047,7 +3058,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3062,7 +3073,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 4400.056,
     "orient": "R0"
    },
@@ -3078,7 +3089,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3093,7 +3104,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 4000.056,
     "orient": "R0"
    },
@@ -3109,7 +3120,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3124,7 +3135,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 3600.056,
     "orient": "R0"
    },
@@ -3140,7 +3151,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3155,7 +3166,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 3200.056,
     "orient": "R0"
    },
@@ -3171,7 +3182,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3186,7 +3197,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 2800.056,
     "orient": "R0"
    },
@@ -3202,7 +3213,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3217,7 +3228,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 2400.056,
     "orient": "R0"
    },
@@ -3233,7 +3244,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3248,7 +3259,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 2000.056,
     "orient": "R0"
    },
@@ -3264,7 +3275,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3279,7 +3290,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 1600.056,
     "orient": "R0"
    },
@@ -3295,7 +3306,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3310,7 +3321,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 1200.056,
     "orient": "R0"
    },
@@ -3326,7 +3337,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3341,7 +3352,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 800.056,
     "orient": "R0"
    },
@@ -3357,7 +3368,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3372,7 +3383,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 400.056,
     "orient": "R0"
    },
@@ -3388,7 +3399,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3403,7 +3414,7 @@
     "h": 400.0
    },
    "origin": {
-    "x": 1151.984,
+    "x": 1238.384,
     "y": 0.056,
     "orient": "R0"
    },
@@ -3419,7 +3430,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6"
@@ -3431,7 +3442,7 @@
    "parent": "s81_layer1",
    "outline": {
     "w": 1727.976,
-    "h": 2721.576
+    "h": 2721.6
    },
    "origin": {
     "x": 13942.8,
@@ -3450,7 +3461,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
@@ -4342,7 +4353,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
+   "version": 3,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
@@ -4588,7 +4599,7 @@
    ],
    "assembly": "pending_owner",
    "owner": "el1011-ds-vm",
-   "notes": "BE S-face contract v3 (P2 READY-LATENCY 4: consumer dsfd_vm_p2_ep rebuilt s81die-1011 377e1ff10); tile list (be slices, fe lane tiles, be hub logic folded into tiles) to be posted by the owner; clt6 LEF fails M7/pin access (re-route)"
+   "notes": "BE S-face contract v3 (P2 READY-LATENCY 4: consumer dsfd_vm_p2_ep rebuilt s81die-1011 377e1ff10); tile list (be slices, fe lane tiles, be hub logic folded into tiles) to be posted by the owner; clt6 LEF fails M7/pin access (re-route); v3: bgq28 columns at pitch 388.8 (345.6 + 43.2 channel; 1,512.0 of the 1,520.184 slab): column 1-3 W-face ck/rs/grp reachable; FE S-face / BE N-face pins follow the columns (+43.2 h), BE slice tiles at 388.8 s + 43.2"
   },
   {
    "name": "sp_capture",
@@ -5193,6 +5204,534 @@
    "assembly": "pending_owner",
    "owner": "el1011-ds-misc",
    "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)"
+  },
+  {
+   "name": "sp_vm/g_h[0].g_t[0].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 0.0,
+    "y": 1636.2,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[0].g_t[1].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 0.0,
+    "y": 1136.16,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[0].g_t[2].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 0.0,
+    "y": 636.12,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[0].g_t[3].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 0.0,
+    "y": 136.08,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[1].g_t[0].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 388.8,
+    "y": 1636.2,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[1].g_t[1].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 388.8,
+    "y": 1136.16,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[1].g_t[2].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 388.8,
+    "y": 636.12,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[1].g_t[3].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 388.8,
+    "y": 136.08,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[2].g_t[0].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 777.6,
+    "y": 1636.2,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[2].g_t[1].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 777.6,
+    "y": 1136.16,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[2].g_t[2].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 777.6,
+    "y": 636.12,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[2].g_t[3].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 777.6,
+    "y": 136.08,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[3].g_t[0].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 1166.4,
+    "y": 1636.2,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[3].g_t[1].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 1166.4,
+    "y": 1136.16,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[3].g_t[2].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 1166.4,
+    "y": 636.12,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/g_h[3].g_t[3].u_bg",
+   "cell": "dsfd_vm_bgq28",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 345.6,
+    "h": 500.04
+   },
+   "origin": {
+    "x": 1166.4,
+    "y": 136.08,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck[0]",
+    "face": "W",
+    "offset": 249.996,
+    "layer": "M4"
+   },
+   "target_insertion_ps": 610.0,
+   "version": 3,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   }
  ]
 }

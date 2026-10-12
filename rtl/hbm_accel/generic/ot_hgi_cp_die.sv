@@ -31,6 +31,7 @@ module ot_hgi_cp_die #(
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
     parameter integer NOS = 160,       // tputx-cpf: ring sectors in flight (seq / cp NOS; was 48)
     parameter integer FQCR = 4,        // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
+    parameter integer IKS_I = 0,       // ot_hgi_seq IKS_I (hbmdie-1011): HBM operand I for IDX.INDEX IKS; 0 = legacy
     parameter integer MTP_PINREG = 0,  // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
                                        // FIFOs / flops on f_mtp, t_mtp, mh_* and the translator side; +1 cycle a crossing,
                                        // controller PRL 4); 0 = the unregistered collar (pinned views unchanged)
@@ -135,7 +136,7 @@ module ot_hgi_cp_die #(
     reg  halt;
     wire units_busy = ~credit[0] | ~credit[1] | ~credit[2] | ~credit[3] | ~(&credx) | (|ux_v);
     localparam [15:0] RECU = 16'b0000_0111_1111_1110;   // units 1-10 have a record bus (0 CTL internal, 11 SIMT absent)
-    ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO), .FETCH_PIN_FIFO(1), .FQ_LOCAL(1), .FQCR(FQCR), .NOS(NOS)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
+    ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO), .FETCH_PIN_FIFO(1), .FQ_LOCAL(1), .FQCR(FQCR), .NOS(NOS), .IKS_I(IKS_I)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
         .cmd_wdata(cfg_wdata), .units_busy(units_busy), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded), .cfg_err(cfg_err),
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),

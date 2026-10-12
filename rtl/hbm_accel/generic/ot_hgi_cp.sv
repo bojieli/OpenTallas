@@ -20,7 +20,8 @@ module ot_hgi_cp #(
     parameter integer FQ_LOCAL = 0,
     parameter integer FQCR = 16,
     parameter integer NOS = 160,       // tputx-cpf: ring sectors in flight (the sequencer's NOS; was a fixed 48)
-    parameter integer MUT_FQ = 0
+    parameter integer MUT_FQ = 0,
+    parameter integer IKS_I = 0          // ot_hgi_seq IKS_I (HBM operand I for IDX.INDEX IKS); 0 = legacy
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -166,7 +167,7 @@ module ot_hgi_cp #(
         assign f_req_addr = sf_addr;
         assign sf_rdy = f_req_rdy;
     end endgenerate
-    ot_hgi_seq #(.RW(RW), .USE_MACRO(USE_MACRO), .NOS(NOS)) u_seq (.clk(clk), .rst_n(rst_n), .md_d(md_d),
+    ot_hgi_seq #(.RW(RW), .USE_MACRO(USE_MACRO), .NOS(NOS), .IKS_I(IKS_I)) u_seq (.clk(clk), .rst_n(rst_n), .md_d(md_d),
         .cfg_vocab(cp_act[HGI_CP_VOCAB_L +: HGI_CP_VOCAB_N]), .cfg_ctx_max(cp_act[32 + HGI_CP_CTX_MAX_L +: HGI_CP_CTX_MAX_N]),
         .rank(rank), .hold(hold), .busy(seq_busy),
         .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(db_job), .db_gen(db_gen),
