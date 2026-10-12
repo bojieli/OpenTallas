@@ -140,9 +140,9 @@
   },
   "hgi_b2": {
    "kind": "hgi",
-   "args": "--g B2=1 --g B2_RING=1",
+   "args": "--g B2=1 --g B2_RING=1 --g CP_IKS_I=1",
    "mem_gb": 60,
-   "about": "B2 OLD-VM mode (stream 10): every unit a replay stub, 4 clusters x 65,536-word slices, records placed per b2.txt (tools/hgi_e2e/b2.py), stub hold += ring cycles"
+   "about": "B2 OLD-VM mode (stream 10): every unit a replay stub, 4 clusters x 65,536-word slices, records placed per b2.txt (tools/hgi_e2e/b2.py), stub hold += ring cycles; CP_IKS_I 1: the CP passes IDX.INDEX's IKS operand I (the --iks vectors) to the stub"
   },
   "hgi_b2coll": {
    "kind": "hgi",
