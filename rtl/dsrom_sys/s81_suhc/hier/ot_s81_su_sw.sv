@@ -267,14 +267,15 @@ module ot_s81_su_swt #(
         wire desc = mine && v0 && !rnz;
         wire opc  = mine && v0 && rnz;
         wire [15:0] ix0 = rcnt - 16'd1;
+        wire [9:0]  bt  = ix0 >> LR;                                // the beat (a 10-bit select of ix0 runs past bit 15)
         wire        isu = ix0[LR - 1];
         wire [15:0] pp  = (ix0 >> LL) % NPS;
         always @(posedge clk) begin : dreg
             integer k;
             e_d <= dn_d_i;
-            e_t <= {ix0[LR +: 10], pp[1:0]};
+            e_t <= {bt, pp[1:0]};
             if (desc) begin e_ob <= dn_d_i[13:0]; e_lim <= dn_d_i[96 +: 32]; wv <= dn_d_i[160 +: 32 * NWB]; end
-            e_w <= wsel(ix0[LR +: 10]);
+            e_w <= wsel(bt);
         end
         always @(posedge clk or negedge rst_n) begin : creg
             integer k;
@@ -318,14 +319,15 @@ module ot_s81_su_swt #(
         localparam integer TB = 13, RB = 512 + TB + 1;
         reg [L-1:0] sv; reg [L*512-1:0] sd; reg [L*TB-1:0] stg;
         always @(*) begin : sl
-            integer s; reg [15:0] ix, pp;
+            integer s; reg [15:0] ix, pp; reg [9:0] bx;
             sv = 0; sd = 0; stg = 0;
             for (s = 0; s < S_RD; s = s + 1) begin
                 ix = rcnt + s - 16'd1;
                 sv[s] = mine && dq_v[s] && (rcnt != 16'd0 || s != 0);
                 sd[512 * s +: 512] = dq_d[512 * s +: 512];
                 pp = (ix >> LL) % NPS;
-                stg[TB * s +: TB] = {ix[LR +: 10], ix[LR - 1], pp[1:0]};
+                bx = ix >> LR;
+                stg[TB * s +: TB] = {bx, ix[LR - 1], pp[1:0]};
             end
         end
         wire [LL-1:0] off = rcnt[LL-1:0] - 1'b1;
