@@ -418,9 +418,11 @@ def verify_pack(pack):
     return dict(verdict=o['verdict'], shapes=o['shapes'], db_shapes=o['db_shapes'], tiles=o['tiles'], clipped_pieces=o['clipped_pieces'])
 
 
-def export(el, job=None, log=log):
-    """cut + verify + publish one closure; never raises"""
+def export(el, job=None, log=log, force=False):
+    """cut + verify + publish one closure; never raises.  A closure already published is skipped unless force."""
     t0 = time.time()
+    if job and not force and (STORE / 'elements' / el / (job + '.json')).exists():
+        log('%s: %s already published' % (el, job)); return True
     try:
         STORE.mkdir(parents=True, exist_ok=True)
         status_update(el, state='running', stage='locate', job=job, error=None)
@@ -503,7 +505,7 @@ def backfill(limit=None, only=None, workers=4, redo=False):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest='cmd', required=True)
-    e = sp.add_parser('export'); e.add_argument('--element'); e.add_argument('--job')
+    e = sp.add_parser('export'); e.add_argument('--element'); e.add_argument('--job'); e.add_argument('--force', action='store_true')
     b = sp.add_parser('backfill'); b.add_argument('--limit', type=int); b.add_argument('--only'); b.add_argument('--workers', type=int, default=4); b.add_argument('--redo', action='store_true')
     sp.add_parser('gc'); sp.add_parser('status'); sp.add_parser('audit', help='re-verify every published latest closure from the store files')
     a = ap.parse_args()
@@ -518,7 +520,7 @@ def main():
             if not el:
                 st = json.loads((JOBS / (a.job + '.json')).read_text())
                 el = (st.get('spec') or {}).get('block') or a.job
-        sys.exit(0 if export(el, a.job) else 1)
+        sys.exit(0 if export(el, a.job, force=a.force) else 1)
     if a.cmd == 'backfill': return backfill(a.limit, set(a.only.split(',')) if a.only else None, a.workers, a.redo)
     if a.cmd == 'gc': print(json.dumps(gc())); return
     if a.cmd == 'audit':
