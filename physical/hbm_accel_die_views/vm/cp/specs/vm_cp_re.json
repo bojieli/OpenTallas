@@ -34,7 +34,7 @@
  "pin_ranges": {
   "tap": [
    70,
-   300
+   297.0
   ],
   "se": [
    2,
@@ -50,19 +50,19 @@
   ],
   "rdo": [
    2,
-   60
+   58.718
   ],
   "cfgi": [
    2.0,
    19.6
   ],
   "cfgo": [
-   2,
-   60
+   59.718,
+   60.0
   ],
   "ck": [
-   193.4,
-   195.4
+   298.0,
+   300.0
   ]
  },
  "route": {
@@ -71,7 +71,12 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01,
   "pin_v": "M3 M5",
-  "pin_h": "M4 M6"
+  "pin_h": "M4 M6",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M3 M5"
+  }
  },
  "job": {
   "owner": "Claude:el1011-hbm-vm8cp",

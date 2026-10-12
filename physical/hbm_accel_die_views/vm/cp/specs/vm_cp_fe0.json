@@ -9,7 +9,7 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 10.8,
+  "w": 12.96,
   "h": 498.96
  },
  "pg_layer": "M7",
@@ -27,23 +27,23 @@
  "pin_ranges": {
   "f_su_SE": [
    2.0,
-   496.96
+   323.318
   ],
   "iSE": [
-   2.0,
-   496.96
+   324.318,
+   404.648
   ],
   "qSE": [
-   2.0,
+   405.648,
    496.96
   ],
   "ph": [
-   100,
+   103.0,
    496.96
   ],
   "ck": [
-   248.48,
-   250.48
+   100,
+   102.0
   ]
  },
  "route": {
@@ -52,7 +52,12 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01,
   "pin_v": "M3 M5",
-  "pin_h": "M4 M6"
+  "pin_h": "M4 M6",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M3 M5"
+  }
  },
  "job": {
   "owner": "Claude:el1011-hbm-vm8cp",

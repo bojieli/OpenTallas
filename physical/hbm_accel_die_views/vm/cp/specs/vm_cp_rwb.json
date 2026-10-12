@@ -9,7 +9,7 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 10.8,
+  "w": 12.96,
   "h": 108.0
  },
  "pg_layer": "M7",
@@ -24,7 +24,7 @@
  },
  "pin_ranges": {
   "i": [
-   2.0,
+   5.0,
    106.0
   ],
   "o": [
@@ -32,8 +32,8 @@
    106.0
   ],
   "ck": [
-   53.0,
-   55.0
+   2.0,
+   4.0
   ]
  },
  "route": {
@@ -42,7 +42,12 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01,
   "pin_v": "M3 M5",
-  "pin_h": "M4 M6"
+  "pin_h": "M4 M6",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M3 M5"
+  }
  },
  "job": {
   "owner": "Claude:el1011-hbm-vm8cp",

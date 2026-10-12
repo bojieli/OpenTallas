@@ -201,7 +201,7 @@ LOGIC = {
 
 # ------------------------------------------------------------------------------------------------- instances
 # (inst, kit, x, y, orient, {port: net})   x/y = lower-left in the VM region (um); widths of relay kits from area
-XW = 10.8
+XW = 12.96                              # gate: 10.8 um outlines leave 6.48 um core = PDN-0185 (no M7 strap pair)
 XWK = {'vm_cp_rb2': 21.6, 'vm_cp_re': 21.6}   # 201-bit N / S faces
 INST = [
     ('u_fw0', 'vm_cp_fw0', 0, 0, 'R0', {'f_su_SW': 'f_su_SW', 'iSW': 'iSW', 'qSW': 'qSW', 'ph': 'n_fw0_ph', 'wd': 'n_fw0_wd'}),
@@ -346,10 +346,37 @@ def spec(kn, pos_inst):
     pins.setdefault(ckf, []).insert(0, 'ck')
     L = w if ckf == 'N' else h
     ranges['ck'] = [round(L / 2 - 1, 3), round(L / 2 + 1, 3)]
+    # gate (02:30): PPL places an ordered group on ONE layer, so two 1-2k buses sharing a face range (and ck in its middle)
+    # failed PPL-0107/0093.  Pins now go through run_abi3_physical's balanced placer (place_pin, alternating M4/M6 or
+    # M3/M5 per pin, uniform over the port's range), which needs DISJOINT per-port ranges on a face: overlapping ranges
+    # are packed in order of their midpoints, each port getting a share proportional to its bits (ck 2 um), 1 um gaps.
+    width = {p: ports[p][1] for p in ports}; width['ck'] = 0
+    for f, plist in pins.items():
+        Lf = w if f in 'NS' else h
+        order = sorted(plist, key=lambda p: ((ranges[p][0] + ranges[p][1]) / 2, plist.index(p)))
+        clusters = []
+        for p in order:
+            lo, hi = ranges[p]
+            if clusters and lo < clusters[-1][2]:
+                clusters[-1][0].append(p); clusters[-1][2] = max(clusters[-1][2], hi); clusters[-1][1] = min(clusters[-1][1], lo)
+            else:
+                clusters.append([[p], lo, hi])
+        for ps, lo, hi in clusters:
+            if len(ps) == 1:
+                continue
+            gaps = 1.0 * (len(ps) - 1); fixed = sum(2.0 for p in ps if p == 'ck')
+            avail = hi - lo - gaps - fixed; tot = sum(width[p] for p in ps)
+            x = lo
+            for p in ps:
+                span = 2.0 if p == 'ck' else avail * width[p] / tot
+                ranges[p] = [round(x, 3), round(x + span, 3)]; x += span + 1.0
+            for p in ps:
+                assert ranges[p][1] <= Lf - CORNER + 1e-6 and ranges[p][0] >= CORNER - 1e-6, (kn, p, ranges[p])
     srcs = [f'physical/hbm_accel_die_views/vm/cp/rtl/{kn}.sv']
     s = {'name': kn, 'top': kn, 'kind': 'tile', 'sources': srcs, 'clock_port': 'ck', 'reset_ports': [],
          'outline': {'w': w, 'h': h}, 'pg_layer': 'M7', 'pins': pins, 'pin_ranges': ranges,
-         'route': {'pd': 0.50, 'threads': 8, 'peak_ram_gb': 48, 'hold_margin_ns': 0.010, 'pin_v': 'M3 M5', 'pin_h': 'M4 M6'}}
+         'route': {'pd': 0.50, 'threads': 8, 'peak_ram_gb': 48, 'hold_margin_ns': 0.010, 'pin_v': 'M3 M5', 'pin_h': 'M4 M6',
+                   'pin_balance': {'group_max': 1, 'h': 'M4 M6', 'v': 'M3 M5'}}}
     s['job'] = {'owner': 'Claude:el1011-hbm-vm8cp', 'branch': 'claude/el1011-hbm-vm8cp', 'tag': 'cp1',
                 'purpose': f'[vm8cp] VM8 top-down re-plan tile {kn} (results/arch/hier_contract_1011/vm8_replan.md)',
                 'extra_paths': ['physical/hbm_accel_die_views/vm', 'physical/hbm_accel_die_views/common', 'rtl/common',

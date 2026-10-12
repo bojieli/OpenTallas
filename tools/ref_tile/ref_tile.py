@@ -586,7 +586,18 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(r.get('pin_h', 'M4 M6'))}",
         f"PIN_V={shq(r.get('pin_v', 'M5'))}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", ""])
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r), ""])
+
+
+def pin_balance_env(r: dict) -> list:
+    """optional route.pin_balance {group_max, h, v}: run_abi3_physical's balanced pin placer (place_pin, uniform over each
+    port's range, layer alternating every group_max pins) instead of PPL ordered groups, which put a whole port on ONE
+    layer ([vm8cp] 2k-bit relay buses: PPL-0107 / PPL-0093).  Needs disjoint per-port pin_ranges on a face."""
+    pb = r.get("pin_balance")
+    if not pb:
+        return []
+    return [f"export OT_PIN_GROUP_MAX={int(pb.get('group_max', 1))}",
+            f"export OT_PIN_BALANCE_H={shq(pb.get('h', 'M4 M6'))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', 'M3 M5'))}"]
 
 
 def referenced_paths(s: dict, kd: str) -> list:
