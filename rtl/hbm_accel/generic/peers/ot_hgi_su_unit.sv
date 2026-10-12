@@ -1419,16 +1419,16 @@ module ot_hgi_su_ctlw #(
                 .wst_dn(dn_st[g]), .wdr_dn(dn_dr[g]), .ovf(dn_ov[g]));
         end
         // go blanking: a done seen within BL edges of its go belongs to the previous burst.  Worst path, slice 3: go
-        // ctlw -> s0 .. s3 pins (4), lane done (1), s3 combine (1), back s2 / s1 / s0 (2 each: 6), the capture here (1)
-        // = 13 (the single-slice hub path was 4 with BL 6): BL = 15
-        localparam integer BL = 15;
-        reg h_wst, h_wdr, h_ovf; reg [3:0] bl_st, bl_dr;
+        // ctlw -> s0 .. s3 pins (1 + 2 a hop since FWD2 10-12: 7), lane done (1), s3 combine (1), back s2 / s1 / s0
+        // (2 each: 6), the capture here (1) = 16 (13 before FWD2, BL 15): BL = 18
+        localparam integer BL = 18;
+        reg h_wst, h_wdr, h_ovf; reg [4:0] bl_st, bl_dr;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin h_wst <= 1'b1; h_wdr <= 1'b1; h_ovf <= 1'b0; bl_st <= '0; bl_dr <= '0; end
             else begin
                 h_wst <= dn_st[0]; h_wdr <= dn_dr[0]; h_ovf <= dn_ov[0];
-                bl_st <= wst_go ? 4'(BL) : (bl_st != 0 ? bl_st - 4'd1 : 4'd0);
-                bl_dr <= wdr_go ? 4'(BL) : (bl_dr != 0 ? bl_dr - 4'd1 : 4'd0);
+                bl_st <= wst_go ? 5'(BL) : (bl_st != 0 ? bl_st - 5'd1 : 5'd0);
+                bl_dr <= wdr_go ? 5'(BL) : (bl_dr != 0 ? bl_dr - 5'd1 : 5'd0);
             end
         assign wst_done = h_wst && bl_st == 0 && !wst_go;
         assign wdr_done = h_wdr && bl_dr == 0 && !wdr_go;
@@ -2462,15 +2462,29 @@ module ot_hgi_su_ctlw_slice #(
         d_os <= d_os_i;
     end
     reg [1:0] sl_q; always @(posedge clk) sl_q <= sl_i;      // strap pin flop
-    assign wst_go_o = wst_go; assign wdr_go_o = wdr_go; assign d_os_o = d_os;
-    for (genvar q = 0; q < 6; q = q + 1) begin : g_fo
-        assign lo_o[q*24 +: 24] = lo[q]; assign hi_o[q*24 +: 24] = hi[q]; assign lb_o[q*(LWB+1) +: LWB+1] = lb[q];
-        assign rv_o[q] = rv[q]; assign dsec_o[q*21 +: 21] = dsec[q];
+    // FWD2 (el1011-hbm-sfu 10-12, ctlw_slice_rtd TT -153: hi/lo/dsec/rv/go pin flops at the S (input) face drove both
+    // the slice logic and the N (output) face 346 um away: 7-9 levels flop -> port).  The hop is now two registers: the
+    // S-face pin flops feed the slice only, a dedicated forward register (placed at the N face) drives the output pins.
+    // +1 edge per hop (the parent's go blanking BL covers it).
+    reg wst_go_f, wdr_go_f, d_os_f;
+    reg [6*24-1:0] lo_f, hi_f; reg [6*(LWB+1)-1:0] lb_f; reg [5:0] rv_f; reg [6*21-1:0] dsec_f;
+    reg [2*24-1:0] d_lo_f, d_hi_f; reg [2*(LWB+1)-1:0] d_lb_f; reg [1:0] d_rv_f; reg [2*21-1:0] d_dsec_f;
+    always @(posedge clk or negedge rst_l) if (!rst_l) begin wst_go_f <= 1'b0; wdr_go_f <= 1'b0; end
+                                           else begin wst_go_f <= wst_go; wdr_go_f <= wdr_go; end
+    always @(posedge clk) begin
+        d_os_f <= d_os;
+        for (integer q = 0; q < 6; q = q + 1) begin
+            lo_f[q*24 +: 24] <= lo[q]; hi_f[q*24 +: 24] <= hi[q]; lb_f[q*(LWB+1) +: LWB+1] <= lb[q];
+            rv_f[q] <= rv[q]; dsec_f[q*21 +: 21] <= dsec[q];
+        end
+        for (integer q = 4; q < 6; q = q + 1) begin
+            d_lo_f[(q-4)*24 +: 24] <= d_lo[q]; d_hi_f[(q-4)*24 +: 24] <= d_hi[q];
+            d_lb_f[(q-4)*(LWB+1) +: LWB+1] <= d_lb[q]; d_rv_f[q-4] <= d_rv[q]; d_dsec_f[(q-4)*21 +: 21] <= d_dsec[q];
+        end
     end
-    for (genvar q = 4; q < 6; q = q + 1) begin : g_fd
-        assign d_lo_o[(q-4)*24 +: 24] = d_lo[q]; assign d_hi_o[(q-4)*24 +: 24] = d_hi[q];
-        assign d_lb_o[(q-4)*(LWB+1) +: LWB+1] = d_lb[q]; assign d_rv_o[q-4] = d_rv[q]; assign d_dsec_o[(q-4)*21 +: 21] = d_dsec[q];
-    end
+    assign wst_go_o = wst_go_f; assign wdr_go_o = wdr_go_f; assign d_os_o = d_os_f;
+    assign lo_o = lo_f; assign hi_o = hi_f; assign lb_o = lb_f; assign rv_o = rv_f; assign dsec_o = dsec_f;
+    assign d_lo_o = d_lo_f; assign d_hi_o = d_hi_f; assign d_lb_o = d_lb_f; assign d_rv_o = d_rv_f; assign d_dsec_o = d_dsec_f;
     reg dn_st_q, dn_dr_q, dn_ov_q;                           // the next slice's combined flags, pin-flopped
     always @(posedge clk or negedge rst_l) if (!rst_l) begin dn_st_q <= 1'b1; dn_dr_q <= 1'b1; dn_ov_q <= 1'b0; end
                                            else begin dn_st_q <= wst_dn_i; dn_dr_q <= wdr_dn_i; dn_ov_q <= ovf_i; end
@@ -2486,18 +2500,61 @@ module ot_hgi_su_ctlw_slice #(
     // {data, dirty} (ldr_rv, pin-flopped) pops it, whatever the memory latency
     reg [20:0] dq_s [0:NL-1][0:LQ-1]; reg [QB-1:0] dq_h [0:NL-1], dq_t [0:NL-1]; reg [QB:0] dq_n [0:NL-1];
     // per-lane state
-    reg [2:0]  sg_r [0:NL-1]; reg sg_on [0:NL-1]; reg [20:0] sg_nx [0:NL-1]; reg [20:0] sg_end [0:NL-1];
+    reg [2:0]  sg_r [0:NL-1]; reg sg_on [0:NL-1]; reg [20:0] sg_nx [0:NL-1];
     // landing FIFO: LQ queued at the VM + the accepted-not-landed pipe (VM core + relays): power of two >= 2 LQ + 32
     localparam integer LFB = $clog2(2 * LQ + 32), LFD = 1 << LFB;
     reg [QB:0] cr [0:NL-1]; reg [LSW-1:0] lq [0:NL-1][0:LFD-1]; reg [LFB-1:0] lqh [0:NL-1], lqt [0:NL-1]; reg [LFB:0] lqn [0:NL-1];
     reg [5:0] wpend [0:NL-1]; reg lane_ovf;
-    reg [2:0]  cl_r [0:NL-1]; reg cl_on [0:NL-1]; reg [LSW-1:0] cl_nx [0:NL-1]; reg [LSW-1:0] cl_end [0:NL-1];
-    reg [2:0]  dg_r [0:NL-1]; reg dg_on [0:NL-1]; reg [LSW-1:0] dg_nx [0:NL-1]; reg [LSW-1:0] dg_end [0:NL-1];
+    reg [2:0]  cl_r [0:NL-1]; reg cl_on [0:NL-1]; reg [LSW-1:0] cl_nx [0:NL-1];
+    reg [2:0]  dg_r [0:NL-1]; reg dg_on [0:NL-1]; reg [LSW-1:0] dg_nx [0:NL-1];
     reg [QB:0] wcr [0:NL-1]; reg [NL-1:0] dp1, dp2, dp3; reg [20:0] dp1_s [0:NL-1]; reg [20:0] dp2_s [0:NL-1]; reg [20:0] dp3_s [0:NL-1];
     reg [NL-1:0] wst_ldone, wdr_ldone;
     function automatic [20:0] first_of(input [20:0] lo_s, input integer b);
         first_of = lo_s + 21'((5'(b) - lo_s[4:0]) & 5'd31);
     endfunction
+    // PRE (el1011-hbm-sfu 10-12, ctlw_slice_rtd TT -153: the region walks were 25-30 levels -- a 6:1 descriptor mux by
+    // the region index, first_of, the 24-bit end sum, the 21-bit compare and the +32 end test in one edge).  Every
+    // per-region quantity is now precomputed from the (op-stable) descriptor registers in two registered stages:
+    //   P1: first sector of this lane (first_of) and the region end;   P2: valid (rv && first <= end), the remaining
+    //   issue count ((end - first) >> 5; the walk ends at count 0, which is exactly "nx + 32 > end"), and the stage
+    //   landing sector / drain write-back sector start (first + dsec, first - d_dsec; then +32 per issue).
+    // The walks start one edge after go (go -> idle 7, go_d -> region 0 / 4) so P2 holds the new descriptor.
+    reg wst_go_d, wdr_go_d;
+    always @(posedge clk or negedge rst_l) if (!rst_l) begin wst_go_d <= 1'b0; wdr_go_d <= 1'b0; end
+                                           else begin wst_go_d <= wst_go; wdr_go_d <= wdr_go; end
+    reg [20:0] p1_sgf [0:NL-1][0:3]; reg [20:0] p1_clf [0:NL-1][0:1]; reg [20:0] p1_dgf [0:NL-1][0:1];
+    reg [20:0] p1_cle [0:1]; reg [20:0] p1_dge [0:1];
+    reg sgok [0:NL-1][0:3]; reg [15:0] sgn [0:NL-1][0:3]; reg [20:0] sgf [0:NL-1][0:3]; reg [LSW-1:0] sgl [0:NL-1][0:3];
+    reg clok [0:NL-1][0:1]; reg [LSW-1:0] cln [0:NL-1][0:1]; reg [LSW-1:0] clf [0:NL-1][0:1];
+    reg dgok [0:NL-1][0:1]; reg [LSW-1:0] dgn [0:NL-1][0:1]; reg [LSW-1:0] dgf [0:NL-1][0:1]; reg [20:0] dgs [0:NL-1][0:1];
+    always @(posedge clk) begin
+        for (integer r = 0; r < 2; r = r + 1) begin
+            p1_cle[r] <= 21'((lb[4+r] + (hi[4+r] - lo[4+r])) >> 3);
+            p1_dge[r] <= 21'((d_lb[4+r] + (d_hi[4+r] - d_lo[4+r])) >> 3);
+        end
+        for (integer b = 0; b < NL; b = b + 1) begin
+            for (integer r = 0; r < 4; r = r + 1) begin
+                p1_sgf[b][r] <= first_of(21'(lo[r] >> 3), 32'(sl_q) * NL + b);
+                sgok[b][r] <= rv[r] && p1_sgf[b][r] <= 21'(hi[r] >> 3);
+                sgn[b][r] <= 16'((21'(hi[r] >> 3) - p1_sgf[b][r]) >> 5);
+                sgf[b][r] <= p1_sgf[b][r];
+                sgl[b][r] <= LSW'(p1_sgf[b][r] + dsec[r]);
+            end
+            for (integer r = 0; r < 2; r = r + 1) begin
+                p1_clf[b][r] <= first_of(21'(lb[4+r] >> 3), 32'(sl_q) * NL + b);
+                clok[b][r] <= rv[4+r] && p1_clf[b][r] <= p1_cle[r];
+                clf[b][r] <= LSW'(p1_clf[b][r]);
+                cln[b][r] <= (LSW'(p1_cle[r]) >= LSW'(p1_clf[b][r])) ? LSW'((LSW'(p1_cle[r]) - LSW'(p1_clf[b][r])) >> 5) : '0;
+                p1_dgf[b][r] <= first_of(21'(d_lb[4+r] >> 3), 32'(sl_q) * NL + b);
+                dgok[b][r] <= d_rv[4+r] && !(r == 0 && d_os) && p1_dgf[b][r] <= p1_dge[r];
+                dgf[b][r] <= LSW'(p1_dgf[b][r]);
+                dgn[b][r] <= (LSW'(p1_dge[r]) >= LSW'(p1_dgf[b][r])) ? LSW'((LSW'(p1_dge[r]) - LSW'(p1_dgf[b][r])) >> 5) : '0;
+                dgs[b][r] <= 21'(LSW'(p1_dgf[b][r])) - d_dsec[4+r];
+            end
+        end
+    end
+    reg [15:0] sg_cnt [0:NL-1]; reg [LSW-1:0] sg_ls [0:NL-1]; reg [LSW-1:0] cl_cnt [0:NL-1];
+    reg [LSW-1:0] dg_cnt [0:NL-1]; reg [20:0] dg_s [0:NL-1];
     // landing FIFO head per lane: flops (LQSRAM 0) or an SRAM first-word-fall-through FIFO (LQSRAM 1); lq_first = slot 0
     wire [LSW-1:0] lq_head [0:NL-1]; reg [LSW-1:0] lq_first [0:NL-1];
     generate if (LQSRAM != 0) begin : g_lqm
@@ -2512,7 +2569,7 @@ module ot_hgi_su_ctlw_slice #(
             wire pop = (MUT_W == 4) ? pop_d : wrr_q[g*257 + 256];
             wire hv, ovf_l;
             ot_fifo_sram_fwft #(.W(LSW), .DEPTH(64), .MACRO(3)) u_lq (.clk(clk), .rst_n(rst_l), .push(push),
-                .wdata(LSW'(sg_nx[g] + dsec[sg_r[g]])), .pop(pop), .hv(hv), .head(lq_head[g]), .ovf(ovf_l));
+                .wdata(sg_ls[g]), .pop(pop), .hv(hv), .head(lq_head[g]), .ovf(ovf_l));
             // synthesis translate_off
             always @(posedge clk) if (rst_l && pop && !hv)
                 $error("ctlw slice %0d lane %0d: a response landed before its FIFO head was readable", SL, g);
@@ -2535,25 +2592,25 @@ module ot_hgi_su_ctlw_slice #(
         end else begin
             for (integer b = 0; b < NL; b = b + 1) begin : lane
                 reg iss, land, dr_iss, wsend, wfree;
-                reg [20:0] f;
                 iss = 1'b0; land = 1'b0; dr_iss = 1'b0; wsend = 1'b0; wfree = 1'b0;
                 wrq[b*16 + 15] <= 1'b0; lsw_v[b] <= 1'b0; ldc_v[b] <= 1'b0; ldr_v[b] <= 1'b0; wwq[b*280 + 279] <= 1'b0;
                 // ---------------- stage: source region walk (regions 0..3)
-                if (wst_go) begin sg_r[b] <= 3'd0; sg_on[b] <= 1'b0; cl_r[b] <= 3'd4; cl_on[b] <= 1'b0; wst_ldone[b] <= 1'b0; end
+                if (wst_go) begin sg_r[b] <= 3'd7; sg_on[b] <= 1'b0; cl_r[b] <= 3'd7; cl_on[b] <= 1'b0; wst_ldone[b] <= 1'b0; end
+                else if (wst_go_d) begin sg_r[b] <= 3'd0; cl_r[b] <= 3'd4; end
                 else if (sg_r[b] < 3'd4) begin
                     if (!sg_on[b]) begin
-                        f = first_of(21'(lo[sg_r[b]] >> 3), 32'(sl_q) * NL + b);
-                        if (rv[sg_r[b]] && f <= 21'(hi[sg_r[b]] >> 3)) begin
-                            sg_nx[b] <= f; sg_end[b] <= 21'(hi[sg_r[b]] >> 3); sg_on[b] <= 1'b1;
+                        if (sgok[b][sg_r[b][1:0]]) begin
+                            sg_nx[b] <= sgf[b][sg_r[b][1:0]]; sg_cnt[b] <= sgn[b][sg_r[b][1:0]]; sg_ls[b] <= sgl[b][sg_r[b][1:0]];
+                            sg_on[b] <= 1'b1;
                         end else sg_r[b] <= sg_r[b] + 3'd1;
                     end else if (cr[b] != 0) begin
                         iss = 1'b1;
                         wrq[b*16 +: 16] <= {1'b1, sg_nx[b][14:0]};
-                        if (LQSRAM == 0) lq[b][lqt[b]] <= LSW'(sg_nx[b] + dsec[sg_r[b]]);
-                        if (lqt[b] == '0) lq_first[b] <= LSW'(sg_nx[b] + dsec[sg_r[b]]);
+                        if (LQSRAM == 0) lq[b][lqt[b]] <= sg_ls[b];
+                        if (lqt[b] == '0) lq_first[b] <= sg_ls[b];
                         lqt[b] <= lqt[b] + 1'b1;
-                        if (sg_nx[b] + 21'd32 > sg_end[b]) begin sg_on[b] <= 1'b0; sg_r[b] <= sg_r[b] + 3'd1; end
-                        else sg_nx[b] <= sg_nx[b] + 21'd32;
+                        if (sg_cnt[b] == 16'd0) begin sg_on[b] <= 1'b0; sg_r[b] <= sg_r[b] + 3'd1; end
+                        else begin sg_nx[b] <= sg_nx[b] + 21'd32; sg_ls[b] <= sg_ls[b] + LSW'(32); sg_cnt[b] <= sg_cnt[b] - 16'd1; end
                     end
                 end
                 // responses land in request order
@@ -2567,39 +2624,36 @@ module ot_hgi_su_ctlw_slice #(
                 if (lqn[b] == (LFB+1)'(LFD) && iss && !land) lane_ovf <= 1'b1;
                 cr[b] <= cr[b] - iss + wrq_cr_q[b];
                 // sink dirty-mask clears (regions 4, 5; the local span), one sector a lane an edge
-                if (!wst_go && cl_r[b] < 3'd6) begin
+                if (!wst_go && !wst_go_d && cl_r[b] < 3'd6) begin
                     if (!cl_on[b]) begin
-                        f = first_of(21'(lb[cl_r[b]] >> 3), 32'(sl_q) * NL + b);
-                        if (rv[cl_r[b]] && f <= 21'((lb[cl_r[b]] + (hi[cl_r[b]] - lo[cl_r[b]])) >> 3)) begin
-                            cl_nx[b] <= LSW'(f); cl_end[b] <= LSW'((lb[cl_r[b]] + (hi[cl_r[b]] - lo[cl_r[b]])) >> 3);
-                            cl_on[b] <= 1'b1;
+                        if (clok[b][cl_r[b][0]]) begin
+                            cl_nx[b] <= clf[b][cl_r[b][0]]; cl_cnt[b] <= cln[b][cl_r[b][0]]; cl_on[b] <= 1'b1;
                         end else cl_r[b] <= cl_r[b] + 3'd1;
                     end else begin
                         ldc_v[b] <= 1'b1; ldc_sec[b*LSW +: LSW] <= cl_nx[b];
-                        if (21'(cl_nx[b]) + 21'd32 > 21'(cl_end[b])) begin cl_on[b] <= 1'b0; cl_r[b] <= cl_r[b] + 3'd1; end
-                        else cl_nx[b] <= cl_nx[b] + LSW'(32);
+                        if (cl_cnt[b] == '0) begin cl_on[b] <= 1'b0; cl_r[b] <= cl_r[b] + 3'd1; end
+                        else begin cl_nx[b] <= cl_nx[b] + LSW'(32); cl_cnt[b] <= cl_cnt[b] - LSW'(1); end
                     end
                 end
                 if (!wst_go && sg_r[b] >= 3'd4 && sg_r[b] != 3'd7 && cl_r[b] >= 3'd6 &&
                     ((lqn[b] + iss - land) == 0 && (cr[b] - iss + wrq_cr_q[b]) == (QB+1)'(LQ))) wst_ldone[b] <= 1'b1;
                 // ---------------- drain: sink regions 4 (O, unless STREAM) and 5 (R)
-                if (wdr_go) begin dg_r[b] <= 3'd4; dg_on[b] <= 1'b0; wdr_ldone[b] <= 1'b0; end
+                if (wdr_go) begin dg_r[b] <= 3'd7; dg_on[b] <= 1'b0; wdr_ldone[b] <= 1'b0; end
+                else if (wdr_go_d) dg_r[b] <= 3'd4;
                 else if (dg_r[b] < 3'd6) begin
                     if (!dg_on[b]) begin
-                        f = first_of(21'(d_lb[dg_r[b]] >> 3), 32'(sl_q) * NL + b);
-                        if (d_rv[dg_r[b]] && !(dg_r[b] == 3'd4 && d_os) &&
-                            f <= 21'((d_lb[dg_r[b]] + (d_hi[dg_r[b]] - d_lo[dg_r[b]])) >> 3)) begin
-                            dg_nx[b] <= LSW'(f); dg_end[b] <= LSW'((d_lb[dg_r[b]] + (d_hi[dg_r[b]] - d_lo[dg_r[b]])) >> 3);
+                        if (dgok[b][dg_r[b][0]]) begin
+                            dg_nx[b] <= dgf[b][dg_r[b][0]]; dg_cnt[b] <= dgn[b][dg_r[b][0]]; dg_s[b] <= dgs[b][dg_r[b][0]];
                             dg_on[b] <= 1'b1;
                         end else dg_r[b] <= dg_r[b] + 3'd1;
                     end else if (wcr[b] != 0) begin
-                        if (!(MUT_W == 2 && 21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b]))) begin
+                        if (!(MUT_W == 2 && dg_cnt[b] == '0)) begin
                             dr_iss = 1'b1;
                             ldr_v[b] <= 1'b1; ldr_sec[b*LSW +: LSW] <= dg_nx[b];
-                            dq_s[b][dq_t[b]] <= 21'(dg_nx[b]) - d_dsec[dg_r[b]]; dq_t[b] <= dq_t[b] + 1'b1;
+                            dq_s[b][dq_t[b]] <= dg_s[b]; dq_t[b] <= dq_t[b] + 1'b1;
                         end
-                        if (21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b])) begin dg_on[b] <= 1'b0; dg_r[b] <= dg_r[b] + 3'd1; end
-                        else dg_nx[b] <= dg_nx[b] + LSW'(32);
+                        if (dg_cnt[b] == '0) begin dg_on[b] <= 1'b0; dg_r[b] <= dg_r[b] + 3'd1; end
+                        else begin dg_nx[b] <= dg_nx[b] + LSW'(32); dg_s[b] <= dg_s[b] + 21'd32; dg_cnt[b] <= dg_cnt[b] - LSW'(1); end
                     end
                 end
                 // read return: valid-driven (ldr_rv pin flop), the sector identity from the lane's in-flight FIFO
