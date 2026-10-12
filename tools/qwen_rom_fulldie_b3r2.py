@@ -78,7 +78,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, seam_free=False):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, seam_free=False, station_word=0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -93,6 +93,15 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     v.LST_V = (v.VCH, v.LST_V[1])
     v.CORRIDOR_BITS = 388
     v.TAP_BITS = 325
+    if station_word:
+        # qwendie-1012 contract v5 D5: the closed station (ot_qwen_die_station a_d/b_d/t_d + a_r/b_r/t_r) and tile_nk
+        # (ib 379 + ib_go 1 + xl 128) carry 508 data + ready = 509 bits per hop; the b3r2 compressed transport (323)
+        # is implemented by no RTL.  The closed qfd_cst view has NO clock/reset bundle on its corridor or tap faces
+        # (clk / rst_n are single W-face pins; the die clock comes from the die CTS plan to the 'ck' pin), so the
+        # corridor and tap words are the 509-bit station word itself (388 = 323 + 65 carried a 64-clock + reset bundle
+        # the station never had; 574 at pitch 2 = 55.1 um does not fit the 52.68 um station face, 509 = 48.9 um does).
+        v.CORRIDOR_BITS = station_word
+        v.TAP_BITS = station_word
     v.REGION_PG = {r: (.48 / PG.bump_pitch(c, 90) if c else 0.) for r, c in F.REGION_PG.items()}
     # ---- meso FIFO slots and F2 storage
     st_extra_um2 = (TAP_FIFO_BITS + F2_STATION_EXTRA_BITS) * FIFO_MM2_PER_BIT * 1e6
