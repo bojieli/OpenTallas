@@ -1,5 +1,5 @@
 {
- "name": "hc_tile_ref-c1-6b91d3540",
+ "name": "hc_tile_ref-c1-7e3baed71",
  "block": "ot_hgi_hc_tile",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-hcvm",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-hcvm-hc4",
-  "commit": "6b91d3540",
+  "commit": "7e3baed711cc88ce5c649018c89fe8f82987fa83",
   "extra_paths": [
    "rtl",
    "physical/asap7_memory_macros",
@@ -19,7 +19,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_hgi_hc_tile rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf 'module ot_lint_top; ot_hgi_hc_tile u_top (); endmodule\\n' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_lint_top {RUN}/ot_lint_top.sv +define+OT_WW_MACRO rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hc_tile_ref/hc_tile_ref-c1-6b91d3540"
+   "to": "results/rtl/ref_tile/hc_tile_ref/hc_tile_ref-c1-7e3baed71"
   }
  ],
  "cycles_added": 0,
