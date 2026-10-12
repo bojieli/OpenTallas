@@ -1,8 +1,8 @@
 # ot_v41_pqc_spine_screen v15 HIER composition (R 16), el1011-ds-misc/pqc 2026-10-11: deliberate tile placement,
 # computed from the tile views' sizes (whichever variant is adopted).  Data flow (physical spec, el1011-ds-misc.log):
-#   top band (x_q pins N, 2048 b): T_AQ0 | T_IX0 T_IX2 T_IX1 T_IX3 | T_AQ1.  x_q[0:1023] (words 0-31) feeds T_AQ0, T_IX0,
-#     T_IX2 (left half), x_q[1024:2047] feeds T_AQ1, T_IX1, T_IX3 (right half): every q_x pin flop is <= ~200 um from
-#     its three consumers;
+#   N edge: T_XIN0/1 (the x_q pin registers) over their halves; band 2: T_AQ0 | T_AQ1; band 3: T_IX0 T_IX2 | T_IX1
+#     T_IX3 next to the die centre.  x_q[0:1023] (words 0-31) feeds T_AQ0, T_IX0, T_IX2 (left half), x_q[1024:2047]
+#     T_AQ1, T_IX1, T_IX3 (right half): each T_XIN output is <= ~300 um from its three consumers;
 #   middle band, centred under the T_IX block: T_CTL | T_QB | T_BC0..3 -> o_bus pins (E face).  T_QB takes aq_q from
 #     both T_AQ bottoms (<= ~470 um Manhattan), T_BC0 takes bt_d (T_IX, <= ~250 um), hq (T_QB), bc_hr (T_CTL);
 #   bottom band: T_RET0/1 centred on the region-root pins (S face: r_* / o_w_*), mdr from T_CTL (<= ~250 um); the ROM
@@ -42,26 +42,28 @@ foreach need {ot_dsrom_aq12t,0 ot_dsrom_aq12t,1 ot_pqc_t_ix,0 ot_pqc_t_ix,1 ot_p
               ot_pqc_t_srom,0 ot_pqc_t_prom,0 ot_pqc_t_prom,1 ot_pqc_t_bc,4 ot_pqc_t_xin,0 ot_pqc_t_xin,1} {
   if {![info exists inst($need)]} { error "pqc macro_place: no tile $need" }
 }
-# x_q pin-register tiles at the N edge (no top-level soft flops), each centred over its half's consumers
+# x_q pin-register tiles at the N edge (no top-level soft flops), each over its half
 lassign [dim $inst(ot_pqc_t_xin,0)] xw xh
 set ybase [expr {$H - $E - $xh}]
-set HT [expr {$ybase - $G}]
-# top band
-set x $E
-set ytop $H
-foreach key {ot_dsrom_aq12t,0 ot_pqc_t_ix,0 ot_pqc_t_ix,2 ot_pqc_t_ix,1 ot_pqc_t_ix,3 ot_dsrom_aq12t,1} {
-  lassign [dim $inst($key)] w h
-  set y [expr {$HT - $h}]
-  put $inst($key) $x $y
-  set cx_($key) [expr {$x + $w / 2.0}]
-  set ytop [expr {min($ytop, $y)}]
-  set x [expr {$x + $w + $G}]
-}
-if {$x - $G + $E > $W + 0.01} { error "pqc macro_place: top band needs [expr {$x - $G + $E}] um > die $W" }
-set c0 [expr {($cx_(ot_dsrom_aq12t,0) + $cx_(ot_pqc_t_ix,0) + $cx_(ot_pqc_t_ix,2)) / 3.0}]
-set c1 [expr {($cx_(ot_dsrom_aq12t,1) + $cx_(ot_pqc_t_ix,1) + $cx_(ot_pqc_t_ix,3)) / 3.0}]
+# band 2: the quantisers side by side (x_q[0:1023] -> T_AQ0 left, x_q[1024:2047] -> T_AQ1 right)
+lassign [dim $inst(ot_dsrom_aq12t,0)] aw ah
+set ya [expr {$ybase - $G - $ah}]
+put $inst(ot_dsrom_aq12t,0) $E $ya
+put $inst(ot_dsrom_aq12t,1) [expr {$E + $aw + $G}] $ya
+if {$E + 2 * $aw + 2 * $G > $W + 0.01} { error "pqc macro_place: quantiser band needs [expr {$E + 2 * $aw + 2 * $G}] um > die $W" }
+set c0 [expr {$E + $aw / 2.0}]
+set c1 [expr {$E + $aw + $G + $aw / 2.0}]
 put $inst(ot_pqc_t_xin,0) [expr {$c0 - $xw / 2.0}] $ybase
 put $inst(ot_pqc_t_xin,1) [expr {$c1 - $xw / 2.0}] $ybase
+# band 3: the BF16 x-buffer tiles, IX0 IX2 under T_AQ0 (words 0-31), IX1 IX3 under T_AQ1 (words 32-63), each pair
+# centred on its half and pulled to the die centre (their bt_d lanes go to T_BC0 under the middle)
+lassign [dim $inst(ot_pqc_t_ix,0)] iw ih
+set yi [expr {$ya - $G - $ih}]
+put $inst(ot_pqc_t_ix,0) [expr {$c0 + $aw / 2.0 - 2 * $iw - $G}] $yi
+put $inst(ot_pqc_t_ix,2) [expr {$c0 + $aw / 2.0 - $iw}] $yi
+put $inst(ot_pqc_t_ix,1) [expr {$c1 - $aw / 2.0}] $yi
+put $inst(ot_pqc_t_ix,3) [expr {$c1 - $aw / 2.0 + $iw + $G}] $yi
+set ytop $yi
 # middle band, centred on the die
 lassign [dim $inst(ot_pqc_t_qb,0)] qw qh
 set qx [expr {$W / 2.0 - $qw / 2.0}]
