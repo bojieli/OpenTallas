@@ -24,7 +24,7 @@ module tb_hgi_idx_topk_heap;
   .in_score(isc[31:0]), .out_valid(ov), .out_ready(ordy), .out_id(oid), .out_score(osc), .out_row(orow), .out_last(olast),
   .out_values_valid(ovv), .done(done), .error(err));
 `elsif HUBC
- // -DHUBC: hgi_idx_topk_w8_hub + 8 heap tiles (ot_hgi_idx_topk_w8_comp; IW = HW = 8)
+ // -DHUBC: hgi_idx_topk_w8_hub + 8 heap tiles (ot_hgi_idx_topk_w8_cluster; IW = HW = 8)
 `ifdef OT_TOPK_HEAP_MUT_BYP
  localparam integer HC_BYP = 1;
 `else
@@ -35,7 +35,7 @@ module tb_hgi_idx_topk_heap;
 `else
  localparam integer HC_CLR = 0;
 `endif
- ot_hgi_idx_topk_w8_comp #(.MUT_BYP(HC_BYP), .MUT_CLR(HC_CLR)) dut (.clk(clk), .rst_n(rst_n), .cmd_valid(cv), .cmd_ready(cr),
+ ot_hgi_idx_topk_w8_cluster #(.MUT_BYP(HC_BYP), .MUT_CLR(HC_CLR)) dut (.clk(clk), .rst_n(rst_n), .cmd_valid(cv), .cmd_ready(cr),
   .cmd_unit(4'd9), .cmd_op(op), .cmd_param(prm), .cmd_n(cn), .cmd_m(cm), .cmd_values(vals), .in_valid(iv), .in_ready(ir),
   .in_score(isc), .in_nw(inw), .out_valid(ov), .out_ready(ordy), .out_id(oid), .out_score(osc), .out_row(orow),
   .out_last(olast), .out_values_valid(ovv), .done(done), .error(err));

@@ -6,7 +6,8 @@
 // result skid (ot_hgi_idx_topk_wreg HUB=1).  The 8 hardened heap tiles ot_hgi_topk_heap_tile sit OUTSIDE, one per lane
 // pin group t<h>_*; every seam is flop -> wire -> flop (hub output flops / tile pin flops; tile output regs / hub pin flops).
 // Defaults = the hardened configuration (a hard child is instantiated without parameter overrides).
-// ot_hgi_idx_topk_w8_comp = hub + 8 RTL tiles: the bench composition (tb -DHUBC).
+// ot_hgi_idx_topk_w8_cluster = hub + 8 heap tiles: the production w8 hard cluster (element hgi_idx_topk_w8; the tiles are
+// hard children under OT_TOPK_TILE_HARD, instantiated WITHOUT parameter overrides) and the bench composition (tb -DHUBC).
 module ot_hgi_idx_topk_w8_hub #(parameter integer MUT_BYP=0) (
  input wire clk, rst_n,
  input wire cmd_valid, output wire cmd_ready,
@@ -56,8 +57,7 @@ module ot_hgi_idx_topk_w8_hub #(parameter integer MUT_BYP=0) (
  assign t7_k = k_w[95:84]; assign t7_op_v = v_w[7]; assign t7_op_ext = e_w[7]; assign t7_clr_go = c_w[7]; assign t7_op_x = x_w[431:378];
 endmodule
 
-`ifndef OT_TOPK_TILE_HARD
-module ot_hgi_idx_topk_w8_comp #(parameter integer MUT_BYP=0, parameter integer MUT_CLR=0) (
+module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integer MUT_CLR=0) (
  input wire clk, rst_n,
  input wire cmd_valid, output wire cmd_ready,
  input wire [3:0] cmd_unit, input wire [5:0] cmd_op,
@@ -76,7 +76,11 @@ module ot_hgi_idx_topk_w8_comp #(parameter integer MUT_BYP=0, parameter integer 
  wire [11:0] k5; wire v5, e5, c5, cr5, xv5, id5; wire [53:0] x5, xd5; wire [52:0] rk5;
  wire [11:0] k6; wire v6, e6, c6, cr6, xv6, id6; wire [53:0] x6, xd6; wire [52:0] rk6;
  wire [11:0] k7; wire v7, e7, c7, cr7, xv7, id7; wire [53:0] x7, xd7; wire [52:0] rk7;
- ot_hgi_idx_topk_w8_hub #(.MUT_BYP(0)) u_hub (.clk(clk), .rst_n(rst_n), .cmd_valid(cmd_valid), .cmd_ready(cmd_ready),
+ // elaboration check: the hard tile is the MAX_K 2,048 configuration (k pins 12 b) and takes no mutants
+`ifdef OT_TOPK_TILE_HARD
+ if (MUT_BYP != 0 || MUT_CLR != 0) begin : g_chk $error("hard heap tiles have no mutant parameters"); end
+`endif
+ ot_hgi_idx_topk_w8_hub u_hub (.clk(clk), .rst_n(rst_n), .cmd_valid(cmd_valid), .cmd_ready(cmd_ready),
   .cmd_unit(cmd_unit), .cmd_op(cmd_op), .cmd_param(cmd_param), .cmd_n(cmd_n), .cmd_m(cmd_m), .cmd_values(cmd_values),
   .in_valid(in_valid), .in_ready(in_ready), .in_score(in_score), .in_nw(in_nw), .out_valid(out_valid), .out_ready(out_ready),
   .out_id(out_id), .out_score(out_score), .out_row(out_row), .out_last(out_last), .out_values_valid(out_values_valid),
@@ -97,21 +101,60 @@ module ot_hgi_idx_topk_w8_comp #(parameter integer MUT_BYP=0, parameter integer 
   .t6_idle(id6), .t6_ext_d(xd6), .t6_root_key(rk6),
   .t7_k(k7), .t7_op_v(v7), .t7_op_ext(e7), .t7_clr_go(c7), .t7_op_x(x7), .t7_op_cr(cr7), .t7_ext_v(xv7),
   .t7_idle(id7), .t7_ext_d(xd7), .t7_root_key(rk7));
- ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t0 (.clk(clk), .rst_n(rst_n), .k(k0),
+`ifdef OT_TOPK_TILE_HARD
+ ot_hgi_topk_heap_tile u_t0 (
+`else
+ ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t0 (
+`endif
+.clk(clk), .rst_n(rst_n), .k(k0),
   .op_v(v0), .op_ext(e0), .op_x(x0), .op_cr(cr0), .ext_v(xv0), .ext_d(xd0), .root_key(rk0), .clr_go(c0), .idle(id0));
- ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t1 (.clk(clk), .rst_n(rst_n), .k(k1),
+`ifdef OT_TOPK_TILE_HARD
+ ot_hgi_topk_heap_tile u_t1 (
+`else
+ ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t1 (
+`endif
+.clk(clk), .rst_n(rst_n), .k(k1),
   .op_v(v1), .op_ext(e1), .op_x(x1), .op_cr(cr1), .ext_v(xv1), .ext_d(xd1), .root_key(rk1), .clr_go(c1), .idle(id1));
- ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t2 (.clk(clk), .rst_n(rst_n), .k(k2),
+`ifdef OT_TOPK_TILE_HARD
+ ot_hgi_topk_heap_tile u_t2 (
+`else
+ ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t2 (
+`endif
+.clk(clk), .rst_n(rst_n), .k(k2),
   .op_v(v2), .op_ext(e2), .op_x(x2), .op_cr(cr2), .ext_v(xv2), .ext_d(xd2), .root_key(rk2), .clr_go(c2), .idle(id2));
- ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t3 (.clk(clk), .rst_n(rst_n), .k(k3),
+`ifdef OT_TOPK_TILE_HARD
+ ot_hgi_topk_heap_tile u_t3 (
+`else
+ ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t3 (
+`endif
+.clk(clk), .rst_n(rst_n), .k(k3),
   .op_v(v3), .op_ext(e3), .op_x(x3), .op_cr(cr3), .ext_v(xv3), .ext_d(xd3), .root_key(rk3), .clr_go(c3), .idle(id3));
- ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t4 (.clk(clk), .rst_n(rst_n), .k(k4),
+`ifdef OT_TOPK_TILE_HARD
+ ot_hgi_topk_heap_tile u_t4 (
+`else
+ ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t4 (
+`endif
+.clk(clk), .rst_n(rst_n), .k(k4),
   .op_v(v4), .op_ext(e4), .op_x(x4), .op_cr(cr4), .ext_v(xv4), .ext_d(xd4), .root_key(rk4), .clr_go(c4), .idle(id4));
- ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t5 (.clk(clk), .rst_n(rst_n), .k(k5),
+`ifdef OT_TOPK_TILE_HARD
+ ot_hgi_topk_heap_tile u_t5 (
+`else
+ ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t5 (
+`endif
+.clk(clk), .rst_n(rst_n), .k(k5),
   .op_v(v5), .op_ext(e5), .op_x(x5), .op_cr(cr5), .ext_v(xv5), .ext_d(xd5), .root_key(rk5), .clr_go(c5), .idle(id5));
- ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t6 (.clk(clk), .rst_n(rst_n), .k(k6),
+`ifdef OT_TOPK_TILE_HARD
+ ot_hgi_topk_heap_tile u_t6 (
+`else
+ ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t6 (
+`endif
+.clk(clk), .rst_n(rst_n), .k(k6),
   .op_v(v6), .op_ext(e6), .op_x(x6), .op_cr(cr6), .ext_v(xv6), .ext_d(xd6), .root_key(rk6), .clr_go(c6), .idle(id6));
- ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t7 (.clk(clk), .rst_n(rst_n), .k(k7),
+`ifdef OT_TOPK_TILE_HARD
+ ot_hgi_topk_heap_tile u_t7 (
+`else
+ ot_hgi_topk_heap_tile #(.MAX_K(2048), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_t7 (
+`endif
+.clk(clk), .rst_n(rst_n), .k(k7),
   .op_v(v7), .op_ext(e7), .op_x(x7), .op_cr(cr7), .ext_v(xv7), .ext_d(xd7), .root_key(rk7), .clr_go(c7), .idle(id7));
 endmodule
-`endif
