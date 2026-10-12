@@ -1,5 +1,5 @@
 {
- "name": "p2h_head_ref-r5-COMMIT",
+ "name": "p2h_head_ref-r5-88a9c7283",
  "block": "ot_p2h_head",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-ds-mtp-p2pfx",
-  "commit": "COMMIT",
+  "commit": "88a9c7283",
   "extra_paths": [
    "rtl/experimental/mtp_p2_ordered_20261009",
    "tools/mtp_p2_rootpipe_gate.py",
@@ -130,7 +130,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/p2h_head_ref/p2h_head_ref-r5-COMMIT"
+   "to": "results/rtl/ref_tile/p2h_head_ref/p2h_head_ref-r5-88a9c7283"
   }
  ],
  "cycles_added": 0,
