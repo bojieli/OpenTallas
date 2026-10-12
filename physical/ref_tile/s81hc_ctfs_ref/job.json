@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfs_ref-v1-a9cfb97b9",
+ "name": "s81hc_ctfs_ref-v1-4c6ea9b8c",
  "block": "ot_s81_hc_ctfs",
  "ref_tile": true,
  "owner": "Claude:el1011-s81hc-ctile",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/el1011-s81hc-ctile",
-  "commit": "a9cfb97b9"
+  "commit": "4c6ea9b8c"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfs_ref/s81hc_ctfs_ref-v1-a9cfb97b9"
+   "to": "results/rtl/ref_tile/s81hc_ctfs_ref/s81hc_ctfs_ref-v1-4c6ea9b8c"
   }
  ],
  "cycles_added": 0,
