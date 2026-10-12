@@ -70,7 +70,7 @@ def main():
         T = nb + nc
         st = hd * (4 if fmt == 'FP32' else 1)
         rs, vm, hb, ex, info = [], {}, [], {}, []
-        prm = lanes | ((hd // 64 - 1) << 4) | ((1 << 8) if ring_m else 0)
+        prm = (lanes & 15) | ((hd // 64 - 1) << 4) | ((1 << 8) if ring_m else 0)
         pending_pv = []
         for kv in range(heads_kv):
             K = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
@@ -130,6 +130,19 @@ def main():
             for i in info:
                 i.update(price=round(qwen_price(T), 1), price_at_8192=round(qwen_price(8192), 1))
             add(name, rs, vm, hb, ex, dict(vehicle='qwen', T=T, lanes=4, hd=128, fmt='FP8E4M3', ring=0, records=info))
+        elif name.startswith('dflash_vg'):
+            # DFlash b16 verify group (hgi_sim.dflash step_program verify.qk/pv.kv0.g12): lanes 16 (4 query heads x 4
+            # block positions), hd 128, FP8 E4M3 rows: B = the committed context (n_sel = POS, no ring), C = the 16 new
+            # rows of the block; T = n_B + 16
+            T = int(name[9:])
+            nb = T - 16
+            rs, vm, hb, ex, info = att_pair(16, 128, nb, 16, 'FP8E4M3', 0, nb, 1 << 34, (1 << 34) + (1 << 30),
+                                            (1 << 34) + (1 << 28), 0, 0, 4096, 4096 + 16 * (T + 8), 40000, T + 8,
+                                            'dflash_vg')
+            for i in info:
+                i.update(price=round(qwen_price(T), 1))
+            add(name, rs, vm, hb, ex, dict(vehicle='qwen_dflash', T=T, lanes=16, hd=128, fmt='FP8E4M3', ring=0, nc=16,
+                                           records=info))
         elif name in ('ds_L0', 'ring_wrap'):
             pos1 = 1048576 if name == 'ds_L0' else 1000
             rs, vm, hb, ex, info = att_pair(1, 512, 128, 0, 'FP32', 128, pos1, 1 << 34, (1 << 34) + (1 << 30), 0, 0,
