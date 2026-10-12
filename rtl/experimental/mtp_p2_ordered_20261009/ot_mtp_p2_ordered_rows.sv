@@ -12,7 +12,11 @@
 // registered flags and acc_data_q's D is a 2:1 of registers (+1 cycle input latency, full rate).  All default 0:
 // the original logic.
 module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0, parameter integer PRIMARY_SHARED=0,
-  parameter integer SB_REG=0, parameter integer ACC_REG=0, parameter integer PRE_DEC=0) (
+  parameter integer SB_REG=0, parameter integer ACC_REG=0, parameter integer PRE_DEC=0,
+  // BSEL_REP=1 (el1011-ds-mtp 2026-10-12, mtp-p2h-xp-50b05596a TT class pending_meta[8:7] -> 576-bit bank read mux ->
+  // queue D: one flop through 6 buffer levels): the bank select is held as one-hot flop copies, one per 32-bit group
+  // (keep_hierarchy, loaded with pending_meta), so the queue write data is one AND-OR level from flops.  Exact.
+  parameter integer BSEL_REP=0) (
   input wire clk, rst_n,
   input wire start_v, output wire start_r,
   input wire [73:0] start_identity, // {frame3,rank2,stage2,epoch4,position21,user10,transaction32}
@@ -57,6 +61,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     reg [27:0] wr_address;
     wire [575:0] encoded[0:3];
     wire [767:0] bank_q[0:3];
+    wire [575:0] bsel_data;
     reg [3:0] accept_bank, accept_last;
     reg [511:0] accepted_data[0:3];
     reg [6:0] accepted_word[0:3];
@@ -110,6 +115,13 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     wire [3:0] occupancy=wp-rp;
     wire issue=busy&&!fault&&!sbad&&!all_issued&&
       complete[read_bank]&&(occupancy+pending<8);
+    genvar bg;
+    for(bg=0;bg<18;bg=bg+1) begin: g_bsel
+      wire [3:0] bs;
+      ot_p2_bsel_rep u_bs(.clk(clk),.rst_n(rst_n),.ld(issue),.d(4'b0001<<read_bank),.q(bs));
+      assign bsel_data[32*bg+:32]=({32{bs[0]}}&bank_q[0][32*bg+:32])|({32{bs[1]}}&bank_q[1][32*bg+:32])|
+                                  ({32{bs[2]}}&bank_q[2][32*bg+:32])|({32{bs[3]}}&bank_q[3][32*bg+:32]);
+    end
     wire pop=out_v&&out_r;
     assign start_r=!busy&&!fault&&!sbad;
     assign out_v=busy&&!fault&&!sbad&&(wp!=rp)&&!queue_bad;
@@ -194,7 +206,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
           end else begin read_word<=read_word+1;read_word_copy<=read_word_copy+1;end
         end
         if(pending&&!fault&&!sbad) begin
-          queue[wp[2:0]]<=bank_q[pending_meta[8:7]][575:0];
+          queue[wp[2:0]]<=BSEL_REP?bsel_data:bank_q[pending_meta[8:7]][575:0];
           queue_meta[wp[2:0]]<=pending_meta;queue_meta_copy[wp[2:0]]<=pending_meta_copy;
           wp<=wp+1;wp_copy<=wp_copy+1;
         end
@@ -216,6 +228,12 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
       end
     end
   end endgenerate
+endmodule
+// One-hot bank-select copy (BSEL_REP): loads with pending_meta (on issue), resets with it (bank 0); keep_hierarchy stops
+// opt_merge from folding the 18 copies back into one high-fanout net.
+(* keep_hierarchy *)
+module ot_p2_bsel_rep(input wire clk, input wire rst_n, input wire ld, input wire [3:0] d, output reg [3:0] q);
+  always @(posedge clk or negedge rst_n) if(!rst_n) q<=4'b0001; else if(ld) q<=d;
 endmodule
 // Register-output skid buffer: out_data / out_valid are flops (no read-select mux), in_ready = !skid_full (a flop).
 // Full rate; a stalled head parks the next beat in the skid register.

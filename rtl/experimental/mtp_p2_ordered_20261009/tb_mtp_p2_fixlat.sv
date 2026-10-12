@@ -18,6 +18,12 @@ module p2fl_relay #(parameter integer W=1, N=0)(input wire clk, rst_n, input wir
  end endgenerate
 endmodule
 module tb_mtp_p2_fixlat #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX=2, START_DELAY=300, NOSTALL=0);
+`ifndef OT_P2_NAIVE
+ localparam integer RL0 = 4;   // VM BE contract v3: lane 0 into dsfd_vm_p2_ep is READY-LATENCY 4 (every beat a transfer)
+`else
+ localparam integer RL0 = 0;
+`endif
+ reg [7:0] c0_rh = 0;
  reg clk=0; always #0.416667 clk=~clk;
  reg rst_n=0;
  reg [31:0] inputs[0:3839], gold[0:1279];
@@ -89,14 +95,15 @@ module tb_mtp_p2_fixlat #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NT
   // NOSTALL: saturated sources / always-ready consumer (latency measurement: lnk at 0 stations vs OT_P2_NAIVE at 0
   // stations = the core driven directly).
   c1_v = s1<80*NTX  && (NOSTALL || rnd[2:0]!=0);
-  c0_v = s0<160*NTX && (NOSTALL || rnd[5:3]!=0);
+  c0_v = s0<160*NTX && (NOSTALL || rnd[5:3]!=0) && (RL0==0 || c0_rh[RL0-1]);
   co_r = NOSTALL || (!(cycles>=900 && cycles<1100) && rnd[9:7]!=0 && !(cycles%300>=250));
  end
  always @(posedge clk) if(rst_n) begin
   cycles<=cycles+1;
   if(cs_v&&cs_r) starts<=starts+1;
   if(c1_v&&c1_r) s1<=s1+1;
-  if(c0_v&&c0_r) s0<=s0+1;
+  if(c0_v&&(RL0!=0||c0_r)) s0<=s0+1;
+  c0_rh <= {c0_rh[6:0], c0_r};
   if(fault) $fatal(1,"P2FL unexpected fault cycle %0d",cycles);
   if(co_v&&co_r) begin
    if(received>=80*NTX) $fatal(1,"P2FL extra/duplicate output row %0d",received);

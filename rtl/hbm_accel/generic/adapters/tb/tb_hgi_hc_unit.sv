@@ -54,7 +54,7 @@ module tb_hgi_hc_unit;
     wire [37:0] xq; wire [256:0] xr; reg [37:0] xq1, xq2; reg [256:0] xr1, xr2;
     wire k_v; reg k_rdy = 0; wire [36:0] k_a; reg k_rv = 0; reg [255:0] k_rd = 0; wire lane_f;
     always @(posedge clk) begin xq1 <= xq; xq2 <= xq1; end
-    ot_hgi_hc_die #(.HC_EPS(NEPS), .MUT_MP(MM), .WVM(0), .SPL(1), .HL(1)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_hc_die #(.HC_EPS(NEPS), .MUT_MP(MM), .MUT_POST(MP), .WVM(0), .SPL(1), .HL(1)) u (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]),
         .rec_n_a(cur[916:896]), .rec_n_o(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted),
         .vmq(uq), .vmr(ur), .xq(xq), .xr(xr2));
@@ -115,6 +115,9 @@ module tb_hgi_hc_unit;
 `endif
 `ifdef WMAC
         , .WMACRO(1)
+`endif
+`ifdef SYS
+        , .SYS(1)
 `endif
         ) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]),

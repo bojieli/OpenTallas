@@ -165,14 +165,60 @@ module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 
 endmodule
 
 // VM-slab end: sends lane 0.
-module dsfd_vm_p2_ep (
+// BE S-face contract v3 (el1011-ds-vm b235ed401, s81die-1011 2026-10-11): the VM back end's P2 port is READY-LATENCY
+// RL = 4: the BE asserts c_l0v in cycle t only if c_l0r was high in cycle t - RL, and every c_l0v beat is a transfer
+// (no same-cycle ready).  This end therefore lands every beat: c_l0v / c_l0d -> pin flops -> a D-entry landing queue
+// -> the grant-protocol sender.  c_l0r is a flop: it is raised for cycle t + 1 only if the queue has room for every beat
+// that can still arrive, counting the queue, the pin flop and the last RL + 1 issued readies (pops ignored, so the
+// bound is safe):  cnt + pv + popcount(rh[RL:0]) + 1 <= D.  The issue -> queue round trip is RL + 2 cycles, so D = RL + 6
+// keeps a full-rate stream (one beat a cycle) with no ready bubble.  Mutant OT_S81PH_MUT_P2EP_NOSLACK: ready ignores
+// the in-flight beats (room for one) -> the queue overflows under a stalled grant and lane-0 words are lost.
+module dsfd_vm_p2_ep #(parameter integer RL = 4, parameter integer D = RL + 6) (
  input wire [0:0] ck, rst,
  input wire [0:0] c_l0v, output wire [0:0] c_l0r, input wire [603:0] c_l0d,
  output wire [0:0] t_l0v, output wire [603:0] t_l0d, input wire [0:0] f_l0g
 );
+ localparam integer AW = $clog2(D), CW = $clog2(D + 1), HW = RL + 1;
  wire rn;
  ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
- ot_dsrom_mtp_ltx #(.W(604)) u_l0(.clk(ck[0]),.rst_n(rn),.c_valid(c_l0v),.c_ready(c_l0r),.c_data(c_l0d),
+ // pin flops (data without reset)
+ reg pv; reg [603:0] pd;
+ always @(posedge ck[0]) pd <= c_l0d;
+ always @(posedge ck[0] or negedge rn) if (!rn) pv <= 1'b0; else pv <= c_l0v[0];
+ // landing queue: payload slots without reset, pointers / count with reset
+ reg [603:0] q [0:D-1];
+ reg [AW-1:0] wp, rp; reg [CW-1:0] cnt;
+ wire qv = cnt != 0;
+ wire tr;                                   // sender takes the head
+ wire pop = qv && tr;
+ always @(posedge ck[0]) if (pv) q[wp] <= pd;
+ always @(posedge ck[0] or negedge rn)
+  if (!rn) begin wp <= 0; rp <= 0; cnt <= 0; end
+  else begin
+   if (pv)  wp <= (wp == D - 1) ? {AW{1'b0}} : wp + 1'b1;
+   if (pop) rp <= (rp == D - 1) ? {AW{1'b0}} : rp + 1'b1;
+   cnt <= cnt + pv - pop;
+  end
+ // credit-style ready: one flop, from flops only
+ reg r; reg [HW-1:0] rh;                    // rh[0] = r one cycle ago ... rh[RL] = r RL + 1 cycles ago
+ integer k; reg [CW+2:0] infl;
+ always @* begin infl = cnt + pv + r; for (k = 0; k < RL; k = k + 1) infl = infl + rh[k]; end
+ always @(posedge ck[0] or negedge rn)
+  if (!rn) begin r <= 1'b0; rh <= {HW{1'b0}}; end
+  else begin
+   rh <= {rh[HW-2:0], r};
+`ifdef OT_S81PH_MUT_P2EP_NOSLACK
+   r <= cnt + pv < D;
+`else
+   r <= infl + 1 <= D;
+`endif
+  end
+ assign c_l0r = r;
+ ot_dsrom_mtp_ltx #(.W(604)) u_l0(.clk(ck[0]),.rst_n(rn),.c_valid(qv),.c_ready(tr),.c_data(q[rp]),
   .l_valid(t_l0v),.l_ready(f_l0g),.l_data(t_l0d));
+ // overflow is a contract breach (BE or this bound): visible in simulation
+ // synthesis translate_off
+ always @(posedge ck[0]) if (rn && pv && !pop && cnt == D) $fatal(1, "dsfd_vm_p2_ep: landing queue overflow (RL %0d D %0d)", RL, D);
+ // synthesis translate_on
 endmodule
 `default_nettype wire
