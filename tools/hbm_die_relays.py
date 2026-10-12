@@ -383,6 +383,22 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True, relay_all=False):
             if not sel:
                 continue
             sel = sorted(sel)
+            # hbmdie-v10-sta: bus bits past a REAL end's last pin are spare chain bits (write_netlist truncates a
+            # full-width real connection the same way; v10 host chain 787 b vs the host PHY's 381 iox pins left the
+            # rx sub-bus with NO pin at the PHY end -> 'iox@' and a crash); they get no relay chain
+            def _pins_at(e):
+                n_ = nreal(e)
+                if n_ is None:
+                    return None
+                ix_ = H.port_idx(e[1]) or list(range(bits))
+                return {i for i in sel if ix_[i] < n_}
+            for e_ in eps:
+                ok_ = _pins_at(e_)
+                if ok_ is not None and len(ok_) < len(sel):
+                    rec['spare_bits_dropped'] = rec.get('spare_bits_dropped', 0) + len(sel) - len(ok_)
+                    sel = [i for i in sel if i in ok_]
+            if not sel:
+                continue
             s_, t_ = (0, 1) if g == 'f' else (1, 0)
             src, dst = eps[s_], eps[t_]
             (ps, oks), (pt, okt) = pin_xy(src[0], src[1], sel), pin_xy(dst[0], dst[1], sel)

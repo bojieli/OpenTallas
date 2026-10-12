@@ -478,7 +478,9 @@ def gen_place(s: dict, blocks: list) -> str:
              "  foreach i [dict get $by $master] {",
              "    set n [ot_ref_strip [$i getName]]",
              "    if {[lsearch -exact $used $n] >= 0} continue",
-             "    if {$pat ne \"\" && ![string match [ot_ref_strip $pat] $n]} continue",
+             "    set sp [ot_ref_strip $pat]",
+             "    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)",
+             "    if {$pat ne \"\" && $sp ne $n && ![string match $sp $n]} continue",
              "    lappend used $n; return $i", "  }",
              "  error \"ref_tile place: no unplaced instance of $master matching '$pat'\"", "}",
              "set ot_ref_n 0"]
@@ -594,7 +596,11 @@ def gen_hooks(s: dict, kd: str) -> dict:
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
                "# column; created here, removed by post_drt.tcl, so the abstract carries only real metal: DRT-0073 at the parent)",
                f"source /src/{QDM}/pre_ref_skew.tcl",
-               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"] + btcl
+               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+               # el1011-ds-mtp-cbw 2026-10-12: with MAX_ROUTING_LAYER as GRT's top layer FastRoute zeroes that layer over
+               # every hard macro (M5 cap + SRAM OBS M1-M4 = full wall; hrow5_cbw-r5b / hgi_seq v2.4 GRT-0116); GRT to
+               # MAX+1 at zero capacity restores it, detailed route still stops at MAX (no-op without macros)
+               "source /src/physical/common_flow/grt_macro_top_layer.tcl"] + btcl
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"] + btcl
@@ -652,6 +658,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         # sbuf read-data flops r_d at TT 1,050 vs 1,560 ps -> R2O FF hold -318 ps that hold repair cannot move.
         if views and s.get("spine_macro_leaf", True):
             extra.append("--orfs-var OT_SPINE_MACRO_LEAF=1")
+        # spec "spine_through_icg": the cluster clock enters ONE tile clock gate (ICG) that clocks the rest (SM tile
+        # ot_cg_tile): the spine is built on the ICG output net (clock_spine.tcl OT_SPINE_THROUGH_ICG)
+        if s.get("spine_through_icg"):
+            extra.append("--orfs-var OT_SPINE_THROUGH_ICG=1")
     # spec "defines": RTL defines the top's synthesis needs (e.g. the hardened-child body selected by `ifdef); written after
     # run_abi3's own "VERILOG_DEFINES = -DSYNTHESIS", so it keeps -DSYNTHESIS explicitly (the lint bench uses the same set).
     if s.get("defines"):
@@ -742,7 +752,7 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
-           "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
+           "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):

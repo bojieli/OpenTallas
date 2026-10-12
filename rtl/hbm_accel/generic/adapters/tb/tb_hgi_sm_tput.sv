@@ -26,7 +26,11 @@ module tb_hgi_sm_tput;
     localparam integer NSM = 32, NREAL = 2, CW = 106, NXC = 4, NPC = 4;
     // smmv 2026-10-11 row credits: ADP = per-SM pub arrival depth = adapter credits (+define+TB_AD4: the old depth 4);
     // +define+MUT_NOCR: the adapter describes the whole slice at once (the pre-fix behaviour: the overrun reproduces)
-`ifdef TB_AD4
+// smmv-cr (2026-10-12): +define+TB_AD=<n> any depth (AD < 8 is refused at elaboration unless MUT_CRDL);
+// +define+MUT_CRDL: the pre-fix chunk rule min(CH, AD), not wave-aligned (at AD 4 it must DEADLOCK -> watchdog FAIL)
+`ifdef TB_AD
+    localparam integer ADP = `TB_AD;
+`elsif TB_AD4
     localparam integer ADP = 4;
 `else
     localparam integer ADP = 32;
@@ -40,6 +44,11 @@ module tb_hgi_sm_tput;
     localparam integer NOCR = 1;
 `else
     localparam integer NOCR = 0;
+`endif
+`ifdef MUT_CRDL
+    localparam integer CRDL = 1;
+`else
+    localparam integer CRDL = 0;
 `endif
     wire [NSM-1:0] pcr; reg [NSM-1:0] acr = 0;
     reg clk = 0;
@@ -66,7 +75,7 @@ module tb_hgi_sm_tput;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
     wire [1:0] x_space, x_fmt, pub_space; wire [6:0] x_xb; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret;
-    ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME), .AD(ADP), .MUT_NOCR(NOCR), .MUT_XB(MXB)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME), .AD(ADP), .MUT_CRDL(CRDL), .MUT_NOCR(NOCR), .MUT_XB(MXB)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
         .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
         .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
@@ -220,6 +229,26 @@ module tb_hgi_sm_tput;
         if (rv[0]) begin if (e_rv0 < 0) e_rv0 = cyc; e_rv1 = cyc; end
         if (pub_done && e_pd < 0) e_pd = cyc;
     end
+    // DEADLOCK WATCHDOG (smmv-cr 2026-10-12): no result row (any real SM), no HBM line request and no retire for WD
+    // cycles (+WD=, default 20000) while a record is in flight -> dump the credit loop and FAIL (a hang is a FAIL, never
+    // a 2M-cycle stall).  Dump: per real SM the adapter's credits cr_s, rows left rr_s, rr_nz, d_pend, lines requested,
+    // rows emitted this record, the pub's credit pulses ccnt and the class credits sent csent.
+    integer wd, wd_last = 0, rows_rec [0:NREAL-1], wi; reg wd_on = 0;
+    initial begin if (!$value$plusargs("WD=%d", wd)) wd = 20000; rows_rec[0] = 0; rows_rec[1] = 0; end
+    always @(posedge clk) if (rst_n) begin
+        for (wi = 0; wi < NREAL; wi = wi + 1) if (rv[wi]) rows_rec[wi] = rows_rec[wi] + 1;
+        if (!wd_on || done || (|rv) || g_sm[0].req_v || g_sm[1].req_v) wd_last = cyc;
+        else if (cyc - wd_last > wd) begin
+            $display("ERR DEADLOCK: no row / line request / retire for %0d cycles at cycle %0d (record %0d, AD %0d)", wd, cyc, r, ADP);
+            for (wi = 0; wi < NREAL; wi = wi + 1)
+                $display("  SM %0d: cr_s %0d rr_s %0d rr_nz %0d d_pend %0d st_pend %0d lines_req %0d rows_emitted_total %0d ccnt %0d csent %0d",
+                         wi, u_a.cr_s[wi*$clog2(ADP+1) +: $clog2(ADP+1)], u_a.rr_s[wi*13 +: 13], u_a.rr_nz[wi], u_a.d_pend[wi],
+                         u_a.st_pend[wi], lines_req[wi], rows_rec[wi], ccnt[wi], csent[wi]);
+            $display("  adapter busy %0d fld_ph %0d started %0d go_ok %0d pd_seen %0d all_arr_r %0d pend0_r %0d; pub_fault %0d",
+                     u_a.busy, u_a.fld_ph, u_a.started, u_a.go_ok, u_a.pd_seen, u_a.all_arr_r, u_a.pend0_r, pub_fault);
+            $display("HGI_SM_TPUT FAIL deadlock"); $finish;
+        end
+    end
     reg [255:0] qd; reg [31:0] lastsec; reg [119:0] inf;
     always @(posedge clk) begin if (rst_n && done) k = k + 1; if (rst_n && fault) nf = nf + 1; end
     // proxy fragment writer: one beat an edge from dispatch; checked to finish before the x-load's x_done
@@ -245,10 +274,10 @@ module tb_hgi_sm_tput;
             cur_q = inf[115:100]; cur_m = inf[99:80]; cr_missing(inf[115:100], inf[99:80]);
             t = 0; while (!rec_rdy && t < 100000) begin @(negedge clk); t = t + 1; end
             e_xi = -1; e_xd = -1; e_st = -1; e_rq0 = -1; e_rq1 = -1; e_rs1 = -1; e_rv0 = -1; e_rv1 = -1; e_pd = -1;
-            @(posedge clk); td = cyc; #0.1 rec_v = 0;
+            @(posedge clk); td = cyc; #0.1 rec_v = 0; wd_on = 1; wd_last = cyc;
             proxy_q = (XB == 0) && (inf[119:116] == 1 || inf[119:116] == 2); px0 = inf[47:16]; pxn = inf[15:0]; pxi = 0; px_go = proxy_q;
             t = 0; while (k < r + 1 && nf == 0 && t < 2000000) begin @(posedge clk); t = t + 1; end
-            tr_ = cyc; px_go = 0; proxy_q = 0;
+            tr_ = cyc; px_go = 0; proxy_q = 0; wd_on = 0;
             if (k != r + 1 || nf != 0) begin $display("ERR record %0d: retired %0d faults %0d (x_fault %0d pub_fault %0d)", r, k, nf, x_fault, pub_fault); errors = errors + 1; r = NREC; end
             else begin
                 $display("TPUT %0d disp %0d ret %0d service %0d lines %0d %0d", r, td, tr_, tr_ - (td > prev_ret ? td : prev_ret), lines_req[0], lines_req[1]); $fflush;
