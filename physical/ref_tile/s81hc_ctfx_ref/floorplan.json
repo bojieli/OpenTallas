@@ -1,22 +1,22 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
- "name": "s81hc_ctrs_ref",
- "top": "ot_s81_hc_ctrs",
+ "name": "s81hc_ctfx_ref",
+ "top": "ot_s81_hc_ctfx",
  "kind": "tile",
  "die": [
   0,
   0,
   576.72,
-  25.92
+  8.64
  ],
  "core": [
   2.16,
   2.16,
   574.5600000000001,
-  23.76
+  6.48
  ],
  "why": "spec outline",
- "std_area_um2": 6323,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -30,30 +30,16 @@
  },
  "pins": {
   "N": [
-   "rvm",
-   "rdm",
-   "rq_q",
-   "hs_run",
-   "hs_c",
-   "hrq",
-   "yb",
-   "cs",
-   "nflt",
-   "hov_d",
-   "hnz_d",
-   "pflt_d"
+   "fv_in",
+   "fd_in"
   ],
   "S": [
-   "rv_in",
-   "rd_in",
    "fv",
    "fdx"
   ],
   "W": [
    "clk",
-   "rst_in",
-   "tid",
-   "last"
+   "rst_in"
   ]
  },
  "clock_port": "clk",
@@ -89,13 +75,13 @@
   "rtl/hdc/v41/ot_hdc_actquant.sv",
   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
   "rtl/hdc/v41x/ot_dsrom_divc.sv",
-  "physical/ref_tile/s81hc_ctrs_ref/kit.env",
-  "physical/ref_tile/s81hc_ctrs_ref/clock.sdc",
-  "physical/ref_tile/s81hc_ctrs_ref/signoff.sdc",
-  "physical/ref_tile/s81hc_ctrs_ref/pdn.tcl",
-  "physical/ref_tile/s81hc_ctrs_ref/pre_cts.tcl",
-  "physical/ref_tile/s81hc_ctrs_ref/pre_grt.tcl",
-  "physical/ref_tile/s81hc_ctrs_ref/post_drt.tcl",
+  "physical/ref_tile/s81hc_ctfx_ref/kit.env",
+  "physical/ref_tile/s81hc_ctfx_ref/clock.sdc",
+  "physical/ref_tile/s81hc_ctfx_ref/signoff.sdc",
+  "physical/ref_tile/s81hc_ctfx_ref/pdn.tcl",
+  "physical/ref_tile/s81hc_ctfx_ref/pre_cts.tcl",
+  "physical/ref_tile/s81hc_ctfx_ref/pre_grt.tcl",
+  "physical/ref_tile/s81hc_ctfx_ref/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
   "physical/qwen_die_masters/io_ref_skew.sdc",
   "physical/qwen_die_masters/io_plain.sdc",

@@ -37,10 +37,10 @@
  "reset_ports": [],
  "outline": {
   "w": 576.72,
-  "h": 10.8
+  "h": 25.92
  },
  "std_area_um2": 1965,
- "why_floorplan": "S-edge forward relay + out stages (5,856 flops): full slot width for 2,935 bus pins on N/S; core util 53%",
+ "why_floorplan": "S-edge forward relay + out stages (5,856 flops): full slot width for 2,935 bus pins on N/S; 25.92 tall (10.8 failed DPL-0038)",
  "macros": [],
  "pins": {
   "N": [
@@ -68,7 +68,7 @@
   "owner": "Claude:el1011-s81hc-ctile",
   "branch": "claude/el1011-s81hc-ctile",
   "tag": "v1",
-  "purpose": "s81-suhc HC half-octet column slot (576.72 x 706.32: the measured 215k um2 std does not fit 572.4 under the 70% cap) as 28 hard tiles of 6 masters (N->S: ctrn | ctnl rows 0-1 | ctpl half 0 | ctrs + ctfn centre band | ctpl half 1 | ctnl rows 2-3 | ctfs; ot_s81_hc_cth; every flop-to-flop stage <= ~360 um): ctfs",
+  "purpose": "s81-suhc HC half-octet column slot (576.72 x 760.32: the measured ~215k um2 std does not fit 572.4 under the 70% cap) as 30 hard tiles of 8 masters (N->S: ctrn | ctnl rows 0-1 | ctpl half 0 | centre band ctra, ctrb, ctfx, ctfn | ctpl half 1 | ctnl rows 2-3 | ctfs; ot_s81_hc_cth; every flop-to-flop stage <= ~400 um): ctfs",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctfs_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfs_ref"

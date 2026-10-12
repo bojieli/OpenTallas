@@ -1,6 +1,6 @@
 {
- "name": "s81hc_ctrs_ref",
- "top": "ot_s81_hc_ctrs",
+ "name": "s81hc_ctrb_ref",
+ "top": "ot_s81_hc_ctrb",
  "kind": "tile",
  "sources": [
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
@@ -37,29 +37,22 @@
  "reset_ports": [],
  "outline": {
   "w": 576.72,
-  "h": 25.92
+  "h": 21.6
  },
- "std_area_um2": 6323,
- "why_floorplan": "centre-band return pin / origination / merge (pin-bound: 6.9k N pins incl. hrq 4096 from the 16 lanes, 3.3k S pins incl. fdx from ctfn below): full slot width, core util 51%",
+ "why_floorplan": "centre-band return slots 2-3 (sequencer/origination/ybuf replicated, takes the rd header + the 128 psb-shift bits): ~2.2k N / 2.5k S pins",
  "macros": [],
  "pins": {
   "N": [
-   "rvm",
    "rdm",
-   "rq_q",
-   "hs_run",
-   "hs_c",
-   "hrq",
-   "yb",
-   "cs",
-   "nflt",
-   "hov_d",
-   "hnz_d",
-   "pflt_d"
+   "hrq_n",
+   "yb_n"
   ],
   "S": [
    "rv_in",
-   "rd_in",
+   "rdh_in",
+   "rdd_in",
+   "hrq_s",
+   "yb_s",
    "fv",
    "fdx"
   ],
@@ -81,10 +74,10 @@
   "owner": "Claude:el1011-s81hc-ctile",
   "branch": "claude/el1011-s81hc-ctile",
   "tag": "v1",
-  "purpose": "s81-suhc HC half-octet column slot (576.72 x 706.32: the measured 215k um2 std does not fit 572.4 under the 70% cap) as 28 hard tiles of 6 masters (N->S: ctrn | ctnl rows 0-1 | ctpl half 0 | ctrs + ctfn centre band | ctpl half 1 | ctnl rows 2-3 | ctfs; ot_s81_hc_cth; every flop-to-flop stage <= ~360 um): ctrs",
+  "purpose": "s81-suhc HC half-octet column slot (576.72 x 760.32: the measured ~215k um2 std does not fit 572.4 under the 70% cap) as 30 hard tiles of 8 masters (N->S: ctrn | ctnl rows 0-1 | ctpl half 0 | centre band ctra, ctrb, ctfx, ctfn | ctpl half 1 | ctnl rows 2-3 | ctfs; ot_s81_hc_cth; every flop-to-flop stage <= ~400 um): ctrb",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
-  "views_to": "physical/ref_tile/s81hc_ctrs_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_ctrs_ref"
+  "views_to": "physical/ref_tile/s81hc_ctrb_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctrb_ref"
  },
  "params": {},
  "children": [],

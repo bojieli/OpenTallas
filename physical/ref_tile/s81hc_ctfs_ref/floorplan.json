@@ -7,13 +7,13 @@
   0,
   0,
   576.72,
-  10.8
+  25.92
  ],
  "core": [
   2.16,
   2.16,
   574.5600000000001,
-  8.64
+  23.76
  ],
  "why": "spec outline",
  "std_area_um2": 1965,
@@ -45,7 +45,14 @@
  },
  "clock_port": "clk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 16% outside 45%-60% (std 1965 + macro 0 in core 12364 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
