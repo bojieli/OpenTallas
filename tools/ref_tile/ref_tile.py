@@ -478,7 +478,9 @@ def gen_place(s: dict, blocks: list) -> str:
              "  foreach i [dict get $by $master] {",
              "    set n [ot_ref_strip [$i getName]]",
              "    if {[lsearch -exact $used $n] >= 0} continue",
-             "    if {$pat ne \"\" && ![string match [ot_ref_strip $pat] $n]} continue",
+             "    set sp [ot_ref_strip $pat]",
+             "    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)",
+             "    if {$pat ne \"\" && $sp ne $n && ![string match $sp $n]} continue",
              "    lappend used $n; return $i", "  }",
              "  error \"ref_tile place: no unplaced instance of $master matching '$pat'\"", "}",
              "set ot_ref_n 0"]
@@ -652,6 +654,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         # sbuf read-data flops r_d at TT 1,050 vs 1,560 ps -> R2O FF hold -318 ps that hold repair cannot move.
         if views and s.get("spine_macro_leaf", True):
             extra.append("--orfs-var OT_SPINE_MACRO_LEAF=1")
+        # spec "spine_through_icg": the cluster clock enters ONE tile clock gate (ICG) that clocks the rest (SM tile
+        # ot_cg_tile): the spine is built on the ICG output net (clock_spine.tcl OT_SPINE_THROUGH_ICG)
+        if s.get("spine_through_icg"):
+            extra.append("--orfs-var OT_SPINE_THROUGH_ICG=1")
     # spec "defines": RTL defines the top's synthesis needs (e.g. the hardened-child body selected by `ifdef); written after
     # run_abi3's own "VERILOG_DEFINES = -DSYNTHESIS", so it keeps -DSYNTHESIS explicitly (the lint bench uses the same set).
     if s.get("defines"):
