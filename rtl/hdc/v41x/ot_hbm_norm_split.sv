@@ -61,9 +61,14 @@ module ot_hbm_norm_grp #(
         end
     endfunction
     // reset: rst_n is the top's synchronised reset; one pin flop (asynchronous assert, synchronous release)
-    reg rs;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 1'b0; else rs <= 1'b1;
-    wire rstn = rs;
+    // idle1012 textbook class 2 (gtile8 lint: one rs flop drove 3,552 reset loads): the pin flop is REPLICATED per
+    // region (* keep *): [0] control + output flops, [1] in-group tree, [2+k-1] chunk-chain stage k (k = 1..7),
+    // [9+2l] lane l mix/square, [10+2l] lane l scale/weight multipliers.  Every copy is the same flop (asynchronous
+    // assert from rst_n, release on the same edge), so behaviour is cycle-identical to the single flop.
+    localparam integer NR = 9 + 2 * G;
+    (* keep = "true", dont_touch = "true" *) reg [NR-1:0] rs;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rs <= {NR{1'b0}}; else rs <= {NR{1'b1}};
+    wire rstn = rs[0];
     // input pin flops (no reset, as the flat view's capture flops: a write in the first cycles after release lands)
     reg go_c, in_v_c, wl_v_c, rb_v_c; reg [7:0] wl_i_c; reg [4*G*32-1:0] x_c; reg [127:0] pre_c;
     reg [G*32-1:0] wl_d_c; reg [31:0] rb_d_c;
@@ -133,7 +138,7 @@ module ot_hbm_norm_grp #(
         for (l = 0; l < G; l = l + 1) begin : g_lane
             wire [31:0] xl;
             wire [9:0] f;
-            ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rstn), .v(in_v_c),
+            ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rs[9 + 2 * l]), .v(in_v_c),
                 .h0(x_c[(0 * G + l) * 32 +: 32]), .h1(x_c[(1 * G + l) * 32 +: 32]),
                 .h2(x_c[(2 * G + l) * 32 +: 32]), .h3(x_c[(3 * G + l) * 32 +: 32]), .pre(pre_c), .x(xl),
                 .fault(f[0]));
@@ -141,10 +146,10 @@ module ot_hbm_norm_grp #(
             assign xl_all[l * 32 +: 32] = xl;
             reg [31:0] xo, wo;                   // macro output registers
             always @(posedge clk) begin xo <= xmq[l * 32 +: 32]; wo <= wmq[l * 32 +: 32]; end
-            ot_hdc_qmul_lat #(LM) u_sq (clk, rstn, x_v, xl, xl, sq[l * 32 +: 32], f[7]);
+            ot_hdc_qmul_lat #(LM) u_sq (clk, rs[9 + 2 * l], x_v, xl, xl, sq[l * 32 +: 32], f[7]);
             wire [31:0] p, q;
-            ot_hdc_qmul_lat #(LMS) u_xr (clk, rstn, sc_go, xo, rh, p, f[8]);
-            ot_hdc_qmul_lat #(LMS) u_w  (clk, rstn, vy[LMS], wo, p, q, f[9]);
+            ot_hdc_qmul_lat #(LMS) u_xr (clk, rs[10 + 2 * l], sc_go, xo, rh, p, f[8]);
+            ot_hdc_qmul_lat #(LMS) u_w  (clk, rs[10 + 2 * l], vy[LMS], wo, p, q, f[9]);
             reg [31:0] yr;
             always @(posedge clk) yr <= bf16(q);
             assign y[l * 32 +: 32] = yr;
@@ -157,9 +162,9 @@ module ot_hbm_norm_grp #(
             assign f[0] = 1'b0;
             for (k = 1; k < 8; k = k + 1) begin : g_j
                 wire [31:0] sd;
-                ot_hdc_delay #(.W(32), .D(LA * (k - 1))) u_sd (.clk(clk), .rst_n(rstn), .d(sq[(8 * c + k) * 32 +: 32]),
+                ot_hdc_delay #(.W(32), .D(LA * (k - 1))) u_sd (.clk(clk), .rst_n(rs[1 + k]), .d(sq[(8 * c + k) * 32 +: 32]),
                                                               .q(sd));
-                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rstn, vs[LM + LA * (k - 1)], acc[k - 1], sd, acc[k], f[k]);
+                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rs[1 + k], vs[LM + LA * (k - 1)], acc[k - 1], sd, acc[k], f[k]);
             end
             assign cs[c * 32 +: 32] = acc[7];
             assign cf[c] = |f;
@@ -176,7 +181,7 @@ module ot_hbm_norm_grp #(
         for (k = 1; k <= LT; k = k + 1) begin : g_tl
             wire [(NC >> k)-1:0] f;
             for (c = 0; c < (NC >> k); c = c + 1) begin : g_tn
-                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rstn, vs[LM + 7 * LA + LA * (k - 1)], tv[k - 1][2 * c],
+                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rs[1], vs[LM + 7 * LA + LA * (k - 1)], tv[k - 1][2 * c],
                                                tv[k - 1][2 * c + 1], tv[k][c], f[c]);
             end
             for (c = (NC >> k); c < NC; c = c + 1) begin : g_tz
