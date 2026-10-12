@@ -30,8 +30,14 @@ module ot_sram_bank #(
             assign q = rq;
         end else begin : g_mux
             reg [AW-1:0] bs;
+            reg [511:0] qm;
             always @(posedge clk) if (re) bs <= ra >> 6;
-            assign q = rq[512 * bs +: 512];
+            always @(*) begin : sel                    // decoded AND-OR select (no runtime part-select)
+                integer i;
+                qm = 512'd0;
+                for (i = 0; i < NM; i = i + 1) if (bs == i) qm = qm | rq[512 * i +: 512];
+            end
+            assign q = qm;
         end
     endgenerate
 endmodule
