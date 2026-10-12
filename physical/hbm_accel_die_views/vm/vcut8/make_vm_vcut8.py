@@ -132,16 +132,20 @@ ST_HALVES = set(os.environ.get('VM_ST_HALVES', 'sw_w sw_e nw_w se_e se_w ne_e').
 
 SLICE_HALVES = {'sw_w', 'nw_e', 'se_w', 'ne_w'}
 ST_COLS = int(os.environ.get('VM_ST_COLS', '3'))
-ST_SLICE_W = 135.0
+ST_SLICE_W = 135.0       # slice column: 6 SRAMs (94.824 um wide) stacked, >= 20 um to each tile edge
 ST_K = {(kv.split(':')[0], kv.split(':')[1].split('=')[0]): int(kv.split('=')[1])
         for kv in os.environ.get('VM_ST_K', '').replace(' ', '').split(',') if kv}   # 'sw_w:t_n_row=1,...'
 ST_COLB = {kv.split(':')[0]: [float(x) for x in kv.split(':')[1].split('/')]
            for kv in os.environ.get('VM_ST_COLB', '').replace(' ', '').split(',') if kv}
-ST_PDN_X, ST_PDN_Y = 10.8, 5.4   # r2: tile boundaries on the vm/pdn_vm.tcl strap pitches (M7 stripes 10.8, M5/M6 straps 5.4)       # slice column: 6 SRAMs (94.824 um wide) stacked, >= 20 um to each tile edge
+# r3: tile origins on the PDN AND routing-track lattice: x on lcm(10.8 M7 stripes, 0.064 M7/M6, 0.048 M5/M4, 0.036 M3,
+# 0.054 site) = 43.2 um, y on lcm(5.4 M6 straps, 0.064 M6, 0.048 M4, 0.27 row) = 43.2 um, so every half pin stays on its layer's
+# track in tile-local coordinates (r2 9adc3c44e x0 237.6 / y0 502.2: M7 tap pins 0.032 off the track -> DRT-0421 'no pins on
+# routing grid' -> DRT-0255 on cke6 / cke13; r1 the same on ck / cke10)
+ST_PDN_X, ST_PDN_Y = 43.2, 43.2
 
 def st_rows(h):
     """PHYSICAL SPEC [hbm-vm8] 2026-10-11: VM_ST rows (2 -> 500 um each; hop <= 500 um), on the 0.27 um row grid"""
-    # r2: inner boundaries on the 5.4 um M5/M6 strap pitch (a multiple of the 0.27 row) so every tile's own PDN
+    # r2/r3: inner boundaries on ST_PDN_Y (strap pitch x track lattice, a multiple of the 0.27 row) so every tile's own PDN
     # (vm/pdn_vm.tcl, offsets from the tile origin) lands on the half's straps: the half's pin / tap strap clearance
     # (free / free_span) holds unchanged in tile-local coordinates (r1 DRT-0255 on ck[0] / cke10[0] at off-grid tiles)
     b = [0.0] + [round(round(QH * r / ST / ST_PDN_Y) * ST_PDN_Y, 4) for r in range(1, ST)] + [QH]
@@ -155,13 +159,13 @@ def st_cols(h, q=None):
         b = [0.0] + ST_COLB[f'{q}_{h}'] + [w]
         assert all(abs(x / ST_PDN_X - round(x / ST_PDN_X)) < 1e-6 for x in b[1:-1]), b
         return [(b[i], b[i + 1]) for i in range(len(b) - 1)]
-    P = ST_PDN_X          # r2: inner boundaries on the 10.8 um M7 stripe pitch (= 2 x M5/M6 pitch, 200 sites), see st_rows
+    P = ST_PDN_X          # r2/r3: inner boundaries on the ST_PDN_X lattice (M7 stripes x M3-M7 tracks x sites), see st_rows
     if f'{q}_{h}' in SLICE_HALVES and ST_COLS == 3:
         lo = math.floor((w - ST_SLICE_W) / 2 / P) * P             # slice column widened outward to the pitch (>= ST_SLICE_W)
         hi = lo + math.ceil((ST_SLICE_W + (w - ST_SLICE_W) / 2 - lo) / P) * P
         b = [0.0, lo, hi, w]
     else:
-        b = [0.0] + [round(w * c / ST_COLS / P) * P for c in range(1, ST_COLS)] + [w]
+        b = [0.0] + [c * round(w / ST_COLS / P) * P for c in range(1, ST_COLS)] + [w]
     b = [b[0]] + [round(x, 4) for x in b[1:-1]] + [b[-1]]
     return [(b[i], b[i + 1]) for i in range(len(b) - 1)]
 
