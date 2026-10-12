@@ -36,6 +36,10 @@ module ot_hgi_idx_unit #(
     // hgi-1010/g3: TWIW = the TOPKW engine's beat width and heap count (ot_hgi_idx_topk_wreg IW = W = TWIW): 8 = DEFAULT (production; 4 = the first build)
     // or 8 (the production 8-wide engine: a whole sector a beat, 8 heaps; g2 heap bench IW8/W8 16 cases PASS)
     parameter integer TWIW = 8,
+    // el1011-idxone (opt-in, default 0 = the flat ot_hgi_idx_topk_wreg above): TOPKC = 1 (needs TOPKW = 1, TWIW = 8) puts
+    // IDX.TOPK on the hardened w8 cluster ot_hgi_idx_topk_w8_cluster (8 heap tiles + hub, same cmd / beat / out ports),
+    // the die configuration (ot_hgi_idx_unit_native)
+    parameter integer TOPKC = 0,
     // hgi-1010/g3 (opt-in, defaults 0 = unchanged): see the IDX.INDEX front below
     parameter integer NGLOB = 0,
     parameter integer IKS = 0,
@@ -90,7 +94,15 @@ module ot_hgi_idx_unit #(
     localparam integer TWB = $clog2(TWIW + 1);
     reg  [TWIW*32-1:0] e_inw; reg [TWB-1:0] e_nw;     // TOPKW: a beat of up to TWIW words
     wire e_out_r;
-    generate if (TOPKW != 0) begin : g_tw
+    generate if (TOPKW != 0 && TOPKC != 0) begin : g_tc
+    if (TWIW != 8) begin : g_chk ot_ERROR_TOPKC_needs_TWIW_8 u_chk (); end
+    ot_hgi_idx_topk_w8_cluster u_topk (.clk(clk), .rst_n(rst_n),
+        .cmd_valid(e_cmd_v), .cmd_ready(e_cmd_r), .cmd_unit(4'd9), .cmd_op(6'd2), .cmd_param({13'd0, k}),
+        .cmd_n({12'd0, a_n}), .cmd_m({12'd0, a_m}), .cmd_values(has_r),
+        .in_valid(e_in_v), .in_ready(e_in_r), .in_score(e_inw), .in_nw(e_nw),
+        .out_valid(e_out_v), .out_ready(e_out_r), .out_id(e_id), .out_score(e_sc), .out_row(e_row),
+        .out_last(e_last), .out_values_valid(e_vv), .done(e_done), .error(e_err));
+    end else if (TOPKW != 0) begin : g_tw
     ot_hgi_idx_topk_wreg #(.ENABLE(1'b1), .MAX_K(2048), .IW(TWIW), .W(TWIW)) u_topk (.clk(clk), .rst_n(rst_n),
         .cmd_valid(e_cmd_v), .cmd_ready(e_cmd_r), .cmd_unit(4'd9), .cmd_op(6'd2), .cmd_param({13'd0, k}),
         .cmd_n({12'd0, a_n}), .cmd_m({12'd0, a_m}), .cmd_values(has_r),

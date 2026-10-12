@@ -74,7 +74,10 @@ SRC_REAL["fused"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.s
                            "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
 # hgi-1010/g3: --real idxn = REAL_IDX with IDX_NATIVE 1 (IDX.INDEX through the die's selector, 4 stack scorers and 4 svc
 # IKS stripes; tb_hgi_e2e / hgi_e2e_idxn.sv); the selector's SRAM line memories need the macro models
-SRC_REAL["idxn"] = SRC_REAL["idx"] + ["rtl/hbm_accel/generic/idx/ot_hgi_idx_iks_issue.sv",
+# el1011-idxone: the die module ot_hgi_idx_unit_native (a thin wrapper of ot_hgi_idx_unit at the die configuration, IDX.TOPK on
+# the w8 cluster)
+SRC_REAL["idxn"] = SRC_REAL["idx"] + ["rtl/hbm_accel/generic/idx/ot_hgi_idx_unit_native.sv",
+                                      "rtl/hbm_accel/generic/idx/ot_hgi_idx_iks_issue.sv",
                                       "rtl/hbm_accel/generic/e2e/hgi_e2e_idxn.sv",
                                       "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
                                       "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"]

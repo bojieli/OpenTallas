@@ -377,7 +377,8 @@ module tb_hgi_e2e;
         wire [337:0] vq; wire [273:0] vr;
         wire [89:0] s_fs; wire [1047:0] s_qb; wire s_qbr; wire [344:0] s_kin; wire [611:0] s_to; wire s_toc;
         wire [71:0] s_co; wire s_coc; wire [1:0] s_ev; wire [511:0] s_iks;
-        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1), .IKS_EVEN(1)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
+        // el1011-idxone: the die's own module (ot_hgi_idx_unit at NGLOB/IKS/IKS_EVEN/PREF/TOPKW/TOPKC 1, TWIW 8)
+        ot_hgi_idx_unit_native #(.MUT(IDX_MUT)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
             .vmq(vq), .vmr(vr), .sel_fs(s_fs), .sel_qb(s_qb), .sel_qbr(s_qbr), .sel_kin(s_kin), .sel_to(s_to),
             .sel_toc(s_toc), .sel_co(s_co), .sel_coc(s_coc), .sel_ev(s_ev), .iks_e(s_iks));
         hgi_e2e_vmc #(.UNIT(9), .LAT(VLATE)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));

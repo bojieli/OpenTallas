@@ -5,11 +5,7 @@ wire done,fault,toc,coc;wire [337:0] vmq;wire [89:0] fs;wire [1047:0] qb;wire [3
 `ifndef IMUT
  `define IMUT 0
 `endif
-`ifdef LEGACY
- ot_hgi_idx_index #(.MUT(`IMUT))
-`else
- ot_hgi_idx_index_native
-`endif
+ ot_hgi_idx_index #(.MUT(`IMUT))   // one implementation (ot_hgi_idx_index_native removed, el1011-idxone)
  d(.clk(clk),.rst_n(rst_n),.go(1'b0),.k(12'd1),.cand_en(1'b1),.keep_en(1'b0),.n(32'd0),.rank(7'd0),.pos(20'd0),.a_base(18'd0),.b_base(18'd0),.c_base(18'd0),.o_base(18'd0),.r_base(18'd0),.d_base(18'd0),.d_stride(18'd0),.c_stride(18'd0),.c_n(12'd0),.has_r(1'b0),.done(done),.fault(fault),.vmq(vmq),.vmr(274'd0),.fs(fs),.qb(qb),.qbr(1'b0),.kin(kin),.to(to),.toc(toc),.co(co),.coc(coc),.ev(2'd0));
 integer i,tc=0,cc=0;always @(posedge clk)begin
 if(d.st==5 && d.tfn!=0 && d.tl==15 && !d.pk_full[0] && d.th[292+:20]!==tc) $fatal(1,"topk FIFO order");
