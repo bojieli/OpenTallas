@@ -1,0 +1,239 @@
+{
+ "name": "dsfd_vm_be_sl",
+ "top": "dsfd_vm_be_sl",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn_in",
+  "rns_in"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 92.88
+ },
+ "pins": {
+  "N": [
+   "o_v",
+   "o_d",
+   "o_f",
+   "o_o"
+  ],
+  "S": [
+   "srq_d",
+   "srq_v",
+   "vrv",
+   "vrq",
+   "bl_d",
+   "bl_v",
+   "c_l0r",
+   "c_l0v",
+   "c_l0d"
+  ],
+  "W": [
+   "ck",
+   "cks",
+   "rn_in",
+   "rns_in",
+   "f_vx",
+   "f_wex",
+   "f_mx",
+   "f_v5",
+   "f_we5",
+   "f_m5s",
+   "fe_flt",
+   "st_i"
+  ],
+  "E": [
+   "st_o",
+   "t_err",
+   "flt",
+   "fvec",
+   "max_occ",
+   "t_p2c"
+  ]
+ },
+ "pin_ranges": {
+  "o_v": [
+   217.29,
+   218.29
+  ],
+  "o_d": [
+   218.29,
+   298.01
+  ],
+  "o_f": [
+   298.01,
+   299.0
+  ],
+  "o_o": [
+   299.0,
+   300.0
+  ],
+  "srq_d": [
+   2.0,
+   26.94
+  ],
+  "srq_v": [
+   26.94,
+   27.132
+  ],
+  "vrv": [
+   27.132,
+   27.228
+  ],
+  "vrq": [
+   27.228,
+   39.516
+  ],
+  "bl_d": [
+   39.516,
+   250.812
+  ],
+  "bl_v": [
+   250.812,
+   252.396
+  ],
+  "c_l0r": [
+   252.396,
+   252.54
+  ],
+  "c_l0v": [
+   252.54,
+   252.636
+  ],
+  "c_l0d": [
+   252.636,
+   269.084
+  ],
+  "ck": [
+   4.012,
+   6.252
+  ],
+  "cks": [
+   6.252,
+   6.732
+  ],
+  "rn_in": [
+   6.732,
+   7.212
+  ],
+  "rns_in": [
+   7.212,
+   7.692
+  ],
+  "f_vx": [
+   7.692,
+   9.708
+  ],
+  "f_wex": [
+   9.708,
+   11.724
+  ],
+  "f_mx": [
+   11.724,
+   19.5
+  ],
+  "f_v5": [
+   19.5,
+   19.98
+  ],
+  "f_we5": [
+   19.98,
+   20.46
+  ],
+  "f_m5s": [
+   20.46,
+   29.388
+  ],
+  "fe_flt": [
+   29.388,
+   36.612
+  ],
+  "st_i": [
+   36.612,
+   54.812
+  ],
+  "st_o": [
+   35.836,
+   53.052
+  ],
+  "t_err": [
+   53.052,
+   53.532
+  ],
+  "flt": [
+   53.532,
+   54.012
+  ],
+  "fvec": [
+   54.012,
+   66.396
+  ],
+  "max_occ": [
+   66.396,
+   67.644
+  ],
+  "t_p2c": [
+   67.644,
+   69.884
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_ph_views/vm_master/be_sl_clock_ref.sdc"
+ ],
+ "inhold": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:el1011-ds-vm/be",
+  "branch": "main",
+  "tag": "r3",
+  "purpose": "el1011-ds-vm/be r3: r2 698f866c5 TT -34.26 = ALL reg->reg core_clk<->str_clk ratio crossings (u_rc0/u_rc1 mem->sh 2048 paths, w_st->w_st_r, wp_pub->wp_r; data 68 ps / 2 levels in the 208 ps 4:3 edge window) failing on 104 ps INTER-TREE insertion skew (ck tree 276 ps vs cks tree 172 ps); FF -2.87 = vrq output ports (str_clk). Fix: be_sl_str_boundary.tcl balances the cks tree to the ck tree after CTS (dont_touch delay chain at the cks root, iterated to |dL|<=12 ps) so both pins carry one insertion in the ETM; outhold (BUF-HB4-BUF at flop-driven output pins); M5 layer cap (contract v11 slot: PG M5, pins M3/M5 N/S, M4 W/E); N-face o_* at contract v11 x 217.29-300.0 (follows bgq28 v4).",
+  "benches": [
+   {
+    "name": "exact_gold",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one gold_s1 --out {RUN}/bench/gold_s1",
+    "expect": "pass",
+    "pass_regex": "SPVM_gold_s1: PASS",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "neg_stale",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one mut_stale --out {RUN}/bench/mut_stale",
+    "expect": "fail",
+    "fail_regex": "SPVM_mut_stale: FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24
+   }
+  ],
+  "views_to": "physical/ref_tile/dsfd_vm_be_sl/views",
+  "record_to": "results/rtl/ref_tile/dsfd_vm_be_sl"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "boundary_tcl": [
+  "physical/s81_ph_views/vm_master/be_sl_str_boundary.tcl"
+ ],
+ "contract": {
+  "file": "results/arch/hier_contract_1011/s81.json",
+  "slot": "sp_vm/u_be.g_s[0].u_sl"
+ },
+ "outhold": true
+}

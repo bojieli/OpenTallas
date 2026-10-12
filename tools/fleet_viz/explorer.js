@@ -56,6 +56,8 @@ let SUMS = {};
 function loadSums(){ return fetch('/api/explorer/elem_summaries' + (SAFE ? '?safe=1' : ''), {cache: 'no-store'}).then(r => r.ok ? r.json() : null)
   .then(j => { if (j && j.summaries){ SUMS = j.summaries; if (S.meta){ renderTree(); if (S.card) renderCard(S.card); } } }).catch(() => {}); }
 loadSums(); setInterval(() => { if (!document.hidden) loadSums(); }, 10 * 60 * 1000);
+/* flow / version state (fv_flow.js): progress tracker above the card, badge + M5 re-route comparison in the card */
+if (window.FVFlow){ FVFlow.mount('flowtrk'); FVFlow.on(() => { if (S.card) renderCard(S.card); }); }
 function sumOf(el){ return (el && SUMS[el]) || ''; }
 // the element page of an element: /explorer/element/<name> (layout, placement, timing, clock, density, facts, how it works)
 function pageHref(el){ return '/explorer/element/' + encodeURIComponent(el) + (SAFE ? '?safe=1' : ''); }
@@ -520,6 +522,7 @@ function renderCard(c){
   const H = [];
   const cs = sumOf(c.element || c.name);
   H.push(`<div><h2>${esc(c.name)}</h2><div class="dec">${esc(c.decoded || '')}</div>${cs && cs !== c.decoded ? `<p class="csum">${esc(cs)}</p>` : ''}</div>`);
+  if (window.FVFlow && c.element && !SAFE){ const fb = FVFlow.badge(c.element) + FVFlow.compare(c.element); if (fb) H.push(`<div class="fvf">${fb}</div>`); }
   if (c.element && !SAFE){
     const ix = ELEMIDX[c.element], ep = ELEMPAGES[c.element];
     H.push(`<div class="primary"><a class="btn-primary" href="${pageHref(c.element)}">Open element page<span aria-hidden="true"> \u2192</span></a>

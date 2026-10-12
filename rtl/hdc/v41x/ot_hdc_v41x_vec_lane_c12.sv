@@ -969,6 +969,7 @@ endmodule
 // el1011-hbm-sfu 2026-10-11 (textbook class 1, SFU lane: 47,785 sinks on one root): the lane's sigmoid chain as a
 // hardened sub-tile.  Every input is a pin register, every output a register (no logic between pin and flop); the
 // reset enters through its own pin flop.  Same words as the in-lane chain, 2 cycles later.
+`ifndef OT_SFU_CHAIN_HARD  // lane cluster build: the chain is the hard child (LEF/LIB), not RTL
 module ot_hdc_v41x_sfu_chain #(
     // defaults = the HARDENED configuration (a hard child has no parameters: preamble PARENT SYNTHESIS rule)
     parameter integer MLAT = 6, parameter integer ALAT = 6, parameter integer DDIV = 21, parameter integer DENR = 1,
@@ -1016,3 +1017,4 @@ module ot_hdc_v41x_sfu_chain #(
         if (!rst_q) begin f_e <= 1'b0; f_den <= 1'b0; f_div <= 1'b0; end
         else begin f_e <= f_e_c; f_den <= f_den_c; f_div <= f_div_c; end
 endmodule
+`endif  // OT_SFU_CHAIN_HARD

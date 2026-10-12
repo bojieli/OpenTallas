@@ -40,6 +40,7 @@ family and family_about (empty about/family when no manual entry). Throughput qu
 metrics) fetched over ssh in the background and cached in <state>/element_area.json.
 """
 import collections, datetime, glob, json, os, pathlib, re, subprocess, threading, time
+import flow_state
 
 T0 = datetime.datetime.fromisoformat('2026-10-07T20:45:00-07:00').timestamp()   # option-B (TT) switch
 LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'MIGRATING'}
@@ -253,6 +254,7 @@ class Elements:
         self.state.mkdir(parents=True, exist_ok=True)
         self.ssh_of = ssh_of; self.ctl = ctl; self.md_path = pathlib.Path(md_path); self.log = log
         self.period = period; self.md_period = md_period
+        self.flow = flow_state.FlowState(repo, log)   # flow / version state (ref_tile M5 = current flow)
         self.cache = {}; self.optb = (None, {}); self.rest = (None, {}); self.revk = (None, {}); self.supk = (None, {})
         self.superseded_path = pathlib.Path(os.environ.get('FLEET_VIZ_SUPERSEDED', os.path.expanduser(
             '~/claude-takeover-20261007/superseded_elements.json')))
@@ -306,7 +308,8 @@ class Elements:
                     closed_t=closed_t, host=j.get('host'), tt_corner=tt,
                     tt=_f(m.get('ss_ps')) if tt else None, ss=_f(m.get('ss_sensitivity_ps')) if tt else _f(m.get('ss_ps')),
                     ff=_f(m.get('ff_ps')), drc=m.get('drc'), has_m=bool(m),
-                    drc_metrics=(m.get('drc_metrics') or [None])[0], orfs_dir=m.get('orfs_dir'))
+                    drc_metrics=(m.get('drc_metrics') or [None])[0], orfs_dir=m.get('orfs_dir'),
+                    ref_tile=bool(s.get('ref_tile')), kit=flow_state.kit_of(((s.get('stages') or {}).get('route') or {}).get('cmd')))
 
     def latest(self, pattern):
         fs = sorted(glob.glob(str(self.repo / pattern)))
@@ -521,6 +524,7 @@ class Elements:
             r['throughput'] = tq
             r['gate'] = gate_text(r['category'], tq)
             rows.append(r)
+        flow = self.flow.annotate(rows, groups, TARGETS)   # r['flow'] / flow_label / die_used / m5_reroute
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
         summ = collections.defaultdict(lambda: collections.Counter())
         tsum = collections.defaultdict(lambda: collections.Counter())
@@ -529,7 +533,7 @@ class Elements:
             if r['category'].startswith('closed'):
                 tsum[r['target']][(r.get('throughput') or {}).get('status') or 'NO_BUDGET_ROW'] += 1
         self.desc.save()
-        return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS,
+        return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS, flow=flow,
                     summary={t: dict(summ[t]) for t in TARGETS if t in summ},
                     throughput_summary={t: dict(tsum[t]) for t in TARGETS if t in tsum},
                     sources=dict(option_b=ob.get('path'), option_b_decided=ob.get('decided'), jobs=len(js),
@@ -673,7 +677,7 @@ class Elements:
     def snapshot(self, safe=False):
         with self.lock: d = self.data; v = self.ver
         if safe:
-            return dict(t=d['t'], safe=True, cats=CATS, targets=TARGETS, summary=d['summary'], v=v)
+            return dict(t=d['t'], safe=True, cats=CATS, targets=TARGETS, summary=d['summary'], flow=d.get('flow'), v=v)
         return dict(d, rows=[public(r) for r in d['rows']], v=v)
 
     # ---- markdown

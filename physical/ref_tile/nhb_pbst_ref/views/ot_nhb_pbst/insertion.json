@@ -1,0 +1,157 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/routes/nhb_pbst_ref_q5b_ebf1805fa/work/orfs/results/asap7/opentallas_ot_nhb_pbst_asap7_ref_nhb_pbst_ref_q5b_ebf1805fa/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "ck",
+ "parasitics": "spef",
+ "ss": {
+  "boundary": {
+   "n": 1040,
+   "mean": 246.9,
+   "min": 207.8,
+   "max": 286.3
+  },
+  "all": {
+   "n": 1561,
+   "mean": 246.6,
+   "min": 207.8,
+   "max": 286.3
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 246.6,
+   "max_slew": 26.3,
+   "max_late": 17.1,
+   "pins": [
+    {
+     "pin": "u_pb0/clk",
+     "arr": 263.7,
+     "slew": 26.3,
+     "late": 17.1,
+     "net": "clknet_1_0__leaf_clk"
+    },
+    {
+     "pin": "u_pb1/clk",
+     "arr": 262.8,
+     "slew": 22.9,
+     "late": 16.2,
+     "net": "clknet_1_1__leaf_clk"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "tt": {
+  "boundary": {
+   "n": 1040,
+   "mean": 192.7,
+   "min": 154.2,
+   "max": 230.7
+  },
+  "all": {
+   "n": 1561,
+   "mean": 192.3,
+   "min": 154.2,
+   "max": 230.7
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 192.3,
+   "max_slew": 22.2,
+   "max_late": -0.7,
+   "pins": [
+    {
+     "pin": "u_pb0/clk",
+     "arr": 191.6,
+     "slew": 22.2,
+     "late": -0.7,
+     "net": "clknet_1_0__leaf_clk"
+    },
+    {
+     "pin": "u_pb1/clk",
+     "arr": 190.9,
+     "slew": 18.6,
+     "late": -1.4,
+     "net": "clknet_1_1__leaf_clk"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "ff": {
+  "boundary": {
+   "n": 1040,
+   "mean": 160.6,
+   "min": 123.1,
+   "max": 197.1
+  },
+  "all": {
+   "n": 1561,
+   "mean": 160.2,
+   "min": 123.1,
+   "max": 197.1
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 160.2,
+   "max_slew": 21.1,
+   "max_late": -10.5,
+   "pins": [
+    {
+     "pin": "u_pb0/clk",
+     "arr": 149.7,
+     "slew": 21.1,
+     "late": -10.5,
+     "net": "clknet_1_0__leaf_clk"
+    },
+    {
+     "pin": "u_pb1/clk",
+     "arr": 149.1,
+     "slew": 17.3,
+     "late": -11.1,
+     "net": "clknet_1_1__leaf_clk"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 2,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 247,
+  "CK_SS_ALL_MEAN": 247,
+  "CK_SS_MIN": 208,
+  "CK_SS_ALL_MIN": 208,
+  "CK_SS_MAX": 286,
+  "CK_SS_ALL_MAX": 286,
+  "CK_TT_MEAN": 193,
+  "CK_TT_ALL_MEAN": 192,
+  "CK_TT_MIN": 154,
+  "CK_TT_ALL_MIN": 154,
+  "CK_TT_MAX": 231,
+  "CK_TT_ALL_MAX": 231,
+  "CK_FF_MEAN": 161,
+  "CK_FF_ALL_MEAN": 160,
+  "CK_FF_MIN": 123,
+  "CK_FF_ALL_MIN": 123,
+  "CK_FF_MAX": 197,
+  "CK_FF_ALL_MAX": 197,
+  "CK_ROUTE_REF": "SS"
+ }
+}

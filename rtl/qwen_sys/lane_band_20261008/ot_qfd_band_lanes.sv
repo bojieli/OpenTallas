@@ -37,6 +37,9 @@
 // valid (lockstep check) and raises fault on a mismatch.
 // Every block input lands in a flop at the pin, every output leaves a station flop (no logic between pin and flop).
 // MUT = 1 (band): level 9 pairs (0,2)(1,3) instead of (0,1)(2,3); MUT = 2 (upper): level 11 pairs (b0,b3)(b1,b4)(b2,b5).
+// MUT = 3 (upper): band words taken in reverse band order (band-index mutant; MUT 2 is a no-op at NB = 3).
+// TP8 (results/arch/qwen_tp8_1012): ot_qfd_band_upper NB = 3, LG = 12 (GT 3,072): level 11 = 1 adder (b0+b1), b2 held,
+// level 12 no adders (GT >> 12 = 0 groups); a parameter setting, TP4 (NB 6, LG 13) unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 
 // NLV tree levels over GI positions of one lane (ot_qwen_me_sptree_w12 g_lvl with HOLD_TO = GI): level j (1..NLV)
@@ -221,7 +224,8 @@ module ot_qfd_band_upper #(
         always @(posedge clk) sl <= sel_d;
         always @(posedge clk or negedge rst_n) if (!rst_n) tl <= 2'b00; else tl <= tv_d;
         for (b = 0; b < NB; b = b + 1) begin : g_b
-            assign li[32*b +: 32] = pw_q[32*(b*NL + l) +: 32];
+            // MUT = 3 (band-index mutant, TP8 qwen_tp8_1012): band b's slot reads band NB-1-b's word
+            assign li[32*b +: 32] = pw_q[32*(((MUT == 3) ? (NB - 1 - b) : b)*NL + l) +: 32];
         end
         for (b = 0; b < 3; b = b + 1) begin : g_o
             assign y[32*(b*NL + l) +: 32] = lo[32*b +: 32];

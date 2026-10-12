@@ -10,6 +10,12 @@ SRC=$(pwd)
 mkdir -p "$OUT"
 if [ "$MODE" = pos ]; then
   STACK=h bash rtl/test/qwen_kv_die/bench_run.sh "$SRC" "$OUT" 28 1 7 5 29 28 34 0 || exit 3   # env DQ / HBMT* pass through
+  # el1011-q-kvd 2026-10-12: a build that died (earlyoom SIGTERM, OOM) leaves no Vtb and 14 rc-127 rows; that is an
+  # environment failure, not a mismatch -- exit 3 with the build log tail instead of exit 1 ("exact_all false")
+  # (a build killed by a signal is reported as "Killed", which the closure loop's RESOURCE_RE reads as a tool crash)
+  [ -x "$OUT/b0/Vtb" ] || { echo "BUILD_FAIL: no $OUT/b0/Vtb"; tail -n 3 "$OUT/b0/build.log" 2>/dev/null
+    grep -qE "threw signal (9|15)|Killed" "$OUT/b0/build.log" 2>/dev/null && echo "build tool Killed by a signal (memory pressure / earlyoom)"
+    exit 3; }
   python3 - "$OUT/results.jsonl" <<'PY'
 import json, sys
 rows = [json.loads(x) for x in open(sys.argv[1]) if x.strip()]

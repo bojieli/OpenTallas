@@ -44,7 +44,7 @@ rc=0
   --orfs-var PDN_TCL=/src/${PDN:-physical/s81_ph_views/common/pdn_view.tcl} --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
   --orfs-var ADDER_MAP_FILE= ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} ${STEPS:-} \
   --step-tcl PRE_CTS=${PRECTS:-physical/s81_ph_views/common/pre_cts_fclk_root_buf.tcl} --step-tcl POST_CTS=${POSTCTS:-physical/s81_ph_views/common/post_cts_vclk.tcl} \
-  --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
+  --step-tcl PRE_GLOBAL_ROUTE=${PREGRT:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.035} --purpose signoff_target --nickname-tag s81ph_$(echo $lab | tr -c "A-Za-z0-9_\n" "_") \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1 || rc=$?
