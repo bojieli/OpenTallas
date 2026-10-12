@@ -7,7 +7,7 @@
 //   ot_qwen_sys_rst_seq (POR -> links trained -> HBM round trip -> dies -> ready; soft reset)
 //   ot_qfd_pkgctl (start fan-out with a step generation, done = all dies done for that generation and drained,
 //                  token / logit agreement, step watchdog, fail closed)
-//   the prompt buffer (NSLOT x 2^PLB x NW; 8,192 x 18 b at full shape: one ot_sram_1r1w macro set, behavioural here)
+//   the prompt buffer (NSLOT x 2^PLB x NW; 8,192 x 18 b at full shape: one ot_sram_1rw_2048x128_m4, 4 tokens a row)
 // The token loop (fed-back token, position + 1, the prompt phase) and the stop condition (EOS ids, max new tokens,
 // context limit) are ot_host_if's.  The per-die 38-stage loop is ot_qfd_dctl on every die.
 // Ports: the host side is the AXI4-Lite register slave + AXI4 DMA master the host link endpoint (qfd_io_host, HOST class
@@ -117,12 +117,27 @@ module ot_qfd_sysctl #(
     wire [31:0] h_wdata, h_rdata;
     wire [3:0]  h_wstrb;
     wire        hi_irq;
-    wire pb_we, pb_re; wire [SB+PLB-1:0] pb_waddr, pb_raddr; wire [NW-1:0] pb_wdata; reg [NW-1:0] pb_q;
-    reg  [NW-1:0] pbuf [0:NSLOT*(1<<PLB)-1];
-    always @(posedge clk) begin
-        if (pb_we) pbuf[pb_waddr] <= pb_wdata;
-        if (pb_re) pb_q <= pbuf[pb_raddr];
-    end
+    wire pb_we, pb_re; wire [SB+PLB-1:0] pb_waddr, pb_raddr; wire [NW-1:0] pb_wdata; wire [NW-1:0] pb_q;
+    generate if (NSLOT == 1 && PLB == 13 && NW <= 32) begin : g_pb_macro
+        // prompt buffer = one ot_sram_1rw_2048x128_m4: token a at row a[12:2], 32-bit slot a[1:0] (masked write).
+        // host_if never reads and writes it in one cycle with NSLOT = 1 (a request is fully loaded before it runs);
+        // a same-cycle pair would take the write (the read then returns the row's stale slot: flagged pb_conflict)
+        wire [127:0] rd;
+        reg  [1:0] rslot;
+        wire [10:0] a = pb_we ? pb_waddr[12:2] : pb_raddr[12:2];
+        ot_sram_1rw_2048x128_m4 u_pb (.clk(clk), .ce_in(pb_we || pb_re), .we_in(pb_we), .addr_in(a),
+            .wd_in({4{32'(pb_wdata)}}), .w_mask_in(128'hFFFF_FFFF << (32 * pb_waddr[1:0])), .rd_out(rd));
+        always @(posedge clk) if (pb_re) rslot <= pb_raddr[1:0];
+        assign pb_q = rd[32 * rslot +: NW];
+    end else begin : g_pb_flops
+        reg [NW-1:0] pbuf [0:NSLOT*(1<<PLB)-1];
+        reg [NW-1:0] q;
+        always @(posedge clk) begin
+            if (pb_we) pbuf[pb_waddr] <= pb_wdata;
+            if (pb_re) q <= pbuf[pb_raddr];
+        end
+        assign pb_q = q;
+    end endgenerate
     wire eng_start, eng_done, eng_fault;
     wire [NW-1:0] eng_token, eng_pos, eng_next_token;
     wire [SB-1:0] eng_slot;
