@@ -280,6 +280,7 @@ place_pin -pin_name {ei[276]} -layer M4 -location {469.8960 39.7400} -pin_size {
 place_pin -pin_name {ei[277]} -layer M6 -location {469.8960 39.8240} -pin_size {0.1920 0.0320}
 place_pin -pin_name {ei[278]} -layer M4 -location {469.8960 39.9320} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[279]} -layer M6 -location {469.8960 40.0160} -pin_size {0.1920 0.0320}
+place_pin -pin_name {ei[280]} -layer M4 -location {469.8960 40.1240} -pin_size {0.1920 0.0240}
 place_pin -pin_name {eo[0]} -layer M4 -location {469.8960 1.0120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {eo[1]} -layer M6 -location {469.8960 1.1040} -pin_size {0.1920 0.0320}
 place_pin -pin_name {eo[2]} -layer M4 -location {469.8960 1.2040} -pin_size {0.1920 0.0240}
@@ -4574,3 +4575,4 @@ place_pin -pin_name {wo[54]} -layer M4 -location {0.0960 67.3880} -pin_size {0.1
 place_pin -pin_name {wo[55]} -layer M6 -location {0.0960 67.4720} -pin_size {0.1920 0.0320}
 place_pin -pin_name {wo[56]} -layer M4 -location {0.0960 67.5800} -pin_size {0.1920 0.0240}
 place_pin -pin_name {wo[57]} -layer M6 -location {0.0960 67.6640} -pin_size {0.1920 0.0320}
+place_pin -pin_name {wo[58]} -layer M4 -location {0.0960 67.7720} -pin_size {0.1920 0.0240}
