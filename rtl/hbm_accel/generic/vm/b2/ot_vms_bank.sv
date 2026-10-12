@@ -20,15 +20,19 @@
 //             is granted only while an egress credit is held, so the client's credit protocol is unchanged.
 //   dq        DMA wide write lane (never back-pressured: it always wins the write port); dq_done.
 //   kq        COLL broadcast lane (the collective result tree, 2.2 kb across a die centre line): as one wq lane.
-//   xq        ring write lane {v, rowm 11, data 256, wmask 8} (a mirror write broadcast by another slice); xq_cr, xq_done.
-//   eg        mirror egress {v, rowm 11, data 256, wmask 8} to the CW ring stop; eg_cr returns one of EGC credits.
+//   xq, xq2   ring write lanes {v, rowm 11, data 256, wmask 8} (a mirror write broadcast by another slice) from the CW
+//             and the CCW ring stop; xq*_cr, xq*_done.
+//   eg        mirror egress {v, rowm 11, data 256, wmask 8} to BOTH ring stops (CW copy -> sid+1/+2, CCW copy -> sid+3);
+//             eg_cr[d] returns one of EGC credits of stop d; a mirror write is granted only with a credit of each.
 //   pq        packet port from the hub {v, we, rowm 11, data 256, wmask 8, tag 8}; pq_cr = credit (PQ deep);
 //             pr {v, we, tag 8, data 256}: reads and writes alike, in pq order, no back-pressure.
 //   status    {fault, ue, ce 16} (sticky / saturating).
 // Pipeline: pin flop -> queue -> grant (S1) -> encode, macro pins (S2) -> macro edge (M) -> capture (C, the only load of
 //   the macro outputs) -> select + syndrome (D) -> correct, response flop (R).  Reads and writes take the same path to
 //   the macro, so the grant order is the macro order (a packet write then read of one row is RAW-safe).
-// Write port priority: DMA, then round robin over {WG lanes, kq, xq, packet}; read port: round robin over {RG, packet}.
+// Write port priority: DMA, then round robin over {WG lanes, kq, xq, packet, xq2}; read port: round robin over {RG, packet}.
+// Reset only on control (valids, pointers, counters, credits, status); payload flops, queues and the pipeline payload
+// have no reset, so rst_n loads only the control flops.
 module ot_vms_bank #(
     parameter integer RG  = 2,
     parameter integer WG  = 2,
@@ -45,7 +49,7 @@ module ot_vms_bank #(
     input  wire [1:0]         sid,
     input  wire [RG*17-1:0]   rq,
     output reg  [RG-1:0]      rq_cr,
-    output reg  [RG*257-1:0]  rr,
+    output wire [RG*257-1:0]  rr,
     input  wire [WG*281-1:0]  wq,
     output reg  [WG-1:0]      wq_cr,
     output reg  [WG-1:0]      wq_done,
@@ -57,11 +61,14 @@ module ot_vms_bank #(
     input  wire [275:0]       xq,
     output reg                xq_cr,
     output reg                xq_done,
-    output reg  [275:0]       eg,
-    input  wire               eg_cr,
+    input  wire [275:0]       xq2,
+    output reg                xq2_cr,
+    output reg                xq2_done,
+    output wire [275:0]       eg,
+    input  wire [1:0]         eg_cr,
     input  wire [284:0]       pq,
     output reg                pq_cr,
-    output reg  [265:0]       pr,
+    output wire [265:0]       pr,
     output reg  [17:0]        status
 );
     // ------------------------------------------------------------------ SECDED (39,32), same code as ot_hgi_vm_core
@@ -105,22 +112,44 @@ module ot_vms_bank #(
         end
     endfunction
 
-    // ------------------------------------------------------------------ pin flops
-    reg [RG*17-1:0] rq_r; reg [WG*281-1:0] wq_r; reg [280:0] dq_r, kq_r; reg [275:0] xq_r; reg [284:0] pq_r; reg eg_cr_r;
+    // ------------------------------------------------------------------ pin flops (payload: no reset)
+    reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+    reg [RG-1:0] rq_v; reg [WG-1:0] wq_v; reg dq_v, kq_v, xq_v, x2_v, pq_v; reg [1:0] eg_cr_r;
     reg [2:0] bid_r; reg [1:0] sid_r;
+    reg [RG*17-1:0] rq_r; reg [WG*281-1:0] wq_r;
+    always @* begin
+        rq_r = rq_d; for (integer g = 0; g < RG; g = g + 1) rq_r[g*17 + 16] = rq_v[g];
+        wq_r = wq_d; for (integer g = 0; g < WG; g = g + 1) wq_r[g*281 + 280] = wq_v[g];
+    end
+    wire [280:0] dq_r = {dq_v, dq_d[279:0]}, kq_r = {kq_v, kq_d[279:0]};
+    wire [275:0] xq_r = {xq_v, xq_d[274:0]}, x2_r = {x2_v, x2_d[274:0]};
+    wire [284:0] pq_r = {pq_v, pq_d[283:0]};
+    always @(posedge clk) begin rq_d <= rq; wq_d <= wq; dq_d <= dq; kq_d <= kq; xq_d <= xq; x2_d <= xq2; pq_d <= pq; bid_r <= bid; sid_r <= sid; end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rq_r <= '0; wq_r <= '0; dq_r <= '0; kq_r <= '0; xq_r <= '0; pq_r <= '0; eg_cr_r <= 1'b0; bid_r <= 3'd0; sid_r <= 2'd0; end
-        else begin rq_r <= rq; wq_r <= wq; dq_r <= dq; kq_r <= kq; xq_r <= xq; pq_r <= pq; eg_cr_r <= eg_cr; bid_r <= bid; sid_r <= sid; end
+        if (!rst_n) begin rq_v <= '0; wq_v <= '0; dq_v <= 1'b0; kq_v <= 1'b0; xq_v <= 1'b0; x2_v <= 1'b0; pq_v <= 1'b0; eg_cr_r <= 2'b00; end
+        else begin
+            for (integer g = 0; g < RG; g = g + 1) rq_v[g] <= rq[g*17 + 16];
+            for (integer g = 0; g < WG; g = g + 1) wq_v[g] <= wq[g*281 + 280];
+            dq_v <= dq[280]; kq_v <= kq[280]; xq_v <= xq[275]; x2_v <= xq2[275]; pq_v <= pq[284]; eg_cr_r <= eg_cr;
+        end
+    // output registers: control valid + payload
+    reg eg_v; reg [274:0] eg_d; reg [RG-1:0] rr_v; reg [RG*256-1:0] rr_d; reg pr_v; reg [264:0] pr_d;
+    assign eg = {eg_v, eg_d}; assign pr = {pr_v, pr_d};
+    genvar gr;
+    for (gr = 0; gr < RG; gr = gr + 1) begin : g_rr
+        assign rr[gr*257 +: 257] = {rr_v[gr], rr_d[gr*256 +: 256]};
+    end
 
     // ------------------------------------------------------------------ queues
     // write-queue entry {bad, rowm 11, data 256, wmask 8} = 276 b
-    localparam integer NWQ = WG + 3;              // writers in the round robin: WG lanes, kq, xq, packet (index WG+2)
+    localparam integer NWQ = WG + 4;              // writers in the round robin: WG lanes, kq, xq, packet (index WG+2), xq2
     localparam integer LQB = (LQ > 1) ? $clog2(LQ) : 1, KQB = (KQD > 1) ? $clog2(KQD) : 1, XQB = (XQD > 1) ? $clog2(XQD) : 1;
     localparam integer PQB = (PQ > 1) ? $clog2(PQ) : 1;
     reg [275:0] wqm [0:WG-1][0:LQ-1]; reg [LQB-1:0] wqh [0:WG-1], wqt [0:WG-1]; reg [LQB:0] wqn [0:WG-1];
     reg [11:0]  rqm [0:RG-1][0:LQ-1]; reg [LQB-1:0] rqh [0:RG-1], rqt [0:RG-1]; reg [LQB:0] rqn [0:RG-1];
     reg [275:0] kqm [0:KQD-1]; reg [KQB-1:0] kqh, kqt; reg [KQB:0] kqn;
     reg [275:0] xqm [0:XQD-1]; reg [XQB-1:0] xqh, xqt; reg [XQB:0] xqn;
+    reg [275:0] x2m [0:XQD-1]; reg [XQB-1:0] x2h, x2t; reg [XQB:0] x2n;
     reg [284:0] pqm [0:PQ-1];  reg [PQB-1:0] pqh, pqt; reg [PQB:0] pqn;   // entry = pq with bit 284 (v) := bad (0: the hub decodes)
 
     // heads
@@ -128,18 +157,19 @@ module ot_vms_bank #(
     reg [RG:0] r_req;                                  // RG lanes, packet read (index RG)
     reg [11:0] r_head [0:RG];
     reg [284:0] p_head;
-    reg [3:0] egc;                                     // egress credits held
+    reg [3:0] egc [0:1];                               // egress credits held (CW stop, CCW stop)
     always @* begin
         for (integer g = 0; g < WG; g = g + 1) begin
             w_head[g] = wqm[g][wqh[g]];
             w_mir[g]  = w_head[g][274];
-            w_req[g]  = (wqn[g] != 0) && (!w_mir[g] || egc != 4'd0 || MUT == 1);
+            w_req[g]  = (wqn[g] != 0) && (!w_mir[g] || (egc[0] != 4'd0 && egc[1] != 4'd0) || MUT == 1);
         end
         w_head[WG]   = kqm[kqh]; w_req[WG]   = kqn != 0;
         w_head[WG+1] = xqm[xqh]; w_req[WG+1] = xqn != 0;
         p_head = pqm[pqh];
         w_head[WG+2] = {p_head[284], p_head[282:16] /* rowm, data */, p_head[15:8] /* wmask */};
         w_req[WG+2]  = (pqn != 0) && p_head[283];
+        w_head[WG+3] = x2m[x2h]; w_req[WG+3] = x2n != 0;
         for (integer g = 0; g < RG; g = g + 1) begin r_head[g] = rqm[g][rqh[g]]; r_req[g] = rqn[g] != 0; end
         r_head[RG] = {p_head[284], p_head[282:272]}; r_req[RG] = (pqn != 0) && !p_head[283];
     end
@@ -164,20 +194,22 @@ module ot_vms_bank #(
     reg s1w_v; reg [3:0] s1w_p; reg [10:0] s1w_row; reg [255:0] s1w_d; reg [7:0] s1w_m; reg [7:0] s1w_tag;
     reg s1r_v; reg [3:0] s1r_p; reg [10:0] s1r_row; reg [7:0] s1r_tag;
     reg flt;
+    // write-grant egress (a granted client mirror write is copied to both ring stops)
+    wire [275:0] wgh = w_head[w_sel];
+    wire egv = !dma_v && w_gnt && w_sel < 4'(WG) && wgh[274] && MUT != 1;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            s1w_v <= 1'b0; s1r_v <= 1'b0; wptr <= 4'd0; rptr <= 4'd0; flt <= 1'b0; egc <= 4'(EGC); eg <= '0;
-            rq_cr <= '0; wq_cr <= '0; kq_cr <= 1'b0; xq_cr <= 1'b0; pq_cr <= 1'b0;
+            s1w_v <= 1'b0; s1r_v <= 1'b0; wptr <= 4'd0; rptr <= 4'd0; flt <= 1'b0; egc[0] <= 4'(EGC); egc[1] <= 4'(EGC); eg_v <= 1'b0;
+            rq_cr <= '0; wq_cr <= '0; kq_cr <= 1'b0; xq_cr <= 1'b0; xq2_cr <= 1'b0; pq_cr <= 1'b0;
             for (integer g = 0; g < WG; g = g + 1) begin wqh[g] <= '0; wqt[g] <= '0; wqn[g] <= '0; end
             for (integer g = 0; g < RG; g = g + 1) begin rqh[g] <= '0; rqt[g] <= '0; rqn[g] <= '0; end
-            kqh <= '0; kqt <= '0; kqn <= '0; xqh <= '0; xqt <= '0; xqn <= '0; pqh <= '0; pqt <= '0; pqn <= '0;
+            kqh <= '0; kqt <= '0; kqn <= '0; xqh <= '0; xqt <= '0; xqn <= '0; x2h <= '0; x2t <= '0; x2n <= '0; pqh <= '0; pqt <= '0; pqn <= '0;
         end else begin : seq
-            reg [11:0] dd; reg egv;
-            // queue pushes (decode at push)
+            reg [11:0] dd;
+            // queue pointers (the entries are written by the payload block below; decode at push)
             for (integer g = 0; g < WG; g = g + 1) begin
                 if (wq_r[g*281 + 280]) begin
-                    dd = dsec(wq_r[g*281 + 264 +: 16], bid_r, sid_r);
-                    wqm[g][wqt[g]] <= {dd, wq_r[g*281 +: 264]}; wqt[g] <= wqt[g] + 1'b1;
+                    wqt[g] <= wqt[g] + 1'b1;
                     if (wqn[g] == (LQB+1)'(LQ) && !w_pop[g]) flt <= 1'b1;        // client exceeded its credits
                 end
                 wqn[g] <= wqn[g] + (wq_r[g*281 + 280] ? 1 : 0) - (w_pop[g] ? 1 : 0);
@@ -185,56 +217,60 @@ module ot_vms_bank #(
             end
             for (integer g = 0; g < RG; g = g + 1) begin
                 if (rq_r[g*17 + 16]) begin
-                    rqm[g][rqt[g]] <= dsec(rq_r[g*17 +: 16], bid_r, sid_r); rqt[g] <= rqt[g] + 1'b1;
+                    rqt[g] <= rqt[g] + 1'b1;
                     if (rqn[g] == (LQB+1)'(LQ) && !r_pop[g]) flt <= 1'b1;
                 end
                 rqn[g] <= rqn[g] + (rq_r[g*17 + 16] ? 1 : 0) - (r_pop[g] ? 1 : 0);
                 if (r_pop[g]) rqh[g] <= rqh[g] + 1'b1;
             end
-            if (kq_r[280]) begin
-                kqm[kqt] <= {dsec(kq_r[264 +: 16], bid_r, sid_r), kq_r[263:0]}; kqt <= kqt + 1'b1;
-                if (kqn == (KQB+1)'(KQD) && !w_pop[WG]) flt <= 1'b1;
-            end
+            if (kq_r[280]) begin kqt <= kqt + 1'b1; if (kqn == (KQB+1)'(KQD) && !w_pop[WG]) flt <= 1'b1; end
             kqn <= kqn + (kq_r[280] ? 1 : 0) - (w_pop[WG] ? 1 : 0); if (w_pop[WG]) kqh <= kqh + 1'b1;
-            if (xq_r[275]) begin
-                xqm[xqt] <= {1'b0, xq_r[274:0]}; xqt <= xqt + 1'b1;
-                if (xqn == (XQB+1)'(XQD) && !w_pop[WG+1]) flt <= 1'b1;
-            end
+            if (xq_r[275]) begin xqt <= xqt + 1'b1; if (xqn == (XQB+1)'(XQD) && !w_pop[WG+1]) flt <= 1'b1; end
             xqn <= xqn + (xq_r[275] ? 1 : 0) - (w_pop[WG+1] ? 1 : 0); if (w_pop[WG+1]) xqh <= xqh + 1'b1;
-            if (pq_r[284]) begin
-                pqm[pqt] <= {1'b0, pq_r[283:0]}; pqt <= pqt + 1'b1;
-                if (pqn == (PQB+1)'(PQ) && !p_pop) flt <= 1'b1;
-            end
+            if (x2_r[275]) begin x2t <= x2t + 1'b1; if (x2n == (XQB+1)'(XQD) && !w_pop[WG+3]) flt <= 1'b1; end
+            x2n <= x2n + (x2_r[275] ? 1 : 0) - (w_pop[WG+3] ? 1 : 0); if (w_pop[WG+3]) x2h <= x2h + 1'b1;
+            if (pq_r[284]) begin pqt <= pqt + 1'b1; if (pqn == (PQB+1)'(PQ) && !p_pop) flt <= 1'b1; end
             pqn <= pqn + (pq_r[284] ? 1 : 0) - (p_pop ? 1 : 0); if (p_pop) pqh <= pqh + 1'b1;
             // credits (a pulse per pop)
             for (integer g = 0; g < WG; g = g + 1) wq_cr[g] <= w_pop[g];
             for (integer g = 0; g < RG; g = g + 1) rq_cr[g] <= r_pop[g];
-            kq_cr <= w_pop[WG]; xq_cr <= w_pop[WG+1]; pq_cr <= p_pop;
+            kq_cr <= w_pop[WG]; xq_cr <= w_pop[WG+1]; pq_cr <= p_pop; xq2_cr <= w_pop[WG+3];
             // write grant
-            egv = 1'b0;
             s1w_v <= dma_v || w_gnt;
-            if (dma_v) begin
-                dd = dsec(dq_r[264 +: 16], bid_r, sid_r);
-                s1w_p <= 4'd15; s1w_row <= dd[10:0]; s1w_d <= dq_r[263:8]; s1w_m <= dd[11] ? 8'd0 : dq_r[7:0];
-                if (dd[11]) flt <= 1'b1;
-            end else if (w_gnt) begin : wg
-                reg [275:0] h; h = w_head[w_sel];
-                s1w_p <= w_sel; s1w_row <= h[274:264]; s1w_d <= h[263:8]; s1w_m <= h[275] ? 8'd0 : h[7:0];
-                s1w_tag <= p_head[7:0];
-                if (h[275]) flt <= 1'b1;
+            if (dma_v) begin dd = dsec(dq_r[264 +: 16], bid_r, sid_r); if (dd[11]) flt <= 1'b1; end
+            else if (w_gnt) begin
+                if (wgh[275]) flt <= 1'b1;
                 wptr <= (w_sel + 4'd1 == 4'(NWQ)) ? 4'd0 : w_sel + 4'd1;
-                if (w_sel < 4'(WG) && h[274] && MUT != 1) begin egv = 1'b1; eg <= {1'b1, h[274:0]}; end
             end
-            if (!egv) eg[275] <= 1'b0;
-            egc <= egc - (egv ? 4'd1 : 4'd0) + (eg_cr_r ? 4'd1 : 4'd0);
+            eg_v <= egv;
+            for (integer d = 0; d < 2; d = d + 1) egc[d] <= egc[d] - (egv ? 4'd1 : 4'd0) + (eg_cr_r[d] ? 4'd1 : 4'd0);
             // read grant
             s1r_v <= r_any;
             if (r_any) begin
-                s1r_p <= r_sel; s1r_row <= r_head[r_sel][10:0]; s1r_tag <= p_head[7:0];
                 if (r_head[r_sel][11]) flt <= 1'b1;
                 rptr <= (r_sel + 4'd1 == 4'(RG + 1)) ? 4'd0 : r_sel + 4'd1;
             end
         end
+    always @(posedge clk) begin : s1d
+        reg [11:0] dd;
+        for (integer g = 0; g < WG; g = g + 1)
+            if (wq_r[g*281 + 280]) begin dd = dsec(wq_r[g*281 + 264 +: 16], bid_r, sid_r); wqm[g][wqt[g]] <= {dd, wq_r[g*281 +: 264]}; end
+        for (integer g = 0; g < RG; g = g + 1)
+            if (rq_r[g*17 + 16]) rqm[g][rqt[g]] <= dsec(rq_r[g*17 +: 16], bid_r, sid_r);
+        if (kq_r[280]) kqm[kqt] <= {dsec(kq_r[264 +: 16], bid_r, sid_r), kq_r[263:0]};
+        if (xq_r[275]) xqm[xqt] <= {1'b0, xq_r[274:0]};
+        if (x2_r[275]) x2m[x2t] <= {1'b0, x2_r[274:0]};
+        if (pq_r[284]) pqm[pqt] <= {1'b0, pq_r[283:0]};
+        if (dma_v) begin
+            dd = dsec(dq_r[264 +: 16], bid_r, sid_r);
+            s1w_p <= 4'd15; s1w_row <= dd[10:0]; s1w_d <= dq_r[263:8]; s1w_m <= dd[11] ? 8'd0 : dq_r[7:0];
+        end else begin
+            s1w_p <= w_sel; s1w_row <= wgh[274:264]; s1w_d <= wgh[263:8]; s1w_m <= wgh[275] ? 8'd0 : wgh[7:0];
+        end
+        s1w_tag <= p_head[7:0];
+        eg_d <= wgh[274:0];
+        s1r_p <= r_sel; s1r_row <= r_head[r_sel][10:0]; s1r_tag <= p_head[7:0];
+    end
 
     // ------------------------------------------------------------------ S2: macro pins
     reg [9:0] m_ra, m_wa; reg m_rA, m_rC, m_rB, m_wA, m_wB, m_wC; reg [311:0] m_wd; reg [7:0] m_mA, m_mC; reg [15:0] m_mB;
@@ -243,14 +279,18 @@ module ot_vms_bank #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin m_rA <= 1'b0; m_rB <= 1'b0; m_rC <= 1'b0; m_wA <= 1'b0; m_wB <= 1'b0; m_wC <= 1'b0; s2r_v <= 1'b0; s2w_v <= 1'b0; end
         else begin
-            m_rA <= s1r_v && !s1r_row[10]; m_rC <= s1r_v && s1r_row[10]; m_rB <= s1r_v; m_ra <= s1r_row[9:0];
-            m_wA <= s1w_v && !s1w_row[10]; m_wC <= s1w_v && s1w_row[10]; m_wB <= s1w_v; m_wa <= s1w_row[9:0];
-            m_wd <= enc8(s1w_d);
-            m_mA <= s1w_row[10] ? 8'd0 : s1w_m; m_mC <= s1w_row[10] ? s1w_m : 8'd0;
-            m_mB <= s1w_row[10] ? {s1w_m, 8'd0} : {8'd0, s1w_m};
-            s2r_v <= s1r_v; s2r_p <= s1r_p; s2r_mir <= s1r_row[10]; s2r_tag <= s1r_tag;
-            s2w_v <= s1w_v; s2w_p <= s1w_p; s2w_tag <= s1w_tag;
+            m_rA <= s1r_v && !s1r_row[10]; m_rC <= s1r_v && s1r_row[10]; m_rB <= s1r_v;
+            m_wA <= s1w_v && !s1w_row[10]; m_wC <= s1w_v && s1w_row[10]; m_wB <= s1w_v;
+            s2r_v <= s1r_v; s2w_v <= s1w_v;
         end
+    always @(posedge clk) begin
+        m_ra <= s1r_row[9:0]; m_wa <= s1w_row[9:0];
+        m_wd <= enc8(s1w_d);
+        m_mA <= s1w_row[10] ? 8'd0 : s1w_m; m_mC <= s1w_row[10] ? s1w_m : 8'd0;
+        m_mB <= s1w_row[10] ? {s1w_m, 8'd0} : {8'd0, s1w_m};
+        s2r_p <= s1r_p; s2r_mir <= s1r_row[10]; s2r_tag <= s1r_tag;
+        s2w_p <= s1w_p; s2w_tag <= s1w_tag;
+    end
     // mask expansion is wiring only (each word-mask flop drives its 39 bit-mask pins)
     wire [255:0] mskA, mskC, mskB;
     genvar gk;
@@ -285,24 +325,26 @@ module ot_vms_bank #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             mr_v <= 1'b0; mw_v <= 1'b0; c_v <= 1'b0; cw_v <= 1'b0; d_v <= 1'b0; dw_v <= 1'b0;
-            wq_done <= '0; dq_done <= 1'b0; kq_done <= 1'b0; xq_done <= 1'b0;
+            wq_done <= '0; dq_done <= 1'b0; kq_done <= 1'b0; xq_done <= 1'b0; xq2_done <= 1'b0;
         end else begin
-            mr_v <= s2r_v; mr_p <= s2r_p; mr_mir <= s2r_mir; mr_tag <= s2r_tag;
-            mw_v <= s2w_v; mw_p <= s2w_p; mw_tag <= s2w_tag;
+            mr_v <= s2r_v; mw_v <= s2w_v;
             // done = the write is in the macro (this edge wrote it)
             for (integer g = 0; g < WG; g = g + 1) wq_done[g] <= s2w_v && s2w_p == 4'(g);
             dq_done <= s2w_v && s2w_p == 4'd15; kq_done <= s2w_v && s2w_p == 4'(WG); xq_done <= s2w_v && s2w_p == 4'(WG + 1);
-            c_v <= mr_v; c_p <= mr_p; c_mir <= mr_mir; c_tag <= mr_tag;
-            if (mr_v) begin c_a <= rdA; c_b <= rdB[111:0]; c_c <= rdC; end
-            cw_v <= mw_v && mw_p == 4'(WG + 2); cw_tag <= mw_tag;
-            d_v <= c_v; d_p <= c_p; d_tag <= c_tag; dw_v <= cw_v; dw_tag <= cw_tag;
-            if (c_v) begin : dsel
-                reg [255:0] dat; reg [55:0] ck;
-                dat = c_mir ? c_c : c_a; ck = c_mir ? c_b[111:56] : c_b[55:0];
-                d_dat <= dat;
-                for (integer k = 0; k < 8; k = k + 1) d_syn[k*7 +: 7] <= chk(dat[k*32 +: 32]) ^ ck[k*7 +: 7];
-            end
+            xq2_done <= s2w_v && s2w_p == 4'(WG + 3);
+            c_v <= mr_v; cw_v <= mw_v && mw_p == 4'(WG + 2);
+            d_v <= c_v; dw_v <= cw_v;
         end
+    // capture flops: the only load of the macro outputs (no enable, no reset)
+    always @(posedge clk) begin : mcd
+        reg [255:0] dat; reg [55:0] ck;
+        mr_p <= s2r_p; mr_mir <= s2r_mir; mr_tag <= s2r_tag; mw_p <= s2w_p; mw_tag <= s2w_tag;
+        c_p <= mr_p; c_mir <= mr_mir; c_tag <= mr_tag; c_a <= rdA; c_b <= rdB[111:0]; c_c <= rdC; cw_tag <= mw_tag;
+        d_p <= c_p; d_tag <= c_tag; dw_tag <= cw_tag;
+        dat = c_mir ? c_c : c_a; ck = c_mir ? c_b[111:56] : c_b[55:0];
+        d_dat <= dat;
+        for (integer k = 0; k < 8; k = k + 1) d_syn[k*7 +: 7] <= chk(dat[k*32 +: 32]) ^ ck[k*7 +: 7];
+    end
     // R: correct, count, respond
     reg [255:0] cor; reg [3:0] nce; reg nue;
     always @* begin
@@ -318,21 +360,20 @@ module ot_vms_bank #(
     end
     reg [15:0] ce; reg ue;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rr <= '0; pr <= '0; ce <= 16'd0; ue <= 1'b0; status <= 18'd0; end
+        if (!rst_n) begin rr_v <= '0; pr_v <= 1'b0; ce <= 16'd0; ue <= 1'b0; status <= 18'd0; end
         else begin
-            for (integer g = 0; g < RG; g = g + 1) begin
-                rr[g*257 + 256] <= d_v && d_p == 4'(g);
-                if (d_v && d_p == 4'(g)) rr[g*257 +: 256] <= cor;
-            end
+            for (integer g = 0; g < RG; g = g + 1) rr_v[g] <= d_v && d_p == 4'(g);
             // a packet read (d_p == RG) and a packet write echo are never on the same edge (one packet op a cycle)
-            pr[265] <= (d_v && d_p == 4'(RG)) || dw_v;
-            if (d_v && d_p == 4'(RG)) pr[264:0] <= {1'b0, d_tag, cor};
-            else if (dw_v) pr[264:0] <= {1'b1, dw_tag, 256'd0};
+            pr_v <= (d_v && d_p == 4'(RG)) || dw_v;
             if (d_v) begin
                 ce <= (ce + {12'd0, nce} < ce) ? 16'hffff : ce + {12'd0, nce};
                 if (nue) ue <= 1'b1;
             end
             status <= {flt, ue, ce};
         end
+    always @(posedge clk) begin
+        for (integer g = 0; g < RG; g = g + 1) rr_d[g*256 +: 256] <= cor;
+        pr_d <= (d_v && d_p == 4'(RG)) ? {1'b0, d_tag, cor} : {1'b1, dw_tag, 256'd0};
+    end
 endmodule
 `default_nettype wire

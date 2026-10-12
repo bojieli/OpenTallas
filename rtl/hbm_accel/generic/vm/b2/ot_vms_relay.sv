@@ -7,12 +7,16 @@ module ot_vms_relay #(parameter integer W = 2223, parameter integer C = 1) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire [W-1:0] f_in,
-    output reg  [W-1:0] f_out,
+    output wire [W-1:0] f_out,
     input  wire [C-1:0] cr_in,       // from downstream
     output reg  [C-1:0] cr_out       // to upstream
 );
+    // reset only on control (the flit valid, the credits); the flit payload is a plain flop (no reset load)
+    reg v; reg [W-2:0] d;
+    always @(posedge clk) d <= f_in[W-2:0];
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin f_out <= '0; cr_out <= '0; end
-        else begin f_out <= f_in; cr_out <= cr_in; end
+        if (!rst_n) begin v <= 1'b0; cr_out <= '0; end
+        else begin v <= f_in[W-1]; cr_out <= cr_in; end
+    assign f_out = {v, d};
 endmodule
 `default_nettype wire

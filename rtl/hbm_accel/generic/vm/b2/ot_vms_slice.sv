@@ -1,8 +1,10 @@
 `timescale 1ns/1ps
 `default_nettype none
-// HBM B2 VM SLICE (el1011-hbm-b2-vm, 2026-10-12): one quadrant's VM = hub + 8 bank tiles + CW stop + CCW stop.  This
-// module is glue only (wires between hardened tiles; the die places the tiles): no logic of its own.
-// Lane index of a wide group = g*8 + b (lane b <-> bank b).  See ot_vms_bank / ot_vms_hub / ot_vms_cwstop.
+// HBM B2 VM SLICE (el1011-hbm-b2-vm, SPEC v0.4, 2026-10-12): one quadrant's VM = hub + 8 bank tiles + CW and CCW ring
+// stops (one netlist, dir strap) + ring client + COLL star receiver.  This module is glue only (wires between hardened
+// tiles; the die places the tiles): no logic of its own.  Both ring directions are wide (2,224 b + a 2-b per-VC credit);
+// the COLL star edge is 2,130 b + a 1-b credit.  mirror_busy = {CCW stop, CW stop} (the consumer ORs them).
+// Lane index of a wide group = g*8 + b (lane b <-> bank b).  See ot_vms_bank / ot_vms_hub / ot_vms_rstop / ot_vms_rcl.
 module ot_vms_slice #(
     parameter integer NC = 4, parameter integer RG = 2, parameter integer WG = 2,
     parameter integer BMUT = 0, parameter integer HMUT = 0, parameter integer CMUT = 0
@@ -20,31 +22,33 @@ module ot_vms_slice #(
     output wire [WG*8-1:0]      wq_done,
     input  wire [8*281-1:0]     dq,
     output wire [7:0]           dq_done,
-    input  wire [8*281-1:0]     kq,
-    output wire [7:0]           kq_cr,
+    input  wire [2129:0]        vcb,
+    output wire                 vcb_cr,
     output wire [7:0]           kq_done,
-    input  wire [2222:0]        cw_in,
-    output wire                 cw_in_cr,
-    output wire [2222:0]        cw_out,
-    input  wire                 cw_out_cr,
-    input  wire [291:0]         ccw_in,
+    input  wire [2223:0]        cw_in,
+    output wire [1:0]           cw_in_cr,
+    output wire [2223:0]        cw_out,
+    input  wire [1:0]           cw_out_cr,
+    input  wire [2223:0]        ccw_in,
     output wire [1:0]           ccw_in_cr,
-    output wire [291:0]         ccw_out,
+    output wire [2223:0]        ccw_out,
     input  wire [1:0]           ccw_out_cr,
     output wire [8*18-1:0]      bank_status,
     output wire [2:0]           hub_status,
-    output wire                 mirror_busy
+    output wire [1:0]           mirror_busy
 );
     wire [(NC+1)*338-1:0] hcq; wire [(NC+1)*274-1:0] hcr;
     wire [337:0] hq; wire [273:0] hr;
     assign hcq = {hq, cq}; assign cr = hcr[NC*274-1:0]; assign hr = hcr[NC*274 +: 274];
     wire [8*285-1:0] pq; wire [7:0] pq_cr; wire [8*266-1:0] pr;
-    wire [289:0] cwi; wire cwi_cr; wire [287:0] cci; wire cci_cr; wire [263:0] cco;
-    wire [8*276-1:0] eg, xq; wire [7:0] eg_cr, xq_cr, xq_done;
-    wire [287:0] rce; wire rce_cr; wire [2:0] wak; wire wak_cr, ack;
-    localparam integer HF = 2, EGC = 1;  // EGC: bank egress credits = the CW stop's lane buffer depth;     // hub -> stop PREQ FIFO depth = the hub's credits (one constant for both sides)
+    wire [289:0] cwi, cci; wire cwi_cr, cci_cr; wire [263:0] cco0, cco1;
+    wire [8*276-1:0] eg, xq0, xq1; wire [7:0] egc0, egc1, xqc0, xqc1, xqd0, xqd1;
+    wire [287:0] rce0, rce1; wire rce0_cr, rce1_cr; wire [265:0] ri0, ri1; wire ri0_cr, ri1_cr;
+    wire [2:0] wk01, wk10; wire wk01_cr, wk10_cr; wire ack01, ack10;
+    wire [8*281-1:0] kq; wire [7:0] kq_cr; wire [3:0] cb_epoch;
+    localparam integer HF = 2, EGC = 1;  // one constant for both sides of each credit link
     ot_vms_hub #(.NC(NC), .CWI(HF), .CCI(HF), .MUT(HMUT)) u_hub (.clk(clk), .rst_n(rst_n), .sid(sid), .cq(hcq), .cr(hcr), .pq(pq), .pq_cr(pq_cr),
-        .pr(pr), .cwi(cwi), .cwi_cr(cwi_cr), .cci(cci), .cci_cr(cci_cr), .cco(cco), .status(hub_status));
+        .pr(pr), .cwi(cwi), .cwi_cr(cwi_cr), .cci(cci), .cci_cr(cci_cr), .cco0(cco0), .cco1(cco1), .status(hub_status));
     genvar b, g;
     for (b = 0; b < 8; b = b + 1) begin : g_bank
         wire [RG*17-1:0] brq; wire [RG-1:0] brq_cr; wire [RG*257-1:0] brr;
@@ -60,14 +64,20 @@ module ot_vms_slice #(
         ot_vms_bank #(.RG(RG), .WG(WG), .EGC(EGC), .MUT(BMUT)) u_bank (.clk(clk), .rst_n(rst_n), .bid(3'(b)), .sid(sid),
             .rq(brq), .rq_cr(brq_cr), .rr(brr), .wq(bwq), .wq_cr(bwq_cr), .wq_done(bwq_done),
             .dq(dq[b*281 +: 281]), .dq_done(dq_done[b]), .kq(kq[b*281 +: 281]), .kq_cr(kq_cr[b]), .kq_done(kq_done[b]),
-            .xq(xq[b*276 +: 276]), .xq_cr(xq_cr[b]), .xq_done(xq_done[b]), .eg(eg[b*276 +: 276]), .eg_cr(eg_cr[b]),
+            .xq(xq0[b*276 +: 276]), .xq_cr(xqc0[b]), .xq_done(xqd0[b]), .xq2(xq1[b*276 +: 276]), .xq2_cr(xqc1[b]), .xq2_done(xqd1[b]),
+            .eg(eg[b*276 +: 276]), .eg_cr({egc1[b], egc0[b]}),
             .pq(pq[b*285 +: 285]), .pq_cr(pq_cr[b]), .pr(pr[b*266 +: 266]), .status(bank_status[b*18 +: 18]));
     end
-    ot_vms_cwstop #(.HF(HF), .EGC(EGC), .MUT(CMUT)) u_cw (.clk(clk), .rst_n(rst_n), .sid(sid), .cw_in(cw_in), .cw_in_cr(cw_in_cr),
-        .cw_out(cw_out), .cw_out_cr(cw_out_cr), .cwi(cwi), .cwi_cr(cwi_cr), .eg(eg), .eg_cr(eg_cr), .xq(xq), .xq_cr(xq_cr),
-        .xq_done(xq_done), .rce(rce), .rce_cr(rce_cr), .wak(wak), .wak_cr(wak_cr), .ack_in(ack), .mirror_busy(mirror_busy));
-    ot_vms_ccwstop #(.HF(HF)) u_ccw (.clk(clk), .rst_n(rst_n), .sid(sid), .ccw_in(ccw_in), .ccw_in_cr(ccw_in_cr), .ccw_out(ccw_out),
-        .ccw_out_cr(ccw_out_cr), .cci(cci), .cci_cr(cci_cr), .cco(cco), .wak(wak), .wak_cr(wak_cr), .ack_out(ack),
-        .rce(rce), .rce_cr(rce_cr), .hq(hq), .hr(hr));
+    ot_vms_rstop #(.HF(HF), .EGC(EGC), .MUT(CMUT)) u_cw (.clk(clk), .rst_n(rst_n), .sid(sid), .dir(1'b0),
+        .l_in(cw_in), .l_in_cr(cw_in_cr), .l_out(cw_out), .l_out_cr(cw_out_cr), .pi(cwi), .pi_cr(cwi_cr),
+        .eg(eg), .eg_cr(egc0), .xq(xq0), .xq_cr(xqc0), .xq_done(xqd0), .rce(rce0), .rce_cr(rce0_cr), .ri(ri0), .ri_cr(ri0_cr),
+        .wko(wk01), .wko_cr(wk01_cr), .wki(wk10), .wki_cr(wk10_cr), .cco(cco0), .ack_o(ack01), .ack_i(ack10), .mirror_busy(mirror_busy[0]));
+    ot_vms_rstop #(.HF(HF), .EGC(EGC), .MUT(CMUT)) u_ccw (.clk(clk), .rst_n(rst_n), .sid(sid), .dir(1'b1),
+        .l_in(ccw_in), .l_in_cr(ccw_in_cr), .l_out(ccw_out), .l_out_cr(ccw_out_cr), .pi(cci), .pi_cr(cci_cr),
+        .eg(eg), .eg_cr(egc1), .xq(xq1), .xq_cr(xqc1), .xq_done(xqd1), .rce(rce1), .rce_cr(rce1_cr), .ri(ri1), .ri_cr(ri1_cr),
+        .wko(wk10), .wko_cr(wk10_cr), .wki(wk01), .wki_cr(wk01_cr), .cco(cco1), .ack_o(ack10), .ack_i(ack01), .mirror_busy(mirror_busy[1]));
+    ot_vms_rcl u_rcl (.clk(clk), .rst_n(rst_n), .sid(sid), .rce0(rce0), .rce0_cr(rce0_cr), .rce1(rce1), .rce1_cr(rce1_cr),
+        .hq(hq), .hr(hr), .ri0(ri0), .ri0_cr(ri0_cr), .ri1(ri1), .ri1_cr(ri1_cr));
+    ot_vms_star u_star (.clk(clk), .rst_n(rst_n), .vcb(vcb), .vcb_cr(vcb_cr), .kq(kq), .kq_cr(kq_cr), .epoch(cb_epoch));
 endmodule
 `default_nettype wire

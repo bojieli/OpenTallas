@@ -19,11 +19,11 @@ module tb_vms_slice;
     reg  [NC*338-1:0] ncq, ocq; wire [NC*274-1:0] ncr, ocr;
     reg  [RG*8*17-1:0] nrq; wire [RG*8-1:0] nrq_cr; wire [RG*8*257-1:0] nrr;
     reg  [WG*8*281-1:0] nwq; wire [WG*8-1:0] nwq_cr, nwq_done;
-    reg  [8*281-1:0] ndq; wire [7:0] ndq_done; wire [7:0] nkq_cr, nkq_done;
-    wire [2222:0] cwo; wire cwic; wire [291:0] ccwo; wire [1:0] ccwic; wire [8*18-1:0] bst; wire [2:0] hst; wire mb;
+    reg  [8*281-1:0] ndq; wire [7:0] ndq_done; wire nvcb_cr; wire [7:0] nkq_done;
+    wire [2223:0] cwo, ccwo; wire [1:0] cwic, ccwic; wire [8*18-1:0] bst; wire [2:0] hst; wire [1:0] mb;
     ot_vms_slice #(.NC(NC), .RG(RG), .WG(WG), .BMUT(BMUT), .HMUT(HMUT), .CMUT(CMUT)) dut (.clk(clk), .rst_n(rst_n), .sid(2'(Q)),
         .cq(ncq), .cr(ncr), .rq(nrq), .rq_cr(nrq_cr), .rr(nrr), .wq(nwq), .wq_cr(nwq_cr), .wq_done(nwq_done), .dq(ndq), .dq_done(ndq_done),
-        .kq('0), .kq_cr(nkq_cr), .kq_done(nkq_done), .cw_in('0), .cw_in_cr(cwic), .cw_out(cwo), .cw_out_cr(1'b0),
+        .vcb('0), .vcb_cr(nvcb_cr), .kq_done(nkq_done), .cw_in('0), .cw_in_cr(cwic), .cw_out(cwo), .cw_out_cr(2'b00),
         .ccw_in('0), .ccw_in_cr(ccwic), .ccw_out(ccwo), .ccw_out_cr(2'b00), .bank_status(bst), .hub_status(hst), .mirror_busy(mb));
     reg  [32*280-1:0] owq; wire [31:0] owq_done; reg [64*16-1:0] orq; wire [63:0] orq_cr; wire [64*257-1:0] orr;
     reg  [64*280-1:0] ow2q; wire [63:0] ow2q_cr, ow2q_done; wire [18:0] ost;
