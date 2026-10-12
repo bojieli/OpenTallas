@@ -1,0 +1,57 @@
+{
+ "name": "s81hc_crrre_ref",
+ "top": "ot_s81_hc_crootr_r",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "C": 2
+ },
+ "clock_port": "sk",
+ "reset_ports": [
+  "srs"
+ ],
+ "outline": {
+  "w": 276.48,
+  "h": 199.8
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "N": [
+   "t_v",
+   "t_pk",
+   "t_flt"
+  ],
+  "E": [
+   "sk",
+   "srs"
+  ],
+  "S": [
+   "ch_rv",
+   "ch_rd"
+  ],
+  "W": [
+   "s_rv",
+   "s_rd"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-s81hc-crootr",
+  "branch": "claude/el1011-s81hc-crootr",
+  "tag": "v1",
+  "purpose": "[hc-crootr] crootr v2 4-tile split, C=2 (comb W): return (comb-side S corner): capture, RT relay, s_rv/s_rd, packet slice to the tree; ~7.3k flops; replaces s81hc_crootre_ref (one 34.6k-sink root, hold WNS frozen -102 ps)",
+  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
+  "views_to": "physical/ref_tile/s81hc_crrre_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_crrre_ref"
+ },
+ "inhold": true
+}
