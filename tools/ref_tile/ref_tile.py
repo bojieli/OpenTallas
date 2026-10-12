@@ -581,6 +581,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         # spec 'inhold': one dont_touch hold buffer between every data input port and its single capture flop, inserted
         # before global placement (owner 10-10: a hold-only miss on input captures -> delay stage at the inputs, no ECO)
         extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
+        # the hold cell sits AT its input pin with a strong resizable driver after it (vm8 181753c60), FIRM through GPL and
+        # released before DPL: seeding it at the capture flop left a long dont_touch-loaded port net -> GPL repair_design
+        # RSZ-3006 (s81hc crootrw/crootre d02b035e3), and a bare HB4 driving the long wire costs ~400 ps (vm8 r9)
+        drv = s.get("inhold_drv", "BUFx4f_ASAP7_75t_R")
+        if drv:
+            extra.append(f"--orfs-var OT_INHOLD_DRV={drv}")
+            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -615,6 +622,8 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("inhold"):
         out.append("physical/dsrom_window_source/leaf_inhold.tcl")
+        if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R"):
+            out.append("physical/dsrom_window_source/leaf_inhold_release.tcl")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:

@@ -1,20 +1,14 @@
 {
- "name": "s81hc_ccf_ref-v1-ee56cc32d",
+ "name": "s81hc_ccf_ref-v2-COMMIT",
  "block": "ot_s81_hc_ccf",
  "ref_tile": true,
  "owner": "Claude:s81-suhc-hier-1011",
  "purpose": "s81-suhc-hier-1011 comb v2 (PHYSICAL SPEC comb v2, el1011-s81-suhc-hier-1011.log 23:40 PT): ot_s81_hc_ccf, one of the 7 hard tile types replacing the flat 124k-flop ot_s81_hc_comb (wires-only wrapper); reference tile flow",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "commit": "ee56cc32d59e7df3a043af3d8c6a70990960fefe"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -79,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ccf_ref/s81hc_ccf_ref-v1-ee56cc32d"
+   "to": "results/rtl/ref_tile/s81hc_ccf_ref/s81hc_ccf_ref-v2-COMMIT"
   }
  ],
  "cycles_added": 0,

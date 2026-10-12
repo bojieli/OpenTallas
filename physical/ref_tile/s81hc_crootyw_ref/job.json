@@ -4,12 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:s81-suhc-hier-1011",
  "purpose": "s81-suhc-hier-1011 HC crooty C=0 via the reference tile flow (die slot contract_hcs outline + faces): hand view failed child_lint (f) (blocked-above face pins after a pre-a804fc09b hold ECO) -> ref_tile above-only keepout + exact abstract; ",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
