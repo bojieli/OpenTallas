@@ -1,6 +1,6 @@
 # HBM die B2: quadrant-local VM slices (spec, 2026-10-12)
 
-**Status: PROVISIONAL (v0.2, 10-12 05:05 PT; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
+**Status: PROVISIONAL (v0.3, 10-12 05:30 PT; v0.3 = section 5.0 budget counts EXPOSED cycles + bandwidth sizing; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
 are marked TBD. The windowed hub GRT gate (section 7) is still running. Changes after the gate are versioned here and
 announced in `claude-takeover-20261007/el1011-hbm-b2.log`.
 
@@ -260,6 +260,54 @@ streamed. The study's bound is 16 cycles a record with a remote operand.
 | overlap credit (SU local lanes, 8 cycles x 1,356 SU.VOP x 0.78 share) | -212 / layer (-1.5 %) | n/a |
 
 The budget passes when the measured exposed cycles a layer (R4) are ≤ 2.0 % of layer time on DS and ≤ 0.3 % on Qwen.
+
+### 5.0 What the budget counts (v0.3, settles the compiler / b2verif question)
+
+**(a) The budget counts EXPOSED cycles only.** An exposed cycle is one in which a consumer stalls because the next
+sector it needs is remote and has not arrived yet.
+- Serial ring occupancy (words / link width + hops) is BANDWIDTH. It is reported, but not budgeted, as long as it
+  overlaps the consumer's own work. Under the no-barrier rule (R1) consumers start on local data and read the remote
+  data afterwards.
+- The harness model "a 4,096-word x broadcast = 32 + 128 = 160 cycles" is store-and-forward at 32 words a cycle. B2
+  does not do that. The exposed cost is
+
+  `exposed = sum over records of max(0, t_arrive(s) - t_need(s))` over the record's remote sectors s,
+
+  where `t_need(s)` is the cycle at which the consumer, reading in its own order, local sectors first, reaches s.
+- **Harness rule.** Record per-sector `t_arrive` and `t_need` (R4), and charge `max(0, ...)`. A slice's consumer reads
+  its local quarter first.
+
+**(b) Width that keeps the exposed time within 1-2 %.** The exposure is hidden when every slice's inbound remote
+bandwidth is at least the remote share of its consumer's read rate, so that only the first remote sector's hop
+latency can show:
+- **Consumer rate.** The local 8-lane group (and the x load to VM8) reads 8 sectors = 64 words a cycle. With F2, 3/4
+  of a replicated vector is remote, so it needs ≥ 48 words a cycle inbound.
+- **Ring.** A slice has 2 inbound links x 2,048-b data (64 words a cycle) = 128 words a cycle. That is ≥ 48, so it is
+  hidden. A 1,024-b ring link (32 words a cycle, 64 inbound) would also pass for x, but at 1.33x margin only, so the
+  ring stays at 2,048 b.
+- **COLL broadcast** (single source, all of the vector remote): it needs ≥ 64 words a cycle a slice, hence the star of
+  2,048-b data edges (F3). The v0.1 1,024-b edges halve the consumer rate, and THAT is the 128-cycle term in the
+  harness.
+- **Residual exposure a record:** the first remote sector's hop minus the local lead time. For x, the local quarter
+  takes `N/4/64` cycles: 16 cycles at N = 4,096 (Qwen) and 28 at 7,168 (DS). That covers a 12-cycle adjacent hop, but
+  not the 23-cycle diagonal. Per broadcast this is ≤ 0-11 cycles. A COLL star record exposes ≤ 10 cycles.
+- **Exposed a layer:**
+  - Qwen: 4 x-type broadcasts x ≤ 11 + 2 ALL_REDUCE x 10 ≈ 64 cycles = **0.18 %** of 35,253;
+  - DS: about 238 cycles = **1.7 %** of 14,139 (section 5a).
+
+  Both are within the 290 / 93 budgets, which are now defined as EXPOSED cycles a layer. The compiler's 1,009 → 540 a
+  layer is serial ring occupancy at 32 words a cycle and is not comparable with the budget.
+
+**tok/s from exposed cycles.**
+
+| model | exposed (critical) | estimate | change |
+|---|---|---|---|
+| DS | ≈ 175 critical cycles a layer (1.2 %) | ≈ 2,095 tok/s; with the SU local-lane saving, 2,110-2,125 | -0.7 to +0.1 % vs 2,121.8 |
+| Qwen | ≈ 64 cycles a layer (0.18 %) | ≈ 943.8 tok/s | -0.2 % vs 945.5 |
+
+B2's cost is not materially above 2 %, provided F1-F3 hold and the harness measures exposed cycles as defined here.
+If the measured exposed cycles exceed the budget once F1-F3 are in, the escalation trigger to the owner is DS > 2 % or
+Qwen > 0.5 %.
 
 ### 5a. Measured OLD-VM traffic and the three structural fixes (v0.2, b2verif main 89610e018)
 
