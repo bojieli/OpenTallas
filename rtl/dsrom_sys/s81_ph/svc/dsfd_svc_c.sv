@@ -17,7 +17,9 @@
 //   NRH  Q2 <-> Q0 / Q1 / Q3 = 9 / 5 / 5       B / G / window / fetched-row / p.v / fault lanes
 //   NRI  idx <-> Q0 / Q1 / Q2 / Q3 = 7 / 3 / 3 / 8   A lanes
 //   NRS  Q0 -> Q1, Q1 -> Q2, Q3 -> Q2 = 5       q.k partial-score lanes
-//   NRQ  u_io q copy 0 -> idx = 6 (valid-only); NRX idx x -> u_io = 6 skid stations
+//   NRQ  u_io q copy 0 -> idx = 6 (valid-only); NRX idx x -> u_io = 6 skid stations; NRHW host hw / hc <-> Q2 = 4
+// Host writes (hw / hc, dsfd_host_sd contract): KV / RoPE sector -> this stack's HBM sector addr[29:0] through the home's
+// G port 12 (PC by the PHY map), credit cr per word taken, ack = completed host sector writes per cycle.
 // Quadrant od / a0 links keep the composition's station chains (u_stn_q0/1/2, latency-insensitive, generated with the
 // slab floorplan; not instantiated here).  SVC FRAME PROTOCOL v1.1 unchanged: one result source (id 0) on a0 / od.
 // ---------------------------------------------------------------------------------------------------------------
@@ -36,11 +38,14 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
     input  wire [31:0]    rk, wd, rv,
     input  wire [32*256-1:0] r_data,
     input  wire [32*17-1:0]  r_tag,
-    input  wire [32*4-1:0]   r_beat
+    input  wire [32*4-1:0]   r_beat,
+    // per-stack host write face (dsfd_host_sd hw<s> / hc<s>): {cls 2, we, addr 32, d 256, v} in, {ack 8, cr} out
+    input  wire [291:0]   hw,
+    output wire [8:0]     hc
 );
     localparam integer NRH0 = 9, NRH1 = 5, NRH3 = 5, NRS = 5, NRQ = 6, NRX = 6;
     localparam integer NRI0 = 7, NRI1 = 3, NRI2 = 3, NRI3 = 8;
-    localparam integer NG = 12;
+    localparam integer NG = 13, NRHW = 4;   // NRHW: N-E host pins <-> quadrant 2
     function automatic integer nrh(input integer d); nrh = (d == 0) ? NRH0 : (d == 1) ? NRH1 : (d == 3) ? NRH3 : 0; endfunction
     function automatic integer rq_(input integer d); rq_ = (d < 2) ? d : 2; endfunction   // remote-quadrant index (0, 1, 3)
     function automatic integer nri(input integer d); nri = (d == 0) ? NRI0 : (d == 1) ? NRI1 : (d == 2) ? NRI2 : NRI3; endfunction
@@ -76,6 +81,9 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
     wire [23:0] hq_bq_v [0:3]; wire [24*46-1:0] hq_bq_d [0:3]; wire [23:0] hq_br_c [0:3];
     wire [2:0] hq_gq_v [0:3], hq_gr_c [0:3], hq_wb_v [0:3], hq_fb_v [0:3], hq_pv_c [0:3];
     wire [3*344-1:0] hq_gq_d [0:3]; wire [3*4228-1:0] hq_wb_d [0:3]; wire [3*607-1:0] hq_fb_d [0:3];
+    wire hwq_v; wire [290:0] hwq_d; wire [8:0] hq_hc [0:3];
+    dsfd_svch_rly #(.W(291), .NR(NRHW)) u_hw (.ck(ck), .rst(rst), .i_v(hw[0]), .i_d(hw[291:1]), .o_v(hwq_v), .o_d(hwq_d));
+    dsfd_svch_rly #(.W(1), .NR(NRHW), .V(9)) u_hc (.ck(ck), .rst(rst), .i_v(hq_hc[2]), .i_d(1'b0), .o_v(hc), .o_d());
     // index-reader ends
     wire [31:0] x_aq_v, x_aq_c, x_ar_v, x_ar_c; wire [32*50-1:0] x_aq_d; wire [32*276-1:0] x_ar_d;
 
@@ -101,7 +109,8 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
             .h_bq_v(hq_bq_v[g]), .h_bq_d(hq_bq_d[g]), .h_bq_c(h_bq_c), .h_br_v(h_br_v), .h_br_d(h_br_d), .h_br_c(hq_br_c[g]),
             .h_gq_v(hq_gq_v[g]), .h_gq_d(hq_gq_d[g]), .h_gq_c(h_gq_c), .h_gr_v(h_gr_v), .h_gr_d(h_gr_d), .h_gr_c(hq_gr_c[g]),
             .h_gwd(h_gwd), .h_wb_v(hq_wb_v[g]), .h_wb_d(hq_wb_d[g]), .h_wb_c(h_wb_c), .h_fb_v(hq_fb_v[g]), .h_fb_d(hq_fb_d[g]),
-            .h_pv_v(h_pv_v), .h_pv_d(h_pv_d), .h_pv_c(hq_pv_c[g]), .h_flt(h_flt));
+            .h_pv_v(h_pv_v), .h_pv_d(h_pv_d), .h_pv_c(hq_pv_c[g]), .h_flt(h_flt),
+            .h_hw_v(hwq_v), .h_hw_d(hwq_d), .h_hc(hq_hc[g]));
     end endgenerate
     assign h_bq_v = hq_bq_v[2]; assign h_bq_d = hq_bq_d[2]; assign h_br_c = hq_br_c[2];
     assign h_gq_v = hq_gq_v[2]; assign h_gq_d = hq_gq_d[2]; assign h_gr_c = hq_gr_c[2];

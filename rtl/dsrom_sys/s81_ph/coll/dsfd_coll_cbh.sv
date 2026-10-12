@@ -13,10 +13,15 @@
 // Datapath registers carry no reset (class 2); each tile synchronises rs itself (same edge in every tile).
 `timescale 1ns/1ps
 
+// OT_S81PH_CBH_PARENT (the parent route): the children below are hard macros (closed tiles), so their bodies are left
+// out and synthesis binds them to their liberty views; the parent is wiring only.
+`ifndef OT_S81PH_CBH_PARENT
 // FIFO with a registered head: the D-deep array sits behind a head register, so the consumer reads a flop, and the
 // array read mux lands in the head register (never in the consumer's logic).  Same push -> visible latency as
 // ot_s81ph_rfifo (1 cycle); capacity D + 1.
-module ot_s81ph_hfifo #(parameter integer W = 8, parameter integer D = 16) (
+// RREP (el1011-ds-coll 2026-10-11, opt-in, default 1 = byte-identical): the head-load read pointer is replicated RREP
+// times (kept ot_s81ph_keep_ff bits), copy c selects head columns [c*SW +: SW] (cel u_sk: one rp bit drove 8,755 loads).
+module ot_s81ph_hfifo #(parameter integer W = 8, parameter integer D = 16, parameter integer RREP = 1) (
     input  wire         clk, input wire rst_n,
     input  wire         push, input wire [W-1:0] wd,
     input  wire         pop,
@@ -33,9 +38,28 @@ module ot_s81ph_hfifo #(parameter integer W = 8, parameter integer D = 16) (
     wire h_ld_m = (!hv || take) && m_ne;
     wire h_ld_w = (!hv || take) && !m_ne && push;
     wire m_wr = push && !h_ld_w;
+    wire [W-1:0] m_rd;
+    wire [AW-1:0] rp_nx = h_ld_m ? rp + 1'b1 : rp;
+    generate if (RREP <= 1) begin : g_rp1
+        assign m_rd = m[rp];
+    end else begin : g_rpn
+        localparam integer SW = (W + RREP - 1) / RREP;
+        genvar c, b;
+        for (c = 0; c < RREP; c = c + 1) begin : g_c
+            localparam integer LO = c * SW, HI = ((c + 1) * SW > W) ? W : (c + 1) * SW;
+            if (LO < W) begin : g_on
+                wire [AW-1:0] rpc;
+                for (b = 0; b < AW; b = b + 1) begin : g_b
+                    ot_s81ph_keep_ff u_k (.clk(clk), .rst_n(rst_n), .d(rp_nx[b]), .q(rpc[b]));
+                end
+                wire [W-1:0] row = m[rpc];
+                assign m_rd[HI-1:LO] = row[HI-1:LO];
+            end
+        end
+    end endgenerate
     always @(posedge clk) begin
         if (m_wr) m[wp] <= wd;
-        if (h_ld_m) hd <= m[rp];
+        if (h_ld_m) hd <= m_rd;
         else if (h_ld_w) hd <= wd;
     end
     always @(posedge clk or negedge rst_n)
@@ -185,6 +209,10 @@ module `OT_S81PH_CBF_M (
     always @(posedge ck) begin fv_p <= f_vm[591:1]; fu_p <= fv_rel[591:1]; end
 endmodule
 
+`else
+`define OT_S81PH_CBF_M dsfd_coll_cbf
+`endif
+
 // the hierarchical cb: dsfd_coll_cb's ports, built from the hardened sub-elements
 module dsfd_coll_cbh #(parameter integer OD = 16, parameter integer CR = 1, parameter integer TREP = 1,
     parameter integer RSL = 8, parameter integer PCR = 1) (
@@ -217,11 +245,13 @@ module dsfd_coll_cbh #(parameter integer OD = 16, parameter integer CR = 1, para
 `endif
 );
     wire unused_p = &{1'b0, ts[2:1]};
-    dsfd_coll_cbr #(.RSL(RSL), .PCR(PCR)) u_rw (.ck(ck[0]), .rs(rs[0]),
+    dsfd_coll_cbr u_rw (                                    // RSL 8 / PCR 1 = the closed tile's defaults
+       .ck(ck[0]), .rs(rs[0]),
         .n_lo_v(lo0_v[0]), .n_lo_r(lo0_r[0]), .n_lo_d(lo0_d), .x_lo_v(wlo_v[0]), .x_lo_r(wlo_r[0]), .x_lo_d(wlo_d),
         .x_li_v(wli_v[0]), .x_li_r(wli_r[0]), .x_li_d(wli_d), .n_li_v(li0_v[0]), .n_li_r(li0_r[0]), .n_li_d(li0_d),
         .x_flt(wflt), .n_flt(flt_u[2:0]));
-    dsfd_coll_cbr #(.RSL(RSL), .PCR(PCR)) u_re (.ck(ck[0]), .rs(rs[0]),
+    dsfd_coll_cbr u_re (
+       .ck(ck[0]), .rs(rs[0]),
         .n_lo_v(lo4_v[0]), .n_lo_r(lo4_r[0]), .n_lo_d(lo4_d), .x_lo_v(elo_v[0]), .x_lo_r(elo_r[0]), .x_lo_d(elo_d),
         .x_li_v(eli_v[0]), .x_li_r(eli_r[0]), .x_li_d(eli_d), .n_li_v(li4_v[0]), .n_li_r(li4_r[0]), .n_li_d(li4_d),
         .x_flt(eflt), .n_flt(flt_u[5:3]));
@@ -241,11 +271,13 @@ module dsfd_coll_cbh #(parameter integer OD = 16, parameter integer CR = 1, para
     end endgenerate
     assign fc[0] = 1'b0;
 `ifdef OT_S81PH_CBH_TRACE
-    integer tn = 0;
-    always @(posedge ck[0]) if (tn < 40 && (f_vm[0] || bw_v[0] || ts[0] || t_vm[0] || fvm_u[0] || bw_cr[0])) begin
-        tn = tn + 1;
-        $display("CBH %m t=%0t rs=%b f_vm0=%b fvm_u0=%b bw_v=%b ts=%b t_vm0=%b bw_cr=%b q0hv=%b", $time, rs[0], f_vm[0],
-                 fvm_u[0], bw_v[0], ts, t_vm[0], bw_cr[0], u_q0.u.hv);
+    integer n_f = 0, n_u = 0, n_b = 0, n_t = 0, n_s = 0, n_c = 0, n_r = 0;
+    always @(posedge ck[0]) begin
+        n_f = n_f + f_vm[0]; n_u = n_u + fvm_u[0]; n_b = n_b + bw_v[0]; n_t = n_t + t_vm[0]; n_s = n_s + ts[0];
+        n_c = n_c + bw_cr[0]; n_r = n_r + rs[0];
+        if (n_r % 50000 == 1)
+            $display("CBH %m t=%0t rs_cyc=%0d f_vm=%0d fvm_u=%0d bw_v=%0d t_vm=%0d ts=%0d bw_cr=%0d", $time, n_r, n_f, n_u,
+                     n_b, n_t, n_s, n_c);
     end
 `endif
 endmodule

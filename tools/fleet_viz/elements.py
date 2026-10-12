@@ -16,7 +16,7 @@ twins, _s2/_t/_split/... alternatives) folded into their master. Each element ge
   cancelled only             every job was cancelled
   superseded                 listed in $FLEET_VIZ_SUPERSEDED (default ~/claude-takeover-20261007/superseded_elements.json,
                              {element: {by, reason}}): replaced by another element or not used by any die; overrides every
-                             non-closed category and is excluded from the open counts (summary 'open' = all but closed/superseded)
+                             category (closed included, owner 10-11) and is excluded from every count; 'cancelled only' is also excluded
 
 Overrides from $FLEET_VIZ_OVERRIDES (default ~/claude-takeover-20261007/element_overrides.json):
   variants   {block: {of, kind, reason}}: fold a differently named block into element `of` (checked before the VARIANT
@@ -427,11 +427,15 @@ class Elements:
         known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {})) | set(registry)
         vmap = {b: master(v['of'], known) for b, v in ov['variants'].items()}
         vmap = {b: m for b, m in vmap.items() if m not in sup}   # never fold into a superseded parent (it would count nowhere)
-        instances = collections.defaultdict(set)
+        instances = collections.defaultdict(set); tiles = collections.defaultdict(set)
         for b, v in ov['variants'].items():
             # fill-9 2026-10-10: a fold whose parent is superseded is dropped from vmap above; indexing it raised KeyError
             # and froze /api/elements from 11:06 to 16:37 (dsfd_mtp_seq_rtt instance of superseded dsrom_mtp_seq_native_binding)
             if v.get('kind') == 'instance' and b in vmap: instances[vmap[b]].update((b, vmap[b]))   # the master block is an instance too
+            # owner 10-11 two-level rule: kind 'tile' = a hardened tile of a composed element. The element closes when every
+            # tile block has a closure (the composition bench gates adding the fold); the master's own flat jobs do not
+            # block it, but a closure of the master itself (dual-track flat line) still closes it.
+            if v.get('kind') == 'tile' and b in vmap: tiles[vmap[b]].add(b)
         groups = collections.defaultdict(list)
         for j in js: groups[master(j['block'], known, vmap)].append(j)
         for b in ob.get('closed', {}):   # option-B closed blocks with no loop job (routes judged outside the loop)
@@ -441,7 +445,19 @@ class Elements:
             key = master(b, known, vmap); groups.setdefault(key, []); evidence[key].extend(records)
         rows = []
         for m, g in groups.items():
-            r = self.element(m, g, ob, rest, rj)
+            gg = g
+            if tiles.get(m) and not any(j['block'] == m and j['status'] == 'CLOSED' and j['name'] not in rj for j in g):
+                gg = [j for j in g if j['block'] in tiles[m]]
+                closed_blocks = {j['block'] for j in gg if j['status'] == 'CLOSED' and j['name'] not in rj} | set(ob.get('closed', {}))
+                missing = sorted(b for b in tiles[m] if b not in closed_blocks)
+            r = self.element(m, gg or g, ob, rest, rj)
+            if gg is not g and missing:
+                if r['category'].startswith('closed'):
+                    r['category'] = self.element(m, [j for j in gg if j['block'] in missing], ob, rest, rj)['category'] if any(j['block'] in missing for j in gg) else CATS[7]
+                    r['closed_t'] = None
+                r['via'] = 'tiles not closed: %s' % ', '.join(missing)
+            elif gg is not g:
+                r['via'] = 'closed via tiles: %s' % ', '.join(sorted(tiles[m]))
             if r['category'].startswith('closed') and instances.get(m):
                 closed_blocks = {j['block'] for j in g if j['status'] == 'CLOSED' and j['name'] not in rj} | set(ob.get('closed', {}))
                 missing = sorted(b for b in instances[m] if b not in closed_blocks)
@@ -463,7 +479,7 @@ class Elements:
             r['owner'] = ov['owners'].get(m) or self.remap_owner(r['owner'] or '', ov)
             sv = sup.get(m) or next((sup[b] for b in [m] + r['variants'] if b in sup), None)
             r['superseded'] = None
-            if sv and not r['category'].startswith('closed'):
+            if sv:   # owner 10-11: superseded overrides closed too; such rows are not counted anywhere
                 r['category'] = 'superseded'; r['superseded'] = dict(by=sv.get('by'), reason=sv.get('reason'))
                 r['via'] = 'superseded by %s' % sv.get('by')
             tq = tput.get(m) or next((tput[b] for b in r['variants'] if b in tput), None)
@@ -675,7 +691,8 @@ def gate_text(category, tq):
     if not tq: return timing + ', NO-THROUGHPUT-BUDGET-ROW'
     st = tq.get('status')
     return timing + (', THROUGHPUT-QUALIFIED' if st == 'QUALIFIED' else ', THROUGHPUT-QUALIFIED-BY-BOUND' if st == 'QUALIFIED_BY_BOUND'
-                     else ', THROUGHPUT-ACCEPTED' if st == 'ACCEPTED' else ', THROUGHPUT-UNQUALIFIED')
+                     else ', THROUGHPUT-ACCEPTED' if st == 'ACCEPTED' else ', THROUGHPUT-EXEMPT' if st == 'EXEMPT'
+                     else ', THROUGHPUT-UNQUALIFIED')
 
 def throughput_text(tq):
     if not tq: return ''

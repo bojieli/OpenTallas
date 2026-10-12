@@ -50,6 +50,12 @@ HROWS = HC * D * 16 // 512          # 640
 GROWS = D // 16                     # 320
 
 RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv", "rtl/link/ot_fifo_sram_fwft.sv",
+       "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_croot.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_hroot.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/lib/ot_skid_buffer.sv",
        "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv", "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
@@ -310,8 +316,10 @@ HCG = re.compile(r"HCG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) co
 JOB = re.compile(r"HCJ op=(\d+) kind=(\d+) start=(\d+) done=(\d+)")
 
 
-def build(out: Path, ng, fp, mut, amut, lvm):
-    tag = f"ng{ng}_{fp}_m{mut}_a{amut}"
+def build(out: Path, ng, fp, mut, amut, lvm, hier=0):
+    # hier: 1 = root split + column chains of octet sub-tiles; 2 = the structural variant (half-octet sub-tiles, split
+    # column roots)
+    tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + {0: "", 1: "_hier", 2: "_hier2"}[hier]
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_hc_master"
     if not exe.exists():
@@ -321,7 +329,7 @@ def build(out: Path, ng, fp, mut, amut, lvm):
             srcs = dpi_rest(obj) + srcs
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
-               f"-GAMUT={amut}", f"-GLVM={lvm}", *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier == 2)}", f"-GCSPLIT={int(hier == 2)}", *map(str, srcs), "-CFLAGS", "-O1"]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode != 0:
@@ -331,7 +339,7 @@ def build(out: Path, ng, fp, mut, amut, lvm):
 
 def cmd_run(a):
     out = Path(a.out)
-    exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm)
+    exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier)
     res = []
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
         d = out / "runs" / meta["run"]
@@ -350,7 +358,7 @@ def cmd_run(a):
         print(meta["run"], "PASS" if row["ok"] else "FAIL", row["err_rows"], "/", row["rows"], "fault", row["fault"],
               "cyc", row["cycles"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
-               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, runs=res,
+               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
                simulator=subprocess.run([VERILATOR, "--version"], capture_output=True, text=True).stdout.strip(),
                source_sha256={s: sha(ROOT / s) for s in FP[a.fp] + RTL + [TB]})
@@ -373,6 +381,7 @@ def main():
     p.add_argument("--mut", type=int, default=0)
     p.add_argument("--amut", type=int, default=0)
     p.add_argument("--lvm", type=int, default=10)
+    p.add_argument("--hier", type=int, default=0, help="1: hierarchical slab (root tile + 3 column chains of 1-octet sub-tiles)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
 

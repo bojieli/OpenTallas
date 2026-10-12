@@ -49,9 +49,21 @@ DB=${ECO_RB_DB:-5_2_route.odb}; [ -f $RB/$DB ] || DB=6_final.odb   # ECO_RB_DB=6
 # (pre-fill route db; the tcl removes fillers otherwise)
 CUR_DIR=$RB; CUR_DB=$DB; CUR_SPEF=$OB/6_final.spef; [ -f $CUR_SPEF ] || CUR_SPEF=$RB/6_final.spef
 PS=""; for p in "$@"; do PS="$PS /src/$p"; done
+MACROS=${MACROS:-}
+if [ -n "$MACROS" ]; then  # MACRO-VIEW (2026-10-11): a bare SRAM master in verdict.macros crashed every ECO (ORD-0001)
+  MACROS=$(python3 "$CLD/macro_views.py" --root "$PWD" $MACROS) || { echo "MACROS unresolvable against the source snapshot: refusing to run without the macro LEF/lib"; exit 2; }
+fi
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 CS_ARGS=$(for p in "$@"; do echo -n " --post-sdc $p"; done; for m in ${MACROS:-}; do echo -n " --macro $m"; done)
 ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
+# el1011-q-tile 2026-10-11: the ECO re-route keeps the block's own routing-layer contract.  The hard default M7 re-routed
+# a hardened leaf (MAX_ROUTING_LAYER M6: M7 left free for its parent's straps) with ~1.8k signal shapes on M7 (qfd_tile_lsl4);
+# MAXL defaults to the route's config.mk MAX_ROUTING_LAYER, M7 only when the route sets none.
+if [ -z "${MAXL:-}" ]; then
+  CFGMK=$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk
+  [ -f "$CFGMK" ] && MAXL=$(sed -n 's/^export MAX_ROUTING_LAYER *= *//p' "$CFGMK" | tail -1 | tr -d ' ')
+  echo "OT_ECO max routing layer ${MAXL:-M7} (route config: $CFGMK)" | tee -a "$OUT/eco.log"
+fi
 # LOOP-GAPS 2026-10-08 (redesign-0315: hbm_smh_front_s m3f/m3g ECOs close at TT +100 / FF +20 but were scored at SS with
 # the planning neighbour clock): the ECO is timed and judged with the job's own sign-off SDC set.
 export SDC_NAME=${SDC_NAME:-6_final.sdc}

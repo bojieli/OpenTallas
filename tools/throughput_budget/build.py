@@ -62,8 +62,8 @@ MEASURED = {
     "DMA.LOAD": dict(ratio=0.622, grade="e2e", src="results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
                      note="6 records"),
     "DMA.FENCE": dict(ratio=0.117, grade="e2e", src="results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"),
-    "DMA.KVWB_DS": dict(ratio=3.817, grade="e2e", src="results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
-                        note="retires on write completion, not acceptance (audit hbm_ds_kvwb)"),
+    "DMA.KVWB_DS": dict(ratio=1.05, grade="unit_bench", src="results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json",
+                        note="tb_hgi_mover_kport die config (real kport + 4 svc stacks), posted retire: first record 63 cyc, 4-stack 61.1 cyc/record; KMUT5 FAIL"),
     "FUSED.HC_PRE_NORM": dict(ratio=6.514, grade="unit_bench", src=U + "fused/hc_pre_norm_d5120/report.json"),
     "FUSED.HC_POST": dict(ratio=20.085, grade="unit_bench", src=U + "fused/hc_post_d5120/report.json"),
     "FUSED.QDQ_FP8": dict(ratio=2.74, grade="unit_bench", src=U + "qdq_wide/report.json", accepted="owner rule: e2e follows measurement, +1.3k cyc/token, 0.24% (main 2026-10-11)",
@@ -112,7 +112,7 @@ OWNERS = {
     "FUSED.QDQ_FP4_E4M3": "tput-gate-1010 (with QDQ_FP8)",
     "IDX.TOPK": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
     "IDX.INDEX": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "DMA.KVWB_DS": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+    "DMA.KVWB_DS": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
     "ATT.QK": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
     "ATT.PV": "hgi-1010/g2",
     "SM.MATVEC": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
@@ -186,6 +186,25 @@ ROM_RULES = [
      r"ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)", "ds_rom_mtp", "wave", "WAVE_BENCH", None,
      "el1011-ds-mtp: per element from the integrated MTP wave bench record (WAVE_BENCH; tools/mtp_wave_bench.py): "
      "QUALIFIED when its charges' measured / price <= qualify_ratio, else UNQUALIFIED at the measured ratio"),
+    # tput-map-1011 (2026-10-11): hardened tiles / sub-tiles inherit the class of the composed element they implement
+    # (two-level rule: the composition bench on those same tiles gates the fold; the class price is the composed op's)
+    (r"^(dsfd_su_t_|ot_s81_hc_)", "ds_rom", "su", None, None,
+     "tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"),
+    (r"^(ot_pqc_t_|ot_dsrom_aq12t$)", "ds_rom", "field", None, None,
+     "tput-map-1011: hard tiles of the PQ spine screen ot_v41_pqc_spine_screen (field class; aq12t is cycle-identical to aq12m)"),
+    (r"^dsfd_vm_", "ds_rom", "field", None, None,
+     "tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"),
+    (r"^dsfd_dw_ep_", "ds_rom", "select", None, None,
+     "tput-map-1011: sel / col command endpoint tiles of the selector / collector slabs (done word on the slab vd stream): select class"),
+    (r"^(ot_engc_t_|ot_dsrom_engram_)", "ds_rom", "embed", None, None,
+     "tput-map-1011: tiles / producer of the all-tile engram composition dsfd_engram_c (embed class)"),
+    (r"^ot_hdc_v41x_idx_ksub_el$", "ds_rom", "hbm", None, None,
+     "tput-map-1011: key-sub tile of the indexer chunk ot_hdc_v41x_idx_chunk_el (L2.attn.idx.score node, hbm class)"),
+    (r"^qfd_io_collective", "qwen_rom", "link", None, None,
+     "tput-map-1011: hardened all-reduce lane slice of qfd_io_collective (link class)"),
+    (r"^qfd_su64_", "qwen_rom", "su", None, None, "tput-map-1011: hardened su64 lane tile of the spine SU (su class)"),
+    (r"^qfd_sp_tree_top", "qwen_rom", "me", None, None,
+     "tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"),
     (r"^dsfd_coll_", "ds_rom", "coll", None, None, "ds-1010: collective lanes"),
     (r"^(dsfd_engram_)", "ds_rom", "embed", None, None, "ds-1010: engram lookup / sink (embed class)"),
     (r"^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)", "ds_rom", "su", None, None, "ds-1010: HC / SU lanes (su class)"),
@@ -202,6 +221,60 @@ ROM_RULES = [
      "qwen-1010: spine SU / sequencer / residual (su class)"),
     (r"^qfd_dspark_", "qwen_rom", "mtp", "UNQUALIFIED_NO_BENCH", None, "qwen-1010: DSpark on Qwen ROM has no qualified composition"),
 ]
+
+
+# tput-map-1011 (owner 2026-10-11): elements that need NO throughput bench.  Only tiny control / glue (config, status, reset,
+# CSR, small FSMs with no per-token work) and blocks with no per-token price (off the decode token path) qualify; a datapath
+# or critical-control element never does.  Applied only to an element still UNQUALIFIED_NO_BENCH (never hides a measured
+# ratio).  kind: control_glue | off_token_path.
+EXEMPT = {
+    "ot_s81_ingest_visibility_fence": ("control_glue",
+        "host-write completion counter + Gray-coded toggle/ack CDC snapshot to clk_h (RTL header): status, no per-token datapath"),
+    "dsfd_host": ("off_token_path", "host / KV-ingest die master (ROWS / IKEY / RAW ingest, prefill / admission): no per-token price row"),
+    "dsfd_host_native": ("off_token_path", "native variant of the dsfd_host ingest master: no per-token price row"),
+    "dsfd_host_protected": ("off_token_path", "protected variant of the dsfd_host ingest master: no per-token price row"),
+    "dsfd_host_sd": ("off_token_path", "per-stack decode of the host ingest sector stream (dsfd_host o_* -> hw<s>): no per-token price row"),
+    "qfd_sysctl_stn_pb2": ("control_glue", "station of the package-controller sysctl ring (ot_qfd_pkgctl host_if control packets; "
+                                           "one-entry packet queue): system control, no per-token datapath"),
+    # not_in_design: not instantiated in the design of record and no price row (supersede candidates; tput-map-1011/F4, F5)
+    **{e: ("not_in_design", "older KV-on-ROM-die path: not instantiated in the adopted r22ko4 ROM die or the KV die; no price row "
+                            "(the KV-die class bench results/rtl/tput_map_1011/qwen_kv_die covers the adopted path); supersede candidate")
+       for e in ("qfd_kv_row", "qfd_kv_merge_skid", "qfd_kvc_decode_pc", "qfd_kvc_decode_map_pc", "qfd_su_kv624",
+                 "ot_qwen_rom_core_core_kv_banked")},
+    "qfd_dspark_argmax_gather": ("off_token_path", "DSpark on Qwen ROM: the Qwen ROM token path prices AR only (no DSpark price row)"),
+    "qfd_dspark_s7_control": ("off_token_path", "DSpark on Qwen ROM stage-7 control: the Qwen ROM token path prices AR only"),
+    "dsfd_mtp_seq": ("not_in_design", "legacy receiver copy: the bound head631ep uses dsfd_mtp_seq_rtt (same core ot_dsrom_mtp_seq, "
+                                      "wave bench QUALIFIED); supersede candidate"),
+}
+
+# tput-map-1011: hardened tiles of a composed element (owner two-level rule) inherit the composed element's throughput entry
+# (the tile runs the composed element's op; the composition bench on the same tiles gates the registry fold).  Applied to an
+# element with no class / bench of its own ('unmapped').  (regex, parent element)
+TILE_OF = [
+    (r"^ot_nhb_", "ot_qwen_nearhbm_attn_hub_p"),
+    (r"^ot_qkh_", "ot_qwen_nearhbm_head_h"),
+    (r"^ot_p2h_", "ot_mtp_p2_prefix_path"),
+    (r"^qfd_tile_lsl", "qfd_tile"),
+    (r"^qfd_vm_grp", "qfd_sp_vector_memory"),
+    (r"^ot_qwen_nearhbm_attn_hub_t", "ot_qwen_nearhbm_attn_hub_p"),
+    (r"^hfd_hc_tile", "hfd_hc"),
+]
+
+# tput-map-1011: per-class production-shape bench records (one bench of a class qualifies every element it lists).
+# Schema opentallas.tput-class-bench.v1: {class, model, elements[], ratio, exact, price{}, measured{}} or per_element
+# {element: {op, status, ratio, why}}.  Ratios only from committed records (provenance rule).
+CLASS_BENCH_GLOB = "results/rtl/tput_map_1011/*/record.json"
+
+
+def class_bench_records():
+    out = []
+    for p in sorted(ROOT.glob(CLASS_BENCH_GLOB)):
+        try:
+            d = json.loads(p.read_text())
+        except Exception:  # noqa: BLE001
+            continue
+        out.append((str(p.relative_to(ROOT)), d))
+    return out
 
 
 # el1011-ds-mtp [wave]: the integrated DS ROM MTP draft / WFC / accept bench (rtl/dsrom_sys/mtp/tb/tb_mtp_wave.sv): per charge of
@@ -264,8 +337,16 @@ def bench_ii():
     """element -> the cycles-per-item line of its newest passing exact bench (closure-loop job state, CLOSED jobs first).
     The item kind is the largest-count item on the line; 'stalled' = the stimulus injects stalls (II not intrinsic)."""
     import glob as _g
+    import urllib.request
     jd = Path.home() / ".local/state/closure_loop/jobs"
     best = {}
+    # the element's ADOPTED record (registry best.job) outranks a newer-finishing sibling: a superseded variant whose
+    # hold ECO finished later (e.g. qfd_coll_xfifo_l8m vs the adopted l8n) must not be cited as the element's bench
+    try:
+        adopted = {(r.get("best") or {}).get("job") for r in
+                   json.load(urllib.request.urlopen("http://127.0.0.1:8765/api/elements", timeout=60))["rows"]} - {None}
+    except Exception:  # noqa: BLE001
+        adopted = set()
     for f in _g.glob(str(jd / "*.json")):
         try:
             j = json.loads(open(f).read())
@@ -288,7 +369,8 @@ def bench_ii():
                            bench=bn, line=ln.strip()[:200], cycles=cyc, item=it[0] if it else None, items=it[1] if it else None,
                            ii=round(cyc / it[1], 3) if it else None, stalled=bool(re.search(r"stall|STALL|jitter", ln)),
                            owner=str((j.get("spec") or {}).get("owner", "")), target=None, t=j.get("updated", 0))
-                if blk not in best or ent["t"] > best[blk]["t"]:
+                ent["adopted"] = j["name"] in adopted
+                if blk not in best or (ent["adopted"], ent["t"]) > (best[blk].get("adopted", False), best[blk]["t"]):
                     best[blk] = ent
                 break
     # ---- automated II harness records (tools/throughput_budget/auto_ii.py, owner 2026-10-11): the recording replay of the
@@ -672,7 +754,7 @@ def main():
                     impact_tok_s=r["impact_tok_s"], budget_cycles_per_record=r["price_cycles_per_record"],
                     budget_at_target=r["budget_cycles_per_record_at_target"], owner=r["owner"]) for i, r in enumerate(rank)]
     # registry gate: element -> worst status over the ops it serves (DS first, then Qwen, then ROM classes)
-    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "ACCEPTED": 2, "QUALIFIED_BY_BOUND": 3, "QUALIFIED": 4}
+    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "ACCEPTED": 2, "EXEMPT": 2.5, "QUALIFIED_BY_BOUND": 3, "QUALIFIED": 4}
     el = {}
 
     def put(e, target, op, st, ratio, owner, src):
@@ -756,6 +838,56 @@ def main():
         else:
             put(e, "rom", "unmapped", "UNQUALIFIED_NO_BENCH", None, "-", "no token-path class and no name rule")
             rom_cov[e] = None
+    # ---- tput-map-1011 class bench records: replace the op entries the record measures (class name, 'unmapped', 'bench II')
+    def reput(e, drop, ent):
+        cur = el.pop(e, None)
+        for o in (cur or {}).get("ops", []):
+            if not drop(o):
+                put(e, o["model"], o["op"], o["status"], o["ratio"], o["owner"], o["src"])
+        put(e, ent["model"], ent["op"], ent["status"], ent["ratio"], ent["owner"], ent["src"])
+        if cur and cur.get("bf_budget"):
+            el[e]["bf_budget"] = cur["bf_budget"]
+
+    cbr = []
+    for path, d in class_bench_records():
+        c = prov(path)
+        cls = d.get("class")
+        if isinstance(d.get("entries"), list):
+            per = {x["element"]: dict(x, op=x.get("class") or cls) for x in d["entries"]}
+        elif isinstance(d.get("elements"), dict):
+            per = d["elements"]
+        else:
+            per = d.get("per_element") or {e: dict(op=cls, ratio=d.get("ratio")) for e in d.get("elements") or []}
+        for e, x in per.items():
+            if not isinstance(x, dict):
+                continue
+            ratio = x.get("ratio")
+            st = x.get("status")
+            if st not in ("EXEMPT",):
+                st = ("UNQUALIFIED_NO_BENCH" if ratio is None or c is None or d.get("exact") is False or x.get("exact") is False
+                      else "QUALIFIED" if ratio <= QUAL else "UNQUALIFIED")
+            op = x.get("op") or cls
+            src = f"{path} @ {c or 'uncommitted'}: {x.get('why') or d.get('notes') or ''}"[:300]
+            if st == "EXEMPT":
+                EXEMPT.setdefault(e, (x.get("kind", "control_glue"), x.get("why") or "-"))
+                continue
+            rep = x.get("replaces")
+            reput(e, lambda o, cls=cls, op=op, rep=rep: o["op"] in (cls, op, rep, "unmapped") or str(o["op"]).startswith("bench II"),
+                  dict(model=x.get("model") or d.get("model", "-"), op=op, status=st, ratio=ratio, owner="tput-map-1011", src=src))
+        cbr.append(dict(path=path, commit=c, cls=cls, model=d.get("model"), ratio=d.get("ratio"), elements=sorted(per)))
+    tile_cov = {}
+    for e in list(el):
+        if el[e]["limiting"]["op"] != "unmapped" and el[e]["status"] != "UNQUALIFIED_NO_BENCH":
+            continue
+        for rx, parent in TILE_OF:
+            if re.match(rx, e) and parent in el:
+                pl = el[parent]["limiting"]
+                reput(e, lambda o: o["op"] == "unmapped" or o["status"] == "UNQUALIFIED_NO_BENCH",
+                      dict(model=pl["model"], op="tile of %s: %s" % (parent, pl["op"]), status=el[parent]["status"],
+                           ratio=el[parent]["ratio"], owner=pl["owner"], src="tput-map-1011 TILE_OF %s -> %s: %s" % (rx, parent, pl["src"])))
+                tile_cov[e] = parent
+                rom_cov[e] = "tile of " + parent
+                break
     # ---- provenance (main 10-10): every ratio must come from a committed bench record (path + commit)
     hand = []
     for model, part, table in (("DS", ds, MEASURED), ("Qwen", qw, MEASURED_QWEN)):
@@ -790,6 +922,17 @@ def main():
             put(e, b["target"] or "rom", "bench II (" + (b["item"] or "no items") + ")", "UNQUALIFIED_NO_BENCH", None, b["owner"],
                 f"closure job {b['job']}: {b['line'][:140]} (II {b['ii']} > 1.10 or stalled stimulus: budget not mapped)")
             el[e]["bench_ii"] = b
+    # ---- exemptions (tput-map-1011): control / glue and off-token-path blocks, only where no bench number exists
+    exempt = {}
+    for e, (kind, why) in EXEMPT.items():
+        cur = el.get(e)
+        if cur is not None and cur["status"] != "UNQUALIFIED_NO_BENCH":
+            exempt[e] = dict(kind=kind, why=why, applied=False, note="element has a bench status " + cur["status"])
+            continue
+        prev = cur["limiting"] if cur else None
+        el[e] = dict(status="EXEMPT", ratio=None, limiting=dict(op="exempt:" + kind, model=(prev or {}).get("model", "-"),
+                     status="EXEMPT", ratio=None, owner="tput-map-1011", src=why), ops=(cur or {}).get("ops", []), exempt=kind)
+        exempt[e] = dict(kind=kind, why=why, applied=True)
     # ---- build gate: priced ops (per variant) with their native-RTL evidence
     RATES = {"DS": ["DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
                     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
@@ -831,7 +974,7 @@ def main():
                build_gate=dict(rule="every op the simulator prices needs a committed bench that executes it natively in RTL "
                                     "(no stub, no behavioural model, no unsupported status); else PRICED-NOT-BUILT",
                                rows=gate, priced_not_built=[g for g in gate if g["status"] != "BUILT"]),
-               hand_entered=hand, bench_ii=bii,
+               hand_entered=hand, bench_ii=bii, exempt=exempt, class_bench_records=cbr, tile_of=tile_cov,
                bf_hier=BF_HIER, wave_bench=(dict(path=WAVE_BENCH_PATH, commit=prov(WAVE_BENCH_PATH), qualify_ratio=QUAL,
                                           charges=[dict(id=c["id"], price=c["price"], measured=c["measured"], ratio=c["ratio"],
                                                         elements=c["elements"]) for c in WAVE_BENCH["charges"]])

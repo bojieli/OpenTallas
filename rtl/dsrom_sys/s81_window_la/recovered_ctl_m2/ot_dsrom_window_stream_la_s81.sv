@@ -27,7 +27,11 @@ module ot_dsrom_window_stream_la_s81 #(
     // 1 (with MARGIN; takeover-ds 2026-10-07): kept per-channel copies of run and of the registered start (the
     // channel walkers no longer share one run / start net), and the landed-beat poison test is split across two
     // edges (four 64-bit partial ORs, then the OR) inside the existing five-edge flag pipeline.  Zero cycles.
-    parameter bit MARGIN2 = 0
+    parameter bit MARGIN2 = 0,
+    // MARGIN3 (el1011-ds-misc 2026-10-11): the per-lane landing pipeline lives in four hardened 8-lane sub-tiles
+    // (ot_dsrom_wsrc_land8) that capture the beats at their pins; this engine takes their registered |bad and
+    // popcount (land_bad / land_nb, the same edges as bad_q / nbp) and keeps no reset on walk data registers.
+    parameter bit MARGIN3 = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -43,7 +47,11 @@ module ot_dsrom_window_stream_la_s81 #(
     input  wire [NPC-1:0]        rsp_v,               // accepted (landed) beats
     input  wire [NPC*TAGW-1:0]   rsp_tag,
     input  wire [NPC*BEATW-1:0]  rsp_beat,
-    input  wire [NPC*256-1:0]    rsp_data
+    input  wire [NPC*256-1:0]    rsp_data,
+    input  wire [3:0]            land_bad,
+    input  wire [15:0]           land_nb,
+    input  wire [3:0]            land_simbad,
+    output wire [AW-1:0]         b_o
 );
     localparam integer PITCH = 17;
     localparam integer NSECT = 128 * PITCH;              // 2,176
@@ -191,7 +199,7 @@ module ot_dsrom_window_stream_la_s81 #(
                     Glo[q] <= gl1; Grel[q] <= Grel[q] + 1'b1; jq[q] <= q[4:0] ^ gl1 ^ ghn[4:0];
                 end else rv[q] <= 1'b0;
             end
-    end else begin : g_walk2
+    end else if (!MARGIN3) begin : g_walk2
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             pdone <= '1; rv <= '0; ghi0 <= 0; ghi1 <= 0; j0 <= 0; j1 <= 0; nlast <= 0; hi_c <= 0;
@@ -222,6 +230,43 @@ module ot_dsrom_window_stream_la_s81 #(
                     end else rv[q] <= 1'b0;
                 end
         end
+    end else begin : g_walk3
+    // MARGIN3: control (pdone, rv, hi_c) reset; walk data (Glo, Grel, jq, raddr, rtag, the per-channel job copies)
+    // unreset -- each is loaded on the channel's start before any read, and raddr / rtag leave only with rv.
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            pdone <= '1; rv <= '0; ghi0 <= 0; ghi1 <= 0; j0 <= 0; j1 <= 0; nlast <= 0; hi_c <= 0;
+        end else begin
+            if (start_e && !run) begin
+                ghi0 <= shi0; ghi1 <= shi0 + 1'b1; j0 <= sa0[4:0]; j1 <= sa1[4:0];
+                nlast <= sa1[AW-3:5] - sa0[AW-3:5];
+            end
+            for (q = 0; q < NPC; q = q + 1)
+                if (start_c[q] && !run_c[q]) begin
+                    pdone[q] <= 1'b0; rv[q] <= 1'b0; hi_c[q] <= 1'b0;
+                end else if (!rv[q] || req_rdy[q]) begin
+                    if (run_c[q] && !pdone[q]) begin
+                        rv[q] <= (Grel[q] != 5'd0 || jq[q] >= j0_c[q]) && (Grel[q] != nlast_c[q] || jq[q] <= j1_c[q]);
+                        if (Grel[q] == nlast_c[q]) pdone[q] <= 1'b1;
+                        if (Glo[q] + 5'd1 == 5'd0) hi_c[q] <= 1'b1;
+                    end else rv[q] <= 1'b0;
+                end
+        end
+    reg [4:0] gl1d; reg [GW-6:0] ghd, ghnd;
+    always @(posedge clk)
+        for (q = 0; q < NPC; q = q + 1)
+            if (start_c[q] && !run_c[q]) begin
+                Glo[q] <= sa0[9:5]; Grel[q] <= 0; jq[q] <= q[4:0] ^ sa0[9:5] ^ shi0[4:0];
+                ghi0_c[q] <= shi0; ghi1_c[q] <= shi1_c; j0_c[q] <= sa0[4:0]; j1_c[q] <= sa1[4:0];
+                nlast_c[q] <= nl_c[4:0];
+            end else if ((!rv[q] || req_rdy[q]) && run_c[q] && !pdone[q]) begin
+                ghd = hi_c[q] ? ghi1_c[q] : ghi0_c[q];
+                raddr[q] <= {ghd, Glo[q], jq[q], 2'b00};
+                rtag[q] <= {Grel[q], jq[q]} - {5'd0, j0_c[q]};
+                gl1d = Glo[q] + 1'b1;
+                ghnd = (hi_c[q] || gl1d == 5'd0) ? ghi1_c[q] : ghi0_c[q];
+                Glo[q] <= gl1d; Grel[q] <= Grel[q] + 1'b1; jq[q] <= q[4:0] ^ gl1d ^ ghnd[4:0];
+            end
     end endgenerate
     reg [NPC*AW-1:0] a_p; reg [NPC*TAGW-1:0] t_p;
     always @* for (q = 0; q < NPC; q = q + 1) begin a_p[q*AW +: AW] = raddr[q]; t_p[q*TAGW +: TAGW] = rtag[q]; end
@@ -267,6 +312,7 @@ module ot_dsrom_window_stream_la_s81 #(
             assign k16d_c[pg] = t4[pg] - sl4[pg];
         end
     end endgenerate
+    generate if (!MARGIN3) begin : g_land_int
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             v1 <= 0; v2 <= 0; v3 <= 0; v4 <= 0; v5 <= 0; rng2 <= 0; rng3 <= 0; rng4 <= 0; rng5 <= 0; k16_5 <= 0; bad_q <= 0;
@@ -309,6 +355,17 @@ module ot_dsrom_window_stream_la_s81 #(
             end
             nb_q <= nb_a + nb_b;
         end
+    end else begin : g_land_ext                           // MARGIN3: the land8 tiles' registered results
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin nb_a <= 0; nb_b <= 0; nb_q <= 0; end
+        else begin
+            nb_a <= {1'b0, land_nb[3:0]} + {1'b0, land_nb[7:4]}; nb_b <= {1'b0, land_nb[11:8]} + {1'b0, land_nb[15:12]};
+            nb_q <= nb_a + nb_b;
+        end
+    end endgenerate
+    assign b_o = b;
+    wire bad_any = MARGIN3 ? |land_bad : |bad_q;
+    wire sim_bad_any = MARGIN3 ? |land_simbad : pc_sim_bad;
     always @* begin
         for (p = 0; p < NPC; p = p + 1)
             bad_beat[p] = v5[p] && (rng5[p] || (MARGIN ? (k16_5[p] ? ps5[p] : pc5[p]) :
@@ -324,7 +381,7 @@ module ot_dsrom_window_stream_la_s81 #(
             if (base_e[4:0] != 0) fault <= 1'b1;
         end else if (run) begin
             if (grp_ok) gnext <= gnext + IW;
-            if (|bad_q || pc_sim_bad) fault <= 1'b1;
+            if (bad_any || sim_bad_any) fault <= 1'b1;
             landed <= landed + nb_q;
             rem <= rem - nb_q;
             if (rem == {5'd0, nb_q}) run <= 0;
