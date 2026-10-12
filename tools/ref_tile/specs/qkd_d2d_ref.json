@@ -155,5 +155,8 @@
   "views_to": "physical/ref_tile/qkd_d2d_ref/views",
   "record_to": "results/rtl/ref_tile/qkd_d2d_ref"
  },
- "floorplan_note": "q8 (el1011-q-kvd 2026-10-12): link buffers at their INPUT faces -- TX buffers R0 on the S row under t_d (east half of S), RX buffers MX (din up) on the N rows under rx_flit (east half of N); RTL IRL/ORL relays (HT=1): one kept relay register per receive buffer next to its din, output relays toward r_d (S west) / tx_flit (N west); every parent hop <= ~480 um by pin/din geometry (q5b: rq_f -> sbuf din 814 ps of wire, RX sbufs had been placed at the S face)"
+ "floorplan_note": "q8 (el1011-q-kvd 2026-10-12): link buffers at their INPUT faces -- TX buffers R0 on the S row under t_d (east half of S), RX buffers MX (din up) on the N rows under rx_flit (east half of N); RTL IRL/ORL relays (HT=1): one kept relay register per receive buffer next to its din, output relays toward r_d (S west) / tx_flit (N west); every parent hop <= ~480 um by pin/din geometry (q5b: rq_f -> sbuf din 814 ps of wire, RX sbufs had been placed at the S face)",
+ "io_flop_at_pins": {
+  "cols": 12
+ }
 }
