@@ -1,5 +1,5 @@
 {
- "name": "coll_tp8_rt2-v2-298652203",
+ "name": "coll_tp8_rt2-v2-COMMIT",
  "block": "ot_coll_tp8_die",
  "ref_tile": true,
  "owner": "Claude:el1011-qwen-tp8-coll",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/el1011-qwen-tp8-coll",
-  "commit": "298652203"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -151,7 +151,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_tp8_rt2/coll_tp8_rt2-v2-298652203"
+   "to": "results/rtl/ref_tile/coll_tp8_rt2/coll_tp8_rt2-v2-COMMIT"
   }
  ],
  "cycles_added": 0,
