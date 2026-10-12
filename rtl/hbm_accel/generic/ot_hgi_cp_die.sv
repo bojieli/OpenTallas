@@ -45,6 +45,11 @@ module ot_hgi_cp_die #(
                                        //   {n_O, n_B, n_A, O, C, B, A, header, valid} (1,216 b; ot_hgi_fused_station in the
                                        //   quant block forwards QDQ to the quant unit); 0 = the QDQ-only {n_O, n_A, O, A, header, valid}
     parameter integer QRW = 683 + 533 * FUSED,  // 1,216 with FUSED (FUSED in {0, 1})
+    parameter integer B2 = 0,          // el1011-hbm-b2-cp (HBM B2, 4 clusters): 1 = units 1 SM, 2 SU, 3 SFU, 5 ATT, 8 DMA feed
+                                       //   ot_hgi_b2_disp (per-quadrant record stations): their ret = {fault, done, ready} come
+                                       //   from the dispatcher (ready = its input FIFO has room; done / fault = one retire a
+                                       //   record, after every targeted cluster finished it), so the one-record unit credit is
+                                       //   bypassed (seq's per-unit outstanding counters order them, as for any queued unit)
     parameter integer LX = (MTP == 2) ? 41 : 0,
     parameter integer CX = (MTP == 2) ? 8 : 0
 ) (
@@ -106,7 +111,12 @@ module ot_hgi_cp_die #(
     input  wire [16:0]   x_noise,           // unused (hgi-1010/h): the noise / mask id is MD word 53 (mtp_noise)
     // MTP=2: the controller nets (hgi_mtp_native <-> MX1 collar)
     input  wire [516:0]  f_mtp,
-    output wire [196:0]  t_mtp
+    output wire [196:0]  t_mtp,
+    // B2 = 1 (el1011-hbm-b2-cp): the command bus to the 4 cluster record stations (ot_hgi_b2_rqu), their returns, and
+    // the VM mirror window [lo, hi) (cfg strap); the sm / su / sfu / att / dma record ports and their ret are then unused
+    output wire [1032:0] b2_cb,
+    input  wire [39:0]   b2_rb,
+    input  wire [35:0]   b2_mir
 );
     // ---------------------------------------------------------------- loader link fields
     reg [229:0] cpl_r; assign cpl = cpl_r[221 + CX:0];
@@ -134,6 +144,16 @@ module ot_hgi_cp_die #(
     reg  [3:0] credit;                                   // {argmax, idx, quant, coll}
     reg  [5:0] credx;                                    // {hc, dma, att, sfu, su, sm}
     reg  halt;
+    wire [5:0] cx = credx | ((B2 != 0) ? 6'b011111 : 6'b000000);   // B2: the dispatcher holds the per-cluster credits
+    wire [2:0] sm_rt, su_rt, sfu_rt, att_rt, dma_rt;                // the per-cluster units' {fault, done, ready}
+    reg  [4:0] b2_v; reg [2197:0] b2_p;                              // B2: one shared record register (the dispatcher's input)
+    generate if (B2 != 0) begin : b2
+        ot_hgi_b2_disp #(.D(4), .BW(1024)) u_disp (.clk(clk), .rst_n(rst_n), .r_v(b2_v), .r_pa(b2_p[1098:0]), .r_pb(b2_p[2197:1099]), .sm_ret(sm_rt),
+            .su_ret(su_rt), .sfu_ret(sfu_rt), .att_ret(att_rt), .dma_ret(dma_rt), .mlo(b2_mir[17:0]), .mhi(b2_mir[35:18]), .cb(b2_cb), .rb(b2_rb), .busy());
+    end else begin : nb2
+        assign sm_rt = sm_ret; assign su_rt = su_ret; assign sfu_rt = sfu_ret; assign att_rt = att_ret; assign dma_rt = dma_ret;
+        assign b2_cb = '0;
+    end endgenerate
     wire mh_emit_free = (MTP == 2) && !cpl_hold && !(cpl_v && !x_run);   // the completion station can take an emit / done beat
     wire units_busy = ~credit[0] | ~credit[1] | ~credit[2] | ~credit[3] | ~(&credx) | (|ux_v);
     localparam [15:0] RECU = 16'b0000_0111_1111_1110;   // units 1-10 have a record bus (0 CTL internal, 11 SIMT absent)
@@ -241,13 +261,13 @@ module ot_hgi_cp_die #(
         u_rdy[4] = credit[1] && quant_ret[0] && !halt;
         u_rdy[9] = credit[2] && idx_ret[0] && !halt;
         u_rdy[7] = credit[3] && am_ret[0] && !halt;
-        u_rdy[1] = credx[0] && sm_ret[0] && !halt;  u_rdy[2] = credx[1] && su_ret[0] && !halt;
-        u_rdy[3] = credx[2] && sfu_ret[0] && !halt; u_rdy[5] = credx[3] && att_ret[0] && !halt;
-        u_rdy[8] = credx[4] && dma_ret[0] && !halt; u_rdy[10] = credx[5] && hc_ret[0] && !halt;
+        u_rdy[1] = cx[0] && sm_rt[0] && !halt;  u_rdy[2] = cx[1] && su_rt[0] && !halt;
+        u_rdy[3] = cx[2] && sfu_rt[0] && !halt; u_rdy[5] = cx[3] && att_rt[0] && !halt;
+        u_rdy[8] = cx[4] && dma_rt[0] && !halt; u_rdy[10] = credx[5] && hc_ret[0] && !halt;
         u_done = ux_done & ~RECU; u_done[6] = coll_ret[1]; u_done[4] = quant_ret[1]; u_done[9] = idx_ret[1]; u_done[7] = am_ret[1];
-        u_done[1] = sm_ret[1]; u_done[2] = su_ret[1]; u_done[3] = sfu_ret[1]; u_done[5] = att_ret[1]; u_done[8] = dma_ret[1]; u_done[10] = hc_ret[1];
+        u_done[1] = sm_rt[1]; u_done[2] = su_rt[1]; u_done[3] = sfu_rt[1]; u_done[5] = att_rt[1]; u_done[8] = dma_rt[1]; u_done[10] = hc_ret[1];
         u_fault = ux_fault & ~RECU; u_fault[6] = coll_ret[2]; u_fault[4] = quant_ret[2]; u_fault[9] = idx_ret[2]; u_fault[7] = am_ret[2];
-        u_fault[1] = sm_ret[2]; u_fault[2] = su_ret[2]; u_fault[3] = sfu_ret[2]; u_fault[5] = att_ret[2]; u_fault[8] = dma_ret[2]; u_fault[10] = hc_ret[2];
+        u_fault[1] = sm_rt[2]; u_fault[2] = su_rt[2]; u_fault[3] = sfu_rt[2]; u_fault[5] = att_rt[2]; u_fault[8] = dma_rt[2]; u_fault[10] = hc_ret[2];
     end
     assign ux_v = u_v & ~RECU & {16{!halt}};
     // descriptor index: A 0, B 1, C 2, D 3, O 4, R 5, I 6
@@ -261,6 +281,19 @@ module ot_hgi_cp_die #(
     function automatic [255:0] a_il(input [255:0] a, input [17:0] il);
         begin a_il = a; a_il[255:239] = il[17:1]; a_il[7] = il[0]; end
     endfunction
+    // B2: the five per-cluster units' records into ONE register (same packing as their legacy buses)
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) b2_v <= 5'd0;
+        else b2_v <= (B2 != 0) ? {u_v[8] && u_rdy[8], u_v[5] && u_rdy[5], u_v[3] && u_rdy[3], u_v[2] && u_rdy[2], u_v[1] && u_rdy[1]} : 5'd0;
+    end
+    always @(posedge clk)
+        if (B2 != 0) begin
+            if (u_v[1] && u_rdy[1]) b2_p <= 2198'({nB, nA, dO, dB, dA, d_hdr, 1'b1});
+            if (u_v[2] && u_rdy[2]) b2_p <= {nA, dI, dR, dO, dD, dC, dB, dA, d_sut, d_hdr, 1'b1};
+            if (u_v[3] && u_rdy[3]) b2_p <= 2198'({nA, dO, dC, dB, dA, d_hdr, 1'b1});
+            if (u_v[5] && u_rdy[5]) b2_p <= 2198'({d_pos1, nC, nB, dO, dC, dB, dA, d_sut, d_hdr, 1'b1});
+            if (u_v[8] && u_rdy[8]) b2_p <= 2198'({d_pos1, nO, nA, dO, a_il(dA, dI[25:8] + {2'd0, d_L}), d_hdr, 1'b1});
+        end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; coll_recx <= 554'd0; quant_rec <= '0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
@@ -282,15 +315,15 @@ module ot_hgi_cp_die #(
             if (u_v[7] && u_rdy[7]) begin am_rec <= {rank, nO, nA, dO, dA, d_hdr, 1'b1}; credit[3] <= 1'b0; end
             else if (am_ret[1] || am_ret[2]) credit[3] <= 1'b1;
             if (u_v[1] && u_rdy[1]) begin sm_rec <= {nB, nA, dO, dB, dA, d_hdr, 1'b1}; credx[0] <= 1'b0; end
-            else if (sm_ret[1] || sm_ret[2]) credx[0] <= 1'b1;
+            else if (sm_rt[1] || sm_rt[2]) credx[0] <= 1'b1;
             if (u_v[2] && u_rdy[2]) begin su_rec <= {nA, dI, dR, dO, dD, dC, dB, dA, d_sut, d_hdr, 1'b1}; credx[1] <= 1'b0; end
-            else if (su_ret[1] || su_ret[2]) credx[1] <= 1'b1;
+            else if (su_rt[1] || su_rt[2]) credx[1] <= 1'b1;
             if (u_v[3] && u_rdy[3]) begin sfu_rec <= {nA, dO, dC, dB, dA, d_hdr, 1'b1}; credx[2] <= 1'b0; end
-            else if (sfu_ret[1] || sfu_ret[2]) credx[2] <= 1'b1;
+            else if (sfu_rt[1] || sfu_rt[2]) credx[2] <= 1'b1;
             if (u_v[5] && u_rdy[5]) begin att_rec <= {d_pos1, nC, nB, dO, dC, dB, dA, d_sut, d_hdr, 1'b1}; credx[3] <= 1'b0; end
-            else if (att_ret[1] || att_ret[2]) credx[3] <= 1'b1;
+            else if (att_rt[1] || att_rt[2]) credx[3] <= 1'b1;
             if (u_v[8] && u_rdy[8]) begin dma_rec <= {d_pos1, nO, nA, dO, a_il(dA, dI[25:8] + {2'd0, d_L}), d_hdr, 1'b1}; credx[4] <= 1'b0; end
-            else if (dma_ret[1] || dma_ret[2]) credx[4] <= 1'b1;
+            else if (dma_rt[1] || dma_rt[2]) credx[4] <= 1'b1;
             if (u_v[10] && u_rdy[10]) begin hc_rec <= {nO, nA, dO, dB, dA, d_hdr, 1'b1}; credx[5] <= 1'b0; end
             else if (hc_ret[1] || hc_ret[2]) credx[5] <= 1'b1;
             if (vmstat[18] || vmstat[17] || vmstat[16]) halt <= 1'b1;

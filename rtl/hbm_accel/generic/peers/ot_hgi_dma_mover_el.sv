@@ -8,7 +8,8 @@
 // outline is sized by its real interface (~4.7k IO pins, not 13.0k).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_mover_el #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer PX = 2              // hbm-fq/mvf: 1 registered issue decisions + vmq output; 2 + response pin flops, chunked set-up, serial SXP (ot_hgi_dma_mover PX)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -53,7 +54,7 @@ module ot_hgi_dma_mover_el #(
     input  wire          wl_done
 );
     wire [512:0] vr2q_nc;
-    ot_hgi_dma_mover #(.MUT(MUT), .VR2(0), .KVW(0)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
+    ot_hgi_dma_mover #(.MUT(MUT), .VR2(0), .KVW(0), .PX(PX)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
         .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
