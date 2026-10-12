@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctrn_ref-v1-COMMIT",
+ "name": "s81hc_ctrn_ref-v1-a9cfb97b9",
  "block": "ot_s81_hc_ctrn",
  "ref_tile": true,
  "owner": "Claude:el1011-s81hc-ctile",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/el1011-s81hc-ctile",
-  "commit": "COMMIT"
+  "commit": "a9cfb97b9"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctrn_ref/s81hc_ctrn_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctrn_ref/s81hc_ctrn_ref-v1-a9cfb97b9"
   }
  ],
  "cycles_added": 0,
