@@ -417,10 +417,10 @@ function draw(E){
     c.globalAlpha = 1;
   }
   for (const o of spec.overlays || []) OVER[o] && OVER[o](E, c, r, spec);
-  P.lab.innerHTML = `<b>${esc(E.d.label + (E.d.role ? ' · ' + E.d.role : ''))}</b><br>${esc(SAFE ? '' : E.d.block + ' · ')}${fmt(E.W, 1)} × ${fmt(E.H, 1)} µm · ${fmt(E.n, 0)} cells` +
+  P.lab.innerHTML = `<b>${esc(E.d.label + (E.d.role ? ' · ' + E.d.role : ''))}</b><br>${esc(SAFE ? '' : E.d.block + ' · ')}${fmt(E.W, 1)} × ${fmt(E.H, 1)} \u00b5m · ${fmt(E.n, 0)} cells` +
     (S.tab === 'tree' ? `<br>${E.cw && S.tview === 'wires' ? `routed clock wires from the DB (${fmt(E.cw.n, 0)} segments)` : 'tree topology: straight lines driver → driven buffer'}` : '') +
     (S.tab === 'rtl' && S.rtlEl === E.k && S.rtlSel != null ? `<br>lit: ${esc(SAFE ? 'selected module' : (S.rtlSel || '(top)'))} · <span style="color:var(--accent)">&#9632;</span> named <span style="color:var(--warn)">&#9632;</span> inferred` : '');
-  const bar = niceStep(80 / s); P.scale.textContent = `${bar >= 1 ? fmt(bar, 0) : fmt(bar, 2)} µm ≈ ${fmt(bar * s, 0)} px`;
+  const bar = niceStep(80 / s); P.scale.textContent = `${bar >= 1 ? fmt(bar, 0) : fmt(bar, 2)} \u00b5m ≈ ${fmt(bar * s, 0)} px`;
 }
 function niceStep(v){ const m = Math.pow(10, Math.floor(Math.log10(v))), e = v / m; return (e >= 5 ? 5 : e >= 2 ? 2 : 1) * m; }
 function drawCells(E, c, r, mode){
@@ -518,7 +518,7 @@ function hover(E, e){
     if (best >= 0){ const n = N[best]; html = `<div class="n">${esc(SAFE ? n[4] : n[6])}</div><div class="m">${esc(n[4])} · level ${n[3]}${/ICG/.test(n[4]) ? ' · clock gate' : ''} · clock arrival TT ${fmt(n[5], 1)} ps</div>`; }
   }
   if (!html && S.tab === 'density'){ const g = E.d.geom.grid, bx = Math.floor(x / g.bin_um), by = Math.floor(y / g.bin_um), k = by * g.nx + bx;
-    html = `<div class="n">bin ${bx},${by} (${fmt(g.bin_um, 1)} µm)</div><div class="m">cell density ${fmt(100 * g.density[k], 1)} % · signal pins ${fmt(g.pins[k], 0)} · routed-wire RUDY ${fmt(g.rudy[k], 2)} µm/µm²</div>`; }
+    html = `<div class="n">bin ${bx},${by} (${fmt(g.bin_um, 1)} \u00b5m)</div><div class="m">cell density ${fmt(100 * g.density[k], 1)} % · signal pins ${fmt(g.pins[k], 0)} · routed-wire RUDY ${fmt(g.rudy[k], 2)} \u00b5m/\u00b5m²</div>`; }
   if (!html){
     const m = E.d.geom.macros.find(q => x >= q.x0 && x <= q.x1 && y >= q.y0 && y <= q.y1);
     const i = hit(E, x, y, 0);
@@ -530,8 +530,8 @@ function hover(E, e){
       html = `<div class="n">${esc(SAFE ? 'cell #' + i : (j >= 0 ? L[j][4] : 'cell #' + i + ' (synthesis-named)'))}</div>
         <div class="m">master ${esc(E.d.geom.masters[E.mas[i]])}${tags.length ? ' · ' + tags.join(' · ') : ''}<br>
         block <span style="color:${E.groups[E.grp[i]].color}">&#9632;</span> ${esc(SAFE ? 'block ' + (E.grp[i] + 1) : E.groups[E.grp[i]].name)}${SAFE ? '' : `<br>module ${esc(mod)}`}${f & F.infer ? ' <i>(inferred: from the flops it connects to)</i>' : ''}${rl}<br>
-        at (${fmt(E.x[i], 2)}, ${fmt(E.y[i], 2)}) µm${j >= 0 ? ` · clock TT ${fmt(L[j][3], 1)} ps${E.d.clock_ff_match && E.d.clock_ff_leaves ? ` / FF ${fmt(E.d.clock_ff_leaves[j], 1)} ps` : ''}` : ''}</div>`;
-    } else if (m) html = `<div class="n">${esc(SAFE ? 'macro' : m.name)}</div><div class="m">${esc(m.master)} · ${fmt(m.x1 - m.x0, 2)} × ${fmt(m.y1 - m.y0, 2)} µm</div>`;
+        at (${fmt(E.x[i], 2)}, ${fmt(E.y[i], 2)}) \u00b5m${j >= 0 ? ` · clock TT ${fmt(L[j][3], 1)} ps${E.d.clock_ff_match && E.d.clock_ff_leaves ? ` / FF ${fmt(E.d.clock_ff_leaves[j], 1)} ps` : ''}` : ''}</div>`;
+    } else if (m) html = `<div class="n">${esc(SAFE ? 'macro' : m.name)}</div><div class="m">${esc(m.master)} · ${fmt(m.x1 - m.x0, 2)} × ${fmt(m.y1 - m.y0, 2)} \u00b5m</div>`;
   }
   if (!html){ tip.hidden = true; return; }
   tip.innerHTML = html; tip.hidden = false;
@@ -582,8 +582,8 @@ function keyNumbersHtml(E){
     ['clocks (sign-off SDC)', cl.length ? cl.join('<br>') : (d.layout ? 'not read (geometry-only export)' : '—')],
     [setupK.replace(' (sign-off record)', '') + ' / FF hold', `<span class="${f(/setup WNS \(sign-off/) >= 0 ? 'ok' : 'ng'}">${fx(f(/setup WNS \(sign-off/), '', 2)}</span> / <span class="${f(/^FF hold WNS \(sign-off/) >= 0 ? 'ok' : 'ng'}">${fx(f(/^FF hold WNS \(sign-off/), '', 2)}</span> ps · DRC ${fx(f(/^DRC$/))}`],
     ['cycles added', fx(f(/^cycles added/))],
-    ['std-cell area', fx(f(/^std-cell area/), 'µm²', 0) + (f(/^macro area/) ? ' + macros ' + fx(f(/^macro area/), 'µm²', 0) : '')],
-    ['die · utilisation', fx(f(/^die$/), 'µm') + ' · ' + fx(f(/^utilisation/), '%', 1)],
+    ['std-cell area', fx(f(/^std-cell area/), '\u00b5m²', 0) + (f(/^macro area/) ? ' + macros ' + fx(f(/^macro area/), '\u00b5m²', 0) : '')],
+    ['die · utilisation', fx(f(/^die$/), '\u00b5m') + ' · ' + fx(f(/^utilisation/), '%', 1)],
     ['cells · flops', fx(f(/^std cells$/)) + ' · ' + fx(f(/^flops$/))],
     ['LVT / SLVT cells', fx(f(/^LVT cells/), '%', 2) + ' / ' + fx(f(/^SLVT cells/), '%', 2)],
     ['power (vectorless, TT)', fx(f(/^power/), 'mW', 1)]];
@@ -862,10 +862,10 @@ function renderSide(){
   } else if (T === 'density'){
     const mx = heatMax(S.dmetric);
     H.push(sec('Density / congestion', `<div class="seg" role="group"><button type="button" data-dm="density" aria-pressed="${S.dmetric === 'density'}">Cell density</button><button type="button" data-dm="pins" aria-pressed="${S.dmetric === 'pins'}">Pin density</button><button type="button" data-dm="rudy" aria-pressed="${S.dmetric === 'rudy'}">Routed-wire RUDY</button></div>
-      <div class="ramp" style="background:linear-gradient(90deg,${HEAT.join(',')})"></div><div class="rampl"><span>0</span><span>sqrt scale, shared</span><span>${S.dmetric === 'density' ? fmt(100 * mx, 0) + ' %' : S.dmetric === 'pins' ? fmt(mx, 0) + ' pins' : fmt(mx, 2) + ' µm/µm²'}</span></div>
+      <div class="ramp" style="background:linear-gradient(90deg,${HEAT.join(',')})"></div><div class="rampl"><span>0</span><span>sqrt scale, shared</span><span>${S.dmetric === 'density' ? fmt(100 * mx, 0) + ' %' : S.dmetric === 'pins' ? fmt(mx, 0) + ' pins' : fmt(mx, 2) + ' \u00b5m/\u00b5m²'}</span></div>
       <p class="note" style="margin-top:6px">${S.dmetric === 'density' ? 'Placed std-cell area per bin over bin area (macros excluded).' : S.dmetric === 'pins' ? 'Signal pins of placed cells per bin.' : 'Each net\'s final routed wire length spread evenly over its pin bounding box (RUDY with routed length): an estimate of routing demand, not global-route overflow; the routed DBs carry no GRT congestion map.'}</p>`));
-    ok.forEach(E => { const a = E.d.geom.grid[S.dmetric], s = a.slice().sort((x, y) => x - y), f = v => S.dmetric === 'density' ? fmt(100 * v, 1) + ' %' : S.dmetric === 'pins' ? fmt(v, 0) : fmt(v, 2) + ' µm/µm²';
-      H.push(sec(esc(E.d.label), `<dl class="kv"><dt>median bin</dt><dd>${f(pct(s, .5))}</dd><dt>99th pct bin</dt><dd>${f(pct(s, .99))}</dd><dt>max bin</dt><dd>${f(s[s.length - 1])}</dd><dt>bin</dt><dd>${fmt(E.d.geom.grid.bin_um, 1)} µm</dd></dl>`)); });
+    ok.forEach(E => { const a = E.d.geom.grid[S.dmetric], s = a.slice().sort((x, y) => x - y), f = v => S.dmetric === 'density' ? fmt(100 * v, 1) + ' %' : S.dmetric === 'pins' ? fmt(v, 0) : fmt(v, 2) + ' \u00b5m/\u00b5m²';
+      H.push(sec(esc(E.d.label), `<dl class="kv"><dt>median bin</dt><dd>${f(pct(s, .5))}</dd><dt>99th pct bin</dt><dd>${f(pct(s, .99))}</dd><dt>max bin</dt><dd>${f(s[s.length - 1])}</dd><dt>bin</dt><dd>${fmt(E.d.geom.grid.bin_um, 1)} \u00b5m</dd></dl>`)); });
   } else if (T === 'rtl'){
     H.push(rtlSideHtml());
   } else if (T === 'facts'){

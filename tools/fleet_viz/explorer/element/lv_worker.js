@@ -1,7 +1,8 @@
 /* Layout viewer worker: fetches and decodes tiles / raster nodes off the main thread and builds the GPU instance
    buffers (layout.js draws them).  Messages in:
      {op:'init', header, base}                         header JSON, blob URL prefix
-     {op:'tile', key, url, phys}                       -> {op:'tile', key, n, rects, meta, pick:{x0,y0,x1,y1,layer,kind,net,aux,pin}, ox, oy}
+     {op:'tile', key, parts:[{name,url}], phys}         -> {op:'tile', key, secs, n, rects, meta, pick:{x0,y0,x1,y1,layer,kind,net,aux,pin}, ox, oy}
+                                                          (parts: the tile's sections the view needs: L<layer>, v, c)
      {op:'raster', key, url, style}                    -> {op:'raster', key, rgba (256*256*4), layers}
      {op:'restyle', style}                             -> re-composite every cached raster node: {op:'raster', ...} each
    Instance buffers: rects Float32 [x0,y0,x1,y1] absolute DBU (exact in float32 below 2^24 = 16.7 mm; deck.gl's identity
@@ -68,6 +69,15 @@ async function get(url){
   const r = await fetch(url); if (!r.ok) throw new Error(r.status + ' ' + url);
   return new Uint8Array(await r.arrayBuffer());
 }
+// decoded tile sections, kept so a layer switched on later costs only its own section (LRU by count)
+const secCache = new Map();
+async function section(p){
+  let T = secCache.get(p.url);
+  if (T){ secCache.delete(p.url); secCache.set(p.url, T); return T; }
+  const buf = await get(p.url); T = D.decodeTile(buf, H); T.bytes = buf.length;
+  secCache.set(p.url, T); if (secCache.size > 6000) secCache.delete(secCache.keys().next().value);
+  return T;
+}
 
 self.onmessage = async (ev) => {
   const m = ev.data;
@@ -75,11 +85,13 @@ self.onmessage = async (ev) => {
     if (m.op === 'init'){ H = m.header; NL = H.layers.length; return; }
     if (m.op === 'tile'){
       const t0 = performance.now();
-      const buf = await get(m.url);
+      const parts = await Promise.all(m.parts.map(section));
       const t1 = performance.now();
-      const T = D.decodeTile(buf, H);
+      const T = {ox: parts[0].ox, oy: parts[0].oy, size: parts[0].size, rects: {}, vias: null, cells: null};
+      let bytes = 0;
+      for (const P of parts){ Object.assign(T.rects, P.rects); if (P.vias) T.vias = P.vias; if (P.cells) T.cells = P.cells; bytes += P.bytes; }
       const r = buildTile(T, m.phys);
-      r.op = 'tile'; r.key = m.key; r.bytes = buf.length; r.ms = [t1 - t0, performance.now() - t1];
+      r.op = 'tile'; r.key = m.key; r.secs = m.parts.map(p => p.name); r.bytes = bytes; r.ms = [t1 - t0, performance.now() - t1];
       const p = r.pick;
       self.postMessage(r, [r.rects.buffer, r.meta.buffer, p.x0.buffer, p.y0.buffer, p.x1.buffer, p.y1.buffer, p.layer.buffer, p.kind.buffer, p.net.buffer, p.aux.buffer, p.pin.buffer]);
       return;

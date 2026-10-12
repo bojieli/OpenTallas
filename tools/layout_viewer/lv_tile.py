@@ -14,7 +14,8 @@ PACK (.lvp, schema opentallas.layout_viewer.pack.v1)
   'nn' / 'ni'   net / instance names, one per line, in index order (net i is line i - 1); 'nns' u8 signal-type code per net
                 (served by name lookup / search on the server, never shipped whole to the client)
   'lint'        JSON: hierarchy-contract findings (lv_lint.py), each with layout geometry
-  't/<tx>_<ty>' geometry tile (binary, see TILE below), leaf tiles of TILE_NM x TILE_NM
+  't/<tx>_<ty>/<s>'  geometry tile section (binary, see TILE below; one section each), leaf tiles of TILE_NM x TILE_NM;
+                <s> = L<layer index> (that layer's rectangles), v (vias), c (std cells); the header lists each tile's sections
   'r/<l>/<ix>_<iy>'  density raster node of level l: one 256 x 256 u8 plane per non-empty layer (coverage 0..255)
   'cong'        routing-utilisation grid per routing layer (u8, percent of track capacity, signal wires)
   'ibb'         int32 columns over the instances: delta x0, delta y0, w, h, master (bbox for search / name lookup)
@@ -320,7 +321,7 @@ def build_tiles(meta, rects, vias, insts, inets, mrects, quality):
                 net = q[:, 5]; dnet = np.diff(net, prepend=0)
                 body = b''.join([varint(zz(dmaj)), varint(zz(dmnr)), varint(q[:, 3] - q[:, 1]), varint(q[:, 4] - q[:, 2]),
                                  varint(zz(dnet)), varint(q[:, 6]), varint(qc), varint(qs[qc != 0])])
-                secs.append(struct.pack('<BBHII', 1, li, 1 if v else 0, len(q), len(body)) + body)
+                secs.append(('L%d' % li, struct.pack('<BBHII', 1, li, 1 if v else 0, len(q), len(body)) + body))
                 counts[li] = int(len(q))
         v = V[vb[t]:vb[t + 1]]
         if len(v):
@@ -329,7 +330,7 @@ def build_tiles(meta, rects, vias, insts, inets, mrects, quality):
             dy = np.diff(y, prepend=0); same = np.concatenate([[False], dy[1:] == 0])
             dx = np.where(same, x - np.concatenate([[0], x[:-1]]), x)
             body = b''.join([varint(zz(dy)), varint(zz(dx)), varint(v[:, 2]), varint(zz(np.diff(v[:, 3], prepend=0))), varint(v[:, 4])])
-            secs.append(struct.pack('<BBHII', 2, 255, 0, len(v), len(body)) + body)
+            secs.append(('v', struct.pack('<BBHII', 2, 255, 0, len(v), len(body)) + body))
         c = C[cb[t]:cb[t + 1]]
         if len(c):
             I = insts[c]
@@ -345,13 +346,15 @@ def build_tiles(meta, rects, vias, insts, inets, mrects, quality):
                 nets = np.zeros(0, np.int64)
             body = b''.join([varint(zz(dy)), varint(zz(dx)), varint(I[:, 2]), varint(I[:, 3]), varint(zz(np.diff(c, prepend=0))), varint(I[:, 8]),
                              varint(zz(np.diff(nets, prepend=0)))])
-            secs.append(struct.pack('<BBHII', 3, 255, 0, len(c), len(body)) + body)
+            secs.append(('c', struct.pack('<BBHII', 3, 255, 0, len(c), len(body)) + body))
         if not secs: continue
-        raw = struct.pack('<4siiIHH', b'OTT1', int(tox), int(toy), S, len(secs), 0) + b''.join(secs)
-        raw_total += len(raw)
-        blobs['t/%d_%d' % (txi, tyi)] = raw
+        # one blob per section (per layer / vias / cells): the client fetches only the layers it shows
+        for nm, sec in secs:
+            raw = struct.pack('<4siiIHH', b'OTT1', int(tox), int(toy), S, 1, 0) + sec
+            raw_total += len(raw)
+            blobs['t/%d_%d/%s' % (txi, tyi, nm)] = raw
         nphys = int((insts[C[cb[t]:cb[t + 1]], 8] & 4).astype(bool).sum())
-        index.append(dict(x=txi, y=tyi, n=counts, v=int(vb[t + 1] - vb[t]), c=int(cb[t + 1] - cb[t]) - nphys, cp=nphys))
+        index.append(dict(x=txi, y=tyi, n=counts, v=int(vb[t + 1] - vb[t]), c=int(cb[t + 1] - cb[t]) - nphys, cp=nphys, s=[nm for nm, _ in secs]))
     L = int(math.ceil(math.log2(max(nx, ny)))) if max(nx, ny) > 1 else 0
     return blobs, dict(size=S, ox=ox, oy=oy, nx=int(nx), ny=int(ny), L=L, tiles=index, raw_bytes=raw_total,
                        pieces=int(len(P)), shapes=int(len(allr)))

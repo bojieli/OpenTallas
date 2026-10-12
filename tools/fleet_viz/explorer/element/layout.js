@@ -137,12 +137,18 @@ function saveUrl(){
     if (V.hl) o.n = String(V.hl); else delete o.n;
     const ov = Object.keys(V.ov).filter(k => V.ov[k]); if (ov.length) o.o = ov.join('.'); else delete o.o;
     if (V.lintSel != null) o.f = String(V.lintSel); else delete o.f;
+    if (V.manifest && V.index && V.manifest.job !== V.index.latest) o.j = V.manifest.job; else delete o.j;
     try { history.replaceState(null, '', location.pathname + location.search + '#' + Object.entries(o).map(([k, v]) => k + '=' + encodeURIComponent(v).replace(/%2C/g, ',')).join('&')); } catch (e) {}
   }, 250);
 }
 
 async function api(path, opt){ const r = await fetch(V.base + path, opt); if (!r.ok) throw new Error(r.status + ' ' + path); return r; }
-const blobUrl = name => V.base + 'b/' + name + '?v=' + V.ver;
+const blobUrl = name => {
+  if (V.objects){ const h = V.objects[name]; return h ? '/layout_store/objects/' + h.slice(0, 2) + '/' + h + '.br' : null; }
+  return V.base + 'b/' + name + '?v=' + V.ver;
+};
+async function blobJSON(name){ const u = blobUrl(name); if (!u) throw new Error('no ' + name); const r = await fetch(u); if (!r.ok) throw new Error(r.status + ' ' + name); return r.json(); }
+async function blobBuf(name){ const u = blobUrl(name); if (!u) throw new Error('no ' + name); const r = await fetch(u); if (!r.ok) throw new Error(r.status + ' ' + name); return r.arrayBuffer(); }
 
 function open(o){
   // o: {root, side, el, d (element JSON), E (elem.js prepped element or null), safe, onFallback}
@@ -158,7 +164,8 @@ function close(keep){
   if (!keep) { V.open = false; return; }
   if (deckgl){ deckgl.finalize(); deckgl = null; }
   if (V.workers) V.workers.forEach(w => w.terminate());
-  Object.assign(V, {workers: null, tiles: new Map(), rasters: new Map(), header: null, hl: 0, lintSel: null, rulers: [], rulerMode: false, pending: new Map()});
+  Object.assign(V, {workers: null, tiles: new Map(), rasters: new Map(), header: null, hl: 0, lintSel: null, rulers: [], rulerMode: false, pending: new Map(),
+    objects: null, manifest: null, index: null, tidx: null, firstPaint: null, firstGeo: null, miniBg: null, congIm: null, stats: null});
 }
 async function poll(){
   const el = V.el;
@@ -166,6 +173,16 @@ async function poll(){
   try { st = await (await api('status?prepare=1')).json(); } catch (e) { st = {state: 'failed', error: String(e)}; }
   if (V.el !== el || !V.open) return;
   const msg = V.root.querySelector('[data-msg]');
+  if (st.state === 'static' && !V.safe){
+    try {
+      V.index = await (await fetch(st.index)).json();
+      const job = (urlState().j && V.index.history.includes(urlState().j)) ? urlState().j : V.index.latest;
+      V.manifest = await (await fetch('/layout_store/elements/' + encodeURIComponent(V.el) + '/' + encodeURIComponent(job) + '.json')).json();
+      V.objects = V.manifest.objects; V.ver = V.manifest.id;
+      return start();
+    } catch (e) { console.warn('static store', e); }
+  }
+  if (st.state === 'static'){ V.ver = st.id; return start(); }   // share-safe view: the same closure through /api/layout (redacted)
   if (st.state === 'ready'){ V.ver = st.version; return start(); }
   if (st.state === 'nodb'){
     V.root.innerHTML = `<div class="lv-busy"><div><b>No routed database for this element.</b><br>${esc(st.reason || '')}<br><br><button class="btn" data-fb>Open the placement view</button></div></div>`;
@@ -193,7 +210,7 @@ async function start(){
   try {
     if (!window.deck) await loadScript('vendor/deck.gl-8.9.36.min.js');
     if (!RectLayer) defineLayer();
-    const H = await (await api('b/header?v=' + V.ver)).json();
+    const H = await blobJSON('header');
     V.header = H;
   } catch (e) {
     V.root.innerHTML = `<div class="lv-busy"><div><b>Viewer failed to start.</b><br><span class="lv-dim">${esc(String(e))}</span><br><br><button class="btn" data-fb>Open the placement view</button></div></div>`;
@@ -222,6 +239,7 @@ async function start(){
   V.budget = PHONE() ? 1.6e6 : 5e6;
   V.gpuCap = 300e6;
   // DOM
+  if (SOLID){ V.root.style.background = '#000'; document.documentElement.classList.add('lv-solid'); }
   V.root.innerHTML = `
     <div class="lv-canvas" data-canvas></div>
     <div class="lv-top">
@@ -271,6 +289,7 @@ async function start(){
 
 /* ------------------------------------------------------------------ styles -> uniforms */
 function themeBg(){ return cssv('color-scheme') === 'light' ? 'light' : 'dark'; }
+const SOLID = /[?&]lvsolid=1/.test(location.search);   // regression mode: every layer solid white, no outline / stipple (tools/layout_viewer/lv_visual.py)
 function applyPalette(){
   const P = PAL[V.palette] || PAL.classic, light = themeBg() === 'light';
   V.L.forEach(l => {
@@ -280,6 +299,7 @@ function applyPalette(){
     else { const s = P[l.name] || ['#999999', 4]; c = s[0]; pat = s[1]; }
     if (light && l.type !== 'CELLS' && l.type !== 'PHYS'){ const a = hex(c); c = '#' + a.map(v => Math.round(v * 0.82).toString(16).padStart(2, '0')).join(''); }
     l.color = c; l.pat = pat;
+    if (SOLID){ l.color = '#ffffff'; l.pat = 0; l.op = 1; }
   });
   updateUniforms();
 }
@@ -288,7 +308,7 @@ function updateUniforms(){
   V.L.forEach(l => { const c = hex(l.color); col.set([c[0] / 255, c[1] / 255, c[2] / 255, 1], l.i * 4); al[l.i] = l.vis ? l.op : 0; pat[l.i] = l.pat; });
   KINDS.forEach(k => kd[k[0]] = V.kindVis[k[0]] ? 1 : 0);
   kd[14] = V.L[V.L.length - 1].vis ? 1 : 0;   // physical-only outlines follow their layer row
-  V.uni = {uColor: col, uAlpha: al, uPat: pat, uKind: kd, uHl: V.hl || 0, uFill: themeBg() === 'light' ? 0.32 : 0.22, uPx: 1};
+  V.uni = {uColor: col, uAlpha: al, uPat: pat, uKind: kd, uHl: V.hl || 0, uFill: SOLID ? 1 : themeBg() === 'light' ? 0.32 : 0.22, uPx: 1};
   V.styleVer = (V.styleVer || 0) + 1;
   if (V.workers){
     const st = {}; V.L.forEach(l => { const c = hex(l.color); st[l.i] = {r: c[0], g: c[1], b: c[2], a: l.vis ? l.op : 0}; });
@@ -364,23 +384,41 @@ function update(){
   render(b, geo, want, level);
   drawMini(); drawScale(ppu); renderInfo(cost, vis.length);
 }
+function neededSecs(k){
+  const t = tileIndex().get(k); if (!t) return [];
+  const nl = V.header.layers.length, L = V.L, out = [];
+  const secs = t.s || [];
+  for (const s of secs){
+    if (s[0] === 'L'){ const li = +s.slice(1); if (L[li] && L[li].vis) out.push(s); }
+    else if (s === 'v'){ if ((V.kindVis[9] || V.kindVis[10]) && L.some(l => l.type === 'CUT' && l.vis)) out.push(s); }
+    else if (s === 'c'){ if (L[nl].vis || L[nl + 1].vis || L.some(l => /^(M1|V0|M2)$/.test(l.name) && l.vis)) out.push(s); }
+  }
+  return out;
+}
 function requestTile(k){
+  const secs = neededSecs(k);
+  if (!secs.length){ V.tiles.set(k, {n: 0, empty: true, secs: [], bytes: 0, used: performance.now()}); return; }
   const w = V.workers[V.wnext++ % V.workers.length];
   V.pending.set('t/' + k, performance.now());
-  w.postMessage({op: 'tile', key: k, url: location.origin + blobUrl('t/' + k), phys: V.phys});
+  w.postMessage({op: 'tile', key: k, parts: secs.map(s => ({name: s, url: location.origin + blobUrl('t/' + k + '/' + s)})), phys: V.phys});
+}
+function refreshTiles(){   // a layer switched on: tiles that lack its section are fetched again (cached sections are reused)
+  for (const [k, t] of V.tiles){ const need = neededSecs(k); if (need.some(s => !(t.secs || []).includes(s)) && !V.pending.has('t/' + k)) requestTile(k); }
 }
 function requestRaster(k){
   const w = V.workers[V.wnext++ % V.workers.length];
   V.pending.set('r/' + k, performance.now());
-  w.postMessage({op: 'raster', key: k, url: location.origin + blobUrl('r/' + k), style: V.rstyle});
+  const u = blobUrl('r/' + k); if (!u){ V.pending.delete('r/' + k); return; }
+  w.postMessage({op: 'raster', key: k, url: location.origin + u, style: V.rstyle});
 }
 function onWorker(ev){
   const m = ev.data;
   if (m.op === 'tile'){
     V.pending.delete('t/' + m.key);
     if (!V.header) return;
-    const bytes = m.n * 28;
-    V.tiles.set(m.key, {n: m.n, rects: m.rects, meta: m.meta, pick: m.pick, ox: m.ox, oy: m.oy, bytes, used: performance.now(), layer: null});
+    const bytes = m.n * 28, old = V.tiles.get(m.key);
+    if (old) V.gpuBytes -= old.bytes || 0;
+    V.tiles.set(m.key, {n: m.n, rects: m.rects, meta: m.meta, pick: m.pick, ox: m.ox, oy: m.oy, bytes, secs: m.secs, used: performance.now(), layer: null});
     V.gpuBytes += bytes;
     V.stats = V.stats || {tiles: 0, ms: 0, bytes: 0}; V.stats.tiles++; V.stats.ms += m.ms[1]; V.stats.bytes += m.bytes;
     if (!V.firstGeo){ V.firstGeo = performance.now() - V.t0; }
@@ -416,10 +454,11 @@ function render(b, geo, want, level){
   const allLoaded = geo && [...want].every(k => V.tiles.has(k) || !tileIndex().has(k));
   if (!allLoaded){ rl(0); if (level !== 0) rl(level); }
   if (geo){
-    for (const k of want){ const t = V.tiles.get(k); if (!t) continue;
+    for (const k of want){ const t = V.tiles.get(k); if (!t || t.empty || !t.n) continue;
       layers.push(new RectLayer({id: 't' + k, data: {length: t.n, attributes: {instanceRects: {value: t.rects, size: 4}, instanceMeta: {value: t.meta, size: 3}}},
         coordinateSystem: C, lv: V.uni})); }
   }
+  if (SOLID){ deckgl.setProps({layers}); return; }
   // die / core outline + macros
   const D = V.die, Co = V.header.core, fg = hex(cssv('--faint') || '#4a5678');
   layers.push(new deck.PathLayer({id: 'die', data: [{p: [[D[0], D[1]], [D[2], D[1]], [D[2], D[3]], [D[0], D[3]], [D[0], D[1]]], c: [...fg, 255]},
@@ -436,7 +475,7 @@ function render(b, geo, want, level){
   if (rs.length){
     const ac = hex(cssv('--story') || '#ffd23f');
     layers.push(new deck.LineLayer({id: 'rulers', data: rs, getSourcePosition: r => r.a, getTargetPosition: r => r.b, getColor: [...ac, 255], widthUnits: 'pixels', getWidth: 2, coordinateSystem: C}));
-    layers.push(new deck.TextLayer({id: 'rulert', data: rs, getPosition: r => [(r.a[0] + r.b[0]) / 2, (r.a[1] + r.b[1]) / 2], getText: r => rulerText(r), getSize: 12,
+    layers.push(new deck.TextLayer({id: 'rulert', data: rs, getPosition: r => [(r.a[0] + r.b[0]) / 2, (r.a[1] + r.b[1]) / 2], getText: r => rulerText(r), getSize: 12, characterSet: 'auto',
       getColor: [...ac, 255], background: true, getBackgroundColor: themeBg() === 'light' ? [255, 255, 255, 220] : [5, 7, 13, 220], backgroundPadding: [4, 2],
       fontFamily: 'ui-monospace, Menlo, monospace', getTextAnchor: 'start', getAlignmentBaseline: 'bottom', getPixelOffset: [6, -6], coordinateSystem: C}));
   }
@@ -444,12 +483,12 @@ function render(b, geo, want, level){
     layers.push(new deck.PolygonLayer({id: 'flash', data: [f], getPolygon: q => [[q[0], q[1]], [q[2], q[1]], [q[2], q[3]], [q[0], q[3]]], filled: false, stroked: true, getLineColor: [...ac, 255], lineWidthUnits: 'pixels', getLineWidth: 2.5, coordinateSystem: C})); }
   deckgl.setProps({layers});
 }
-function rulerText(r){ const dx = (r.b[0] - r.a[0]) / V.dbu, dy = (r.b[1] - r.a[1]) / V.dbu; return `${fmt(Math.hypot(dx, dy), 3)} µm  (dx ${fmt(dx, 3)}, dy ${fmt(dy, 3)})`; }
+function rulerText(r){ const dx = (r.b[0] - r.a[0]) / V.dbu, dy = (r.b[1] - r.a[1]) / V.dbu; return `${fmt(Math.hypot(dx, dy), 3)} \u00b5m  (dx ${fmt(dx, 3)}, dy ${fmt(dy, 3)})`; }
 
 /* ------------------------------------------------------------------ overlays */
 async function loadOverlays(){
-  try { V.lint = await (await api('b/lint?v=' + V.ver)).json(); } catch (e) { V.lint = {error: String(e), findings: []}; }
-  try { const buf = await (await api('b/cong?v=' + V.ver)).arrayBuffer(); V.cong = LVDecode.decodeCong(buf); } catch (e) { V.cong = null; }
+  try { V.lint = await blobJSON('lint'); } catch (e) { V.lint = {error: String(e), findings: []}; }
+  try { V.cong = LVDecode.decodeCong(await blobBuf('cong')); } catch (e) { V.cong = null; }
   V.congLayer = V.congLayer != null ? V.congLayer : 'max';
   prepClock(); prepModules();
   renderSide(); requestUpdate();
@@ -494,7 +533,7 @@ function overlayLayers(layers, b, geo){
   if (V.ov.mods && V.mods){
     layers.push(new deck.PolygonLayer({id: 'mods', data: V.mods, getPolygon: m => { const q = m.bb; return [[q[0], q[1]], [q[2], q[1]], [q[2], q[3]], [q[0], q[3]]]; },
       filled: false, getLineColor: m => [...hex(m.color), 230], lineWidthUnits: 'pixels', getLineWidth: 2, coordinateSystem: C}));
-    layers.push(new deck.TextLayer({id: 'modt', data: V.mods, getPosition: m => [m.bb[0], m.bb[3]], getText: m => V.safe ? 'block' : m.name, getSize: 11, getColor: m => [...hex(m.color), 255],
+    layers.push(new deck.TextLayer({id: 'modt', data: V.mods, getPosition: m => [m.bb[0], m.bb[3]], getText: m => V.safe ? 'block' : m.name, getSize: 11, characterSet: 'auto', getColor: m => [...hex(m.color), 255],
       getTextAnchor: 'start', getAlignmentBaseline: 'top', getPixelOffset: [4, 4], fontFamily: 'ui-monospace, Menlo, monospace', background: true,
       getBackgroundColor: light ? [255, 255, 255, 200] : [5, 7, 13, 200], coordinateSystem: C}));
   }
@@ -528,7 +567,7 @@ function overlayLayers(layers, b, geo){
     const mk = F.filter(f => f.bbox).map(f => ({f, p: [(f.bbox[0] + f.bbox[2]) / 2, (f.bbox[1] + f.bbox[3]) / 2]}));
     layers.push(new deck.PolygonLayer({id: 'lintbb', data: F.filter(f => f.bbox && (sel == null || sel === f.id)), getPolygon: f => { const q = f.bbox; return [[q[0], q[1]], [q[2], q[1]], [q[2], q[3]], [q[0], q[3]]]; },
       filled: false, getLineColor: f => [...(f.sev === 'FAIL' ? red : amb), 200], lineWidthUnits: 'pixels', getLineWidth: 1, coordinateSystem: C}));
-    layers.push(new deck.TextLayer({id: 'lintmk', data: mk, getPosition: d => d.p, getText: d => '⚠ ' + (d.f.id + 1), getSize: 13, getColor: d => [...(d.f.sev === 'FAIL' ? red : amb), 255],
+    layers.push(new deck.TextLayer({id: 'lintmk', data: mk, getPosition: d => d.p, getText: d => '\u26a0 ' + (d.f.id + 1), getSize: 13, getColor: d => [...(d.f.sev === 'FAIL' ? red : amb), 255],
       background: true, getBackgroundColor: light ? [255, 255, 255, 235] : [5, 7, 13, 235], backgroundPadding: [4, 2], fontWeight: 700, coordinateSystem: C, pickable: true, characterSet: 'auto',
       fontFamily: 'ui-sans-serif, system-ui, sans-serif'}));
   }
@@ -568,7 +607,7 @@ async function names(kind, ids){
 async function doHover(e){
   if (!V.header || !e) return;
   const w = worldAt(e), tip = V.root.querySelector('[data-tip]');
-  V.root.querySelector('[data-coord]').textContent = `x ${fmt((w[0] - V.die[0]) / V.dbu, 3)}  y ${fmt((w[1] - V.die[1]) / V.dbu, 3)} µm`;
+  V.root.querySelector('[data-coord]').textContent = `x ${fmt((w[0] - V.die[0]) / V.dbu, 3)}  y ${fmt((w[1] - V.die[1]) / V.dbu, 3)} \u00b5m`;
   if (V.rulerMode && V.rulerLive){ V.rulerLive.b = [w[0], w[1]]; requestUpdate(); }
   if (V.overlayHover){ return; }
   const ppu = Math.pow(2, V.vs.zoom), tol = 2 / ppu;
@@ -579,7 +618,7 @@ async function doHover(e){
   const L = V.L[li], W = (p.x1[i] - p.x0[i]) / V.dbu, Hh = (p.y1[i] - p.y0[i]) / V.dbu;
   let head = `${esc(L.name)} · ${esc(KIND_NAME[kind] || 'shape')}`, sub = '';
   if (kind === 9 || kind === 10){ const vt = V.header.vias[p.aux[i]]; sub = vt ? 'via ' + esc(vt.name) : ''; }
-  let body = `<div class="m">${fmt(W, 3)} × ${fmt(Hh, 3)} µm at (${fmt((p.x0[i] - V.die[0]) / V.dbu, 3)}, ${fmt((p.y0[i] - V.die[1]) / V.dbu, 3)})${p.kind[i] < 9 && (p.layer[i] < V.header.layers.length) ? '' : ''}</div>`;
+  let body = `<div class="m">${fmt(W, 3)} × ${fmt(Hh, 3)} \u00b5m at (${fmt((p.x0[i] - V.die[0]) / V.dbu, 3)}, ${fmt((p.y0[i] - V.die[1]) / V.dbu, 3)})${p.kind[i] < 9 && (p.layer[i] < V.header.layers.length) ? '' : ''}</div>`;
   const show = (nn, inst) => {
     const lines = [];
     if (inst){ const m = V.header.masters[inst.master]; lines.push(`instance <b>${esc(V.safe ? '#' + p.aux[i] : inst.name)}</b>`, `master ${esc(m ? m.name : inst.master)}${p.pin[i] >= 0 && m ? ' · pin ' + esc(m.pins[p.pin[i]].name) : ''}`); }
@@ -609,7 +648,7 @@ function onDeckHover(info){
   else if (id === 'clkb'){ html = `<div class="n">${esc(V.safe ? o.m : o.name)}</div><div class="m">${esc(o.m)} · level ${o.lvl} · arrival TT ${fmt(o.t, 1)} ps</div>`; }
   else if (id === 'paths'){ html = `<div class="n">path ${o.i + 1}: slack ${fmt(o.p.slack, 2)} ps</div><div class="m">${esc(V.safe ? '' : o.p.start + ' → ' + o.p.end)}</div><div class="m lv-dim">click to select</div>`; }
   else if (id === 'pathpins'){ html = `<div class="n">${esc(V.safe ? o[3] : o[0])}</div><div class="m">${esc(o[3])} · +${fmt(o[2], 2)} ps · arrival ${fmt(o[1], 2)} ps</div>`; }
-  else if (id === 'macros'){ html = `<div class="n">${esc(V.safe ? 'macro' : o.name)}</div><div class="m">${esc(V.safe ? '' : o.master)} · ${fmt((o.bbox[2] - o.bbox[0]) / V.dbu, 2)} × ${fmt((o.bbox[3] - o.bbox[1]) / V.dbu, 2)} µm · ${esc(o.orient)}</div>`; V.overlayHover = false; return; }
+  else if (id === 'macros'){ html = `<div class="n">${esc(V.safe ? 'macro' : o.name)}</div><div class="m">${esc(V.safe ? '' : o.master)} · ${fmt((o.bbox[2] - o.bbox[0]) / V.dbu, 2)} × ${fmt((o.bbox[3] - o.bbox[1]) / V.dbu, 2)} \u00b5m · ${esc(o.orient)}</div>`; V.overlayHover = false; return; }
   if (html){ tip.innerHTML = html; tip.hidden = false; placeTip(tip, info.srcEvent || {clientX: info.x + V.root.getBoundingClientRect().left, clientY: info.y + V.root.getBoundingClientRect().top}); }
 }
 function onClick(info, ev){
@@ -713,7 +752,7 @@ function drawScale(ppu){
   const el = V.root.querySelector('[data-scale]'); if (!el) return;
   const um = 100 / (ppu * V.dbu), m = Math.pow(10, Math.floor(Math.log10(um))), e = um / m, step = (e >= 5 ? 5 : e >= 2 ? 2 : 1) * m;
   el.querySelector('i').style.width = (step * ppu * V.dbu) + 'px';
-  el.querySelector('span').textContent = step >= 1 ? fmt(step, 0) + ' µm' : step >= 0.01 ? fmt(step * 1000, 0) + ' nm' : fmt(step * 1000, 1) + ' nm';
+  el.querySelector('span').textContent = step >= 1 ? fmt(step, 0) + ' \u00b5m' : step >= 0.01 ? fmt(step * 1000, 0) + ' nm' : fmt(step * 1000, 1) + ' nm';
 }
 function renderInfo(cost, nvis){
   const el = V.root.querySelector('[data-info]'); if (!el) return;
@@ -731,7 +770,7 @@ function presets(name){
   if (name === 'power'){ setAll(l => l.type !== 'PHYS' && l.type !== 'CELLS'); KINDS.forEach(k => V.kindVis[k[0]] = [1, 2, 3, 10].includes(k[0])); }
   if (name === 'm6'){ setAll(l => { const m = /^[MV](\d+)$/.exec(l.name); return l.name === 'Pad' || (m && (l.name[0] === 'M' ? +m[1] >= 6 : +m[1] >= 5)); }); V.kindVis[4] = true; V.ov.macros = true; }
   V.phys = V.L[nl + 1].vis;
-  updateUniforms(); renderSide(); requestUpdate(); saveUrl();
+  updateUniforms(); refreshTiles(); renderSide(); requestUpdate(); saveUrl();
 }
 function renderSide(){
   if (!V.side || !V.header) return;
@@ -751,7 +790,7 @@ function renderSide(){
   const cong = V.cong ? `<div class="ctl"><label>layer <select data-cong><option value="max" ${V.congLayer === 'max' ? 'selected' : ''}>max over layers</option>${V.cong.layers.map(li => `<option value="${li}" ${String(V.congLayer) === String(li) ? 'selected' : ''}>${esc(H.layers[li].name)}</option>`).join('')}</select></label></div>
     <div class="lv-ramp" style="background:linear-gradient(90deg,${HEAT.join(',')})"></div><div class="rampl"><span>0%</span><span>55%</span><span>&ge;110% of track capacity</span></div>
     <div class="tw"><table class="t"><thead><tr><th>layer</th><th class="n">p50</th><th class="n">p99</th><th class="n">max</th><th class="n">bins &gt;100%</th></tr></thead><tbody>${H.congestion.layers.map(c => `<tr><td>${esc(c.name)}</td><td class="n">${fmt(c.p50, 0)}%</td><td class="n">${fmt(c.p99, 0)}%</td><td class="n">${fmt(c.max, 0)}%</td><td class="n">${fmt(c.over100, 0)}</td></tr>`).join('')}</tbody></table></div>
-    <p class="note">${esc(H.congestion.basis)}; ${fmt(H.congestion.bin_nm / 1000, 2)} µm bins.</p>` : '<p class="note">no congestion grid in this pack</p>';
+    <p class="note">${esc(H.congestion.basis)}; ${fmt(H.congestion.bin_nm / 1000, 2)} \u00b5m bins.</p>` : '<p class="note">no congestion grid in this pack</p>';
   const P = V.d ? (((V.pcorner || 'setup') === 'hold' ? V.d.hold_paths : V.d.setup_paths) || []).slice(0, 15) : [];
   const paths = !P.length ? '<p class="note">No timing paths were exported for this element (timing not re-run).</p>' :
     `<div class="ctl"><select data-pc><option value="setup" ${(V.pcorner || 'setup') === 'setup' ? 'selected' : ''}>setup (TT)</option><option value="hold" ${V.pcorner === 'hold' ? 'selected' : ''}>hold (FF)</option></select></div>
@@ -759,7 +798,7 @@ function renderSide(){
   const clk = V.clk ? `<div class="lv-ramp" style="background:linear-gradient(90deg,${ARR.join(',')})"></div><div class="rampl"><span>${fmt(V.clk.lo, 0)} ps</span><span>clock arrival (TT, p1..p99)</span><span>${fmt(V.clk.hi, 0)} ps</span></div>
     <p class="note">${fmt(V.clk.bufs.length, 0)} tree cells, ${fmt(V.clk.leaves.length, 0)} sinks; click a clock-tree wire on the layout to light its routed net.</p>` : '<p class="note">no clock tree exported</p>';
   const net = V.netSel ? `<div class="lv-net"><b>${esc(V.safe ? 'net #' + V.netSel.id : V.netSel.name)}</b>${V.netSel.sig && V.netSel.sig !== 'SIGNAL' ? ' · ' + esc(V.netSel.sig) : ''}
-      ${V.netSel.bbox ? `<br><span class="lv-dim">extent ${fmt((V.netSel.bbox[2] - V.netSel.bbox[0]) / V.dbu, 2)} × ${fmt((V.netSel.bbox[3] - V.netSel.bbox[1]) / V.dbu, 2)} µm</span> <button class="rl" data-netzoom>zoom to net</button>` : ''} <button class="rl" data-netclear>clear</button></div>` : '';
+      ${V.netSel.bbox ? `<br><span class="lv-dim">extent ${fmt((V.netSel.bbox[2] - V.netSel.bbox[0]) / V.dbu, 2)} × ${fmt((V.netSel.bbox[3] - V.netSel.bbox[1]) / V.dbu, 2)} \u00b5m</span> <button class="rl" data-netzoom>zoom to net</button>` : ''} <button class="rl" data-netclear>clear</button></div>` : '';
   const T = H.truth ? H.truth.reduce((s, t) => s + t.n, 0) : null;
   const ovt = (k, t) => `<label class="lv-chk lv-ovt"><input type="checkbox" data-ov="${k}" ${V.ov[k] ? 'checked' : ''}> ${t}</label>`;
   V.side.innerHTML = `
@@ -774,10 +813,19 @@ function renderSide(){
     <div class="sec"><h3>Clock tree</h3>${ovt('clock', 'draw the tree, arrival-coloured')}${clk}</div>
     <div class="sec"><h3>Congestion</h3>${ovt('cong', 'per-layer heatmap')}${cong}</div>
     <div class="sec"><h3>Structure</h3>${ovt('macros', 'macro outlines')}${ovt('mods', 'module outlines' + (V.mods ? ` (${V.mods.length} blocks)` : ' (placement data needed)'))}</div>
+    ${V.manifest ? (() => { const c = V.manifest.closure || {}, m = c.metrics || {};
+      return `<div class="sec"><h3>Closure <span class="u">static export</span></h3><dl class="kv">
+      <dt>job</dt><dd>${esc(c.job || V.manifest.job)}${c.status ? ' · ' + esc(c.status) : ''}</dd>
+      ${c.commit ? `<dt>commit</dt><dd>${esc(String(c.commit).slice(0, 12))}</dd>` : ''}
+      ${m.ss_ps != null ? `<dt>setup / hold</dt><dd>${esc((m.setup_corner || 'ss').toUpperCase())} ${fmt(+m.ss_ps, 2)} ps · FF ${fmt(+m.ff_ps, 2)} ps · DRC ${esc(m.drc != null ? m.drc : '\u2014')}</dd>` : ''}
+      ${c.closed_at ? `<dt>closed</dt><dd>${esc(c.closed_at)}</dd>` : ''}
+      ${c.record ? `<dt>record</dt><dd>${esc(c.record)}</dd>` : ''}
+      <dt>export</dt><dd>${esc(V.manifest.made)} · ${fmt(V.manifest.bytes / 1e6, 1)} MB · round trip ${esc((V.manifest.verify || {}).verdict || '?')} (${fmt((V.manifest.verify || {}).shapes, 0)} shapes)</dd>
+      </dl>${V.index && V.index.history.length > 1 ? `<div class="ctl" style="margin-top:6px"><label>history <select data-hist>${V.index.history.map((j, i) => `<option value="${esc(j)}" ${j === V.manifest.job ? 'selected' : ''}>${esc(j)}${i === 0 ? ' (latest)' : ''}</option>`).join('')}</select></label></div>` : ''}</div>`; })() : ''}
     <div class="sec"><h3>Data</h3><dl class="kv">
       <dt>source</dt><dd>${esc(V.safe ? 'final routed DB' : (H.db || ''))}</dd>
-      <dt>die</dt><dd>${fmt((H.die[2] - H.die[0]) / H.dbu, 3)} × ${fmt((H.die[3] - H.die[1]) / H.dbu, 3)} µm · ${H.dbu} DBU/µm</dd>
-      <dt>tiles</dt><dd>${H.grid.nx} × ${H.grid.ny} of ${fmt(H.grid.size / H.dbu, 1)} µm, ${H.grid.tiles ? H.grid.tiles.length : 0} non-empty</dd>
+      <dt>die</dt><dd>${fmt((H.die[2] - H.die[0]) / H.dbu, 3)} × ${fmt((H.die[3] - H.die[1]) / H.dbu, 3)} \u00b5m · ${H.dbu} DBU/\u00b5m</dd>
+      <dt>tiles</dt><dd>${H.grid.nx} × ${H.grid.ny} of ${fmt(H.grid.size / H.dbu, 1)} \u00b5m, ${H.grid.tiles ? H.grid.tiles.length : 0} non-empty</dd>
       <dt>DB truth</dt><dd>${T != null ? fmt(T, 0) + ' shapes; round-trip: tools/layout_viewer/lv_verify.js' : 'not recorded'}</dd>
       <dt>cut</dt><dd>${esc(H.made || '')}</dd>
       ${V.firstPaint ? `<dt>first paint</dt><dd>${fmt(V.firstPaint, 0)} ms${V.firstGeo ? ` · first geometry ${fmt(V.firstGeo, 0)} ms` : ''}</dd>` : ''}</dl></div>`;
@@ -786,11 +834,11 @@ function renderSide(){
 function bindSide(){
   const S = V.side, nl = V.header.layers.length;
   S.querySelectorAll('[data-lv]').forEach(c => c.onchange = () => { const l = V.L[+c.dataset.lv]; l.vis = c.checked; if (l.i === nl + 1){ V.phys = l.vis; V.tiles.clear(); V.gpuBytes = 0; }
-    c.closest('.lv-row').classList.toggle('off', !l.vis); updateUniforms(); requestUpdate(); saveUrl(); });
+    c.closest('.lv-row').classList.toggle('off', !l.vis); updateUniforms(); refreshTiles(); requestUpdate(); saveUrl(); });
   S.querySelectorAll('[data-lo]').forEach(c => c.oninput = () => { V.L[+c.dataset.lo].op = c.value / 100; updateUniforms(); requestUpdate(); });
   S.querySelectorAll('[data-solo]').forEach(b => b.onclick = () => { const i = +b.dataset.solo; const only = V.L.every(l => l.i === i ? l.vis : !l.vis);
-    V.L.forEach(l => l.vis = only ? l.type !== 'PHYS' : l.i === i); V.phys = V.L[nl + 1].vis; updateUniforms(); renderSide(); requestUpdate(); saveUrl(); });
-  S.querySelectorAll('[data-kind]').forEach(c => c.onchange = () => { V.kindVis[+c.dataset.kind] = c.checked; updateUniforms(); requestUpdate(); saveUrl(); });
+    V.L.forEach(l => l.vis = only ? l.type !== 'PHYS' : l.i === i); V.phys = V.L[nl + 1].vis; updateUniforms(); refreshTiles(); renderSide(); requestUpdate(); saveUrl(); });
+  S.querySelectorAll('[data-kind]').forEach(c => c.onchange = () => { V.kindVis[+c.dataset.kind] = c.checked; updateUniforms(); refreshTiles(); requestUpdate(); saveUrl(); });
   S.querySelectorAll('[data-pre]').forEach(b => b.onclick = () => presets(b.dataset.pre));
   const pal = S.querySelector('[data-pal]'); if (pal) pal.onchange = () => { V.palette = pal.value; lsSet('pal', pal.value); applyPalette(); renderSide(); V.miniDirty = true; requestUpdate(); };
   S.querySelectorAll('[data-ov]').forEach(c => c.onchange = () => { V.ov[c.dataset.ov] = c.checked; requestUpdate(); saveUrl(); });
@@ -800,6 +848,9 @@ function bindSide(){
   S.querySelectorAll('[data-p]').forEach(r => r.onclick = () => { V.psel = +r.dataset.p; V.ov.paths = true; const p = ((V.pcorner === 'hold' ? V.d.hold_paths : V.d.setup_paths) || [])[V.psel];
     if (p){ const pts = p.points.filter(q => q[5] != null); if (pts.length){ const xs = pts.map(q => um2dbu(q[5])), ys = pts.map(q => um2dbu(q[6])); zoomTo([Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)], 0.8); } }
     renderSide(); requestUpdate(); });
+  const hs = S.querySelector('[data-hist]'); if (hs) hs.onchange = () => { const o = urlState(); o.j = hs.value; o.tab = 'geo';
+    try { history.replaceState(null, '', location.pathname + location.search + '#' + Object.entries(o).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&')); } catch (e) {}
+    V.loadedFor = null; open(V); };
   const nz = S.querySelector('[data-netzoom]'); if (nz) nz.onclick = () => zoomTo(V.netSel.bbox);
   const nc = S.querySelector('[data-netclear]'); if (nc) nc.onclick = () => highlight(0);
 }
@@ -817,5 +868,6 @@ window.LayoutViewer = {
   theme: () => { if (V.header){ applyPalette(); renderSide(); V.miniDirty = true; V.congIm = null; requestUpdate(); } },
   state: () => V,
   _update: () => update(),
+  _restyle: () => { updateUniforms(); refreshTiles(); requestUpdate(); },
 };
 })();

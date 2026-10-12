@@ -615,6 +615,8 @@ class H(BaseHTTPRequestHandler):
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
+        if u.path.startswith('/layout_store/'):
+            return LAYOUT.static(self, u.path[len('/layout_store/'):], safe)
         if u.path.startswith('/api/layout/'):
             return LAYOUT.handle(self, u.path[len('/api/layout/'):], q, safe)
         if u.path.startswith('/api/explorer/'):

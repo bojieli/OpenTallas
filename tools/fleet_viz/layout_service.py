@@ -1,117 +1,38 @@
-"""Layout viewer tiling service for fleet-viz (/api/layout/...).  See tools/fleet_viz/LAYOUT_VIEWER.md.
+"""Layout viewer service for fleet-viz.  See tools/fleet_viz/LAYOUT_VIEWER.md.
 
-An element's routed DB stays on the fleet host that holds it.  On the first request (or from the background
-precompute) the service ships tools/layout_viewer/{lv_extract,lv_tile,lv_lint}.py + child_lint.py to that host, runs
-the lossless OpenDB extraction in the ORFS container and the tile cutter beside it, both under ot-heavy with a memory
-cap sized from the DB, and fetches the finished pack (<element>.lvp) into a bounded on-disk LRU cache here.  The HTTP
-side only reads blobs out of cached packs: brotli bytes passed straight through (Content-Encoding: br) or decompressed
-for a client that does not accept br.
+Closed elements are served from the static layout store (layout_store.py: content-addressed objects + one manifest per
+closure, cut once at closure / by the backfill): plain static files, nothing is cut at view time.
 
-  GET /api/layout/<el>/status[?prepare=1]   state: none | queued | running | ready | failed | nodb (+ stage, error)
-  GET /api/layout/<el>/b/<blob>?v=<pack>    one pack blob: header, names, lint, cong, ibb, nbb, t/<x>_<y>, r/<l>/<x>_<y>
-  GET /api/layout/<el>/search?q=&k=net|inst|pin   names containing q (case-insensitive), with bbox
-  GET /api/layout/_cache                    cache + queue summary
-Elements on ot-epyc4 (saturated) are extracted on a relay host: the ODB is streamed through this host to ot-epyc3.
+  GET /layout_store/elements/<el>/index.json        latest closure + history (static)
+  GET /layout_store/elements/<el>/<job>.json        manifest of one closure (static)
+  GET /layout_store/objects/<h2>/<hash>.br          an immutable blob (Content-Encoding: br, or decoded for a client
+                                                    that does not accept br)
+
+Elements that are not in the store (not closed, or not yet exported) fall back to an on-demand cut into a bounded LRU
+cache of packs (cut on the fleet host holding the DB, layout_store.cut_pack):
+  GET /api/layout/<el>/status[?prepare=1]   state: static | ready | none | queued | running | failed | nodb
+  GET /api/layout/<el>/b/<blob>?v=<pack>    one blob of the on-demand pack
+Both: GET /api/layout/<el>/search?q=&k=net|inst|all, /api/layout/<el>/names?k=net|inst&ids=..   (name tables stay on
+the server), GET /api/layout/_cache.
 """
-import collections, fcntl, json, os, pathlib, shlex, shutil, struct, subprocess, threading, time
+import collections, json, os, pathlib, struct, threading, time
 
 try:
     import brotli
 except ImportError:  # pragma: no cover
     brotli = None
+import layout_store as LS
+from layout_store import Pack, StorePack, ssh
 
 HERE = pathlib.Path(__file__).resolve().parent
-ELEM_DATA = HERE / 'explorer' / 'element' / 'data'
-TOOLS = pathlib.Path(os.environ.get('LV_TOOLS', HERE / 'layout_viewer'))   # deployed copy of tools/layout_viewer + child_lint.py
+ELEM_DATA = LS.ELEM_DATA
 CACHE = pathlib.Path(os.environ.get('LV_CACHE', pathlib.Path.home() / '.cache' / 'layout-viewer'))
-CACHE_GB = float(os.environ.get('LV_CACHE_GB', '24'))
+CACHE_GB = float(os.environ.get('LV_CACHE_GB', '8'))
 STATE = pathlib.Path(os.environ.get('LV_STATE', pathlib.Path.home() / '.local' / 'state' / 'layout-viewer'))
-IMAGE = 'openroad/orfs:asap7lock'
-OPENROAD = '/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad'
-AVOID = set(filter(None, os.environ.get('LV_AVOID_HOSTS', 'ot-epyc4').split(',')))
-RELAY = os.environ.get('LV_RELAY_HOST', 'ot-epyc3')
-RELAY_DIR = os.environ.get('LV_RELAY_DIR', '/srv/opentallas-scratch/claude/layout-viewer-store/relay')
-PRECOMPUTE = os.environ.get('LV_PRECOMPUTE', '1') == '1'
-PRE_MAX_MEM = int(os.environ.get('LV_PRECOMPUTE_MAX_MEM', '31'))    # background work stays in ot-heavy's small slots
-EXTRACT_VERSION = 'e1'   # bump when lv_extract.py output changes (forces re-extraction)
-TILE_VERSION = 't2'      # bump when lv_tile.py / lv_lint.py output changes (re-cut from the kept extraction)
 
 
 def _log(*a):
     print(time.strftime('%H:%M:%S'), '[layout]', *a, flush=True)
-
-
-def ssh(host, cmd, inp=None, timeout=1800, binary=False):
-    args = ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ServerAliveInterval=30', '-o', 'ControlPath=none', host, cmd]
-    return subprocess.run(args, input=inp, capture_output=True, text=not binary, timeout=timeout)
-
-
-class Pack:
-    """read-only view of one .lvp file"""
-    def __init__(self, path):
-        self.path = pathlib.Path(path)
-        self.fh = open(self.path, 'rb')
-        h = self.fh.read(24)
-        if h[:8] != b'OTLVPK01': raise ValueError('not a layout pack: %s' % path)
-        io, il = struct.unpack('<QQ', h[8:24])
-        self.fh.seek(io); self.index = json.loads(brotli.decompress(self.fh.read(il)))
-        st = self.path.stat()
-        self.version = '%x%x' % (int(st.st_mtime), st.st_size)
-        self.lock = threading.Lock()
-        self._json = {}
-
-    def raw(self, name):
-        e = self.index.get(name)
-        if e is None: return None
-        with self.lock:
-            self.fh.seek(e[0]); return self.fh.read(e[1])
-
-    def json(self, name):
-        if name not in self._json:
-            b = self.raw(name)
-            self._json[name] = None if b is None else json.loads(brotli.decompress(b))
-        return self._json[name]
-
-    def dec(self, name):
-        """decompressed blob bytes, cached while the pack is open"""
-        k = '_d_' + name
-        if k not in self._json:
-            b = self.raw(name)
-            self._json[k] = None if b is None else brotli.decompress(b)
-        return self._json[k]
-
-    def lines(self, name):
-        """(bytes, line-start offsets) of a newline-joined name blob"""
-        k = '_l_' + name
-        if k not in self._json:
-            import numpy as np
-            b = self.dec(name) or b''
-            ends = np.flatnonzero(np.frombuffer(b, dtype=np.uint8) == 10)
-            starts = np.concatenate([[0], ends[:-1] + 1]) if len(ends) else np.zeros(0, dtype=np.int64)
-            self._json[k] = (b, starts, ends)
-        return self._json[k]
-
-    def line(self, name, i):
-        b, st, en = self.lines(name)
-        return b[st[i]:en[i]].decode('utf-8', 'replace') if 0 <= i < len(st) else None
-
-    def find(self, name, q, limit):
-        """indices of lines containing q (case-insensitive)"""
-        import numpy as np, re
-        k = '_lc_' + name
-        if k not in self._json: self._json[k] = self.lines(name)[0].lower()
-        bl = self._json[k]; st = self.lines(name)[1]
-        out, seen = [], set()
-        for m in re.finditer(re.escape(q.lower().encode()), bl):
-            i = int(np.searchsorted(st, m.start(), side='right') - 1)
-            if i in seen: continue
-            seen.add(i); out.append(i)
-            if len(out) >= limit: break
-        return out
-
-    def close(self):
-        try: self.fh.close()
-        except Exception: pass
 
 
 class Service:
@@ -124,8 +45,6 @@ class Service:
         self.host_sem = collections.defaultdict(lambda: threading.Semaphore(2))
         self.total_sem = threading.Semaphore(4)
         self.safe_hdr = {}
-        if PRECOMPUTE:
-            threading.Thread(target=self._precompute, daemon=True, name='layout-precompute').start()
 
     # ------------------------------------------------------------------ state
     def _mark(self, el, **kw):
@@ -152,6 +71,10 @@ class Service:
 
     def status(self, el, prepare=False, background=False):
         if not valid_name(el): return dict(state='invalid')
+        man = self.static_manifest(el)
+        if man is not None:
+            return dict(state='static', job=man['job'], id=man['id'], manifest='/layout_store/elements/%s/%s.json' % (el, man['job']),
+                        index='/layout_store/elements/%s/index.json' % el)
         p = self.pack_path(el)
         st = self._state(el)
         if p.exists():
@@ -181,72 +104,22 @@ class Service:
 
     # ------------------------------------------------------------------ pipeline
     def _run(self, el, db, background):
-        host, odb = db['host'], db['path']
-        work_host = RELAY if host in AVOID else host
         try:
-            with self.total_sem, self.host_sem[work_host]:
+            with self.total_sem, self.host_sem[db['host']]:
                 t0 = time.time()
-                self._mark(el, state='running', stage='probe', started=time.strftime('%Y-%m-%dT%H:%M:%S%z'))
-                pr = ssh(host, 'stat -c "%%s %%Y" %s' % shlex.quote(odb), timeout=120)
-                if pr.returncode: raise RuntimeError('routed DB not found on %s: %s' % (host, odb))
-                size, mtime = map(int, pr.stdout.split())
-                mem = int(min(160, max(8, -(-(12 * size) // 10 ** 9) + 6)))
-                if background and mem > PRE_MAX_MEM:
-                    self._mark(el, state='none', stage='deferred: DB too large for background precompute (%d GB cap); opens on demand' % mem)
-                    return
-                store = store_dir(work_host, odb, el) if work_host == host else '%s/%s' % (RELAY_DIR, el)
-                src_odb = odb
-                ssh(work_host, 'mkdir -p %s/tools/pylib314 %s/raw' % (store, store), timeout=120)
-                if work_host != host:   # relay: stream the DB through this host (no ssh between fleet hosts)
-                    self._mark(el, stage='relay %s -> %s (%.1f GB)' % (host, work_host, size / 1e9))
-                    src_odb = '%s/6_final.odb' % store
-                    chk = ssh(work_host, 'stat -c %%s %s 2>/dev/null' % src_odb, timeout=60)
-                    if chk.returncode or int(chk.stdout.strip() or 0) != size:
-                        cmd = 'ssh -o BatchMode=yes -o ControlPath=none %s "cat %s" | ssh -o BatchMode=yes -o ControlPath=none %s "cat > %s.tmp && mv %s.tmp %s"' % (
-                            host, shlex.quote(odb), work_host, src_odb, src_odb, src_odb)
-                        r = subprocess.run(['bash', '-c', cmd], capture_output=True, text=True, timeout=6 * 3600)
-                        if r.returncode: raise RuntimeError('relay copy failed: %s' % r.stderr[-300:])
-                # ship the tools
-                self._mark(el, stage='ship tools to %s' % work_host)
-                tar = subprocess.run(['tar', '-C', str(TOOLS), '-cf', '-', '.'], capture_output=True)
-                r = ssh(work_host, 'tar -C %s/tools -xf -' % store, inp=tar.stdout, binary=True, timeout=300)
-                if r.returncode: raise RuntimeError('ship tools: %s' % r.stderr[-300:])
-                # reuse what the host already has: the extraction when it is newer than the DB and of this extractor
-                # version, the pack when it is also of this tile-cutter version
-                pk = '%s/%s.lvp' % (store, el)
-                have = ssh(work_host, 'cd %s && test raw/meta.json -nt %s && cat ext.version 2>/dev/null; echo /; test -f %s.lvp && cat tile.version 2>/dev/null' % (
-                    store, shlex.quote(src_odb), shlex.quote(el)), timeout=60).stdout.split('/')
-                ext_ok = have[0].strip() == EXTRACT_VERSION
-                tile_ok = ext_ok and len(have) > 1 and have[1].strip() == TILE_VERSION
-                if not ext_ok:
-                    self._mark(el, stage='extract (OpenDB, %d GB cap) on %s' % (mem, work_host))
-                    cmd = ('cd {st} && rm -f ext.version tile.version && nice -n 19 ot-heavy --mem {m} -- docker run --rm --memory {m}g --cpu-shares 128 --user $(id -u):$(id -g) '
-                           '-v {dbd}:/db:ro -v {st}/tools:/exp:ro -v {st}/raw:/out -e OT_DB=/db/{dbn} -e OT_OUT=/out -e HOME=/tmp {img} '
-                           '{orr} -python -exit /exp/lv_extract.py > {st}/extract.log 2>&1; r=$?; echo rc $r; tail -3 {st}/extract.log; [ $r = 0 ] && echo {v} > ext.version').format(
-                        st=store, m=mem, dbd=shlex.quote(os.path.dirname(src_odb)), dbn=shlex.quote(os.path.basename(src_odb)), img=IMAGE, orr=OPENROAD, v=EXTRACT_VERSION)
-                    r = ssh(work_host, cmd, timeout=6 * 3600)
-                    if 'rc 0' not in r.stdout: raise RuntimeError('extract failed: %s %s' % (r.stdout[-400:], r.stderr[-200:]))
-                if not tile_ok:
-                    self._mark(el, stage='cut tiles on %s' % work_host)
-                    mj = json.dumps(dict(db='%s:%s' % (host, odb), job=db.get('job'), extract_host=work_host))
-                    tm = int(min(120, max(8, mem * 1.6)))
-                    cmd = ('cd {st} && nice -n 19 ot-heavy --mem {m} -- python3 tools/lv_tile.py --raw raw --out {el}.lvp --element {el} --meta-json {mj} '
-                           '> tile.log 2>&1; r=$?; echo rc $r; tail -3 tile.log; [ $r = 0 ] && echo {v} > tile.version').format(
-                        st=store, m=tm, el=shlex.quote(el), mj=shlex.quote(mj), v=TILE_VERSION)
-                    r = ssh(work_host, cmd, timeout=6 * 3600)
-                    if 'rc 0' not in r.stdout: raise RuntimeError('tile cut failed: %s %s' % (r.stdout[-400:], r.stderr[-200:]))
-                self._mark(el, stage='fetch pack')
+                self._mark(el, state='running', stage='locate', started=time.strftime('%Y-%m-%dT%H:%M:%S%z'))
+                src = LS.locate(el)
+                if src is None: raise RuntimeError('routed DB not found (closed archive or %s)' % db['host'])
                 dst = self.pack_path(el); tmp = dst.with_suffix('.part')
-                r = subprocess.run(['scp', '-q', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', '%s:%s' % (work_host, pk), str(tmp)], capture_output=True, text=True, timeout=3600)
-                if r.returncode: raise RuntimeError('fetch: %s' % r.stderr[-300:])
+                LS.cut_pack(el, src, tmp, lambda **k: self._mark(el, **k))
                 os.replace(tmp, dst)
                 with self.lock:
                     old = self.packs.pop(el, None)
                     if old: old.close()
                     self.safe_hdr.pop(el, None)
                 self._mark(el, state='ready', stage='ready', finished=time.strftime('%Y-%m-%dT%H:%M:%S%z'), seconds=round(time.time() - t0, 1),
-                           store='%s:%s' % (work_host, store), bytes=dst.stat().st_size)
-                self.log('%s ready in %.0f s (%s, %.1f MB)' % (el, time.time() - t0, work_host, dst.stat().st_size / 1e6))
+                           host=src.get('host') or 'archive', bytes=dst.stat().st_size)
+                self.log('%s on-demand pack ready in %.0f s (%.1f MB)' % (el, time.time() - t0, dst.stat().st_size / 1e6))
                 self.evict()
         except Exception as e:
             self._mark(el, state='failed', error=('%s: %s' % (type(e).__name__, e))[:600], failed_at=time.time())
@@ -264,38 +137,35 @@ class Service:
             except OSError: pass
             self.log('evicted %s' % p.name)
 
-    def _precompute(self):
-        time.sleep(90)
-        while True:
-            try:
-                idx = json.loads((ELEM_DATA / 'index.json').read_text()).get('elements', {})
-                todo = []
-                for el, e in sorted(idx.items()):
-                    if not e.get('layout') or self.pack_path(el).exists(): continue
-                    st = self._state(el)
-                    if st.get('state') == 'failed' or str(st.get('stage', '')).startswith('deferred'): continue   # failures retry on demand only
-                    db = self.element_db(el)
-                    if db and db['host'] not in AVOID: todo.append((el, db))
-                for el, db in todo:
-                    if self.pack_path(el).exists(): continue
-                    self.start(el, db, background=True)
-                    while el in self.jobs and self.jobs[el].is_alive(): time.sleep(5)
-                    time.sleep(20)
-            except Exception as e:
-                self.log('precompute: %s' % e)
-            time.sleep(1800)
-
     # ------------------------------------------------------------------ serving
-    def pack(self, el):
+    def static_manifest(self, el, job=None):
+        try:
+            i = json.loads((LS.STORE / 'elements' / el / 'index.json').read_text())
+            return json.loads((LS.STORE / 'elements' / el / ((job or i['latest']) + '.json')).read_text())
+        except Exception:
+            return None
+
+    def pack(self, el, job=None):
+        key = el + '@' + (job or '')
+        try:
+            i = json.loads((LS.STORE / 'elements' / el / 'index.json').read_text())
+            mp = LS.STORE / 'elements' / el / ((job or i['latest']) + '.json')
+        except Exception:
+            mp = None
         with self.lock:
-            pk = self.packs.get(el)
-            if pk is not None:
-                self.packs.move_to_end(el); return pk
-        p = self.pack_path(el)
-        if not p.exists(): return None
-        pk = Pack(p)
+            pk = self.packs.get(key)
+            fresh = pk is not None and ((mp is None and not isinstance(pk, StorePack)) or
+                                        (isinstance(pk, StorePack) and mp is not None and pk.path == mp and mp.stat().st_mtime <= pk._mt))
+            if fresh:
+                self.packs.move_to_end(key); return pk
+        if mp is not None and mp.exists():
+            pk = StorePack(mp); pk._mt = mp.stat().st_mtime
+        else:
+            p = self.pack_path(el)
+            if not p.exists(): return None
+            pk = Pack(p); pk._mt = 0
         with self.lock:
-            self.packs[el] = pk
+            self.packs[key] = pk
             while len(self.packs) > 12:
                 _, o = self.packs.popitem(last=False); o.close()
         return pk
@@ -360,6 +230,28 @@ class Service:
         return dict(packs=len(files), bytes=sum(p.stat().st_size for p in files), cap_bytes=CACHE_GB * 1e9, running=running)
 
     # ------------------------------------------------------------------ HTTP glue (called from server.py)
+    def static(self, h, rel, safe):
+        """/layout_store/<rel>: plain files of the store.  Objects are immutable (content hash); manifests and indexes are
+        small JSON.  The share-safe view reads closures through /api/layout (redacted), never the raw manifests."""
+        try:
+            p = (LS.STORE / rel).resolve()
+            ok = p.is_relative_to(LS.STORE.resolve()) and p.is_file() and (rel.startswith('objects/') or rel.startswith('elements/'))
+        except (OSError, ValueError):
+            ok = False
+        if not ok: return h.send(404, b'not found', 'text/plain')
+        if safe and rel.startswith('elements/'): return h.send(403, b'{"safe":true}', 'application/json')
+        b = p.read_bytes()
+        if p.suffix == '.br':
+            br = 'br' in (h.headers.get('Accept-Encoding') or '')
+            body = b if br else brotli.decompress(b)
+            h.send_response(200); h.send_header('Content-Type', 'application/octet-stream'); h.send_header('Content-Length', str(len(body)))
+            if br: h.send_header('Content-Encoding', 'br')
+            h.send_header('Vary', 'Accept-Encoding'); h.send_header('Cache-Control', 'public, max-age=31536000, immutable')
+            h.send_header('X-Content-Type-Options', 'nosniff'); h.end_headers()
+            if h.command != 'HEAD': h.wfile.write(body)
+            return
+        return h.send(200, b, 'application/json')
+
     def handle(self, h, path, q, safe):
         """h: the BaseHTTPRequestHandler; path after /api/layout/"""
         parts = path.split('/', 2)
@@ -399,15 +291,6 @@ class Service:
 
 def valid_name(el):
     return bool(el) and len(el) < 200 and all(c.isalnum() or c in '_-.' for c in el) and not el.startswith('.')
-
-
-def store_dir(host, odb, el):
-    p = pathlib.PurePosixPath(odb)
-    parts = p.parts
-    if 'closure-loop' in parts:
-        root = pathlib.PurePosixPath(*parts[:parts.index('closure-loop')])
-        return str(root / 'layout-viewer-store' / el)
-    return str(p.parent / 'layout-viewer-store' / el)
 
 
 def redact(name, o):

@@ -9,7 +9,7 @@ Reads the DB through the OpenDB Python API only (no DEF text) and writes into OT
                via used, with its exact cut + enclosure boxes relative to the via origin), master table (pin + OBS boxes
                in the master frame, routing / cut layers only), net / instance / bterm name tables, macro list, counts
   rects.i32    7 x N: layer, x0, y0, x1, y1, net (1-based, 0 = none), kind
-               kind 0 signal wire segment, 1 special stripe, 2 special followpin, 3 other special (ring / blockwire /
+               kind 0 signal wire segment or RECT patch (decoded from the wire opcodes: dbWirePathItr skips them), 1 special stripe, 2 special followpin, 3 other special (ring / blockwire /
                padring / ...), 4 block pin (bterm), 5 routing obstruction, 6 metal fill
   vias.i32     5 x M: x, y, via type, net, kind (0 signal-wire via, 1 special-wire via)
   insts.i32    9 x I: origin x, origin y, orient (odb enum order R0 R90 R180 R270 MY MYR90 MX MXR90), master,
@@ -105,7 +105,8 @@ for i, n in enumerate(nets):
     net_names.append(n.getName())
     net_sig.append(n.getSigType())
 SHAPE_KIND = {'STRIPE': 1, 'FOLLOWPIN': 2}
-n_seg = n_via = 0
+n_seg = n_via = n_rect = 0
+D = odb.dbWireDecoder
 for n in nets:
     ni = NETIDX[n.getId()]
     w = n.getWire()
@@ -129,6 +130,20 @@ for n in nets:
                     r = (li, s.xMin(), s.yMin(), s.xMax(), s.yMax())
                     rects.extend(r + (ni, 0)); n_seg += 1
                     if TRUTH: truth.extend(r)
+        # RECT patches ("NEW M2 ( x y ) RECT ( dx1 dy1 dx2 dy2 )"): dbWirePathItr does not yield them; decode them from the
+        # wire's opcode stream (the four operands after the RECT opcode, relative to the last point)
+        dec = D(); dec.begin(w); op = dec.next(); last = None
+        while op != D.END_DECODE:
+            if op == D.POINT: last = dec.getPoint()
+            elif op == D.POINT_EXT: last = dec.getPoint_ext()
+            elif op == D.RECT and last is not None:
+                li = lidx(dec.getLayer())
+                if li >= 0:
+                    j = dec.getJunctionId(); d = [w.getData(j + t) for t in range(4)]
+                    r = (li, last[0] + min(d[0], d[2]), last[1] + min(d[1], d[3]), last[0] + max(d[0], d[2]), last[1] + max(d[1], d[3]))
+                    rects.extend(r + (ni, 0)); n_rect += 1
+                    if TRUTH: truth.extend(r)
+            op = dec.next()
     for sw in n.getSWires():
         for bx in sw.getWires():
             if bx.isVia():
@@ -147,7 +162,7 @@ for n in nets:
                 r = (li, bx.xMin(), bx.yMin(), bx.xMax(), bx.yMax())
                 rects.extend(r + (ni, kind)); n_seg += 1
                 if TRUTH: truth.extend(r)
-log('wires: %d rects, %d vias, %d via types, %d nets' % (n_seg, n_via, len(via_tab), len(nets)))
+log('wires: %d rects (+%d RECT patches), %d vias, %d via types, %d nets' % (n_seg, n_rect, n_via, len(via_tab), len(nets)))
 
 # ------------------------------------------------------------------ block pins, obstructions, fills
 bterms = list(block.getBTerms())

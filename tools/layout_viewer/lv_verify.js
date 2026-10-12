@@ -7,7 +7,7 @@
    --dump writes the decoded shape set (int32 layer,x0,y0,x1,y1 per rect, unsorted) for an exact list comparison. */
 'use strict';
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
-const D = require(path.join(__dirname, '../fleet_viz/explorer/element/lv_decode.js'));
+const D = require(process.env.LV_DECODE || path.join(__dirname, '../fleet_viz/explorer/element/lv_decode.js'));
 
 const file = process.argv[2];
 const dumpAt = process.argv.indexOf('--dump');
@@ -31,7 +31,7 @@ function add(li, x0, y0, x1, y1){
 }
 for (const k of Object.keys(index)){
   if (!k.startsWith('t/')) continue;
-  const T = D.decodeTile(blob(k), header); ntile++;
+  const T = D.decodeTile(blob(k), header); ntile++;   // one section per blob
   D.forEachShape(T, header, (li, x0, y0, x1, y1, net, kind, clip, id) => {
     if (clip){ npiece++; const key = li * 2 ** 32 + id, p = pieces.get(key);
       if (p){ p[0] = Math.min(p[0], x0); p[1] = Math.min(p[1], y0); p[2] = Math.max(p[2], x1); p[3] = Math.max(p[3], y1); }
