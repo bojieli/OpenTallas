@@ -29037,7 +29037,7 @@
    "clock_entry": {
     "pin": "ck",
     "face": "N",
-    "layer": "M7"
+    "layer": "M5"
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -29115,7 +29115,7 @@
    "view_cap": "M7",
    "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
    "layer_cap": "M5",
-   "pin_replan": "contract pins / clock entry on M7 above the cap: move to M4 (H) / M5 (V) before a new route"
+   "m5_reroute": "pins moved to M4/M5 for the M5 re-route (reroute_batch.py)"
   },
   {
    "name": "svc_NE_s1",
@@ -29140,7 +29140,7 @@
    "clock_entry": {
     "pin": "ck",
     "face": "N",
-    "layer": "M7"
+    "layer": "M5"
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -29156,7 +29156,7 @@
    "view_cap": "M7",
    "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
    "layer_cap": "M5",
-   "pin_replan": "contract pins / clock entry on M7 above the cap: move to M4 (H) / M5 (V) before a new route"
+   "m5_reroute": "pins moved to M4/M5 for the M5 re-route (reroute_batch.py)"
   },
   {
    "name": "svc_SE_s2",
@@ -29331,7 +29331,7 @@
    "clock_entry": {
     "pin": "ck",
     "face": "N",
-    "layer": "M7"
+    "layer": "M5"
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -29451,7 +29451,7 @@
    "view_cap": "M7",
    "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
    "layer_cap": "M5",
-   "pin_replan": "contract pins / clock entry on M7 above the cap: move to M4 (H) / M5 (V) before a new route"
+   "m5_reroute": "pins moved to M4/M5 for the M5 re-route (reroute_batch.py)"
   },
   {
    "name": "svc_NE_s3",
@@ -29476,7 +29476,7 @@
    "clock_entry": {
     "pin": "ck",
     "face": "N",
-    "layer": "M7"
+    "layer": "M5"
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -29492,7 +29492,7 @@
    "view_cap": "M7",
    "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
    "layer_cap": "M5",
-   "pin_replan": "contract pins / clock entry on M7 above the cap: move to M4 (H) / M5 (V) before a new route"
+   "m5_reroute": "pins moved to M4/M5 for the M5 re-route (reroute_batch.py)"
   },
   {
    "name": "svc_SE_s4",

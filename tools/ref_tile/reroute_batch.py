@@ -504,17 +504,28 @@ def write_snapshot(kd: str, commit: str, files: list):
 
 
 # ------------------------------------------------------------------------------------------------------ gate
+ASSIGNED: dict[str, int] = {}
+AVAIL: dict[str, int] = {}
+
+
 def pick_host(mem: int) -> str:
-    best, bv = HOSTS[0], -1e9
-    for h in HOSTS:
-        try:
-            o = ssh(h, "awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=20).strip()
-            free = int(o) - HEADROOM[h]
-        except Exception:  # noqa: BLE001
-            continue
-        if free > bv:
-            best, bv = h, free
-    return best
+    """the host with the most free memory after this batch's own assignments (ot-heavy then admits by memory there);
+    MemAvailable is read once per host per batch so concurrent picks spread instead of piling on one host"""
+    with LOCK:
+        for h in HOSTS:
+            if h not in AVAIL:
+                try:   # MemAvailable minus the growth ot-heavy still reserves for running jobs (its admission rule)
+                    o = ssh(h, "awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo; "
+                               "tail -1 /var/tmp/ot-heavy/admit.log 2>/dev/null", timeout=20)
+                    g = re.search(r"grow (\d+)G", o)
+                    AVAIL[h] = int(o.split()[0]) - (int(g.group(1)) if g else 0)
+                except Exception:  # noqa: BLE001
+                    AVAIL[h] = -10 ** 6
+        fits = [h for h in HOSTS if AVAIL[h] - HEADROOM[h] - ASSIGNED.get(h, 0) >= mem] or \
+            [h for h in HOSTS if h in ("ot-epyc1tb", "ot-epyc4")]          # big hosts queue in ot-heavy
+        best = max(fits, key=lambda h: AVAIL[h] - HEADROOM[h] - ASSIGNED.get(h, 0))
+        ASSIGNED[best] = ASSIGNED.get(best, 0) + mem
+        return best
 
 
 def gate(kd: str, mem: int, remote=True) -> tuple[str, str, str]:
@@ -582,6 +593,32 @@ def log(owner: str | None, line: str):
 
 
 # ------------------------------------------------------------------------------------------------------ run
+def check_rlayers(kd: str, spec: dict):
+    """lesson 10-12: a kit whose kit.env lacks RLAYERS routes on the flow default (signals up to M7+) and breaks the
+    M5 contract silently.  Tiles must cap at M5 (M6 only with a layer_cap_grant); cluster kits keep their M7 signal
+    cap (the batch never re-generates a cluster, but a cluster spec passed through must not be clipped)."""
+    env = (ROOT / kd / "kit.env").read_text()
+    m = re.search(r"^RLAYERS=['\"]?(M\d+)\s+(M\d+)", env, re.M)
+    if not m:
+        raise SpecSkip(f"kit {kd}/kit.env has no RLAYERS (ref_tile gen did not apply the layer contract)")
+    top = int(m.group(2)[1:])
+    if spec.get("kind") == "cluster":
+        if top < 7:
+            raise SpecSkip(f"cluster kit {kd} RLAYERS top {m.group(2)} < M7 (cluster kits keep M7)")
+    elif top > 5 and not (spec.get("layer_cap") == "M6" and spec.get("layer_cap_grant")):
+        raise SpecSkip(f"tile kit {kd} RLAYERS top {m.group(2)} above the M5 cap without a layer_cap_grant")
+
+
+def job_name_free(name: str) -> str:
+    """lesson 10-12: the loop keys jobs by name, so a name it already REFUSED (or saw in any state) is refused again
+    at intake.  Return the first free name: name, name-r2, name-r3, ..."""
+    n, cand = 1, name
+    while (JOBS / f"{cand}.json").exists() or (INTAKE / f"{cand}.json").exists():
+        n += 1
+        cand = f"{name}-r{n}"
+    return cand
+
+
 def prepare(row, rec, st) -> dict | None:
     import ref_tile as RT
     t = st["tiles"].setdefault(row["cell"], {})
@@ -596,9 +633,10 @@ def prepare(row, rec, st) -> dict | None:
         sp = SPECS / f"{spec['name']}.json"
         sp.write_text(json.dumps(spec, indent=1) + "\n")
         RT.gen(str(sp))
+        check_rlayers(kd, spec)
         t.update(state="kit", kit=kd, spec=str(sp.relative_to(ROOT)), closed_job=rec["job"], priority=row["priority"],
                  owner=rec["spec"].get("owner"), at=now())
-        return {"cell": row["cell"], "kd": kd, "spec": sp, "mem": max(16, min(96, spec["route"]["peak_ram_gb"]))}
+        return {"cell": row["cell"], "kd": kd, "spec": sp, "mem": max(24, min(64, spec["route"]["peak_ram_gb"] // 2))}
     except (SpecSkip, Exception) as ex:  # noqa: BLE001
         kind = "skip" if isinstance(ex, SpecSkip) else "error"
         t.update(state=kind, reason=f"{type(ex).__name__}: {ex}"[:400], closed_job=rec["job"], at=now())
@@ -608,7 +646,8 @@ def prepare(row, rec, st) -> dict | None:
 
 def run(a, rows, closed, st):
     sel = [r for r in rows if r["state"] == "eligible" and r["priority"] in a.priorities
-           and st["tiles"].get(r["cell"], {}).get("state") not in ("submitted", "skip", "gate_fail")]
+           and (st["tiles"].get(r["cell"], {}).get("state") not in ("submitted", "skip", "gate_fail")
+                or (a.retry and st["tiles"].get(r["cell"], {}).get("state") in ("gate_fail", "error")))]
     if a.only:
         sel = [r for r in sel if r["cell"] in a.only]
     sel = sel[: a.limit] if a.limit else sel
@@ -633,6 +672,8 @@ def run(a, rows, closed, st):
             else:
                 t.update(state="gate_fail", reason=why)
                 log(t.get("owner"), f"{p['cell']}: M5 re-route kit {p['kd']} pre-route gate {v} on {host}: {why[:300]}")
+                if re.search(r"PPL-0111|slots for the pins|pin_capacity|pin density", why):
+                    propose_grant(p["cell"], t, f"pin placement fails at M4/M5 ({why[:160]})")
             save_state(st)
     if not ok or a.no_submit:
         return
@@ -653,24 +694,39 @@ def run(a, rows, closed, st):
     git("commit", "-q", "-m", f"m5rr: job specs for {len(ok)} M5 re-route kits at {c1}\n\n"
         f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>")
     git("push", "-q", "origin", f"HEAD:{BRANCH}")
-    _, live, pending = records()
     for p in ok:
-        job = json.loads((ROOT / p["kd"] / "job.json").read_text())
-        t = st["tiles"][p["cell"]]
+        st["tiles"][p["cell"]].update(state="committed", commit=c1)
+    save_state(st)
+    submit(st)
+
+
+def submit(st: dict):
+    """drop every committed (gated, pushed) kit's job spec into the loop intake once; re-checks live jobs first"""
+    _, live, pending = records()
+    for cell, t in sorted(st["tiles"].items()):
+        if t.get("state") != "committed":
+            continue
+        jp = ROOT / t["kit"] / "job.json"
+        job = json.loads(jp.read_text())
         if job["block"] in live or job["block"] in pending:
             t.update(state="skip", reason="live job appeared before submit")
             continue
-        sub = subprocess.run([sys.executable, str(ROOT / "tools/closure_loop/submit_lint.py"),
-                              str(ROOT / p["kd"] / "job.json")], cwd=ROOT, capture_output=True, text=True)
+        sub = subprocess.run([sys.executable, str(ROOT / "tools/closure_loop/submit_lint.py"), "check", str(jp)],
+                             cwd=ROOT, capture_output=True, text=True)
         if sub.returncode:
             t.update(state="gate_fail", reason="submit_lint: " + (sub.stdout + sub.stderr)[-300:])
-            log(t.get("owner"), f"{p['cell']}: M5 re-route submit_lint FAIL: {t['reason']}")
+            log(t.get("owner"), f"{cell}: M5 re-route submit_lint FAIL: {t['reason']}")
             continue
-        shutil.copy(ROOT / p["kd"] / "job.json", INTAKE / f"{job['name']}.json")
-        t.update(state="submitted", job=job["name"], commit=c1, submitted_at=now())
-        log(t.get("owner"), f"{p['cell']}: M5 re-route SUBMITTED {job['name']} (kit {p['kd']}, closed {t['closed_job']}, "
-                            f"gate {t['gate']} on {t['gate_host']}, priority {t['priority']})")
-    save_state(st)
+        name = job_name_free(job["name"])
+        if name != job["name"]:
+            prev = (jload(JOBS / f"{job['name']}.json") or {}).get("status") or "intake"
+            log(t.get("owner"), f"{cell}: job name {job['name']} already used ({prev}); submitting as {name}")
+            job["name"] = name
+        (INTAKE / f"{name}.json").write_text(json.dumps(job, indent=1) + "\n")
+        t.update(state="submitted", job=job["name"], submitted_at=now())
+        log(t.get("owner"), f"{cell}: M5 re-route SUBMITTED {job['name']} (kit {t['kit']}, closed {t['closed_job']}, "
+                            f"gate {t.get('gate')} on {t.get('gate_host')}, priority {t.get('priority')})")
+        save_state(st)
 
 
 # ------------------------------------------------------------------------------------------------------ compare
@@ -742,6 +798,28 @@ def pin_density(kd: str) -> float | None:
     return round(n / (2 * (W + H)), 3)
 
 
+def propose_grant(cell: str, t: dict, why: str):
+    """pin-dense edge tile worse / infeasible at M5: propose an M6 layer_cap_grant in the die lead's log (no M5 iteration)"""
+    for f_, d in contracts():
+        if any(sl.get("cell") == cell for sl in d["slots"]) and f_.name in DIE_LOG and \
+                t.get("grant_proposed") != DIE_LOG[f_.name]:
+            with LOCK, open(TAKE / DIE_LOG[f_.name], "a") as fh:
+                fh.write(f"{dt.datetime.now().strftime('%m-%d %H:%M')} [reroute_m5] PROPOSAL to the {d.get('die')} die "
+                         f"lead: layer_cap_grant M6 for {cell} (pin-dense edge tile; {why}). Not iterating at M5; "
+                         f"grant -> set slot layer_cap M6 + layer_cap_grant, then reroute_batch.py re-generates.\n")
+            t["grant_proposed"] = DIE_LOG[f_.name]
+    if not t.get("grant_proposed"):          # placed through a parent cfg (cluster child): the die by name prefix
+        lg = next((v for k, v in (("hgi_", "el1011-hbmdie.log"), ("ot_hgi", "el1011-hbmdie.log"), ("hfd_", "el1011-hbmdie.log"),
+                                  ("qkd_", "el1011-q-kvd.log"), ("qfd_", "el1011-qwendie.log"), ("dsfd_", "el1011-s81die.log"),
+                                  ("ot_dsrom", "el1011-s81die.log"), ("ot_pqc", "el1011-s81die.log"))
+                   if cell.startswith(k) or any(str(x).startswith("cfg:" + k) for x in t.get("dies", []))), None)
+        if lg:
+            with LOCK, open(TAKE / lg, "a") as fh:
+                fh.write(f"{dt.datetime.now().strftime('%m-%d %H:%M')} [reroute_m5] PROPOSAL to the die lead: "
+                         f"layer_cap_grant M6 for {cell} (pin-dense edge tile; {why}). Not iterating at M5.\n")
+            t["grant_proposed"] = lg
+
+
 def compare(st: dict):
     for cell, t in sorted(st["tiles"].items()):
         if t.get("state") != "submitted" or (t.get("compare") or {}).get("final"):
@@ -771,27 +849,25 @@ def compare(st: dict):
                 + (f" -> WORSE: {'; '.join(flags)}" if flags else ""))
         log(t.get("owner"), line)
         if flags and dens is not None and dens >= PIN_DENSE:
-            for f_, d in contracts():
-                if any(sl.get("cell") == cell for sl in d["slots"]) and f_.name in DIE_LOG:
-                    with LOCK, open(TAKE / DIE_LOG[f_.name], "a") as fh:
-                        fh.write(f"{dt.datetime.now().strftime('%m-%d %H:%M')} [reroute_m5] PROPOSAL to the {d.get('die')} "
-                                 f"die lead: layer_cap_grant M6 for {cell} (pin-dense edge tile, {dens} signal pins/um; "
-                                 f"M5 re-route {t['job']} worse: {'; '.join(flags)}). Not iterating at M5.\n")
-                    t["compare"]["grant_proposed"] = DIE_LOG[f_.name]
+            propose_grant(cell, t, f"{dens} signal pins/um; M5 re-route {t['job']} worse: {'; '.join(flags)}")
         save_state(st)
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", nargs="?", default="plan", choices=["plan", "run", "status", "compare"])
+    ap.add_argument("cmd", nargs="?", default="plan", choices=["plan", "run", "status", "compare", "submit"])
     ap.add_argument("--priorities", type=lambda s: [int(x) for x in s.split(",")], default=[1, 2, 3, 4])
     ap.add_argument("--only", nargs="*")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--gates", type=int, default=12, help="concurrent remote gates")
     ap.add_argument("--local-gate", action="store_true", help="local gate only (no remote synthesis smoke)")
     ap.add_argument("--no-submit", action="store_true")
+    ap.add_argument("--retry", action="store_true", help="also re-kit + re-gate gate_fail / error tiles")
     a = ap.parse_args(argv)
     st = load_state()
+    if a.cmd == "submit":
+        submit(st)
+        return 0
     if a.cmd == "compare":
         compare(st)
         return 0
