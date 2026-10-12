@@ -72,12 +72,12 @@ module tb_svc_ps_stream_tput;
   integer srow0 [0:7]; reg [12:0] stag [0:7];
   reg seen [0:7][0:31][0:1023];
   time t_first = 0, t_last = 0;
-  integer kr, sl, si, c;
+  integer kr, sl, si, sk, c;
   initial for (c = 0; c < 8; c = c + 1) begin kq[c] = 1'b0; cr_pend[c] = 0; end
   always @(posedge ck) if (rst) for (kr = 0; kr < 8; kr = kr + 1) if (ks[kr][0]) begin : rowchk
     reg [63:0] meta; reg [4:0] pcid; reg [9:0] rq; reg [3:0] sm; reg [1023:0] want; integer s;
     meta = ks[kr][1098:1035]; pcid = meta[18:14]; sm = meta[13:10]; rq = ks[kr][10:1];
-    s = -1; for (si = 0; si < nstr; si = si + 1) if (stag[si] == meta[32:20]) s = si;
+    s = -1; for (sk = 0; sk < nstr; sk = sk + 1) if (stag[sk] == meta[32:20]) s = sk;   // own loop variable (si is the stimulus loop's)
     for (sl = 0; sl < 4; sl = sl + 1) want[sl*256 +: 256] = pat(kaddr(pcid, 4 * rq + sl, (s < 0) ? 0 : srow0[s]));
     if (s < 0) begin err = err + 1; if (err < 6) $display("ERR row with unknown stream tag %0d", meta[32:20]); end
     else if (pcid[4:2] != kr || meta[19] != 1'b0) begin err = err + 1; if (err < 6) $display("ERR row port %0d pc %0d", kr, pcid); end
