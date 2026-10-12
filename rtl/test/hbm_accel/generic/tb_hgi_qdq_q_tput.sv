@@ -39,9 +39,10 @@ module tb_hgi_qdq_q_tput;
    assign b_wq[g*281 +: 281] = {wq_d[S][g*280 + 279], 1'b0, wq_d[S][g*280 +: 279]};
  end
  wire [8*18-1:0] bank_status; wire [2:0] hub_status;
+ // lane credits = the slice's own default (4 + 2 x 3 contract relay stages, SPEC v0.8 D-B2-12): no bench override
  ot_vms_slice #(.NC(1), .RG(1), .WG(1)) vm (.clk(clk), .rst_n(rst_n), .sid(2'd0), .cq(bq), .cr(br),
    .rq(b_rq), .rq_cr(s_rcr), .rr(s_rr), .wq(b_wq), .wq_cr(s_wcr), .wq_done(s_wdn),
-   .dq('0), .dq_done(), .kq('0), .kq_cr(), .kq_done(), .cw_in('0), .cw_in_cr(), .cw_out(), .cw_out_cr(1'b0),
+   .dq('0), .dq_done(), .vcb('0), .vcb_cr(), .kq_done(), .cw_in('0), .cw_in_cr(), .cw_out(), .cw_out_cr(2'b0),
    .ccw_in('0), .ccw_in_cr(), .ccw_out(), .ccw_out_cr(2'b0), .bank_status(bank_status), .hub_status(hub_status), .mirror_busy());
  reg [255:0] gin [0:127]; reg [255:0] gout [0:127];
  integer nrec, fd, k, s, j, op [0:15], n [0:15], ab [0:15], ob [0:15], cost [0:15], blk [0:15], iss [0:15];
