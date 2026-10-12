@@ -58,7 +58,11 @@ endmodule
 // next wp / count), so no landed-valid -> 8 x W-bit enable cone (coll lane lcrpx v_q -> mem[7][*] SS -176) and (b)
 // o_valid is a registered non-empty flag, so the count compare is not in front of the consumer's accept (lane lcrpi
 // n -> pop -> rp SS -574).  Same cycle behaviour as WFREE=1.
-module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0, WFREE=0)(
+// RREP (el1011-ds-coll 2026-10-11, opt-in, default 1 = byte-identical): the read pointer that selects mem[rp] for all W
+// bits is replicated RREP times; copy c (registered, async reset like rp, kept as ot_s81ph_keep_ff bits so synthesis
+// cannot merge them) selects only data columns [c*SW +: SW].  A 553-bit DEPTH-8 read mux on one rp bit was 4,418 loads
+// (textbook high_fanout); at RREP 16 each copy drives <= 35 columns.  Requires ot_s81ph_keep_ff (dsfd_coll_split.sv).
+module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0, WFREE=0, RREP=1)(
     input wire clk, rst_n,
     input wire l_valid, input wire [W-1:0] l_data, (* keep *) output reg l_credit,
     output wire o_valid, input wire o_ready, output wire [W-1:0] o_data,
@@ -88,7 +92,24 @@ module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0, WFREE=0)(
     reg nz_r;                        // WFREE 2: n != 0, registered
     reg [DEPTH-1:0] we_r;            // WFREE 2: one-hot (wp == k) && !full, registered
     assign f_valid = (WFREE == 2) ? nz_r : (n != 0);
-    assign f_data = mem[rp];
+    wire [AW-1:0] rp_nx_r = (f_valid && f_ready) ? ((rp == AW'(DEPTH - 1)) ? '0 : rp + 1'b1) : rp;
+    generate if (RREP <= 1) begin : g_rp1
+        assign f_data = mem[rp];
+    end else begin : g_rpn
+        localparam integer SW = (W + RREP - 1) / RREP;
+        genvar c, b;
+        for (c = 0; c < RREP; c = c + 1) begin : g_c
+            localparam integer LO = c * SW, HI = ((c + 1) * SW > W) ? W : (c + 1) * SW;
+            if (LO < W) begin : g_on
+                wire [AW-1:0] rpc;
+                for (b = 0; b < AW; b = b + 1) begin : g_b
+                    ot_s81ph_keep_ff u_k (.clk(clk), .rst_n(rst_n), .d(rp_nx_r[b]), .q(rpc[b]));
+                end
+                wire [W-1:0] row = mem[rpc];
+                assign f_data[HI-1:LO] = row[HI-1:LO];
+            end
+        end
+    end endgenerate
     wire pop = f_valid && f_ready;
     wire full = n == CW'(DEPTH);
     wire wr = WFREE ? (v_q && !full) : (v_q && (!full || pop));

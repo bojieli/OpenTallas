@@ -22,6 +22,11 @@ module ot_s81_hc_crooty #(
     output reg  [YS-1:0]        p_y,
     output reg                  p_flt
 );
+    // tile-local reset relay (2 flops at the pin): the srs port drives exactly one flop; every reset of the tile
+    // is the relay output (no pin-to-register reset path, no reset-removal hold flood off an input port)
+    reg [1:0] rsr;
+    always @(posedge sk) rsr <= {rsr[0], srs};
+    wire rs_n = rsr[1];
     localparam integer NS = NG / GS;
     localparam integer NP = (NS + NCOL - 1) / NCOL;
     localparam integer NL = 4 * NS;
@@ -72,8 +77,8 @@ module ot_s81_hc_crooty #(
     reg  [YB:0]   yn;
     reg  [YB-1:0] yw, yr;
     always @(posedge sk) begin yp <= y_s; yp2 <= yp; end
-    always @(posedge sk or negedge srs)
-        if (!srs) begin ya <= 1'b0; pr <= 1'b0; yn <= 0; yw <= 0; yr <= 0; p_flt <= 1'b0; end
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) begin ya <= 1'b0; pr <= 1'b0; yn <= 0; yw <= 0; yr <= 0; p_flt <= 1'b0; end
         else begin
             ya <= yacc; pr <= p_req;
             if (ya) yw <= yw + 1'b1;
@@ -89,8 +94,8 @@ module ot_s81_hc_crooty #(
     reg [4*WSL-1:0] w_c;
     always @(posedge sk) w_c <= p_w;
     integer s;
-    always @(posedge sk or negedge srs)
-        if (!srs) begin wq_v <= 0; end
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) begin wq_v <= 0; end
         else for (s = 0; s < 4; s = s + 1) wq_v[s] <= w_c[WSL * s];
     always @(posedge sk)
         for (s = 0; s < 4; s = s + 1) begin
