@@ -94,6 +94,10 @@ module ot_hgi_idx_index_w #(
             for (l = 0; l < 32; l = l + 1) rr_v[l] <= wrr[l*257 + 256];
         end
     always @(posedge clk) for (l = 0; l < 32; l = l + 1) rr_d[l*256 +: 256] <= wrr[l*257 +: 256];
+    // selector output beats land in pin flops before the beat FIFOs
+    reg to_v, co_v; reg [611:1] to_d; reg [71:1] co_d;
+    always @(posedge clk or negedge rn) if (!rn) begin to_v <= 1'b0; co_v <= 1'b0; end else begin to_v <= to[0]; co_v <= co[0]; end
+    always @(posedge clk) begin to_d <= to[611:1]; co_d <= co[71:1]; end
     // ================================================================ frame state
     localparam S_IDLE = 2'd0, S_RUN = 2'd1, S_FLUSH = 2'd2;
     reg [1:0] st;
@@ -295,14 +299,14 @@ module ot_hgi_idx_index_w #(
             done <= 1'b0; fault <= 1'b0; fs[0] <= 1'b0; qb[0] <= 1'b0; kin[0] <= 1'b0; toc <= 1'b0; coc <= 1'b0;
             for (l = 0; l < 32; l = l + 1) begin wrq[l*16 + 15] <= 1'b0; wwq[l*280 + 279] <= 1'b0; end
             // ---- selector inputs (captured always: the selector sends only against credits)
-            if (to[0]) begin tf[tft] <= to; tft <= tft + 3'd1; end
-            if (co[0]) begin cf[cft] <= co; cft <= cft + 3'd1; end
+            if (to_v) begin tf[tft] <= {to_d, 1'b1}; tft <= tft + 3'd1; end
+            if (co_v) begin cf[cft] <= {co_d, 1'b1}; cft <= cft + 3'd1; end
             if (ev_q[0] && st != S_IDLE) sel_done <= 1'b1;
             if (ev_q[1] && st != S_IDLE) bad <= 1'b1;
             if (st != S_IDLE) begin
-                tfn <= tfn + {3'd0, to[0]} - {3'd0, t_pop};
-                cfn <= cfn + {3'd0, co[0]} - {3'd0, c_pop};
-                if ((to[0] && tfn == 4'd8 && !t_pop) || (co[0] && cfn == 4'd8 && !c_pop)) bad <= 1'b1;
+                tfn <= tfn + {3'd0, to_v} - {3'd0, t_pop};
+                cfn <= cfn + {3'd0, co_v} - {3'd0, c_pop};
+                if ((to_v && tfn == 4'd8 && !t_pop) || (co_v && cfn == 4'd8 && !c_pop)) bad <= 1'b1;
             end
             // ---- lane credits / landing reservations / writes outstanding
             for (l = 0; l < 32; l = l + 1) begin
