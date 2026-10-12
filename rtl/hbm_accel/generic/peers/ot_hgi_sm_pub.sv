@@ -1062,8 +1062,9 @@ module ot_hgi_sm_pub_hier #(
     output wire [31:0]        s0_data
 );
     localparam integer NSL = (NSM + NSS - 1) / NSS, NCOL = 4, W = 52, CW = 76, NSMP = NSL * NSS;
-    generate if (NSL != 8 || NPC != 4 || NC != 8 || NSS != 4 || SD != 8) begin : g_cfg
-        initial $fatal(1, "ot_hgi_sm_pub_hier: the hardened composition is NSM 29-32, NC 8, NPC 4, NSS 4, SD 8");
+    // NPC < 4 (STREAM-only benches): columns >= NPC have no VM client (their writes are never acknowledged)
+    generate if (NSL != 8 || NPC < 1 || NPC > 4 || NC != 8 || NSS != 4 || SD != 8) begin : g_cfg
+        initial $fatal(1, "ot_hgi_sm_pub_hier: the hardened composition is NSM 29-32, NC 8, NPC 4 (1-3: STREAM only), NSS 4, SD 8");
     end endgenerate
     wire [NSMP-1:0] rv_p = NSMP'(sm_rv);
     wire [NSMP*12-1:0] rr_p = (NSMP*12)'(sm_rrow);
@@ -1072,7 +1073,7 @@ module ot_hgi_sm_pub_hier #(
     wire [NSL*CW-1:0] s_c;                                   // the command at slice k
     wire [NCOL*CW-1:0] c_in, c_out; wire [CW-1:0] h_w, h_e;
     wire [3:0] t_v, t_cr, t_a, t_vq; wire [4*W-1:0] t_d; wire [7:0] t_dn, t_ft;
-    wire [NPC-1:0] vq_v; wire [NPC*279-1:0] vq_p;
+    wire [3:0] vq_v; wire [4*279-1:0] vq_p; wire [7:0] c_va;
     // command: hub -> column 1 (W) / column 2 (E); column 1 -> column 0, column 2 -> column 3
     assign c_in[1*CW +: CW] = h_w; assign c_in[2*CW +: CW] = h_e;
     assign c_in[0*CW +: CW] = c_out[1*CW +: CW]; assign c_in[3*CW +: CW] = c_out[2*CW +: CW];
@@ -1102,13 +1103,18 @@ module ot_hgi_sm_pub_hier #(
             .a_ack(s_ack[A]), .b_ack(s_ack[B]), .a_sov(s_sov[A]), .b_sov(s_sov[B]),
             .a_sod(s_sod[A*W +: W]), .b_sod(s_sod[B*W +: W]), .a_cr(s_cr[A]), .b_cr(s_cr[B]),
             .a_dn(s_dn[A]), .b_dn(s_dn[B]), .a_ft(s_ft[A]), .b_ft(s_ft[B]),
-            .vq_v(vq_v[gc]), .vq_p(vq_p[gc*279 +: 279]), .va({vmr[gc*274 + 273], vmr[gc*274 + 256]}),
+            .vq_v(vq_v[gc]), .vq_p(vq_p[gc*279 +: 279]), .va(c_va[gc*2 +: 2]),
             .t_v(t_v[gc]), .t_d(t_d[gc*W +: W]), .t_cr(t_cr[gc]), .t_a(t_a[gc]),
             .dn(t_dn[2*gc +: 2]), .ft(t_ft[2*gc +: 2]));
         assign t_vq[gc] = vq_v[gc];
-        wire [278:0] p = vq_p[gc*279 +: 279];
-        assign vmq[gc*338 +: 338] = {vq_v[gc], 1'b1, 12'd0, p[278:264], 5'd0, p[263:8],
-            {{4{p[7]}}, {4{p[6]}}, {4{p[5]}}, {4{p[4]}}, {4{p[3]}}, {4{p[2]}}, {4{p[1]}}, {4{p[0]}}}, 16'h5042};
+        if (gc < NPC) begin : g_vm
+            wire [278:0] p = vq_p[gc*279 +: 279];
+            assign c_va[gc*2 +: 2] = {vmr[gc*274 + 273], vmr[gc*274 + 256]};
+            assign vmq[gc*338 +: 338] = {vq_v[gc], 1'b1, 12'd0, p[278:264], 5'd0, p[263:8],
+                {{4{p[7]}}, {4{p[6]}}, {4{p[5]}}, {4{p[4]}}, {4{p[3]}}, {4{p[2]}}, {4{p[1]}}, {4{p[0]}}}, 16'h5042};
+        end else begin : g_novm
+            assign c_va[gc*2 +: 2] = 2'b00;
+        end
     end endgenerate
     ot_hgi_sm_pub_hub u_hub (
         .clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
