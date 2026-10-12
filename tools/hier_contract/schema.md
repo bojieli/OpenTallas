@@ -18,6 +18,9 @@ through the lead, bumps the slot `version` and the file `version`, and gets a `c
 | `pg_layer` | the child's top layer: full-length VDD/VSS stripes only (leaf: M6 or M7 per die; a parent that is itself a child: M7) |
 | `strap_layer` | the parent's strap layer = `pg_layer` + 1; the child puts no signal or OBS there |
 | `signal_max_layer` | highest layer for child signals (normally `pg_layer`, with signals routing around the stripes, or `pg_layer` - 1) |
+| `layer_cap` | (2026-10-12) top layer for a NEW route of the slot's tile, signals AND PG: M5 (default from `layer_defaults`); M6 only with `layer_cap_grant` "<die lead>: <reason>". `pg_layer` / `strap_layer` / `signal_max_layer` follow it (cap / cap+1 / cap) |
+| `view_cap`, `view_layers`, `view_status` | (2026-10-12) the existing closed view's own cap and pre-bump layers; the view stays valid only while child_lint passes at `view_cap` (strap = cap + 1); `view_status` records the measured top signal layer from layer_usage_1012.json |
+| `layer_rule` | which rule the slot follows: `tile_m5` (bumped), `cluster` (cluster PG M7 over <= M6 children, unchanged), `hard_ip` / `die_layer` (PHY / die-layer pins, unchanged; die lead re-plans) |
 | `version` | slot version; the element records the version it was built to |
 
 M8/M9 belong to the die top only.

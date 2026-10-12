@@ -59,7 +59,13 @@ module tb_hgi_e2e;
     // job (forced drafter) instead of a doorbell; vectors: tools/hgi_sim/ds_mtp_kernels.py sim --export.  host.mem words
     // 64.. : plen, gamma, ngen, rank, force (0 = real DSpark drafter), maxpos, n emitted, final commit n; 72.. prompt; 80.. forced drafts (f_addr);
     // 88.. the golden emitted tokens.  MUT_HT (bench mutant): the head table entry of position 3 = the draft there.
+    parameter integer HT_VM = 261760;   // VM word of the head stub table HT[0] = ds_mtp_kernels.bind_vm_tail() HT (ds_native map end 261,696)
     parameter integer MTP = 0, MUT = 0, MUT_HT = 0;   // MTP 1: collar in the bench (x_* ports); 2: collar inside the CP die
+    // B2 (2026-10-12, tools/hgi_e2e/b2.py): 4 clusters x local VM slices + ring. B2 1 = OLD-VM mode on the central VM model
+    // (records placed per b2.txt, VM traffic classed local / remote per slice, B2_RING 1: stub hold += ring cycles);
+    // B2 2 = native cluster RTL (reserved until the B2 units land)
+    parameter integer B2 = 0, B2_RING = 0, B2_NCLUST = 4, B2_SLICE_W = 65536;
+    import "DPI-C" function int e2e_b2_init(input int mode, input int ring, input int ncl, input int slw);
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_posted(input int on);
     initial e2e_posted((REAL_DMA != 0 && DMA_POSTED != 0) ? 1 : 0);
@@ -533,6 +539,8 @@ module tb_hgi_e2e;
         $readmemh({dir, "/host.mem"}, host);
         n_rec = e2e_init(dir, outp);
         if (n_rec <= 0) $fatal(1, "E2E init failed");
+        if (B2 == 2) $fatal(1, "E2E B2 2 (native cluster RTL) is not built yet: run B2 1 (old-VM mode)");
+        if (B2 != 0 && e2e_b2_init(B2, B2_RING, B2_NCLUST, B2_SLICE_W) < 0) $fatal(1, "E2E B2 init failed");
         fscr = (!MTP && host[69] != 0) ? host[69][17:0] : 18'(FUSED_SCRATCH);   // (MTP: host[69] is maxpos)
         if (REAL_FUSED) e2e_ignore(int'(fscr), int'(fscr) + 16384);
         if ($value$plusargs("WATCH=%d", w)) e2e_watch(w);
@@ -551,7 +559,7 @@ module tb_hgi_e2e;
         if (rd[3:1] != 0 || !rd[0]) begin errs = errs + 1; end
         if (MTP == 2) begin : mtpjob2          // the host through the loader's MTP window (0xE00) + completion FIFO
             integer ne, nk, done; reg [16:0] em [0:15]; reg [191:0] jc; integer stat;
-            if (MUT_HT) e2e_vm_wr(0, 261440 + 3, int'(host[80 + 2]));
+            if (MUT_HT) e2e_vm_wr(0, HT_VM + 3, int'(host[80 + 2]));
             jc = 0; jc[1 +: 4] = host[65][3:0]; jc[5] = (host[68] != 0); jc[6 +: 21] = host[66][20:0];
             jc[27 +: 21] = host[64][20:0]; jc[158 +: 21] = host[69][20:0];
             for (w = 0; w < 6; w = w + 1) axw(12'hE00 + 4 * w, jc[32 * w +: 32]);
@@ -586,7 +594,7 @@ module tb_hgi_e2e;
                 if (em[i] != host[88 + i][16:0]) begin $display("E2E MTP FAIL: emitted %0d = %0d golden %0d", i, em[i], host[88 + i]); errs = errs + 1; end
         end else         if (MTP) begin : mtpjob
             integer ne, nk; reg [16:0] em [0:15];
-            if (MUT_HT) e2e_vm_wr(0, 261440 + 3, int'(host[80 + 2]));         // head table HT[3] := the draft there
+            if (MUT_HT) e2e_vm_wr(0, HT_VM + 3, int'(host[80 + 2]));         // head table HT[3] := the draft there
             // job config (179 b): gamma [1+:4], force [5], ngen [6+:21], plen [27+:21], eos off, maxpos [158+:21]
             f_host = 0; f_host[37 + 1 +: 4] = host[65][3:0]; f_host[37 + 5] = (host[68] != 0); f_host[37 + 6 +: 21] = host[66][20:0];   // host[68]: 0 = real DSpark drafter
             f_host[37 + 27 +: 21] = host[64][20:0]; f_host[37 + 158 +: 21] = host[69][20:0];
