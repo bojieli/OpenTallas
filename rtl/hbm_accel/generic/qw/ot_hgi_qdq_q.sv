@@ -146,6 +146,11 @@ module ot_hgi_qdq_q #(
     // ---------------------------------------------------------------- assembly -> decode
     wire [2:0] h_l = bq_l[b_h], h_n = bq_n[b_h];
     reg [7:0] h_hit; reg h_ok; reg [1023:0] h_x;
+    // lane heads: each lane selects its own head entry locally (16:1 x 256 on the lane's own pointer), then the 4 beat
+    // positions take a one-hot AND-OR over the 8 lane heads (textbook audit 10-12: lf[l][lf_h[l]] with a runtime lane l
+    // built a 128:1 x 256 select per position with 16,384-load decode nets)
+    reg [255:0] lh [0:7];
+    always @* for (integer b = 0; b < 8; b = b + 1) lh[b] = lf[b][lf_h[b]];
     always @* begin
         h_ok = b_used != 0; h_x = '0;
         for (integer b = 0; b < 8; b = b + 1) begin
@@ -154,7 +159,7 @@ module ot_hgi_qdq_q #(
         end
         for (integer j = 0; j < 4; j = j + 1) begin
             reg [2:0] l; l = 3'(h_l + ((MUT == 1) ? (j ^ 1) : j));
-            if (j < h_n) h_x[j*256 +: 256] = lf[l][lf_h[l]];
+            for (integer b = 0; b < 8; b = b + 1) h_x[j*256 +: 256] = h_x[j*256 +: 256] | ({256{j < h_n && l == 3'(b)}} & lh[b]);
         end
     end
     reg [OW:0] resv, od_n;
