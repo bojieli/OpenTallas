@@ -1,5 +1,5 @@
 {
- "name": "sfu_lane_ring3_rt-rt-COMMIT",
+ "name": "sfu_lane_ring3_rt-rt-ae5899467",
  "block": "ot_su12_sfu",
  "ref_tile": true,
  "owner": "Claude:rr1012",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-rr1012-sfu",
-  "commit": "COMMIT"
+  "commit": "ae5899467"
  },
  "stages": {
   "bench": [
@@ -109,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/sfu_lane_ring3_rt/sfu_lane_ring3_rt-rt-COMMIT"
+   "to": "results/rtl/ref_tile/sfu_lane_ring3_rt/sfu_lane_ring3_rt-rt-ae5899467"
   }
  ],
  "cycles_added": 0,
