@@ -6,7 +6,7 @@
 // wq {v, sector 15, data 256, wmask 8} / wq_cr / wq_done, burst grant rg_req / rg_gnt, wg_req / wg_gnt).
 // Throughput fix (AGENTS throughput gate: the packet unit ran 13.7x its price ceil(n/32)+8, the 32-lane wide engines
 // 2.7-4.4x because every record waited for the previous one to drain):
-//   * rate: one 32-FP32 beat (4 sectors on 4 consecutive local banks) a cycle into ONE decode core (ot_hgi_qw_dec, the
+//   * rate: one 32-FP32 beat (4 sectors on 4 consecutive local banks) a cycle into ONE decode core (ot_hgi_qw_dec3 = dxl/dbq/daq, or ot_hgi_qw_dec; the
 //     closed hardened decode tile: same arithmetic as ot_hgi_quant_wide / the transport -> word-identical O);
 //   * record OVERLAP: an RQ-deep record queue; the read walk of record k+1 is loaded on the cycle record k issues its last
 //     beat (no drain between records); the header rides with each beat into the decode (the decode is per-beat clean);
@@ -31,6 +31,7 @@ module ot_hgi_qdq_q #(
     parameter integer NB  = 32,     // issued-beat FIFO (>= read round trip in beats; 16 caps S=3 at 18 cyc a 16-beat record)
     parameter integer OD  = 64,     // result FIFO beats (>= decode latency 26 + write round trip at S=3)
     parameter integer RQ  = 16,     // record queue
+    parameter integer DEC3 = 1,     // decoder: 1 = ot_hgi_qw_dec3 (track B: dxl / dbq / daq tiles), 0 = ot_hgi_qw_dec (one tile)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -160,8 +161,14 @@ module ot_hgi_qdq_q #(
     wire l_fire = h_ok && resv != OD[OW:0];
     reg d_v; reg [127:0] d_h; reg [1023:0] d_x;
     wire vo, qfault, dfault; wire [511:0] y;
-    ot_hgi_qw_dec u_dec (.clk(clk), .rst_n(rr_n[2]), .v(d_v), .header(d_h), .x(d_x), .vo(vo), .y(y), .fault(qfault),
-        .decode_fault(dfault));
+    generate if (DEC3 != 0) begin : g_d3
+        // track B (decoder of record, coordinator 10-12): three hardened tiles dxl / dbq / daq, same ports and timing
+        ot_hgi_qw_dec3 u_dec (.clk(clk), .rst_n(rr_n[2]), .v(d_v), .header(d_h), .x(d_x), .vo(vo), .y(y), .fault(qfault),
+            .decode_fault(dfault));
+    end else begin : g_d1
+        ot_hgi_qw_dec u_dec (.clk(clk), .rst_n(rr_n[2]), .v(d_v), .header(d_h), .x(d_x), .vo(vo), .y(y), .fault(qfault),
+            .decode_fault(dfault));
+    end endgenerate
     // ---------------------------------------------------------------- result FIFO + write
     reg [14:0] mq_o [0:OD-1]; reg [2:0] mq_n [0:OD-1]; reg [QW-1:0] mq_e [0:OD-1]; reg mq_z [0:OD-1];
     reg [511:0] od_y [0:OD-1]; reg [OW-1:0] od_h, od_t, mq_t;
