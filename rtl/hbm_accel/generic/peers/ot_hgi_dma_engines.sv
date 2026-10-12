@@ -29,7 +29,13 @@ module ot_hgi_dma_engines #(
     parameter integer MUT_IL = 0,
     parameter integer MUT_MV = 0,         // bench: the mover's MUT (5 = the KV write-back engine mutant, hbm-fq)
     parameter integer SBIT = 35,
-    parameter [35:0] STACK_BYTES = 36'd22500000000
+    parameter [35:0] STACK_BYTES = 36'd22500000000,
+    parameter integer B2 = 0,             // el1011-hbm-b2 (2026-10-12): 1 = the engines of B2 cluster QID (one cluster a stack): the
+                                          //   front, mover and back serve only stack QID (lanes of other stacks constant 0, inputs
+                                          //   unused); STRIPE4 / indexed-stream rows on other stacks are skipped (their cluster serves
+                                          //   them), any other access to another stack faults.  0 = today (bit-identical).
+    parameter integer QID = 0,
+    parameter integer MUT_B2 = 0          // bench: 1 rows of stack (QID + 1) mod 4 served on lane QID, 2 lane (QID + 1) mod 4 driven
 ) (
     input  wire                clk,
     input  wire                rst_n,
@@ -131,13 +137,15 @@ module ot_hgi_dma_engines #(
     // row sequencer (FRONT 0)
     reg [175:0] sc; reg sq_act, sq_last, sq_mv_v, sq_wait; reg [226:0] sq_mv; reg [19:0] sq_e;
     reg sq_p0v; reg [59:0] sq_p0; reg [1:0] sq_ph; reg [59:0] sq_p; reg [42:0] sq_lo, sq_hi; reg [31:0] sq_id;
+    reg sq_skd;                                                 // B2: the stream's last row was another stack's (done pulse)
+    localparam integer QS = (MUT_B2 == 1) ? (QID + 1) % 4 : QID;
     assign vmq = rd_act ? r_vmq : m_vmq;
     wire f_rdy, f_done, f_fault, m_rdy, m_done, m_fault, m_src, m_fence_rdy;
     assign fence_rdy = m_fence_rdy && b_quiet; wire [279:0] m_wl; wire [32*280-1:0] f_wl;
     assign mv_rdy = !rd_act && !sq_act && (to_b ? (b_rdy && !m_pend) : (b_quiet && (to_f ? f_rdy : m_rdy)));
-    assign mv_done = f_done | (m_done && (!sq_act || sq_last)) | b_done;
+    assign mv_done = f_done | (m_done && (!sq_act || sq_last)) | b_done | sq_skd;
     assign mv_fault = f_fault | m_fault | b_fault;
-    assign mv_src = (m_src && !sq_act) | b_src; assign mv_pdone = (m_done && (!sq_act || sq_last)) | b_done; assign mv_fdone = f_done;
+    assign mv_src = (m_src && !sq_act) | b_src; assign mv_pdone = (m_done && (!sq_act || sq_last)) | b_done | sq_skd; assign mv_fdone = f_done;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin m_pend <= 1'b0; b_own <= 1'b0; end
         else begin
@@ -147,7 +155,7 @@ module ot_hgi_dma_engines #(
         end
     assign vr2q = b_own ? b_vr2q : m_vr2q;
     generate if (BACK != 0) begin : g_back
-        ot_hgi_dma_back #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES), .MUT(MUT_BK)) u_back (.clk(clk), .rst_n(rst_n),
+        ot_hgi_dma_back #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES), .MUT(MUT_BK), .B2(B2), .QID(QID), .MUT_B2(MUT_B2)) u_back (.clk(clk), .rst_n(rst_n),
             .mv_v(mv_v && to_b && !rd_act && !sq_act && !m_pend), .mv_rdy(b_rdy), .mv(mv), .mv_src(b_src), .mv_done(b_done),
             .mv_fault(b_fault), .quiet(b_quiet), .vr2q(b_vr2q), .vr2r(b_own ? vr2r : 8257'd0), .wd(wd), .wd_cr(wd_cr), .wa(wa));
     end else begin : g_noback
@@ -155,7 +163,7 @@ module ot_hgi_dma_engines #(
         assign b_vr2q = '0; assign wd = '0;
     end endgenerate
     generate if (FRONT != 0) begin : g_front
-        ot_hgi_dma_front #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES)) u_front (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && to_f && !to_b && b_quiet),
+        ot_hgi_dma_front #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES), .B2(B2), .QID(QID), .MUT_B2(MUT_B2)) u_front (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && to_f && !to_b && b_quiet),
             .mv_rdy(f_rdy), .mv(mv), .mv_done(f_done), .mv_fault(f_fault),
             .ix_v(ixf_v), .ix_rdy(ix_rdy_f), .ix_cmd(ixf_cmd), .id_v(s_id_v), .id_rdy(id_rdy_f), .id(idf[idf_h]),
             .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
@@ -174,7 +182,7 @@ module ot_hgi_dma_engines #(
         assign wl[gl*280 +: 280] = f_wl[gl*280 + 279] ? f_wl[gl*280 +: 280] : m_wlx[gl*280 +: 280];
     end endgenerate
     // hbm-fq/dma 10-11: with the KV engine the sector engine reads VM sources through the packet client (SVR2 0)
-    ot_hgi_dma_mover #(.MUT(MUT_MV), .VR2(VR2), .SVR2((KVW != 0) ? 0 : -1), .KVW(KVW)) u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !to_b && !rd_act && b_quiet)), .mv_rdy(m_rdy),
+    ot_hgi_dma_mover #(.MUT(MUT_MV), .VR2(VR2), .SVR2((KVW != 0) ? 0 : -1), .KVW(KVW), .B2(B2), .QID(QID), .MUT_B2(MUT_B2)) u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !to_b && !rd_act && b_quiet)), .mv_rdy(m_rdy),
         .mv(sq_act ? sq_mv : mv), .mv_done(m_done),
         .mv_fault(m_fault), .mv_src(m_src), .fence_v(fence_v && b_quiet), .fence_rdy(m_fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
@@ -190,10 +198,10 @@ module ot_hgi_dma_engines #(
         if (!rst_n) begin
             rd_act <= 1'b0; rd_out <= 3'd0; rd_fl <= 6'd0; ro_h <= 2'd0; ro_t <= 2'd0; idf_h <= 5'd0; idf_t <= 5'd0;
             idf_n <= 6'd0; r_vmq <= 338'd0; rb_h <= 2'd0; rb_t <= 2'd0; rb_n <= 3'd0; u_k <= 4'd0; u_e <= 20'd0; ixf_v <= 1'b0;
-            sq_act <= 1'b0; sq_mv_v <= 1'b0; sq_wait <= 1'b0; sq_last <= 1'b0; sq_ph <= 2'd0;
+            sq_act <= 1'b0; sq_mv_v <= 1'b0; sq_wait <= 1'b0; sq_last <= 1'b0; sq_ph <= 2'd0; sq_skd <= 1'b0;
         end else begin : rdr
             reg push, rsp_in, upop;
-            ixf_v <= 1'b0; r_vmq[337] <= 1'b0; push = 1'b0;
+            ixf_v <= 1'b0; r_vmq[337] <= 1'b0; push = 1'b0; sq_skd <= 1'b0;
             if (is_v && is_rdy) begin
                 sc <= is_cmd[175:0]; rd_act <= is_cmd[174:155] != 20'd0; rd_w <= is_cmd[207:176]; rd_left <= is_cmd[174:155]; u_e <= 20'd0;
                 if (FRONT != 0) begin ixf_v <= 1'b1; ixf_cmd <= is_cmd[175:0]; end
@@ -245,9 +253,13 @@ module ot_hgi_dma_engines #(
                     //            src istride 16, src stride 32, src base 40, src fmt 3, src space 2}
                     sq_mv <= {sc[90:70], 20'd1, 16'd1, 32'd0, {8'd0, dw}, (sc[2:0] == 3'd5) ? 3'd5 : 3'd0, 2'd1,
                               16'd1, 32'd0, a[39:0], sc[2:0], 2'd0};
-                    sq_mv_v <= 1'b1; sq_wait <= 1'b1; sq_ph <= 2'd0;
-                    sq_last <= sq_e + 20'd1 == sc[174:155];
-                    sq_e <= sq_e + 20'd1;
+                    sq_ph <= 2'd0; sq_e <= sq_e + 20'd1;
+                    if (B2 != 0 && a[SBIT +: 2] != 2'(QS)) begin          // B2: another stack's row: skipped
+                        if (sq_e + 20'd1 == sc[174:155]) begin sq_act <= 1'b0; sq_skd <= 1'b1; end
+                    end else begin
+                        sq_mv_v <= 1'b1; sq_wait <= 1'b1;
+                        sq_last <= sq_e + 20'd1 == sc[174:155];
+                    end
                 end
                 if (sq_wait && m_done) begin
                     sq_wait <= 1'b0;
