@@ -115,3 +115,24 @@ module dsfd_svch_xstn (
     ot_s81ph_skid #(.W(512)) u_s (.clk(ck[0]), .rst_n(rs[1]), .i_v(i_v[0]), .i_d(i_d), .i_r(i_r[0]),
         .o_v(o_v[0]), .o_d(o_d), .o_r(o_r[0]));
 endmodule
+
+// Hold-delay stage: N inverter PAIRS per bit, each inverter its own keep_hierarchy cell (logically identity; synthesis
+// cannot cancel the chain).  N = 0 is wires.  Used only where a hold-only miss on a structurally sound tile was measured.
+module ot_s81_svch_hdly #(parameter integer W = 1, parameter integer N = 0) (input wire [W-1:0] a, output wire [W-1:0] y);
+    generate if (N == 0) begin : g_w
+        assign y = a;
+    end else begin : g_d
+        wire [W-1:0] st [0:2*N];
+        assign st[0] = a; assign y = st[2*N];
+        genvar b, n;
+        for (b = 0; b < W; b = b + 1) begin : g_b
+            for (n = 0; n < 2 * N; n = n + 1) begin : g_n
+                ot_s81_svch_hinv u_i (.a(st[n][b]), .y(st[n+1][b]));
+            end
+        end
+    end endgenerate
+endmodule
+(* keep_hierarchy = 1 *)
+module ot_s81_svch_hinv (input wire a, output wire y);
+    assign y = ~a;
+endmodule

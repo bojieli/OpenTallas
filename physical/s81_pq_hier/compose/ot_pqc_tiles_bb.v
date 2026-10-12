@@ -33,3 +33,5 @@ endmodule
     output o_ready, o_idle, o_x_re, output [18:0] o_x_addr, output o_fault, o_ev, output [6:0] rom_pa0, rom_pa1,
     input [63:0] rom_pq0, rom_pq1, output [7:0] rom_sa, input [47:0] rom_sq);
 endmodule
+(* blackbox *) module ot_pqc_t_xin (input clk, input [1023:0] d, output [1023:0] q);
+endmodule

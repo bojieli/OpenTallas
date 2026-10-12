@@ -5,6 +5,7 @@
 # OT_XFM_* env overrides (um, lower-left) let a variant move them without a new script.
 set ot_blk [ord::get_db_block]
 set ot_loc [dict create \
+  ot_sram_1r1w2c_128x516_m1 [list [expr {[info exists ::env(OT_XFM_CQ_X)] ? $::env(OT_XFM_CQ_X) : 50.112}] [expr {[info exists ::env(OT_XFM_CQ_Y)] ? $::env(OT_XFM_CQ_Y) : 25.056}]] \
   ot_sram_1r1w2c_64x516_m1 [list [expr {[info exists ::env(OT_XFM_CQ_X)] ? $::env(OT_XFM_CQ_X) : 50.112}] [expr {[info exists ::env(OT_XFM_CQ_Y)] ? $::env(OT_XFM_CQ_Y) : 25.056}]] \
   ot_sram_1r1w2c_16x546_m1 [list [expr {[info exists ::env(OT_XFM_SQ_X)] ? $::env(OT_XFM_SQ_X) : 46.656}] [expr {[info exists ::env(OT_XFM_SQ_Y)] ? $::env(OT_XFM_SQ_Y) : 131.760}]]]
 set ot_n 0

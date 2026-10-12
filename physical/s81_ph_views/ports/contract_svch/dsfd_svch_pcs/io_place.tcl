@@ -1911,3 +1911,4 @@ place_pin -pin_name {gwd[8]} -layer M5 -location {128.5560 64.7040} -pin_size {0
 place_pin -pin_name {gwd[9]} -layer M5 -location {128.6520 64.7040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {gwd[10]} -layer M5 -location {128.7480 64.7040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {gwd[11]} -layer M5 -location {128.8440 64.7040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {gwd[12]} -layer M5 -location {128.9400 64.7040} -pin_size {0.0240 0.1920}
