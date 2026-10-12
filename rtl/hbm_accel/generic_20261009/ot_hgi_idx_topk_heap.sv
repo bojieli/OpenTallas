@@ -48,7 +48,12 @@ endmodule
 // el1011-hbm-idx 10-11: WREG=1 registers the write port (ce / address / mask / data flops next to the macro, write one edge
 // after the B stage): the macro's wd_in / w_mask_in / w_addr_in see flop -> pin only (the w8 route had B-stage compare ->
 // select -> wd_in in one cycle across the block).  The heap's last-write register (byp) covers the extra edge (see heap).
-module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, parameter integer WREG=0) (
+// el1011-hold3 2026-10-12: FFMAX = deepest level kept in flops (default 16 = the closed heap_rt_b netlist).  The M5
+// heap re-route (ot_hgi_topk_heap_tile_m5 TT -43.86 / FF -55.41: the 8- and 16-word flop levels 5/6 = 5,184 flops behind
+// one write-address decode (wa_q 3,462 loads) and a 16:1 x 216-b read mux, setup AND hold failing on the same store =
+// skew over one 16k-flop root) builds with -DOT_TOPK_HEAP_FFMAX=4: levels 5/6 move into 128x256 macros (same sync read /
+// masked sync write), ~10.8k flops on the root.
+module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, parameter integer WREG=0, parameter integer FFMAX=16) (
  input wire clk,
  input wire r_ce, input wire [AW-1:0] r_a, output wire [215:0] rd,
  input wire w_ce_i, input wire [AW-1:0] w_a_i, input wire [1:0] w_s, input wire [53:0] w_d, input wire w_all
@@ -63,7 +68,7 @@ module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, para
  end else begin : g_wc
   assign w_ce = w_ce_i; assign w_a = w_a_i; assign wmask = wmask_c; assign wdat = wdat_c;
  end endgenerate
- generate if (DEPTH <= 16) begin : g_ff
+ generate if (DEPTH <= FFMAX) begin : g_ff
   reg [215:0] m [0:DEPTH-1]; reg [215:0] q;
   integer i;
   always @(posedge clk) begin
@@ -167,7 +172,12 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
   localparam integer D = qd(j), A = awf(qd(j));
   wire [PW-1:0] wp = wr_p[j];
   wire [PW-1:0] rp = a_p[j - 2];
-  ot_hgi_topk_lvl #(.DEPTH(D), .AW(A), .WREG(1)) u_l (.clk(clk),
+`ifdef OT_TOPK_HEAP_FFMAX
+  localparam integer FFM = `OT_TOPK_HEAP_FFMAX;
+`else
+  localparam integer FFM = 16;
+`endif
+  ot_hgi_topk_lvl #(.DEPTH(D), .AW(A), .WREG(1), .FFMAX(FFM)) u_l (.clk(clk),
    .r_ce(a_v[j - 2]), .r_a(A'(rp & ((1 << (j - 2)) - 1))), .rd(rdq[j]),
    .w_ce_i(wr_v[j] || clr_bl[j]), .w_a_i(clr_bl[j] ? A'(clr_cl[j]) : A'((wp & ((1 << j) - 1)) >> 2)), .w_s(wp[1:0]),
    .w_d(wr_d[j]), .w_all(clr_bl[j]));

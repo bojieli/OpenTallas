@@ -1863,6 +1863,104 @@ def verdict_macros(j):
     return list(out)
 
 
+# OVERLAY-TRACKS-MAIN (el1012-daemon-overlay 2026-10-12): ship_helpers tars HELPERS from the DAEMON's tree (HERE) into every
+# job's {CL}, and stages copy them over the job's synced src (orfs_hold_mm.tcl, io_ref_routed.sdc, link_budget_consistent.sdc,
+# cg_pushdown.tcl, ...).  The daemon tree is a worktree pinned at an old commit, so flow fixes on main (de53a3b7c, e409d530a,
+# 3fd51709d, 1bfd5f1d2) never reached loop routes.  Each helper is now resolved against origin/main (fetched by the loop):
+#   local == main tip                    -> local
+#   local == an OLDER main version       -> main's tip blob (stale daemon copy; logged once per main tip)
+#   local not any main version (daemon-only edit) -> local, with an OVERLAY-DRIFT alert (shared-tool rule: land it on main)
+# overlay_drift_check() logs every differing helper (and the in-process imports) at startup and hourly.
+OVERLAY_CHECK_EXTRA = ("tools/textbook_lint.py", "tools/fp_margin_lint.py", "tools/ref_tile/pre_route_gate.py",
+                       "tools/closure_loop/submit_lint.py", "tools/closure_loop/macro_views.py")
+_OVL = {"head": None, "head_at": 0.0, "hist": {}, "said": set(), "check_at": 0.0}
+
+
+def _ovl_head():
+    if time.time() - _OVL["head_at"] > 60 or not _OVL["head"]:
+        r = sh(["git", "-C", str(REPO), "rev-parse", "refs/remotes/origin/main"], timeout=60)
+        _OVL["head"] = r.stdout.strip() if r.returncode == 0 else None
+        _OVL["head_at"] = time.time()
+    return _OVL["head"]
+
+
+def _ovl_blob_id(data):
+    import hashlib
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def _ovl_resolve(rel):
+    """(bytes to ship, state) for repo path rel; state in same|stale|daemon_only|not_on_main|no_git"""
+    local = (HERE.parents[1] / rel).read_bytes()
+    head = _ovl_head()
+    if not head:
+        return local, "no_git"
+    key = (rel, head)
+    if key not in _OVL["hist"]:
+        tip = sh(["git", "-C", str(REPO), "rev-parse", f"{head}:{rel}"], timeout=60)
+        _OVL["hist"][key] = tip.stdout.strip() if tip.returncode == 0 else None
+    tip = _OVL["hist"][key]
+    lid = _ovl_blob_id(local)
+    if tip is None:
+        return local, "not_on_main"
+    if lid == tip:
+        return local, "same"
+    # is the daemon copy an OLDER main version?  (a blob once in main's history stays there: cached per blob)
+    hk = ("inhist", rel, lid)
+    if not _OVL["hist"].get(hk):
+        r = sh(["git", "-C", str(REPO), "log", "--format=", "--raw", "--no-abbrev", "--no-renames", head, "--", rel],
+               timeout=180)
+        _OVL["hist"][hk] = r.returncode == 0 and lid in {ln.split()[3] for ln in r.stdout.splitlines()
+                                                          if ln.startswith(":") and len(ln.split()) >= 5}
+    if _OVL["hist"][hk]:
+        data = subprocess.run(["git", "-C", str(REPO), "cat-file", "blob", tip], capture_output=True, timeout=60)
+        if data.returncode == 0:
+            if ("stale", rel, head) not in _OVL["said"]:
+                _OVL["said"].add(("stale", rel, head))
+                log(f"OVERLAY-TRACKS-MAIN: daemon copy of {rel} is an old main version; shipping origin/main {head[:9]}'s")
+            return data.stdout, "stale"
+        return local, "no_git"
+    if ("daemon_only", rel, lid) not in _OVL["said"]:
+        _OVL["said"].add(("daemon_only", rel, lid))
+        log(f"OVERLAY-DRIFT ALERT: {rel} in the daemon tree has edits NOT on origin/main ({head[:9]}); shipping the daemon's "
+            f"copy -- commit it to main (shared-tool rule)")
+    return local, "daemon_only"
+
+
+def overlay_helper_bytes(helper):
+    rel = os.path.normpath(f"tools/closure_loop/{helper}")
+    try:
+        return _ovl_resolve(rel)[0]
+    except Exception as ex:  # noqa: BLE001 -- never block a launch on the resolver: ship the daemon's copy
+        log(f"OVERLAY-TRACKS-MAIN: {rel} unresolved ({type(ex).__name__}: {ex}); shipping the daemon's copy")
+        return (HERE / helper).read_bytes()
+
+
+def overlay_drift_check(force=False):
+    """startup + hourly: log every overlay / in-process file whose daemon copy differs from origin/main"""
+    if not force and time.time() - _OVL["check_at"] < 3600:
+        return
+    _OVL["check_at"] = time.time()
+    try:
+        gfetch("main", timeout=300)
+        _OVL["head_at"] = 0.0
+        rows = []
+        for rel in [os.path.normpath(f"tools/closure_loop/{h}") for h in HELPERS] + list(OVERLAY_CHECK_EXTRA):
+            if not (HERE.parents[1] / rel).is_file():
+                rows.append(f"{rel}: missing in daemon tree"); continue
+            st = _ovl_resolve(rel)[1]
+            if st != "same":
+                rows.append(f"{rel}: {st}")
+        hd = (_OVL["head"] or "?")[:9]
+        if rows:
+            log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: {len(rows)} file(s) differ (stale = main's copy is shipped; "
+                f"daemon_only = commit to main; in-process imports need a restart): " + "; ".join(rows))
+        else:
+            log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: all overlay files equal main")
+    except Exception:  # noqa: BLE001
+        log("overlay_drift_check error:\n" + traceback.format_exc())
+
+
 def ship_helpers(host, run):
     """(re)write the loop's helper scripts into {CL}: jobs synced before a helper existed get it too"""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -1870,7 +1968,9 @@ def ship_helpers(host, run):
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
         for helper in HELPERS:
-            tf.add(str(HERE / helper), arcname=Path(helper).name)
+            data = overlay_helper_bytes(helper)
+            ti = tarfile.TarInfo(Path(helper).name); ti.size = len(data); ti.mode = (HERE / helper).stat().st_mode & 0o777
+            ti.mtime = int(time.time()); tf.addfile(ti, io.BytesIO(data))
     if is_local(host):
         os.makedirs(f"{run}/cl", exist_ok=True)
         with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
@@ -1881,6 +1981,13 @@ def ship_helpers(host, run):
                            input=buf.getvalue(), capture_output=True, timeout=120)
     if r.returncode:
         raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
+
+
+def route_cfg_of(rb):
+    """the ORFS config.mk of the route whose base dir is rb (results/asap7/<d>/base -> <orfs>/config.mk): a stacked ECO
+    (hold on a VT-swap / combo base) passes it as ROUTE_CFG so hold_eco.sh keeps the route's layer cap + face keepout"""
+    ps = Path(str(rb)).parents
+    return str((ps[3] if len(ps) > 3 else Path(str(rb))) / "config.mk")
 
 
 def tag(st, j):
@@ -4542,7 +4649,8 @@ def start_combo_hold_retry(j, fleet, m, prev):
     henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=0 ALLOW=4 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
             f"ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} KEEPCLK=0 BUF=30 MACROS={mac} THREADS=8 SDC_NAME={sdcn} ECO_RB_DB=6_final.odb")
     cmd = (f"VB=$(ls -d {prev['out']}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo no combo base; exit 3; }}; "
-           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} ROUTE_CFG={shlex.quote(route_cfg_of(prev['rb']))} "
+           f"bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
     ship_helpers(j["host"], j["run"])
     prev["hold_retry"] = True
     j.setdefault("eco_history", []).append(prev)
@@ -4611,7 +4719,7 @@ def start_combo_eco(j, fleet, m):
     cmd = (f"{venv} bash {{CL}}/vtswap_eco.sh {rb} {ob} {outv} {blk} {pq}; "
            f"VB=$(ls -d {outv}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo COMBO: no vtswap base; exit 3; }}; "
            f"[ -f $VB/{sdcn} ] || cp {ob}/{sdcn} $VB/; "
-           f"{henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+           f"{henv} ROUTE_CFG={shlex.quote(route_cfg_of(rb))} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
     ship_helpers(j["host"], j["run"])
     tt, ff = m["ss_ps"], m["ff_ps"]
     j["eco"] = dict(tried=True, kind="combo", rb=rb, ob=ob, combo_vtswap=outv, out=out, post_sdc=post,
@@ -6315,6 +6423,7 @@ def host_down_requeue(j, kind, now=None):
 
 
 def tick(fleet):
+    overlay_drift_check()
     try:
         ingest()
     except Exception:  # noqa: BLE001
