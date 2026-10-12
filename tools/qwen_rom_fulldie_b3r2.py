@@ -234,6 +234,12 @@ def _tp8b_f2(v, m):
         v.SPINE_CHANNEL_X = lanes
         v.SPINE_LANE_BALANCE = True
         xe0 = round(xe0 + wch + ab, 4)
+        ck = by.get('clk_rx')
+        if ck is not None and ab:
+            # the forwarded-clock receiver sat in sub-column W right where the KV-half words (aq / emf / emr) and the
+            # VM result words cross the spine (fine x-cut 0.74 over it): it moves to sub-column M above the tree top
+            t2 = by['tt_up4_2']
+            ck.x, ck.y = round(t2.x, 4), round(v.dn(t2.y + t2.h + 1200.0, v.GY), 4)
         g['tp8b_kvc_x'] = [round(x + wch + ab, 4) for x in g['tp8b_kvc_x']]
         g['tp8b_spine_channels'] = dict(w_ch=wch, ab_ch=ab, lanes=lanes)
     # (2) the KV-die halves: W strip + channel left of the W field, E strip + channel right of the E field
@@ -246,6 +252,13 @@ def _tp8b_f2(v, m):
     chx = getattr(v, 'SPINE_CHANNEL_X', None)
     if chx:
         v.SPINE_CHANNEL_X = [round(x + kvs + (kvc if x >= xe0 - 1e-3 else 0.0), 3) for x in chx]
+        if getattr(v, 'SPINE_LANE_BALANCE', False):
+            # it3: two more lanes in the KV-centre column (W and E of its blocks)
+            # (>= 300 um from the E spine lane so the two never share a 260-um window); the KV centre's own words
+            # run in this column too: _relays pre-loads these lanes (SPINE_LANE_PRELOAD bits over the die height)
+            k0 = g['tp8b_kvc_x'][0]
+            v.SPINE_CHANNEL_X = sorted(v.SPINE_CHANNEL_X + [round(k0 + 320.0, 3), round(k0 + 650.0, 3)])
+            v.SPINE_LANE_PRELOAD = {round(k0 + 320.0, 3): 1000.0, round(k0 + 650.0, 3): 2500.0}
     # (3) IO band S: the core moves up by IO_DEPTH + the IO word channel; the IO blocks go to the S edge
     io = [i for i in m['insts'] if i.kind in ('io', 'xfifo')]
     ion = {i.name for i in io}
@@ -267,13 +280,14 @@ def _tp8b_f2(v, m):
         # it3: >= io_gap between IO blocks (the abutted row left 2-41 um, so the xfifo <-> SerDes words' relays sat on
         # the die edge and hopped 3.5 mm diagonally over the UCIe PHY); host_serdes: a reserved slot for the KV host
         # SerDes PHY between the collective and the xfifo (filled by _tp8b_kv)
-        x_ = io[0].x
+        x_ = x00 = io[0].x
         for i in io:
+            if f2.get('host_serdes') and i.name == 'io_collective':
+                # W of the collective: the slot must not split the collective | xfifo | UCIe words (11 kb face to face)
+                g['tp8b_host_slot_dx'] = round(v.up(x_, v.GX) - x00, 4)
+                x_ = v.up(x_, v.GX) + f2['host_serdes_w'] + iog
             i.x = round(v.up(x_, v.GX), 4)
             x_ = i.x + i.w + iog
-            if f2.get('host_serdes') and i.name == 'io_collective':
-                g['tp8b_host_slot_dx'] = round(x_ - io[0].x, 4)
-                x_ += f2['host_serdes_w'] + iog
     span = io[-1].x + io[-1].w - io[0].x
     xc = (m['col_x'](half - 1) + pitch + m['col_x'](half)) / 2 - kvc / 2      # the ROM spine (W of the KV centre)
     sx = v.dn(xc - (by['io_collective'].x + by['io_collective'].w / 2 - io[0].x) - io[0].x, v.GX)
@@ -282,7 +296,7 @@ def _tp8b_f2(v, m):
     for i in io:
         i.x = round(i.x + sx, 4)
     if 'tp8b_host_slot_dx' in g:
-        g['tp8b_host_slot'] = [round(io[0].x + g.pop('tp8b_host_slot_dx'), 4), round(y_edge, 4)]
+        g['tp8b_host_slot'] = [round(x00 + sx + g.pop('tp8b_host_slot_dx'), 4), round(y_edge, 4)]
     g['y_io'] = g['y_top']          # the relays' corridor top (the IO band no longer sits above the field)
     H = v.up(g['y_top'] + v.EDGE if hasattr(v, 'EDGE') else g['y_top'] + 21.6, v.GY)
     m['die'] = dict(m['die'], w=W, h=H, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
@@ -392,7 +406,8 @@ def _tp8b_kv(v, m):
     for n in KV_CENTRE:
         i = kby[n]
         y = v.dn(y - i.h, v.GY)
-        i.x, i.y = round(v.dn((x0 + x1) / 2 - i.w / 2, v.GX), 4), round(y, 4)
+        xc_ = x1 - 120.0 - 389.0 if TP8['f2'].get('kvc_east') else (x0 + x1) / 2   # it3: E-aligned centre stack
+        i.x, i.y = round(v.dn(xc_ - i.w / 2, v.GX), 4), round(y, 4)
         y -= gap
         new.append(i)
     gone = [i for i in m['insts'] if i.name in ROM_DROP]
@@ -1642,7 +1657,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     LBIN = 260.0
     lane_bits = {x: [0.0] * (int(m['die']['h'] // LBIN) + 2) for x in (getattr(v, 'SPINE_CHANNEL_X', None) or [])}
     big = [(it.x, it.y, it.x + it.w, it.y + it.h) for it in m['insts'] if it.w * it.h > 4e4]
+    for x_, b_ in (getattr(v, 'SPINE_LANE_PRELOAD', None) or {}).items():
+        if x_ in lane_bits:
+            lane_bits[x_] = [b_] * len(lane_bits[x_])
     cur_bits = [0]
+    io_sub = [0.0, 0.0, 0.0]
+    io_ch = next(((r['rect'][1], r['rect'][3]) for r in m['regions'] if r['name'] == 'io_chan'), None) \
+        if getattr(v, 'SPINE_LANE_BALANCE', False) else None
 
     def lane_pick(chx, P0, P1, lb):
         ya, yb = sorted((P0[1], P1[1]))
@@ -1680,6 +1701,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             xc = cx_list[min(cs, key=lambda c: load(c, Pf[1], Po[1]) + abs(cx_list[c] - Po[0]) / 2000.0)]
             path = [Pf, (xc, Pf[1]), (xc, Po[1]), Po]
             return path if f0 else path[::-1]
+        if io_ch is not None and max(P0[1], P1[1]) < io_ch[0] and abs(P0[0] - P1[0]) > 500.0:
+            # it3: an IO-row word between two IO blocks that are not neighbours runs in the IO word channel above the
+            # row (its straight run would cross the UCIe / collective PHY bodies: relays fell on the die edge and hopped
+            # 1.3-3.5 mm over the PHY)
+            lo_, hi_ = sorted((P0[0], P1[0]))
+            if any(a < hi_ - 1.0 and lo_ + 1.0 < c and b < min(P0[1], P1[1]) + 1.0 < d for a, b, c, d in big):
+                # two sub-lanes over the channel height, least-loaded first (one centre line stacked every word
+                # in one 260-um window)
+                hch = io_ch[1] - io_ch[0]
+                subs = [io_ch[0] + hch * f for f in (0.2, 0.8)]
+                k_ = min(range(2), key=lambda j: io_sub[j])
+                io_sub[k_] += cur_bits[0]
+                return [P0, (P0[0], subs[k_]), (P1[0], subs[k_]), P1]
         chx = getattr(v, 'SPINE_CHANNEL_X', None)
         if chx and abs(P0[1] - P1[1]) > 1000.0 and min(chx) - 1500.0 < P0[0] < max(chx) + 1500.0 \
                 and min(chx) - 1500.0 < P1[0] < max(chx) + 1500.0 and lane_bits is not None:
