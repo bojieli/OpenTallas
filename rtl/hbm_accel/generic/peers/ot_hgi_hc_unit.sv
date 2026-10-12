@@ -172,7 +172,7 @@ module ot_hgi_hc_unit #(
     // el1011-hcvm-hc SYS: the per-tile x write bundles, the HCP stage-chain ports, HBM lane mux
     localparam integer NXM = W / 16;
     wire [8*NXM-1:0] xw_ce; wire [8*NXM*10-1:0] xw_a; wire [8*NXM*256-1:0] xw_d; wire [8*NXM*16-1:0] xw_m;
-    wire [8*2*NXM*278-1:0] xl;
+    wire [8*2*NXM*150-1:0] xl;
     wire sd_v, sd_ss; wire [LW:0] sd_nv; wire [AW-1:0] sd_wa, sd_xa; wire [W*32-1:0] sys_sum; wire sys_fault;
     wire p_iss;
     generate if (SYS == 0) begin : g_xflat
@@ -451,20 +451,20 @@ module ot_hgi_hc_unit #(
             assign w_rdy0[g*SPL +: SPL] = {SPL{rb[XRLY-1][0]}};
             assign w_flt[g*SPL +: SPL] = {{(SPL-1){1'b0}}, rb[XRLY-1][1]};
             // B2: the relayed write of macro gm leaves as two local-slice x lanes (half rows, fp32 words with the bf16
-            // element in [31:16]) -- the shape the quarter's local VM slice station drives on the die
-            wire [2*NXM*278-1:0] xl_g;
+            // element in [31:16], lower halves dropped) -- the shape the quarter's local VM slice station drives
+            wire [2*NXM*150-1:0] xl_g;
             for (genvar gm = 0; gm < NXM; gm = gm + 1) begin : g_xl
                 for (genvar h = 0; h < 2; h = h + 1) begin : g_h
                     wire [7:0] mk = xw_m[(g*NXM + gm)*16 + h*8 +: 8];
-                    wire [255:0] dw;
+                    wire [127:0] dw;
                     for (genvar j = 0; j < 8; j = j + 1) begin : g_w
-                        assign dw[j*32 +: 32] = {xw_d[(g*NXM + gm)*256 + (h*8 + j)*16 +: 16], 16'd0};
+                        assign dw[j*16 +: 16] = xw_d[(g*NXM + gm)*256 + (h*8 + j)*16 +: 16];
                     end
-                    assign xl_g[(2*gm + h)*278 +: 278] = {xw_ce[g*NXM + gm] && |mk,
+                    assign xl_g[(2*gm + h)*150 +: 150] = {xw_ce[g*NXM + gm] && |mk,
                         {1'b0, 1'(gm), xw_a[(g*NXM + gm)*10 +: 10], 1'(h)}, dw, mk};
                 end
             end
-            assign xl[g*2*NXM*278 +: 2*NXM*278] = xl_g;
+            assign xl[g*2*NXM*150 +: 2*NXM*150] = xl_g;
             ot_hgi_hc_tile #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .LM(SLM), .LA(SLA)) u_t (
                 .clk(clk), .rst_n(rst_n), .first(g == 0),
                 .d_v(cv[g]), .d_ss(css[g]), .d_nv(cnv[g*(LW+1) +: LW+1]), .d_wa(cwa[g*AW +: AW]), .d_xa(cxa[g*AW +: AW]),
@@ -474,7 +474,7 @@ module ot_hgi_hc_unit #(
                 .c_start(c[0]), .c_rel(c[1]), .c_base(e[0 +: HAW]), .c_soff(e[HAW +: SPL*HAW]),
                 .c_nwk(e[HAW+SPL*HAW +: SPL*CWW]), .c_bnd(e[HAW+SPL*HAW+SPL*CWW +: SPL*AW]),
                 .c_pbase(e[HAW+SPL*HAW+SPL*CWW+SPL*AW +: HAW]), .c_pgo(c[2]), .t_rdy(t_rdy[g]), .t_flt(t_flt[g]),
-                .xl_q(xl[g*2*NXM*278 +: 2*NXM*278]), .xl_cr(), .xl_done(),
+                .xl_q(xl[g*2*NXM*150 +: 2*NXM*150]), .xl_cr(), .xl_done(),
                 .hq_v(t_hqv[g*SPL +: SPL]), .hq_rdy(hq_rdy[g*SPL +: SPL]), .hq_addr(t_hqa[g*SPL*HAW +: SPL*HAW]),
                 .hq_len(t_hql[g*SPL*3 +: SPL*3]), .hq_tag(t_hqt[g*SPL*TG +: SPL*TG]), .hr_v(hr_v[g*SPL +: SPL]),
                 .hr_tag(hr_tag[g*SPL*TG +: SPL*TG]), .hr_beat(hr_beat[g*SPL*2 +: SPL*2]), .hr_data(hr_data[g*SPL*256 +: SPL*256]));
@@ -826,12 +826,13 @@ module ot_hgi_hc_tile #(
     output reg                  t_rdy,
     output reg                  t_flt,
     // x writes: the B2 LOCAL VM slice x lanes (results/arch/hbm_b2_1012/SPEC.md 2a: the HC tile's xw / aperture port
-    // is fed from its local slice).  Lane l = x macro l / 2, half row l % 2, the 278-b aperture lane format
-    // {v, sector 13 = {0, macro, row 10, half}, data 256 = 8 fp32 words (x element = word[31:16]), word mask 8};
+    // is fed from its local slice).  Lane l = x macro l / 2, half row l % 2: the 278-b aperture lane
+    // {v, sector 13 = {0, macro, row 10, half}, data 256 = 8 fp32 words, word mask 8} with each word's lower half
+    // dropped by the slice station (x is consumed as bf16 = word[31:16]), i.e. 150 b {v, sector 13, 8 x 16, mask 8};
     // xl_cr[l] pulses the edge a sector is captured (pin flop; a lane takes one every edge), xl_done[l] the edge it is
     // written.  Both lanes of one macro in one edge must name the same row, and the sector must match the lane
     // (macro, half): else the tile faults (t_flt, fail closed).  4 lanes a tile = 8 a quarter = one per local bank.
-    input  wire [2*NXM*278-1:0] xl_q,
+    input  wire [2*NXM*150-1:0] xl_q,
     output reg  [2*NXM-1:0]     xl_cr,
     output reg  [2*NXM-1:0]     xl_done,
     // HBM read lanes
@@ -871,22 +872,22 @@ module ot_hgi_hc_tile #(
     wire [NXM-1:0] xl_bad;
     generate for (gm = 0; gm < NXM; gm = gm + 1) begin : g_xm
         // lane pin flops (no logic before them), then the half rows merge into one macro row write
-        reg [1:0] v_q; reg [12:0] s_q [0:1]; reg [255:0] dl_q [0:1]; reg [7:0] ml_q [0:1];
+        reg [1:0] v_q; reg [12:0] s_q [0:1]; reg [127:0] dl_q [0:1]; reg [7:0] ml_q [0:1];
         always @(posedge clk or negedge rl[1])
             if (!rl[1]) v_q <= 2'b00;
-            else v_q <= {xl_q[(2*gm+1)*278 + 277], xl_q[(2*gm)*278 + 277]};
+            else v_q <= {xl_q[(2*gm+1)*150 + 149], xl_q[(2*gm)*150 + 149]};
         always @(posedge clk) for (integer h = 0; h < 2; h = h + 1) begin
-            s_q[h] <= xl_q[(2*gm+h)*278 + 264 +: 13]; dl_q[h] <= xl_q[(2*gm+h)*278 + 8 +: 256];
-            ml_q[h] <= xl_q[(2*gm+h)*278 +: 8];
+            s_q[h] <= xl_q[(2*gm+h)*150 + 136 +: 13]; dl_q[h] <= xl_q[(2*gm+h)*150 + 8 +: 128];
+            ml_q[h] <= xl_q[(2*gm+h)*150 +: 8];
         end
         wire [9:0] a_q = v_q[0] ? s_q[0][10:1] : s_q[1][10:1];
         wire [255:0] d_q, wm;
         for (ll = 0; ll < 16; ll = ll + 1) begin : g_m
             // row lane ll = half ll / 8, word ll % 8 (the bf16 x element is the fp32 word's upper half)
 `ifdef MUT_XL
-            assign d_q[ll*16 +: 16] = dl_q[1 - ll / 8][(ll % 8)*32 + 16 +: 16];   // mutant: half rows swapped
+            assign d_q[ll*16 +: 16] = dl_q[1 - ll / 8][(ll % 8)*16 +: 16];   // mutant: half rows swapped
 `else
-            assign d_q[ll*16 +: 16] = dl_q[ll / 8][(ll % 8)*32 + 16 +: 16];
+            assign d_q[ll*16 +: 16] = dl_q[ll / 8][(ll % 8)*16 +: 16];
 `endif
             assign wm[ll*16 +: 16] = {16{v_q[ll / 8] && ml_q[ll / 8][ll % 8]}};
         end
@@ -899,7 +900,7 @@ module ot_hgi_hc_tile #(
         always @(posedge clk or negedge rl[1])
             if (!rl[1]) begin xl_cr[2*gm +: 2] <= 2'b00; xl_done[2*gm +: 2] <= 2'b00; end
             else begin
-                xl_cr[2*gm +: 2] <= {xl_q[(2*gm+1)*278 + 277], xl_q[(2*gm)*278 + 277]};
+                xl_cr[2*gm +: 2] <= {xl_q[(2*gm+1)*150 + 149], xl_q[(2*gm)*150 + 149]};
                 xl_done[2*gm +: 2] <= v_q;
             end
     end endgenerate
