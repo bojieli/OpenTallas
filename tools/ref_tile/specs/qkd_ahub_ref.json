@@ -72,17 +72,17 @@
  "route": {
   "pd": 0.5,
   "threads": 16,
-  "peak_ram_gb": 64
+  "peak_ram_gb": 112
  },
  "job": {
   "owner": "Claude:el1011-q-kvd",
   "branch": "claude/el1011-q-kvd",
-  "tag": "q5",
+  "tag": "q5b",
   "hosts": [
    "ot-epyc1tb",
    "ot-epyc4"
   ],
-  "purpose": "q-kvd RELAUNCH5: attention hub cluster ot_qwen_nearhbm_attn_hub_t (qkd_ahub slot 647.976^2) over ref_tile views 4 pbst + 4 pvlg + 4 zh; replaces hand qkd_ahub_t",
+  "purpose": "q-kvd RELAUNCH5: attention hub cluster ot_qwen_nearhbm_attn_hub_t (qkd_ahub slot 647.976^2) over ref_tile views 4 pbst + 4 pvlg + 4 zh; replaces hand qkd_ahub_t || route peak declared 112 GB (> AGIdock per-job limit 110 GB) so the route lands on an EPYC: the loop pins benches to the route host and does not offload a 128 GB bench that exceeds AGIdock's per-job limit (reported to coordinator)",
   "benches": [
    {
     "name": "hubt_layer_exact",

@@ -59,15 +59,15 @@
  "route": {
   "pd": 0.5,
   "threads": 16,
-  "peak_ram_gb": 64
+  "peak_ram_gb": 112
  },
  "macros": [],
  "inter": [],
  "job": {
   "owner": "Claude:el1011-q-kvd",
   "branch": "claude/el1011-q-kvd",
-  "tag": "q5",
-  "purpose": "q-kvd RELAUNCH5: KV end cluster (qkd_d2d slot 777.576x518.376, results/arch/hier_contract_1011/qwen_kv.json) over child_lint-clean views (4 sbuf + 3 fbuf8) through the reference cluster flow; replaces hand qkd_d2d_h (DRT-0073 on hand tile abstracts)",
+  "tag": "q5b",
+  "purpose": "q-kvd RELAUNCH5: KV end cluster (qkd_d2d slot 777.576x518.376, results/arch/hier_contract_1011/qwen_kv.json) over child_lint-clean views (4 sbuf + 3 fbuf8) through the reference cluster flow; replaces hand qkd_d2d_h (DRT-0073 on hand tile abstracts) || route peak declared 112 GB (> AGIdock per-job limit 110 GB) so the route lands on an EPYC: the loop pins benches to the route host and does not offload a 128 GB bench that exceeds AGIdock's per-job limit (reported to coordinator)",
   "benches": [
    {
     "name": "ht_layer_exact",
