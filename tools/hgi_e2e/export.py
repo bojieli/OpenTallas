@@ -41,6 +41,7 @@ import hbm_generic_iface as HGI  # noqa: E402
 from hgi_sim import machine as MC  # noqa: E402
 from hgi_sim.records import encode_program, decode_program, OPND  # noqa: E402
 
+B2 = None                             # --layout b2: the hgi_b2 pass wrapper (pass 1 Collect, pass 2 Check), innermost
 IMAGE_PAGE = 0x10                     # image at HBM byte 0x10000 (free in both models' maps)
 ESZ = MC.ESIZE
 
@@ -237,7 +238,7 @@ def export_qwen(a):
     regions = list(die0.hbm.regions)
     vm0 = die0.vm.copy()
     cap = Capture(M, die0, a.sm_weights)
-    M.units = {k: cap.wrap(k, fn) for k, fn in M.units.items()}
+    M.units = {k: cap.wrap(k, B2.wrap(k, fn) if B2 else fn) for k, fn in M.units.items()}
     dr = decode_program(image)
     for r, r0 in zip(dr, recs):
         r.tag, r.family = r0.tag, r0.family
@@ -306,7 +307,8 @@ def export_ds(a):
                   snap={id(dat): dat.copy() for b, dat, nm in regions if dat.size <= (1 << 28)},
                   image=encode_program(progs[0]), pos=pos, token=token, die0=die0)
         cap = Capture(Mach, die0, a.sm_weights)
-        wrapped = {k: (cap.wrap(k, fn) if isinstance(k, tuple) else fn) for k, fn in units.items()}
+        wrapped = {k: (cap.wrap(k, B2.wrap(k, fn) if B2 else fn) if isinstance(k, tuple) else fn)
+                   for k, fn in units.items()}
         st["units"] = units
         st["cap"] = cap
         t0 = time.time()
@@ -584,8 +586,61 @@ def main():
     ap.add_argument("--iks", action="store_true", help="ds: IKS key regions + IDX.INDEX operand I, and the rank-0 key image "
                     "in the IKS layout (native IDX.INDEX runs)")
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--layout", choices=("flat", "b2"), default="flat",
+                    help="flat (default, the one-VM die: fallback) or b2 (4 clusters, distributed VM: also writes OUT/b2/)")
+    ap.add_argument("--b2-pass", type=int, default=1, help=argparse.SUPPRESS)
+    ap.add_argument("--b2-mutant", choices=("stale_mirror", "chain_naive"), help="b2: a broken B2 machine the check must refuse")
+    ap.add_argument("--b2-allow", action="store_true", help="b2: write the verdict but do not refuse a placement violation")
     a = ap.parse_args()
+    if a.layout == "b2":
+        return export_b2(a)
     return export_qwen(a) if a.model == "qwen" else export_ds(a) if a.model == "ds" else export_dflash(a)
+
+
+def export_b2(a):
+    """--layout b2: pass 1 = the normal export + hgi_b2.Collect (who needs every VM word) -> placement; pass 2 (a fresh
+    process: the DS run keeps module state) = the same run under hgi_b2.Check (placement asserts, per-cluster masked
+    execution on every rank, chained reductions vs the golden order) -> OUT/b2/.  Refuses (rc 3) on a violation."""
+    global B2
+    import subprocess
+    from hgi_b2 import b2 as B
+    run = export_qwen if a.model == "qwen" else export_ds if a.model == "ds" else None
+    if run is None:
+        raise SystemExit("--layout b2: qwen or ds")
+    b2o = a.out / "b2"
+    b2o.mkdir(parents=True, exist_ok=True)
+    if a.b2_pass == 1:
+        B2 = B.Collect()
+        t0 = time.time()
+        rc = run(a)
+        np.save(b2o / "cls.npy", B2.placement().cls)
+        (b2o / "pass1.json").write_text(json.dumps(dict(rc=rc, wall_s=round(time.time() - t0, 1), promoted=B2.promoted,
+                                                        modes={f"{k[0]}:{k[1]}": n for k, n in B2.modes.items()},
+                                                        subs=len(B2.subs)), indent=1) + "\n")
+        if rc:
+            return rc
+        argv = [x for x in sys.argv[1:]] + ["--b2-pass", "2"]
+        return subprocess.run([sys.executable, "-m", "hgi_e2e.export"] + argv, cwd=str(TOOLS)).returncode
+    pl = B.Placement(np.load(b2o / "cls.npy"))
+    p1 = json.loads((b2o / "pass1.json").read_text())
+
+    class _C:                                   # the pass-1 mode counts for the verdict
+        modes = {tuple(k.split(":", 1)): n for k, n in p1["modes"].items()}
+    B2 = B.Check(pl, None, mutant=a.b2_mutant)
+    t0 = time.time()
+    rc = run(a)
+    vm0 = np.fromfile(a.out / "vm0.bin", "<u4")
+    vmf = np.fromfile(a.out / "vm_final.bin", "<u4")
+    meta = json.loads((a.out / "meta.json").read_text())
+    v = B.write(b2o, pl, B2, _C, vm0, vmf, dict(vehicle=meta.get("vehicle"), model=meta.get("model"),
+                                                 mutant=a.b2_mutant, golden_rc=rc, pass2_wall_s=round(time.time() - t0, 1),
+                                                 promoted_to_mirror=p1["promoted"]))
+    print(f"b2 {meta.get('vehicle')}: exact {v['exact']} violations {v['violations']} capacity {v['capacity']} "
+          f"ring {v['ring_words']}")
+    if v["violations"] and not a.b2_allow:
+        print("B2 placement REFUSED:\n  " + "\n  ".join(v["first_violations"][:10]))
+        return 3
+    return rc
 
 
 if __name__ == "__main__":
