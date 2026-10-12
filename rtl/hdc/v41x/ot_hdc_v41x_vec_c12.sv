@@ -336,8 +336,14 @@ module ot_hdc_v41x_vec #(
 `else
     localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
 `endif
+`ifdef OT_NEG_SIG_DEPTH
+    // Negative control (tput-fix-1011): the sigmoid / SiLU stage retires one cycle before its result.
+    localparam [15:0] H_M = MLAT, H_EXP = D_EXPL, H_SIG = D_SIG - 1, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+                      H_EG = D_EG;
+`else
     localparam [15:0] H_M = MLAT, H_EXP = D_EXPL, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
                       H_EG = D_EG;
+`endif
     function automatic [9:0] sfu_d(input [2:0] s);
         case (s)
             SFU_EXP: sfu_d = D_EXPL;
