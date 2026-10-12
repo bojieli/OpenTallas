@@ -78,7 +78,10 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     output reg  [1:0]        lf,                            // {e_flt, mq_flt}
     output reg               pe_o, input wire [3:1] pe_i
 );
-    localparam integer SFW = 128, PW = 163, TAGW = 32, EDEPTH = 512, MQD = EDEPTH, MQB = $clog2(MQD);
+    // OT_S81PH_COLL_CSTRESS (bench only): 8-deep receive FIFOs per parity, so the inter-die credit loop runs dry and
+    // must work (277 records per die never exhaust the 256-deep production FIFOs)
+    localparam integer EDEPTH = `ifdef OT_S81PH_COLL_CSTRESS 16 `else 512 `endif;
+    localparam integer SFW = 128, PW = 163, TAGW = 32, MQD = EDEPTH, MQB = $clog2(MQD);
     localparam integer PTW = (S == 0) ? 169 : 129;
     reg [1:0] rst_s;
     always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
@@ -105,10 +108,10 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     wire [3:0] e_txv; wire [PW-1:0] e_txr; wire [7:0] e_cro;
     wire o_v, o_last, o_err, o_red; wire [1:0] o_rank; wire [4*SFW-1:0] o_d, o_gdat; wire [SFW-1:0] o_rdat;
     reg  o_rdy;
-    wire e_flt; wire [2:0] e_code;
+    wire e_flt; wire [2:0] e_code; wire e_rpop;
     ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(0), .LANES(4), .TAGW(TAGW),
         .DEPTH(EDEPTH), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1), .FIFO_SRAM(1),
-        .SRAM_MACRO(1), .PULL(1), .PULL_D(XD), .PCOPY(1), .PSL(1), .LQW(2), .EXTF(1)) u_eng (
+        .SRAM_MACRO(1), .PULL(1), .PULL_D(XD), .PCOPY(1), .PSL(1), .LQW(2), .EXTF(1), .RHOLD(1)) u_eng (
         .clk(ck), .rst_n(erst_n),
         .in_valid(e_iv), .in_ready(e_ir), .in_data(lq_d[SFW-1:0]), .in_last(lq_d[161]), .in_mode(lq_d[160]),
         .in_tag(lq_d[SFW +: TAGW]),
@@ -117,7 +120,7 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
         .rl_tx_valid(), .rl_tx_rec(), .rl_rx_valid(4'd0), .rl_rx_rec({4*PW{1'b0}}),
         .out_valid(o_v), .out_ready(o_rdy), .out_data(o_d), .out_last(o_last), .out_rank(o_rank), .out_err(o_err),
         .out_red(o_red), .out_rdat(o_rdat), .out_gdat(o_gdat),
-        .fault(e_flt), .fault_code(e_code), .xl_v(xl_v), .xl_d(xl_d), .xl_cr(xl_cr));
+        .fault(e_flt), .fault_code(e_code), .red_hold(!room2), .out_rpop(e_rpop), .xl_v(xl_v), .xl_d(xl_d), .xl_cr(xl_cr));
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin tx_v <= 3'd0; cr_o <= 6'd0; end
         else begin tx_v <= e_txv[3:1]; cr_o <= e_cro[7:2]; end
@@ -145,7 +148,11 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     always @(posedge ck or negedge erst_n) if (!erst_n) r_v <= 1'b0; else r_v <= o_red;
     always @(posedge ck) begin r_d <= o_rdat; r_last <= o_last; r_err <= o_err; end
     reg  signed [7:0] cred;
-    reg          room2;                                     // registered (cred >= 2), from the next credit value
+    // room2 = (cred - w_r) >= 2, registered from the next values: w_r = reduce words popped and not yet emitted, each
+    // holding a reserved output slot (reduce words are not back-pressured at the output); also the engine's reduce-pop
+    // gate (red_hold).  Slow-VM-drain fix (1-in-8 take overflowed the remote queue in the flat and the split designs).
+    reg          room2;
+    reg  [7:0]   w_r;
     wire         in_red = r_v && !hm;
     always @(*) o_rdy = hm && (pk_n == 0) && room2;
     wire         in_gat = o_v && !o_red && hm && o_rdy;
@@ -153,15 +160,25 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     reg  [4*SFW-1:0] gat_d;
     always @(*) for (integer i = 0; i < 4; i = i + 1) gat_d[i*SFW +: SFW] = o_gdat[(i ^ rank)*SFW +: SFW];
     wire         pk_emit = (pk_n != 0) && (pk_n == 4 || !in_red);
+    // pass-through pick REGISTERED one cycle ahead (ce cex / ceh p4 ces0: landing valid -> round robin -> 5:1 x 169
+    // -> b_d -> w1_d -125.5): pk_q = the round robin's one-hot choice among the lanes landed last cycle and not taken
+    // then; such a lane is still landed now (only this packer pops), so the mux is steered by flops.  Per-lane order
+    // is unchanged; a lane that lands this cycle competes from the next.
     reg  [2:0]   rr;
-    reg  [2:0]   pt_lx;                                     // the round robin's pick among the landed lanes
-    always @(*) begin
-        pt_lx = 3'd0;
-        for (integer i = 4; i >= 0; i = i - 1) if (ep_ov[(rr + i) % 5]) pt_lx = (rr + i) % 5;
-    end
-    wire         pt_push = !pk_emit && !in_gat && room2 && (|ep_ov);
+    reg  [4:0]   pk_q;
+    wire         pt_push = !pk_emit && !in_gat && room2 && (|pk_q);
+    reg  [2:0]   pt_lx;
+    always @(*) begin pt_lx = 3'd0; for (integer i = 0; i < 5; i = i + 1) if (pk_q[i]) pt_lx = i; end
     wire [2:0]   pt_l = pt_lx;
-    assign ep_or = pt_push ? (5'd1 << pt_lx) : 5'd0;
+    assign ep_or = pt_push ? pk_q : 5'd0;
+    wire [2:0]   rr_nx = pt_push ? ((pt_l == 4) ? 3'd0 : pt_l + 1'b1) : rr;
+    wire [4:0]   cand = ep_ov & ~ep_or;
+    reg  [4:0]   pk_nx;
+    always @(*) begin
+        pk_nx = 5'd0;
+        for (integer i = 4; i >= 0; i = i - 1) if (cand[(rr_nx + i) % 5]) pk_nx = 5'd1 << ((rr_nx + i) % 5);
+    end
+    always @(posedge ck or negedge erst_n) if (!erst_n) pk_q <= 5'd0; else pk_q <= pk_nx;
     reg  [4:0]   qc [0:5];
     reg  [3:0]   qf [0:5];
     always @(*) for (integer i = 0; i < 6; i = i + 1) qf[i] = (qc[i] > 15) ? 4'd15 : qc[i][3:0];
@@ -187,9 +204,17 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     wire [50:0]  hdr = {rank, fv_q, fault, b_cr, pe, in_gat && !pk_emit, pt_push ? ptw[PTW-1] : 1'b0, b_last, b_mask,
                         pt_push ? pt_l : 3'd0, b_type};
     wire [7:0]   cred_nx = cred - (oq_push ? 8'sd1 : 8'sd0) + (bcr_q ? 8'sd1 : 8'sd0);
+    wire [7:0]   w_nx = w_r + (e_rpop ? 8'd1 : 8'd0) - (pk_emit ? {5'd0, pk_n} : 8'd0);
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin cred <= OQX_D; room2 <= 1'b1; end
-        else begin cred <= cred_nx; room2 <= $signed(cred_nx) >= 8'sd2; end
+        if (!rst_n) begin cred <= OQX_D; room2 <= 1'b1; w_r <= 8'd0; end
+        else begin
+            cred <= cred_nx; w_r <= w_nx;
+`ifdef OT_S81PH_MUT_ORC
+            room2 <= $signed(cred_nx) >= 8'sd2;                              // negative control: no reservation
+`else
+            room2 <= ($signed({cred_nx[7], cred_nx}) - $signed({1'b0, w_nx})) >= 9'sd2;
+`endif
+        end
     always @(posedge ck) if (in_red) pk_d[(pk_emit ? 0 : pk_n) * SFW +: SFW] <= r_d;
     always @(posedge ck or negedge erst_n) begin
         if (!erst_n) begin
@@ -208,7 +233,7 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
                 if (pk_emit) begin pk_n <= 1; pk_l <= {3'b000, r_last}; pk_err <= r_err; end
                 else begin pk_n <= pk_n + 1'b1; pk_l[pk_n] <= r_last; pk_err <= pk_err | r_err; end
             end
-            if (pt_push) rr <= (pt_l == 4) ? 3'd0 : pt_l + 1'b1;
+            rr <= rr_nx;
             for (integer i = 0; i < 6; i = i + 1)
                 qc[i] <= qc[i] - (oq_push ? {1'b0, qf[i]} : 5'd0) + (qp_q[i] ? 5'd1 : 5'd0);
             if (|fv_q) fault <= 1'b1;
@@ -269,7 +294,7 @@ module dsfd_coll_cel #(parameter integer KIND = 0, parameter integer XD = 6) (
     wire x_lo_v, x_lo_r, x_li_v, x_li_r; wire [552:0] x_lo_d, x_li_d; wire ff;
     ot_link_credit_tx #(.W(553), .CRED(8)) u_so (.clk(ck), .rst_n(rst_n), .i_valid(x_lo_v), .i_ready(x_lo_r),
         .i_data(x_lo_d), .l_valid(f_lo_v), .l_data(f_lo_d), .l_credit(f_lo_r));
-    ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(0), .WFREE(1)) u_si (.clk(ck), .rst_n(rst_n), .l_valid(f_li_v),
+    ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(0), .WFREE(1), .RREP(16)) u_si (.clk(ck), .rst_n(rst_n), .l_valid(f_li_v),
         .l_data(f_li_d), .l_credit(f_li_r), .o_valid(x_li_v), .o_ready(x_li_r), .o_data(x_li_d), .fault(ff));
     reg [2:0] xf_q; reg skf;
     always @(posedge ck or negedge rst_n)
@@ -289,7 +314,7 @@ module dsfd_coll_cel #(parameter integer KIND = 0, parameter integer XD = 6) (
         wire flit_go = x_lo_v && x_lo_r;
         reg [9:0] crx0, crx1, crs0, crs1;
         wire [1:0] cs0 = (crs0 > 3) ? 2'd3 : crs0[1:0], cs1 = (crs1 > 3) ? 2'd3 : crs1[1:0];
-        ot_s81ph_hfifo #(.W(PW), .D(16)) u_sk (.clk(ck), .rst_n(erst_n), .push(tv_q), .wd(rec), .pop(flit_go && sk_hv),
+        ot_s81ph_hfifo #(.W(PW), .D(16), .RREP(16)) u_sk (.clk(ck), .rst_n(erst_n), .push(tv_q), .wd(rec), .pop(flit_go && sk_hv),
             .hv(sk_hv), .hd(sk_hd), .fault(sk_f));
         // room flag for the slices: registered here, registered there; covers the pushes in flight (<= 4)
         reg [5:0] occ;
@@ -354,7 +379,7 @@ endmodule
 module dsfd_coll_ceq #(parameter integer XD = 6, parameter integer QD0 = 16, parameter integer QD = 8) (
     input  wire              ck, input wire rs,
     input  wire [591:0]      fvm_u,                         // from cb (f_vm pass-through)
-    output reg               e_en, output reg [1:0] rank, output reg [5:0] qp, output reg [7:0] fv,
+    output reg               e_en, output reg [1:0] rank, output wire [5:0] qp, output reg [7:0] fv,
     output wire              q_v, output wire [4*162-1:0] q_d, input wire q_cr,
     output wire [4:0]        p_v, output wire [5*553-1:0] p_d, input wire [4:0] p_cr,
     input  wire [8*4-1:0]    lane_f,                        // per lane {tx-buffer fault, lane fault triplet}
@@ -371,14 +396,21 @@ module dsfd_coll_ceq #(parameter integer XD = 6, parameter integer QD0 = 16, par
     always @(posedge ck) fv_p <= fvm_u[591:1];
     wire [591:0] f = {fv_p, fv_v};
     wire fvv = f[0]; wire [1:0] ftype = f[2:1]; wire [2:0] flink = f[5:3];
-    wire [W+33:0] rec = {f[6], f[7], f[39:8], f[40 +: W]};  // {last, mode, tag, data}
+    // decode REGISTERED (ceq p4: fv_v -> type / link compare -> push -> 586-bit FIFO bypass enables -214): one push
+    // flop per queue, the record one register later, then the queue
+    reg [5:0] psh_q; reg [W+33:0] rec;                      // {last, mode, tag, data}
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) psh_q <= 6'd0;
+        else for (integer i = 0; i < 6; i = i + 1)
+            psh_q[i] <= fvv && ((i == 0) ? (ftype == 2'd1) : (ftype == 2'd2 && flink == i - 1));
+    always @(posedge ck) rec <= {f[6], f[7], f[39:8], f[40 +: W]};
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin e_en <= 1'b0; rank <= 2'd0; end
         else if (fvv && ftype == 2'd3) begin rank <= f[41:40]; e_en <= f[42]; end
     wire [5:0] pop, qflt;
     genvar j;
     generate for (j = 0; j < 6; j = j + 1) begin : g_q
-        wire psh = fvv && ((j == 0) ? (ftype == 2'd1) : (ftype == 2'd2 && flink == j - 1));
+        wire psh = psh_q[j];
         wire hv, rdy; wire [W+33:0] hd;
         ot_fifo_sram_fwft #(.W(W + 34), .DEPTH((j == 0) ? QD0 : QD), .MACRO(2)) u_q (.clk(ck), .rst_n(rst_n),
             .push(psh), .wdata(rec), .pop(hv && rdy), .hv(hv), .head(hd), .ovf(qflt[j]));
@@ -400,11 +432,15 @@ module dsfd_coll_ceq #(parameter integer XD = 6, parameter integer QD0 = 16, par
     end endgenerate
     // fault vector {lane, mq, oq, queue, engine, gearbox, endpoint, tx buffer} (the flat core's fv_flt), sticky
     reg [31:0] lf_q; reg [7:0] sf_q; reg [2:0] ff_q; reg bf_q;
+    // kept: qp_k[j] has the same D as the queue's credit-link l_valid, and a merged flop would drive an E-face stream
+    // pin and this W-face broadcast pin (ceq p4 l_valid -> qp[5] -116)
+    (* keep = "true" *) reg [5:0] qp_k;
+    assign qp = qp_k;
     reg [7:0] lane_st;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin qp <= 6'd0; fv <= 8'd0; lf_q <= 0; sf_q <= 0; ff_q <= 0; bf_q <= 1'b0; lane_st <= 0; end
+        if (!rst_n) begin qp_k <= 6'd0; fv <= 8'd0; lf_q <= 0; sf_q <= 0; ff_q <= 0; bf_q <= 1'b0; lane_st <= 0; end
         else begin
-            qp <= pop; lf_q <= lane_f; sf_q <= slice_f; ff_q <= fifo_f; bf_q <= bw_flt;
+            qp_k <= pop; lf_q <= lane_f; sf_q <= slice_f; ff_q <= fifo_f; bf_q <= bw_flt;
             for (integer i = 0; i < 8; i = i + 1) if (lf_q[4*i+2]) lane_st[i] <= 1'b1;
             fv <= fv | {|lane_st, sf_q[0] | sf_q[2] | sf_q[4] | sf_q[6], bf_q, |qflt,
                         sf_q[1] | sf_q[3] | sf_q[5] | sf_q[7] | (|ff_q),
@@ -494,7 +530,7 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
         end
     end endgenerate
     generate for (k = 1; k < 4; k = k + 1) begin : g_f
-        dsfd_coll_cef u_f (.ck(c), .rs(r), .e_en(e_en), .rx_v(rx_v[k]), .rx_d(rx_d[k]), .x_v(xv[k]), .x_d(xd[k]),
+        dsfd_coll_cef #(.PD(`ifdef OT_S81PH_COLL_CSTRESS 8 `else 256 `endif)) u_f (.ck(c), .rs(r), .e_en(e_en), .rx_v(rx_v[k]), .rx_d(rx_d[k]), .x_v(xv[k]), .x_d(xd[k]),
             .x_cr(xl_cr_s[0][2*k +: 2]), .flt(fifo_f[k - 1]));
     end endgenerate
     // slices
