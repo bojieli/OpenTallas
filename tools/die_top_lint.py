@@ -888,6 +888,7 @@ QLINK = 1056          # qwen_rom_fulldie LINK_TRACKS: 512 each way + 32 control 
 def dirs_qwen(bid, cls, bits, eps, j, port):
     """Qwen die (qwen_rom_fulldie buses(): endpoint 0 is always the upstream / source end)."""
     bid = re.sub(r'__r\d+$', '', bid)                  # r21: a relay hop keeps its bus's rule
+    cls = cls.split('@')[0]                            # tp8b: KV-die buses merged onto the ROM die carry '<cls>@kv'
     if cls in ('corridor', 'head_chain', 'tap'):
         return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
     bid = bid[:-2] if bid.endswith('_x') else bid      # r18: second half of a bus through a CDC cluster
@@ -1030,6 +1031,10 @@ def endpoint_dirs(die, real, by, bus, j):
     rule = (dirs_s81 if die.startswith('s81') else dirs_qwen if die in ('qwen_rom', 'qwen_kv') else dirs_hbm)(bid, cls, bits, eps, j, port)
     if rule == 'complement':
         others = [k for k in range(len(eps)) if k != j and by[eps[k][0]].master in real]
+        if not others and len(eps) == 2:
+            # qwen-tp8/die (tp8b merges the KV die's qkd_* CDC leaves / controllers onto the ROM die, neither bound to
+            # RTL in the qwen_rom binding): no real end to complement -> the Qwen bus convention, endpoint 0 upstream
+            return [(0, bits, 'out' if j == 0 else 'in')], None
         assert len(others) == 1, (bid, j)
         oseg, _ = endpoint_dirs(die, real, by, bus, others[0])
         flip = {'in': 'out', 'out': 'in', 'io': 'io', 'missing': 'missing'}
