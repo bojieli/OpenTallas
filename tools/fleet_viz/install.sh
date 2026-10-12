@@ -15,7 +15,7 @@ mkdir -p "$dst/explorer/element/data"; cp "$src"/explorer/element/{index.html,el
 cp "$src"/explorer/element/{layout.js,lv_worker.js,lv_decode.js} "$dst/explorer/element/"
 mkdir -p "$dst/explorer/element/vendor"; cp "$src"/explorer/element/vendor/*.js "$dst/explorer/element/vendor/"
 cp "$src"/layout_service.py "$src"/layout_store.py "$dst/"
-mkdir -p "$dst/layout_viewer"; cp "$src"/../layout_viewer/{lv_extract.py,lv_tile.py,lv_lint.py,lv_verify.js} "$src"/../hier_contract/child_lint.py "$dst/layout_viewer/"
+mkdir -p "$dst/layout_viewer"; cp "$src"/../layout_viewer/{lv_extract.py,lv_tile.py,lv_lint.py,lv_verify.js,lv_post_record.sh} "$src"/../hier_contract/child_lint.py "$dst/layout_viewer/"
 mkdir -p "$dst/layout_store"   # static layout store (layout_store.py): content-addressed closure exports, kept across deploys
 # python 3.14 fleet hosts have no brotli module: ship the wheel's contents next to lv_tile.py (pylib314/)
 if [ ! -f "$dst/layout_viewer/pylib314/brotli.py" ]; then
