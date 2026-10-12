@@ -32,141 +32,302 @@
   }
  },
  "measured": {
-  "frac_of_peak_e2e_worst": 0.7862,
-  "frac_of_peak_e2e_mean": 0.8049,
-  "frac_of_peak_steady_worst": 0.7919,
-  "credited_frac_e2e_worst": 0.7263,
-  "shape": "one stack: 2 back-to-back PS stream descriptors x 4,092 sectors a PC x 32 PCs (8.38 MB a stack; gu record ~7.9 MB a stack), 5 refresh phases, no-credit and credited (consumer returns one credit a forwarded cycle per landed row)",
+  "frac_of_peak_e2e_worst": 0.9085,
+  "frac_of_peak_e2e_mean": 0.9374,
+  "frac_of_peak_steady_worst": 0.9167,
+  "credited_frac_e2e_worst": 0.9085,
+  "shape": "one stack: 2 back-to-back PS stream descriptors x 4,092 sectors a PC x 32 PCs (8.38 MB a stack; gu record ~7.9 MB a stack), 5 refresh phases, no-credit and credited; controller of record RW 16 (FR-FCFS) (consumer returns one credit a forwarded cycle per landed row)",
   "runs": [
    {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 0,
+    "cred": 0,
+    "frac_e2e": 0.9723,
+    "frac_steady": 0.9815,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 0,
+    "cred": 1,
+    "frac_e2e": 0.9723,
+    "frac_steady": 0.9815,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 1300,
+    "cred": 0,
+    "frac_e2e": 0.9445,
+    "frac_steady": 0.9532,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 1300,
+    "cred": 1,
+    "frac_e2e": 0.9445,
+    "frac_steady": 0.9532,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 2700,
+    "cred": 0,
+    "frac_e2e": 0.909,
+    "frac_steady": 0.917,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 2700,
+    "cred": 1,
+    "frac_e2e": 0.909,
+    "frac_steady": 0.917,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 4100,
+    "cred": 0,
+    "frac_e2e": 0.925,
+    "frac_steady": 0.9334,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 4100,
+    "cred": 1,
+    "frac_e2e": 0.925,
+    "frac_steady": 0.9334,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 5500,
+    "cred": 0,
+    "frac_e2e": 0.9368,
+    "frac_steady": 0.9454,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw16",
+    "phase_ns": 5500,
+    "cred": 1,
+    "frac_e2e": 0.9368,
+    "frac_steady": 0.9454,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 0,
+    "cred": 0,
+    "frac_e2e": 0.9723,
+    "frac_steady": 0.9818,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 0,
+    "cred": 1,
+    "frac_e2e": 0.9723,
+    "frac_steady": 0.9818,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 1300,
+    "cred": 0,
+    "frac_e2e": 0.9444,
+    "frac_steady": 0.9533,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 1300,
+    "cred": 1,
+    "frac_e2e": 0.9444,
+    "frac_steady": 0.9533,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 2700,
+    "cred": 0,
+    "frac_e2e": 0.9085,
+    "frac_steady": 0.9167,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 2700,
+    "cred": 1,
+    "frac_e2e": 0.9085,
+    "frac_steady": 0.9167,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 4100,
+    "cred": 0,
+    "frac_e2e": 0.9249,
+    "frac_steady": 0.9335,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 4100,
+    "cred": 1,
+    "frac_e2e": 0.9249,
+    "frac_steady": 0.9335,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 5500,
+    "cred": 0,
+    "frac_e2e": 0.9366,
+    "frac_steady": 0.9454,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw16",
+    "phase_ns": 5500,
+    "cred": 1,
+    "frac_e2e": 0.9366,
+    "frac_steady": 0.9454,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw1",
+    "phase_ns": 0,
+    "cred": 0,
+    "frac_e2e": 0.959,
+    "frac_steady": 0.9678,
+    "errors": 0
+   },
+   {
     "build": "SW_seg_psfc_rw1",
     "phase_ns": 2700,
     "cred": 0,
-    "frac_e2e": 0.7995,
-    "frac_steady": 0.8053,
+    "frac_e2e": 0.9225,
+    "frac_steady": 0.9306,
     "errors": 0
    },
    {
     "build": "SW_seg_psfc_rw1",
-    "phase_ns": 4100,
-    "cred": 0,
-    "frac_e2e": 0.8313,
-    "frac_steady": 0.8376,
-    "errors": 0
-   },
-   {
-    "build": "SW_seg_psfc_rw1",
-    "phase_ns": 0,
-    "cred": 0,
-    "frac_e2e": 0.8187,
-    "frac_steady": 0.8248,
-    "errors": 0
-   },
-   {
-    "build": "SW_seg_psfc_rw1",
-    "phase_ns": 0,
+    "phase_ns": 2700,
     "cred": 1,
-    "frac_e2e": 0.7432,
-    "frac_steady": 0.7483,
-    "errors": 0
-   },
-   {
-    "build": "SW_seg_psfc_rw1",
-    "phase_ns": 1300,
-    "cred": 0,
-    "frac_e2e": 0.7866,
-    "frac_steady": 0.7923,
+    "frac_e2e": 0.9225,
+    "frac_steady": 0.9306,
     "errors": 0
    },
    {
     "build": "SW_seg_psfc_rw1",
     "phase_ns": 5500,
     "cred": 0,
-    "frac_e2e": 0.7863,
-    "frac_steady": 0.7919,
-    "errors": 0
-   },
-   {
-    "build": "SW_seg_psfc_rw1",
-    "phase_ns": 2700,
-    "cred": 1,
-    "frac_e2e": 0.7263,
-    "frac_steady": 0.7311,
-    "errors": 0
-   },
-   {
-    "build": "NE_seg_psfc_rw1",
-    "phase_ns": 4100,
-    "cred": 0,
-    "frac_e2e": 0.8303,
-    "frac_steady": 0.8367,
-    "errors": 0
-   },
-   {
-    "build": "NE_seg_psfc_rw1",
-    "phase_ns": 2700,
-    "cred": 1,
-    "frac_e2e": 0.7264,
-    "frac_steady": 0.7313,
-    "errors": 0
-   },
-   {
-    "build": "NE_seg_psfc_rw1",
-    "phase_ns": 0,
-    "cred": 1,
-    "frac_e2e": 0.7406,
-    "frac_steady": 0.7458,
-    "errors": 0
-   },
-   {
-    "build": "NE_seg_psfc_rw1",
-    "phase_ns": 2700,
-    "cred": 0,
-    "frac_e2e": 0.7995,
-    "frac_steady": 0.8054,
-    "errors": 0
-   },
-   {
-    "build": "NE_seg_psfc_rw1",
-    "phase_ns": 5500,
-    "cred": 0,
-    "frac_e2e": 0.7863,
-    "frac_steady": 0.7921,
-    "errors": 0
-   },
-   {
-    "build": "NE_seg_psfc_rw1",
-    "phase_ns": 0,
-    "cred": 0,
-    "frac_e2e": 0.8246,
-    "frac_steady": 0.8309,
-    "errors": 0
-   },
-   {
-    "build": "NE_seg_psfc_rw1",
-    "phase_ns": 1300,
-    "cred": 0,
-    "frac_e2e": 0.7862,
-    "frac_steady": 0.792,
+    "frac_e2e": 0.9245,
+    "frac_steady": 0.9326,
     "errors": 0
    }
   ]
  },
- "ratio": 1.208,
- "ratio_mean": 1.18,
- "ratio_vs_record_requirement": 0.986,
- "ratio_vs_record_requirement_credited": 1.067,
+ "ratio": 1.046,
+ "ratio_mean": 1.013,
+ "ratio_vs_record_requirement": 0.853,
+ "ratio_vs_record_requirement_credited": 0.853,
  "exact": true,
- "mutant": "slot (PS sector slot ignores the row's bank XOR, run_bench_ps.sh neg_slot) FAIL: 49,089 errors",
- "bench": "physical/hbm_accel_die_views/svc/run_bench_stream_tput.sh <out> {SW|NE} seg_psfc [slot] with RW=1 (tb/tb_svc_ps_stream_tput.sv; Verilator 5.032)",
- "host": "ot-epyc1tb:/srv/opentallas/claude/tput-map-1011/f1",
- "source_commit": "6c4677c53 + new tb/run script (uncommitted at run time)",
- "rtl": "physical/hbm_accel_die_views/svc/rtl/seg_psfc (all 17 segments + hfd_svc_{SW,NE}_seg joins; seg_ps gives identical rows/timing: SW p0 0.8187 / p2700 0.7995)",
- "controller_model": "ot_hdc_v41x_idx_hbm NPC 32 REFPB 3 MEM_MODE 1, 1.0 TB/s a stack, RW 1 (in-order return per PC)",
+ "mutant": "slot (PS sector slot ignores the row bank XOR) FAIL 49,089 row errors; rob (ROB drains a sector without waiting for it to land) FAIL 65,473 errors -- both on 8f35e71d6, RW16, SW p0",
+ "bench": "physical/hbm_accel_die_views/svc/run_bench_stream_tput.sh <out> {SW|NE} seg_psfc [slot|rob] with RW=16 (default) and RW=1 (tb/tb_svc_ps_stream_tput.sv; Verilator 5.032)",
+ "host": "ot-epyc3:/srv/opentallas-scratch/claude/tputx-svc/o_full (rob2 snapshot = 8f35e71d6 RTL)",
+ "source_commit": "8f35e71d6 (claude/el1011-hbm-tputx-svc)",
+ "rtl": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_ps_lib.sv (ot_svs_pcs ROB + 2 descriptor slots, ot_svs_eps 2 in flight, ot_svs_grp lt per slot) + rtl/seg_psfc regenerated (c_dd 2 b)",
+ "controller_model": "ot_hdc_v41x_idx_hbm NPC 32 REFPB 3 MEM_MODE 1, 1.0 TB/s a stack, RW 16 FR-FCFS (record) and RW 1 (in-order) -- both exact",
  "findings": [
-  "EXACTNESS DEPENDS ON IN-ORDER RETURNS: with the controller model of record (RW 16, FR-FCFS reorder window, as every other bench uses) the PS segments mis-assemble rows: a later read's beats land in an earlier row's buffer (slot 0 of rq 0 carries sector 4), rows go out with smask 0111; SW production run 49,420 of 65,472 rows, 16,053 errors (FAIL). The PS group unit (ot_svs_grp, 2 row buffers a PC) assumes per-PC in-order beats (the bench stub returns in order). Either the die controller must guarantee per-PC in-order returns, or ot_svs_grp needs a tag-indexed row buffer (KNO 15 = up to 15 rows outstanding a PC).",
-  "RATE: in-order, no-credit: 0.786-0.831 of stack peak (worst over 5 refresh phases, end-to-end incl. first access; steady 0.792-0.838); credited: 0.726-0.741. vs the simulator's 0.950 stream term -> ratio 1.208 worst / 1.176 mean (UNQUALIFIED); vs the gu record requirement 0.775 -> 0.986 no-credit / 1.067 credited (the token price holds, gu stays SM-bound).",
-  "7 of the 17 elements' adopted closures are LEGACY seg routes without per-PC streams (hfd_svc_SE_s0..s3, hfd_svc_SW_s0/s1/s5: best = tt_c10b5fc9a / tc_4aadc92bc jobs; every PS route of these is CANCELLED / EARLY_FAIL); the bench qualifies the PS RTL these segments must close in."
+  "RATE: RW16 worst 0.9085 of peak over 5 refresh phases x credited/no-credit x SW/NE (e2e incl. first access), mean 0.9374; credited == no-credit at every phase -> ratio 1.046 (was 1.208), QUALIFIED (<= 1.10).",
+  "EXACT under the controller of record (RW 16): 0 errors in all 24 runs; RW1 also exact.",
+  "Step 1 alone (ROB + KNO31 + drain credits, no overlap): worst 0.8706 (ratio 1.091); the overlap adds ~4 points (boundary bubble + issue-ahead of the second stream).",
+  "17 svc segments need re-route (one ROB macro per PC unit, c_dd +1 cross-face bit): hbm_svc_*_rob_8f35e71d6_tc_hm10-cl.",
+  "Back-to-back descriptors beyond 2 (4 x 2044, 8 x 512: the mod-4 done count wraps) PASS; the tb previously shared its stimulus loop variable with the row checker, so only 2 descriptors were ever posted (fixed: own variable)."
  ],
- "notes": "One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measures all its slices; SW and NE (SE segments) agree to <= 0.006."
+ "notes": "One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measures all its slices; SW and NE (SE segments) agree to <= 0.006.",
+ "qualified": true,
+ "breakdown_before": [
+  "outstanding window: KNO 15 (60 beats a PC) binds: KNO 31 lifts RW1 p0/p2700 0.819/0.800 -> 0.922/0.887; KNO 63 = KNO 31 (saturated)",
+  "credit loop: credits consumed at read issue, so CRR 16 must cover HBM latency: credited 0.743/0.726 vs no-credit 0.819/0.800; CRR 64 -> equal",
+  "reorder: RW16 FR-FCFS mis-assembled rows (2 row buffers a PC need in-order beats): 16,053 errors, credited deadlock",
+  "descriptor boundary: next stream launched only after every PC drained the previous (done chain): ~100-230 ns bubble a boundary",
+  "residue: controller refresh / row phase (RW1 KNO31 0.881-0.938 over 5 phases)"
+ ],
+ "fix": "per-PC read reorder buffer (one ot_sram_1r1w_128x256 a PC: 128 sectors = KNO 31 x 4 + 4), in-order drain -> exact under FR-FCFS by construction; outstanding KNO 15 -> 31; credits consumed at drain (CRR 16 unchanged: the window spans only the pcs->group->consumer loop); two descriptor slots a PC + 2-b drained-count done chain -> stream N+1 issues while N drains",
+ "before": {
+  "ratio": 1.208,
+  "frac_of_peak_e2e_worst": 0.7862,
+  "credited_frac_e2e_worst": 0.7263,
+  "exact_rw16": false,
+  "source_commit": "6c4677c53 + new tb/run script (uncommitted at run time)"
+ },
+ "history": [
+  {
+   "date": "2026-10-11",
+   "ratio": 1.208,
+   "note": "tput-map-1011 F1 record (in-order RW1, KNO 15, CRR at issue)"
+  }
+ ],
+ "multi_descriptor": [
+  {
+   "fam": "SW",
+   "nsec": 2044,
+   "nstr": 4,
+   "phase_ns": 0,
+   "cred": 0,
+   "frac_e2e": 0.9618,
+   "errors": 0
+  },
+  {
+   "fam": "SW",
+   "nsec": 2044,
+   "nstr": 4,
+   "phase_ns": 0,
+   "cred": 1,
+   "frac_e2e": 0.9618,
+   "errors": 0
+  },
+  {
+   "fam": "SW",
+   "nsec": 2044,
+   "nstr": 4,
+   "phase_ns": 2700,
+   "cred": 0,
+   "frac_e2e": 0.9131,
+   "errors": 0
+  },
+  {
+   "fam": "SW",
+   "nsec": 2044,
+   "nstr": 4,
+   "phase_ns": 2700,
+   "cred": 1,
+   "frac_e2e": 0.9131,
+   "errors": 0
+  },
+  {
+   "fam": "NE",
+   "nsec": 512,
+   "nstr": 8,
+   "phase_ns": 0,
+   "cred": 0,
+   "frac_e2e": 0.9186,
+   "errors": 0
+  },
+  {
+   "fam": "NE",
+   "nsec": 512,
+   "nstr": 8,
+   "phase_ns": 0,
+   "cred": 1,
+   "frac_e2e": 0.9186,
+   "errors": 0
+  }
+ ]
 }
