@@ -1,3 +1,7 @@
+# el1011-ds-vm/fe 2026-10-11 23:30 v5 outline 1,520.064 x 594.00 (was 473.04: feh3 FLOORPLAN_MARGIN util 68.1% ->
+#  ~54.2% = 488,251 um2 std+macro / 901,277 um2 core).  +120.96 um (14 x 8.64 lattice) in height: N-face pins, the clt
+#  tile row (y 226.80 -> 347.76) and the E svc column (+120.96) move up together; S row / row 2 stay; the added band is
+#  glue placement room between the landing macros and the tile wall (row 2 -> tile wall channel 20.5 -> 141.5 um).
 # el1011-ds-vm/fe 2026-10-11: hierarchical dsfd_vm_fe v4 (1,520.064 x 473.04).  Physical spec: el1011-ds-vm.log HIER SPEC.
 #  16 capture-lane hard tiles dsfd_vm_clt (80.64 x 230.04, routed M2-M6) g_cl[g].u_l abutted in one row under their f_cap
 #  slices of the N face: x 0.432 + 80.64 g, y 226.80 (16.2-um N jog channel to the die pins).
@@ -19,8 +23,8 @@ set ot_pos(9) [list [lindex $ot_xs 4] 30.24]
 set ot_pos(3) [list [lindex $ot_xs 5] 30.24]
 set ot_pos(2) [list [lindex $ot_xs 6] 30.24]
 set ot_pos(4) [list [lindex $ot_xs 3] 128.52]
-set ot_pos(0) [list 1328.4 248.40]
-set ot_pos(1) [list 1328.4 346.68]
+set ot_pos(0) [list 1328.4 369.36]
+set ot_pos(1) [list 1328.4 467.64]
 set ot_n 0; set ot_t 0
 foreach ot_i [$ot_blk getInsts] {
   set ot_nm [$ot_i getName]
@@ -29,7 +33,7 @@ foreach ot_i [$ot_blk getInsts] {
     place_macro -macro_name $ot_nm -location $ot_pos($ot_l) -orientation R0
     incr ot_n
   } elseif {[regexp {g_cl\\?\[(\d+)\\?\]\.u_l$} $ot_nm -> ot_g] && [[$ot_i getMaster] isBlock]} {
-    place_macro -macro_name $ot_nm -location [list [expr {0.432 + 80.64 * $ot_g}] 226.80] -orientation R0
+    place_macro -macro_name $ot_nm -location [list [expr {0.432 + 80.64 * $ot_g}] 347.76] -orientation R0
     incr ot_t
   }
 }
