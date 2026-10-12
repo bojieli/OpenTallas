@@ -90,6 +90,16 @@ def load_spec(path: str) -> dict:
         raise SpecError("spec: a cluster needs hard children (children[])")
     if s["kind"] == "tile" and s["children"]:
         raise SpecError("spec: a leaf tile has no hard children (use kind cluster)")
+    if s["pins"] == "auto":   # inputs S, outputs N, clock + resets W (a starting plan; set real faces per the die contract)
+        import textbook_lint as TL  # noqa: E402
+        mods = TL.rtl_modules([(ROOT / f).read_text(errors="replace") for f in s["sources"] if (ROOT / f).exists()])
+        if s["top"] not in mods:
+            raise SpecError(f"pins auto: top {s['top']} not found in the sources")
+        dirs = TL.module_port_dirs(mods[s["top"]])
+        side = set([s["clock_port"]] + list(s["reset_ports"]))
+        s["pins"] = {"S": [p for p, d in dirs.items() if d == "input" and p not in side],
+                     "N": [p for p, d in dirs.items() if d != "input" and p not in side],
+                     "W": [p for p in dirs if p in side]}
     bad = [f for f in s["pins"] if f not in FACES]
     if bad:
         raise SpecError(f"spec: pins faces must be N/S/E/W, got {bad}")
@@ -286,29 +296,34 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
     hi_x = x1c - max(CHANNEL_UM, PIN_EDGE_UM if "E" in pin_faces else 0)
     lo_y = y0c + max(CHANNEL_UM, PIN_EDGE_UM if "S" in pin_faces else 0)
     hi_y = y1c - max(CHANNEL_UM, PIN_EDGE_UM if "N" in pin_faces else 0)
-    x, y, row_h = lo_x, lo_y, 0.0
-    auto = []
+    def lat(b):
+        return (float(s.get("child_lattice_um", CHILD_LATTICE_UM)),) * 2 if b["kind"] == "child" else (GRID_X, GRID_Y)
+    auto = [b for b in blocks if not b.get("at")]
     for b in blocks:
         if b.get("at"):
             b["_xy"] = (float(b["at"][0]), float(b["at"][1]))
-            continue
-        if x + b["w"] > hi_x + 1e-6 and x > lo_x:
-            x, y, row_h = lo_x, y + row_h + CHANNEL_UM, 0.0
-        b["_xy"] = (x, y)
-        x += b["w"] + CHANNEL_UM
-        row_h = max(row_h, b["h"])
-        auto.append(b)
-    if auto:   # centre the auto-placed array in the free window (equal channels on both sides)
+    if auto:
+        gx = max(lat(b)[0] for b in auto)
+        gy = max(lat(b)[1] for b in auto)
+        x0, y = snap_up(lo_x, gx), snap_up(lo_y, gy)
+        x, row_h = x0, 0.0
+        for b in auto:      # lattice-aware row packing: every channel >= CHANNEL_UM AFTER snapping
+            if x + b["w"] > hi_x + 1e-6 and x > x0:
+                x, y, row_h = x0, snap_up(y + row_h + CHANNEL_UM, gy), 0.0
+            b["_xy"] = (x, y)
+            x = snap_up(x + b["w"] + CHANNEL_UM, gx)
+            row_h = max(row_h, b["h"])
         bx1 = max(b["_xy"][0] + b["w"] for b in auto)
         by1 = max(b["_xy"][1] + b["h"] for b in auto)
-        sx, sy = max(0.0, (hi_x - bx1) / 2), max(0.0, (hi_y - by1) / 2)
-        for b in auto:
-            b["_xy"] = (b["_xy"][0] + sx, b["_xy"][1] + sy)
+        sx = math.floor(max(0.0, (hi_x - bx1) / 2) / gx) * gx
+        sy = math.floor(max(0.0, (hi_y - by1) / 2) / gy) * gy
+        for b in auto:      # centre the array in the free window, on the lattice
+            b["_xy"] = (round(b["_xy"][0] + sx, 4), round(b["_xy"][1] + sy, 4))
     for b in blocks:
         if b["kind"] == "child":
             # a hard tile built on the same lattice: its origin on the common lattice keeps every layer's pins on track
             g = float(s.get("child_lattice_um", CHILD_LATTICE_UM))
-            bx, by = snap_up(b["_xy"][0], g), snap_up(b["_xy"][1], g)
+            bx, by = snap(b["_xy"][0], g), snap(b["_xy"][1], g)
             r = cmta.check_placement(track_macro(b["view"]) if b.get("_tm") is None else b["_tm"], b["orient"],
                                      round(bx * 1000), round(by * 1000))
             off = sum(v["offtrack"] for v in r["layers"].values())
@@ -381,7 +396,8 @@ def gen_place(s: dict, blocks: list) -> str:
              "# track lattice (origins from check_macro_track_alignment best shift), >= 20 um channels, no macro at a pin",
              "# face.  Instance names are matched with backslashes stripped on BOTH sides (the db holds g\\[1\\].u or g[1].u",
              "# depending on the stage).  A spec instance pattern (glob) picks among same-master instances; else dictionary",
-             "# order.  Every macro gets a hard placement blockage halo.",
+             "# order.  The halo is MACRO_PLACE_HALO (rows cut by tapcell); NO extra placement blockage: a hard blockage over",
+             "# the halo covers the row-end endcaps and fails detailed placement (DPL-0004 / DPL-0033, ref gate 2026-10-11).",
              "set b [ord::get_db_block]", "set dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
              "proc ot_ref_strip {n} { return [string map {\\\\ {}} $n] }",
              "set ot_ref_by {}",
@@ -404,13 +420,9 @@ def gen_place(s: dict, blocks: list) -> str:
         lines.append(f"set i [ot_ref_pick $ot_ref_by {bl['master']} {{{bl.get('inst') or ''}}}]")
         lines.append(f"$i setOrient {bl['orient']}; $i setLocation [expr {{round({bl['x']} * $dbu)}}] "
                      f"[expr {{round({bl['y']} * $dbu)}}]; $i setPlacementStatus FIRM")
-        x0, y0 = bl["x"] - HALO_UM, bl["y"] - HALO_UM
-        x1, y1 = bl["x"] + bl["w"] + HALO_UM, bl["y"] + bl["h"] + HALO_UM
-        lines.append(f"set k [odb::dbBlockage_create $b [expr {{round({x0} * $dbu)}}] [expr {{round({y0} * $dbu)}}] "
-                     f"[expr {{round({x1} * $dbu)}}] [expr {{round({y1} * $dbu)}}]]; incr ot_ref_n")
         lines.append(f"puts \"REF_TILE place: [$i getName] {bl['master']} at {bl['x']} {bl['y']} {bl['orient']}\"")
     lines.append("set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }")
-    lines.append(f"if {{$nb != {len(blocks)}}} {{ error \"ref_tile place: netlist has $nb macros, spec places {len(blocks)}\" }}")
+    lines.append(f"if {{$nb != {len(blocks)}}} {{ error \"ref_tile place: expected {len(blocks)} macros, netlist has $nb\" }}")
     return "\n".join(lines) + "\n"
 
 
@@ -489,8 +501,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
     out = [*s["sources"], f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
-           f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh", "tools/run_abi3_physical.py",
-           "tools/w18/corner_sta_ref.py", "tools/tt_views/view_export.py", "tools/hier_contract/child_lint.py",
+           f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]

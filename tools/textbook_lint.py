@@ -1165,6 +1165,21 @@ def module_ports(body: str) -> dict:
     return out
 
 
+def module_port_dirs(body: str) -> dict:
+    """{port: 'input'|'output'|'inout'}"""
+    hdr = body[:body.find(";")] if ";" in body else body
+    out = {}
+    for blob in (hdr, body):
+        for m in re.finditer(r"\b(input|output|inout)\b([^;]*?)(?=;|\)\s*$|\binput\b|\boutput\b|\binout\b)", blob, re.S):
+            names = re.sub(r"\[[^\]]*\]", " ", m.group(2))
+            for n in re.findall(r"\b([A-Za-z_]\w*)\b", names):
+                if n not in _KW and n not in out:
+                    out[n] = m.group(1)
+        if out:
+            break
+    return out
+
+
 def module_params(body: str) -> dict:
     params = {}
     for m in re.finditer(r"\b(?:parameter|localparam)\b(?:\s+(?:integer|int|logic|bit)\b)?(?:\s*\[[^\]]*\])?\s*([^;]*)", body):

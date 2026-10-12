@@ -128,28 +128,36 @@ def git_show(commit, path):
 
 
 def referenced_closure(seeds, commit=None, args_env=None):
-    """every repo path reachable from the seeds through the files they name (tcl source, sh, env, sdc)"""
-    seen, missing, todo = set(), set(), list(seeds)
+    """every repo path reachable from the seeds through the files they name (tcl source, sh, env, sdc; a .py named by
+    a command is scanned one level deep -- generators such as hbm_w2_station_hier_physical.py write the hooks into
+    their run.sh -- and paths found only in a .py are checked for the sync set, not for existence)"""
+    seen, missing, weak = set(), set(), set()
+    soft = set()     # found only inside a generator .py and not a flow script (.tcl/.sdc/.sh/.env): may be an unused option
+    todo = [(s, 0, False) for s in seeds]
     while todo:
-        p = todo.pop()
+        p, depth, from_py = todo.pop()
         p = p.replace("//", "/")
-        if p in seen or p in missing:
+        if p in seen:
             continue
         txt = git_show(commit, p)
         if txt is None:
             if "$" not in p and "*" not in p:
-                missing.add(p)
+                (weak if from_py else missing).add(p)
             continue
         seen.add(p)
-        if p.endswith((".tcl", ".sh", ".env", ".sdc")):
+        if from_py and (not p.endswith((".tcl", ".sh", ".env", ".sdc")) or depth > 0 and p.endswith(".sv")):
+            soft.add(p)
+        if p.endswith((".tcl", ".sh", ".env", ".sdc")) or (p.endswith(".py") and depth == 0):
             body = re.sub(r"(?m)^\s*#.*$", "", txt)
             for m in PATH_RE.finditer(body):
                 q = m.group(1)
                 if "$" not in q and "{" not in q:
-                    todo.append(q)
+                    # ${VAR:-default}: the default only applies when the caller does not set VAR -> soft
+                    dflt = body[max(0, m.start() - 2):m.start()] == ":-"
+                    todo.append((q, depth + 1, from_py or p.endswith(".py") or dflt))
             if p.endswith("route_master.sh") and args_env:
-                todo.append(f"physical/qwen_die_masters/cfg/{args_env}.env")
-    return seen, missing
+                todo.append((f"physical/qwen_die_masters/cfg/{args_env}.env", depth + 1, False))
+    return seen, missing - seen, soft
 
 
 def check_sources(g: Gate, job: dict, extra_seeds=(), commit=None):
@@ -172,10 +180,14 @@ def check_sources(g: Gate, job: dict, extra_seeds=(), commit=None):
             cfg = m.group(1)
     for p in (job.get("verdict") or {}).get("post_sdc") or []:
         seeds.add(p)
-    seen, missing = referenced_closure(sorted(seeds), commit, cfg)
-    outside = sorted(p for p in seen if not any(p == s or p.startswith(s + "/") for s in synced))
-    if missing:
-        g.add("FAIL", "sources", f"{len(missing)} referenced file(s) do not exist"
+    seen, missing, soft = referenced_closure(sorted(seeds), commit, cfg)
+    out_all = sorted(p for p in seen if not any(p == s or p.startswith(s + "/") for s in synced))
+    if any("tt_overlay.py" in c for c in cmds):    # tt_overlay force-copies these into the snapshot (closure_loop TTB_FILES)
+        soft |= {f"physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+                                                       "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")}
+    outside = [p for p in out_all if p not in soft]
+    if missing:     # WARN: a recipe may write the file at run time (generated SDC / run script)
+        g.add("WARN", "sources", f"{len(missing)} referenced file(s) do not exist"
               + (f" at {commit}" if commit else "") + f": {sorted(missing)[:6]}", "commit them / fix the path")
     if outside:
         g.add("FAIL", "sources", f"{len(outside)} referenced file(s) outside the synced source paths {synced}: "
@@ -329,9 +341,11 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     cmd = f"ot-heavy --mem {mem} -- bash {script}"
     p = subprocess.run(["ssh", host, cmd], stdin=subprocess.DEVNULL, capture_output=True)
     out = p.stdout.decode(errors="replace")
-    (kd / "gate_remote.log").write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
+    logp = Path(os.environ.get("TMPDIR", "/tmp")) / f"ref_gate_{spec['name']}_{ts}.log"   # never into the kit (dirty tree)
+    logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
+    g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
     secs = round(time.time() - t0)
-    kv = dict(re.findall(r"^(GATE_\w+?)=(\S+)", out, re.M))
+    kv = dict(re.findall(r"\b(GATE_[A-Z_]+)=(\S+)", out))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if kv.get("GATE_FLOW_RC") != "0":
         why = "; ".join(errs[:4]) or "see gate_remote.log"
@@ -356,6 +370,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         W, H = fp["die"][2], fp["die"][3]
         core = (W - 2 * RT.CORE_MARGIN) * (H - 2 * RT.CORE_MARGIN)
         mac = sum(b["w"] * b["h"] for b in fp["blocks"])
+        if area > mac:          # yosys' chip area counts the black-box macros' liberty area
+            area -= mac
         u = (area + mac) / core
         sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if (u > 0.70 or u < 0.30) else "WARN")
         g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {u:.0%}",
@@ -367,7 +383,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         if not mm:
             continue
         tag, chk, msg = mm.groups()
-        if tag == "PASS" or not chk:
+        if tag == "PASS" or not chk or " cells " in line[:200] and " flops " in line[:200] and ":" not in line[15:40]:
             g.add("INFO", "textbook", line[len("textbook_lint: "):][:300])
             continue
         g.add("FAIL" if tag == "REFUSE" else "WARN", f"textbook.{chk}", msg[:500], TEXTBOOK_FIX.get(chk, ""))

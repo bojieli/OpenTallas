@@ -2,7 +2,8 @@
 # track lattice (origins from check_macro_track_alignment best shift), >= 20 um channels, no macro at a pin
 # face.  Instance names are matched with backslashes stripped on BOTH sides (the db holds g\[1\].u or g[1].u
 # depending on the stage).  A spec instance pattern (glob) picks among same-master instances; else dictionary
-# order.  Every macro gets a hard placement blockage halo.
+# order.  The halo is MACRO_PLACE_HALO (rows cut by tapcell); NO extra placement blockage: a hard blockage over
+# the halo covers the row-end endcaps and fails detailed placement (DPL-0004 / DPL-0033, ref gate 2026-10-11).
 set b [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 proc ot_ref_strip {n} { return [string map {\\ {}} $n] }
@@ -27,11 +28,9 @@ proc ot_ref_pick {by master pat} {
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {}]
 $i setOrient R0; $i setLocation [expr {round(28.08 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
-set k [odb::dbBlockage_create $b [expr {round(25.919999999999998 * $dbu)}] [expr {round(21.6 * $dbu)}] [expr {round(125.064 * $dbu)}] [expr {round(66.984 * $dbu)}]]; incr ot_ref_n
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 28.08 23.76 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {}]
 $i setOrient R0; $i setLocation [expr {round(28.08 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
-set k [odb::dbBlockage_create $b [expr {round(25.919999999999998 * $dbu)}] [expr {round(84.24000000000001 * $dbu)}] [expr {round(125.064 * $dbu)}] [expr {round(129.624 * $dbu)}]]; incr ot_ref_n
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 28.08 86.4 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 2} { error "ref_tile place: netlist has $nb macros, spec places 2" }
+if {$nb != 2} { error "ref_tile place: expected 2 macros, netlist has $nb" }
