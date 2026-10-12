@@ -14,7 +14,7 @@
   "golden_n12288": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=12288 actual_reads=12480 cycles=61867"
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=12288 actual_reads=12480 cycles=61862"
    },
    "neg": {
     "rc": 1,
@@ -33,7 +33,7 @@
   "sparse_n12288_l3_s11_st1": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER_SPARSE n=12288 seed=11 lat=3 stall=1 reads=14201 cycles=14538"
+    "line": "PASS_GLOBAL_ORDER_SPARSE n=12288 seed=11 lat=3 stall=1 reads=14201 cycles=14559"
    },
    "neg": {
     "rc": 1,
@@ -45,7 +45,7 @@
   "sparse_n512_l3_s1_st0": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER_SPARSE n=512 seed=1 lat=3 stall=0 reads=767 cycles=939"
+    "line": "PASS_GLOBAL_ORDER_SPARSE n=512 seed=1 lat=3 stall=0 reads=767 cycles=940"
    },
    "neg": {
     "rc": 1,
@@ -57,7 +57,7 @@
   "sparse_n512_l3_s7_st3": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER_SPARSE n=512 seed=7 lat=3 stall=3 reads=772 cycles=1191"
+    "line": "PASS_GLOBAL_ORDER_SPARSE n=512 seed=7 lat=3 stall=3 reads=772 cycles=1192"
    },
    "neg": {
     "rc": 1,
@@ -69,7 +69,7 @@
   "sparse_n64_l3_s9_st2": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER_SPARSE n=64 seed=9 lat=3 stall=2 reads=242 cycles=318"
+    "line": "PASS_GLOBAL_ORDER_SPARSE n=64 seed=9 lat=3 stall=2 reads=242 cycles=319"
    },
    "neg": {
     "rc": 1,
@@ -81,7 +81,7 @@
   "tput_n2048_l3": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=2048 actual_reads=2240 cycles=2263"
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=2048 actual_reads=2240 cycles=2264"
    },
    "neg": {
     "rc": 1,
@@ -93,7 +93,7 @@
   "tput_n2048_l0": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=2048 actual_reads=2240 cycles=2261"
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=2048 actual_reads=2240 cycles=2262"
    },
    "neg": {
     "rc": 1,
@@ -105,7 +105,7 @@
   "tput_n4096_l3": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=4311"
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=4312"
    },
    "neg": {
     "rc": 1,
@@ -117,7 +117,7 @@
   "tput_n4096_l0": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=4309"
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=4096 actual_reads=4288 cycles=4310"
    },
    "neg": {
     "rc": 1,
@@ -129,7 +129,7 @@
   "tput_n512_l3": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=512 actual_reads=704 cycles=727"
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=512 actual_reads=704 cycles=728"
    },
    "neg": {
     "rc": 1,
@@ -141,7 +141,7 @@
   "tput_n512_l0": {
    "pos": {
     "rc": 0,
-    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=512 actual_reads=704 cycles=725"
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=512 actual_reads=704 cycles=726"
    },
    "neg": {
     "rc": 1,
