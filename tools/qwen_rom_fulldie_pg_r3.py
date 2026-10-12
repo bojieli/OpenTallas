@@ -21,11 +21,34 @@ def bump_pitch(coverage, bump_um=90.0):
             return bump_um / n
     raise ValueError('no representable odd-divisor pitch')
 
+STRAP_DROPS = {}
+
+
 def pg_rects(master, k=1, widths=None):
     """Prospective abstract PG rails; actual child PG handoff remains required."""
     if min(master.w, master.h) < 3:
         raise ValueError('master too small for distinct PG rails')
     signal = F.pin_rects(master, k, widths or {})
+    st = getattr(F, 'PG_STRAPS', {}).get(master.name)
+    if st:
+        # qwendie-1011 (el1011-q-tile 2406851bf): a hierarchical tile whose own parent PDN ends in M7 straps exposes
+        # THOSE as its power pins (pdn_tile_h2.tcl: M7 width .288 / spacing .096 / pitch 10.8 / offset 1.0, VDD then
+        # VSS); the die macro grid lands on them (M7-M8).  A strap touching an M7 signal pin is dropped (counted).
+        sig7 = [r for _, layer, r in signal if layer == st['layer']]
+        out, n = {'VDD': [], 'VSS': []}, 0
+        x = st['offset']
+        while x + 2 * st['width'] + st['spacing'] <= master.w - .1:
+            for net, x0 in (('VDD', x), ('VSS', x + st['width'] + st['spacing'])):
+                r = (round(x0, 3), .512, round(x0 + st['width'], 3), round(master.h - .512, 3))
+                if any(a < r[2] and c > r[0] and b < r[3] and d > r[1] for a, b, c, d in sig7):
+                    n += 1
+                    continue
+                out[net].append((st['layer'], r))
+            x += st['pitch']
+        if not out['VDD'] or not out['VSS']:
+            raise ValueError(f'{master.name}: no {st["layer"]} power strap clear of the signal pins')
+        STRAP_DROPS[master.name] = n
+        return out
     free = []
     for tick in range(math.ceil((.752-.116)/.080), math.floor((master.h-.752-.116)/.080)+1):
         y = .116 + tick*.080

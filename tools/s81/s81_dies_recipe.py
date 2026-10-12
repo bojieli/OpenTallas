@@ -164,6 +164,21 @@ def recipes():
                         role='DSpark primary die with the seed launcher and the main-hidden row store (mtp-dsbind 2026-10-10)',
                         note='draftPs + dsfd_mtp_hrow (rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv); 9 MTP SerDes = 5 draft '
                              'fan-out + the head seed lane + 3 hidden-part lanes (layer 37 / 38 / 39 stage dies, rank k)'),
+        'hsrc37': dict(opts=_sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8) + ['--die', 'layer1',
+                                               '--wfc-kit', '--hrow-src', '0', '--mtp-links', '1'],
+                        role='stage die of layer 37 with the hidden-row source (rank k -> DSpark primary P.k; mtp-dsbind 2026-10-11)',
+                        note='layer1 full + the WFC kit (t_hep issue-epoch events) + dsfd_mtp_hrow_src + 1 MTP SerDes (its hidden '
+                             'lane); hub column 1,814.4 / VCH 1,468.8 (kit slab, as layer1srckitm)'),
+        'hsrc38': dict(opts=_sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8) + ['--die', 'layer1',
+                                               '--wfc-kit', '--hrow-src', '1', '--mtp-links', '1'],
+                        role='stage die of layer 38 with the hidden-row source (rank k -> DSpark primary P.k; mtp-dsbind 2026-10-11)',
+                        note='layer1 full + the WFC kit (t_hep issue-epoch events) + dsfd_mtp_hrow_src + 1 MTP SerDes (its hidden '
+                             'lane); hub column 1,814.4 / VCH 1,468.8 (kit slab, as layer1srckitm)'),
+        'hsrc39': dict(opts=_sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8) + ['--die', 'layer1',
+                                               '--wfc-kit', '--hrow-src', '2', '--mtp-links', '1'],
+                        role='stage die of layer 39 with the hidden-row source (rank k -> DSpark primary P.k; mtp-dsbind 2026-10-11)',
+                        note='layer1 full + the WFC kit (t_hep issue-epoch events) + dsfd_mtp_hrow_src + 1 MTP SerDes (its hidden '
+                             'lane); hub column 1,814.4 / VCH 1,468.8 (kit slab, as layer1srckitm)'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
                        role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '

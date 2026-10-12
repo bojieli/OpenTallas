@@ -57,7 +57,7 @@ set ot_lb_default [lindex [dict keys $ot_lb_vmap] 0]
 # the port-sourced clock of the first register reached from a port through combinational cells (odb walk; a
 # generated clock maps to its master's port clock)
 proc ot_lb_clk_of_inst {inst} {
-  foreach cp {CLK clk CK} {
+  foreach cp {CLK clk CK ck} {
     set ck [get_pins -quiet "[string map {/ .} [$inst getName]]/$cp"]
     if {[llength $ck] == 0} { set ck [get_pins -quiet "[$inst getName]/$cp"] }
     if {[llength $ck] == 0} continue
@@ -70,13 +70,21 @@ proc ot_lb_clk_of_inst {inst} {
   }
   return ""
 }
-proc ot_lb_is_seq {inst} { return [regexp {^(DFF|DHL|DLL|SDF|ASYNC|ICG)} [[$inst getMaster] getName]] }
+# a hard macro (block master: SRAM, register bank, hardened sub-tile) is a timing endpoint like a register; walking
+# through it as combinational fanned every port across all macro outputs (hfd_attn_half 2026-10-11: ~5k ports x 4,000
+# nets each through the 544-bit banks kept cts.tcl in this Tcl loop for 10 h after CTS)
+proc ot_lb_is_seq {inst} {
+  set m [$inst getMaster]
+  if {[$m isBlock]} { return 1 }
+  return [regexp {^(DFF|DHL|DLL|SDF|ASYNC|ICG)} [$m getName]]
+}
 proc ot_lb_domain {portname dir} {
   set bt [[ord::get_db_block] findBTerm $portname]
   if {$bt eq "NULL" || $bt eq ""} { return "" }
   set nets [list [$bt getNet]]; set seen [dict create]; set k 0
-  while {[llength $nets] && $k < 4000} {
-    set n [lindex $nets 0]; set nets [lrange $nets 1 end]; incr k
+  set qi 0
+  while {$qi < [llength $nets] && $k < 4000} {
+    set n [lindex $nets $qi]; incr qi; incr k
     if {$n eq "NULL" || [dict exists $seen [$n getName]]} continue
     dict set seen [$n getName] 1
     foreach it [$n getITerms] {

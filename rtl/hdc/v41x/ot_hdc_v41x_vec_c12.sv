@@ -206,6 +206,7 @@ module ot_hdc_v41x_vec #(
     parameter integer GSH = 0,          // lanes register the gather word's shift: every gather fetch one deeper
     parameter integer KIMM = 0,         // imm3 travels to the lanes as its order key okey(imm3)
     parameter integer DENR = 0,         // lanes register the sigmoid denominator operand: sigmoid / SiLU one deeper
+    parameter integer SFUT = 0,         // el1011-hbm-sfu: lanes' sigmoid chain as a registered sub-tile: exp / sigmoid / SiLU +2
     parameter integer DRING = 0         // lanes' SFU delay lines as ring buffers (0 cycles)
 ) (
     input  wire              clk,
@@ -324,7 +325,7 @@ module ot_hdc_v41x_vec #(
     endfunction
     // S-stage depths (ot_hdc_v41x_vec_lane / _side): exp 7 MLAT + 8 ALAT + 4, sigmoid exp + ALAT + 19, rsqrt
     // 1 + 9 MLAT + 3 ALAT, sqrt 31, sqrt(softplus) exp + 11 MLAT + 10 ALAT + 50, gate 33 + sigmoid
-    localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG0 = D_EXP + ALAT + DDIV, D_SIG = D_SIG0 + DENR,
+    localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG0 = D_EXP + ALAT + DDIV, D_SIG = D_SIG0 + DENR + 2 * SFUT, D_EXPL = D_EXP + 2 * SFUT,
                        D_RSQ = 1 + 9 * MLAT + 3 * ALAT + SIDEX, D_SQRT = 31 + SIDEX,
                        D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG0 + SIDEX;
     localparam [15:0] H_A = ALAT;
@@ -335,11 +336,17 @@ module ot_hdc_v41x_vec #(
 `else
     localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
 `endif
-    localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+`ifdef OT_NEG_SIG_DEPTH
+    // Negative control (tput-fix-1011): the sigmoid / SiLU stage retires one cycle before its result.
+    localparam [15:0] H_M = MLAT, H_EXP = D_EXPL, H_SIG = D_SIG - 1, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
                       H_EG = D_EG;
+`else
+    localparam [15:0] H_M = MLAT, H_EXP = D_EXPL, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+                      H_EG = D_EG;
+`endif
     function automatic [9:0] sfu_d(input [2:0] s);
         case (s)
-            SFU_EXP: sfu_d = D_EXP;
+            SFU_EXP: sfu_d = D_EXPL;
             SFU_SIGM, SFU_SILU: sfu_d = D_SIG;
             SFU_RSQRT: sfu_d = D_RSQ;
             SFU_SQRT: sfu_d = D_SQRT;
@@ -1363,7 +1370,7 @@ module ot_hdc_v41x_vec #(
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
                                .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT), .ALAT(ALAT),
-                               .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING)) u_lane (
+                               .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .SFUT(SFUT), .DRING(DRING)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
             .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
             .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),

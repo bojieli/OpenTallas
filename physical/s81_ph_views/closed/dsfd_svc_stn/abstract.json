@@ -1,6 +1,6 @@
 {
   "name": "dsfd_svc_stn",
-  "orfs_dir": "/home/ubuntu/closure-loop-local/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt-arch/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt_arch/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/home/ubuntu/closure-loop-local/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt-arch/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt_arch/work/orfs:/in:ro",
         "-v",
-        "/home/ubuntu/closure-loop-local/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt/view:/out",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt-arch/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt_arch/view:/out",
         "-v",
-        "/home/ubuntu/closure-loop-local/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt/abs_tmp:/tmp",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt-arch/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt_arch/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/home/ubuntu/closure-loop-local/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt-arch/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt_arch/work/orfs:/in:ro",
         "-v",
-        "/home/ubuntu/closure-loop-local/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt/view:/out",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt-arch/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt_arch/view:/out",
         "-v",
-        "/home/ubuntu/closure-loop-local/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt/abs_tmp:/tmp",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a-lbc-tt-arch/routes/s81ph_dsfd_svc_stn_da50ce55a_lbc_tt_arch/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -49,9 +49,9 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_svc_stn.lef": "bfad047c5579ff76a023f95b017e81e5db2f6b10875011c331821eff36bdd2ea",
-    "dsfd_svc_stn_ff.lib": "50b0d67c646af85fda061984015926e45cb4381684df519d655343c6b6ad9273",
-    "dsfd_svc_stn_ss.lib": "a04183aca72dba5efe6c7a785d1f3ea5f7503d17e4ebb1f96ce569fc5d6e04ef"
+    "dsfd_svc_stn.lef": "1e0e243398c88c0f0ef70b45bb4e5199d95d803cfc72cb78f4ee315595a6a39d",
+    "dsfd_svc_stn_ff.lib": "2a6f04103e9e7f247fac23407cfa892f9c3278dd562aaa3581ab03fafaf9793b",
+    "dsfd_svc_stn_ss.lib": "b59990af593974b8895ea549ea65666c11b202a7933f8d60829150a768bf9938"
   },
   "ok": true
 }
