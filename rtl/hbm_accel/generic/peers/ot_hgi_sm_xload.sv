@@ -55,6 +55,7 @@ module ot_hgi_sm_xload #(
     input  wire [31:0]        x_stride,
     input  wire [1:0]         x_space,
     input  wire [1:0]         x_fmt,
+    input  wire [6:0]         x_xb,          // smmv 3a: x-store slot base (fragment address offset; compiler-allocated)
     output reg                x_done,
     output reg                x_fault,
     output reg                xw_en,
@@ -173,10 +174,10 @@ module ot_hgi_sm_xload #(
         for (x = 0; x < NBMAX; x = x + 1) if (bb == x && bslot(x) >= 0 && bslot(x) < np) in_slot = 1'b1;
     endfunction
     // ---- command pin flop (the x_* decode does not run from the pins): +1 edge a command
-    reg cmd_v; reg [39:0] c_base; reg [20:0] c_n; reg [3:0] c_p; reg [31:0] c_stride; reg [1:0] c_space, c_fmt;
+    reg cmd_v; reg [6:0] c_xb; reg [39:0] c_base; reg [20:0] c_n; reg [3:0] c_p; reg [31:0] c_stride; reg [1:0] c_space, c_fmt;
     assign x_rdy = !busy && !cmd_v;
     always @(posedge clk) if (x_v && x_rdy) begin
-        c_base <= x_base; c_n <= x_n; c_p <= x_p; c_stride <= x_stride; c_space <= x_space; c_fmt <= x_fmt;
+        c_base <= x_base; c_n <= x_n; c_p <= x_p; c_stride <= x_stride; c_space <= x_space; c_fmt <= x_fmt; c_xb <= x_xb;
     end
     wire c_bdf = (BD != 0) && (c_fmt == 2'd1 || c_fmt == 2'd2);
     wire c_bad = ((BD == 0) && (c_fmt == 2'd1 || c_fmt == 2'd2)) || c_space != 2'd1 || |c_base[2:0] || |c_stride[2:0] || c_p > PMAX || c_p == 4'd0 ||
@@ -402,8 +403,8 @@ module ot_hgi_sm_xload #(
         end
         // r7 (xb): the beat assembled from rw (r6) under its stage-6 beat index; xw_* = pin flops of xb
         if (rv[RD-2]) xb <= rm_ok[RD-2] ? beats[rm_b[RD-2]] : 2048'd0;
-        if (rv[RD-1]) begin xw_addr <= rm_addr[RD-1]; xw_grp <= rm_b[RD-1]; xw_data <= xb; end
-        if (be_v) begin xw_addr <= be_a; xw_grp <= be_g; xw_data <= be_d; end
+        if (rv[RD-1]) begin xw_addr <= rm_addr[RD-1] + c_xb; xw_grp <= rm_b[RD-1]; xw_data <= xb; end
+        if (be_v) begin xw_addr <= be_a + c_xb; xw_grp <= be_g; xw_data <= be_d; end
     end
 endmodule
 `default_nettype wire

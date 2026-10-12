@@ -1210,6 +1210,26 @@ if {[llength $phy_cells]} {
   add_pdn_connect -grid {phy} -layers {M4 M5}
   add_pdn_connect -grid {phy} -layers {M5 M8}
 }
+# kv-die it2 (die_iter_1012): bound real element views (exact LEFs) carry their PG pins as full-length horizontal M6
+# stripes (layer contract: leaf PG on M6, parent straps one layer up).  M6 and the die's M8 are both horizontal, so the
+# die grid never reaches them (it1 die_kvi1: all 132 bound views PSM-0039 unconnected, PSM-0069).  Vertical M7 straps
+# over every block master whose VDD pin is on M6: M6 -> M7 at each crossing, M7 -> M8 onto the core grid.
+set hv6_cells {}
+foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] {
+  if {![$c isBlock]} { continue }
+  set t [$c findMTerm VDD]
+  if {$t eq "NULL"} { continue }
+  foreach mp [$t getMPins] { foreach b [$mp getGeometry] {
+    if {[$b getTechLayer] ne "NULL" && [[$b getTechLayer] getName] eq "M6"} { lappend hv6_cells [$c getName] } } }
+} }
+set hv6_cells [lsort -unique $hv6_cells]
+puts "OT_HV6 masters [llength $hv6_cells]: $hv6_cells"
+if {[llength $hv6_cells]} {
+  define_pdn_grid -macro -cells $hv6_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {hv6}
+  add_pdn_stripe -grid {hv6} -layer {M7} -width {0.288} -pitch {10.88} -offset {2.0}
+  add_pdn_connect -grid {hv6} -layers {M6 M7}
+  add_pdn_connect -grid {hv6} -layers {M7 M8}
+}
 ''')
     man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))

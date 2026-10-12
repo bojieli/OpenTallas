@@ -541,7 +541,22 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     r = s["route"]
     srcs = " ".join(s["sources"])
     params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
-    pins = " ".join(f"--pin-region {shq(pin_regex(v) + '=' + FACES[f])}" for f, v in s["pins"].items() if v and f != "ANY")
+    # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
+    # a face tile's bus pins sit at the end facing their die neighbour and >= the given margin off the tile corners
+    # ([vm8cp] corner-pin DRT-0255 class); ports without a range keep the whole face.
+    rng = s.get("pin_ranges") or {}
+    regs = []
+    for f, v in s["pins"].items():
+        if not v or f == "ANY":
+            continue
+        plain = [n for n in v if n not in rng]
+        if plain:
+            regs.append(pin_regex(plain) + "=" + FACES[f])
+        for n in v:
+            if n in rng:
+                lo, hi = rng[n]
+                regs.append(pin_regex([n]) + "=" + FACES[f] + f":{float(lo):g}-{float(hi):g}")
+    pins = " ".join(f"--pin-region {shq(r)}" for r in regs)
     views = sorted({b["view"] for b in blocks})
     extra = ["--orfs-var ADDER_MAP_FILE=", f"--orfs-var PDN_TCL=/src/{kd}/pdn.tcl",
              f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}",
@@ -558,6 +573,12 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     # spec "defines": extra Verilog defines for synthesis (e.g. OT_WW_MACRO selects the weight window's macro branch)
     if s.get("defines"):
         extra.append("--orfs-var " + shq("VERILOG_DEFINES=-DSYNTHESIS " + " ".join(f"-D{d}" for d in s["defines"])))
+    # spec "orfs_vars" {NAME: value}: extra ORFS variables the RTL needs (e.g. VERILOG_INCLUDE_DIRS=/src/rtl/common for a
+    # source with `include); flow-mechanics knobs stay owned by the kit
+    for k, v in s.get("orfs_vars", {}).items():
+        if not re.fullmatch(r"[A-Z][A-Z0-9_]*", k) or re.search(r"\s", str(v)):
+            raise SpecError(f"spec: orfs_vars {k}={v!r}: NAME=[A-Z0-9_]+, value without whitespace")
+        extra.append(f"--orfs-var {k}={v}")
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
@@ -565,6 +586,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
+    if s.get("inhold"):
+        # spec 'inhold': one dont_touch hold buffer between every data input port and its single capture flop, inserted
+        # before global placement (owner 10-10: a hold-only miss on input captures -> delay stage at the inputs, no ECO)
+        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -574,7 +599,18 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(r.get('pin_h', 'M4 M6'))}",
         f"PIN_V={shq(r.get('pin_v', 'M5'))}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", ""])
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r), ""])
+
+
+def pin_balance_env(r: dict) -> list:
+    """optional route.pin_balance {group_max, h, v}: run_abi3_physical's balanced pin placer (place_pin, uniform over each
+    port's range, layer alternating every group_max pins) instead of PPL ordered groups, which put a whole port on ONE
+    layer ([vm8cp] 2k-bit relay buses: PPL-0107 / PPL-0093).  Needs disjoint per-port pin_ranges on a face."""
+    pb = r.get("pin_balance")
+    if not pb:
+        return []
+    return [f"export OT_PIN_GROUP_MAX={int(pb.get('group_max', 1))}",
+            f"export OT_PIN_BALANCE_H={shq(pb.get('h', 'M4 M6'))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', 'M3 M5'))}"]
 
 
 def referenced_paths(s: dict, kd: str) -> list:
@@ -586,6 +622,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
+    if s.get("inhold"):
+        out.append("physical/dsrom_window_source/leaf_inhold.tcl")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
@@ -606,8 +644,16 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     hm = float(r.get("hold_margin_ns", 0.010))
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
+    # lint sees what synthesis sees: the spec defines and every macro's behavioural model (hc_tile_ref-c1 failed
+    # bench_lint on a missing ot_sram_1r1w_1024x256 because the macro branch is selected by a define)
+    mvs = []
+    for m in s.get("macros", []):
+        nm = Path(m["view"]).name
+        if f"{m['view']}/{nm}.v" not in mvs:
+            mvs.append(f"{m['view']}/{nm}.v")
     lint = ("verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module "
-            f"{s['top']} " + " ".join(s["sources"]) + " && echo lint-ok")
+            f"{s['top']} " + "".join(f"+define+{d} " for d in s.get("defines", []))
+            + " ".join(list(s["sources"]) + mvs) + " && echo lint-ok")
     benches = j.get("benches") or []
     if not any(b.get("name") == "lint" for b in benches):
         benches = [{"name": "lint", "cmd": lint, "expect": "pass", "threads": 1, "peak_ram_gb": 4,
@@ -619,7 +665,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         "name": name, "block": s["top"], "ref_tile": True,
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),
-        "hosts": j.get("hosts", ["ot-epyc1tb", "ot-epyc2", "ot-epyc3", "ot-pve1"]),
+        **({"hosts": j["hosts"]} if j.get("hosts") else {}),   # no default host list: the loop places jobs (EPYC2/3 retired 10-12)
         "threads": int(r.get("threads", 8)), "peak_ram_gb": int(r.get("peak_ram_gb", 32)),
         "source": {"branch": j.get("branch", "main"), "commit": commit or "COMMIT",
                    **({"extra_paths": j["extra_paths"]} if j.get("extra_paths") else {})},

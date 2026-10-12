@@ -32,6 +32,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `children [{view, count, at?, inst?}]` | hard children (cluster): views exported by this flow |
 | `pg_layer` | leaf: M6 (default) or M7; cluster: M7 |
 | `defines` | extra Verilog defines for synthesis (`VERILOG_DEFINES=-DSYNTHESIS -D<d>...`), e.g. `OT_WW_MACRO` |
+| `inhold` | true: one dont_touch hold buffer per data input -> capture flop before global placement (leaf_inhold.tcl; hold-only input-capture misses on a sound tile) |
 | `sdc_extra` | repo SDC files inlined at the end of clock.sdc and signoff.sdc (a second clock domain, e.g. a CDC adapter's controller clock; s81 hc cseq) |
 | `inter`, `refglob`, `io_budget {in,out}` | die-context IO (io_ref_skew.sdc), 0.2 / 0.2 T default |
 | `forwarded_clock` | cluster with a forwarded-clock subtree (keeps the forwarding inverter, own root) |
