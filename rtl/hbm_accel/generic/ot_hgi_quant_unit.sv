@@ -117,7 +117,8 @@ module ot_hgi_quant_unit #(
                         st <= 2;
                     end
                     2: begin if (elig) w_go <= 1; else t_go <= 1; st <= 3; end
-                    3: st <= 4;
+                    3: st <= (WQ == 2) ? 3'd5 : 3'd4;   // WQ=2: go passes a face flop, idle drops a cycle later
+                    5: st <= 4;
                     4: if (w_idle && t_ready && t_drained && !w_go && !t_go) st <= 0;
                     default: st <= 0;
                 endcase

@@ -15,6 +15,12 @@
 //   * the result FIFO is a 64 x 512 SRAM (ot_sram_1r1w_64x512_m1_r2c2) with a capture flop on its read port;
 //   * retire counts done events through a registered popcount.
 // Command relay, registered status pins and per-half write-beat relays (physical spec 10-11). Latency per record grows (~16 edges); the rate stays one 32-element beat a cycle (OD 64 covers the longer loop).
+// Registered face (el1011-hbm-fq 10-12, class 3: ha/hb-adc3fb5d8 EARLY_FAIL_HOLD, 5 pin flops of 9,734 inputs): every input
+// port is captured by a pure face flop (no logic, no reset, no enable) and every child pin / centre cone is fed from face
+// or staging flops only; every output port is driven by a pure face flop.  Reset: rst_n is sampled by a face flop that
+// feeds the reset relay (assert then needs one clock edge; release as before plus one).  Cost: +1 cycle on go (idle drops
+// two cycles after go -- ot_hgi_quant_unit WQ=2 waits one more state), +1 on each read request / response / credit,
+// +1 on each write beat / credit / done, +1 on the grants; rate unchanged.
 // MUT (bench): 1 = assembly takes sector j from lane j ^ 1 of the beat (lane-to-sector map; must FAIL).
 module ot_hgi_quant_wide_h #(
     parameter integer NB = 32,
@@ -42,8 +48,21 @@ module ot_hgi_quant_wide_h #(
     localparam integer LD = 4;                  // = ot_hgi_qw_rq production default
     localparam integer OD = 64, OW = 6;         // = SRAM words
     localparam integer SW = $clog2(NB), CW = $clog2(LQ + 1), LW = $clog2(LD);
+    // ---------------------------------------------------------------- face flops (pure: no logic, reset or enable)
+    reg f_rst, f_go, f_rg, f_wg;
+    reg [1408:0] f_cmd;
+    reg [32*257-1:0] f_wrr;
+    reg [31:0] f_wrq_cr, f_wwq_cr, f_wwq_done;
+    always @(posedge clk) begin
+        f_rst <= rst_n; f_go <= go; f_cmd <= cmd; f_rg <= rg_gnt; f_wg <= wg_gnt;
+        f_wrr <= wrr; f_wrq_cr <= wrq_cr; f_wwq_cr <= wwq_cr; f_wwq_done <= wwq_done;
+    end
+    wire [32*16-1:0] t_wrq; wire [32*280-1:0] t_wwq;   // tile outputs, registered again at the face
+    reg [32*16-1:0] f_wrq; reg [32*280-1:0] f_wwq;
+    always @(posedge clk) begin f_wrq <= t_wrq; f_wwq <= t_wwq; end
+    assign wrq = f_wrq; assign wwq = f_wwq;
     wire [2:0] rr_n;                            // 0 control, 1 counters / relays, 2 tiles
-    ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rr_n));
+    ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
     // ---------------------------------------------------------------- record registers
     reg busy, bad, c_done, c_fault;            // centre done / fault (registered again at the pins)
     reg [127:0] hdr;
@@ -55,13 +74,14 @@ module ot_hgi_quant_wide_h #(
     reg [19:0] r_row; reg [15:0] r_left; reg r_last; reg [14:0] r_sec; reg [31:0] r_nrowbase; reg rd_done;
     reg [19:0] w_row; reg [15:0] w_beat; reg [31:0] w_rowbase;
     reg [39:0] sec_done, sec_iss;
-    // command: pin flops at the command face, then a relay into the centre (the face is ~500 um from the control)
+    // command: face flops, then a relay into the centre (the face is ~350 um from the control).  The command words shift
+    // unconditionally (no 1,409-flop enable): p_cmd is the command of the f_go cycle whenever p_go is set.
     reg p_go, p_go0; reg [1408:0] p_cmd, p_cmd0;
-    wire take = go && !busy && !p_go0 && !p_go;
+    wire take = f_go && !busy && !p_go0 && !p_go;
     always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin p_go0 <= 0; p_go <= 0; end
         else begin p_go0 <= take; p_go <= p_go0; end
-    always @(posedge clk) begin if (take) p_cmd0 <= cmd; p_cmd <= p_cmd0; end
-    // registered status outputs (idle may only lag: it drops the cycle after go and rises a cycle after busy falls)
+    always @(posedge clk) begin p_cmd0 <= f_cmd; p_cmd <= p_cmd0; end
+    // registered status outputs (idle may only lag: it drops two cycles after go and rises a cycle after busy falls)
     always @(posedge clk or negedge rr_n[0])
         if (!rr_n[0]) begin idle <= 1'b1; done <= 0; fault <= 0; rg_req <= 0; wg_req <= 0; end
         else begin
@@ -70,7 +90,7 @@ module ot_hgi_quant_wide_h #(
         end
     reg rg_ok, wg_ok;
     always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin rg_ok <= 0; wg_ok <= 0; end
-        else begin rg_ok <= busy && rg_gnt; wg_ok <= busy && wg_gnt; end
+        else begin rg_ok <= busy && f_rg; wg_ok <= busy && f_wg; end
     // ---------------------------------------------------------------- tiles
     wire [1023:0] gq [0:7];
     wire [31:0] e_push, e_rcr, e_wcr, e_done;
@@ -84,11 +104,11 @@ module ot_hgi_quant_wide_h #(
             assign rsec_b[i*15 +: 15] = rs2[q*4 + i]; assign rsl_b[i*4 +: 4] = sl2[q*4 + i];
             assign wsec_b[i*15 +: 15] = wsec2[q*4 + i]; assign wsl_b[i*4 +: 4] = ws2[q*4 + i];
         end
-        ot_hgi_qw_rq u_rq (.clk(clk), .rst_n(rr_n[2]), .wrr(wrr[q*4*257 +: 4*257]), .wrq(wrq[q*64 +: 64]),
-            .wrq_cr(wrq_cr[q*4 +: 4]), .c_hit_r(hr2[q*4 +: 4]), .c_sec(rsec_b), .c_hit_p(hp2[q*4 +: 4]), .c_slot(rsl_b),
+        ot_hgi_qw_rq u_rq (.clk(clk), .rst_n(rr_n[2]), .wrr(f_wrr[q*4*257 +: 4*257]), .wrq(t_wrq[q*64 +: 64]),
+            .wrq_cr(f_wrq_cr[q*4 +: 4]), .c_hit_r(hr2[q*4 +: 4]), .c_sec(rsec_b), .c_hit_p(hp2[q*4 +: 4]), .c_slot(rsl_b),
             .gq(gq[q]), .e_push(e_push[q*4 +: 4]), .e_rcr(e_rcr[q*4 +: 4]));
-        ot_hgi_qw_wq u_wq (.clk(clk), .rst_n(rr_n[2]), .wwq(wwq[q*4*280 +: 4*280]), .wwq_cr(wwq_cr[q*4 +: 4]),
-            .wwq_done(wwq_done[q*4 +: 4]), .c_y(q < 4 ? wy2a : wy2b), .c_v(wv2[q*4 +: 4]), .c_slot(wsl_b), .c_sec(wsec_b),
+        ot_hgi_qw_wq u_wq (.clk(clk), .rst_n(rr_n[2]), .wwq(t_wwq[q*4*280 +: 4*280]), .wwq_cr(f_wwq_cr[q*4 +: 4]),
+            .wwq_done(f_wwq_done[q*4 +: 4]), .c_y(q < 4 ? wy2a : wy2b), .c_v(wv2[q*4 +: 4]), .c_slot(wsl_b), .c_sec(wsec_b),
             .e_wcr(e_wcr[q*4 +: 4]), .e_done(e_done[q*4 +: 4]));
     end endgenerate
     // event relays (tile face -> centre)
