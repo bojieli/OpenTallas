@@ -22,6 +22,8 @@ module tb_qfd_vm_bv_ports;
     parameter integer ELEMS = 16384, NRB = 16, SMIN = 3, SMAX = 7, XVM = 12, BMAX = 4, SW = 8, VL = 7;
     parameter integer DB = 16, RSD = 4, CRB = 4, MUT = 0, SMUT = 0, TSR = 0, CYCLES = 30000, SEED = 5, XRN = 4096;
     parameter integer ND = 9;
+    parameter integer MEE = 0, VMT = 0, RV = 1, RO = 2;   // el1011-q-sp: me_en one edge early / hardened bank tiles
+                                                           // (VMT: pass XVM + RV + RO + 2 and VL = 7 + RV + RO + 1)
     parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
     parameter [ND*8-1:0] DSET = {8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0};
     localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NB = 6, NS = 8;
@@ -30,6 +32,7 @@ module tb_qfd_vm_bv_ports;
     always #0.5 clk = ~clk;
     integer seed;
     // ---- DUT inputs ----
+    reg me_want_nx, started_nx;
     reg me_want, x_dv, w_v, r_v, rd_v, mx_we;
     wire me_en;
     reg [AW-1:0] x_dc, x_dcs, rd_addr, mx_addr;
@@ -67,8 +70,8 @@ module tb_qfd_vm_bv_ports;
             .o_data(l_data[gb*512 +: 512]), .o_cr(l_cr[gb]), .rok(l_ok[gb]), .fault(l_fault[gb]));
     end endgenerate
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
-        .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT)) dut (
-        .clk(clk), .rst_n(rst_n), .me_en(me_en), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
+        .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO)) dut (
+        .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),
         .s_re0(s_re0), .s_re1(s_re1), .s_a0(s_a0), .s_a1(s_a1), .s_q(s_q),
         .sw_mask(sw_mask), .sw_a0(sw_a0), .sw_a1(sw_a1), .sw_data(sw_data),
@@ -83,6 +86,15 @@ module tb_qfd_vm_bv_ports;
     always @(posedge clk or negedge rst_n) if (!rst_n) okd <= 0; else okd <= {okd[RSD-1:0], me_ok};
     reg started_e;
     assign me_en = me_want && (okd[RSD-1] || !started_e);
+    // MEE: the same enable one edge early (me_want drawn one negedge ahead; okd one shift earlier; started one ahead)
+    wire me_en_e = me_want_nx && (okd[RSD-2] || !started_nx);
+    reg  me_eq;
+    integer bad_me;
+    initial bad_me = 0;
+    always @(posedge clk) begin
+        me_eq <= me_en_e;
+        if (MEE != 0 && started_nx && me_eq !== me_en) bad_me = bad_me + 1;
+    end
     // ---- reference memory ----
     reg [31:0] vm [0:ELEMS-1];
     function [31:0] rv(input integer a); rv = (a < ELEMS && a >= 0) ? vm[a] : 32'd0; endfunction
@@ -201,14 +213,14 @@ module tb_qfd_vm_bv_ports;
     endtask
     initial begin
         seed = SEED; bad_x = 0; bad_s = 0; bad_r = 0; bad_land = 0; bad_img = 0; n_s = 0; n_r = 0; n_land = 0; tuples = 0;
-        started = -1; nburst = 0; land_seen = 0; rw_p = 0; rr_p = 0; started_e = 0;
+        started = -1; nburst = 0; land_seen = 0; rw_p = 0; rr_p = 0; started_e = 0; started_nx = 0;
         for (i = 0; i < ELEMS; i = i + 1) vm[i] = 0;
         for (i = 0; i < ELEMS / 16; i = i + 1) shadow[i] = 0;
         for (i = 0; i < RSN / 16; i = i + 1) lastw[i] = -1;
         for (i = 0; i < XVM; i = i + 1) begin xp_v[i] = 0; xp_q[i] = 0; end
         for (i = 0; i <= VL; i = i + 1) begin sev[i] = 0; sexp[i] = 0; end
         r_xq = 0;
-        me_want = 1; x_dv = 0; x_dc = 0; x_dcs = 1; x_dsp = SMIN; w_v = 0; r_v = 0; w_row = 0; r_row = 0; w_mask = 0;
+        me_want = 1; me_want_nx = 1; x_dv = 0; x_dc = 0; x_dcs = 1; x_dsp = SMIN; w_v = 0; r_v = 0; w_row = 0; r_row = 0; w_mask = 0;
         w_data = 0; rd_v = 0; rd_addr = RD0; rd_data = 0; mx_we = 0; mx_addr = MX0 / 16; mx_mask = 0; mx_data = 0;
         s_re0 = 0; s_re1 = 0; s_a0 = 0; s_a1 = 0; sw_mask = 0; sw_a0 = 0; sw_a1 = 0; sw_data = 0;
         b_ov = 0; b_we = 0; b_addr = 0; b_mask = 0; b_data = 0;
@@ -220,7 +232,9 @@ module tb_qfd_vm_bv_ports;
             for (l = 0; l < 16; l = l + 1) w_data[32*l +: 32] = $random(seed);
         end
         @(negedge clk); w_v = 0;
-        repeat (20) @(negedge clk);
+        repeat (19) @(negedge clk);
+        started_nx = 1;
+        @(negedge clk);
         started_e = 1;
         for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin
             @(negedge clk);
@@ -242,7 +256,8 @@ module tb_qfd_vm_bv_ports;
             end
             // ---- engine: its registers (burst, maxima, x descriptor) change only after an engine edge ----
             eng_prev = en_edge;
-            me_want = ($random(seed) & 7) != 0;
+            if (MEE != 0) begin me_want = me_want_nx; me_want_nx = ($random(seed) & 7) != 0; end
+            else me_want = ($random(seed) & 7) != 0;
             if (eng_prev) begin
                 b_ov = 0; b_we = 0; mx_we = 0;
                 if (($random(seed) & 3) == 0) new_burst;
@@ -294,12 +309,16 @@ module tb_qfd_vm_bv_ports;
             r_v = ($random(seed) & 3) == 0; r_row = (XR0 / 16) + (($random(seed) & 32'h7fffffff) % (XRN / 16));
         end
         // drain: no new traffic, the engine runs until every burst landed
-        b_ov = 0; b_we = 0; mx_we = 0; x_dv = 0; s_re0 = 0; sw_mask = 0; rd_v = 0; w_v = 0; r_v = 0; me_want = 1;
+        b_ov = 0; b_we = 0; mx_we = 0; x_dv = 0; s_re0 = 0; sw_mask = 0; rd_v = 0; w_v = 0; r_v = 0;
+        // MEE: the loop's last negedge already advanced me_want; only the lookahead (not yet seen by an edge) becomes 1
+        if (MEE != 0) begin me_want_nx = 1; @(negedge clk); end
+        me_want = 1;
         for (i = 0; i < 20000 && land_cnt != nburst[15:0]; i = i + 1) @(negedge clk);
         repeat (40) @(negedge clk);
         for (i = 0; i < ELEMS; i = i + 1)
             if (shadow[i / 16][32*(i % 16) +: 32] !== vm[i]) bad_img = bad_img + 1;
-        if (bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
+        if (bad_me != 0) $display("me_en_e lookahead mismatches %0d", bad_me);
+        if (bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
             !w_hazard && !(|l_fault) && land_cnt == nburst[15:0] && nburst > 500 && n_s > 1000 && n_r > 1000 && tuples > 500)
             $display("PASS qfd_vm_bv_ports NRB=%0d SW=%0d VL=%0d su_reads=%0d row_reads=%0d tuples=%0d bursts=%0d land_steps=%0d cycles=%0d",
                      NRB, SW, VL, n_s, n_r, tuples, nburst, n_land, CYCLES);
