@@ -31,6 +31,11 @@ module tb_hgi_sm_tput;
 `else
     localparam integer ADP = 32;
 `endif
+`ifdef MUT_XB
+    localparam integer MXB = 1;            // smmv 3a mutant: the SMs read x from slot 0 (reused x in another slot is wrong)
+`else
+    localparam integer MXB = 0;
+`endif
 `ifdef MUT_NOCR
     localparam integer NOCR = 1;
 `else
@@ -61,7 +66,7 @@ module tb_hgi_sm_tput;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
     wire [1:0] x_space, x_fmt, pub_space; wire [6:0] x_xb; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret;
-    ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME), .AD(ADP), .MUT_NOCR(NOCR)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME), .AD(ADP), .MUT_NOCR(NOCR), .MUT_XB(MXB)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
         .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
         .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
