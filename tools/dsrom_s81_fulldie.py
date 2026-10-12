@@ -2443,6 +2443,7 @@ COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin fa
 # 36ccf0cb0: 3 x 572.4 columns, 29 tiles); HC root split (5db4c7ec6 / 597e34cac, ds-1010.log 14:14): 3 x 575.992 columns
 SU_V2_UM = (1727.976, 6069.6)
 HC_V2_UM = (1727.976, 9640.0)
+CONTRACT_SLABS = {}             # --contract FILE (s81-die-iter): centre slab outlines {name: (w, h)} from the hier contract
 SUHC_V2_HC_N = False            # --suhc-v2-hc-north: the v2 HC in the slot above the corridor (default: hc_s floor slot)
 SUHC_V2 = False                 # --suhc-v2 (s81die-1011/ctrl, die lead decision 3): su_hc contract v2 = ONE SU master
                                 #   (dsfd_sp_su_c, su_s W-floor slot) + ONE HC master (dsfd_sp_hc_c, hc_s E-column slot);
@@ -3261,6 +3262,14 @@ def build_r8(variant=None):
         assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
         slab_w['vm'] = up(VM_SLAB[0], GX)
         centre_area['vm'] = slab_w['vm'] * up(VM_SLAB[1], GY) / 1e6
+    if CONTRACT_SLABS:
+        # --contract FILE (s81-die-iter 2026-10-12): centre hard elements keep their contract outline (w x h) inside a
+        # hub column widened for the v3 SU / HC slabs (column channels); each is centred in the column
+        for n_, (w_, h_) in CONTRACT_SLABS.items():
+            if n_ in centre_area and n_ not in ('su_s', 'hc_s'):
+                assert w_ <= cw + 1e-6, ('contract slab wider than the hub column', n_, w_, cw)
+                slab_w[n_] = up(w_, GX)
+                centre_area[n_] = slab_w[n_] * up(h_, GY) / 1e6
     # --ecol-slabs (ds-1010/s81die 2026-10-10): W-column centre slabs moved to a sub-column of the E (HC) column, beside
     # the HC slabs, next to the crossing corridor (the W column overflowed: split3cr collective + WFC kit + host)
     if RTL_HUB_WIDTHS:
@@ -3286,7 +3295,7 @@ def build_r8(variant=None):
             # --wfc-crp (main 10-11): the slab master is dsfd_wfc_cr2 = the routed credit-boundary tile dsfd_wfc_crp at the
             # slab's die edge (every die link / VM signal lands in its pin flops / SRAM landing) + the kit behind it
             ms_ = 'dsfd_wfc_cr2' if WFC_CRP else ('dsfd_wfc_src' if WFC_ROLE == 'source' else 'dsfd_wfc_stg')
-            slab('wfc', centre_area[n], x0_, yy, w0_, master=ms_)
+            slab('wfc', centre_area[n], up(x0_ + (w0_ - slab_w.get(n, w0_)) / 2, GX), yy, slab_w.get(n, w0_), master=ms_)
             notes.append('MTP-WFC --wfc-kit (%s): %s = %s in a %.2f um slab (%.3f mm2)' % (
                 WFC_ROLE, ms_, 'SOURCE tokpipe + tok_hard + lnk + vmx' if WFC_ROLE == 'source' else 'STG tokpipe + lnk + vmx',
                 WFC_SLAB_H, centre_area[n]))
@@ -3373,11 +3382,11 @@ def build_r8(variant=None):
         # --suhc-v2 n (s81die-1011/ctrl): the one HC in the freed slot ABOVE the corridor, facing the VM rows (order A puts
         # the VM at the corridor): VM row slots run straight across the VCH, the collective's 8,192-b y is ~2.5 mm
         # shorter than to the floor slot (hb_collective_t_hc_y_hc_s: no station spot over a 7,451 um path)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, hcw, dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, min(hcw, up(HC_V2_UM[0], GX)), dom=SUHC_DOM)
     elif SUHC_V2:   # the floor slot holds c0 - floor um: the 9,640 um HC outline fits only if the corridor sits above it
         assert c0 - (band + SPINE_GAP) >= HC_V2_UM[1], ('v2 HC outline taller than the hc_s floor slot: use '
                                                         '--suhc-v2-hc-north', round(c0 - band - SPINE_GAP, 1), HC_V2_UM)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), hcw, dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), min(hcw, up(HC_V2_UM[0], GX)), dom=SUHC_DOM)
     else:
         slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom=SUHC_DOM)
     if not SUHC_V2:     # --suhc-v2: one HC (hc_s slot); the hc_n slot is free
@@ -7043,6 +7052,7 @@ def die_options(ap):
                     '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--contract', help='s81-die-iter 2026-10-12: hier contract JSON (repo path): SU / HC / VM / centre slab outlines')
     ap.add_argument('--suhc-v2', action='store_true', help='s81die-1011: su_hc contract v2 (one SU in su_s, one HC in hc_s, VM '
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
@@ -7204,6 +7214,22 @@ def apply_options(a):
     COL_PITCH8 = COL_W8 + 8.64
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
     COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
+    global SU_V2_UM, HC_V2_UM, HROW_UM
+    if getattr(a, 'contract', None):
+        # --contract (s81-die-iter 2026-10-12): slab outlines from results/arch/hier_contract_1011/s81.json (v3+): SU / HC v2
+        # slabs (column channels), centre hard elements, VM slab (overrides --vm-slab), MTP hrow
+        cslots_ = {s_['name']: s_ for s_ in json.loads((ROOT / a.contract).read_text())['slots']}
+        def _o(n_):
+            return (float(cslots_[n_]['outline']['w']), float(cslots_[n_]['outline']['h']))
+        SU_V2_UM, HC_V2_UM = _o('sp_su_s'), _o('sp_hc_s')
+        CONTRACT_SLABS.clear()
+        for n_, k_ in (('capture', 'sp_capture'), ('gather', 'sp_gather'), ('collective', 'sp_collective'), ('wfc_hard', 'sp_wfc')):
+            if k_ in cslots_ and _o(k_)[0] > 0:
+                CONTRACT_SLABS[n_] = _o(k_)
+        if 'sp_vm' in cslots_:
+            a.vm_slab = '%.3f,%.3f' % _o('sp_vm')
+        if 'hrow' in cslots_ and _o('hrow')[0] > 0:
+            HROW_UM = _o('hrow')
     SUHC_1011 = bool(getattr(a, 'suhc_1011', False))
     SUHC_DOM, SUHC_HC_VM = ('stream_1p2', 2048) if SUHC_1011 else ('serial_0p9', 1024)
     global SU_E, HROW_TX
