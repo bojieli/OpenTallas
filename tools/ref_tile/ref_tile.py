@@ -145,7 +145,12 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
         pg = pg or "M6"
         if pg not in ("M6", "M7"):
             raise SpecError(f"layer contract: a leaf tile's PG layer is M6 or M7, not {pg}")
-        out.update(pg_layer=pg, rlayers=("M2", "M6"), strap_layer=f"M{metal(pg) + 1}")
+        # optional signal_max_layer M7 on an M7-PG leaf (signals between its own M7 stripes, as a cluster does) where the
+        # die contract slot allows it (Qwen sp_port_tiles: signal_max M8) -- long macro-clock / bus wires off thin M2-M6
+        sm = s.get("signal_max_layer", "M6")
+        if sm not in ("M6", "M7") or (sm == "M7" and pg != "M7"):
+            raise SpecError(f"layer contract: a leaf tile routes signals to M6, or to M7 only with PG on M7 (got {sm}, PG {pg})")
+        out.update(pg_layer=pg, rlayers=("M2", sm), strap_layer=f"M{metal(pg) + 1}")
     else:
         for ch in s["children"]:
             m = read_view_lef(ch["view"])
@@ -616,7 +621,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(r.get('pin_h', 'M4 M6'))}",
         f"PIN_V={shq(r.get('pin_v', 'M5'))}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r), ""])
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r),
+        # optional route.cts_args: TritonCTS arguments (ref_route.sh CTSA), e.g. macro clustering for a "clock": "cts" cluster
+        *([f"CTSA={shq(r['cts_args'])}"] if r.get("cts_args") else []), ""])
 
 
 def pin_balance_env(r: dict) -> list:

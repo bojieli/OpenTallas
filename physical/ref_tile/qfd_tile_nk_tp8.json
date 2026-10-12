@@ -275,19 +275,20 @@
  "route": {
   "pd": 0.45,
   "threads": 16,
-  "peak_ram_gb": 64
+  "peak_ram_gb": 64,
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -macro_clustering_size 2 -macro_clustering_max_diameter 150"
  },
  "job": {
   "owner": "Claude:qwen-tp8/par",
   "branch": "claude/el1011-qwen-tp8-par",
-  "tag": "r1",
+  "tag": "c1",
   "hosts": [
    "ot-epyc1tb",
    "ot-epyc4",
    "ot-agidock128",
    "ot-pve1"
   ],
-  "purpose": "qwen-tp8 TP8 parameter setting of the die tile qfd_tile_nk (r22ko4 D2 NK variant): GT 6144 -> 3072 (768 tiles/die, CODE_BANKS 5, same 10 ROM macros + 8 lsl leaves, same faces); ref_tile cluster floorplan 311.04 x 1291.656 (ROM 2x(3+2) bands with 20 um channels, leaves on the 43.2 lattice). Gate: partition bench at the TP8 analog GT 24 (3*2^k like 3072) seeds 1/5 + GT 8 PASS; TMUT 3 (stale MPR copy) / TMUT 4 (stale-2*GT round step) + gate MUTANT 1 FAIL.",
+  "purpose": "qwen-tp8 TP8 parameter setting of the die tile qfd_tile_nk (r22ko4 D2 NK variant): GT 6144 -> 3072 (768 tiles/die, CODE_BANKS 5, same 10 ROM macros + 8 lsl leaves, same faces); ref_tile cluster floorplan 311.04 x 1291.656 (ROM 2x(3+2) bands with 20 um channels, leaves on the 43.2 lattice). Gate: partition bench at the TP8 analog GT 24 (3*2^k like 3072) seeds 1/5 + GT 8 PASS; TMUT 3 (stale MPR copy) / TMUT 4 (stale-2*GT round step) + gate MUTANT 1 FAIL. | c1 (qwen-tp8/tiles 2026-10-12): r1 EARLY_FAIL_HOLD -405.9 ps flat was the balanced clock spine: on this 311x1296 cluster it never converged (CTS probe: 83,682 pad buffers for 32,178 sinks, leaf arrival 2.17-2.25 ns, real lsl-vs-flop skew 324 ps -> reg->reg -153 / reg->lsl -180 ps before repair). Structural fix: TritonCTS macro/register trees with the lsl lib insertion (clock: cts, macro clustering 2/150) = the CTS that closed hold on the same RTL at TP4 (qfd_tile_nk_h3-8c1e8805e: hold ws 0 after 1,406 buffers).",
   "benches": [
    {
     "name": "tp8_g24_exact_s1",
@@ -368,5 +369,6 @@
     ]
    }
   ]
- }
+ },
+ "clock": "cts"
 }

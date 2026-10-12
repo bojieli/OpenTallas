@@ -1,9 +1,9 @@
 {
- "name": "qfd_tile_nk_tp8-r1-cd66ca4e7",
+ "name": "qfd_tile_nk_tp8-c1-COMMIT",
  "block": "ot_qwen_rom_tile_nk",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8/par",
- "purpose": "qwen-tp8 TP8 parameter setting of the die tile qfd_tile_nk (r22ko4 D2 NK variant): GT 6144 -> 3072 (768 tiles/die, CODE_BANKS 5, same 10 ROM macros + 8 lsl leaves, same faces); ref_tile cluster floorplan 311.04 x 1291.656 (ROM 2x(3+2) bands with 20 um channels, leaves on the 43.2 lattice). Gate: partition bench at the TP8 analog GT 24 (3*2^k like 3072) seeds 1/5 + GT 8 PASS; TMUT 3 (stale MPR copy) / TMUT 4 (stale-2*GT round step) + gate MUTANT 1 FAIL.",
+ "purpose": "qwen-tp8 TP8 parameter setting of the die tile qfd_tile_nk (r22ko4 D2 NK variant): GT 6144 -> 3072 (768 tiles/die, CODE_BANKS 5, same 10 ROM macros + 8 lsl leaves, same faces); ref_tile cluster floorplan 311.04 x 1291.656 (ROM 2x(3+2) bands with 20 um channels, leaves on the 43.2 lattice). Gate: partition bench at the TP8 analog GT 24 (3*2^k like 3072) seeds 1/5 + GT 8 PASS; TMUT 3 (stale MPR copy) / TMUT 4 (stale-2*GT round step) + gate MUTANT 1 FAIL. | c1 (qwen-tp8/tiles 2026-10-12): r1 EARLY_FAIL_HOLD -405.9 ps flat was the balanced clock spine: on this 311x1296 cluster it never converged (CTS probe: 83,682 pad buffers for 32,178 sinks, leaf arrival 2.17-2.25 ns, real lsl-vs-flop skew 324 ps -> reg->reg -153 / reg->lsl -180 ps before repair). Structural fix: TritonCTS macro/register trees with the lsl lib insertion (clock: cts, macro clustering 2/150) = the CTS that closed hold on the same RTL at TP4 (qfd_tile_nk_h3-8c1e8805e: hold ws 0 after 1,406 buffers).",
  "hosts": [
   "ot-epyc1tb",
   "ot-epyc4",
@@ -14,13 +14,13 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-qwen-tp8-par",
-  "commit": "cd66ca4e7"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_rom_tile_nk physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v rtl/physical/ot_qwen_rom_tile_nk.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v rtl/hdc/ot_hdc_fp32_add_lat_nr.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qwen_rom_tile_nk #(.GT(3072), .NW(18), .SMIN(7), .CODE_BANKS(5), .KV_VB(131072), .KV_NH(2), .MEM_EXTRA(1), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(8), .FAST_ISSUE(1), .KV_PREP(4), .ROM_PIPE(1), .ROM_ARELAY(2), .ROM_CAP2(1), .ROM_CAPX(2), .LRST(3), .ARPB(1), .MPR(1), .HIER(2), .HIER_HARD(1), .ANR(1), .TOREG(1), .TIDR(1), .LRR(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v rtl/physical/ot_qwen_rom_tile_nk.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v rtl/hdc/ot_hdc_fp32_add_lat_nr.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -158,7 +158,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_nk_tp8/qfd_tile_nk_tp8-r1-cd66ca4e7"
+   "to": "results/rtl/ref_tile/qfd_tile_nk_tp8/qfd_tile_nk_tp8-c1-COMMIT"
   }
  ],
  "cycles_added": 0,
