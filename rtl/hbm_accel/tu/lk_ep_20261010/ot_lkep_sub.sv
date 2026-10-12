@@ -12,7 +12,7 @@
 //        tx_cr / o_cr (glue crq)         -> credit relay stage 1
 //        fb_v / fb_d (glue fbv / fb_*)   -> fb relay stage 1
 //        rx_v / rx_d (glue c_v / c_h)    -> rx relay stage 1
-//   out: icr_ret (credit relay last stage), tx_v / tx_d and o_v / o_d (sink relay stage 1), ak (ack relay last stage),
+//   out: icr_ret (credit relay last stage), tx_v / tx_d and o_v / o_d (sink relay last stage), ak (ack relay last stage),
 //        drop / fault / rep (status capture registers)
 // Cycle changes vs 0c493ddbb (transaction-level exact; bench tb_hfd_lk_ep / tb_lk_rate gate adoption):
 //   * the TX bank read: the head advances on adm_t (the admission registered in the tile), the launch register l0 one
@@ -21,7 +21,8 @@
 // ---------------------------------------------------------------------------
 
 // ot_lkep_sinkp: pin half of ot_lkep_sinkq (macro output port side): credit counter / m_rdy, capture registers, relay
-// stage 1 (the tile's output register); the credit returns through N relay stages from the consumer's crq.
+// stages 1..N (the last one is the tile's output register: all N relay stages live in the tile because the macro's out /
+// rx pins sit ~600 um from the tile's seam face); the credit returns through N relay stages from the consumer's crq.
 module ot_lkep_sinkp #(parameter integer W = 545, parameter integer D = 4, parameter integer N = 2) (
     input  wire         clk,
     input  wire         rst_p,
@@ -29,7 +30,7 @@ module ot_lkep_sinkp #(parameter integer W = 545, parameter integer D = 4, param
     input  wire         m_v,
     input  wire [W-1:0] m_d,
     output reg          m_rdy,
-    output wire         o_v,           // relay stage 1 (registered)
+    output wire         o_v,           // relay stage N (registered)
     output wire [W-1:0] o_d,
     input  wire         crq            // consumer pop (a glue register)
 );
@@ -44,16 +45,16 @@ module ot_lkep_sinkp #(parameter integer W = 545, parameter integer D = 4, param
         if (!rst_p) begin cnt <= D; m_rdy <= 1'b0; cap_v <= 1'b0; end
         else begin cnt <= cnt_n; m_rdy <= (cnt_n != 0); cap_v <= hs; end
     always @(posedge clk) cap_d <= m_d;
-    ot_lkep_relay #(.W(W), .N(1)) u_f1 (.clk(clk), .rst_n(rst_c), .i_v(cap_v), .i_d(cap_d), .o_v(o_v), .o_vr(), .o_d(o_d));
+    ot_lkep_relay #(.W(W), .N(N)) u_f1 (.clk(clk), .rst_n(rst_c), .i_v(cap_v), .i_d(cap_d), .o_v(o_v), .o_vr(), .o_d(o_d));
     ot_lkep_relay #(.W(1), .N(N)) u_c (.clk(clk), .rst_n(rst_p), .i_v(crq), .i_d(1'b0), .o_v(crb), .o_d(crb_d));
 endmodule
 
-// ot_lkep_sinkc: consumer half of ot_lkep_sinkq: relay stages 2..N, the D-deep FIFO, pop -> crq (registered, to the
+// ot_lkep_sinkc: consumer half of ot_lkep_sinkq: the D-deep FIFO (fed straight from the tile's last relay stage), pop -> crq (registered, to the
 // pin half's credit relay).  ot_lkep_sinkp + ot_lkep_sinkc == ot_lkep_sinkq edge for edge.
 module ot_lkep_sinkc #(parameter integer W = 545, parameter integer D = 4, parameter integer N = 2, parameter integer SL = 64) (
     input  wire         clk,
     input  wire         rst_c,
-    input  wire         i_v,           // sink relay stage 1 (tile output register)
+    input  wire         i_v,           // sink relay stage N (tile output register)
     input  wire [W-1:0] i_d,
     output wire         h_v,
     output wire [W-1:0] h_d,
@@ -65,7 +66,7 @@ module ot_lkep_sinkc #(parameter integer W = 545, parameter integer D = 4, param
     wire          f_v;
     wire [W-1:0]  f_d;
     wire [NSL-1:0] f_vs;
-    ot_lkep_relay #(.W(W), .N(N - 1), .NV(NSL)) u_f (.clk(clk), .rst_n(rst_c), .i_v(i_v), .i_d(i_d), .o_v(f_v), .o_vr(f_vs), .o_d(f_d));
+    ot_lkep_relay #(.W(W), .N(0), .NV(NSL)) u_f (.clk(clk), .rst_n(rst_c), .i_v(i_v), .i_d(i_d), .o_v(f_v), .o_vr(f_vs), .o_d(f_d));
     reg  [D*W-1:0]   m;
     (* keep *) reg [NSL*D-1:0] wp;
     (* keep *) reg [NSL*D-1:0] rp;

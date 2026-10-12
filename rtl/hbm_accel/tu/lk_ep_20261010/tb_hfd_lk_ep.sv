@@ -43,7 +43,7 @@ module tb_hfd_lk_ep;
     wire [NS-1:0] a_rw;
     genvar gq;
     generate for (gq = 0; gq < NS; gq = gq + 1) begin : g_rw
-        assign a_rw[gq] = A.g_p[gq].u_rp.g_on.rinc;
+        assign a_rw[gq] = A.g_t[gq].u_t.u_rp.g_on.rinc;
     end endgenerate
     always @(posedge clk) if (rst_n && lostrp > 0 && (|a_rw) && cyc >= lr_until) begin lr_until <= cyc + 40; lostrp <= lostrp - 1; end
     always @(posedge clk) begin
