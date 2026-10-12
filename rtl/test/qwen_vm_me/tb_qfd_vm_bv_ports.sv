@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // qwen-vm-me 2026-10-08: every port of the banked vector memory ot_qfd_sp_vector_memory_bv at once, against the token
 // bench's behavioural VM semantics (rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_stream4.sv `vm`), plus the ME
-// result path (6 x ot_qfd_res_ser -> the merge inside the memory) under the engine stall loop.
+// result path (NB (TP4 6 / TP8 3) x ot_qfd_res_ser -> the merge inside the memory) under the engine stall loop.
 //   reference   one array; at every edge the SU operand reads presented before the edge read the array first, then the
 //               writes presented before the edge (SU lane rows, reducer element, sequencer row, the engine-edge maxima
 //               row) apply -- the base's registered-read / same-edge-write order.  Result bursts apply in burst order
@@ -25,8 +25,9 @@ module tb_qfd_vm_bv_ports;
     parameter integer MEE = 0, VMT = 0, RV = 1, RO = 2;   // el1011-q-sp: me_en one edge early / hardened bank tiles
                                                            // (VMT: pass XVM + RV + RO + 7 and VL = 7 + RV + RO + 5)
     parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
+    parameter integer NB = 6;                  // band result links: TP4 6, TP8 3 (results/arch/qwen_tp8_1012)
     parameter [ND*8-1:0] DSET = {8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0};
-    localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NB = 6, NS = 8;
+    localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NS = 8;
     localparam integer XR0 = 0, RD0 = XRN, SQ0 = XRN + 1024, MX0 = XRN + 2048, RS0 = XRN + 3072, RSN = 5120, SU0 = XRN + 8192;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
@@ -203,8 +204,8 @@ module tb_qfd_vm_bv_ports;
                     for (ss = 0; ss < NS; ss = ss + 1) b_we[qq*NS + ss] = $random(seed) & 1;
             end
             for (qq = 0; qq < NB * NS; qq = qq + 1) begin
-                // a row unique within the burst: slot-indexed band of rows (8 x 6 = 48 of the region's 320), randomly shifted
-                rr = (qq + 48 * (($random(seed) & 32'h7fffffff) % (RSN / 16 / 48))) % (RSN / 16);
+                // a row unique within the burst: slot-indexed band of rows (NS x NB = 48 at TP4 of the region's 320), randomly shifted
+                rr = (qq + NB * NS * (($random(seed) & 32'h7fffffff) % (RSN / 16 / (NB * NS)))) % (RSN / 16);
                 b_addr[qq*AW +: AW] = RS0 / 16 + rr;
                 b_mask[qq*16 +: 16] = $random(seed);
                 for (ss = 0; ss < 16; ss = ss + 1) b_data[qq*512 + 32*ss +: 32] = $random(seed);

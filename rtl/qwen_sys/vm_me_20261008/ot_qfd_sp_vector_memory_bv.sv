@@ -19,7 +19,7 @@
 //                   wins, as the base's lane-ordered commit).
 //   reducer write   one element (skid source), the sequencer's row write w_* (skid source), the tree top's per-slot
 //                   maxima row mx_* (engine-edge sampled, skid source).
-//   ME results      NB = 6 band serializer links (ot_qfd_res_ser) into the 6:1 merge (ot_qfd_res_merge, inside), one
+//   ME results      NB band serializer links (ot_qfd_res_ser; TP4 6, TP8 3) into the NB:1 merge (ot_qfd_res_merge, inside), one
 //                   row a cycle onto the bank-write arbiter; land_cnt counts landed bursts for the tree top.
 // Writes are BROADCAST to every copy at the same edge (the copies stay identical).  Uniform latency (the exactness
 // argument): every read and every write presented at edge t reaches the macros at edge t + 4 (SU reads: descriptor
@@ -93,7 +93,7 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter [ND*8-1:0] DSET = {8'd96, 8'd64, 8'd48, 8'd32, 8'd24, 8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0},
     parameter integer SW = 64,
     parameter integer NSU = 3,
-    parameter integer NB = 6,
+    parameter integer NB = 6,                          // ME band result links: TP4 6 (default), TP8 3 (3 bands of 256 tiles)
     parameter integer CRB = 4,
     parameter integer SQD = 2,
     parameter integer NRBS = 16,                       // banks of each SU replica copy (rows r mod NRBS)
