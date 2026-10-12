@@ -6,7 +6,7 @@
 module hfd_svc_SW_s0 (
     input wire [0:0] ck,
     input wire [1265:0] ei,
-    output wire [606:0] eo,
+    output wire [607:0] eo,
     input wire [1:0] kq0,
     input wire [1:0] kq1,
     output wire [1101:0] ks0,
@@ -42,10 +42,10 @@ module hfd_svc_SW_s0 (
   wire ln1_wr_v, ln1_w_room, ln1_v, ln1_rq; wire [9:0] ln1_wr_tag; wire [4:0] ln1_wr_beat; wire [255:0] ln1_wr_data; wire [270:0] ln1_d;
   wire ln2_wr_v, ln2_w_room, ln2_v, ln2_rq; wire [9:0] ln2_wr_tag; wire [4:0] ln2_wr_beat; wire [255:0] ln2_wr_data; wire [270:0] ln2_d;
   wire ln3_wr_v, ln3_w_room, ln3_v, ln3_rq; wire [9:0] ln3_wr_tag; wire [4:0] ln3_wr_beat; wire [255:0] ln3_wr_data; wire [270:0] ln3_d;
-  wire pc0_iv, pc0_k_v, pc0_k_rdy, pc0_kr_v, pc0_bv; wire [50:0] pc0_id; wire [29:0] pc0_k_addr; wire [3:0] pc0_k_len, pc0_kr_beat, pc0_bb; wire [16:0] pc0_k_tag, pc0_kr_tag, pc0_bt; wire [255:0] pc0_kr_data, pc0_bd; wire pc0_div, pc0_dov, pc0_dniok, pc0_dniph, pc0_dnook, pc0_dnoph, pc0_crv; wire [61:0] pc0_did, pc0_dod;
-  wire pc1_iv, pc1_k_v, pc1_k_rdy, pc1_kr_v, pc1_bv; wire [50:0] pc1_id; wire [29:0] pc1_k_addr; wire [3:0] pc1_k_len, pc1_kr_beat, pc1_bb; wire [16:0] pc1_k_tag, pc1_kr_tag, pc1_bt; wire [255:0] pc1_kr_data, pc1_bd; wire pc1_div, pc1_dov, pc1_dniok, pc1_dniph, pc1_dnook, pc1_dnoph, pc1_crv; wire [61:0] pc1_did, pc1_dod;
-  wire pc2_iv, pc2_k_v, pc2_k_rdy, pc2_kr_v, pc2_bv; wire [50:0] pc2_id; wire [29:0] pc2_k_addr; wire [3:0] pc2_k_len, pc2_kr_beat, pc2_bb; wire [16:0] pc2_k_tag, pc2_kr_tag, pc2_bt; wire [255:0] pc2_kr_data, pc2_bd; wire pc2_div, pc2_dov, pc2_dniok, pc2_dniph, pc2_dnook, pc2_dnoph, pc2_crv; wire [61:0] pc2_did, pc2_dod;
-  wire pc3_iv, pc3_k_v, pc3_k_rdy, pc3_kr_v, pc3_bv; wire [50:0] pc3_id; wire [29:0] pc3_k_addr; wire [3:0] pc3_k_len, pc3_kr_beat, pc3_bb; wire [16:0] pc3_k_tag, pc3_kr_tag, pc3_bt; wire [255:0] pc3_kr_data, pc3_bd; wire pc3_div, pc3_dov, pc3_dniok, pc3_dniph, pc3_dnook, pc3_dnoph, pc3_crv; wire [61:0] pc3_did, pc3_dod;
+  wire pc0_iv, pc0_k_v, pc0_k_rdy, pc0_kr_v, pc0_bv; wire [50:0] pc0_id; wire [29:0] pc0_k_addr; wire [3:0] pc0_k_len, pc0_kr_beat, pc0_bb; wire [16:0] pc0_k_tag, pc0_kr_tag, pc0_bt; wire [255:0] pc0_kr_data, pc0_bd; wire pc0_div, pc0_dov, pc0_dniok, pc0_dnook, pc0_crv; wire [1:0] pc0_dniph, pc0_dnoph; wire [61:0] pc0_did, pc0_dod;
+  wire pc1_iv, pc1_k_v, pc1_k_rdy, pc1_kr_v, pc1_bv; wire [50:0] pc1_id; wire [29:0] pc1_k_addr; wire [3:0] pc1_k_len, pc1_kr_beat, pc1_bb; wire [16:0] pc1_k_tag, pc1_kr_tag, pc1_bt; wire [255:0] pc1_kr_data, pc1_bd; wire pc1_div, pc1_dov, pc1_dniok, pc1_dnook, pc1_crv; wire [1:0] pc1_dniph, pc1_dnoph; wire [61:0] pc1_did, pc1_dod;
+  wire pc2_iv, pc2_k_v, pc2_k_rdy, pc2_kr_v, pc2_bv; wire [50:0] pc2_id; wire [29:0] pc2_k_addr; wire [3:0] pc2_k_len, pc2_kr_beat, pc2_bb; wire [16:0] pc2_k_tag, pc2_kr_tag, pc2_bt; wire [255:0] pc2_kr_data, pc2_bd; wire pc2_div, pc2_dov, pc2_dniok, pc2_dnook, pc2_crv; wire [1:0] pc2_dniph, pc2_dnoph; wire [61:0] pc2_did, pc2_dod;
+  wire pc3_iv, pc3_k_v, pc3_k_rdy, pc3_kr_v, pc3_bv; wire [50:0] pc3_id; wire [29:0] pc3_k_addr; wire [3:0] pc3_k_len, pc3_kr_beat, pc3_bb; wire [16:0] pc3_k_tag, pc3_kr_tag, pc3_bt; wire [255:0] pc3_kr_data, pc3_bd; wire pc3_div, pc3_dov, pc3_dniok, pc3_dnook, pc3_crv; wire [1:0] pc3_dniph, pc3_dnoph; wire [61:0] pc3_did, pc3_dod;
   wire sp0_iv, sp0_tk, sp0_qrdy; wire [41:0] sp0_id;
   wire sp1_iv, sp1_tk, sp1_qrdy; wire [41:0] sp1_id;
   wire w_cv, w_ct, w_wv, w_rdy_s; wire [39:0] w_cd; wire [7:0] w_room, w_ld; wire [23:0] w_addr_s; wire [5:0] w_len_s; wire [9:0] w_tag_s;
@@ -96,13 +96,13 @@ module hfd_svc_SW_s0 (
   wire c_ew_3_v; wire [39:0] c_ew_3_d;
   wire c_ewb_0_v; wire [0:0] c_ewb_0_d;
   wire c_sd3_1_v; wire [61:0] c_sd3_1_d;
-  wire c_dd3_0_v; wire [0:0] c_dd3_0_d;
+  wire c_dd3_0_v; wire [1:0] c_dd3_0_d;
   wire c_sd2_0_v; wire [61:0] c_sd2_0_d;
-  wire c_dd2_0_v; wire [0:0] c_dd2_0_d;
+  wire c_dd2_0_v; wire [1:0] c_dd2_0_d;
   wire c_sd1_0_v; wire [61:0] c_sd1_0_d;
-  wire c_dd1_0_v; wire [0:0] c_dd1_0_d;
+  wire c_dd1_0_v; wire [1:0] c_dd1_0_d;
   wire c_sd0_0_v; wire [61:0] c_sd0_0_d;
-  wire c_dd0_0_v; wire [0:0] c_dd0_0_d;
+  wire c_dd0_0_v; wire [1:0] c_dd0_0_d;
   wire c_cr0_0_v; wire [0:0] c_cr0_0_d;
   wire c_cr1_0_v; wire [0:0] c_cr1_0_d;
   wire c_cr2_0_v; wire [0:0] c_cr2_0_d;
@@ -143,7 +143,7 @@ module hfd_svc_SW_s0 (
   ot_svs_lane u_ln1 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln1_wr_v), .wr_tag(ln1_wr_tag), .wr_beat(ln1_wr_beat), .wr_data(ln1_wr_data), .w_room(ln1_w_room), .o_v(ln1_v), .o_d(ln1_d), .room_q(ln1_rq));
   ot_svs_lane u_ln2 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln2_wr_v), .wr_tag(ln2_wr_tag), .wr_beat(ln2_wr_beat), .wr_data(ln2_wr_data), .w_room(ln2_w_room), .o_v(ln2_v), .o_d(ln2_d), .room_q(ln2_rq));
   ot_svs_lane u_ln3 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .wr_v(ln3_wr_v), .wr_tag(ln3_wr_tag), .wr_beat(ln3_wr_beat), .wr_data(ln3_wr_data), .w_room(ln3_w_room), .o_v(ln3_v), .o_d(ln3_d), .room_q(ln3_rq));
-  assign pc0_dniok = 1'b0; assign pc0_dniph = 1'b0;   // chain end (END = 1)
+  assign pc0_dniok = 1'b0; assign pc0_dniph = 2'b00;   // chain end (END = 1)
   ot_svs_pcs #(.PCID(0), .END(1)) u_pc0 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc0_iv), .iss_d(pc0_id), .k_v(pc0_k_v), .k_rdy(pc0_k_rdy), .k_addr(pc0_k_addr), .k_len(pc0_k_len), .k_tag(pc0_k_tag), .kr_v(pc0_kr_v), .kr_tag(pc0_kr_tag), .kr_beat(pc0_kr_beat), .kr_data(pc0_kr_data), .b_v(pc0_bv), .b_t(pc0_bt), .b_b(pc0_bb), .b_d(pc0_bd), .di_v(pc0_div), .di_d(pc0_did), .do_v(pc0_dov), .do_d(pc0_dod), .dni_ok(pc0_dniok), .dni_ph(pc0_dniph), .dno_ok(pc0_dnook), .dno_ph(pc0_dnoph), .cr_v(pc0_crv));
   ot_svs_pcs #(.PCID(1), .END(0)) u_pc1 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc1_iv), .iss_d(pc1_id), .k_v(pc1_k_v), .k_rdy(pc1_k_rdy), .k_addr(pc1_k_addr), .k_len(pc1_k_len), .k_tag(pc1_k_tag), .kr_v(pc1_kr_v), .kr_tag(pc1_kr_tag), .kr_beat(pc1_kr_beat), .kr_data(pc1_kr_data), .b_v(pc1_bv), .b_t(pc1_bt), .b_b(pc1_bb), .b_d(pc1_bd), .di_v(pc1_div), .di_d(pc1_did), .do_v(pc1_dov), .do_d(pc1_dod), .dni_ok(pc1_dniok), .dni_ph(pc1_dniph), .dno_ok(pc1_dnook), .dno_ph(pc1_dnoph), .cr_v(pc1_crv));
   ot_svs_pcs #(.PCID(2), .END(0)) u_pc2 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc2_iv), .iss_d(pc2_id), .k_v(pc2_k_v), .k_rdy(pc2_k_rdy), .k_addr(pc2_k_addr), .k_len(pc2_k_len), .k_tag(pc2_k_tag), .kr_v(pc2_kr_v), .kr_tag(pc2_kr_tag), .kr_beat(pc2_kr_beat), .kr_data(pc2_kr_data), .b_v(pc2_bv), .b_t(pc2_bt), .b_b(pc2_bb), .b_d(pc2_bd), .di_v(pc2_div), .di_d(pc2_did), .do_v(pc2_dov), .do_d(pc2_dod), .dni_ok(pc2_dniok), .dni_ph(pc2_dniph), .dno_ok(pc2_dnook), .dno_ph(pc2_dnoph), .cr_v(pc2_crv));
@@ -158,7 +158,7 @@ module hfd_svc_SW_s0 (
   ot_svc_vpipe #(.W(1), .N(2)) c_tb0_0 (.ck(c), .rst_n(rn), .v(ar0_take), .d(1'b0), .qv(c_tb0_0_v), .q(c_tb0_0_d));
   assign sp0_tk = c_tb0_0_v;
   ot_svc_vpipe #(.W(42), .N(2)) c_rq1_0 (.ck(c), .rst_n(rn), .v(sp1_iv), .d(sp1_id), .qv(c_rq1_0_v), .q(c_rq1_0_d));
-  assign eo[606:564] = {c_rq1_0_d, c_rq1_0_v};
+  assign eo[607:565] = {c_rq1_0_d, c_rq1_0_v};
   ot_svc_vpipe #(.W(1), .N(2)) c_tb1_1 (.ck(c), .rst_n(rn), .v(ei[1236]), .d(ei[1237:1237]), .qv(c_tb1_1_v), .q(c_tb1_1_d));
   assign sp1_tk = c_tb1_1_v;
   ot_svc_vpipe #(.W(51), .N(2)) c_is0_0 (.ck(c), .rst_n(rn), .v(ar0_iv[0]), .d(ar0_id[50:0]), .qv(c_is0_0_v), .q(c_is0_0_d));
@@ -197,22 +197,22 @@ module hfd_svc_SW_s0 (
   assign rs4_v = c_rs4_1_v;
   assign rs4_d = c_rs4_1_d;
   ot_svc_vpipe #(.W(1), .N(2)) c_dn4_0 (.ck(c), .rst_n(rn), .v(as1_kt[0]), .d(1'b0), .qv(c_dn4_0_v), .q(c_dn4_0_d));
-  assign eo[557:556] = {c_dn4_0_d, c_dn4_0_v};
+  assign eo[558:557] = {c_dn4_0_d, c_dn4_0_v};
   ot_svc_vpipe #(.W(277), .N(2)) c_rs5_1 (.ck(c), .rst_n(rn), .v(ei[390]), .d(ei[667:391]), .qv(c_rs5_1_v), .q(c_rs5_1_d));
   assign rs5_v = c_rs5_1_v;
   assign rs5_d = c_rs5_1_d;
   ot_svc_vpipe #(.W(1), .N(2)) c_dn5_0 (.ck(c), .rst_n(rn), .v(as1_kt[1]), .d(1'b0), .qv(c_dn5_0_v), .q(c_dn5_0_d));
-  assign eo[559:558] = {c_dn5_0_d, c_dn5_0_v};
+  assign eo[560:559] = {c_dn5_0_d, c_dn5_0_v};
   ot_svc_vpipe #(.W(277), .N(2)) c_rs6_1 (.ck(c), .rst_n(rn), .v(ei[668]), .d(ei[945:669]), .qv(c_rs6_1_v), .q(c_rs6_1_d));
   assign rs6_v = c_rs6_1_v;
   assign rs6_d = c_rs6_1_d;
   ot_svc_vpipe #(.W(1), .N(2)) c_dn6_0 (.ck(c), .rst_n(rn), .v(as1_kt[2]), .d(1'b0), .qv(c_dn6_0_v), .q(c_dn6_0_d));
-  assign eo[561:560] = {c_dn6_0_d, c_dn6_0_v};
+  assign eo[562:561] = {c_dn6_0_d, c_dn6_0_v};
   ot_svc_vpipe #(.W(277), .N(2)) c_rs7_1 (.ck(c), .rst_n(rn), .v(ei[946]), .d(ei[1223:947]), .qv(c_rs7_1_v), .q(c_rs7_1_d));
   assign rs7_v = c_rs7_1_v;
   assign rs7_d = c_rs7_1_d;
   ot_svc_vpipe #(.W(1), .N(2)) c_dn7_0 (.ck(c), .rst_n(rn), .v(as1_kt[3]), .d(1'b0), .qv(c_dn7_0_v), .q(c_dn7_0_d));
-  assign eo[563:562] = {c_dn7_0_d, c_dn7_0_v};
+  assign eo[564:563] = {c_dn7_0_d, c_dn7_0_v};
   ot_svc_vpipe #(.W(271), .N(1)) c_wl0_0 (.ck(c), .rst_n(rn), .v(ln0_v), .d(ln0_d), .qv(c_wl0_0_v), .q(c_wl0_0_d));
   assign as0_wsv = c_wl0_0_v;
   assign as0_wsq = c_wl0_0_d;
@@ -228,13 +228,13 @@ module hfd_svc_SW_s0 (
   ot_svc_vpipe #(.W(1), .N(1)) c_wr1_0 (.ck(c), .rst_n(rn), .v(ln1_rq), .d(1'b0), .qv(c_wr1_0_v), .q(c_wr1_0_d));
   assign w_room[1] = c_wr1_0_v;
   ot_svc_vpipe #(.W(271), .N(1)) c_wl2_0 (.ck(c), .rst_n(rn), .v(ln2_v), .d(ln2_d), .qv(c_wl2_0_v), .q(c_wl2_0_d));
-  assign eo[283:12] = {c_wl2_0_d, c_wl2_0_v};
+  assign eo[284:13] = {c_wl2_0_d, c_wl2_0_v};
   ot_svc_vpipe #(.W(1), .N(3)) c_wd2_1 (.ck(c), .rst_n(rn), .v(ei[1224]), .d(ei[1225:1225]), .qv(c_wd2_1_v), .q(c_wd2_1_d));
   assign w_ld[2] = c_wd2_1_v;
   ot_svc_vpipe #(.W(1), .N(2)) c_wr2_0 (.ck(c), .rst_n(rn), .v(ln2_rq), .d(1'b0), .qv(c_wr2_0_v), .q(c_wr2_0_d));
   assign w_room[2] = c_wr2_0_v;
   ot_svc_vpipe #(.W(271), .N(1)) c_wl3_0 (.ck(c), .rst_n(rn), .v(ln3_v), .d(ln3_d), .qv(c_wl3_0_v), .q(c_wl3_0_d));
-  assign eo[555:284] = {c_wl3_0_d, c_wl3_0_v};
+  assign eo[556:285] = {c_wl3_0_d, c_wl3_0_v};
   ot_svc_vpipe #(.W(1), .N(3)) c_wd3_2 (.ck(c), .rst_n(rn), .v(ei[1226]), .d(ei[1227:1227]), .qv(c_wd3_2_v), .q(c_wd3_2_d));
   assign w_ld[3] = c_wd3_2_v;
   ot_svc_vpipe #(.W(1), .N(3)) c_wr3_0 (.ck(c), .rst_n(rn), .v(ln3_rq), .d(1'b0), .qv(c_wr3_0_v), .q(c_wr3_0_d));
@@ -259,28 +259,28 @@ module hfd_svc_SW_s0 (
   assign w_cv = c_ew_3_v;
   assign w_cd = c_ew_3_d;
   ot_svc_vpipe #(.W(1), .N(3)) c_ewb_0 (.ck(c), .rst_n(rn), .v(w_ct), .d(1'b0), .qv(c_ewb_0_v), .q(c_ewb_0_d));
-  assign eo[11:10] = {c_ewb_0_d, c_ewb_0_v};
+  assign eo[12:11] = {c_ewb_0_d, c_ewb_0_v};
   ot_svc_vpipe #(.W(62), .N(1)) c_sd3_1 (.ck(c), .rst_n(rn), .v(ei[0]), .d(ei[62:1]), .qv(c_sd3_1_v), .q(c_sd3_1_d));
   assign pc3_div = c_sd3_1_v;
   assign pc3_did = c_sd3_1_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd3_0 (.ck(c), .rst_n(rn), .v(pc3_dnook), .d(pc3_dnoph), .qv(c_dd3_0_v), .q(c_dd3_0_d));
-  assign eo[1:0] = {c_dd3_0_d, c_dd3_0_v};
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd3_0 (.ck(c), .rst_n(rn), .v(pc3_dnook), .d(pc3_dnoph), .qv(c_dd3_0_v), .q(c_dd3_0_d));
+  assign eo[2:0] = {c_dd3_0_d, c_dd3_0_v};
   ot_svc_vpipe #(.W(62), .N(1)) c_sd2_0 (.ck(c), .rst_n(rn), .v(pc3_dov), .d(pc3_dod), .qv(c_sd2_0_v), .q(c_sd2_0_d));
   assign pc2_div = c_sd2_0_v;
   assign pc2_did = c_sd2_0_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd2_0 (.ck(c), .rst_n(rn), .v(pc2_dnook), .d(pc2_dnoph), .qv(c_dd2_0_v), .q(c_dd2_0_d));
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd2_0 (.ck(c), .rst_n(rn), .v(pc2_dnook), .d(pc2_dnoph), .qv(c_dd2_0_v), .q(c_dd2_0_d));
   assign pc3_dniok = c_dd2_0_v;
   assign pc3_dniph = c_dd2_0_d;
   ot_svc_vpipe #(.W(62), .N(1)) c_sd1_0 (.ck(c), .rst_n(rn), .v(pc2_dov), .d(pc2_dod), .qv(c_sd1_0_v), .q(c_sd1_0_d));
   assign pc1_div = c_sd1_0_v;
   assign pc1_did = c_sd1_0_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd1_0 (.ck(c), .rst_n(rn), .v(pc1_dnook), .d(pc1_dnoph), .qv(c_dd1_0_v), .q(c_dd1_0_d));
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd1_0 (.ck(c), .rst_n(rn), .v(pc1_dnook), .d(pc1_dnoph), .qv(c_dd1_0_v), .q(c_dd1_0_d));
   assign pc2_dniok = c_dd1_0_v;
   assign pc2_dniph = c_dd1_0_d;
   ot_svc_vpipe #(.W(62), .N(1)) c_sd0_0 (.ck(c), .rst_n(rn), .v(pc1_dov), .d(pc1_dod), .qv(c_sd0_0_v), .q(c_sd0_0_d));
   assign pc0_div = c_sd0_0_v;
   assign pc0_did = c_sd0_0_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd0_0 (.ck(c), .rst_n(rn), .v(pc0_dnook), .d(pc0_dnoph), .qv(c_dd0_0_v), .q(c_dd0_0_d));
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd0_0 (.ck(c), .rst_n(rn), .v(pc0_dnook), .d(pc0_dnoph), .qv(c_dd0_0_v), .q(c_dd0_0_d));
   assign pc1_dniok = c_dd0_0_v;
   assign pc1_dniph = c_dd0_0_d;
   ot_svc_vpipe #(.W(1), .N(1)) c_cr0_0 (.ck(c), .rst_n(rn), .v(gp0_cr[0]), .d(1'b0), .qv(c_cr0_0_v), .q(c_cr0_0_d));
@@ -292,13 +292,13 @@ module hfd_svc_SW_s0 (
   ot_svc_vpipe #(.W(1), .N(3)) c_cr3_0 (.ck(c), .rst_n(rn), .v(gp0_cr[3]), .d(1'b0), .qv(c_cr3_0_v), .q(c_cr3_0_d));
   assign pc3_crv = c_cr3_0_v;
   ot_svc_vpipe #(.W(1), .N(2)) c_cr4_0 (.ck(c), .rst_n(rn), .v(gp1_cr[0]), .d(1'b0), .qv(c_cr4_0_v), .q(c_cr4_0_d));
-  assign eo[3:2] = {c_cr4_0_d, c_cr4_0_v};
+  assign eo[4:3] = {c_cr4_0_d, c_cr4_0_v};
   ot_svc_vpipe #(.W(1), .N(2)) c_cr5_0 (.ck(c), .rst_n(rn), .v(gp1_cr[1]), .d(1'b0), .qv(c_cr5_0_v), .q(c_cr5_0_d));
-  assign eo[5:4] = {c_cr5_0_d, c_cr5_0_v};
+  assign eo[6:5] = {c_cr5_0_d, c_cr5_0_v};
   ot_svc_vpipe #(.W(1), .N(2)) c_cr6_0 (.ck(c), .rst_n(rn), .v(gp1_cr[2]), .d(1'b0), .qv(c_cr6_0_v), .q(c_cr6_0_d));
-  assign eo[7:6] = {c_cr6_0_d, c_cr6_0_v};
+  assign eo[8:7] = {c_cr6_0_d, c_cr6_0_v};
   ot_svc_vpipe #(.W(1), .N(2)) c_cr7_0 (.ck(c), .rst_n(rn), .v(gp1_cr[3]), .d(1'b0), .qv(c_cr7_0_v), .q(c_cr7_0_d));
-  assign eo[9:8] = {c_cr7_0_d, c_cr7_0_v};
+  assign eo[10:9] = {c_cr7_0_d, c_cr7_0_v};
   ot_svc_vpipe #(.W(13), .N(3)) c_sg0_3 (.ck(c), .rst_n(rn), .v(ei[1238]), .d(ei[1251:1239]), .qv(c_sg0_3_v), .q(c_sg0_3_d));
   assign gp0_sgv = c_sg0_3_v;
   assign gp0_sgd = c_sg0_3_d;

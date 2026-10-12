@@ -1,6 +1,6 @@
 // hfd_quant: thin registered die wrapper (tools/hbm_die_wrap.py, CLAUDE HBM-ABSTRACTS spine).
 // Die ports exactly as the r16g generator master (tools/hbm_die_views.py ports); default-off: nothing
-// instantiates it except the die view route.  HGI-1 quant view with the FUSED station (hgi-1010/c2, AUDIT N5; supersedes the QDQ-only view of hgi-takeover 10-09): ot_hgi_fused_station = ot_hgi_fused_record (UNIT 1, UWIDE 1: unit 4 front, record hgi_quant_cmd 1,216 b {n_O, n_B, n_A, O, C, B, A, header, valid} from ot_hgi_cp_die FUSED 1) -> ROW_NORM / HC_PRE_NORM / HC_POST on its internal stream unit (VM packet client hgi_vmq_fused, wide lanes on the lgE tap, slot 2), QDQ_* forwarded on q_rec to the unchanged ot_hgi_quant_unit (VM client hgi_vmq_quant, as before); the FUSED mover (ot_hgi_dma_mover, gain LOAD) on its own remote kport read lane hgi_fmk_q 38 / hgi_fmk_r 257 (ot_hgi_hbm_rdq_server on the loader kport lane after the mover HBM lanes), its VM client hgi_vmq_fmv, its VM write lane on the lgE write group. Unit bench rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_station.sv.
+// instantiates it except the die view route.  HGI-1 quant view with the FUSED station (hgi-1010/c2, AUDIT N5; supersedes the QDQ-only view of hgi-takeover 10-09): ot_hgi_fused_station = ot_hgi_fused_record (UNIT 1, UWIDE 1: unit 4 front, record hgi_quant_cmd 1,216 b {n_O, n_B, n_A, O, C, B, A, header, valid} from ot_hgi_cp_die FUSED 1) -> ROW_NORM / HC_PRE_NORM / HC_POST on its internal stream unit (VM packet client hgi_vmq_fused, wide lanes on the lgE tap, slot 2), QDQ_* forwarded on q_rec to the unchanged ot_hgi_quant_unit (VM client hgi_vmq_quant, as before); the FUSED mover (ot_hgi_dma_mover, gain LOAD) on its own remote kport read lane hgi_fmk_q 38 / hgi_fmk_r 257 (ot_hgi_hbm_rdq_server on the loader kport lane after the mover HBM lanes), its VM client hgi_vmq_fmv, its VM write lane on the lgE write group. Unit bench rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_station.sv. el1011-hbm-fused 10-12: HCE 2 / HLL 1 -- the record hands its d = 5120 HC_POST / HC_PRE_NORM jobs to hfd_hc_eng (ot_hgi_hc_eng_station) over fused_ne {g_rdy, job_v, job 149} / fused_ne_r {job_rdy, fault, done}; bench tb_hgi_fused_station (run_hgi_die_masters.sh fused_hce).
 module hfd_quant (
     input wire [0:0] ck,
     input wire [2:0] f_fused_ne,
@@ -80,6 +80,8 @@ module hfd_quant (
     wire [64:0] w_fs_lg_wdn;
     wire [37:0] w_fs_xq;
     wire [256:0] w_fs_xr;
+    wire [150:0] w_fs_ne_o;
+    wire [2:0] w_fs_ne_i;
     assign w_fs_clk = {1{clk}};
     assign w_fs_rst_n = {1{rst_n}};
     assign w_fs_rec = {i_f_hgi_cmdproc[1215:0]};
@@ -89,8 +91,9 @@ module hfd_quant (
     assign w_fs_lg_rdn = {i_f_lgE_rdn[8256:0]};
     assign w_fs_lg_wdn = {i_f_lgE_wdn[64:0]};
     assign w_fs_xr = {i_f_hgi_fmkr[256:0]};
-    ot_hgi_fused_station #(.UN(64), .UM(16), .UWIDE(1), .SCRATCH(245760), .Q(32), .LQ(32), .SCR_WORDS(16384), .ULWB(18)) u_fs (.clk(w_fs_clk), .rst_n(w_fs_rst_n), .rec(w_fs_rec), .ret(w_fs_ret), .q_vmq(w_fs_q_vmq), .q_vmr(w_fs_q_vmr), .f_vmq(w_fs_f_vmq), .f_vmr(w_fs_f_vmr), .m_vmq(w_fs_m_vmq), .m_vmr(w_fs_m_vmr), .lg_rup(w_fs_lg_rup), .lg_rdn(w_fs_lg_rdn), .lg_wup(w_fs_lg_wup), .lg_wdn(w_fs_lg_wdn), .xq(w_fs_xq), .xr(w_fs_xr));
-    wire [150:0] od_t_fused_ne = {151'd0};
+    assign w_fs_ne_i = {i_f_fused_ne[2:0]};
+    ot_hgi_fused_station #(.UN(64), .UM(16), .UWIDE(1), .SCRATCH(245760), .Q(32), .LQ(32), .SCR_WORDS(16384), .ULWB(18), .HCE(2), .HLL(1)) u_fs (.clk(w_fs_clk), .rst_n(w_fs_rst_n), .rec(w_fs_rec), .ret(w_fs_ret), .q_vmq(w_fs_q_vmq), .q_vmr(w_fs_q_vmr), .f_vmq(w_fs_f_vmq), .f_vmr(w_fs_f_vmr), .m_vmq(w_fs_m_vmq), .m_vmr(w_fs_m_vmr), .lg_rup(w_fs_lg_rup), .lg_rdn(w_fs_lg_rdn), .lg_wup(w_fs_lg_wup), .lg_wdn(w_fs_lg_wdn), .xq(w_fs_xq), .xr(w_fs_xr), .ne_o(w_fs_ne_o), .ne_i(w_fs_ne_i));
+    wire [150:0] od_t_fused_ne = {w_fs_ne_o[150:0]};
     wire [150:0] o_t_fused_ne;
     for (genvar k = 0; k < 151; k = k + 1) begin : g_o_t_fused_ne
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_fused_ne[k]), .q(o_t_fused_ne[k]));
