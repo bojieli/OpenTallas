@@ -1532,6 +1532,9 @@ FC_HOPS = {
     # fc_t: H2 at the S-edge pins (x 30-134), O at the W-edge pins (y 137-216): p1 / p2 / M / P stepped between them
     "fc_t": "ot_place {^u_p1[vd]\\.} 60 150 36 60\not_place {^u_p2[vd]\\.} 60 150 76 100\n"
             "ot_place {^u_m1\\.} 70 130 120 150\not_place {^u_p1\\.} 24 70 150 200\n",
+    # fc_bc (round 6): u_sk0's registered head (H) + slice control at the N end of the centre channel (x 121-267 between
+    # the ring macros' halos), <= ~30 um from the k0_d / k0_mv / k1_sr pins (cal3: TT -205, 397 ps of wire to the pins)
+    "fc_bc": "ot_place {^u_sk0\\.g_c\\[[0-9]+\\]\\.(g_d\\.h|u\\.)} 124 264 420 476\n",
     # fc_xl: row 0's face register in the NW corner (W-edge input y 210-288, N-face output x 12-91)
     "fc_xl": "ot_place {^u_m0\\.} 4 90 236 292\n",
     # fc_b: H2 at the E-edge pins (y 230-285), O at the W-edge pins (y 199-277)

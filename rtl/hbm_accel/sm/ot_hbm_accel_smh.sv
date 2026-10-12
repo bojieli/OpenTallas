@@ -1453,6 +1453,152 @@ endmodule
 // Liberty blackboxes carry no parameters: the defaults are the production / candidate (ENABLE_INT8 1, PIPE_INT8 2) build;
 // front_c passes parameters in simulation only.
 `ifdef OT_SMH_FC_HIER
+// [hbm-smh/fc] round 6: fc_bc's first line skid with a REGISTERED N boundary.  Same 2-entry handshake as
+// ot_hbm_accel_smh_skid3v per 32-bit slice (s_ready = not full, m_valid = not empty, +1 cycle s -> m, one transfer a
+// cycle), but stored as head H + tail T so m_data, m_valid_v and s_ready_v all leave flops (cal3: k0_d = rp ? e1 : e0
+// behind the N-face pins, 397 ps of wire, TT -205).  Cycle-identical to skid3v at every port when valid.
+module ot_hbm_accel_smh_skid3r #(
+    parameter integer W = 8
+) (
+    input  wire                         clk,
+    input  wire                         rst_n,
+    input  wire [(W+31)/32+1:0]         s_valid_v,
+    output wire [(W+31)/32+1:0]         s_ready_v,
+    input  wire [W-1:0]                 s_data,
+    output wire [(W+31)/32+1:0]         m_valid_v,
+    input  wire [(W+31)/32+1:0]         m_ready_v,
+    output wire [W-1:0]                 m_data
+);
+    localparam integer NS = (W + 31) / 32;
+    genvar i;
+    generate for (i = 0; i < NS + 2; i = i + 1) begin : g_c
+        wire [3:0] st;                         // {cnt[1:0], m_valid, full} (reset: empty, ready)
+        wire [1:0] c = st[3:2];
+        wire mv = st[1], sr = !st[0];
+        wire pu = s_valid_v[i] && sr;
+        wire po = mv && m_ready_v[i];
+        wire [1:0] cn = c + {1'b0, pu} - {1'b0, po};
+        assign s_ready_v[i] = sr;
+        assign m_valid_v[i] = mv;
+        ot_hbm_accel_smh_kregk #(.W(4), .RST(1)) u (.clk(clk), .rst_n(rst_n),
+            .d({cn, cn != 2'd0, cn == 2'd2}), .q(st));
+        if (i < NS) begin : g_d
+            localparam integer LO = 32 * i;
+            localparam integer WB = (W - LO < 32) ? W - LO : 32;
+            reg [WB-1:0] h, t;
+            // head: loads when it empties (pop) or the queue was empty; from T when two were held
+            wire h_en = (c == 2'd0) ? pu : (po && (c == 2'd2 || pu));
+            wire t_en = pu && ((c == 2'd1 && !po) || (c == 2'd2));
+            always @(posedge clk) begin
+                if (h_en) h <= c[1] ? t : s_data[LO +: WB];
+                if (t_en) t <= s_data[LO +: WB];
+            end
+            assign m_data[LO +: WB] = h;
+        end
+    end endgenerate
+endmodule
+
+// [hbm-smh/fc] round 6: fc_is's INT8 adapter + output queue + format bypass, cut into 34 slices of 32 bits
+// (32 x two lanes + two tail slices of bits 1024-1087), each with its own kept control state and its own fmt3 copy, so
+// no select / enable net spans the line (cal3 TT -227: pending -> 512-bit codes mux -> classify -> 1088 a_data mux,
+// a_capacity / int8_mode on ~1-2k loads).  Both halves are classified at the input; the high half is held classified,
+// so the pending select is a registered 2:1 mux.  Behaviour = ot_hbm_accel_int8_line_ob (u_core PIPE 1) + fc_is's
+// byp mux, cycle for cycle; data registers load from slice control alone (contents while invalid never reach e0 / e1).
+module ot_hbm_accel_smh_fc_i8s (
+    input  wire          clk, rst_n,
+    input  wire [33:0]   f3_v,                 // fmt3 copies (one per slice), loaded with the op
+    input  wire          s_valid,
+    output wire          s_ready,
+    input  wire [1087:0] s_data,
+    output wire          busy, byp,
+    output wire          m_valid,
+    input  wire          m_ready,
+    output wire [1087:0] o_data                // byp ? s_data : queue head
+);
+    function automatic [15:0] classify(input [7:0] code_in);
+        reg [7:0] code, mag;
+        reg [2:0] top;
+        integer b;
+        begin
+`ifdef OT_INT8_MUT_SIGN
+            code = code_in & 8'h7f;
+`else
+            code = code_in;
+`endif
+            mag = code[7] ? (~code + 8'd1) : code;
+            top = 0;
+            for (b = 0; b < 8; b = b + 1) if (mag[b]) top = b;
+            classify = {4'd0, top, code[7], mag};
+        end
+    endfunction
+    function automatic [15:0] encode(input [15:0] field);
+        reg [7:0] shifted, exponent;
+        begin
+            exponent = 8'd127 + field[11:9];
+            shifted = field[7:0] << (7 - field[11:9]);
+            encode = (field[7:0] == 0) ? 16'd0 : {field[8], exponent, shifted[6:0]};
+        end
+    endfunction
+    genvar g, l;
+    generate for (g = 0; g < 34; g = g + 1) begin : g_s
+        localparam integer LO = 32 * g;
+        wire [7:0] st;                          // {pending, a_valid, a_int8, m_valid, cnt[1:0], wp, rp}
+        wire pend = st[7], av = st[6], ai = st[5], mv = st[4], wp = st[1], rp = st[0];
+        wire [1:0] cnt = st[3:2];
+        wire f3 = f3_v[g];
+`ifdef OT_INT8_MUT_OBDROP
+        wire c_rdy = 1'b1;                      // NEGATIVE CONTROL: the queue ignores its fill (overrun drops a beat)
+`else
+        wire c_rdy = (cnt != 2'd2);
+`endif
+        wire cap = !mv || c_rdy;
+        wire a_cap = !av || cap;
+        wire push = mv && c_rdy;
+        wire pop = (cnt != 2'd0) && m_ready;
+        wire bz = mv || av || pend || (cnt != 2'd0);
+`ifdef OT_SMH_MUT_NOBYP
+        wire bp = 1'b0;
+`else
+        wire bp = !f3 && !bz;
+`endif
+        wire n_mv = cap ? av : mv;
+        wire n_av = a_cap ? (pend || s_valid) : av;
+        wire n_ai = a_cap ? (pend ? 1'b1 : (s_valid ? f3 : ai)) : ai;
+        wire n_pd = a_cap ? (pend ? 1'b0 : (s_valid && f3)) : pend;
+        ot_hbm_accel_smh_kregk #(.W(8), .RST(1)) u_c (.clk(clk), .rst_n(rst_n),
+            .d({n_pd, n_av, n_ai, n_mv, cnt + {1'b0, push} - {1'b0, pop}, push ? ~wp : wp, pop ? ~rp : rp}), .q(st));
+        if (g == 0) begin : g_o
+            assign s_ready = a_cap && !pend;
+            assign busy = bz;
+            assign byp = bp;
+            assign m_valid = (cnt != 2'd0);
+        end
+        reg [31:0] ad, md, e0, e1;
+        wire [31:0] lo_c, hi_c, nx, wd;
+        if (g < 32) begin : g_l
+            reg [31:0] hc;
+            for (l = 0; l < 2; l = l + 1) begin : g_ln
+                assign lo_c[16*l +: 16] = classify(s_data[8*(2*g+l) +: 8]);
+                assign hi_c[16*l +: 16] = classify(s_data[512 + 8*(2*g+l) +: 8]);
+                assign wd[16*l +: 16] = encode(ad[16*l +: 16]);
+            end
+            always @(posedge clk) if (a_cap && !pend) hc <= hi_c;
+            assign nx = pend ? hc : (f3 ? lo_c : s_data[LO +: 32]);
+        end else begin : g_t
+            assign lo_c = 32'd0; assign hi_c = 32'd0;
+            assign wd = 32'd0;
+            assign nx = (pend || f3) ? 32'd0 : s_data[LO +: 32];
+        end
+        always @(posedge clk) begin
+            if (a_cap) ad <= nx;
+            if (cap) md <= ai ? wd : ad;
+            if (push && !wp) e0 <= md;
+            if (push &&  wp) e1 <= md;
+        end
+        assign o_data[LO +: 32] = bp ? s_data[LO +: 32] : (rp ? e1 : e0);
+    end endgenerate
+endmodule
+
 // fc_bc: ring SRAMs + bulk copy, the south-face channels (descriptor sink, request source, response chain both stages),
 // retire landing (stage 2), the first line skid (u_sk0, outputs registered), row 3's face register.
 module ot_hbm_accel_smh_fc_bc #(parameter integer MAX_OUT = 512, parameter integer PIO = 2, parameter integer TAGW = 16) (
@@ -1490,7 +1636,7 @@ module ot_hbm_accel_smh_fc_bc #(parameter integer MAX_OUT = 512, parameter integ
         .s_valid(b_valid), .s_ready(b_ready), .s_data(b_data), .s_valid_v(b_valid_v), .s_ready_v(b_ready_v),
         .outstanding(), .idle());
     wire [NSL+1:0] k0_sr;
-    ot_hbm_accel_smh_skid3v #(.W(1088)) u_sk0 (.clk(clk), .rst_n(rr[3]), .s_valid_v({b_valid, b_valid, b_valid_v}),
+    ot_hbm_accel_smh_skid3r #(.W(1088)) u_sk0 (.clk(clk), .rst_n(rr[3]), .s_valid_v({b_valid, b_valid, b_valid_v}),
         .s_ready_v(k0_sr), .s_data(b_data), .m_valid_v(k0_mv), .m_ready_v(k1_sr), .m_data(k0_d));
     assign b_ready = k0_sr[NSL];
     assign b_ready_v = k0_sr[NSL-1:0];
@@ -1574,23 +1720,34 @@ module ot_hbm_accel_smh_fc_is #(
         wire demand = input_open && !issue_line_end && intake_credit;
         wire a_busy, a_v; wire [1087:0] a_d;
         wire fmt3 = (fmt_q == 2'd3);
-`ifdef OT_SMH_MUT_NOBYP
-        wire byp = 1'b0;
-`else
-        wire byp = !fmt3 && !a_busy;
-`endif
-        assign w_ready = byp ? issue_w_ready : (unpack_ready && demand && fmt3);
+        wire byp;
         if (PIPE_INT8 >= 2) begin : g_ob
-            ot_hbm_accel_int8_line_ob u_unpack (.clk(clk), .rst_n(rr[2]), .busy(a_busy),
-                .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
-                .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
+            // round 6 (class 2 + 5): the adapter, its output queue and the bypass mux cut into 34 slices x 32 bits
+            // (ot_hbm_accel_smh_fc_i8s), each with kept control state and its own fmt3 copy; slice 0 drives the
+            // control outputs (byp / busy / ready / valid).  Cycle-identical to ot_hbm_accel_int8_line_ob + the mux.
+            (* keep *) reg [33:0] f3_v;
+            always @(posedge clk or negedge rn)
+                if (!rn) f3_v <= 34'd0;
+                else if (h_pop) f3_v <= {34{h_fmt == 2'd3}};
+            wire s_byp;
+            ot_hbm_accel_smh_fc_i8s u_unpack (.clk(clk), .rst_n(rr[2]), .f3_v(f3_v),
+                .s_valid(w_valid && demand && !s_byp), .s_ready(unpack_ready), .s_data(w_data),
+                .busy(a_busy), .byp(s_byp), .m_valid(a_v), .m_ready(issue_w_ready && !s_byp), .o_data(a_d));
+            assign byp = s_byp;
+            assign issue_w_data = a_d;
         end else begin : g_ln
+`ifdef OT_SMH_MUT_NOBYP
+            assign byp = 1'b0;
+`else
+            assign byp = !fmt3 && !a_busy;
+`endif
             ot_hbm_accel_int8_line #(.PIPE(PIPE_INT8)) u_unpack (.clk(clk), .rst_n(rr[2]), .busy(a_busy),
                 .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
                 .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
+            assign issue_w_data = byp ? w_data : a_d;
         end
+        assign w_ready = byp ? issue_w_ready : (unpack_ready && demand && fmt3);
         assign issue_w_valid = byp ? w_valid : a_v;
-        assign issue_w_data  = byp ? w_data : a_d;
     end else begin : g_no_int8
         assign issue_w_valid = w_valid;
         assign w_ready = issue_w_ready;
