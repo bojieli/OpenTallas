@@ -1,5 +1,5 @@
 {
- "name": "nhb_pbst_ref-v2-d84d29ac5",
+ "name": "nhb_pbst_ref-v3-2011ea89b",
  "block": "ot_nhb_pbst",
  "ref_tile": true,
  "owner": "Claude:ref-flow-1011",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/ref-flow-1011",
-  "commit": "d84d29ac5",
+  "commit": "2011ea89b",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
   ]
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/nhb_pbst_ref/nhb_pbst_ref-v2-d84d29ac5"
+   "to": "results/rtl/ref_tile/nhb_pbst_ref/nhb_pbst_ref-v3-2011ea89b"
   }
  ],
  "cycles_added": 0,
