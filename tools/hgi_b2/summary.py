@@ -55,7 +55,7 @@ def main():
                "hbmw.bin, coll_*.bin: the fallback, unchanged) + b2/ (placement.json = the address->slice segment map, "
                "vm0_s{q}.bin / vm_final_s{q}.bin = slice q physical images [65,536 local | 32,768 mirror], "
                "records_b2.json = per executed record: mode, chain, per-cluster work and physical sub-descriptors, "
-               "verdict.json, cls.npy = word classes)"),
+               "verdict.json, cls_per_die.npz = word classes per die)"),
         vehicles=rows), indent=1) + "\n")
     for r in rows:
         rc = r["ring_cycles"] or {}

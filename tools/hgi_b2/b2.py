@@ -339,11 +339,20 @@ class Collect:
     """Pass 1: run the golden program, record which clusters need every VM word."""
 
     def __init__(self):
-        self.need = np.zeros(VMW, np.uint8)       # bit q: cluster q reads / writes it in a split record
-        self.central = np.zeros(VMW, bool)        # a central ring client reads / writes it
+        # PER DIE (rank): every HBM die is its own VM address space with its own cmdproc slice map, and an SPMD
+        # program's rank-dependent bases (EP slot rows, per-rank expert columns) touch different words on every die.
+        # The union over the 96 ranks counted every rank's private rows against ONE die's mirror (DS L2: 125,091 /
+        # 32,768); the per-die maps are what each die loads.
+        self.rk = {}
         self.modes = Counter()
-        self.subs = set()                         # per-cluster VM sub-operands (one physical descriptor each)
-        self.crecs = []                           # rank 0: the VM words of every central record, in program order
+
+    def _r(self, rank):
+        if rank not in self.rk:
+            self.rk[rank] = dict(need=np.zeros(VMW, np.uint8),   # bit q: cluster q reads / writes it in a split record
+                                 central=np.zeros(VMW, bool),    # a central ring client reads / writes it
+                                 subs=set(),                     # per-cluster VM sub-operands (one descriptor each)
+                                 crecs=[])                       # the VM words of every central record, program order
+        return self.rk[rank]
 
     def _central(self, M, r, die, L):
         xs = []
@@ -352,12 +361,12 @@ class Collect:
                 try:
                     a = M.vm_addrs(d, die, L)
                     a = a[(a >= 0) & (a < VMW)]
-                    self.central[a] = True
+                    self._r(die.rank)["central"][a] = True
                     xs.append(a)
                 except MC.Fault:
                     pass
-        if die.rank == 0 and xs:
-            self.crecs.append(np.unique(np.concatenate(xs)))
+        if xs:
+            self._r(die.rank)["crecs"].append(np.unique(np.concatenate(xs)))
 
     def wrap(self, key, fn):
         def run(M, r, L):
@@ -372,32 +381,38 @@ class Collect:
                     for die in dies:
                         M.dies, M.cur = [die], M.rec_of(die, r)
                         s = split_of(M, M.cur, die, L)
-                        self.modes[(r.unit, s.mode + ("+" + s.chain if s.chain else ""))] += 1
+                        if die.rank == 0:
+                            self.modes[(r.unit, s.mode + ("+" + s.chain if s.chain else ""))] += 1
+                        D = self._r(die.rank)
                         for (nm, q), t in s.sub.items():
                             if nm != "B" and t[1] > 0 and t[2] > 0:
-                                self.subs.add(tuple(int(x) for x in t))
+                                D["subs"].add(tuple(int(x) for x in t))
                         for nm, role, kind, per in s.ops:
                             if kind == "grid":
                                 for q in range(NQ):
-                                    self.need[per[q]] |= np.uint8(1 << q)
+                                    D["need"][per[q]] |= np.uint8(1 << q)
                             elif kind == "whole":
-                                self.need[per] |= np.uint8(0xF)
+                                D["need"][per] |= np.uint8(0xF)
             finally:
                 M.dies, M.cur = dies, cur
             return fn(M, r, L)
         return run
 
     def placement(self):
+        """one Placement per die (rank); PlacementSet.of(rank)"""
+        self.promoted = 0
+        return PlacementSet({rk: self._placement(D) for rk, D in sorted(self.rk.items())} or {0: self._placement(self._r(0))})
+
+    def _placement(self, D):
         cls = np.full(VMW, -1, np.int8)
-        pc = np.zeros(VMW, np.int64)
-        nb = self.need
+        nb = D["need"]
         cnt = ((nb >> 0) & 1) + ((nb >> 1) & 1) + ((nb >> 2) & 1) + ((nb >> 3) & 1)
         cls[cnt >= 2] = MIR
         for q in range(NQ):
             cls[(cnt == 1) & (((nb >> q) & 1) == 1)] = q
-        only_c = (cnt == 0) & self.central
+        only_c = (cnt == 0) & D["central"]
         load = np.array([int(np.sum(cls == q)) for q in range(NQ)], np.int64)
-        for a in self.crecs:                     # central-private words: LOCAL to the record's home cluster
+        for a in D["crecs"]:                     # central-private words: LOCAL to the record's home cluster
             fresh = a[only_c[a] & (cls[a] < 0)]
             if not fresh.size:
                 continue
@@ -407,14 +422,13 @@ class Collect:
             h = next((q for q in order if load[q] + fresh.size <= LOCAL_W), order[0])
             cls[fresh] = h
             load[h] += fresh.size
-        w = np.nonzero(only_c & (cls < 0))[0]    # a central word on a non-rank-0 die only
+        w = np.nonzero(only_c & (cls < 0))[0]    # (none left: every die records its own central records)
         cls[w] = (w // 256) % NQ
         # closure: a cluster's sub-operand is ONE physical descriptor, so it must sit in one region: promote a mixed one
         # to MIRROR until stable
-        self.promoted = 0
         for _ in range(16):
             ch = 0
-            for b, n, m, st, ist in self.subs:
+            for b, n, m, st, ist in D["subs"]:
                 la = ga(b, st, ist, range(m), range(n))
                 la = la[(la >= 0) & (la < VMW)]
                 c = cls[la]
@@ -428,6 +442,51 @@ class Collect:
 
 
 # ------------------------------------------------------------------------------------------------ the map
+class PlacementSet:
+    """per-die placements (rank -> Placement). The exported vector is rank 0's die: its images / table / slice map are
+    rank 0's; capacity must fit on EVERY die."""
+
+    def __init__(self, by_rank):
+        self.by_rank = by_rank
+        self.r0 = by_rank[min(by_rank)]
+        self.cls, self.phys = self.r0.cls, self.r0.phys
+
+    def of(self, rank):
+        return self.by_rank.get(rank, self.r0)
+
+    def capacity(self):
+        caps = {rk: p.capacity() for rk, p in self.by_rank.items()}
+        worst_m = max(caps, key=lambda rk: caps[rk]["mirror_words"])
+        worst_l = max(caps, key=lambda rk: max(caps[rk]["local_words"]))
+        c = dict(self.r0.capacity())
+        c.update(dies=len(caps), fits=all(x["fits"] for x in caps.values()),
+                 fits_slice=all(x["fits_slice"] for x in caps.values()),
+                 worst_mirror=dict(rank=worst_m, words=caps[worst_m]["mirror_words"]),
+                 worst_local=dict(rank=worst_l, words=max(caps[worst_l]["local_words"])),
+                 note="local_words / mirror_words = rank 0 (the exported die); fits = every die")
+        return c
+
+    def table(self):
+        t = self.r0.table()
+        t["per_die"] = "rank 0 shown; every die has its own map (SPMD rank-dependent bases)"
+        return t
+
+    def slice_image(self, vm, q):
+        return self.r0.slice_image(vm, q)
+
+    def spec_image(self, vm):
+        return self.r0.spec_image(vm)
+
+    def save(self, f):
+        rks = sorted(self.by_rank)
+        np.savez_compressed(f, ranks=np.array(rks), cls=np.stack([self.by_rank[r].cls for r in rks]))
+
+    @staticmethod
+    def load(f):
+        z = np.load(f)
+        return PlacementSet({int(r): Placement(c) for r, c in zip(z["ranks"], z["cls"])})
+
+
 class Placement:
     def __init__(self, cls):
         self.cls = cls
@@ -526,19 +585,29 @@ def affine(ph, rows, cols):
 class Check:
     """Pass 2: placement asserts + masked per-cluster execution + chain proof, on every die; per-record B2 dispatch."""
 
-    def __init__(self, pl: Placement, die0, seed=12, refuse=True, mutant=None):
+    def __init__(self, pl, die0, seed=12, refuse=True, mutant=None):
         """mutant (the check's own teeth; each must FAIL): stale_mirror = a cluster sees no mirror copy (the
         mirror-write broadcast / collective broadcast never arrived); chain_naive = per-cluster csums combined by a
         pairwise tree instead of the carried golden counter state."""
-        self.pl, self.die0, self.refuse, self.mutant = pl, die0, refuse, mutant
+        self.pls = pl if isinstance(pl, PlacementSet) else PlacementSet({0: pl})
+        self.die0, self.refuse, self.mutant = die0, refuse, mutant
         self.rng = np.random.default_rng(seed)
-        self.avail = [pl.avail(q) for q in range(NQ)]
+        self._av = {}
+        self._use(0)
         self.viol = []
         self.stats = Counter()
         self.ring = Counter()
         self.recs = []              # rank 0, one per executed dispatched record (Capture order)
         self.hbm_q = np.zeros(NQ, np.int64)
         self.P = ring_params()
+
+    def _use(self, rank):
+        """switch to this die's placement"""
+        self.pl = self.pls.of(rank)
+        k = id(self.pl)
+        if k not in self._av:
+            self._av[k] = [self.pl.avail(q) for q in range(NQ)]
+        self.avail = self._av[k]
 
     def fail(self, msg):
         self.viol.append(msg)
@@ -612,6 +681,7 @@ class Check:
         for die in dies:
             if die.rank != 0:
                 continue
+            self._use(0)
             M.dies, M.cur = [die], M.rec_of(die, r)
             rd = wr = 0
             ops = []
@@ -669,6 +739,7 @@ class Check:
 
     def _one(self, M, r, die, L, fn):
         rank = die.rank
+        self._use(rank)
         s = split_of(M, r, die, L)
         s.tag = f"{r.unit}.{r.op}[{getattr(r, 'tag', '')}]@L{L}"
         self._static(s, s.tag, rank)
@@ -808,7 +879,7 @@ def write(out, pl, chk, collect, vm0, vm_final, meta_extra):
     if not cap["fits"]:
         v["violations"] += 1
         v["first_violations"].insert(0, f"capacity: local {cap['local_words']} / {LOCAL_W}, mirror {cap['mirror_words']} / "
-                                        f"{MIRROR_W} (SPEC 2a slice map)")
+                                        f"{MIRROR_W} on rank 0; worst die mirror {cap.get('worst_mirror')}, local {cap.get('worst_local')}")
     split_work = defaultdict(lambda: [0] * NQ)
     for e in chk.recs:
         for q, w in (e.get("work") or {}).items():

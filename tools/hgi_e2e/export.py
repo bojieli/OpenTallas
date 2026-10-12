@@ -614,15 +614,15 @@ def export_b2(a):
         B2 = B.Collect()
         t0 = time.time()
         rc = run(a)
-        np.save(b2o / "cls.npy", B2.placement().cls)
+        B2.placement().save(b2o / "cls_per_die.npz")
         (b2o / "pass1.json").write_text(json.dumps(dict(rc=rc, wall_s=round(time.time() - t0, 1), promoted=B2.promoted,
                                                         modes={f"{k[0]}:{k[1]}": n for k, n in B2.modes.items()},
-                                                        subs=len(B2.subs)), indent=1) + "\n")
+                                                        subs=sum(len(D["subs"]) for D in B2.rk.values()), dies=len(B2.rk)), indent=1) + "\n")
         if rc:
             return rc
         argv = [x for x in ARGV0[1:]] + ["--b2-pass", "2"]
         return subprocess.run([sys.executable, "-m", "hgi_e2e.export"] + argv, cwd=str(TOOLS)).returncode
-    pl = B.Placement(np.load(b2o / "cls.npy"))
+    pl = B.PlacementSet.load(b2o / "cls_per_die.npz")
     p1 = json.loads((b2o / "pass1.json").read_text())
 
     class _C:                                   # the pass-1 mode counts for the verdict
