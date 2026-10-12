@@ -8,7 +8,7 @@ set -uo pipefail
 S=$(readlink -f $1); R=$2; M=$3; TAG=$4; T=${5:-24}; KO=${6:-}
 [ -e "$M/STATUS.log" ] && { echo "refusing to overwrite $M" >&2; exit 2; }
 mkdir -p $M; M=$(readlink -f $M); cd $S
-export OT_S81_Q_LEF=physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz
+export OT_S81_CTRL_GATE_WARN=phys OT_S81_Q_LEF=physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz
 A="$(cat $S/$R) --cfifo-colck"; [ -n "$KO" ] && A="$(echo "$A" | sed "s/--die [a-z0-9]*/--die $KO/")"; echo "$A" > $M/options.txt
 KIND=$(echo "$A" | grep -o -- '--die [a-z0-9]*' | awk '{print $2}'); AK=$(echo "$A" | sed "s/--die $KIND//")
 st(){ echo "$(date -u +%FT%TZ) $*" >> $M/STATUS.log; }

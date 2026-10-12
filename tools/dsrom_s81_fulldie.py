@@ -7382,7 +7382,10 @@ def main(argv=None):
                 Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
             if cg['verdict'] != 'PASS':
                 msg_ = 'DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40])
-                if os.environ.get('OT_S81_CTRL_GATE_WARN') == '1' and a.mode == 'plan':
+                wv_ = os.environ.get('OT_S81_CTRL_GATE_WARN')
+                if (wv_ == '1' and a.mode == 'plan') or (wv_ == 'phys' and a.mode in ('plan', 'real', 'irm', 'check')):
+                    # s81-die-iter 2026-10-12 ('phys'): the die PHYSICAL chain (assembly / GRT / STA / IR) also proceeds;
+                    # the RTL port-audit findings stay a FAIL record (<out>.ctrl_gate.json / the die README), not waived
                     # s81die-1011: geometry-only die-fit (plan) proceeds; the port-audit findings stay a FAIL record
                     print('WARNING ' + msg_, file=sys.stderr)
                 else:
