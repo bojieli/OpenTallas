@@ -21,7 +21,7 @@
     "cr": "die:t_hgi_cp[0:274]+t_hgi_quant[0:274]+t_hgi_idx[0:274]+t_hgi_argmax[0:274]+t_hgi_su[0:274]+t_hgi_sfu[0:274]+t_hgi_hc[0:274]+t_hgi_dma[0:274]+t_hgi_coll[0:274]",
     "status": "die:t_hgi_vmstat[0:19]",
     "wq": "die:f_hgi_vmw_dma[0:8992]",
-    "wq_done": "die:t_hgi_vmw_dma[0:32]",
+    "wq_done": "die:t_hgi_vmw_done[0:32]",
     "lgw_r_up": "die:f_lgW_rup[0:515]",
     "lgw_r_dn": "die:t_lgW_rdn[0:8259]",
     "lgw_w_up": "die:f_lgW_wup[0:8963]",
@@ -36,11 +36,12 @@
     "ap_q": "die:t_hgi_vmap[0:2224]",
     "ap_cr": "die:f_hgi_vmap[0:8]",
     "ap_done": "die:f_hgi_vmap[8:16]",
-    "dma_r_up": "die:f_hgi_vmr2_dma[0:513]",
-    "dma_r_dn": "die:t_hgi_vmr2_dma[0:8257]"
+    "dma_r_up": "die:f_dma_vr2q[0:513]",
+    "dma_r_dn": "die:t_dma_vr2r[0:8257]"
    }
   }
  ],
  "kept_out_regs": true,
- "face_stages": 3
+ "face_stages": 3,
+ "ties": {}
 }

@@ -1021,9 +1021,9 @@ fi
 echo "end $(date -Is)" >> $W/status
 """
 
-def write_abstract(work: Path, name, macros, view_name):
+def write_abstract(work: Path, name, macros, view_name, tt=False):
     mlefs = "\n".join(f"read_lef /src/{m}/{Path(m).name}.lef" for m in macros)
-    for c in ("ss", "ff"):
+    for c in (("ss", "ff", "tt") if tt else ("ss", "ff")):
         C = c.upper()
         libs = [f"asap7sc7p5t_AO_RVT_{C}_nldm_211120.lib.gz", f"asap7sc7p5t_INVBUF_RVT_{C}_nldm_220122.lib.gz",
                 f"asap7sc7p5t_OA_RVT_{C}_nldm_211120.lib.gz", f"asap7sc7p5t_SEQ_RVT_{C}_nldm_220123.lib",
@@ -1037,13 +1037,13 @@ def write_abstract(work: Path, name, macros, view_name):
              "create_clock -name core_clk -period 833 [get_ports clk]", "set_propagated_clock [all_clocks]",
              f"write_timing_model -library_name {view_name}_{c} /work/views/{view_name}_{c}.lib"]
         if c == "ss":
-            t.append(f"write_abstract_lef -bloat_occupied_layers /work/views/{view_name}.lef")
+            t.append(f"write_abstract_lef /work/views/{view_name}.lef")
         t.append("exit")
         (work / f"abstract_{c}.tcl").write_text("\n".join(t) + "\n")
     (work / "abstract.tcl").write_text("source /work/abstract_ss.tcl\n")
 
 
-def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=True, make_extra=""):
+def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=True, make_extra="", tt=False):
     margs = " ".join(f"--macro {m}" for m in macros)
     txt = RUN.format(label=label, work=work, src=src, need=need, cores=cores, cname=f"claude-smh-{label}",
                      macro_args=margs, target=target, make_extra=make_extra,
@@ -1068,7 +1068,7 @@ def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=T
         txt = txt.replace('  echo "corner_rc=$?" >> $W/status\n', step)
     # two abstract sessions (SS and FF)
     txt = txt.replace('"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract.tcl"',
-                      '"mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/'
+                      '"mkdir -p /work/views; for c in ' + ('ss ff tt' if tt else 'ss ff') + '; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/'
                       'openroad -no_init -exit /work/abstract_\\$c.tcl || exit 1; done"')
     (work / "run.sh").write_text(txt)
     (work / "run.sh").chmod(0o755)
@@ -1137,12 +1137,47 @@ def cmd_block(a):
                "}", "foreach ot_inst [[ord::get_db_block] getInsts] {",
                "  if {![[$ot_inst getMaster] isBlock]} { continue }",
                "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
-               "  if {![regexp {g_lf\\[(\\d+)\\]\\.u_leaf\\.g_xm\\[(\\d+)\\]\\.u_x} $n -> j mi]} { error \"no slot for $n\" }",
-               "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
+               "  if {[regexp {g_lf\\[(\\d+)\\]\\.(?:u_lh\\.)?u_leaf\\.g_xm\\[(\\d+)\\]\\.u_x} $n -> j mi]} {",
+               "    place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
+               "  } elseif {[regexp {g_lf\\[(\\d+)\\]\\.u_lh\\.u_leaf\\.u_(tcc|bdc)} $n -> j c]} {",
+               "    place_macro -macro_name [$ot_inst getName] -location [lrange $ot_cx($j:$c) 0 1] -orientation [lindex $ot_cx($j:$c) 2]",
+               "  } else { error \"no slot for $n\" }",
                "  incr ot_n", "}",
-               "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
+               f"if {{$ot_n != {12 if a.hier_views else 8}}} {{ error \"macro_place: placed $ot_n\" }}"]
+        if a.hier_views:
+            # el1011-hbm-smh: the 2 x 2 hardened columns (geom col_xy: "j:tcc" -> [x, y, orient]); x-store overrides xs_xy
+            macros = [SRAM_X, f"{a.hier_views}/ot_hbm_accel_smh_tcc", f"{a.hier_views}/ot_hbm_accel_smh_bdc"]
+            if "xs_xy" in g:
+                xy = {tuple(int(t) for t in k.split(":")): tuple(v) for k, v in g["xs_xy"].items()}
+                tcl[2:2 + len(xy)] = [f"  {{{j}:{mi}}} {{{x} {y}}}" for (j, mi), (x, y) in xy.items()]
+            tcl = ["array set ot_cx {"] + [f"  {{{k}}} {{{v[0]} {v[1]} {v[2]}}}" for k, v in g["col_xy"].items()] + ["}"] + tcl
         sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref,
                         nbr_in="rin* bin* gin*" + (" cgi" if a.cg else ""))
+    elif a.piece in ("tcc", "bdc"):
+        # el1011-hbm-smh: a hardened column of one leaf (OT_SMH_HIER).  Inputs (the j-stage pin flops) on the W edge,
+        # lane-major (i_w[k] beside i_x[k]), M4 every 4 tracks (5.2 b/um); results on the E edge; clk / rst_a north.
+        w, h = g[a.piece + "_w"], g[a.piece + "_h"]
+        name = "ot_hbm_accel_smh_" + a.piece
+        nw = P["LBS"] * 266 if a.piece == "bdc" else P["LSB"] * 16
+        ins = ["i_v", "i_first", "i_last"] + (["i_fp4"] if a.piece == "bdc" else []) + bits("i_tag", P["TAGW"])
+        for k in range(nw):
+            ins += [f"i_w[{k}]", f"i_x[{k}]"]
+        outs = ["ov", "fault"] + bits("y", 32) + bits("otag", P["TAGW"])
+        def edge(names, x):
+            y0 = trk((h - len(names) * 0.192) / 2)
+            if y0 < 1.0:
+                raise ValueError(f"{a.piece}: {len(names)} pins do not fit a {h} um edge at 0.192")
+            return [(nm, "M4", "", x, round(y0 + i * 0.192, 3)) for i, nm in enumerate(names)]
+        # bdc sits WEST of the x-store stack in the tile (R0, no mirror: mirrored pins leave the track grid), so its
+        # operand inputs face EAST toward the SRAM capture flops; tcc sits east of the stack with its inputs WEST.
+        pins = (edge(ins, w) + edge(outs, 0.0)) if a.piece == "bdc" else (edge(ins, 0.0) + edge(outs, w))
+        xc = round(round((w / 2 - 0.012) / 0.048) * 0.048 + 0.012, 3)
+        pins += [("clk", "M5", "", xc, h), ("rst_a", "M5", "", round(xc + 0.48, 3), h)]
+        macros = []
+        tcl = None
+        extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
+        sdc = sdc_block(a.lat, nbr_in="i_*", lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew,
+                        io_ref=a.io_ref).replace("[get_ports rst_n]", "[get_ports rst_a]")
     elif a.piece == "be":
         w, h = g.get("be_w", g["tile_w"]), g["be_h"]
         pins = be_pins(w, h, a.variant, cg=a.cg)
@@ -1220,7 +1255,7 @@ def cmd_block(a):
         # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
         (work / "hops.tcl").write_text(HOPS)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
-    if a.piece in ("tile", "be") and a.pin_flops:
+    if a.piece in ("tile", "be", "tcc", "bdc") and a.pin_flops:
         # m2: the pass-through landing registers join the input face's strip (tile W 16 um overflowed: --pin-depth)
         (work / "hops.tcl").write_text(PIN_TCL.replace("ot_pin_place_auto {.*} 16\n", f"ot_pin_place_auto {{.*}} {a.pin_depth}\n"))
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
@@ -1249,6 +1284,21 @@ def cmd_block(a):
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_FILES += /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hbm_accel/cg/ot_cg_tile.sv\n"
                     "export PRE_CTS_TCL = /work/pre_cts_cg.tcl\n")
+    defs = (["OT_SMH_CG_ENREG"] if getattr(a, "cg_enreg", False) else []) + (["OT_SMH_XLK"] if getattr(a, "xlk", False) else [])
+    # fe-push-hphys-1010: valid-only reset in the fp32 add pipelines / bmul (--drst0), the port reset through ot_rst_relay (--rst-relay)
+    defs += (["OT_FP_DATA_NORST", "OT_SMH_DRST0"] if getattr(a, "drst0", False) else []) + (["OT_SMH_RSTRELAY"] if getattr(a, "rst_relay", False) else [])
+    if getattr(a, "rst_relay", False):
+        if a.piece not in ("tile", "tcc", "bdc"):
+            raise ValueError("--rst-relay applies to the tile / its columns")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_FILES += /src/rtl/lib/ot_rst_relay.sv\n")
+    if defs:
+        if getattr(a, "cg_enreg", False) and not (getattr(a, "cg", False) and a.piece == "tile"):
+            raise ValueError("--cg-enreg applies to the gated tile (--cg --piece tile)")
+        if getattr(a, "xlk", False) and a.piece not in ("tile", "tcc", "bdc"):
+            raise ValueError("--xlk applies to the tile (its x-store macros)")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_DEFINES += " + " ".join("-D" + d for d in defs) + "\n")
     int8_enabled = any(x == "ENABLE_INT8=1" for x in (a.top_param or []))
     if int8_enabled:
         if a.piece != "front_c":
@@ -1258,14 +1308,21 @@ def cmd_block(a):
     if getattr(a, "hold_mm", False):
         with (work / "config.mk").open("a") as f:
             f.write("export OT_HOLD_MM = 1\n")
-    write_abstract(work, name, macros, name)
+    if a.piece in ("tcc", "bdc") or a.hier_views:
+        defs_h = "export VERILOG_DEFINES += -DOT_SMH_HIER\n"
+        if a.piece in ("tcc", "bdc"):
+            defs_h += "export VERILOG_FILES += /src/rtl/lib/ot_rst_relay.sv\n" if not getattr(a, "rst_relay", False) else ""
+        with (work / "config.mk").open("a") as f:
+            f.write(defs_h)
+    hier_tt = a.piece in ("tcc", "bdc") or bool(a.hier_views)
+    write_abstract(work, name, macros, name, tt=hier_tt)
     if a.top_param:
         # e.g. --top-param REQCR=1: the hardened master built with a non-default parameter (ORFS VERILOG_TOP_PARAMS)
         (work / "config.mk").write_text((work / "config.mk").read_text() + "export VERILOG_TOP_PARAMS = "
                                         + " ".join(" ".join(x.split("=", 1)) for x in a.top_param) + "\n")
     mx = " ".join(f"{k}={v}" for k, v in (x.split("=", 1) for x in (a.make_var or [])))
     run_sh(work, a.label, a.src, a.need, a.cores, macros, target=a.stop_after or "finish", admit=not a.no_admit,
-           make_extra=(mx + " ") if mx else "")
+           make_extra=(mx + " ") if mx else "", tt=hier_tt)
     (work / "geometry.json").write_text(json.dumps(dict(piece=a.piece, variant=a.variant, die=die, geom=g,
                                                         pins=len(pins)), indent=1) + "\n")
     if getattr(a, "hold_mm", False):
@@ -1360,7 +1417,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("block")
-    b.add_argument("--piece", choices=("tile", "be", "front") + STRIPS, required=True)
+    b.add_argument("--piece", choices=("tile", "be", "front", "tcc", "bdc") + STRIPS, required=True)
     b.add_argument("--variant", default="toE", choices=("toE", "toW", "one"))
     b.add_argument("--label", required=True)
     b.add_argument("--out", required=True)
@@ -1399,6 +1456,13 @@ def main(argv=None):
                    "cg_pushdown.tcl clones the ICG per sink cluster before CTS")
     b.add_argument("--cg-nopush", action="store_true", help="--cg: keep the ONE ICG at the root (no cg_pushdown cloning; small pieces: "
                    "the back end's CTS segfaulted with the push-down hook)")
+    b.add_argument("--cg-enreg", action="store_true", help="[cg-smt] 2026-10-10: --cg tile: the ICG ENA from one register beside the "
+                   "gate (ot_cg_tile ENREG; tile_wg cal: ENA from leaf-insertion cnt/wq, TT -198 ps)")
+    b.add_argument("--drst0", action="store_true", help="fe-push-hphys-1010: fp32 add cuts / y / err and the bmul y unreset (valid bits keep the reset)")
+    b.add_argument("--rst-relay", action="store_true", help="fe-push-hphys-1010: tile rst_n port -> ot_rst_relay (4 regions, release +3 edges)")
+    b.add_argument("--xlk", action="store_true", help="[cg-smt] 2026-10-10: tile: a negedge lockup stage at every x-store macro input "
+                   "(0 cycles; macro clock pin late + 47 ps lib hold: FF hold -55..-84 ps at r_addr_in / w_mask_in)")
+    b.add_argument("--hier-views", default=None, help="el1011-hbm-smh: tile under OT_SMH_HIER with the hardened columns (repo dir holding ot_hbm_accel_smh_tcc / _bdc views)")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)

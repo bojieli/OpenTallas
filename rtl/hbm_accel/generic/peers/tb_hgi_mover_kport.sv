@@ -31,6 +31,12 @@ module tb_hgi_mover_kport;
     parameter integer ST_MIN = 0;                       // B/cycle x 1000 gate for the STRIPE4 swapout store (0: report only)
     parameter integer VR2 = 0;                          // 1: VM-source sectors on the DMA wide read group model (b's contract)
     parameter integer GLAT = 12;                        // read group: request -> response edges (die hops + the VM core)
+    parameter integer SVR2 = -1;                        // the sector engine on the read group (-1: = VR2; the die runs 0 with KVW 1)
+    parameter integer KVW = 0;                          // the mover's KV write-back engine (hbm-fq/dma 2026-10-11, needs VR2 = 1)
+    parameter integer KVB = 0;                          // 1: also run the DMA.KVWB_DS throughput cases (2,048 B rows, posted)
+    parameter integer KVB_N = 16;                       // records a KVWB burst
+    parameter integer KVB_MAX = 0;                      // gate: posted cycles / record x 10 (0: report only)
+    parameter integer ONLY_KVB = 0;                     // 1: the KVWB cases only
     reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
     // ---- mover
     reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_done, mv_fault, mv_src;
@@ -40,7 +46,7 @@ module tb_hgi_mover_kport;
     wire [337:0] vmq; wire [279:0] wl; reg wl_done = 0; reg [273:0] vmr = 0;
     wire [4:0] kp_rdy, kp_rsp_v, kp_rsp_we, kp_last; wire [79:0] kp_rtag; wire [5*256-1:0] kp_rdata; wire kp_fault;
     wire [512:0] vr2q; reg [8256:0] vr2r = '0;
-    ot_hgi_dma_mover #(.MUT(MUT), .VR2(VR2)) u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
+    ot_hgi_dma_mover #(.MUT(MUT), .VR2(VR2), .SVR2(SVR2), .KVW(KVW)) u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
         .mv_fault(mv_fault), .mv_src(mv_src), .fence_v(1'b0), .fence_rdy(), .fence_done(),
         .k_req_v(k_req_v), .k_req_rdy(kp_rdy[0]), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(kp_rsp_v[0]), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(kp_rsp_we[0]),
@@ -252,8 +258,59 @@ module tb_hgi_mover_kport;
             ncase = ncase + 1;
         end
     endtask
+    // DMA.KVWB_DS throughput (hbm-fq/dma 2026-10-11, budget ds_hbm op DMA.KVWB_DS: one 2,048 B row a record, price 60
+    // cycles / record): KVB_N back-to-back window-row appends, VM FP32 row (512 words) -> HBM ring row (2,048 B pitch), issued
+    // as ot_hgi_dma_record POSTED issues them: the next move when mv_rdy after the previous move's mv_src (posted retire).
+    // rot = 0: every ring row on one stack (consecutive rows); rot = 1: record r on stack r mod 4 (per-layer rings).
+    // posted cycles / record = (last mv_src - first accept) / N; drain = (the last mv_done - first accept) / N; first =
+    // the first (isolated) record's accept -> mv_src = the e2e's dispatch -> retire of the one KVWB a layer.  Every written
+    // word is checked.  Gate KVB_MAX (cycles x 10): the first record's retire in both cases and the posted rate of the
+    // per-layer-ring (rot 1) burst; the one-stack burst's rate is reported (it is bound by the stack's write credits once the
+    // 512-sector buffer is full, not by the mover).
+    integer kv_done_c = 0; always @(posedge clk) if (mv_done) kv_done_c <= cyc;
+    task automatic kvwb(input [127:0] name, input integer rot);
+        integer t0, ta, ts, r, i, bad, sum_lat, max_lat, lat0; reg [36:0] ra; reg [31:0] want, got; reg [255:0] sec; real pr, dr;
+        begin
+            hm.delete(); bad = 0; sum_lat = 0; max_lat = 0;
+            @(negedge clk);
+            for (r = 0; r < KVB_N; r = r + 1) begin
+                mv = {21'd512, 20'd1, 16'd1, 32'd2048, {3'd0, rot ? 2'(r) : 2'd1, 35'h0c00000 + 35'(rot ? (r / 4) : r) * 35'd2048}, 3'd0, 2'd0,
+                      16'd1, 32'd512, 40'(2048 + r * 512), 3'd0, 2'd1};
+                mv_v = 1; while (!mv_rdy) @(negedge clk); ta = cyc; if (r == 0) t0 = cyc; @(negedge clk); mv_v = 0;
+                while (!mv_src && !mv_fault && cyc - ta < 200000) @(negedge clk);
+                ts = cyc;
+                if (mv_fault || !mv_src) begin $display("FAIL %0s rec %0d: src %0d fault %0d", name, r, mv_src, mv_fault); errs = errs + 1; end
+                sum_lat = sum_lat + (ts - ta); if (ts - ta > max_lat) max_lat = ts - ta; if (r == 0) lat0 = ts - ta;
+            end
+            pr = (1.0 * (ts - t0)) / KVB_N;
+            while (kv_done_c < ts && cyc - ts < 200000) @(negedge clk);
+            repeat (2) @(negedge clk); while (!mv_rdy) @(negedge clk);
+            dr = (1.0 * (kv_done_c - t0)) / KVB_N;
+            repeat (4) @(posedge clk);
+            for (r = 0; r < KVB_N; r = r + 1) for (i = 0; i < 512; i = i + 1) begin
+                ra = {rot ? 2'(r) : 2'd1, 35'h0c00000 + 35'(rot ? (r / 4) : r) * 35'd2048 + 35'(i * 4)};
+                want = vmw(32'(2048 + r * 512 + i));
+                sec = hm.exists({ra[36:35], ra[34:5]}) ? hm[{ra[36:35], ra[34:5]}] : {8{32'hDEADDEAD}};
+                got = sec[32 * ra[4:2] +: 32];
+                if (got !== want) begin if (bad < 4) $display("FAIL %0s rec %0d elem %0d: %h want %h", name, r, i, got, want); bad = bad + 1; end
+                nwords = nwords + 1;
+            end
+            if (hm.num() != KVB_N * 64) begin $display("FAIL %0s: %0d sectors written, %0d expected", name, hm.num(), KVB_N * 64); bad = bad + 1; end
+            errs = errs + bad;
+            $display("KVWB %0s N %0d first %0d cyc posted %0.1f cyc/record (retire latency mean %0.1f max %0d) drain %0.1f cyc/record%0s",
+                     name, KVB_N, lat0, pr, (1.0 * sum_lat) / KVB_N, max_lat, dr, bad ? " DATA BAD" : "");
+            if (KVB_MAX != 0 && lat0 * 10 > KVB_MAX) begin $display("FAIL %0s: first record %0d cyc > %0.1f", name, lat0, KVB_MAX / 10.0); errs = errs + 1; end
+            if (KVB_MAX != 0 && rot != 0 && pr * 10 > KVB_MAX) begin $display("FAIL %0s: %0.1f cyc/record > %0.1f", name, pr, KVB_MAX / 10.0); errs = errs + 1; end
+            ncase = ncase + 1;
+        end
+    endtask
     initial begin
         repeat (4) @(posedge clk); rst_n = 1; repeat (40) @(posedge clk);
+        if (KVB != 0) begin
+            kvwb("kvwb_1stack", 0);
+            kvwb("kvwb_4stack", 1);
+        end
+        if (ONLY_KVB == 0) begin
         load("hc_row",       0, {3'd1, 2'd1, 35'h0040000}, 0,    40'd4096,  5120, 4, 5120, 0);   // HC weight row, STRIPE4
         load("one_stack",    0, {3'd0, 2'd2, 35'h0100000}, 0,    40'd4096,  5120, 1, 5120, 0);   // linear, one stack
         load("bf16_stripe",  1, {3'd1, 2'd3, 35'h0200000}, 4096, 40'd0,     1008, 9, 1000, 0);
@@ -267,6 +324,7 @@ module tb_hgi_mover_kport;
         store("u32_rows",    5, 40'd96,    104,  {3'd0, 2'd3, 35'h0a00000}, 4096,  9, 96,   0);
         store("partial_row", 0, 40'd0,     64,   {3'd0, 2'd0, 35'h0b00000}, 256,   2, 60,   1);  // 240 B rows: must fault
         store("unal_base",   0, 40'd0,     64,   {3'd0, 2'd0, 35'h0b00010}, 256,   2, 64,   1);  // must fault
+        end
         if (kp_fault) begin $display("FAIL kport fault"); errs = errs + 1; end
         if (errs == 0) $display("MOVER-KPORT PASS %0d cases, %0d words (NO %0d RB %0d XLAT %0d)", ncase, nwords, NO, RB, XLAT);
         else $display("MOVER-KPORT FAIL %0d errors", errs);
