@@ -128,6 +128,23 @@ def closure(roots, have=()):
     return files
 
 
+def fused_scratch_words(r):
+    """VM words a FUSED record writes at cfg_scratch (0: none), exactly as ot_hgi_fused_record's F10 check computes its
+    scr_end: HC_PRE_NORM (op 0) d = A.n / 4, d + 2 + d (gain G, x, S, S2); HC_POST (op 2) d = A.n, nseg 1; ROW_NORM (op 1)
+    d = seg (param[13:6]) or A.n x A.m when seg is 0, nseg = A.n x A.m / d; d + 2 nseg.  QDQ_* / SOFTMAX use none."""
+    if r["unit"] != "FUSED" or r["op"] not in ("HC_PRE_NORM", "HC_POST", "ROW_NORM"):
+        return 0
+    a = r["eff"]["A"]
+    if r["op"] == "HC_PRE_NORM":
+        return 2 * (a[1] // 4) + 2
+    if r["op"] == "HC_POST":
+        return a[1] + 2
+    tot = a[1] * max(a[2], 1)
+    seg = (int(r["hdr"], 16) >> 70) & 0xFF
+    dd = seg or tot
+    return dd + 2 * (tot // dd if seg else 1)
+
+
 def prep(d: Path):
     from hgi_sim.records import Rec, MDesc, decode_program, encode_program
     meta = json.loads((d / "meta.json").read_text())
@@ -162,10 +179,11 @@ def prep(d: Path):
                      f" {r.get('cost', 1)} {r['vm_off']} {r['vm_n']} {r['hbm_off']} {r['hbm_n']} "
                      f"{r.get('s2_disp', 0)} {r.get('s2_start', 0)} {r.get('s2_end', 0)} {tag}")
     (d / "recs.txt").write_text("\n".join(lines) + "\n")
-    (d / "prep.txt").write_text(f"{meta['image_base_bytes']} image_e2e.bin\n{len(skip)}\n" +
-                                "".join(f"{a} {v}\n" for a, v in skip))
+    (d / "prep.txt").unlink(missing_ok=True)          # written LAST (below): runners wait on it, so a refused prep
+    (d / "host.mem").unlink(missing_ok=True)          # leaves no half-prepared vector that a bench would run on
     dyn = meta["dyn"]
-    # the FUSED unit's compiler-reserved scratch: the largest VM range no record of this layer touches (>= 16 Ki words)
+    # the FUSED unit's compiler-reserved scratch: the largest VM range no record of this layer touches, at least as long
+    # as the largest scratch footprint any FUSED record of the program uses (fused_scratch_words: the RTL's own scr_end)
     import numpy as np
     used = np.zeros(1 << 18, bool)
     used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4")[:1 << 18] != 0      # (words past 2^18: the HC aperture)
@@ -196,7 +214,8 @@ def prep(d: Path):
         from hgi_sim import ds_native as DN
         for r in recs:
             DN.assert_fused_fast_path(r, scratch=scr, check_gain=False)
-    assert best[0] - (scr - best[1]) >= 16384, f"no 16 Ki-word free VM range for the FUSED scratch ({best})"
+    need = max([fused_scratch_words(r) for r in meta["records"]] + [0])
+    assert best[0] - (scr - best[1]) >= need, f"no {need}-word free VM range for the FUSED scratch ({best})"
     tk = meta.get("tokx_golden") or []                # DFlash step: the CPU golden's committed tokens (CTL.TOKX beats)
     # host words (tb_hgi_e2e, non-MTP): 64 token, 65 pos, 66 expected token, 67 rank, 68 ncol, 69 FUSED scratch;
     # 104 = expected CTL.TOKX count k, 105.. = the tokens (70..103 belong to the MTP job layout)
@@ -204,6 +223,9 @@ def prep(d: Path):
         [int(x) for x in tk] + [0] * (23 - len(tk))
     assert len(host) == 128
     (d / "host.mem").write_text("\n".join(f"{x & 0xFFFFFFFF:08x}" for x in host) + "\n")
+    (d / "prep.txt").write_text(f"{meta['image_base_bytes']} image_e2e.bin\n{len(skip)}\n" +
+                                "".join(f"{a} {v}\n" for a, v in skip))
+    print(f"prep {d}: FUSED scratch {scr} ({need} words used of a {best[0] - (scr - best[1])}-word free range)")
     print(f"prep {d}: {len(lines)} records, image {len(image)} B, expected token {exp_tok}")
 
 
