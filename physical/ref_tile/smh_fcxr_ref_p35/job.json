@@ -1,14 +1,14 @@
 {
- "name": "smh_fcxr_ref_p35-r1-9214bae8b",
+ "name": "smh_fcxr_ref_p35-r2-bc7099159",
  "block": "ot_hbm_accel_smh_fc_xr",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-smh",
- "purpose": "[el1012 io_tcl audit] re-route on main >= 6332f4e44: the a9afd2404/10db43429 closed route ignored the exact io_tcl (run_abi3_physical --pin-region overrode IO_CONSTRAINTS) so its pins came out region-grouped (all pins displaced, seams broken); same RTL, outline, defines and exact io_tcl. Prior: [idle1012] ot_hbm_accel_smh_fc_xr re-route through tools/ref_tile (child_lint (f)/(c) FAIL on the hand-kit view: no above-only pin keepout / M7 signals); same RTL, outline, defines and exact abutment pins (io_tcl) as the closed hand route",
+ "purpose": "[el1012 GPL-0305 fix] r1-9214bae8b p35/p40 both diverged in 3_3_place_gp: 1,197 um2 movable in a 31,409 um2 core (3.8% util, outline fixed by the SMH abutment relay span), exact io_tcl puts 10.4 pins/um on N/S M5 and E M4 (contract), so GPL's routability mode chases pin-face congestion (top-0.5% 1.13) it cannot fix by inflation: +100.6% artificial inflation, 50 reverts, overflow stuck 0.13, density penalty 1e32 -> NaN. Fix: GPL_ROUTABILITY_DRIVEN=0 (same class/fix as nwwt2/swet1 and the 10-11 fc_xr hand kit); GRT/DRT sign-off unchanged. Same RTL, outline, exact io_tcl, M6 grant. Prior: [el1012 io_tcl audit] re-route on main >= 6332f4e44: the a9afd2404/10db43429 closed route ignored the exact io_tcl (run_abi3_physical --pin-region overrode IO_CONSTRAINTS) so its pins came out region-grouped (all pins displaced, seams broken); same RTL, outline, defines and exact io_tcl. Prior: [idle1012] ot_hbm_accel_smh_fc_xr re-route through tools/ref_tile (child_lint (f)/(c) FAIL on the hand-kit view: no above-only pin keepout / M7 signals); same RTL, outline, defines and exact abutment pins (io_tcl) as the closed hand route",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
   "branch": "main",
-  "commit": "9214bae8b"
+  "commit": "bc7099159"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_fcxr_ref_p35/smh_fcxr_ref_p35-r1-9214bae8b"
+   "to": "results/rtl/ref_tile/smh_fcxr_ref_p35/smh_fcxr_ref_p35-r2-bc7099159"
   }
  ],
  "cycles_added": 0,

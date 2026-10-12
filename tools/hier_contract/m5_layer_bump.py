@@ -53,13 +53,23 @@ def measured_top() -> dict:
     return out
 
 
-def classify(s: dict) -> str:
+# cells whose die slot is a hardened cluster although the slot note says hardened_block (cluster of clusters):
+# hfd_quant = ot_hgi_quant_unit -> ot_hgi_quant_wide_h clusters (OT_HARD_CHILDREN) -> qw_* tiles.
+CLUSTER_CELLS = {"hfd_quant"}
+CHILD_GRANT = ("coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster {p}; the M5 cap "
+               "protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)")
+
+
+def classify(s: dict, parents: set, clusters: set) -> str:
     if HARD_IP.search(s["cell"]):
         return "hard_ip"
-    if "luster" in str(s.get("notes", "")):
-        return "cluster"
+    note = str(s.get("notes", ""))
+    if "luster" in note or "two_level" in note or s["name"] in parents or s["cell"] in CLUSTER_CELLS:
+        return "cluster"                                  # keeps its M7 plan; die tracks above it are M8/M9
     if (metal(s.get("signal_max_layer")) or 0) >= 8:      # signals / pins on the die's M8/M9: the die lead re-plans
         return "die_layer"
+    if s.get("parent") in clusters:
+        return "cluster_child"                            # inside a hardened cluster: M6 cap (coordinator 10-12 11:40)
     return "tile_m5"
 
 
@@ -72,18 +82,27 @@ def bump(path: Path, meas: dict) -> dict:
         prev, ver = d.get("layer_defaults"), d["version"] + 1
     d["version"], d["updated"] = ver, WHEN
     d["layer_defaults"] = dict(DEFAULTS, previous=prev)
-    n = {"tile_m5": 0, "cluster": 0, "hard_ip": 0, "die_layer": 0, "view_violates_own_cap": 0, "already_m5": 0,
+    n = {"tile_m5": 0, "cluster_child": 0, "cluster": 0, "hard_ip": 0, "die_layer": 0, "view_violates_own_cap": 0, "already_m5": 0,
          "pin_replan": 0}
+    for s in d["slots"]:                             # already bumped: restore the view's layers to re-derive
+        if s["kind"] != "die" and "view_layers" in s:
+            s.update(s["view_layers"])
+    parents = {s.get("parent") for s in d["slots"]} - {None}
+    clusters = {s["name"] for s in d["slots"] if s["kind"] != "die" and classify(s, parents, set()) == "cluster"}
     for s in d["slots"]:
         if s["kind"] == "die":
             continue
-        if "view_layers" in s:                       # already bumped: restore the view's layers to re-derive
-            s.update(s["view_layers"])
-        rule = classify(s)
+        rule = classify(s, parents, clusters)
         s["layer_rule"] = rule
         n[rule] += 1
-        if rule != "tile_m5":
+        if rule not in ("tile_m5", "cluster_child"):
+            for k in ("view_layers", "view_cap", "view_status", "layer_cap", "pin_replan"):
+                s.pop(k, None)
+            if s.get("layer_cap_grant", "").startswith("coordinator 2026-10-12 11:40"):
+                s.pop("layer_cap_grant")
             continue
+        if rule == "cluster_child" and not s.get("layer_cap_grant"):
+            s.update(layer_cap="M6", layer_cap_grant=CHILD_GRANT.format(p=s["parent"]))
         own = max(metal(s["pg_layer"]) or 0, metal(s["signal_max_layer"]) or 0)
         s["view_layers"] = {k: s[k] for k in ("pg_layer", "strap_layer", "signal_max_layer")}
         s["view_cap"] = f"M{own}"
@@ -115,7 +134,7 @@ def bump(path: Path, meas: dict) -> dict:
     entry = {"version": ver, "when": WHEN,
              "change": f"M5 tile layer contract ({SRC}): new tile routes cap signals AND PG at M5 (strap M6, pins M4/M5, "
                        f"keepout M6; M6 by layer_cap_grant only; die signals M6/M7 over tiles; M8/M9 die power/global). "
-                       f"{n['tile_m5']} tile slots bumped (view_cap = closed view's own cap; {n['view_violates_own_cap']} "
+                       f"{n['tile_m5']} die-placed tile slots bumped, {n['cluster_child']} cluster children at M6 (coordinator 10-12 11:40) (view_cap = closed view's own cap; {n['view_violates_own_cap']} "
                        f"views INVALID: signals above their own cap; {n['already_m5']} already <= M5; {n['pin_replan']} need "
                        f"a pin re-plan off M6+); unchanged: {n['cluster']} cluster, {n['hard_ip']} hard IP, "
                        f"{n['die_layer']} die-layer slots. Tool: tools/hier_contract/m5_layer_bump.py contracts"}

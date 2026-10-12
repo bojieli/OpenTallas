@@ -13,17 +13,17 @@
   "rst"
  ],
  "pins": {
-  "W": [
+  "N": [
    "f_w",
    "f_r",
    "f_d"
   ],
-  "E": [
+  "S": [
    "t_w",
    "t_r",
    "t_d"
   ],
-  "N": [
+  "W": [
    "ck",
    "rst",
    "f_bid"
@@ -33,13 +33,15 @@
   "pd": 0.55,
   "threads": 8,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "pin_min_tracks": 3,
+  "pin_v": "M5"
  },
  "job": {
   "owner": "Claude:el1011-ds-mtp",
   "branch": "claude/el1011-ds-mtp-hrow",
-  "tag": "r5",
-  "purpose": "el1011-ds-mtp hrow-r5 2026-10-12 (owner GLUE PLACEMENT; rev-3 cluster mtp-hrow3-e33f9cff1-tc-sp FAILED reg2reg -7.7 ns, 140,653 flops on one root): dsfd_mtp_hrow as tiles placed by the S81 die -- 30 chain bank tiles (bank + its chain stage, W->E cbe / E->W cbw snake per part), 3 ingress tiles (drain receiver: the never-filled 22x514 RTT queue removed; write ordering delay inside), 1 hub; every tile < 15k clock sinks. This tile: dsfd_mtp_hrow_cbe x15 (chain W->E).",
+  "tag": "r5b",
+  "purpose": "el1011-ds-mtp hrow-r5 2026-10-12 (owner GLUE PLACEMENT; rev-3 cluster mtp-hrow3-e33f9cff1-tc-sp FAILED reg2reg -7.7 ns, 140,653 flops on one root): dsfd_mtp_hrow as tiles placed by the S81 die -- 30 chain bank tiles (bank + its chain stage, W->E cbe / E->W cbw snake per part), 3 ingress tiles (drain receiver: the never-filled 22x514 RTT queue removed; write ordering delay inside), 1 hub; every tile < 15k clock sinks. This tile: dsfd_mtp_hrow_cbe x15 r5b: chain N->S (cbe: in N, out S; cbw: in S, out N; snake = down one column, up the next), bus on M5 over the SRAMs (r5 W->E GRT overflow 26k: 2,079-b bus vs 70.7 um of M2/M4 channel = 1.24).",
   "benches": [
    {
     "name": "hrow_tiles_pos",
@@ -68,13 +70,38 @@
   "record_to": "results/rtl/ref_tile/hrow5_cbe"
  },
  "outline": {
-  "w": 432.0,
+  "w": 475.2,
   "h": 216.0
  },
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "count": 4
+   "at": [
+    31.104,
+    24.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    268.92,
+    24.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    31.104,
+    121.5
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    268.92,
+    121.5
+   ]
   }
- ]
+ ],
+ "floorplan_why": "r5b 2026-10-12: chain turned N->S (was W->E). The 2,079-b chain (f_w 1039 + f_r 15 + f_d 1025) crossed a 432x216 tile horizontally, but the 4 SRAMs (OBS M1-M4) leave only 70.7 um of horizontal channel: M2+M4 ~2,500 derated tracks vs ~3,100 nets (2,079 through + macro-edge I/O) = 1.24 -> GRT overflow 26k, markers capped 20k (cap-0 over macros 16k; hotspot = mid channel y 90-126 + macro edges). Running the bus N->S puts it on M5, free over the macros: ~9,800 derated vertical tracks (M5 full width + M3 in channels) vs ~3,100 = 0.32; face 2,079 pins at 3 M5 tracks = 300 of 471 um. Outline 475.2 (11 x 43.2) x 216 for a 63 um mid channel (512 macro-edge pins/row)."
 }

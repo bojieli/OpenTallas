@@ -26,26 +26,26 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_qkvd_sbuf {}]
-$i setOrient R0; $i setLocation [expr {round(86.4 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkvd_sbuf at 86.4 43.2 R0"
-set i [ot_ref_pick $ot_ref_by ot_qkvd_sbuf {}]
-$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkvd_sbuf at 345.6 43.2 R0"
-set i [ot_ref_pick $ot_ref_by ot_qkvd_sbuf {}]
-$i setOrient R0; $i setLocation [expr {round(86.4 * $dbu)}] [expr {round(216.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkvd_sbuf at 86.4 216.0 R0"
-set i [ot_ref_pick $ot_ref_by ot_qkvd_sbuf {}]
-$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(216.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkvd_sbuf at 345.6 216.0 R0"
-set i [ot_ref_pick $ot_ref_by ot_qkvd_fbuf8 {}]
-$i setOrient R0; $i setLocation [expr {round(604.8 * $dbu)}] [expr {round(216.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkvd_fbuf8 at 604.8 216.0 R0"
-set i [ot_ref_pick $ot_ref_by ot_qkvd_fbuf8 {}]
-$i setOrient R0; $i setLocation [expr {round(86.4 * $dbu)}] [expr {round(388.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkvd_fbuf8 at 86.4 388.8 R0"
-set i [ot_ref_pick $ot_ref_by ot_qkvd_fbuf8 {}]
-$i setOrient R0; $i setLocation [expr {round(216.0 * $dbu)}] [expr {round(388.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkvd_fbuf8 at 216.0 388.8 R0"
+set i [ot_ref_pick $ot_ref_by ot_qkvd_sbuf {*g_tx?0?*}]
+$i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkvd_sbuf at 129.6 43.2 R0"
+set i [ot_ref_pick $ot_ref_by ot_qkvd_sbuf {*g_tx?1?*}]
+$i setOrient R0; $i setLocation [expr {round(388.8 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkvd_sbuf at 388.8 43.2 R0"
+set i [ot_ref_pick $ot_ref_by ot_qkvd_fbuf8 {*g_tx?2?*}]
+$i setOrient R0; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkvd_fbuf8 at 648.0 43.2 R0"
+set i [ot_ref_pick $ot_ref_by ot_qkvd_sbuf {*g_rx?1?*}]
+$i setOrient MX; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(302.424 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkvd_sbuf at 129.6 302.424 MX"
+set i [ot_ref_pick $ot_ref_by ot_qkvd_sbuf {*g_rx?3?*}]
+$i setOrient MX; $i setLocation [expr {round(388.8 * $dbu)}] [expr {round(302.424 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkvd_sbuf at 388.8 302.424 MX"
+set i [ot_ref_pick $ot_ref_by ot_qkvd_fbuf8 {*g_rx?2?*}]
+$i setOrient MX; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(216.024 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkvd_fbuf8 at 648.0 216.024 MX"
+set i [ot_ref_pick $ot_ref_by ot_qkvd_fbuf8 {*g_rx?0?*}]
+$i setOrient MX; $i setLocation [expr {round(648.0 * $dbu)}] [expr {round(345.624 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkvd_fbuf8 at 648.0 345.624 MX"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 7} { error "ref_tile place: expected 7 macros, netlist has $nb" }
