@@ -1,0 +1,167 @@
+{
+ "name": "vm_cp_root",
+ "top": "vm_cp_root",
+ "kind": "tile",
+ "sources": [
+  "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_root.sv",
+  "physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_root_x.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 432.0
+ },
+ "pg_layer": "M7",
+ "pins": {
+  "W": [
+   "ck",
+   "wd_i",
+   "wr_i",
+   "tap_w",
+   "st_o"
+  ],
+  "E": [
+   "rd_i",
+   "cfg_i",
+   "tap_e",
+   "rst"
+  ],
+  "S": [
+   "cmd0",
+   "wd0",
+   "rv0",
+   "rd0",
+   "cmd2",
+   "wd2",
+   "rv2",
+   "rd2"
+  ],
+  "N": [
+   "cmd1",
+   "wd1",
+   "rv1",
+   "rd1",
+   "cmd3",
+   "wd3",
+   "rv3",
+   "rd3"
+  ]
+ },
+ "pin_ranges": {
+  "wd_i": [
+   2,
+   200
+  ],
+  "wr_i": [
+   400,
+   430
+  ],
+  "tap_w": [
+   200,
+   400
+  ],
+  "st_o": [
+   200,
+   400
+  ],
+  "rd_i": [
+   2,
+   100
+  ],
+  "cfg_i": [
+   2,
+   100
+  ],
+  "tap_e": [
+   100,
+   330
+  ],
+  "rst": [
+   2,
+   100
+  ],
+  "cmd0": [
+   2.0,
+   300.4
+  ],
+  "wd0": [
+   2.0,
+   300.4
+  ],
+  "rv0": [
+   2.0,
+   300.4
+  ],
+  "rd0": [
+   2.0,
+   300.4
+  ],
+  "cmd2": [
+   2.0,
+   300.4
+  ],
+  "wd2": [
+   2.0,
+   300.4
+  ],
+  "rv2": [
+   2.0,
+   300.4
+  ],
+  "rd2": [
+   2.0,
+   300.4
+  ],
+  "cmd1": [
+   2.0,
+   300.4
+  ],
+  "wd1": [
+   2.0,
+   300.4
+  ],
+  "rv1": [
+   2.0,
+   300.4
+  ],
+  "rd1": [
+   2.0,
+   300.4
+  ],
+  "cmd3": [
+   2.0,
+   300.4
+  ],
+  "wd3": [
+   2.0,
+   300.4
+  ],
+  "rv3": [
+   2.0,
+   300.4
+  ],
+  "rd3": [
+   2.0,
+   300.4
+  ],
+  "ck": [
+   215.0,
+   217.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4 M6"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": []
+}

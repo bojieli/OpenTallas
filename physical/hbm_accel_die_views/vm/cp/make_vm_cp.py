@@ -23,7 +23,7 @@ from pathlib import Path
 D = Path(__file__).resolve().parent
 RTL = D / 'rtl'
 VMH, VMW = 2000.112, 1399.632           # VM region (the 4 r22 quadrant slots, origin = hb_vm_sw origin)
-FH = 500.028                            # face tile height (VMH / 4)
+FH = 498.96                             # face tile height (231 x 2.16 lattice; 4 per face)
 BPU = 0.62                              # placed um2 per relay flop bit (DFF + clock / hold share, ASAP7 RVT)
 UTIL = 0.45
 HV = {'W': 'M4 M6', 'E': 'M4 M6', 'N': 'M3 M5', 'S': 'M3 M5'}   # pin layers per face (signals M2-M6, PG M7)
@@ -238,7 +238,7 @@ def kit_geom(name):
         g = LOGIC[name]; return g['w'], g['h']
     k = KITS[name]
     bits = sum(v[1] for v in k['ports'].values() if v[0] == 'out')
-    return max(XWK.get(name, XW), snap(bits * BPU / (k['h'] * UTIL), 5.4)), k['h']
+    return max(XWK.get(name, XW), snap(bits * BPU / (k["h"] * UTIL), 2.16)), k["h"]
 
 def ports_of(name):
     return LOGIC[name]['ports'] if name in LOGIC else KITS[name]['ports']

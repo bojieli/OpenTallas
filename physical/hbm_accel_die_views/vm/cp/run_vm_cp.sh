@@ -6,6 +6,8 @@
 #   mode 2 every output bit at ONE constant latency vs the monolithic (check_vm_tiles.py; prints the per-path table)
 #   mode 3 root write / read ports ONE depth from their die pins; monolithic wr SKEWED detected
 #   negatives MUT_XBUS (SE slice wd bits 10/11) and MUT_RELAY (xSE tap bits 10/11 in the E fork) must FAIL mode 1
+# --x-assign 0: vm_env_body hashes xSW/xNE[2078:2016] (11 bits past the 2,068-bit port, j = 32); Verilator returns a per-site
+# X value there (the monolithic env read 0x000, the DUT env 0x7ff on identical in-range data) -- pinned to 0 for both envs.
 O=${1:?}; VL=${2:-verilator}; mkdir -p $O; V=physical/hbm_accel_die_views; T=$V/vm/tiles; C=$V/vm/cp
 SR1=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 BASE="$V/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv $SR1 $V/vm/rtl/ot_hbm_die_vm_multicast_root.sv $V/vm/rtl/hfd_vm.sv $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv"
@@ -14,7 +16,7 @@ ok=1; $VL --version
 for f in $TILES; do m=$(basename $f .sv)
   $VL --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module $m rtl/common/ot_fwd_link_stage.sv $SR1 $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv $f > $O/lint_$m.log 2>&1 || { echo "lint $m FAIL"; ok=0; }
 done
-b() { n=$1; shift; $VL -I$T --binary --timing -j 16 --unroll-count 8192 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-initial unique --top-module tb_vm_tiles "$@" -Mdir $O/$n.obj -o sim $BASE $TILES $C/hfd_vm_cp.sv $C/tb_vm_cp.sv > $O/$n.build 2>&1 || { echo "$n BUILD_FAILED"; grep -m5 -i error $O/$n.build; return 2; }; }
+b() { n=$1; shift; $VL -I$T --binary --timing -j 16 --unroll-count 8192 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-initial unique --x-assign 0 --top-module tb_vm_tiles "$@" -Mdir $O/$n.obj -o sim $BASE $TILES $C/hfd_vm_cp.sv $C/tb_vm_cp.sv > $O/$n.build 2>&1 || { echo "$n BUILD_FAILED"; grep -m5 -i error $O/$n.build; return 2; }; }
 for s in 1 2 3; do b m1s$s -DMODE=1 -DSEED=$s && (cd $O && ./m1s$s.obj/sim +verilator+seed+$s > m1s$s.log 2>&1); grep -E "VM_TILES|VM_CP" $O/m1s$s.log | tail -2; grep -q "hash=MATCH" $O/m1s$s.log && ! grep -qE "VM_TILES FAIL|not aligned" $O/m1s$s.log || ok=0; done
 mkdir -p $O/m2; b m2 -DMODE=2 -DSEED=1 && (cd $O/m2 && ../m2.obj/sim > m2.log 2>&1)
 python3 $T/check_vm_tiles.py $O/m2/trace_ref.hex $O/m2/trace_dut.hex > $O/m2.check; rc=$?; tail -25 $O/m2.check; [ $rc = 0 ] || ok=0

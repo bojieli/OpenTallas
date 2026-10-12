@@ -1,0 +1,74 @@
+{
+ "name": "vm_cp_slice3",
+ "top": "vm_cp_slice3",
+ "kind": "tile",
+ "sources": [
+  "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_slice3.sv",
+  "physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_slice.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 216.0
+ },
+ "pg_layer": "M7",
+ "pins": {
+  "N": [
+   "cmd",
+   "wd",
+   "rv",
+   "rd"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "cmd": [
+   2.0,
+   257.2
+  ],
+  "wd": [
+   2.0,
+   257.2
+  ],
+  "rv": [
+   2.0,
+   257.2
+  ],
+  "rd": [
+   2.0,
+   257.2
+  ],
+  "rst": [
+   2.0,
+   214.0
+  ],
+  "ck": [
+   107.0,
+   109.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4 M6"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 6
+  }
+ ],
+ "params": {},
+ "children": [],
+ "inter": []
+}

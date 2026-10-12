@@ -1,0 +1,80 @@
+{
+ "name": "vm_cp_re",
+ "top": "vm_cp_re",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_fwd_link_stage.sv",
+  "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_re.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 21.6,
+  "h": 388.8
+ },
+ "pg_layer": "M7",
+ "pins": {
+  "W": [
+   "ck",
+   "tap",
+   "rdo",
+   "cfgo"
+  ],
+  "E": [
+   "se",
+   "ne"
+  ],
+  "S": [
+   "rdi"
+  ],
+  "N": [
+   "cfgi"
+  ]
+ },
+ "pin_ranges": {
+  "tap": [
+   70,
+   300
+  ],
+  "se": [
+   2,
+   194
+  ],
+  "ne": [
+   194,
+   386
+  ],
+  "rdi": [
+   2.0,
+   19.6
+  ],
+  "rdo": [
+   2,
+   60
+  ],
+  "cfgi": [
+   2.0,
+   19.6
+  ],
+  "cfgo": [
+   2,
+   60
+  ],
+  "ck": [
+   193.4,
+   195.4
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4 M6"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": []
+}

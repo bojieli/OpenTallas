@@ -1,0 +1,51 @@
+{
+ "name": "vm_cp_rwb",
+ "top": "vm_cp_rwb",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_fwd_link_stage.sv",
+  "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rwb.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 10.8,
+  "h": 108.0
+ },
+ "pg_layer": "M7",
+ "pins": {
+  "W": [
+   "ck",
+   "i"
+  ],
+  "E": [
+   "o"
+  ]
+ },
+ "pin_ranges": {
+  "i": [
+   2.0,
+   106.0
+  ],
+  "o": [
+   2.0,
+   106.0
+  ],
+  "ck": [
+   53.0,
+   55.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4 M6"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": []
+}
