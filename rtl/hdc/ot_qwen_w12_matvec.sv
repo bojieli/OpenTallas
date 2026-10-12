@@ -463,10 +463,9 @@ end else begin : g_issue_fast
     //: three stages (the first use is IL >= 3 cycles after the go): the shifted terms, their kept sum, the result
     localparam integer NB_GT = PRW;
     //: TP-setting bench mutants (qwen-tp8 2026-10-12; TMUT 0 = the real constants, synthesis-identical): 4 = the
-    //: round-step products ts*(GT>>S) / ots*(GT>>S) built from a stale 2*GT (a TP4 constant on a TP8 tile); 5 = the
-    //: per-round tile count GT>>S from a stale 2*GT
+    //: round-step products ts*(GT>>S) / ots*(GT>>S) built from a stale 2*GT (a TP4 constant on a TP8 tile).
+    //: (a stale-2*GT pr_a or e_gm bound was tried as TMUT 5: unobservable -- it only touches groups no result port reads)
     localparam integer GT_TS = (TMUT == 4) ? (GT << 1) : GT;
-    localparam integer GT_PR = (TMUT == 5) ? (GT << 1) : GT;
     reg [AW+PRW-1:0] tsh [0:NB_GT-1];
     reg [AW+PRW-1:0] osh [0:NB_GT-1];
     reg [NW:0]       kpad_a;
@@ -476,7 +475,7 @@ end else begin : g_issue_fast
             tsh[b] <= (((GT_TS >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ts_r} << (b - split_r)) : {(AW+PRW){1'b0}};
             osh[b] <= (((GT_TS >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ots_r} << (b - split_r)) : {(AW+PRW){1'b0}};
         end
-        pr_a <= GT_PR >> split_r;
+        pr_a <= GT >> split_r;
         kpad_a <= {1'b0, ktot_r} + ((1 << split_r) - 1);
     end
     wire [AW+PRW-1:0] tsum, osum;

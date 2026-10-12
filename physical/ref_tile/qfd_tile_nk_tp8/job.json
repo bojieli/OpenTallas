@@ -3,7 +3,7 @@
  "block": "ot_qwen_rom_tile_nk",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8/par",
- "purpose": "qwen-tp8 TP8 parameter setting of the die tile qfd_tile_nk (r22ko4 D2 NK variant): GT 6144 -> 3072 (768 tiles/die, CODE_BANKS 5, same 10 ROM macros + 8 lsl leaves, same faces); ref_tile cluster floorplan 311.04 x 1291.656 (ROM 2x(3+2) bands with 20 um channels, leaves on the 43.2 lattice). Gate: partition bench at the TP8 analog GT 24 (3*2^k like 3072) seeds 1/5 + GT 8 PASS; TMUT 3/4/5 (stale MPR copy / stale-2*GT round step / per-round count) FAIL.",
+ "purpose": "qwen-tp8 TP8 parameter setting of the die tile qfd_tile_nk (r22ko4 D2 NK variant): GT 6144 -> 3072 (768 tiles/die, CODE_BANKS 5, same 10 ROM macros + 8 lsl leaves, same faces); ref_tile cluster floorplan 311.04 x 1291.656 (ROM 2x(3+2) bands with 20 um channels, leaves on the 43.2 lattice). Gate: partition bench at the TP8 analog GT 24 (3*2^k like 3072) seeds 1/5 + GT 8 PASS; TMUT 3 (stale MPR copy) / TMUT 4 (stale-2*GT round step) + gate MUTANT 1 FAIL.",
  "hosts": [
   "ot-epyc1tb",
   "ot-epyc4",
@@ -75,17 +75,6 @@
    {
     "name": "tp8_g24_tmut4",
     "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=24 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=2 --param TMUT=4 --workdir {RUN}/bench/tp8_g24_tmut4 --result {RUN}/bench/tp8_g24_tmut4.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/tp8_g24_tmut4.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
-    "expect": "fail",
-    "fail_regex": "MUTVERDICT FAIL",
-    "threads": 8,
-    "peak_ram_gb": 16,
-    "needs": [
-     "verilator"
-    ]
-   },
-   {
-    "name": "tp8_g24_tmut5",
-    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=24 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=2 --param TMUT=5 --workdir {RUN}/bench/tp8_g24_tmut5 --result {RUN}/bench/tp8_g24_tmut5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/tp8_g24_tmut5.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
     "expect": "fail",
     "fail_regex": "MUTVERDICT FAIL",
     "threads": 8,
