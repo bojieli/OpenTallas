@@ -3347,16 +3347,20 @@ def build_r8(variant=None):
     ch_ = sum(up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
     su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
+    # --contract (s81-die-iter, contract v4): a v2 SU wider than the hub column grows WEST (E edge on the column's E edge,
+    # clear of the xE trunk / sseq stations by the VCH); the free strip W of the column holds it (10.5 um to the xW stations)
+    su_w_ = up(SU_V2_UM[0], GX) if (SUHC_V2 and SU_V2_UM[0] > cw + 1e-6) else cw
+    su_x_ = x_sp - (su_w_ - cw)
     if SU_E:
         # --su-e MM2 (ds-1010/s81die 2026-10-11): su_n (MM2) moves to the E column above hc_n; su_s (the rest) sits at the
         # W column floor with the centre stack right above it (the 2.42 mm VM of s81-vm-1011 overflowed the W column)
         su_lo = su_area - SU_E
         if SUHC_V2:     # the one v2 SU: its hierarchical outline (the su_s W-floor slot)
             su_lo = SU_V2_UM[0] * SU_V2_UM[1] / 1e6
-        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / cw, GY) + SPINE_GAP, GY)
+        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / su_w_, GY) + SPINE_GAP, GY)
     # --rtl-hub-widths (order A): the SU's VM row slots (~17.1 kb) are face-to-face with the VM right above it
     su_gap = RTL_ABUT_GAP if (RTL_HUB_WIDTHS and SUHC_V2 and centre and centre[0] == 'vm') else SPINE_GAP
-    slab('su_s', su_lo, x_sp, dn(yc - su_gap - up(su_lo * 1e6 / cw, GY), GY), cw, dom=SUHC_DOM)
+    slab('su_s', su_lo, su_x_, dn(yc - su_gap - up(su_lo * 1e6 / su_w_, GY), GY), su_w_, dom=SUHC_DOM)
     yy = yc
     for i_, n in enumerate(centre):
         put(n, x_sp, yy, cw)
@@ -3382,11 +3386,11 @@ def build_r8(variant=None):
         # --suhc-v2 n (s81die-1011/ctrl): the one HC in the freed slot ABOVE the corridor, facing the VM rows (order A puts
         # the VM at the corridor): VM row slots run straight across the VCH, the collective's 8,192-b y is ~2.5 mm
         # shorter than to the floor slot (hb_collective_t_hc_y_hc_s: no station spot over a 7,451 um path)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, min(hcw, up(HC_V2_UM[0], GX)), dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, up(HC_V2_UM[0], GX), dom=SUHC_DOM)
     elif SUHC_V2:   # the floor slot holds c0 - floor um: the 9,640 um HC outline fits only if the corridor sits above it
         assert c0 - (band + SPINE_GAP) >= HC_V2_UM[1], ('v2 HC outline taller than the hc_s floor slot: use '
                                                         '--suhc-v2-hc-north', round(c0 - band - SPINE_GAP, 1), HC_V2_UM)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), min(hcw, up(HC_V2_UM[0], GX)), dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), up(HC_V2_UM[0], GX), dom=SUHC_DOM)
     else:
         slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom=SUHC_DOM)
     if not SUHC_V2:     # --suhc-v2: one HC (hc_s slot); the hc_n slot is free
