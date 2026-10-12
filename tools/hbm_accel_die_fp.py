@@ -2091,7 +2091,37 @@ def build_r25gq_net(variant):
             rs_sinks[d_].append((r_, 'rst'))
             if b0_ not in fcl_:
                 ck_sinks[d_].append((r_, 'ck'))
-        old_order = list(buses)         # tree nets go where the die-wide net they replace sat (masters() packs a face's
+        # hbmdie-v10-sta 2026-10-12 (the kv_die 758ccc84c pattern): the Option-A chain stations of relays() (wq*_<bid>,
+        # hfd_stn_q*) and the attention -> SU relays (hfd_att_su_relay) are register stages but joined no clock net, so
+        # their masters had no ck pin and the die STA could time none of their hops (v10: 3,512 of 6,388 stations).
+        # Each one now joins the clock tree of the domain of the first non-station driver up its chain, unless a bus
+        # on that chain forwards its clock (fclk: source-synchronous, clock in the a/b bits) or it is a forwarded
+        # station (fwd_dom).
+        ckd_ = {e[0] for es_ in ck_sinks.values() for e in es_}
+        byl_ = {i.name: i for i in insts}
+        isr_ = lambda n: n in byl_ and (byl_[n].master.startswith('hfd_stn') or byl_[n].master == 'hfd_att_su_relay')
+        inb_ = {}
+        for b_ in buses:
+            if len(b_[3]) == 2 and b_[1] not in ('clock_trunk', 'reset_tree'):
+                inb_.setdefault(b_[3][1][0], (b_[0], b_[3][0][0]))
+        isf_ = lambda b: b in fcl_ or b.split('_p')[0] in fcl_ or re.sub(r'_(t|r)?\d+$', '', b) in fcl_
+        phys_rec['stations_clock_added'] = phys_rec['stations_forwarded'] = 0
+        for it_ in insts:
+            if not isr_(it_.name) or it_.name in ckd_ or it_.name in (base.get('fwd_dom') or {}):
+                continue
+            cur_, fwd_, seen_ = it_.name, False, set()
+            while cur_ in inb_ and cur_ not in seen_:
+                seen_.add(cur_)
+                bid_, cur_ = inb_[cur_]
+                fwd_ = fwd_ or isf_(bid_)
+                if not isr_(cur_):
+                    break
+            if fwd_:
+                phys_rec['stations_forwarded'] += 1
+                continue
+            ck_sinks[dom_of.get(cur_) or 'stream'].append((it_.name, 'ck'))
+            phys_rec['stations_clock_added'] += 1
+        old_order = list(buses)        # tree nets go where the die-wide net they replace sat (masters() packs a face's
         buses[:] = keep_b               # ports in first-seen order: the block pin plans stay identical)
         tree_nets = defaultdict(list)
         CKW, CKH = 12.96, 12.96        # >= 3 generated 1-b pins + gaps a face in the k = 16 bundled view

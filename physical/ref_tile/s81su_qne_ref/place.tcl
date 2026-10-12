@@ -20,14 +20,16 @@ proc ot_ref_pick {by master pat} {
   foreach i [dict get $by $master] {
     set n [ot_ref_strip [$i getName]]
     if {[lsearch -exact $used $n] >= 0} continue
-    if {$pat ne "" && ![string match [ot_ref_strip $pat] $n]} continue
+    set sp [ot_ref_strip $pat]
+    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)
+    if {$pat ne "" && $sp ne $n && ![string match $sp $n]} continue
     lappend used $n; return $i
   }
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(44.064 * $dbu)}] [expr {round(90.72 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 44.064 90.72 R0"
+$i setOrient R0; $i setLocation [expr {round(25.488 * $dbu)}] [expr {round(71.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 25.488 71.28 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 1} { error "ref_tile place: expected 1 macros, netlist has $nb" }

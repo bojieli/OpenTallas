@@ -16,6 +16,10 @@ MACRO ot_pqc_t_ix
       LAYER M4 ;
         RECT  0 4.752 0.084 4.776 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 4.752 2.408 4.776 ;
+    END
   END ba_blk[0]
   PIN ba_blk[1]
     DIRECTION INPUT ;
@@ -23,6 +27,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M4 ;
         RECT  0 6.336 0.084 6.36 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 6.336 0.137 6.6 ;
     END
   END ba_blk[1]
   PIN ba_blk[2]
@@ -32,6 +40,10 @@ MACRO ot_pqc_t_ix
       LAYER M4 ;
         RECT  0 7.92 0.084 7.944 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 7.92 0.173 7.944 ;
+    END
   END ba_blk[2]
   PIN ba_v
     DIRECTION INPUT ;
@@ -39,6 +51,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M4 ;
         RECT  0 9.456 0.084 9.48 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 9.456 0.173 9.48 ;
     END
   END ba_v
   PIN bt_d[0]
@@ -2096,6 +2112,10 @@ MACRO ot_pqc_t_ix
       LAYER M4 ;
         RECT  0 11.04 0.084 11.064 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 11.04 0.181 11.064 ;
+    END
   END clk
   PIN h_hi[0]
     DIRECTION INPUT ;
@@ -2104,6 +2124,10 @@ MACRO ot_pqc_t_ix
       LAYER M4 ;
         RECT  0 12.624 0.084 12.648 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 12.624 1.181 12.648 ;
+    END
   END h_hi[0]
   PIN h_hi[10]
     DIRECTION INPUT ;
@@ -2111,6 +2135,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M4 ;
         RECT  0 28.272 0.084 28.296 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 28.272 1.181 28.296 ;
     END
   END h_hi[10]
   PIN h_hi[11]
@@ -2176,6 +2204,10 @@ MACRO ot_pqc_t_ix
       LAYER M4 ;
         RECT  0 40.848 0.084 40.872 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 40.848 0.179 40.872 ;
+    END
   END h_hi[18]
   PIN h_hi[19]
     DIRECTION INPUT ;
@@ -2184,6 +2216,10 @@ MACRO ot_pqc_t_ix
       LAYER M4 ;
         RECT  0 42.384 0.084 42.408 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 42.384 2.365 42.408 ;
+    END
   END h_hi[19]
   PIN h_hi[1]
     DIRECTION INPUT ;
@@ -2191,6 +2227,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M4 ;
         RECT  0 14.16 0.084 14.184 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 14.16 0.605 14.184 ;
     END
   END h_hi[1]
   PIN h_hi[20]
@@ -2256,6 +2296,10 @@ MACRO ot_pqc_t_ix
       LAYER M6 ;
         RECT  0 54.976 0.07 55.008 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 54.976 2.339 55.008 ;
+    END
   END h_hi[27]
   PIN h_hi[28]
     DIRECTION INPUT ;
@@ -2263,6 +2307,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M6 ;
         RECT  0 56.512 0.07 56.544 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 56.512 0.179 56.544 ;
     END
   END h_hi[28]
   PIN h_hi[29]
@@ -2384,6 +2432,10 @@ MACRO ot_pqc_t_ix
       LAYER M4 ;
         RECT  0 26.736 0.084 26.76 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 26.736 0.097 26.76 ;
+    END
   END h_hi[9]
   PIN hw7[0]
     DIRECTION INPUT ;
@@ -2391,6 +2443,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M6 ;
         RECT  0 69.056 0.07 69.088 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 69.056 0.227 69.088 ;
     END
   END hw7[0]
   PIN hw7[1]
@@ -2400,6 +2456,10 @@ MACRO ot_pqc_t_ix
       LAYER M6 ;
         RECT  0 70.656 0.07 70.688 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 70.656 0.131 70.688 ;
+    END
   END hw7[1]
   PIN hw7[2]
     DIRECTION INPUT ;
@@ -2407,6 +2467,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M6 ;
         RECT  0 72.192 0.07 72.224 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 72.192 0.275 72.224 ;
     END
   END hw7[2]
   PIN hw7[3]
@@ -2416,6 +2480,10 @@ MACRO ot_pqc_t_ix
       LAYER M6 ;
         RECT  0 73.792 0.07 73.824 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 73.792 0.563 73.824 ;
+    END
   END hw7[3]
   PIN hw7[4]
     DIRECTION INPUT ;
@@ -2423,6 +2491,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M6 ;
         RECT  0 75.328 0.07 75.36 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 75.328 0.227 75.36 ;
     END
   END hw7[4]
   PIN hw7[5]
@@ -2432,6 +2504,10 @@ MACRO ot_pqc_t_ix
       LAYER M6 ;
         RECT  0 76.928 0.07 76.96 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 76.928 0.179 76.96 ;
+    END
   END hw7[5]
   PIN hw7[6]
     DIRECTION INPUT ;
@@ -2439,6 +2515,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M6 ;
         RECT  0 78.464 0.07 78.496 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 78.464 0.851 78.496 ;
     END
   END hw7[6]
   PIN par
@@ -2448,6 +2528,10 @@ MACRO ot_pqc_t_ix
       LAYER M6 ;
         RECT  0 80.064 0.07 80.096 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 80.064 1.427 80.096 ;
+    END
   END par
   PIN rst_n
     DIRECTION INPUT ;
@@ -2455,6 +2539,10 @@ MACRO ot_pqc_t_ix
     PORT
       LAYER M6 ;
         RECT  0 81.6 0.07 81.632 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 81.6 2.339 81.632 ;
     END
   END rst_n
   PIN xw[0]
@@ -11635,23 +11723,12 @@ MACRO ot_pqc_t_ix
      RECT  70.452 84.989 70.47 86.285 ;
     LAYER M4 ;
      RECT  0.025 6.576 0.06 6.6 ;
-     RECT  0.06 26.736 0.097 26.76 ;
-     RECT  0.06 6.336 0.137 6.6 ;
      RECT  0.097 26.64 0.137 26.76 ;
-     RECT  0.06 7.92 0.173 7.944 ;
-     RECT  0.06 9.456 0.173 9.48 ;
-     RECT  0.06 40.848 0.179 40.872 ;
-     RECT  0.06 11.04 0.181 11.064 ;
      RECT  0.181 11.04 0.245 11.16 ;
      RECT  0.245 11.136 0.268 11.16 ;
-     RECT  0.06 14.16 0.605 14.184 ;
      RECT  0.133 56.496 0.805 56.52 ;
-     RECT  0.06 12.624 1.181 12.648 ;
-     RECT  0.06 28.272 1.181 28.296 ;
      RECT  2.252 36.672 2.293 36.696 ;
      RECT  0.137 26.64 2.365 26.664 ;
-     RECT  0.06 42.384 2.365 42.408 ;
-     RECT  0.06 4.752 2.408 4.776 ;
      RECT  2.329 17.904 2.408 17.928 ;
      RECT  0.229 20.4 2.408 20.424 ;
      RECT  2.365 26.304 2.408 26.664 ;
@@ -17722,21 +17799,10 @@ MACRO ot_pqc_t_ix
      RECT  72.624 86.281 75.048 86.352 ;
      RECT  77.52 86.251 79.944 86.352 ;
     LAYER M6 ;
-     RECT  0.016 70.656 0.131 70.688 ;
-     RECT  0.016 56.512 0.179 56.544 ;
-     RECT  0.016 76.928 0.179 76.96 ;
      RECT  0.053 11.136 0.227 11.168 ;
-     RECT  0.016 69.056 0.227 69.088 ;
-     RECT  0.016 75.328 0.227 75.36 ;
      RECT  0.133 40.832 0.235 40.864 ;
-     RECT  0.016 72.192 0.275 72.224 ;
-     RECT  0.016 73.792 0.563 73.824 ;
-     RECT  0.016 78.464 0.851 78.496 ;
-     RECT  0.016 80.064 1.427 80.096 ;
      RECT  0.181 36.672 2.293 36.704 ;
      RECT  2.293 36.48 2.339 36.704 ;
-     RECT  0.016 54.976 2.339 55.008 ;
-     RECT  0.016 81.6 2.339 81.632 ;
      RECT  2.339 36.48 2.4 36.512 ;
      RECT  2.293 32.064 2.539 32.096 ;
      RECT  2.4 35.016 2.539 36.512 ;

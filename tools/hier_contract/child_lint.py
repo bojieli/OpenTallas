@@ -19,6 +19,9 @@ A parent may only be submitted when every hard child it instantiates passes this
                  directly above it leaves the parent no via access (DRT-0073 at the DS cbh parent: c2e836720-p2 tiles
                  cbq0 12 / cbq 17 / cbr 51 / cbf 0).  Fix in the child: el1011-ds-coll's pin-access plan hook
                  physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873).  The layer below is reported only.
+                 Also FAIL: an OBS rect on the pin's OWN layer overlapping that pin (positive area; edge touch ignored)
+                 and no other pin -- the exporter wrote the pin net's route stub as OBS (ot_qkvd_sbuf, DRT-0073); fix
+                 abstract_pin_stub.py.  A same-layer OBS rect spanning several pins is WARN only (edge-band decomposition).
   (g) clock      WARN only: clock-pin insertion delay (max/min_clock_tree_path) from the TT lib; missing, or more than
                  100 ps from the contract slot's target_insertion_ps (preamble CLOCK LATENCY ACROSS THE HIERARCHY).
 
@@ -36,11 +39,15 @@ from pathlib import Path
 AREA_FRAC = 0.90          # (a) bloat threshold and (b) full-stripe span fraction
 MIN_STRIPES = 2           # (b) per net
 EPS_UM = 0.001            # 1 DBU: LEF microns are decimal, floats are not (43.2-um tile, 2.16-um insets: 38.88 < 0.9*43.2 in floats)
+EDGE_INSET_UM = 2.16      # (b) ref_tile stops PG stripes this far short of each edge; a stripe reaching within the inset of both edges is full-length (thin tiles < 43.2 um failed the 90% rule: ctfx 12.96 um tall = 67%)
 MIN_SPREAD = 0.50         # (b) first..last full stripe must span this fraction of the perpendicular dimension
 INSERTION_TOL_PS = 100.0  # (g)
 EPS = 0.0015              # um: boundary touch tolerance
 FACE_FIX = ("physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the "
             "outer face-pin column before GRT, remove after DRT")
+
+SAME_FIX = ("tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef (73e17f447): move the pin's own same-layer stub "
+            "from OBS into its PORT")
 
 
 def metal(layer: str | None) -> int | None:
@@ -130,8 +137,8 @@ def check_pg(m: dict) -> dict:
     rec["top_layer"] = f"M{top}" if top else None
     for n, p in sorted(nets.items()):
         sh = [r for r in p["rects"] if metal(r[0]) == top]
-        full_h = [r for r in sh if (r[3] - r[1]) + EPS_UM >= AREA_FRAC * W]       # horizontal stripes across the width
-        full_v = [r for r in sh if (r[4] - r[2]) + EPS_UM >= AREA_FRAC * H]
+        full_h = [r for r in sh if (r[3] - r[1]) + EPS_UM >= min(AREA_FRAC * W, W - 2 * EDGE_INSET_UM)]       # horizontal stripes across the width
+        full_v = [r for r in sh if (r[4] - r[2]) + EPS_UM >= min(AREA_FRAC * H, H - 2 * EDGE_INSET_UM)]
         full, horiz = (full_h, True) if len(full_h) >= len(full_v) else (full_v, False)
         area = sum((r[3] - r[1]) * (r[4] - r[2]) for r in sh) or 1.0
         cov = sum((r[3] - r[1]) * (r[4] - r[2]) for r in full) / area
@@ -158,10 +165,16 @@ def check_pg(m: dict) -> dict:
 
 def face_access(m: dict) -> dict:
     W, H = m["W"], m["H"]
+    # only OBS reaching into the edge band of the deepest face pin can overlap a face pin: index those alone (a
+    # routed tile has 10^5 OBS rects; pins x all OBS took minutes per view)
+    band = max((max(r[3] - r[1], r[4] - r[2]) for n, p in m["pins"].items() if not is_pg(n, p) for r in p["rects"]
+                if face_of(r, W, H)), default=0.0) + EPS
     obs = {}
     for r in m["obs"]:
-        obs.setdefault(r[0], []).append(r)
-    faces, above, below, examples = 0, set(), set(), []
+        if r[1] < band or r[2] < band or r[3] > W - band or r[4] > H - band:
+            obs.setdefault(r[0], []).append(r)
+    faces, above, below, same, examples, same_ex = 0, set(), set(), set(), [], []
+    band, band_ex, same_hits = set(), [], {}
     for n, p in m["pins"].items():
         if is_pg(n, p):
             continue
@@ -176,7 +189,22 @@ def face_access(m: dict) -> dict:
                 above.add(n)
             if _overlaps(r, obs.get(f"M{L - 1}", [])):
                 below.add(n)
-    return {"face_pins": faces, "blocked_above": len(above), "covered_below": len(below), "examples": examples}
+            for o in obs.get(r[0], []):            # same-layer OBS over the pin (positive area; edge touch ignored)
+                if _overlaps(r, [o]):
+                    same_hits.setdefault(o, set()).add(n)
+    # an OBS rect overlapping exactly ONE face pin on its layer is that pin's own route stub written as OBS (ot_qkvd_sbuf
+    # pop, 73e17f447: DRT-0073 reproduced standalone) -> blocked.  A rect spanning several pins is the exporter's
+    # decomposition of the occupied edge band (it cannot be metal: it would short different nets); 126 of the 128
+    # views passing on 2026-10-12, every ref_tile view included, carry it, and the sbuf repro's din pins under it got
+    # access -> reported (WARN) only.
+    for o, ns in same_hits.items():
+        tgt = same if len(ns) == 1 else band
+        for n in sorted(ns):
+            if n not in tgt and len(same_ex if tgt is same else band_ex) < 6:
+                (same_ex if tgt is same else band_ex).append(f"{n} {o[0]} ({o[1]:.3f},{o[2]:.3f})")
+            tgt.add(n)
+    return {"face_pins": faces, "blocked_above": len(above), "covered_below": len(below), "examples": examples,
+            "blocked_same": len(same), "same_examples": same_ex, "band_same": len(band - same), "band_examples": band_ex}
 
 
 def clock_insertion(lib_text: str) -> dict:
@@ -348,6 +376,13 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
     if "f" not in skip and fa["blocked_above"]:
         fails.append(f"(f) face-pin access: {fa['blocked_above']} of {fa['face_pins']} face pins have OBS on the layer "
                      f"above over the pin (DRT-0073 class; e.g. {', '.join(fa['examples'][:3])}); fix: {FACE_FIX}")
+    if "f" not in skip and fa["blocked_same"]:
+        fails.append(f"(f) face-pin access: {fa['blocked_same']} of {fa['face_pins']} face pins overlapped by OBS on their OWN "
+                     f"layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. "
+                     f"{', '.join(fa['same_examples'][:3])}); fix: {SAME_FIX}")
+    if "f" not in skip and fa["band_same"]:
+        warns.append(f"(f) face-pin access: {fa['band_same']} of {fa['face_pins']} face pins partly under a same-layer OBS rect "
+                     f"spanning several pins (exporter edge-band decomposition; e.g. {', '.join(fa['band_examples'][:3])})")
     # (g)
     if "g" not in skip:
         target = (s or {}).get("target_insertion_ps")
@@ -368,6 +403,7 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
             + " / ".join(f"{n} {e['stripes']} stripes ({e['spread']:.0%} spread, {e['coverage']:.0%} cov)"
                          for n, e in pg["nets"].items())
             + f"; strap {info['strap_layer']}; face pins {fa['face_pins']} blocked-above {fa['blocked_above']}"
+            + f" blocked-same {fa['blocked_same']}"
             + "".join(f"; clock {k} insertion {v['max_ps']:.0f} ps" for k, v in (info.get("clock_insertion") or {}).items() if v))
     return {"schema": "opentallas.hier_contract.child_lint.v1", "lef": str(lef_path), "verdict": verdict,
             "fails": fails, "warns": warns, "summary": summ, "info": info}

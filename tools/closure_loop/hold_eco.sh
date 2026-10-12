@@ -60,7 +60,7 @@ ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
 # a hardened leaf (MAX_ROUTING_LAYER M6: M7 left free for its parent's straps) with ~1.8k signal shapes on M7 (qfd_tile_lsl4);
 # MAXL defaults to the route's config.mk MAX_ROUTING_LAYER, M7 only when the route sets none.
 if [ -z "${MAXL:-}" ]; then
-  CFGMK=$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk
+  CFGMK=${ROUTE_CFG:-$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk}
   [ -f "$CFGMK" ] && MAXL=$(sed -n 's/^export MAX_ROUTING_LAYER *= *//p' "$CFGMK" | tail -1 | tr -d ' ')
   echo "OT_ECO max routing layer ${MAXL:-M7} (route config: $CFGMK)" | tee -a "$OUT/eco.log"
 fi
@@ -73,7 +73,12 @@ fi
 # win 15/801, pqc qb 44/1105) are exactly the 4 that went through a hold ECO; the 9 without ECO have 0.  When the
 # route's config.mk hooks carried a keepout, the ECO session re-applies it ABOVE ONLY (OT_PK_FRAC / HALO / FACES from
 # the route) around its GRT/DRT and removes it before export.  ECO_PK=0 opts out, ECO_PK=1 forces it.
-RCFG=$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk
+# ROUTE-CFG (2026-10-12, dscoll_cesn_rt-rta): a combo ECO stacks this script on vtswap_eco.sh's output base, whose ORFS
+# dir has no config.mk, so MAXL fell back to M7 and the keepout to 0: the ECO re-route of an M2-M6 tile put 5,573 shapes
+# on M7 and blocked 276 face pins (child_lint (c)+(f) FAIL at export after CLOSED).  The loop passes the ORIGINAL route's
+# config.mk as ROUTE_CFG; without it a missing config.mk is reported loudly.
+RCFG=${ROUTE_CFG:-$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk}
+[ -f "$RCFG" ] || echo "OT_ECO WARNING: route config $RCFG missing -> layer cap / face-pin keepout of the route NOT applied" | tee -a "$OUT/eco.log"
 if [ -z "${ECO_PK:-}" ]; then
   ECO_PK=0
   if [ -f "$RCFG" ]; then
