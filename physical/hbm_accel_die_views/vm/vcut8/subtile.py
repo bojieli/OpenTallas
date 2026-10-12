@@ -32,7 +32,7 @@ from pathlib import Path
 D = Path(__file__).resolve().parent
 SEQ = re.compile(r'^\$_(DFF|DFFE|SDFF|SDFFE|SDFFCE)_')
 HF_CAP = 1024       # r4: loads per seam bit in the sink tile (textbook_lint hf_port_refuse 2,048; replicas above)
-SINK_CAP = 13500     # clock sinks per tile (owner audit class 1: <= ~15k per tree)
+SINK_CAP = int(os.environ.get('VM_ST_SINK_CAP', '13500'))   # clock sinks per tile (owner audit class 1: <= ~15k per tree)
 BUDGET = 10.0           # seam bits per um of shared edge (two pin layers; the 13.9 b/um N-S faces failed congestion)
 
 
@@ -178,12 +178,34 @@ def main():
             conflict.append((qname(un), anchor[un][1], why)); return
         anchor.setdefault(un, (k, why))
     core_src = re.compile(r'ot_hfd_vm_slice\.sv|ot_hfd_vm_root_x\.sv|ot_sram')
+    # r10 (VM_ST_CORE_SEQ='<q>_<h>,...', opt-in): a unit anchors in the core only through a core FLOP or macro, not through
+    # core combinational cells.  r9 sw_e: the root's output decode (seat_data -> tap_data, 4 copies) is merged with the
+    # ~9.7k output-chain flops it drives (a logic cluster joins the flops it drives), and its root src attribute pulled
+    # all of them into the core tile (20.5k core-anchored sinks, 25.7k in the tile).  Those units read root flops only, so
+    # they may sit one tile edge away (flop -> seam -> decode -> flop, full cycle; same cycles); SINK_CAP then spreads them.
+    core_seq = f'{q}_{h}' in os.environ.get('VM_ST_CORE_SEQ', '').replace(' ', '').split(',')
     for cn in cells:
-        if is_mac[cn] or core_src.search(str(cells[cn].get('attributes', {}).get('src', ''))):
+        if is_mac[cn] or (core_src.search(str(cells[cn].get('attributes', {}).get('src', ''))) and (not core_seq or is_seq[cn])):
             set_anchor(U[cn], core_k, 'core')
+    # r10 (VM_ST_CLUSTER_TILE='<q>_<h>:<c>/<r>', opt-in): the large logic clusters that hold no root / slice cell (e.g.
+    # the root's seat_data decode merged with the 4k output-chain flops it drives) anchor in that tile, edge-adjacent to
+    # the core, instead of the core: r9 sw_e core tile 25.7k clock sinks (root_x 10.8k + 9.5k of such chain flops + half
+    # glue) against the <= 15k per-tree rule.  The decode reads root flops only, so the core -> cluster seam is a flop ->
+    # logic -> flop full cycle like every other seam (same cycles).
+    # 'free' instead of '<c>/<r>': such clusters are not anchored at all; they are placed like every other unit, between
+    # their upstream / downstream anchors under SINK_CAP (r10 sw_e: the per-tap decode copies of ODUP head W-bound and
+    # E-bound output chains, so one shared tile would be wrong for half of them).
+    ctile, cfree = None, False
+    for kv in os.environ.get('VM_ST_CLUSTER_TILE', '').replace(' ', '').split(','):
+        if kv == f'{q}_{h}:free':
+            cfree = True
+        elif kv.startswith(f'{q}_{h}:'):
+            cc_, rr_ = (int(x) for x in kv.split(':')[1].split('/'))
+            ctile = cc_ * R + rr_
+            assert sum(abs(x - y) for x, y in zip(cr(ctile), cr(core_k))) == 1, ('cluster tile not adjacent to core', kv)
     for un, cs in units.items():
-        if len(cs) > 64 and sum(comb(x) for x in cs) > 32:
-            set_anchor(un, core_k, 'logic cluster')
+        if len(cs) > 64 and sum(comb(x) for x in cs) > 32 and not (cfree and un not in anchor):
+            set_anchor(un, ctile if (ctile is not None and un not in anchor) else core_k, 'logic cluster')
     vecbits = {}
     for vn in a.vector_net:
         for i, b in enumerate(mod['netnames'][vn]['bits']):
@@ -316,7 +338,13 @@ def main():
             p = path(kb[un], kf[un], cx)
             return p[int(round((len(p) - 1) * db[un] / (db[un] + df[un])))]
         return kb.get(un, kf.get(un, core_k))
-    for un in sorted((u_ for u_ in units if u_ not in anchor), key=lambda u_: (db.get(u_, 10 ** 6), u_)):
+    # r10 (VM_ST_FFIRST='<q>_<h>,...'): units with ONE feasible tile are placed before every flexible unit, so the flexible
+    # ones see the true load of the core tile (r10 sw_e scan: flexible units filled the core to the cap first, then 2-4k
+    # forced chain flops pushed it to 17.7k).  Same feasibility, same cycles; only who yields to the cap changes.
+    ffirst = f'{q}_{h}' in os.environ.get('VM_ST_FFIRST', '').replace(' ', '').split(',')
+    def porder(u_):
+        return ((bin(fd[u_] & fu[u_]).count('1') > 1) if ffirst else 0, db.get(u_, 10 ** 6), u_)
+    for un in sorted((u_ for u_ in units if u_ not in anchor), key=porder):
         cand = fd[un] & fu[un]
         for y in list(pred[un]) + list(succ[un]):
             if y in tile:
@@ -459,7 +487,20 @@ def main():
     srcmix = collections.Counter((cr(tile[U[cn]]), re.sub(r':.*', '', str(cells[cn].get('attributes', {}).get('src', '?')).split('/')[-1]))
                                  for cn in cells if is_seq[cn])
     seam_sinks = collections.Counter(ks for _, ks, kd, ins, *_ in cuts if ins)
-    rep = dict(master=m, grid=f'{C}x{R}', cols=cols, rows=rows, core_tile=cr(core_k), cells=len(cells), units=len(units),
+    anc_sinks = collections.Counter()
+    for un_, (k_, why_) in anchor.items():
+        anc_sinks[f'{cr(k_)} {why_.split()[0]}'] += nseq[un_]
+    core_units = []
+    for un_ in sorted((u_ for u_, (k_, w_) in anchor.items() if k_ == core_k), key=lambda u_: -nseq[u_])[:6]:
+        sc_ = collections.Counter(os.path.basename(str(cells[x].get('attributes', {}).get('src', '?')).split(':')[0])
+                                  for x in units[un_] if is_seq[x])
+        core_units.append(dict(nseq=nseq[un_], cells=len(units[un_]), src=dict(sc_), why=anchor[un_][1],
+                               ex=sorted({re.sub(r'\[\d+\]', '', qname(x)) for x in units[un_] if is_seq[x]})[:12]))
+    core_free = collections.Counter()
+    for un_, k_ in tile.items():
+        if k_ == core_k and un_ not in anchor:
+            core_free[re.sub(r'\d+', '#', re.sub(r'\[\d+\]', '', qname(un_)))[:60] + f' cand={bin(fd[un_] & fu[un_]).count("1")}'] += nseq[un_]
+    rep = dict(core_free=dict(core_free.most_common(14)), core_units=core_units, anchor_sinks=dict(anc_sinks.most_common(12)), master=m, grid=f'{C}x{R}', cols=cols, rows=rows, core_tile=cr(core_k), cells=len(cells), units=len(units),
                anchored=len(anchor), conflicts=len(conflict), infeasible=infeas, infeasible_ex=dbg, conflict_ex=[str(x)[:160] for x in conflict[:4]],
                k_demand=dict(kdem.most_common()), row_cross_chains=[xload, dict(xalt)], violations=len(viol), viol_ex=viol[:4], viol_classes={' | '.join(map(str, k_)): v_ for k_, v_ in vcls.most_common(12)}, mixed=len(mixed), mixed_ex=mixed[:4], cuts=len(cuts),
                inserted=sum(1 for c in cuts if c[3]), relays=len(relay_d), relay_cuts=relayed, neg_functional=len(nfunc),

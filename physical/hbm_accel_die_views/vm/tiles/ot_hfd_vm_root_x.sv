@@ -7,7 +7,7 @@
 // All payload+192-bit source identities live in actual 128x256 SRAM with W6
 // SECDED. Writes are ACKed only after SRAM readback. No zero-init dependency.
 // por_n is COLD reset only. The caller must drain before resetting ownership.
-module ot_hfd_vm_root_x #(parameter integer ENABLE=0,parameter integer SEATP=0,parameter integer FREG=0)(
+module ot_hfd_vm_root_x #(parameter integer ENABLE=0,parameter integer SEATP=0,parameter integer FREG=0,parameter integer ODUP=0)(
  output wire mem_cmd_v,output wire mem_cmd_we,output wire mem_cmd_bank,output wire [6:0] mem_cmd_addr,output wire [2815:0] mem_wd,
  input wire mem_rd_v,input wire [2815:0] mem_rd,
  input wire clk,por_n,
@@ -79,7 +79,14 @@ module ot_hfd_vm_root_x #(parameter integer ENABLE=0,parameter integer SEATP=0,p
   reg chk_err_q;reg [36*72-1:0] smp_enc_q;   // smp_enc_q: data register (no reset), loaded in CHECK
   always @(posedge clk)if(SEATP!=0&&state==CHECK)for(integer k=0;k<36;k=k+1)smp_enc_q[k*72+:72]<=encode64(sample_data[k*64+:64]);
   assign wr_ACK_v=state==WACK&&!fault;
-  assign wr_ACK_owner=seat_data[2063+:192];
+  wire [4*2304-1:0] seat_data_o;   // ODUP: per-tap output decode copies
+  for(genvar t=0;t<4;t=t+1)begin:odec
+   for(genvar k=0;k<36;k=k+1)begin:w
+    wire [65:0] a=decode64(seat[k*72+:72]);
+    assign seat_data_o[t*2304+k*64+:64]=a[63:0];
+   end
+  end
+  assign wr_ACK_owner=ODUP?seat_data_o[2304+2063+:192]:seat_data[2063+:192];
   assign drained=state==IDLE&&!fault;
   assign native_release=state==PUBLISH&&(&acked)&&!fault;
   reg [2303:0] raw;
@@ -92,8 +99,8 @@ module ot_hfd_vm_root_x #(parameter integer ENABLE=0,parameter integer SEATP=0,p
   always @(posedge clk) if(mem_rd_v) rd_hold<=mem_rd;
   for(genvar t=0;t<4;t=t+1)begin:taps
    assign tap_v[t]=state==PUBLISH&&!sent[t]&&!fault;
-   assign tap_data[t*2063+:2063]=seat_data[2062:0];
-   assign tap_owner[t*192+:192]=seat_data[2063+:192];
+   assign tap_data[t*2063+:2063]=ODUP?seat_data_o[t*2304+:2063]:seat_data[2062:0];
+   assign tap_owner[t*192+:192]=ODUP?seat_data_o[2304+2063+:192]:seat_data[2063+:192];
   end
   always @*begin
    next_state=state;next_bank=bank;next_addr=addr;next_is_write=is_write;

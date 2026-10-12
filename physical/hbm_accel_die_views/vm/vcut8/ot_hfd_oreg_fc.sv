@@ -27,3 +27,18 @@ module ot_hfd_oreg2x (input wire clk, input wire clkf, input wire d, output reg 
     always @(negedge clk) l <= s0;
     always @(posedge clkf) q <= l;
 endmodule
+// ot_hfd_oreg4x / ot_hfd_oreg5x (r10 vm8 2026-10-11): ot_hfd_oreg3x with one / two more core stages, for the widened sw_e
+// (VM_ST_WID, VM_ST_K sw_e:e2w=2): the root -> W-face path crosses two tile columns plus the row seam, one full-cycle hop
+// per tile edge, so the output chain carries one more posedge stage than ot_hfd_oreg3x.
+module ot_hfd_oreg4x (input wire clk, input wire clkf, input wire d, output reg q);
+    reg s0, s1, s2, l;
+    always @(posedge clk) begin s0 <= d; s1 <= s0; s2 <= s1; end
+    always @(negedge clk) l <= s2;
+    always @(posedge clkf) q <= l;
+endmodule
+module ot_hfd_oreg5x (input wire clk, input wire clkf, input wire d, output reg q);
+    reg s0, s1, s2, s3, l;
+    always @(posedge clk) begin s0 <= d; s1 <= s0; s2 <= s1; s3 <= s2; end
+    always @(negedge clk) l <= s3;
+    always @(posedge clkf) q <= l;
+endmodule

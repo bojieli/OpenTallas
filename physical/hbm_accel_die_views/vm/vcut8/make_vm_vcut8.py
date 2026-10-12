@@ -135,6 +135,8 @@ ST_COLS = int(os.environ.get('VM_ST_COLS', '3'))
 ST_SLICE_W = 135.0       # slice column: 6 SRAMs (94.824 um wide) stacked, >= 20 um to each tile edge
 ST_K = {(kv.split(':')[0], kv.split(':')[1].split('=')[0]): int(kv.split('=')[1])
         for kv in os.environ.get('VM_ST_K', '').replace(' ', '').split(',') if kv}   # 'sw_w:t_n_row=1,...'
+ST_KIN = {(kv.split(':')[0], kv.split(':')[1].split('=')[0]): int(kv.split('=')[1])
+          for kv in os.environ.get('VM_ST_KIN', '').replace(' ', '').split(',') if kv}   # r10: 'sw_e:w2e=1' (root-half inputs)
 ST_COLB = {kv.split(':')[0]: [float(x) for x in kv.split(':')[1].split('/')]
            for kv in os.environ.get('VM_ST_COLB', '').replace(' ', '').split(',') if kv}
 # r3: tile origins on the PDN AND routing-track lattice: x on lcm(10.8 M7 stripes, 0.064 M7/M6, 0.048 M5/M4, 0.036 M3,
@@ -147,6 +149,18 @@ ST_PDN_X, ST_PDN_Y = 43.2, 43.2
 # t_s_wr__t[0] at (0.012, 0.096)) and 30 of 36 r3 tiles carry such corner pins: a pin on the boundary has no access
 # from either side of the corner.  Faces shared with a closed half (nw_e, ne_w) keep their pins (their routes stand).
 FACE_KO = float(os.environ.get('VM_ST_FACE_KO', '0')) if ST else 0.0
+# r10 (VM_ST_WID='sw_e:<um>', opt-in; unset = r9 byte-exact): a tiled half widened EASTWARD.  sw_e r9 carried ~9.2k
+# row-seam bits on 350 um x 3 vertical pin layers (9.4 b/um/layer in a 100 um window, target <= 6): the bits are the
+# half's port traffic to/from its one root (N-face / upper-E / upper-W ports vs the root row), so no row/core placement
+# removes them, and no vertical pin layer <= M6 is left (M2/M4/M6 run horizontally).  The N face keeps its pins at the
+# r9 x (they abut nw_e's S face, closed) and the E face its y (abuts se_w's W face); only the E face moves east by the
+# widening, the die lead re-places the quadrant row (outline change posted in el1011-hbmdie.log).
+SW_ROOT = 'sw_e'      # r10: the root half (u_mr) of the VM8 cut
+ST_WID = {kv.split(':')[0]: float(kv.split(':')[1]) for kv in os.environ.get('VM_ST_WID', '').replace(' ', '').split(',') if kv} if ST else {}
+
+def wid(q, h):
+    """outline width of half (q, h): WID[h] unless widened by VM_ST_WID"""
+    return ST_WID.get(f'{q}_{h}', WID[h])
 
 def face_ko(halves, f):
     """tile boundaries along face f ('ew' -> rows, 'ns' -> columns) of the given (q, h) halves; [] unless all are tiled"""
@@ -167,7 +181,7 @@ def st_rows(h):
 def st_cols(h, q=None):
     """3 columns (O-face, middle, I/seam face), ~116 um each; a slice half widens the middle column to ST_SLICE_W (the
     slice stays whole: 6 SRAMs stacked with 28.08 um channels, >= 20 um to the tile edges); on the 0.054 site grid"""
-    w = WID[h]
+    w = wid(q, h) if q is not None else WID[h]
     if f'{q}_{h}' in ST_COLB:   # r2: per-half column cuts sized to the row-seam load (VM_ST_COLB 'sw_e:118.8/280.8')
         b = [0.0] + ST_COLB[f'{q}_{h}'] + [w]
         assert all(abs(x / ST_PDN_X - round(x / ST_PDN_X)) < 1e-6 for x in b[1:-1]), b
@@ -362,7 +376,7 @@ class H(mt.T):
         return b
     def pin_xy(s, p, b):
         f = port_face(s.q, s.h, p); c = PINPOS[(f'hfd_vm_{s.q}_{s.h}', p)][b]
-        return {'w': (0.0, c), 'e': (WID[s.h], c), 's': (c, 0.0), 'n': (c, QH)}[f]
+        return {'w': (0.0, c), 'e': (wid(s.q, s.h), c), 's': (c, 0.0), 'n': (c, QH)}[f]
     def ws_stages(s, p, w, n, expr, nb):
         """[vm8] 2026-10-11 wire stages (hbm_vm8bfq 328df2a09 TT: nee -62 i_f_su_NE -> t_s_wr lockup, see -258
         x_w2e lockup -> t_n_row pin reg, sew -229 xf_f_w_wr -> t_n_wr lockup): a face-to-face path (input pin stage on
@@ -474,6 +488,16 @@ def cross_in(s, p, w):     # cross / seam input: pin register on its tap leaf + 
     for lo, hi, t in tap_runs(s.taps_of(p)):
         s.a(f'always @(posedge c_{t}) xf_{p}[{hi}:{lo}] <= {p}[{hi}:{lo}]; '
             f'always @(negedge c_{t}) {lk}[{hi}:{lo}] <= xf_{p}[{hi}:{lo}];   // pin reg + lockup ({t})')
+    kin = ST_KIN.get((f'{s.q}_{s.h}', p), 0) if s.rin else 0
+    if kin:
+        # r10 (VM_ST_KIN): +kin full core stages on every bit of a root-half cross input (uniform: one more cycle per
+        # stage on the whole port, so its bits keep one depth), for a tiled half whose input pins sit more tile edges
+        # from the core than the pin register -> lockup -> x_ chain can cross (sw_e r10 root in the top row: w2e pins
+        # in the bottom-W tile are 3 edges from it)
+        s.a(f'reg [{w-1}:0] ' + ', '.join(f'xk{i}_{p}' for i in range(kin)) + '; always @(posedge clk) begin ' +
+            ''.join(f'xk{i}_{p} <= {lk if i == 0 else f"xk{i-1}_{p}"}; ' for i in range(kin)) + 'end')
+        s.inp_n[p] = 2 + kin
+        lk = f'xk{kin-1}_{p}'
     if s.rin:                 # root half: one more core register after the lockup (+1 cycle on root inputs)
         s.a(f'reg [{w-1}:0] x_{p}; always @(posedge clk) x_{p} <= {lk};')
     else:
@@ -520,7 +544,10 @@ def sw_e():
     s.a('wire m_v, m_we, m_bank; wire [6:0] m_addr; wire [2815:0] m_wd; wire m_rd_v; wire [2815:0] m_rd;')
     s.a('wire wr_ready, wr_ACK_v, rd_ready, native_release, drained, fault; wire [3:0] tap_v; wire [191:0] wr_ACK_owner;')
     s.a('wire [767:0] tap_owner; wire [4*2063-1:0] tap_data;')
-    s.a('ot_hfd_vm_root_x #(.ENABLE(1), .SEATP(1), .FREG(1)) u_mr (.clk(clk), .por_n(rst_n), .mem_cmd_v(m_v), .mem_cmd_we(m_we), '
+    # r10 (VM_ST_ODUP='sw_e'): per-tap output decode copies in the root (make_root_x.py ODUP), and e2w takes tap 1's
+    # copy while t_e_row keeps tap 0's, so the W-bound and E-bound output chains are separate placement units (same value)
+    odup = f'{SW_ROOT}' in os.environ.get('VM_ST_ODUP', '').replace(' ', '').split(',')
+    s.a(f'ot_hfd_vm_root_x #(.ENABLE(1), .SEATP(1), .FREG(1){", .ODUP(1)" if odup else ""}) u_mr (' '.clk(clk), .por_n(rst_n), .mem_cmd_v(m_v), .mem_cmd_we(m_we), '
         '.mem_cmd_bank(m_bank), .mem_cmd_addr(m_addr), .mem_wd(m_wd), .mem_rd_v(m_rd_v), .mem_rd(m_rd), '
         '.wr_v(wq[15]), .wr_ready(wr_ready), .wr_bank(wq[16]), .wr_addr(wq[23:17]), '
         '.wr_data({wq[14:0], wd_f_su_SW[2047:0]}), .wr_owner(wq[215:24]), .wr_ACK_v(wr_ACK_v), '
@@ -537,7 +564,14 @@ def sw_e():
     s.a('assign m_rd = {arr[3] ? x_f_e_row[1281:770] : hold[2815:2304], arr[2] ? x_f_e_row[768:1] : hold[2303:1536], '
         'arr[1] ? x_f_n_row[768:1] : hold[1535:768], arr[0] ? s0_d : hold[767:0]};')
     s.a('always @(posedge clk or negedge rst_n) if (!rst_n) got <= 0; else got <= m_rd_v ? 4\'d0 : got_nx;')
-    s.a('always @(posedge clk) hold <= m_rd;')
+    if odup:
+        # r10: the hold register captures its own copy of the read-row mux, so it is not one placement unit with the
+        # root's rd_hold flops (same value: the same mux of the same flops); 2,816 flops leave the core tile
+        s.a('wire [2815:0] m_rd_h = {arr[3] ? x_f_e_row[1281:770] : hold[2815:2304], arr[2] ? x_f_e_row[768:1] : hold[2303:1536], '
+            'arr[1] ? x_f_n_row[768:1] : hold[1535:768], arr[0] ? s0_d : hold[767:0]};')
+        s.a('always @(posedge clk) hold <= m_rd_h;')
+    else:
+        s.a('always @(posedge clk) hold <= m_rd;')
     cmd = mt.CMD('m')
     cross_out(s, 't_n_wr', W, cat(cmd + [(10, 768, 'm_wd[1535:768]'), (778, 818, 'fs[2047:1230]')], W))
     cross_out(s, 't_e_wr', W, cat(cmd + [(10, 768, 'm_wd[2303:1536]'), (778, 512, 'm_wd[2815:2304]'), (1290, 974, 'fs[973:0]')], W))
@@ -545,7 +579,7 @@ def sw_e():
     cross_out(s, 't_e_row', R, cat([(0, TAPW, 'tap_data[2062:0]')], R))
     tsu = ('{x_f_e_wr[1278:201], tap_owner[767:0], wr_ACK_owner[191:0], tap_v[3:0], fault, drained, native_release, rd_ready, '
            'wr_ACK_v, wr_ready}')
-    cross_out(s, 'e2w', 5401, f'{{c_wd, c_addr, c_bank, c_we, c_v, x_f_e_wr[1790:1279], {tsu}, tap_data[2062:0]}}')
+    cross_out(s, 'e2w', 5401, f'{{c_wd, c_addr, c_bank, c_we, c_v, x_f_e_wr[1790:1279], {tsu}, tap_data[{"4125:2063" if odup else "2062:0"}]}}')
     return s
 
 # ---------------------------------------------------------------- NW (O = w: die face; I = e: slice + cross + t_quant)
@@ -736,7 +770,7 @@ def plan():
     pins = {f'hfd_vm_{q}_{h}': [] for q in OUTER for h in 'we'}
     dens = []
     def put(master, face, pos, lys, ren=lambda p: p):
-        w = WID[master[-1]]
+        w = wid(master.split('_')[2], master[-1])
         for p, xs in pos.items():
             for b, a in enumerate(xs):
                 ly = lys[p][b]
@@ -789,7 +823,7 @@ def plan():
     for q in OUTER:
         for h in 'we':
             m = f'hfd_vm_{q}_{h}'
-            w = WID[h]
+            w = wid(q, h)
             xc = 0.016 + round((w / 2 - 0.016) / 0.064) * 0.064
             pins[m].append(('ck', 0, 'M7', round(xc, 4), round(QH / 2, 4), '0.0320 0.2880'))
             ys = 0.096 if q in ('sw', 'se') else QH - 0.096          # outer short edge (VM slot edge)
@@ -802,7 +836,7 @@ def plan():
         for q in OUTER:
             for h in 'we':
                 m = f'hfd_vm_{q}_{h}'
-                w = WID[h]
+                w = wid(q, h)
                 for f in faces_of(q, h):
                     for t, lo, hi in taps(h, f):
                         c = (lo + hi) / 2
@@ -850,7 +884,7 @@ def plan():
         q, h = m.split('_')[2], m.split('_')[3]
         seen, got = set(), {}
         for p, b, ly, x, y, _ in ps:
-            assert 0.0 <= x <= WID[h] and 0.0 <= y <= QH, (m, p, b, x, y)
+            assert 0.0 <= x <= wid(q, h) and 0.0 <= y <= QH, (m, p, b, x, y)
             k = (ly, round(x, 3), round(y, 3))
             assert k not in seen, ('pin clash', m, p, b, k)
             seen.add(k); got[p] = got.get(p, 0) + 1
@@ -871,7 +905,7 @@ def write_ports(m, pins):
         xs, ys = [t[3] for t in pp], [t[4] for t in pp]
         ports[n] = {'bits': w, 'direction': d, 'layer': pp[0][2], 'layers': sorted({t[2] for t in pp}),
                     'x': [min(xs), max(xs)], 'y': [min(ys), max(ys)]}
-    (od / 'ports.json').write_text(json.dumps({'master': m, 'kind': 'vm8v', 'w_um': WID[h], 'h_um': QH, 'obs_top': 7,
+    (od / 'ports.json').write_text(json.dumps({'master': m, 'kind': 'vm8v', 'w_um': wid(q, h), 'h_um': QH, 'obs_top': 7,
         'parent': f'hfd_vm_{q}', 'half': h, 'side': 'outer' if OUTER[q] == h else 'inner',
         'generator': 'physical/hbm_accel_die_views/vm/vcut8/make_vm_vcut8.py', 'ports': ports}, indent=1) + '\n')
 
