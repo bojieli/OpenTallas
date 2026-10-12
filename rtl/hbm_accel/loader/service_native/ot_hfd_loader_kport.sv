@@ -68,6 +68,7 @@ module ot_hfd_loader_kport #(
 );
     localparam integer NA = (NO <= 1) ? 1 : $clog2(NO);
     localparam integer CW = $clog2(NO + 1);
+    localparam integer WNW = $clog2(WNO + 1);             // hbmdie-1011: written-not-popped / popped-not-taken counters (5 b at WNO 16)
     localparam integer RA = $clog2(RB);
     localparam integer LN = (ND <= 2) ? 1 : $clog2(ND);   // lane index width (hgi-1010/c: was 2 bits; ND 7 aliased lanes 4..6 onto 0..2)
     genvar s, d;
@@ -122,8 +123,8 @@ module ot_hfd_loader_kport #(
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) ack_prev <= 8'd0; else ack_prev <= ack_now;
         wire [7:0] wpop = ack_now - ack_prev;                 // pops this edge
-        reg [4:0] wn;                                          // written, not popped
-        reg [4:0] wa;                                          // popped, acknowledgement not yet taken by the lane
+        reg [WNW-1:0] wn;                                          // written, not popped
+        reg [WNW-1:0] wa;                                          // popped, acknowledgement not yet taken by the lane
         reg [15:0] wt [0:WNO-1]; reg [$clog2(WNO)-1:0] wth, wtt;   // the outstanding writes' tags, in order
         reg wp_v; reg [290:0] wp;                              // the write packet register (one a cycle)
         reg wsticky;                                           // a WR_G step without an outstanding write
@@ -135,7 +136,7 @@ module ot_hfd_loader_kport #(
             wire rd_ok = !req_we[d] && rqn != 3'd4 && l_wn[d] == 5'd0 &&
                          (l_cnt[d] == 0 || (l_stk[d] == s && l_cnt[d] != CW'(NO)));
             wire wr_ok = req_we[d] && l_cnt[d] == 0 && req_wstrb[d*32 +: 32] == 32'hFFFFFFFF &&
-                         (owner[s] == '0 || owner[s][d]) && wn < 5'(WNO) && (l_wn[d] == 5'd0 || l_wstk[d] == s) && l_wn[d] != 5'd31;
+                         (owner[s] == '0 || owner[s][d]) && wn < WNW'(WNO) && (l_wn[d] == 5'd0 || l_wstk[d] == s) && l_wn[d] != 5'd31;
             assign want[d] = ENABLE && req_v[d] && l_ok[d] && l_stack[d] == s && (rd_ok || wr_ok);
         end
         reg [ND-1:0] gr_; reg [LN-1:0] gs_;
@@ -179,7 +180,7 @@ module ot_hfd_loader_kport #(
         wire [3:0] chunk = (MUT == 3) ? rm : ((rm < room4) ? rm : room4);
         wire [4:0] cpc = sc[6:2] ^ sc[11:7] ^ sc[16:12];
         wire rd_go = ENABLE && rqn != 3'd0 && fn != CW'(NO) && (cr != 0 || MUT == 4) && (rres + (RA+1)'(chunk) <= (RA+1)'(RB)) &&
-                     !rsticky && !n_fault && wn == 5'd0 && !ev;     // the write fence: no written-but-unpopped write
+                     !rsticky && !n_fault && wn == '0 && !ev;     // the write fence: no written-but-unpopped write
         wire rlast = chunk == rm;
         wire [22+LN:0] fh_ = fl[fh];
         wire [22+LN:0] fa_ = fl[fa];
@@ -237,23 +238,23 @@ module ot_hfd_loader_kport #(
                 fn <= fn + (rd_go ? 1'b1 : 1'b0) - (c_end ? 1'b1 : 1'b0);
             end
         // ---------------- writes: packet register, credits (WR_G pops), in-order acknowledgements to the writer lane
-        assign e_rsp_v[s] = wa != 5'd0;
+        assign e_rsp_v[s] = wa != '0;
         assign e_rsp_tag[s] = wt[wth];
         wire w_take = e_rsp_v[s] && |(owner[s] & rsp_rdy);
-        wire owp = wn != 5'd0 || wp_v;
+        wire owp = wn != '0 || wp_v;
         assign lq[s*350 +: 350] = {(BURST != 0) ? chunk : 4'd1, owp, 1'b1, qh_[50:35], sc, cpc, rd_go, wp, wp_v};
         assign r_fault[s] = rsticky || wsticky;
         always @(posedge clk) if (ev) begin wp <= {ed, l_sec[gs_], l_pc[gs_]}; wt[wtt] <= et; end
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin owner[s] <= {ND{1'b0}}; rr[s] <= '0; wn <= 5'd0; wa <= 5'd0; wth <= '0; wtt <= '0; wp_v <= 1'b0; wsticky <= 1'b0; end
+            if (!rst_n) begin owner[s] <= {ND{1'b0}}; rr[s] <= '0; wn <= '0; wa <= '0; wth <= '0; wtt <= '0; wp_v <= 1'b0; wsticky <= 1'b0; end
             else begin
                 if (acc_s[s]) rr[s] <= LN'((32'(gs_) + 1) % ND);
                 wp_v <= ev;
                 if (ev) begin owner[s] <= gr_; wtt <= wtt + 1'b1; end
-                else if (wn == 5'd0 && wa == 5'd0 && !wp_v) owner[s] <= {ND{1'b0}};
+                else if (wn == '0 && wa == '0 && !wp_v) owner[s] <= {ND{1'b0}};
                 if (wpop > 8'(wn)) wsticky <= 1'b1;                             // a pop nobody wrote
-                wn <= wn + (ev ? 5'd1 : 5'd0) - wpop[4:0];
-                wa <= wa + ((MUT == 5) ? (ev ? 5'd1 : 5'd0) : wpop[4:0]) - (w_take ? 5'd1 : 5'd0);   // MUT 5: acknowledged at send
+                wn <= wn + (ev ? WNW'(1) : WNW'(0)) - WNW'(wpop);
+                wa <= wa + ((MUT == 5) ? (ev ? WNW'(1) : WNW'(0)) : WNW'(wpop)) - (w_take ? WNW'(1) : WNW'(0));   // MUT 5: acknowledged at send
                 if (w_take) wth <= wth + 1'b1;
             end
     end
