@@ -595,7 +595,9 @@ endmodule
 // (18 or 19; the original: 13).
 // ---------------------------------------------------------------------------
 module ot_dsrom_actquant_f12 #(
-    parameter integer MLAT = 5      // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
+    parameter integer MLAT = 5,     // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
+    parameter integer XSRAM = 0     // el1011-s81su (opt-in): the elements' S0 -> E wait line in SRAM (ot_sram_dline,
+                                    // 2 x 64x512 macros + capture flops) instead of 1,024 x (6 + MLAT) flops; same values
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -678,7 +680,11 @@ module ot_dsrom_actquant_f12 #(
     ot_hdc_delay #(.W(2), .D(MLAT)) u_dp (.clk(clk), .rst_n(rst_n), .d({lv_fp4[5], lv_nf[5]}), .q({p_fp4, p_nf}));
     // the elements, S0 -> E (5 tree + MLAT multiply registers, then E itself: aligned at E's input)
     wire [1023:0] xe;
-    ot_hdc_delay #(.W(1024), .D(6 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xe));
+    generate if (XSRAM != 0) begin : g_xs
+        ot_sram_dline #(.W(1024), .D(6 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xe));
+    end else begin : g_xf
+        ot_hdc_delay #(.W(1024), .D(6 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xe));
+    end endgenerate
 
     // ---- E: e = ceil_log2(prod)
     reg              e_v, e_fp4, e_nf;

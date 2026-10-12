@@ -6122,9 +6122,9 @@ def b2_nets(vb2):
         if vb2.get('xload'):    # SM.MATVEC x load: slice q -> its quadrant VM8 (hb_vm_<q>), read half of a tap
             out.append((f'vxl_{q_}', 'hub', 2065, (f'hb_vms_{q_}', 't_xl_rdn'), (f'hb_vm_{q_.lower()}', 'f_xl_rdn')))
             out.append((f'vxl_{q_}_r', 'hub', 129, (f'hb_vm_{q_.lower()}', 't_xl_rup'), (f'hb_vms_{q_}', 'f_xl_rup')))
-        if vb2.get('vmap'):     # HC aperture: 2,224 b / 4 per quarter
-            out.append((f'vmap_{q_}', 'hub', 556, (f'hb_vms_{q_}', 't_hgi_vmap'), (f'hb_hc_{q_}', 'f_hgi_vmap')))
-            out.append((f'vmap_{q_}_r', 'hub', 4, (f'hb_hc_{q_}', 't_hgi_vmap'), (f'hb_vms_{q_}', 'f_hgi_vmap')))
+        if vb2.get('vmap'):     # HC x lanes a quarter: v0.6 556 + 4 (2 x 278); SPEC v0.7 vmap_bits 1,200 + 16 (8 x 150 b, cr / done)
+            out.append((f'vmap_{q_}', 'hub', vb2.get('vmap_bits', 556), (f'hb_vms_{q_}', 't_hgi_vmap'), (f'hb_hc_{q_}', 'f_hgi_vmap')))
+            out.append((f'vmap_{q_}_r', 'hub', vb2.get('vmap_r_bits', 4), (f'hb_hc_{q_}', 't_hgi_vmap'), (f'hb_vms_{q_}', 'f_hgi_vmap')))
     return out
 
 
