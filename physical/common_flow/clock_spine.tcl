@@ -8,6 +8,7 @@
 # What: sinks of the port net are binned into leaves (<= OT_SPINE_LEAF_N sinks in an OT_SPINE_BIN um bin); a recursive
 # bisection tree joins the leaves (node = leaf centroid); the root is fed from the port by a repeated trunk; every edge is
 # an L path chosen to avoid macros, repeated every <= OT_SPINE_SEG um; buffers sit on legal sites outside macros/blockages,
+# on sites no placed cell uses (no overlap, no late flop displacement; check_placement verified after insertion),
 # FIRM + dont_touch, every spine net is CLOCK (clk_net_protect keeps resizer off it).  Leaves are then padded to equal
 # MEASURED arrival (STA, placement parasitics), OT_SPINE_ITERS rounds.  TritonCTS is not run for this clock.
 # Chain it FIRST in OT_CTS_FIX_HOOKS (it wraps clock_tree_synthesis; other hooks wrap it).  Knobs (env): OT_SPINE_PORT
@@ -40,26 +41,49 @@ proc ot_sp_free {x y} {
   return [list $x $y]
 }
 
-# snap to a legal row/site not used by another spine cell
+# is the w-wide footprint at (cx, cy) inside one row segment, outside macros/hard blockages, and on sites no other cell uses?
+proc ot_sp_fits {cx cy nsite} {
+  set sw $::ot_sp_sw
+  for {set s 0} {$s < $nsite} {incr s} { if {[dict exists $::ot_sp_used "$cy,[expr {$cx + $s * $sw}]"]} { return 0 } }
+  if {![dict exists $::ot_sp_rowseg $cy]} { return 0 }
+  set in 0; set x1 [expr {$cx + $nsite * $sw}]
+  foreach sg [dict get $::ot_sp_rowseg $cy] { lassign $sg a b; if {$cx >= $a && $x1 <= $b} { set in 1; break } }
+  if {!$in} { return 0 }
+  return [expr {![ot_sp_blocked $cx $cy $x1 [expr {$cy + $::ot_sp_rh}]]}]
+}
+
+# Snap to the nearest FREE legal footprint: sites taken by ANY placed cell (movable flops/logic included, not only fixed
+# cells) or by another spine cell are excluded, so an inserted spine buffer never overlaps an existing instance and never
+# needs detailed placement to displace a flop after the fact (hcoll-port-tile11 g11a: 44 DPL-0033 overlaps, PLACED flops
+# under FIRM clkbuf_sp_* -- the occupancy map used to hold only FIRM/LOCKED/FIXED cells).  Search: rows in order of
+# |dr|, and within a row outward site by site; cost = |dx| + |dy|, stop once a row's dy alone exceeds the best cost.
 proc ot_sp_legal {x y} {
   set sw $::ot_sp_sw; set rh $::ot_sp_rh; set w $::ot_sp_cw
   set ry [expr {$::ot_sp_ry0 + int(round(double($y - $::ot_sp_ry0) / $rh)) * $rh}]
   set sx [expr {$::ot_sp_rx0 + int(round(double($x - $::ot_sp_rx0) / $sw)) * $sw}]
   set nsite [expr {int(ceil(double($w) / $sw))}]
-  if {![info exists ::ot_sp_cand]} {
-    set c {}
-    for {set k -40} {$k <= 40} {incr k} { for {set dr -10} {$dr <= 10} {incr dr} { lappend c [list [expr {abs($k) * 2 + abs($dr) * 3}] $k $dr] } }
-    set ::ot_sp_cand [lsort -integer -index 0 $c]
+  set R $::ot_sp_rsites; set D $::ot_sp_rrows
+  set best ""; set bc 1e18
+  for {set k 0} {$k <= 2 * $D} {incr k} {
+    set dr [expr {($k + 1) / 2 * ($k % 2 ? 1 : -1)}]
+    set rc [expr {abs($dr) * $rh}]
+    if {$rc >= $bc} break
+    set cy [expr {$ry + $dr * $rh}]
+    if {![dict exists $::ot_sp_rowseg $cy]} continue
+    for {set d 0} {$d <= $R} {incr d} {
+      if {$rc + $d * $sw >= $bc} break
+      foreach sg {1 -1} {
+        set cx [expr {$sx + $sg * $d * $sw}]
+        if {[ot_sp_fits $cx $cy $nsite]} { set best [list $cx $cy]; set bc [expr {$rc + $d * $sw}]; break }
+      }
+      if {$best ne "" && [lindex $best 1] == $cy} break
+    }
   }
-  foreach kc $::ot_sp_cand {
-    lassign $kc _ k dr
-    set cx [expr {$sx + $k * $nsite * $sw}]; set cy [expr {$ry + $dr * $rh}]
-    if {[ot_sp_blocked $cx $cy [expr {$cx + $w}] [expr {$cy + $rh}]]} continue
-    set ok 1
-    for {set s -1} {$s <= $nsite} {incr s} { if {[dict exists $::ot_sp_used "$cy,[expr {$cx + $s * $sw}]"]} { set ok 0; break } }
-    if {!$ok} continue
-    for {set s 0} {$s < $nsite} {incr s} { dict set ::ot_sp_used "$cy,[expr {$cx + $s * $sw}]" 1 }
-    return [list $cx $cy]
+  if {$best ne ""} {
+    lassign $best cx cy
+    # spine cells keep a one-site gap to each other (pin access between adjacent x24 buffers)
+    for {set s -1} {$s <= $nsite} {incr s} { dict set ::ot_sp_used "$cy,[expr {$cx + $s * $sw}]" 1 }
+    return $best
   }
   # crowded: move the target 10 um outward and retry
   if {[incr ::ot_sp_retry] < 40} {
@@ -67,6 +91,17 @@ proc ot_sp_legal {x y} {
     set r [ot_sp_legal $fx $fy]; set ::ot_sp_retry 0; return $r
   }
   error "OT_SPINE: no legal site near $x $y"
+}
+
+# Every spine cell was put on free sites, so the design must pass check_placement exactly as it did before insertion.
+# Guard (should never fire): if it does not, legalise the movable cells around the FIRM spine (detailed_placement moves
+# only PLACED instances) and re-check, so CTS never continues on an illegal placement.
+proc ot_sp_check_legal {} {
+  if {[catch {check_placement} e] == 0} { puts "OT_SPINE legal: check_placement clean after $::ot_sp_nbuf spine cells"; return }
+  puts "OT_SPINE WARNING: check_placement failed after spine insertion ($e); legalising movable cells around the spine"
+  detailed_placement
+  check_placement
+  puts "OT_SPINE legal: check_placement clean after detailed_placement"
 }
 
 proc ot_sp_buf {name x y innet {m ""}} {
@@ -226,24 +261,33 @@ proc ot_clock_spine {} {
       lappend ::ot_sp_obs [list [expr {[$b xMin] - $halo}] [expr {[$b yMin] - $halo}] [expr {[$b xMax] + $halo}] [expr {[$b yMax] + $halo}]]
     }
   }
+  # only HARD placement blockages exclude spine cells: soft / partial-density blockages are global-placer guidance (e.g. the
+  # hcoll pin-flop channel guides cover every face strip beside the SRAM columns; treating them as hard left no legal site
+  # for the west-face leaves -> 'no legal site', hcoll-port-tile10 g10a/g10b).  Spine cells are FIRM, so legal there.
   foreach g [$blk getBlockages] {
+    if {[$g isSoft]} continue
+    if {[catch {$g getMaxDensity} md] == 0 && $md > 0 && $md < 100} continue
     set b [$g getBBox]; lappend ::ot_sp_obs [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
   }
-  set ::ot_sp_rowor [dict create]; set ::ot_sp_ry0 ""; set ::ot_sp_rx0 ""
+  set ::ot_sp_rowor [dict create]; set ::ot_sp_rowseg [dict create]; set ::ot_sp_ry0 ""; set ::ot_sp_rx0 ""
   foreach r [$blk getRows] {
     lassign [$r getOrigin] ox oy
     if {$::ot_sp_ry0 eq "" || $oy < $::ot_sp_ry0} { set ::ot_sp_ry0 $oy }
     if {$::ot_sp_rx0 eq "" || $ox < $::ot_sp_rx0} { set ::ot_sp_rx0 $ox }
     dict set ::ot_sp_rowor $oy [$r getOrient]
+    set rb [$r getBBox]; dict lappend ::ot_sp_rowseg $oy [list [$rb xMin] [$rb xMax]]
     set ::ot_sp_sw [[$r getSite] getWidth]; set ::ot_sp_rh [[$r getSite] getHeight]
   }
   set ::ot_sp_used [dict create]; set ::ot_sp_nbuf 0; set ::ot_sp_nn 0; set ::ot_sp_insts {}
-  # existing fixed / firm standard cells (tapcells, pin cells) keep their sites
+  set ::ot_sp_rsites [ot_sp_env OT_SPINE_SEARCH_SITES 600]; set ::ot_sp_rrows [ot_sp_env OT_SPINE_SEARCH_ROWS 12]
+  # every placed standard cell (fixed AND movable) keeps its sites: spine cells go on free sites only
   foreach i [$blk getInsts] {
     if {[[$i getMaster] isBlock]} continue
-    if {[lsearch -exact {FIRM LOCKED FIXED COVER} [$i getPlacementStatus]] < 0} continue
+    if {![$i isPlaced]} continue
     set b [$i getBBox]
-    for {set x [$b xMin]} {$x < [$b xMax]} {incr x $::ot_sp_sw} { dict set ::ot_sp_used "[$b yMin],$x" 1 }
+    for {set y [$b yMin]} {$y < [$b yMax]} {incr y $::ot_sp_rh} {
+      for {set x [$b xMin]} {$x < [$b xMax]} {incr x $::ot_sp_sw} { dict set ::ot_sp_used "$y,$x" 1 }
+    }
   }
   # sinks -> bins -> leaves
   set bins [dict create]; set ns 0
@@ -305,6 +349,7 @@ proc ot_clock_spine {} {
   }
   foreach b $::ot_sp_insts { $b setDoNotTouch 1 }
   foreach n [concat [list $net0] [lmap b $::ot_sp_insts {[$b findITerm $::ot_sp_out] getNet}]] { $n setDoNotTouch 1 }
+  ot_sp_check_legal
   puts "OT_SPINE done port $port buffers $::ot_sp_nbuf"
   return 1
 }

@@ -80,12 +80,12 @@
 // 2r, 2r+1 mod 256; v2 checked addr[7:4] == G only).  Faults (sticky): [0] alignment, [1] range, [2] allocation (no free
 // entry and no victim), [3] write queue full at an eviction.
 module dsfd_vm_cl #(
-    parameter integer G = 0,            // lane index (static)
     parameter integer LA = 12,          // row entries
     parameter integer LTO = 16,         // partial-row timeout (cycles since last element)
     parameter integer WQ = 2            // write queue depth
 ) (
     input  wire          clk, rn,       // rn: this lane's relayed reset (control only)
+    input  wire [3:0]    gid,           // lane index (static strap, registered by dsfd_vm_clt): one hard view serves all 16 lanes
     input  wire [15:0]   ev,
     input  wire [16*19-1:0] ea,
     input  wire [16*32-1:0] ed,
@@ -106,7 +106,7 @@ module dsfd_vm_cl #(
         for (k = 0; k < 16; k = k + 1) if (ev[k]) begin
             if (ea[19*k + 18]) d_frg = 1'b1;
 `ifndef OT_SPVM_MUT_NOALIGN
-            else if (ea[19*k + 1 +: 7] != {G[3:0], k[3:1]}) d_fal = 1'b1;
+            else if (ea[19*k + 1 +: 7] != {gid, k[3:1]}) d_fal = 1'b1;
 `endif
             else d_ok[k] = 1'b1;
         end
@@ -259,7 +259,7 @@ module dsfd_vm_cl #(
             if (s3_al[e]) KEYM[e] <= s3_ak[e];
         end
         if (mv && q_room) begin q_t[qt] <= mk; q_m[qt] <= mm; q_d[qt] <= md; end
-        if (q_pop) begin w_row <= {q_t[qh], G[3:0]}; w_m <= q_m[qh]; w_d <= q_d[qh]; end
+        if (q_pop) begin w_row <= {q_t[qh], gid}; w_m <= q_m[qh]; w_d <= q_d[qh]; end
         if (!rn) begin
             for (e = 0; e < LA; e = e + 1) MASK[e] <= 16'd0;
             qn <= 0; qh <= 0; qt <= 0; w_v <= 1'b0; flt <= 4'd0;
@@ -283,13 +283,13 @@ endmodule
 // 832-b f_cap slice (8 roots x {row1 {data32, addr19}, v1, row0 {data32, addr19}, v0}), registered reset and port slot,
 // dsfd_vm_cl (outputs registered).  Pin plan physical/s81_ph_views/ports/contract_vm28/dsfd_vm_clt.
 module dsfd_vm_clt #(
-    parameter integer G = 0,
     parameter integer LA = 12,
     parameter integer LTO = 16
 ) (
     input  wire [0:0]   ck,
     input  wire [0:0]   rn,
     input  wire [0:0]   sok,
+    input  wire [3:0]   gid,            // v3: lane index as a static strap pin (was parameter G: a hard view has no parameters)
     input  wire [831:0] f_c,
     output wire [0:0]   w_v,
     output wire [13:0]  w_row,
@@ -298,8 +298,8 @@ module dsfd_vm_clt #(
     output wire [3:0]   flt
 );
     wire clk = ck[0];
-    reg [831:0] cp; reg rn_r, sok_r;
-    always @(posedge clk) begin cp <= f_c; rn_r <= rn[0]; sok_r <= sok[0]; end
+    reg [831:0] cp; reg rn_r, sok_r; reg [3:0] gid_r;
+    always @(posedge clk) begin cp <= f_c; rn_r <= rn[0]; sok_r <= sok[0]; gid_r <= gid; end
     wire [15:0] lv; wire [16*19-1:0] la; wire [16*32-1:0] ld;
     genvar gk;
     generate for (gk = 0; gk < 8; gk = gk + 1) begin : g_r
@@ -313,12 +313,12 @@ module dsfd_vm_clt #(
 `ifdef OT_SPVM_MUT_DROPW
     // MUTANT: lane 0 drops every 61st accepted element (posted write vanishes)
     reg [5:0] dc;
-    always @(posedge clk) if (!rn_r) dc <= 6'd0; else if (G == 0 && lv[0]) dc <= (dc == 6'd60) ? 6'd0 : dc + 6'd1;
-    wire [15:0] lvx = (G == 0 && dc == 6'd60) ? (lv & 16'hfffe) : lv;
+    always @(posedge clk) if (!rn_r) dc <= 6'd0; else if (gid_r == 4'd0 && lv[0]) dc <= (dc == 6'd60) ? 6'd0 : dc + 6'd1;
+    wire [15:0] lvx = (gid_r == 4'd0 && dc == 6'd60) ? (lv & 16'hfffe) : lv;
 `else
     wire [15:0] lvx = lv;
 `endif
-    dsfd_vm_cl #(.G(G), .LA(LA), .LTO(LTO)) u_c (.clk(clk), .rn(rn_r), .ev(lvx), .ea(la), .ed(ld), .slot_ok(sok_r),
+    dsfd_vm_cl #(.LA(LA), .LTO(LTO)) u_c (.clk(clk), .rn(rn_r), .gid(gid_r), .ev(lvx), .ea(la), .ed(ld), .slot_ok(sok_r),
         .w_v(w_v[0]), .w_row(w_row), .w_m(w_m), .w_d(w_d), .flt(flt));
 endmodule
 
@@ -489,7 +489,11 @@ module dsfd_vm_fe #(
 `endif
         (* keep = 1 *) reg rr_l;
         always @(posedge clk) rr_l <= rn0;
-        dsfd_vm_clt #(.G(gl), .LA(LA), .LTO(LTO)) u_l (.ck(ck), .rn(rr_l), .sok(sok), .f_c(f_cap[832*gl +: 832]),
+        // hard child: NO parameter overrides (the hard view is LA 12 / LTO 16); the lane index is the gid strap
+        if (LA != 12 || LTO != 16) begin : g_cfg
+            dsfd_vm_clt_hard_cfg_mismatch u_err ();   // elaboration error: the hardened dsfd_vm_clt is LA 12 / LTO 16
+        end
+        dsfd_vm_clt u_l (.ck(ck), .rn(rr_l), .sok(sok), .gid(gl[3:0]), .f_c(f_cap[832*gl +: 832]),
             .w_v(cl_v[gl]), .w_row(cl_row[14*gl +: 14]), .w_m(cl_m[16*gl +: 16]), .w_d(cl_d[512*gl +: 512]),
             .flt(cl_f[4*gl +: 4]));
     end endgenerate

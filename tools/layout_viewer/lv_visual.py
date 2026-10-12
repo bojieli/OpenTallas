@@ -41,35 +41,47 @@ def kl_layout(defp, lefdir):
     return ly
 
 
-def kl_region(ly, name):
+def kl_region(ly, name, box=None):
     import klayout.db as db
     r = db.Region()
     for i in ly.layer_indexes():
         inf = ly.get_info(i)
         if inf.name in (name, name + '.PIN'):
-            r.insert(db.RecursiveShapeIterator(ly, ly.top_cell(), i))
+            r.insert(db.RecursiveShapeIterator(ly, ly.top_cell(), i, db.Box(*box)) if box else db.RecursiveShapeIterator(ly, ly.top_cell(), i))
     r.flatten()
     return r.merged()
 
 
-def geometry(ly, pack, layers, out):
+def header_layers(pack):
+    import brotli, struct
+    if str(pack).endswith('.json'):
+        man = json.loads(Path(pack).read_text()); h = man['objects']['header']
+        b = (Path(pack).resolve().parent.parent.parent / 'objects' / h[:2] / (h + '.br')).read_bytes()
+    else:
+        with open(pack, 'rb') as f:
+            io, il = struct.unpack('<QQ', f.read(24)[8:]); f.seek(io); idx = json.loads(brotli.decompress(f.read(il)))
+            f.seek(idx['header'][0]); b = f.read(idx['header'][1])
+    return [l['name'] for l in json.loads(brotli.decompress(b))['layers']]
+
+
+def geometry(ly, pack, layers, out, box=None):
     import klayout.db as db
     dump = out / 'decoded.bin'
     subprocess.run(['node', str(HERE / 'lv_verify.js'), pack, '--dump', str(dump)], check=False, capture_output=True)
-    hdr = json.loads(subprocess.run(['node', '-e', '''
-const fs=require("fs"),z=require("zlib");const f=fs.openSync(process.argv[1],"r");const b=Buffer.alloc(24);fs.readSync(f,b,0,24,0);
-const io=Number(b.readBigUInt64LE(8)),il=Number(b.readBigUInt64LE(16));const ib=Buffer.alloc(il);fs.readSync(f,ib,0,il,io);
-const idx=JSON.parse(z.brotliDecompressSync(ib));const e=idx.header;const hb=Buffer.alloc(e[1]);fs.readSync(f,hb,0,e[1],e[0]);
-const h=JSON.parse(z.brotliDecompressSync(hb));console.log(JSON.stringify(h.layers.map(l=>l.name)))''', pack], capture_output=True, text=True).stdout)
+    hdr = header_layers(pack)
     a = np.fromfile(dump, dtype='<i4').reshape(-1, 5)
     res = {}
     for name in layers:
         li = hdr.index(name)
         m = a[a[:, 0] == li]
+        if box is not None:   # window: shapes touching it, both sides clipped to it
+            m = m[(m[:, 1] < box[2]) & (m[:, 3] > box[0]) & (m[:, 2] < box[3]) & (m[:, 4] > box[1])]
         ours = db.Region()
         for r in m: ours.insert(db.Box(int(r[1]), int(r[2]), int(r[3]), int(r[4])))
         ours.merge()
-        kl = kl_region(ly, name)
+        kl = kl_region(ly, name, box)
+        if box is not None:
+            w = db.Region(db.Box(*box)); ours = ours & w; kl = kl & w
         x = ours ^ kl
         res[name] = dict(ours_area_um2=ours.area() / 1e6, klayout_area_um2=kl.area() / 1e6, xor_area_nm2=x.area(),
                          xor_share=(x.area() / max(1, kl.area())), ours_polys=ours.count(), klayout_polys=kl.count())
@@ -108,7 +120,7 @@ async def viewer_images(url, element, box, layers, px, out):
     files = {}
     async with async_playwright() as p:
         b = await p.chromium.launch(args=['--use-gl=angle', '--use-angle=gl-egl', '--ignore-gpu-blocklist'])
-        ctx = await b.new_context(viewport={'width': 1700, 'height': 1300})
+        ctx = await b.new_context(viewport={'width': 1700, 'height': 2400})
         pg = await ctx.new_page()
         cx, cy = (box[0] + box[2]) / 2 * 1000, (box[1] + box[3]) / 2 * 1000
         for name in layers:
@@ -162,16 +174,20 @@ def main():
     ap.add_argument('--url', default='http://127.0.0.1:8765'); ap.add_argument('--element', required=True)
     ap.add_argument('--box', nargs=4, type=float, required=True); ap.add_argument('--layers', default='M1,M2,M3,M4,M5,M6,M7,V1,V2,V3,V4,V5,V6')
     ap.add_argument('--px', type=int, default=600); ap.add_argument('--out', required=True); ap.add_argument('--skip-geometry', action='store_true')
+    ap.add_argument('--geo-box', nargs=4, type=float, help='um window for the geometry XOR (default: whole die)'); ap.add_argument('--skip-pixels', action='store_true')
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     layers = a.layers.split(',')
     res = dict(schema='opentallas.layout_viewer.visual.v1', element=a.element, box_um=a.box, px=a.px)
     if not a.skip_geometry:
         ly = kl_layout(a.defp, a.lef_dir)
-        res['geometry'] = geometry(ly, a.pack, layers, out)
-    kf = kl_images(a.defp, a.lef_dir, a.box, layers, a.px, out)
-    vf = asyncio.run(viewer_images(a.url, a.element, a.box, layers, a.px, out))
-    res['pixels'] = {n: compare(mask(kf[n]), mask(vf[n])) for n in layers}
+        res['geometry'] = geometry(ly, a.pack, layers, out, [int(v * 1000) for v in a.geo_box] if a.geo_box else None)
+        res['geo_box_um'] = a.geo_box
+        (out / 'visual.json').write_text(json.dumps(res, indent=1))
+    if not a.skip_pixels:
+        kf = kl_images(a.defp, a.lef_dir, a.box, layers, a.px, out)
+        vf = asyncio.run(viewer_images(a.url, a.element, a.box, layers, a.px, out))
+        res['pixels'] = {n: compare(mask(kf[n]), mask(vf[n])) for n in layers}
     (out / 'visual.json').write_text(json.dumps(res, indent=1))
     print(json.dumps(res, indent=1))
 

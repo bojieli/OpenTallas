@@ -168,7 +168,9 @@ module ot_hgi_sm_record #(
     // the chunk never exceeds the credits (CH > AD would wait for credits that can never exist: deadlock)
     localparam integer CHE = (CH < AD) ? CH : AD;
     localparam integer LCH = $clog2(CHE), CRW = $clog2(AD + 1);
+`ifndef SYNTHESIS
     initial if ((1 << LCH) != CHE) $fatal(1, "ot_hgi_sm_record: min(CH, AD) must be a power of two");
+`endif
     localparam integer NOCR = (CR == 0 || MUT_NOCR != 0) ? 1 : 0;
     reg  [NSM*13-1:0] rr_s; reg [NSM*24-1:0] lr_s; reg [NSM*32-1:0] nb_s; reg [NSM*CRW-1:0] cr_s;
     reg  [23:0] chl;                     // lines a full chunk
