@@ -1058,11 +1058,13 @@ module ot_hgi_su_ctlw #(
     parameter integer MUT_W = 0,          // bench mutants: 1 stage lands every sector at its lane's first slot (no
                                           //   advance), 2 the drain skips the last sector of each lane, 3 the record
                                           //   retires before its drain writes are in VM (no done wait), 4 no source / live-sink hazard check
-                                          //   (a record stages an operand an older record has not drained yet)
+                                          //   (a record stages an operand an older record has not drained yet), 5 a FWD-forwarded source base off by one word
     parameter integer SLICES = 0,         // el1011-hbm-sfu: 1 = 4 hardened 8-lane slices + 2-stage reduction hub, 2 = and
                                           //   the lanes' landing FIFOs in 64x16 SRAM (default 0: flat)
     parameter integer OVL = 1,            // 1: three-slot record pipeline (span + stage | run | drain overlap); 0: one
                                           //   record at a time (each slot waits for the younger ones to empty)
+    parameter integer FWD = 1,            // el1011-sutput: 1 = local operand forwarding (STRM): a source equal to a region
+                                          //   of the record in RUN reads its local copy (no stage, no allocation, pinned)
     parameter integer STRM = 1            // el1011-sutput: 1 = streamed stage -> compute -> drain + sector hazard + 2-deep
                                           //   drain queue (flat lanes, SLICES = 0 only); 0 = the three-slot pipeline
 ) (
@@ -1238,7 +1240,8 @@ module ot_hgi_su_ctlw #(
     reg [273:0] vr_unused;
     reg [31:0] wrq_cr_q, wwq_cr_q, wwq_done_q; reg [32*257-1:0] wrr_q;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wrq_cr_q <= '0; wwq_cr_q <= '0; wwq_done_q <= '0; wrr_q <= '0; end
+        // reset only the valid bits (el1011-sutput: the 256-b payloads are qualified by them; rst_n fanout lint)
+        if (!rst_n) begin wrq_cr_q <= '0; wwq_cr_q <= '0; wwq_done_q <= '0; for (integer b = 0; b < 32; b = b + 1) wrr_q[b*257 + 256] <= 1'b0; end
         else begin wrq_cr_q <= wrq_cr; wwq_cr_q <= wwq_cr; wwq_done_q <= wwq_done; wrr_q <= wrr; end
     reg [32*256-1:0] ldr_d_q; reg [32*8-1:0] ldr_dm_q;
     reg [31:0] ldr_rv_q;
@@ -1306,7 +1309,8 @@ module ot_hgi_su_ctlw #(
     endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wrq_f <= '0; wwq_f <= '0; lsw_v_f <= '0; ldc_v_f <= '0; ldr_v_f <= '0; dp1 <= '0; dp2 <= '0; dp3 <= '0;
+            for (integer b = 0; b < 32; b = b + 1) begin wrq_f[b*16 + 15] <= 1'b0; wwq_f[b*280 + 279] <= 1'b0; end   // valid bits only
+            lsw_v_f <= '0; ldc_v_f <= '0; ldr_v_f <= '0; dp1 <= '0; dp2 <= '0; dp3 <= '0;
             for (integer b = 0; b < 32; b = b + 1) begin dq_h[b] <= '0; dq_t[b] <= '0; dq_n[b] <= '0; end
             wst_ldone <= '1; wdr_ldone <= '1; lane_ovf_f <= 1'b0; ln_ns <= '0;
             for (integer b = 0; b < 32; b = b + 1) begin
@@ -1574,6 +1578,32 @@ module ot_hgi_su_ctlw #(
     reg [15:0] pa [0:5]; reg [15:0] pc [0:5]; reg [23:0] pb [0:5]; reg [23:0] pd [0:5];
     reg [31:0] pq0 [0:5]; reg [31:0] pq1 [0:5]; reg [31:0] pq2 [0:5]; reg [31:0] pq3 [0:5]; reg [39:0] pacc [0:5]; reg [1:0] pph;
     reg [LWB+1:0] c_fsize;
+    // FWD (el1011-sutput): the RUN record's region descriptors (word set + local base), the FRONT record's forwarded
+    // sources, and per-entry PINS (hull of local words a record reads from an older record's range)
+    reg [23:0] r_fb [0:5]; reg [23:0] r_fso [0:5]; reg [23:0] r_fsi [0:5]; reg [15:0] r_fnr [0:5]; reg [15:0] r_fni [0:5];
+    reg [LWB:0] r_flb [0:5]; reg [5:0] r_fok;
+    reg [3:0] fwd; reg [LWB:0] flb [0:3]; reg [1:0] f_fph; reg [LWB+1:0] fsize_all;
+    reg f_pv, r_pv, q1_pv, d_pv; reg [LWB:0] f_pl, f_ph, r_pl, r_ph, q1_pl, q1_ph, d_pl, d_ph_;
+    reg [3:0] m_fwd; reg [LWB:0] m_flb [0:3]; reg [5:0] c_fok;
+    always @* begin
+        for (integer k = 0; k < 6; k = k + 1)
+            c_fok[k] = rv[k] && !(k == 0 && cpair) && !((k == 1 || k == 3) && bhalf) && !(k == 4 && o_s);
+        m_fwd = 4'd0;
+        for (integer q = 0; q < 4; q = q + 1) begin : fq
+            reg ov4, ov5, hit;
+            m_flb[q] = '0;
+            ov4 = r_rv[4] && !r_os && ovl_v(lo[q], hi[q], r_lo[4], r_hi[4]);
+            ov5 = r_rv[5] && ovl_v(lo[q], hi[q], r_lo[5], r_hi[5]);
+            for (integer k = 0; k < 6; k = k + 1) begin
+                hit = FWD != 0 && STR != 0 && r_v && !r_ser && !f_ser && c_fok[q] && r_fok[k] && c_base[q] == r_fb[k] &&
+                      ((c_nr[q] == 16'd1 && r_fnr[k] == 16'd1) || (c_nr[q] == r_fnr[k] && c_so[q] == r_fso[k])) &&
+                      ((c_si[q] == r_fsi[k] && c_ni[q] == r_fni[k]) ||
+                       ((c_si[q] == 24'd0 || c_ni[q] == 16'd1) && (r_fsi[k] == 24'd0 || r_fni[k] == 16'd1))) &&
+                      ((k == 4) ? !ov5 : (k == 5) ? !ov4 : !(ov4 || ov5));
+                if (hit && !m_fwd[q]) begin m_fwd[q] = 1'b1; m_flb[q] = r_flb[k]; end
+            end
+        end
+    end
     always @* begin
         c_fsize = '0;
         for (integer k = 0; k < 6; k = k + 1)
@@ -1591,6 +1621,10 @@ module ot_hgi_su_ctlw #(
     wire alloc_ok = !(r_v && ovl_r(fb_try, LWB'(fb_try + fsize), r_rs, r_re)) &&
                     !(d_v && ovl_r(fb_try, LWB'(fb_try + fsize), d_rs, d_re)) &&
                     !(q1_v && ovl_r(fb_try, LWB'(fb_try + fsize), q1_rs, q1_re)) &&
+                    !(f_pv && ovl_r(fb_try, LWB'(fb_try + fsize), f_pl, f_ph)) &&
+                    !(r_v && r_pv && ovl_r(fb_try, LWB'(fb_try + fsize), r_pl, r_ph)) &&
+                    !(d_v && d_pv && ovl_r(fb_try, LWB'(fb_try + fsize), d_pl, d_ph_)) &&
+                    !(q1_v && q1_pv && ovl_r(fb_try, LWB'(fb_try + fsize), q1_pl, q1_ph)) &&
                     ({1'b0, fb_try} + fsize <= {2'b0, SBASE}) &&
                     (!f_ser || (!r_v && !d_v && !q1_v)) && !(r_v && r_ser) && !(d_v && d_ser) && !(q1_v && q1_ser) &&
                     (OVL != 0 || (!r_v && !d_v && !q1_v));
@@ -1699,6 +1733,7 @@ module ot_hgi_su_ctlw #(
             r_hand <= 1'b0; f_hand <= 1'b0; f_seq <= 8'd0; x_seq <= 8'hFF; x_dseq <= 8'hFF; fs_on <= 1'b0;
             fs_str <= '0; fs_late <= '0; fs_sw <= '0; fs_odense <= 1'b0; wm_v <= 1'b0; wm_tag <= 2'd0; d_str <= 1'b0;
             r_str <= 1'b0; q1_str <= 1'b0; fs_ytag <= 2'd0; stg_busy <= 4'd0;
+            f_fph <= 2'd2; fwd <= 4'd0; f_pv <= 1'b0; r_pv <= 1'b0; q1_pv <= 1'b0; d_pv <= 1'b0; r_fok <= 6'd0;
             for (k2 = 0; k2 < 4; k2 = k2 + 1) fs_wm[k2] <= 4'd0;
         end else begin
             vmq[337] <= 1'b0; su_fault_r <= 1'b0; am_stream[0] <= 1'b0; am_stream[1] <= 1'b0; su_ret <= 1'b0;
@@ -1748,7 +1783,7 @@ module ot_hgi_su_ctlw #(
             // the second entry moves up when the head is free (or retires this edge)
             if (q1_v && !d_v && st != S_FAULT) begin
                 d_v <= 1'b1; d_ph <= 2'd0; d_as <= q1_as; d_os <= q1_os; d_ser <= q1_ser; d_no <= q1_no; d_ni <= q1_ni;
-                d_rs <= q1_rs; d_re <= q1_re; d_tag <= q1_tag; d_str <= q1_str;
+                d_rs <= q1_rs; d_re <= q1_re; d_tag <= q1_tag; d_str <= q1_str; d_pv <= q1_pv; d_pl <= q1_pl; d_ph_ <= q1_ph;
                 for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                     d_lo[k2] <= q1_lo[k2]; d_hi[k2] <= q1_hi[k2]; d_lb[k2] <= q1_lb[k2]; d_rv[k2] <= q1_rv[k2]; d_dsec[k2] <= q1_dsec[k2];
                 end
@@ -1762,6 +1797,7 @@ module ot_hgi_su_ctlw #(
                         a_s <= strm[0]; o_s <= strm[1]; f_ser <= strm[0] | strm[1];
                         st <= (STR != 0 && strm == 2'd0) ? S_PMUL : S_SPAN; pph <= 2'd0;
                         f_tag <= tag_ctr; tag_ctr <= tag_ctr + 2'd1;
+                        f_fph <= 2'd2; fwd <= 4'd0; f_pv <= 1'b0;
                         for (k2 = 0; k2 < 6; k2 = k2 + 1) rv[k2] <= 1'b0;
                     end
                 end
@@ -1824,17 +1860,43 @@ module ot_hgi_su_ctlw #(
                                 if (k2 == 0 && cpair) begin lo[0] <= c_base[0] & ~24'd1; hi[0] <= (c_base[0] + pacc[0][23:0]) | 24'd1; end
                                 else begin lo[k2] <= c_base[k2]; hi[k2] <= c_base[k2] + pacc[k2][23:0]; end
                             end
-                            fsize <= c_fsize; st <= S_WAITA;
+                            fsize <= c_fsize; fsize_all <= c_fsize; st <= S_WAITA; f_fph <= 2'd0;
                             if (aind != 2'd0 || w[32 +: 8] != 8'd0) begin su_fault_r <= 1'b1; st <= S_FAULT; end
                         end
                     endcase
                     pph <= pph + 2'd1;
                 end
-                S_WAITA: if (alloc_ok) begin                         // a free local range for the whole record
+                S_WAITA: if (f_fph == 2'd0) begin                   // FWD: sources equal to a region of the RUN record
+                    fwd <= m_fwd; for (k2 = 0; k2 < 4; k2 = k2 + 1) flb[k2] <= m_flb[k2];
+                    f_fph <= 2'd1;
+                end else if (f_fph == 2'd1) begin                   // FWD: no allocation for them; pin their local words
+                    begin : fp
+                        reg [LWB+1:0] sz; reg [LWB:0] pl, ph; reg pv;
+                        sz = fsize_all; pv = 1'b0; pl = '0; ph = '0;
+                        for (integer q = 0; q < 4; q = q + 1) if (fwd[q]) begin
+                            sz = sz - (LWB+2)'(pacc[q][23:0]) - 265;
+                            if (!pv || flb[q] < pl) pl = flb[q];
+                            if (!pv || flb[q] + (LWB+1)'(hi[q] - lo[q]) + 1 > ph) ph = flb[q] + (LWB+1)'(hi[q] - lo[q]) + 1;
+                            pv = 1'b1;
+                        end
+                        fsize <= sz; f_pv <= pv; f_pl <= pl; f_ph <= ph;
+                    end
+                    f_fph <= 2'd2;
+                end else if (alloc_ok) begin                         // a free local range for the whole record
                     alloc <= fb_try; f_rs <= fb_try; rk <= 3'd0; st <= S_NEXTR;
+                end else if (fwd != 4'd0 && !r_v && !q1_v && !d_v) begin   // nothing live and no fit: stage them instead
+                    fwd <= 4'd0; f_pv <= 1'b0; fsize <= fsize_all;
                 end
                 S_NEXTR: begin                                      // place region rk, relocate its base
-                    if (rv[rk]) begin
+                    if (rv[rk] && rk < 3'd4 && fwd[rk[1:0]]) begin      // FWD: the older record's local copy
+                        rv[rk] <= 1'b0; lb[rk] <= flb[rk[1:0]];
+                        case (rk)
+                            3'd0: fw[40 +: 24]  <= w[40 +: 24]  - lo[0] + flb[0] + (MUT_W == 5 ? 24'd1 : 24'd0);
+                            3'd1: fw[138 +: 24] <= w[138 +: 24] - lo[1] + flb[1] + (MUT_W == 5 ? 24'd1 : 24'd0);
+                            3'd2: fw[211 +: 24] <= w[211 +: 24] - lo[2] + flb[2] + (MUT_W == 5 ? 24'd1 : 24'd0);
+                            default: fw[284 +: 24] <= w[284 +: 24] - lo[3] + flb[3] + (MUT_W == 5 ? 24'd1 : 24'd0);
+                        endcase
+                    end else if (rv[rk]) begin
                         lb[rk] <= lbk;
                         alloc <= lbk + (hi[rk] - lo[rk]) + 1 + 8;
                         if (lbk + (hi[rk] - lo[rk]) + 1 > SBASE) begin su_fault_r <= 1'b1; st <= S_FAULT; end
@@ -1872,6 +1934,11 @@ module ot_hgi_su_ctlw #(
                         r_v <= 1'b1; r_gop <= 1'b1; r_cdone <= 1'b0; r_as <= a_s; r_os <= o_s; r_ser <= f_ser;
                         wl <= {f_mul, f_lead, x_seq, 2'd3, fw[627:0]};
                         r_no <= no; r_ni <= ni; r_rs <= f_rs; r_re <= ap; r_tag <= f_tag; r_str <= fs_odense; r_hand <= 1'b0;
+                        r_pv <= f_pv; r_pl <= f_pl; r_ph <= f_ph;
+                        for (k2 = 0; k2 < 6; k2 = k2 + 1) begin
+                            r_fb[k2] <= c_base[k2]; r_fso[k2] <= c_so[k2]; r_fsi[k2] <= c_si[k2]; r_fnr[k2] <= c_nr[k2];
+                            r_fni[k2] <= c_ni[k2]; r_flb[k2] <= lb[k2]; r_fok[k2] <= c_fok[k2] && (k2 >= 4 || !fwd[k2[1:0]]);
+                        end
                         for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                             r_lo[k2] <= lo[k2]; r_hi[k2] <= hi[k2]; r_lb[k2] <= lb[k2]; r_rv[k2] <= rv[k2]; r_dsec[k2] <= dsec[k2];
                         end
@@ -1886,6 +1953,11 @@ module ot_hgi_su_ctlw #(
                 S_RDY: if (!r_v) begin                              // into RUN (stage complete)
                     r_v <= 1'b1; r_gop <= 1'b1; r_cdone <= 1'b0; wl <= fw; r_as <= a_s; r_os <= o_s; r_ser <= f_ser;
                     r_no <= no; r_ni <= ni; r_rs <= f_rs; r_re <= ap; r_tag <= f_tag; r_str <= fs_odense; r_hand <= 1'b0;
+                        r_pv <= f_pv; r_pl <= f_pl; r_ph <= f_ph;
+                        for (k2 = 0; k2 < 6; k2 = k2 + 1) begin
+                            r_fb[k2] <= c_base[k2]; r_fso[k2] <= c_so[k2]; r_fsi[k2] <= c_si[k2]; r_fnr[k2] <= c_nr[k2];
+                            r_fni[k2] <= c_ni[k2]; r_flb[k2] <= lb[k2]; r_fok[k2] <= c_fok[k2] && (k2 >= 4 || !fwd[k2[1:0]]);
+                        end
                     for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                         r_lo[k2] <= lo[k2]; r_hi[k2] <= hi[k2]; r_lb[k2] <= lb[k2]; r_rv[k2] <= rv[k2]; r_dsec[k2] <= dsec[k2];
                     end
@@ -1902,13 +1974,13 @@ module ot_hgi_su_ctlw #(
                         if (STR != 0 && !r_ser) begin                // into DRAIN at go: the O drains as it is written
                             if (!d_v && !q1_v) begin
                                 r_hand <= 1'b1; d_v <= 1'b1; d_ph <= 2'd0; d_as <= r_as; d_os <= r_os; d_ser <= r_ser;
-                                d_no <= r_no; d_ni <= r_ni; d_rs <= r_rs; d_re <= r_re; d_tag <= r_tag; d_str <= r_str;
+                                d_no <= r_no; d_ni <= r_ni; d_rs <= r_rs; d_re <= r_re; d_tag <= r_tag; d_str <= r_str; d_pv <= r_pv; d_pl <= r_pl; d_ph_ <= r_ph;
                                 for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                                     d_lo[k2] <= r_lo[k2]; d_hi[k2] <= r_hi[k2]; d_lb[k2] <= r_lb[k2]; d_rv[k2] <= r_rv[k2]; d_dsec[k2] <= r_dsec[k2];
                                 end
                             end else if (d_v && !q1_v) begin
                                 r_hand <= 1'b1; q1_v <= 1'b1; q1_as <= r_as; q1_os <= r_os; q1_ser <= r_ser;
-                                q1_no <= r_no; q1_ni <= r_ni; q1_rs <= r_rs; q1_re <= r_re; q1_tag <= r_tag; q1_str <= r_str;
+                                q1_no <= r_no; q1_ni <= r_ni; q1_rs <= r_rs; q1_re <= r_re; q1_tag <= r_tag; q1_str <= r_str; q1_pv <= r_pv; q1_pl <= r_pl; q1_ph <= r_ph;
                                 for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                                     q1_lo[k2] <= r_lo[k2]; q1_hi[k2] <= r_hi[k2]; q1_lb[k2] <= r_lb[k2]; q1_rv[k2] <= r_rv[k2]; q1_dsec[k2] <= r_dsec[k2];
                                 end
@@ -1926,14 +1998,14 @@ module ot_hgi_su_ctlw #(
                     end
                 end else if (!r_hand && !d_v && !q1_v) begin       // into DRAIN (compute done)
                     d_v <= 1'b1; d_ph <= 2'd0; d_as <= r_as; d_os <= r_os; d_ser <= r_ser; d_no <= r_no; d_ni <= r_ni;
-                    d_rs <= r_rs; d_re <= r_re; d_tag <= r_tag; d_str <= r_str;
+                    d_rs <= r_rs; d_re <= r_re; d_tag <= r_tag; d_str <= r_str; d_pv <= r_pv; d_pl <= r_pl; d_ph_ <= r_ph;
                     for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                         d_lo[k2] <= r_lo[k2]; d_hi[k2] <= r_hi[k2]; d_lb[k2] <= r_lb[k2]; d_rv[k2] <= r_rv[k2]; d_dsec[k2] <= r_dsec[k2];
                     end
                     r_v <= 1'b0; r_ser <= 1'b0;
                 end else if (!r_hand && STR != 0 && d_v && !q1_v) begin
                     q1_v <= 1'b1; q1_as <= r_as; q1_os <= r_os; q1_ser <= r_ser;
-                    q1_no <= r_no; q1_ni <= r_ni; q1_rs <= r_rs; q1_re <= r_re; q1_tag <= r_tag; q1_str <= r_str;
+                    q1_no <= r_no; q1_ni <= r_ni; q1_rs <= r_rs; q1_re <= r_re; q1_tag <= r_tag; q1_str <= r_str; q1_pv <= r_pv; q1_pl <= r_pl; q1_ph <= r_ph;
                     for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                         q1_lo[k2] <= r_lo[k2]; q1_hi[k2] <= r_hi[k2]; q1_lb[k2] <= r_lb[k2]; q1_rv[k2] <= r_rv[k2]; q1_dsec[k2] <= r_dsec[k2];
                     end
