@@ -37,10 +37,10 @@
  "reset_ports": [],
  "outline": {
   "w": 141.84,
-  "h": 125.28
+  "h": 118.8
  },
- "std_area_um2": 9869,
- "why_floorplan": "hc_post group g x half (8 per slot, one 4-column row each side of the centre band, column g under lane column g); core util 59.3%",
+ "std_area_um2": 9388,
+ "why_floorplan": "hc_post group g x half (8 per slot, one 4-column row each side of the centre band, column g under lane column g); std 9388 um2 (cth shrink f8cfdcdd9, yosys-scaled), core util ~0.60 at 141.84 x 118.8",
  "macros": [],
  "pins": {
   "N": [

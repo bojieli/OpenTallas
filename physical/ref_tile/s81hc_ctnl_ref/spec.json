@@ -37,10 +37,10 @@
  "reset_ports": [],
  "outline": {
   "w": 141.84,
-  "h": 98.28
+  "h": 97.2
  },
- "std_area_um2": 7767,
- "why_floorplan": "one norm lane (bank row x lane column, 16 per slot in 4 rows x 4 columns, 4 x 141.84 + 3 x 3.12 um = slot width); core util 59.4%",
+ "std_area_um2": 7652,
+ "why_floorplan": "one norm lane (bank row x lane column, 16 per slot in 4 rows x 4 columns, 4 x 141.84 + 3 x 3.12 um = slot width); std 7652 um2 (cth shrink f8cfdcdd9, yosys-scaled), core util ~0.60 at 141.84 x 97.2",
  "macros": [],
  "pins": {
   "N": [
