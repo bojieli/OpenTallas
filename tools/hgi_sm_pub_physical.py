@@ -37,6 +37,53 @@ EDGE, GAP, CH = 17.28, 25.92, 103.68       # parent: edge margin, column gap, ce
 PW = round(2 * EDGE + NCOL * SW + (NCOL - 1) * GAP, 3)
 PH = round(2 * EDGE + 2 * SH + CH, 3)
 VSLICE = "ot_hgi_sm_pub_slice"
+# two-level rule (OWNER 10-11 ~21:00): the parent's glue as hard elements placed by the die (no parent route)
+CLW, CLH = 129.6, 64.8                     # ot_hgi_sm_pub_col (x4): channel centre under each slice column
+HBW, HBH = 86.4, 64.8                      # ot_hgi_sm_pub_hub (x1): channel centre, between columns 1 and 2
+CW = 76
+
+
+def cmd_bits(p):
+    """slice S-face command order {go, sm, bf, ob, ost, mm, qq, pp} as bits of a CW-wide {go, fields} port."""
+    return ([f"{p}[75]", f"{p}[74]", f"{p}[73]"] + [f"{p}[{i}]" for i in range(55, 73)] + [f"{p}[{i}]" for i in range(37, 55)]
+            + [f"{p}[{i}]" for i in range(17, 37)] + [f"{p}[{i}]" for i in range(4, 17)] + [f"{p}[{i}]" for i in range(4)])
+
+
+def face_h(names, w, y, pitch=0.192):
+    x0 = round((w - len(names) * pitch) / 2 / 0.048) * 0.048 + 0.012
+    return [(n, "M5", None, round(x0 + i * pitch, 3), y) for i, n in enumerate(names)]
+
+
+def face_v(names, h, x, pitch=0.144):
+    y0 = round((h - len(names) * pitch) / 2 / 0.048) * 0.048 + 0.012
+    return [(n, "M4", None, x, round(y0 + i * pitch, 3)) for i, n in enumerate(names)]
+
+
+def col_pins():
+    """N = slice a (N row) in the slice S-face order, S = slice b (S row); E = inner (hub side: command in + the hub
+    seam), W = outer (command out to the outer column + VM client).  Cols 2/3 are placed MY."""
+    def sl(x, c):
+        return (cmd_bits(c) + [f"{x}_wv"] + smh.bits(f"{x}_wp", 279) + [f"{x}_ack", f"{x}_sov"]
+                + [f"{x}_sod[{i}]" for i in range(32, 52)] + [f"{x}_sod[{i}]" for i in range(32)] + [f"{x}_cr", f"{x}_dn", f"{x}_ft"])
+    north = ["clk"] + sl("a", "ca")
+    south = ["rst_n"] + sl("b", "cb")
+    east = cmd_bits("ci") + ["t_v"] + smh.bits("t_d", 52) + ["t_cr", "t_a"] + smh.bits("dn", 2) + smh.bits("ft", 2)
+    west = cmd_bits("co") + ["vq_v"] + smh.bits("vq_p", 279) + smh.bits("va", 2)
+    return face_h(north, CLW, CLH) + face_h(south, CLW, 0.0) + face_v(east, CLH, CLW) + face_v(west, CLH, 0.0)
+
+
+def hub_pins():
+    def seam(cs):
+        n = []
+        for c in cs:
+            n += [f"t_v[{c}]"] + [f"t_d[{c*52+i}]" for i in range(52)] + [f"t_cr[{c}]", f"t_a[{c}]"]
+            n += [f"t_dn[{2*c}]", f"t_dn[{2*c+1}]", f"t_ft[{2*c}]", f"t_ft[{2*c+1}]", f"t_vq[{c}]"]
+        return n
+    west = (["clk", "rst_n", "pub_v", "pub_rdy"] + smh.bits("pub_base", 40) + smh.bits("pub_stride", 32)
+            + smh.bits("pub_space", 2) + smh.bits("pub_m", 20) + smh.bits("pub_q", 13) + smh.bits("pub_p", 4)
+            + ["pub_bf16", "pub_done", "pub_fault"] + cmd_bits("cw") + seam((0, 1)))
+    east = cmd_bits("ce") + seam((2, 3)) + ["s0_v"] + smh.bits("s0_idx", 20) + smh.bits("s0_data", 32)
+    return face_v(west, HBH, 0.0) + face_v(east, HBH, HBW)
 
 
 def sm_pin_names(s):
@@ -135,7 +182,16 @@ def cmd_block(a):
             f"proc ::repair_timing_helper {{args}} {{ ::ot_rth_orig {{*}}$args -max_buffer_percent {a.hold_buffer_pct} }}\n")
         extra["PRE_CTS_TCL"] = "/work/rt_hook.tcl"
         extra["PRE_GLOBAL_ROUTE_TCL"] = "/work/rt_hook.tcl"
-    if a.piece == "slice":
+    if a.piece in ("col", "hub"):
+        col = a.piece == "col"
+        name, die = ("ot_hgi_sm_pub_col", (CLW, CLH)) if col else ("ot_hgi_sm_pub_hub", (HBW, HBH))
+        pins = col_pins() if col else hub_pins()
+        macros = []
+        extra.update({"MAX_ROUTING_LAYER": "M6", "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_hgi_pub_child.tcl"})
+        nin = ("ci* a_wv a_wp* a_sov a_sod* a_dn a_ft b_wv b_wp* b_sov b_sod* b_dn b_ft va* t_cr" if col else
+               "pub_v pub_base* pub_stride* pub_space* pub_m* pub_q* pub_p* pub_bf16 t_v* t_d* t_a* t_dn* t_ft* t_vq*")
+        sdc = smh.sdc_block(a.lat, nbr_in=nin, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
+    elif a.piece == "slice":
         name, die = VSLICE, (SW, SH)
         north, south = slice_pins()
         pins = north + south
@@ -180,7 +236,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("block")
-    b.add_argument("--piece", choices=("slice", "parent"), required=True)
+    b.add_argument("--piece", choices=("slice", "parent", "col", "hub"), required=True)
     b.add_argument("--views", default=None, help="parent: repo path of the slice view dir (named ot_hgi_sm_pub_slice)")
     b.add_argument("--label", required=True)
     b.add_argument("--out", required=True)
