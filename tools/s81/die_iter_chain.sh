@@ -19,7 +19,7 @@ st GEN_DONE
     I=$M/ir_$w; /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py irm $A --work $I --window $w > $M/ir_gen_$w.log 2>&1 || { st IR_GEN_FAIL $w; continue; }
     /srv/opentallas-scratch/admit.sh 60 -- docker run --rm --name dieit_${TAG}_ir_$w --cpus=16 --memory=120g -v $I:/work -w /work openroad/orfs:asap7lock \
       bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; chmod -R a+rwX /work"
-    st "IR $w $(grep -h 'Worstcase IR drop\|OT_IR ' $I/run.log | tr '\n' ' ')"
+    st "IR $w $(grep -h 'OT_IR_INNER\|Worstcase IR drop\|OT_IR ' $I/run.log | tr '\n' ' ')"
   done ) &
 C=$M/clock; mkdir -p $C
 ( /srv/opentallas-scratch/admit.sh 40 -- python3 tools/budgets/extract_die.py --src $S --die s81r8_$KIND --s81-opts "$AK" --out $C/model.json.gz > $C/extract.log 2>&1 || { st CLOCK_EXTRACT_FAIL; exit 1; }
@@ -47,3 +47,6 @@ cd $M && /srv/opentallas-scratch/admit.sh 120 -- $M/dietop_grt_sta.sh a_real grt
 grep -q OT_SPEF $M/grt/sta_tt.log || { st STA_NO_SPEF; exit 1; }
 for c in tt ff ss; do echo "$c $(grep -E "^(worst slack|tns)" $M/grt/sta_$c.log | tr "\n" " ")"; done > $M/grt/summary.txt
 st "CHAIN_DONE $(tr '\n' ' ' < $M/grt/summary.txt)"
+# post-GRT (2026-10-12 s81-die-iter): relay/station clock-pin check, OCV bound, GRT-vs-DRT cap error bar (x1.40 / x2.44),
+# region DRT staged when the die GRT has 0 overflow
+bash $S/tools/s81/die_sens.sh $M $S $TAG; st "SENS_DONE"
