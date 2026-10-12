@@ -18,7 +18,7 @@
 // Records are delivered strictly in push order.
 //
 // MACRO: 0 ot_sram_1r1w_64x512_m1_r2c2, 1 ot_sram_1r1w_256x256_m2_r2c2,
-//        2 ot_sram_1r1w_128x256_m1_r2c2.  DEPTH <= the macro's words.
+//        2 ot_sram_1r1w_128x256_m1_r2c2, 3 ot_sram_1r1w_64x16_m1 (el1011 ctlw lane FIFOs).  DEPTH <= the macro's words.
 // Repair ports are tied off (no spares in use).
 // ---------------------------------------------------------------------------
 module ot_fifo_sram_fwft #(
@@ -35,8 +35,8 @@ module ot_fifo_sram_fwft #(
     output wire [W-1:0]  head,
     output reg           ovf
 );
-    localparam integer MWORDS = (MACRO == 0) ? 64 : (MACRO == 1) ? 256 : 128;
-    localparam integer MBITS  = (MACRO == 0) ? 512 : 256;
+    localparam integer MWORDS = (MACRO == 0 || MACRO == 3) ? 64 : (MACRO == 1) ? 256 : 128;
+    localparam integer MBITS  = (MACRO == 0) ? 512 : (MACRO == 3) ? 16 : 256;
     localparam integer MAW    = $clog2(MWORDS);
     localparam integer NT     = (W + MBITS - 1) / MBITS;
     localparam integer AW     = $clog2(DEPTH);
@@ -74,6 +74,9 @@ module ot_fifo_sram_fwft #(
             ot_sram_1r1w_256x256_m2_r2c2 u_m (.clk(clk), .r_ce_in(rd_arr), .r_addr_in(raddr), .rd_out(rq[t*MBITS +: MBITS]),
                 .w_ce_in(wr_arr), .w_addr_in(waddr), .wd_in(wd), .w_mask_in({MBITS{1'b1}}),
                 .rr_en(2'b00), .rr_addr({(2*(MAW-1)){1'b0}}), .cr_en(2'b00), .cr_sel({(2*$clog2(MBITS)){1'b0}}));
+        end else if (MACRO == 3) begin : g_m3
+            ot_sram_1r1w_64x16_m1 u_m (.clk(clk), .r_ce_in(rd_arr), .r_addr_in(raddr), .rd_out(rq[t*MBITS +: MBITS]),
+                .w_ce_in(wr_arr), .w_addr_in(waddr), .wd_in(wd), .w_mask_in({MBITS{1'b1}}));
         end else begin : g_m2
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(rd_arr), .r_addr_in(raddr), .rd_out(rq[t*MBITS +: MBITS]),
                 .w_ce_in(wr_arr), .w_addr_in(waddr), .wd_in(wd), .w_mask_in({MBITS{1'b1}}),

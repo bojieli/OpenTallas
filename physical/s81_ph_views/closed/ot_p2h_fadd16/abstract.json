@@ -1,6 +1,6 @@
 {
   "name": "ot_p2h_fadd16",
-  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/work/orfs",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-b/routes/mtp_p2h_fa_50b05596a_tc_b/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/work/orfs:/in:ro",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-b/routes/mtp_p2h_fa_50b05596a_tc_b/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/view:/out",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-b/routes/mtp_p2h_fa_50b05596a_tc_b/view:/out",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/abs_tmp:/tmp",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-b/routes/mtp_p2h_fa_50b05596a_tc_b/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/work/orfs:/in:ro",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-b/routes/mtp_p2h_fa_50b05596a_tc_b/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/view:/out",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-b/routes/mtp_p2h_fa_50b05596a_tc_b/view:/out",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/abs_tmp:/tmp",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-b/routes/mtp_p2h_fa_50b05596a_tc_b/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -49,9 +49,9 @@
   },
   "macro_views": [],
   "files": {
-    "ot_p2h_fadd16.lef": "ee3ed207b76983d0896c8a792e67203e542dc0ae2babdaa7c67027957ab61d8a",
-    "ot_p2h_fadd16_ff.lib": "db79f99ab361a73b08046551f081e7fc738b95e3641819961ba12732f0a276d5",
-    "ot_p2h_fadd16_ss.lib": "3c37f2b23e42e6f50a3d834c2162a83be1d5f43f9d20fff67fa6bc536074ece0"
+    "ot_p2h_fadd16.lef": "6fd60b5d03498102ce59ed94df18f94b5bd758083e3abdd62f79a133f8d30450",
+    "ot_p2h_fadd16_ff.lib": "6fdd77b98caa3835836dcbf9f93f8d1f2b58e9a21ed22b233e5eec1746613753",
+    "ot_p2h_fadd16_ss.lib": "620625e8678f49a6fcd271286ce93272d94317994728259fc59840afff8a819f"
   },
   "ok": true
 }
