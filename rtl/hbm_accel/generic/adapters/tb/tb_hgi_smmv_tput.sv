@@ -7,6 +7,9 @@
 // Shadows: SM s replays real SM (s mod 2); per record r it is active iff M_r > s Q_r, emits rows < R_s(r) of the op the
 // real SM is emitting (row pointer) and toggles its own arrive only for ops it is active in (arrive pointer).
 // Mutants (must FAIL): MUT_ROW (pub drops s Q), MUT_SLOT (every x at slot 0), MUT_EARLY (retire on issue).
+// B2 (+define+NCL=4): NCL cluster engines of NSM/NCL SMs each (strap sm_base = c NSM/NCL), each with its own x loader
+// and record-pipelined pub on the VM; every record goes to all clusters (accepted when all are ready) and retires when
+// the last cluster retires it.  Real SMs 0/1 sit in cluster 0; x writes of clusters > 0 reach shadows only.
 module tb_hgi_smmv_tput;
 `ifdef MUT_ROW
     localparam integer MW = 1;
@@ -26,8 +29,11 @@ module tb_hgi_smmv_tput;
 `ifndef WIN
 `define WIN 4
 `endif
+`ifndef NCL
+`define NCL 1
+`endif
     `include "tput_sizes.svh"
-    localparam integer NSM = 32, NREAL = 2, CW = 106, NXC = 4, NPC = 4;
+    localparam integer NSM = 32, NREAL = 2, CW = 106, NXC = 4, NPC = 4, NCL = `NCL, NSL = NSM / NCL;
     reg clk = 0;
     always #1 clk = ~clk;
     reg [937:0] recm [0:NREC-1]; reg [119:0] infm [0:NREC-1]; reg [2063:0] xwm [0:NXW-1];
@@ -46,38 +52,52 @@ module tb_hgi_smmv_tput;
     integer errors = 0, cyc = 0;
     always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0; reg [937:0] cur; reg rec_v = 0;
-    wire rec_rdy, done, fault, halted;
-    wire x_v, x_rdy, x_done, x_fault, pub_v, pub_rdy, pub_done, pub_fault;
-    wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
-    wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
-    wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret; wire [2:0] iss_seq;
-    wire xl_en; wire [6:0] xl_addr, xl_grp; wire [2047:0] xl_data;
+    wire rec_rdy; wire [NCL-1:0] c_rdy, c_done, c_fault, c_halt, c_pfault, c_xfault; wire [NCL*3-1:0] c_iss;
+    wire fault = |c_fault;
+    assign rec_rdy = &c_rdy;
+    wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret; wire [2:0] iss_seq = c_iss[2:0];
     wire xw_en; wire [6:0] xw_addr, xw_grp; wire [2047:0] xw_data;
-    ot_hgi_smmv #(.NSM(NSM), .W(`WIN), .MUT_SLOT(MS), .MUT_EARLY(ME)) u_a (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
-        .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
-        .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
-        .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done),
-        .x_fault(x_fault), .xl_en(xl_en), .xl_addr(xl_addr), .xl_grp(xl_grp), .xl_data(xl_data), .xw_en(xw_en),
-        .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base),
-        .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
-        .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd), .sm_ret(sm_ret), .sm_cg_en(), .dbg_iss_seq(iss_seq));
+    wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
 `ifdef XBD
     localparam integer XB = 1;
 `else
     localparam integer XB = 0;
     initial $fatal(1, "tb_hgi_smmv_tput needs +define+XBD (native block-dot x)");
 `endif
-    wire [NXC*338-1:0] xq; wire [NXC*274-1:0] xr; wire [NPC*338-1:0] pq; wire [NPC*274-1:0] pr;
+    wire [NCL*NXC*338-1:0] xq; wire [NCL*NXC*274-1:0] xr; wire [NCL*NPC*338-1:0] pq; wire [NCL*NPC*274-1:0] pr;
     wire [273:0] tr; reg [337:0] tq = 0;
-    ot_hgi_sm_xload #(.NXC(NXC), .BD(XB)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
-        .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done),
-        .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr));
-    wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
-    ot_hgi_smmv_pub #(.NSM(NSM), .NPC(NPC), .W(`WIN), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
-        .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
-        .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr),
-        .s0_v(), .s0_idx(), .s0_data());
-    ot_hgi_vm_unit #(.NC(NXC + NPC + 1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
+    genvar cl;
+    generate for (cl = 0; cl < NCL; cl = cl + 1) begin : g_cl
+        wire x_v, x_rdy, x_done, x_fault, pub_v, pub_rdy, pub_done, pub_fault;
+        wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
+        wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q; wire [6:0] x_xb;
+        wire l_en; wire [6:0] l_addr, l_grp; wire [2047:0] l_data;
+        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .MUT_SLOT(MS), .MUT_EARLY(ME)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
+            .rec_v(rec_v && rec_rdy), .rec_rdy(c_rdy[cl]),
+            .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
+            .rec_n_b(cur[937:917]), .rec_done(c_done[cl]), .rec_fault(c_fault[cl]), .halted(c_halt[cl]), .x_v(x_v), .x_rdy(x_rdy),
+            .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb),
+            .x_done(x_done), .x_fault(x_fault), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base),
+            .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
+            .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
+            .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]));
+        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+            .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
+            .x_fault(x_fault), .xw_en(l_en), .xw_addr(l_addr), .xw_grp(l_grp), .xw_data(l_data),
+            .vmq(xq[cl*NXC*338 +: NXC*338]), .vmr(xr[cl*NXC*274 +: NXC*274]),
+            .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
+        if (cl == 0) begin : g_xw
+            assign xw_en = l_en; assign xw_addr = l_addr; assign xw_grp = l_grp; assign xw_data = l_data;
+        end
+        ot_hgi_smmv_pub #(.NSM(NSL), .NPC(NPC), .W(`WIN), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
+            .pub_v(pub_v), .pub_rdy(pub_rdy),
+            .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
+            .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv[cl*NSL +: NSL]), .sm_rrow(rrow[cl*NSL*12 +: NSL*12]),
+            .sm_rdata(rdata[cl*NSL*256 +: NSL*256]), .vmq(pq[cl*NPC*338 +: NPC*338]), .vmr(pr[cl*NPC*274 +: NPC*274]),
+            .s0_v(), .s0_idx(), .s0_data());
+        assign c_pfault[cl] = pub_fault; assign c_xfault[cl] = x_fault;
+    end endgenerate
+    ot_hgi_vm_unit #(.NC(NCL * (NXC + NPC) + 1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
     integer lines_req [0:NREAL-1];
     wire [NREAL-1:0] arr_real;
     // record being issued (the engine's issue pointer advances once a record)
@@ -173,17 +193,20 @@ module tb_hgi_smmv_tput;
     integer j, t, k, nf, r, prev_ret, busy_sum;
     integer disp [0:NREC-1]; integer retc [0:NREC-1];
     reg [255:0] qd; reg [31:0] lastsec;
+    integer kc [0:NCL-1]; integer kmin, c2;
     always @(posedge clk) begin
-        if (rst_n && done) begin retc[k] = cyc; k = k + 1; end
+        for (c2 = 0; c2 < NCL; c2 = c2 + 1) if (rst_n && c_done[c2]) kc[c2] = kc[c2] + 1;
+        kmin = kc[0]; for (c2 = 1; c2 < NCL; c2 = c2 + 1) if (kc[c2] < kmin) kmin = kc[c2];
+        while (k < kmin) begin retc[k] = cyc; k = k + 1; end
         if (rst_n && fault) nf = nf + 1;
     end
     initial begin
         for (j = 0; j < NREAL; j = j + 1) begin lines_req[j] = 0; opn[j] = 0; rowp[j] = 0; rown[j] = 0; arrp[j] = 0; end
-        arr_q = 0;
+        arr_q = 0; k = 0; for (j = 0; j < NCL; j = j + 1) kc[j] = 0;
         repeat (3) @(posedge clk);
         rst_n = 0; repeat (4) @(posedge clk); rst_n = 1; repeat (4) @(posedge clk);
         for (j = 0; j < NVMI; j = j + 1) vm_sec(1'b1, vmim[j][287:256], vmim[j][255:0], qd);
-        $display("x loaded: %0d sectors at cycle %0d (LAT %0d BWX10 %0d W %0d)", NVMI, cyc, lat, bwx10, `WIN); $fflush;
+        $display("x loaded: %0d sectors at cycle %0d (LAT %0d BWX10 %0d W %0d NCL %0d)", NVMI, cyc, lat, bwx10, `WIN, NCL); $fflush;
         k = 0; nf = 0;
         for (r = 0; r < NREC && nf == 0; r = r + 1) begin
             @(negedge clk); cur = recm[r]; rec_v = 1;
@@ -192,7 +215,7 @@ module tb_hgi_smmv_tput;
         end
         t = 0; while (k < NREC && nf == 0 && t < 4000000) begin @(posedge clk); t = t + 1; end
         repeat (8) @(posedge clk);
-        if (k != NREC || nf != 0) begin $display("ERR retired %0d of %0d, faults %0d (x_fault %0d pub_fault %0d)", k, NREC, nf, x_fault, pub_fault); errors = errors + 1; end
+        if (k != NREC || nf != 0) begin $display("ERR retired %0d of %0d, faults %0d (x_fault %b pub_fault %b)", k, NREC, nf, c_xfault, c_pfault); errors = errors + 1; end
         prev_ret = 0; busy_sum = 0;
         for (r = 0; r < k; r = r + 1) begin
             $display("TPUT %0d disp %0d ret %0d service %0d", r, disp[r], retc[r], retc[r] - (disp[r] > prev_ret ? disp[r] : prev_ret)); 
@@ -206,7 +229,7 @@ module tb_hgi_smmv_tput;
                 if (errors < 30) $display("ERR O[%0d] = %h expected %h", vmem[j][63:32], qd[32 * vmem[j][34:32] +: 32], vmem[j][31:0]);
                 errors = errors + 1; end
         end
-        $display("summary: %0d SM.MATVEC records (window %0d), service sum %0d cycles, %0d result words checked", NREC, `WIN, busy_sum, NVME);
+        $display("summary: %0d SM.MATVEC records (window %0d, clusters %0d), service sum %0d cycles, %0d result words checked", NREC, `WIN, NCL, busy_sum, NVME);
         if (errors == 0) $display("HGI_SMMV_TPUT PASS"); else $display("HGI_SMMV_TPUT FAIL errors=%0d", errors);
         $finish;
     end
