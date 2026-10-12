@@ -7275,7 +7275,12 @@ def main(argv=None):
             if a.out:
                 Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
             if cg['verdict'] != 'PASS':
-                raise SystemExit('DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40]))
+                msg_ = 'DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40])
+                if os.environ.get('OT_S81_CTRL_GATE_WARN') == '1' and a.mode == 'plan':
+                    # s81die-1011: geometry-only die-fit (plan) proceeds; the port-audit findings stay a FAIL record
+                    print('WARNING ' + msg_, file=sys.stderr)
+                else:
+                    raise SystemExit(msg_)
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
