@@ -66,3 +66,36 @@ See `el1011-qwen-tp8.log` for the bench cycle counts. The pre-fold adds the 23-c
 ## Open item
 
 PKG and DIE, like the TP4 engine's RANK, are synthesis parameters. The route uses the representative PKG 0 / DIE 0. A single die mask for all 8 dies needs them turned into straps. That is a change to the engine, so it belongs to the TP4 line `el1011-q-coll`.
+
+## Cut analysis (owner rule "CUT ANALYSIS BEFORE RTL", 2026-10-12) and the v2 floorplan
+
+Reproduce with `python3 tools/qwen_tp8_coll_cut.py`.
+
+**Capacity.** Horizontal tracks across a vertical cut: M4 (48 nm pitch, 20.8 tracks/µm, no cluster PG) plus M6 (64 nm pitch, minus the M6 PG pair, 13.5 tracks/µm). M2 is held back for cell-local wiring, and M7 is vertical. A track counts only over the y-span that no block blocks on that layer. The fold slice blocks M1–M6. The SRAM macro blocks M1–M4, so M6 passes over it.
+
+**Faces.** The W (UCIe) face carries 2,130 pins, 2.24/µm. The E (SerDes) face carries 3,290 pins, 3.46/µm. Against M4 + M6 pin slots at 2 tracks per pin (about 17 slots/µm), these use 0.13 and 0.20 of the face. In v2 the S face carries 548 pins over x 43–302 on M5, 0.22 of its slots.
+
+**Per-cut results.**
+
+| Cut (column middle) | v1 demand / tracks | v1 util | v2 demand / tracks | v2 util |
+|---|---|---|---|---|
+| A, queues | 3,291 / 20,818 | 0.16 | 2,160 / 19,130 | 0.11 |
+| B, pre-fold slices | **4,315 / 7,713** | **0.56** | 1,166 / 7,713 | 0.15 |
+| C, glue | 5,298 / 29,255 | 0.18 | 5,298 / 30,943 | 0.17 |
+| D, engine slices (unchanged TP4 engine) | 3,250 / 7,713 | 0.42 | 3,250 / 7,713 | 0.42 |
+| E, engine FIFOs | 2,184 / 25,880 | 0.08 | 2,184 / 25,880 | 0.08 |
+
+**v1 fails at column B.** The slices leave only 224.6 µm of the 950.4 µm height free on M4 and M6. Through that space v1 routes all the queue traffic between column A and the glue in column C: the LB and PQ heads, the LQ0 and RQ reads, the result bus, and the S-face input. On top of that, 1,024 pairing wires leave column C and wrap around to the slices' W-face src pins.
+
+**v2 restructure (`coll_tp8_rt2`).** The outline grows to 1,166.4 × 950.4 µm.
+- **Column A at x 43.2.** It holds 8 macros at a 108 µm pitch, bottom to top: LB0, LB1, PQ0, PQ1, TQ, RQ, LQ0, LQ1. The result queues and the merger now sit by the UCIe R pins, and LQ1 leaves column C.
+- **Pairing channel.** An 81 µm A|B channel holds the pairing logic, which faces the pre-fold src faces directly.
+- **Columns B–E.** B is at x 302.4. C (EQ and the engine heads) is at x 518.4, D at 734.4 and E at 950.4.
+- **Pin ranges.**
+  - S face: `in_*` over x 43–302.
+  - N face: `out_*` and `fault*` over x 43–302; `clk` and `rst_n` over x 562–605.
+  - W face: `up_*` and `dp_*` over y 43–475; `ur_*` and `dr_*` over y 475–907.
+
+**v2 result.** The worst cut is 0.42, at the unchanged engine column D. The RTL is unchanged, so the benches stand.
+
+**IO hold (lesson from TP4 pr2s-835975149).** pr2s failed FF hold at −67.7 ps, with 2,194 input-to-register endpoints at −384.6 ps. Its IO reference was the internal register `*s0_v*`, which sits about 400 ps later than the input pin flops. Both ref_tile kits instead take the reference from the median input pin flop (`refglob "*"`) and use the cluster clock spine. The `--cts` gate measures the spread of the pin flops' insertion delay.
