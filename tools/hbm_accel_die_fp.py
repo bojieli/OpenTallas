@@ -561,7 +561,12 @@ ADOPTED = R25
 R25GQ_V8 = dict(   # hbm-die-iter contract v8 (10-12): the 19 hfd_hc pins the closed tiled quarter's route places (r25gqw
     # io_place / LEF: f_sfu / t_sfu 4-track at y 404 / 601, rst 801, ck<c>e M4 except c 2-3 on M6) are taken exactly; the
     # die-only HC ports (VM lane / map / cmdproc) pack around them
-    anchor_ports={'hfd_hc': 'physical/hbm_accel_die_views/hcp/r25gqw/ports/hfd_hc/ports.json'}, relay_repair_rounds=20)
+    anchor_ports={'hfd_hc': 'physical/hbm_accel_die_views/hcp/r25gqw/ports/hfd_hc/ports.json'}, relay_repair_rounds=20,
+    # windowed GRT 10-12 (hub window 11-19 x 9-17 mm, k=16, 5 iters, epyc1tb/epyc2): die-wide M4/M5 adjustment 1.0 left
+    # only pin access in the channels (2,118,679 window overflow); blocks keep M2-M5 1.0 over their outlines, channels keep
+    # 0.5 of M4/M5 for PDN stripes + relay pin access -> 1,335,381 (-37 %); lane-group splits (lgE -> E + E2, W+E) were
+    # +29 % and fail reach (3 lgE rdn segments 545-912 um): rejected
+    grt_m45=0.5)
 R25GQ_PR = dict(phys_free_min=0.45,  # rf2: a 100-um route cell < 45 % free (a <= 43-um abutment gap; every 84-um lk_ep channel keeps one cell >= 46 %) is a block for
                 # physical-relay / clock-tree routes: no station or buffer pair fits a stage there
                 pinned_faces='physical/hbm_accel_die_views/ports_r25gqn', hgi_idx_wh=(1270.08, 1719.36), spine_over_n=1836.0, phys_relays=True, relay_tree=True, phys_block_cost=400.0, svc_ch_dh=108.0, relay_repair_rounds=10,
@@ -6743,7 +6748,7 @@ def main(argv=None):
         print(json.dumps(case_real(m, work)))
     elif a.mode == 'grt':
         gw = tuple(float(v_) for v_ in a.grt_win.split(',')) if a.grt_win else None
-        print(json.dumps(_jsonable(case_grt(m, work, a.k, a.tag, a.iters, cov, empty=a.empty, win=gw, m45=a.m45))))
+        print(json.dumps(_jsonable(case_grt(m, work, a.k, a.tag, a.iters, cov, empty=a.empty, win=gw, m45=a.m45 if a.m45 is not None else m['variant'].get('grt_m45')))))
     elif a.mode == 'ir':
         print(json.dumps(case_ir(m, work, a.window, cov)))
     return 0
