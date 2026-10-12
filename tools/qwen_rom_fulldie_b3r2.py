@@ -215,6 +215,7 @@ def _tp8b_f2(v, m):
     kvs = v.up(f2['kv_w'] + f2['kv_ch'], v.GX)
     W = R._spine_relay_channel(v, m, g, 0.0, kvs, W)
     g['tp8b_kv_w'] = [round(v.EDGE if hasattr(v, 'EDGE') else 0.0, 4), round(kvs, 4)]
+    g['tp8b_kvc_x'] = [round(x + kvs, 4) for x in g['tp8b_kvc_x']]     # recorded before the W strip shifted the core
     W = round(W + kvs, 4)
     g['tp8b_kv_e'] = [round(W - kvs, 4), round(W, 4)]
     chx = getattr(v, 'SPINE_CHANNEL_X', None)
