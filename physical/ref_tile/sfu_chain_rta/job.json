@@ -4,12 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-sfu",
  "purpose": "[el1011-hbm-sfu idle1012] SFU sigmoid chain (hard child of the ot_su12_sfu lane cluster, slot of hfd_sfu x16 per quarter) through tools/ref_tile: exact abstract + TT/FF/SS + insertion (hand view b70b0112c lacks TT lib / PG M5). Pins W face toward lane logic.",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 12,
  "peak_ram_gb": 24,
  "source": {

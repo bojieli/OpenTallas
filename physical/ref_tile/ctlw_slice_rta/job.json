@@ -4,12 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-sfu",
  "purpose": "[el1011-hbm-sfu idle1012] ot_hgi_su_ctlw_slice (GLUE PLACEMENT slice chain c23c819c3 + MUT_W 4 d3fa51641) through tools/ref_tile; previous slice jobs failed in a stale 'calibrate' stage that routed the flat 80k-flop ot_hgi_su_ctlw (textbook REFUSE) or on the unobservable MUT_DIRTY negative. Pin-limited (10,440 pins, std 8.4k um2): faces by memory side -- W = VM bank (wrq/wrr/wwq, 4,448), E = local bank (lsw/ldc/ldr, 4,552), N/S = slice-chain links; 1-track pin pitch (lane precedent 2,251 M4 pins every track).",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
