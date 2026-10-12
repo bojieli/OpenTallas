@@ -1,5 +1,5 @@
 {
- "name": "dsfd_coll_ct_rt-rt-COMMIT",
+ "name": "dsfd_coll_ct_rt-rt-9dbc1bc00",
  "block": "dsfd_coll_ct",
  "ref_tile": true,
  "owner": "Claude:rr1012-coll",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-rr1012-coll",
-  "commit": "COMMIT"
+  "commit": "9dbc1bc00"
  },
  "stages": {
   "bench": [
@@ -142,7 +142,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_coll_ct_rt/dsfd_coll_ct_rt-rt-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_coll_ct_rt/dsfd_coll_ct_rt-rt-9dbc1bc00"
   }
  ],
  "cycles_added": 0,
