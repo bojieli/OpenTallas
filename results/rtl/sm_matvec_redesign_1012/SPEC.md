@@ -121,3 +121,22 @@ about 9 k flops, a station about 1.5 k.
 ## 4. Implementation status (step B1 = engine + record-pipelined pub; step B2 = x engine)
 
 See /home/ubuntu/claude-takeover-20261007/el1011-hbm-smmv-b.log (COLLECT) for the live state.
+
+## 5. HBM B2 re-cut (owner, 2026-10-12): 4 clusters x 8 SMs, one HBM3E stack and one LOCAL VM slice each
+
+- **Bandwidth per SM is unchanged by B2.** One stack per cluster = 1.0 TB/s for 8 SMs = 125 GB/s = 104.2 B/cycle/SM
+  at peak, or 99.0 B/cycle/SM sustained (95 %). The batched price needs 136 B/cycle/SM, so the floor is the same
+  **1.374x sustained / 1.306x peak**. The OWNER DECISION in section 1 stands as written.
+- The engine becomes per cluster: one ot_hgi_smmv with NSM 8 (W 4), with stations at its 8 SMs. An MoE expert record
+  is split across all 4 clusters, so each cluster engine runs its quarter of the rows. Row blocks are Q = ceil(M / 32)
+  globally, and cluster c owns SMs 8c..8c+7, so the station strap is s_global = 8c + s. Retire is per cluster. Any
+  cross-cluster ordering comes from the compiler-scheduled ring, with no global barrier.
+- **x load (B2 step) sized against the LOCAL slice port, not lgE.** Each cluster loads the full x (K elements)
+  into its 8 SMs. The rate per cluster is unchanged at 72 el/cycle for w2 FP4. Reading FP32 from the local slice
+  needs 288 B/cycle = 9 sectors/cycle, then NQ 4 actquant. The provisional slice-port width must be checked when
+  results/arch/hbm_b2_1012/SPEC.md lands. If the port is narrower than 9 sectors/cycle, x moves as pre-quantised FP4
+  blocks: 2,304 FP4 = 36 sectors per w2 record, about 1.1 sectors/cycle.
+- **Results:** 8 SMs per cluster, so 1 row/cycle/cluster at wo_a. The local pub is one slice of the 8-slice pub at
+  4 SMs a slice, i.e. 2 slices a cluster.
+- **Track A pieces to fold in:** credit flow (sm_cr, AD 32 arrival FIFO), the 32-deep pub slice, x reuse (header
+  XR bit + xb; in B as a reuse hit that pins the allocator slot).
