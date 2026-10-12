@@ -1,60 +1,30 @@
 {
   "name": "ot_dsrom_aq12t",
-  "orfs_dir": "/srv/opentallas/claude/closure-loop/el1011-pqc-aq12t-b-cc60cd537-tc-cl/routes/el1011_pqc_aq12t_b_cc60cd537_tc_cl/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/el1011-pqc-aq12t-a-cc60cd537-tc-cl/routes/el1011_pqc_aq12t_a_cc60cd537_tc_cl/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
-      "done": true,
-      "command": [
-        "docker",
-        "run",
-        "--rm",
-        "-v",
-        "/srv/opentallas/claude/closure-loop/el1011-pqc-aq12t-b-cc60cd537-tc-cl/routes/el1011_pqc_aq12t_b_cc60cd537_tc_cl/work/orfs:/in:ro",
-        "-v",
-        "/srv/opentallas-scratch/claude/el1011-pqc/views/ot_dsrom_aq12t:/out",
-        "-v",
-        "/srv/opentallas/claude/closure-loop/el1011-pqc-aq12t-b-cc60cd537-tc-cl/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
-        "openroad/orfs:asap7lock",
-        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
-        "-no_init",
-        "-exit",
-        "/out/export_ss.tcl"
-      ]
+      "done": true
     },
     "ff": {
       "returncode": 0,
-      "done": true,
-      "command": [
-        "docker",
-        "run",
-        "--rm",
-        "-v",
-        "/srv/opentallas/claude/closure-loop/el1011-pqc-aq12t-b-cc60cd537-tc-cl/routes/el1011_pqc_aq12t_b_cc60cd537_tc_cl/work/orfs:/in:ro",
-        "-v",
-        "/srv/opentallas-scratch/claude/el1011-pqc/views/ot_dsrom_aq12t:/out",
-        "-v",
-        "/srv/opentallas/claude/closure-loop/el1011-pqc-aq12t-b-cc60cd537-tc-cl/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
-        "openroad/orfs:asap7lock",
-        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
-        "-no_init",
-        "-exit",
-        "/out/export_ff.tcl"
-      ]
+      "done": true
     },
     "tt": {
       "returncode": 0,
       "done": true,
+      "ws": "OT_WS max -5.085276644223313e-11 min -7.442749194730425e-11",
+      "image": "openroad/orfs:asap7lock",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas/claude/closure-loop/el1011-pqc-aq12t-b-cc60cd537-tc-cl/routes/el1011_pqc_aq12t_b_cc60cd537_tc_cl/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-pqc-aq12t-a-cc60cd537-tc-cl/routes/el1011_pqc_aq12t_a_cc60cd537_tc_cl/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/el1011-pqc/views/ot_dsrom_aq12t:/out",
+        "/srv/opentallas-scratch/claude/el1011-pqc/repo-f22b/physical/s81_pq_hier/views/ot_dsrom_aq12t:/out",
         "-v",
-        "/srv/opentallas/claude/closure-loop/el1011-pqc-aq12t-b-cc60cd537-tc-cl/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/el1011-pqc-aq12t-a-cc60cd537-tc-cl/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
         "openroad/orfs:asap7lock",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -64,13 +34,13 @@
     }
   },
   "macro_views": [
-    "/srv/opentallas/claude/closure-loop/el1011-pqc-aq12t-b-cc60cd537-tc-cl/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+    "/srv/opentallas-scratch/claude/closure-loop/el1011-pqc-aq12t-a-cc60cd537-tc-cl/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "files": {
-    "ot_dsrom_aq12t.lef": "6265363ff5f700410681a424b0547e4f0a722e72ca927d9b8a95f3927d0e33fa",
-    "ot_dsrom_aq12t_ff.lib": "5d567414159b9f6a64393b4bf42bd2372b7dd377f472b509a113dcb4ab1be9bb",
-    "ot_dsrom_aq12t_ss.lib": "9ec1a4320e72da2e4ec91bf94dc54bc3548553abed339523741ec5820175126b",
-    "ot_dsrom_aq12t_tt.lib": "4fc398eb1d214799838b0c0fd0190f5e03f81f1c91d3c7834bad6acec20863c4"
+    "ot_dsrom_aq12t.lef": "3554f125da745b49429f1aad5bb039fa09851b82b706ae8ad8f5f9459f4743f2",
+    "ot_dsrom_aq12t_ff.lib": "614d44462359694d87eb4713aca3c5c80a88300f36175f6ab3d3e9444b6e2775",
+    "ot_dsrom_aq12t_ss.lib": "6f9acdaf5eeb0c8c85f5e924531aaad8df960da75986d61af728bbf5ff946726",
+    "ot_dsrom_aq12t_tt.lib": "c1e303c8f0545f52f9e7372e5a4d273eeca3b1cbfc25144e7459258148a8c6dc"
   },
   "ok": true
 }
