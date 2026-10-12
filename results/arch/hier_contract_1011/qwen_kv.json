@@ -1,7 +1,7 @@
 {
  "schema": "qwen-hier-contract/0 (provisional; migrate to tools/hier_contract/)",
  "die": "qwen_kv",
- "version": 1,
+ "version": 2,
  "source": "die_kv15 case_kv @14f0f4368 (die chain CLOSED TT +217.17 / FF +18.26)",
  "period_ps": 833.333,
  "die_outline": "qwen_kv",
@@ -24371,6 +24371,36 @@
    "date": "2026-10-11 18:45 PDT",
    "by": "qwendie-1011",
    "note": "provisional from die_kv15 case_kv @14f0f4368 (die chain CLOSED TT +217.17 / FF +18.26)"
+  },
+  {
+   "version": 2,
+   "date": "2026-10-11 21:45 PDT",
+   "by": "qwendie-1011",
+   "note": "seam_check spec; KV hub tiles pending q-kvd handover"
   }
- ]
+ ],
+ "seam_check": {
+  "definition": "every die-level net between two hard slots (tile<->tile, tile<->hub, element<->relay) is a SEAM",
+  "structure": [
+   "registered both sides (pin flop in, flop out; macro outputs captured with no logic)",
+   "<= 504 um of wire per stage (relays at discrete sites; last segment <= ~100 um into an unregistered input)",
+   "no seam net fanout > 64 without replication"
+  ],
+  "tools": [
+   "tools/qwen_kv_die/die_audit.py (structure: hops_over_reach, pin overlaps, region extents)",
+   "tools/budgets/clock_plan.py emit/record (die clock to every slot clock entry: intra/inter skew policy, 0 violations)",
+   "tools/qwen_kv_die/chain/die_chain.sh (case -> PDN check_power_grid -> GRT -> STA on slot libs with measured clock arrivals) + pad_chain.sh (rule-H1 hold pads)",
+   "per-REGION die-top detailed route (DRT) with slots as fixed macros, relays/hubs as the only logic: to be added (AMENDMENT 2)"
+  ],
+  "pass": {
+   "TT_setup_ps": ">= 0 @ 833.333 on the CTS clock",
+   "FF_hold_ps": ">= 0 after pads",
+   "GRT_overflow": 0,
+   "DRC": 0,
+   "PDN": "check_power_grid PASS",
+   "clock_plan": "0 intra / 0 inter violations",
+   "hops_over_504um": 0
+  },
+  "evidence_rule": "estimate-only seam checks are not closure evidence; a seam passes only on the routed die region"
+ }
 }
