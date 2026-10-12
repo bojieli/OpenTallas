@@ -1,5 +1,5 @@
 {
- "name": "s81hc_cryww_ref-v1-COMMIT",
+ "name": "s81hc_cryww_ref-v1-56634d4ff",
  "block": "ot_s81_hc_crooty_w",
  "ref_tile": true,
  "owner": "Claude:el1011-s81hc-crooty",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-s81hc-crooty",
-  "commit": "COMMIT"
+  "commit": "56634d4ff"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_cryww_ref/s81hc_cryww_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_cryww_ref/s81hc_cryww_ref-v1-56634d4ff"
   }
  ],
  "cycles_added": 0,
