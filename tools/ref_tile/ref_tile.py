@@ -657,11 +657,16 @@ def lint_cmd(s: dict) -> str:
     'hierarchy -check' in the route.  (10-12: ~30 ref jobs NEEDS_RTL on a lint that omitted the defines that select the
     top's body / named blackbox children.)"""
     defs = ["-DSYNTHESIS"] + [f"-D{d}" for d in s.get("defines", [])]
-    gp = [f"-G{k}={v}" for k, v in s.get("params", {}).items()]
     inc = [f"-I{d[len('/src/'):] if d.startswith('/src/') else d}"
            for d in str(s.get("orfs_vars", {}).get("VERILOG_INCLUDE_DIRS", "")).split() if d]
-    return " ".join(["verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING",
-                     *defs, *gp, *inc, "--top-module", s["top"], *s["sources"]]) + " && echo lint-ok"
+    # the top is linted under a one-line wrapper: verilator refuses --top-module on a module that another parsed source
+    # instantiates (ot_hgi_hc_tile inside ot_hgi_hc_unit.sv, from claude/el1011-hcvm-hc4 7e3baed71); the top's params
+    # become instance overrides (-G only reaches the top level); unconnected wrapper ports are lint warnings only
+    pv = ", ".join(f".{k}({v})" for k, v in s.get("params", {}).items())
+    inst = f"{s['top']} #({pv}) u_top ();" if pv else f"{s['top']} u_top ();"
+    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' 'module ot_lint_top; {inst} endmodule' > {{RUN}}/ot_lint_top.sv && ")
+    return wrap + " ".join(["verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING",
+                     *defs, *inc, "--top-module", "ot_lint_top", "{RUN}/ot_lint_top.sv", *s["sources"]]) + " && echo lint-ok"
 
 
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
