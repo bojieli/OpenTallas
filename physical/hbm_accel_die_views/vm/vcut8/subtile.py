@@ -15,9 +15,13 @@ HOW (cycle-exact, generic over the generated RTL): the half (VM_ST ports) is fla
   * anchors: port bits (the tile under the pin), the slice macros and the slice / root core (the core tile); every other
     unit is placed on the Manhattan tile path between its nearest upstream and downstream anchors, in proportion to its
     sequential position (adjacent stages are in the same or an edge-adjacent tile);
-  * seams: a cut net whose source and sink capture on the SAME edge gets an opposite-edge flop at the seam in the source
-    tile, clocked by the source flop's own clock (pos -> neg -> pos is still one cycle); pos -> neg / neg -> pos nets cross
-    as they are.  Every seam is a registered half-cycle hand-off (T/2 hold margin against tile-to-tile skew), 0 cycles;
+  * seams (r2, FULL CYCLE): every negedge flop is merged into the unit of its posedge driver(s), and a cut leaving a pure
+    negedge relay carries the relay's posedge source Q instead (same value at every posedge capture), so every seam is a
+    posedge flop -> tile pin -> tile pin -> posedge flop crossing between tile roots: full cycle, 0 cycles added, no
+    inserted flop (r1 half-cycle hand-offs failed tile IO timing: negedge-launched outputs had ~90 ps of budget).  Where
+    a full-cycle hop must cross two tile edges, make_vm_vcut8 VM_ST_K adds uniform per-port stages (report k_demand);
+  * tiles sit on the PDN strap pitch (make_vm_vcut8 st_rows / st_cols), seam pins only on free tracks (r1 DRT-0255);
+  * row-seam column per chain picked by load per um (detours allowed when the chain has the hops);
   * a tile carries its core clock as its own port ck (die pin ckt<k>), its face taps, its pins at the parent locations
     and a reset relay (the parent reset reaches every tile through registered seams like any other net).
     python3 subtile.py --json nl/<m>.json --master <m> --rows 3 --cols 2 --out st/ [--report-only]
@@ -50,6 +54,9 @@ def main():
     ap.add_argument('--json', required=True); ap.add_argument('--master', required=True); ap.add_argument('--out', required=True)
     ap.add_argument('--rows', type=int, default=2); ap.add_argument('--cols', type=int, default=3)
     ap.add_argument('--report-only', action='store_true'); ap.add_argument('--core-row', type=int, default=-1)
+    ap.add_argument('--vector-net', action='append', default=[], help='keep this net as one vector reg in the core tile (bench force)')
+    ap.add_argument('--probe', default='', help='<scope>:<prefix>:<n1,n2,...> bench probe block in the core tile')
+    ap.add_argument('--tb-out', default='', help='bench include (vm_st_tb.svh) with VM_CFG / VM_RT / VM_ROOT for the tiled half')
     a = ap.parse_args()
     os.environ['VM_ST'] = str(a.rows); os.environ['VM_ST_COLS'] = str(a.cols)
     os.environ.setdefault('VM_TAPS_LONG', '48'); os.environ.setdefault('VM_TAPS_SHORT', '32')
@@ -63,12 +70,11 @@ def main():
         r = next(i for i, (lo, hi) in enumerate(rows) if y < hi or i == R - 1)
         return c * R + r
     cr = lambda k: (k // R, k % R)
-    def path(ka, kb, var=0):
-        """tiles from ka to kb, one edge per step; var picks the column of the row crossing (source / middle /
-        destination) so N-S traffic spreads over the three columns of the row seam"""
+    def path(ka, kb, cx=None):
+        """tiles from ka to kb, one edge per step, crossing the row seam in column cx (default: the source column; r2:
+        cx may lie outside [ca, cb] -- a detour that spreads N-S traffic over every column of the row seam)"""
         (ca, ra), (cb, rb) = cr(ka), cr(kb)
-        cols_ = list(range(ca, cb + (1 if cb >= ca else -1), 1 if cb >= ca else -1))
-        cx = cols_[min(var, len(cols_) - 1)] if var < 2 else cols_[len(cols_) // 2]
+        cx = ca if cx is None else cx
         p = [ka]; c, r = ca, ra
         while c != cx:
             c += 1 if cx > c else -1; p.append(c * R + r)
@@ -119,6 +125,37 @@ def main():
                     x, y = f(cn), f(lc)
                     if x != y:
                         par[y] = x
+    # r2 FULL-CYCLE SEAMS: every negedge flop joins the unit of its posedge driver(s) (through its D cone), so no cut is
+    # ever P -> N; a cut leaving a pure negedge relay ($_DFF_N_ whose D is a posedge flop's Q) carries that posedge Q
+    # instead (relay bypass: its posedge loads capture the same value one full cycle after launch).  Every seam is then a
+    # posedge -> posedge full-cycle crossing between tile roots: 0 cycles added, no inserted flop, no half-cycle tile IO.
+    edge0 = {cn: edge_of(c['type']) for cn, c in cells.items()}
+    relay_d, nfunc = {}, []
+    for cn, c in cells.items():
+        if not (is_seq[cn] and edge0[cn] == 'N'):
+            continue
+        d = c['connections']['D'][0]
+        dv = drv.get(d)
+        if c['type'] == '$_DFF_N_' and dv and is_seq[dv[0]] and edge0[dv[0]] == 'P':
+            relay_d[cn] = d
+            x, y = f(dv[0]), f(cn)
+            if x != y:
+                par[y] = x
+            continue
+        nfunc.append(cn)
+        todo, seen = [b_ for pn_, bs in c['connections'].items() if c['port_directions'][pn_] == 'input' and pn_ != 'C'
+                      for b_ in bs if isinstance(b_, int)], set()
+        while todo:
+            b_ = todo.pop()
+            if b_ in seen or b_ not in drv:
+                continue
+            seen.add(b_); dc = drv[b_][0]
+            x, y = f(dc), f(cn)
+            if x != y:
+                par[y] = x
+            if comb(dc):
+                todo += [bb for pn_, bs in cells[dc]['connections'].items() if cells[dc]['port_directions'][pn_] == 'input'
+                         for bb in bs if isinstance(bb, int)]
     U = {cn: f(cn) for cn in cells}
     units = collections.defaultdict(list)
     for cn in cells:
@@ -146,6 +183,12 @@ def main():
     for un, cs in units.items():
         if len(cs) > 64 and sum(comb(x) for x in cs) > 32:
             set_anchor(un, core_k, 'logic cluster')
+    vecbits = {}
+    for vn in a.vector_net:
+        for i, b in enumerate(mod['netnames'][vn]['bits']):
+            vecbits[b] = (vn, i)
+            if b in drv:
+                set_anchor(U[drv[b][0]], core_k, f'vector {vn}')
     def pin_k(pn, i):
         p = pins[(pn, i)]
         return tile_xy(p[1], p[2])
@@ -165,17 +208,17 @@ def main():
             if not clockpin(lc, lp) and U[lc] != U[cn]:
                 succ[U[cn]].add(U[lc]); pred[U[lc]].add(U[cn])
     def bfs(adjm):
-        dist, at = {}, {}
+        dist, at, org = {}, {}, {}
         dq = collections.deque()
         for un, (k, _) in anchor.items():
-            dist[un], at[un] = 0, k; dq.append(un)
+            dist[un], at[un], org[un] = 0, k, un; dq.append(un)
         while dq:
             x = dq.popleft()
             for y in adjm[x]:
                 if y not in dist:
-                    dist[y], at[y] = dist[x] + 1, at[x]; dq.append(y)
-        return dist, at
-    db, kb = bfs(succ); df, kf = bfs(pred)
+                    dist[y], at[y], org[y] = dist[x] + 1, at[x], org[x]; dq.append(y)
+        return dist, at, org
+    db, kb, ob = bfs(succ); df, kf, of_ = bfs(pred)
     NT_ = len(tiles); ALL = (1 << NT_) - 1
     nb_ = [0] * NT_
     for k in range(NT_):
@@ -211,9 +254,26 @@ def main():
     load_t = [0] * NT_
     for un in anchor:
         load_t[tile[un]] += nseq[un]
+    # r2: the row seam column of a chain (its upstream / downstream anchor pair) is picked once, least loaded per um of
+    # column width among the columns the chain spans (r1: a per-unit hash put 2/3 of the N-S traffic through the core
+    # column: 22-57 b/um on its 116 um row seam)
+    xload, xpick, xalt = [0.0] * C, {}, collections.Counter()
     def target(un):
         if un in db and un in df:
-            p = path(kb[un], kf[un], hash(un) % 3)
+            key = (ob[un], of_[un])
+            if key not in xpick:
+                (ca, ra), (cb, rb) = cr(kb[un]), cr(kf[un])
+                hops = db[un] + df[un]
+                if ra != rb:     # any column whose detour fits the chain's hops (|ca-cx| + |cx-cb| + |ra-rb| tile edges)
+                    cs = [c_ for c_ in range(C) if abs(ca - c_) + abs(c_ - cb) + abs(ra - rb) <= hops] or [ca]
+                    xalt[len(cs) > 1] += 1
+                    cx = min(cs, key=lambda c_: ((xload[c_] + 1) / (cols[c_][1] - cols[c_][0]), abs(ca - c_) + abs(c_ - cb)))
+                    xload[cx] += 1
+                else:
+                    cx = None
+                xpick[key] = cx
+            cx = xpick[key]
+            p = path(kb[un], kf[un], cx)
             return p[int(round((len(p) - 1) * db[un] / (db[un] + df[un])))]
         return kb.get(un, kf.get(un, core_k))
     for un in sorted((u_ for u_ in units if u_ not in anchor), key=lambda u_: (db.get(u_, 10 ** 6), u_)):
@@ -267,6 +327,8 @@ def main():
         return es
     viol, mixed, cuts = [], [], []
     vcls = collections.Counter()
+    halfcut, relayed = [], 0
+    cutd = collections.OrderedDict()
     for b, (cn, pn, _) in drv.items():
         if comb(cn) or is_fci[cn]:
             continue
@@ -288,10 +350,31 @@ def main():
             es = sink_edges(lc) - {'O'}
             if len(es) > 1:
                 mixed.append((nm.get(b, (str(b),))[0], sorted(es))); continue
-            grp[(kd, bool(es) and next(iter(es)) == se)].append((lc, lp, k))
-        for (kd, ins), ls in grp.items():
-            ck = cells[cn]['connections']['C'][0] if is_seq[cn] else cells[cn]['connections']['clk'][0]
-            cuts.append((b, ks, kd, ins, ck, edge_cell.get(cn) or 'P', ls))
+            if (se == 'N' and cn not in relay_d) or 'N' in es:
+                halfcut.append((qname(cn), se, sorted(es))); continue
+            grp[kd].append((lc, lp, k))
+        for kd, ls in grp.items():
+            sc, sb = (drv[relay_d[cn]][0], relay_d[cn]) if cn in relay_d else (cn, b)
+            relayed += cn in relay_d
+            ck = cells[sc]['connections']['C'][0] if is_seq[sc] else cells[sc]['connections']['clk'][0]
+            cutd.setdefault((sb, kd), (sb, ks, kd, False, ck, 'P', []))[6].extend(ls)
+    cuts = list(cutd.values())
+    # r2: violations / infeasible units by the output port anchor downstream of them -> make_vm_vcut8 VM_ST_K (+1 full
+    # stage on every bit of that port per round)
+    def out_anchor(un):
+        o = of_.get(un)
+        w_ = anchor.get(o, (0, ''))[1] if o is not None else ''
+        return w_.split()[1].split('[')[0] if w_.startswith('out ') else ('?' + w_.split(' ')[0])
+    kdem = collections.Counter()
+    for b, (cn, pn, _) in drv.items():
+        if comb(cn) or is_fci[cn]:
+            continue
+        for lc, lp, _ in loads.get(b, []):
+            if not clockpin(lc, lp) and not adj(tile[U[cn]], tile[U[lc]]):
+                kdem[out_anchor(U[lc])] += 1
+    for un in units:
+        if un not in anchor and un in fd and not (fd[un] & fu[un]):
+            kdem[out_anchor(un)] += 1
     tapuse = collections.defaultdict(set)
     for cn, c in cells.items():
         for pn_, bits in c['connections'].items():
@@ -320,19 +403,20 @@ def main():
     seam_sinks = collections.Counter(ks for _, ks, kd, ins, *_ in cuts if ins)
     rep = dict(master=m, grid=f'{C}x{R}', cols=cols, rows=rows, core_tile=cr(core_k), cells=len(cells), units=len(units),
                anchored=len(anchor), conflicts=len(conflict), infeasible=infeas, infeasible_ex=dbg, conflict_ex=[str(x)[:160] for x in conflict[:4]],
-               violations=len(viol), viol_ex=viol[:4], viol_classes={' | '.join(map(str, k_)): v_ for k_, v_ in vcls.most_common(12)}, mixed=len(mixed), mixed_ex=mixed[:4], cuts=len(cuts),
-               inserted=sum(1 for c in cuts if c[3]), seam_bits=dict(sorted(seamn.items())),
+               k_demand=dict(kdem.most_common()), row_cross_chains=[xload, dict(xalt)], violations=len(viol), viol_ex=viol[:4], viol_classes={' | '.join(map(str, k_)): v_ for k_, v_ in vcls.most_common(12)}, mixed=len(mixed), mixed_ex=mixed[:4], cuts=len(cuts),
+               inserted=sum(1 for c in cuts if c[3]), relays=len(relay_d), relay_cuts=relayed, neg_functional=len(nfunc),
+               half_cycle_cuts=len(halfcut), half_cycle_ex=[str(x)[:120] for x in halfcut[:4]], seam_bits=dict(sorted(seamn.items())),
                seam_b_per_um=dict(sorted(load.items())), over_budget=over,
                sinks_per_tile={str(cr(k)): v + seam_sinks.get(k, 0) for k, v in sorted(sinks.items())},
                sink_src={str(k_): v_ for k_, v_ in srcmix.most_common(10)}, tap_split=len(tapx), tap_split_ex=dict(list(tapx.items())[:4]))
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     (out / f'{m}_st_report.json').write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps(rep))
-    bad = conflict or viol or mixed
+    bad = conflict or viol or mixed or halfcut
     if a.report_only or bad:
         sys.exit(2 if bad else 0)
     emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port_of, pins, nm, drv, clkports,
-         is_seq, is_mac, core_k)
+         is_seq, is_mac, core_k, vecbits, a, loads)
 
 
 FLOP_TPL = {
@@ -354,12 +438,15 @@ COMB_TPL = {'$_AND_': '{A} & {B}', '$_OR_': '{A} | {B}', '$_XOR_': '{A} ^ {B}', 
 
 
 def emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port_of, pins, nm, drv, clkports,
-         is_seq, is_mac, core_k):
+         is_seq, is_mac, core_k, vecbits, a, loads):
     """per-tile Verilog (generic cells; flops (* keep *)), the parent shell, per-tile pins / views / sdc / macros"""
     NT, R = len(tiles), len(rows)
     used, wname = set(), {}
     def wn(b):
         if b in wname:
+            return wname[b]
+        if b in vecbits:
+            wname[b] = f'{vecbits[b][0]}[{vecbits[b][1]}]'
             return wname[b]
         base = (f'{nm[b][0]}_{nm[b][1]}' if nm[b][2] > 1 else nm[b][0]) if b in nm else f'n{b}'
         base = re.sub(r'_+', '_', re.sub(r'[^0-9A-Za-z_]', '_', base)).strip('_') or f'n{b}'
@@ -457,6 +544,17 @@ def emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port
         a_, b_ = (int(x) for x in s[1:].split('_'))
         lo, hi = (a_ * R + b_, a_ * R + b_ + 1) if s[0] in 'ud' else (b_ * R + a_, (b_ + 1) * R + a_)
         return (lo, hi) if s[0] in 'ue' else (hi, lo)          # (source tile, sink tile)
+    def core_view(b):
+        if not isinstance(b, int):
+            return {'0': "1'b0", '1': "1'b1"}.get(b, "1'b0")
+        for lc, lp, kk in loads.get(b, []):
+            if tk[lc] == core_k and (lc, lp, kk) in subst:
+                return subst[(lc, lp, kk)]
+        if b in drv and tk[drv[b][0]] == core_k:
+            return wn(b)
+        if b in port_of:
+            return src(core_k, b)
+        raise SystemExit(f'probe bit {b} not visible in the core tile')
     texts = {}
     for k in range(NT):
         ps = [('input', 'ck', 1)] + [('input', pn, 1) for pn in sorted(ports_t[k])]
@@ -470,6 +568,19 @@ def emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port
         x0, x1, y0, y1 = tiles[k]
         body = [f'// GENERATED by vm/vcut8/subtile.py from {m}: hardened tile {cr(k)} x {x0:.3f}..{x1:.3f} y {y0:.3f}..{y1:.3f} um',
                 f'module {m}_t{k} (', ',\n'.join(f'    {d} wire [{w-1}:0] {n}' for d, n, w in ps), ');']
+        vec_here = {vn for (vn, _) in vecbits.values()} if k == core_k else set()
+        for vn in sorted(vec_here):
+            body.append(f"reg [{len(mod['netnames'][vn]['bits']) - 1}:0] {vn};")
+        decl[k] = {x for x in decl[k] if not re.fullmatch(r'\w+\[\d+\]', x)}
+        regs[k] = {x for x in regs[k] if not re.fullmatch(r'\w+\[\d+\]', x)}
+        if k == core_k and a.probe:
+            scope, pre, names = a.probe.split(':')
+            body.append(f'if (1) begin : {scope}   // bench probes: the values the {pre.rstrip(".")} cells see in this tile')
+            for n_ in names.split(','):
+                bits = mod['netnames'][pre + n_]['bits']
+                el = [core_view(b) for b in reversed(bits)]
+                body.append(f'    wire [{len(bits) - 1}:0] {n_} = {{' + ', '.join(el) + '};')
+            body.append('end')
         dw = sorted(decl[k] - regs[k])
         body += ['wire ' + ', '.join(dw[i:i + 32]) + ';' for i in range(0, len(dw), 32)]
         rg = sorted(regs[k])
@@ -493,6 +604,15 @@ def emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port
                 cs.append(f'.{n}({n})')
         body.append(f'{m}_t{k} u_t{k} (' + ',\n    '.join(cs) + ');')
     (out / f'{m}.v').write_text('\n'.join(body + ['endmodule', '']))
+    if a.tb_out:
+        scope = a.probe.split(':')[0] if a.probe else ''
+        tl = [f'// generated by subtile.py ({m}): bench handles of the tiled half (tb_vm_vcut8.sv `VM_ST)']
+        for vn in a.vector_net:
+            tl += ['`undef VM_CFG', f'`define VM_CFG u.u_sw`SWH.u_t{core_k}.{vn}']
+        if scope:
+            tl += ['`undef VM_RT', f'`define VM_RT u.u_sw`SWH.u_t{core_k}.{scope}']
+        tl += ['`undef VM_ROOT', '`define VM_ROOT vm_st_dbg   // root internals are flattened: debug display only (VM_DBG)']
+        Path(a.tb_out).write_text('\n'.join(tl) + '\n')
     fsd = {k: [f'# generated by subtile.py from {m}_fwd_clk.sdc: forwarded-clock outputs of {m}_t{k}'] for k in range(NT)}
     for l in (D / f'{m}_fwd_clk.sdc').read_text().splitlines():
         mm = re.search(r'\[get_ports \{(\w+)\[(\d+)\]\}\]$', l)
@@ -536,8 +656,11 @@ def emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port
 
 
 def seam_pins(g, n, w, sw, tile, k, cr):
-    """pins of seam bus n on its shared tile edge: up/down buses on the N/S edges (M5/M7), east/west buses on the E/W
-    edges (M4/M6); the two directions of one edge interleave on the same span (forward even slots, backward odd)"""
+    """pins of seam bus n on its shared tile edge: up/down buses on the N/S edges (M5/M7, + M3 on a dense seam), east/west
+    buses on the E/W edges (M4/M6); the two directions of one edge interleave (forward even slots, backward odd).
+    r2: slots map onto the FREE tracks of each layer only (make_vm_vcut8.free: >= 0.1 um off every PDN strap; tile
+    origins sit on the strap pitch, so tile-local = half-local), spread evenly along the edge per layer (r1 put seam
+    pins over M6 / M7 straps)"""
     mm = re.fullmatch(r'([udew])(\d+)_(\d+)(_o)?', n)
     d_, a_, b_ = mm.group(1), int(mm.group(2)), int(mm.group(3))
     x0, x1, y0, y1 = tile
@@ -547,26 +670,32 @@ def seam_pins(g, n, w, sw, tile, k, cr):
     mn, tot = min(nf, nb), nf + nb
     vert = d_ in 'ud'
     L = (x1 - x0) if vert else (y1 - y0)
-    pitch = (L - 6.0) / max(tot, 1)
     if vert:
         near = cr(k)[1] == b_                     # row b sees the b / b+1 boundary on its top edge
+        lys = ('M5', 'M7', 'M3') if tot / (L - 6.0) > BUDGET else ('M5', 'M7')
     else:
         near = cr(k)[0] == b_                     # column b sees the b / b+1 boundary on its east edge
+        lys = ('M4', 'M6')
+    TR = {'M3': (0.018, 0.036), 'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M7': (0.016, 0.064)}
+    free_t = {}
+    for ly in lys:
+        gr, st = TR[ly]
+        free_t[ly] = [round(gr + i * st, 4) for i in range(int((3.0 - gr) / st) + 1, int((L - 3.0 - gr) / st) + 1)
+                      if g.free(ly, gr + i * st)]
+    per = [tot // len(lys) + (1 if r < tot % len(lys) else 0) for r in range(len(lys))]
+    for r, ly in enumerate(lys):
+        if per[r] > len(free_t[ly]):
+            raise SystemExit(f'seam {n}: {per[r]} pins > {len(free_t[ly])} free {ly} tracks on {L:.1f} um')
     out = []
     for j in range(w):
         s_ = 2 * j + (0 if first else 1) if j < mn else 2 * mn + (j - mn)
-        a = 3.0 + (s_ + 0.5) * pitch
+        r = s_ % len(lys); ly = lys[r]; i = s_ // len(lys)
+        ft = free_t[ly]
+        a = ft[min(len(ft) - 1, int((i + 0.5) * len(ft) / per[r]))]
         if vert:
-            dense = tot / (L - 6.0) > BUDGET            # a dense row seam also uses M3 (three vertical pin layers)
-            ly = ('M5', 'M7', 'M3')[s_ % 3] if dense else ('M5' if s_ % 2 == 0 else 'M7')
-            grid, step = {'M5': (0.012, 0.048), 'M7': (0.016, 0.064), 'M3': (0.018, 0.036)}[ly]
-            x = round(grid + round((a - grid) / step) * step, 4)
-            out.append((n, j, ly, x, round((y1 - y0) - 0.096, 4) if near else 0.096, None))
+            out.append((n, j, ly, a, round((y1 - y0) - 0.096, 4) if near else 0.096, None))
         else:
-            ly = 'M4' if s_ % 2 == 0 else 'M6'
-            grid, step = (0.012, 0.048) if ly == 'M4' else (0.016, 0.064)
-            y = round(grid + round((a - grid) / step) * step, 4)
-            out.append((n, j, ly, round((x1 - x0) - 0.096, 4) if near else 0.096, y, None))
+            out.append((n, j, ly, round((x1 - x0) - 0.096, 4) if near else 0.096, a, None))
     return out
 
 

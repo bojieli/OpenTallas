@@ -77,9 +77,18 @@ endmodule
 `define VM_TRACE "trace_dut.hex"
 `define VM_ROOT u.u_sw`SWH.u_mr.on
 `define VM_RT u.u_sw`SWH.u_mr
+`ifdef VM_ST
+`include "vm_st_tb.svh"
+`endif
 `include "vm_env_body.svh"
 
+`ifdef VM_ST
+module vm_st_dbg_m; reg [7:0] state = 0, sticky = 0; reg [3:0] sent = 0, acked = 0; endmodule
+`endif
 module tb_vm_tiles;
+`ifdef VM_ST
+    vm_st_dbg_m vm_st_dbg();
+`endif
     reg clk = 0; always #0.5 clk = ~clk;
     wire [63:0] ha, hb; integer na, nb; wire da, db, fa, fb;
     vm_env_m a (.clk(clk), .h(ha), .nev(na), .done(da), .fault_end(fa));

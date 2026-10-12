@@ -132,23 +132,37 @@ ST_HALVES = set(os.environ.get('VM_ST_HALVES', 'sw_w sw_e nw_w se_e se_w ne_e').
 
 SLICE_HALVES = {'sw_w', 'nw_e', 'se_w', 'ne_w'}
 ST_COLS = int(os.environ.get('VM_ST_COLS', '3'))
-ST_SLICE_W = 135.0       # slice column: 6 SRAMs (94.824 um wide) stacked, >= 20 um to each tile edge
+ST_SLICE_W = 135.0
+ST_K = {(kv.split(':')[0], kv.split(':')[1].split('=')[0]): int(kv.split('=')[1])
+        for kv in os.environ.get('VM_ST_K', '').replace(' ', '').split(',') if kv}   # 'sw_w:t_n_row=1,...'
+ST_COLB = {kv.split(':')[0]: [float(x) for x in kv.split(':')[1].split('/')]
+           for kv in os.environ.get('VM_ST_COLB', '').replace(' ', '').split(',') if kv}
+ST_PDN_X, ST_PDN_Y = 10.8, 5.4   # r2: tile boundaries on the vm/pdn_vm.tcl strap pitches (M7 stripes 10.8, M5/M6 straps 5.4)       # slice column: 6 SRAMs (94.824 um wide) stacked, >= 20 um to each tile edge
 
 def st_rows(h):
     """PHYSICAL SPEC [hbm-vm8] 2026-10-11: VM_ST rows (2 -> 500 um each; hop <= 500 um), on the 0.27 um row grid"""
-    b = [0.0] + [round(round(QH * r / ST / 0.27) * 0.27, 4) for r in range(1, ST)] + [QH]
+    # r2: inner boundaries on the 5.4 um M5/M6 strap pitch (a multiple of the 0.27 row) so every tile's own PDN
+    # (vm/pdn_vm.tcl, offsets from the tile origin) lands on the half's straps: the half's pin / tap strap clearance
+    # (free / free_span) holds unchanged in tile-local coordinates (r1 DRT-0255 on ck[0] / cke10[0] at off-grid tiles)
+    b = [0.0] + [round(round(QH * r / ST / ST_PDN_Y) * ST_PDN_Y, 4) for r in range(1, ST)] + [QH]
     return [(b[i], b[i + 1]) for i in range(ST)]
 
 def st_cols(h, q=None):
     """3 columns (O-face, middle, I/seam face), ~116 um each; a slice half widens the middle column to ST_SLICE_W (the
     slice stays whole: 6 SRAMs stacked with 28.08 um channels, >= 20 um to the tile edges); on the 0.054 site grid"""
     w = WID[h]
+    if f'{q}_{h}' in ST_COLB:   # r2: per-half column cuts sized to the row-seam load (VM_ST_COLB 'sw_e:118.8/280.8')
+        b = [0.0] + ST_COLB[f'{q}_{h}'] + [w]
+        assert all(abs(x / ST_PDN_X - round(x / ST_PDN_X)) < 1e-6 for x in b[1:-1]), b
+        return [(b[i], b[i + 1]) for i in range(len(b) - 1)]
+    P = ST_PDN_X          # r2: inner boundaries on the 10.8 um M7 stripe pitch (= 2 x M5/M6 pitch, 200 sites), see st_rows
     if f'{q}_{h}' in SLICE_HALVES and ST_COLS == 3:
-        side = (w - ST_SLICE_W) / 2
-        b = [0.0, side, side + ST_SLICE_W, w]
+        lo = math.floor((w - ST_SLICE_W) / 2 / P) * P             # slice column widened outward to the pitch (>= ST_SLICE_W)
+        hi = lo + math.ceil((ST_SLICE_W + (w - ST_SLICE_W) / 2 - lo) / P) * P
+        b = [0.0, lo, hi, w]
     else:
-        b = [0.0] + [w * c / ST_COLS for c in range(1, ST_COLS)] + [w]
-    b = [b[0]] + [round(round(x / 0.054) * 0.054, 4) for x in b[1:-1]] + [b[-1]]
+        b = [0.0] + [round(w * c / ST_COLS / P) * P for c in range(1, ST_COLS)] + [w]
+    b = [b[0]] + [round(x, 4) for x in b[1:-1]] + [b[-1]]
     return [(b[i], b[i + 1]) for i in range(len(b) - 1)]
 
 def st_tiles(h, q=None):
@@ -350,8 +364,8 @@ class H(mt.T):
                 continue
             a, b = s.pin_xy(*sb), s.pin_xy(p, k)
             span.append((abs(a[0] - b[0]) + abs(a[1] - b[1]), nb[k]))
-        if not span:
-            return 0, 0.0
+        if not span:     # no input-pin source (core-generated bits): only the r2 VM_ST_K full-cycle seam stages
+            return ST_K.get((f'{s.q}_{s.h}', p), 0), 0.0
         def cap(K, neg):
             if neg and n == 1:
                 return 2 * FT_RH if K == 0 else 4 * FT_RH + (K - 1) * FT_RF
@@ -381,6 +395,10 @@ class H(mt.T):
                 return (1 if K == 0 else K + 2) if (neg and n == 1) else (n - 1 + K) + 2
             while any(d > hin + hout(K, ng) for d, hin, ng in need):
                 K += 1
+            # r2 full-cycle seams (subtile.py merges every negedge relay into its posedge driver): a seam is crossed by a
+            # full-cycle hop only, so the half-cycle count above can fall short; subtile.py reports the shortfall per
+            # output port (k_demand) and VM_ST_K adds that many full core stages on every bit of the port (uniform)
+            K += ST_K.get((f'{s.q}_{s.h}', p), 0)
         return K, max(d for d, _ in span)
     def out(s, p, w, n, expr, fclk=()):   # output through per-bit ot_hfd_oreg<n>x: lockup on ck, pin register on the face leaf
         if not FC:
@@ -620,6 +638,10 @@ def tb():
     t = t.replace('`define VM_ROOT u.u_sw.u_mr.on', '`define VM_ROOT u.u_sw`SWH.u_mr.on')
     t = t.replace('`define VM_RT u.u_sw.u_mr', '`define VM_RT u.u_sw`SWH.u_mr')
     assert t.count('`VMQ(') == 4 and 'u.u_sw`SWH.u_mr' in t
+    if ST:     # tiled halves: the root half's bench handles come from subtile.py (vm_st_tb.svh, -I<VM_ST_DIR>)
+        t = t.replace('`define VM_RT u.u_sw`SWH.u_mr\n', '`define VM_RT u.u_sw`SWH.u_mr\n`ifdef VM_ST\n`include "vm_st_tb.svh"\n`endif\n', 1)
+        t = t.replace('module tb_vm_tiles;', '`ifdef VM_ST\nmodule vm_st_dbg_m; reg [7:0] state = 0, sticky = 0; reg [3:0] sent = 0, acked = 0; endmodule\n`endif\n'
+                      'module tb_vm_tiles;\n`ifdef VM_ST\n    vm_st_dbg_m vm_st_dbg();\n`endif', 1)
     return t
 
 # ---------------------------------------------------------------- pins

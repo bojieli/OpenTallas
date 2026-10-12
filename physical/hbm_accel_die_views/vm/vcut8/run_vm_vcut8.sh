@@ -18,7 +18,7 @@ ok=1
 for q in sw nw se ne; do for h in w e; do
   $VL --lint-only --unroll-count 8192 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module hfd_vm_${q}_${h} $V/common/ot_hfd_oreg1.sv $V/vm/vcut8/ot_hfd_oreg_fc.sv rtl/common/ot_fwd_link_stage.sv $SR1 $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv $(hsrc hfd_vm_${q}_${h}) > $O/lint_${q}_${h}.log 2>&1 && echo "LINT hfd_vm_${q}_${h} ok" || { echo "LINT hfd_vm_${q}_${h} FAIL"; grep -m5 -i error $O/lint_${q}_${h}.log; ok=0; }
 done; done
-b() { n=$1; tb=$2; srcs=$3; shift 3; $VL -I$T --binary --timing -j 16 --unroll-count 8192 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-initial unique --top-module tb_vm_tiles "$@" -Mdir $O/$n.obj -o sim $BASE $srcs $tb > $O/$n.build 2>&1 || { echo "$n BUILD_FAILED"; grep -m5 -i error $O/$n.build; return 2; }; }
+b() { n=$1; tb=$2; srcs=$3; shift 3; $VL -I$T --binary --timing -j 16 --unroll-count 8192 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-initial unique --top-module tb_vm_tiles "$@" ${VM_ST_DIR:+-DVM_ST} ${STINC:-${VM_ST_DIR:+-I$VM_ST_DIR}} -Mdir $O/$n.obj -o sim $BASE $srcs $tb > $O/$n.build 2>&1 || { echo "$n BUILD_FAILED"; grep -m5 -i error $O/$n.build; return 2; }; }
 for s in 1 2 3; do b m1s$s $S/tb_vm_vcut8.sv "$HALVES" -DVCUT8 -DMODE=1 -DSEED=$s && (cd $O && ./m1s$s.obj/sim +verilator+seed+$s > m1s$s.log 2>&1); grep VM_TILES $O/m1s$s.log; grep -q "hash=MATCH" $O/m1s$s.log && ! grep -q "VM_TILES FAIL" $O/m1s$s.log || ok=0; done
 mkdir -p $O/m2_8 $O/m2_4
 b m2_8 $S/tb_vm_vcut8.sv "$HALVES" -DVCUT8 -DMODE=2 -DSEED=1 && (cd $O/m2_8 && ../m2_8.obj/sim > m2.log 2>&1)
@@ -32,7 +32,8 @@ grep -Eq "VM_PORT_DEPTH trace_ref.hex wr= *SKEWED" $O/m3.log && echo "VM_PORT_DE
 for m in XBUS SEAM SEATP; do   # SEATP: the root LOAD skips the seat load (must FAIL mode 1)
   HM="$HALVES"   # SEATP mutates the root inside a tiled sw_e: its tiles are re-cut from the mutated netlist (VM_ST_DIR_SEATP)
   if [ $m = SEATP ] && [ -n "${VM_ST_DIR:-}" ] && [ -f $VM_ST_DIR/hfd_vm_sw_e.v ]; then HM=$(echo " $HALVES " | sed "s# $(hsrc hfd_vm_sw_e) # $(VM_ST_DIR=${VM_ST_DIR_SEATP:?tiled sw_e needs VM_ST_DIR_SEATP} hsrc hfd_vm_sw_e) #"); fi
-  b neg_$m $S/tb_vm_vcut8.sv "$HM" -DVCUT8 -DMODE=1 -DSEED=1 -DMUT_$m && (cd $O && ./neg_$m.obj/sim > neg_$m.log 2>&1); grep VM_TILES $O/neg_$m.log
+  STINC=""; [ $m = SEATP ] && [ -n "${VM_ST_DIR_SEATP:-}" ] && STINC="-I$VM_ST_DIR_SEATP"
+  STINC="$STINC" b neg_$m $S/tb_vm_vcut8.sv "$HM" -DVCUT8 -DMODE=1 -DSEED=1 -DMUT_$m && (cd $O && ./neg_$m.obj/sim > neg_$m.log 2>&1); grep VM_TILES $O/neg_$m.log
   grep -q "VM_TILES FAIL" $O/neg_$m.log && echo "VM_VCUT8_NEG_${m}_DETECTED" || { echo "neg $m not detected"; ok=0; }
 done
 [ $ok = 1 ] && echo "VM_VCUT8_BENCH PASS" || echo "VM_VCUT8_BENCH FAIL"

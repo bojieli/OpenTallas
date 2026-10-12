@@ -6,7 +6,7 @@ set fc_ps(f_w_row) 2
 set fc_ps(f_w_wr) 2
 set fc_ps(t_n_wr) 3
 set fc_ps(t_w_ctl) 2
-set fc_ps(t_w_row) 2
-set fc_ps(t_w_wr) 3
-set fc_ps(w2e) 3
+set fc_ps(t_w_row) 3
+set fc_ps(t_w_wr) 4
+set fc_ps(w2e) 4
 set fc_ps(e2w) 2
