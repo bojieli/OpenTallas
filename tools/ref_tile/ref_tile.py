@@ -100,9 +100,9 @@ def load_spec(path: str) -> dict:
         s["pins"] = {"S": [p for p, d in dirs.items() if d == "input" and p not in side],
                      "N": [p for p, d in dirs.items() if d != "input" and p not in side],
                      "W": [p for p in dirs if p in side]}
-    bad = [f for f in s["pins"] if f not in FACES]
+    bad = [f for f in s["pins"] if f not in FACES and f != "ANY"]
     if bad:
-        raise SpecError(f"spec: pins faces must be N/S/E/W, got {bad}")
+        raise SpecError(f"spec: pins faces must be N/S/E/W (or ANY: placer's choice, all faces), got {bad}")
     for f, names in s["pins"].items():
         for n in names:
             if re.search(r"\[\s*\d+\s*(:\s*\d+\s*)?\]", n):
@@ -291,6 +291,8 @@ def on_track(b: dict, x: float, y: float) -> tuple[float, float, int]:
 def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
     """explicit 'at' wins; the rest go in rows away from the pin faces, >= CHANNEL_UM apart and from the core edge"""
     pin_faces = {f for f, v in s["pins"].items() if v}
+    if pin_faces & {"ANY"}:
+        pin_faces = set(FACES)
     x0c, y0c, x1c, y1c = CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN
     lo_x = x0c + max(CHANNEL_UM, PIN_EDGE_UM if "W" in pin_faces else 0)
     hi_x = x1c - max(CHANNEL_UM, PIN_EDGE_UM if "E" in pin_faces else 0)
@@ -340,6 +342,8 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
     """(severity, check, message, fix) -- the geometry part of the pre-route gate, also run at gen time"""
     out = []
     pin_faces = {f for f, v in s["pins"].items() if v}
+    if "ANY" in pin_faces:
+        pin_faces = set(FACES)
     x0c, y0c, x1c, y1c = CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN
     for b in blocks:
         bx0, by0, bx1, by1 = b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"]
@@ -372,7 +376,7 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
     if std_area:
         u = (std_area + mac) / core
         if not (UTIL_LO <= u <= UTIL_HI + 0.05):
-            out.append(("FAIL" if (u > 0.70 or u < 0.30) else "WARN", "util",
+            out.append(("FAIL" if u > 0.70 else "WARN", "util",
                         f"utilisation {u:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro {mac:.0f} "
                         f"in core {core:.0f} um2)", "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
     long_side = max(W, H)
@@ -452,14 +456,63 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + io)
 
 
+def child_insertions(s: dict) -> dict:
+    """{child master: clock-pin insertion ps} from each hard child's TT lib (max_clock_tree_path), 0 when absent"""
+    out = {}
+    for ch in s["children"]:
+        v = ch["view"]
+        p = ROOT / v / f"{view_name(v)}_tt.lib"
+        ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+        vals = [x["max_ps"] for x in ins.values() if x]
+        out[view_name(v)] = round(max(vals), 1) if vals else 0.0
+    return out
+
+
+SPINE_INS = """# ref_tile cluster clock: the pre-placed balanced clock SPINE (physical/common_flow/clock_spine.tcl, el1011-hbm-attn
+# c11a6e02a: attention halves leaf spread 1,634 -> 24 ps; idx w8 cluster 518 ps skew) replaces TritonCTS for the cluster
+# clock.  Leaf target = arrival at the sink pin PLUS the hard child's own clock insertion (its TT lib max_clock_tree_path),
+# so the spine balances the flops INSIDE the children against the cluster's own flops (CLOCK LATENCY ACROSS THE HIERARCHY).
+set ::ot_ref_child_ins [dict create {ins}]
+proc ot_sp_leaf_arrivals {{}} {{
+  estimate_parasitics -placement
+  sta::find_timing_paths -path_delay max -group_path_count 1
+  set a [dict create]
+  dict for {{n net}} $::ot_sp_leafnet {{
+    set v 0.0
+    foreach pin [get_pins -quiet -of_objects [get_nets -quiet [$net getName]] -filter "direction==input"] {{
+      set x [get_property $pin arrival_max_rise]
+      if {{$x eq "" || $x eq "INF" || $x eq "-INF"}} continue
+      set c [get_cells -quiet -of_objects $pin]
+      if {{[llength $c]}} {{
+        set m [get_property $c ref_name]
+        if {{[dict exists $::ot_ref_child_ins $m]}} {{ set x [expr {{$x + [dict get $::ot_ref_child_ins $m]}}] }}
+      }}
+      if {{$x > $v}} {{ set v $x }}
+    }}
+    dict set a $n $v
+  }}
+  return $a
+}}
+puts "REF_TILE spine: child insertion targets $::ot_ref_child_ins"
+"""
+
+
 def gen_hooks(s: dict, kd: str) -> dict:
     fwd = bool(s.get("forwarded_clock"))
+    spine = s["kind"] == "cluster" and s.get("clock", "spine") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
-               + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else ""),
-               f"source /src/{QDM}/pre_cts_skew.tcl"]
+               + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
+               + ("; cluster: balanced clock spine with child-insertion leaf targets (sourced FIRST, so the io_ref wrapper"
+                  " below wraps it)" if spine else "")]
+    files = {}
+    if spine:
+        pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
+        ins = child_insertions(s)
+        files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())))
+    pre_cts.append(f"source /src/{QDM}/pre_cts_skew.tcl")
     if fwd:
         pre_cts.append("source /src/physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
-    pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (adjacent layers over the outer face-pin",
+    pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
                "# column; created here, removed by post_drt.tcl, so the abstract carries only real metal: DRT-0073 at the parent)",
                f"source /src/{QDM}/pre_ref_skew.tcl",
                "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
@@ -467,7 +520,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"]
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
-            "post_drt.tcl": "\n".join(post_drt) + "\n"}
+            "post_drt.tcl": "\n".join(post_drt) + "\n", **files}
 
 
 def shq(v: str) -> str:
@@ -478,20 +531,32 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     r = s["route"]
     srcs = " ".join(s["sources"])
     params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
-    pins = " ".join(f"--pin-region {shq(pin_regex(v) + '=' + FACES[f])}" for f, v in s["pins"].items() if v)
+    pins = " ".join(f"--pin-region {shq(pin_regex(v) + '=' + FACES[f])}" for f, v in s["pins"].items() if v and f != "ANY")
     views = sorted({b["view"] for b in blocks})
     extra = ["--orfs-var ADDER_MAP_FILE=", f"--orfs-var PDN_TCL=/src/{kd}/pdn.tcl",
-             f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}"]
+             f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}",
+             # keep only the layer ABOVE each face pin clear (what the parent needs and child_lint (f) checks); also
+             # blocking the layer below took the tile's own M3 access to a dense M4 face (hfd_hc 239-268 DRC, c95527ec0)
+             f"--orfs-var OT_PK_ABOVE_ONLY={0 if s.get('pin_access', {}).get('both_sides') else 1}"]
     if blocks:
         extra.append(f"--orfs-var MACRO_PLACEMENT_TCL=/src/{kd}/place.tcl")
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
-        extra.append(f"--macro-place-halo {HALO_UM} {HALO_UM}")
+        h = float(s["route"].get("macro_halo_um", HALO_UM))
+        extra.append(f"--macro-place-halo {h} {h}")
+    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+        extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
+    # macro-dominated tile (macros > 1/3 of the core): global placement at the fixed PLACE_DENSITY, not lower-bound + 0.05
+    # (pbst: std cells 3% of the core -> target density 0.11 -> RePlAce GPL-0305 divergence in 3 of 4 runs, ref gate)
+    core = (W - 2 * CORE_MARGIN) * (H - 2 * CORE_MARGIN)
+    fixed = s["route"].get("fixed_density", sum(b["w"] * b["h"] for b in blocks) > core / 3)
+    if fixed:
+        extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
         f"# generated by tools/ref_tile/ref_tile.py from {kd}/spec.json -- do not edit; re-run gen",
         f"TOP={s['top']}", f"SRCS={shq(srcs)}", f"PARAMS=({params})", f"FW={W}", f"FH={H}", f"PINS=({pins})",
-        f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
+        f"PINEX={0 if s['pins'].get('ANY') else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(r.get('pin_h', 'M4 M6'))}",
         f"PIN_V={shq(r.get('pin_v', 'M5'))}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
@@ -507,6 +572,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
+    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+        out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]

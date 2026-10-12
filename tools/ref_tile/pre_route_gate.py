@@ -95,6 +95,9 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
     for f, names in spec["pins"].items():
         for n in names:
             plan.setdefault(n, []).append(f)
+    if spec["pins"].get("ANY"):
+        g.add("WARN", "pins", f"{len(spec['pins']['ANY'])} port group(s) left to the IO placer (ANY): {spec['pins']['ANY'][:4]}",
+              "give every bus a face (and an offset range) from the die contract before the die integrates it")
     for n, fs in plan.items():
         if len(fs) > 1:
             g.add("FAIL", "pins", f"port {n} planned on {len(fs)} faces {fs}", "one face per port")
@@ -182,7 +185,9 @@ def check_sources(g: Gate, job: dict, extra_seeds=(), commit=None):
         seeds.add(p)
     seen, missing, soft = referenced_closure(sorted(seeds), commit, cfg)
     out_all = sorted(p for p in seen if not any(p == s or p.startswith(s + "/") for s in synced))
-    if any("tt_overlay.py" in c for c in cmds):    # tt_overlay force-copies these into the snapshot (closure_loop TTB_FILES)
+    if True:   # the loop ships these flow helpers into every job (closure_loop HELPERS / tt_overlay TTB_FILES)
+        soft |= {f"physical/common_flow/{n}" for n in ("macro_sliver_block.tcl", "edge_sliver_block.tcl",
+                                                       "macro_cts_cluster.tcl", "io_ref_routed.sdc")}
         soft |= {f"physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                        "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")}
     outside = [p for p in out_all if p not in soft]
@@ -291,8 +296,10 @@ EOP
 grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | tail -1 | sed 's/^/GATE_AREA /'
 if [ "{CTS}" = 1 ]; then
   docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
+  grep -h "\[ERROR" $R/cts.log | head -3 | sed 's/^/GATE_CTSERR /'
+  grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   python3 tools/closure_loop/ck_insertion.py --base $B --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
-  python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+json.dumps({{k:v for k,v in d.items() if k in ('corners','boundary','all','macro_clk','summary')}})[:3000])" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
 fi
@@ -373,7 +380,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         if area > mac:          # yosys' chip area counts the black-box macros' liberty area
             area -= mac
         u = (area + mac) / core
-        sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if (u > 0.70 or u < 0.30) else "WARN")
+        # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
+        sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
         g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {u:.0%}",
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
@@ -387,10 +395,15 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
             g.add("INFO", "textbook", line[len("textbook_lint: "):][:300])
             continue
         g.add("FAIL" if tag == "REFUSE" else "WARN", f"textbook.{chk}", msg[:500], TEXTBOOK_FIX.get(chk, ""))
+    if cts and kv.get("GATE_CTS_RC") not in (None, "0"):
+        g.add("FAIL", "cts_run", "placement / CTS of the kit failed: " + "; ".join(re.findall(r"^GATE_CTSERR (.*)$", out, re.M))[:500],
+              "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing")
     if cts:
         ck = re.search(r"^GATE_CK (.*)$", out, re.M)
         g.add("INFO" if ck else "WARN", "cts_calibration", (ck.group(1)[:900] if ck else
               f"CTS rc={kv.get('GATE_CTS_RC')} ck_insertion rc={kv.get('GATE_CK_RC')}"))
+        for line in re.findall(r"^GATE_SPINE (.*)$", out, re.M):
+            g.add("INFO", "clock_spine", line[:300])
         for line in re.findall(r"^GATE_PC (.*)$", out, re.M):
             g.add("INFO", "path_classes", line)
 
