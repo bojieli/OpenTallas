@@ -6,7 +6,7 @@ set -u
 SRC=$1; OUT=$2; RST=$3; KST=$4; LNK=$5; PL=$6; QX=$7; RX=$8; KVL=$9; MUTS=${10:-1}
 mkdir -p $OUT/v $OUT/log
 cd $SRC
-echo "start $(date) src=$(git -C $SRC log --oneline -1)" > $OUT/STATUS
+echo "start $(date) src=$(git -C $SRC log --oneline -1 2>/dev/null || echo "(source archive, no git)")" > $OUT/STATUS
 # vectors
 for spec in 8192:normal 8192:peaky 8191:mixed 4097:flat 2048:wide 129:tiny 1:normal; do
   c=${spec%%:*}; k=${spec##*:}

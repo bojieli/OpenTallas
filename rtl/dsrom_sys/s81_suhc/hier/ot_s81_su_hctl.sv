@@ -95,8 +95,12 @@ module ot_s81_su_hctl #(
     endfunction
 
     integer s;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    // synchronous reset from a local relay flop: the reset is a registered full-cycle path into the D logic (no
+    // async recovery check over a ~600-flop reset net from the slab reset synchroniser)
+    reg rst_q;
+    always @(posedge clk) rst_q <= rst_n;
+    always @(posedge clk) begin
+        if (!rst_n || !rst_q) begin
             run <= 0; kind <= 0; jslot <= 0; jtag <= 0; jid <= 0; dbase <= 0; ph <= 0; p0 <= 0;
             ri <= 0; rr <= 0; np <= 0; nrow <= 0; nw <= 0; cw <= 0; sm_owner_v <= 0; sm_owner <= 0;
             rdy_ok <= 0; alive_q <= 0;
