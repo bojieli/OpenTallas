@@ -1,5 +1,5 @@
 {
- "name": "qdq_lq_ref-l1-COMMIT",
+ "name": "qdq_lq_ref-l1-f450c1763",
  "block": "ot_hgi_qdq_lq",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-sfu",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/el1011-qdqtput",
-  "commit": "COMMIT"
+  "commit": "f450c1763"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qdq_lq_ref/qdq_lq_ref-l1-COMMIT"
+   "to": "results/rtl/ref_tile/qdq_lq_ref/qdq_lq_ref-l1-f450c1763"
   }
  ],
  "cycles_added": 0,
