@@ -3,7 +3,8 @@
 // ot_s81_hc_cth (el1011-s81hc-ctile, 2026-10-12): the HALF = 1 column sub-tile of the HC slab (dsfd_sp_hc HIER=2),
 // split into hard tiles of <= ~15k clock sinks each.  Cycle-for-cycle the same pins and bus timing as
 // ot_s81_hc_ctile #(.HALF(1)) (that module's header holds the protocol); this file only moves the logic:
-//   ctf   forward bus: reset relay, fv / fd pin flops, y-shift register, RLY relay, out flops (the 4 forward hops);
+//   ctfn / ctfs  forward bus, N / S strips: ctfn = reset relay, fv / fd pin flops, y-shift register; ctfs = RLY - 1
+//         relays + out flops (the cross-slot stage fdm -> relay is wire only, so no flop-to-flop wire > ~500 um);
 //         exports its pin flops (fv, fd control + slot data) to the other tiles (registered seam).
 //   ctnl  x16, one per norm lane (bank j = h row % 4, group l): the lane's slice of the bank's resident h rows
 //         (group l, 2 slots x NV), its gain words, hc_pre mix -> square, x wait line, scale, y, and chain adder l of the
@@ -12,7 +13,7 @@
 //         hardened master serves all 16 lanes of every sub-tile; no strap fans out.
 //   ctpl  x8, hc_post group g output lanes {2h, 2h+1} (ot_dsrom_su_hcpost sliced) + its coefficient words and the
 //         write-back counters; in_r = OR of the 4 banks' zero-gated group-g reads.
-//   ctr   return bus: rv / rd pin flops, a stage for the far tile's originated slots, the merge stage (y rows from
+//   ctrs / ctrn  return bus, S / N strips (ctrn = RLY - 2 relays + out flops, rdm -> ctrn wire only): rv / rd pin flops, a stage for the far tile's originated slots, the merge stage (y rows from
 //         ybuf, partial packet from psb, h rows from the banks' hrq), out flops.  The merge sits one stage later than
 //         in ot_s81_hc_ctile and the relay one stage earlier (needs RLY >= 2): same 2 + RLY registers a hop, and every
 //         merged source is one register later (faults / hc_post flags registered at their tile), so rv / rd are
@@ -49,9 +50,12 @@ module ot_s81_hc_cth #(
 `endif
     wire [S_RD+4:0] fv;
     wire [FXW-1:0]  fdx;
-    ot_s81_hc_ctf #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_f (
-        .clk(clk), .rst_in(rst_in), .rst_out(rst_out), .fv_in(fv_in), .fd_in(fd_in), .fv_out(fv_out), .fd_out(fd_out),
-        .fv(fv), .fdx(fdx));
+    wire [S_RD+4:0] fvm;
+    wire [FDW-1:0]  fdm;
+    ot_s81_hc_ctfn #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_fn (
+        .clk(clk), .rst_in(rst_in), .fv_in(fv_in), .fd_in(fd_in), .fv(fv), .fdx(fdx), .fvm(fvm), .fdm(fdm));
+    ot_s81_hc_ctfs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
+        .clk(clk), .rst_in(rst_in), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out));
     wire [16*S_RT-1:0]  rq_q;
     wire                hs_run;
     wire [15:0]         hs_c;
@@ -87,25 +91,32 @@ module ot_s81_hc_cth #(
             .hov_d(hov_d[m]), .hnz_d(hnz_d[m]), .pflt_d(pflt_d[m]));
     end endgenerate
     wire [4*32-1:0] cs = {acc[32 * 15 +: 32], acc[32 * 11 +: 32], acc[32 * 7 +: 32], acc[32 * 3 +: 32]};
-    ot_s81_hc_ctr #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY)) u_r (
+    wire [S_RT+3:0] rvm;
+    wire [RDW-1:0]  rdm;
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u_rs (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_in), .rd_in(rd_in),
-        .rv_out(rv_out), .rd_out(rd_out), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c), .hrq(hrq), .yb(yb), .cs(cs),
+        .rvm(rvm), .rdm(rdm), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c), .hrq(hrq), .yb(yb), .cs(cs),
         .nflt(nflt), .hov_d(hov_d[0]), .hnz_d(|hnz_d), .pflt_d(|pflt_d));
+    ot_s81_hc_ctrn #(.S_RT(S_RT), .RDW(RDW), .RLY(RLY)) u_rn (
+        .clk(clk), .rst_in(rst_in), .rvm(rvm), .rdm(rdm), .rv_out(rv_out), .rd_out(rd_out));
 endmodule
 
-// ------------------------------------------------------------------------------------------------ forward bus tile
-module ot_s81_hc_ctf #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, RLY = 2
+// ------------------------------------------------------------------------------------------------ forward bus tiles
+// ctfn (N strip): reset relay, fv / fd pin flops, y-shift register fdm; exports the pin flops (fv, fdx) to the slot.
+// ctfs (S strip): the RLY - 1 relay stages and the out flops.  fdm -> relay is the one cross-slot stage (wire only, no
+// logic between the two flops); fd_out at the S face abuts the next slot's N face.  Same registers as the single
+// strip (ot_s81_hc_ctile: pin, y-shift, RLY - 1 relays, out), now spread N -> S.
+module ot_s81_hc_ctfn #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2
 ) (
     input  wire               clk,
     input  wire               rst_in,
-    output wire               rst_out,
     input  wire [S_RD+4:0]    fv_in,
     input  wire [FDW-1:0]     fd_in,
-    output reg  [S_RD+4:0]    fv_out,
-    output reg  [FDW-1:0]     fd_out,
     output reg  [S_RD+4:0]    fv,                    // pin flops, exported
-    output wire [FXW-1:0]     fdx
+    output wire [FXW-1:0]     fdx,
+    output reg  [S_RD+4:0]    fvm,
+    output reg  [FDW-1:0]     fdm
 );
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32, GT = GS / 2;
     localparam integer FDD = (S_RD * 512 > YW) ? S_RD * 512 : YW;
@@ -113,21 +124,42 @@ module ot_s81_hc_ctf #(
     reg [1:0] rr;
     always @(posedge clk) rr <= {rr[0], rst_in};
     wire rst_n = rr[1];
-    assign rst_out = rr[1];
-    reg [S_RD+4:0] fvm;
-    reg [FDW-1:0]  fd, fdm;
-    wire [S_RD+4:0] fvm_d;
-    wire [FDW-1:0]  fdm_d;
+    reg [FDW-1:0]  fd;
     assign fdx = fd[FXW-1:0];
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fv <= 0; fvm <= 0; fv_out <= 0; end
-        else begin fv <= fv_in; fvm <= fv; fv_out <= fvm_d; end
+        if (!rst_n) begin fv <= 0; fvm <= 0; end
+        else begin fv <= fv_in; fvm <= fv; end
     always @(posedge clk) begin
         fd <= fd_in;
         fdm <= fd;
         if (fv[S_RD]) fdm[O_D +: YW] <= fd[O_D +: YW] >> (GT * 32);           // y beat: next tile's slice to 0
-        fd_out <= fdm_d;
     end
+endmodule
+
+module ot_s81_hc_ctfs #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, RLY = 2
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    output wire               rst_out,
+    input  wire [S_RD+4:0]    fvm,
+    input  wire [FDW-1:0]     fdm,
+    output reg  [S_RD+4:0]    fv_out,
+    output reg  [FDW-1:0]     fd_out
+);
+    localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32;
+    localparam integer FDD = (S_RD * 512 > YW) ? S_RD * 512 : YW;
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FDW = O_D + FDD;
+    reg [1:0] rr;
+    always @(posedge clk) rr <= {rr[0], rst_in};
+    wire rst_n = rr[1];
+    assign rst_out = rr[1];
+    wire [S_RD+4:0] fvm_d;
+    wire [FDW-1:0]  fdm_d;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) fv_out <= 0;
+        else fv_out <= fvm_d;
+    always @(posedge clk) fd_out <= fdm_d;
     ot_hdc_delay #(.W(S_RD + 5), .D(RLY - 1), .RESET(1)) u_fvr (.clk(clk), .rst_n(rst_n), .d(fvm), .q(fvm_d));
     ot_hdc_delay #(.W(FDW), .D(RLY - 1)) u_fdr (.clk(clk), .rst_n(rst_n), .d(fdm), .q(fdm_d));
 endmodule
@@ -436,9 +468,13 @@ module ot_s81_hc_ctpl #(
         else begin hov_d <= hov; hnz_d <= hov & nz; pflt_d <= |l_f; end
 endmodule
 
-// ------------------------------------------------------------------------------------------------ return bus tile
-module ot_s81_hc_ctr #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, RLY = 2
+// ------------------------------------------------------------------------------------------------ return bus tiles
+// ctrs (S strip): rv / rd pin flops, the far tile's originated slots, the merge stage (ybuf, psb, the banks' hrq) and
+// the norm/scale sequencer copy.  ctrn (N strip): the RLY - 2 relay stages and the out flops.  rdm -> (relay | out) is
+// the one cross-slot stage (wire only); rd_out at the N face abuts the previous slot's S face.  Same registers as the
+// single strip ctr: pin, origination, merge, RLY - 2 relays, out.
+module ot_s81_hc_ctrs #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -448,8 +484,8 @@ module ot_s81_hc_ctr #(
     input  wire [FXW-1:0]         fdx,
     input  wire [S_RT+3:0]        rv_in,
     input  wire [RDW-1:0]         rd_in,
-    output wire [S_RT+3:0]        rv_out,
-    output wire [RDW-1:0]         rd_out,
+    output reg  [S_RT+3:0]        rvm,
+    output reg  [RDW-1:0]         rdm,
     output wire [16*S_RT-1:0]     rq_q,               // pin-flop row fields for the banks' h reads
     output reg                    hs_run,
     output reg  [15:0]            hs_c,
@@ -528,8 +564,8 @@ module ot_s81_hc_ctr #(
     end
 
     // stage 1: pin flops; stage 2: the far tile's originated slots; stage 3: merge; then 2 + RLY - 3 relays + out
-    reg [S_RT+3:0] rvq, rv2, rvm;
-    reg [RDW-1:0]  rdq, rd2, rdm;
+    reg [S_RT+3:0] rvq, rv2;
+    reg [RDW-1:0]  rdq, rd2;
     assign rq_q = rdq[P_Q +: 16 * S_RT];
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin rvq <= 0; rv2 <= 0; rvm <= 0; end
@@ -590,14 +626,25 @@ module ot_s81_hc_ctr #(
             end
         rdm <= o;
     end
+endmodule
+
+module ot_s81_hc_ctrn #(
+    parameter integer S_RT = 4, RDW = 2156, RLY = 2
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    input  wire [S_RT+3:0]    rvm,
+    input  wire [RDW-1:0]     rdm,
+    output reg  [S_RT+3:0]    rv_out,
+    output reg  [RDW-1:0]     rd_out
+);
+    reg [1:0] rr;
+    always @(posedge clk) rr <= {rr[0], rst_in};
+    wire rst_n = rr[1];
     wire [S_RT+3:0] rv_out_d;
     wire [RDW-1:0]  rd_out_d;
     ot_hdc_delay #(.W(S_RT + 4), .D(RLY - 2), .RESET(1)) u_rvr (.clk(clk), .rst_n(rst_n), .d(rvm), .q(rv_out_d));
     ot_hdc_delay #(.W(RDW), .D(RLY - 2)) u_rdr (.clk(clk), .rst_n(rst_n), .d(rdm), .q(rd_out_d));
-    reg  [S_RT+3:0] rvo;
-    reg  [RDW-1:0]  rdo;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rvo <= 0; else rvo <= rv_out_d;
-    always @(posedge clk) rdo <= rd_out_d;
-    assign rv_out = rvo;
-    assign rd_out = rdo;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rv_out <= 0; else rv_out <= rv_out_d;
+    always @(posedge clk) rd_out <= rd_out_d;
 endmodule
