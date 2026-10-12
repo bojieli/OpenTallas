@@ -1,6 +1,7 @@
     input wire [0:0] ck,
     input wire [831:0] f_c,
     output wire [3:0] flt,
+    input wire [3:0] gid,
     input wire [0:0] rn,
     input wire [0:0] sok,
     output wire [511:0] w_d,
