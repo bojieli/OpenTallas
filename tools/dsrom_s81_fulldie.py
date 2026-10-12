@@ -4288,6 +4288,7 @@ CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', co
                       # s81die-1011/ctrl: HC (engine 2) endpoint in hc_s = dsfd_sp_hc_c (dsfd_sp_hc, hc_gate PASS); the
                       # su_hc contract v2 makes HC one logical slab (hc_n folds into it when the suhc floorplan lands)
                       hc_s='dsfd_sp_hc_c', su_s='dsfd_sp_su_c', eng='dsfd_engram_c')
+PEER_SPAN_CENTRE = False        # --peer-span-centre (s81-die-iter 2026-10-12): wide face-to-face groups centred on the span shared with the peer
 RTL_HUB_WIDTHS = False          # --rtl-hub-widths (s81die-1011/ctrl, die lead decision 2026-10-11)
 # the gated hub masters' real interfaces (DIE_FLD_GATE: 12 root lanes gather -> capture, the tiled capture's VM writes;
 # the collective contract results/rtl/s81_ph_20261006/collective/contract.json: f_vm 592 / ts 3 in, t_vm 2,100 out)
@@ -6517,7 +6518,28 @@ def _faces_r8(m, Mx, it, ports):
             resv = []
             if wide:
                 tw_ = sum(bwf(ports[p_][1]) + 2.0 for p_ in wide) - 2.0
-                c_ = min(max(L / 2 - tw_ / 2, 0.4), L - 0.4 - tw_)
+                ctr_ = L / 2
+                if PEER_SPAN_CENTRE:
+                    # s81-die-iter 2026-10-12 (--contract: SU 1,890 grows W of the 1,728 column, VM 1,520): centring
+                    # on each OWN face put the abutting pair's wide groups 81 um apart (rs_d 102.8 um > PIN_SEG -> a
+                    # 103.7 um pin relay with no room in the 21.6 um abut gap).  Centre the group on the centre of the
+                    # die span the face shares with its wide-port peers: the same point at both ends of the pair.
+                    by_ = m['_by']
+                    pe_ = {i_ for p_ in wide for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p_), [])
+                           for i_, _q in eps_ if i_ != it.name and i_ in by_}
+                    if pe_:
+                        if f in 'NS':
+                            lo_ = max(it.x, min(by_[i_].x for i_ in pe_))
+                            hi_ = min(it.x + it.w, max(by_[i_].x + by_[i_].w for i_ in pe_))
+                            org_, flip_ = it.x, it.orient in ('MY', 'R180')
+                        else:
+                            lo_ = max(it.y, min(by_[i_].y for i_ in pe_))
+                            hi_ = min(it.y + it.h, max(by_[i_].y + by_[i_].h for i_ in pe_))
+                            org_, flip_ = it.y, it.orient in ('MX', 'R180')
+                        if hi_ - lo_ >= tw_ + 0.8:
+                            ctr_ = (lo_ + hi_) / 2 - org_
+                            ctr_ = L - ctr_ if flip_ else ctr_
+                c_ = min(max(ctr_ - tw_ / 2, 0.4), L - 0.4 - tw_)
                 if '_bus_of' not in m:
                     bo_ = {}
                     for bid_, _c, _b, eps_ in m['buses']:
@@ -7061,6 +7083,8 @@ def die_options(ap):
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
+    ap.add_argument('--peer-span-centre', action='store_true', help='s81-die-iter: with --rtl-hub-widths, centre each '
+                    'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--rtl-hub-widths', action='store_true', help='s81die-1011 (die lead decision): W hub column gather -> '
                     'capture -> VM (capture directly above gather) and the hub buses at the RTL widths: gather t_capture 6,947 '
                     '(12 root lanes), capture t_vm 13,376, collective t_vm 2,100, VM -> collective f_vm 592 + ts 3')
@@ -7084,6 +7108,8 @@ def apply_options(a):
     global CTRL_ADAPTERS, RTL_HUB_WIDTHS
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
     RTL_HUB_WIDTHS = bool(getattr(a, 'rtl_hub_widths', False))
+    global PEER_SPAN_CENTRE
+    PEER_SPAN_CENTRE = bool(getattr(a, 'peer_span_centre', False))
     global SUHC_V2, SUHC_V2_HC_N
     SUHC_V2 = bool(getattr(a, 'suhc_v2', False))
     SUHC_V2_HC_N = bool(getattr(a, 'suhc_v2_hc_north', False))
