@@ -115,12 +115,13 @@ module ot_hgi_smmv #(
 
     // ================= window (entries at seq mod W) =================
     localparam integer WI = (W > 1) ? $clog2(W) : 1;
+    localparam integer WA = 1 << WI;     // ring slots (W=1 keeps 2 slots so the 1-bit seq index stays in range; occupancy still <= W)
     reg [2:0] tail, xp, ip, rh, ppc, pdc;            // push / x / issue / retire / pub command / pub done (3-b seq)
-    reg [255:0] e_a [0:W-1]; reg [255:0] e_o [0:W-1]; reg [20:0] e_na [0:W-1];
-    reg [1:0] e_f [0:W-1]; reg [3:0] e_p [0:W-1]; reg [7:0] e_g [0:W-1]; reg [12:0] e_q [0:W-1]; reg [19:0] e_m [0:W-1];
-    reg [23:0] e_lq [0:W-1]; reg [30:0] e_ml [0:W-1]; reg [31:0] e_l0 [0:W-1];
-    reg [6:0] e_xb [0:W-1]; reg [7:0] e_rel [0:W-1]; reg [W-1:0] e_xd, e_xr;
-    reg [NSM-1:0] e_act [0:W-1]; reg [NSM*4-1:0] e_tgt [0:W-1];
+    reg [255:0] e_a [0:WA-1]; reg [255:0] e_o [0:WA-1]; reg [20:0] e_na [0:WA-1];
+    reg [1:0] e_f [0:WA-1]; reg [3:0] e_p [0:WA-1]; reg [7:0] e_g [0:WA-1]; reg [12:0] e_q [0:WA-1]; reg [19:0] e_m [0:WA-1];
+    reg [23:0] e_lq [0:WA-1]; reg [30:0] e_ml [0:WA-1]; reg [31:0] e_l0 [0:WA-1];
+    reg [6:0] e_xb [0:WA-1]; reg [7:0] e_rel [0:WA-1]; reg [WA-1:0] e_xd, e_xr;
+    reg [NSM-1:0] e_act [0:WA-1]; reg [NSM*4-1:0] e_tgt [0:WA-1];
     wire [2:0] nin = tail - rh;
     reg rdy_r;
     assign rec_rdy = rdy_r;
@@ -354,9 +355,10 @@ module ot_hgi_smmv_pub #(
     localparam integer NB = NSM * NC, QD = 16;
     reg [4:0] smb_q; always @(posedge clk) smb_q <= sm_base;
     localparam integer WI = (W > 1) ? $clog2(W) : 1;
+    localparam integer WA = 1 << WI;
     reg [2:0] ct, chd;                                        // command tail / done head (3-b seq)
-    reg [17:0] c_ob [0:W-1]; reg [17:0] c_ost [0:W-1]; reg [19:0] c_mm [0:W-1]; reg [12:0] c_qq [0:W-1];
-    reg [3:0] c_pp [0:W-1]; reg [W-1:0] c_sm, c_bf;
+    reg [17:0] c_ob [0:WA-1]; reg [17:0] c_ost [0:WA-1]; reg [19:0] c_mm [0:WA-1]; reg [12:0] c_qq [0:WA-1];
+    reg [3:0] c_pp [0:WA-1]; reg [WA-1:0] c_sm, c_bf;
     assign pub_rdy = rst_n && ((ct - chd) < W);
     function automatic [31:0] rb(input [31:0] x, input en);
         reg [31:0] r;
