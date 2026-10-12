@@ -915,8 +915,7 @@ def compare(a):
     out['drc_total'] = sum(drc.values())
     out['drc_classes'] = dict(sorted(drc.items(), key=lambda kv: -kv[1]))
     log = (d / 'drt.log').read_text(errors='replace') if (d / 'drt.log').exists() else ''
-    its = re.findall(r'Completing (\d+)\S* optimization iteration.*?\n.*?Number of violations = (\d+)', log, re.S)
-    out['drt_iterations'] = [[int(i), int(v)] for i, v in its][-6:]
+    out['drt_iterations'] = [int(v) for v in re.findall(r'Number of violations = (\d+)', log)]
     # GRT side from the clipped guides
     units = cutj.get('dbu', 1000)
     grt = {}
@@ -1017,8 +1016,31 @@ def compare(a):
                                      'min': round(min(dr), 2) if dr else None,
                                      'max': round(max(dr), 2) if dr else None}}
     out['sta'] = sta
+    # wire-only parasitic error bar (works when the window has no clocked sinks, e.g. clockless relay abstracts):
+    # total net capacitance, die GRT SPEF of record vs RCX of the detailed route, internal nets
+    def spef_caps(p):
+        caps, nm = {}, {}
+        if not p.exists():
+            return caps
+        sc = 1.0
+        for ln in open(p, errors='replace'):
+            if ln.startswith('*C_UNIT'):
+                f = ln.split(); sc = float(f[1]) * {'PF': 1000.0, 'FF': 1.0}.get(f[2].upper(), 1.0)
+            elif ln.startswith('*') and ln[1:2].isdigit():
+                k, v = ln.split(None, 1); nm[k] = v.strip()
+            elif ln.startswith('*D_NET'):
+                f = ln.split(); caps[nm.get(f[1], f[1])] = float(f[2]) * sc
+        return caps
+    cg, cr = spef_caps(d / 'grt_internal.spef'), spef_caps(d / 'routed.spef')
+    rel = sorted((cr[n] - cg[n]) / cg[n] for n in cg if n in cr and cg[n] > 0.5)
+    out['net_cap'] = {'nets': len(rel), 'grt_total_ff': round(sum(cg[n] for n in cg if n in cr), 1),
+                      'rcx_total_ff': round(sum(cr[n] for n in cg if n in cr), 1),
+                      'rel_median': round(rel[len(rel) // 2], 4) if rel else None,
+                      'rel_p05': round(rel[len(rel) // 20], 4) if rel else None,
+                      'rel_p95': round(rel[(len(rel) * 19) // 20], 4) if rel else None,
+                      'note': 'internal nets with GRT cap > 0.5 fF; (RCX - GRT) / GRT'}
     (d / 'compare.json').write_text(json.dumps(out, indent=1))
-    print(json.dumps({k: out[k] for k in ('drc_total', 'wirelength', 'vias', 'layer_contract', 'sta')}, indent=1))
+    print(json.dumps({k: out[k] for k in ('drc_total', 'drt_iterations', 'wirelength', 'vias', 'layer_contract', 'sta', 'net_cap')}, indent=1))
 
 
 def main():
