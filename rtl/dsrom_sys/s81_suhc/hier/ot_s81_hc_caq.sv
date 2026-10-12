@@ -21,11 +21,12 @@ module ot_s81_hc_caq (
                                         // return merge: captured here, OR'd, registered = the flat comb's rd slot u)
     input  wire [23:0]   iq,           // {vector, row} of the block
     output wire          vo,
-    output wire [255:0]  q,
     output wire [9:0]    e,
     output wire          f,
     output wire [23:0]   iqo,
-    output wire [511:0]  wd            // write-slot u data (the flat writer's wq_d slot u; valid with crx's wq_v[u])
+    output wire [511:0]  wd,           // write-slot u data (the flat writer's wq_d slot u; valid with crx's wq_v[u])
+    input  wire          odd,          // tie: u is odd (its codes are the upper half of codes slot S_RT + u/2)
+    output reg  [255:0]  cq            // codes half for write slot S_RT + u/2: q (odd: q if vo else 0), +2 regs
 );
     localparam [2:0] K_NORM = 4;
     reg [1:0] rsr;
@@ -41,6 +42,7 @@ module ot_s81_hc_caq (
         if (!rs_n) begin run_q <= 1'b0; rv_q <= 1'b0; end
         else begin run_q <= run; rv_q <= rv_u; end
     always @(posedge sk) begin t_q <= t_u; kind_q <= kind; x_q <= rdd; iq_q <= iq; end
+    wire [255:0] q;
     reg [1023:0] xx;
     integer e_;
     always @(*) for (e_ = 0; e_ < 32; e_ = e_ + 1) xx[32 * e_ +: 32] = {x_q[16 * e_ +: 16], 16'h0000};
@@ -49,5 +51,8 @@ module ot_s81_hc_caq (
     ot_dsrom_aq12 u_aq (.clk(sk), .rst_n(rs_n), .v(rv_q && !t_q && run_q && kind_q == K_NORM), .x(xx),
                         .vo(vo), .q(q), .e(ee), .y(unused_y), .fault(f));
     assign e = ee;
+    // codes slice (= crx's aq_q capture + wq_d codes write, same cycles; written unconditionally, used with v)
+    reg [255:0] cq1;
+    always @(posedge sk) begin cq1 <= (odd && !vo) ? 256'd0 : q; cq <= cq1; end
     ot_hdc_delay #(.W(24), .D(18)) u_iq (.clk(sk), .rst_n(rs_n), .d(iq_q), .q(iqo));
 endmodule

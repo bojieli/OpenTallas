@@ -130,13 +130,15 @@ module ot_s81_hc_comb #(
     wire [P_D-1:0]    o_rd;
     wire [4*(WSL-512)-1:0] w_h;
     wire [S_RT*512-1:0]    a_wd;
+    wire [4*(WSL-512)-1:0] e_h;
+    wire [1023:0]          e_x;
+    wire [S_RT*256-1:0]    a_cq;
     wire [RVW-1:0]    r_crv;
     wire [7:0]        r_cpi;
     wire [NE1*32-1:0] r_ex1;
     wire [S_RT-1:0]   o_rv, a_vo, a_f;
     wire              o_run;
     wire [2:0]        o_kind;
-    wire [S_RT*256-1:0] a_q;
     wire [S_RT*10-1:0]  a_e;
     wire [S_RT*24-1:0]  a_iq;
 
@@ -153,19 +155,23 @@ module ot_s81_hc_comb #(
         .sk(sk), .srs(srs), .w_rv(w_rv), .e_rv(e_rv), .w_rd(w_rd[P_D-1:0]), .e_rd(e_rd[P_D-1:0]), .c_rv(r_crv),
         .c_rd(p_crd[P_D-1:0]),
         .j_v(j_v), .j_kind(j_kind), .j_base(j_base), .j_fq(j_fq), .j_fy(j_fy), .j_end(j_end), .j_flt(j_flt),
-        .j_civ(j_civ), .a_vo(a_vo), .a_f(a_f), .a_q(a_q), .a_e(a_e), .a_iq(a_iq),
-        .o_rv(o_rv), .o_rd(o_rd), .o_run(o_run), .o_kind(o_kind), .w_h(w_h), .e_w(e_w),
+        .j_civ(j_civ), .a_vo(a_vo), .a_f(a_f), .a_e(a_e), .a_iq(a_iq),
+        .o_rv(o_rv), .o_rd(o_rd), .o_run(o_run), .o_kind(o_kind), .w_h(w_h), .e_h(e_h), .e_x(e_x),
         .x_wdone(x_wdone), .x_pob(x_pob), .x_f1(x_f1), .x_f4(x_f4));
 
     genvar u;
     generate for (u = 0; u < S_RT; u = u + 1) begin : g_aq
         ot_s81_hc_caq u_caq (.sk(sk), .srs(srs), .run(o_run), .kind(o_kind), .rv_u(o_rv[u]), .t_u(o_rd[P_T + u]),
             .w_d(w_rd[P_D + 512 * u +: 512]), .e_d(e_rd[P_D + 512 * u +: 512]),
-            .c_d((L1 > 0) ? p_crd[P_D + 512 * u +: 512] : 512'd0), .wd(a_wd[512 * u +: 512]),
+            .c_d((L1 > 0) ? p_crd[P_D + 512 * u +: 512] : 512'd0), .wd(a_wd[512 * u +: 512]), .odd(u % 2 == 1),
+            .cq(a_cq[256 * u +: 256]),
             .iq({o_rd[P_I + 8 * u +: 8], o_rd[P_Q + 16 * u +: 16]}),
-            .vo(a_vo[u]), .q(a_q[256 * u +: 256]), .e(a_e[10 * u +: 10]), .f(a_f[u]), .iqo(a_iq[24 * u +: 24]));
+            .vo(a_vo[u]), .e(a_e[10 * u +: 10]), .f(a_f[u]), .iqo(a_iq[24 * u +: 24]));
         assign w_w[WSL * u +: WSL] = {a_wd[512 * u +: 512], w_h[(WSL - 512) * u +: WSL - 512]};
     end endgenerate
+    assign e_w = {e_x[512 +: 512], e_h[3 * (WSL - 512) +: WSL - 512], e_x[0 +: 512], e_h[2 * (WSL - 512) +: WSL - 512],
+                  a_cq[768 +: 256], a_cq[512 +: 256], e_h[(WSL - 512) +: WSL - 512],
+                  a_cq[256 +: 256], a_cq[0 +: 256], e_h[0 +: WSL - 512]};
 
     ot_s81_hc_cntree `OT_HCC_P u_nt (
         .sk(sk), .srs(srs), .w_rvt(w_rv[S_RT]), .e_rvt(e_rv[S_RT]), .w_pi(w_rd[P_PI +: 8]), .e_pi(e_rd[P_PI +: 8]),

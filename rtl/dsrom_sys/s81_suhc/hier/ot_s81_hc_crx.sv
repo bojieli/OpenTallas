@@ -28,7 +28,6 @@ module ot_s81_hc_crx #(
     input  wire [13:0]          j_base,
     input  wire                 j_fq, j_fy, j_end, j_flt, j_civ,
     input  wire [S_RT-1:0]      a_vo, a_f,      // act-quant tiles
-    input  wire [S_RT*256-1:0]  a_q,
     input  wire [S_RT*10-1:0]   a_e,
     input  wire [S_RT*24-1:0]   a_iq,
     output wire [S_RT-1:0]      o_rv,           // to the act-quant tiles (stage-2 flops)
@@ -36,7 +35,8 @@ module ot_s81_hc_crx #(
     output reg                  o_run,
     output reg  [2:0]           o_kind,
     output wire [4*HSL-1:0]     w_h,            // west slots 0-3 {mask, row, v}; data = caq wd (same cycle)
-    output wire [4*WSL-1:0]     e_w,
+    output wire [4*HSL-1:0]     e_h,            // east slots 4-7 {mask, row, v}; data: 4/5 = caq cq, 6/7 = e_x
+    output wire [1023:0]        e_x,            // slots 6 (exps row) / 7 data
     output reg                  x_wdone, x_pob, x_f1, x_f4
 );
     // the comb's geometry (identical to ot_s81_hc_comb; defaults = the hardened NG 256 HIER=1 configuration)
@@ -88,13 +88,12 @@ module ot_s81_hc_crx #(
         else begin jv <= j_v; je <= j_end; jflt <= j_flt; jciv <= j_civ; end
     always @(posedge sk) begin jk <= j_kind; jb <= j_base; jfq <= j_fq; jfy <= j_fy; end
     reg  [S_RT-1:0]     aq_vo, aq_f;
-    reg  [S_RT*256-1:0] aq_q;
     reg  [S_RT*10-1:0]  aq_e;
     reg  [S_RT*24-1:0]  aq_iq;
     always @(posedge sk or negedge rs_n)
         if (!rs_n) begin aq_vo <= 0; aq_f <= 0; end
         else begin aq_vo <= a_vo; aq_f <= a_f; end
-    always @(posedge sk) begin aq_q <= a_q; aq_e <= a_e; aq_iq <= a_iq; end
+    always @(posedge sk) begin aq_e <= a_e; aq_iq <= a_iq; end
     // ---------------------------------------------------------------- the writer
     reg  [13:0]         base;
     reg                 f_q, f_y;
@@ -140,7 +139,7 @@ module ot_s81_hc_crx #(
                         if (aq_vo[s]) begin
                             wq_v[S_RT + s / 2] <= 1'b1; wq_mask[16 * (S_RT + s / 2) +: 16] <= 16'hFFFF;
                             wq_row[14 * (S_RT + s / 2) +: 14] <= base + v * CR + q / 2;
-                            wq_d[512 * (S_RT + s / 2) +: 512] <= {aq_vo[s + 1] ? aq_q[256 * (s + 1) +: 256] : 256'd0, aq_q[256 * s +: 256]};
+                            // data: ot_s81_hc_caq s / s+1 cq (codes slice)
                             n_w = n_w + 1;
                         end
                     end
@@ -172,6 +171,7 @@ module ot_s81_hc_crx #(
     genvar g;
     generate for (g = 0; g < 4; g = g + 1) begin : g_w
         assign w_h[HSL * g +: HSL] = {wq_mask[16 * g +: 16], wq_row[14 * g +: 14], wq_v[g]};   // + caq g's wd
-        assign e_w[WSL * g +: WSL] = {wq_d[512 * (g + 4) +: 512], wq_mask[16 * (g + 4) +: 16], wq_row[14 * (g + 4) +: 14], wq_v[g + 4]};
+        assign e_h[HSL * g +: HSL] = {wq_mask[16 * (g + 4) +: 16], wq_row[14 * (g + 4) +: 14], wq_v[g + 4]};
     end endgenerate
+    assign e_x = wq_d[512 * (S_RT + 2) +: 1024];
 endmodule
