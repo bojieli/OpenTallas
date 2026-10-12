@@ -476,12 +476,24 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
             hc = ck(P.lane_y.get(hj, band_y), getattr(P, 'lane_x', {}).get(hj))
             bs = 'bsrc' + (f'_{hc}' if bdst != [None] else '')
             rc_ = (11 * c) % P.LB          # per-chain head rotation of the broadcast word (distinct chains)
+            HR = getattr(P, 'head_relay', 0)
+            hin = f'hsrc_{c}' if HR else f'tb_{c}_0'
+            if HR:
+                L_.append(f'    wire [{P.LB}:0] hsrc_{c};')
             if neg and c == 0:
-                L_.append(f'    assign tb_{c}_0 = {{{bs}[{P.LB}], {bs}[{P.LB - 1}:1], ~{bs}[0]}};   // NEGATIVE CONTROL: chain 0 bit 0 inverted')
+                L_.append(f'    assign {hin} = {{{bs}[{P.LB}], {bs}[{P.LB - 1}:1], ~{bs}[0]}};   // NEGATIVE CONTROL: chain 0 bit 0 inverted')
             elif rc_:
-                L_.append(f'    assign tb_{c}_0 = {{{bs}[{P.LB}], {bs}[{P.LB - 1 - rc_}:0], {bs}[{P.LB - 1}:{P.LB - rc_}]}};')
+                L_.append(f'    assign {hin} = {{{bs}[{P.LB}], {bs}[{P.LB - 1 - rc_}:0], {bs}[{P.LB - 1}:{P.LB - rc_}]}};')
             else:
-                L_.append(f'    assign tb_{c}_0 = {bs};')
+                L_.append(f'    assign {hin} = {bs};')
+            if HR:
+                # cons1011 head relay (textbook class 4): the broadcast word is registered at the band on the chain's
+                # own root (the only root crossing: lockup -> hb_0, local) and relayed HR-1 more stages (<= ~420 um each)
+                # to the chain head, whose bc_in is driven straight from the last stage (no logic, ~20-50 um)
+                for s2 in range(HR):
+                    src2 = hin if s2 == 0 else f'hb_{c}_{s2 - 1}'
+                    L_.append(f'    (* keep *) reg [{P.LB}:0] hb_{c}_{s2};  always @(posedge {hc}) hb_{c}_{s2} <= {src2};')
+                L_.append(f'    assign tb_{c}_0 = hb_{c}_{HR - 1};')
             ein = ['1\'b0'] * P.WCT
             for x in range(P.WCT):
                 if (c, x) in einj:
@@ -496,7 +508,21 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
                 tm = getattr(P, 'tile_master', None) or ('hfd_su_tile_xl' if xroot else 'hfd_su_tile')
                 L_.append(f'    {tm} u_tile_{j} (.clk({tc}), .bc_in(tb_{c}_{r}), .bc_out(tb_{c}_{r + 1}), '
                           f'.acc_in(ta_{c}_{r + 1}), .acc_out(ta_{c}_{r}));')
-        L_.append(f'    wire [{P.KC * P.WCT - 1}:0] heads = {{' + ', '.join(f'ta_{c}_0' for c in reversed(range(P.KC))) + '};')
+        HR = getattr(P, 'head_relay', 0)
+        if HR:
+            # cons1011 head relay (output): each chain head's accumulator captured on the chain root next to the head
+            # tile (half cycle from the tile's negedge acc_out, ~20-50 um), relayed HR-1 stages to the band; the band
+            # output stage reads it through its lockup copy (heads(d))
+            for c in range(P.KC):
+                k, s_ = divmod(c, 2)
+                hj = (k * P.G * 2 + s_) * P.L
+                hc = ck(P.lane_y.get(hj, band_y), getattr(P, 'lane_x', {}).get(hj))
+                for s2 in range(HR):
+                    src2 = f'ta_{c}_0' if s2 == 0 else f'hq_{c}_{s2 - 1}'
+                    L_.append(f'    (* keep *) reg [{P.WCT - 1}:0] hq_{c}_{s2};  always @(posedge {hc}) hq_{c}_{s2} <= {src2};')
+                R(f'hq_{c}_{HR - 1}', P.WCT, hc)
+        else:
+            L_.append(f'    wire [{P.KC * P.WCT - 1}:0] heads = {{' + ', '.join(f'ta_{c}_0' for c in reversed(range(P.KC))) + '};')
     else:
         for k in range(P.K):
             for g in range(P.G):
@@ -571,6 +597,11 @@ def emit_rtl(P, neg=False, xroot=False, cg=False):
 
     def heads(d):
         """the chain heads as read by a register on clock d (xroot: through the heads' lockup copies)"""
+        if P.tiled and getattr(P, 'head_relay', 0):
+            if d not in hd:
+                hd[d] = f'heads_{d}'
+                L_.append(f'    wire [{P.KC * P.WCT - 1}:0] heads_{d} = {{' + ', '.join(X(f'hq_{c}_{P.head_relay - 1}', d) for c in reversed(range(P.KC))) + '};')
+            return hd[d]
         if P.tiled:
             return 'heads'
         if not xroot or not nck or all(cw[f'acc_{k}_0'][0] == d for k in range(P.K)):
@@ -794,7 +825,7 @@ def emit_tb(P, nvec, seed, out, cg=False):
                                                             for d in vin) + '\n')
     q = P.q
     m = q['master']
-    hold = (2 * P.NT + 2 * P.DMAX + 20) if P.tiled else (2 * P.G + 2 * P.DMAX + 14)   # tiled: 16 broadcast + 16 accumulate tile hops
+    hold = (2 * P.NT + 2 * P.DMAX + 2 * getattr(P, 'head_relay', 0) + 20) if P.tiled else (2 * P.G + 2 * P.DMAX + 14)   # tiled: 16 broadcast + 16 accumulate tile hops
     cks = ', '.join(f'.{c}(clk)' for c in P.cks) if P.cks else '.ck(clk)'
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))
@@ -954,6 +985,8 @@ def main():
                     'registers), no standard-cell sea in the channels (hbm-forks 2026-10-10)')
     ap.add_argument('--tile-master', help='--tiled: the hardened tile master (default hfd_su_tile[_xl]); conservative-1011: hfd_hc_tile_xl')
     ap.add_argument('--tile-grid', nargs=2, type=int, metavar=('ROWS', 'COLS'), help='--tiled: grid_place (one row per clock segment, serpentine chains)')
+    ap.add_argument('--head-relay', type=int, default=0, help='--tiled: conservative-1011 per-chain head relay: N registered stages on the '
+                    'chain root between the band and each chain head, both directions (textbook class 4: band -> head up to ~0.8 mm)')
     ap.add_argument('--tile-pitch-x', type=float, help='--tile-grid: column pitch um (default tile + 20.4)')
     ap.add_argument('--tile-size', nargs=2, type=float, metavar=('W', 'H'), help='--tiled: the closed tile footprint (default: strip + lane)')
     ap.add_argument('--cg', action='store_true', help='per-group clock gating, or per-tile gating with --tiled, with pin cg_en')
@@ -976,6 +1009,7 @@ def main():
         q['params'] = dict(q['params'] or {}, SFUT=a.sfut)     # in place: emit_rtl finds the quarter by identity
     P = Plan(q, json.loads(Path(a.ports).read_text()))
     P.tiled = a.tiled
+    P.head_relay = a.head_relay if a.tiled else 0
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     m = q['master']
@@ -1035,7 +1069,7 @@ def main():
                                                       RB=P.RB, RA=P.RA, LO=P.LO), indent=1) + '\n')
     (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out, cg=a.cg))
     if a.tiled:
-        tiled_info = dict(tiles=P.N, chains=P.KC, tiles_per_chain=P.NT, acc_bits_per_chain=P.WCT,
+        tiled_info = dict(head_relay=P.head_relay, tiles=P.N, chains=P.KC, tiles_per_chain=P.NT, acc_bits_per_chain=P.WCT,
                           flops_in_tiles=P.N * (P.LB + 1 + P.LO + P.WCT + ((P.LB + 1 + P.WCT) if xr else 0)),
                           lockup_bits=P.N * (P.LB + 1 + P.WCT) if xr else 0,
                           clock_gates=P.N if a.cg else 0, wake_lead_cycles=3 if a.cg else 0,

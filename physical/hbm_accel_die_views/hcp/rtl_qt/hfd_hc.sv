@@ -703,7 +703,12 @@ module hfd_hc (
     assign bsrc_clk6e[160] = din_q_clk6e[160] ^ din_q_clk6e[321] ^ din_q_clk6e[482] ^ din_q_clk6e[643] ^ din_q_clk6e[804] ^ din_q_clk6e[965];
 wire [161:0] tb_0_0; wire [161:0] tb_0_1; wire [161:0] tb_0_2; wire [161:0] tb_0_3; wire [161:0] tb_0_4; wire [161:0] tb_0_5; wire [161:0] tb_0_6; wire [161:0] tb_0_7; wire [161:0] tb_0_8; wire [161:0] tb_0_9; wire [161:0] tb_0_10; wire [161:0] tb_0_11; wire [161:0] tb_0_12; wire [161:0] tb_0_13; wire [161:0] tb_0_14; wire [161:0] tb_0_15; wire [161:0] tb_0_16; wire [161:0] tb_0_17; wire [161:0] tb_0_18; wire [161:0] tb_0_19; wire [161:0] tb_0_20; wire [161:0] tb_0_21; wire [161:0] tb_0_22;
 wire [255:0] ta_0_0; wire [255:0] ta_0_1; wire [255:0] ta_0_2; wire [255:0] ta_0_3; wire [255:0] ta_0_4; wire [255:0] ta_0_5; wire [255:0] ta_0_6; wire [255:0] ta_0_7; wire [255:0] ta_0_8; wire [255:0] ta_0_9; wire [255:0] ta_0_10; wire [255:0] ta_0_11; wire [255:0] ta_0_12; wire [255:0] ta_0_13; wire [255:0] ta_0_14; wire [255:0] ta_0_15; wire [255:0] ta_0_16; wire [255:0] ta_0_17; wire [255:0] ta_0_18; wire [255:0] ta_0_19; wire [255:0] ta_0_20; wire [255:0] ta_0_21; wire [255:0] ta_0_22;
-    assign tb_0_0 = bsrc_clk0e;
+    wire [161:0] hsrc_0;
+    assign hsrc_0 = bsrc_clk0e;
+    (* keep *) reg [161:0] hb_0_0;  always @(posedge clk0e) hb_0_0 <= hsrc_0;
+    (* keep *) reg [161:0] hb_0_1;  always @(posedge clk0e) hb_0_1 <= hb_0_0;
+    (* keep *) reg [161:0] hb_0_2;  always @(posedge clk0e) hb_0_2 <= hb_0_1;
+    assign tb_0_0 = hb_0_2;
     assign ta_0_22 = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0};
     hfd_hc_tile_xl u_tile_0 (.clk(clk0e), .bc_in(tb_0_0), .bc_out(tb_0_1), .acc_in(ta_0_1), .acc_out(ta_0_0));
     hfd_hc_tile_xl u_tile_1 (.clk(clk0e), .bc_in(tb_0_1), .bc_out(tb_0_2), .acc_in(ta_0_2), .acc_out(ta_0_1));
@@ -729,7 +734,12 @@ wire [255:0] ta_0_0; wire [255:0] ta_0_1; wire [255:0] ta_0_2; wire [255:0] ta_0
     hfd_hc_tile_xl u_tile_41 (.clk(clk1e), .bc_in(tb_0_21), .bc_out(tb_0_22), .acc_in(ta_0_22), .acc_out(ta_0_21));
 wire [161:0] tb_1_0; wire [161:0] tb_1_1; wire [161:0] tb_1_2; wire [161:0] tb_1_3; wire [161:0] tb_1_4; wire [161:0] tb_1_5; wire [161:0] tb_1_6; wire [161:0] tb_1_7; wire [161:0] tb_1_8; wire [161:0] tb_1_9; wire [161:0] tb_1_10; wire [161:0] tb_1_11; wire [161:0] tb_1_12; wire [161:0] tb_1_13; wire [161:0] tb_1_14; wire [161:0] tb_1_15; wire [161:0] tb_1_16; wire [161:0] tb_1_17; wire [161:0] tb_1_18; wire [161:0] tb_1_19; wire [161:0] tb_1_20; wire [161:0] tb_1_21; wire [161:0] tb_1_22;
 wire [255:0] ta_1_0; wire [255:0] ta_1_1; wire [255:0] ta_1_2; wire [255:0] ta_1_3; wire [255:0] ta_1_4; wire [255:0] ta_1_5; wire [255:0] ta_1_6; wire [255:0] ta_1_7; wire [255:0] ta_1_8; wire [255:0] ta_1_9; wire [255:0] ta_1_10; wire [255:0] ta_1_11; wire [255:0] ta_1_12; wire [255:0] ta_1_13; wire [255:0] ta_1_14; wire [255:0] ta_1_15; wire [255:0] ta_1_16; wire [255:0] ta_1_17; wire [255:0] ta_1_18; wire [255:0] ta_1_19; wire [255:0] ta_1_20; wire [255:0] ta_1_21; wire [255:0] ta_1_22;
-    assign tb_1_0 = {bsrc_clk2e[161], bsrc_clk2e[149:0], bsrc_clk2e[160:150]};
+    wire [161:0] hsrc_1;
+    assign hsrc_1 = {bsrc_clk2e[161], bsrc_clk2e[149:0], bsrc_clk2e[160:150]};
+    (* keep *) reg [161:0] hb_1_0;  always @(posedge clk2e) hb_1_0 <= hsrc_1;
+    (* keep *) reg [161:0] hb_1_1;  always @(posedge clk2e) hb_1_1 <= hb_1_0;
+    (* keep *) reg [161:0] hb_1_2;  always @(posedge clk2e) hb_1_2 <= hb_1_1;
+    assign tb_1_0 = hb_1_2;
     assign ta_1_22 = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0};
     hfd_hc_tile_xl u_tile_2 (.clk(clk2e), .bc_in(tb_1_0), .bc_out(tb_1_1), .acc_in(ta_1_1), .acc_out(ta_1_0));
     hfd_hc_tile_xl u_tile_3 (.clk(clk2e), .bc_in(tb_1_1), .bc_out(tb_1_2), .acc_in(ta_1_2), .acc_out(ta_1_1));
@@ -755,7 +765,12 @@ wire [255:0] ta_1_0; wire [255:0] ta_1_1; wire [255:0] ta_1_2; wire [255:0] ta_1
     hfd_hc_tile_xl u_tile_43 (.clk(clk3e), .bc_in(tb_1_21), .bc_out(tb_1_22), .acc_in(ta_1_22), .acc_out(ta_1_21));
 wire [161:0] tb_2_0; wire [161:0] tb_2_1; wire [161:0] tb_2_2; wire [161:0] tb_2_3; wire [161:0] tb_2_4; wire [161:0] tb_2_5; wire [161:0] tb_2_6; wire [161:0] tb_2_7; wire [161:0] tb_2_8; wire [161:0] tb_2_9; wire [161:0] tb_2_10; wire [161:0] tb_2_11; wire [161:0] tb_2_12; wire [161:0] tb_2_13; wire [161:0] tb_2_14; wire [161:0] tb_2_15; wire [161:0] tb_2_16; wire [161:0] tb_2_17; wire [161:0] tb_2_18; wire [161:0] tb_2_19; wire [161:0] tb_2_20; wire [161:0] tb_2_21; wire [161:0] tb_2_22;
 wire [255:0] ta_2_0; wire [255:0] ta_2_1; wire [255:0] ta_2_2; wire [255:0] ta_2_3; wire [255:0] ta_2_4; wire [255:0] ta_2_5; wire [255:0] ta_2_6; wire [255:0] ta_2_7; wire [255:0] ta_2_8; wire [255:0] ta_2_9; wire [255:0] ta_2_10; wire [255:0] ta_2_11; wire [255:0] ta_2_12; wire [255:0] ta_2_13; wire [255:0] ta_2_14; wire [255:0] ta_2_15; wire [255:0] ta_2_16; wire [255:0] ta_2_17; wire [255:0] ta_2_18; wire [255:0] ta_2_19; wire [255:0] ta_2_20; wire [255:0] ta_2_21; wire [255:0] ta_2_22;
-    assign tb_2_0 = {bsrc_clk4e[161], bsrc_clk4e[138:0], bsrc_clk4e[160:139]};
+    wire [161:0] hsrc_2;
+    assign hsrc_2 = {bsrc_clk4e[161], bsrc_clk4e[138:0], bsrc_clk4e[160:139]};
+    (* keep *) reg [161:0] hb_2_0;  always @(posedge clk4e) hb_2_0 <= hsrc_2;
+    (* keep *) reg [161:0] hb_2_1;  always @(posedge clk4e) hb_2_1 <= hb_2_0;
+    (* keep *) reg [161:0] hb_2_2;  always @(posedge clk4e) hb_2_2 <= hb_2_1;
+    assign tb_2_0 = hb_2_2;
     assign ta_2_22 = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0};
     hfd_hc_tile_xl u_tile_44 (.clk(clk4e), .bc_in(tb_2_0), .bc_out(tb_2_1), .acc_in(ta_2_1), .acc_out(ta_2_0));
     hfd_hc_tile_xl u_tile_45 (.clk(clk4e), .bc_in(tb_2_1), .bc_out(tb_2_2), .acc_in(ta_2_2), .acc_out(ta_2_1));
@@ -781,7 +796,12 @@ wire [255:0] ta_2_0; wire [255:0] ta_2_1; wire [255:0] ta_2_2; wire [255:0] ta_2
     hfd_hc_tile_xl u_tile_85 (.clk(clk5e), .bc_in(tb_2_21), .bc_out(tb_2_22), .acc_in(ta_2_22), .acc_out(ta_2_21));
 wire [161:0] tb_3_0; wire [161:0] tb_3_1; wire [161:0] tb_3_2; wire [161:0] tb_3_3; wire [161:0] tb_3_4; wire [161:0] tb_3_5; wire [161:0] tb_3_6; wire [161:0] tb_3_7; wire [161:0] tb_3_8; wire [161:0] tb_3_9; wire [161:0] tb_3_10; wire [161:0] tb_3_11; wire [161:0] tb_3_12; wire [161:0] tb_3_13; wire [161:0] tb_3_14; wire [161:0] tb_3_15; wire [161:0] tb_3_16; wire [161:0] tb_3_17; wire [161:0] tb_3_18; wire [161:0] tb_3_19; wire [161:0] tb_3_20; wire [161:0] tb_3_21; wire [161:0] tb_3_22;
 wire [255:0] ta_3_0; wire [255:0] ta_3_1; wire [255:0] ta_3_2; wire [255:0] ta_3_3; wire [255:0] ta_3_4; wire [255:0] ta_3_5; wire [255:0] ta_3_6; wire [255:0] ta_3_7; wire [255:0] ta_3_8; wire [255:0] ta_3_9; wire [255:0] ta_3_10; wire [255:0] ta_3_11; wire [255:0] ta_3_12; wire [255:0] ta_3_13; wire [255:0] ta_3_14; wire [255:0] ta_3_15; wire [255:0] ta_3_16; wire [255:0] ta_3_17; wire [255:0] ta_3_18; wire [255:0] ta_3_19; wire [255:0] ta_3_20; wire [255:0] ta_3_21; wire [255:0] ta_3_22;
-    assign tb_3_0 = {bsrc_clk6e[161], bsrc_clk6e[127:0], bsrc_clk6e[160:128]};
+    wire [161:0] hsrc_3;
+    assign hsrc_3 = {bsrc_clk6e[161], bsrc_clk6e[127:0], bsrc_clk6e[160:128]};
+    (* keep *) reg [161:0] hb_3_0;  always @(posedge clk6e) hb_3_0 <= hsrc_3;
+    (* keep *) reg [161:0] hb_3_1;  always @(posedge clk6e) hb_3_1 <= hb_3_0;
+    (* keep *) reg [161:0] hb_3_2;  always @(posedge clk6e) hb_3_2 <= hb_3_1;
+    assign tb_3_0 = hb_3_2;
     assign ta_3_22 = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0};
     hfd_hc_tile_xl u_tile_46 (.clk(clk6e), .bc_in(tb_3_0), .bc_out(tb_3_1), .acc_in(ta_3_1), .acc_out(ta_3_0));
     hfd_hc_tile_xl u_tile_47 (.clk(clk6e), .bc_in(tb_3_1), .bc_out(tb_3_2), .acc_in(ta_3_2), .acc_out(ta_3_1));
@@ -805,13 +825,29 @@ wire [255:0] ta_3_0; wire [255:0] ta_3_1; wire [255:0] ta_3_2; wire [255:0] ta_3
     hfd_hc_tile_xl u_tile_83 (.clk(clk7e), .bc_in(tb_3_19), .bc_out(tb_3_20), .acc_in(ta_3_20), .acc_out(ta_3_19));
     hfd_hc_tile_xl u_tile_86 (.clk(clk7e), .bc_in(tb_3_20), .bc_out(tb_3_21), .acc_in(ta_3_21), .acc_out(ta_3_20));
     hfd_hc_tile_xl u_tile_87 (.clk(clk7e), .bc_in(tb_3_21), .bc_out(tb_3_22), .acc_in(ta_3_22), .acc_out(ta_3_21));
-    wire [1023:0] heads = {ta_3_0, ta_2_0, ta_1_0, ta_0_0};
-    (* keep *) reg [1023:0] t_sfu_o0;  always @(posedge clk3e) t_sfu_o0 <= heads[1023:0];
+    (* keep *) reg [255:0] hq_0_0;  always @(posedge clk0e) hq_0_0 <= ta_0_0;
+    (* keep *) reg [255:0] hq_0_1;  always @(posedge clk0e) hq_0_1 <= hq_0_0;
+    (* keep *) reg [255:0] hq_0_2;  always @(posedge clk0e) hq_0_2 <= hq_0_1;
+    (* keep *) reg [255:0] hq_1_0;  always @(posedge clk2e) hq_1_0 <= ta_1_0;
+    (* keep *) reg [255:0] hq_1_1;  always @(posedge clk2e) hq_1_1 <= hq_1_0;
+    (* keep *) reg [255:0] hq_1_2;  always @(posedge clk2e) hq_1_2 <= hq_1_1;
+    (* keep *) reg [255:0] hq_2_0;  always @(posedge clk4e) hq_2_0 <= ta_2_0;
+    (* keep *) reg [255:0] hq_2_1;  always @(posedge clk4e) hq_2_1 <= hq_2_0;
+    (* keep *) reg [255:0] hq_2_2;  always @(posedge clk4e) hq_2_2 <= hq_2_1;
+    (* keep *) reg [255:0] hq_3_0;  always @(posedge clk6e) hq_3_0 <= ta_3_0;
+    (* keep *) reg [255:0] hq_3_1;  always @(posedge clk6e) hq_3_1 <= hq_3_0;
+    (* keep *) reg [255:0] hq_3_2;  always @(posedge clk6e) hq_3_2 <= hq_3_1;
+    wire [1023:0] heads_clk3e = {hq_3_2_xk, hq_2_2_xk, hq_1_2_xk, hq_0_2_xk};
+    (* keep *) reg [1023:0] t_sfu_o0;  always @(posedge clk3e) t_sfu_o0 <= heads_clk3e[1023:0];
     (* keep *) reg [1023:0] t_sfu_o1;  always @(posedge clk3e) t_sfu_o1 <= t_sfu_o0;
     (* keep *) reg [1023:0] t_sfu_o2;  always @(posedge clk3e) t_sfu_o2 <= t_sfu_o1;
     assign t_sfu = t_sfu_o2;
-    // xroot: 3 lockup registers, 2050 bits
+    // xroot: 7 lockup registers, 3074 bits
     (* keep *) reg [1023:0] f_sfu_i0_xk;  always @(negedge clk2e) f_sfu_i0_xk <= f_sfu_i0;   // xroot lockup (clk2e root)
     (* keep *) reg [1023:0] f_sfu_i2_xk;  always @(negedge clk3e) f_sfu_i2_xk <= f_sfu_i2;   // xroot lockup (clk3e root)
     (* keep *) reg [1:0] rst_q_xk;  always @(negedge clk4e) rst_q_xk <= rst_q;   // xroot lockup (clk4e root)
+    (* keep *) reg [255:0] hq_3_2_xk;  always @(negedge clk6e) hq_3_2_xk <= hq_3_2;   // xroot lockup (clk6e root)
+    (* keep *) reg [255:0] hq_2_2_xk;  always @(negedge clk4e) hq_2_2_xk <= hq_2_2;   // xroot lockup (clk4e root)
+    (* keep *) reg [255:0] hq_1_2_xk;  always @(negedge clk2e) hq_1_2_xk <= hq_1_2;   // xroot lockup (clk2e root)
+    (* keep *) reg [255:0] hq_0_2_xk;  always @(negedge clk0e) hq_0_2_xk <= hq_0_2;   // xroot lockup (clk0e root)
 endmodule
