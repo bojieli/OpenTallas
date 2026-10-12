@@ -17,5 +17,5 @@ EXACT 7 mismatch 0
 PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=2319 priced=168
 - rtl/test/hbm_accel/generic/tb_hgi_quant_wide_tput.sv:86: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 7us; walltime 0.384 s; speed 17.611 us/s
-- Verilator: cpu 0.385 s on 1 threads; alloced 1021 MB
+- Verilator: $finish at 7us; walltime 0.373 s; speed 18.149 us/s
+- Verilator: cpu 0.374 s on 1 threads; alloced 1021 MB
