@@ -68,3 +68,10 @@ module ot_pqc_t_ctl16 (
         o_ready <= r_ready; o_idle <= r_idle; o_x_re <= x_re; o_x_addr <= x_addr; o_fault <= r_fault; o_ev <= r_ev;
     end
 endmodule
+// T_XIN: the screen's x_q pin registers (1024 b, the vector-memory read data) as a hard tile, so the composition's top
+// level holds no soft flops (every tile pin is a tile register; top-level flops would see the tiles' ~200-300 ps
+// internal clock latency as hold / setup skew).  d on the N face, q on the S face, no reset.
+module ot_pqc_t_xin (input wire clk, input wire [1023:0] d, output reg [1023:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+

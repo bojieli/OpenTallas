@@ -18,19 +18,40 @@ sys.path[:0] = [str(ROOT / 'tools'), str(ROOT / 'tools/s81')]
 CTRL = re.compile(r'^(ck|ckv|cks|ckh|ckc|clk|refclk|rst|rsv|rss|rs|rst_n|por|pll_\w+|rst_\w+|scan\w*|test\w*|tie\w*|grp)$')
 
 
-def rtl_ports(module):
-    """{port: (direction, bits or None)} from the RTL source of `module` (ANSI port list; widths from literal ranges)."""
+# hand RTL outside rtl/ (s81die-1011/ctrl): the host ingest master lives with its physical package
+RTL_ROOTS = ('rtl', 'physical/rom_host_ingest/rtl')
+# hard-macro VIEWS (black-box port lists of the LEF'd macros), compared pin for pin but reported as views, not RTL
+VIEWS = {'ot_rom_4096x72_m8': 'physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v',
+         'ot_hbm3e_phy_v41x_aw30_e8p5': 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/'
+                                        'ot_hbm3e_phy_v41x_aw30_e8p5_bb.v',
+         'ot_pdie_serdes': 'physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v',
+         'ot_pdie_ucie': 'physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v'}
+
+
+def _ports_from_text(module, t):
+    m = re.search(rf'module\s+{re.escape(module)}\b.*?\)\s*\(\s*(.*?)\)\s*;', t, re.S) or \
+        re.search(rf'module\s+{re.escape(module)}\b\s*\(\s*(.*?)\)\s*;', t, re.S)
+    return _parse_body(m) if m else {}
+
+
+def rtl_ports(module, text=None, path=None):
+    """{port: (direction, bits or None)} from the RTL source of `module` (ANSI port list; widths from literal ranges);
+    `text` = an already generated source (the case's glue RTL), `path` = a given file (a macro view)."""
+    if text is not None:
+        return _ports_from_text(module, text) if re.search(rf'^\s*module\s+{re.escape(module)}\b', text, re.M) else None
+    if path is not None:
+        return _ports_from_text(module, (ROOT / path).read_text()) if (ROOT / path).exists() else None
     # filesystem scan (the audit also runs in extracted source trees that are not git checkouts)
-    r = subprocess.run(['grep', '-rlE', '--include=*.sv', '--include=*.v', rf'^\s*module\s+{re.escape(module)}\b', 'rtl'],
-                       cwd=ROOT, capture_output=True, text=True)
+    r = subprocess.run(['grep', '-rlE', '--include=*.sv', '--include=*.v', rf'^\s*module\s+{re.escape(module)}\b',
+                        *[d for d in RTL_ROOTS if (ROOT / d).exists()]], cwd=ROOT, capture_output=True, text=True)
     files = sorted(f for f in r.stdout.split() if f and '/test/' not in f and '/tb' not in f)
     if not files:
         return None
     t = (ROOT / files[0]).read_text()
-    m = re.search(rf'module\s+{re.escape(module)}\b.*?\)\s*\(\s*(.*?)\)\s*;', t, re.S) or \
-        re.search(rf'module\s+{re.escape(module)}\b\s*\(\s*(.*?)\)\s*;', t, re.S)
-    if not m:
-        return {}
+    return _ports_from_text(module, t)
+
+
+def _parse_body(m):
     body = re.sub(r'//.*', '', m.group(1))
     ports, d, w = {}, None, None
     for tok in re.split(r',', body):
@@ -52,23 +73,77 @@ def rtl_ports(module):
     return ports
 
 
-def audit(m):
+def _expand_real(die, gmap):
+    """die pins of a real-macro master are pin GROUPS (generator r8 binding, real_ports_r8): {group: (dir, bits)} ->
+    {macro port base: (dir, bits bound)}; a group the binding does not map stays as is (-> placeholder finding)"""
+    out = {}
+    for g, v in die.items():
+        if g not in gmap:
+            out[g] = v
+            continue
+        for pin in gmap[g]:
+            b = re.sub(r'\[\d+\]$', '', pin)
+            d_, n_ = out.get(b, (v[0], 0))
+            out[b] = (d_, n_ + 1)
+    return out
+
+
+def audit(m, glue_out=None, absent=None):
+    """glue masters (tools/dsrom_s81_fulldie.py GLUE_PREFIX: stations, relays, lane ends, FIFOs, nodes) are read from
+    THIS die's generated glue RTL (glue_rtl(m): structural over ot_fwd_link_stage / ot_meso_fifo / ot_ratio_cdc_fifo /
+    ot_v41_retn_w17w10), written to glue_out when given, the way die_top_lint binds them; macro views by their bb."""
     pdir = m.get('pdir') or {}
     masters = sorted({it.master for it in m['insts']})
-    out = dict(masters=len(masters), no_rtl=[], findings={})
+    out = dict(masters=len(masters), no_rtl=[], findings={}, views=[], glue=0)
+    glue_txt = None
+    try:
+        import dsrom_s81_fulldie as F
+        if m.get('glue') is not None:
+            glue_txt = F.glue_rtl(m)
+            if glue_out:
+                Path(glue_out).write_text(glue_txt)
+    except Exception as e:       # no glue model: glue masters fall back to the tree scan (reported, not waived)
+        out['glue_error'] = repr(e)[:300]
+    try:     # real macros / the routed q element: die pin groups -> macro pins (the generator's r8 binding)
+        real_map = F.real_ports_r8()
+    except Exception as e:
+        real_map = {}
+        out['real_map_error'] = repr(e)[:300]
     for ms in masters:
         die = pdir.get(ms, {})
-        rp = rtl_ports(ms)
+        if ms in VIEWS:
+            rp = rtl_ports(ms, path=VIEWS[ms])
+            out['views'].append(dict(master=ms, view=VIEWS[ms], found=rp is not None))
+        elif glue_txt is not None and F.is_glue(ms):
+            rp = rtl_ports(ms, text=glue_txt)
+            out['glue'] += rp is not None
+        else:
+            rp = rtl_ports(ms)
         if rp is None:
             out['no_rtl'].append(dict(master=ms, die_pins=len(die)))
             continue
+        if ms in real_map:
+            die = _expand_real(die, real_map[ms])
         f = dict(unbound=[], placeholder=[], width=[])
+        dec = (absent or {}).get(ms, {})
         for p, (d, w) in rp.items():
             if CTRL.match(p):
+                continue
+            if p not in die and p in dec:
+                ok_ = (dec[p] == 'open') == (d == 'output') and \
+                      (d == 'output' or (w is None or re.match(rf'^{w}\'', str(dec[p])) is not None))
+                out.setdefault('declared_absent', []).append(dict(master=ms, port=p, dir=d, bits=w, value=dec[p], ok=ok_))
+                if not ok_:
+                    f['unbound'].append(f'{d} {p}[{w}] (declared absent as {dec[p]}: direction / width mismatch)')
                 continue
             if p not in die:
                 f['unbound'].append(f'{d} {p}[{w}]')
             elif w and die[p][1] != w:
+                sp_ = f'{p}[{die[p][1]}:{w - 1}]'       # a declared unused upper slice (e.g. ROM spare columns)
+                if die[p][1] < w and dec.get(sp_) == 'open' and d == 'output':
+                    out.setdefault('declared_absent', []).append(dict(master=ms, port=sp_, dir=d, bits=w - die[p][1],
+                                                                      value='open', ok=True))
+                    continue
                 f['width'].append(f'{p}: die {die[p][1]} vs rtl {w}')
         for p in die:
             if p not in rp and not CTRL.match(p):

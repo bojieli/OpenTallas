@@ -166,7 +166,7 @@ def gate(m, role, bindings=None, used=None):
     except ImportError:
         out['findings'].append('die_port_audit unavailable (tools/s81/die_port_audit.py): gate cannot pass without it')
     else:
-        a = audit(m)
+        a = audit(m, absent=bindings.get('absent_ports', {}).get(role))
         out['port_audit'] = a
         for ms, f in sorted(a['findings'].items()):
             for k_, v in f.items():
