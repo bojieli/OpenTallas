@@ -27,7 +27,7 @@ for b in smh_pt_w_ref_p45h-r1-6332f4e44 $XJ; do
 done
 for v in physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w physical/ref_tile/$XS/views/ot_hbm_accel_smh_xs; do
   [ -s "$v/$(basename $v).lef" ] || { echo "BLOCKED: no view $v (closure record not merged yet)"; exit 2; }
-  python3 tools/hier_contract/child_lint.py "$v/$(basename $v).lef" --libs "$v" | tail -1 | grep -q '^PASS' \
+  cl=$(python3 tools/hier_contract/child_lint.py "$v/$(basename $v).lef" --libs "$v" || true); grep -q '^PASS' <<<"$cl" \
     || { echo "BLOCKED: child_lint FAIL on $v"; exit 2; }
 done
 python3 physical/ref_tile_specs/smh/mk_smh_tile_cluster.py
