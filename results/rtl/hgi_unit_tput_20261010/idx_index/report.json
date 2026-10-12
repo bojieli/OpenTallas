@@ -14,5 +14,5 @@
   "ratio": 8.603,
   "ratio_basis": "only exact record type (L24-type, 4,320 of 7,513.6 priced cyc/token); L20 inexact, L2 hangs -> no whole-token ratio; token ratio >= 5.72 even with L2 at its price ((4 x 9,291 + 3,823 + 3 x 658.9) / 7,513.6)",
   "status": "UNQUALIFIED (> 1.10; L2 hang and L20 mismatch are correctness gaps)",
-  "mutant": "IDX_MUT=2 on L24 (epyc2 out/tput_mut2_L24): the IDX.INDEX record (k 19) mismatches the golden (E2E REAL 19 index_frame VM mismatches) -> FAILS as required"
+  "mutant": "IDX_MUT=2 on L24 (epyc2 out/tput_mut2_L24): IDX.INDEX record k 19: 136 of 1,024 checked words mismatch (same 9,291 cycles), HGI_E2E FAIL -> FAILS as required"
 }

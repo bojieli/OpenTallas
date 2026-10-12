@@ -11,5 +11,5 @@
 | L2 / 8 / 14: n 524,288 (3) | 658.9 | never retires | - | HANG (watchdog at 404,198 cyc) |
 
 - Ratio of record: 8.60x (the only exact record type). Whole token >= 5.72x even charging L2 at its price.
-- Mutant IDX_MUT=2 on L24: the IDX record mismatches (mut2_L24_head.log) -> FAILS as required.
+- Mutant IDX_MUT=2 on L24: 136 of 1,024 IDX words mismatch, HGI_E2E FAIL (mut2_L24_head.log) -> FAILS as required.
 - Status: UNQUALIFIED (> 1.10) plus two correctness gaps (L20 mismatch, L2 hang); reported to el1011-hbm-idx.
