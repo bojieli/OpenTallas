@@ -112,7 +112,7 @@ module ot_hgi_hc_unit #(
     output reg  [31:0]       ap_done
 );
     localparam integer SPW = W / 8, LW = $clog2(W), LS = $clog2(SPW), AW = 16, CWW = $clog2(RMAX + 1);
-    localparam integer TSOR = 1, TTML = 3, TTOR = 1;  // = ot_hgi_hc_tile defaults (SOR, TML, TOR): the SYS stage hop and memory latency
+    localparam integer TSOR = 1, TTML = 3, TTOR = 1, TTIR = 1;  // = ot_hgi_hc_tile defaults (SOR, TML, TOR, TIR): the SYS stage hop and memory latency
     // ---- the record adapter
     wire job_v; reg job_rdy, job_done, job_fault; wire [228:0] job; wire [3:0] j_np; wire [17:0] j_as, j_os;
     ot_hgi_hc_record #(.LEGACY(0), .PMAX(PMAX)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .cfg_hc_eps(cfg_norm_eps),
@@ -256,7 +256,7 @@ module ot_hgi_hc_unit #(
     always @(posedge clk) begin xd <= xq1; wd <= wq; end
     reg h_cv; wire h_cr, h_ov, h_last, h_fault, h_idle; wire [31:0] h_od;
     wire [$clog2(PMAX)-1:0] h_opos;
-    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2), .SYS(SYS), .SYS_LAT(2*DRLY + 1 + 7*(SLA + 1 + TSOR + TTOR) + 3 + 2 + (TTML - 2) + SLM + SLA + TSOR + TTOR)) u_hcp (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2), .SYS(SYS), .SYS_LAT(2*DRLY + 1 + 7*(SLA + 1 + TSOR + TTOR + TTIR) + 3 + 2 + (TTML - 2) + SLM + SLA + TSOR + TTOR + TTIR)) u_hcp (.clk(clk), .rst_n(rst_n),
         .cmd_valid(h_cv), .cmd_ready(h_cr), .cmd_npos(npos[$clog2(PMAX):0]), .cmd_nout(2'd1), .cmd_nchunk(nchunk[15:0]),
         .cmd_scale(1'b1), .cmd_nf(nf), .cmd_eps(eps), .cmd_wbase(16'd0), .cmd_xbase(16'd0),
         .w_re(w_re), .w_addr(w_addr), .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd),
@@ -798,6 +798,12 @@ module ot_hgi_hc_tile #(
     // ~204 ps insertion, gate path class macro->out -771 ps): TOR 1 = sum_out and the descriptor taps o_* registered
     // at the tile's E face in cluster flops (one more cycle per tile hop; the unit's SYS_LAT counts TTOR).
     parameter integer TOR = 1,
+    // round 7 (hc_tile_xl-c2-8612208d7 FLOORPLAN_MARGIN bank_distance: the W-face sum_in / f_in pins (8 lanes x 32 b
+    // + 2 a leaf) were wired straight to the 4 hard lane-group leaves' pin flops 258 um away in the centre column):
+    // TIR 1 = every W-face chain input (d_*, sum_in, f_in) captured in cluster flops at the W face, then one register
+    // hop (<= 260 um) into the leaves.  The whole chain hop moves together (descriptor taps with the sums), so it is
+    // one more cycle per tile on the chain (8 a unit; the unit's SYS_LAT counts TTIR).  `first` is a static strap.
+    parameter integer TIR = 1,
     parameter integer NVW = $clog2(W) + 1,
     parameter integer CWW = $clog2(RMAX + 1),
     parameter integer NXM = W / 16
@@ -858,11 +864,23 @@ module ot_hgi_hc_tile #(
     end else begin : g_ntor
         always @* begin o_v = s_ov; o_ss = s_oss; o_nv = s_onv; o_wa = s_owa; o_xa = s_oxa; sum_out = s_sum; end
     end endgenerate
+    // ---- the W face (TIR): chain inputs -> face registers (no logic before them)
+    wire i_v, i_ss, i_f; wire [NVW-1:0] i_nv; wire [AW-1:0] i_wa, i_xa; wire [W*32-1:0] i_sum;
+    generate if (TIR != 0) begin : g_tir
+        reg r_v, r_ss, r_f; reg [NVW-1:0] r_nv; reg [AW-1:0] r_wa, r_xa; reg [W*32-1:0] r_sum;
+        always @(posedge clk or negedge rl[2]) if (!rl[2]) r_v <= 1'b0; else r_v <= d_v;
+        always @(posedge clk) begin r_ss <= d_ss; r_nv <= d_nv; r_wa <= d_wa; r_xa <= d_xa; r_sum <= sum_in; r_f <= f_in; end
+        assign i_v = r_v; assign i_ss = r_ss; assign i_nv = r_nv; assign i_wa = r_wa; assign i_xa = r_xa;
+        assign i_sum = r_sum; assign i_f = r_f;
+    end else begin : g_ntir
+        assign i_v = d_v; assign i_ss = d_ss; assign i_nv = d_nv; assign i_wa = d_wa; assign i_xa = d_xa;
+        assign i_sum = sum_in; assign i_f = f_in;
+    end endgenerate
     // ---- the lane stage
     wire w_re, x_re; wire [AW-1:0] w_addr, x_addr; reg [W*32-1:0] wd; reg [W*16-1:0] xd;
     ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(TML), .NVW(NVW), .LM(LM), .LA(LA), .SOR(SOR), .LRST(1), .ADRST(0), .LG(TLG)) u_st (.clk(clk), .rst_n(rl[0]), .first(first),
-        .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(s_ov), .o_ss(s_oss), .o_nv(s_onv), .o_wa(s_owa),
-        .o_xa(s_oxa), .sum_in(sum_in), .sum_out(s_sum), .f_in(f_in), .f_out(f_out), .w_re(w_re), .w_addr(w_addr),
+        .d_v(i_v), .d_ss(i_ss), .d_nv(i_nv), .d_wa(i_wa), .d_xa(i_xa), .o_v(s_ov), .o_ss(s_oss), .o_nv(s_onv), .o_wa(s_owa),
+        .o_xa(s_oxa), .sum_in(i_sum), .sum_out(s_sum), .f_in(i_f), .f_out(f_out), .w_re(w_re), .w_addr(w_addr),
         .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd));
     // ---- x memory (registered write bundle in, read data captured into xd: address reg -> macro -> xd = ML 2)
     wire [W*16-1:0] xq1;
