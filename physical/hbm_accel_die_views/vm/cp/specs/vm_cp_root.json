@@ -187,6 +187,16 @@
      "verilator"
     ],
     "min_count_regex": "events=(\\d+)/"
+   },
+   {
+    "name": "vm_cp_bench_mut_xbus",
+    "cmd": "VM_CP_MUT=XBUS bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/vmcp_mut",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "views_to": "physical/ref_tile/vm_cp_root/views",

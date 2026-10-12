@@ -383,7 +383,9 @@ def spec(kn, pos_inst):
                                 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2'],
                 'benches': [{'name': 'vm_cp_bench', 'cmd': 'bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/vmcp',
                              'expect': 'pass', 'threads': 16, 'peak_ram_gb': 32, 'needs': ['verilator'],
-                             'min_count_regex': r'events=(\d+)/'}],
+                             'min_count_regex': r'events=(\d+)/'},
+                            {'name': 'vm_cp_bench_mut_xbus', 'cmd': 'VM_CP_MUT=XBUS bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/vmcp_mut',
+                             'expect': 'fail', 'threads': 16, 'peak_ram_gb': 32, 'needs': ['verilator']}],
                 'views_to': f'physical/ref_tile/{kn}/views', 'record_to': f'results/rtl/ref_tile/{kn}'}
     if kn in KITS:
         s['sources'].insert(0, 'rtl/common/ot_fwd_link_stage.sv')

@@ -1,5 +1,5 @@
 {
- "name": "vm_cp_root-cp1-b2764dce0",
+ "name": "vm_cp_root-cp1-COMMIT",
  "block": "vm_cp_root",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-vm8cp",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/el1011-hbm-vm8cp",
-  "commit": "b2764dce0",
+  "commit": "COMMIT",
   "extra_paths": [
    "physical/hbm_accel_die_views/vm",
    "physical/hbm_accel_die_views/common",
@@ -44,6 +44,16 @@
      "verilator"
     ],
     "min_count_regex": "events=(\\d+)/"
+   },
+   {
+    "name": "vm_cp_bench_mut_xbus",
+    "cmd": "VM_CP_MUT=XBUS bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/vmcp_mut",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "calibrate": {
@@ -94,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vm_cp_root/vm_cp_root-cp1-b2764dce0"
+   "to": "results/rtl/ref_tile/vm_cp_root/vm_cp_root-cp1-COMMIT"
   }
  ],
  "cycles_added": 0,
