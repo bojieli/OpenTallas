@@ -99,20 +99,40 @@ module ot_s81_su_qbt #(
             for (s = 0; s < L; s = s + 1)
                 rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
     end
+    // pass assembly: with off != 0 a pass's L rows straddle two spine cycles; the early rows wait in a hold register so
+    // every position of a pass leaves in ONE cycle (the engines run in lockstep: the pair exchange and the write slots
+    // depend on it). The pass completes when its last position (L - 1) arrives; rows of the next pass arriving in that
+    // cycle are held.
+    wire [L-1:0] iv;
+    wire [L-1:0] same;
+    wire [11:0]  tl = rv[LL][RB * (L - 1) + 512 +: 12];
+    wire         done = iv[L - 1];
+    genvar gj;
+    generate for (gj = 0; gj < L; gj = gj + 1) begin : g_as
+        assign iv[gj] = rv[LL][RB * gj + 524];
+        assign same[gj] = iv[gj] && rv[LL][RB * gj + 512 +: 12] == tl;
+    end endgenerate
+    reg [L-1:0] hv; reg [L*512-1:0] hd; reg [L*12-1:0] ht;
     always @(posedge clk) begin : oreg
         integer j;
         for (j = 0; j < L; j = j + 1) begin
-            e_d[512 * j +: 512] <= rv[LL][RB * j +: 512];
-            e_t[12 * j +: 12] <= rv[LL][RB * j + 512 +: 12];
+            e_d[512 * j +: 512] <= same[j] ? rv[LL][RB * j +: 512] : hd[512 * j +: 512];
+            e_t[12 * j +: 12] <= same[j] ? rv[LL][RB * j + 512 +: 12] : ht[12 * j +: 12];
+            if (iv[j] && !(done && same[j])) begin hd[512 * j +: 512] <= rv[LL][RB * j +: 512];
+                                                   ht[12 * j +: 12] <= rv[LL][RB * j + 512 +: 12]; end
         end
         e_ob <= ob_n; e_f4 <= fp4;
     end
     always @(posedge clk or negedge rst_n) begin : vreg
         integer j;
-        if (!rst_n) begin e_v <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; end
+        if (!rst_n) begin e_v <= 0; hv <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; end
         else begin
-            for (j = 0; j < L; j = j + 1) e_v[j] <= rv[LL][RB * j + 524];
-            o_fu <= 1'b0; o_fo <= 1'b0; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
+            for (j = 0; j < L; j = j + 1) begin
+                e_v[j] <= done && (same[j] || hv[j]);
+                if (iv[j] && !(done && same[j])) hv[j] <= 1'b1;
+                else if (done) hv[j] <= 1'b0;
+            end
+            o_fu <= 1'b0; o_fo <= done && (~(same | hv) != 0); o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
         end
     end
 endmodule
