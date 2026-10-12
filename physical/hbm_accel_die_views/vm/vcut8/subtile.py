@@ -31,6 +31,7 @@ from pathlib import Path
 
 D = Path(__file__).resolve().parent
 SEQ = re.compile(r'^\$_(DFF|DFFE|SDFF|SDFFE|SDFFCE)_')
+HF_CAP = 1024       # r4: loads per seam bit in the sink tile (textbook_lint hf_port_refuse 2,048; replicas above)
 SINK_CAP = 13500     # clock sinks per tile (owner audit class 1: <= ~15k per tree)
 BUDGET = 10.0           # seam bits per um of shared edge (two pin layers; the 13.9 b/um N-S faces failed congestion)
 
@@ -359,6 +360,24 @@ def main():
             ck = cells[sc]['connections']['C'][0] if is_seq[sc] else cells[sc]['connections']['clk'][0]
             cutd.setdefault((sb, kd), (sb, ks, kd, False, ck, 'P', []))[6].extend(ls)
     cuts = list(cutd.values())
+    # r4 [vm8] 2026-10-11 (textbook_lint high_fanout REFUSE swet2 @f0104f2ac: seam e0_0[2216] = the reset relay rst_c,
+    # 5,531 async-reset loads behind ONE tile pin): a cut whose sink tile has > HF_CAP loads is split into kept REPLICAS of
+    # its posedge source flop in the source tile, one seam bit each, <= HF_CAP loads per bit (grouped by cell name so a
+    # copy serves one logical region; the placer co-locates each copy's sinks).  Same D / clock / reset as the source:
+    # cycle-identical, 0 cycles added, no new register stage.
+    hfsplit = []
+    for i_, (sb, ks, kd, ins, ck, se, ls) in enumerate(list(cuts)):
+        if len(ls) <= HF_CAP or ins:
+            continue
+        sc = drv[sb][0]
+        if not is_seq[sc] or tile[U[sc]] != ks:
+            raise SystemExit(f'high-fanout cut {nm.get(sb, (sb,))[0]} ({len(ls)} loads) not driven by a flop in its source tile')
+        ls = sorted(ls, key=lambda x: (str(x[0]), str(x[1]), x[2]))
+        n_ = -(-len(ls) // HF_CAP); per = -(-len(ls) // n_)
+        cuts[i_] = (sb, ks, kd, ins, ck, se, ls[:per])
+        for j in range(1, n_):
+            cuts.append((('HF', sb, j, sc), ks, kd, ins, ck, se, ls[j * per:(j + 1) * per]))
+        hfsplit.append((nm.get(sb, (str(sb),))[0], cr(ks), cr(kd), len(ls), n_))
     # r2: violations / infeasible units by the output port anchor downstream of them -> make_vm_vcut8 VM_ST_K (+1 full
     # stage on every bit of that port per round)
     def out_anchor(un):
@@ -405,7 +424,7 @@ def main():
                anchored=len(anchor), conflicts=len(conflict), infeasible=infeas, infeasible_ex=dbg, conflict_ex=[str(x)[:160] for x in conflict[:4]],
                k_demand=dict(kdem.most_common()), row_cross_chains=[xload, dict(xalt)], violations=len(viol), viol_ex=viol[:4], viol_classes={' | '.join(map(str, k_)): v_ for k_, v_ in vcls.most_common(12)}, mixed=len(mixed), mixed_ex=mixed[:4], cuts=len(cuts),
                inserted=sum(1 for c in cuts if c[3]), relays=len(relay_d), relay_cuts=relayed, neg_functional=len(nfunc),
-               half_cycle_cuts=len(halfcut), half_cycle_ex=[str(x)[:120] for x in halfcut[:4]], seam_bits=dict(sorted(seamn.items())),
+               hf_split=hfsplit, half_cycle_cuts=len(halfcut), half_cycle_ex=[str(x)[:120] for x in halfcut[:4]], seam_bits=dict(sorted(seamn.items())),
                seam_b_per_um=dict(sorted(load.items())), over_budget=over,
                sinks_per_tile={str(cr(k)): v + seam_sinks.get(k, 0) for k, v in sorted(sinks.items())},
                sink_src={str(k_): v_ for k_, v_ in srcmix.most_common(10)}, tap_split=len(tapx), tap_split_ex=dict(list(tapx.items())[:4]))
@@ -534,6 +553,12 @@ def emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port
     for s, lst in seams.items():
         sw[s] = len(lst)
         for idx, (b, ks, kd, ins, ck, se) in enumerate(lst):
+            if isinstance(b, tuple):        # r4 high-fanout replica: a kept copy of the source flop, one seam bit per copy
+                _, sb, j, sc = b; c = cells[sc]; cx = c['connections']
+                v = f'{wn(sb)}_hf{j}'; regs[ks].add(v)
+                L[ks].append('(* keep *) ' + FLOP_TPL[c['type']].format(Q=v, **{p: src(ks, cx[p][0], sc, p, 0) for p in cx if p != 'Q'}))
+                L[ks].append(f'assign {s}_o[{idx}] = {v};')
+                continue
             v = src(ks, b)
             if ins:
                 r_ = f'{s}_r{idx}'
