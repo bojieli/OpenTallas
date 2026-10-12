@@ -33,7 +33,7 @@
   "w": 777.576,
   "h": 455.76
  },
- "pg_layer": "M6",
+ "pg_layer": "M7",
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
@@ -88,13 +88,14 @@
   "pd": 0.55,
   "threads": 16,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -no_obstruction_aware -delay_buffer_derate 0.75 -macro_clustering_size 2 -macro_clustering_max_diameter 150"
  },
  "job": {
   "owner": "Claude:qwen-tp8/par-port",
   "branch": "claude/el1011-qwen-tp8-par-port",
-  "tag": "v2",
-  "purpose": "qwen-tp8 (results/arch/qwen_tp8_1012 ELEMENT_IMPACT qfd_port_tiles_*): the slab port group at the TP8 cut, GT 3072, GID 47 (the last of 48 groups = 6 slabs x 8, the largest group constant; other GIDs differ only in constant multiplier/adder terms), s14o parameters of the closed TP4 slab_s14o_lvt-95725fb69tt; same outline 777.576 x 455.76 and faces (res_in/p_/o_/am_ east, bw_/tw_ west), 16 scale banks (TP8 image uses 7: results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json); reference tile flow",
+  "tag": "v3",
+  "purpose": "qwen-tp8 (results/arch/qwen_tp8_1012 ELEMENT_IMPACT qfd_port_tiles_*): the slab port group at the TP8 cut, GT 3072, GID 47 (the last of 48 groups = 6 slabs x 8, the largest group constant; other GIDs differ only in constant multiplier/adder terms), s14o parameters of the closed TP4 slab_s14o_lvt-95725fb69tt; same outline 777.576 x 455.76 and faces (res_in/p_/o_/am_ east, bw_/tw_ west), 16 scale banks (TP8 image uses 7: results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json); reference tile flow | v3 (qwen-tp8/tiles 2026-10-12): v2 EARLY_FAIL_HOLD stalled at FF hold -55.5 on u_rom/addr_in with SS setup -51 at CTS: the 16 ROM clock pins hang on a separate wire-dominated macro tree (avg sink wire 1,042 um on M2-M6, depth 9) while the 25k flops sit on a 14-16 level buffer tree with 370 ps latency spread (601-972 ps), so ROM-vs-relay/capture-flop skew moves across corners (SS: ROM early -> rd_out->cap setup; FF: ROM late -> addr hold). Structural fix: route as the die contract slot allows (sp_port_tiles signal_max M8; TP4 closure routed M2-M8): PG M7 stripes, signals M2-M7 so the long clock trunks leave thin M2-M6; TritonCTS as the closed TP4 recipe (-no_obstruction_aware) with macro clustering 2/150 (nk_h3).",
   "extra_paths": [
    "src",
    "results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json",
@@ -173,6 +174,7 @@
   "views_to": "physical/ref_tile/qfd_port_tiles_tp8_s14o/views",
   "record_to": "results/rtl/ref_tile/qfd_port_tiles_tp8_s14o"
  },
+ "signal_max_layer": "M7",
  "children": [],
  "inter": []
 }

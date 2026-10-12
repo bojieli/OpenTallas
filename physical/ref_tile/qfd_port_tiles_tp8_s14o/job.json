@@ -1,14 +1,14 @@
 {
- "name": "qfd_port_tiles_tp8_s14o-v2-ed9a37b29",
+ "name": "qfd_port_tiles_tp8_s14o-v3-COMMIT",
  "block": "ot_qwen_slab_port_group",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8/par-port",
- "purpose": "qwen-tp8 (results/arch/qwen_tp8_1012 ELEMENT_IMPACT qfd_port_tiles_*): the slab port group at the TP8 cut, GT 3072, GID 47 (the last of 48 groups = 6 slabs x 8, the largest group constant; other GIDs differ only in constant multiplier/adder terms), s14o parameters of the closed TP4 slab_s14o_lvt-95725fb69tt; same outline 777.576 x 455.76 and faces (res_in/p_/o_/am_ east, bw_/tw_ west), 16 scale banks (TP8 image uses 7: results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json); reference tile flow",
+ "purpose": "qwen-tp8 (results/arch/qwen_tp8_1012 ELEMENT_IMPACT qfd_port_tiles_*): the slab port group at the TP8 cut, GT 3072, GID 47 (the last of 48 groups = 6 slabs x 8, the largest group constant; other GIDs differ only in constant multiplier/adder terms), s14o parameters of the closed TP4 slab_s14o_lvt-95725fb69tt; same outline 777.576 x 455.76 and faces (res_in/p_/o_/am_ east, bw_/tw_ west), 16 scale banks (TP8 image uses 7: results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json); reference tile flow | v3 (qwen-tp8/tiles 2026-10-12): v2 EARLY_FAIL_HOLD stalled at FF hold -55.5 on u_rom/addr_in with SS setup -51 at CTS: the 16 ROM clock pins hang on a separate wire-dominated macro tree (avg sink wire 1,042 um on M2-M6, depth 9) while the 25k flops sit on a 14-16 level buffer tree with 370 ps latency spread (601-972 ps), so ROM-vs-relay/capture-flop skew moves across corners (SS: ROM early -> rd_out->cap setup; FF: ROM late -> addr hold). Structural fix: route as the die contract slot allows (sp_port_tiles signal_max M8; TP4 closure routed M2-M8): PG M7 stripes, signals M2-M7 so the long clock trunks leave thin M2-M6; TritonCTS as the closed TP4 recipe (-no_obstruction_aware) with macro clustering 2/150 (nk_h3).",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-qwen-tp8-par-port",
-  "commit": "ed9a37b29",
+  "commit": "COMMIT",
   "extra_paths": [
    "src",
    "results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json",
@@ -31,7 +31,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_slab_port_group rtl/physical/ot_qwen_slab_port_group.sv rtl/common/ot_meso_fifo.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qwen_slab_port_group #(.MUL_LAT(7), .BW_FIFO(0), .OREG(1), .MUL_KCP(1), .IN_STAGE(1), .AM_SPLIT(1), .S5_CTL(1), .SCALE_PAIR(1), .GT(3072), .GID(47)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_slab_port_group.sv rtl/common/ot_meso_fifo.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -146,7 +146,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_port_tiles_tp8_s14o/qfd_port_tiles_tp8_s14o-v2-ed9a37b29"
+   "to": "results/rtl/ref_tile/qfd_port_tiles_tp8_s14o/qfd_port_tiles_tp8_s14o-v3-COMMIT"
   }
  ],
  "cycles_added": 0,
