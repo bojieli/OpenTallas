@@ -19,20 +19,30 @@ sys.path.insert(0, str(C.ROOT / 'tools'))
 import dshbm_matched_sm_seq as MS  # noqa: E402
 
 NSM = 2
+DS = False
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default='/tmp/hgi_sme2e_tb')
-    out = Path(ap.parse_args().out)
+    ap.add_argument('--ds', action='store_true', help='add the DS block-dot (FP8 / FP4) cases')
+    a_ = ap.parse_args()
+    out = Path(a_.out)
+    global DS
+    DS = a_.ds
     out.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(31)
     cases, recs, vmi, vme, lines = [], [], [], [], {}
     line_cursor = 1000
-    shapes = [(3, 512, 7, 1), (3, 1024, 16, 3), (3, 4096, 3, 1), (3, 512, 1, 2), (0, 600, 5, 2), (0, 2048, 2, 8),
-              (0, 512, 9, 1)]
-    for pf, K, M, P in shapes:
-        Gn = -(-K // 512)
+    # (fmt, K, M, P, O BF16): fmt 3 INT8 / 0 BF16 (Qwen class), 1 FP8 / 2 FP4 block-dot (DS: x quantised by the
+    # x-load, hgi-1010/d), O BF16 = the DS records' output format (the publication rounds; hgi_sim: to_bf16(csum))
+    shapes = [(3, 512, 7, 1, 0), (3, 1024, 16, 3, 0), (3, 4096, 3, 1, 0), (3, 512, 1, 2, 0), (0, 600, 5, 2, 0),
+              (0, 2048, 2, 8, 0), (0, 512, 9, 1, 0)]
+    if DS:
+        shapes += [(1, 1024, 7, 1, 1), (1, 4096, 5, 2, 1), (2, 2048, 6, 1, 1), (2, 4096, 3, 3, 0), (1, 7168, 4, 1, 1),
+                   (2, 1024, 2, 8, 1), (1, 96, 3, 1, 0)]
+    for pf, K, M, P, obf in shapes:
+        Gn = -(-K // {0: 512, 3: 512, 1: 1024, 2: 2048}[pf])
         lpr = (4 if pf == 3 else 8) * Gn
         lb = 160 if pf == 3 else 136
         Q = -(-M // NSM)
@@ -49,16 +59,19 @@ def main():
             R = max(0, min(Q, M - s * Q))
             if not R:
                 continue
-            g = MS.gen_op('v41_int8' if pf == 3 else 'v41_bf16', R, K, 8, rng, X=X)
+            g = MS.gen_op({3: 'v41_int8', 0: 'v41_bf16', 1: 'v41_fp8', 2: 'v41_fp4'}[pf], R, K, 8, rng, X=X)
             assert len(g['lines']) == R * lpr, (len(g['lines']), R, lpr)
             for i, w in enumerate(g['lines']):
                 lines[line0 + s * Q * lpr + i] = int(w)
             for p in range(P):
                 for r in range(R):
-                    vexp[int(obase + p * ostride + s * Q + r)] = int(np.float32(g['gold'][p][r]).view(np.uint32))
+                    v = int(np.float32(g['gold'][p][r]).view(np.uint32))
+                    if obf:                                   # to_bf16 RNE (finite)
+                        v = ((v + 0x7FFF + ((v >> 16) & 1)) >> 16) << 16 & 0xFFFFFFFF
+                    vexp[int(obase + p * ostride + s * Q + r)] = v
         A = C.SV.mdesc(space=1, fmt=0, base=int(abase), n=K, m=P, stride=int(astride))
-        B = C.SV.mdesc(space=0, fmt=4 if pf == 3 else 1, base=line0 * lb, n=K, m=M, stride=lpr * lb)
-        O = C.SV.mdesc(space=1, fmt=0, base=int(obase), n=M, m=P, stride=int(ostride))
+        B = C.SV.mdesc(space=0, fmt={3: 4, 0: 1, 1: 2, 2: 3}[pf], base=line0 * lb, n=K, m=M, stride=lpr * lb)
+        O = C.SV.mdesc(space=1, fmt=1 if obf else 0, base=int(obase), n=M, m=P, stride=int(ostride))
         h = C.SV.header(1, 0, opnd=0b10011, param=pf | (P - 1) << 2)
         cases.append((len(recs), 1, len(vmi), len(vin), len(vme), len(vexp)))
         recs.append(h | A << 128 | B << 384 | O << 640 | K << 896 | K << 917)

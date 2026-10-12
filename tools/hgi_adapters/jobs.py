@@ -42,8 +42,10 @@ UNITS = {
               'run_small.sh mover (HGI_MOVER: DMA adapter + mover (F6 sector engine + serial engine) on the real HGI VM + '
               'kport HBM model: CF-IDXD / CF-KV x 3 exact + 60 random LOAD / STORE over every format; MUT_RNE FAIL; '
               'MUT 2 (sector engine drops a partial row-end sector) FAIL)'),
-    'xload': ('ot_hgi_sm_xload', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv'], (520, 520), (640, 420),
-              'run_small.sh sm_e2e (HGI_SM_E2E: record -> adapter -> x-load -> 2 real smh -> publication -> real VM; MUT_T FAIL)'),
+    'xload': ('ot_hgi_sm_xload', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv', 'rtl/hdc/v41/ot_hdc_actquant.sv',
+                                  'rtl/hdc/ot_hdc_fpu.sv', 'rtl/hdc/ot_hdc_delay.sv'], (520, 520), (640, 420),
+              'run_small.sh sm_e2e (HGI_SM_E2E: record -> adapter -> x-load (FP32 / BF16 / FP8 / FP4 block-dot) -> 2 real smh '
+              '-> publication -> real VM; MUT_T / MUT_BD FAIL)'),
     'pub': ('ot_hgi_sm_pub', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv'], (700, 700), (860, 560),
             'run_small.sh sm_e2e (HGI_SM_E2E; MUT_ROW FAIL)'),
     'hc': ('ot_hgi_hc_record', [f'{A}/ot_hgi_hc_record.sv'], (200, 200), (260, 180),

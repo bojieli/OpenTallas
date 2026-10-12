@@ -15,6 +15,9 @@
 // O VM: O.base + p O.stride 8-aligned is NOT required.  O STREAM (space 2, the Qwen head: SM -> SU stream 0): every
 // result (slot p, global row g) leaves as one STREAM 0 beat {s0_v, s0_idx = p M + g, s0_data} through a SQ-entry FIFO,
 // one beat an edge, in arrival order (the SU unit lands beats by index, so order is free); overrun faults.
+// O.fmt BF16 (pub_bf16, hgi-1010/d: the DS block-dot records' output, hgi_sim SM: out = to_bf16(csum)): each word is
+// rounded to BF16 (RNE, NaN quieted, the golden to_bf16) as it leaves for VM / STREAM, stored as the BF16-valued FP32
+// word (VM words are FP32); FP32 O words pass unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_sm_pub #(
     parameter integer NSM = 32,
@@ -32,6 +35,7 @@ module ot_hgi_sm_pub #(
     input  wire [19:0]        pub_m,
     input  wire [12:0]        pub_q,
     input  wire [3:0]         pub_p,
+    input  wire               pub_bf16,      // hgi-1010/d: O.fmt = BF16: every published word is to_bf16 (RNE) of the sum
     output reg                pub_done,
     output reg                pub_fault,
     input  wire [NSM-1:0]     sm_rv,
@@ -49,6 +53,18 @@ module ot_hgi_sm_pub #(
     // registered result capture (the SM's output register drives a long wire: land it first)
     reg [NSM-1:0] rv_q; reg [11:0] rr_q [0:NSM-1]; reg [NC*32-1:0] rd_q [0:NSM-1];
     integer s, c;
+    reg obf;
+    function automatic [31:0] rb(input [31:0] x, input en);     // to_bf16 (RNE), as a BF16-valued FP32 word
+        reg [31:0] r;
+        begin
+            if (!en) rb = x;
+            else if (x[30:23] == 8'hFF && x[22:0] != 0) rb = {x[31:16] | 16'h0040, 16'd0};
+            else begin r = x + 32'h7FFF + {31'd0, x[16]}; rb = {r[31:16], 16'd0}; end
+        end
+    endfunction
+    function automatic [255:0] rb8(input [255:0] x, input en);
+        integer q; for (q = 0; q < 8; q = q + 1) rb8[32*q +: 32] = rb(x[32*q +: 32], en);
+    endfunction
     always @(posedge clk) for (s = 0; s < NSM; s = s + 1) begin rv_q[s] <= sm_rv[s]; rr_q[s] <= sm_rrow[s*12 +: 12];
                                                                 rd_q[s] <= sm_rdata[s*NC*32 +: NC*32]; end
     // per-SM rows expected / received; all_rows registered
@@ -132,7 +148,7 @@ module ot_hgi_sm_pub #(
             if (pub_v && pub_rdy) begin
                 if (!(pub_space == 2'd1 || pub_space == 2'd2) || pub_p == 4'd0 || pub_p > NC) pub_fault <= 1'b1;
                 else begin
-                    busy <= 1'b1; sm_m <= (pub_space == 2'd2); all_rows <= 1'b0;
+                    busy <= 1'b1; sm_m <= (pub_space == 2'd2); all_rows <= 1'b0; obf <= pub_bf16;
                     ob <= pub_base[17:0]; ost <= pub_stride[17:0]; mm <= pub_m; qq <= pub_q; pp <= pub_p;
                     for (s = 0; s < NSM; s = s + 1) begin : nd
                         reg [19:0] r0; r0 = s * pub_q;
@@ -144,7 +160,7 @@ module ot_hgi_sm_pub #(
             for (s = 0; s < NSM; s = s + 1) if (busy && rv_q[s]) recv[s] <= recv[s] + 20'd1;
             // the granted entry: a STREAM beat out, or a flush into the FIFO (one write an edge)
             if (take) begin
-                if (sm_m) begin s0_v <= 1'b1; {s0_idx, s0_data} <= shd_v[gk*52 +: 52]; end
+                if (sm_m) begin s0_v <= 1'b1; s0_idx <= shd_v[gk*52 + 32 +: 20]; s0_data <= rb(shd_v[gk*52 +: 32], obf); end
                 else begin qsec[qt] <= fsec_v[gk*15 +: 15]; qdat[qt] <= fdat_v[gk*256 +: 256]; qmsk[qt] <= fmsk_v[gk*8 +: 8]; end
             end
             // drain: the lowest free client takes the head (one pop an edge)
@@ -152,7 +168,7 @@ module ot_hgi_sm_pub #(
                 reg taken; taken = 1'b0;
                 for (c = 0; c < NPC; c = c + 1)
                     if (!taken && !cbusy[c] && qn != 0) begin
-                        vmq[c*338 +: 338] <= {1'b1, 1'b1, 12'd0, qsec[qh], 5'd0, qdat[qh],
+                        vmq[c*338 +: 338] <= {1'b1, 1'b1, 12'd0, qsec[qh], 5'd0, rb8(qdat[qh], obf),
                                               {{4{qmsk[qh][7]}}, {4{qmsk[qh][6]}}, {4{qmsk[qh][5]}}, {4{qmsk[qh][4]}},
                                                {4{qmsk[qh][3]}}, {4{qmsk[qh][2]}}, {4{qmsk[qh][1]}}, {4{qmsk[qh][0]}}}, 16'h5042};
                         cbusy[c] <= 1'b1; taken = 1'b1;

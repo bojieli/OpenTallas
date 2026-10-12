@@ -10,6 +10,11 @@ module tb_hgi_sm_e2e;
 `else
     localparam integer MT = 0;
 `endif
+`ifdef MUT_BD
+    localparam integer MB = 1;
+`else
+    localparam integer MB = 0;
+`endif
 `ifdef MUT_ROW
     localparam integer MW = 1;
 `else
@@ -36,23 +41,23 @@ module tb_hgi_sm_e2e;
     wire rec_rdy, done, fault, halted;
     wire x_v, x_rdy, x_done, x_fault, pub_v, pub_rdy, pub_done, pub_fault;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
-    wire [1:0] x_space, x_fmt, pub_space; wire [19:0] pub_m; wire [12:0] pub_q;
+    wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret;
     ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
         .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
         .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done),
         .x_fault(x_fault), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
-        .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_done(pub_done), .pub_fault(pub_fault),
+        .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done), .pub_fault(pub_fault),
         .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd), .sm_ret(sm_ret));
     wire xw_en; wire [6:0] xw_addr, xw_grp; wire [2047:0] xw_data;
     wire [2*338-1:0] xq, pq; wire [2*274-1:0] xr, pr; wire [273:0] tr; reg [337:0] tq = 0;
-    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(x_fault),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .vmq(xq), .vmr(xr));
     wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
     ot_hgi_sm_pub #(.NSM(NSM), .NPC(2), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
-        .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p),
+        .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
         .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr));
     ot_hgi_vm_unit #(.NC(5)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
     genvar s;
@@ -60,6 +65,28 @@ module tb_hgi_sm_e2e;
         wire [CW-1:0] c = sm_cmd[s*CW +: CW];
         wire start_ready, d_ready, req_v, fault_s, arrive, released, busy; wire [31:0] req_addr; wire [9:0] req_tag;
         reg rsp_v = 0; reg [9:0] rsp_tag; reg [1087:0] rsp_data;
+`ifdef VIA_LEAF
+        // hgi-1010/d: the die form -- the adapter's command crosses the control leaf (ot_hgi_sm_leaf_cp -> LD register
+        // stages = the trunk / cdist stations -> ot_hgi_sm_leaf_el) and the acks come back over LD stages
+        localparam integer LD = 7 + s;
+        wire [111:0] dn0, up0; reg [111:0] dnp [0:LD-1]; reg [111:0] upp [0:LD-1]; integer z;
+        always @(posedge clk) begin dnp[0] <= dn0; upp[0] <= up0; for (z = 1; z < LD; z = z + 1) begin dnp[z] <= dnp[z-1]; upp[z] <= upp[z-1]; end end
+        wire l_start, l_dv, l_rel, l_cg; wire [8:0] l_rows; wire [15:0] l_c; wire [7:0] l_g; wire l_gs; wire [1:0] l_fmt;
+        wire [6:0] l_xb; wire [31:0] l_db; wire [23:0] l_dl;
+        ot_hgi_sm_leaf_cp #(.MUT_NOCREDIT(`ifdef MUT_LEAF 1 `else 0 `endif)) u_lc (.clk(clk), .rst_n(rst_n), .cmd(c),
+            .cg_en(1'b1), .fault(fault_s), .ret(sm_ret[s*4 +: 4]), .dn(dn0), .up(upp[LD-1]));
+        ot_hgi_sm_leaf_el #(.RW(9)) u_le (.clk(clk), .rst_n(rst_n), .dn(dnp[LD-1]), .up(up0), .start(l_start),
+            .start_ready(start_ready), .op_rows(l_rows), .op_c(l_c), .op_g(l_g), .op_gs(l_gs), .op_fmt(l_fmt), .op_xb(l_xb),
+            .busy(busy), .d_valid(l_dv), .d_ready(d_ready), .d_base(l_db), .d_lines(l_dl), .arrive(arrive),
+            .release_in(l_rel), .released(released), .cg_en(l_cg));
+        ot_hbm_accel_smh #(.ENABLE_INT8(1), .PIPE_INT8(1), .RMAX(256)) u_sm (.clk(clk), .rst_n(rst_n), .start(l_start),
+            .start_ready(start_ready), .op_rows(l_rows), .op_c(l_c), .op_g(l_g), .op_gs(l_gs),
+            .op_fmt(l_fmt), .op_xb(l_xb), .busy(busy), .d_valid(l_dv), .d_ready(d_ready), .d_base(l_db),
+            .d_lines(l_dl), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr), .req_tag(req_tag), .rsp_v(rsp_v),
+            .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data),
+            .rv(rv[s]), .rrow(rrow[s*12 +: 12]), .rdata(rdata[s*256 +: 256]), .fault(fault_s), .arrive(arrive),
+            .release_in(l_rel), .released(released));
+`else
         assign sm_ret[s*4 +: 4] = {fault_s, arrive, d_ready, start_ready};
         ot_hbm_accel_smh #(.ENABLE_INT8(1), .PIPE_INT8(1), .RMAX(256)) u_sm (.clk(clk), .rst_n(rst_n), .start(c[0]),
             .start_ready(start_ready), .op_rows(c[9:1]), .op_c(c[29:14]), .op_g(c[37:30]), .op_gs(c[38]),
@@ -68,6 +95,7 @@ module tb_hgi_sm_e2e;
             .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data),
             .rv(rv[s]), .rrow(rrow[s*12 +: 12]), .rdata(rdata[s*256 +: 256]), .fault(fault_s), .arrive(arrive),
             .release_in(c[105]), .released(released));
+`endif
         // line memory: in-order responses, latency 6
         reg [31:0] qa [0:255]; reg [9:0] qt [0:255]; integer qh = 0, qtl = 0; integer qc [0:255];
         always @(posedge clk) begin

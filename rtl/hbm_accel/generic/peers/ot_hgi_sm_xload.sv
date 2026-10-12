@@ -10,13 +10,22 @@
 //   beat b (xw_grp) of address a carries fragment bits [b x 2,048 +: 2,048], b < ceil(P x XC / 2,048) (= op_xb).
 // One VM sector = the 8 t values of one lane j, so a group g is 64 x P sector reads into a P x 64 x 8 BF16 tile, then
 // 8 x op_xb beats.  to_bf16 = RNE (hdc_golden; the golden of SM.MATVEC fmt 0 / 3 rounds x to BF16).
-// Refusals (x_fault): fmt 1 / 2 (the DS block-dot x is quant_fp8 codes + block exponents: the activation quantiser,
-// not this loader), A not VM (STREAM x enters from the SU stream, not here), A.base / A.stride not 8-word aligned.
+// BLOCK-DOT x (fmt 1 FP8 / fmt 2 FP4 weights; hgi-1010/d 2026-10-10, the DS activation path): x is quantised HERE,
+//   exactly as the golden's linear_q (hdc_golden_v41.quant_fp8: per 32-block amax, e = ceil_log2(amax / 448), E4M3
+//   codes) by the qualified r25 activation quantiser ot_hdc_actquant (one block an edge, 13 deep), and laid out as the
+//   smh block-dot fragment (tools/dshbm_matched_sm_seq.gen_op): lane j (< LA = 4 FP8 / 8 FP4) of column p at bit
+//   p x XC + 266 j holds block b = (g LA + j) 8 + t: its 32 codes (8 b each, from bit 0) then its exponent (10 b,
+//   two's complement); lanes past the row's K / 32 blocks are 0.  Per fragment address (g, t) the loader reads the
+//   P x LA blocks (4 sectors each, two blocks assembling at a time on the NXC clients), quantises them into a
+//   P x 2,128-b register file (cleared per address), then sends the address's beats (a beat may span two slots).
+// Refusals (x_fault): A not VM (STREAM x enters from the SU stream, not here), A.base / A.stride not 8-word aligned,
+//   block-dot K not a multiple of 32, a non-finite x element in a block-dot block (the quantiser's fault).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_sm_xload #(
     parameter integer NXC = 4,            // VM packet clients (reads in flight)
     parameter integer PMAX = 8,
-    parameter integer MUT_T = 0           // mutant: lane j takes t from the wrong half (k = (g 64 + j) 8 + (7 - t))
+    parameter integer MUT_T = 0,          // mutant: lane j takes t from the wrong half (k = (g 64 + j) 8 + (7 - t))
+    parameter integer MUT_BD = 0          // mutant: a block-dot block lands in the neighbouring lane (j ^ 1)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -38,6 +47,8 @@ module ot_hgi_sm_xload #(
     input  wire [NXC*274-1:0] vmr
 );
     localparam integer XC = 3152, XOFF = 2128;
+    localparam integer NBMAX = (PMAX * XC + 2047) / 2048;
+    localparam integer NBMAX_Q = NBMAX;
     reg busy; reg [17:0] base; reg [20:0] kk; reg [3:0] pp; reg [17:0] st;
     reg [7:0] gn, g; reg [3:0] p_rd; reg [6:0] j_rd; reg [9:0] outst; reg [3:0] t; reg [6:0] b; reg [6:0] nb;
     // STORAGE (register file, synthesis-friendly): 8 t-banks, each PMAX words of 1,024 b = one slot's 64 lanes x BF16;
@@ -57,6 +68,25 @@ module ot_hgi_sm_xload #(
     end
     wire [10:0] got_n = got;
     reg [1:0] ph;                          // 0 read, 1 emit, 2 done
+    // ---- block-dot path state
+    reg bd; reg [3:0] la; reg [15:0] nbk;  // fmt 1 / 2; lanes a fragment column; K / 32 blocks
+    reg [1:0] bph;                         // 0 off, 1 read + quantise address (g, t), 2 emit its beats
+    reg [3:0] bp; reg [3:0] bj; reg [1:0] bs; reg asl;   // issue cursor: column, lane, sector, assembly slot
+    reg [15:0] bq_exp, bq_got;             // blocks of this address expected / quantised
+    reg bq_iss_done; reg bflt;
+    reg [1023:0] ab [0:1]; reg [2:0] acnt [0:1]; reg [3:0] ap [0:1]; reg [3:0] aj [0:1]; reg [1:0] aact;
+    reg [2127:0] qb [0:PMAX-1];
+    wire        aq_vo, aq_f; wire [255:0] aq_q; wire signed [9:0] aq_e; wire [511:0] aq_y;
+    reg         aq_v; reg [1023:0] aq_x; reg [7:0] aq_tg; reg [7:0] tgf [0:15]; reg [3:0] tgh, tgt;
+    ot_hdc_actquant u_aq (.clk(clk), .rst_n(rst_n), .v(aq_v), .fp4(1'b0), .x(aq_x), .vo(aq_vo), .q(aq_q), .e(aq_e),
+                          .y(aq_y), .fault(aq_f));
+    // the block-dot fragment of one address: column p's lanes at p XC (2,128 b), the rest 0; beat b = bits [2,048 b +: 2,048]
+    wire [PMAX*XC-1:0] fq;
+    genvar gq;
+    generate for (gq = 0; gq < PMAX; gq = gq + 1) begin : g_fq
+        assign fq[gq*XC +: XC] = {{(XC-2128){1'b0}}, qb[gq]};
+    end endgenerate
+    wire [(NBMAX_Q*2048)-1:0] fqx = {{(NBMAX_Q*2048 - PMAX*XC){1'b0}}, fq};
     assign x_rdy = !busy;
     reg [273:0] vr [0:NXC-1];
     integer c;
@@ -71,7 +101,7 @@ module ot_hgi_sm_xload #(
     endfunction
     // beat b of fragment (g, t): the fragment holds slot p's lanes at [p XC + XOFF, + 1,024); slot blocks are 3,152
     // apart with a 2,128-b gap > the 2,048-b beat, so a beat overlaps AT MOST ONE slot: a static (p, offset) per b
-    localparam integer NBMAX = (PMAX * XC + 2047) / 2048;
+
     function automatic integer bslot(input integer bb);       // the slot a beat overlaps, -1 none
         integer pp2; bslot = -1;
         for (pp2 = 0; pp2 < PMAX; pp2 = pp2 + 1)
@@ -108,19 +138,30 @@ module ot_hgi_sm_xload #(
     integer w;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vmq <= 0; cbusy <= 0; ph <= 0;
-                          hv <= 0; e_v <= 1'b0; end
+                          hv <= 0; e_v <= 1'b0; tgh <= 4'd0; tgt <= 4'd0; aq_v <= 1'b0; bph <= 2'd0; bd <= 1'b0; end
         else begin
             x_done <= 1'b0; xw_en <= 1'b0; e_v <= 1'b0;
             // emission stage 2: the registered slot word -> the beat
-            if (e_v) begin xw_en <= 1'b1; xw_addr <= e_addr; xw_grp <= b_q; xw_data <= e_ok ? beat : 2048'd0; end
+            if (e_v) begin xw_en <= 1'b1; xw_addr <= e_addr; xw_grp <= b_q;
+                xw_data <= bd ? fqx[b_q*2048 +: 2048] : e_ok ? beat : 2048'd0; end
             for (c = 0; c < NXC; c = c + 1) vmq[c*338 + 337] <= 1'b0;
             if (x_v && x_rdy) begin
-                if (x_fmt == 2'd1 || x_fmt == 2'd2 || x_space != 2'd1 || |x_base[2:0] || |x_stride[2:0] || x_p > PMAX ||
-                    x_p == 4'd0) x_fault <= 1'b1;
+                if (x_space != 2'd1 || |x_base[2:0] || |x_stride[2:0] || x_p > PMAX || x_p == 4'd0 ||
+                    ((x_fmt == 2'd1 || x_fmt == 2'd2) && (|x_n[4:0] || x_n == 21'd0))) x_fault <= 1'b1;
                 else begin
                     busy <= 1'b1; base <= x_base[17:0]; kk <= x_n; pp <= x_p; st <= x_stride[17:0];
                     gn <= ((x_n - 21'd1) >> 9) + 8'd1; g <= 8'd0; p_rd <= 4'd0; j_rd <= 7'd0; got <= 11'd0; ph <= 2'd0;
                     nb <= ({12'd0, x_p} * 16'd3152 + 16'd2047) >> 11;    // 16 b: P x XC reaches 25,216
+                    bd <= (x_fmt == 2'd1 || x_fmt == 2'd2); la <= (x_fmt == 2'd2) ? 4'd8 : 4'd4;
+                    nbk <= x_n[20:5]; bflt <= 1'b0;
+                    if (x_fmt == 2'd1 || x_fmt == 2'd2) begin
+                        // Gn = ceil(ceil(nb / 8) / LA) groups: FP8 ceil(K / 1,024), FP4 ceil(K / 2,048)
+                        gn <= (x_fmt == 2'd2) ? ((x_n - 21'd1) >> 11) + 8'd1 : ((x_n - 21'd1) >> 10) + 8'd1;
+                        ph <= 2'd3; bph <= 2'd1; t <= 4'd0; bp <= 4'd0; bj <= 4'd0; bs <= 2'd0; asl <= 1'b0;
+                        bq_exp <= 16'd0; bq_got <= 16'd0; bq_iss_done <= 1'b0; aact <= 2'b00; acnt[0] <= 3'd0;
+                        acnt[1] <= 3'd0;
+                        for (w = 0; w < PMAX; w = w + 1) qb[w] <= 2128'd0;
+                    end
                 end
             end
             if (busy && ph == 2'd0) begin
@@ -169,7 +210,80 @@ module ot_hgi_sm_xload #(
                     t <= t + 4'd1;
                 end else b <= b + 7'd1;
             end
-            if (busy && ph == 2'd2 && !e_v) begin busy <= 1'b0; x_done <= 1'b1; ph <= 2'd0; end   // last beat out
+            // ---------------- block-dot: read + quantise the P x LA blocks of address (g, t), then emit its beats
+            aq_v <= 1'b0;
+            if (aq_v) begin tgf[tgt] <= aq_tg; tgt <= tgt + 4'd1; end      // the quantiser is in order: tags ride
+            if (busy && ph == 2'd3 && bph == 2'd1) begin
+                begin : bdi
+                    reg found; integer cf; reg [31:0] wd; reg [15:0] blk; reg blk_ok;
+                    found = 1'b0; cf = 0;
+                    for (c = NXC - 1; c >= 0; c = c - 1) if (!cbusy[c]) begin found = 1'b1; cf = c; end
+                    blk = ({8'd0, g} * {12'd0, la} + {12'd0, bj}) * 16'd8 + {12'd0, t};
+                    blk_ok = blk < nbk;
+                    wd = {14'd0, base} + bp * {14'd0, st} + {blk, 5'd0} + {bs, 3'd0};
+                    // issue the next sector of block (bp, bj) into assembly slot bslot (free); a block past K / 32
+                    // is skipped (its lanes stay 0)
+                    if (!bq_iss_done && bp < pp) begin
+                        if (!blk_ok) begin
+                            if (bj == la - 4'd1) begin bj <= 4'd0; bp <= bp + 4'd1; end else bj <= bj + 4'd1;
+                        end else if (found && !aact[asl]) begin
+                            vmq[cf*338 +: 338] <= {1'b1, 1'b0, wd[29:3], 5'd0, 256'd0, 32'd0,
+                                                   {5'd0, asl, bs, bp, bj}};
+                            cbusy[cf] <= 1'b1;
+                            if (bs == 2'd3) begin
+                                bs <= 2'd0; aact[asl] <= 1'b1; ap[asl] <= bp; aj[asl] <= bj; asl <= !asl;
+                                bq_exp <= bq_exp + 16'd1;
+                                if (bj == la - 4'd1) begin bj <= 4'd0; bp <= bp + 4'd1; end else bj <= bj + 4'd1;
+                            end else bs <= bs + 2'd1;
+                        end
+                    end else bq_iss_done <= 1'b1;
+                end
+                for (c = 0; c < NXC; c = c + 1)                                  // hold every arriving response
+                    if (cbusy[c] && !hv[c] && vr[c][273] && !vr[c][256]) begin hv[c] <= 1'b1; hdat[c] <= vr[c]; end
+                if (lsel_v) begin : bland                                        // land one held sector an edge
+                    reg sl_; reg [1:0] ss_;
+                    sl_ = hdat[lsel][267]; ss_ = hdat[lsel][266:265];        // tag {slot, sector, p, j}
+                    ab[sl_][256*ss_ +: 256] <= hdat[lsel][255:0];
+                    acnt[sl_] <= acnt[sl_] + 3'd1;
+                    hv[lsel] <= 1'b0; cbusy[lsel] <= 1'b0;
+                end
+                // a complete block -> the quantiser (older slot first: slots complete in issue order)
+                begin : bq
+                    reg qs; reg qv;
+                    qv = 1'b0; qs = 1'b0;
+                    if (aact[!asl] && acnt[!asl] == 3'd4) begin qv = 1'b1; qs = !asl; end
+                    else if (aact[asl] && acnt[asl] == 3'd4) begin qv = 1'b1; qs = asl; end
+                    if (qv) begin
+                        aq_v <= 1'b1; aq_x <= ab[qs]; aq_tg <= {ap[qs], aj[qs]}; aact[qs] <= 1'b0; acnt[qs] <= 3'd0;
+                        if (lsel_v && hdat[lsel][267] == qs) acnt[qs] <= 3'd1;   // (cannot happen: slot full)
+                    end
+                end
+                if (bq_iss_done && bq_got == bq_exp && !aact[0] && !aact[1] && !aq_v) begin
+                    bph <= 2'd2; b <= 7'd0;
+                end
+            end
+            if (busy && ph == 2'd3 && aq_vo) begin                             // the quantiser's output lands
+                qb[tgf[tgh][7:4]][266*(tgf[tgh][3:0] ^ MUT_BD[3:0]) +: 266] <= {aq_e, aq_q}; tgh <= tgh + 4'd1;
+                bq_got <= bq_got + 16'd1;
+                if (aq_f) bflt <= 1'b1;
+            end
+            if (busy && ph == 2'd3 && bph == 2'd2) begin                       // emit the address's beats
+                e_v <= 1'b1; e_addr <= {g[3:0], t[2:0]}; b_q <= b;
+                if (b == nb - 7'd1) begin
+                    b <= 7'd0;
+                    for (w = 0; w < PMAX; w = w + 1) qb[w] <= 2128'd0;
+                    bp <= 4'd0; bj <= 4'd0; bs <= 2'd0; bq_exp <= 16'd0; bq_got <= 16'd0; bq_iss_done <= 1'b0;
+                    if (t == 4'd7) begin
+                        t <= 4'd0;
+                        if (g == gn - 8'd1) begin ph <= 2'd2; bph <= 2'd0; end
+                        else begin g <= g + 8'd1; bph <= 2'd1; end
+                    end else begin t <= t + 4'd1; bph <= 2'd1; end
+                end else b <= b + 7'd1;
+            end
+            if (busy && ph == 2'd2 && !e_v) begin                              // last beat out
+                busy <= 1'b0; ph <= 2'd0; bd <= 1'b0;
+                if (bflt) x_fault <= 1'b1; else x_done <= 1'b1;
+            end
         end
     end
 endmodule
