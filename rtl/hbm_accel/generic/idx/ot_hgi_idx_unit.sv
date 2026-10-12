@@ -42,7 +42,8 @@ module ot_hgi_idx_unit #(
     // el1011-hbm-idxs (opt-in, default 0 = the packet-client adapter above, unchanged): IXW = 1 runs IDX.INDEX on
     // ot_hgi_idx_index_w, whose VM traffic rides the die's 32-lane VM wide read / write groups (the wr* / ww* ports,
     // ot_hgi_vm_lanestation client format; tie the grants high for a dedicated group).  IXW = 0 ties them off.
-    parameter integer IXW = 0
+    parameter integer IXW = 0,
+    parameter integer IXNL = 8         // IXW lanes (HBM B2 slice-local lane group)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -63,14 +64,14 @@ module ot_hgi_idx_unit #(
     // index-key stream (IKS = 1): the four stacks' svc e beats {payload 127, valid} (ot_hgi_idx_iks_issue); 0 otherwise
     output wire [511:0]  iks_e,
     // VM wide groups (IXW = 1)
-    output wire [32*16-1:0]  wrq,
-    input  wire [31:0]       wrq_cr,
-    input  wire [32*257-1:0] wrr,
+    output wire [IXNL*16-1:0]  wrq,
+    input  wire [IXNL-1:0]     wrq_cr,
+    input  wire [IXNL*257-1:0] wrr,
     output wire              rg_req,
     input  wire              rg_gnt,
-    output wire [32*280-1:0] wwq,
-    input  wire [31:0]       wwq_cr,
-    input  wire [31:0]       wwq_done,
+    output wire [IXNL*280-1:0] wwq,
+    input  wire [IXNL-1:0]     wwq_cr,
+    input  wire [IXNL-1:0]     wwq_done,
     output wire              wg_req,
     input  wire              wg_gnt
 );
@@ -167,7 +168,7 @@ module ot_hgi_idx_unit #(
                    (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && x_iks_ok && x_n_ok;
     generate if (IXW != 0) begin : g_ixw
     assign vmq_x = 338'd0;
-    ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
+    ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0), .NL(IXNL)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
         .keep_en_i(x_keep), .n_i(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank_i(x_rank),
         .pos_i(NGLOB != 0 ? x_newest : rpos), .a_base_i(a_base[17:0]), .b_base_i(dB_b), .c_base_i(dC_b), .o_base_i(o_base[17:0]), .r_base_i(r_base[17:0]),
         .d_base_i(dD_b), .d_stride_i(dD_s), .c_stride_i(dC[105:88]), .c_n_i(dC[59:48]), .has_r_i(has_r), .done(x_done), .fault(x_fault),
