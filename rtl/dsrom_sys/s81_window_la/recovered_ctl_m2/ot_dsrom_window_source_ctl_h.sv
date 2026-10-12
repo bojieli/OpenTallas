@@ -3,7 +3,7 @@
 // landing tiles, wired exactly as the g_land generate of ot_dsrom_window_source_ctl.sv (el1012-wsrc).  Exactness
 // evidence for the die-placed landing cut: tools/dsrom_window_pipeline_gate.py --ctl-leaf 5 --ctl-core compiles
 // ot_wsrc_core_define.sv + ot_dsrom_window_source_ctl.sv (as the core) + this file in place of the monolithic module.
-// MARGIN 3 only.
+// MARGIN 3 only.  s_v / s_tag / s_beat / s_data are dead from MARGIN 2 on and end here (the core has no such pins).
 module ot_dsrom_window_source_ctl #(
     parameter integer MARGIN = 0,
     parameter bit REFILL_OWNER_SAFE = 0,
@@ -123,11 +123,7 @@ module ot_dsrom_window_source_ctl #(
         .m_wdata(m_wdata),
         .m_wstrb(m_wstrb),
         .m_wr_done(m_wr_done),
-        .s_v(s_v),
         .s_rdy(s_rdy),
-        .s_tag(s_tag),
-        .s_beat(s_beat),
-        .s_data(s_data),
         .wl_req_v(wl_req_v),
         .wl_req_rdy(wl_req_rdy),
         .wl_req_addr(wl_req_addr),

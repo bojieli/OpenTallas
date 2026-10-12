@@ -162,11 +162,17 @@ module ot_dsrom_window_source_ctl #(
     output wire [1023:0] m_wdata,
     output wire [127:0] m_wstrb,
     input wire [3:0] m_wr_done,
+`ifdef OT_WSRC_CORE
+    // the K-port read response is dead from MARGIN 2 on (w_s_* below are 0; FR / FR_DONE / FR_PIPE unreachable):
+    // the core drops its 1,092 input pins; s_rdy (the writer's) stays a port
+    output wire [3:0] s_rdy,
+`else
     input wire [3:0] s_v,
     output wire [3:0] s_rdy,
     input wire [4*TAGW-1:0] s_tag,
     input wire [15:0] s_beat,
     input wire [1023:0] s_data,
+`endif
     // wide port: client 0 of the stack's ot_dsrom_hbm_wmux
     output wire [NPC-1:0] wl_req_v,
     input wire [NPC-1:0] wl_req_rdy,
@@ -203,6 +209,9 @@ module ot_dsrom_window_source_ctl #(
     input wire merge_fault,
     output wire [31:0] la_load_cycles
 );
+`ifdef OT_WSRC_CORE
+    wire [3:0] s_v = 4'd0; wire [4*TAGW-1:0] s_tag = '0; wire [15:0] s_beat = 16'd0; wire [1023:0] s_data = 1024'd0;
+`endif
     // ---------------- reset (MARGIN: flopped at the pin, asynchronous assert, synchronous release) -----
     wire rst_i;
     generate if (MARGIN) begin : g_rst
@@ -501,7 +510,7 @@ module ot_dsrom_window_source_ctl #(
 `ifdef OT_WSRC_CORE
     generate if (1) begin : g_land_core
 `ifndef SYNTHESIS
-        initial if (MARGIN < 3) $fatal(1, "ot_dsrom_window_source_core: MARGIN 3 only");
+        initial if (MARGIN < 3) $fatal(1, "ot_dsrom_window_source_core: MARGIN 3 only (the dropped s_* response and the landing cut need it)");
 `endif
         assign land_rst_n = rst_g[13:10];
         assign a_v = '0; assign a_tag = '0; assign a_beat = '0; assign a_data = '0;
