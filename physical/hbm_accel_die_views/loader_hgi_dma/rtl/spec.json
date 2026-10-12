@@ -262,46 +262,6 @@
    "class": "open",
    "reason": "OPEN (hbmdie-1011/kvw 10-11): the die DMA write lane is 281 b (AP format {v, ap, sector 15, data, mask}, b/[fp] vmw_dma 8,992); ot_hfd_loader_hgi / ot_hgi_dma_mover have no aperture route yet, so ap = 0 (VM writes only, no DMA -> HC weight aperture). Owner: hgi-1010/b (AP in the mover) + die lead."
   },
-  "die:h[788:789]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:h[787:788]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:qSW[350:351]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:qSE[350:351]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:qNW[350:351]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:qNE[350:351]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:rSW[293:294]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:rSE[293:294]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:rNW[293:294]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
-  "die:rNE[293:294]": {
-   "class": "open",
-   "reason": "r25gqn port drift (pre-existing on main, hbmdie-1011/bind 10-11): the die record widened the loader's native svc endpoint lq 350 -> 351 (qSW/qSE/qNW/qNE) / lr 293 -> 294 (rSW..rNE) and the host port h by one bit each way, but ot_hfd_loader_hgi still has lq 350 / lr 293 / h 788; main's committed wrapper already pads them 0. Owner: svc-ep / die lead (bind or drop the bit)"
-  },
   "die:f_hgi_vmw[0:32]": {
    "class": "open",
    "reason": "OPEN (hbmdie-1011/vmwdone 10-11): the VM per-lane AP stop (ot_hgi_vm_unit wq_rdy, low only while a lane's aperture queue is near full). ot_hgi_dma_mover has no aperture route yet and writes ap = 0 (see the die:t_hgi_vmw ap-bit ties), so the stop never falls for its traffic; the mover must honour it when the AP route lands. Owner: hgi-1010/b (AP in the mover)."
