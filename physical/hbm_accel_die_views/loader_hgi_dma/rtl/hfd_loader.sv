@@ -13,6 +13,7 @@ module hfd_loader (
     input wire [325:0] f_hgi_rgxw1,
     input wire [273:0] f_hgi_vmr,
     input wire [31:0] f_hgi_vmw,
+    input wire [31:0] f_hgi_vmw_done,
     inout wire [788:0] h,
     output wire [350:0] qNE,
     output wire [350:0] qNW,
@@ -87,6 +88,11 @@ module hfd_loader (
     reg [31:0] i2_f_hgi_vmw; always @(posedge clk) i2_f_hgi_vmw <= i1_f_hgi_vmw;
     reg [31:0] i3_f_hgi_vmw; always @(posedge clk) i3_f_hgi_vmw <= i2_f_hgi_vmw;
     reg [31:0] i_f_hgi_vmw; always @(posedge clk) i_f_hgi_vmw <= i3_f_hgi_vmw;
+    reg [31:0] i0_f_hgi_vmw_done; always @(posedge clk) i0_f_hgi_vmw_done <= f_hgi_vmw_done;
+    reg [31:0] i1_f_hgi_vmw_done; always @(posedge clk) i1_f_hgi_vmw_done <= i0_f_hgi_vmw_done;
+    reg [31:0] i2_f_hgi_vmw_done; always @(posedge clk) i2_f_hgi_vmw_done <= i1_f_hgi_vmw_done;
+    reg [31:0] i3_f_hgi_vmw_done; always @(posedge clk) i3_f_hgi_vmw_done <= i2_f_hgi_vmw_done;
+    reg [31:0] i_f_hgi_vmw_done; always @(posedge clk) i_f_hgi_vmw_done <= i3_f_hgi_vmw_done;
     reg [788:0] i0_h; always @(posedge clk) i0_h <= h;
     reg [788:0] i1_h; always @(posedge clk) i1_h <= i0_h;
     reg [788:0] i2_h; always @(posedge clk) i2_h <= i1_h;
@@ -251,7 +257,7 @@ module hfd_loader (
     assign w_ld_dma_vr2r = {i_f_dma_vr2r[8256:0]};
     assign w_ld_dma_dq_rdy = 4'd0;
     assign w_ld_dma_dd = 8640'd0;
-    assign w_ld_dma_vmw_done = {i_f_hgi_vmw[31:0]};
+    assign w_ld_dma_vmw_done = {i_f_hgi_vmw_done[31:0]};
     assign w_ld_rgx_q = {i_f_hgi_rgxq1[37:0], i_f_hgi_rgxq0[37:0]};
     assign w_ld_rgx_w = {i_f_hgi_rgxw1[325:0], i_f_hgi_rgxw0[325:0]};
     assign w_ld_fmk_q = {i_f_hgi_fmkq[37:0]};

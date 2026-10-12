@@ -9,6 +9,7 @@
     input wire [325:0] f_hgi_rgxw1,
     input wire [273:0] f_hgi_vmr,
     input wire [31:0] f_hgi_vmw,
+    input wire [31:0] f_hgi_vmw_done,
     inout wire [788:0] h,
     output wire [350:0] qNE,
     output wire [350:0] qNW,

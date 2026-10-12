@@ -34,6 +34,7 @@
     output wire [2223:0] t_hgi_vmap,
     output wire [18:0] t_hgi_vmstat,
     output wire [64:0] t_hgi_vmw2_coll,
+    output wire [31:0] t_hgi_vmw_done,
     output wire [31:0] t_hgi_vmw_rdy,
     output wire [8259:0] t_lgE_rdn,
     output wire [67:0] t_lgE_wdn,
