@@ -99,7 +99,7 @@ def main():
     M.cfg["cp_ctx_max"] = max(M.cfg.get("cp_ctx_max", 0), 1 << 20)
     M.doorbell(0, POS)
     die = M.dies[0]
-    die.vm[:] = rng.normal(0.0, 1.0, MA.VM_WORDS).astype(F).view(np.uint32)
+    die.vm[:] = rng.normal(0.0, 1.0, die.vm.size).astype(F).view(np.uint32)   # die.vm is the die's VM (MA.VM_WORDS drifted from it)
     keep = set(a.tags.split(',')) if a.tags else None
     units = {'su': ('SU',), 'sfu': ('SFU',), 'both': ('SU', 'SFU')}[a.unit]
     dyn = T.Dyn(POS)

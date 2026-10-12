@@ -52,6 +52,9 @@ RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_
        "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
        "rtl/hdc/v41/ot_hdc_actquant.sv", "rtl/hdc/v41x/ot_dsrom_aq12.sv", "rtl/hdc/v41x/ot_dsrom_divc.sv"]
 TB = "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_master.sv"
+# the hierarchical slab (s81-suhc-hier-1011): control tile + engine tiles on registered chains, same pins
+HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_norm_lg.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_tile.sv",
+        "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 
 
@@ -312,17 +315,18 @@ JOB = re.compile(r"SUJ op=(\d+) kind=(\d+) start=(-?\d+) done=(-?\d+)")
 def cmd_run(a):
     sh = SHAPES[a.shape]
     out = Path(a.out)
-    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}"
+    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + ("_h" if a.hier else "")
+    rtl = RTL + (HIER if a.hier else [])
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_su_master"
     if not exe.exists():
         obj.mkdir(parents=True, exist_ok=True)
-        srcs = [ROOT / s for s in H.FP[a.fp] + RTL + [TB]]
+        srcs = [ROOT / s for s in H.FP[a.fp] + rtl + [TB]]
         if a.fp == "dpi":
             srcs = H.dpi_rest(obj) + srcs
         cmd = [H.VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_su_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", *[f"-G{k}={v}" for k, v in sh.items()],
-               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *(["-DSU_HIER"] if a.hier else []), *map(str, srcs), "-CFLAGS", "-O1"]
         rr = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + rr.stdout + rr.stderr)
         if rr.returncode != 0:
@@ -346,9 +350,9 @@ def cmd_run(a):
               row["jobs"], "fault", row["fault"], row["fault_code"], "cyc", row["cycles"],
               "early", row["early_done_rows"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.su_gate.run.v1", generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, runs=res,
+               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, hier=bool(a.hier), runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
-               source_sha256={s: H.sha(ROOT / s) for s in H.FP[a.fp] + RTL + [TB]})
+               source_sha256={s: H.sha(ROOT / s) for s in H.FP[a.fp] + rtl + [TB]})
     (out / f"run_{tag}.json").write_text(json.dumps(rec, indent=1) + "\n")
     print("RUN", tag, rec["status"])
     return 0 if rec["status"] == "pass" else 1
@@ -367,6 +371,7 @@ def main():
     p.add_argument("--fp", default="dpi")
     p.add_argument("--mut", type=int, default=0)
     p.add_argument("--amut", type=int, default=0)
+    p.add_argument("--hier", action="store_true", help="the hierarchical slab dsfd_sp_su_h")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
 

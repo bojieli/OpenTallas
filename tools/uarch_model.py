@@ -635,6 +635,35 @@ def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
                          "VM sector a cycle (item: TOPK 4.3x)")
 
 
+def hgi_coll_topk_merge_model(G=96, n=512, k=512, kmax=2048, deliver_lanes=4, ser_cycles_per_flit_rank=23.75):
+    """HGI COLL.TOPK_MERGE (unit 6 op 2) in hardware (hgi-1010/k 2026-10-10, rtl/hbm_accel/generic/collective/tkm/
+    ot_hgi_coll_tkm.sv, ot_hgi_coll_ep TKM = 1): a merge sink on the collective's exact gather bypass.
+
+    Every rank injects pf = ceil(M / 8) flits of 8 {value, id} pairs (pad slots past its n); every rank receives the G pf
+    flits on its delivery lanes (credit back-pressured) and keeps the exact top k: survivors (key > tau, tau = the
+    array's k-th key, an exact lower bound) enter a systolic merge array of kmax / 4 cells of 4 sorted elements (one
+    4-element block a cycle); then odd-even transposition by the id key (ceil(k / 4) rounds) and a 4-element-a-cycle
+    shift-out into 16-word O / R lines.  Exact: the 83-bit key {valid, ordered value, ~id, ~rank, ~index} is the golden
+    lexsort's total order.  Survivors ~ k (1 + ln(G n / k)) for unordered values (G n for ascending arrival: worst case,
+    one block of 4 a cycle).
+    """
+    import math
+    assert 1 <= k <= kmax <= 2048 and 1 <= n <= 2048 and 1 <= G <= 96
+    pf = -(-n // 8)
+    flits = G * pf
+    gather = flits / deliver_lanes
+    surv = min(G * n, k * (1 + math.log(max(G * n / k, 1.0))))
+    insert = surv / 4
+    cells = kmax // 4
+    tail = math.ceil(k / 4) * 3 + 20          # drain + id rounds + shift-out + packer / writes
+    return dict(flits_delivered=flits, delivered_elements_per_cycle=8 * deliver_lanes,
+                gather_cycles=round(gather), survivors_estimate=round(surv), insert_cycles=round(insert),
+                tail_cycles=tail, record_cycles_estimate=round(max(gather, insert) + tail),
+                cells=cells, element_bits=84, key_bits=83, comparators_per_cell=16,
+                flops_estimate=cells * 4 * 84 * 2, widest_select="4 x 4 x 83-bit compare + rank + 8:4 one-hot select a cell",
+                price_basis="walk topk_merge(sel) = TU endpoint 1,628.5 + TU 377.6 ns + tail 0.15 us + l20 select 419")
+
+
 def hbm_index_service_model():
     """Full-stack key source geometry and finite return-reservation obligations."""
     from hbm_index_service_model import model

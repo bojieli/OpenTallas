@@ -4,7 +4,7 @@
 set -u
 O=$1; P=${2:-}; mkdir -p $O
 VL=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; [ -x $VL ] || VL=verilator
-S="rtl/hdc/v41x/ot_hdc_v41x_idx_chunk_el.sv rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv
+S="rtl/hdc/v41x/ot_hdc_v41x_idx_chunk_el.sv rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv rtl/lib/ot_rst_relay.sv rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv
  rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv"
 if [ ! -x $O/obj/Vtb_hgi_idx_chunk_el ]; then
  $VL --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-PINMISSING \

@@ -183,8 +183,9 @@ ROM_RULES = [
     (r"^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)", "ds_rom", "field", None, None,
      "ds-1010: field relays / stations (measured field phases include the wire)"),
     (r"^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|"
-     r"ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)", "ds_rom_mtp", "wave", "UNQUALIFIED_NO_BENCH", None,
-     "bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"),
+     r"ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)", "ds_rom_mtp", "wave", "WAVE_BENCH", None,
+     "el1011-ds-mtp: per element from the integrated MTP wave bench record (WAVE_BENCH; tools/mtp_wave_bench.py): "
+     "QUALIFIED when its charges' measured / price <= qualify_ratio, else UNQUALIFIED at the measured ratio"),
     (r"^dsfd_coll_", "ds_rom", "coll", None, None, "ds-1010: collective lanes"),
     (r"^(dsfd_engram_)", "ds_rom", "embed", None, None, "ds-1010: engram lookup / sink (embed class)"),
     (r"^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)", "ds_rom", "su", None, None, "ds-1010: HC / SU lanes (su class)"),
@@ -201,6 +202,35 @@ ROM_RULES = [
      "qwen-1010: spine SU / sequencer / residual (su class)"),
     (r"^qfd_dspark_", "qwen_rom", "mtp", "UNQUALIFIED_NO_BENCH", None, "qwen-1010: DSpark on Qwen ROM has no qualified composition"),
 ]
+
+
+# el1011-ds-mtp [wave]: the integrated DS ROM MTP draft / WFC / accept bench (rtl/dsrom_sys/mtp/tb/tb_mtp_wave.sv): per charge of
+# results/arch/mtp_step_20261009/ds_rom_step.json the RTL cycles between the price formula's own events; per element the
+# worst ratio of the charges it is on (QUALIFIED <= QUAL, else UNQUALIFIED), QUALIFIED_BY_BOUND / UNQUALIFIED_NO_BENCH as
+# the record states.  Elements of the wave name rule missing from the record stay UNQUALIFIED_NO_BENCH.
+WAVE_BENCH_PATH = "results/rtl/dsrom_mtp_wave_bench_20261011/record.json"
+
+
+def wave_bench():
+    p = ROOT / WAVE_BENCH_PATH
+    return json.loads(p.read_text()) if p.exists() else None
+
+
+WAVE_BENCH = wave_bench()
+
+
+def wave_status(e):
+    """(status, ratio, src) of element e from the wave bench record"""
+    if WAVE_BENCH is None:
+        return "UNQUALIFIED_NO_BENCH", None, "no wave bench record (" + WAVE_BENCH_PATH + ")"
+    r = WAVE_BENCH["elements"].get(e)
+    if r is None:
+        return "UNQUALIFIED_NO_BENCH", None, WAVE_BENCH_PATH + ": element not in the integrated wave bench"
+    st, ratio = r["status"], r.get("ratio")
+    if ratio is not None and st in ("QUALIFIED", "UNQUALIFIED"):
+        st = "QUALIFIED" if ratio <= QUAL else "UNQUALIFIED"
+    why = r.get("charge") and f"charge {r['charge']} measured / price {ratio}" or r.get("why") or "-"
+    return st, ratio, f"{WAVE_BENCH_PATH} @ {prov(WAVE_BENCH_PATH) or 'uncommitted'}: {why}"
 
 
 def rom_blocks():
@@ -713,6 +743,11 @@ def main():
             continue
         for rr in rom_rules:
             if re.match(rr["pattern"], e):
+                if rr["status"] == "WAVE_BENCH":
+                    st, wr, wsrc = wave_status(e)
+                    put(e, rr["model"], "class:" + rr["cls"] + " (wave bench)", st, wr, "el1011-ds-mtp", wsrc)
+                    rom_cov[e] = rr["pattern"]
+                    break
                 st = rr["status"] or cls_status.get((rr["model"], rr["cls"]), "UNQUALIFIED_NO_BENCH")
                 put(e, rr["model"], "class:" + rr["cls"], st, rr["ratio"], rr["why"].split(":")[0] if ":" in rr["why"] else "-",
                     "name rule " + rr["pattern"] + ": " + rr["why"])
@@ -797,7 +832,10 @@ def main():
                                     "(no stub, no behavioural model, no unsupported status); else PRICED-NOT-BUILT",
                                rows=gate, priced_not_built=[g for g in gate if g["status"] != "BUILT"]),
                hand_entered=hand, bench_ii=bii,
-               bf_hier=BF_HIER, rom_block_rules=rom_rules, rom_block_coverage=rom_cov,
+               bf_hier=BF_HIER, wave_bench=(dict(path=WAVE_BENCH_PATH, commit=prov(WAVE_BENCH_PATH), qualify_ratio=QUAL,
+                                          charges=[dict(id=c["id"], price=c["price"], measured=c["measured"], ratio=c["ratio"],
+                                                        elements=c["elements"]) for c in WAVE_BENCH["charges"]])
+                                     if WAVE_BENCH else None), rom_block_rules=rom_rules, rom_block_coverage=rom_cov,
                hbm_datactl_rows=dc, svc_endpoint_budget_ds=svc, qwen_hbm=qw, rom=rom, rom_audit_rows=rom_audit,
                elements=dict(sorted(el.items())))
     a.out.parent.mkdir(parents=True, exist_ok=True)
