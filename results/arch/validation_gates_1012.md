@@ -1,13 +1,13 @@
-# Academic-validation gates (owner, 2026-10-12)
+# Academic-validation final-evidence plan (2026-10-12; coordinator recommendation, discussed with the owner)
 
-Final-evidence runs are GATED per design target. A target enters its final phase only when BOTH hold:
+The EVIDENCE OF RECORD for these tasks is taken per design target once both hold:
 1. its RTL is frozen (all elements closed and throughput-qualified, no pending RTL change);
 2. its die floorplan has converged (die GRT 0 overflow, die STA TT setup / FF hold >= 0 on real views).
 
-Until then die-level work iterates in parallel with element closure (GRT / STA / CTS plan / IR per contract version), and per-layer runs are smoke tests, not evidence.
+Everything below starts NOW in parallel as pilots/smoke so the flows and vehicles are proven before freeze: die iteration (GRT/STA/CTS/IR) every contract version; one region-DRT pilot on the most converged die (flow validation: abstracts, die-top layers, pin access, runtime); composition runs as a regression on each RTL change of a covered unit; missing vehicles (S81 per-layer, Qwen die seams) built now. At freeze the same flows are re-run once for the record.
 
 ## Gated final tasks (per target: Qwen ROM+KV, DeepSeek ROM S81, HBM R25GQ)
-| Task | Gate | Notes |
+| Task | Record run when | Notes |
 |---|---|---|
 | Representative-region detailed route (worst congestion, longest links, IO edge, dense column) + GRT-vs-DRT error bar | RTL frozen + floorplan converged | ~4 regions per die; no flat full-die DRT |
 | Composition at target context (one layer per type + head; Qwen P8191, DeepSeek P1048575) on final RTL | RTL frozen | evidence of record |

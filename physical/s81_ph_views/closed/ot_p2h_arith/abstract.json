@@ -1,6 +1,6 @@
 {
   "name": "ot_p2h_arith",
-  "orfs_dir": "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,13 +10,15 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/view:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/view:/out",
         "-v",
-        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/abs_eco:/tmp",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -32,13 +34,15 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/view:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/view:/out",
         "-v",
-        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/abs_eco:/tmp",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -47,14 +51,13 @@
       ]
     }
   },
-  "macro_views": [],
-  "vt_flavours_added": [
-    "LVT"
+  "macro_views": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "files": {
-    "ot_p2h_arith.lef": "06aa8abdf6307b41d63dd8867748adcbdbf03e9daa8cf041cb3c9fa7254b0fd3",
-    "ot_p2h_arith_ff.lib": "8e92391ef1bc04d4684691c8c5543e2356cabe6fb4a5f94ab06a6cbe4674b331",
-    "ot_p2h_arith_ss.lib": "a3ee09ca2303f877de457bcaece1d709a268181aa00cdb0434aaa499e6791745"
+    "ot_p2h_arith.lef": "1c1267d9494763de434ef267e4000de9018b9639968460d40200f05388e83a3e",
+    "ot_p2h_arith_ff.lib": "60f3c87edb69bff68002b09052b5e99855d0d013809d8bc53cfe43a3e545c422",
+    "ot_p2h_arith_ss.lib": "ef664953910bf8edcf613e39416123cf3f9ed24b4edab3f5f586df2ae0c2d1df"
   },
   "ok": true
 }

@@ -92,6 +92,9 @@ module ot_hgi_vm_btile #(
     // pin flops: every tile input lands in a flop (the down tree's r2 stage and the DMA data line's last stage live
     // here, next to the bank), no logic between a pin and its flop
     reg [GW-1:0] gq; reg [NC*LW-1:0] lq; reg wh_q; reg [9:0] wr_q; reg [311:0] we_q; reg [7:0] wm_q;
+    // round 2 (hgi_vm_bt{a,b}-a7bf28890 NEEDS_RTL: bid pin -> em compare -134 ps TT): the bank-id strap lands in a pin flop
+    reg [4:0] bid_q;
+    always @(posedge clk) bid_q <= bid;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin gq <= '0; wh_q <= 1'b0; end else begin gq <= gi; wh_q <= w_hit; end
     always @(posedge clk) begin lq <= lanes; wr_q <= w_row; we_q <= w_enc; wm_q <= w_wm; end
     wire          d_rv = gq[GW-1],  d_wv = gq[GW-2-CW];
@@ -119,7 +122,7 @@ module ot_hgi_vm_btile #(
             always @(posedge clk) p0_s <= rq_in[g*16 +: 15];
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) begin ev <= 1'b0; em <= 1'b0; end
-                else begin ev <= p0_v; em <= p0_s[4:0] == bid; end
+                else begin ev <= p0_v; em <= p0_s[4:0] == bid_q; end
             assign rqh_v[g] = ev; assign rqh_m[g] = em;
             reg [9:0] q [0:LRD-1]; reg [$clog2(LRD)-1:0] wp, rp;
             wire pop = d_lv && d_lg == 2'(g);
@@ -144,7 +147,7 @@ module ot_hgi_vm_btile #(
     always @(posedge clk) begin l1_g <= d_lg; l2_g <= l1_g; l1_ra <= lhead[d_lg*10 +: 10]; l2_ra <= l1_ra; end
     // ---- W2 write lanes: pin flop, event flop {v, match}, local SRAM queue read on the decision
     reg b1_v, b2_v; reg [1:0] b1_g, b2_g;
-    wire [4*274-1:0] qraw;
+    wire [4*330-1:0] qraw;
     for (genvar g = 0; g < 4; g = g + 1) begin : g_w2
         if (g < NGW) begin : g_on
             reg p0_v; reg [278:0] p0_d; reg ev, em; reg crq; reg [3:0] dnl;
@@ -152,15 +155,21 @@ module ot_hgi_vm_btile #(
             always @(posedge clk) p0_d <= w2q_in[g*280 +: 279];
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) begin ev <= 1'b0; em <= 1'b0; end
-                else begin ev <= p0_v; em <= p0_d[264 +: 5] == bid; end
+                else begin ev <= p0_v; em <= p0_d[264 +: 5] == bid_q; end
             assign w2h_v[g] = ev; assign w2h_m[g] = em;
             reg [5:0] wp, rp; wire pop = d_qv && d_qg == 2'(g);
-            wire [511:0] rd; reg [273:0] raw;
-            wire [511:0] wdx = {238'd0, p0_d[264 + 5 +: 10], p0_d[8 +: 256], p0_d[7:0]};
-            ot_sram_1r1w_64x512_m1_r2c2 u_q (.clk(clk), .r_ce_in(pop), .r_addr_in(rp), .rd_out(rd),
-                .w_ce_in(p0_v), .w_addr_in(wp), .wd_in(wdx), .w_mask_in({512{1'b1}}),
+            // round 2 (b2_g -> m_wd -92 ps TT: 4:1 select + SECDED encode + priority mux in one cycle): the queue holds the
+            // ENCODED word {row 10, enc 312, mask 8} (encode on the write side, pin flop -> encode -> macro), so the read
+            // side is raw capture -> one-hot AND-OR select -> m_wd.  Macro address pins through a hold-delay stage
+            // (rp / wp -> u_q addr FF hold -42.85 / -21.80 ps: macro clock pin later than the pointer flops).
+            wire [511:0] rd; reg [329:0] raw; wire [5:0] rpd, wpd;
+            wire [511:0] wdx = {182'd0, p0_d[264 + 5 +: 10], enc8(p0_d[8 +: 256]), p0_d[7:0]};
+            ot_hdly #(.W(6), .N(2)) u_hr (.a(rp), .y(rpd));
+            ot_hdly #(.W(6), .N(2)) u_hw (.a(wp), .y(wpd));
+            ot_sram_1r1w_64x512_m1_r2c2 u_q (.clk(clk), .r_ce_in(pop), .r_addr_in(rpd), .rd_out(rd),
+                .w_ce_in(p0_v), .w_addr_in(wpd), .wd_in(wdx), .w_mask_in({512{1'b1}}),
                 .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
-            always @(posedge clk) if (b1_v && b1_g == 2'(g)) raw <= rd[273:0];      // raw capture at the macro
+            always @(posedge clk) if (b1_v && b1_g == 2'(g)) raw <= rd[329:0];      // raw capture at the macro
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) begin wp <= '0; rp <= '0; crq <= 1'b0; dnl <= '0; end
                 else begin
@@ -168,9 +177,9 @@ module ot_hgi_vm_btile #(
                     if (pop) rp <= rp + 1'b1;
                     crq <= pop; dnl <= {dnl[2:0], crq};
                 end
-            assign qraw[g*274 +: 274] = raw; assign w2q_cr[g] = crq; assign w2q_done[g] = dnl[3];
+            assign qraw[g*330 +: 330] = raw; assign w2q_cr[g] = crq; assign w2q_done[g] = dnl[3];
         end else begin : g_off
-            assign qraw[g*274 +: 274] = '0;
+            assign qraw[g*330 +: 330] = '0;
         end
     end
     if (NGW == 0) begin : g_now2
@@ -179,7 +188,14 @@ module ot_hgi_vm_btile #(
     always @(posedge clk or negedge rst_n) if (!rst_n) begin b1_v <= 1'b0; b2_v <= 1'b0; end
         else begin b1_v <= d_qv; b2_v <= b1_v; end
     always @(posedge clk) begin b1_g <= d_qg; b2_g <= b1_g; end
-    wire [273:0] qsel = qraw[b2_g*274 +: 274];
+    // one-hot select, kept copies per 55-bit slice (no 330-load select net)
+    wire [329:0] qsel;
+    for (genvar sl = 0; sl < 6; sl = sl + 1) begin : g_qs
+        (* keep = "true" *) reg [3:0] oh;
+        always @(posedge clk) for (integer k = 0; k < 4; k = k + 1) oh[k] <= (b1_g == 2'(k));
+        assign qsel[sl*55 +: 55] = (qraw[0*330 + sl*55 +: 55] & {55{oh[0]}}) | (qraw[1*330 + sl*55 +: 55] & {55{oh[1]}}) |
+                                   (qraw[2*330 + sl*55 +: 55] & {55{oh[2]}}) | (qraw[3*330 + sl*55 +: 55] & {55{oh[3]}});
+    end
     // ---- macro input registers (next to the macros): client > DMA lane > W2 lane (the unit's order)
     reg m_re, m_we; reg [9:0] m_ra, m_wa; reg [311:0] m_wd; reg [7:0] m_wm;
     reg rp1, rp2, rp3, d_v; reg k1, k2, k3, d_k; reg [CW-1:0] rc1, rc2, rc3, d_c; reg [1:0] rg1, rg2, rg3, d_g;
@@ -190,7 +206,7 @@ module ot_hgi_vm_btile #(
         k1 <= c2_re; rc1 <= c2_rc; rg1 <= l2_g;
         if (c2_we) begin m_wa <= c2_wa; m_wd <= c2_wd; m_wm <= c2_wm; end
         else if (wh_q) begin m_wa <= wr_q; m_wd <= we_q; m_wm <= wm_q | {8{MUT == 4}}; end
-        else begin m_wa <= qsel[264 +: 10]; m_wd <= enc8(qsel[8 +: 256]); m_wm <= qsel[7:0]; end
+        else begin m_wa <= qsel[320 +: 10]; m_wd <= qsel[8 +: 312]; m_wm <= qsel[7:0]; end
     end
     wire [311:0] wme;
     for (genvar w = 0; w < 8; w = w + 1) begin : g_wm
@@ -204,29 +220,37 @@ module ot_hgi_vm_btile #(
         .w_ce_in(m_we), .w_addr_in(m_wa), .wd_in(wdx[511:256]), .w_mask_in(wmx[511:256]),
         .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     // read return: macro edge (rp2) -> raw capture (no logic before it) -> decode (d) -> client return (u) / lane rr
-    reg [311:0] raw; reg [255:0] d_d; reg [3:0] d_ce; reg d_ue;
+    // round 2 (u_d -> u_d pins -44.89 / -43.42 ps TT; raw -> d_ce -25.39 ps): the decode register is duplicated per
+    // destination (d_d toward the client-return pins, d_r toward the lane rr pins, so neither drags the other), and the
+    // corrected-word count is a popcount of 8 registered flags in the u stage instead of in the decode cycle.
+    reg [311:0] raw; reg [255:0] d_d; (* keep = "true" *) reg [255:0] d_r; reg [7:0] d_cf; reg d_ue;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin rp2 <= 1'b0; rp3 <= 1'b0; d_v <= 1'b0; u_v <= 1'b0; end
         else begin rp2 <= rp1; rp3 <= rp2; d_v <= rp3; u_v <= d_v && d_k; end
     always @(posedge clk) begin
         k2 <= k1; k3 <= k2; d_k <= k3; rc2 <= rc1; rc3 <= rc2; d_c <= rc3; rg2 <= rg1; rg3 <= rg2; d_g <= rg3;
         if (rp2) raw <= rd[311:0];
         begin : dc
-            reg [33:0] x; reg [3:0] n; reg u;
-            n = 4'd0; u = 1'b0;
+            reg [33:0] x; reg u;
+            u = 1'b0;
             for (integer q = 0; q < 8; q = q + 1) begin
-                x = dec(raw[q*39 +: 39]); d_d[q*32 +: 32] <= x[31:0];
-                n = n + {3'd0, x[32]}; u = u | x[33];
+                x = dec(raw[q*39 +: 39]); d_d[q*32 +: 32] <= x[31:0]; d_r[q*32 +: 32] <= x[31:0];
+                d_cf[q] <= rp3 && x[32]; u = u | x[33];
             end
-            d_ce <= rp3 ? n : 4'd0; d_ue <= rp3 && u;
+            d_ue <= rp3 && u;
         end
-        u_c <= d_c; u_d <= d_d; u_ce <= d_v ? d_ce : 4'd0; u_ue <= d_v && d_ue;
+        begin : pc
+            reg [3:0] n; n = 4'd0;
+            for (integer q = 0; q < 8; q = q + 1) n = n + {3'd0, d_cf[q]};
+            u_ce <= d_v ? n : 4'd0;
+        end
+        u_c <= d_c; u_d <= d_d; u_ue <= d_v && d_ue;
     end
     // lane read responses, registered at the bank
     for (genvar g = 0; g < NGR; g = g + 1) begin : g_rr
         reg rv; reg [255:0] rdat;
         always @(posedge clk or negedge rst_n) if (!rst_n) rv <= 1'b0;
             else rv <= d_v && !d_k && ((MUT == 5) ? (g == 0) : (d_g == 2'(g)));
-        always @(posedge clk) rdat <= d_d;
+        always @(posedge clk) rdat <= d_r;
         assign rr[g*257 +: 257] = {rv, rdat};
     end
 endmodule

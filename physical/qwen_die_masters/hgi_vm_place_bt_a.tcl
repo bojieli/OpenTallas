@@ -4,5 +4,5 @@
 place_macro -macro_name {u_lo} -location {21.600 21.60} -orientation R0
 place_macro -macro_name {u_hi} -location {21.600 112.32} -orientation R0
 place_macro -macro_name {g_w2\[0\].g_on.u_q} -location {21.600 203.04} -orientation R0
-place_macro -macro_name {g_w2\[1\].g_on.u_q} -location {21.600 301.32} -orientation R0
+place_macro -macro_name {g_w2\[1\].g_on.u_q} -location {21.600 301.344} -orientation R0
 place_macro -macro_name {g_w2\[2\].g_on.u_q} -location {21.600 399.60} -orientation R0
