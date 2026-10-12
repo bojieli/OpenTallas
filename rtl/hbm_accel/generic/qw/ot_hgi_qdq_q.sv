@@ -27,8 +27,8 @@
 module ot_hgi_qdq_q #(
     parameter integer LQ  = 4,      // lane credits a lane (= the slice bank's wide-lane queue depth)
     parameter integer LD  = 8,      // per-lane response FIFO (read round trip at 0.5 sector / lane / cycle)
-    parameter integer NB  = 16,     // issued-beat FIFO (>= read round trip in beats)
-    parameter integer OD  = 32,     // result FIFO beats (>= decode latency 26 + write slack)
+    parameter integer NB  = 32,     // issued-beat FIFO (>= read round trip in beats; 16 caps S=3 at 18 cyc a 16-beat record)
+    parameter integer OD  = 64,     // result FIFO beats (>= decode latency 26 + write round trip at S=3)
     parameter integer RQ  = 16,     // record queue
     parameter integer MUT = 0
 ) (
