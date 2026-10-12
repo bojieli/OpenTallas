@@ -32,7 +32,7 @@ CORNERS = ('tt', 'ff')
 
 
 def macro_block(text, name=None):
-    m = re.search(r'^MACRO (\S+)\s*$' if name is None else rf'^MACRO {re.escape(name)}\s*$', text, re.M)
+    m = re.search(r'^MACRO (\S+)\s*$' if name is None else rf'^MACRO ({re.escape(name)})\s*$', text, re.M)
     if not m:
         raise KeyError(name)
     nm = m.group(1)
