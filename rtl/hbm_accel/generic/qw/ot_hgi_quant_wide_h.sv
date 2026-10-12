@@ -114,36 +114,39 @@ module ot_hgi_quant_wide_h #(
     reg [14:0] mq_sec [0:OD-1]; reg [2:0] mq_n [0:OD-1]; reg [OW-1:0] mq_h, mq_t;
     reg [OW-1:0] od_h, od_t; reg [OW:0] od_n, resv;
     // ---------------------------------------------------------------- decisions
-    wire [2:0] r_nsec = r_last ? nsec_last[2:0] : 3'd4;
-    reg [31:0] r_ok_l;
-    always @* for (integer b = 0; b < 32; b = b + 1)
-        r_ok_l[b] = (rcr[b] > CW'(hit_r[b])) && ((lf_r[b] + (LW+1)'(hit_r[b])) < (LW+1)'(LD));
-    reg r_cr_ok;
-    always @* begin
-        r_cr_ok = 1'b1;
-        for (integer j = 0; j < 4; j = j + 1) if (j < r_nsec && !r_ok_l[5'(r_sec[4:0] + j)]) r_cr_ok = 1'b0;
-    end
-    wire r_issue = busy && !bad && rg_ok && !rd_done && r_used < NB && r_cr_ok;
-    wire [4:0] h_l = bq_l[r_head]; wire [2:0] h_n = bq_n[r_head];
-    reg h_ok;
-    always @* begin
-        h_ok = r_used != 0;
-        for (integer j = 0; j < 4; j = j + 1)
-            if (j < h_n && !(lf_n[5'(h_l + j)] > (LW+1)'(hit_p[5'(h_l + j)]))) h_ok = 1'b0;
-    end
-    wire l_fire = busy && h_ok && resv < OD;
-    wire [14:0] w_sec0 = mq_sec[od_h]; wire [2:0] w_n = mq_n[od_h];
-    reg w_cr_ok;
-    always @* begin
-        w_cr_ok = 1'b1;
-        for (integer j = 0; j < 4; j = j + 1)
-            if (j < w_n && !(wcr[5'(w_sec0 + j)] > CW'(hit_w[5'(w_sec0 + j)]))) w_cr_ok = 1'b0;
-    end
-    wire w_fire = busy && !bad && wg_ok && od_n != 0 && w_cr_ok;
+    // el1011-hbm-fq 10-11 (class 5, ha/hb-d63ee120c od_h -> sec_iss / u_od.r_ce 17 levels): every credit decision is a
+    // 32-lane vector AND (one-hot lane window from a register), no 32:1 lane muxes; the write head (sector, count, lane
+    // window) is a lookahead register; the result-FIFO SRAM read is issued from a register one edge after w_fire.
     function automatic [31:0] lanes(input [4:0] l0, input [2:0] nn);
         lanes = 0;
         for (integer j = 0; j < 4; j = j + 1) if (j < nn) lanes[5'(l0 + j)] = 1'b1;
     endfunction
+    wire [2:0] r_nsec = r_last ? nsec_last[2:0] : 3'd4;
+    reg [31:0] r_ok_l;
+    always @* for (integer b = 0; b < 32; b = b + 1)
+        r_ok_l[b] = (rcr[b] > CW'(hit_r[b])) && ((lf_r[b] + (LW+1)'(hit_r[b])) < (LW+1)'(LD));
+    wire r_cr_ok = &(~lanes(r_sec[4:0], r_nsec) | r_ok_l);
+    wire r_issue = busy && !bad && rg_ok && !rd_done && r_used < NB && r_cr_ok;
+    wire [4:0] h_l = bq_l[r_head]; wire [2:0] h_n = bq_n[r_head];
+    reg [31:0] h_ok_l;
+    always @* for (integer b = 0; b < 32; b = b + 1) h_ok_l[b] = lf_n[b] > (LW+1)'(hit_p[b]);
+    wire h_ok = (r_used != 0) && &(~lanes(h_l, h_n) | h_ok_l);
+    wire l_fire = busy && h_ok && resv < OD;
+    // write head lookahead: hd_* = meta of entry od_h, re-read every edge for the next od_h.  Exact: an entry counts in od_n
+    // only after its gather/decode/capture pipeline (>= 5 edges after its meta write), so mq is settled when hd reads it.
+    reg [14:0] hd_sec; reg [2:0] hd_n; reg [31:0] hd_ln;
+    wire [14:0] w_sec0 = hd_sec; wire [2:0] w_n = hd_n;
+    reg [31:0] w_ok_l;
+    always @* for (integer b = 0; b < 32; b = b + 1) w_ok_l[b] = wcr[b] > CW'(hit_w[b]);
+    wire w_cr_ok = &(~hd_ln | w_ok_l);
+    wire w_fire = busy && !bad && wg_ok && od_n != 0 && w_cr_ok;
+    wire [OW-1:0] od_hn = p_go ? {OW{1'b0}} : (w_fire ? od_h + 1'b1 : od_h);
+    always @(posedge clk) begin
+        hd_sec <= mq_sec[od_hn]; hd_n <= mq_n[od_hn]; hd_ln <= lanes(mq_sec[od_hn][4:0], mq_n[od_hn]);
+    end
+    // registered SRAM read issue (next to u_od): rf_* = w_fire / od_h / head meta one edge later
+    reg rf_v; reg [OW-1:0] rf_a; reg [14:0] rf_sec; reg [2:0] rf_n;
+    always @(posedge clk) begin rf_a <= od_h; rf_sec <= w_sec0; rf_n <= w_n; end
     // ---------------------------------------------------------------- per-lane sectors / slots (registered, then relayed)
     reg [14:0] rs1 [0:31]; reg [3:0] sl1 [0:31];
     always @(posedge clk)
@@ -174,7 +177,7 @@ module ot_hgi_quant_wide_h #(
         else begin yc_v <= d_vo; yc_f <= d_vo && d_f; yc_df <= d_df; end
     always @(posedge clk) yc <= d_y;
     wire [511:0] od_rd;
-    ot_sram_1r1w_64x512_m1_r2c2 u_od (.clk(clk), .r_ce_in(w_fire), .r_addr_in(od_h), .rd_out(od_rd),
+    ot_sram_1r1w_64x512_m1_r2c2 u_od (.clk(clk), .r_ce_in(rf_v), .r_addr_in(rf_a), .rd_out(od_rd),
         .w_ce_in(yc_v), .w_addr_in(od_t), .wd_in(yc), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     // write beat: capture the SRAM read, per-lane valid / slot / sector a cycle later, relay to the write quads
@@ -182,16 +185,16 @@ module ot_hgi_quant_wide_h #(
     reg [31:0] wv1; reg [3:0] ws1 [0:31]; reg [14:0] wsec1 [0:31];
     always @(posedge clk) begin
         wc_y <= od_rd; wy2a <= wc_y; wy2b <= wc_y;
-        wm_sec <= w_sec0; wm_n <= w_n;
+        wm_sec <= rf_sec; wm_n <= rf_n;
         for (integer b = 0; b < 32; b = b + 1) begin
             ws1[b] <= 4'(1) << 2'(b - wm_sec[4:0]); wsec1[b] <= wm_sec + 15'(5'(b - wm_sec[4:0]));
             ws2[b] <= ws1[b]; wsec2[b] <= wsec1[b];
         end
     end
     always @(posedge clk or negedge rr_n[1])
-        if (!rr_n[1]) begin wm_v <= 0; wv1 <= 0; wv2 <= 0; end
+        if (!rr_n[1]) begin rf_v <= 0; wm_v <= 0; wv1 <= 0; wv2 <= 0; end
         else begin
-            wm_v <= w_fire;
+            rf_v <= w_fire; wm_v <= rf_v;
             for (integer b = 0; b < 32; b = b + 1) wv1[b] <= wm_v && (5'(b - wm_sec[4:0]) < 5'(wm_n));
             wv2 <= wv1;
         end
@@ -216,7 +219,7 @@ module ot_hgi_quant_wide_h #(
             c_done <= 0;
             hit_r <= r_issue ? lanes(r_sec[4:0], r_nsec) : 32'd0;
             hit_p <= l_fire ? lanes(h_l, h_n) : 32'd0;
-            hit_w <= w_fire ? lanes(w_sec0[4:0], w_n) : 32'd0;
+            hit_w <= w_fire ? hd_ln : 32'd0;
             if (p_go) begin
                 busy <= 1; bad <= 0; c_fault <= 0; hdr <= p_cmd[128:1];
                 m <= p_cmd[129 + 256 + 68 +: 20];
