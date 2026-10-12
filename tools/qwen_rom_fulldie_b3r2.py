@@ -80,6 +80,15 @@ def _isa_bits():
 TP8 = None
 
 
+def _band_tgt(v, rows, b):
+    """y centre of band b's tile rows (tp8b F2: the centroid of the band's blocks, v.BAND_BLOCKS)."""
+    bb = getattr(v, 'BAND_BLOCKS', None)
+    if bb:
+        ys = [rows[r0] + (rows[r0 + 3] + v.TILE_SLOT[1] - rows[r0]) / 2 for c0, r0 in bb[b]]
+        return sum(ys) / len(ys)
+    return (rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2
+
+
 def _tp8_globals(cfg):
     global PORT_GROUPS, BANDS, RTL_PORT_GROUPS, TP8
     TP8 = dict(cfg)
@@ -100,16 +109,168 @@ def _tp8_base(v, cfg):
     # the 4-rank fold) gets a 1.5x TP4 budget outline; the CDC cluster widens for the 3 SerDes word pairs
     v.IO_BLOCKS = [(n, a * (cfg.get('coll_scale', 1.5) if n == 'collective' else 1.0), d) for n, a, d in v.IO_BLOCKS]
     v.IOX_W = cfg.get('iox_w', 700.128)
+    if cfg.get('f2'):
+        _tp8b_base(v, cfg)
     if cfg.get('tile_body'):
         # contract v2 (SPEC 5, tile slot width): the GT 3,072 qfd_tile_nk cluster (ref_tile kit qfd_tile_nk_tp8, 311.04 x
         # 1,296 um) + the unchanged 52.704-um qfd_cst corridor; r19 takes the slot pitch from KV_TILE_W
         v.KV_TILE_W = round(cfg['tile_body'] + v.CORR, 6)
         v.TILE_SLOT = (v.KV_TILE_W, cfg.get('tile_h', v.TILE_SLOT[1]))
         v.TILE_BODY_W = cfg['tile_body']
+        if cfg.get('f2'):
+            # tp8b F2: column pitch = tile slot + the column channel (station corridor + spread tree legs)
+            v.KV_TILE_W = cfg['f2']['col_pitch']
+            v.TILE_SLOT = (v.KV_TILE_W, cfg.get('tile_h', v.TILE_SLOT[1]))
     if cfg.get('tree_pads'):
         _tp = json.loads((ROOT / cfg['tree_pads']).read_text())
         v.TREE_PADS = _tp['pads']
         v.TREE_PAD_TARGETS = _tp.get('targets', {})     # total relays per padded leg (unpadded relays + pads)
+
+
+# ---- qwen-tp8 tp8b (results/arch/qwen_tp8_1012/SPEC.md section 0 / 5, floorplan F2, track B single die): 48 columns x
+# 16 rows of qfd_tile_nk at the 311.04 x 1,296 slot (column pitch = slot + column channel), 3 compact bands of 16 4x4
+# blocks (band 0 = block-row 0 + the 4 near-spine blocks of block-row 1; band 1 = the other 8 of block-row 1 + the 8
+# near-spine blocks of block-row 2; band 2 = the other 4 of block-row 2 + block-row 3), the spine column widened to the
+# F2 4,589 um with the KV-centre sub-column, the KV die halves on the W / E edges, ALL IO in one S band under a 400-um
+# IO word channel.
+def _tp8b_bands(cols, rows, bc=4, br=4):
+    nbc, half = cols // bc, cols // bc // 2
+    blocks = {}
+    for c0 in range(0, cols, bc):
+        for r0 in range(0, rows, br):
+            k = c0 // bc
+            side = 'W' if k < half else 'E'
+            dist = (half - 1 - k) if side == 'W' else (k - half)      # 0 = next to the spine
+            row = r0 // br
+            if row == 0 or (row == 1 and dist <= 1):
+                band = 0
+            elif row == 1 or (row == 2 and dist <= 3):
+                band = 1
+            else:
+                band = 2
+            blocks[(c0, r0)] = (band, side, dist)
+    out, members = {}, {}
+    for b in range(3):
+        mem = [cr for cr, t in blocks.items() if t[0] == b]
+        w = sorted((cr for cr in mem if blocks[cr][1] == 'W'), key=lambda cr: (-blocks[cr][2], cr[1]))
+        e = sorted((cr for cr in mem if blocks[cr][1] == 'E'), key=lambda cr: (blocks[cr][2], cr[1]))
+        assert len(w) == len(e) == 8, ('tp8b band', b, len(w), len(e))
+        for k, cr in enumerate(w + e):
+            out[cr] = (b, k)
+        members[b] = w + e
+    return out, members
+
+
+def _tp8b_base(v, cfg):
+    f2 = cfg['f2']
+    v.COLS, v.ROWS = f2['cols'], f2['rows']
+    bmap, members = _tp8b_bands(v.COLS, v.ROWS, *v.BLOCK)
+    v.BAND_OF = lambda b, c0, r0: bmap[(c0, r0)]
+    v.BAND_BLOCKS = members
+
+
+def _yshift(m, g, ys, dy, skip=()):
+    """everything at or above y = ys moves up by dy (instances not in skip, regions, geo y values)."""
+    for i in m['insts']:
+        if i.name not in skip and i.y >= ys - 1e-3:
+            i.y = round(i.y + dy, 4)
+    for key in ('regions', 'clock_regions'):
+        out = []
+        for r in m.get(key, []):
+            x0, y0, x1, y1 = r['rect']
+            if y0 >= ys - 1e-3:
+                y0, y1 = y0 + dy, y1 + dy
+            elif y1 > ys + 1e-3:
+                y1 = y1 + dy
+            out.append(dict(r, rect=[x0, round(y0, 4), x1, round(y1, 4)]))
+        m[key] = out
+    for k in list(g):
+        val = g[k]
+        if k.startswith(('y', 'mid', 'row_y', 'ch_y', 'stack_cy')):
+            if isinstance(val, (int, float)) and val >= ys - 1e-3:
+                g[k] = round(val + dy, 4)
+            elif isinstance(val, list) and val and all(isinstance(q, (int, float)) for q in val):
+                g[k] = [round(q + dy, 4) if q >= ys - 1e-3 else q for q in val]
+
+
+def _tp8b_f2(v, m):
+    """tp8b F2 re-floorplan after the tp8a spine / IO surgery, before the relays (they are derived from this placement)."""
+    from qwen_kv_die import rom_r22k as R
+    f2 = TP8['f2']
+    g = m['geo']
+    by = {i.name: i for i in m['insts']}
+    W = m['die']['w']
+    S = v.SHAVE
+    half = v.COLS // 2
+    pitch = v.TILE_SLOT[0]
+    xw_end = m['col_x'](half - 1) + pitch          # W field end (spine W face)
+    xe0 = m['col_x'](half)                          # E field start
+    spine_w = xe0 - xw_end
+    # (1) the KV-centre sub-column (qkd_seq / host / ahub / embgw) on the spine's E side: spine -> f2 spine_w
+    kvc = v.up(f2['spine_w'] - spine_w, v.GX)
+    if kvc > 0:
+        W = R._spine_relay_channel(v, m, g, xe0, kvc, W)
+    g['tp8b_kvc_x'] = [round(xe0, 4), round(xe0 + kvc, 4)]
+    # (2) the KV-die halves: W strip + channel left of the W field, E strip + channel right of the E field
+    kvs = v.up(f2['kv_w'] + f2['kv_ch'], v.GX)
+    W = R._spine_relay_channel(v, m, g, 0.0, kvs, W)
+    g['tp8b_kv_w'] = [round(v.EDGE if hasattr(v, 'EDGE') else 0.0, 4), round(kvs, 4)]
+    W = round(W + kvs, 4)
+    g['tp8b_kv_e'] = [round(W - kvs, 4), round(W, 4)]
+    chx = getattr(v, 'SPINE_CHANNEL_X', None)
+    if chx:
+        v.SPINE_CHANNEL_X = [round(x + kvs + (kvc if x >= xe0 - 1e-3 else 0.0), 3) for x in chx]
+    # (3) IO band S: the core moves up by IO_DEPTH + the IO word channel; the IO blocks go to the S edge
+    io = [i for i in m['insts'] if i.kind in ('io', 'xfifo')]
+    ion = {i.name for i in io}
+    y_io_old = min(i.y for i in io)
+    ch = v.up(f2['io_chan'], v.GY)
+    dy = v.up(v.IO_DEPTH + ch, v.GY)
+    y_edge = g['y0']
+    _yshift(m, g, 0.0, dy, skip=ion)
+    for i in io:
+        i.y = round(y_edge, 4)
+    m['regions'] = [r for r in m['regions'] if r['name'] not in ('io_band', 'io_chan')]
+    xa, xb = m['col_x'](0), m['col_x'](v.COLS - 1) + pitch
+    m['regions'] += [dict(name='io_band', kind='io', rect=[xa, y_edge, xb, y_edge + v.IO_DEPTH]),
+                     dict(name='io_chan', kind='channel', rect=[xa, y_edge + v.IO_DEPTH, xb, y_edge + dy])]
+    # the IO row keeps its x order (SerDes 1 / 2, collective, xfifo, UCIe, SerDes 0), centred on the spine
+    io.sort(key=lambda i: i.x)
+    span = io[-1].x + io[-1].w - io[0].x
+    xc = (m['col_x'](half - 1) + pitch + m['col_x'](half)) / 2 - kvc / 2      # the ROM spine (W of the KV centre)
+    sx = v.dn(xc - (by['io_collective'].x + by['io_collective'].w / 2 - io[0].x) - io[0].x, v.GX)
+    sx = max(sx, v.up(xa, v.GX) - io[0].x)
+    sx = min(sx, v.dn(xb - io[-1].x - io[-1].w - S, v.GX))
+    for i in io:
+        i.x = round(i.x + sx, 4)
+    g['y_io'] = g['y_top']          # the relays' corridor top (the IO band no longer sits above the field)
+    H = v.up(g['y_top'] + v.EDGE if hasattr(v, 'EDGE') else g['y_top'] + 21.6, v.GY)
+    m['die'] = dict(m['die'], w=W, h=H, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
+    # (4) the constant ROM row gets a >= f2['crom_ch'] um word channel to the buffer rows above it
+    cr = [i for i in m['insts'] if i.name.startswith('crom_g_')]
+    cb = [i for i in m['insts'] if i.name.startswith('cbuf_g_')]
+    if cr and cb:
+        gap = min(b_.y for b_ in cb) - max(c.y + c.h + S for c in cr)
+        need = f2.get('crom_ch', 151.2) - gap
+        if need > 0:
+            for c in cr:
+                c.y = round(v.dn(c.y - need, v.GY), 4)
+        g['tp8b_crom_ch_um'] = round(min(b_.y for b_ in cb) - max(c.y + c.h + S for c in cr), 3)
+    ov = []
+    ins = [i for i in m['insts']]
+    ins.sort(key=lambda i: i.x)
+    for a_ in range(len(ins)):
+        p = ins[a_]
+        for b_ in range(a_ + 1, len(ins)):
+            q = ins[b_]
+            if q.x >= p.x + p.w - 1e-3:
+                break
+            if q.y < p.y + p.h - 1e-3 and p.y < q.y + q.h - 1e-3:
+                ov.append((p.name, q.name))
+    m['tp8b'] = dict(die_um=[W, H], spine_w=round(spine_w + kvc, 3), kvc_w=kvc, kv_strip_w=kvs, io_dy=dy,
+                     io_x=[round(io[0].x, 3), round(io[-1].x + io[-1].w, 3)], overlaps=ov[:20], n_overlaps=len(ov))
+    if ov:
+        raise SystemExit(f'tp8b: {len(ov)} overlaps, e.g. {ov[:6]}')
 
 
 def _tp8_io(v, m):
@@ -495,6 +656,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             if TP8.get('spine_gap'):
                 _tp8_spine(v_, m_)
             _tp8_io(v_, m_)
+            if TP8.get('f2'):
+                _tp8b_f2(v_, m_)
     if before_relays is not None:
         # Opt-in system composition: actual slots/ports precede relay discovery.
         # Default recipes retain their existing geometry and master contracts.
@@ -838,7 +1001,7 @@ def _repack_r21m(v, m):
     # band slabs (r17 over W / E / M, held to their band's column segment); the W primary carries the serializer
     # below it and the band-lane block above it
     rows = g['row_y']
-    tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
+    tgt = [_band_tgt(v, rows, b) for b in range(BANDS)]
     order = sorted(range(BANDS), key=lambda b: abs(tgt[b] - g['mid']))
     m['band_slabs'] = {}
     per = PORT_GROUPS // (2 * BANDS)
@@ -2194,7 +2357,7 @@ def _repack_band(v, m):
     m['insts'] = [i for i in m['insts'] if not i.name.startswith(('sp_port_tiles', 'sp_scale_rom'))]
     cols, free = _spine_free(v, m, central)
     rows = g['row_y']
-    tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
+    tgt = [_band_tgt(v, rows, b) for b in range(BANDS)]
     port_g = next(a for n, a, *_ in v.SPINE_BLOCKS if n == 'port_tiles') / PORT_GROUPS
     scale_g = next(a for n, a, *_ in v.SPINE_BLOCKS if n == 'scale_rom') / PORT_GROUPS
     for c in free:
@@ -2300,7 +2463,7 @@ def _repack_b3r3(v, m):
                        ('constants_sequencer', y_cs, h_cs, 'E')):
         parts.append(dict(name=n, col=c, y=round(y, 3), h=h))
     rows = g['row_y']
-    tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
+    tgt = [_band_tgt(v, rows, b) for b in range(BANDS)]
     half = (area['port_tiles'] + area['scale_rom']) / (2 * BANDS)
     h_sl = hh(half)
     if getattr(v, 'SLAB_GROUP_H', 0.0):

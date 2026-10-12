@@ -66,6 +66,7 @@ COLS, ROWS = 64, 24
 CH_ROWS = (7, 17)
 ROW_GAP = 0.0
 NBANDS = 6
+BAND_OF = None                 # qwen-tp8 tp8b (F2): (block, c0, r0) -> (band, port index); None: band = block row
 TILE_SLOT = (313.632, 1291.68)
 CORR = 52.704
 CORR_R2 = 52.704               # the r2 floorplan corridor (r20e may widen CORR; the tile body keeps its width)
@@ -226,9 +227,9 @@ def _build(spine_w, tree_mode):
     band = PHY_DEPTH + CTRL_W + cdc_w + STRIP_W
     x_wband = up(EDGE, GX)
     x_arr_w = up(x_wband + band, GX)
-    x_spine = x_arr_w + 32 * TILE_SLOT[0]
+    x_spine = x_arr_w + (COLS // 2) * TILE_SLOT[0]
     x_arr_e = up(x_spine + 2 * cw + VCH + XCOL, GX)
-    x_eband = x_arr_e + 32 * TILE_SLOT[0]
+    x_eband = x_arr_e + (COLS // 2) * TILE_SLOT[0]
     W = up(x_eband + band + EDGE, GX)
     # y layout: 7 rows, channel S, 10 rows, channel N, 7 rows, IO band
     y0 = up(EDGE, GY)
@@ -251,11 +252,11 @@ def _build(spine_w, tree_mode):
     regions = []
     # ---- tiles, stations, heads
     def col_x(c):
-        return x_arr_w + c * TILE_SLOT[0] if c < 32 else x_arr_e + (c - 32) * TILE_SLOT[0]
+        return x_arr_w + c * TILE_SLOT[0] if c < COLS // 2 else x_arr_e + (c - COLS // 2) * TILE_SLOT[0]
     for c in range(COLS):
         xc = col_x(c)
         for r in range(ROWS):
-            insts.append(Inst(f't_{c}_{r}', 'qfd_tile_e' if (R19 and c >= 32) else 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
+            insts.append(Inst(f't_{c}_{r}', 'qfd_tile_e' if (R19 and c >= COLS // 2) else 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
                               kind='tile', region='tile_field'))
             sy = row_y[r] + dn((TILE_SLOT[1] - STATION[1]) / 2, GY)
             insts.append(Inst(f's_{c}_{r}', 'qfd_cst', xc + TILE_BODY_W, sy, STATION[0] - SHAVE, STATION[1] - SHAVE,
@@ -497,7 +498,7 @@ def _build(spine_w, tree_mode):
             for k in range(1, n + 1):
                 xx = (xb_ - k * LINK_WAYPOINT_UM) if side == 'W' else (xa + k * LINK_WAYPOINT_UM - LST_H[0])
                 # sit in a corridor (never on a tile body): nearest corridor x
-                c = min(range(32) if side == 'W' else range(32, 64), key=lambda c: abs(col_x(c) + TILE_BODY_W - xx))
+                c = min(range(COLS // 2) if side == 'W' else range(COLS // 2, COLS), key=lambda c: abs(col_x(c) + TILE_BODY_W - xx))
                 # r18: over a tile body, clear of the corridor that crosses the channel there (r18j i5: M9 1.035 at
                 # corridor 9 where lh_SW_* sat on the corridor's channel crossing)
                 lx = dn(col_x(c) + TILE_BODY_W / 2 - LST_H[0] / 2, GX) if R18 else col_x(c) + TILE_BODY_W + GX * 20
@@ -547,11 +548,11 @@ def buses(m):
     # column-head chains from the x root (vector memory block: x network root, dataflow level 2 at the hub edge)
     xr = 'sp_vector_memory'
     prev = (xr, 'xw')
-    for c in range(31, -1, -1):
+    for c in range(COLS // 2 - 1, -1, -1):
         B.append((f'head_{c}', 'head_chain', CORRIDOR_BITS, [prev, (f'h_{c}', 'e')]))
         prev = (f'h_{c}', 'w')
     prev = (xr, 'xe')
-    for c in range(32, COLS):
+    for c in range(COLS // 2, COLS):
         B.append((f'head_{c}', 'head_chain', CORRIDOR_BITS, [prev, (f'h_{c}', 'w')]))
         prev = (f'h_{c}', 'e')
     # ME split tree: 4 x 4 blocks; 8 + 4 + 2 + 1 nodes hosted on distinct tiles; leaves = t_out
@@ -584,8 +585,8 @@ def buses(m):
         if m['tree_mode'] == 'central':
             B.append((f'bword_{b}', 'tree_spine', TREE_BITS, [root, ('sp_tree_top', f'bw{b}')]))
         else:   # banded: to the port slice of this block-row band
-            band = r0 // BLOCK[1]
-            B.append((f'bword_{b}', 'tree_spine', TREE_BITS, [root, (f'sp_port_tiles_{band}', f'bw{b % 16}')]))
+            band, k = BAND_OF(b, c0, r0) if BAND_OF else (r0 // BLOCK[1], b % 16)
+            B.append((f'bword_{b}', 'tree_spine', TREE_BITS, [root, (f'sp_port_tiles_{band}', f'bw{k}')]))
     if m['tree_mode'] != 'central':
         for band in range(NBANDS):
             B.append((f'pword_{band}', 'tree_spine', TREE_BITS, [(f'sp_port_tiles_{band}', 'rw'), ('sp_tree_top', f'bw{band}')]))
@@ -610,7 +611,7 @@ def buses(m):
     if R19:
         # per-row landing fabric: stack crossbar -> the row's first tile -> ... -> the tile beside the spine
         for side in 'WE':
-            cols = list(range(32)) if side == 'W' else list(range(63, 31, -1))
+            cols = list(range(COLS // 2)) if side == 'W' else list(range(COLS - 1, COLS // 2 - 1, -1))
             for r in range(ROWS):
                 st = f'{side}{"S" if r < ROWS // 2 else "N"}'
                 prev = (m['lfifos'][st].name, f'r{r % (ROWS // 2)}')

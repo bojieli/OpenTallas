@@ -103,7 +103,9 @@ def surgery(v, m, compact_seq=False):
             i.master = 'qfd_tile_nk'
     dx = g['x_arr_w'] - MARGIN
     xr = g['x_eband']
-    assert min(i.x for i in keep) >= dx - 1e-6 and max(i.x + i.w for i in keep) <= xr + 1e-6, 'kept outside the bands'
+    # qwen-tp8 tp8b (F2): the IO row is longer than the narrower 48-column field until _tp8b_f2 re-places it in the S band
+    chk = [i for i in keep if not (getattr(v, 'BAND_OF', None) and i.kind in ('io', 'xfifo'))]
+    assert min(i.x for i in chk) >= dx - 1e-6 and max(i.x + i.w for i in chk) <= xr + 1e-6, 'kept outside the bands'
     for i in keep:
         i.x = round(i.x - dx, 4)
     W = round(xr - dx + MARGIN, 4)
@@ -303,7 +305,7 @@ def _wrap_masters(v, m):
     def masters(model, k=1, port_bits=None):
         tiles = [i for i in model['insts'] if i.master == 'qfd_tile_nk']
         for i in tiles:
-            i.master = 'qfd_tile_e' if i.name.split('_')[1].isdigit() and int(i.name.split('_')[1]) >= 32 else 'qfd_tile'
+            i.master = 'qfd_tile_e' if i.name.split('_')[1].isdigit() and int(i.name.split('_')[1]) >= v.COLS // 2 else 'qfd_tile'
         sqi = next((i for i in model['insts'] if i.name == 'sp_constants_sequencer'), None)
         sq_wh = (sqi.w, sqi.h) if sqi is not None else None
         if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):

@@ -142,11 +142,19 @@ QWEN_R22KSV = dict(QWEN_R22K, before_relays=_R22K.surgery_vm, seam_free=True)
 QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=669.6, tile_body=311.04, tile_h=1296.0,
                                            spine_gap=171.936, root_spread=True,
                                            tree_pads='results/arch/hier_contract_1012/qwen_rom_tp8_tree_pads.json'))
-R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a')
+# tp8b (qwen-tp8/die 2026-10-12, SPEC section 0 / 5 floorplan F2, track B single die): 48 x 16 qfd_tile_nk at the 311.04 x 1,296
+# slot (column pitch 394.848 = slot + 83.8-um column channel; row gap 190.08), 3 compact bands of 16 blocks, the spine
+# widened to 4,589 um (KV-centre sub-column), KV-die halves 3.7 mm + 100-um channel on the W / E edges, all IO in one S
+# band under a 400-um IO word channel (qwen_rom_fulldie_b3r2._tp8b_f2)
+QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=190.08, tile_body=311.04, tile_h=1296.0,
+                                       spine_gap=171.936, root_spread=True,
+                                       f2=dict(cols=48, rows=16, col_pitch=394.848, spine_w=4589.0, kv_w=3700.0,
+                                               kv_ch=100.0, io_chan=400.0, crom_ch=151.2)))
+R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
                 'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K,
-                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS, 'r22ko4': QWEN_R22KO4, 'r22ksv': QWEN_R22KSV, 'tp8a': QWEN_TP8A}
+                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS, 'r22ko4': QWEN_R22KO4, 'r22ksv': QWEN_R22KSV, 'tp8a': QWEN_TP8A, 'tp8b': QWEN_TP8B}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -2535,7 +2543,7 @@ def main(argv=None):
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
-                                                              'r21c', 'r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a'])
+                                                              'r21c', 'r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '
