@@ -17,6 +17,7 @@ module ot_engc_pbank #(
     // clock pins as a separate macro tree that ends with NO leaf buffers (2 branch nets, 3 SRAMs each, 124-188 um,
     // SRAM clk slew 239 ps FF -> slew-dependent library hold 42-61 ps on every wd_in / addr pin; CTS macro-clustering
     // options do not change it, CTS-stop x1-x3).  An explicit clock cell per group gives each SRAM its own short driver:
+    //   (gated off while the tile is in reset: only valid-reset / unreset data flops sit on it, no observable change)
     //   0 = none (T_PBB as closed);  1 = per-group ICG drives only the SRAM clk;
     //   2 = per-group ICG drives the SRAM clk AND its access (W3 / R2) and capture flops (macro + launch flops on one leaf).
     parameter integer CKL = 0
@@ -55,7 +56,9 @@ module ot_engc_pbank #(
         if (CKL == 0) begin : g_ck0 assign ckm = ck; end
         else begin : g_ckl
 `ifdef SYNTHESIS
-            ICGx4_ASAP7_75t_R u_ckl (.CLK(ck), .ENA(1'b1), .SE(1'b0), .GCLK(ckm));
+            // ENA = the synchronised reset (clock runs once out of reset).  NOT a tie: OpenSTA propagates the ENA=1 constant
+            // through the ICG statetable and drops the CLK->GCLK arc (CTS-stop x5: SRAM clk unclocked, 1,536 unconstrained D).
+            ICGx4_ASAP7_75t_R u_ckl (.CLK(ck), .ENA(rn), .SE(1'b0), .GCLK(ckm));
 `else
             assign ckm = ck;
 `endif
