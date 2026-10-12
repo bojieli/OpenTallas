@@ -78,7 +78,8 @@ module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integ
  wire [11:0] k7; wire v7, e7, c7, cr7, xv7, id7; wire [53:0] x7, xd7; wire [52:0] rk7;
  // elaboration check: the hard tile is the MAX_K 2,048 configuration (k pins 12 b) and takes no mutants
 `ifdef OT_TOPK_TILE_HARD
- if (MUT_BYP != 0 || MUT_CLR != 0) begin : g_chk $error("hard heap tiles have no mutant parameters"); end
+ // (a non-default request instantiates an undefined module, so elaboration fails in every tool)
+ if (MUT_BYP != 0 || MUT_CLR != 0) begin : g_chk ot_ERROR_hard_heap_tiles_take_no_parameters u_chk (); end
 `endif
  ot_hgi_idx_topk_w8_hub u_hub (.clk(clk), .rst_n(rst_n), .cmd_valid(cmd_valid), .cmd_ready(cmd_ready),
   .cmd_unit(cmd_unit), .cmd_op(cmd_op), .cmd_param(cmd_param), .cmd_n(cmd_n), .cmd_m(cmd_m), .cmd_values(cmd_values),
