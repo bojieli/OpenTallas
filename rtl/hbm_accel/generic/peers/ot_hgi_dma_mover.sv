@@ -307,13 +307,14 @@ module ot_hgi_dma_mover #(
         u_pop = ({2'd0, u_k} == s_room) || u_end;                     // the source sector is used up / chunk end
     end
     // ---- reader: each slot's next chunk (combinational on registered slot state)
-    reg [3:0] c_ok; reg [36:0] c_ea [0:3]; reg [3:0] c_ns [0:3]; reg [8:0] c_by [0:3]; reg [3:0] c_rend; reg [3:0] c_bad;
+    reg [3:0] c_ok; reg [8:0] c_bv [0:3]; reg [36:0] c_ea [0:3]; reg [3:0] c_ns [0:3]; reg [8:0] c_by [0:3]; reg [3:0] c_rend; reg [3:0] c_bad;
     reg [36:0] c_ds [0:3];                                  // the chunk's first destination sector (STRIPE4: its stack)
     always @* begin : chk
         for (integer k = 0; k < 4; k = k + 1) begin : ck
             reg [3:0] lm; reg [8:0] bav; reg [1:0] st;
             lm = src_hbm ? (4'd8 - {1'b0, rsa[k][7:5]}) : 4'd1;       // sectors to the 8-sector boundary (VM: one)
             bav = {lm, 5'd0} - {4'd0, rsa[k][4:0]};
+            c_bv[k] = bav;
             c_by[k] = ({15'd0, bav} < rrl[k]) ? bav : rrl[k][8:0];
             c_rend[k] = {15'd0, bav} >= rrl[k];
             c_ns[k] = 4'(({4'd0, rsa[k][4:0]} + c_by[k] + 9'd31) >> 5);
@@ -334,15 +335,37 @@ module ot_hgi_dma_mover #(
     reg [3:0] q_ok, q_rend, q_bad; reg [36:0] q_ea [0:3]; reg [3:0] q_ns [0:3]; reg [8:0] q_by [0:3]; reg [36:0] q_ds [0:3];
     reg [4:0] q_ln [0:3]; reg l_v; reg [1:0] l_k; reg [4:0] l_ln;
     // PX: each slot's next values on issue (valid under the same mask as q_*: a slot that issued last cycle is not picked)
-    reg [41:0] q_san [0:3], q_ddn [0:3], q_nsn [0:3], q_ndn [0:3]; reg [23:0] q_rln [0:3]; reg [19:0] q_ron [0:3]; reg [3:0] q_rlst;
+    reg [41:0] q_san [0:3]; reg [23:0] q_rln [0:3]; reg [19:0] q_ron [0:3]; reg [3:0] q_rlst;
+    // hbm-fq/mvf 10-11 r2 (route px1a 01a78566e TT -208 / SS -713: rsa / ssp -> q_san / q_ddn 26-31 levels = the c_by chain
+    // (src_hbm -> lm -> bav -> compare rrl -> mux) in series with a 42-b add; sstw -> q_nsn / rsa -> rnsa = bare 42-b adds):
+    // * q_san is only consumed when the chunk does NOT end the row (!q_rend), where c_by = bav, so rsa + c_by =
+    //   (rsa[41:5] + lm) << 5 = HBM ? {rsa[41:8] + 1, 8'b0} : {rsa[41:5] + 1, 5'b0}: two incrementers off the register.
+    // * q_ddn = rdd + ((bav >> sl2) << dl2) (< 2^12): a 13-b low add with its carry registered; the high part is rdd[41:13]
+    //   or its registered increment, selected at issue by the carry (rdd[k] is unchanged since R0 sampled it: same mask
+    //   as every q_*).  q_nsn / q_ndn (row-step adds): 21-b halves, carry registered, both high sums registered.
+    reg [12:0] q_dlo [0:3]; reg [3:0] q_dc; reg [41:13] q_dh1 [0:3];
+    reg [20:0] q_nlo [0:3], q_nh0 [0:3], q_nh1 [0:3], q_mlo [0:3], q_mh0 [0:3], q_mh1 [0:3]; reg [3:0] q_nc, q_mc;
+    wire [41:0] q_ddn [0:3], q_nsn [0:3], q_ndn [0:3];
+    genvar g;
+    for (g = 0; g < 4; g = g + 1) begin : g_qsel
+        assign q_ddn[g] = {q_dc[g] ? q_dh1[g] : rdd[g][41:13], q_dlo[g]};
+        assign q_nsn[g] = {q_nc[g] ? q_nh1[g] : q_nh0[g], q_nlo[g]};
+        assign q_ndn[g] = {q_mc[g] ? q_mh1[g] : q_mh0[g], q_mlo[g]};
+    end
     always @(posedge clk) begin
         for (integer k = 0; k < 4; k = k + 1) begin : r0
             reg [41:0] w; reg [19:0] rn1;
             q_ok[k] <= c_ok[k]; q_rend[k] <= c_rend[k]; q_bad[k] <= c_bad[k]; q_ea[k] <= c_ea[k]; q_ns[k] <= c_ns[k];
             q_by[k] <= c_by[k]; q_ds[k] <= c_ds[k]; q_ln[k] <= rsa[k][9:5];
-            w = {33'd0, c_by[k] >> sl2}; rn1 = ro[k] + ((stp || stpd) ? 20'd4 : 20'd1);
-            q_san[k] <= rsa[k] + {33'd0, c_by[k]}; q_rln[k] <= rrl[k] - {15'd0, c_by[k]}; q_ddn[k] <= rdd[k] + (w << dl2);
-            q_nsn[k] <= rnsa[k] + sstw; q_ndn[k] <= rndd[k] + dstw; q_ron[k] <= rn1; q_rlst[k] <= rn1 >= mm;
+            w = {33'd0, c_bv[k] >> sl2}; rn1 = ro[k] + ((stp || stpd) ? 20'd4 : 20'd1);
+            q_san[k] <= src_hbm ? {rsa[k][41:8] + 34'd1, 8'd0} : {rsa[k][41:5] + 37'd1, 5'd0};   // exact when !c_rend
+            q_rln[k] <= rrl[k] - {15'd0, c_bv[k]};                                     // exact when !c_rend
+            {q_dc[k], q_dlo[k]} <= {1'b0, rdd[k][12:0]} + {1'b0, 13'(w << dl2)}; q_dh1[k] <= rdd[k][41:13] + 29'd1;
+            {q_nc[k], q_nlo[k]} <= {1'b0, rnsa[k][20:0]} + {1'b0, sstw[20:0]};
+            q_nh0[k] <= rnsa[k][41:21] + sstw[41:21]; q_nh1[k] <= rnsa[k][41:21] + sstw[41:21] + 21'd1;
+            {q_mc[k], q_mlo[k]} <= {1'b0, rndd[k][20:0]} + {1'b0, dstw[20:0]};
+            q_mh0[k] <= rndd[k][41:21] + dstw[41:21]; q_mh1[k] <= rndd[k][41:21] + dstw[41:21] + 21'd1;
+            q_ron[k] <= rn1; q_rlst[k] <= rn1 >= mm;
         end
         l_k <= r_k; l_ln <= rsa[r_k][9:5];
     end
@@ -359,6 +382,7 @@ module ot_hgi_dma_mover #(
         for (integer t = 3; t >= 0; t = t - 1) if (r_ok[2'(rrr + 2'(t))]) begin r_go = 1'b1; r_k = 2'(rrr + 2'(t)); end
         r_go = r_go && busy_f && go_q5 && !f_fault && sf_n <= 9'(SFD - 10) && cf_n < 7'(CF - 2);
     end
+    reg [3:0] s_nc, s_mc;                                              // PX: settle-edge low-half carries
     reg go_q3;                                                         // one more setup edge: the row-end registers settle
     reg go_q4;                                                         // the reader slots are set up
     reg go_q2;                                                         // the command fields are settled
@@ -602,7 +626,16 @@ module ot_hgi_dma_mover #(
                     f_fault <= 1'b1; mv_fault <= 1'b1; busy_f <= 1'b0;
                 end
             end
-            if (go_q2 && !go_q3) for (integer k = 0; k < 4; k = k + 1) begin   // the settle edge: each slot's next row
+            if (PX != 0) begin                                                 // two settle edges: 21-b halves, carry kept
+                if (go_q2 && !go_q3) for (integer k = 0; k < 4; k = k + 1) begin
+                    {s_nc[k], rnsa[k][20:0]} <= {1'b0, rsa[k][20:0]} + {1'b0, sstw[20:0]};
+                    {s_mc[k], rndd[k][20:0]} <= {1'b0, rdd[k][20:0]} + {1'b0, dstw[20:0]};
+                end
+                if (go_q3 && !go_q4) for (integer k = 0; k < 4; k = k + 1) begin
+                    rnsa[k][41:21] <= rsa[k][41:21] + sstw[41:21] + {20'd0, s_nc[k]};
+                    rndd[k][41:21] <= rdd[k][41:21] + dstw[41:21] + {20'd0, s_mc[k]};
+                end
+            end else if (go_q2 && !go_q3) for (integer k = 0; k < 4; k = k + 1) begin   // the settle edge: each slot's next row
                 rnsa[k] <= rsa[k] + sstw; rndd[k] <= rdd[k] + dstw;
             end
             // ---- issue: lane / client requests
