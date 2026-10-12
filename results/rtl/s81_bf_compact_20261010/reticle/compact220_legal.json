@@ -1,0 +1,1597 @@
+{
+ "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
+ "tool": "tools/dsrom_s81_fulldie.py --gen r8",
+ "tool_sha256": "1763189d03af06f9d6489489ba1df83c8e492a28353ff05eecce23cc8c77e9bf",
+ "sources_sha256": {
+  "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+  "results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz": "3d904e3f5cda2c6a8cbf21d8109224254e295e3b9a23cb1185accc20ea88e512",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+  "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4",
+  "rtl/v41die/ot_s81_cfg7_seq.sv": "95b0070f8e6dd2118f6a6196b76376905c48d9885cdfaf0000a6eda9cece8733",
+  "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json": "635ae98aea31f228f7ba2d848c455ea06587e22759b62951cdb4725b3f1e569a",
+  "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_A.lef.gz": "0bd29f9155f06f3297b85830dfce439a8fc06352363b3ba81bf86064ac159b80",
+  "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_B.lef.gz": "f12004448d0d630436249918482a8c3747ad2886cd849f06cb99902507c3adea",
+  "rtl/v41rom/ot_dsrom_head_bundle.sv": "a24a454205fcc4a474dd21a38a99f0eee40fa0c0224dbd917980b5d23b328bac",
+  "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+  "rtl/common/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85",
+  "rtl/common/ot_ratio_cdc_fifo.sv": "b608b11a3e676f0a83ddfba49b6187b5991e2d443a4d1c5269274ee6587e8557",
+  "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+ },
+ "die": {
+  "w_um": 33000.0,
+  "h_um": 26000.0,
+  "mm2": 858.0
+ },
+ "variant": {
+  "q_x1b": false,
+  "ck_rule": true,
+  "coll_split3": false,
+  "bf_hier": 450.144,
+  "bf_frame_extra_um": 0.0,
+  "die_um": [
+   33000.0,
+   26000.0
+  ],
+  "host": true,
+  "ctrl_rq": false,
+  "fwd_iface": false,
+  "hop_extra": 0,
+  "path_pick": false,
+  "hop_r_cc": 410.0,
+  "relay_tt_reach": null,
+  "wfc_hard": true,
+  "face_pin_inset": false,
+  "ctrl_slab": false,
+  "ctrl_role": null,
+  "su_area_mm2": 12.80594,
+  "hub_column_width_um": 1080.0,
+  "gen": "r8",
+  "geometry_fix": false,
+  "cfifo_v2": true,
+  "cfifo_colck": true,
+  "link_fix": false,
+  "link_split": false,
+  "sel_xstg": false,
+  "pin_relay": false,
+  "nxt_reach": false,
+  "vm_face_mm2": null,
+  "ch_heights": [
+   501.12,
+   501.12,
+   501.12,
+   501.12,
+   501.12,
+   501.12,
+   259.2
+  ],
+  "vch_w": 1209.6,
+  "hc_corr": 1209.6,
+  "hc_xface": false,
+  "hop_fix": false,
+  "meso_d8": false,
+  "fwd_pitch": 430.56,
+  "corr_interleave": false,
+  "rev": "r9",
+  "cc_reach_um": 430.56,
+  "vch_interleave": false,
+  "q_lef": "results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz",
+  "head_dies": 12,
+  "die": "layer",
+  "role": "scan die (4 HBM3E stacks; 32 of the rack)",
+  "pairs": 1792,
+  "bf": 256,
+  "nv": 0,
+  "head_bundles": 0,
+  "stacks": [
+   "SW",
+   "SE",
+   "NW",
+   "NE"
+  ],
+  "elem_frame_h": 228.96,
+  "q_elem_frame_h": 241.92,
+  "frame_h": 2566.08,
+  "slot_h": 311.04,
+  "slots": 8,
+  "mtp_seq": null,
+  "mtp_links": 0,
+  "draft": null
+ },
+ "ctrl_model": null,
+ "ctrl_binding_shell_sha256": null,
+ "slot": {
+  "elem_frame_h_um": 228.96,
+  "q_elem_frame_h_um": 241.92,
+  "frame_h_um": 2566.08,
+  "slot_h_um": 311.04,
+  "slots_per_column": 8,
+  "capacity": {
+   "elem_frame_h_um": 228.96,
+   "q_elem_frame_h_um": 241.92,
+   "frame_h_um": 2566.08,
+   "slot_h_um": 311.04,
+   "slots_per_column": 8,
+   "columns": 128,
+   "max_pairs_per_layer_die": 1792,
+   "pairs_per_layer_die_now": 2417,
+   "layer_field_pairs_total": 783108,
+   "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
+   "layer_dies_now": 324,
+   "layer_dies_at_max": 438,
+   "extra_layer_dies": 114,
+   "inventory_compiled_pairs_TP4": 783264,
+   "rack": {
+    "scan_dies_4stack": 32,
+    "layer_dies_1stack": 292,
+    "head_dies": 12,
+    "table_dies": 36,
+    "draft_dies": 52,
+    "total": 424,
+    "layer_dies_total": 324,
+    "head_bundles_per_head_die": 85,
+    "source": "results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 table, 1-stack layer dies)"
+   },
+   "meso_slot": {
+    "record": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json",
+    "um2_per_W512_slot": 4842.0,
+    "cfifo_W564_slots": 2,
+    "cfifo_reservation_um2": 41057.3
+   },
+   "bf_per_region_flavours": {
+    "4": {
+     "max_pairs": 1536,
+     "bf": 512,
+     "slots_per_column": 8,
+     "slot_h_um": 311.04
+    },
+    "0": {
+     "max_pairs": 2048,
+     "bf": 0,
+     "slots_per_column": 8,
+     "slot_h_um": 311.04
+    }
+   }
+  }
+ },
+ "instances": {
+  "bfcol": 512,
+  "bf": 256,
+  "cfg": 12544,
+  "seq": 1792,
+  "q": 1536,
+  "sstn": 1024,
+  "qbank": 3072,
+  "node": 3456,
+  "cfifo": 128,
+  "pqstn": 256,
+  "pqroot": 128,
+  "hub": 11,
+  "pqrom": 3,
+  "phy": 4,
+  "ctrl": 4,
+  "svc": 4,
+  "band_blk": 2,
+  "link": 8,
+  "rstg": 256,
+  "rly": 8192,
+  "hend": 44,
+  "stn": 2611,
+  "hstn": 77
+ },
+ "area_mm2_by_kind": {
+  "bfcol": 50.786,
+  "bf": 5.655,
+  "cfg": 30.069,
+  "seq": 3.746,
+  "q": 99.596,
+  "sstn": 5.351,
+  "qbank": 1.204,
+  "node": 23.219,
+  "cfifo": 5.255,
+  "pqstn": 0.292,
+  "pqroot": 3.582,
+  "hub": 37.622,
+  "pqrom": 0.007,
+  "phy": 40.026,
+  "ctrl": 8.446,
+  "svc": 53.612,
+  "band_blk": 6.341,
+  "link": 4.238,
+  "rstg": 0.344,
+  "rly": 2.475,
+  "hend": 0.711,
+  "stn": 1.826,
+  "hstn": 0.049
+ },
+ "placed_footprint_mm2": 384.45,
+ "utilisation": {
+  "placed_over_die": 0.4481,
+  "field_frames_mm2": 388.51
+ },
+ "geometry": {
+  "slot_h": 311.04,
+  "slots": 8,
+  "frame_h": 2566.08,
+  "q_elem_frame_h": 241.92,
+  "x_lw": 20.304,
+  "x_fw": 1191.024,
+  "x_sp": 14806.8,
+  "x_fe": 18176.4,
+  "x_le": 32718.384,
+  "y_f": 3669.84,
+  "y_top": 22332.24,
+  "ch_y": [
+   3669.84,
+   6737.04,
+   9804.24,
+   12871.44,
+   15938.64,
+   19005.839999999997,
+   22073.04
+  ],
+  "tier_y": [
+   4170.96,
+   7238.16,
+   10305.36,
+   13372.560000000001,
+   16439.76,
+   19506.959999999995
+  ],
+  "band_depth": 3041.28,
+  "field_h": 18662.4,
+  "spine_cx": 16491.6,
+  "col_pitch": 1191.456,
+  "col_w": 1182.816,
+  "spf": 518.4,
+  "tier_cols": [
+   10,
+   11,
+   11,
+   11,
+   11,
+   10
+  ]
+ },
+ "forwarded": {
+  "stations": 2611,
+  "ot_fwd_link_stage_instances": 7422,
+  "chains": 83,
+  "max_hop_um": 430.5,
+  "hops_over_430p56": 0,
+  "over_examples": [],
+  "meso_fifos": 276,
+  "ratio_cdc_fifos": 12
+ },
+ "field_round_trip_cycles": {
+  "farthest_frame": 127,
+  "cycles": 143,
+  "x_trunk_stages": 65,
+  "column_slot_stages": 8,
+  "root_stages": 2,
+  "return_trunk_stages": 54,
+  "meso_crossings": 2,
+  "crossing_cycles_each": 2,
+  "hop_fix": null,
+  "q_bank_stages": 2,
+  "column_relays_x": 1,
+  "column_relays_return": 4,
+  "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
+ },
+ "bus_classes": {
+  "x_lane": {
+   "buses": 6784,
+   "wires": 1850240
+  },
+  "x_ctl": {
+   "buses": 1152,
+   "wires": 17280
+  },
+  "cfg": {
+   "buses": 3328,
+   "wires": 179712
+  },
+  "go": {
+   "buses": 3328,
+   "wires": 3328
+  },
+  "rom_a": {
+   "buses": 1795,
+   "wires": 21540
+  },
+  "rom_ce": {
+   "buses": 12547,
+   "wires": 12547
+  },
+  "rom_q": {
+   "buses": 12547,
+   "wires": 602256
+  },
+  "stat": {
+   "buses": 10496,
+   "wires": 17408
+  },
+  "ret_leaf": {
+   "buses": 12800,
+   "wires": 806400
+  },
+  "ret_tree": {
+   "buses": 3584,
+   "wires": 236544
+  },
+  "col_ret": {
+   "buses": 896,
+   "wires": 59904
+  },
+  "col_clock": {
+   "buses": 128,
+   "wires": 128
+  },
+  "col_reset": {
+   "buses": 128,
+   "wires": 128
+  },
+  "bfh": {
+   "buses": 1024,
+   "wires": 397824
+  },
+  "local": {
+   "buses": 56,
+   "wires": 31922
+  },
+  "fclk": {
+   "buses": 6175,
+   "wires": 6175
+  },
+  "lane": {
+   "buses": 6183,
+   "wires": 1478798
+  },
+  "hub": {
+   "buses": 94,
+   "wires": 61398
+  },
+  "phy_dfi": {
+   "buses": 4,
+   "wires": 88952
+  },
+  "hbm_read": {
+   "buses": 4,
+   "wires": 35456
+  },
+  "host_wr": {
+   "buses": 8,
+   "wires": 2384
+  },
+  "top_in": {
+   "buses": 2,
+   "wires": 2
+  },
+  "clock": {
+   "buses": 3,
+   "wires": 3
+  },
+  "reset": {
+   "buses": 3,
+   "wires": 3
+  }
+ },
+ "chains": [
+  {
+   "chain": "xWdn",
+   "lanes": [
+    566
+   ],
+   "stations": 27,
+   "length_um": 10437.5,
+   "max_hop_um": 426.2,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xW2",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12724.5,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW1",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12724.5,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW0",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11533.0,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xWup",
+   "lanes": [
+    566
+   ],
+   "stations": 19,
+   "length_um": 7318.0,
+   "max_hop_um": 425.7,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xW3",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12776.8,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW4",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12776.8,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW5",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11585.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xEdn",
+   "lanes": [
+    566
+   ],
+   "stations": 31,
+   "length_um": 12361.1,
+   "max_hop_um": 426.6,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xE2",
+   "lanes": [
+    566
+   ],
+   "stations": 33,
+   "length_um": 12810.6,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE1",
+   "lanes": [
+    566
+   ],
+   "stations": 33,
+   "length_um": 12810.6,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE0",
+   "lanes": [
+    566
+   ],
+   "stations": 30,
+   "length_um": 11619.2,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xEup",
+   "lanes": [
+    566
+   ],
+   "stations": 36,
+   "length_um": 14460.5,
+   "max_hop_um": 425.5,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xE3",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12758.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE4",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12758.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE5",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11566.9,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "rW0",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 42,
+   "length_um": 17313.9,
+   "max_hop_um": 429.4,
+   "last_hop_um": 217.3
+  },
+  {
+   "chain": "rW1",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 38,
+   "length_um": 15670.7,
+   "max_hop_um": 429.4,
+   "last_hop_um": 358.4
+  },
+  {
+   "chain": "rW2",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 32,
+   "length_um": 12836.0,
+   "max_hop_um": 429.4,
+   "last_hop_um": 72.1
+  },
+  {
+   "chain": "rW3",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 38,
+   "length_um": 15408.0,
+   "max_hop_um": 429.4,
+   "last_hop_um": 167.2
+  },
+  {
+   "chain": "rW4",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 45,
+   "length_um": 18347.3,
+   "max_hop_um": 429.4,
+   "last_hop_um": 131.7
+  },
+  {
+   "chain": "rW5",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 49,
+   "length_um": 20095.1,
+   "max_hop_um": 429.8,
+   "last_hop_um": 20.4
+  },
+  {
+   "chain": "rE0",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 53,
+   "length_um": 21750.3,
+   "max_hop_um": 429.4,
+   "last_hop_um": 1.3
+  },
+  {
+   "chain": "hr_E0_o",
+   "lanes": [
+    692
+   ],
+   "stations": 1,
+   "length_um": 739.2,
+   "max_hop_um": 425.1,
+   "last_hop_um": 314.1
+  },
+  {
+   "chain": "rE1",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 48,
+   "length_um": 19788.6,
+   "max_hop_um": 429.8,
+   "last_hop_um": 240.3
+  },
+  {
+   "chain": "hr_E1_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 743.3,
+   "max_hop_um": 426.4,
+   "last_hop_um": 319.0
+  },
+  {
+   "chain": "rE2",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 41,
+   "length_um": 16635.5,
+   "max_hop_um": 429.8,
+   "last_hop_um": 40.6
+  },
+  {
+   "chain": "hr_E2_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 743.3,
+   "max_hop_um": 426.4,
+   "last_hop_um": 319.0
+  },
+  {
+   "chain": "rE3",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 44,
+   "length_um": 17949.5,
+   "max_hop_um": 429.8,
+   "last_hop_um": 229.4
+  },
+  {
+   "chain": "hr_E3_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 743.3,
+   "max_hop_um": 426.4,
+   "last_hop_um": 319.0
+  },
+  {
+   "chain": "rE4",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 51,
+   "length_um": 20794.6,
+   "max_hop_um": 429.8,
+   "last_hop_um": 0.5
+  },
+  {
+   "chain": "hr_E4_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 743.3,
+   "max_hop_um": 413.4,
+   "last_hop_um": 332.0
+  },
+  {
+   "chain": "rE5",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 54,
+   "length_um": 22448.2,
+   "max_hop_um": 429.8,
+   "last_hop_um": 270.0
+  },
+  {
+   "chain": "hr_E5_o",
+   "lanes": [
+    692
+   ],
+   "stations": 1,
+   "length_um": 739.2,
+   "max_hop_um": 425.1,
+   "last_hop_um": 314.1
+  },
+  {
+   "chain": "qSW",
+   "lanes": [
+    514
+   ],
+   "stations": 27,
+   "length_um": 11564.0,
+   "max_hop_um": 429.8,
+   "last_hop_um": 87.5
+  },
+  {
+   "chain": "aSW",
+   "lanes": [
+    1026
+   ],
+   "stations": 27,
+   "length_um": 11409.5,
+   "max_hop_um": 429.8,
+   "last_hop_um": 69.1
+  },
+  {
+   "chain": "ixSW",
+   "lanes": [
+    514
+   ],
+   "stations": 11,
+   "length_um": 5023.5,
+   "max_hop_um": 425.5,
+   "last_hop_um": 346.9
+  },
+  {
+   "chain": "coSW",
+   "lanes": [
+    514
+   ],
+   "stations": 67,
+   "length_um": 28546.6,
+   "max_hop_um": 429.8,
+   "last_hop_um": 76.9
+  },
+  {
+   "chain": "qSE",
+   "lanes": [
+    514
+   ],
+   "stations": 51,
+   "length_um": 22067.5,
+   "max_hop_um": 425.5,
+   "last_hop_um": 391.2
+  },
+  {
+   "chain": "aSE",
+   "lanes": [
+    1026
+   ],
+   "stations": 50,
+   "length_um": 21611.7,
+   "max_hop_um": 426.2,
+   "last_hop_um": 361.8
+  },
+  {
+   "chain": "ixSE",
+   "lanes": [
+    514
+   ],
+   "stations": 25,
+   "length_um": 10903.1,
+   "max_hop_um": 425.5,
+   "last_hop_um": 277.8
+  },
+  {
+   "chain": "coSE",
+   "lanes": [
+    514
+   ],
+   "stations": 84,
+   "length_um": 35895.2,
+   "max_hop_um": 426.0,
+   "last_hop_um": 195.7
+  },
+  {
+   "chain": "qNW",
+   "lanes": [
+    514
+   ],
+   "stations": 31,
+   "length_um": 13251.8,
+   "max_hop_um": 429.8,
+   "last_hop_um": 78.9
+  },
+  {
+   "chain": "aNW",
+   "lanes": [
+    1026
+   ],
+   "stations": 30,
+   "length_um": 13100.8,
+   "max_hop_um": 426.8,
+   "last_hop_um": 349.7
+  },
+  {
+   "chain": "ixNW",
+   "lanes": [
+    514
+   ],
+   "stations": 68,
+   "length_um": 28884.7,
+   "max_hop_um": 429.8,
+   "last_hop_um": 76.9
+  },
+  {
+   "chain": "coNW",
+   "lanes": [
+    514
+   ],
+   "stations": 12,
+   "length_um": 5152.8,
+   "max_hop_um": 426.5,
+   "last_hop_um": 79.1
+  },
+  {
+   "chain": "qNE",
+   "lanes": [
+    514
+   ],
+   "stations": 56,
+   "length_um": 23793.5,
+   "max_hop_um": 425.5,
+   "last_hop_um": 98.3
+  },
+  {
+   "chain": "aNE",
+   "lanes": [
+    1026
+   ],
+   "stations": 54,
+   "length_um": 23303.0,
+   "max_hop_um": 426.9,
+   "last_hop_um": 378.9
+  },
+  {
+   "chain": "ixNE",
+   "lanes": [
+    514
+   ],
+   "stations": 85,
+   "length_um": 36330.4,
+   "max_hop_um": 426.0,
+   "last_hop_um": 204.3
+  },
+  {
+   "chain": "coNE",
+   "lanes": [
+    514
+   ],
+   "stations": 25,
+   "length_um": 10872.4,
+   "max_hop_um": 427.2,
+   "last_hop_um": 249.7
+  },
+  {
+   "chain": "sel",
+   "lanes": [
+    514
+   ],
+   "stations": 24,
+   "length_um": 10500.0,
+   "max_hop_um": 426.0,
+   "last_hop_um": 299.8
+  },
+  {
+   "chain": "col",
+   "lanes": [
+    514
+   ],
+   "stations": 27,
+   "length_um": 11649.1,
+   "max_hop_um": 426.0,
+   "last_hop_um": 173.7
+  },
+  {
+   "chain": "KW0t",
+   "lanes": [
+    512
+   ],
+   "stations": 48,
+   "length_um": 20459.2,
+   "max_hop_um": 429.4,
+   "last_hop_um": 60.0
+  },
+  {
+   "chain": "KW0r",
+   "lanes": [
+    512
+   ],
+   "stations": 48,
+   "length_um": 20389.0,
+   "max_hop_um": 430.3,
+   "last_hop_um": 111.5
+  },
+  {
+   "chain": "KW1t",
+   "lanes": [
+    512
+   ],
+   "stations": 51,
+   "length_um": 21703.0,
+   "max_hop_um": 429.4,
+   "last_hop_um": 94.4
+  },
+  {
+   "chain": "KW1r",
+   "lanes": [
+    512
+   ],
+   "stations": 51,
+   "length_um": 21678.9,
+   "max_hop_um": 429.4,
+   "last_hop_um": 246.7
+  },
+  {
+   "chain": "KW2t",
+   "lanes": [
+    512
+   ],
+   "stations": 42,
+   "length_um": 18052.5,
+   "max_hop_um": 429.4,
+   "last_hop_um": 204.2
+  },
+  {
+   "chain": "KW2r",
+   "lanes": [
+    512
+   ],
+   "stations": 42,
+   "length_um": 17852.6,
+   "max_hop_um": 426.6,
+   "last_hop_um": 101.1
+  },
+  {
+   "chain": "KW3t",
+   "lanes": [
+    512
+   ],
+   "stations": 48,
+   "length_um": 20336.5,
+   "max_hop_um": 430.5,
+   "last_hop_um": 27.5
+  },
+  {
+   "chain": "KW3r",
+   "lanes": [
+    512
+   ],
+   "stations": 48,
+   "length_um": 20292.2,
+   "max_hop_um": 429.8,
+   "last_hop_um": 82.1
+  },
+  {
+   "chain": "KE0t",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 22766.0,
+   "max_hop_um": 429.4,
+   "last_hop_um": 242.2
+  },
+  {
+   "chain": "KE0r",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 22696.2,
+   "max_hop_um": 429.4,
+   "last_hop_um": 171.9
+  },
+  {
+   "chain": "KE1t",
+   "lanes": [
+    512
+   ],
+   "stations": 56,
+   "length_um": 24009.8,
+   "max_hop_um": 430.3,
+   "last_hop_um": 326.8
+  },
+  {
+   "chain": "KE1r",
+   "lanes": [
+    512
+   ],
+   "stations": 57,
+   "length_um": 23986.1,
+   "max_hop_um": 430.3,
+   "last_hop_um": 165.0
+  },
+  {
+   "chain": "KE2t",
+   "lanes": [
+    512
+   ],
+   "stations": 57,
+   "length_um": 24355.9,
+   "max_hop_um": 429.4,
+   "last_hop_um": 132.8
+  },
+  {
+   "chain": "KE2r",
+   "lanes": [
+    512
+   ],
+   "stations": 56,
+   "length_um": 24186.6,
+   "max_hop_um": 427.0,
+   "last_hop_um": 386.2
+  },
+  {
+   "chain": "KE3t",
+   "lanes": [
+    512
+   ],
+   "stations": 62,
+   "length_um": 26603.6,
+   "max_hop_um": 429.4,
+   "last_hop_um": 370.4
+  },
+  {
+   "chain": "KE3r",
+   "lanes": [
+    512
+   ],
+   "stations": 62,
+   "length_um": 26581.4,
+   "max_hop_um": 429.4,
+   "last_hop_um": 307.6
+  },
+  {
+   "chain": "hb_vm_su_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 4,
+   "length_um": 1705.0,
+   "max_hop_um": 429.8,
+   "last_hop_um": 124.2
+  },
+  {
+   "chain": "hb_vm_su_n",
+   "lanes": [
+    1024
+   ],
+   "stations": 8,
+   "length_um": 3540.3,
+   "max_hop_um": 429.8,
+   "last_hop_um": 226.6
+  },
+  {
+   "chain": "hb_vm_hc_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 4,
+   "length_um": 1912.8,
+   "max_hop_um": 425.5,
+   "last_hop_um": 214.5
+  },
+  {
+   "chain": "hb_hc_n_vm",
+   "lanes": [
+    1024
+   ],
+   "stations": 2,
+   "length_um": 1209.6,
+   "max_hop_um": 425.9,
+   "last_hop_um": 360.3
+  },
+  {
+   "chain": "hb_gather_capture",
+   "lanes": [
+    576
+   ],
+   "stations": 8,
+   "length_um": 3792.3,
+   "max_hop_um": 425.5,
+   "last_hop_um": 393.7
+  },
+  {
+   "chain": "hb_capture_vm",
+   "lanes": [
+    512
+   ],
+   "stations": 3,
+   "length_um": 1299.0,
+   "max_hop_um": 426.8,
+   "last_hop_um": 55.7
+  },
+  {
+   "chain": "hb_collective_vm",
+   "lanes": [
+    512
+   ],
+   "stations": 5,
+   "length_um": 2246.5,
+   "max_hop_um": 425.5,
+   "last_hop_um": 121.9
+  },
+  {
+   "chain": "hb_su_s_hc_s",
+   "lanes": [
+    512
+   ],
+   "stations": 2,
+   "length_um": 1209.6,
+   "max_hop_um": 426.8,
+   "last_hop_um": 362.0
+  },
+  {
+   "chain": "hb_su_n_hc_n",
+   "lanes": [
+    512
+   ],
+   "stations": 2,
+   "length_um": 1209.6,
+   "max_hop_um": 426.0,
+   "last_hop_um": 361.2
+  },
+  {
+   "chain": "hb_hc_s_hc_n",
+   "lanes": [
+    1024
+   ],
+   "stations": 3,
+   "length_um": 1281.6,
+   "max_hop_um": 429.2,
+   "last_hop_um": 128.5
+  },
+  {
+   "chain": "hb_hc_n_hc_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 3,
+   "length_um": 1425.6,
+   "max_hop_um": 429.8,
+   "last_hop_um": 149.2
+  },
+  {
+   "chain": "hb_pq_gather",
+   "lanes": [
+    508
+   ],
+   "stations": 8,
+   "length_um": 3658.0,
+   "max_hop_um": 427.7,
+   "last_hop_um": 267.0
+  },
+  {
+   "chain": "hb_gather_pq",
+   "lanes": [
+    192
+   ],
+   "stations": 9,
+   "length_um": 3802.0,
+   "max_hop_um": 425.5,
+   "last_hop_um": 70.4
+  },
+  {
+   "chain": "hb_wfc_vm",
+   "lanes": [
+    544
+   ],
+   "stations": 5,
+   "length_um": 2177.4,
+   "max_hop_um": 425.7,
+   "last_hop_um": 66.8
+  },
+  {
+   "chain": "hb_vm_wfc",
+   "lanes": [
+    512
+   ],
+   "stations": 5,
+   "length_um": 2321.4,
+   "max_hop_um": 425.5,
+   "last_hop_um": 197.8
+  }
+ ],
+ "scan_die_power": {
+  "stages": 81,
+  "pairs": 2417,
+  "static_icg_w": 50.196,
+  "dynamic_saturated_w": 33.9,
+  "total_saturated_w": 84.1,
+  "cooling_limit_w": 474.56,
+  "fits_cooling": true,
+  "all_pairs_busy_in_phase_w": 744.2,
+  "basis": "static: tools/ds_energy_silicon_authoritative.LAYER_DIE_W (ICG ledger, 30.6 W of it SerDes); dynamic: uarch_model._v41_graph(proposal) L20 per-die energy (field 0.497, idx MAC 0.049, HBM IF 0.115, attention 0.007 mJ/token) x head-bound saturated 80,833.5 tok/s; IR windows use the local peak in-phase densities below, not this average"
+ },
+ "rev": "r9",
+ "column_relays": {
+  "nets": 5632,
+  "relays": 8192,
+  "tt_reach_relays": [],
+  "by_class": {
+   "rt_": 6400,
+   "xa_": 0,
+   "xb_": 128,
+   "cc_": 0,
+   "qt_": 640,
+   "es_": 768,
+   "ss_": 0,
+   "so_": 0,
+   "nf_": 128,
+   "cfg_": 0,
+   "go_": 0,
+   "rr_": 0
+  }
+ },
+ "hub_stations": {
+  "hr_W0_o": {
+   "path_um": 359.4,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hr_W1_o": {
+   "path_um": 204.6,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hr_W2_o": {
+   "path_um": 363.5,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hr_W3_o": {
+   "path_um": 363.5,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hr_W4_o": {
+   "path_um": 363.5,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hr_W5_o": {
+   "path_um": 359.4,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hr_E0_o": {
+   "path_um": 739.2,
+   "stations": 1,
+   "floor_added": 1
+  },
+  "hr_E1_o": {
+   "path_um": 743.3,
+   "stations": 1,
+   "floor_added": 1
+  },
+  "hr_E2_o": {
+   "path_um": 743.3,
+   "stations": 1,
+   "floor_added": 1
+  },
+  "hr_E3_o": {
+   "path_um": 743.3,
+   "stations": 1,
+   "floor_added": 1
+  },
+  "hr_E4_o": {
+   "path_um": 743.3,
+   "stations": 1,
+   "floor_added": 1
+  },
+  "hr_E5_o": {
+   "path_um": 739.2,
+   "stations": 1,
+   "floor_added": 1
+  },
+  "hb_vm_su_s": {
+   "path_um": 1705.0,
+   "stations": 4,
+   "floor_added": 3
+  },
+  "hb_vm_su_n": {
+   "path_um": 3540.3,
+   "stations": 8,
+   "floor_added": 8
+  },
+  "hb_vm_hc_s": {
+   "path_um": 1912.8,
+   "stations": 4,
+   "floor_added": 4
+  },
+  "hb_hc_n_vm": {
+   "path_um": 1209.6,
+   "stations": 2,
+   "floor_added": 2
+  },
+  "hb_vm_gather": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_gather_capture": {
+   "path_um": 3792.3,
+   "stations": 8,
+   "floor_added": 8
+  },
+  "hb_capture_vm": {
+   "path_um": 1299.0,
+   "stations": 3,
+   "floor_added": 3
+  },
+  "hb_collective_vm": {
+   "path_um": 2246.5,
+   "stations": 5,
+   "floor_added": 5
+  },
+  "hb_su_s_hc_s": {
+   "path_um": 1209.6,
+   "stations": 2,
+   "floor_added": 2
+  },
+  "hb_su_n_hc_n": {
+   "path_um": 1209.6,
+   "stations": 2,
+   "floor_added": 2
+  },
+  "hb_hc_s_hc_n": {
+   "path_um": 1281.6,
+   "stations": 3,
+   "floor_added": 2
+  },
+  "hb_hc_n_hc_s": {
+   "path_um": 1425.6,
+   "stations": 3,
+   "floor_added": 3
+  },
+  "hb_vm_pq": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_pq_gather": {
+   "path_um": 3658.0,
+   "stations": 8,
+   "floor_added": 8
+  },
+  "hb_gather_pq": {
+   "path_um": 3802.0,
+   "stations": 9,
+   "floor_added": 8
+  },
+  "hb_wfc_vm": {
+   "path_um": 2177.4,
+   "stations": 5,
+   "floor_added": 5
+  },
+  "hb_vm_wfc": {
+   "path_um": 2321.4,
+   "stations": 5,
+   "floor_added": 5
+  },
+  "hb_collective_wfc": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_wfc_collective": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_wfc_capture": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_capture_wfc": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_collective_host": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_host_collective": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  }
+ },
+ "power_model": {
+  "seq": {
+   "w": 0.000217,
+   "basis": "DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)"
+  },
+  "sstn": {
+   "w": 0.001527,
+   "basis": "DERIVED 564 stage flops x W18 per-flop clock x 1.5"
+  },
+  "cfifo": {
+   "w": 0.007821,
+   "basis": "DERIVED meso W564 D4 (4 ring + 1 output word) + return register x W18 per-flop clock x 1.5"
+  },
+  "rstg": {
+   "w": 0.000179,
+   "basis": "DERIVED 66 stage flops"
+  },
+  "stn": {
+   "w": 0.0,
+   "basis": "per station: lane bits x W18 per-flop clock x 1.5 (inst_power_r8)"
+  },
+  "hend": {
+   "w": 0.0,
+   "basis": "per end/start block: 5 x lane bits x W18 per-flop clock x 1.5 (inst_power_r8)"
+  }
+ },
+ "legality_python": {
+  "instances": 35920,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "generated_pin_clashes": 0,
+ "windows_um": {
+  "field": [
+   6848.304,
+   9704.24,
+   11022.672,
+   13005.36
+  ],
+  "field_bf": [
+   12105.584,
+   3870.96,
+   15288.4,
+   6770.96
+  ],
+  "spine": [
+   14406.8,
+   11601.04,
+   18576.4,
+   14401.04
+  ],
+  "band_s": [
+   6248.896,
+   0.0,
+   9248.896,
+   3941.28
+  ]
+ },
+ "child_reservations": {}
+}

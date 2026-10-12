@@ -71,6 +71,7 @@ col = f'''`timescale 1ns/1ps
 // q-element's column shifted by exactly one cycle: same values, same order, partials +1 cycle.  Outputs leave from the
 // column's own output registers.  The BF x slice is the column's u_x copy (equal to the element's i2_q0 every cycle).
 module ot_v41_bf_col #({params},
+    parameter integer HDLY = 0,       // bf-hier-1011: HB4 hold-delay cells per input bit ahead of the boundary registers
     parameter integer MB = 0          // which column (simulation ROM image name only)
 ) (
     input  wire          clk,
@@ -114,7 +115,19 @@ module ot_v41_bf_col #({params},
     wire [4:0]   b_so_n [0:NSEG-1];
     if (1) begin : g_pin
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) r_rst (.clk(clk), .arst_n(rst_n_pin), .d(1'b1), .q(b_rst));
-        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze (.clk(clk), .arst_n(rst_n_pin), .d(ze_d), .q(b_ze));
+        // HDLY: a dont_touch hold-delay stage on every abutted input (ot_bf_hdly; identity in function)
+        wire d_ze, d_issue, d_i1_v, d_i1_bk, d_i1_bf; wire [13:0] d_a_ctr; wire [TW-1:0] d_i1_t;
+        wire [255:0] d_i2x_q0, d_i2x_q1; wire [9:0] d_i2x_e0, d_i2x_e1; wire [16*NSEG-1:0] d_so_row; wire [5*NSEG-1:0] d_so_idx, d_so_n;
+        ot_bf_hdly #(.W(1), .N(HDLY)) u_hdly_ze (.a(ze_d), .y(d_ze));
+        ot_bf_hdly #(.W(4), .N(HDLY)) u_hdly_ctl (.a({{issue, i1_v, i1_bk, i1_bf}}), .y({{d_issue, d_i1_v, d_i1_bk, d_i1_bf}}));
+        ot_bf_hdly #(.W(14), .N(HDLY)) u_hdly_actr (.a(a_ctr), .y(d_a_ctr));
+        ot_bf_hdly #(.W(TW), .N(HDLY)) u_hdly_t (.a(i1_t), .y(d_i1_t));
+        ot_bf_hdly #(.W(256), .N(HDLY)) u_hdly_q0 (.a(i2x_q0), .y(d_i2x_q0));
+        ot_bf_hdly #(.W(256), .N(HDLY)) u_hdly_q1 (.a(i2x_q1), .y(d_i2x_q1));
+        ot_bf_hdly #(.W(20), .N(HDLY)) u_hdly_e (.a({{i2x_e0, i2x_e1}}), .y({{d_i2x_e0, d_i2x_e1}}));
+        ot_bf_hdly #(.W(16*NSEG), .N(HDLY)) u_hdly_row (.a(so_row), .y(d_so_row));
+        ot_bf_hdly #(.W(10*NSEG), .N(HDLY)) u_hdly_so (.a({{so_idx, so_n}}), .y({{d_so_idx, d_so_n}}));
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze (.clk(clk), .arst_n(rst_n_pin), .d(d_ze), .q(b_ze));
         reg r_issue, r_i1_v, r_i1_bk, r_i1_bf;
         reg [13:0] r_a_ctr;
         reg [TW-1:0] r_i1_t;
@@ -123,9 +136,9 @@ module ot_v41_bf_col #({params},
         reg [16*NSEG-1:0] r_so_row;
         reg [5*NSEG-1:0] r_so_idx, r_so_n;
         always @(posedge clk) begin
-            r_issue <= issue; r_i1_v <= i1_v; r_i1_bk <= i1_bk; r_i1_bf <= i1_bf; r_a_ctr <= a_ctr; r_i1_t <= i1_t;
-            r_i2x_q0 <= i2x_q0; r_i2x_e0 <= i2x_e0; r_i2x_q1 <= i2x_q1; r_i2x_e1 <= i2x_e1;
-            r_so_row <= so_row; r_so_idx <= so_idx; r_so_n <= so_n;
+            r_issue <= d_issue; r_i1_v <= d_i1_v; r_i1_bk <= d_i1_bk; r_i1_bf <= d_i1_bf; r_a_ctr <= d_a_ctr; r_i1_t <= d_i1_t;
+            r_i2x_q0 <= d_i2x_q0; r_i2x_e0 <= d_i2x_e0; r_i2x_q1 <= d_i2x_q1; r_i2x_e1 <= d_i2x_e1;
+            r_so_row <= d_so_row; r_so_idx <= d_so_idx; r_so_n <= d_so_n;
         end
         assign b_issue = r_issue; assign b_i1_v = r_i1_v; assign b_i1_bk = r_i1_bk; assign b_i1_bf = r_i1_bf;
         assign b_a_ctr = r_a_ctr; assign b_i1_t = r_i1_t;
