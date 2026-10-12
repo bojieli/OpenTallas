@@ -599,6 +599,8 @@ O4_VM_SQ = (2332.8, 2073.6)
 O4_CTLM_S = dict(xd=100.0, xr=140.0, mx=400.0, ld=549.6)   # the control tile's S-face (VM-side) pin groups
 O4_ME_EN_BITS = 8               # me_en: one registered copy per VM bank-group tile, issued a cycle ahead by tt_ctlm
 O4_CHAN = 64.8                 # qwendie-1011: relay channel between the two constant-buffer rows
+O4_SUCH = 32.4                 # qwendie-1012 (it1 GRT 2D residual): channel between the SU S face and buffer row 0 (was abutted:
+                                #   all 16 cb words jog to their SU pins in one 4.8-um gcell row at y~10,060, cap 45-51 / use 46-53)
 O4_RROW = 64.8                 # relay row between the buffer rows and the ROM row (>= the 60.48-um wide-word relay frame)
 # qwen-1010/A 23:30: the all-reduce data path is the RTL's (ot_qwen_tp_seq_w12_vrl in seq_su reads the VM over seq_vrd /
 # vm_seq_q, streams the words to the collective and writes the result back over seq_vwr): the native sequencer <->
@@ -850,11 +852,11 @@ def _option4(v, m, rec):
         # qwendie-1011 (textbook audit class 6): a relay channel (O4_CHAN) between the two buffer rows, so row 0's far
         # side (S) and row 1's SU side (N) are open faces, not an abutted seam
         cb.append(add(f'cbuf_g_{k}', 'qfd_su_cbuf_g', su.x + col * O4_CBUF[0],
-                      su.y - (row + 1) * O4_CBUF[1] - row * O4_CHAN, O4_CBUF, dom=su.domain))
+                      su.y - O4_SUCH - (row + 1) * O4_CBUF[1] - row * O4_CHAN, O4_CBUF, dom=su.domain))
     # one ROM row at one height, never crossed by a far word (a 518.4-um ROM group is longer than the 504-um reach):
     # groups 4..7 under their buffers in column M, groups 0..3 in the E slot at the same height; a relay row (O4_RROW)
     # between the buffers and the ROM row carries row 0's far words east to the E slot
-    y_rom = v.dn(su.y - 2 * O4_CBUF[1] - O4_CHAN - O4_RROW - O4_CROM[1], v.GY)
+    y_rom = v.dn(su.y - O4_SUCH - 2 * O4_CBUF[1] - O4_CHAN - O4_RROW - O4_CROM[1], v.GY)
     for k in range(8):
         col = k % 4
         x = (slab.x if k < 4 else su.x) + col * O4_CROM[0]
