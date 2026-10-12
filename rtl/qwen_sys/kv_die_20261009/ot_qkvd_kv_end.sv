@@ -30,7 +30,8 @@ module ot_qkvd_kv_end #(
 );
     ot_qkvd_d2d #(.NT(3), .NR(4), .TXB(4), .RXB(0), .W(W), .IBD({8'd8, 8'd4, 8'(UCX), 8'(UCX)}),
                   .FCR({8'd0, 8'd4, 8'd32, 8'(FCR_RES)}), .RBD({8'd32, 8'd8, 8'd32, 8'd4}),
-                  .OCR({8'd32, 8'd8, 8'(QD), 8'd4}), .MUT(MUT), .SBD(SBD), .HT(HT)) u_d2d (
+                  .OCR({8'd32, 8'd8, 8'(QD), 8'd4}), .MUT(MUT), .SBD(SBD), .HT(HT),
+                  .ORL(HT != 0 ? 1 : 0), .IRL(HT != 0 ? 1 : 0)) u_d2d (   // HT routes (qkd_d2d_ref): input + output relays
         .clk(clk), .rst_n(rst_n), .t_v(t_v), .t_d(t_d), .t_cr(t_cr), .r_v(r_v), .r_d(r_d), .r_cr(r_cr),
         .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .fault(fault),
         .fault_cause(fault_cause));

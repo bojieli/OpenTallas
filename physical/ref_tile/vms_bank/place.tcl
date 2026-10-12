@@ -20,20 +20,22 @@ proc ot_ref_pick {by master pat} {
   foreach i [dict get $by $master] {
     set n [ot_ref_strip [$i getName]]
     if {[lsearch -exact $used $n] >= 0} continue
-    if {$pat ne "" && ![string match [ot_ref_strip $pat] $n]} continue
+    set sp [ot_ref_strip $pat]
+    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)
+    if {$pat ne "" && $sp ne $n && ![string match $sp $n]} continue
     lappend used $n; return $i
   }
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(63.936 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 63.936 25.92 R0"
+$i setOrient R0; $i setLocation [expr {round(66.96 * $dbu)}] [expr {round(28.08 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 66.96 28.08 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(63.936 * $dbu)}] [expr {round(116.64 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 63.936 116.64 R0"
+$i setOrient R0; $i setLocation [expr {round(66.96 * $dbu)}] [expr {round(118.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 66.96 118.8 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(63.936 * $dbu)}] [expr {round(207.36 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 63.936 207.36 R0"
+$i setOrient R0; $i setLocation [expr {round(66.96 * $dbu)}] [expr {round(209.52 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 66.96 209.52 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 3} { error "ref_tile place: expected 3 macros, netlist has $nb" }

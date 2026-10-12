@@ -808,6 +808,10 @@ def cmd_die(a):
                                        relay_all=getattr(a, 'relay_all_pins', False))
         RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib', work / 'hfd_rly_tt.lib')
         (work / 'relays.json').write_text(json.dumps(relay_rec, indent=0))
+        # hbmdie-v10-sta: forwarded-clock classes for tools/hbm_die_clock_pins.py (a station on an fclk bus or in
+        # fwd_dom takes its clock from the forwarded bits of its a port, not from a ck pin)
+        (work / 'clock_classes.json').write_text(json.dumps(dict(fclk=sorted(m.get('fclk') or {}),
+                                                                 fwd_dom=sorted(m.get('fwd_dom') or {}))) + '\n')
         print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced', 'unplaced_detail', 'instance_metadata')}))
     if a.case in ('real', 'sta'):
         H.case_real(m, work)

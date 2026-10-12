@@ -1808,7 +1808,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
-           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py",
+           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
                                                           "macro_sliver_block.tcl", "edge_sliver_block.tcl",
@@ -1881,6 +1881,13 @@ def ship_helpers(host, run):
                            input=buf.getvalue(), capture_output=True, timeout=120)
     if r.returncode:
         raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
+
+
+def route_cfg_of(rb):
+    """the ORFS config.mk of the route whose base dir is rb (results/asap7/<d>/base -> <orfs>/config.mk): a stacked ECO
+    (hold on a VT-swap / combo base) passes it as ROUTE_CFG so hold_eco.sh keeps the route's layer cap + face keepout"""
+    ps = Path(str(rb)).parents
+    return str((ps[3] if len(ps) > 3 else Path(str(rb))) / "config.mk")
 
 
 def tag(st, j):
@@ -2126,6 +2133,16 @@ def launch_stage(j, st, cmd):
     # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
     # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
     env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj 2>/dev/null || true\n"
+    if st["kind"] != "bench" and j["spec"].get("ref_tile"):
+        # LOOP-CHILD-LINT (2026-10-12): ref_tile.py export (collect / hold-ECO re-export) imports child_lint from the job's
+        # synced src, so a job synced before a child_lint fix (888b49460 EDGE_INSET_UM: thin tiles' edge-inset PG stripes)
+        # kept failing export on a lint bug, and every retry re-synced the old commit.  The lint is the loop's gate, not
+        # the design: run the loop's own child_lint (CHILD_LINT_DIR, shipped to {CL}); the job's views stay the input.
+        ship_helpers(j["host"], j["run"])
+        _src = j.get("stage_source", f"{j['run']}/src")
+        env += (f"[ -f {_src}/tools/hier_contract/child_lint.py ] && ! [ -f {_src}/tools/hier_contract/child_lint.py.job ] && "
+                f"cp {_src}/tools/hier_contract/child_lint.py {_src}/tools/hier_contract/child_lint.py.job; "
+                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py\n")
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
         cap = stage_mem_cap(j, st)
@@ -4532,7 +4549,8 @@ def start_combo_hold_retry(j, fleet, m, prev):
     henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=0 ALLOW=4 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
             f"ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} KEEPCLK=0 BUF=30 MACROS={mac} THREADS=8 SDC_NAME={sdcn} ECO_RB_DB=6_final.odb")
     cmd = (f"VB=$(ls -d {prev['out']}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo no combo base; exit 3; }}; "
-           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} ROUTE_CFG={shlex.quote(route_cfg_of(prev['rb']))} "
+           f"bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
     ship_helpers(j["host"], j["run"])
     prev["hold_retry"] = True
     j.setdefault("eco_history", []).append(prev)
@@ -4601,7 +4619,7 @@ def start_combo_eco(j, fleet, m):
     cmd = (f"{venv} bash {{CL}}/vtswap_eco.sh {rb} {ob} {outv} {blk} {pq}; "
            f"VB=$(ls -d {outv}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo COMBO: no vtswap base; exit 3; }}; "
            f"[ -f $VB/{sdcn} ] || cp {ob}/{sdcn} $VB/; "
-           f"{henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+           f"{henv} ROUTE_CFG={shlex.quote(route_cfg_of(rb))} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
     ship_helpers(j["host"], j["run"])
     tt, ff = m["ss_ps"], m["ff_ps"]
     j["eco"] = dict(tried=True, kind="combo", rb=rb, ob=ob, combo_vtswap=outv, out=out, post_sdc=post,
