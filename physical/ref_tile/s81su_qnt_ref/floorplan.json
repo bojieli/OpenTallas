@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  216.0,
-  216.0
+  36.72,
+  345.6
  ],
  "core": [
   2.16,
   2.16,
-  213.84,
-  213.84
+  34.56,
+  343.44
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -27,7 +27,7 @@
   "strap_layer": "M7"
  },
  "pins": {
-  "S": [
+  "W": [
    "ck",
    "rst",
    "dn_st",
@@ -35,27 +35,25 @@
    "dn_gsel",
    "dn_jid",
    "dn_v",
+   "i_f",
    "dn_d"
   ],
   "E": [
-   "i_f",
-   "o_fu",
-   "o_fo",
-   "o_alive",
-   "o_den",
-   "o_rdy",
-   "o_rjid"
-  ],
-  "N": [
-   "e_v",
    "e_d",
+   "e_v",
    "e_t",
    "e_gq",
    "e_gr",
    "e_gw",
    "e_go",
    "e_ob",
-   "e_eps"
+   "e_eps",
+   "o_fu",
+   "o_fo",
+   "o_alive",
+   "o_den",
+   "o_rdy",
+   "o_rjid"
   ]
  },
  "clock_port": "ck",

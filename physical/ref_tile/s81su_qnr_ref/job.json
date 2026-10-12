@@ -3,7 +3,7 @@
  "block": "dsfd_su_t_qnr",
  "ref_tile": true,
  "owner": "Claude:el1011-s81su-qn",
- "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the QN reduce (x1): 32 chunk sums -> golden pairwise tree, vector levels, ss/D + eps, rsqrt -> rstd (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow",
+ "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the QN reduce tail (x1): two half-tree sums -> the golden tree top add, vector levels, ss/D + eps, rsqrt -> rstd (the 32-input reduce was 23,114 sinks > 15k: split into 2 half trees + this tail); reference tile flow",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {

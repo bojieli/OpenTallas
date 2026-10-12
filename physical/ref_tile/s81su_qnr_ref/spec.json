@@ -23,10 +23,6 @@
  "reset_ports": [
   "rst"
  ],
- "outline": {
-  "w": 345.6,
-  "h": 345.6
- },
  "util": 0.52,
  "pg_layer": "M6",
  "pins": {
@@ -37,7 +33,8 @@
    "i_eps",
    "p_v",
    "p_p",
-   "p_d"
+   "p_d",
+   "p_f"
   ],
   "N": [
    "r_v",
@@ -56,11 +53,12 @@
   "owner": "Claude:el1011-s81su-qn",
   "branch": "claude/el1011-s81su-qn",
   "tag": "v1",
-  "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the QN reduce (x1): 32 chunk sums -> golden pairwise tree, vector levels, ss/D + eps, rsqrt -> rstd (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow",
+  "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the QN reduce tail (x1): two half-tree sums -> the golden tree top add, vector levels, ss/D + eps, rsqrt -> rstd (the 32-input reduce was 23,114 sinks > 15k: split into 2 half trees + this tail); reference tile flow",
   "no_bench_reason": "bit-exactness is gated on the slab dsfd_sp_su_h (tools/s81_suhc/su_gate.py --hier full m0 PASS + m1/m5 FAIL, reduced m0 PASS + mutants FAIL; el1011-s81-suhc-hier-1011.log [su]); the sub-tile alone has no golden",
   "views_to": "physical/ref_tile/s81su_qnr_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_qnr_ref"
  },
+ "std_area_um2": 5200,
  "params": {},
  "macros": [],
  "children": [],

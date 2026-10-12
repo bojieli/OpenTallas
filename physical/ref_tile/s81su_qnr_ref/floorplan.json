@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  345.6,
-  345.6
+  105.84,
+  105.84
  ],
  "core": [
   2.16,
   2.16,
-  343.44,
-  343.44
+  103.68,
+  103.68
  ],
- "why": "spec outline",
- "std_area_um2": null,
+ "why": "util 0.52 of std 5200 + macros 0 um2",
+ "std_area_um2": 5200,
  "layer_contract": {
   "children": {},
   "pg_layer": "M6",
@@ -34,7 +34,8 @@
    "i_eps",
    "p_v",
    "p_p",
-   "p_d"
+   "p_d",
+   "p_f"
   ],
   "N": [
    "r_v",
