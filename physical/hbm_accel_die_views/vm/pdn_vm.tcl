@@ -11,7 +11,11 @@ set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}
 define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M7}
 add_pdn_stripe -grid {top} -layer {M1} -width {0.018} -pitch {0.54} -offset {0} -followpins
 add_pdn_stripe -grid {top} -layer {M2} -width {0.018} -pitch {0.54} -offset {0} -followpins
-add_pdn_stripe -grid {top} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
+# [vm8 r8, 2026-10-11] top-grid M5 strap offset 0.300 -> 2.700 (same 0.048 track residue): at 0.300 the VDD/VSS M5 pair
+# sat 0.30-0.61 um from the WEST tile edge, and its M5-M6 via pads (x 0.264-0.363) shorted / broke EOL spacing with the
+# M6 west-face pins (hbm_vm8st3_nwwt4 DRC 25: 22 of 25 on e0_1/w0_1_o x VSS at x < 0.37; nwwt5/sewt0 DRC stalls the same
+# face).  2.7 = half the 5.4 pitch: >= 2.1 um clear of both W and E faces on every tile width.  M6/M7 unchanged.
+add_pdn_stripe -grid {top} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {2.700}
 add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.288} -pitch {5.4} -offset {0.600}
 add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}
 add_pdn_connect -grid {top} -layers {M1 M2}
