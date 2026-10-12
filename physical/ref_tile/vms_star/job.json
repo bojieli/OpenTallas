@@ -1,5 +1,5 @@
 {
- "name": "vms_star-v04-COMMIT",
+ "name": "vms_star-v04-98ae25577",
  "block": "ot_vms_star",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-b2-vm",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-b2-vm",
-  "commit": "COMMIT",
+  "commit": "98ae25577",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -155,7 +155,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vms_star/vms_star-v04-COMMIT"
+   "to": "results/rtl/ref_tile/vms_star/vms_star-v04-98ae25577"
   }
  ],
  "cycles_added": 0,
