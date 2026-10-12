@@ -26,8 +26,8 @@ Floorplan: i3_plan/floorplan.{json,svg}.
 | run | die | host / dir | status | GRT overflow | TT setup WNS / TNS | FF hold WNS / TNS | SS (sensitivity) | IR spine / field |
 |---|---|---|---|---|---|---|---|---|
 | c1 | layer1 | EPYC1 s81-die-iter/c1 | GRT running (about 12 h) | TBD | TBD | TBD | TBD | TBD |
-| c1e | layer1e (Engram home: eng_SE in the SE service slot) | EPYC4 s81-die-iter/c1e | relaunched 02:35 (first plan hit an assertion at d10_eng_SE, fix below) | TBD | TBD | TBD | TBD | TBD |
-| i3h | hrow-tx legality (SE slot under dsfd_mtp_hrow 2,998.08 x 1,769.04) | EPYC1 s81-die-iter/i3h_plan | queued | - | - | - | - | - |
+| c1e | layer1e (Engram home: eng_SE in the SE service slot) | EPYC4 s81-die-iter/c1e (src_c1e2 = 4c8acb002 + the fixes below, per-pin kit) | plan 3 PASS (0 overlaps / 0 outside / 0 pin clashes, 59,077 inst); chain started 03:14 | TBD | TBD | TBD | TBD | TBD |
+| i3h | hrow-tx legality (SE slot under dsfd_mtp_hrow 2,998.08 x 1,769.04) | EPYC1 s81-die-iter/i3h_plan | done: 0 overlaps / 0 outside / 0 pin clashes, 58,338 inst; margin lint TT reach PASS (max 518.4 <= 674 um), SS reach 504 um: 128 hops of 518.4 um (y_rt_<c>_24b_1, one per column) | - | - | - | - | - |
 | r4f (reference, 10-10) | layer1, r9 pre-v4 | EPYC3 cont-takeover/s81-r4d/r4f | done | 0 | -16.9 ps / -11.13 ns (1,018 paths, 1,008 of them return relays y_rt_*b) | -107.3 ps / -58,911 ns (2.32 M paths, raw die relays) | -63.9 ps | - |
 
 CTS plan: TBD from c1/clock/plan.json.gz (sinks, planned share, skew per tree).
@@ -47,12 +47,33 @@ CTS plan: TBD from c1/clock/plan.json.gz (sinks, planned share, skew per tree).
 
    No false paths and no masking: the die tree delivers each pin early by the insertion behind that pin.
    Verification: the r4f GRT SPEF re-timed at FF with the corrected balance (A) and as it was (B):
-   s81-die-iter/hold_verify on EPYC4. Result: TBD.
+   s81-die-iter/hold_verify on EPYC4. Both runs use the same SPEF, libs and netlist; 9 min, 26 GB each.
+
+   | FF hold (r4f SPEF) | as it was (B) | corrected balance (A) |
+   |---|---|---|
+   | WNS / TNS | -107.3 ps / -58,911 ns | -103.7 ps / -55,745 ns |
+   | y_xa (cfifo cr -> first column relay) worst | -107.3 | -32.9 |
+   | y_xb worst | -89.7 | -32.3 |
+   | endpoints < -50 ps | 36,150 | 4,093 |
+   | violating endpoints | 2,320,945 | 2,252,452 |
+
+   The cfifo class is closed down to the common relay floor (about -33 ps: interim relays, 50 ps hold uncertainty,
+   15 ps hold, a few um of wire). The new worst endpoint is a different class: hco_SW -> xsco_SW at -103.7 ps (unchanged
+   between A and B). In that class the hub m2l end block launches o[*] with a 110.5 ps ETM arc into an interim
+   dsfd_xstg_515 2.8 um away. The kit balances hco on its 152 ps scalar, while its lib's ck min_clock_tree_path is
+   123.0 ps. This is the next die-top hold class.
 3. **layer1e plan assertion (d10_eng_SE).** The control-plane start blocks on the eng_SE slab searched only stripS,
    which lies above the SE service slot. They now stand in the slot box first (engS / hrowS, as the fwd-iface sink ends
    do).
 
 ## Open
+
+- Hold class hco_SW -> xsco_SW (-103.7): balance single-clock closed views on their lib min_clock_tree_path at FF
+  (hco 123.0 instead of 152, worth about 29 ps), and add hold buffering on the die-top net, because the hop is 2.8 um.
+- c1 ran its kit with the earlier die_sta (src_8d764f310). After its GRT, re-run the kit with main die_sta and repeat
+  the FF STA on the c1 SPEF.
+- i3h: the hrow-tx slot is legal, so contract v7 stands (no v8). The 128 SS-reach hops (518.4 > 504 um) are the TT
+  return-relay class that v4 targets; TT reach passes.
 
 - Die-relay hold beyond the cfifo class (r4f: y_xb 167k, y_rt*b 79k, y_rt*a 52k, y_cfg 29k, y_cc 15k paths): the relays
   still have interim views (0 ps insertion), so the die-top region route has to carry hold buffering on the relay inputs.
