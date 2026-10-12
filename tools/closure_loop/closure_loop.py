@@ -2886,6 +2886,7 @@ def viz_elem_export(j):
                              stdout=lg, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, start_new_session=True,
                              env=dict(os.environ, CL_REPO=str(REPO)))
         event(j, "viz-elem: element page export started (explorer_elem_export.py auto)")
+        if (lvh := Path.home() / ".local/share/fleet-viz/layout_viewer/lv_post_record.sh").exists(): subprocess.Popen([str(lvh), j["name"]], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)  # layout viewer static export (layout-viewer-1011)
     except Exception as e:      # never into the caller
         event(j, f"viz-elem: export not started ({type(e).__name__}: {str(e)[:120]})")
 
