@@ -2858,6 +2858,7 @@ def finish(j, status, reason, ledger_text):
     experiment(j, f"{term} {reason[:120]}")
     if status == "CLOSED":
         viz_elem_export(j)
+        os.environ.get("CL_CLOSED_ARCHIVE", "1") != "0" and os.path.exists(CLOSED_ARCHIVE_HOOK) and os.system(f"setsid -f {CLOSED_ARCHIVE_HOOK} {shlex.quote(j['name'])} >/dev/null 2>&1 </dev/null")  # closed-archive-1011
 
 
 # VIZ-ELEM (owner 2026-10-10, viz-elem-1010): every CLOSED job gets its Chip Explorer element page.  finish() starts
@@ -2866,6 +2867,7 @@ def finish(j, status, reason, ledger_text):
 # ~/.local/state/viz-elem/<job>.json and VIZ_ELEM_LOG.  Deep release keeps the run dir while the marker says running.
 # CL_VIZ_ELEM=0 disables.  Backlog / retries: explorer_elem_export.py batch.
 VIZ_ELEM_MARKS = Path.home() / ".local/state/viz-elem"
+CLOSED_ARCHIVE_HOOK = "/home/ubuntu/closed_archive/_tools/hook.sh"   # closed-archive-1011: archives every CLOSED job's final files
 VIZ_ELEM_LOG = STATE / "viz_elem.log"
 
 
