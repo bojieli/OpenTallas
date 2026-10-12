@@ -21,7 +21,7 @@
 // verdict is registered).  The probe names state (11 = write stage), expert_index, word_index, sum_q describe stage 15.
 // EXT_ADD=1 (el1011-ds-mtp [p2pfx] hierarchical rebuild 2026-10-11): the 16-lane adder array is the separate hard tile
 // ot_p2h_fadd16 (its own clock tree; input pin flops + LAT8 ot_v41_fadd, registered outputs), driven from the add_a /
-// add_b / issue-valid registers through the x_add_* ports; FL = 9 (tile input register + 8).
+// add_b / issue-valid registers through the x_add_* ports; FL = 10 (fadd tile input register + 8 + arith result pin register).
 module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, DSTAGE=0, ROOTPIPE=0, EXT_ADD=0)(
  input wire clk,rst_n,start_v, output wire start_r,
  input wire [73:0] start_identity,input wire [26:0] start_ids,
@@ -41,7 +41,7 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, 
  assign x_add_v=0;assign x_add_a=0;assign x_add_b=0;
  end else begin: enabled
  localparam [1:0] P_IDLE=0,P_ACC=1,P_DRAIN=2;
- localparam integer FL=EXT_ADD?9:8; // ot_v41_fadd LATENCY at CUT 1_0111_1011 (+1: ot_p2h_fadd16 input pin flops) (checked: add_v vs tag valid)
+ localparam integer FL=EXT_ADD?10:8; // ot_v41_fadd LATENCY at CUT 1_0111_1011 (+1: ot_p2h_fadd16 input pin flops, +1: ot_p2h_arith result pin flops) (checked: add_v vs tag valid)
  localparam integer S_ADD=6, S_SUM=S_ADD+FL, S_WR=S_SUM+2;   // 6, 14, 16
  localparam integer QD=4;          // output queue entries = drain credits
  // ---------------- control (duplicated) ----------------

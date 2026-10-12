@@ -80,6 +80,10 @@ module ot_p2h_arith #(parameter integer MUT_COPY_FIRST=0)(
  .out_valid(xa_v),.out_ready(xa_r),.out_data(xa_d));
  wire ar_sr,ar_fault,ar_ce,ar_v,ar_r,ar_last;wire [73:0] ar_id;wire [6:0] ar_word;wire [575:0] ar_code;
  wire x_v;wire [511:0] x_a,x_b;
+ // result pin flops: the fadd tile's outputs land in flops before any logic (valid bits reset)
+ reg [15:0] y_v;reg [543:0] y_q;
+ always @(posedge clk or negedge rn)if(!rn)y_v<=16'd0;else y_v<=f_y[559:544];
+ always @(posedge clk)y_q<=f_y[543:0];
  ot_mtp_p2_prefix #(.ENABLE(1),.BREG(1),.DSTAGE(1),.ROOTPIPE(1),.EXT_ADD(1),.MUT_COPY_FIRST(MUT_COPY_FIRST)) arithmetic(.clk(clk),.rst_n(rn),
  .start_v(c_sv),.start_r(ar_sr),.start_identity(c_id),.start_ids(c_ids),
  .in_v(xa_v),.in_r(xa_r),.in_identity(xa_d[668:595]),.in_expert(xa_d[594:586]),
@@ -87,7 +91,7 @@ module ot_p2h_arith #(parameter integer MUT_COPY_FIRST=0)(
  .in_word(xa_d[582:576]),.in_secded(xa_d[575:0]),.out_v(ar_v),.out_r(ar_r),
  .out_identity(ar_id),.out_word(ar_word),.out_last(ar_last),.out_secded(ar_code),
  .abort(c_ab),.done(),.fault(ar_fault),.corrected(ar_ce),
- .x_add_v(x_v),.x_add_a(x_a),.x_add_b(x_b),.x_add_y(f_y[511:0]),.x_add_err(f_y[543:512]),.x_add_vo(f_y[559:544]));
+ .x_add_v(x_v),.x_add_a(x_a),.x_add_b(x_b),.x_add_y(y_q[511:0]),.x_add_err(y_q[543:512]),.x_add_vo(y_v));
  assign t_ab={x_v,x_a,x_b};
  wire o_v;wire [657:0] o_d;
  ot_sc_pfifo #(.W(658),.S(2),.G(32)) opin(.clk(clk),.rst_n(rn),
