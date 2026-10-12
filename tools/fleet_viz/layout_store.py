@@ -43,6 +43,10 @@ AVOID = set(filter(None, os.environ.get('LV_AVOID_HOSTS', 'ot-epyc4').split(',')
 RELAY = os.environ.get('LV_RELAY_HOST', 'ot-epyc3')
 RELAY_DIR = os.environ.get('LV_RELAY_DIR', '/srv/opentallas-scratch/claude/layout-viewer-store/relay')
 LOCAL_LOCK = WORK / '.local_cut.lock'    # cuts on this host run one at a time
+LOCAL_MAX_DB = float(os.environ.get('LV_LOCAL_MAX_DB', 400e6))   # archive DBs up to this (raw) size are cut on this host
+STREAM_ROOT = {'ot-epyc1tb': '/srv/opentallas-scratch/claude', 'ot-epyc2': '/srv/opentallas-scratch2/claude',
+               'ot-epyc3': '/srv/opentallas-scratch2/claude', 'ot-agidock128': '/srv/opentallas-scratch/claude', 'ot-pve1': '/srv/opentallas-scratch/claude'}
+STREAM_HOSTS = sorted(STREAM_ROOT)       # larger archive DBs are streamed (zstd) to one of these and cut there
 EXTRACT_VERSION = 'e2'   # bump when lv_extract.py output changes (forces re-extraction)
 TILE_VERSION = 't4'      # bump when lv_tile.py / lv_lint.py output changes (re-cut from the kept extraction)
 SCHEMA = 'opentallas.layout_viewer.store.v1'
@@ -62,16 +66,24 @@ def ssh(host, cmd, inp=None, timeout=1800, binary=False):
 
 
 def mem_for(size):
-    return int(min(160, max(8, -(-(12 * size) // 10 ** 9) + 6)))
+    return int(min(160, max(8, -(-(8 * size) // 10 ** 9) + 6)))   # measured: a 2.95 GB DB extracts within 31 GB (ot-heavy small slot)
 
 
 # ------------------------------------------------------------------ where is the DB
 def archive_db(el, job):
-    """the closed-archive copy of a job's final DB (closed-archive-1011 layout: <archive>/<el>/<job>/...6_final.odb)"""
+    """the closed-archive copy of a job's final DB (closed-archive-1011: <archive>/<el>/<job>/final/6_final.odb[.zst],
+    raw size in its manifest.json) -> (path, raw bytes) or None"""
     d = ARCHIVE / el / job
     if not d.is_dir(): return None
-    hits = sorted(d.rglob('6_final.odb')) or sorted(d.rglob('*.odb'))
-    return hits[0] if hits else None
+    for p in (d / 'final' / '6_final.odb', d / 'final' / '6_final.odb.zst'):
+        if p.exists():
+            size = None
+            try:
+                m = json.loads((d / 'manifest.json').read_text())
+                size = next((f.get('raw_size') for f in m.get('files', []) if f.get('role') == 'final_odb'), None)
+            except Exception: pass
+            return p, size or p.stat().st_size
+    return None
 
 
 def element_json(el):
@@ -83,14 +95,18 @@ def locate(el, job=None):
     """-> dict(kind='archive', path) | dict(kind='host', host, path) | None, plus the job"""
     d = element_json(el) or {}
     job = job or d.get('job')
+    if not job:   # no element page: the archive's best closure for the element
+        try: job = next((r['job'] for r in json.loads((ARCHIVE / 'INDEX.json').read_text()).get('rows', [])
+                         if r.get('element') == el and r.get('scope') == 'best' and r.get('status') == 'archived'), None)
+        except Exception: job = None
     if job:
         a = archive_db(el, job)
-        if a: return dict(kind='archive', path=str(a), job=job)
+        if a: return dict(kind='archive', path=str(a[0]), size=a[1], job=job)
     db = d.get('db') or ''
     if ':' in db and (not job or job == d.get('job')):
         host, path = db.split(':', 1)
         if host in ('localhost', '127.0.0.1'):
-            if os.path.exists(path): return dict(kind='archive', path=path, job=job or d.get('job'))
+            if os.path.exists(path): return dict(kind='archive', path=path, size=os.path.getsize(path), job=job or d.get('job'))
         else:
             r = ssh(host, 'stat -c "%%s" %s' % shlex.quote(path), timeout=60)
             if r.returncode == 0:
@@ -107,7 +123,7 @@ def locate(el, job=None):
         if r.returncode == 0 and r.stdout.strip():
             size, path = r.stdout.strip().split(' ', 1)
             if host in ('localhost', '127.0.0.1'):   # a DB on this host is cut here, like an archive copy
-                return dict(kind='archive', path=path, job=job)
+                return dict(kind='archive', path=path, size=int(size), job=job)
             return dict(kind='host', host=host, path=path, size=int(size), job=job)
     return None
 
@@ -126,12 +142,22 @@ def cut_pack(el, src, dst, mark=lambda **k: None):
     meta = json.dumps(dict(db=src['path'] if src['kind'] == 'archive' else '%s:%s' % (src['host'], src['path']), job=src.get('job'),
                            source=src['kind']))
     if src['kind'] == 'archive':
-        return _cut_local(el, pathlib.Path(src['path']), dst, meta, mark)
+        if (src.get('size') or 0) <= LOCAL_MAX_DB:   # small DBs are cut here; larger ones go to a fleet host
+            return _cut_local(el, pathlib.Path(src['path']), dst, meta, mark)
+        host = STREAM_HOSTS[int(hashlib.sha1(el.encode()).hexdigest(), 16) % len(STREAM_HOSTS)]
+        return _cut_remote(el, host, None, src.get('size') or 0, dst, meta, mark, stream=pathlib.Path(src['path']))
     return _cut_remote(el, src['host'], src['path'], src.get('size') or 0, dst, meta, mark)
 
 
 def _cut_local(el, odb, dst, meta, mark):
     w = WORK / el; (w / 'raw').mkdir(parents=True, exist_ok=True)
+    if odb.suffix == '.zst':   # archive copies are zstd-compressed
+        plain = w / '6_final.odb'
+        if not (plain.exists() and plain.stat().st_mtime >= odb.stat().st_mtime):
+            mark(stage='decompress archived DB')
+            r = subprocess.run(['bash', '-c', 'zstd -dcq < %s > %s.tmp && mv %s.tmp %s' % (shlex.quote(str(odb.resolve())), plain, plain, plain)], capture_output=True, text=True)
+            if r.returncode: raise RuntimeError('zstd: %s' % r.stderr[-200:])
+        odb = plain
     mem = mem_for(odb.stat().st_size)
     WORK.mkdir(parents=True, exist_ok=True)
     with open(LOCAL_LOCK, 'w') as lk:
@@ -162,13 +188,26 @@ def _cut_local(el, odb, dst, meta, mark):
     return dst
 
 
-def _cut_remote(el, host, odb, size, dst, meta, mark):
+def _cut_remote(el, host, odb, size, dst, meta, mark, stream=None):
     work_host = RELAY if host in AVOID else host
     mem = mem_for(size)
-    store = remote_store_dir(odb, el) if work_host == host else '%s/%s' % (RELAY_DIR, el)
+    if stream is not None:
+        store = '%s/layout-viewer-store/%s' % (STREAM_ROOT[work_host], el)
+    else:
+        store = remote_store_dir(odb, el) if work_host == host else '%s/%s' % (RELAY_DIR, el)
     src_odb = odb
     ssh(work_host, 'mkdir -p %s/tools %s/raw' % (store, store), timeout=120)
-    if work_host != host:   # relay: stream the DB through this host (fleet hosts have no ssh to each other)
+    if stream is not None:   # an archived DB: stream it (compressed) from this host
+        mark(stage='stream archived DB to %s (%.1f GB)' % (work_host, size / 1e9))
+        src_odb = '%s/6_final.odb' % store
+        chk = ssh(work_host, 'stat -c %%s %s 2>/dev/null' % src_odb, timeout=60)
+        if chk.returncode or int(chk.stdout.strip() or 0) != size:
+            dec = 'zstd -dcq' if stream.suffix == '.zst' else 'cat'
+            with open(stream, 'rb') as fin:
+                r = subprocess.run(['ssh', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', work_host,
+                                    '%s > %s.tmp && mv %s.tmp %s' % (dec, src_odb, src_odb, src_odb)], stdin=fin, capture_output=True, timeout=6 * 3600)
+            if r.returncode: raise RuntimeError('stream to %s failed: %s' % (work_host, r.stderr[-300:]))
+    elif work_host != host:   # relay: stream the DB through this host (fleet hosts have no ssh to each other)
         mark(stage='relay %s -> %s (%.1f GB)' % (host, work_host, size / 1e9))
         src_odb = '%s/6_final.odb' % store
         chk = ssh(work_host, 'stat -c %%s %s 2>/dev/null' % src_odb, timeout=60)
@@ -418,11 +457,34 @@ def verify_pack(pack):
     return dict(verdict=o['verdict'], shapes=o['shapes'], db_shapes=o['db_shapes'], tiles=o['tiles'], clipped_pieces=o['clipped_pieces'])
 
 
+def cleanup(el, src):
+    """the store is the record: drop the cut's working files (extraction ~ the DB's size, relay copy, pack)"""
+    try:
+        if src['kind'] == 'archive':
+            shutil.rmtree(WORK / el, ignore_errors=True)
+            if (src.get('size') or 0) > LOCAL_MAX_DB:
+                host = STREAM_HOSTS[int(hashlib.sha1(el.encode()).hexdigest(), 16) % len(STREAM_HOSTS)]
+                ssh(host, 'rm -rf %s/layout-viewer-store/%s' % (STREAM_ROOT[host], shlex.quote(el)), timeout=600)
+        else:
+            host = RELAY if src['host'] in AVOID else src['host']
+            d = remote_store_dir(src['path'], el) if host == src['host'] else '%s/%s' % (RELAY_DIR, el)
+            if d.rstrip('/').endswith('/' + el) and 'layout-viewer-store' in d:
+                ssh(host, 'rm -rf %s' % shlex.quote(d), timeout=600)
+    except Exception:
+        pass
+
+
 def export(el, job=None, log=log, force=False):
     """cut + verify + publish one closure; never raises.  A closure already published is skipped unless force."""
     t0 = time.time()
     if job and not force and (STORE / 'elements' / el / (job + '.json')).exists():
         log('%s: %s already published' % (el, job)); return True
+    WORK.mkdir(parents=True, exist_ok=True)
+    lk = open(WORK / ('.%s.lock' % el), 'w')
+    try:   # one cut per element at a time across processes (hook, backfill, manual)
+        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        log('%s: another export of this element is running' % el); lk.close(); return False
     try:
         STORE.mkdir(parents=True, exist_ok=True)
         status_update(el, state='running', stage='locate', job=job, error=None)
@@ -442,6 +504,7 @@ def export(el, job=None, log=log, force=False):
         mark(stage='publish')
         man = publish(el, job, tmp, ver)
         tmp.unlink(missing_ok=True)
+        cleanup(el, src)
         status_update(el, state='done', stage='published', job=job, id=man['id'], bytes=man['bytes'], seconds=round(time.time() - t0),
                       shapes=ver.get('shapes'))
         log('%s: published %s (%s, %.1f MB, %d shapes, %.0f s)' % (el, job, src['kind'], man['bytes'] / 1e6, ver.get('shapes', 0), time.time() - t0))
@@ -488,7 +551,9 @@ def backfill(limit=None, only=None, workers=4, redo=False):
         if not host:
             try: host = json.loads((JOBS / (job + '.json')).read_text()).get('host') or 'local'
             except Exception: host = 'local'
-        key = 'archive' if archive_db(el, job) else (RELAY if host in AVOID else host)
+        a_ = archive_db(el, job)
+        if a_: key = 'archive' if a_[1] <= LOCAL_MAX_DB else 'stream:' + STREAM_HOSTS[int(hashlib.sha1(el.encode()).hexdigest(), 16) % len(STREAM_HOSTS)]
+        else: key = RELAY if host in AVOID else host
         queues.setdefault(key, []).append((el, job))
     log('backfill queues: ' + ', '.join('%s %d' % (k, len(v)) for k, v in queues.items()))
     res = []

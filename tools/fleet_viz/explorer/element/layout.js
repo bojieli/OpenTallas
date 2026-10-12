@@ -29,7 +29,8 @@ const PAL = {
     V0: ['#7fb8d8', 0], V1: ['#eaae7f', 0], V2: ['#7fcfb9', 0], V3: ['#f2cf7f', 0], V4: ['#aad9f4', 0], V5: ['#e5bcd3', 0], V6: ['#f7f1a0', 0], V7: ['#c390aa', 0], V8: ['#a1d4cc', 0], V9: ['#cccccc', 0]}};
 const KINDS = [ // id, label, default visible
   [0, 'Signal wires', 1], [1, 'Power stripes', 1], [2, 'Follow-pin rails', 1], [3, 'Other special wires', 1], [4, 'Block pins', 1], [5, 'Routing obstructions', 1],
-  [6, 'Metal fill', 1], [7, 'Macro pins', 1], [8, 'Macro OBS', 1], [9, 'Signal vias', 1], [10, 'Power vias', 1], [11, 'Cell pins', 1], [12, 'Cell OBS', 1], [13, 'Cell outlines', 1], [14, 'Filler / tap outlines', 0]];
+  [6, 'Metal fill', 1], [7, 'Macro pins', 1], [8, 'Macro OBS', 1], [9, 'Signal vias', 1], [10, 'Power vias', 1], [11, 'Cell pins', 1], [12, 'Cell OBS', 1], [13, 'Cell outlines', 1], [14, 'Filler / tap outlines', 0],
+  [15, 'Via arrays (merged)', 1], [16, 'Via array cuts', 1]];
 const KIND_NAME = Object.fromEntries(KINDS.map(k => [k[0], k[1].replace(/s$/, '')]));
 const HEAT = ['#2c7bb6', '#7fbfdc', '#e6f5c9', '#fee08b', '#fc8d59', '#d7191c'];
 const ARR = ['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725'];
@@ -43,7 +44,7 @@ attribute vec3 instanceMeta;
 uniform vec4 uColor[48];
 uniform float uAlpha[48];
 uniform float uPat[48];
-uniform float uKind[16];
+uniform float uKind[20];
 uniform float uHl;
 uniform float uPx;
 varying vec4 vColor; varying vec2 vPx; varying vec2 vSz; varying float vClip; varying float vPat;
@@ -151,13 +152,13 @@ async function blobJSON(name){ const u = blobUrl(name); if (!u) throw new Error(
 async function blobBuf(name){ const u = blobUrl(name); if (!u) throw new Error('no ' + name); const r = await fetch(u); if (!r.ok) throw new Error(r.status + ' ' + name); return r.arrayBuffer(); }
 
 function open(o){
-  // o: {root, side, el, d (element JSON), E (elem.js prepped element or null), safe, onFallback}
-  Object.assign(V, {open: true, root: o.root, side: o.side, el: o.el, d: o.d, E: o.E, safe: o.safe, onFallback: o.onFallback, base: '/api/layout/' + encodeURIComponent(o.el) + '/'});
-  if (V.loadedFor === o.el && deckgl){ V.root.hidden = false; V.side.hidden = false; renderSide(); requestUpdate(); return; }
+  // o: {root, side, nav (optional: layers + overlay toggles go here, read-outs stay in side), el, d (element JSON), E (elem.js prepped element or null), safe, onFallback}
+  Object.assign(V, {open: true, root: o.root, side: o.side, nav: o.nav || null, el: o.el, d: o.d, E: o.E, safe: o.safe, onFallback: o.onFallback, base: '/api/layout/' + encodeURIComponent(o.el) + '/'});
+  if (V.loadedFor === o.el && deckgl){ V.root.hidden = false; V.side.hidden = false; if (V.nav) V.nav.hidden = false; renderSide(); requestUpdate(); return; }
   close(true);
   V.loadedFor = o.el;
   V.root.innerHTML = `<div class="lv-busy" data-busy><div class="lv-spin"></div><div data-msg>Checking the routed geometry&hellip;</div></div>`;
-  V.side.innerHTML = '';
+  V.side.innerHTML = ''; if (V.nav) V.nav.innerHTML = '';
   poll();
 }
 function close(keep){
@@ -240,7 +241,7 @@ async function start(){
   for (let i = 0; i < NW; i++){ const w = new Worker('/explorer/element/lv_worker.js'); w.onmessage = onWorker; w.postMessage({op: 'init', header: H}); V.workers.push(w); }
   updateUniforms();   // pushes the raster style to the workers
   V.budget = PHONE() ? 1.2e6 : 3e6;
-  V.gpuCap = 300e6;
+  V.gpuCap = PHONE() ? 150e6 : 300e6;
   // DOM
   if (SOLID){ V.root.style.background = '#000'; document.documentElement.classList.add('lv-solid'); }
   V.root.innerHTML = `
@@ -308,10 +309,11 @@ function applyPalette(){
   updateUniforms();
 }
 function updateUniforms(){
-  const col = new Float32Array(48 * 4), al = new Float32Array(48), pat = new Float32Array(48), kd = new Float32Array(16);
+  const col = new Float32Array(48 * 4), al = new Float32Array(48), pat = new Float32Array(48), kd = new Float32Array(20);
   V.L.forEach(l => { const c = hex(l.color); col.set([c[0] / 255, c[1] / 255, c[2] / 255, 1], l.i * 4); al[l.i] = l.vis ? l.op : 0; pat[l.i] = l.pat; });
   KINDS.forEach(k => kd[k[0]] = V.kindVis[k[0]] ? 1 : 0);
   kd[14] = V.L[V.L.length - 1].vis ? 1 : 0;   // physical-only outlines follow their layer row
+  kd[15] = kd[16] = V.kindVis[10] ? 1 : 0;    // via arrays follow 'Power vias'
   V.uni = {uColor: col, uAlpha: al, uPat: pat, uKind: kd, uHl: V.hl || 0, uFill: SOLID ? 1 : themeBg() === 'light' ? 0.32 : 0.22, uPx: 1};
   V.styleVer = (V.styleVer || 0) + 1;
   if (V.workers){
@@ -354,12 +356,19 @@ function update(){
   const upx = ppu * Math.min(2, window.devicePixelRatio || 1); if (V.uni.uPx !== upx) V.uni = Object.assign({}, V.uni, {uPx: upx});
   const TI = tileIndex();
   const vis = tilesIn(b, 0).map(([x, y]) => x + '_' + y).filter(k => TI.has(k));
-  let cost = 0; vis.forEach(k => cost += shapeCost(TI.get(k)));
+  // the header's per-tile counts estimate the instances a tile becomes; loaded tiles calibrate the estimate
+  let est = 0, act = 0; for (const [k, t] of V.tiles){ if (t.n && TI.has(k)){ est += shapeCost(TI.get(k)); act += t.n; } }
+  const scale = est > 0 ? Math.max(0.5, Math.min(20, act / est)) : 1;
+  let cost = 0; vis.forEach(k => cost += shapeCost(TI.get(k)) * scale);
   const geo = cost <= V.budget && ppu * 1000 >= 0.25;   // >= 0.25 px per um and within the shape budget
   V.mode = geo ? 'geometry' : 'raster';
   const want = new Set();
+  if (geo && V.lastArrDetail !== arrDetail()){ V.lastArrDetail = arrDetail(); refreshTiles(); }
   if (geo){
-    const near = tilesIn(b, 1).map(([x, y]) => x + '_' + y).filter(k => TI.has(k));
+    // a one-tile prefetch ring, unless tiles are heavy (dense via arrays at full detail): then only what is on screen
+    const perTile = vis.length ? cost / vis.length : 0;
+    const heavy = perTile > 4e5 || (arrDetail() && [...V.tiles.values()].some(t => t.hasArr));   // via arrays cut by cut: on-screen only
+    const near = tilesIn(b, heavy ? 0 : 1).map(([x, y]) => x + '_' + y).filter(k => TI.has(k));
     const cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, G = V.header.grid;
     near.sort((p, q) => dist(p) - dist(q));
     function dist(k){ const [x, y] = k.split('_').map(Number); return (G.ox + (x + .5) * G.size - cx) ** 2 + (G.oy + (y + .5) * G.size - cy) ** 2; }
@@ -379,6 +388,7 @@ function update(){
       for (let y = ny0; y <= ny1; y++) for (let x = nx0; x <= nx1; x++){ const k = level + '/' + x + '_' + y; if (have.has(x + '_' + y) && !V.rasters.has(k) && !V.pending.has('r/' + k)) requestRaster(k); }
     }
   }
+  V.want = want;
   // GPU memory: evict least-recently-wanted tiles beyond the cap
   if (V.gpuBytes > V.gpuCap){
     const lru = [...V.tiles.entries()].filter(([k]) => !want.has(k)).sort((a, b2) => a[1].used - b2[1].used);
@@ -404,11 +414,15 @@ function requestTile(k){
   if (!secs.length){ V.tiles.set(k, {n: 0, empty: true, secs: [], bytes: 0, used: performance.now()}); return; }
   const w = V.workers[V.wnext++ % V.workers.length];
   V.pending.set('t/' + k, performance.now());
-  w.postMessage({op: 'tile', key: k, parts: secs.map(s => ({name: s, url: location.origin + blobUrl('t/' + k + '/' + s)})), phys: V.phys});
+  w.postMessage({op: 'tile', key: k, parts: secs.map(s => ({name: s, url: location.origin + blobUrl('t/' + k + '/' + s)})), phys: V.phys, arrDetail: arrDetail()});
 }
 function refreshTiles(){   // a layer switched on: tiles that lack its section are fetched again (cached sections are reused)
-  for (const [k, t] of V.tiles){ const need = neededSecs(k); if (need.some(s => !(t.secs || []).includes(s)) && !V.pending.has('t/' + k)) requestTile(k); }
+  const ad = arrDetail();
+  for (const [k, t] of V.tiles){ const need = neededSecs(k);
+    if ((need.some(s => !(t.secs || []).includes(s)) || (t.hasArr && t.arrDetail !== ad)) && !V.pending.has('t/' + k)) requestTile(k); }
 }
+// via-array cuts become individual shapes once a cut is ~4 device pixels (ASAP7 power-via cuts are 18-24 nm)
+function arrDetail(){ return Math.pow(2, V.vs.zoom) * Math.min(2, window.devicePixelRatio || 1) >= 0.2; }
 function requestRaster(k){
   const w = V.workers[V.wnext++ % V.workers.length];
   V.pending.set('r/' + k, performance.now());
@@ -420,9 +434,10 @@ function onWorker(ev){
   if (m.op === 'tile'){
     V.pending.delete('t/' + m.key);
     if (!V.header) return;
+    if (V.want && !V.want.has(m.key) && V.gpuBytes > V.gpuCap * 0.6){ requestUpdate(); return; }   // no longer needed: drop
     const bytes = m.n * 28, old = V.tiles.get(m.key);
     if (old) V.gpuBytes -= old.bytes || 0;
-    V.tiles.set(m.key, {n: m.n, rects: m.rects, meta: m.meta, pick: m.pick, ox: m.ox, oy: m.oy, bytes, secs: m.secs, used: performance.now(), layer: null});
+    V.tiles.set(m.key, {n: m.n, rects: m.rects, meta: m.meta, pick: m.pick, ox: m.ox, oy: m.oy, bytes, secs: m.secs, hasArr: m.hasArr, arrDetail: m.arrDetail, used: performance.now(), layer: null});
     V.gpuBytes += bytes;
     V.stats = V.stats || {tiles: 0, ms: 0, bytes: 0}; V.stats.tiles++; V.stats.ms += m.ms[1]; V.stats.bytes += m.bytes;
     if (!V.firstGeo){ V.firstGeo = performance.now() - V.t0; }
@@ -794,7 +809,7 @@ function renderSide(){
       <small>${l.type === 'CUT' ? 'via' : l.type === 'ROUTING' ? (l.dir === 'HORIZONTAL' ? 'H' : 'V') : ''}</small>
       <input type="range" min="0" max="100" value="${Math.round(l.op * 100)}" data-lo="${l.i}" aria-label="${esc(l.name)} opacity">
       <button class="lv-solo" data-solo="${l.i}" title="Show only ${esc(l.name)}">solo</button></div>`).join('');
-  const kinds = KINDS.filter(k => k[0] !== 14).map(k => `<label class="lv-chk"><input type="checkbox" ${V.kindVis[k[0]] ? 'checked' : ''} data-kind="${k[0]}"> ${esc(k[1])}</label>`).join('');
+  const kinds = KINDS.filter(k => k[0] < 14).map(k => `<label class="lv-chk"><input type="checkbox" ${V.kindVis[k[0]] ? 'checked' : ''} data-kind="${k[0]}"> ${esc(k[1])}</label>`).join('');
   const lint = V.lint || {}, F = lint.findings || [];
   const fsel = V.lintSel != null ? F[V.lintSel] : null;
   const lintHtml = lint.error ? `<p class="note">Contract lint could not run: ${esc(lint.error)}</p>` : !F.length ? `<p class="note ok">No findings: this element passes the hierarchy-contract checks on its routed abstract${(lint.summary && lint.summary.macros && lint.summary.macros.length) ? ' and every placed macro is on grid' : ''}.</p>` :
@@ -814,18 +829,19 @@ function renderSide(){
       ${V.netSel.bbox ? `<br><span class="lv-dim">extent ${fmt((V.netSel.bbox[2] - V.netSel.bbox[0]) / V.dbu, 2)} × ${fmt((V.netSel.bbox[3] - V.netSel.bbox[1]) / V.dbu, 2)} \u00b5m</span> <button class="rl" data-netzoom>zoom to net</button>` : ''} <button class="rl" data-netclear>clear</button></div>` : '';
   const T = H.truth ? H.truth.reduce((s, t) => s + t.n, 0) : null;
   const ovt = (k, t) => `<label class="lv-chk lv-ovt"><input type="checkbox" data-ov="${k}" ${V.ov[k] ? 'checked' : ''}> ${t}</label>`;
-  V.side.innerHTML = `
+  const navHtml = `
     <div class="sec"><h3>Layers <span class="u">${fmt(H.counts.rects + H.counts.vias, 0)} shapes + ${fmt(H.counts.insts, 0)} instances</span></h3>
       <div class="lv-pre"><button class="btn" data-pre="all">All</button><button class="btn" data-pre="signals">Signals only</button><button class="btn" data-pre="power">Power grid</button><button class="btn" data-pre="m6">M6+ die contract</button></div>
       <div class="lv-layers">${layersHtml}</div>
       <details class="lv-kinds"><summary>Shape kinds</summary><div class="lv-kgrid">${kinds}</div></details>
       <div class="ctl" style="margin-top:8px"><label>palette <select data-pal><option value="classic" ${V.palette === 'classic' ? 'selected' : ''}>Classic layout</option><option value="cvd" ${V.palette === 'cvd' ? 'selected' : ''}>Colour-blind safe</option></select></label></div>
-      ${net}</div>
-    <div class="sec"><h3>Contract findings <span class="u">child_lint on this routed DB</span></h3>${ovt('lint', 'draw on the layout')}${lintHtml}</div>
-    <div class="sec"><h3>Timing paths</h3>${ovt('paths', 'draw worst paths')}${paths}</div>
-    <div class="sec"><h3>Clock tree</h3>${ovt('clock', 'draw the tree, arrival-coloured')}${clk}</div>
-    <div class="sec"><h3>Congestion</h3>${ovt('cong', 'per-layer heatmap')}${cong}</div>
-    <div class="sec"><h3>Structure</h3>${ovt('macros', 'macro outlines')}${ovt('mods', 'module outlines' + (V.mods ? ` (${V.mods.length} blocks)` : ' (placement data needed)'))}</div>
+      </div>
+    <div class="sec"><h3>Overlays</h3>${ovt('lint', 'contract findings' + (F.length ? ` <small class="lv-dim">(${F.length})</small>` : ''))}${ovt('paths', 'worst timing paths')}${ovt('clock', 'clock tree, arrival-coloured')}${ovt('cong', 'congestion heatmap')}${ovt('macros', 'macro outlines')}${ovt('mods', 'module outlines' + (V.mods ? ` (${V.mods.length} blocks)` : ' (placement data needed)'))}</div>`;
+  const metaHtml = `${net ? `<div class="sec">${net}</div>` : ''}
+    <div class="sec"><h3>Contract findings <span class="u">child_lint on this routed DB</span></h3>${lintHtml}</div>
+    <div class="sec"><h3>Timing paths</h3>${paths}</div>
+    <div class="sec"><h3>Clock tree</h3>${clk}</div>
+    <div class="sec"><h3>Congestion</h3>${cong}</div>
     ${V.manifest ? (() => { const c = V.manifest.closure || {}, m = c.metrics || {};
       return `<div class="sec"><h3>Closure <span class="u">static export</span></h3><dl class="kv">
       <dt>job</dt><dd>${esc(c.job || V.manifest.job)}${c.status ? ' · ' + esc(c.status) : ''}</dd>
@@ -842,10 +858,13 @@ function renderSide(){
       <dt>DB truth</dt><dd>${T != null ? fmt(T, 0) + ' shapes; round-trip: tools/layout_viewer/lv_verify.js' : 'not recorded'}</dd>
       <dt>cut</dt><dd>${esc(H.made || '')}</dd>
       ${V.firstPaint ? `<dt>first paint</dt><dd>${fmt(V.firstPaint, 0)} ms${V.firstGeo ? ` · first geometry ${fmt(V.firstGeo, 0)} ms` : ''}</dd>` : ''}</dl></div>`;
+  if (V.nav){ V.nav.innerHTML = navHtml; V.side.innerHTML = metaHtml; } else V.side.innerHTML = navHtml + metaHtml;
   bindSide();
 }
 function bindSide(){
-  const S = V.side, nl = V.header.layers.length;
+  const both = [V.side, V.nav].filter(Boolean);
+  const S = {querySelectorAll: q => both.flatMap(c => [...c.querySelectorAll(q)]), querySelector: q => { for (const c of both){ const e = c.querySelector(q); if (e) return e; } return null; }};
+  const nl = V.header.layers.length;
   S.querySelectorAll('[data-lv]').forEach(c => c.onchange = () => { const l = V.L[+c.dataset.lv]; l.vis = c.checked; if (l.i === nl + 1){ V.phys = l.vis; V.tiles.clear(); V.gpuBytes = 0; }
     c.closest('.lv-row').classList.toggle('off', !l.vis); updateUniforms(); refreshTiles(); requestUpdate(); saveUrl(); });
   S.querySelectorAll('[data-lo]').forEach(c => c.oninput = () => { V.L[+c.dataset.lo].op = c.value / 100; updateUniforms(); requestUpdate(); });
@@ -854,7 +873,7 @@ function bindSide(){
   S.querySelectorAll('[data-kind]').forEach(c => c.onchange = () => { V.kindVis[+c.dataset.kind] = c.checked; updateUniforms(); refreshTiles(); requestUpdate(); saveUrl(); });
   S.querySelectorAll('[data-pre]').forEach(b => b.onclick = () => presets(b.dataset.pre));
   const pal = S.querySelector('[data-pal]'); if (pal) pal.onchange = () => { V.palette = pal.value; lsSet('pal', pal.value); applyPalette(); renderSide(); V.miniDirty = true; requestUpdate(); };
-  S.querySelectorAll('[data-ov]').forEach(c => c.onchange = () => { V.ov[c.dataset.ov] = c.checked; requestUpdate(); saveUrl(); });
+  S.querySelectorAll('[data-ov]').forEach(c => c.onchange = () => { V.ov[c.dataset.ov] = c.checked; requestUpdate(); saveUrl(); });   // left column only
   S.querySelectorAll('[data-f]').forEach(b => b.onclick = () => selectFinding(+b.dataset.f, true));
   const cg = S.querySelector('[data-cong]'); if (cg) cg.onchange = () => { V.congLayer = cg.value; V.ov.cong = true; renderSide(); requestUpdate(); };
   const pc = S.querySelector('[data-pc]'); if (pc) pc.onchange = () => { V.pcorner = pc.value; V.psel = 0; V.ov.paths = true; renderSide(); requestUpdate(); };
@@ -877,7 +896,7 @@ function selectFinding(id, zoom){
 
 /* ------------------------------------------------------------------ public */
 window.LayoutViewer = {
-  open, close: () => { V.open = false; if (V.root) V.root.hidden = true; if (V.side) V.side.hidden = true; },
+  open, close: () => { V.open = false; if (V.root) V.root.hidden = true; if (V.side) V.side.hidden = true; if (V.nav) V.nav.hidden = true; },
   theme: () => { if (V.header){ applyPalette(); renderSide(); V.miniDirty = true; V.congIm = null; requestUpdate(); } },
   state: () => V,
   _update: () => update(),

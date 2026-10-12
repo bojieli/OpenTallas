@@ -50,6 +50,7 @@ module tb_hgi_e2e;
     // selector + 4 stack scorers + 4 svc IKS stripes on a DRAM controller model of the HBM model (hgi_e2e_idxn.sv);
     // IDX_MUT = the unit's bench mutant (2: the next head's weight, 3: R from the wrong lane; must FAIL)
     parameter integer IDX_NATIVE = 0, IDX_MUT = 0, IDX_LEG = 24;
+    parameter integer CP_IKS_I = IDX_NATIVE;   // hbmdie-1011: the CP passes an HBM operand I (IDX.INDEX IKS key region)
     // hgi-1010/h (2026-10-10) MTP=1: the DS DSpark job through the die -- the real native controller hgi_mtp_native, the MX1
     // MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job / provider / emit queue / transaction join) and ot_hgi_cp_die MTP=1
     // (the backend translator: one KERNEL doorbell per launch, G23 entries / G26 per-layer bodies).  The host starts a
@@ -123,7 +124,7 @@ module tb_hgi_e2e;
         assign n_t = '0; assign n_f = '0; assign t_host = '0; assign t_prov = '0; assign t_emit = '0; assign t_eh = '0;
         assign t_abort = 1'b0; assign t_drained = 1'b0; assign t_be = '0;
     end endgenerate
-    ot_hgi_cp_die #(.USE_MACRO(0), .MTP(MTP), .MUT(MUT), .FQCR(16)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
+    ot_hgi_cp_die #(.USE_MACRO(0), .MTP(MTP), .MUT(MUT), .FQCR(16), .IKS_I(CP_IKS_I)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(cp_vmq), .vmr(cp_vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_recx(coll_recx), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret),
         .idx_rec(idx_rec), .idx_ret(idx_ret),
         .am_rec(am_rec), .am_ret({ux_fault[7], ux_done[7], ux_rdy[7]}),
@@ -374,7 +375,7 @@ module tb_hgi_e2e;
         wire [337:0] vq; wire [273:0] vr;
         wire [89:0] s_fs; wire [1047:0] s_qb; wire s_qbr; wire [344:0] s_kin; wire [611:0] s_to; wire s_toc;
         wire [71:0] s_co; wire s_coc; wire [1:0] s_ev; wire [511:0] s_iks;
-        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
+        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1), .IKS_EVEN(1)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
             .vmq(vq), .vmr(vr), .sel_fs(s_fs), .sel_qb(s_qb), .sel_qbr(s_qbr), .sel_kin(s_kin), .sel_to(s_to),
             .sel_toc(s_toc), .sel_co(s_co), .sel_coc(s_coc), .sel_ev(s_ev), .iks_e(s_iks));
         hgi_e2e_vmc #(.UNIT(9), .LAT(VLATE)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
