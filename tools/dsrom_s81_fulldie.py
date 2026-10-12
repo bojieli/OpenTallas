@@ -2105,7 +2105,7 @@ def pg_tile_split(ins, power, M, keep=(), real_pg=None, pgt_lef=None):
                         rc = {net: [(max(a, dx) - dx, max(b, dy) - dy, min(c, dx + tw) - dx, min(e, dy + th) - dy)
                                     for a, b, c, e in rr if min(c, dx + tw) - max(a, dx) > 0.05 and
                                     min(e, dy + th) - max(b, dy) > 0.05] for net, rr in real_pg[it.master].items()}
-                        M[nm] = Q.Master(nm, tw, th, M[it.master].obs_top, 'PG current tile of real ' + base)
+                        M[nm] = Q.Master(nm, tw, th, 'M7', 'PG current tile of real ' + base)
                         pgt_lef[nm] = _pgt_lef(nm, tw, th, rc)
                     px = it.x + (it.w - dx - tw if it.orient in ('MY', 'R180') else dx)
                     py = it.y + (it.h - dy - th if it.orient in ('MX', 'R180') else dy)
