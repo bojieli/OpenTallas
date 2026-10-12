@@ -278,6 +278,9 @@ def cost(r, dyn, L, cfg=None):
         tr = TRANSPORT if (r.param & 3) == 3 else 1.0
         nbytes = n * m * ESZ[b.fmt] * tr
         stream = nbytes / bw
+        # per-SM physical floor (owner 2026-10-12): the busiest SM's rows at its HBM share, bw / 32 = 98.96 B/cycle/SM
+        # (== w19_hbm_token_compose.SM_HBM_BYTES_PER_CYCLE), not only the die-average stream
+        stream = max(stream, -(-m // 32) * n * ESZ[b.fmt] * tr / (bw / 32))
         if "SM.bf16_lines_per_row_k" in MEAS:
             # fmt 0 and fmt 3 issue on the same BF16 lanes (fmt 3: a 128-code line in two 64-code beats)
             R = -(-m // 32)
