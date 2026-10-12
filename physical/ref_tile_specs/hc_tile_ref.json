@@ -1,0 +1,337 @@
+{
+ "name": "hc_tile_ref",
+ "top": "ot_hgi_hc_tile",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+  "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_WW_MACRO"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 656.64,
+  "h": 725.76
+ },
+ "pg_layer": "M7",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?0?.u_w.g_mac.g_s?0?.u_m",
+   "at": [
+    22.464,
+    250.56
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?0?.u_w.g_mac.g_s?1?.u_m",
+   "at": [
+    137.376,
+    250.56
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?0?.u_w.g_mac.g_s?2?.u_m",
+   "at": [
+    22.464,
+    313.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?0?.u_w.g_mac.g_s?3?.u_m",
+   "at": [
+    137.376,
+    313.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?1?.u_w.g_mac.g_s?0?.u_m",
+   "at": [
+    22.464,
+    375.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?1?.u_w.g_mac.g_s?1?.u_m",
+   "at": [
+    137.376,
+    375.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?1?.u_w.g_mac.g_s?2?.u_m",
+   "at": [
+    22.464,
+    438.48
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?1?.u_w.g_mac.g_s?3?.u_m",
+   "at": [
+    137.376,
+    438.48
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?2?.u_w.g_mac.g_s?0?.u_m",
+   "at": [
+    424.224,
+    250.56
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?2?.u_w.g_mac.g_s?1?.u_m",
+   "at": [
+    539.136,
+    250.56
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?2?.u_w.g_mac.g_s?2?.u_m",
+   "at": [
+    424.224,
+    313.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?2?.u_w.g_mac.g_s?3?.u_m",
+   "at": [
+    539.136,
+    313.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?3?.u_w.g_mac.g_s?0?.u_m",
+   "at": [
+    424.224,
+    375.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?3?.u_w.g_mac.g_s?1?.u_m",
+   "at": [
+    539.136,
+    375.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?3?.u_w.g_mac.g_s?2?.u_m",
+   "at": [
+    424.224,
+    438.48
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_win?3?.u_w.g_mac.g_s?3?.u_m",
+   "at": [
+    539.136,
+    438.48
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_xm?0?.u_x",
+   "at": [
+    42.336,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_xm?1?.u_x",
+   "at": [
+    439.344,
+    43.2
+   ]
+  }
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?0?.u_lg",
+   "at": [
+    259.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?1?.u_lg",
+   "at": [
+    259.2,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?2?.u_lg",
+   "at": [
+    259.2,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?3?.u_lg",
+   "at": [
+    259.2,
+    561.6000000000001
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "d_v",
+   "d_ss",
+   "d_nv",
+   "d_wa",
+   "d_xa",
+   "sum_in",
+   "f_in",
+   "first"
+  ],
+  "E": [
+   "o_v",
+   "o_ss",
+   "o_nv",
+   "o_wa",
+   "o_xa",
+   "sum_out",
+   "f_out"
+  ],
+  "N": [
+   "hq_v",
+   "hq_rdy",
+   "hq_addr",
+   "hq_len",
+   "hq_tag",
+   "hr_v",
+   "hr_tag",
+   "hr_beat",
+   "hr_data"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "c_start",
+   "c_rel",
+   "c_base",
+   "c_soff",
+   "c_nwk",
+   "c_bnd",
+   "c_pgo",
+   "c_pbase",
+   "t_rdy",
+   "t_flt",
+   "xw_ce",
+   "xw_a",
+   "xw_d",
+   "xw_m"
+  ]
+ },
+ "refglob": "*",
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-hbm-hcvm",
+  "branch": "claude/el1011-hcvm-hc4",
+  "tag": "c1",
+  "purpose": "el1011-hbm-hcvm/hc round 5: HC bank tile ot_hgi_hc_tile as a ref_tile CLUSTER = 4 hard lane-group leaves ot_hdc_v41x_hcp_lanes (hc_lanes_ref-r4-6a28f232b CLOSED TT +183.93 / FF +16.65 / DRC 0, child_lint PASS, 204 ps insertion) + glue (4 weight windows x 4 128x256 macros, 2 x-memory 1024x256 macros, request FIFOs, capture + one-hot select regs, descriptor taps). Fixes hc_tile-sys-faa39cbe9 class 1 (one clock root over ~57k sinks): balanced clock spine with leaf targets at each child's insertion; leaves in one column (W face s_i, E face y) so sum_in/sum_out cross no leaf; windows centre band, x macros at the S face; every glue->leaf signal is a register (wd/xd/lvs/sss/ov_r); every output a flop (o_* taps, so_q in the leaf, FIFO heads, t_rdy/t_flt). Benches: HC unit SYS composition exact + MUT_MP/MUT_POST fail.",
+  "benches": [
+   {
+    "name": "hc_sys_exact",
+    "cmd": "XDEF='-DWVM -DSPL=4 -DXMAC -DWMAC -DSYS' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_hc_unit.sh {RUN}/bench_sys",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^HGI_HC_UNIT PASS"
+   },
+   {
+    "name": "mut_mp",
+    "cmd": "XDEF='-DWVM -DSPL=4 -DXMAC -DWMAC -DSYS' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_hc_unit.sh {RUN}/bench_sys_mp MUT_MP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^HGI_HC_UNIT FAIL errors=[1-9]"
+   },
+   {
+    "name": "mut_post",
+    "cmd": "XDEF='-DWVM -DSPL=4 -DXMAC -DWMAC -DSYS' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_hc_unit.sh {RUN}/bench_sys_post MUT_POST",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^HGI_HC_UNIT FAIL errors=[1-9]"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "physical/asap7_memory_macros",
+   "physical/ref_tile/hc_lanes_ref/views"
+  ],
+  "views_to": "physical/ref_tile/hc_tile_ref/views",
+  "record_to": "results/rtl/ref_tile/hc_tile_ref"
+ }
+}
