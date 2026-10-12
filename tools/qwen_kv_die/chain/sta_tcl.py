@@ -94,7 +94,7 @@ if plan:
     sh = 'setup' if c == 'tt' else 'hold'
     rname = {r: f'{r[0]}__r{i}' for i, r in enumerate(sorted(regs))}
     rc, pairs, worst = [], [], defaultdict(lambda: (0.0, None))
-    if OCV > 0:
+    if True:     # region clocks also at OT_STA_OCV=0: that run is the parity check of the mechanism itself
         for r, ks in sorted(regs.items()):
             pins = ' '.join(ks)
             rc.append(f'create_clock -name {rname[r]} -period {PERIOD.get(r[0], 1024.0)} [get_pins -quiet {{{pins}}}]')
