@@ -47,6 +47,16 @@ module hfd_idx_score #(
   input  wire                sc,
   output reg  [3:0]          st
 );
+  localparam integer KB = 544;                                // a line = 2 keys; the stack beat = 16 keys = 8 lines
+  // negative mutants for the exact bench (simulation only; tools/hbm_idx_die_bench.py runs each and requires FAIL)
+`ifndef SYNTHESIS
+  reg mut_lane, mut_gid, mut_keep;
+  initial begin
+    mut_lane = $test$plusargs("MUT_LANE"); mut_gid = $test$plusargs("MUT_GID"); mut_keep = $test$plusargs("MUT_KEEP");
+  end
+`else
+  localparam mut_lane = 1'b0, mut_gid = 1'b0, mut_keep = 1'b0;
+`endif
   // ------------------------------------------------------------------ reset synchroniser
   reg rs1, rs2;
   always @(posedge ck or negedge rst) if (!rst) {rs2, rs1} <= 2'b00; else {rs2, rs1} <= {rs1, 1'b1};
