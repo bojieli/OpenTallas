@@ -211,12 +211,20 @@ def export_qwen(a):
     layer, pos = a.layer, a.position
     g = QC.Geometry(cfg, 8192)
     md = QC.qwen_params(cfg)
-    Kc, Vc = R.synthetic_kv(model, layer, pos)
-    x = R.synthetic_x(model, layer)
     tr = {}
-    x_out = model.layer(layer, x, pos, Kc.copy(), Vc.copy(), tr)
-    hbms, _ = QC.build_images(model, g, [layer], kv_state={layer: (Kc, Vc)}.get)
-    recs = QC.program(g, md, 1, parts=("layers",))
+    if a.head:
+        # diesim-1012: the LM head vehicle (final RMSNorm -> head MATVEC -> SU row scale -> ARGMAX.LOCAL ->
+        # COLL.ARGMAX_MERGE -> CTL.END token), input = the realistic deep residual qwen_proof's head stage uses
+        x = R.synthetic_x(model, 1)
+        _, gold_tok = model.head(x, tr)
+        hbms, _ = QC.build_images(model, g, [])
+        recs = QC.program(g, md, 0, parts=("head",))
+    else:
+        Kc, Vc = R.synthetic_kv(model, layer, pos)
+        x = R.synthetic_x(model, layer)
+        x_out = model.layer(layer, x, pos, Kc.copy(), Vc.copy(), tr)
+        hbms, _ = QC.build_images(model, g, [layer], kv_state={layer: (Kc, Vc)}.get)
+        recs = QC.program(g, md, 1, parts=("layers",))
     image = encode_program(recs)
     dies = [Die(d, hbms[d]) for d in range(QC.TP)]
     words = md_words(cfg["vocab_size"], 40960, QC.TP, len(image))
@@ -237,8 +245,11 @@ def export_qwen(a):
     tok, trace = M.run(image, 0, pos, hash_bufs=False, recs=dr)
     wall = time.time() - t0
     # golden check: the layer output on rank 0 equals qwen_r25
-    xo = die0.vm[g.vm["X"]:g.vm["X"] + g.H]
-    ok = bool(np.array_equal(xo, np.asarray(x_out, np.float32).view(np.uint32)))
+    if a.head:                                       # every rank's merged token == the CPU golden's argmax
+        ok = int(tok) == gold_tok and all(int(d.vm[g.vm["TOK"]]) == gold_tok for d in dies)
+    else:
+        xo = die0.vm[g.vm["X"]:g.vm["X"] + g.H]
+        ok = bool(np.array_equal(xo, np.asarray(x_out, np.float32).view(np.uint32)))
     sch = T.schedule(recs, pos, "S2")
     sch_nw = T.schedule(recs, pos, "S2", wires=False)
     ex = sch["ex"]
@@ -258,8 +269,9 @@ def export_qwen(a):
     vm0_path = a.out / "vm0.bin"
     a.out.mkdir(parents=True, exist_ok=True)
     vm0_path.write_bytes(vm0.astype("<u4").tobytes())
-    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="Qwen3-8B", vehicle=f"qwen_L{layer}_P{pos}", layer=layer,
-                position=pos, rank=0, group=QC.TP, token=0, layer_out_exact_vs_qwen_r25=ok,
+    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="Qwen3-8B", vehicle=(f"qwen_head_P{pos}" if a.head else f"qwen_L{layer}_P{pos}"),
+                layer=(None if a.head else layer), position=pos, rank=0, group=QC.TP,
+                token=(gold_tok if a.head else 0), layer_out_exact_vs_qwen_r25=ok,
                 layer_out_vm=[g.vm["X"], g.H], sim_wall_s=round(wall, 1),
                 s2_cycles=round(sch["total_cycles"], 1), s2_no_wires_cycles=round(sch_nw["total_cycles"], 1),
                 timing_grade="hgi_sim.timing S2 (calibration.json; SM / SU / HBM first access measured, rest estimates)",
@@ -268,12 +280,18 @@ def export_qwen(a):
                     "hgi_sim/machine.py", "hgi_sim/qwen_compiler.py", "hgi_sim/records.py", "hgi_sim/lib.py",
                     "hgi_sim/timing.py", "qwen_r25_golden.py", "hgi_e2e/export.py")})
     write_out(a.out, cap, dies, die0, image, words, [0, pos, pos + 1, 0, 0, 0, 0, pos], meta, hbm_pre)
-    print(f"qwen L{layer} P{pos}: {len(cap.recs)} dispatched records, layer out exact {ok}, S2 {sch['total_cycles']:.0f}")
+    print(f"qwen {'head' if a.head else f'L{layer}'} P{pos}: {len(cap.recs)} dispatched records, layer out exact {ok}, S2 {sch['total_cycles']:.0f}")
     return 0 if ok else 1
 
 
 # --------------------------------------------------------------------------------------------------------------- DS
 def export_ds(a):
+    # el1011-hbm-fused: the e2e FUSED slot (rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv hgi_e2e_fused_slot) runs the
+    # micro-op lowering, not the lane-local HC engine, so it reads the d = 5120 gain LINEAR: export without the GPK /
+    # bank-phase rules unless the harness builds the slot with the engine (then HGI_FUSED_HLL=1).  The die (hfd_quant
+    # HCE 2 + hfd_hc_eng) and its die-master bench use HLL 1.
+    import os
+    os.environ.setdefault("HGI_FUSED_HLL", "0")
     from hgi_sim import ds_native as DN
     from hgi_sim import timing as T
     from hgi_sim.ds_native_timing import NativeCost
@@ -561,7 +579,7 @@ def main():
     ap.add_argument("--layer", type=int, default=0)
     ap.add_argument("--position", type=int, default=8191)
     ap.add_argument("--sm-weights", action="store_true", help="also export the SM weight bytes (real SM runs)")
-    ap.add_argument("--head", action="store_true", help="ds: the vehicle is the LM head (+ ARGMAX.LOCAL / COLL.ARGMAX_MERGE); "
+    ap.add_argument("--head", action="store_true", help="ds / qwen: the vehicle is the LM head (+ ARGMAX.LOCAL / COLL.ARGMAX_MERGE); ds: "
                     "--layer 39 is run first to enter it")
     ap.add_argument("--iks", action="store_true", help="ds: IKS key regions + IDX.INDEX operand I, and the rank-0 key image "
                     "in the IKS layout (native IDX.INDEX runs)")

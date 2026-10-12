@@ -316,6 +316,44 @@ def co_delay(lib):
     return float(m.group(1)) if m else 0.0
 
 
+_TREE_INS = {}
+
+
+def pin_tree_insertion(lib, pin):
+    """{(pin, 'min'|'max'): rise value} from a view lib's min/max_clock_tree_path arcs on clock pin `pin` (the ETM's
+    own per-clock-pin insertion), {} when the lib carries none for that pin"""
+    key = (str(lib), pin)
+    if key not in _TREE_INS:
+        t = Path(lib).read_text(errors='ignore') if lib and Path(lib).exists() else ''
+        out = {}
+        pm = re.search(r'pin\(\s*"?%s(?:\[0\])?"?\s*\)\s*\{(.*?)\n    \}' % re.escape(pin), t, re.S)
+        for tm in re.finditer(r'timing_type\s*:\s*(min|max)_clock_tree_path\s*;.*?cell_rise\s*\([^)]*\)\s*\{[^}]*?values\(\s*"\s*([\d.]+)',
+                              pm.group(1) if pm else '', re.S):
+            out[tm.group(1)] = float(tm.group(2))
+        _TREE_INS[key] = out
+    return _TREE_INS[key]
+
+
+def pin_insertion(mst, pin, libs):
+    """s81-die-iter 2026-10-12 (die relay hold FF -107.3, r4f: cf<c> cr -> y_xa_<c>_0_0): a MULTI-CLOCK block (the
+    colck cfifo: ck = stream trunk + co pass, cr = its column-side sink of the column tree, xf = the lane write clock)
+    has a different insertion behind each clock pin; one master scalar (its routed / calib boundary mean, the ck side:
+    206.5 ps FF) put the column relays ~40-80 ps behind the cr-side launch flops.  Balance each such pin with the ETM's
+    own min/max_clock_tree_path on that pin: SS (setup corner) max, FF (hold corner) min, TT their mean.  [ss, ff, tt]
+    or None (the lib carries no tree path on the pin -> the master scalar, as before)"""
+    if not libs:
+        return None
+    v = []
+    for c in ('ss', 'ff', 'tt'):
+        lp = libs.get(c, {}).get(mst, (None,))[0]
+        d = pin_tree_insertion(lp, pin) if lp else {}
+        if not d:
+            return None
+        v.append(d.get('max', d.get('min')) if c == 'ss' else d.get('min', d.get('max')) if c == 'ff' else
+                 (d.get('min', 0.0) + d.get('max', d.get('min', 0.0))) / (2 if 'max' in d and 'min' in d else 1))
+    return v
+
+
 def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=None):
     """in place: lat[pin] = planned [ss, ff, tt] arrival -> pin latency so that every flop arrives at plan + D
     (D = the deepest in-arc insertion per corner within the pin's clock tree: the trunk, or one column tree, which
@@ -331,17 +369,35 @@ def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=N
                 r['insertion_in_arcs_ps'] = [round(x, 1) for x in ins[mst]]
             r.pop('insertion_added_ps', None)
     grp = (lambda k_: group.get(k_, 'trunk')) if group else (lambda k_: 'trunk')
+    # per-clock-pin insertion: the ETM's own clock_tree_path on that pin (pin_insertion: SS max, FF min, TT mean), else
+    # the master scalar.  s81-die-iter 2026-10-12: SINGLE-clock closed views too -- r4f FF, dsfd_m2l_vr_512x1__hco_SW
+    # was balanced on its routed boundary MEAN (152 ps FF) while its ETM's min tree path is 123.0, so its launch flops
+    # arrived ~29 ps before the plan into the interim xsco_SW relay 2.8 um away (-103.7 ps); multi-clock masters
+    # (the colck cfifo) were already balanced per pin.
+    pin_ins, per_pin = {}, {}
+    for k_ in lat:
+        mst, pn = pin_master[k_], k_.split('/')[1].split('[')[0]
+        if masters.get(mst, {}).get('view', 'interim') != 'interim':
+            if (mst, pn) not in per_pin:
+                per_pin[(mst, pn)] = pin_insertion(mst, pn, libs)
+            if per_pin[(mst, pn)]:
+                pin_ins[k_] = per_pin[(mst, pn)]
+    vin = lambda k_: pin_ins.get(k_) or ins[pin_master[k_]]
+    for (mst, pn), v in sorted(per_pin.items()):
+        if v:
+            masters.get(mst, {}).setdefault('insertion_per_clock_pin_ps', {})[pn] = [round(x, 1) for x in v]
     D = defaultdict(lambda: [0.0, 0.0, 0.0])
     for k_ in lat:
-        g, v = grp(k_), ins[pin_master[k_]]
+        g, v = grp(k_), vin(k_)
         D[g] = [max(D[g][i], v[i]) for i in range(3)]
     for k_ in lat:
-        v, d = ins[pin_master[k_]], D[grp(k_)]
+        v, d = vin(k_), D[grp(k_)]
         lat[k_] = [lat[k_][i] + d[i] - v[i] for i in range(3)]
     return dict(model='balanced: flop arrival = planned sink arrival + D (per clock tree); pin latency = that - in-arc '
                       'insertion; a column clock source = its cfifo ck pin latency',
                 pad_ps={g: [round(x, 1) for x in d] for g, d in sorted(D.items()) if any(d)},
-                masters_offset=sorted(m for m, v in ins.items() if any(v)), pins=len(lat))
+                masters_offset=sorted(m for m, v in ins.items() if any(v)), pins=len(lat),
+                per_clock_pin={f'{m_}/{p_}': [round(x, 1) for x in v] for (m_, p_), v in sorted(per_pin.items()) if v})
 
 
 def interim_lib(cells, corner):

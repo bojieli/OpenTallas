@@ -29,5 +29,58 @@
  "bench": "tb_hgi_e2e -GMTP=2 vehicle ds_mtp_spec (ot-epyc1tb:/srv/opentallas/claude/hgi-1010/h/hgi_spec.sh)",
  "host": "ot-epyc1tb",
  "source_commit": "claude/hgi-mtp-e2e-20261010 867a9381e (vehicle)",
- "notes": "No production-shape MTP verify bench can be recorded today: every committed-era vehicle run fails exactness before the verify columns -- out3 ds_mtp_spec MTP=2 (04:20 10-11): REAL record 14 q_norm.ss mismatch, MTP abort status 0x60 at 3,522 cycles, 17/3,824 dispatched; out mtp1 (10-10 16:38): FUSED record 9 attn_norm 5,120 mismatches, control fault. The earlier MTP=2 run that produced the 145k/63.8k interim was Terminated before the accept check. Even the interim says the class is > 1.10 (2.27x: L0 body 1.59x + swapout DMA.STORE 35x). Owner: hgi-1010/h (vehicle) + hgi-1010/c (striped multi-outstanding DMA.STORE). ot_hgi_cp_mtp_pinreg is a registered pin collar (no per-token logic of its own) and rides on this class."
+ "notes": "No production-shape MTP verify bench can be recorded today: every committed-era vehicle run fails exactness before the verify columns -- out3 ds_mtp_spec MTP=2 (04:20 10-11): REAL record 14 q_norm.ss mismatch, MTP abort status 0x60 at 3,522 cycles, 17/3,824 dispatched; out mtp1 (10-10 16:38): FUSED record 9 attn_norm 5,120 mismatches, control fault. The earlier MTP=2 run that produced the 145k/63.8k interim was Terminated before the accept check. Even the interim says the class is > 1.10 (2.27x: L0 body 1.59x + swapout DMA.STORE 35x). Owner: hgi-1010/h (vehicle) + hgi-1010/c (striped multi-outstanding DMA.STORE). ot_hgi_cp_mtp_pinreg is a registered pin collar (no per-token logic of its own) and rides on this class.",
+ "dma_back": {
+  "element": "ot_hgi_dma_back (rtl/hbm_accel/generic/peers/ot_hgi_dma_back.sv)",
+  "shape": "production swapout: DMA.STORE h 20,480 FP32 (STRIPE4 320 x 256 B rows, 4 stacks) + DMA.STORE PRE 8 words -> quiet (the CTL.FENCE condition)",
+  "price_cycles": 248,
+  "price_src": "MTP.VERIFY swapout row (store_latency 30 x 2 + fence 60 + dispatch)",
+  "measured_cycles": {
+   "VLAT6_ALAT40_HOPS3": 161,
+   "VLAT14": 177,
+   "VLAT6_JIT5": 167,
+   "VLAT6_JIT11": 176
+  },
+  "ratio": 0.673,
+  "exact": "tb_hgi_dma_back PASS: production + 640-sector linear row + strided serial windows + 60 random moves (JIT 11) word-exact, no stray writes",
+  "mutants": {
+   "MUT1 misplaced sector (group-1 address + 1)": "FAIL",
+   "MUT2 src before landed (posted retire early; VM model reads at response)": "FAIL"
+  },
+  "bench": "bash rtl/hbm_accel/generic/peers/run_dma_back_bench.sh OUT 0 -GNRAND=40 -GJIT=5 (ot-epyc1tb /srv/opentallas-scratch/claude/tputx-mtp-back)",
+  "source_commit": "claude/el1011-hbm-tputx-mtp c17f580de",
+  "b2_per_cluster": {
+   "config": "NS 1 (own stack STK), NB 8 (local slice 8-lane group, lane = sector s[2:0]), VCR 8",
+   "shape": "cluster quarter of the swapout: 80 rows x 256 B (20 KiB) slice -> own stack (+ PRE 8 words on cluster 0) -> quiet",
+   "measured_cycles": {
+    "VLAT6_JIT5": 167,
+    "VLAT14": 152,
+    "no_PRE_clusters": 144
+   },
+   "price_cycles": 248,
+   "ratio": 0.673,
+   "exact": "PASS (30 random moves JIT5 + long rows + strided)",
+   "mutants": {
+    "MUT1": "FAIL",
+    "MUT2": "FAIL"
+   },
+   "source_commit": "aa02aad65"
+  },
+  "config_of_ratio": "B2 per-cluster (the target architecture)"
+ },
+ "interface_change": {
+  "owner": "svc (hbm-phys/[svc]) + die lead (ot_hgi_dma_slot / die top nets)",
+  "summary": "DMA BACK needs an svc WRITE stream into each stack's service, the mirror of the DMA FRONT read stream (dq/dd/dd_cr).",
+  "engines_ports": "ot_hgi_dma_engines #(.BACK(1)): output wd[32*289-1:0], input wd_cr[31:0], input wa[15:0]; the back engine shares the existing VM DMA wide READ group (vr2q 513 / vr2r 8,257, die nets hgi_vmr2_dma / _r) with the mover (ownership switched in the engines)",
+  "die_nets": {
+   "dma_wd": "4 stacks x 8 lanes x 289 b = 9,248 wires, DMA slot -> svc strip, {v [288], sector address [287:256] = HBM byte address [36:5] (stack bits [31:30] must equal the lane's stack), data [255:0]}; registered at the engine; relay registers every <= 500 um as dd",
+   "dma_wd_cr": "32 wires svc -> DMA slot: one pulse = the svc popped one beat of that lane (credit return); initial credit WCR = 32 a lane (the svc's beat buffer depth; >= the credit round trip: 4 + 2 x hops + svc pop cycles)",
+   "dma_wa": "4 stacks x 4 b svc -> DMA slot: sectors of that stack written this cycle (0..8), posted acknowledgements (the write is visible to every later read of the stack's controller); pin-flopped in the engine"
+  },
+  "svc_side": "per stack: 8 lane beat FIFOs (WCR deep), each beat is self-describing (no request / tag / order: any lane, any order); the 8 lanes of a stack carry up to 8 sectors a cycle, normally one 256 B contiguous chunk (8 consecutive sectors) -> one 256 B write burst a cycle a stack; count written sectors into dma_wa. Model: tb_hgi_e2e.sv hgi_e2e_svcw (write at arrival, credit HOPS later, wa LAT later).",
+  "loader_die": "ot_hfd_loader_hgi instantiates ot_hgi_dma_engines with BACK = 0 (ports unconnected); enabling BACK there = connect wd / wd_cr / wa to the svc write stream and set BACK = 1.",
+  "b2": "HBM B2 (owner 10-12): one ot_hgi_dma_back per cluster beside its local slice, NS 1 / NB 8. VM side = the cluster's local 8-lane group client tap (rup 129 = {c_req, 8 x {v, sector 15}}, rdn 2,065 = {c_gnt, credits 8, 8 x {v, data 256}}). svc side inside the cluster: dma_wd 8 x 289, dma_wd_cr 8, dma_wa 4 (own stack only). No cross-cluster wires.",
+  "b2_compiler": "B2 compiler item (lead acked): the STRIPE4 h swap (ds_mtp_kernels swap(), 320 x 256 B rows, row o on stack o mod 4) must be emitted as 4 per-cluster DMA.STOREs (cluster k: its 80 rows from its slice, linear on stack k at COLB + slot x CSTR + k x 64, stride 256), and the swapin as 4 per-cluster loads."
+ },
+ "notes_tputx_mtp_1012": "Rec 14 (q_norm.ss) fixed by 37508ae85 (su_ctl unused-stream stride): runs A/B passed it and stopped at rec 101 swapout.PRE: a 16 B (partial-sector) DMA.STORE the mover refuses (abort 0x60 / 0x64); the sim's DMA.STORE already demands whole sectors -> compiler pads PRE / dhead stores to sectors. Swapout.h ran 6.8k cycles on the mover (~12 B/cyc) vs price 248: DMA BACK + STRIPE4 h swap (this branch). Vehicle re-run pending (see el1011-hbm-tputx.log COLLECT (tputx-mtp))."
 }
