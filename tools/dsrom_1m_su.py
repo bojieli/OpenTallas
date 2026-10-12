@@ -627,6 +627,8 @@ def cmd_prep(a):
     if a.fns:
         cases = [c for c in cases if c["meta"]["fn"] in a.fns.split(",")]
     snaps = sorted(out.glob("snap_*.pkl"))
+    if not snaps or not cases:                 # the lowering reads DIR/snap_L*.pkl written by the golden step
+        sys.exit(f"prep: {len(snaps)} snap_*.pkl in {out} (run the golden step first), {len(cases)} cases -- nothing written")
     h = hashlib.sha256()
     for p in snaps:
         h.update(p.read_bytes())

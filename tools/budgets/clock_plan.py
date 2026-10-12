@@ -236,7 +236,7 @@ def clock_nets(d, trees, groups, group):
                 l.append((inst, port, x, y))
             nets.append((t, (rx, ry), l))
         return nets
-    R = plan_regions(d, trees)
+    R = plan_regions(d, trees, max_ext=MAX_REGION_UM)
     fam_root = {}
     if (d.get('die') == 'hbm' and FAMILY_ROOTS[0]) or (S81_LOCAL_FAMILIES and d.get('die', '').startswith('s81')):
         # HBM r23 (die 30.6 mm wide, stream trunk 3.1 ns: sibling regions of one SM group (G<q>w / G<q>e) or one scan
@@ -284,9 +284,31 @@ def emit(a):
     d = C.load_die(a.die_model)
     trees, groups = plan_groups(d)
     missing_clock_pins = validate_clock_pins(d, trees)
-    nets = clock_nets(d, trees, groups, a.group)
+    nets = getattr(a, '_nets', None) or clock_nets(d, trees, groups, a.group)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    if getattr(a, 'shards', 0) and a.shards > 1 and not getattr(a, '_nets', None):
+        # qwendie-1011: one CTS design per shard of region trees (independent clocks, no shared buffers), run in
+        # parallel with a per-shard timeout; a single 265-region design hung > 3.5 h in CTS (H-tree level loop) with
+        # no way to tell which region.  record takes every shard as a --case (names are prefixed per case).
+        import copy
+        k = -(-len(nets) // a.shards)
+        names = []
+        for i in range(0, len(nets), k):
+            b = copy.copy(a)
+            b.out, b._nets, b.name = str(out / f'sh{i // k:02d}'), nets[i:i + k], f'{a.name}_sh{i // k:02d}'
+            emit(b)
+            names.append(f'sh{i // k:02d}')
+        (out / 'run.sh').write_text(f"""#!/bin/bash
+# {a.name}: {len(names)} CTS shards in parallel (each: timeout, then a no-clustering retry)
+D=$(cd "$(dirname "$0")" && pwd)
+printf '%s\\n' {' '.join(names)} | xargs -P ${{SHARD_PAR:-{len(names)}}} -I{{}} bash $D/{{}}/run.sh
+for s in {' '.join(names)}; do [ "$(cat $D/$s/exit 2>/dev/null)" = 0 ] || {{ echo "shard $s failed"; exit 1; }}; done
+""")
+        (out / 'run.sh').chmod(0o755)
+        (out / 'shards.json').write_text(json.dumps(names) + '\n')
+        print(json.dumps(dict(case=str(out), shards=len(names), trees=len(nets))))
+        return
     W, H = d['outline_um']
     v, place, sdc, sinks = [], [], [], []
     v.append('module ckplan (ref);\n  input ref;')
@@ -365,6 +387,8 @@ foreach c [get_cells *] {
 close $f
 exit
 """
+    ct = (out / 'cts.tcl').read_text()
+    (out / 'cts_nc.tcl').write_text(ct.replace(' -sink_clustering_enable', ''))
     for corner in ('SS', 'FF'):
         (out / f'meas_{corner}.tcl').write_text(common.replace('%C%', corner) + meas.replace('%PLAT%', PLAT)
                                                .replace('%LAY%', lay).replace('%C%', corner))
@@ -374,10 +398,12 @@ set -o pipefail
 D=$(cd "$(dirname "$0")" && pwd)
 IMG=${{IMG:-openroad/orfs:latest}}
 CPUS=${{CPUS:-8}}
+TO=${{CTS_TIMEOUT:-5400}}
 run() {{ docker run --rm --name ckplan_{esc(a.name)}_$1 --cpus=$CPUS -v $D:/work -w /work $IMG bash -lc \\
-  "/usr/bin/time -v /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -threads $CPUS -no_init -exit /work/$1.tcl > /work/$1.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"; }}
+  "timeout -k 60 $TO /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -threads $CPUS -no_init -exit /work/$1.tcl > /work/$1.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"; }}
 date -u +%FT%TZ > $D/start
-run cts && run meas_SS && run meas_FF
+# qwendie-1011: a CTS that does not finish inside the timeout is retried once without sink clustering
+{{ run cts || {{ echo "cts rc=$? -> retry without sink clustering" >> $D/retry; run cts_nc; }}; }} && run meas_SS && run meas_FF
 echo $? > $D/exit
 date -u +%FT%TZ > $D/end
 """)
@@ -583,14 +609,20 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--group', default='trunk', choices=['trunk', 'region', 'htop', 'hreg'])
     ap.add_argument('--buffer-um', type=float, default=150.0)
+    ap.add_argument('--shards', type=int, default=0, help='emit: split the trees into N independent CTS cases run in parallel')
     ap.add_argument('--case', action='append', default=[])
+    ap.add_argument('--max-region-um', type=float, default=None,
+                    help='region sink-bbox side limit (default MAX_REGION_UM 4000); qwendie-1011: the Qwen ROM die region '
+                         'trees at 4 mm are ~650 ps deep, so 5%% OCV on unshared insertion breaks the intra budget')
     ap.add_argument('--max-merge-um', type=float, default=None,
                     help='merged-region sink-bbox side limit (default MAX_MERGE_UM 5250); die-gaps 2026-10-08: S81 r3 '
                          'serial spine merged to 5.23 mm gave a 65.2 ps intra bound (+25 margin > 90)')
     ap.add_argument('--s81-local-families', action='store_true', help='opt-in: selector/collector plus local crossing stages share band trunk roots')
     a = ap.parse_args()
-    global MAX_MERGE_UM, S81_LOCAL_FAMILIES
+    global MAX_MERGE_UM, MAX_REGION_UM, S81_LOCAL_FAMILIES
     S81_LOCAL_FAMILIES = a.s81_local_families
+    if a.max_region_um:
+        MAX_REGION_UM = a.max_region_um
     if a.max_merge_um:
         MAX_MERGE_UM = a.max_merge_um
     emit(a) if a.mode == 'emit' else record(a)

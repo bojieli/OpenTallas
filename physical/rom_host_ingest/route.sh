@@ -14,12 +14,19 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
 export OT_ORFS_NUM_CORES=${CORES:-12} NUM_CORES=${CORES:-12} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 SRCS="rtl/lib/ot_reset_sync.sv rtl/link/ot_link_afifo.sv rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv rtl/hdc/ingest/ot_hdc_kv_ingest.sv rtl/hdc/ingest/ot_rom_host_ingest.sv"
 srcargs="--source $D/rtl/$top.sv"; for s in $SRCS ${XSRCS:-}; do srcargs="$srcargs --source $s"; done
+# el1011-q-coll 2026-10-11: FW / FH (um) give an explicit outline (die 0 0 FW FH, core inset 2.16) for floorplans planned
+# from a macro grid; otherwise the outline follows UTIL as before.
+if [ -n "${FW:-}" ] && [ -n "${FH:-}" ]; then
+  AREA_ARGS="--die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))")"
+else
+  AREA_ARGS="--core-utilization ${UTIL:-40}"
+fi
 ADMIT=$(ls /srv/opentallas-scratch/admit.sh 2>/dev/null); ADMIT=${ADMIT:+$ADMIT ${NEED:-48} --}
 $ADMIT python3 tools/run_abi3_physical.py --view asap7 --top $top $srcargs \
   --clock-port ck --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 \
-  --sdc-append $D/sdc/hing_clocks_div${DIV:-2}.sdc --stages synth,pnr \
-  --core-utilization ${UTIL:-40} --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
+  --sdc-append $D/sdc/hing_clocks_div${DIV:-2}.sdc --stages ${STAGES:-synth,pnr} \
+  ${AREA_ARGS} --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var ADDER_MAP_FILE= --orfs-var "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none" \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.010} --purpose signoff_target --nickname-tag hing_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited ${EXTRA:-} "$@" \
