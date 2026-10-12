@@ -263,6 +263,11 @@ module ot_qwen_me_spctl_w12 #(
                                          //   pre-decoded from the ring output and the slot maximum rk[t_j] / rseen[t_j] registered with
                                          //   write forwarding (bit 1 mutant: no forwarding); (c) scale_addr = b_sbase + b_off, the
                                          //   offset added one stage earlier (bit 3 mutant: offset without nbs)
+    parameter integer AMI = 0,           // el1011-q-seq (coordinator 10-11 decision, +1 argmax-loop cycle): 1 = p_am pin register (the die
+                                         //   word lands in a flop at the ctlm pin; textbook class 3, routed p_am -> argmax -58 ps), and every
+                                         //   result-side argmax / mx timing (tree valid line tv, tag line u_ttag, accumulator clear RXA) one
+                                         //   edge later to match: am_* / mx_* / idle settle one edge later, the result sequence is unchanged;
+                                         //   2 = negative control (the register without the +1 compensation: MUST FAIL)
     parameter integer PK = 0             // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
                                          //   land_cnt pin flop) and the u_ttag line read from a register (ring D-1 + output flop: t_* straight from flops); 2 = negative control (KS carry-in dropped: progress one low)
 ) (
@@ -1020,10 +1025,13 @@ end endgenerate
     localparam integer NPT = NPG / PQ;
     localparam integer CW = 1 + 32 + NW;
     wire [CW*AN-1:0] alv [LPT:LV];
-    reg  [LV:0] tv;
+    //: AMI: AMC = the +1 compensation (AMI 1 only; AMI 2 registers p_am without it); LVT = the tree-top valid tap
+    localparam integer AMC = (AMI == 1) ? 1 : 0;
+    localparam integer LVT = LV + AMC;
+    reg  [LVT:0] tv;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) tv <= 0;
-        else tv <= {tv[LV-1:0], r_v && r_last && (r_amax || r_rmax)};
+        else tv <= {tv[LVT-1:0], r_v && r_last && (r_amax || r_rmax)};
     end
     wire [1+3+1+AW-1:0] ttag;
     wire [1+3+1+AW-1:0] ttag_ew;     // SC (b): the ring output one edge before ttag (PK)
@@ -1032,7 +1040,7 @@ end endgenerate
     generate if (PK != 0 && LV >= 2) begin : g_ttreg
         // PK: the same LV + 1 edges as a ring of LV and a register, so the mx write stage starts from flops
         wire [1+3+1+AW-1:0] ttag_e;
-        ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV), .TREE(((SC & 1) != 0) ? 1 : 0)) u_ttag (.clk(clk), .rst_n(rst_n),
+        ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + AMC), .TREE(((SC & 1) != 0) ? 1 : 0)) u_ttag (.clk(clk), .rst_n(rst_n),
             .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag_e));
         reg [1+3+1+AW-1:0] ttag_q;
         always @(posedge clk) ttag_q <= ttag_e;
@@ -1040,7 +1048,7 @@ end endgenerate
         assign ttag_ew = ttag_e;
     end else begin : g_ttline
         assign ttag_ew = '0;
-        ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + 1)) u_ttag (.clk(clk), .rst_n(rst_n),
+        ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + 1 + AMC)) u_ttag (.clk(clk), .rst_n(rst_n),
             .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag));
     end endgenerate
     wire          t_rmax, t_opend;
@@ -1049,7 +1057,13 @@ end endgenerate
     assign {t_rmax, t_j, t_opend, t_mbase} = ttag;
     genvar e, al;
     generate
-        assign alv[LPT][CW*NPT-1:0] = p_am;
+        if (AMI != 0) begin : g_ami
+            reg [CW*NPT-1:0] pam_pin;     // AMI: the p_am pin register (datapath, no reset; qualified by tv)
+            always @(posedge clk) pam_pin <= p_am;
+            assign alv[LPT][CW*NPT-1:0] = pam_pin;
+        end else begin : g_amd
+            assign alv[LPT][CW*NPT-1:0] = p_am;
+        end
         if ((AN >> LPT) > NPT) begin : g_ppad
             assign alv[LPT][CW*AN-1:CW*NPT] = 0;
         end else if (AN > (AN >> LPT)) begin : g_ppad2
@@ -1085,8 +1099,8 @@ end endgenerate
     wire          a_tv, a_rmax, a_clr;
     //: the accumulator clear of an amax op at its issue (RXA > 0: RXA edges later, with the results)
     wire am_clr;
-    generate if (RXA > 0) begin : g_amc
-        ot_hdc_delay #(.W(1), .D(RXA), .RESET(1)) u_amc (.clk(clk), .rst_n(rst_n), .d(go && ready && i_amax), .q(am_clr));
+    generate if (RXA + AMC > 0) begin : g_amc
+        ot_hdc_delay #(.W(1), .D(RXA + AMC), .RESET(1)) u_amc (.clk(clk), .rst_n(rst_n), .d(go && ready && i_amax), .q(am_clr));
     end else begin : g_amc0
         assign am_clr = go && ready && i_amax;
     end endgenerate
@@ -1099,10 +1113,10 @@ end endgenerate
         always @(posedge clk) atop_q <= top;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin a_tv_q <= 1'b0; a_rmax_q <= 1'b0; a_clr_q <= 1'b0; end
-            else begin a_tv_q <= tv[LV]; a_rmax_q <= t_rmax; a_clr_q <= am_clr; end
+            else begin a_tv_q <= tv[LVT]; a_rmax_q <= t_rmax; a_clr_q <= am_clr; end
         assign atop = atop_q; assign a_tv = a_tv_q; assign a_rmax = a_rmax_q; assign a_clr = a_clr_q;
     end else begin : g_amw
-        assign atop = top; assign a_tv = tv[LV]; assign a_rmax = t_rmax; assign a_clr = am_clr;
+        assign atop = top; assign a_tv = tv[LVT]; assign a_rmax = t_rmax; assign a_clr = am_clr;
     end endgenerate
     wire          atop_v = atop[CW-1];
     wire [31:0]   atop_key = atop[CW-2 -: 32];
@@ -1146,7 +1160,7 @@ end endgenerate
         end
         else begin
             mx_we <= 1'b0;
-            if (tv[LV] && t_rmax) begin
+            if (tv[LVT] && t_rmax) begin
                 if (t_opend) begin
                     mx_we <= 1'b1;
                     rseen <= 0;
@@ -1168,7 +1182,7 @@ end endgenerate
         reg  [W-1:0]    l_j;        // lane l holds slot t_j
         reg  [31:0]     rk_jr;
         reg             rs_jr;
-        wire rk_wr = tv[LV] && t_rmax && !t_opend && top_v;    // this edge's slot write (rk[t_j] <= nk)
+        wire rk_wr = tv[LVT] && t_rmax && !t_opend && top_v;    // this edge's slot write (rk[t_j] <= nk)
         integer ll, jj;
         always @(posedge clk) begin
             for (ll = 0; ll < W; ll = ll + 1) begin
@@ -1187,7 +1201,7 @@ end endgenerate
             rk_jr <= (rk_wr && (t_j == e_j) && ((SC & 2) == 0)) ? nk : rk[e_j];
         always @(posedge clk or negedge rst_n)
             if (!rst_n) rs_jr <= 1'b0;
-            else if (tv[LV] && t_rmax && t_opend) rs_jr <= 1'b0;
+            else if (tv[LVT] && t_rmax && t_opend) rs_jr <= 1'b0;
             else rs_jr <= (rk_wr && (t_j == e_j) && ((SC & 2) == 0)) ? 1'b1 : rseen[e_j];
         assign rk_jx = rk_jr; assign rseen_jx = rs_jr;
 `ifdef OT_SC_COV
@@ -1196,12 +1210,12 @@ end endgenerate
         always @(posedge clk) begin
             if (rk_wr && (t_j == e_j)) cov_fwd = cov_fwd + 1;
             if (rk_wr) cov_rkw = cov_rkw + 1;
-            if (tv[LV] && t_rmax && t_opend) cov_mxw = cov_mxw + 1;
+            if (tv[LVT] && t_rmax && t_opend) cov_mxw = cov_mxw + 1;
         end
         final $display("SC_COV b: rk_writes=%0d fwd=%0d mx_writes=%0d", cov_rkw, cov_fwd, cov_mxw);
 `endif
         always @(posedge clk) begin
-            if (tv[LV] && t_rmax && t_opend) begin
+            if (tv[LVT] && t_rmax && t_opend) begin
                 mx_addr <= t_mbase >> LW;
                 for (ll = 0; ll < W; ll = ll + 1) begin
                     mx_mask[ll] <= |l_sel[ll*IL +: IL];
@@ -1215,7 +1229,7 @@ end endgenerate
     end else begin : g_nscb
         assign rk_jx = rk[t_j]; assign rseen_jx = rseen[t_j];
     always @(posedge clk) begin
-        if (tv[LV] && t_rmax && t_opend) begin
+        if (tv[LVT] && t_rmax && t_opend) begin
             mx_addr <= t_mbase >> LW;
             mx_mask <= {W{1'b0}};
             mx_data <= {(W*32){1'b0}};

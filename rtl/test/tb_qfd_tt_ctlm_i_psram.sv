@@ -149,7 +149,10 @@ module tb_qfd_tt_ctlm_i_psram;
         end
     endfunction
     wire [12*51-1:0] pam_tx0 = pam(pt0[PL-1]), pam_tx1 = pam(pt1[PL-1]);
-    ot_qfd_tt_ctlm_i #(.PSRAM(0), .PMUT(0), .HQ2(0)) u0 (
+    // el1011-q-seq AUD 32768 (coordinator 10-11: p_am pin register, argmax loop +1 cycle): the cycle-level golden u0 counts
+    // the same +1 (u0 = the base with only the AMI bit); TXN keeps u0 the plain base (transaction-level, timing-free compare)
+    localparam integer U0_AUD = ((U1_AUD & 32768) != 0 && TXN == 0) ? 32768 : 0;
+    ot_qfd_tt_ctlm_i #(.PSRAM(0), .PMUT(0), .HQ2(0), .AUD(U0_AUD)) u0 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .token(token),

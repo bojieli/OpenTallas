@@ -18,7 +18,8 @@ module mxw #(parameter integer SC = 0) (input clk, input rst_n, input tvl, input
         output reg [16*32-1:0] mx_data, output [8*32-1:0] rko, output [7:0] rso, output [31:0] rkj, output rsj,
         output [2:0] tj, output [28:0] tq);
     localparam integer W = 16, IL = 8, LW = 4, AW = 24, LV = 10, PK = 1;
-    wire [LV:0] tv = {tvl && rst_n, {LV{1'b0}}};   // tv is an async-reset register in the RTL: 0 while rst_n is low
+    localparam integer LVT = LV;   // AMI: the tree-top valid tap (LV + 1 under AMI 1); the tap is a free input here
+    wire [LVT:0] tv = {tvl && rst_n, {LVT{1'b0}}};   // tv is an async-reset register in the RTL: 0 while rst_n is low
     reg  [1+3+1+AW-1:0] ttag_q;
     always @(posedge clk) ttag_q <= ttag_e;
     wire [1+3+1+AW-1:0] ttag = ttag_q, ttag_ew = ttag_e;
