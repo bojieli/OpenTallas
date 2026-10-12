@@ -1766,6 +1766,14 @@ def kind_at(m, x, y):
     return 'field'
 
 
+def pg_pitch_grid(p):
+    """M8/M9 PG stripe pitch on the manufacturing grid (0.001 um): pdngen snaps the pitch DOWN and the derived spacing
+    (pitch/2 - width) UP to the grid and then requires pitch >= 2 x (width + spacing) -- an off-grid bump-aligned pitch
+    (63.6396 / 7 = 9.0914) failed PDN-0175 (9.0910 < 9.0920).  Rounded UP to 0.002 um so pitch/2 - 0.48 is on grid
+    (the stripe lattice drifts < 0.001 um per bump period from the bump pitch; the vsrc sites stay on the bumps)."""
+    return round(math.ceil(round(p / 0.002, 6) - 1e-9) * 0.002, 3)
+
+
 def case_ir(m, work, window, cov, peak=True, vdd_pitch=None, align=True, signal_bumps_phy=True, scale=1.0):
     work.mkdir(parents=True, exist_ok=True)
     x0, y0, x1, y1 = windows(m)[window]
@@ -1780,7 +1788,7 @@ def case_ir(m, work, window, cov, peak=True, vdd_pitch=None, align=True, signal_
             return raw
         n = math.ceil(vp / raw - 1e-9)
         n += (n % 2 == 0)
-        return round(vp / n, 4)
+        return pg_pitch_grid(vp / n)
     sites = {'VDD': [], 'VSS': []}
     for net, off in (('VDD', vp / 2), ('VSS', 0.0)):
         yy = off if off > 0 else vp
@@ -2040,7 +2048,7 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     raw = dn(0.48 / p, 0.160)
     n = math.ceil(vp / raw - 1e-9)
     n += (n % 2 == 0)
-    pitch = round(vp / n, 4)
+    pitch = pg_pitch_grid(vp / n)
     _init_real()
     M = masters(m, 1)
     ins, clip_pw = [], {}
@@ -2086,7 +2094,7 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     for net in ('VDD', 'VSS'):
         (work / f'vsrc_{net}.loc').write_text(''.join(f'{x:.3f}, {y:.3f}, {BUMP_SIZE:.1f}, {VDD_V if net == "VDD" else 0.0}\n'
                                                      for x, y in sites[net]))
-    off = round((vp / 2) % pitch, 4)
+    off = round((vp / 2) % pitch, 3)
     cfgm = real_lef(CFG_LEF)['name']
     m8m = [x for x in masters_used if x.split('_clip_')[0] in PG_M8_MASTERS]
     other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m)
@@ -2106,8 +2114,8 @@ add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name top -voltage_domains CORE
-add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch} -spacing {pitch / 2 - 0.48:.4f} -offset {off}
-add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch / 2 - 0.48:.4f} -offset {off}
+add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch:.3f} -spacing {pitch / 2 - 0.48:.3f} -offset {off:.3f}
+add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch:.3f} -spacing {pitch / 2 - 0.48:.3f} -offset {off:.3f}
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name m7 -cells {{{other}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid m7 -layers {{M7 M8}}
@@ -2182,7 +2190,7 @@ def case_psmt(out, mode):
                 s.append(f'{x:.3f}, {y:.3f}, 20.0, {0.7 if net=="VDD" else 0.0}\n'); x += vp
             y += vp
         (out / f'vsrc_{net}.loc').write_text(''.join(s))
-    pitch = 3.7435; PL = '/OpenROAD-flow-scripts/flow/platforms/asap7'
+    pitch = pg_pitch_grid(3.7435); PL = '/OpenROAD-flow-scripts/flow/platforms/asap7'
     t = f"""read_lef {PL}/lef/asap7_tech_1x_201209.lef
 read_lef /work/x.lef
 read_def /work/t.def
@@ -2191,8 +2199,8 @@ add_global_connection -net VSS -inst_pattern .* -pin_pattern ^VSS$ -ground
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name top -voltage_domains CORE
-add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch} -spacing {pitch/2-0.48:.4f} -offset {(vp/2)%pitch:.4f}
-add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch/2-0.48:.4f} -offset {(vp/2)%pitch:.4f}
+add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch:.3f} -spacing {pitch/2-0.48:.3f} -offset {(vp/2)%pitch:.3f}
+add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch:.3f} -spacing {pitch/2-0.48:.3f} -offset {(vp/2)%pitch:.3f}
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name m7 -cells {{{comps[0][1]}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid m7 -layers {{M7 M8}}
