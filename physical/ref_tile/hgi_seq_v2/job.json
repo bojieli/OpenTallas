@@ -1,5 +1,5 @@
 {
- "name": "hgi_seq_v2-v23-COMMIT",
+ "name": "hgi_seq_v2-v23-8447139d1",
  "block": "ot_hgi_seq",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-b2-cp",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-hbm-b2-cp",
-  "commit": "COMMIT",
+  "commit": "8447139d1",
   "extra_paths": [
    "rtl/hbm_accel/generic/tb",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
@@ -19,7 +19,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_hgi_seq rtl/hbm_accel/generic/ot_hgi_seq.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_seq #(.USE_MACRO(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/ot_hgi_seq.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_seq_v2/hgi_seq_v2-v23-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_seq_v2/hgi_seq_v2-v23-8447139d1"
   }
  ],
  "cycles_added": 0,
