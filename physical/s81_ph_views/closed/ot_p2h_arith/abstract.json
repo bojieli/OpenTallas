@@ -1,0 +1,63 @@
+{
+  "name": "ot_p2h_arith",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/routes/mtp_p2h_ar_f78ff6417_tc_a/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2h-ar-f78ff6417-tc-a/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_p2h_arith.lef": "1c1267d9494763de434ef267e4000de9018b9639968460d40200f05388e83a3e",
+    "ot_p2h_arith_ff.lib": "60f3c87edb69bff68002b09052b5e99855d0d013809d8bc53cfe43a3e545c422",
+    "ot_p2h_arith_ss.lib": "ef664953910bf8edcf613e39416123cf3f9ed24b4edab3f5f586df2ae0c2d1df"
+  },
+  "ok": true
+}

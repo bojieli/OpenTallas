@@ -41,13 +41,13 @@ def kl_layout(defp, lefdir):
     return ly
 
 
-def kl_region(ly, name):
+def kl_region(ly, name, box=None):
     import klayout.db as db
     r = db.Region()
     for i in ly.layer_indexes():
         inf = ly.get_info(i)
         if inf.name in (name, name + '.PIN'):
-            r.insert(db.RecursiveShapeIterator(ly, ly.top_cell(), i))
+            r.insert(db.RecursiveShapeIterator(ly, ly.top_cell(), i, db.Box(*box)) if box else db.RecursiveShapeIterator(ly, ly.top_cell(), i))
     r.flatten()
     return r.merged()
 
@@ -79,7 +79,7 @@ def geometry(ly, pack, layers, out, box=None):
         ours = db.Region()
         for r in m: ours.insert(db.Box(int(r[1]), int(r[2]), int(r[3]), int(r[4])))
         ours.merge()
-        kl = kl_region(ly, name)
+        kl = kl_region(ly, name, box)
         if box is not None:
             w = db.Region(db.Box(*box)); ours = ours & w; kl = kl & w
         x = ours ^ kl
