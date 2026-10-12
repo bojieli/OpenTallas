@@ -1,5 +1,5 @@
 {
- "name": "vms_bank-v08-COMMIT",
+ "name": "vms_bank-v08-bb49c6813",
  "block": "ot_vms_bank",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-sfu",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-qdqtput",
-  "commit": "COMMIT",
+  "commit": "bb49c6813",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -161,7 +161,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vms_bank/vms_bank-v08-COMMIT"
+   "to": "results/rtl/ref_tile/vms_bank/vms_bank-v08-bb49c6813"
   }
  ],
  "cycles_added": 0,
