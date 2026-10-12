@@ -209,6 +209,7 @@ module ot_hgi_fused_record #(
     wire [20:0] SCR_LIMIT_W = (SCR_WORDS == 0) ? 21'd262144 : ({3'd0, scr_q} + 21'(SCR_WORDS));
 
     wire [17:0] g_b = scr_q;
+    reg k_bad, k_hq, k_nm, k_scr, k_hce, k_hgp;   // S_DEC decisions, registered at S_G4
     reg [1:0] sudone;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -237,12 +238,17 @@ module ot_hgi_fused_record #(
                     f_d <= {1'b0, 8'd127 + {3'd0, lg_d}, dm[22:0]}; f_inv <= {1'b0, 8'd127 - {3'd0, lg_d}, 23'd0};
                     s1_b <= scr_q + d[17:0]; st <= S_G4;
                 end
-                S_G4: begin s2_b <= s1_b + nseg; x_b <= s1_b + nseg + 18'd1; st <= S_DEC; end
+                S_G4: begin s2_b <= s1_b + nseg; x_b <= s1_b + nseg + 18'd1; st <= S_DEC;
+                    // el1011-hbm-fused: S_DEC's decisions registered here (operands stable since S_LD, d since S_G2,
+                    // nseg since S_G3): S_DEC is a mux on flops, not a descriptor-check cone into mv / ne_job
+                    k_bad <= (hdr[127:124] != 4'd4 || op > 6'd6 || op == 6'd3); k_hq <= hq_ok;
+                    k_nm <= (op == 6'd1) ? rn_ok : hp_ok; k_scr <= (scr_end > SCR_LIMIT_W);
+                    k_hce <= hce_ok; k_hgp <= hgp_ok; end
                 S_DEC: begin
-                    if (hdr[127:124] != 4'd4 || op > 6'd6 || op == 6'd3) begin rec_fault <= 1'b1; st <= S_HALT; end
+                    if (k_bad) begin rec_fault <= 1'b1; st <= S_HALT; end
                     else if (op == 6'd2) begin                 // HC_POST: 4 x (mix_k, out_k) on the stream unit
-                        if (!hq_ok) begin rec_fault <= 1'b1; st <= S_HALT; end
-                        else if (hce_ok) begin
+                        if (!k_hq) begin rec_fault <= 1'b1; st <= S_HALT; end
+                        else if (k_hce) begin
                             ne_job <= {2'd1, hdr[63:32], d, dO[25:8], dC[25:8], 22'd0, dB[25:8], dA[25:8]};
                             ne_v <= 1'b1; st <= S_NEW;
                         end
@@ -251,9 +257,9 @@ module ot_hgi_fused_record #(
                     end else if (op == 6'd1 || op == 6'd0) begin
                         // F10 (hgi-unitrate): the scratch the micro-sequence uses must fit the reserved region and VM:
                         // ROW_NORM G (d) + S (nseg) + S2 (nseg); HC_PRE_NORM G (d) + S + S2 + the mixed x (d)
-                        if (op == 6'd1 ? !rn_ok : !hp_ok) begin rec_fault <= 1'b1; st <= S_HALT; end
-                        else if (scr_end > SCR_LIMIT_W) begin rec_fault <= 1'b1; st <= S_HALT; end
-                        else if (op == 6'd0 && hce_ok && hgp_ok) begin
+                        if (!k_nm) begin rec_fault <= 1'b1; st <= S_HALT; end
+                        else if (k_scr) begin rec_fault <= 1'b1; st <= S_HALT; end
+                        else if (op == 6'd0 && k_hce && k_hgp) begin
                             // HC engine: gain -> G as raw U32 words {m 1, n d/2, dst VM U32 G, src HBM U32 B} streamed
                             // while the engine reads h (it reads G on hg_rdy)
                             mv <= {21'(d >> 1), 20'd1, 16'd1, 32'd0, {22'd0, g_b}, 3'd5, 2'd1, 16'd1, 32'd0, dB[47:8], 3'd5, 2'd0};
@@ -274,7 +280,7 @@ module ot_hgi_fused_record #(
                 end
                 S_MVW: if (!mv_v) begin
                     if (in_mvf) begin rec_fault <= 1'b1; st <= S_HALT; end
-                    else if (in_mvd && op == 6'd0 && hce_ok) begin   // the one-pass engine: h, gain (G), pre
+                    else if (in_mvd && op == 6'd0 && k_hce) begin   // the one-pass engine: h, gain (G), pre
                         ne_job <= {2'd0, hdr[63:32], d, dO[25:8], dC[25:8], 22'd0, g_b, dA[25:8]};
                         ne_v <= 1'b1; st <= S_NEW;
                     end
