@@ -7,7 +7,6 @@
  "clock_port": "clk",
  "reset_ports": ["rst_n"],
  "outline": {"w": 180.0, "h": 180.0},
- "pg_layer": "M6",
  "pins": {"W": ["src", "red_in"], "E": ["sum", "v_out", "e_out"], "N": ["clk", "rst_n"]},
  "refglob": "*",
  "route": {"pd": 0.55, "threads": 16, "peak_ram_gb": 40, "hold_margin_ns": 0.010},

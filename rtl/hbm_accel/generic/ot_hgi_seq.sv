@@ -119,6 +119,35 @@ module ot_hgi_seq #(
     // CTL.TOKX (Q-MTP-1, hbm-forks 2026-10-09): the committed tokens of the step, up to 16, carried on the completion
     output wire          cpl_tokx       // 1: this completion beat is a CTL.TOKX committed token (status 0), END follows
 );
+    // ---- v2.3 hold-delay stage on every input (route 905100ec5: FF hold -17.85 ps on input -> pin-flop paths, die-context
+    // IO hold budget): one kept HB4 delay cell a bit (ot_hgi_seq_hdly N=1 = rtl/lib/ot_hdly, ~38 ps at FF; dont_touch via hdly_dont_touch.tcl at
+    // PRE_FLOORPLAN). A wire in simulation: function unchanged.
+    wire [160-1:0] md_d_h; ot_hgi_seq_hdly #(.W(160), .N(2)) u_hdly_md_d (.a(md_d), .y(md_d_h));
+    wire [18-1:0] cfg_vocab_h; ot_hgi_seq_hdly #(.W(18), .N(2)) u_hdly_cfg_vocab (.a(cfg_vocab), .y(cfg_vocab_h));
+    wire [21-1:0] cfg_ctx_max_h; ot_hgi_seq_hdly #(.W(21), .N(2)) u_hdly_cfg_ctx_max (.a(cfg_ctx_max), .y(cfg_ctx_max_h));
+    wire [8-1:0] rank_h; ot_hgi_seq_hdly #(.W(8), .N(2)) u_hdly_rank (.a(rank), .y(rank_h));
+    wire [1-1:0] hold_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_hold (.a(hold), .y(hold_h));
+    wire [1-1:0] db_v_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_db_v (.a(db_v), .y(db_v_h));
+    wire [18-1:0] db_token_h; ot_hgi_seq_hdly #(.W(18), .N(2)) u_hdly_db_token (.a(db_token), .y(db_token_h));
+    wire [20-1:0] db_pos_h; ot_hgi_seq_hdly #(.W(20), .N(2)) u_hdly_db_pos (.a(db_pos), .y(db_pos_h));
+    wire [32-1:0] db_job_h; ot_hgi_seq_hdly #(.W(32), .N(2)) u_hdly_db_job (.a(db_job), .y(db_job_h));
+    wire [4-1:0] db_gen_h; ot_hgi_seq_hdly #(.W(4), .N(2)) u_hdly_db_gen (.a(db_gen), .y(db_gen_h));
+    wire [2-1:0] db_entry_h; ot_hgi_seq_hdly #(.W(2), .N(2)) u_hdly_db_entry (.a(db_entry), .y(db_entry_h));
+    wire [4-1:0] db_ncol_h; ot_hgi_seq_hdly #(.W(4), .N(2)) u_hdly_db_ncol (.a(db_ncol), .y(db_ncol_h));
+    wire [4-1:0] db_kernel_h; ot_hgi_seq_hdly #(.W(4), .N(2)) u_hdly_db_kernel (.a(db_kernel), .y(db_kernel_h));
+    wire [32-1:0] db_loff_h; ot_hgi_seq_hdly #(.W(32), .N(2)) u_hdly_db_loff (.a(db_loff), .y(db_loff_h));
+    wire [11*32-1:0] md_k_h; ot_hgi_seq_hdly #(.W(11*32), .N(2)) u_hdly_md_k (.a(md_k), .y(md_k_h));
+    wire [1-1:0] f_req_rdy_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_f_req_rdy (.a(f_req_rdy), .y(f_req_rdy_h));
+    wire [1-1:0] f_rsp_v_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_f_rsp_v (.a(f_rsp_v), .y(f_rsp_v_h));
+    wire [256-1:0] f_rsp_data_h; ot_hgi_seq_hdly #(.W(256), .N(2)) u_hdly_f_rsp_data (.a(f_rsp_data), .y(f_rsp_data_h));
+    wire [1-1:0] vr_rdy_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_vr_rdy (.a(vr_rdy), .y(vr_rdy_h));
+    wire [1-1:0] vr_rsp_v_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_vr_rsp_v (.a(vr_rsp_v), .y(vr_rsp_v_h));
+    wire [32-1:0] vr_rsp_data_h; ot_hgi_seq_hdly #(.W(32), .N(2)) u_hdly_vr_rsp_data (.a(vr_rsp_data), .y(vr_rsp_data_h));
+    wire [16-1:0] u_rdy_h; ot_hgi_seq_hdly #(.W(16), .N(2)) u_hdly_u_rdy (.a(u_rdy), .y(u_rdy_h));
+    wire [16-1:0] u_done_h; ot_hgi_seq_hdly #(.W(16), .N(2)) u_hdly_u_done (.a(u_done), .y(u_done_h));
+    wire [16-1:0] u_fault_h; ot_hgi_seq_hdly #(.W(16), .N(2)) u_hdly_u_fault (.a(u_fault), .y(u_fault_h));
+    wire [1-1:0] wr_quiet_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_wr_quiet (.a(wr_quiet), .y(wr_quiet_h));
+    wire [1-1:0] cpl_rdy_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_cpl_rdy (.a(cpl_rdy), .y(cpl_rdy_h));
     // ---- registered boundary (submit rule X4): every data / status input lands in a pin flop
     reg [159:0] md_d_r; reg [11*32-1:0] md_k_r; reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg [7:0] rank_r; reg hold_r;
     reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r; reg f_rsp_v_r; reg [255:0] f_rsp_data_r;
@@ -133,9 +162,9 @@ module ot_hgi_seq #(
     wire rn_u = rs_u[1];                 // per-unit outstanding counters
     always @(posedge clk or negedge rn)
         if (!rn) begin hold_r <= 1'b1; vr_rsp_v_r <= 1'b0; u_done_r <= 16'd0; u_fault_r <= 16'd0; wr_quiet_r <= 1'b0; f_rsp_v_r <= 1'b0; end
-        else begin hold_r <= hold; vr_rsp_v_r <= vr_rsp_v; u_done_r <= u_done; u_fault_r <= u_fault; wr_quiet_r <= wr_quiet; f_rsp_v_r <= f_rsp_v; end
+        else begin hold_r <= hold_h; vr_rsp_v_r <= vr_rsp_v_h; u_done_r <= u_done_h; u_fault_r <= u_fault_h; wr_quiet_r <= wr_quiet_h; f_rsp_v_r <= f_rsp_v_h; end
     always @(posedge clk) begin
-        md_d_r <= md_d; md_k_r <= md_k; cfg_vocab_r <= cfg_vocab; cfg_ctx_max_r <= cfg_ctx_max; rank_r <= rank; vr_rsp_data_r <= vr_rsp_data; f_rsp_data_r <= f_rsp_data;
+        md_d_r <= md_d_h; md_k_r <= md_k_h; cfg_vocab_r <= cfg_vocab_h; cfg_ctx_max_r <= cfg_ctx_max_h; rank_r <= rank_h; vr_rsp_data_r <= vr_rsp_data_h; f_rsp_data_r <= f_rsp_data_h;
     end
     localparam integer RB = $clog2(RW);
     localparam integer RS = RW / 2;                       // sectors
@@ -153,10 +182,11 @@ module ot_hgi_seq #(
     localparam [2:0] K_DISP = 3'd0, K_END = 3'd1, K_TOKX = 3'd2, K_FENCE = 3'd3, K_LVM = 3'd4, K_FLT = 3'd5;
     reg [4:0]  st;
     reg        run_q;                    // a job runs (FE / AU / queue active): set at the job start, cleared on S_CPL
+    (* keep = 1 *) reg run_f;         // v2.3: the FE's own copy of run_q (run_q drove ~hundreds of loads: run_q -> pi -27 ps)
     reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q; reg [20:0] pos1_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
     reg [RB:0]  wp, frp;                 // write (sector aligned), free (outermost loop body start or the parse pointer)
-    reg [39:0]  faddr, faddr_n, img_q;   // faddr_n = faddr + 32 kept registered (the push selects; no 40-bit add)
+    reg [39:0]  faddr, faddr_n, faddr_nn, img_q;   // faddr_n = faddr + 32 kept registered (the push selects; no 40-bit add)
     reg [7:0]   inflight, drop;
     reg         fetching;
     wire [RB:0] frp_al = {frp[RB:1], 1'b0};
@@ -179,6 +209,14 @@ module ot_hgi_seq #(
             always @* rd_sec = q_r;
         end else begin : g_64k                                  // bank = word pointer bit 11 (sector bit 10)
             wire [255:0] q0, q1; reg rb_q, rb_qq; reg [255:0] q0_r, q1_r, wd0_q, wd1_q; reg we0_q, we1_q; reg [9:0] wa0_q, wa1_q;
+            wire [255:0] wd0_d, wd1_d;     // v2.3: hold-delay stage flop -> macro write data (FF hold -4.2 ps)
+            ot_hgi_seq_hdly #(.W(256), .N(2)) u_hdly_wd0 (.a(wd0_q), .y(wd0_d));
+            ot_hgi_seq_hdly #(.W(256), .N(2)) u_hdly_wd1 (.a(wd1_q), .y(wd1_d));
+            // v2.4 (route 8447139d1 FF hold: wd1_q -> u_ring1/wd_in -15.5, we1_q -> w_ce_in -7.6): two kept HB4 stages on
+            // the macro write data / enables (flop -> macro hold, the macro's clock pin sits late in the tree)
+            wire we0_d, we1_d;
+            ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_we0 (.a(we0_q), .y(we0_d));
+            ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_we1 (.a(we1_q), .y(we1_d));
             always @(posedge clk) begin
                 rb_q <= rd_ptr[11]; rb_qq <= rb_q;
                 if (!rb_q) q0_r <= q0;                          // the bank read on the previous edge
@@ -187,10 +225,10 @@ module ot_hgi_seq #(
                 we1_q <= ring_we &&  wp[11]; wa1_q <= wp[10:1]; if (ring_we &&  wp[11]) wd1_q <= f_rsp_data_r;
             end
             ot_sram_1r1w_1024x256_m2_r2c2 u_ring0 (.clk(clk), .r_ce_in(!rd_ptr[11]), .r_addr_in(rd_ptr[10:1]), .rd_out(q0),
-                .w_ce_in(we0_q), .w_addr_in(wa0_q), .wd_in(wd0_q), .w_mask_in({256{1'b1}}),
+                .w_ce_in(we0_d), .w_addr_in(wa0_q), .wd_in(wd0_d), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
             ot_sram_1r1w_1024x256_m2_r2c2 u_ring1 (.clk(clk), .r_ce_in(rd_ptr[11]), .r_addr_in(rd_ptr[10:1]), .rd_out(q1),
-                .w_ce_in(we1_q), .w_addr_in(wa1_q), .wd_in(wd1_q), .w_mask_in({256{1'b1}}),
+                .w_ce_in(we1_d), .w_addr_in(wa1_q), .wd_in(wd1_d), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
             always @* rd_sec = rb_qq ? q1_r : q0_r;
         end
@@ -210,7 +248,7 @@ module ot_hgi_seq #(
     reg room_q;
     wire       rq_push = fetching && (rqn != 2'd2) && (inflight < NOS) && room_q;
     always @(posedge clk or negedge rn) if (!rn) room_q <= 1'b0; else room_q <= (used + (rq_push ? 2 : 0) + 2 <= RW);
-    wire       rq_pop = f_req_v && f_req_rdy;
+    wire       rq_pop = f_req_v && f_req_rdy_h;
     always @(posedge clk or negedge rn)
         if (!rn) begin rqh <= 1'b0; rqn <= 2'd0; end
         else begin
@@ -271,6 +309,7 @@ module ot_hgi_seq #(
     wire       tbl_ok = tbc[6];
     wire [2:0] h_slot = tbc[5:3];
     reg [20:0] ps, p1, q_p1, q_n2, q_ns1, q_ns2, q_win, q_sc1, q_sc2, q_scr, q_ps;
+    wire [19:0] pos_d; ot_hgi_seq_hdly #(.W(20), .N(2)) u_hdly_pos (.a(pos), .y(pos_d));   // v2.3: FF hold -8.6 ps pos -> p1
     reg [20:0] q_sc1b, q_psb;
     reg [31:0] dsq [16:40];
     wire [28:0] rp0 = rank_r[0] ? {8'd0, q_sc1}       : 29'd0, rp1 = rank_r[1] ? {7'd0, q_sc1, 1'b0} : 29'd0,
@@ -288,7 +327,7 @@ module ot_hgi_seq #(
     reg [20:0] q_psc, q_psd, q_sc1c, q_sc1d, q_sc1e; reg [20:0] r_diff; reg r_ge;
     always @(posedge clk) begin
         ps <= {1'b0, pos} + {18'd0, h_slot};                                   // stage 1
-        p1 <= {1'b0, pos} + {18'd0, h_slot} + 21'd1;
+        p1 <= {1'b0, pos_d} + {18'd0, h_slot} + 21'd1;
         q_ps <= ps; q_p1 <= p1; q_n2 <= {1'b0, p1[20:1]};                       // stage 2
         q_ns1 <= mn(p1, DS_TOPK); q_ns2 <= mn({1'b0, p1[20:1]}, DS_TOPK); q_win <= mn(p1, DS_WIN);
         q_sc1 <= cdv(p1, DS_TPL); q_sc2 <= cdv({1'b0, p1[20:1]}, DS_TPL); q_scr <= cdv(mn(p1, DS_SCAN), DS_TPL);
@@ -330,6 +369,7 @@ module ot_hgi_seq #(
     reg [2:0]  rv, rodd, rep;            // read pipe: valid, started at an odd word, epoch
     reg [FD*128-1:0] fqv;                // shift FIFO: word 0 is the head
     reg [4:0]  fq_n, fcred;              // words held / free credits (FD - held - in the read pipe)
+    reg [FD+1:0] fq_th;                  // v2.3: thermometer copy of fq_n (fq_th[j] = j < fq_n), registered
     // the current record (registered at the header cycle)
     reg [127:0] h;
     reg [1:0]  rcl; reg rskip;
@@ -361,7 +401,13 @@ module ot_hgi_seq #(
     reg more;
     always @(posedge clk) more <= more_c;
     // ---- header evaluation from the FIFO head (flops): every decision flag is registered at the header pop
-    wire [127:0] hw = fqv[127:0];
+    // v2.4 LAZY-SHIFT FIFO (route 8447139d1: run_q -> be_inj -> pc -> 1.5k fqv data flops TT -48.25, 22-24 levels; pc
+    // fanned out to ~4.6k mux selects): the storage fqv lags the view by the PREVIOUS cycle's pop count pq (registered,
+    // one keep'd copy per entry / reader group).  View word i = fqv[i + pq].  Storage update: keep view words below
+    // fq_n (registered thermometer), pushes at fq_n / fq_n + 1 -- this cycle's pop decision pc reaches only pq, fq_n /
+    // fq_th and the FE counters, never the FIFO data.  Readers add one 3:1 select from flops.
+    wire [127:0] fv0, fv1;               // view words 0 and 1
+    wire [127:0] hw = fv0;
     wire [3:0]  hw_unit = hw[H_UNIT +: 4];
     wire [5:0]  hw_op   = hw[H_OP +: 6];
     wire [1:0]  hw_pred = hw[H_PRED +: 2];
@@ -370,8 +416,9 @@ module ot_hgi_seq #(
     wire [24:0] hw_param = hw[H_PARAM +: 25];
     wire [2:0]  hw_np = hw_opnd[0] + hw_opnd[1] + hw_opnd[2] + hw_opnd[3] + hw_opnd[4] + hw_opnd[5] + hw_opnd[6];
     wire [4:0]  hw_rlen = 5'd1 + {3'd0, hw_tmpl, 1'b0} + {1'b0, hw_np, 1'b0};
-    wire [RB+1:0] hw_end = {1'b0, rp - frp} + {{(RB-3){1'b0}}, hw_rlen};
-    wire        hw_recbad = (depth != 2'd0) && (hw_end > RW - 2);
+    // body-over-the-ring check against a REGISTERED limit (RW - 2 - (rp - frp)): no subtract in the header cycle
+    reg  [4:0]  lim5; reg lim_big;
+    wire        hw_recbad = (depth != 2'd0) && !lim_big && (hw_rlen > lim5);
     wire        hw_bad = (hw_unit >= 4'd11) || (hw_op >= {2'd0, nops(hw_unit)});
     reg         hw_pok;
     always @* case (hw_pred) 2'd0: hw_pok = 1'b1; 2'd1: hw_pok = (pos == 20'd0); 2'd2: hw_pok = (pos != 20'd0);
@@ -392,10 +439,14 @@ module ot_hgi_seq #(
     // ---- FE control (combinational from flops)
     wire        job_start;               // S_DB3 with a good doorbell (main FSM)
     wire        be_inj;                  // the indexed resolver owns the AU input this cycle
-    wire        fe_hcap  = run_q && fs == F_H && fq_n != 5'd0 && settle == 2'd0 && tbl_ok && q_cnt < QD;
+    wire        fe_hcap  = run_f && fs == F_H && fq_th[0] && settle == 2'd0 && tbl_ok && q_cnt < QD;
     wire        fe_halloc = fe_hcap && hw_rc != RC_DISC;               // dispatch / END / TOKX / header fault entry
-    wire        fe_inp   = run_q && fs == F_P && rcl != RC_FLT;
-    wire        fe_pop2  = fe_inp && (pi != hq_nit) && fq_n >= 5'd2 && !(rcl == RC_DSP && be_inj);
+    // v2.3 (route 905100ec5 limiter hw -> e_hdr, TT -187): the header's queue entry is written the cycle AFTER the
+    // header pop from registered state (h, hq_kind, hq_rdy0) under a per-entry registered enable (ha_e) -- the
+    // header decode ends in a few flops instead of fanning out to every entry's ~200 data flops.
+    reg         ha_v; reg [QD-1:0] ha_e; reg [2:0] hq_kind; reg hq_rdy0;
+    wire        fe_inp   = run_f && fs == F_P && rcl != RC_FLT;
+    wire        fe_pop2  = fe_inp && (pi != hq_nit) && fq_th[1] && !(rcl == RC_DSP && be_inj);
     wire        fe_sut   = fe_pop2 && rcl == RC_DSP && h[H_TMPL] && pi == 4'd0;
     wire        fe_item  = fe_pop2 && rcl == RC_DSP && !(h[H_TMPL] && pi == 4'd0);
     wire        fe_done  = fe_inp && (hq_nit == 4'd0 || (fe_pop2 && pi + 4'd1 == hq_nit));
@@ -405,39 +456,80 @@ module ot_hgi_seq #(
     wire        fe_redir = fe_done && rcl == RC_DISC && !rskip && h_op == 6'd2 && more;
     wire        fe_flush = job_start || fe_redir;
     wire [1:0]  pc = fe_hcap ? 2'd1 : fe_pop2 ? 2'd2 : 2'd0;
-    wire        q_alloc = fe_halloc || fe_aalloc;
-    reg  [2:0]  q_akind;
+    wire        q_alloc = ha_v || fe_aalloc;
+    reg  [2:0]  q_akind;                 // the header's entry kind (registered into hq_kind at the pop)
     always @* begin
-        if (fe_aalloc) q_akind = (h_op == 6'd4) ? K_FENCE : K_LVM;
-        else if (hw_rc == RC_FLT) q_akind = K_FLT;
+        if (hw_rc == RC_FLT) q_akind = K_FLT;
         else if (hw_isctl && hw_op == 6'd3) q_akind = K_END;
         else if (hw_isctl && hw_op == 6'd5) q_akind = K_TOKX;
         else q_akind = K_DISP;
     end
     wire [2:0]  fe_sl = hq_sl[(pi - {3'd0, h[H_TMPL]}) * 3 +: 3];      // the item's descriptor slot
-    wire [255:0] fe_it = fqv[255:0];                                    // the item (two words)
+    wire [255:0] fe_it = {fv1, fv0};                                    // the item (two words)
     // ---- reader: one sector a cycle while the ring has it and the FIFO has room
     wire [RB:0] ravail = wv ? (wp - rdp) : {(RB+1){1'b0}};
-    wire        rd_iss = run_q && !fe_flush && (ravail != {(RB+1){1'b0}}) && fcred >= 5'd2;
+    wire        rd_iss = run_f && !fe_flush && (ravail != {(RB+1){1'b0}}) && fcred >= 5'd2;
     wire        push_ok = rv[2] && (rep[2] == ep) && !fe_flush;
     wire [1:0]  sc = !push_ok ? 2'd0 : rodd[2] ? 2'd1 : 2'd2;
     wire [127:0] pw0 = rodd[2] ? rd_sec[255:128] : rd_sec[127:0];
     wire [127:0] pw1 = rd_sec[255:128];
     // ---- loop-from-VM reply (BE)
     reg         lv_rsp; reg [15:0] lv_rcnt;
-    // ---- FIFO data (no reset): entry i takes word i + pc, or a pushed word
+    // ---- FIFO data (no reset), v2.4 lazy shift: storage entry i takes storage word i + pq when i < fq_n (view kept),
+    // pushed word 0 at i == fq_n, pushed word 1 at i == fq_n + 1.  Writes in a flush cycle are harmless (fq_th clears),
+    // so the data path carries the raw push (no fe_flush cone).
+    wire [FD+4:0] feq = {3'b000, fq_th[FD:0] & ~fq_th[FD+1:1], !fq_th[0]};    // feq[m] = (m == fq_n)
+    wire        push_raw = rv[2] && (rep[2] == ep);
+    wire [1:0]  scr = !push_raw ? 2'd0 : rodd[2] ? 2'd1 : 2'd2;
+    wire [1:0]  pq_n = fe_flush ? 2'd0 : pc;
     genvar gi;
     generate for (gi = 0; gi < FD; gi = gi + 1) begin : g_fq
-        wire [4:0] src = gi + pc;
-        wire [127:0] cur = (pc == 2'd0) ? fqv[gi*128 +: 128] :
-                           (pc == 2'd1) ? ((gi + 1 < FD) ? fqv[((gi + 1) % FD)*128 +: 128] : 128'd0) :
-                                          ((gi + 2 < FD) ? fqv[((gi + 2) % FD)*128 +: 128] : 128'd0);
-        wire [4:0] k = src - fq_n;
+        (* keep = 1 *) reg [1:0] pq;      // this entry's copy of the previous pop count (one-hot-ish: 0 / 1 / 2)
+        always @(posedge clk or negedge rn_f) if (!rn_f) pq <= 2'd0; else pq <= pq_n;
+        wire [127:0] s0 = fqv[gi*128 +: 128];
+        wire [127:0] s1 = (gi + 1 < FD) ? fqv[((gi + 1) % FD)*128 +: 128] : 128'd0;
+        wire [127:0] s2 = (gi + 2 < FD) ? fqv[((gi + 2) % FD)*128 +: 128] : 128'd0;
+        wire [127:0] cur = pq[1] ? s2 : pq[0] ? s1 : s0;
+        wire keep = fq_th[gi];
+        wire e0 = feq[gi];
+        wire e1 = (gi >= 1) ? feq[(gi >= 1) ? gi - 1 : 0] : 1'b0;
         always @(posedge clk)
-            if (src < fq_n) fqv[gi*128 +: 128] <= cur;
-            else if (k == 5'd0 && sc != 2'd0) fqv[gi*128 +: 128] <= pw0;
-            else if (k == 5'd1 && sc == 2'd2) fqv[gi*128 +: 128] <= pw1;
+            if (keep) fqv[gi*128 +: 128] <= cur;
+            else if (e0 && scr != 2'd0) fqv[gi*128 +: 128] <= pw0;
+            else if (e1 && scr == 2'd2) fqv[gi*128 +: 128] <= pw1;
     end endgenerate
+    // view readers: 4 x 32-bit groups (view words 0 and 1), each with its own pq copy
+    generate for (gi = 0; gi < 4; gi = gi + 1) begin : g_fr
+        (* keep = 1 *) reg [1:0] pr;
+        always @(posedge clk or negedge rn_f) if (!rn_f) pr <= 2'd0; else pr <= pq_n;
+        assign fv0[gi*32 +: 32] = pr[1] ? fqv[256 + gi*32 +: 32] : pr[0] ? fqv[128 + gi*32 +: 32] : fqv[gi*32 +: 32];
+        assign fv1[gi*32 +: 32] = pr[1] ? fqv[384 + gi*32 +: 32] : pr[0] ? fqv[256 + gi*32 +: 32] : fqv[128 + gi*32 +: 32];
+    end endgenerate
+    // v2.4: the thermometer moves by d = sc - pc (-2..+2): five shifted copies from flops, selected by d
+    wire [FD+1:0] th_m2 = {2'b00, fq_th[FD+1:2]}, th_m1 = {1'b0, fq_th[FD+1:1]}, th_p1 = {fq_th[FD:0], 1'b1},
+                  th_p2 = {fq_th[FD-1:0], 2'b11};
+    wire [FD+1:0] th_n = (pc == 2'd2) ? ((sc == 2'd2) ? fq_th : (sc == 2'd1) ? th_m1 : th_m2) :
+                         (pc == 2'd1) ? ((sc == 2'd2) ? th_p1 : (sc == 2'd1) ? fq_th : th_m1) :
+                                        ((sc == 2'd2) ? th_p2 : (sc == 2'd1) ? th_p1 : fq_th);
+    always @(posedge clk or negedge rn_f)
+        if (!rn_f) fq_th <= {(FD+2){1'b0}};
+        else if (fe_flush) fq_th <= {(FD+2){1'b0}};
+        else fq_th <= th_n;
+    // ---- ring-limit register: rpd = rp - frp after this cycle's update, lim = RW - 2 - rpd
+    reg  [RB:0] rpd;
+    wire        fe_adv = run_f && !job_start && fs == F_P && fe_done &&
+                         (rcl == RC_DSP || rskip || h_op == 6'd0 || h_op == 6'd4);      // rp <= hq_rpn, no settle
+    wire [RB:0] rpd_n = job_start ? {(RB+1){1'b0}} : (settle != 2'd0) ? (rp - frp) :
+                        fe_adv ? ((depth == 2'd0) ? {(RB+1){1'b0}} : rpd + {{(RB-4){1'b0}}, hq_rlen}) : rpd;
+    wire [RB:0] lim_n = RW - 2 - rpd_n;
+    always @(posedge clk) begin rpd <= rpd_n; lim5 <= lim_n[4:0]; lim_big <= |lim_n[RB:5]; end
+    integer fk2;
+    always @(posedge clk or negedge rn_f)
+        if (!rn_f) begin ha_v <= 1'b0; ha_e <= {QD{1'b0}}; end
+        else begin
+            ha_v <= !job_start && fe_halloc;
+            for (fk2 = 0; fk2 < QD; fk2 = fk2 + 1) ha_e[fk2] <= !job_start && fe_halloc && qt == fk2;
+        end
     // ---- FE sequential
     integer fk;
     always @(posedge clk or negedge rn_f) begin
@@ -459,10 +551,10 @@ module ot_hgi_seq #(
             if (job_start) begin
                 fs <= F_H; rp <= {{RB{1'b0}}, img_q[4]}; rdp <= {{RB{1'b0}}, img_q[4]}; frp <= {{RB{1'b0}}, img_q[4]};
                 ep <= ~ep; depth <= 2'd0; Lc <= 16'd0; L1c <= 16'd0; settle <= 2'd0; pi <= 4'd0;
-            end else if (run_q) begin
+            end else if (run_f) begin
                 case (fs)
                     F_H: if (fe_hcap) begin
-                        h <= hw; rcl <= hw_rc; rskip <= !hw_pok && !(hw_recbad || hw_bad);
+                        h <= hw; hq_kind <= q_akind; hq_rdy0 <= (hw_rc == RC_FLT) || (!hw_tmpl && hw_np == 3'd0); rcl <= hw_rc; rskip <= !hw_pok && !(hw_recbad || hw_bad);
                         hq_rlen <= hw_rlen; hq_rpn <= rp + {{(RB-4){1'b0}}, hw_rlen};
                         hq_nit <= {3'd0, hw_tmpl} + {1'b0, hw_np}; hq_np <= hw_np;
                         for (fk = 0; fk < 7; fk = fk + 1) hq_sl[fk*3 +: 3] <= mth(hw_opnd, fk[2:0]);
@@ -561,7 +653,12 @@ module ot_hgi_seq #(
             endcase
         end
     endfunction
-    wire [TRW-1:0] a0_row = trow_of(trow, a0_slot);
+    // v2.3 (route 905100ec5: a0_slot -> 8:1 row mux -> 27:1 code mux -> a1_x): the record's table row is registered
+    // from h (fixed for the record; an item reaches A1 >= 2 cycles after its header pop, h of the next record lands
+    // >= 1 cycle after the last item's A1)
+    reg [TRW-1:0] hrow_q;
+    always @(posedge clk) hrow_q <= trow_of(trow, h[H_SLOT +: 3]);
+    wire [TRW-1:0] a0_row = hrow_q;
     wire [31:0] dyn_d = dynx(a0_dsel, a0_row, a0_slot, a0_L, a0_L1, pos, pos1_q, token, rank_r),
                 dyn_n = dynx(a0_nsel, a0_row, a0_slot, a0_L, a0_L1, pos, pos1_q, token, rank_r);
     wire a0_flt = !a0_be && ((a0_isI && (a0_idx || a0_nsel == 6'd63 || (a0_sp != 2'd1 && !(IKS_I != 0 && a0_sp == 2'd0)))) ||
@@ -681,23 +778,33 @@ module ot_hgi_seq #(
     wire        be_pclr;                 // the resolver's entry has every pending descriptor resolved
     reg  [QB-1:0] rd_e, inj_e;         // the resolver's reader entry (VM reads) / injector entry (AU pass)
     reg         ir_flt;                  // the reader found a fault in rd_e (reported when rd_e reaches the head)
-    wire [TRW-1:0] hw_row = trow_of(trow, hw[H_SLOT +: 3]);
+    wire [TRW-1:0] h_row = trow_of(trow, h[H_SLOT +: 3]);
+    // v2.3 (route 905100ec5: pi -> fe_sl -> 7k s_dsc enables): an FE item / SUT is written into its entry one cycle
+    // after the pop from a staging register, under per-(entry, slot) registered enables
+    reg [255:0] it_d; reg [QD*7-1:0] it_we; reg [QD-1:0] su_we; reg su_np0; integer qe7;
+    always @(posedge clk) begin it_d <= fe_it; su_np0 <= (hq_np == 3'd0); end
+    always @(posedge clk or negedge rn_f)
+        if (!rn_f) begin it_we <= {(QD*7){1'b0}}; su_we <= {QD{1'b0}}; end
+        else for (qe7 = 0; qe7 < QD*7; qe7 = qe7 + 1) begin
+            it_we[qe7] <= fe_item && ctag == qe7 / 7 && fe_sl == qe7 % 7;
+            if (qe7 < QD) su_we[qe7] <= fe_sut && ctag == qe7;
+        end
     genvar ge, gs;
     generate for (ge = 0; ge < QD; ge = ge + 1) begin : g_q
         reg [127:0] e_hdr; reg [2:0] e_kind; reg [255:0] e_sut;
         reg [17:0] e_ixa, e_ina; reg e_ixb, e_inb, e_rdy, e_flt; reg [15:0] e_L, e_L1; reg [20:0] e_ps1;
         wire [EW_D-1:0] e_dsc; wire [EW_N-1:0] e_n; wire [EW_PH-1:0] e_ph; wire [6:0] e_px7, e_pn7;
-        wire al = q_alloc && qt == ge;
+        wire al = ha_e[ge] || (fe_aalloc && qt == ge);
         wire fw = a6_fe && a5_tag == ge;
         wire bw = a6_be && inj_e == ge;
         wire pclr = al || (be_pclr && inj_e == ge);
         always @(posedge clk) begin
             if (al) begin
-                e_hdr <= fe_aalloc ? h : hw; e_kind <= q_akind; e_L <= Lc; e_L1 <= L1c;
-                e_ps1 <= hw_row[32 +: 21]; e_flt <= 1'b0;
-                e_rdy <= fe_aalloc || hw_rc == RC_FLT || (!hw_tmpl && hw_np == 3'd0);
+                e_hdr <= h; e_kind <= fe_aalloc ? ((h_op == 6'd4) ? K_FENCE : K_LVM) : hq_kind; e_L <= Lc; e_L1 <= L1c;
+                e_ps1 <= h_row[32 +: 21]; e_flt <= 1'b0;
+                e_rdy <= fe_aalloc || hq_rdy0;
             end
-            if (fe_sut && ctag == ge) begin e_sut <= fe_it; if (hq_np == 3'd0) e_rdy <= 1'b1; end
+            if (su_we[ge]) begin e_sut <= it_d; if (su_np0) e_rdy <= 1'b1; end
             if (fw) begin
                 if (a5_isI) begin e_ixa <= a6_iax[17:0]; e_ixb <= a6_ixb; e_ina <= a5_ian[17:0]; e_inb <= a6_inb; end
                 if (a6_flt) e_flt <= 1'b1;
@@ -712,7 +819,7 @@ module ot_hgi_seq #(
             reg [255:0] s_dsc; reg [20:0] s_n; reg [23:0] s_ph; reg s_px, s_pn;
             wire [20:0] nf = s_pn ? Nv : s_n;
             always @(posedge clk) begin
-                if (fe_item && ctag == ge && fe_sl == gs) s_dsc <= fe_it;
+                if (it_we[ge*7 + gs]) s_dsc <= it_d;
                 if (pclr) begin s_px <= 1'b0; s_pn <= 1'b0; end
                 if (fw && a5_j == gs) begin
                     s_dsc[M_BASE +: 40] <= a5_acc[39:0]; s_dsc[M_N +: 20] <= a5_n[19:0]; s_n <= a5_n;
@@ -764,6 +871,10 @@ module ot_hgi_seq #(
     localparam [1:0] J_IDLE = 2'd0, J_INJ = 2'd1, J_IW = 2'd2;                   // injector
     reg [1:0] ir_st, jst; reg ir_sv; reg [QB-1:0] ir_se; reg [31:0] rXv; reg [20:0] rNv;
     reg [5:0] rem; reg [3:0] ninj, nres;
+    // v2.3 (route 905100ec5: rd_e -> 4:1 entry mux -> vr_addr): the reader entry's N-read operands, registered (rd_e
+    // and the entry are fixed while the X read is in flight; its response is >= 2 cycles after rd_e is set)
+    reg [17:0] rd_ina_q; reg rd_pn_q, rd_inb_q;
+    always @(posedge clk) begin rd_ina_q <= all_ina[rd_e*18 +: 18]; rd_pn_q <= |all_pn[rd_e*6 +: 6]; rd_inb_q <= all_inb[rd_e]; end
     // per-entry scan inputs
     // the per-entry scan inputs are registered (one cycle stale is conservative: an entry only becomes ready /
     // resolved / faulted, busy only drops apart from dispatches of entries still in the queue, which the scan counts)
@@ -820,8 +931,12 @@ module ot_hgi_seq #(
     wire        hd_pend = |(hd_px | hd_pn);
     wire        be_go = run_q && (st == S_HD) && (q_cnt != 0) && hd_kind == K_DISP && hd_rdy && !hd_flt && hd_wok && !hd_pend &&
                         !(|(u_fault_r & ~16'd1));
+    // v2.3 (route 905100ec5: outst -> busy_u -> wait rule -> be_go -> 2.4k d_* enables): the payload follows the head
+    // entry every S_HD cycle (enable = a state decode, no wait / ready logic); units sample d_* only under u_v (S_DSP),
+    // and the value loaded in the be_go cycle is the same head entry as before.
+    wire        d_ld = (st == S_HD);
     integer qd2;
-    always @(posedge clk) if (be_go) begin
+    always @(posedge clk) if (d_ld) begin
         d_hdr <= hd_hdr; d_sut <= hd_hdr[H_TMPL] ? hd_sut : 256'd0; d_L <= hd_L; d_L1 <= hd_L1; d_pos1 <= pos1_q; d_pslot1 <= hd_ps1;
         for (qd2 = 0; qd2 < 7; qd2 = qd2 + 1) begin
             d_desc[qd2*256 +: 256] <= hd_hdr[H_OPND + qd2] ? hd_dsc[qd2*256 +: 256] : 256'd0;
@@ -834,24 +949,24 @@ module ot_hgi_seq #(
     assign vr_v = vr_vr & ~vr_tk;
     always @(posedge clk or negedge rn)
         if (!rn) vr_tk <= 1'b0;
-        else vr_tk <= vr_new ? (vr_v & vr_rdy) : (vr_tk | (vr_v & vr_rdy));
+        else vr_tk <= vr_new ? (vr_v & vr_rdy_h) : (vr_tk | (vr_v & vr_rdy_h));
     integer k;
-    wire [15:0] u_acc = u_v & u_rdy;
+    wire [15:0] u_acc = u_v & u_rdy_h;
     reg db_rdy_q;
     always @(posedge clk or negedge rn)
         if (!rn) db_rdy_q <= 1'b0;
-        else db_rdy_q <= (st == S_IDLE) && !hold_r && !hold && !(db_v && db_rdy_q) && !db_pend;
+        else db_rdy_q <= (st == S_IDLE) && !hold_r && !hold_h && !(db_v_h && db_rdy_q) && !db_pend;
     assign db_rdy = db_rdy_q;
     reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol, dbq_kernel; reg [1:0] dbq_entry; reg [31:0] dbq_loff;
     always @(posedge clk or negedge rn)
         if (!rn) db_pend <= 1'b0;
-        else if (db_v && db_rdy_q) db_pend <= 1'b1;
+        else if (db_v_h && db_rdy_q) db_pend <= 1'b1;
         else if (st == S_IDLE) db_pend <= 1'b0;
     always @(posedge clk) if (db_rdy_q) begin
-        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry; dbq_kernel <= db_kernel; dbq_loff <= db_loff;
+        dbq_token <= db_token_h; dbq_pos <= db_pos_h; dbq_job <= db_job_h; dbq_gen <= db_gen_h; dbq_ncol <= db_ncol_h; dbq_entry <= db_entry_h; dbq_kernel <= db_kernel_h; dbq_loff <= db_loff_h;
     end
     reg cpl_v_q, cpl_tokx_q;
-    wire cpl_hs = cpl_v_q & cpl_rdy;
+    wire cpl_hs = cpl_v_q & cpl_rdy_h;
     reg  cpl_hs_q;
     always @(posedge clk or negedge rn) if (!rn) cpl_hs_q <= 1'b0; else cpl_hs_q <= cpl_hs;
     always @(posedge clk or negedge rn)
@@ -869,7 +984,7 @@ module ot_hgi_seq #(
     reg [15:0] u_vr, u_tk, iss_q;
     always @(posedge clk or negedge rn)
         if (!rn) u_tk <= 16'd0;
-        else u_tk <= (u_vr == 16'd0) ? 16'd0 : (u_tk | (u_v & u_rdy));
+        else u_tk <= (u_vr == 16'd0) ? 16'd0 : (u_tk | (u_v & u_rdy_h));
     assign u_v = u_vr & ~u_tk;
     reg [3:0] kern_q;
     reg [31:0] kern_off;
@@ -886,7 +1001,7 @@ module ot_hgi_seq #(
     wire        hd_fault = |(u_fault_r & ~16'd1);
     wire        vm_free = (ir_st == I_IDLE) && !ir_sv;      // the BE may issue its own VM read (reader idle, nothing selected)
     task fault3;
-        begin st <= S_CPL; run_q <= 1'b0; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_vr <= 16'd0;
+        begin st <= S_CPL; run_q <= 1'b0; run_f <= 1'b0; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_vr <= 16'd0;
               vr_vr <= 1'b0; end
     endtask
     // the BE frees the head (one comb term per pop site; mirrors the FSM below)
@@ -915,7 +1030,7 @@ module ot_hgi_seq #(
     end endgenerate
     always @(posedge clk or negedge rn_m) begin
         if (!rn_m) begin
-            st <= S_IDLE; run_q <= 1'b0; wp <= 0; wv <= 1'b0; inflight <= 0; drop <= 0; fetching <= 1'b0;
+            st <= S_IDLE; run_q <= 1'b0; run_f <= 1'b0; wp <= 0; wv <= 1'b0; inflight <= 0; drop <= 0; fetching <= 1'b0;
             u_vr <= 16'd0; iss_q <= 16'd0; vr_vr <= 1'b0; vr_new <= 1'b0; tbc <= 7'd0; av <= 6'd0;
             ir_st <= I_IDLE; jst <= J_IDLE; ir_sv <= 1'b0; ir_flt <= 1'b0; rd_e <= {QB{1'b0}}; inj_e <= {QB{1'b0}};
             cpl_status <= 0; cpl_token <= 0; cc_c <= 0;
@@ -927,7 +1042,7 @@ module ot_hgi_seq #(
             inflight <= fl_after;
             if (!tbc[6]) tbc <= tbc + 7'd1;
             vr_new <= 1'b0; lv_rsp <= 1'b0;
-            if (rq_push) begin faddr <= faddr_n; faddr_n <= faddr_n + 40'd32; end
+            if (rq_push) begin faddr <= faddr_n; faddr_n <= faddr_nn; faddr_nn <= faddr_nn + 40'd32; end   // v2.3: no add after the push decision
             if (f_rsp_v_r) begin
                 if (drop != 0) drop <= drop - 8'd1;
                 else begin wp <= wp + 2'd2; wv <= 1'b1; end
@@ -954,9 +1069,9 @@ module ot_hgi_seq #(
                     end
                     I_XR: if (vr_rsp_v_r) begin
                         rXv <= vr_rsp_data_r;
-                        if (|all_pn[rd_e*6 +: 6]) begin
-                            if (all_inb[rd_e]) begin ir_flt <= 1'b1; ir_st <= I_IDLE; end
-                            else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= all_ina[rd_e*18 +: 18]; ir_st <= I_NR; end
+                        if (rd_pn_q) begin
+                            if (rd_inb_q) begin ir_flt <= 1'b1; ir_st <= I_IDLE; end
+                            else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= rd_ina_q; ir_st <= I_NR; end
                         end else ir_st <= I_HAND;
                     end
                     I_NR: if (vr_rsp_v_r) begin
@@ -979,7 +1094,7 @@ module ot_hgi_seq #(
                 endcase
             end
             if (|(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL) begin
-                st <= S_CPL; run_q <= 1'b0; cpl_status <= 4'd1; cpl_token <= 0; u_vr <= 0; vr_vr <= 1'b0; fetching <= 1'b0;
+                st <= S_CPL; run_q <= 1'b0; run_f <= 1'b0; cpl_status <= 4'd1; cpl_token <= 0; u_vr <= 0; vr_vr <= 1'b0; fetching <= 1'b0;
             end else case (st)
                 S_IDLE: if (db_pend) begin
                     token <= dbq_token; pos <= dbq_pos; cpl_job <= dbq_job; cpl_gen <= dbq_gen; cpl_pos <= dbq_pos;
@@ -1005,8 +1120,8 @@ module ot_hgi_seq #(
                     if (db_bad) begin
                         st <= S_CPL; cpl_status <= 4'd3;
                     end else begin
-                        faddr <= {img_q[39:5], 5'd0}; faddr_n <= {img_q[39:5] + 35'd1, 5'd0}; fetching <= 1'b1;
-                        wp <= 0; wv <= 1'b0; drop <= fl_after; run_q <= 1'b1;
+                        faddr <= {img_q[39:5], 5'd0}; faddr_n <= {img_q[39:5] + 35'd1, 5'd0}; faddr_nn <= {img_q[39:5] + 35'd2, 5'd0}; fetching <= 1'b1;
+                        wp <= 0; wv <= 1'b0; drop <= fl_after; run_q <= 1'b1; run_f <= 1'b1;
                         qh <= 0; qt <= 0; q_cnt <= 0;
                         st <= S_HD;
                     end
@@ -1043,7 +1158,7 @@ module ot_hgi_seq #(
                     else begin lv_rsp <= 1'b1; lv_rcnt <= vr_rsp_data_r[15:0]; st <= S_HD; end
                 end
                 S_ENDRD: if (vr_rsp_v_r) begin
-                    st <= S_CPL; run_q <= 1'b0; fetching <= 1'b0; cpl_pos <= pos;
+                    st <= S_CPL; run_q <= 1'b0; run_f <= 1'b0; fetching <= 1'b0; cpl_pos <= pos;
                     cpl_token <= vr_rsp_data_r[17:0];
                     cpl_status <= (vr_rsp_data_r[31:18] != 14'd0 || vr_rsp_data_r[17:0] >= cfg_vocab_r) ? 4'd3 : 4'd0;
                 end
@@ -1080,5 +1195,30 @@ module ot_hgi_seq #(
             end
         end
     end
+endmodule
+`default_nettype wire
+
+// v2.3 hold-delay stage (a local copy of rtl/lib/ot_hdly, so every consumer that compiles ot_hgi_seq.sv by -y keeps
+// building): N kept HB4xp67 delay cells a bit under SYNTHESIS (dont_touch'ed by physical/qwen_die_masters/
+// hdly_dont_touch.tcl on instance names *u_hdly_*), a wire in simulation -- function is identity.
+`default_nettype none
+module ot_hgi_seq_hdly #(parameter integer W = 1, parameter integer N = 0) (input wire [W-1:0] a, output wire [W-1:0] y);
+`ifdef SYNTHESIS
+    if (N == 0) begin : g_w
+        assign y = a;
+    end else begin : g_d
+        genvar b, k;
+        for (b = 0; b < W; b = b + 1) begin : g_b
+            wire [N:0] c;
+            assign c[0] = a[b];
+            for (k = 0; k < N; k = k + 1) begin : g_k
+                (* keep *) HB4xp67_ASAP7_75t_R u_hb (.A(c[k]), .Y(c[k+1]));
+            end
+            assign y[b] = c[N];
+        end
+    end
+`else
+    assign y = a;
+`endif
 endmodule
 `default_nettype wire

@@ -22,5 +22,5 @@ define_pdn_grid -macro -cells {ot_sram_1r1w_512x128_m4_r2c2 ot_sram_1r1w_256x256
 add_pdn_stripe -grid {mac} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
 add_pdn_connect -grid {mac} -layers {M4 M5}
 add_pdn_connect -grid {mac} -layers {M5 M6}
-define_pdn_grid -macro -cells {dsfd_vm_clt} -halo {0 0 0 0} -voltage_domains {CORE} -name {clt}
+define_pdn_grid -macro -cells {dsfd_vm_clt dsfd_vm_fsr} -halo {0 0 0 0} -voltage_domains {CORE} -name {clt}
 add_pdn_connect -grid {clt} -layers {M6 M7}

@@ -1143,6 +1143,7 @@ def rtl_modules(texts: list) -> dict:
 
 def module_ports(body: str) -> dict:
     """{port: width or None} of a module body (ANSI header or non-ANSI declarations)"""
+    body = re.sub(r"\(\*.*?\*\)", " ", body, flags=re.S)        # attributes (* keep = "true" *) name no ports
     hdr = body[:body.find(";")] if ";" in body else body
     params = module_params(body)
     out = {}
@@ -1167,6 +1168,7 @@ def module_ports(body: str) -> dict:
 
 def module_port_dirs(body: str) -> dict:
     """{port: 'input'|'output'|'inout'}"""
+    body = re.sub(r"\(\*.*?\*\)", " ", body, flags=re.S)        # attributes (* keep = "true" *) name no ports
     hdr = body[:body.find(";")] if ";" in body else body
     out = {}
     for blob in (hdr, body):

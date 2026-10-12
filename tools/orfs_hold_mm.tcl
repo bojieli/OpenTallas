@@ -101,6 +101,13 @@ proc ot_mm_sync {} {
   read_sdc $f
   file delete $f
   set_propagated_clock [all_clocks]
+  # MMFF-PARASITICS (el1011-q-kvd 2026-10-12): the FF SDCs below MEASURE BC clock arrivals (QDM reference pin, io_ref
+  # pin flops) and turn them into the input-min / output-min delays.  Until now the BC scene was estimated only at the
+  # END of this proc, so a tree built in the stage (clock spine, CTS) was measured WITHOUT wire parasitics:
+  # qkd_d2d_ref (ot_qkvd_kv_end, 1.56 ns TT spine) read BC 745.7 ps at the reference flop, the estimated BC tree is
+  # 1,180-1,242 ps, and 2,143 input pins got a 500 ps fake hold hole (FF hold -501.9, flat over 2,000 repair
+  # iterations: EARLY_FAIL_HOLD).  Estimate first so the reference and the hold check see the same tree.
+  estimate_parasitics [expr {$::ot_mm_stage eq "4_cts.sdc" ? "-global_routing" : "-placement"}]
   set ot_mm_ioref_read 0
   ot_mm_scene_shim 1
   if {[info exists ::env(OT_MM_FF_SDC)]} {

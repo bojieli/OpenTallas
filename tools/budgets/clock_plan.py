@@ -656,7 +656,8 @@ def balance(a):
     ins_tt, ins_ff = {}, {}
     if (lib / 'qfd_etm_tt.lib').exists():                  # Qwen ROM die: one ETM lib per corner (qwen_die_etm_map)
         ins_tt, ins_ff = lib_insertions(lib / 'qfd_etm_tt.lib'), lib_insertions(lib / 'qfd_etm_ff.lib')
-    for f in sorted(lib.glob('qfd_etm_*_tt.lib')):          # per-master ETMs (bind_views.py)
+    # per-master ETMs (bind_views.py: qfd_etm_<m>_tt.lib); HBM die cases (tools/hbm_die_views.py die): <master>_tt.lib
+    for f in sorted(set(lib.glob('qfd_etm_*_tt.lib')) | {g for g in lib.glob('*_tt.lib') if not g.name.startswith('qfd_etm')}):
         ins_tt.update(lib_insertions(f))
         g = f.with_name(f.name[:-len('_tt.lib')] + '_ff.lib')
         if g.exists():

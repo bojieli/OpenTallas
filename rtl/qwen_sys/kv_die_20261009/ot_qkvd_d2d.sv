@@ -39,6 +39,16 @@ module ot_qkvd_d2d #(
     // HT (el1011-q-kvd 2026-10-11; 0 = unchanged): every link buffer is a hardened tile (ot_qkvd_buf_tiles.sv: depth > 8
     // -> ot_qkvd_sbuf (SRAM), else ot_qkvd_fbuf8), own clock tree / reset relay / pin flops; occupancy kept here (W 528)
     parameter integer HT  = 0,
+    // ORL (el1011-q-kvd 2026-10-12; 0 = unchanged): one relay register on each output datapath -- tx_v/tx_flit (TX
+    // link) and r_v/r_d (die RX face) -- so the link buffers sit next to their INPUT face (rx_flit -> RX buffer din,
+    // t_d -> TX buffer din: the hard-child din side is the short-budget side) and the far face is reached in two
+    // <= 500 um stages (route qkd_d2d_ref-q5b: rq_f -> sbuf din 814 ps of wire).  +1 cycle on each direction; order,
+    // values and credits unchanged (r_d = the ORL=0 r_d one cycle later; credit flow is latency-insensitive)
+    parameter integer ORL = 0,
+    // IRL (el1011-q-kvd 2026-10-12; 0 = unchanged): one relay register on each input datapath between the pin flop and
+    // the link buffers, REPLICATED per buffer on RX (rx_word is broadcast to all NR buffers: one kept copy sits next to
+    // each buffer's din, the parent -> parent hop takes the wire).  +1 cycle per direction, behaviour = inputs delayed
+    parameter integer IRL = 0,
     parameter integer FW  = 8 + 8 + 1 + 3 + W
 ) (
     input  wire            clk,
@@ -81,11 +91,34 @@ module ot_qkvd_d2d #(
     reg [FW-1:0] rq_f;
     always @(posedge clk) rq_f <= rx_flit;
     always @(posedge clk or negedge rs) if (!rs) rq_v <= 1'b0; else rq_v <= rx_v;
-    wire [7:0]   rx_seq_f = rq_f[W + 12 +: 8];
-    wire [7:0]   rx_crs   = rq_f[W + 4 +: 8];
-    wire         rx_dv    = rq_v && rq_f[W + 3];
-    wire [2:0]   rx_cls   = rq_f[W +: 3];
-    wire [W-1:0] rx_word  = rq_f[W-1:0];
+    // IRL input relays: ce_* (TX), re_* (RX header) / re_w (RX word, one copy per receive buffer)
+    wire [NT-1:0]   ce_v;
+    wire [NT*W-1:0] ce_d;
+    wire            re_v;
+    wire [FW-1:W]   re_h;
+    wire [NR*W-1:0] re_w;
+    genvar g;
+    generate if (IRL != 0) begin : g_irl
+        reg [NT-1:0]   ci2_v;
+        reg [NT*W-1:0] ci2_d;
+        reg            rq2_v;
+        reg [FW-1:W]   rq2_h;
+        always @(posedge clk) begin ci2_d <= ci_d; rq2_h <= rq_f[FW-1:W]; end
+        always @(posedge clk or negedge rs) if (!rs) begin ci2_v <= 0; rq2_v <= 1'b0; end else begin ci2_v <= ci_v; rq2_v <= rq_v; end
+        for (g = 0; g < NR; g = g + 1) begin : g_rw
+            (* keep *) reg [W-1:0] rw;                                            // next to receive buffer g's din
+            always @(posedge clk) rw <= rq_f[W-1:0];
+            assign re_w[W*g +: W] = rw;
+        end
+        assign ce_v = ci2_v; assign ce_d = ci2_d; assign re_v = rq2_v; assign re_h = rq2_h;
+    end else begin : g_idir
+        assign ce_v = ci_v; assign ce_d = ci_d; assign re_v = rq_v; assign re_h = rq_f[FW-1:W];
+        assign re_w = {NR{rq_f[W-1:0]}};
+    end endgenerate
+    wire [7:0]   rx_seq_f = re_h[W + 12 +: 8];
+    wire [7:0]   rx_crs   = re_h[W + 4 +: 8];
+    wire         rx_dv    = re_v && re_h[W + 3];
+    wire [2:0]   rx_cls   = re_h[W +: 3];
 
     reg f_die, f_rb, f_seq, f_cred, f_cls;
     // ---- TX side ----
@@ -110,21 +143,21 @@ module ot_qkvd_d2d #(
         wire [$clog2(IBD[8*i +: 8]+1)-1:0] cnt;
         if (HT != 0) begin : g_ht
             reg [7:0] oc;
-            always @(posedge clk or negedge rs) if (!rs) oc <= 8'd0; else oc <= oc + (ci_v[i] ? 8'd1 : 8'd0) - (gnt[i] ? 8'd1 : 8'd0);
+            always @(posedge clk or negedge rs) if (!rs) oc <= 8'd0; else oc <= oc + (ce_v[i] ? 8'd1 : 8'd0) - (gnt[i] ? 8'd1 : 8'd0);
             assign ib_full[i] = (oc == IBD[8*i +: 8]);
             assign cnt = oc[$clog2(IBD[8*i +: 8]+1)-1:0];
             if (IBD[8*i +: 8] > 8) begin : g_s
-                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs_t), .push(ci_v[i]), .din(ci_d[W*i +: W]), .pop(gnt[i]),
+                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .din(ce_d[W*i +: W]), .pop(gnt[i]),
                     .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
             end else begin : g_f
-                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs_t), .push(ci_v[i]), .din(ci_d[W*i +: W]), .pop(gnt[i]),
+                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .din(ce_d[W*i +: W]), .pop(gnt[i]),
                     .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
             end
         end else if (SBD != 0 && IBD[8*i +: 8] >= SBD) begin : g_sb
-        ot_qkvd_fifo_sb #(.W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ci_v[i]), .din(ci_d[W*i +: W]),
+        ot_qkvd_fifo_sb #(.W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ce_v[i]), .din(ce_d[W*i +: W]),
             .pop(gnt[i]), .dout(ib_head[W*i +: W]), .empty(ib_empty[i]), .full(ib_full[i]), .count(cnt));
         end else begin : g_ff
-        ot_qkvd_fifo #(.RH(1), .W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ci_v[i]), .din(ci_d[W*i +: W]),
+        ot_qkvd_fifo #(.RH(1), .W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ce_v[i]), .din(ce_d[W*i +: W]),
             .pop(gnt[i]), .dout(ib_head[W*i +: W]), .empty(ib_empty[i]), .full(ib_full[i]), .count(cnt));
         end
     end endgenerate
@@ -150,17 +183,17 @@ module ot_qkvd_d2d #(
             assign rb_full[j] = (oc == RBD[8*j +: 8]);
             assign cnt = oc[$clog2(RBD[8*j +: 8]+1)-1:0];
             if (RBD[8*j +: 8] > 8) begin : g_s
-                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(rx_word), .pop(rb_pop[j]),
+                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(re_w[W*j +: W]), .pop(rb_pop[j]),
                     .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
             end else begin : g_f
-                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(rx_word), .pop(rb_pop[j]),
+                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(re_w[W*j +: W]), .pop(rb_pop[j]),
                     .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
             end
         end else if (SBD != 0 && RBD[8*j +: 8] >= SBD) begin : g_sb
-        ot_qkvd_fifo_sb #(.W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(rx_word),
+        ot_qkvd_fifo_sb #(.W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(re_w[W*j +: W]),
             .pop(rb_pop[j]), .dout(rb_head[W*j +: W]), .empty(rb_empty[j]), .full(rb_full[j]), .count(cnt));
         end else begin : g_ff
-        ot_qkvd_fifo #(.RH(1), .W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(rx_word),
+        ot_qkvd_fifo #(.RH(1), .W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(re_w[W*j +: W]),
             .pop(rb_pop[j]), .dout(rb_head[W*j +: W]), .empty(rb_empty[j]), .full(rb_full[j]), .count(cnt));
         end
     end endgenerate
@@ -177,10 +210,17 @@ module ot_qkvd_d2d #(
         end
     end
     reg [7:0] tx_seq, rx_seq;
-    always @(posedge clk) tx_flit <= {tx_seq, cr_ret, any, sel_cls, sel_word};   // datapath: no reset
+    reg tv0;                                                                      // ORL: tx_v one stage early
+    generate if (ORL != 0) begin : g_torl
+        reg [FW-1:0] tf0;                                                         // relay: near the TX buffers
+        always @(posedge clk) begin tf0 <= {tx_seq, cr_ret, any, sel_cls, sel_word}; tx_flit <= tf0; end
+    end else begin : g_tdir
+        always @(posedge clk) tx_flit <= {tx_seq, cr_ret, any, sel_cls, sel_word};   // datapath: no reset
+    end endgenerate
+    reg [NR-1:0] rv0;                                                             // ORL: r_v one stage early
     always @(posedge clk or negedge rs) begin
         if (!rs) begin
-            tx_v <= 1'b0; tx_seq <= 8'd0; rx_seq <= 8'd0; rr <= 0;
+            tx_v <= 1'b0; tv0 <= 1'b0; rv0 <= 0; tx_seq <= 8'd0; rx_seq <= 8'd0; rr <= 0;
             t_cr <= 0; r_v <= 0;
             f_die <= 1'b0; f_rb <= 1'b0; f_seq <= 1'b0; f_cred <= 1'b0; f_cls <= 1'b0;
             fault <= 1'b0; fault_cause <= 5'd0;
@@ -191,21 +231,22 @@ module ot_qkvd_d2d #(
             for (k = 0; k < NR; k = k + 1) begin ocred[k] <= OCR[8*k +: 8]; owed[k] <= 8'd0; end
         end else begin
             // die TX face
-            for (k = 0; k < NT; k = k + 1) if (ci_v[k] && ib_full[k] && !gnt[k]) f_die <= 1'b1;
+            for (k = 0; k < NT; k = k + 1) if (ce_v[k] && ib_full[k] && !gnt[k]) f_die <= 1'b1;
             t_cr <= gnt;
             // link TX
-            tx_v <= up_q;
+            tv0 <= up_q;
+            tx_v <= (ORL != 0) ? tv0 : up_q;
             if (up_q) tx_seq <= tx_seq + 1'b1;
             if (any) rr <= ((rr + 1) % NT);
             for (k = 0; k < NT; k = k + 1) begin : upd_lc
                 reg [8:0] nxt;
-                nxt = {1'b0, lcred[k]} - (gnt[k] ? 9'd1 : 9'd0) + ((rq_v && k < 4) ? {7'd0, rx_crs[2*k +: 2]} : 9'd0);
+                nxt = {1'b0, lcred[k]} - (gnt[k] ? 9'd1 : 9'd0) + ((re_v && k < 4) ? {7'd0, rx_crs[2*k +: 2]} : 9'd0);
                 lcred[k] <= nxt[7:0];
                 lc_nz[k] <= (nxt != 0);
                 if (nxt > {1'b0, FCR[8*k +: 8]} + ((MUT == 1 && k == 0) ? 9'd1 : 9'd0)) f_cred <= 1'b1;
             end
             // link RX
-            if (rq_v) begin
+            if (re_v) begin
                 rx_seq <= rx_seq + 1'b1;
                 if (rx_seq_f != rx_seq) f_seq <= 1'b1;
             end
@@ -216,10 +257,19 @@ module ot_qkvd_d2d #(
                 ocred[k] <= ocred[k] - (rb_pop[k] ? 8'd1 : 8'd0) + (cr_q[k] ? 8'd1 : 8'd0);
             end
             // die RX face
-            r_v <= rb_pop;
+            rv0 <= rb_pop;
+            r_v <= (ORL != 0) ? rv0 : rb_pop;
             fault_cause <= {f_cls, f_cred, f_seq, f_rb, f_die};
             fault <= f_die | f_rb | f_seq | f_cred | f_cls;
         end
     end
-    always @(posedge clk) for (k = 0; k < NR; k = k + 1) if (rb_pop[k]) r_d[W*k +: W] <= rb_head[W*k +: W];
+    generate if (ORL != 0) begin : g_rorl
+        reg [NR*W-1:0] rd0;                                                       // relay: head capture next to the RX buffers
+        always @(posedge clk) begin
+            for (k = 0; k < NR; k = k + 1) if (rb_pop[k]) rd0[W*k +: W] <= rb_head[W*k +: W];
+            r_d <= rd0;                                                           // face register: no enable fan-out at the face
+        end
+    end else begin : g_rdir
+        always @(posedge clk) for (k = 0; k < NR; k = k + 1) if (rb_pop[k]) r_d[W*k +: W] <= rb_head[W*k +: W];
+    end endgenerate
 endmodule
