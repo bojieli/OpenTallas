@@ -41,6 +41,7 @@ import hbm_generic_iface as HGI  # noqa: E402
 from hgi_sim import machine as MC  # noqa: E402
 from hgi_sim.records import encode_program, decode_program, OPND  # noqa: E402
 
+ARGV0 = list(sys.argv)                # export_ds overwrites sys.argv for ds_native: pass 2 re-invokes with THIS
 B2 = None                             # --layout b2: the hgi_b2 pass wrapper (pass 1 Collect, pass 2 Check), innermost
 IMAGE_PAGE = 0x10                     # image at HBM byte 0x10000 (free in both models' maps)
 ESZ = MC.ESIZE
@@ -619,7 +620,7 @@ def export_b2(a):
                                                         subs=len(B2.subs)), indent=1) + "\n")
         if rc:
             return rc
-        argv = [x for x in sys.argv[1:]] + ["--b2-pass", "2"]
+        argv = [x for x in ARGV0[1:]] + ["--b2-pass", "2"]
         return subprocess.run([sys.executable, "-m", "hgi_e2e.export"] + argv, cwd=str(TOOLS)).returncode
     pl = B.Placement(np.load(b2o / "cls.npy"))
     p1 = json.loads((b2o / "pass1.json").read_text())
