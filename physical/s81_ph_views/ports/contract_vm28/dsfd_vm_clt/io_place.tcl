@@ -1381,3 +1381,7 @@ place_pin -pin_name {flt[3]} -layer M5 -location {53.1960 0.0960} -pin_size {0.0
 place_pin -pin_name {ck[0]} -layer M5 -location {55.3080 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {rn[0]} -layer M5 -location {55.5000 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {sok[0]} -layer M5 -location {55.6920 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {gid[0]} -layer M5 -location {55.8840 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {gid[1]} -layer M5 -location {55.9800 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {gid[2]} -layer M5 -location {56.0760 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {gid[3]} -layer M5 -location {56.1720 0.0960} -pin_size {0.0240 0.1920}

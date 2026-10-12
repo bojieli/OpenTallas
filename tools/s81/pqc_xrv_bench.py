@@ -223,8 +223,13 @@ def run_one(args):
     exe = Path(work) / "build" / f"{build}_pq{pq}" / "tb"
     plus = [f"+OT_XD={pa.get('D', 1)}", f"+OT_XJIT={pa.get('J', 0)}", f"+OT_XSKEW={pa.get('K', 0)}",
             f"+OT_XSEED={pa.get('S', 1)}"]
-    p = subprocess.run([str(exe), str(rd / "img"), str(rd / "ops.txt"), *plus], capture_output=True, text=True,
-                       timeout=3600)
+    # el1011-ds-misc/pqc: a run that never finishes (a mutant can hang the node) is a FAILED run, not a bench error
+    try:
+        p = subprocess.run([str(exe), str(rd / "img"), str(rd / "ops.txt"), *plus], capture_output=True, text=True,
+                           timeout=int(os.environ.get("OT_PQC_RUN_TIMEOUT", "3600")))
+    except subprocess.TimeoutExpired as ex:
+        out = ex.stdout.decode() if isinstance(ex.stdout, bytes) else (ex.stdout or "")
+        p = subprocess.CompletedProcess(ex.cmd, 124, out + "\nTIMEOUT\n", "TIMEOUT")
     lines = p.stdout.splitlines()
     w = [(int(t[1]), int(t[2]), int(t[3], 16)) for t in (ln.split() for ln in lines) if t and t[0] == "W"]
     node = next((ln for ln in lines if ln.startswith("NODE ")), "")

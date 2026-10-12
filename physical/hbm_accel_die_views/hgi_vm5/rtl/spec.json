@@ -21,7 +21,7 @@
     "cr": "die:t_hgi_cp[0:274]+t_hgi_quant[0:274]+t_hgi_idx[0:274]+t_hgi_argmax[0:274]+t_hgi_su[0:274]+t_hgi_sfu[0:274]+t_hgi_hc[0:274]+t_hgi_dma[0:274]+t_hgi_coll[0:274]",
     "status": "die:t_hgi_vmstat[0:19]",
     "wq": "die:f_hgi_vmw_dma[0:8992]",
-    "wq_done": "fold",
+    "wq_done": "die:t_hgi_vmw_done[0:32]",
     "lgw_r_up": "die:f_lgW_rup[0:515]",
     "lgw_r_dn": "die:t_lgW_rdn[0:8259]",
     "lgw_w_up": "die:f_lgW_wup[0:8963]",
@@ -43,10 +43,32 @@
  ],
  "kept_out_regs": true,
  "face_stages": 3,
- "ties": {
-  "vmd.wq_done": {
-   "class": "open",
-   "reason": "OPEN (hbmdie-1011/kvw 10-11): the r25gqn die dropped hgi_vmw_dma_done (tools/hbm_accel_die_fp.py drop_buses) and re-staged only hgi_vmw_dma 8,992 + hgi_vmw_rdy 32 -> hfd_loader f_hgi_vmw, which the loader view binds to its dma_vmw_done (completion) port: a done net (32 b, VM -> loader) must be restored on the die. Owner: die lead (hbmdie-1011) + hgi-1010/b."
-  }
+ "ties": {},
+ "sources": {
+  "base": [
+   "rtl/hbm_accel/generic/vm/ot_hgi_vm_lanechain.sv",
+   "rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv",
+   "rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv"
+  ],
+  "tunit": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/vm/ot_hgi_vm_btile.sv",
+   "rtl/hbm_accel/generic/vm/ot_hgi_vm_tunit.sv"
+  ],
+  "note": "hbmdie-1011/views: with instances[vmd].params TUNIT=1 (ot_hgi_vm_lanechain -> ot_hgi_vm_tunit, el1011-hbm-hcvm 20730548c at NC 9 / WP 32 / WDIRECT 1 / RP 96 / W2 96 / LQ 32 / AP 1) the route / bench source list is base + tunit (ot_hgi_vm_btile.sv is the hard bank tile; under the hard build it is the btile LEF/LIB view). TUNIT stays 0 until hgi_vm_bt{a,b} + the tunit parent close."
+ },
+ "tunit_latency_contract": {
+  "source": "el1011-hbm-hcvm 20730548c (hgi-1010.log 10-11 19:14), vs ot_hgi_vm_unit at the same pins",
+  "request_to_response": 12,
+  "lane_read_rq_to_rr": 8,
+  "rq_to_credit": 6,
+  "w2q_to_credit": 6,
+  "w2q_to_done": 8,
+  "wq_to_wq_done": 8,
+  "aperture_ap_cr_to_ap_q_rtt": 2,
+  "reset_release": 3,
+  "lane_client_rule": "LQ >= the new credit round trip (LQ 32 ample)",
+  "e2e_model": "tb_hgi_e2e VM_TUNIT=1: packet +12, lane read +8, rq/w2q credit +6, w2q/wq done +8 (hgi_e2e_vmlanes CRX/WCX/WDX, hgi_e2e_vmw DX)"
  }
 }
