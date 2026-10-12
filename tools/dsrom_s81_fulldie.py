@@ -1991,8 +1991,27 @@ def _pg_only_m7(text):
     return re.sub(r'  PIN (VDD|VSS)\n(.*?)\n  END \1', fix, text, flags=re.S)
 
 
+PG_M8_MASTERS = set()          # hbmdie-1011 (conservative-1011 a0bda978e): masters whose PG pins are M8 straps (tiled hfd_hc)
+
+
 def _gen_pg_lef(mst):
-    """Generated abstract with M7 PG stripes (0.288 um, 10.8 um pitch, as the routed q element) for the PSM window."""
+    """Generated abstract with M7 PG stripes (0.288 um, 10.8 um pitch, as the routed q element) for the PSM window.
+    PG_M8_MASTERS (incl. their window clips): horizontal M8 PG straps instead (0.48 um, 10.8 um pitch) and M1-M7 owned
+    by the block; the die joins them with its M9 straps (via89 at every same-net crossing)."""
+    if mst.name.split('_clip_')[0] in PG_M8_MASTERS:
+        L = [f'MACRO {mst.name}', '  CLASS BLOCK ;', f'  FOREIGN {mst.name} 0 0 ;', f'  SIZE {mst.w:.3f} BY {mst.h:.3f} ;',
+             '  SYMMETRY X Y ;']
+        for net, off in (('VDD', 1.0), ('VSS', 6.4)):
+            L += [f'  PIN {net}', '    DIRECTION INOUT ;', f'    USE {"POWER" if net == "VDD" else "GROUND"} ;', '    PORT',
+                  '      LAYER M8 ;']
+            y = off
+            while y + 0.48 < mst.h - 0.2:
+                L.append(f'        RECT 0.300 {y:.3f} {mst.w - 0.3:.3f} {y + 0.48:.3f} ;')
+                y += 10.8
+            L += ['    END', f'  END {net}']
+        L += ['  OBS'] + [f'    LAYER M{i} ;\n      RECT 0 0 {mst.w:.3f} {mst.h:.3f} ;' for i in range(1, 8)] + ['  END',
+                                                                                                      f'END {mst.name}', '']
+        return '\n'.join(L)
     L = [f'MACRO {mst.name}', '  CLASS BLOCK ;', f'  FOREIGN {mst.name} 0 0 ;', f'  SIZE {mst.w:.3f} BY {mst.h:.3f} ;',
          '  SYMMETRY X Y ;']
     for net, off in (('VDD', 1.0), ('VSS', 6.4)):
@@ -2069,7 +2088,10 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
                                                      for x, y in sites[net]))
     off = round((vp / 2) % pitch, 4)
     cfgm = real_lef(CFG_LEF)['name']
-    other = ' '.join(x for x in masters_used if x != cfgm)
+    m8m = [x for x in masters_used if x.split('_clip_')[0] in PG_M8_MASTERS]
+    other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m)
+    m8grid = ('define_pdn_grid -macro -name m8 -cells {' + ' '.join(m8m) + '} -halo {0 0 0 0} -voltage_domains CORE\n'
+              'add_pdn_connect -grid m8 -layers {M8 M9}\n') if m8m else ''
     power = {it.name: (clip_pw[it.name] if it.name in clip_pw else inst_power(it)) * (1.0 if peak else 0.25) for it in ins}
     tcl = f"""
 set t0 [clock seconds]
@@ -2089,7 +2111,7 @@ add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch / 
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name m7 -cells {{{other}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid m7 -layers {{M7 M8}}
-define_pdn_grid -macro -name mcfg -cells {{{cfgm}}} -halo {{0 0 0 0}} -voltage_domains CORE
+{m8grid}define_pdn_grid -macro -name mcfg -cells {{{cfgm}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_stripe -grid mcfg -layer M5 -width 0.12 -pitch 2.4 -spacing 1.08 -offset 0.6
 add_pdn_connect -grid mcfg -layers {{M4 M5}}
 add_pdn_connect -grid mcfg -layers {{M5 M8}}
@@ -2449,6 +2471,7 @@ SUHC_V2_BUSES = tuple(
 
                  ('hc_s', 'collective', 1, 'y_rdy', 'f_hc_yr'),)
 SU_E = 0.0                     # --su-e MM2: su_n in the E column above hc_n (W column: su_s + centre)
+COLL_SLAB_H = None             # --coll-slab-h H (s81die-1011 hier contract v1): collective slab height at full hub column width
 VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
 ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre slabs moved to an E-column sub-column
 ECOL_W = 518.4
@@ -3227,6 +3250,10 @@ def build_r8(variant=None):
         # --suhc-1011: the collective E face carries the 8 x 1,024-b y lanes to HC on top of its links / VM / host pins
         # (layer1e: 840 um of pins > the 806 um face): the slab grows to COLL_FACE_UM tall (same area rule as capture)
         centre_area['collective'] = max(centre_area['collective'], COLL_FACE_UM * cw / 1e6)
+    if COLL_SLAB_H and not COLL_SPLIT3:
+        # --coll-slab-h (s81die-1011 hier contract v1): hierarchical collective (lane tiles W, core column 1,360.8: cb parent
+        # 972.4 x 423.4 + ce parent + ct) at full column width; the W column has ~5.8 mm free height above the host
+        centre_area['collective'] = max(centre_area['collective'], up(COLL_SLAB_H, GY) * cw / 1e6)
     if VM_SLAB:   # --vm-slab W,H (s81-vm-1011): the VM master outline (NP24 bgq tiles), centred in the hub column
         assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
         slab_w['vm'] = up(VM_SLAB[0], GX)
@@ -3443,7 +3470,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -6908,6 +6935,9 @@ def die_options(ap):
                     'su_s = the rest at the W column floor under the centre stack (room for the --vm-slab VM); default 0 = off')
     ap.add_argument('--hrow-tx', action='store_true', help='ds-1010/s81die 2026-10-11: stage die of layer 37/38/39: the '
                     'hidden-row sender dsfd_mtp_hrow_tx (hc_n -> MTP lane, header from the WFC kit); needs --suhc-1011 --su-e')
+    ap.add_argument('--coll-slab-h', type=float, help='s81die-1011 (hier contract v1, 2026-10-11): collective slab = full hub '
+                    'column width x H um (hierarchical collective: 8 lane tiles stacked on the W face, core column 1,360.8 um '
+                    'with cb 972.4 x 423.4 / ce / ct; e.g. 2721.6)')
     ap.add_argument('--vm-slab', help='ds-1010/s81die 2026-10-11 (s81-vm-1011): VM slab outline W,H in um (e.g. 1520,2420); '
                     'default: the HUB_MM2 area at the column width')
     ap.add_argument('--ecol-slabs', help='ds-1010/s81die 2026-10-10: comma list of W hub-column centre slabs (wfc, host, '
@@ -7124,7 +7154,8 @@ def apply_options(a):
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
     COL_W8 = LANES_W + NS_W + RSC_W
     COL_PITCH8 = COL_W8 + 8.64
-    global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB
+    global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
+    COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
     SUHC_1011 = bool(getattr(a, 'suhc_1011', False))
     SUHC_DOM, SUHC_HC_VM = ('stream_1p2', 2048) if SUHC_1011 else ('serial_0p9', 1024)
     global SU_E, HROW_TX
@@ -7244,7 +7275,12 @@ def main(argv=None):
             if a.out:
                 Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
             if cg['verdict'] != 'PASS':
-                raise SystemExit('DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40]))
+                msg_ = 'DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40])
+                if os.environ.get('OT_S81_CTRL_GATE_WARN') == '1' and a.mode == 'plan':
+                    # s81die-1011: geometry-only die-fit (plan) proceeds; the port-audit findings stay a FAIL record
+                    print('WARNING ' + msg_, file=sys.stderr)
+                else:
+                    raise SystemExit(msg_)
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
