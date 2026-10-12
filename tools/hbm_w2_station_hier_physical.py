@@ -278,6 +278,12 @@ def cmd_hub(a):
     lines = [l for l in cfg.splitlines() if not l.startswith("export VERILOG_FILES")]
     lines.insert(3, f"export VERILOG_FILES = /src/{STN}/hub/{name}.v")
     lines.append(f"export PDN_TCL = /src/{STN}/pdn_slice_m7.tcl")
+    if a.port_hold_out or a.port_hold_in:
+        # deterministic dont_touch delay stage at the hold-failing port pins (hub_port_hold.tcl; OWNER 10-10 hold rule)
+        lines.append(f"export PRE_GLOBAL_PLACE_TCL = /src/{STN}/hub_port_hold.tcl")
+        lines.append(f"export OT_PH_OUT = {a.port_hold_out or ''}")
+        lines.append(f"export OT_PH_IN = {a.port_hold_in or ''}")
+        lines.append(f"export OT_PH_N = {a.port_hold_n}")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
     seam = " ".join(f"sl{k}_*" for k in range(5))
     (work / "pins.tcl").write_text(
@@ -350,6 +356,9 @@ def main(argv=None):
     h.add_argument("--need", default="32")
     h.add_argument("--cores", default="16")
     h.add_argument("--no-admit", action="store_true")
+    h.add_argument("--port-hold-out", default=None, help="output ports given a dont_touch delay stage at the pin")
+    h.add_argument("--port-hold-in", default=None, help="input ports given a dont_touch delay stage at the pin")
+    h.add_argument("--port-hold-n", type=int, default=1, help="delay cells per port")
     t.add_argument("--piece", choices=sorted(PIECES), required=True)
     t.add_argument("--no", type=int, choices=(2, 3), required=True)
     t.add_argument("--width", type=float, required=True)
