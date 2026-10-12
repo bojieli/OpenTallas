@@ -44,13 +44,13 @@
  "route": {
   "pd": 0.55,
   "threads": 16,
-  "peak_ram_gb": 48,
+  "peak_ram_gb": 112,
   "hold_margin_ns": 0.01
  },
  "job": {
   "owner": "Claude:el1011-q-kvd",
   "branch": "claude/el1011-q-kvd",
-  "tag": "a",
+  "tag": "q5",
   "purpose": "idle1012 head_h (ot_qwen_nearhbm_head_h, 128 inst) hierarchical rebuild via ref_tile: flat head = class 1 (one root over ~200k sinks) + class 3/5 (hid pin -> 1,024 q enables); sub-tile ot_qkh_ktree x1 (K levels 4-7 adders + scale + fault OR), 151.2x97.2 (~51% util), M2-M6, PG M6",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
@@ -61,7 +61,7 @@
     "cmd": "mkdir -p {RUN}/bench && HSUB=1 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hs_pos",
     "expect": "pass",
     "threads": 16,
-    "peak_ram_gb": 64,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ],
@@ -73,7 +73,7 @@
     "cmd": "mkdir -p {RUN}/bench && HSUB=1 HSMUT=1 bash tools/qwen_kv_die/bench_gate.sh neg {RUN}/bench/hs_neg 0",
     "expect": "fail",
     "threads": 16,
-    "peak_ram_gb": 32,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ],

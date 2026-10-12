@@ -1,0 +1,93 @@
+{
+  "name": "ot_nhb_pbst",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/routes/nhb_pbst_ref_q5b_ebf1805fa/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.1838863223090357e-10 min -7.884248809375549e-13",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/routes/nhb_pbst_ref_q5b_ebf1805fa/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/record/views/ot_nhb_pbst:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/src/physical/ref_tile/nhb_pbst_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.7821145387463275e-10 min -3.8735792351474174e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/routes/nhb_pbst_ref_q5b_ebf1805fa/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/record/views/ot_nhb_pbst:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/src/physical/ref_tile/nhb_pbst_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.3484827971209654e-10 min -2.291482281702173e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/routes/nhb_pbst_ref_q5b_ebf1805fa/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/record/views/ot_nhb_pbst:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/src/physical/ref_tile/nhb_pbst_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/src/physical/ref_tile/nhb_pbst_ref/signoff.sdc",
+    "sha256": "0cd8e5ad0344086f08a7766b5588082ce70ab197ee04ae2d2912368e8021124f",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/nhb_pbst_ref-q5b-ebf1805fa/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_nhb_pbst.lef": "9149d75423f39c314962580e30f64fa7453dca619482d3061b30ab0cea11a5da",
+    "ot_nhb_pbst_ff.lib": "af15a2664b49393a6b7c1ecb7fafb5978874ea497e7840768d19a5f08bbd6dad",
+    "ot_nhb_pbst_ss.lib": "9f282ed61a1932667c484c37219bb2f800bad2cd148b859b0981f873cc4ce8cc",
+    "ot_nhb_pbst_tt.lib": "9b40b0aa22974287eec0dc8a5a60da6ccab92f765fed64ba79041f00fbdee0ec"
+  },
+  "ok": true
+}

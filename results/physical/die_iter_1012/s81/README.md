@@ -31,6 +31,8 @@ Floorplan: i3_plan/floorplan.{json,svg}.
 | r4f (reference, 10-10) | layer1, r9 pre-v4 | EPYC3 cont-takeover/s81-r4d/r4f | done | 0 | -16.9 ps / -11.13 ns (1,018 paths, 1,008 of them return relays y_rt_*b) | -107.3 ps / -58,911 ns (2.32 M paths, raw die relays) | -63.9 ps | - |
 | rp7 | layer1 margin lint, recipe v5 (= v4 + --rt-strip 40), main 6df7157ba | EPYC4 s81-die-iter/rp7 | 0 overlaps / 0 outside / 0 pin clashes; SS reach violations 128 -> 0; far-side 1 (f_hb_collective_t_hc_y_2048_3071_hc_s_7, 22.0 um back vs 20 slack) | - | - | - | - | - |
 | ir_m948 | layer1 / layer1e IR (main 948f2da01, M8/M9 pitch on grid) | EPYC1 s81-die-iter/ir_m948_{layer1,layer1e} | PDN-0175 gone | - | - | - | - | spine 63.6 mV VDD / 73.4 mV VSS (FAIL > 35; worst node sp_vm clip, then the g_hb_hc_s_wq_d_vm stations); field PSM-0069: 42 unconnected 6.46 um qbanks (bn/bs) + 231 window-edge M7 stubs |
+| ir_pdn2 (v5) | layer1 IR, die PDN contract v2 (claude/el1012-s81pdn da4a35f97 on 412dc16fc, opts v4) | EPYC1 s81pdn/v5 | **PASS <= 35 mV**: PDN PASS, PSM connectivity PASS (0 unconnected) | - | - | - | - | inner window: spine **16.7 VDD / 28.0 VSS mV**, field **29.5 / 31.4 mV** (static, peak power; 2-pitch guard band excluded) |
+| c3 | layer1, contract v11 (HC HIER2 slab 1,816.56 x 12,630.216), v5 recipe, main f13695e45; c1/c2 (pre-IR-fix src) killed | EPYC1 s81-die-iter/c3 | plan check: 0 overlaps / 0 outside / 0 pin clashes (56,802 inst), reach 0, far-side 1; relay/station clock pins 34,317 / 0 missing (c2 odb) | running (GRT ~12 h) | TBD | TBD | TBD | IR PDN v2 + OT_IR_INNER; after STA: die_sens.sh = OCV bound (0.95/1.05) and cap x1.40 / x2.44 (region-DRT error bar) TT/FF; region DRT staged only at GRT overflow 0 |
 
 CTS plan: TBD from c1/clock/plan.json.gz (sinks, planned share, skew per tree).
 
@@ -80,9 +82,8 @@ CTS plan: TBD from c1/clock/plan.json.gz (sinks, planned share, skew per tree).
 
 ## Open
 
-- IR: spine 63.6 / 73.4 mV at the sp_vm clip (power concentrated on the clipped VM abstract); field PSM-0069 because a
-  6.46 um qbank's M7 stripes can miss the 9.092 um-pitch die M8 strap of one net -> glue-row follow-pin grid (M2/M5) or
-  M8 PG on short abstracts; window-edge M7 stubs need clipping to strap crossings.
+- IR: closed at contract v2 (ir_pdn2 row; die PDN contract below). Open: dynamic droop (PSM is static; the run uses
+  peak = 4x average power), layer1e not re-run, field margin 3.6 mV at the dsfd_node rows (n26_*).
 - far-side 1: f_hb_collective_t_hc_y_2048_3071_hc_s_7 (forwarded hub station, 22.0 um back).
 - hqe_SW -> svc_SW FF hold -51.3 (closed svc input; pad belongs in the svc view or a die-top pad stage).
 
@@ -97,3 +98,36 @@ CTS plan: TBD from c1/clock/plan.json.gz (sinks, planned share, skew per tree).
   still have interim views (0 ps insertion), so the die-top region route has to carry hold buffering on the relay inputs.
   Sign-off follows the AMENDMENT item 2: routed per region.
 - ctrl port audit: 13 findings, recorded as warnings (OT_S81_CTRL_GATE_WARN=phys). Other streams own them.
+
+## Die PDN contract v2 (el1012-s81pdn, 2026-10-12)
+
+Layer contract kept: tiles PG on M6, element / parent straps M7, die grid M8/M9. Budget: 35 mV = 5 % of VDD 0.7 V,
+static, at peak power (inst_power, 4x the average the --avg run uses).
+
+| quantity | spine window | field window | design value |
+|---|---|---|---|
+| power / density (peak) | 2.75 W, 0.146 W/mm2 (sp_vm 0.94 W on its 0.90 mm2 clip = 1.05 W/mm2) | 21.5 W, 1.32 W/mm2 (q element 0.253 W / 0.113 mm2 = 2.24 W/mm2) | - |
+| bumps | every core bump PG: 45 um array, VDD and VSS each on a 63.64 um lattice (1 per 4,050 um2) | same | field 7.6 mA, q element 13 mA per bump |
+| die M8 / M9 | per-net pitch 9.092 um (bump pitch / 7), 0.48 um wide: 5.3 % per net per layer | same | via89 at every same-net crossing |
+| M7 -> M8 | element M7 stripes 10.8 um per net; via78 at each same-net crossing (1 per 98 um2 per net) | same | - |
+| thin blocks | stations dsfd_hstnh 17.256 h: local die-M8 at 9.092 | qbank 6.456 h: local M8 3.312; rstg 8.616 h: 4.752; relays 17.256 h: 9.092 offset 0.5 | rule: h - 0.6 < 2 x 9.092 + 0.48 -> local die-M8 straps, 4 straps (2 per net) inside the block |
+| result (inner window) | 16.7 / 28.0 mV | 29.5 / 31.4 mV | <= 35 mV |
+
+No denser spine grid and no extra power domain for sp_vm: its density (1.05 W/mm2) is below the field's, and the field
+grid closes there. What the three ir_m948 failures were and what changed (tools/dsrom_s81_fulldie.py case_irm):
+
+1. Spine 63.6 / 73.4 mV: PSM puts an instance's whole current on ONE node (case_psmt: 54.8 vs 2.4 mV for the same
+   1 W). The worst nodes were the centres of the sp_vm clip (0.94 W) and of the hstnh stations. Every block above
+   64.8 um is now modelled as 43.2 um current tiles (4 M7 pitches, area share of its power each). Generated blocks keep
+   their M7 lattice. Real abstracts (the q element) are cut into tiles that carry their own M7 PG rects.
+2. Field PSM-0069: 6.456 um qbanks were crossed by at most one die M8 strap per net, and often by none. They now get
+   local die-M8 straps by the thin-block rule above. pdngen `-cells` is an unanchored regex (`dsfd_rstg` took the
+   rstg tiles -> PDN-0217), so every macro-grid cell name is now anchored `^name$`.
+3. Window edge: the solved window now has 2 bump pitches of the surrounding die on every side and is judged inside
+   (OT_IR_INNER). Without the guard band, the first VSS bump column sat 63.6 um in from the cut, and the field's edge
+   q elements read 40.2 mV against 29.7 mV in the interior (v4).
+
+Runs (EPYC1 /srv/opentallas-scratch/claude/s81pdn/): v1 = tiles + thin rule (spine 16.9 / 27.7 mV, field PDN-0217);
+v1f = anchored grids (field PSM PASS, 57.9 / 71.9 mV at the q element centres); v4 = real-abstract tiles (field
+29.7 / 40.2 mV, edge column); v5 = guard band (table above).
+

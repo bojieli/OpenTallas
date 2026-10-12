@@ -53,6 +53,15 @@ mkdir -p $OUT
 # self-contained module is extracted from it here.
 awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > $OUT/ot_hdc_lzc32_only.sv
 SRC="$SRC $OUT/ot_hdc_lzc32_only.sv"
+# el1011-q-kvd 2026-10-12: HSUB=1 puts ~3,800 real ot_hdc_fp32_add_lat_nr (bit-level prefix networks) into the HD 128
+# 4-stack bench (16 ot_qkh_lane8 per head); Verilator peaked at 491 GiB and never finished.  As for ot_hdc_fp32_add_lat
+# (sim_nhb_fp_lat_dpi.sv), the bench runs the DPI stand-in rtl/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv, checked
+# cycle-exact against the real unit by rtl/test/nearhbm/run_nr_standin_equiv.sh; the rest of the real file
+# (ot_hdc_fp32_add_lat_sel, ot_hdc_w11_cut_v, ot_hdc_add_hcopy36) is kept.  NR_REAL=1 forces the real units.
+if [ -n "${HSUB:-}" ] && [ -z "${NR_REAL:-}" ]; then
+  awk '/^module ot_hdc_fp32_add_lat_nr /{s=1} !s{print} s&&/^endmodule/{s=0}' $W/hdc/ot_hdc_fp32_add_lat_nr.sv > $OUT/ot_hdc_fp32_add_lat_nr_rest.sv
+  SRC="${SRC/$W\/hdc\/ot_hdc_fp32_add_lat_nr.sv/$OUT/ot_hdc_fp32_add_lat_nr_rest.sv $W/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv}"
+fi
 $VL --cc --exe --build -j 16 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
   --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${SBP:++define+KVD_SBP=$SBP} ${HT:++define+KVD_HT} ${HUBT:++define+KVD_HUBT} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
   -CFLAGS "-O1 -DKVD_R=$RR -DKVD_ROM_ST=$RST" --Mdir $OUT -o Vtb $SRC $CPP > $OUT/build.log 2>&1

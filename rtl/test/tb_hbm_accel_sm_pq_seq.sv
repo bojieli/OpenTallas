@@ -92,7 +92,11 @@ module tb_hbm_accel_sm_pq_seq;
         end
     end
 `endif
+`ifdef OT_SMH_FC_HIER
+`define OT_DP dut.g_fp.u_fc.u_is  // hbm-smh/fc: issue / line stream live in front_c's fc_is child
+`else
 `define OT_DP dut.g_fp.u_fc      // the bench configuration (RMAX 256) instantiates the parameterised pieces; (m3) issue / line stream in the centre strip
+`endif
 `define OT_DCROW dut.g_fp.u_fs.al[RW-1:0]
 `else
     ot_hbm_accel_sm_pq #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),

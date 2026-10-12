@@ -121,7 +121,7 @@ module tb_hgi_sm_e2e;
     ot_hgi_vm_lanearb #(.K(3), .REQW(16), .RSPW(257), .RLY(`WRLY)) u_arb (.clk(clk), .rst_n(rst_n), .c_req({2'b00, rg_req}),
         .c_gnt(a_gnt), .c_q({{2*32*16{1'b0}}, wrq_x}), .c_cr(a_cr), .c_rsp(a_rsp), .g_q(g_q), .g_cr(g_cr), .g_rsp(g_rsp));
     assign rg_gnt_x = a_gnt[0]; assign wcr_x = a_cr[0 +: 32]; assign wrr_x = a_rsp[0 +: 32*257];
-    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .WVM(1), .WLQ(`WLQ), .MUT_WV(MWV)) u_x (.clk(clk), .rst_n(rst_n), .x_xb(x_xb),
+    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .BD(`ifdef XBD0 0 `else 1 `endif), .WVM(1), .WLQ(`WLQ), .MUT_WV(MWV)) u_x (.clk(clk), .rst_n(rst_n), .x_xb(x_xb),
         .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(x_fault),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .vmq(xq), .vmr(xr),
@@ -129,7 +129,8 @@ module tb_hgi_sm_e2e;
 `else
     ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .BD(`ifdef XBD0 0 `else 1 `endif)) u_x (.clk(clk), .rst_n(rst_n), .x_xb(x_xb), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(x_fault),
-        .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .vmq(xq), .vmr(xr));
+        .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .vmq(xq), .vmr(xr),
+        .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
 `endif
     wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
     ot_hgi_sm_pub #(.NSM(NSM), .NPC(2), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
