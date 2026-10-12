@@ -16,6 +16,10 @@ MACRO ot_qkvd_sbuf
       LAYER M4 ;
         RECT  0 25.2 0.084 25.224 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 25.2 0.131 25.224 ;
+    END
   END clk
   PIN din[0]
     DIRECTION INPUT ;
@@ -8480,6 +8484,10 @@ MACRO ot_qkvd_sbuf
       LAYER M4 ;
         RECT  0 75.6 0.084 75.624 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 75.6 0.131 75.624 ;
+    END
   END pop
   PIN push
     DIRECTION INPUT ;
@@ -8495,6 +8503,10 @@ MACRO ot_qkvd_sbuf
     PORT
       LAYER M4 ;
         RECT  0 126 0.084 126.024 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 126 0.131 126.024 ;
     END
   END rst_n
   PIN VDD
@@ -16837,9 +16849,6 @@ MACRO ot_qkvd_sbuf
      RECT  212.328 149.357 212.346 151.181 ;
      RECT  215.784 150.509 215.802 151.181 ;
     LAYER M4 ;
-     RECT  0.06 25.2 0.131 25.224 ;
-     RECT  0.06 75.6 0.131 75.624 ;
-     RECT  0.06 126 0.131 126.024 ;
      RECT  0.181 150.192 1.093 150.216 ;
      RECT  2.005 0.096 2.365 0.12 ;
      RECT  2.293 2.88 2.408 3.672 ;

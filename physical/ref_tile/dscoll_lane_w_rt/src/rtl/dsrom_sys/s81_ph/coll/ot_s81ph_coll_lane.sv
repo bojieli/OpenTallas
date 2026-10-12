@@ -76,32 +76,37 @@ module ot_s81ph_coll_lane #(
     localparam integer S = FFW + 1;
     localparam integer PNUM = (GFMT != 0) ? FB * 3 * (IDLE_P - 1) : FB * G * (IDLE_P - 1);
     localparam integer PDEN = (GFMT != 0) ? 4 * IDLE_P : S * IDLE_P;
-    reg [1:0] rst_s;
-    always @(posedge clk or negedge rs_n) if (!rs_n) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
-    wire rst_n = rst_s[1];
+    // reset: one kept two-flop synchroniser per consumer region (lr, ingress skid, egress skid, endpoint, gearbox,
+    // control) instead of one 6.8k-load net (textbook lint high_fanout); all copies release on the same edge.
+    localparam integer NRS = 6;
+    (* keep *) reg [NRS-1:0] rst_a, rst_b;
+    always @(posedge clk or negedge rs_n)
+        if (!rs_n) begin rst_a <= {NRS{1'b0}}; rst_b <= {NRS{1'b0}}; end
+        else begin rst_a <= {NRS{1'b1}}; rst_b <= rst_a; end
+    wire rst_lr = rst_b[0], rst_ski = rst_b[1], rst_sko = rst_b[2], rst_ep = rst_b[3], rst_gb = rst_b[4], rst_n = rst_b[5];
     reg [514:0] lr;
-    always @(posedge clk or negedge rst_n) if (!rst_n) lr <= 0; else lr <= rx;
+    always @(posedge clk or negedge rst_lr) if (!rst_lr) lr <= 0; else lr <= rx;
     // core -> link
     wire iv, ir, il; wire [W-1:0] id;
     reg  lk1, up;                                // link-up gate (v4): own receiver locked once / peer's locked
     wire ir_g = ir && (UPGATE == 0 || up);
-    ot_s81ph_skid2 #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_n), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
+    ot_s81ph_skid2 #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_ski), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
         .out_v(iv), .out_r(ir_g), .out_d({il, id}));
     // link -> core
     wire ov, orr, ol; wire [W-1:0] od;
-    ot_s81ph_skid2 #(.W(W + 1)) u_sko (.clk(clk), .rst_n(rst_n), .in_v(ov), .in_r(orr), .in_d({ol, od}),
+    ot_s81ph_skid2 #(.W(W + 1)) u_sko (.clk(clk), .rst_n(rst_sko), .in_v(ov), .in_r(orr), .in_d({ol, od}),
         .out_v(li_v), .out_r(li_r), .out_d(li_d));
     wire ftv, rtv, frv, rrv; wire [FFW-1:0] ft, fr; wire [RFW-1:0] rt, rr; wire ep_f, gb_f, gb_l;
     ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
         .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE)) u_ep (
-        .clk(clk), .rst_n(rst_n), .ch_b(ch_b),
+        .clk(clk), .rst_n(rst_ep), .ch_b(ch_b),
         .in_valid(iv && (UPGATE == 0 || up)), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready(orr), .out_data(od), .out_last(ol),
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv), .r_tx(rt), .r_rx_v(rrv), .r_rx(rr),
         .credit_stalls(), .fault(ep_f), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),
         .st_naks(), .st_replays(), .st_timeouts(), .st_retx_flits(), .st_max_replay_occ());
     ot_s81ph_link_gbx #(.FMT(GFMT), .FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P)) u_gb (
-        .clk(clk), .rst_n(rst_n), .f_tx_v(ftv), .f_tx(ft), .r_tx_v(rtv && (UPGATE == 0 || lk1)), .r_tx(rt), .beat_tx(tx),
+        .clk(clk), .rst_n(rst_gb), .f_tx_v(ftv), .f_tx(ft), .r_tx_v(rtv && (UPGATE == 0 || lk1)), .r_tx(rt), .beat_tx(tx),
         .beat_rx_v(lr[0] && lr[513]), .beat_rx(lr[512:1]), .f_rx_v(frv), .f_rx(fr), .r_rx_v(rrv), .r_rx(rr),
         .locked(gb_l), .fault(gb_f));
     always @(posedge clk or negedge rst_n) if (!rst_n) flt <= 3'b000; else flt <= {lr[514], gb_f, ep_f};

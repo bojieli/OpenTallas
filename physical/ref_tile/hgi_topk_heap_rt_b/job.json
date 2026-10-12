@@ -1,5 +1,5 @@
 {
- "name": "hgi_topk_heap_rt_b-w8s-COMMIT",
+ "name": "hgi_topk_heap_rt_b-w8s-402f8bf83",
  "block": "ot_hgi_topk_heap_tile",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-idx",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-idx",
-  "commit": "COMMIT",
+  "commit": "402f8bf83",
   "extra_paths": [
    "tools/hgi_topk_heap_bench.sh",
    "rtl/test/hbm_generic_20261009",
@@ -134,7 +134,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_topk_heap_rt_b/hgi_topk_heap_rt_b-w8s-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_topk_heap_rt_b/hgi_topk_heap_rt_b-w8s-402f8bf83"
   }
  ],
  "cycles_added": 0,
