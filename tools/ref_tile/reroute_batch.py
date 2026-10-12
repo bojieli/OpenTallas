@@ -593,6 +593,32 @@ def log(owner: str | None, line: str):
 
 
 # ------------------------------------------------------------------------------------------------------ run
+def check_rlayers(kd: str, spec: dict):
+    """lesson 10-12: a kit whose kit.env lacks RLAYERS routes on the flow default (signals up to M7+) and breaks the
+    M5 contract silently.  Tiles must cap at M5 (M6 only with a layer_cap_grant); cluster kits keep their M7 signal
+    cap (the batch never re-generates a cluster, but a cluster spec passed through must not be clipped)."""
+    env = (ROOT / kd / "kit.env").read_text()
+    m = re.search(r"^RLAYERS=['\"]?(M\d+)\s+(M\d+)", env, re.M)
+    if not m:
+        raise SpecSkip(f"kit {kd}/kit.env has no RLAYERS (ref_tile gen did not apply the layer contract)")
+    top = int(m.group(2)[1:])
+    if spec.get("kind") == "cluster":
+        if top < 7:
+            raise SpecSkip(f"cluster kit {kd} RLAYERS top {m.group(2)} < M7 (cluster kits keep M7)")
+    elif top > 5 and not (spec.get("layer_cap") == "M6" and spec.get("layer_cap_grant")):
+        raise SpecSkip(f"tile kit {kd} RLAYERS top {m.group(2)} above the M5 cap without a layer_cap_grant")
+
+
+def job_name_free(name: str) -> str:
+    """lesson 10-12: the loop keys jobs by name, so a name it already REFUSED (or saw in any state) is refused again
+    at intake.  Return the first free name: name, name-r2, name-r3, ..."""
+    n, cand = 1, name
+    while (JOBS / f"{cand}.json").exists() or (INTAKE / f"{cand}.json").exists():
+        n += 1
+        cand = f"{name}-r{n}"
+    return cand
+
+
 def prepare(row, rec, st) -> dict | None:
     import ref_tile as RT
     t = st["tiles"].setdefault(row["cell"], {})
@@ -607,6 +633,7 @@ def prepare(row, rec, st) -> dict | None:
         sp = SPECS / f"{spec['name']}.json"
         sp.write_text(json.dumps(spec, indent=1) + "\n")
         RT.gen(str(sp))
+        check_rlayers(kd, spec)
         t.update(state="kit", kit=kd, spec=str(sp.relative_to(ROOT)), closed_job=rec["job"], priority=row["priority"],
                  owner=rec["spec"].get("owner"), at=now())
         return {"cell": row["cell"], "kd": kd, "spec": sp, "mem": max(24, min(64, spec["route"]["peak_ram_gb"] // 2))}
@@ -619,7 +646,8 @@ def prepare(row, rec, st) -> dict | None:
 
 def run(a, rows, closed, st):
     sel = [r for r in rows if r["state"] == "eligible" and r["priority"] in a.priorities
-           and st["tiles"].get(r["cell"], {}).get("state") not in ("submitted", "skip", "gate_fail")]
+           and (st["tiles"].get(r["cell"], {}).get("state") not in ("submitted", "skip", "gate_fail")
+                or (a.retry and st["tiles"].get(r["cell"], {}).get("state") in ("gate_fail", "error")))]
     if a.only:
         sel = [r for r in sel if r["cell"] in a.only]
     sel = sel[: a.limit] if a.limit else sel
@@ -689,7 +717,12 @@ def submit(st: dict):
             t.update(state="gate_fail", reason="submit_lint: " + (sub.stdout + sub.stderr)[-300:])
             log(t.get("owner"), f"{cell}: M5 re-route submit_lint FAIL: {t['reason']}")
             continue
-        shutil.copy(jp, INTAKE / f"{job['name']}.json")
+        name = job_name_free(job["name"])
+        if name != job["name"]:
+            prev = (jload(JOBS / f"{job['name']}.json") or {}).get("status") or "intake"
+            log(t.get("owner"), f"{cell}: job name {job['name']} already used ({prev}); submitting as {name}")
+            job["name"] = name
+        (INTAKE / f"{name}.json").write_text(json.dumps(job, indent=1) + "\n")
         t.update(state="submitted", job=job["name"], submitted_at=now())
         log(t.get("owner"), f"{cell}: M5 re-route SUBMITTED {job['name']} (kit {t['kit']}, closed {t['closed_job']}, "
                             f"gate {t.get('gate')} on {t.get('gate_host')}, priority {t.get('priority')})")
@@ -829,6 +862,7 @@ def main(argv=None) -> int:
     ap.add_argument("--gates", type=int, default=12, help="concurrent remote gates")
     ap.add_argument("--local-gate", action="store_true", help="local gate only (no remote synthesis smoke)")
     ap.add_argument("--no-submit", action="store_true")
+    ap.add_argument("--retry", action="store_true", help="also re-kit + re-gate gate_fail / error tiles")
     a = ap.parse_args(argv)
     st = load_state()
     if a.cmd == "submit":
