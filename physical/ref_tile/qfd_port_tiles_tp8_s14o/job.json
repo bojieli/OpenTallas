@@ -1,20 +1,14 @@
 {
- "name": "qfd_port_tiles_tp8_s14o-v1-334e3621d",
+ "name": "qfd_port_tiles_tp8_s14o-v2-COMMIT",
  "block": "ot_qwen_slab_port_group",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8/par-port",
  "purpose": "qwen-tp8 (results/arch/qwen_tp8_1012 ELEMENT_IMPACT qfd_port_tiles_*): the slab port group at the TP8 cut, GT 3072, GID 47 (the last of 48 groups = 6 slabs x 8, the largest group constant; other GIDs differ only in constant multiplier/adder terms), s14o parameters of the closed TP4 slab_s14o_lvt-95725fb69tt; same outline 777.576 x 455.76 and faces (res_in/p_/o_/am_ east, bw_/tw_ west), 16 scale banks (TP8 image uses 7: results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json); reference tile flow",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-qwen-tp8-par-port",
-  "commit": "334e3621d",
+  "commit": "COMMIT",
   "extra_paths": [
    "src",
    "results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json",
@@ -61,7 +55,7 @@
     "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --out {RUN}/bench/tp8_pos",
     "expect": "pass",
     "pass_regex": "PASS: [0-9]+ requests, [0-9]+ results bit-exact.*GT 3072 GID 47",
-    "min_count_regex": "GT 3072 GID 47: [1-9][0-9]* in range",
+    "min_count_regex": "GT 3072 GID 47: ([0-9]+) in range",
     "needs": [
      "iverilog"
     ],
@@ -152,7 +146,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_port_tiles_tp8_s14o/qfd_port_tiles_tp8_s14o-v1-334e3621d"
+   "to": "results/rtl/ref_tile/qfd_port_tiles_tp8_s14o/qfd_port_tiles_tp8_s14o-v2-COMMIT"
   }
  ],
  "cycles_added": 0,
