@@ -53,8 +53,8 @@
  "job": {
   "owner": "Claude:el1011-hbm-b2-cp",
   "branch": "claude/el1011-hbm-b2-cp",
-  "tag": "v2",
-  "purpose": "HBM B2 (owner 10-12) CP record dispatcher: address->slice routing, per-(unit,cluster) credits, one 1,033-b command bus to 4 cluster stations, all-cluster retire (in cmdproc beside ot_hgi_cp)",
+  "tag": "v3",
+  "purpose": "ot_hgi_b2_disp v3: SPEC v0.4 (efce04383) address map -- owner = addr_word[17:16] for addr < 2^18; >= 2^18 is the REPL window (never an owner; was the old HC-aperture -> slice 0 rule). v2 CLOSED TT +53.56 / FF +3.11.",
   "extra_paths": [
    "rtl/hbm_accel/generic/b2"
   ],

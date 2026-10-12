@@ -4,8 +4,10 @@
 module ot_hfd_actquant_m #(
     parameter integer MR = 0,       // views agent: 1 with MLAT 6 = L5 multiplier + rounding cut (_l6r)
     parameter integer MLAT = 5,     // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
-    parameter integer XRING = 0     // el1011-hbm-fq/qvm: 0 = the 7+MLAT-deep element line; K > 0 = a K-slot lane ring
+    parameter integer XRING = 0,    // el1011-hbm-fq/qvm: 0 = the 7+MLAT-deep element line; K > 0 = a K-slot lane ring
                                     // (legal only when v is high at most once every I edges with K * I > 7 + MLAT)
+    parameter integer XEXT = 0      // el1011-hbm-fq track B: 1 = the 1024 element bits of the line come from xe_ext (an
+                                    // external staging tile: x delayed 7 + MLAT edges after s0_x); only the 64 Z bits stay
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -16,7 +18,8 @@ module ot_hfd_actquant_m #(
     output reg  [255:0]  q,
     output reg  signed [9:0] e,
     output reg  [511:0]  y,
-    output reg           fault
+    output reg           fault,
+    input  wire [1023:0] xe_ext
 );
     localparam integer LATENCY = 13 + MLAT + 4;
     localparam [30:0] FLOOR_FP8 = 31'h38d1b717;   // float32(1e-4)
@@ -105,8 +108,16 @@ module ot_hfd_actquant_m #(
         assign s0_nz[zi] = |s0_x[32*zi +: 31];
         assign s0_fz[zi] = |s0_x[32*zi + 23 +: 8];
     end endgenerate
+    localparam integer XW = (XEXT != 0) ? 64 : 1024 + 64;
+    wire [1087:0] xl_d = {s0_fz, s0_nz, s0_x};
+    wire [XW-1:0] xl_lq;
     wire [1087:0] xl_q;
-    ot_hdc_delay #(.W(1024 + 64), .D(XRING == 0 ? 7 + MLAT : 0)) u_x (.clk(clk), .rst_n(rst_n), .d({s0_fz, s0_nz, s0_x}), .q(xl_q));
+    ot_hdc_delay #(.W(XW), .D(XRING == 0 ? 7 + MLAT : 0)) u_x (.clk(clk), .rst_n(rst_n), .d(xl_d[1087 -: XW]), .q(xl_lq));
+    generate if (XEXT != 0) begin : g_xe
+        assign xl_q = {xl_lq, xe_ext};
+    end else begin : g_xi
+        assign xl_q = xl_lq;
+    end endgenerate
 
     // ---- E: e = ceil_log2(prod)
     reg              e_v, e_fp4, e_nf;
