@@ -46,7 +46,7 @@
   "benches": [
    {
     "name": "sel_capture_exact",
-    "cmd": "python3 tools/hbm_selector_capture_gate.py {RUN}/bench_gate --macro",
+    "cmd": "python3 tools/hbm_selector_capture_gate.py {RUN}/bench_gate --macro --hard",
     "expect": "pass",
     "pass_regex": "\"pass_gate\": true",
     "threads": 4,
