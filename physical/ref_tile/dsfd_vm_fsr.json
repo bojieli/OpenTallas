@@ -5,7 +5,7 @@
  "sources": ["rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv"],
  "clock_port": "ck",
  "reset_ports": ["rn"],
- "outline": {"w": 345.6, "h": 43.2},
+ "outline": {"w": 345.6, "h": 16.2},
  "pg_layer": "M6",
  "pins": {"N": ["ck", "rn", "i_v", "i_we", "i_row", "i_mask", "i_d", "i_rf"],
           "S": ["o_v", "o_we", "o_row", "o_mask", "o_d", "o_rf"]},
