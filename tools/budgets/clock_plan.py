@@ -621,12 +621,135 @@ def record(a):
                           viol_intra=len(viol_intra), viol_inter=len(viol_inter))))
 
 
+# ------------------------------------------------------------------------------------------------ balance
+def lib_insertions(lib):
+    """{cell: (min, max)} ETM clock_tree_path of every hard view in a liberty file (its own routed clock tree, ps)"""
+    t = Path(lib).read_text()
+    st = [m.start() for m in re.finditer(r'\n\s*cell\s*\(', t)]
+    out = {}
+    for i, a_ in enumerate(st):
+        body = t[a_:st[i + 1] if i + 1 < len(st) else len(t)]
+        v = {k: float(m.group(1)) for k in ('min', 'max')
+             if (m := re.search(k + r'_clock_tree_path\s*;[^v]*values\("([0-9.]+)', body, re.S))}
+        if len(v) == 2:
+            out[re.search(r'cell\s*\(\s*"?(\w+)', body).group(1)] = (v['min'], v['max'])
+    return out
+
+
+def balance(a):
+    """qwendie-1012 (CLOCK LATENCY ACROSS THE HIERARCHY).  Every ETM-bound hard view carries its own routed clock tree
+    (min/max_clock_tree_path), so its registers clock at (die arrival at its clock pin) + (its insertion).  Two errors
+    in the it1/it2 die STA: (1) OpenSTA reads a pin latency on a macro as the latency of its INTERNAL registers and
+    subtracts the ETM tree ('macro clock tree delay -665.5'), so writing the plan's pin arrival put every view's pin
+    one insertion early -- harmless between equal-depth relays (~95 ps cst ETMs), but qfd_d2d_rom's 665.5-767.2 ps
+    tree made its pin ~570 ps early (it2: TT -273 on 787 endpoints); (2) the plan balanced pin arrivals only, and its
+    synchronous pairs were same-tree only.  Fix: 'view_pin_insertion' (sta_tcl writes pin arrival + insertion,
+    -early min / -late max) and target-latency balance: a view whose register instant is later than its bus partners'
+    on OTHER trees, on a tree that holds only it and its own-tree partners (r22ko4 clk_d2d: d2d_rom + ucie_kv FDI +
+    rs_bump on pll_d2d), has its tree tapped EARLY -- every other tree root gets the same TT lift L (one delay line
+    per root, SS:FF 1 : 0.53 like the region pads) and the view's entry pad lands it on its partners.  TT is solved
+    (setup sign-off); the FF residual is reported (hold is closed by the relay-input pads).  A late view on a shared
+    tree is left as recorded and reported."""
+    P = json.loads(Path(a.plan).read_text())
+    d = C.load_die(a.die_model)
+    lib = Path(a.libs)
+    ins_tt, ins_ff = {}, {}
+    if (lib / 'qfd_etm_tt.lib').exists():                  # Qwen ROM die: one ETM lib per corner (qwen_die_etm_map)
+        ins_tt, ins_ff = lib_insertions(lib / 'qfd_etm_tt.lib'), lib_insertions(lib / 'qfd_etm_ff.lib')
+    for f in sorted(lib.glob('qfd_etm_*_tt.lib')):          # per-master ETMs (bind_views.py)
+        ins_tt.update(lib_insertions(f))
+        g = f.with_name(f.name[:-len('_tt.lib')] + '_ff.lib')
+        if g.exists():
+            ins_ff.update(lib_insertions(g))
+    si, sr = P['sink_insertion'], P['sink_region']
+    kss = 1.0 / ((1.0 + 0.53) / 2.0)          # a TT delay of x ps is x * kss in SS and 0.53 x kss in FF
+    tree_of = lambda k: sr[k].split(':', 1)[0]
+    m_of = lambda k: d['by'][k.rsplit('/', 1)[0]][1] if k.rsplit('/', 1)[0] in d['by'] else None
+    vi = {k: (ins_tt[m_of(k)], ins_ff[m_of(k)]) for k in si if m_of(k) in ins_tt and m_of(k) in ins_ff}
+    mid = lambda k, i: (sum(vi[k][i]) / 2) if k in vi else 0.0
+    tt = lambda k, o=si: (o[k][0] + o[k][1]) / 2
+    by_inst = defaultdict(list)
+    for k in si:
+        by_inst[k.rsplit('/', 1)[0]].append(k)
+    fb_ = set(d.get('fclk_buses', []))
+    partners = defaultdict(set)
+    for bid, cls, bits, eps in d['buses']:
+        if bid in fb_ or cls in ('clock', 'col_clock', 'clock_trunk', 'reset', 'reset_tree', 'col_reset', 'fclk', 'top_in'):
+            continue
+        insts = {e[0] for e in eps}
+        for i_ in insts:
+            for v in by_inst.get(i_, []):
+                for o in insts - {i_}:
+                    partners[v].update(by_inst.get(o, []))
+    tsinks = defaultdict(set)
+    for k in si:
+        tsinks[tree_of(k)].add(k)
+    flop = lambda k, o=si: tt(k, o) + mid(k, 0)
+    # one STA clock per root instance (r22ko4: clk_rx/pll_* = 'stream'; io_collective/pll_serial etc. are async
+    # groups): balance and lift only inside the early tree's own clock
+    dom = {t: (P['trees'].get(t, {}).get('root') or ['?'])[0] for t in tsinks}
+    deficit, need = {}, {}
+    for t, ks in tsinks.items():
+        deep = [k for k in ks if k in vi]
+        for v in deep:
+            oth = [p for p in partners[v] if tree_of(p) != t and dom.get(tree_of(p)) == dom[t]]
+            if not oth:
+                continue
+            T = sum(flop(p) for p in oth) / len(oth)
+            x = flop(v) - T
+            if x > a.min_late_ps:
+                deficit[v] = x
+                need[v] = T - mid(v, 0)
+    early, left = set(), []
+    for t in {tree_of(v) for v in deficit}:
+        ks = tsinks[t]
+        own = {p for v in ks if v in deficit for p in partners[v] if tree_of(p) == t}
+        if ks - {v for v in ks if v in deficit} - own:
+            left += [v for v in ks if v in deficit]
+        else:
+            early.add(t)
+    doms = {dom[t] for t in early}
+    if len(doms) > 1:
+        raise SystemExit(f'balance: early trees in several clocks {sorted(doms)}: one lift per clock not implemented')
+    L = max([x for v, x in deficit.items() if tree_of(v) in early], default=0.0)
+    lifted = lambda k: tree_of(k) not in early and dom.get(tree_of(k)) in doms
+    out = {k: ([si[k][0] + L * kss, si[k][1] + 0.53 * L * kss] if lifted(k) else list(si[k])) for k in si}
+    rows = {}
+    for v in deficit:
+        if tree_of(v) not in early:
+            continue
+        pad = max(0.0, need[v] + L - tt(v))
+        out[v] = [si[v][0] + pad * kss, si[v][1] + 0.53 * pad * kss]
+    for v in deficit:
+        pt = [p for p in partners[v] if tree_of(p) != tree_of(v) and dom.get(tree_of(p)) == dom[tree_of(v)]]
+        rows[v] = dict(master=m_of(v), view_insertion_tt=vi[v][0], view_insertion_ff=vi[v][1], early_tree=tree_of(v) in early,
+                       partners=len(pt), late_before_tt=round(deficit[v], 1),
+                       die_tt_before=round(tt(v), 1), die_tt_after=round(tt(v, out), 1),
+                       flop_tt_minus_partners=round(flop(v, out) - sum(flop(p, out) for p in pt) / len(pt), 1),
+                       flop_ff_minus_partners=round(out[v][1] + mid(v, 1) - sum(out[p][1] + mid(p, 1) for p in pt) / len(pt), 1))
+    mixed = sorted(k for k in si if tree_of(k) in early and k not in deficit)
+    P['sink_insertion'] = {k: [round(x[0], 1), round(x[1], 1)] for k, x in out.items()}
+    P['view_pin_insertion'] = {k: dict(tt=list(x[0]), ff=list(x[1])) for k, x in vi.items()}
+    P['view_balance'] = dict(method=balance.__doc__.strip(), libs=str(lib), min_late_ps=a.min_late_ps,
+                             lift_clock_roots=sorted(doms), lift_tt_ps=round(L, 1), lift_ss_ps=round(L * kss, 1), lift_ff_ps=round(0.53 * L * kss, 1),
+                             early_trees=sorted(early), own_tree_partners_moved=mixed, views=len(vi),
+                             late_left_on_shared_trees={v: round(deficit[v], 1) for v in sorted(left)}, rows=rows)
+    Path(a.out).write_text(json.dumps(P, indent=1, default=str) + '\n')
+    er = [r for r in rows.values() if r['early_tree']]
+    print(json.dumps(dict(views=len(vi), late=len(deficit), lift_tt=round(L, 1), early=sorted(early), moved=len(mixed),
+                          left=len(left), worst_left=max(deficit[v] for v in left) if left else None,
+                          early_tt_residual=max((abs(r['flop_tt_minus_partners']) for r in er), default=None),
+                          early_ff_residual=max((abs(r['flop_ff_minus_partners']) for r in er), default=None))))
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['emit', 'record'])
+    ap.add_argument('mode', choices=['emit', 'record', 'balance'])
     ap.add_argument('--die-model', required=True)
     ap.add_argument('--name', default='case')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--plan', help='balance: recorded plan.json')
+    ap.add_argument('--libs', help='balance: the STA libs dir (qfd_etm_{tt,ff}.lib [+ qfd_etm_<master>_{tt,ff}.lib])')
+    ap.add_argument('--min-late-ps', type=float, default=60.0, help='balance: register-instant lateness vs partners that gets balanced (the setup uncertainty)')
     ap.add_argument('--group', default='trunk', choices=['trunk', 'region', 'htop', 'hreg'])
     ap.add_argument('--buffer-um', type=float, default=150.0)
     ap.add_argument('--shards', type=int, default=0, help='emit: split the trees into N independent CTS cases run in parallel')
@@ -645,7 +768,7 @@ def main():
         MAX_REGION_UM = a.max_region_um
     if a.max_merge_um:
         MAX_MERGE_UM = a.max_merge_um
-    emit(a) if a.mode == 'emit' else record(a)
+    emit(a) if a.mode == 'emit' else record(a) if a.mode == 'record' else balance(a)
 
 
 if __name__ == '__main__':
