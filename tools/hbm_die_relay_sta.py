@@ -347,21 +347,20 @@ puts "OT_SENS case={name} corner={c} r_k={rk:.3f} c_k={ck:.3f} ocv={ocv:g} wns_n
 
 
 def detour(grt_csv, hpwl_csv):
-    """routed / HPWL wirelength of the GRT of record: report_wire_length -global_route CSV (net, length um ...) vs the
+    """routed / HPWL wirelength of the GRT of record: report_wire_length -global_route file ('grt: net total_wl pins') vs the
     same case's placement HPWL per net (hpwl.csv: net,hpwl_um); totals over nets present in both, and the median"""
-    import csv
-    def rd(path, col):
+    def rd(path):
         out = {}
-        with open(path) as f:
-            for row in csv.reader(f):
-                if len(row) <= col:
-                    continue
-                try:
-                    out[row[0].strip()] = float(row[col])
-                except ValueError:
-                    continue
+        for ln in Path(path).read_text().splitlines():      # 'grt: <net> <total_wl um> <#pins>' or '<net> <hpwl um>'
+            t = ln.replace(',', ' ').split()
+            if t and t[0] == 'grt:':
+                t = t[1:]
+            try:
+                out[t[0]] = float(t[1])
+            except (IndexError, ValueError):
+                continue
         return out
-    g, h = rd(grt_csv, 1), rd(hpwl_csv, 1)
+    g, h = rd(grt_csv), rd(hpwl_csv)
     both = [(g[n], h[n]) for n in g if n in h and h[n] > 0]
     r = sorted(a / b for a, b in both)
     return dict(nets=len(both), grt_um=round(sum(a for a, _ in both), 1), hpwl_um=round(sum(b for _, b in both), 1),
@@ -393,7 +392,7 @@ def budgets(case):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--case', required=True)
+    ap.add_argument('--case', required=False)
     ap.add_argument('--clock-context', help='clock_context.json from tools/hbm_die_clock_context.py')
     ap.add_argument('--budgets', action='store_true')
     ap.add_argument('--hold-pads', help='JSON {load pin: FF pad ps} (die-level hold padding)')
