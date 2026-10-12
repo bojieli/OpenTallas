@@ -743,7 +743,15 @@ module ot_hdc_v41x_vec_lane #(
             wire [31:0] y_exp, y_div;
             wire f_e, f_den, f_div;
             if (SFUT != 0) begin : g_chain_tile
+`ifdef OT_SFU_CHAIN_HARD
+                // hard sub-tile: no parameter overrides (the LEF/LIB cell); its defaults must be this lane's config
+                if (MLAT != 6 || ALAT != 6 || DDIV != 21 || DENR != 1 || DRING != 4 || K != 1) begin : g_chain_cfg_err
+                    OT_SFU_CHAIN_HARD_VIEW_IS_MLAT6_ALAT6_DDIV21_DENR1_DRING4_K1 u_cfg_err ();   // undefined: elaboration stops
+                end
+                ot_hdc_v41x_sfu_chain u_chain (
+`else
                 ot_hdc_v41x_sfu_chain #(.MLAT(MLAT), .ALAT(ALAT), .DDIV(DDIV), .DENR(DENR), .DRING(DRING), .K(K)) u_chain (
+`endif
                     .clk(clk), .rst_n(local_rst_n[29]), .v(v3), .is_exp(is_exp), .is_sig(is_sig),
                     .silu(ci_sfu == SFU_SILU), .r(R), .y_exp(y_exp), .y_div(y_div), .f_e(f_e), .f_den(f_den), .f_div(f_div));
             end else begin : g_chain_flat
@@ -915,8 +923,9 @@ endmodule
 // hardened sub-tile.  Every input is a pin register, every output a register (no logic between pin and flop); the
 // reset enters through its own pin flop.  Same words as the in-lane chain, 2 cycles later.
 module ot_hdc_v41x_sfu_chain #(
-    parameter integer MLAT = 6, parameter integer ALAT = 6, parameter integer DDIV = 21, parameter integer DENR = 0,
-    parameter integer DRING = 0, parameter integer K = 1
+    // defaults = the HARDENED configuration (a hard child has no parameters: preamble PARENT SYNTHESIS rule)
+    parameter integer MLAT = 6, parameter integer ALAT = 6, parameter integer DDIV = 21, parameter integer DENR = 1,
+    parameter integer DRING = 4, parameter integer K = 1
 ) (
     input  wire clk, input wire rst_n,
     input  wire v, input wire is_exp, input wire is_sig, input wire silu, input wire [31:0] r,
