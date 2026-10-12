@@ -13,6 +13,14 @@
 #   3. OUTPUT: driver net -> HB4 -> HB4 -> BUFx4f -> port, all FIRM at the pin, for outputs driven by a flop (directly
 #      or through BUF / INV); tie / combinational outputs untouched.
 #   4. R2R: one HB4 in front of each D pin of the listed capture classes, seeded at the capture flop.
+# [amh2 2026-10-12] fp{a,b}amh-f53d1153b crashed at 3_3_place_gp, RSZ-3006 "Failed to insert buffer before loads for net
+#   p_f_e2[112]" (load ot_hso_04248/A dont_touch): the output chain's first HB4 sat at the pin with the flop -> pin wire
+#   as its input and the dont_touch glob ot_hs* also froze the BUFx4f drivers.  Fixed (vm8 181753c60 pattern, ref_tile
+#   default): every weak hold cell is preceded by a resizable lead BUFx4f (the long wire ends on a resizable load, so
+#   repair_design can buffer it) and followed by a resizable BUFx4f (it drives the wire); drivers are named ot_hdrv_*
+#   so the ot_hs* dont_touch glob leaves them resizable.  Only the hold cells and the short nets INTO them are dont_touch.
+#   INPUT  port -> HB4 -> BUF (port net short: HB4 at the pin);  OUTPUT net -> BUF -> HB4 -> BUF -> HB4 -> BUF -> port;
+#   R2R    net -> BUF -> HB4 -> BUF -> D (at the capture flop).
 # ctlm_hold_release.tcl (PRE_DETAIL_PLACE) returns the FIRM cells and the pin flops to PLACED for DPL.
 source /src/physical/qwen_die_masters/io_flop_at_pins.tcl
 # ORFS sources step hooks inside a proc (global_place.tcl): bind every script-level name to the global namespace
@@ -34,16 +42,21 @@ proc hs_pin_xy {bt m} {
   set y [expr {max([$hs_ca yMin], min($y, [$hs_ca yMax] - [$m getHeight]))}]
   return [list $x $y]
 }
-# chain: insert masters (list) between net `in` and returns the last output net (new); cells placed at xy, status st
+# chain: insert masters (list) after net `in`; returns the last output net (new) and the cells; cells placed at xy,
+# status st.  Hold cells (hs_hb) are named <pfx>_* (dont_touch via the ot_hs* glob) and their INPUT net is made
+# dont_touch (it is local: the cell before it sits at the same xy); drivers (hs_bf) are ot_hdrv_* and stay resizable.
 proc hs_chain {pfx in masters xy st} {
-  global hs_blk hs_firm hs_dt_nets hs_seq
+  global hs_blk hs_firm hs_dt_nets hs_seq hs_hb
   set cur $in; set cells {}
   foreach m $masters {
-    set i [odb::dbInst_create $hs_blk $m [format "%s_%05d" $pfx $hs_seq]]
-    set n [odb::dbNet_create $hs_blk [format "%s_n%05d" $pfx $hs_seq]]
+    set hold [expr {$m eq $hs_hb}]
+    set p [expr {$hold ? $pfx : "ot_hdrv"}]
+    set i [odb::dbInst_create $hs_blk $m [format "%s_%05d" $p $hs_seq]]
+    set n [odb::dbNet_create $hs_blk [format "%s_n%05d" $p $hs_seq]]
     incr hs_seq
     [$i findITerm A] connect $cur
     [$i findITerm Y] connect $n
+    if {$hold} { lappend hs_dt_nets $cur }
     lassign $xy x y
     $i setOrient R0; $i setLocation $x $y; $i setPlacementStatus $st
     if {$st eq "FIRM"} { lappend hs_firm [$i getName] }
@@ -79,7 +92,6 @@ foreach bt [$hs_blk getBTerms] {
   $d disconnect
   lassign [hs_chain ot_hsi $net [list $hs_hb $hs_bf] [hs_pin_xy $bt $hs_hb] FIRM] last cells
   $d connect $last
-  lappend hs_dt_nets $net [[[lindex $cells 0] findITerm Y] getNet]
   incr hs_ni
 }
 # 3. OUTPUT stages
@@ -90,11 +102,10 @@ foreach bt [$hs_blk getBTerms] {
   set pn [odb::dbNet_create $hs_blk [format "ot_hso_p%05d" $hs_no]]
   $bt disconnect
   $bt connect $pn
-  lassign [hs_chain ot_hso $net [list $hs_hb $hs_hb $hs_bf] [hs_pin_xy $bt $hs_hb] FIRM] last cells
+  lassign [hs_chain ot_hso $net [list $hs_bf $hs_hb $hs_bf $hs_hb $hs_bf] [hs_pin_xy $bt $hs_hb] FIRM] last cells
   # move the BUF output onto the port net
   set bi [lindex $cells end]; [$bi findITerm Y] disconnect; [$bi findITerm Y] connect $pn
   odb::dbNet_destroy $last
-  lappend hs_dt_nets [[[lindex $cells 0] findITerm Y] getNet] [[[lindex $cells 1] findITerm Y] getNet]
   incr hs_no
 }
 # 4. R2R capture classes (instance globs; D pin, or wd_in* on the tag SRAM macros)
@@ -108,7 +119,7 @@ set hs_r2r {
 }
 foreach inst [$hs_blk getInsts] {
   set nm [$inst getName]
-  if {[string match "ot_hs*" $nm]} continue
+  if {[string match "ot_hs*" $nm] || [string match "ot_hdrv_*" $nm]} continue
   set hit 0
   foreach g $hs_r2r { if {[string match $g $nm]} { set hit 1; break } }
   set mac [string match "*u_tag.g_mem.g_b*u_m" $nm]
@@ -120,7 +131,7 @@ foreach inst [$hs_blk getInsts] {
     if {$mac && ![string match "wd_in*" $p]} continue
     set n [$it getNet]; if {$n eq "NULL"} continue
     $it disconnect
-    lassign [hs_chain ot_hsr $n [list $hs_hb] [$inst getLocation] PLACED] last cells
+    lassign [hs_chain ot_hsr $n [list $hs_bf $hs_hb $hs_bf] [$inst getLocation] PLACED] last cells
     $it connect $last
     incr hs_nr
   }
@@ -130,4 +141,4 @@ if {$hs_seq > 0} {
   foreach n $hs_dt_nets { $n setDoNotTouch 1 }
 }
 set fh [open $::env(RESULTS_DIR)/ot_hold_stage_firm.txt w]; puts $fh [join $hs_firm "\n"]; close $fh
-puts "HOLDSTAGE: inputs $hs_ni (HB4+BUF), outputs $hs_no (2xHB4+BUF), r2r D pins $hs_nr (HB4), [llength $hs_firm] FIRM"
+puts "HOLDSTAGE: inputs $hs_ni (HB4+BUF), outputs $hs_no (BUF+HB4+BUF+HB4+BUF), r2r D pins $hs_nr (BUF+HB4+BUF), [llength $hs_firm] FIRM; dont_touch [llength [get_cells ot_hs*]] hold cells / [llength $hs_dt_nets] nets"
