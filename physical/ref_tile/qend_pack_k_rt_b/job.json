@@ -3,7 +3,7 @@
  "block": "hfd_qsel_pack_k",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-idx",
- "purpose": "el1011-hbm-idx idle1012/qend: textbook rebuild of hfd_idx_sel_native_qend (260k flops one root -> quarter clusters of hard tiles); leaf tile topk slice packer W16 PW37 (8 per element), unchanged RTL leaf, variant b 216.0x69.12 PD 0.45",
+ "purpose": "el1011-hbm-idx idle1012/qend: textbook rebuild of hfd_idx_sel_native_qend (260k flops one root -> quarter clusters of hard tiles); leaf tile topk slice packer W16 PW37 (8 per element), unchanged RTL leaf, variant b 129.6x51.84 PD 0.66 (std area 3165 um2 from the remote gate)",
  "hosts": [
   "ot-epyc1tb",
   "ot-epyc2",

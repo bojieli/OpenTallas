@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "hbm_r25gq",
- "version": 7,
+ "version": 8,
  "owner": "hbmdie-1011",
- "updated": "2026-10-12T01:20-07:00",
+ "updated": "2026-10-12T03:45-07:00",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -94,6 +94,22 @@
   {
    "version": 7,
    "change": "D19 SM.MATVEC x load (step 3b) = client of the E lane group lgE (hgi_vm E face, 32 lanes, KE = 4), slot 0 \"cp\", which has no wide client today (views 10-11 21:22: lgEcp OPEN). ot_hgi_sm_xload (in hfd_cmdproc) binds the EXISTING cmdproc N-face ports: f_lgEcp_rdn 8,257 b (wrr 32 x 257 + wrq_cr 32 + 1) and t_lgEcp_rup 513 b (wrq 32 x 16 + rg_req); f_lgEcp_wdn / t_lgEcp_wup stay with CP (x load is read-only). No new die pins. Seam: hgi_vm E face -> hb_stn_lgE_hce (hc_eng N) -> hb_stn_lgE_cp (abuts cmdproc N face), every hop a registered station <= 504 um (r25gqn_pr check: data segments > 504 um = 0); x load registers its tap at the cmdproc N-face pins (pin flops in/out). Why E: physically nearest the SM adapter (cmdproc abuts hgi_vm) and slot 0 is idle; the other E clients (ATT, quant, HC_ENG) do not run during SM.MATVEC; lgW serves SU/SFU/HC on the far W quarter [v7]"
+  },
+  {
+   "version": 8,
+   "change": "D20 hfd_hc: the 19 ports the closed tiled quarter (r25gqw io_place / route LEF) carries are taken exactly by the die master (generator variant r25gqn_pr8 anchor_ports): f_sfu / t_sfu 4-track at y 404.4 / 601.2, rst 801.0, ck<c>e M4 except ck2e/ck3e M6, ck<c>w M4; 2,063 / 2,065 pins rect-exact, 2 M6 ck pins centre-exact (width 0.024 vs 0.032). Die-only HC ports (t/f_hgi_vmap, f_hgi_vmr, t_hgi_vmq, f/t_hgi_cmdproc on E; lgW chain on N) pack around them (vmap/cmdproc step to M6 over the M4 ck pins). check PASS (PYTHONHASHSEED=0) [v8]"
+  },
+  {
+   "version": 8,
+   "change": "D21 die GRT capacity model: blocks keep M2-M5 adjustment 1.0 over their outlines; channels keep 0.5 of M4/M5 (PDN stripes + relay pin access) instead of the die-wide 1.0 (variant grt_m45=0.5). Windowed hub GRT (11-19 x 9-17 mm, k=16, 5 iters): 2,118,679 -> 1,335,381 window overflow (-37 %; M5 769k->460k, M6 586k->448k, M7 298k->140k). Lane-group restructures (lgE split E+E2; W+E restations) +29 % and reach FAIL: rejected [v8]"
+  },
+  {
+   "version": 8,
+   "change": "D22 hfd_hc interface gap: the closed quarter has only 19 ports; the die model also routes t/f_hgi_vmap (2,240 b), f_hgi_vmr 274, t_hgi_vmq 338, f/t_hgi_cmdproc 942 and the lgW chain (f_lgW_rdn 8,257 / f_lgW_wdn 65 / t_lgW_rup 513 / t_lgW_wup 8,961) to hb_hc_*: owner cons B must place these on head-tile glue at the v8 offsets, or the die drops them [open]"
+  },
+  {
+   "version": 8,
+   "change": "D22 DECIDED (hbm-die-iter 10-12): the 10 die-only hfd_hc ports belong to the HGI HC unit (ot_hgi_hc_unit), not the closed 88-tile quarter (whose HGI-view t_sfu is tied 0; it keeps exactly its 19 ports). The unit gets its own die slot hb_hgi_hc (hfd_hgi_hc = unit shell + hbm-hcvm hard ot_hgi_hc_tile cluster 656.64 x 725.76): record f/t_hgi_cmdproc 939/3, VM packet t_hgi_vmq 338 / f_hgi_vmr 274, aperture f/t_hgi_vmap 2,224/16, wide VM client tap (lgW rdn 8,257 / wdn 65 / rup 513 / wup 8,961). Pre-B2 evidence variant r25gqn_pr9 (tools/hbm_accel_die_fp.py hgi_hc_slot): 2,016 x 820.8 N of hb_sfu_SW, lgW station on its S face; check PASS (0 overlaps, 0 reach, 0 far-side, 0 k16 clashes, 32,956 inst); the column under hb_hc_SW failed reach (lgW hop 4.8 mm down the 345-um HC|SU channel). UNDER B2 (owner 10-12): the slot stays beside its cluster's HC quarter and its wide tap binds to the cluster's LOCAL VM slice port (no lgW); no port is dropped [decided]"
   }
  ],
  "slots": [
@@ -2759,62 +2775,62 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 6,
+   "version": 8,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees)",
    "pins": [
     {
      "name": "f_sfu[1023:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 85.692
+     "offset": 502.62
     },
     {
      "name": "t_sfu[1023:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 219.996
+     "offset": 699.42
     },
     {
      "name": "t_hgi_vmap[15:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 305.868
+     "offset": 1223.052
     },
     {
      "name": "f_hgi_vmap[2223:0]",
      "face": "E",
-     "layer": "M4",
-     "offset": 449.388
+     "layer": "M6",
+     "offset": 1106.896
     },
     {
      "name": "f_hgi_vmr[273:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 605.244
+     "offset": 1191.372
     },
     {
      "name": "t_hgi_vmq[337:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 670.62
+     "offset": 1437.948
     },
     {
      "name": "rst",
      "face": "E",
      "layer": "M4",
-     "offset": 722.844
+     "offset": 800.988
     },
     {
      "name": "f_hgi_cmdproc[938:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 1381.116
+     "offset": 1314.924
     },
     {
      "name": "t_hgi_cmdproc[2:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 1462.284
+     "offset": 1498.092
     },
     {
      "name": "f_lgW_rdn[8256:0]",
@@ -2843,8 +2859,8 @@
     {
      "name": "ck0e",
      "face": "E",
-     "layer": "M6",
-     "offset": 93.712
+     "layer": "M4",
+     "offset": 93.708
     },
     {
      "name": "ck0w",
@@ -2855,8 +2871,8 @@
     {
      "name": "ck1e",
      "face": "E",
-     "layer": "M6",
-     "offset": 281.104
+     "layer": "M4",
+     "offset": 281.1
     },
     {
      "name": "ck1w",
@@ -2891,8 +2907,8 @@
     {
      "name": "ck4e",
      "face": "E",
-     "layer": "M6",
-     "offset": 843.152
+     "layer": "M4",
+     "offset": 843.18
     },
     {
      "name": "ck4w",
@@ -2903,8 +2919,8 @@
     {
      "name": "ck5e",
      "face": "E",
-     "layer": "M6",
-     "offset": 1030.544
+     "layer": "M4",
+     "offset": 1030.572
     },
     {
      "name": "ck5w",
@@ -2915,8 +2931,8 @@
     {
      "name": "ck6e",
      "face": "E",
-     "layer": "M6",
-     "offset": 1217.936
+     "layer": "M4",
+     "offset": 1217.964
     },
     {
      "name": "ck6w",
@@ -2927,8 +2943,8 @@
     {
      "name": "ck7e",
      "face": "E",
-     "layer": "M6",
-     "offset": 1405.328
+     "layer": "M4",
+     "offset": 1405.356
     },
     {
      "name": "ck7w",
@@ -5694,7 +5710,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 6,
+   "version": 8,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {
@@ -8453,7 +8469,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 6,
+   "version": 8,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {
@@ -11212,7 +11228,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 6,
+   "version": 8,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {
