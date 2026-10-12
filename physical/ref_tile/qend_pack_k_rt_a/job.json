@@ -1,9 +1,9 @@
 {
- "name": "qend_pack_k_rt_a-q1012-COMMIT",
+ "name": "qend_pack_k_rt_a-q1012-f07a5f552",
  "block": "hfd_qsel_pack_k",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-idx",
- "purpose": "el1011-hbm-idx idle1012/qend: textbook rebuild of hfd_idx_sel_native_qend (260k flops one root -> quarter clusters of hard tiles); leaf tile topk slice packer W16 PW37 (8 per element), unchanged RTL leaf, variant a 172.8x86.4 PD 0.5",
+ "purpose": "el1011-hbm-idx idle1012/qend: textbook rebuild of hfd_idx_sel_native_qend (260k flops one root -> quarter clusters of hard tiles); leaf tile topk slice packer W16 PW37 (8 per element), unchanged RTL leaf, variant a 108.0x56.16 PD 0.6 (std area 3165 um2 from the remote gate)",
  "hosts": [
   "ot-epyc1tb",
   "ot-epyc2",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/el1011-hbm-idx",
-  "commit": "COMMIT",
+  "commit": "f07a5f552",
   "extra_paths": [
    "tools/hbm_selector_capture_gate.py",
    "rtl/hdc",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qend_pack_k_rt_a/qend_pack_k_rt_a-q1012-COMMIT"
+   "to": "results/rtl/ref_tile/qend_pack_k_rt_a/qend_pack_k_rt_a-q1012-f07a5f552"
   }
  ],
  "cycles_added": 0,

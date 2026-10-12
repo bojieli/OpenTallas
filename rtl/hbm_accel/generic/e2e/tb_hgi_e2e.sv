@@ -35,6 +35,8 @@ module tb_hgi_e2e;
     parameter integer DMA_VR2 = 0;     // hbmdie-1011/kvw: the mover's VM-source reads on the VM DMA wide READ group (die t_dma_vr2q /
                                        // f_dma_vr2r, the loader die view runs VR2 1): modelled by hgi_e2e_vmlanes on the DMA unit's VM
     parameter integer DMA_KVW = 0;
+    parameter integer DMA_BACK = 0;    // [tputx-mtp] 10-12: ot_hgi_dma_back (VM -> HBM store stream, 4 stacks x 8 lanes) + the svc WRITE model
+    parameter integer DMA_BMUT = 0;    // bench: the back engine's MUT
     parameter integer VM_TUNIT = 0;    // hbmdie-1011/vmt: VM = ot_hgi_vm_tunit (el1011-hbm-hcvm ee633319d): the VM models take its
                                        // measured latency deltas, responses +7 and wide-write done +4 edges (die: ot_hgi_vm_die TUNIT 1)
     // VM_TUNIT latency contract (el1011-hbm-hcvm 20730548c, NC 9 / RP 96 / W2 96 / AP 1 die config): packet request ->
@@ -55,9 +57,15 @@ module tb_hgi_e2e;
     // MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job / provider / emit queue / transaction join) and ot_hgi_cp_die MTP=1
     // (the backend translator: one KERNEL doorbell per launch, G23 entries / G26 per-layer bodies).  The host starts a
     // job (forced drafter) instead of a doorbell; vectors: tools/hgi_sim/ds_mtp_kernels.py sim --export.  host.mem words
-    // 64.. : plen, gamma, ngen, rank, ncol, maxpos, n emitted, final commit n; 72.. prompt; 80.. forced drafts (f_addr);
+    // 64.. : plen, gamma, ngen, rank, force (0 = real DSpark drafter), maxpos, n emitted, final commit n; 72.. prompt; 80.. forced drafts (f_addr);
     // 88.. the golden emitted tokens.  MUT_HT (bench mutant): the head table entry of position 3 = the draft there.
+    parameter integer HT_VM = 261760;   // VM word of the head stub table HT[0] = ds_mtp_kernels.bind_vm_tail() HT (ds_native map end 261,696)
     parameter integer MTP = 0, MUT = 0, MUT_HT = 0;   // MTP 1: collar in the bench (x_* ports); 2: collar inside the CP die
+    // B2 (2026-10-12, tools/hgi_e2e/b2.py): 4 clusters x local VM slices + ring. B2 1 = OLD-VM mode on the central VM model
+    // (records placed per b2.txt, VM traffic classed local / remote per slice, B2_RING 1: stub hold += ring cycles);
+    // B2 2 = native cluster RTL (reserved until the B2 units land)
+    parameter integer B2 = 0, B2_RING = 0, B2_NCLUST = 4, B2_SLICE_W = 65536;
+    import "DPI-C" function int e2e_b2_init(input int mode, input int ring, input int ncl, input int slw);
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_posted(input int on);
     initial e2e_posted((REAL_DMA != 0 && DMA_POSTED != 0) ? 1 : 0);
@@ -85,9 +93,9 @@ module tb_hgi_e2e;
     reg s_awvalid = 0, s_wvalid = 0, s_bready = 1, s_arvalid = 0, s_rready = 1; reg [11:0] s_awaddr = 0, s_araddr = 0;
     reg [31:0] s_wdata = 0; wire s_awready, s_wready, s_bvalid, s_arready, s_rvalid; wire [31:0] s_rdata;
     wire c_awvalid, c_wvalid, c_arvalid, c_bready, c_rready; wire [11:0] c_awaddr, c_araddr; wire [31:0] c_wdata; wire [3:0] c_wstrb;
-    wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; wire [3:0] m_req_len; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data = 0;
+    wire [418 + (MTP == 2 ? 41 : 0):0] lcp; wire [221 + (MTP == 2 ? 8 : 0):0] cplk; wire m_req_v; wire [36:0] m_req_addr; wire [3:0] m_req_len; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data = 0;
     wire lfault;
-    ot_hgi_loader_cp #(.BURST(1)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
+    ot_hgi_loader_cp #(.BURST(1), .MTPH(MTP == 2 ? 1 : 0)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hf), .s_bvalid(s_bvalid), .s_bready(s_bready),
         .s_arvalid(s_arvalid), .s_arready(s_arready), .s_araddr(s_araddr), .s_rvalid(s_rvalid), .s_rready(s_rready),
         .s_rdata(s_rdata), .c_awvalid(c_awvalid), .c_awready(1'b0), .c_awaddr(c_awaddr), .c_wvalid(c_wvalid), .c_wready(1'b0),
@@ -108,8 +116,7 @@ module tb_hgi_e2e;
     wire [16:0] p_tok = host[72 + t_prov[2:0]][16:0], f_tok = host[80 + t_prov[22:20]][16:0];
     assign prov = {39'd0, 1'b1, 55'd0, 2'd0, f_tok, p_tok, 48'd0};
     assign f_be = {1'b0, xdr, xcplf, xs, xg, xj, xcplv, xcr};
-    wire [196:0] c_t_mtp; wire [4:0] c_t_host; wire [42:0] c_t_prov; wire [37:0] c_t_emit; wire [99:0] c_t_eh;
-    wire c_t_abort, c_t_drained;
+    wire [196:0] c_t_mtp;
     generate if (MTP) begin : g_mtp
         hgi_mtp_native native (.clk(clk), .rst_n(rst_n), .f_cmdproc(n_f), .t_cmdproc(n_t));
         if (MTP == 1) begin : g_ext_collar           // the collar outside the CP die (x_* ports)
@@ -117,9 +124,9 @@ module tb_hgi_e2e;
                 .t_mtp(n_f), .f_host(f_host), .t_host(t_host), .f_provider(prov), .t_emit(t_emit), .t_provider(t_prov),
                 .f_emit_host(f_eh), .t_emit_host(t_eh), .t_abort(t_abort), .t_drained(t_drained), .f_am({xam, xamv}),
                 .f_backend(f_be), .t_backend(t_be));
-        end else begin : g_int_collar               // MTP=2: the collar inside ot_hgi_cp_die (f_mtp / t_mtp, mh_*)
-            assign n_f = c_t_mtp; assign t_host = c_t_host; assign t_prov = c_t_prov; assign t_emit = c_t_emit;
-            assign t_eh = c_t_eh; assign t_abort = c_t_abort; assign t_drained = c_t_drained; assign t_be = '0;
+        end else begin : g_int_collar               // MTP=2: the collar inside ot_hgi_cp_die, host side on the loader link
+            assign n_f = c_t_mtp; assign t_host = 5'd0; assign t_prov = 43'd0; assign t_emit = 38'd0;
+            assign t_eh = 100'd0; assign t_abort = 1'b0; assign t_drained = 1'b0; assign t_be = '0;
         end
     end else begin : g_nomtp
         assign n_t = '0; assign n_f = '0; assign t_host = '0; assign t_prov = '0; assign t_emit = '0; assign t_eh = '0;
@@ -136,8 +143,7 @@ module tb_hgi_e2e;
         .x_cmd_v(t_be[0]), .x_cmd_ready(xcr), .x_cmd(t_be[1 +: 201]), .x_cmd_job(t_be[202 +: 32]), .x_cmd_gen(t_be[234 +: 4]),
         .x_cmd_seq(t_be[238 +: 32]), .x_cpl_v(xcplv), .x_cpl_ready(t_be[270]), .x_cpl_job(xj), .x_cpl_gen(xg), .x_cpl_seq(xs),
         .x_cpl_fault(xcplf), .x_am_v(xamv), .x_am_idx(xam), .x_drained_ready(xdr), .x_ext_fault(t_abort), .x_noise(17'd128799),
-        .f_mtp(n_t), .t_mtp(c_t_mtp), .mh_f_host(f_host), .mh_t_host(c_t_host), .mh_f_provider(prov), .mh_t_provider(c_t_prov),
-        .mh_t_emit(c_t_emit), .mh_f_emit_host(f_eh), .mh_t_emit_host(c_t_eh), .mh_t_abort(c_t_abort), .mh_t_drained(c_t_drained));
+        .f_mtp(n_t), .t_mtp(c_t_mtp));
     // hgi-takeover (DIE GAP closed): units 1-10 have die record buses; real slots take the payload from the bus (no
     // internal tap); the handshake fields {fault, done, ready} are the harness's per-unit ux_* values
     wire [15:0] ux_v = ux_v_raw | {5'd0, hc_rec[0], 1'b0, dma_rec[0], am_rec[0], 1'b0, att_rec[0], 1'b0, sfu_rec[0], su_rec[0], sm_rec[0], 1'b0};
@@ -309,20 +315,23 @@ module tb_hgi_e2e;
     hgi_e2e_rlanes #(.LAT(KLAT)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
         .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
         .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data));
-        ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .VR2(DMA_VR2), .KVW(DMA_KVW), .MUT_MV(DMA_MUT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
+        wire [32*289-1:0] bwd; wire [31:0] bwd_cr; wire [15:0] bwa;
+        ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .VR2(DMA_VR2), .KVW(DMA_KVW), .BACK(DMA_BACK), .MUT_MV(DMA_MUT), .MUT_BK(DMA_BMUT)) u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
             .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_pdone), .mv_fdone(mv_fdone),
             .is_v(is_v), .is_rdy(is_rdy), .is_cmd(is_cmd), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
             .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
             .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
             .k_rsp_data(k_rd), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
         .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(vr2q), .vr2r(vr2r),
-        .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
+        .vmq(vq), .vmr(vr), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done),
+            .wd(bwd), .wd_cr(bwd_cr), .wa(bwa));
+        hgi_e2e_svcw #(.LAT(KLAT)) u_svcw (.clk(clk), .rst_n(rst_n), .wd(bwd), .wd_cr(bwd_cr), .wa(bwa));
         // VR2: the VM's DMA wide read group (ot_hgi_vm_die dma_r_up / dma_r_dn, one lanehead client): up {c_req, 32 x {v,
         // sector 15}}, down {c_gnt (c_req one edge later), credits 32 (the lane's bank pop), 32 x {v, data 256}}
         wire [512:0] vr2q; wire [8256:0] vr2r; reg vr2_gnt = 1'b0; wire [31:0] vr2_cr, vr2_wcr, vr2_wd; wire [32*257-1:0] vr2_rr;
         always @(posedge clk) vr2_gnt <= rst_n && vr2q[512];
-        assign vr2r = (DMA_VR2 != 0) ? {vr2_gnt, vr2_cr, vr2_rr} : 8257'd0;
-        hgi_e2e_vmlanes #(.UNIT(8), .LAT(VLAT + (VM_TUNIT != 0 ? 8 : 0)), .CRX(VCX), .WCX(VWCX), .WDX(VDX)) u_vr2 (.clk(clk), .rst_n(rst_n), .rq((DMA_VR2 != 0) ? vr2q[511:0] : 512'd0),
+        assign vr2r = (DMA_VR2 != 0 || DMA_BACK != 0) ? {vr2_gnt, vr2_cr, vr2_rr} : 8257'd0;
+        hgi_e2e_vmlanes #(.UNIT(8), .LAT(VLAT + (VM_TUNIT != 0 ? 8 : 0)), .CRX(VCX), .WCX(VWCX), .WDX(VDX)) u_vr2 (.clk(clk), .rst_n(rst_n), .rq((DMA_VR2 != 0 || DMA_BACK != 0) ? vr2q[511:0] : 512'd0),
             .rq_cr(vr2_cr), .rr(vr2_rr), .wq('0), .wq_cr(vr2_wcr), .wq_done(vr2_wd));
         hgi_e2e_vmw #(.UNIT(8), .NW(32), .DX(VDX)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
         hgi_e2e_svc #(.LAT(KLAT)) u_svc (.clk(clk), .rst_n(rst_n), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr));
@@ -517,6 +526,10 @@ module tb_hgi_e2e;
             @(negedge clk); s_arvalid = 0; while (!s_rvalid) @(negedge clk); rd = s_rdata; end
     endtask
     longint t_db, t_cpl, t_drain;
+    integer nk2 = 0;
+    always @(posedge clk) if (MTP == 2 && rst_n && cpd.cpl_v && cpd.x_run) begin     // the translator's launches
+        $display("E2E KCPL %0d cyc %0d token %0d status %0d", nk2, cyc - t_db, cpd.cpl_token, cpd.cpl_status); nk2 = nk2 + 1;
+    end
     integer n_tokx; reg [17:0] tokx_got [0:15];
     always @(posedge clk) if (rst_n && cpd.u_cp.cpl_v && t_cpl == 0) t_cpl = cyc;
     integer w, n_rec, c_tok, c_st, c_cyc, fin, cfgfix;
@@ -526,6 +539,8 @@ module tb_hgi_e2e;
         $readmemh({dir, "/host.mem"}, host);
         n_rec = e2e_init(dir, outp);
         if (n_rec <= 0) $fatal(1, "E2E init failed");
+        if (B2 == 2) $fatal(1, "E2E B2 2 (native cluster RTL) is not built yet: run B2 1 (old-VM mode)");
+        if (B2 != 0 && e2e_b2_init(B2, B2_RING, B2_NCLUST, B2_SLICE_W) < 0) $fatal(1, "E2E B2 init failed");
         fscr = (!MTP && host[69] != 0) ? host[69][17:0] : 18'(FUSED_SCRATCH);   // (MTP: host[69] is maxpos)
         if (REAL_FUSED) e2e_ignore(int'(fscr), int'(fscr) + 16384);
         if ($value$plusargs("WATCH=%d", w)) e2e_watch(w);
@@ -542,11 +557,46 @@ module tb_hgi_e2e;
         axr(12'hC24);
         $display("E2E CFG status err %0d loaded %0d", rd[3:1], rd[0]);
         if (rd[3:1] != 0 || !rd[0]) begin errs = errs + 1; end
-        if (MTP) begin : mtpjob
+        if (MTP == 2) begin : mtpjob2          // the host through the loader's MTP window (0xE00) + completion FIFO
+            integer ne, nk, done; reg [16:0] em [0:15]; reg [191:0] jc; integer stat;
+            if (MUT_HT) e2e_vm_wr(0, HT_VM + 3, int'(host[80 + 2]));
+            jc = 0; jc[1 +: 4] = host[65][3:0]; jc[5] = (host[68] != 0); jc[6 +: 21] = host[66][20:0];
+            jc[27 +: 21] = host[64][20:0]; jc[158 +: 21] = host[69][20:0];
+            for (w = 0; w < 6; w = w + 1) axw(12'hE00 + 4 * w, jc[32 * w +: 32]);
+            axw(12'hE18, 32'h12345678); axw(12'hE1C, 32'hb);
+            for (w = 0; w < 8; w = w + 1) begin
+                axw(12'hE24, {2'd0, 6'(w), 7'd0, host[72 + w][16:0]});          // prompt table
+                axw(12'hE28, {2'd0, 6'(w), 7'd0, host[80 + w][16:0]});          // forced-token table
+            end
+            t_db = cyc;
+            axw(12'hE20, 1);                                                      // START
+            ne = 0; nk = 0; done = 0; w = 0; stat = 0;
+            while (!done && w < 40000000) begin
+                axr(12'hC20); w = w + 1;
+                if (rd[10:8] != 0) begin
+                    axr(12'hC40); c_tok = rd[17:0]; axr(12'hC44); c_cyc = rd; axr(12'hC4C); c_st = rd[7:4];
+                    if (rd[8]) begin
+                        if (ne < 16) em[ne] = c_tok[16:0];
+                        $display("E2E MTP emit %0d token %0d idx %0d cyc %0d", ne, c_tok, c_cyc, cyc - t_db); ne = ne + 1;
+                        axr(12'hC50);
+                    end else begin
+                        axr(12'hC50); stat = rd; done = 1;
+                        $display("E2E MTP done: accepted_count %0d stop status %0d", c_tok, stat);
+                    end
+                end
+                axr(12'hE40); if (rd[6]) begin $display("E2E MTP FAIL: abort (status %h)", rd); errs = errs + 1; done = 1; end
+            end
+            t_cpl = cyc; c_st = stat; c_tok = ne; c_cyc = int'(cyc - t_db);
+            $display("E2E MTP host done: %0d emitted (golden %0d) status %0d commit n %0d (golden %0d) job %0d cycles",
+                     ne, host[70], stat, n_t[357 +: 32], host[71], cyc - t_db);
+            if (!done || ne != host[70] || n_t[357 +: 32] != host[71]) errs = errs + 1;
+            for (integer i = 0; i < ne && i < 16; i = i + 1)
+                if (em[i] != host[88 + i][16:0]) begin $display("E2E MTP FAIL: emitted %0d = %0d golden %0d", i, em[i], host[88 + i]); errs = errs + 1; end
+        end else         if (MTP) begin : mtpjob
             integer ne, nk; reg [16:0] em [0:15];
-            if (MUT_HT) e2e_vm_wr(0, 261184 + 3, int'(host[80 + 2]));         // head table HT[3] := the draft there
+            if (MUT_HT) e2e_vm_wr(0, HT_VM + 3, int'(host[80 + 2]));         // head table HT[3] := the draft there
             // job config (179 b): gamma [1+:4], force [5], ngen [6+:21], plen [27+:21], eos off, maxpos [158+:21]
-            f_host = 0; f_host[37 + 1 +: 4] = host[65][3:0]; f_host[37 + 5] = 1'b1; f_host[37 + 6 +: 21] = host[66][20:0];
+            f_host = 0; f_host[37 + 1 +: 4] = host[65][3:0]; f_host[37 + 5] = (host[68] != 0); f_host[37 + 6 +: 21] = host[66][20:0];   // host[68]: 0 = real DSpark drafter
             f_host[37 + 27 +: 21] = host[64][20:0]; f_host[37 + 158 +: 21] = host[69][20:0];
             f_host[1 +: 32] = 32'h12345678; f_host[33 +: 4] = 4'hb;
             t_db = cyc;
@@ -769,6 +819,42 @@ module hgi_e2e_svc #(parameter integer LAT = 40, parameter integer RATE = 8) (
                     dd[i*270 +: 270] <= lb[i][lh[i] % 1024]; lh[i] = lh[i] + 1; cr[i] = cr[i] - 1;
                 end
             end
+        end
+    end
+endmodule
+
+// svc WRITE stream model ([tputx-mtp] 2026-10-12; the interface ot_hgi_dma_back drives, record mtp_verify interface_change):
+// per stack x lane a beat {v, sector address 32, data 256} after HOPS wire stages; the sector is written to the HBM model
+// on arrival (the beat's lane must belong to the address's stack), the lane credit returns HOPS edges later, and the
+// stack's written count (wa, 0..8 a cycle) LAT edges after arrival (the posted write acknowledgement)
+module hgi_e2e_svcw #(parameter integer LAT = 40, parameter integer HOPS = 3, parameter integer SBIT = 35) (
+    input wire clk, input wire rst_n, input wire [32*289-1:0] wd, output wire [31:0] wd_cr, output reg [15:0] wa);
+    import "DPI-C" function void e2e_hbm_sector(input longint addr, input bit we, input bit [255:0] wd,
+                                                input bit [31:0] strb, output bit [255:0] rd);
+    reg [32*289-1:0] h [1:HOPS]; reg [31:0] ch [0:HOPS]; reg [31:0] c0;
+    integer aq [0:3][0:1023]; longint at [0:3][0:1023]; integer ah [0:3], atl [0:3]; longint tn = 0;
+    initial begin c0 = 0; wa = 0; for (integer s = 0; s < 4; s++) begin ah[s] = 0; atl[s] = 0; end
+        for (integer k = 1; k <= HOPS; k++) begin h[k] = '0; ch[k] = 0; end end
+    always @* ch[0] = c0;
+    assign wd_cr = ch[HOPS];
+    always @(posedge clk) begin
+        tn <= tn + 1; h[1] <= wd; for (integer k = 2; k <= HOPS; k++) h[k] <= h[k-1];
+        for (integer k = 1; k <= HOPS; k++) ch[k] <= ch[k-1];
+        c0 <= '0; wa <= '0;
+        if (rst_n) for (integer s = 0; s < 4; s++) begin : st
+            integer c; c = 0;
+            for (integer l = 0; l < 8; l++) begin : ln
+                reg [288:0] b; longint a; bit [255:0] rd;
+                b = h[HOPS][(s*8 + l)*289 +: 289];
+                if (b[288]) begin
+                    a = longint'(b[287:256]) * 32;
+                    if (((a >> SBIT) & 3) != s) $fatal(1, "E2E FAIL: svc write stack %0d lane %0d got address %h", s, l, a);
+                    e2e_hbm_sector(a, 1'b1, b[255:0], 32'hFFFFFFFF, rd);
+                    c0[s*8 + l] <= 1'b1; c = c + 1;
+                end
+            end
+            if (c > 0) begin aq[s][atl[s] % 1024] = c; at[s][atl[s] % 1024] = tn + LAT; atl[s] = atl[s] + 1; end
+            if (ah[s] < atl[s] && at[s][ah[s] % 1024] <= tn) begin wa[s*4 +: 4] <= 4'(aq[s][ah[s] % 1024]); ah[s] = ah[s] + 1; end
         end
     end
 endmodule
