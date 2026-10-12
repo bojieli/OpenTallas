@@ -1,5 +1,5 @@
 {
- "name": "dscoll_cesn_rt-rtb-47200f646",
+ "name": "dscoll_cesn_rt-rtc-47200f646",
  "block": "dsfd_coll_cesn",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-coll",
@@ -7,7 +7,7 @@
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
-  "branch": "claude/el1011-ds-coll",
+  "branch": "main",
   "commit": "47200f646"
  },
  "stages": {
