@@ -165,7 +165,7 @@ module ot_rom_oneshot_die_m #(
     end else begin : g_ibc
         assign ib_head = ib[ir[IA-1:0]];
     end endgenerate
-    reg          txv_q, icr_q;
+    wire         txv_q, icr_q;
     reg [PW-1:0] txrec_q;
     generate if (PR != 0) begin : g_txr
         always @(posedge clk) begin txrec_q <= ib_head; lpq <= ib_head; end   // tx_rec meaningful only with tx_valid
@@ -181,10 +181,14 @@ module ot_rom_oneshot_die_m #(
         assign tx_rec = txrec_q;
         always @(*) begin lpv = 1'b0; lpq = {PW{1'b0}}; end
     end endgenerate
+    // tx_valid (tx face) and in_cr (in face) are logically the same register (<= fire), but their pins sit on
+    // different faces ~870 um apart: a single merged flop cannot reach both within one 500-um stage.  Each is
+    // its own pin register in a keep_hierarchy leaf (synthesis cannot merge them), placed at its own pin.
+    (* keep_hierarchy *) ot_coll_pinreg_r u_txv (.clk(clk), .rst_n(rst_i), .d(fire), .q(txv_q));
+    (* keep_hierarchy *) ot_coll_pinreg_r u_icr (.clk(clk), .rst_n(rst_i), .d(fire), .q(icr_q));
     always @(posedge clk or negedge rst_i)
-        if (!rst_i) begin txv_q <= 1'b0; icr_q <= 1'b0; iw <= 0; ir <= 0; end
+        if (!rst_i) begin iw <= 0; ir <= 0; end
         else begin
-            txv_q <= fire; icr_q <= fire;
             if (iv_q && !ib_full) iw <= iw + 1'b1;
             if (fire) ir <= ir + 1'b1;
         end
@@ -610,4 +614,8 @@ endmodule
 // identical interior register and the pin-anchoring hook can place it at its port.
 module ot_coll_pinreg #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
     always @(posedge clk) q <= d;
+endmodule
+// single-bit control pin register with async reset (kept as its own leaf so it is never merged with a twin)
+module ot_coll_pinreg_r (input wire clk, input wire rst_n, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
 endmodule
