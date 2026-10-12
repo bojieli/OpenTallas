@@ -1,0 +1,177 @@
+{
+ "name": "s81su_kvt_ref",
+ "top": "dsfd_su_t_kvt",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 36.72,
+  "h": 453.6
+ },
+ "util": 0.52,
+ "pins": {
+  "W": [
+   "ck",
+   "rst",
+   "dn_st",
+   "dn_kind",
+   "dn_gsel",
+   "dn_jid",
+   "dn_v",
+   "i_f",
+   "dn_d",
+   "e_cs"
+  ],
+  "E": [
+   "e_d",
+   "e_v",
+   "e_gk",
+   "e_gr",
+   "e_gw",
+   "e_go",
+   "e_ob",
+   "e_eps",
+   "o_fu",
+   "o_fo",
+   "o_alive",
+   "o_den",
+   "o_rdy",
+   "o_rjid"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "aspect": 1.0,
+ "job": {
+  "owner": "Claude:el1011-s81su",
+  "branch": "claude/el1011-s81su-kv",
+  "tag": "v1",
+  "purpose": "el1011-s81su PHYSICAL SPEC KV v3: the KV tap, one data quarter (x4): pin flops, row numbering (5 param rows KV / 1 GK), kept per-position offsets, 5-level rotation into 32 positions x 129 b, cos/sin capture (replaces dsfd_su_t_kv0/kv1, 942k flops one root each); reference tile flow, M5 layer cap",
+  "no_bench_reason": "bit-exactness is gated on the slab dsfd_sp_su_h (tools/s81_suhc/su_gate.py --hier full m0 PASS + m1/m5 FAIL, reduced m0 PASS + mutants FAIL; el1011-s81-suhc-hier-1011.log [su-kv]); the sub-tile alone has no golden",
+  "views_to": "physical/ref_tile/s81su_kvt_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_kvt_ref"
+ },
+ "pin_ranges": {
+  "dn_d": [
+   4.0,
+   200.0
+  ],
+  "e_cs": [
+   204.0,
+   262.0
+  ],
+  "ck": [
+   264.0,
+   265.0
+  ],
+  "rst": [
+   265.5,
+   266.5
+  ],
+  "dn_st": [
+   267.0,
+   268.0
+  ],
+  "dn_kind": [
+   268.5,
+   269.5
+  ],
+  "dn_gsel": [
+   270.0,
+   271.0
+  ],
+  "dn_jid": [
+   271.5,
+   272.7
+  ],
+  "dn_v": [
+   273.2,
+   275.6
+  ],
+  "i_f": [
+   276.1,
+   286.1
+  ],
+  "e_d": [
+   4.0,
+   400.0
+  ],
+  "e_v": [
+   402.0,
+   406.0
+  ],
+  "e_gk": [
+   406.5,
+   407.5
+  ],
+  "e_gr": [
+   408.0,
+   409.0
+  ],
+  "e_gw": [
+   409.5,
+   410.5
+  ],
+  "e_go": [
+   411.0,
+   412.0
+  ],
+  "e_ob": [
+   412.5,
+   414.6
+  ],
+  "e_eps": [
+   415.1,
+   419.9
+  ],
+  "o_fu": [
+   420.4,
+   421.4
+  ],
+  "o_fo": [
+   421.9,
+   422.9
+  ],
+  "o_alive": [
+   423.4,
+   424.4
+  ],
+  "o_den": [
+   424.9,
+   425.9
+  ],
+  "o_rdy": [
+   426.4,
+   427.4
+  ],
+  "o_rjid": [
+   427.9,
+   429.1
+  ]
+ },
+ "orfs_vars": {
+  "SYNTH_KEEP_MODULES": "ot_s81_su_qn_keep_ff"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": []
+}

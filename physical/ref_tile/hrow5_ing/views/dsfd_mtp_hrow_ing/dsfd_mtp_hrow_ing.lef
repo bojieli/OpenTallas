@@ -9,14 +9,14 @@ MACRO dsfd_mtp_hrow_ing
   FOREIGN dsfd_mtp_hrow_ing 0 0 ;
   CLASS BLOCK ;
   SIZE 129.6 BY 129.6 ;
-  PIN ck[0]
+  PIN ck
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M5 ;
         RECT  83.28 0 83.304 0.084 ;
     END
-  END ck[0]
+  END ck
   PIN f_hp[0]
     DIRECTION INPUT ;
     USE SIGNAL ;
@@ -4153,14 +4153,14 @@ MACRO dsfd_mtp_hrow_ing
         RECT  83.472 0 83.496 0.084 ;
     END
   END f_pid[1]
-  PIN rst[0]
+  PIN rst
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M5 ;
         RECT  83.568 0 83.592 0.084 ;
     END
-  END rst[0]
+  END rst
   PIN t_ev[0]
     DIRECTION OUTPUT ;
     USE SIGNAL ;
@@ -4345,14 +4345,14 @@ MACRO dsfd_mtp_hrow_ing
         RECT  83.76 129.516 83.784 129.6 ;
     END
   END t_flt[1]
-  PIN t_hpg[0]
+  PIN t_hpg
     DIRECTION OUTPUT ;
     USE SIGNAL ;
     PORT
       LAYER M4 ;
         RECT  0 71.568 0.084 71.592 ;
     END
-  END t_hpg[0]
+  END t_hpg
   PIN t_wc[0]
     DIRECTION OUTPUT ;
     USE SIGNAL ;

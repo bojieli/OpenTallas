@@ -135,6 +135,12 @@ def used_cells() -> dict:
             c = cells.setdefault(cell, {"slots": [], "dies": set(), "rules": set(), "count": 0, "cluster": False})
             c["dies"].add("cfg:" + Path(f).stem)
             c["count"] += 1
+    # coordinator 2026-10-12 16:05: every cell of the el1012 ECO-config audit (M7-routed closed views, views failing
+    # child_lint (c)/(f)/(b)) is a used cell of this batch, prioritised by congestion (m5_reroute_priority tier) like the rest
+    for cell, e in ((jload(HC / "m5_reroute_audit_cells.json", {}) or {}).get("cells") or {}).items():
+        c = cells.setdefault(cell, {"slots": [], "dies": set(), "rules": set(), "count": 0, "cluster": False})
+        c["dies"].add("audit:el1012-eco-config")
+        c["audit"] = e.get("why") or ["audit"]
     return cells
 
 
@@ -252,7 +258,7 @@ def plan() -> dict:
                        owner=spec.get("owner"), ref_tile=bool(spec.get("ref_tile")))
         p = pri.get(cell)
         row["priority"] = 1 if p and p.get("tier") == 1 else 2 if c["count"] >= 4 else \
-            3 if rec and rec["job"] in lf else 4
+            3 if (rec and rec["job"] in lf) or c.get("audit") else 4
         if p:
             row["rank"] = p.get("rank")
         row["state"] = "skip" if reason else "eligible"
@@ -446,6 +452,15 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
         if any(x is None for x in inc):
             raise SpecSkip("include dirs outside the repo")
         orfs_vars["VERILOG_INCLUDE_DIRS"] = " ".join(inc)
+    # the closed die-view routes (route_view.sh) ran two things the ref_tile kit must carry: the POST_SYNTH inout retype
+    # by default (an unbuffered inout stops the post-GRT repair with RSZ-0074 and breaks CTS latency: hfd_svc_SE_s1/s4/s7,
+    # SW_s4 RSZ-0074 and SE_s3/SW_s3 "OT_LINK_BUDGET: no measured clock" at 4_1_cts, 2026-10-12), and the per-block
+    # forwarded-clock SDC (--sdc-append *_fwd.sdc: the FIFO write domains' own clocks)
+    top_txt = "\n".join((ROOT / s).read_text(errors="replace") for s in srcs[:1] if (ROOT / s).exists())
+    post_synth = ("physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl"
+                  if re.search(r"^\s*inout\b", top_txt, re.M) else None)
+    rcmd = json.dumps(rec["spec"])
+    sdc_x = sorted({x for x in re.findall(r"(?:rtl|physical)/[\w./-]+_fwd\.sdc", rcmd) if (ROOT / x).exists()})
     # benches of the closed record, same regexes; on drifted files they run on a snapshot overlay
     benches = [dict(b) for b in ((rec["spec"].get("stages") or {}).get("bench") or []) if isinstance(b, dict)]
     for b in benches:
@@ -465,6 +480,11 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
             b["cmd"] = ov + "{ " + b["cmd"] + "\n}"
             b["note"] = (b.get("note", "") + f" [m5rr: run on the {commit[:9]} snapshot overlay of {kd}/src]").strip()
     W, H = lef["W"], lef["H"]
+    # vertical-face pin capacity at the M5 cap: PPL keeps PIN_MIN_TRACKS=2 on the vertical pin layer (M5, 48 nm pitch),
+    # so a N/S face holds ~W/0.096 pins on M5 alone; a face fuller than 90% of that gets M3 too (M3 M5, both under the
+    # cap; ot_pqc_t_ix: 1,024 xw pins on a 97.2-um N face, PPL-0111 with M5 only, its closed view had M3 + M5)
+    ns = {fc: sum(faces[b].get(fc, 0) for b in faces) for fc in ("N", "S")}
+    route_x = {"pin_v": "M3 M5"} if max(ns.values()) > 0.9 * W / 0.096 else {}
     contract = None
     for f_, d in contracts():
         for sl in d["slots"]:
@@ -478,7 +498,8 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
         "name": name, "top": v["DESIGN_NAME"], "kind": "tile", "sources": srcs, "params": params,
         "clock_port": clk, "reset_ports": rst, **({"contract": contract} if contract else {"outline": {"w": W, "h": H}}), "macros": macros, "pins": pins,
         **({"defines": defines} if defines else {}), **({"orfs_vars": orfs_vars} if orfs_vars else {}),
-        "route": {"pd": float(v.get("PLACE_DENSITY", 0.55) or 0.55), "threads": 8,
+        **({"post_synth_tcl": post_synth} if post_synth else {}), **({"sdc_extra": sdc_x} if sdc_x else {}),
+        "route": {"pd": float(v.get("PLACE_DENSITY", 0.55) or 0.55), "threads": 8, **route_x,
                   "peak_ram_gb": int((rec["spec"].get("stages") or {}).get("route", {}).get("peak_ram_gb") or 32)},
         "job": {"owner": OWNER, "branch": BRANCH, "tag": "m5",
                 "purpose": (f"M5 re-route (reroute_batch.py) of closed {rec['job']} ({cell}, RTL {commit[:9]}"
@@ -634,6 +655,11 @@ def prepare(row, rec, st) -> dict | None:
         sp.write_text(json.dumps(spec, indent=1) + "\n")
         RT.gen(str(sp))
         check_rlayers(kd, spec)
+        if t.get("state_m5") == "failed":
+            # --retry of a submitted M5 route that ended NEEDS_HUMAN / FAILED: keep its history, re-kit, new job name
+            t.setdefault("history", []).append({k: t.get(k) for k in ("job", "commit", "compare")})
+            for k in ("compare", "state_m5", "grant_proposed"):
+                t.pop(k, None)
         t.update(state="kit", kit=kd, spec=str(sp.relative_to(ROOT)), closed_job=rec["job"], priority=row["priority"],
                  owner=rec["spec"].get("owner"), at=now())
         return {"cell": row["cell"], "kd": kd, "spec": sp, "mem": max(24, min(64, spec["route"]["peak_ram_gb"] // 2))}
@@ -647,7 +673,8 @@ def prepare(row, rec, st) -> dict | None:
 def run(a, rows, closed, st):
     sel = [r for r in rows if r["state"] == "eligible" and r["priority"] in a.priorities
            and (st["tiles"].get(r["cell"], {}).get("state") not in ("submitted", "skip", "gate_fail")
-                or (a.retry and st["tiles"].get(r["cell"], {}).get("state") in ("gate_fail", "error")))]
+                or (a.retry and st["tiles"].get(r["cell"], {}).get("state") in ("gate_fail", "error"))
+                or (a.retry and st["tiles"].get(r["cell"], {}).get("state_m5") == "failed"))]
     if a.only:
         sel = [r for r in sel if r["cell"] in a.only]
     sel = sel[: a.limit] if a.limit else sel
@@ -862,7 +889,8 @@ def main(argv=None) -> int:
     ap.add_argument("--gates", type=int, default=12, help="concurrent remote gates")
     ap.add_argument("--local-gate", action="store_true", help="local gate only (no remote synthesis smoke)")
     ap.add_argument("--no-submit", action="store_true")
-    ap.add_argument("--retry", action="store_true", help="also re-kit + re-gate gate_fail / error tiles")
+    ap.add_argument("--retry", action="store_true", help="also re-kit + re-gate gate_fail / error tiles and submitted "
+                    "tiles whose M5 route ended NEEDS_HUMAN / FAILED (state_m5 failed)")
     a = ap.parse_args(argv)
     st = load_state()
     if a.cmd == "submit":
@@ -879,7 +907,7 @@ def main(argv=None) -> int:
     rows = p["rows"]
     for r in rows:
         t = st["tiles"].get(r["cell"], {})
-        if t.get("state") == "submitted":
+        if t.get("state") == "submitted" and not (a.retry and t.get("state_m5") == "failed"):
             r["state"], r["reason"] = "skip", "submitted by this batch"
     from collections import Counter
     st["plan"] = {"at": now(), "eligible": sum(r["state"] == "eligible" for r in rows),

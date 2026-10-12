@@ -4,9 +4,13 @@
 // stops (one netlist, dir strap) + ring client + COLL star receiver.  This module is glue only (wires between hardened
 // tiles; the die places the tiles): no logic of its own.  Both ring directions are wide (2,224 b + a 2-b per-VC credit);
 // the COLL star edge is 2,130 b + a 1-b credit.  mirror_busy = {CCW stop, CW stop} (the consumer ORs them).
-// Lane index of a wide group = g*8 + b (lane b <-> bank b).  See ot_vms_bank / ot_vms_hub / ot_vms_rstop / ot_vms_rcl.
+// Lane index of a wide group = g*8 + b (lane b <-> bank b); lane credits 4 + 2 x relay stages (RRS / WRS).  See ot_vms_bank / ot_vms_hub / ot_vms_rstop / ot_vms_rcl.
 module ot_vms_slice #(
     parameter integer NC = 4, parameter integer RG = 2, parameter integer WG = 2,
+    // relay stages each way between each wide lane group's farthest client and the slice face (die contract relay count;
+    // SPEC v0.8 D-B2-12): every lane of group g gets 4 + 2 x RRS/WRS[g] credits (ot_vms_bank).  Default 3 = the local
+    // lane group's far station (slice -> SU -> SFU -> HC); the bank tile is hardened at its defaults, which must match.
+    parameter [RG*4-1:0] RRS = {RG{4'd3}}, parameter [WG*4-1:0] WRS = {WG{4'd3}},
     parameter integer BMUT = 0, parameter integer HMUT = 0, parameter integer CMUT = 0
 ) (
     input  wire                 clk,
@@ -61,7 +65,7 @@ module ot_vms_slice #(
             assign bwq[g*281 +: 281] = wq[(g*8 + b)*281 +: 281];
             assign wq_cr[g*8 + b] = bwq_cr[g]; assign wq_done[g*8 + b] = bwq_done[g];
         end
-        ot_vms_bank #(.RG(RG), .WG(WG), .EGC(EGC), .MUT(BMUT)) u_bank (.clk(clk), .rst_n(rst_n), .bid(3'(b)), .sid(sid),
+        ot_vms_bank #(.RG(RG), .WG(WG), .RRS(RRS), .WRS(WRS), .EGC(EGC), .MUT(BMUT)) u_bank (.clk(clk), .rst_n(rst_n), .bid(3'(b)), .sid(sid),
             .rq(brq), .rq_cr(brq_cr), .rr(brr), .wq(bwq), .wq_cr(bwq_cr), .wq_done(bwq_done),
             .dq(dq[b*281 +: 281]), .dq_done(dq_done[b]), .kq(kq[b*281 +: 281]), .kq_cr(kq_cr[b]), .kq_done(kq_done[b]),
             .xq(xq0[b*276 +: 276]), .xq_cr(xqc0[b]), .xq_done(xqd0[b]), .xq2(xq1[b*276 +: 276]), .xq2_cr(xqc1[b]), .xq2_done(xqd1[b]),

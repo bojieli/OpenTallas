@@ -1,7 +1,7 @@
 # S81 DeepSeek ROM layer die: die-level iteration
 
 Lead: s81-die-iter (log /home/ubuntu/claude-takeover-20261007/el1011-s81die.log, prefix [s81-die-iter]).
-Contract: results/arch/hier_contract_1011/s81.json, v7 (main a82dfd1c6). Generator: tools/dsrom_s81_fulldie.py (gen r8 / rev r9).
+Contract: results/arch/hier_contract_1011/s81.json, v13 (HC split around the corridor; v7 at a82dfd1c6). Generator: tools/dsrom_s81_fulldie.py (gen r8 / rev r9).
 Recipe: s81_layer1_v4.opts (= v3 + --relay-progress --sstn-ccpad --pin-need), plus --cfifo-colck added by the chain.
 Chain: tools/s81/die_iter_chain.sh: GEN -> clock plan (clock-only CTS, tools/budgets/clock_plan.py) -> balanced kit
 (tools/s81/die_sta.py) -> PLACE -> full-die GRT -> STA TT / FF / SS on the GRT parasitics + IR on the spine and field windows.
@@ -33,6 +33,8 @@ Floorplan: i3_plan/floorplan.{json,svg}.
 | ir_m948 | layer1 / layer1e IR (main 948f2da01, M8/M9 pitch on grid) | EPYC1 s81-die-iter/ir_m948_{layer1,layer1e} | PDN-0175 gone | - | - | - | - | spine 63.6 mV VDD / 73.4 mV VSS (FAIL > 35; worst node sp_vm clip, then the g_hb_hc_s_wq_d_vm stations); field PSM-0069: 42 unconnected 6.46 um qbanks (bn/bs) + 231 window-edge M7 stubs |
 | ir_pdn2 (v5) | layer1 IR, die PDN contract v2 (claude/el1012-s81pdn da4a35f97 on 412dc16fc, opts v4) | EPYC1 s81pdn/v5 | **PASS <= 35 mV**: PDN PASS, PSM connectivity PASS (0 unconnected) | - | - | - | - | inner window: spine **16.7 VDD / 28.0 VSS mV**, field **29.5 / 31.4 mV** (static, peak power; 2-pitch guard band excluded) |
 | c3 | layer1, contract v11 (HC HIER2 slab 1,816.56 x 12,630.216), v5 recipe, main f13695e45; c1/c2 (pre-IR-fix src) killed | EPYC1 s81-die-iter/c3 | plan check: 0 overlaps / 0 outside / 0 pin clashes (56,802 inst), reach 0, far-side 1; relay/station clock pins 34,317 / 0 missing (c2 odb) | running (GRT ~12 h) | TBD | TBD | TBD | IR PDN v2 + OT_IR_INNER; after STA: die_sens.sh = OCV bound (0.95/1.05) and cap x1.40 / x2.44 (region-DRT error bar) TT/FF; region DRT staged only at GRT overflow 0 |
+| v12 plan | layer1, contract v12 (HC split: sp_hc_s 1,816.56 x 12,053.44 + NEW sp_hc_t 1,816.56 x 5,186.16 below the corridor; cth 576.72 x 740.88; bgq28 501.12; svcj 64.8 x 43.2), v5 recipe | localhost check | 0 overlaps / 0 outside / 0 pin clashes (56,851 inst), reach 0, far-side 1 (same hc_s_7 22 um); hc_s<->hc_t 6 crossings x 1,512 um, 7 stations each | staged: tools/s81/die_chain_launch.sh <v12 sha> c4 (after c3 reports) | - | - | - | ctrl gate (warn=phys) 16 findings: +dsfd_sp_hc_c t_tf/f_tr placeholders, +dsfd_sp_hc_t no RTL (HC lead splits dsfd_sp_hc after ctile_14/36/56) |
+| v13 plan | layer1, contract v13 (SU SM stops: sp_su_s 1,890 x 10,022.4, hub stack + corridor +3,952.8 N; HC 10/12 rows; ces 302.4 x 341.28; crooty v3; cth sub_layout; P2 draft-A slots), v5 recipe | localhost check | 0 overlaps / 0 outside / 0 pin clashes (57,015 inst), reach 0, far-side 1 (hc_s_7 22 um); ctrl gate 16 findings (same as v12) | c5 staged/launched (see log) | - | - | - | ctrl gate (warn=phys) 16 findings |
 
 CTS plan: TBD from c1/clock/plan.json.gz (sinks, planned share, skew per tree).
 

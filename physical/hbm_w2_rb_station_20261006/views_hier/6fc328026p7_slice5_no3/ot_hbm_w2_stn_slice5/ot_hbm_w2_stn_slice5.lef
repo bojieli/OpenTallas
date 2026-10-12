@@ -9040,6 +9040,10 @@ MACRO ot_hbm_w2_stn_slice5
       LAYER M5 ;
         RECT  19.92 0 19.944 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.92 0.016 19.944 0.181 ;
+    END
   END grc_o[2]
   PIN grc_o[3]
     DIRECTION OUTPUT ;
@@ -15517,7 +15521,6 @@ MACRO ot_hbm_w2_stn_slice5
      RECT  69.168 0.053 69.192 0.179 ;
      RECT  70.848 0.117 70.872 0.179 ;
      RECT  87.12 0.016 89.16 0.179 ;
-     RECT  19.92 0.016 19.944 0.181 ;
      RECT  22.32 0.016 25.512 0.275 ;
      RECT  49.632 0.179 51.384 0.275 ;
      RECT  87.12 0.179 89.112 0.275 ;

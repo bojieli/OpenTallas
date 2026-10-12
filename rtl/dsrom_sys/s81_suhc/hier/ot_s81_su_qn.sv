@@ -58,23 +58,38 @@ module ot_s81_su_qnt #(
     always @(posedge clk) begin dq_kind <= dn_kind_i; dq_gsel <= dn_gsel_i; dq_jid <= dn_jid_i; dq_d <= dn_d_i; end
     always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; fq <= 0; end
                                            else begin dq_st <= dn_st_i; dq_v <= dn_v_i; fq <= i_f; end
-    // job context and row numbering (the first row of a QN / GQ job is its parameter row, the rest operand rows)
-    reg mine, gq; reg [1:0] gsel; reg [7:0] jid; reg [15:0] rcnt;
-    reg [16*L-1:0] rc_j;                                                   // rcnt copies, one a position (fanout)
-    reg [15:0] rc_n;
-    always @(*) begin : rn
+    // job context and row numbering (the first row of a QN / GQ job is its parameter row, the rest operand rows).
+    // rcnt (rows before this cycle's group) = st_r ? 0 : ra + pc_r, from REGISTERED terms only: pc_r = the previous
+    // group's slot count (popcount of the dq_v pin flops, its own stage), st_r its start, ra = the previous rcnt.
+    // Induction: rcnt(t+1) = st(t) ? 0 : rcnt(t) + pc(t), the former recurrence; reset 0 = the former reset.  So the
+    // popcount is never in series with the add (was dq_v -> rc_j 725 ps / 19 lv) and no input pin feeds logic.
+    localparam integer PCW = $clog2(S_RD + 1);
+    reg mine, gq; reg [1:0] gsel; reg [7:0] jid; reg [15:0] ra; reg [PCW-1:0] pc_r; reg st_r;
+    reg [PCW-1:0] pc;
+    always @(*) begin : pcnt
         integer i;
-        rc_n = rcnt;
-        if (dq_st) rc_n = 16'd0;
-        else for (i = 0; i < S_RD; i = i + 1) if (dq_v[i]) rc_n = rc_n + 16'd1;
+        pc = 0;
+        for (i = 0; i < S_RD; i = i + 1) pc = pc + dq_v[i];
     end
+    wire [15:0] rcnt = st_r ? 16'd0 : ra + pc_r;
+    // the rotation offset off = (rcnt - 1) mod L, REGISTERED, one copy a position (265-bit 2:1 mux a level each) in a
+    // kept module (SYNTH_KEEP_MODULES): synthesis cannot merge the copies into one 12k-load net (opt_merge folded the
+    // former plain rc_j copies).  Next off = (st ? 0 : rcnt + pc) - 1 on LL bits only (popcount mod L + a 4-bit add);
+    // the mux selects stay register outputs (an add in front of them cost the e_d outputs 340 ps after placement).
+    localparam integer KW = LL;
+    wire [LL-1:0] off_n = (dq_st ? {LL{1'b0}} : rcnt[LL-1:0] + pc[LL-1:0]) - 1'b1;
+    wire [KW*L-1:0] kq;
+    genvar gj;
+    generate for (gj = 0; gj < L; gj = gj + 1) begin : g_off
+        ot_s81_su_qn_keep_ff #(.W(KW)) u_k (.clk(clk), .rst_n(rst_n), .d(off_n),
+                                            .q(kq[KW * gj +: KW]));
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin mine <= 1'b0; gq <= 1'b0; gsel <= 2'd0; jid <= 8'd0; rcnt <= 16'd0; rc_j <= 0; end
+        if (!rst_n) begin mine <= 1'b0; gq <= 1'b0; gsel <= 2'd0; jid <= 8'd0; ra <= 16'd0; pc_r <= 0; st_r <= 1'b0; end
         else begin
             if (dq_st) begin mine <= (dq_kind == K_QN || dq_kind == K_GQ); gq <= (dq_kind == K_GQ); gsel <= dq_gsel;
                              jid <= dq_jid; end
-            rcnt <= rc_n;
-            rc_j <= {L{rc_n}};
+            ra <= rcnt; pc_r <= pc; st_r <= dq_st;
         end
     end
     wire prm = mine && dq_v[0] && rcnt == 16'd0;
@@ -92,7 +107,7 @@ module ot_s81_su_qnt #(
         for (k = 0; k < LL; k = k + 1)
             for (s = 0; s < L; s = s + 1) begin : pos
                 reg [LL-1:0] off;
-                off = rc_j[16 * s +: LL] - 1'b1;
+                off = kq[KW * s +: KW];
                 rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
             end
     end
@@ -114,6 +129,15 @@ module ot_s81_su_qnt #(
             o_fu <= o_fu | (|fq); o_fo <= 1'b0; o_alive <= 1'b1; o_den <= 1'b1;
         end
     end
+endmodule
+
+// a register that synthesis must keep (SYNTH_KEEP_MODULES + keep): per-position copies of a broadcast control value.
+// Reset value all ones = the off of rcnt 0 (bit-identical to the former rc_j <= 0 copies).
+module ot_s81_su_qn_keep_ff #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d,
+                                                           output wire [W-1:0] q);
+    (* keep = "true" *) reg [W-1:0] q_k;
+    always @(posedge clk or negedge rst_n) if (!rst_n) q_k <= {W{1'b1}}; else q_k <= d;
+    assign q = q_k;
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -262,6 +286,7 @@ module ot_s81_su_qnr #(
     input  wire [NE-1:0]   p_v,
     input  wire [NE-1:0]   p_p,           // the partial's vector parity
     input  wire [NE*32-1:0] p_d,
+    input  wire [NE-1:0]   p_f,           // upstream (half-tree) faults, sticky into o_f
     output reg             r_v,
     output reg  [31:0]     r_d,
     output reg             o_f
@@ -286,9 +311,9 @@ module ot_s81_su_qnr #(
     always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
     wire rst_n = rr1;
     // pin flops
-    reg go; reg [31:0] eps; reg [NE-1:0] pv; reg [NE-1:0] pp; reg [NE*32-1:0] pd;
+    reg go; reg [31:0] eps; reg [NE-1:0] pv; reg [NE-1:0] pp; reg [NE*32-1:0] pd; reg [NE-1:0] pf;
     always @(posedge clk) begin eps <= i_eps; pd <= p_d; pp <= p_p; end
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin go <= 1'b0; pv <= 0; end else begin go <= i_go; pv <= p_v; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin go <= 1'b0; pv <= 0; pf <= 0; end else begin go <= i_go; pv <= p_v; pf <= p_f; end
     // two entries an engine (by vector parity)
     reg [NE*32-1:0] e0, e1;
     reg [NE-1:0] h0, h1;
@@ -412,7 +437,97 @@ module ot_s81_su_qnr #(
     always @(posedge clk) r_d <= rr;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) o_f <= 1'b0;
-        else o_f <= o_f | (|tf) | (|nf) | f_div | f_eps | f_rsq;
+        else o_f <= o_f | (|tf) | (|nf) | f_div | f_eps | f_rsq | (|pf);
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// HALF TREE: NE engines' chunk partials of a vector -> pairwise tree (golden order) -> one registered sum + vector parity.
+// Two halves (engines 0..NE-1, NE..2NE-1) feed the reduce (NE 2), whose single level is the golden tree's top add.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_s81_su_qnh #(
+    parameter integer NE = 16, LA = 4
+) (
+    input  wire            clk,
+    input  wire            rst_in,
+    input  wire            i_go,
+    input  wire [NE-1:0]   p_v,
+    input  wire [NE-1:0]   p_p,           // the partial's vector parity
+    input  wire [NE*32-1:0] p_d,
+    output reg             s_v,
+    output reg             s_p,           // the sum's vector parity (the reduce holds it by parity)
+    output reg  [31:0]     s_d,
+    output reg             o_f
+);
+    localparam integer LT = $clog2(NE);
+`ifndef SYNTHESIS
+    initial if ((1 << LT) != NE || NE < 2) $fatal(1, "ot_s81_su_qnh: NE a power of two >= 2");
+`endif
+    reg rr0, rr1;
+    always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
+    wire rst_n = rr1;
+    // pin flops
+    reg go; reg [NE-1:0] pv; reg [NE-1:0] pp; reg [NE*32-1:0] pd;
+    always @(posedge clk) begin pd <= p_d; pp <= p_p; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin go <= 1'b0; pv <= 0; end else begin go <= i_go; pv <= p_v; end
+    // two entries an engine (by vector parity)
+    reg [NE*32-1:0] e0, e1;
+    reg [NE-1:0] h0, h1;
+    reg ptr; reg [7:0] vi;
+    wire fire = (ptr ? (&h1) : (&h0)) && !go;
+    always @(posedge clk) begin : ent
+        integer e;
+        for (e = 0; e < NE; e = e + 1) if (pv[e]) begin
+            if (pp[e]) e1[32 * e +: 32] <= pd[32 * e +: 32]; else e0[32 * e +: 32] <= pd[32 * e +: 32];
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin : hb
+        integer e;
+        if (!rst_n) begin h0 <= 0; h1 <= 0; ptr <= 1'b0; vi <= 8'd0; end
+        else if (go) begin h0 <= 0; h1 <= 0; ptr <= 1'b0; vi <= 8'd0; end
+        else begin
+            if (fire) begin if (ptr) h1 <= 0; else h0 <= 0; ptr <= !ptr; vi <= vi + 8'd1; end
+            for (e = 0; e < NE; e = e + 1) if (pv[e]) begin if (pp[e]) h1[e] <= 1'b1; else h0[e] <= 1'b1; end
+        end
+    end
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && !go) begin : ovc
+        integer e;
+        for (e = 0; e < NE; e = e + 1)
+            if (pv[e] && (pp[e] ? h1[e] : h0[e]) && !(fire && pp[e] == ptr))
+                $fatal(1, "ot_s81_su_qnh: engine %0d partial overruns its entry", e);
+    end
+`endif
+    // the chunk tree
+    wire [NE*32-1:0] lv = ptr ? e1 : e0;
+    wire [31:0] tv [0:LT][0:NE-1];
+    wire [LT:0] tf;
+    wire [LA*LT:0] fv;
+    ot_hdc_vline #(.D(LA * LT)) u_fv (.clk(clk), .rst_n(rst_n), .v(fire), .vd(fv));
+    wire [7:0] vsi;
+    ot_hdc_delay #(.W(8), .D(LA * LT)) u_vi (.clk(clk), .rst_n(rst_n), .d(vi), .q(vsi));
+    genvar c, k, n;
+    generate
+        for (c = 0; c < NE; c = c + 1) begin : g_t0
+            assign tv[0][c] = lv[32 * c +: 32];
+        end
+        assign tf[0] = 1'b0;
+        for (k = 1; k <= LT; k = k + 1) begin : g_tl
+            wire [(NE >> k)-1:0] f;
+            for (c = 0; c < (NE >> k); c = c + 1) begin : g_tn
+                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rst_n, fv[LA * (k - 1)], tv[k - 1][2 * c], tv[k - 1][2 * c + 1],
+                                               tv[k][c], f[c]);
+            end
+            for (c = (NE >> k); c < NE; c = c + 1) begin : g_tz
+                assign tv[k][c] = 32'd0;
+            end
+            assign tf[k] = |f;
+        end
+    endgenerate
+    wire        vsum_v = fv[LA * LT];
+    wire [31:0] vsum = tv[LT][0];
+    always @(posedge clk or negedge rst_n) if (!rst_n) s_v <= 1'b0; else s_v <= vsum_v && !go;
+    always @(posedge clk) begin s_d <= vsum; s_p <= vsi[0]; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) o_f <= 1'b0; else o_f <= o_f | (|tf);
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------

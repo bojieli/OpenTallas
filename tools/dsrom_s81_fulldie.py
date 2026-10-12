@@ -2583,6 +2583,9 @@ COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin fa
 # 36ccf0cb0: 3 x 572.4 columns, 29 tiles); HC root split (5db4c7ec6 / 597e34cac, ds-1010.log 14:14): 3 x 575.992 columns
 SU_V2_UM = (1727.976, 6069.6)
 HC_V2_UM = (1727.976, 9640.0)
+HC_T_UM = None                  # contract v12 sp_hc_t: the HC chain tails in the E-column floor slot below the corridor
+HC_T_COLS = 3                   # HC columns (one chain each); v12 hc_s <-> hc_t crossing buses per column
+HC_T_FWD, HC_T_RET = 1264, 1090   # per column: fd 1128 + fv 7 + rst 1 + cy 128 / rd 1082 + rv 8 (ot_s81_hc_cth ports)
 CONTRACT_SLABS = {}             # --contract FILE (s81-die-iter): centre slab outlines {name: (w, h)} from the hier contract
 SUHC_V2_HC_N = False            # --suhc-v2-hc-north: the v2 HC in the slot above the corridor (default: hc_s floor slot)
 SUHC_V2 = False                 # --suhc-v2 (s81die-1011/ctrl, die lead decision 3): su_hc contract v2 = ONE SU master
@@ -3527,6 +3530,13 @@ def build_r8(variant=None):
         # the VM at the corridor): VM row slots run straight across the VCH, the collective's 8,192-b y is ~2.5 mm
         # shorter than to the floor slot (hb_collective_t_hc_y_hc_s: no station spot over a 7,451 um path)
         slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, up(HC_V2_UM[0], GX), dom=SUHC_DOM)
+        if HC_T_UM:
+            # contract v12 (s81-die-iter 2026-10-12): the 64 x 740.88 half-octet slots + root row (17,240 um) exceed the
+            # E column above the corridor (12,655.5 um, die = full 26 mm field); the chain tails (7 / 5 / 7 slots) stand
+            # in the empty E-column floor slot below the corridor, abutting it; hc_s S face -> hc_t N face per column
+            ht_ = up(HC_T_UM[1], GY)
+            assert c0 - ht_ >= band + SPINE_GAP, ('hc_t taller than the E-column floor slot', c0 - band - SPINE_GAP, ht_)
+            slab('hc_t', HC_T_UM[0] * HC_T_UM[1] / 1e6, hcx, c0 - ht_, up(HC_T_UM[0], GX), dom=SUHC_DOM)
     elif SUHC_V2:   # the floor slot holds c0 - floor um: the 9,640 um HC outline fits only if the corridor sits above it
         assert c0 - (band + SPINE_GAP) >= HC_V2_UM[1], ('v2 HC outline taller than the hc_s floor slot: use '
                                                         '--suhc-v2-hc-north', round(c0 - band - SPINE_GAP, 1), HC_V2_UM)
@@ -4142,7 +4152,10 @@ def buses_r8(m):
             ((('collective', 'host', 514, 't_host', 'f_collective'),
               ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
             (ctrl_adapter_buses(hb) if CTRL_ADAPTERS else ()) + \
-            (RTL_HUB_EXTRA if RTL_HUB_WIDTHS else ()):
+            (RTL_HUB_EXTRA if RTL_HUB_WIDTHS else ()) + \
+            (tuple(b_ for k in range(HC_T_COLS) for b_ in (('hc_s', 'hc_t', HC_T_FWD, f't_tf{k}', f'f_sf{k}'),
+                                                            ('hc_t', 'hc_s', HC_T_RET, f't_sr{k}', f'f_tr{k}')))
+             if 'hc_t' in hub else ()):
         if SUHC_V2 and ((a_, b_) in (('vm', 'su_s'), ('vm', 'su_n'), ('vm', 'hc_s'), ('hc_n', 'vm'), ('su_s', 'hc_s'),
                                      ('su_n', 'hc_n'), ('hc_s', 'hc_n'), ('hc_n', 'hc_s')) and pa in ('t_su_s', 't_su_n', 't_hc', 't_vm', 't_n', 't_s')):
             continue          # su_hc v2 retired these (the VM row slots / y bus replace them)
@@ -5640,6 +5653,11 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             # across the corridor inside the HC column (hc_s N face -> hc_n S face), one x per direction, spread
             # over the column width; its common-clock stations stand in the corridor.
             xx = A.x + A.w * (0.3 if a_ == 'hc_s' else 0.7)
+            mk_ = re.fullmatch(r't_(tf|sr)(\d)', pa)
+            if 'hc_t' in (a_, b_) and mk_:
+                # contract v12: one crossing per HC column, at that column's centre (fwd W of it, return E of it)
+                cp_ = (HC_V2_UM[0] + 43.2) / HC_T_COLS        # 576.72 slot + 43.2 channel = 619.92
+                xx = A.x + cp_ * int(mk_.group(2)) + (cp_ - 43.2) / 2 + (-90.0 if mk_.group(1) == 'tf' else 90.0)
             path = [(xx, A.y + A.h), (xx, Bk.y)] if A.y < Bk.y else [(xx, A.y), (xx, Bk.y + Bk.h)]
             L = _poly_len(path)
             name = hbn
@@ -6157,7 +6175,7 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
         sv0 = svcs[sts[0]]
         for st in sts:
             svcs[st].master = CTRL_SVC_MASTER
-        jw, jh = 64.8, 64.8                          # ot_s81_slab_ep (QD 8, JQ 8) + NS job pulse registers
+        jw, jh = 64.8, 43.2                          # contract v12: closed ref_tile view s81_svcjoin_ref (scalar ck / rst)
         x, y = face_pt(sv0, 2300.0)
         yy = y + jh / 2 + 6.0 if sv0.orient == 'R0' else y - jh / 2 - 6.0
         pl = P.near(x, yy, jw, jh, [cor['stripS'] if sv0.orient == 'R0' else cor['stripN']], horiz=True, span=800.0)
@@ -7455,7 +7473,7 @@ def apply_options(a):
     COL_PITCH8 = COL_W8 + 8.64
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
     COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
-    global SU_V2_UM, HC_V2_UM, HROW_UM
+    global SU_V2_UM, HC_V2_UM, HROW_UM, HC_T_UM, P2_OUTLINE_UM, P2_SLAB_MM2
     if getattr(a, 'contract', None):
         # --contract (s81-die-iter 2026-10-12): slab outlines from results/arch/hier_contract_1011/s81.json (v3+): SU / HC v2
         # slabs (column channels), centre hard elements, VM slab (overrides --vm-slab), MTP hrow
@@ -7463,6 +7481,10 @@ def apply_options(a):
         def _o(n_):
             return (float(cslots_[n_]['outline']['w']), float(cslots_[n_]['outline']['h']))
         SU_V2_UM, HC_V2_UM = _o('sp_su_s'), _o('sp_hc_s')
+        HC_T_UM = _o('sp_hc_t') if 'sp_hc_t' in cslots_ else None
+        if 'sp_p2' in cslots_:   # contract v13: draft-A P2 = xport + head + fadd16 tiles (prefix_path_hub dropped)
+            P2_OUTLINE_UM = _o('sp_p2')
+            P2_SLAB_MM2 = P2_OUTLINE_UM[0] * P2_OUTLINE_UM[1] / 1e6
         CONTRACT_SLABS.clear()
         for n_, k_ in (('capture', 'sp_capture'), ('gather', 'sp_gather'), ('collective', 'sp_collective'), ('wfc_hard', 'sp_wfc')):
             if k_ in cslots_ and _o(k_)[0] > 0:
