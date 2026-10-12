@@ -1,20 +1,14 @@
 {
- "name": "hbm_retry545_ref-r1-COMMIT",
+ "name": "hbm_retry545_ref-r1-9357f2d4b",
  "block": "ot_hbm_link_retry_pipeline",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-coll/lkep",
  "purpose": "idle1012: retry macro (hard child of ot_lkep_sub / hfd_lk_ep) through tools/ref_tile: nakh64m6a view (CLOSED TT +43.00 / FF +24.06) fails child_lint (d) no TT lib and (f) 534/2408 face pins covered above; ref_tile gives exact abstract + TT/FF/SS + insertion + above-only keepout + dataflow pin plan (W in / S tx / N rx / E out+ack+fb). Same RTL/params as c87c01b44.",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/el1011-hbm-coll",
-  "commit": "COMMIT",
+  "commit": "9357f2d4b",
   "extra_paths": [
    "results/rtl/hbm_retry_txrx_pin_20261010"
   ]
@@ -147,7 +141,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_retry545_ref/hbm_retry545_ref-r1-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_retry545_ref/hbm_retry545_ref-r1-9357f2d4b"
   }
  ],
  "cycles_added": 6,
