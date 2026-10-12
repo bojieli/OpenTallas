@@ -5,7 +5,7 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-11T10:34:17Z",
+ "generated_utc": "2026-10-12T02:16:55Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -689,16 +689,16 @@
     "required_items_per_cycle_at_target": 35.522,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00028,
-    "measured_ratio": 3.817,
-    "measured_grade": "e2e",
-    "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
-    "measured_note": "retires on write completion, not acceptance (audit hbm_ds_kvwb)",
+    "measured_ratio": 1.05,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json",
+    "measured_note": "tb_hgi_mover_kport die config (real kport + 4 svc stacks), posted retire: first record 63 cyc, 4-stack 61.1 cyc/record; KMUT5 FAIL",
     "interim": null,
-    "measured_cycles_per_record": 229.0,
-    "status": "UNQUALIFIED",
-    "impact_cycles_per_token": 5376.6,
-    "impact_tok_s": -20.0,
-    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
+    "measured_cycles_per_record": 63.0,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": 64.0,
+    "impact_tok_s": -0.2,
+    "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
     "elements": [
      "ot_hgi_dma_mover",
      "ot_hgi_dma_record",
@@ -711,8 +711,8 @@
      }
     },
     "measured_record": {
-     "path": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
-     "commit": "e02a65f1f"
+     "path": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json",
+     "commit": null
     }
    },
    {
@@ -906,16 +906,6 @@
   },
   {
    "rank": 4,
-   "op": "DMA.KVWB_DS",
-   "ratio": 3.817,
-   "impact_cycles_per_token": 5376.6,
-   "impact_tok_s": -20.0,
-   "budget_cycles_per_record": 60.0,
-   "budget_at_target": 57.7,
-   "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)"
-  },
-  {
-   "rank": 5,
    "op": "FUSED.QDQ_FP8",
    "ratio": 2.74,
    "impact_cycles_per_token": 1336.3,
@@ -925,7 +915,7 @@
    "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)"
   },
   {
-   "rank": 6,
+   "rank": 5,
    "op": "HC.HC_MIX_POST",
    "ratio": 1.282,
    "impact_cycles_per_token": 0.0,
@@ -1247,7 +1237,7 @@
     "op": "COLL.ARGMAX_MERGE",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_e2e_native_20261011/dfl_tiny_coll/report.json",
+    "evidence": "results/rtl/hgi_e2e_native_20261011/dfl_tiny_coll/report.json; results/rtl/hgi_e2e_native_20261011/ds_head_coll/report.json",
     "records_per_token": 1,
     "price_cycles_per_token": 765.4,
     "critical_cycles_if_zero": null,
@@ -1403,7 +1393,7 @@
     "op": "COLL.ARGMAX_MERGE",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_e2e_native_20261011/dfl_tiny_coll/report.json",
+    "evidence": "results/rtl/hgi_e2e_native_20261011/dfl_tiny_coll/report.json; results/rtl/hgi_e2e_native_20261011/ds_head_coll/report.json",
     "records_per_token": 1,
     "price_cycles_per_token": 586,
     "critical_cycles_if_zero": null,
@@ -1483,6 +1473,14 @@
   ]
  },
  "hand_entered": [
+  {
+   "model": "DS",
+   "op": "DMA.KVWB_DS",
+   "claimed_ratio": 1.05,
+   "src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json",
+   "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
+   "why": "not a committed bench record of this op at this shape"
+  },
   {
    "model": "Qwen",
    "op": "SM.MATVEC",
@@ -1747,6 +1745,21 @@
   }
  ],
  "bench_ii": {
+  "dsfd_vm_clt": {
+   "job": "s81vm-clt6-dc9e98d04-tc-rd-pd40",
+   "commit": "dc9e98d04",
+   "bench": "bench_exact_gold",
+   "line": "RESULT cyc=64000 checked=44301 mismatches_or_fails=0 phases=139 arm=139 p2rd=671 done=8141 rows_ready=69 starts=459 p2_words=14578 ctrl_reads=3179 el=215712/215712 cap_ops=12842 max_occ=3 mirror_max=3",
+   "cycles": 64000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-ds-vm/fe",
+   "target": null,
+   "t": "2026-10-11T16:20:22-07:00",
+   "adopted": true
+  },
   "qfd_io_emb_root": {
    "job": "qfd_io_emb_root-1e23a4915-lvt-tc",
    "commit": "1e23a4915",
@@ -1759,7 +1772,8 @@
    "stalled": false,
    "owner": "Claude:drive-0928",
    "target": null,
-   "t": "2026-10-10T19:14:24-07:00"
+   "t": "2026-10-10T19:14:24-07:00",
+   "adopted": true
   },
   "ot_dsrom_hc_input_reader": {
    "job": "hcreader-plain300-lk-b678636a2-tc-cl",
@@ -1773,7 +1787,8 @@
    "stalled": false,
    "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
    "target": null,
-   "t": "2026-10-10T16:47:11-07:00"
+   "t": "2026-10-10T16:47:11-07:00",
+   "adopted": true
   },
   "ot_hbm_native_index_query_credit": {
    "job": "qcredit_rb-2db44a8cd-tc-hm25-cl",
@@ -1787,7 +1802,8 @@
    "stalled": false,
    "owner": "Claude:struct-close",
    "target": null,
-   "t": "2026-10-10T03:48:15-07:00"
+   "t": "2026-10-10T03:48:15-07:00",
+   "adopted": true
   },
   "hfd_att_su_relay": {
    "job": "hfd_att_su_relay-d578aa824-tc-cl",
@@ -1801,7 +1817,8 @@
    "stalled": false,
    "owner": "Claude:hbm-phys-1010/idx",
    "target": null,
-   "t": "2026-10-10T18:44:36-07:00"
+   "t": "2026-10-10T18:44:36-07:00",
+   "adopted": true
   },
   "qfd_row_merge_native_fence": {
    "job": "rowfence_b-7eea9e354-tc",
@@ -1815,7 +1832,8 @@
    "stalled": false,
    "owner": "Claude:sys-takeover",
    "target": null,
-   "t": "2026-10-10T20:45:26-07:00"
+   "t": "2026-10-10T20:45:26-07:00",
+   "adopted": true
   },
   "qfd_sp_constants_sequencer_sys": {
    "job": "qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c-tc-hm10-lvt-cl",
@@ -1829,11 +1847,12 @@
    "stalled": false,
    "owner": "Claude:struct-close",
    "target": null,
-   "t": "2026-10-10T19:14:24-07:00"
+   "t": "2026-10-10T19:14:24-07:00",
+   "adopted": true
   },
   "dsfd_mtp_seq": {
-   "job": "mtp-mtp_seq-c-c67a71fe5-tc",
-   "commit": "c67a71fe5",
+   "job": "mtp-mtp_seq-b-511fa714d-tc",
+   "commit": "511fa714d",
    "bench": "bench_pass_s0_tr_forced",
    "line": "{\"case\": \"s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\": 24,",
    "cycles": 41423,
@@ -1843,7 +1862,8 @@
    "stalled": false,
    "owner": "Claude:mtp-rom",
    "target": null,
-   "t": "2026-10-09T18:19:17-07:00"
+   "t": "2026-10-09T18:18:18-07:00",
+   "adopted": true
   },
   "hfd_su_tile_xl": {
    "job": "hfd_su_tilexl-fe-fa7b65cba-sw147-ongrid-pdnp-tc-hm10-pd55-cl",
@@ -1857,7 +1877,8 @@
    "stalled": false,
    "owner": "Claude:hardcore-1010",
    "target": null,
-   "t": "2026-10-11T00:20:26-07:00"
+   "t": "2026-10-11T06:21:26-07:00",
+   "adopted": true
   },
   "hfd_idx_t4_join": {
    "job": "hgi_idx_t4_join-fe-f7cabb9b7-b-tc-cl",
@@ -1871,7 +1892,38 @@
    "stalled": true,
    "owner": "Claude:fe-push-hgi-1010",
    "target": null,
-   "t": "2026-10-11T03:05:01-07:00"
+   "t": "2026-10-11T03:05:01-07:00",
+   "adopted": true
+  },
+  "qfd_coll_xfifo_l8_b": {
+   "job": "qfd_coll_xfifo_l8n_b-6d8e992da-tc-cl",
+   "commit": "6d8e992da",
+   "bench": "bench_coll_native_exact",
+   "line": "case reduce_8w PASS NCOLL_NATIVE PASS cycles=318",
+   "cycles": 318,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-coll",
+   "target": null,
+   "t": "2026-10-11T15:29:05-07:00",
+   "adopted": true
+  },
+  "hfd_hc_tile_xl": {
+   "job": "hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl",
+   "commit": "5c35b1a6e",
+   "bench": "bench_hc_tile_xl_pos",
+   "line": "TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100",
+   "cycles": 600,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:conservative-1011 [B hfd_hc]",
+   "target": null,
+   "t": "2026-10-11T14:47:27-07:00",
+   "adopted": true
   },
   "ot_dsrom_hc_seed_join": {
    "job": "hcjoin-mc420-lk-d4211f538-tc-cl",
@@ -1885,21 +1937,23 @@
    "stalled": false,
    "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
    "target": null,
-   "t": "2026-10-09T23:19:13-07:00"
+   "t": "2026-10-11T08:47:37-07:00",
+   "adopted": true
   },
   "dsfd_mtp_seq_rtt": {
-   "job": "mtp-seqrtt-d-20ec697d1-tc",
-   "commit": "20ec697d1",
-   "bench": "bench_pass_rtt_s0_tr_forced",
-   "line": "{\"case\": \"rtt_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\":",
+   "job": "mtp-seq-rtt-native-61b4bc729-tc",
+   "commit": "61b4bc729",
+   "bench": "bench_pass_rtt_rly_s0_tr_forced",
+   "line": "{\"case\": \"rtt_rly_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2, \"SEQ_RTT\": 1, \"RLY\": 1}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.c",
    "cycles": 42073,
    "item": "issues",
    "items": 92,
    "ii": 457.315,
    "stalled": false,
-   "owner": "Claude:mtp-head-1010",
+   "owner": "Claude:mtp-wfc",
    "target": null,
-   "t": "2026-10-10T17:44:49-07:00"
+   "t": "2026-10-10T17:43:49-07:00",
+   "adopted": true
   },
   "qfd_io_serdes": {
    "job": "qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc",
@@ -1913,7 +1967,8 @@
    "stalled": false,
    "owner": "Claude:drive-1143",
    "target": null,
-   "t": "2026-10-10T03:48:07-07:00"
+   "t": "2026-10-11T08:49:18-07:00",
+   "adopted": true
   },
   "qfd_embed_ingress_code": {
    "job": "qfd_embed_ingress_code-0e025d03c",
@@ -1927,7 +1982,23 @@
    "stalled": false,
    "owner": "Codex:embedding-scale",
    "target": null,
-   "t": "2026-10-10T05:01:06-07:00"
+   "t": "2026-10-10T05:01:06-07:00",
+   "adopted": false
+  },
+  "qfd_coll_xfifo_l8": {
+   "job": "qfd_coll_xfifo_l8n_a-6d8e992da-tc-cl",
+   "commit": "6d8e992da",
+   "bench": "bench_coll_native_exact",
+   "line": "case reduce_8w PASS NCOLL_NATIVE PASS cycles=318",
+   "cycles": 318,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-coll",
+   "target": null,
+   "t": "2026-10-11T15:28:44-07:00",
+   "adopted": true
   },
   "ot_hgi_argmax18_m": {
    "job": "hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl",
@@ -1941,10 +2012,11 @@
    "stalled": false,
    "owner": "Claude:hgi-takeover",
    "target": null,
-   "t": "2026-10-10T16:47:22-07:00"
+   "t": "2026-10-10T16:47:22-07:00",
+   "adopted": true
   },
   "ot_hbm_native_candidate_parse": {
-   "job": "candparse_rb-937531860-tc-hm10-cl",
+   "job": "candparse_rb-937531860-tc-hm25-cl",
    "commit": "937531860",
    "bench": "bench_rb_cand_parse_exact",
    "line": "PARSE_DONE tuples=60 cycles=78",
@@ -1955,7 +2027,8 @@
    "stalled": false,
    "owner": "Claude:struct-close",
    "target": null,
-   "t": "2026-10-09T15:54:12-07:00"
+   "t": "2026-10-11T08:46:05-07:00",
+   "adopted": true
   },
   "dsfd_cap_mtp_ep": {
    "job": "fixlat-capmtp-ffbec0c86-tc",
@@ -1969,7 +2042,8 @@
    "stalled": false,
    "owner": "Claude:mtp-fixlat-1011",
    "target": null,
-   "t": "2026-10-11T02:03:53-07:00"
+   "t": "2026-10-11T02:03:53-07:00",
+   "adopted": true
   },
   "qfd_sysctl_stn_pb2": {
    "job": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
@@ -1983,10 +2057,11 @@
    "stalled": false,
    "owner": "Claude:drive-0158",
    "target": null,
-   "t": "2026-10-10T19:21:56-07:00"
+   "t": "2026-10-10T19:21:56-07:00",
+   "adopted": true
   },
   "dsfd_colt_lane": {
-   "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12",
+   "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12-ttfix",
    "commit": "e96dd1e56",
    "bench": "bench_exact_ring",
    "line": "COLT_RING PASS cycles=100000 reads=27118",
@@ -1997,7 +2072,8 @@
    "stalled": false,
    "owner": "Codex:s81-slab-continuation",
    "target": null,
-   "t": "2026-10-11T01:15:32-07:00"
+   "t": "2026-10-10T19:58:04-07:00",
+   "adopted": true
   },
   "hgi_att_rows_g12_140": {
    "job": "hgi-att-g12-140-187a8471c-tc-cx",
@@ -2011,7 +2087,8 @@
    "stalled": false,
    "owner": "Codex:generic_attn_g12",
    "target": null,
-   "t": "2026-10-09T19:48:12-07:00"
+   "t": "2026-10-09T19:48:12-07:00",
+   "adopted": true
   },
   "qfd_embed_code_bank_retained": {
    "job": "qfd_embed_code_bank_retained-24bd6a53b-tt",
@@ -2025,7 +2102,8 @@
    "stalled": false,
    "owner": "Codex:embedding-scale",
    "target": null,
-   "t": "2026-10-10T02:54:48-07:00"
+   "t": "2026-10-10T02:54:48-07:00",
+   "adopted": false
   },
   "qfd_coll_xfifo_b": {
    "job": "qfd_coll_xfifo_b-66fd85cda-tc",
@@ -2039,7 +2117,8 @@
    "stalled": false,
    "owner": "Claude:sys-takeover",
    "target": null,
-   "t": "2026-10-10T01:09:24-07:00"
+   "t": "2026-10-10T01:09:24-07:00",
+   "adopted": true
   },
   "dsfd_svcio_job": {
    "job": "svcio_job-a6cf4500f-tc",
@@ -2053,7 +2132,8 @@
    "stalled": false,
    "owner": "Claude:s81-svceng-1011",
    "target": null,
-   "t": "2026-10-11T01:46:21-07:00"
+   "t": "2026-10-11T13:46:54-07:00",
+   "adopted": true
   },
   "dsfd_coll_p2_lane_pa": {
    "job": "mtpl-dsfd_coll_p2_lane_pa-0ddaf548b-tc-hm10-b",
@@ -2084,7 +2164,23 @@
    "stalled": false,
    "owner": "Claude:qwen-missing",
    "target": null,
-   "t": "2026-10-09T12:17:54-07:00"
+   "t": "2026-10-09T12:17:54-07:00",
+   "adopted": true
+  },
+  "dsfd_wfc_crp": {
+   "job": "el1011-wfccrp-bb847e831-tc-hm25-pr",
+   "commit": "bb847e831",
+   "bench": "bench_crp_stg_r1",
+   "line": "OK         crp_stg_r1             expect=pass MTP_STG PASS jobs=60 starts=60 out=60 cycles=27585 vmslow=0 core_user_mismatch_at_start=0",
+   "cycles": 27585,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-ds-wfc",
+   "target": null,
+   "t": "2026-10-11T11:27:59-07:00",
+   "adopted": true
   },
   "dsfd_coll_p2_lane_ba": {
    "job": "qf-p2lba-ogrant-5b059065b-tc-hm0-lvt",
@@ -2115,7 +2211,23 @@
    "stalled": false,
    "owner": "Claude:sys-takeover",
    "target": null,
-   "t": "2026-10-10T17:46:54-07:00"
+   "t": "2026-10-10T17:46:54-07:00",
+   "adopted": true
+  },
+  "dsfd_svch_pcs": {
+   "job": "svch_pcs-eccab9f14-pd60-tc",
+   "commit": "eccab9f14",
+   "bench": "bench_svch_pcs_exact",
+   "line": "SVCHPCS sent=3000 beats=6639 max_outstanding=8 errors=0 fault=0 cycles=21000 verdict=PASS",
+   "cycles": 21000,
+   "item": "beats",
+   "items": 6639,
+   "ii": 3.163,
+   "stalled": false,
+   "owner": "Claude:s81die-1011/ctrl svch",
+   "target": null,
+   "t": "2026-10-11T15:52:58-07:00",
+   "adopted": true
   },
   "qfd_res_ctl": {
    "job": "qfd_res_ctl-f46a68c8a-tc-hm0",
@@ -2129,10 +2241,11 @@
    "stalled": false,
    "owner": "Codex:res-ser-tiles",
    "target": null,
-   "t": "2026-10-10T17:49:58-07:00"
+   "t": "2026-10-11T08:49:23-07:00",
+   "adopted": true
   },
   "ot_hbm_native_candidate_format": {
-   "job": "candfmt_rb-937531860-tc-hm25-cl",
+   "job": "candfmt_rb-937531860-tc-hm10-cl",
    "commit": "937531860",
    "bench": "bench_rb_cand_format_exact",
    "line": "FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0",
@@ -2143,7 +2256,23 @@
    "stalled": false,
    "owner": "Claude:struct-close",
    "target": null,
-   "t": "2026-10-09T12:31:28-07:00"
+   "t": "2026-10-11T08:46:03-07:00",
+   "adopted": true
+  },
+  "dsfd_vm_be_sl": {
+   "job": "s81vm-besl-b235ed401-tc-rd-pd45",
+   "commit": "b235ed401",
+   "bench": "bench_exact_gold",
+   "line": "RESULT cyc=64000 checked=43251 mismatches_or_fails=0 phases=120 arm=120 p2rd=714 done=8322 rows_ready=60 starts=469 p2_words=12679 ctrl_reads=3266 el=196000/196000 cap_ops=11750 max_occ=3 mirror_max=3",
+   "cycles": 64000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-ds-vm/be",
+   "target": null,
+   "t": "2026-10-11T13:05:48-07:00",
+   "adopted": true
   },
   "ot_hgi_coll_row_formatter": {
    "job": "hgi_coll_row_formatter_c130-264ff331a-tc-cl",
@@ -2157,7 +2286,8 @@
    "stalled": false,
    "owner": "Claude:hgi-takeover",
    "target": null,
-   "t": "2026-10-10T16:47:31-07:00"
+   "t": "2026-10-10T16:47:31-07:00",
+   "adopted": true
   },
   "dsfd_p2_lnk": {
    "job": "fixlat-p2lnk-c917ea78d-tc-hm20",
@@ -2176,6 +2306,36 @@
    "accept_spaced": true,
    "dense": true
   },
+  "qfd_seq_su_bi_fea": {
+   "job": "qfd_seq_su_bi-fearl-19fe61d1d-tc-hm0-cl",
+   "commit": "19fe61d1d",
+   "bench": "bench_hq2_lockstep_s1",
+   "line": "PASS seq_su_bi_psram cycles=20997 program_reads=400 loads=200 core_done=0 cwait=19050 coll=0 vm_writes=0 chase_eq=0",
+   "cycles": 20997,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-seq",
+   "target": null,
+   "t": "2026-10-11T17:20:19-07:00",
+   "adopted": true
+  },
+  "qfd_tile": {
+   "job": "qfd_tile_lsl3-17c2e7993-tc-hm0-cl",
+   "commit": "17c2e7993",
+   "bench": "bench_rom_pipe_exact_anr",
+   "line": "\"verdict\": \"PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=300 cycles=22937 result_writes=5632 maxima=24 argmax_changes=501 scale_reads=2444 latency_added=13 ACC_LAT=7 TREE_LAT=",
+   "cycles": 22937,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-tile",
+   "target": null,
+   "t": "2026-10-11T16:29:06-07:00",
+   "adopted": true
+  },
   "dsfd_svc_join": {
    "job": "svc_join-a6cf4500f-tc",
    "commit": "a6cf4500f",
@@ -2188,7 +2348,8 @@
    "stalled": false,
    "owner": "Claude:s81-svceng-1011",
    "target": null,
-   "t": "2026-10-11T02:19:20-07:00"
+   "t": "2026-10-11T13:46:44-07:00",
+   "adopted": true
   },
   "qfd_embed_ingress_code_numeric": {
    "job": "qfd_embed_ingress_code_numeric-82c12047d-lbc",
@@ -2202,7 +2363,8 @@
    "stalled": false,
    "owner": "Claude:setup-triage (block owner main / Codex:embedding-scale)",
    "target": null,
-   "t": "2026-10-09T12:17:54-07:00"
+   "t": "2026-10-09T12:17:54-07:00",
+   "adopted": false
   },
   "dsfd_hstnh_515": {
    "job": "s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl",
@@ -2216,7 +2378,38 @@
    "stalled": false,
    "owner": "Claude:struct-close",
    "target": null,
-   "t": "2026-10-09T12:17:55-07:00"
+   "t": "2026-10-09T12:17:55-07:00",
+   "adopted": true
+  },
+  "qfd_io_collective_fs": {
+   "job": "qfd_io_collective_fs-b760fc991-tc-cl",
+   "commit": "b760fc991",
+   "bench": "bench_coll_margin7_exact",
+   "line": "se gather_1w margin=7 mutant=0 PASS mismatches=0 words_out=1024 cycles=355",
+   "cycles": 355,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-coll",
+   "target": null,
+   "t": "2026-10-11T16:34:46-07:00",
+   "adopted": true
+  },
+  "dsfd_coll_p2_ep": {
+   "job": "el1011-collp2-966562e4c-tc-a",
+   "commit": "966562e4c",
+   "bench": "bench_pass_p2_s1",
+   "line": "FIXLAT p2_s1 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 cycles=12749 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:119: $finish ",
+   "cycles": 12749,
+   "item": "rows",
+   "items": 160,
+   "ii": 79.681,
+   "stalled": false,
+   "owner": "Claude:el1011-ds-wfc",
+   "target": null,
+   "t": "2026-10-11T11:40:01-07:00",
+   "adopted": true
   },
   "dsfd_vm_wfc_ep": {
    "job": "mtp-vm_wfc_ep-rd2-9c9ac6963-tc",
@@ -2230,7 +2423,8 @@
    "stalled": false,
    "owner": "Claude:mtp-wfc-1010",
    "target": null,
-   "t": "2026-10-10T23:30:55-07:00"
+   "t": "2026-10-11T05:31:33-07:00",
+   "adopted": true
   },
   "ot_attn_tile_m6h1q": {
    "job": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
@@ -2244,7 +2438,23 @@
    "stalled": false,
    "owner": "Claude:redesign-hbm",
    "target": null,
-   "t": "2026-10-10T06:26:00-07:00"
+   "t": "2026-10-10T06:26:00-07:00",
+   "adopted": true
+  },
+  "qfd_seq_su_bi_feb": {
+   "job": "qfd_seq_su_bi-febra-dace0dae3-tc-hm0-cl",
+   "commit": "dace0dae3",
+   "bench": "bench_hq2_lockstep_s1",
+   "line": "PASS seq_su_bi_psram cycles=20997 program_reads=400 loads=200 core_done=0 cwait=19050 coll=0 vm_writes=0 chase_eq=0",
+   "cycles": 20997,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-seq",
+   "target": null,
+   "t": "2026-10-11T18:52:40-07:00",
+   "adopted": true
   },
   "hgi_att_rows_g12_120": {
    "job": "hgi-att-g12-120-187a8471c-tc-cx",
@@ -2258,7 +2468,8 @@
    "stalled": false,
    "owner": "Codex:generic_attn_g12",
    "target": null,
-   "t": "2026-10-09T19:48:11-07:00"
+   "t": "2026-10-09T19:48:11-07:00",
+   "adopted": true
   },
   "ot_hbm_index_global_order": {
    "job": "gorderscan_fast2_a-f11374855-tc-hm10",
@@ -2272,7 +2483,8 @@
    "stalled": false,
    "owner": "Claude:sys-takeover",
    "target": null,
-   "t": "2026-10-09T16:06:31-07:00"
+   "t": "2026-10-09T16:06:31-07:00",
+   "adopted": true
   },
   "qfd_seq_su": {
    "job": "qfd_seq_su-fea-f3e3d6b6f-tc-hm0-cl",
@@ -2286,7 +2498,8 @@
    "stalled": false,
    "owner": "Claude:hardcore-1010/fe-h",
    "target": null,
-   "t": "2026-10-11T03:01:04-07:00"
+   "t": "2026-10-11T03:01:04-07:00",
+   "adopted": true
   },
   "dsfd_vm_mtp_ep": {
    "job": "fixlat-vmmtp-189894fc2-tc-hm20",
@@ -2300,7 +2513,8 @@
    "stalled": false,
    "owner": "Claude:mtp-fixlat-1011",
    "target": null,
-   "t": "2026-10-11T02:21:55-07:00"
+   "t": "2026-10-11T02:21:55-07:00",
+   "adopted": true
   },
   "ot_su12_sfu": {
    "job": "hbm_sfu_lane_ring3_aa5dd28d5",
@@ -2314,7 +2528,8 @@
    "stalled": false,
    "owner": "Claude:hbm-blocks",
    "target": null,
-   "t": "2026-10-09T19:22:19-07:00"
+   "t": "2026-10-09T19:22:19-07:00",
+   "adopted": true
   },
   "dsfd_wfc_vmx": {
    "job": "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl",
@@ -2345,7 +2560,8 @@
    "stalled": false,
    "owner": "Claude:fe-push-hgi-1010",
    "target": null,
-   "t": "2026-10-10T21:49:39-07:00"
+   "t": "2026-10-11T03:49:59-07:00",
+   "adopted": true
   },
   "qfd_io_emb_tap": {
    "job": "qfd_io_emb_tap-c1e4eba84tt",
@@ -2359,7 +2575,8 @@
    "stalled": false,
    "owner": "Claude:qwen-rtl-finish",
    "target": null,
-   "t": "2026-10-09T12:17:55-07:00"
+   "t": "2026-10-09T12:17:55-07:00",
+   "adopted": true
   },
   "qfd_embed_ingress_code_padded": {
    "job": "qfd_embed_ingress_code_padded-3d5ad2a4ftt",
@@ -2373,7 +2590,8 @@
    "stalled": false,
    "owner": "Claude:qwen-blocks",
    "target": null,
-   "t": "2026-10-10T02:57:06-07:00"
+   "t": "2026-10-10T02:57:06-07:00",
+   "adopted": true
   },
   "ot_dsrom_hc_mean_capture": {
    "job": "hcmean-mc560-lk-a7bdfef93-tc-cl",
@@ -2387,7 +2605,8 @@
    "stalled": false,
    "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
    "target": null,
-   "t": "2026-10-10T07:03:29-07:00"
+   "t": "2026-10-11T08:47:38-07:00",
+   "adopted": true
   },
   "dsfd_vm_p2_ep": {
    "job": "fixlat-vmp2-ffbec0c86-tc",
@@ -2401,7 +2620,8 @@
    "stalled": false,
    "owner": "Claude:mtp-fixlat-1011",
    "target": null,
-   "t": "2026-10-11T02:06:57-07:00"
+   "t": "2026-10-11T02:06:57-07:00",
+   "adopted": true
   },
   "dsfd_wfc_lnk": {
    "job": "mtp-wfc_lnk-b-0cd6caa1b-tc",
@@ -2415,7 +2635,38 @@
    "stalled": false,
    "owner": "Claude:mtp-rom",
    "target": null,
-   "t": "2026-10-10T00:27:21-07:00"
+   "t": "2026-10-11T08:48:53-07:00",
+   "adopted": true
+  },
+  "ot_qkvd_fbuf8": {
+   "job": "qkd_fbuf8-a-0feeb971e-tc-hm10-cl",
+   "commit": "0feeb971e",
+   "bench": "bench_fbuf8_d8",
+   "line": "PASS buf_tile D=8 cycles=200000 pops=70919 head_gap_cycles=13082",
+   "cycles": 200000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-kvd",
+   "target": null,
+   "t": "2026-10-11T18:45:28-07:00",
+   "adopted": true
+  },
+  "ot_qkvd_sbuf": {
+   "job": "qkd_sbuf-b-0feeb971e-tc-hm10-cl",
+   "commit": "0feeb971e",
+   "bench": "bench_sbuf_d48",
+   "line": "PASS buf_tile D=48 cycles=200000 pops=72516 head_gap_cycles=12358",
+   "cycles": 200000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-kvd",
+   "target": null,
+   "t": "2026-10-11T16:07:28-07:00",
+   "adopted": true
   },
   "ot_dsrom_su_hcpost_lane_pr": {
    "job": "hbm_hcp_lane_pr_79315a431-tc",
@@ -2429,7 +2680,8 @@
    "stalled": false,
    "owner": "Claude:safe-hbm",
    "target": null,
-   "t": "2026-10-09T13:52:14-07:00"
+   "t": "2026-10-11T08:46:46-07:00",
+   "adopted": true
   },
   "ot_v41_rom_elem_q_qxpq_w10": {
    "job": "dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl",
@@ -2443,7 +2695,8 @@
    "stalled": false,
    "owner": "Claude:cont-takeover",
    "target": null,
-   "t": "2026-10-10T22:52:51-07:00"
+   "t": "2026-10-10T22:52:51-07:00",
+   "adopted": true
   },
   "dsfd_mtp_seed_launch": {
    "job": "mtp-seedl-4b2f329b3-tc",
@@ -2584,6 +2837,154 @@
   },
   "src": "results/rtl/s81_bf_arch_20261009/bench/{tcg0,hcol}.json + compose/price.json"
  },
+ "wave_bench": {
+  "path": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json",
+  "commit": "766396b41",
+  "qualify_ratio": 1.1,
+  "charges": [
+   {
+    "id": "wfc_kit.ar_pass",
+    "price": 160.53,
+    "measured": 177.46,
+    "ratio": 1.1055,
+    "elements": [
+     "ot_dsrom_wfc_tokpipe_stg",
+     "dsfd_wfc_lnk",
+     "dsfd_wfc_vmx",
+     "dsfd_wfc_crp",
+     "dsfd_vm_wfc_ep"
+    ]
+   },
+   {
+    "id": "wfc_kit.intervals",
+    "price": 310.62,
+    "measured": 160.22,
+    "ratio": 0.5158,
+    "elements": [
+     "ot_dsrom_wfc_tokpipe_stg",
+     "ot_dsrom_wfc_tokpipe_src",
+     "dsfd_wfc_lnk",
+     "dsfd_wfc_vmx",
+     "dsfd_wfc_crp",
+     "dsfd_vm_wfc_ep"
+    ]
+   },
+   {
+    "id": "mtp_seq.draft_chain",
+    "price": 48.0,
+    "measured": 36.0,
+    "ratio": 0.75,
+    "elements": [
+     "dsfd_mtp_seq_rtt",
+     "ot_dsrom_mtp_lrx_rtt"
+    ]
+   },
+   {
+    "id": "mtp_seq.seed_release",
+    "price": 22.4,
+    "measured": 18.0,
+    "ratio": 0.8036,
+    "elements": [
+     "dsfd_mtp_seq_rtt",
+     "ot_dsrom_mtp_lrx_rtt"
+    ]
+   },
+   {
+    "id": "wfc_tok.edges",
+    "price": 3.0,
+    "measured": 3.0,
+    "ratio": 1.0,
+    "elements": [
+     "dsfd_wfc_tok_hard"
+    ]
+   },
+   {
+    "id": "mtp_commit",
+    "price": 1.0,
+    "measured": 1.0,
+    "ratio": 1.0,
+    "elements": [
+     "ot_mtp_commit"
+    ]
+   },
+   {
+    "id": "p2.link_ends",
+    "price": 51.0,
+    "measured": 45.0,
+    "ratio": 0.8824,
+    "elements": [
+     "dsfd_p2_lnk",
+     "dsfd_coll_p2_ep",
+     "dsfd_vm_p2_ep"
+    ]
+   },
+   {
+    "id": "p2.core_transaction",
+    "price": 5467.0,
+    "measured": 6092.0,
+    "ratio": 1.1143,
+    "elements": [
+     "ot_mtp_p2_prefix_path"
+    ]
+   },
+   {
+    "id": "mtp_lane.adapters",
+    "price": 16.0,
+    "measured": 16.0,
+    "ratio": 1.0,
+    "elements": [
+     "dsfd_coll_mtp_lane"
+    ]
+   },
+   {
+    "id": "p2.lane_adapters",
+    "price": 51.0,
+    "measured": 45.0,
+    "ratio": 0.8824,
+    "elements": [
+     "dsfd_coll_p2_lane_pa",
+     "dsfd_coll_p2_lane_ba"
+    ]
+   },
+   {
+    "id": "markov.floor",
+    "price": 562.5,
+    "measured": 562.5,
+    "ratio": 1.0,
+    "elements": [
+     "ot_dsrom_markov_row_K256"
+    ]
+   },
+   {
+    "id": "draft_head.pipe_regs.vm_mtp_ep",
+    "price": 5.0,
+    "measured": 5.0,
+    "ratio": 1.0,
+    "elements": [
+     "dsfd_vm_mtp_ep",
+     "dsfd_cap_mtp_ep"
+    ]
+   },
+   {
+    "id": "seedl.launch",
+    "price": 147.38,
+    "measured": 108.85,
+    "ratio": 0.7386,
+    "elements": [
+     "dsfd_mtp_seed_launch"
+    ]
+   },
+   {
+    "id": "hrow.transport",
+    "price": 165.0,
+    "measured": 163.0,
+    "ratio": 0.9879,
+    "elements": [
+     "dsfd_mtp_hrow"
+    ]
+   }
+  ]
+ },
  "rom_block_rules": [
   {
    "pattern": "^ot_s81_bf_native$",
@@ -2605,9 +3006,9 @@
    "pattern": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
    "model": "ds_rom_mtp",
    "cls": "wave",
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "WAVE_BENCH",
    "ratio": null,
-   "why": "bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+   "why": "el1011-ds-mtp: per element from the integrated MTP wave bench record (WAVE_BENCH; tools/mtp_wave_bench.py): QUALIFIED when its charges' measured / price <= qualify_ratio, else UNQUALIFIED at the measured ratio"
   },
   {
    "pattern": "^dsfd_coll_",
@@ -2701,8 +3102,20 @@
  "rom_block_coverage": {
   "dsfd_cap_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_cb": "^dsfd_coll_",
+  "dsfd_coll_cbf": "^dsfd_coll_",
+  "dsfd_coll_cbfj": "^dsfd_coll_",
+  "dsfd_coll_cbh": "^dsfd_coll_",
   "dsfd_coll_cbj": "^dsfd_coll_",
+  "dsfd_coll_cbq": "^dsfd_coll_",
+  "dsfd_coll_cbq0": "^dsfd_coll_",
+  "dsfd_coll_cbr": "^dsfd_coll_",
   "dsfd_coll_ce": "^dsfd_coll_",
+  "dsfd_coll_cef": "^dsfd_coll_",
+  "dsfd_coll_cele": "^dsfd_coll_",
+  "dsfd_coll_celp": "^dsfd_coll_",
+  "dsfd_coll_ceq": "^dsfd_coll_",
+  "dsfd_coll_ces0": "^dsfd_coll_",
+  "dsfd_coll_cesn": "^dsfd_coll_",
   "dsfd_coll_ct": "^dsfd_coll_",
   "dsfd_coll_mtp_lane": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_p2_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -2740,6 +3153,7 @@
   "dsfd_m2l_vr_68x11__hr_W3": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_m2l_vr_68x11__hr_W4": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_mtp_hrow": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
+  "dsfd_mtp_hrow_bank": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seed_launch": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seq": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_mtp_seq_rtt": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -2748,10 +3162,26 @@
   "dsfd_stnh_514x1": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_stnh_566x1": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "dsfd_stnv_514x1": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
+  "dsfd_su_t_ctl": null,
+  "dsfd_su_t_kv": null,
+  "dsfd_su_t_kv0": null,
+  "dsfd_su_t_kv1": null,
+  "dsfd_su_t_pin": null,
+  "dsfd_su_t_qb": null,
+  "dsfd_su_t_qn": null,
+  "dsfd_su_t_qn0": null,
+  "dsfd_su_t_qn1": null,
+  "dsfd_su_t_root": null,
+  "dsfd_su_t_sm": null,
+  "dsfd_su_t_sw": null,
   "dsfd_svc_join": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
+  "dsfd_svch_pcs": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
+  "dsfd_svch_rly": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
   "dsfd_svcio_job": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
   "dsfd_vm_be": null,
+  "dsfd_vm_be_sl": null,
   "dsfd_vm_bgq28": null,
+  "dsfd_vm_clt": null,
   "dsfd_vm_fe": null,
   "dsfd_vm_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_vm_p2_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -2761,6 +3191,7 @@
   "dsfd_wfc_tok_hard": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_wfc_vmx": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsrom_mtp_head_full340_A": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
+  "ot_dsrom_aq12t": null,
   "ot_dsrom_engram_lead_producer": null,
   "ot_dsrom_hc_input_reader": "^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)",
   "ot_dsrom_hc_mean_capture": "^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)",
@@ -2776,22 +3207,55 @@
   "ot_dsrom_su_hcpost_lane_pr": "^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)",
   "ot_dsrom_wfc_tokpipe_src": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_dsrom_wfc_tokpipe_stg": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
+  "ot_engc_t_io": null,
+  "ot_engc_t_pbb": null,
+  "ot_engc_t_pbc": null,
+  "ot_engc_t_win": null,
+  "ot_engc_t_ws": null,
   "ot_hdc_v41_fh_ctl": "^ot_hdc_v41_fh_",
   "ot_hdc_v41_fh_ep_view": "^ot_hdc_v41_fh_",
   "ot_hdc_v41_fh_hquad": "^ot_hdc_v41_fh_",
   "ot_hdc_v41_fh_sram_lane_hardened": "^ot_hdc_v41_fh_",
+  "ot_hdc_v41x_idx_ksub_el": null,
   "ot_meso_fifo_w512d4": "^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)",
   "ot_mtp_commit": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_mtp_hist_ring": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_mtp_hist_ring_p": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_mtp_p2_prefix_path": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
+  "ot_mtp_p2_prefix_path_hub": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
+  "ot_nhb_pbst": null,
+  "ot_nhb_pvlg": null,
+  "ot_nhb_zh": null,
+  "ot_p2h_arith": null,
+  "ot_p2h_fadd16": null,
+  "ot_p2h_xport": null,
+  "ot_pqc_t_bc": null,
+  "ot_pqc_t_ctl16": null,
+  "ot_pqc_t_ix": null,
+  "ot_pqc_t_prom": null,
+  "ot_pqc_t_qb": null,
+  "ot_pqc_t_ret": null,
+  "ot_pqc_t_srom": null,
+  "ot_pqc_t_xin": null,
+  "ot_qkh_ktree": null,
+  "ot_qkh_lane8": null,
+  "ot_qkvd_fbuf8": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_kv_end": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_rom_end": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qkvd_sbuf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_attn_hub_p": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_ectl_h": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_head_h": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_rom_core_core_kv_banked": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_stream4_cdc_pc": "^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc)",
+  "ot_s81_hc_comb": null,
+  "ot_s81_hc_cpin": null,
+  "ot_s81_hc_croot": null,
+  "ot_s81_hc_crootr": null,
+  "ot_s81_hc_crooty": null,
+  "ot_s81_hc_ctile": null,
+  "ot_s81_hc_rtile": null,
+  "ot_s81_hc_tile": null,
   "ot_s81_host_dispatch": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
   "ot_s81_ingest_visibility_fence": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
   "ot_s81_native_pc_mux_plain": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
@@ -2839,12 +3303,11 @@
   "qfd_ctrl_protected_00": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_ctrl_ready_00": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_ctrl_shift_00": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
-  "qfd_dspark_argmax_gather": "^qfd_dspark_",
-  "qfd_dspark_s7_control": "^qfd_dspark_",
   "qfd_emb_pc_00": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_emb_pcport": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_emb_pcport_kvw": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_emb_pcport_kvw2": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
+  "qfd_io_collective_fs": null,
   "qfd_io_host": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_kv_merge_skid": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qfd_kv_row": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
@@ -2863,14 +3326,17 @@
   "qfd_sp_constants_sequencer_sys_v_t": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_sp_tree_top_b_f1a": null,
   "qfd_sp_tree_top_b_f1b": null,
+  "qfd_su64_lane_t": null,
   "qfd_su_cbuf": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_su_cbuf_g": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_su_kv624": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qfd_sysctl_sram": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_sysctl_stn": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
+  "qfd_tile_lsl": null,
   "qfd_tt_ctl": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_ctlm": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_up4": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
+  "qfd_vm_grp": null,
   "qkd_kvwq_ctl": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_grp": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_leaf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)"
@@ -4214,24 +4680,24 @@
  ],
  "elements": {
   "dsfd_cap_mtp_ep": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
     }
    ],
    "bench_ii": {
@@ -4246,7 +4712,8 @@
     "stalled": false,
     "owner": "Claude:mtp-fixlat-1011",
     "target": null,
-    "t": "2026-10-11T02:03:53-07:00"
+    "t": "2026-10-11T02:03:53-07:00",
+    "adopted": true
    }
   },
   "dsfd_capt_ctl": {
@@ -4421,6 +4888,72 @@
     }
    ]
   },
+  "dsfd_coll_cbf": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cbfj": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cbh": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
   "dsfd_coll_cbj": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -4443,7 +4976,205 @@
     }
    ]
   },
+  "dsfd_coll_cbq": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cbq0": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cbr": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
   "dsfd_coll_ce": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cef": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cele": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_celp": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_ceq": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_ces0": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cesn": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -4608,68 +5339,83 @@
    ]
   },
   "dsfd_coll_mtp_lane": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_lane.adapters measured / price 1.0"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_lane.adapters measured / price 1.0"
     }
    ]
   },
   "dsfd_coll_p2_ep": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.8824,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.8824,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 0.8824,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "el1011-collp2-966562e4c-tc-a",
+    "commit": "966562e4c",
+    "bench": "bench_pass_p2_s1",
+    "line": "FIXLAT p2_s1 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 cycles=12749 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:119: $finish ",
+    "cycles": 12749,
+    "item": "rows",
+    "items": 160,
+    "ii": 79.681,
+    "stalled": false,
+    "owner": "Claude:el1011-ds-wfc",
+    "target": null,
+    "t": "2026-10-11T11:40:01-07:00",
+    "adopted": true
+   }
   },
   "dsfd_coll_p2_lane_ba": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.8824,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.8824,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.lane_adapters measured / price 0.8824"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 0.8824,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.lane_adapters measured / price 0.8824"
     }
    ],
    "bench_ii": {
@@ -4691,24 +5437,24 @@
    }
   },
   "dsfd_coll_p2_lane_pa": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.8824,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.8824,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.lane_adapters measured / price 0.8824"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 0.8824,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.lane_adapters measured / price 0.8824"
     }
    ],
    "bench_ii": {
@@ -4759,7 +5505,7 @@
     }
    ],
    "bench_ii": {
-    "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12",
+    "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12-ttfix",
     "commit": "e96dd1e56",
     "bench": "bench_exact_ring",
     "line": "COLT_RING PASS cycles=100000 reads=27118",
@@ -4770,7 +5516,8 @@
     "stalled": false,
     "owner": "Codex:s81-slab-continuation",
     "target": null,
-    "t": "2026-10-11T01:15:32-07:00"
+    "t": "2026-10-10T19:58:04-07:00",
+    "adopted": true
    }
   },
   "dsfd_colt_mrg": {
@@ -5094,7 +5841,8 @@
     "stalled": false,
     "owner": "Claude:struct-close",
     "target": null,
-    "t": "2026-10-09T12:17:55-07:00"
+    "t": "2026-10-09T12:17:55-07:00",
+    "adopted": true
    }
   },
   "dsfd_l2r_vr_512x1__hq_SW": {
@@ -5710,46 +6458,68 @@
    ]
   },
   "dsfd_mtp_hrow": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.9879,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.9879,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge hrow.transport measured / price 0.9879"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
+     "model": "ds_rom_mtp",
+     "status": "QUALIFIED",
+     "ratio": 0.9879,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge hrow.transport measured / price 0.9879"
+    }
+   ]
+  },
+  "dsfd_mtp_hrow_bank": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:wave (wave bench)",
+    "model": "ds_rom_mtp",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json: element not in the integrated wave bench"
+   },
+   "ops": [
+    {
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json: element not in the integrated wave bench"
     }
    ]
   },
   "dsfd_mtp_seed_launch": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.7386,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.7386,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge seedl.launch measured / price 0.7386"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 0.7386,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge seedl.launch measured / price 0.7386"
     }
    ],
    "bench_ii": {
@@ -5774,26 +6544,26 @@
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: legacy receivers (overflow behind the head631 stations, mtp_seq_rtt_link_gate); the bound head631ep carries dsfd_mtp_seq_rtt (same core ot_dsrom_mtp_seq), which this bench runs"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: legacy receivers (overflow behind the head631 stations, mtp_seq_rtt_link_gate); the bound head631ep carries dsfd_mtp_seq_rtt (same core ot_dsrom_mtp_seq), which this bench runs"
     }
    ],
    "bench_ii": {
-    "job": "mtp-mtp_seq-c-c67a71fe5-tc",
-    "commit": "c67a71fe5",
+    "job": "mtp-mtp_seq-b-511fa714d-tc",
+    "commit": "511fa714d",
     "bench": "bench_pass_s0_tr_forced",
     "line": "{\"case\": \"s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\": 24,",
     "cycles": 41423,
@@ -5803,66 +6573,85 @@
     "stalled": false,
     "owner": "Claude:mtp-rom",
     "target": null,
-    "t": "2026-10-09T18:19:17-07:00"
+    "t": "2026-10-09T18:18:18-07:00",
+    "adopted": true
    }
   },
   "dsfd_mtp_seq_rtt": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.8036,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.8036,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_seq.seed_release measured / price 0.8036"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 0.8036,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_seq.seed_release measured / price 0.8036"
     }
    ],
    "bench_ii": {
-    "job": "mtp-seqrtt-d-20ec697d1-tc",
-    "commit": "20ec697d1",
-    "bench": "bench_pass_rtt_s0_tr_forced",
-    "line": "{\"case\": \"rtt_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\":",
+    "job": "mtp-seq-rtt-native-61b4bc729-tc",
+    "commit": "61b4bc729",
+    "bench": "bench_pass_rtt_rly_s0_tr_forced",
+    "line": "{\"case\": \"rtt_rly_s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2, \"SEQ_RTT\": 1, \"RLY\": 1}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.c",
     "cycles": 42073,
     "item": "issues",
     "items": 92,
     "ii": 457.315,
     "stalled": false,
-    "owner": "Claude:mtp-head-1010",
+    "owner": "Claude:mtp-wfc",
     "target": null,
-    "t": "2026-10-10T17:44:49-07:00"
+    "t": "2026-10-10T17:43:49-07:00",
+    "adopted": true
    }
   },
   "dsfd_p2_lnk": {
    "status": "QUALIFIED",
-   "ratio": 1.0,
+   "ratio": 0.8824,
    "limiting": {
-    "op": "bench II (items)",
-    "model": "rom",
+    "op": "class:wave (wave bench)",
+    "model": "ds_rom_mtp",
     "status": "QUALIFIED",
-    "ratio": 1.0,
-    "owner": "auto-II harness",
-    "src": "closure job fixlat-p2lnk-c917ea78d-tc-hm20 @ c917ea78d: MEASURED_ACCEPT, density 1.0: 1.000 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+    "ratio": 0.8824,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
    },
    "ops": [
     {
-     "op": "bench II (items)",
-     "model": "rom",
+     "op": "class:wave (wave bench)",
+     "model": "ds_rom_mtp",
      "status": "QUALIFIED",
-     "ratio": 1.0,
-     "owner": "auto-II harness",
-     "src": "closure job fixlat-p2lnk-c917ea78d-tc-hm20 @ c917ea78d: MEASURED_ACCEPT, density 1.0: 1.000 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+     "ratio": 0.8824,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "fixlat-p2lnk-c917ea78d-tc-hm20",
+    "commit": "c917ea78d",
+    "bench": "pass_p2_s1",
+    "line": "MEASURED_ACCEPT, density 1.0: 1.000 cycles an item",
+    "cycles": 12743,
+    "item": "items",
+    "items": 12743,
+    "ii": 1.0,
+    "stalled": false,
+    "owner": "auto-II harness",
+    "target": null,
+    "t": 0,
+    "kind": "MEASURED_ACCEPT",
+    "accept_spaced": true,
+    "dense": true
+   }
   },
   "dsfd_r2l_vr_1024x1__ha_SW": {
    "status": "QUALIFIED",
@@ -6192,6 +6981,270 @@
     }
    ]
   },
+  "dsfd_su_t_ctl": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_kv": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_kv0": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_kv1": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_pin": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_qb": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_qn": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_qn0": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_qn1": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_root": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_sm": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "dsfd_su_t_sw": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "dsfd_svc_join": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -6225,7 +7278,8 @@
     "stalled": false,
     "owner": "Claude:s81-svceng-1011",
     "target": null,
-    "t": "2026-10-11T02:19:20-07:00"
+    "t": "2026-10-11T13:46:44-07:00",
+    "adopted": true
    }
   },
   "dsfd_svc_pc": {
@@ -6285,6 +7339,65 @@
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
+    }
+   ]
+  },
+  "dsfd_svch_pcs": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl): ds-1010: HBM PC path (hbm class)"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl): ds-1010: HBM PC path (hbm class)"
+    }
+   ],
+   "bench_ii": {
+    "job": "svch_pcs-eccab9f14-pd60-tc",
+    "commit": "eccab9f14",
+    "bench": "bench_svch_pcs_exact",
+    "line": "SVCHPCS sent=3000 beats=6639 max_outstanding=8 errors=0 fault=0 cycles=21000 verdict=PASS",
+    "cycles": 21000,
+    "item": "beats",
+    "items": 6639,
+    "ii": 3.163,
+    "stalled": false,
+    "owner": "Claude:s81die-1011/ctrl svch",
+    "target": null,
+    "t": "2026-10-11T15:52:58-07:00",
+    "adopted": true
+   }
+  },
+  "dsfd_svch_rly": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:hbm",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl): ds-1010: HBM PC path (hbm class)"
+   },
+   "ops": [
+    {
+     "op": "class:hbm",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl): ds-1010: HBM PC path (hbm class)"
     }
    ]
   },
@@ -6351,7 +7464,8 @@
     "stalled": false,
     "owner": "Claude:s81-svceng-1011",
     "target": null,
-    "t": "2026-10-11T01:46:21-07:00"
+    "t": "2026-10-11T13:46:54-07:00",
+    "adopted": true
    }
   },
   "dsfd_svcio_od": {
@@ -6466,6 +7580,43 @@
     }
    ]
   },
+  "dsfd_vm_be_sl": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ],
+   "bench_ii": {
+    "job": "s81vm-besl-b235ed401-tc-rd-pd45",
+    "commit": "b235ed401",
+    "bench": "bench_exact_gold",
+    "line": "RESULT cyc=64000 checked=43251 mismatches_or_fails=0 phases=120 arm=120 p2rd=714 done=8322 rows_ready=60 starts=469 p2_words=12679 ctrl_reads=3266 el=196000/196000 cap_ops=11750 max_occ=3 mirror_max=3",
+    "cycles": 64000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-ds-vm/be",
+    "target": null,
+    "t": "2026-10-11T13:05:48-07:00",
+    "adopted": true
+   }
+  },
   "dsfd_vm_bg": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -6578,6 +7729,43 @@
     }
    ]
   },
+  "dsfd_vm_clt": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ],
+   "bench_ii": {
+    "job": "s81vm-clt6-dc9e98d04-tc-rd-pd40",
+    "commit": "dc9e98d04",
+    "bench": "bench_exact_gold",
+    "line": "RESULT cyc=64000 checked=44301 mismatches_or_fails=0 phases=139 arm=139 p2rd=671 done=8141 rows_ready=69 starts=459 p2_words=14578 ctrl_reads=3179 el=215712/215712 cap_ops=12842 max_occ=3 mirror_max=3",
+    "cycles": 64000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-ds-vm/fe",
+    "target": null,
+    "t": "2026-10-11T16:20:22-07:00",
+    "adopted": true
+   }
+  },
   "dsfd_vm_fe": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -6601,24 +7789,24 @@
    ]
   },
   "dsfd_vm_mtp_ep": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
     }
    ],
    "bench_ii": {
@@ -6633,28 +7821,29 @@
     "stalled": false,
     "owner": "Claude:mtp-fixlat-1011",
     "target": null,
-    "t": "2026-10-11T02:21:55-07:00"
+    "t": "2026-10-11T02:21:55-07:00",
+    "adopted": true
    }
   },
   "dsfd_vm_p2_ep": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.8824,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.8824,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 0.8824,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
     }
    ],
    "bench_ii": {
@@ -6669,28 +7858,29 @@
     "stalled": false,
     "owner": "Claude:mtp-fixlat-1011",
     "target": null,
-    "t": "2026-10-11T02:06:57-07:00"
+    "t": "2026-10-11T02:06:57-07:00",
+    "adopted": true
    }
   },
   "dsfd_vm_wfc_ep": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.1055,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.1055,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.1055,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
     }
    ],
    "bench_ii": {
@@ -6705,50 +7895,66 @@
     "stalled": false,
     "owner": "Claude:mtp-wfc-1010",
     "target": null,
-    "t": "2026-10-10T23:30:55-07:00"
+    "t": "2026-10-11T05:31:33-07:00",
+    "adopted": true
    }
   },
   "dsfd_wfc_crp": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.1055,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.1055,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.1055,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "el1011-wfccrp-bb847e831-tc-hm25-pr",
+    "commit": "bb847e831",
+    "bench": "bench_crp_stg_r1",
+    "line": "OK         crp_stg_r1             expect=pass MTP_STG PASS jobs=60 starts=60 out=60 cycles=27585 vmslow=0 core_user_mismatch_at_start=0",
+    "cycles": 27585,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-ds-wfc",
+    "target": null,
+    "t": "2026-10-11T11:27:59-07:00",
+    "adopted": true
+   }
   },
   "dsfd_wfc_lnk": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.1055,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.1055,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.1055,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
     }
    ],
    "bench_ii": {
@@ -6763,72 +7969,90 @@
     "stalled": false,
     "owner": "Claude:mtp-rom",
     "target": null,
-    "t": "2026-10-10T00:27:21-07:00"
+    "t": "2026-10-11T08:48:53-07:00",
+    "adopted": true
    }
   },
   "dsfd_wfc_tok_hard": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_tok.edges measured / price 1.0"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_tok.edges measured / price 1.0"
     }
    ]
   },
   "dsfd_wfc_vmx": {
-   "status": "QUALIFIED",
-   "ratio": 1.015,
+   "status": "UNQUALIFIED",
+   "ratio": 1.1055,
    "limiting": {
-    "op": "bench II (items)",
-    "model": "rom",
-    "status": "QUALIFIED",
-    "ratio": 1.015,
-    "owner": "auto-II harness",
-    "src": "closure job mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl @ c39e235bb: MEASURED_RECORDED, density 0.986: 1.015 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+    "op": "class:wave (wave bench)",
+    "model": "ds_rom_mtp",
+    "status": "UNQUALIFIED",
+    "ratio": 1.1055,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
    },
    "ops": [
     {
-     "op": "bench II (items)",
-     "model": "rom",
-     "status": "QUALIFIED",
-     "ratio": 1.015,
-     "owner": "auto-II harness",
-     "src": "closure job mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl @ c39e235bb: MEASURED_RECORDED, density 0.986: 1.015 cycles an item (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+     "op": "class:wave (wave bench)",
+     "model": "ds_rom_mtp",
+     "status": "UNQUALIFIED",
+     "ratio": 1.1055,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl",
+    "commit": "c39e235bb",
+    "bench": "prd_s0_tr_forced",
+    "line": "MEASURED_RECORDED, density 0.986: 1.015 cycles an item",
+    "cycles": 41275,
+    "item": "items",
+    "items": 40685,
+    "ii": 1.015,
+    "stalled": false,
+    "owner": "auto-II harness",
+    "target": null,
+    "t": 0,
+    "kind": "MEASURED_RECORDED",
+    "accept_spaced": false,
+    "dense": true
+   }
   },
   "dsrom_mtp_head_full340_A": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: whole-vocab head wrapper (needs redesign, not built)"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: whole-vocab head wrapper (needs redesign, not built)"
     }
    ]
   },
@@ -6865,7 +8089,8 @@
     "stalled": false,
     "owner": "Claude:hbm-phys-1010/idx",
     "target": null,
-    "t": "2026-10-10T18:44:36-07:00"
+    "t": "2026-10-10T18:44:36-07:00",
+    "adopted": true
    }
   },
   "hfd_attn_half_hi": {
@@ -7082,6 +8307,43 @@
     }
    ]
   },
+  "hfd_hc_tile_xl": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:conservative-1011 [B hfd_hc]",
+    "src": "closure job hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:conservative-1011 [B hfd_hc]",
+     "src": "closure job hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl",
+    "commit": "5c35b1a6e",
+    "bench": "bench_hc_tile_xl_pos",
+    "line": "TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100",
+    "cycles": 600,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:conservative-1011 [B hfd_hc]",
+    "target": null,
+    "t": "2026-10-11T14:47:27-07:00",
+    "adopted": true
+   }
+  },
   "hfd_idx_score": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -7159,7 +8421,8 @@
     "stalled": true,
     "owner": "Claude:fe-push-hgi-1010",
     "target": null,
-    "t": "2026-10-11T03:05:01-07:00"
+    "t": "2026-10-11T03:05:01-07:00",
+    "adopted": true
    }
   },
   "hfd_index_q_b0": {
@@ -7483,7 +8746,8 @@
     "stalled": false,
     "owner": "Claude:hardcore-1010",
     "target": null,
-    "t": "2026-10-11T00:20:26-07:00"
+    "t": "2026-10-11T06:21:26-07:00",
+    "adopted": true
    }
   },
   "hfd_svc_SE_s0": {
@@ -8159,7 +9423,8 @@
     "stalled": false,
     "owner": "Codex:generic_attn_g12",
     "target": null,
-    "t": "2026-10-09T19:48:11-07:00"
+    "t": "2026-10-09T19:48:11-07:00",
+    "adopted": true
    }
   },
   "hgi_att_rows_g12_140": {
@@ -8203,7 +9468,8 @@
     "stalled": false,
     "owner": "Codex:generic_attn_g12",
     "target": null,
-    "t": "2026-10-09T19:48:12-07:00"
+    "t": "2026-10-09T19:48:12-07:00",
+    "adopted": true
    }
   },
   "hgi_idx_chunk": {
@@ -8335,7 +9601,8 @@
     "stalled": false,
     "owner": "Claude:redesign-hbm",
     "target": null,
-    "t": "2026-10-10T06:26:00-07:00"
+    "t": "2026-10-10T06:26:00-07:00",
+    "adopted": true
    }
   },
   "ot_dshbm_accept_port": {
@@ -8401,6 +9668,28 @@
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
+    }
+   ]
+  },
+  "ot_dsrom_aq12t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
     }
    ]
   },
@@ -8549,7 +9838,8 @@
     "stalled": false,
     "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
     "target": null,
-    "t": "2026-10-10T16:47:11-07:00"
+    "t": "2026-10-10T16:47:11-07:00",
+    "adopted": true
    }
   },
   "ot_dsrom_hc_mean_capture": {
@@ -8585,7 +9875,8 @@
     "stalled": false,
     "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
     "target": null,
-    "t": "2026-10-10T07:03:29-07:00"
+    "t": "2026-10-11T08:47:38-07:00",
+    "adopted": true
    }
   },
   "ot_dsrom_hc_secded_pipe": {
@@ -8643,7 +9934,8 @@
     "stalled": false,
     "owner": "Claude:cont-takeover (distributed HC routes; registry rows: sys-takeover)",
     "target": null,
-    "t": "2026-10-09T23:19:13-07:00"
+    "t": "2026-10-11T08:47:37-07:00",
+    "adopted": true
    }
   },
   "ot_dsrom_head_bundle_glue": {
@@ -8740,21 +10032,21 @@
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: embedding lookup feeding the Markov join: not on a wave charge in this bench"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: embedding lookup feeding the Markov join: not on a wave charge in this bench"
     }
    ]
   },
@@ -8762,43 +10054,43 @@
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: needs the head weight ROM image (viamap); HBRELAY half of draft_head.pipe_regs not measured"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: needs the head weight ROM image (viamap); HBRELAY half of draft_head.pipe_regs not measured"
     }
    ]
   },
   "ot_dsrom_markov_row_K256": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge markov.floor measured / price 1.0"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge markov.floor measured / price 1.0"
     }
    ]
   },
@@ -8806,43 +10098,43 @@
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: PINREG 2 variant (the charge is priced on PINREG 1)"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: PINREG 2 variant (the charge is priced on PINREG 1)"
     }
    ]
   },
   "ot_dsrom_mtp_lrx_rtt": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.8036,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.8036,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_seq.seed_release measured / price 0.8036"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 0.8036,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_seq.seed_release measured / price 0.8036"
     }
    ]
   },
@@ -8850,21 +10142,21 @@
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: seed projection controller drives the native q-element over the released main_proj tensor; its cycles are the composition seed term (bench stub at T_SC), not a wave charge"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: seed projection controller drives the native q-element over the released main_proj tensor; its cycles are the composition seed term (bench stub at T_SC), not a wave charge"
     }
    ]
   },
@@ -8983,7 +10275,8 @@
     "stalled": false,
     "owner": "Claude:safe-hbm",
     "target": null,
-    "t": "2026-10-09T13:52:14-07:00"
+    "t": "2026-10-11T08:46:46-07:00",
+    "adopted": true
    }
   },
   "ot_dsrom_su_softmax_div_tile": {
@@ -9107,24 +10400,24 @@
    ]
   },
   "ot_dsrom_wfc_tokpipe_src": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 0.5158,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 0.5158,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.intervals measured / price 0.5158"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 0.5158,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.intervals measured / price 0.5158"
     }
    ],
    "bench_ii": {
@@ -9146,24 +10439,24 @@
    }
   },
   "ot_dsrom_wfc_tokpipe_stg": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.1055,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.1055,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.1055,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
     }
    ],
    "bench_ii": {
@@ -9301,6 +10594,116 @@
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
+    }
+   ]
+  },
+  "ot_engc_t_io": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_engc_t_pbb": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_engc_t_pbc": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_engc_t_win": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_engc_t_ws": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
     }
    ]
   },
@@ -9547,7 +10950,8 @@
     "stalled": false,
     "owner": "Claude:sys-takeover",
     "target": null,
-    "t": "2026-10-09T16:06:31-07:00"
+    "t": "2026-10-09T16:06:31-07:00",
+    "adopted": true
    }
   },
   "ot_hbm_native_candidate_format": {
@@ -9559,7 +10963,7 @@
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
     "owner": "Claude:struct-close",
-    "src": "closure job candfmt_rb-937531860-tc-hm25-cl: FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0 (II 2.155 > 1.10 or stalled stimulus: budget not mapped)"
+    "src": "closure job candfmt_rb-937531860-tc-hm10-cl: FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0 (II 2.155 > 1.10 or stalled stimulus: budget not mapped)"
    },
    "ops": [
     {
@@ -9568,11 +10972,11 @@
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
      "owner": "Claude:struct-close",
-     "src": "closure job candfmt_rb-937531860-tc-hm25-cl: FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0 (II 2.155 > 1.10 or stalled stimulus: budget not mapped)"
+     "src": "closure job candfmt_rb-937531860-tc-hm10-cl: FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0 (II 2.155 > 1.10 or stalled stimulus: budget not mapped)"
     }
    ],
    "bench_ii": {
-    "job": "candfmt_rb-937531860-tc-hm25-cl",
+    "job": "candfmt_rb-937531860-tc-hm10-cl",
     "commit": "937531860",
     "bench": "bench_rb_cand_format_exact",
     "line": "FORMAT_DONE packets=863 flits=118 cycles=1860 errors=0",
@@ -9583,7 +10987,8 @@
     "stalled": false,
     "owner": "Claude:struct-close",
     "target": null,
-    "t": "2026-10-09T12:31:28-07:00"
+    "t": "2026-10-11T08:46:03-07:00",
+    "adopted": true
    }
   },
   "ot_hbm_native_candidate_parse": {
@@ -9595,7 +11000,7 @@
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
     "owner": "Claude:struct-close",
-    "src": "closure job candparse_rb-937531860-tc-hm10-cl: PARSE_DONE tuples=60 cycles=78 (II 1.3 > 1.10 or stalled stimulus: budget not mapped)"
+    "src": "closure job candparse_rb-937531860-tc-hm25-cl: PARSE_DONE tuples=60 cycles=78 (II 1.3 > 1.10 or stalled stimulus: budget not mapped)"
    },
    "ops": [
     {
@@ -9604,11 +11009,11 @@
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
      "owner": "Claude:struct-close",
-     "src": "closure job candparse_rb-937531860-tc-hm10-cl: PARSE_DONE tuples=60 cycles=78 (II 1.3 > 1.10 or stalled stimulus: budget not mapped)"
+     "src": "closure job candparse_rb-937531860-tc-hm25-cl: PARSE_DONE tuples=60 cycles=78 (II 1.3 > 1.10 or stalled stimulus: budget not mapped)"
     }
    ],
    "bench_ii": {
-    "job": "candparse_rb-937531860-tc-hm10-cl",
+    "job": "candparse_rb-937531860-tc-hm25-cl",
     "commit": "937531860",
     "bench": "bench_rb_cand_parse_exact",
     "line": "PARSE_DONE tuples=60 cycles=78",
@@ -9619,7 +11024,8 @@
     "stalled": false,
     "owner": "Claude:struct-close",
     "target": null,
-    "t": "2026-10-09T15:54:12-07:00"
+    "t": "2026-10-11T08:46:05-07:00",
+    "adopted": true
    }
   },
   "ot_hbm_native_index_query_credit": {
@@ -9655,7 +11061,8 @@
     "stalled": false,
     "owner": "Claude:struct-close",
     "target": null,
-    "t": "2026-10-10T03:48:15-07:00"
+    "t": "2026-10-10T03:48:15-07:00",
+    "adopted": true
    }
   },
   "ot_hdc_accept": {
@@ -9850,6 +11257,28 @@
     }
    ]
   },
+  "ot_hdc_v41x_idx_ksub_el": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "ot_hgi_argmax18_m": {
    "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
@@ -9891,7 +11320,8 @@
     "stalled": false,
     "owner": "Claude:hgi-takeover",
     "target": null,
-    "t": "2026-10-10T16:47:22-07:00"
+    "t": "2026-10-10T16:47:22-07:00",
+    "adopted": true
    }
   },
   "ot_hgi_argmax_record": {
@@ -10039,7 +11469,8 @@
     "stalled": false,
     "owner": "Claude:hgi-takeover",
     "target": null,
-    "t": "2026-10-10T16:47:31-07:00"
+    "t": "2026-10-10T16:47:31-07:00",
+    "adopted": true
    }
   },
   "ot_hgi_cp": {
@@ -10097,72 +11528,73 @@
     "stalled": false,
     "owner": "Claude:fe-push-hgi-1010",
     "target": null,
-    "t": "2026-10-10T21:49:39-07:00"
+    "t": "2026-10-11T03:49:59-07:00",
+    "adopted": true
    }
   },
   "ot_hgi_dma_front": {
-   "status": "UNQUALIFIED",
-   "ratio": 3.817,
+   "status": "QUALIFIED",
+   "ratio": 1.05,
    "limiting": {
     "op": "DMA.KVWB_DS",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 3.817,
-    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
-    "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+    "status": "QUALIFIED",
+    "ratio": 1.05,
+    "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
+    "src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json"
    },
    "ops": [
     {
      "op": "DMA.KVWB_DS",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 3.817,
-     "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
-     "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+     "status": "QUALIFIED",
+     "ratio": 1.05,
+     "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
+     "src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json"
     }
    ]
   },
   "ot_hgi_dma_mover": {
-   "status": "UNQUALIFIED",
-   "ratio": 3.817,
+   "status": "QUALIFIED",
+   "ratio": 1.05,
    "limiting": {
     "op": "DMA.KVWB_DS",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 3.817,
-    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
-    "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+    "status": "QUALIFIED",
+    "ratio": 1.05,
+    "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
+    "src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json"
    },
    "ops": [
     {
      "op": "DMA.KVWB_DS",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 3.817,
-     "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
-     "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+     "status": "QUALIFIED",
+     "ratio": 1.05,
+     "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
+     "src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json"
     }
    ]
   },
   "ot_hgi_dma_record": {
-   "status": "UNQUALIFIED",
-   "ratio": 3.817,
+   "status": "QUALIFIED",
+   "ratio": 1.05,
    "limiting": {
     "op": "DMA.KVWB_DS",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 3.817,
-    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
-    "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+    "status": "QUALIFIED",
+    "ratio": 1.05,
+    "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
+    "src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json"
    },
    "ops": [
     {
      "op": "DMA.KVWB_DS",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 3.817,
-     "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
-     "src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+     "status": "QUALIFIED",
+     "ratio": 1.05,
+     "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
+     "src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json"
     }
    ]
   },
@@ -10627,90 +12059,90 @@
    ]
   },
   "ot_mtp_commit": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "QUALIFIED",
+    "ratio": 1.0,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_commit measured / price 1.0"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "QUALIFIED",
+     "ratio": 1.0,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_commit measured / price 1.0"
     }
    ]
   },
   "ot_mtp_hist_ring": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
     }
    ]
   },
   "ot_mtp_hist_ring_p": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
     }
    ]
   },
   "ot_mtp_p2_prefix_path": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.1143,
    "limiting": {
-    "op": "class:wave",
+    "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "bf-mtp-1010",
-    "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.1143,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
    },
    "ops": [
     {
-     "op": "class:wave",
+     "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "bf-mtp-1010",
-     "src": "name rule ^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_): bf-mtp-1010: DS ROM MTP draft / WFC / accept path not integrated on the S81 binding (audit dsrom_mtp_draft_hw)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.1143,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
     }
    ],
    "bench_ii": {
@@ -10729,6 +12161,417 @@
     "kind": "MEASURED_ACCEPT",
     "accept_spaced": true,
     "dense": false
+   }
+  },
+  "ot_mtp_p2_prefix_path_hub": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:wave (wave bench)",
+    "model": "ds_rom_mtp",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json: element not in the integrated wave bench"
+   },
+   "ops": [
+    {
+     "op": "class:wave (wave bench)",
+     "model": "ds_rom_mtp",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json: element not in the integrated wave bench"
+    }
+   ]
+  },
+  "ot_nhb_pbst": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_nhb_pvlg": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_nhb_zh": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_p2h_arith": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_p2h_fadd16": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_p2h_xport": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_pqc_t_bc": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_pqc_t_ctl16": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_pqc_t_ix": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_pqc_t_prom": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_pqc_t_qb": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_pqc_t_ret": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_pqc_t_srom": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_pqc_t_xin": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qkh_ktree": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qkh_lane8": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qkvd_fbuf8": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ],
+   "bench_ii": {
+    "job": "qkd_fbuf8-a-0feeb971e-tc-hm10-cl",
+    "commit": "0feeb971e",
+    "bench": "bench_fbuf8_d8",
+    "line": "PASS buf_tile D=8 cycles=200000 pops=70919 head_gap_cycles=13082",
+    "cycles": 200000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-kvd",
+    "target": null,
+    "t": "2026-10-11T18:45:28-07:00",
+    "adopted": true
    }
   },
   "ot_qkvd_kv_end": {
@@ -10774,6 +12617,43 @@
      "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ]
+  },
+  "ot_qkvd_sbuf": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ],
+   "bench_ii": {
+    "job": "qkd_sbuf-b-0feeb971e-tc-hm10-cl",
+    "commit": "0feeb971e",
+    "bench": "bench_sbuf_d48",
+    "line": "PASS buf_tile D=48 cycles=200000 pops=72516 head_gap_cycles=12358",
+    "cycles": 200000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-kvd",
+    "target": null,
+    "t": "2026-10-11T16:07:28-07:00",
+    "adopted": true
+   }
   },
   "ot_qwen_link_forwarded_tmr_pair": {
    "status": "QUALIFIED",
@@ -11171,6 +13051,182 @@
     }
    ]
   },
+  "ot_s81_hc_comb": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_s81_hc_cpin": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_s81_hc_croot": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_s81_hc_crootr": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_s81_hc_crooty": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_s81_hc_ctile": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_s81_hc_rtile": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_s81_hc_tile": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "ot_s81_head_delay8x32": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -11377,7 +13433,8 @@
     "stalled": false,
     "owner": "Claude:hbm-blocks",
     "target": null,
-    "t": "2026-10-09T19:22:19-07:00"
+    "t": "2026-10-09T19:22:19-07:00",
+    "adopted": true
    }
   },
   "ot_v41_bf_col": {
@@ -11509,7 +13566,8 @@
     "stalled": false,
     "owner": "Claude:cont-takeover",
     "target": null,
-    "t": "2026-10-10T22:52:51-07:00"
+    "t": "2026-10-10T22:52:51-07:00",
+    "adopted": true
    }
   },
   "qfd_cdc1024": {
@@ -11589,7 +13647,8 @@
     "stalled": false,
     "owner": "Claude:sys-takeover",
     "target": null,
-    "t": "2026-10-10T17:46:54-07:00"
+    "t": "2026-10-10T17:46:54-07:00",
+    "adopted": true
    }
   },
   "qfd_coll_xfifo_b": {
@@ -11625,7 +13684,8 @@
     "stalled": false,
     "owner": "Claude:sys-takeover",
     "target": null,
-    "t": "2026-10-10T01:09:24-07:00"
+    "t": "2026-10-10T01:09:24-07:00",
+    "adopted": true
    }
   },
   "qfd_coll_xfifo_l8": {
@@ -11648,7 +13708,22 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc): qwen-1010: link / collective FIFOs (link class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_coll_xfifo_l8n_a-6d8e992da-tc-cl",
+    "commit": "6d8e992da",
+    "bench": "bench_coll_native_exact",
+    "line": "case reduce_8w PASS NCOLL_NATIVE PASS cycles=318",
+    "cycles": 318,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-coll",
+    "target": null,
+    "t": "2026-10-11T15:28:44-07:00",
+    "adopted": true
+   }
   },
   "qfd_coll_xfifo_l8_b": {
    "status": "QUALIFIED",
@@ -11670,7 +13745,22 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc): qwen-1010: link / collective FIFOs (link class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_coll_xfifo_l8n_b-6d8e992da-tc-cl",
+    "commit": "6d8e992da",
+    "bench": "bench_coll_native_exact",
+    "line": "case reduce_8w PASS NCOLL_NATIVE PASS cycles=318",
+    "cycles": 318,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-coll",
+    "target": null,
+    "t": "2026-10-11T15:29:05-07:00",
+    "adopted": true
+   }
   },
   "qfd_crom_g": {
    "status": "QUALIFIED",
@@ -12530,50 +14620,6 @@
     }
    ]
   },
-  "qfd_dspark_argmax_gather": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "class:mtp",
-    "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "qwen-1010",
-    "src": "name rule ^qfd_dspark_: qwen-1010: DSpark on Qwen ROM has no qualified composition"
-   },
-   "ops": [
-    {
-     "op": "class:mtp",
-     "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "qwen-1010",
-     "src": "name rule ^qfd_dspark_: qwen-1010: DSpark on Qwen ROM has no qualified composition"
-    }
-   ]
-  },
-  "qfd_dspark_s7_control": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "class:mtp",
-    "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "qwen-1010",
-    "src": "name rule ^qfd_dspark_: qwen-1010: DSpark on Qwen ROM has no qualified composition"
-   },
-   "ops": [
-    {
-     "op": "class:mtp",
-     "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "qwen-1010",
-     "src": "name rule ^qfd_dspark_: qwen-1010: DSpark on Qwen ROM has no qualified composition"
-    }
-   ]
-  },
   "qfd_emb_pc_00": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -12717,7 +14763,8 @@
     "stalled": false,
     "owner": "Claude:qwen-missing",
     "target": null,
-    "t": "2026-10-09T12:17:54-07:00"
+    "t": "2026-10-09T12:17:54-07:00",
+    "adopted": true
    }
   },
   "qfd_embed_code_bank_retained": {
@@ -12753,7 +14800,8 @@
     "stalled": false,
     "owner": "Codex:embedding-scale",
     "target": null,
-    "t": "2026-10-10T02:54:48-07:00"
+    "t": "2026-10-10T02:54:48-07:00",
+    "adopted": false
    }
   },
   "qfd_embed_ingress_code": {
@@ -12789,7 +14837,8 @@
     "stalled": false,
     "owner": "Codex:embedding-scale",
     "target": null,
-    "t": "2026-10-10T05:01:06-07:00"
+    "t": "2026-10-10T05:01:06-07:00",
+    "adopted": false
    }
   },
   "qfd_embed_ingress_code_numeric": {
@@ -12825,7 +14874,8 @@
     "stalled": false,
     "owner": "Claude:setup-triage (block owner main / Codex:embedding-scale)",
     "target": null,
-    "t": "2026-10-09T12:17:54-07:00"
+    "t": "2026-10-09T12:17:54-07:00",
+    "adopted": false
    }
   },
   "qfd_embed_ingress_code_padded": {
@@ -12861,7 +14911,8 @@
     "stalled": false,
     "owner": "Claude:qwen-blocks",
     "target": null,
-    "t": "2026-10-10T02:57:06-07:00"
+    "t": "2026-10-10T02:57:06-07:00",
+    "adopted": true
    }
   },
   "qfd_embed_ingress_scale": {
@@ -12952,6 +15003,43 @@
     }
    ]
   },
+  "qfd_io_collective_fs": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ],
+   "bench_ii": {
+    "job": "qfd_io_collective_fs-b760fc991-tc-cl",
+    "commit": "b760fc991",
+    "bench": "bench_coll_margin7_exact",
+    "line": "se gather_1w margin=7 mutant=0 PASS mismatches=0 words_out=1024 cycles=355",
+    "cycles": 355,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-coll",
+    "target": null,
+    "t": "2026-10-11T16:34:46-07:00",
+    "adopted": true
+   }
+  },
   "qfd_io_emb_root": {
    "status": "QUALIFIED_BY_BOUND",
    "ratio": null,
@@ -12985,7 +15073,8 @@
     "stalled": false,
     "owner": "Claude:drive-0928",
     "target": null,
-    "t": "2026-10-10T19:14:24-07:00"
+    "t": "2026-10-10T19:14:24-07:00",
+    "adopted": true
    }
   },
   "qfd_io_emb_tap": {
@@ -13021,7 +15110,8 @@
     "stalled": false,
     "owner": "Claude:qwen-rtl-finish",
     "target": null,
-    "t": "2026-10-09T12:17:55-07:00"
+    "t": "2026-10-09T12:17:55-07:00",
+    "adopted": true
    }
   },
   "qfd_io_host": {
@@ -13079,7 +15169,8 @@
     "stalled": false,
     "owner": "Claude:drive-1143",
     "target": null,
-    "t": "2026-10-10T03:48:07-07:00"
+    "t": "2026-10-11T08:49:18-07:00",
+    "adopted": true
    }
   },
   "qfd_io_ucie": {
@@ -13379,7 +15470,8 @@
     "stalled": false,
     "owner": "Codex:res-ser-tiles",
     "target": null,
-    "t": "2026-10-10T17:49:58-07:00"
+    "t": "2026-10-11T08:49:23-07:00",
+    "adopted": true
    }
   },
   "qfd_res_slot": {
@@ -13459,7 +15551,8 @@
     "stalled": false,
     "owner": "Claude:sys-takeover",
     "target": null,
-    "t": "2026-10-10T20:45:26-07:00"
+    "t": "2026-10-10T20:45:26-07:00",
+    "adopted": true
    }
   },
   "qfd_seq_su": {
@@ -13495,7 +15588,8 @@
     "stalled": false,
     "owner": "Claude:hardcore-1010/fe-h",
     "target": null,
-    "t": "2026-10-11T03:01:04-07:00"
+    "t": "2026-10-11T03:01:04-07:00",
+    "adopted": true
    }
   },
   "qfd_seq_su_bi_fea": {
@@ -13518,7 +15612,22 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_seq_su_bi-fearl-19fe61d1d-tc-hm0-cl",
+    "commit": "19fe61d1d",
+    "bench": "bench_hq2_lockstep_s1",
+    "line": "PASS seq_su_bi_psram cycles=20997 program_reads=400 loads=200 core_done=0 cwait=19050 coll=0 vm_writes=0 chase_eq=0",
+    "cycles": 20997,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-seq",
+    "target": null,
+    "t": "2026-10-11T17:20:19-07:00",
+    "adopted": true
+   }
   },
   "qfd_seq_su_bi_feb": {
    "status": "QUALIFIED",
@@ -13540,7 +15649,22 @@
      "owner": "qwen-1010",
      "src": "name rule ^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host): qwen-1010: spine SU / sequencer / residual (su class)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_seq_su_bi-febra-dace0dae3-tc-hm0-cl",
+    "commit": "dace0dae3",
+    "bench": "bench_hq2_lockstep_s1",
+    "line": "PASS seq_su_bi_psram cycles=20997 program_reads=400 loads=200 core_done=0 cwait=19050 coll=0 vm_writes=0 chase_eq=0",
+    "cycles": 20997,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-seq",
+    "target": null,
+    "t": "2026-10-11T18:52:40-07:00",
+    "adopted": true
+   }
   },
   "qfd_sp_band_lanes": {
    "status": "QUALIFIED",
@@ -13641,7 +15765,8 @@
     "stalled": false,
     "owner": "Claude:struct-close",
     "target": null,
-    "t": "2026-10-10T19:14:24-07:00"
+    "t": "2026-10-10T19:14:24-07:00",
+    "adopted": true
    }
   },
   "qfd_sp_constants_sequencer_sys_v_t": {
@@ -13850,6 +15975,28 @@
     }
    ]
   },
+  "qfd_su64_lane_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "qfd_su_cbuf": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -13993,7 +16140,8 @@
     "stalled": false,
     "owner": "Claude:drive-0158",
     "target": null,
-    "t": "2026-10-10T19:21:56-07:00"
+    "t": "2026-10-10T19:21:56-07:00",
+    "adopted": true
    }
   },
   "qfd_tile": {
@@ -14024,7 +16172,22 @@
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qfd_tile_lsl3-17c2e7993-tc-hm0-cl",
+    "commit": "17c2e7993",
+    "bench": "bench_rom_pipe_exact_anr",
+    "line": "\"verdict\": \"PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=300 cycles=22937 result_writes=5632 maxima=24 argmax_changes=501 scale_reads=2444 latency_added=13 ACC_LAT=7 TREE_LAT=",
+    "cycles": 22937,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-tile",
+    "target": null,
+    "t": "2026-10-11T16:29:06-07:00",
+    "adopted": true
+   }
   },
   "qfd_tile_e": {
    "status": "QUALIFIED",
@@ -14045,6 +16208,28 @@
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_tile_lsl": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
     }
    ]
   },
@@ -14133,6 +16318,28 @@
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_vm_grp": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
     }
    ]
   },
