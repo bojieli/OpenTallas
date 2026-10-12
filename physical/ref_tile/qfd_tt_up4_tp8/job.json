@@ -1,5 +1,5 @@
 {
- "name": "qfd_tt_up4_tp8-rt1-COMMIT",
+ "name": "qfd_tt_up4_tp8-rt1-ef228d3d0",
  "block": "ot_qfd_band_upper",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8/par-tt",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-qwen-tp8-par-tt",
-  "commit": "COMMIT"
+  "commit": "ef228d3d0"
  },
  "stages": {
   "bench": [
@@ -132,7 +132,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tt_up4_tp8/qfd_tt_up4_tp8-rt1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tt_up4_tp8/qfd_tt_up4_tp8-rt1-ef228d3d0"
   }
  ],
  "cycles_added": 0,
