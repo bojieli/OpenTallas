@@ -1,5 +1,14 @@
 `timescale 1ns/1ps
 `default_nettype none
+`ifndef OT_SU_C12_RSLICE
+`define OT_SU_C12_RSLICE 64
+`endif
+`ifndef OT_SU_C12_DENR
+`define OT_SU_C12_DENR 1
+`endif
+`ifndef OT_SU_C12_SFUT
+`define OT_SU_C12_SFUT 0
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // HGI-1 stream-unit die body (hgi-adapters, 2026-10-09) on the D1 memory model (spec 2.4 "How engines reach VM",
 // main aeac6fa40): record -> ot_hgi_su_record (decode) -> STAGE the op's VM operands into the unit's local fixed-latency
@@ -954,7 +963,17 @@ module ot_hgi_su_unit #(
     wire [4*N*AW-1:0] rd_addr; wire [4*N-1:0] rd_re; wire [8*N-1:0] rd_src; wire [4*N*32-1:0] rd_q;
     wire [N*32-1:0] vm_wdata, kv_wdata; wire [NR-1:0] res_we; wire [NR*AW-1:0] res_addr; wire [NR*32-1:0] res_data;
     wire [7:0] cr_seq, cr_dseq, cr_rseq; wire [15:0] cr_cnt, emitted; wire de, dr, ds; wire [7:0] es, rs, ss;
+`ifdef OT_SU_C12
+    // tput-fix-1011 (bench only, -DOT_SU_C12 with the *_c12 file set): the stream unit as the die's c12 lane array --
+    // ot_su13_ctl64's functional parameter set (rtl/hdc/v41x/phys/ot_hdc_su_ctl_c13_phys.sv less the physical-only CTL13;
+    // lanes = ot_su12_sfu / ot_su12_light: MLAT 6, ALAT 6, OPR 1, DDIV 21, SIDEX 4, CAPR 1)
+    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(7), .RET_STAGES(8), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21),
+                      .SIDEX(4), .FSQ(1), .CAPR(1), .RPAD(1), .RSL(2), .RTAP(1), .ROUT(1), .RSLICE(`OT_SU_C12_RSLICE),
+                      .CTL12(1), .DENR(`OT_SU_C12_DENR), .SFUT(`OT_SU_C12_SFUT))
+                    u_vec (.clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+`else
     ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV)) u_vec (.clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+`endif
         .i_nout(wl[0 +: 16]), .i_nin(wl[16 +: 16]), .i_asrc(wl[32 +: 2]), .i_bsrc(wl[34 +: 2]), .i_csrc(wl[36 +: 2]),
         .i_dsrc(wl[38 +: 2]), .i_abase(wl[40 +: 24]), .i_aso(wl[64 +: 24]), .i_asi(wl[88 +: 24]),
         .i_aibase(wl[112 +: 24]), .i_aind(wl[136 +: 2]), .i_bbase(wl[138 +: 24]), .i_bso(wl[162 +: 24]),

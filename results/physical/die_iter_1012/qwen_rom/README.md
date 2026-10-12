@@ -1,0 +1,52 @@
+# Qwen3-8B ROM die (r22ko4): die-level iteration log
+
+Owner decision 2026-10-12: die-level iteration runs in parallel with element closure. Each iteration assembles the die
+from the current contract (`results/arch/hier_contract_1011/qwen_rom.json`):
+
+- **real**: the master is bound to a closed, routed element's exported timing view (LEF + TT/FF Liberty from the shared
+  exporter, `physical/qwen_die_masters/views/<v>`). Die bits are bound by role or direction (`tools/hier_contract/die_views.py`).
+- **budget**: an open element. It has the contract slot outline and pins, and its Liberty takes the contract IO budget:
+  setup at each input pin = in_delay_frac x T, clock->out at each output pin = out_delay_frac x T (0.2 T = 166.67 ps).
+  FF hold keeps the single-flop minimum view.
+- **assumed**: the single-flop constants of `tools/qwen_die_element_lib.py` (iteration 1 only).
+
+The full-die checks are on EPYC3 (`/srv/opentallas-scratch/claude/die-evidence-2/qwen_r22ko4_<e>`): legal real case,
+then PDN, then full-die GRT, then die STA (TT setup / FF hold on GRT parasitics with the CTS-measured clock plan), then
+rule-H1 hold pads, then IR. Per the academic-validation rule there is no flat full-die DRT. Real-view share counts the
+relay stations and the 1,536 cst stations as real: they are bound to closed station ETMs by pin direction.
+
+| It | Run | Contract | Views (real / budget / assumed masters) | Real share inst / area | GRT overflow | TT setup WNS real / all (ps) | FF hold WNS real / all (ps) | IR |
+|---|---|---|---|---|---|---|---|---|
+| 1 | r22ko4_e6 (src 21fdd3100) | v3 | 156 / 0 / 19 | 87.9% / 7.1% | pending: GRT in extra iterations (21/30 at 07:05 UTC, so overflow > 0 after the initial route) | pending | pending | pending |
+| 2 | e6 GRT re-timed (`sta_r22k_<c>_it2`) | v4 + it2 views | 159 / 16 / 1 | 88.1% / 7.4% | (same route as it 1) | pending | pending | pending |
+| 3 | r22ko4_e7 (src 22760e79f) | v4 (+ io_collective M7 straps, 265-region CTS plan) | 156 / 0 / 19 | 87.9% / 7.1% | pending (PDN running) | pending | pending | pending |
+
+## Where the area is
+
+92.6% of the die area is still on budget views. Almost all of it is one element: `qfd_tile_nk`, 1,536 x 0.345 mm2 =
+529.6 mm2. That replicated hardened cluster is open: the h3 route hit DRT-0073 on the lsl leaf's E-face pin access, and
+lsl6 is the fix (el1011-q-tile). The die's real-area share moves only when that tile closes. Every other open element is
+under 5 mm2.
+
+Bound in iteration 2 (closed and exported, outline matches the slot): `qfd_crom_g` (x8, crom_g_a ff3637ce7),
+`qfd_su_cbuf_g` (x8, su_cbuf_g_b d32ba31e7) and `qfd_d2d_rom` (x1, d2d_rom_b).
+
+Some elements have closed but are not bound yet, because their die master is not the closed block:
+
+- `qfd_tt_up4`: the die master has 6 x 513 pw ports. The closed element is one band upper with 768 pw bits.
+- `qfd_io_serdes` and `qfd_io_ucie`: the die masters are PHY + adapter composites. Only the adapter has closed.
+- `qfd_seq_su` and `qfd_sp_band_lanes`: no exported view in `physical/qwen_die_masters/views` yet.
+
+## Contract v5 (2026-10-12): floorplan fixes from this iteration
+
+- **D5, word width.** The station words were 323 bits: the corridor a/b on `qfd_cst_n`/`_s`, and tap on the cst and
+  `qfd_tile_nk`. They are now 509 bits: 508 data plus ready. The closed RTL is 508 + 1: `qfd_cst` (ot_qwen_die_station a_d/b_d/t_d plus
+  a_r/b_r/t_r) and the
+  tile_nk ports ib 379 + ib_go 1 + xl 128. The die generator still used the b3r2 compressed instruction transport
+  (TAP_BITS 325), which no RTL implements. So the die under-counted 186 bits on every station hop. The die generator
+  follows in e8.
+- **D6, tile_nk layers.** `qfd_tile_nk` signal_max_layer goes from M6 to M7. The die straps on M8, and the tile's M7
+  signals run between its M7 PG straps.
+- **tile_nk outline held at 266.952 x 1291.656 (about 60% utilisation).** el1011-q-tile asked for a 288.36 um width.
+  The 52.68 um column channel beside each tile holds the closed `qfd_cst` stations. Widening the column pitch adds
+  64 x 21.4 um = +45 mm2, which takes the die to 866 mm2, over the 858 mm2 reticle.

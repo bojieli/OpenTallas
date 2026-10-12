@@ -9,7 +9,8 @@
 //  * per-rank 2-entry head FIFOs (leaves), refilled by up to 96 concurrent reads (at most ONE outstanding per rank, so
 //    no read is ever issued past a rank's last slot, and leaf space is reserved at issue: occupancy + outstanding <= 2);
 //  * read issue: 8 groups x 12 ranks (group = rank mod 8), a registered round-robin 12:1 candidate {rank, ordinal} per
-//    group (an empty leaf's refill before a prefetch; prefetch only after every leaf has held a head once), one 8:1
+//    group from registered wants only (an empty leaf's refill before a prefetch; prefetch only after every leaf has held
+//    a head once; a granted group skips one cycle), one 8:1
 //    round-robin grant into a registered read request (no 96-way arbitration in one cycle);
 //  * responses: R1 register (rank-independent checks) -> R2 = 8 registered group copies (fanout) -> group-local check
 //    of the expected ordinal for that rank (responses may return in any rank order; per rank they are in order);
@@ -36,7 +37,7 @@ module ot_hbm_index_global_order_mt #(parameter integer ENABLE=0)(
  output wire [72:0] out_frame,output wire [6:0] out_rank,
  output wire retained,output wire done,output wire fault
 );
- localparam [1:0] IDLE=2'd0,RUN=2'd1,DONE=2'd2,FAULT=2'd3;
+ localparam [2:0] IDLE=3'd0,RUN=3'd1,DONE=3'd2,FAULT=3'd3,ARM=3'd4;   // ARM: one clear cycle between start and RUN
  localparam integer NR=96,NG=8,GS=12,NP=192,ROOT=191;   // group g = rank[2:0], member k = rank[6:3]
  function automatic [6:0] mod96(input [16:0] id);   // id % 96 = {((id>>5) % 3), id[4:0]} (tb_hbm_gorder_mod96)
   reg [11:0] q; reg [4:0] sum; reg [1:0] r3; integer d;
@@ -49,12 +50,22 @@ module ot_hbm_index_global_order_mt #(parameter integer ENABLE=0)(
   integer k; begin pick12=0; for(k=11;k>=0;k=k-1) if(m[k]) pick12=k[3:0]; for(k=11;k>=0;k=k-1) if(m[k]&&k>=p) pick12=k[3:0]; end
  endfunction
 
- reg [1:0] state;
+ reg [2:0] state;
  reg [72:0] frame;
- wire lease_ok=owner_valid&&owner_frame==frame;
+ // lease registered (73-bit compare off the handshake paths); it is valid from RUN on (frame is loaded entering ARM)
+ reg lease_ok; always @(posedge clk or negedge por_n) if(!por_n) lease_ok<=1'b0; else lease_ok<=owner_valid&&owner_frame==frame;
  wire run=ENABLE&&state==RUN;
- wire clr=ENABLE&&state==IDLE&&start&&start_r;           // start of a record: clear every per-rank / node state
  assign start_r=ENABLE&&state==IDLE&&publication_complete&&owner_valid;
+ // Record clear: per-rank / node state carries no power-on reset (no reset on the datapath, por_n fanout ~150); it is
+ // cleared in the ARM cycle by 29 registered copies of the start acceptance (<= ~200 loads each):
+ // clrv[2g+h] = leaves of group g (h: members 0-5 / 6-11), clrv[16+j] = merge nodes 8j..8j+7, clrv[28] = misc.
+ wire start_go=ENABLE&&state==IDLE&&start&&start_r&&start_frame==owner_frame;
+ wire [28:0] clrv;
+ genvar ci;
+ generate for(ci=0;ci<29;ci=ci+1)begin:g_clr
+  ot_sc_rep_ff u_c(.clk(clk),.rst_n(por_n),.d(start_go),.q(clrv[ci]));
+ end endgenerate
+ wire clr=clrv[28];
 
  // ---------------- response path: R1 (rank-independent checks) ----------------
  assign rsp_r=run&&lease_ok;
@@ -110,9 +121,9 @@ module ot_hbm_index_global_order_mt #(parameter integer ENABLE=0)(
    assign empty_g[k]=c==2'd0&&!ended; assign want_g[k]=want[R]; assign wanthi_g[k]=want_hi[R];
    assign p_has[R]=c!=2'd0; assign p_end[R]=ended&&c==2'd0; assign p_head[R]=e0;
    assign p_key[R]=(c!=2'd0)?{1'b0,e0[33:17]}:ended?18'h3ffff:lb;
-   always @(posedge clk or negedge por_n)
-    if(!por_n)begin outst<=1'b0;ended<=1'b0;ord<=11'd0;c<=2'd0;lb<=18'(R);end
-    else if(clr)begin outst<=1'b0;ended<=1'b0;ord<=11'd0;c<=2'd0;lb<=18'(R);end
+   wire lclr=clrv[2*g+(k>=6)];
+   always @(posedge clk)
+    if(lclr)begin outst<=1'b0;ended<=1'b0;ord<=11'd0;c<=2'd0;lb<=18'(R);end
     else begin
      if(issue)outst<=1'b1;
      if(hit)begin outst<=1'b0;ord<=ord+11'd1;if(g_last[g])ended<=1'b1;end
@@ -126,14 +137,14 @@ module ot_hbm_index_global_order_mt #(parameter integer ENABLE=0)(
     default:;
    endcase
   end
-  // registered 8:1 candidate; the candidate granted this cycle is masked out of the next one
+  // registered 12:1 candidate, picked from the registered wants only (no grant in the pick path); a granted group shows
+  // no candidate the next cycle (its want bits then reflect the issue), so a group issues at most every other cycle
   reg cv,chi; reg [3:0] cli,gp; reg [10:0] cord;
-  wire [GS-1:0] gm=~(gnt[g]?(12'd1<<cli):12'd0);
-  wire [GS-1:0] wm=want_g&gm,wh=wanthi_g&gm;
+  wire [GS-1:0] wm=want_g,wh=wanthi_g;
   wire [3:0] nli=|wh?pick12(wh,gp):pick12(wm,gp);
   always @(posedge clk or negedge por_n) if(!por_n) gp<=4'd0; else if(gnt[g]) gp<=(cli==GS-1)?4'd0:cli+4'd1;
   assign cand_v[g]=cv; assign cand_hi[g]=chi; assign cand_li[g]=cli; assign cand_ord[g]=cord;
-  always @(posedge clk or negedge por_n) if(!por_n) begin cv<=1'b0;chi<=1'b0;end else begin cv<=|wm&&!clr;chi<=|wh&&!clr;end
+  always @(posedge clk or negedge por_n) if(!por_n) begin cv<=1'b0;chi<=1'b0;end else begin cv<=|wm&&!clrv[2*g]&&!gnt[g];chi<=|wh&&!clrv[2*g]&&!gnt[g];end
   always @(posedge clk) begin cli<=nli; cord<=ord_g[nli]; end
  end endgenerate
 
@@ -181,9 +192,9 @@ module ot_hbm_index_global_order_mt #(parameter integer ENABLE=0)(
    if(HASB)begin:g_popb assign p_pop[B]=take_b; end
    assign p_has[O]=c!=2'd0; assign p_end[O]=alldone&&c==2'd0; assign p_head[O]=e0;
    assign p_key[O]=(c!=2'd0)?{1'b0,e0[33:17]}:bnd;
-   always @(posedge clk or negedge por_n)
-    if(!por_n)begin c<=2'd0;alldone<=1'b0;bnd<=18'd0;end
-    else if(clr)begin c<=2'd0;alldone<=1'b0;bnd<=18'd0;end
+   wire nclr=clrv[16+(O-NR)/8];
+   always @(posedge clk)
+    if(nclr)begin c<=2'd0;alldone<=1'b0;bnd<=18'd0;end
     else begin c<=c+{1'b0,push}-{1'b0,pop};alldone<=a_end&&b_end;bnd<=ak<bk?ak:bk;end
    always @(posedge clk) case({push,pop})
     2'b10:if(c==2'd0)e0<=din;else e1<=din;
@@ -193,7 +204,7 @@ module ot_hbm_index_global_order_mt #(parameter integer ENABLE=0)(
    endcase
    if(O==ROOT)begin:g_root_check                   // strict ascending at the root push
     reg [16:0] last; reg last_v;
-    assign root_bad=push&&last_v&&din[33:17]<=last;
+    assign root_bad=run&&push&&last_v&&din[33:17]<=last;
     always @(posedge clk or negedge por_n)
      if(!por_n) last_v<=1'b0; else if(clr) last_v<=1'b0; else if(push) last_v<=1'b1;
     always @(posedge clk) if(push) last<=din[33:17];
@@ -209,16 +220,18 @@ module ot_hbm_index_global_order_mt #(parameter integer ENABLE=0)(
  assign retained=ENABLE&&state!=IDLE;
  assign done=ENABLE&&state==DONE&&lease_ok;
  assign fault=ENABLE&&state==FAULT;
- wire any_fault=(state!=IDLE&&!lease_ok)||(rsp_v&&state!=RUN)||(r1_v&&r1_bad)||(|g_mis)||root_bad;
+ wire any_fault=((state==RUN||state==DONE)&&!lease_ok)||(rsp_v&&state!=RUN)||(r1_v&&r1_bad)||(|g_mis)||root_bad;
+ always @(posedge clk) if(start_go) frame<=start_frame;
  always @(posedge clk or negedge por_n)
-  if(!por_n)begin state<=IDLE;frame<=73'd0;end
+  if(!por_n)state<=IDLE;
   else if(ENABLE)begin
    if(state!=FAULT&&any_fault)state<=FAULT;
    else case(state)
     IDLE:if(start&&start_r)begin
      if(start_frame!=owner_frame)state<=FAULT;
-     else begin frame<=start_frame;state<=RUN;end
+     else state<=ARM;
     end
+    ARM:state<=RUN;
     RUN:if(p_end[ROOT])state<=DONE;
     DONE:state<=IDLE;
     default:state<=FAULT;

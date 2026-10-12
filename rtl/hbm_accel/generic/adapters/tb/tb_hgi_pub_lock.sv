@@ -3,7 +3,9 @@ module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm
     localparam integer NSM = 32;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 11, errors = 0;
-    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end
+    integer rate = 48;   // a row from each SM with probability 1/rate an edge (+RATE=<n>; production stress: 8 = the ff bound 8 / (P NSM / NPC) at P 8)
+    initial begin if (!$value$plusargs("RATE=%d", rate)) rate = 48; $display("RATE=%0d", rate); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg pub_v = 0; reg [39:0] pb = 0; reg [31:0] pst = 0; reg [19:0] pm = 0; reg [12:0] pq = 0; reg [3:0] pp = 0;
     reg [NSM-1:0] rv = 0; reg [NSM*12-1:0] rr = 0; reg [NSM*256-1:0] rd = 0;
     wire ra, rb, da, db, fa, fb; wire [4*338-1:0] qa, qb; wire [4*274-1:0] xa, xb; wire [273:0] ta, tb2; reg [337:0] tq = 0;
@@ -33,20 +35,21 @@ module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm
     endtask
     reg [31:0] expv [int];
     integer c, s, i, nda, ndb, t, sr [0:NSM-1], rows, left, w; reg [31:0] va2, vb2;
-    always @(posedge clk) begin if (da) nda = nda + 1; if (db) ndb = ndb + 1; end
+    integer cyc = 0, t0 = 0, ta_ = 0, tb_ = 0;   // cycles from the command to each form's pub_done (added cycles recorded)
+    always @(posedge clk) begin cyc = cyc + 1; if (da) begin nda = nda + 1; ta_ = cyc; end if (db) begin ndb = ndb + 1; tb_ = cyc; end end
     initial begin
         repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk);
         for (c = 0; c < 8; c = c + 1) begin
             pp = 1 + ($unsigned($random(seed)) % 8); pm = 1 + ($unsigned($random(seed)) % 400); pq = (pm + NSM - 1) / NSM;
             pb = 100 * c + ($unsigned($random(seed)) % 50); pst = pm + ($unsigned($random(seed)) % 20); nda = 0; ndb = 0;
-            @(negedge clk); pub_v = 1; @(negedge clk); pub_v = 0;
+            @(negedge clk); pub_v = 1; t0 = cyc; @(negedge clk); pub_v = 0;
             for (s = 0; s < NSM; s = s + 1) sr[s] = 0;
             left = pm;
             while (left > 0) begin
                 @(negedge clk); rv = 0;
                 for (s = 0; s < NSM; s = s + 1) begin
                     rows = (pm > s * pq) ? ((pm - s * pq > pq) ? pq : pm - s * pq) : 0;
-                    if (sr[s] < rows && ($unsigned($random(seed)) % 48) == 0) begin
+                    if (sr[s] < rows && ($unsigned($random(seed)) % rate) == 0) begin
                         rv[s] = 1; rr[s*12 +: 12] = sr[s]; for (i = 0; i < 8; i = i + 1) begin rd[s*256 + 32*i +: 32] = $random(seed);
                             if (i < pp) expv[pb + i * pst + s * pq + sr[s]] = rd[s*256 + 32*i +: 32]; end
                         sr[s] = sr[s] + 1; left = left - 1;
@@ -60,7 +63,7 @@ module tb_pub_lock;  // hgi-adapters: the restructured SM publication (ot_hgi_sm
                 rd2(w, va2, vb2);
                 if (expv.exists(w) && vb2 !== expv[w]) begin if (errors < 6) $display("ERR cmd %0d VM[%0d] %h expected %h (old %h)", c, w, vb2, expv[w], va2); errors = errors + 1; end
             end
-            $display("cmd %0d P %0d M %0d checked", c, pp, pm);
+            $display("cmd %0d P %0d M %0d checked; done cycles ref %0d dut %0d", c, pp, pm, ta_ - t0, tb_ - t0);
         end
         if (errors == 0) $display("PUB_LOCK PASS"); else $display("PUB_LOCK FAIL %0d", errors);
         $finish;
