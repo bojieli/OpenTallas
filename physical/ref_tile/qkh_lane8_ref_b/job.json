@@ -1,5 +1,5 @@
 {
- "name": "qkh_lane8_ref_b-b-ed4575902",
+ "name": "qkh_lane8_ref_b-b-5b672e553",
  "block": "ot_qkh_lane8",
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-q-kvd",
-  "commit": "ed4575902",
+  "commit": "5b672e553",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
   ]
@@ -119,7 +119,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_lane8_ref_b/qkh_lane8_ref_b-b-ed4575902"
+   "to": "results/rtl/ref_tile/qkh_lane8_ref_b/qkh_lane8_ref_b-b-5b672e553"
   }
  ],
  "cycles_added": 0,
