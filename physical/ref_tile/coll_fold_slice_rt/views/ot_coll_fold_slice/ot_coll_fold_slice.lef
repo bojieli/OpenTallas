@@ -3704,6 +3704,10 @@ MACRO ot_coll_fold_slice
       LAYER M4 ;
         RECT  0 158.352 0.084 158.376 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 158.352 0.137 158.376 ;
+    END
   END src[511]
   PIN src[51]
     DIRECTION INPUT ;
@@ -12953,7 +12957,6 @@ MACRO ot_coll_fold_slice
      RECT  0.125 121.248 0.133 121.272 ;
      RECT  0.06 123.888 0.133 129.96 ;
      RECT  0.053 45.6 0.137 45.624 ;
-     RECT  0.06 158.352 0.137 158.376 ;
      RECT  0.06 91.632 0.179 97.704 ;
      RECT  0.06 107.76 0.179 110.76 ;
      RECT  0.133 81.072 0.181 81.096 ;

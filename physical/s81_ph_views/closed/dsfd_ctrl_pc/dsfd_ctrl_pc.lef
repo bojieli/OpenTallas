@@ -88,6 +88,10 @@ MACRO dsfd_ctrl_pc
       LAYER M4 ;
         RECT  0 125.28 0.192 125.304 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 125.28 0.156 125.304 ;
+    END
   END co_w[1]
   PIN k_addr[0]
     DIRECTION OUTPUT ;
@@ -16816,7 +16820,6 @@ MACRO dsfd_ctrl_pc
      RECT  95.544 248.155 95.562 248.285 ;
      RECT  97.2 248.155 97.218 248.285 ;
     LAYER M4 ;
-     RECT  0.025 125.28 0.156 125.304 ;
      RECT  0.156 124.128 0.248 125.304 ;
      RECT  0.248 0.528 0.352 247.332 ;
      RECT  0.352 0.672 0.44 247.332 ;

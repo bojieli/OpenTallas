@@ -21248,6 +21248,10 @@ MACRO ot_s81_hc_crootr_t
       LAYER M5 ;
         RECT  173.136 181.356 173.16 181.44 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  173.136 181.392 173.16 181.427 ;
+    END
   END sk
   PIN srs
     DIRECTION INPUT ;
@@ -58778,7 +58782,6 @@ MACRO ot_s81_hc_crootr_t
      RECT  272.4 179.289 272.52 179.303 ;
      RECT  173.136 107.795 173.16 181.093 ;
      RECT  173.136 181.093 173.208 181.392 ;
-     RECT  173.136 181.392 173.16 181.427 ;
   END
 END ot_s81_hc_crootr_t
 END LIBRARY

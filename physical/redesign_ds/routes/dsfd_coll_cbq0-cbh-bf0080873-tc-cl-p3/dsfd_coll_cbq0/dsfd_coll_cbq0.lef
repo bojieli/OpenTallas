@@ -3392,6 +3392,10 @@ MACRO dsfd_coll_cbq0
       LAYER M5 ;
         RECT  45.984 0 46.008 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  45.984 0.144 46.008 0.299 ;
+    END
   END ck
   PIN flt_i
     DIRECTION INPUT ;
@@ -3400,6 +3404,10 @@ MACRO dsfd_coll_cbq0
       LAYER M4 ;
         RECT  77.568 170.112 77.76 170.136 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  77.389 170.112 77.58 170.136 ;
+    END
   END flt_i
   PIN hq[0]
     DIRECTION OUTPUT ;
@@ -3407,6 +3415,10 @@ MACRO dsfd_coll_cbq0
     PORT
       LAYER M4 ;
         RECT  0 170.112 0.192 170.136 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 170.112 0.133 170.136 ;
     END
   END hq[0]
   PIN hq[10]
@@ -3519,6 +3531,10 @@ MACRO dsfd_coll_cbq0
     PORT
       LAYER M5 ;
         RECT  50.784 0 50.808 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  50.784 0.144 50.808 0.227 ;
     END
   END rs
   PIN t_vm[0]
@@ -6887,6 +6903,10 @@ MACRO dsfd_coll_cbq0
     PORT
       LAYER M5 ;
         RECT  43.824 0 43.848 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  43.824 0.144 43.848 0.227 ;
     END
   END ts
   PIN VDD
@@ -15193,7 +15213,6 @@ MACRO dsfd_coll_cbq0
      RECT  5.616 339.821 5.634 339.965 ;
      RECT  17.028 339.773 17.046 340.013 ;
     LAYER M4 ;
-     RECT  0.06 170.112 0.133 170.136 ;
      RECT  0.133 170.112 0.156 171.192 ;
      RECT  0.156 170.112 0.169 171.336 ;
      RECT  0.133 54.624 0.248 54.648 ;
@@ -30223,11 +30242,7 @@ MACRO dsfd_coll_cbq0
      RECT  74.099 85.824 74.765 85.848 ;
      RECT  75.848 0.528 75.952 339.672 ;
      RECT  75.952 0.798 76.144 339.402 ;
-     RECT  77.389 170.112 77.58 170.136 ;
     LAYER M5 ;
-     RECT  43.824 0.144 43.848 0.227 ;
-     RECT  50.784 0.144 50.808 0.227 ;
-     RECT  45.984 0.144 46.008 0.299 ;
      RECT  2.4 0.144 42.648 0.517 ;
      RECT  2.4 0.517 43.752 0.611 ;
      RECT  0.24 0.517 0.36 0.787 ;

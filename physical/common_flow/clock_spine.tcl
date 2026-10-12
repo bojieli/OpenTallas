@@ -265,6 +265,35 @@ proc ot_clock_spine {} {
     }
     if {[llength $icgs] != 1} { error "OT_SPINE_THROUGH_ICG: port $port drives [llength $icgs] ICG cells (need exactly 1)" }
     set g [lindex $icgs 0]
+    # the ICG and every other cell on the port net (its enable registers) move next to the clock pin below: placed by the
+    # global placer at the centroid of the whole gated network they sat ~600 um from the pin on an unbuffered port net
+    # (SM tile cluster gate: leaf arrivals 1.3-2.7 ns before padding, 3.5 ns after)
+    set ::ot_sp_icg_move {}
+    foreach it [$net0 getITerms] {
+      set i [$it getInst]
+      if {![[$i getMaster] isBlock] && [lsearch -exact $::ot_sp_icg_move $i] < 0} { lappend ::ot_sp_icg_move $i }
+    }
+    # + their local logic (counter / enable cone): cells within 6 net hops over nets of fanout <= 16, capped at 400 cells
+    set front $::ot_sp_icg_move
+    for {set d 0} {$d < 6 && [llength $front]} {incr d} {
+      set nxt {}
+      foreach i $front {
+        foreach it [$i getITerms] {
+          set n [$it getNet]
+          if {$n eq "NULL" || $n eq ""} continue
+          if {[$n getSigType] in {POWER GROUND CLOCK} || $n eq $net0} continue
+          if {[llength [$n getITerms]] > 17 || [llength [$n getBTerms]] > 0 && [llength [$n getITerms]] > 4} continue
+          foreach jt [$n getITerms] {
+            set j [$jt getInst]
+            if {[[$j getMaster] isBlock] || [lsearch -exact $::ot_sp_icg_move $j] >= 0} continue
+            if {[llength $::ot_sp_icg_move] >= 400} break
+            lappend ::ot_sp_icg_move $j; lappend nxt $j
+          }
+        }
+      }
+      set front $nxt
+    }
+    set ::ot_sp_icg $g
     set gt [$g findITerm GCLK]
     set net0 [$gt getNet]
     lassign [$gt getAvgXY] ok gx gy
@@ -320,6 +349,23 @@ proc ot_clock_spine {} {
     for {set y [$b yMin]} {$y < [$b yMax]} {incr y $::ot_sp_rh} {
       for {set x [$b xMin]} {$x < [$b xMax]} {incr x $::ot_sp_sw} { dict set ::ot_sp_used "$y,$x" 1 }
     }
+  }
+  if {$::ot_sp_root_xy ne ""} {
+    set pb0 [$bt getBBox]
+    set qx [expr {([$pb0 xMin] + [$pb0 xMax]) / 2}]; set qy [expr {([$pb0 yMin] + [$pb0 yMax]) / 2}]
+    set qx [expr {min(max($qx, $::ot_sp_cx0), $::ot_sp_cx1 - 20 * $u)}]; set qy [expr {min(max($qy, $::ot_sp_cy0), $::ot_sp_cy1 - 20 * $u)}]
+    set cw0 $::ot_sp_cw
+    foreach i $::ot_sp_icg_move {
+      set ::ot_sp_cw [[$i getMaster] getWidth]; set ::ot_sp_retry 0
+      lassign [ot_sp_legal $qx $qy] lx ly
+      if {[dict exists $::ot_sp_rowor $ly]} { $i setOrient [dict get $::ot_sp_rowor $ly] }
+      $i setLocation $lx $ly; $i setPlacementStatus FIRM
+    }
+    set ::ot_sp_cw $cw0
+    lassign [[$::ot_sp_icg findITerm GCLK] getAvgXY] ok gx gy
+    if {!$ok} { lassign [$::ot_sp_icg getLocation] gx gy }
+    set ::ot_sp_root_xy [list $gx $gy]
+    puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] port-net cells (ICG + enable regs) moved beside the clock pin"
   }
   # sinks -> bins -> leaves
   set bins [dict create]; set ns 0

@@ -16,6 +16,10 @@ MACRO ot_s81_head_delay8x32
       LAYER M4 ;
         RECT  0 14.4 0.084 14.424 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 14.4 0.131 14.424 ;
+    END
   END clk
   PIN d[0]
     DIRECTION INPUT ;
@@ -71,6 +75,10 @@ MACRO ot_s81_head_delay8x32
     PORT
       LAYER M5 ;
         RECT  2.88 0 2.904 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  2.88 0.016 2.904 2.137 ;
     END
   END d[15]
   PIN d[16]
@@ -143,6 +151,10 @@ MACRO ot_s81_head_delay8x32
     PORT
       LAYER M5 ;
         RECT  3.936 0 3.96 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  3.936 0.016 3.96 0.131 ;
     END
   END d[23]
   PIN d[24]
@@ -950,7 +962,6 @@ MACRO ot_s81_head_delay8x32
      RECT  3.42 14.909 4.05 17.117 ;
      RECT  13.752 15.137 14.238 17.117 ;
     LAYER M4 ;
-     RECT  0.06 14.4 0.131 14.424 ;
      RECT  0.06 2.976 1.181 11.448 ;
      RECT  0.06 12.48 1.181 13.176 ;
      RECT  1.181 2.976 1.217 3.768 ;
@@ -1063,10 +1074,8 @@ MACRO ot_s81_head_delay8x32
      RECT  17.053 4.704 17.148 11.352 ;
      RECT  17.053 12.384 17.148 13.944 ;
     LAYER M5 ;
-     RECT  3.936 0.016 3.96 0.131 ;
      RECT  13.248 0.016 13.368 0.131 ;
      RECT  13.248 0.131 13.272 0.563 ;
-     RECT  2.88 0.016 2.904 2.137 ;
      RECT  13.092 2.137 13.212 2.245 ;
      RECT  12.576 2.245 13.212 2.293 ;
      RECT  2.292 2.137 2.904 2.339 ;
