@@ -15,6 +15,7 @@ module tb_hgi_dma_front;
     parameter integer NB = 32;     // VM wide lanes (banks)
     parameter integer PCX4 = 0;
     parameter integer XP = 0;      // hbm-fq/dma 10-11: the textbook rebuild (registered X1 request vectors, X2 split, count rungs)
+    parameter integer XS = 0;      // el1011-hbm-dmafs 10-12: 1 = the two-level split ot_hgi_dma_front_xsw (core + 4 slices)
     parameter integer XQ = 0;      // hbm-fq/mvf 10-11: X2 select rung + conversion rung + pin output register (needs XP)
     parameter integer AP = 0;      // hgi-1010 b: the weight aperture (VM words >= 2^18, 2 slots of 32,768): 281-b lanes, random
                                    //   per-bank wl_rdy stops (no lane may carry a sector 5+ edges into a stop), slot loads
@@ -26,10 +27,17 @@ module tb_hgi_dma_front;
     reg ix_v = 0; reg [175:0] ix_cmd = 0; wire ix_rdy; reg id_v = 0; reg [31:0] id = 0; wire id_rdy;
     wire [NS*51-1:0] dq; reg [NS-1:0] dq_rdy = 0; reg [NIN*270-1:0] dd_m = 0; wire [NIN*270-1:0] dd; wire [NIN-1:0] dd_cr;
     wire [NB*LWW-1:0] wl; reg [NB-1:0] wl_done = 0; reg [NB-1:0] wl_rdy = '1; integer rlow [0:NB-1];
+    generate if (XS != 0) begin : g_xs
+    ot_hgi_dma_front_xsw #(.NS(NS), .NL(NL), .SBIT(SBIT), .STACK_BYTES(36'(SB)), .NB(NB), .LD(LD), .AP(AP), .XP(XP), .XQ(XQ), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v),
+        .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
+        .ix_v(ix_v), .ix_rdy(ix_rdy), .ix_cmd(ix_cmd), .id_v(id_v), .id_rdy(id_rdy), .id(id), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
+        .wl(wl), .wl_done(wl_done), .wl_rdy(wl_rdy));
+    end else begin : g_flat
     ot_hgi_dma_front #(.NS(NS), .NL(NL), .SBIT(SBIT), .STACK_BYTES(36'(SB)), .NB(NB), .LD(LD), .AP(AP), .XP(XP), .XQ(XQ), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v),
         .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
         .ix_v(ix_v), .ix_rdy(ix_rdy), .ix_cmd(ix_cmd), .id_v(id_v), .id_rdy(id_rdy), .id(id), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
         .wl(wl), .wl_done(wl_done), .wl_rdy(wl_rdy));
+    end endgenerate
     // ---- memories
     // HBM byte at address a: a full 64-bit mix (every address bit reaches every data bit; hgi-1010/c: the old hash
     // (a * K + (a >> 7) * K2) >> 3 ignored address bits >= 11, so a high-address error went unseen)
