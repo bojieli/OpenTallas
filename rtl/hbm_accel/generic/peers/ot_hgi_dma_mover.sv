@@ -236,6 +236,11 @@ module ot_hgi_dma_mover #(
     reg [41:0] sbase, dbase;                                // byte addresses (VM: word x 4)
     // ---- reader: up to four slots (STRIPE4: slot k = rows k, k + 4, ...; else slot 0 = every row)
     reg        stp, stpd;                                   // STRIPE4 source / destination
+    // PX3 (idle1012, route px3a-344de5a43 TT -86: stp/stpd -> m -> 8-way x-shift select -> carry-save -> 14-b add, 27-30
+    // levels): the base + m x stride addends (a1, a2, carry-in) of every slot are REGISTERED on the command-accept edge,
+    // decoded from cm_q (same edge as sstb / dstb / stp / stpd), so the go_f / go_q2 / go_q3 chunk adds start from flops
+    // (carry-save 2 levels + 14-b add); the row step (4 under STRIPE4, else 1) is its own flop (no stp fanout).
+    reg [41:0] op_a1 [0:3][0:3], op_a2 [0:3][0:3]; reg op_ci [0:3][0:3]; reg [19:0] ro_inc;
     reg [1:0]  s0, d0;                                      // STRIPE4: row 0's source / destination stack
     reg [41:0] sstw, dstw;                                  // a slot's row step (STRIPE4: 4 strides)
     reg [3:0]  ract;                                        // slot active (rows left to issue)
@@ -367,8 +372,18 @@ module ot_hgi_dma_mover #(
     always @* begin : csa
         reg [41:0] b, x, a1, a2; reg ci; integer m;
         for (integer v = 0; v < 4; v = v + 1) for (integer k = 0; k < 4; k = k + 1) begin
-            b = (v < 2) ? sbase : dbase; x = (v < 2) ? {8'd0, sstb} : {8'd0, dstb};
-            m = (v == 0 || v == 2) ? k : (stp || stpd) ? k + 4 : k + 1;
+            b = (v < 2) ? sbase : dbase; a1 = op_a1[v][k]; a2 = op_a2[v][k]; ci = op_ci[v][k];
+            cs_s[v][k] = b ^ a1 ^ a2; cs_k[v][k] = ((b & a1) | (b & a2) | (a1 & a2)) << 1; cs_i[v][k] = ci;
+        end
+    end
+    always @(posedge clk) if (cv_go && fast_cmd) begin : csa_op     // the addends, registered with the command fields
+        reg [41:0] x, a1, a2; reg ci, st4; integer m;
+        st4 = (cm_q[1:0] == 2'd0 && cm_q[44:42] == 3'd1) || (cm_q[94:93] == 2'd0 && cm_q[137:135] == 3'd1);
+        ro_inc <= st4 ? 20'd4 : 20'd1;
+        for (integer v = 0; v < 4; v = v + 1) for (integer k = 0; k < 4; k = k + 1) begin
+            x = (v < 2) ? {8'd0, ((cm_q[1:0] == 2'd1) ? {cm_q[76:45], 2'b00} : {2'd0, cm_q[76:45]})}
+                        : {8'd0, ((cm_q[94:93] == 2'd1) ? {cm_q[169:138], 2'b00} : {2'd0, cm_q[169:138]})};
+            m = (v == 0 || v == 2) ? k : st4 ? k + 4 : k + 1;
             ci = 1'b0;
             case (m)
                 0: begin a1 = 42'd0;    a2 = 42'd0; end
@@ -380,7 +395,7 @@ module ot_hgi_dma_mover #(
                 6: begin a1 = x << 2;   a2 = x << 1; end
                 default: begin a1 = x << 3; a2 = ~x; ci = 1'b1; end
             endcase
-            cs_s[v][k] = b ^ a1 ^ a2; cs_k[v][k] = ((b & a1) | (b & a2) | (a1 & a2)) << 1; cs_i[v][k] = ci;
+            op_a1[v][k] <= a1; op_a2[v][k] <= a2; op_ci[v][k] <= ci;
         end
     end
     always @(posedge clk) begin
@@ -388,7 +403,7 @@ module ot_hgi_dma_mover #(
             reg [41:0] w; reg [19:0] rn1;
             q_ok[k] <= c_ok[k]; q_rend[k] <= c_rend[k]; q_bad[k] <= c_bad[k]; q_ea[k] <= c_ea[k]; q_ns[k] <= c_ns[k];
             q_by[k] <= c_by[k]; q_ds[k] <= c_ds[k]; q_ln[k] <= rsa[k][9:5];
-            w = {33'd0, c_bv[k] >> sl2}; rn1 = ro[k] + ((stp || stpd) ? 20'd4 : 20'd1);
+            w = {33'd0, c_bv[k] >> sl2}; rn1 = ro[k] + ro_inc;
             q_san[k] <= src_hbm ? {rsa[k][41:8] + 34'd1, 8'd0} : {rsa[k][41:5] + 37'd1, 5'd0};   // exact when !c_rend
             q_rln[k] <= rrl[k] - {15'd0, c_bv[k]};                                     // exact when !c_rend
             {q_dc[k], q_dlo[k]} <= {1'b0, rdd[k][12:0]} + {1'b0, 13'(w << dl2)}; q_dh1[k] <= rdd[k][41:13] + 29'd1;
@@ -757,8 +772,8 @@ module ot_hgi_dma_mover #(
                             end
                         end
                     end else if (q_rend[r_k]) begin                                       // the slot's next row (precomputed)
-                        if (ro[r_k] + ((stp || stpd) ? 20'd4 : 20'd1) >= mm) ract[r_k] <= 1'b0;
-                        ro[r_k] <= ro[r_k] + ((stp || stpd) ? 20'd4 : 20'd1); rrl[r_k] <= nnb;
+                        if (ro[r_k] + ro_inc >= mm) ract[r_k] <= 1'b0;
+                        ro[r_k] <= ro[r_k] + ro_inc; rrl[r_k] <= nnb;
                         rsa[r_k] <= rnsa[r_k]; rnsa[r_k] <= rnsa[r_k] + sstw; rdd[r_k] <= rndd[r_k]; rndd[r_k] <= rndd[r_k] + dstw;
                     end else begin
                         rsa[r_k] <= rsa[r_k] + {33'd0, q_by[r_k]}; rrl[r_k] <= rrl[r_k] - {15'd0, q_by[r_k]};
@@ -774,7 +789,12 @@ module ot_hgi_dma_mover #(
                     if (vpush) t[v_in - {2'd0, v_rv}] = vkind;
                     v_kind <= t;
                 end
-                rd_in <= rd_in + (r_go ? {5'd0, q_ns[r_k]} : 9'd0) - {8'd0, lw_v};
+                begin : rdc                                    // PX3: one candidate per slot, picked after the add
+                    reg [8:0] cn, cc [0:3];
+                    cn = rd_in - {8'd0, lw_v};
+                    for (integer k = 0; k < 4; k = k + 1) cc[k] = cn + {5'd0, q_ns[k]};
+                    rd_in <= r_go ? cc[r_k] : cn;
+                end
                 wr_in <= wr_in + {8'd0, iss_kw | iss_vw} - {8'd0, v_wr_ack | (wld_q & busy_f & !dst_hbm)}
                          - {6'd0, 3'(w_ack_q[0]) + 3'(w_ack_q[1]) + 3'(w_ack_q[2]) + 3'(w_ack_q[3])};
             end
@@ -809,7 +829,12 @@ module ot_hgi_dma_mover #(
                 lg <= nf ? (4'd1 << nx) : 4'd0; if (nf) lgi <= nx;
                 if (lw_v) lv[lw_a] <= 1'b1;
                 if (pop_) begin lv[sf_h] <= 1'b0; sf_h <= sf_h + 8'd1; end
-                sf_n <= sf_n + (r_go ? {5'd0, q_ns[r_k]} : 9'd0) - {8'd0, pop_};
+                begin : sfc                                    // PX3: one candidate per slot, picked after the add
+                    reg [8:0] cn, cc [0:3];
+                    cn = sf_n - {8'd0, pop_};
+                    for (integer k = 0; k < 4; k = k + 1) cc[k] = cn + {5'd0, q_ns[k]};
+                    sf_n <= r_go ? cc[r_k] : cn;
+                end
             end
             // ---- unpack (stage U -> p1): the current chunk; the staged descriptor becomes current at the chunk end
             p1_v <= 1'b0;
