@@ -1286,6 +1286,8 @@ def ds_units(m, man, golib):
         a = r.desc["A"]
         if a.space == "HBM" and EG_TBASE <= a.base < EG_TBASE + (1 << 35) and a.indexed:
             return eg_home_rows(M, r, L)
+        if a.space == "HBM" and a.base >> 37 == 1 and (a.base & ((1 << 35) - 1)) not in HC_STRIPE:
+            return base_load(M, r, L)               # a STRIPE4 data row (the MTP column swap), not an HC weight row
         if not (a.space == "HBM" and a.base >= WBASE):
             return base_load(M, r, L)
         for die in M.dies:
