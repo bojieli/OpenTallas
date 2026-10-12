@@ -234,6 +234,8 @@ EXEMPT = {
     "dsfd_host_native": ("off_token_path", "native variant of the dsfd_host ingest master: no per-token price row"),
     "dsfd_host_protected": ("off_token_path", "protected variant of the dsfd_host ingest master: no per-token price row"),
     "dsfd_host_sd": ("off_token_path", "per-stack decode of the host ingest sector stream (dsfd_host o_* -> hw<s>): no per-token price row"),
+    "qfd_sysctl_stn_pb2": ("control_glue", "station of the package-controller sysctl ring (ot_qfd_pkgctl host_if control packets; "
+                                           "one-entry packet queue): system control, no per-token datapath"),
     # not_in_design: not instantiated in the design of record and no price row (supersede candidates; tput-map-1011/F4, F5)
     **{e: ("not_in_design", "older KV-on-ROM-die path: not instantiated in the adopted r22ko4 ROM die or the KV die; no price row "
                             "(the KV-die class bench results/rtl/tput_map_1011/qwen_kv_die covers the adopted path); supersede candidate")
@@ -254,6 +256,8 @@ TILE_OF = [
     (r"^ot_p2h_", "ot_mtp_p2_prefix_path"),
     (r"^qfd_tile_lsl", "qfd_tile"),
     (r"^qfd_vm_grp", "qfd_sp_vector_memory"),
+    (r"^ot_qwen_nearhbm_attn_hub_t", "ot_qwen_nearhbm_attn_hub_p"),
+    (r"^hfd_hc_tile", "hfd_hc"),
 ]
 
 # tput-map-1011: per-class production-shape bench records (one bench of a class qualifies every element it lists).
@@ -873,12 +877,12 @@ def main():
         cbr.append(dict(path=path, commit=c, cls=cls, model=d.get("model"), ratio=d.get("ratio"), elements=sorted(per)))
     tile_cov = {}
     for e in list(el):
-        if el[e]["limiting"]["op"] != "unmapped":
+        if el[e]["limiting"]["op"] != "unmapped" and el[e]["status"] != "UNQUALIFIED_NO_BENCH":
             continue
         for rx, parent in TILE_OF:
             if re.match(rx, e) and parent in el:
                 pl = el[parent]["limiting"]
-                reput(e, lambda o: o["op"] == "unmapped",
+                reput(e, lambda o: o["op"] == "unmapped" or o["status"] == "UNQUALIFIED_NO_BENCH",
                       dict(model=pl["model"], op="tile of %s: %s" % (parent, pl["op"]), status=el[parent]["status"],
                            ratio=el[parent]["ratio"], owner=pl["owner"], src="tput-map-1011 TILE_OF %s -> %s: %s" % (rx, parent, pl["src"])))
                 tile_cov[e] = parent
