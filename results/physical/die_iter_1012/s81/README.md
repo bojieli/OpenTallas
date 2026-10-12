@@ -32,6 +32,7 @@ Floorplan: i3_plan/floorplan.{json,svg}.
 | rp7 | layer1 margin lint, recipe v5 (= v4 + --rt-strip 40), main 6df7157ba | EPYC4 s81-die-iter/rp7 | 0 overlaps / 0 outside / 0 pin clashes; SS reach violations 128 -> 0; far-side 1 (f_hb_collective_t_hc_y_2048_3071_hc_s_7, 22.0 um back vs 20 slack) | - | - | - | - | - |
 | ir_m948 | layer1 / layer1e IR (main 948f2da01, M8/M9 pitch on grid) | EPYC1 s81-die-iter/ir_m948_{layer1,layer1e} | PDN-0175 gone | - | - | - | - | spine 63.6 mV VDD / 73.4 mV VSS (FAIL > 35; worst node sp_vm clip, then the g_hb_hc_s_wq_d_vm stations); field PSM-0069: 42 unconnected 6.46 um qbanks (bn/bs) + 231 window-edge M7 stubs |
 | ir_pdn2 (v5) | layer1 IR, die PDN contract v2 (claude/el1012-s81pdn da4a35f97 on 412dc16fc, opts v4) | EPYC1 s81pdn/v5 | **PASS <= 35 mV**: PDN PASS, PSM connectivity PASS (0 unconnected) | - | - | - | - | inner window: spine **16.7 VDD / 28.0 VSS mV**, field **29.5 / 31.4 mV** (static, peak power; 2-pitch guard band excluded) |
+| c3 | layer1, contract v11 (HC HIER2 slab 1,816.56 x 12,630.216), v5 recipe, main f13695e45; c1/c2 (pre-IR-fix src) killed | EPYC1 s81-die-iter/c3 | plan check: 0 overlaps / 0 outside / 0 pin clashes (56,802 inst), reach 0, far-side 1; relay/station clock pins 34,317 / 0 missing (c2 odb) | running (GRT ~12 h) | TBD | TBD | TBD | IR PDN v2 + OT_IR_INNER; after STA: die_sens.sh = OCV bound (0.95/1.05) and cap x1.40 / x2.44 (region-DRT error bar) TT/FF; region DRT staged only at GRT overflow 0 |
 
 CTS plan: TBD from c1/clock/plan.json.gz (sinks, planned share, skew per tree).
 
