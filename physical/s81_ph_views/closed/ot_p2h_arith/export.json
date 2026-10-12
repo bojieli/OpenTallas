@@ -1,0 +1,60 @@
+{
+  "name": "ot_p2h_arith",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-p2h-ar-610bc37ff-tc-a/routes/mtp_p2h_ar_610bc37ff_tc_a/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "ot_p2h_arith.lef": "06aa8abdf6307b41d63dd8867748adcbdbf03e9daa8cf041cb3c9fa7254b0fd3",
+    "ot_p2h_arith_ff.lib": "8e92391ef1bc04d4684691c8c5543e2356cabe6fb4a5f94ab06a6cbe4674b331",
+    "ot_p2h_arith_ss.lib": "a3ee09ca2303f877de457bcaece1d709a268181aa00cdb0434aaa499e6791745"
+  },
+  "ok": true
+}

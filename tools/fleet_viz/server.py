@@ -9,6 +9,7 @@ Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
   /replay?from=&to=&speed=   the same page playing a recorded window (/api/replay serves the data)
   /api/elements     per-element (block) closure status table (elements.py; share-safe: summary counts only)
+  /api/layout/<element>/...  routed-geometry tiles for the element page's Layout tab (layout_service.py)
   /api/stream       server-sent events (latest history point only; /api/fleet
                     carries the full 60-minute history)
 Internal view is the default: real host aliases, job and block names, slacks
@@ -19,7 +20,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage, landing
+import recorder, elements, explorer, coverage, landing, elem_shell, layout_service
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
@@ -448,6 +449,7 @@ COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/Open
 # /explorer/element/...: per-element post-route pages (page + pages.json from the repo; data/ written by
 # tools/explorer_elem_export.py pack, never committed).  Share-safe requests get the data with raw names stripped.
 ELEM_DIR = HERE / 'explorer' / 'element'
+SHELL = elem_shell.Shell(ELEM_DIR, ELEMENTS, EXPLORER, log=log, repo=os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'))   # page header / tab availability / data-id resolution
 _ELEM_CACHE = {}
 
 def elem_redact(o):
@@ -532,6 +534,8 @@ def elem_body(path, safe, gz):
     return b
 # /landing/...: the public landing page (landing/index.html + recordings), numbers from committed results at request time
 LANDING_DIR = HERE / 'landing'
+# /api/layout/...: the routed-geometry layout viewer (layout_service.py; packs cut on the fleet host holding each DB)
+LAYOUT = layout_service.Service(log=log)
 LANDING = landing.Landing(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), log=log)
 
 def with_sent(body):
@@ -612,6 +616,10 @@ class H(BaseHTTPRequestHandler):
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
+        if u.path.startswith('/layout_store/'):
+            return LAYOUT.static(self, u.path[len('/layout_store/'):], safe)
+        if u.path.startswith('/api/layout/'):
+            return LAYOUT.handle(self, u.path[len('/api/layout/'):], q, safe)
         if u.path.startswith('/api/explorer/'):
             return self.explorer(u.path[len('/api/explorer/'):], q, safe)
         if u.path == '/api/stream':
@@ -637,6 +645,8 @@ class H(BaseHTTPRequestHandler):
             ok = p.is_relative_to(ELEM_DIR.resolve()) and p.is_file() and p.suffix in ('.html', '.js', '.css', '.json', '.bin', '.svg', '.png')
         except (OSError, ValueError):
             ok = False
+        if not ok and rel and '/' not in rel and '.' not in rel:   # /explorer/element/<name>: the page itself (deep link)
+            p, ok = ELEM_DIR / 'index.html', True
         if not ok: return self.send(404, b'not found', 'text/plain')
         gz = 'gzip' in (self.headers.get('Accept-Encoding') or '') and p.stat().st_size > 8192
         try:
@@ -687,6 +697,14 @@ class H(BaseHTTPRequestHandler):
                 return js(dict(error='share-safe view: cards open from the map'), 403)
             return js(EXPLORER.card(element=arg('element'), master=arg('master'), die=arg('die'), safe=safe) if not safe
                       else EXPLORER.card_safe_by_index(arg('die'), arg('mi')))
+        if what == 'elem_shell':
+            return js(SHELL.page(arg('e') or '', safe))
+        if what == 'elem_summaries':
+            return js(dict(t=time.time(), src=SHELL.desc.src, summaries=SHELL.summaries(safe)))
+        if what == 'elem_coverage':
+            c = SHELL.coverage()
+            if safe: c['missing'] = len(c['missing'])
+            return js(c)
         if what == 'story':
             c = EXPLORER.story(arg('id') or '')
             if c and safe: c = {k: v for k, v in c.items() if k not in ('attach', '_file')}

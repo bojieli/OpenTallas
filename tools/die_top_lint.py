@@ -228,15 +228,99 @@ def _untern(expr):
         expr = e
 
 
+def _top_tern(expr):
+    """an unparenthesised top-level SV ternary c ? a : b (branches may hold parentheses) -> python (a) if (c) else (b)"""
+    depth, q, nest = 0, -1, 0
+    for i, ch in enumerate(expr):
+        depth += ch == '('
+        depth -= ch == ')'
+        if depth:
+            continue
+        if ch == '?':
+            if q < 0:
+                q = i
+            else:
+                nest += 1
+        elif ch == ':' and q >= 0:
+            if nest:
+                nest -= 1
+            else:
+                return f'(({_top_tern(expr[q + 1:i])}) if ({expr[:q]}) else ({_top_tern(expr[i + 1:])}))'
+    return expr
+
+
 def _eval(expr, env):
-    e = _untern(expr).replace('$clog2', 'clog2')
+    e = _top_tern(_untern(expr)).replace('$clog2', 'clog2')
     e = re.sub(r"\d+'[dD](\d+)", r'\1', e)
     return int(eval(e, {'clog2': clog2, '__builtins__': {}}, dict(env)))  # noqa: S307
 
 
-def parse_module(path, module, params=None):
-    """{'params': {...}, 'ports': {name: (dir, width)}} of an ANSI module header."""
-    t = _strip((ROOT / path).read_text())
+_DIRECTIVE = re.compile(r'^[ \t]*`(ifdef|ifndef|elsif|else|endif|define|undef|include)\b[ \t]*(.*)$')
+
+
+def _preprocess(path, defines=None, _seen=None):
+    """Minimal SV preprocessor for header parsing: `include (relative to the file, then rtl/ and the repo root),
+    `define / `undef of argument-less macros (line continuations joined) and `NAME expanded in the text.  `ifdef /
+    `ifndef / `elsif / `else / `endif select which `define / `undef / `include directives take effect (against `defines`,
+    name -> text; default none = the plain build); the module text of every branch is kept, as _strip always did, so a
+    header's `ifdef-guarded ports stay in the port union the die lints expect.  Comments are stripped first."""
+    path = Path(path) if Path(path).is_absolute() else ROOT / path
+    defs = {} if defines is None else defines
+    seen = set() if _seen is None else _seen
+    t = re.sub(r'//[^\n]*', '', re.sub(r'/\*.*?\*/', '', path.read_text(), flags=re.S))
+    t = re.sub(r'\\\n', ' ', t)
+    out, stack = [], []          # stack of [this branch active, some branch already taken]
+
+    def active():
+        return all(a for a, _ in stack)
+
+    def expand(line):
+        for _ in range(16):      # nested macros
+            n_ = re.sub(r'`([A-Za-z_]\w*)', lambda m_: defs.get(m_.group(1), m_.group(0))
+                        if m_.group(1) in defs else m_.group(0), line)
+            if n_ == line:
+                break
+            line = n_
+        return line
+    for ln in t.split('\n'):
+        dm = _DIRECTIVE.match(ln)
+        if not dm:
+            out.append(expand(ln))   # text of every branch is kept (the parser's historical union of `ifdef ports);
+            continue                 # only directives (`define / `undef / `include) follow the active branch
+        kw, arg = dm.group(1), dm.group(2).strip()
+        name = (re.match(r'[A-Za-z_]\w*', arg) or [''])[0]
+        if kw in ('ifdef', 'ifndef'):
+            c = (name in defs) == (kw == 'ifdef')
+            stack.append([c, c])
+        elif kw == 'elsif':
+            c = not stack[-1][1] and name in defs
+            stack[-1] = [c, stack[-1][1] or c]
+        elif kw == 'else':
+            stack[-1] = [not stack[-1][1], True]
+        elif kw == 'endif':
+            stack.pop()
+        elif not active():
+            pass
+        elif kw == 'define':
+            defs[name] = arg[len(name):].strip()
+        elif kw == 'undef':
+            defs.pop(name, None)
+        elif kw == 'include':
+            f = arg.strip('"<> ')
+            for base in (path.parent, ROOT / 'rtl', ROOT):
+                if (base / f).exists():
+                    if (base / f).resolve() not in seen:
+                        seen.add((base / f).resolve())
+                        _preprocess(base / f, defs, seen)      # headers contribute their defines only
+                    break
+        out.append('')
+    return '\n'.join(out)
+
+
+def parse_module(path, module, params=None, defines=None):
+    """{'params': {...}, 'ports': {name: (dir, width)}} of an ANSI module header (after `define / `ifdef / `include
+    preprocessing with `defines`, default: none defined)."""
+    t = _strip(_preprocess(path, dict(defines or {})))
     mm = re.search(r'\bmodule\s+' + re.escape(module) + r'\b', t)
     if not mm:
         raise KeyError(f'{module} not in {path}')
@@ -2269,9 +2353,15 @@ def margin(die, m):
             return H.margin_lint(m)
         if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE in R22K_FAMILY):
             import fp_margin_lint as FPL
+            lp = None
+            if die == 'qwen_rom' and 'vm' in _QW:
+                # qwendie-1011: far-side against the load's actual pin (generator pin map), not the load block's centre
+                v_, m_, B_ = _QW['vm']
+                # (fp_margin_lint pin_pt(inst, port), hbmdie-1011's interface for the same rule)
+                lp = B_._pin_pos(v_, m_)
             return FPL.die_margin(m['insts'], [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
                                   {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
-                                  reach_um=504.0, sliver_um=12.0)
+                                  reach_um=504.0, sliver_um=12.0, pin_pt=lp)
     except Exception as ex:  # noqa: BLE001 - a lint add-on must not hide the connectivity findings
         return dict(verdict='ERROR', error=f'{type(ex).__name__}: {ex}')
     return dict(verdict='N/A')

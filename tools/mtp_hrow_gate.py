@@ -17,7 +17,7 @@ Mutants (must FAIL): OT_HROW_MUT_NOEPOCH on pos_late (serves the stale squashed 
 import argparse, json, re, subprocess
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv',
+SRC = ['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_bank.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv',
        'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv',
        'rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv',
        'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v',
@@ -26,10 +26,14 @@ POS = ['pos_steady', 'pos_late', 'neg_drop']
 MUT = [('OT_HROW_MUT_NOEPOCH', 'pos_late'), ('OT_HROW_MUT_NOPART', 'neg_drop')]
 
 
+TILES = False   # --tiles: the bench runs on the two-level tile composition dsfd_mtp_hrow_tc
+
+
 def build(out, d=None):
-    exe = out / ('sim' + ('_' + d if d else ''))
+    exe = out / ('sim' + ('_' + d if d else '') + ('_tiles' if TILES else ''))
+    src = SRC + (['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv'] if TILES else [])
     subprocess.run(['iverilog', '-g2012', '-o', str(exe), '-s', 'tb_mtp_hrow'] + (['-D' + d] if d else [])
-                   + [str(ROOT / s) for s in SRC], check=True)
+                   + (['-DOT_HROW_TILES'] if TILES else []) + [str(ROOT / s) for s in src], check=True)
     return exe
 
 
@@ -48,7 +52,10 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--only', choices=['pos', 'mut'])
     ap.add_argument('--record', type=Path)
+    ap.add_argument('--tiles', action='store_true', help='run on the two-level tile composition (dsfd_mtp_hrow_tc)')
     a = ap.parse_args()
+    global TILES
+    TILES = a.tiles
     a.out.mkdir(parents=True, exist_ok=True)
     rec = dict(schema='opentallas.mtp-hrow-gate.v1', sources=SRC, cases=[], mutants=[])
     ok = mut_ok = True

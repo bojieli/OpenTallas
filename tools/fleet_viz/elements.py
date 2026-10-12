@@ -16,7 +16,7 @@ twins, _s2/_t/_split/... alternatives) folded into their master. Each element ge
   cancelled only             every job was cancelled
   superseded                 listed in $FLEET_VIZ_SUPERSEDED (default ~/claude-takeover-20261007/superseded_elements.json,
                              {element: {by, reason}}): replaced by another element or not used by any die; overrides every
-                             non-closed category and is excluded from the open counts (summary 'open' = all but closed/superseded)
+                             category (closed included, owner 10-11) and is excluded from every count; 'cancelled only' is also excluded
 
 Overrides from $FLEET_VIZ_OVERRIDES (default ~/claude-takeover-20261007/element_overrides.json):
   variants   {block: {of, kind, reason}}: fold a differently named block into element `of` (checked before the VARIANT
@@ -31,7 +31,9 @@ Sources: ~/.local/state/closure_loop/jobs/*.json (mtime-cached), <repo>/results/
 and tt_restatus_*.json (latest by name), per-job revocations from $FLEET_VIZ_REVOKED (default
 ~/claude-takeover-20261007/revoked_closures.json, {job: {reason, ff_ps, by, at}}; applies to any CLOSED job), descriptions from the repo (die-master .env headers, RTL module headers,
 abstract manifests) falling back to the cleaned job purpose, cached in <state>/element_descriptions.json (entries with
-"src": "manual" are never regenerated). Throughput qualification (AGENTS.md, owner 2026-10-10) comes from the latest
+"src": "manual" are never regenerated). Hand-written descriptions in <repo>/results/fleet_viz/element_descriptions_manual.json
+({families: {name: blurb}, elements: {el: {summary, about, family}}}) load first and override the cache; rows carry summary, about,
+family and family_about (empty about/family when no manual entry). Throughput qualification (AGENTS.md, owner 2026-10-10) comes from the latest
 <repo>/results/arch/throughput_budget_*/budget.json (working tree, else origin/main): each row gets `throughput`
 (status QUALIFIED / UNQUALIFIED / UNQUALIFIED_NO_BENCH, worst measured/price ratio, limiting op, owner) and `gate`
 ('CLOSED-TIMING, THROUGHPUT-UNQUALIFIED' until the unit's production-shape bench is within 1.10 of its price). Area comes from the best job's ORFS report (6_report.json, else the route
@@ -48,7 +50,7 @@ CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
-STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen)')),   # qkd / ot_qkvd: the KV die (kv-die 2026-10-09)
+STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen|ot_nhb_|ot_qkh_)')),   # qkd / ot_qkvd: the KV die (kv-die 2026-10-09)
           ('HBM accelerator', re.compile(r'^(hfd|ot_hbm|ot_ha2|ot_su\d|ot_attn|hbm|smh|w2_|hgi|ot_hgi|ot_hcoll|ot_gpu_rf_)')),
           ('DeepSeek ROM', re.compile(r'^(dsfd|ot_dsrom|ot_s81|s81|dshead|dsrom|ot_v41_|bf_|pq_|ot_mtp_)'))]
 WEAK = [('Qwen ROM', re.compile(r'qwen')), ('HBM accelerator', re.compile(r'hbm|ha2')),
@@ -125,6 +127,39 @@ class Describer:
         self.repo = pathlib.Path(repo); self.cache_path = pathlib.Path(cache); self.idx = None; self.idx_t = 0
         try: self.cache = json.loads(self.cache_path.read_text())
         except Exception: self.cache = {}
+        # hand-written descriptions committed to the repo (element-desc-1011): loaded first, survive redeploys
+        self.manual_path = self.repo / 'results/fleet_viz/element_descriptions_manual.json'
+        self.manual_t = None; self.manual = {}; self.families = {}
+        self.load_manual()
+
+    def load_manual(self):
+        # working tree first, else origin/main (the shared checkout can lag main)
+        try: t = self.manual_path.stat().st_mtime; src = None
+        except OSError:
+            rel = str(self.manual_path.relative_to(self.repo))
+            try: t = subprocess.run(['git', '-C', str(self.repo), 'rev-parse', 'origin/main:' + rel],
+                                    capture_output=True, text=True, timeout=20).stdout.strip(); src = rel
+            except Exception: return
+            if not t: return
+        if t == self.manual_t: return
+        try:
+            d = json.loads(self.manual_path.read_text() if src is None else subprocess.run(
+                ['git', '-C', str(self.repo), 'show', 'origin/main:' + src], capture_output=True, text=True, timeout=30).stdout)
+        except Exception: return
+        self.manual_t = t; self.manual = d.get('elements', {}); self.families = d.get('families', {})
+        for m, e in self.manual.items():
+            if e.get('summary'):
+                self.cache[m] = dict(text=e['summary'], src='manual', summary=e['summary'],
+                                     about=e.get('about', ''), family=e.get('family', ''))
+
+    def info(self, mname):
+        self.load_manual()
+        c = self.cache.get(mname) or {}
+        if c.get('src') != 'manual': return dict(summary=c.get('text', ''), about='', family='', family_about='')
+        f = c.get('family', '')
+        return dict(summary=c.get('summary') or c.get('text', ''), about=c.get('about', ''), family=f,
+                    family_about=self.families.get(f, ''))
+
 
     def index(self):
         if self.idx is not None and time.time() - self.idx_t < 3600: return self.idx
@@ -427,11 +462,15 @@ class Elements:
         known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {})) | set(registry)
         vmap = {b: master(v['of'], known) for b, v in ov['variants'].items()}
         vmap = {b: m for b, m in vmap.items() if m not in sup}   # never fold into a superseded parent (it would count nowhere)
-        instances = collections.defaultdict(set)
+        instances = collections.defaultdict(set); tiles = collections.defaultdict(set)
         for b, v in ov['variants'].items():
             # fill-9 2026-10-10: a fold whose parent is superseded is dropped from vmap above; indexing it raised KeyError
             # and froze /api/elements from 11:06 to 16:37 (dsfd_mtp_seq_rtt instance of superseded dsrom_mtp_seq_native_binding)
             if v.get('kind') == 'instance' and b in vmap: instances[vmap[b]].update((b, vmap[b]))   # the master block is an instance too
+            # owner 10-11 two-level rule: kind 'tile' = a hardened tile of a composed element. The element closes when every
+            # tile block has a closure (the composition bench gates adding the fold); the master's own flat jobs do not
+            # block it, but a closure of the master itself (dual-track flat line) still closes it.
+            if v.get('kind') == 'tile' and b in vmap: tiles[vmap[b]].add(b)
         groups = collections.defaultdict(list)
         for j in js: groups[master(j['block'], known, vmap)].append(j)
         for b in ob.get('closed', {}):   # option-B closed blocks with no loop job (routes judged outside the loop)
@@ -441,7 +480,19 @@ class Elements:
             key = master(b, known, vmap); groups.setdefault(key, []); evidence[key].extend(records)
         rows = []
         for m, g in groups.items():
-            r = self.element(m, g, ob, rest, rj)
+            gg = g
+            if tiles.get(m) and not any(j['block'] == m and j['status'] == 'CLOSED' and j['name'] not in rj for j in g):
+                gg = [j for j in g if j['block'] in tiles[m]]
+                closed_blocks = {j['block'] for j in gg if j['status'] == 'CLOSED' and j['name'] not in rj} | set(ob.get('closed', {}))
+                missing = sorted(b for b in tiles[m] if b not in closed_blocks)
+            r = self.element(m, gg or g, ob, rest, rj)
+            if gg is not g and missing:
+                if r['category'].startswith('closed'):
+                    r['category'] = self.element(m, [j for j in gg if j['block'] in missing], ob, rest, rj)['category'] if any(j['block'] in missing for j in gg) else CATS[7]
+                    r['closed_t'] = None
+                r['via'] = 'tiles not closed: %s' % ', '.join(missing)
+            elif gg is not g:
+                r['via'] = 'closed via tiles: %s' % ', '.join(sorted(tiles[m]))
             if r['category'].startswith('closed') and instances.get(m):
                 closed_blocks = {j['block'] for j in g if j['status'] == 'CLOSED' and j['name'] not in rj} | set(ob.get('closed', {}))
                 missing = sorted(b for b in instances[m] if b not in closed_blocks)
@@ -463,7 +514,7 @@ class Elements:
             r['owner'] = ov['owners'].get(m) or self.remap_owner(r['owner'] or '', ov)
             sv = sup.get(m) or next((sup[b] for b in [m] + r['variants'] if b in sup), None)
             r['superseded'] = None
-            if sv and not r['category'].startswith('closed'):
+            if sv:   # owner 10-11: superseded overrides closed too; such rows are not counted anywhere
                 r['category'] = 'superseded'; r['superseded'] = dict(by=sv.get('by'), reason=sv.get('reason'))
                 r['via'] = 'superseded by %s' % sv.get('by')
             tq = tput.get(m) or next((tput[b] for b in r['variants'] if b in tput), None)
@@ -564,6 +615,7 @@ class Elements:
         return dict(element=m, target=target(m, *(next(((j['owner'], j['branch']) for j in g), ('', '')))),
                     variants=[b for b in blocks if b != m], category=cat, via=via,
                     purpose=self.desc.get(m, blocks, [j['purpose'] for j in sorted(g, key=lambda j: j['created'])]),
+                    **self.desc.info(m),
                     jobs=len(g), live=len(live), failed=len(failed), closed_jobs=len(closed),
                     best=tm, area=dict(die=a.get('die'), core=a.get('core'), util=a.get('util')) if 'err' not in a and a else None,
                     revoked=revd, latest=latest,
@@ -675,6 +727,7 @@ def gate_text(category, tq):
     if not tq: return timing + ', NO-THROUGHPUT-BUDGET-ROW'
     st = tq.get('status')
     return timing + (', THROUGHPUT-QUALIFIED' if st == 'QUALIFIED' else ', THROUGHPUT-QUALIFIED-BY-BOUND' if st == 'QUALIFIED_BY_BOUND'
+                     else ', THROUGHPUT-ACCEPTED' if st == 'ACCEPTED' else ', THROUGHPUT-EXEMPT' if st == 'EXEMPT'
                      else ', THROUGHPUT-UNQUALIFIED')
 
 def throughput_text(tq):

@@ -35,6 +35,21 @@ module tb_hbm_stream_bw;
   parameter integer WSETP = 1;
   parameter integer OMUT = 0;
   parameter real    ENG_RATE = 1.171875;
+  // qwen-1010 2026-10-10 SELF = 1: the descriptor / go come from the KV-die RTL path instead of the bench: the issuer
+  // ot_qkvd_kv_desc (core clock 1.2 GHz) gets the CTL ATTN of layer L at go_cycle(L) (+ JIT jitter) and a done strobe
+  // per finished layer; its words cross an ot_async_fifo to the hclk, NRLY trunk relays and NTAP ot_qkvd_kcmd_tap
+  // stations (stack 0, G = tap % 8); the LAST tap feeds an 8-entry controller-head command FIFO (desc pops on desc_r,
+  // go at once) that drives this stack.  Every tap's descriptor is checked ({n, row} = {1,024, layer} at T = 8,192).
+  // Verdict adds: stream measured from the ATTN (not from the applied go) <= the 1,165 ns step on layers 1..35 (layer
+  // 0 is the cold start after reset: no previous ATTN to time from), and no issuer / head fault.
+  // DMUT = the issuer's MUT (1 no pre-hint, 2 lead / 4, 3 wrong row).
+  parameter integer SELF = 0;
+  parameter integer JIT = 0;
+  parameter integer NRLY = 16;
+  parameter integer NTAP = 32;
+  parameter integer LEADC = 450;
+  parameter integer GLEADC = 80;
+  parameter integer DMUT = 0;
   localparam integer NS = 1024;               // sectors per PC per layer
   localparam integer CYC = 1024;              // ps per controller cycle (CK/2)
   // timing (ps): ot_hdc_hbm_model.sv defaults; RFCPB from ot_hdc_v41x_idx_hbm.sv; RREFD assumed
@@ -100,6 +115,52 @@ module tb_hbm_stream_bw;
   function automatic integer go_cycle(input integer L);
     go_cycle = 64 + int'((longint'(L) * PERIOD_PS + CYC / 2) / CYC);
   endfunction
+
+  // ---------- SELF = 1: the KV-die descriptor path ----------
+  reg cclk = 0;
+  always #416.667 cclk = ~cclk;
+  longint attn_ps [0:LAYERS-1];
+  reg c_attn = 0; reg [5:0] c_layer = 0; reg c_done = 0;
+  integer c_next = 0, c_dnext = 0;
+  wire k_v, k_ready, k_fault, f_rv; wire [31:0] k_d, f_rd;
+  ot_qkvd_kv_desc #(.NL(LAYERS), .LEAD(LEADC), .GLEAD(GLEADC), .MUT(DMUT)) issuer (
+    .clk(cclk), .rst_n(rst_n), .p_mid_init(20'(int'((PERIOD_PS * 3 + 1250) / 2500))), .p_tok_init(20'd0),
+    .attn_v(c_attn), .attn_layer(c_layer), .attn_T(14'd8192), .done_v(c_done),
+    .k_v(k_v), .k_d(k_d), .k_ready(k_ready), .fault(k_fault));
+  ot_async_fifo #(.WIDTH(32), .DEPTH(8)) kcdc (
+    .wr_clk(cclk), .wr_rst_n(rst_n), .wr_valid(k_v), .wr_ready(k_ready), .wr_data(k_d), .wr_overflow(),
+    .rd_clk(clk), .rd_rst_n(rst_n), .rd_valid(f_rv), .rd_ready(1'b1), .rd_data(f_rd), .rd_underflow());
+  reg [NRLY:0] r_v; reg [31:0] r_d [0:NRLY];
+  always @(posedge clk) begin
+    r_v[0] <= SELF != 0 && f_rv; r_d[0] <= f_rd;
+    for (int i = 1; i <= NRLY; i++) begin r_v[i] <= r_v[i-1]; r_d[i] <= r_d[i-1]; end
+  end
+  wire [NTAP:0] t_v; wire [31:0] t_d [0:NTAP]; wire [NTAP-1:0] tc_v; wire [31:0] tc_d [0:NTAP-1];
+  assign t_v[0] = r_v[NRLY]; assign t_d[0] = r_d[NRLY];
+  for (genvar i = 0; i < NTAP; i++) begin : tap
+    ot_qkvd_kcmd_tap #(.G(i % 8), .ST(0), .ROW0(0)) u (.clk(clk), .rst_n(rst_n), .i_v(t_v[i]), .i_d(t_d[i]),
+      .o_v(t_v[i+1]), .o_d(t_d[i+1]), .c_v(tc_v[i]), .c_d(tc_d[i]));
+  end
+  // controller-head command FIFO model (ot_qwen_ctrl_pc_head: 8 entries; desc pops on desc_ready, go at once)
+  reg [31:0] hq [$]; longint tap_bad = 0, tap_desc = 0, head_ovf = 0; int exp_l [0:NTAP-1];
+  always @(posedge clk) if (rst_n && SELF != 0) begin
+    for (int i = 0; i < NTAP; i++) if (tc_v[i] && tc_d[i][31:30] == 2'd0) begin
+      tap_desc++;
+      if (tc_d[i][29:19] != 11'(NS) || tc_d[i][18:0] != 19'(exp_l[i])) begin
+        if (tap_bad < 10) $display("TAP DESC MISMATCH tap=%0d n=%0d row=%0d expected n=%0d row=%0d", i,
+                                   tc_d[i][29:19], tc_d[i][18:0], NS, exp_l[i]);
+        tap_bad++;
+      end
+      exp_l[i]++;
+    end
+    if (tc_v[NTAP-1]) begin hq.push_back(tc_d[NTAP-1]); if (hq.size() > 8) head_ovf++; end
+  end
+  // the ATTN / done strobes in the core clock
+  always @(posedge cclk) if (rst_n && SELF != 0) begin
+    c_attn <= 0; c_done <= 0;
+    if (c_next < LAYERS && $time >= attn_ps[c_next]) begin c_attn <= 1; c_layer <= 6'(c_next); c_next <= c_next + 1; end
+    if (c_dnext < LAYERS && c_dnext < cur) begin c_done <= 1; c_dnext <= c_dnext + 1; end
+  end
 
   always @(posedge clk) if (rst_n) begin
     now = cyc * CYC;
@@ -256,6 +317,16 @@ module tb_hbm_stream_bw;
     end
     // ---------- layer control: post (desc), then go ----------
     desc_v <= 0; go <= 0;
+    if (SELF != 0) begin
+      if (hq.size() != 0 && !desc_v) begin
+        if (hq[0][31:30] == 2'd0) begin
+          if (desc_r) begin desc_v <= 1; desc_row <= hq[0][18:0]; posted <= posted + 1; void'(hq.pop_front()); end
+        end else begin
+          go <= 1; layer_go[launched] = int'(cyc + 1); if (launched == 0) cur = 0; launched <= launched + 1;
+          void'(hq.pop_front());
+        end
+      end
+    end else
     if (posted < LAYERS && posted == launched && desc_r && !desc_v &&
         (B2B != 0 ? (posted == 0 || cur >= posted) : (cyc >= go_cycle(posted) - HINT))) begin
       desc_v <= 1; desc_row <= 19'(posted); posted <= posted + 1;
@@ -289,6 +360,20 @@ module tb_hbm_stream_bw;
                longint'(1048576.0 / (real'(worst) * 1e-12)), longint'(1048576.0 / (real'(sum) / LAYERS * 1e-12)));
       $display("SUMMARY sectors_good=%0d sectors_bad=%0d violations=%0d cmds ACT=%0d PRE=%0d PREab=%0d REF=%0d RD=%0d max_ref_gap_ps=%0d max_landing=%0d",
                good, bad, viol, n_act, n_pre, n_preall, n_ref, n_rd, max_ref_gap, max_land);
+      if (SELF != 0) begin : selfv
+        longint wa = 0, l0a = 0, lateg = 0; int over_a = 0;
+        for (int L = 0; L < LAYERS; L++) begin
+          automatic longint ta = (layer_last[L] + 1) * CYC - attn_ps[L];
+          automatic longint gl = longint'(layer_go[L]) * CYC - attn_ps[L];
+          if (L == 0) l0a = ta; else begin if (ta > wa) wa = ta; if (ta > need) over_a++; end
+          if (gl > lateg) lateg = gl;
+          $display("SELF LAYER %0d attn_ps=%0d go_minus_attn_ps=%0d stream_from_attn_ps=%0d", L, attn_ps[L], gl, ta);
+        end
+        $display("SELF SUMMARY worst_from_attn_ps(L1..)=%0d layer0_cold_ps=%0d over_need=%0d max_go_after_attn_ps=%0d tap_desc=%0d tap_bad=%0d head_ovf=%0d issuer_fault=%0d dmut=%0d jit=%0d",
+                 wa, l0a, over_a, lateg, tap_desc, tap_bad, head_ovf, k_fault, DMUT, JIT);
+        $display("SUMMARY verdict=%s", (bad == 0 && viol == 0 && good == longint'(LAYERS) * 32 * NS && over_a == 0 &&
+                 tap_bad == 0 && tap_desc == longint'(LAYERS) * NTAP && head_ovf == 0 && !k_fault) ? "PASS" : "FAIL");
+      end else
       $display("SUMMARY verdict=%s", (bad == 0 && viol == 0 && good == longint'(LAYERS) * 32 * NS) ? "PASS" : "FAIL");
       $finish;
     end
@@ -314,6 +399,10 @@ module tb_hbm_stream_bw;
         b_open[p][b] = 0; b_act[p][b] = -1000000; b_pre[p][b] = -1000000; b_rd[p][b] = -1000000; b_ref_end[p][b] = 0;
       end
     end
+    for (int L = 0; L < LAYERS; L++) begin
+      attn_ps[L] = longint'(go_cycle(L)) * CYC + ((JIT != 0) ? longint'($urandom_range(0, 2 * JIT * CYC)) - JIT * CYC : 0);
+    end
+    for (int i = 0; i < NTAP; i++) exp_l[i] = 0;
     repeat (4) @(posedge clk);
     rst_n = 1;
   end

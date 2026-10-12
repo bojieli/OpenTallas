@@ -85,7 +85,7 @@
     {
       "original": "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv",
       "recovered": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_stream_la_s81.sv",
-      "sha256": "d2d0cdd3908796b40f871410f65dae009f05f947114abc7f0787fe699e9d8e22"
+      "sha256": "19b65e55785fc80bce2cd3e81bb56c41e6666c62e4aad23c66c7fe2833bad04b"
     },
     {
       "original": "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv",
@@ -105,7 +105,7 @@
     {
       "original": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv",
       "recovered": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_writer_pipeline.sv",
-      "sha256": "df9f9dbfdc0ec9ae7bf87edbd6178f354cf3fa8cc9ae722cf7d25aa00cfca7e5"
+      "sha256": "c6c8da474336a1950cb044c712f25bc1b64d6a6c100e061c4d6d59bdb98016a0"
     },
     {
       "original": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
@@ -115,7 +115,7 @@
     {
       "original": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv",
       "recovered": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_pipeline.sv",
-      "sha256": "46b36b39b55ad26a16e71497fedccd428adbad9186063c4d13a08b6638c41330"
+      "sha256": "b8d15243e7a9bb76502cd7fdf0f7c94519dd70aa2f65f0b7ae06327766a986b9"
     },
     {
       "original": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_row_merge_pipeline.sv",
@@ -130,12 +130,22 @@
     {
       "original": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_ctl.sv",
       "recovered": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_ctl.sv",
-      "sha256": "8a75b9ee1b82e9df278616cbc429292faa821c36d772fcd2ef31e78fcecc67ce"
+      "sha256": "cb624769cf92e4a0dbd43f22cf09108fef3fb754db337c687aa3c1a76dc7fe06"
     },
     {
       "original": "rtl/dsrom_sys/s81_window_la/pipeline/mutant_window_ctl_late_payload.sv",
       "recovered": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/mutant_window_ctl_late_payload.sv",
       "sha256": "c66459016ede4969a75f03f84052fe64cc01a94f6d838491edab3467ae11e15f"
+    },
+    {
+      "original": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_land8.sv",
+      "recovered": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_land8.sv",
+      "sha256": "f6b2e419031ccc49a0908062bc73b034e7d9860ae12c2c059cf8bd2b33249301"
+    },
+    {
+      "original": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_mirror.sv",
+      "recovered": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_mirror.sv",
+      "sha256": "1f4a2bb4c3763d0655f32b4dc17395a73822a816c47181f3e9d3b7769e6bea7d"
     }
   ]
 }

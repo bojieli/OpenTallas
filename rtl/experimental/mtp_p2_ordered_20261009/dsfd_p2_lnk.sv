@@ -29,20 +29,19 @@
 // identity check), so a word of transaction t+1 must not reach it before start t+1 fires.  Over stations no sender can
 // know when that is (the VM's lane 0 never sees the start at all), so the lane ends present a word to the core only
 // while its identity equals the identity of the last start the core accepted; later words wait in the credited
-// receiver; the gate lives in each lane's ot_dsrom_mtp_pp2 port stage as a registered per-slot match flag.
-// Boundary timing: stationed receivers SEL 1 + OUTPUT_PIPE 1, then ot_dsrom_mtp_pp2 at every core input port (port
-// valid / data from flops via one 2:1 mux, the core's ready steers 3 flops); the result row leaves via ltx_rc.
-// Core boundary (idle-sweep-1010, fixlat-p2lnk-ffbec0c86-tc TT -280 / SS -594: c_in_v[1] = lv & open_ was a 74-bit
-// identity compare + OR tree straight to the port (-248), and c_in_r / c_start_r reached the 604 / 101-b OUTPUT_PIPE
-// data enables of the receivers (-246, 1,613 D pins)): every core-facing channel now crosses an abutting grant pair
-// ot_dsrom_mtp_ltx_rc -> ot_dsrom_mtp_lrx (D 4, SEL 1, no stations: the closed 3-cycle history is exact, full rate),
-// as dsfd_coll_p2_ep does since 5b059065b.  c_*_v is an OR of flops, c_*_d a 4-slot one-hot read of registered slots,
-// and c_*_r only selects the pair's dozen state flops, never a data register.  The gate now sits between the stationed
-// receiver and the pair (internal reg -> reg), and cur_id follows the core's accepted start one cycle late through a
-// registered take (c_start_v & c_start_r -> 1 flop; the identity is held in the pair's head slot until popped, so it
-// is captured unconditionally the same cycle): opening a cycle later is always safe.  The result row leaves through
-// ot_dsrom_mtp_ltx_rc (c_out_r from one flop, same function as ltx).  Cost: +2 cycles per lane word / start
-// (pipelined, full rate), +1 cycle on the gate opening per transaction.
+// receiver (OUTPUT_PIPE 1: the compare reads a registered head, not the queue mux).
+// Boundary (rev 2, fixlat-p2lnk-ffbec0c86-tc TT -280: c_in_v = valid AND a 74-b compare (13 levels to the pin), c_in_r
+// -> 604-b output-pipe enables + SEL state (15 levels, 1,208 loads from one input pin), head / row flops 100+ um from
+// their pins): no core port touches logic.  Per lane: receiver (lrx_rtt OUTPUT_PIPE, registered head) -> GATE stage
+// (a_d / a_v, a REGISTERED match flag a_m: the compare reads flops and lands in one flop, recomputed every cycle for
+// the next head / next identity) -> core-side ot_sc_pfifo PINREG S 3 (pin flop capture, registered in_ready /
+// out_valid, out_data = 3:1 select by replicated pointer flops, c_in_r only steers the late-select copies).  Start:
+// receiver -> ot_sc_pfifo PINREG S 3.  Accepted-start identity: the accept is registered (acc_r) together with a
+// free-running copy of c_start_d (sd_r), so c_start_r reaches 1 flop, never the 74-b cur_id enables; the gate opens
+// one cycle after the core accepts the start (correct: later is safe, earlier is the fault).  Result row: core ->
+// ot_sc_pfifo PINREG S 3 (c_out_r = its registered in_ready, pin flops at the core pins) -> ot_dsrom_mtp_ltx_rc
+// (grant from one flop, row flops at the die pins).  Cost: +3 cycles per lane word / +2 per start / +2 per result row,
+// pipelined (full rate kept: S 3 with PINREG; receiver depths unchanged).
 // OT_FIXLAT_MUT_LAT1 (negative control): every receiver here assumes a latency-1 link (0 hops, the legacy
 // 3-cycle grant history) at the same depth -> must overflow on the stationed bench.
 // OT_FIXLAT_MUT_NOGATE (negative control): no transaction gate -> back-to-back transactions fault the core.
@@ -68,42 +67,61 @@ module dsfd_p2_lnk #(parameter integer FWD_V = 12, parameter integer RET_V = 14,
  wire clk = ck[0];
  wire rst_n;
  ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rst_n));
- wire [1:0] lv, lr;
- wire [1207:0] ld;                                                       // stationed receivers' registered heads
- ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_l0(.clk(clk),.rst_n(rst_n),
-  .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(lv[0]),.c_ready(lr[0]),.c_data(ld[603:0]));
- ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_l1(.clk(clk),.rst_n(rst_n),
-  .l_valid(f_l1v),.l_ready(t_l1g),.l_data(f_l1d),.c_valid(lv[1]),.c_ready(lr[1]),.c_data(ld[1207:604]));
+ // ---- start: receiver -> core-side pin FIFO
  wire sv, sr; wire [100:0] sd;
  ot_dsrom_mtp_lrx_rtt #(.W(101),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_st(.clk(clk),.rst_n(rst_n),
   .l_valid(f_sv),.l_ready(t_sg),.l_data(f_sd),.c_valid(sv),.c_ready(sr),.c_data(sd));
- // core ports: ot_dsrom_mtp_pp2 2-entry ping-pong stages (port valid / data from flops via one 2:1 mux; the core's
- // ready steers 3 flops).  fixlat-p2lnk-ffbec0c86-tc TT -280 (74-b compare to c_in_v; ready -> 604/101-b enables); the
- // ltx_rc -> lrx D4 pairs of 3d7201bc4 put the D4 queue mux on the port (same class measured on collp2 5b059065b).
- ot_dsrom_mtp_pp2 #(.W(101)) u_sc(.clk(clk),.rst_n(rst_n),.i_valid(sv),.i_ready(sr),.i_data(sd),
-  .o_valid(c_start_v),.o_ready(c_start_r),.o_data(c_start_d),.g_id(1'b0),.g_ok(1'b0),.g_chg(1'b0));
- // transaction gate: identity of the start the core accepted (registered take), held in each lane stage's slot flags
- reg [73:0] cur_id, acc_id; reg cur_ok, acc, chg;
- always @(posedge clk) acc_id <= c_start_d[100:27];
+ ot_sc_pfifo #(.W(101),.S(3),.G(32),.PINREG(1)) u_sp(.clk(clk),.rst_n(rst_n),.in_valid(sv),.in_ready(sr),.in_data(sd),
+  .out_valid(c_start_v[0]),.out_ready(c_start_r[0]),.out_data(c_start_d));
+ // ---- accepted-start identity (registered accept + free-running data copy; cur_id loads from flops only)
+ reg acc_r; reg [73:0] sd_r, cur_id; reg cur_ok;
+ always @(posedge clk) sd_r <= c_start_d[100:27];
  always @(posedge clk)
-  if(!rst_n) begin acc<=1'b0; cur_ok<=1'b0; cur_id<='0; chg<=1'b0; end
+  if(!rst_n) begin acc_r<=1'b0; cur_ok<=1'b0; cur_id<='0; end
   else begin
-   acc <= c_start_v && c_start_r;
-   chg <= acc;
-   if(acc) begin cur_ok<=1'b1; cur_id<=acc_id; end
+   acc_r <= c_start_v[0] && c_start_r[0];
+   if(acc_r) begin cur_ok<=1'b1; cur_id<=sd_r; end
   end
+ wire [73:0] cur_id_n = acc_r ? sd_r : cur_id;   // identity in force next cycle (from flops)
+ wire cur_ok_n = cur_ok || acc_r;
+ // ---- lanes: receiver -> gate stage -> core-side pin FIFO
+ genvar l;
+ generate for (l = 0; l < 2; l = l + 1) begin: g_lane
+  wire rv, rr; wire [603:0] rd;
+  if (l == 0) begin: g_r
+   ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_V),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(VF),.RETURN_HOPS(VR)) u_rx(.clk(clk),.rst_n(rst_n),
+    .l_valid(f_l0v),.l_ready(t_l0g),.l_data(f_l0d),.c_valid(rv),.c_ready(rr),.c_data(rd));
+  end else begin: g_r
+   ot_dsrom_mtp_lrx_rtt #(.W(604),.D(D_C),.SEL(1),.ENABLE_RTT(1),.OUTPUT_PIPE(1),.FORWARD_HOPS(CF),.RETURN_HOPS(CR)) u_rx(.clk(clk),.rst_n(rst_n),
+    .l_valid(f_l1v),.l_ready(t_l1g),.l_data(f_l1d),.c_valid(rv),.c_ready(rr),.c_data(rd));
+  end
+  // gate stage: a_m = (identity of the word held next cycle == identity in force next cycle), registered
+  reg a_v, a_m; reg [603:0] a_d;
+  wire pr;                                  // pin FIFO in_ready (a flop)
 `ifdef OT_FIXLAT_MUT_NOGATE
- localparam integer GATE = 0;
+  wire pass = a_v;
 `else
- localparam integer GATE = 74;
+  wire pass = a_v && a_m;
 `endif
- genvar k;
- generate for (k=0; k<2; k=k+1) begin: g_lane
-  ot_dsrom_mtp_pp2 #(.W(604),.IDG(GATE),.IDL(530)) u_pp(.clk(clk),.rst_n(rst_n),.i_valid(lv[k]),.i_ready(lr[k]),
-   .i_data(ld[604*k +: 604]),.o_valid(c_in_v[k]),.o_ready(c_in_r[k]),.o_data(c_in_d[604*k +: 604]),
-   .g_id(cur_id[(GATE>0?GATE:1)-1:0]),.g_ok(cur_ok),.g_chg(chg));
+  wire adv = !a_v || (pass && pr);          // the stage takes the receiver head (flops only)
+  assign rr = adv;
+  wire [73:0] id_n = adv ? rd[603:530] : a_d[603:530];
+  always @(posedge clk) begin
+   if(!rst_n) begin a_v<=1'b0; a_m<=1'b0; end
+   else begin
+    if(adv) a_v<=rv;
+    a_m <= cur_ok_n && (id_n == cur_id_n);
+   end
+   if(adv && rv) a_d<=rd;
+  end
+  ot_sc_pfifo #(.W(604),.S(3),.G(32),.PINREG(1)) u_pf(.clk(clk),.rst_n(rst_n),.in_valid(pass),.in_ready(pr),.in_data(a_d),
+   .out_valid(c_in_v[l]),.out_ready(c_in_r[l]),.out_data(c_in_d[604*l+:604]));
  end endgenerate
- ot_dsrom_mtp_ltx_rc #(.W(594)) u_o(.clk(clk),.rst_n(rst_n),.c_valid(c_out_v),.c_ready(c_out_r),.c_data(c_out_d),
+ // ---- result row: core -> pin FIFO -> grant-protocol sender (grant from one flop)
+ wire ov, orr; wire [593:0] od;
+ ot_sc_pfifo #(.W(594),.S(3),.G(32),.PINREG(1)) u_op(.clk(clk),.rst_n(rst_n),.in_valid(c_out_v[0]),.in_ready(c_out_r[0]),.in_data(c_out_d),
+  .out_valid(ov),.out_ready(orr),.out_data(od));
+ ot_dsrom_mtp_ltx_rc #(.W(594)) u_o(.clk(clk),.rst_n(rst_n),.c_valid(ov),.c_ready(orr),.c_data(od),
   .l_valid(t_ov),.l_ready(f_og),.l_data(t_od));
 endmodule
 
@@ -147,14 +165,60 @@ module dsfd_coll_p2_ep #(parameter integer FWD_C = 8, parameter integer RET_C = 
 endmodule
 
 // VM-slab end: sends lane 0.
-module dsfd_vm_p2_ep (
+// BE S-face contract v3 (el1011-ds-vm b235ed401, s81die-1011 2026-10-11): the VM back end's P2 port is READY-LATENCY
+// RL = 4: the BE asserts c_l0v in cycle t only if c_l0r was high in cycle t - RL, and every c_l0v beat is a transfer
+// (no same-cycle ready).  This end therefore lands every beat: c_l0v / c_l0d -> pin flops -> a D-entry landing queue
+// -> the grant-protocol sender.  c_l0r is a flop: it is raised for cycle t + 1 only if the queue has room for every beat
+// that can still arrive, counting the queue, the pin flop and the last RL + 1 issued readies (pops ignored, so the
+// bound is safe):  cnt + pv + popcount(rh[RL:0]) + 1 <= D.  The issue -> queue round trip is RL + 2 cycles, so D = RL + 6
+// keeps a full-rate stream (one beat a cycle) with no ready bubble.  Mutant OT_S81PH_MUT_P2EP_NOSLACK: ready ignores
+// the in-flight beats (room for one) -> the queue overflows under a stalled grant and lane-0 words are lost.
+module dsfd_vm_p2_ep #(parameter integer RL = 4, parameter integer D = RL + 6) (
  input wire [0:0] ck, rst,
  input wire [0:0] c_l0v, output wire [0:0] c_l0r, input wire [603:0] c_l0d,
  output wire [0:0] t_l0v, output wire [603:0] t_l0d, input wire [0:0] f_l0g
 );
+ localparam integer AW = $clog2(D), CW = $clog2(D + 1), HW = RL + 1;
  wire rn;
  ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
- ot_dsrom_mtp_ltx #(.W(604)) u_l0(.clk(ck[0]),.rst_n(rn),.c_valid(c_l0v),.c_ready(c_l0r),.c_data(c_l0d),
+ // pin flops (data without reset)
+ reg pv; reg [603:0] pd;
+ always @(posedge ck[0]) pd <= c_l0d;
+ always @(posedge ck[0] or negedge rn) if (!rn) pv <= 1'b0; else pv <= c_l0v[0];
+ // landing queue: payload slots without reset, pointers / count with reset
+ reg [603:0] q [0:D-1];
+ reg [AW-1:0] wp, rp; reg [CW-1:0] cnt;
+ wire qv = cnt != 0;
+ wire tr;                                   // sender takes the head
+ wire pop = qv && tr;
+ always @(posedge ck[0]) if (pv) q[wp] <= pd;
+ always @(posedge ck[0] or negedge rn)
+  if (!rn) begin wp <= 0; rp <= 0; cnt <= 0; end
+  else begin
+   if (pv)  wp <= (wp == D - 1) ? {AW{1'b0}} : wp + 1'b1;
+   if (pop) rp <= (rp == D - 1) ? {AW{1'b0}} : rp + 1'b1;
+   cnt <= cnt + pv - pop;
+  end
+ // credit-style ready: one flop, from flops only
+ reg r; reg [HW-1:0] rh;                    // rh[0] = r one cycle ago ... rh[RL] = r RL + 1 cycles ago
+ integer k; reg [CW+2:0] infl;
+ always @* begin infl = cnt + pv + r; for (k = 0; k < RL; k = k + 1) infl = infl + rh[k]; end
+ always @(posedge ck[0] or negedge rn)
+  if (!rn) begin r <= 1'b0; rh <= {HW{1'b0}}; end
+  else begin
+   rh <= {rh[HW-2:0], r};
+`ifdef OT_S81PH_MUT_P2EP_NOSLACK
+   r <= cnt + pv < D;
+`else
+   r <= infl + 1 <= D;
+`endif
+  end
+ assign c_l0r = r;
+ ot_dsrom_mtp_ltx #(.W(604)) u_l0(.clk(ck[0]),.rst_n(rn),.c_valid(qv),.c_ready(tr),.c_data(q[rp]),
   .l_valid(t_l0v),.l_ready(f_l0g),.l_data(t_l0d));
+ // overflow is a contract breach (BE or this bound): visible in simulation
+ // synthesis translate_off
+ always @(posedge ck[0]) if (rn && pv && !pop && cnt == D) $fatal(1, "dsfd_vm_p2_ep: landing queue overflow (RL %0d D %0d)", RL, D);
+ // synthesis translate_on
 endmodule
 `default_nettype wire

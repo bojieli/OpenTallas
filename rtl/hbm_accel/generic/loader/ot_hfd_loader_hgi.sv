@@ -13,8 +13,13 @@ module ot_hfd_loader_hgi #(
     parameter integer DMA_FRONT = 1,    // 0: every move on the mover (a die without the svc DMA stream bound)
     parameter integer VR2 = 0,          // 1: the mover's VM-source reads on the VM's DMA wide READ group (dma_vr2q / dma_vr2r, die
                                         //    nets hgi_vmr2_dma 513 b / hgi_vmr2_dma_r 8,257 b; hgi-1010/c + b), else the packet client
+    parameter integer KVW = 0,          // 1 (needs VR2 = 1): the DMA mover's KV write-back engine ot_hgi_dma_kvw (hbm-fq 2026-10-11:
+                                        //    KVWB_DS 55 cyc single / 53.1 cyc a record cross-stack vs price 60; 202 at VR2 = 0)
     parameter integer RGX = 0,          // 1: the hardware ROW_GATHER's HBM lanes (hfd_coll ot_hgi_coll_rgx_hbm / _snk): 2 read +
                                         //    2 write servers on kport lanes 3..6 (hgi-1010/c)
+    parameter integer FMV = 0,          // hgi-1010/c2 (AUDIT N5): 1 = the FUSED mover's remote read lane (fmk_q / fmk_r, the quant
+                                        //    block's ot_hgi_hbm_rdq_client) on kport lane KND (RGX only: lane 7 here; after the
+                                        //    mover HBM lanes 7..10 of hgi-1010/c it is lane 11)
     parameter integer RUNPRE = 0        // fe-push-hgi-1010: 1 = CP window burst head run from push-time contiguity bits
 ) (
     input  wire          clk,
@@ -62,6 +67,9 @@ module ot_hfd_loader_hgi #(
     output wire [513:0] rgx_r,           // 2 x {data 256, v}
     input  wire [651:0] rgx_w,           // 2 x {data 256, strb 32, addr 37, v} writes
     output wire [1:0]   rgx_a,           // 2 x write acknowledgement
+    // the FUSED mover's remote kport read lane (die nets hgi_fmk_q / hgi_fmk_r; FMV = 0: idle)
+    input  wire [37:0]  fmk_q,           // {addr 37, v}
+    output wire [256:0] fmk_r,           // {data 256, v}
     output wire irq,
     output wire fault
 );
@@ -71,7 +79,19 @@ module ot_hfd_loader_hgi #(
     wire l_req_v, l_req_rdy, l_req_we, l_rsp_v, l_rsp_rdy, l_rsp_we; wire [36:0] l_req_addr; wire [255:0] l_req_wdata, l_rsp_data;
     wire [31:0] l_req_wstrb; wire [15:0] l_req_tag, l_rsp_tag;
     localparam integer KND = RGX ? 7 : 3;
-    wire [6:0] k_rsp_v, k_rsp_we, k_req_rdy; wire [7*16-1:0] k_rsp_tag; wire [7*256-1:0] k_rsp_data;
+    wire [7:0] k_rsp_v, k_rsp_we, k_req_rdy; wire [8*16-1:0] k_rsp_tag; wire [8*256-1:0] k_rsp_data;
+    wire fm_v, fm_flt; wire [36:0] fm_a;
+    generate if (FMV != 0) begin : g_fmv
+        if (RGX == 0) begin : g_bad
+            initial $error("ot_hfd_loader_hgi: FMV needs RGX (the FUSED lane follows the RGX lanes)");
+        end
+        ot_hgi_hbm_rdq_server #(.Q(32)) u_fms (.clk(clk), .rst_n(rst_n), .xq(fmk_q), .xr(fmk_r), .req_v(fm_v),
+            .req_rdy(k_req_rdy[7]), .req_addr(fm_a), .rsp_v(k_rsp_v[7]), .rsp_data(k_rsp_data[7*256 +: 256]), .fault(fm_flt));
+    end else begin : g_nofmv
+        assign fm_v = 1'b0; assign fm_a = 37'd0; assign fm_flt = 1'b0; assign fmk_r = 257'd0;
+        assign k_rsp_v[7] = 1'b0; assign k_rsp_we[7] = 1'b0; assign k_req_rdy[7] = 1'b0;
+        assign k_rsp_tag[7*16 +: 16] = 16'd0; assign k_rsp_data[7*256 +: 256] = 256'd0;
+    end endgenerate
     // the mover's HBM read lanes (hgi-1010/c): kport lanes KND .. KND + 3 = stacks 0..3 (bursts, multi-outstanding)
     wire [3:0] mr_v, mr_rdy, mr_rv, mr_rrdy, mr_last; wire [4*37-1:0] mr_a; wire [15:0] mr_len;
     wire [63:0] mr_tag, mr_rtag; wire [1023:0] mr_rd, mr_wd; wire [3:0] mr_we, mr_rwe; wire [127:0] mr_ws;
@@ -88,7 +108,7 @@ module ot_hfd_loader_hgi #(
         .mv_v(d_mv_v), .mv_rdy(d_mv_rdy), .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault),
         .mv_src(d_mv_src), .mv_pdone(d_mv_pdone), .mv_fdone(d_mv_fdone),
         .is_v(d_is_v), .is_rdy(d_is_rdy), .is_cmd(d_is_cmd), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone));
-    ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .VR2(VR2), .STACK_BYTES(STACK_BYTES)) u_eng (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy),
+    ot_hgi_dma_engines #(.FRONT(DMA_FRONT), .VR2(VR2), .KVW(KVW), .STACK_BYTES(STACK_BYTES)) u_eng (.clk(clk), .rst_n(rst_n), .mv_v(d_mv_v), .mv_rdy(d_mv_rdy),
         .mv(d_mv), .mv_done(d_mv_done), .mv_fault(d_mv_fault), .mv_src(d_mv_src), .mv_pdone(d_mv_pdone), .mv_fdone(d_mv_fdone),
         .is_v(d_is_v), .is_rdy(d_is_rdy), .is_cmd(d_is_cmd), .fence_v(d_fv), .fence_rdy(d_frdy), .fence_done(d_fdone),
         .k_req_v(d_kv), .k_req_rdy(k_req_rdy[2]), .k_req_we(d_kwe), .k_req_addr(d_ka), .k_req_wdata(d_kd),
@@ -143,15 +163,28 @@ module ot_hfd_loader_hgi #(
                 .fault(x_flt[2 + gx]));
             assign x_we[2 + gx] = 1'b1;
         end
+        if (FMV != 0) begin : g_kp12
+        wire [3:0] mr_lst; wire [7:0] k_lst_unused;
+        ot_hfd_loader_kport #(.ENABLE(1), .ND(12), .STACK_BYTES(STACK_BYTES), .RB(KP_RB), .NO(KP_NO)) u_kp (.clk(clk), .rst_n(rst_n),
+            .req_v({fm_v, mr_v, x_v, d_kv, f_v, l_req_v}), .req_rdy({k_req_rdy[7], mr_rdy, k_req_rdy[6:0]}), .req_we({1'b0, mr_we, x_we, d_kwe, 1'b0, l_req_we}),
+            .req_addr({fm_a, mr_a, x_a, d_ka, f_a, l_req_addr}), .req_wdata({256'd0, mr_wd, x_d, d_kd, 256'd0, l_req_wdata}),
+            .req_wstrb({32'd0, mr_ws, x_s, d_ks, 32'd0, l_req_wstrb}), .req_tag({16'hf005, mr_tag, 64'hf004f003f002f001, d_kt, 16'hf000, l_req_tag}),
+            .req_len({4'd1, mr_len, 16'h1111, 4'd1, f_len, 4'd1}),
+            .rsp_v({k_rsp_v[7], mr_rv, k_rsp_v[6:0]}), .rsp_rdy({1'b1, mr_rrdy, 4'hF, d_krr, 1'b1, l_rsp_rdy}), .rsp_we({k_rsp_we[7], mr_rwe, k_rsp_we[6:0]}),
+            .rsp_tag({k_rsp_tag[7*16 +: 16], mr_rtag, k_rsp_tag[7*16-1:0]}), .rsp_data({k_rsp_data[7*256 +: 256], mr_rd, k_rsp_data[7*256-1:0]}),
+            .rsp_last({k_lst_unused[7], mr_lst, k_lst_unused[6:0]}), .lq(lq), .lr(lr), .fault(kp_fault));
+        assign mr_last = mr_lst;
+        end else begin : g_kp11
         wire [3:0] mr_lst; wire [6:0] k_lst_unused;
         ot_hfd_loader_kport #(.ENABLE(1), .ND(11), .STACK_BYTES(STACK_BYTES), .RB(KP_RB), .NO(KP_NO)) u_kp (.clk(clk), .rst_n(rst_n),
-            .req_v({mr_v, x_v, d_kv, f_v, l_req_v}), .req_rdy({mr_rdy, k_req_rdy}), .req_we({mr_we, x_we, d_kwe, 1'b0, l_req_we}),
+            .req_v({mr_v, x_v, d_kv, f_v, l_req_v}), .req_rdy({mr_rdy, k_req_rdy[6:0]}), .req_we({mr_we, x_we, d_kwe, 1'b0, l_req_we}),
             .req_addr({mr_a, x_a, d_ka, f_a, l_req_addr}), .req_wdata({mr_wd, x_d, d_kd, 256'd0, l_req_wdata}),
             .req_wstrb({mr_ws, x_s, d_ks, 32'd0, l_req_wstrb}), .req_tag({mr_tag, 64'hf004f003f002f001, d_kt, 16'hf000, l_req_tag}),
             .req_len({mr_len, 16'h1111, 4'd1, f_len, 4'd1}),
-            .rsp_v({mr_rv, k_rsp_v}), .rsp_rdy({mr_rrdy, 4'hF, d_krr, 1'b1, l_rsp_rdy}), .rsp_we({mr_rwe, k_rsp_we}),
-            .rsp_tag({mr_rtag, k_rsp_tag}), .rsp_data({mr_rd, k_rsp_data}), .rsp_last({mr_lst, k_lst_unused}), .lq(lq), .lr(lr), .fault(kp_fault));
+            .rsp_v({mr_rv, k_rsp_v[6:0]}), .rsp_rdy({mr_rrdy, 4'hF, d_krr, 1'b1, l_rsp_rdy}), .rsp_we({mr_rwe, k_rsp_we[6:0]}),
+            .rsp_tag({mr_rtag, k_rsp_tag[7*16-1:0]}), .rsp_data({mr_rd, k_rsp_data[7*256-1:0]}), .rsp_last({mr_lst, k_lst_unused}), .lq(lq), .lr(lr), .fault(kp_fault));
         assign mr_last = mr_lst;
+        end
     end else begin : g_norgx
         assign rgx_r = '0; assign rgx_a = '0; assign x_flt = '0;
         assign k_rsp_v[6:3] = '0; assign k_rsp_we[6:3] = '0; assign k_req_rdy[6:3] = '0; assign k_rsp_tag[7*16-1:48] = '0;
@@ -170,6 +203,6 @@ module ot_hfd_loader_hgi #(
         assign mr_last = mr_lst;
     end endgenerate
     assign f_rdy = k_req_rdy[1];
-    assign fault = lc_fault | ld_fault | kp_fault | (|x_flt);   // the DMA unit's faults retire through its record (dma_ret)
+    assign fault = lc_fault | ld_fault | kp_fault | (|x_flt) | fm_flt;   // the DMA unit's faults retire through its record (dma_ret)
 endmodule
 `default_nettype wire

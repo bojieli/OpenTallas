@@ -96,7 +96,7 @@ place_pin -pin_name {c_done[8]} -layer M5 -location {43.1160 0.0960} -pin_size {
 place_pin -pin_name {c_st[0]} -layer M5 -location {47.8680 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {c_st[1]} -layer M5 -location {47.9640 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ck[0]} -layer M5 -location {53.1000 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rs[0]} -layer M5 -location {55.6920 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst[0]} -layer M5 -location {55.6920 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {vh[0]} -layer M5 -location {31.1640 64.7040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {vh[1]} -layer M5 -location {31.2600 64.7040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {vh[2]} -layer M5 -location {31.3560 64.7040} -pin_size {0.0240 0.1920}

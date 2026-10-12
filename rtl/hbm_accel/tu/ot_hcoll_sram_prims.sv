@@ -101,7 +101,12 @@ endmodule
 module ot_hcoll_sfifo #(
     parameter integer W  = 8,
     parameter integer AW = 7,
-    parameter integer K  = 4
+    parameter integer K  = 4,
+    // RFETCH (FILL-9 2026-10-10, opt-in): the fetch decision leaves a FLOP instead of the scnt / ocr compare cone.
+    // fetch_q is computed from the next-state counters, so it equals the RFETCH=0 combinational fetch on every
+    // edge (cycle-identical); one replicated flop per bank drives that bank's macro r_ce.  Root cause it removes:
+    // count -> AND4/AO31/INV -> buffered r_ce over the 3 macros was the TT -26.5 ps reg->macro path of the port.
+    parameter integer RFETCH = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -129,10 +134,27 @@ module ot_hcoll_sfifo #(
     reg          v1, v2;
     wire full  = scnt == (AW+1)'(N);
     wire put   = push_p && !full;
-    wire fetch = (scnt != '0) && (ocr != 3'd0);
+    wire fetch_c = (scnt != '0) && (ocr != 3'd0);
+    reg  fetch_q;
+    reg  [NBK-1:0] rce_q;
+    wire fetch = (RFETCH != 0) ? fetch_q : fetch_c;
     wire hovf;
     wire [2:0] hc;
     wire do_pop = pop && !empty;
+    wire [AW:0]   scnt_n = scnt + (AW+1)'(put) - (AW+1)'(fetch);
+    wire [2:0]    ocr_n  = ocr - 3'(fetch) + 3'(do_pop);
+    wire [AW-1:0] rp_n   = fetch ? rp + 1'b1 : rp;
+`ifdef OT_HCOLL_MUT_RFETCH_LATE
+    wire fetch_d = fetch_c;                          // mutant: decision one edge late (stale counters)
+`else
+    wire fetch_d = (scnt_n != '0) && (ocr_n != 3'd0);
+`endif
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin fetch_q <= 1'b0; rce_q <= '0; end
+        else begin
+            fetch_q <= fetch_d;
+            for (integer b = 0; b < NBK; b = b + 1) rce_q[b] <= fetch_d && (NBK == 1 || rp_n[AW-1] == 1'(b));
+        end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 3'(K); v1 <= 1'b0; v2 <= 1'b0; ovf <= 1'b0;
@@ -151,7 +173,8 @@ module ot_hcoll_sfifo #(
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
     end
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
-        ot_hcoll_sram128 #(.W(W)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
+        ot_hcoll_sram128 #(.W(W)) u_m (.clk(clk),
+            .r_ce((RFETCH != 0) ? rce_q[b] : (fetch && (NBK == 1 || rp[AW-1] == 1'(b)))), .r_addr(7'(rp)),
             .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
     end
     wire [W-1:0] raw_q = rawb[(NBK > 1) ? bs2 : 1'b0];
@@ -167,7 +190,16 @@ endmodule
 module ot_hcoll_sfifo_x #(
     parameter integer W  = 8,
     parameter integer AW = 7,
-    parameter integer K  = 8
+    parameter integer K  = 8,
+    parameter integer RFETCH = 0,    // as ot_hcoll_sfifo: registered, next-state-computed fetch (cycle-identical)
+    // RBSEL (idleA-hcoll 2026-10-10, opt-in): the bank select leaves the 2:1 x W mux in front of out_d.  Root cause it
+    // removes (routes hcoll-port-rfetch-c26cc6a77-f9a TT -35.7, fb-7ea0839ae-c TT -76.4): ONE bs2 flop (yosys folded
+    // the fb per-slice copies into bs2v[0]) -> 3-6 buffers over the bank rows -> NAND2/OA21 -> ~210 ps of wire to the
+    // out_d flop at the rb_d pins.  RBSEL=1: per-bank, per-64-bit-slice (* keep *) select copies gate each bank's
+    // capture word into a bank-local flop mq[b] (AND, both inputs local to the bank), and out_d <= mq[0] | mq[1] gets a
+    // full cycle for the bank -> pin wire.  +1 edge on the RX buffer: the fetch -> credit loop is 9 edges, so the
+    // consumer needs K = 9 slots for full rate (ot_hcoll_port passes K; the core-side land FIFO must hold K).
+    parameter integer RBSEL = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -183,6 +215,8 @@ module ot_hcoll_sfifo_x #(
 `endif
     localparam integer N = 1 << AW;
     localparam integer NBK = (AW > 7) ? 2 : 1;
+    localparam integer RBX = (RBSEL != 0 && NBK > 1) ? 1 : 0;
+    localparam integer NSL = (W + 63) / 64;
     reg          push_p;
     reg [W-1:0]  din_p;
     reg [W-1:0]  rawb [0:NBK-1];
@@ -194,27 +228,72 @@ module ot_hcoll_sfifo_x #(
     reg          v1, v2;
     wire full  = scnt == (AW+1)'(N);
     wire put   = push_p && !full;
-    wire fetch = (scnt != '0) && (ocr != 4'd0);
+    wire fetch_c = (scnt != '0) && (ocr != 4'd0);
+    reg  fetch_q;
+    reg  [NBK-1:0] rce_q;
+    wire fetch = (RFETCH != 0) ? fetch_q : fetch_c;
+    wire [AW:0]   scnt_n = scnt + (AW+1)'(put) - (AW+1)'(fetch);
+    wire [3:0]    ocr_n  = ocr - 4'(fetch) + 4'(cr_in);
+    wire [AW-1:0] rp_n   = fetch ? rp + 1'b1 : rp;
+`ifdef OT_HCOLL_MUT_RFETCH_LATE
+    wire fetch_d = fetch_c;
+`else
+    wire fetch_d = (scnt_n != '0) && (ocr_n != 4'd0);
+`endif
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin fetch_q <= 1'b0; rce_q <= '0; end
+        else begin
+            fetch_q <= fetch_d;
+            for (integer b = 0; b < NBK; b = b + 1) rce_q[b] <= fetch_d && (NBK == 1 || rp_n[AW-1] == 1'(b));
+        end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; ovf <= 1'b0; out_v <= 1'b0;
+            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; ovf <= 1'b0;
         end else begin
             push_p <= push;
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
             if (put) wp <= wp + 1'b1;
             if (fetch) rp <= rp + 1'b1;
             ocr <= ocr - 4'(fetch) + 4'(cr_in);
-            v1 <= fetch; v2 <= v1; out_v <= v2;
+            v1 <= fetch; v2 <= v1;
             if (push_p && full) ovf <= 1'b1;
         end
     always @(posedge clk) begin
         din_p <= din;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
-        out_d <= rawb[(NBK > 1) ? bs2 : 1'b0];
+        if (RBX == 0) out_d <= rawb[(NBK > 1) ? bs2 : 1'b0];
     end
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
-        ot_hcoll_sram128 #(.W(W)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
+        ot_hcoll_sram128 #(.W(W)) u_m (.clk(clk),
+            .r_ce((RFETCH != 0) ? rce_q[b] : (fetch && (NBK == 1 || rp[AW-1] == 1'(b)))), .r_addr(7'(rp)),
             .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
     end
+    // ---- RBSEL: bank-local AND stage, then OR into the pin flop (+1 edge) ----
+    generate if (RBX != 0) begin : g_rbsel
+        // flat vectors (no unpacked arrays): the keep reaches every select bit cell (physical/common_flow/ot_keep_regs.tcl)
+        (* keep *) reg [NBK*NSL-1:0] selq;    // selq[b*NSL+s] == (bs2 == b), one copy per bank and 64-bit slice
+        reg [NBK*W-1:0] mq;
+        reg v3;
+        always @(posedge clk) begin
+            for (integer b = 0; b < NBK; b = b + 1)
+                for (integer s = 0; s < NSL; s = s + 1)
+`ifdef OT_HCOLL_MUT_RBSEL
+                    selq[b*NSL+s] <= (bs2 == 1'(b));            // mutant: select one edge late (stale bank)
+`else
+                    selq[b*NSL+s] <= (bs1 == 1'(b));
+`endif
+            for (integer b = 0; b < NBK; b = b + 1)
+                for (integer i = 0; i < W; i = i + 1)
+                    mq[b*W+i] <= rawb[b][i] & selq[b*NSL + i/64];
+            out_d <= mq[0 +: W] | mq[(NBK-1)*W +: W];
+        end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) v3 <= 1'b0; else v3 <= v2;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) out_v <= 1'b0; else out_v <= v3;
+    end else begin : g_rbdir
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) out_v <= 1'b0; else out_v <= v2;
+    end endgenerate
 endmodule

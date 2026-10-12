@@ -19,6 +19,7 @@ keeps rank 0's view:
   vmw.bin        per record: {u32 addr, u32 value} for every VM word the record writes (diff U output footprint)
   hbmw.bin       per record: {u64 addr, u64 len, bytes} for every HBM range the record changes
   coll_<k>.bin   per COLL record: every rank's A operand as FP32 words, rank-major (the collective model's peers)
+  collb_<k>.bin  per COLL.TOPK_MERGE record: every rank's B operand (the ids, U32), rank-major (hgi-1010/k)
 """
 from __future__ import annotations
 
@@ -71,7 +72,9 @@ class Capture:
         self.vmw = bytearray()
         self.hbmw = bytearray()
         self.touch = []                      # HBM byte intervals read or written by rank 0
+        self.ik_touch = []                   # IDX.INDEX operand-I spans (the --iks key image supplies their bytes)
         self.coll = {}
+        self.collb = {}
 
     def wrap(self, key, fn):
         def run(M, r, L):
@@ -93,19 +96,26 @@ class Capture:
                     eff[nm] = [int(b), int(n), int(m), int(st), int(ist), d.space, d.fmt]
                     if d.space == "HBM" and (r0.unit != "SM" or nm != "B" or self.sm_weights):
                         sp = hbm_span(M, d, die0, L)
-                        if sp:
+                        if sp and r0.unit == "IDX" and nm == "I":
+                            self.ik_touch.append(sp)
+                        elif sp:
                             self.touch.append(sp)
                     elif d.space == "HBM" and r0.unit == "SM":
                         pass
                 coll_parts = None
+                coll_b = None
                 if r0.unit == "COLL":
                     coll_parts = []
+                    coll_b = [] if (r0.op == "TOPK_MERGE" and "B" in r0.desc) else None
                     for dd in dies_save:
                         rr = M.rec_of(dd, r)
                         M.dies, M.cur = [dd], rr
                         a = rr.desc["A"]
                         coll_parts.append(np.asarray(M.read(a, dd, L), dtype=np.float32).view(np.uint32).copy()
                                           if a.space == "VM" else np.zeros(0, np.uint32))
+                        if coll_b is not None:
+                            b0, nb, _, _, _ = M.eff(rr.desc["B"], dd, L)
+                            coll_b.append(dd.vm[b0:b0 + nb].astype(np.uint32).copy())
                 # footprint of the VM outputs
                 M.dies, M.cur = [die0], r0
                 fp = []
@@ -142,6 +152,8 @@ class Capture:
             k = len(self.recs)
             if coll_parts is not None:
                 self.coll[k] = coll_parts
+            if coll_b is not None:
+                self.collb[k] = coll_b
             self.recs.append(dict(k=k, unit=r0.unit, op=r0.op, tag=getattr(r0, "tag", ""), L=int(L),
                                   hdr=f"{r0.encode()[:16][::-1].hex()}", eff=eff, vm_off=off_vm // 8,
                                   vm_n=int(len(addrs)), hbm_off=off_h, hbm_n=nh))
@@ -178,6 +190,8 @@ def write_out(out, cap, M_dies, die0, image, words, dyn, meta, hbm_pre):
     (out / "vm_final.bin").write_bytes(die0.vm.astype("<u4").tobytes())
     for k, parts in cap.coll.items():
         (out / f"coll_{k}.bin").write_bytes(b"".join(p.astype("<u4").tobytes() for p in parts))
+    for k, parts in getattr(cap, "collb", {}).items():
+        (out / f"collb_{k}.bin").write_bytes(b"".join(p.astype("<u4").tobytes() for p in parts))
     meta.update(md_words=words, dyn=dyn, records=cap.recs, image_bytes=len(image),
                 image_sha256=hashlib.sha256(image).hexdigest(), image_base_bytes=IMAGE_PAGE * 4096)
     (out / "meta.json").write_text(json.dumps(meta, indent=1, default=int) + "\n")
@@ -362,7 +376,9 @@ def export_ds(a):
     # --iks (hgi-1010/g3): the rank-0 index-key image of every IDX.INDEX frame in the IKS layout the issuer streams
     # (ot_hgi_idx_iks_issue): die-local key k (ascending owned id) -> stack q = (k div 8) div 342, slot s = k - 2,736 q, at
     # HBM byte (q << 35) | I.base + 68 s, the 544-b key word {4 UE8M0 scale bytes, 128 FP4 codes} little-endian (the
-    # scorer's line = 2 keys); a stack's image covers its B_q blocks x 544 B (pad keys zero)
+    # scorer's line = 2 keys); a stack's image covers its B_q blocks (rounded up to even) x 544 B (pad keys zero)
+    if not st.get("ik"):
+        cap.touch += cap.ik_touch                # no key image: keep the sim's own operand-I bytes
     for rd, ids, keys in st.get("ik", []):
         import hbm_idx_die_bench as IB
         ib = rd.desc["I"].base
@@ -373,6 +389,7 @@ def export_ds(a):
         nb = -(-n // 8)
         for q in range(4):
             bq = max(0, min(342, nb - 342 * q))
+            bq += bq & 1                          # the issuer's EVEN rule: whole scorer beats (2 blocks), pad keys zero
             if bq == 0:
                 continue
             img = bytearray(bq * 544)
