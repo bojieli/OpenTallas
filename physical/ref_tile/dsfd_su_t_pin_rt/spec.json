@@ -1,0 +1,88 @@
+{
+ "name": "dsfd_su_t_pin_rt",
+ "top": "dsfd_su_t_pin",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "contract": {
+  "file": "results/arch/hier_contract_1011/s81.json",
+  "slot": "sp_su_s/po0"
+ },
+ "pg_layer": "M7",
+ "macros": [],
+ "pins": {
+  "N": [
+   "c_rf",
+   "c_rq_row",
+   "c_rq_v",
+   "c_rv",
+   "c_uv"
+  ],
+  "S": [
+   "ck",
+   "rst",
+   "rq_row",
+   "rq_v",
+   "up_a",
+   "up_m",
+   "wq_mask",
+   "wq_row"
+  ],
+  "E": [
+   "dn_d",
+   "dn_v",
+   "up_d",
+   "up_v"
+  ],
+  "W": [
+   "rs_d",
+   "rs_v",
+   "wq_d",
+   "wq_v"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-rr1012-su",
+  "branch": "claude/el1011-rr1012-su",
+  "tag": "rt",
+  "purpose": "rr1012: dsfd_su_t_pin (closed hand-kit s81su-tpin-9eff3d007-tc-pd55, RTL 9eff3d007; main's dsfd_su_t_pin RTL is unchanged since) re-routed through the reference tile flow because its view fails child_lint (f) 201/8698 face pins blocked above; contract slot s81.json sp_su_s/po0 (parent ds_rom_s81_layer1:dsfd_sp_su_c), pin faces from the closed LEF",
+  "benches": [
+   {
+    "name": "exact_full_hier",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/su --shape full --hier",
+    "expect": "pass",
+    "pass_regex": "RUN full_dpi_m0_a0_h pass",
+    "threads": 8,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "neg_stale_den",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/su5 --shape full --hier --mut 5",
+    "expect": "fail",
+    "fail_regex": "RUN full_dpi_m5_a0_h fail",
+    "threads": 8,
+    "peak_ram_gb": 48
+   }
+  ],
+  "extra_paths": [
+   "results/rtl/hbm_su_fused_compiler_20261005"
+  ],
+  "views_to": "physical/ref_tile/dsfd_su_t_pin_rt/views",
+  "record_to": "results/rtl/ref_tile/dsfd_su_t_pin_rt"
+ },
+ "params": {},
+ "children": [],
+ "inter": []
+}

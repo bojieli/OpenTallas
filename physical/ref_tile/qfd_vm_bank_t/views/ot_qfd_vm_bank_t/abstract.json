@@ -1,0 +1,93 @@
+{
+  "name": "ot_qfd_vm_bank_t",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/routes/qfd_vm_bank_t_r6_b9e44cb62_g2/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -1.46483991603219e-10 min -1.4594722652638836e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/routes/qfd_vm_bank_t_r6_b9e44cb62_g2/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/record/views/ot_qfd_vm_bank_t:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/src/physical/ref_tile/qfd_vm_bank_t/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 8.865141953862121e-11 min -1.3257241138209253e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/routes/qfd_vm_bank_t_r6_b9e44cb62_g2/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/record/views/ot_qfd_vm_bank_t:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/src/physical/ref_tile/qfd_vm_bank_t/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.138755756358023e-11 min -1.3851284008659093e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/routes/qfd_vm_bank_t_r6_b9e44cb62_g2/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/record/views/ot_qfd_vm_bank_t:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/src/physical/ref_tile/qfd_vm_bank_t/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/src/physical/ref_tile/qfd_vm_bank_t/signoff.sdc",
+    "sha256": "50bdd4fe8b5e4668e4a934e3b9c6707fd08c8b7540ac22be2b25069a1b2821dc",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_bank_t-r6-b9e44cb62-g2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "files": {
+    "ot_qfd_vm_bank_t.lef": "786838f44239ea4f1f1bba80e374e9e84a6c824cc61fee5a0de52c39db55cbc9",
+    "ot_qfd_vm_bank_t_ff.lib": "414bd5299f49b2a85233249e9e84c3c3abce28be74aa870d62407847a5db094f",
+    "ot_qfd_vm_bank_t_ss.lib": "ebb3b38a361618121ff8bf310e9ba2044d43355c2688282a0608aab815156b10",
+    "ot_qfd_vm_bank_t_tt.lib": "5e1776c1845b26e9673992434fb13388ca7bdec8ba24b111adc9a7c50466360a"
+  },
+  "ok": true
+}
