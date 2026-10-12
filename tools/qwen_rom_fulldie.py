@@ -61,6 +61,11 @@ SHAVE = 0.024                  # frame -> abstract: W, H = frame - 0.024 (= 0.02
 MINW_PINS = os.environ.get('OT_MINW_PINS') == '1'   # face pins at the layer minimum width (half widths below); kv_die turns it on; env OT_MINW_PINS=1 (closure-loop auto-react DRT-0073 successor)
 MIN_HW = dict(M6=0.016, M7=0.016, M8=0.020, M9=0.020)
 COLS, ROWS = 64, 24
+# qwen-tp8 (tp8a recipe): ROWS 12, horizontal link channels before rows CH_ROWS, ROW_GAP um of routing channel
+# between tile rows, NBANDS block-row bands (ROWS / 4); defaults keep the TP4 die byte-identical
+CH_ROWS = (7, 17)
+ROW_GAP = 0.0
+NBANDS = 6
 TILE_SLOT = (313.632, 1291.68)
 CORR = 52.704
 CORR_R2 = 52.704               # the r2 floorplan corridor (r20e may widen CORR; the tile body keeps its width)
@@ -202,7 +207,7 @@ def _build(spine_w, tree_mode):
     # spine: the r2 width carries 32.437 mm2 of content in one 1,040.688 um column; packed here as two columns
     # beside a centred vertical link channel, with the two horizontal link channels crossing it
     content = sum(b[1] for b in SPINE_BLOCKS)
-    spine_h = ROWS * TILE_SLOT[1] + 2 * HCH
+    spine_h = ROWS * TILE_SLOT[1] + 2 * HCH + (ROWS - 1) * ROW_GAP
     need_w = None
     if spine_w is None:
         # two columns, each loses 2 x HCH of height to the crossing channels; the hub element row loses
@@ -231,13 +236,15 @@ def _build(spine_w, tree_mode):
     y = y0
     ch_y = []
     for r in range(ROWS):
-        if r in (7, 17):
+        if r in CH_ROWS:
             ch_y.append(y)
             y += HCH
+        if r and ROW_GAP:
+            y = up(y + ROW_GAP, GY)
         row_y.append(y)
         y += TILE_SLOT[1]
     y_top = y
-    mid = row_y[12]
+    mid = row_y[ROWS // 2]
     y_io = y_top + IO_CHAN
     H = up(y_io + IO_DEPTH + EDGE, GY)
     insts = []
@@ -324,7 +331,7 @@ def _build(spine_w, tree_mode):
     idx = {'port_tiles': 0, 'scale_rom': 0}
     order = [('W', 0), ('E', 0), ('W', 2), ('E', 2), ('E', 1), ('W', 1), ('W', '1a')]
     for name in ('port_tiles', 'scale_rom'):
-        per = need[name][1] / 6
+        per = need[name][1] / NBANDS
         for key in order:
             while remaining[name] > 1e-6:
                 f = free[key]
@@ -421,8 +428,8 @@ def _build(spine_w, tree_mode):
                 ky0, kh = sy0, span
                 if R19:
                     # the landing crossbar spans the 12 tile rows its stack serves (S: rows 0-11, N: rows 12-23)
-                    ky0 = row_y[0] if si == 0 else row_y[12]
-                    kh = (row_y[11] + TILE_SLOT[1] - row_y[0]) if si == 0 else (y_top - row_y[12])
+                    ky0 = row_y[0] if si == 0 else row_y[ROWS // 2]
+                    kh = (row_y[ROWS // 2 - 1] + TILE_SLOT[1] - row_y[0]) if si == 0 else (y_top - row_y[ROWS // 2])
                 lfifos[st] = Inst(f'lfifo_{st}', 'qfd_kvc_n' if (R19 and si == 1) else 'qfd_kvc', x_strip, ky0, STRIP_W - SHAVE, kh - SHAVE, orient,
                                   kind='link_fifo', region='strip')
                 insts.append(lfifos[st])
@@ -443,7 +450,7 @@ def _build(spine_w, tree_mode):
     # ---- IO band (north): collective centred on the spine, embedding west, UCIe and SerDes east
     io = {}
     xs = {}
-    clen = up(3.6e6 / IO_DEPTH, GX)
+    clen = up(next(b[1] for b in IO_BLOCKS if b[0] == 'collective') * 1e6 / IO_DEPTH, GX)   # 3.6 mm2 (TP4)
     xs['collective'] = up(x_spine + (x_arr_e - x_spine) / 2 - clen / 2, GX)
     elen = up(11.046e6 / IO_DEPTH, GX)
     xs['embedding_rom'] = xs['collective'] - elen - 10 * GX
@@ -528,11 +535,11 @@ def buses(m):
     # corridors: head -> stations, away from the mid-line
     for c in range(COLS):
         prev = (f'h_{c}', 's')
-        for r in range(11, -1, -1):
+        for r in range(ROWS // 2 - 1, -1, -1):
             B.append((f'cor_{c}_{r}', 'corridor', CORRIDOR_BITS, [prev, (f's_{c}_{r}', 'a')]))
             prev = (f's_{c}_{r}', 'b')
         prev = (f'h_{c}', 'n')
-        for r in range(12, ROWS):
+        for r in range(ROWS // 2, ROWS):
             B.append((f'cor_{c}_{r}', 'corridor', CORRIDOR_BITS, [prev, (f's_{c}_{r}', 'b')]))
             prev = (f's_{c}_{r}', 'a')
         for r in range(ROWS):
@@ -580,7 +587,7 @@ def buses(m):
             band = r0 // BLOCK[1]
             B.append((f'bword_{b}', 'tree_spine', TREE_BITS, [root, (f'sp_port_tiles_{band}', f'bw{b % 16}')]))
     if m['tree_mode'] != 'central':
-        for band in range(6):
+        for band in range(NBANDS):
             B.append((f'pword_{band}', 'tree_spine', TREE_BITS, [(f'sp_port_tiles_{band}', 'rw'), ('sp_tree_top', f'bw{band}')]))
     # hub <-> stack links: hub -> vertical leg waypoints -> corner -> horizontal waypoints -> strip FIFO
     for si in range(2):
@@ -605,8 +612,8 @@ def buses(m):
         for side in 'WE':
             cols = list(range(32)) if side == 'W' else list(range(63, 31, -1))
             for r in range(ROWS):
-                st = f'{side}{"S" if r < 12 else "N"}'
-                prev = (m['lfifos'][st].name, f'r{r % 12}')
+                st = f'{side}{"S" if r < ROWS // 2 else "N"}'
+                prev = (m['lfifos'][st].name, f'r{r % (ROWS // 2)}')
                 for c in cols:
                     B.append((f'kvl_{side}{r}_{c}', 'kv_land', KVL_BITS, [prev, (f't_{c}_{r}', 'li')]))
                     prev = (f't_{c}_{r}', 'lo')
@@ -798,8 +805,8 @@ def masters(m, k=1, port_bits=None):
                 if R19:
                     kv.note += '; r19: landing crossbar, 32 PC words -> 12 row buses x 768 b (one per tile row)'
                     ry = m['geo']['row_y']
-                    r0 = 0 if rep_.endswith('S') else 12
-                    for j in range(12):
+                    r0 = 0 if rep_.endswith('S') else ROWS // 2
+                    for j in range(ROWS // 2):
                         kv.face(f'r{j}', KVL_BITS, 'W', 'M4', ry[r0 + j] + TILE_SLOT[1] * 0.78 - lf_.y, 1)
                 for p, cd in enumerate(m['cdcs'][rep_]):
                     yc = cd.y - lf_.y

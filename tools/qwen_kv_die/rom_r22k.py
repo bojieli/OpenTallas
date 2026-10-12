@@ -910,7 +910,7 @@ def _option4(v, m, rec):
     add_b += [('o4_sel', 'tree_spine', B['sel'], [('tt_ctlm', 'sel'), ('tt_up4_0', 'sel')]),
               ('o4_upf', 'tree_spine', B['up_flt'], [('tt_up4_0', 'flt'), ('tt_ctlm', 'uf')]),
               ('tt_ty', 'tree_spine', 1538, [('tt_up4_0', 'ty'), ('sp_band_lanes_0', 'tt')])]
-    for b in range(6):
+    for b in range(getattr(v, 'NBANDS', 6)):
         add_b += [(f'pword_{b}', 'tree_spine', 513, [(f'sp_band_lanes_{b}', 'pw'), ('tt_up4_0', f'pw{b}')]),
                   (f'tt_lf{b}', 'tree_spine', 1, [(f'sp_band_lanes_{b}', 'f'), ('tt_up4_0', f'lf{b}')])]
     for k in range(8):
@@ -965,7 +965,7 @@ def _o4_masters(v, m, ghosts):
         for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']), ('meok', 1)):
             c.face(p, bits, 'E', 'M4', y + bits * 0.096 / 2, 2)
             y += bits * 0.096 + 4.0
-        for b in range(6):
+        for b in range(getattr(v, 'NBANDS', 6)):
             c.face(f'c{b}', 343, 'W', 'M4', 80.0 + b * 290.0, 1)
             c.face(f'f{b}', 107, 'W', 'M4', 80.0 + b * 290.0 + 220.0, 1)
             c.face(f'lc{b}', 28, 'W', 'M4', 80.0 + b * 290.0 + 260.0, 1)
@@ -982,7 +982,7 @@ def _o4_masters(v, m, ghosts):
         # site is within reach (r22ko4 tt_lf / pword / tt_ty hops 512-683 um); ty (closed plan: E, abutted by
         # tile 1) joins them on W.  One M4 track per bit: 4,622 b = 222 um of the 388.8-um face.
         y = 16.0
-        for b in range(6):
+        for b in range(getattr(v, 'NBANDS', 6)):
             u4.face(f'pw{b}', 513, 'W', 'M4', y + 513 * 0.048 / 2, 1)
             y += 513 * 0.048 + 1.0
             u4.face(f'lf{b}', 1, 'W', 'M4', y + 0.5, 1)

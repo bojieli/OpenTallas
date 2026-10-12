@@ -73,14 +73,106 @@ def _isa_bits():
     return sum(w for n, w in I.FIELDS), me
 
 
+# ---- qwen-tp8 (results/arch/qwen_tp8_1012/SPEC.md sections 1, 2, 5): the TP8 track-A ROM die.  G = 3,072 lane groups
+# = 768 qfd_tile_nk (the TP4 tile, unchanged) in 64 columns x 12 rows = 3 bands of 4 tile rows (TP4: 6); port groups
+# 16 per band (48); the spine keeps its column; ROW_GAP um of routing channel between tile rows sizes the die to the
+# spec outline (slot share <= 60 %, channels >= 35 %).  Opt-in (recipe tp8a); every other recipe is unchanged.
+TP8 = None
+
+
+def _tp8_globals(cfg):
+    global PORT_GROUPS, BANDS, RTL_PORT_GROUPS, TP8
+    TP8 = dict(cfg)
+    BANDS = cfg['bands']
+    PORT_GROUPS = GROUPS_PER_BAND * BANDS
+    RTL_PORT_GROUPS = 8 * BANDS
+
+
+def _tp8_base(v, cfg):
+    v.ROWS = 4 * cfg['bands']
+    v.NBANDS = cfg['bands']
+    v.CH_ROWS = tuple(cfg['ch_rows'])
+    v.ROW_GAP = cfg['row_gap']
+    # TP8 per-die spine content: port groups halve (3 bands), scale rows 452,144 / 609,376 (SPEC section 1)
+    sc = dict(port_tiles=0.5, scale_rom=452144 / 609376)
+    v.SPINE_BLOCKS = [(n, a * sc.get(n, 1.0), d, s) for n, a, d, s in v.SPINE_BLOCKS]
+    # IO band (SPEC section 3): the two-level collective (in-package pre-fold + owner-half select / all-gather around
+    # the 4-rank fold) gets a 1.5x TP4 budget outline; the CDC cluster widens for the 3 SerDes word pairs
+    v.IO_BLOCKS = [(n, a * (cfg.get('coll_scale', 1.5) if n == 'collective' else 1.0), d) for n, a, d in v.IO_BLOCKS]
+    v.IOX_W = cfg.get('iox_w', 700.128)
+    if cfg.get('tree_pads'):
+        v.TREE_PADS = json.loads((ROOT / cfg['tree_pads']).read_text())['pads']
+
+
+def _tp8_io(v, m):
+    """qwen-tp8 IO band: 3 SerDes ports (one per remote package, K4 board; TP4: 1 adapter for 2 destinations).  SerDes
+    k = 1, 2 are placed W of the collective (MY: their S-face word pins at the end toward the collective); each gets
+    its own collective s<k> / sr<k> words through the IO-band CDC cluster (i_/o_serdes_tx<k>, i_/o_serdes_rx<k>) and
+    the SerDes link clock."""
+    by = {i.name: i for i in m['insts']}
+    col, s0, iox = by['io_collective'], by['io_serdes'], m['io']['xfifo']
+    n = TP8.get('serdes', 3)
+    x = col.x
+    new = []
+    for k in range(1, n):
+        x = v.dn(x - 10 * v.GX - (s0.w + v.SHAVE), v.GX)
+        it = v.Inst(f'io_serdes_{k}', s0.master, x, s0.y, s0.w, s0.h, 'MY', kind=s0.kind, region=s0.region,
+                    domain=s0.domain)
+        for o in m['insts']:
+            assert not (o.x < it.x + it.w and it.x < o.x + o.w and o.y < it.y + it.h and it.y < o.y + o.h), \
+                f'tp8 io: {it.name} overlaps {o.name}'
+        new.append(it)
+    m['insts'] += new
+    bits = next(b for bid, cl, b, eps in m['buses'] if bid == 'serdes_tx')
+    rbits = next(b for bid, cl, b, eps in m['buses'] if bid == 'serdes_rx')
+    B = []
+    for bid, cl, b, eps in m['buses']:
+        if bid == 'clk_serdes':
+            eps = list(eps) + [(it.name, 'ck') for it in new]
+        B.append((bid, cl, b, eps))
+    for k, it in enumerate(new, 1):
+        B += [(f'serdes_tx{k}', 'io', bits, [('io_collective', f's{k}'), (iox.name, f'i_serdes_tx{k}')]),
+              (f'serdes_tx{k}_x', 'io', bits, [(iox.name, f'o_serdes_tx{k}'), (it.name, 'c')]),
+              (f'serdes_rx{k}', 'io', rbits, [(it.name, 'r'), (iox.name, f'i_serdes_rx{k}')]),
+              (f'serdes_rx{k}_x', 'io', rbits, [(iox.name, f'o_serdes_rx{k}'), ('io_collective', f'sr{k}')])]
+    m['buses'] = B
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        C = o['qfd_io_collective']
+        for q in range(1, n):
+            for p0 in ('s', 'sr'):
+                spec = C.ports[p0]
+                assert spec[0] == 'face', (p0, spec)
+                along = C.w if spec[2] in 'NS' else C.h
+                span = spec[1] * 0.048 * spec[5] + 4.0
+                c = spec[4] - q * span if spec[4] - q * span - span / 2 > 2.0 else spec[4] + q * span
+                assert span / 2 + 2.0 <= c <= along - span / 2 - 2.0, ('tp8 collective pin', p0, q, c, along)
+                C.face(f'{p0}{q}', spec[1], spec[2], spec[3], c, spec[5])
+        X = o['qfd_io_xfifo']
+        for q in range(1, n):
+            for p0, j in (('o_serdes_tx', 0), ('i_serdes_rx', 1)):
+                spec = X.ports.get(f'{p0}{q}')
+                if spec is not None and spec[0] == 'face' and spec[2] in 'NS':
+                    span = spec[1] * 0.048 * spec[5] + 4.0
+                    X.ports[f'{p0}{q}'] = spec[:4] + (400.0 + (2 * (q - 1) + j) * span + span / 2,) + spec[5:]
+        return o
+    v.masters = masters
+    m['tp8_io'] = dict(serdes=[s0.name] + [i.name for i in new], collective_um=[round(col.w, 3), round(col.h, 3)],
+                       xfifo_um=[round(iox.w, 3), round(iox.h, 3)])
+
+
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, seam_free=False, station_word=0):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, seam_free=False, station_word=0, tp8=None):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
+    if tp8:
+        _tp8_globals(tp8)
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
     v = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(v)
@@ -103,6 +195,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         v.CORRIDOR_BITS = station_word
         v.TAP_BITS = station_word
     v.REGION_PG = {r: (.48 / PG.bump_pitch(c, 90) if c else 0.) for r, c in F.REGION_PG.items()}
+    if tp8:
+        _tp8_base(v, tp8)
     # ---- meso FIFO slots and F2 storage
     st_extra_um2 = (TAP_FIFO_BITS + F2_STATION_EXTRA_BITS) * FIFO_MM2_PER_BIT * 1e6
     st_extra_h = v.up(st_extra_um2 / v.CORR, v.GY)
@@ -152,6 +246,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         # scale bus is slab-internal); central blocks around the hub; constant ROM beside SU64
         w0 = m['geo']['spine_w_needed']
         w = v.up(w0 + widen_um, 2 * v.GX)
+        if tp8:
+            # qwen-tp8: the spine columns keep the TP4 777.6 um width (closed d2d_rom / su64_sfu / ctlm / slab views)
+            w = round(2 * tp8.get('spine_cw', 777.6) + v.VCH, 3)
         m = v.build(spine_w=w, tree_mode='banded')
         m['geo']['spine_w_needed'] = w0
         m['geo']['b3r3_spine_w'] = w
@@ -256,6 +353,12 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if emb_hbm:
         _emb_hbm(v, m)        # before the relays: the SU <-> hub embedding words get their relay chains
     m['b3r2']['r21c_emb_hbm'] = emb_hbm
+    if tp8 and before_relays is not None:
+        _br0 = before_relays
+
+        def before_relays(v_, m_):
+            _br0(v_, m_)
+            _tp8_io(v_, m_)
     if before_relays is not None:
         # Opt-in system composition: actual slots/ports precede relay discovery.
         # Default recipes retain their existing geometry and master contracts.
@@ -440,7 +543,7 @@ def _rtl_finish(v, m):
           ('tt_xr', 'tree_spine', 1, [('sp_vector_memory', 'xr'), ('sp_tree_top', 'xr')]),
           ('tt_mx', 'tree_spine', TT_MX_BITS, [('sp_tree_top', 'mx'), ('sp_vector_memory', 'mx')]),
           ('emb_cr', 'io', 1, [('io_embedding_rom', 'acr'), ('sp_su64_sfu', 'ecr')])]
-    for b in range(6):
+    for b in range(BANDS):
         B += [(f'tt_c{b}', 'tree_spine', TT_BAND_C_BITS, [('sp_tree_top', f'c{b}'), (f'sp_port_tiles_{b}', 'tc')]),
               (f'tt_f{b}', 'tree_spine', TT_BAND_F_BITS, [(f'sp_port_tiles_{b}', 'tf'), ('sp_tree_top', f'f{b}')])]
     m['buses'] = B
@@ -475,7 +578,7 @@ def _rtl_finish(v, m):
         tt.face('xd', TT_XD_BITS, 'S', 'M5', 100.0, 2)
         tt.face('xr', 1, 'S', 'M5', 140.0, 2)
         tt.face('mx', TT_MX_BITS, 'S', 'M5', 400.0, 1)
-        for b in range(6):
+        for b in range(BANDS):
             tt.face(f'c{b}', TT_BAND_C_BITS, 'W', 'M4', 150.0 + b * 480.0, 1)
             tt.face(f'f{b}', TT_BAND_F_BITS, 'W', 'M4', 150.0 + b * 480.0 + 220.0, 1)
         vm.face('xd', TT_XD_BITS, 'N', 'M5', 640.0, 1)
@@ -492,7 +595,7 @@ def _rtl_finish(v, m):
             if 'o' in em.ports:
                 em.ports['o'] = em.ports['o'][:1] + (EMB_RSP_BITS,) + em.ports['o'][2:]
             em.face('acr', 1, 'S', 'M5', em.w - 200.0, 1)
-        for b in range(6):
+        for b in range(BANDS):
             mn = f'qfd_port_tiles_{b}'
             if mn in o:
                 P = o[mn]
@@ -1294,6 +1397,63 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         old = len(pl['frames'])
         pl['frames'] = frames
         repaired.append((pl['bid'], old, len(frames), round(max(hops_of(pl)), 1)))
+    # ---- qwen-tp8 tree-leg pads (tools/qwen_die_seam/tree_pads.py: the array bench's arrival model on the unpadded
+    # netlist): a tree word whose leg arrives early at its node gets `pad` extra relays at its sink end, in the
+    # corridor the node tile's W-face tree pins face, so both legs of every node arrive on the same cycle
+    tpads = getattr(v, 'TREE_PADS', None) or {}
+
+    def pad_spot(x, y, w, h, rings=200):
+        # nearest free frame anywhere (corridor, row-gap channel, spine): free() rejects every instance rect
+        for ring in range(rings):
+            st = ring * 4 * v.GY
+            cands = [(0, 0)] if ring == 0 else \
+                [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
+                [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
+            for dx, dy in sorted(cands, key=lambda t_: abs(t_[0]) + abs(t_[1])):
+                x0, y0 = v.dn(x - w / 2 + dx, v.GX), v.dn(y - h / 2 + dy, v.GY)
+                if y0 >= g['y0'] and y0 + h <= die_top and free((x0, y0, x0 + w, y0 + h)):
+                    return x0, y0
+        return None
+    pad_done = {}
+    if tpads:
+        bidx = {bid: idx for idx, (bid, cl, bits, eps) in buses}
+        for bid, npad in sorted(tpads.items()):
+            if bid not in bidx:
+                raise ValueError(f'tree pads: no bus {bid}')
+            idx = bidx[bid]
+            if idx not in plans:
+                _, cl, bits, eps = m['buses'][idx]
+                P0, P1 = pos(*eps[0]), pos(*eps[1])
+                plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=[],
+                                  d=abs(P0[0] - P1[0]) + abs(P0[1] - P1[1]))
+                keep.pop(idx, None)
+            pl = plans[idx]
+            w, h = relay_frame(pl['bits'], pl['cl'])
+            x1, y1 = pl['P1']
+            cc = corr_of(x1 - v.CORR / 2)
+            got = []
+            # the pads sit on the segment from the sink back to the bus's last relay (or its source): pad j at
+            # (j + 1) / (npad + 1) of the way, each at the nearest free spot (every hop ~ segment / (npad + 1))
+            fq = pl['frames'][-1] if pl['frames'] else None
+            Q = (fq[0] + fq[2] / 2, fq[1] + fq[3] / 2) if fq else pl['P0']
+            px, py = x1 - v.CORR / 2, y1
+            for j in range(npad):
+                # a walk from the sink toward Q: each pad nearest the point 1 / (pads left + 1) of the way from the
+                # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
+                fr = 1.0 / (npad - j + 1)
+                qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
+                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
+                if sp is None:
+                    sp = pad_spot(qx, qy, w + v.SHAVE, h + v.SHAVE)
+                if sp is None:
+                    raise ValueError(f'tree pads: no free spot for {bid} pad {j}')
+                add_rect((sp[0], sp[1], sp[0] + w + v.SHAVE, sp[1] + h + v.SHAVE))
+                got.append((sp[0], sp[1], w, h))
+                px, py = sp[0] + w / 2, sp[1] + h / 2
+            got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
+            pl['frames'] = list(pl['frames']) + got
+            pad_done[bid] = npad
+    m['tp8_tree_pads'] = dict(buses=len(pad_done), relays=sum(pad_done.values()))
     # ---- emit relays and hops
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']

@@ -133,11 +133,16 @@ QWEN_R22KS = dict(QWEN_R22K, before_relays=_R22K.surgery_s, seam_free=True)   # 
 QWEN_R22KO4 = dict(QWEN_R21C, before_relays=_R22K.surgery_o4, seam_free=True, station_word=509)   # v5 D5 (qwendie-1012)
 # r22ksv (qwen-1010/a, opt-in): r22ks + the sequencer <-> VM all-reduce word path (rom_r22k._vm_ar; r22ko4 has it too)
 QWEN_R22KSV = dict(QWEN_R22K, before_relays=_R22K.surgery_vm, seam_free=True)
-R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv')
+# tp8a (qwen-tp8 2026-10-12, results/arch/qwen_tp8_1012/SPEC.md track A): the TP8 ROM die = r22ko4 with 768 tiles
+# (64 columns x 12 rows, 3 bands of 4 rows), 48 port groups, ROW_GAP routing channel between tile rows to the 25.0 x 23.0
+# mm spec outline, link channels before rows 2 and 10 (the M column segment between them holds the SU + VM + tree-top stack), an IO band with the two-level collective and 3 SerDes
+QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=518.4,
+                                           tree_pads='results/arch/hier_contract_1012/qwen_rom_tp8_tree_pads.json'))
+R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
                 'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K,
-                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS, 'r22ko4': QWEN_R22KO4, 'r22ksv': QWEN_R22KSV}
+                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS, 'r22ko4': QWEN_R22KO4, 'r22ksv': QWEN_R22KSV, 'tp8a': QWEN_TP8A}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
