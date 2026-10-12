@@ -937,9 +937,18 @@ module dsfd_vm_be_sl #(
     input  wire [1279:0]     o_d,
     input  wire [3:0]        o_f,
     input  wire [2:0]        o_o,
-    input  wire [24:0]       xc,         // {lane id x 5 (4 b each, X port order {p9, p8, p2, p7, p6}), v x 5}
-    input  wire [23:0]       pm,         // {this slice's 23 P2 metadata bits, P2 read valid}
-    input  wire [0:0]        c_l0r,      // the consumer ready, relayed: honoured P2RL serial cycles after the BE pin
+    // v4 (GLUE PLACEMENT rule): the die-facing control arrives on this tile's own pins (die-top relays: exactly DIE_D = 3
+    // stages on every control seam, equal for all 4 slices); pin flops + the alignment line live in the tile
+    input  wire [4:0]        f_vx,       // X lane valids (port order {p9, p8, p2, p7, p6}), f_wex write flags
+    input  wire [4:0]        f_wex,
+    input  wire [19:0]       f_mx,       // X lane ids (4 b each)
+    input  wire [0:0]        f_v5,
+    input  wire [0:0]        f_we5,
+    input  wire [22:0]       f_m5s,      // this slice's 23 bits of the P2 metadata (f_m5[23 s +: 23])
+    input  wire [0:0]        c_l0r,      // consumer ready (die relays: exactly 1 stage) -> pin flop: READY-LATENCY 3 + die relays
+    input  wire [15:0]       fe_flt,     // FE fault vector (the die drives it on one slice, 0 on the others)
+    input  wire [39:0]       st_i,       // status chain from the W neighbour (slice 0: tied 0) {fe 16, sst 17, mis, sf 5, v}
+    output reg  [39:0]       st_o,       // status chain to the E neighbour (registered; abutting seam, no die relay)
     output reg  [255:0]      srq_d,      // {row 1, row 0} slices
     output reg  [1:0]        srq_v,
     output reg  [0:0]        vrv,
@@ -949,9 +958,14 @@ module dsfd_vm_be_sl #(
     output wire [0:0]        c_l0v,
     output wire [150:0]      c_l0d,      // {23 metadata bits, 128 data bits}
     output reg  [0:0]        t_p2c,
-    output reg  [4:0]        sflt,       // this cycle {x_col, x_mis, r_ovf, p_mis, p_ovf}
-    output reg  [16:0]       sst         // {o_o, o_f, o_v} pin flops (slice compare / status)
+    output reg  [0:0]        t_err,      // sticky status of the chain up to this slice (the die uses slice 3's)
+    output reg  [0:0]        flt,
+    output reg  [31:0]       fvec,
+    output reg  [2:0]        max_occ
 );
+    localparam integer KX = 4;          // in-tile alignment relays after the control pin flops (DIE_D + 1 + KX + XT = MD + 1)
+    reg [4:0] sflt;                     // this cycle {x_col, x_mis, r_ovf, p_mis, p_ovf}
+    reg [16:0] sst;                     // {o_o, o_f, o_v} pin flops (slice compare / status)
     localparam integer NP = 10;
     localparam integer NC = 2;          // ctrl-return 64-b chunks
     localparam integer NG = 4;          // bus-lane groups
@@ -970,6 +984,25 @@ module dsfd_vm_be_sl #(
         q_d <= o_d; q_o <= o_o;
     end
     always @(posedge clk) sst <= {q_o, q_f, q_v};
+    // control pin flops (v3: in the parent) + KX alignment relays -> xc / pm exactly as the v3 parent delivered them
+    reg c_fv, c_rdy; reg [19:0] c_xm; reg [22:0] c_fm; reg [15:0] c_fe;
+    // the control pin flops + KX line are a pure delay line WITHOUT reset (as v3's relays): the die's rn reaches the
+    // tile DR stages after the die synchroniser, so a reset here would drop requests issued in that window whose read
+    // data arrives after rn_i (v3 reset its pin flops on the earlier parent rn0); the reset hold (>= MD + 1 cycles of
+    // running clock, inputs idle) flushes the line
+    always @(posedge clk) begin
+        if (!rn_i) c_fe <= 16'd0; else c_fe <= fe_flt;
+        c_fv <= f_v5[0] && !f_we5[0]; c_xm <= f_mx; c_fm <= f_m5s;
+    end
+    reg [4:0] c_xv5;
+    always @(posedge clk) c_xv5 <= f_vx & ~f_wex;
+    reg [24:0] xl [0:KX-1]; reg [23:0] pl_ [0:KX-1];
+    always @(posedge clk) begin : p_kx integer i;
+        xl[0] <= {c_xm, c_xv5}; pl_[0] <= {c_fm, c_fv};
+        for (i = 1; i < KX; i = i + 1) begin xl[i] <= xl[i-1]; pl_[i] <= pl_[i-1]; end
+    end
+    wire [24:0] xc = xl[KX-1]; wire [23:0] pm = pl_[KX-1];
+    always @(posedge clk) c_rdy <= c_l0r[0];   // ready pin flop
     // ---------------------------------------------------------------- t_srq slice (no data reset)
     always @(posedge clk) begin
         if (!rn_w) srq_v <= 2'b00; else srq_v <= q_v[1:0];
@@ -1073,9 +1106,9 @@ module dsfd_vm_be_sl #(
     wire mv_nx = rn_i && o_v[5];
     wire [FW-1:0] flit = {pd_m[XT-1], q_d[5*128 +: 128]};
     reg [PB-1:0] ph, pt; reg [PB:0] pn; reg ov; reg p_ovf_n, p_mis_n; reg rq;
-    always @(posedge clk) if (!rn_p) rq <= 1'b0; else rq <= c_l0r[0];
+    always @(posedge clk) if (!rn_p) rq <= 1'b0; else rq <= c_rdy;
 `ifdef OT_SPVM_MUT_RLAT
-    wire rdy = c_l0r[0];                // mutant: honours the ready one cycle early (beats the consumer did not grant)
+    wire rdy = c_rdy;                   // mutant: honours the ready one cycle early (beats the consumer did not grant)
 `else
     wire rdy = rq;
 `endif
@@ -1092,10 +1125,10 @@ module dsfd_vm_be_sl #(
         localparam integer O = PCB * gp;
         localparam integer CWD = (gp == PC - 1) ? FW - PCB * (PC - 1) : PCB;
         wire [P2D-1:0] wo, ro; wire mvc, rqc, pec;
-        dsfd_vm_be_kreg #(.W(2*P2D + 3), .ID(64 + gp)) u_pc (.clk(clk), .d({pw_oh, pr_oh, mv_nx, rn_p && c_l0r[0], pn_nx != 0}),
+        dsfd_vm_be_kreg #(.W(2*P2D + 3), .ID(64 + gp)) u_pc (.clk(clk), .d({pw_oh, pr_oh, mv_nx, rn_p && c_rdy, pn_nx != 0}),
             .q({wo, ro, mvc, rqc, pec}));
 `ifdef OT_SPVM_MUT_RLAT
-        wire ldc = c_l0r[0] && pec;
+        wire ldc = c_rdy && pec;
 `else
         wire ldc = rqc && pec;                             // = ld
 `endif
@@ -1127,9 +1160,39 @@ module dsfd_vm_be_sl #(
             sflt <= {x_col_r, x_mis_r, r_ovf_n, p_mis_n, p_ovf_n};
         end
     end
+    // ---------------------------------------------------------------- status chain (v4: replaces the parent's combine)
+    // st_i pin flop; the neighbour's sst arrives 2 cycles old (its st_o register + this pin flop) and is compared with
+    // this slice's sst delayed 2 (lockstep slices: equal every cycle); OR-accumulate faults; sticky status per slice.
+    reg [39:0] st_r; reg [16:0] sst_d1, sst_d2;
+    always @(posedge clk) begin st_r <= st_i; sst_d1 <= sst; sst_d2 <= sst_d1; end
+    wire [4:0] c_sf = st_r[5:1] | sflt;
+    wire c_mis = st_r[6] | (st_r[0] && st_r[20:7] != sst_d2[13:0]);
+    wire [15:0] c_fe2 = st_r[39:24] | c_fe;
+    always @(posedge clk) begin
+        if (!rn_w) st_o <= 40'd0;
+        else st_o <= {c_fe2, sst, c_mis, c_sf, 1'b1};
+    end
+    reg [31:0] fv;
+    always @(posedge clk) begin
+        if (!rn_w) begin flt <= 1'b0; fvec <= 32'd0; t_err <= 1'b0; max_occ <= 3'd0; end
+        else begin
+            // [3:0] memory {fault, und, mis, ovf | write-only read}; [19:4] FE vector; [20] P2 FIFO overflow;
+            // [21] P2 metadata misalignment; [22] slice mismatch; [23] ctrl return overflow; [24] X misalignment; [25] X collision
+            fv = {6'd0, c_sf[4], c_sf[3], c_sf[2], c_mis, c_sf[1], c_sf[0], c_fe2, sst_d2[13:10]};
+            fvec <= fvec | fv;
+            flt <= flt | (|fv);
+            t_err <= t_err | (|fv);
+            max_occ <= (sst_d2[16:14] > max_occ) ? sst_d2[16:14] : max_occ;
+        end
+    end
 endmodule
 
-// ------------------------------------------------------------------------------------------------ back end (parent)
+// ------------------------------------------------------------------------------------------------ back end (composition)
+// dsfd_vm_be v4 (GLUE PLACEMENT rule, el1011-ds-vm/be-sl4): NO parent element.  The 4 hardened slices dsfd_vm_be_sl are
+// placed by the die; this module is the RTL composition the bench runs: 4 slices + the die-top glue modelled
+// behaviourally (die reset synchronisers + DR equal-length reset relays, DIE_D = 3 control relay stages per slice,
+// 1 c_l0r relay stage per slice, abutting W->E status chain, slice 3's sticky status = the BE status outputs).
+// Latency vs v3: responses +0, P2 ready latency 4 (1 die relay + 3 in the slice), status +2..+5 cycles (chain).
 module dsfd_vm_be #(
     parameter integer NS = 4,
     parameter integer P2D = 40,         // P2 flit FIFO depth (the FE reader's credits)
@@ -1165,51 +1228,43 @@ module dsfd_vm_be #(
     output reg  [31:0]         fvec,
     output reg  [2:0]          max_occ
 );
-    localparam integer R = MD - XT;     // control relay stages, parent pin flop -> tile pin (every tile alike)
-    initial if (NS != 4 || R < 1 || XT != 2 || P2D != 40) $error("dsfd_vm_be: NS 4, XT 2, P2D 40 (the hardened slice tile), MD > 2");
+    localparam integer KX = 4;          // dsfd_vm_be_sl in-tile alignment relays
+    localparam integer DIE_D = MD - KX - XT;   // die control relay stages (DIE_D + 1 + KX + XT = MD + 1, as v3's 1 + R + XT)
+    initial if (NS != 4 || DIE_D < 1 || XT != 2 || P2D != 40) $error("dsfd_vm_be: NS 4, XT 2, P2D 40 (the hardened slice tile), MD >= 7");
     wire clk = ck[0];
     wire rn0, rns0;
+    // die glue: reset synchronisers (one each, at the die), equal-length relays to every slice
     ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn0));
     ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns0));
-    // forward-metadata pin flops (slice-0 tile-3 f_* at the W end of the N face)
-    reg q_fv; reg [91:0] q_fm; reg [4:0] q_xv; reg [19:0] q_xm; reg [15:0] q_fe;
-    // P2 consumer ready: pin flop (the tile registers the relayed copy again: READY LATENCY 4, see dsfd_vm_be_sl)
-    reg q_rdy;
-    always @(posedge clk) q_rdy <= c_l0r[0];
-    always @(posedge clk) begin
-        if (!rn0) begin q_fv <= 1'b0; q_xv <= 5'd0; q_fe <= 16'd0; end
-        else begin q_fv <= f_v5[0] && !f_we5[0]; q_xv <= f_vx & ~f_wex; q_fe <= fe_flt; end
-        q_fm <= f_m5; q_xm <= f_mx;
-    end
     wire [255:0] srq_d [0:NS-1]; wire [1:0] srq_v [0:NS-1]; wire [NS-1:0] vrv_s, c_l0v_s, t_p2c_s;
     wire [127:0] vrq_s [0:NS-1]; wire [16*128-1:0] bl_d [0:NS-1]; wire [15:0] bl_v [0:NS-1];
-    wire [150:0] p2_s [0:NS-1]; wire [4:0] sflt [0:NS-1]; wire [16:0] sst [0:NS-1];
-    wire [4:0] sflt_r [0:NS-1]; wire [16:0] sst_r [0:NS-1];
-    genvar gs, gr, gl;
+    wire [150:0] p2_s [0:NS-1]; wire [39:0] st [0:NS];
+    wire [NS-1:0] terr_s, flt_s; wire [31:0] fvec_s [0:NS-1]; wire [2:0] mocc_s [0:NS-1];
+    assign st[0] = 40'd0;               // chain head
+    genvar gs, gl;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_s
-        // equal-length registered relays to / from this slice tile (no slab-wide control net)
+        // die-top relays (behavioural): DR reset stages, DIE_D control stages, 1 c_l0r stage, all equal per slice
         reg [DR-1:0] rnc, rns_;
-        reg [24:0] xr [0:R-1]; reg [23:0] pr [0:R-1]; reg rr;
+        reg [4:0] dvx [0:DIE_D-1]; reg [4:0] dwx [0:DIE_D-1]; reg [19:0] dmx [0:DIE_D-1];
+        reg dv5 [0:DIE_D-1]; reg dw5 [0:DIE_D-1]; reg [22:0] dm5 [0:DIE_D-1]; reg rr;
         always @(posedge clk) begin : p_rl integer i;
             rnc <= {rnc[DR-2:0], rn0};
-            rr <= q_rdy;                    // c_l0r relay (pin flop at the centred pin -> this tile, <= ~270 um a stage)
-            xr[0] <= {q_xm, q_xv}; pr[0] <= {q_fm[23*gs +: 23], q_fv};
-            for (i = 1; i < R; i = i + 1) begin xr[i] <= xr[i-1]; pr[i] <= pr[i-1]; end
+            rr <= c_l0r[0];
+            dvx[0] <= f_vx; dwx[0] <= f_wex; dmx[0] <= f_mx; dv5[0] <= f_v5[0]; dw5[0] <= f_we5[0]; dm5[0] <= f_m5[23*gs +: 23];
+            for (i = 1; i < DIE_D; i = i + 1) begin
+                dvx[i] <= dvx[i-1]; dwx[i] <= dwx[i-1]; dmx[i] <= dmx[i-1]; dv5[i] <= dv5[i-1]; dw5[i] <= dw5[i-1]; dm5[i] <= dm5[i-1];
+            end
         end
         always @(posedge cks[0]) rns_ <= {rns_[DR-2:0], rns0};
-        reg [4:0] fr [0:DR-1]; reg [16:0] sr [0:DR-1];
-        always @(posedge clk) begin : p_st integer i;
-            fr[0] <= sflt[gs]; sr[0] <= sst[gs];
-            for (i = 1; i < DR; i = i + 1) begin fr[i] <= fr[i-1]; sr[i] <= sr[i-1]; end
-        end
-        assign sflt_r[gs] = fr[DR-1]; assign sst_r[gs] = sr[DR-1];
         dsfd_vm_be_sl u_sl (                // hard macro at its defaults (P2D 40, XT 2): no parameter overrides
             .ck(ck), .cks(cks), .rn_in(rnc[DR-1]), .rns_in(rns_[DR-1]),
             .o_v(o_v[10*gs +: 10]), .o_d(o_d[1280*gs +: 1280]), .o_f(o_f[4*gs +: 4]), .o_o(o_o[3*gs +: 3]),
-            .xc(xr[R-1]), .pm(pr[R-1]), .c_l0r(rr),
+            .f_vx(dvx[DIE_D-1]), .f_wex(dwx[DIE_D-1]), .f_mx(dmx[DIE_D-1]), .f_v5(dv5[DIE_D-1]), .f_we5(dw5[DIE_D-1]),
+            .f_m5s(dm5[DIE_D-1]), .c_l0r(rr), .fe_flt(gs == 0 ? fe_flt : 16'd0), .st_i(st[gs]), .st_o(st[gs+1]),
             .srq_d(srq_d[gs]), .srq_v(srq_v[gs]), .vrv(vrv_s[gs]), .vrq(vrq_s[gs]), .bl_d(bl_d[gs]), .bl_v(bl_v[gs]),
-            .c_l0v(c_l0v_s[gs]), .c_l0d(p2_s[gs]), .t_p2c(t_p2c_s[gs]), .sflt(sflt[gs]), .sst(sst[gs]));
-        // this slice's bits of every response (S-FACE CONTRACT v3: at this tile's x range)
+            .c_l0v(c_l0v_s[gs]), .c_l0d(p2_s[gs]), .t_p2c(t_p2c_s[gs]),
+            .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs]));
+        // this slice's bits of every response (S-FACE CONTRACT v3/v4: at this tile's x range)
         assign t_srq[128*gs +: 128] = srq_d[gs][127:0];
         assign t_srq[513 + 128*gs +: 128] = srq_d[gs][255:128];
         assign vrq[128*gs +: 128] = vrq_s[gs];
@@ -1219,7 +1274,7 @@ module dsfd_vm_be #(
             assign t_bl[513*gl + 1 + 128*gs +: 128] = bl_d[gs][128*gl +: 128];
         end
     end endgenerate
-    // lockstep control outputs from the tile next to their pins
+    // lockstep control outputs from one slice next to their pins
     assign t_srq[512] = srq_v[0][0]; assign t_srq[1025] = srq_v[0][1];
     assign vrv = vrv_s[0];
     generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_bv
@@ -1227,25 +1282,8 @@ module dsfd_vm_be #(
     end endgenerate
     assign c_l0v = c_l0v_s[1];
     assign t_p2c = t_p2c_s[NS-1];
-    // ---------------------------------------------------------------- status (sticky; relayed tile status, equal length)
-    reg s_mis; reg [4:0] sf; reg [31:0] fv;
-    always @(posedge clk) begin : p_status integer s;
-        if (!rn0) begin s_mis <= 1'b0; flt <= 1'b0; fvec <= 32'd0; t_err <= 1'b0; max_occ <= 3'd0; end
-        else begin
-            sf = 5'd0;
-            for (s = 0; s < NS; s = s + 1) begin
-                sf = sf | sflt_r[s];
-                if (s > 0 && sst_r[s][13:0] != sst_r[0][13:0]) s_mis <= 1'b1;
-            end
-            // [3:0] memory {fault, und, mis, ovf | write-only read}; [19:4] FE vector; [20] P2 FIFO overflow;
-            // [21] P2 metadata misalignment; [22] slice mismatch; [23] ctrl return overflow; [24] X misalignment; [25] X collision
-            fv = {6'd0, sf[4], sf[3], sf[2], s_mis, sf[1], sf[0], q_fe, sst_r[0][13:10]};
-            fvec <= fvec | fv;
-            flt <= flt | (|fv);
-            t_err <= t_err | (|fv);
-            max_occ <= (sst_r[0][16:14] > max_occ) ? sst_r[0][16:14] : max_occ;
-        end
-    end
+    // status = the chain tail (slice NS-1)
+    always @* begin t_err = terr_s[NS-1]; flt = flt_s[NS-1]; fvec = fvec_s[NS-1]; max_occ = mocc_s[NS-1]; end
 endmodule
 
 // ================================================================================================ composition
