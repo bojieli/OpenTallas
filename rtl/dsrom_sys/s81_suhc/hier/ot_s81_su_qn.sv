@@ -55,26 +55,39 @@ module ot_s81_su_qnt #(
     // pin flops
     reg dq_st; reg [3:0] dq_kind; reg [1:0] dq_gsel; reg [7:0] dq_jid; reg [S_RD-1:0] dq_v; reg [S_RD*256-1:0] dq_d;
     reg [NFI-1:0] fq;
+    // the slot count of the arriving row group, counted on the way in (a 16-bit popcount in the pin stage's input cone,
+    // inside the 0.8 T the IO budget leaves): the row numbering below is then one add, not popcount + add (was 725 ps /
+    // 19 levels dq_v -> rc_j).  Same cycle as dq_v: values and latency unchanged.
+    reg [$clog2(S_RD+1)-1:0] dq_pc;
     always @(posedge clk) begin dq_kind <= dn_kind_i; dq_gsel <= dn_gsel_i; dq_jid <= dn_jid_i; dq_d <= dn_d_i; end
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; fq <= 0; end
-                                           else begin dq_st <= dn_st_i; dq_v <= dn_v_i; fq <= i_f; end
+    always @(posedge clk or negedge rst_n) begin : pinv
+        integer i;
+        reg [$clog2(S_RD+1)-1:0] c;
+        if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; fq <= 0; dq_pc <= 0; end
+        else begin
+            dq_st <= dn_st_i; dq_v <= dn_v_i; fq <= i_f;
+            c = 0;
+            for (i = 0; i < S_RD; i = i + 1) c = c + dn_v_i[i];
+            dq_pc <= c;
+        end
+    end
     // job context and row numbering (the first row of a QN / GQ job is its parameter row, the rest operand rows)
     reg mine, gq; reg [1:0] gsel; reg [7:0] jid; reg [15:0] rcnt;
-    reg [16*L-1:0] rc_j;                                                   // rcnt copies, one a position (fanout)
-    reg [15:0] rc_n;
-    always @(*) begin : rn
-        integer i;
-        rc_n = rcnt;
-        if (dq_st) rc_n = 16'd0;
-        else for (i = 0; i < S_RD; i = i + 1) if (dq_v[i]) rc_n = rc_n + 16'd1;
-    end
+    wire [15:0] rc_n = dq_st ? 16'd0 : rcnt + dq_pc;
+    // the rotation offset off = (rcnt - 1) mod L, one registered copy a position (265-bit 2:1 mux a level each) in a
+    // kept module, so synthesis cannot merge the copies back into one 12k-load net (opt_merge did, in the plain regs)
+    wire [LL-1:0] off_n = rc_n[LL-1:0] - 1'b1;
+    wire [LL*L-1:0] off_j;
+    genvar gj;
+    generate for (gj = 0; gj < L; gj = gj + 1) begin : g_off
+        ot_s81_su_qn_keep_ff #(.W(LL)) u_k (.clk(clk), .rst_n(rst_n), .d(off_n), .q(off_j[LL * gj +: LL]));
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin mine <= 1'b0; gq <= 1'b0; gsel <= 2'd0; jid <= 8'd0; rcnt <= 16'd0; rc_j <= 0; end
+        if (!rst_n) begin mine <= 1'b0; gq <= 1'b0; gsel <= 2'd0; jid <= 8'd0; rcnt <= 16'd0; end
         else begin
             if (dq_st) begin mine <= (dq_kind == K_QN || dq_kind == K_GQ); gq <= (dq_kind == K_GQ); gsel <= dq_gsel;
                              jid <= dq_jid; end
             rcnt <= rc_n;
-            rc_j <= {L{rc_n}};
         end
     end
     wire prm = mine && dq_v[0] && rcnt == 16'd0;
@@ -92,7 +105,7 @@ module ot_s81_su_qnt #(
         for (k = 0; k < LL; k = k + 1)
             for (s = 0; s < L; s = s + 1) begin : pos
                 reg [LL-1:0] off;
-                off = rc_j[16 * s +: LL] - 1'b1;
+                off = off_j[LL * s +: LL];
                 rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
             end
     end
@@ -114,6 +127,15 @@ module ot_s81_su_qnt #(
             o_fu <= o_fu | (|fq); o_fo <= 1'b0; o_alive <= 1'b1; o_den <= 1'b1;
         end
     end
+endmodule
+
+// a register that synthesis must keep (SYNTH_KEEP_MODULES + keep): per-position copies of a broadcast control value.
+// Reset value all ones = the off of rcnt 0 (bit-identical to the former rc_j <= 0 copies).
+module ot_s81_su_qn_keep_ff #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d,
+                                                           output wire [W-1:0] q);
+    (* keep = "true" *) reg [W-1:0] q_k;
+    always @(posedge clk or negedge rst_n) if (!rst_n) q_k <= {W{1'b1}}; else q_k <= d;
+    assign q = q_k;
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
