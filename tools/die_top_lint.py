@@ -130,7 +130,7 @@ QWEN_R22KS = dict(QWEN_R22K, before_relays=_R22K.surgery_s, seam_free=True)   # 
 # r22ko4 (qwen-1010/a 2026-10-10, opt-in): r22k with the option-4 control plane (tree-top control tile + 4 upper tiles,
 # seq_su by the SU, constant buffer / ROM group tiles; rom_r22k._option4), seam-free pin faces as r22ks (the control
 # tile's S face meets the VM)
-QWEN_R22KO4 = dict(QWEN_R21C, before_relays=_R22K.surgery_o4, seam_free=True)
+QWEN_R22KO4 = dict(QWEN_R21C, before_relays=_R22K.surgery_o4, seam_free=True, station_word=509)   # v5 D5 (qwendie-1012)
 # r22ksv (qwen-1010/a, opt-in): r22ks + the sequencer <-> VM all-reduce word path (rom_r22k._vm_ar; r22ko4 has it too)
 QWEN_R22KSV = dict(QWEN_R22K, before_relays=_R22K.surgery_vm, seam_free=True)
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv')

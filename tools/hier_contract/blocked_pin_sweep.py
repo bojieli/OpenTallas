@@ -17,6 +17,15 @@ exported LEF (archive final/<block>.lef, else the record's published LEF on main
 
 Output: results/arch/hier_contract_1011/blocked_pin_sweep.json (tile, job, pins blocked / total, parent, owner).
 LEF parsing only: lightweight, runs locally.
+
+--all (2026-10-12, RELAUNCH 4): every CLOSED tile / leaf record (closure-loop jobs + closed archive), not only
+route_master ones: child_lint (c) strap layer and (f) blocked-above on the exported view LEF (archive final/, else the
+record's published dir on main, else --remote: the run's record/ on its host).  Notes whether the record went through
+the loop's post-route hold ECO and whether that ECO ran before the keepout re-apply fix a804fc09b (ECO DRT put nets
+back over the face pins: blocked_pin_sweep.json's 4 blocked tiles were exactly the 4 hold-ECO'd ones).  A record with
+a parent (hier contract slot / cfg --macro-view) is "used"; a used view failing (c)/(f) is the action list: re-export
+(ref_tile.py export) when only the view is wrong, else re-route on main >= a804fc09b.
+Output: results/arch/hier_contract_1011/blocked_pin_sweep_all.json.
 """
 from __future__ import annotations
 
@@ -135,12 +144,134 @@ def parent_index() -> dict:
     return {k: sorted(v) for k, v in idx.items()}
 
 
+ECO_FIX, ECO_FIX_AT = "a804fc09b", "2026-10-12T00:15:23-07:00"   # daemon tree hold_eco.sh carries OT_ECO_PK from here
+
+
+def lef_for(d: Path | None, man: dict, spec: dict, block: str, remote: bool) -> tuple[Path | None, str]:
+    if d is not None:
+        for p in [d / "final" / f"{block}.lef", *sorted((d / "final").glob("*.lef"))]:
+            if p.exists() and "_bloat" not in p.name:
+                return p, "archive"
+    recs = (man.get("record") or []) + (spec.get("record") or [] if isinstance(spec.get("record"), list) else [])
+    for rec in recs:
+        to = rec.get("to")
+        if not to or not (REPO / to).is_dir():
+            continue
+        hits = [h for h in sorted((REPO / to).rglob("*.lef")) if "_bloat" not in h.name and "/macros/" not in str(h)]
+        pick = next((h for h in hits if h.stem == block), None) or (hits[0] if hits else None)
+        if pick:
+            return pick, "main"
+    if remote:
+        try:
+            p = fetch_remote_lef(man, block)
+        except Exception:  # noqa: BLE001
+            p = None
+        if p:
+            return p, "remote"
+    return None, ""
+
+
+def main_all(a) -> int:
+    parents = parent_index()
+    recs = {}
+    for f in sorted(Path(a.jobs).glob("*.json")):
+        try:
+            j = json.load(open(f))
+        except Exception:
+            continue
+        if j.get("status") == "CLOSED" and isinstance(j.get("spec"), dict):
+            recs[j["name"]] = (None, {"job": j["name"], "element": j["spec"].get("block"), "owner": j["spec"].get("owner"),
+                                      "record": [], "closed_at": j.get("updated"), "host": j.get("host"),
+                                      "run_dir": j.get("run")}, j["spec"], j.get("commit_full") or "", j)
+    for d in sorted(Path(a.archive).glob("*/*")):
+        try:
+            man = json.load(open(d / "manifest.json"))
+            spec = json.load(open(d / "spec.json"))
+        except Exception:
+            continue
+        if not str((man.get("metrics") or {}).get("reason", "")).startswith("CLOSED"):
+            continue
+        try:
+            j = json.load(open(d / "job.json"))
+        except Exception:
+            j = {}
+        recs[man.get("job") or d.name] = (d, man, spec, man.get("commit") or (spec.get("source") or {}).get("commit", ""), j)
+    rows, lint_cache = [], {}
+    for job, (d, man, spec, commit, j) in sorted(recs.items()):
+        block = man.get("block") or spec.get("block")
+        lef, src = lef_for(d, man, spec, block, a.remote)
+        e = (j or {}).get("eco") or {}
+        eco = bool(e.get("installed"))
+        row = {"element": man.get("element") or block, "job": job, "block": block, "commit": (commit or "")[:11],
+               "owner": man.get("owner") or spec.get("owner"), "closed_at": man.get("closed_at"),
+               "ref_tile": bool(spec.get("ref_tile")), "hold_eco": eco,
+               "hold_eco_started": e.get("started") if eco else None,
+               "hold_eco_pre_fix": bool(eco and str(e.get("started") or "") < ECO_FIX_AT),
+               "lef": str(lef) if lef else None, "lef_source": src}
+        if lef:
+            key = str(lef)
+            if key not in lint_cache:
+                try:
+                    lint_cache[key] = child_lint.lint(key, skip=set("abdeg"))
+                except Exception as ex:  # noqa: BLE001
+                    lint_cache[key] = {"verdict": "ERROR", "fails": [f"lint error: {ex}"[:200]], "info": {}}
+            res = lint_cache[key]
+            fa = (res.get("info") or {}).get("face") or {}
+            row.update(cell=(res.get("info") or {}).get("cell") or block,
+                       strap_layer=(res.get("info") or {}).get("strap_layer"),
+                       c_fail=any(x.startswith("(c)") for x in res["fails"]),
+                       f_fail=any(x.startswith("(f)") for x in res["fails"]),
+                       face_pin_rects=fa.get("face_pins"), blocked_above=fa.get("blocked_above"),
+                       examples=(fa.get("examples") or [])[:3], fails=[x[:240] for x in res["fails"]])
+        else:
+            row.update(cell=block, error="no exported LEF (archive final/, main record dir" + (", remote record/" if a.remote else "") + ")")
+        row["parent"] = parents.get(row.get("cell") or block) or parents.get(block) or []
+        row["used"] = bool(row["parent"])
+        bad = row.get("c_fail") or row.get("f_fail")
+        if bad:
+            # only the view is wrong when (c) alone fails (an export layer/OBS choice) or (f) on a view whose route was
+            # never hold-ECO'd pre-fix (keepout lost in the abstract, not the wires) -- the routed db must be checked to
+            # tell; ECO'd-pre-fix + (f) means the ECO's wires really sit over the pins -> re-route
+            row["action"] = ("re-route on main >= a804fc09b (pre-fix hold ECO put wires over the face pins)"
+                             if row.get("f_fail") and row["hold_eco_pre_fix"] else
+                             "ref_tile export re-export (check routed db: wires vs abstract)")
+        rows.append(row)
+    linted = [r for r in rows if r.get("lef")]
+    bad = [r for r in linted if r.get("c_fail") or r.get("f_fail")]
+    out = {"schema": "opentallas.hier_contract.blocked_pin_sweep_all.v1", "eco_fix": ECO_FIX, "eco_fix_at": ECO_FIX_AT,
+           "selection": "every CLOSED record (closure-loop jobs + closed archive); check = child_lint (c) strap and "
+                        "(f) blocked-above on the exported view LEF",
+           "closed_records": len(rows), "linted": len(linted), "distinct_lefs": len(lint_cache),
+           "no_lef": len(rows) - len(linted), "fail_c": sum(1 for r in linted if r.get("c_fail")),
+           "fail_f": sum(1 for r in linted if r.get("f_fail")), "fail_any": len(bad),
+           "used_fail": sum(1 for r in bad if r["used"]),
+           "f_fail_hold_eco_pre_fix": sum(1 for r in bad if r.get("f_fail") and r["hold_eco_pre_fix"]),
+           "f_fail_no_eco": sum(1 for r in bad if r.get("f_fail") and not r["hold_eco"]),
+           "records": rows}
+    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+    Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
+    for r in sorted(bad, key=lambda r: (not r["used"], r["element"] or "")):
+        print(f"{'USED ' if r['used'] else '     '}{(r['element'] or '')[:30]:30s} {r['job'][:50]:50s} c={int(bool(r.get('c_fail')))} "
+              f"f={r.get('blocked_above')}/{r.get('face_pin_rects')} eco={'pre' if r['hold_eco_pre_fix'] else int(r['hold_eco'])} "
+              f"parent={','.join(r['parent'])[:60] or '-'}")
+    print(f"closed {len(rows)}; linted {len(linted)} ({len(lint_cache)} distinct LEFs); fail (c) {out['fail_c']} "
+          f"(f) {out['fail_f']}; used+fail {out['used_fail']}; (f) with pre-fix hold ECO {out['f_fail_hold_eco_pre_fix']}, "
+          f"(f) without ECO {out['f_fail_no_eco']} -> {a.out}")
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--archive", default=str(ARCHIVE))
     ap.add_argument("--jobs", default=str(Path.home() / ".local/state/closure_loop/jobs"))
     ap.add_argument("--out", default=str(REPO / "results/arch/hier_contract_1011/blocked_pin_sweep.json"))
+    ap.add_argument("--all", action="store_true", help="every CLOSED record, child_lint (c)+(f) (see module doc)")
+    ap.add_argument("--remote", action="store_true", help="--all: fetch the run's record/ LEF from its host when not local")
     a = ap.parse_args(argv)
+    if a.all:
+        if a.out.endswith("blocked_pin_sweep.json"):
+            a.out = a.out.replace("blocked_pin_sweep.json", "blocked_pin_sweep_all.json")
+        return main_all(a)
     parents = parent_index()
     rows, control, n_rm = [], [], 0
     recs = {}  # job -> (archive dir or None, manifest, spec, commit)
