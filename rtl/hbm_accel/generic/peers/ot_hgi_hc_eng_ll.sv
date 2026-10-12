@@ -119,11 +119,18 @@ module ot_hgi_hc_lane_ll #(
     reg [639:0] wt;                          // scalar words 0..19
     reg [31:0] rh;                           // rstd
     reg scp; reg [7:0] scx;                  // a scalar read pending
+    // el1011-hbm-fused GPK: HC_PRE_NORM gain PACKED lane-local (BF16, compiler layout): packed sector u + 32 k of this
+    // lane holds the gains of its data sectors u + 32 (2k) (words 0..3) and u + 32 (2k + 1) (words 4..7), so the gain
+    // is D / 2 words (half the mover traffic) and still bank-local; NG = gain sectors this lane reads
+    reg pk; wire [MB-1:0] NG = pk ? MB'(NM / 2) : MB'(NM);
+    function automatic [255:0] bf2f(input [127:0] h);
+        integer e; begin bf2f = '0; for (e = 0; e < 8; e = e + 1) bf2f[32*e +: 32] = {h[16*e +: 16], 16'd0}; end
+    endfunction
     wire c_job = dv_q && dop_q == 3'd0, c_wgt = dv_q && dop_q == 3'd1, c_scr = dv_q && dop_q == 3'd2;
     wire c_go = dv_q && dop_q == 3'd3, c_grdy = dv_q && dop_q == 3'd4, c_rstd = dv_q && dop_q == 3'd5;
     wire scr_mine = c_scr && dd_q[4:0] == lid_q;
     always @(posedge clk) begin
-        if (c_job) begin post <= dd_q[45]; a_s <= dd_q[14:0]; b_s <= dd_q[29:15]; o_s <= dd_q[44:30];
+        if (c_job) begin post <= dd_q[45]; pk <= dd_q[46] && !dd_q[45]; a_s <= dd_q[14:0]; b_s <= dd_q[29:15]; o_s <= dd_q[44:30];
                          u <= {5'd0, 5'(lid_q - dd_q[4:0])}; end
         if (c_wgt) wt[128*dx_q[2:0] +: 128] <= dd_q;
         if (c_rstd) rh <= dd_q[31:0];
@@ -136,7 +143,7 @@ module ot_hgi_hc_lane_ll #(
     reg [MB:0] gs, gp;                       // HC_POST: sectors started / fully pushed (FIFO admission)
     reg [FB-1:0] occ;
     wire [9:0] i_s = u + {im, 5'd0};         // the row sector of m
-    wire rd_done = (im == MB'(NM));
+    wire rd_done = ph_b ? (im == NG) : (im == MB'(NM));
     reg  iss; reg [14:0] isec;
     always @* begin
         iss = 1'b0; isec = '0;
@@ -178,7 +185,8 @@ module ot_hgi_hc_lane_ll #(
             op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= rd_q;
             if (MUT == 2 && lid_q == 5'd0) begin op[0] <= asb[1]; op[1] <= asb[0]; end
         end
-        if (rsp && rph_b) gb[rm] <= rd_q;
+        if (rsp && rph_b && !pk) gb[rm] <= rd_q;
+        if (rsp && rph_b && pk) begin gb[{rm, 1'b0}] <= bf2f(rd_q[127:0]); gb[{rm, 1'b1}] <= bf2f(rd_q[255:128]); end
     end
 
     // ---- datapath: HC_POST 8 element pipelines (row k of the sector a cycle); HC_PRE_NORM mix / x / squares / chunk
@@ -329,7 +337,7 @@ module ot_hgi_hc_lane_ll #(
             if (cs_v) begin up_v <= 1'b1; up_t <= 1'b1; cm <= cm + 1'b1; end
             // PRE phase C: the scale starts when r has landed and every gain sector is in
             if (c_rstd) r_ok <= 1'b1;
-            if (!post && run && r_ok && !sc_run && sm == '0 && rph_b && rm == MB'(NM) && ym == '0 && !y_v && !vx[LMS]
+            if (!post && run && r_ok && !sc_run && sm == '0 && rph_b && rm == NG && ym == '0 && !y_v && !vx[LMS]
                 && !xo_v && npush == '0) sc_run <= 1'b1;
             if (sc_run) begin if (sm == MB'(NM - 1)) sc_run <= 1'b0; sm <= sm + 1'b1; end
             // outputs
@@ -468,7 +476,7 @@ module ot_hgi_hc_ctl_ll #(
     wire j_post = (job[148:147] == 2'd1);
     wire [14:0] ja = job[17:3], jb = job[35:21], jo = job[93:79];
     wire job_ok = (job[114:94] == 21'(D)) && (job[2:0] == 3'd0) && (job[20:18] == 3'd0) && (job[78:76] == 3'd0) &&
-                  (ja[4:0] == jb[4:0]) && (ja[4:0] == jo[4:0]) && !(job[148:147] == 2'd0 && job[36]) &&
+                  (ja[4:0] == jb[4:0]) && (ja[4:0] == jo[4:0]) && !(job[148:147] == 2'd0 && job[36] && (NM % 2 != 0))   /* packed gain: lane-local GPK layout, NM even */ &&
                   (job[148:147] <= 2'd1);
 
     // ---- command bus (the top's registers -> RL relay flops per lane)
@@ -638,7 +646,7 @@ module ot_hgi_hc_ctl_ll #(
                     st <= S_SC; scs <= '0; scl <= '0; ndone <= '0; crp <= '0; bi <= '0;
                     for (L = 0; L < 32; L = L + 1) cwp[L] <= '0;
                     nsc <= 3'(({3'd0, c_b[2:0]} + (post ? 6'd20 : 6'd4) + 6'd7) >> 3);
-                    cv <= 1'b1; cop <= 3'd0; cx <= '0; cd <= {81'd0, 1'b0, post, jo, jb, ja};       // JOB
+                    cv <= 1'b1; cop <= 3'd0; cx <= '0; cd <= {81'd0, job[36] && !post, post, jo, jb, ja};       // JOB
                 end
                 S_SC: begin                                                    // one scalar read a cycle
                     cv <= 1'b1; cop <= 3'd2; cx <= 8'(scs); cd <= {113'd0, c_b[17:3] + 15'(scs)};

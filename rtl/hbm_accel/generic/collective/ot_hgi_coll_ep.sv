@@ -25,6 +25,7 @@ module ot_hgi_coll_ep #(
     parameter integer PPK = 512,       // parking depth per epoch queue (flits of a gather this rank has not started)
     parameter integer MUT_PIPE = 0,    // bench mutants: 1 tag ignored (oldest epoch's context), 2 no parking (early
                                        //   flits formatted with the oldest context), 3 an epoch completes one flit early
+    parameter integer SWCRED = 256,    // [link] 2026-10-10: switch-ingress credits of each port = the hfd_lk_ep TX queue (32)
     parameter integer RGXHW = 0,       // 1: hardware COLL.ROW_GATHER (G25): owner-row source + list-order sink on this endpoint
     parameter integer RFMT = 1,        // 0: no row formatter (rowfmt ports unbound): ROW_GATHER param[8] = 0 faults
     parameter integer TKM = 0,         // hgi-1010/k: 1 = hardware COLL.TOPK_MERGE: merge sink ot_hgi_coll_tkm on the gather bypass
@@ -172,7 +173,7 @@ module ot_hgi_coll_ep #(
         else if (r_go) tkm_run <= (TKM != 0) && r_tkm; else if (go) tkm_run <= 1'b0;
     wire tkm_now = tkm_run | (r_go & r_tkm & (TKM != 0));
     ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1), .RGX(RGXHW), .DELCRED((RGXHW != 0 || TKM != 0) ? 1 : 0), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
-        .DEL(DEL), .LANES(LANES), .PIPE(PIPE)) u_ep (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
+        .DEL(DEL), .LANES(LANES), .PIPE(PIPE), .SWCRED(SWCRED)) u_ep (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
         .rank(sel ? r_rank : rank), .mcast_group_size(sel ? r_mg : 8'd96), .mcast_all(sel & r_mall),
         .gsz(sel ? r_gsz : 4'hF), .byp(sel & r_byp), .res_bf16(sel ? r_bf16 : 1'b1), .pf(sel ? r_pf : pf), .go(r_go | go), .start_ready(start_ready),
         .done_valid(done_valid), .done_ready(done_ready), .fault_ack(1'b0),
