@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import math
 import os
 from collections import Counter, defaultdict
@@ -47,6 +48,9 @@ DEFAULT = dict(
     # (36 layers) -> 93 / layer (tok_model.py; SPEC.md replaces these)
     budget_cycles_per_layer=dict(ds=290, qwen=93),
     consumer_wpc=64,                                    # a consumer reads 64 words / cycle (SPEC 5.0)
+    # SPEC v0.5 (main 87eead465) die address map, decoded by RANGE: slice addr[17:16] below repl_base, REPL mirror,
+    # HC weight aperture moved to 294,912..360,447; the simulated / image address space is spec_words
+    repl_base=262144, repl_w=32768, hcap_base=294912, hcap_w=65536, spec_words=360448,
 )
 READ_OPS = ("A", "B", "C", "I")
 
@@ -71,6 +75,21 @@ def slice_of(a: np.ndarray, P: dict, smap: np.ndarray | None = None) -> np.ndarr
     for lo, hi in P["mirror"]:
         s[(a >= lo) & (a < hi)] = -1
     return s
+
+
+def spec_slice_of(a: np.ndarray, P: dict) -> np.ndarray:
+    """slice of SPEC v0.5 die addresses (the compiler's vm*_spec.bin / sub-descriptor 'spec' fields), range decode:
+    slice addr[17:16] below REPL_BASE, -1 = REPL mirror (local everywhere), HC aperture = STRIPE4 by sector (fed from
+    the local slice, vmap_<q>); any other address raises (a fault in RTL)"""
+    a = np.asarray(a, np.int64)
+    rb, hb = P["repl_base"], P["hcap_base"]
+    rep = (a >= rb) & (a < rb + P["repl_w"])
+    hc = (a >= hb) & (a < hb + P["hcap_w"])
+    lo = (a >= 0) & (a < rb)
+    if not np.all(lo | rep | hc):
+        raise ValueError("SPEC v0.5 address outside slice / REPL / HC aperture")
+    s = np.where(lo, (a >> 16) & 3, -1)
+    return np.where(hc, ((a - hb) // P["aperture_stripe_words"]) % P["nclust"], s).astype(np.int64)
 
 
 def hops(a: int, b: int, n: int) -> int:
@@ -175,6 +194,10 @@ def traffic(vec: Path, P: dict) -> dict:
     vmw = np.frombuffer((vec / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0].astype(np.int64)
     smp = vec / "b2" / "slice.npy"
     smap = np.load(smp) if smp.exists() else None
+    spi = vec / "b2" / "vm0_spec.bin"
+    if spi.exists() and spi.stat().st_size // 4 != P["spec_words"]:
+        print(f"WARNING {spi}: {spi.stat().st_size // 4} words, SPEC v0.5 die image is {P['spec_words']} (pre-v0.5 "
+              f"compiler; traffic uses logical addresses + slice.npy, unaffected)", file=sys.stderr)
     rows = [record_traffic(r, vmw[r["vm_off"]:r["vm_off"] + r["vm_n"]], P, smap) for r in meta["records"]]
     model = "qwen" if "qwen" in str(meta.get("model", "")).lower() else "ds"
     budget = P["budget_cycles_per_layer"][model]
