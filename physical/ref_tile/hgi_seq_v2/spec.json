@@ -89,10 +89,10 @@
   "hold_delay": true
  },
  "job": {
-  "owner": "Claude:el1011-hbm-tputx-cpf",
-  "branch": "claude/el1011-hbm-tputx-cpf",
+  "owner": "Claude:el1011-hbm-b2-cp",
+  "branch": "claude/el1011-hbm-b2-cp",
   "tag": "v23",
-  "purpose": "tputx-cpf: ot_hgi_seq v2.3 timing restructure of route 905100ec5 (TT -187): registered header allocation + ring-limit register, thermometer FIFO control, S_HD payload load, staged item writes, registered DYN row and N-read operands; hold-delay stage on every input (+ pos, ring write data)",
+  "purpose": "ot_hgi_seq v2.3 (prefetching fetch sequencer for CP.FETCH, 0.794x of price; B2 dispatch path 0.828x): v2.2 route 905100ec5 TT -186.91 fixed structurally (registered header alloc, thermometer FIFO control, staged writes, registered DYN row / resolver operands, hold-delay cells on inputs)",
   "extra_paths": [
    "rtl/hbm_accel/generic/tb",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
