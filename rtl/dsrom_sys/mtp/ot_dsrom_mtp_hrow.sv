@@ -129,7 +129,7 @@ module ot_dsrom_mtp_hrow_store #(
         reg [EV-1:0] ev0; reg [WC-1:0] wc0;
         wire [1:0] hq = d[1:0]; wire [3:0] he = d[5:2]; wire [NW-1:0] hp = d[6 +: NW]; wire [UB-1:0] hu = d[6 + NW +: UB];
         always @(posedge clk or negedge rn)
-            if (!rn) begin inh <= 1'b0; ihalf <= 1'b0; flt <= 2'b0; ev0[EV-2] <= 1'b0; wc0[0] <= 1'b0; end
+            if (!rn) begin inh <= 1'b0; ihalf <= 1'b0; flt <= 2'b0; ev0 <= '0; wc0[0] <= 1'b0; islot <= '0; ibeat <= 7'd0; end
             else begin
                 ev0[EV-2] <= 1'b0; wc0[0] <= 1'b0;
                 if (i_v[gp]) begin
@@ -138,7 +138,7 @@ module ot_dsrom_mtp_hrow_store #(
                         ev0[EV-2] <= 1'b1; ev0[EV-1] <= 1'b1; ev0[0 +: 12 + SW] <= {{hu, hp[SB-1:0]}, hp[7:0], he};
                         islot <= {hu, hp[SB-1:0]}; ibeat <= 7'd0; ihalf <= 1'b0; inh <= 1'b1;
                     end else if (!inh) flt[1] <= 1'b1;
-                    else if (!ihalf) begin ilo <= d[511:0]; ihalf <= 1'b1; end
+                    else if (!ihalf) ihalf <= 1'b1;
                     else begin
                         wc0[0] <= 1'b1;
                         ihalf <= 1'b0; ibeat <= ibeat + 7'd1;
@@ -149,6 +149,8 @@ module ot_dsrom_mtp_hrow_store #(
                     end
                 end
             end
+        // ilo is datapath: no reset, own block (a non-reset bit in an async-reset block synthesises as an async-load flop)
+        always @(posedge clk) if (i_v[gp] && !d[513] && inh && !ihalf) ilo <= d[511:0];
         always @(posedge clk) if (i_v[gp] && !d[513] && inh && ihalf) begin
             wc0[WC-1:1] <= {d[511:0], ilo, DB'(islot) * DB'(PB) + DB'(ibeat)};
         end
