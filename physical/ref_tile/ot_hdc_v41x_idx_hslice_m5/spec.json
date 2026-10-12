@@ -12,19 +12,14 @@
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/hdc/ot_hdc_fp32_add_lat.sv"
  ],
- "params": {
-  "NB": 4,
-  "FPL": 7,
-  "FML": 5,
-  "QL": 5
- },
+ "params": {},
  "clock_port": "clk",
  "reset_ports": [
   "rst_n"
  ],
- "contract": {
-  "file": "results/arch/hier_contract_1011/r25gq.json",
-  "slot": "idx_score_SW/g_col[0].g_s[0].u_hs"
+ "outline": {
+  "w": 172.8,
+  "h": 103.68
  },
  "macros": [],
  "pins": {
@@ -56,17 +51,28 @@
  "route": {
   "pd": 0.5,
   "threads": 8,
-  "peak_ram_gb": 64
+  "peak_ram_gb": 48
  },
  "job": {
   "owner": "Claude:el1011-reroute-m5",
   "branch": "claude/el1011-reroute-m5",
   "tag": "m5",
-  "purpose": "M5 re-route (reroute_batch.py) of closed hgi-idx-hslice-b-a791d4196-tc-cl (ot_hdc_v41x_idx_hslice, RTL a791d4196, snapshot of 1 drifted files): same RTL, outline 180.0x110.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-hbm-idx",
+  "purpose": "M5 re-route (reroute_batch.py) of closed idx_hslice_rt_a-i1012-63dc36f91 (ot_hdc_v41x_idx_hslice, RTL 63dc36f91, snapshot of 1 drifted files): same RTL, outline 172.8x103.68, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-hbm-idx",
   "benches": [
    {
+    "name": "lint",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/. $B/ && cd $B && { verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_hdc_v41x_idx_hslice rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv rtl/lib/ot_rst_relay.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv && echo lint-ok\n}",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "[m5rr: run on the 63dc36f91 snapshot overlay of physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src]"
+   },
+   {
     "name": "chunk_el_lockstep_exact",
-    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/. $B/ && cd $B && { bash tools/hgi_idx_chunk_el_bench.sh {RUN}/bench\n}",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/. $B/ && cd $B && { bash tools/hgi_idx_chunk_el_bench.sh {RUN}/bench\n}",
     "expect": "pass",
     "pass_regex": "^HGI_IDX_CHUNK_EL PASS",
     "threads": 16,
@@ -75,11 +81,11 @@
      "verilator"
     ],
     "timeout_s": 14400,
-    "note": "[m5rr: run on the a791d4196 snapshot overlay of physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src]"
+    "note": "[m5rr: run on the 63dc36f91 snapshot overlay of physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src]"
    },
    {
     "name": "chunk_el_hb_mutant",
-    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/. $B/ && cd $B && { bash tools/hgi_idx_chunk_el_bench.sh {RUN}/bench +MUT_HB\n}",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/. $B/ && cd $B && { bash tools/hgi_idx_chunk_el_bench.sh {RUN}/bench_mut +MUT_HB\n}",
     "expect": "fail",
     "fail_regex": "HGI_IDX_CHUNK_EL FAIL",
     "threads": 16,
@@ -88,14 +94,14 @@
      "verilator"
     ],
     "timeout_s": 14400,
-    "note": "[m5rr: run on the a791d4196 snapshot overlay of physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src]"
+    "note": "[m5rr: run on the 63dc36f91 snapshot overlay of physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src]"
    }
   ]
  },
  "m5rr": {
   "cell": "ot_hdc_v41x_idx_hslice",
-  "closed_job": "hgi-idx-hslice-b-a791d4196-tc-cl",
-  "closed_commit": "a791d419622f0cd42d230e7114da1543b874198c",
+  "closed_job": "idx_hslice_rt_a-i1012-63dc36f91",
+  "closed_commit": "63dc36f917c74a737e912f3bd7460a7725e914df",
   "snapshot": [
    "rtl/hdc/ot_hdc_fastfp.sv"
   ],
