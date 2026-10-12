@@ -27,8 +27,19 @@ foreach k {ucie serdes} { create_clock -name $k -period 833.333 [get_pins -quiet
 set_clock_groups -asynchronous -group stream -group serial -group ucie -group serdes"""
 lat = ''
 if plan:
-    si = json.loads(Path(plan).read_text())['sink_insertion']
-    rows = [f'set p [get_pins -quiet {{{k}}}]; if {{[llength $p]}} {{ set_clock_latency {(v[1] if c == "ff" else (v[0] + v[1]) / 2):.1f} $p; incr ot_lat_n }} else {{ incr ot_lat_miss }}'
+    P_ = json.loads(Path(plan).read_text())
+    si = P_['sink_insertion']
+    # qwendie-1012: a bound hard view's clock pin (clock_plan.py balance 'view_pin_insertion'): OpenSTA takes a pin
+    # latency on a macro as its internal-register latency and subtracts the ETM clock-tree path, so the physical pin
+    # arrival is written as arrival + insertion (-early min / -late max) and the view's pin lands where the die delivers
+    vi = P_.get('view_pin_insertion', {})
+    def lat_(k, v):
+        a = v[1] if c == "ff" else (v[0] + v[1]) / 2
+        if k in vi:
+            mn, mx = vi[k][c]
+            return (f'set_clock_latency -early {a + mn:.1f} $p; set_clock_latency -late {a + mx:.1f} $p')
+        return f'set_clock_latency {a:.1f} $p'
+    rows = [f'set p [get_pins -quiet {{{k}}}]; if {{[llength $p]}} {{ {lat_(k, v)}; incr ot_lat_n }} else {{ incr ot_lat_miss }}'
             for k, v in sorted(si.items())]
     Path(out).with_name(f'clock_lat_{c}.tcl').write_text('set ot_lat_n 0; set ot_lat_miss 0\n' + '\n'.join(rows) +
         f'\nputs "OT_CLOCK_PLAN corner={c} sinks={len(rows)} bound=$ot_lat_n missing=$ot_lat_miss"\n')
