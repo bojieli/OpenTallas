@@ -89,9 +89,26 @@ def locate(el, job=None):
     db = d.get('db') or ''
     if ':' in db and (not job or job == d.get('job')):
         host, path = db.split(':', 1)
-        r = ssh(host, 'stat -c "%%s" %s' % shlex.quote(path), timeout=60)
-        if r.returncode == 0:
-            return dict(kind='host', host=host, path=path, size=int(r.stdout.strip() or 0), job=job or d.get('job'))
+        if host in ('localhost', '127.0.0.1'):
+            if os.path.exists(path): return dict(kind='archive', path=path, job=job or d.get('job'))
+        else:
+            r = ssh(host, 'stat -c "%%s" %s' % shlex.quote(path), timeout=60)
+            if r.returncode == 0:
+                return dict(kind='host', host=host, path=path, size=int(r.stdout.strip() or 0), job=job or d.get('job'))
+    # the job's own run dir (the registry's best closure can differ from the job the element page was built from)
+    try: st = json.loads((JOBS / (job + '.json')).read_text()) if job else {}
+    except Exception: st = {}
+    host, run = st.get('host'), (st.get('run') or '').rstrip('/')
+    if host and run:
+        od = (st.get('metrics') or {}).get('orfs_dir') or ''
+        probe = ('for d in %s %s/cl/eco*/pass*/orfs %s/routes/*/work/orfs %s/routes/*/signoff; do for f in $d/results/asap7/*/base/6_final.odb; do '
+                 '[ -f "$f" ] && { stat -c "%%s %%n" "$f"; exit 0; }; done; done; exit 1') % (shlex.quote(od) if od else '', run, run, run)
+        r = ssh(host, probe, timeout=120)
+        if r.returncode == 0 and r.stdout.strip():
+            size, path = r.stdout.strip().split(' ', 1)
+            if host in ('localhost', '127.0.0.1'):   # a DB on this host is cut here, like an archive copy
+                return dict(kind='archive', path=path, job=job)
+            return dict(kind='host', host=host, path=path, size=int(size), job=job)
     return None
 
 
@@ -459,17 +476,25 @@ def backfill(limit=None, only=None, workers=4, redo=False):
     todo = [r for r in rows if redo or done.get(r['element']) != r['best']['job']]
     if limit: todo = todo[:limit]
     log('backfill: %d of %d closed elements to export' % (len(todo), len(rows)))
-    # per-source concurrency: one local cut at a time (lock in _cut_local), at most 2 per fleet host
-    sems = collections.defaultdict(lambda: threading.Semaphore(2))
-    def one(r):
+    # one queue per DB source (each fleet host, the relay host, this host's archive), 2 cuts at a time per queue
+    # (the local archive cuts are serialised by LOCAL_LOCK), so a run of elements on one host never idles the others
+    queues = collections.OrderedDict()
+    for r in todo:
         el, job = r['element'], r['best']['job']
         d = element_json(el) or {}
-        host = (d.get('db') or ':').split(':', 1)[0] or 'local'
+        host = (d.get('db') or ':').split(':', 1)[0]
+        if not host:
+            try: host = json.loads((JOBS / (job + '.json')).read_text()).get('host') or 'local'
+            except Exception: host = 'local'
         key = 'archive' if archive_db(el, job) else (RELAY if host in AVOID else host)
-        with sems[key]:
-            return export(el, job)
-    with cf.ThreadPoolExecutor(max_workers=workers) as ex:
-        res = list(ex.map(one, todo))
+        queues.setdefault(key, []).append((el, job))
+    log('backfill queues: ' + ', '.join('%s %d' % (k, len(v)) for k, v in queues.items()))
+    res = []
+    def run_queue(items):
+        with cf.ThreadPoolExecutor(max_workers=2) as ex:
+            return list(ex.map(lambda t: export(*t), items))
+    with cf.ThreadPoolExecutor(max_workers=max(1, len(queues))) as ex:
+        for r in ex.map(run_queue, queues.values()): res += r
     g = gc(); s = size_report()
     write_json(STORE / 'SIZE.json', s)
     log('backfill done: %d ok, %d not exported; store %.2f GB of %.0f GB budget; gc %s' % (sum(res), len(res) - sum(res), s['bytes'] / 1e9, BUDGET_GB, g))

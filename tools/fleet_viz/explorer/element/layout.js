@@ -268,6 +268,7 @@ async function start(){
     onViewStateChange: ({viewState}) => { V.vs = viewState; requestUpdate(); saveUrl(); return viewState; },
     getCursor: ({isDragging}) => V.rulerMode ? 'crosshair' : isDragging ? 'grabbing' : 'default',
     onClick: onClick, onHover: onDeckHover,
+    onAfterRender: () => { const t = performance.now(); const f = V.frames || (V.frames = []); f.push(t); while (f.length && t - f[0] > 2000) f.shift(); },
     useDevicePixels: Math.min(2, window.devicePixelRatio || 1),
     parameters: {clearColor: [0, 0, 0, 0], depthTest: false, blend: true},
     layers: []
@@ -754,9 +755,17 @@ function drawScale(ppu){
   el.querySelector('i').style.width = (step * ppu * V.dbu) + 'px';
   el.querySelector('span').textContent = step >= 1 ? fmt(step, 0) + ' \u00b5m' : step >= 0.01 ? fmt(step * 1000, 0) + ' nm' : fmt(step * 1000, 1) + ' nm';
 }
+const PERF = /[?&#]perf=1/.test(location.href);
+setInterval(() => { if (PERF && V.open && V.header) renderInfo(V.lastCost || 0); }, 500);
+function fps(){ const f = V.frames || []; if (f.length < 2) return null; const dt = []; for (let i = 1; i < f.length; i++) dt.push(f[i] - f[i - 1]); dt.sort((a, b) => a - b);
+  return {fps: 1000 * (f.length - 1) / (f[f.length - 1] - f[0]), p95: dt[Math.floor(dt.length * 0.95)]}; }
 function renderInfo(cost, nvis){
   const el = V.root.querySelector('[data-info]'); if (!el) return;
+  V.lastCost = cost;
   const loading = [...V.pending.keys()].length;
+  if (PERF){ const p = fps(), inst = [...V.tiles.values()].reduce((s, t) => s + (t.n || 0), 0);
+    el.innerHTML = `${V.mode} · ${p ? fmt(p.fps, 0) + ' fps (p95 ' + fmt(p.p95, 1) + ' ms)' : 'idle'} · ${fmt(inst, 0)} instances loaded · GPU ${fmt(V.gpuBytes / 1e6, 0)} MB · first paint ${fmt(V.firstPaint, 0)} ms · first geometry ${fmt(V.firstGeo, 0)} ms${loading ? ' · loading ' + loading : ''}`;
+    return; }
   el.innerHTML = `${V.mode === 'geometry' ? '<b>exact geometry</b>' : '<b>density raster</b> L' + V.rlevel} · ${fmt(cost, 0)} shapes in view${loading ? ` · loading ${loading}` : ''} · GPU ${fmt(V.gpuBytes / 1e6, 0)} MB`;
 }
 
