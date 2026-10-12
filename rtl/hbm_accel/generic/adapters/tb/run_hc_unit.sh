@@ -21,3 +21,6 @@ D="${XDEF:-} -DOT_WW_MACRO"; [ -n "$MUT" ] && D="$D -D$MUT"
   --top-module tb_hgi_hc_unit -I"$OUT/vec" -Mdir "$OUT/obj" $SRC rtl/hbm_accel/generic/adapters/tb/tb_hgi_hc_unit.sv \
   -j ${J:-16} > "$OUT/build.log" 2>&1 || { tail -30 "$OUT/build.log"; exit 2; }
 "$OUT/obj/Vtb_hgi_hc_unit" +DIR="$OUT/vec" ${RUNARGS:-} | tee "$OUT/run.log" | tail -12
+# exit status carries the bench verdict (a FAIL with errors=N used to exit 0, so a detected mutant read as
+# "expected FAIL but rc=0" in the closure loop): 0 only on HGI_HC_UNIT PASS.
+grep -q "^HGI_HC_UNIT PASS" "$OUT/run.log"

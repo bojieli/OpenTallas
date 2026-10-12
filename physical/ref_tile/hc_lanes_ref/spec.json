@@ -57,7 +57,8 @@
     "peak_ram_gb": 32,
     "needs": [
      "verilator"
-    ]
+    ],
+    "pass_regex": "^HGI_HC_UNIT PASS"
    },
    {
     "name": "mut_mp",
@@ -67,7 +68,8 @@
     "peak_ram_gb": 32,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^HGI_HC_UNIT FAIL errors=[1-9]"
    },
    {
     "name": "mut_post",
@@ -77,7 +79,8 @@
     "peak_ram_gb": 32,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^HGI_HC_UNIT FAIL errors=[1-9]"
    }
   ],
   "extra_paths": [
