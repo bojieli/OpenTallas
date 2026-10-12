@@ -434,6 +434,55 @@ def main():
     bad = conflict or viol or mixed or halfcut
     if a.report_only or bad:
         sys.exit(2 if bad else 0)
+    # r5 [vm8] 2026-10-11 (hbm_vm8st3_swwt5 @9a98b69aa EARLY_FAIL_CONGESTION, GRT markers stuck at 10,000, vertical overflow
+    # in a y 160-280 band across the whole 89.9 um column at 14% utilisation): seam bits were slotted in cut order, so the
+    # e2w feed-through bits left t5 on its W seam in REVERSED y order w.r.t. their fixed E-face pins (corr -0.89, mean
+    # |dy| 231 um over a 482 um tile): every bit crossed the tile centre vertically.  VM_ST_SEAM_ORDER='<q>_<h>,...': the
+    # bits of every seam of that half are slotted by the along-edge coordinate of the bit's straight line between its
+    # upstream and downstream port anchors (interpolated at the seam), so a seam pin sits where the wire passes anyway.
+    # Pin slots, seam widths, layers and the RTL are unchanged; only which bit takes which slot.
+    # 'sw_w' orders every seam of the half; 'sw_w:w1_1+u2_0' only the named seams (the other tiles stay byte-identical).
+    so_ = {}
+    for kv in os.environ.get('VM_ST_SEAM_ORDER', '').replace(' ', '').split(','):
+        if kv:
+            so_[kv.split(':')[0]] = set(kv.split(':')[1].split('+')) if ':' in kv else None
+    if f'{q}_{h}' in so_:
+        so_s = so_[f'{q}_{h}']
+        def pin_at(un):
+            mm_ = re.fullmatch(r'(?:in|out) (\w+)\[(\d+)\]', anchor.get(un, (0, ''))[1]) if un is not None else None
+            p_ = pins.get((mm_.group(1), int(mm_.group(2)))) if mm_ else None
+            return (p_[1], p_[2]) if p_ else None
+        def seam_key(c_):
+            sb_, ks_, kd_, *_r, ls_ = c_
+            s_ = seam_of(ks_, kd_)
+            a_ = int(s_[1:].split('_')[1])   # e/w: column boundary, u/d: row boundary
+            sc_ = sb_[3] if isinstance(sb_, tuple) else drv[sb_][0]
+            us_, ud_ = U[sc_], (U[ls_[0][0]] if ls_ else None)
+            pu, pd = pin_at(ob.get(us_)), pin_at(of_.get(ud_) if ud_ is not None else None)
+            ax = 1 if s_[0] in 'ew' else 0          # E/W seams run along y, N/S seams along x
+            at = cols[a_][1] if s_[0] in 'ew' else rows[a_][1]
+            if pu and pd:
+                if abs(pd[1 - ax] - pu[1 - ax]) > 1e-6:
+                    t_ = min(1.0, max(0.0, (at - pu[1 - ax]) / (pd[1 - ax] - pu[1 - ax])))
+                else:
+                    t_ = 0.5
+                return (s_, pu[ax] + t_ * (pd[ax] - pu[ax]))
+            if pu or pd:
+                return (s_, (pu or pd)[ax])
+            lo_, hi_ = (rows[int(s_[1:].split('_')[0])] if s_[0] in 'ew' else cols[int(s_[1:].split('_')[0])])
+            return (s_, (lo_ + hi_) / 2)
+        # reorder only within the selected seams, in place: every other cut keeps its position (other tiles byte-identical)
+        sel_ = [i_ for i_, c_ in enumerate(cuts) if seam_key(c_)[1] is not None and (so_s is None or
+                seam_of(c_[1], c_[2]) in so_s or (seam_of(c_[1], c_[2])[0].translate(str.maketrans('udew', 'duwe')) +
+                                                  seam_of(c_[1], c_[2])[1:]) in so_s)]
+        bys_ = collections.defaultdict(list)
+        for i_ in sel_:
+            bys_[seam_of(cuts[i_][1], cuts[i_][2])].append(i_)
+        new_ = list(cuts)
+        for s_, ix_ in bys_.items():
+            for i_, c_ in zip(ix_, sorted((cuts[i_] for i_ in ix_), key=seam_key)):
+                new_[i_] = c_
+        cuts = new_
     emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port_of, pins, nm, drv, clkports,
          is_seq, is_mac, core_k, vecbits, a, loads)
 
