@@ -34,6 +34,7 @@ def snap(v, g): return round(math.ceil(v / g - 1e-9) * g, 3)
 # kit: ports {name: (dir, width, face)}, outs {port: [segments, msb first]}; segment ('p', port, hi, lo) | ('fclk', n)
 # | ('cat', [...]) ; every non-fclk output bit is one flop whose D is an input pin bit (no logic in a relay tile).
 def P(port, hi, lo): return ('p', port, hi, lo)
+def P2(port, hi, lo): return ('p2', port, hi, lo)   # two flops: keeps the monolith's in-bus alignment
 
 KITS = {}
 def kit(name, h, ports, outs, note):
@@ -41,7 +42,7 @@ def kit(name, h, ports, outs, note):
 
 kit('vm_cp_fw0', FH, {'f_su_SW': ('in', 2048, 'W'), 'iSW': ('in', 512, 'W'), 'qSW': ('out', 582, 'W'),
                       'ph': ('out', 2048, 'E', (2, 300)), 'wd': ('out', 2048, 'E', (300, 498))},
-    {'qSW': [('fclk', 2), P('f_su_SW', 2047, 1980), P('iSW', 511, 0)], 'ph': [P('f_su_SW', 2047, 0)],
+    {'qSW': [('fclk', 2), P2('f_su_SW', 2047, 1980), P('iSW', 511, 0)], 'ph': [P('f_su_SW', 2047, 0)],
      'wd': [P('f_su_SW', 2047, 0)]}, 'SW die face lo: f_su_SW -> placeholder lane (ph) + root wr data (wd); q face')
 kit('vm_cp_fw1', FH, {'t_su_SW': ('out', 2048, 'W'), 'xSW': ('out', 2068, 'W'),
                       'ph': ('in', 1078, 'E', (2, 200)), 'tap': ('in', 2063, 'E', (200, 498)), 'st': ('in', 970, 'E', (200, 498))},
@@ -58,7 +59,7 @@ kit('vm_cp_fw3', FH, {'f_su_NW': ('in', 2048, 'W'), 'iNW': ('in', 512, 'W'), 'qN
      'wr': [P('f_su_NW', 216, 0)]}, 'NW die face hi: f_su_NW -> placeholder lane + root wr request; q face')
 kit('vm_cp_fe0', FH, {'f_su_SE': ('in', 2048, 'E'), 'iSE': ('in', 512, 'E'), 'qSE': ('out', 582, 'E'),
                       'ph': ('out', 1078, 'W', (100, 498))},
-    {'qSE': [('fclk', 2), P('f_su_SE', 2047, 1980), P('iSE', 511, 0)], 'ph': [P('f_su_SE', 1077, 0)]},
+    {'qSE': [('fclk', 2), P2('f_su_SE', 2047, 1980), P('iSE', 511, 0)], 'ph': [P('f_su_SE', 1077, 0)]},
     'SE die face lo: f_su_SE[1077:0] -> bottom lane (rd request forks at RB2); q face')
 kit('vm_cp_fe1', FH, {'t_su_SE': ('out', 2048, 'E'), 'xSE': ('out', 2068, 'E'),
                       'ph': ('in', 2048, 'W', (2, 250)), 'tap': ('in', 2063, 'W', (250, 498))},
@@ -118,7 +119,11 @@ def relay_sv(name, k):
                 for b in range(n):
                     L.append(f'    ot_fwd_clk_inv u_fclk_{o}_{lo+b} (.a(ck), .y({o}[{lo+b}]));')
             else:
-                L.append(f'    reg [{n-1}:0] r_{o}_{lo}; always @(posedge ck) r_{o}_{lo} <= {s[1]}[{s[2]}:{s[3]}];')
+                src = f'{s[1]}[{s[2]}:{s[3]}]'
+                if s[0] == 'p2':   # SW/SE q: f_su[2047:1980] is one cycle behind i[511:0] in hfd_vm (extra input stage)
+                    L.append(f'    reg [{n-1}:0] r2_{o}_{lo}; always @(posedge ck) r2_{o}_{lo} <= {src};')
+                    src = f'r2_{o}_{lo}'
+                L.append(f'    reg [{n-1}:0] r_{o}_{lo}; always @(posedge ck) r_{o}_{lo} <= {src};')
                 L.append(f'    assign {o}[{pos-1}:{lo}] = r_{o}_{lo};')
             pos = lo
     L.append('endmodule')

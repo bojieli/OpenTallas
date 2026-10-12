@@ -7,7 +7,8 @@ module vm_cp_fe0 (input wire ck,
     output wire [1077:0] ph);
     ot_fwd_clk_inv u_fclk_qSE_580 (.a(ck), .y(qSE[580]));
     ot_fwd_clk_inv u_fclk_qSE_581 (.a(ck), .y(qSE[581]));
-    reg [67:0] r_qSE_512; always @(posedge ck) r_qSE_512 <= f_su_SE[2047:1980];
+    reg [67:0] r2_qSE_512; always @(posedge ck) r2_qSE_512 <= f_su_SE[2047:1980];
+    reg [67:0] r_qSE_512; always @(posedge ck) r_qSE_512 <= r2_qSE_512;
     assign qSE[579:512] = r_qSE_512;
     reg [511:0] r_qSE_0; always @(posedge ck) r_qSE_0 <= iSE[511:0];
     assign qSE[511:0] = r_qSE_0;
