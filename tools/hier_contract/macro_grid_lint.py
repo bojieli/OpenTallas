@@ -2,7 +2,10 @@
 """MACRO-ON-GRID submit lint (owner 2026-10-11): refuse a job whose macro placement puts a macro's signal pins off the
 routing tracks.  Measured twice on 2026-10-11: hcoll-port-tile4-b7891847f-g4a/b/c (INTERIOR=430/436: y0 = 19.88 um,
 row pitch 61.04 um, 41 route failures) and hbm_sfu_lane_r4mpa/b (SRAM at y 182.25 um): M4 pins 8-24 nm off their track
--> DRT-0419 "No routing tracks pass through the center of Term" -> DRT-0255 maze failures.
+-> DRT-0419 "No routing tracks pass through the center of Term" -> DRT-0255 maze failures.  Hard children placed by a
+parent are checked the same way with their own LEF pin offsets: qkd_d2d_h-305021c34 put the ot_qkvd tiles on a
+1.08 um grid (DRT-0418 / DRT-0073; fix 04612c41b snaps to 8.64 um).  Route scripts are followed with their positional
+args and the files they source (route_master.sh CFG=$1 -> cfg/<CFG>.env EXTRA / MACRO_PLACEMENT_TCL / FW, FH).
 
 How: the placement scripts a job names (MACRO_PLACEMENT_TCL, MACRO_PLACEMENT cfg, --step-tcl hooks that move macros,
 MPT) are read at the source commit and EXECUTED in tclsh against a mock OpenDB (block / insts / masters from the job's
@@ -44,7 +47,7 @@ def expand(s: str, env: dict) -> str:
             return env[name]
         return dflt if dflt is not None else m.group(0)
     for _ in range(8):
-        n = re.sub(r"\$\{([A-Za-z_]\w*)(:?[-=?]([^}]*))?\}|\$([A-Za-z_]\w*)", rep, s)
+        n = re.sub(r"\$\{([A-Za-z_]\w*|\d)(:?[-=?]([^}]*))?\}|\$([A-Za-z_]\w*|\d)", rep, s)
         if n == s:
             break
         s = n
@@ -96,13 +99,22 @@ def job_inputs(spec: dict, git) -> dict:
         env: dict = {}
         run_assigns(cmd.replace("&&", ";"), env, set())
         texts = [(cmd, env)]
-        for sc in re.findall(r"[\w./${}:-]+\.sh\b", cmd):
+        for sc, argstr in re.findall(r"([\w./${}:-]+\.sh)\b([^;&|\n]*)", cmd):
             p = norm(expand(sc, env))
             body = git.show(commit, p) if p else None
             if body:
                 senv = dict(env)
+                for i, a in enumerate(argstr.split()[:9], 1):        # positional args: CFG=$1 in route_master.sh
+                    senv[str(i)] = a
                 run_assigns(body, senv, set(env))
                 texts.append((body, senv))
+                # files the script sources (cfg/<CFG>.env: MACROS, EXTRA --macro-view, MACRO_PLACEMENT_TCL, FW/FH)
+                for src in re.findall(r"(?m)^\s*(?:source|\.)\s+(\S+)", body):
+                    q = norm(expand(src, senv))
+                    stxt = git.show(commit, q) if q and "$" not in q else None
+                    if stxt:
+                        run_assigns(stxt, senv, set(env))
+                        texts.append((stxt, senv))
         for body, e in texts:
             for k, v in e.items():
                 out["env"].setdefault(k, v)
@@ -112,7 +124,7 @@ def job_inputs(spec: dict, git) -> dict:
                 out["env"].setdefault(k, v)
             for tok in re.findall(r"(?:MACRO_PLACEMENT_TCL=|POST_MACRO_PLACE=|MACRO_PLACE\w*=|--step-tcl\s+\w+=|"
                                   r"MPT=)(\S+)", flat):
-                p = norm(tok)
+                p = norm(tok.rstrip(")'\""))
                 if p and p.endswith(".tcl"):
                     out["tcl"].setdefault(p, None)
             out.setdefault("named", set()).update(re.findall(r"\b(ot_(?:sram|rom|rf|regfile)\w+)", flat))
@@ -133,9 +145,17 @@ def job_inputs(spec: dict, git) -> dict:
             if da and not out["die"]:
                 x0, y0, x1, y1 = map(float, da.groups())
                 out["die"] = (x1 - x0, y1 - y0)
+            ca = re.search(r"--core-area\s+([-\d.]+)\s+([-\d.]+)", flat)
+            if ca and "core_margin" not in out:
+                out["core_margin"] = (float(ca.group(1)), float(ca.group(2)))
     env = out["env"]
     if not out["die"]:
-        if env.get("DIEW") and env.get("DIEH"):
+        if env.get("FW") and env.get("FH"):
+            try:
+                out["die"] = (float(env["FW"]), float(env["FH"]))
+            except ValueError:
+                pass
+        if not out["die"] and env.get("DIEW") and env.get("DIEH"):
             try:
                 out["die"] = (float(env["DIEW"]), float(env["DIEH"]))
             except ValueError:
@@ -175,7 +195,8 @@ proc ::mk::call {id method args} {
   switch -- $k/$method {
     block/getInsts { return $::mk::insts }
     block/getDbUnitsPerMicron { return 1000 }
-    block/getDieArea - block/getCoreArea { return $::mk::die }
+    block/getDieArea { return $::mk::die }
+    block/getCoreArea { return $::mk::core }
     block/getName { return mock_top }
     block/getBTerms - block/getNets - block/getRows { return {} }
     block/findInst { return [::mk::find_or_make [lindex $args 0]] }
@@ -264,16 +285,18 @@ proc regexp {args} {
 """
 
 
-def build_mock(masters: dict, counts: dict, die, env: dict, srcroot: str) -> str:
+def build_mock(masters: dict, counts: dict, die, env: dict, srcroot: str, core_margin=None) -> str:
     t = [TCL_PRELUDE, f"set ::mk::srcroot {{{srcroot}}}"]
     for k, v in env.items():
         if re.fullmatch(r"[A-Za-z_]\w*", k) and "{" not in v and "}" not in v:
             t.append(f"set ::env({k}) {{{v}}}")
     t.append("set ::mk::tech [::mk::obj tech {}]; set ::mk::masters {}; set ::mk::insts {}; set ::mk::byname {}")
     if die:
+        mx, my = (round(v * 1000) for v in (core_margin or (0.0, 0.0)))
         t.append(f"set ::mk::die [::mk::rect 0 0 {round(die[0] * 1000)} {round(die[1] * 1000)}]")
+        t.append(f"set ::mk::core [::mk::rect {mx} {my} {round(die[0] * 1000) - mx} {round(die[1] * 1000) - my}]")
     else:
-        t.append("set ::mk::die [::mk::obj nodie {}]")
+        t.append("set ::mk::die [::mk::obj nodie {}]; set ::mk::core $::mk::die")
     idx = 0
     for name, m in masters.items():
         t.append(f"set _m [::mk::obj master [list name {name} w {m['W']} h {m['H']}]]; lappend ::mk::masters $_m")
@@ -292,7 +315,8 @@ foreach i $::mk::touched { set m [::mk::get $i master]
 """
 
 
-def run_mock(script_path: str, masters: dict, counts: dict, die, env: dict, files: dict) -> tuple[list, str | None]:
+def run_mock(script_path: str, masters: dict, counts: dict, die, env: dict, files: dict,
+             core_margin=None) -> tuple[list, str | None]:
     """execute the placement tcl (files = {repo path: text}, materialised under a temp srcroot); -> placements, error"""
     with tempfile.TemporaryDirectory(prefix="mgl-") as td:
         for p, txt in files.items():
@@ -300,7 +324,7 @@ def run_mock(script_path: str, masters: dict, counts: dict, die, env: dict, file
             f.parent.mkdir(parents=True, exist_ok=True)
             f.write_text(txt)
         drv = Path(td) / "_drive.tcl"
-        drv.write_text(build_mock(masters, counts, die, env, td)
+        drv.write_text(build_mock(masters, counts, die, env, td, core_margin)
                        + f"if {{[catch {{source {{{Path(td) / script_path}}}}} e]}} {{ puts \"MKERROR $e\" }}\n"
                        + TCL_EPILOGUE)
         r = subprocess.run(["tclsh", str(drv)], capture_output=True, text=True, timeout=TIMEOUT_S)
@@ -412,10 +436,10 @@ def check(spec: dict, git, max_list: int = 6) -> dict:
     findings, warns, evaluated = [], [], {}
     for p, fam in sorted(scripts.items()):
         files = sources[p]
-        hint = count_hint("\n".join(files.values())) or 1
+        hint = count_hint("\n".join(files.values())) or 2
         counts = {n: hint for n in masters}
         try:
-            pl, err = run_mock(p, masters, counts, ji["die"], ji["env"], files)
+            pl, err = run_mock(p, masters, counts, ji["die"], ji["env"], files, ji.get("core_margin"))
         except (subprocess.TimeoutExpired, OSError) as ex:
             pl, err = [], f"{type(ex).__name__}"
         if err and not pl:
