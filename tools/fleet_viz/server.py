@@ -709,7 +709,9 @@ class H(BaseHTTPRequestHandler):
                 e = dict(flow=r.get('flow'), label=r.get('flow_label'), detail=r.get('flow_detail'), die_used=r.get('die_used'),
                          target=r.get('target'), m5=r.get('m5_reroute'), element=r['element'], category=r.get('category'))
                 el[r['element']] = e
-                for b in r.get('variants') or []: el.setdefault(b, e)
+                mb = r.get('m5_by_block') or {}
+                for b in r.get('variants') or []: el.setdefault(b, dict(e, m5=mb[b]) if b in mb else e)
+                for b, m in mb.items(): el.setdefault(b, dict(e, m5=m))
             return js(dict(t=d.get('t'), flow=fl, elements=el))
         if what == 'elem_summaries':
             return js(dict(t=time.time(), src=SHELL.desc.src, summaries=SHELL.summaries(safe)))
