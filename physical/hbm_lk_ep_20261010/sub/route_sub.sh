@@ -33,7 +33,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_lkep_sub \
   --step-tcl PRE_IO_PLACEMENT=$D/pins_sub.tcl \
   --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
-  --step-tcl PRE_GLOBAL_ROUTE=$GRTH ${MAXWIRE:+--orfs-var OT_MAXWIRE_UM=$MAXWIRE} ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} \
+  --step-tcl PRE_GLOBAL_ROUTE=$GRTH ${MAXWIRE:+--orfs-var OT_MAXWIRE_UM=$MAXWIRE} ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} ${PKA:+--orfs-var OT_PK_ABOVE_ONLY=$PKA} \
   --slew-margin-percent 20 --hold-margin-ns ${HM:-0.050} --purpose signoff_target --nickname-tag lks_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1

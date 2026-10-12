@@ -34,7 +34,7 @@ python3 tools/run_abi3_physical_aligned_guarded.py --macro-track-gate --view asa
  --hold-margin-ns ${HM:-0.010} --orfs-var ADDER_MAP_FILE= --slew-margin-percent 30 \
  --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
  ${RLAYERS:+--routing-layers $RLAYERS} ${PREGRT:+--step-tcl PRE_GLOBAL_ROUTE=$PREGRT} \
- ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} \
+ ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} ${PKA:+--orfs-var OT_PK_ABOVE_ONLY=$PKA} \
  --purpose signoff_target --nickname-tag hbm_retry_cl_$(echo $lab | tr -c "A-Za-z0-9_\n" _) \
  --keep-workdir $W/work --force --output $W/physical.json "$@" > $W/run.log 2>&1
 rc=$?; echo "rc=$rc" > $W/exit
