@@ -24,6 +24,11 @@ proc ot_fcl_taps {} {
     set n [regsub {\[0\]$} [$bt getName] {}]
     if {[regexp {^ck[wensg][0-9]+$} $n] && [$bt getNet] ne "NULL"} { lappend r [list $n [$bt getNet]] }
   }
+  # [vm8 r2] an interior sub-tile has no face tap: its own root ck is the single balanced leaf (tap_latency.py fallback)
+  if {![llength $r]} {
+    set bt [[ord::get_db_block] findBTerm {ck[0]}]
+    if {$bt ne "NULL" && [$bt getNet] ne "NULL"} { lappend r [list ck [$bt getNet]] }
+  }
   return $r
 }
 # posedge register clock pins of one tap (STA pin objects) and whether the tap net carries a built tree

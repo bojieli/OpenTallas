@@ -54,6 +54,17 @@ foreach bt [$blk getBTerms] {{
   if {{$k}} {{ puts $fo "$n [expr {{$s / $k}}] $k" }}
 }}
 close $fo
+# [vm8 r2] an interior sub-tile has no face tap: its own root ck is the one leaf the die balances (latency 0, REF = its mean)
+if {{[file size /t/{C}.txt] == 0}} {{
+  set fo [open /t/{C}.txt w]; set s 0.0; set k 0
+  foreach r [all_registers -clock_pins -rise_clock [get_clocks -quiet core_clk]] {{
+    if {{[string match *DFFL* [get_property [get_cells -of_objects $r] ref_name]]}} {{ continue }}
+    set v [get_property $r arrival_max_rise]
+    if {{[string is double -strict $v]}} {{ set s [expr {{$s + $v}}]; incr k }}
+  }}
+  if {{$k}} {{ puts $fo "ck [expr {{$s / $k}}] $k" }}
+  close $fo
+}}
 """
 
 
