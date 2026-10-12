@@ -21,6 +21,7 @@ module tb_hfd_attn_half_b (input wire clk);
     parameter integer ROLE = 4;
     parameter integer MUT = 0;
     parameter integer CG = 0;      // hbm-phys-1010 [att]: gated quads + the die result guard on both sides
+    parameter integer LLDKR = 0;   // el1011-hbm-attn v11: lo ldk strap registered + replicated (hfd_attn_half_lo LDKR)
     parameter integer LDK = 0;     // hbm-forks: 1 = the entry-point strap (ROLE 4 packets; reference sees chain ld masked)
     reg rst_n = 1'b0;
     reg [1617:0] pk0, pk1, pk2;
@@ -93,7 +94,7 @@ module tb_hfd_attn_half_b (input wire clk);
     assign xp_h = (MUT == 1) ? (xp_l ^ (1619'd1 << 1000)) : (MUT == 5) ? xp_d : xp_l;
     assign xr_h = (MUT == 2) ? xr_d : (MUT == 3) ? {xr_l[135:0], xr_l[271:136]} : xr_l;
     wire [1617:0] cf_s, rf_s; wire [528:0] o_s;
-    hfd_attn_half_lo #(.CG(CG), .NK(LNK), .NC(LNC), .NR(LNR), .PMID(LPMID), .NFR(LNFR), .NXP(LNXP), .NLL(NLL)) u_lo (
+    hfd_attn_half_lo #(.CG(CG), .NK(LNK), .NC(LNC), .NR(LNR), .PMID(LPMID), .NFR(LNFR), .NXP(LNXP), .NLL(NLL), .LDKR(LLDKR)) u_lo (
         .ck(clk), .rst(rst_n), .k(LDK ? 1041'd0 : k_in), .ks(ks_in), .ldk(LDK[0]), .q(q_in), .ci(pk_c), .ri(pk_r), .rf(rf_s), .xp(xp_l), .xr(xr_l));
     hfd_attn_half_hi #(.CG(CG), .PMID(PMID), .NFC(NFC), .NL(NL), .NLL(NLL + ((MUT == 4) ? 1 : 0)), .NI(NI)) u_hi (
         .ck(clk), .xp(xp_h), .xr(xr_h), .i(i_in), .cf(cf_s), .o(o_s));
