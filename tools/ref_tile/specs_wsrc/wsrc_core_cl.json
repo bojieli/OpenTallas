@@ -1,0 +1,428 @@
+{
+ "name": "wsrc_core_cl",
+ "top": "ot_dsrom_window_source_core",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_wsrc_core_define.sv",
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_ctl.sv",
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_writer_pipeline.sv",
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_stream_la_s81.sv",
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_chip_v41x_window_stage4.sv",
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_chip_v41x_window_row_codec.sv",
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv"
+ ],
+ "params": {
+  "MARGIN": 3,
+  "REFILL_OWNER_SAFE": 1,
+  "REFILL_CREDITS": 8,
+  "LA_ISSUE_PC": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/wsrc_mirror_ref/views/ot_dsrom_wsrc_mirror",
+   "count": 1
+  }
+ ],
+ "pg_layer": "M7",
+ "outline": {
+  "w": 216.0,
+  "h": 216.0
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "region_base_sector",
+   "region_sector_count",
+   "prime_v",
+   "prime_ready",
+   "prime_user",
+   "prime_row",
+   "blk_v",
+   "blk_ready",
+   "blk_user",
+   "blk_row",
+   "blk_idx",
+   "blk_codes",
+   "blk_scale",
+   "start_v",
+   "start_ready",
+   "start_user",
+   "start_first",
+   "start_count",
+   "staged_v",
+   "stream_go",
+   "busy",
+   "done",
+   "fault",
+   "fault_code",
+   "refill_cycles",
+   "sectors_read",
+   "rows_fetched",
+   "blocks_written",
+   "sectors_written",
+   "rows_refilled"
+  ],
+  "E": [
+   "m_v",
+   "m_rdy",
+   "m_addr",
+   "m_len",
+   "m_tag",
+   "m_we",
+   "m_wdata",
+   "m_wstrb",
+   "m_wr_done",
+   "s_rdy"
+  ],
+  "S": [
+   "wl_req_v",
+   "wl_req_rdy",
+   "wl_req_addr",
+   "wl_req_len",
+   "wl_req_tag"
+  ],
+  "N": [
+   "la_b",
+   "land_rst_n",
+   "land_bad",
+   "land_simbad",
+   "land_nb",
+   "stage_job_v",
+   "stage_job_user",
+   "stage_job_first",
+   "stage_job_count",
+   "stage_all_rows",
+   "stage_landed",
+   "stage_fault",
+   "merge_start_v",
+   "merge_start_ready",
+   "merge_user",
+   "merge_first",
+   "merge_count",
+   "merge_done",
+   "merge_fault",
+   "la_load_cycles"
+  ]
+ },
+ "pin_ranges": {
+  "m_v": [
+   10.0,
+   10.6
+  ],
+  "m_rdy": [
+   11.0,
+   11.6
+  ],
+  "m_addr": [
+   12.0,
+   28.828
+  ],
+  "m_len": [
+   29.228,
+   31.472
+  ],
+  "m_tag": [
+   31.872,
+   40.847
+  ],
+  "m_we": [
+   41.247,
+   41.847
+  ],
+  "m_wdata": [
+   42.247,
+   185.845
+  ],
+  "m_wstrb": [
+   186.245,
+   204.195
+  ],
+  "m_wr_done": [
+   204.595,
+   205.195
+  ],
+  "s_rdy": [
+   205.595,
+   206.195
+  ],
+  "wl_req_v": [
+   10.0,
+   13.967
+  ],
+  "wl_req_rdy": [
+   14.367,
+   18.335
+  ],
+  "wl_req_addr": [
+   18.735,
+   137.755
+  ],
+  "wl_req_len": [
+   138.155,
+   154.024
+  ],
+  "wl_req_tag": [
+   154.424,
+   206.0
+  ],
+  "la_b": [
+   10.0,
+   40.225
+  ],
+  "land_rst_n": [
+   40.625,
+   44.655
+  ],
+  "land_bad": [
+   45.055,
+   49.084
+  ],
+  "land_simbad": [
+   49.484,
+   53.514
+  ],
+  "land_nb": [
+   53.914,
+   70.034
+  ],
+  "stage_job_v": [
+   70.434,
+   71.442
+  ],
+  "stage_job_user": [
+   71.842,
+   81.917
+  ],
+  "stage_job_first": [
+   82.317,
+   103.474
+  ],
+  "stage_job_count": [
+   103.874,
+   111.934
+  ],
+  "stage_all_rows": [
+   112.334,
+   113.341
+  ],
+  "stage_landed": [
+   113.741,
+   125.831
+  ],
+  "stage_fault": [
+   126.231,
+   127.239
+  ],
+  "merge_start_v": [
+   127.639,
+   128.646
+  ],
+  "merge_start_ready": [
+   129.046,
+   130.053
+  ],
+  "merge_user": [
+   130.453,
+   140.528
+  ],
+  "merge_first": [
+   140.928,
+   162.086
+  ],
+  "merge_count": [
+   162.486,
+   170.545
+  ],
+  "merge_done": [
+   170.945,
+   171.953
+  ],
+  "merge_fault": [
+   172.353,
+   173.36
+  ],
+  "la_load_cycles": [
+   173.76,
+   206.0
+  ],
+  "rst_n": [
+   10.0,
+   10.6
+  ],
+  "region_base_sector": [
+   11.0,
+   17.091
+  ],
+  "region_sector_count": [
+   17.491,
+   23.582
+  ],
+  "prime_v": [
+   23.982,
+   24.582
+  ],
+  "prime_ready": [
+   24.982,
+   25.582
+  ],
+  "prime_user": [
+   25.982,
+   28.012
+  ],
+  "prime_row": [
+   28.412,
+   32.676
+  ],
+  "blk_v": [
+   33.076,
+   33.676
+  ],
+  "blk_ready": [
+   34.076,
+   34.676
+  ],
+  "blk_user": [
+   35.076,
+   37.106
+  ],
+  "blk_row": [
+   37.506,
+   41.77
+  ],
+  "blk_idx": [
+   42.17,
+   42.982
+  ],
+  "blk_codes": [
+   43.382,
+   95.358
+  ],
+  "blk_scale": [
+   95.758,
+   97.382
+  ],
+  "start_v": [
+   97.782,
+   98.382
+  ],
+  "start_ready": [
+   112.0,
+   112.6
+  ],
+  "start_user": [
+   113.0,
+   117.404
+  ],
+  "start_first": [
+   117.804,
+   127.051
+  ],
+  "start_count": [
+   127.451,
+   130.974
+  ],
+  "staged_v": [
+   131.374,
+   131.974
+  ],
+  "stream_go": [
+   132.374,
+   132.974
+  ],
+  "busy": [
+   133.374,
+   133.974
+  ],
+  "done": [
+   134.374,
+   134.974
+  ],
+  "fault": [
+   135.374,
+   135.974
+  ],
+  "fault_code": [
+   136.374,
+   138.576
+  ],
+  "refill_cycles": [
+   138.976,
+   153.06799999999998
+  ],
+  "sectors_read": [
+   153.46800000000002,
+   167.56
+  ],
+  "rows_fetched": [
+   167.96,
+   182.051
+  ],
+  "blocks_written": [
+   182.451,
+   196.543
+  ],
+  "sectors_written": [
+   196.94299999999998,
+   211.035
+  ],
+  "rows_refilled": [
+   211.435,
+   214.958
+  ],
+  "clk": [
+   107.0,
+   109.0
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M3 M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:el1011-ds-misc/wsrc",
+  "branch": "claude/el1012-wsrc-cluster",
+  "tag": "v1",
+  "purpose": "ot_dsrom_window_source_ctl as die-placed tiles: this CORE cluster (writer, skids, FSM, stream engine, reset relays; ~97k cells / ~13.5k flops of glue = substantial -> hardened cluster) + 1 hard ot_dsrom_wsrc_mirror (one-cycle mirror read/compare with the FSM); the 4 feed-forward land8 landing tiles (8,704 acc_* pins) are placed by the die at the staging faces. Pins 3,742 (old 620-um composition: ~13.5k incl. 1,092 dead s_* inputs).",
+  "benches": [
+   {
+    "name": "wsrc-core-exact",
+    "cmd": "cd {SRC} && python3 tools/dsrom_window_pipeline_gate.py --ctl-leaf 5 --ctl-core --out {RUN}/bench/pos --vectors {SRC}/results/rtl/dsrom_window_source_core_1012/vec --verilator /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --jobs 8",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wsrc-core-late-payload-mutant",
+    "cmd": "cd {SRC} && python3 tools/dsrom_window_pipeline_gate.py --ctl-leaf 5 --ctl-core --mutant-late-payload --out {RUN}/bench/mut --vectors {SRC}/results/rtl/dsrom_window_source_core_1012/vec --verilator /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --jobs 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/wsrc_core_cl/views",
+  "record_to": "results/rtl/ref_tile/wsrc_core_cl",
+  "extra_paths": [
+   "results/rtl/dsrom_window_source_core_1012"
+  ]
+ }
+}
