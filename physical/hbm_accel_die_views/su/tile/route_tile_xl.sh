@@ -42,7 +42,7 @@ export OT_MM_FF_SDC="$G/signoff.sdc"
   --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var ENABLE_DPO=0 --orfs-var DONT_BUFFER_PORTS=1 --orfs-var OT_WS_PINREG_DENSITY=${PRD:-0.3} --orfs-var OT_WS_PINREG=1 --orfs-var OT_WS_INPUT_COMB=1 --orfs-var OT_WS_OUTPUT_PINREG=1 --orfs-var OT_IO_FILE=/src/$T/io_place.tcl \
   --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/common/wire_stage_fence.tcl \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=${PREGRT:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} \
-  ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} \
+  ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} ${PKA:+--orfs-var OT_PK_ABOVE_ONLY=$PKA} \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 route_rc=$?
