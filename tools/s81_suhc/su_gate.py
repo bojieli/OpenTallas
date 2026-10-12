@@ -35,6 +35,8 @@ import hc_gate as H                                          # noqa: E402
 
 F = np.float32
 SHAPES = dict(reduced=dict(QN_N=64, KV_N=512, QB_NB=4, SW_W=64, SM_H=2, SM_LPH=16, SM_NVMAX=40, S_RD=2, S_WR=4),
+              # reduced with S_RD == 2 QB blocks a pass (L = S_RD): exercises the full shape's aligned QB tap at reduced cost
+              reduced_al=dict(QN_N=64, KV_N=512, QB_NB=4, SW_W=64, SM_H=2, SM_LPH=16, SM_NVMAX=40, S_RD=4, S_WR=4),
               full=dict(QN_N=256, KV_N=512, QB_NB=32, SW_W=1024, SM_H=16, SM_LPH=16, SM_NVMAX=40, S_RD=16, S_WR=16))
 # the DS HBM SU case set the golden runs draw on: tools/dshbm_baseline_measure.py prep (snapshots sha256 cd0fc866...)
 # -> tools/dshbm_chain_levers.py prep (_il) -> prep2 (_ildr); recorded in results/rtl/hbm_su_fused_compiler_20261005/v2_ildr.json
