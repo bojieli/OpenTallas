@@ -21,11 +21,73 @@
  "children": [
   {
    "view": "physical/qwen_die_masters/views/ot_qkvd_sbuf",
-   "count": 4
+   "count": 1,
+   "inst": "*g_tx?0?*",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/qwen_die_masters/views/ot_qkvd_sbuf",
+   "count": 1,
+   "inst": "*g_tx?1?*",
+   "at": [
+    388.8,
+    43.2
+   ],
+   "orient": "R0"
   },
   {
    "view": "physical/ref_tile/qkd_fbuf8_ref/views/ot_qkvd_fbuf8",
-   "count": 3
+   "count": 1,
+   "inst": "*g_tx?2?*",
+   "at": [
+    648.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/qwen_die_masters/views/ot_qkvd_sbuf",
+   "count": 1,
+   "inst": "*g_rx?1?*",
+   "at": [
+    129.6,
+    302.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/qwen_die_masters/views/ot_qkvd_sbuf",
+   "count": 1,
+   "inst": "*g_rx?3?*",
+   "at": [
+    388.8,
+    302.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_fbuf8_ref/views/ot_qkvd_fbuf8",
+   "count": 1,
+   "inst": "*g_rx?2?*",
+   "at": [
+    648.0,
+    216.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_fbuf8_ref/views/ot_qkvd_fbuf8",
+   "count": 1,
+   "inst": "*g_rx?0?*",
+   "at": [
+    648.0,
+    345.6
+   ],
+   "orient": "MX"
   }
  ],
  "outline": {
@@ -34,12 +96,12 @@
  },
  "pins": {
   "S": [
-   "t_v",
-   "t_d",
-   "t_cr",
    "r_v",
+   "r_cr",
    "r_d",
-   "r_cr"
+   "t_v",
+   "t_cr",
+   "t_d"
   ],
   "N": [
    "tx_up",
@@ -66,8 +128,8 @@
  "job": {
   "owner": "Claude:el1011-q-kvd",
   "branch": "claude/el1011-q-kvd",
-  "tag": "q5b",
-  "purpose": "q-kvd RELAUNCH5: KV end cluster (qkd_d2d slot 777.576x518.376, results/arch/hier_contract_1011/qwen_kv.json) over child_lint-clean views (4 sbuf + 3 fbuf8) through the reference cluster flow; replaces hand qkd_d2d_h (DRT-0073 on hand tile abstracts) || route peak declared 112 GB (> AGIdock per-job limit 110 GB) so the route lands on an EPYC: the loop pins benches to the route host and does not offload a 128 GB bench that exceeds AGIdock's per-job limit (reported to coordinator)",
+  "tag": "q8",
+  "purpose": "q-kvd R8: KV end cluster (qkd_d2d slot 777.576x518.376) structural setup fix on a commit >= de53a3b7c (hold MM after parasitic estimation + OT_SPINE_MACRO_LEAF): q5b TT -613 at CTS = rq_f -> RX sbuf din 814 ps of wire. Fix: RTL input/output relays (+1 cycle each way, HT builds; RX word replicated per receive buffer) + explicit floorplan (buffers at their input faces, RX MX din-up). Benches ht_layer_exact (HT=1, relays in) PASS / ht_layer_mut FAIL",
   "benches": [
    {
     "name": "ht_layer_exact",
@@ -96,5 +158,6 @@
    "ot-epyc1tb",
    "ot-epyc4"
   ]
- }
+ },
+ "floorplan_note": "q8 (el1011-q-kvd 2026-10-12): link buffers at their INPUT faces -- TX buffers R0 on the S row under t_d (east half of S), RX buffers MX (din up) on the N rows under rx_flit (east half of N); RTL IRL/ORL relays (HT=1): one kept relay register per receive buffer next to its din, output relays toward r_d (S west) / tx_flit (N west); every parent hop <= ~480 um by pin/din geometry (q5b: rq_f -> sbuf din 814 ps of wire, RX sbufs had been placed at the S face)"
 }
