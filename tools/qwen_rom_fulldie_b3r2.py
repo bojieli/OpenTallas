@@ -233,6 +233,7 @@ def _tp8b_f2(v, m):
         lanes += [round(x + wch + ab, 3) for x in chx0[1:]]
         v.SPINE_CHANNEL_X = lanes
         v.SPINE_LANE_BALANCE = True
+        v.TILE_CLUSTER = True        # coordinator 12:15: qfd_tile_nk is a cluster slot, die M8+ over it
         xe0 = round(xe0 + wch + ab, 4)
         ck = by.get('clk_rx')
         if ck is not None and ab:
@@ -768,7 +769,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     v.CORR_M9_ADJ = corr_m9_adj
     if r19:
         v.TILE_SLOT = (v.KV_TILE_W, v.TILE_SLOT[1])
-        v.TILE_BODY_W = v.KV_TILE_W - v.CORR
+        # qwen-tp8 coordinator DECISION 2026-10-12 12:15: the qfd_tile_nk cluster slot is 311.04 x 1296; tp8b's F2
+        # column pitch (394.848) is slot + station corridor + a 31-um die channel, so the body keeps tile_body (it had
+        # taken pitch - corridor = 342.12 and the die lost that channel over the M8+-only cluster)
+        v.TILE_BODY_W = tp8['tile_body'] if tp8 and tp8.get('tile_body') and tp8.get('f2') else v.KV_TILE_W - v.CORR
     if corr_um:
         # r20e: a wider corridor (tree-word M9 legs crowd the corridors); the tile body keeps its width, the slot grows
         body = v.TILE_BODY_W
@@ -1693,11 +1697,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     if getattr(v, 'SPINE_LANE_BALANCE', False) and g.get('row_y'):
         ry = sorted(g['row_y'])
         th = v.TILE_SLOT[1]
-        kv_gaps = [round((a + th + b) / 2, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0]
-        # over-tile runs too (M6+ over the M5-capped tiles, relays in the corridors): the KV strips' head stacks leave
-        # crossing heights only below / between / above their stacks, which are mostly over tile rows
-        gap_set = set(kv_gaps)
-        kv_gaps = sorted(kv_gaps + [round(a + th * f, 3) for a in ry for f in (0.25, 0.5, 0.75)])
+        if getattr(v, 'TILE_CLUSTER', False):
+            # coordinator DECISION 2026-10-12 12:15: qfd_tile_nk is a CLUSTER slot (M2-M7 inside), the die has only
+            # M8+ over it (0.75 x 260 um x M8 = 2,438 b per fine window): a KV-half word (530-1,048 b) runs in a row gap
+            # (M4-M8 free), on one of three sub-lanes per gap, never over a tile row
+            kv_gaps = sorted(round(a + th + (b - a - th) * f, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0
+                             for f in (0.25, 0.5, 0.75))
+            gap_set = set(kv_gaps)
+        else:
+            kv_gaps = [round((a + th + b) / 2, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0]
+            # over-tile runs too (M6+ over the M5-capped tiles, relays in the corridors): the KV strips' head stacks
+            # leave crossing heights only below / between / above their stacks, which are mostly over tile rows
+            gap_set = set(kv_gaps)
+            kv_gaps = sorted(kv_gaps + [round(a + th * f, 3) for a in ry for f in (0.25, 0.5, 0.75)])
     io_ch = next(((r['rect'][1], r['rect'][3]) for r in m['regions'] if r['name'] == 'io_chan'), None) \
         if getattr(v, 'SPINE_LANE_BALANCE', False) else None
 
