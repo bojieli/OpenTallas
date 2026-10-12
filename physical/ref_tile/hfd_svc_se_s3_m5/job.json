@@ -1,5 +1,5 @@
 {
- "name": "hfd_svc_se_s3_m5-m5-COMMIT",
+ "name": "hfd_svc_se_s3_m5-m5-3fbe60da9",
  "block": "hfd_svc_SE_s3",
  "ref_tile": true,
  "owner": "Claude:el1011-reroute-m5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-reroute-m5",
-  "commit": "COMMIT"
+  "commit": "3fbe60da9"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hfd_svc_se_s3_m5/hfd_svc_se_s3_m5-m5-COMMIT"
+   "to": "results/rtl/ref_tile/hfd_svc_se_s3_m5/hfd_svc_se_s3_m5-m5-3fbe60da9"
   }
  ],
  "cycles_added": 0,
