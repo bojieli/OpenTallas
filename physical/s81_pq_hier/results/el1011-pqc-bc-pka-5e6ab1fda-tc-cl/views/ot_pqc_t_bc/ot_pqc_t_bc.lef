@@ -16,6 +16,10 @@ MACRO ot_pqc_t_bc
       LAYER M4 ;
         RECT  0 4.032 0.084 4.056 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 3.888 0.06 4.056 ;
+    END
   END clk
   PIN d[0]
     DIRECTION INPUT ;
@@ -30794,7 +30798,6 @@ MACRO ot_pqc_t_bc
      RECT  29.415 97.487 29.505 97.757 ;
      RECT  34.815 97.487 34.905 97.757 ;
     LAYER M4 ;
-     RECT  0.025 3.888 0.06 4.056 ;
      RECT  0.06 22.032 0.097 23.832 ;
      RECT  0.06 65.328 0.097 67.128 ;
      RECT  0.06 54.528 0.133 56.28 ;

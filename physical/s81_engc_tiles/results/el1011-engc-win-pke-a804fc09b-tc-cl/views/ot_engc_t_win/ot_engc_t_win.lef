@@ -40,6 +40,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  2.064 0 2.088 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  2.064 0.016 2.088 2.137 ;
+    END
   END cfg_o[0]
   PIN cfg_o[1]
     DIRECTION OUTPUT ;
@@ -47,6 +51,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  4.224 0 4.248 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  4.224 0.016 4.248 2.675 ;
     END
   END cfg_o[1]
   PIN cfg_o[2]
@@ -56,6 +64,14 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  6.384 0 6.408 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  6.384 0.016 6.408 0.037 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  6.384 0.037 6.504 0.179 ;
+    END
   END cfg_o[2]
   PIN ck
     DIRECTION INPUT ;
@@ -64,6 +80,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  188.976 47.436 189 47.52 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  188.976 47.157 189 47.504 ;
+    END
   END ck
   PIN f_agc
     DIRECTION INPUT ;
@@ -71,6 +91,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  25.968 47.436 25.992 47.52 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.968 44.971 25.992 47.504 ;
     END
   END f_agc
   PIN f_win[0]
@@ -816,6 +840,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  8.592 0 8.616 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  8.592 0.016 8.616 2.137 ;
+    END
   END lk_fault
   PIN lk_ob[0]
     DIRECTION INPUT ;
@@ -823,6 +851,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  125.136 0 125.16 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  125.136 0.016 125.16 0.131 ;
     END
   END lk_ob[0]
   PIN lk_ob[1]
@@ -832,6 +864,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  127.488 0 127.512 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  127.488 0.016 127.512 0.611 ;
+    END
   END lk_ob[1]
   PIN lk_ob[2]
     DIRECTION INPUT ;
@@ -839,6 +875,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  129.84 0 129.864 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  129.84 0.016 129.864 0.131 ;
     END
   END lk_ob[2]
   PIN lk_oc[0]
@@ -848,6 +888,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  115.008 0 115.032 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  115.008 0.016 115.032 0.179 ;
+    END
   END lk_oc[0]
   PIN lk_oc[1]
     DIRECTION INPUT ;
@@ -855,6 +899,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  116.976 0 117 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  116.976 0.016 117 0.131 ;
     END
   END lk_oc[1]
   PIN lk_oc[2]
@@ -864,6 +912,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  118.992 0 119.016 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  118.992 0.016 119.016 0.227 ;
+    END
   END lk_oc[2]
   PIN lk_oc[3]
     DIRECTION INPUT ;
@@ -871,6 +923,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  121.008 0 121.032 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  121.008 0.016 121.032 0.131 ;
     END
   END lk_oc[3]
   PIN lk_oc[4]
@@ -880,6 +936,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  122.976 0 123 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  122.976 0.016 123 2.915 ;
+    END
   END lk_oc[4]
   PIN lk_ocred
     DIRECTION OUTPUT ;
@@ -887,6 +947,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  304.992 0 305.016 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  304.992 0.016 305.016 2.137 ;
     END
   END lk_ocred
   PIN lk_od[0]
@@ -3008,6 +3072,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  132.48 0 132.504 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  132.48 0.016 132.504 0.131 ;
+    END
   END lk_os[0]
   PIN lk_os[1]
     DIRECTION INPUT ;
@@ -3015,6 +3083,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  135.504 0 135.528 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  135.504 0.016 135.528 2.339 ;
     END
   END lk_os[1]
   PIN lk_os[2]
@@ -3024,6 +3096,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  138.48 0 138.504 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  138.48 0.016 138.504 1.187 ;
+    END
   END lk_os[2]
   PIN lk_ov
     DIRECTION INPUT ;
@@ -3031,6 +3107,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  109.008 0 109.032 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  109.008 0.016 109.032 0.131 ;
     END
   END lk_ov
   PIN lk_rel[0]
@@ -3040,6 +3120,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  93.504 0 93.528 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  93.504 0.016 93.528 0.563 ;
+    END
   END lk_rel[0]
   PIN lk_rel[1]
     DIRECTION OUTPUT ;
@@ -3047,6 +3131,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  96.48 0 96.504 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  96.48 0.016 96.504 0.563 ;
     END
   END lk_rel[1]
   PIN lk_rel[2]
@@ -3056,6 +3144,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  99.504 0 99.528 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  99.504 0.016 99.528 0.131 ;
+    END
   END lk_rel[2]
   PIN lk_rel[3]
     DIRECTION OUTPUT ;
@@ -3063,6 +3155,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  102.48 0 102.504 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  102.48 0.016 102.504 0.611 ;
     END
   END lk_rel[3]
   PIN lk_stb
@@ -3072,6 +3168,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  323.472 0 323.496 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  323.472 0.016 323.496 1.715 ;
+    END
   END lk_stb
   PIN lk_sts[0]
     DIRECTION INPUT ;
@@ -3079,6 +3179,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  315.984 0 316.008 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  315.984 0.016 316.008 0.611 ;
     END
   END lk_sts[0]
   PIN lk_sts[1]
@@ -3088,6 +3192,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  318 0 318.024 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  318 0.016 318.024 1.187 ;
+    END
   END lk_sts[1]
   PIN lk_sts[2]
     DIRECTION INPUT ;
@@ -3095,6 +3203,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  319.968 0 319.992 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  319.968 0.016 319.992 0.299 ;
     END
   END lk_sts[2]
   PIN lk_stv
@@ -3104,6 +3216,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  312.48 0 312.504 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  312.48 0.016 312.504 0.363 ;
+    END
   END lk_stv
   PIN lk_wcred
     DIRECTION INPUT ;
@@ -3111,6 +3227,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  86.976 0 87 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  86.976 0.016 87 2.485 ;
     END
   END lk_wcred
   PIN lk_wid[0]
@@ -3664,6 +3784,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  25.008 0 25.032 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.008 0.016 25.032 2.137 ;
+    END
   END lk_wv
   PIN perr_o[0]
     DIRECTION OUTPUT ;
@@ -3800,6 +3924,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  10.752 0 10.776 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.752 0.016 10.776 0.131 ;
+    END
   END rn_lk
   PIN rn_sk
     DIRECTION OUTPUT ;
@@ -3815,6 +3943,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  195.504 47.436 195.528 47.52 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  195.504 47.365 195.624 47.504 ;
     END
   END rst
   PIN s_perr[0]
@@ -6208,6 +6340,10 @@ MACRO ot_engc_t_win
       LAYER M5 ;
         RECT  58.512 47.436 58.536 47.52 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  58.512 46.117 58.536 47.504 ;
+    END
   END t_collective
   PIN vrel_i[0]
     DIRECTION INPUT ;
@@ -6279,6 +6415,10 @@ MACRO ot_engc_t_win
     PORT
       LAYER M5 ;
         RECT  12.912 0 12.936 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.912 0.016 12.936 2.137 ;
     END
   END werr_i
   PIN werr_o
@@ -16775,27 +16915,15 @@ MACRO ot_engc_t_win
      RECT  327.769 4.32 327.852 25.368 ;
      RECT  327.852 22.032 327.881 22.056 ;
     LAYER M5 ;
-     RECT  6.384 0.016 6.408 0.037 ;
-     RECT  10.752 0.016 10.776 0.131 ;
      RECT  45.216 0.016 59.352 0.131 ;
      RECT  74.4 0.016 75.768 0.131 ;
-     RECT  99.504 0.016 99.528 0.131 ;
-     RECT  109.008 0.016 109.032 0.131 ;
-     RECT  116.976 0.016 117 0.131 ;
-     RECT  121.008 0.016 121.032 0.131 ;
-     RECT  125.136 0.016 125.16 0.131 ;
-     RECT  129.84 0.016 129.864 0.131 ;
-     RECT  132.48 0.016 132.504 0.131 ;
      RECT  190.08 0.016 197.16 0.131 ;
      RECT  204.624 0.016 211.704 0.131 ;
      RECT  233.76 0.016 240.792 0.131 ;
      RECT  210.096 0.131 211.704 0.133 ;
-     RECT  6.384 0.037 6.504 0.179 ;
      RECT  45.696 0.131 59.352 0.179 ;
-     RECT  115.008 0.016 115.032 0.179 ;
      RECT  219.216 0.016 226.248 0.181 ;
      RECT  45.696 0.179 52.056 0.227 ;
-     RECT  118.992 0.016 119.016 0.227 ;
      RECT  233.952 0.131 240.792 0.227 ;
      RECT  248.304 0.016 249.912 0.227 ;
      RECT  190.32 0.131 197.16 0.245 ;
@@ -16811,7 +16939,6 @@ MACRO ot_engc_t_win
      RECT  234.192 0.245 244.008 0.275 ;
      RECT  249.888 0.227 249.912 0.275 ;
      RECT  228.72 0.245 232.824 0.299 ;
-     RECT  319.968 0.016 319.992 0.299 ;
      RECT  47.952 0.227 48.408 0.323 ;
      RECT  60.384 0.245 60.408 0.323 ;
      RECT  61.536 0.245 61.56 0.323 ;
@@ -16826,7 +16953,6 @@ MACRO ot_engc_t_win
      RECT  234.432 0.275 244.008 0.323 ;
      RECT  245.28 0.245 245.784 0.323 ;
      RECT  246.912 0.245 248.76 0.323 ;
-     RECT  312.48 0.016 312.504 0.363 ;
      RECT  199.44 0.323 203.256 0.371 ;
      RECT  217.344 0.323 222.648 0.371 ;
      RECT  228.96 0.323 228.984 0.371 ;
@@ -16845,8 +16971,6 @@ MACRO ot_engc_t_win
      RECT  210.336 0.467 211.032 0.515 ;
      RECT  217.824 0.467 217.848 0.515 ;
      RECT  220.32 0.419 222.264 0.515 ;
-     RECT  93.504 0.016 93.528 0.563 ;
-     RECT  96.48 0.016 96.504 0.563 ;
      RECT  190.32 0.373 197.88 0.563 ;
      RECT  200.592 0.467 202.44 0.563 ;
      RECT  213.264 0.419 213.288 0.563 ;
@@ -16856,10 +16980,7 @@ MACRO ot_engc_t_win
      RECT  53.424 0.179 54.36 0.611 ;
      RECT  66.144 0.323 66.168 0.611 ;
      RECT  73.488 0.565 75.336 0.611 ;
-     RECT  102.48 0.016 102.504 0.611 ;
-     RECT  127.488 0.016 127.512 0.611 ;
      RECT  218.832 0.467 219.24 0.611 ;
-     RECT  315.984 0.016 316.008 0.611 ;
      RECT  56.16 0.179 59.352 0.659 ;
      RECT  73.488 0.611 73.944 0.659 ;
      RECT  218.832 0.611 218.856 0.659 ;
@@ -16871,13 +16992,10 @@ MACRO ot_engc_t_win
      RECT  56.16 0.659 57.096 1.187 ;
      RECT  58.416 0.659 59.352 1.187 ;
      RECT  73.488 0.659 73.512 1.187 ;
-     RECT  138.48 0.016 138.504 1.187 ;
      RECT  201.456 0.563 201.48 1.187 ;
      RECT  220.32 0.515 221.928 1.187 ;
-     RECT  318 0.016 318.024 1.187 ;
      RECT  64.368 1.141 64.824 1.235 ;
      RECT  192.384 1.141 198.36 1.715 ;
-     RECT  323.472 0.016 323.496 1.715 ;
      RECT  64.368 1.235 64.392 1.717 ;
      RECT  66.624 1.141 66.648 1.717 ;
      RECT  68.448 1.141 68.472 1.717 ;
@@ -16903,10 +17021,6 @@ MACRO ot_engc_t_win
      RECT  202.8 1.973 202.824 2.101 ;
      RECT  213.936 2.037 213.96 2.101 ;
      RECT  225.12 0.323 226.248 2.101 ;
-     RECT  2.064 0.016 2.088 2.137 ;
-     RECT  8.592 0.016 8.616 2.137 ;
-     RECT  12.912 0.016 12.936 2.137 ;
-     RECT  25.008 0.016 25.032 2.137 ;
      RECT  51.12 1.763 51.312 2.137 ;
      RECT  190.56 1.139 191.304 2.137 ;
      RECT  192.384 1.715 197.208 2.137 ;
@@ -16917,7 +17031,6 @@ MACRO ot_engc_t_win
      RECT  217.728 2.101 217.752 2.137 ;
      RECT  223.968 0.323 223.992 2.137 ;
      RECT  230.112 1.717 230.136 2.137 ;
-     RECT  304.992 0.016 305.016 2.137 ;
      RECT  190.56 2.137 197.208 2.149 ;
      RECT  242.256 2.101 242.28 2.165 ;
      RECT  190.416 2.149 197.208 2.219 ;
@@ -16940,7 +17053,6 @@ MACRO ot_engc_t_win
      RECT  311.808 2.245 311.832 2.293 ;
      RECT  7.8 2.137 8.616 2.339 ;
      RECT  58.416 1.187 58.44 2.339 ;
-     RECT  135.504 0.016 135.528 2.339 ;
      RECT  199.44 1.811 199.512 2.339 ;
      RECT  202.2 2.293 211.512 2.339 ;
      RECT  220.32 1.187 220.344 2.339 ;
@@ -17021,18 +17133,15 @@ MACRO ot_engc_t_win
      RECT  238.272 2.339 241.752 2.475 ;
      RECT  198.48 2.435 198.504 2.483 ;
      RECT  229.056 2.435 229.752 2.483 ;
-     RECT  86.976 0.016 87 2.485 ;
      RECT  101.472 2.245 101.496 2.539 ;
      RECT  311.808 2.387 311.832 2.539 ;
      RECT  86.016 2.485 87 2.579 ;
      RECT  165.84 2.485 165.864 2.579 ;
      RECT  210.192 2.435 211.608 2.579 ;
      RECT  216.48 2.387 216.744 2.579 ;
-     RECT  4.224 0.016 4.248 2.675 ;
      RECT  234.432 2.435 236.28 2.821 ;
      RECT  202.2 2.339 206.232 2.867 ;
      RECT  24 2.137 25.032 2.915 ;
-     RECT  122.976 0.016 123 2.915 ;
      RECT  191.28 2.243 197.208 2.915 ;
      RECT  202.2 2.867 204.648 2.915 ;
      RECT  213 2.411 213.96 2.915 ;
@@ -19500,12 +19609,8 @@ MACRO ot_engc_t_win
      RECT  11.472 47.275 14.04 47.504 ;
      RECT  16.704 47.275 19.224 47.504 ;
      RECT  21.888 47.275 23.976 47.504 ;
-     RECT  25.968 44.971 25.992 47.504 ;
      RECT  28.128 47.269 36.648 47.504 ;
      RECT  45.648 47.365 47.88 47.504 ;
-     RECT  58.512 46.117 58.536 47.504 ;
-     RECT  188.976 47.157 189 47.504 ;
-     RECT  195.504 47.365 195.624 47.504 ;
      RECT  47.76 47.504 47.784 47.507 ;
      RECT  195.6 47.504 195.624 47.507 ;
     LAYER M6 ;
