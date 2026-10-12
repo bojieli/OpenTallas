@@ -42,7 +42,8 @@ SW32, SH32 = 51.408, 20.79                  # 32x128 SRAM
 XC32 = 134.784                              # centre column x (channels 22.68 / 21.38 to columns A / B)
 YBAND = round(YB + 3 * RP + MH + 21.6, 3)   # N band y (21.6 above the top big row)
 XBAND0, XBP = 24.624, round(SW32 + 21.6, 3)  # band x0, band pitch (4 macros, 24.6 um to each side edge)
-YC32 = [round(YB + 3 * RP + MH - SH32 - i * (SH32 + 21.6), 3) for i in range(4)]   # centre column, top down
+YC32 = [round(241.92 - i * 43.2, 3) for i in range(4)]   # centre column, top down (0.864 grid: pins on track;
+#                                                        22.41 um channels, 22.41 to the band)
 EDGE, GAP, CH = 17.28, 25.92, 103.68       # parent: edge margin, column gap, central channel
 PW = round(2 * EDGE + NCOL * SW + (NCOL - 1) * GAP, 3)
 PH = round(2 * EDGE + 2 * SH + CH, 3)
