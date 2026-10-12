@@ -122,3 +122,19 @@ the r22ko4 hierarchy (`qfd_tile_nk` replication, io_collective cluster, tile pin
 latencies posted 10-11). Smallest vehicle: `partition_token.py` variant `r22` that wraps one `qfd_tile_nk` (+ its
 leaves) and the io_collective cluster RTL in place of the corresponding W12 slices, with the contract-v4 latency deltas
 as station knobs, run at L3 and head. Estimate: ~2 agent-days.
+
+## 5. Results and re-runs (2026-10-12 02:45 PDT, diesim-1012 relaunch)
+
+- **Qwen ROM split partition @ `ca7ca4fff`: all ok** — Q1 L3 exact (17,120 cyc, 0 layer-X / 0 K/V mismatches, 3,868 s),
+  Q2 COMP 0 FAIL as required (49,152 X / 6,046 K/V mismatches), Q3 head exact (token 24, logit 0x41962749, 3,055 cyc).
+  Record: `results/rtl/comp_regress/ca7ca4fff/summary_epyc1tb.json`. Main has since changed `ot_qwen_w12_matvec`,
+  `ot_qwen_me_array_w12`, `ot_qwen_rom_tile_w12` (in the builds' `__ver.d`), so `comp_regress` re-runs Q1-Q3 at `de098fdb4`.
+- **HBM: no simulation ran.** Exports 11/11 ok (EPYC1). On EPYC3 the all-real builds `dsall` / `dsallmut` died rc=143:
+  root cause = the 150 GB cgroup cap — the kernel OOM-killed verilator inside the scope and systemd's OOMPolicy=stop
+  SIGTERMed the rest (journal `oom-kill` 07:12-07:16 UTC); `idxn` alone allocates 124 GB. EPYC3 is draining, so its
+  pipeline was stopped. `ot_hgi_seq.sv` (+1,294/-602) and `ot_hgi_cp*.sv` changed on main since `ca7ca4fff`, so every
+  HBM binary is rebuilt at current main via `tools/comp_regress` (all-real cap 420 GB): EPYC1 `qall/qallmut/coll/collmut`
+  (Qwen L0, **Qwen head**, DS head), EPYC4 `dsall/dsallmut/idxn/idxnmut` (DS L0..L37 @1M).
+- **Qwen head on HBM added**: `export qwen --head` (final norm -> head MATVEC -> SU row scale -> ARGMAX.LOCAL ->
+  COLL.ARGMAX_MERGE -> CTL.END); exporter golden check vs `qwen_r25` head argmax on all 4 ranks: exact (6 records, S2 77,388).
+  Runs: `hgi_qall__qwen_head`, `hgi_coll__qwen_head`, mutant `hgi_collmut__qwen_head` (must FAIL).

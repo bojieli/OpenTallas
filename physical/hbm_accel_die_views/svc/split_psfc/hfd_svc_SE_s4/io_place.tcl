@@ -1,7 +1,7 @@
 # hfd_svc_SE_s4: every die pin at the generator's position (svc/gen_svc_seg.py, derived master; generator, r16i)
 place_pin -pin_name {ck[0]} -layer M5 -location {398.5080 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {cke[0]} -layer M4 -location {1008.8880 129.6120} -pin_size {0.1920 0.0240}
-place_pin -pin_name {ckw[0]} -layer M4 -location {0.0960 155.3880} -pin_size {0.1920 0.0240}
+place_pin -pin_name {ckw[0]} -layer M4 -location {0.0960 155.4840} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[0]} -layer M4 -location {1008.8880 73.3400} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[1]} -layer M6 -location {1008.8880 73.4240} -pin_size {0.1920 0.0320}
 place_pin -pin_name {ei[2]} -layer M4 -location {1008.8880 73.5320} -pin_size {0.1920 0.0240}
@@ -564,6 +564,7 @@ place_pin -pin_name {ei[558]} -layer M4 -location {1008.8880 126.9080} -pin_size
 place_pin -pin_name {ei[559]} -layer M6 -location {1008.8880 126.9920} -pin_size {0.1920 0.0320}
 place_pin -pin_name {ei[560]} -layer M4 -location {1008.8880 127.1000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[561]} -layer M6 -location {1008.8880 127.1840} -pin_size {0.1920 0.0320}
+place_pin -pin_name {ei[562]} -layer M4 -location {1008.8880 127.2920} -pin_size {0.1920 0.0240}
 place_pin -pin_name {eo[0]} -layer M4 -location {1008.8880 1.0120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {eo[1]} -layer M6 -location {1008.8880 1.1040} -pin_size {0.1920 0.0320}
 place_pin -pin_name {eo[2]} -layer M4 -location {1008.8880 1.2040} -pin_size {0.1920 0.0240}
@@ -7636,3 +7637,4 @@ place_pin -pin_name {wo[560]} -layer M4 -location {0.0960 154.5560} -pin_size {0
 place_pin -pin_name {wo[561]} -layer M6 -location {0.0960 154.6400} -pin_size {0.1920 0.0320}
 place_pin -pin_name {wo[562]} -layer M4 -location {0.0960 154.7480} -pin_size {0.1920 0.0240}
 place_pin -pin_name {wo[563]} -layer M6 -location {0.0960 154.8320} -pin_size {0.1920 0.0320}
+place_pin -pin_name {wo[564]} -layer M4 -location {0.0960 154.9400} -pin_size {0.1920 0.0240}

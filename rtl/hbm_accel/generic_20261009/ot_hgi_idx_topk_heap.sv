@@ -236,7 +236,18 @@ module ot_hgi_topk_heap_tile #(parameter integer MAX_K=2048, parameter integer M
  wire h_rdy, h_xv, h_idle; wire [53:0] h_xd; wire [52:0] h_root;
  wire h_go = (fn != 2'd0) && h_rdy;
  wire [54:0] h_op = fq[fh];
- ot_hgi_topk_heap #(.MAX_K(MAX_K), .MUT_BYP(MUT_BYP), .MUT_CLR(MUT_CLR)) u_h (.clk(clk), .rst_n(trr[0]), .k(k_p),
+ // el1011-hbm-idx 10-12: the hard w8 cluster instantiates its tiles WITHOUT parameters; bench mutants reach them by define
+`ifdef OT_TOPK_HEAP_MUT_BYP
+ localparam integer MBY = 1;
+`else
+ localparam integer MBY = MUT_BYP;
+`endif
+`ifdef OT_TOPK_HEAP_MUT_CLR
+ localparam integer MCL = 1;
+`else
+ localparam integer MCL = MUT_CLR;
+`endif
+ ot_hgi_topk_heap #(.MAX_K(MAX_K), .MUT_BYP(MBY), .MUT_CLR(MCL)) u_h (.clk(clk), .rst_n(trr[0]), .k(k_p),
   .op_v(fn != 2'd0), .op_ext(h_op[54]), .op_x(h_op[53:0]), .op_rdy(h_rdy), .ext_v(h_xv), .ext_d(h_xd), .root_key(h_root),
   .clr_go(c_p), .idle(h_idle));
  always @(posedge clk) begin
@@ -251,6 +262,106 @@ module ot_hgi_topk_heap_tile #(parameter integer MAX_K=2048, parameter integer M
    fn <= fn + v_p - h_go; if (h_go) fh <= ~fh;
    op_cr <= h_go; ext_v <= h_xv;
    idle <= h_idle && fn == 2'd0 && !v_p && !c_p && !h_go;
+  end
+ end
+endmodule
+
+// el1011-hbm-idx 2026-10-12 (w8 split, textbook class 1): ONE LANE OF THE w8 ENGINE AS A HARD TILE (no parameters; the
+// W = IW = 8, MAX_K 2,048 configuration of ot_hgi_idx_topk_hw LANE=1).  It holds what the cluster's g_h lane held: the
+// lane relay's LAST stage (as pin flops: phase / k / clear / push), the 16 x 54 survivor FIFO, the heap credits and settle
+// count, the extract counters, the lane status flops (quiet / extract done / FIFO room), the registered heap seam (its
+// outer face abuts the heap tile ot_hgi_topk_heap_tile), the 1024 x 256 reverse-buffer SRAM with registered write / read
+// and capture flop, the 8 x 54 run FIFO and the leaf head.  The merge leaf leaves on a CREDIT link (mv / md registered,
+// MQD credits, credit return mcr into a pin flop) instead of the old one-cycle pop handshake with the cluster's relay node.
+// Every input lands in a pin flop, every output is a register.
+module ot_hgi_topk_lane_tile (
+ input wire clk, rst_n,
+ input wire [2:0] ph, input wire [11:0] kin, input wire clr, pv, input wire [53:0] pd, input wire mcr,
+ output reg q, x, ok, output reg [52:0] root, output reg mv, output reg [53:0] md, output reg me,
+ output wire [11:0] t_k, output reg t_op_v, t_op_ext, output wire t_clr_go, output reg [53:0] t_op_x,
+ input wire t_op_cr, t_ext_v, t_idle, input wire [53:0] t_ext_d, input wire [52:0] t_root_key
+);
+ localparam integer KW = 12, FD = 16, FA = 4, RD = 512, RA = 9;
+ localparam [2:0] MQD = 3'd6;                           // = ot_hgi_idx_topk_hw MQD
+ localparam integer FTHR = 7;                           // = ot_hgi_idx_topk_hw FTHR at W = IW = 8 (checked there)
+ localparam [2:0] SCV = 3'd5;
+ localparam [2:0] IDLE = 0, FILL = 2, FLUSH = 3, EXT = 4, MERGE = 5;
+`ifdef OT_TOPK_HEAP_MUT_REV
+ localparam integer MUT_REV = 1;
+`else
+ localparam integer MUT_REV = 0;
+`endif
+ wire [1:0] rr;                                         // reset standard: the port drives only the relay
+ ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+ // pin flops (relay stage 1)
+ reg [2:0] lph; reg [KW-1:0] kl; reg clr_r, p3_v, mcr_p; reg [53:0] p3_d;
+ always @(posedge clk) begin kl <= kin; p3_d <= pd; end
+ always @(posedge clk or negedge rr[0])
+  if (!rr[0]) begin lph <= IDLE; clr_r <= 1'b0; p3_v <= 1'b0; mcr_p <= 1'b0; end
+  else begin lph <= ph; clr_r <= clr; p3_v <= pv; mcr_p <= mcr; end
+ wire fon = lph == FILL || lph == FLUSH, ex = lph == EXT, mg = lph == MERGE;
+ wire pv_any = p3_v;                                    // stage 0 is the cluster's (it masks q with it)
+ reg [53:0] ff [0:FD-1]; reg [FA:0] fc; reg [FA-1:0] fw, fr;
+ reg [1:0] cr; reg [2:0] sc;
+ reg [KW-1:0] xi, xo;
+ reg i_cr, i_xv, i_idle; reg [53:0] i_xd;               // heap seam pin flops
+ wire hpv = (fon && fc != 0) || (ex && xi != kl);
+ wire iss = hpv && cr != 2'd0;
+ wire push = p3_v && fon;
+ wire pop = fon && fc != 0 && cr != 2'd0;
+ always @(posedge clk) if (push) ff[fw] <= p3_d;
+ always @(posedge clk or negedge rr[0]) begin
+  if (!rr[0]) begin
+   fc <= 0; fw <= 0; fr <= 0; cr <= 2'd2; sc <= SCV; xi <= 0; xo <= 0;
+   q <= 1'b0; x <= 1'b0; ok <= 1'b0;
+  end else begin
+   if (!fon) begin fc <= 0; fw <= 0; fr <= 0; end
+   else begin fc <= fc + push - pop; fw <= fw + push; fr <= fr + pop; end
+   cr <= cr - iss + i_cr; sc <= (iss || clr_r) ? SCV : (sc != 3'd0 ? sc - 3'd1 : 3'd0);
+   if (!ex) begin xi <= 0; xo <= 0; end else begin xi <= xi + iss; xo <= xo + i_xv; end
+   q <= i_idle && sc == 3'd0 && fc == 0 && !pv_any;
+   x <= ex && (xo + i_xv == kl);
+   ok <= fc <= FTHR;
+  end
+ end
+ // heap seam (registered both ways; the heap tile has its own pin flops / output regs)
+ always @(posedge clk) begin t_op_x <= ff[fr]; i_xd <= t_ext_d; root <= t_root_key; end
+ always @(posedge clk or negedge rr[0])
+  if (!rr[0]) begin t_op_v <= 1'b0; t_op_ext <= 1'b0; i_cr <= 1'b0; i_xv <= 1'b0; i_idle <= 1'b0; end
+  else begin t_op_v <= iss; t_op_ext <= ex; i_cr <= t_op_cr; i_xv <= t_ext_v; i_idle <= t_idle; end
+ assign t_k = kl; assign t_clr_go = clr_r;
+ // reverse buffer: registered write (WREG) and read (rq_*), capture flop rbq next to the macro output
+ wire [KW-1:0] wa = (MUT_REV != 0) ? xo : kl - 1'b1 - xo;
+ reg [RA:0] mw; reg [RA-1:0] rq_a; reg rq_ce, s2, s3; reg [215:0] rbq; wire [215:0] rb_q;
+ reg [53:0] mf [0:7]; reg [3:0] mc; reg [2:0] mr, mwp; reg [KW-1:0] mp; reg lh_v; reg [53:0] lh_d; reg [2:0] mcc;
+ wire rd_go = mg && !rq_ce && !s2 && !s3 && ({mw, 2'b00} < kl) && (mc + 4'd4 <= 4'd8);
+ ot_hgi_topk_lvl #(.DEPTH(RD), .AW(RA), .WREG(1)) u_rb (.clk(clk), .r_ce(rq_ce), .r_a(rq_a), .rd(rb_q), .w_ce_i(i_xv),
+  .w_a_i(RA'(wa >> 2)), .w_s(wa[1:0]), .w_d(i_xd), .w_all(1'b0));
+ wire lpop = lh_v && mcc != 3'd0;                       // send the head on a credit
+ wire refill = mc != 4'd0 && (!lh_v || lpop);
+ wire [KW+1:0] base = {mw - 1'b1, 2'b00};
+ reg [2:0] np; integer lq;
+ always @* begin np = 3'd0; for (lq = 0; lq < 4; lq = lq + 1) if (s3 && base + lq < kl) np = np + 1'b1; end
+ always @(posedge clk) begin
+  if (rd_go) rq_a <= RA'(mw);
+  rbq <= rb_q;
+  for (lq = 0; lq < 4; lq = lq + 1) if (lq < np) mf[mwp + lq[2:0]] <= rbq[54 * lq +: 54];
+  if (refill) lh_d <= mf[mr];
+  if (lpop) md <= lh_d;
+ end
+ always @(posedge clk or negedge rr[1]) begin
+  if (!rr[1]) begin mw <= 0; rq_ce <= 1'b0; s2 <= 1'b0; s3 <= 1'b0; mc <= 0; mr <= 0; mwp <= 0; mp <= 0; lh_v <= 1'b0; me <= 1'b0;
+   mcc <= MQD; mv <= 1'b0; end
+  else if (!mg) begin mw <= 0; rq_ce <= 1'b0; s2 <= 1'b0; s3 <= 1'b0; mc <= 0; mr <= 0; mwp <= 0; mp <= 0; lh_v <= 1'b0;
+   me <= 1'b0; mcc <= MQD; mv <= 1'b0; end
+  else begin
+   rq_ce <= rd_go; s2 <= rq_ce; s3 <= s2;
+   if (rd_go) mw <= mw + 1'b1;
+   mwp <= mwp + np; mr <= mr + refill; mc <= mc + np - refill;
+   if (lpop) mp <= mp + 1'b1;
+   if (refill) lh_v <= 1'b1; else if (lpop) lh_v <= 1'b0;
+   me <= !lh_v && mp == kl;
+   mcc <= mcc - lpop + mcr_p; mv <= lpop;
   end
  end
 endmodule
@@ -310,7 +421,12 @@ module ot_hgi_idx_topk_hw #(
  parameter integer MUT_BYP=0, parameter integer MUT_CLR=0, parameter integer MUT_REV=0,
  // HUB=1 (el1011-hbm-idx r6, hgi_idx_topk_w8_hub): the heap tiles are OUTSIDE; every tile seam is registered on this side
  // (t_* outputs from flops, t_* inputs into pin flops; the tile has its own pin flops / registered outputs)
- parameter bit HUB=0
+ parameter bit HUB=0,
+ // LANE=1 (with HUB=1; el1011-hbm-idx 10-12 w8 split, textbook class 1: 23.7k cluster flops on one root): the per-lane glue
+ // (survivor FIFO, credits, extract counters, reverse buffer, run FIFO, leaf head, heap seam) is the hard lane tile
+ // ot_hgi_topk_lane_tile OUTSIDE (lt_* pins); this side keeps relay stage 0, the status / tournament / merge trees and a
+ // per-lane merge credit FIFO (the leaf pop loop is cut at a registered credit link)
+ parameter bit LANE=0
 )(
  input wire clk,rst_n,
  input wire cmd_valid, output wire cmd_ready,
@@ -322,7 +438,10 @@ module ot_hgi_idx_topk_hw #(
  output wire [31:0] out_id,out_score,out_row,
  output wire out_last, output wire out_values_valid, output reg done, output reg [3:0] error,
  output wire [W*$clog2(MAX_K+1)-1:0] t_k, output wire [W-1:0] t_op_v, t_op_ext, t_clr_go, output wire [W*54-1:0] t_op_x,
- input wire [W-1:0] t_op_cr, t_ext_v, t_idle_i, input wire [W*54-1:0] t_ext_d, input wire [W*53-1:0] t_root_key
+ input wire [W-1:0] t_op_cr, t_ext_v, t_idle_i, input wire [W*54-1:0] t_ext_d, input wire [W*53-1:0] t_root_key,
+ output wire [W*3-1:0] lt_ph, output wire [W*$clog2(MAX_K+1)-1:0] lt_k, output wire [W-1:0] lt_clr, lt_pv, lt_mcr,
+ output wire [W*54-1:0] lt_pd,
+ input wire [W-1:0] lt_q, lt_x, lt_ok, lt_mv, lt_me, input wire [W*53-1:0] lt_root, input wire [W*54-1:0] lt_md
 );
  localparam integer KW = $clog2(MAX_K + 1);
  localparam [2:0] SCV = HUB ? 3'd5 : 3'd3;              // settle count after an op / clear (covers the seam flops)
@@ -402,7 +521,45 @@ module ot_hgi_idx_topk_hw #(
  wire beat = in_valid && in_ready;
  // ---------------------------------------------------------------- lanes
  wire l_lv [0:W-1], l_le [0:W-1], l_pop [0:W-1]; wire [53:0] l_ld [0:W-1];
+ localparam integer MQD = 6;                            // LANE: merge credit FIFO (credit round trip 5 = full rate)
+ if (LANE && (!HUB || W != 8 || IW != 8 || KW != 12 || FTHR != 7 || LRD != 2)) begin : g_lchk
+  ot_ERROR_lane_tile_is_the_w8_configuration u_chk ();  // ot_hgi_topk_lane_tile hard-codes these
+ end
  generate for (h = 0; h < W; h = h + 1) begin : g_h
+  if (LANE) begin : g_lt
+   wire f2p = f2_v && (h / IW == f2_g) && ((h % IW) < f2_nw) && f2_gt[h % IW];
+   reg [2:0] ph0; reg [KW-1:0] k0; reg c0, pv0; reg [53:0] pd0;     // relay stage 0 (stage 1 = the tile's pin flops)
+   always @(posedge clk) begin k0 <= k; pd0 <= f2_e[h % IW]; end
+   always @(posedge clk or negedge rr[h])
+    if (!rr[h]) begin ph0 <= IDLE; c0 <= 1'b0; pv0 <= 1'b0; end else begin ph0 <= st; c0 <= clr_go; pv0 <= f2p; end
+   assign lt_ph[3 * h +: 3] = ph0; assign lt_k[KW * h +: KW] = k0; assign lt_clr[h] = c0; assign lt_pv[h] = pv0;
+   assign lt_pd[54 * h +: 54] = pd0;
+   assign l_q[h] = lt_q[h] && !pv0; assign l_x[h] = lt_x[h]; assign l_ok[h] = lt_ok[h];
+   assign h_root[h] = lt_root[53 * h +: 53];
+   // merge leaf: the tile sends (mv, md) on a credit; entries land straight in this FIFO (its entry flops are the pin
+   // flops); exhaustion (me) leaves the tile one edge after its last item and is registered again here (mle)
+   reg men, mle, mcr; reg [53:0] mq [0:MQD-1]; reg [2:0] mqw, mqr, mqn;
+   wire mpush = men && lt_mv[h], mpop = l_pop[h];
+   always @(posedge clk) if (mpush) mq[mqw] <= lt_md[54 * h +: 54];
+   always @(posedge clk or negedge rr[h])
+    if (!rr[h]) begin men <= 1'b0; mle <= 1'b0; mcr <= 1'b0; mqw <= 0; mqr <= 0; mqn <= 0; end
+    else begin
+     men <= st == MERGE;
+     if (!men) begin mle <= 1'b0; mcr <= 1'b0; mqw <= 0; mqr <= 0; mqn <= 0; end
+     else begin
+      mle <= lt_me[h]; mcr <= mpop;
+      if (mpush) mqw <= (mqw == MQD - 1) ? 3'd0 : mqw + 3'd1;
+      if (mpop) mqr <= (mqr == MQD - 1) ? 3'd0 : mqr + 3'd1;
+      mqn <= mqn + mpush - mpop;
+     end
+    end
+   assign l_lv[h] = mqn != 3'd0; assign l_ld[h] = mq[mqr]; assign l_le[h] = mle && mqn == 3'd0;
+   assign lt_mcr[h] = mcr;
+   assign t_k[KW * h +: KW] = '0; assign t_op_v[h] = 1'b0; assign t_op_ext[h] = 1'b0; assign t_op_x[54 * h +: 54] = '0;
+   assign t_clr_go[h] = 1'b0;
+  end else begin : g_ln
+   assign lt_ph[3 * h +: 3] = '0; assign lt_k[KW * h +: KW] = '0; assign lt_clr[h] = 1'b0; assign lt_pv[h] = 1'b0;
+   assign lt_pd[54 * h +: 54] = '0; assign lt_mcr[h] = 1'b0;
   reg [2:0] lph_s [0:LRD-1]; reg [KW-1:0] kl_s [0:LRD-1]; reg clr_s [0:LRD-1];   // LRD-deep lane relays
   wire [2:0] lph = lph_s[LRD - 1]; wire [KW-1:0] kl = kl_s[LRD - 1]; wire clr_r = clr_s[LRD - 1];
   for (gr = 0; gr < LRD; gr = gr + 1) begin : g_rl
@@ -497,6 +654,7 @@ module ot_hgi_idx_topk_hw #(
    end
   end
   assign l_lv[h] = lh_v; assign l_ld[h] = lh_d; assign l_le[h] = le;
+  end
  end endgenerate
  // ---------------------------------------------------------------- merge tree (relay node on every edge)
  wire tv [0:TL][0:WP-1]; wire [53:0] td [0:TL][0:WP-1]; wire te [0:TL][0:WP-1]; wire tp [0:TL][0:WP-1];
@@ -595,7 +753,12 @@ endmodule
 // ready (room for one more after this cycle), out_ready only steers the local head load.
 module ot_hgi_idx_topk_wreg #(
  parameter bit ENABLE=0, parameter integer MAX_K=2048, parameter integer IW=4, parameter integer W=4,
- parameter integer MUT_BYP=0, parameter bit HUB=0
+ parameter integer MUT_BYP=0, parameter bit HUB=0,
+ // LANE=1 (with HUB=1; el1011-hbm-idx 10-12 w8 split, textbook class 1: 23.7k cluster flops on one root): the per-lane glue
+ // (survivor FIFO, credits, extract counters, reverse buffer, run FIFO, leaf head, heap seam) is the hard lane tile
+ // ot_hgi_topk_lane_tile OUTSIDE (lt_* pins); this side keeps relay stage 0, the status / tournament / merge trees and a
+ // per-lane merge credit FIFO (the leaf pop loop is cut at a registered credit link)
+ parameter bit LANE=0
 )(
  input wire clk,rst_n,
  input wire cmd_valid, output wire cmd_ready,
@@ -607,7 +770,10 @@ module ot_hgi_idx_topk_wreg #(
  output wire [31:0] out_id,out_score,out_row,
  output wire out_last, output wire out_values_valid, output reg done, output reg [3:0] error,
  output wire [W*$clog2(MAX_K+1)-1:0] t_k, output wire [W-1:0] t_op_v, t_op_ext, t_clr_go, output wire [W*54-1:0] t_op_x,
- input wire [W-1:0] t_op_cr, t_ext_v, t_idle_i, input wire [W*54-1:0] t_ext_d, input wire [W*53-1:0] t_root_key
+ input wire [W-1:0] t_op_cr, t_ext_v, t_idle_i, input wire [W*54-1:0] t_ext_d, input wire [W*53-1:0] t_root_key,
+ output wire [W*3-1:0] lt_ph, output wire [W*$clog2(MAX_K+1)-1:0] lt_k, output wire [W-1:0] lt_clr, lt_pv, lt_mcr,
+ output wire [W*54-1:0] lt_pd,
+ input wire [W-1:0] lt_q, lt_x, lt_ok, lt_mv, lt_me, input wire [W*53-1:0] lt_root, input wire [W*54-1:0] lt_md
 );
  reg active,c_valid,s_valid,q_valid,pending_done,h_v,o_rdy;   // h_v: a command held at the pin (cmd_ready = !h_v, a flop)
  reg [3:0] c_unit; reg [5:0] c_op; reg [24:0] c_param; reg [31:0] c_n,c_m; reg c_values;
@@ -625,14 +791,16 @@ module ot_hgi_idx_topk_wreg #(
  wire go=h_v&&!active&&!c_valid&&core_cmd_ready&&!pending_done&&!q_valid&&bn==3'd0;
  assign in_ready=active&&(!s_valid||core_in_ready);
  assign out_valid=q_valid; assign {out_values_valid,out_last,out_row,out_score,out_id}={q_valid&&q_r[97],q_r[96:0]};
- ot_hgi_idx_topk_hw #(.ENABLE(ENABLE),.MAX_K(MAX_K),.IW(IW),.W(W),.MUT_BYP(MUT_BYP),.HUB(HUB)) core(
+ ot_hgi_idx_topk_hw #(.ENABLE(ENABLE),.MAX_K(MAX_K),.IW(IW),.W(W),.MUT_BYP(MUT_BYP),.HUB(HUB),.LANE(LANE)) core(
   .clk(clk),.rst_n(rst_n),.cmd_valid(c_valid),.cmd_ready(core_cmd_ready),
   .cmd_unit(c_unit),.cmd_op(c_op),.cmd_param(c_param),.cmd_n(c_n),.cmd_m(c_m),.cmd_values(c_values),
   .in_valid(s_valid&&active),.in_ready(core_in_ready),.in_score(s_score),.in_nw(s_nw),
   .out_valid(core_out_valid),.out_ready(core_out_ready),.out_id(core_id),.out_score(core_score),
   .out_row(core_row),.out_last(core_last),.out_values_valid(core_values),.done(core_done),.error(core_error),
   .t_k(t_k),.t_op_v(t_op_v),.t_op_ext(t_op_ext),.t_clr_go(t_clr_go),.t_op_x(t_op_x),.t_op_cr(t_op_cr),.t_ext_v(t_ext_v),
-  .t_idle_i(t_idle_i),.t_ext_d(t_ext_d),.t_root_key(t_root_key));
+  .t_idle_i(t_idle_i),.t_ext_d(t_ext_d),.t_root_key(t_root_key),
+  .lt_ph(lt_ph),.lt_k(lt_k),.lt_clr(lt_clr),.lt_pv(lt_pv),.lt_mcr(lt_mcr),.lt_pd(lt_pd),.lt_q(lt_q),.lt_x(lt_x),.lt_ok(lt_ok),
+  .lt_mv(lt_mv),.lt_me(lt_me),.lt_root(lt_root),.lt_md(lt_md));
  always @(posedge clk) begin
   if(cmd_valid&&cmd_ready)begin c_unit<=cmd_unit;c_op<=cmd_op;c_param<=cmd_param;c_n<=cmd_n;c_m<=cmd_m;c_values<=cmd_values;end
   if(in_ready&&in_valid)begin s_score<=in_score;s_nw<=in_nw;end

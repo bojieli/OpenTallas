@@ -24,6 +24,36 @@ import dsrom_s81_fulldie as S  # noqa: E402
 
 CLK_NAMES = ('ck', 'clk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
 K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=32.0, su=10.0, ho=15.0))
+# s81-die-iter 2026-10-12 (FF hold, r4f SPEF: hco_SW -> xsco_SW -103.7, hr_W<n> -> f_hr_W<n>_o_1 -77.9, hl_W<n> ->
+# g_hl_W<n>_o_sp_collective_0 -77.6 ps): a closed end block (m2l / r2l / l2r, kind 'hend') is balanced on its MEAN clock
+# insertion, but its boundary output flops ride a shorter branch (~80 vs 152 ps), so its outputs launch ~70 ps early
+# into the glue stage placed beside it (a few um of wire, no wire delay to absorb it).  Receiver hold pad (the Qwen
+# 'relay-input pads' pattern, tools/hbm_die_relay_sta.py): every interim glue stage whose data input is driven by a
+# closed hend within PAD_NEAR_UM carries a delay chain between that input pin and its capture register, sized at FF
+# (HOLD_PAD_FF) and costing PAD_SCALE x at TT / SS (ASAP7 BUF chains).  The padded instances bind a '<master>__hp' cell
+# (same ports; the pad lives inside the stage).  REL_CLK: a multi-clock glue master's data input timed against the
+# clock that captures it (the SEL_XSTG input register `ir` is clocked by cw, the end block's side -- not ck).
+PAD_SCALE = dict(ff=1.0, tt=1.4, ss=1.9)
+HOLD_PAD_FF = 120.0
+PAD_NEAR_UM = 100.0
+PAD_SUFFIX = '__hp'
+REL_CLK = {'dsfd_xstg': {'i': 'cw'}}
+
+
+def hold_pad_sites(m):
+    """{load inst: set(data ports)} of the interim glue inputs a closed end block drives from <= PAD_NEAR_UM away"""
+    by = {it.name: it for it in m['insts']}
+    gap = lambda p, q: max(0.0, max(p.x, q.x) - min(p.x + p.w, q.x + q.w)) + max(0.0, max(p.y, q.y) - min(p.y + p.h, q.y + q.h))
+    out = defaultdict(set)
+    for bid, cls, bits, eps in m['buses']:
+        d = by.get(eps[0][0]) if eps else None
+        if d is None or d.kind != 'hend':
+            continue
+        for inst, port in eps[1:]:
+            l_ = by.get(inst)
+            if l_ is not None and l_.kind != 'hend' and S.is_glue(l_.master) and gap(d, l_) <= PAD_NEAR_UM:
+                out[inst].add(port)
+    return out
 # owner option B (2026-10-07): die setup at TT, hold at FF, SS as sensitivity.  TT planned clock arrival = mean of the
 # CTS-validated SS and FF insertions (the plan's CTS ran SS / FF libraries only): an estimate, marked in kit.json
 
@@ -316,6 +346,44 @@ def co_delay(lib):
     return float(m.group(1)) if m else 0.0
 
 
+_TREE_INS = {}
+
+
+def pin_tree_insertion(lib, pin):
+    """{(pin, 'min'|'max'): rise value} from a view lib's min/max_clock_tree_path arcs on clock pin `pin` (the ETM's
+    own per-clock-pin insertion), {} when the lib carries none for that pin"""
+    key = (str(lib), pin)
+    if key not in _TREE_INS:
+        t = Path(lib).read_text(errors='ignore') if lib and Path(lib).exists() else ''
+        out = {}
+        pm = re.search(r'pin\(\s*"?%s(?:\[0\])?"?\s*\)\s*\{(.*?)\n    \}' % re.escape(pin), t, re.S)
+        for tm in re.finditer(r'timing_type\s*:\s*(min|max)_clock_tree_path\s*;.*?cell_rise\s*\([^)]*\)\s*\{[^}]*?values\(\s*"\s*([\d.]+)',
+                              pm.group(1) if pm else '', re.S):
+            out[tm.group(1)] = float(tm.group(2))
+        _TREE_INS[key] = out
+    return _TREE_INS[key]
+
+
+def pin_insertion(mst, pin, libs):
+    """s81-die-iter 2026-10-12 (die relay hold FF -107.3, r4f: cf<c> cr -> y_xa_<c>_0_0): a MULTI-CLOCK block (the
+    colck cfifo: ck = stream trunk + co pass, cr = its column-side sink of the column tree, xf = the lane write clock)
+    has a different insertion behind each clock pin; one master scalar (its routed / calib boundary mean, the ck side:
+    206.5 ps FF) put the column relays ~40-80 ps behind the cr-side launch flops.  Balance each such pin with the ETM's
+    own min/max_clock_tree_path on that pin: SS (setup corner) max, FF (hold corner) min, TT their mean.  [ss, ff, tt]
+    or None (the lib carries no tree path on the pin -> the master scalar, as before)"""
+    if not libs:
+        return None
+    v = []
+    for c in ('ss', 'ff', 'tt'):
+        lp = libs.get(c, {}).get(mst, (None,))[0]
+        d = pin_tree_insertion(lp, pin) if lp else {}
+        if not d:
+            return None
+        v.append(d.get('max', d.get('min')) if c == 'ss' else d.get('min', d.get('max')) if c == 'ff' else
+                 (d.get('min', 0.0) + d.get('max', d.get('min', 0.0))) / (2 if 'max' in d and 'min' in d else 1))
+    return v
+
+
 def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=None):
     """in place: lat[pin] = planned [ss, ff, tt] arrival -> pin latency so that every flop arrives at plan + D
     (D = the deepest in-arc insertion per corner within the pin's clock tree: the trunk, or one column tree, which
@@ -331,20 +399,39 @@ def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=N
                 r['insertion_in_arcs_ps'] = [round(x, 1) for x in ins[mst]]
             r.pop('insertion_added_ps', None)
     grp = (lambda k_: group.get(k_, 'trunk')) if group else (lambda k_: 'trunk')
+    # per-clock-pin insertion: the ETM's own clock_tree_path on that pin (pin_insertion: SS max, FF min, TT mean), else
+    # the master scalar.  s81-die-iter 2026-10-12: SINGLE-clock closed views too -- r4f FF, dsfd_m2l_vr_512x1__hco_SW
+    # was balanced on its routed boundary MEAN (152 ps FF) while its ETM's min tree path is 123.0, so its launch flops
+    # arrived ~29 ps before the plan into the interim xsco_SW relay 2.8 um away (-103.7 ps); multi-clock masters
+    # (the colck cfifo) were already balanced per pin.
+    pin_ins, per_pin = {}, {}
+    for k_ in lat:
+        mst, pn = pin_master[k_], k_.split('/')[1].split('[')[0]
+        if masters.get(mst, {}).get('view', 'interim') != 'interim':
+            if (mst, pn) not in per_pin:
+                per_pin[(mst, pn)] = pin_insertion(mst, pn, libs)
+            if per_pin[(mst, pn)]:
+                pin_ins[k_] = per_pin[(mst, pn)]
+    vin = lambda k_: pin_ins.get(k_) or ins[pin_master[k_]]
+    for (mst, pn), v in sorted(per_pin.items()):
+        if v:
+            masters.get(mst, {}).setdefault('insertion_per_clock_pin_ps', {})[pn] = [round(x, 1) for x in v]
     D = defaultdict(lambda: [0.0, 0.0, 0.0])
     for k_ in lat:
-        g, v = grp(k_), ins[pin_master[k_]]
+        g, v = grp(k_), vin(k_)
         D[g] = [max(D[g][i], v[i]) for i in range(3)]
     for k_ in lat:
-        v, d = ins[pin_master[k_]], D[grp(k_)]
+        v, d = vin(k_), D[grp(k_)]
         lat[k_] = [lat[k_][i] + d[i] - v[i] for i in range(3)]
     return dict(model='balanced: flop arrival = planned sink arrival + D (per clock tree); pin latency = that - in-arc '
                       'insertion; a column clock source = its cfifo ck pin latency',
                 pad_ps={g: [round(x, 1) for x in d] for g, d in sorted(D.items()) if any(d)},
-                masters_offset=sorted(m for m, v in ins.items() if any(v)), pins=len(lat))
+                masters_offset=sorted(m for m, v in ins.items() if any(v)), pins=len(lat),
+                per_clock_pin={f'{m_}/{p_}': [round(x, 1) for x in v] for (m_, p_), v in sorted(per_pin.items()) if v})
 
 
-def interim_lib(cells, corner):
+def interim_lib(cells, corner, pads=None):
+    pads = pads or {}
     k = K[corner]
     L = [f'library (s81_interim_{corner}) {{', ' delay_model : table_lookup;', ' time_unit : "1ps";',
          ' voltage_unit : "1V";', ' current_unit : "1mA";', ' pulling_resistance_unit : "1kohm";',
@@ -366,8 +453,11 @@ def interim_lib(cells, corner):
             if p == ck or (d == 'input' and p in CLK_NAMES):     # every clock pin of a multi-clock glue master
                 body.append('   clock : true;')
             elif ck and d == 'input':
-                for tt, v in (('setup_rising', k['su']), ('hold_rising', k['ho'])):
-                    body.append(f'   timing () {{ related_pin : "{ck}"; timing_type : {tt}; '
+                rck = next((v_[p] for m_, v_ in REL_CLK.items() if name.startswith(m_) and p in v_), ck)
+                rck = rck if rck in ports else ck
+                pps = HOLD_PAD_FF if p in pads.get(name, ()) else 0.0
+                for tt, v in (('setup_rising', k['su'] + pps * PAD_SCALE[corner]), ('hold_rising', k['ho'] - pps)):
+                    body.append(f'   timing () {{ related_pin : "{rck}"; timing_type : {tt}; '
                                 f'rise_constraint (scalar) {{ values ("{v}"); }} fall_constraint (scalar) {{ values ("{v}"); }} }}')
             elif ck and d == 'output':
                 body.append(f'   timing () {{ related_pin : "{ck}"; timing_type : rising_edge; '
@@ -411,6 +501,24 @@ def main():
     rec = dict(masters={}, clocks=[])
     vroot = a.views_root.resolve()
     cls_ = {c: closed_libs(c, vroot, a.label) for c in ('ss', 'tt', 'ff')}
+    psites = hold_pad_sites(m)
+    by_ = {it.name: it for it in m['insts']}
+    # a pad lives inside an INTERIM stage: a master with a routed view in any corner carries its own (real) timing
+    psites = {i: v for i, v in psites.items() if not any(by_[i].master in cls_[c] for c in cls_)}
+    pads = defaultdict(set)                  # padded cell -> padded data ports
+    for inst, ps_ in psites.items():
+        pads[by_[inst].master + PAD_SUFFIX] |= ps_
+    if psites:
+        txt = (a.out / 'die.v').read_text()
+        for inst in psites:
+            mst = by_[inst].master
+            txt, k_ = re.subn(rf'^(\s*){re.escape(mst)} {re.escape(inst)} \(', rf'\g<1>{mst}{PAD_SUFFIX} {inst} (', txt,
+                              count=1, flags=re.M)
+            assert k_ == 1, ('hold pad: instance not in die.v', inst, mst)
+        (a.out / 'die.v').write_text(txt)
+    rec['hold_pads'] = dict(ff_ps=HOLD_PAD_FF, scale=PAD_SCALE, near_um=PAD_NEAR_UM, instances=len(psites),
+                            cells={c: sorted(v) for c, v in sorted(pads.items())},
+                            rule='interim glue input driven by a closed hend within near_um: in-stage delay chain')
     if getattr(S, 'CFIFO_COLCK', False):
         # ds-1010 2026-10-10: --cfifo-colck binds the colck cfifo view (its column side clocked from cr); the kit itself
         # selects it (chains used to sed the lib paths AFTER the kit had balanced the column tree with the plain view)
@@ -461,6 +569,8 @@ def main():
             else:
                 ports = dict(pdir.get(mst, {}))
             cells.append((mst, (it.w + S.SHAVE) * (it.h + S.SHAVE), ports))
+            if mst + PAD_SUFFIX in pads:
+                cells.append((mst + PAD_SUFFIX, (it.w + S.SHAVE) * (it.h + S.SHAVE), ports))
             r_ = dict(view='interim', ports=len(ports))
             if mst in parts:
                 if mst == 'dsfd_sp_collective' and 'collective_binding' in rec:
@@ -473,7 +583,7 @@ def main():
                     done = sorted(x for x in parts[mst] if x in cls_['ss'] and cls_['ss'][x][1] == 'closed')
                 r_.update(view='partitioned', tiles=list(parts[mst]), tiles_closed=done)
             rec['masters'][mst] = r_
-        (a.out / f'interim_{corner}.lib').write_text(interim_lib(cells, corner))
+        (a.out / f'interim_{corner}.lib').write_text(interim_lib(cells, corner, pads))
         (a.out / f'libs_{corner}.txt').write_text('\n'.join(sorted(libs) + [f'/kit/interim_{corner}.lib']) + '\n')
     # clocks: die domain sources (collective PLL pins) and the column roots (cfifo co)
     srcs = []

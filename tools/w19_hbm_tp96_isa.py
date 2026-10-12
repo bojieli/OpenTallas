@@ -216,9 +216,9 @@ class Compiler:
         # ---------------------------------------------------------------- MoE
         self.local(L, "hc_mixes", which="ffn", tag="hc_ffn (mixes + Sinkhorn)")
         self.local(L, "hc_pre_norm", which="ffn", tag="ffn_norm")
-        self.mv(L, P + "ffn.gate.weight", "mv", "x", "gsc", 384, 5120, "bf16", out_dtype="fp32", tag="router gate")
+        self.mv(L, P + "ffn.gate.weight", "mv", "x", "gsc", m.n_exp, 5120, "bf16", out_dtype="fp32", tag="router gate")
         self.local(L, "router_act", tag="sqrt(softplus) on the die's own router rows")
-        self.gather(L, [("gsc", 384, 4)], "router_gather")
+        self.gather(L, [("gsc", m.n_exp, 4)], "router_gather")
         self.local(L, "route", tag="top-6 + weights (replicated)")
         self.emit(kind="expert_fetch", unit="HBM", layer=L, experts=m.k_exp, tag="routed-expert slices HBM -> SMEM "
                   "(descriptors after the router; B2)")

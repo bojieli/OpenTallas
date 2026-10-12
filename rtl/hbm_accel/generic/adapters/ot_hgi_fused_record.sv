@@ -37,6 +37,12 @@ module ot_hgi_fused_record #(
     parameter integer HCE = 0,             // hgi-1010 b: 1 = HC_POST / HC_PRE_NORM of row length HCD (sector-aligned bases)
                                            //   run on the internal one-pass ot_hgi_hc_eng (UNIT = 1, UWIDE = 1) instead of
                                            //   the micro-op lowering; other shapes keep the lowering
+                                           // 2 = the same HC jobs handed to the EXTERNAL lane-local engine (the die's hfd_hc_eng
+                                           //   = ot_hgi_hc_eng_station, own lgE slot) over the ne_* pins (die net fused_ne):
+                                           //   one credit (a job a record), ne_v held until the registered ne_rdy (the engine's
+                                           //   relayed job_rdy) is seen -> a level the far side edge-detects; ne_g = the gain-
+                                           //   landed level (HC_PRE_NORM); ne_done / ne_fault pulses retire the record.  The
+                                           //   record's own lanes stay with its stream unit (no hand-over); always HLL rules
     parameter integer HCD = 5120,
     parameter integer HMUT = 0,            // ot_hgi_hc_eng MUT (bench negatives)
     parameter integer HLL = 0,             // hbm-hcvm 10-11: 1 = the lane-local HC engine build (ot_hgi_hc_eng LL = 1); it takes
@@ -90,6 +96,7 @@ module ot_hgi_fused_record #(
     output reg           ne_v,
     input  wire          ne_rdy,
     output reg  [148:0]  ne_job,
+    output wire          ne_g,            // HCE 2: the streamed gain move landed (registered level, rides with ne_job)
     input  wire          ne_done,
     input  wire          ne_fault,
     // quant record bus (QDQ) and its return {fault, done}
@@ -113,9 +120,10 @@ module ot_hgi_fused_record #(
                                 p_na <= rec_n_a; p_nb <= rec_n_b; p_no <= rec_n_o; end
     reg in_mvd, in_mvf, in_ned, in_nef, in_qd, in_qf;
     wire e_rdy, e_done, e_fault;
-    wire ne_rdy_m = (HCE != 0) ? e_rdy : ne_rdy;
-    always @(posedge clk) begin in_mvd <= mv_done; in_mvf <= mv_fault; in_ned <= (HCE != 0) ? e_done : ne_done;
-                                in_nef <= (HCE != 0) ? e_fault : ne_fault;
+    reg in_ner;                            // HCE 2: the external engine's job_rdy (pin flop)
+    wire ne_rdy_m = (HCE == 1) ? e_rdy : (HCE == 2) ? in_ner : ne_rdy;
+    always @(posedge clk) begin in_mvd <= mv_done; in_mvf <= mv_fault; in_ned <= (HCE == 1) ? e_done : ne_done;
+                                in_nef <= (HCE == 1) ? e_fault : ne_fault; in_ner <= ne_rdy;
                                 in_qd <= q_done; in_qf <= q_fault; end
     // el1011-hbm-fused (textbook class 2): the port reset drove ~4.2k flops directly; it now enters through a local
     // reset relay (synchronised release, one region per consumer: FSM / HC engine / stream unit); rec_rdy waits for
@@ -165,9 +173,10 @@ module ot_hgi_fused_record #(
     reg  [31:0] f_d, f_inv; reg [17:0] s1_b, s2_b;
     // ---- the internal SU path
     // the wide lanes: the internal SU, or the HC engine while it owns them (S_NEW; both quiet at the hand-over)
-    wire own = (HCE != 0) && (st == 5'd9);
+    wire own = (HCE == 1) && (st == 5'd9);
+    assign ne_g = (HCE == 2) && hg_rdy;
     wire [32*16-1:0] u_wrq, e_wrq; wire [32*280-1:0] u_wwq, e_wwq; wire u_rg, u_wg, e_rg, e_wg;
-    generate if (HCE != 0 && UNIT != 0 && UWIDE != 0) begin : g_hce
+    generate if (HCE == 1 && UNIT != 0 && UWIDE != 0) begin : g_hce
         assign wrq = own ? e_wrq : u_wrq; assign wwq = own ? e_wwq : u_wwq;
         assign rg_req = own ? e_rg : u_rg; assign wg_req = own ? e_wg : u_wg;
         ot_hgi_hc_eng #(.D(HCD), .LQ(ULQ), .MUT(HMUT), .LL(HLL), .RL(HRL)) u_hce (.clk(clk), .rst_n(rr[1]), .job_v(ne_v), .job_rdy(e_rdy),
@@ -210,7 +219,7 @@ module ot_hgi_fused_record #(
     wire hgp_ok = (HCD % 512 == 0) && (dB[9:8] == 2'd0);
     wire hce_ok = (HCE != 0) && (UNIT != 0) && (UWIDE != 0) && (d == 21'(HCD)) && (dA[10:8] == 3'd0) && (dO[10:8] == 3'd0) &&
                   ((op == 6'd2) ? (dB[10:8] == 3'd0) : (scr_q[2:0] == 3'd0)) &&
-                  ((HLL == 0) || ((dA[15:11] == dO[15:11]) && ((op == 6'd2) ? (dB[15:11] == dO[15:11]) : (scr_q[7:3] == dO[15:11]))));
+                  ((HLL == 0 && HCE != 2) || ((dA[15:11] == dO[15:11]) && ((op == 6'd2) ? (dB[15:11] == dO[15:11]) : (scr_q[7:3] == dO[15:11]))));
     // F10: the end of the scratch this record uses (exclusive), against the reserved limit (SCR_WORDS words from the base,
     // 0 = up to the end of VM): an over-size record FAULTS instead of wrapping its scratch over live VM words
     wire [20:0] scr_end = {3'd0, scr_q} + d + ((op == 6'd0) ? (21'd2 + d) : {4'd0, nseg, 1'b0});
