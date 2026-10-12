@@ -28,10 +28,10 @@ module ot_qkh_lane8 #(
 );
     localparam integer PLAT = 4;
     // ---- reset relay: the port drives only the relay; control flops reset from its outputs ---------------------------
-    wire [1:0] rr;
-    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
-    wire rl = rr[0];          // lanes
-    wire rc = rr[1];          // tile control / pins
+    // idle1012 textbook class 2: one reset copy per lane (the shared lane copy drove 952 flops) + one for the tile control
+    wire [8:0] rr;
+    ot_rst_relay #(.REGIONS(9), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    wire rc = rr[8];          // tile control / pins
     // ---- S3: the pin flops ---------------------------------------------------------------------------------------------
     reg  [3:0]      c3;
     reg  [63:0]     row3;
@@ -77,6 +77,7 @@ module ot_qkh_lane8 #(
     wire [7:0]      p_vo, p_f, l_vo, l_f, b_f;
     wire [LTW-1:0]  dw = lt_d;
     generate for (d = 0; d < 8; d = d + 1) begin : g_d
+        wire rl = rr[d];      // this lane's reset copy
         // tree role: 0 2 4 6 level 1 (own pair); 1: level 2 (0, 2); 5: level 2 (4, 6); 3: level 3 (1, 5); 7: none
         localparam integer TL = (d % 2 == 0) ? 1 : ((d == 1 || d == 5) ? 2 : ((d == 3) ? 3 : 0));
         localparam integer LA = (d == 3) ? 1 : d - 1;
@@ -157,8 +158,10 @@ module ot_qkh_ktree #(
     output reg           sc_f,
     output reg           g_f
 );
-    wire rc;
-    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rc));
+    // idle1012 textbook class 2: one reset copy per K-tree adder + one for the scale multiply / control (one copy drove 1,004)
+    wire [16:0] rr;
+    ot_rst_relay #(.REGIONS(17), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    wire rc = rr[16];
     reg  [511:0] kp_r;
     reg          kv_r;
     reg  [15:0]  gf_r;
@@ -194,7 +197,7 @@ module ot_qkh_ktree #(
             assign vin = nvo[CB + 2*IX];
         end
         wire [1:0] err;
-        (* keep_hierarchy *) ot_hdc_fp32_add_lat_nr #(.LAT(ADD_LAT)) u_a (.clk(clk), .rst_n(rc), .valid_in(vin),
+        (* keep_hierarchy *) ot_hdc_fp32_add_lat_nr #(.LAT(ADD_LAT)) u_a (.clk(clk), .rst_n(rr[i]), .valid_in(vin),
             .a(a), .b(b), .y(n[32*i +: 32]), .err(err), .valid_out(nvo[i]));
         assign nf[i] = nvo[i] && (err != 2'd0);
     end endgenerate
