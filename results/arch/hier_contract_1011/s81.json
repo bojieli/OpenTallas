@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 8,
+ "version": 9,
  "owner": "s81die-1011",
- "updated": "2026-10-12 07:55 PT",
+ "updated": "2026-10-12 08:10 PT",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -68,6 +68,11 @@
    "version": 8,
    "when": "2026-10-12 07:55 PT",
    "change": "s81-die-iter (ds-coll proposal 07:17): dsfd_coll_lane_w slot 345.6 x 340.2 -> 432.0 x 336.96 (2 macro columns x 5 rows of ot_sram_1r1w_512x128_m4_r2c2 under ref_tile >= 20 um macro channels; one 345.6 column holds <= 6 of the 10). Height 336.96 (2.16 lattice) instead of the proposed 341.28 so the 8 abutting lanes (origins y = k x 336.96, top 2,695.68) stay inside the unchanged sp_collective outline 1,727.976 x 2,721.6 (8 x 341.28 = 2,730.24 would not); faces unchanged (die lanes W, core E, ck/rs/chb N). Fit check: 0 overlaps / 0 outside among the 19 sp_collective children; lanes -> cb_rw / ct gap 97.2 um. Die plan unchanged (parent outline unchanged)."
+  },
+  {
+   "version": 9,
+   "when": "2026-10-12 08:10 PT",
+   "change": "el1011-ds-vm/be (approved by main): +4 dsfd_vm_be_sl tile slots under sp_vm (die-placed; BE parent retired): N/S pins on vertical M3/M5 (was N-face M6, stalled M7-spacing DRC), PG M6 stripes (ref_tile), strap M7, outline 302.4 x 92.88 at x = s*388.8+43.2, y 21.6."
   }
  ],
  "slots": [
@@ -5757,6 +5762,662 @@
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+  },
+  {
+   "name": "sp_vm/u_be.g_s[0].u_sl",
+   "cell": "dsfd_vm_be_sl",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 302.4,
+    "h": 92.88
+   },
+   "origin": {
+    "x": 43.2,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "W",
+    "layer": "M4"
+   },
+   "version": "9",
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "pins": [
+    {
+     "name": "o_v[9:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_d[1279:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_f[3:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_o[2:0]",
+     "face": "N"
+    },
+    {
+     "name": "srq_d[255:0]",
+     "face": "S"
+    },
+    {
+     "name": "srq_v[1:0]",
+     "face": "S"
+    },
+    {
+     "name": "vrv",
+     "face": "S"
+    },
+    {
+     "name": "vrq[127:0]",
+     "face": "S"
+    },
+    {
+     "name": "bl_d[2047:0]",
+     "face": "S"
+    },
+    {
+     "name": "bl_v[15:0]",
+     "face": "S"
+    },
+    {
+     "name": "c_l0r",
+     "face": "S"
+    },
+    {
+     "name": "c_l0v",
+     "face": "S"
+    },
+    {
+     "name": "c_l0d[150:0]",
+     "face": "S"
+    },
+    {
+     "name": "ck",
+     "face": "W"
+    },
+    {
+     "name": "cks",
+     "face": "W"
+    },
+    {
+     "name": "rn_in",
+     "face": "W"
+    },
+    {
+     "name": "rns_in",
+     "face": "W"
+    },
+    {
+     "name": "f_vx[4:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_wex[4:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_mx[19:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_v5",
+     "face": "W"
+    },
+    {
+     "name": "f_we5",
+     "face": "W"
+    },
+    {
+     "name": "f_m5s[22:0]",
+     "face": "W"
+    },
+    {
+     "name": "fe_flt[15:0]",
+     "face": "W"
+    },
+    {
+     "name": "st_i[39:0]",
+     "face": "W"
+    },
+    {
+     "name": "st_o[39:0]",
+     "face": "E"
+    },
+    {
+     "name": "t_err",
+     "face": "E"
+    },
+    {
+     "name": "flt",
+     "face": "E"
+    },
+    {
+     "name": "fvec[31:0]",
+     "face": "E"
+    },
+    {
+     "name": "max_occ[2:0]",
+     "face": "E"
+    },
+    {
+     "name": "t_p2c",
+     "face": "E"
+    }
+   ],
+   "pin_layers": {
+    "N": "M3 M5",
+    "S": "M3 M5",
+    "W": "M4 M6",
+    "E": "M4 M6"
+   },
+   "owner": "el1011-ds-vm",
+   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl."
+  },
+  {
+   "name": "sp_vm/u_be.g_s[1].u_sl",
+   "cell": "dsfd_vm_be_sl",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 302.4,
+    "h": 92.88
+   },
+   "origin": {
+    "x": 432.0,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "W",
+    "layer": "M4"
+   },
+   "version": "9",
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "pins": [
+    {
+     "name": "o_v[9:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_d[1279:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_f[3:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_o[2:0]",
+     "face": "N"
+    },
+    {
+     "name": "srq_d[255:0]",
+     "face": "S"
+    },
+    {
+     "name": "srq_v[1:0]",
+     "face": "S"
+    },
+    {
+     "name": "vrv",
+     "face": "S"
+    },
+    {
+     "name": "vrq[127:0]",
+     "face": "S"
+    },
+    {
+     "name": "bl_d[2047:0]",
+     "face": "S"
+    },
+    {
+     "name": "bl_v[15:0]",
+     "face": "S"
+    },
+    {
+     "name": "c_l0r",
+     "face": "S"
+    },
+    {
+     "name": "c_l0v",
+     "face": "S"
+    },
+    {
+     "name": "c_l0d[150:0]",
+     "face": "S"
+    },
+    {
+     "name": "ck",
+     "face": "W"
+    },
+    {
+     "name": "cks",
+     "face": "W"
+    },
+    {
+     "name": "rn_in",
+     "face": "W"
+    },
+    {
+     "name": "rns_in",
+     "face": "W"
+    },
+    {
+     "name": "f_vx[4:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_wex[4:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_mx[19:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_v5",
+     "face": "W"
+    },
+    {
+     "name": "f_we5",
+     "face": "W"
+    },
+    {
+     "name": "f_m5s[22:0]",
+     "face": "W"
+    },
+    {
+     "name": "fe_flt[15:0]",
+     "face": "W"
+    },
+    {
+     "name": "st_i[39:0]",
+     "face": "W"
+    },
+    {
+     "name": "st_o[39:0]",
+     "face": "E"
+    },
+    {
+     "name": "t_err",
+     "face": "E"
+    },
+    {
+     "name": "flt",
+     "face": "E"
+    },
+    {
+     "name": "fvec[31:0]",
+     "face": "E"
+    },
+    {
+     "name": "max_occ[2:0]",
+     "face": "E"
+    },
+    {
+     "name": "t_p2c",
+     "face": "E"
+    }
+   ],
+   "pin_layers": {
+    "N": "M3 M5",
+    "S": "M3 M5",
+    "W": "M4 M6",
+    "E": "M4 M6"
+   },
+   "owner": "el1011-ds-vm",
+   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl."
+  },
+  {
+   "name": "sp_vm/u_be.g_s[2].u_sl",
+   "cell": "dsfd_vm_be_sl",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 302.4,
+    "h": 92.88
+   },
+   "origin": {
+    "x": 820.8,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "W",
+    "layer": "M4"
+   },
+   "version": "9",
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "pins": [
+    {
+     "name": "o_v[9:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_d[1279:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_f[3:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_o[2:0]",
+     "face": "N"
+    },
+    {
+     "name": "srq_d[255:0]",
+     "face": "S"
+    },
+    {
+     "name": "srq_v[1:0]",
+     "face": "S"
+    },
+    {
+     "name": "vrv",
+     "face": "S"
+    },
+    {
+     "name": "vrq[127:0]",
+     "face": "S"
+    },
+    {
+     "name": "bl_d[2047:0]",
+     "face": "S"
+    },
+    {
+     "name": "bl_v[15:0]",
+     "face": "S"
+    },
+    {
+     "name": "c_l0r",
+     "face": "S"
+    },
+    {
+     "name": "c_l0v",
+     "face": "S"
+    },
+    {
+     "name": "c_l0d[150:0]",
+     "face": "S"
+    },
+    {
+     "name": "ck",
+     "face": "W"
+    },
+    {
+     "name": "cks",
+     "face": "W"
+    },
+    {
+     "name": "rn_in",
+     "face": "W"
+    },
+    {
+     "name": "rns_in",
+     "face": "W"
+    },
+    {
+     "name": "f_vx[4:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_wex[4:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_mx[19:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_v5",
+     "face": "W"
+    },
+    {
+     "name": "f_we5",
+     "face": "W"
+    },
+    {
+     "name": "f_m5s[22:0]",
+     "face": "W"
+    },
+    {
+     "name": "fe_flt[15:0]",
+     "face": "W"
+    },
+    {
+     "name": "st_i[39:0]",
+     "face": "W"
+    },
+    {
+     "name": "st_o[39:0]",
+     "face": "E"
+    },
+    {
+     "name": "t_err",
+     "face": "E"
+    },
+    {
+     "name": "flt",
+     "face": "E"
+    },
+    {
+     "name": "fvec[31:0]",
+     "face": "E"
+    },
+    {
+     "name": "max_occ[2:0]",
+     "face": "E"
+    },
+    {
+     "name": "t_p2c",
+     "face": "E"
+    }
+   ],
+   "pin_layers": {
+    "N": "M3 M5",
+    "S": "M3 M5",
+    "W": "M4 M6",
+    "E": "M4 M6"
+   },
+   "owner": "el1011-ds-vm",
+   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl."
+  },
+  {
+   "name": "sp_vm/u_be.g_s[3].u_sl",
+   "cell": "dsfd_vm_be_sl",
+   "kind": "tile",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 302.4,
+    "h": 92.88
+   },
+   "origin": {
+    "x": 1209.6,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "W",
+    "layer": "M4"
+   },
+   "version": "9",
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "pins": [
+    {
+     "name": "o_v[9:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_d[1279:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_f[3:0]",
+     "face": "N"
+    },
+    {
+     "name": "o_o[2:0]",
+     "face": "N"
+    },
+    {
+     "name": "srq_d[255:0]",
+     "face": "S"
+    },
+    {
+     "name": "srq_v[1:0]",
+     "face": "S"
+    },
+    {
+     "name": "vrv",
+     "face": "S"
+    },
+    {
+     "name": "vrq[127:0]",
+     "face": "S"
+    },
+    {
+     "name": "bl_d[2047:0]",
+     "face": "S"
+    },
+    {
+     "name": "bl_v[15:0]",
+     "face": "S"
+    },
+    {
+     "name": "c_l0r",
+     "face": "S"
+    },
+    {
+     "name": "c_l0v",
+     "face": "S"
+    },
+    {
+     "name": "c_l0d[150:0]",
+     "face": "S"
+    },
+    {
+     "name": "ck",
+     "face": "W"
+    },
+    {
+     "name": "cks",
+     "face": "W"
+    },
+    {
+     "name": "rn_in",
+     "face": "W"
+    },
+    {
+     "name": "rns_in",
+     "face": "W"
+    },
+    {
+     "name": "f_vx[4:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_wex[4:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_mx[19:0]",
+     "face": "W"
+    },
+    {
+     "name": "f_v5",
+     "face": "W"
+    },
+    {
+     "name": "f_we5",
+     "face": "W"
+    },
+    {
+     "name": "f_m5s[22:0]",
+     "face": "W"
+    },
+    {
+     "name": "fe_flt[15:0]",
+     "face": "W"
+    },
+    {
+     "name": "st_i[39:0]",
+     "face": "W"
+    },
+    {
+     "name": "st_o[39:0]",
+     "face": "E"
+    },
+    {
+     "name": "t_err",
+     "face": "E"
+    },
+    {
+     "name": "flt",
+     "face": "E"
+    },
+    {
+     "name": "fvec[31:0]",
+     "face": "E"
+    },
+    {
+     "name": "max_occ[2:0]",
+     "face": "E"
+    },
+    {
+     "name": "t_p2c",
+     "face": "E"
+    }
+   ],
+   "pin_layers": {
+    "N": "M3 M5",
+    "S": "M3 M5",
+    "W": "M4 M6",
+    "E": "M4 M6"
+   },
+   "owner": "el1011-ds-vm",
+   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl."
   }
  ]
 }
