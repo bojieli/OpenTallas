@@ -921,6 +921,10 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--output", str(o / "insertion.json")])
     lef = o / f"{top}.lef"
+    if lef.exists():
+        # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
+        # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
+        subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])
     res = child_lint.lint(str(lef), str(o)) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "

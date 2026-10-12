@@ -5133,6 +5133,21 @@ def child_lint_view(lef_text, checks):
     return [x for x in res["fails"] if x[1:2] in checks], res.get("summary", "")
 
 
+def pin_stub_fix(lef_text):
+    """(text, note): tools/hier_contract/abstract_pin_stub.py applied to a view LEF text; note '' when nothing moved"""
+    with tempfile.TemporaryDirectory() as td:
+        a, b = Path(td) / "in.lef", Path(td) / "out.lef"
+        a.write_text(lef_text)
+        r = subprocess.run([sys.executable, str(CHILD_LINT_DIR / "abstract_pin_stub.py"), str(a), str(b)],
+                           capture_output=True, text=True, timeout=600)
+        m = re.search(r"pinstub: (\d+) OBS rects moved into (\d+) pins", r.stdout or "")
+        if r.returncode != 0 or not m or not b.exists():
+            return lef_text, ""
+        if m.group(1) == "0":
+            return lef_text, ""
+        return b.read_text(), f"{m.group(1)} OBS stubs of {m.group(2)} pins"
+
+
 def child_lint_gate(j):
     """None = pass / not a tile view; else the (c)/(f) failure text.  Raises on ssh failure (the commit is re-tried)."""
     checks = child_lint_gate_checks(j["spec"])
@@ -5150,7 +5165,17 @@ def child_lint_gate(j):
     t = ssh(j["host"], f"cat {shlex.quote(lef)}", timeout=300)
     if t.returncode != 0 or "MACRO" not in t.stdout:
         raise RuntimeError(f"child-lint gate: could not read {lef}: {(t.stderr or '')[-200:]}")
-    fails, summ = child_lint_view(t.stdout, checks)
+    text, moved = pin_stub_fix(t.stdout)
+    if moved:
+        # PIN-STUB (73e17f447, ot_qkvd_sbuf DRT-0073): write_abstract_lef writes a face pin's own same-layer route stub
+        # as OBS over the pin; child_lint (f) now refuses that.  Moving the stub into the pin's PORT is the exact view
+        # (in a DRC-clean route, metal touching a pin on its layer is the pin's net), so fix the record's view in place.
+        w = ssh(j["host"], f"cat > {shlex.quote(lef)}.pinstub && mv {shlex.quote(lef)}.pinstub {shlex.quote(lef)}",
+                timeout=300, input=text)
+        if w.returncode != 0:
+            raise RuntimeError(f"child-lint gate: could not write the pin-stub view {lef}: {(w.stderr or '')[-200:]}")
+        event(j, f"child-lint gate: abstract_pin_stub moved {moved} into their pins' PORTs in {lef}")
+    fails, summ = child_lint_view(text, checks)
     j["child_lint"] = dict(lef=lef, checks="".join(sorted(checks)), fails=fails, summary=summ[:400], at=now_iso())
     return "; ".join(fails) if fails else None
 
