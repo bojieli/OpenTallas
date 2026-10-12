@@ -653,7 +653,9 @@ def balance(a):
     P = json.loads(Path(a.plan).read_text())
     d = C.load_die(a.die_model)
     lib = Path(a.libs)
-    ins_tt, ins_ff = lib_insertions(lib / 'qfd_etm_tt.lib'), lib_insertions(lib / 'qfd_etm_ff.lib')
+    ins_tt, ins_ff = {}, {}
+    if (lib / 'qfd_etm_tt.lib').exists():                  # Qwen ROM die: one ETM lib per corner (qwen_die_etm_map)
+        ins_tt, ins_ff = lib_insertions(lib / 'qfd_etm_tt.lib'), lib_insertions(lib / 'qfd_etm_ff.lib')
     for f in sorted(lib.glob('qfd_etm_*_tt.lib')):          # per-master ETMs (bind_views.py)
         ins_tt.update(lib_insertions(f))
         g = f.with_name(f.name[:-len('_tt.lib')] + '_ff.lib')

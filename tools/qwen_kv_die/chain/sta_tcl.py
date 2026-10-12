@@ -31,13 +31,13 @@ if plan:
     si = P_['sink_insertion']
     # qwendie-1012: a bound hard view's clock pin (clock_plan.py balance 'view_pin_insertion'): OpenSTA takes a pin
     # latency on a macro as its internal-register latency and subtracts the ETM clock-tree path, so the physical pin
-    # arrival is written as arrival + insertion (-early min / -late max) and the view's pin lands where the die delivers
+    # arrival is written as arrival + insertion (-min min / -max max) and the view's pin lands where the die delivers
     vi = P_.get('view_pin_insertion', {})
     def lat_(k, v):
         a = v[1] if c == "ff" else (v[0] + v[1]) / 2
         if k in vi:
             mn, mx = vi[k][c]
-            return (f'set_clock_latency -early {a + mn:.1f} $p; set_clock_latency -late {a + mx:.1f} $p')
+            return (f'set_clock_latency -min {a + mn:.1f} $p; set_clock_latency -max {a + mx:.1f} $p')
         return f'set_clock_latency {a:.1f} $p'
     rows = [f'set p [get_pins -quiet {{{k}}}]; if {{[llength $p]}} {{ {lat_(k, v)}; incr ot_lat_n }} else {{ incr ot_lat_miss }}'
             for k, v in sorted(si.items())]
