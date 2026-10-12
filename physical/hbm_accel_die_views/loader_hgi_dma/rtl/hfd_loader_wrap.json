@@ -9,7 +9,7 @@
  ],
  "forwarded_clock_outputs": 0,
  "forwarded_clock_inputs": 0,
- "die_input_bits": 11815,
+ "die_input_bits": 11847,
  "die_input_bits_used": 11808,
  "die_output_bits": 12850,
  "die_output_bits_driven": 12813,
@@ -44,6 +44,14 @@
    "bits": 32,
    "cls": "not_adopted",
    "reason": "NOT ADOPTED (lead 10-10, HC sizing results/uarch/svc_dma_hc_sizing_20261010.json): the svc DMA stream v2 is not built; every DMA move runs on the mover over the kport native endpoint (bursts, KP_NO 16 / KP_RB 64, lq/lr to the svc PS native endpoint). DMA_FRONT 0; these front ports carry no traffic.",
+   "gap": null
+  },
+  {
+   "where": "die:f_hgi_vmw[0:32]",
+   "kind": "spare_die_input_dropped",
+   "bits": 32,
+   "cls": "open",
+   "reason": "OPEN (hbmdie-1011/vmwdone 10-11): the VM per-lane AP stop (ot_hgi_vm_unit wq_rdy, low only while a lane's aperture queue is near full). ot_hgi_dma_mover has no aperture route yet and writes ap = 0 (see the die:t_hgi_vmw ap-bit ties), so the stop never falls for its traffic; the mover must honour it when the AP route lands. Owner: hgi-1010/b (AP in the mover).",
    "gap": null
   },
   {
@@ -388,7 +396,7 @@
   "debug": 0,
   "test": 0,
   "by_design": 0,
-  "open": 42,
+  "open": 74,
   "not_adopted": 8880
  }
 }

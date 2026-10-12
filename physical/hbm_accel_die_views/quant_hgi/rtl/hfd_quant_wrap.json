@@ -6,23 +6,23 @@
  "folded_outputs": [],
  "forwarded_clock_outputs": 0,
  "forwarded_clock_inputs": 0,
- "die_input_bits": 10621,
+ "die_input_bits": 10622,
  "die_input_bits_used": 10617,
- "die_output_bits": 10678,
+ "die_output_bits": 10680,
  "die_output_bits_driven": 10529,
  "ties": [
   {
-   "where": "die:f_fused_ne[0:2]",
+   "where": "die:f_fused_ne[0:3]",
    "kind": "spare_die_input_dropped",
-   "bits": 2,
+   "bits": 3,
    "cls": "open",
    "reason": "FUSED HCE dispatch to hfd_hc_eng (die nets added 98020a3e2 lineage: fused_ne 151 / 3 b; hgi-1010/b ot_hgi_hc_eng, not gated): the station issues no HCE records yet (outputs const 0, the 3-b return unused) until the hc_eng unit is gated and bound",
    "gap": null
   },
   {
-   "where": "die:t_fused_ne[0:149]",
+   "where": "die:t_fused_ne[0:151]",
    "kind": "spare_die_output_const0",
-   "bits": 149,
+   "bits": 151,
    "cls": "open",
    "reason": "FUSED HCE dispatch to hfd_hc_eng (die nets added 98020a3e2 lineage: fused_ne 151 / 3 b; hgi-1010/b ot_hgi_hc_eng, not gated): the station issues no HCE records yet (outputs const 0, the 3-b return unused) until the hc_eng unit is gated and bound",
    "gap": null
@@ -33,7 +33,7 @@
   "debug": 0,
   "test": 0,
   "by_design": 0,
-  "open": 151,
+  "open": 154,
   "not_adopted": 0
  }
 }
