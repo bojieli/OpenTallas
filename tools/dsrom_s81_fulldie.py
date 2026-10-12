@@ -2443,6 +2443,7 @@ COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin fa
 # 36ccf0cb0: 3 x 572.4 columns, 29 tiles); HC root split (5db4c7ec6 / 597e34cac, ds-1010.log 14:14): 3 x 575.992 columns
 SU_V2_UM = (1727.976, 6069.6)
 HC_V2_UM = (1727.976, 9640.0)
+CONTRACT_SLABS = {}             # --contract FILE (s81-die-iter): centre slab outlines {name: (w, h)} from the hier contract
 SUHC_V2_HC_N = False            # --suhc-v2-hc-north: the v2 HC in the slot above the corridor (default: hc_s floor slot)
 SUHC_V2 = False                 # --suhc-v2 (s81die-1011/ctrl, die lead decision 3): su_hc contract v2 = ONE SU master
                                 #   (dsfd_sp_su_c, su_s W-floor slot) + ONE HC master (dsfd_sp_hc_c, hc_s E-column slot);
@@ -3261,6 +3262,14 @@ def build_r8(variant=None):
         assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
         slab_w['vm'] = up(VM_SLAB[0], GX)
         centre_area['vm'] = slab_w['vm'] * up(VM_SLAB[1], GY) / 1e6
+    if CONTRACT_SLABS:
+        # --contract FILE (s81-die-iter 2026-10-12): centre hard elements keep their contract outline (w x h) inside a
+        # hub column widened for the v3 SU / HC slabs (column channels); each is centred in the column
+        for n_, (w_, h_) in CONTRACT_SLABS.items():
+            if n_ in centre_area and n_ not in ('su_s', 'hc_s'):
+                assert w_ <= cw + 1e-6, ('contract slab wider than the hub column', n_, w_, cw)
+                slab_w[n_] = up(w_, GX)
+                centre_area[n_] = slab_w[n_] * up(h_, GY) / 1e6
     # --ecol-slabs (ds-1010/s81die 2026-10-10): W-column centre slabs moved to a sub-column of the E (HC) column, beside
     # the HC slabs, next to the crossing corridor (the W column overflowed: split3cr collective + WFC kit + host)
     if RTL_HUB_WIDTHS:
@@ -3286,7 +3295,7 @@ def build_r8(variant=None):
             # --wfc-crp (main 10-11): the slab master is dsfd_wfc_cr2 = the routed credit-boundary tile dsfd_wfc_crp at the
             # slab's die edge (every die link / VM signal lands in its pin flops / SRAM landing) + the kit behind it
             ms_ = 'dsfd_wfc_cr2' if WFC_CRP else ('dsfd_wfc_src' if WFC_ROLE == 'source' else 'dsfd_wfc_stg')
-            slab('wfc', centre_area[n], x0_, yy, w0_, master=ms_)
+            slab('wfc', centre_area[n], up(x0_ + (w0_ - slab_w.get(n, w0_)) / 2, GX), yy, slab_w.get(n, w0_), master=ms_)
             notes.append('MTP-WFC --wfc-kit (%s): %s = %s in a %.2f um slab (%.3f mm2)' % (
                 WFC_ROLE, ms_, 'SOURCE tokpipe + tok_hard + lnk + vmx' if WFC_ROLE == 'source' else 'STG tokpipe + lnk + vmx',
                 WFC_SLAB_H, centre_area[n]))
@@ -3338,16 +3347,20 @@ def build_r8(variant=None):
     ch_ = sum(up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
     su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
+    # --contract (s81-die-iter, contract v4): a v2 SU wider than the hub column grows WEST (E edge on the column's E edge,
+    # clear of the xE trunk / sseq stations by the VCH); the free strip W of the column holds it (10.5 um to the xW stations)
+    su_w_ = up(SU_V2_UM[0], GX) if (SUHC_V2 and SU_V2_UM[0] > cw + 1e-6) else cw
+    su_x_ = x_sp - (su_w_ - cw)
     if SU_E:
         # --su-e MM2 (ds-1010/s81die 2026-10-11): su_n (MM2) moves to the E column above hc_n; su_s (the rest) sits at the
         # W column floor with the centre stack right above it (the 2.42 mm VM of s81-vm-1011 overflowed the W column)
         su_lo = su_area - SU_E
         if SUHC_V2:     # the one v2 SU: its hierarchical outline (the su_s W-floor slot)
             su_lo = SU_V2_UM[0] * SU_V2_UM[1] / 1e6
-        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / cw, GY) + SPINE_GAP, GY)
+        yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / su_w_, GY) + SPINE_GAP, GY)
     # --rtl-hub-widths (order A): the SU's VM row slots (~17.1 kb) are face-to-face with the VM right above it
     su_gap = RTL_ABUT_GAP if (RTL_HUB_WIDTHS and SUHC_V2 and centre and centre[0] == 'vm') else SPINE_GAP
-    slab('su_s', su_lo, x_sp, dn(yc - su_gap - up(su_lo * 1e6 / cw, GY), GY), cw, dom=SUHC_DOM)
+    slab('su_s', su_lo, su_x_, dn(yc - su_gap - up(su_lo * 1e6 / su_w_, GY), GY), su_w_, dom=SUHC_DOM)
     yy = yc
     for i_, n in enumerate(centre):
         put(n, x_sp, yy, cw)
@@ -3373,11 +3386,11 @@ def build_r8(variant=None):
         # --suhc-v2 n (s81die-1011/ctrl): the one HC in the freed slot ABOVE the corridor, facing the VM rows (order A puts
         # the VM at the corridor): VM row slots run straight across the VCH, the collective's 8,192-b y is ~2.5 mm
         # shorter than to the floor slot (hb_collective_t_hc_y_hc_s: no station spot over a 7,451 um path)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, hcw, dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, up(HC_V2_UM[0], GX), dom=SUHC_DOM)
     elif SUHC_V2:   # the floor slot holds c0 - floor um: the 9,640 um HC outline fits only if the corridor sits above it
         assert c0 - (band + SPINE_GAP) >= HC_V2_UM[1], ('v2 HC outline taller than the hc_s floor slot: use '
                                                         '--suhc-v2-hc-north', round(c0 - band - SPINE_GAP, 1), HC_V2_UM)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), hcw, dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, dn(c0 - HC_V2_UM[1], GY), up(HC_V2_UM[0], GX), dom=SUHC_DOM)
     else:
         slab('hc_s', HUB_MM2['hc'] * fs, hcx, dn(c0 - hs_, GY), hcw, dom=SUHC_DOM)
     if not SUHC_V2:     # --suhc-v2: one HC (hc_s slot); the hc_n slot is free
@@ -4019,7 +4032,11 @@ def buses_r8(m):
             # dsfd_svc_join c_st -> sequencer s4) and gating its PC issue on live (composition.json nets.status)
             bus(f'st_{st}', 'hbm_req', 2, [(c_, 'st'), (cl_, 'hs')])
         else:
-            bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
+            # s81-die-iter 2026-10-12 (c1e plan: dsfd_ctrl.rd 8,896 on ctrl_SW vs 8,864 on ctrl_SE): one master, one
+            # port width -- under --ctrl-adapters dsfd_ctrl rd is its RTL [8895:0] (32 response valids included) on every
+            # stack, so the layer1e Engram client (eng_SE) takes the full word too (dsfd_engram_c has no HBM response
+            # port yet: recorded by the ctrl port audit for the svceng stream, OT_S81_CTRL_GATE_WARN=phys)
+            bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS + (32 if CTRL_ADAPTERS else 0), [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
         if CTRL_RQ:   # s81-gen: the controller's request side (real dsfd_ctrl rq / rk / wd), abutting faces
             bus(f'rq_{st}', 'hbm_req', HBM_RQ_BITS, [(cl_, 'rq'), (m['ctrls'][st].name, 'rq')])
             bus(f'rk_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'rk'), (cl_, 'rk')])
@@ -4275,6 +4292,7 @@ CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', co
                       # s81die-1011/ctrl: HC (engine 2) endpoint in hc_s = dsfd_sp_hc_c (dsfd_sp_hc, hc_gate PASS); the
                       # su_hc contract v2 makes HC one logical slab (hc_n folds into it when the suhc floorplan lands)
                       hc_s='dsfd_sp_hc_c', su_s='dsfd_sp_su_c', eng='dsfd_engram_c')
+PEER_SPAN_CENTRE = False        # --peer-span-centre (s81-die-iter 2026-10-12): wide face-to-face groups centred on the span shared with the peer
 RTL_HUB_WIDTHS = False          # --rtl-hub-widths (s81die-1011/ctrl, die lead decision 2026-10-11)
 # the gated hub masters' real interfaces (DIE_FLD_GATE: 12 root lanes gather -> capture, the tiled capture's VM writes;
 # the collective contract results/rtl/s81_ph_20261006/collective/contract.json: f_vm 592 / ts 3 in, t_vm 2,100 out)
@@ -5874,8 +5892,13 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
         elif band(at):
             x, y = face_pt(at, nxt_off_c(at))
             yy = y + h / 2 + 6.0 if at.orient == 'R0' else y - h / 2 - 6.0
-            pl = P.near(x, yy, w, h, [cor['stripS'] if at.orient == 'R0' else cor['stripN']], horiz=True, span=1200.0,
-                        rows=12)
+            strip_ = cor['stripS'] if at.orient == 'R0' else cor['stripN']
+            # s81-die-iter 10-12 (c1e plan: AssertionError d10_eng_SE): a band slab in the free SE service slot (layer1e
+            # eng_SE / hrow_SE) sits below stripS, so its start blocks stand in the slot box around it (engS / hrowS, as
+            # the fwd-iface sink ends do) before climbing into the strip
+            slot_ = cor.get('engS') if at is hub.get('eng') else cor.get('hrowS') if at is hub.get('hrow') else None
+            pl = P.near(x, yy, w, h, ([slot_] if slot_ else []) + [strip_], horiz=True, span=1200.0,
+                        rows=20 if slot_ else 12)
             assert pl, tag
             st_ = P.add(Inst(f'hs_{tag}', nm, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
         else:
@@ -6504,7 +6527,28 @@ def _faces_r8(m, Mx, it, ports):
             resv = []
             if wide:
                 tw_ = sum(bwf(ports[p_][1]) + 2.0 for p_ in wide) - 2.0
-                c_ = min(max(L / 2 - tw_ / 2, 0.4), L - 0.4 - tw_)
+                ctr_ = L / 2
+                if PEER_SPAN_CENTRE:
+                    # s81-die-iter 2026-10-12 (--contract: SU 1,890 grows W of the 1,728 column, VM 1,520): centring
+                    # on each OWN face put the abutting pair's wide groups 81 um apart (rs_d 102.8 um > PIN_SEG -> a
+                    # 103.7 um pin relay with no room in the 21.6 um abut gap).  Centre the group on the centre of the
+                    # die span the face shares with its wide-port peers: the same point at both ends of the pair.
+                    by_ = m['_by']
+                    pe_ = {i_ for p_ in wide for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p_), [])
+                           for i_, _q in eps_ if i_ != it.name and i_ in by_}
+                    if pe_:
+                        if f in 'NS':
+                            lo_ = max(it.x, min(by_[i_].x for i_ in pe_))
+                            hi_ = min(it.x + it.w, max(by_[i_].x + by_[i_].w for i_ in pe_))
+                            org_, flip_ = it.x, it.orient in ('MY', 'R180')
+                        else:
+                            lo_ = max(it.y, min(by_[i_].y for i_ in pe_))
+                            hi_ = min(it.y + it.h, max(by_[i_].y + by_[i_].h for i_ in pe_))
+                            org_, flip_ = it.y, it.orient in ('MX', 'R180')
+                        if hi_ - lo_ >= tw_ + 0.8:
+                            ctr_ = (lo_ + hi_) / 2 - org_
+                            ctr_ = L - ctr_ if flip_ else ctr_
+                c_ = min(max(ctr_ - tw_ / 2, 0.4), L - 0.4 - tw_)
                 if '_bus_of' not in m:
                     bo_ = {}
                     for bid_, _c, _b, eps_ in m['buses']:
@@ -7043,10 +7087,13 @@ def die_options(ap):
                     '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
+    ap.add_argument('--contract', help='s81-die-iter 2026-10-12: hier contract JSON (repo path): SU / HC / VM / centre slab outlines')
     ap.add_argument('--suhc-v2', action='store_true', help='s81die-1011: su_hc contract v2 (one SU in su_s, one HC in hc_s, VM '
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
+    ap.add_argument('--peer-span-centre', action='store_true', help='s81-die-iter: with --rtl-hub-widths, centre each '
+                    'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--rtl-hub-widths', action='store_true', help='s81die-1011 (die lead decision): W hub column gather -> '
                     'capture -> VM (capture directly above gather) and the hub buses at the RTL widths: gather t_capture 6,947 '
                     '(12 root lanes), capture t_vm 13,376, collective t_vm 2,100, VM -> collective f_vm 592 + ts 3')
@@ -7070,6 +7117,8 @@ def apply_options(a):
     global CTRL_ADAPTERS, RTL_HUB_WIDTHS
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
     RTL_HUB_WIDTHS = bool(getattr(a, 'rtl_hub_widths', False))
+    global PEER_SPAN_CENTRE
+    PEER_SPAN_CENTRE = bool(getattr(a, 'peer_span_centre', False))
     global SUHC_V2, SUHC_V2_HC_N
     SUHC_V2 = bool(getattr(a, 'suhc_v2', False))
     SUHC_V2_HC_N = bool(getattr(a, 'suhc_v2_hc_north', False))
@@ -7204,6 +7253,24 @@ def apply_options(a):
     COL_PITCH8 = COL_W8 + 8.64
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
     COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
+    global SU_V2_UM, HC_V2_UM, HROW_UM
+    if getattr(a, 'contract', None):
+        # --contract (s81-die-iter 2026-10-12): slab outlines from results/arch/hier_contract_1011/s81.json (v3+): SU / HC v2
+        # slabs (column channels), centre hard elements, VM slab (overrides --vm-slab), MTP hrow
+        cslots_ = {s_['name']: s_ for s_ in json.loads((ROOT / a.contract).read_text())['slots']}
+        def _o(n_):
+            return (float(cslots_[n_]['outline']['w']), float(cslots_[n_]['outline']['h']))
+        SU_V2_UM, HC_V2_UM = _o('sp_su_s'), _o('sp_hc_s')
+        CONTRACT_SLABS.clear()
+        for n_, k_ in (('capture', 'sp_capture'), ('gather', 'sp_gather'), ('collective', 'sp_collective'), ('wfc_hard', 'sp_wfc')):
+            if k_ in cslots_ and _o(k_)[0] > 0:
+                CONTRACT_SLABS[n_] = _o(k_)
+        if 'sp_vm' in cslots_:
+            a.vm_slab = '%.3f,%.3f' % _o('sp_vm')
+        for k_ in ('rep/hrow', 'hrow'):      # v6: the replicated-slot key (the bare key never matched)
+            if k_ in cslots_ and _o(k_)[0] > 0:
+                HROW_UM = _o(k_)
+                break
     SUHC_1011 = bool(getattr(a, 'suhc_1011', False))
     SUHC_DOM, SUHC_HC_VM = ('stream_1p2', 2048) if SUHC_1011 else ('serial_0p9', 1024)
     global SU_E, HROW_TX
@@ -7324,7 +7391,10 @@ def main(argv=None):
                 Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
             if cg['verdict'] != 'PASS':
                 msg_ = 'DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40])
-                if os.environ.get('OT_S81_CTRL_GATE_WARN') == '1' and a.mode == 'plan':
+                wv_ = os.environ.get('OT_S81_CTRL_GATE_WARN')
+                if (wv_ == '1' and a.mode == 'plan') or (wv_ == 'phys' and a.mode in ('plan', 'real', 'irm', 'check')):
+                    # s81-die-iter 2026-10-12 ('phys'): the die PHYSICAL chain (assembly / GRT / STA / IR) also proceeds;
+                    # the RTL port-audit findings stay a FAIL record (<out>.ctrl_gate.json / the die README), not waived
                     # s81die-1011: geometry-only die-fit (plan) proceeds; the port-audit findings stay a FAIL record
                     print('WARNING ' + msg_, file=sys.stderr)
                 else:

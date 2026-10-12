@@ -1,0 +1,283 @@
+{
+ "schema": "opentallas.qwen-tp8-1012.v1",
+ "date": "2026-10-12",
+ "model": {
+  "hidden": 4096,
+  "layers": 36,
+  "q_heads": 32,
+  "kv_heads": 8,
+  "head_dim": 128,
+  "ffn": 12288,
+  "vocab": 151936,
+  "int8_weight_bytes_rom": 7568097280
+ },
+ "rom": {
+  "TP4_G6144": {
+   "weight_bytes_per_die": 1892024320,
+   "weight_bits_per_die": 15136194560,
+   "code_words_per_die": 20016,
+   "code_word_bits": 786432,
+   "code_bits_per_die": 15741222912,
+   "tiles": 1536,
+   "code_banks_per_column": 5,
+   "macros_per_tile": 10,
+   "macro_bits_per_tile": 10895360,
+   "bank_fill": 0.9773,
+   "scale_rows_per_die": 609376,
+   "lm_head": {
+    "rows": 37984,
+    "split": 2048,
+    "rounds": 99,
+    "words": 1584
+   }
+  },
+  "TP8_G6144": {
+   "weight_bytes_per_die": 946012160,
+   "weight_bits_per_die": 7568097280,
+   "code_words_per_die": 10016,
+   "code_word_bits": 786432,
+   "code_bits_per_die": 7876902912,
+   "tiles": 1536,
+   "code_banks_per_column": 3,
+   "macros_per_tile": 6,
+   "macro_bits_per_tile": 6537216,
+   "bank_fill": 0.8151,
+   "scale_rows_per_die": 452144,
+   "lm_head": {
+    "rows": 18992,
+    "split": 1024,
+    "rounds": 25,
+    "words": 800
+   }
+  },
+  "TP8_G3072": {
+   "weight_bytes_per_die": 946012160,
+   "weight_bits_per_die": 7568097280,
+   "code_words_per_die": 20032,
+   "code_word_bits": 393216,
+   "code_bits_per_die": 7876902912,
+   "tiles": 768,
+   "code_banks_per_column": 5,
+   "macros_per_tile": 10,
+   "macro_bits_per_tile": 10895360,
+   "bank_fill": 0.9781,
+   "scale_rows_per_die": 452144,
+   "lm_head": {
+    "rows": 18992,
+    "split": 512,
+    "rounds": 25,
+    "words": 1600
+   }
+  }
+ },
+ "area": {
+  "tp4_slot_mm2": 592.4,
+  "tp4_slot_share": 0.721,
+  "A_slot_mm2": 320.8,
+  "A_die": {
+   "w": 25.0,
+   "h": 23.0,
+   "mm2": 575.0
+  },
+  "A_slot_share": 0.558,
+  "A_kv_die_mm2_unchanged": 205.8,
+  "B_slot_mm2": 436.5,
+  "B_kv_part_mm2": 116.7,
+  "B_die": {
+   "w": 25.0,
+   "h": 31.0,
+   "mm2": 775.0
+  },
+  "B_slot_share": 0.563,
+  "reticle_mm2": 858.0,
+  "tile_mm2_each": 0.3448,
+  "trackA_by_cell": {
+   "qfd_tile_nk": 264.81,
+   "qfd_io_serdes": 12.0,
+   "qfd_io_ucie": 10.0,
+   "qfd_io_collective": 5.4,
+   "qfd_sp_vector_memory": 4.84,
+   "qfd_sp_band_lanes": 2.64,
+   "qfd_cst_n": 2.1,
+   "qfd_cst_s": 2.1,
+   "qfd_sp_su64_sfu": 1.6,
+   "qfd_tt_ctlm": 1.41,
+   "qfd_sp_res_ser": 1.21,
+   "qfd_crom_g": 0.81,
+   "qfd_port_tiles_0": 0.72,
+   "qfd_port_tiles_0_f1": 0.72,
+   "qfd_port_tiles_1": 0.72,
+   "qfd_port_tiles_1_f1": 0.72,
+   "qfd_port_tiles_2": 0.72,
+   "qfd_port_tiles_2_f1": 0.72,
+   "qfd_port_tiles_3": 0.72,
+   "qfd_port_tiles_3_f1": 0.72,
+   "qfd_port_tiles_4": 0.72,
+   "qfd_port_tiles_4_f1": 0.72,
+   "qfd_port_tiles_5": 0.72,
+   "qfd_port_tiles_5_f1": 0.72,
+   "qfd_io_xfifo": 0.63,
+   "ot_qkvd_ucie_x64_phy": 0.6,
+   "qfd_d2d_rom": 0.4,
+   "qfd_tt_up4_g": 0.4,
+   "qfd_su_cbuf_g": 0.34,
+   "qfd_seq_su": 0.27,
+   "qfd_chead_e": 0.17,
+   "qfd_chead_w": 0.17,
+   "qfd_clkrx": 0.17,
+   "qfd_tt_up4": 0.13,
+   "qfd_ckbump": 0.0,
+   "qfd_rstsync": 0.0
+  }
+ },
+ "kv_tp4_MB_per_user_per_die": 151.0,
+ "kv": {
+  "A_kv_die_4stack": {
+   "stacks": 4,
+   "capacity_GB": 96.0,
+   "kv_MB_per_user_per_die_P8191": 75.5,
+   "capacity_users": 1271,
+   "bw_TBs": 4.0,
+   "users_before_kv_bw_bound": 9.2
+  },
+  "B4": {
+   "stacks": 4,
+   "capacity_GB": 96.0,
+   "kv_MB_per_user_per_die_P8191": 75.5,
+   "capacity_users": 1271,
+   "bw_TBs": 4.0,
+   "users_before_kv_bw_bound": 8.8
+  },
+  "B2": {
+   "stacks": 2,
+   "capacity_GB": 48.0,
+   "kv_MB_per_user_per_die_P8191": 75.5,
+   "capacity_users": 635,
+   "bw_TBs": 2.0,
+   "users_before_kv_bw_bound": 4.8
+  }
+ },
+ "throughput": {
+  "TP4_basis": {
+   "cycles": 249431.0,
+   "tok_s": 4810.9,
+   "layer_L1": 6835.0
+  },
+  "A_central": {
+   "cycles": 214074,
+   "tok_s": 5605.5,
+   "vs_tp4": 0.1652,
+   "layer_delta": {
+    "qkv": -33.2,
+    "o_proj": -33.2,
+    "gate_up": -33.2,
+    "down": -33.2,
+    "qknorm_rope": -50.5,
+    "attn_kv": -512.0,
+    "allreduce1": 0,
+    "allreduce2": 0,
+    "residual": -287.3
+   },
+   "knobs": {
+    "relay_scale": 0.65,
+    "heads_scale": 0.5,
+    "attn_kv": 1304.0,
+    "ar_delta": 0,
+    "embed": 272
+   }
+  },
+  "A_conservative": {
+   "cycles": 256657,
+   "tok_s": 4675.5,
+   "vs_tp4": -0.0282,
+   "layer_delta": {
+    "qkv": -0.0,
+    "o_proj": -0.0,
+    "gate_up": -0.0,
+    "down": -0.0,
+    "qknorm_rope": -0.0,
+    "attn_kv": 0.0,
+    "allreduce1": 100,
+    "allreduce2": 100,
+    "residual": -0.0
+   },
+   "knobs": {
+    "relay_scale": 1.0,
+    "heads_scale": 1.0,
+    "attn_kv": 1816.0,
+    "ar_delta": 100,
+    "embed": 272
+   }
+  },
+  "B4_central": {
+   "cycles": 205496,
+   "tok_s": 5839.5,
+   "vs_tp4": 0.2138,
+   "layer_delta": {
+    "qkv": -23.8,
+    "o_proj": -23.8,
+    "gate_up": -23.8,
+    "down": -23.8,
+    "qknorm_rope": -50.5,
+    "attn_kv": -867.0,
+    "allreduce1": 0,
+    "allreduce2": 0,
+    "residual": -205.2
+   },
+   "knobs": {
+    "relay_scale": 0.75,
+    "heads_scale": 0.5,
+    "attn_kv": 949.0,
+    "ar_delta": 0,
+    "embed": 150
+   }
+  },
+  "B4_conservative": {
+   "cycles": 243877,
+   "tok_s": 4920.5,
+   "vs_tp4": 0.0228,
+   "layer_delta": {
+    "qkv": -0.0,
+    "o_proj": -0.0,
+    "gate_up": -0.0,
+    "down": -0.0,
+    "qknorm_rope": -0.0,
+    "attn_kv": -355.0,
+    "allreduce1": 100,
+    "allreduce2": 100,
+    "residual": -0.0
+   },
+   "knobs": {
+    "relay_scale": 1.0,
+    "heads_scale": 1.0,
+    "attn_kv": 1461.0,
+    "ar_delta": 100,
+    "embed": 272
+   }
+  },
+  "B2_central": {
+   "cycles": 223928,
+   "tok_s": 5358.9,
+   "vs_tp4": 0.1139,
+   "layer_delta": {
+    "qkv": -23.8,
+    "o_proj": -23.8,
+    "gate_up": -23.8,
+    "down": -23.8,
+    "qknorm_rope": -50.5,
+    "attn_kv": -355.0,
+    "allreduce1": 0,
+    "allreduce2": 0,
+    "residual": -205.2
+   },
+   "knobs": {
+    "relay_scale": 0.75,
+    "heads_scale": 0.5,
+    "attn_kv": 1461.0,
+    "ar_delta": 0,
+    "embed": 150
+   }
+  }
+ },
+ "grade": "modelled: TP4 token-path windows (measured/apportioned/priced as graded there) with the TP8 deltas listed; no TP8 RTL run"
+}

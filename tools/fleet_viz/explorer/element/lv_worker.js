@@ -15,11 +15,30 @@ let H = null, NL = 0;
 const planes = new Map();   // raster key -> {layers, planes}
 let style = null;
 
-function buildTile(T, phys){
+// via arrays (power-grid vias with many cuts per layer): drawn as one merged box per (via, cut layer) until the cuts
+// are at least a couple of pixels wide (arrDetail), then cut by cut.  Enclosures are always drawn exactly.
+let arrInfo = null;   // via type -> {layer: [cut box indices]} for layers with > 4 boxes
+function viaArrays(){
+  if (arrInfo) return arrInfo;
+  arrInfo = H.vias.map(v => { const by = {}; v.boxes.forEach((b, j) => (by[b[0]] = by[b[0]] || []).push(j)); const o = {};
+    for (const li in by) if (by[li].length > 4){ const bs = by[li].map(j => v.boxes[j]);
+      o[li] = [Math.min(...bs.map(b => b[1])), Math.min(...bs.map(b => b[2])), Math.max(...bs.map(b => b[3])), Math.max(...bs.map(b => b[4]))]; }
+    return Object.keys(o).length ? o : null; });
+  return arrInfo;
+}
+function buildTile(T, phys, arrDetail){
   // gather per layer (dense lists) so the output is in draw order
   const per = Array.from({length: NL + 2}, () => []);
-  // wire pieces and via boxes (aux = shape id / -1); cell shapes are built below so they carry their instance and pin
-  D.forEachShape({rects: T.rects, vias: T.vias, cells: null}, H, (li, x0, y0, x1, y1, net, kind, clip, id) => { per[li].push(x0, y0, x1, y1, net, kind, clip, id, -1, -1); });
+  let hasArr = false;
+  // wire pieces (aux = shape id); cell shapes are built below so they carry their instance and pin
+  D.forEachShape({rects: T.rects, vias: null, cells: null}, H, (li, x0, y0, x1, y1, net, kind, clip, id) => { per[li].push(x0, y0, x1, y1, net, kind, clip, id, -1, -1); });
+  if (T.vias){ const v = T.vias, VT = H.vias, AI = viaArrays();
+    for (let i = 0; i < v.n; i++){ const t = v.type[i], bx = VT[t].boxes, arr = AI[t], k = v.kind[i] ? 10 : 9, X = v.x[i], Y = v.y[i];
+      if (arr) hasArr = true;
+      for (let j = 0; j < bx.length; j++){ const q = bx[j];
+        if (arr && arr[q[0]]){ if (!arrDetail) continue; per[q[0]].push(X + q[1], Y + q[2], X + q[3], Y + q[4], v.net[i], 16, 0, t, -1, -1); continue; }
+        per[q[0]].push(X + q[1], Y + q[2], X + q[3], Y + q[4], v.net[i], k, 0, t, -1, -1); }
+      if (arr && !arrDetail) for (const li in arr){ const a = arr[li]; per[+li].push(X + a[0], Y + a[1], X + a[2], Y + a[3], v.net[i], 15, 0, t, -1, -1); } } }
   if (T.cells){ const c = T.cells, M = H.masters;
     for (let i = 0; i < c.n; i++){
       const isPhys = (c.flags[i] & 4) !== 0; if (isPhys && !phys) continue;
@@ -44,7 +63,7 @@ function buildTile(T, phys){
       px0[k] = a[i]; py0[k] = a[i + 1]; px1[k] = a[i + 2]; py1[k] = a[i + 3]; lay[k] = li; kind[k] = a[i + 5]; net[k] = a[i + 4];
       aux[k] = a[i + 8] >= 0 ? a[i + 8] : a[i + 7]; pin[k] = a[i + 9];
     } }
-  return {n, rects, meta, pick: {x0: px0, y0: py0, x1: px1, y1: py1, layer: lay, kind, net, aux, pin}, ox, oy,
+  return {n, rects, meta, pick: {x0: px0, y0: py0, x1: px1, y1: py1, layer: lay, kind, net, aux, pin}, ox, oy, hasArr, arrDetail,
     vias: T.vias ? T.vias.n : 0, cells: T.cells ? T.cells.n : 0};
 }
 
@@ -90,7 +109,7 @@ self.onmessage = async (ev) => {
       const T = {ox: parts[0].ox, oy: parts[0].oy, size: parts[0].size, rects: {}, vias: null, cells: null};
       let bytes = 0;
       for (const P of parts){ Object.assign(T.rects, P.rects); if (P.vias) T.vias = P.vias; if (P.cells) T.cells = P.cells; bytes += P.bytes; }
-      const r = buildTile(T, m.phys);
+      const r = buildTile(T, m.phys, m.arrDetail);
       r.op = 'tile'; r.key = m.key; r.secs = m.parts.map(p => p.name); r.bytes = bytes; r.ms = [t1 - t0, performance.now() - t1];
       const p = r.pick;
       self.postMessage(r, [r.rects.buffer, r.meta.buffer, p.x0.buffer, p.y0.buffer, p.x1.buffer, p.y1.buffer, p.layer.buffer, p.kind.buffer, p.net.buffer, p.aux.buffer, p.pin.buffer]);

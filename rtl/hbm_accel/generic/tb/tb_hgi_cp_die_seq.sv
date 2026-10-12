@@ -7,7 +7,8 @@
 module tb_hgi_cp_die_seq;
     parameter integer MUT = 0;
     parameter integer BURST = 0;       // (MUT 9: the loader burst mutant)
-    parameter integer RUNPRE = 0;      // fe-push-hgi-1010: loader head-run from push-time contiguity bits
+    parameter integer RUNPRE = 0;
+    parameter integer NOS = 160;       // tputx-cpf: ring sectors in flight (the CP's NOS; was 48)      // fe-push-hgi-1010: loader head-run from push-time contiguity bits
     // hgi-1010: loader BURST 1 + CP 16 credits; the lane honours m_req_len, NO in flight
 `include "hgi_seq_sizes.svh"
 `include "hgi_seq_sizes_conf.svh"
@@ -35,7 +36,7 @@ module tb_hgi_cp_die_seq;
     wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
     reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;
     wire [15:0] ux_v; reg [15:0] ux_rdy = 0, ux_done = 0, ux_fault = 0; reg [2:0] coll_ret = 3'b001, quant_ret = 3'b001;
-    ot_hgi_cp_die #(.USE_MACRO(0), .MUT(MUT), .FQCR(BURST ? 16 : 4)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
+    ot_hgi_cp_die #(.USE_MACRO(0), .NOS(NOS), .MUT(MUT), .FQCR(BURST ? 16 : 4)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret), .idx_rec(idx_rec), .idx_ret(idx_ret),
         .am_rec(am_rec), .am_ret(am_ret),
         .sm_rec(sm_rec), .sm_ret(sm_ret), .su_rec(su_rec), .su_ret(su_ret), .sfu_rec(sfu_rec), .sfu_ret(sfu_ret),
@@ -127,7 +128,7 @@ module tb_hgi_cp_die_seq;
             mq_h = mq_h + 1; mq_n = mq_n - 1;
         end
         if (m_req_v && m_req_rdy) begin
-            if (mq_n >= 48) $fatal(1, "more than 48 ring sectors in flight");
+            if (mq_n >= NOS) $fatal(1, "more than %0d ring sectors in flight", NOS);
             if (m_req_len < 1 || m_req_len > 8 || (!BURST && m_req_len != 1)) $fatal(1, "bad burst length %0d", m_req_len);
             for (bq = 0; bq < m_req_len; bq = bq + 1) begin   // a burst: every sector its own in-order response
                 begin integer jt; jt = FAST ? 0 : $urandom % 4; tlast = (tnow + FLAT + jt > tlast + 1) ? tnow + FLAT + jt : tlast + 1; end
@@ -239,6 +240,32 @@ module tb_hgi_cp_die_seq;
         if (quant_rec[0]) begin if (!check_quant || quant_rec !== exp_quant) begin $display("FAIL quant record bus"); fails = fails + 1; end check_quant = 0; end
     end
     integer t_db = 0, t_cpl = -1;
+`ifdef CPF_PROF
+    // tputx-cpf 2026-10-11: cycle breakdown of the sequencer's state while a job runs (doorbell -> last dispatch)
+    integer prof [0:31]; integer pq;
+    initial for (pq = 0; pq < 32; pq = pq + 1) prof[pq] = 0;
+    always @(posedge clk) if (cpd.u_cp.u_seq.st != 0) prof[cpd.u_cp.u_seq.st] = prof[cpd.u_cp.u_seq.st] + 1;   // v2 states: 4 HD 5 XR 6 INJ 7 IW 8 DSP 9 FEN
+    // S_HD (4) split: queue empty (decode-bound) / head still in the AU / head pending indexed reads / wait mask
+    integer hd_e = 0, hd_r = 0, hd_p = 0, hd_w = 0, hd_o = 0, fe_h = 0, fe_p = 0, fe_s = 0;
+    always @(posedge clk) begin
+        if (cpd.u_cp.u_seq.st == 4) begin
+            if (cpd.u_cp.u_seq.q_cnt == 0) hd_e = hd_e + 1;
+            else if (!cpd.u_cp.u_seq.hd_rdy) hd_r = hd_r + 1;
+            else if (cpd.u_cp.u_seq.hd_pend) hd_p = hd_p + 1;
+            else if (!cpd.u_cp.u_seq.hd_wok) hd_w = hd_w + 1;
+            else hd_o = hd_o + 1;
+        end
+        if (cpd.u_cp.u_seq.run_q) begin
+            if (cpd.u_cp.u_seq.fe_hcap || cpd.u_cp.u_seq.fe_pop2) fe_p = fe_p + 1;
+            else if (cpd.u_cp.u_seq.fs <= 1 && cpd.u_cp.u_seq.q_cnt >= cpd.u_cp.u_seq.QD) fe_h = fe_h + 1;   // queue full
+            else if (cpd.u_cp.u_seq.fs <= 1) fe_s = fe_s + 1;                                              // FIFO / AU input starved
+        end
+    end
+    final begin
+        for (pq = 0; pq < 32; pq = pq + 1) if (prof[pq] != 0) $display("CPF_PROF st %0d cycles %0d", pq, prof[pq]);
+        $display("CPF_PROF HD empty %0d head_in_AU %0d pending %0d wait %0d other %0d | FE busy %0d queue_full %0d starved %0d", hd_e, hd_r, hd_p, hd_w, hd_o, fe_p, fe_h, fe_s);
+    end
+`endif
     integer c, n0, t, a, nbeat, tbad; reg [17:0] c_tok; reg [3:0] c_st; reg c_tx; reg [19:0] c_pos;
     initial begin
         for (k = 0; k < 16; k = k + 1) begin outst[k] = 0; pn[k] = 0; end
