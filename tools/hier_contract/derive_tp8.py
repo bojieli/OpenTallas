@@ -20,6 +20,22 @@ import hier_contract_migrate as MG  # noqa: E402
 
 RELAY = re.compile(r'^q[fk]d_rly')
 HARD_IP = ('ot_hbm3e_phy', 'qfd_io_serdes', 'qfd_io_ucie', 'qkd_pll', 'qfd_clkrx', 'ot_qfd_serdes_112g_x12_phy')
+CLUSTER = ('qfd_tile_nk', 'qfd_tile_h3c', 'qfd_tile_h3s')
+CLUSTER_SLOT = (311.04, 1296.0)
+# slot requests logged to the die lead (el1011-qwen-tp8.log), recorded on the v3 slots
+SLOT_REQ = {
+    'qfd_sp_vector_memory': dict(
+        target_insertion_ps=240.0,
+        note='VM = ot_qfd_vm_grp CLUSTER (8 vm_grp tiles + MEE): clock entry budgeted at the cluster insertion ~240 ps '
+             '(coordinator); q-sp 11:19: closed bank_t/su_t routed insertion 319/371 ps mean -> cluster may export '
+             '~450-500 ps TT, re-budget on the qfd_vm_grp_c gated number',
+        outline_req=(1149.0, 1149.0, 'q-sp 11:19: vm_grp cluster 993.6 x 648 -> ~1149 x 1149 at util 0.55')),
+    'qfd_io_collective': dict(outline_req=(1166.4, 950.4, 'qwen-tp8/coll 07:11: W up/dp y 43-475, ur/dr y 475-907; S in_* '
+                                                         'x 43-302; N out_*/fault* x 43-302, clk/rst_n x 562-605')),
+    'qfd_tile_nk': dict(note='q-tile 10:03 face pins: W n_a 356-456 n_b 457-557 t_out 557-657 n_y 658-758 li 758-946; E ib '
+                             '400-520 ib_go 520-524 xl 524-580 tile_id 580-600 fault 600-604 rst_n 640-644 clk 660-664 lo '
+                             '758-946 (M4)'),
+}
 TP8_DELTAS = [
     dict(id='T1', slots=['qfd_tile_nk', 'qfd_cst_n', 'qfd_cst_s'], status='decided v1',
          change='tile count 1,536 -> 768 (G 6,144 -> 3,072 lane groups; 64 columns x 12 rows); same qfd_tile_nk master, '
@@ -165,7 +181,20 @@ def main():
         s['origin'] = dict(x=x, y=y, orient=o if o in ('R0', 'MX', 'MY', 'R180') else 'R0')
         s['version'] = a.version
         s['parent'] = die
-        if a.tile_cap and cell not in HARD_IP:
+        if a.tile_cap and cell in CLUSTER:
+            # coordinator DECISION 2026-10-12 12:15 (q-tile request A/B 10:03): qfd_tile_nk / h3c / h3s is a CLUSTER
+            # slot (hard ROM/SRAM/leaf children): slot 311.04 x 1296 (content >= 288.36), layers M2-M7 with PG M7,
+            # pins M4 only on the W/E faces; the die routes over it on M8+ only (cuts.py CLUSTER)
+            s['outline'] = dict(w=CLUSTER_SLOT[0], h=CLUSTER_SLOT[1])
+            s.update(signal_max_layer='M7', pg_layer='M7', strap_layer='M8', pin_layers=['M4'])
+            s['layer_cap'] = dict(cap='M7', kind='cluster', die_over='M8+', pin_layers=['M4'],
+                                  layer_cap_grant='qwen-tp8 die lead: ROM/SRAM-band cluster, macros block M1-M4; pins '
+                                                  'M4 only (coordinator DECISION 2026-10-12 12:15)')
+            for pn in s.get('pins', []):
+                pn['layer'] = 'M4'
+            if s.get('clock_entry', {}).get('layer'):
+                s['clock_entry'] = dict(s['clock_entry'], layer='M4')
+        elif a.tile_cap and cell not in HARD_IP:
             # v3 layer cap: the slot is built to <= cap (signals and PG stripes on cap, parent strap cap+1); a slot whose
             # current view (case LEF) uses a higher layer is flagged for re-route (closed tiles: congested regions first)
             used = [sh[0] for p_ in lef[cell]['pins'].values() for sh in p_['shapes'] if sh[0]]
@@ -180,6 +209,17 @@ def main():
             if not s['layer_cap']['conforms']:
                 open_items.setdefault(cell, []).append(f'layer cap {a.tile_cap}: current view uses {hi}; re-route to '
                                                        f'the v{a.version} cap (pins re-assigned on <= {a.tile_cap})')
+        for k, v in SLOT_REQ.get(cell, {}).items():
+            if k == 'outline_req':
+                if abs(s['outline']['w'] - v[0]) > 0.05 or abs(s['outline']['h'] - v[1]) > 0.05:
+                    msg = (f'slot request: outline {v[0]} x {v[1]} ({v[2]}); case LEF has {s["outline"]["w"]} x '
+                           f'{s["outline"]["h"]} -> die floorplan regen')
+                    if msg not in open_items.get(cell, []):
+                        open_items.setdefault(cell, []).append(msg)
+            elif k == 'note':
+                s['notes'] = s.get('notes', '') + ' | ' + v
+            else:
+                s[k] = v
         slots.append(s)
     cells = {s['cell'] for s in slots}
     for c, v in C.get('open_items', {}).items():
