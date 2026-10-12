@@ -913,7 +913,9 @@ def build_r25gq(variant):
         # v6: the SU-facing edge stays where the v1 slot had it (ix_x + hc_col_w): the mirrored E copies keep their 0.432-grid
         # origin, the W copies land on the 0.048 track grid (as the v1 slot's E edge did)
         hc_x = ix_x if hc_w <= ix_w + 1e-6 else round(ix_x + V.get('hc_col_w', ix_w) - hc_w, 6)
-        put(f'hb_hc_{q}', 'hb_hc_SW', hc_x, hc_y, hc_w, hc_h)
+        it_hc_ = put(f'hb_hc_{q}', 'hb_hc_SW', hc_x, hc_y, hc_w, hc_h)
+        if (V.get('hc_orient') or {}).get(q):     # contract v10: ONE hfd_hc master -> its tap face maps to every station
+            it_hc_.orient = V['hc_orient'][q]
         rmap[f'hb_hc_{q}'] = f'hb_hc_{q}'
         ty0 = up(qy + (qh - at_h0) / 2, GY)
         if V.get('attn_tall'):      # S top below the die equator with half the >= 346 um central corridor
@@ -1593,8 +1595,9 @@ def build_r25gq_net(variant):
             rec.append(dict(station=cl, from_=src, path_um=L, relays=len(rl)))
         for snm_, cl_, tg_ in sts_:     # the abutting full-width tap: station t_lg<G>c_<dn> -> client, client t_* -> station
             for suf_, bits_ in (V.get(f'lane_tap_nets_{sd_}') or V['lane_tap_nets']):     # (a block with two client slots names them by tag: f_lgE<tag>_*)
-                ends_ = [(snm_, f't_lg{sd_}c_{suf_}'), (cl_, f'f_lg{sd_}{tg_}_{suf_}')] if suf_.endswith('dn') else \
-                    [(cl_, f't_lg{sd_}{tg_}_{suf_}'), (snm_, f'f_lg{sd_}c_{suf_}')]
+                cg_ = 'c' if cl_ in (V.get('lane_tap_generic') or ()) else f'{sd_}{tg_}'   # v10: replicated client, one port name
+                ends_ = [(snm_, f't_lg{sd_}c_{suf_}'), (cl_, f'f_lg{cg_}_{suf_}')] if suf_.endswith('dn') else \
+                    [(cl_, f't_lg{cg_}_{suf_}'), (snm_, f'f_lg{sd_}c_{suf_}')]
                 buses.append((f'hgi_lg{sd_.lower()}_tap_{suf_}_{cl_[3:]}{tg_}', 'hub', bits_, ends_))
             rec.append(dict(client=cl_, station=snm_, box=[round(x, 3) for x in by[snm_].box()],
                             tap_bits=sum(b_ for _, b_ in (V.get(f'lane_tap_nets_{sd_}') or V['lane_tap_nets']))))
@@ -2088,7 +2091,37 @@ def build_r25gq_net(variant):
             rs_sinks[d_].append((r_, 'rst'))
             if b0_ not in fcl_:
                 ck_sinks[d_].append((r_, 'ck'))
-        old_order = list(buses)         # tree nets go where the die-wide net they replace sat (masters() packs a face's
+        # hbmdie-v10-sta 2026-10-12 (the kv_die 758ccc84c pattern): the Option-A chain stations of relays() (wq*_<bid>,
+        # hfd_stn_q*) and the attention -> SU relays (hfd_att_su_relay) are register stages but joined no clock net, so
+        # their masters had no ck pin and the die STA could time none of their hops (v10: 3,512 of 6,388 stations).
+        # Each one now joins the clock tree of the domain of the first non-station driver up its chain, unless a bus
+        # on that chain forwards its clock (fclk: source-synchronous, clock in the a/b bits) or it is a forwarded
+        # station (fwd_dom).
+        ckd_ = {e[0] for es_ in ck_sinks.values() for e in es_}
+        byl_ = {i.name: i for i in insts}
+        isr_ = lambda n: n in byl_ and (byl_[n].master.startswith('hfd_stn') or byl_[n].master == 'hfd_att_su_relay')
+        inb_ = {}
+        for b_ in buses:
+            if len(b_[3]) == 2 and b_[1] not in ('clock_trunk', 'reset_tree'):
+                inb_.setdefault(b_[3][1][0], (b_[0], b_[3][0][0]))
+        isf_ = lambda b: b in fcl_ or b.split('_p')[0] in fcl_ or re.sub(r'_(t|r)?\d+$', '', b) in fcl_
+        phys_rec['stations_clock_added'] = phys_rec['stations_forwarded'] = 0
+        for it_ in insts:
+            if not isr_(it_.name) or it_.name in ckd_ or it_.name in (base.get('fwd_dom') or {}):
+                continue
+            cur_, fwd_, seen_ = it_.name, False, set()
+            while cur_ in inb_ and cur_ not in seen_:
+                seen_.add(cur_)
+                bid_, cur_ = inb_[cur_]
+                fwd_ = fwd_ or isf_(bid_)
+                if not isr_(cur_):
+                    break
+            if fwd_:
+                phys_rec['stations_forwarded'] += 1
+                continue
+            ck_sinks[dom_of.get(cur_) or 'stream'].append((it_.name, 'ck'))
+            phys_rec['stations_clock_added'] += 1
+        old_order = list(buses)        # tree nets go where the die-wide net they replace sat (masters() packs a face's
         buses[:] = keep_b               # ports in first-seen order: the block pin plans stay identical)
         tree_nets = defaultdict(list)
         CKW, CKH = 12.96, 12.96        # >= 3 generated 1-b pins + gaps a face in the k = 16 bundled view
@@ -6122,9 +6155,9 @@ def b2_nets(vb2):
         if vb2.get('xload'):    # SM.MATVEC x load: slice q -> its quadrant VM8 (hb_vm_<q>), read half of a tap
             out.append((f'vxl_{q_}', 'hub', 2065, (f'hb_vms_{q_}', 't_xl_rdn'), (f'hb_vm_{q_.lower()}', 'f_xl_rdn')))
             out.append((f'vxl_{q_}_r', 'hub', 129, (f'hb_vm_{q_.lower()}', 't_xl_rup'), (f'hb_vms_{q_}', 'f_xl_rup')))
-        if vb2.get('vmap'):     # HC aperture: 2,224 b / 4 per quarter
-            out.append((f'vmap_{q_}', 'hub', 556, (f'hb_vms_{q_}', 't_hgi_vmap'), (f'hb_hc_{q_}', 'f_hgi_vmap')))
-            out.append((f'vmap_{q_}_r', 'hub', 4, (f'hb_hc_{q_}', 't_hgi_vmap'), (f'hb_vms_{q_}', 'f_hgi_vmap')))
+        if vb2.get('vmap'):     # HC x lanes a quarter: v0.6 556 + 4 (2 x 278); SPEC v0.7 vmap_bits 1,200 + 16 (8 x 150 b, cr / done)
+            out.append((f'vmap_{q_}', 'hub', vb2.get('vmap_bits', 556), (f'hb_vms_{q_}', 't_hgi_vmap'), (f'hb_hc_{q_}', 'f_hgi_vmap')))
+            out.append((f'vmap_{q_}_r', 'hub', vb2.get('vmap_r_bits', 4), (f'hb_hc_{q_}', 't_hgi_vmap'), (f'hb_vms_{q_}', 'f_hgi_vmap')))
     return out
 
 
@@ -6160,6 +6193,19 @@ def r25gq_b2():
                 for d_ in ('t', 'f'):
                     v['face_force'][(f'hfd_stn_lg{q}{k}', f'{d_}_lg{q}_{suf}')] = f_
     return v
+def r25gq_v10():
+    """contract v10 (hbmdie 10-12) = B2 (r25gqn_b2) + SPEC v0.7 HC x lanes (vmap 1,200 + 16 b a quarter) + ONE hfd_hc
+    master for all four quarters: the local-group tap is one port set f_lgc_rdn / f_lgc_wdn / t_lgc_rup / t_lgc_wup on the
+    master N face, and the E quarters are placed SE R180 / NE MY (was MY / R180) so that face meets each station (W
+    quarters: equator side; E quarters: outer side, hc_eng holds the equator channel); vmap stays on the master E face
+    = the face toward the quarter's slice for every orient."""
+    v = r25gq_b2()
+    v['vm_b2'] = dict(v['vm_b2'], vmap_bits=1200, vmap_r_bits=16)
+    v['hc_orient'] = dict(SE='R180', NE='MY')
+    v['lane_tap_generic'] = tuple(f'hb_hc_{q}' for q in ('SW', 'SE', 'NW', 'NE'))
+    return v
+
+
 def r25gq_v9():
     """contract v9 = v8 + D22 (the HGI HC unit slot hb_hgi_hc; see HGI_HC_PORTS)"""
     ls_ = R25GQ['lane_stations']
@@ -6180,7 +6226,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gqn_pr9=r25gq_v9(), r25gqn_b2=r25gq_b2(), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gqn_pr9=r25gq_v9(), r25gqn_b2=r25gq_b2(), r25gqn_v10=r25gq_v10(), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

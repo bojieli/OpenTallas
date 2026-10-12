@@ -257,7 +257,7 @@ def report(corner, tag=''):
     sfx = f'_{tag}' if tag else ''
     tg = f' pads={tag}' if tag else ''
     return f'''
-puts "OT_WNS corner={corner}{tg} ns=[sta::worst_slack -{k}] tns_ns=[sta::total_negative_slack -{k}]"
+puts "OT_WNS corner={corner}{tg} ns=[sta::worst_slack -corner {corner} -{k}] tns_ns=[sta::total_negative_slack -corner {corner} -{k}]"
 set f [open /out/paths_{corner}{sfx}.txt w]
 set n 0
 foreach pe [find_timing_paths -path_delay {k} -corner {corner} -group_path_count 200000 -endpoint_path_count 1 -slack_max 0.015] {{
@@ -269,6 +269,104 @@ puts "OT_FAIL_ENDPOINTS corner={corner}{tg} n=$n"
 report_checks -path_delay {k} -corner {corner} -group_path_count 10 -format full_clock_expanded -digits 4 -fields {{slew cap input_pins}}
 puts OT_DONE
 '''
+
+
+# ASAP7 platform layer RC (flow/platforms/asap7/setRC.tcl, the values estimate_parasitics uses in every die case):
+# kOhm/um and pF/um per routing layer.  The cap sensitivity re-issues them with capacitance x k (resistance and vias
+# unchanged) and re-runs estimate_parasitics -global_routing on the SAME global route.
+ASAP7_LAYER_RC = dict(M1=(7.04175e-02, 1e-10), M2=(2.97127e-02, 1.74942e-01), M3=(3.12870e-02, 1.55554e-01),
+                      M4=(1.80365e-02, 1.78475e-01), M5=(1.89935e-02, 1.64264e-01), M6=(1.18796e-02, 1.87426e-01),
+                      M7=(1.25096e-02, 1.62979e-01), M8=(8.44765e-03, 1.03962e-01), M9=(8.89556e-03, 9.28446e-02))
+
+
+def sensitivity(sinks, ocv, cap_scales):
+    """hbmdie-v10-sta (2026-10-12) post-nominal bounds in the same GRT session, RAW (no die hold pads):
+    (1) OCV bound: set_timing_derate -early (1-ocv) -late (1+ocv) on cells and nets (the repo convention of
+        tools/s81/die_sens.sh, 0.95 / 1.05), on nominal GRT parasitics;
+    (2) GRT-vs-DRT wire-cap error bar: every routing layer's capacitance per um x k (k = 1.40 median, 2.44 p95 of
+        the DRT/GRT net-C ratio measured on 3,189 internal nets, results/physical/die_region_drt_1012/README.md),
+        estimate_parasitics -global_routing re-run on the same route; pin / view-model caps unchanged, so this is the
+        wire part only (the measured gap is per-unit-length coupling C, wire length agrees within 3 %);
+    (3) the p95 cap case again with the OCV derate (worst bound).
+    Each case re-applies the corner's clock constraints and prints, per case, TT setup and FF hold:
+      OT_SENS case=<name> corner=tt|ff wns_ns=.. tns_ns=.. fail=<endpoints with slack < 0>"""
+    if not ocv and not cap_scales:
+        return ''
+
+    def rc(k):
+        return '\n'.join(f'set_layer_rc -layer {l} -resistance {r:.6e} -capacitance {c * k:.6e}'
+                          for l, (r, c) in ASAP7_LAYER_RC.items()) + '\nestimate_parasitics -global_routing\n'
+
+    def rep(name):
+        out = []
+        for c, k in (('tt', 'max'), ('ff', 'min')):
+            out.append(constraints(sinks, c) + f'''set n 0
+foreach pe [find_timing_paths -path_delay {k} -corner {c} -group_path_count 200000 -endpoint_path_count 1 -slack_max 0.0] {{ incr n }}
+set w [sta::worst_slack -corner {c} -{k}]; set t [sta::total_negative_slack -corner {c} -{k}]
+puts "OT_SENS case={name} corner={c} wns_ns=$w tns_ns=$t fail=$n"
+''')
+        return '\n'.join(out)
+    der = (f'set_timing_derate -early {1 - ocv:.3f}\nset_timing_derate -late {1 + ocv:.3f}\n' if ocv else '')
+    L = ['\n# ---- hbmdie-v10-sta sensitivity (raw, no pads): see tools/hbm_die_relay_sta.py sensitivity() ----',
+         'puts OT_SENS_BEGIN']
+    if ocv:
+        L += [der, rep(f'ocv{ocv:g}_c1.00'), 'unset_timing_derate']
+    for k in cap_scales:
+        L += [rc(k), rep(f'c{k:.2f}')]
+    if ocv and cap_scales:
+        L += [der, rep(f'ocv{ocv:g}_c{max(cap_scales):.2f}'), 'unset_timing_derate']
+    L += [rc(1.0), 'puts OT_SENS_DONE']
+    return '\n'.join(L) + '\n'
+
+
+# ASAP7 setRC.tcl: the placement-parasitic die cases estimate every die net on M7's per-um RC (set_wire_rc -layer M7)
+M7_RC = ASAP7_LAYER_RC['M7']
+
+
+def place_sens(sinks, cases):
+    """hbmdie-v10-sta (2026-10-12): bounds on the PLACEMENT-parasitic die STA (the case's estimate_parasitics -placement,
+    every net on M7 per-um RC), one session after the nominal TT setup / FF hold.  cases = [(name, r_k, c_k, ocv)]:
+    the M7 per-um resistance x r_k and capacitance x c_k (set_layer_rc, then set_wire_rc -layer M7, re-estimate) and
+    set_timing_derate -early 1-ocv -late 1+ocv on cells and nets.  Wire-cap points: C x1.40 / x2.44 (GRT-vs-DRT net-C
+    median / p95, results/physical/die_region_drt_1012); detour point: R and C x d, d = the GRT of record's routed
+    wirelength / placement HPWL (tools/hbm_die_relay_sta.py detour).  Prints per case and corner
+      OT_SENS case=<name> corner=tt|ff wns_ns=.. tns_ns=.. fail=<endpoints with slack < 0>"""
+    r0, c0 = M7_RC
+    L = ['\n# ---- placement-parasitic sensitivity (tools/hbm_die_relay_sta.py place_sens) ----', 'puts OT_SENS_BEGIN']
+    for name, rk, ck, ocv in cases:
+        L.append(f'set_layer_rc -layer M7 -resistance {r0 * rk:.6e} -capacitance {c0 * ck:.6e}')
+        L += ['set_wire_rc -signal -layer M7', 'set_wire_rc -clock -layer M7', 'estimate_parasitics -placement']
+        L.append(f'set_timing_derate -early {1 - ocv:.3f}\nset_timing_derate -late {1 + ocv:.3f}' if ocv else 'unset_timing_derate')
+        for c, k in (('tt', 'max'), ('ff', 'min')):
+            L.append(constraints(sinks, c) + f'''set n 0
+foreach pe [find_timing_paths -path_delay {k} -corner {c} -group_path_count 200000 -endpoint_path_count 1 -slack_max 0.0] {{ incr n }}
+puts "OT_SENS case={name} corner={c} r_k={rk:.3f} c_k={ck:.3f} ocv={ocv:g} wns_ns=[sta::worst_slack -corner {c} -{k}] tns_ns=[sta::total_negative_slack -corner {c} -{k}] fail=$n"
+''')
+    L += ['unset_timing_derate', 'puts OT_SENS_DONE']
+    return '\n'.join(L) + '\n'
+
+
+def detour(grt_csv, hpwl_csv):
+    """routed / HPWL wirelength of the GRT of record: report_wire_length -global_route file ('grt: net total_wl pins') vs the
+    same case's placement HPWL per net (hpwl.csv: net,hpwl_um); totals over nets present in both, and the median"""
+    def rd(path):
+        out = {}
+        for ln in Path(path).read_text().splitlines():      # 'grt: <net> <total_wl um> <#pins>' or '<net> <hpwl um>'
+            t = ln.replace(',', ' ').split()
+            if t and t[0] == 'grt:':
+                t = t[1:]
+            try:
+                out[t[0]] = float(t[1])
+            except (IndexError, ValueError):
+                continue
+        return out
+    g, h = rd(grt_csv), rd(hpwl_csv)
+    both = [(g[n], h[n]) for n in g if n in h and h[n] > 0]
+    r = sorted(a / b for a, b in both)
+    return dict(nets=len(both), grt_um=round(sum(a for a, _ in both), 1), hpwl_um=round(sum(b for _, b in both), 1),
+                detour_total=round(sum(a for a, _ in both) / max(1e-9, sum(b for _, b in both)), 4),
+                detour_median=round(r[len(r) // 2], 4) if r else None,
+                detour_p90=round(r[int(len(r) * 0.9)], 4) if r else None)
 
 
 def budgets(case):
@@ -294,12 +392,24 @@ def budgets(case):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--case', required=True)
+    ap.add_argument('--case', required=False)
     ap.add_argument('--clock-context', help='clock_context.json from tools/hbm_die_clock_context.py')
     ap.add_argument('--budgets', action='store_true')
     ap.add_argument('--hold-pads', help='JSON {load pin: FF pad ps} (die-level hold padding)')
     ap.add_argument('--measured', help='measured_insertion.json (closure-loop calibrate) for view insertion')
+    ap.add_argument('--ocv', type=float, default=0.05,
+                    help='OCV bound on the GRT session: set_timing_derate -early 1-x -late 1+x (cells + nets), 0 = off')
+    ap.add_argument('--place-sens', action='store_true',
+                    help='write run_sta_place.tcl: placement-parasitic TT setup / FF hold + OCV / wire-cap / detour bounds')
+    ap.add_argument('--detour', type=float, default=0.0, help='GRT routed/HPWL factor for the place-sens detour point')
+    ap.add_argument('--detour-of', nargs=2, metavar=('GRT_CSV', 'HPWL_CSV'), help='print the detour factor and exit')
+    ap.add_argument('--cap-scales', default='1.40,2.44',
+                    help='GRT-vs-DRT wire-capacitance sensitivity (results/physical/die_region_drt_1012: DRT/GRT net C '
+                         'median +40 %%, p95 +144 %%); empty = off')
     a = ap.parse_args()
+    if a.detour_of:
+        print(json.dumps(detour(*a.detour_of)))
+        return
     case = Path(a.case)
     if a.budgets:
         b = budgets(case)
@@ -320,6 +430,17 @@ def main():
     ttp, tt_fallback = tt_prefix(prefix, case)
     (case / 'run_clock_tt.tcl').write_text(ttp + constraints(sinks, 'tt') + hold_pads(a.hold_pads, 'tt') + report('tt'))
     (case / 'tt_fallback.json').write_text(json.dumps(tt_fallback) + '\n')
+    if a.place_sens:
+        caps = [float(x) for x in a.cap_scales.split(',') if x.strip()]
+        cases = [(f'ocv{a.ocv:g}', 1.0, 1.0, a.ocv)] if a.ocv else []
+        cases += [(f'c{k:.2f}', 1.0, k, 0.0) for k in caps]
+        if a.detour:
+            cases += [(f'detour{a.detour:.3f}', a.detour, a.detour, 0.0)]
+        if a.ocv and caps:
+            cases += [(f'ocv{a.ocv:g}_c{max(caps):.2f}', 1.0, max(caps), a.ocv)]
+        nom = constraints(sinks, 'tt') + report('tt').replace('puts OT_DONE', '') + constraints(sinks, 'ff') + \
+            report('ff').replace('puts OT_DONE', '')
+        (case / 'run_sta_place.tcl').write_text(ttp + nom + place_sens(sinks, cases) + 'puts OT_DONE\n')
     print(json.dumps(dict(tt_models_missing=tt_fallback)))
     # OWNER STEER 2026-10-07 (3): die timing on GLOBAL-ROUTE parasitics: full-die GRT (M4-M9, coarse M2/M3 tracks so
     #   the gcell is GRT_TILE_UM, the dietop_round method) -> estimate_parasitics -global_routing -> SS then FF
@@ -357,7 +478,9 @@ estimate_parasitics -global_routing''')
         t = report(c, 'pad' if a.hold_pads else '')
         t = t.replace('/out/paths_' + c + '_pad.txt', '/out/paths_' + c + '.txt')
         return constraints(sinks, c) + r + (t if last else t.replace('puts OT_DONE', ''))
-    (case / 'run_grt_sta.tcl').write_text(gp + corner_block('tt', False) + corner_block('ff', False) + corner_block('ss', True))
+    sens = sensitivity(sinks, a.ocv, [float(x) for x in a.cap_scales.split(',') if x.strip()])
+    (case / 'run_grt_sta.tcl').write_text(gp + corner_block('tt', False) + corner_block('ff', False) + corner_block('ss', True)
+                                          + sens)
     # STA-only on an existing GRT checkpoint: guides cannot feed estimate_parasitics (GRT-0008), so the session
     # re-runs the same global route (deterministic, same layers / adjustments) -- written only to a scratch odb
     (case / 'run_grt_sta_only.tcl').write_text((case / 'run_grt_sta.tcl').read_text().replace(

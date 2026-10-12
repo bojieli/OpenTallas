@@ -294,14 +294,20 @@ module ot_hgi_topk_lane_tile (
  wire [1:0] rr;                                         // reset standard: the port drives only the relay
  ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
  // pin flops (relay stage 1)
- reg [2:0] lph; reg [KW-1:0] kl; reg clr_r, p3_v, mcr_p; reg [53:0] p3_d;
- always @(posedge clk) begin kl <= kin; p3_d <= pd; end
+ // lane_rt_d (10-12, rt_c TT -183): k and clear land in TWO pin flops each -- kl / clr_r feed the core, tk_q / tcg are the
+ // S-face heap-seam output registers (rt_c pulled the shared kl flop into the 25-um seam window, so every k compare in the
+ // merge / reverse-buffer logic crossed the tile: t_k -> mf -246 / -> wm_q -217 at SS); wa = k - 1 - xo is ONE adder k + ~xo.
+ reg [2:0] lph; reg [KW-1:0] kl, tk_q; reg clr_r, tcg, p3_v, mcr_p; reg [53:0] p3_d;
+ always @(posedge clk) begin kl <= kin; tk_q <= kin; p3_d <= pd; end
  always @(posedge clk or negedge rr[0])
-  if (!rr[0]) begin lph <= IDLE; clr_r <= 1'b0; p3_v <= 1'b0; mcr_p <= 1'b0; end
-  else begin lph <= ph; clr_r <= clr; p3_v <= pv; mcr_p <= mcr; end
+  if (!rr[0]) begin lph <= IDLE; clr_r <= 1'b0; tcg <= 1'b0; p3_v <= 1'b0; mcr_p <= 1'b0; end
+  else begin lph <= ph; clr_r <= clr; tcg <= clr; p3_v <= pv; mcr_p <= mcr; end
  wire fon = lph == FILL || lph == FLUSH, ex = lph == EXT, mg = lph == MERGE;
  wire pv_any = p3_v;                                    // stage 0 is the cluster's (it masks q with it)
- reg [53:0] ff [0:FD-1]; reg [FA:0] fc; reg [FA-1:0] fw, fr;
+ // survivor FIFO with ONE-HOT write / read pointers and a REGISTERED HEAD hd (== ff[fr] every cycle): t_op_x is a
+ // flop -> wire -> flop copy of hd (rt_c: fr -> 16:1 mux -> t_op_x at the S-face window, 16 levels, -417 SS / -183 TT),
+ // and the write enables are p3_v & fon & fwoh[i] (no 4 -> 16 decode on the 864-flop enable fan-out: lph / fw -> ff).
+ reg [53:0] ff [0:FD-1]; reg [FA:0] fc; reg [FD-1:0] fwoh, froh; reg [53:0] hd;
  reg [1:0] cr; reg [2:0] sc;
  reg [KW-1:0] xi, xo;
  reg i_cr, i_xv, i_idle; reg [53:0] i_xd;               // heap seam pin flops
@@ -309,14 +315,24 @@ module ot_hgi_topk_lane_tile (
  wire iss = hpv && cr != 2'd0;
  wire push = p3_v && fon;
  wire pop = fon && fc != 0 && cr != 2'd0;
- always @(posedge clk) if (push) ff[fw] <= p3_d;
+ wire [FD-1:0] froh1 = {froh[FD-2:0], froh[FD-1]};
+ wire [FD-1:0] frn = !fon ? {{(FD-1){1'b0}}, 1'b1} : (pop ? froh1 : froh);
+ reg [53:0] m_a, m_b; integer fi;
+ always @* begin
+  m_a = 54'd0; m_b = 54'd0;
+  for (fi = 0; fi < FD; fi = fi + 1) begin if (froh[fi]) m_a = m_a | ff[fi]; if (froh1[fi]) m_b = m_b | ff[fi]; end
+ end
+ always @(posedge clk) begin
+  for (fi = 0; fi < FD; fi = fi + 1) if (push && fwoh[fi]) ff[fi] <= p3_d;
+  hd <= (push && |(frn & fwoh)) ? p3_d : (!fon ? ff[0] : (pop ? m_b : m_a));
+ end
  always @(posedge clk or negedge rr[0]) begin
   if (!rr[0]) begin
-   fc <= 0; fw <= 0; fr <= 0; cr <= 2'd2; sc <= SCV; xi <= 0; xo <= 0;
+   fc <= 0; fwoh <= 1; froh <= 1; cr <= 2'd2; sc <= SCV; xi <= 0; xo <= 0;
    q <= 1'b0; x <= 1'b0; ok <= 1'b0;
   end else begin
-   if (!fon) begin fc <= 0; fw <= 0; fr <= 0; end
-   else begin fc <= fc + push - pop; fw <= fw + push; fr <= fr + pop; end
+   if (!fon) begin fc <= 0; fwoh <= 1; froh <= 1; end
+   else begin fc <= fc + push - pop; if (push) fwoh <= {fwoh[FD-2:0], fwoh[FD-1]}; if (pop) froh <= froh1; end
    cr <= cr - iss + i_cr; sc <= (iss || clr_r) ? SCV : (sc != 3'd0 ? sc - 3'd1 : 3'd0);
    if (!ex) begin xi <= 0; xo <= 0; end else begin xi <= xi + iss; xo <= xo + i_xv; end
    q <= i_idle && sc == 3'd0 && fc == 0 && !pv_any;
@@ -325,13 +341,13 @@ module ot_hgi_topk_lane_tile (
   end
  end
  // heap seam (registered both ways; the heap tile has its own pin flops / output regs)
- always @(posedge clk) begin t_op_x <= ff[fr]; i_xd <= t_ext_d; root <= t_root_key; end
+ always @(posedge clk) begin t_op_x <= hd; i_xd <= t_ext_d; root <= t_root_key; end
  always @(posedge clk or negedge rr[0])
   if (!rr[0]) begin t_op_v <= 1'b0; t_op_ext <= 1'b0; i_cr <= 1'b0; i_xv <= 1'b0; i_idle <= 1'b0; end
   else begin t_op_v <= iss; t_op_ext <= ex; i_cr <= t_op_cr; i_xv <= t_ext_v; i_idle <= t_idle; end
- assign t_k = kl; assign t_clr_go = clr_r;
+ assign t_k = tk_q; assign t_clr_go = tcg;
  // reverse buffer: registered write (WREG) and read (rq_*), capture flop rbq next to the macro output
- wire [KW-1:0] wa = (MUT_REV != 0) ? xo : kl - 1'b1 - xo;
+ wire [KW-1:0] wa = (MUT_REV != 0) ? xo : kl + ~xo;     // == kl - 1 - xo (mod 2^KW)
  reg [RA:0] mw; reg [RA-1:0] rq_a; reg rq_ce, s2, s3; reg [215:0] rbq; wire [215:0] rb_q;
  reg [53:0] mf [0:7]; reg [3:0] mc; reg [2:0] mr, mwp; reg [KW-1:0] mp; reg lh_v; reg [53:0] lh_d; reg [2:0] mcc;
  wire rd_go = mg && !rq_ce && !s2 && !s3 && ({mw, 2'b00} < kl) && (mc + 4'd4 <= 4'd8);
@@ -339,11 +355,13 @@ module ot_hgi_topk_lane_tile (
   .w_a_i(RA'(wa >> 2)), .w_s(wa[1:0]), .w_d(i_xd), .w_all(1'b0));
  wire lpop = lh_v && mcc != 3'd0;                       // send the head on a credit
  wire refill = mc != 4'd0 && (!lh_v || lpop);
- wire [KW+1:0] base = {mw - 1'b1, 2'b00};
- reg [2:0] np; integer lq;
- always @* begin np = 3'd0; for (lq = 0; lq < 4; lq = lq + 1) if (s3 && base + lq < kl) np = np + 1'b1; end
+ // words landing from this read, fixed at rd_go (one read in flight: rd_go waits for !rq_ce && !s2 && !s3) instead of
+ // four k compares at s3 in front of the run-FIFO write enables (rt_c t_k -> mf, 16 levels)
+ wire [KW-1:0] kd = kl - KW'({mw, 2'b00});
+ reg [2:0] npr; integer lq;
+ wire [2:0] np = s3 ? npr : 3'd0;
  always @(posedge clk) begin
-  if (rd_go) rq_a <= RA'(mw);
+  if (rd_go) begin rq_a <= RA'(mw); npr <= (|kd[KW-1:2]) ? 3'd4 : kd[2:0]; end
   rbq <= rb_q;
   for (lq = 0; lq < 4; lq = lq + 1) if (lq < np) mf[mwp + lq[2:0]] <= rbq[54 * lq +: 54];
   if (refill) lh_d <= mf[mr];

@@ -48,7 +48,19 @@ module ot_hgi_sm_record #(
     // the pub's per-SM arrival depth.  CR = 0 (and MUT_NOCR): one descriptor of the whole slice (the old behaviour).
     parameter integer CR = 1,
     parameter integer AD = 32,
-    parameter integer CH = 8,             // rows a chunk (power of two)
+    // smmv-cr (2026-10-12) DEADLOCK RULE: the SM does NOT emit a row when its LPR lines are in.  ot_hbm_accel_smh issues
+    // in group-slot mode (op_gs = 1, op_c = 8): items (row, group) row-major, group-minor, in WAVES of SIL = IL = 8 items
+    // whose lines interleave (wave, t, s); a row leaves only when its LAST wave's lines are all in.  A chunk that ends
+    // inside a wave therefore emits nothing until the NEXT chunk's lines arrive; if it also took the last credits (n =
+    // AD) the next chunk can never leave: circular wait (r_ad4b / h_t4 / h_tcr4 hung on wo_a BF16 LPR 8 = G 1 = 8 rows
+    // a wave, chunk 4 rows = half a wave, AD 4).  Rule: a chunk is a multiple of SIL rows (SIL rows = SIL G items = G
+    // whole waves for ANY G; also whole row blocks in row-slot mode), so every row of a described chunk is emitted with
+    // no later line, and n <= AD credits come back from rows of described chunks only -> no circular wait at any AD.
+    // The SM result port has no ready and a wave's SIL rows leave back to back, so AD < SIL cannot be overrun-safe:
+    // refused at elaboration (fail closed).  MUT_CRDL = 1: the old chunk min(CH, AD) with no AD check (must deadlock).
+    parameter integer CH = 8,             // rows a chunk (power of two; at least SIL, at most AD)
+    parameter integer SIL = 8,            // the SM's issue interleave (ot_hbm_accel_smh IL): a chunk is a multiple of it
+    parameter integer MUT_CRDL = 0,       // mutant: chunk min(CH, AD) not wave-aligned, AD < SIL allowed (deadlock returns)
     parameter integer MUT_NOCR = 0,       // mutant: describe the whole slice at once, ignore the credits (overrun returns)
     parameter integer MUT_XB = 0          // mutant (smmv 3a): the SMs read x from slot 0 whatever the record's slot
 ) (
@@ -174,10 +186,14 @@ module ot_hgi_sm_record #(
     reg  [NSM-1:0] rel;                  // release_in a SM (the adapter echoes arrive at retire)
     // row-credit chunking (CR): rows / lines still to describe, the next chunk's base, credits; chunk lines = LPR x CH
     // the chunk never exceeds the credits (CH > AD would wait for credits that can never exist: deadlock)
-    localparam integer CHE = (CH < AD) ? CH : AD;
+    // and is a multiple of SIL rows (a chunk ending inside an SM issue wave waits for the next chunk's lines: deadlock)
+    localparam integer CHM = (CH < AD) ? CH : AD;
+    localparam integer CHE = (MUT_CRDL != 0 || CHM >= SIL) ? CHM : SIL;
     localparam integer LCH = $clog2(CHE), CRW = $clog2(AD + 1);
 `ifndef SYNTHESIS
     initial if ((1 << LCH) != CHE) $fatal(1, "ot_hgi_sm_record: min(CH, AD) must be a power of two");
+    initial if (CR != 0 && MUT_NOCR == 0 && MUT_CRDL == 0 && (AD < SIL || CHE % SIL != 0))
+        $fatal(1, "ot_hgi_sm_record: row credits need AD >= SIL = %0d and a chunk multiple of SIL rows (AD %0d, CH %0d): a chunk inside an SM issue wave deadlocks", SIL, AD, CH);
 `endif
     localparam integer NOCR = (CR == 0 || MUT_NOCR != 0) ? 1 : 0;
     reg  [NSM*13-1:0] rr_s; reg [NSM*24-1:0] lr_s; reg [NSM*32-1:0] nb_s; reg [NSM*CRW-1:0] cr_s;

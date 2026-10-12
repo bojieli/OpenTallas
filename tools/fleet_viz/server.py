@@ -434,7 +434,8 @@ STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('inde
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
           '/explorer_story.js': ('explorer_story.js', 'text/javascript; charset=utf-8'),
-          '/fv_stale.js': ('fv_stale.js', 'text/javascript; charset=utf-8')}
+          '/fv_stale.js': ('fv_stale.js', 'text/javascript; charset=utf-8'),
+          '/fv_flow.js': ('fv_flow.js', 'text/javascript; charset=utf-8')}
 # /explorer/token/...: mount point for the token-path views (a separate stream ships them into explorer/token/)
 TOKEN_DIR = HERE / 'explorer' / 'token'
 TOKEN_TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -699,6 +700,19 @@ class H(BaseHTTPRequestHandler):
                       else EXPLORER.card_safe_by_index(arg('die'), arg('mi')))
         if what == 'elem_shell':
             return js(SHELL.page(arg('e') or '', safe))
+        if what == 'flow':   # flow / version state per element + per-target progress (flow_state.py)
+            d = ELEMENTS.snapshot(safe)
+            fl = d.get('flow') or {}
+            if safe: return js(dict(t=d.get('t'), flow=fl))
+            el = {}
+            for r in d.get('rows', []):
+                e = dict(flow=r.get('flow'), label=r.get('flow_label'), detail=r.get('flow_detail'), die_used=r.get('die_used'),
+                         target=r.get('target'), m5=r.get('m5_reroute'), element=r['element'], category=r.get('category'))
+                el[r['element']] = e
+                mb = r.get('m5_by_block') or {}
+                for b in r.get('variants') or []: el.setdefault(b, dict(e, m5=mb[b]) if b in mb else e)
+                for b, m in mb.items(): el.setdefault(b, dict(e, m5=m))
+            return js(dict(t=d.get('t'), flow=fl, elements=el))
         if what == 'elem_summaries':
             return js(dict(t=time.time(), src=SHELL.desc.src, summaries=SHELL.summaries(safe)))
         if what == 'elem_coverage':
