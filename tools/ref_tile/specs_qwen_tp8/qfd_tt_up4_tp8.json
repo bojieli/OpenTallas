@@ -32,7 +32,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 64.8,
+  "w": 43.2,
   "h": 205.2
  },
  "pg_layer": "M6",
@@ -71,7 +71,7 @@
   "owner": "Claude:qwen-tp8/spine",
   "branch": "claude/el1011-qwen-tp8-spine",
   "tag": "rt2",
-  "purpose": "qwen-tp8/spine re-route (supersedes rt1): ot_qfd_band_upper at TP8 now holds ONE upper level (NU = LG-TCUT-4 = 1: level 11, 1 adder b0+b1, b2 held); rt1's second, adder-less level 12 duplicated the port element's level-LG hold and put every band result TA+1 edges behind the control element (tb_qfd_spine_band FAIL at 3 bands). NB 3, LG 12, NL 4; TP4 (NU 2) bit-identical; outline / faces as rt1. qwen-tp8 (results/arch/qwen_tp8_1012): tree-top UPPER sub-tile ot_qfd_band_upper at TP8 = NB 3 bands (GT 3,072), LG 12, NL 4; parameter setting of the TP4 qfd_tt_up4_b element (NB 6, LG 13, 345.6 x 388.8), same faces (band words W, returns E, select S); outline resized to the TP8 content (std 5,942 um2 synthesized; W/E faces ~390 pins each over M4/M6 at ~1 b/um/layer set the 205 um height)",
+  "purpose": "qwen-tp8/spine re-route (supersedes rt1): ot_qfd_band_upper at TP8 now holds ONE upper level (NU = LG-TCUT-4 = 1: level 11, 1 adder b0+b1, b2 held); rt1's second, adder-less level 12 duplicated the port element's level-LG hold and put every band result TA+1 edges behind the control element (tb_qfd_spine_band FAIL at 3 bands). NB 3, LG 12, NL 4; TP4 (NU 2) bit-identical; outline / faces as rt1. qwen-tp8 (results/arch/qwen_tp8_1012): tree-top UPPER sub-tile ot_qfd_band_upper at TP8 = NB 3 bands (GT 3,072), LG 12, NL 4; parameter setting of the TP4 qfd_tt_up4_b element (NB 6, LG 13, 345.6 x 388.8), same faces (band words W, returns E, select S); outline resized to the TP8 content (std 5,942 um2 synthesized; W/E faces ~390 pins each over M4/M6 at ~1 b/um/layer set the 205 um height) Outline 43.2 x 205.2 (NU 1 removes one level: std 4,214 um2; 64.8 wide was util 32%); W/E pin faces unchanged, fits inside the 64.8 x 205.2 contract slot.",
   "benches": [
    {
     "name": "bl_tp8_exact",
@@ -176,5 +176,5 @@
   "views_to": "physical/ref_tile/qfd_tt_up4_tp8/views",
   "record_to": "results/rtl/ref_tile/qfd_tt_up4_tp8"
  },
- "std_area_um2": 5942
+ "std_area_um2": 4214
 }
