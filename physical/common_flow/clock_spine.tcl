@@ -11,7 +11,7 @@
 # FIRM + dont_touch, every spine net is CLOCK (clk_net_protect keeps resizer off it).  Leaves are then padded to equal
 # MEASURED arrival (STA, placement parasitics), OT_SPINE_ITERS rounds.  TritonCTS is not run for this clock.
 # Chain it FIRST in OT_CTS_FIX_HOOKS (it wraps clock_tree_synthesis; other hooks wrap it).  Knobs (env): OT_SPINE_PORT
-# (default ck[0]), OT_SPINE_SEG 150, OT_SPINE_BIN 60, OT_SPINE_LEAF_N 8, OT_SPINE_HALO 3, OT_SPINE_CELL BUFx24_ASAP7_75t_R,
+# (default ck[0]), OT_SPINE_MACRO_LEAF 0, OT_SPINE_SEG 150, OT_SPINE_BIN 60, OT_SPINE_LEAF_N 8, OT_SPINE_HALO 3, OT_SPINE_CELL BUFx24_ASAP7_75t_R,
 # OT_SPINE_ITERS 3.  Functional netlist unchanged (buffers only).
 
 proc ot_sp_env {n d} { if {[info exists ::env($n)] && $::env($n) ne ""} { return $::env($n) }; return $d }
@@ -251,7 +251,13 @@ proc ot_clock_spine {} {
     if {[$it getIoType] ne "INPUT"} continue
     lassign [$it getAvgXY] ok x y
     if {!$ok} { set l [[$it getInst] getLocation]; lassign $l x y }
-    dict lappend bins "[expr {int($x / $bin)}],[expr {int($y / $bin)}]" [list $it $x $y]
+    # OT_SPINE_MACRO_LEAF=1 (el1011-q-coll): a hard-macro clock pin is its own leaf, so a child-insertion target never
+    # skews the flops that would otherwise share its bin
+    if {[ot_sp_env OT_SPINE_MACRO_LEAF 0] eq "1" && [[[$it getInst] getMaster] isBlock]} {
+      dict lappend bins "M[[$it getInst] getName]" [list $it $x $y]
+    } else {
+      dict lappend bins "[expr {int($x / $bin)}],[expr {int($y / $bin)}]" [list $it $x $y]
+    }
     incr ns
   }
   set ::ot_sp_pos [dict create]; set ::ot_sp_cnt [dict create]; set ::ot_sp_members [dict create]; set nl 0
