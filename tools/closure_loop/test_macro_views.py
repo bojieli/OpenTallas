@@ -35,6 +35,10 @@ class Resolve(unittest.TestCase):
         for e in (f"/src/{CANON}", f"{{SRC}}/{CANON}/", f"{CANON}/{SRAM}.lef", f"/src/{SRAM}"):
             self.assertEqual(mv.resolve([e], TREE)[0], [CANON], e)
 
+    def test_path_entry_kept_when_not_in_tree(self):
+        v = "physical/hbm_attn_tile_r/quad_b_tc/c891a57cf_cg_hm10/view"
+        self.assertEqual(mv.resolve([f"/src/{v}/"], TREE), ([v], [(f"/src/{v}/", v)]))
+
     def test_ambiguous_prefers_memory_macros(self):
         self.assertEqual(mv.resolve(["ot_dup"], TREE)[0], ["physical/asap7_memory_macros/ot_dup"])
 
