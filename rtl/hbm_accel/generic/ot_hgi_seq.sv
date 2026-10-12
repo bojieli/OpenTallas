@@ -120,7 +120,7 @@ module ot_hgi_seq #(
     reg [159:0] md_d_r; reg [11*32-1:0] md_k_r; reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg [7:0] rank_r; reg hold_r;
     reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r; reg f_rsp_v_r; reg [255:0] f_rsp_data_r;
     // reset: asynchronous assert, synchronous release through two flops; every other control register resets on rn
-    reg [1:0] rs_q, rs_f, rs_m, rs_u;   // one release synchronizer per region (reset fanout <= ~256 a copy)
+    (* keep = 1 *) reg [1:0] rs_q, rs_f, rs_m, rs_u;   // one release synchronizer per region (reset fanout <= ~256 a copy)
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin rs_q <= 2'b00; rs_f <= 2'b00; rs_m <= 2'b00; rs_u <= 2'b00; end
         else begin rs_q <= {rs_q[0], 1'b1}; rs_f <= {rs_f[0], 1'b1}; rs_m <= {rs_m[0], 1'b1}; rs_u <= {rs_u[0], 1'b1}; end

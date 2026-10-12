@@ -62,7 +62,7 @@
  "bench": "tools/tput_map_1011/run_cp_fetch.sh <out> 1 0 160 1  (vectors: tools/tput_map_1011/cp_fetch_vectors.py; tb rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv +FAST +FLAT, NOS 160, Icarus 12.0)",
  "host": "ot-epyc3:/home/ubuntu/tputx-cpf/v2",
  "source_commit": "d1510bb7d (claude/el1011-hbm-tputx-cpf; v2.2 = v2.1 + gate fixes, QD 4)",
- "verdict": "THROUGHPUT PASS (0.793 <= 1.10); unit qualification still needs the routed v2 (ref_tile hgi_seq_v2)",
+ "verdict": "THROUGHPUT PASS (0.794 <= 1.10); unit qualification still needs the routed v2 (ref_tile hgi_seq_v2)",
  "notes": "tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DYN from a per-slot table built at job start; 60 partial-product rows CSA-reduced; 17-bit chunk carry-select adds); 4-entry record queue (8 entries: 0.747x, +11k flops); early indexed resolver (one X + one N VM read a record as soon as its wait mask holds with older queued dispatches counted busy; reader and AU re-injection overlapped); BE dispatch 3 cycles a record.  NOS 48 -> 160 (the priced 32 B/cyc x 160-cycle lane; at 48 the lane caps at 9.6 B/cyc = 49.9k cycles for this image).  Residual: the resolver's serial VM round trip (~8.5 cycles, one outstanding read) shows as head-pending 9.9k; decode is 17.0k busy.",
  "history": [
   {
