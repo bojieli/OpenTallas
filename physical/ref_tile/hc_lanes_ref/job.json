@@ -1,5 +1,5 @@
 {
- "name": "hc_lanes_ref-r4-COMMIT",
+ "name": "hc_lanes_ref-r4-6a28f232b",
  "block": "ot_hdc_v41x_hcp_lanes",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-hcvm",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hcvm-hc4",
-  "commit": "COMMIT",
+  "commit": "6a28f232b",
   "extra_paths": [
    "rtl",
    "physical/asap7_memory_macros"
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hc_lanes_ref/hc_lanes_ref-r4-COMMIT"
+   "to": "results/rtl/ref_tile/hc_lanes_ref/hc_lanes_ref-r4-6a28f232b"
   }
  ],
  "cycles_added": 0,
