@@ -9,7 +9,12 @@ module ot_hdc_vstream_lane #(
     parameter integer NW   = 16,
     parameter integer LANE = 0,
     parameter integer KV_FP8 = 1,     // the vector core's KV cache is FP8 E4M3 (hdc_golden.KV_FMT)
-    parameter integer ML = 0          // extra memory-read latency: every memory answers 1 + ML edges after its read
+    parameter integer ML = 0,         // extra memory-read latency: every memory answers 1 + ML edges after its read
+    // el1011-q-sp 2026-10-11 (lane tile TT -180 ps, class 5: fp32 mul stage 2 = 4 CSA levels + 48-b prefix add in one
+    // cycle): QLA / QLM = the adder / multiplier latency (3 = ot_hdc_fastfp, unchanged; > 3 = the *_lat cuts, same
+    // values).  Every internal schedule (taps, SFU depths, MC/MD) follows; results are tagged, so only latency moves.
+    parameter integer QLA = 3,
+    parameter integer QLM = 3
                                       // strobe (the element's tag and valid wait ML more cycles before S1); 0 = original
 ) (
     input  wire              clk,
@@ -71,8 +76,9 @@ module ot_hdc_vstream_lane #(
     localparam [1:0] MB_OFF = 0, MB_POS = 1, MB_NEG = 2;
     localparam [2:0] AD_BYP = 0, AD_Q = 1, AD_C = 2, AD_NEGB = 3, AD_IMM = 4;
     localparam [2:0] SFU_NONE = 0, SFU_EXP = 1, SFU_RECIP = 2, SFU_RSQRT = 3, SFU_SIGM = 4;
-    localparam integer LA = 3, LM = 3;            // ot_hdc_qadd / ot_hdc_qmul latency
-    localparam integer D_EXP = 49, D_RECIP = 28, D_RSQRT = 37;   // ot_hdc_sfu.sv DEPTHs
+    localparam integer LA = QLA, LM = QLM;        // ot_hdc_qadd / ot_hdc_qmul latency
+    // ot_hdc_sfu_q DEPTHs (49 / 28 / 37 at LA = LM = 3)
+    localparam integer D_EXP = 7 * LM + 8 * LA + 4, D_RECIP = 1 + 3 * (2 * LM + LA), D_RSQRT = 1 + 3 * (3 * LM + LA);
     localparam integer D_SIGM = D_EXP + LA + D_RECIP;   // exp, +1, reciprocal
     localparam integer TAP0 = LM + 1 + LA;        // S3 -> R (7)
     localparam integer TAPMAX = TAP0 + D_SIGM;
@@ -199,8 +205,8 @@ module ot_hdc_vstream_lane #(
     // -- S3 -> S3+LM: the two multipliers ----------------------------------------
     wire [31:0] p_mul, q_mul;
     wire fa, fb_;
-    ot_hdc_qmul u_ma (clk, rst_n, s3_v && s3_ma != MA_BYP, ma_x, ma_y, p_mul, fa);
-    ot_hdc_qmul u_mb (clk, rst_n, s3_v && s3_mb != MB_OFF, mb_x, mb_y, q_mul, fb_);
+    ot_hdc_qmul #(.L(LM)) u_ma (clk, rst_n, s3_v && s3_ma != MA_BYP, ma_x, ma_y, p_mul, fa);
+    ot_hdc_qmul #(.L(LM)) u_mb (clk, rst_n, s3_v && s3_mb != MB_OFF, mb_x, mb_y, q_mul, fb_);
     wire [31:0] a8, blo8, c8, imm2_8;
     wire [1:0]  ma8;
     wire [2:0]  ad8;
@@ -224,7 +230,7 @@ module ot_hdc_vstream_lane #(
     end
     wire [31:0] r_add, px14;
     wire fad;
-    ot_hdc_qadd u_ad (clk, rst_n, v3[LM+1] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
+    ot_hdc_qadd #(.L(LA)) u_ad (clk, rst_n, v3[LM+1] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
     wire [2:0] ad14;
     ot_hdc_delay #(.W(35), .D(LA)) u_d914 (.clk(clk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
     wire [LA:0] v9;
@@ -235,18 +241,18 @@ module ot_hdc_vstream_lane #(
     // -- R: special functions -------------------------------------------------------
     wire [31:0] y_exp, y_rcp, y_rsq;
     wire vo_exp, vo_rcp, vo_rsq, f_exp, f_rcp, f_rsq;
-    ot_hdc_exp_q u_exp (.clk(clk), .rst_n(rst_n), .v(v14 && (cls == SFU_EXP || cls == SFU_SIGM)), .x(r14),
+    ot_hdc_exp_q #(.LA(LA), .LM(LM)) u_exp (.clk(clk), .rst_n(rst_n), .v(v14 && (cls == SFU_EXP || cls == SFU_SIGM)), .x(r14),
                         .y(y_exp), .vo(vo_exp), .fault(f_exp));
     // sigmoid denominator: exp(R) + 1, then the reciprocal
     wire [31:0] e1;
     wire f_e1;
     wire [LA:0] ve1;
-    ot_hdc_qadd u_e1 (clk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);
+    ot_hdc_qadd #(.L(LA)) u_e1 (clk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);
     ot_hdc_vline #(.D(LA)) u_ve1 (.clk(clk), .rst_n(rst_n), .v(vo_exp && cls == SFU_SIGM), .vd(ve1));
     wire        rcp_v = (cls == SFU_SIGM) ? ve1[LA] : (v14 && cls == SFU_RECIP);
     wire [31:0] rcp_x = (cls == SFU_SIGM) ? e1 : r14;
-    ot_hdc_recip_q u_rcp (.clk(clk), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));
-    ot_hdc_rsqrt_q u_rsq (.clk(clk), .rst_n(rst_n), .v(v14 && cls == SFU_RSQRT), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));
+    ot_hdc_recip_q #(.LA(LA), .LM(LM)) u_rcp (.clk(clk), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));
+    ot_hdc_rsqrt_q #(.LA(LA), .LM(LM)) u_rsq (.clk(clk), .rst_n(rst_n), .v(v14 && cls == SFU_RSQRT), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));
 
     // B, C and the tail tag ride a tapped line from S3; the tap is the class depth.
     localparam integer LT = 32 + 32 + TT;
@@ -287,7 +293,7 @@ module ot_hdc_vstream_lane #(
     end
     wire [31:0] mc_out, byp5, b5;
     wire fmc;
-    ot_hdc_qmul u_mc (clk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);
+    ot_hdc_qmul #(.L(LM)) u_mc (clk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);
     wire [TT-1:0] c_tail;
     wire [LM:0] vmc;
     ot_hdc_vline #(.D(LM)) u_vmc (.clk(clk), .rst_n(rst_n), .v(mc_v), .vd(vmc));
@@ -305,7 +311,7 @@ module ot_hdc_vstream_lane #(
     end
     wire [31:0] md_out, dbyp5;
     wire fmd;
-    ot_hdc_qmul u_md (clk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);
+    ot_hdc_qmul #(.L(LM)) u_md (clk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);
     wire [TT-1:0] o_tail;
     wire [LM:0] vmd;
     ot_hdc_vline #(.D(LM)) u_vmd (.clk(clk), .rst_n(rst_n), .v(md_v), .vd(vmd));

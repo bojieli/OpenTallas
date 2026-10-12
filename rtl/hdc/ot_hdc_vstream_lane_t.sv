@@ -15,7 +15,12 @@ module ot_hdc_vstream_lane_t #(
     parameter integer NW   = 16,
     parameter integer KV_FP8 = 1,
     parameter integer ML   = 0,          // the memory latency at the vstream ports (answer at 1 + ML edges)
-    parameter integer RD   = 1           // parent relay stages each way between the vstream ports and this tile
+    parameter integer RD   = 1,          // parent relay stages each way between the vstream ports and this tile
+    // el1011-q-sp 2026-10-11: the hardened tile's fp32 latencies (lane QLA / QLM).  Defaults = the hardened
+    // configuration (a parent instantiates the hard tile with no overrides): mul 5 (CSA tree | prefix add | round),
+    // add 4 (prefix adds split from the alignment).  The tile's results are tagged; only the lane latency grows.
+    parameter integer QLA  = 4,
+    parameter integer QLM  = 5
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -96,7 +101,7 @@ module ot_hdc_vstream_lane_t #(
     wire [31:0]   n_out;
     wire [1:0]    n_red;
     wire [AW-1:0] n_raddr;
-    ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML + 2 + 2 * RD)) u_lane (
+    ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML + 2 + 2 * RD), .QLA(QLA), .QLM(QLM)) u_lane (
         .clk(clk), .rst_n(rt), .emit0(q_emit0), .live(q_live), .i(q_i), .fin_th(q_fin_th), .i_last_r(q_ilast),
         .cura0(q_cura), .curb0(q_curb), .curc0(q_curc), .curd0(q_curd), .rrow(q_rrow),
         .asi(q_asi), .bsi(q_bsi), .csi(q_csi), .dsi(q_dsi),
