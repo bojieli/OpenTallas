@@ -2,7 +2,7 @@
 # [smmv-b/smt] one-command submit of the SM tile clusters (smh_tile_eg_ref / smh_tile_wg_ref) once their two open
 # children are CLOSED with child_lint (c)+(f) clean:
 #   pt_w  smh_pt_w_ref_p45h-r1-6332f4e44  (views -> physical/ref_tile/smh_pt_w_ref_p45h/views)
-#   xs    smh_xs_ref_p50x-r1-0bce85cc9    (views -> physical/ref_tile/smh_xs_ref_p50x/views; exact io_tcl pins for MX)
+#   xs    smh_xs_ref_p40x-r1-c2250fec8 or smh_xs_ref_t40-r1-c2250fec8 (exact io_tcl pins, needed for the leaf-1 MX copy)
 # Merges their closure records, re-generates both kits on the real views (sizes, pins on track per orientation, spine
 # child-insertion targets), lints, commits, writes the job specs and drops them into the closure-loop intake.
 # Usage: bash physical/ref_tile_specs/smh/smh_tile_submit.sh   (run from the claude/el1011-hbm-smt worktree)
@@ -10,20 +10,22 @@ set -euo pipefail
 WT=${WT:-/home/ubuntu/wt/el1011-hbm-smt}
 cd "$WT"
 J=~/.local/state/closure_loop/jobs
-for j in smh_pt_w_ref_p45h-r1-6332f4e44 smh_xs_ref_p50x-r1-0bce85cc9; do
-  st=$(python3 -c "import json;print(json.load(open('$J/$j.json'))['status'])")
-  [ "$st" = CLOSED ] || { echo "BLOCKED: $j is $st"; exit 2; }
-done
-# gate-only placeholders (hand pt_w view / xs LEF with planned pins) must go before the records land
-rm -rf physical/ref_tile/smh_pt_w_ref_p45h/views physical/ref_tile/smh_xs_ref_p50x/views
+st() { python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['status'])" "$J/$1.json" 2>/dev/null || echo MISSING; }
+[ "$(st smh_pt_w_ref_p45h-r1-6332f4e44)" = CLOSED ] || { echo "BLOCKED: pt_w p45h not CLOSED"; exit 2; }
+XS=""
+for k in p40x t40; do [ "$(st smh_xs_ref_$k-r1-c2250fec8)" = CLOSED ] && { XS=smh_xs_ref_$k; XJ=smh_xs_ref_$k-r1-c2250fec8; break; }; done
+[ -n "$XS" ] || { echo "BLOCKED: no exact-pin xs closed (p40x: $(st smh_xs_ref_p40x-r1-c2250fec8), t40: $(st smh_xs_ref_t40-r1-c2250fec8))"; exit 2; }
+export SMT_XS_KIT=$XS
+# gate-only xs placeholders must go before the record lands
+rm -rf physical/ref_tile/smh_xs_ref_p50x/views physical/ref_tile/smh_xs_ref_p40x/views physical/ref_tile/smh_xs_ref_t40/views
 git checkout -- physical/ref_tile 2>/dev/null || true
 git fetch -q origin
-git merge -q --no-edit origin/claude/el1011-hbm-smt   # the loop auto-merges xs p50x's record here
+git merge -q --no-edit origin/claude/el1011-hbm-smt   # the loop auto-merges the xs record here
 git merge -q --no-edit origin/main
-for b in smh_pt_w_ref_p45h-r1-6332f4e44 smh_xs_ref_p50x-r1-0bce85cc9; do
+for b in smh_pt_w_ref_p45h-r1-6332f4e44 $XJ; do
   if git rev-parse -q --verify "origin/codex/closure-record-$b" >/dev/null; then git merge -q --no-edit "origin/codex/closure-record-$b"; fi
 done
-for v in physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w physical/ref_tile/smh_xs_ref_p50x/views/ot_hbm_accel_smh_xs; do
+for v in physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w physical/ref_tile/$XS/views/ot_hbm_accel_smh_xs; do
   [ -s "$v/$(basename $v).lef" ] || { echo "BLOCKED: no view $v (closure record not merged yet)"; exit 2; }
   python3 tools/hier_contract/child_lint.py "$v/$(basename $v).lef" --libs "$v" | tail -1 | grep -q '^PASS' \
     || { echo "BLOCKED: child_lint FAIL on $v"; exit 2; }
@@ -36,7 +38,7 @@ for v in eg wg; do
     || { echo "BLOCKED: local gate FAIL ($v)"; exit 2; }
 done
 git add physical/ref_tile_specs/smh physical/ref_tile/smh_tile_eg_ref physical/ref_tile/smh_tile_wg_ref
-git commit -q -m "[smmv-b/smt] SM tile cluster kits eg/wg on the closed pt_w p45h + xs p50x views
+git commit -q -m "[smmv-b/smt] SM tile cluster kits eg/wg on the closed pt_w p45h + xs $XS views
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" || true
 C=$(git rev-parse --short=9 HEAD)
