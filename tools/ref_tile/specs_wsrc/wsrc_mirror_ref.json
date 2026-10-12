@@ -1,0 +1,69 @@
+{
+ "name": "wsrc_mirror_ref",
+ "top": "ot_dsrom_wsrc_mirror",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_mirror.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pg_layer": "M6",
+ "std_area_um2": 3186,
+ "util": 0.52,
+ "pins": {
+  "N": [
+   "clk"
+  ],
+  "W": [
+   "rst_n",
+   "wr_tag",
+   "wr_set",
+   "wr_clr",
+   "wr_slot",
+   "wr_row",
+   "wr_user"
+  ],
+  "S": [
+   "rd_row",
+   "rd_use",
+   "j_user"
+  ],
+  "E": [
+   "bad"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-ds-misc/wsrc",
+  "branch": "claude/el1012-wsrc-cluster",
+  "tag": "v1",
+  "purpose": "wsrc tag mirror (hard child of the wsrc core cluster), ref_tile re-route: the closed hand-kit view a7247ecfa-f fails child_lint (f) 4 face pins blocked",
+  "benches": [
+   {
+    "name": "mirror-model-positive",
+    "cmd": "mkdir -p {RUN}/bench && cd {SRC} && iverilog -g2012 -s tb_wsrc_mirror -o {RUN}/bench/positive rtl/dsrom_sys/s81_window_la/tb_wsrc_mirror.sv rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_mirror.sv && vvp {RUN}/bench/positive 2>&1 | tee {RUN}/bench/positive.log; grep -q 'PASS MIRROR' {RUN}/bench/positive.log",
+    "expect": "pass",
+    "pass_regex": "PASS MIRROR",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "mirror-mutant",
+    "cmd": "mkdir -p {RUN}/bench && cd {SRC} && iverilog -g2012 -DOT_MIRROR_MUTANT -s tb_wsrc_mirror -o {RUN}/bench/negative rtl/dsrom_sys/s81_window_la/tb_wsrc_mirror.sv rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_mirror.sv && vvp {RUN}/bench/negative",
+    "expect": "fail",
+    "fail_regex": "MIRROR errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "views_to": "physical/ref_tile/wsrc_mirror_ref/views",
+  "record_to": "results/rtl/ref_tile/wsrc_mirror_ref"
+ }
+}

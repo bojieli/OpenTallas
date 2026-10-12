@@ -1,0 +1,91 @@
+{
+ "name": "wsrc_land8_ref",
+ "top": "ot_dsrom_wsrc_land8",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_land8.sv",
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pg_layer": "M7",
+ "pins": {
+  "S": [
+   "acc_v",
+   "acc_tag",
+   "acc_beat",
+   "acc_data"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "b",
+   "bad",
+   "nb",
+   "sim_bad"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M3 M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:el1011-ds-misc/wsrc",
+  "branch": "claude/el1012-wsrc-cluster",
+  "tag": "v1",
+  "purpose": "wsrc landing tile (die-placed; 8 lanes of acc_* -> registered bad / nb), ref_tile re-route: the closed hand-kit view 6c3ed996d fails child_lint (b) no M7 PG stripes, (f) 29 face pins blocked",
+  "benches": [
+   {
+    "name": "land8-model-positive",
+    "cmd": "mkdir -p {RUN}/bench && cd {SRC} && iverilog -g2012 -s tb_wsrc_land8 -o {RUN}/bench/positive rtl/dsrom_sys/s81_window_la/tb_wsrc_land8.sv rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_land8.sv rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv && vvp {RUN}/bench/positive 2>&1 | tee {RUN}/bench/positive.log; grep -q 'PASS LAND8' {RUN}/bench/positive.log",
+    "expect": "pass",
+    "pass_regex": "PASS LAND8",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "land8-mutant",
+    "cmd": "mkdir -p {RUN}/bench && cd {SRC} && iverilog -g2012 -DOT_LAND8_MUTANT -s tb_wsrc_land8 -o {RUN}/bench/negative rtl/dsrom_sys/s81_window_la/tb_wsrc_land8.sv rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_land8.sv rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv && vvp {RUN}/bench/negative",
+    "expect": "fail",
+    "fail_regex": "LAND8 errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "views_to": "physical/ref_tile/wsrc_land8_ref/views",
+  "record_to": "results/rtl/ref_tile/wsrc_land8_ref"
+ },
+ "outline": {
+  "w": 129.6,
+  "h": 28.08
+ },
+ "pin_ranges": {
+  "acc_v": [
+   2.0,
+   2.6
+  ],
+  "acc_tag": [
+   2.8,
+   8.9
+  ],
+  "acc_beat": [
+   9.1,
+   11.0
+  ],
+  "acc_data": [
+   11.2,
+   127.6
+  ]
+ },
+ "_note": "pin-limited: 2,184 acc_* pins on S. M5 alone at 2 tracks is ~10.4 pins/um (needs ~210 um); the balanced placer alternates M3/M5 per pin at ~0.057 um (per-layer pitch 0.114 >= 2 tracks of either), so S fits 129.6 um; util ~39% (std 1,435 um2), the old 140.4 x 43.224 hand kit was 27%."
+}

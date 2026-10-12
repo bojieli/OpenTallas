@@ -1,0 +1,72 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "wsrc_mirror_ref",
+ "top": "ot_dsrom_wsrc_mirror",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  84.24,
+  84.24
+ ],
+ "core": [
+  2.16,
+  2.16,
+  82.08,
+  82.08
+ ],
+ "why": "util 0.52 of std 3186 + macros 0 um2",
+ "std_area_um2": 3186,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M6",
+  "rlayers": [
+   "M2",
+   "M6"
+  ],
+  "strap_layer": "M7"
+ },
+ "pins": {
+  "N": [
+   "clk"
+  ],
+  "W": [
+   "rst_n",
+   "wr_tag",
+   "wr_set",
+   "wr_clr",
+   "wr_slot",
+   "wr_row",
+   "wr_user"
+  ],
+  "S": [
+   "rd_row",
+   "rd_use",
+   "j_user"
+  ],
+  "E": [
+   "bad"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_wsrc_mirror.sv",
+  "physical/ref_tile/wsrc_mirror_ref/kit.env",
+  "physical/ref_tile/wsrc_mirror_ref/clock.sdc",
+  "physical/ref_tile/wsrc_mirror_ref/signoff.sdc",
+  "physical/ref_tile/wsrc_mirror_ref/pdn.tcl",
+  "physical/ref_tile/wsrc_mirror_ref/pre_cts.tcl",
+  "physical/ref_tile/wsrc_mirror_ref/pre_grt.tcl",
+  "physical/ref_tile/wsrc_mirror_ref/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+ ]
+}
