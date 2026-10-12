@@ -132,7 +132,7 @@ module ot_s81_su_qbt #(
                 if (iv[j] && !(done && same[j])) hv[j] <= 1'b1;
                 else if (done) hv[j] <= 1'b0;
             end
-            o_fu <= 1'b0; o_fo <= done && (~(same | hv) != 0); o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
+            o_fu <= 1'b0; o_fo <= done && !(&(same | hv)); o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
         end
     end
 endmodule
