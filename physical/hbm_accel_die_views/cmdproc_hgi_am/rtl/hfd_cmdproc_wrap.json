@@ -45,13 +45,21 @@
   "w_cpd_mh_t_abort",
   "w_cpd_mh_t_drained"
  ],
- "forwarded_clock_outputs": 0,
- "forwarded_clock_inputs": 0,
- "die_input_bits": 1388,
+ "forwarded_clock_outputs": 8,
+ "forwarded_clock_inputs": 4,
+ "die_input_bits": 18320,
  "die_input_bits_used": 1254,
- "die_output_bits": 13938,
- "die_output_bits_driven": 10762,
+ "die_output_bits": 33402,
+ "die_output_bits_driven": 10770,
  "ties": [
+  {
+   "where": "cpd.coll_recx",
+   "kind": "open",
+   "bits": 554,
+   "cls": "open",
+   "reason": "owner hbmdie-1011 / hgi-1010/k: COLL.TOPK_MERGE operand sideband {n_R, n_B, desc_R, desc_B} (554 b) is consumed only by ot_hgi_coll_ep TKM=1 (hgi_recx). The die coll view (coll_hgi) builds TKM 0 with no hgi_recx input and the r25gqn hgi_coll net is 968 b, so no die net carries it; it becomes die net t_hgi_coll +554 b when the TOPK_MERGE tiles (16 x ot_hgi_coll_tkm_tile, r25gq hier contract) are composed with coll TKM=1. Until then COLL.TOPK_MERGE on this die runs the TKM=0 (software merge) path.",
+   "gap": null
+  },
   {
    "where": "cpd.sm_rec",
    "kind": "fold",
@@ -445,17 +453,9 @@
    "gap": null
   },
   {
-   "where": "die:cNE[823:824]",
+   "where": "die:cNE[823:896]",
    "kind": "spare_die_input_dropped",
-   "bits": 1,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
-   "gap": null
-  },
-  {
-   "where": "die:cNE[826:827]",
-   "kind": "spare_die_input_dropped",
-   "bits": 1,
+   "bits": 73,
    "cls": "by_design",
    "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
    "gap": null
@@ -581,17 +581,9 @@
    "gap": null
   },
   {
-   "where": "die:cNW[823:824]",
+   "where": "die:cNW[823:896]",
    "kind": "spare_die_input_dropped",
-   "bits": 1,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
-   "gap": null
-  },
-  {
-   "where": "die:cNW[826:827]",
-   "kind": "spare_die_input_dropped",
-   "bits": 1,
+   "bits": 73,
    "cls": "by_design",
    "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
    "gap": null
@@ -717,17 +709,9 @@
    "gap": null
   },
   {
-   "where": "die:cSE[823:824]",
+   "where": "die:cSE[823:896]",
    "kind": "spare_die_input_dropped",
-   "bits": 1,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
-   "gap": null
-  },
-  {
-   "where": "die:cSE[826:827]",
-   "kind": "spare_die_input_dropped",
-   "bits": 1,
+   "bits": 73,
    "cls": "by_design",
    "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
    "gap": null
@@ -853,19 +837,43 @@
    "gap": null
   },
   {
-   "where": "die:cSW[823:824]",
+   "where": "die:cSW[823:896]",
    "kind": "spare_die_input_dropped",
-   "bits": 1,
+   "bits": 73,
    "cls": "by_design",
    "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
    "gap": null
   },
   {
-   "where": "die:cSW[826:827]",
+   "where": "die:f_lgEatt_rdn[0:8257]",
    "kind": "spare_die_input_dropped",
-   "bits": 1,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
+   "bits": 8257,
+   "cls": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 1 (ATT) on its W face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:f_lgEatt_wdn[0:65]",
+   "kind": "spare_die_input_dropped",
+   "bits": 65,
+   "cls": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 1 (ATT) on its W face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:f_lgEcp_rdn[0:8257]",
+   "kind": "spare_die_input_dropped",
+   "bits": 8257,
+   "cls": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 0 (CP) on the cmdproc N face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:f_lgEcp_wdn[0:65]",
+   "kind": "spare_die_input_dropped",
+   "bits": 65,
+   "cls": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 0 (CP) on the cmdproc N face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die.",
    "gap": null
   },
   {
@@ -992,14 +1000,6 @@
    "where": "die:cNE[766:823]",
    "kind": "spare_die_output_const0",
    "bits": 57,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
-   "gap": null
-  },
-  {
-   "where": "die:cNE[824:826]",
-   "kind": "spare_die_output_const0",
-   "bits": 2,
    "cls": "by_design",
    "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
    "gap": null
@@ -1133,14 +1133,6 @@
    "gap": null
   },
   {
-   "where": "die:cNW[824:826]",
-   "kind": "spare_die_output_const0",
-   "bits": 2,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
-   "gap": null
-  },
-  {
    "where": "die:cSE[0:42]",
    "kind": "spare_die_output_const0",
    "bits": 42,
@@ -1264,14 +1256,6 @@
    "where": "die:cSE[766:823]",
    "kind": "spare_die_output_const0",
    "bits": 57,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
-   "gap": null
-  },
-  {
-   "where": "die:cSE[824:826]",
-   "kind": "spare_die_output_const0",
-   "bits": 2,
    "cls": "by_design",
    "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
    "gap": null
@@ -1405,11 +1389,67 @@
    "gap": null
   },
   {
-   "where": "die:cSW[824:826]",
+   "where": "die:t_hgi_e2NE[0:129]",
    "kind": "spare_die_output_const0",
-   "bits": 2,
-   "cls": "by_design",
-   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)",
+   "bits": 129,
+   "cls": "open",
+   "reason": "owner svc (hbm-phys-1010 svc) + hbmdie-1011: r25gqn att_e2 (9954ced3a) reserves the CP ATT KV STREAM issuer -> svc_NE_s3 'e2' expert-request net (128 b + fclk). ot_hgi_cp_die has no KV STREAM issuer (ATT records have no die record bus on r25gqn: att_rec is classed by_design), so the net is driven 0 = no request. Bind when the ATT record adapter + e2 issuer land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:t_hgi_e2NW[0:129]",
+   "kind": "spare_die_output_const0",
+   "bits": 129,
+   "cls": "open",
+   "reason": "owner svc (hbm-phys-1010 svc) + hbmdie-1011: r25gqn att_e2 (9954ced3a) reserves the CP ATT KV STREAM issuer -> svc_NW_s3 'e2' expert-request net (128 b + fclk). ot_hgi_cp_die has no KV STREAM issuer (ATT records have no die record bus on r25gqn: att_rec is classed by_design), so the net is driven 0 = no request. Bind when the ATT record adapter + e2 issuer land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:t_hgi_e2SE[0:129]",
+   "kind": "spare_die_output_const0",
+   "bits": 129,
+   "cls": "open",
+   "reason": "owner svc (hbm-phys-1010 svc) + hbmdie-1011: r25gqn att_e2 (9954ced3a) reserves the CP ATT KV STREAM issuer -> svc_SE_s3 'e2' expert-request net (128 b + fclk). ot_hgi_cp_die has no KV STREAM issuer (ATT records have no die record bus on r25gqn: att_rec is classed by_design), so the net is driven 0 = no request. Bind when the ATT record adapter + e2 issuer land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:t_hgi_e2SW[0:129]",
+   "kind": "spare_die_output_const0",
+   "bits": 129,
+   "cls": "open",
+   "reason": "owner svc (hbm-phys-1010 svc) + hbmdie-1011: r25gqn att_e2 (9954ced3a) reserves the CP ATT KV STREAM issuer -> svc_SW_s3 'e2' expert-request net (128 b + fclk). ot_hgi_cp_die has no KV STREAM issuer (ATT records have no die record bus on r25gqn: att_rec is classed by_design), so the net is driven 0 = no request. Bind when the ATT record adapter + e2 issuer land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:t_lgEatt_rup[0:513]",
+   "kind": "spare_die_output_const0",
+   "bits": 513,
+   "cls": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 1 (ATT) on its W face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:t_lgEatt_wup[0:8961]",
+   "kind": "spare_die_output_const0",
+   "bits": 8961,
+   "cls": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 1 (ATT) on its W face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:t_lgEcp_rup[0:513]",
+   "kind": "spare_die_output_const0",
+   "bits": 513,
+   "cls": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 0 (CP) on the cmdproc N face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die.",
+   "gap": null
+  },
+  {
+   "where": "die:t_lgEcp_wup[0:8961]",
+   "kind": "spare_die_output_const0",
+   "bits": 8961,
+   "cls": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 0 (CP) on the cmdproc N face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die.",
    "gap": null
   }
  ],
@@ -1417,8 +1457,8 @@
  "classed_tie_bits": {
   "debug": 0,
   "test": 0,
-  "by_design": 6753,
-  "open": 0,
+  "by_design": 7029,
+  "open": 36662,
   "not_adopted": 0
  }
 }
