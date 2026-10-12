@@ -30,9 +30,14 @@ module ot_hgi_cp_die #(
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
     parameter integer FQCR = 4,        // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
-    parameter integer MTP_PINREG = 0   // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
+    parameter integer IKS_I = 0,       // ot_hgi_seq IKS_I (hbmdie-1011): HBM operand I for IDX.INDEX IKS; 0 = legacy
+    parameter integer MTP_PINREG = 0,  // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
                                        // FIFOs / flops on f_mtp, t_mtp, mh_* and the translator side; +1 cycle a crossing,
                                        // controller PRL 4); 0 = the unregistered collar (pinned views unchanged)
+    parameter integer FUSED = 0,       // hgi-1010/c2 (AUDIT N5): 1 = unit 4's record bus is the FUSED front's field set
+                                       //   {n_O, n_B, n_A, O, C, B, A, header, valid} (1,216 b; ot_hgi_fused_station in the
+                                       //   quant block forwards QDQ to the quant unit); 0 = the QDQ-only {n_O, n_A, O, A, header, valid}
+    parameter integer QRW = 683 + 533 * FUSED   // 1,216 with FUSED (FUSED in {0, 1})
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -42,8 +47,9 @@ module ot_hgi_cp_die #(
     input  wire [273:0]  vmr,           // VM client {v, rsp 273}
     input  wire [18:0]   vmstat,        // {proto_fault, mask_fault, ue, ce}
     output reg  [967:0]  coll_rec,      // unit 6
+    output reg  [553:0]  coll_recx,     // unit 6, with coll_rec: {n_R, n_B, desc_R, desc_B} (TOPK_MERGE B / R operands, hgi-1010/k)
     input  wire [2:0]    coll_ret,      // {fault, done, ready}
-    output reg  [682:0]  quant_rec,     // unit 4
+    output reg  [QRW-1:0] quant_rec,    // unit 4 (FUSED: the FUSED front's record)
     input  wire [2:0]    quant_ret,
     output reg  [2074:0] idx_rec,       // unit 9 {I, die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid} (I: hgi-1010/g)
     input  wire [2:0]    idx_ret,
@@ -129,13 +135,13 @@ module ot_hgi_cp_die #(
     reg  halt;
     wire units_busy = ~credit[0] | ~credit[1] | ~credit[2] | ~credit[3] | ~(&credx) | (|ux_v);
     localparam [15:0] RECU = 16'b0000_0111_1111_1110;   // units 1-10 have a record bus (0 CTL internal, 11 SIMT absent)
-    ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
+    ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO), .FETCH_PIN_FIFO(1), .FQ_LOCAL(1), .FQCR(FQCR), .IKS_I(IKS_I)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
         .cmd_wdata(cfg_wdata), .units_busy(units_busy), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded), .cfg_err(cfg_err),
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),
         .db_gen(db_q[73:70]), .db_entry(db_q[75:74]), .db_ncol(db_q[79:76]), .db_kernel(db_k), .db_loff(MUT == 2 ? 32'd0 : db_lo),
         .md_kent(md_kent), .md_kstride(md_kstride), .md_noise(md_noise),
-        .f_req_v(f_req_v), .f_req_rdy(fq_cr != 5'd0 && fq_in < 7'd48), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
+        .f_req_v(f_req_v), .f_req_rdy(1'b0), .f_req_ack(l_freq_ack), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
         .vr_v(vr_v), .vr_rdy(!vr_busy), .vr_addr(vr_addr), .vr_rsp_v(vr_rv), .vr_rsp_data(vr_rd),
         .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n), .d_pos1(d_pos1),
         .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault), .wr_quiet(wr_quiet),
@@ -226,7 +232,7 @@ module ot_hgi_cp_die #(
     endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            credit <= 4'b1111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
+            credit <= 4'b1111; coll_rec <= 968'd0; coll_recx <= 554'd0; quant_rec <= '0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
             sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 704'd0; hc_rec <= 939'd0;
             db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
@@ -234,9 +240,9 @@ module ot_hgi_cp_die #(
             // dispatch (the bus carries one valid edge per record)
             coll_rec[0] <= 1'b0; quant_rec[0] <= 1'b0; idx_rec[0] <= 1'b0; am_rec[0] <= 1'b0;
             sm_rec[0] <= 1'b0; su_rec[0] <= 1'b0; sfu_rec[0] <= 1'b0; att_rec[0] <= 1'b0; dma_rec[0] <= 1'b0; hc_rec[0] <= 1'b0;
-            if (u_v[6] && u_rdy[6]) begin coll_rec <= {rank, nI, nO, nA, dI, dO, dA, d_hdr, 1'b1}; credit[0] <= 1'b0; end
+            if (u_v[6] && u_rdy[6]) begin coll_rec <= {rank, nI, nO, nA, dI, dO, dA, d_hdr, 1'b1}; coll_recx <= {nR, nB, dR, dB}; credit[0] <= 1'b0; end
             else if (coll_ret[1] || coll_ret[2]) credit[0] <= 1'b1;
-            if (u_v[4] && u_rdy[4]) begin quant_rec <= {nO, nA, dO, dA, d_hdr, 1'b1}; credit[1] <= 1'b0; end
+            if (u_v[4] && u_rdy[4]) begin quant_rec <= (FUSED != 0) ? QRW'({nO, nB, nA, dO, dC, dB, dA, d_hdr, 1'b1}) : QRW'({nO, nA, dO, dA, d_hdr, 1'b1}); credit[1] <= 1'b0; end
             else if (quant_ret[1] || quant_ret[2]) credit[1] <= 1'b1;
             if (u_v[9] && u_rdy[9]) begin
                 idx_rec <= {dI, rank, 20'(d_pos1 - 21'd1), nR, nO, nD, nC, nB, nA, dR, dO, dD, dC, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0;
@@ -279,7 +285,7 @@ module ot_hgi_cp_die #(
             // F5: a request leaves on a credit (the loader's queue slot), the slot returns on the loader's f_req_ack (the
             // memory lane took it), not on the data; sectors return in order, at most 48 in flight (the sequencer's NOS)
             begin : fetch
-                reg snd; snd = f_req_v && fq_cr != 5'd0 && fq_in < 7'd48;
+                reg snd; snd = f_req_v;                       // [cp] FQ_LOCAL: the CP sends only on a credit (fq_cr / fq_in mirror it)
                 if (snd) begin cpl[113] <= 1'b1; cpl[153:114] <= f_req_addr; end
                 fq_cr <= fq_cr - {4'd0, snd} + {4'd0, l_freq_ack};
                 fq_in <= fq_in + {6'd0, snd} - {6'd0, l_frsp_v};

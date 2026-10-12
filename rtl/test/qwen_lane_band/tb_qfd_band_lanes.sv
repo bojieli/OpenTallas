@@ -10,6 +10,7 @@
 // MUT = 1 / 2: the band / upper negative mutants (wrong combine order) -> FAIL.
 module tb_qfd_band_lanes;
     parameter integer NL = 4, LNK = 0, MUT = 0, NOPS = 3000, SEED = 1;
+    parameter integer RDMEM = 0, BANR = 0;   // el1011-q-seq: DUT delay lines in SRAM (2 = one-edge-short mutant) / valid-only adder resets
     localparam integer NB = 6, LAT_L = 41, LAT_B = 46 + 2 * LNK;
     reg clk = 0, rst_n = 0;
     always #5 clk = ~clk;
@@ -35,7 +36,7 @@ module tb_qfd_band_lanes;
     wire [3*NL*32-1:0] tt, tt_r;
     wire tu, tvv, tu_r, tv_r2, uf;
     generate for (b = 0; b < NB; b = b + 1) begin : g_band
-        ot_qfd_band_lanes #(.NL(NL), .LNK(LNK), .MUT(MUT == 1 ? 1 : 0)) u_b (
+        ot_qfd_band_lanes #(.NL(NL), .LNK(LNK), .MUT(MUT == 1 ? 1 : 0), .RDMEM(RDMEM), .BANR(BANR)) u_b (
             .clk(clk), .rst_n(rst_n), .b0(b == 0), .tw(din[b*8*NL*32 +: 8*NL*32]), .sel_e(sel), .tv_e(tv),
             .tt_ty(b == 0 ? tt_r : {3*NL*32{1'b0}}), .tt_use(b == 0 ? tu_r : 1'b0), .tt_v(b == 0 ? tv_r2 : 1'b0),
             .pw(pw[b*NL*32 +: NL*32]), .pw_v(pv[b]), .ty(ty[b]), .fault(bf[b]));
@@ -53,6 +54,7 @@ module tb_qfd_band_lanes;
     reg [3:0]  hs [0:HN-1];
     reg [48*NL*32-1:0] yh [0:127];   // the lane's y by cycle (mod 128)
     integer n = 0, i, k, g, s, ops = 0, checks = 0, groups = 0, errors = 0, seed = SEED;
+    initial begin seed = SEED; $display("SEED=%0d", seed); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     integer lv, d;
     reg rstick = 0, dstick = 0;
     function automatic [31:0] rfp(input integer dummy);

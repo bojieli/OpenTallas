@@ -16,7 +16,7 @@ def main():
     d = 'rtl/experimental/mtp_p2_ordered_20261009/'
     common = ['rtl/v41rom/ot_v41_fadd.sv', 'rtl/common/ot_prefix.sv', 'rtl/common/ot_secded.sv',
               'rtl/common/ot_sc_pfifo.sv', 'rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv']
-    path = [d+x+'.sv' for x in ['ot_mtp_p2_ordered_rows', 'ot_mtp_p2_prefix', 'ot_mtp_p2_prefix_native', 'ot_mtp_p2_prefix_path']]
+    path = [d+x+'.sv' for x in ['ot_mtp_p2_ordered_rows', 'ot_mtp_p2_prefix', 'ot_mtp_p2_prefix_native', 'ot_mtp_p2_prefix_path', 'ot_mtp_p2_tiles']] + ['rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv']
     cases = [
         ('path', 'tb_mtp_p2_prefix_path', dict(ROOTPIPE=1), path+common, True, 'PATH PASS'),
         ('order', 'tb_mtp_p2_prefix_path', dict(ROOTPIPE=1, MUT=2), path+common, False, 'PATH unexpected fault'),

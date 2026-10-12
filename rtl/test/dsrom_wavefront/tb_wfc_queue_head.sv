@@ -79,6 +79,7 @@ module tb_wfc_queue_head #(
           $fatal(1,"constant-head payload differs from native router");
     end
     integer seed_v = SEED;
+    initial begin seed_v = SEED; $display("SEED=%0d", seed_v); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     function integer rnd(input integer unused);
         rnd = $random(seed_v);
     endfunction

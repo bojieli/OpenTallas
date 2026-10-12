@@ -1,0 +1,72 @@
+{
+ "name": "s81b-wsrc-pinroot-605d751a5-hm10",
+ "block": "ot_dsrom_window_source_ctl",
+ "owner": "Codex:wsrc-root",
+ "purpose": "Root boundary fix: per-pin input/output flop anchoring; legal lower IO layers (M4/M6 and M5/M7), clock at W-face midpoint. Same hash-verified MARGIN2 RTL and existing four writer cycles. Historical HM10 actual failures: 15 input captures, FF -7.63, r2r +2.99; never mask with higher repair margin. Source reference core is local edge origin, virtual clock measured interior insertion. TT setup>=0 FF hold>=0 DRC0 option B; SS sensitivity retained.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "codex/wsrc-root-20261010",
+  "commit": "605d751a5cfc0935aa87b1b81d584a126779d3be"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "request-skid-exact-mutant",
+    "cmd": "cd {SRC} && physical/dsrom_window_source/bench.sh {RUN}/bench",
+    "ok": "grep -q 'PASS REQUEST_SKID' {RUN}/bench/positive.log && grep -q 'REQUEST_PAYLOAD_MISMATCH transaction=0' {RUN}/bench/mutant.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "expect": "pass",
+    "pass_regex": "PASS source-manifest and production W339 skid positive/mutant"
+   },
+   {
+    "name": "late-payload-mutant",
+    "expect": "fail",
+    "fail_regex": "REQUEST_PAYLOAD_MISMATCH transaction=0",
+    "cmd": "cd {SRC} && iverilog -g2012 -s tb_recovered_ctl_request_skid -o {RUN}/bench/negative rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/mutant_window_ctl_late_payload.sv rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_dsrom_window_source_ctl.sv rtl/dsrom_sys/s81_window_la/tb_recovered_ctl_request_skid.sv && vvp {RUN}/bench/negative",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC=\"physical/dsrom_window_source/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ss.sdc physical/dsrom_window_source/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ff_guarded.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 DIE=540 PD=0.50 MARGIN=2 physical/dsrom_window_source/route_ctl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "echo route_ctl.sh writes the IO SDC from CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX",
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC=\"physical/dsrom_window_source/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ss.sdc physical/dsrom_window_source/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ff_guarded.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 DIE=540 PD=0.50 MARGIN=2 physical/dsrom_window_source/route_ctl.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/*.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json && cp {RUN}/bench/*.log {RUN}/record/ && cp {SRC}/physical/dsrom_window_source/root_fix.json {SRC}/physical/dsrom_window_source/model_pin_anchor.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": []
+ },
+ "record": [
+  {
+   "to": "physical/dsrom_window_source/view_pinroot_605d751a5",
+   "from": "{RUN}/record"
+  }
+ ],
+ "cycles_added": 4,
+ "merge_target": "main",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01
+}

@@ -1,0 +1,10 @@
+    input wire [0:0] ck,
+    input wire [32:0] j,
+    output wire [1:0] jd,
+    input wire [514:0] q,
+    output wire [514:0] q_o,
+    input wire [0:0] rst,
+    input wire [25:0] t_a0,
+    input wire [25:0] t_a1,
+    input wire [25:0] t_od,
+    input wire [25:0] t_x

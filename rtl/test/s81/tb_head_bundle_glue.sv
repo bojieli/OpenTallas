@@ -15,6 +15,7 @@ module tb;
  wire gd,rv2,f2;wire[255:0] sa,sb;wire[3:0] bv;wire[31:0] bd,rb2;wire[16:0] rr2,r0b;wire[67:0] r0a;
  ot_dsrom_head_bundle_glue #(.USE_HARD_DELAY8(USE_HARD_DELAY8),.USE_MIN_DELAY_CELLS(USE_MIN_DELAY_CELLS),.MARGIN(MARGIN),.MIN_DEPTH(MIN_DEPTH)) dut(.clk(clk),.rst_n(rst_n),.go(go),.row0(row0),.xa(xa),.xb(xb),.bo_v(refdut.bo_v),.bo_d(refdut.bo_d),.b_fault(refdut.b_fault),.a_done(refdut.a_done),.a_fault(refdut.a_fault),.a_row_flat(rows),.a_bits_flat(bits_),.a_key_flat(keys),.go_d(gd),.xsa(sa),.xsb(sb),.bv_r(bv),.bd_r(bd),.row0_a(r0a),.row0_b(r0b),.res_v(rv2),.res_row(rr2),.res_bits(rb2),.fault(f2));
  integer i,j,seed=12345,valids=0,gos=0;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 12345; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  // MARGIN: result group {res_v,res_row,res_bits,fault} +3 cycles, row0_a +2 (row0 sampled at go); all else same cycle
  localparam integer RL=MARGIN?3:0;
  reg [35:0] bq1; always @(posedge clk) bq1<={refdut.bv_r,refdut.bd_r};

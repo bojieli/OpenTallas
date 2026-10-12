@@ -12,12 +12,12 @@
 // MUT 1: the record header drops the A operand bit -> the unit faults (must FAIL);
 // MUT 2: transport mutant 4 (responses paired with the newest request) -> wrong words (must FAIL).
 module tb_hgi_quant_wide_tput;
- parameter integer MUT = 0, SERIAL_SHAPE = 0, WMUT = 0, LQ = 16;
+ parameter integer MUT = 0, SERIAL_SHAPE = 0, WMUT = 0, LQ = 16, WQ = 0;
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
  reg [682:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; wire [273:0] vmr0;
  reg [337:0] bq = 0; wire [273:0] br; wire [18:0] status;
  wire [32*16-1:0] rq; wire [31:0] rq_cr, w2_cr, w2_done; wire [32*257-1:0] rr; wire [32*280-1:0] w2q;
- ot_hgi_quant_unit #(.MUT(MUT == 2 ? 4 : 0), .SERIAL_SHAPE(SERIAL_SHAPE), .WIDE(1), .WLQ(LQ), .WMUT(WMUT)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
+ ot_hgi_quant_unit #(.MUT(MUT == 2 ? 4 : 0), .SERIAL_SHAPE(SERIAL_SHAPE), .WIDE(1), .WLQ(LQ), .WMUT(WMUT), .WQ(WQ)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
    .vmq(vmq), .vmr(vmr0), .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(w2q), .wwq_cr(w2_cr), .wwq_done(w2_done),
    .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1));
  ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(LQ)) vm (.clk(clk), .rst_n(rst_n), .cq({bq, vmq}), .cr({br, vmr0}), .status(status),

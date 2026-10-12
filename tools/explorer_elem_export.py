@@ -110,6 +110,7 @@ need = set()
 for k in ("tt_tcl", "ff_tcl"):
     if res.get(k):
         need.update(re.findall(r"/src/(\S+)", open(res[k]).read()))
+res["need_sta"] = sorted(need)
 if res.get("config"):
     t = open(res["config"]).read()
     need.update(re.findall(r"/src/(\S+)", t))
@@ -245,9 +246,30 @@ def _auto(job, element, dest, reg, log, redo):
                                          ['ssh', '-o', 'BatchMode=yes', host, 'tar -x -C %s' % src]), input=ar.stdout, capture_output=True, timeout=600)
                     if rr.returncode: raise RuntimeError('src rebuild: %s' % rr.stderr[-200:])
                 ssh(host, 'echo %s > %s/SOURCE_COMMIT' % (commit, src))
+                # files the loop GENERATES into a job's src (io_ref_routed.sdc, per-view io_place.tcl, ...) are not in git;
+                # the loop keeps text copies elsewhere in the run dir (cl/, routes/...): recover them by name
                 missing = [p for p in P.get('need', []) if p not in paths]
-                if missing and not nosta:
-                    log('%s: %d source paths not in git at %s -> geometry only' % (job, len(missing), commit[:10])); nosta = True
+                if missing:
+                    rec = r'''
+import os, shutil, sys
+run, src = sys.argv[1], sys.argv[2]
+for p in sys.argv[3:]:
+    b = os.path.basename(p); hit = None
+    for dp, dn, fn in [w for root in (run + "/cl", run) for w in os.walk(root)]:   # the loop's own copy in cl/ first
+        if hit: break
+        if dp == run + "/src" or dp.startswith(run + "/src/"): dn[:] = []; continue
+        if dp.startswith(run + "/routes") and "/objects" in dp: dn[:] = []; continue
+        if b in fn: hit = os.path.join(dp, b)
+    if hit:
+        os.makedirs(os.path.dirname(os.path.join(src, p)), exist_ok=True); shutil.copy(hit, os.path.join(src, p)); print("RECOVERED", p, hit)
+'''
+                    r = ssh(host, 'python3 -c %s %s %s %s' % (shlex.quote(rec), shlex.quote(run), shlex.quote(src), ' '.join(shlex.quote(p) for p in missing)), timeout=600)
+                    got = set(re.findall(r'^RECOVERED (\S+)', r.stdout, re.M))
+                    missing = [p for p in missing if p not in got]
+                    if got: log('%s: recovered %d generated source file(s) from the run dir: %s' % (job, len(got), ', '.join(sorted(got))))
+                sta_missing = [p for p in missing if p in set(P.get('need_sta', P.get('need', [])))]
+                if sta_missing and not nosta:
+                    log('%s: %d STA source paths neither in git at %s nor in the run dir (%s) -> geometry only' % (job, len(sta_missing), commit[:10], ', '.join(sta_missing))); nosta = True
     if layout:
         odb_gb, spef_gb = P.get('odb_gb') or 0, P.get('spef_gb') or 0
         mem = int(min(160, max(12, math.ceil(10 * odb_gb + 6 * spef_gb + 6))))
@@ -260,11 +282,14 @@ def _auto(job, element, dest, reg, log, redo):
         r = ssh(host, 'cd %s && python3 tools/explorer_elem_export.py run %s' % (S, ' '.join(shlex.quote(x) for x in args)), timeout=6 * 3600)
         if r.returncode:
             raise RuntimeError('run rc %d: %s %s' % (r.returncode, r.stdout[-300:], r.stderr[-300:]))
-    rtl_ok = False
+    rtl_ok, rtl_err = False, None if P.get('config') else 'the route\'s synthesis config (config.mk) was not found on the host'
     if P.get('config') and src:
         r = ssh(host, 'cd %s && nice -n 19 python3 tools/explorer_elem/rtl_export.py --config %s --src %s --out %s/rtl --mem 16' % (S, shlex.quote(P['config']), shlex.quote(src), S), timeout=3600)
         rtl_ok = r.returncode == 0
-        if not rtl_ok: log('%s: rtl export failed: %s' % (job, (r.stdout + r.stderr)[-300:]))
+        if not rtl_ok:
+            errs = re.findall(r'^.*ERROR.*$', r.stdout + r.stderr, re.M)
+            rtl_err = (errs[-1] if errs else (r.stdout + r.stderr)[-200:]).strip()[:300]
+            log('%s: rtl export failed: %s' % (job, rtl_err))
     # fetch
     names = (['tt.json', 'ff.json', 'cells.bin', 'clk.bin', 'power_tt.rpt'] if layout else [])
     for n in names:
@@ -279,7 +304,7 @@ def _auto(job, element, dest, reg, log, redo):
     ref = find_reference_model(spec, st, commit) if have_commit else dict(found=False, seeds=[], note='source commit not in the repo')
     pack(raw=raw_local if layout and (raw_local / 'tt.json').exists() else None, element=eid, job=job, dest=dest, st=st,
          host=host, raw_remote=(S + '/raw') if S else None, db=('%s:%s/6_final.odb' % (host, P['base'])) if P.get('base') else None,
-         rtl=rtl_local, ref=ref, reg=reg, nosta=nosta)
+         rtl=rtl_local, ref=ref, reg=reg, nosta=nosta, rtl_error=None if rtl_local else (rtl_err or 'RTL export produced no output'))
     mark(job, state='done', element=eid, layout=layout, nosta=nosta, rtl=bool(rtl_local), reference=ref.get('path'), error=None)
     log('%s -> %s done (layout %s, sta %s, rtl %s, ref %s)' % (job, eid, layout, not nosta, bool(rtl_local), ref.get('path')))
     return True
@@ -291,7 +316,7 @@ def _num(x):
     except Exception: return None
 
 
-def pack(raw, element, job, dest, st, host=None, raw_remote=None, db=None, rtl=None, ref=None, reg=None, nosta=False,
+def pack(raw, element, job, dest, st, host=None, raw_remote=None, db=None, rtl=None, ref=None, reg=None, nosta=False, rtl_error=None,
          label=None, role=None, summary=None, note=None, extra_facts=(), record_ref=None):
     dest = pathlib.Path(dest); dest.mkdir(parents=True, exist_ok=True)
     reg = reg or {}
@@ -341,7 +366,7 @@ def pack(raw, element, job, dest, st, host=None, raw_remote=None, db=None, rtl=N
               category=reg.get('category'), summary=summary, note=note, block=spec.get('block') or (tt or {}).get('top'), job=job, host=host, db=db,
               record=rec_ref, exported_at=time.strftime('%Y-%m-%dT%H:%M:%S%z'), facts=facts, layout=bool(tt), nosta=bool(nosta or (tt or {}).get('nosta')),
               bench=dict(spec={k: v for k, v in spec.items() if 'bench' in k.lower()}, stages=(spec.get('stages') or {}).get('bench') or [],
-                         state=st.get('benches') or {}), reference=ref)
+                         state=st.get('benches') or {}), reference=ref, rtl_error=rtl_error)
     if tt:
         el['geom'] = {k: tt[k] for k in ('die', 'core', 'cells', 'masters', 'modules', 'module_cells', 'macros', 'ports', 'grid', 'quantum_dbu', 'dbu_per_um', 'stats')}
         el['geom']['cells']['file'] = '%s.cells.bin' % element

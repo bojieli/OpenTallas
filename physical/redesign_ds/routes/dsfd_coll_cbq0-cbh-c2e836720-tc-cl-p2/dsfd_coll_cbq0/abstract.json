@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_coll_cbq0",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cbq0-cbh-c2e836720-tc-cl-p2/routes/dsfd_coll_cbq0_cbh_c2e836720_tc_cl_p2/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cbq0-cbh-c2e836720-tc-cl-p2/routes/dsfd_coll_cbq0_cbh_c2e836720_tc_cl_p2/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cbq0-cbh-c2e836720-tc-cl-p2/routes/dsfd_coll_cbq0_cbh_c2e836720_tc_cl_p2/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cbq0-cbh-c2e836720-tc-cl-p2/routes/dsfd_coll_cbq0_cbh_c2e836720_tc_cl_p2/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cbq0-cbh-c2e836720-tc-cl-p2/routes/dsfd_coll_cbq0_cbh_c2e836720_tc_cl_p2/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cbq0-cbh-c2e836720-tc-cl-p2/routes/dsfd_coll_cbq0_cbh_c2e836720_tc_cl_p2/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cbq0-cbh-c2e836720-tc-cl-p2/routes/dsfd_coll_cbq0_cbh_c2e836720_tc_cl_p2/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_coll_cbq0.lef": "d189f3f80a921f14ec8cf26c15fe55c56026cbafc2b2e1ebf1dbceb45949c565",
+    "dsfd_coll_cbq0_ff.lib": "bcde72de139a51093d587daef13edd2e620dff7859f5e7604032812ba858ed7c",
+    "dsfd_coll_cbq0_ss.lib": "cbff46094dbe039ecdafb03efa5e1b519d13996e3a2240794ccf2b2efae54551"
+  },
+  "ok": true
+}

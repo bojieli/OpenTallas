@@ -9,6 +9,7 @@ module tb_hgi_idx_chunk_el;
     reg rst_n = 0, ql_v = 0, k_v = 0; reg [7:0] ql_head = 0; reg [NB*128-1:0] ql_codes = 0; reg [NB*8-1:0] ql_sc = 0;
     reg [15:0] ql_w = 0; reg [NKT-1:0] k_kv = 0; reg [KW-1:0] k_key = 0;
     integer mut = 0, errors = 0, nk = 0, nc = 0, i, j, c, seed = 5;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 5; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     wire [3:0] rv, ev; wire [4*NKT-1:0] rkv, ekv, rf, ef; wire [4*NKT*32-1:0] rs, es;
     genvar g;
     for (g = 0; g < 4; g = g + 1) begin : g_c
@@ -20,13 +21,18 @@ module tb_hgi_idx_chunk_el;
             .ql_v(ql_v), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w), .k_v(k_v), .k_kv(k_kv), .k_key(k_key),
             .c_v(ev[g]), .c_kv(ekv[NKT*g +: NKT]), .c_sum(es[NKT*32*g +: NKT*32]), .c_fault(ef[NKT*g +: NKT]));
     end
+    // el1011-hbm-idx: the hierarchical chunk element (systolic hardened slices) adds XLAT = FPL + 16 edges of latency;
+    // the reference outputs are delayed by exactly that and compared every cycle (constant latency, 1 beat/cycle)
+    localparam integer XLAT = FPL + 16;
+    wire [3:0] rvd; wire [4*NKT-1:0] rkvd, rfd; wire [4*NKT*32-1:0] rsd;
+    ot_hdc_delay #(.W(4 + 8*NKT + 4*NKT*32), .D(XLAT), .RESET(1)) u_rd (.clk(clk), .rst_n(rst_n), .d({rv, rkv, rf, rs}), .q({rvd, rkvd, rfd, rsd}));
     always @(posedge clk) if (rst_n) begin
-        if (rv !== ev || (rv[0] && (rkv !== ekv || rs !== es || rf !== ef))) begin
-            if (errors < 5) $display("ERR t=%0t chunk outputs differ: v %b/%b sum %h / %h", $time, rv, ev, rs[127:0], es[127:0]);
+        if (rvd !== ev || (rvd[0] && (rkvd !== ekv || rsd !== es || rfd !== ef))) begin
+            if (errors < 5) $display("ERR t=%0t chunk outputs differ: v %b/%b sum %h / %h", $time, rv, ev, rsd[127:0], es[127:0]);
             errors = errors + 1;
         end
         if (k_v) nk = nk + 1;
-        if (rv[0]) nc = nc + 1;
+        if (rvd[0]) nc = nc + 1;
     end
     function automatic [31:0] rnd; begin rnd = $random(seed); end endfunction
     // FP4 E2M1 codes (any nibble) with a modest UE8M0-style scale so sums stay finite most of the time
@@ -41,7 +47,7 @@ module tb_hgi_idx_chunk_el;
     endtask
     initial begin
         if ($test$plusargs("MUT_HB")) mut = 1;
-        repeat (4) @(negedge clk); rst_n = 1; repeat (2) @(negedge clk);
+        repeat (4) @(negedge clk); rst_n = 1; repeat (8) @(negedge clk);   // el1011: the element's reset relay releases 3 edges late
         for (c = 0; c < 3; c = c + 1) begin                          // 3 tokens: reload all heads, then a key stream
             for (i = 0; i < 40; i = i + 1) qload((i * 7 + c) % 40);
             repeat (4) @(negedge clk);
@@ -50,7 +56,7 @@ module tb_hgi_idx_chunk_el;
                 for (j = 0; j < KW / 32 + 1; j = j + 1) k_key[32 * j +: 32] = rnd();
                 for (j = 0; j < NKT * NB; j = j + 1) k_key[(j / NB) * NB * 136 + NB * 128 + 8 * (j % NB) +: 8] = 8'd118 + (rnd() & 8'd15);
             end
-            @(negedge clk); k_v = 0; repeat (FPL * 12 + QL + FML + 20) @(negedge clk);
+            @(negedge clk); k_v = 0; repeat (FPL * 12 + QL + FML + 20 + XLAT) @(negedge clk);
         end
         $display("summary: %0d key beats in, %0d chunk beats out, %0d mismatching cycles", nk, nc, errors);
         if (errors == 0 && nk == nc && nk > 0) $display("HGI_IDX_CHUNK_EL PASS (lockstep, 4 chunks, tput 1 beat/cycle)");

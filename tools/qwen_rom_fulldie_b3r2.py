@@ -254,15 +254,72 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if seam_free:
         _seam_free(v, m)      # after every pin-plan rule, before the relays (they are derived from the moved pins)
     m['b3r2']['r22ks_seam_free'] = seam_free
+    if before_relays is not None:
+        _regions_from_placement(m)   # the surgery moved blocks: region clocks follow the FINAL placement
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
+        if before_relays is not None:
+            _regions_from_placement(m)   # the relays joined region clocks: re-file + split to the measured cap again
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
     if su_vm_abut:
         # outermost: after the relays (an abutted bus takes no relay); r21m: the banked memory's descriptor ports
         _su_vm_bus(v, m, *((SU_VM_A_BITS_BV, SU_VM_Q_BITS) if vm_me else (SU_VM_A_BITS, SU_VM_Q_BITS)))
     m['b3r2']['r21v_su_vm_abut'] = su_vm_abut
+    if before_relays is not None and getattr(v, 'FACE_PACK_FINAL', False):
+        _face_pack_final(v, m)   # outermost: after every pin-moving wrapper
     return v, m
+
+
+def _face_pack_final(v, m):
+    """qwendie-1011 (r22ko4 audit): no two face pin groups of one master may overlap on one face + layer.  _despan
+    (inside the surgery) only slides forward and gives up at the face end; later wrappers (seam-free) move pins after
+    it.  This outermost pass packs every face + layer forward, then backward from the face end when the forward pack
+    overflows; pinned (abutted pair) groups never move; any overlap left raises."""
+    inner = v.masters
+    pinned = getattr(v, 'PINNED_FACE_PORTS', set())
+    rec = m['b3r2'].setdefault('face_pack_final', [])
+    gap = 0.1   # only real overlaps move (already-legal groups keep their place: abutted pairs stay aligned)
+
+    def masters(model, k=1, port_bits=None):
+        M = inner(model, k, port_bits)
+        for name, mst in M.items():
+            groups = {}
+            for p in dict.fromkeys(mst.order):     # a port can appear twice in order (re-added by a later wrapper)
+                s = mst.ports.get(p)
+                if s and s[0] == 'face':
+                    groups.setdefault((s[2], s[3]), []).append(p)
+            for (face, layer), ps in groups.items():
+                L_ = mst.h if face in 'EW' else mst.w
+                G = sorted(([p, mst.ports[p][4], mst.ports[p][1] * mst.ports[p][5] * 0.048 / 2] for p in ps),
+                           key=lambda g: g[1])
+                fix = lambda g: (name, g[0]) in pinned   # noqa: E731
+                for _ in range(3):
+                    for a, b in zip(G, G[1:]):       # forward
+                        need = a[1] + a[2] + gap + b[2]
+                        if b[1] < need:
+                            if fix(b) and not fix(a):
+                                a[1] = b[1] - b[2] - gap - a[2]
+                            elif not fix(b):
+                                b[1] = need
+                    end = L_                          # backward from the face end
+                    for g in reversed(G):
+                        if g[1] + g[2] > end - 0.5 and not fix(g):
+                            g[1] = end - 0.5 - g[2]
+                        end = g[1] - g[2] - gap
+                    G.sort(key=lambda g: g[1])
+                bad = [(a[0], b[0]) for a, b in zip(G, G[1:]) if b[1] - b[2] < a[1] + a[2] - 1e-6] + \
+                      [(g[0], 'face end') for g in G if g[1] - g[2] < -1e-6 or g[1] + g[2] > L_ + 1e-6]
+                if bad:
+                    raise ValueError(f'{name} {face}/{layer}: face groups do not fit: {bad[:4]}')
+                for g in G:
+                    kind, bits, f, ly, c, pitch = mst.ports[g[0]]
+                    if abs(c - g[1]) > 1e-6:
+                        mst.ports[g[0]] = (kind, bits, f, ly, round(g[1], 3), pitch)
+                        if len(rec) < 400:
+                            rec.append((name, g[0], face, layer, round(c, 3), round(g[1], 3)))
+        return M
+    v.masters = masters
 
 
 # r21v (qwen-split-exact 2026-10-07): the stream unit <-> vector memory bus.  ot_qwen_rom_core's u_su reads three
@@ -284,7 +341,11 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     by = {i.name: i for i in m['insts']}
     su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
     gap = vm.y - (su.y + su.h)
-    if abs(su.x - vm.x) > 1e-6 or abs(su.w - vm.w) > 1e-6 or not (0.0 <= gap <= SU_VM_ABUT_TOL_UM) \
+    # qwendie-1011: a VM wider than the SU (r22ko4 near-square slot) abuts with the SU inside its S face; the pin
+    # groups shift by the SU's offset (0 for every equal-width recipe: unchanged)
+    off = round(su.x - vm.x, 4) if vm.w > su.w + 1e-6 else 0.0
+    if abs(su.x - vm.x - off) > 1e-6 or not (-1e-6 <= off and su.x + su.w <= vm.x + vm.w + 1e-6) \
+            or (off == 0.0 and abs(su.w - vm.w) > 1e-6) or not (0.0 <= gap <= SU_VM_ABUT_TOL_UM) \
             or su.orient != 'R0' or vm.orient != 'R0':
         raise ValueError(f'su_vm_abut: SU64 {su.x:.3f},{su.y:.3f} {su.w:.3f}x{su.h:.3f} {su.orient} and VM '
                          f'{vm.x:.3f},{vm.y:.3f} {vm.w:.3f}x{vm.h:.3f} {vm.orient} do not abut (gap {gap:.3f} um): '
@@ -316,15 +377,15 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
                 raise ValueError(f'su_vm_abut: {M_.name} {f} face already holds {taken}')
         s.face('va', SU_VM_A_BITS, 'N', 'M5', a_c, 1)
         s.face('vq', SU_VM_Q_BITS, 'N', 'M5', q_c, 1)
-        q.face('sa', SU_VM_A_BITS, 'S', 'M5', a_c, 1)
-        q.face('sq', SU_VM_Q_BITS, 'S', 'M5', q_c, 1)
+        q.face('sa', SU_VM_A_BITS, 'S', 'M5', a_c + off, 1)
+        q.face('sq', SU_VM_Q_BITS, 'S', 'M5', q_c + off, 1)
         return out
     v.masters = masters
     m['r21v_su_vm'] = dict(bits_su_to_vm=SU_VM_A_BITS, bits_vm_to_su=SU_VM_Q_BITS, gap_um=round(gap, 4),
                            face_um=round(w, 3), layer='M5', pitch_tracks=1,
                            a_span_um=[round(a_c - a_span / 2, 3), round(a_c + a_span / 2, 3)],
                            q_span_um=[round(q_c - q_span / 2, 3), round(q_c + q_span / 2, 3)],
-                           stations=0, rtl_latency_added=0)
+                           stations=0, rtl_latency_added=0, **({'vm_face_offset_um': off} if off else {}))
 
 
 # r21f (qwen-rtl-finish 2026-10-07): the abstracts of the three masters whose RTL was finished
@@ -976,12 +1037,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     regs = m['clock_regions']
 
     def region_of(cx, cy):
-        for k, r in enumerate(regs):
-            a, b_, c, d = r['rect']
-            if a <= cx <= c and b_ <= cy <= d:
-                return k
-        return min(range(len(regs)), key=lambda k: abs((regs[k]['rect'][0] + regs[k]['rect'][2]) / 2 - cx)
-                   + abs((regs[k]['rect'][1] + regs[k]['rect'][3]) / 2 - cy))
+        return region_at(regs, cx, cy)
     ck_add = {}
     stats, B, fck_drop, fck_new, insts, worst, spill = {}, [], set(), [], [], [], []
     stage_of = {}
@@ -1026,8 +1082,14 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, c[3], tol)
             return None if sp is None else (sp[0], sp[1], w, h)
         frames, s_last, ycur = [], 0.0, None
-        while L - s_last > pitch:
-            reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + pitch]
+        # qwendie-1011: a TERMINAL_TIGHT endpoint (an unregistered element input: ctlm c* carries p_am into the
+        # fixed-latency argmax loop) gets its relay within `tight` um of the pin; same relay count (checked by the caller)
+        tt_ = getattr(v, 'TERMINAL_TIGHT', {})
+        tight0 = tt_.get(tuple(eps[0]))
+        tight1 = tt_.get(tuple(eps[-1]))
+        while L - s_last > (tight1 if tight1 and len(frames) else pitch) or (tight0 and not frames and L > tight0):
+            hi_ = tight0 if (tight0 and not frames) else pitch
+            reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + hi_]
             if not reach:
                 nxt = [c for c in cands if c[0] > s_last + 1.0]
                 if not nxt:
@@ -1114,10 +1176,17 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         site_cache[key] = (arr, cKDTree(arr + np.array([w / 2, h / 2])) if len(arr) else None)
         return site_cache[key]
 
+    def backtracks(pl):
+        """qwendie-1011 (textbook audit class 4 / fp_margin_lint far_side): a relay farther (Manhattan) from the next
+        chain point than its predecessor is (+ 20 um) -- the chain doubles back."""
+        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
+        mh = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])   # noqa: E731
+        return any(mh(pts[i], pts[i + 1]) > mh(pts[i - 1], pts[i + 1]) + 20.0 for i in range(1, len(pts) - 1))
+
     repaired, unrepaired = [], []
     for idx, pl in sorted(plans.items()):
         hs = hops_of(pl)
-        if max(hs) <= RMAX + 25.0:
+        if max(hs) <= RMAX + 25.0 and not backtracks(pl):
             continue
         bits = pl['bits']
         w, h = relay_frame(bits, pl['cl'])
@@ -1137,6 +1206,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         D = RMAX - max(W, H) / 2 + 26.0
         P0, P1 = pl['P0'], pl['P1']
         ctr = arr + np.array([W / 2, H / 2])
+        # qwendie-1011: every hop of the searched chain makes progress toward the load (no doubling back)
+        dP1 = np.abs(ctr[:, 0] - P1[0]) + np.abs(ctr[:, 1] - P1[1])
         ok_cache = {}
 
         def ok(i):
@@ -1144,7 +1215,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 x0, y0 = arr[i]
                 ok_cache[i] = free((x0, y0, x0 + W, y0 + H))
             return ok_cache[i]
-        def bfs(De):
+        def bfs(De, mono):
             start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i)]
             par = {i: -1 for i in start}
             front, hit = start, None
@@ -1158,38 +1229,59 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 nxt = []
                 for i, nb in zip(front, tree.query_ball_point(ctr[front], D, p=1)):
                     for j in nb:
-                        if j not in par and ok(j):
+                        if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j):
                             par[j] = i
                             nxt.append(j)
                 nxt.sort(key=lambda j: abs(ctr[j][0] - P1[0]) + abs(ctr[j][1] - P1[1]))
                 front = nxt[:4000]
             return hit, par, start
-        hit, par, start = bfs(D)
-        if hit is None:
-            # end hops only: the measured closing span (430.56 um, corridor gate +11.9 ps at SS) when the pin's
-            # neighbourhood is full
-            hit, par, start = bfs(430.0 - max(W, H) / 2)
-        if hit is None:
-            unrepaired.append(f"{pl['bid']} (start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f})")
+
+        def chain_of(hit, par):
+            c_ = [hit]
+            while par[c_[-1]] != -1:
+                c_.append(par[c_[-1]])
+            return [(float(arr[i][0]), float(arr[i][1]), w, h) for i in c_[::-1]]
+        # qwendie-1011: a monotone chain (each relay closer to the load: no doubling back) first; the unconstrained
+        # search only when the pass-1 hops are too long; a pass-1 chain whose hops pass is never replaced by a worse one
+        need = max(hs) > RMAX + 25.0
+        found, why = None, ''
+        for De, mono in ((D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)):
+            if not mono and not need:
+                continue
+            hit, par, start = bfs(De, mono)
+            if hit is None:
+                why = f"start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f}"
+                continue
+            cand = chain_of(hit, par)
+            if mono or not backtracks(dict(pl, frames=cand)) or found is None:
+                found = cand
+            if mono or not need:
+                break
+            if not backtracks(dict(pl, frames=cand)):
+                break
+        frames = []
+        if found is not None:
+            for f in found:
+                r_ = (f[0], f[1], f[0] + W, f[1] + H)
+                if not free(r_):
+                    break
+                add_rect(r_)
+                frames.append(f)
+            if len(frames) != len(found):
+                # the found chain overlaps itself: roll it back (a partial chain leaves a gap hop)
+                for f in frames:
+                    r_ = (f[0], f[1], f[0] + W, f[1] + H)
+                    for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
+                        for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
+                            lst = grid.get((gx, gy), [])
+                            if r_ in lst:
+                                lst.remove(r_)
+                frames, why = [], 'self-overlap'
+        if not frames:
+            unrepaired.append(f"{pl['bid']} ({why})")
             for r_ in own:
                 add_rect(r_)
             continue
-        chain = [hit]
-        while par[chain[-1]] != -1:
-            chain.append(par[chain[-1]])
-        chain = chain[::-1]
-        frames = []
-        for i in chain:
-            x0, y0 = arr[i]
-            r_ = (x0, y0, x0 + W, y0 + H)
-            if not free(r_):
-                break
-            add_rect(r_)
-            frames.append((float(x0), float(y0), w, h))
-        if len(frames) != len(chain):
-            for f in frames:
-                pass
-            unrepaired.append(pl['bid'] + ' (self-overlap)')
         old = len(pl['frames'])
         pl['frames'] = frames
         repaired.append((pl['bid'], old, len(frames), round(max(hops_of(pl)), 1)))
@@ -1391,13 +1483,7 @@ def _r18_post(v, m):
     regs = m['clock_regions']
 
     def region_of(it):
-        cx, cy = it.x + it.w / 2, it.y + it.h / 2
-        for k, r in enumerate(regs):
-            a, b_, c, d = r['rect']
-            if a <= cx <= c and b_ <= cy <= d:
-                return k
-        return min(range(len(regs)), key=lambda k: abs((regs[k]['rect'][0] + regs[k]['rect'][2]) / 2 - cx)
-                   + abs((regs[k]['rect'][1] + regs[k]['rect'][3]) / 2 - cy))
+        return region_at(regs, it.x + it.w / 2, it.y + it.h / 2)
     per = {}
     for it in m['insts']:
         if it.domain == 'stream_1p2' and it.name != 'hub_el':
@@ -1584,8 +1670,9 @@ def _r18_masters(v, m):
                         j += 1
                         continue
                     M.order.append(pn)
-                    M.area(pn, 1, min(M.w - 1.0, max(1.0, M.w / 2 + ((j % 12) - 6) * 1.6)),
-                           min(M.h - 1.0, max(1.0, M.h / 2 + (j // 12) * 1.6)), 1)
+                    pp_ = getattr(v, 'CK_AREA_PITCH', 1.6)   # qwendie-1011 r22ko4: 3.2 (1.6 < the M8 pin: rows overlapped)
+                    M.area(pn, 1, min(M.w - 1.0, max(1.0, M.w / 2 + ((j % 12) - 6) * pp_)),
+                           min(M.h - 1.0, max(1.0, M.h / 2 + (j // 12) * pp_)), 1)
                     j += 1
         return out
     v.masters = masters
@@ -2645,6 +2732,91 @@ def _slab_entry(v, obs_top=7, strip=0.0):
 
 
 # ------------------------------------------------------------------------------------------------ clock regions
+def region_at(regs, cx, cy):
+    """clock region of a point: the region whose rectangle contains it, else the one whose rectangle is NEAREST (edge
+    distance).  qwendie-1011 textbook audit (class 1): the old nearest-CENTRE fallback put a channel relay / ROM group
+    outside every rectangle into a region whose centre was nearer but whose rectangle was far (spine bands r97 / r98
+    of r22ko4 grew to 6.6 / 6.3 mm sink spans against REGION_MAX_MM 5.25)."""
+    def dist(r):
+        a, b_, c, d = r['rect']
+        return max(a - cx, 0.0, cx - c) + max(b_ - cy, 0.0, cy - d)
+    return min(range(len(regs)), key=lambda k: (dist(regs[k]), k))
+
+
+def _regions_from_placement(m):
+    """qwendie-1011 textbook audit (class 1): re-derive every region clock net (clk_r<k>) from the final placement.
+    The r18 pass assigns region clocks from the placement it sees; a later surgery (r22ko4 surgery_o4: seq_su,
+    cbuf_g / crom_g groups, spine parts) moves blocks without moving their clock pin, so a block kept the clock of a
+    region it no longer sits in (r22ko4: creg_spine_1 / _2 sink spans 6.6 / 6.3 mm vs REGION_MAX_MM 5.25).  Every
+    sink pin is re-filed under region_at(its centre); the root keeps one pll_r<k> output per non-empty region."""
+    regs = m['clock_regions']
+    by = {i.name: i for i in m['insts']}
+    keep, root, sinks = [], None, []
+    for bus in m['buses']:
+        bid, cl, bits, eps = bus
+        if re.fullmatch(r'clk_r\d+', bid):
+            for i, p in eps:
+                if p.startswith('pll_r'):
+                    root = root or i
+                else:
+                    sinks.append((i, p))
+        else:
+            keep.append(bus)
+    if root is None:
+        return
+    per = {}
+    for i, p in sinks:
+        it = by[i]
+        per.setdefault(region_at(regs, it.x + it.w / 2, it.y + it.h / 2), []).append((i, p))
+    # a region whose MEASURED sink span exceeds REGION_MAX_MM (r22ko4 + near-square VM: band rectangles 5,264 um tall)
+    # splits at the median of its long axis into two regions (a new root output each) until every span fits
+    cap, split = REGION_MAX_MM * 1000, 0
+    work = sorted(per)
+    while work:
+        k = work.pop()
+        l = per[k]
+        cx = [by[i].x + by[i].w / 2 for i, _ in l]
+        cy = [by[i].y + by[i].h / 2 for i, _ in l]
+        dx, dy = max(cx) - min(cx), max(cy) - min(cy)
+        if max(dx, dy) <= cap or len(l) < 2:
+            continue
+        key = cx if dx >= dy else cy
+        o = sorted(range(len(l)), key=lambda j: key[j])
+        lo, hi = [l[j] for j in o[:len(o) // 2]], [l[j] for j in o[len(o) // 2:]]
+        r0 = regs[k]
+        a, b_, c, d = r0['rect']
+        nk = len(regs)
+        regs.append(dict(name=f"{r0['name']}_s{split}", kind=r0['kind'], rect=[a, b_, c, d], split_of=r0['name']))
+        per[k], per[nk] = lo, hi
+        split += 1
+        for kk in (k, nk):        # the rectangle is shared: record the halves' measured extent
+            xs_ = [by[i].x + by[i].w / 2 for i, _ in per[kk]]
+            ys_ = [by[i].y + by[i].h / 2 for i, _ in per[kk]]
+            ext = round(max(max(xs_) - min(xs_), max(ys_) - min(ys_)) / 1000, 4)
+            regs[kk]['extent_mm'], regs[kk]['within_5p25'] = ext, ext <= REGION_MAX_MM + 1e-9
+        work += [k, nk]
+    moved = sum(1 for bus in m['buses'] if re.fullmatch(r'clk_r\d+', bus[0])
+                for i, p in bus[3] if not p.startswith('pll_r')
+                and f'clk_r{region_at(regs, by[i].x + by[i].w / 2, by[i].y + by[i].h / 2)}' != bus[0])
+    m['buses'] = keep + [(f'clk_r{k}', 'clock_trunk', 1, [(root, f'pll_r{k}')] + per[k]) for k in sorted(per)]
+    m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), refiled=moved, region_nets=len(per), split=split)
+
+
+def region_spans(m):
+    """measured sink span per region clock net (clk_r<k>: every pin but the hub's pll_r<k>), from the placement."""
+    by = {i.name: i for i in m['insts']}
+    out = {}
+    for bid, cl, bits, eps in m['buses']:
+        if not re.fullmatch(r'clk_r\d+', bid):
+            continue
+        pts = [by[i] for i, p in eps if i in by and not p.startswith('pll_')]
+        if pts:
+            xs = [i.x + i.w / 2 for i in pts]
+            ys = [i.y + i.h / 2 for i in pts]
+            out[bid] = dict(sinks=len(pts), span_um=[round(max(xs) - min(xs), 1), round(max(ys) - min(ys), 1)])
+    return out
+
+
 def clock_regions(v, m):
     """Decision C regions: 4 x 4-tile blocks (with their corridors), spine bands, strip thirds, IO blocks."""
     g = m['geo']
@@ -2990,6 +3162,9 @@ def record(v, m):
         e['max_extent_mm'] = max(e['max_extent_mm'], r['extent_mm'])
         if not r['within_5p25']:
             e['over_5p25'].append(r['name'])
+    # qwendie-1011 (textbook class 1): the MEASURED sink span of every region clock net, not only the rectangle's
+    spans = region_spans(m)
+    span_max = max((max(s['span_um']) for s in spans.values()), default=0.0)
     return dict(schema=SCHEMA, tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 b2_generator_sha256=F.sha('tools/qwen_rom_fulldie.py'), b3_selection_sha256=F.sha('tools/qwen_rom_fulldie_b3.py'),
                 die=die, vch_um=v.VCH, corridor_bits=v.CORRIDOR_BITS, tap_bits=v.TAP_BITS, band_repack=m['b3r2']['band'],
@@ -2997,6 +3172,8 @@ def record(v, m):
                 group_map={k: v_ for k, v_ in m['b3r2']['groups'].items() if k in ('primary', 'overflow_groups', 'overflow_slab')},
                 spine_parts=m['geo'].get('spine_parts_band') or m['geo']['spine_parts'],
                 fifo=fifo_accounting(v, m), clock_regions_summary=by_kind, clock_regions=m['clock_regions'],
+                region_sink_spans=spans, region_sink_span_max_mm=round(span_max / 1000, 4),
+                regions_over_5p25_measured=sorted(k for k, s in spans.items() if max(s['span_um']) > REGION_MAX_MM * 1000),
                 spine_vertical_cut_bits=spine_cut(m, [3000, 8800, 12000, 18000, 25000]),
                 link_stages=v.link_stages(m), bword_stages=bword_stages(v, m))
 

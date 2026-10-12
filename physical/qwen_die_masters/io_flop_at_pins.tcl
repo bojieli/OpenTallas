@@ -15,12 +15,35 @@ set ot_die [$ot_blk getDieArea]
 set dx0 [expr {double([$ot_die xMin]) / $ot_dbu}]; set dx1 [expr {double([$ot_die xMax]) / $ot_dbu}]
 set dy0 [expr {double([$ot_die yMin]) / $ot_dbu}]; set dy1 [expr {double([$ot_die yMax]) / $ot_dbu}]
 set ot_gap [expr {[info exists ::env(OT_OFLOP_GAP)] ? $::env(OT_OFLOP_GAP) : 1.0}]
+# OT_OFLOP_COLS (el1011-ds-coll 2026-10-11, default 4): staggered rows/columns per face.  A face whose boundary flops
+# outnumber 4 x (face length / flop width) gets overlapping FIRM sites and DPL pushes the overflow away from the pins
+# (coll cb S face: 2,100 t_vm + 592 f_vm flops on 680 um, t_vm[0] 270 ps of wire from its pin, kps TT -65).
+set ot_cols [expr {[info exists ::env(OT_OFLOP_COLS)] ? $::env(OT_OFLOP_COLS) : 4}]
 proc ot_of_drv {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return $it } }
   return ""
 }
+# ds-1010 2026-10-11: the chain net may also feed the flop's OWN hold / enable mux (a DFFE maps to DFF + mux whose feedback
+# can tap the Q-polarity net after the output inverter): accept a net whose only other loads are cells whose output is the
+# candidate flop's D net (lane lcrpx: 556 li_d / flt output flops skipped, li_d 240 ps of wire, TT -43 / -67).
+proc ot_of_fbonly {net cand chain} {
+  if {![ot_of_isff $cand]} { return 0 }
+  set dnet ""
+  foreach it [$cand getITerms] { if {[[$it getMTerm] getName] eq "D"} { set dnet [$it getNet] } }
+  if {$dnet eq "" || $dnet eq "NULL"} { return 0 }
+  foreach it [$net getITerms] {
+    if {![$it isInputSignal]} continue
+    set li [$it getInst]
+    if {$li eq $chain} continue
+    set ok 0
+    foreach ot [$li getITerms] { if {[$ot isOutputSignal] && [$ot getNet] eq $dnet} { set ok 1 } }
+    if {!$ok} { return 0 }
+  }
+  return 1
+}
 proc ot_of_isff {inst} { return [string match "DFF*" [[$inst getMaster] getName]] }
-proc ot_of_isbuf {inst} { set m [[$inst getMaster] getName]; return [expr {[string match "INV*" $m] || [string match "BUF*" $m]}] }
+proc ot_of_isbuf {inst} { set m [[$inst getMaster] getName]; return [expr {[string match "INV*" $m] || [string match "BUF*" $m] || [string match "HB*" $m]}] }
+# el1011-q-coll 2026-10-11: HB* = the ot_hdly kept hold-delay cells between a pin flop and its port (walked like a buffer)
 # the single input-signal sink of a net (or "" if 0 or > 1 sinks)
 proc ot_of_sink {net} {
   set s ""
@@ -54,7 +77,7 @@ foreach bt [$ot_blk getBTerms] {
         if {![$it isInputSignal]} continue
         set n2 [$it getNet]; if {$n2 eq "NULL"} continue
         set d2 [ot_of_drv $n2]
-        if {$d2 ne "" && [llength [$n2 getITerms]] == 2} { set nxt [$d2 getInst] }
+        if {$d2 ne "" && ([llength [$n2 getITerms]] == 2 || [ot_of_fbonly $n2 [$d2 getInst] $inst])} { set nxt [$d2 getInst] }
       }
       if {$nxt eq ""} break
       set inst $nxt
@@ -94,7 +117,7 @@ foreach bt [$ot_blk getBTerms] {
 foreach side {L R B T} { set ot_k($side) 0 }
 foreach c [lsort -real -index 1 $cand] {
   lassign $c side pos ff px py io
-  set col [expr {$ot_k($side) % 4}]; incr ot_k($side)
+  set col [expr {$ot_k($side) % $ot_cols}]; incr ot_k($side)
   set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]
   set h [expr {double([[$ff getMaster] getHeight]) / $ot_dbu}]
   switch $side {

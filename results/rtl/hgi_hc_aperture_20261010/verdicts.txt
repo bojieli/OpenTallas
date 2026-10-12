@@ -1,0 +1,13 @@
+hgi-1010/d HC unit: weight APERTURE (HSRC 1), striped HBM fetch (SPL sub-windows, HL = 8 SPL lanes), wide W-group x staging
+(WVM, ot_hgi_vm_wrd wave client), W > 32 segmented window fetch; ot_hgi_sm_pub banked-SRAM form (MEM 1, default).
+Benches (epyc2, ot-heavy), run_hc_unit.sh 18 cases (G22 ops 0/1/2, K 256..20480, multi-position):
+  plain W32                          HGI_HC_UNIT PASS        VIA_LANE (die lane client)        PASS
+  WVM + SPL 4                        PASS                    WVM + SPL 4 macro windows/x       PASS (earlier tree)
+  WVM + SPL 8                        PASS (earlier tree)     W 64 plain                        PASS
+  WVM + SPL 4 + APERTURE (4 records through slots)   PASS ;  MUT_AP (slot count drops bank 7)  FAIL errors=8
+  MUT_HL (window on the wrong lane)  FAIL errors=387        MUT_WV 1 / 2 (wave rotation / lane skew)  FAIL
+  HC_MIX_ROWS K 20480 1 row: 6,052 (HBM 1 lane) -> 482 cycles (WVM + SPL 4); HC_MIX 95,187 -> 10,144
+  pending: W 64 with WVM / aperture (runs lost to the host reset; rerun)
+run_pub_lock.sh (sm_pub MEM 1 vs the flop form, 32 SMs random, VM images): PUB_LOCK PASS; MUT_PAR FAIL; MUT_ROW FAIL
+run_su_stream.sh PUB (STREAM through sm_pub MEM 1): HGI_PUB_STREAM PASS; MUT_ROW FAIL
+HC tput gate (tools/hgi_unit_tput/run_hc.sh): PASS (pass PASS, MUT_POST FAIL)

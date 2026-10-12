@@ -1,0 +1,265 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qf-p2lba-ogrant-5b059065b-tc-hm10-lvt",
+ "block": "dsfd_coll_p2_lane_ba",
+ "owner": "Claude:mtp-colllane-1011/p2lba",
+ "source_branch": "claude/p2lba-1011",
+ "record_branch": "codex/closure-record-qf-p2lba-ogrant-5b059065b-tc-hm10-lvt",
+ "source_commit": "5b059065b286484fede2af1d82aa5e0f4dbf1512",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 95.24,
+  "ff_ps": 9.45,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -138.92,
+  "ss_sensitivity_tns_ps": -22468.1,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/corner_sta.json",
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qf-p2lba-ogrant-5b059065b-tc-hm10-lvt/routes/qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/work/orfs/logs/asap7/opentallas_dsfd_coll_p2_lane_ba_asap7_s81ph_qf_p2lba_ogrant_5b059065b_tc_hm10_lvt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_p2l_s1": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26692 abort_latency=94 starts=3\nMTP_P2LANE_GATE PASS\nP2LANE_RAW PASS\n",
+   "track": "parallel"
+  },
+  "bench_exact_p2l_s5": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "p2l_s5    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26544 abort_latency=94 starts=3\nMTP_P2LANE_GATE PASS\nP2LANE_RAW PASS\n",
+   "track": "parallel"
+  },
+  "bench_neg_seg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "neg_seg   expect fail -> fail OK :: [997000000] %Fatal: tb_mtp_p2_lanes.sv:101: Assertion failed in tb_mtp_p2_lanes: P2L transport lane-1 word 0 mismatch: got id 02c0002000000005678 exp 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012345678 got lo c10b000080000000 exp lo c10b000080000000\nMTP_P2LANE_GATE PASS\nP2LANE_RAW FAIL\n",
+   "track": "parallel"
+  },
+  "bench_neg_lat1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "neg_lat1  expect fail -> fail OK :: \nMTP_P2LANE_GATE PASS\nP2LANE_RAW FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1165,
+    "mean": 491.0,
+    "min": 482.2,
+    "max": 497.0
+   },
+   "all": {
+    "n": 9686,
+    "mean": 483.4,
+    "min": 465.9,
+    "max": 535.6
+   },
+   "errors": [],
+   "macros": null,
+   "macro_libs": 0
+  },
+  "ff": {
+   "boundary": {
+    "n": 1165,
+    "mean": 307.3,
+    "min": 300.4,
+    "max": 312.4
+   },
+   "all": {
+    "n": 9686,
+    "mean": 301.0,
+    "min": 285.2,
+    "max": 344.3
+   },
+   "errors": [],
+   "macros": null,
+   "macro_libs": 0
+  },
+  "env": {
+   "CK_SS_MEAN": 376,
+   "CK_SS_ALL_MEAN": 369,
+   "CK_SS_MIN": 368,
+   "CK_SS_ALL_MIN": 353,
+   "CK_SS_MAX": 381,
+   "CK_SS_ALL_MAX": 417,
+   "CK_TT_MEAN": 376,
+   "CK_TT_ALL_MEAN": 369,
+   "CK_TT_MIN": 368,
+   "CK_TT_ALL_MIN": 353,
+   "CK_TT_MAX": 381,
+   "CK_TT_ALL_MAX": 417,
+   "CK_FF_MEAN": 307,
+   "CK_FF_ALL_MEAN": 301,
+   "CK_FF_MIN": 300,
+   "CK_FF_ALL_MIN": 285,
+   "CK_FF_MAX": 312,
+   "CK_FF_ALL_MAX": 344,
+   "CK_SSLIB_MEAN": 491,
+   "CK_SSLIB_MIN": 482,
+   "CK_SSLIB_MAX": 497,
+   "CK_SSLIB_ALL_MEAN": 483,
+   "CK_SSLIB_ALL_MIN": 466,
+   "CK_SSLIB_ALL_MAX": 536,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated",
+  "macro_clk": {
+   "n": 0,
+   "slew_ps": 120.0,
+   "late_ps": 30.0,
+   "flag": false,
+   "outliers": []
+  }
+ },
+ "cycles_added": "off the chain (lane-1 words stream ahead of the start)",
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T23:47:52-07:00",
+ "job_spec": {
+  "name": "qf-p2lba-ogrant-5b059065b-tc-hm10-lvt",
+  "block": "dsfd_coll_p2_lane_ba",
+  "owner": "Claude:mtp-colllane-1011/p2lba",
+  "purpose": "p2lba 2026-10-11 (mtp-colllane-1011): dsfd_coll_p2_lane_ba at origin/main 5b059065b = the OGRANT structural fix (8aa62270c: received words land in a 4-word register FIFO whose REGISTERED room gates the landing; output = MTP grant sender ot_dsrom_mtp_ltx, r_r into a pin flop, r_v/r_d from flops, no pin drives an enable). Routed classes before it: 0ddaf548b TT -141 (r_r -> li_ready -> 604-bit enables, 13-15 lv); quickfix RSKID d9fbc9948 TT -49/-50 = r_r -> skid2 out_d/sk_d 604-bit enables (10-12 lv, 400 paths SS) + out_v->r_v; both classes removed by OGRANT. 8aa62270c routes crashed only because SRCS lacked rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv (ot_dsrom_mtp_ltx not part of the design) -- added here; SDCM now exported. + OT_MULTI_VT=lvt (<= 2% cells) for margin. P2 gate at 5b059065b: p2l_s1 26,692 / p2l_s5 26,544 cyc (base 0ddaf548b 27,020), negatives FAIL. HM 0.010.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+   "branch": "claude/p2lba-1011",
+   "commit": "5b059065b"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_p2l_s1",
+     "cmd": "python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases p2l_s1 --raw -j 1",
+     "expect": "pass",
+     "pass_regex": "P2LANE_RAW PASS",
+     "threads": 8,
+     "peak_ram_gb": 16
+    },
+    {
+     "name": "exact_p2l_s5",
+     "cmd": "python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases p2l_s5 --raw -j 1",
+     "expect": "pass",
+     "pass_regex": "P2LANE_RAW PASS",
+     "threads": 8,
+     "peak_ram_gb": 16
+    },
+    {
+     "name": "neg_seg",
+     "cmd": "python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases neg_seg --raw -j 1",
+     "expect": "fail",
+     "fail_regex": "P2LANE_RAW FAIL",
+     "threads": 8,
+     "peak_ram_gb": 16
+    },
+    {
+     "name": "neg_lat1",
+     "cmd": "python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases neg_lat1 --raw -j 1",
+     "expect": "fail",
+     "fail_regex": "P2LANE_RAW FAIL",
+     "threads": 8,
+     "peak_ram_gb": 16
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_MULTI_VT=lvt; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.010 PD=0.40 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv' CLK=ck PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/redesign_ds/coll_split/tile.sdc bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_coll_p2_lane_ba rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 32
+   },
+   "route": {
+    "cmd": "export OT_MULTI_VT=lvt; export SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.010 PD=0.40 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv' CLK=ck PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/redesign_ds/coll_split/tile.sdc bash physical/s81_ph_views/common/route_view.sh {LABEL} contract dsfd_coll_p2_lane_ba rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 48
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_coll_p2_lane_ba"
+   }
+  ],
+  "cycles_added": "off the chain (lane-1 words stream ahead of the start)",
+  "merge_target": "main",
+  "budget": {
+   "enabled": false,
+   "reason": "S81-PH tile sheet is grade target (no calibration); routed on the calibrated measured insertion (standard flow, as the coll split3 tiles)."
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "host_require": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4"
+  ],
+  "route_corner": "TC"
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

@@ -22,6 +22,7 @@ BANK = 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_vet
 STATION = Q+'/ot_hbm_native_frame_station_rb.sv'
 CHAIN = Q+'/ot_hbm_native_quarter_chain_rb.sv'
 BANK_TB = 'rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv'
+SLICE = 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_station_slice.sv'  # HIER station tiles (el1011-hbm-no3)
 VETO_TB = 'rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv'
 PKG = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv', 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv']
 CAL = ('module tb_native_quarter_publication;',
@@ -65,6 +66,17 @@ CHAIN_MUTANTS = {
  'S8_rel_q_decision_removed': (STATION, 'rel_q<=rel_ok_d&&!release_all;', "rel_q<=1'b1;"),
  'S5_learned_send_not_recorded': (STATION, '    if(learned[t]||pend[t])ns[t]=1;', '    if(1\'b0)ns[t]=1;'),
 }
+# GRANT_SEAT=1 negative controls (only run with --grant-seat; the edited lines exist in the gs branch only).
+GRANT_MUTANTS = {
+# (A seat written on EVERY edge is not a negative here: the upstream rb station holds in_data while it offers, so the
+#  quarter bench cannot see it; measured 2026-10-11: S9 'if(1'b1)Ew<=' PASSES PASS19. Occupancy (take) is the check.)
+ 'S10_take_ignores_valid': (STATION, '  assign take=iv_p&&gr_d;', '  assign take=gr_d;'),
+}
+# HIER=1 negative control: a slice that commits the zero codeword instead of the seat must fail the quarter bench
+# (proves the bench exercises the slice datapath, not a leftover flat copy).
+HIER_MUTANTS = {
+ 'H1_slice_commit_zero': (SLICE, "if(com_q[i])code[i]<=sel_q[i]?Ew[i]:72'b0;", "if(com_q[i])code[i]<=72'b0;"),
+}
 
 
 def sha(p):
@@ -81,10 +93,13 @@ def run(cmd, log):
 
 RELREG = False
 HALFV = False
+NO2CHAIN = False
 CHAIN_DEF_OLD = 'module ot_hbm_native_quarter_chain_rb #(parameter integer ENABLE=0,STN_HALF=0)('
 DEF_OLD = 'parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0'
 SAFEV = False
 PHASE_SEAT = False
+GRANT = False
+HIER = False
 
 
 def relreg(out, files):
@@ -101,6 +116,14 @@ def relreg(out, files):
             t=Path(f).read_text(); t=t.replace('LOCAL_PHASE=0,HOLD_SEAT=0','LOCAL_PHASE=1,HOLD_SEAT=1').replace('RESET_SEAT=0','RESET_SEAT=1')
             d=out/('seats_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
             m=d/Path(f).name;m.write_text(t);f=str(m)
+        if GRANT and f.endswith('ot_hbm_native_frame_station_rb.sv'):
+            t=Path(f).read_text(); assert t.count('GRANT_SEAT=0,HIER=0)(')==1; t=t.replace('GRANT_SEAT=0,HIER=0)(','GRANT_SEAT=1,HIER=0)(')
+            d=out/('grant_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
+            m=d/Path(f).name;m.write_text(t);f=str(m)
+        if HIER and f.endswith('ot_hbm_native_frame_station_rb.sv'):
+            t=Path(f).read_text(); assert t.count('HIER=0)(')==1; t=t.replace('HIER=0)(','HIER=1)(')
+            d=out/('hier_'+hashlib.sha256(f.encode()).hexdigest()[:8]); d.mkdir(exist_ok=True)
+            m=d/Path(f).name;m.write_text(t);f=str(m)
         res.append(f)
     return res
 
@@ -109,7 +132,7 @@ def mutate(out, name, files):
     """Return file list with at most one mutated copy written under out/name."""
     if name is None:
         return relreg(out, files)
-    path, old, new = {**BANK_MUTANTS, **CHAIN_MUTANTS}[name]
+    path, old, new = {**BANK_MUTANTS, **CHAIN_MUTANTS, **GRANT_MUTANTS, **HIER_MUTANTS}[name]
     text = (ROOT/path).read_text()
     assert text.count(old) == 1, (name, old)
     d = out/name; d.mkdir(exist_ok=True)
@@ -132,7 +155,7 @@ def bank_bench(out, tag, stage, dist, mutant=None, red=1):
 
 def veto_bench(out, tag, mutant=None):
     """Station cross-bank veto bench: a station rail upset with healthy banks."""
-    files = [str(ROOT/p) for p in PKG+[BANK, 'rtl/common/ot_fwd_link_stage.sv', STATION, VETO_TB]]
+    files = [str(ROOT/p) for p in PKG+[BANK, SLICE, 'rtl/common/ot_fwd_link_stage.sv', STATION, VETO_TB]]
     files = mutate(out, mutant, files)
     vvp = out/f'{tag}.vvp'
     rc = run(['iverilog', '-g2012', '-s', 'tb_w2_rb_cross_bank_veto', '-o', str(vvp), *files], out/f'{tag}.compile.log')
@@ -152,7 +175,7 @@ def quarter_bench(out, tag, rb=True, mutant=None):
     files = [str(ROOT/s) for s in srcs]
     if rb:
         files = [f for f in files if not f.endswith(('ot_hbm_native_frame_station.sv', 'ot_hbm_native_quarter_chain.sv'))]
-        files += [str(ROOT/BANK), str(ROOT/STATION), str(ROOT/CHAIN)]
+        files += [str(ROOT/BANK), str(ROOT/SLICE), str(ROOT/STATION), str(ROOT/CHAIN)]
         if HALFV:
             files += [str(ROOT/Q/'ot_hbm_native_frame_station_rb_half.sv')]
     files = mutate(out, mutant, files)
@@ -171,7 +194,7 @@ def quarter_bench(out, tag, rb=True, mutant=None):
     if rb:
         old = 'ot_hbm_native_quarter_chain #(.ENABLE(1)) chain('
         assert tb.count(old) == 1
-        tb = tb.replace(old, 'ot_hbm_native_quarter_chain_rb #(.ENABLE(1)) chain(')
+        tb = tb.replace(old, 'ot_hbm_native_quarter_chain_rb #(.ENABLE(1)%s) chain(' % (',.NO2_CHAIN(1)' if NO2CHAIN else ''))
     if HALFV and rb:
         tb = tb.replace('.u_station.held.', '.u_station.hs.u_core.held.')
         # half rate: the registered drained/warm status settles in <=40 edges (2x the core step)
@@ -205,8 +228,11 @@ def main():
     ap.add_argument('--half', action='store_true', help='half-rate station shell (quarter bench only)')
     ap.add_argument('--safe', action='store_true', help='SAFE=1 (registered permission decision), implies --rel-reg')
     ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
+    ap.add_argument('--no2-chain', action='store_true', help='FALLBACK: quarter as 7 NO2 stations (chain NO2_CHAIN=1)')
+    ap.add_argument('--grant-seat', action='store_true', help='GRANT_SEAT=1: in_v pin lands in one flop, seat written on grant (no3s)')
+    ap.add_argument('--hier', action='store_true', help='HIER=1: payload in word-group slice tiles (requires --grant-seat)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
-    global RELREG, SAFEV, HALFV, PHASE_SEAT; PHASE_SEAT=a.phase_seat; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
+    global RELREG, SAFEV, HALFV, PHASE_SEAT, NO2CHAIN, GRANT, HIER; NO2CHAIN=a.no2_chain; GRANT=a.grant_seat; HIER=a.hier; PHASE_SEAT=a.phase_seat; RELREG = a.rel_reg or a.safe; SAFEV = a.safe; HALFV = a.half
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
     if a.quarter_only:
         r = quarter_bench(out, 'quarter_rb', True)
@@ -227,15 +253,18 @@ def main():
     for name in BANK_MUTANTS:
         r = bank_bench(out, 'neg_'+name, 0, 1, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
-    for name in CHAIN_MUTANTS:
+    for name in list(CHAIN_MUTANTS) + (list(GRANT_MUTANTS) if GRANT else []) + (list(HIER_MUTANTS) if HIER else []):
         if name == 'S8_rel_q_decision_removed' and not RELREG:
             continue
         r = veto_bench(out, 'neg_'+name, name) if name in VETO_MUTANTS else quarter_bench(out, 'neg_'+name, True, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
     rb, leg = res['quarter']['rb'].get('calendar', {}), res['quarter'].get('legacy_same_bench', {}).get('calendar', {})
+    res['no2_chain'] = NO2CHAIN
+    res['grant_seat'] = GRANT
+    res['hier'] = HIER
     res['calendar_delta_edges_vs_legacy'] = {k: rb[k]-leg[k] for k in rb if k in leg}
     res['bench_edits'] = [e[2] for e in BENCH_EDITS]
-    pin_paths = [BANK, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/tb_native_quarter_publication.sv', *PKG]
+    pin_paths = [BANK, SLICE, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/tb_native_quarter_publication.sv', *PKG]
     if HALFV:
         pin_paths.append(Q+'/ot_hbm_native_frame_station_rb_half.sv')
     res['source_pins'] = {p: sha(ROOT/p) for p in pin_paths}

@@ -1,7 +1,8 @@
 /* Chip Explorer element page (/explorer/element/): one closed element (or a side-by-side pair), from its final routed
    DB (tools/explorer_elem_export.py: OpenROAD in the ORFS container with the closure loop's own sign-off STA setup) and
    its RTL at the closure's source commit (tools/explorer_elem/rtl_export.py: yosys elaboration of the exact synthesis
-   inputs).  Tabs: Layout (landing) · Timing · Clock arrival · Clock tree · Density · RTL (structure diagram, reference
+   inputs).  Tabs: Layout (landing: the routed-geometry viewer, layout.js + /api/layout) · Placement · Timing · Clock arrival ·
+   Clock tree · Density · RTL (structure diagram, reference
    model, source) · Facts (key numbers, throughput qualification, every fact with its record).
    URL: ?p=<page id> | ?e=<element id>; #tab=<tab>; ?safe=1 hides raw names. */
 (function(){
@@ -21,13 +22,17 @@ function hex2rgb(h){ h = h.replace('#', ''); if (h.length === 3) h = h.split('')
 
 const F = {flop: 1, clk: 2, lvt: 4, hold: 8, repair: 16, infer: 32, slvt: 64, icg: 128};
 const TABS = [
-  ['layout', 'Layout', 'Every placed cell of the routed layout, coloured by the RTL block it implements.'],
+  ['geo', 'Layout', 'The routed geometry from the final DB, per metal layer: every wire, via, pin and cell shape, with contract findings, timing paths, the clock tree and congestion drawn on it.'],
+  ['layout', 'Placement', 'Every placed cell of the routed layout, coloured by the RTL block it implements.'],
   ['timing', 'Timing', 'The worst setup (TT) and hold (FF) paths, drawn through their placed pins, with per-stage delays.'],
   ['arrival', 'Clock arrival', 'When the clock edge reaches each flop, on one colour scale for every element shown.'],
   ['tree', 'Clock tree', 'How one clock pin feeds every flop: each buffer level and clock gate, on the layout and as a level diagram.'],
   ['density', 'Density', 'Cell density, pin density and routed-wire demand per bin.'],
   ['rtl', 'RTL', 'Structure from the elaborated RTL, the reference model the bench names, and the source at the closure\u2019s commit. Select a module to light its cells.'],
   ['facts', 'Facts', 'Key numbers, throughput qualification against the budget, and every sign-off and layout fact with its record.']];
+TABS.push(['how', 'How it works', 'What the element does and how, step by step: the curated stories that walk its datapath (shell.js).']);
+const SHELL = window.ElemShell || null;   // header, breadcrumb, tab availability (shell.js + /api/explorer/elem_shell)
+const PATH_EL = (() => { const m = location.pathname.match(/^\/explorer\/element\/([^/]+)$/); return m && m[1] !== 'index.html' ? decodeURIComponent(m[1]) : null; })();
 const LAYOUT_TABS = new Set(['layout', 'timing', 'arrival', 'tree', 'density']);
 const PAL = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#17becf', '#bcbd22', '#8c6bb1'];
 const OTHER = '#7c86a6', UNATTR = '#4a5678';
@@ -45,7 +50,7 @@ const S = {page: null, pages: null, els: [], tab: 'layout', depth: null, iso: {}
 /* ------------------------------------------------------------------ theme */
 function applyTheme(){ const t = lsGet('theme', ''); if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
 applyTheme();
-$('theme').onclick = () => { const dark = cssv('color-scheme') !== 'light'; lsSet('theme', dark ? 'light' : 'dark'); applyTheme(); S.els.forEach(E => E.raster = {}); render(); };
+$('theme').onclick = () => { const dark = cssv('color-scheme') !== 'light'; lsSet('theme', dark ? 'light' : 'dark'); applyTheme(); S.els.forEach(E => E.raster = {}); render(); if (window.LayoutViewer) LayoutViewer.theme(); };
 
 /* ------------------------------------------------------------------ load */
 async function getJSON(u){ const r = await fetch(u, {cache: 'no-store'}); if (!r.ok) throw new Error(r.status + ' ' + u); return r.json(); }
@@ -58,18 +63,22 @@ async function init(){
   let pages = {pages: [], elements: {}};
   try { pages = await getJSON('pages.json' + QS); } catch (e) {}
   S.pages = pages;
-  let pid = QP.get('p'), eid = QP.get('e');
+  let pid = QP.get('p'), eid = QP.get('e') || PATH_EL;
   let page = pages.pages.find(p => p.id === pid);
-  if (!page && eid) page = pages.pages.find(p => p.elements.length === 1 && p.elements[0] === eid) || {id: eid, elements: [eid], title: null, summary: null, blocks: []};
+  // one element: the shell resolves the data id (an export may sit under the closing job's block name) and fills the header
+  S.shell = !page && eid && SHELL ? await SHELL.load(eid) : null;
+  const did = S.shell && S.shell.data ? S.shell.data : eid;
+  if (!page && eid) page = pages.pages.find(p => p.elements.length === 1 && p.elements[0] === did) || {id: did, elements: [did], title: null, summary: null, blocks: []};
   if (!page) page = pages.pages[0];
   if (!page){ $('sum').textContent = 'No element pages are installed yet.'; return; }
   S.page = page;
-  document.title = (page.title || 'Element Layout').slice(0, 40);
-  $('title').textContent = page.title || page.elements.join(' vs ');
-  S.tab = hashTab() || 'layout';
+  if (!S.shell) document.title = (page.title || 'Element Layout').slice(0, 40);
+  if (!S.shell) $('title').textContent = page.title || page.elements.join(' vs ');
+  S.tab = hashTab() || 'geo';
   renderTabs();
   buildStage();
   const els = await Promise.all(page.elements.map(async (id, k) => {
+    if (S.shell && !S.shell.data) return {id, err: S.shell.missing || 'no routed data', k, pane: S.panes[k]};
     try {
       const d = await getJSON('data/' + encodeURIComponent(id) + '.json' + QS);
       if (!d.geom) return {id, d, k, pane: S.panes[k], nolayout: true, M: {status: (d.facts.find(f => f.k === 'status') || {}).v, recTT: factv(d, /setup WNS \(sign-off/), recFF: factv(d, /^FF hold WNS \(sign-off/), drc: factv(d, /^DRC$/)}};
@@ -79,12 +88,14 @@ async function init(){
     } catch (e) { return {id, err: String(e), k, pane: S.panes[k]}; }
   }));
   S.els = els;
-  if (!page.title) $('title').textContent = els.map(E => E.d ? E.d.label + (E.d.target ? ' · ' + E.d.target : '') : E.id).join(' vs ');
+  if (!page.title && !S.shell) $('title').textContent = els.map(E => E.d ? E.d.label + (E.d.target ? ' · ' + E.d.target : '') : E.id).join(' vs ');
   document.title = ($('title').textContent || 'Element').slice(0, 40);
   const sumtxt = page.summary || els.filter(E => E.d).map(E => [E.d.category, E.d.role && E.d.role !== E.d.category ? E.d.role : null, E.d.nosta && E.d.layout ? 'timing not re-run (sources released)' : null].filter(Boolean).join(' · ')).join(' | ');
   $('sum').textContent = sumtxt; $('sum').parentNode.hidden = !sumtxt;
   els.forEach(E => { const p = E.pane; p.busy.textContent = E.err ? 'Could not load ' + E.id + ': ' + E.err : E.nolayout ? 'Layout data released: the closure loop deleted this job\u2019s routed DB before the page existed. RTL and Facts remain.' : ''; p.busy.hidden = !(E.err || E.nolayout); });
   if (LAYOUT_TABS.has(S.tab) && els.every(E => E.nolayout || E.err)){ S.tab = 'facts'; renderTabs(); }
+  if (SHELL && !SHELL.tab(S.tab, S).ok){ S.tab = 'facts'; }
+  renderTabs();
   chooseLayout();
   S.depth = +lsGet('depth.' + page.id, 0) || null;
   regroup();
@@ -243,9 +254,21 @@ function resolveReg(E, name){
 
 /* ------------------------------------------------------------------ tabs */
 function renderTabs(){
-  $('tabs').innerHTML = TABS.map(([k, t]) => `<button type="button" role="tab" data-tab="${k}" aria-selected="${S.tab === k}">${t}</button>`).join('');
-  $('tabs').querySelectorAll('[data-tab]').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  const av = k => SHELL ? SHELL.tab(k, S) : {ok: true};
+  $('tabs').innerHTML = TABS.map(([k, t]) => { const a = av(k);
+    return `<button type="button" role="tab" data-tab="${k}" aria-selected="${S.tab === k}" tabindex="${S.tab === k ? 0 : -1}"${a.ok ? '' : ` aria-disabled="true" title="${esc(a.why)}"`}>${t}</button>`; }).join('');
+  $('tabs').querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { const a = av(b.dataset.tab);
+    if (a.ok) setTab(b.dataset.tab); else $('tabdesc').textContent = (TABS.find(t => t[0] === b.dataset.tab) || [])[1] + ' is unavailable: ' + a.why + '.'; });
+  // roving focus: arrow keys move along the tab bar, Home / End jump
+  $('tabs').onkeydown = e => { const bs = [...$('tabs').querySelectorAll('[data-tab]')], i = bs.indexOf(document.activeElement); if (i < 0) return;
+    const j = e.key === 'ArrowRight' ? (i + 1) % bs.length : e.key === 'ArrowLeft' ? (i - 1 + bs.length) % bs.length : e.key === 'Home' ? 0 : e.key === 'End' ? bs.length - 1 : -1;
+    if (j >= 0){ e.preventDefault(); bs[j].focus(); } };
   $('tabdesc').textContent = (TABS.find(t => t[0] === S.tab) || [])[2] || '';
+  const na = TABS.map(([k, t]) => [t, av(k)]).filter(([, a]) => !a.ok);
+  // one line per distinct reason, naming the tabs it greys out
+  const by = new Map(); na.forEach(([t, a]) => by.set(a.why, (by.get(a.why) || []).concat(t)));
+  $('tabna').innerHTML = [...by].map(([why, ts]) => `<b>${esc(ts.join(', '))}</b>: ${esc(why)}`).join('<br>');
+  $('tabna').hidden = !na.length;
 }
 function setTab(k){
   S.tab = k; renderTabs();
@@ -253,8 +276,32 @@ function setTab(k){
   render();
 }
 window.addEventListener('hashchange', () => { if (/^#(story-|overview)/.test(location.hash)){ setTab('layout'); return; } const t = hashTab(); if (t && t !== S.tab) setTab(t); });
+/* ------------------------------------------------------------------ Layout tab: the routed-geometry viewer (layout.js) */
+let lvLoading = null;
+function renderGeo(){
+  const on = S.tab === 'geo';
+  $('stage').hidden = on; $('side').hidden = on; $('geo').hidden = !on; $('geoside').hidden = !on;
+  if (!on){ if (window.LayoutViewer) LayoutViewer.close(); return false; }
+  const ok = S.els.filter(E => E.d);
+  if (!ok.length){ $('geo').innerHTML = '<div class="lv-busy">' + esc(S.els.map(E => E.err || '').join(' ') || 'No element data.') + '</div>'; return true; }
+  const k = Math.min(S.geoEl || 0, ok.length - 1), E = ok[k];
+  if (ok.length > 1){
+    $('tabdesc').innerHTML = esc(TABS[0][2]) + ' <span class="seg" style="margin-left:8px">' + ok.map((x, i) => `<button type="button" data-ge="${i}" aria-pressed="${i === k}">${esc(short(x))}</button>`).join('') + '</span>';
+    $('tabdesc').querySelectorAll('[data-ge]').forEach(b => b.onclick = () => { S.geoEl = +b.dataset.ge; render(); });
+  }
+  const go = () => LayoutViewer.open({root: $('geo'), side: $('geoside'), el: E.id, d: E.d, E: E.nolayout || E.err ? null : E, safe: SAFE,
+    onFallback: () => setTab('layout')});
+  if (window.LayoutViewer) go();
+  else {
+    lvLoading = lvLoading || new Promise((res, rej) => { const s = document.createElement('script'); s.src = '/explorer/element/layout.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    lvLoading.then(go).catch(e => { $('geo').innerHTML = '<div class="lv-busy">Layout viewer failed to load: ' + esc(String(e)) + '</div>'; });
+  }
+  return true;
+}
 function render(){
   document.body.className = 'tab-' + S.tab;
+  if (renderGeo()) return;
+  if (SHELL && SHELL.render(S)) return;
   S.els.forEach(E => { if (!E.err && !E.nolayout && (!E.view || E.view.auto)) fit(E); });
   renderSide(); redrawAll();
 }
@@ -392,10 +439,10 @@ function draw(E){
     c.globalAlpha = 1;
   }
   for (const o of spec.overlays || []) OVER[o] && OVER[o](E, c, r, spec);
-  P.lab.innerHTML = `<b>${esc(E.d.label + (E.d.role ? ' · ' + E.d.role : ''))}</b><br>${esc(SAFE ? '' : E.d.block + ' · ')}${fmt(E.W, 1)} × ${fmt(E.H, 1)} µm · ${fmt(E.n, 0)} cells` +
+  P.lab.innerHTML = `<b>${esc(E.d.label + (E.d.role ? ' · ' + E.d.role : ''))}</b><br>${esc(SAFE ? '' : E.d.block + ' · ')}${fmt(E.W, 1)} × ${fmt(E.H, 1)} \u00b5m · ${fmt(E.n, 0)} cells` +
     (S.tab === 'tree' ? `<br>${E.cw && S.tview === 'wires' ? `routed clock wires from the DB (${fmt(E.cw.n, 0)} segments)` : 'tree topology: straight lines driver → driven buffer'}` : '') +
     (S.tab === 'rtl' && S.rtlEl === E.k && S.rtlSel != null ? `<br>lit: ${esc(SAFE ? 'selected module' : (S.rtlSel || '(top)'))} · <span style="color:var(--accent)">&#9632;</span> named <span style="color:var(--warn)">&#9632;</span> inferred` : '');
-  const bar = niceStep(80 / s); P.scale.textContent = `${bar >= 1 ? fmt(bar, 0) : fmt(bar, 2)} µm ≈ ${fmt(bar * s, 0)} px`;
+  const bar = niceStep(80 / s); P.scale.textContent = `${bar >= 1 ? fmt(bar, 0) : fmt(bar, 2)} \u00b5m ≈ ${fmt(bar * s, 0)} px`;
 }
 function niceStep(v){ const m = Math.pow(10, Math.floor(Math.log10(v))), e = v / m; return (e >= 5 ? 5 : e >= 2 ? 2 : 1) * m; }
 function drawCells(E, c, r, mode){
@@ -493,7 +540,7 @@ function hover(E, e){
     if (best >= 0){ const n = N[best]; html = `<div class="n">${esc(SAFE ? n[4] : n[6])}</div><div class="m">${esc(n[4])} · level ${n[3]}${/ICG/.test(n[4]) ? ' · clock gate' : ''} · clock arrival TT ${fmt(n[5], 1)} ps</div>`; }
   }
   if (!html && S.tab === 'density'){ const g = E.d.geom.grid, bx = Math.floor(x / g.bin_um), by = Math.floor(y / g.bin_um), k = by * g.nx + bx;
-    html = `<div class="n">bin ${bx},${by} (${fmt(g.bin_um, 1)} µm)</div><div class="m">cell density ${fmt(100 * g.density[k], 1)} % · signal pins ${fmt(g.pins[k], 0)} · routed-wire RUDY ${fmt(g.rudy[k], 2)} µm/µm²</div>`; }
+    html = `<div class="n">bin ${bx},${by} (${fmt(g.bin_um, 1)} \u00b5m)</div><div class="m">cell density ${fmt(100 * g.density[k], 1)} % · signal pins ${fmt(g.pins[k], 0)} · routed-wire RUDY ${fmt(g.rudy[k], 2)} \u00b5m/\u00b5m²</div>`; }
   if (!html){
     const m = E.d.geom.macros.find(q => x >= q.x0 && x <= q.x1 && y >= q.y0 && y <= q.y1);
     const i = hit(E, x, y, 0);
@@ -505,8 +552,8 @@ function hover(E, e){
       html = `<div class="n">${esc(SAFE ? 'cell #' + i : (j >= 0 ? L[j][4] : 'cell #' + i + ' (synthesis-named)'))}</div>
         <div class="m">master ${esc(E.d.geom.masters[E.mas[i]])}${tags.length ? ' · ' + tags.join(' · ') : ''}<br>
         block <span style="color:${E.groups[E.grp[i]].color}">&#9632;</span> ${esc(SAFE ? 'block ' + (E.grp[i] + 1) : E.groups[E.grp[i]].name)}${SAFE ? '' : `<br>module ${esc(mod)}`}${f & F.infer ? ' <i>(inferred: from the flops it connects to)</i>' : ''}${rl}<br>
-        at (${fmt(E.x[i], 2)}, ${fmt(E.y[i], 2)}) µm${j >= 0 ? ` · clock TT ${fmt(L[j][3], 1)} ps${E.d.clock_ff_match && E.d.clock_ff_leaves ? ` / FF ${fmt(E.d.clock_ff_leaves[j], 1)} ps` : ''}` : ''}</div>`;
-    } else if (m) html = `<div class="n">${esc(SAFE ? 'macro' : m.name)}</div><div class="m">${esc(m.master)} · ${fmt(m.x1 - m.x0, 2)} × ${fmt(m.y1 - m.y0, 2)} µm</div>`;
+        at (${fmt(E.x[i], 2)}, ${fmt(E.y[i], 2)}) \u00b5m${j >= 0 ? ` · clock TT ${fmt(L[j][3], 1)} ps${E.d.clock_ff_match && E.d.clock_ff_leaves ? ` / FF ${fmt(E.d.clock_ff_leaves[j], 1)} ps` : ''}` : ''}</div>`;
+    } else if (m) html = `<div class="n">${esc(SAFE ? 'macro' : m.name)}</div><div class="m">${esc(m.master)} · ${fmt(m.x1 - m.x0, 2)} × ${fmt(m.y1 - m.y0, 2)} \u00b5m</div>`;
   }
   if (!html){ tip.hidden = true; return; }
   tip.innerHTML = html; tip.hidden = false;
@@ -557,8 +604,8 @@ function keyNumbersHtml(E){
     ['clocks (sign-off SDC)', cl.length ? cl.join('<br>') : (d.layout ? 'not read (geometry-only export)' : '—')],
     [setupK.replace(' (sign-off record)', '') + ' / FF hold', `<span class="${f(/setup WNS \(sign-off/) >= 0 ? 'ok' : 'ng'}">${fx(f(/setup WNS \(sign-off/), '', 2)}</span> / <span class="${f(/^FF hold WNS \(sign-off/) >= 0 ? 'ok' : 'ng'}">${fx(f(/^FF hold WNS \(sign-off/), '', 2)}</span> ps · DRC ${fx(f(/^DRC$/))}`],
     ['cycles added', fx(f(/^cycles added/))],
-    ['std-cell area', fx(f(/^std-cell area/), 'µm²', 0) + (f(/^macro area/) ? ' + macros ' + fx(f(/^macro area/), 'µm²', 0) : '')],
-    ['die · utilisation', fx(f(/^die$/), 'µm') + ' · ' + fx(f(/^utilisation/), '%', 1)],
+    ['std-cell area', fx(f(/^std-cell area/), '\u00b5m²', 0) + (f(/^macro area/) ? ' + macros ' + fx(f(/^macro area/), '\u00b5m²', 0) : '')],
+    ['die · utilisation', fx(f(/^die$/), '\u00b5m') + ' · ' + fx(f(/^utilisation/), '%', 1)],
     ['cells · flops', fx(f(/^std cells$/)) + ' · ' + fx(f(/^flops$/))],
     ['LVT / SLVT cells', fx(f(/^LVT cells/), '%', 2) + ' / ' + fx(f(/^SLVT cells/), '%', 2)],
     ['power (vectorless, TT)', fx(f(/^power/), 'mW', 1)]];
@@ -576,12 +623,12 @@ function tputHtml(E){
   const lab = st => st === 'QUALIFIED' ? 'ver' : st === 'UNQUALIFIED_NO_BENCH' ? 'unv' : 'bad';
   const txt = st => st === 'UNQUALIFIED_NO_BENCH' ? 'UNQUALIFIED · no production-shape bench' : st;
   const L = el.limiting || {};
-  const ops = (el.ops || []).map(o => `<tr><td class="m">${esc(o.op)}</td><td class="m">${esc(o.model)}</td><td><span class="lbl ${lab(o.status)}">${esc(txt(o.status))}</span></td><td class="n">${o.ratio == null ? '—' : fmt(o.ratio, 3)}</td><td class="m" style="font-size:10.5px">${esc(o.src || '—')}</td></tr>`).join('');
+  const ops = (el.ops || []).map(o => `<div class="fact"><div class="fr"><span><code>${esc(o.op)}</code> · ${esc(o.model)}</span><b><span class="lbl ${lab(o.status)}">${esc(txt(o.status))}</span> ${o.ratio == null ? '' : 'ratio ' + fmt(o.ratio, 3)}</b></div>${o.owner && o.owner !== '-' ? `<div class="note" style="margin:2px 0 0">owner ${esc(o.owner)}</div>` : ''}<div class="src">${esc(o.src || 'no source recorded')}</div></div>`).join('');
   const cl = cls.map(c => `<tr><td class="m">${esc(c.model)} · ${esc(c.cls)}</td><td><span class="lbl ${lab(c.status)}">${esc(txt(c.status))}</span></td><td class="n">${fmt(c.critical_cycles_per_token, 1)}</td><td class="n">${fmt(100 * c.share, 1)} %</td><td class="n">${fmt(100 * c.measured_fraction, 2)} % of ${fmt(c.nodes, 0)}</td></tr>
     ${c.n_unmeasured ? `<tr><td colspan="5" class="note">unmeasured nodes (${c.n_unmeasured}): ${esc((c.unmeasured_nodes || []).join(', '))}</td></tr>` : ''}`).join('');
   return `<div class="vbox"><p><span class="lbl ${lab(el.status)}">${esc(txt(el.status))}</span> ${el.ratio == null ? 'measured / budget ratio: <b>none recorded</b> (status from the token-path class below)' : `measured / budget = <b>${fmt(el.ratio, 3)}</b> (qualifies at ≤ ${fmt(qr, 2)})`}</p>
     <p class="note" style="margin-top:4px">limiting op ${esc(L.op || '—')} in ${esc(L.model || '—')}${L.owner && L.owner !== '-' ? ' · owner ' + esc(L.owner) : ''}</p>
-    <div class="tw"><table class="t" style="margin-top:6px"><thead><tr><th>op</th><th>model</th><th>status</th><th class="n">ratio</th><th>source</th></tr></thead><tbody>${ops}</tbody></table></div>
+    <div class="facts" style="margin-top:6px">${ops}</div>
     ${cl ? `<div class="tw"><table class="t" style="margin-top:8px"><thead><tr><th>token-path class</th><th>status</th><th class="n">cycles / token</th><th class="n">share</th><th class="n">measured</th></tr></thead><tbody>${cl}</tbody></table></div><p class="note">${esc(cls[0].basis || '')}</p>` : ''}
     ${src}</div>`;
 }
@@ -723,7 +770,7 @@ function rtlSideHtml(){
   const ok = S.els.filter(E => !E.err);
   const E = ok.find(x => x.k === S.rtlEl) || ok[0]; if (!E) return '';
   if (SAFE) return sec('RTL', '<p class="note">The RTL source is not shown in the share-safe view.</p>');
-  if (!E.d.rtl_file) return sec(esc(E.d.label) + ' · RTL', `<p class="note">No RTL export for this element (the job's synthesis config was not found).</p><h4 class="sub">Reference model</h4>${refHtml(E)}`);
+  if (!E.d.rtl_file) return sec(esc(E.d.label) + ' · RTL', `<p class="note">No RTL export for this element: ${esc(E.d.rtl_error || 'the job\'s synthesis config was not found')}.</p><h4 class="sub">Reference model</h4>${refHtml(E)}`);
   if (!E.rtl) return sec('RTL', '<p class="note">Loading the RTL&hellip;</p>');
   S.rtlEl = E.k;
   const R = E.rtl;
@@ -837,10 +884,10 @@ function renderSide(){
   } else if (T === 'density'){
     const mx = heatMax(S.dmetric);
     H.push(sec('Density / congestion', `<div class="seg" role="group"><button type="button" data-dm="density" aria-pressed="${S.dmetric === 'density'}">Cell density</button><button type="button" data-dm="pins" aria-pressed="${S.dmetric === 'pins'}">Pin density</button><button type="button" data-dm="rudy" aria-pressed="${S.dmetric === 'rudy'}">Routed-wire RUDY</button></div>
-      <div class="ramp" style="background:linear-gradient(90deg,${HEAT.join(',')})"></div><div class="rampl"><span>0</span><span>sqrt scale, shared</span><span>${S.dmetric === 'density' ? fmt(100 * mx, 0) + ' %' : S.dmetric === 'pins' ? fmt(mx, 0) + ' pins' : fmt(mx, 2) + ' µm/µm²'}</span></div>
+      <div class="ramp" style="background:linear-gradient(90deg,${HEAT.join(',')})"></div><div class="rampl"><span>0</span><span>sqrt scale, shared</span><span>${S.dmetric === 'density' ? fmt(100 * mx, 0) + ' %' : S.dmetric === 'pins' ? fmt(mx, 0) + ' pins' : fmt(mx, 2) + ' \u00b5m/\u00b5m²'}</span></div>
       <p class="note" style="margin-top:6px">${S.dmetric === 'density' ? 'Placed std-cell area per bin over bin area (macros excluded).' : S.dmetric === 'pins' ? 'Signal pins of placed cells per bin.' : 'Each net\'s final routed wire length spread evenly over its pin bounding box (RUDY with routed length): an estimate of routing demand, not global-route overflow; the routed DBs carry no GRT congestion map.'}</p>`));
-    ok.forEach(E => { const a = E.d.geom.grid[S.dmetric], s = a.slice().sort((x, y) => x - y), f = v => S.dmetric === 'density' ? fmt(100 * v, 1) + ' %' : S.dmetric === 'pins' ? fmt(v, 0) : fmt(v, 2) + ' µm/µm²';
-      H.push(sec(esc(E.d.label), `<dl class="kv"><dt>median bin</dt><dd>${f(pct(s, .5))}</dd><dt>99th pct bin</dt><dd>${f(pct(s, .99))}</dd><dt>max bin</dt><dd>${f(s[s.length - 1])}</dd><dt>bin</dt><dd>${fmt(E.d.geom.grid.bin_um, 1)} µm</dd></dl>`)); });
+    ok.forEach(E => { const a = E.d.geom.grid[S.dmetric], s = a.slice().sort((x, y) => x - y), f = v => S.dmetric === 'density' ? fmt(100 * v, 1) + ' %' : S.dmetric === 'pins' ? fmt(v, 0) : fmt(v, 2) + ' \u00b5m/\u00b5m²';
+      H.push(sec(esc(E.d.label), `<dl class="kv"><dt>median bin</dt><dd>${f(pct(s, .5))}</dd><dt>99th pct bin</dt><dd>${f(pct(s, .99))}</dd><dt>max bin</dt><dd>${f(s[s.length - 1])}</dd><dt>bin</dt><dd>${fmt(E.d.geom.grid.bin_um, 1)} \u00b5m</dd></dl>`)); });
   } else if (T === 'rtl'){
     H.push(rtlSideHtml());
   } else if (T === 'facts'){

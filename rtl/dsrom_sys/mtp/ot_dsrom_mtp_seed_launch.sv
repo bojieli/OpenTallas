@@ -17,8 +17,10 @@
 //        range  user >= MAXU or nrow == 0                                                                  fault[2]
 //      a failed descriptor launches NOTHING (state unchanged) and raises the sticky fault;
 //   3. per committed position inside the drafter window (the last WIN; older rows are outside the drafter's
-//      ring), fetch the position's 240-beat hidden row from the die VM (row stride 256 beats: address HBASE +
-//      {user, pos mod WIN, beat}) and stream it into seed_ctl, then wait out_done (all seed elements, die join);
+//      ring), fetch the position's 240-beat hidden row from the row store (row stride 256 beats: address HBASE +
+//      {issue epoch, user, pos mod WIN, beat}; the issue epoch = the user's epoch before this descriptor, i.e. the
+//      block epoch the committed positions were issued under: the store serves only that version of the row, never a
+//      squashed one -- dsfd_mtp_hrow) and stream it into seed_ctl, then wait out_done (all seed elements, die join);
 //   4. after the anchor row: a one-cycle program-start event {user, anchor, y, epoch} to the DSpark block mtp.0 issue.
 // Faults (sticky): [0] drop, [1] stale, [2] range, [3] protocol (VM response outside a row / x_done outside wait).
 // Mutants (negative controls, never in a build): OT_SEEDL_MUT_NOGAP (no lc check), OT_SEEDL_MUT_NOEPOCH (no epoch
@@ -55,14 +57,14 @@ module ot_dsrom_mtp_seed_launch #(
     localparam integer UB = (MAXU > 1) ? $clog2(MAXU) : 1;
     localparam integer WB = $clog2(WIN);
     localparam integer BB = 8;
-    initial if ((1 << WB) != WIN || BEATS > 256 || VM_AW < UB + WB + BB) $fatal(1, "seed_launch: bad dimensions");
+    initial if ((1 << WB) != WIN || BEATS > 256 || VM_AW < UB + WB + BB + 4) $fatal(1, "seed_launch: bad dimensions");
     localparam [2:0] S_IDLE = 3'd0, S_CHK = 3'd1, S_WAIT = 3'd2, S_ROW = 3'd3, S_PROC = 3'd4;
     reg [2:0] st;
     reg [NW-1:0] lc [0:MAXU-1];
     reg [3:0]    ep [0:MAXU-1];
     reg [MAXU-1:0] seen;                      // a user's first descriptor sets its epoch
     // decoded descriptor (registered)
-    reg [USER_W-1:0] r_u; reg [NW-1:0] r_anc, r_nrow, r_y, r_first; reg [3:0] r_ep;
+    reg [USER_W-1:0] r_u; reg [NW-1:0] r_anc, r_nrow, r_y, r_first; reg [3:0] r_ep, r_iep;
     reg [NW-1:0] pos; reg [8:0] nrq, nrs;
     assign d_r = (st == S_IDLE) && !c_v;
     wire [UB-1:0] ui = r_u[UB-1:0];
@@ -110,13 +112,14 @@ module ot_dsrom_mtp_seed_launch #(
 `endif
                     else begin
                         lc[ui] <= r_anc + 1'b1; ep[ui] <= r_ep; seen[ui] <= 1'b1;
+                        r_iep <= seen[ui] ? ep[ui] : 4'd0;     // the epoch these rows were ISSUED under
                         pos <= win_lo; st <= S_WAIT;
                     end
                 end
                 S_WAIT: if (x_rdy) begin
                     nrq <= 9'd1; nrs <= 0;
                     v_rq_v <= 1'b1;
-                    v_rq_a <= VM_AW'(HBASE) + {{(VM_AW-UB-WB-BB){1'b0}}, ui, pos[WB-1:0], {BB{1'b0}}};
+                    v_rq_a <= VM_AW'(HBASE) + {{(VM_AW-UB-WB-BB-4){1'b0}}, r_iep, ui, pos[WB-1:0], {BB{1'b0}}};
                     st <= S_ROW;
                 end
                 S_ROW: begin

@@ -226,6 +226,7 @@ module tb_dsfd_sp_vm;
     endtask
     integer p2c_base [$], p2c_nw [$], p2c_ex [$], p2c_sh [$], p2c_tag [$], p2c_chk [$]; reg [73:0] p2c_id [$];
     integer p2_w = 0;
+    localparam integer P2RL = 4; reg [7:0] rdh = 8'd0;     // c_l0r history (ready latency of the BE P2 port)
     integer rr_exp [$];
     integer n_rr = 0, ks_seen = 0;
     integer x0_chk [$];                     // X0 reads that are region checks: row, or -1
@@ -243,7 +244,9 @@ module tb_dsfd_sp_vm;
                 void'(ex_l[bl].pop_front()); void'(ex_lt[bl].pop_front());
             end
         end
-        if (c_l0v && c_l0r) begin
+        // P2 port is READY-LATENCY P2RL (BE S-FACE CONTRACT v3): every c_l0v beat is a transfer and needs c_l0r P2RL cycles earlier
+        if (c_l0v && !rdh[P2RL-1]) begin $display("FAIL cyc %0d: P2 beat without ready %0d cycles earlier", cyc, P2RL); nbad = nbad + 1; end
+        if (c_l0v) begin
             chk(5, c_l0d[511:0], 0);
             p2_words_seen = p2_words_seen + 1;
             if (p2c_base.size() == 0) begin $display("FAIL cyc %0d: P2 flit without a command", cyc); nbad = nbad + 1; end
@@ -276,6 +279,7 @@ module tb_dsfd_sp_vm;
                 n_rr = n_rr + 1;
             end
         end
+        rdh = {rdh[6:0], c_l0r};
     endtask
     integer n_cq = 0;
     reg [511:0] ex_q_c [$];
