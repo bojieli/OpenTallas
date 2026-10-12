@@ -1430,15 +1430,37 @@ def geo_snapshot(key):
                 instances=[[r[5], g["kinds"][r[0]], r[1], r[2], r[3], r[4], ms.get(r[5], "")] for r in g["rects"]])
 
 
+# Designs this tool exports, in index order.  OPTIONAL entries are picked up as soon as their function lands, with no
+# other edit: qwen_hbm (Qwen3-8B on the HBM accelerator r25 die, T4) is written by the qwen-hbm-unify stream as
+# `def qwen_hbm()` (and optionally `def qwen_hbm_mtp(ar)`) in this file.  tools/token_path_refresh.py re-runs this
+# tool on every origin/main change of its inputs, so the new design is exported (and its view data installed) on the
+# first refresh after the function merges.
+DESIGNS = (("qwen_rom", "qwen", "qwen_mtp"), ("ds_rom", "ds_rom", "ds_rom_mtp"), ("hbm_ds", "hbm", "hbm_mtp"),
+           ("qwen_hbm", "qwen_hbm", "qwen_hbm_mtp"))
+
+
+def designs():
+    """({design: AR fn}, {design: MTP fn}) for every design whose function is defined in this module"""
+    g = globals()
+    fns = {k: g[f] for k, f, _ in DESIGNS if callable(g.get(f))}
+    mtps = {k: g[m] for k, _, m in DESIGNS if k in fns and callable(g.get(m))}
+    return fns, mtps
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--viz-dir", type=Path, default=None, help="also write data/ + geometry snapshots for the views here")
-    ap.add_argument("--only", default="qwen_rom,ds_rom,hbm_ds")
+    ap.add_argument("--only", default="all", help="comma list of designs, or 'all' (every design this tool defines, "
+                    "see designs())")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
-    fns = dict(qwen_rom=qwen, ds_rom=ds_rom, hbm_ds=hbm)
-    mtps = dict(ds_rom=ds_rom_mtp, hbm_ds=hbm_mtp)
+    fns, mtps = designs()
+    if a.only != "all":
+        unknown = set(a.only.split(",")) - set(fns)
+        if unknown:
+            ap.error(f"unknown design(s) {sorted(unknown)}; defined: {sorted(fns)}")
+        fns = {k: fns[k] for k in a.only.split(",")}
     index = []
 
     def write(name, rec):
@@ -1451,7 +1473,7 @@ def main():
             shutil.copy(p, dd / p.name)
         return p
 
-    for k in a.only.split(","):
+    for k in fns:
         rec = fns[k]()
         mrec = mtps[k](rec) if k in mtps else None
         if mrec:
@@ -1471,7 +1493,8 @@ def main():
         t = rec["totals"]
         print(f"{k}: {t['cycles']:,.1f} cycles = {t['us']} us = {t['tok_s']} tok/s (published {t['tok_s_published']}); "
               f"{len(rec['nodes'])} nodes, {len(rec['critical_path'])} on the critical path, {len(rec['groups'])} groups")
-        index.append(dict(design=k, title=rec["title"], file=p.name, tok_s=t["tok_s_published"], cycles=t["cycles"],
+        index.append(dict(design=k, title=rec["title"], file=p.name, die=(rec.get("geometry") or {}).get("key"),
+                          tok_s=t["tok_s_published"], cycles=t["cycles"],
                           mtp=dict(rec["mtp"], reason=None) if mrec else rec["mtp"]))
         if a.viz_dir:
             gk = rec["geometry"]["key"]

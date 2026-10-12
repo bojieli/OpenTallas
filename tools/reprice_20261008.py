@@ -275,6 +275,9 @@ def qwen():
     return res
 
 
+OPTIONAL_TARGETS = ("qwen_hbm",)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="reprice-") as td:
@@ -282,6 +285,11 @@ def main():
                    rule="today's recorded closure cycle costs only, each itemised and composed cumulatively by the existing "
                         "composition tools; upper bounds where a cost's exposure is not measured; no physical adoption implied",
                    ds_rom=ds_rom(Path(td)), hbm_ds=hbm(), qwen_rom=qwen())
+        # optional targets, priced as soon as their function lands (qwen-hbm-unify writes `def qwen_hbm()` here for
+        # Qwen3-8B on the HBM accelerator r25; tools/token_path_refresh.py re-runs this tool when it merges)
+        for k in OPTIONAL_TARGETS:
+            if callable(globals().get(k)):
+                rec[k] = globals()[k]()
     (OUT / "reprice.json").write_text(json.dumps(rec, indent=1) + "\n")
     d = rec["ds_rom"]
     for k in d["before"]:
