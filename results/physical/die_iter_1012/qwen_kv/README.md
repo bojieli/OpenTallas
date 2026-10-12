@@ -20,7 +20,8 @@ logic, counted separately.
 | Iter | Date (PT) | Src | Contract | Bound views | Real share (inst / area) | Legal / PDN | GRT overflow | TT setup WNS | FF hold WNS | Clock plan | IR | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | kv15 (baseline) | 10-11 02:12 | 14f0f4368 | (v1 source) | PHYs only; all elements ASSUMED constants, ideal clocks | 0.3% / 37.0% | PASS / PASS | 0 | +217.17 | +18.26 | none | none | Assumed single-flop views only: a die-wire audit, not element timing |
-| it1 | 10-12 00:17 | 0329aff19 | v4 | qkd_kvwq_ctl_bin (4), qkd_kvwq_leaf_s_w129_m (128) | 7.0% / 38.3% | running | running | running | running | running | not yet | Not bound: qkd_ectl (closed view qkd_ectl_b = old t_* interface, 531.36 x 345.6 vs slot 648 x 129.6), qkd_cdc_wleaf (no TT ETM). Largest placeholder: qkd_rhead 128 x 0.294 mm2 = 37.6 mm2 (open) |
+| it1 | 10-12 00:17 | 0329aff19 | v4 | qkd_kvwq_ctl_bin (4), qkd_kvwq_leaf_s_w129_m (128) | 7.0% / 38.3% | PASS / PDN PASS but **PG FAIL** (PSM-0069: all 132 bound views unconnected) | 0 | +87.90 (ideal) / +88.90 (plan) | +18.26 (ideal) / +17.51 (plan) | record missed the hreg shard cases -> re-recorded: 36 regions, 0 / 0 viol (intra 55.1, inter 94.4 ps) | not yet | Not bound: qkd_ectl (closed view qkd_ectl_b = old t_* interface, 531.36 x 345.6 vs slot 648 x 129.6), qkd_cdc_wleaf (no TT ETM). Largest placeholder: qkd_rhead 128 x 0.294 mm2 = 37.6 mm2 (open) |
+| it1b | 10-12 02:20 | cc7948034 | v4 | as it1 | 7.0% / 38.3% | PASS / PASS, **PG VDD / VSS PASS** | 0 | **+88.90** | **+17.51** | plan, 0 / 0 viol | not yet | Floorplan fix: die PDN grid `hv6` = vertical M7 straps (0.288 um, pitch 10.88) over every block master whose VDD pin is on M6 (bound real views carry M6 PG stripes; M6 and the die M8 are both horizontal, so the die grid never reached them). No relay hold miss on this die (raw FF positive with the CTS plan) |
 
 ## Open element items (sent to owners)
 
