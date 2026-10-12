@@ -27,7 +27,7 @@ module tb_loader_service_kvs #(parameter integer NATIVE=1,CONCURRENT=0,KNO=15,XS
     if(kr_v[d]&&kr_rdy[d]&&kr_tag[17*d+15+:2]==2'b01)normal_debt[d]=normal_debt[d]-1;
    end
   end
-  ot_hbm_svc_core_native #(.NATIVE(NATIVE),.SM_PC0({5'd28, 5'd24, 5'd20, 5'd16, 5'd12, 5'd8, 5'd4, 5'd0}),
+  ot_hbm_svc_core_native #(.NATIVE(NATIVE),.NATIVE_CHAIN(0),.SM_PC0({5'd28, 5'd24, 5'd20, 5'd16, 5'd12, 5'd8, 5'd4, 5'd0}),
     .RSP_ST(128'h10111101210021002211322133212110), .REQ_ST(32'h11112332), .W_ST(32'hec985300),
     .FWD(8'b01010101), .KV_PC(16), .IK_PC(17), .KV_ST(0), .IK_ST(0), .E_ST(11), .XST(XST), .KVS(1), .KNO(KNO)) u_svc (
     .ck(ck), .rst(rst_n), .q_d({8*42{1'b0}}), .q_v(8'd0), .q_fclk(8'd0), .q_rdy(q_rdy), .line(line), .fclk(fclk),
@@ -37,7 +37,7 @@ module tb_loader_service_kvs #(parameter integer NATIVE=1,CONCURRENT=0,KNO=15,XS
     .w_v(), .w_rdy(1'b0), .w_addr(), .w_len(), .w_tag(), .w_room(8'd0), .wr_v(8'd0), .wr_rdy(), .wr_tag(80'd0),
     .wr_beat(40'd0), .wr_data(2048'd0), .wq_d(292'd0), .wq_fclk(1'b0), .wq_g(), .k_wr_done(k_wr_done),
     .kvs(kvs), .kvs_done(kvs_done),
-    .outer_write_pending(1'b0),.native_v(native_v),.native_rdy(native_rdy),.native_pc(5'd7),.native_addr(native_addr),.native_tag(16'hbeef),
+    .outer_write_pending(1'b0),.native_v(native_v),.native_rdy(native_rdy),.native_pc(5'd7),.native_addr(native_addr),.native_tag(16'hbeef),.native_len(4'd1),
     .native_rsp_v(native_rsp_v),.native_rsp_rdy(native_rsp_rdy),.native_rsp_tag(native_rsp_tag),.native_rsp_data(native_rsp_data),.native_fault(native_fault));
   ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(30), .DW(256), .MEM_WORDS(1024), .TAGW(17), .LENW(4), .BEATW(4),
     .QD(64), .REFPB(3), .MEM_MODE(1), .CLK_PS(TCK)) u_m (

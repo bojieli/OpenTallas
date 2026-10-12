@@ -1,0 +1,79 @@
+{
+ "name": "hgi_attn_half_hi_cgvalid-32a2be683-tc-hm10-cl",
+ "block": "hfd_attn_half_hi",
+ "owner": "Codex:ATT-held-valid",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "codex/att-held-valid-20261010",
+  "commit": "32a2be6838a7c53b0e90e43192f3eadfc4379be4"
+ },
+ "purpose": "CG1 coherent16-head result guard; explicit fault on partial result; gated hard quad bound in PNR and macro-aware reSTA. IO fully timed (no blanket false paths). Producer gating exactness requires same-source assembly qualification before adoption.",
+ "stages": {
+  "bench": [
+   {
+    "name": "die_result_consumer_exact_negative",
+    "cmd": "python3 tools/run_hbm_att_result_valid.py",
+    "expect": "pass",
+    "pass_regex": "\"CG\": 1, \"returncode\": 0, \"passed\": true",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "die_result_consumer_unguarded_negative",
+    "cmd": "python3 tools/run_hbm_att_result_valid.py --negative-only",
+    "expect": "fail",
+    "fail_regex": "\"CG\": 0, \"returncode\": 1, \"passed\": false",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "successor routes timed IO with pinflop reference and existing real macro hierarchy; no IO exceptions"
+  },
+  "route": {
+   "cmd": "bash $(ls -d /srv/opentallas-scratch2/scratch/claude/ttviews/ttv_install.sh /srv/opentallas-scratch/claude/ttviews/ttv_install.sh 2>/dev/null | head -1) {SRC} ot_attn_tile_m6h1q=physical/hbm_attn_tile_r/quad_b_tc/c891a57cf_cg_hm10/view ot_attn_bank_sn544=physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544 ot_attn_bank_ew544=physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544 && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/hbm_attn_tile_r/signoff_833_int.sdc'; OUT={RUN}/routes CORES=16 TOP=hfd_attn_half_hi HALFDIR=physical/hbm_attn_tile_r/half_ps DH=689.04 QUADDIR=physical/hbm_attn_tile_r/quad_b_tc/c891a57cf_cg_hm10/view PARAMS=\"CG=1 PMID=2 NFC=2 NL=8 NLL=3 NI=6\" SLIVER=20 HALO=2 PADG=4 PADD=2 HM=0.010 PD=0.40 CTSA=\"-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150\" bash physical/hbm_attn_tile_r/half/route_half_cl.sh {LABEL} --orfs-var \"GLOBAL_ROUTE_ARGS=-congestion_iterations 30 -allow_congestion\"",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "normal input/output delays active; pinflop reference enabled; signoff_833_int only retimes real clock, no false paths introduced"
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_attn_tile_r/signoff_833_int.sdc"
+  ],
+  "macros": [
+   "physical/hbm_attn_tile_r/quad_b_tc/c891a57cf_cg_hm10/view",
+   "physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544",
+   "physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544"
+  ]
+ },
+ "route_hold_margin_ns": 0.01,
+ "route_hold_corners": "mm",
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "merge_target": null,
+ "pinflop_ref": true
+}

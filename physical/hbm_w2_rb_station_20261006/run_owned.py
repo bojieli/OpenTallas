@@ -32,8 +32,10 @@ p.add_argument('--tag', default='tk_W2_rb')
 p.add_argument('--half', action='store_true', help='half-rate shell top')
 p.add_argument('--phase-seat', action='store_true', help='localphase and real kept hold/reset delay seats')
 p.add_argument('--safe', action='store_true', help='SAFE=1 station (registered permission decision)')
+p.add_argument('--grant-seat', action='store_true', help='GRANT_SEAT=1: in_v pin lands in one flop, seat words written on grant')
 p.add_argument('--post-route-ff-hold', action='store_true',
                help='SS-only setup optimization at CTS/GRT; strict FF hold repair/signoff remains required after route')
+p.add_argument('--hier', action='store_true', help='HIER=1 station: payload in word-group slice tiles (el1011-hbm-no3)')
 p.add_argument('--hold-margin-ns', type=float, default=0.01)
 a, passthrough = p.parse_known_args()
 for k, e in (('l_max', 'CK_SS_MAX'), ('l_min', 'CK_SS_MIN'), ('l_ff_min', 'CK_FF_MIN'), ('l_ff_max', 'CK_FF_MAX')):
@@ -111,7 +113,26 @@ def endpoint(block, work, case):
                 basis='exact rb station host map, attributes/kept hierarchy and physical ties retained')
 
 
+_orig_io_constraints_tcl = driver.io_constraints_tcl
+
+
 def pins(regions, exhaustive=False, die_area_um=None):
+    # Balanced pins are fixed directly, bypassing IO placer's corner avoidance.
+    # Keep the along-face coordinate within the routable core span: ACK_frame
+    # at x~0 on the north face otherwise has no route through the W PDN strip.
+    if any(os.environ.get(k) for k in ('OT_PIN_BALANCE_H', 'OT_PIN_BALANCE_V', 'OT_PIN_GROUP_MAX')):
+        bounded = []
+        for region in regions:
+            region = dict(region)
+            lower, upper = ((2.16, a.core_height + 2.16)
+                            if region['edge'] in ('left', 'right') else
+                            (2.052, a.core_width + 2.052))
+            old_lower, old_upper = region.get('range_um', (lower, upper))
+            region['range_um'] = [max(lower, old_lower), min(upper, old_upper)]
+            if region['range_um'][0] >= region['range_um'][1]:
+                raise ValueError('station pin region outside routable core span')
+            bounded.append(region)
+        return _orig_io_constraints_tcl(bounded, exhaustive, die_area_um)
     pat = {'^(clk_sm|por_n|release_held|in_.*|release_.*)$': 'clk_sm por_n release_held in_* release_*',
            '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$': 'fclk_o out_* ACK_* fault drained paused'}
     return '\n'.join('set_io_pin_constraint -region '+r['edge']+':* -pin_names {'+pat[r['regex']]+'}' for r in regions)+'\n'
@@ -125,9 +146,12 @@ HQ = 'physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_fra
 argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb_half' if a.half else 'ot_hbm_native_frame_station_rb',
         '--source', rel+'/bank_veto_static.sv', '--source', 'rtl/common/ot_fwd_link_stage.sv',
         '--source', rel+'/station_rb_static.sv',
+        *(['--source', rel+'/slice_static.sv'] if a.hier else []),
         *(['--source', HQ] if a.half else []),
         '--param', 'ENABLE=1', '--param', f'NO={a.no}', *([] if a.half else ['--param', 'REL_REG=1', '--param', f'SAFE={int(a.safe)}']),
         *(['--param','LOCAL_PHASE=1','--param','HOLD_SEAT=1','--param','RESET_SEAT=1'] if a.phase_seat else []),
+        *(['--param','GRANT_SEAT=1'] if a.grant_seat else []),
+        *(['--param','HIER=1'] if a.hier else []),
         '--clock-port', 'clk_sm', '--clock-period-ns', f'{a.period_ps/1000:.6f}',
         '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', '0.025',
         '--orfs-corner', 'WC', '--hold-corners', ('WC' if a.post_route_ff_hold else 'WC,BC'), '--hold-margin-ns', str(a.hold_margin_ns),

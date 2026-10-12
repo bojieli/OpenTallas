@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hfd_su_tile",
+      "target": "HBM accelerator",
+      "owner": "Codex:hub_physical",
+      "recorded_at": "2026-10-10T05:55:00-07:00",
+      "description": "Structural SU tile successor with real falling-edge outputs; tiled quarter192macro elements,192 actual ICGs,42 wake-root lockups, shared qid sites match real E/M4 interface. No IO false paths in successor tile recipe.",
+      "source": {
+        "commit": "61d954b73",
+        "paths": [
+          "tools/hbm_hub_quarter_gen.py",
+          "physical/hbm_accel_die_views/su/rtl_tile_xl/hfd_su_tile_xl.sv",
+          "physical/hbm_accel_die_views/su/tile/route_tile_xl.sh"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "physical/hbm_accel_die_views/su/rtl_tile_xl",
+          "77a990296 per-tile wake/gating opt-in"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "results/uarch/hbm_sfu_reset_tree_20261010/su_tiled_gating.json",
+          "results/uarch/hbm_sfu_reset_tree_20261010/su_strap_geometry.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/hbm_sfu_reset_tree_20261010/tiled_gating/result.json: qid0-3 eightvectors each settle46; two-tile gating336checks each +/-100ps"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "ownership mutant8 mismatches; routing mutant1; latewake mutant24"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "evidence": [
+          "hbm_su_lane_pk2-aba7c2f73-tc-cl RUNNING ot-pve1; internal lane route is screening only until real TT/FF macro interface and tile context close",
+          "TT/FF measured insertion required; newtile andquarter not launched"
+        ]
+      },
+      "dependencies": [
+        "hbm_su_lane_pk2-aba7c2f73-tc-cl real TT/FF macro export",
+        "full tile input/output context with no false path",
+        "quarter192 real ICG CTS and M7/channel route"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "quarter is transport envelope, not SU controller; no physical closure or power saving adopted"
+        ]
+      }
+    },
+    {
+      "element": "hfd_sfu",
+      "target": "HBM accelerator",
+      "owner": "Codex:hub_physical",
+      "recorded_at": "2026-10-10T05:55:00-07:00",
+      "description": "Real RSTPIPE reset fanout tree pin1/banks8/leaves53 with62 protected registers;3 added reset admission cycles, no reset multicycle. Tall and widened physically admitted alternatives preserve progressing routes.",
+      "source": {
+        "commit": "61d954b73",
+        "paths": [
+          "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+          "physical/hbm_accel_die_views/su/route_sfu_reset_wide.sh"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "1c6bad500 opt-in reset tree; defaults0"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "results/uarch/hbm_sfu_reset_tree_20261010; widened237.6x330.48 channel301.104um4704 modeled tracks vs2769 required"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/hbm_sfu_reset_tree_20261010: fulllane1500 activecycles repeatedreset"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "never-release reset mutant246mismatches; both admitted jobs confirmed expected failure"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "evidence": [
+          "hbm_sfu_lane_rstpipe3-5fbc10b08-tc-cl RUNNING ot-epyc4",
+          "hbm_sfu_lane_rstpipe3w-d57301b03-tc-cl RUNNING ot-epyc4",
+          "no TT/FF full-interface closure yet"
+        ]
+      },
+      "dependencies": [
+        "real reset/command macro setup and clock-Q screening",
+        "full quarter corner route and channel tracks",
+        "actual reset cycles composed in scheduled consumer"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "legacy masked reset candidate remains history; quarter successor not adopted"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "classification": "synthesis-infrastructure-failure, not timing/design verdict",
+  "failed_source_commit": "c8a5b43521238462656bf9583bd30ad78d3be660",
+  "successor_source_commit": "45c0807b1",
+  "failure": "select -assert-min 1 w:g_rc.u_elem.* matched zero wires",
+  "observed_element": "genblk3.g_rc.u_elem",
+  "cause": "HCOL conditional branch adds Yosys automatic generate prefix",
+  "recovery": "optional prefix selector plus exact four 4096x274 macro count before and after synthesis",
+  "proof": "canonical full native pair hierarchy/proc/flatten passes replacement selector, four real ROMs and absence of legacy wake leaves",
+  "native_rtl_sha256": "a8d7593ad80dc3823187d009a95fdebe6efd332f319886a21248023776ebd7dd",
+  "physical_constraints_changed": false,
+  "route_result": "pending"
+}

@@ -1,0 +1,171 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qkd_kvwq_leaf_s-52115e3d5-tc-hm10",
+ "block": "qkd_kvwq_leaf",
+ "owner": "Codex:qwen-kv-leaves",
+ "source_branch": "codex/kv-leaves-20261010",
+ "record_branch": "codex/closure-record-qkd_kvwq_leaf_s-52115e3d5-tc-hm10",
+ "source_commit": "52115e3d53bfbe1be20d3c1d6691e86388515526",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_leaf_s-52115e3d5-tc-hm10",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 223.28,
+  "ff_ps": 4.3,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": 128.43,
+  "ss_sensitivity_tns_ps": 0.0,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_leaf_s-52115e3d5-tc-hm10/routes/qkd_kvwq_leaf_s_52115e3d5_tc_hm10/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_leaf_s-52115e3d5-tc-hm10/routes/qkd_kvwq_leaf_s_52115e3d5_tc_hm10/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_leaf_s-52115e3d5-tc-hm10/routes/qkd_kvwq_leaf_s_52115e3d5_tc_hm10/work/orfs/logs/asap7/opentallas_ot_qkvd_kv_wq_leaf_asap7_qdm_qkd_kvwq_leaf_s_52115e3d5_tc_hm10/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_pinned_leaf_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "KVWQ_LEAF_PINNED_EXACT_PASS: unchanged full32PC leaf mechanism, 24 and144 rows\n",
+   "track": "parallel"
+  },
+  "bench_pinned_leaf_mutants": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "KVWQ_LEAF_PINNED_NEG_DETECTED: unchanged full32PC mutants1/2/3\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T06:03:18-07:00",
+ "job_spec": {
+  "name": "qkd_kvwq_leaf_s-52115e3d5-tc-hm10",
+  "block": "qkd_kvwq_leaf",
+  "owner": "Codex:qwen-kv-leaves",
+  "purpose": "Same full-shape leaf RTL, re-pin301 CDCwrite/return bits to S. PlaceMX below actualCDC S write pins for <=100um final segments. No extra RTL edges or controller logic; exact pinned32PC component reused without rerun. Old leaf_a/b views preserved.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "codex/kv-leaves-20261010",
+   "commit": "52115e3d53bfbe1be20d3c1d6691e86388515526",
+   "extra_paths": [
+    "results/closure_loop/qkd_kvwq_leaf_a-5b265f2b7-tc-hm10"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "pinned_leaf_exact",
+     "cmd": "python3 tools/qwen_kv_die/kvwq_leaf_reuse_gate.py pos",
+     "expect": "pass",
+     "pass_regex": "^KVWQ_LEAF_PINNED_EXACT_PASS",
+     "threads": 1,
+     "peak_ram_gb": 1
+    },
+    {
+     "name": "pinned_leaf_mutants",
+     "cmd": "python3 tools/qwen_kv_die/kvwq_leaf_reuse_gate.py neg",
+     "expect": "fail",
+     "fail_regex": "^KVWQ_LEAF_PINNED_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qkd_kvwq_leaf_s.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qkd_kvwq_leaf_s {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qkd_kvwq_leaf_s --post-sdc physical/qwen_die_masters/signoff/qkd_kvwq_leaf_s.sdc --corners ss,tt,ff --out {RUN}/record/views/qkd_kvwq_leaf_s > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qkd_kvwq_leaf_s.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "current corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r22k budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/qwen_kv_binary_20261010/qkd_kvwq_leaf_s-52115e3d5-tc-hm10"
+   }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "OptionB TT>=0 FF>=0 DRC0, unchanged1.2GHz60/25. Pin-plan-only successor; physical relocation measured by its own route. Exact provenance requires original unchanged leaf/ctl/default composition sha256 and prior32PC positive/mutant records.",
+  "merge_target": "main"
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

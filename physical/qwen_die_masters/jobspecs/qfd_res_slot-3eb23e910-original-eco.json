@@ -1,0 +1,131 @@
+{
+  "name": "qfd_res_slot-3eb23e910-original-eco",
+  "block": "qfd_res_slot",
+  "owner": "Codex:res-ser-tiles",
+  "purpose": "Postroute-only successor of immutable cancelled original slot job. Original wrapperOOM preceded orphan successful DRC0 final route. Consume exact original finalDB/SDC/SPEF hashes, copy to successor ownership, cornerSTA+hold ECO only; no placement or reroute. TT research scope; SS sensitivity retained.",
+  "hosts": [
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/res-ser-tiles-20261010",
+    "commit": "3eb23e9101f6502aab732c6f0c5cba27ef4b47cf"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Existing Qwen in-run median pin-flop clock-reference contract; source-latency/boundary arrival preserved"
+    },
+    "route": {
+      "cmd": "python3 - '{RUN}/routes/{LABEL}' '{CL}' <<'RECOVERY_PY'\nimport hashlib,json,shutil,sys\nfrom pathlib import Path\nold=Path('/srv/opentallas-scratch/claude/closure-loop/qfd_res_slot-3eb23e910-tc-hm0/routes/qfd_res_slot_3eb23e910_tc_hm0')\ndst=Path(sys.argv[1]);cl=Path(sys.argv[2])\nassert Path('{SRC}'+'/SOURCE_COMMIT').read_text().strip()=='3eb23e9101f6502aab732c6f0c5cba27ef4b47cf'\nassert Path('/srv/opentallas-scratch/claude/closure-loop/qfd_res_slot-3eb23e910-tc-hm0/src'+'/SOURCE_COMMIT').read_text().strip()=='3eb23e9101f6502aab732c6f0c5cba27ef4b47cf'\nbase=next((old/'work/orfs/results/asap7').glob('*/base'))\nmanifest={'files': {'6_final.odb': {'bytes': 115011163, 'sha256': '074682fada6c3b96633619a29a7b23b99e6ef0b46068858cebc1e5a15861f5eb'}, '6_final.sdc': {'bytes': 215556, 'sha256': '1efca7d5a081ca02dd689b2f4762b6113a3303e36c6232002f6486c5393b1832'}, '6_final.spef': {'bytes': 34034491, 'sha256': '812b941e0c96eb7e35a6d3c6717d6e2d3fc323b193c34eaf836732302f2dd993'}}, 'DRC': 0, 'source': '3eb23e9101f6502aab732c6f0c5cba27ef4b47cf'}\nfor n,v in manifest['files'].items():\n p=base/n\n assert p.stat().st_size==v['bytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==v['sha256'],n\nif not dst.exists():\n dst.mkdir(parents=True)\n shutil.copytree(old/'work/orfs',dst/'work/orfs',symlinks=True)\n shutil.copy2(old/'signoff.sdc',dst/'signoff.sdc')\ncl.mkdir(exist_ok=True)\n(cl/'ttb_corner.txt').write_text(Path('/srv/opentallas-scratch/claude/closure-loop/qfd_res_slot-3eb23e910-tc-hm0/cl'+'/ttb_corner.txt').read_text())\n(cl/'original_route_manifest.json').write_text(json.dumps(manifest,indent=2)+'\\n')\n(dst/'STATUS').write_text('RECOVERED ORIGINAL ROUTE; postroute-only successor, immutable wrapperOOM retained\\n')\nprint('VERIFIED original source+6_final hashes; copied original DRC0 route, no PNR')\nRECOVERY_PY\npython3 tools/w18/corner_sta_ref.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --extra-sdc {RUN}/routes/{LABEL}/signoff.sdc --macro physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 --output {RUN}/routes/{LABEL}/corner_sta.json\nrc=$?\nprintf 'corner_rc=%s\\nrecovery_rc=%s\\n' \"$rc\" \"$rc\" > {RUN}/routes/{LABEL}/status\nexit \"$rc\"",
+      "ok": "grep -q '^recovery_rc=0' {RUN}/routes/{LABEL}/status",
+      "threads": 8,
+      "peak_ram_gb": 8,
+      "logs": [
+        "{CL}/original_route_manifest.json"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views; cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/; python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_res_slot --post-sdc physical/qwen_die_masters/signoff/qfd_res_slot.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_res_slot > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_res_slot.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+    ]
+  },
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "Fix true FF hold under actual IO insertion reference"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_res_tiles_20261010/qfd_res_slot-3eb23e910-original-eco"
+    },
+    {
+      "from": "{CL}/original_route_manifest.json",
+      "to": "results/rtl/qwen_res_tiles_20261010/qfd_res_slot-3eb23e910-original-eco/original_route_manifest.json"
+    }
+  ],
+  "cycles_added": "raw accepted burst to first output +19..26 edges versus legacy, 21 request/output; measured full burst service12.008 cycles, empty11.529; 8 requests/burst and finite16credits, no token-rate claim",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0,
+  "route_corner": "TC",
+  "submit_lint": {
+    "applied": "pin_balance",
+    "env": {
+      "OT_PIN_GROUP_MAX": "32",
+      "OT_PIN_BALANCE_H": "M4 M6",
+      "OT_PIN_BALANCE_V": "M5 M7",
+      "PIN_H": "M4 M6",
+      "PIN_V": "M5 M7"
+    },
+    "at": "2026-10-09T19:30:25-07:00",
+    "est_as_configured": {
+      "W": 20.84,
+      "E": 4.52,
+      "N": 15.38,
+      "S": 6.23
+    },
+    "est_fix": {
+      "W": 0.68,
+      "E": 0.33,
+      "N": 0.99,
+      "S": 0.4
+    },
+    "why": "pin density > 12.0 b/um/layer as configured (W/M4 20.84 b/um (group ^(b_pw|b_pv|b_lf)(\\[|$) 3084 pins); N/M5 15.38 b/um (group ^(tt_ty|tt_use|tt_v)(\\[|$) 1538 pins)); approved automatic fix pin_balance (OT_PIN_GROUP_MAX='32' OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7') -> 0.99 b/um"
+  },
+  "registered_io": true,
+  "host_require": [
+    "ot-agidock128"
+  ],
+  "no_bench_reason": "Reuse source3eb original daemon exact fullshape PASS1465 beats and true mutant mismatch beat1; immutable logs committed under results/uarch/qwen_result_slot_conveyor_20261010/recovery_original. No RTL change. Historical legacy source byte-identical.",
+  "artifact_parent": {
+    "job": "qfd_res_slot-3eb23e910-tc-hm0",
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_res_slot-3eb23e910-tc-hm0",
+    "manifest": {
+      "files": {
+        "6_final.odb": {
+          "bytes": 115011163,
+          "sha256": "074682fada6c3b96633619a29a7b23b99e6ef0b46068858cebc1e5a15861f5eb"
+        },
+        "6_final.sdc": {
+          "bytes": 215556,
+          "sha256": "1efca7d5a081ca02dd689b2f4762b6113a3303e36c6232002f6486c5393b1832"
+        },
+        "6_final.spef": {
+          "bytes": 34034491,
+          "sha256": "812b941e0c96eb7e35a6d3c6717d6e2d3fc323b193c34eaf836732302f2dd993"
+        }
+      },
+      "DRC": 0,
+      "source": "3eb23e9101f6502aab732c6f0c5cba27ef4b47cf"
+    },
+    "failure": "attempt1 wrapperOOM preserved; cancelled migrated attempt2 preserved"
+  }
+}

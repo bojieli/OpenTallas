@@ -1,0 +1,39 @@
+OK g1 expect=PASS got=PASS M=64 own=64 CYCLES=2348   | +G=1 +RANK=9 +K=64 +SEED=22
+OK g2 expect=PASS got=PASS M=71 own=57 CYCLES=2620   | +G=2 +RANK=3 +DESTS=1 +K=128 +SEED=21
+OK g4 expect=PASS got=PASS M=76 own=61 CYCLES=3136   | +G=4 +RANK=6 +K=256 +HSTALL=20 +SEED=20
+OK g8 expect=PASS got=PASS M=75 own=64 CYCLES=6675   | +G=8 +RANK=13 +K=512 +STALL=10 +SEED=19
+OK g8_noforeign expect=PASS got=PASS M=75 own=64 CYCLES=4346   | +G=8 +RANK=13 +K=512 +FOREIGN=0 +SEED=19
+OK g96_b1 expect=PASS got=PASS M=15 own=3 CYCLES=4233   | +G=96 +RANK=5 +K=512 +LB=0 +SEED=14
+OK g96_b128 expect=PASS got=PASS M=13 own=6 CYCLES=4259   | +G=96 +RANK=5 +K=512 +LB=7 +SEED=15
+OK g96_del8 expect=PASS got=PASS M=11 own=5 CYCLES=2177   | +G=96 +RANK=5 +K=512 +SEED=1
+OK g96_del8_k2048 expect=PASS got=PASS M=34 own=16 CYCLES=8484   | +G=96 +RANK=0 +K=2048 +K2=512 +SEED=5
+OK g96_del8_stall expect=PASS got=PASS M=12 own=7 CYCLES=3069   | +G=96 +RANK=5 +K=512 +STALL=30 +HSTALL=30 +TXSTALL=20 +SEED=7
+OK g96_dest_s1 expect=PASS got=PASS M=11 own=5 CYCLES=4236   | +G=96 +RANK=5 +K=512 +SEED=1
+OK g96_dest_s2 expect=PASS got=PASS M=11 own=3 CYCLES=4239   | +G=96 +RANK=5 +K=512 +SEED=2
+OK g96_dest_s3 expect=PASS got=PASS M=11 own=5 CYCLES=4254   | +G=96 +RANK=5 +K=512 +SEED=3
+OK g96_k1 expect=PASS got=PASS M=1 own=0 CYCLES=146   | +G=96 +RANK=5 +K=1 +K2=2 +SEED=11
+OK g96_k2048 expect=PASS got=PASS M=34 own=16 CYCLES=16696   | +G=96 +RANK=0 +K=2048 +K2=512 +SEED=5
+OK g96_k2048_stall expect=PASS got=PASS M=31 own=24 CYCLES=22234   | +G=96 +RANK=40 +K=2048 +K2=33 +STALL=25 +HSTALL=25 +TXSTALL=25 +SEED=6
+OK g96_k7 expect=PASS got=PASS M=1 own=0 CYCLES=170   | +G=96 +RANK=5 +K=7 +K2=512 +SEED=12
+OK g96_nondest expect=PASS got=PASS M=12 own=8 CYCLES=4262   | +G=96 +RANK=77 +K=512 +SEED=4
+OK g96_sec63 expect=PASS got=PASS M=10 own=7 CYCLES=4733   | +G=96 +RANK=5 +K=512 +SEC=63 +STALL=10 +SEED=16
+OK g96_sec9 expect=PASS got=PASS M=13 own=2 CYCLES=755   | +G=96 +RANK=5 +K=512 +SEC=9 +SEED=17
+OK g96_sec9_k2048 expect=PASS got=PASS M=31 own=24 CYCLES=3339   | +G=96 +RANK=50 +K=2048 +SEC=9 +STALL=20 +SEED=18
+OK g96_skew expect=PASS got=PASS M=246 own=246 CYCLES=10061   | +G=96 +RANK=63 +K=512 +SKEW=50 +STALL=20 +SEED=9
+OK g96_skew_full expect=PASS got=PASS M=968 own=968 CYCLES=37161   | +G=96 +RANK=12 +K=1024 +SKEW=95 +STALL=10 +HSTALL=10 +SEED=10
+OK g96_stall expect=PASS got=PASS M=12 own=7 CYCLES=6011   | +G=96 +RANK=5 +K=512 +STALL=30 +HSTALL=30 +TXSTALL=20 +SEED=7
+OK g96_stall50_all expect=PASS got=PASS M=12 own=4 CYCLES=8521   | +G=96 +RANK=95 +DESTS=96 +K=512 +STALL=50 +SEED=8
+OK g96_tightsw expect=PASS got=PASS M=12 own=4 CYCLES=62147   | +G=96 +RANK=30 +K=512 +EQCAP=4 +LAT=120 +TXLAT=60 +SEED=13
+OK mut_credit expect=FAIL got=FAIL  FAIL DUT fault (cfg 0 src 0 ep 0 sink 1) | +G=96 +RANK=5 +K=512 +STALL=60 +SEED=1
+OK mut_dup expect=FAIL got=FAIL  FAIL duplicate departure gi=7680 | +G=96 +RANK=5 +K=512 +SEED=1
+OK mut_nogate expect=FAIL got=FAIL  FAIL DUT fault (cfg 0 src 0 ep 1 sink 0) | +G=96 +RANK=5 +K=512 +SKEW=60 +STALL=60 +SEED=1
+OK mut_omaj expect=FAIL got=FAIL  FAIL departure of a row the DUT does not own: gi=960 x=30 | +G=96 +RANK=5 +K=512 +SEED=1
+OK mut_slot expect=FAIL got=FAIL  FAIL departure of a row the DUT does not own: gi=0 x=0 | +G=96 +RANK=5 +K=512 +SEED=1
+OK rec_del8 expect=PASS got=PASS M=11 own=6 CYCLES=2178   | +G=96 +RANK=5 +K=512 +SEED=1
+OK rec_g8 expect=PASS got=PASS M=74 own=59 CYCLES=6678   | +G=8 +RANK=13 +K=512 +STALL=10 +SEED=19
+OK rec_g96_dest expect=PASS got=PASS M=11 own=5 CYCLES=4243   | +G=96 +RANK=5 +K=512 +SEED=1
+OK rec_g96_k2048_stall expect=PASS got=PASS M=31 own=24 CYCLES=22214   | +G=96 +RANK=40 +K=2048 +K2=33 +STALL=25 +HSTALL=25 +TXSTALL=25 +SEED=6
+OK rec_g96_nondest expect=PASS got=PASS M=11 own=10 CYCLES=4251   | +G=96 +RANK=77 +K=512 +SEED=4
+OK rec_g96_sec9 expect=PASS got=PASS M=12 own=4 CYCLES=838   | +G=96 +RANK=5 +K=512 +SEC=9 +STALL=10 +SEED=17
+OK rec_g96_skew expect=PASS got=PASS M=253 own=253 CYCLES=10387   | +G=96 +RANK=63 +K=512 +SKEW=50 +STALL=20 +SEED=9
+HGI_RGX PASS 38 cases

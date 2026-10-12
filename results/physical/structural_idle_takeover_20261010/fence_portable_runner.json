@@ -1,0 +1,59 @@
+{
+  "rtl_changed": false,
+  "original_failed_job": "mtp-fence-pinret-a36ffb0a3-tc-hm0",
+  "root_cause": "EPYC3 lacks ripgrep; original all-four-seed simulation PASS but shell runner returned1",
+  "runner_sha256": "9fee05a58f70629d62bae2d7a976fa5795274c30dc653d0dac26d50c28a579a5",
+  "checks": [
+    {
+      "name": "exact",
+      "observed_runner_returncode": 0,
+      "matched": true,
+      "logs": [
+        {
+          "seed": 7,
+          "sha256": "0e0f4fda40475e4a17fa49c4e0c90898720c95fa998ee634113530a3cf64c573",
+          "text": "PINRET_CALENDAR original=1648 candidate=2437 delta=789\nFENCE_P PASS writes=186/186 acks=186/186 fences=37/37 fault=1/1 bad=0\n"
+        },
+        {
+          "seed": 3,
+          "sha256": "f1c02710fec61fe80d4f9c2133ac8e8963311ef96be9786626f8a1b44f7143ff",
+          "text": "PINRET_CALENDAR original=1599 candidate=2448 delta=849\nFENCE_P PASS writes=186/186 acks=186/186 fences=37/37 fault=1/1 bad=0\n"
+        },
+        {
+          "seed": 11,
+          "sha256": "afc7153cfd6598340775d651850f5c65c75a05c0aa1a6e307fb2ef5a2df86a60",
+          "text": "PINRET_CALENDAR original=1645 candidate=2425 delta=780\nFENCE_P PASS writes=186/186 acks=186/186 fences=37/37 fault=1/1 bad=0\n"
+        },
+        {
+          "seed": 29,
+          "sha256": "5e84804b4d5d090fefcad8fc8be171e519174a4270be4d76c35a63eb18f1311f",
+          "text": "PINRET_CALENDAR original=1602 candidate=2411 delta=809\nFENCE_P PASS writes=186/186 acks=186/186 fences=37/37 fault=1/1 bad=0\n"
+        }
+      ]
+    },
+    {
+      "name": "mut_last",
+      "observed_runner_returncode": 1,
+      "matched": true,
+      "logs": [
+        {
+          "seed": 7,
+          "sha256": "486d375e17aad544e472473bc99d99446a8a22a09698504be361887fdbe4e64a",
+          "text": "PINRET_CALENDAR original=1648 candidate=505 delta=-1143\nFENCE_P FAIL writes=186/0 acks=186/0 fences=37/0 fault=1/1 bad=1\n"
+        }
+      ]
+    },
+    {
+      "name": "mut_return",
+      "observed_runner_returncode": 1,
+      "matched": true,
+      "logs": [
+        {
+          "seed": 7,
+          "sha256": "a66444424ad61a1df37d21ad2d05eba0329f22cbdd61703a2aedc3452a7d1dd3",
+          "text": "FATAL: physical/hbm_mtp/bench/tb_fence_pinret.sv:55: PINRET_WRITE_PAYLOAD_MISMATCH\n       Time: 20500 Scope: tb_fence_pinret.e1.$ivl_for_loop0\n"
+        }
+      ]
+    }
+  ]
+}

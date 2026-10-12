@@ -1,0 +1,19 @@
+{
+  "adoption_gate": "FAIL",
+  "sources": {
+    "sb5": "b1a58c10f",
+    "sb6": "13e43398e",
+    "compiled_SW": "74e5e750c"
+  },
+  "independent_PHY_reference": "PASS SW/NE208SM16KV16IK four-state noX",
+  "positive_PS": "FAIL207/208SM;12/12streams17018/17018rows12done16KV16IK",
+  "host": "ot-epyc1tb",
+  "mutants": "still live; full gate pending",
+  "no_physical_closure_adopted": true,
+  "logs": {
+    "sb6/ref_NE.log": "222399e317ca995be96179ec1e87a8569e62205024d937735fd08c6cf2bcce26",
+    "sb6/compiled_SW_FAIL.log": "e79e2148a895c462b921844117fd6c85fb67eadc76d86def0ac75e440bd44ec7",
+    "sb6/ref_SW.log": "b2ea4a7e36ab126e3c67c0aae3c32e94daab07314ec900f5f03cd4785f27a52d",
+    "sb5/ref_SW.log": "63a23dff9e90d1fbdd2ec7b3433c7acd5942a689babcf153248e633d712f180e"
+  }
+}

@@ -1,0 +1,9 @@
+ep_g8 rc=0 BYP_RUN gn=8 rank=3 base=0 pf=16 delivered=128 cycles=187 BYP_RUN gn=8 rank=3 base=0 pf=17 delivered=136 cycles=189 
+ep_g96 rc=0 BYP_RUN gn=96 rank=37 base=0 pf=4 delivered=384 cycles=669 BYP_RUN gn=96 rank=37 base=0 pf=5 delivered=480 cycles=692 
+ep_dupe rc=0 BYP_MISMATCH gi=0 src=0 q=0 PASS HGI_COLL_BYPASS_DUPE fault=1 gn=8 rank=3 pf=16 
+rec_g8 rc=0 BYP_RUN gn=8 rank=11 base=8 pf=16 delivered=128 cycles=197 BYP_RUN gn=8 rank=11 base=8 pf=17 delivered=136 cycles=200 
+rec_g96 rc=0 BYP_RUN gn=96 rank=37 base=0 pf=4 delivered=384 cycles=677 BYP_RUN gn=96 rank=37 base=0 pf=5 delivered=480 cycles=701 
+rec_amx rc=0 PASS HGI_COLL_ARGMAX_MERGE gn=8 rank=11 token=81007 [187000] %Fatal: tb_hgi_coll_bypass.sv:204: Assertion failed in tb_hgi_coll_bypass.run: BYP_COUNT got=1 want=8 mism=0 ndep=1 
+rec_multi rc=0 PASS HGI_COLL_BYPASS_MULTI fault=1 record_fault=1 [38000] %Fatal: tb_hgi_coll_bypass.sv:189: Assertion failed in tb_hgi_coll_bypass.run: BYP_MULTI_NOT_DETECTED done=0 fault=1 
+mg rc=0 MODE_REJECT PASS code=4 MODE_REJECT PASS code=5 
+mgm rc=1 [9000] %Fatal: tb_hgi_coll_mode_guard.sv:13: Assertion failed in tb_hgi_coll_mode_guard.unnamedblk1.unnamedblk1_3: BAD_MODE_ACTIVITY code=4 

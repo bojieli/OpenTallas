@@ -1,0 +1,7 @@
+PASS full545 1300 records, ring wrap, paced admission, independent stalls
+PASS UE, coalesced NAK, duplicate removal, golden payload order
+PASS stale, duplicate, bad-FEC, future ACK and session filtering
+PASS bounded retries retain debt
+PASS actual full512 retention and duplicate/reordered feedback
+PASS real replay SRAM double-error poison blocks launch
+PASS_ALL

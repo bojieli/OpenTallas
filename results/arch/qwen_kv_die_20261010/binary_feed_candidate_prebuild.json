@@ -1,0 +1,426 @@
+{
+ "schema": "opentallas.qwen-kv-die.plan.v1",
+ "generator": "tools/qwen_kv_die/kv_die.py",
+ "generator_sha256": "185376cfe5de90ea747c8888701b1b1cc96fd5403a28c4e80f493574369401d0",
+ "template": {
+  "path": "tools/qwen_kv_die/r21c_band.json",
+  "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
+ },
+ "die_um": [
+  8543.232,
+  24328.08
+ ],
+ "die_mm2": 207.84,
+ "instances": 1553,
+ "buses": 2949,
+ "instance_mm2": 122.482,
+ "fill": 0.5893,
+ "masters": {
+  "ot_hbm3e_phy": {
+   "n": 4,
+   "mm2": 40.0082
+  },
+  "ot_qfd_serdes_112g_x12_phy": {
+   "n": 1,
+   "mm2": 3.6287
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "n": 1,
+   "mm2": 0.6046
+  },
+  "qkd_ahub": {
+   "n": 1,
+   "mm2": 0.4199
+  },
+  "qkd_astk": {
+   "n": 4,
+   "mm2": 6.8882
+  },
+  "qkd_cdc_wleaf": {
+   "n": 128,
+   "mm2": 4.2888
+  },
+  "qkd_ckbump": {
+   "n": 1,
+   "mm2": 0.0019
+  },
+  "qkd_ctrl": {
+   "n": 4,
+   "mm2": 12.0205
+  },
+  "qkd_d2d": {
+   "n": 1,
+   "mm2": 0.4031
+  },
+  "qkd_ectl": {
+   "n": 32,
+   "mm2": 2.6868
+  },
+  "qkd_embgw": {
+   "n": 1,
+   "mm2": 0.1511
+  },
+  "qkd_host": {
+   "n": 1,
+   "mm2": 0.4031
+  },
+  "qkd_kvwq_ctl_bin": {
+   "n": 4,
+   "mm2": 0.3583
+  },
+  "qkd_kvwq_leaf": {
+   "n": 128,
+   "mm2": 2.0296
+  },
+  "qkd_land": {
+   "n": 4,
+   "mm2": 8.3909
+  },
+  "qkd_pll": {
+   "n": 1,
+   "mm2": 0.105
+  },
+  "qkd_rhead": {
+   "n": 128,
+   "mm2": 37.62
+  },
+  "qkd_rly_1": {
+   "n": 158,
+   "mm2": 0.2514
+  },
+  "qkd_rly_10": {
+   "n": 43,
+   "mm2": 0.0684
+  },
+  "qkd_rly_1025": {
+   "n": 115,
+   "mm2": 0.3268
+  },
+  "qkd_rly_1048": {
+   "n": 118,
+   "mm2": 0.3488
+  },
+  "qkd_rly_16": {
+   "n": 114,
+   "mm2": 0.1814
+  },
+  "qkd_rly_2": {
+   "n": 94,
+   "mm2": 0.1496
+  },
+  "qkd_rly_21": {
+   "n": 4,
+   "mm2": 0.0064
+  },
+  "qkd_rly_293": {
+   "n": 88,
+   "mm2": 0.14
+  },
+  "qkd_rly_36": {
+   "n": 20,
+   "mm2": 0.0318
+  },
+  "qkd_rly_520": {
+   "n": 21,
+   "mm2": 0.0334
+  },
+  "qkd_rly_530": {
+   "n": 254,
+   "mm2": 0.4041
+  },
+  "qkd_rly_540": {
+   "n": 59,
+   "mm2": 0.0939
+  },
+  "qkd_rly_563": {
+   "n": 20,
+   "mm2": 0.0341
+  },
+  "qkd_seq": {
+   "n": 1,
+   "mm2": 0.4031
+  }
+ },
+ "ucie": {
+  "macro": "ot_qkvd_ucie_x64_phy",
+  "mm2": 0.6047,
+  "edge_um": 777.6,
+  "edge": "N (abuts the ROM die S edge under spine column M)"
+ },
+ "relay_stages": {
+  "af_EN": 2,
+  "af_ES": 28,
+  "af_WN": 2,
+  "af_WS": 28,
+  "am_EN": 5,
+  "am_ES": 5,
+  "am_WN": 5,
+  "am_WS": 5,
+  "ap_EN": 5,
+  "ap_ES": 5,
+  "ap_WN": 5,
+  "ap_WS": 5,
+  "aq_EN": 2,
+  "aq_ES": 28,
+  "aq_WN": 2,
+  "aq_WS": 27,
+  "ares": 21,
+  "emf_EN": 4,
+  "emf_ES": 24,
+  "emf_WN": 4,
+  "emf_WS": 24,
+  "emr_EN": 4,
+  "emr_ES": 24,
+  "emr_WN": 4,
+  "emr_WS": 25,
+  "hc": 43,
+  "hf": 21,
+  "hs": 21,
+  "ing_EN": 25,
+  "ing_ES": 3,
+  "ing_WN": 24,
+  "ing_WS": 3,
+  "krq_EN_0": 5,
+  "krq_EN_1": 10,
+  "krq_EN_2": 9,
+  "krq_EN_3": 5,
+  "krq_ES_0": 5,
+  "krq_ES_1": 9,
+  "krq_ES_2": 9,
+  "krq_ES_3": 5,
+  "krq_WN_4": 5,
+  "krq_WN_5": 10,
+  "krq_WN_6": 9,
+  "krq_WN_7": 5,
+  "krq_WS_4": 5,
+  "krq_WS_5": 9,
+  "krq_WS_6": 9,
+  "krq_WS_7": 5,
+  "krs_EN_0": 5,
+  "krs_EN_1": 10,
+  "krs_EN_2": 9,
+  "krs_EN_3": 5,
+  "krs_ES_0": 5,
+  "krs_ES_1": 10,
+  "krs_ES_2": 9,
+  "krs_ES_3": 6,
+  "krs_WN_4": 5,
+  "krs_WN_5": 9,
+  "krs_WN_6": 9,
+  "krs_WN_7": 5,
+  "krs_WS_4": 5,
+  "krs_WS_5": 9,
+  "krs_WS_6": 9,
+  "krs_WS_7": 5,
+  "kst": 43,
+  "kvn_EN": 18,
+  "kvn_ES": 41,
+  "kvn_WN": 18,
+  "kvn_WS": 41,
+  "lt_EN": 1,
+  "lt_ES": 1,
+  "lt_WN": 1,
+  "lt_WS": 1,
+  "mf_EN": 3,
+  "mf_ES": 25,
+  "mf_WN": 3,
+  "mf_WS": 25,
+  "tk": 43,
+  "wencoded_EN_0": 6,
+  "wencoded_EN_2": 5,
+  "wencoded_EN_3": 11,
+  "wencoded_ES_0": 6,
+  "wencoded_ES_2": 5,
+  "wencoded_ES_3": 11,
+  "wencoded_WN_0": 6,
+  "wencoded_WN_2": 5,
+  "wencoded_WN_3": 11,
+  "wencoded_WS_0": 6,
+  "wencoded_WS_2": 5,
+  "wencoded_WS_3": 11,
+  "wret_EN_0": 6,
+  "wret_EN_2": 5,
+  "wret_EN_3": 11,
+  "wret_ES_0": 6,
+  "wret_ES_2": 5,
+  "wret_ES_3": 11,
+  "wret_WN_0": 7,
+  "wret_WN_2": 5,
+  "wret_WN_3": 13,
+  "wret_WS_0": 7,
+  "wret_WS_2": 5,
+  "wret_WS_3": 13
+ },
+ "critical_stages": {
+  "d2d_to_seq": 0,
+  "seq_to_astk": {
+   "WS": 27,
+   "WN": 2,
+   "ES": 28,
+   "EN": 2
+  },
+  "astk_to_hub": {
+   "WS": 5,
+   "WN": 5,
+   "ES": 5,
+   "EN": 5
+  },
+  "hub_to_astk": {
+   "WS": 5,
+   "WN": 5,
+   "ES": 5,
+   "EN": 5
+  },
+  "hub_to_seq": 21,
+  "seq_to_d2d": 0,
+  "seq_to_land": {
+   "WS": 41,
+   "WN": 18,
+   "ES": 41,
+   "EN": 18
+  },
+  "gw_to_land": {
+   "WS": 24,
+   "WN": 4,
+   "ES": 24,
+   "EN": 4
+  },
+  "land_to_gw": {
+   "WS": 25,
+   "WN": 4,
+   "ES": 24,
+   "EN": 4
+  },
+  "seq_to_gw": 0,
+  "gw_to_seq": 0
+ },
+ "assumed": {
+  "row_engine_frame": "re-cut H: 4 x qkd_rhead 648.0 x 453.6 + qkd_ectl 648.0 x 129.6 (measured cells: head 152,960 um2 placed, control 24,507 um2 synthesized; routes qkd_rhead_c / qkd_ectl_c)",
+  "astk_w": 220.32,
+  "land_w": 172.8,
+  "frames": {
+   "qkd_ckbump": [
+    43.2,
+    43.2
+   ],
+   "qkd_d2d": [
+    777.6,
+    518.4
+   ],
+   "qkd_seq": [
+    777.6,
+    518.4
+   ],
+   "qkd_embgw": [
+    388.8,
+    388.8
+   ],
+   "qkd_pll": [
+    324.0,
+    324.0
+   ],
+   "qkd_ahub": [
+    648.0,
+    648.0
+   ],
+   "qkd_host": [
+    777.6,
+    518.4
+   ]
+  },
+  "note": "frames without a routed element are sized from synthesis or stated as ASSUMED"
+ },
+ "legality": {
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "strict_ports": {
+  "ok": true,
+  "failures": [],
+  "rows": [
+   {
+    "master": "qkd_ectl",
+    "module": "ot_qwen_nearhbm_ectl_h",
+    "rtl_ports": 53,
+    "die_ports": 16,
+    "classed": {
+     "ev_k_first": "debug",
+     "ev_v_first": "debug"
+    }
+   },
+   {
+    "master": "qkd_rhead",
+    "module": "ot_qwen_nearhbm_head_h",
+    "rtl_ports": 14,
+    "die_ports": 6,
+    "classed": {
+     "hid": "by_design: die-top strap (tie cells), the head index of this tile"
+    }
+   },
+   {
+    "master": "qkd_ahub",
+    "module": "ot_qwen_nearhbm_attn_hub_p",
+    "rtl_ports": 24,
+    "die_ports": 13,
+    "classed": {
+     "ev": "debug"
+    }
+   },
+   {
+    "master": "qkd_seq",
+    "module": "ot_qkvd_kv_seq",
+    "rtl_ports": 43,
+    "die_ports": 29,
+    "classed": {}
+   },
+   {
+    "master": "qkd_d2d",
+    "module": "ot_qkvd_kv_end",
+    "rtl_ports": 15,
+    "die_ports": 6,
+    "classed": {}
+   },
+   {
+    "master": "qkd_kvwq_leaf",
+    "module": "ot_qkvd_kv_wq_leaf",
+    "rtl_ports": 24,
+    "die_ports": 9,
+    "classed": {}
+   },
+   {
+    "master": "qkd_cdc_wleaf",
+    "module": "ot_qwen_stream4_cdc_pc",
+    "rtl_ports": 33,
+    "die_ports": 10,
+    "classed": {}
+   },
+   {
+    "master": "qkd_kvwq_ctl_bin",
+    "module": "ot_qkvd_kv_wq_ctl_binary",
+    "rtl_ports": 18,
+    "die_ports": 13,
+    "classed": {}
+   }
+  ],
+  "frame_only": {
+   "qkd_astk": "ot_qwen_nearhbm_attn_stack_d minus its engines (re-cut D: q beat broadcast, node staging, P.V levels 4-7; recut.json)",
+   "qkd_land": "qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip",
+   "qkd_embgw": "ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)",
+   "qkd_host": "qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter",
+   "qkd_pll": "vendor PLL + ot_qwen_sys_rst_seq",
+   "qkd_ctrl": "qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion, no new die port)",
+   "qkd_ckbump": "clock / reset bump pair to the ROM die (pad cell, no logic: by design)"
+  }
+ },
+ "adopted": false,
+ "source_sha256": {
+  "tools/qwen_kv_die/kv_die.py": "185376cfe5de90ea747c8888701b1b1cc96fd5403a28c4e80f493574369401d0",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv": "277010ff5766e63f11043065e9a79c8487dcfc5a1e3852d99355a2ac696bdbf9",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_leaves_binary.sv": "363d6624c7fae85cf0085e7d38d124fc4f479ceadef76e9827f50a69819dbe30",
+  "physical/qwen_die_masters/cfg/qkd_kvwq_ctl_bin_a.env": "c9de1b6e5aba6aef2b119df44c3ada8df5ba0af092b2c658b91591b376a42b18"
+ },
+ "feed_mapping": "ctl physical{f_v[0],f_d256,f_sec24,f_lane8,f_tag9}: lane low3 routed, high5constantoutputpins explicitly unused; 293-bit chain",
+ "qualification": "PENDING full32PC exact/negative bench and optionB TTsetup>=0 FFhold>=0 DRC0; actualclosedpin/context map still owed"
+}

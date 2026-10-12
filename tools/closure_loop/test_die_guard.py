@@ -1,6 +1,6 @@
 """drive-0849 2026-10-09: die-level runs are exempt from stuckscan actions and from loop container kills; every loop
 flow container is memory-capped so an overrun cannot trigger a host OOM that takes a die run."""
-import re, sys
+import re, sys, subprocess
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import closure_loop as cl  # noqa: E402
@@ -45,3 +45,52 @@ def test_mem_cap():
 def test_stage_oom_first():
     src = Path(cl.__file__).read_text()
     assert 'env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj' in src and cl.STAGE_OOM_SCORE_ADJ > 0
+
+
+def test_live_die_names_share_guards():
+    names = ("s81_grt_r4f_grt", "s81_grt_s81_l1e_grt", "s81_grt_s81_l1full_grt",
+             "qfd_die_kv11_case_kv_run_pdn", "qfd_gw_spine_drt", "qfd_gw_io_drt", "s81_l1full")
+    assert ss.DIE_RUN_RE.pattern == cl.DIE_CONTAINER_RE
+    for name in names:
+        assert re.search(cl.DIE_CONTAINER_RE, "/" + name), name
+        assert ss.is_die_run(dict(name=name, spec={})), name
+    assert not ss.is_die_run(dict(name="s81ph-dsfd_coll_ct-split3", spec={}))
+
+
+def test_mount_guards_share_pattern():
+    for run in ("/srv/claude/die-evidence-2/s81_l1full", "/srv/claude/kv-die/die_kv11"):
+        assert re.search(cl.DIE_MOUNT_RE, run)
+        assert ss.is_die_run(dict(name="random_docker_name", run=run, spec={}))
+    assert not ss.is_die_run(dict(name="random", run="/srv/claude/kv-die-other/block", spec={}))
+
+
+def test_container_kill_exemption_checks_mounts():
+    # A stage f-string expands DIE_CONTAINER_SKIP once; the surrounding ssh command
+    # format pass reduces the doubled Go-template braces to docker's actual braces.
+    skip = cl.DIE_CONTAINER_SKIP.format()
+    for inspected, expected in (("/s81_grt_r4f_grt /src", "protected"),
+                                ("/random /srv/claude/die-evidence-2/s81", "protected"),
+                                ("/random /srv/claude/kv-die/die_kv11", "protected"),
+                                ("/random /srv/loop/block/src", "stoppable")):
+        script = "docker() { printf '%s\\n' \"$INSPECTED\"; }; for c in candidate; do " + skip + "echo stoppable; done"
+        result = subprocess.run(["bash", "-c", script], env={"INSPECTED": inspected}, text=True, capture_output=True, check=True)
+        assert result.stdout.strip() == ("" if expected == "protected" else "stoppable"), (inspected, result)
+    assert "{{.Name}} {{range .Mounts}}{{.Source}} {{end}}" in skip
+
+
+def test_container_processes_inherit_stage_oom_adj(tmp_path=None):
+    # drive-1010: in-container openroad/yosys must carry +500 too, else the kernel kills tiny +500 wrappers first
+    import os, subprocess, tempfile, pathlib
+    d = pathlib.Path(tempfile.mkdtemp())
+    (d / "shim").mkdir(); (d / "real").mkdir()
+    (d / "shim" / "docker").write_text(cl.DOCKER_SHIM); (d / "shim" / "docker").chmod(0o755)
+    (d / "real" / "docker").write_text('#!/bin/bash\necho "$@"\n'); (d / "real" / "docker").chmod(0o755)
+    env = dict(os.environ, PATH=f"{d}/shim:{d}/real:/usr/bin:/bin", OT_MEM_CAP_GB="64")
+    env.pop("OT_FP_LINT_DIR", None)
+    out = subprocess.run([str(d / "shim" / "docker"), "run", "img", "cmd"], env=env, capture_output=True, text=True).stdout
+    assert "--oom-score-adj 500" in out and "--memory 64g" in out and out.rstrip().endswith("img cmd")
+    env["OT_FP_LINT_DIR"] = str(d / "fpl")
+    out = subprocess.run([str(d / "shim" / "docker"), "run", "img"], env=env, capture_output=True, text=True).stdout
+    assert "--oom-score-adj 500" in out
+    out = subprocess.run([str(d / "shim" / "docker"), "ps"], env=env, capture_output=True, text=True).stdout
+    assert out.strip() == "ps"

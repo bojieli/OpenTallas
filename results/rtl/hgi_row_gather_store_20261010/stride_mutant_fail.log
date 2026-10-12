@@ -1,0 +1,41 @@
+STORE_RECORD case=0 record=1 cycles=13886
+STORE_RECORD case=0 record=2 cycles=13886
+STORE_MEASURE case=0 records=2 cycles=27775 accepted=12288 acked=12288 KLAT=40
+ERR case 0 HBM word 0280000200 = 3f800200 expected 3f800400
+ERR case 0 HBM word 0280000201 = 3f800201 expected 3f800401
+ERR case 0 HBM word 0280000202 = 3f800202 expected 3f800402
+ERR case 0 HBM word 0280000203 = 3f800203 expected 3f800403
+ERR case 0 HBM word 0280000204 = 3f800204 expected 3f800404
+ERR case 0 HBM word 0280000205 = 3f800205 expected 3f800405
+ERR case 0 HBM word 0280000206 = 3f800206 expected 3f800406
+ERR case 0 HBM word 0280000207 = 3f800207 expected 3f800407
+ERR case 0 HBM word 0280000208 = 3f800208 expected 3f800408
+ERR case 0 HBM word 0280000209 = 3f800209 expected 3f800409
+ERR case 0 HBM word 028000020a = 3f80020a expected 3f80040a
+ERR case 0 HBM word 028000020b = 3f80020b expected 3f80040b
+ERR case 0 HBM word 028000020c = 3f80020c expected 3f80040c
+ERR case 0 HBM word 028000020d = 3f80020d expected 3f80040d
+ERR case 0 HBM word 028000020e = 3f80020e expected 3f80040e
+ERR case 0 HBM word 028000020f = 3f80020f expected 3f80040f
+ERR case 0 HBM word 0280000210 = 3f800210 expected 3f800410
+ERR case 0 HBM word 0280000211 = 3f800211 expected 3f800411
+ERR case 0 HBM word 0280000212 = 3f800212 expected 3f800412
+ERR case 0 HBM word 0280000213 = 3f800213 expected 3f800413
+ERR case 0 HBM word 0280000214 = 3f800214 expected 3f800414
+ERR case 0 HBM word 0280000215 = 3f800215 expected 3f800415
+ERR case 0 HBM word 0280000216 = 3f800216 expected 3f800416
+ERR case 0 HBM word 0280000217 = 3f800217 expected 3f800417
+ERR case 0 HBM word 0280000218 = 3f800218 expected 3f800418
+ERR case 0 HBM word 0280000219 = 3f800219 expected 3f800419
+ERR case 0 HBM word 028000021a = 3f80021a expected 3f80041a
+ERR case 0 HBM word 028000021b = 3f80021b expected 3f80041b
+ERR case 0 HBM word 028000021c = 3f80021c expected 3f80041c
+ERR case 0 HBM word 028000021d = 3f80021d expected 3f80041d
+STORE_RECORD case=1 record=1 cycles=9278
+STORE_MEASURE case=1 records=1 cycles=9280 accepted=4096 acked=4096 KLAT=40
+summary: 2 cases (3 records), 131072 memory words checked
+HGI_ROW_GATHER_STORE FAIL errors=48640
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_row_gather_store.sv:128: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 2.230 s; speed 856.151 us/s
+- Verilator: cpu 2.230 s on 1 threads; allocated 17 MB

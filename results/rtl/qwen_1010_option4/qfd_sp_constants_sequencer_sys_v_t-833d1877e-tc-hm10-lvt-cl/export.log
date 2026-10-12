@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "qfd_sp_constants_sequencer_sys",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_sp_constants_sequencer_sys_v_t-ffbec0c86-tc-hm10-lvt-cl-ttfix/routes/qfd_sp_constants_sequencer_sys_v_t_ffbec0c86_tc_hm10_lvt_cl_ttfix/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/qfd_sp_constants_sequencer_sys.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-2.629575446277954e-10",
+  "ws_min": "4.69183580875665e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "5.653155721319081e-11",
+  "ws_min": "2.364936024790154e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "1.716696229614456e-10",
+  "ws_min": "2.700201173766459e-12"
+ },
+ "files": {
+  "qfd_sp_constants_sequencer_sys.lef": "06faa4ef597c3b2b1cc7d21f2610722f51e6cc68f756ada6fe4afd90ac993e60",
+  "qfd_sp_constants_sequencer_sys_ff.lib": "69e11713dab90163505a792dfadac7278a60f02d320dd05db779d566ba13e579",
+  "qfd_sp_constants_sequencer_sys_ss.lib": "454c4a5ee2174efc4d854f90f27d93ec8840169f95f6caa6ba86f8ac57a03e2b",
+  "qfd_sp_constants_sequencer_sys_tt.lib": "672ec733d937f22b91db130a0b976bfa6a44c7d5e5481c836ec789287744f7a6"
+ }
+}

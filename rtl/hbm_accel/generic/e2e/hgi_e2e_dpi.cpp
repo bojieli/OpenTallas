@@ -22,7 +22,7 @@
 #include <map>
 #include "svdpi.h"
 
-static const int VMW = 1 << 18;
+static const int VMW = (1 << 18) + (1 << 16);  // VM + the HC weight aperture (main b1a793d75)
 static uint32_t vm[VMW];
 static std::vector<uint32_t> vm_final;
 static std::unordered_map<uint64_t, std::vector<uint8_t>> hbm;   // sector index -> 32 bytes
@@ -41,6 +41,8 @@ static std::vector<uint8_t> hbmw;        // golden HBM writes {u64 addr, u64 len
 static int ndisp = 0, nerr_disp = 0, unloaded_hbm = 0, n_ret = 0;
 static std::unordered_map<int, std::unordered_set<uint32_t>> wrote;   // unit -> VM words written since its dispatch
 static std::unordered_set<int> skip_final;                            // VM words excluded from the final compare
+static std::vector<std::pair<unsigned, unsigned>> gold_vm;              // gold.txt: independent golden VM words (e.g. the
+                                                                        // DFlash draft ids / committed tokens from the CPU golden)
 static std::vector<std::pair<int, int>> ignore_rng;                   // compiler-reserved unit scratch (FUSED)
 static bool ignored(int a) { for (auto& r : ignore_rng) if (a >= r.first && a < r.second) return true; return false; }
 extern "C" void e2e_ignore(int lo, int hi) { ignore_rng.push_back({lo, hi}); }
@@ -68,10 +70,11 @@ static void hbm_load(uint64_t a, const uint8_t* p, uint64_t n) {
 extern "C" int e2e_init(const char* d, const char* outp) {
     dir = d;
     std::vector<uint8_t> b;
-    if (!read_file(dir + "/vm0.bin", b) || b.size() != 4u * VMW) { fprintf(stderr, "E2E: vm0.bin\n"); return -1; }
-    memcpy(vm, b.data(), 4u * VMW);
-    if (!read_file(dir + "/vm_final.bin", b) || b.size() != 4u * VMW) { fprintf(stderr, "E2E: vm_final.bin\n"); return -1; }
-    vm_final.resize(VMW); memcpy(vm_final.data(), b.data(), 4u * VMW);
+    // vectors carry 2^18 words (no aperture) or 2^18 + 2^16 (with the HC weight aperture)
+    if (!read_file(dir + "/vm0.bin", b) || (b.size() != 4u * VMW && b.size() != 4u * (1 << 18))) { fprintf(stderr, "E2E: vm0.bin\n"); return -1; }
+    memcpy(vm, b.data(), b.size());
+    if (!read_file(dir + "/vm_final.bin", b) || (b.size() != 4u * VMW && b.size() != 4u * (1 << 18))) { fprintf(stderr, "E2E: vm_final.bin\n"); return -1; }
+    vm_final.assign(VMW, 0); memcpy(vm_final.data(), b.data(), b.size());
     if (!read_file(dir + "/hbm.bin", b)) { fprintf(stderr, "E2E: hbm.bin\n"); return -1; }
     for (size_t o = 0; o + 16 <= b.size();) {
         uint64_t a, n; memcpy(&a, &b[o], 8); memcpy(&n, &b[o + 8], 8); o += 16;
@@ -87,6 +90,12 @@ extern "C" int e2e_init(const char* d, const char* outp) {
     int nskip; if (fscanf(f, "%d", &nskip) != 1) return -1;
     for (int i = 0; i < nskip; i++) { unsigned a, v; if (fscanf(f, "%u %u", &a, &v) != 2) return -1; vm[a] = v; skip_final.insert(a); }
     fclose(f);
+    if ((f = fopen((dir + "/gold.txt").c_str(), "r"))) {
+        unsigned a, v;
+        while (fscanf(f, "%u %u", &a, &v) == 2) gold_vm.push_back({a, v});
+        fclose(f);
+        fprintf(stderr, "E2E: %zu independent golden VM words (gold.txt)\n", gold_vm.size());
+    }
     if (!read_file(dir + "/vmw.bin", b)) return -1;
     vmw.resize(b.size() / 4); memcpy(vmw.data(), b.data(), b.size());
     if (!read_file(dir + "/hbmw.bin", hbmw)) return -1;
@@ -141,6 +150,25 @@ extern "C" void e2e_hbm_sector(long long addr, svBit we, const svBitVecVal* wd, 
         for (int i = 0; i < 8; i++) rd[i] = v[4 * i] | v[4 * i + 1] << 8 | v[4 * i + 2] << 16 | (uint32_t)v[4 * i + 3] << 24;
     }
 }
+
+// HC weight sets (hgi-1010/g, tools/hgi_e2e/hc_weights.py -> hcw.bin {u64 sector, 32 B}): the REAL HC unit's HBM lane
+// reads here; the compiler's 1-element placeholder for the set reserves no span in the HBM map, so the sets are a
+// separate map (a sector the record does not own reads as zero and is counted).
+static std::unordered_map<uint64_t, std::vector<uint8_t>> hcw;
+static int hcw_loaded = -1, hcw_miss = 0;
+extern "C" void e2e_hcw_sector(long long sec, svBitVecVal* rd) {
+    if (hcw_loaded < 0) {
+        std::vector<uint8_t> b; hcw_loaded = 0;
+        if (read_file(dir + "/hcw.bin", b))
+            for (size_t o = 0; o + 40 <= b.size(); o += 40) { uint64_t s; memcpy(&s, &b[o], 8); hcw[s].assign(&b[o + 8], &b[o + 40]); hcw_loaded++; }
+        fprintf(stderr, "E2E: hcw.bin %d HC weight-set sectors\n", hcw_loaded);
+    }
+    auto it = hcw.find((uint64_t)sec);
+    if (it == hcw.end()) { hcw_miss++; for (int i = 0; i < 8; i++) rd[i] = 0; return; }
+    const uint8_t* v = it->second.data();
+    for (int i = 0; i < 8; i++) rd[i] = v[4 * i] | v[4 * i + 1] << 8 | v[4 * i + 2] << 16 | (uint32_t)v[4 * i + 3] << 24;
+}
+extern "C" int e2e_hcw_misses() { return hcw_miss; }
 
 // ------------------------------------------------------------------------------------------------ scoreboard
 static uint32_t bits(const svBitVecVal* v, int lsb, int w) {
@@ -202,19 +230,66 @@ extern "C" void e2e_stub_retire(int k, long long cyc) {
     apply(r);
 }
 
+// posted DMA writes (DMA_POSTED = 1, hgi-1010/c): a DMA STORE / KVWB_DS retires on acceptance, its HBM bytes land later
+// and are guaranteed visible only after the next DMA.FENCE -- check them there (or at the end), not at the retire
+static int posted_dma = 0;
+static std::vector<int> posted_pend;
+extern "C" void e2e_posted(int on) { posted_dma = on; }
+static int hbm_check(int k) {
+    Rec& r = recs[k]; int bad = 0;
+    size_t o = r.hbm_off;
+    for (uint64_t i = 0; i < r.hbm_n; i++) {
+        uint64_t a, n; memcpy(&a, &hbmw[o], 8); memcpy(&n, &hbmw[o + 8], 8); o += 16;
+        for (uint64_t j = 0; j < n; j++) {
+            uint8_t g = hbmw[o + j], h = sector((a + j) >> 5)[(a + j) & 31];
+            if (g != h) { if (bad < 8) fprintf(stderr, "E2E REAL %d (%s) HBM[%llx] = %02x golden %02x (posted, at fence)\n", k, r.tag.c_str(), (unsigned long long)(a + j), h, g); bad++; }
+        }
+        o += n;
+    }
+    return bad;
+}
+// the pending posted records' bytes, the LAST pending writer of each byte winning (posted writes of later records
+// may land before an earlier record is checked; only the program-order final value of the pending set is defined)
+static int posted_drain() {
+    std::map<uint64_t, std::pair<uint8_t, int>> last;
+    for (int pk : posted_pend) {
+        Rec& q = recs[pk]; size_t o = q.hbm_off;
+        for (uint64_t i = 0; i < q.hbm_n; i++) {
+            uint64_t a, n; memcpy(&a, &hbmw[o], 8); memcpy(&n, &hbmw[o + 8], 8); o += 16;
+            for (uint64_t j = 0; j < n; j++) last[a + j] = {hbmw[o + j], pk};
+            o += n;
+        }
+    }
+    int bad = 0;
+    for (auto& kv : last) {
+        uint8_t h = sector(kv.first >> 5)[kv.first & 31];
+        if (h != kv.second.first) {
+            if (bad < 8) fprintf(stderr, "E2E REAL %d (%s) HBM[%llx] = %02x golden %02x (posted, at fence)\n", kv.second.second,
+                                 recs[kv.second.second].tag.c_str(), (unsigned long long)kv.first, h, kv.second.first);
+            recs[kv.second.second].mism++; bad++;
+        }
+    }
+    posted_pend.clear();
+    return bad;
+}
 extern "C" int e2e_real_retire(int k, long long cyc) {
     if (k < 0 || k >= (int)recs.size()) return 1;
     Rec& r = recs[k];
     r.ret = cyc; r.real = 1; n_ret++;
     std::unordered_set<uint32_t> gold;
     int bad = 0;
+    if (posted_dma && r.unit == 8 && r.op == 2) {                // DMA.FENCE (op 2): the posted writes before it must be visible
+        bad += posted_drain();
+    }
+    const bool defer = posted_dma && r.unit == 8 && r.hbm_n > 0 && (r.op == 1 || r.op == 3);   // STORE / KVWB_DS
+    if (defer) posted_pend.push_back(k);
     for (uint64_t i = 0; i < r.vm_n; i++) {
         uint32_t a = vmw[2 * (r.vm_off + i)], v = vmw[2 * (r.vm_off + i) + 1];
         gold.insert(a);
         if (vm[a] != v) { if (bad < 8) fprintf(stderr, "E2E REAL %d (%s) VM[%u] = %08x golden %08x\n", k, r.tag.c_str(), a, vm[a], v); bad++; }
     }
     size_t o = r.hbm_off;
-    for (uint64_t i = 0; i < r.hbm_n; i++) {
+    for (uint64_t i = 0; i < (defer ? 0 : r.hbm_n); i++) {
         uint64_t a, n; memcpy(&a, &hbmw[o], 8); memcpy(&n, &hbmw[o + 8], 8); o += 16;
         for (uint64_t j = 0; j < n; j++) {
             uint8_t g = hbmw[o + j], h = sector((a + j) >> 5)[(a + j) & 31];
@@ -232,6 +307,7 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
 // coll_<k>.bin: every rank's A operand (rank-major, n words each) of COLL record k; the golden O is record k's VM writes.
 static int coll_k = -1, coll_g = 0, coll_n = 0;
 static std::vector<uint32_t> coll_a;
+static std::vector<uint32_t> coll_b;                  // collb_<k>.bin: every rank's B (TOPK_MERGE ids), rank-major
 static std::unordered_map<uint32_t, uint32_t> coll_o;
 extern "C" int e2e_coll_load(int k, int g) {
     if (k == coll_k) return coll_n;
@@ -240,6 +316,12 @@ extern "C" int e2e_coll_load(int k, int g) {
     if (!read_file(dir + nm, b) || g <= 0) { fprintf(stderr, "E2E COLL: no %s\n", nm); return -1; }
     coll_k = k; coll_g = g; coll_n = (int)(b.size() / 4 / g);
     coll_a.resize(b.size() / 4); memcpy(coll_a.data(), b.data(), b.size());
+    coll_b.clear();
+    {
+        std::vector<uint8_t> bb;
+        char nb[64]; snprintf(nb, sizeof nb, "/collb_%d.bin", k);
+        if (read_file(dir + nb, bb) && bb.size() == b.size()) { coll_b.resize(bb.size() / 4); memcpy(coll_b.data(), bb.data(), bb.size()); }
+    }
     coll_o.clear();
     const Rec& r = recs[k];
     for (uint64_t i = 0; i < r.vm_n; i++) coll_o[vmw[2 * (r.vm_off + i)]] = vmw[2 * (r.vm_off + i) + 1];
@@ -257,6 +339,18 @@ extern "C" void e2e_coll_part_w(int q, int w0, svBitVecVal* out) {
     for (int j = 0; j < 16; j++) {
         int e = w0 + j;
         out[j] = (q >= 0 && q < coll_g && e >= 0 && e < coll_n) ? coll_a[(size_t)q * coll_n + e] : 0;
+    }
+}
+// TOPK_MERGE (hgi-1010/k): rank q's flit f as its endpoint injects it (ot_hgi_coll_ep TKM): words 0..7 its A[8f ..]
+// (a NaN as the canonical 7FC00000), words 8..15 its B[8f ..]; slots past n are the pad pair {FFFFFFFF, FFFFFFFF}
+extern "C" void e2e_coll_pair(int q, int f, svBitVecVal* out) {
+    for (int j = 0; j < 8; j++) {
+        int e = f * 8 + j;
+        bool ok = q >= 0 && q < coll_g && e < coll_n;
+        uint32_t v = ok ? coll_a[(size_t)q * coll_n + e] : 0xFFFFFFFFu;
+        if (ok && (v & 0x7F800000u) == 0x7F800000u && (v & 0x007FFFFFu)) v = 0x7FC00000u;
+        out[j] = v;
+        out[8 + j] = ok ? (!coll_b.empty() ? coll_b[(size_t)q * coll_n + e] : 0) : 0xFFFFFFFFu;
     }
 }
 // the golden result flit gi at O (BF16: 32 halves from O[gi*32 + j]; FP32: 16 words from O[gi*16 + j])
@@ -278,9 +372,15 @@ extern "C" void e2e_coll_res(int obase, int gi, int bf16, svBitVecVal* out) {
 
 extern "C" int e2e_finish(long long cyc, int token, int status) {
     int vbad = 0;
+    vbad += posted_drain();                                  // posted writes with no later fence
     for (int a = 0; a < VMW; a++) if (!skip_final.count(a) && !ignored(a) && vm[a] != vm_final[a]) {
         if (vbad < 8) fprintf(stderr, "E2E FINAL VM[%d] = %08x golden %08x\n", a, vm[a], vm_final[a]);
         vbad++;
+    }
+    int gbad = 0;
+    for (auto& gv : gold_vm) if (vm[gv.first] != gv.second) {
+        if (gbad < 16) fprintf(stderr, "E2E GOLDEN VM[%u] = %08x cpu-golden %08x\n", gv.first, vm[gv.first], gv.second);
+        gbad++;
     }
     int hbad = 0;
     // final HBM: the last golden write of each byte
@@ -300,11 +400,11 @@ extern "C" int e2e_finish(long long cyc, int token, int status) {
             fprintf(logf, "%d %d %d %s %d %lld %lld %.1f %.1f %.1f %.1f %x %d %d %d\n", r.k, r.unit, r.op, r.tag.c_str(), r.real,
                     r.disp, r.ret, r.cost, r.s2d, r.s2s, r.s2e, r.dmism, r.checked, r.mism, r.stray);
         fprintf(logf, "SUMMARY cycles %lld token %d status %d dispatched %d/%zu retired %d dispatch_mismatch %d final_vm_mismatch %d "
-                      "final_hbm_mismatch %d unloaded_hbm_reads %d\n", cyc, token, status, ndisp, recs.size(), n_ret, nerr_disp,
-                vbad, hbad, unloaded_hbm);
+                      "final_hbm_mismatch %d unloaded_hbm_reads %d golden_vm_checked %zu golden_vm_mismatch %d\n", cyc, token, status, ndisp,
+                recs.size(), n_ret, nerr_disp, vbad, hbad, unloaded_hbm, gold_vm.size(), gbad);
         fclose(logf); logf = nullptr;
     }
-    fprintf(stderr, "E2E SUMMARY cycles %lld token %d status %d dispatched %d/%zu dispatch_mismatch %d final_vm_mismatch %d final_hbm_mismatch %d unloaded_hbm_reads %d\n",
-            cyc, token, status, ndisp, recs.size(), nerr_disp, vbad, hbad, unloaded_hbm);
-    return nerr_disp + vbad + hbad;
+    fprintf(stderr, "E2E SUMMARY cycles %lld token %d status %d dispatched %d/%zu dispatch_mismatch %d final_vm_mismatch %d final_hbm_mismatch %d unloaded_hbm_reads %d golden_vm_mismatch %d/%zu\n",
+            cyc, token, status, ndisp, recs.size(), nerr_disp, vbad, hbad, unloaded_hbm, gbad, gold_vm.size());
+    return nerr_disp + vbad + hbad + gbad;
 }

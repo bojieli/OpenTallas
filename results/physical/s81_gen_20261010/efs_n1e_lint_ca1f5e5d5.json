@@ -1,0 +1,5210 @@
+{
+ "schema": "opentallas.die_top_lint.v1",
+ "die": "s81r8_layer1e",
+ "top_fix": false,
+ "generator": "tools/dsrom_s81_fulldie.py --gen r8",
+ "generator_sha256": "20b0a35ffd545c0480863672454052a937ee6872b1c8549fc8c3b32d759a2387",
+ "generator_tag": {
+  "file": "tools/dsrom_s81_fulldie.py",
+  "sha256": "20b0a35ffd545c0480863672454052a937ee6872b1c8549fc8c3b32d759a2387",
+  "tree_head": "28d7cb869",
+  "file_commit": null
+ },
+ "qwen_source": null,
+ "qwen_recipe": null,
+ "pin_fit_errors": {},
+ "lint_tool_sha256": "e3a4b4f55110b6fc58632266ac3d7a18df642136a56381019b0a61ccf46ebf1d",
+ "variant": {
+  "tier_cols": null,
+  "frames": 128,
+  "lane_equal": true,
+  "q_x1b": false,
+  "cfg_rgap": 21.6,
+  "cfg_rgap_at": 1,
+  "xb_rgap": 25.92,
+  "ck_rule": false,
+  "coll_split3": false,
+  "bf_hier": null,
+  "bf_frame_extra_um": 0.0,
+  "die_um": [
+   33000.0,
+   26000.0
+  ],
+  "host": true,
+  "ctrl_rq": true,
+  "fwd_iface": true,
+  "hop_extra": 0,
+  "path_pick": true,
+  "hop_r_cc": 500.0,
+  "relay_tt_reach": 600.0,
+  "wfc_hard": true,
+  "face_pin_inset": true,
+  "coll_split3_cr": false,
+  "collective_composition": null,
+  "ctrl_slab": false,
+  "ctrl_role": null,
+  "su_area_mm2": 25.61188,
+  "hub_column_width_um": 1728.0,
+  "gen": "r8",
+  "geometry_fix": true,
+  "cfifo_v2": true,
+  "cfifo_colck": false,
+  "link_fix": true,
+  "link_split": true,
+  "sel_xstg": true,
+  "pin_relay": true,
+  "nxt_reach": true,
+  "vm_face_mm2": null,
+  "ch_heights": [
+   501.12,
+   544.3199999999999,
+   630.72,
+   630.72,
+   544.3199999999999,
+   501.12,
+   259.2
+  ],
+  "vch_w": 1641.6,
+  "hc_corr": 1512.0,
+  "hc_xface": true,
+  "hop_fix": true,
+  "meso_d8": true,
+  "fwd_pitch": 430.56,
+  "corr_interleave": true,
+  "rev": "r9",
+  "cc_reach_um": 215.0,
+  "vch_interleave": true,
+  "q_lef": "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz",
+  "head_dies": 12,
+  "die": "layer1e",
+  "role": "Engram home layer die, 2 HBM3E stacks (8 of the rack: stages 3 / 42 x 4 ranks)",
+  "pairs": 1792,
+  "bf": 512,
+  "nv": 0,
+  "head_bundles": 0,
+  "stacks": [
+   "SW",
+   "SE"
+  ],
+  "elem_frame_h": 198.72,
+  "q_elem_frame_h": 221.4,
+  "frame_h": 2646.0,
+  "slot_h": 280.8,
+  "slots": 9,
+  "mtp_seq": null,
+  "mtp_links": 0,
+  "draft": null
+ },
+ "census": {
+  "instances": 59192,
+  "buses": 107485,
+  "net_bits": 6515759,
+  "masters": 201,
+  "real_instances": 58535,
+  "placeholder_instances": 657
+ },
+ "real_blocks": {
+  "ot_v41_rom_elem_q_qxpq_w10": {
+   "module": "ot_v41_rom_elem_q_qxpq_w10",
+   "file": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "kind": "routed RTL (QELEM PQ, NB=2)",
+   "params": {
+    "NB": 2
+   },
+   "instances": 1280
+  },
+  "ot_rom_4096x72_m8": {
+   "module": "ot_rom_4096x72_m8",
+   "file": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+   "kind": "hard macro black box",
+   "params": {},
+   "instances": 12547
+  },
+  "ot_hbm3e_phy_v41x_aw30_e8p5": {
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "file": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+   "kind": "hard macro black box",
+   "params": {},
+   "instances": 2
+  },
+  "ot_pdie_serdes": {
+   "module": "ot_pdie_serdes",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 6
+  },
+  "ot_pdie_ucie": {
+   "module": "ot_pdie_ucie",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 2
+  },
+  "dsfd_cfifo": {
+   "module": "dsfd_cfifo",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_hstnh_1024": {
+   "module": "dsfd_hstnh_1024",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 22
+  },
+  "dsfd_hstnh_130": {
+   "module": "dsfd_hstnh_130",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 11
+  },
+  "dsfd_hstnh_17": {
+   "module": "dsfd_hstnh_17",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_hstnh_192": {
+   "module": "dsfd_hstnh_192",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 7
+  },
+  "dsfd_hstnh_508": {
+   "module": "dsfd_hstnh_508",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 6
+  },
+  "dsfd_hstnh_512": {
+   "module": "dsfd_hstnh_512",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 38
+  },
+  "dsfd_hstnh_513": {
+   "module": "dsfd_hstnh_513",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_hstnh_514": {
+   "module": "dsfd_hstnh_514",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 28
+  },
+  "dsfd_hstnh_515": {
+   "module": "dsfd_hstnh_515",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 4
+  },
+  "dsfd_hstnh_544": {
+   "module": "dsfd_hstnh_544",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 6
+  },
+  "dsfd_hstnh_576": {
+   "module": "dsfd_hstnh_576",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 4
+  },
+  "dsfd_hstnh_64": {
+   "module": "dsfd_hstnh_64",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 19
+  },
+  "dsfd_hstnh_692": {
+   "module": "dsfd_hstnh_692",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 13
+  },
+  "dsfd_hstnh_761": {
+   "module": "dsfd_hstnh_761",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 28
+  },
+  "dsfd_hstnv_1024": {
+   "module": "dsfd_hstnv_1024",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 44
+  },
+  "dsfd_hstnv_1027": {
+   "module": "dsfd_hstnv_1027",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 2
+  },
+  "dsfd_hstnv_130": {
+   "module": "dsfd_hstnv_130",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_hstnv_17": {
+   "module": "dsfd_hstnv_17",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_hstnv_192": {
+   "module": "dsfd_hstnv_192",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 4
+  },
+  "dsfd_hstnv_2162": {
+   "module": "dsfd_hstnv_2162",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 2
+  },
+  "dsfd_hstnv_3": {
+   "module": "dsfd_hstnv_3",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 3
+  },
+  "dsfd_hstnv_508": {
+   "module": "dsfd_hstnv_508",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 4
+  },
+  "dsfd_hstnv_512": {
+   "module": "dsfd_hstnv_512",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 18
+  },
+  "dsfd_hstnv_514": {
+   "module": "dsfd_hstnv_514",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 3
+  },
+  "dsfd_hstnv_515": {
+   "module": "dsfd_hstnv_515",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 4
+  },
+  "dsfd_hstnv_544": {
+   "module": "dsfd_hstnv_544",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 6
+  },
+  "dsfd_hstnv_576": {
+   "module": "dsfd_hstnv_576",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 7
+  },
+  "dsfd_hstnv_64": {
+   "module": "dsfd_hstnv_64",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 2
+  },
+  "dsfd_hstnv_692": {
+   "module": "dsfd_hstnv_692",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_l2r_vr_16x1__hs_e_vm_t_eng": {
+   "module": "dsfd_l2r_vr_16x1__hs_e_vm_t_eng",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_l2r_vr_512x1__hq_SW": {
+   "module": "dsfd_l2r_vr_512x1__hq_SW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_l2r_vr_564x1__hx_E": {
+   "module": "dsfd_l2r_vr_564x1__hx_E",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_l2r_vr_564x1__hx_W": {
+   "module": "dsfd_l2r_vr_564x1__hx_W",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_lkck_NE": {
+   "module": "dsfd_lkck_NE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_lkck_NW": {
+   "module": "dsfd_lkck_NW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_lkck_SE": {
+   "module": "dsfd_lkck_SE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 3
+  },
+  "dsfd_lkck_SW": {
+   "module": "dsfd_lkck_SW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 3
+  },
+  "dsfd_m2l_raw_512x1__hl_E0": {
+   "module": "dsfd_m2l_raw_512x1__hl_E0",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_E1": {
+   "module": "dsfd_m2l_raw_512x1__hl_E1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_E2": {
+   "module": "dsfd_m2l_raw_512x1__hl_E2",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_E3": {
+   "module": "dsfd_m2l_raw_512x1__hl_E3",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_W0": {
+   "module": "dsfd_m2l_raw_512x1__hl_W0",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_W1": {
+   "module": "dsfd_m2l_raw_512x1__hl_W1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_W2": {
+   "module": "dsfd_m2l_raw_512x1__hl_W2",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_W3": {
+   "module": "dsfd_m2l_raw_512x1__hl_W3",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_1124x1__he_e_collective_t_engi": {
+   "module": "dsfd_m2l_vr_1124x1__he_e_collective_t_engi",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_16x1__he_e_vm_t_eng": {
+   "module": "dsfd_m2l_vr_16x1__he_e_vm_t_eng",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_18x1__he_hcSE": {
+   "module": "dsfd_m2l_vr_18x1__he_hcSE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_18x1__he_hcSW": {
+   "module": "dsfd_m2l_vr_18x1__he_hcSW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_1x1__he_e_collective_t_engc": {
+   "module": "dsfd_m2l_vr_1x1__he_e_collective_t_engc",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_1x1__he_e_eng_t_collective": {
+   "module": "dsfd_m2l_vr_1x1__he_e_eng_t_collective",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_265x1__he_e_swr": {
+   "module": "dsfd_m2l_vr_265x1__he_e_swr",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_282x1__he_e_eng_t_ag": {
+   "module": "dsfd_m2l_vr_282x1__he_e_eng_t_ag",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_35x1__he_e_swq": {
+   "module": "dsfd_m2l_vr_35x1__he_e_swq",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_3x1__he_e_host_t_eng": {
+   "module": "dsfd_m2l_vr_3x1__he_e_host_t_eng",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_4x1__he_e_eng_t_air": {
+   "module": "dsfd_m2l_vr_4x1__he_e_eng_t_air",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_512x1__hco_SW": {
+   "module": "dsfd_m2l_vr_512x1__hco_SW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_512x1__hix_SW": {
+   "module": "dsfd_m2l_vr_512x1__hix_SW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_512x1__hqe_SW": {
+   "module": "dsfd_m2l_vr_512x1__hqe_SW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_578x1__he_hwSE": {
+   "module": "dsfd_m2l_vr_578x1__he_hwSE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_578x1__he_hwSW": {
+   "module": "dsfd_m2l_vr_578x1__he_hwSW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x10__hr_E0": {
+   "module": "dsfd_m2l_vr_68x10__hr_E0",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x10__hr_E5": {
+   "module": "dsfd_m2l_vr_68x10__hr_E5",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x10__hr_W0": {
+   "module": "dsfd_m2l_vr_68x10__hr_W0",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x10__hr_W5": {
+   "module": "dsfd_m2l_vr_68x10__hr_W5",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_E1": {
+   "module": "dsfd_m2l_vr_68x11__hr_E1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_E2": {
+   "module": "dsfd_m2l_vr_68x11__hr_E2",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_E3": {
+   "module": "dsfd_m2l_vr_68x11__hr_E3",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_E4": {
+   "module": "dsfd_m2l_vr_68x11__hr_E4",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_W1": {
+   "module": "dsfd_m2l_vr_68x11__hr_W1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_W2": {
+   "module": "dsfd_m2l_vr_68x11__hr_W2",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_W3": {
+   "module": "dsfd_m2l_vr_68x11__hr_W3",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_W4": {
+   "module": "dsfd_m2l_vr_68x11__hr_W4",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_m2l_vr_73x1__he_e_collective_t_eng": {
+   "module": "dsfd_m2l_vr_73x1__he_e_collective_t_eng",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_node_LLd": {
+   "module": "dsfd_node_LLd",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_node_LLfd": {
+   "module": "dsfd_node_LLfd",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 896
+  },
+  "dsfd_node_LLfu": {
+   "module": "dsfd_node_LLfu",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 768
+  },
+  "dsfd_node_NNfd": {
+   "module": "dsfd_node_NNfd",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 768
+  },
+  "dsfd_node_NNfu": {
+   "module": "dsfd_node_NNfu",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 896
+  },
+  "dsfd_qbank_N": {
+   "module": "dsfd_qbank_N",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1280
+  },
+  "dsfd_qbank_S": {
+   "module": "dsfd_qbank_S",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1280
+  },
+  "dsfd_r2l_vr_1024x1__ha_SW": {
+   "module": "dsfd_r2l_vr_1024x1__ha_SW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_r2l_vr_512x1__hcol": {
+   "module": "dsfd_r2l_vr_512x1__hcol",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_r2l_vr_512x1__hsel": {
+   "module": "dsfd_r2l_vr_512x1__hsel",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_r2l_vr_532x1__he_e_eng_t_vm": {
+   "module": "dsfd_r2l_vr_532x1__he_e_eng_t_vm",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1
+  },
+  "dsfd_rly_15_EN": {
+   "module": "dsfd_rly_15_EN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 104
+  },
+  "dsfd_rly_15_SN": {
+   "module": "dsfd_rly_15_SN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 792
+  },
+  "dsfd_rly_15_SW": {
+   "module": "dsfd_rly_15_SW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_15_WE": {
+   "module": "dsfd_rly_15_WE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_15_WN": {
+   "module": "dsfd_rly_15_WN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_1_EW": {
+   "module": "dsfd_rly_1_EW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 384
+  },
+  "dsfd_rly_1_NS": {
+   "module": "dsfd_rly_1_NS",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 512
+  },
+  "dsfd_rly_1_SN": {
+   "module": "dsfd_rly_1_SN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_1_WN": {
+   "module": "dsfd_rly_1_WN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 512
+  },
+  "dsfd_rly_266_EN": {
+   "module": "dsfd_rly_266_EN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_266_SN": {
+   "module": "dsfd_rly_266_SN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 512
+  },
+  "dsfd_rly_266_WE": {
+   "module": "dsfd_rly_266_WE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 640
+  },
+  "dsfd_rly_283_SN": {
+   "module": "dsfd_rly_283_SN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 640
+  },
+  "dsfd_rly_283_WE": {
+   "module": "dsfd_rly_283_WE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 640
+  },
+  "dsfd_rly_2_ES": {
+   "module": "dsfd_rly_2_ES",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1152
+  },
+  "dsfd_rly_2_EW": {
+   "module": "dsfd_rly_2_EW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_2_NE": {
+   "module": "dsfd_rly_2_NE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 256
+  },
+  "dsfd_rly_2_NS": {
+   "module": "dsfd_rly_2_NS",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1152
+  },
+  "dsfd_rly_2_NW": {
+   "module": "dsfd_rly_2_NW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1280
+  },
+  "dsfd_rly_2_SN": {
+   "module": "dsfd_rly_2_SN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_2_WE": {
+   "module": "dsfd_rly_2_WE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 640
+  },
+  "dsfd_rly_2_WN": {
+   "module": "dsfd_rly_2_WN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 640
+  },
+  "dsfd_rly_2_WS": {
+   "module": "dsfd_rly_2_WS",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 896
+  },
+  "dsfd_rly_54_EW": {
+   "module": "dsfd_rly_54_EW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 640
+  },
+  "dsfd_rly_54_WN": {
+   "module": "dsfd_rly_54_WN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 512
+  },
+  "dsfd_rly_63_NE": {
+   "module": "dsfd_rly_63_NE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1024
+  },
+  "dsfd_rly_63_NS": {
+   "module": "dsfd_rly_63_NS",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 4480
+  },
+  "dsfd_rly_63_SE": {
+   "module": "dsfd_rly_63_SE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 512
+  },
+  "dsfd_rly_63_SN": {
+   "module": "dsfd_rly_63_SN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_63_WE": {
+   "module": "dsfd_rly_63_WE",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 6784
+  },
+  "dsfd_rly_63_WN": {
+   "module": "dsfd_rly_63_WN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 640
+  },
+  "dsfd_rly_63_WS": {
+   "module": "dsfd_rly_63_WS",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 3840
+  },
+  "dsfd_rly_66_NS": {
+   "module": "dsfd_rly_66_NS",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 896
+  },
+  "dsfd_rly_66_SN": {
+   "module": "dsfd_rly_66_SN",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 512
+  },
+  "dsfd_rly_68_ES": {
+   "module": "dsfd_rly_68_ES",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rly_68_EW": {
+   "module": "dsfd_rly_68_EW",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rstg": {
+   "module": "dsfd_rstg",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 256
+  },
+  "dsfd_rstg_pq66": {
+   "module": "dsfd_rstg_pq66",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_rstg_pq68": {
+   "module": "dsfd_rstg_pq68",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_sstn_e0c0si": {
+   "module": "dsfd_sstn_e0c0si",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 384
+  },
+  "dsfd_sstn_e0c0sinf": {
+   "module": "dsfd_sstn_e0c0sinf",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_sstn_e0e1c0c1": {
+   "module": "dsfd_sstn_e0e1c0c1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 128
+  },
+  "dsfd_sstn_e0e1c0c1si": {
+   "module": "dsfd_sstn_e0e1c0c1si",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 512
+  },
+  "dsfd_stnh_1026x1": {
+   "module": "dsfd_stnh_1026x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 8
+  },
+  "dsfd_stnh_1126x1": {
+   "module": "dsfd_stnh_1126x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 24
+  },
+  "dsfd_stnh_18x1": {
+   "module": "dsfd_stnh_18x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 23
+  },
+  "dsfd_stnh_20x1": {
+   "module": "dsfd_stnh_20x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_267x1": {
+   "module": "dsfd_stnh_267x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 38
+  },
+  "dsfd_stnh_284x1": {
+   "module": "dsfd_stnh_284x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 24
+  },
+  "dsfd_stnh_37x1": {
+   "module": "dsfd_stnh_37x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 38
+  },
+  "dsfd_stnh_3x1": {
+   "module": "dsfd_stnh_3x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 49
+  },
+  "dsfd_stnh_512x1": {
+   "module": "dsfd_stnh_512x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 596
+  },
+  "dsfd_stnh_514x1": {
+   "module": "dsfd_stnh_514x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 44
+  },
+  "dsfd_stnh_534x1": {
+   "module": "dsfd_stnh_534x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 24
+  },
+  "dsfd_stnh_566x1": {
+   "module": "dsfd_stnh_566x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 392
+  },
+  "dsfd_stnh_580x1": {
+   "module": "dsfd_stnh_580x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 37
+  },
+  "dsfd_stnh_5x1": {
+   "module": "dsfd_stnh_5x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 24
+  },
+  "dsfd_stnh_6x1": {
+   "module": "dsfd_stnh_6x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 24
+  },
+  "dsfd_stnh_70x1": {
+   "module": "dsfd_stnh_70x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 93
+  },
+  "dsfd_stnh_70x10": {
+   "module": "dsfd_stnh_70x10",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 50
+  },
+  "dsfd_stnh_70x11": {
+   "module": "dsfd_stnh_70x11",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 46
+  },
+  "dsfd_stnh_70x2": {
+   "module": "dsfd_stnh_70x2",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_70x3": {
+   "module": "dsfd_stnh_70x3",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_70x4": {
+   "module": "dsfd_stnh_70x4",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_70x5": {
+   "module": "dsfd_stnh_70x5",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_70x6": {
+   "module": "dsfd_stnh_70x6",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_70x7": {
+   "module": "dsfd_stnh_70x7",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_70x8": {
+   "module": "dsfd_stnh_70x8",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_70x9": {
+   "module": "dsfd_stnh_70x9",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 36
+  },
+  "dsfd_stnh_75x1": {
+   "module": "dsfd_stnh_75x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 26
+  },
+  "dsfd_stnv_1026x1": {
+   "module": "dsfd_stnv_1026x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 19
+  },
+  "dsfd_stnv_1126x1": {
+   "module": "dsfd_stnv_1126x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 30
+  },
+  "dsfd_stnv_18x1": {
+   "module": "dsfd_stnv_18x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 27
+  },
+  "dsfd_stnv_20x1": {
+   "module": "dsfd_stnv_20x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 59
+  },
+  "dsfd_stnv_256x1": {
+   "module": "dsfd_stnv_256x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 24
+  },
+  "dsfd_stnv_267x1": {
+   "module": "dsfd_stnv_267x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 3
+  },
+  "dsfd_stnv_284x1": {
+   "module": "dsfd_stnv_284x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 30
+  },
+  "dsfd_stnv_37x1": {
+   "module": "dsfd_stnv_37x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 5
+  },
+  "dsfd_stnv_3x1": {
+   "module": "dsfd_stnv_3x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 59
+  },
+  "dsfd_stnv_512x1": {
+   "module": "dsfd_stnv_512x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 196
+  },
+  "dsfd_stnv_514x1": {
+   "module": "dsfd_stnv_514x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 122
+  },
+  "dsfd_stnv_534x1": {
+   "module": "dsfd_stnv_534x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 24
+  },
+  "dsfd_stnv_566x1": {
+   "module": "dsfd_stnv_566x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 89
+  },
+  "dsfd_stnv_580x1": {
+   "module": "dsfd_stnv_580x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 59
+  },
+  "dsfd_stnv_5x1": {
+   "module": "dsfd_stnv_5x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 31
+  },
+  "dsfd_stnv_6x1": {
+   "module": "dsfd_stnv_6x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 30
+  },
+  "dsfd_stnv_70x1": {
+   "module": "dsfd_stnv_70x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 15
+  },
+  "dsfd_stnv_70x10": {
+   "module": "dsfd_stnv_70x10",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 79
+  },
+  "dsfd_stnv_70x11": {
+   "module": "dsfd_stnv_70x11",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 67
+  },
+  "dsfd_stnv_75x1": {
+   "module": "dsfd_stnv_75x1",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 29
+  },
+  "dsfd_xstg_515": {
+   "module": "dsfd_xstg_515",
+   "file": "/srv/opentallas-scratch/claude/s81-gen/s81die/lint_n1e/s81r8_layer1e_glue.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 2
+  },
+  "ot_s81_cfg7_seq": {
+   "module": "ot_s81_cfg7_seq",
+   "file": "rtl/v41die/ot_s81_cfg7_seq.sv",
+   "kind": "glue RTL (S81-DIE)",
+   "params": {},
+   "instances": 1792
+  }
+ },
+ "connectivity": [],
+ "unbound_real_pins": [
+  {
+   "master": "dsfd_stnv_256x1",
+   "port": "fo0",
+   "insts": 12,
+   "bits": 12,
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "master": "ot_s81_cfg7_seq",
+   "port": "ef",
+   "insts": 512,
+   "bits": 1024,
+   "dir": "input",
+   "width": 2
+  },
+  {
+   "master": "ot_s81_cfg7_seq",
+   "port": "go_tag",
+   "insts": 512,
+   "bits": 1024,
+   "dir": "output",
+   "width": 2
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qxpq_w10",
+   "port": "walking",
+   "insts": 1280,
+   "bits": 1280,
+   "dir": "output",
+   "width": 1
+  }
+ ],
+ "placeholder_port_direction_conflicts": {},
+ "clocking": [
+  {
+   "master": "dsfd_bf",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_bk_collector",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_bk_selector",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_cfifo",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_ctrl",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "dsfd_engram",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_host",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_hstnh_1024",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 22
+  },
+  {
+   "master": "dsfd_hstnh_130",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 11
+  },
+  {
+   "master": "dsfd_hstnh_17",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_hstnh_192",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 7
+  },
+  {
+   "master": "dsfd_hstnh_508",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 6
+  },
+  {
+   "master": "dsfd_hstnh_512",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 38
+  },
+  {
+   "master": "dsfd_hstnh_513",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_hstnh_514",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 28
+  },
+  {
+   "master": "dsfd_hstnh_515",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 4
+  },
+  {
+   "master": "dsfd_hstnh_544",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 6
+  },
+  {
+   "master": "dsfd_hstnh_576",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 4
+  },
+  {
+   "master": "dsfd_hstnh_64",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 19
+  },
+  {
+   "master": "dsfd_hstnh_692",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 13
+  },
+  {
+   "master": "dsfd_hstnh_761",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 28
+  },
+  {
+   "master": "dsfd_hstnv_1024",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 44
+  },
+  {
+   "master": "dsfd_hstnv_1027",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 2
+  },
+  {
+   "master": "dsfd_hstnv_130",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_hstnv_17",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_hstnv_192",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 4
+  },
+  {
+   "master": "dsfd_hstnv_2162",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 2
+  },
+  {
+   "master": "dsfd_hstnv_3",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 3
+  },
+  {
+   "master": "dsfd_hstnv_508",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 4
+  },
+  {
+   "master": "dsfd_hstnv_512",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 18
+  },
+  {
+   "master": "dsfd_hstnv_514",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 3
+  },
+  {
+   "master": "dsfd_hstnv_515",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 4
+  },
+  {
+   "master": "dsfd_hstnv_544",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 6
+  },
+  {
+   "master": "dsfd_hstnv_576",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 7
+  },
+  {
+   "master": "dsfd_hstnv_64",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 2
+  },
+  {
+   "master": "dsfd_hstnv_692",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_l2r_vr_16x1__hs_e_vm_t_eng",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_l2r_vr_512x1__hq_SW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_l2r_vr_564x1__hx_E",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_l2r_vr_564x1__hx_W",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_lkck_NE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_lkck_NW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_lkck_SE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 3
+  },
+  {
+   "master": "dsfd_lkck_SW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 3
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E0",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E2",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E3",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W0",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W2",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W3",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_1124x1__he_e_collective_t_engi",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_16x1__he_e_vm_t_eng",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_18x1__he_hcSE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_18x1__he_hcSW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_1x1__he_e_collective_t_engc",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_1x1__he_e_eng_t_collective",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_265x1__he_e_swr",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_282x1__he_e_eng_t_ag",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_35x1__he_e_swq",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_3x1__he_e_host_t_eng",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_4x1__he_e_eng_t_air",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hco_SW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hix_SW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hqe_SW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_578x1__he_hwSE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_578x1__he_hwSW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_E0",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_E5",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_W0",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_W5",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E2",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E3",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E4",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W2",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W3",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W4",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_73x1__he_e_collective_t_eng",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_node_LLd",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_node_LLfd",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 896
+  },
+  {
+   "master": "dsfd_node_LLfu",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 768
+  },
+  {
+   "master": "dsfd_node_NNfd",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 768
+  },
+  {
+   "master": "dsfd_node_NNfu",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 896
+  },
+  {
+   "master": "dsfd_pq_root",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_qbank_N",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1280
+  },
+  {
+   "master": "dsfd_qbank_S",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1280
+  },
+  {
+   "master": "dsfd_r2l_vr_1024x1__ha_SW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_r2l_vr_512x1__hcol",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_r2l_vr_512x1__hsel",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_r2l_vr_532x1__he_e_eng_t_vm",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_rly_15_EN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 104
+  },
+  {
+   "master": "dsfd_rly_15_SN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 792
+  },
+  {
+   "master": "dsfd_rly_15_SW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_15_WE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_15_WN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_1_EW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 384
+  },
+  {
+   "master": "dsfd_rly_1_NS",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_1_SN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_1_WN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_266_EN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_266_SN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_266_WE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_283_SN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_283_WE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_2_ES",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1152
+  },
+  {
+   "master": "dsfd_rly_2_EW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_2_NE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 256
+  },
+  {
+   "master": "dsfd_rly_2_NS",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1152
+  },
+  {
+   "master": "dsfd_rly_2_NW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1280
+  },
+  {
+   "master": "dsfd_rly_2_SN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_2_WE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_2_WN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_2_WS",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 896
+  },
+  {
+   "master": "dsfd_rly_54_EW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_54_WN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_63_NE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1024
+  },
+  {
+   "master": "dsfd_rly_63_NS",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 4480
+  },
+  {
+   "master": "dsfd_rly_63_SE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_63_SN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_63_WE",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 6784
+  },
+  {
+   "master": "dsfd_rly_63_WN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_63_WS",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 3840
+  },
+  {
+   "master": "dsfd_rly_66_NS",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 896
+  },
+  {
+   "master": "dsfd_rly_66_SN",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_68_ES",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_68_EW",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rstg",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 256
+  },
+  {
+   "master": "dsfd_rstg_pq66",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rstg_pq68",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_sp_capture",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_collective",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_gather",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_hc_n",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_hc_s",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_pq",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_su_n",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_su_s",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_vm",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sstn_e0c0si",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 384
+  },
+  {
+   "master": "dsfd_sstn_e0c0sinf",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_sstn_e0e1c0c1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_sstn_e0e1c0c1si",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_stnh_1026x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 8
+  },
+  {
+   "master": "dsfd_stnh_1126x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 24
+  },
+  {
+   "master": "dsfd_stnh_18x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 23
+  },
+  {
+   "master": "dsfd_stnh_20x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_267x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 38
+  },
+  {
+   "master": "dsfd_stnh_284x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 24
+  },
+  {
+   "master": "dsfd_stnh_37x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 38
+  },
+  {
+   "master": "dsfd_stnh_3x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 49
+  },
+  {
+   "master": "dsfd_stnh_512x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 596
+  },
+  {
+   "master": "dsfd_stnh_514x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 44
+  },
+  {
+   "master": "dsfd_stnh_534x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 24
+  },
+  {
+   "master": "dsfd_stnh_566x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 392
+  },
+  {
+   "master": "dsfd_stnh_580x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 37
+  },
+  {
+   "master": "dsfd_stnh_5x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 24
+  },
+  {
+   "master": "dsfd_stnh_6x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 24
+  },
+  {
+   "master": "dsfd_stnh_70x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 93
+  },
+  {
+   "master": "dsfd_stnh_70x10",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 50
+  },
+  {
+   "master": "dsfd_stnh_70x11",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 46
+  },
+  {
+   "master": "dsfd_stnh_70x2",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_70x3",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_70x4",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_70x5",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_70x6",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_70x7",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_70x8",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_70x9",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 36
+  },
+  {
+   "master": "dsfd_stnh_75x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 26
+  },
+  {
+   "master": "dsfd_stnv_1026x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 19
+  },
+  {
+   "master": "dsfd_stnv_1126x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 30
+  },
+  {
+   "master": "dsfd_stnv_18x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 27
+  },
+  {
+   "master": "dsfd_stnv_20x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 59
+  },
+  {
+   "master": "dsfd_stnv_256x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 24
+  },
+  {
+   "master": "dsfd_stnv_267x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 3
+  },
+  {
+   "master": "dsfd_stnv_284x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 30
+  },
+  {
+   "master": "dsfd_stnv_37x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 5
+  },
+  {
+   "master": "dsfd_stnv_3x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 59
+  },
+  {
+   "master": "dsfd_stnv_512x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 196
+  },
+  {
+   "master": "dsfd_stnv_514x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 122
+  },
+  {
+   "master": "dsfd_stnv_534x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 24
+  },
+  {
+   "master": "dsfd_stnv_566x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 89
+  },
+  {
+   "master": "dsfd_stnv_580x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 59
+  },
+  {
+   "master": "dsfd_stnv_5x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 31
+  },
+  {
+   "master": "dsfd_stnv_6x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 30
+  },
+  {
+   "master": "dsfd_stnv_70x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 15
+  },
+  {
+   "master": "dsfd_stnv_70x10",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 79
+  },
+  {
+   "master": "dsfd_stnv_70x11",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 67
+  },
+  {
+   "master": "dsfd_stnv_75x1",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 29
+  },
+  {
+   "master": "dsfd_svc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_wfc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_xstg_515",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 2
+  },
+  {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 2
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 6
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 2
+  },
+  {
+   "master": "ot_rom_4096x72_m8",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 12547
+  },
+  {
+   "master": "ot_s81_cfg7_seq",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1792
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qxpq_w10",
+   "view": "real",
+   "clock": "clock_bound",
+   "instances": 1280
+  }
+ ],
+ "clock_sources": {
+  "sp_collective": [
+   "pll_hbm",
+   "pll_serial",
+   "pll_stream",
+   "t_engcf",
+   "t_engf",
+   "t_engif",
+   "tfE0",
+   "tfE1",
+   "tfE2",
+   "tfE3",
+   "tfW0",
+   "tfW1",
+   "tfW2",
+   "tfW3"
+  ]
+ },
+ "clock_leaf_offsets": null,
+ "reset": [
+  {
+   "master": "dsfd_bf",
+   "net": "reset_tree",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_bk_collector",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_bk_selector",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_cfifo",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_ctrl",
+   "net": "reset_tree",
+   "instances": 2
+  },
+  {
+   "master": "dsfd_engram",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_host",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_l2r_vr_16x1__hs_e_vm_t_eng",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_l2r_vr_512x1__hq_SW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_l2r_vr_564x1__hx_E",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_l2r_vr_564x1__hx_W",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E0",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E1",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E2",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E3",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W0",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W1",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W2",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W3",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_1124x1__he_e_collective_t_engi",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_16x1__he_e_vm_t_eng",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_18x1__he_hcSE",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_18x1__he_hcSW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_1x1__he_e_collective_t_engc",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_1x1__he_e_eng_t_collective",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_265x1__he_e_swr",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_282x1__he_e_eng_t_ag",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_35x1__he_e_swq",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_3x1__he_e_host_t_eng",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_4x1__he_e_eng_t_air",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hco_SW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hix_SW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hqe_SW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_578x1__he_hwSE",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_578x1__he_hwSW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_E0",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_E5",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_W0",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_W5",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E1",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E2",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E3",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E4",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W1",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W2",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W3",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W4",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_m2l_vr_73x1__he_e_collective_t_eng",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_node_LLd",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_node_LLfd",
+   "net": "reset_tree",
+   "instances": 896
+  },
+  {
+   "master": "dsfd_node_LLfu",
+   "net": "reset_tree",
+   "instances": 768
+  },
+  {
+   "master": "dsfd_node_NNfd",
+   "net": "reset_tree",
+   "instances": 768
+  },
+  {
+   "master": "dsfd_node_NNfu",
+   "net": "reset_tree",
+   "instances": 896
+  },
+  {
+   "master": "dsfd_pq_root",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_qbank_N",
+   "net": "reset_tree",
+   "instances": 1280
+  },
+  {
+   "master": "dsfd_qbank_S",
+   "net": "reset_tree",
+   "instances": 1280
+  },
+  {
+   "master": "dsfd_r2l_vr_1024x1__ha_SW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_r2l_vr_512x1__hcol",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_r2l_vr_512x1__hsel",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_r2l_vr_532x1__he_e_eng_t_vm",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_rly_15_EN",
+   "net": "reset_tree",
+   "instances": 104
+  },
+  {
+   "master": "dsfd_rly_15_SN",
+   "net": "reset_tree",
+   "instances": 792
+  },
+  {
+   "master": "dsfd_rly_15_SW",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_15_WE",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_15_WN",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_1_EW",
+   "net": "reset_tree",
+   "instances": 384
+  },
+  {
+   "master": "dsfd_rly_1_NS",
+   "net": "reset_tree",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_1_SN",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_1_WN",
+   "net": "reset_tree",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_266_EN",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_266_SN",
+   "net": "reset_tree",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_266_WE",
+   "net": "reset_tree",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_283_SN",
+   "net": "reset_tree",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_283_WE",
+   "net": "reset_tree",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_2_ES",
+   "net": "reset_tree",
+   "instances": 1152
+  },
+  {
+   "master": "dsfd_rly_2_EW",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_2_NE",
+   "net": "reset_tree",
+   "instances": 256
+  },
+  {
+   "master": "dsfd_rly_2_NS",
+   "net": "reset_tree",
+   "instances": 1152
+  },
+  {
+   "master": "dsfd_rly_2_NW",
+   "net": "reset_tree",
+   "instances": 1280
+  },
+  {
+   "master": "dsfd_rly_2_SN",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_2_WE",
+   "net": "reset_tree",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_2_WN",
+   "net": "reset_tree",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_2_WS",
+   "net": "reset_tree",
+   "instances": 896
+  },
+  {
+   "master": "dsfd_rly_54_EW",
+   "net": "reset_tree",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_54_WN",
+   "net": "reset_tree",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_63_NE",
+   "net": "reset_tree",
+   "instances": 1024
+  },
+  {
+   "master": "dsfd_rly_63_NS",
+   "net": "reset_tree",
+   "instances": 4480
+  },
+  {
+   "master": "dsfd_rly_63_SE",
+   "net": "reset_tree",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_63_SN",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_63_WE",
+   "net": "reset_tree",
+   "instances": 6784
+  },
+  {
+   "master": "dsfd_rly_63_WN",
+   "net": "reset_tree",
+   "instances": 640
+  },
+  {
+   "master": "dsfd_rly_63_WS",
+   "net": "reset_tree",
+   "instances": 3840
+  },
+  {
+   "master": "dsfd_rly_66_NS",
+   "net": "reset_tree",
+   "instances": 896
+  },
+  {
+   "master": "dsfd_rly_66_SN",
+   "net": "reset_tree",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_rly_68_ES",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rly_68_EW",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rstg",
+   "net": "reset_tree",
+   "instances": 256
+  },
+  {
+   "master": "dsfd_rstg_pq66",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_rstg_pq68",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_sp_capture",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_collective",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_gather",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_hc_n",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_hc_s",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_pq",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_su_n",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_su_s",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_vm",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sstn_e0c0si",
+   "net": "reset_tree",
+   "instances": 384
+  },
+  {
+   "master": "dsfd_sstn_e0c0sinf",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_sstn_e0e1c0c1",
+   "net": "reset_tree",
+   "instances": 128
+  },
+  {
+   "master": "dsfd_sstn_e0e1c0c1si",
+   "net": "reset_tree",
+   "instances": 512
+  },
+  {
+   "master": "dsfd_svc",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_wfc",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "ot_s81_cfg7_seq",
+   "net": "reset_tree",
+   "instances": 1792
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qxpq_w10",
+   "net": "reset_tree",
+   "instances": 1280
+  }
+ ],
+ "interfaces": {},
+ "top_ports": [
+  "refclk",
+  "por_n"
+ ],
+ "physical": {
+  "missing_pins": [
+   {
+    "master": "dsfd_stnh_512x1",
+    "port": "di0[0:255]",
+    "endpoints": 6,
+    "bits": 1536,
+    "examples": [
+     "f_KW1r_1.di0[0:255] (0/256) in KW1rs_o0",
+     "f_KW2r_1.di0[0:255] (0/256) in KW2rs_o0",
+     "f_KW3r_1.di0[0:255] (0/256) in KW3rs_o0"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_512x1",
+    "port": "di0[256:511]",
+    "endpoints": 6,
+    "bits": 1536,
+    "examples": [
+     "f_KW1r_1.di0[256:511] (0/256) in KW1rs_o256",
+     "f_KW2r_1.di0[256:511] (0/256) in KW2rs_o256",
+     "f_KW3r_1.di0[256:511] (0/256) in KW3rs_o256"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_512x1",
+    "port": "do0[0:255]",
+    "endpoints": 6,
+    "bits": 1536,
+    "examples": [
+     "f_KW1t_46.do0[0:255] (0/256) in KW1ts_d0",
+     "f_KW2t_37.do0[0:255] (0/256) in KW2ts_d0",
+     "f_KW3t_42.do0[0:255] (0/256) in KW3ts_d0"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_512x1",
+    "port": "do0[256:511]",
+    "endpoints": 6,
+    "bits": 1536,
+    "examples": [
+     "f_KW1t_46.do0[256:511] (0/256) in KW1ts_d256",
+     "f_KW2t_37.do0[256:511] (0/256) in KW2ts_d256",
+     "f_KW3t_42.do0[256:511] (0/256) in KW3ts_d256"
+    ]
+   },
+   {
+    "master": "ot_pdie_serdes",
+    "port": "rx[0:255]",
+    "endpoints": 6,
+    "bits": 1536,
+    "examples": [
+     "lk_W1.rx[0:255] (0/256) in KW1rs_d0",
+     "lk_W2.rx[0:255] (0/256) in KW2rs_d0",
+     "lk_W3.rx[0:255] (0/256) in KW3rs_d0"
+    ]
+   },
+   {
+    "master": "ot_pdie_serdes",
+    "port": "rx[256:511]",
+    "endpoints": 6,
+    "bits": 1536,
+    "examples": [
+     "lk_W1.rx[256:511] (0/256) in KW1rs_d256",
+     "lk_W2.rx[256:511] (0/256) in KW2rs_d256",
+     "lk_W3.rx[256:511] (0/256) in KW3rs_d256"
+    ]
+   },
+   {
+    "master": "ot_pdie_serdes",
+    "port": "tx[0:255]",
+    "endpoints": 6,
+    "bits": 1536,
+    "examples": [
+     "lk_W1.tx[0:255] (0/256) in KW1ts_o0",
+     "lk_W2.tx[0:255] (0/256) in KW2ts_o0",
+     "lk_W3.tx[0:255] (0/256) in KW3ts_o0"
+    ]
+   },
+   {
+    "master": "ot_pdie_serdes",
+    "port": "tx[256:511]",
+    "endpoints": 6,
+    "bits": 1536,
+    "examples": [
+     "lk_W1.tx[256:511] (0/256) in KW1ts_o256",
+     "lk_W2.tx[256:511] (0/256) in KW2ts_o256",
+     "lk_W3.tx[256:511] (0/256) in KW3ts_o256"
+    ]
+   }
+  ],
+  "face_away": [
+   {
+    "master": "dsfd_bf",
+    "port": "x*",
+    "orient": "R0",
+    "endpoints": 384,
+    "bits": 104320,
+    "examples": [
+     "e3.x1 face S peer 263 um behind (xb_0_3)",
+     "e7.x0 face S peer 263 um behind (xa_0_6)",
+     "e10.x1 face S peer 263 um behind (xb_0_8)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_1024",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1024,
+    "examples": [
+     "g_hb_hc_n_vm_d0_f_hb_hc_n_vm_1_0.di face W peer 99 um behind (hb_hc_n_vm_d0_g0_f_hb_hc_n_vm_1)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_1024",
+    "port": "dq",
+    "orient": "MY",
+    "endpoints": 1,
+    "bits": 1024,
+    "examples": [
+     "f_hb_vm_su_n_16.dq face W peer 29 um behind (hb_vm_su_n_d16_g0_sp_su_n)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_1024",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 2048,
+    "examples": [
+     "g_hb_vm_su_n_d0_f_hb_vm_su_n_1_0.dq face E peer 10 um behind (hb_vm_su_n_d0_g1_f_hb_vm_su_n_1)",
+     "g_hb_hc_n_vm_d0_f_hb_hc_n_vm_1_0.dq face E peer 120 um behind (hb_hc_n_vm_d0_g1_f_hb_hc_n_vm_1)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_192",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 192,
+    "examples": [
+     "g_hb_gather_pq_d9_sp_pq_0.di face W peer 38 um behind (hb_gather_pq_d9_g0_sp_pq)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_192",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 192,
+    "examples": [
+     "g_hb_gather_pq_d9_sp_pq_0.dq face E peer 80 um behind (hb_gather_pq_d9_g1_sp_pq)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_512",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 4,
+    "bits": 2048,
+    "examples": [
+     "g_hb_vm_gather_d2_sp_gather_0.di face W peer 54 um behind (hb_vm_gather_d2_g0_sp_gather)",
+     "g_hb_capture_vm_d6_sp_vm_0.di face W peer 168 um behind (hb_capture_vm_d6_g0_sp_vm)",
+     "g_hb_collective_vm_d11_sp_vm_0.di face W peer 62 um behind (hb_collective_vm_d11_g0_sp_vm)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_512",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 4,
+    "bits": 2048,
+    "examples": [
+     "g_hb_vm_gather_d2_sp_gather_0.dq face E peer 68 um behind (hb_vm_gather_d2_g1_sp_gather)",
+     "g_hb_capture_vm_d6_sp_vm_0.dq face E peer 24 um behind (hb_capture_vm_d6_g1_sp_vm)",
+     "g_hb_collective_vm_d11_sp_vm_0.dq face E peer 27 um behind (hb_collective_vm_d11_g1_sp_vm)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_513",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 513,
+    "examples": [
+     "g_hq_SW_i_hq_SW_0.di face W peer 35 um behind (hq_SW_i_g0_hq_SW)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_513",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 513,
+    "examples": [
+     "g_hq_SW_i_hq_SW_0.dq face E peer 21 um behind (hq_SW_i_g1_hq_SW)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_514",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 1028,
+    "examples": [
+     "g_hb_wfc_collective_d8_sp_collective_0.di face W peer 83 um behind (hb_wfc_collective_d8_g0_sp_collective)",
+     "g_hb_collective_host_d10_sp_host_0.di face W peer 98 um behind (hb_collective_host_d10_g0_sp_host)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_514",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 1028,
+    "examples": [
+     "g_hb_wfc_collective_d8_sp_collective_0.dq face E peer 74 um behind (hb_wfc_collective_d8_g1_sp_collective)",
+     "g_hb_collective_host_d10_sp_host_0.dq face E peer 72 um behind (hb_collective_host_d10_g1_sp_host)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_515",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 515,
+    "examples": [
+     "g_hl_E3_o_sp_collective_0.di face W peer 151 um behind (hl_E3_o_g0_sp_collective)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_515",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 515,
+    "examples": [
+     "g_hl_E3_o_sp_collective_0.dq face E peer 66 um behind (hl_E3_o_g1_sp_collective)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_576",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 576,
+    "examples": [
+     "g_hb_gather_capture_d9_sp_capture_0.di face W peer 72 um behind (hb_gather_capture_d9_g0_sp_capture)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_576",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 576,
+    "examples": [
+     "g_hb_gather_capture_d9_sp_capture_0.dq face E peer 36 um behind (hb_gather_capture_d9_g1_sp_capture)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_692",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 1384,
+    "examples": [
+     "g_hr_E0_o_d4_sp_gather_0.di face W peer 90 um behind (hr_E0_o_d4_g0_sp_gather)",
+     "g_hr_E5_o_d4_sp_gather_0.di face W peer 99 um behind (hr_E5_o_d4_g0_sp_gather)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_692",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 1384,
+    "examples": [
+     "g_hr_E0_o_d4_sp_gather_0.dq face E peer 55 um behind (hr_E0_o_d4_g1_sp_gather)",
+     "g_hr_E5_o_d4_sp_gather_0.dq face E peer 46 um behind (hr_E5_o_d4_g1_sp_gather)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_761",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 3,
+    "bits": 2283,
+    "examples": [
+     "g_hr_E2_o_d4_sp_gather_0.di face W peer 100 um behind (hr_E2_o_d4_g0_sp_gather)",
+     "g_hr_E3_o_d4_sp_gather_0.di face W peer 96 um behind (hr_E3_o_d4_g0_sp_gather)",
+     "g_hr_E4_o_d5_sp_gather_0.di face W peer 45 um behind (hr_E4_o_d5_g0_sp_gather)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnh_761",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 3,
+    "bits": 2283,
+    "examples": [
+     "g_hr_E2_o_d4_sp_gather_0.dq face E peer 49 um behind (hr_E2_o_d4_g1_sp_gather)",
+     "g_hr_E3_o_d4_sp_gather_0.dq face E peer 53 um behind (hr_E3_o_d4_g1_sp_gather)",
+     "g_hr_E4_o_d5_sp_gather_0.dq face E peer 79 um behind (hr_E4_o_d5_g1_sp_gather)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnv_1024",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 2048,
+    "examples": [
+     "g_hb_hc_n_vm_d8_sp_vm_0.di face S peer 57 um behind (hb_hc_n_vm_d8_g0_sp_vm)",
+     "g_hb_hc_n_hc_s_d0_f_hb_hc_n_hc_s_1_0.di face S peer 99 um behind (hb_hc_n_hc_s_d0_g0_f_hb_hc_n_hc_s_1)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnv_1024",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 2048,
+    "examples": [
+     "g_hb_hc_n_vm_d8_sp_vm_0.dq face N peer 59 um behind (hb_hc_n_vm_d8_g1_sp_vm)",
+     "g_hb_hc_n_hc_s_d0_f_hb_hc_n_hc_s_1_0.dq face N peer 121 um behind (hb_hc_n_hc_s_d0_g1_f_hb_hc_n_hc_s_1)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnv_3",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 6,
+    "examples": [
+     "g_hs_e_vm_t_eng_s_sp_vm_0.di face S peer 352 um behind (hs_e_vm_t_eng_s_g0_sp_vm)",
+     "g_hs_e_vm_t_eng_s_sp_vm_1.di face S peer 436 um behind (hs_e_vm_t_eng_s_g1_sp_vm)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnv_3",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 6,
+    "examples": [
+     "g_hs_e_vm_t_eng_s_sp_vm_0.dq face N peer 436 um behind (hs_e_vm_t_eng_s_g1_sp_vm)",
+     "g_hs_e_vm_t_eng_s_sp_vm_1.dq face N peer 121 um behind (hs_e_vm_t_eng_s_g2_sp_vm)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnv_515",
+    "port": "di",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 1030,
+    "examples": [
+     "g_hcol_o_sp_vm_0.di face S peer 220 um behind (hcol_o_g0_sp_vm)",
+     "g_hcol_o_sp_vm_1.di face S peer 371 um behind (hcol_o_g1_sp_vm)"
+    ]
+   },
+   {
+    "master": "dsfd_hstnv_515",
+    "port": "dq",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 1030,
+    "examples": [
+     "g_hcol_o_sp_vm_0.dq face N peer 371 um behind (hcol_o_g1_sp_vm)",
+     "g_hcol_o_sp_vm_1.dq face N peer 99 um behind (hcol_o_g2_sp_vm)"
+    ]
+   },
+   {
+    "master": "dsfd_node_LLfd",
+    "port": "a",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 32256,
+    "examples": [
+     "n0_10.a face W peer 99 um behind (rt_0_10a)",
+     "n0_12.a face W peer 99 um behind (rt_0_12a)",
+     "n0_16.a face W peer 99 um behind (rt_0_16a)"
+    ]
+   },
+   {
+    "master": "dsfd_node_LLfd",
+    "port": "b",
+    "orient": "R0",
+    "endpoints": 768,
+    "bits": 48384,
+    "examples": [
+     "n0_2.b face W peer 99 um behind (rt_0_2b)",
+     "n0_10.b face W peer 99 um behind (rt_0_10b)",
+     "n0_12.b face W peer 99 um behind (rt_0_12b)"
+    ]
+   },
+   {
+    "master": "dsfd_node_LLfu",
+    "port": "a",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 32256,
+    "examples": [
+     "n0_4.a face W peer 99 um behind (rt_0_4a)",
+     "n0_14.a face W peer 99 um behind (rt_0_14a)",
+     "n0_18.a face W peer 99 um behind (rt_0_18a)"
+    ]
+   },
+   {
+    "master": "dsfd_node_LLfu",
+    "port": "b",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 32256,
+    "examples": [
+     "n0_4.b face W peer 99 um behind (rt_0_4b)",
+     "n0_8.b face W peer 99 um behind (rt_0_8b)",
+     "n0_14.b face W peer 99 um behind (rt_0_14b)"
+    ]
+   },
+   {
+    "master": "dsfd_qbank_N",
+    "port": "d_r*",
+    "orient": "R0",
+    "endpoints": 640,
+    "bits": 40320,
+    "examples": [
+     "bn1.d_r1 face N peer 248 um behind (rt_0_2b_y0)",
+     "bn4.d_r1 face N peer 248 um behind (rt_0_8b_y0)",
+     "bn9.d_r1 face N peer 248 um behind (rt_0_18b_y0)"
+    ]
+   },
+   {
+    "master": "dsfd_qbank_N",
+    "port": "d_st",
+    "orient": "R0",
+    "endpoints": 256,
+    "bits": 512,
+    "examples": [
+     "bn12.d_st face N peer 248 um behind (es_12_y0)",
+     "bn13.d_st face N peer 248 um behind (es_13_y0)",
+     "bn26.d_st face N peer 248 um behind (es_26_y0)"
+    ]
+   },
+   {
+    "master": "dsfd_qbank_S",
+    "port": "i_go",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 128,
+    "examples": [
+     "bs8.i_go face S peer 263 um behind (go_8)",
+     "bs22.i_go face S peer 263 um behind (go_22)",
+     "bs36.i_go face S peer 263 um behind (go_36)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_15_SN",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 7680,
+    "examples": [
+     "y_cc_0_2_0.o face N peer 28 um behind (cc_0_2)",
+     "y_cc_0_4_0.o face N peer 28 um behind (cc_0_4)",
+     "y_cc_0_5_0.o face N peer 64 um behind (cc_0_5)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_15_WE",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 1920,
+    "examples": [
+     "y_cc_0_9_0.o face E peer 177 um behind (cc_0_9_g0_s12)",
+     "y_cc_1_9_0.o face E peer 177 um behind (cc_1_9_g0_s26)",
+     "y_cc_2_9_0.o face E peer 177 um behind (cc_2_9_g0_s40)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_15_WN",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 1920,
+    "examples": [
+     "y_cc_0_7_0.o face N peer 28 um behind (cc_0_7)",
+     "y_cc_1_7_0.o face N peer 28 um behind (cc_1_7)",
+     "y_cc_2_7_0.o face N peer 28 um behind (cc_2_7)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_1_NS",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 512,
+    "examples": [
+     "y_go_2_0.o face S peer 296 um behind (go_2)",
+     "y_go_5_0.o face S peer 296 um behind (go_5)",
+     "y_go_11_0.o face S peer 296 um behind (go_11)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_1_SN",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 128,
+    "examples": [
+     "y_go_8_0.o face N peer 263 um behind (go_8)",
+     "y_go_22_0.o face N peer 263 um behind (go_22)",
+     "y_go_36_0.o face N peer 263 um behind (go_36)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_266_SN",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 256,
+    "bits": 68096,
+    "examples": [
+     "y_xb_0_3_0.o face N peer 56 um behind (xb_0_3)",
+     "y_xb_0_8_0.o face N peer 56 um behind (xb_0_8)",
+     "y_xb_1_3_0.o face N peer 56 um behind (xb_1_3)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_283_SN",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 36224,
+    "examples": [
+     "y_xa_0_6_0.o face N peer 56 um behind (xa_0_6)",
+     "y_xa_1_6_0.o face N peer 56 um behind (xa_1_6)",
+     "y_xa_2_6_0.o face N peer 56 um behind (xa_2_6)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_2_EW",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 256,
+    "examples": [
+     "y_ef_13_0.o face W peer 32 um behind (ef_13)",
+     "y_ef_27_0.o face W peer 32 um behind (ef_27)",
+     "y_ef_41_0.o face W peer 32 um behind (ef_41)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_2_NS",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 1024,
+    "examples": [
+     "y_gt_2_0.o face S peer 304 um behind (gt_2_g0_e2)",
+     "y_gt_5_0.o face S peer 304 um behind (gt_5_g0_e5)",
+     "y_gt_11_0.o face S peer 304 um behind (gt_11_g0_e11)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_2_SN",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 256,
+    "examples": [
+     "y_gt_8_0.o face N peer 255 um behind (gt_8_g0_e8)",
+     "y_gt_22_0.o face N peer 255 um behind (gt_22_g0_e22)",
+     "y_gt_36_0.o face N peer 255 um behind (gt_36_g0_e36)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_2_WE",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 256,
+    "examples": [
+     "y_ef_6_0.o face E peer 75 um behind (ef_6)",
+     "y_ef_20_0.o face E peer 75 um behind (ef_20)",
+     "y_ef_34_0.o face E peer 75 um behind (ef_34)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_54_EW",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 640,
+    "bits": 34560,
+    "examples": [
+     "y_cfg_2_0.o face W peer 216 um behind (cfg_2)",
+     "y_cfg_5_0.o face W peer 216 um behind (cfg_5)",
+     "y_cfg_8_0.o face W peer 216 um behind (cfg_8)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_63_NE",
+    "port": "i",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 32256,
+    "examples": [
+     "y_rt_0_0b_0.i face N peer 11 um behind (rt_0_0b_y0_g1_y_rt_0_0b_0)",
+     "y_rt_0_6b_0.i face N peer 34 um behind (rt_0_6b_y0_g1_y_rt_0_6b_0)",
+     "y_rt_0_14b_0.i face N peer 11 um behind (rt_0_14b_y0_g1_y_rt_0_14b_0)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_63_NS",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 8064,
+    "examples": [
+     "y_rt_0_18b_0.o face S peer 272 um behind (rt_0_18b_y1)",
+     "y_rt_1_18b_0.o face S peer 272 um behind (rt_1_18b_y1)",
+     "y_rt_2_18b_0.o face S peer 272 um behind (rt_2_18b_y1)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_63_SN",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 8064,
+    "examples": [
+     "y_rt_0_26b_1.o face N peer 149 um behind (rt_0_26b_y2)",
+     "y_rt_1_26b_1.o face N peer 149 um behind (rt_1_26b_y2)",
+     "y_rt_2_26b_1.o face N peer 149 um behind (rt_2_26b_y2)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_63_WE",
+    "port": "i",
+    "orient": "R0",
+    "endpoints": 1664,
+    "bits": 104832,
+    "examples": [
+     "g_rt_0_0a_y0_y_rt_0_0a_0_0.i face W peer 235 um behind (rt_0_0a_y0_g0_y_rt_0_0a_0)",
+     "y_rt_0_0a_0.i face W peer 155 um behind (rt_0_0a_y0_g1_y_rt_0_0a_0)",
+     "g_rt_0_0b_y0_y_rt_0_0b_0_0.i face W peer 283 um behind (rt_0_0b_y0_g0_y_rt_0_0b_0)"
+    ]
+   },
+   {
+    "master": "dsfd_rly_63_WE",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 1024,
+    "bits": 64512,
+    "examples": [
+     "g_rt_0_0a_y0_y_rt_0_0a_0_0.o face E peer 155 um behind (rt_0_0a_y0_g1_y_rt_0_0a_0)",
+     "g_rt_0_0b_y0_y_rt_0_0b_0_0.o face E peer 120 um behind (rt_0_0b_y0_g1_y_rt_0_0b_0)",
+     "g_rt_0_6a_y0_y_rt_0_6a_0_0.o face E peer 151 um behind (rt_0_6a_y0_g1_y_rt_0_6a_0)"
+    ]
+   },
+   {
+    "master": "dsfd_sstn_e0c0si",
+    "port": "cci",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 1920,
+    "examples": [
+     "t0_5.cci face S peer 64 um behind (cc_0_5)",
+     "t1_5.cci face S peer 64 um behind (cc_1_5)",
+     "t2_5.cci face S peer 64 um behind (cc_2_5)"
+    ]
+   },
+   {
+    "master": "dsfd_sstn_e0e1c0c1",
+    "port": "xa",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 36224,
+    "examples": [
+     "t0_8.xa face N peer 16 um behind (xa_0_9_y0)",
+     "t1_8.xa face N peer 16 um behind (xa_1_9_y0)",
+     "t2_8.xa face N peer 16 um behind (xa_2_9_y0)"
+    ]
+   },
+   {
+    "master": "dsfd_sstn_e0e1c0c1",
+    "port": "xbi",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 34048,
+    "examples": [
+     "t0_8.xbi face S peer 56 um behind (xb_0_8)",
+     "t1_8.xbi face S peer 56 um behind (xb_1_8)",
+     "t2_8.xbi face S peer 56 um behind (xb_2_8)"
+    ]
+   },
+   {
+    "master": "dsfd_sstn_e0e1c0c1si",
+    "port": "cci",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 1920,
+    "examples": [
+     "t0_6.cci face S peer 56 um behind (cc_0_6)",
+     "t1_6.cci face S peer 56 um behind (cc_1_6)",
+     "t2_6.cci face S peer 56 um behind (cc_2_6)"
+    ]
+   },
+   {
+    "master": "dsfd_sstn_e0e1c0c1si",
+    "port": "so",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 256,
+    "examples": [
+     "t0_3.so face S peer 47 um behind (so_0_3_y0)",
+     "t1_3.so face S peer 47 um behind (so_1_3_y0)",
+     "t2_3.so face S peer 47 um behind (so_2_3_y0)"
+    ]
+   },
+   {
+    "master": "dsfd_sstn_e0e1c0c1si",
+    "port": "xa",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 144896,
+    "examples": [
+     "t0_1.xa face N peer 16 um behind (xa_0_2_y0)",
+     "t0_3.xa face N peer 16 um behind (xa_0_4_y0)",
+     "t0_4.xa face N peer 16 um behind (xa_0_5_y0)"
+    ]
+   },
+   {
+    "master": "dsfd_sstn_e0e1c0c1si",
+    "port": "xai",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 36224,
+    "examples": [
+     "t0_6.xai face S peer 56 um behind (xa_0_6)",
+     "t1_6.xai face S peer 56 um behind (xa_1_6)",
+     "t2_6.xai face S peer 56 um behind (xa_2_6)"
+    ]
+   },
+   {
+    "master": "dsfd_sstn_e0e1c0c1si",
+    "port": "xbi",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 34048,
+    "examples": [
+     "t0_3.xbi face S peer 56 um behind (xb_0_3)",
+     "t1_3.xbi face S peer 56 um behind (xb_1_3)",
+     "t2_3.xbi face S peer 56 um behind (xb_2_3)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_1026x1",
+    "port": "di*",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1026,
+    "examples": [
+     "f_aSW_26.di0 face W peer 18 um behind (aSW_d25)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_1026x1",
+    "port": "fi*",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "f_aSW_1.fi0 face W peer 35 um behind (aSW_f0)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_20x1",
+    "port": "di*",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 20,
+    "examples": [
+     "f_hcSW_1.di0 face W peer 71 um behind (hcSW_d0_g1_f_hcSW_1)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_20x1",
+    "port": "fi*",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "f_hcSW_1.fi0 face W peer 70 um behind (hcSW_f0_g1_f_hcSW_1)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_267x1",
+    "port": "fi*",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "f_e_swr_1.fi0 face W peer 17 um behind (e_swr_f0)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_512x1",
+    "port": "di*",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 512,
+    "examples": [
+     "f_KE1t_19.di0 face W peer 35 um behind (KE1t_d18)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_512x1",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 8,
+    "bits": 8,
+    "examples": [
+     "f_KW0t_45.fi0 face E peer 15 um behind (KW0t_f44)",
+     "f_KW1t_46.fi0 face E peer 15 um behind (KW1t_f45)",
+     "f_KW2t_37.fi0 face E peer 15 um behind (KW2t_f36)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_512x1",
+    "port": "fi*",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "f_KE1t_19.fi0 face W peer 22 um behind (KE1t_f18)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_512x1",
+    "port": "fo*",
+    "orient": "R0",
+    "endpoints": 7,
+    "bits": 7,
+    "examples": [
+     "f_KW1r_1.fo0 face E peer 12 um behind (KW1r_f1)",
+     "f_KW2r_1.fo0 face E peer 12 um behind (KW2r_f1)",
+     "f_KW3r_1.fo0 face E peer 12 um behind (KW3r_f1)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_514x1",
+    "port": "fi*",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "f_ixSW_1.fi0 face W peer 23 um behind (ixSW_f0)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_566x1",
+    "port": "do*",
+    "orient": "R0",
+    "endpoints": 64,
+    "bits": 36224,
+    "examples": [
+     "f_xE2_3.do0 face E peer 9 um behind (xE2_d3)",
+     "f_xE2_6.do0 face E peer 9 um behind (xE2_d6)",
+     "f_xE2_9.do0 face E peer 9 um behind (xE2_d9)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_566x1",
+    "port": "fo*",
+    "orient": "R0",
+    "endpoints": 65,
+    "bits": 65,
+    "examples": [
+     "f_xE2_3.fo0 face E peer 23 um behind (xE2_f3)",
+     "f_xE2_6.fo0 face E peer 23 um behind (xE2_f6)",
+     "f_xE2_9.fo0 face E peer 23 um behind (xE2_f9)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x10",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_27.di9 face E peer 36 um behind (rE0_d26_9)",
+     "f_rE1_27.di9 face E peer 36 um behind (rE1_d26_9)",
+     "f_rE2_27.di9 face E peer 36 um behind (rE2_d26_9)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x10",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_27.fi9 face E peer 38 um behind (rE0_f26_9)",
+     "f_rE1_27.fi9 face E peer 38 um behind (rE1_f26_9)",
+     "f_rE2_27.fi9 face E peer 38 um behind (rE2_f26_9)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x11",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 5,
+    "bits": 350,
+    "examples": [
+     "f_rE1_30.di10 face E peer 36 um behind (rE1_d29_10)",
+     "f_rE2_30.di10 face E peer 36 um behind (rE2_d29_10)",
+     "f_rE3_30.di10 face E peer 36 um behind (rE3_d29_10)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x11",
+    "port": "do*",
+    "orient": "MY",
+    "endpoints": 12,
+    "bits": 840,
+    "examples": [
+     "f_rE3_32.do2 face W peer 12 um behind (rE3_d32_2)",
+     "f_rE3_32.do3 face W peer 16 um behind (rE3_d32_3)",
+     "f_rE3_32.do4 face W peer 20 um behind (rE3_d32_4)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x11",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 5,
+    "bits": 5,
+    "examples": [
+     "f_rE1_30.fi10 face E peer 38 um behind (rE1_f29_10)",
+     "f_rE2_30.fi10 face E peer 38 um behind (rE2_f29_10)",
+     "f_rE3_30.fi10 face E peer 38 um behind (rE3_f29_10)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x11",
+    "port": "fo*",
+    "orient": "MY",
+    "endpoints": 12,
+    "bits": 12,
+    "examples": [
+     "f_rE3_32.fo2 face W peer 10 um behind (rE3_f32_2)",
+     "f_rE3_32.fo3 face W peer 14 um behind (rE3_f32_3)",
+     "f_rE3_32.fo4 face W peer 18 um behind (rE3_f32_4)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x2",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_3.di1 face E peer 36 um behind (rE0_d2_1)",
+     "f_rE1_3.di1 face E peer 36 um behind (rE1_d2_1)",
+     "f_rE2_3.di1 face E peer 36 um behind (rE2_d2_1)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x2",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_3.fi1 face E peer 38 um behind (rE0_f2_1)",
+     "f_rE1_3.fi1 face E peer 38 um behind (rE1_f2_1)",
+     "f_rE2_3.fi1 face E peer 38 um behind (rE2_f2_1)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x3",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_6.di2 face E peer 36 um behind (rE0_d5_2)",
+     "f_rE1_6.di2 face E peer 36 um behind (rE1_d5_2)",
+     "f_rE2_6.di2 face E peer 36 um behind (rE2_d5_2)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x3",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_6.fi2 face E peer 38 um behind (rE0_f5_2)",
+     "f_rE1_6.fi2 face E peer 38 um behind (rE1_f5_2)",
+     "f_rE2_6.fi2 face E peer 38 um behind (rE2_f5_2)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x4",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_9.di3 face E peer 36 um behind (rE0_d8_3)",
+     "f_rE1_9.di3 face E peer 36 um behind (rE1_d8_3)",
+     "f_rE2_9.di3 face E peer 36 um behind (rE2_d8_3)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x4",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_9.fi3 face E peer 38 um behind (rE0_f8_3)",
+     "f_rE1_9.fi3 face E peer 38 um behind (rE1_f8_3)",
+     "f_rE2_9.fi3 face E peer 38 um behind (rE2_f8_3)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x5",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_12.di4 face E peer 36 um behind (rE0_d11_4)",
+     "f_rE1_12.di4 face E peer 36 um behind (rE1_d11_4)",
+     "f_rE2_12.di4 face E peer 36 um behind (rE2_d11_4)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x5",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_12.fi4 face E peer 38 um behind (rE0_f11_4)",
+     "f_rE1_12.fi4 face E peer 38 um behind (rE1_f11_4)",
+     "f_rE2_12.fi4 face E peer 38 um behind (rE2_f11_4)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x6",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_15.di5 face E peer 36 um behind (rE0_d14_5)",
+     "f_rE1_15.di5 face E peer 36 um behind (rE1_d14_5)",
+     "f_rE2_15.di5 face E peer 36 um behind (rE2_d14_5)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x6",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_15.fi5 face E peer 38 um behind (rE0_f14_5)",
+     "f_rE1_15.fi5 face E peer 38 um behind (rE1_f14_5)",
+     "f_rE2_15.fi5 face E peer 38 um behind (rE2_f14_5)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x7",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_18.di6 face E peer 36 um behind (rE0_d17_6)",
+     "f_rE1_18.di6 face E peer 36 um behind (rE1_d17_6)",
+     "f_rE2_18.di6 face E peer 36 um behind (rE2_d17_6)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x7",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_18.fi6 face E peer 38 um behind (rE0_f17_6)",
+     "f_rE1_18.fi6 face E peer 38 um behind (rE1_f17_6)",
+     "f_rE2_18.fi6 face E peer 38 um behind (rE2_f17_6)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x8",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_21.di7 face E peer 36 um behind (rE0_d20_7)",
+     "f_rE1_21.di7 face E peer 36 um behind (rE1_d20_7)",
+     "f_rE2_21.di7 face E peer 36 um behind (rE2_d20_7)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x8",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_21.fi7 face E peer 38 um behind (rE0_f20_7)",
+     "f_rE1_21.fi7 face E peer 38 um behind (rE1_f20_7)",
+     "f_rE2_21.fi7 face E peer 38 um behind (rE2_f20_7)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x9",
+    "port": "di*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 420,
+    "examples": [
+     "f_rE0_24.di8 face E peer 36 um behind (rE0_d23_8)",
+     "f_rE1_24.di8 face E peer 36 um behind (rE1_d23_8)",
+     "f_rE2_24.di8 face E peer 36 um behind (rE2_d23_8)"
+    ]
+   },
+   {
+    "master": "dsfd_stnh_70x9",
+    "port": "fi*",
+    "orient": "MY",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_rE0_24.fi8 face E peer 38 um behind (rE0_f23_8)",
+     "f_rE1_24.fi8 face E peer 38 um behind (rE1_f23_8)",
+     "f_rE2_24.fi8 face E peer 38 um behind (rE2_f23_8)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_256x1",
+    "port": "fi*",
+    "orient": "R0",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_KW1txs_0.fi0 face S peer 279 um behind (KW1ts_f)",
+     "f_KW2txs_0.fi0 face S peer 279 um behind (KW2ts_f)",
+     "f_KW3txs_0.fi0 face S peer 279 um behind (KW3ts_f)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_256x1",
+    "port": "fo*",
+    "orient": "R0",
+    "endpoints": 6,
+    "bits": 6,
+    "examples": [
+     "f_KW1rxs_1.fo0 face N peer 302 um behind (KW1rs_f)",
+     "f_KW2rxs_1.fo0 face N peer 302 um behind (KW2rs_f)",
+     "f_KW3rxs_1.fo0 face N peer 302 um behind (KW3rs_f)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_512x1",
+    "port": "fi*",
+    "orient": "MX",
+    "endpoints": 2,
+    "bits": 2,
+    "examples": [
+     "f_KW0t_1.fi0 face N peer 21 um behind (KW0t_f0_g1_f_KW0t_1)",
+     "f_KW1t_1.fi0 face N peer 21 um behind (KW1t_f0_g1_f_KW1t_1)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_514x1",
+    "port": "fi*",
+    "orient": "MX",
+    "endpoints": 1,
+    "bits": 1,
+    "examples": [
+     "f_col_3.fi0 face N peer 10 um behind (col_f2)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_566x1",
+    "port": "do*",
+    "orient": "MX",
+    "endpoints": 2,
+    "bits": 1132,
+    "examples": [
+     "f_xWdn_25.do0 face S peer 10 um behind (xW0_d0)",
+     "f_xEdn_32.do0 face S peer 10 um behind (xE0_d0)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_566x1",
+    "port": "fo*",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 2,
+    "examples": [
+     "f_xWup_18.fo0 face N peer 21 um behind (xW5_f0)",
+     "f_xEup_31.fo0 face N peer 21 um behind (xE5_f0)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_70x10",
+    "port": "do*",
+    "orient": "MX",
+    "endpoints": 14,
+    "bits": 980,
+    "examples": [
+     "f_rW5_47.do0 face S peer 58 um behind (rW5_de_0)",
+     "f_rW5_47.do1 face S peer 62 um behind (rW5_de_1)",
+     "f_rW5_47.do2 face S peer 66 um behind (rW5_de_2)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_70x10",
+    "port": "do*",
+    "orient": "R0",
+    "endpoints": 3,
+    "bits": 210,
+    "examples": [
+     "f_rE0_50.do0 face N peer 11 um behind (rE0_d50_0)",
+     "f_rE5_56.do3 face N peer 24 um behind (rE5_de_3_g0_hr_E5)",
+     "f_rE5_56.do9 face N peer 24 um behind (rE5_de_9_g0_hr_E5)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_70x10",
+    "port": "fo*",
+    "orient": "MX",
+    "endpoints": 14,
+    "bits": 14,
+    "examples": [
+     "f_rW5_47.fo0 face S peer 60 um behind (rW5_fe_0)",
+     "f_rW5_47.fo1 face S peer 64 um behind (rW5_fe_1)",
+     "f_rW5_47.fo2 face S peer 67 um behind (rW5_fe_2)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_70x10",
+    "port": "fo*",
+    "orient": "R0",
+    "endpoints": 4,
+    "bits": 4,
+    "examples": [
+     "f_rE0_50.fo0 face N peer 13 um behind (rE0_f50_0)",
+     "f_rE0_50.fo1 face N peer 9 um behind (rE0_f50_1)",
+     "f_rE5_56.fo3 face N peer 25 um behind (rE5_fe_3_g0_hr_E5)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_70x11",
+    "port": "do*",
+    "orient": "MX",
+    "endpoints": 11,
+    "bits": 770,
+    "examples": [
+     "f_rW4_43.do0 face S peer 73 um behind (rW4_de_0)",
+     "f_rW4_43.do1 face S peer 73 um behind (rW4_de_1)",
+     "f_rW4_43.do2 face S peer 73 um behind (rW4_de_2)"
+    ]
+   },
+   {
+    "master": "dsfd_stnv_70x11",
+    "port": "fo*",
+    "orient": "MX",
+    "endpoints": 11,
+    "bits": 11,
+    "examples": [
+     "f_rW4_43.fo0 face S peer 73 um behind (rW4_fe_0)",
+     "f_rW4_43.fo1 face S peer 73 um behind (rW4_fe_1)",
+     "f_rW4_43.fo2 face S peer 73 um behind (rW4_fe_2)"
+    ]
+   },
+   {
+    "master": "dsfd_xstg_515",
+    "port": "i",
+    "orient": "MY",
+    "endpoints": 2,
+    "bits": 1030,
+    "examples": [
+     "xsix_SW.i face W peer 25 um behind (hix_SW_x)",
+     "xsco_SW.i face W peer 25 um behind (hco_SW_x)"
+    ]
+   },
+   {
+    "master": "ot_s81_cfg7_seq",
+    "port": "ef",
+    "orient": "MY",
+    "endpoints": 128,
+    "bits": 256,
+    "examples": [
+     "s13.ef face N peer 32 um behind (ef_13)",
+     "s27.ef face N peer 32 um behind (ef_27)",
+     "s41.ef face N peer 32 um behind (ef_41)"
+    ]
+   },
+   {
+    "master": "ot_s81_cfg7_seq",
+    "port": "go_e",
+    "orient": "MY",
+    "endpoints": 512,
+    "bits": 512,
+    "examples": [
+     "s2.go_e face N peer 274 um behind (go_2_y0_g0_y_go_2_0)",
+     "s5.go_e face N peer 274 um behind (go_5_y0_g0_y_go_5_0)",
+     "s11.go_e face N peer 274 um behind (go_11_y0_g0_y_go_11_0)"
+    ]
+   },
+   {
+    "master": "ot_s81_cfg7_seq",
+    "port": "go_tag",
+    "orient": "MY",
+    "endpoints": 512,
+    "bits": 1024,
+    "examples": [
+     "s2.go_tag face N peer 274 um behind (gt_2_y0_g0_y_gt_2_0)",
+     "s5.go_tag face N peer 274 um behind (gt_5_y0_g0_y_gt_5_0)",
+     "s11.go_tag face N peer 274 um behind (gt_11_y0_g0_y_gt_11_0)"
+    ]
+   },
+   {
+    "master": "ot_v41_rom_elem_q_qxpq_w10",
+    "port": "ef",
+    "orient": "R0",
+    "endpoints": 512,
+    "bits": 1024,
+    "examples": [
+     "e2.ef face S peer 246 um behind (ef_2_y0_g0_y_ef_2_0)",
+     "e5.ef face S peer 246 um behind (ef_5_y0_g0_y_ef_5_0)",
+     "e8.ef face S peer 246 um behind (ef_8_y0_g0_y_ef_8_0)"
+    ]
+   },
+   {
+    "master": "ot_v41_rom_elem_q_qxpq_w10",
+    "port": "gt",
+    "orient": "R0",
+    "endpoints": 128,
+    "bits": 256,
+    "examples": [
+     "e8.gt face S peer 255 um behind (gt_8_g0_e8)",
+     "e22.gt face S peer 255 um behind (gt_22_g0_e22)",
+     "e36.gt face S peer 255 um behind (gt_36_g0_e36)"
+    ]
+   }
+  ],
+  "pin_spread": [
+   {
+    "bus": "dfi_SW",
+    "cls": "phy_dfi",
+    "inst": "ctrl_SW",
+    "master": "dsfd_ctrl",
+    "port": "phy",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SW",
+    "cls": "phy_dfi",
+    "inst": "phy_SW",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SE",
+    "cls": "phy_dfi",
+    "inst": "ctrl_SE",
+    "master": "dsfd_ctrl",
+    "port": "phy",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SE",
+    "cls": "phy_dfi",
+    "inst": "phy_SE",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "KW0_tx",
+    "cls": "lane",
+    "inst": "lk_W0",
+    "master": "ot_pdie_ucie",
+    "port": "tx",
+    "face": "E",
+    "span_um": 823.3,
+    "peer_manhattan_um": 9.7,
+    "bits": 512
+   },
+   {
+    "bus": "KW0r_d0",
+    "cls": "lane",
+    "inst": "lk_W0",
+    "master": "ot_pdie_ucie",
+    "port": "rx",
+    "face": "E",
+    "span_um": 823.3,
+    "peer_manhattan_um": 6.4,
+    "bits": 512
+   },
+   {
+    "bus": "KE0_tx",
+    "cls": "lane",
+    "inst": "lk_E0",
+    "master": "ot_pdie_ucie",
+    "port": "tx",
+    "face": "W",
+    "span_um": 823.3,
+    "peer_manhattan_um": 10.0,
+    "bits": 512
+   },
+   {
+    "bus": "KE0r_d0",
+    "cls": "lane",
+    "inst": "lk_E0",
+    "master": "ot_pdie_ucie",
+    "port": "rx",
+    "face": "W",
+    "span_um": 823.3,
+    "peer_manhattan_um": 6.8,
+    "bits": 512
+   },
+   {
+    "bus": "rq_SE",
+    "cls": "hbm_req",
+    "inst": "eng_SE",
+    "master": "dsfd_engram",
+    "port": "rq",
+    "face": "S",
+    "span_um": 523.7,
+    "peer_manhattan_um": 126.7,
+    "bits": 10912
+   },
+   {
+    "bus": "rq_SE",
+    "cls": "hbm_req",
+    "inst": "ctrl_SE",
+    "master": "dsfd_ctrl",
+    "port": "rq",
+    "face": "N",
+    "span_um": 523.7,
+    "peer_manhattan_um": 126.7,
+    "bits": 10912
+   },
+   {
+    "bus": "rd_SE",
+    "cls": "hbm_read",
+    "inst": "ctrl_SE",
+    "master": "dsfd_ctrl",
+    "port": "rd",
+    "face": "N",
+    "span_um": 425.4,
+    "peer_manhattan_um": 122.2,
+    "bits": 8864
+   },
+   {
+    "bus": "rd_SE",
+    "cls": "hbm_read",
+    "inst": "eng_SE",
+    "master": "dsfd_engram",
+    "port": "rd",
+    "face": "S",
+    "span_um": 425.4,
+    "peer_manhattan_um": 122.2,
+    "bits": 8864
+   }
+  ],
+  "pin_spread_count": 12,
+  "abut_without_channel": []
+ },
+ "meso_forwarded_gap": {
+  "stations": 2881,
+  "ot_fwd_link_stage_instantiated": 7421,
+  "meso_fifos_instantiated": 281,
+  "ratio_cdc_fifos_instantiated": 8,
+  "chains": 99,
+  "max_hop_um": 430.3,
+  "hops_over_430p56": 0,
+  "clock_region_crossings": {
+   "x_lane|region": {
+    "buses": 7680,
+    "bits": 2108160
+   },
+   "x_ctl|region": {
+    "buses": 2560,
+    "bits": 38400
+   },
+   "rom_a|region": {
+    "buses": 1795,
+    "bits": 21540
+   },
+   "rom_ce|region": {
+    "buses": 12547,
+    "bits": 12547
+   },
+   "rom_q|region": {
+    "buses": 12547,
+    "bits": 602256
+   },
+   "stat|region": {
+    "buses": 8704,
+    "bits": 17152
+   },
+   "cfg|region": {
+    "buses": 9344,
+    "bits": 238336
+   },
+   "go|region": {
+    "buses": 4224,
+    "bits": 4224
+   },
+   "ret_leaf|region": {
+    "buses": 9728,
+    "bits": 612864
+   },
+   "ret_tree|region": {
+    "buses": 1536,
+    "bits": 101376
+   },
+   "col_ret|region": {
+    "buses": 1280,
+    "bits": 85248
+   },
+   "col_clock|region": {
+    "buses": 128,
+    "bits": 128
+   },
+   "col_reset|region": {
+    "buses": 128,
+    "bits": 128
+   },
+   "local|region": {
+    "buses": 66,
+    "bits": 33234
+   },
+   "fclk|domain": {
+    "buses": 452,
+    "bits": 452
+   },
+   "lane|domain": {
+    "buses": 472,
+    "bits": 122192
+   },
+   "local|domain": {
+    "buses": 8,
+    "bits": 3128
+   },
+   "fclk|region": {
+    "buses": 8,
+    "bits": 8
+   },
+   "hub|region": {
+    "buses": 40,
+    "bits": 25242
+   },
+   "hub|domain": {
+    "buses": 6,
+    "bits": 4754
+   },
+   "phy_dfi|region": {
+    "buses": 2,
+    "bits": 44476
+   },
+   "hbm_read|domain": {
+    "buses": 2,
+    "bits": 17728
+   },
+   "hbm_req|domain": {
+    "buses": 6,
+    "bits": 21952
+   },
+   "clock|domain": {
+    "buses": 3,
+    "bits": 3
+   },
+   "reset|region": {
+    "buses": 1,
+    "bits": 1
+   },
+   "reset|domain": {
+    "buses": 2,
+    "bits": 2
+   }
+  },
+  "clock_domain_crossings": {
+   "fclk|stream_1p2->fwd->fwd": {
+    "buses": 2,
+    "bits": 2,
+    "examples": [
+     "xWdn_f0",
+     "xEdn_f0"
+    ]
+   },
+   "lane|stream_1p2->fwd->fwd": {
+    "buses": 2,
+    "bits": 1132,
+    "examples": [
+     "xWdn_d0",
+     "xEdn_d0"
+    ]
+   },
+   "fclk|fwd->fwd->stream_1p2": {
+    "buses": 116,
+    "bits": 116,
+    "examples": [
+     "xW2_f2",
+     "xW2_f5",
+     "xW2_f8"
+    ]
+   },
+   "lane|fwd->fwd->stream_1p2": {
+    "buses": 116,
+    "bits": 65656,
+    "examples": [
+     "xW2_d2",
+     "xW2_d5",
+     "xW2_d8"
+    ]
+   },
+   "fclk|fwd->stream_1p2": {
+    "buses": 169,
+    "bits": 169,
+    "examples": [
+     "f_xW2_32_tf0",
+     "f_xW1_32_tf0",
+     "f_xW0_29_tf0"
+    ]
+   },
+   "lane|fwd->stream_1p2": {
+    "buses": 169,
+    "bits": 27002,
+    "examples": [
+     "f_xW2_32_td0",
+     "f_xW1_32_td0",
+     "f_xW0_29_td0"
+    ]
+   },
+   "fclk|stream_1p2->fwd": {
+    "buses": 157,
+    "bits": 157,
+    "examples": [
+     "rW0_f2_1",
+     "rW0_f5_2",
+     "rW0_f8_3"
+    ]
+   },
+   "lane|stream_1p2->fwd": {
+    "buses": 157,
+    "bits": 20210,
+    "examples": [
+     "rW0_d2_1",
+     "rW0_d5_2",
+     "rW0_d8_3"
+    ]
+   },
+   "local|stream_1p2->serial_0p9": {
+    "buses": 6,
+    "bits": 2598,
+    "examples": [
+     "he_e_eng_t_vm_o",
+     "hq_SW_s_g1_sp_vm",
+     "ha_SW_o_g2_sp_vm"
+    ]
+   },
+   "fclk|fwd->link->fwd": {
+    "buses": 2,
+    "bits": 2,
+    "examples": [
+     "KW0_clk",
+     "KE0_clk"
+    ]
+   },
+   "lane|fwd->link": {
+    "buses": 14,
+    "bits": 4096,
+    "examples": [
+     "KW0_tx",
+     "KW1ts_o0",
+     "KW1ts_o256"
+    ]
+   },
+   "lane|link->fwd": {
+    "buses": 14,
+    "bits": 4096,
+    "examples": [
+     "KW0r_d0",
+     "KW1rs_d0",
+     "KW1rs_d256"
+    ]
+   },
+   "fclk|fwd->link->fwd->fwd": {
+    "buses": 6,
+    "bits": 6,
+    "examples": [
+     "KW1_clk",
+     "KW2_clk",
+     "KW3_clk"
+    ]
+   },
+   "hub|stream_1p2->serial_0p9": {
+    "buses": 3,
+    "bits": 1568,
+    "examples": [
+     "hb_wfc_vm_d11",
+     "hb_capture_vm_d6_g1_sp_vm",
+     "hb_collective_vm_d11_g1_sp_vm"
+    ]
+   },
+   "hbm_read|hbm->stream_1p2": {
+    "buses": 2,
+    "bits": 17728,
+    "examples": [
+     "rd_SW",
+     "rd_SE"
+    ]
+   },
+   "hbm_req|stream_1p2->hbm": {
+    "buses": 2,
+    "bits": 21824,
+    "examples": [
+     "rq_SW",
+     "rq_SE"
+    ]
+   },
+   "hbm_req|hbm->stream_1p2": {
+    "buses": 4,
+    "bits": 128,
+    "examples": [
+     "rk_SW",
+     "wd_SW",
+     "rk_SE"
+    ]
+   },
+   "local|serial_0p9->stream_1p2": {
+    "buses": 2,
+    "bits": 530,
+    "examples": [
+     "hq_SW_i_g1_hq_SW",
+     "hs_e_vm_t_eng_i_g2_hs_e_vm_t_eng"
+    ]
+   },
+   "hub|serial_0p9->stream_1p2": {
+    "buses": 3,
+    "bits": 3186,
+    "examples": [
+     "hb_vm_gather_d2_g1_sp_gather",
+     "hb_vm_pq_g2_sp_pq",
+     "hb_vm_wfc_d11_g1_sp_wfc"
+    ]
+   },
+   "clock|stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->hbm->stream_1p2->hbm->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2": {
+    "buses": 1,
+    "bits": 1,
+    "examples": [
+     "clk_stream"
+    ]
+   },
+   "clock|stream_1p2->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->stream_1p2->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9->serial_0p9": {
+    "buses": 1,
+    "bits": 1,
+    "examples": [
+     "clk_serial"
+    ]
+   },
+   "clock|stream_1p2->hbm->hbm": {
+    "buses": 1,
+    "bits": 1,
+    "examples": [
+     "clk_hbm"
+    ]
+   }
+  }
+ },
+ "block_shape": {},
+ "counterparts": {
+  "ot_fwd_link_stage": {
+   "rtl": "rtl/common/ot_fwd_link_stage.sv",
+   "rtl_ports": {
+    "fclk_i": "input 1",
+    "rst_n": "input 1",
+    "i_v": "input 1",
+    "i_d": "input 512",
+    "fclk_o": "output 1",
+    "o_v": "output 1",
+    "o_d": "output 512"
+   },
+   "instantiated_in_die_top": 0
+  },
+  "ot_meso_fifo": {
+   "rtl": "rtl/common/ot_meso_fifo.sv",
+   "rtl_ports": {
+    "wclk": "input 1",
+    "wrst_n": "input 1",
+    "w_v": "input 1",
+    "w_rdy": "output 1",
+    "w_d": "input 512",
+    "rclk": "input 1",
+    "rrst_n": "input 1",
+    "r_v": "output 1",
+    "r_rdy": "input 1",
+    "r_d": "output 512",
+    "w_live": "output 1",
+    "r_live": "output 1",
+    "w_fault": "output 1",
+    "r_fault": "output 1",
+    "dbg_wc": "output 3",
+    "dbg_rp": "output 3",
+    "dbg_cc": "output 3",
+    "dbg_cp": "output 3",
+    "dbg_ws": "output 2",
+    "dbg_rs": "output 2"
+   },
+   "instantiated_in_die_top": 0
+  }
+ },
+ "margin_lint": {
+  "mode": "edges",
+  "chains": 62661,
+  "reach_um": 504.0,
+  "reach_violations": 0,
+  "far_side_relays": 2698,
+  "reach_examples": [],
+  "far_side_examples": [
+   {
+    "chain": "f_KE3t_56->lk_E3",
+    "relay": "f_KE3txs_0",
+    "back_um": 286.8
+   },
+   {
+    "chain": "f_KE2t_53->lk_E2",
+    "relay": "f_KE2txs_0",
+    "back_um": 286.8
+   },
+   {
+    "chain": "f_KW3t_42->lk_W3",
+    "relay": "f_KW3txs_0",
+    "back_um": 282.5
+   },
+   {
+    "chain": "f_KW1t_46->lk_W1",
+    "relay": "f_KW1txs_0",
+    "back_um": 282.5
+   },
+   {
+    "chain": "f_KW2t_37->lk_W2",
+    "relay": "f_KW2txs_0",
+    "back_um": 282.5
+   },
+   {
+    "chain": "f_KE1t_54->lk_E1",
+    "relay": "f_KE1txs_0",
+    "back_um": 273.9
+   },
+   {
+    "chain": "g_rt_127_14b_y0_y_rt_127_14b_0_0->y_rt_127_14b_1",
+    "relay": "y_rt_127_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_126_14b_y0_y_rt_126_14b_0_0->y_rt_126_14b_1",
+    "relay": "y_rt_126_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_125_14b_y0_y_rt_125_14b_0_0->y_rt_125_14b_1",
+    "relay": "y_rt_125_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_124_14b_y0_y_rt_124_14b_0_0->y_rt_124_14b_1",
+    "relay": "y_rt_124_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_123_14b_y0_y_rt_123_14b_0_0->y_rt_123_14b_1",
+    "relay": "y_rt_123_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_122_14b_y0_y_rt_122_14b_0_0->y_rt_122_14b_1",
+    "relay": "y_rt_122_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_121_14b_y0_y_rt_121_14b_0_0->y_rt_121_14b_1",
+    "relay": "y_rt_121_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_120_14b_y0_y_rt_120_14b_0_0->y_rt_120_14b_1",
+    "relay": "y_rt_120_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_119_14b_y0_y_rt_119_14b_0_0->y_rt_119_14b_1",
+    "relay": "y_rt_119_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_118_14b_y0_y_rt_118_14b_0_0->y_rt_118_14b_1",
+    "relay": "y_rt_118_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_117_14b_y0_y_rt_117_14b_0_0->y_rt_117_14b_1",
+    "relay": "y_rt_117_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_116_14b_y0_y_rt_116_14b_0_0->y_rt_116_14b_1",
+    "relay": "y_rt_116_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_115_14b_y0_y_rt_115_14b_0_0->y_rt_115_14b_1",
+    "relay": "y_rt_115_14b_0",
+    "back_um": 152.9
+   },
+   {
+    "chain": "g_rt_114_14b_y0_y_rt_114_14b_0_0->y_rt_114_14b_1",
+    "relay": "y_rt_114_14b_0",
+    "back_um": 152.9
+   }
+  ],
+  "verdict": "FAIL",
+  "tt": {
+   "reach_um": 674.0,
+   "reach_violations": 0,
+   "verdict_reach": "PASS",
+   "max_um": 0.0
+  }
+ },
+ "abstract_ports_without_net": {},
+ "top_fixes": {},
+ "verilog": {
+  "top": "s81r8_layer1e_lint_top",
+  "stubs": 18,
+  "nc_wires": 301128,
+  "filelist": "s81r8_layer1e_lint_top.f",
+  "rtl_files": 37,
+  "unresolved_modules": []
+ }
+}

@@ -1,0 +1,5 @@
+{"schema": "opentallas.s81.svceng-records.v1", "stream": "s81-svceng-1011",
+ "engram_c_gate": {"source_commit": "1c25bc875", "host": "ot-epyc2", "cmd": "python3 tools/s81_svceng/engram_c_gate.py --out engc_f1", "verdict": "PASS",
+   "summary": "600-event official-window stream x 2 layers x 4 ranks, every engine a dsfd_engram_c master driven by engine-10 descriptors; slot rows read through the master VM port after DONE, compared element for element with the golden (rtl_dsrom_engram_lookup_campaign.compare); modes ideal 200 ns HBM / stressed / CRC injection / isolated / back-to-back; negatives dropstart, wrongdesc, earlydone, droppeddone, wrongtag all FAIL",
+   "throughput": "isolated window -> slot-ready 495.7 cycles (budget lookup_local_cycles 500, results/arch/engram_20261008/design.json); back-to-back 343.9 cycles a token (2 layers, 4 ranks, NSLOT 8)"},
+ "svc_job_gate": {"source_commit": "1c25bc875 (files)", "host": "ot-epyc2", "cmd": "bash rtl/dsrom_sys/s81_ctrl/test/run_svc_job_gate.sh g4", "verdict": "PASS", "logs": "svc_gate/"}}

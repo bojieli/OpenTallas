@@ -33,6 +33,8 @@ from .records import MDesc, Rec, decode_program  # noqa: E402
 
 F = np.float32
 VM_WORDS = 1 << 18
+VM_AP = 1 << 16          # HC weight aperture (main b1a793d75): VM words [2^18, 2^18 + 2^16), written only by DMA.LOAD O and
+                         # read only by HC_MIX_ROWS B; any other access faults
 ESIZE = {"FP32": 4, "BF16": 2, "FP8E4M3": 1, "INT8": 1, "U32": 4, "UE8M0": 1, "FP4E2M1": 1}
 _E4M3 = None
 
@@ -108,8 +110,9 @@ class Hbm:
 class Die:
     def __init__(self, rank, hbm: Hbm):
         self.rank = rank
-        self.vm = np.zeros(VM_WORDS, dtype=np.uint32)
+        self.vm = np.zeros(VM_WORDS + VM_AP, dtype=np.uint32)
         self.hbm = hbm
+        self.synth_hbm = {}          # HBM bytes a unit model synthesised from the checkpoint (abs addr -> bytes; e2e export)
         self.dyn = [0] * 32
         self.streams = {}            # STREAM id -> FIFO of pushed element vectors (credit-ordered producer -> consumer)
         self.stream_seen = {}        # STREAM id -> the last vector pushed (simulator-side visibility for checkers)
@@ -136,6 +139,35 @@ def d_unpack(words):
         else:
             md[name] = (words[w] >> lsb) & ((1 << width) - 1)
     return md
+
+
+LOOP_COUNT_FROM_VM = 1 << 17     # PROVISIONAL (G24, hbm-sim -> hgi-takeover 10-10): count = U32(VM[imm_a]), e.g. the
+                                  # IDX.OWNED slot count of a software ROW_GATHER (data-dependent)
+
+
+def loop_count(M, r):
+    """CTL.LOOP count: param[15:0], or (param[17]) the U32 word VM[imm_a] -- equal on every die of the group."""
+    if not r.param & LOOP_COUNT_FROM_VM:
+        return r.param & 0xFFFF
+    vals = {int(d.vm[r.imm_a]) for d in M.dies}
+    if len(vals) != 1:
+        raise Fault(1, f"LOOP count from VM differs across dies {sorted(vals)[:4]}")
+    c = vals.pop()
+    if c > 0xFFFF:
+        raise Fault(3, "LOOP count from VM > 65,535")
+    return c
+
+
+def matching_endloop(recs, pc):
+    depth = 0
+    for j in range(pc, len(recs)):
+        if recs[j].unit == "CTL" and recs[j].op == "LOOP":
+            depth += 1
+        elif recs[j].unit == "CTL" and recs[j].op == "ENDLOOP":
+            depth -= 1
+            if depth == 0:
+                return j
+    raise Fault(3, "LOOP without ENDLOOP")
 
 
 class Machine:
@@ -190,6 +222,12 @@ class Machine:
         else:
             n = die.dyn[d.n_sel] if d.n_sel else d.n
         ist = 0 if d.ibcast else (d.istride or 1)
+        if d.space == "HBM" and base >> 37:
+            # bits [39:37] are the row-stripe code (spec 3.6): only a DMA.LOAD A may carry one (code 1 = STRIPE4); any
+            # other HBM base >= 2^37 is outside the die's 128 GiB and would alias the code
+            c = self.cur
+            if not (base >> 37 == 1 and c is not None and (c.unit, c.op) == ("DMA", "LOAD") and d == c.desc.get("A")):
+                raise Fault(3, f"HBM base {base:#x} >= 2^37 outside a STRIPE-coded DMA.LOAD A")
         return base, n, d.m, d.stride, ist
 
     def vm_addrs(self, d, die, L, no=None, ni=None):
@@ -199,7 +237,12 @@ class Machine:
         o, i = np.meshgrid(np.arange(no), np.arange(ni), indexing="ij")
         a = (base + o * st + i * ist).reshape(-1)
         if a.size and (a.min() < 0 or a.max() >= VM_WORDS):
-            raise Fault(3, "VM access out of range")
+            c = self.cur
+            ok = (c is not None and a.max() < VM_WORDS + VM_AP and a.min() >= VM_WORDS and
+                  (((c.unit, c.op) == ("DMA", "LOAD") and d == c.desc.get("O")) or
+                   ((c.unit, c.op) == ("HC", "HC_MIX_ROWS") and d == c.desc.get("B"))))
+            if not ok:
+                raise Fault(3, "VM access out of range (the HC aperture is DMA.LOAD O / HC_MIX_ROWS B only)")
         return a
 
     def vm_read(self, d, die, L, no=None, ni=None):
@@ -236,8 +279,18 @@ class Machine:
         ni = n if ni is None else ni
         es = ESIZE[d.fmt]
         rows = []
+        code = base >> 37                       # spec 6.4: HBM row-stripe code (DMA.LOAD A only); 0 = linear
+        if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "LOAD"))):
+            raise Fault(3, f"HBM stripe code {code} not allowed here")
+        if code == 1 and (base % 32 or st % 32 or ist != 1):
+            raise Fault(3, "STRIPE4: rows must start 32 B aligned and be contiguous")
         for o in range(no):
             ra = base + o * st
+            if code == 1:                       # STRIPE4: row o on stack (base[36:35] + o) mod 4, stack-local address
+                s0, loc = (base >> 35) & 3, (base & ((1 << 35) - 1)) + o * st
+                if loc >> 35:
+                    raise Fault(3, "STRIPE4: row beyond the stack-local space")
+                ra = (((s0 + o) & 3) << 35) | loc
             if ist == 1:
                 raw = die.hbm.view(ra, ni * es)
             else:
@@ -260,13 +313,24 @@ class Machine:
         base, n, m, st, ist = self.eff(d, die, L)
         es = ESIZE[d.fmt]
         v = np.asarray(vals, dtype=F).reshape(m, n)
+        code = base >> 37                       # spec 6.4: HBM row-stripe code (DMA.STORE O only); 0 = linear
+        if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "STORE"))):
+            raise Fault(3, f"HBM stripe code {code} not allowed here")
+        if self.cur is not None and (self.cur.unit, self.cur.op) == ("DMA", "STORE") and (base % 32 or st % 32 or ist != 1 or (n * es) % 32):
+            raise Fault(3, "DMA.STORE: HBM rows must be whole 32-byte sectors (aligned start, stride, length; istride 1)")
         for o in range(m):
             raw = encode_fmt(v[o], d.fmt)
+            ra = base + o * st
+            if code == 1:                       # STRIPE4: row o on stack (base[36:35] + o) mod 4, stack-local address
+                s0, loc = (base >> 35) & 3, (base & ((1 << 35) - 1)) + o * st
+                if loc >> 35:
+                    raise Fault(3, "STRIPE4: row beyond the stack-local space")
+                ra = (((s0 + o) & 3) << 35) | loc
             if ist == 1:
-                die.hbm.view(base + o * st, n * es)[:] = raw
+                die.hbm.view(ra, n * es)[:] = raw
             else:
                 for i in range(n):
-                    die.hbm.view(base + o * st + i * ist * es, es)[:] = raw[i * es:(i + 1) * es]
+                    die.hbm.view(ra + i * ist * es, es)[:] = raw[i * es:(i + 1) * es]
             die.hbm.writes += n * es
 
     def read(self, d, die, L, no=None, ni=None):
@@ -305,7 +369,11 @@ class Machine:
                 continue
             if r.unit == "CTL":
                 if r.op == "LOOP":
-                    loops.append(dict(start=pc + 1, count=r.param & 0xFFFF, level=(r.param >> 16) & 1, i=0))
+                    cnt = loop_count(self, r)
+                    if cnt == 0:                                # skip the body (to the matching ENDLOOP)
+                        pc = matching_endloop(recs, pc) + 1
+                        continue
+                    loops.append(dict(start=pc + 1, count=cnt, level=(r.param >> 16) & 1, i=0))
                     pc += 1
                     continue
                 if r.op == "ENDLOOP":
@@ -399,6 +467,9 @@ def decode_fmt(raw, fmt):
         return raw.view(np.int8).astype(F)
     if fmt == "FP8E4M3":
         return e4m3_table()[raw]
+    if fmt == "UE8M0":                          # a power-of-two scale byte: 2^(b - 127); 255 = NaN
+        b = raw.view(np.uint8).astype(np.int64)
+        return np.where(b == 255, np.nan, np.exp2(b - 127.0)).astype(F)
     raise Fault(3, f"fmt {fmt} not decodable here")
 
 
@@ -417,6 +488,9 @@ def encode_fmt(v, fmt):
 # unit models
 # ----------------------------------------------------------------------------------------------------------------
 def u_dma_load(M: Machine, r: Rec, L):
+    a0 = r.desc["A"]
+    if a0.indexed and a0.n_sel == HGI.NSEL_FROM_VM:
+        return dma_row_stream(M, r, L)
     for die in M.dies:
         a, o = r.desc["A"], r.desc["O"]
         vals = M.read(a, die, L)
@@ -424,6 +498,25 @@ def u_dma_load(M: Machine, r: Rec, L):
             die.vm[M.vm_addrs(o, die, L)] = vals.astype(np.uint32)
         else:
             M.vm_write(o, die, L, vals)
+
+
+def dma_row_stream(M: Machine, r: Rec, L):
+    """The indexed stream form of DMA.LOAD (spec 3.3), PROVISIONAL reading (G24 iii): A indexed with n_sel = N_FROM_VM;
+    the row count is U32(VM[I + I.stride + L]) (row 1 of I) and row e is the A row of id U32(VM[I + L + e]) (row 0):
+    base + id x dyn_mul, O.n elements of A.fmt; rows land at O.base + e O.stride, in list order."""
+    for die in M.dies:
+        rd = M.rec_of(die, r)
+        a, o, i_ = rd.desc["A"], rd.desc["O"], rd.desc["I"]
+        ib = M._plain_base(i_, die, L)
+        cnt = int(die.vm[ib + i_.stride + L])
+        ob, on, om, ost, _ = M.eff(o, die, L)
+        if cnt > om:
+            raise Fault(3, f"row stream: {cnt} rows > O.m {om}")
+        for e in range(cnt):
+            idx = int(die.vm[ib + L + e])
+            base = a.base + L * a.lstride + idx * a.dyn_mul
+            v = M.hbm_read(MDesc(space="HBM", fmt=a.fmt, base=base, n=on), die, 0)[0]
+            M.vm_write(MDesc(space="VM", base=ob + e * ost, n=on), die, 0, v)
 
 
 def u_dma_store(M: Machine, r: Rec, L):
@@ -681,6 +774,43 @@ def u_idx_index(M: Machine, r: Rec, L):
                 M.vm_write(rd.desc["R"], die, L, v[order].astype(F))
 
 
+def u_idx_owned(M: Machine, r: Rec, L):
+    """IDX.OWNED (G21): param [7:0] B (owner block), [15:8] G, [23:16] c (slots a gather; PROVISIONAL G24, 0 = 1).
+    A U32 = the K selected row ids (list order).  Row i is owned by rank (i div B) mod G at local row
+    (i div (B G)) B + i mod B.  O = this rank's owned local rows in list order, padded with 0 to ceil(M / c) c (M = the
+    group's largest owned count); R = per list entry the row's place in the gathered array, SLOT-MAJOR j G + r
+    (PROVISIONAL G24: slot j of owner r; the spec text says r M + j); D = [M, ceil(M / c)]."""
+    B, G_, c = r.param & 0xFF, (r.param >> 8) & 0xFF, max(1, (r.param >> 16) & 0xFF)
+    if B == 0 or B & (B - 1) or G_ not in (1, 2, 4, 8, 96):
+        raise Fault(3, "IDX.OWNED B / G")
+    for die in M.dies:
+        rd = M.rec_of(die, r)
+        ab, K, _, _, _ = M.eff(rd.desc["A"], die, L)
+        ids = die.vm[ab:ab + K].astype(np.int64)
+        own = (ids // B) % G_
+        cnt = np.bincount(own, minlength=G_)
+        Mx = int(cnt.max()) if K else 0
+        rounds = -(-Mx // c)
+        me = die.rank % G_
+        mine = ids[own == me]
+        local = (mine // (B * G_)) * B + mine % B
+        ob, on, _, _, _ = M.eff(rd.desc["O"], die, L)
+        if on < rounds * c:
+            raise Fault(3, f"IDX.OWNED O.n {on} < ceil(M / c) c = {rounds * c}")
+        o = np.zeros(on, dtype=np.uint32)
+        o[:len(local)] = local
+        die.vm[ob:ob + on] = o
+        j = np.zeros(K, dtype=np.int64)                  # slot of each entry within its owner's list
+        seen = np.zeros(G_, dtype=np.int64)
+        for e in range(K):
+            j[e] = seen[own[e]]
+            seen[own[e]] += 1
+        rb, rn, _, _, _ = M.eff(rd.desc["R"], die, L)
+        die.vm[rb:rb + K] = (j * G_ + own).astype(np.uint32)
+        db, _, _, _, _ = M.eff(rd.desc["D"], die, L)
+        die.vm[db:db + 2] = np.array([Mx, rounds], dtype=np.uint32)
+
+
 def u_coll_topk_merge(M: Machine, r: Rec, L):
     """COLL.TOPK_MERGE (G18): from VM, A = local values, B = their ids (n each, per die); the group's top imm_a by
     descending value, ties to the lowest id; O = the ids in ascending id order, R (optional) = their values.  The
@@ -914,7 +1044,7 @@ def _write_red(M, rd, die, L, vals):
 
 UNITS = {("DMA", "LOAD"): u_dma_load, ("DMA", "STORE"): u_dma_store, ("DMA", "FENCE"): u_dma_fence,
          ("SM", "MATVEC"): u_sm_matvec, ("COLL", "ALL_REDUCE_SUM"): u_coll_all_reduce,
-         ("IDX", "INDEX"): u_idx_index, ("COLL", "TOPK_MERGE"): u_coll_topk_merge,
+         ("IDX", "INDEX"): u_idx_index, ("COLL", "TOPK_MERGE"): u_coll_topk_merge, ("IDX", "OWNED"): u_idx_owned,
          ("ARGMAX", "LOCAL"): u_argmax_local, ("COLL", "ARGMAX_MERGE"): u_coll_argmax_merge,
          ("FUSED", "ROW_NORM"): u_row_norm, ("SFU", "GLU"): u_glu, ("ATT", "QK"): u_att_qk, ("ATT", "PV"): u_att_pv,
          ("SU", "VOP"): u_su_vop, ("IDX", "TOPK"): u_idx_topk, ("COLL", "ALL_GATHER"): u_coll_all_gather,

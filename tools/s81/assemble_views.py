@@ -22,11 +22,15 @@ results/rtl/s81_assembled_views_20261008/<slab>/ (lib per corner + glue.json); d
 """
 import argparse
 import json
+import hashlib
+import math
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 TILES = ROOT / 'physical/s81_ph_views/closed'
+_LIB_ROOT = ROOT
+_CREDIT_LIBS = {}
 T_PS = 833.333
 UNC_S, UNC_H, SKEW_INTRA = 60.0, 50.0, 90.0    # glue: signoff 60 + intra-region skew 90 (budget sheet); hold 25 + 25
 # (s81-die-timing 2026-10-08: was 25 + 50; rule H1 drops the link hold term, as in die_sta.py)
@@ -151,6 +155,8 @@ class Lib:
 
 
 def lib_for(tile, corner):
+    if (tile, corner) in _CREDIT_LIBS:
+        return _CREDIT_LIBS[tile, corner], False
     d = TILES / tile if (TILES / tile).exists() else ROOT / 'physical/s81_die_views/views' / tile   # die station view
     p = d / f'{tile}_{corner}.lib'
     if p.exists():
@@ -201,7 +207,7 @@ def assemble(slab, spec, ports, corner):
         L.append(f' type (b{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1}; bit_to : 0; '
                  'downto : true; }')
     L.append(f' cell ({slab}) {{')
-    rec = dict(ports={}, tiles_ss_as_tt=ss_as, libs={t: str(libs[t].path.relative_to(ROOT)) for t in tiles})
+    rec = dict(ports={}, tiles_ss_as_tt=ss_as, libs={t: str(libs[t].path.relative_to(_LIB_ROOT)) for t in tiles})
     for p, (d, w) in sorted(ports.items()):
         L.append(f'  bus ({p}) {{ bus_type : b{w}; direction : {d};')
         if p in spec['clocks']:
@@ -288,14 +294,153 @@ def glue_checks(spec):
     return out
 
 
+
+def collective_credit_recipe(root):
+    """Full-shape pin geometry and the exact credit-link net contract, independent of pending views."""
+    root = Path(root)
+    comp = json.loads((root / 'physical/s81_ph_views/collective/composition_split3cr.json').read_text())
+    contract = comp['port_contract']
+    plans = {m: json.loads((root / f'physical/s81_ph_views/ports/{contract}/{m}/ports.json').read_text())
+             for m in ('dsfd_coll_cb', 'dsfd_coll_ce', 'dsfd_coll_ct', 'dsfd_coll_lane_w')}
+    instances = {r['inst']: r for r in comp['instances']}
+    glue, nets = [], []
+
+    def points(inst, port, offset=0, count=None):
+        r = instances[inst]
+        plan = plans[r['master']]
+        pins = plan['ports'][port]['pins']
+        pins = pins[offset:offset + count] if count is not None else pins
+        result = []
+        for bit, layer, x0, y0, x1, y1 in pins:
+            x, y = (x0 + x1) / 2, (y0 + y1) / 2
+            if r['orient'] == 'MY': x = plan['w_um'] - x
+            elif r['orient'] != 'R0': raise ValueError('unsupported orientation ' + r['orient'])
+            result.append((bit, r['xy'][0] + x, r['xy'][1] + y))
+        return result
+
+    def link(ai, ap, bi, bp, ak=0, bk=0, count=None):
+        a, b = instances[ai], instances[bi]
+        pa, pb = plans[a['master']]['ports'][ap], plans[b['master']]['ports'][bp]
+        count = count or min(pa['bits'], pb['bits'])
+        aa, bb = points(ai, ap, ak, count), points(bi, bp, bk, count)
+        if len(aa) != count or len(bb) != count or pa['direction'] == pb['direction']:
+            raise ValueError('bad seam shape/direction ' + ai + '.' + ap + ' / ' + bi + '.' + bp)
+        if pa['direction'] == 'input':
+            ai, ap, bi, bp, aa, bb, a, b = bi, bp, ai, ap, bb, aa, b, a
+        length = max(abs(x - xx) + abs(y - yy) for (_, x, y), (_, xx, yy) in zip(aa, bb))
+        what = ai + '.' + ap + ' -> ' + bi + '.' + bp
+        glue.append((a['master'], ap, b['master'], bp, length, 0, what))
+        nets.append(dict(launch=ai + '.' + ap, capture=bi + '.' + bp, bits=count,
+                         launch_bits=[r[0] for r in aa], capture_bits=[r[0] for r in bb], length_um=length))
+
+    for lane in range(8):
+        inst = f'g_lane[{lane}].g_' + ('w' if lane < 4 else 'e') + '.u_l'
+        k = lane % 4
+        core = 'u_cb' if k == 0 else 'u_ct' if k == 3 else 'u_ce'
+        prefix = 'w' if lane < 4 else 'e'
+        group = k - 1 if core == 'u_ce' else 0
+        for port in ('lo_v', 'lo_r', 'lo_d', 'li_v', 'li_r', 'li_d', 'flt'):
+            cp = prefix + port
+            width = plans['dsfd_coll_lane_w']['ports'][port]['bits']
+            link(inst, port, core, cp, bk=group * width, count=width)
+    for south, north in (('u_cb', 'u_ce'), ('u_ce', 'u_ct')):
+        shared = set(plans[instances[south]['master']]['ports']) & set(plans[instances[north]['master']]['ports'])
+        for port in sorted(shared - {'ck', 'rs'}):
+            # only the abutting N/S pins are seam nets, not similarly-named W/E lane buses
+            aa, bb = points(south, port), points(north, port)
+            if max(abs(a[2] - b[2]) for a, b in zip(aa, bb)) < 0.5:
+                link(south, port, north, port)
+    ports = {'f_vm': [('dsfd_coll_cb', ['f_vm'])], 'ts': [('dsfd_coll_cb', ['ts'])],
+             't_vm': [('dsfd_coll_cb', ['t_vm'])], 'por': [('dsfd_coll_ck', ['por'])]}
+    for p in ('pll_stream', 'pll_serial', 'pll_hbm', 'rst_stream', 'rst_serial', 'rst_hbm'):
+        ports[p] = [('dsfd_coll_ck', [p])]
+    for side in ('W', 'E'):
+        for k in range(4):
+            ports[f'r{side}{k}'] = [('dsfd_coll_lane_w', ['rx'])]
+            ports[f'td{side}{k}'] = [('dsfd_coll_lane_w', ['tx'])]
+            ports[f'tf{side}{k}'] = [('dsfd_coll_lane_w', ['tf'])]
+    spec = dict(clocks={'refclk': ['refclk'], 'pll_stream': ['ck'], 'pll_serial': [], 'pll_hbm': []},
+                ports=ports, glue=glue)
+    recipe = dict(schema='opentallas.s81.credit_assembly_plan.v1', variant='split3cr', slab_um=comp['slab_um'],
+                  instances=comp['instances'], retained_clock_tile=dict(inst='u_ck', master='dsfd_coll_ck',
+                  source_commit='752a48488384dbe9c95a72c084bc24e0ac800a17', outside_slab=True),
+                  nets=nets, glue_bundles=len(nets), glue_bits=sum(n['bits'] for n in nets),
+                  clocks='measured external u_ck placement, face taps/source latencies and all 11 data-tile clock sinks required',
+                  qualification_inputs=dict(corner_sta='committed TT/FF STA receipt with ODB/SPEF/SDC hashes', clock_root='actual external u_ck x_um/y_um', clock_taps='all 11 data tile taps with measured TT/FF source latency (option1)', uncertainties_ps=[60, 25], period_ps=833.333),
+                  status='UNQUALIFIED: four source-matched routed views, retained clock tile, measured seam/clock evidence required')
+    return spec, recipe
+
+
+def export_collective_credit(a):
+    """Opt-in export only; missing physical evidence cannot produce an adopted assembly."""
+    from die_sta import collective_credit_binding, credit_qualification_valid
+    global _LIB_ROOT, _CREDIT_LIBS
+    root = a.views_root.resolve()
+    spec, recipe = collective_credit_recipe(root)
+    d = a.out / 'dsfd_sp_collective_split3cr'
+    d.mkdir(parents=True, exist_ok=True)
+    (d / 'recipe.json').write_text(json.dumps(recipe, indent=1) + '\n')
+    if a.collective_credit_plan:
+        print('CR planning geometry', recipe['glue_bundles'], 'bundles', recipe['glue_bits'], 'bits; UNQUALIFIED')
+        return
+    binding = collective_credit_binding(root)
+    if binding['problems']:
+        raise ValueError('UNQUALIFIED: ' + '; '.join(binding['problems']))
+    if not a.credit_glue_evidence:
+        raise ValueError('UNQUALIFIED: --credit-glue-evidence must name source-pinned measured seam/clock evidence')
+    qpath = a.credit_glue_evidence.resolve()
+    q = json.loads(qpath.read_text())
+    if (q.get('status') != 'PASS' or q.get('variant') != 'split3cr'
+            or q.get('tile_bindings') != binding['tile_bindings'] or q.get('clock_binding') != binding['clock_binding']
+            or q.get('clock_period_ps') != 833.333 or q.get('setup_uncertainty_ps') != 60
+            or q.get('hold_uncertainty_ps') != 25 or q.get('net_contract') != recipe['nets']
+            or q.get('clock_sinks') != [r['inst'] + '/ck' for r in recipe['instances']]
+            or not all(type(q.get(k)) in (int, float) and math.isfinite(q[k]) and q[k] >= 0
+                       for k in ('tt_setup_ps', 'ff_hold_ps')) or q.get('drc') != 0):
+        raise ValueError('UNQUALIFIED: measured seam/clock evidence does not match the exact credit assembly')
+    qualification = dict(status='PASS', evidence=str(qpath.relative_to(root)), sha256=hashlib.sha256(qpath.read_bytes()).hexdigest())
+    if not credit_qualification_valid(root, qualification, binding):
+        raise ValueError('UNQUALIFIED: measured corner receipt/hash provenance failed')
+    _LIB_ROOT = root
+    selected = dict(binding['tile_bindings'], dsfd_coll_ck=binding['clock_binding'])
+    _CREDIT_LIBS = {(m, c): root / r['libs'][c] for m, r in selected.items() for c in ('ss', 'tt', 'ff')}
+    P = json.loads(a.ports.read_text())
+    ports = {k: tuple(v) for k, v in P['dsfd_sp_collective'].items()}
+    record = dict(slab='dsfd_sp_collective', variant='split3cr', tile_bindings=binding['tile_bindings'],
+                  clock_binding=binding['clock_binding'], corners={}, physical_qualification=qualification)
+    # Compute every corner and all inter-tile checks before writing any timing view.
+    views = {}
+    for c in ('ss', 'tt', 'ff'):
+        views[c], record['corners'][c] = assemble('dsfd_sp_collective', spec, ports, c)
+        missing = [p for p, arcs in record['corners'][c]['ports'].items()
+                   if p not in spec['clocks'] and (not isinstance(arcs, dict) or not arcs)]
+        if missing: raise ValueError('UNQUALIFIED: missing die-facing arcs ' + ', '.join(missing))
+    g = glue_checks(spec)
+    if not all(type(r.get(k)) in (int, float) and math.isfinite(r[k]) and r[k] >= 0
+               for r in g for k in ('tt_setup_bal', 'ff_hold_bal')):
+        raise ValueError('UNQUALIFIED: routed-ETM seam checks fail; no views exported')
+    record.update(glue=g, glue_worst_ps={k: min(r[k] for r in g) for k in
+                  ('tt_setup', 'ss_setup', 'ff_hold', 'tt_setup_bal', 'ss_setup_bal', 'ff_hold_bal')})
+    for c, txt in views.items():
+        (d / f'dsfd_sp_collective_{c}.lib').write_text(txt)
+    (d / 'assembled.json').write_text(json.dumps(record, indent=1) + '\n')
+    print('CR assembly exported from source-matched routed views and measured seam/clock evidence; die context still required')
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--collective-credit', action='store_true', help='export only the gated split3CR collective assembly; default slab recipes unchanged')
+    ap.add_argument('--collective-credit-plan', action='store_true', help='emit exact full-shape credit geometry/net recipe without timing views or adoption')
+    ap.add_argument('--views-root', type=Path, default=ROOT)
+    ap.add_argument('--credit-glue-evidence', type=Path, help='source-pinned measured seam/clock evidence; required before CR export')
     ap.add_argument('--glue-only', action='store_true', help='recompute only the glue of existing <out>/<slab>/assembled.json '
                     '(tiles unchanged: the libs stay)')
     ap.add_argument('--ports', type=Path,
                     help='JSON {slab: {port: [direction, width]}} (die_sta.py kit --ports-out)')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
+    if a.collective_credit or a.collective_credit_plan:
+        export_collective_credit(a)
+        return
     summ = {}
     if a.glue_only:
         for slab, spec in SLABS.items():

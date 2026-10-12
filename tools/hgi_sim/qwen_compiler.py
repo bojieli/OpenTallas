@@ -252,7 +252,8 @@ def sut(**kw):
 class Builder:
     """Program assembly with wait masks from region hazards: a record waits for unit u (u != its own unit) when it
     reads a region u wrote, or writes a region u read or wrote, since u last drained (RAW / WAR / WAW; read-read is
-    not a hazard).  A record's own unit orders it (in-order queue)."""
+    not a hazard). Non-DMA units serialize their own records. DMA may pipeline records, so a dependent DMA record
+    also waits for its own unit; independent transfers may still overlap."""
 
     def __init__(self, g):
         self.g = g
@@ -264,7 +265,7 @@ class Builder:
         mask = 0
         rd, wr = set(reads), set(writes)
         for u in HGI.UNITS:
-            if u == rec.unit:
+            if u == rec.unit and u != "DMA":
                 continue
             if (rd & self.pwr[u]) or (wr & (self.prd[u] | self.pwr[u])):
                 mask |= wait_mask(u)

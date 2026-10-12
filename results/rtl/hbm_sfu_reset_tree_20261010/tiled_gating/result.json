@@ -1,0 +1,47 @@
+{
+  "status": "bench_qualified_physical_unqualified",
+  "command": "python3 tools/hbm_hub_quarter_gen.py --quarter su --ports /tmp/hub-gen-bench/ports/hfd_su/ports.json --out /tmp/hub-gen-bench/gen --tiled --cg --xroot lockup --lane-size 85.32 162",
+  "scope": "Quarter connectivity, not arithmetic: registered lane stand-in. Minimum two-tile gating/wake with real ICG and root lockup checks per-cycle equality at both +/-100ps roots.",
+  "quarter": {
+    "shape": [
+      1406.136,
+      5529.576
+    ],
+    "tiles": 192,
+    "icgs": 192,
+    "wake_crossings": 42,
+    "hold": 64,
+    "wake_lead": 3,
+    "whole_data_cycles_added": 0,
+    "lockup_bits": 420672
+  },
+  "source_sha256": {
+    "tools/hbm_hub_quarter_gen.py": "cd939c2050dd410234a18ce675004dd886c0b9f577723cb4a2ee4efe761e3da8",
+    "tools/hbm_su_tile_xl_gen.py": "3b032eae9ea9b56711446bcb94a67f5390c95445e15d51d3ab8c4fa690ebdb3d",
+    "tests/rtl/hub_reset/tb_su_tile_cg.sv": "0311fc47a935b5548136ac7a7c9c32a5dbb3cf5085fa958bf24fd184b9466bd2",
+    "tests/rtl/hub_reset/run_su_tile_cg.sh": "fd5626c22f2db1bbe2bdee6870be091be90005a25854327f843dde6eb00b40f6",
+    "rtl/hbm_accel/cg/ot_cg_tile.sv": "12534865332c1e3c0af444748386b7097cdc959417277059ff357bfe0a2642a4",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "physical/hbm_accel_die_views/su/rtl_tile_xl/hfd_su_tile_xl.sv": "93eea1aa540a32e8ac86467bac8770849586230585e05ba0e568ba00c528d01a"
+  },
+  "generated_sha256": {
+    "hfd_su.sv": "f83f6216418412b049c6d816b88a61993eeae061e05ba25b946e7021a49ec469",
+    "hfd_su_neg.sv": "b1980fbc0c00b958da9639d21609a1d3ac4369c9ace4cbca1fa89fb7a401b2d3",
+    "hfd_su_tile_xl.sv": "93eea1aa540a32e8ac86467bac8770849586230585e05ba0e568ba00c528d01a",
+    "tb_hfd_su.sv": "859299781061a1f53e0ecaa56957051427bb59881daefa9a4dc71155e28bf779",
+    "ot_su12_light_simstub.sv": "63d75b0e6cb475ff3b3585ee299e912bf9c7388793bc61bfc2e3a1a990869f94"
+  },
+  "result": {
+    "qid0_3": "PASS8vectors_each_settle46",
+    "ownership_mutant": "FAIL8mismatches",
+    "routing_mutant": "FAIL1mismatch",
+    "gated_primitive": "PASS336checks_each_phase",
+    "wake_mutant": "FAIL24mismatches"
+  },
+  "adoption_gates": [
+    "TT/FF full real macro interfaces and route DRC0",
+    "192 ICG context CTS and real routing tracks",
+    "full arithmetic independently qualified in lane",
+    "no measured power savings yet"
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "schema": "opentallas.qwen.crom_scoped_successor.v1",
+  "original": {
+    "registry_element": "qfd_crom48",
+    "source": "337dcce3942e3c807793327082e2322740ddf3b6",
+    "top": "ot_qfd_crom",
+    "params": {
+      "SW": 64,
+      "AW": 24,
+      "LW": 6,
+      "LB": 0
+    },
+    "macros": 48,
+    "outline_um": [
+      777.6,
+      1000
+    ],
+    "ports_bits": {
+      "crom_re": 64,
+      "crom_addr": 1536,
+      "crom_stage": 6,
+      "crom_q": 4096,
+      "fault": 1,
+      "fault_code": 2
+    },
+    "state": "EARLY_FAIL_SETUP; historical other pin/access failures retained"
+  },
+  "closed_element": {
+    "name": "qfd_crom_g_a",
+    "job": "qfd_crom_g_a-ff3637ce7-tc",
+    "source": "ff3637ce795d5d1d816ea90a0fb1503c6f109202",
+    "top": "ot_qfd_crom_g",
+    "wrapper_instantiation": {
+      "child": "ot_qfd_crom",
+      "SW": 8,
+      "LB": 0,
+      "AW": 24,
+      "LW": 6
+    },
+    "macros": 6,
+    "outline_um": [
+      194.4,
+      518.4
+    ],
+    "ports_bits": {
+      "crom_re": 8,
+      "crom_addr": 192,
+      "crom_stage": 6,
+      "crom_q": 512,
+      "fault": 1,
+      "fault_code": 2
+    },
+    "metrics_ps": {
+      "setup_TT": 2.59,
+      "hold_FF": 30.62,
+      "SS_sensitivity": -281.44
+    },
+    "DRC": 0,
+    "record_commit": "80c13b0b2252e894dc056ea3825299107779f754",
+    "merged_source_and_record_tip": "2f4ed1967",
+    "source_sha256": {
+      "rtl/qwen_sys/system_20261008/ot_qfd_crom.sv": "b73e6d351d15d4476c0936e595d2d1fc3373737b9c206c94bc547aa451d8af34",
+      "rtl/test/redesign_qwen/tb_qfd_crom_g.sv": "7b6a8ff816871f733f79f331f1df72143ab864c3ab5f8d32fe6c85116caf64d6",
+      "physical/redesign_qwen/crom_g_bench.sh": "32b6d679dbd9b13263c234ac0fe66e67f9529463d9ec3259a3f2ec11c2d80647",
+      "physical/qwen_die_masters/cfg/qfd_crom_g_a.env": "c8fac5439d2aa1a25301c43baf01148d6438e16462a7a386d5a97da221f87afd",
+      "physical/qwen_die_masters/crom_g_place.tcl": "367a9b79db51c8654ad50885211973de0f0d26792da4e5634563412a0376af6c"
+    },
+    "benches": {
+      "bench_crom_g_pos": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "CROM_G_PASS\n",
+        "track": "parallel"
+      },
+      "bench_crom_g_neg": {
+        "expect": "fail",
+        "rc": 1,
+        "ok": true,
+        "tail": "CROM_G_NEG_DETECTED\n",
+        "track": "parallel"
+      }
+    }
+  },
+  "functional_tiling_evidence": {
+    "bench_source": "ff3637ce795d5d1d816ea90a0fb1503c6f109202",
+    "bench": "rtl/test/redesign_qwen/tb_qfd_crom_g.sv",
+    "vehicle": "eight ot_qfd_crom(SW8, LB8*g) children versus ot_qfd_crom(SW64,LB0); physical fixed-LB0 wrapper is not instantiated",
+    "instances": 8,
+    "total_macros": 48,
+    "random_images": "all16wide*2depth+8narrow*2depth macro images, seed7,512physicalrows of2128bits",
+    "stimulus_cycles": 6000,
+    "stages": "0..35 (rs%36); HEAD36 excluded despite bench comment",
+    "regions": [
+      "QK",
+      "OSC",
+      "DSC",
+      "ROPE",
+      "ZERO"
+    ],
+    "not_stimulated": [
+      "QSCALE",
+      "HEAD final norm",
+      "explicit invalid address/stage/misalignment/row-disagreement domain"
+    ],
+    "compared_every_edge": [
+      "4096 output bits",
+      "OR of8 tile fault flags versus reference fault"
+    ],
+    "not_compared": [
+      "fault_code; per-group codes have no aggregation in bench"
+    ],
+    "negative": "GMUT1 uses LB0 for every group, detected fault mismatch; confirms group1..7 cannot reuse fixed-LB0 ABI unchanged",
+    "latency": "same existing5edge pipeline under valid reads, 0 added edges in sourcejob"
+  },
+  "scope": {
+    "exact_physical_alias": false,
+    "recommended_registry": "qfd_crom48 superseded proposal by eight crom_g tiles; one group0 element is CLOSED, composed64lane successor not CLOSED",
+    "replica_count": 8,
+    "group_lane_bases": [
+      0,
+      8,
+      16,
+      24,
+      32,
+      40,
+      48,
+      56
+    ],
+    "ROM_outline_sum_um2": 806215.6799999999,
+    "old_ROM_outline_um2": 777600.0,
+    "ROM_outline_change_percent": 3.6799999999999944
+  },
+  "adoption_prerequisites": [
+    "Explicit source/ABI binding for group1..7 lane-base alignment and global macro payload/image mapping; existing physical wrapper is fixed LB0",
+    "Golden fault/fault_code aggregation contract including first-cause order and exact latency",
+    "Complete contract read-domain gate including QSCALE, HEAD36 and malformed descriptor/address/column disagreement checks",
+    "Compose eight ROM tiles with eight closed cbuf group tiles, clock tree, same-stage/token readiness, local routing reach, pin ordering, tile floorplan and warm/prefetch latency in unified model",
+    "Adopt only after composed exact/measured rate gate; group0 TTresearch+FF closure is not SS headline or full64lane in-context signoff"
+  ]
+}

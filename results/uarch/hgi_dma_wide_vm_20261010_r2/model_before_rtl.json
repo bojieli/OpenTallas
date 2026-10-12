@@ -1,0 +1,132 @@
+{
+  "scope": "opt-in wider front and actual protected shared VM, no route/adoption claim",
+  "default_enable": 0,
+  "design_applicability": {
+    "Qwen3-8B ROM": false,
+    "DeepSeek-V4.1 ROM": false,
+    "Qwen3-8B HBM": true,
+    "DeepSeek-V4.1 HBM": true
+  },
+  "MACs_per_cycle": 0,
+  "clock_hz": 1200000000.0,
+  "HBM": {
+    "sustained_Bpc": 3166.6666666666665,
+    "nominal_Bpc": 3333.3333333333335,
+    "required_raw_Bpc": 3000,
+    "implemented_lane_roof_Bpc": 4096
+  },
+  "front": {
+    "stacks": 4,
+    "lanes_per_stack": 32,
+    "service_tag_bits": 6,
+    "tags_per_stack": 64,
+    "request_packet_bits": 53,
+    "response_packet_bits": 272,
+    "source_run_sectors": 256,
+    "source_run_cycles": 8,
+    "read_latency": 104,
+    "native_descriptor_lifetime_cycles": 314,
+    "minimum_tags_per_stack": 40,
+    "credit_depth": 256,
+    "credit_round_trip": 199,
+    "lane_fifo_bits": 8978432,
+    "format_expansion": {
+      "FP32": 1,
+      "BF16": 2,
+      "FP8": 4
+    },
+    "placement": "128 near-VM converter tiles; each owns four logical banks with two physical phases; transport raw272bits, expand beside memory"
+  },
+  "VM": {
+    "payload_bytes": 8388608,
+    "word_address_bits": 21,
+    "sector_address_bits": 18,
+    "logical_banks": 512,
+    "physical_banks": 1024,
+    "physical_phase": "sector bit9",
+    "row": "sector bits17:10",
+    "logical_bank": "sector bits8:0",
+    "physical_read_II": 2,
+    "physical_write_II": 2,
+    "macro_count": 2048,
+    "macro_name": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macro_rows": 256,
+    "ECC": "eight independent39,32 SECDED words per sector; two256bit macros store312protectedbits",
+    "maximum_sector_writes_per_cycle": 512.0,
+    "maximum_write_Bpc": 16384.0,
+    "actual_bank_write_edges": 5,
+    "actual_bank_read_edges": 6,
+    "actual_body_write_publication_elapsed": 5,
+    "actual_body_read_publication_elapsed": 6,
+    "allocation_visibility_bits": 4194304,
+    "visibility_policy": "protected per-word initialized bitmap; read waits all eight words durable, never fabricates zero SRAM contents",
+    "allocation_write_pipeline_bits": 174080,
+    "allocation_logic_area_um2": null,
+    "allocation_physical_fit_qualified": false,
+    "decoded_capacity_raw_equivalent_Bpc": {
+      "FP32": 16384,
+      "BF16": 8192,
+      "FP8": 4096
+    },
+    "producer_ports": {
+      "DMA": 512,
+      "native_COLL": 8,
+      "packet": "existing337/273 ABI byteaddress32 holds8MiB; bounds become23bytebits"
+    },
+    "arbitration": "bank-local ready/reserve before admission; COLL and packet write compete with DMA; tagged ACK only after macro publication",
+    "COLL_completion": "DEL credit returns on filtered slot or actual tagged write ACK, never merely arrival",
+    "ATT_binding": "reader uses same18bitsector region descriptor; selected rows0..4MiB, query/scratch4..8MiB pending compiler live interval inventory",
+    "region_descriptor": {
+      "selected_row_base_sector": 0,
+      "selected_rows_max": 2048,
+      "row_bytes": 2048,
+      "selected_rows_bytes": 4194304,
+      "query_and_scratch_base_sector": 131072,
+      "query_and_scratch_reserved_bytes": 4194304,
+      "live_interval_qualified": false
+    }
+  },
+  "boundaries": {
+    "raw_data_bits": 34816,
+    "service_request_bits": 212,
+    "credit_bits": 128,
+    "DMA_local_bank_bits": 144896,
+    "expanded_global_die_bus_allowed": false
+  },
+  "physical": {
+    "macro_area_um2": 14523826.176,
+    "macro_dimensions_um": [
+      172.8,
+      41.04
+    ],
+    "SS_macro_clk_to_q_ps": 511.3577744831065,
+    "SS_macro_min_period_ps": 479.415105155955,
+    "macro_count_per_converter_tile": 16,
+    "tile_count": 128,
+    "proposal_tile_width_um": 900,
+    "proposal_tile_height_um": 500,
+    "proposal_grid": [
+      8,
+      16
+    ],
+    "proposal_grid_area_mm2": 57.6,
+    "tile_macro_area_um2": 113467.392,
+    "tile_logic_capacity_at60pct_um2": 156532.608,
+    "tracks_per_long_data_lane": 272,
+    "tracks_per_short_local_bank_port": 283,
+    "channel_capacity": "die owner supplies actual layer/occupancy budget; no route admitted",
+    "floorplan_fit": "macro geometry legal in proposed tile; slot placement and mapped logic/pins remain unqualified"
+  },
+  "macro_source_sha256": "f0e8d51af00ec806eddea2f031e4ecaab6316557c9c4a78c00827dc84323d2c5",
+  "latency_composition": {
+    "read104": 104,
+    "data_transport": 96,
+    "front_convert": "measured successor RTL",
+    "write_publication_min": 5,
+    "credit_transport": 96,
+    "token_latency": "include every cold-start and format expansion; service and VM occupancy measured independently"
+  },
+  "physical_admitted": false,
+  "adoption": false,
+  "HBM90pct_proven": false
+}

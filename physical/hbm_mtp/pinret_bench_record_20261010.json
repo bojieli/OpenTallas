@@ -1,0 +1,78 @@
+{
+  "model": {
+    "schema": "opentallas.hbm.fence.pin_return.v1",
+    "adopted": false,
+    "default_PINRET": 0,
+    "exactness": "same ordered valid/ready transactions; no arithmetic",
+    "MACs_per_cycle": 0,
+    "memory_bytes_per_cycle_delta": 0,
+    "boundaries_bits_per_cycle": {
+      "host_write": 4105,
+      "fence": 8,
+      "credit_return": 2
+    },
+    "sustainable_transactions_per_cycle": 0.25,
+    "output_payload_bytes_per_cycle_max": 128.0,
+    "replicas": 2,
+    "added_output_register_bits": 4113,
+    "added_control_FF": 136,
+    "mux_bits": 4113,
+    "demux_bits": 0,
+    "pin_ready_fanout": 2,
+    "internal_load_fanout_max": 130,
+    "lane_load_fanout_max": 32,
+    "tracks_required_delta": 0,
+    "channel_capacity": "same die-link ports; frame grows p2r3 300x300 to 360x360",
+    "area_upper_bound_um2": 2549.4,
+    "area_basis": "pre-build allowance 0.6 um2/FF including mux/route; mapping must measure",
+    "slot_area_um2": 129600,
+    "floorplan": "disjoint row/site pin banks <=16um inward, <=12um along face; FIRM through DPL",
+    "added_output_latency_cycles": 2,
+    "accepted_to_internal_credit_cycles": 1,
+    "next_output_reload_cycles": 3,
+    "single_user_latency_delta_ns_per_write": 1.6666666666666667,
+    "single_user_latency_delta_ns_per_fence": 1.6666666666666667,
+    "composed_delta_ns": "2 * (writes + fences) / clock_ghz; sum actual trace events, no headline adoption",
+    "evidence_gate": "full-width original fence transaction bench and mutants + TT/FF/DRC closure"
+  },
+  "exact_seeds": [
+    7,
+    3,
+    11,
+    29
+  ],
+  "writes": 186,
+  "acks": 186,
+  "fences": 37,
+  "original_cycles": [
+    1648,
+    1599,
+    1645,
+    1602
+  ],
+  "candidate_cycles": [
+    2437,
+    2448,
+    2425,
+    2411
+  ],
+  "cycle_deltas": [
+    789,
+    849,
+    780,
+    809
+  ],
+  "calendar_qualification": "reactive environments use different random seeds; serial script latency evidence, not a pure fixed timing delta",
+  "bridge_stall_bench": {
+    "sent": 512,
+    "received": 512,
+    "cycles": 3695,
+    "stall_cycles_per_period": 64,
+    "period_cycles": 137
+  },
+  "negatives": {
+    "cap_last_removed": "FENCE_P FAIL writes186/0 acks186/0 fences37/0",
+    "credit_return_removed": "PINRET_WRITE_PAYLOAD_MISMATCH; PINRET_FLOW_WRONG_OR_DUPLICATE received=1"
+  },
+  "physical_qualification": "not measured; admitted job required; default off"
+}

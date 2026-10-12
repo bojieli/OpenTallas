@@ -222,12 +222,23 @@ if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" &
         set nets $next
       }
     }
-    set ot_pf_v {}
-    set ot_pf_rc [lindex [lindex [dict values $::ot_ir_moved] 0] 1]
-    foreach p $ot_pf_pins { set v [ot_ir_arr $p $ot_pf_rc]; if {$v ne "" && $v ne "INF" && $v ne "-INF" && [string is double -strict $v]} { lappend ot_pf_v $v } }
-    if {[llength $ot_pf_v]} {
-      set s 0.0; foreach v $ot_pf_v { set s [expr {$s + $v}] }
-      set Lpf [expr {$s / [llength $ot_pf_v]}]
+    # mtp-wfc 2026-10-11 (dsfd_wfc_crp, two port clocks ck / ckv): the mean is PER REAL CLOCK.  It was taken over the pin
+    # flops of the FIRST moved clock only (core_clk, 288.8) and applied to every moved clock's inputs: the ser-domain
+    # inputs (vclk_s, boundary mean 215.1) were shifted +73.7 ps late, the FF hold scene saw +10 on f_swa / f_ksrd /
+    # credits and never repaired them, the verdict (no PF) read -33.  Each moved virtual clock now shifts by the pin-flop
+    # mean of ITS real clock (only pin flops on that tree: svc-fix 2026-10-10, forwarded-clock capture flops excluded); a
+    # clock with no pin flops keeps its boundary reference.
+    set ot_pf_rcs [lsort -unique [lmap v [dict values $::ot_ir_moved] {lindex $v 1}]]
+    set ot_pf_m [dict create]
+    foreach rc $ot_pf_rcs {
+      set vs {}
+      foreach p $ot_pf_pins {
+        if {[lsearch -exact [lmap c [get_property $p clocks] {get_full_name $c}] $rc] < 0} continue
+        set v [ot_ir_arr $p $rc]; if {$v ne "" && $v ne "INF" && $v ne "-INF" && [string is double -strict $v]} { lappend vs $v }
+      }
+      if {[llength $vs]} { set s 0.0; foreach v $vs { set s [expr {$s + $v}] }; dict set ot_pf_m $rc [list [expr {$s / [llength $vs]}] [llength $vs]] }
+    }
+    if {[dict size $ot_pf_m]} {
       set ot_pf_tmp [file join [expr {[info exists ::env(TMPDIR)] ? $::env(TMPDIR) : "/tmp"}] "ot_pf_[pid]_[clock clicks].sdc"]
       write_sdc $ot_pf_tmp
       set fh [open $ot_pf_tmp r]; set txt [read $fh]; close $fh; file delete $ot_pf_tmp
@@ -235,13 +246,18 @@ if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" &
       foreach ln [split $txt "\n"] {
         if {![regexp {^set_input_delay\s+(\S+)\s+(.*-clock \[get_clocks \{([^\}]+)\}\].*?)(\[get_ports .*\])\s*$} $ln -> val mid ck tgt]} continue
         if {![dict exists $::ot_ir_moved $ck]} continue
-        set d [expr {$Lpf - [lindex [dict get $::ot_ir_moved $ck] 0]}]
+        lassign [dict get $::ot_ir_moved $ck] L rc
+        if {![dict exists $ot_pf_m $rc]} continue
+        set d [expr {[lindex [dict get $ot_pf_m $rc] 0] - $L}]
         lappend redo [list [expr {$val + $d}] $mid $tgt]
         dict set ports "$ck|$tgt" [list $ck $tgt]
       }
       dict for {k v} $ports { lassign $v ck tgt; unset_input_delay -clock $ck [subst $tgt]; unset_input_delay -clock $ck -clock_fall [subst $tgt] }
       foreach r $redo { lassign $r val mid tgt; eval "set_input_delay $val $mid $tgt" }
-      puts [format "OT_IOREF_PF input pin flops %d mean %.1f: %d input delays re-referenced (ports %d)" [llength $ot_pf_v] $Lpf [llength $redo] [dict size $ports]]
+      dict for {rc v} $ot_pf_m {
+        puts [format "OT_IOREF_PF %s input pin flops %d mean %.1f" $rc [lindex $v 1] [lindex $v 0]]
+      }
+      puts [format "OT_IOREF_PF %d input delays re-referenced (ports %d)" [llength $redo] [dict size $ports]]
     } else { puts "OT_IOREF_PF no input pin flops: input reference unchanged" }
   } ot_pf_err]} { puts "OT_IOREF_PF WARNING: $ot_pf_err -- input reference unchanged"; if {[info exists ::env(OT_IOREF_PF_DEBUG)]} { puts $::errorInfo } }
 }

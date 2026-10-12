@@ -14,6 +14,7 @@ mid-height between its two lane groups.  Writes physical/s81_ph_views/ports/<con
 and the three core tiles, and physical/s81_ph_views/collective/composition_split3.json."""
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -84,7 +85,16 @@ def main():
     ap.add_argument('--core-width', type=float, default=680.4)
     ap.add_argument('--vm-pin-step', type=int, default=4)
     ap.add_argument('--contract', default='contract_split3')
+    ap.add_argument('--credit-links', action='store_true', help='emit a separate opt-in credit-seam composition; all four CR/LCR masters must close before binding')
+    ap.add_argument('--credit-source', action='append', default=[], metavar='MASTER=COMMIT', help='explicit per-master source pin override for a separately qualified CR/LCR successor; credit-links only')
     a = ap.parse_args()
+    source_overrides = {}
+    for entry in a.credit_source:
+        master, sep, commit = entry.partition('=')
+        if (not a.credit_links or not sep or master not in {'dsfd_coll_cb', 'dsfd_coll_ce', 'dsfd_coll_ct', 'dsfd_coll_lane_w'}
+                or master in source_overrides or not re.fullmatch('[0-9a-f]{9,40}', commit)):
+            ap.error('credit-source requires a unique known master and 9..40 hexadecimal commit, with --credit-links')
+        source_overrides[master] = commit
     LW, CW = a.lane_width, a.core_width
     T.CONTRACT = a.contract
     SW = T.r4(2 * LW + CW + 0.192)
@@ -146,7 +156,20 @@ def main():
                          lanes='lane k core-face pins <-> the core tile holding lane k (0 / 4: u_cb, 1 2 5 6: u_ce, 3 / 7: u_ct) at slab y = (k % 4) * LH + Y_CORE',
                          clocks='pll_stream -> ck of every lane tile and of u_cb / u_ce / u_ct (die clock tree; core tiles take ck on the W face near mid-height)'),
                cost='lanes 0 / 3 / 4 / 7 +2 cycles each way, f_vm +2, packer -> t_vm +2; slab width +%.1f um vs the 540-um p4 core' % (CW - 540.0))
-    out = ROOT / 'physical/s81_ph_views/collective/composition_split3.json'
+    if a.credit_links:
+        rec.update(variant='split3cr', port_contract=a.contract,
+                   core_rtl_defines=rec['core_rtl_defines'] + ['OT_S81PH_COLL_CR'],
+                   lane_rtl_defines=rec['lane_rtl_defines'] + ['OT_S81PH_LANE_CR'],
+                   boundary_protocol='lo_r / li_r are credit pulses, not combinational ready; every lane and seam uses an 8-deep credit landing FIFO',
+                   required_parameters={'dsfd_coll_cb': {'CR': 1}, 'dsfd_coll_ce': {'CR': 1, 'QPIPE': 1},
+                                        'dsfd_coll_ct': {'CR': 1, 'LR': 0}, 'dsfd_coll_lane_w': {'LCR': 1}},
+                   physical_adoption='UNQUALIFIED: cb, ce, ct and lane LCR must all close with exactness and negative-control gates before binding',
+                   source_commits={'core': 'a17b27437', 'lane': '851328e6c'},
+                   source='rtl/dsrom_sys/s81_ph/dsfd_sp_collective.sv with core_rtl_defines and lane_rtl_defines; rtl/common/ot_link_credit.sv WFREE credit landing',
+                   cost='full rate; +2..3 cycles per lane/seam crossing each way; full-shape collective bench 3013 cycles vs current 3015, not a token-rate claim')
+    if source_overrides:
+        rec['per_master_source_commits'] = source_overrides
+    out = ROOT / ('physical/s81_ph_views/collective/composition_split3cr.json' if a.credit_links else 'physical/s81_ph_views/collective/composition_split3.json')
     out.write_text(json.dumps(rec, indent=1) + '\n')
     print('ok', a.contract, 'slab', SW, 'x', T.SH, 'seam B/E end x', round(xs, 3), 'seam E/T end x', round(xt, 3))
 

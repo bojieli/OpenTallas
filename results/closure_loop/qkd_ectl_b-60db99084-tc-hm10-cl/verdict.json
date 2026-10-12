@@ -1,0 +1,228 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qkd_ectl_b-60db99084-tc-hm10-cl",
+ "block": "ot_qwen_nearhbm_ectl_h",
+ "owner": "Claude:kv-die",
+ "source_branch": "claude/kv-die-20261009",
+ "record_branch": "codex/closure-record-qkd_ectl_b-60db99084-tc-hm10-cl",
+ "source_commit": "60db99084d9a361c191654aa3aba81bf19183183",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_b-60db99084-tc-hm10-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 13.15,
+  "ff_ps": 7.46,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -364.01,
+  "ss_sensitivity_tns_ps": -1034202.1,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_b-60db99084-tc-hm10-cl/routes/qkd_ectl_b_60db99084_tc_hm10_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qkd_ectl_b.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_b-60db99084-tc-hm10-cl/routes/qkd_ectl_b_60db99084_tc_hm10_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_b-60db99084-tc-hm10-cl/routes/qkd_ectl_b_60db99084_tc_hm10_cl/work/orfs/logs/asap7/opentallas_ot_qwen_nearhbm_ectl_h_asap7_qdm_qkd_ectl_b_60db99084_tc_hm10_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)\n- Verilator: Built from 1.753 MB sources in 62 modules, into 0.207 MB in 5 C++ files needing 0.000 MB\n- Verilator: Walltime 0.103 s (elab=0.025, cvt=0.030, bld=0.000); cpu 0.093 s on 1 threads; alloced 18.922 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_recut_h_exact_record": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "record check rc=0\n",
+   "track": "parallel"
+  },
+  "bench_merge_off_mutant_record": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "record check rc=1\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T08:10:46-07:00",
+ "job_spec": {
+  "name": "qkd_ectl_b-60db99084-tc-hm10-cl",
+  "block": "ot_qwen_nearhbm_ectl_h",
+  "owner": "Claude:kv-die",
+  "purpose": "kv-die re-cut H (owner rule: good physical design): the near-HBM row engine as hard sub-tiles. This job: ot_qwen_nearhbm_ectl_h (the engine control tile), variant b. Every monolithic engine route failed (-6.0 / -4.4 / -3.6 ns pre-route, D -49 ns in floorplan repair). Exact: recut_h.json (layer step through the link, 14 runs exact, mutants as expected; step 1,806).",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 160,
+  "source": {
+   "branch": "claude/kv-die-20261009",
+   "commit": "60db99084",
+   "required_files": [
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv",
+    "rtl/hdc/ot_hdc_sfu_q.sv",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "physical/qwen_die_masters/cfg/qkd_ectl_b.env",
+    "physical/qwen_die_masters/signoff/qkd_ectl_b.sdc",
+    "results/arch/qwen_kv_die_20261009/bench.json",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+    "results/arch/qwen_kv_die_20261009/recut_h.json",
+    "physical/qwen_die_masters/cfg/qkd_ectl_b.env",
+    "physical/qwen_die_masters/signoff/qkd_ectl_b.sdc"
+   ],
+   "extra_paths": [
+    "results/arch/qwen_kv_die_20261009"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_nearhbm_ectl_h rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "recut_h_exact_record",
+     "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/recut_h.json')); sys.exit(0 if d['ok'] and d['exact_all'] else 1)\" ; rc=$?; echo \"record check rc=$rc\"; exit $rc",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 1
+    },
+    {
+     "name": "merge_off_mutant_record",
+     "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/recut_h.json')); sys.exit(1 if not d['mutants']['mut2']['exact'] else 0)\" ; rc=$?; echo \"record check rc=$rc\"; exit $rc",
+     "expect": "fail",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+   },
+   "route": {
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_nearhbm_ectl_h rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qkd_ectl_b.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qkd_ectl_b {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 160
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qkd_ectl_b --post-sdc physical/qwen_die_masters/signoff/qkd_ectl_b.sdc --corners ss,tt,ff --out {RUN}/record/views/qkd_ectl_b > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qkd_ectl_b.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "current corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "no KV-die budget sheet yet; die-master kit budgets applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/qwen_kv_die_20261009/qkd_ectl_b-60db99084-tc-hm10-cl"
+   }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "KV-die element; its cycles are inside the measured layer step (reprice.json)",
+  "merge_target": "main",
+  "submit_lint": {
+   "applied": "pin_balance",
+   "env": {
+    "OT_PIN_GROUP_MAX": "32",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M5 M7",
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+   },
+   "at": "2026-10-09T22:35:43-07:00",
+   "est_as_configured": {
+    "W": 7.82,
+    "E": 7.82,
+    "N": 7.82,
+    "S": 0.02
+   },
+   "est_fix": {
+    "W": 1.51,
+    "E": 1.54,
+    "N": 3.18,
+    "S": 0.0
+   },
+   "why": "ordered pin group(s) > 200 pins (^(t_c|t_row|t_e|t_lt|t_qv|t_qb|t_qd|t_sc|t_sf|t_gf)(\\[|$) 3382, ^(req_|rsp_)[a-z_]*(\\[|$) 1041, ^(start_in|T_in|cyc8_in|q_valid_in|q_beat_in|q_data_in|exp_done|er_|sc_|lmax|nb_|k_done|v_done|fault|ev_)[a-z_0-9]*(\\[|$) 1061) fall back in the IO placer (PPL-0107) || measured pin-density failure (the estimate is a lower bound); approved automatic fix pin_balance (OT_P"
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

@@ -1,0 +1,112 @@
+{
+ "schema": "opentallas.qwen-kv-write-binary-head-pipeline.v1",
+ "default_off": true,
+ "adopted": false,
+ "model_precedes_rtl": true,
+ "models": [
+  "Qwen3-8B ROM companion KV die"
+ ],
+ "stacks_per_die": 4,
+ "replicas": {
+  "controller": 4,
+  "leaf": 128,
+  "standalone_encoder": 0
+ },
+ "macs_per_cycle": 0,
+ "compute_intensity_macs_per_byte": 0,
+ "communication_intensity_bits_per_posted_row": 1180,
+ "memory_ports": [
+  {
+   "name": "posted_row_queue",
+   "depth": 4,
+   "storage_bits": 4184,
+   "write_bytes_per_cycle": 130.75,
+   "read_bytes_per_cycle": 130.75
+  }
+ ],
+ "boundary_bits_per_cycle": {
+  "posted_row": 1048,
+  "physical_feed_per_group": 298,
+  "chain_feed_per_group": 293,
+  "done_per_group": 2,
+  "cdc_write_per_pc": 290,
+  "cdc_return_per_pc": 11
+ },
+ "routing": {
+  "controller_feed_tracks": 1200,
+  "controller_two_layer_face_capacity": 13500,
+  "leaf_chain_tracks": 295,
+  "leaf_cdc_tracks": 301,
+  "leaf_two_layer_vertical_capacity": 3825,
+  "physical_high5_lane_bits": "constant-zero pins retained, not routed to leaf",
+  "final_segment_target_um": 100,
+  "SS_reach_sensitivity_um": 504,
+  "selected_row_internal_bits_per_cycle": 1049,
+  "controller_feed_density_estimate": 0.9259259259259259
+ },
+ "replica_cost": {
+  "read_mux": "4:1 x1024 row and 4:1 x22 identity, unchanged",
+  "write_demux": "4 queue entries, unchanged",
+  "feed_data_mux": "four fixed256-bit row slices, unchanged",
+  "lane_mux": "3 bits per group from row identity; old8-bit one-hot removed",
+  "lane_fanout": 4,
+  "quarter_valid_fanout": 1,
+  "cdc_handshake_fanout": 1,
+  "head_capture_fanout": "one selected-row register per bit, feeds one quarter bank"
+ },
+ "area": {
+  "controller_slot_um": [
+   216.0,
+   648.0
+  ],
+  "leaf_slot_um": [
+   86.4,
+   183.6
+  ],
+  "control_storage_bits": 4184,
+  "controller_ff_delta": -20,
+  "analytical_ff_area_delta_um2": -5.832000000000001,
+  "removed_standalone_encoder_or2_equivalent": 144,
+  "removed_encoder_reserved_mm2": 0.029859840000000002,
+  "measured_successor_cell_area_um2": null,
+  "slot_fit": "reuse closed ctl outline; synthesis/floorplan measures actual utilization",
+  "extra_head_state_bits": 1049,
+  "extra_analytical_DFF_area_um2": 305.88840000000005,
+  "reserved_controller_area_delta_mm2": 0.20155392
+ },
+ "latency": {
+  "feed_hop_edges": 2,
+  "done_hop_edges": 1,
+  "max_leaf_hops": 7,
+  "max_feed_chain_edges": 14,
+  "max_done_chain_edges": 7,
+  "relay_forward_edges": 42,
+  "relay_return_edges": 41,
+  "posted_row_overhead_edges_vs_abutted_leaf": 104,
+  "added_controller_edges": 1,
+  "single_user_token_added_edges": 0,
+  "token_overlap_credit": "none claimed; posted writes can backpressure if credits exhaust",
+  "steady_state": "one row in flight per quarter; actual retire period must come from component trace",
+  "stage": "queue read mux -> selected-row register -> output pin flops",
+  "posted_write_cost": "one extra core edge a launched row; full component measures phase/credit effects"
+ },
+ "exact_contract": "Same sector bytes/address/tag/durable identity, binary low3 selects t[2:0]; four sectors per row",
+ "qualification": {
+  "physical": "TT setup>=0, FF hold>=0, DRC0 under unchanged1.2GHz/60ps/25ps and die budgets",
+  "exact": "full32PC HEAD_PIPE1 component and mutants, same physical298/293-bit feed contract",
+  "pinned_default": "old ctl RTL and closed views byte-identical",
+  "adoption": "exact gate and physical record plus closed-view pin/context mapping"
+ },
+ "floorplan": {
+  "die_um": [
+   8543.232,
+   24587.28
+  ],
+  "die_mm2": 210.055,
+  "edge_channel_um": 129.6,
+  "control_relay_strip_um": 518.832,
+  "overlaps": 0,
+  "outside": 0,
+  "inherited_landing_far_side": 4
+ }
+}

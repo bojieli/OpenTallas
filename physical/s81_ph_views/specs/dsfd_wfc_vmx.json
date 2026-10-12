@@ -1,7 +1,7 @@
 {
  "master": "dsfd_wfc_vmx",
- "w_um": 291.6,
- "h_um": 280.8,
+ "w_um": 345.6,
+ "h_um": 324.0,
  "domain": "stream_1p2+serial_0p9",
  "note": "WFC VM / core transport: W = the WFC (VM write, VM read, read data; abutting, fixed one-edge read), E = sp_vm (0.9 GHz write / read), N = the WFC core start / done + VM credit, S = stage core (0.9 GHz) + clocks",
  "ports": [
@@ -70,12 +70,12 @@
   ],
   [
    "f_srq",
-   513,
+   1026,
    "input",
    "E",
    "M4",
    3,
-   0.74
+   0.75
   ],
   [
    "f_cs",
@@ -133,7 +133,7 @@
   ],
   [
    "t_srd",
-   15,
+   31,
    "output",
    "S",
    "M5",

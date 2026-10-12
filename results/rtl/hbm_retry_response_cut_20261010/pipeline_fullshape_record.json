@@ -1,0 +1,30 @@
+{
+  "source_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/common/ot_secded_dec_dp.sv": "ca99060a11aaa3f9fe3b39e06fb8ac316e9abc3341eb167844db7f058f5e6048",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv": "5d8084182a2c67c5e5a943a05cf9e8b5251f03e8454e5be12b20a3adafae6033",
+    "rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv": "2f4453c8652c6f74ec120186ac4d55703e2a91c277e7fe8d95c53a3ae2a7dd4c",
+    "rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_link_retry_pipeline.sv": "3dd01cd7c51bba95caa7c0f1da671edbcd1601e54cced3896d43c88b495dd260"
+  },
+  "gates": [
+    {
+      "name": "positive",
+      "negative_control": false,
+      "pass_gate": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "duplicate_mutant",
+      "negative_control": true,
+      "pass_gate": true,
+      "build_exit": 0,
+      "run_exit": 1
+    }
+  ],
+  "exactness_gate": "PASS",
+  "physical_qualified": false,
+  "die_integrated": false
+}

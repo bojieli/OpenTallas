@@ -1913,6 +1913,17 @@ def floorplan_extra_lines(floorplan: dict[str, Any] | None) -> list[str]:
     return lines
 
 
+def ot_tt_lib_override(config: list[str]) -> list[str]:
+    """LOOP-LVT (2026-10-10): option B makes corner WC read TT via `export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)`,
+    but the asap7 platform config.mk (included AFTER the design config) then appends every OTHER_VT's libraries with
+    `WC_NLDM_LIB_FILES += $(subst PLACEHOLDER,<vt>,$(WC_NLDM_LIB_FILES_T))` -- the SS template -- so an
+    ASAP7_USE_VT='RVT LVT[ SLVT]' route repaired setup against LVT/SLVT SS cells.  The template cannot be overridden
+    from the design config (the platform re-assigns it); `override` makes the platform's later `+=` a no-op, and
+    $(TC_NLDM_LIB_FILES) already holds every VT's TT libraries.  RVT-only routes: same value, unchanged."""
+    return [("override " + line) if re.fullmatch(r"export WC_NLDM_LIB_FILES\s*=\s*\$\(TC_NLDM_LIB_FILES\)\s*", line)
+            else line for line in config]
+
+
 def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
     """Opt-in flow fixes chained after the block's own PRE_CTS hook (setup-triage 2026-10-07).
 
@@ -1967,17 +1978,50 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
     terminal must match EXACTLY ONE region regex, else the floorplan errors out.
     A prefix written '^(x_|go)(\\[|$)' matches only a port named 'x_', so the
     x_* bus went unconstrained while 'go' kept the region non-empty."""
+    # BUS-AWARE (drive-1010 2026-10-10): a regex written for a bus BASE name ('^(a|b)$') silently missed every bit
+    # 'a[3]' -- ot_gpu_rf_visibility_fence_p left 4,105 pins without a face.  A pattern now matches a terminal when it
+    # matches its full name OR its bus base name (trailing [n] stripped; a scalar and a bus can never share a base),
+    # and every pin-region run checks that no bus is left partly assigned (ot_check_bus_complete, always on).
+    # ESCAPED BITS (hgi-1010 2026-10-11): a netlist whose top ports were bit-blasted to escaped scalars
+    # ('\\out_data[5] ', the W11 endpoint netlist) loads into odb as the terminal name 'out_data\\[5\\]' (OpenROAD
+    # keeps the escape on the brackets; PPL prints 'in_data\\[997\\]').  Neither the full name nor ot_pin_base (whose
+    # '[n]$' needs a bare ']') then matched a bit-indexed region such as '^(out_data\\[(...)\\])$', so
+    # w2-rb-safe-no3-nesw-43c045555 failed 'matches no port', and ot_check_bus_complete skipped every such bus.  Names
+    # are now compared in their plain bus spelling (ot_pin_plain); the escaped odb name is still what is placed.
     lines = [
         "# Written by tools/run_abi3_physical.py --pin-region.",
+        "proc ot_pin_plain {name} { return [string map {\\\\\\[ \\[ \\\\\\] \\]} $name] }",
+        "proc ot_pin_base {name} { regsub {\\[[0-9]+\\]$} [ot_pin_plain $name] {} base; return $base }",
+        "proc ot_pin_matches {pattern name} {",
+        "  return [expr {[regexp -- $pattern $name] || [regexp -- $pattern [ot_pin_plain $name]] ||",
+        "                [regexp -- $pattern [ot_pin_base $name]]}]",
+        "}",
         "proc ot_match_pins {pattern} {",
         "  set names {}",
         "  foreach bterm [[ord::get_db_block] getBTerms] {",
         "    set name [$bterm getName]",
-        "    if {[regexp -- $pattern $name]} { lappend names $name }",
+        "    if {[ot_pin_matches $pattern $name]} { lappend names $name }",
         "  }",
         "  if {[llength $names] == 0} { error \"--pin-region $pattern matches no port\" }",
         "  return [lsort -dictionary $names]",
         "}",
+        "proc ot_check_bus_complete {patterns} {",
+        "  array set hit {}; array set all {}",
+        "  foreach bterm [[ord::get_db_block] getBTerms] {",
+        "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
+        "    set name [$bterm getName]",
+        "    set base [ot_pin_base $name]",
+        "    if {$base eq [ot_pin_plain $name]} { continue }",
+        "    incr all($base)",
+        "    foreach p $patterns { if {[ot_pin_matches $p $name]} { incr hit($base); break } }",
+        "  }",
+        "  set bad {}",
+        "  foreach base [array names hit] { if {$hit($base) != $all($base)} { lappend bad \"$base:$hit($base)/$all($base)\" } }",
+        "  if {[llength $bad] > 0} {",
+        "    error \"--pin-region leaves bus bits unassigned (bus:assigned/bits): [lrange [lsort $bad] 0 23]\"",
+        "  }",
+        "}",
+        "ot_check_bus_complete [list " + " ".join("{" + r["regex"] + "}" for r in pin_regions) + "]",
     ]
     if exhaustive:
         pats = " ".join("{" + r["regex"] + "}" for r in pin_regions)
@@ -1988,7 +2032,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
             "    set name [$bterm getName]",
             "    set n 0",
-            "    foreach p $patterns { if {[regexp -- $p $name]} { incr n } }",
+            "    foreach p $patterns { if {[ot_pin_matches $p $name]} { incr n } }",
             "    if {$n != 1} { lappend bad \"$name:$n\" }",
             "  }",
             "  if {[llength $bad] > 0} {",
@@ -2429,6 +2473,7 @@ def run_pnr(
     if endpoint_netlist:
         config.append("export SYNTH_NETLIST_FILES = /work/w11_endpoint_mapped.v")
     config = apply_cts_fix_hooks(config, case)
+    config = ot_tt_lib_override(config)
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
         (case / "io_constraints.tcl").write_text(

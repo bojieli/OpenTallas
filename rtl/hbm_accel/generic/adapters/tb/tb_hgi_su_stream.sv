@@ -13,6 +13,7 @@ module tb_hgi_su_stream #(parameter integer MUTR = 0);
         $readmemh({dir, "/ss_case.mem"}, casem); $readmemh({dir, "/ss_stream.mem"}, strm); $readmemh({dir, "/ss_vm.mem"}, vmm);
     end
     integer errors = 0, cyc = 0, seed = 9; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 9; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg rst_n = 0; reg [2196:0] sur; reg su_v = 0; reg [682:0] amr = 0; reg [7:0] rank = 0;
 `ifdef PUB
     // the SM side: 32 SM result ports (rows in order per SM, random gaps) -> ot_hgi_sm_pub STREAM mode -> stream 0
@@ -21,7 +22,7 @@ module tb_hgi_su_stream #(parameter integer MUTR = 0);
     reg pub_v = 0; wire pub_rdy, pub_done, pub_fault; reg [12:0] pq = 0; reg [19:0] pm = 0;
     reg [NSM-1:0] sm_rv = 0; reg [NSM*12-1:0] sm_rrow = 0; reg [NSM*8*32-1:0] sm_rdata = 0;
     ot_hgi_sm_pub #(.NSM(NSM), .NC(8), .NPC(1), .MUT_ROW(MUTR)) u_pub (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
-        .pub_base(40'd0), .pub_stride(32'd0), .pub_space(2'd2), .pub_m(pm), .pub_q(pq), .pub_p(4'd1),
+        .pub_base(40'd0), .pub_stride(32'd0), .pub_space(2'd2), .pub_m(pm), .pub_q(pq), .pub_p(4'd1), .pub_bf16(1'b0),
         .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(),
         .vmr(274'd0), .s0_v(s0_v), .s0_idx(s0_idx), .s0_data(s0_data));
     reg [31:0] logit [0:65535]; integer bchk = 0, rmask = 63;
@@ -36,7 +37,17 @@ module tb_hgi_su_stream #(parameter integer MUTR = 0);
 `endif
     wire su_rdy, su_done, su_fault, su_halt; wire [522:0] ams; wire am_rdy; wire [2:0] am_ret; wire nan_flag;
     wire [337:0] sq, aq; wire [273:0] sr, ar, tr; reg [337:0] tq = 0;
-    ot_hgi_su_unit #(.N(32), .M(8), .LV(7)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(su_v), .rec_rdy(su_rdy),
+    ot_hgi_su_unit #(
+`ifdef MUT_LAT
+    .MUT_LAT(`MUT_LAT),
+`endif
+`ifdef SU_BEH
+    .MACRO(0),
+`endif
+`ifdef NO_PAYLOAD_RST
+    .PAYLOAD_RESET(0),
+`endif
+.N(32), .M(8), .LV(7)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(su_v), .rec_rdy(su_rdy),
         .rec_hdr(sur[127:0]), .rec_sut(sur[383:128]), .rec_a(sur[639:384]), .rec_b(sur[895:640]), .rec_c(sur[1151:896]),
         .rec_d(sur[1407:1152]), .rec_o(sur[1663:1408]), .rec_r(sur[1919:1664]), .rec_i(sur[2175:1920]),
         .rec_n_a(sur[2196:2176]), .rec_done(su_done), .rec_fault(su_fault), .halted(su_halt), .vmq(sq), .vmr(sr),

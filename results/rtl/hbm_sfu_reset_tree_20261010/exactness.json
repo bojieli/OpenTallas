@@ -1,0 +1,14 @@
+{
+ "source_commit": "5fbc10b08ac62462508bc05b530cb4026ee65061",
+ "top": "ot_su12_sfu",
+ "parameter": {"RSTPIPE": 1, "GSH": 1, "KIMM": 1, "DENR": 1, "DRING": 3},
+ "bench": "tests/rtl/hub_reset/tb_sfu_reset_tree.sv",
+ "cycles": 1500,
+ "reset_hold_cycles": 12,
+ "post_release_idle_cycles": 8,
+ "exactness": "PASS",
+ "negative_control": "never release candidate reset",
+ "negative_verdict": "FAIL",
+ "negative_mismatches": 246,
+ "scope": "Full SFU lane output validity and data compared at every active cycle, repeated reset windows. Physical qualification and emitted macro timing remain open."
+}

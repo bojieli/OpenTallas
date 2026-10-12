@@ -1,0 +1,93 @@
+{
+  "wiring_gate": "PASS vectors512 fullwidth545 halves2",
+  "wrong_lane_mutant": "REJECTED PORT2_TILES_WIRING_MISMATCH iteration0",
+  "qualification": "symbolic leaf vehicle validates only terminal composition; actual SRAM/ECC transaction gate remains required",
+  "binding_gate": "PENDING_HALF_CLOSURE RUNNING",
+  "model": {
+    "schema": "opentallas.hcoll.port2_tiles.v1",
+    "adopted": false,
+    "parent": "ot_hcoll_port2",
+    "successor": "ot_hcoll_port2_tiles",
+    "half_source": "3b90d75fa113add3ab6b8f1d21e58a18e6b1b206",
+    "half_job": "hgi-coll-port-secded-3b90d75fa-pd50-fc-tc-cl",
+    "half_master": "ot_hcoll_port",
+    "half_parameters": {
+      "PAYLOAD_ECC": 1,
+      "FACE_CK": 1
+    },
+    "full_shape": {
+      "PWT": 545,
+      "QAW": 7,
+      "RXAW": 8,
+      "WSTG": 14,
+      "K": 8,
+      "SWCRED": 256
+    },
+    "macro_count": {
+      "halves": 2,
+      "SRAM_per_half": 18,
+      "total_SRAM": 36
+    },
+    "compute": {
+      "MACs_per_cycle": 0,
+      "arithmetic_delta": 0
+    },
+    "memory_bytes_per_cycle": {
+      "per_half_read_capacity": 576,
+      "per_half_write_capacity": 576
+    },
+    "boundary_bits_per_cycle": {
+      "input_payload": 3270,
+      "output_payload": 2180,
+      "seam": 0,
+      "added_status": 6,
+      "added_face_clock": 2
+    },
+    "replica_cost": {
+      "half_replicas": 2,
+      "mux_bits": 0,
+      "demux_bits": 0,
+      "fanout_delta": 0,
+      "added_payload_FF": 0
+    },
+    "routing": {
+      "seam_tracks": 0,
+      "half_clock_pins": 2,
+      "half_face_clock_pins": 2,
+      "signal_crossings_between_halves": 0,
+      "half_channel_lint": "required on source-pinned closed half"
+    },
+    "area": {
+      "half_um": [
+        480,
+        540
+      ],
+      "seam_keepout_um": 24,
+      "composite_um": [
+        984,
+        540
+      ],
+      "composite_um2": 531360,
+      "half_um2": 259200,
+      "macro_density_reduction": "two independent 18-SRAM regions"
+    },
+    "latency": {
+      "partition_added_cycles": 0,
+      "partition_added_token_ns": 0,
+      "protected_half_latency": "inherit calibrated source gate/model; no legacy0cycle claim for protection changes"
+    },
+    "historical_semantics": {
+      "old_pair": "PAYLOAD_ECC absent; fault-free payload only; one interior clock",
+      "new_half": "corrects single payload bit; rejects UE, exports CE and two simultaneous RXdrop count; face-clock RX capture",
+      "address_mapping": "all queue depths/widths/consumer credits and h*545+:545 lane order retained"
+    },
+    "adoption_gate": [
+      "same source-pinned half TT/FF/DRC closure for both instances",
+      "universal wiring/clock-credit lane mapping gate and mutant",
+      "live half payload FIFO/port CE+UE benches and mutants",
+      "real half abstract dimensions/ports validated",
+      "composite placement and die-level seam/clock binding lint"
+    ],
+    "no_duplicate_half_route": true
+  }
+}

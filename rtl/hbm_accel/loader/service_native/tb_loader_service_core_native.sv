@@ -22,14 +22,14 @@ module tb_loader_service_core_native;
  .rd_v(rd_v),.rd_rdy(rd_rdy),.rd_pc(rd_pc),.rd_addr(rd_addr),.rd_tag(rd_tag),
  .rd_rsp_v(rd_rsp_v),.rd_rsp_rdy(rd_rsp_rdy),.rd_rsp_pc(rd_rsp_pc),.rd_rsp_tag(rd_rsp_tag),.rd_rsp_beat(rd_rsp_beat),.rd_rsp_data(rd_rsp_data),
  .service_fault(native_fault||wq_source_fault),.busy(endpoint_busy),.fault(endpoint_fault));
- ot_hbm_svc_core_native #(.NATIVE(1),.WB(1),.WB_SOURCE_ACK(1),.KVS(1),.XST(0),.WQ_ST(1))service(
+ ot_hbm_svc_core_native #(.NATIVE(1),.NATIVE_CHAIN(0),.WB(1),.WB_SOURCE_ACK(1),.KVS(1),.XST(0),.WQ_ST(1))service(
  .ck(clk),.rst(rst_n),.q_d(336'b0),.q_v(8'b0),.q_fclk(8'b0),.e_d(128'b0),.e_fclk(1'b0),
  .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.k_we(k_we),.k_wdata(k_wdata),.k_wstrb(k_wstrb),
  .kr_v(kr_v),.kr_rdy(kr_rdy),.kr_tag(kr_tag),.kr_beat(kr_beat),.kr_data(kr_data),
  .w_rdy(1'b1),.w_room(8'hff),.wr_v(8'b0),.wr_tag(80'b0),.wr_beat(40'b0),.wr_data(2048'b0),
  .wq_d({wr_packet,wr_v}),.wq_fclk(clk),.wq_source(2'd2),.wq_source_g(wq_source_g),.wq_source_fault(wq_source_fault),.wq_source_busy(wq_source_busy),.wq_pending(wq_pending),.k_wr_done(k_wr_done),.phy_rst_n(phy_rst_n),
  .outer_write_pending(endpoint_busy&&req_we&&!rsp_v),
- .native_v(rd_v),.native_rdy(rd_rdy),.native_pc(rd_pc),.native_addr(rd_addr),.native_tag(rd_tag),
+ .native_v(rd_v),.native_rdy(rd_rdy),.native_pc(rd_pc),.native_addr(rd_addr),.native_tag(rd_tag),.native_len(4'd1),
  .native_rsp_v(rd_rsp_v),.native_rsp_rdy(rd_rsp_rdy),.native_rsp_pc(rd_rsp_pc),.native_rsp_tag(rd_rsp_tag),.native_rsp_beat(rd_rsp_beat),.native_rsp_data(rd_rsp_data),.native_fault(native_fault));
  // Actual refresh-aware controller timing and backing memory, minimum one stack.
  ot_hdc_v41x_idx_hbm #(.NPC(32),.AW(30),.DW(256),.MEM_WORDS(1024),.TAGW(17),.LENW(4),.BEATW(4),.QD(64),.REFPB(3),.MEM_MODE(0))phy(

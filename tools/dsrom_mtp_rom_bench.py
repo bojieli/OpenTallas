@@ -32,7 +32,8 @@ M = "rtl/dsrom_sys/mtp"
 TRACES = "results/rtl/dshbm_dspark_rtl_20261003/traces"
 COMMON = [f"{M}/ot_dsrom_mtp_skid.sv", f"{M}/ot_dsrom_mtp_link_pair.sv", f"{M}/ot_dsrom_mtp_seq.sv", f"{M}/ot_dsrom_wfc_tok.sv", f"{M}/ot_dsrom_wfc_lnk.sv",
           f"{M}/ot_dsrom_wfc_vmx.sv", f"{M}/ot_dsrom_drf_fan.sv", f"{M}/dsfd_mtp_tops.sv", "rtl/common/ot_ratio_cdc_fifo.sv",
-          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv", "rtl/link/ot_fifo_sram_fwft.sv",   # vmx RQ x RWE > 32 kbit -> SRAM queue
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
           "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"]
 
 
@@ -86,6 +87,23 @@ def cases():
     c["prd_s0_neg_predoff"] = dict(c["s0_tr_forced"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF"], expect="fail")
     c["prd_stg_neg_predoff"] = dict(c["stg_r1"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF"], expect="fail")
     c["prd_s0_neg_predoff_nochk"] = dict(c["s0_tr_forced"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF", "OT_WFCVMX_MUT_NOPCHK"], expect="fail")
+    # mtp-head-1010 2026-10-10: native binding at the head die's actual relay chains (tb_mtp_rom_s0_rtt): the RTT-aware
+    # sequencer dsfd_mtp_seq_rtt passes and the sequencer's own mutant fails
+    rtt = dict(tb="tb_mtp_rom_s0_rtt", extra=[f"{M}/ot_dsrom_mtp_link_rtt.sv", f"{M}/dsfd_mtp_seq_rtt.sv"])
+    for tr in ("tr_dspark", "tr_forced"):
+        c[f"rtt_s0_{tr}"] = dict(rtt, trace=tr, params=dict(MODE=0, NUSR=2))
+    c["rtt_s0_hash_u3"] = dict(rtt, params=dict(MODE=1, NUSR=3, NGEN_H=48, RHO=70, SEED=3))
+    c["rtt_s0_hash_u1_fast"] = dict(rtt, params=dict(MODE=1, NUSR=1, NGEN_H=60, RHO=95, SEED=5, T_DRAFT=120, T_HEAD=8))
+    # (the receiver stress negatives -- legacy history / short RTT overflow -- are tools/mtp_seq_rtt_link_gate.py: this
+    #  system traffic never stalls a receiver with flits in flight, so a short history passes here; measured 2026-10-10)
+    c["rtt_s0_neg_off1"] = dict(rtt, trace="tr_forced", params=dict(MODE=0, NUSR=1), defines=["OT_MTPSEQ_MUT_OFF1"], expect="fail")
+    # mtp-fixlat-1011: the same system with the capture / VM slab ends as RTL (dsfd_cap_mtp_ep / dsfd_vm_mtp_ep,
+    # OT_MTP_PARTNER_EP) at the head631 chains; their stalled-receiver negatives are tools/mtp_fixlat_gate.py pep_*
+    ep = dict(tb="tb_mtp_rom_s0_rtt", extra=rtt["extra"] + [f"{M}/dsfd_mtp_partner_ep.sv"])
+    for tr in ("tr_dspark", "tr_forced"):
+        c[f"ep_s0_{tr}"] = dict(ep, trace=tr, params=dict(MODE=0, NUSR=2), defines=["OT_MTP_PARTNER_EP"])
+    c["ep_s0_hash_u3"] = dict(ep, params=dict(MODE=1, NUSR=3, NGEN_H=48, RHO=70, SEED=3), defines=["OT_MTP_PARTNER_EP"])
+    c["ep_s0_neg_off1"] = dict(ep, trace="tr_forced", params=dict(MODE=0, NUSR=1), defines=["OT_MTP_PARTNER_EP", "OT_MTPSEQ_MUT_OFF1"], expect="fail")
     for k in c:
         c[k].setdefault("expect", "pass")
     return c
@@ -97,7 +115,7 @@ def run_case(name, spec, out: Path):
     rec = dict(case=name, expect=spec["expect"], params=spec.get("params", {}), defines=spec.get("defines", []))
     if "trace" in spec:
         rec["trace"] = trace_hex(ROOT / TRACES / f"{spec['trace']}.cfg.json", d / "trace.hex")
-    srcs = [str(ROOT / s) for s in COMMON] + [str(ROOT / M / "tb" / f"{spec['tb']}.sv")]
+    srcs = [str(ROOT / s) for s in COMMON + spec.get("extra", [])] + [str(ROOT / M / "tb" / f"{spec['tb']}.sv")]
     cmd = ["iverilog", "-g2012", "-s", spec["tb"], "-o", str(d / "sim.vvp")]
     cmd += [f"-D{x}" for x in spec.get("defines", [])]
     cmd += [f"-P{spec['tb']}.{k}={v}" for k, v in spec.get("params", {}).items()]
@@ -108,7 +126,7 @@ def run_case(name, spec, out: Path):
         return rec
     r = subprocess.run(["vvp", "-n", str(d / "sim.vvp")], capture_output=True, text=True, cwd=d)
     (d / "run.log").write_text(r.stdout + r.stderr)
-    tag = {"tb_mtp_rom_s0": "MTP_S0", "tb_mtp_rom_stg": "MTP_STG", "tb_mtp_rom_tok": "MTP_TOK",
+    tag = {"tb_mtp_rom_s0": "MTP_S0", "tb_mtp_rom_s0_rtt": "MTP_S0", "tb_mtp_rom_stg": "MTP_STG", "tb_mtp_rom_tok": "MTP_TOK",
            "tb_mtp_rom_fan": "MTP_FAN"}[spec["tb"]]
     m = re.search(rf"^{tag} (PASS|FAIL).*$", r.stdout, re.M)
     got = m.group(1).lower() if m else "nolog"

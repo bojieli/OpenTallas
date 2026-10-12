@@ -11,7 +11,7 @@
 // registered reset (async assert, 2-flop release, rn); (2) cmd lands in a registered station before it fans out to the
 // 1,024 lane / header / descriptor registers (+1 cycle a record); (3) the shape check's span multiplies are registered
 // before the compares (validation 2 cycles, +1 a record).  Added: +2 cycles a record (r3: +2 more, a 4-stage shape check), no other change.
-module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
+module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0, SERIAL_SHAPE=0)(
  input wire clk,rst_n,input wire [1408:0] cmd,
  output wire ready,output reg done,output reg fault,output wire drained,
  output wire req_v,input wire req_r,output wire [336:0] req,
@@ -27,6 +27,11 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [127:0] incoming_header=cq[1+:128];
  wire [255:0] ca=cq[385+:256],co=cq[1153+:256];
  reg [255:0] a,o;reg validating; reg val2, val3, val4; reg [63:0] aspan_q,ospan_q;
+ // Optional exact serial span arithmetic: no multiplier sits on one clock path.
+ reg shape_active, val_sum; reg [4:0] shape_bit;
+ reg [63:0] ar_acc,ac_acc,or_acc,oc_acc;
+ reg [63:0] ar_mc,ac_mc,or_mc,oc_mc;
+ reg [19:0] ar_count,ac_count,or_count,oc_count;
  wire [127:0] ch=header;
  reg busy,bad;
  reg seat_v;reg [336:0] seat;
@@ -99,7 +104,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire reply_ok=response[272:257]==d_tag && response[256]==d_we;
  // staging the next request (the seat is free, or is being taken this cycle) while fewer than 4 are in flight
  // (req_r is NOT in this cone: the boundary stays registered -- a seat is restaged the cycle after it is taken)
- wire stage=busy&&!validating&&!val2&&!val3&&!val4&&!bad&&!launch&&(write_offer||read_offer)&&!seat_v&&pd_n<3'd4;
+ wire stage=busy&&!validating&&!val_sum&&!val2&&!val3&&!val4&&!bad&&!launch&&(write_offer||read_offer)&&!seat_v&&pd_n<3'd4;
  wire s_last_read=!write_offer&&(read_part+offer_step==32 || read_col+offer_step==n);
  wire s_last_write=write_offer&&(write_part+offer_step==32 || write_col+offer_step==n);
  wire s_final=s_last_write&&write_row+1==m&&write_col+offer_step==n;
@@ -109,6 +114,10 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [PW-1:0] tail_next=tail==DEPTH-1?0:tail+1;
  always @(posedge clk or negedge rn)begin
   if(!rn)begin
+   shape_active<=0;val_sum<=0;shape_bit<=0;
+   ar_acc<=0;ac_acc<=0;or_acc<=0;oc_acc<=0;
+   ar_mc<=0;ac_mc<=0;or_mc<=0;oc_mc<=0;
+   ar_count<=0;ac_count<=0;or_count<=0;oc_count<=0;
    cq_v<=0;cq<=0;val2<=0;val3<=0;val4<=0;aspan_q<=0;ospan_q<=0;orow_q<=0;
    fields_q<=0;same_q<=0;nalias_q<=0;shape_q<=0;aend_q<=0;oend_q<=0;
    a<=0;o<=0;validating<=0;busy<=0;bad<=0;seat_v<=0;seat<=0;response_v<=0;response<=0;header<=0;n<=0;m<=0;
@@ -132,9 +141,30 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;
     reserved<=0;queued<=0;head<=0;tail<=0;
    end
-   if(busy&&validating)begin                  // validation 1: the span products
-    validating<=0;val2<=1;
-    aspan_q<=aspan;ospan_q<=ospan;orow_q<=(o[67:48]-20'd1)*{16'd0,oir};
+   if(busy&&validating)begin
+    if(!SERIAL_SHAPE)begin                 // historical parallel product vehicle
+     validating<=0;val2<=1;
+     aspan_q<=aspan;ospan_q<=ospan;orow_q<=(o[67:48]-20'd1)*{16'd0,oir};
+    end else if(!shape_active)begin         // operand station; invalid zero shapes still reject in fields_ok
+     shape_active<=1;shape_bit<=0;
+     ar_acc<=0;ac_acc<=0;or_acc<=0;oc_acc<=0;
+     ar_mc<={32'd0,a[119:88]};ac_mc<={48'd0,air};
+     or_mc<={32'd0,o[119:88]};oc_mc<={48'd0,oir};
+     ar_count<=a[87:68]-20'd1;ac_count<=a[67:48]-20'd1;
+     or_count<=o[87:68]-20'd1;oc_count<=o[67:48]-20'd1;
+    end else begin                        // four parallel, one-add-per-edge unsigned products
+     ar_acc<=ar_acc+(ar_count[0]?ar_mc:64'd0);
+     ac_acc<=ac_acc+(ac_count[0]?ac_mc:64'd0);
+     or_acc<=or_acc+(or_count[0]?or_mc:64'd0);
+     oc_acc<=oc_acc+(oc_count[0]?oc_mc:64'd0);
+     ar_mc<=ar_mc<<1;ac_mc<=ac_mc<<1;or_mc<=or_mc<<1;oc_mc<=oc_mc<<1;
+     ar_count<=ar_count>>1;ac_count<=ac_count>>1;or_count<=or_count>>1;oc_count<=oc_count>>1;
+     shape_bit<=shape_bit+1'b1;
+     if(shape_bit==19)begin shape_active<=0;validating<=0;val_sum<=1;end
+    end
+   end
+   if(busy&&val_sum)begin                  // no product-to-sum combinational chain
+    val_sum<=0;val2<=1;aspan_q<=ar_acc+ac_acc;ospan_q<=or_acc+oc_acc;orow_q<=oc_acc;
    end
    if(busy&&val2)begin                        // validation 2: field checks, end addresses
     val2<=0;val3<=1;
@@ -146,7 +176,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
     val4<=0;
     if(!shape_q)begin bad<=1;fault<=1;busy<=0;done<=1;end
    end
-   if(busy&&!validating&&!val2&&!val3&&!val4)begin
+   if(busy&&!validating&&!val_sum&&!val2&&!val3&&!val4)begin
     if(take_req&&!stage)seat_v<=0;
     if(bad)seat_v<=0;
     if(provider_fault||decode_fault)begin bad<=1;fault<=1;end

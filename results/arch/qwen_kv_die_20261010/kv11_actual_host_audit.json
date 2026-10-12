@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.qwen-kv11-hourly-actual-host.v1",
+ "audited_at": "2026-10-10T06:06:25.449435-07:00",
+ "host": "ot-epyc1tb",
+ "source_commit": "f8a6d7c30",
+ "run": "/srv/opentallas-scratch/claude/kv-die/die_kv11",
+ "live_pid": null,
+ "classification": "COMPLETED_WITH_PHYSICAL_AND_STA_FAILURES_NOT_STALLED",
+ "chain_done_pt": "2026-10-10 05:36:18 PDT",
+ "real_case": {
+  "instances": 1171,
+  "overlaps": 0,
+  "outside": 0,
+  "assertions": "PASS",
+  "pin_access": "PASS"
+ },
+ "pdn": {
+  "generation_exit": 0,
+  "VDD": "PASS",
+  "VSS": "FAIL PSM-0069"
+ },
+ "grt": {
+  "exit": 0,
+  "overflow": 0,
+  "wirelength_um": 479515267,
+  "seconds": 529.5,
+  "peak_rss_mb": 25229,
+  "spef_written": false,
+  "spef_error": "RCX-0134: no extraction data"
+ },
+ "sta": {
+  "tt_exit": 1,
+  "ff_exit": 1,
+  "error": "OT_STEP_FAIL spef missing; read_guides has no wire RC"
+ },
+ "closure": false,
+ "preserved": true,
+ "restarted": false
+}

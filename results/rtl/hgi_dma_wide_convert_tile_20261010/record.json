@@ -1,0 +1,74 @@
+{
+  "verdict": "PASS",
+  "scope": "minimumconverterquad actual8protectedbanks16SRAMmacros, not wholearray or physicalclosure",
+  "golden_commit": "da91f525e",
+  "golden_path": "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv",
+  "golden_function_sha256": {
+    "i8_f": "af06c865f735c7c8593c05c094c50e81b5fab16ba02bcb6e1879d4355c2e6374",
+    "e4m3_f": "aa45a45909d83a5f0c2c942f04dde7467094fc7447cd3f391aa44b14581212f2",
+    "conv": "06cf41df8ae3a09f861864084b811b6a1b5d4c95e3afb7d56c7a3d2a5ceea748"
+  },
+  "primitive_commit": "59a9e0b4f",
+  "transactions": {
+    "output_pieces": 126,
+    "max_pieces_per_cycle": 4,
+    "formats": [
+      "FP32raw",
+      "BF16expand",
+      "E4M3golden"
+    ],
+    "E4M3_all_encodings": 256,
+    "input_slots": 4,
+    "local_logical_banks": 4,
+    "physical_banks": 8,
+    "real_SRAMs": 16,
+    "registered_outputs_held_under_stalls": true,
+    "actual_commit_ack_cycle_check": 4,
+    "wrap": "sector511+pieces1..3,sector1023+pieces1/3",
+    "malformed": [
+      "format3",
+      "pieceoutsideK",
+      "sector+joverflow18",
+      "wrongtargettile"
+    ],
+    "raw_control_mirror_fault": "publication/admission failclosed"
+  },
+  "latency": {
+    "raw_accept_to_bank_accept_min_elapsed": 2,
+    "raw_accept_to_held_output_elapsed": 1,
+    "actual_commit_ACK_total_min_elapsed": 6
+  },
+  "model_composition": {
+    "fullshape_converter_tiles": 128,
+    "total_logicalbanks": 512,
+    "total_physicalbanks": 1024,
+    "total_macros": 2048,
+    "raw_packets_per_tile_cycle_roof": 4,
+    "local_sector_outputs_per_tile_cycle_roof": 4,
+    "unqualified": "globalrouter scheduling/congestion/90percentBW stillrequiresactualmeasurement"
+  },
+  "negative_controls": {
+    "1": "wrongpiece -> CONVERT_EXACT_OR_DUP",
+    "2": "wrongformat -> CONVERT_EXACT_OR_DUP",
+    "3": "earlyrawrelease -> CONVERT_DROP121/122"
+  },
+  "default_ENABLE": 0,
+  "physical_admitted": false,
+  "HBM90pct_proven": false,
+  "adopted": false,
+  "files": {
+    "lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run1.log": "c2006137becf159b4f33251d0cac054d1d5c6c3299422cd31bab84f36867db33",
+    "build3.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run3.log": "caa19c53ac31a4d9a82c83d365ad86a3f15e82f284ae5b636b8bff103a9bad80",
+    "run_gate.py": "2f1b4926862d29ed3bc5a26a65e9267e9b8cfa4336e694431a69a19ee97f6a79",
+    "run0.log": "f9c442832fbbd4bf4c8e827580c0c81a6aa3ec7e3422acda18e9bf59f0065db0",
+    "initial_width_lint.log": "b91d273b58fbbb5a973fc237788f9c3dd8e40438125d81225d5221a807d1ae84",
+    "build2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_record.json": "720f7a310aeeca6516269b28e107933cfc66c4149b09464e649ac1bf60e190f4",
+    "run2.log": "c2006137becf159b4f33251d0cac054d1d5c6c3299422cd31bab84f36867db33",
+    "build1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model_before_rtl.json": "4ba3cc6b1f97b9c280daaa8cd0da40b1f22899b414f7bc569b118e5bc90616e5"
+  }
+}

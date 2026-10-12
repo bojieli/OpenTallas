@@ -16,15 +16,36 @@ module tb_hgi_fused_unit;
         $readmemh({dir, "/fu_vmi.mem"}, vmim); $readmemh({dir, "/fu_vme.mem"}, vmem); $readmemh({dir, "/fu_hbm.mem"}, hbmm);
     end
     integer errors = 0, cyc = 0, seed = 3; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 3; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg rst_n = 0; reg [1214:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted, mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
     wire [337:0] fq, mq; wire [273:0] fr, mr, tr; reg [337:0] tq = 0;
-    ot_hgi_fused_record #(.UNIT(1)) u (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'd240000), .rec_v(rec_v),
+    wire [32*16-1:0] rq; wire [31:0] rq_cr, w2_cr, w2_done; wire [32*257-1:0] rr; wire [32*280-1:0] w2q;   // WIDE lanes
+    ot_hgi_fused_record #(
+`ifdef NO_PAYLOAD_RST
+    .PAYLOAD_RESET(0),
+`endif
+.UNIT(1)
+`ifdef SCRW
+    , .SCR_WORDS(`SCRW)
+`endif
+`ifdef WIDE
+    , .UWIDE(1), .ULWB(18)
+`endif
+`ifdef UN
+    , .UN(`UN), .UM(`UM)
+`endif
+    ) u (.clk(clk), .rst_n(rst_n), .cfg_scratch(18'd240000), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]),
         .rec_o(cur[1151:896]), .rec_n_a(cur[1172:1152]), .rec_n_b(cur[1193:1173]), .rec_n_o(cur[1214:1194]),
         .rec_done(done), .rec_fault(fault), .halted(halted), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
         .mv_fault(mv_fault), .op_v(), .op_rdy(1'b0), .op_w(), .su_idle(1'b1), .su_fault(1'b0), .vmq(fq), .vmr(fr),
-        .ne_v(), .ne_rdy(1'b1), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(), .q_done(1'b0), .q_fault(1'b0));
+        .ne_v(), .ne_rdy(1'b1), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(), .q_done(1'b0), .q_fault(1'b0)
+`ifdef WIDE
+        , .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(w2q), .wwq_cr(w2_cr), .wwq_done(w2_done),
+        .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1)
+`endif
+        );
     wire k_req_v, k_req_we, k_rsp_rdy; reg k_req_rdy = 0, k_rsp_v = 0, k_rsp_we = 0; reg [255:0] k_rsp_data = 0;
     wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
     wire [279:0] wl; wire wl_done;   // the VM wide write port (hgi-takeover 2026-10-10)
@@ -32,9 +53,29 @@ module tb_hgi_fused_unit;
         .mv_fault(mv_fault), .fence_v(1'b0), .fence_rdy(), .fence_done(), .k_req_v(k_req_v), .k_req_rdy(k_req_rdy),
         .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd), .k_req_wstrb(k_ws), .k_req_tag(k_tag),
         .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we), .k_rsp_data(k_rsp_data), .k_fault(1'b0),
+.r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(), .vr2r(8257'd0),
         .vmq(mq), .vmr(mr), .wl(wl), .wl_done(wl_done));
+`ifdef WIDE
+    ot_hgi_vm_unit #(.NC(3), .WP(1), .RP(32), .W2(32)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status(),
+        .wq(wl), .wq_done(wl_done), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q), .w2q_cr(w2_cr), .w2q_done(w2_done));
+`else
     ot_hgi_vm_unit #(.NC(3), .WP(1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, mq, fq}), .cr({tr, mr, fr}), .status(), .wq(wl), .wq_done(wl_done));
+`endif
     reg [31:0] hbm [longint];
+    // hgi-1010/c: the mover's four HBM read lanes (bursts, in order a lane) on tb_hgi_rlanes over this bench's memory
+    wire [3:0] r_req_v, r_req_rdy, r_rsp_v, r_rsp_rdy, r_rsp_last; wire [4*37-1:0] r_req_addr, la; wire [15:0] r_req_len;
+    wire [63:0] r_req_tag, r_rsp_tag; wire [1023:0] r_rsp_data, r_req_wdata; wire [3:0] r_req_we, r_rsp_we; wire [127:0] r_req_wstrb; reg [1023:0] ld; integer hgen = 0; wire [3:0] wv; wire [4*37-1:0] wa; wire [1023:0] wd; wire [127:0] ws;
+    always @(posedge clk) hgen <= hgen + 1;
+    tb_hgi_rlanes #(.LAT(6)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
+        .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
+        .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .la(la), .ld(ld), .wv(wv), .wa(wa), .wd(wd), .ws(ws));
+    always @(posedge clk) for (integer l = 0; l < 4; l = l + 1) if (wv[l]) for (integer q = 0; q < 8; q = q + 1)
+        hbm[(longint'(wa[l*37 +: 37]) >> 2) + q] = wd[l*256 + 32*q +: 32];      // full sectors (the lanes refuse partial ones)
+    always @(la or hgen) for (integer l = 0; l < 4; l = l + 1) for (integer q = 0; q < 8; q = q + 1) begin
+        longint wa; wa = (longint'(la[l*37 +: 37]) >> 2) + q;
+        ld[l*256 + 32*q +: 32] = hbm.exists(wa) ? hbm[wa] : 32'd0;
+    end
     integer klat = -1, q; reg pend = 0; reg [36:0] pa;
     always @(posedge clk) begin
         k_rsp_v <= 0;
@@ -77,6 +118,9 @@ module tb_hgi_fused_unit;
             t = 0; while (k < nr && nf == 0 && t < 4000000) begin @(posedge clk); t = t + 1; end
             if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", c, k, nr, nf); errors = errors + 1; end
             $display("case %0d: %0d records in %0d cycles", c, k, cyc - t0); $fflush;
+`ifdef DUMP_SCR
+            for (j = 0; j < 4; j = j + 1) begin vm_req(1'b0, 240000 + `DUMP_SCR + j, 0, qd); $display("SCR %0d = %h", j, qd); end
+`endif
             for (j = 0; j < nve; j = j + 1) begin
                 vm_req(1'b0, vmem[ve0 + j][63:32], 0, qd);
                 if (qd !== vmem[ve0 + j][31:0]) begin

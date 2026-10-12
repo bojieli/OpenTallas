@@ -1,0 +1,90 @@
+{
+  "name": "hbm_smh_tile_wg_cg-a6d34a72e-tc-np-ref-cl",
+  "block": "ot_hbm_accel_smh_tile_wg",
+  "owner": "Codex:sm-cg-finish",
+  "purpose": "Root ICG alternative: avoid cloned gate ENA fanout path measured -545 ps on eg CTS, with corrected pin-flop IO reference. Preserve prior failed and live attempts. Same functional CG RTL as recorded smcg4 gate; no data-path cycles added.",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "source": {
+    "branch": "codex/sm-cg-finish-20261010",
+    "commit": "a6d34a72eb03cb384a3e04adaff60cfa18918bea",
+    "extra_paths": [
+      "results/uarch/hbm_smh_tile_headroom_20261007",
+      "results/arch/redesign_hbm_cg_20261009/smcg4_adoption"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "pinned_smcg4_lockstep_and_mutants",
+        "cmd": "grep -q 'CG_LOCKSTEP mismatches 0 gated_cycles_tile00 3056 of 8244' results/arch/redesign_hbm_cg_20261009/smcg4_adoption/run.out && test $(grep -c 'CG_LOCKSTEP mismatches 97' results/arch/redesign_hbm_cg_20261009/smcg4_adoption/run2.out) -eq 2 && echo SM_CG_PINNED_GATE_PASS",
+        "expect": "pass",
+        "pass_regex": "SM_CG_PINNED_GATE_PASS",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "calibrate": {
+      "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/hbm_accel_smh_physical.py block --cg --cg-nopush --piece tile --variant toW --geom {SRC}/results/uarch/hbm_smh_tile_headroom_20261007/geom_362p88.json --pd 0.60 --pin-flops --pin-depth 24 --grt-allow --make-var ROUTING_LAYER_ADJUSTMENT=0.20 --make-var SKIP_INCREMENTAL_REPAIR=1 --period 770 --skew 90 --die-skew 150 --hold-margin 25 --hold-buffer-pct 60 --no-admit --cores {THREADS} --src {SRC} --label {LABEL}_cal --stop-after cts --out {RUN}/routes/{LABEL}_cal --lat ${CK_SS_MEAN:-720} --lat-ff ${CK_FF_MEAN:-430} && bash {RUN}/routes/{LABEL}_cal/run.sh",
+      "base": "{RUN}/routes/{LABEL}_cal/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 16,
+      "peak_ram_gb": 64
+    },
+    "route": {
+      "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/hbm_accel_smh_physical.py block --cg --cg-nopush --piece tile --variant toW --geom {SRC}/results/uarch/hbm_smh_tile_headroom_20261007/geom_362p88.json --pd 0.60 --pin-flops --pin-depth 24 --grt-allow --make-var ROUTING_LAYER_ADJUSTMENT=0.20 --make-var SKIP_INCREMENTAL_REPAIR=1 --period 770 --skew 90 --die-skew 150 --hold-margin 25 --hold-buffer-pct 60 --no-admit --cores {THREADS} --src {SRC} --label {LABEL} --out {RUN}/routes/{LABEL} --lat ${CK_SS_MEAN:-720} --lat-ff ${CK_FF_MEAN:-430} && bash {RUN}/routes/{LABEL}/run.sh",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/views {RUN}/record/route && cp {RUN}/routes/{LABEL}/views/* {RUN}/record/views/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/config.mk {RUN}/routes/{LABEL}/constraint.sdc {RUN}/routes/{LABEL}/geometry.json {RUN}/record/route/ && cp {CL}/calib.json {RUN}/record/route/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [],
+    "macros": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+    ]
+  },
+  "hold_eco": {
+    "reexport": "docker run --rm -v {SRC}:/src:ro -v {RUN}/routes/{LABEL}:/work openroad/orfs:asap7lock bash -lc 'mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract_$c.tcl || exit 1; done' > {RUN}/routes/{LABEL}/abstract_eco.log 2>&1"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/hbm_accel_smh_views/cg/a6d34a72e_np_ref/tile_wg"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/hbm_sm_structure_20261005/routes_cg/a6d34a72e_np_ref/tile_wg"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "budget": {
+    "enabled": false,
+    "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+  },
+  "cycles_note": "0 on the data path; the wake contract asks the adapter to raise cg_en with the job (x load) and hold it to retirement",
+  "no_bench_reason": "Pure physical re-route of benched CG RTL, only ICG cloning disabled (BE root-ICG routes closed). Pinned smcg4 NC4 gap=0 mismatches, late32=97 and HOLD0=97, 3056 gated cycles/8244: results/arch/redesign_hbm_cg_20261009/smcg4_adoption at a6d34a72e. The explicit pinned gate checks these records before routing."
+}

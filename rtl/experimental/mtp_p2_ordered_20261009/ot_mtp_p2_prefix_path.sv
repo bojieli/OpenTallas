@@ -14,7 +14,7 @@
 //  * fault / corrected outputs registered.
 // Context ownership is unchanged: start_r stays low from the accepted start through the last external out handshake.
 // REGB=0 is the original wiring.
-module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REGB=1, parameter integer MUT_COPY_FIRST=0, parameter integer MUT_ORDER=0)(
+module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REGB=1, parameter integer ROOTPIPE=0, parameter integer MUT_COPY_FIRST=0, parameter integer MUT_ORDER=0)(
  input wire clk,rst_n,start_v,output wire start_r,
  input wire [73:0] start_identity,input wire [26:0] start_ids,
  input wire [1:0] in_v,output wire [1:0] in_r,input wire [147:0] in_identity,
@@ -109,7 +109,7 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  .in_valid(tr_v),.in_ready(tr_r),
  .in_data({tr_id,tr_expert,tr_shared,tr_last,tr_tlast,tr_word,tr_code}),
  .out_valid(xa_v),.out_ready(xa_r),.out_data(xa_d));
- ot_mtp_p2_prefix #(.ENABLE(1),.BREG(1),.DSTAGE(1),.MUT_COPY_FIRST(MUT_COPY_FIRST)) arithmetic(.clk(clk),.rst_n(rst_n),
+ ot_mtp_p2_prefix #(.ENABLE(1),.BREG(1),.DSTAGE(1),.ROOTPIPE(ROOTPIPE),.MUT_COPY_FIRST(MUT_COPY_FIRST)) arithmetic(.clk(clk),.rst_n(rst_n),
  .start_v(fire),.start_r(ar_sr),.start_identity(sid_q),.start_ids(sids_q),
  .in_v(xa_v),.in_r(xa_r),.in_identity(xa_d[668:595]),.in_expert(xa_d[594:586]),
  .in_shared(xa_d[585]),.in_row_last(xa_d[584]),.in_transaction_last(xa_d[583]),
@@ -123,9 +123,15 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  .in_word(ar_word),.in_last(ar_last),.out_v(po_v),.out_r(po_r),
  .out_data(po_data),.out_identity(po_id),.out_word(po_word),.out_last(po_last),
  .fault(pub_fault),.corrected(pub_ce));
+ if(ROOTPIPE)begin: root_output
+ ot_mtp_p2_pin_output #(.W(594),.G(32)) opin(.clk(clk),.rst_n(rst_n),
+ .in_valid(po_v),.in_ready(po_r),.in_data({po_data,po_id,po_word,po_last}),
+ .out_valid(out_v),.out_ready(out_r),.out_data(oq));
+ end else begin: fifo_output
  ot_sc_pfifo #(.W(594),.S(2),.G(32)) opin(.clk(clk),.rst_n(rst_n),
  .in_valid(po_v),.in_ready(po_r),.in_data({po_data,po_id,po_word,po_last}),
  .out_valid(out_v),.out_ready(out_r),.out_data(oq));
+ end
  assign out_data=oq[593:82];assign out_identity=oq[81:8];assign out_word=oq[7:1];assign out_last=oq[0];
  wire last_pop=out_v&&out_r&&out_last&&!poison;
  wire busy_nx=(busy||fire)&&!last_pop;
@@ -142,3 +148,28 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer REG
  end endgenerate
 endmodule
 `default_nettype wire
+
+// Single-flight output station. Pin ready only clears a scalar valid and is
+// captured as a release credit; it cannot reach wide write-enable replicas.
+// Payload is captured while unoccupied and held through acknowledgement.
+module ot_mtp_p2_pin_output #(parameter W=594,G=32,MUT=0)(
+ input wire clk,rst_n,in_valid,output wire in_ready,input wire [W-1:0] in_data,
+ output reg out_valid,input wire out_ready,output wire [W-1:0] out_data);
+ reg occupied,release_q;
+ wire take=in_valid&&in_ready;
+ wire occupied_next=(occupied||take)&&!release_q;
+ assign in_ready=!occupied;
+ always @(posedge clk)begin
+ if(!rst_n)begin occupied<=0;release_q<=0;out_valid<=0;end
+ else begin occupied<=occupied_next;release_q<=out_valid&&out_ready;
+ if(take)out_valid<=1;else if(out_valid&&out_ready)out_valid<=0;end
+ end
+ for(genvar g=0;g<(W+G-1)/G;g=g+1)begin: groups
+ localparam GW=(W-g*G<G)?W-g*G:G;
+ wire busy;
+ ot_sc_rep_ff #(.RV(0)) busy_ff(.clk(clk),.rst_n(rst_n),.d(occupied_next),.q(busy));
+ reg [GW-1:0] payload;
+ always @(posedge clk)if(MUT||!busy)payload<=in_data[g*G+:GW];
+ assign out_data[g*G+:GW]=payload;
+ end
+endmodule

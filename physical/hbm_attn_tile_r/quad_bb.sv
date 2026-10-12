@@ -1,7 +1,7 @@
 // Blackbox of the hardened quad (rtl/hdc/v41x/ot_hdc_v41x_attn_tile_m6h1r.sv ot_attn_tile_m6h1q) for the H16 parent
 // route; its views: physical/hbm_attn_tile_r/quad/ot_attn_tile_m6h1q.
 (* blackbox *)
-module ot_attn_tile_m6h1q (
+module ot_attn_tile_m6h1q #(parameter integer CG = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [7:0]    qgid,

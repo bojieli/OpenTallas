@@ -1,0 +1,11 @@
+    input wire [0:0] ck,
+    input wire [10:0] f_clr,
+    input wire [514:0] f_hp0,
+    input wire [514:0] f_hp1,
+    input wire [514:0] f_hp2,
+    input wire [24:0] f_vrq,
+    input wire [0:0] rst,
+    output wire [2:0] t_flt,
+    output wire [2:0] t_hpg,
+    output wire [0:0] t_vrq,
+    output wire [1024:0] t_vrs

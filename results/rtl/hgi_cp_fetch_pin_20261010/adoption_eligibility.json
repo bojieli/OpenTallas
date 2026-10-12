@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.cp_fetch_pin_eligibility.v1",
+  "predecessor": {
+    "source": "2c4729bfe8de71047e7bf23f043d4ef02a6ca5e5",
+    "job": "hgi_cp-fetchpin-2c4729bfe-tc-hm10-cl",
+    "adoption_eligible": false,
+    "reason": "PRE_GLOBAL_PLACE log:0 fetch flops at own pins. Yosys canonicalized the front register instance names to f_req_addr/f_req_v, so old generate-scope match selected no cells. Progressing physical job retained for pathfinding."
+  },
+  "successor": {
+    "source": "b52977eda",
+    "job": "hgi_cp-fetchpin-b52977eda-tc-hm10-cl",
+    "probe": "pin41_probe_v2.log",
+    "front_flops_anchored": 41,
+    "ports_without_flop": 0,
+    "guard": "fatal unless41; verdict checks route log",
+    "adoption_eligible": "only after matching TT/FF incl SRAM/DRC gates pass",
+    "RTL_hash_unchanged": true
+  },
+  "flow_probe_failure": {
+    "log": "pin41_probe.log",
+    "reason": "container PATH absent OpenROAD env; no design run, retained"
+  },
+  "exact": "CP38 andconformance66 plus500-request sustained-stall scoreboard andtwo mutants pass; unchanged RTL sourcehash from exact.json"
+}

@@ -1,0 +1,53 @@
+{
+  "source_base": "199dc0b71",
+  "candidate": "PAYLOAD_RESET=0, opt-in, original reset remains default1",
+  "model_before_RTL": true,
+  "sizing": {
+    "input_station_payload_bits": 2197,
+    "op_payload_bits": 670,
+    "async_reset_sinks_removed": 2867,
+    "added_data_flops": 0,
+    "added_data_wires": 0,
+    "data_bandwidth_bytes_per_cycle": "unchanged",
+    "controller_slot_um": [
+      320,
+      320
+    ],
+    "measured_base_cells": 16841,
+    "measured_base_synth_area_um2": 2630.743,
+    "measured_base_place_area_um2": 3817,
+    "power_area": "expected lower reset network and async flop cost; do not credit until routed measurement"
+  },
+  "latency": {
+    "first_legal_record_cycles_added": 0,
+    "token_cycles_added": 0,
+    "reason": "input payload captured unconditionally each edge; raw_v/dec_v/exec valid controls retain reset and staging"
+  },
+  "valid_consumer_audit": {
+    "station_decode": "hdr/sut/descriptors only used when raw_v is asserted from acceptedrec_v&&rec_rdy",
+    "op_issue": "w_q only accepted by controller when op_v&&op_rdy; op_v requires dec_v&&!nop&&!bad&&!exec&&!halt",
+    "controller": "captures op_w only under op_v&&op_rdy_r; no idle reads",
+    "legacy": "parameter default1 leaves original behavior",
+    "service_noX": "not modified; no service module or scoreboard semantics changed"
+  },
+  "physical_adoption": "pending exact/negative gates and routed TT/FF/DRC under unchanged budgets",
+  "exact_gates": {
+    "rtl_source": "849012083",
+    "SU_words": 2572,
+    "SFU_words": 5376,
+    "FUSED_words": 34112,
+    "STREAM_elements": [
+      300,
+      1001,
+      37984
+    ],
+    "latency_comparison": "identical per-record cycles to199dc0b71; no added record/token cycles",
+    "valid_audit": "original-vs-resetless adapter controls and valid operation words compared every edge in real SU/SFU unit benches",
+    "four_state": "Icarus immediate first-edge release record, idle poisonX, two resets, PASS",
+    "negative": "MUT_IDLE_READ required FAIL on invalid word comparison; no service/ECC/noX gate modified"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv": "2d909676e879f0741af8cf5c735f3beea9c442651b2ecf571a1bf3feac893966",
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "3ad519542020d190b61bd6af101ebae5fd6b35699232da586fe1faa8aab65817"
+  }
+}

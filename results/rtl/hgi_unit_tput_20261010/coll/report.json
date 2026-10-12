@@ -1,0 +1,151 @@
+{
+ "pass_": true,
+ "grade": "measured_unit_bench",
+ "vehicle": "ot_hgi_coll_ep PIPE=1 (main 86ee9156a), DS L0 13-gather sequence G96, one rank + lockstep switch stub LAT 453 CRED 137",
+ "source_log": "results/rtl/hgi_unitrate_20261010/coll_pipe/run_pipe.log",
+ "summary": {
+  "cycles": 2949,
+  "records": 13
+ },
+ "per_unit": {
+  "COLL": {
+   "records": 13,
+   "real": 13,
+   "exact": 13,
+   "rtl_busy": 0,
+   "sim_cost": 4117.399999999999
+  }
+ },
+ "records": [
+  {
+   "k": 0,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather0",
+   "real": 1,
+   "disp": 0,
+   "ret": 721,
+   "cost": 382.7
+  },
+  {
+   "k": 1,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather1",
+   "real": 1,
+   "disp": 124,
+   "ret": 846,
+   "cost": 382.7
+  },
+  {
+   "k": 2,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather2",
+   "real": 1,
+   "disp": 248,
+   "ret": 1042,
+   "cost": 788.5
+  },
+  {
+   "k": 3,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather3",
+   "real": 1,
+   "disp": 372,
+   "ret": 1093,
+   "cost": 765.4
+  },
+  {
+   "k": 4,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather4",
+   "real": 1,
+   "disp": 496,
+   "ret": 1464,
+   "cost": 126.2
+  },
+  {
+   "k": 5,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather5",
+   "real": 1,
+   "disp": 842,
+   "ret": 1589,
+   "cost": 126.2
+  },
+  {
+   "k": 6,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather6",
+   "real": 1,
+   "disp": 967,
+   "ret": 1785,
+   "cost": 126.2
+  },
+  {
+   "k": 7,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather7",
+   "real": 1,
+   "disp": 1163,
+   "ret": 1908,
+   "cost": 126.2
+  },
+  {
+   "k": 8,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather8",
+   "real": 1,
+   "disp": 1287,
+   "ret": 2206,
+   "cost": 126.2
+  },
+  {
+   "k": 9,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather9",
+   "real": 1,
+   "disp": 1585,
+   "ret": 2331,
+   "cost": 126.2
+  },
+  {
+   "k": 10,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather10",
+   "real": 1,
+   "disp": 1710,
+   "ret": 2527,
+   "cost": 126.2
+  },
+  {
+   "k": 11,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather11",
+   "real": 1,
+   "disp": 1906,
+   "ret": 2700,
+   "cost": 788.5
+  },
+  {
+   "k": 12,
+   "unit": "COLL",
+   "op": 1,
+   "tag": "gather12",
+   "real": 1,
+   "disp": 2030,
+   "ret": 2949,
+   "cost": 126.2
+  }
+ ]
+}

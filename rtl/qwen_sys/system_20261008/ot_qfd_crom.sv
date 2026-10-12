@@ -54,13 +54,19 @@ module ot_qfd_crom #(
     parameter integer MUT = 0,
     // LB (redesign-qwen 2026-10-09; 0 = unchanged): global index of lane 0 -- an 8-lane GROUP TILE (SW 8: 2 wide columns +
     // 1 narrow column = 6 macros) checks its lanes' alignment against lanes LB .. LB + SW - 1 of the 64-lane contract
-    parameter integer LB = 0
+    parameter integer LB = 0,
+    // LBS (qwen-1010/c 2026-10-10; 0 = unchanged): the lane base comes from the crom_lb STRAP pin instead of LB, captured in
+    // the e1 input station with the address (registered at the pin, 0 added edges), so ONE hardened group tile serves all
+    // eight groups (the die ties group g's crom_lb to 8 g); LB then only names the mask images (simulation personalisation,
+    // as any ROM).  LBS = 0 leaves crom_lb unused.
+    parameter integer LBS = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire [SW-1:0]     crom_re,
     input  wire [SW*AW-1:0]  crom_addr,
     input  wire [LW-1:0]     crom_stage,        // 0..35 decoder layer stages, HEAD the lm_head stage
+    input  wire [5:0]        crom_lb,           // LBS = 1: lane base strap (static; tie to the group's first global lane)
     output wire [SW*64-1:0]  crom_q,
     output reg               fault,
     output reg  [1:0]        fault_code
@@ -80,6 +86,12 @@ module ot_qfd_crom #(
     wire [LW-1:0]    st1;
     ot_hdc_delay #(.W(SW), .D(1), .RESET(1)) u_is_re (.clk(clk), .rst_n(rst_n), .d(crom_re), .q(re1));
     ot_hdc_delay #(.W(SW*AW + LW), .D(1)) u_is_a (.clk(clk), .rst_n(rst_n), .d({crom_addr, crom_stage}), .q({a1, st1}));
+    wire [5:0] lb1;
+    generate if (LBS != 0) begin : g_lbs
+        ot_hdc_delay #(.W(6), .D(1)) u_is_lb (.clk(clk), .rst_n(rst_n), .d(crom_lb), .q(lb1));
+    end else begin : g_lbp
+        assign lb1 = LB[5:0];
+    end endgenerate
 
     // ---- e2: per-lane region decode ----
     // narrow row of a layer-local region: stage * LROWS + off (LROWS = 148 = 128 + 16 + 4: three shifted adds)
@@ -111,7 +123,7 @@ module ot_qfd_crom #(
                 else if (a < A_DSC0) begin k = K_NARROW; off = a - A_OSC0; r = lbase + R_QKR + off[6 +: RW]; end
                 else if (a < A_END) begin k = K_NARROW; off = a - A_DSC0; r = lbase + R_QKR64 + off[6 +: RW]; end
                 else k = K_BAD;
-                if ((k == K_WIDE || k == K_NARROW) && off[5:0] != (l[5:0] + LB[5:0])) al = 1'b0;
+                if ((k == K_WIDE || k == K_NARROW) && off[5:0] != (l[5:0] + lb1)) al = 1'b0;
                 t_v[l] <= re1[l];
                 t_kind[l*3 +: 3] <= k;
                 t_row[l*RW +: RW] <= r;
@@ -250,4 +262,27 @@ module ot_qfd_crom_g (
 );
     ot_qfd_crom #(.SW(8), .LB(0)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
+endmodule
+
+
+// Die master qfd_crom_gs (qwen-1010/c 2026-10-10): the constant-ROM group tile with a LANE-BASE STRAP.  ot_qfd_crom_g fixes
+// LB 0, so groups 1..7 would each be a different netlist (the alignment check's constant).  Here the lane base is the
+// crom_lb pin (registered in the input station beside crom_addr: 0 added edges, no timing exception), so the 8 groups are
+// 8 placements of ONE hardened tile; the die ties crom_lb of group g to 8 g.  IMG_LB names the simulation mask images only.
+module ot_qfd_crom_gs #(
+    parameter integer IMG_LB = 0,
+    parameter integer MUT = 0
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [7:0]        crom_re,
+    input  wire [8*24-1:0]   crom_addr,
+    input  wire [5:0]        crom_stage,
+    input  wire [5:0]        crom_lb,
+    output wire [8*64-1:0]   crom_q,
+    output wire              fault,
+    output wire [1:0]        fault_code
+);
+    ot_qfd_crom #(.SW(8), .LB(IMG_LB), .LBS(1), .MUT(MUT)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+        .crom_stage(crom_stage), .crom_lb(crom_lb), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
 endmodule

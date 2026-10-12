@@ -21,19 +21,29 @@ import rtl_hdc_package_tp_campaign as C  # noqa: E402
 XF = ROOT / "rtl/physical/ot_qwen_die_io_xfifo.sv"
 CX = ROOT / "rtl/physical/ot_qwen_die_coll_xfifo.sv"
 SRC = [ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-       ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
+       ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/rom/ot_coll_fold_slice.sv", ROOT / "rtl/rom/ot_coll_rst_leaf.sv", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
        ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv",
        ROOT / "rtl/physical/ot_qwen_die_coll_xfifo.sv", ROOT / "rtl/physical/ot_qwen_die_cdc_ch.sv", ROOT / "rtl/physical/ot_qwen_async_fifo_w.sv",
-       ROOT / "rtl/lib/ot_async_fifo.sv", ROOT / "rtl/lib/ot_reset_sync.sv", ROOT / "rtl/test/tb_qfd_coll_native.sv"]
+       ROOT / "rtl/lib/ot_async_fifo.sv", ROOT / "rtl/lib/ot_reset_sync.sv", ROOT / "rtl/lib/ot_hdly.sv", ROOT / "rtl/test/tb_qfd_coll_native.sv",
+       # el1011-q-coll: dual-clock FIFO body macros (MEMM = 1), behavioural views
+       ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.v",
+       ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
+       ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1.v",
+       ROOT / "physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1.v"]
 CASES = [  # name, msgs, words, gap %, modes, consumer %
     ("reduce_8w", 32, 8, 0, "r", 100),
     ("mixed_gaps", 32, 8, 30, "m", 100),
     ("gather_1w_slow", 32, 1, 10, "g", 25),
     ("mixed_slow", 32, 8, 0, "m", 25),
     ("reduce_320w", 2, 320, 0, "r", 100),
+    # Qwen3-8B TP4 shape (tools/hdc_program.py: an all-reduce is 256 words = one 4,096-element FP32 vector at 16 lanes;
+    # two per layer; the lm-head argmax all-gathers one word)
+    ("qwen_ar_256w", 1, 256, 0, "r", 100),
+    ("qwen_layer_2x256w", 2, 256, 0, "r", 100),
+    ("qwen_argmax_1w", 1, 1, 0, "g", 100),
 ]
-MUT = {"trunc": (".i_d(i_coll_seq), .i_cr(), .w_fault(wf_cq)", ".i_d({i_coll_seq[WCQ-1:1], 1'b0}), .i_cr(), .w_fault(wf_cq)"),
-       "credit": ("ocr_q <= o_coll_seq_v;", "ocr_q <= 1'b0;")}
+MUT = {"trunc": (".i_d(x_i_coll_seq), .i_cr(), .w_fault(wf_cq)", ".i_d({x_i_coll_seq[WCQ-1:1], 1'b0}), .i_cr(), .w_fault(wf_cq)"),
+       "credit": ("ocr_q <= x_o_coll_seq_v;", "ocr_q <= 1'b0;")}
 
 
 def build(w: Path, mode: str) -> Path:
@@ -48,7 +58,10 @@ def build(w: Path, mode: str) -> Path:
     obj = w / "obj"
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--top-module", "tb_qfd_coll_native", "-Mdir", str(obj),
-           f"-GCQ_AD={os.environ.get('NCOLL_CQ_AD', '64')}"] + \
+           f"-GCQ_AD={os.environ.get('NCOLL_CQ_AD', '64')}", f"-GCR={os.environ.get('NCOLL_CR', '4')}",
+           f"-GENG_IB={os.environ.get('NCOLL_ENG_IB', '4')}", f"-GLCR={os.environ.get('NCOLL_LCR', '4')}",
+           f"-GCPIPE={os.environ.get('NCOLL_CPIPE', '-1')}", f"-GMEMM={os.environ.get('NCOLL_MEMM', '0')}"] + \
+          (["+define+OT_MUT_MEMM"] if mode == "memm" else []) + \
           (["+define+OT_NCOLL_MUT_NOREFUND_CHECK"] if mode == "gate" else []) + src + \
           [str(ROOT / "physical/sys_takeover/coll_native_harness.cpp"), "-CFLAGS", "-O1", "-j", "8"]
     r = subprocess.run(cmd, capture_output=True, text=True)

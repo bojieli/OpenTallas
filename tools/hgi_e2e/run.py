@@ -30,9 +30,14 @@ END_TOKEN_VM = 0x3FFF0
 SRC_BASE = [
     "rtl/hbm_accel/generic/ot_hgi_cfg.sv", "rtl/hbm_accel/generic/ot_hgi_seq.sv", "rtl/hbm_accel/generic/ot_hgi_cp.sv",
     "rtl/hbm_accel/generic/ot_hgi_cp_die.sv", "rtl/hbm_accel/generic/loader/ot_hgi_loader_cp.sv",
+    # REAL_FETCH 1 (default): the record-ring fetch through the die's loader memory port
+    "rtl/hbm_accel/loader/service_native/ot_hfd_loader_kport.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_loader_native_endpoint.sv",
 ]
 SRC_REAL = {
-    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv"],
+    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_kvw.sv",
+            # hgi-1010/c: the mover's landing RAM (a 256 x 256 macro; the sequencer ring stays USE_MACRO 0)
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"],
     "quant": ["rtl/hbm_accel/generic/ot_hgi_quant_unit.sv", "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
               "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv", "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
               "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"],
@@ -44,17 +49,37 @@ VEC = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_
        "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
        "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec.sv"]
-SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv"]
-SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_sfu_record.sv"]
+SRC_REAL["att"] = ["rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv",
+                   "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv", "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+                   "rtl/hdc/v41x/ot_hdc_v41x_attn.sv", "rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv"]
+SRC_REAL["hc"] = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+                  "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+                  "rtl/hdc/ot_hdc_fastfp_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+                  "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
+                  "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+                  "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv", "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+                  "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv", "rtl/hdc/v41/ot_hdc_sinkhorn.sv", "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+                  "rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv", "rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv"]
+SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
+SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
 SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
                     "rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv",
                     "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv", "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
                     "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
                     "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv", "rtl/hbm_accel/tu/ot_hcoll_port.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-                    "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv"]
+                    "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+                    "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv", "rtl/lib/ot_rst_relay.sv"]       # hgi-1010/k hardware TOPK_MERGE
 SRC_REAL["fused"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv",
-                           "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv"]
-TB = ["rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
+                           "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv",
+                           "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
+# hgi-1010/g3: --real idxn = REAL_IDX with IDX_NATIVE 1 (IDX.INDEX through the die's selector, 4 stack scorers and 4 svc
+# IKS stripes; tb_hgi_e2e / hgi_e2e_idxn.sv); the selector's SRAM line memories need the macro models
+SRC_REAL["idxn"] = SRC_REAL["idx"] + ["rtl/hbm_accel/generic/idx/ot_hgi_idx_iks_issue.sv",
+                                      "rtl/hbm_accel/generic/e2e/hgi_e2e_idxn.sv",
+                                      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+                                      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"]
+TB = ["rtl/hbm_accel/generic/peers/tb_hgi_rlanes.sv",   # hgi-1010/c: the mover's HBM lane model (hgi_e2e_rlanes)
+      "rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
       "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
 
 
@@ -140,9 +165,52 @@ def prep(d: Path):
     (d / "prep.txt").write_text(f"{meta['image_base_bytes']} image_e2e.bin\n{len(skip)}\n" +
                                 "".join(f"{a} {v}\n" for a, v in skip))
     dyn = meta["dyn"]
-    host = md + [dyn[3], dyn[1], exp_tok, meta["rank"], 1] + [0] * 11
+    # the FUSED unit's compiler-reserved scratch: the largest VM range no record of this layer touches (>= 16 Ki words)
+    import numpy as np
+    used = np.zeros(1 << 18, bool)
+    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4")[:1 << 18] != 0      # (words past 2^18: the HC aperture)
+    wa = np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]
+    used[wa[wa < (1 << 18)]] = True
+    for r in meta["records"]:
+        for e in r["eff"].values():
+            if e[5] == "VM" and e[0] < (1 << 18):
+                b_, n_, m_, st_, ist_ = e[:5]
+                used[b_:b_ + (max(m_, 1) - 1) * st_ + (max(n_, 1) - 1) * max(ist_, 1) + 1] = True
+    used[END_TOKEN_VM] = True
+    if not meta.get("needs_end"):                     # the program's own CTL.END token word (not a dispatched record)
+        used[recs[-1].desc["A"].base] = True
+    best, i = (0, 0), 0
+    while i < used.size:
+        if not used[i]:
+            j = i
+            while j < used.size and not used[j]:
+                j += 1
+            best = max(best, (j - i, i))
+            i = j
+        else:
+            i += 1
+    scr = (best[1] + 7) & ~7
+    assert best[0] - (scr - best[1]) >= 16384, f"no 16 Ki-word free VM range for the FUSED scratch ({best})"
+    tk = meta.get("tokx_golden") or []                # DFlash step: the CPU golden's committed tokens (CTL.TOKX beats)
+    # host words (tb_hgi_e2e, non-MTP): 64 token, 65 pos, 66 expected token, 67 rank, 68 ncol, 69 FUSED scratch;
+    # 104 = expected CTL.TOKX count k, 105.. = the tokens (70..103 belong to the MTP job layout)
+    host = md + [dyn[3], dyn[1], exp_tok, meta["rank"], meta.get("ncol", 1), scr] + [0] * 34 + [len(tk)] + \
+        [int(x) for x in tk] + [0] * (23 - len(tk))
+    assert len(host) == 128
     (d / "host.mem").write_text("\n".join(f"{x & 0xFFFFFFFF:08x}" for x in host) + "\n")
     print(f"prep {d}: {len(lines)} records, image {len(image)} B, expected token {exp_tok}")
+
+
+COLLAR = "physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv"
+TOKEDGE = "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv"
+
+
+def mtp_sources():
+    """MTP=1 (hgi-1010/h): the native controller (tools/hgi_mtp_native_gate.py's source set) + the MX1 MTP collar's
+    queue / join; the collar module itself is extracted from its physical top file at script time (COLLAR)"""
+    import hgi_mtp_native_gate as GT
+    return ["rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv"] + GT.NATIVE + GT.FACADE + ["rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv",
+                                    "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv"]
 
 
 def script(a):
@@ -153,12 +221,27 @@ def script(a):
             a.g = [g for g in a.g if not g.startswith(key + "=")]
     real = [x for x in a.real.split(",") if x]
     src = list(dict.fromkeys(SRC_BASE + sum((SRC_REAL[x] for x in real), [])))
+    mtp = int(getattr(a, "mtp", 0) or 0)
+    if mtp:
+        src = list(dict.fromkeys(src + mtp_sources()))
     src = list(dict.fromkeys(src + closure(src)))
-    gp = " ".join(f"-G{'REAL_' + x.upper()}=1" for x in real) + "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG"))
-    gp += (" +define+E2E_COLL_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
+    gp = " ".join(f"-G{'REAL_' + ('idx' if x == 'idxn' else x).upper()}=1" for x in real)
+    gp += "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG")) + (" -GIDX_NATIVE=1" if "idxn" in real else "")
+    gp += (" +define+E2E_COLL_DEBUG +define+E2E_FUSED_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
     gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
     gp += " +define+E2E_FUSED" if "fused" in real else ""
-    tag = ("_".join(sorted(real)) or "stubs") + "".join("_" + g.replace("=", "") for g in a.g)
+    gp += " +define+E2E_ATT" if "att" in real else ""
+    gp += " +define+E2E_HC" if "hc" in real else ""
+    tag = (f"mtp{mtp}_" if mtp else "") + ("_".join(sorted(real)) or "stubs") + "".join("_" + g.replace("=", "") for g in a.g)
+    mtp_pre = ""
+    if mtp:
+        gp += f" -GMTP={mtp}"
+        mtp_pre = (f"awk '/^module hfd_cmdproc_s_mtp_native_mx1_mtp /,/^endmodule/' $S/{COLLAR} > $O/collar_mtp.sv\n"
+               f"grep -q endmodule $O/collar_mtp.sv\n"
+               # Verilator 5.032 internal error (V3Delayed 'Multiple Write refs on LHS of NBA' on wrapfix's argument t when
+               # it is inlined into the NBAs) in the controller's spec-state edge: a bench-only copy with wrapfix as a
+               # macro of the same expression (t taken as 32 bits, as the function's input)
+               f"python3 $S/tools/hgi_e2e/wrapfix_copy.py $S/{TOKEDGE} $O/token_edge.sv\n")
     wi = ""
     if "coll" in real and ("COLL_BF16" in gd or "COLL_PFMAX" in gd):
         # what-if copy of the collective block body: the PSG endpoint built with these parameters
@@ -169,16 +252,19 @@ def script(a):
               f".PFMAX({pfm}),/' $S/{orig} > $O/ot_hgi_coll_ep_whatif.sv\ngrep -q 'PFMAX({pfm})' $O/ot_hgi_coll_ep_whatif.sv\n")
         src.append("WHATIF")
     srcs = " ".join(("$O/ot_hgi_coll_ep_whatif.sv" if s_ == "WHATIF" else "$S/" + s_) for s_ in src)
-    LAST_SRC[:] = [x for x in src if x != "WHATIF"] + (["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"] if wi else [])
+    if mtp:
+        srcs = srcs.replace("$S/" + TOKEDGE, "$O/token_edge.sv") + " $O/collar_mtp.sv"
+    LAST_SRC[:] = [x for x in src if x != "WHATIF"] + (["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"]
+                                                       if "WHATIF" in src else []) + ([COLLAR] if mtp else [])
     return f"""#!/bin/bash
 # hgi-e2e run: vehicle {a.vehicle}, real units [{', '.join(real) or 'none'}]; FLAT {a.flat} KLAT {a.klat} VLAT {a.vlat}
 set -e
 S=${{SRC:-src}}; V=${{VEC:-vec}}/{a.vehicle}; O=${{OUT:-out}}/{a.vehicle}_{tag}_f{a.flat}k{a.klat}
 mkdir -p $O
-{wi}VER=${{VERILATOR:-verilator}}
+{mtp_pre}{wi}VER=${{VERILATOR:-verilator}}
 $VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-BLKSEQ --timing -O2 \\
   {gp} -GFLAT={a.flat} -GKLAT={a.klat} -GVLAT={a.vlat} \\
-  -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb \\
+  -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb{' -I$S/rtl/common' if 'idxn' in real else ''} \\
   {srcs} \\
   {' '.join('$S/' + t for t in TB)} --Mdir $O/obj -o tb > $O/build.log 2>&1
 set +e
@@ -234,6 +320,8 @@ def main():
     s.add_argument("--flat", type=int, default=40); s.add_argument("--klat", type=int, default=40)
     s.add_argument("--vlat", type=int, default=6); s.add_argument("--out", type=Path, required=True)
     s.add_argument("--g", action="append", default=[], help="extra tb parameter KEY=VAL")
+    s.add_argument("--mtp", type=int, nargs="?", const=1, default=0,
+                   help="1: controller + collar (bench) + CP die translator (DS MTP job); 2: the collar inside the CP die")
     r = sp.add_parser("report"); r.add_argument("run", type=Path); r.add_argument("--out", type=Path)
     a = ap.parse_args()
     if a.cmd == "prep":

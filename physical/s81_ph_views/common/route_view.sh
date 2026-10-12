@@ -52,8 +52,9 @@ echo "rc=$rc" > $W/exit
 if (( rc != 0 )); then exit "$rc"; fi
 # CTS-only calibration run (closure loop: --pnr-stop-after cts): no sign-off / export
 case " $* " in *" --pnr-stop-after "*) echo DONE >> $W/exit; exit 0;; esac
-mac1=$(echo ${MACROS:-} | awk '{print $1}' | cut -d= -f2)
-python3 tools/w18/corner_sta.py ${mac1:+--macro $mac1} --post-sdc physical/s81_ph_views/common/signoff_unc60.sdc --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1 || rc=$?
+# every macro view (memory macros AND hardened leaves) is timed with its own liberty at sign-off
+macs=""; for mv in ${MACROS:-}; do macs="$macs --macro $(echo $mv | cut -d= -f2)"; done
+python3 tools/w18/corner_sta.py $macs --post-sdc physical/s81_ph_views/common/signoff_unc60.sdc --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1 || rc=$?
 echo "corner_rc=$rc" >> $W/exit
 if (( rc != 0 )); then exit "$rc"; fi
 mvx=""; for mv in ${MACROS:-}; do mvx="$mvx --macro-view $(echo $mv | cut -d= -f2)"; done

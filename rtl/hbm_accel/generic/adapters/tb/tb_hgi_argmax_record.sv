@@ -10,6 +10,10 @@ module tb_hgi_argmax_record;
 `else
     localparam integer MO = 0;
 `endif
+`ifndef LPS
+ `define LPS 8
+`endif
+    localparam integer LPS = `LPS;            // hgi-1010/tput1-argmax: 16 = the opt-in wide adapter / engine (VM sector pairs)
     `include "am_sizes.svh"
     reg clk = 0;
     always #1 clk = ~clk;
@@ -24,14 +28,14 @@ module tb_hgi_argmax_record;
     reg rst_n = 0;
     reg [682:0] rec = 0; reg [7:0] rank = 0;
     wire [2:0] ret; wire nan_flag; wire [337:0] vmq; wire [273:0] vmr0, vmr1; reg [337:0] tq = 0;
-    wire e_in_v, e_in_last, e_bias_en, e_out_v, e_out_nan, e_fault, e_rf; wire [7:0] e_mask; wire [255:0] e_vals, e_bias;
+    wire e_in_v, e_in_last, e_bias_en, e_out_v, e_out_nan, e_fault, e_rf; wire [LPS-1:0] e_mask; wire [LPS*32-1:0] e_vals, e_bias;
     wire [6:0] e_rank; wire [17:0] e_imm, e_idx; wire [31:0] e_val;
-    ot_hgi_argmax_record #(.MUT_OFFSET(MO)) u (.clk(clk), .rst_n(rst_n), .cfg_rank(rank), .rec(rec), .ret(ret),
-        .nan_flag(nan_flag), .vmq(vmq), .vmr(vmr0), .am_stream(523'd0), .e_in_v(e_in_v), .e_in_last(e_in_last),
+    ot_hgi_argmax_record #(.MUT_OFFSET(MO), .LPS(LPS)) u (.clk(clk), .rst_n(rst_n), .cfg_rank(rank), .rec(rec), .ret(ret),
+        .nan_flag(nan_flag), .vmq(vmq), .vmr(vmr0), .am_stream({(3 + 65 * LPS){1'b0}}), .e_in_v(e_in_v), .e_in_last(e_in_last),
         .e_bias_en(e_bias_en), .e_mask(e_mask), .e_vals(e_vals), .e_bias(e_bias), .e_rank(e_rank), .e_imm(e_imm),
         .e_out_v(e_out_v), .e_out_idx(e_idx), .e_out_nan(e_out_nan), .e_fault(e_fault), .e_range_fault(e_rf),
         .e_out_value(e_val));
-    ot_hgi_argmax18_m #(.LP(8), .GENERIC18(1)) u_e (.clk(clk), .rst_n(rst_n), .in_v(e_in_v), .in_last(e_in_last),
+    ot_hgi_argmax18_m #(.LP(LPS), .GENERIC18(1)) u_e (.clk(clk), .rst_n(rst_n), .in_v(e_in_v), .in_last(e_in_last),
         .in_bias_en(e_bias_en), .in_mask(e_mask), .in_vals(e_vals), .in_bias(e_bias), .cfg_rank(e_rank), .cfg_imm_a(e_imm),
         .out_v(e_out_v), .out_idx(e_idx), .out_nan(e_out_nan), .fault(e_fault), .out_range_fault(e_rf), .out_value(e_val));
     ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, vmq}), .cr({vmr1, vmr0}), .status());

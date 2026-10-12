@@ -1,0 +1,190 @@
+{
+  "recorded_utc": "2026-10-10T12:22:20.004904+00:00",
+  "source": "http://127.0.0.1:8765/api/elements",
+  "idle_count": 20,
+  "idle_actions": [
+    {
+      "element": "ot_qkvd_kv_wq",
+      "target": "Qwen ROM",
+      "registry_owner": "Claude:redesign-qwen",
+      "category": "needs redesign (no live job)",
+      "assigned_owner": "rom_takeover/qwen/kv_leaves",
+      "action": "Collect binary-controller and boundary pin successors, qualify 128-leaf/encoder composition with actual CDC geometry.",
+      "gate_or_job": null
+    },
+    {
+      "element": "qfd_crom48",
+      "target": "Qwen ROM",
+      "registry_owner": "Claude:drive-0158",
+      "category": "needs redesign (no live job)",
+      "assigned_owner": "crosscut_takeover/structural_idle/res_ser_crom",
+      "action": "Verify exact qualified closed crom_g/cbuf replacement binding and register supersession; preserve old monolith failures and avoid reroute.",
+      "gate_or_job": null
+    },
+    {
+      "element": "qfd_io_xfifo",
+      "target": "Qwen ROM",
+      "registry_owner": "Codex:qwen_system routine; Claude phys-intake J6",
+      "category": "needs redesign (no live job)",
+      "assigned_owner": "rom_takeover/qwen/io_xfifo",
+      "action": "Collect SS/FF/TT exports from unchanged closed ODB; run actual relay/CDC composition and die binding before adoption.",
+      "gate_or_job": null
+    },
+    {
+      "element": "qfd_kv_row_endpoint",
+      "target": "Qwen ROM",
+      "registry_owner": "Codex:qwen-system",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "rom_takeover/qwen",
+      "action": "Compose actual endpoint, seq and tree-top controller pair; standalone full-width acceptance/wrap gates and production lint passed, physical jobs preserved.",
+      "gate_or_job": null
+    },
+    {
+      "element": "qfd_sp_res_ser",
+      "target": "Qwen ROM",
+      "registry_owner": "Claude:struct-close",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "crosscut_takeover/structural_idle/res_ser_crom",
+      "action": "Collect separate slot and controller routes; compose measured service queue/stall costs (12.008 cycles/burst) and added fill latency before adoption.",
+      "gate_or_job": null
+    },
+    {
+      "element": "dsfd_coll_core",
+      "target": "DeepSeek ROM",
+      "registry_owner": "Claude:cont-takeover (s81 continuation; drive-0849 handoff)",
+      "category": "needs redesign (no live job)",
+      "assigned_owner": "rom_takeover/ds_collective",
+      "action": "Assemble cb/ce/ct and LCR credit masters with retained closed clock tile; qualify all four new views before composed STA.",
+      "gate_or_job": null
+    },
+    {
+      "element": "ot_dsrom_markov_row_K256_PINREG1",
+      "target": "DeepSeek ROM",
+      "registry_owner": "Codex:mtp-markov-route",
+      "category": "needs redesign (no live job)",
+      "assigned_owner": "crosscut_takeover/mtp",
+      "action": "Finish root decoder/output register successor and route; price +238 cycles per transaction from rb4 exact gate.",
+      "gate_or_job": null
+    },
+    {
+      "element": "dsrom_mtp_head_full340_A",
+      "target": "DeepSeek ROM",
+      "registry_owner": "Codex:mtp-takeover-20261010",
+      "category": "implementation recorded (no physical job)",
+      "assigned_owner": "crosscut_takeover/mtp",
+      "action": "Bind full head source to directed chain gate; collect current physical head successor, then update model only after exact and timing gates.",
+      "gate_or_job": null
+    },
+    {
+      "element": "dsrom_mtp_seq_native_binding",
+      "target": "DeepSeek ROM",
+      "registry_owner": "Codex:mtp-takeover-20261010",
+      "category": "implementation recorded (no physical job)",
+      "assigned_owner": "crosscut_takeover/mtp",
+      "action": "Complete endpoint integration for six measured native chains; retain OPEN binding until all producers/consumers qualify.",
+      "gate_or_job": null
+    },
+    {
+      "element": "hfd_vm_ne_e",
+      "target": "HBM accelerator",
+      "registry_owner": "Codex:vm8-tap",
+      "category": "needs redesign (no live job)",
+      "assigned_owner": "/root/hbm_takeover/hbm_flow/vm8",
+      "action": "Qualify fanout-bounded clock-tap bank successor and exactness, sequential own calibration before route; match real CTS artifact and source latency; preserve progressing calibration.",
+      "gate_or_job": "bankcandidatecf7c9ca2a max222positive/445total sinks,taps82->1056,+0cycles geometryPASS; sew pilot recipes calibrate_parallel:false; old recovery artifacts race root assigned /root/merge_collect daemon fix. Clockpower/contextualholdgatespending."
+    },
+    {
+      "element": "ot_gpu_rf_visibility_fence_p",
+      "target": "HBM accelerator",
+      "registry_owner": "Codex:structural-idle-port-fence-frame",
+      "category": "needs redesign (no live job)",
+      "assigned_owner": "crosscut_takeover/structural_idle/port_fence_frame",
+      "action": "Collect registered PINRET physical successor after exact full seeds/ACK/fence gate; default remains off until context closure.",
+      "gate_or_job": null
+    },
+    {
+      "element": "hfd_sfu",
+      "target": "HBM accelerator",
+      "registry_owner": "Claude:fill-5",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "/root/hbm_takeover/hub_physical",
+      "action": "Qualify real three-stage replicated-reset lane, choose tall or widened full lane based on real closure/slot fit, then compose SFU quarter with matching macro and actual IO budgets.",
+      "gate_or_job": "hbm_sfu_lane_rstpipe3-5fbc10b08-tc-cl and rstpipe3w-d57301b03-tc-cl live; full-lane1500cycle reset exact PASS and never-release mutant FAIL246 (622293f58); no quarter physical job until matching qualified lane."
+    },
+    {
+      "element": "hfd_su_tile",
+      "target": "HBM accelerator",
+      "registry_owner": "Claude:hbm-forks",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "/root/hbm_takeover/hub_physical",
+      "action": "Finish two-layer M4/M6 pin-keepout lane85.32, then tile_xl with real falling-edge lockups, per-pin IO budgets and pin-flop anchors; replicate only after qualifying matched lane/tile.",
+      "gate_or_job": "hbm_su_lane_pk2-aba7c2f73 successor admitted; predecessor width83 failed20.8bits/um W/M4. Tile_xl two-tile\u00b1100psskew300cyclesPASS/bypassmutantFAIL287; no tilePNR until new lane real abstract. Old blanketIOFalsepathineligible."
+    },
+    {
+      "element": "hfd_vm_ne_n",
+      "target": "HBM accelerator",
+      "registry_owner": "Claude:drive-0849",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "/root/hbm_takeover/hbm_flow/vm8",
+      "action": "Qualify fanout-bounded clock-tap bank successor and exactness, sequential own calibration before route; match real CTS artifact and source latency; preserve progressing calibration.",
+      "gate_or_job": "bankcandidatecf7c9ca2a max222positive/445total sinks,taps82->1056,+0cycles geometryPASS; sew pilot recipes calibrate_parallel:false; old recovery artifacts race root assigned /root/merge_collect daemon fix. Clockpower/contextualholdgatespending."
+    },
+    {
+      "element": "hfd_vm_se_n",
+      "target": "HBM accelerator",
+      "registry_owner": "Claude:drive-0849",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "/root/hbm_takeover/hbm_flow/vm8",
+      "action": "Qualify fanout-bounded clock-tap bank successor and exactness, sequential own calibration before route; match real CTS artifact and source latency; preserve progressing calibration.",
+      "gate_or_job": "bankcandidatecf7c9ca2a max222positive/445total sinks,taps82->1056,+0cycles geometryPASS; sew pilot recipes calibrate_parallel:false; old recovery artifacts race root assigned /root/merge_collect daemon fix. Clockpower/contextualholdgatespending."
+    },
+    {
+      "element": "hfd_vm_se_s",
+      "target": "HBM accelerator",
+      "registry_owner": "Claude:drive-0849",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "/root/hbm_takeover/hbm_flow/vm8",
+      "action": "Qualify fanout-bounded clock-tap bank successor and exactness, sequential own calibration before route; match real CTS artifact and source latency; preserve progressing calibration.",
+      "gate_or_job": "bankcandidatecf7c9ca2a max222positive/445total sinks,taps82->1056,+0cycles geometryPASS; sew pilot recipes calibrate_parallel:false; old recovery artifacts race root assigned /root/merge_collect daemon fix. Clockpower/contextualholdgatespending."
+    },
+    {
+      "element": "hfd_vm_sw_n",
+      "target": "HBM accelerator",
+      "registry_owner": "Claude:fill-5",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "/root/hbm_takeover/hbm_flow/vm8",
+      "action": "Qualify fanout-bounded clock-tap bank successor and exactness, sequential own calibration before route; match real CTS artifact and source latency; preserve progressing calibration.",
+      "gate_or_job": "bankcandidatecf7c9ca2a max222positive/445total sinks,taps82->1056,+0cycles geometryPASS; sew pilot recipes calibrate_parallel:false; old recovery artifacts race root assigned /root/merge_collect daemon fix. Clockpower/contextualholdgatespending."
+    },
+    {
+      "element": "ot_hcoll_port2",
+      "target": "HBM accelerator",
+      "registry_owner": "Claude:struct-close",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "crosscut_takeover/structural_idle/port_fence_frame",
+      "action": "Compose two current protected half masters with independent exact gate; collect current half route, refuse old ECC0 monolith alias.",
+      "gate_or_job": null
+    },
+    {
+      "element": "ot_hgi_su_unit",
+      "target": "HBM accelerator",
+      "registry_owner": "Claude:hgi-adapters",
+      "category": "flow failure (no live job)",
+      "assigned_owner": "/root/hbm_takeover/hbm_flow",
+      "action": "Compose SU controller+actualr25 local-memory/vector views; qualify reset-local control/resetless valid-qualified payload candidate without flat-memory synthesis.",
+      "gate_or_job": "199dc0b71 ctl a/bRUNNING; fullSU/SFU/FUSED/STREAM+dirtymutantPASS4e2cede01. optin849012083 removes2867 resetloads at+0cycles with four-state poisonedpayload firstrecord and consumer-valid negatives PASS; SFUGLU shadow/physicalpending. Unitcomposition notclosed."
+    },
+    {
+      "element": "R25IQG native indexer topology",
+      "target": "HBM accelerator",
+      "registry_owner": "Codex:hbm-native-t4",
+      "category": "implementation recorded (no physical job)",
+      "assigned_owner": "/root/hbm_takeover/norm_selector",
+      "action": "Compose actual T4 L4tap\u00d74 + finite join + selector and bind all actual HGI adapter ports; qualify full arithmetic, geometry, corner views and credits before topology adoption.",
+      "gate_or_job": "join/tapLANE0=4/8/12 jobsadmitted,reuse95dLANE0=0/T4bench. join342beats500stallPASS/mutantsFAIL. R25G4T4 geometry9fabfba21 PASS0overlap/pinclash/reach,787.153mm\u00b2die/+9.6mm\u00b2reservation; actualadapter6516FF+3in/3outstages model built, physicaljoins stillpending."
+    }
+  ],
+  "fleet_audit": "/home/ubuntu/codex-takeover-20261010/fleet/review-20261010T122018Z.json",
+  "bf_deadline_pt": "2026-10-10T21:30:00-07:00",
+  "fleet_summary": "No eligible destructive actions or stale direct compute. AGIdock 8.1GiB available: hold new large admissions until measured headroom permits. Local125GiB free; source archive transfer preserved and full checkout owners instructed sparse. PVE2/PVE3 excluded."
+}

@@ -1,0 +1,281 @@
+{
+  "source": "28d7cb869fda34389dce3b1375671282e4f7e2e7",
+  "corner_policy": "SS reach504 remains required; TT wire reach reported separately",
+  "runs": [
+    {
+      "case": "extra2",
+      "log": "results/physical/s81_gen_20261010/x1b_extra2_28d7cb869.log",
+      "sha256": "b21ee31239754944e47eef39d59ccc6b959f8ea4a632e1231d37b7486c2067aa",
+      "ss_reach_um": 504.0,
+      "ss_violations": 128,
+      "examples": [
+        {
+          "chain": "g_rt_127_8b_y2_y_rt_127_8b_2_0->y_rt_127_8b_2",
+          "seg": "g_rt_127_8b_y2_y_rt_127_8b_2_0->y_rt_127_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_126_8b_y2_y_rt_126_8b_2_0->y_rt_126_8b_2",
+          "seg": "g_rt_126_8b_y2_y_rt_126_8b_2_0->y_rt_126_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_125_8b_y2_y_rt_125_8b_2_0->y_rt_125_8b_2",
+          "seg": "g_rt_125_8b_y2_y_rt_125_8b_2_0->y_rt_125_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_124_8b_y2_y_rt_124_8b_2_0->y_rt_124_8b_2",
+          "seg": "g_rt_124_8b_y2_y_rt_124_8b_2_0->y_rt_124_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_123_8b_y2_y_rt_123_8b_2_0->y_rt_123_8b_2",
+          "seg": "g_rt_123_8b_y2_y_rt_123_8b_2_0->y_rt_123_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_122_8b_y2_y_rt_122_8b_2_0->y_rt_122_8b_2",
+          "seg": "g_rt_122_8b_y2_y_rt_122_8b_2_0->y_rt_122_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_121_8b_y2_y_rt_121_8b_2_0->y_rt_121_8b_2",
+          "seg": "g_rt_121_8b_y2_y_rt_121_8b_2_0->y_rt_121_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_120_8b_y2_y_rt_120_8b_2_0->y_rt_120_8b_2",
+          "seg": "g_rt_120_8b_y2_y_rt_120_8b_2_0->y_rt_120_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_119_8b_y2_y_rt_119_8b_2_0->y_rt_119_8b_2",
+          "seg": "g_rt_119_8b_y2_y_rt_119_8b_2_0->y_rt_119_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_118_8b_y2_y_rt_118_8b_2_0->y_rt_118_8b_2",
+          "seg": "g_rt_118_8b_y2_y_rt_118_8b_2_0->y_rt_118_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_117_8b_y2_y_rt_117_8b_2_0->y_rt_117_8b_2",
+          "seg": "g_rt_117_8b_y2_y_rt_117_8b_2_0->y_rt_117_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_116_8b_y2_y_rt_116_8b_2_0->y_rt_116_8b_2",
+          "seg": "g_rt_116_8b_y2_y_rt_116_8b_2_0->y_rt_116_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_115_8b_y2_y_rt_115_8b_2_0->y_rt_115_8b_2",
+          "seg": "g_rt_115_8b_y2_y_rt_115_8b_2_0->y_rt_115_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_114_8b_y2_y_rt_114_8b_2_0->y_rt_114_8b_2",
+          "seg": "g_rt_114_8b_y2_y_rt_114_8b_2_0->y_rt_114_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_113_8b_y2_y_rt_113_8b_2_0->y_rt_113_8b_2",
+          "seg": "g_rt_113_8b_y2_y_rt_113_8b_2_0->y_rt_113_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_112_8b_y2_y_rt_112_8b_2_0->y_rt_112_8b_2",
+          "seg": "g_rt_112_8b_y2_y_rt_112_8b_2_0->y_rt_112_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_111_8b_y2_y_rt_111_8b_2_0->y_rt_111_8b_2",
+          "seg": "g_rt_111_8b_y2_y_rt_111_8b_2_0->y_rt_111_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_110_8b_y2_y_rt_110_8b_2_0->y_rt_110_8b_2",
+          "seg": "g_rt_110_8b_y2_y_rt_110_8b_2_0->y_rt_110_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_109_8b_y2_y_rt_109_8b_2_0->y_rt_109_8b_2",
+          "seg": "g_rt_109_8b_y2_y_rt_109_8b_2_0->y_rt_109_8b_2",
+          "um": 526.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_108_8b_y2_y_rt_108_8b_2_0->y_rt_108_8b_2",
+          "seg": "g_rt_108_8b_y2_y_rt_108_8b_2_0->y_rt_108_8b_2",
+          "um": 526.2,
+          "hops": 1
+        }
+      ],
+      "tt": {
+        "reach_um": 674.0,
+        "reach_violations": 0,
+        "verdict_reach": "PASS",
+        "max_um": 526.2
+      },
+      "verdict": "FAIL",
+      "exit": 3
+    },
+    {
+      "case": "nott",
+      "log": "results/physical/s81_gen_20261010/x1b_nott_28d7cb869.log",
+      "sha256": "be5bae9a1a1a3c2889aa58cf8572129f8c4df4a6c0d7b7090c83acfe399288d1",
+      "ss_reach_um": 504.0,
+      "ss_violations": 384,
+      "examples": [
+        {
+          "chain": "g_rt_127_8b_y0_y_rt_127_8b_0_0->y_rt_127_8b_0",
+          "seg": "g_rt_127_8b_y0_y_rt_127_8b_0_0->y_rt_127_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_126_8b_y0_y_rt_126_8b_0_0->y_rt_126_8b_0",
+          "seg": "g_rt_126_8b_y0_y_rt_126_8b_0_0->y_rt_126_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_125_8b_y0_y_rt_125_8b_0_0->y_rt_125_8b_0",
+          "seg": "g_rt_125_8b_y0_y_rt_125_8b_0_0->y_rt_125_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_124_8b_y0_y_rt_124_8b_0_0->y_rt_124_8b_0",
+          "seg": "g_rt_124_8b_y0_y_rt_124_8b_0_0->y_rt_124_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_123_8b_y0_y_rt_123_8b_0_0->y_rt_123_8b_0",
+          "seg": "g_rt_123_8b_y0_y_rt_123_8b_0_0->y_rt_123_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_122_8b_y0_y_rt_122_8b_0_0->y_rt_122_8b_0",
+          "seg": "g_rt_122_8b_y0_y_rt_122_8b_0_0->y_rt_122_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_121_8b_y0_y_rt_121_8b_0_0->y_rt_121_8b_0",
+          "seg": "g_rt_121_8b_y0_y_rt_121_8b_0_0->y_rt_121_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_120_8b_y0_y_rt_120_8b_0_0->y_rt_120_8b_0",
+          "seg": "g_rt_120_8b_y0_y_rt_120_8b_0_0->y_rt_120_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_119_8b_y0_y_rt_119_8b_0_0->y_rt_119_8b_0",
+          "seg": "g_rt_119_8b_y0_y_rt_119_8b_0_0->y_rt_119_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_118_8b_y0_y_rt_118_8b_0_0->y_rt_118_8b_0",
+          "seg": "g_rt_118_8b_y0_y_rt_118_8b_0_0->y_rt_118_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_117_8b_y0_y_rt_117_8b_0_0->y_rt_117_8b_0",
+          "seg": "g_rt_117_8b_y0_y_rt_117_8b_0_0->y_rt_117_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_116_8b_y0_y_rt_116_8b_0_0->y_rt_116_8b_0",
+          "seg": "g_rt_116_8b_y0_y_rt_116_8b_0_0->y_rt_116_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_115_8b_y0_y_rt_115_8b_0_0->y_rt_115_8b_0",
+          "seg": "g_rt_115_8b_y0_y_rt_115_8b_0_0->y_rt_115_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_114_8b_y0_y_rt_114_8b_0_0->y_rt_114_8b_0",
+          "seg": "g_rt_114_8b_y0_y_rt_114_8b_0_0->y_rt_114_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_113_8b_y0_y_rt_113_8b_0_0->y_rt_113_8b_0",
+          "seg": "g_rt_113_8b_y0_y_rt_113_8b_0_0->y_rt_113_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_112_8b_y0_y_rt_112_8b_0_0->y_rt_112_8b_0",
+          "seg": "g_rt_112_8b_y0_y_rt_112_8b_0_0->y_rt_112_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_111_8b_y0_y_rt_111_8b_0_0->y_rt_111_8b_0",
+          "seg": "g_rt_111_8b_y0_y_rt_111_8b_0_0->y_rt_111_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_110_8b_y0_y_rt_110_8b_0_0->y_rt_110_8b_0",
+          "seg": "g_rt_110_8b_y0_y_rt_110_8b_0_0->y_rt_110_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_109_8b_y0_y_rt_109_8b_0_0->y_rt_109_8b_0",
+          "seg": "g_rt_109_8b_y0_y_rt_109_8b_0_0->y_rt_109_8b_0",
+          "um": 847.2,
+          "hops": 1
+        },
+        {
+          "chain": "g_rt_108_8b_y0_y_rt_108_8b_0_0->y_rt_108_8b_0",
+          "seg": "g_rt_108_8b_y0_y_rt_108_8b_0_0->y_rt_108_8b_0",
+          "um": 847.2,
+          "hops": 1
+        }
+      ],
+      "tt": {
+        "reach_um": 674.0,
+        "reach_violations": 128,
+        "verdict_reach": "FAIL",
+        "max_um": 847.2
+      },
+      "verdict": "FAIL",
+      "exit": 3
+    }
+  ],
+  "next": "450um actual relay pitch with up to2added stations, admitted pinned diagnostic; no timing relaxation or adoption"
+}

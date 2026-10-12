@@ -1,0 +1,11 @@
+STORE_RECORD case=0 record=1 cycles=13886
+STORE_RECORD case=0 record=2 cycles=13886
+STORE_MEASURE case=0 records=2 cycles=27775 accepted=12288 acked=12288 KLAT=40
+STORE_RECORD case=1 record=1 cycles=9278
+STORE_MEASURE case=1 records=1 cycles=9280 accepted=4096 acked=4096 KLAT=40
+summary: 2 cases (3 records), 131072 memory words checked
+HGI_ROW_GATHER_STORE PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_row_gather_store.sv:128: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 2.223 s; speed 858.655 us/s
+- Verilator: cpu 2.223 s on 1 threads; allocated 17 MB

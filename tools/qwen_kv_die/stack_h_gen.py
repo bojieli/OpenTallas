@@ -326,6 +326,137 @@ def generate():
     ectl = rep(ectl, """    localparam integer LANE_D = 4;                         // issue -> lane inputs (S1, S1b, S2, S3)""",
                """    localparam integer LANE_D = 4;                         // issue -> lane inputs (S1, S1b, S2 at the tile pin, S3)
     localparam integer PLAT = 4;""")
+    # ---- qwen-1010/b 2026-10-10: ectl_c timing successor (route qkd_ectl_c-f8a6d7c30 EARLY_FAIL_SETUP TT -519 ps, 746
+    # endpoints).  Three structural causes, three exact fixes (transaction level; the bench re-measures the cycles):
+    #  (a) the request generator is fed by the E face (exp_done / n_s / gmax / start) but its requests leave on the W face
+    #      (the landing column): req_* crossed the 648-um tile in one cycle (629 ps of wire, reg -> out -543 ps).  The
+    #      requests now pass RQD registered relay stages to the W-face pin flops (+RQD cycles of request latency, inside
+    #      the DQ = 32 credit window).
+    #  (b) the q beat broadcast enters on the E face and leaves on both long faces (t0_qd S / t1_qd N, the far end ~700 um
+    #      away): one registered mid stage (qv / qb / qd), and q_ready counts the delayed valid, so the q rows still land in
+    #      the head tiles before the first K issue reaches them (+1 cycle at the layer start).
+    #  (c) the score / running-max block takes its own reset leaf (u_rc fanned out to the whole tile: lmax -16 ps).
+    ectl = re.sub(r'output reg(\s+)req_valid,', r'output wire\1req_valid,', ectl, count=1)
+    ectl = re.sub(r'output reg(\s+)req_v,', r'output wire\1req_v,', ectl, count=1)
+    ectl = re.sub(r'output reg(\s+)req_g,', r'output wire\1req_g,', ectl, count=1)
+    ectl = re.sub(r'output reg (\s*)\[12:0\](\s+)req_t,', r'output wire\1[12:0]\2req_t,', ectl, count=1)
+    n0 = len(re.findall(r'\breq_(?:valid|v|g|t)\b(?=\s*<=)', ectl))
+    assert n0 == 10, n0
+    ectl = re.sub(r'\breq_(valid|v|g|t)\b(?=\s*<=)', r'rq_\1', ectl)
+    ectl = rep(ectl, """    // ---- request generator -------------------------------------------------------------------------------------------
+""", """    // ---- request generator -------------------------------------------------------------------------------------------
+    reg        rq_valid, rq_v, rq_g;                    // the generator's request (relayed to the W-face pin flops below)
+    reg [12:0] rq_t;
+""")
+    ectl = rep(ectl, """    // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
+""", """    // ---- request relay: RQD registered stages from the generator to the W-face pin flops (the last stage) -------------
+    localparam integer RQD = 2;
+    wire [RQD:0]        rqv_s;
+    wire [15*(RQD+1)-1:0] rqd_s;
+    assign rqv_s[0] = rq_valid;
+    assign rqd_s[14:0] = {rq_v, rq_g, rq_t};
+    genvar gq;
+    generate for (gq = 0; gq < RQD; gq = gq + 1) begin : g_rq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(15)) u_d (.clk(clk), .d(rqd_s[15*gq +: 15]), .q(rqd_s[15*(gq + 1) +: 15]));
+    end endgenerate
+    assign req_valid = rqv_s[RQD];
+    assign {req_v, req_g, req_t} = rqd_s[15*RQD +: 15];
+
+    // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
+""")
+    # (b) q beat mid stage
+    ectl = rep(ectl, """    always @(posedge clk or negedge rst_n) if (!rst_n) qv_r <= 1'b0; else qv_r <= q_valid_in;
+    always @(posedge clk) begin qb_r <= q_beat_in; qd_r <= q_data_in; end""",
+               """    reg               qv_p;                    // pin flops (E face); qv_r / qb_r / qd_r are the mid stage
+    reg  [5:0]        qb_p;
+    reg  [511:0]      qd_p;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin qv_p <= 1'b0; qv_r <= 1'b0; end else begin qv_p <= q_valid_in; qv_r <= qv_p; end
+    always @(posedge clk) begin qb_p <= q_beat_in; qd_p <= q_data_in; qb_r <= qb_p; qd_r <= qd_p; end""")
+    # (c) score / running-max reset leaf
+    ectl = rep(ectl, """    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+""", """    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+    wire rsc;                                                         // the score / running-max block's own leaf
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rsc));
+""")
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc)
+        if (!rc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end""", """    always @(posedge clk or negedge rsc)
+        if (!rsc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end""")
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc) begin
+        if (!rc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end""", """    always @(posedge clk or negedge rsc) begin
+        if (!rsc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end""")
+    # (e) qwen-1010/b 2026-10-10 (timed HBM3E: DQ 128 engine credits): above DQ 32 the row FIFO is TWO-LEVEL -- an SRAM
+    # level (4 x ot_sram_1r1w_128x256 macros: 128 rows x 1,024 b) in front of the 8-row flop level with the pipelined
+    # read pointers.  Rows enter the flop level in order (direct only while the SRAM level is empty and no refill is in
+    # flight); the SRAM level refills it one row a cycle.  Same push / pop / dout / nonempty contract, rows later at most.
+    old_rows = """    ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                             .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));"""
+    assert old_rows in ectl, 'rows inst'
+    ectl = ectl.replace(old_rows, """    generate if (DQ > 32) begin : g_rows2
+        ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                                 .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    end else begin : g_rows1
+        ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                                 .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    end endgenerate""")
+    # (f) qwen-1010/b 2026-10-10: STREAM ORDER for the K (max) pass.  The KV-die controller streams each PC in its
+    # PC-local order j = {v, g, t[6], t[12:9], t[5:3]} (CONTRACT, stream bench: 0.966 TB/s worst over 8 refresh phases);
+    # the K pass consumes in that order (t[6] outer) whenever the stack holds more than 1,024 positions: the max pass and
+    # the score memory are order-free (scores land by their {g, idx} tag; max is exact in any order).  The V pass keeps
+    # the golden order.  The engine's linear counter L (step R) maps to the position index pidx = perm(L); an L whose
+    # pidx is not a position is skipped by both the request generator and the consumer.  KVD_VMUT (bench only):
+    # the V pass walks k in reverse (the P.V sum reordered) -- must be inexact.
+    ectl = rep(ectl, """    wire       rg_k_ok = rg_run && !rg_vph && (rg_idx < n_s);""",
+               """    wire       kord = (n_s > 12'd1024);                  // stream order for the K pass (see above)
+    wire [11:0] rg_pidx = kord ? {rg_idx[11], rg_idx[9:6], rg_idx[10], rg_idx[5:0]} : rg_idx;
+    wire       rg_klim = kord ? (rg_idx < 12'd2048) : (rg_idx < n_s);
+    wire       rg_k_ok = rg_run && !rg_vph && rg_klim && (rg_pidx < n_s);""")
+    ectl = rep(ectl, """                if (rg_idx < n_s) begin
+                    if (has_credit) begin
+                        issue = 1'b1;
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_idx[10:7], rg_idx[6:0]);
+                        rg_idx <= rg_idx + R;
+                    end""", """                if (rg_klim) begin
+                    if (rg_pidx >= n_s) rg_idx <= rg_idx + R;             // not a position: skip
+                    else if (has_credit) begin
+                        issue = 1'b1;
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
+                        rg_idx <= rg_idx + R;
+                    end""")
+    ectl = rep(ectl, """    wire       k_issue = c_started && !c_vph && !c_fin && (c_idx < n_s) && row_ne && q_ready;""",
+               """    wire [11:0] c_pidx = kord ? {c_idx[11], c_idx[9:6], c_idx[10], c_idx[5:0]} : c_idx;
+    wire       c_klim = kord ? (c_idx < 12'd2048) : (c_idx < n_s);
+    wire       k_issue = c_started && !c_vph && !c_fin && c_klim && (c_pidx < n_s) && row_ne && q_ready;""")
+    ectl = rep(ectl, """                    if (c_idx < n_s) begin
+                        if (k_issue) begin
+                            c_idx <= c_idx + R;""", """                    if (c_klim) begin
+                        if (c_pidx >= n_s) c_idx <= c_idx + R;            // not a position: skip
+                        else if (k_issue) begin
+                            c_idx <= c_idx + R;""")
+    ectl = rep(ectl, """.d({c_g, c_idx[10:0]}), .q(tag_sc));""", """.d({c_g, c_pidx[10:0]}), .q(tag_sc));""")
+    ectl = rep(ectl, """    wire [13:0] c_vt = tpos(c_k, {c_gam[3:0], c_j});""", """`ifdef KVD_VMUT
+    wire [3:0]  c_kk = klast(c_gam[3:0]) - c_k;              // MUTANT: the V pass k order reversed (P.V sum reordered)
+`else
+    wire [3:0]  c_kk = c_k;
+`endif
+    wire [13:0] c_vt = tpos(c_kk, {c_gam[3:0], c_j});""")
+    ectl = rep(ectl, """    wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});""", """`ifdef KVD_VMUT
+    wire [13:0] rg_vt = tpos(klast(rg_gam[3:0]) - rg_k, {rg_gam[3:0], rg_j});
+`else
+    wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});
+`endif""")
+    # (g) qwen-1010/b: the e FIFO (DQ x 64 b) above DQ 32 is two-level too (one SRAM macro, padded), no memory override
+    ectl = rep(ectl, """    ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                        .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));""",
+               """    generate if (DQ > 32) begin : g_e2
+        ot_nhb_fifo_rows2_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                               .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
+    end else begin : g_e1
+        ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                        .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
+    end endgenerate""")
     wrapper = ENGINE
     s = s[:i] + HEAD.lstrip('\n') + '\n' + ectl + '\n' + wrapper + s[j:]
     # ================= the aggregator: node beat lanes (beat b = lanes d = LFB k + b of every head) =================
@@ -336,8 +467,144 @@ def generate():
         reg  [LN*32-1:0] stg [0:ND-1];""", """        localparam integer SA = (ND > 1) ? $clog2(ND) : 1;
         integer          hh_, kk_;
         reg  [LN*32-1:0] stg [0:ND-1];""")
+    # (d) qwen-1010/b 2026-10-10: the row FIFO's 32 read-pointer copies span the 648-um word; the pop (the K / V issue
+    # decision) reached all of them in one cycle (cyc8_r -> issue -> 450 ps of buffered wire -> u_rows.g_rp[*]: -204 ps,
+    # 92 endpoints).  The pop now reaches each slice through two registered stages (one of NQ quadrant copies, then the
+    # slice's own), the slice pointer advances on its stage, and the slice reads at q + ps + pq -- exactly the FIFO
+    # pointer (q counts the pops up to t - 3, ps = pop(t - 2), pq = pop(t - 1)).  0 cycles.
+    s = rep(s, """// read-pointer copy: advances on pop exactly as the FIFO's own pointer
+module ot_nhb_rp_h""", """// read-pointer copy (pop reaches it through two registered stages, pq then ps): reads at q + ps + pq = the FIFO pointer
+module ot_nhb_rp2_h #(parameter integer AW = 5, parameter integer D = 32) (input wire clk, input wire rst_n,
+                                                                           input wire pq, output wire [AW-1:0] ra);
+    reg [AW-1:0] q;
+    reg          ps;
+    wire [AW-1:0] q1 = (q == D - 1) ? {AW{1'b0}} : q + 1'b1;
+    wire [AW-1:0] q2 = (q1 == D - 1) ? {AW{1'b0}} : q1 + 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin q <= {AW{1'b0}}; ps <= 1'b0; end else begin ps <= pq; if (ps) q <= q1; end
+    assign ra = (ps && pq) ? q2 : ((ps || pq) ? q1 : q);
+endmodule
+// read-pointer copy: advances on pop exactly as the FIFO's own pointer
+module ot_nhb_rp_h""")
+    s = rep(s, """    wire [NC*AW-1:0] rpc;
+    genvar c;
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pop(pop), .q(rpc[AW*c +: AW]));""",
+           """    wire [NC*AW-1:0] rpc;
+    localparam integer NQ = (NC >= 4) ? 4 : 1;
+    wire [NQ-1:0] pq;
+    genvar c;
+    generate for (c = 0; c < NQ; c = c + 1) begin : g_pq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_pq (.clk(clk), .rst_n(rst_n), .d(pop), .q(pq[c]));
+    end endgenerate
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));""")
+    s = rep(s, """// FP32 a > b for finite operands""", ROWS2 + """// FP32 a > b for finite operands""")
     return s
 
+
+ROWS2 = r'''// Flop level of the two-level FIFO: ot_nhb_fifo_rows_h with its D entries as EXPLICIT registers (qwen-1010/b
+// 2026-10-10, fe-push SYNTH_MEMORY_MAX_BITS audit: no memory array, so synthesis needs no memory-bits override).
+module ot_nhb_fifo_rows_r_h #(parameter integer W = 1024, parameter integer D = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         pop,
+    output wire [W-1:0] dout,
+    output wire         nonempty,
+    output reg  [$clog2(D+1)-1:0] count
+);
+    localparam integer AW = (D > 1) ? $clog2(D) : 1;
+    localparam integer NC = W / 32;
+    reg [AW-1:0] wpd;
+    reg [D-1:0]  we;
+    reg          pr;
+    reg [W-1:0]  dr;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin wpd <= 0; we <= 0; pr <= 1'b0; count <= 0; end
+        else begin
+            pr <= push;
+            we <= push ? ({{(D-1){1'b0}}, 1'b1} << wpd) : {D{1'b0}};
+            if (push) wpd <= (wpd == D - 1) ? 0 : wpd + 1;
+            count <= count + (pr ? 1 : 0) - (pop ? 1 : 0);
+        end
+    end
+    always @(posedge clk) dr <= din;
+    wire [W*D-1:0] ent;
+    genvar e, c;
+    generate for (e = 0; e < D; e = e + 1) begin : g_ent
+        reg [W-1:0] r;
+        always @(posedge clk) if (we[e]) r <= dr;
+        assign ent[W*e +: W] = r;
+    end endgenerate
+    localparam integer NQ = (NC >= 4) ? 4 : 1;
+    wire [NQ-1:0] pq;
+    wire [NC*AW-1:0] rpc;
+    generate for (c = 0; c < NQ; c = c + 1) begin : g_pq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_pq (.clk(clk), .rst_n(rst_n), .d(pop), .q(pq[c]));
+    end endgenerate
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));
+        assign dout[32*c +: 32] = ent[W*rpc[AW*c +: AW] + 32*c +: 32];
+    end endgenerate
+    assign nonempty = (count != 0);
+endmodule
+
+// Two-level row FIFO (qwen-1010/b 2026-10-10, DQ > 32): an SRAM level (NM x ot_sram_1r1w_128x256: 128 rows) in front of
+// the D1-row flop level ot_nhb_fifo_rows_h (pipelined read pointers).  Order: a row goes straight to the flop level only
+// while the SRAM level is empty and no refill read is in flight, else to the SRAM level, which refills the flop level
+// one row a cycle (read issued when the flop level, counting its in-flight rows, has room).  count = both levels.
+module ot_nhb_fifo_rows2_h #(parameter integer W = 1024, parameter integer D = 128, parameter integer D1 = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         pop,
+    output wire [W-1:0] dout,
+    output wire         nonempty,
+    output reg  [$clog2(D+D1+1)-1:0] count
+);
+    localparam integer NM = (W + 255) / 256;          // macros (the last one padded)
+    localparam integer SD = 128;
+    reg  [6:0] swp, srp;
+    reg  [7:0] scnt;                                   // rows in the SRAM level
+    reg        rd_v;                                   // a refill read issued last edge (its row arrives now)
+    reg  [3:0] l1_pend;                                // rows promised to the flop level (in flight or in it)
+`ifdef KVD_RMUT
+    wire       to_l1   = push && !rd_v && l1_pend < D1;                 // MUTANT: bypasses rows still in the SRAM level
+`else
+    wire       to_l1   = push && scnt == 8'd0 && !rd_v && l1_pend < D1;
+`endif
+    wire       to_sram = push && !to_l1;
+    wire       rd      = (scnt != 8'd0) && (l1_pend + (to_l1 ? 1 : 0) < D1);   // refill when the flop level has room
+    wire [256*NM-1:0] srdp;
+    wire [256*NM-1:0] dinp = {{(256*NM-W){1'b0}}, din};
+    wire [W-1:0] srd = srdp[W-1:0];
+    genvar m;
+    generate for (m = 0; m < NM; m = m + 1) begin : g_m
+        ot_sram_1r1w_128x256_m1_r2c2 u_s (.clk(clk), .r_ce_in(rd), .r_addr_in(srp), .rd_out(srdp[256*m +: 256]),
+            .w_ce_in(to_sram), .w_addr_in(swp), .wd_in(dinp[256*m +: 256]), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    end endgenerate
+    wire        l1_push = to_l1 || rd_v;
+    wire [W-1:0] l1_din = rd_v ? srd : din;
+    wire [$clog2(D1+1)-1:0] l1_cnt;
+    ot_nhb_fifo_rows_r_h #(.W(W), .D(D1)) u_l1 (.clk(clk), .rst_n(rst_n), .push(l1_push), .din(l1_din), .pop(pop),
+                                              .dout(dout), .nonempty(nonempty), .count(l1_cnt));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin swp <= 0; srp <= 0; scnt <= 0; rd_v <= 1'b0; l1_pend <= 0; count <= 0; end
+        else begin
+            if (to_sram) swp <= swp + 7'd1;
+            if (rd) srp <= srp + 7'd1;
+            scnt <= scnt + (to_sram ? 8'd1 : 8'd0) - (rd ? 8'd1 : 8'd0);
+            rd_v <= rd;
+            l1_pend <= l1_pend + ((to_l1 || rd) ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
+            count <= count + (push ? 1 : 0) - (pop ? 1 : 0);
+        end
+    end
+endmodule
+
+'''
 
 CTL_MID = r'''    // ---- re-cut H: S1 (control, row, e, decision word) and its two S1b copies, one per head-tile pair ---------------
     localparam integer LTW = 12;

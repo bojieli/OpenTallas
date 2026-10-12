@@ -1,0 +1,18 @@
+REC 0 n 37984 rank 0 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 1 n 37984 rank 0 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 2 n 37984 rank 0 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 3 n 37984 rank 0 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 4 n 37984 rank 0 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 5 n 37984 rank 0 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 6 n 37984 rank 3 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 7 n 37984 rank 3 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 8 n 37984 rank 3 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 9 n 37984 rank 3 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 10 n 37984 rank 3 disp 0 first 3 last 2376 ret 2413 tail 37
+REC 11 n 37984 rank 3 disp 0 first 3 last 2376 ret 2413 tail 37
+summary: 12 records LPS 16 GAP 1 MUT 0: dispatch->retire total 28956, max last-beat->retire 37
+HGI_ARGMAX_TPUT PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_argmax_tput.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 59us; walltime 0.371 s; speed 158.160 us/s
+- Verilator: cpu 0.368 s on 1 threads; allocated 12 MB

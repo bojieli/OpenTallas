@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.physical.infrastructure_failure.v1",
+  "status": "INFRASTRUCTURE_OOM_NO_PHYSICAL_VERDICT",
+  "job": "pcmux_ob_a-c60bc4ed7-tc-rd",
+  "variant_dir": "/srv/opentallas-scratch/claude/closure-loop/pcmux_ob_a-c60bc4ed7-tc-rd/cl-surgical-codex-20261010",
+  "rtl_commit": "c60bc4ed7920fc012812dfa5927182768ab2f602",
+  "container": "a3718f156091af789a0e9341b5b971b62ed7e404dcb4cd9f7013de5ea2a38f41",
+  "exit_code": 137,
+  "terminal_utc": "2026-10-10T12:21:12Z",
+  "cause": "Host global OOM; kernel CONSTRAINT_NONE/global_oom killed surgical openroad pid2594609, anon-rss17314732KiB. Not a cgroup address-space limit.",
+  "measured": {
+    "pre_tt_ps": 49.496185,
+    "pre_ff_ps": -5.49516,
+    "repair_target_ps": 4,
+    "target_endpoints": 53,
+    "inserted_hold_buffers": 53,
+    "final_tt_ps": null,
+    "final_ff_ps": null,
+    "final_drc": null
+  },
+  "adoption": false,
+  "retry": "Not launched; one authorized experiment exhausted. Preserve progressing concurrent jobs.",
+  "artifacts": {
+    "surgical_global_oom.txt": "75cc6f2770e216b4dbaccfa09ceeefc8c632c90ab74d1f12ac21ce893c5fdea5",
+    "surgical_driver_terminal.txt": "0673cd1a25e87d6caff5c145756a75a20c6a09ad77fd80122489f86ac73df09e",
+    "surgical_docker_terminal.jsonl": "9289503d676b1716588bd2488f180f2e4a8c478065f4184262c6745c172df297",
+    "surgical_endpoint_window.txt": "b884ee9e54ef1c647709a8cc62f009c808db570ff1320af59b952d490137a67e"
+  }
+}

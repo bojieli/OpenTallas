@@ -1,0 +1,119 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_cp-fde1a8677-tc-hm10-cl/cl/eco-combo1-h/pass1/orfs/results/asap7/opentallas_ot_hgi_cp_asap7_mtp_hgi_cp_fde1a8677_tc_hm10_cl/base",
+ "hold_ff": {
+  "paths_seen": 150,
+  "worst_slack_ps": -8.03,
+  "classes": [
+   {
+    "start_class": "u_seq.f_rsp_data_r[*]$_DFF_P_/QN",
+    "end_class": "u_seq.g_ring_m.u_ring/wd_in[*]",
+    "worst_slack_ps": -8.03,
+    "paths": 50,
+    "max_levels": 2,
+    "example_start": "u_seq.f_rsp_data_r[149]$_DFF_P_/QN",
+    "example_end": "u_seq.g_ring_m.u_ring/wd_in[149]"
+   },
+   {
+    "start_class": "u_seq.rqf[*][*]$_DFFE_PP_/QN",
+    "end_class": "f_req_addr[*]",
+    "worst_slack_ps": -1.65,
+    "paths": 31,
+    "max_levels": 5,
+    "example_start": "u_seq.rqf[0][30]$_DFFE_PP_/QN",
+    "example_end": "f_req_addr[30]"
+   },
+   {
+    "start_class": "u_seq.d_n[*]$_DFFE_PP_/QN",
+    "end_class": "d_n[*]",
+    "worst_slack_ps": 17.87,
+    "paths": 2,
+    "max_levels": 3,
+    "example_start": "u_seq.d_n[45]$_DFFE_PP_/QN",
+    "example_end": "d_n[45]"
+   },
+   {
+    "start_class": "u_seq.d_pslot1[*]$_DFFE_PP_/QN",
+    "end_class": "d_pslot1[*]",
+    "worst_slack_ps": 18.05,
+    "paths": 3,
+    "max_levels": 5,
+    "example_start": "u_seq.d_pslot1[0]$_DFFE_PP_/QN",
+    "example_end": "d_pslot1[0]"
+   },
+   {
+    "start_class": "u_seq.d_desc[*]$_DFFE_PP_/QN",
+    "end_class": "d_desc[*]",
+    "worst_slack_ps": 18.25,
+    "paths": 6,
+    "max_levels": 5,
+    "example_start": "u_seq.d_desc[977]$_DFFE_PP_/QN",
+    "example_end": "d_desc[977]"
+   },
+   {
+    "start_class": "u_rx.act[*]$_DFFE_PN0P_/QN",
+    "end_class": "cfg_cp_act[*]",
+    "worst_slack_ps": 18.34,
+    "paths": 3,
+    "max_levels": 4,
+    "example_start": "u_rx.act[2]$_DFFE_PN0P_/QN",
+    "example_end": "cfg_cp_act[2]"
+   },
+   {
+    "start_class": "u_seq.d_hdr[*]$_DFFE_PP_/QN",
+    "end_class": "d_hdr[*]",
+    "worst_slack_ps": 20.1,
+    "paths": 3,
+    "max_levels": 4,
+    "example_start": "u_seq.d_hdr[23]$_DFFE_PP_/QN",
+    "example_end": "d_hdr[23]"
+   },
+   {
+    "start_class": "u_seq.d_sut[*]$_DFFE_PP_/QN",
+    "end_class": "d_sut[*]",
+    "worst_slack_ps": 20.97,
+    "paths": 1,
+    "max_levels": 4,
+    "example_start": "u_seq.d_sut[180]$_DFFE_PP_/QN",
+    "example_end": "d_sut[180]"
+   },
+   {
+    "start_class": "u_seq.d_pos1[*]$_DFFE_PP_/QN",
+    "end_class": "d_pos1[*]",
+    "worst_slack_ps": 21.53,
+    "paths": 1,
+    "max_levels": 6,
+    "example_start": "u_seq.d_pos1[8]$_DFFE_PP_/QN",
+    "example_end": "d_pos1[8]"
+   },
+   {
+    "start_class": "rst_n",
+    "end_class": "u_rx.act[*]$_DFFE_PN0P_/RESETN",
+    "worst_slack_ps": 27.81,
+    "paths": 19,
+    "max_levels": 5,
+    "example_start": "rst_n",
+    "example_end": "u_rx.act[54]$_DFFE_PN0P_/RESETN"
+   },
+   {
+    "start_class": "rst_n",
+    "end_class": "u_rx.shadow[*]$_DFFE_PN0P_/RESETN",
+    "worst_slack_ps": 37.54,
+    "paths": 12,
+    "max_levels": 5,
+    "example_start": "rst_n",
+    "example_end": "u_rx.shadow[60]$_DFFE_PN0P_/RESETN"
+   },
+   {
+    "start_class": "rst_n",
+    "end_class": "u_rx.b[*]$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 61.67,
+    "paths": 10,
+    "max_levels": 5,
+    "example_start": "rst_n",
+    "example_end": "u_rx.b[25]$_DFF_PN0_/RESETN"
+   }
+  ],
+  "errors": []
+ }
+}

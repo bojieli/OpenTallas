@@ -29,14 +29,15 @@
 // Stages: S0 input register; S1 |x| and 16 -> 4 per block; S2 4 -> 1; S2b the
 // floor; S3 scale; S4 thresholds; S5 codes; S6 outputs (registers).
 // ---------------------------------------------------------------------------
-module ot_hgi_fp4qdq (
+module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
     input  wire [1023:0] x,
     output reg           vo,
     output reg  [511:0]  y,
-    output reg           fault
+    output reg           fault,
+    output wire [264:0]  packed_word
 );
     localparam [30:0] FLOOR = 31'h3c400000;   // float32(6 * 2^-9)
     localparam [30:0] SUBN  = 31'h3dc00000;   // float32(6 * 2^-6): below it s is subnormal E4M3
@@ -220,27 +221,60 @@ module ot_hgi_fp4qdq (
             cnt7 = ({1'b0, a} + {1'b0, b2}) + ({1'b0, c} + {2'b0, p[6]});
         end
     endfunction
+    // hgi-1010/c (route f589c9afa: s4_t -> s5_c 28 levels = seven 31-bit compares + the count in one edge): S5A registers
+    // the predicates, S5B counts them (+1 edge; ot_hgi_quant_decode's alignment pipe is one shorter)
+    reg              s5a_v, s5a_nf;
+    reg [6:0]        s5a_p [0:31];
+    reg [31:0]       s5a_sgn;
+    reg [4:0]        s5a_n [0:1];
+    reg signed [9:0] s5a_qs [0:1];
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s5_v <= 1'b0;
-        else s5_v <= s4_v;
+        if (!rst_n) begin s5a_v <= 1'b0; s5_v <= 1'b0; end
+        else begin s5a_v <= s4_v; s5_v <= s5a_v; end
     end
     always @(posedge clk) begin
-        s5_nf <= s4_nf;
-        for (b = 0; b < 2; b = b + 1) begin s5_n[b] <= s4_n[b]; s5_qs[b] <= s4_qs[b]; end
+        s5a_nf <= s4_nf;
+        for (b = 0; b < 2; b = b + 1) begin s5a_n[b] <= s4_n[b]; s5a_qs[b] <= s4_qs[b]; end
         for (i = 0; i < 32; i = i + 1) begin
             xm = x4[32*i +: 31];
             b = i / 16;
             //: the thresholds increase, so the code is the number passed; on a
             //: threshold the even code wins (midpoint j sits below code j+1)
-            //: hgi-takeover: the seven predicates are evaluated in parallel and counted by a
-            //: balanced tree (same count as the former serial cc = cc + 1 chain)
             for (j = 0; j < 7; j = j + 1)
                 qp = {(!s4_big[7*b + j] && (xm > s4_t[7*b + j] || (xm == s4_t[7*b + j] && (j % 2) == 1))), qp[6:1]};
-            cc = cnt7(qp);
-            s5_c[i] <= cc;
-            s5_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
+            s5a_p[i] <= qp;
+            s5a_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
         end
     end
+    always @(posedge clk) begin
+        s5_nf <= s5a_nf; s5_sgn <= s5a_sgn;
+        for (b = 0; b < 2; b = b + 1) begin s5_n[b] <= s5a_n[b]; s5_qs[b] <= s5a_qs[b]; end
+        for (i = 0; i < 32; i = i + 1) begin
+            //: balanced count of the seven predicates (same count as the former serial cc = cc + 1 chain)
+            cc = cnt7(s5a_p[i]);
+            s5_c[i] <= cc;
+        end
+    end
+
+    // Preserve original quantizer provenance, aligned with S6 y/vo. No re-quantization.
+    function automatic [7:0] packed_scale(input [4:0] n, input signed [9:0] qs);
+        begin
+            if (qs == -10'sd9 && n < 5'd8) packed_scale = {5'd0,n[2:0]};
+            else if (n == 5'd16) packed_scale = {1'b0,4'(qs+10'sd11),3'd0};
+            else packed_scale = {1'b0,4'(qs+10'sd10),n[2:0]};
+        end
+    endfunction
+    generate if(PACKED) begin : g_packed
+        reg [143:0] meta; integer k;
+        always @(posedge clk) begin
+            meta[135:128] <= packed_scale(s5_n[0],s5_qs[0]);
+            meta[143:136] <= packed_scale(s5_n[1],s5_qs[1]);
+            for(k=0;k<32;k=k+1) meta[4*k +:4] <= {s5_sgn[k],s5_c[k]};
+        end
+        assign packed_word = {1'b1,120'd0,meta};
+    end else begin : g_no_packed
+        assign packed_word = 265'd0;
+    end endgenerate
 
     // -- S6: BF16 of sign * E2M1[code] * n * 2^qs --------------------------------------------
     reg [7:0]         r;

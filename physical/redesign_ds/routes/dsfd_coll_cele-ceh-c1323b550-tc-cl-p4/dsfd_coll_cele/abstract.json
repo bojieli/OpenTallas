@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_coll_cele",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/dsfd_coll_cele-ceh-c1323b550-tc-cl-p4/routes/dsfd_coll_cele_ceh_c1323b550_tc_cl_p4/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/dsfd_coll_cele-ceh-c1323b550-tc-cl-p4/routes/dsfd_coll_cele_ceh_c1323b550_tc_cl_p4/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/dsfd_coll_cele-ceh-c1323b550-tc-cl-p4/routes/dsfd_coll_cele_ceh_c1323b550_tc_cl_p4/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/dsfd_coll_cele-ceh-c1323b550-tc-cl-p4/routes/dsfd_coll_cele_ceh_c1323b550_tc_cl_p4/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/dsfd_coll_cele-ceh-c1323b550-tc-cl-p4/routes/dsfd_coll_cele_ceh_c1323b550_tc_cl_p4/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/dsfd_coll_cele-ceh-c1323b550-tc-cl-p4/routes/dsfd_coll_cele_ceh_c1323b550_tc_cl_p4/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/dsfd_coll_cele-ceh-c1323b550-tc-cl-p4/routes/dsfd_coll_cele_ceh_c1323b550_tc_cl_p4/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_coll_cele.lef": "138fc27b3cbd8febfb790174d99d07fef24ebf28ff1bcc034d3e605807a348c3",
+    "dsfd_coll_cele_ff.lib": "9e50db2f68a5f08bde73543e55df647ab989d6190d8005c59df577511ef4c53b",
+    "dsfd_coll_cele_ss.lib": "46967f7e26921865ffea8b5a86933812bd1b2423f68bf1fbbbb0ee96ab285420"
+  },
+  "ok": true
+}

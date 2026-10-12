@@ -1,0 +1,44 @@
+{
+  "source_commit": "65f7752c5ca8c38c7d40fb350691c72c62fa7df7",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv": "c56690c894e43b5ccbee5e5022d0cecadaa382bbc54b540e78fcd2f4c86ecb5a",
+    "rtl/test/hbm_accel/generic/tb_hgi_quant_vm_transport.sv": "a02edceeae2dd0fdeb262fb93af804f9a9920178bded7ae30c58baa44c890665",
+    "tools/hgi_quant_vm_transport_bench.sh": "eb9d97ded45c04aae4173668905f822fafe9489754c768bf3ee2b9a6a72585af"
+  },
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch/codex/quant-serial-65f7752c5",
+  "admission_peak_gb": 8,
+  "parameters": {
+    "ENABLE": 1,
+    "SERIAL_SHAPE": 1
+  },
+  "gate": "PASS",
+  "positive": {
+    "cases": 458,
+    "words": 10768,
+    "rc": 0,
+    "coverage": "arbitrary CP stall, ACK delay, strided/multirow,broadcast,tail16/48,illegal UE"
+  },
+  "mutants": {
+    "1": {
+      "rc": 134,
+      "expected": "rejected",
+      "observed": "DROP/CREDIT"
+    },
+    "2": {
+      "rc": 134,
+      "expected": "rejected",
+      "observed": "EARLY_DONE"
+    },
+    "3": {
+      "rc": 134,
+      "expected": "rejected",
+      "observed": "WRITE mismatch"
+    }
+  },
+  "latency_added_cycles_per_record": 21,
+  "default_enabled": false,
+  "physical_qualified": false,
+  "connected_real_vm_gate": "pending in admitted recipes f4b0ce450",
+  "recorded_utc": "2026-10-10T12:05:00.264675+00:00"
+}

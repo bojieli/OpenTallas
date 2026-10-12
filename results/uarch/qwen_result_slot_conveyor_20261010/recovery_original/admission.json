@@ -1,0 +1,15 @@
+{
+  "admitted": true,
+  "reason": "ok",
+  "measured": {
+    "load1": 14.08,
+    "mem_gb": 26,
+    "disk_gb": 96,
+    "roots_gb": {},
+    "external_jobs": [],
+    "external_remaining_gb": 0
+  },
+  "threads": 8,
+  "ram_request_gb": 8,
+  "scope": "only source-pinned completed115MB ODB+34MB SPEF cornerSTA, no PNR; estimate, no address-space limit"
+}

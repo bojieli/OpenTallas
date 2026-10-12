@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.qwen-seq-boundary-gate.v1",
+  "verdict": "PASS",
+  "scope": "actual emitted-top boundary pin stations; controller/arithmetic/sequencer interiors isolated by forced launch/issue wires and missing-module isolation",
+  "unsupported_claims": [
+    "full-token exactness",
+    "SU endpoint counter correctness",
+    "physical closure"
+  ],
+  "files": {
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_boundary.sv": "e925776a1cbd08ad99d9a7059416fb3d5498cd418846ddfbd5e048e790c2b5bc",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su.sv": "f0e9b33b11dd880a5ca3452c18335856a22b9de5321d1c291e9c2175eb6f408b",
+    "tests/rtl/qwen_seq_boundary/tb.sv": "320270b742ae65b0fe47f76b64500798740960af7f322932aa260df3ab7b55c5",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+  },
+  "cases": [
+    {
+      "case": "baseline",
+      "IS": 0,
+      "OS": 0,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS boundary IS=0 OS=0 100 snapshots three independent layer launches\n",
+      "stderr": "",
+      "source_sha256": "e925776a1cbd08ad99d9a7059416fb3d5498cd418846ddfbd5e048e790c2b5bc"
+    },
+    {
+      "case": "baseline",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS boundary IS=1 OS=1 100 snapshots three independent layer launches\n",
+      "stderr": "",
+      "source_sha256": "e925776a1cbd08ad99d9a7059416fb3d5498cd418846ddfbd5e048e790c2b5bc"
+    },
+    {
+      "case": "baseline",
+      "IS": 1,
+      "OS": 2,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS boundary IS=1 OS=2 100 snapshots three independent layer launches\n",
+      "stderr": "",
+      "source_sha256": "e925776a1cbd08ad99d9a7059416fb3d5498cd418846ddfbd5e048e790c2b5bc"
+    },
+    {
+      "case": "baseline",
+      "IS": 2,
+      "OS": 1,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS boundary IS=2 OS=1 100 snapshots three independent layer launches\n",
+      "stderr": "",
+      "source_sha256": "e925776a1cbd08ad99d9a7059416fb3d5498cd418846ddfbd5e048e790c2b5bc"
+    },
+    {
+      "case": "baseline",
+      "IS": 2,
+      "OS": 2,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS boundary IS=2 OS=2 100 snapshots three independent layer launches\n",
+      "stderr": "",
+      "source_sha256": "e925776a1cbd08ad99d9a7059416fb3d5498cd418846ddfbd5e048e790c2b5bc"
+    },
+    {
+      "case": "package_start",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-qwen-seq-boundary-20261010/tests/rtl/qwen_seq_boundary/tb.sv:38: layer launch mismatch n=1\n       Time: 56000 Scope: tb\n",
+      "stderr": "",
+      "source_sha256": "71215860f97a5e485027ec960514e8720ed025029ed88c1b0b53e55dea43ac7e"
+    },
+    {
+      "case": "premature_count",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-qwen-seq-boundary-20261010/tests/rtl/qwen_seq_boundary/tb.sv:36: snapshot mismatch n=0 IS=1 OS=1 got=000000200000000 expected=000000000000000\n       Time: 46000 Scope: tb\n",
+      "stderr": "",
+      "source_sha256": "c9ec0f002f43e27975a73c45ce977a6d4bfaf1778a741b243b4306922195c7aa"
+    },
+    {
+      "case": "wrong_program",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-qwen-seq-boundary-20261010/tests/rtl/qwen_seq_boundary/tb.sv:38: layer launch mismatch n=1\n       Time: 56000 Scope: tb\n",
+      "stderr": "",
+      "source_sha256": "4d22b998de35ae063e097b9da44b58cb05705e20cf80515caeb7e23b9130436c"
+    },
+    {
+      "case": "mixed_snapshot",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-qwen-seq-boundary-20261010/tests/rtl/qwen_seq_boundary/tb.sv:36: snapshot mismatch n=2 IS=1 OS=1 got=000000200110011 expected=000000200110003\n       Time: 66000 Scope: tb\n",
+      "stderr": "",
+      "source_sha256": "b7edbd91b007c532edbfa2dbb235348ebafab0c337a90fb88c4774d84cceb995"
+    }
+  ]
+}
