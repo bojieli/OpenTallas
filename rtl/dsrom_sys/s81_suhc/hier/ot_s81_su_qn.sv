@@ -55,39 +55,39 @@ module ot_s81_su_qnt #(
     // pin flops
     reg dq_st; reg [3:0] dq_kind; reg [1:0] dq_gsel; reg [7:0] dq_jid; reg [S_RD-1:0] dq_v; reg [S_RD*256-1:0] dq_d;
     reg [NFI-1:0] fq;
-    // the slot count of the arriving row group, counted on the way in (a 16-bit popcount in the pin stage's input cone,
-    // inside the 0.8 T the IO budget leaves): the row numbering below is then one add, not popcount + add (was 725 ps /
-    // 19 levels dq_v -> rc_j).  Same cycle as dq_v: values and latency unchanged.
-    reg [$clog2(S_RD+1)-1:0] dq_pc;
     always @(posedge clk) begin dq_kind <= dn_kind_i; dq_gsel <= dn_gsel_i; dq_jid <= dn_jid_i; dq_d <= dn_d_i; end
-    always @(posedge clk or negedge rst_n) begin : pinv
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; fq <= 0; end
+                                           else begin dq_st <= dn_st_i; dq_v <= dn_v_i; fq <= i_f; end
+    // job context and row numbering (the first row of a QN / GQ job is its parameter row, the rest operand rows).
+    // rcnt (rows before this cycle's group) = st_r ? 0 : ra + pc_r, from REGISTERED terms only: pc_r = the previous
+    // group's slot count (popcount of the dq_v pin flops, its own stage), st_r its start, ra = the previous rcnt.
+    // Induction: rcnt(t+1) = st(t) ? 0 : rcnt(t) + pc(t), the former recurrence; reset 0 = the former reset.  So the
+    // popcount is never in series with the add (was dq_v -> rc_j 725 ps / 19 lv) and no input pin feeds logic.
+    localparam integer PCW = $clog2(S_RD + 1);
+    reg mine, gq; reg [1:0] gsel; reg [7:0] jid; reg [15:0] ra; reg [PCW-1:0] pc_r; reg st_r;
+    reg [PCW-1:0] pc;
+    always @(*) begin : pcnt
         integer i;
-        reg [$clog2(S_RD+1)-1:0] c;
-        if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; fq <= 0; dq_pc <= 0; end
-        else begin
-            dq_st <= dn_st_i; dq_v <= dn_v_i; fq <= i_f;
-            c = 0;
-            for (i = 0; i < S_RD; i = i + 1) c = c + dn_v_i[i];
-            dq_pc <= c;
-        end
+        pc = 0;
+        for (i = 0; i < S_RD; i = i + 1) pc = pc + dq_v[i];
     end
-    // job context and row numbering (the first row of a QN / GQ job is its parameter row, the rest operand rows)
-    reg mine, gq; reg [1:0] gsel; reg [7:0] jid; reg [15:0] rcnt;
-    wire [15:0] rc_n = dq_st ? 16'd0 : rcnt + dq_pc;
-    // the rotation offset off = (rcnt - 1) mod L, one registered copy a position (265-bit 2:1 mux a level each) in a
-    // kept module, so synthesis cannot merge the copies back into one 12k-load net (opt_merge did, in the plain regs)
-    wire [LL-1:0] off_n = rc_n[LL-1:0] - 1'b1;
-    wire [LL*L-1:0] off_j;
+    wire [15:0] rcnt = st_r ? 16'd0 : ra + pc_r;
+    // the rotation offset off = (rcnt - 1) mod L per position (265-bit 2:1 mux a level each), from per-position copies
+    // of {st_r, ra, pc_r} low bits in a kept module (SYNTH_KEEP_MODULES): synthesis cannot merge them into one
+    // 12k-load net (opt_merge folded the former plain rc_j copies), and each position adds its own LL bits locally.
+    localparam integer KW = 1 + 2 * LL;
+    wire [KW*L-1:0] kq;
     genvar gj;
     generate for (gj = 0; gj < L; gj = gj + 1) begin : g_off
-        ot_s81_su_qn_keep_ff #(.W(LL)) u_k (.clk(clk), .rst_n(rst_n), .d(off_n), .q(off_j[LL * gj +: LL]));
+        ot_s81_su_qn_keep_ff #(.W(KW)) u_k (.clk(clk), .rst_n(rst_n), .d({dq_st, rcnt[LL-1:0], pc[LL-1:0]}),
+                                            .q(kq[KW * gj +: KW]));
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin mine <= 1'b0; gq <= 1'b0; gsel <= 2'd0; jid <= 8'd0; rcnt <= 16'd0; end
+        if (!rst_n) begin mine <= 1'b0; gq <= 1'b0; gsel <= 2'd0; jid <= 8'd0; ra <= 16'd0; pc_r <= 0; st_r <= 1'b0; end
         else begin
             if (dq_st) begin mine <= (dq_kind == K_QN || dq_kind == K_GQ); gq <= (dq_kind == K_GQ); gsel <= dq_gsel;
                              jid <= dq_jid; end
-            rcnt <= rc_n;
+            ra <= rcnt; pc_r <= pc; st_r <= dq_st;
         end
     end
     wire prm = mine && dq_v[0] && rcnt == 16'd0;
@@ -105,7 +105,9 @@ module ot_s81_su_qnt #(
         for (k = 0; k < LL; k = k + 1)
             for (s = 0; s < L; s = s + 1) begin : pos
                 reg [LL-1:0] off;
-                off = off_j[LL * s +: LL];
+                reg [KW-1:0] kj;
+                kj = kq[KW * s +: KW];
+                off = (kj[KW-1] ? {LL{1'b0}} : kj[LL +: LL] + kj[0 +: LL]) - 1'b1;
                 rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
             end
     end
@@ -130,11 +132,11 @@ module ot_s81_su_qnt #(
 endmodule
 
 // a register that synthesis must keep (SYNTH_KEEP_MODULES + keep): per-position copies of a broadcast control value.
-// Reset value all ones = the off of rcnt 0 (bit-identical to the former rc_j <= 0 copies).
+// Reset value 0 (the position's {st_r, ra, pc_r} copies reset as the originals).
 module ot_s81_su_qn_keep_ff #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d,
                                                            output wire [W-1:0] q);
     (* keep = "true" *) reg [W-1:0] q_k;
-    always @(posedge clk or negedge rst_n) if (!rst_n) q_k <= {W{1'b1}}; else q_k <= d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) q_k <= {W{1'b0}}; else q_k <= d;
     assign q = q_k;
 endmodule
 
