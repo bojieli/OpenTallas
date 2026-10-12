@@ -725,10 +725,31 @@ module dsfd_vm_bgr #(
         // ---- control view (E1 / E2 / history) and data view (E3: the same op 2 cycles later, 2 relays on)
         wire [NP-1:0] a_v = rb_v[gs];
         wire [NP*RA-1:0] a_row = rb_row[gs];
-        wire [NP-1:0] z_we = rb_we[gs+2];
-        wire [NP*RA-1:0] z_row = rb_row[gs+2];
-        wire [NP*MW-1:0] z_m = rb_m[gs+2];
-        wire [NP*DW-1:0] z_d = rb_d[gs+2];
+        // ---- regional reset synchronizer (one per stage: the single rst_s[1] drove 2,024 async loads and failed
+        // recovery by -12.5 ps at CTS; every copy samples the same rs edge, so all regions deassert on the same cycle)
+        reg [1:0] rst_g;
+        always @(posedge clk or negedge rs[0]) if (!rs[0]) rst_g <= 2'b00; else rst_g <= {rst_g[0], 1'b1};
+        wire rst_l = rst_g[1];
+        wire [NP-1:0] z_we;
+        wire [NP*RA-1:0] z_row;
+        wire [NP*MW-1:0] z_m;
+        wire [NP*DW-1:0] z_d;
+        if (gs + 2 == NR - 1) begin : g_zt
+            // The last relay rb[NR-1] IS the f_* output register.  Tapping it here pulled 3.5k f_d flops to this
+            // stage's banks (r3-3ac033956: f_d flop 154 um from its S pin, output buffer 470 um away, reg->out
+            // -985 ps at CTS).  This stage reads its own copy instead, loaded per valid port (clock-enabled, so yosys
+            // opt_merge cannot fold it back into rb[NR-1]); E3 reads z_* only through e_sel of valid beats -> exact.
+            reg [NP-1:0] zt_we; reg [NP*RA-1:0] zt_row; reg [NP*MW-1:0] zt_m; reg [NP*DW-1:0] zt_d;
+            integer zp;
+            always @(posedge clk)
+                for (zp = 0; zp < NP; zp = zp + 1) if (rb_v[NR-2][zp]) begin
+                    zt_we[zp] <= rb_we[NR-2][zp]; zt_row[zp*RA +: RA] <= rb_row[NR-2][zp*RA +: RA];
+                    zt_m[zp*MW +: MW] <= rb_m[NR-2][zp*MW +: MW]; zt_d[zp*DW +: DW] <= rb_d[NR-2][zp*DW +: DW];
+                end
+            assign z_we = zt_we; assign z_row = zt_row; assign z_m = zt_m; assign z_d = zt_d;
+        end else begin : g_zb
+            assign z_we = rb_we[gs+2]; assign z_row = rb_row[gs+2]; assign z_m = rb_m[gs+2]; assign z_d = rb_d[gs+2];
+        end
         // per-stage group-id copy (register chain)
         reg [GW-1:0] sg;
         if (gs == 0) begin : g_sg0
@@ -746,8 +767,8 @@ module dsfd_vm_bgr #(
                 for (p = 0; p < NP; p = p + 1) hz_b[p*BB +: BB] = h_b[HL-1][p];
             end
         end else begin : g_hzn
-            always @(posedge clk or negedge rst_i)
-                if (!rst_i) hz_v <= {NP{1'b0}};
+            always @(posedge clk or negedge rst_l)
+                if (!rst_l) hz_v <= {NP{1'b0}};
                 else hz_v <= g_s[gs-1].hz_v;
             always @(posedge clk) hz_b <= g_s[gs-1].hz_b;
         end
@@ -762,8 +783,8 @@ module dsfd_vm_bgr #(
                     if (hz_v[q] && hz_b[q*BB +: BB] == hz_b[p*BB +: BB]) jc[p] = jc[p] + 1'b1;
             end
         end
-        always @(posedge clk or negedge rst_i)
-            if (!rst_i) d_v <= {NPR{1'b0}};
+        always @(posedge clk or negedge rst_l)
+            if (!rst_l) d_v <= {NPR{1'b0}};
             else d_v <= hz_v[NPR-1:0];
         always @(posedge clk)
             for (p = 0; p < NPR; p = p + 1) begin
@@ -800,8 +821,8 @@ module dsfd_vm_bgr #(
             wire         serve = occ != 0;
             wire [QW+PW:0] cnt_a;
             wire [QW+PW+1:0] need = occ - serve + cnt_a;
-            always @(posedge clk or negedge rst_i)
-                if (!rst_i) begin qh <= 0; qt <= 0; occ <= 0; ovf <= 1'b0; end
+            always @(posedge clk or negedge rst_l)
+                if (!rst_l) begin qh <= 0; qt <= 0; occ <= 0; ovf <= 1'b0; end
                 else begin
                     if (need > QD) begin
                         ovf <= 1'b1;
@@ -816,8 +837,8 @@ module dsfd_vm_bgr #(
             reg [QW-1:0] qtr [0:NW-1];
             reg [QW-1:0] qhr [0:NW-1];
             integer wr;
-            always @(posedge clk or negedge rst_i)
-                if (!rst_i) for (wr = 0; wr < NW; wr = wr + 1) begin qtr[wr] <= 0; qhr[wr] <= 0; end
+            always @(posedge clk or negedge rst_l)
+                if (!rst_l) for (wr = 0; wr < NW; wr = wr + 1) begin qtr[wr] <= 0; qhr[wr] <= 0; end
                 else for (wr = 0; wr < NW; wr = wr + 1) begin
                     if (need > QD) qtr[wr] <= qtr[wr] + (QD - (occ - serve));
                     else qtr[wr] <= qtr[wr] + cnt_a;
@@ -826,8 +847,8 @@ module dsfd_vm_bgr #(
             // ---- E1: bank-match vector on the control view
             reg [NP-1:0] e_hit;
             integer i1;
-            always @(posedge clk or negedge rst_i)
-                if (!rst_i) e_hit <= {NP{1'b0}};
+            always @(posedge clk or negedge rst_l)
+                if (!rst_l) e_hit <= {NP{1'b0}};
                 else for (i1 = 0; i1 < NP; i1 = i1 + 1) e_hit[i1] <= a_v[i1] && a_row[i1*RA +: BB] == gidq;
             // ---- E2: port-order prefix count (4 groups), one-hot slot selects, saturated count
             localparam integer NG = 4, GZ = (NP + NG - 1) / NG, CW = $clog2(NP + 1);
@@ -868,8 +889,8 @@ module dsfd_vm_bgr #(
             reg [NP-1:0] e_sel [0:QD-1];
             reg [QW+PW:0] e_cnt;
             integer j3;
-            always @(posedge clk or negedge rst_i)
-                if (!rst_i) begin
+            always @(posedge clk or negedge rst_l)
+                if (!rst_l) begin
                     e_cnt <= 0;
                     for (j3 = 0; j3 < QD; j3 = j3 + 1) e_sel[j3] <= {NP{1'b0}};
                 end else begin
@@ -912,8 +933,8 @@ module dsfd_vm_bgr #(
                 reg [DW-1:0] y_d [0:QD-1];
                 reg [QW+PW:0] y_cnt;
                 integer j5;
-                always @(posedge clk or negedge rst_i)
-                    if (!rst_i) begin y_v <= {QD{1'b0}}; y_cnt <= 0; end
+                always @(posedge clk or negedge rst_l)
+                    if (!rst_l) begin y_v <= {QD{1'b0}}; y_cnt <= 0; end
                     else begin y_v <= w_v; y_cnt <= e_cnt; end
                 always @(posedge clk) begin
                     y_we <= w_we;
@@ -945,8 +966,8 @@ module dsfd_vm_bgr #(
             reg [8:0]    s_r;
             reg [DW-1:0] s_dd, s_bm;
             integer e;
-            always @(posedge clk or negedge rst_i)
-                if (!rst_i) begin s_we <= 1'b0; s_re <= 1'b0; end
+            always @(posedge clk or negedge rst_l)
+                if (!rst_l) begin s_we <= 1'b0; s_re <= 1'b0; end
                 else begin s_we <= serve & q_we[qh]; s_re <= serve & ~q_we[qh]; end
             always @(posedge clk) begin
                 s_p <= q_p[qh]; s_r <= q_r[qh];
@@ -980,8 +1001,8 @@ module dsfd_vm_bgr #(
             reg          m_v, r_vv;
             reg [PW-1:0] m_p, r_p;
             reg [DW-1:0] r_dd;
-            always @(posedge clk or negedge rst_i)
-                if (!rst_i) begin m_v <= 1'b0; r_vv <= 1'b0; end
+            always @(posedge clk or negedge rst_l)
+                if (!rst_l) begin m_v <= 1'b0; r_vv <= 1'b0; end
                 else begin m_v <= s_re; r_vv <= m_v; end
             always @(posedge clk) begin m_p <= s_p; r_p <= m_p; r_dd <= rd; end
             reg [DW-1:0] f_dd [0:RQ-1];
@@ -1000,8 +1021,8 @@ module dsfd_vm_bgr #(
             reg [DW-1:0] ds [0:KQ-1];
             reg [PW-1:0] dsp [0:KQ-1];
             integer kk;
-            always @(posedge clk or negedge rst_i)
-                if (!rst_i) begin fh <= 0; ft <= 0; fn <= 0; und <= 1'b0; for (wf = 0; wf < NW; wf = wf + 1) fhr[wf] <= 0; end
+            always @(posedge clk or negedge rst_l)
+                if (!rst_l) begin fh <= 0; ft <= 0; fn <= 0; und <= 1'b0; for (wf = 0; wf < NW; wf = wf + 1) fhr[wf] <= 0; end
                 else begin
                     if (r_vv) ft <= ft + 1'b1;
                     fh <= fh + dcnt;
@@ -1050,16 +1071,16 @@ module dsfd_vm_bgr #(
         end
         reg [NPR-1:0]    rt_v;
         reg [NPR*DW-1:0] rt_d;
-        always @(posedge clk or negedge rst_i)
-            if (!rst_i) rt_v <= {NPR{1'b0}};
+        always @(posedge clk or negedge rst_l)
+            if (!rst_l) rt_v <= {NPR{1'b0}};
             else rt_v <= in_v;
         always @(posedge clk) rt_d <= in_d | part;
         reg mis_r, stf;
         reg [2:0] stc;
         reg [OW-1:0] sto;
         integer bo;
-        always @(posedge clk or negedge rst_i)
-            if (!rst_i) begin mis_r <= 1'b0; stf <= 1'b0; stc <= 3'd0; sto <= {OW{1'b0}}; end
+        always @(posedge clk or negedge rst_l)
+            if (!rst_l) begin mis_r <= 1'b0; stf <= 1'b0; stc <= 3'd0; sto <= {OW{1'b0}}; end
             else begin
                 for (p = 0; p < NPR; p = p + 1)
                     if (own[p] && b_dp[lb[p] % SR][PW*d_j[p] +: PW] != p) mis_r <= 1'b1;
