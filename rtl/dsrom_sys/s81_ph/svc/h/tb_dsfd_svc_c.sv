@@ -84,11 +84,42 @@ module tb_dsfd_svc_c (input wire clk);
     wire [32*341-1:0] rq; reg [31:0] rk = 0, rv = 0, wd = 0; reg [32*17-1:0] r_tag = 0; reg [32*4-1:0] r_beat = 0;
     reg [32*256-1:0] r_data = 0;
     reg [32:0] jcmd = 0; wire [1:0] jd;
+    reg [291:0] hw = 0; wire [8:0] hc;
     wire [513:0] od, xd; wire [1025:0] ad; wire of, xf, af, hub_fault;
     dsfd_svc_c #(.DIE_ID(DIE), .ST(ST)) dut (
         .ck(clk), .rst(rst_n), .j(jcmd), .jd(jd), .q({1'b0, 1'b1, q_d, q_v}),
         .od(od), .of(of), .xd(xd), .xf(xf), .ad(ad), .af(af), .fault(hub_fault),
-        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat));
+        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hw(hw), .hc(hc));
+    // ---------------- host writes (dsfd_host_sd hw / hc contract: 8 credits, cr per word, ack per completed sector) ----
+    // NHW sector writes (KV class, then RoPE class) to a region no job touches, one KV marker (no write, no ack),
+    // interleaved with the job; at the end every written sector must hold its data in the HBM image and the acks must
+    // equal the sector writes.
+    localparam integer NHW = 96;
+    integer h_cred = 8, h_sent = 0, h_ack = 0, h_err = 0, h_mark = 0;
+    reg [255:0] h_dat [0:NHW-1]; reg [31:0] h_adr [0:NHW-1];
+    initial for (i = 0; i < NHW; i = i + 1) begin
+        h_adr[i] = (i < NHW / 2) ? 32'h0300_0000 + 32'(i * 5) : 32'h8300_0000 + 32'(i * 7);
+        for (k = 0; k < 8; k = k + 1) h_dat[i][32*k +: 32] = 32'h1234_5678 * (i + 1) + k;
+    end
+    always @(posedge clk) begin
+        hw <= 0;
+        h_cred = h_cred + hc[0]; h_ack = h_ack + hc[8:1];
+        if (rst_n && cyc > 30 && h_cred > 0 && ($urandom % 4) == 0) begin
+            if (h_sent < NHW) begin
+                hw <= {(h_adr[h_sent][31] ? 2'd1 : 2'd0), 1'b1, h_adr[h_sent], h_dat[h_sent], 1'b1}; h_sent = h_sent + 1; h_cred = h_cred - 1;
+            end else if (h_mark == 0) begin
+                hw <= {2'd0, 1'b1, 32'hffffffff, 256'h0b007_e2d, 1'b1}; h_mark = 1; h_cred = h_cred - 1;
+            end
+        end
+    end
+    task automatic host_check();
+        integer ii; longint kk;
+        for (ii = 0; ii < NHW; ii = ii + 1) begin
+            kk = (longint'(DIE) << 32) | (longint'(ST) << 30) | longint'(h_adr[ii][29:0]);
+            if (!hbm.exists(kk) || hbm[kk] !== h_dat[ii]) h_err = h_err + 1;
+        end
+        if (h_ack != NHW || h_cred != 8) h_err = h_err + 1;
+    endtask
     assign a0_v = ad[0]; assign a0_d = ad[512:1];
     assign od_v = od[1]; assign od_d = od[513:2];
     wire [4:0] cflt = {dut.u_x.fo[0], dut.g_q[3].u_q.fo[0], dut.g_q[2].u_q.fo[0], dut.g_q[1].u_q.fo[0], dut.g_q[0].u_q.fo[0]};
@@ -307,10 +338,12 @@ module tb_dsfd_svc_c (input wire clk);
         end
         if ((n_end > 0 && n_done > 0 && cyc > end_cyc + 200) || (n_end > 0 && cyc > end_cyc + 5000) || cyc >= MAXCYC || (fault && cyc > 20 && n_end == 0 && cyc > MAXCYC / 2)) begin
             for (i = 0; i < T; i = i + 1) if (held_row(i) && !got_row[i]) sc_err = sc_err + 1;
+            host_check();
+            $display("SVCC_HOST sent=%0d acks=%0d credits=%0d errors=%0d", h_sent, h_ack, h_cred, h_err);
             $display("SVCC done=%0d die=%0d st=%0d T=%0d window=%0d nsel=%0d held_rows=%0d score_rows=%0d sc_checked=%0d sc_errors=%0d pv_beats=%0d pv_checked=%0d pv_errors=%0d own_rows=%0d rowx=%0d rowx_errors=%0d pairs_in=%0d ends=%0d after_end=%0d fmt_errors=%0d fault=%0d fault_code=%016x cred_err=%0d pc_err=%0d first_q=%0d last_score=%0d end=%0d cycles=%0d timeout=%0d verdict=%s",
                      n_done, DIE, ST, T, wcount, nsel, exp_scores, sc_rows, sc_chk, sc_err, pv_beats, pv_chk, pv_err, exp_own, x_rows, x_err,
                      npair_in, n_end, after_end, fmt_err, fault, fault_code, cred_err, pc_err, first_q_cyc, last_score_cyc, end_cyc, cyc, cyc >= MAXCYC,
-                     (n_done == 1 && sc_err == 0 && pv_err == 0 && x_err == 0 && fmt_err == 0 && after_end == 0 && n_end == 1 && pv_beats == 8 &&
+                     (n_done == 1 && h_err == 0 && sc_err == 0 && pv_err == 0 && x_err == 0 && fmt_err == 0 && after_end == 0 && n_end == 1 && pv_beats == 8 &&
                       sc_rows == exp_scores && x_rows == exp_own && !fault && cred_err == 0 && pc_err == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
             $finish;
         end

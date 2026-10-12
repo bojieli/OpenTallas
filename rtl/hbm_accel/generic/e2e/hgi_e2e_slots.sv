@@ -238,7 +238,7 @@ endmodule
 // excluded from the checks).
 `ifdef E2E_FUSED
 module hgi_e2e_fused_slot #(
-    parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer SCRATCH = 256064,
+    parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer VDX = 0, parameter integer SCRATCH = 256064,
     parameter integer UN = 32, parameter integer UM = 8,       // the FUSED unit's stream unit (die: ot_hgi_fused_record defaults)
     parameter integer UWIDE = 0                                // 1: its D1 body is the WIDE successor (VM wide lanes)
 ) (
@@ -292,7 +292,7 @@ module hgi_e2e_fused_slot #(
         .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
     hgi_e2e_vmc #(.UNIT(4), .LAT(VLAT)) u_vf (.clk(clk), .rst_n(rst_n), .q(fq), .r(fr));
     hgi_e2e_vmc #(.UNIT(4), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(mq), .r(mr));
-    hgi_e2e_vmw #(.UNIT(4), .NW(1)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
+    hgi_e2e_vmw #(.UNIT(4), .NW(1), .DX(VDX)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
 `ifdef E2E_FUSED_DEBUG
     // fault-source report (debug builds): the adapter state, its internal SU unit's state, the vec's refusal flags
     reg seen = 1'b0; longint c = 0;

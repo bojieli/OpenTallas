@@ -32,7 +32,7 @@ SRC=(rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv 
      $S/dsfd_svc_quad.sv $S/dsfd_svc_idx.sv
      rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv $S/ot_s81ph_svc_io.sv rtl/common/ot_fwd_link_stage.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
      $S/ot_s81ph_svc_io_tiles.sv $S/dsfd_svcio_job.sv $S/dsfd_svc_pc.sv $S/dsfd_svc_c.sv)
-HIER=$HH/svch_hierarchy.vlt
+HIER=${HIER:-$HH/svch_hierarchy.vlt}
 if [ "${1:-}" = lint ]; then
   for top in "dsfd_svch_pcs" "dsfd_svch_rly" "dsfd_svc_quad -GQID=0" "dsfd_svc_quad -GQID=1" "dsfd_svc_quad -GQID=2" "dsfd_svc_quad -GQID=3" "dsfd_svc_idx" "dsfd_svc_c"; do
     set -- $top

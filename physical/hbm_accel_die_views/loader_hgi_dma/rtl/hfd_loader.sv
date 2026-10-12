@@ -12,6 +12,7 @@ module hfd_loader (
     input wire [325:0] f_hgi_rgxw1,
     input wire [273:0] f_hgi_vmr,
     input wire [31:0] f_hgi_vmw,
+    input wire [31:0] f_hgi_vmw_done,
     inout wire [788:0] h,
     output wire [350:0] qNE,
     output wire [350:0] qNW,
@@ -80,6 +81,11 @@ module hfd_loader (
     reg [31:0] i2_f_hgi_vmw; always @(posedge clk) i2_f_hgi_vmw <= i1_f_hgi_vmw;
     reg [31:0] i3_f_hgi_vmw; always @(posedge clk) i3_f_hgi_vmw <= i2_f_hgi_vmw;
     reg [31:0] i_f_hgi_vmw; always @(posedge clk) i_f_hgi_vmw <= i3_f_hgi_vmw;
+    reg [31:0] i0_f_hgi_vmw_done; always @(posedge clk) i0_f_hgi_vmw_done <= f_hgi_vmw_done;
+    reg [31:0] i1_f_hgi_vmw_done; always @(posedge clk) i1_f_hgi_vmw_done <= i0_f_hgi_vmw_done;
+    reg [31:0] i2_f_hgi_vmw_done; always @(posedge clk) i2_f_hgi_vmw_done <= i1_f_hgi_vmw_done;
+    reg [31:0] i3_f_hgi_vmw_done; always @(posedge clk) i3_f_hgi_vmw_done <= i2_f_hgi_vmw_done;
+    reg [31:0] i_f_hgi_vmw_done; always @(posedge clk) i_f_hgi_vmw_done <= i3_f_hgi_vmw_done;
     reg [788:0] i0_h; always @(posedge clk) i0_h <= h;
     reg [788:0] i1_h; always @(posedge clk) i1_h <= i0_h;
     reg [788:0] i2_h; always @(posedge clk) i2_h <= i1_h;
@@ -242,7 +248,7 @@ module hfd_loader (
     assign w_ld_dma_vr2r = {i_f_dma_vr2r[8256:0]};
     assign w_ld_dma_dq_rdy = 4'd0;
     assign w_ld_dma_dd = 8640'd0;
-    assign w_ld_dma_vmw_done = {i_f_hgi_vmw[31:0]};
+    assign w_ld_dma_vmw_done = {i_f_hgi_vmw_done[31:0]};
     assign w_ld_rgx_q = {i_f_hgi_rgxq1[37:0], i_f_hgi_rgxq0[37:0]};
     assign w_ld_rgx_w = {i_f_hgi_rgxw1[325:0], i_f_hgi_rgxw0[325:0]};
     ot_hfd_loader_hgi #(.DMA_FRONT(0), .RGX(1), .VR2(1), .KVW(1)) u_ld (.clk(w_ld_clk), .rst_n(w_ld_rst_n), .s_awvalid(w_ld_s_awvalid), .s_awready(w_ld_s_awready), .s_awaddr(w_ld_s_awaddr), .s_wvalid(w_ld_s_wvalid), .s_wready(w_ld_s_wready), .s_wdata(w_ld_s_wdata), .s_wstrb(w_ld_s_wstrb), .s_bvalid(w_ld_s_bvalid), .s_bready(w_ld_s_bready), .s_arvalid(w_ld_s_arvalid), .s_arready(w_ld_s_arready), .s_araddr(w_ld_s_araddr), .s_rvalid(w_ld_s_rvalid), .s_rready(w_ld_s_rready), .s_rdata(w_ld_s_rdata), .h_awvalid(w_ld_h_awvalid), .h_awready(w_ld_h_awready), .h_awaddr(w_ld_h_awaddr), .h_wvalid(w_ld_h_wvalid), .h_wready(w_ld_h_wready), .h_wdata(w_ld_h_wdata), .h_wstrb(w_ld_h_wstrb), .h_bvalid(w_ld_h_bvalid), .h_bready(w_ld_h_bready), .h_arvalid(w_ld_h_arvalid), .h_arready(w_ld_h_arready), .h_araddr(w_ld_h_araddr), .h_rvalid(w_ld_h_rvalid), .h_rready(w_ld_h_rready), .h_rdata(w_ld_h_rdata), .h_dma_arvalid(w_ld_h_dma_arvalid), .h_dma_arready(w_ld_h_dma_arready), .h_dma_araddr(w_ld_h_dma_araddr), .h_dma_rvalid(w_ld_h_dma_rvalid), .h_dma_rready(w_ld_h_dma_rready), .h_dma_rdata(w_ld_h_dma_rdata), .h_dma_rresp(w_ld_h_dma_rresp), .h_dma_rlast(w_ld_h_dma_rlast), .h_dma_awvalid(w_ld_h_dma_awvalid), .h_dma_awready(w_ld_h_dma_awready), .h_dma_awaddr(w_ld_h_dma_awaddr), .h_dma_wvalid(w_ld_h_dma_wvalid), .h_dma_wready(w_ld_h_dma_wready), .h_dma_wdata(w_ld_h_dma_wdata), .h_dma_wstrb(w_ld_h_dma_wstrb), .h_dma_bvalid(w_ld_h_dma_bvalid), .h_dma_bready(w_ld_h_dma_bready), .h_dma_bresp(w_ld_h_dma_bresp), .m_arvalid(w_ld_m_arvalid), .m_arready(w_ld_m_arready), .m_araddr(w_ld_m_araddr), .m_arlen(w_ld_m_arlen), .m_arsize(w_ld_m_arsize), .m_rvalid(w_ld_m_rvalid), .m_rready(w_ld_m_rready), .m_rdata(w_ld_m_rdata), .m_rresp(w_ld_m_rresp), .m_rlast(w_ld_m_rlast), .m_awvalid(w_ld_m_awvalid), .m_awready(w_ld_m_awready), .m_awaddr(w_ld_m_awaddr), .m_awlen(w_ld_m_awlen), .m_awsize(w_ld_m_awsize), .m_wvalid(w_ld_m_wvalid), .m_wready(w_ld_m_wready), .m_wdata(w_ld_m_wdata), .m_wstrb(w_ld_m_wstrb), .m_wlast(w_ld_m_wlast), .m_bvalid(w_ld_m_bvalid), .m_bready(w_ld_m_bready), .m_bresp(w_ld_m_bresp), .lcp(w_ld_lcp), .cpl(w_ld_cpl), .lq(w_ld_lq), .lr(w_ld_lr), .dma_rec(w_ld_dma_rec), .dma_ret(w_ld_dma_ret), .dma_vmq(w_ld_dma_vmq), .dma_vmr(w_ld_dma_vmr), .dma_vr2q(w_ld_dma_vr2q), .dma_vr2r(w_ld_dma_vr2r), .dma_dq(w_ld_dma_dq), .dma_dq_rdy(w_ld_dma_dq_rdy), .dma_dd(w_ld_dma_dd), .dma_dd_cr(w_ld_dma_dd_cr), .dma_vmw(w_ld_dma_vmw), .dma_vmw_done(w_ld_dma_vmw_done), .rgx_q(w_ld_rgx_q), .rgx_r(w_ld_rgx_r), .rgx_w(w_ld_rgx_w), .rgx_a(w_ld_rgx_a), .irq(w_ld_irq), .fault(w_ld_fault));

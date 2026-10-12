@@ -280,6 +280,7 @@ module ot_rom_oneshot_die_m #(
     assign serr[0] = 1'b0;
     generate if (FSL != 0) begin : g_fsl
         initial if (OPQ != 0 || FW % 128 != 0) $error("ot_rom_oneshot_die_m FSL: OPQ 0 and FW a multiple of 128");
+        initial if (N != 4 || ADD_LAT != 7) $error("ot_rom_oneshot_die_m FSL: the hardened ot_coll_fold_slice is N 4, ADD_LAT 7");
         localparam integer NS = FW / 128;
         wire [NS-1:0] sl_v, sl_e;
         wire [FW-1:0] fsum;
@@ -293,7 +294,8 @@ module ot_rom_oneshot_die_m #(
             for (gq = 0; gq < N; gq = gq + 1) begin : g_sd
                 assign sd[gq*128 +: 128] = fsrc_f[gq*FW + gs*128 +: 128];
             end
-            (* keep_hierarchy *) ot_coll_fold_slice #(.N(N), .ADD_LAT(ADD_LAT), .SEAM(1)) u_fs (
+            (* keep_hierarchy *) ot_coll_fold_slice u_fs (   // hardened defaults N 4 / ADD_LAT 7 / SEAM 1 (no override: the
+                                                           // parent takes the hardened macro master by name)
                 .clk(clk), .rst_n(rst_n), .red_in(red_in), .src(sd), .sum(fsum[gs*128 +: 128]),
                 .v_out(sl_v[gs]), .e_out(sl_e[gs]));
         end

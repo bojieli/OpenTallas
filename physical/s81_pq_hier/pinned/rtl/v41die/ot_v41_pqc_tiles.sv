@@ -394,7 +394,7 @@ module ot_v41_pqc_bcrel #(
     reg [W-1:0] qd;                          // data (bits under reset unused)
     reg [RT:0]  qc;                          // {top RT bits, bit RB}
 `ifdef OT_PQC_MUT_BC
-    always @(posedge clk) qd <= {d[W-1:2], d[0], d[1]};             // mutant: two BF16 data bits swapped
+    always @(posedge clk) qd <= {d[W-1:1024], 1024'd0};             // mutant: the BF16 lanes dropped
 `else
     always @(posedge clk) qd <= d;
 `endif
