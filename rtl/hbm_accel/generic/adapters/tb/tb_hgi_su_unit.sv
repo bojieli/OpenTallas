@@ -29,6 +29,12 @@ module tb_hgi_su_unit;
     localparam integer GL = 0;
 `endif
     ot_hgi_su_unit #(
+`ifdef MUT_LAT
+    .MUT_LAT(`MUT_LAT),
+`endif
+`ifdef SU_BEH
+    .MACRO(0),
+`endif
 `ifdef NO_PAYLOAD_RST
     .PAYLOAD_RESET(0),
 `endif

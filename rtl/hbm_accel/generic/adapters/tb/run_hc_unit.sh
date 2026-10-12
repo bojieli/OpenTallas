@@ -20,4 +20,4 @@ D="${XDEF:-}"; [ -n "$MUT" ] && D="$D -D$MUT"
 "$VL" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN $D \
   --top-module tb_hgi_hc_unit -I"$OUT/vec" -Mdir "$OUT/obj" $SRC rtl/hbm_accel/generic/adapters/tb/tb_hgi_hc_unit.sv \
   -j ${J:-16} > "$OUT/build.log" 2>&1 || { tail -30 "$OUT/build.log"; exit 2; }
-"$OUT/obj/Vtb_hgi_hc_unit" +DIR="$OUT/vec" | tee "$OUT/run.log" | tail -12
+"$OUT/obj/Vtb_hgi_hc_unit" +DIR="$OUT/vec" ${RUNARGS:-} | tee "$OUT/run.log" | tail -12

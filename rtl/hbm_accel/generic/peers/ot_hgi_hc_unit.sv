@@ -299,6 +299,10 @@ module ot_hgi_hc_unit #(
                         for (q = 0; q < 8; q = q + 1) begin
                             e2 = {rsec, q[2:0]} - xrow;              // element index of word q
                             if (e2 >= 0 && e2 < {nchunk, 3'b000} && vr[32*q +: 16] != 16'd0) flt <= 1'b1;   // BF16
+`ifdef HC_DBG
+                            if (e2 >= 0 && e2 < {nchunk, 3'b000} && vr[32*q +: 16] != 16'd0)
+                                $display("HC_DBG bf16 pc %0d rsec %0d q %0d xrow %0d e2 %0d word %h", pc, rsec, q, xrow, e2, vr[32*q +: 32]);
+`endif
                         end
                         rsec <= rsec + 27'd1;
                     end

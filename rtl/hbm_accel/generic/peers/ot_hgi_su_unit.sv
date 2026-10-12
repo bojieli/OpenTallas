@@ -66,10 +66,11 @@ module ot_hgi_su_ctl #(
     output reg  [3:0]    sw_g,                // the groups the staged words land in (A + C for c_pair)
     output reg  [LWB-1:0] sw_addr,            // local word address of word 0 of the 8 (any alignment)
     output reg  [7:0]    sw_mask,             // the words written
-    output reg           sr_v,                // read 8 consecutive words of a group (any alignment), one edge later
+    output reg           sr_v,                // read 8 consecutive words of a group (any alignment)
     output reg  [1:0]    sr_g,                // 1 = O, 2 = R
     output reg  [LWB-1:0] sr_addr,
     input  wire [255:0]  sr_data,
+    input  wire          sr_rv,               // sr_data valid (the memory's response; reads return in order)
     output reg  [3:0]    use_p,               // the op's read ports in use (A, B, C or c_pair, D)
     input  wire          sl_pend,             // STREAM landing words still queued in the memory
     output wire          a_str,               // the op's A is the STREAM region
@@ -133,7 +134,9 @@ module ot_hgi_su_ctl #(
     wire [LWB:0] s_el0 = p2c((ni > (red_on ? 16'd8 : 16'd1)) ? ni : (red_on ? 16'd8 : 16'd1));
     wire [LWB:0] s_el = (s_el0 > vw) ? vw : s_el0;
     wire [LWB:0] l_el = flatc ? ni : (ni <= s_el) ? s_el : ((ni + N - 1) & ~(N - 1));
-    wire [LWB:0] L_k = (rk == 3'd5) ? 1 : !hf_k ? l_el : flatc ? (ni >> 1) : ((l_el >> 1) == 0 ? 1 : (l_el >> 1));
+    // (hgi-1010/c timing: the op-level layout is registered once per op in S_PRE; regions then mux registers only)
+    reg [LWB:0] l_full_q, l_half_q; reg [31:0] nn_q;
+    wire [LWB:0] L_k = (rk == 3'd5) ? 1 : hf_k ? l_half_q : l_full_q;
     // ---- per region state
     reg [23:0] lo [0:5]; reg [LWB:0] lb [0:5]; reg rv [0:5]; reg [LWB:0] Lr [0:5]; reg [23:0] sor [0:5], sir [0:5];
     reg [15:0] nrr [0:5], nir [0:5]; reg [LWB:0] lsz [0:5];
@@ -149,12 +152,19 @@ module ot_hgi_su_ctl #(
     reg [15:0] s_rows, s_j; reg [23:0] s_rb, s_va; reg [LWB:0] s_lr; reg [26:0] cur_sec, end_sec; reg [1:0] s_md;
     reg [3:0] st;
     localparam [3:0] S_IDLE = 0, S_SPAN = 1, S_MUL = 2, S_NEXTR = 3, S_STAGE = 4, S_STW = 5, S_RUN = 6, S_RUNW = 7,
-                     S_DRAIN = 8, S_DRW = 9, S_DONE = 10, S_FAULT = 11, S_SOUT = 12;
+                     S_DRAIN = 8, S_DRW = 9, S_DONE = 10, S_FAULT = 11, S_SOUT = 12, S_PRE = 13, S_NX1 = 14, S_NX2 = 15;
+    // registered region operands (hgi-1010/c timing): the multiply's shift registers, the placement, the stage cursor
+    reg [15:0] nrm1_s; reg [39:0] lsh_s; reg [15:0] nw_s; reg [2:0] gk_s; reg [LWB:0] lbk_s, gend_s, gsz_s, gsz2_s;
+    reg [23:0] c_so, c_si; reg [15:0] c_nw; reg [LWB:0] c_L;
     reg [2:0] dk;                                         // drain region (4 O, 5 R)
     reg [26:0] rsec_d, rsec_d2, rsec_d3; reg so_w;
     reg [3:0] rp;                                         // read pipe
-    reg [255:0] sr_data_q;
+    reg [255:0] sr_data_q; reg sr_rv_q;
     always @(posedge clk) sr_data_q <= sr_data;
+    always @(posedge clk or negedge rst_n) if (!rst_n) sr_rv_q <= 1'b0; else sr_rv_q <= sr_rv;
+    // drain reads in flight: {VM sector, word mask} of each issued read, popped by its response (valid-driven, any
+    // memory latency; hgi-1010/d exactness audit: no reader counts edges)
+    reg [34:0] df [0:3]; reg [1:0] df_h, df_t; reg [2:0] nf;
     reg cfault_q; always @(posedge clk) cfault_q <= cfault;
     // ---- allocation: G0 A, G1 B, G2 C (+ A's copy for c_pair), G3 D, G4 O, G5 R (the result file)
     reg [LWB:0] galloc [0:5];
@@ -181,14 +191,11 @@ module ot_hgi_su_ctl #(
         else begin ready_q <= ready; idle_q <= idle; vfault_q <= vfault; end
     end
     reg vf_seen; reg [1:0] idle_ph;
-    wire [2:0] gk = (rk == 3'd4) ? 3'd4 : (rk == 3'd5) ? 3'd5 : rk;
-    wire [LWB:0] lbk = (galloc[gk] + N - 1) & ~(N - 1);
-    wire [LWB:0] gend = lbk + lsz[rk];
     integer k2;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; op_rdy_r <= 1'b1; su_idle_r <= 1'b1; su_fault_r <= 1'b0; go <= 1'b0; vmq <= 338'd0;
-            sl_v <= 1'b0; sw_v <= 1'b0; sr_v <= 1'b0; rp <= 4'd0; use_p <= 4'd0;
+            sl_v <= 1'b0; sw_v <= 1'b0; sr_v <= 1'b0; rp <= 4'd0; use_p <= 4'd0; nf <= 3'd0; df_h <= 2'd0; df_t <= 2'd0;
             outst <= 3'd0; q_h <= 2'd0; q_t <= 2'd0; vf_seen <= 1'b0; scount <= 21'd0; s_clr <= 1'b0; am_stream <= 523'd0;
         end else begin
             vmq[337] <= 1'b0; su_fault_r <= 1'b0; am_stream[0] <= 1'b0; am_stream[1] <= 1'b0;
@@ -204,45 +211,58 @@ module ot_hgi_su_ctl #(
                     if (op_v && op_rdy_r) begin
                         w <= op_w; wl <= op_w; op_rdy_r <= 1'b0; su_idle_r <= 1'b0; rk <= 3'd0; vf_seen <= 1'b0;
                         for (k2 = 0; k2 < 6; k2 = k2 + 1) galloc[k2] <= 0;
-                        a_s <= strm[0]; o_s <= strm[1]; st <= S_SPAN;
+                        a_s <= strm[0]; o_s <= strm[1]; st <= S_PRE;
                     end
+                end
+                S_PRE: begin                                        // the op's layout (registered once)
+                    l_full_q <= l_el; l_half_q <= flatc ? (ni >> 1) : ((l_el >> 1) == 0 ? 1 : (l_el >> 1));
+                    nn_q <= {16'd0, no} * {16'd0, ni};
+                    st <= S_SPAN;
                 end
                 S_SPAN: begin                                       // region rk: used? its layout
                     rv[rk] <= used_k && !(rk == 3'd0 && a_s);
                     lo[rk] <= base_k; sor[rk] <= so_k; sir[rk] <= si_k; nrr[rk] <= nr_k; nir[rk] <= ni_k;
-                    Lr[rk] <= L_k;
+                    Lr[rk] <= L_k; nrm1_s <= nr_k - 16'd1; lsh_s <= {{(39-LWB){1'b0}}, L_k}; nw_s <= ni_k;
+                    gk_s <= (rk == 3'd4) ? 3'd4 : (rk == 3'd5) ? 3'd5 : rk;
                     if (rk == 3'd0 && a_s) begin                    // A = STREAM: rows of ni, element o ni + i = idx
                         wl[40 +: 24] <= SBASE; wl[64 +: 24] <= {8'd0, ni}; wl[88 +: 24] <= 24'd1; st <= S_NEXTR;
                     end else if (rk == 3'd4 && o_s) begin           // O = STREAM: contiguous rows of ni in G4, no drain
                         Lr[4] <= ni; nrr[4] <= no; nir[4] <= ni; rv[4] <= 1'b1;
+                        nrm1_s <= no - 16'd1; lsh_s <= {24'd0, ni}; nw_s <= ni;
                         macc <= 40'd0; mbit <= 5'd0; mph <= 2'd0; st <= S_MUL;
                     end
                     else if (!used_k) st <= S_NEXTR;
                     else begin macc <= 40'd0; mbit <= 5'd0; mph <= 2'd0; st <= S_MUL; end
                     if (rk == 3'd0 && (aind != 2'd0 || w[32 +: 8] != 8'd0)) begin su_fault_r <= 1'b1; st <= S_FAULT; end
                 end
-                S_MUL: begin                                        // lsz = (nr - 1) L + nw, a bit an edge
+                S_MUL: begin                                        // lsz = (nr - 1) L + nw: shift registers, a bit an edge
                     if (mph == 2'd0) begin
-                        if ((nrr[rk] - 16'd1) >> mbit & 16'd1) macc <= macc + ({{(39-LWB){1'b0}}, Lr[rk]} << mbit);
+                        if (nrm1_s[0]) macc <= macc + lsh_s;
+                        nrm1_s <= nrm1_s >> 1; lsh_s <= lsh_s << 1;
                         if (mbit == 5'd15) mph <= 2'd1; else mbit <= mbit + 5'd1;
                     end else begin
-                        lsz[rk] <= macc[LWB:0] + nir[rk]; st <= S_NEXTR;
+                        lsz[rk] <= macc[LWB:0] + nw_s; st <= S_NEXTR;
                     end
                 end
-                S_NEXTR: begin                                      // place region rk (N-aligned), rewrite its fields
+                S_NEXTR: begin                                      // placement: the aligned base (registered)
+                    lbk_s <= (galloc[gk_s] + N - 1) & ~(N - 1); gsz_s <= gsz(gk_s); gsz2_s <= gsz(3'd2);
+                    st <= rv[rk] ? S_NX1 : S_NX2;
+                end
+                S_NX1: begin gend_s <= lbk_s + lsz[rk]; st <= S_NX2; end
+                S_NX2: begin                                        // place region rk (N-aligned), rewrite its fields
                     if (rv[rk]) begin
-                        lb[rk] <= lbk;
-                        galloc[gk] <= gend;
-                        if (rk == 3'd0 && cpair) galloc[2] <= gend;           // A's copy in G2 (C reads A[e ^ 1])
-                        if (gend > gsz(gk) || (rk == 3'd0 && cpair && gend > gsz(3'd2))) begin
+                        lb[rk] <= lbk_s;
+                        galloc[gk_s] <= gend_s;
+                        if (rk == 3'd0 && cpair) galloc[2] <= gend_s;         // A's copy in G2 (C reads A[e ^ 1])
+                        if (gend_s > gsz_s || (rk == 3'd0 && cpair && gend_s > gsz2_s)) begin
                             su_fault_r <= 1'b1; st <= S_FAULT; end
                         case (rk)
-                            3'd0: begin wl[40 +: 24]  <= lbk; wl[64 +: 24]  <= Lr[0]; wl[88 +: 24]  <= 24'd1; end
-                            3'd1: begin wl[138 +: 24] <= lbk; wl[162 +: 24] <= Lr[1]; wl[186 +: 24] <= 24'd1; end
-                            3'd2: begin wl[211 +: 24] <= lbk; wl[235 +: 24] <= Lr[2]; wl[259 +: 24] <= 24'd1; end
-                            3'd3: begin wl[284 +: 24] <= lbk; wl[308 +: 24] <= Lr[3]; wl[332 +: 24] <= 24'd1; end
-                            3'd4: begin wl[382 +: 24] <= lbk; wl[406 +: 24] <= Lr[4]; wl[430 +: 24] <= 24'd1; end
-                            default: begin wl[484 +: 24] <= lbk; wl[508 +: 24] <= 24'd1; end
+                            3'd0: begin wl[40 +: 24]  <= lbk_s; wl[64 +: 24]  <= Lr[0]; wl[88 +: 24]  <= 24'd1; end
+                            3'd1: begin wl[138 +: 24] <= lbk_s; wl[162 +: 24] <= Lr[1]; wl[186 +: 24] <= 24'd1; end
+                            3'd2: begin wl[211 +: 24] <= lbk_s; wl[235 +: 24] <= Lr[2]; wl[259 +: 24] <= 24'd1; end
+                            3'd3: begin wl[284 +: 24] <= lbk_s; wl[308 +: 24] <= Lr[3]; wl[332 +: 24] <= 24'd1; end
+                            3'd4: begin wl[382 +: 24] <= lbk_s; wl[406 +: 24] <= Lr[4]; wl[430 +: 24] <= 24'd1; end
+                            default: begin wl[484 +: 24] <= lbk_s; wl[508 +: 24] <= 24'd1; end
                         endcase
                     end
                     if (st != S_FAULT) begin
@@ -257,6 +277,7 @@ module ot_hgi_su_ctl #(
                         st <= S_STW; q_h <= 0; q_t <= 0; outst <= 0;
                         sw_g <= (rk == 3'd0 && cpair) ? 4'b0101 : (4'b0001 << rk);
                         s_rows <= nrr[rk]; s_rb <= lo[rk]; s_lr <= lb[rk]; s_j <= 16'd0; s_va <= lo[rk];
+                        c_so <= sor[rk]; c_si <= sir[rk]; c_nw <= nir[rk]; c_L <= Lr[rk];
                         s_md <= (sir[rk] == 24'd1) ? 2'd0 : (sir[rk] == 24'd0) ? 2'd1 : 2'd2;
                         cur_sec <= lo[rk] >> 3; end_sec <= (lo[rk] + nir[rk] - 24'd1) >> 3;
                     end
@@ -271,26 +292,26 @@ module ot_hgi_su_ctl #(
                         if (go_) begin
                             vmq <= {1'b1, 1'b0, sc_, 5'd0, 256'd0, 32'd0, 16'h5355};
                             q_sec[q_t] <= sc_; q_md[q_t] <= s_md; q_w[q_t] <= s_va[2:0];
-                            q_lo[q_t] <= s_rb; q_hi[q_t] <= s_rb + nir[rk] - 24'd1;
+                            q_lo[q_t] <= s_rb; q_hi[q_t] <= s_rb + c_nw - 24'd1;
                             q_off[q_t] <= {{(25-LWB){1'b0}}, s_lr} - {2'b00, s_rb};
                             q_la[q_t] <= s_lr + s_j;
-                            q_msk[q_t] <= (s_md == 2'd1) ? ((nir[rk] - s_j >= 16'd8) ? 8'hFF :
-                                                            ((8'd1 << (nir[rk] - s_j)) - 8'd1)) : 8'd1;
+                            q_msk[q_t] <= (s_md == 2'd1) ? ((c_nw - s_j >= 16'd8) ? 8'hFF :
+                                                            ((8'd1 << (c_nw - s_j)) - 8'd1)) : 8'd1;
                             q_t <= q_t + 2'd1;
                             // advance the cursor
                             case (s_md)
                                 2'd0: last_ = (cur_sec == end_sec);
-                                2'd1: last_ = (nir[rk] - s_j <= 16'd8);
-                                default: last_ = (s_j + 16'd1 == nir[rk]);
+                                2'd1: last_ = (c_nw - s_j <= 16'd8);
+                                default: last_ = (s_j + 16'd1 == c_nw);
                             endcase
                             if (last_) begin                              // the next row
-                                s_rows <= s_rows - 16'd1; s_rb <= s_rb + sor[rk]; s_va <= s_rb + sor[rk];
-                                s_lr <= s_lr + Lr[rk]; s_j <= 16'd0;
-                                cur_sec <= (s_rb + sor[rk]) >> 3; end_sec <= (s_rb + sor[rk] + nir[rk] - 24'd1) >> 3;
+                                s_rows <= s_rows - 16'd1; s_rb <= s_rb + c_so; s_va <= s_rb + c_so;
+                                s_lr <= s_lr + c_L; s_j <= 16'd0;
+                                cur_sec <= (s_rb + c_so) >> 3; end_sec <= (s_rb + c_so + c_nw - 24'd1) >> 3;
                             end else begin
                                 cur_sec <= cur_sec + 27'd1;
                                 if (s_md == 2'd1) s_j <= s_j + 16'd8;
-                                else if (s_md == 2'd2) begin s_j <= s_j + 16'd1; s_va <= s_va + sir[rk]; end
+                                else if (s_md == 2'd2) begin s_j <= s_j + 16'd1; s_va <= s_va + c_si; end
                             end
                         end
                         outst <= outst + (go_ ? 3'd1 : 3'd0) - ((vr[273] && !vr[256]) ? 3'd1 : 3'd0);
@@ -312,7 +333,7 @@ module ot_hgi_su_ctl #(
                         endcase
                     end
                 end
-                S_RUN: if (ready_q && !sl_pend && (!a_s || scount >= {5'd0, no} * {5'd0, ni})) begin
+                S_RUN: if (ready_q && !sl_pend && (!a_s || {11'd0, scount} >= nn_q)) begin
                     go <= 1'b1; st <= S_RUNW; idle_ph <= 2'd0; use_p <= {use_d, use_c || cpair, use_b, 1'b1};
                 end
                 S_RUNW: begin
@@ -346,11 +367,12 @@ module ot_hgi_su_ctl #(
                         reg issue; reg [3:0] cnt; reg [7:0] mk; reg [2:0] off;
                         off = d_cur[2:0];
                         cnt = d_run ? (({12'd0, 4'd8} - {13'd0, off} < d_rem) ? 4'd8 - {1'b0, off} : d_rem[3:0]) : 4'd1;
-                        mk = (MUT_DIRTY && d_run) ? 8'hFF : (((8'd1 << cnt) - 8'd1) << off);
-                        issue = d_live && outst + {2'd0, rp[0]} + {2'd0, rp[2]} + {2'd0, rp[3]} < 3'd4;
+                        mk = MUT_DIRTY ? 8'hFF : (((8'd1 << cnt) - 8'd1) << off);
+                        issue = d_live && outst + nf < 3'd4;
                         if (issue) begin
                             // 8 consecutive local words whose word 'off' is the element at d_cur
                             sr_v <= 1'b1; sr_g <= (dk == 3'd4) ? 2'd1 : 2'd2; sr_addr <= d_lcur[LWB-1:0] - off;
+                            df[df_t] <= {27'({3'd0, d_cur[23:3]}), mk}; df_t <= df_t + 2'd1;
                             if (d_rem == {12'd0, cnt}) begin
                                 if (d_row == 16'd1) d_live <= 1'b0;
                                 else begin d_row <= d_row - 16'd1; d_rowb <= d_rowb + d_so; d_cur <= d_rowb + d_so;
@@ -360,30 +382,28 @@ module ot_hgi_su_ctl #(
                                 d_lcur <= d_lcur + cnt;
                             end
                         end
-                        rp[0] <= issue; rp[2] <= rp[0]; rp[3] <= rp[2]; rsec_d2 <= rsec_d; rsec_d3 <= rsec_d2;
-                        mk_d2 <= mk_d; mk_d3 <= mk_d2;
-                        if (rp[3])
-                            vmq <= {1'b1, 1'b1, rsec_d3, 5'd0, sr_data_q,
-                                    {{4{mk_d3[7]}}, {4{mk_d3[6]}}, {4{mk_d3[5]}}, {4{mk_d3[4]}}, {4{mk_d3[3]}}, {4{mk_d3[2]}},
-                                     {4{mk_d3[1]}}, {4{mk_d3[0]}}},
+                        if (sr_rv_q) begin                          // a read's response: its sector to VM, word-masked
+                            vmq <= {1'b1, 1'b1, df[df_h][34:8], 5'd0, sr_data_q,
+                                    {{4{df[df_h][7]}}, {4{df[df_h][6]}}, {4{df[df_h][5]}}, {4{df[df_h][4]}},
+                                     {4{df[df_h][3]}}, {4{df[df_h][2]}}, {4{df[df_h][1]}}, {4{df[df_h][0]}}},
                                     16'h5357};
-                        if (issue) begin rsec_d <= {3'd0, d_cur[23:3]}; mk_d <= mk; end
-                        outst <= outst + (rp[3] ? 3'd1 : 3'd0) - ((vr[273] && vr[256]) ? 3'd1 : 3'd0);
-                        if (!d_live && !rp[0] && !rp[2] && !rp[3] && !issue && outst == ((vr[273] && vr[256]) ? 3'd1 : 3'd0)) begin
+                            df_h <= df_h + 2'd1;
+                        end
+                        nf <= nf + (issue ? 3'd1 : 3'd0) - (sr_rv_q ? 3'd1 : 3'd0);
+                        outst <= outst + (sr_rv_q ? 3'd1 : 3'd0) - ((vr[273] && vr[256]) ? 3'd1 : 3'd0);
+                        if (!d_live && nf == 3'd0 && outst == ((vr[273] && vr[256]) ? 3'd1 : 3'd0)) begin
                             dk <= dk + 3'd1; st <= S_DRAIN; end
                     end
                 end
-                S_SOUT: if (amr_q && !rp[1] && !rp[3] && !so_w) begin         // 8 elements a beat, in element order
+                S_SOUT: if (amr_q && !so_w) begin                  // 8 elements a beat, in element order
                     sr_v <= 1'b1; sr_g <= 2'd1; sr_addr <= o_lb + ebeat; so_w <= 1'b1;
-                end else if (so_w) begin so_w <= 1'b0; rp[1] <= 1'b1; end   // the memory registers the sector
-                else if (rp[1]) begin rp[1] <= 1'b0; rp[3] <= 1'b1; end
-                else if (rp[3]) begin                               // memory data captured at its controller pin
+                end else if (so_w && sr_rv_q) begin                 // the memory's response (valid-driven)
                     begin : so
                         reg [7:0] mk; integer q;
                         for (q = 0; q < 8; q = q + 1) mk[q] = (ebeat + q < etot);
                         am_stream <= {1'b0, 256'd0, sr_data_q, mk, (ebeat + 21'd8 >= etot), 1'b1};
                     end
-                    rp[3] <= 1'b0;
+                    so_w <= 1'b0;
                     if (ebeat + 21'd8 >= etot) st <= S_DONE; else ebeat <= ebeat + 21'd8;
                 end
                 S_DONE: begin su_idle_r <= 1'b1; op_rdy_r <= 1'b1; st <= S_IDLE; if (a_s) s_clr <= 1'b1; end
@@ -392,11 +412,18 @@ module ot_hgi_su_ctl #(
             endcase
         end
     end
+`ifdef SU_DBG
+    reg sfr_d; always @(posedge clk) sfr_d <= su_fault_r;
+    always @(posedge clk) if (su_fault_r && !sfr_d)
+        $display("SU_DBG %m fault st %0d rk %0d cfault %0d s0 %0d vf %0d gend %0d gsz %0d gsz2 %0d ni %0d no %0d L %0d lsz %0d",
+                 st, rk, cfault_q, s0v_q && s0i_q >= SW, vf_seen, gend_s, gsz_s, gsz2_s, ni, no, Lr[rk], lsz[rk]);
+`endif
 endmodule
 
 module ot_hgi_su_lbank #(
     parameter integer RB = 13,             // log2 words in the bank
-    parameter integer MACRO = 1            // 1: ot_sram_1r1w_1024x256 rows (RB = 13); 0: behavioural
+    parameter integer MACRO = 1,           // 1: ot_sram_1r1w_1024x256 rows (RB = 13); 0: behavioural
+    parameter integer LAT = 0              // bench mutant (behavioural banks): 1 = read latency 2 edges, 2 = 0 edges
 ) (
     input  wire          clk,
     input  wire          re,
@@ -435,9 +462,9 @@ module ot_hgi_su_lbank #(
         assign rd = ro[{ks, 5'd0} +: 32];
     end else begin : g_b
         reg [31:0] m [0:(1 << RB) - 1];
-        reg [31:0] q;
-        always @(posedge clk) begin if (re) q <= m[ra]; if (we) m[wa] <= wd; end
-        assign rd = q;
+        reg [31:0] q, q2;
+        always @(posedge clk) begin if (re) q <= m[ra]; q2 <= q; if (we) m[wa] <= wd; end
+        assign rd = (LAT == 1) ? q2 : (LAT == 2) ? m[ra] : q;
     end endgenerate
 endmodule
 
@@ -462,7 +489,8 @@ module ot_hgi_su_lgroup2 #(
     parameter integer N = 16, M = 8, LWB = 17, AW = 24,
     parameter integer NLW = 0,             // lane write ports (GO: N)
     parameter integer MACRO = 1,
-    parameter integer MUT_XBAR = 0         // bench mutant: identity lanes take the neighbouring bank's word
+    parameter integer MUT_XBAR = 0,        // bench mutant: identity lanes take the neighbouring bank's word
+    parameter integer LAT = 0              // bench mutant: bank read latency 1 = +1 edge, 2 = -1 edge (see ot_hgi_su_lbank)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -473,6 +501,7 @@ module ot_hgi_su_lgroup2 #(
     input  wire              sr_v,                  // 8 consecutive words (drain / STREAM-out)
     input  wire [LWB-1:0]    sr_addr,
     output wire [255:0]      sr_d,
+    output wire              sr_rv,                 // sr_d valid: the sector read's response (follows the banks' latency)
     input  wire              sw_v,                  // up to 8 consecutive words (stage)
     input  wire [LWB-1:0]    sw_addr,
     input  wire [7:0]        sw_mask,
@@ -521,15 +550,27 @@ module ot_hgi_su_lgroup2 #(
         end
     end
     reg [LN-1:0] lb_q [0:N-1]; reg [LN-1:0] sr_lo;
+    reg [LN-1:0] lb_q2 [0:N-1]; reg [LN-1:0] sr_lo2; reg srv1, srv2;
     always @(posedge clk) begin
         for (l = 0; l < N; l = l + 1) if (rr[l]) lb_q[l] <= ra[l*AW +: LN];
         if (sr_v) sr_lo <= sr_addr[LN-1:0];
+        for (l = 0; l < N; l = l + 1) lb_q2[l] <= lb_q[l];
+        sr_lo2 <= sr_lo; srv2 <= srv1;
     end
+    always @(posedge clk or negedge rst_n) if (!rst_n) srv1 <= 1'b0; else srv1 <= sr_v;
+    // the response valid and the network selects follow the banks' latency (LAT mutants move the data, valid and
+    // selects together, so a valid-driven reader stays exact and a fixed-latency one does not)
+    assign sr_rv = (LAT == 1) ? srv2 : (LAT == 2) ? sr_v : srv1;
+    wire [LN-1:0] lb_s [0:N-1];
+    for (genvar gs_ = 0; gs_ < N; gs_ = gs_ + 1) begin : g_ls
+        assign lb_s[gs_] = (LAT == 1) ? lb_q2[gs_] : (LAT == 2) ? ra[gs_*AW +: LN] : lb_q[gs_];
+    end
+    wire [LN-1:0] sr_s = (LAT == 1) ? sr_lo2 : (LAT == 2) ? sr_addr[LN-1:0] : sr_lo;
     // the data network: a lane takes its bank among its candidates (lane 0: any bank)
     genvar gl, gj, gk;
     for (gl = 0; gl < N; gl = gl + 1) begin : g_rd
         if (gl == 0) begin : g_any
-            wire [LN-1:0] bs = lb_q[gl] + MUT_XBAR[LN-1:0];
+            wire [LN-1:0] bs = lb_s[gl] + MUT_XBAR[LN-1:0];
             assign rd[0 +: 32] = b_rd[bs];
         end else begin : g_c
             reg [31:0] dv;
@@ -537,13 +578,13 @@ module ot_hgi_su_lgroup2 #(
                 integer kk;
                 dv = 32'd0;
                 for (kk = NCAND - 1; kk >= 0; kk = kk - 1)
-                    if (lb_q[gl] == cbank(gl, kk)) dv = b_rd[(cbank(gl, kk) + MUT_XBAR) % N];
+                    if (lb_s[gl] == cbank(gl, kk)) dv = b_rd[(cbank(gl, kk) + MUT_XBAR) % N];
             end
             assign rd[32*gl +: 32] = dv;
         end
     end
     for (gj = 0; gj < 8; gj = gj + 1) begin : g_sr
-        wire [LN-1:0] bj = sr_lo + gj;
+        wire [LN-1:0] bj = sr_s + gj;
         assign sr_d[32*gj +: 32] = b_rd[bj];
     end
     // ---- write side: stage (8 words) > lane writes > the single-word STREAM landing (its own group in practice)
@@ -601,7 +642,7 @@ module ot_hgi_su_lgroup2 #(
     end
     genvar gb;
     for (gb = 0; gb < N; gb = gb + 1) begin : g_bank
-        ot_hgi_su_lbank #(.RB(RB), .MACRO(MACRO)) u_b (.clk(clk), .re(b_re[gb]), .ra(b_ra[gb]), .rd(b_rd[gb]),
+        ot_hgi_su_lbank #(.RB(RB), .MACRO(MACRO), .LAT(LAT)) u_b (.clk(clk), .re(b_re[gb]), .ra(b_ra[gb]), .rd(b_rd[gb]),
             .we(b_we[gb]), .wa(b_wa[gb]), .wd(b_wd[gb]));
     end
 endmodule
@@ -616,6 +657,7 @@ module ot_hgi_su_rfile #(parameter integer NR = 2, RWB = 6, AW = 24) (
     input  wire              sr_v,
     input  wire [RWB-1:0]    sr_addr,
     output reg  [255:0]      sr_d,
+    output reg               sr_rv,                 // sr_d valid (one edge after sr_v)
     output reg               flt                    // a result outside the file
 );
     reg [31:0] m [0:(1 << RWB) - 1];
@@ -627,6 +669,7 @@ module ot_hgi_su_rfile #(parameter integer NR = 2, RWB = 6, AW = 24) (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) flt <= 1'b0;
         else for (j = 0; j < NR; j = j + 1) if (we[j] && |wa[j*AW + RWB +: AW - RWB]) flt <= 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) sr_rv <= 1'b0; else sr_rv <= sr_v;
 endmodule
 
 module ot_hgi_su_lmem #(
@@ -635,7 +678,10 @@ module ot_hgi_su_lmem #(
     parameter integer RWB = 6,                                      // log2 words of the reducer-result file
     parameter integer SLB = 16,
     parameter integer NOSTR = 0,
-    parameter integer MUT_XBAR = 0
+    parameter integer MUT_XBAR = 0,
+    parameter integer MUT_LAT = 0          // bench mutants: 1 / 2 = every bank's read latency +1 / -1 edge (behavioural
+                                           //   banks; the lane ports' 1-edge contract breaks), 3 / 4 = the drain response
+                                           //   valid one edge early / late against its data
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -667,11 +713,16 @@ module ot_hgi_su_lmem #(
     input  wire [1:0]        sr_g,                  // drain reads: 1 = O, 2 = R
     input  wire [LWB-1:0]    sr_addr,
     output wire [255:0]      sr_data,
+    output wire              sr_rv,                 // sr_data valid: drain / STREAM-out readers consume on it
     output reg               cfault
 );
-    wire [6:0] gf; wire [255:0] o_sr, r_sr;
+    localparam integer LAT = (MUT_LAT == 1 || MUT_LAT == 2) ? MUT_LAT : 0;
+    wire [6:0] gf; wire [255:0] o_sr, r_sr; wire o_rv, r_rv;
     reg [1:0] srg_q; always @(posedge clk) if (sr_v) srg_q <= sr_g;
     assign sr_data = (srg_q == 2'd2) ? r_sr : o_sr;
+    wire srv0 = (srg_q == 2'd2) ? r_rv : o_rv;
+    reg srv_late; always @(posedge clk or negedge rst_n) if (!rst_n) srv_late <= 1'b0; else srv_late <= srv0;
+    assign sr_rv = (MUT_LAT == 3) ? (sr_v && sr_g == 2'd1) || (sr_v && sr_g == 2'd2) : (MUT_LAT == 4) ? srv_late : srv0;
     assign vi_q = {N*32{1'b0}};
     assign sl_pend = 1'b0;
     reg vi_bad; always @(posedge clk) vi_bad <= |vi_re;
@@ -695,19 +746,19 @@ module ot_hgi_su_lmem #(
             end
         end
         localparam integer GB = (g == 0) ? LWB : (g == 1) ? LG1 : (g == 2) ? LG2 : LG3;
-        ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR)) u_g (
-            .clk(clk), .rst_n(rst_n), .rq(rq), .rr(rr), .ra(ra), .rd(rd), .sr_v(1'b0), .sr_addr({GB{1'b0}}), .sr_d(),
+        ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_g (
+            .clk(clk), .rst_n(rst_n), .rq(rq), .rr(rr), .ra(ra), .rd(rd), .sr_v(1'b0), .sr_addr({GB{1'b0}}), .sr_d(), .sr_rv(),
             .sw_v(sw_v && sw_g[g]), .sw_addr(sw_addr[GB-1:0]), .sw_mask(sw_mask), .sw_d(sw_data), .lw(1'b0),
             .lwa({AW{1'b0}}), .lwd(32'd0), .s1_v(1'b0), .s1_a({GB{1'b0}}), .s1_d(32'd0), .flt(gf[g]));
     end
     // GO: the lanes' element writes; drain / STREAM-out reads
-    ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR)) u_go (
+    ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_go (
         .clk(clk), .rst_n(rst_n), .rq({N{1'b0}}), .rr({N{1'b0}}), .ra({N*AW{1'b0}}), .rd(), .sr_v(sr_v && sr_g == 2'd1),
-        .sr_addr(sr_addr[LGO-1:0]), .sr_d(o_sr), .sw_v(1'b0), .sw_addr({LGO{1'b0}}), .sw_mask(8'd0), .sw_d(256'd0),
+        .sr_addr(sr_addr[LGO-1:0]), .sr_d(o_sr), .sr_rv(o_rv), .sw_v(1'b0), .sw_addr({LGO{1'b0}}), .sw_mask(8'd0), .sw_d(256'd0),
         .lw(vm_we), .lwa(vm_waddr), .lwd(vm_wdata), .s1_v(1'b0), .s1_a({LGO{1'b0}}), .s1_d(32'd0), .flt(gf[4]));
     // GR: the reducer results
     ot_hgi_su_rfile #(.NR(NR), .RWB(RWB), .AW(AW)) u_gr (.clk(clk), .rst_n(rst_n), .we(res_we), .wa(res_addr),
-        .wd(res_data), .sr_v(sr_v && sr_g == 2'd2), .sr_addr(sr_addr[RWB-1:0]), .sr_d(r_sr), .flt(gf[5]));
+        .wd(res_data), .sr_v(sr_v && sr_g == 2'd2), .sr_addr(sr_addr[RWB-1:0]), .sr_d(r_sr), .sr_rv(r_rv), .flt(gf[5]));
     // GS: the STREAM-0 landing region (port A reads it when the op's A is STREAM)
     wire [N-1:0] gs_rr, gs_rq; wire [N*AW-1:0] gs_ra;
     for (l = 0; l < N; l = l + 1) begin : g_sa
@@ -719,9 +770,9 @@ module ot_hgi_su_lmem #(
         reg bad; always @(posedge clk) bad <= sl_v || |gs_rq;
         assign gs_rd = {N*32{1'b0}}; assign gf[6] = bad;
     end else begin : g_str
-        ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR)) u_gs (
+        ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
             .clk(clk), .rst_n(rst_n), .rq(gs_rq), .rr(gs_rr), .ra(gs_ra), .rd(gs_rd), .sr_v(1'b0), .sr_addr({SLB{1'b0}}),
-            .sr_d(), .sw_v(1'b0), .sw_addr({SLB{1'b0}}), .sw_mask(8'd0), .sw_d(256'd0), .lw(1'b0), .lwa({AW{1'b0}}),
+            .sr_d(), .sr_rv(), .sw_v(1'b0), .sw_addr({SLB{1'b0}}), .sw_mask(8'd0), .sw_d(256'd0), .lw(1'b0), .lwa({AW{1'b0}}),
             .lwd(32'd0), .s1_v(sl_v), .s1_a(sl_addr[SLB-1:0]), .s1_d(sl_data), .flt(gf[6]));
     end
 `ifdef LMEM_PROF
@@ -741,7 +792,8 @@ module ot_hgi_su_unit #(
     parameter integer SLB = 16,
     parameter integer MUT_DIRTY = 0,
     parameter integer LG1 = LWB, LG2 = LWB, LG3 = LWB, LGO = LWB, RWB = 6,
-    parameter integer MACRO = 1           // local memory: 1 = banked ot_sram_1r1w_1024x256 macros, 0 = behavioural banks
+    parameter integer MACRO = 1,          // local memory: 1 = banked ot_sram_1r1w_1024x256 macros, 0 = behavioural banks
+    parameter integer MUT_LAT = 0         // bench mutants (ot_hgi_su_lmem MUT_LAT; 1 / 2 force behavioural banks)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -764,7 +816,7 @@ module ot_hgi_su_unit #(
 );
     localparam integer AW = 24, NR = N / 8;
     wire go, ready, idle, vfault, ofault, ro; wire [669:0] wl;
-    wire sl_v, sw_v, sr_v, sl_pend, cfault, a_str; wire [LWB-1:0] sl_addr; wire [31:0] sl_data; wire [LWB-1:0] sw_addr, sr_addr; wire [7:0] sw_mask;
+    wire sl_v, sw_v, sr_v, sr_rv, sl_pend, cfault, a_str; wire [LWB-1:0] sl_addr; wire [31:0] sl_data; wire [LWB-1:0] sw_addr, sr_addr; wire [7:0] sw_mask;
     wire [255:0] sw_data, sr_data; wire [3:0] sw_g, use_p; wire [1:0] sr_g;
     ot_hgi_su_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET), .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO), .RWB(RWB)) u_ctl (.clk(clk),
         .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a),
@@ -773,7 +825,7 @@ module ot_hgi_su_unit #(
         .s0_idx(s0_idx), .s0_data(s0_data), .am_stream(am_stream), .am_rdy(am_rdy), .go(go), .ready(ready),
         .idle(idle), .vfault(vfault), .wl(wl), .sl_v(sl_v), .sl_addr(sl_addr), .sl_data(sl_data), .sw_v(sw_v),
         .sw_addr(sw_addr), .sw_mask(sw_mask), .sw_data(sw_data), .sw_g(sw_g), .sr_v(sr_v), .sr_g(sr_g), .sr_addr(sr_addr),
-        .sr_data(sr_data), .use_p(use_p), .sl_pend(sl_pend), .a_str(a_str), .cfault(cfault));
+        .sr_data(sr_data), .sr_rv(sr_rv), .use_p(use_p), .sl_pend(sl_pend), .a_str(a_str), .cfault(cfault));
     wire [N-1:0] vi_re, vm_we, kv_we; wire [N*AW-1:0] vi_addr, vm_waddr, kv_waddr; wire [N*32-1:0] vi_q;
     wire [4*N*AW-1:0] rd_addr; wire [4*N-1:0] rd_re; wire [8*N-1:0] rd_src; wire [4*N*32-1:0] rd_q;
     wire [N*32-1:0] vm_wdata, kv_wdata; wire [NR-1:0] res_we; wire [NR*AW-1:0] res_addr; wire [NR*32-1:0] res_data;
@@ -797,13 +849,13 @@ module ot_hgi_su_unit #(
         .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .res_we(res_we), .res_addr(res_addr), .res_data(res_data),
         .fault(vfault), .order_fault(ofault), .emitted(emitted), .retire_o(ro), .dbg_emit(de), .dbg_eseq(es),
         .dbg_ret(dr), .dbg_rseq(rs), .dbg_res(ds), .dbg_sseq(ss));
-    ot_hgi_su_lmem #(.N(N), .M(M), .LWB(LWB), .AW(AW), .MACRO(MACRO), .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO),
+    ot_hgi_su_lmem #(.N(N), .M(M), .LWB(LWB), .AW(AW), .MACRO(MACRO && (MUT_LAT == 0 || MUT_LAT > 2)), .MUT_LAT(MUT_LAT), .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO),
         .RWB(RWB), .SLB(SLB), .NOSTR(GLU)) u_mem (.clk(clk), .rst_n(rst_n), .use_p(use_p),
         .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_re(rd_re), .rd_addr(rd_addr), .rd_src(rd_src), .rd_q(rd_q),
         .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .res_we(res_we), .res_addr(res_addr),
         .res_data(res_data), .sl_v(sl_v), .sl_addr(sl_addr), .sl_data(sl_data), .sl_pend(sl_pend), .a_str(a_str), .sw_v(sw_v),
         .sw_g(sw_g), .sw_addr(sw_addr), .sw_mask(sw_mask), .sw_data(sw_data), .sr_v(sr_v), .sr_g(sr_g), .sr_addr(sr_addr),
-        .sr_data(sr_data),
+        .sr_data(sr_data), .sr_rv(sr_rv),
         .cfault(cfault));
 endmodule
 `default_nettype wire

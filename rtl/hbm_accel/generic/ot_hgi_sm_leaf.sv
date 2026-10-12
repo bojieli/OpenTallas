@@ -39,7 +39,7 @@ module ot_hgi_sm_leaf_cp #(parameter integer CW = 106, MUT_NOCREDIT = 0) (
         if (!rst_n) begin s_out <= 1'b0; d_out <= 1'b0; dn <= 112'd0; end
         else begin
             dn[0] <= c_start && (!s_out || MUT_NOCREDIT != 0);  // pulse once per start (mutant: every edge)
-            dn[45] <= c_dv && !d_out;
+            dn[45] <= c_dv && (!d_out || MUT_NOCREDIT != 0);   // once per descriptor (mutant: every edge)
             if (c_start && !s_out) s_out <= 1'b1; else if (s_ack) s_out <= 1'b0;
             if (c_dv && !d_out) d_out <= 1'b1; else if (d_ack) d_out <= 1'b0;
             dn[13:1] <= cmd[13:1]; dn[29:14] <= cmd[29:14]; dn[37:30] <= cmd[37:30]; dn[38] <= cmd[38];

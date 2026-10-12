@@ -37,6 +37,12 @@ module tb_hgi_su_stream #(parameter integer MUTR = 0);
     wire su_rdy, su_done, su_fault, su_halt; wire [522:0] ams; wire am_rdy; wire [2:0] am_ret; wire nan_flag;
     wire [337:0] sq, aq; wire [273:0] sr, ar, tr; reg [337:0] tq = 0;
     ot_hgi_su_unit #(
+`ifdef MUT_LAT
+    .MUT_LAT(`MUT_LAT),
+`endif
+`ifdef SU_BEH
+    .MACRO(0),
+`endif
 `ifdef NO_PAYLOAD_RST
     .PAYLOAD_RESET(0),
 `endif

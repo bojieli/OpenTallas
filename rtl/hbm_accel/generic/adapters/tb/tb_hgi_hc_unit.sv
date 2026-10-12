@@ -18,6 +18,7 @@ module tb_hgi_hc_unit;
         $readmemh({dir, "/hu_case.mem"}, casem); $readmemh({dir, "/hu_vmi.mem"}, vmim);
         $readmemh({dir, "/hu_hbm.mem"}, hbmm); $readmemh({dir, "/hu_exp.mem"}, expm);
     end
+    integer c0;
     integer errors = 0, cyc = 0, seed = 5; always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0; reg [937:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
@@ -102,7 +103,8 @@ module tb_hgi_hc_unit;
     integer c, j, t, v0, nv, h0, nh, e0, ne, t0, words = 0; reg [31:0] qd;
     initial begin
         repeat (3) @(posedge clk);
-        for (c = 0; c < NCASE; c = c + 1) begin
+        if (!$value$plusargs("C0=%d", c0)) c0 = 0;
+        for (c = c0; c < NCASE; c = c + 1) begin
             v0 = casem[c][1131:1100]; nv = casem[c][1099:1068]; h0 = casem[c][1067:1036]; nh = casem[c][1035:1004];
             e0 = casem[c][1003:972]; ne = casem[c][971:940];
             rst_n = 0; hbm.delete();
