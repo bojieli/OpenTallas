@@ -1803,7 +1803,7 @@ def corner_sta_compat(j, host, run, full):
     event(j, f"corner_sta.py replaced by {CORNER_STA_COMPAT_REF}'s (generator passes --sdc-name)")
 
 
-HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
+HELPERS = ("eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
@@ -1830,6 +1830,37 @@ CAL_OWNER_ACTION = {
     "synth_or_place": "the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop",
     "flow_error": "ORFS error before CTS completed: see the CALIBRATE_FAIL detail, fix, re-drop",
 }
+
+
+def verdict_macros(j):
+    """verdict.macros as src-relative view dirs (macro_views.py).  MACRO-VIEW (el1011-ds-misc 2026-10-11): a bare SRAM
+    master there made every hold ECO / path summary / re-export die ORD-0001 on /src/<name>/<name>.lef.  Resolved
+    against the job's pinned commit (git ls-tree, cached per commit); on failure the raw list is returned with an event
+    and the remote helpers (hold_eco.sh / vtswap_eco.sh / path_summary.py) re-resolve against the snapshot or fail loudly."""
+    raw = list(((j.get("spec") or {}).get("verdict") or {}).get("macros") or [])
+    if not raw:
+        return []
+    commit = str(((j.get("spec") or {}).get("source") or {}).get("commit", ""))
+    c = j.get("macro_views") or {}
+    if c.get("commit") == commit and c.get("in") == raw and c.get("out"):
+        return list(c["out"])
+    if str(HERE) not in sys.path:
+        sys.path.insert(0, str(HERE))
+    import macro_views
+    try:
+        r = sh(["git", "-C", str(REPO), "ls-tree", "-r", "--name-only", commit], timeout=120)
+        if r.returncode:
+            raise macro_views.MacroViewError(f"git ls-tree {commit[:12]} failed rc={r.returncode}")
+        out, rw = macro_views.resolve(raw, r.stdout.splitlines())
+    except Exception as ex:   # noqa: BLE001 -- never block the stage on resolution; the helpers re-check remotely
+        if c.get("error") != str(ex):
+            event(j, f"MACRO-VIEW: verdict.macros {raw} not resolved at the daemon ({ex}); remote helpers re-resolve")
+        j["macro_views"] = dict(commit=commit, error=str(ex))
+        return raw
+    if rw:
+        event(j, "MACRO-VIEW: verdict.macros resolved " + ", ".join(f"{a} -> {b}" for a, b in rw))
+    j["macro_views"] = dict(commit=commit, **{"in": raw, "out": out})
+    return list(out)
 
 
 def ship_helpers(host, run):
@@ -2855,6 +2886,7 @@ def viz_elem_export(j):
                              stdout=lg, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, start_new_session=True,
                              env=dict(os.environ, CL_REPO=str(REPO)))
         event(j, "viz-elem: element page export started (explorer_elem_export.py auto)")
+        if (lvh := Path.home() / ".local/share/fleet-viz/layout_viewer/lv_post_record.sh").exists(): subprocess.Popen([str(lvh), j["name"]], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)  # layout viewer static export (layout-viewer-1011)
     except Exception as e:      # never into the caller
         event(j, f"viz-elem: export not started ({type(e).__name__}: {str(e)[:120]})")
 
@@ -3081,7 +3113,7 @@ def summarize_failure(j, fleet, metrics):
     if not fail_corners or (not base and not orfs):
         return False
     basearg = f"--base $(ls -d {base} | tail -1)" if base else f"--orfs-dir {orfs}"
-    extra = "".join(f" --macro {m}" for m in v.get("macros", [])) + \
+    extra = "".join(f" --macro {m}" for m in verdict_macros(j)) + \
         "".join(f" --post-sdc {p}" for p in v.get("post_sdc", []))
     cmd = (f"python3 {j['run']}/cl/path_summary.py {basearg} --src {j['run']}/src{extra} --corners "
            f"{','.join(fail_corners)} --output {j['run']}/cl/path_summary.json")
@@ -4448,7 +4480,7 @@ def start_vtswap_eco(j, fleet, m):
     out = f"{j['run']}/cl/eco-vtswap-t{target:g}" + (f"-r{len(j.get('eco_history') or []) + 1}" if j.get("eco_history") else "")
     env = (f"TARGET={target:g} CAP_PCT={cap:g} DRC0={int(m['drc'])} ACC_SS={SS_MIN:g} ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} "
            f"SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')} THREADS=8 "
-           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
+           f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
     if m.get("setup_post_sdc"):
         env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
     cmd = f"{env} bash {{CL}}/vtswap_eco.sh {rb} {ob} {out} {j['spec']['block']} " + " ".join(shlex.quote(p) for p in post_sdcs)
@@ -4494,7 +4526,7 @@ def start_combo_hold_retry(j, fleet, m, prev):
     post = list(prev.get("post_sdc") or [])
     pq = " ".join(shlex.quote(p) for p in post)
     sdcn = shlex.quote(prev.get("sdc_name") or "6_final.sdc")
-    mac = shlex.quote(" ".join(v.get("macros", [])))
+    mac = shlex.quote(" ".join(verdict_macros(j)))
     blk = j["spec"]["block"]
     out = prev["out"] + "-h"
     henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=0 ALLOW=4 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
@@ -4557,7 +4589,7 @@ def start_combo_eco(j, fleet, m):
     n = len(j.get("eco_history") or []) + 1
     outv, out = f"{j['run']}/cl/eco-combo{n}-vt", f"{j['run']}/cl/eco-combo{n}"
     sdcn = shlex.quote(m.get("sdc_name") or "6_final.sdc")
-    mac = shlex.quote(" ".join(v.get("macros", [])))
+    mac = shlex.quote(" ".join(verdict_macros(j)))
     cap = float(he.get("vtswap_cap_pct", VTSWAP_CAP_PCT))
     blk = j["spec"]["block"]
     venv = (f"TARGET=10 CAP_PCT={cap:g} DRC0=1 ACC_SS={SS_MIN:g} ACC_FF={COMBO_FF_FLOOR:g} SETUP_LIB={SETUP_LIB} SDC_NAME={sdcn} "
@@ -4656,7 +4688,7 @@ def start_hold_eco(j, fleet, m):
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
-          f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
+          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS=8"
     keepwires = bool(he.get("keep_wires") or j.get("auto_react_keepwires"))
     if keepwires:
         # LOOP-AUTO class a: narrow re-route -- every net the ECO did not touch keeps its detailed wires (hold_eco.sh
@@ -4730,7 +4762,7 @@ def eco_install_cmd(j):
         lines.append(he["reexport"])                                      # crashed join(); non-str -> the default re-export
     else:
         W = "/".join(rb.split("/")[:-6])     # <route>/work/orfs/results/asap7/<d>/base -> <route>
-        macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
+        macs = " ".join(f"--macro-view {x}" for x in verdict_macros(j))
         isdc = f" --interface-sdc {ob}/6_final.sdc" if ob != rb else ""
         lines.append(f"if [ -f {W}/view/{blk}.lef ]; then mv {W}/view {W}/view.pre_eco; python3 tools/hbm_fmax_attn_abstract.py "
                      f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; "

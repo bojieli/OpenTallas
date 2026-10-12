@@ -14,7 +14,7 @@
 //   * every seam that can exceed ~500 um gets a relay register (requests, pops, write beats, events, a 2-level gather OR);
 //   * the result FIFO is a 64 x 512 SRAM (ot_sram_1r1w_64x512_m1_r2c2) with a capture flop on its read port;
 //   * retire counts done events through a registered popcount.
-// Latency per record grows (~14 edges); the rate stays one 32-element beat a cycle (OD 64 covers the longer loop).
+// Command relay, registered status pins and per-half write-beat relays (physical spec 10-11). Latency per record grows (~16 edges); the rate stays one 32-element beat a cycle (OD 64 covers the longer loop).
 // MUT (bench): 1 = assembly takes sector j from lane j ^ 1 of the beat (lane-to-sector map; must FAIL).
 module ot_hgi_quant_wide_h #(
     parameter integer NB = 32,
@@ -25,7 +25,7 @@ module ot_hgi_quant_wide_h #(
     input  wire          rst_n,
     input  wire          go,
     input  wire [1408:0] cmd,
-    output wire          idle,
+    output reg           idle,
     output reg           done,
     output reg           fault,
     output wire [32*16-1:0]  wrq,
@@ -34,9 +34,9 @@ module ot_hgi_quant_wide_h #(
     output wire [32*280-1:0] wwq,
     input  wire [31:0]       wwq_cr,
     input  wire [31:0]       wwq_done,
-    output wire              rg_req,
+    output reg               rg_req,
     input  wire              rg_gnt,
-    output wire              wg_req,
+    output reg               wg_req,
     input  wire              wg_gnt
 );
     localparam integer LD = 4;                  // = ot_hgi_qw_rq production default
@@ -45,7 +45,7 @@ module ot_hgi_quant_wide_h #(
     wire [2:0] rr_n;                            // 0 control, 1 counters / relays, 2 tiles
     ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rr_n));
     // ---------------------------------------------------------------- record registers
-    reg busy, bad;
+    reg busy, bad, c_done, c_fault;            // centre done / fault (registered again at the pins)
     reg [127:0] hdr;
     reg [19:0] m;
     reg [31:0] rs, ws;
@@ -55,11 +55,19 @@ module ot_hgi_quant_wide_h #(
     reg [19:0] r_row; reg [15:0] r_left; reg r_last; reg [14:0] r_sec; reg [31:0] r_nrowbase; reg rd_done;
     reg [19:0] w_row; reg [15:0] w_beat; reg [31:0] w_rowbase;
     reg [39:0] sec_done, sec_iss;
-    reg p_go; reg [1408:0] p_cmd;
-    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) p_go <= 0; else p_go <= go && !busy;
-    always @(posedge clk) if (go && !busy) p_cmd <= cmd;
-    assign idle = !busy && !p_go;
-    assign rg_req = busy; assign wg_req = busy;
+    // command: pin flops at the command face, then a relay into the centre (the face is ~500 um from the control)
+    reg p_go, p_go0; reg [1408:0] p_cmd, p_cmd0;
+    wire take = go && !busy && !p_go0 && !p_go;
+    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin p_go0 <= 0; p_go <= 0; end
+        else begin p_go0 <= take; p_go <= p_go0; end
+    always @(posedge clk) begin if (take) p_cmd0 <= cmd; p_cmd <= p_cmd0; end
+    // registered status outputs (idle may only lag: it drops the cycle after go and rises a cycle after busy falls)
+    always @(posedge clk or negedge rr_n[0])
+        if (!rr_n[0]) begin idle <= 1'b1; done <= 0; fault <= 0; rg_req <= 0; wg_req <= 0; end
+        else begin
+            idle <= !take && !p_go0 && !p_go && !busy;
+            done <= c_done; fault <= c_fault; rg_req <= busy; wg_req <= busy;
+        end
     reg rg_ok, wg_ok;
     always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin rg_ok <= 0; wg_ok <= 0; end
         else begin rg_ok <= busy && rg_gnt; wg_ok <= busy && wg_gnt; end
@@ -68,7 +76,7 @@ module ot_hgi_quant_wide_h #(
     wire [31:0] e_push, e_rcr, e_wcr, e_done;
     reg [31:0] hr2, hp2;                        // relayed hit vectors
     reg [14:0] rs2 [0:31]; reg [3:0] sl2 [0:31];
-    reg [511:0] wy2; reg [31:0] wv2; reg [3:0] ws2 [0:31]; reg [14:0] wsec2 [0:31];
+    (* keep *) reg [511:0] wy2a; (* keep *) reg [511:0] wy2b; reg [31:0] wv2; reg [3:0] ws2 [0:31]; reg [14:0] wsec2 [0:31];
     genvar q;
     generate for (q = 0; q < 8; q = q + 1) begin : g_q
         wire [59:0] rsec_b, wsec_b; wire [15:0] rsl_b, wsl_b;
@@ -80,7 +88,7 @@ module ot_hgi_quant_wide_h #(
             .wrq_cr(wrq_cr[q*4 +: 4]), .c_hit_r(hr2[q*4 +: 4]), .c_sec(rsec_b), .c_hit_p(hp2[q*4 +: 4]), .c_slot(rsl_b),
             .gq(gq[q]), .e_push(e_push[q*4 +: 4]), .e_rcr(e_rcr[q*4 +: 4]));
         ot_hgi_qw_wq u_wq (.clk(clk), .rst_n(rr_n[2]), .wwq(wwq[q*4*280 +: 4*280]), .wwq_cr(wwq_cr[q*4 +: 4]),
-            .wwq_done(wwq_done[q*4 +: 4]), .c_y(wy2), .c_v(wv2[q*4 +: 4]), .c_slot(wsl_b), .c_sec(wsec_b),
+            .wwq_done(wwq_done[q*4 +: 4]), .c_y(q < 4 ? wy2a : wy2b), .c_v(wv2[q*4 +: 4]), .c_slot(wsl_b), .c_sec(wsec_b),
             .e_wcr(e_wcr[q*4 +: 4]), .e_done(e_done[q*4 +: 4]));
     end endgenerate
     // event relays (tile face -> centre)
@@ -173,7 +181,7 @@ module ot_hgi_quant_wide_h #(
     reg [511:0] wc_y; reg wm_v; reg [14:0] wm_sec; reg [2:0] wm_n;
     reg [31:0] wv1; reg [3:0] ws1 [0:31]; reg [14:0] wsec1 [0:31];
     always @(posedge clk) begin
-        wc_y <= od_rd; wy2 <= wc_y;
+        wc_y <= od_rd; wy2a <= wc_y; wy2b <= wc_y;
         wm_sec <= w_sec0; wm_n <= w_n;
         for (integer b = 0; b < 32; b = b + 1) begin
             ws1[b] <= 4'(1) << 2'(b - wm_sec[4:0]); wsec1[b] <= wm_sec + 15'(5'(b - wm_sec[4:0]));
@@ -199,18 +207,18 @@ module ot_hgi_quant_wide_h #(
     // ---------------------------------------------------------------- central control
     always @(posedge clk or negedge rr_n[0]) begin
         if (!rr_n[0]) begin
-            busy <= 0; bad <= 0; done <= 0; fault <= 0; hdr <= 0; m <= 0; rs <= 0; ws <= 0; nsec_last <= 0; beats_row <= 0;
+            busy <= 0; bad <= 0; c_done <= 0; c_fault <= 0; hdr <= 0; m <= 0; rs <= 0; ws <= 0; nsec_last <= 0; beats_row <= 0;
             b1 <= 0; r_row <= 0; r_left <= 0; r_last <= 0; r_sec <= 0; r_nrowbase <= 0; rd_done <= 0;
             sec_done <= 0; sec_iss <= 0; r_tail <= 0; r_head <= 0; r_used <= 0;
             mq_h <= 0; mq_t <= 0; od_h <= 0; od_t <= 0; od_n <= 0; resv <= 0;
             w_row <= 0; w_beat <= 0; w_rowbase <= 0; hit_r <= 0; hit_p <= 0; hit_w <= 0;
         end else begin
-            done <= 0;
+            c_done <= 0;
             hit_r <= r_issue ? lanes(r_sec[4:0], r_nsec) : 32'd0;
             hit_p <= l_fire ? lanes(h_l, h_n) : 32'd0;
             hit_w <= w_fire ? lanes(w_sec0[4:0], w_n) : 32'd0;
             if (p_go) begin
-                busy <= 1; bad <= 0; fault <= 0; hdr <= p_cmd[128:1];
+                busy <= 1; bad <= 0; c_fault <= 0; hdr <= p_cmd[128:1];
                 m <= p_cmd[129 + 256 + 68 +: 20];
                 rs <= p_cmd[129 + 256 + 88 +: 32]; ws <= p_cmd[1153 + 88 +: 32];
                 r_sec <= p_cmd[129 + 256 + 8 + 3 +: 15];
@@ -241,15 +249,15 @@ module ot_hgi_quant_wide_h #(
             r_used <= r_used + (SW+1)'(r_issue) - (SW+1)'(l_fire);
             if (yc_v) begin
                 od_t <= od_t + 1'b1;
-                if (yc_f) begin bad <= 1; fault <= 1; end
+                if (yc_f) begin bad <= 1; c_fault <= 1; end
             end
-            if (yc_df) begin bad <= 1; fault <= 1; end
+            if (yc_df) begin bad <= 1; c_fault <= 1; end
             od_n <= od_n + (OW+1)'(yc_v) - (OW+1)'(w_fire);
             resv <= resv + (OW+1)'(l_fire) - (OW+1)'(w_fire);
             if (w_fire) begin od_h <= od_h + 1'b1; mq_h <= mq_h + 1'b1; sec_iss <= sec_iss + 40'(w_n); end
             sec_done <= sec_done + 40'(dc);
-            if (busy && !bad && rd_done && w_row == m && resv == 0 && od_n == 0 && sec_done + 40'(dc) == sec_iss) begin busy <= 0; done <= 1; end
-            if (busy && bad && r_used == 0 && od_n == resv && sec_done == sec_iss && dc == 0) begin busy <= 0; done <= 1; end
+            if (busy && !bad && rd_done && w_row == m && resv == 0 && od_n == 0 && sec_done + 40'(dc) == sec_iss) begin busy <= 0; c_done <= 1; end
+            if (busy && bad && r_used == 0 && od_n == resv && sec_done == sec_iss && dc == 0) begin busy <= 0; c_done <= 1; end
             if (p_go) begin
                 sec_done <= 0; sec_iss <= 0;
                 r_tail <= 0; r_head <= 0; r_used <= 0; mq_h <= 0; mq_t <= 0; od_h <= 0; od_t <= 0; od_n <= 0; resv <= 0;

@@ -7,7 +7,7 @@
 // (expected VM rows), n.mem (counts).  Prints per job its engine start / done (slab cycles) and
 // HCG jobs= done= err= rows= fault= code= cyc= bad_tag=  then HCG PASS / HCG FAIL.
 module tb_s81_hc_master;
-    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, MUT = 0, AMUT = 0;
+    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, MUT = 0, AMUT = 0, HIER = 0, NCOL = 3, GS = 8, HALF = 0, CSPLIT = 0;
     parameter integer MAXJ = 64, MAXE = 4096, MAXY = 2048, TMAX = 400000;
     reg cck = 0, sk = 0, crs = 0, srs = 0;
     always #0.4165 cck = ~cck;              // controller 1.2 GHz
@@ -30,7 +30,7 @@ module tb_s81_hc_master;
     wire [S_WR*512-1:0] wq_d;
     wire flt, online;
     wire [3:0] fcode;
-    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .LVM(LVM), .MUT(MUT), .AMUT(AMUT)) dut (
+    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .LVM(LVM), .MUT(MUT), .AMUT(AMUT), .HIER(HIER), .NCOL(NCOL), .GS(GS), .HALF(HALF), .CSPLIT(CSPLIT)) dut (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt),
@@ -81,7 +81,7 @@ module tb_s81_hc_master;
     reg [S_RD*14-1:0]  dl_a [0:63];
     always @(posedge sk) if (srs) begin
         scyc = scyc + 1;
-        if (dut.u_core.e_cmd_v && dut.u_core.e_cmd_ready) jstart[dut.u_core.e_cmd_d[6:0]] = scyc;
+        if (dut.e_v && dut.e_r) jstart[dut.e_d[6:0]] = scyc;
         // writes take effect at issue (before reads of the same cycle: the core never mixes them in one job)
         for (s = 0; s < S_WR; s = s + 1)
             if (wq_v[s]) vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512];

@@ -41,7 +41,7 @@ SWAP = {"rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_l
         "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv"]}
-P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1, ropi=0, rkc=0, rhalf=0, rhpar=0, gsh=0, kimm=0, denr=0, dring=0)
+P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1, ropi=0, rkc=0, rhalf=0, rhpar=0, gsh=0, kimm=0, denr=0, dring=0, sfut=0)
 
 
 def take_params(argv):
@@ -78,14 +78,15 @@ def set_c12(VC):
     d_sig0 = d_exp + a + P["ddiv"]
     d_sig = d_sig0 + P["denr"]           # lane sigmoid / SiLU (DENR); the side pipe's gate keeps d_sig0
     sx = P["sidex"]
-    VC.SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: d_exp, I.SFU_SIGM: d_sig, I.SFU_SILU: d_sig,
+    st = 2 * P["sfut"]                   # el1011-hbm-sfu SFUT: the lanes' sigmoid chain sub-tile seams
+    VC.SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: d_exp + st, I.SFU_SIGM: d_sig + st, I.SFU_SILU: d_sig + st,
                     I.SFU_RSQRT: 1 + 9 * m + 3 * a + sx, I.SFU_SQRT: 31 + sx,
                     I.SFU_SPSQRT: d_exp + 11 * m + 10 * a + 31 + P["ddiv"] + sx, I.SFU_EGATE: 1 + 31 + 1 + d_sig0 + sx}
 
 
 def vflags():
     g = dict(OPR=P["opr"], DDIV=P["ddiv"], SIDEX=P["sidex"], FSQ=P["fsq"], CAPR=P["capr"], RPAD=P["rpad"], RSL=P["rsl"], ROUT=P["rout"], CTL12=P["ctl12"],
-             RTAP=P["rtap"], RSLICE=P["rslice"], ROPI=P["ropi"], RKC=P["rkc"], RHALF=P["rhalf"], RHPAR=P["rhpar"], GSH=P["gsh"], KIMM=P["kimm"], DENR=P["denr"], DRING=P["dring"])
+             RTAP=P["rtap"], RSLICE=P["rslice"], ROPI=P["ropi"], RKC=P["rkc"], RHALF=P["rhalf"], RHPAR=P["rhpar"], GSH=P["gsh"], KIMM=P["kimm"], DENR=P["denr"], DRING=P["dring"], SFUT=P["sfut"])
     return " ".join(f"-G{k}={v}" for k, v in g.items())
 
 

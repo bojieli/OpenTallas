@@ -98,6 +98,13 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer MPR = 0,
     // HIER = NPL > 0 (el1011-q-tile): the engine's lanes + tree as hardened lane-slice leaves (ot_qwen_w12_matvec_part HIER)
     parameter integer HIER = 0,
+    parameter integer HIER_HARD = 0,      // the slices as the hardened leaf ot_qwen_tile_lsl (round 2)
+    // el1011-q-tile h3 (2026-10-11; the glue stays tile-level logic, GLUE PLACEMENT): TOREG = tile output pin registers
+    // on t_out / t_vout (+1 cycle a tile->node hop), TIDR = registered tile_id strap, LRR = one reset relay flop per
+    // hardened leaf
+    parameter integer TOREG = 0,
+    parameter integer TIDR = 0,
+    parameter integer LRR = 0,
     // TMUT 3 = column 1 / bank 0's MPR copy one edge stale
     parameter integer TMUT = 0,
     parameter integer NREG = 1,
@@ -183,8 +190,33 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire [TG*AW-1:0]  me_kv_addr;
     wire [TG*W*32-1:0] me_kv_q;
     wire              me_fault;
+    //: TIDR: the static tile_id strap through a register (the strap pins sat 69 levels from kdif; a strap is constant from
+    //: before reset release, so the registered copy is the same value at every use)
+    wire [15:0]       tile_id_i;
+    wire [W*32-1:0]   t_out_i;
+    wire              t_vout_i;
+    generate if (TIDR != 0) begin : g_tidr
+        (* keep *) reg [15:0] tile_id_q;
+        always @(posedge clk) tile_id_q <= tile_id;
+        assign tile_id_i = tile_id_q;
+    end else begin : g_tidn
+        assign tile_id_i = tile_id;
+    end endgenerate
+    //: TOREG: the tile's tree output as pin registers (the leaves' tree registers sat 216-457 um from the t_out pins);
+    //: data and valid together, +1 cycle on the tile -> node hop
+    generate if (TOREG != 0) begin : g_toreg
+        (* keep *) reg [W*32-1:0] t_out_q;
+        (* keep *) reg            t_vout_q;
+        always @(posedge clk) t_out_q <= t_out_i;
+        always @(posedge clk or negedge rst_n) if (!rst_n) t_vout_q <= 1'b0; else t_vout_q <= t_vout_i;
+        assign t_out = t_out_q;
+        assign t_vout = t_vout_q;
+    end else begin : g_tonr
+        assign t_out = t_out_i;
+        assign t_vout = t_vout_i;
+    end endgenerate
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER),
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
@@ -200,8 +232,8 @@ module ot_qwen_rom_tile_logic_w12 #(
         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
         .progress(), .fault(me_fault),
-        .i_gbase({16'd0, tile_id} * TG), .t_in({W*32{1'b0}}), .t_fault_in(1'b0),
-        .t_out(t_out), .t_vout(t_vout), .t_fault(), .active_o());
+        .i_gbase({16'd0, tile_id_i} * TG), .t_in({W*32{1'b0}}), .t_fault_in(1'b0),
+        .t_out(t_out_i), .t_vout(t_vout_i), .t_fault(), .active_o());
 
     // -- upper tree node ---------------------------------------------------------
     wire node_fault;
@@ -565,6 +597,13 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer ARPB = 0,           // ot_qwen_rom_tile_logic_w12 ARPB (qwen-1010/c): per-bank address register
     parameter integer MPR = 0,            // ot_qwen_rom_tile_logic_w12 MPR (el1011-q-tile): per-macro request register
     parameter integer HIER = 0,           // ot_qwen_rom_tile_logic_w12 HIER (el1011-q-tile): lane-slice leaves
+    parameter integer HIER_HARD = 0,
+    // el1011-q-tile h3 (2026-10-11; the glue stays tile-level logic, GLUE PLACEMENT): TOREG = tile output pin registers
+    // on t_out / t_vout (+1 cycle a tile->node hop), TIDR = registered tile_id strap, LRR = one reset relay flop per
+    // hardened leaf
+    parameter integer TOREG = 0,
+    parameter integer TIDR = 0,
+    parameter integer LRR = 0,
     parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
     input  wire              clk,
@@ -596,7 +635,7 @@ module ot_qwen_rom_tile_w12 #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .ANR(ANR), .BAW(BAW)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .ANR(ANR), .BAW(BAW)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),

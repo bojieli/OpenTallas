@@ -867,16 +867,38 @@ localparam integer W_ME_AMC = 1;
     //: ot_hdc_cg).  The enable is combinational from the supply's view of the
     //: engine's registered requests; it never depends on me_go.
     wire me_wake = (st == S_RUN) && nx_v && (d_unit == 2'd1);
-    generate if (MEREG != 0) begin : g_mereg
+    wire me_clk_en_w;
+    generate if (MEREG != 0 && MEREG < 3) begin : g_mereg
         reg mo_p;                                       // pin flop (me_mem_ok of edge t+2 at edge t)
         (* keep = "true", dont_touch = "true" *) reg mo_e;   // enable flop, placed at the ICG clones
         always @(posedge clk) begin mo_p <= me_mem_ok; mo_e <= (MEREG == 2) ? me_mem_ok : mo_p; end
         assign me_en = !rst_n || (mo_e && ((ME_IDLE_GATE == 0) || !me_idle || me_wake));   // rst_n: the registered tile reset copy
+        assign me_clk_en_w = me_en;
+    end else if (MEREG >= 3) begin : g_merr
+        // MEREG 3 (coordinator decision 10-11): the engine clock enable REGISTERED -- computed one edge early from
+        // the supply word (announced THREE edges ahead: pin flop, central kept flop) and the idle / wake state, so the
+        // engine wakes from idle one edge later (transaction-exact; +1 wake cycle).  16 kept regional copies en_r feed
+        // the pushed-down ICG clones region by region (physical/common_flow/cg_pushdown.tcl OT_CG_ENREP_*); en_c is
+        // the controller's copy, en_o the me_clk_en pin's.  MEREG 4 = negative control (the controller's copy stuck at 1: it issues on edges the engine is not clocked).
+        reg mo_p;
+        (* keep = "true", dont_touch = "true" *) reg mo_m;
+        always @(posedge clk) begin mo_p <= me_mem_ok; mo_m <= mo_p; end
+        // a go in flight keeps the engine clocked until its idle status (a gated-domain delay line) can report it
+        (* keep = "true", dont_touch = "true" *) reg en_c, en_o;
+        // (counted in ENGINE edges: 8 clocked edges cover the 2 issue + 2 status stations and the tree top)
+        reg [3:0] gfl;
+        always @(posedge clk or negedge rst_n) if (!rst_n) gfl <= 4'd0; else if (me_go) gfl <= 4'd8; else if (en_c && gfl != 4'd0) gfl <= gfl - 1'b1;
+        wire en_d = !rst_n || (mo_m && ((ME_IDLE_GATE == 0) || !me_idle || me_wake || me_go || (gfl != 4'd0)));
+        (* keep = "true", dont_touch = "true" *) reg [15:0] en_r;
+        always @(posedge clk) begin en_r <= {16{en_d}}; en_c <= en_d; en_o <= en_d; end
+        assign me_en = (MEREG == 4) ? 1'b1 : en_c;   // MEREG 4 mutant: the controller assumes every edge clocks the engine
+        assign me_clk_en_w = en_o;
     end else begin : g_mecomb
         assign me_en = !rst_n || (((ME_STALL == 0) || me_mem_ok) &&
                               ((ME_IDLE_GATE == 0) || !me_idle || me_wake));
+        assign me_clk_en_w = me_en;
     end endgenerate
-    assign me_clk_en = me_en;
+    assign me_clk_en = me_clk_en_w;   // MEREG 3: the kept pin copy en_o
     wire me_clk;
     generate if (ME_STALL != 0 || ME_IDLE_GATE != 0) begin : g_me_cg
         ot_hdc_cg u_me_cg (.clk(clk), .en(me_en), .gclk(me_clk));
@@ -1042,7 +1064,7 @@ module ot_qfd_tt_ctlm_i #(
     parameter integer MEREG = 0,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 0,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
     parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)
-    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud)
+    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations, 64 no engine idle clock gate (power; the ICG enable then = the registered supply word); 8 = SRAM one-short mutant
 ) (
     input  wire clk, input wire rst_n,
     // token start, program writes (the program-store copy), the SU snapshot, KV / supply readiness
@@ -1069,12 +1091,22 @@ module ot_qfd_tt_ctlm_i #(
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
     wire kv_ok_c, kvwd_c;   // AUD: pin flops (kv_ok / kv_write_drained announced one edge ahead)
-    generate if (AUD != 0) begin : g_kvreg
+    generate if ((AUD & 4) != 0) begin : g_kvreg
         reg kv_ok_q, kvwd_q;
         always @(posedge clk) begin kv_ok_q <= kv_ok; kvwd_q <= kv_write_drained; end
         assign kv_ok_c = kv_ok_q; assign kvwd_c = kvwd_q;
     end else begin : g_kvdir
         assign kv_ok_c = kv_ok; assign kvwd_c = kv_write_drained;
+    end endgenerate
+    wire up_fault_c, x_rdy_c, fab_fault_c; wire [15:0] land_cnt_c; wire [16-1:0] tr_fault_c;
+    wire [12-1:0] p_fault_c;
+    wire [46:0] dpin = {up_fault, land_cnt, x_rdy, tr_fault, p_fault, fab_fault};
+    generate if ((AUD & 16) != 0) begin : g_dpin
+        reg [46:0] dpin_q;    // AUD 16: die-input pin flops (status / count / fault inputs; p_am stays direct)
+        always @(posedge clk) dpin_q <= dpin;
+        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin_q;
+    end else begin : g_ddir
+        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin;
     end endgenerate
     (* keep = "true" *) wire [8-1:0] rsv;   // RRG: reset copies (el1011-q-seq)
     wire [8-1:0] rrv;                      // the raw-port users: rsv under RRG, else rst_n
@@ -1189,7 +1221,7 @@ module ot_qfd_tt_ctlm_i #(
     wire [16-1:0] c_me_progress, u_me_progress;
     wire [1-1:0] c_me_fault, u_me_fault;
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
-    ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .MEREG(MEREG), .PCUT(PCUT), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
+    ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
         .clk(clk),
         .rst_n(rsv[1]),
         .start(q_h_start),
@@ -1421,14 +1453,14 @@ module ot_qfd_tt_ctlm_i #(
     ot_hdc_delay #(.W(XW + 18), .D(OS), .RESET(1)) u_os_snap (.clk(clk), .rst_n(rsv[4]), .d({me_acc, u_me_idle, u_me_progress, m_fin}),
         .q({me_acc_o, me_idle_o, me_prog_o, m_fin_o}));
     ot_hdc_delay #(.W(18 + 32), .D(OS)) u_os_f (.clk(clk), .rst_n(rsv[5]), .d({m_fidx, m_fval}), .q({m_fidx_o, m_fval_o}));
-    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR((AUD != 0) ? 0 : 1), .RDMEM(AUD)) u_tt (
-        .clk(c_me_clk), .rst_n(rsv[0]), .up_fault(up_fault), .land_cnt(land_cnt), .go(u_me_go), .ready(u_me_ready),
+    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0)) u_tt (
+        .clk(c_me_clk), .rst_n(rsv[0]), .up_fault(up_fault_c), .land_cnt(land_cnt_c), .go(u_me_go), .ready(u_me_ready),
         .idle(u_me_idle), .i_nout(u_me_i_nout), .i_tiles(u_me_i_tiles), .i_k(u_me_i_k), .i_wsrc(u_me_i_wsrc), .i_wbase(u_me_i_wbase), .i_ts(u_me_i_ts), .i_ks(u_me_i_ks), .i_js(u_me_i_js), .i_xbase(u_me_i_xbase), .i_xks(u_me_i_xks), .i_xjs(u_me_i_xjs), .i_xcs(u_me_i_xcs), .i_jsh(u_me_i_jsh), .i_split(u_me_i_split), .i_wcs(u_me_i_wcs), .i_round(u_me_i_round), .i_obase(u_me_i_obase), .i_ots(u_me_i_ots), .i_ojs(u_me_i_ojs), .i_mmode(u_me_i_mmode), .i_oen(u_me_i_oen), .i_amax(u_me_i_amax), .i_rmax(u_me_i_rmax), .i_mbase(u_me_i_mbase),
         .wrom_re(u_me_wrom_re), .wrom_addr(u_me_wrom_addr), .kv_re(),
         .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),
-        .x_rdy(x_rdy), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp),
-        .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault),
-        .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault), .fab_fault(fab_fault),
+        .x_rdy(x_rdy_c), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp),
+        .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault_c),
+        .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault_c), .fab_fault(fab_fault_c),
         .ov(ov), .am_idx(u_me_am_idx), .am_val(u_me_am_val), .am_any(u_me_am_any),
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
         .progress(u_me_progress), .fault(u_me_fault));

@@ -228,6 +228,10 @@ module ot_qwen_w12_matvec_part #(
     // flops ARE the S3 registers, its output is the tree's last-level register: same edges, 0 cycles.  Each leaf
     // keeps its own valid line / first line / split delay / reset relay (one local clock tree per leaf).
     parameter integer HIER = 0,
+    // HIER_HARD = 1 (round 2): each slice is the hardened leaf master ot_qwen_tile_lsl (fixed G 4 / NPL 2 / IL 8 / MUL 8 /
+    // ACC 7 / TREE 7 / LRST 3 / ANR 1; rtl/physical/ot_qwen_tile_lsl.sv in simulation, its blackbox + views in the parent route)
+    parameter integer HIER_HARD = 0,
+    parameter integer LRR = 0,            // el1011-q-tile h3: one reset relay flop per hardened leaf (1-cycle later leaf release)
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
@@ -829,10 +833,30 @@ end endgenerate
                 assign w_in[32*gl +: 32] = s2_w[32*((gl / HIER) * W + g * HIER + (gl % HIER)) +: 32];
                 assign lfault[(gl / HIER) * W + g * HIER + (gl % HIER)] = lf[gl];
             end
+            if (HIER_HARD != 0) begin : g_hd
+`ifndef SYNTHESIS
+                initial if (G != 4 || HIER != 2 || IL != 8 || MUL_LAT != 8 || ACC_LAT != 7 || TREE_LAT != 7 || LRST != 3 || ANR != 1) begin
+                    $display("FAIL HIER_HARD: engine parameters differ from the hardened leaf ot_qwen_tile_lsl"); $finish;
+                end
+`endif
+                //: LRR: one reset relay flop per leaf (asynchronous assert, release one edge later), so the tile reset port
+                //: drives 8 relay flops instead of every leaf's relays across the frame
+                wire rst_l;
+                if (LRR != 0) begin : g_lrr
+                    (* keep *) reg rq;
+                    always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                    assign rst_l = rq;
+                end else begin : g_lrn
+                    assign rst_l = rst_n;
+                end
+                ot_qwen_tile_lsl u_lh (.clk(clk), .rst_n(rst_l), .v_d(s2_v), .first_d(s2_first), .split_d(s2_tag[TW-6 -: 4]),
+                    .w_d(w_in), .x_d(s3x_d[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
+            end else begin : g_sf
             ot_qwen_w12_lane_slice #(.G(G), .NPL(HIER), .IL(IL), .MUL_LAT(MUL_LAT), .ACC_LAT(ACC_LAT),
                 .TREE_LAT(TREE_LAT), .LRST(LRST), .ANR(ANR), .TMUT((g == 0) ? TMUT : 0)) u_ls (
                 .clk(clk), .rst_n(rst_n), .v_d(s2_v), .first_d(s2_first), .split_d(s2_tag[TW-6 -: 4]),
                 .w_d(w_in), .x_d(s3x_d[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
+            end
         end
         assign sum = {GL*W*32{1'b0}};
         assign lvl_h = {{((GI - 1) * W * 32){1'b0}}, top};

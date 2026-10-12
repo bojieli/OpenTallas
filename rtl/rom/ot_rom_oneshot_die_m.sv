@@ -75,7 +75,13 @@ module ot_rom_oneshot_die_m #(
     // lanes, its own skew lines, adders, valid chain from its lane 0, partial error OR and reset leaf) with registered
     // seams (pin flops in, flops out: +2 edges on the reduce path; ldl grows by 2).  serr[N-1] = OR of the slice
     // partials (OR is associative and every slice delays identically).  OPQ must be 0.
-    parameter integer FSL     = 0
+    parameter integer FSL     = 0,
+    // IBH = 1 (el1011-q-coll 2026-10-11 22:40, pr2c TT -29.8: ir -> 4:1 ib_head mux -> ~400 ps of wire -> u_txk at the tx
+    // face): the IB head is a REGISTER computed one edge ahead (hq <= ib[next ir], write-bypassed when the next head slot
+    // is written this edge), so every consumer (u_txk / txrec_q / lpq) sees a flop and the long hop is wire only.
+    // Same value every cycle as the combinational ib_head (cycle-exact; no latency).  FPIPE = 2 additionally registers
+    // the tag-disagree and overflow fault conditions one edge (fault / fault_code[1..2] set one edge later).
+    parameter integer IBH     = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -133,7 +139,7 @@ module ot_rom_oneshot_die_m #(
     reg [IA:0]   iw, ir;
     wire ib_empty = (iw == ir);
     wire ib_full  = (iw[IA-1:0] == ir[IA-1:0]) && (iw[IA] != ir[IA]);
-    wire [PW-1:0] ib_head = ib[ir[IA-1:0]];
+    wire [PW-1:0] ib_head;
     always @(posedge clk) if (iv_q && !ib_full) ib[iw[IA-1:0]] <= irec_q;
     // ---- credits and transmit -------------------------------------------------------------------------------------
     reg  [CB-1:0] cr [0:N-1];
@@ -145,6 +151,20 @@ module ot_rom_oneshot_die_m #(
     always @(*) for (r = 0; r < N; r = r + 1)
         can_tx[r] = (r == RANK) ? ((mcnt[r] + hv[r] + ((PR != 0) ? lpv : 1'b0)) < DEPTH) : (cr[r] != 0 && txr_q[r]);
     wire fire = !ib_empty && (&can_tx);
+    generate if (IBH != 0) begin : g_ibh
+        wire [IA:0] ir_nx = fire ? ir + 1'b1 : ir;
+        reg  [PW-1:0] hq;
+        always @(posedge clk)
+`ifdef OT_ONESHOT_M_IBH_MUTANT
+            if (1'b0) hq <= irec_q;                  // negative control: no write bypass of the look-ahead head
+`else
+            if (iv_q && !ib_full && (iw[IA-1:0] == ir_nx[IA-1:0])) hq <= irec_q;
+`endif
+            else hq <= ib[ir_nx[IA-1:0]];
+        assign ib_head = hq;
+    end else begin : g_ibc
+        assign ib_head = ib[ir[IA-1:0]];
+    end endgenerate
     reg          txv_q, icr_q;
     reg [PW-1:0] txrec_q;
     generate if (PR != 0) begin : g_txr
@@ -280,6 +300,7 @@ module ot_rom_oneshot_die_m #(
     assign serr[0] = 1'b0;
     generate if (FSL != 0) begin : g_fsl
         initial if (OPQ != 0 || FW % 128 != 0) $error("ot_rom_oneshot_die_m FSL: OPQ 0 and FW a multiple of 128");
+        initial if (N != 4 || ADD_LAT != 7) $error("ot_rom_oneshot_die_m FSL: the hardened ot_coll_fold_slice is N 4, ADD_LAT 7");
         localparam integer NS = FW / 128;
         wire [NS-1:0] sl_v, sl_e;
         wire [FW-1:0] fsum;
@@ -293,7 +314,8 @@ module ot_rom_oneshot_die_m #(
             for (gq = 0; gq < N; gq = gq + 1) begin : g_sd
                 assign sd[gq*128 +: 128] = fsrc_f[gq*FW + gs*128 +: 128];
             end
-            (* keep_hierarchy *) ot_coll_fold_slice #(.N(N), .ADD_LAT(ADD_LAT), .SEAM(1)) u_fs (
+            (* keep_hierarchy *) ot_coll_fold_slice u_fs (   // hardened defaults N 4 / ADD_LAT 7 / SEAM 1 (no override: the
+                                                           // parent takes the hardened macro master by name)
                 .clk(clk), .rst_n(rst_n), .red_in(red_in), .src(sd), .sum(fsum[gs*128 +: 128]),
                 .v_out(sl_v[gs]), .e_out(sl_e[gs]));
         end
@@ -421,12 +443,21 @@ module ot_rom_oneshot_die_m #(
     end else begin : g_fc
         assign rerr_f = red_out && serr[N-1];
     end endgenerate
+    wire agree_f, ovf_f;
+    generate if (FPIPE >= 2) begin : g_fp2
+        reg agq, ovq;
+        always @(posedge clk or negedge rst_i)
+            if (!rst_i) begin agq <= 1'b0; ovq <= 1'b0; end else begin agq <= s0_vc && !agree; ovq <= ovf; end
+        assign agree_f = agq; assign ovf_f = ovq;
+    end else begin : g_fc2
+        assign agree_f = s0_vc && !agree; assign ovf_f = ovf;
+    end endgenerate
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin fault <= 1'b0; fault_code <= 3'b0; end
         else begin
             if (rerr_f) begin fault <= 1'b1; fault_code[0] <= 1'b1; end
-            if (s0_vc && !agree) begin fault <= 1'b1; fault_code[1] <= 1'b1; end
-            if (ovf || txbad) begin fault <= 1'b1; fault_code[2] <= 1'b1; end
+            if (agree_f) begin fault <= 1'b1; fault_code[1] <= 1'b1; end
+            if (ovf_f || txbad) begin fault <= 1'b1; fault_code[2] <= 1'b1; end
         end
     end
     // ---- PR: replicated pop -------------------------------------------------------------------------------------------

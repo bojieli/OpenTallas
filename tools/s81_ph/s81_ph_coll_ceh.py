@@ -5,7 +5,7 @@
                                      q + broadcasts on N (from ceq), remote landings on W (FIFO tiles), tx / credits /
                                      pass-through landings on E (lane tiles)
     dsfd_coll_cef                    405.6 x 280    remote FIFO tile (6 macros 256x256, 2 x 3): rx on W, slice links N
-    dsfd_coll_cele / dsfd_coll_celp  113.4 x 340.2  lane link: lane face W, core side E
+    dsfd_coll_cele 113.4 x 170.1 / dsfd_coll_celp 64.8 x 170.1  lane link: lane face W, core side E
     dsfd_coll_ceq                    300 x 680.4    VM queues (18 macros 128x256, 2 x 9): fvm_u S, streams E, rest W
     s81_ph_coll_ceh.py   -> physical/s81_ph_views/ports/contract_ceh/<master>/{ports.json, io_place.tcl, ports.svh}"""
 import sys
@@ -60,7 +60,7 @@ def main():
         lay(pl, 'W', [('xl_v', 8, 'input'), ('xl_d', 8 * 163, 'input'), ('xl_cr', 8, 'output')], start=4.8)
         lay(pl, 'E', [('tx_v', 3, 'output'), ('tx_d', 163, 'output'), ('tx_rdy', 3, 'input'), ('cr_i', 6, 'input'),
                       ('cr_o', 6, 'output'), ('pt_v', 5, 'input'), ('pt_d', 5 * (169 if s0 else 129), 'input'),
-                      ('pt_cr', 5, 'output')], start=4.8)
+                      ('pt_cr', 5, 'output')], start=4.8, step=3)
         pl.emit('ceh engine lane-slice' + (' 0 (b_word header)' if s0 else ''))
 
     pf = T.Plan('dsfd_coll_cef', 405.6, 280.0)
@@ -71,7 +71,7 @@ def main():
     pf.emit('ceh remote-source receive FIFO tile (2 parities x 3 macros)')
 
     for m, ep in (('dsfd_coll_cele', 1), ('dsfd_coll_celp', 0)):
-        pl = T.Plan(m, 113.4, 340.2)
+        pl = T.Plan(m, 113.4 if ep else 64.8, 170.1)   # el1011 21:40: util 27% / 16% at 340.2 tall (textbook util_channel) -> 54% each
         lay(pl, 'W', [('f_lo_v', 1, 'output'), ('f_lo_r', 1, 'input'), ('f_lo_d', 553, 'output'), ('f_li_v', 1, 'input'),
                       ('f_li_r', 1, 'output'), ('f_li_d', 553, 'input'), ('x_flt', 3, 'input')], start=4.8)
         if ep:
@@ -88,12 +88,28 @@ def main():
     pq = T.Plan('dsfd_coll_ceq', 300.0, 680.4)
     lay(pq, 'S', [('fvm_u', 592, 'input')])
     lay(pq, 'E', [('q_v', 1, 'output'), ('q_d', 4 * 162, 'output'), ('q_cr', 1, 'input'), ('p_v', 5, 'output'),
-                  ('p_d', 5 * 553, 'output'), ('p_cr', 5, 'input')], start=4.8)
+                  ('p_d', 5 * 553, 'output'), ('p_cr', 5, 'input')], start=4.8, step=4)
     lay(pq, 'W', [('e_en', 1, 'output'), ('rank', 2, 'output'), ('qp', 6, 'output'), ('fv', 8, 'output'),
                   ('lane_f', 32, 'input'), ('slice_f', 8, 'input'), ('fifo_f', 3, 'input'), ('bw_flt', 1, 'input')], start=4.8)
     ck(pq, 'N', 150.0)
     pq.emit('ceh VM queue tile (6 queues in SRAM, broadcasts, fault collector)')
-    print('contract_ceh: dsfd_coll_ces0, dsfd_coll_cesn, dsfd_coll_cef, dsfd_coll_cele, dsfd_coll_celp, dsfd_coll_ceq')
+    # el1011-ds-coll 21:45: per-queue tiles (ceq split). 140.4 x 204.12: 3 macros 128x256 in one column, 20.25 um
+    # channels; f_vm chain S (in) -> N (out) at identical x so abutted tiles connect straight; queue stream E.
+    for m, q0 in (('dsfd_coll_ceq0', 1), ('dsfd_coll_ceqp', 0)):
+        pt = T.Plan(m, 140.4, 204.12)
+        lay(pt, 'S', [('fvm_u' if q0 else 'f_i', 592, 'input')] + ([] if q0 else [('qf_o', 1, 'output')]), step=4)
+        lay(pt, 'N', [('f_o', 592, 'output'), ('qf_i', 1, 'input')], step=4)
+        if q0:
+            lay(pt, 'E', [('q_v', 1, 'output'), ('q_d', 4 * 162, 'output'), ('q_cr', 1, 'input')], start=4.8, step=4)
+            x = lay(pt, 'W', [('e_en', 1, 'output'), ('rank', 2, 'output'), ('qp', 1, 'output'), ('fv', 8, 'output'),
+                              ('lane_f', 32, 'input'), ('slice_f', 8, 'input'), ('fifo_f', 3, 'input'),
+                              ('bw_flt', 1, 'input')], start=4.8)
+        else:
+            lay(pt, 'E', [('p_v', 1, 'output'), ('p_d', 553, 'output'), ('p_cr', 1, 'input')], start=4.8, step=4)
+            x = lay(pt, 'W', [('lid', 3, 'input'), ('qp', 1, 'output')], start=4.8)
+        ck(pt, 'W', x + 4.8)
+        pt.emit('ceh VM queue tile (' + ('queue 0 + rank/enable + fault collector' if q0 else 'one pass-through queue') + ')')
+    print('contract_ceh: dsfd_coll_ces0, dsfd_coll_cesn, dsfd_coll_cef, dsfd_coll_cele, dsfd_coll_celp, dsfd_coll_ceq, dsfd_coll_ceq0, dsfd_coll_ceqp')
 
 
 if __name__ == '__main__':

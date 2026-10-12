@@ -9,7 +9,8 @@
     {"name": "ot_sram_2rw_512x64_m4_r2c2", "words": 512, "bits": 64, "mux": 4, "ports": "2rw", "spare_rows": 2, "spare_cols": 2},
     {"name": "ot_sram_1r1w_256x256_m2_r2c2", "words": 256, "bits": 256, "mux": 2, "ports": "1r1w", "spare_rows": 2, "spare_cols": 2},
     {"name": "ot_sram_1r1w_128x256_m1_r2c2", "words": 128, "bits": 256, "mux": 1, "ports": "1r1w", "spare_rows": 2, "spare_cols": 2},
-    {"name": "ot_sram_1r1w_64x512_m1_r2c2", "words": 64, "bits": 512, "mux": 1, "ports": "1r1w", "spare_rows": 2, "spare_cols": 2}
+    {"name": "ot_sram_1r1w_64x512_m1_r2c2", "words": 64, "bits": 512, "mux": 1, "ports": "1r1w", "spare_rows": 2, "spare_cols": 2},
+    {"name": "ot_sram_1rw_64x128_m1", "words": 64, "bits": 128, "mux": 1, "ports": "1rw"}
   ],
   "rom": [
     {"name": "ot_rom_8192x266_m8", "words": 8192, "bits": 266, "mux": 8},

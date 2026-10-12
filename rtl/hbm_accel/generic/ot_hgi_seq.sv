@@ -39,7 +39,10 @@ module ot_hgi_seq #(
     parameter integer DS_WIN = 128,      //   window
     parameter integer DS_SCAN = 16384,   //   scan cap
     parameter integer DS_TOPK = 512,     //   top-k
-    parameter integer DS_HDL = 9         //   log2 head dim (512)
+    parameter integer DS_HDL = 9,        //   log2 head dim (512)
+    parameter integer IKS_I = 0          // 1 (hbmdie-1011): operand I (slot 6) may be HBM space (IDX.INDEX IKS key region): passed
+                                         //   through range-checked like any HBM operand, no indexed-read source (an indexed operand
+                                         //   of such a record faults as one without I); 0: I must be VM (the legacy rule)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -333,7 +336,7 @@ module ot_hgi_seq #(
     reg [31:0]  mplier;
     reg [5:0]   ash;
     reg [39:0]  ieff;
-    reg         have_i, is_end, is_tokx;
+    reg         have_i, is_end, is_tokx, i_hbm;
     reg [4:0]   tk_i, tk_n; reg [17:0] tk_base; reg tk_k; reg [3:0] ncol; reg [19:0] tk_pos;
     localparam [2:0] A_LOAD = 3'd0, A_ML = 3'd1, A_ML1 = 3'd2, A_MD = 3'd3, A_FIN = 3'd4, A_PRE = 3'd5, A_C1 = 3'd6,
                      A_C2 = 3'd7;
@@ -541,7 +544,7 @@ module ot_hgi_seq #(
         if (!rn) begin
             st <= S_IDLE; clr_q <= 1'b0; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0;
             depth <= 0; Lc <= 0; L1c <= 0; u_vr <= 16'd0; vr_vr <= 1'b0; vr_new <= 1'b0; rpipe_v <= 3'b000; dv_cnt <= 4'd0; m3v <= 1'b0;
-            cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; iq_cnt <= 3'd6; faddr <= 0; faddr_n <= 40'd32; rd_ptr <= 0; wk <= 0; ix <= 0;
+            cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; iq_cnt <= 3'd6; i_hbm <= 1'b0; faddr <= 0; faddr_n <= 40'd32; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
             // a record retires on done OR fault (hgi-1010: a faulted record no longer holds its unit; busy drops)
@@ -679,12 +682,13 @@ module ot_hgi_seq #(
                     else case (as)
                     A_LOAD: if (dv_ok) begin
                         m3v <= 1'b0;
-                        if ((aj == 3'd6 && (dc_idx || dc_nsel == 6'd63 || dc_sp != 2'd1)) ||
+                        if ((aj == 3'd6 && (dc_idx || dc_nsel == 6'd63 || (dc_sp != 2'd1 && !(IKS_I != 0 && dc_sp == 2'd0)))) ||
                             (aj != 3'd6 && (dc_idx || dc_nsel == 6'd63) && !have_i) ||
                             (!dc_idx && dyn_rsv(dc_dsel)) ||
                             (dc_nsel != 6'd0 && dc_nsel != 6'd63 && dyn_rsv(dc_nsel)) ||
                             ((is_end || is_tokx) && aj == 3'd0 && dc_sp != 2'd1)) fault3;
                         else begin
+                            if (aj == 3'd6) begin i_hbm <= (IKS_I != 0) && dc_sp == 2'd0; if ((IKS_I != 0) && dc_sp == 2'd0) have_i <= 1'b0; end
                             acs <= {24'd0, dc[M_BASE +: 40]}; acx <= 64'd0;
                             mcand <= sx32(dc[M_LSTR +: 32]); mplier <= {16'd0, Lc};
                             ash <= 6'd0; as <= A_ML;
@@ -703,9 +707,9 @@ module ot_hgi_seq #(
                     A_FIN: begin
                         pn[aj] <= n_eff;
                         if (aj == 3'd6) begin
-                            if (bad_vm_q) fault3;
+                            if ((IKS_I != 0 && i_hbm) ? bad_q : bad_vm_q) fault3;
                             else begin
-                                ieff <= acc[39:0]; iq_cnt <= 3'd0;
+                                if (!(IKS_I != 0 && i_hbm)) begin ieff <= acc[39:0]; iq_cnt <= 3'd0; end
                                 d_desc[6*256 +: 256] <= eff_desc(dc, acc, n_eff);
                                 d_n[6*21 +: 21] <= n_eff;
                                 aj <= first0(h_opnd); as <= A_PRE;

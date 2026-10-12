@@ -228,8 +228,29 @@ def _untern(expr):
         expr = e
 
 
+def _top_tern(expr):
+    """an unparenthesised top-level SV ternary c ? a : b (branches may hold parentheses) -> python (a) if (c) else (b)"""
+    depth, q, nest = 0, -1, 0
+    for i, ch in enumerate(expr):
+        depth += ch == '('
+        depth -= ch == ')'
+        if depth:
+            continue
+        if ch == '?':
+            if q < 0:
+                q = i
+            else:
+                nest += 1
+        elif ch == ':' and q >= 0:
+            if nest:
+                nest -= 1
+            else:
+                return f'(({_top_tern(expr[q + 1:i])}) if ({expr[:q]}) else ({_top_tern(expr[i + 1:])}))'
+    return expr
+
+
 def _eval(expr, env):
-    e = _untern(expr).replace('$clog2', 'clog2')
+    e = _top_tern(_untern(expr)).replace('$clog2', 'clog2')
     e = re.sub(r"\d+'[dD](\d+)", r'\1', e)
     return int(eval(e, {'clog2': clog2, '__builtins__': {}}, dict(env)))  # noqa: S307
 
@@ -2269,9 +2290,15 @@ def margin(die, m):
             return H.margin_lint(m)
         if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE in R22K_FAMILY):
             import fp_margin_lint as FPL
+            lp = None
+            if die == 'qwen_rom' and 'vm' in _QW:
+                # qwendie-1011: far-side against the load's actual pin (generator pin map), not the load block's centre
+                v_, m_, B_ = _QW['vm']
+                # (fp_margin_lint pin_pt(inst, port), hbmdie-1011's interface for the same rule)
+                lp = B_._pin_pos(v_, m_)
             return FPL.die_margin(m['insts'], [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
                                   {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
-                                  reach_um=504.0, sliver_um=12.0)
+                                  reach_um=504.0, sliver_um=12.0, pin_pt=lp)
     except Exception as ex:  # noqa: BLE001 - a lint add-on must not hide the connectivity findings
         return dict(verdict='ERROR', error=f'{type(ex).__name__}: {ex}')
     return dict(verdict='N/A')
