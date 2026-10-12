@@ -81,14 +81,14 @@
   },
   "A_slot_share": 0.558,
   "A_kv_die_mm2_unchanged": 205.8,
-  "B_slot_mm2": 436.5,
+  "B_slot_mm2": 481.3,
   "B_kv_part_mm2": 116.7,
   "B_die": {
    "w": 25.0,
    "h": 31.0,
    "mm2": 775.0
   },
-  "B_slot_share": 0.563,
+  "B_slot_share": 0.621,
   "reticle_mm2": 858.0,
   "tile_mm2_each": 0.3448,
   "trackA_by_cell": {
@@ -130,6 +130,352 @@
    "qfd_rstsync": 0.0
   }
  },
+ "cut_analysis": {
+  "target": 0.55,
+  "floorplans": {
+   "F1": {
+    "desc": "64 cols x 12 rows (tp8a core), KV-die halves rotated into N and S strips under 2 HBM PHYs each, IO on the W/E edges",
+    "cols": 64,
+    "rows": 12,
+    "col_pitch": 363.74,
+    "row_gap": 518.4399999999998,
+    "io": "W/E edge column",
+    "w": 29476,
+    "h": 28899,
+    "mm2": 851.8,
+    "reticle_fit": false,
+    "slot_share": 0.565
+   },
+   "F2": {
+    "desc": "48 cols x 16 rows, KV-die W half on the die W edge and E half on the E edge UNROTATED (2 HBM PHYs per edge), KV centre blocks (seq/host/ahub/embgw) in the ROM spine, all IO (UCIe peer, collective, xfifo, 3 SerDes) in one S band + 400-um IO word channel",
+    "cols": 48,
+    "rows": 16,
+    "col_pitch": 394.54,
+    "row_gap": 190.0,
+    "io": "S band + 400-um word channel",
+    "w": 31171,
+    "h": 25784,
+    "mm2": 803.7,
+    "reticle_fit": true,
+    "slot_share": 0.599
+   }
+  },
+  "cuts": [
+   {
+    "cut": "tile row H (1 row pitch, vertical cut at the spine face)",
+    "floorplan": "F1",
+    "bits": 9660,
+    "parts": {
+     "tree_block": 2048,
+     "block_roots": 1024,
+     "kv_links": 0,
+     "other": 444,
+     "serdes_words": 6144
+    },
+    "usable_tracks": 28486,
+    "util": 0.339,
+    "ok": true,
+    "rule": "block roots spread over the 4 rows of a block-row (root row = r0 + blockcol mod 4), <= 2 root/band words per row; KV links (F2) <= 2,048 b per row over >= 4 middle rows; any 260-um sub-window over tiles <= 2 words"
+   },
+   {
+    "cut": "tile column V (1 column pitch, horizontal cut in a row gap)",
+    "floorplan": "F1",
+    "bits": 2557,
+    "parts": {
+     "station_corridor": 509,
+     "tree_legs": 1536,
+     "band_word": 512
+    },
+    "usable_tracks": 4577,
+    "util": 0.559,
+    "ok": false,
+    "rule": "the vertical legs of a 4x4 block spread over its 4 columns (<= 3 words per column pitch), legs in the column channel"
+   },
+   {
+    "cut": "spine column V (worst y)",
+    "floorplan": "F1",
+    "bits": 19037,
+    "parts": {
+     "rom_spine": 9109,
+     "kv_centre": 2153,
+     "kv_strip_to_spine": 7775
+    },
+    "usable_tracks": 92959,
+    "util": 0.205,
+    "ok": true,
+    "rule": "measured tp8a spine + KV-die centre column (F1: + one KV strip running N/S to the spine)"
+   },
+   {
+    "cut": "KV region <-> core boundary (worst 1,496-um window, channel)",
+    "floorplan": "F1",
+    "bits": 4326,
+    "parts": {
+     "kv_words": 4326
+    },
+    "usable_tracks": 47140,
+    "util": 0.092,
+    "ok": true,
+    "rule": "KV halves keep their internal geometry (KV die GRT overflow 0); boundary is a 100-um channel"
+   },
+   {
+    "cut": "tile row H (1 row pitch, vertical cut at the spine face)",
+    "floorplan": "F2",
+    "bits": 5564,
+    "parts": {
+     "tree_block": 2048,
+     "block_roots": 1024,
+     "kv_links": 2048,
+     "other": 444
+    },
+    "usable_tracks": 18137,
+    "util": 0.307,
+    "ok": true,
+    "rule": "block roots spread over the 4 rows of a block-row (root row = r0 + blockcol mod 4), <= 2 root/band words per row; KV links (F2) <= 2,048 b per row over >= 4 middle rows; any 260-um sub-window over tiles <= 2 words"
+   },
+   {
+    "cut": "tile column V (1 column pitch, horizontal cut in a row gap)",
+    "floorplan": "F2",
+    "bits": 2557,
+    "parts": {
+     "station_corridor": 509,
+     "tree_legs": 1536,
+     "band_word": 512
+    },
+    "usable_tracks": 5547,
+    "util": 0.461,
+    "ok": true,
+    "rule": "the vertical legs of a 4x4 block spread over its 4 columns (<= 3 words per column pitch), legs in the column channel"
+   },
+   {
+    "cut": "spine column V (worst y)",
+    "floorplan": "F2",
+    "bits": 11262,
+    "parts": {
+     "rom_spine": 9109,
+     "kv_centre": 2153
+    },
+    "usable_tracks": 92959,
+    "util": 0.121,
+    "ok": true,
+    "rule": "measured tp8a spine + KV-die centre column (F1: + one KV strip running N/S to the spine)"
+   },
+   {
+    "cut": "KV region <-> core boundary (worst 1,496-um window, channel)",
+    "floorplan": "F2",
+    "bits": 4326,
+    "parts": {
+     "kv_words": 4326
+    },
+    "usable_tracks": 47140,
+    "util": 0.092,
+    "ok": true,
+    "rule": "KV halves keep their internal geometry (KV die GRT overflow 0); boundary is a 100-um channel"
+   },
+   {
+    "cut": "HBM PHY DFI face (per PHY, abutted)",
+    "floorplan": "F1/F2",
+    "bits": 9207,
+    "usable_tracks": 250000,
+    "util": 0.037,
+    "ok": true,
+    "rule": "face pin rule (face um / 0.048)"
+   },
+   {
+    "cut": "IO word channel (vertical cut, 400-um channel under the IO band)",
+    "floorplan": "F2",
+    "bits": 4096,
+    "parts": {
+     "serdes_words": 4096
+    },
+    "usable_tracks": 12604,
+    "util": 0.325,
+    "ok": true,
+    "rule": "xfifo and UCIe abut the collective; SerDes split 1 W / 2 E of the collective so <= 2 SerDes word pairs cross any x"
+   },
+   {
+    "cut": "crom -> cbuf word row (channel)",
+    "floorplan": "F1/F2",
+    "bits": 2462,
+    "parts": {
+     "crom": 2462
+    },
+    "usable_tracks": 4727,
+    "util": 0.521,
+    "ok": true,
+    "rule": ">= 150-um channel for the constant-buffer word row"
+   },
+   {
+    "cut": "stack face: VM S <-> SU N (abutted)",
+    "floorplan": "F1/F2",
+    "bits": 8511,
+    "usable_tracks": 16200,
+    "util": 0.525,
+    "ok": true,
+    "rule": "face pin rule (face um / 0.048)"
+   },
+   {
+    "cut": "stack face: band_lanes S <-> port_tiles N (abutted)",
+    "floorplan": "F1/F2",
+    "bits": 8192,
+    "usable_tracks": 16200,
+    "util": 0.506,
+    "ok": true,
+    "rule": "face pin rule (face um / 0.048)"
+   },
+   {
+    "cut": "stack face: tt_up4 W face (NB 3)",
+    "floorplan": "F1/F2",
+    "bits": 2311,
+    "usable_tracks": 8100,
+    "util": 0.285,
+    "ok": true,
+    "rule": "face pin rule (face um / 0.048)"
+   },
+   {
+    "cut": "stack face: qfd_tile_nk W face (tree words)",
+    "floorplan": "F1/F2",
+    "bits": 2048,
+    "usable_tracks": 27000,
+    "util": 0.076,
+    "ok": true,
+    "rule": "face pin rule (face um / 0.048)"
+   },
+   {
+    "cut": "stack face: collective E face (2 SerDes x 2,048 b)",
+    "floorplan": "F1/F2",
+    "bits": 4096,
+    "usable_tracks": 19800,
+    "util": 0.207,
+    "ok": true,
+    "rule": "face pin rule (face um / 0.048)"
+   }
+  ],
+  "as_generated": {
+   "tp8a_fine_max": {
+    "ax": "y",
+    "pos": 21750,
+    "win": [
+     12480,
+     12740
+    ],
+    "bits": 3072,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.26,
+    "fam": {
+     "io": 3072
+    }
+   },
+   "tp8a_fine_tree_max": {
+    "ax": "y",
+    "pos": 4850,
+    "win": [
+     18200,
+     18460
+    ],
+    "bits": 3004,
+    "block_um": 207,
+    "usable": 3605,
+    "util": 0.833,
+    "fam": {
+     "tree_block": 2048,
+     "tree_spine": 512,
+     "corridor": 444
+    }
+   },
+   "kv_die_fine_max": {
+    "ax": "y",
+    "pos": 19300,
+    "win": [
+     5460,
+     5720
+    ],
+    "bits": 2141,
+    "block_um": 259,
+    "usable": 2458,
+    "util": 0.871,
+    "fam": {
+     "stack_local": 2118,
+     "reset": 23
+    }
+   },
+   "r22ko4_fine_max": {
+    "ax": "x",
+    "pos": 22050,
+    "win": [
+     22880,
+     23140
+    ],
+    "bits": 2560,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.05,
+    "fam": {
+     "tree_spine": 1536,
+     "tree_block": 1024
+    }
+   }
+  },
+  "chosen": "F2",
+  "b_slots_mm2_311": 481.3
+ },
+ "unit_budget": [
+  [
+   "qfd_tile_nk (768)",
+   "1 code word (2 x 266-b macro reads) per cycle per tile, stall-free over 512 words/layer + 1,600 head words",
+   "stream words/die unchanged at G 3,072"
+  ],
+  [
+   "block tree + band tree",
+   "1 reduced 16-lane FP32 word (512 b) per cycle per band, equal relay depth at every node (no deskew)",
+   "3 band words/cycle into tt_up4"
+  ],
+  [
+   "qfd_sp_band_lanes / res_ser / port_tiles (x3 / x3 / x6 groups)",
+   "1 band word per cycle per band; 1 scale row per cycle per port group",
+   "TP4 per-band shape"
+  ],
+  [
+   "qfd_tt_up4 / tt_ctlm",
+   "1 combined word per cycle (NB 3: one adder level)",
+   ""
+  ],
+  [
+   "qfd_sp_vector_memory / su64_sfu",
+   "4,096-wide FP32 vector in 32 cycles at 4,096 b/cycle (VM <-> collective)",
+   "RMSNorm/residual over full hidden"
+  ],
+  [
+   "qfd_io_collective (2-level)",
+   "all-reduce <= TP4 measured 1,121 / 979 cycles (central)",
+   "section 3"
+  ],
+  [
+   "qfd_io_serdes (x3)",
+   "8 KiB per all-reduce per link in <= 128 cycles = 512 b/cycle/direction payload; 1,024-b adapter word (2x)",
+   "x12 112G PHY ~150 GB/s"
+  ],
+  [
+   "qfd_io_ucie (in-package peer)",
+   "16 KiB + 8 KiB per all-reduce at 1,024 b/cycle/direction (16 + 8 cycles payload)",
+   ""
+  ],
+  [
+   "KV region (128 rheads, 32 ectl, astk, land, ctrl, 4 HBM PHYs)",
+   "attention <= 849 cycles/layer at 1 KV head over 128 PCs; HBM 4 x 1.0 TB/s = 3,333 B/cycle",
+   "B4 central"
+  ],
+  [
+   "KV <-> SU/VM on-die links (replace rom_end/kv_end)",
+   "q / new K,V / result per layer in <= 100 cycles incl. ~8 relays each way",
+   "credit flow, one clock"
+  ],
+  [
+   "embedding gateway (qkd_embgw, on-die)",
+   "16 KiB row per token in <= 150 cycles = >= 874 b/cycle (a 513-b word takes 256 cycles: widen to 1,024 b or charge +106 cycles/token)",
+   "B4 central assumes 150"
+  ]
+ ],
  "kv_tp4_MB_per_user_per_die": 151.0,
  "kv": {
   "A_kv_die_4stack": {
