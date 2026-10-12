@@ -174,5 +174,10 @@ module ot_s81_hc_comb #(
     ot_s81_hc_ccf `OT_HCC_P u_cf (
         .sk(sk), .srs(srs), .fv_i(p_fv), .fd_i(p_fd), .n_yacc(n_yacc), .n_y(n_y), .ch_rst(ch_rst), .ch_fv(ch_fv),
         .ch_fd(ch_fd), .yfl(c_yfl));
+`ifndef SYNTHESIS
+    // bench observability (dsfd_sp_hc reads u_cb.e_v / e_r / e_d: tb job start cycles)
+    wire        e_v = u_seq.e_v, e_r = u_seq.e_r;
+    wire [83:0] e_d = u_seq.e_d;
+`endif
 `undef OT_HCC_P
 endmodule
