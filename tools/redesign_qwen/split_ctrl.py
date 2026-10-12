@@ -1182,6 +1182,53 @@ def vrl_rst_split(t: str) -> str:
             "        else if (st == S_COLL && r_valid && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);\n" + t[i:])
 
 
+def ctrl_olag(t: str) -> str:
+    """el1011-q-seq OLAG (seq_su_bi fea_ra-dace0dae3 TT -60.9: u_ctrl.st -> 23-level skip -> o_cnt / o_cnt1 DFFE enables, 48
+    flops): the other-unit counter lags one edge -- c0 / c1 / c2 (= count + 0/1/2) advance by the REGISTERED skip_q, and
+    o_cnt = skip_q ? c1 : c0, o_cnt1 = skip_q ? c2 : c1 (exact: o_cnt(t+1) = c0(t) + skip_q(t) + skip(t)).  The equality /
+    order compares run against c0..c2 in parallel and are selected by skip_q, so the deep skip ends at one flop and the two
+    osync / opast muxes instead of 48 enables.  OLAG 2 = negative control (o_eq0 selects the wrong copy)."""
+    t = one(t, "    parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)",
+               "    parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)\n"
+               "    parameter integer OLAG = 0,       // el1011-q-seq: lagged other-unit counter (ctrl_olag)")
+    old_cnt = ("    always @(posedge clk or negedge rst_n)\n"
+               "        if (!rst_n) o_cnt <= {XW{1'b0}};\n"
+               "        else if (skip) o_cnt <= o_cnt + 1'b1;\n"
+               "    reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step\n"
+               "    always @(posedge clk or negedge rst_n)\n"
+               "        if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};\n"
+               "        else if (skip) o_cnt1 <= o_cnt1 + 1'b1;\n")
+    t = one(t, old_cnt,
+            "    reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step\n"
+            "    reg ol_sq; reg [XW-1:0] ol_c0, ol_c1, ol_c2;   // OLAG: registered skip, count + 0 / 1 / 2\n"
+            "    generate if (OLAG != 0) begin : g_olag\n"
+            "        always @(posedge clk or negedge rst_n)\n"
+            "            if (!rst_n) begin ol_sq <= 1'b0; ol_c0 <= {XW{1'b0}}; ol_c1 <= XW'(1); ol_c2 <= XW'(2); end\n"
+            "            else begin ol_sq <= skip; if (ol_sq) begin ol_c0 <= ol_c0 + 1'b1; ol_c1 <= ol_c1 + 1'b1; ol_c2 <= ol_c2 + 1'b1; end end\n"
+            "        always @(*) begin o_cnt = ol_sq ? ol_c1 : ol_c0; o_cnt1 = ol_sq ? ol_c2 : ol_c1; end\n"
+            "    end else begin : g_ocnt\n"
+            "    " + old_cnt.replace("    reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step\n", "").replace("\n", "\n    ").rstrip() + "\n"
+            "    end endgenerate\n")
+    old_eq = ("    wire o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});\n"
+              "    wire o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});\n")
+    t = one(t, old_eq,
+            "    wire o_eq0, o_eq1, o_pa0, o_pa1;\n"
+            "    generate if (OLAG != 0) begin : g_oleq\n"
+            "        wire e0 = (x_oacc == ol_c0), e1 = (x_oacc == ol_c1), e2 = (x_oacc == ol_c2);\n"
+            "        wire [XW-1:0] d0 = x_oacc - ol_c0, d1 = x_oacc - ol_c1, d2 = x_oacc - ol_c2;\n"
+            "        wire p0 = !e0 && !d0[XW-1], p1 = !e1 && !d1[XW-1], p2 = !e2 && !d2[XW-1];\n"
+            "        assign o_eq0 = (OLAG == 2 || PCUT == 2) ? (ol_sq ? e0 : e1) : (ol_sq ? e1 : e0);   // PCUT 2 / OLAG 2: negative controls\n"
+            "        assign o_eq1 = ol_sq ? e2 : e1;\n"
+            "        assign o_pa0 = ol_sq ? p1 : p0; assign o_pa1 = ol_sq ? p2 : p1;\n"
+            "    end else begin : g_oeq\n"
+            "        assign o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});\n"
+            "        assign o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});\n"
+            "        assign o_pa0 = !o_eq0 && !o_dif0[XW-1]; assign o_pa1 = !o_eq1 && !o_dif1[XW-1];\n"
+            "    end endgenerate\n")
+    t = one(t, "    wire o_pa0 = !o_eq0 && !o_dif0[XW-1], o_pa1 = !o_eq1 && !o_dif1[XW-1];\n", "")
+    return t
+
+
 def emit_seq_su_bi() -> str:
     """ot_qfd_seq_su_bi = ot_qfd_seq_su_boundary + ICUT + every pin station reset from the registered tile reset rs
     (the routes' rst_n -> u_i_* / u_o_* recovery failures, -52 .. -352 ps)"""
@@ -1199,11 +1246,12 @@ def emit_seq_su_bi() -> str:
             "    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,\n"
             "    parameter integer RLY = 0, parameter integer CRED = 0")
     t = rst_regions(seq_psram(t))
-    t = ctrl_pcut(t)
-    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT),")
+    t = ctrl_olag(ctrl_pcut(t))
+    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT), .OLAG(OLAG),")
     t = one(t, "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy",
                "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy\n"
-               "    parameter integer PCUT = 0,  // el1011-q-seq: exact controller path cuts (ctrl_pcut)")
+               "    parameter integer PCUT = 0,  // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n"
+               "    parameter integer OLAG = 0,  // el1011-q-seq: lagged other-unit counter (ctrl_olag)")
     return t + "\n" + vrl_rst_split(tp_seq_vrl(cred=True))
 
 
@@ -1267,16 +1315,37 @@ def ctlm_mereg(t: str) -> str:
                "    parameter integer MEREG = 0,      // el1011-q-seq: me_mem_ok announced 2 edges ahead; me_en a register")
     old = ("    assign me_en = !rst_n || (((ME_STALL == 0) || me_mem_ok) &&\n"
            "                              ((ME_IDLE_GATE == 0) || !me_idle || me_wake));")
-    t = one(t, old, "    generate if (MEREG != 0) begin : g_mereg\n"
+    t = one(t, old, "    wire me_clk_en_w;\n    generate if (MEREG != 0 && MEREG < 3) begin : g_mereg\n"
                "        reg mo_p;                                       // pin flop (me_mem_ok of edge t+2 at edge t)\n"
                "        (* keep = \"true\", dont_touch = \"true\" *) reg mo_e;   // enable flop, placed at the ICG clones\n"
                "        always @(posedge clk) begin mo_p <= me_mem_ok; mo_e <= (MEREG == 2) ? me_mem_ok : mo_p; end\n"
                "        assign me_en = !rst_n || (mo_e && ((ME_IDLE_GATE == 0) || !me_idle || me_wake));   // rst_n: the registered tile reset copy\n"
-               "    end else begin : g_mecomb\n" + old.replace("    assign", "        assign", 1) + "\n    end endgenerate")
+               "        assign me_clk_en_w = me_en;\n"
+               "    end else if (MEREG >= 3) begin : g_merr\n"
+               "        // MEREG 3 (coordinator decision 10-11): the engine clock enable REGISTERED -- computed one edge early from\n"
+               "        // the supply word (announced THREE edges ahead: pin flop, central kept flop) and the idle / wake state, so the\n"
+               "        // engine wakes from idle one edge later (transaction-exact; +1 wake cycle).  16 kept regional copies en_r feed\n"
+               "        // the pushed-down ICG clones region by region (physical/common_flow/cg_pushdown.tcl OT_CG_ENREP_*); en_c is\n"
+               "        // the controller's copy, en_o the me_clk_en pin's.  MEREG 4 = negative control (the controller's copy stuck at 1: it issues on edges the engine is not clocked).\n"
+               "        reg mo_p;\n"
+               "        (* keep = \"true\", dont_touch = \"true\" *) reg mo_m;\n"
+               "        always @(posedge clk) begin mo_p <= me_mem_ok; mo_m <= mo_p; end\n"
+               "        // a go in flight keeps the engine clocked until its idle status (a gated-domain delay line) can report it\n"
+               "        (* keep = \"true\", dont_touch = \"true\" *) reg en_c, en_o;\n"
+               "        // (counted in ENGINE edges: 8 clocked edges cover the 2 issue + 2 status stations and the tree top)\n"
+               "        reg [3:0] gfl;\n"
+               "        always @(posedge clk or negedge rst_n) if (!rst_n) gfl <= 4'd0; else if (me_go) gfl <= 4'd8; else if (en_c && gfl != 4'd0) gfl <= gfl - 1'b1;\n"
+               "        wire en_d = !rst_n || (mo_m && ((ME_IDLE_GATE == 0) || !me_idle || me_wake || me_go || (gfl != 4'd0)));\n"
+               "        (* keep = \"true\", dont_touch = \"true\" *) reg [15:0] en_r;\n"
+               "        always @(posedge clk) begin en_r <= {16{en_d}}; en_c <= en_d; en_o <= en_d; end\n"
+               "        assign me_en = (MEREG == 4) ? 1'b1 : en_c;   // MEREG 4 mutant: the controller assumes every edge clocks the engine\n"
+               "        assign me_clk_en_w = en_o;\n"
+               "    end else begin : g_mecomb\n" + old.replace("    assign", "        assign", 1) + "\n        assign me_clk_en_w = me_en;\n    end endgenerate")
+    t = one(t, "    assign me_clk_en = me_en;\n", "    assign me_clk_en = me_clk_en_w;   // MEREG 3: the kept pin copy en_o\n")
     t = one(t, "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0\n) (",
                "    parameter integer PSRAM = 0, parameter integer PMUT = 0, parameter integer HQ2 = 0,\n"
                "    parameter integer MEREG = 0   // el1011-q-seq: registered engine clock enable (ctlm_mereg)\n) (")
-    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(1), .MEREG(MEREG), .PCUT(PCUT),")
+    t = one(t, ".ME_STALL(1), .ME_IDLE_GATE(1),", ".ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT),")
     return t
 
 
@@ -1339,12 +1408,12 @@ def ctlm_aud(t: str) -> str:
     head, tile = t[:i], t[i:]
     tile = one(tile, "    parameter integer PCUT = 0    // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n) (",
                "    parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n"
-               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud)\n) (")
+               "    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations, 64 no engine idle clock gate (power; the ICG enable then = the registered supply word); 8 = SRAM one-short mutant\n) (")
     tile = one(tile, "        .kv_write_drained(kv_write_drained),", "        .kv_write_drained(kvwd_c),")
     tile = one(tile, "        .kv_ok(kv_ok),", "        .kv_ok(kv_ok_c),")
     tile = one(tile, "    (* keep = \"true\" *) wire [8-1:0] rsv;",
                "    wire kv_ok_c, kvwd_c;   // AUD: pin flops (kv_ok / kv_write_drained announced one edge ahead)\n"
-               "    generate if (AUD != 0) begin : g_kvreg\n"
+               "    generate if ((AUD & 4) != 0) begin : g_kvreg\n"
                "        reg kv_ok_q, kvwd_q;\n"
                "        always @(posedge clk) begin kv_ok_q <= kv_ok; kvwd_q <= kv_write_drained; end\n"
                "        assign kv_ok_c = kv_ok_q; assign kvwd_c = kvwd_q;\n"
@@ -1352,7 +1421,25 @@ def ctlm_aud(t: str) -> str:
                "        assign kv_ok_c = kv_ok; assign kvwd_c = kv_write_drained;\n"
                "    end endgenerate\n"
                "    (* keep = \"true\" *) wire [8-1:0] rsv;")
-    tile = one(tile, ".SPRE(2), .IS(0), .OS(OS)) u_tt (", ".SPRE(2), .IS(0), .OS(OS), .XADDR((AUD != 0) ? 0 : 1), .RDMEM(AUD)) u_tt (")
+    tile = one(tile, ".SPRE(2), .IS(0), .OS(OS)) u_tt (", ".SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0)) u_tt (")
+    # AUD & 16: the die-facing tree-top inputs pin-flopped (ctlm_i-fpaau-f62cd33ac post-CTS -867: land_cnt[0] raw port ->
+    # u_tt.u_ctl.progress, 890 ps; u_tt runs IS 0 so none of them had a station).  The memory / port elements announce
+    # them one edge ahead (the kv_ok contract).  NOT p_am: it is the port elements' fixed-latency argmax reply sampled
+    # on the controller's RX/RXA-aligned tv line; a pin flop there needs RX/RXA + 1 (LNK-style compensation, die-level).
+    tile = one(tile, "    (* keep = \"true\" *) wire [8-1:0] rsv;",
+               "    wire up_fault_c, x_rdy_c, fab_fault_c; wire [15:0] land_cnt_c; wire [16-1:0] tr_fault_c;\n"
+               "    wire [12-1:0] p_fault_c;\n"
+               "    wire [46:0] dpin = {up_fault, land_cnt, x_rdy, tr_fault, p_fault, fab_fault};\n"
+               "    generate if ((AUD & 16) != 0) begin : g_dpin\n"
+               "        reg [46:0] dpin_q;    // AUD 16: die-input pin flops (status / count / fault inputs; p_am stays direct)\n"
+               "        always @(posedge clk) dpin_q <= dpin;\n"
+               "        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin_q;\n"
+               "    end else begin : g_ddir\n"
+               "        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin;\n"
+               "    end endgenerate\n"
+               "    (* keep = \"true\" *) wire [8-1:0] rsv;")
+    for nm in ("up_fault", "land_cnt", "x_rdy", "tr_fault", "p_fault", "fab_fault"):
+        tile = one(tile, f".{nm}({nm})", f".{nm}({nm}_c)")
     return head + tile
 
 
