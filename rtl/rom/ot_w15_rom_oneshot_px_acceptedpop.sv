@@ -81,6 +81,9 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     // from xl_v / xl_d and returns xl_cr, push / clash / occupancy of those FIFOs are kept by the FIFO tile, and rx_* /
     // rl_* are unused.  The local source's FIFO stays here (its pushes are this engine's fires).
     parameter integer EXTF     = 0,
+    // RHOLD (el1011-ds-coll 2026-10-11, opt-in; 0 = byte-identical): reduce pops wait while red_hold is high (the
+    // consumer has no reserved output slot for another reduce word; slow-VM-drain overflow fix), out_rpop = a reduce pop
+    parameter integer RHOLD    = 0,
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
     parameter integer RB       = (N > 1) ? $clog2(N) : 1
@@ -123,6 +126,8 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     output reg               fault,
     output reg  [2:0]        fault_code,      // [0] arithmetic, [1] tag / mode / parity / relay, [2] FIFO overflow
     // EXTF: landing-queue links of the external FIFOs, [2g + q] = source g parity q (g == RANK unused)
+    input  wire              red_hold,
+    output wire              out_rpop,
     input  wire [2*N-1:0]    xl_v,
     input  wire [2*N*PW-1:0] xl_d,
     output wire [2*N-1:0]    xl_cr
@@ -271,7 +276,9 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     wire g_idle = !g_busy && !g_first;
     // the head registers are free after this cycle when the emitter is idle or emits the index's last beat now
     wire g_free = g_idle || (g_busy && g_cnt == E - 1) || (g_first && E == 1);
-    wire pop_red = all_ne && g_idle && !head_mode;
+    wire rh = (RHOLD != 0) && red_hold;
+    wire pop_red = all_ne && g_idle && !head_mode && !rh;
+    assign out_rpop = pop && pop_red;
     wire pop_gat = all_ne && head_mode && inflight == 0 && g_free && !(s0_v && !s0_mode);
     assign pop = (pop_red || pop_gat) && !g_stall;
     generate
@@ -497,7 +504,7 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
             wire gf_k  = s0v_k && s0m_k;
             wire gi_k  = !gb_k && !gf_k;
             wire gfr_k = gi_k || (gb_k && gc_k == E - 1) || (gf_k && E == 1);
-            assign pop_k[g] = ((ne_k && gi_k && !hm_k) || (ne_k && hm_k && iz_k && gfr_k && !(s0v_k && !s0m_k))) && !gst_k;
+            assign pop_k[g] = ((ne_k && gi_k && !hm_k && !rh) || (ne_k && hm_k && iz_k && gfr_k && !(s0v_k && !s0m_k))) && !gst_k;
             always @(posedge clk or negedge rst_n) begin
                 if (!rst_n) begin
                     ppar_k[g] <= 1'b0; s0v_k <= 1'b0; s0m_k <= 1'b0; gb_k <= 1'b0; gc_k <= 0; gov_k <= 1'b0; iz_k <= 1'b1;
