@@ -617,7 +617,13 @@ module ot_hdc_v41x_hcp_stage #(
     // pipelined IEEE units (1.2 GHz: 8-stage multiply, 7-stage add, ot_hdc_fp32_*_lat, bit for bit the fast units);
     // the stage hop is LA + 1 cycles (adder output register -> next stage's pin flop)
     parameter integer LM  = 8,
-    parameter integer LA  = 7
+    parameter integer LA  = 7,
+    // el1011-hbm-hcvm/hc round 3 (hc_tile-sys-048ca3d9e-b: rst relay -> u_add.y RESETN -310 ps, add y -> sum_out
+    // pin -162 ps wire): SOR 1 registers sum_out at the seam (hop LA + 1 + SOR); LRST 1 gives every lane its own kept
+    // reset flop (no rst_n net over 32 lanes' fp pipes); ADRST 0 builds the adders with data-bit reset off (valid only)
+    parameter integer SOR = 0,
+    parameter integer LRST = 0,
+    parameter integer ADRST = 1
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -643,7 +649,7 @@ module ot_hdc_v41x_hcp_stage #(
     output reg  [AW-1:0]     x_addr,
     input  wire [W*16-1:0]   x_data
 );
-    localparam integer NC = (1 + ML > LA) ? 1 + ML : LA;       // descriptor delay taps kept locally
+    localparam integer NC = (1 + ML > LA + SOR) ? 1 + ML : LA + SOR;   // descriptor delay taps kept locally
     localparam integer DW = 2 + NVW + 2 * AW;
     reg  [NC:0]      cv;                                         // valid, taps 0..NC (reset)
     reg  [DW-2:0]    cd [0:NC];                                  // other fields (no reset)
@@ -665,7 +671,7 @@ module ot_hdc_v41x_hcp_stage #(
         w_addr <= cd[0][2*AW-1:AW];
         x_addr <= cd[0][AW-1:0];
     end
-    assign o_v = cv[LA]; assign {o_ss, o_nv, o_wa, o_xa} = cd[LA]; // tap j = local j: out at local LA
+    assign o_v = cv[LA + SOR]; assign {o_ss, o_nv, o_wa, o_xa} = cd[LA + SOR]; // tap j = local j: out at local LA + SOR
     // input registers (local 2 + ML) and the per-lane enables of that task (computed a cycle early, replicated)
     reg [W*32-1:0] w_in; reg [W*16-1:0] x_in;
     (* keep = "true" *) reg [W-1:0] lv_r, ss_r;
@@ -683,7 +689,20 @@ module ot_hdc_v41x_hcp_stage #(
     always @(posedge clk) sum_q <= sum_in;
     wire [W-1:0] lfl;
     genvar gl;
+    wire [W*32-1:0] y_l;
+    generate if (SOR != 0) begin : g_sor
+        reg [W*32-1:0] so_q; always @(posedge clk) so_q <= y_l; assign sum_out = so_q;
+    end else begin : g_nsor
+        assign sum_out = y_l;
+    end endgenerate
     generate for (gl = 0; gl < W; gl = gl + 1) begin : g_lane
+        wire lrn;
+        if (LRST != 0) begin : g_lr
+            (* keep = "true" *) reg r; always @(posedge clk or negedge rst_n) if (!rst_n) r <= 1'b0; else r <= 1'b1;
+            assign lrn = r;
+        end else begin : g_nlr
+            assign lrn = rst_n;
+        end
         wire [31:0] xw = {x_in[16*gl +: 16], 16'h0000};
         reg  [31:0] gx, gw;
         always @(posedge clk) begin
@@ -691,10 +710,10 @@ module ot_hdc_v41x_hcp_stage #(
             gw <= lv_r[gl] ? (ss_r[gl] ? xw : w_in[32*gl +: 32]) : 32'd0;
         end
         wire [31:0] prod; wire [1:0] e0, e1; wire v0, v1;
-        ot_hdc_fp32_mul_lat #(.LAT(LM)) u_mul (.clk(clk), .rst_n(rst_n), .valid_in(gov), .a(gw), .b(gx), .y(prod),
+        ot_hdc_fp32_mul_lat #(.LAT(LM)) u_mul (.clk(clk), .rst_n(lrn), .valid_in(gov), .a(gw), .b(gx), .y(prod),
                                     .err(e0), .valid_out(v0));
-        ot_hdc_fp32_add_lat #(.LAT(LA)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(v0), .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]),
-                                    .b(prod), .y(sum_out[32*gl +: 32]), .err(e1), .valid_out(v1));
+        ot_hdc_fp32_add_lat #(.LAT(LA), .DRST(ADRST)) u_add (.clk(clk), .rst_n(lrn), .valid_in(v0), .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]),
+                                    .b(prod), .y(y_l[32*gl +: 32]), .err(e1), .valid_out(v1));
         assign lfl[gl] = (v0 && (|e0)) || (v1 && (|e1));
     end endgenerate
     always @(posedge clk or negedge rst_n)

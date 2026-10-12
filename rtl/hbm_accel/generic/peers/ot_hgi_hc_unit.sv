@@ -112,6 +112,7 @@ module ot_hgi_hc_unit #(
     output reg  [31:0]       ap_done
 );
     localparam integer SPW = W / 8, LW = $clog2(W), LS = $clog2(SPW), AW = 16, CWW = $clog2(RMAX + 1);
+    localparam integer TSOR = 1, TTML = 3;            // = ot_hgi_hc_tile defaults (SOR, TML): the SYS stage hop and memory latency
     // ---- the record adapter
     wire job_v; reg job_rdy, job_done, job_fault; wire [228:0] job; wire [3:0] j_np; wire [17:0] j_as, j_os;
     ot_hgi_hc_record #(.LEGACY(0), .PMAX(PMAX)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .cfg_hc_eps(cfg_norm_eps),
@@ -254,7 +255,7 @@ module ot_hgi_hc_unit #(
     always @(posedge clk) begin xd <= xq1; wd <= wq; end
     reg h_cv; wire h_cr, h_ov, h_last, h_fault, h_idle; wire [31:0] h_od;
     wire [$clog2(PMAX)-1:0] h_opos;
-    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2), .SYS(SYS), .SYS_LAT(2*DRLY + 1 + 7*(SLA + 1) + 3 + 2 + SLM + SLA)) u_hcp (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2), .SYS(SYS), .SYS_LAT(2*DRLY + 1 + 7*(SLA + 1 + TSOR) + 3 + 2 + (TTML - 2) + SLM + SLA + TSOR)) u_hcp (.clk(clk), .rst_n(rst_n),
         .cmd_valid(h_cv), .cmd_ready(h_cr), .cmd_npos(npos[$clog2(PMAX):0]), .cmd_nout(2'd1), .cmd_nchunk(nchunk[15:0]),
         .cmd_scale(1'b1), .cmd_nf(nf), .cmd_eps(eps), .cmd_wbase(16'd0), .cmd_xbase(16'd0),
         .w_re(w_re), .w_addr(w_addr), .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd),
@@ -767,6 +768,13 @@ module ot_hgi_hc_tile #(
     parameter integer WMACRO = 1,
     parameter integer LM = 8,
     parameter integer LA = 7,
+    // round 3 (hc_tile-sys-048ca3d9e-b EARLY_FAIL_SETUP -1068 ps: the 4 weight windows' macro outputs (4 x 1024 b, 16
+    // macros) went through the wsel 4:1 mux into wd with no capture flop, 637 ps of wire + 1.1 ns of mux/buffer):
+    // TML 3 = raw capture register per window next to its macros, then a one-hot AND-OR select (replicated kept select
+    // copies per 128-b slice) into wd; x data captured raw likewise (memory latency 2 -> 3 for both).  SOR 1 registers
+    // sum_out at the seam.  These are the hardened defaults (the parent instantiates the tile without overrides).
+    parameter integer TML = 3,
+    parameter integer SOR = 1,
     parameter integer NVW = $clog2(W) + 1,
     parameter integer CWW = $clog2(RMAX + 1),
     parameter integer NXM = W / 16
@@ -815,7 +823,7 @@ module ot_hgi_hc_tile #(
     ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
     // ---- the lane stage
     wire w_re, x_re; wire [AW-1:0] w_addr, x_addr; reg [W*32-1:0] wd; reg [W*16-1:0] xd;
-    ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(2), .NVW(NVW), .LM(LM), .LA(LA)) u_st (.clk(clk), .rst_n(rl[0]), .first(first),
+    ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(TML), .NVW(NVW), .LM(LM), .LA(LA), .SOR(SOR), .LRST(1), .ADRST(0)) u_st (.clk(clk), .rst_n(rl[0]), .first(first),
         .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv), .o_wa(o_wa),
         .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out), .w_re(w_re), .w_addr(w_addr),
         .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd));
@@ -899,7 +907,23 @@ module ot_hgi_hc_tile #(
         else if (pw_push0) pend <= 1'b0;
     end
     // ---- the weight read (sub-window select registered) -> wd; x read -> xd
-    always @(posedge clk) begin wd <= wqs[wsel_q*W*32 +: W*32]; xd <= xq1; end
+    generate if (TML == 2) begin : g_ml2
+        always @(posedge clk) begin wd <= wqs[wsel_q*W*32 +: W*32]; xd <= xq1; end
+    end else begin : g_ml3
+        // raw capture beside each window's macros (no logic before it), select one edge later
+        localparam integer NSL = (W*32) / 128;
+        reg [SPL*W*32-1:0] wcap; reg [W*16-1:0] xcap;
+        always @(posedge clk) begin wcap <= wqs; xcap <= xq1; xd <= xcap; end
+        for (genvar sl = 0; sl < NSL; sl = sl + 1) begin : g_sl
+            (* keep = "true" *) reg [SPL-1:0] oh;
+            always @(posedge clk) for (integer kk = 0; kk < SPL; kk = kk + 1) oh[kk] <= (wsel_q == 4'(kk));
+            always @(posedge clk) begin : mx
+                reg [127:0] o; o = '0;
+                for (integer kk = 0; kk < SPL; kk = kk + 1) o = o | (wcap[kk*W*32 + sl*128 +: 128] & {128{oh[kk]}});
+                wd[sl*128 +: 128] <= o;
+            end
+        end
+    end endgenerate
     // ---- ready / fault (registered)
     always @(posedge clk or negedge rl[2]) begin
         if (!rl[2]) begin t_rdy <= 1'b0; t_flt <= 1'b0; end
