@@ -1,11 +1,11 @@
-TPUT 0 op 4 n 512 issue 0 ret 87 cost 24
-TPUT 1 op 4 n 512 issue 88 ret 175 cost 24
-TPUT 2 op 5 n 128 issue 176 ret 251 cost 12
-TPUT 3 op 6 n 512 issue 252 ret 339 cost 24
-TPUT 4 op 4 n 512 issue 340 ret 427 cost 24
-TPUT 5 op 6 n 512 issue 428 ret 515 cost 24
-TPUT 6 op 4 n 512 issue 516 ret 603 cost 24
-TPUT 7 op 5 n 128 issue 604 ret 679 cost 12
+TPUT 0 op 4 n 512 issue 0 ret 95 cost 24
+TPUT 1 op 4 n 512 issue 96 ret 191 cost 24
+TPUT 2 op 5 n 128 issue 192 ret 275 cost 12
+TPUT 3 op 6 n 512 issue 276 ret 371 cost 24
+TPUT 4 op 4 n 512 issue 372 ret 467 cost 24
+TPUT 5 op 6 n 512 issue 468 ret 563 cost 24
+TPUT 6 op 4 n 512 issue 564 ret 659 cost 24
+TPUT 7 op 5 n 128 issue 660 ret 743 cost 12
 MISMATCH rec 0 word 0: 3e400000 != be700000
 MISMATCH rec 0 word 1: bd600000 != be800000
 MISMATCH rec 0 word 2: 3e700000 != bea00000
@@ -22,6 +22,6 @@ EXACT 4 mismatch 348
 EXACT 5 mismatch 328
 EXACT 6 mismatch 504
 EXACT 7 mismatch 112
-[5423808] %Fatal: tb_hgi_quant_wide_tput.sv:84: Assertion failed in tb_hgi_quant_wide_tput: FATAL: 2898 of 3328 words mismatch
+[5477056] %Fatal: tb_hgi_quant_wide_tput.sv:84: Assertion failed in tb_hgi_quant_wide_tput: FATAL: 2898 of 3328 words mismatch
 %Error: rtl/test/hbm_accel/generic/tb_hgi_quant_wide_tput.sv:84: Verilog $stop
 Aborting...
