@@ -7473,7 +7473,7 @@ def apply_options(a):
     COL_PITCH8 = COL_W8 + 8.64
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
     COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
-    global SU_V2_UM, HC_V2_UM, HROW_UM, HC_T_UM
+    global SU_V2_UM, HC_V2_UM, HROW_UM, HC_T_UM, P2_OUTLINE_UM, P2_SLAB_MM2
     if getattr(a, 'contract', None):
         # --contract (s81-die-iter 2026-10-12): slab outlines from results/arch/hier_contract_1011/s81.json (v3+): SU / HC v2
         # slabs (column channels), centre hard elements, VM slab (overrides --vm-slab), MTP hrow
@@ -7482,6 +7482,9 @@ def apply_options(a):
             return (float(cslots_[n_]['outline']['w']), float(cslots_[n_]['outline']['h']))
         SU_V2_UM, HC_V2_UM = _o('sp_su_s'), _o('sp_hc_s')
         HC_T_UM = _o('sp_hc_t') if 'sp_hc_t' in cslots_ else None
+        if 'sp_p2' in cslots_:   # contract v13: draft-A P2 = xport + head + fadd16 tiles (prefix_path_hub dropped)
+            P2_OUTLINE_UM = _o('sp_p2')
+            P2_SLAB_MM2 = P2_OUTLINE_UM[0] * P2_OUTLINE_UM[1] / 1e6
         CONTRACT_SLABS.clear()
         for n_, k_ in (('capture', 'sp_capture'), ('gather', 'sp_gather'), ('collective', 'sp_collective'), ('wfc_hard', 'sp_wfc')):
             if k_ in cslots_ and _o(k_)[0] > 0:
