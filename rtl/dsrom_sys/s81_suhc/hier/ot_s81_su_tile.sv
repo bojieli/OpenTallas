@@ -172,16 +172,23 @@ module ot_s81_su_tile #(
         end
     end
     always @(posedge clk) begin                       // parameter rows / beat data: no reset
-        for (s = 0; s < S_RD; s = s + 1)
-            if (dq_v[s] && !sph[s] && mine && six[16 * s +: 16] < MAXP) prow[six[16 * s +: 16]] <= dq_d[512 * s +: 512];
+        // decoded writes: every destination row / parameter slot is a constant index selected by a one-hot compare
+        // (an AND-OR row mux per destination), never a variable part-select (16 wide barrel shifters)
         begin : asm
             reg [15:0] r;
-            for (s = 0; s < S_RD; s = s + 1)
+            integer j;
+            for (s = 0; s < S_RD; s = s + 1) begin
+                for (j = 0; j < MAXP; j = j + 1)
+                    if (dq_v[s] && !sph[s] && mine && six[16 * s +: 16] == j) prow[j] <= dq_d[512 * s +: 512];
                 if (dq_v[s] && sph[s] && mine) begin
                     r = six[16 * s +: 16] & (RPB - 1);
-                    if (r >= A0 && r < A0 + L) bb[512 * (r - A0) +: 512] = dq_d[512 * s +: 512];
-                    else if (TK == 3 && r >= B0 && r < B0 + L) bb[512 * (L + r - B0) +: 512] = dq_d[512 * s +: 512];
+                    for (j = 0; j < L; j = j + 1)
+                        if (r == A0 + j) bb[512 * j +: 512] = dq_d[512 * s +: 512];
+                    if (TK == 3)
+                        for (j = 0; j < L; j = j + 1)
+                            if (r == B0 + j) bb[512 * (L + j) +: 512] = dq_d[512 * s +: 512];
                 end
+            end
         end
         if (cmp) bq <= bb;                            // the assembled beat (same block: bb is blocking)
     end
@@ -234,7 +241,7 @@ module ot_s81_su_tile #(
         // head tile (TI 0) through the slab's registered rung (x_pp_*), its rstd comes back over x_rb_*
         localparam integer NN = (TK == 0) ? QN_N : KV_N, GG = NN / NT, NVN = (TK == 0) ? NVQ : 1;
         localparam integer DD = (TK == 0) ? DQ : DK, RFULL = (TK == 0) ? R_QNF : 0;
-        reg [GG*32-1:0] gn [0:4*NVN-1];
+        // gain sets: one small array per lane (4 sets x NVN vectors x 32 b) beside its lane, not one GG*32-wide memory
         reg n_go, n_wl, gon; reg [7:0] n_wi; reg [GG*32-1:0] n_wd; reg [15:0] gp;
         wire n_yv, n_qv, n_rov, n_f; wire [7:0] n_yi, n_qi; wire [GG*32-1:0] n_y, n_ro;
         wire [(GG/32)*256-1:0] n_qc; wire [(GG/32)*10-1:0] n_qe; wire [(GG/32)*512-1:0] n_qy;
@@ -249,9 +256,13 @@ module ot_s81_su_tile #(
             .y_v(n_yv), .y_i(n_yi), .y(n_y), .q_v(n_qv), .q_i(n_qi), .q_codes(n_qc), .q_e(n_qe), .q_y(n_qy),
             .ro_v(n_rov), .ro(n_ro), .fault(n_f));
         always @(*) begin x_pp_v_o = ps_v; x_pp_i_o = ps_i; x_pp_d_o = ps_d; x_rb_v_o = rb_v; x_rb_d_o = rb_d; end
-        always @(posedge clk) begin
-            if (beat_v && jkind == (TK == 0 ? K_GQ : K_GK)) gn[gsel * NVN + bi] <= bq[0 +: GG * 32];
-            n_wd <= gn[gs * NVN + gp];
+        genvar gl;
+        for (gl = 0; gl < GG; gl = gl + 1) begin : g_gn
+            reg [31:0] gn [0:4*NVN-1];
+            always @(posedge clk) begin
+                if (beat_v && jkind == (TK == 0 ? K_GQ : K_GK)) gn[gsel * NVN + bi] <= bq[32 * gl +: 32];
+                n_wd[32 * gl +: 32] <= gn[gs * NVN + gp];
+            end
         end
         // gain vectors -> go -> ready (the head reports it), after the job's parameters (eps) are in
         always @(posedge clk or negedge rst_n) begin
