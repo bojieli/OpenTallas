@@ -576,12 +576,15 @@ module ot_hgi_sm_pub_slice #(
         if (!rn) begin k_go <= 1'b0; rv_q <= '0; ack_q <= 1'b0; cr_q <= 1'b0; end
         else begin k_go <= c_go; rv_q <= sm_rv; ack_q <= w_ack; cr_q <= so_cr; end
     // ---- the held command and its precomputed offsets
-    // round 3 (class 5): the command's address arithmetic is a 3-edge start sequence (st 1: p x stride, p x M, s x Q;
-    // st 2: + O.base, M - sQ; st 3: per-(local SM, slot) bases, need clamp) -> nv; no multiply / add chain behind a pin flop
-    reg busy, sm_m, obf, nv; reg [1:0] st; reg [20:0] dif [0:NSS-1]; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
+    // round 4 (class 5): 5-edge start sequence (one-hot so[1..5]); every add >= 18 b is split in two halves over two
+    // edges with a registered carry; s x Q = sid x 4Q + s x Q.  so[1]: p x stride, p x M, sid x 4Q, s x Q; so[2]: + O.base,
+    // sQ; so[3]: low halves (bases, M - sQ); so[4]: high halves; so[5]: need clamp -> nv
+    reg busy, sm_m, obf, nv; reg [5:1] so; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
     reg [17:0] ob_h, ost_h; reg [17:0] pm [0:NC-1]; reg [19:0] pg [0:NC-1];
-    reg [17:0] pofs [0:NC-1]; reg [19:0] pgi [0:NC-1];
+    reg [17:0] pofs [0:NC-1]; reg [19:0] pgi [0:NC-1]; reg [19:0] sq_a; reg [19:0] sq_b [0:NSS-1];
+    reg [20:0] dif [0:NSS-1]; reg dif_c [0:NSS-1];
     reg [17:0] bs_a [0:NSS-1][0:NC-1]; reg [19:0] bs_g [0:NSS-1][0:NC-1];   // O-address / global-index base per (SM, slot)
+    reg bs_ac [0:NSS-1][0:NC-1], bs_gc [0:NSS-1][0:NC-1];
     reg [19:0] sqc [0:NSS-1], need [0:NSS-1], recv [0:NSS-1];
     wire [19:0] sq [0:NSS-1];                         // s x Q of the global SM (MUT_ROW: 0 in the addresses only)
     genvar gsq;
@@ -593,37 +596,39 @@ module ot_hgi_sm_pub_slice #(
     // ---- arrival FIFOs (data unreset)
     reg [11:0] af_r [0:NSS-1][0:AD-1]; reg [NC*32-1:0] af_d [0:NSS-1][0:AD-1];
     reg [ADW:0] af_n [0:NSS-1]; reg [ADW-1:0] af_h [0:NSS-1], af_t [0:NSS-1];
-    // ---- engine: P (pick) -> R (FIFO read, global row) -> D (addresses; coalesce / emit)
-    // round 3 (class 5): D computes the per-slot sector-change flags only (registered into E); E decides and commits
-    reg p_v, r_v, d_v, e_v; reg [LSL-1:0] p_i, r_i, d_i, e_i, rrp; reg [11:0] r_row; reg [NC*32-1:0] r_d, d_d, e_d;
-    reg [17:0] d_wa [0:NC-1], e_wa [0:NC-1]; reg [19:0] d_gi [0:NC-1], e_gi [0:NC-1]; reg [3:0] e_sp; reg [NC-1:0] e_ch;
+    // ---- engine: P (pick) -> R (FIFO read) -> A (base select) -> D (base + row; sector-change flags) -> E (decide, commit)
+    // every stage accepts only when empty at the edge (registered transfer conditions x_*): one record / 2 edges / slice
+    reg p_v, r_v, a_v, d_v, e_v; reg [LSL-1:0] p_i, r_i, a_i, d_i, e_i, rrp; reg [11:0] r_row, a_row;
+    reg [NC*32-1:0] r_d, a_d, d_d, e_d;
+    reg [17:0] a_ba [0:NC-1], d_wa [0:NC-1], e_wa [0:NC-1]; reg [19:0] a_bg [0:NC-1], d_gi [0:NC-1], e_gi [0:NC-1];
+    reg [3:0] e_sp; reg [NC-1:0] e_ch;
     // coalescing state per (local SM, slot)
     reg [14:0] k_sec [0:NSS-1][0:NC-1]; reg [7:0] k_msk [0:NSS-1][0:NC-1];
     reg        k_par [0:NSS-1][0:NC-1]; reg [1:0] k_pf [0:NSS-1][0:NC-1];
-    // pending flush FIFOs per slot: {local SM, parity, sector, mask}
+    // pending flush FIFOs per slot: {local SM, parity, sector, mask}; registered full / non-empty flags
     reg [LSL+24-1:0] pq_e [0:NC-1][0:PQ-1]; reg [PQW:0] pq_n [0:NC-1]; reg [PQW-1:0] pq_h [0:NC-1], pq_t [0:NC-1];
+    reg [NC-1:0] pq_f, pq_ne;
     // SRAM write / read ports (registered); write data = the word replicated, mask = the word lane
     reg [NC-1:0] m_we, m_re; reg [6:0] m_wa [0:NC-1], m_ra [0:NC-1]; reg [31:0] m_wd [0:NC-1]; reg [2:0] m_ww [0:NC-1];
     wire [255:0] m_rd [0:NC-1];
-    reg [255:0] m_cap [0:NC-1];                       // capture register at every macro output (no logic before it)
+    reg [255:0] m_cap [0:NC-1];                       // capture at every macro output: the read row, else zero
     genvar gq;
     generate for (gq = 0; gq < NC; gq = gq + 1) begin : g_m
         ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(m_re[gq]), .r_addr_in(m_ra[gq]), .rd_out(m_rd[gq]),
             .w_ce_in(m_we[gq]), .w_addr_in(m_wa[gq]), .wd_in({8{m_wd[gq]}}), .w_mask_in({224'd0, 32'hFFFF_FFFF} << {m_ww[gq], 5'd0}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
-    // drain: pick (registered) -> SRAM read -> capture -> 2-entry row FIFO -> write packet
-    // round 3 (class 5): drain pick K1 (grant on registered counts, pop, head index registered) -> K2 (entry read, SRAM read)
+    // drain: K1 (grant on the registered non-empty flags, pop) -> K2 (entry, SRAM read) -> capture -> row FIFO -> packet
     reg dk_v; reg [LNC-1:0] dk_q; reg [PQW-1:0] dk_h;
     reg dr_v, dr_v2, dr_v3; reg [LNC-1:0] dr_q, dr_q2, dr_q3, dr_rr; reg [LSL+24-1:0] dr_e, dr_e2, dr_e3;
     reg [255:0] hq_d [0:1]; reg [14:0] hq_s [0:1]; reg [7:0] hq_m [0:1]; reg [1:0] hq_n; reg hq_h, hq_t;
     reg tok;                                            // a write is out, not yet acknowledged
     reg [SDW-1:0] cr;                                   // STREAM credits
-    reg sweep; reg [LSL:0] sw_i;
+    // end sweep: phase 0 latches one local SM's slot states, phase 1 pushes them (on the registered full flags)
+    reg sweep, sw_ph; reg [LSL:0] sw_i; reg [LSL-1:0] sw_l; reg [7:0] sw_m [0:NC-1]; reg [14:0] sw_s [0:NC-1]; reg [NC-1:0] sw_p;
     reg pend_any, open_q;
     always @* begin
-        pend_any = dk_v || dr_v || dr_v2 || dr_v3 || hq_n != 0 || p_v || r_v || d_v || e_v;
-        for (c = 0; c < NC; c = c + 1) if (pq_n[c] != 0) pend_any = 1'b1;
+        pend_any = dk_v || dr_v || dr_v2 || dr_v3 || hq_n != 0 || p_v || r_v || a_v || d_v || e_v || pq_ne != 0;
         for (s = 0; s < NSS; s = s + 1) if (af_n[s] != 0) pend_any = 1'b1;
     end
     wire [NC-1:0] d_ch;
@@ -633,114 +638,175 @@ module ot_hgi_sm_pub_slice #(
     end endgenerate
     reg arr_empty;
     always @* begin arr_empty = 1'b1; for (s = 0; s < NSS; s = s + 1) if (af_n[s] != 0) arr_empty = 1'b0; end
-    // data-only registers (no reset)
-    always @(posedge clk) for (c = 0; c < NC; c = c + 1) if (dr_v2 && dr_q2 == c) m_cap[c] <= m_rd[c];
+    // ---- transfer / decision terms (registered inputs only)
+    wire x_pr = p_v && !r_v, x_ra = r_v && !a_v && nv, x_ad = a_v && !d_v, x_de = d_v && !e_v;
+    wire x_bt = e_v && sm_m && cr != 0;                 // a STREAM beat
+    reg e_ok;
+    always @* begin : eok
+        integer q; e_ok = 1'b1;
+        for (q = 0; q < NC; q = q + 1)
+            if (e_ch[q] && (pq_f[q] || k_pf[e_i][q][MUT_PAR ? k_par[e_i][q] : !k_par[e_i][q]])) e_ok = 1'b0;
+    end
+    wire e_cm = e_v && !sm_m && e_ok;                   // E commits (VM)
+    wire sw_a = sweep && !sw_ph && sw_i < NSS;          // sweep phase 0
+    reg sw_go;
+    always @* begin : swg
+        integer q; sw_go = sweep && sw_ph;
+        for (q = 0; q < NC; q = q + 1) if (sw_m[q] != 0 && pq_f[q]) sw_go = 1'b0;
+    end
+    reg [NC-1:0] q_push, q_pop; reg k1_f; reg [LNC-1:0] k1_q; reg tk; reg [1:0] hn;
+    always @* begin : qpp
+        integer q, q_; reg go;
+        for (q = 0; q < NC; q = q + 1) q_push[q] = (e_cm && e_ch[q]) || (sw_go && sw_m[q] != 0);
+        tk = hq_n != 0 && !tok;
+        hn = hq_n - (tk ? 2'd1 : 2'd0) + (dr_v3 ? 2'd1 : 2'd0);
+        go = ({1'b0, hn} + (dk_v ? 3'd1 : 3'd0) + (dr_v ? 3'd1 : 3'd0) + (dr_v2 ? 3'd1 : 3'd0)) < 3'd2;   // room for every read in flight
+        k1_f = 1'b0; k1_q = '0;
+        for (q = 0; q < NC; q = q + 1) begin q_ = (dr_rr + 1 + q) % NC;
+            if (go && !k1_f && pq_ne[q_]) begin k1_f = 1'b1; k1_q = LNC'(q_); end
+        end
+        for (q = 0; q < NC; q = q + 1) q_pop[q] = k1_f && k1_q == LNC'(q);
+    end
+    reg [255:0] cap_or;
+    always @* begin : cor
+        integer q; cap_or = '0; for (q = 0; q < NC; q = q + 1) cap_or = cap_or | m_cap[q];
+    end
+    // ---- data-only registers (no reset: rn reaches control flops only)
+    always @(posedge clk) begin : dat
+        integer q, j;
+        for (q = 0; q < NC; q = q + 1) m_cap[q] <= (dr_v2 && dr_q2 == LNC'(q)) ? m_rd[q] : 256'd0;
+        for (j = 0; j < NSS; j = j + 1) if (rv_q[j] && af_n[j] != AD) begin
+            af_r[j][af_t[j]] <= rr_q[j]; af_d[j][af_t[j]] <= rd_q[j]; end
+        // start sequence arithmetic
+        if (so[1]) begin
+            for (q = 0; q < NC; q = q + 1) begin pm[q] <= 18'(q * ost_h); pg[q] <= 20'(q * mm); end
+            sq_a <= 20'({17'd0, sid} * {5'd0, qq, 2'b00});
+            for (j = 0; j < NSS; j = j + 1) sq_b[j] <= 20'(j * {7'd0, qq});
+        end
+        if (so[2]) begin
+            for (q = 0; q < NC; q = q + 1) begin pofs[q] <= ob_h + pm[q]; pgi[q] <= pg[q]; end
+            for (j = 0; j < NSS; j = j + 1) sqc[j] <= sq_a + sq_b[j];
+        end
+        if (so[3]) for (j = 0; j < NSS; j = j + 1) begin
+            {dif_c[j], dif[j][9:0]} <= {1'b0, mm[9:0]} - {1'b0, sqc[j][9:0]};
+            for (q = 0; q < NC; q = q + 1) begin
+                {bs_ac[j][q], bs_a[j][q][8:0]} <= {1'b0, pofs[q][8:0]} + {1'b0, sq[j][8:0]};
+                {bs_gc[j][q], bs_g[j][q][9:0]} <= {1'b0, pgi[q][9:0]} + {1'b0, sq[j][9:0]};
+            end
+        end
+        if (so[4]) for (j = 0; j < NSS; j = j + 1) begin
+            dif[j][20:10] <= {1'b0, mm[19:10]} - {1'b0, sqc[j][19:10]} - {10'd0, dif_c[j]};
+            for (q = 0; q < NC; q = q + 1) begin
+                bs_a[j][q][17:9] <= pofs[q][17:9] + sq[j][17:9] + {8'd0, bs_ac[j][q]};
+                bs_g[j][q][19:10] <= pgi[q][19:10] + sq[j][19:10] + {9'd0, bs_gc[j][q]};
+            end
+        end
+        // engine records
+        if (x_pr) begin r_i <= p_i; r_d <= af_d[p_i][af_h[p_i]]; r_row <= af_r[p_i][af_h[p_i]]; end
+        if (x_ra) begin
+            a_i <= r_i; a_d <= r_d; a_row <= r_row;
+            for (q = 0; q < NC; q = q + 1) begin a_ba[q] <= bs_a[r_i][q]; a_bg[q] <= bs_g[r_i][q]; end
+        end
+        if (x_ad) begin
+            d_i <= a_i; d_d <= a_d;
+            for (q = 0; q < NC; q = q + 1) begin d_wa[q] <= a_ba[q] + {6'd0, a_row}; d_gi[q] <= a_bg[q] + {8'd0, a_row}; end
+        end
+        if (x_de) begin
+            e_i <= d_i; e_d <= d_d; e_ch <= d_ch;
+            for (q = 0; q < NC; q = q + 1) begin e_wa[q] <= d_wa[q]; e_gi[q] <= d_gi[q]; end
+        end else if (x_bt) begin                         // STREAM: word 0 is always the next beat
+            so_idx <= e_gi[0]; so_data <= rb(e_d[31:0], obf); e_d <= {32'd0, e_d[NC*32-1:32]};
+            for (q = 0; q < NC - 1; q = q + 1) e_gi[q] <= e_gi[q + 1];
+        end
+        // SRAM write port: data / lane / row every edge (m_we alone gates the write)
+        for (q = 0; q < NC; q = q + 1) begin
+            m_wd[q] <= e_d[32*q +: 32]; m_ww[q] <= e_wa[q][2:0];
+            m_wa[q] <= 7'({e_i, e_ch[q] ? (MUT_PAR ? k_par[e_i][q] : !k_par[e_i][q]) : k_par[e_i][q]});
+            if (e_cm && q < pp) k_sec[e_i][q] <= e_wa[q][17:3];
+        end
+        // pending flush entries
+        for (q = 0; q < NC; q = q + 1) if (q_push[q])
+            pq_e[q][pq_t[q]] <= sweep ? {sw_l, sw_p[q], sw_s[q], sw_m[q]} : {e_i, k_par[e_i][q], k_sec[e_i][q], k_msk[e_i][q]};
+        if (sw_a) begin
+            sw_l <= LSL'(sw_i);
+            for (q = 0; q < NC; q = q + 1) begin sw_m[q] <= k_msk[LSL'(sw_i)][q]; sw_s[q] <= k_sec[LSL'(sw_i)][q]; sw_p[q] <= k_par[LSL'(sw_i)][q]; end
+        end
+        // drain
+        if (k1_f) begin dk_q <= k1_q; dk_h <= pq_h[k1_q]; end
+        if (dk_v) begin dr_q <= dk_q; dr_e <= pq_e[dk_q][dk_h]; end
+        for (q = 0; q < NC; q = q + 1) m_ra[q] <= 7'({pq_e[q][dk_h][LSL+23:24], pq_e[q][dk_h][23]});
+        dr_q3 <= dr_q2; dr_e3 <= dr_e2; dr_q2 <= dr_q; dr_e2 <= dr_e;
+        if (dr_v3) begin hq_d[hq_t] <= cap_or; hq_s[hq_t] <= dr_e3[22:8]; hq_m[hq_t] <= dr_e3[7:0]; end
+        if (tk) w_pkt <= {hq_s[hq_h], rb8(hq_d[hq_h], obf), hq_m[hq_h]};
+    end
+    // ---- control (reset)
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; nv <= 1'b0; st <= 2'd0; all_rows <= 1'b0; s_done <= 1'b0; s_fault <= 1'b0;
-            w_v <= 1'b0; so_v <= 1'b0; tok <= 1'b0; cr <= SDW'(SD); sweep <= 1'b0; sw_i <= '0; open_q <= 1'b0;
-            p_v <= 1'b0; r_v <= 1'b0; d_v <= 1'b0; e_v <= 1'b0; rrp <= '0; e_sp <= 4'd0; m_we <= '0; m_re <= '0;
+            busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; nv <= 1'b0; so <= '0; all_rows <= 1'b0; s_done <= 1'b0; s_fault <= 1'b0;
+            w_v <= 1'b0; so_v <= 1'b0; tok <= 1'b0; cr <= SDW'(SD); sweep <= 1'b0; sw_ph <= 1'b0; sw_i <= '0; open_q <= 1'b0;
+            p_v <= 1'b0; r_v <= 1'b0; a_v <= 1'b0; d_v <= 1'b0; e_v <= 1'b0; rrp <= '0; e_sp <= 4'd0; m_we <= '0; m_re <= '0;
             dk_v <= 1'b0; dr_v <= 1'b0; dr_v2 <= 1'b0; dr_v3 <= 1'b0; dr_rr <= '0; hq_n <= 2'd0; hq_h <= 1'b0; hq_t <= 1'b0;
+            pq_f <= '0; pq_ne <= '0;
             for (s = 0; s < NSS; s = s + 1) begin af_n[s] <= '0; af_h[s] <= '0; af_t[s] <= '0; recv[s] <= '0; need[s] <= '0; end
             for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) begin
                 k_msk[i][p] <= 8'd0; k_par[i][p] <= 1'b0; k_pf[i][p] <= 2'b00; end
             for (c = 0; c < NC; c = c + 1) begin pq_n[c] <= '0; pq_h[c] <= '0; pq_t[c] <= '0; end
         end else begin : main
-            reg [ADW:0] an [0:NSS-1]; reg [PQW:0] qn_ [0:NC-1]; reg [1:0] pf_ [0:NSS-1][0:NC-1];
-            reg ok, beat, dr_go, done_now; integer sl;
-            s_done <= 1'b0; w_v <= 1'b0; so_v <= 1'b0; m_we <= '0; m_re <= '0;
+            reg [ADW:0] an [0:NSS-1]; reg [1:0] pf_ [0:NSS-1][0:NC-1];
+            reg done_now;
+            s_done <= 1'b0; w_v <= 1'b0; so_v <= 1'b0; m_re <= '0;
             for (s = 0; s < NSS; s = s + 1) an[s] = af_n[s];
-            for (c = 0; c < NC; c = c + 1) qn_[c] = pq_n[c];
             for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) pf_[i][p] = k_pf[i][p];
             begin : opn
                 reg o; o = 1'b0;
                 for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) if (k_msk[i][p] != 0) o = 1'b1;
                 open_q <= o;
             end
-            // ---- the command (fields from the pin flops); need follows one edge later
+            // ---- the command (fields from the pin flops); the start sequence -> nv
             all_rows <= nv && busy && &rdone;
+            so <= {so[4:1], 1'b0};
             if (k_go) begin
-                busy <= 1'b1; sm_m <= k_sm; obf <= k_bf; mm <= k_mm; qq <= k_qq; pp <= k_pp; nv <= 1'b0; st <= 2'd1;
+                busy <= 1'b1; sm_m <= k_sm; obf <= k_bf; mm <= k_mm; qq <= k_qq; pp <= k_pp; nv <= 1'b0; so <= 5'b00001;
                 ob_h <= k_ob; ost_h <= k_ost; all_rows <= 1'b0; sweep <= 1'b0;
-            end else if (busy && st == 2'd1) begin
-                for (p = 0; p < NC; p = p + 1) begin pm[p] <= 18'(p * ost_h); pg[p] <= 20'(p * mm); end
-                for (s = 0; s < NSS; s = s + 1) sqc[s] <= 20'(({17'd0, sid} * NSS + s) * {7'd0, qq});
-                st <= 2'd2;
-            end else if (busy && st == 2'd2) begin
-                for (p = 0; p < NC; p = p + 1) begin pofs[p] <= ob_h + pm[p]; pgi[p] <= pg[p]; end
-                for (s = 0; s < NSS; s = s + 1) dif[s] <= {1'b0, mm} - {1'b0, sqc[s]};
-                st <= 2'd3;
-            end else if (busy && st == 2'd3) begin
-                for (s = 0; s < NSS; s = s + 1) begin
+            end
+            if (so[5]) begin
+                for (s = 0; s < NSS; s = s + 1)
                     need[s] <= (!sm_en[s] || dif[s][20] || dif[s] == 21'd0) ? 20'd0 : (dif[s][19:0] > {7'd0, qq}) ? {7'd0, qq} : dif[s][19:0];
-                    for (p = 0; p < NC; p = p + 1) begin bs_a[s][p] <= pofs[p] + sq[s][17:0]; bs_g[s][p] <= pgi[p] + sq[s]; end
-                end
-                nv <= 1'b1; st <= 2'd0;
+                nv <= 1'b1;
             end
             // ---- arrivals (pre-armed: counted and queued whether or not the command has arrived)
             for (s = 0; s < NSS; s = s + 1) if (rv_q[s]) begin
                 recv[s] <= recv[s] + 20'd1;
                 if (an[s] == AD) s_fault <= 1'b1;                           // overrun: fail closed
-                else begin af_r[s][af_t[s]] <= rr_q[s]; af_d[s][af_t[s]] <= rd_q[s]; af_t[s] <= af_t[s] + 1'b1; an[s] = an[s] + 1'b1; end
+                else begin af_t[s] <= af_t[s] + 1'b1; an[s] = an[s] + 1'b1; end
             end
-            // ---- E: decide on the registered sector-change flags; coalesce (VM) / emit (STREAM)
-            ok = 1'b1; beat = 1'b0;
-            if (e_v && !sm_m) begin
-                for (p = 0; p < NC; p = p + 1) begin : chk
-                    reg np;
-                    np = MUT_PAR ? k_par[e_i][p] : !k_par[e_i][p];
-                    if (e_ch[p] && (qn_[p] == PQ || pf_[e_i][p][np])) ok = 1'b0;
-                end
-                if (ok) begin
-                    for (p = 0; p < NC; p = p + 1) if (p < pp) begin : co
-                        reg [14:0] sc; reg [2:0] w; reg ch; reg par;
-                        sl = e_i; sc = e_wa[p][17:3]; w = e_wa[p][2:0]; ch = e_ch[p];
-                        par = k_par[sl][p];
-                        if (ch) begin                                       // the old sector -> a pending flush
-                            pq_e[p][pq_t[p]] <= {LSL'(sl), par, k_sec[sl][p], k_msk[sl][p]};
-                            pq_t[p] <= pq_t[p] + 1'b1; qn_[p] = qn_[p] + 1'b1;
-                            pf_[sl][p][par] = 1'b1;
-                            par = MUT_PAR ? par : !par;
-                            k_par[sl][p] <= par;
-                        end
-                        m_we[p] <= 1'b1; m_wa[p] <= 7'({LSL'(sl), par}); m_wd[p] <= e_d[32*p +: 32]; m_ww[p] <= w;
-                        k_sec[sl][p] <= sc;
-                        k_msk[sl][p] <= (ch || k_msk[sl][p] == 0) ? (8'd1 << w) : (k_msk[sl][p] | (8'd1 << w));
+            // ---- E: commit (VM) / emit (STREAM)
+            for (p = 0; p < NC; p = p + 1) m_we[p] <= e_cm && (p < pp);
+            if (e_cm) begin
+                for (p = 0; p < NC; p = p + 1) if (p < pp) begin : co
+                    reg [2:0] w; reg par;
+                    w = e_wa[p][2:0]; par = k_par[e_i][p];
+                    if (e_ch[p]) begin                                     // the old sector -> a pending flush
+                        pf_[e_i][p][par] = 1'b1;
+                        k_par[e_i][p] <= MUT_PAR ? par : !par;
                     end
-                    e_v <= 1'b0;
+                    k_msk[e_i][p] <= (e_ch[p] || k_msk[e_i][p] == 0) ? (8'd1 << w) : (k_msk[e_i][p] | (8'd1 << w));
                 end
-            end else if (e_v && sm_m) begin
-                ok = 1'b0;
-                if (cr != 0) begin                                          // one beat an edge, against a credit
-                    beat = 1'b1;
-                    so_v <= 1'b1; so_idx <= e_gi[e_sp]; so_data <= rb(e_d[32*e_sp +: 32], obf);
-                    if (e_sp + 4'd1 >= pp) begin e_v <= 1'b0; e_sp <= 4'd0; ok = 1'b1; end
-                    else e_sp <= e_sp + 4'd1;
-                end
+                e_v <= 1'b0;
             end
-            // ---- D -> E: only when E is empty during this cycle (no commit at this edge: the flags are current)
-            if (d_v && !e_v) begin
-                e_v <= 1'b1; e_i <= d_i; e_d <= d_d; e_ch <= d_ch;
-                for (p = 0; p < NC; p = p + 1) begin e_wa[p] <= d_wa[p]; e_gi[p] <= d_gi[p]; end
-                d_v <= 1'b0;
+            if (x_bt) begin
+                so_v <= 1'b1;
+                if (e_sp + 4'd1 >= pp) begin e_v <= 1'b0; e_sp <= 4'd0; end
+                else e_sp <= e_sp + 4'd1;
             end
-            cr <= cr - (beat ? 1'b1 : 1'b0) + (cr_q ? 1'b1 : 1'b0);
-            // ---- R -> D: the P addresses
-            // round 2 (class 5): every stage accepts only when it is empty at the edge (registered enables; no stall cone
-            // from the coalesce decision back through R and P): one record per 2 edges per slice
-            if (r_v && !d_v && nv) begin                                     // the bases are in (start sequence done)
-                d_v <= 1'b1; d_i <= r_i; d_d <= r_d;
-                for (p = 0; p < NC; p = p + 1) begin
-                    d_wa[p] <= bs_a[r_i][p] + {6'd0, r_row}; d_gi[p] <= bs_g[r_i][p] + {8'd0, r_row}; end
-                r_v <= 1'b0;
+            cr <= cr - (x_bt ? 1'b1 : 1'b0) + (cr_q ? 1'b1 : 1'b0);
+            if (x_de) begin e_v <= 1'b1; d_v <= 1'b0; end
+            if (x_ad) begin d_v <= 1'b1; a_v <= 1'b0; end
+            if (x_ra) begin a_v <= 1'b1; r_v <= 1'b0; end
+            if (x_pr) begin
+                r_v <= 1'b1; af_h[p_i] <= af_h[p_i] + 1'b1; an[p_i] = an[p_i] - 1'b1; p_v <= 1'b0;
             end
-            // ---- P -> R: read (and pop) the picked SM's FIFO head
-            if (p_v && !r_v) begin
-                r_v <= 1'b1; r_i <= p_i; r_d <= af_d[p_i][af_h[p_i]]; r_row <= af_r[p_i][af_h[p_i]];
-                af_h[p_i] <= af_h[p_i] + 1'b1; an[p_i] = an[p_i] - 1'b1;
-                p_v <= 1'b0;
-            end
-            // ---- P: pick an SM with a queued row (round robin), once the command (and sq) is in
+            // ---- P: pick an SM with a queued row (round robin), once the command is in
             if (busy && !k_go && !p_v) begin : pick
                 reg f; reg [LSL-1:0] ix; integer q2;
                 f = 1'b0; ix = '0;
@@ -751,64 +817,40 @@ module ot_hgi_sm_pub_slice #(
                 if (f) begin p_v <= 1'b1; p_i <= ix; rrp <= ix; end
             end
             for (s = 0; s < NSS; s = s + 1) af_n[s] <= an[s];
-            // ---- end sweep (VM): every open sector -> a pending flush (a local SM an edge)
-            if (busy && !sm_m && nv && all_rows && &rdone && arr_empty && !p_v && !r_v && !d_v && !e_v && !sweep) begin
-                sweep <= 1'b1; sw_i <= '0;
+            // ---- end sweep (VM): every open sector -> a pending flush (a local SM / 2 edges)
+            if (busy && !sm_m && nv && all_rows && &rdone && arr_empty && !p_v && !r_v && !a_v && !d_v && !e_v && !sweep) begin
+                sweep <= 1'b1; sw_i <= '0; sw_ph <= 1'b0;
             end
-            if (sweep && sw_i < NSS) begin : swp
-                reg go; sl = sw_i; go = 1'b1;
-                for (p = 0; p < NC; p = p + 1) if (k_msk[sl][p] != 0 && pq_n[p] == PQ) go = 1'b0;   // D is idle: registered count
-                if (go) begin
-                    for (p = 0; p < NC; p = p + 1) if (k_msk[sl][p] != 0) begin
-                        pq_e[p][pq_t[p]] <= {LSL'(sl), k_par[sl][p], k_sec[sl][p], k_msk[sl][p]};
-                        pq_t[p] <= pq_t[p] + 1'b1; qn_[p] = qn_[p] + 1'b1;
-                        pf_[sl][p][k_par[sl][p]] = 1'b1; k_msk[sl][p] <= 8'd0;
-                    end
-                    sw_i <= sw_i + 1'b1;
-                end
+            if (sw_a) sw_ph <= 1'b1;
+            if (sw_go) begin
+                for (p = 0; p < NC; p = p + 1) if (sw_m[p] != 0) begin pf_[sw_l][p][sw_p[p]] = 1'b1; k_msk[sw_l][p] <= 8'd0; end
+                sw_i <= sw_i + 1'b1; sw_ph <= 1'b0;
             end
             // ---- drain: issue the row FIFO head (one write out at a time); capture; read; pick
-            begin : dr
-                reg taken; reg [1:0] n_;
-                taken = hq_n != 0 && !tok;
-                if (taken) begin
-                    w_v <= 1'b1; w_pkt <= {hq_s[hq_h], rb8(hq_d[hq_h], obf), hq_m[hq_h]}; tok <= 1'b1; hq_h <= ~hq_h;
-                end
-                if (ack_q) tok <= 1'b0;
-                n_ = hq_n - (taken ? 2'd1 : 2'd0);
-                if (dr_v3) begin                                            // the captured row -> the row FIFO
-                    hq_d[hq_t] <= m_cap[dr_q3]; hq_s[hq_t] <= dr_e3[22:8]; hq_m[hq_t] <= dr_e3[7:0]; hq_t <= ~hq_t;
-                    n_ = n_ + 2'd1;
-                end
-                if (dr_v2) begin : clr                                      // the row is read (capture this edge): free it
-                    reg [LSL-1:0] lsl; lsl = dr_e2[LSL+23:24]; pf_[lsl][dr_q2][dr_e2[23]] = 1'b0;
-                end
-                hq_n <= n_;
-                dr_v3 <= dr_v2; dr_q3 <= dr_q2; dr_e3 <= dr_e2;
-                dr_v2 <= dr_v; dr_q2 <= dr_q; dr_e2 <= dr_e; dr_v <= 1'b0;
-                dr_go = ({1'b0, n_} + (dk_v ? 3'd1 : 3'd0) + (dr_v ? 3'd1 : 3'd0) + (dr_v2 ? 3'd1 : 3'd0)) < 3'd2;   // room for every read in flight
-                if (dk_v) begin                                             // K2: the popped entry -> SRAM read
-                    dr_q <= dk_q; dr_e <= pq_e[dk_q][dk_h]; dr_v <= 1'b1;
-                    m_re[dk_q] <= 1'b1; m_ra[dk_q] <= 7'({pq_e[dk_q][dk_h][LSL+23:24], pq_e[dk_q][dk_h][23]});
-                end
-                dk_v <= 1'b0;
+            if (tk) begin w_v <= 1'b1; tok <= 1'b1; hq_h <= ~hq_h; end
+            if (ack_q) tok <= 1'b0;
+            if (dr_v3) hq_t <= ~hq_t;
+            hq_n <= hn;
+            if (dr_v2) pf_[dr_e2[LSL+23:24]][dr_q2][dr_e2[23]] = 1'b0;     // the row is read (capture this edge): free it
+            dr_v3 <= dr_v2; dr_v2 <= dr_v; dr_v <= dk_v;
+            if (dk_v) m_re[dk_q] <= 1'b1;
+            dk_v <= k1_f;
+            if (k1_f) dr_rr <= k1_q;
+            for (c = 0; c < NC; c = c + 1) begin
+                pq_t[c] <= pq_t[c] + (q_push[c] ? 1'b1 : 1'b0);
+                pq_h[c] <= pq_h[c] + (q_pop[c] ? 1'b1 : 1'b0);
+                case ({q_push[c], q_pop[c]})
+                    2'b10: begin pq_n[c] <= pq_n[c] + 1'b1; pq_f[c] <= (pq_n[c] == (PQW+1)'(PQ - 1)); pq_ne[c] <= 1'b1; end
+                    2'b01: begin pq_n[c] <= pq_n[c] - 1'b1; pq_f[c] <= 1'b0; pq_ne[c] <= (pq_n[c] != (PQW+1)'(1)); end
+                    default: ;
+                endcase
             end
-            if (dr_go) begin : pk
-                reg f; integer q_; f = 1'b0;
-                for (c = 0; c < NC; c = c + 1) begin q_ = (dr_rr + 1 + c) % NC;
-                    if (!f && pq_n[q_] != 0) begin                          // K1: grant, pop, head index
-                        f = 1'b1; dr_rr <= LNC'(q_); dk_q <= LNC'(q_); dk_h <= pq_h[q_]; dk_v <= 1'b1;
-                        pq_h[q_] <= pq_h[q_] + 1'b1; qn_[q_] = qn_[q_] - 1'b1;
-                    end
-                end
-            end
-            for (c = 0; c < NC; c = c + 1) pq_n[c] <= qn_[c];
             for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) k_pf[i][p] <= pf_[i][p];
             // ---- done: every row in, swept (VM) / emitted (STREAM), nothing pending, the write acknowledged
             done_now = busy && !k_go && nv && all_rows && &rdone && !pend_any && !tok && !w_v && !so_v &&
                        (sm_m || (sweep && sw_i >= NSS && !open_q));
             if (done_now) begin
-                busy <= 1'b0; s_done <= 1'b1; sweep <= 1'b0; nv <= 1'b0; st <= 2'd0;
+                busy <= 1'b0; s_done <= 1'b1; sweep <= 1'b0; nv <= 1'b0; so <= '0;
                 for (s = 0; s < NSS; s = s + 1) recv[s] <= rv_q[s] ? 20'd1 : 20'd0;
             end
         end
