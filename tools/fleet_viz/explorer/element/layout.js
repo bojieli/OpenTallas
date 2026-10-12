@@ -208,7 +208,7 @@ async function start(){
   const t0 = performance.now();
   V.t0 = t0;
   try {
-    if (!window.deck) await loadScript('vendor/deck.gl-8.9.36.min.js');
+    if (!window.deck) await loadScript('/explorer/element/vendor/deck.gl-8.9.36.min.js');
     if (!RectLayer) defineLayer();
     const H = await blobJSON('header');
     V.header = H;
@@ -234,7 +234,7 @@ async function start(){
   // workers
   const NW = Math.max(2, Math.min(4, (navigator.hardwareConcurrency || 4) - 1));
   V.workers = []; V.wnext = 0; V.tiles = new Map(); V.rasters = new Map(); V.pending = new Map(); V.rulers = []; V.gpuBytes = 0;
-  for (let i = 0; i < NW; i++){ const w = new Worker('lv_worker.js'); w.onmessage = onWorker; w.postMessage({op: 'init', header: H}); V.workers.push(w); }
+  for (let i = 0; i < NW; i++){ const w = new Worker('/explorer/element/lv_worker.js'); w.onmessage = onWorker; w.postMessage({op: 'init', header: H}); V.workers.push(w); }
   updateUniforms();   // pushes the raster style to the workers
   V.budget = PHONE() ? 1.6e6 : 5e6;
   V.gpuCap = 300e6;

@@ -9,7 +9,7 @@
    projection subtracts the camera position in the shader, so precision holds at any zoom); meta Float32 [layer, clip | kind << 4, net].
    Draw order = layer order (tech order), synthetic layers after: nl cell outlines, nl+1 physical-only cell outlines. */
 'use strict';
-importScripts('lv_decode.js');
+importScripts('/explorer/element/lv_decode.js');
 const D = self.LVDecode;
 let H = null, NL = 0;
 const planes = new Map();   // raster key -> {layers, planes}

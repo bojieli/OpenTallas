@@ -255,6 +255,7 @@ TILE_OF = [
     (r"^ot_qkh_", "ot_qwen_nearhbm_head_h"),
     (r"^ot_p2h_", "ot_mtp_p2_prefix_path"),
     (r"^qfd_tile_lsl", "qfd_tile"),
+    (r"^qfd_tile_nk", "qfd_tile"),  # r22ko4 D2 die slot: the qfd_tile datapath without the KV slice / landing hop
     (r"^qfd_vm_grp", "qfd_sp_vector_memory"),
     (r"^ot_qwen_nearhbm_attn_hub_t", "ot_qwen_nearhbm_attn_hub_p"),
     (r"^hfd_hc_tile", "hfd_hc"),
@@ -872,8 +873,11 @@ def main():
                 EXEMPT.setdefault(e, (x.get("kind", "control_glue"), x.get("why") or "-"))
                 continue
             rep = x.get("replaces")
-            reput(e, lambda o, cls=cls, op=op, rep=rep: o["op"] in (cls, op, rep, "unmapped") or str(o["op"]).startswith("bench II"),
-                  dict(model=x.get("model") or d.get("model", "-"), op=op, status=st, ratio=ratio, owner="tput-map-1011", src=src))
+            mdl = x.get("model") or d.get("model", "-")
+            # a class bench replaces only its own model's row of the op (the DS SU.VOP row stays when a Qwen SU bench lands)
+            reput(e, lambda o, cls=cls, op=op, rep=rep, mdl=mdl: o["op"] == "unmapped" or str(o["op"]).startswith("bench II")
+                  or (o["op"] in (cls, op, rep) and (o["model"] == mdl or o["status"] == "UNQUALIFIED_NO_BENCH")),
+                  dict(model=mdl, op=op, status=st, ratio=ratio, owner="tput-map-1011", src=src))
         cbr.append(dict(path=path, commit=c, cls=cls, model=d.get("model"), ratio=d.get("ratio"), elements=sorted(per)))
     tile_cov = {}
     for e in list(el):

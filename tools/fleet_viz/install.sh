@@ -4,13 +4,13 @@ set -euo pipefail
 src=$(cd "$(dirname "$0")" && pwd); dst=$HOME/.local/share/fleet-viz
 mkdir -p "$dst" "$HOME/.config/systemd/user"
 cp "$src"/{server.py,agent.py,recorder.py,elements.py,export_replay.py,index.html,fv_stale.js,fleet_hosts.json} "$dst"/
-cp "$src"/{landing.py,coverage.py,explorer.py,explorer_geom.py,explorer.html,explorer.js,explorer_story.js,explorer_dies.json,explorer_names.json,explorer_compose.json,stories_import.py} "$dst"/
+cp "$src"/{landing.py,coverage.py,elem_shell.py,elem_desc.py,explorer.py,explorer_geom.py,explorer.html,explorer.js,explorer_story.js,explorer_dies.json,explorer_names.json,explorer_compose.json,stories_import.py} "$dst"/
 mkdir -p "$dst/stories" "$dst/explorer"
 cp "$src"/stories/*.json "$dst/stories/"
 rm -rf "$dst/explorer/token"; cp -r "$src/explorer/token" "$dst/explorer/token"
 rm -rf "$dst/explorer/coverage"; cp -r "$src/explorer/coverage" "$dst/explorer/coverage"
 # element pages: page + pages.json from the repo; explorer/element/data/ is deploy data (tools/explorer_elem_export.py pack), kept
-mkdir -p "$dst/explorer/element/data"; cp "$src"/explorer/element/{index.html,elem.js,pages.json} "$dst/explorer/element/"
+mkdir -p "$dst/explorer/element/data"; cp "$src"/explorer/element/{index.html,elem.js,shell.js,shell.css,pages.json} "$dst/explorer/element/"
 # layout viewer (Layout tab): client, vendored deck.gl, tiling service, and the host-side tools it ships to fleet hosts
 cp "$src"/explorer/element/{layout.js,lv_worker.js,lv_decode.js} "$dst/explorer/element/"
 mkdir -p "$dst/explorer/element/vendor"; cp "$src"/explorer/element/vendor/*.js "$dst/explorer/element/vendor/"

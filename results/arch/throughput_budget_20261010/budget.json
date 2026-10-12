@@ -5,7 +5,7 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-12T03:54:45Z",
+ "generated_utc": "2026-10-12T04:57:58Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -1641,7 +1641,7 @@
    "stalled": false,
    "owner": "Claude:struct-close",
    "target": null,
-   "t": "2026-10-10T19:14:24-07:00",
+   "t": "2026-10-11T21:23:35-07:00",
    "adopted": true
   },
   "dsfd_mtp_seq": {
@@ -1701,12 +1701,12 @@
    "stalled": false,
    "owner": "Claude:el1011-q-coll",
    "target": null,
-   "t": "2026-10-11T15:29:05-07:00",
+   "t": "2026-10-11T21:33:25-07:00",
    "adopted": true
   },
   "hfd_hc_tile_xl": {
-   "job": "hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl",
-   "commit": "5c35b1a6e",
+   "job": "hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl",
+   "commit": "c95527ec0",
    "bench": "bench_hc_tile_xl_pos",
    "line": "TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100",
    "cycles": 600,
@@ -1716,7 +1716,7 @@
    "stalled": false,
    "owner": "Claude:conservative-1011 [B hfd_hc]",
    "target": null,
-   "t": "2026-10-11T14:47:27-07:00",
+   "t": "2026-10-11T21:22:19-07:00",
    "adopted": true
   },
   "ot_dsrom_hc_seed_join": {
@@ -1791,7 +1791,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-coll",
    "target": null,
-   "t": "2026-10-11T15:28:44-07:00",
+   "t": "2026-10-11T21:30:31-07:00",
    "adopted": true
   },
   "ot_hgi_argmax18_m": {
@@ -1807,6 +1807,21 @@
    "owner": "Claude:hgi-takeover",
    "target": null,
    "t": "2026-10-10T16:47:22-07:00",
+   "adopted": true
+  },
+  "ot_dsrom_aq12t": {
+   "job": "el1011-pqc-aq12t-d-9b9338026-tc-cl",
+   "commit": "9b9338026",
+   "bench": "bench_aq12t_lockstep_exact",
+   "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
+   "cycles": 40000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-ds-misc",
+   "target": null,
+   "t": "2026-10-11T21:55:03-07:00",
    "adopted": true
   },
   "ot_hbm_native_candidate_parse": {
@@ -1851,7 +1866,7 @@
    "stalled": false,
    "owner": "Claude:drive-0158",
    "target": null,
-   "t": "2026-10-10T19:21:56-07:00",
+   "t": "2026-10-11T21:26:24-07:00",
    "adopted": true
   },
   "dsfd_colt_lane": {
@@ -1884,6 +1899,21 @@
    "t": "2026-10-09T19:48:12-07:00",
    "adopted": true
   },
+  "ot_qkvd_fbuf8": {
+   "job": "qkd_fbuf8-a-87a8d98ac-tc-hm10-ka",
+   "commit": "87a8d98ac",
+   "bench": "bench_fbuf8_d8",
+   "line": "PASS buf_tile D=8 cycles=200000 pops=70919 head_gap_cycles=13082",
+   "cycles": 200000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-kvd",
+   "target": null,
+   "t": "2026-10-11T21:14:11-07:00",
+   "adopted": true
+  },
   "qfd_embed_code_bank_retained": {
    "job": "qfd_embed_code_bank_retained-24bd6a53b-tt",
    "commit": "24bd6a53b",
@@ -1911,7 +1941,7 @@
    "stalled": false,
    "owner": "Claude:sys-takeover",
    "target": null,
-   "t": "2026-10-10T01:09:24-07:00",
+   "t": "2026-10-11T21:18:49-07:00",
    "adopted": true
   },
   "dsfd_svcio_job": {
@@ -2005,7 +2035,7 @@
    "stalled": false,
    "owner": "Claude:sys-takeover",
    "target": null,
-   "t": "2026-10-10T17:46:54-07:00",
+   "t": "2026-10-11T21:18:44-07:00",
    "adopted": true
   },
   "dsfd_svch_pcs": {
@@ -2065,7 +2095,7 @@
    "stalled": false,
    "owner": "Claude:el1011-ds-vm/be",
    "target": null,
-   "t": "2026-10-11T19:19:35-07:00",
+   "t": "2026-10-11T21:46:20-07:00",
    "adopted": true
   },
   "ot_hgi_coll_row_formatter": {
@@ -2099,21 +2129,6 @@
    "kind": "MEASURED_ACCEPT",
    "accept_spaced": true,
    "dense": true
-  },
-  "ot_dsrom_aq12t": {
-   "job": "el1011-pqc-aq12t-a-cc60cd537-tc-cl",
-   "commit": "cc60cd537",
-   "bench": "bench_aq12t_lockstep_exact",
-   "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
-   "cycles": 40000,
-   "item": null,
-   "items": null,
-   "ii": null,
-   "stalled": false,
-   "owner": "Claude:el1011-ds-misc",
-   "target": null,
-   "t": "2026-10-11T20:32:13-07:00",
-   "adopted": true
   },
   "qfd_seq_su_bi_fea": {
    "job": "qfd_seq_su_bi-fearl-19fe61d1d-tc-hm0-cl",
@@ -2247,7 +2262,7 @@
    "stalled": false,
    "owner": "Claude:redesign-hbm",
    "target": null,
-   "t": "2026-10-10T06:26:00-07:00",
+   "t": "2026-10-11T20:57:47-07:00",
    "adopted": true
   },
   "qfd_seq_su_bi_feb": {
@@ -2414,7 +2429,7 @@
    "stalled": false,
    "owner": "Claude:qwen-blocks",
    "target": null,
-   "t": "2026-10-10T02:57:06-07:00",
+   "t": "2026-10-11T21:21:27-07:00",
    "adopted": true
   },
   "ot_dsrom_hc_mean_capture": {
@@ -2462,21 +2477,6 @@
    "t": "2026-10-11T08:48:53-07:00",
    "adopted": true
   },
-  "ot_qkvd_fbuf8": {
-   "job": "qkd_fbuf8-a-0feeb971e-tc-hm10-cl",
-   "commit": "0feeb971e",
-   "bench": "bench_fbuf8_d8",
-   "line": "PASS buf_tile D=8 cycles=200000 pops=70919 head_gap_cycles=13082",
-   "cycles": 200000,
-   "item": null,
-   "items": null,
-   "ii": null,
-   "stalled": false,
-   "owner": "Claude:el1011-q-kvd",
-   "target": null,
-   "t": "2026-10-11T18:45:28-07:00",
-   "adopted": true
-  },
   "ot_qkvd_sbuf": {
    "job": "qkd_sbuf-b-0feeb971e-tc-hm10-cl",
    "commit": "0feeb971e",
@@ -2489,7 +2489,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-kvd",
    "target": null,
-   "t": "2026-10-11T16:07:28-07:00",
+   "t": "2026-10-11T21:37:54-07:00",
    "adopted": true
   },
   "ot_dsrom_su_hcpost_lane_pr": {
@@ -2805,6 +2805,18 @@
    ]
   },
   {
+   "path": "results/rtl/tput_map_1011/qwen_sfu/record.json",
+   "commit": "f54a78490",
+   "cls": "SFU.GLU",
+   "model": "Qwen AR 8K (HBM)",
+   "ratio": 1.933,
+   "elements": [
+    "hfd_sfu",
+    "hfd_sfu_tile",
+    "ot_hgi_sfu_record"
+   ]
+  },
+  {
    "path": "results/rtl/tput_map_1011/svc_stream/record.json",
    "commit": "2269e5375",
    "cls": "SVC.STREAM",
@@ -2861,6 +2873,7 @@
   "ot_qkh_lane8": "ot_qwen_nearhbm_head_h",
   "ot_qwen_nearhbm_attn_hub_t": "ot_qwen_nearhbm_attn_hub_p",
   "qfd_tile_lsl": "qfd_tile",
+  "qfd_tile_nk": "qfd_tile",
   "qfd_vm_grp": "qfd_sp_vector_memory"
  },
  "bf_hier": {
@@ -2901,7 +2914,7 @@
  },
  "wave_bench": {
   "path": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json",
-  "commit": "766396b41",
+  "commit": "af4831818",
   "qualify_ratio": 1.1,
   "charges": [
    {
@@ -3236,7 +3249,6 @@
  "rom_block_coverage": {
   "dsfd_cap_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_cb": "^dsfd_coll_",
-  "dsfd_coll_cbfj": "^dsfd_coll_",
   "dsfd_coll_cbh": "^dsfd_coll_",
   "dsfd_coll_cbj": "^dsfd_coll_",
   "dsfd_coll_ce": "^dsfd_coll_",
@@ -3244,6 +3256,8 @@
   "dsfd_coll_cele": "^dsfd_coll_",
   "dsfd_coll_celp": "^dsfd_coll_",
   "dsfd_coll_ceq": "^dsfd_coll_",
+  "dsfd_coll_ceq0": "^dsfd_coll_",
+  "dsfd_coll_ceqp": "^dsfd_coll_",
   "dsfd_coll_ces0": "^dsfd_coll_",
   "dsfd_coll_cesn": "^dsfd_coll_",
   "dsfd_coll_ct": "^dsfd_coll_",
@@ -3448,7 +3462,7 @@
   "qfd_sysctl_sram": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_sysctl_stn": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_tile_lsl": "tile of qfd_tile",
-  "qfd_tile_nk": null,
+  "qfd_tile_nk": "tile of qfd_tile",
   "qfd_tt_ctl": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_ctlm": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_up4": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
@@ -4804,7 +4818,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
    },
    "ops": [
     {
@@ -4813,7 +4827,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
     }
    ],
    "bench_ii": {
@@ -5004,28 +5018,6 @@
     }
    ]
   },
-  "dsfd_coll_cbfj": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:coll",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-   },
-   "ops": [
-    {
-     "op": "class:coll",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-    }
-   ]
-  },
   "dsfd_coll_cbh": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -5159,6 +5151,50 @@
    ]
   },
   "dsfd_coll_ceq": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_ceq0": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_ceqp": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -5375,7 +5411,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_lane.adapters measured / price 1.0"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge mtp_lane.adapters measured / price 1.0"
    },
    "ops": [
     {
@@ -5384,7 +5420,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_lane.adapters measured / price 1.0"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge mtp_lane.adapters measured / price 1.0"
     }
    ]
   },
@@ -5397,7 +5433,7 @@
     "status": "QUALIFIED",
     "ratio": 0.8824,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.link_ends measured / price 0.8824"
    },
    "ops": [
     {
@@ -5406,7 +5442,7 @@
      "status": "QUALIFIED",
      "ratio": 0.8824,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.link_ends measured / price 0.8824"
     }
    ],
    "bench_ii": {
@@ -5434,7 +5470,7 @@
     "status": "QUALIFIED",
     "ratio": 0.8824,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.lane_adapters measured / price 0.8824"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.lane_adapters measured / price 0.8824"
    },
    "ops": [
     {
@@ -5443,7 +5479,7 @@
      "status": "QUALIFIED",
      "ratio": 0.8824,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.lane_adapters measured / price 0.8824"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.lane_adapters measured / price 0.8824"
     }
    ],
    "bench_ii": {
@@ -5473,7 +5509,7 @@
     "status": "QUALIFIED",
     "ratio": 0.8824,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.lane_adapters measured / price 0.8824"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.lane_adapters measured / price 0.8824"
    },
    "ops": [
     {
@@ -5482,7 +5518,7 @@
      "status": "QUALIFIED",
      "ratio": 0.8824,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.lane_adapters measured / price 0.8824"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.lane_adapters measured / price 0.8824"
     }
    ],
    "bench_ii": {
@@ -6498,7 +6534,7 @@
     "status": "QUALIFIED",
     "ratio": 0.9879,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge hrow.transport measured / price 0.9879"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge hrow.transport measured / price 0.9879"
    },
    "ops": [
     {
@@ -6507,7 +6543,7 @@
      "status": "QUALIFIED",
      "ratio": 0.9879,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge hrow.transport measured / price 0.9879"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge hrow.transport measured / price 0.9879"
     }
    ]
   },
@@ -6542,7 +6578,7 @@
     "status": "QUALIFIED",
     "ratio": 0.7386,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge seedl.launch measured / price 0.7386"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge seedl.launch measured / price 0.7386"
    },
    "ops": [
     {
@@ -6551,7 +6587,7 @@
      "status": "QUALIFIED",
      "ratio": 0.7386,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge seedl.launch measured / price 0.7386"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge seedl.launch measured / price 0.7386"
     }
    ],
    "bench_ii": {
@@ -6604,7 +6640,7 @@
     "status": "QUALIFIED",
     "ratio": 0.8036,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_seq.seed_release measured / price 0.8036"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge mtp_seq.seed_release measured / price 0.8036"
    },
    "ops": [
     {
@@ -6613,7 +6649,7 @@
      "status": "QUALIFIED",
      "ratio": 0.8036,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_seq.seed_release measured / price 0.8036"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge mtp_seq.seed_release measured / price 0.8036"
     }
    ],
    "bench_ii": {
@@ -6641,7 +6677,7 @@
     "status": "QUALIFIED",
     "ratio": 0.8824,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.link_ends measured / price 0.8824"
    },
    "ops": [
     {
@@ -6650,7 +6686,7 @@
      "status": "QUALIFIED",
      "ratio": 0.8824,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.link_ends measured / price 0.8824"
     }
    ],
    "bench_ii": {
@@ -7631,7 +7667,7 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-vm/be",
     "target": null,
-    "t": "2026-10-11T19:19:35-07:00",
+    "t": "2026-10-11T21:46:20-07:00",
     "adopted": true
    }
   },
@@ -7815,7 +7851,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
    },
    "ops": [
     {
@@ -7824,7 +7860,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge draft_head.pipe_regs.vm_mtp_ep measured / price 1.0"
     }
    ],
    "bench_ii": {
@@ -7852,7 +7888,7 @@
     "status": "QUALIFIED",
     "ratio": 0.8824,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.link_ends measured / price 0.8824"
    },
    "ops": [
     {
@@ -7861,7 +7897,7 @@
      "status": "QUALIFIED",
      "ratio": 0.8824,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.link_ends measured / price 0.8824"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.link_ends measured / price 0.8824"
     }
    ],
    "bench_ii": {
@@ -7889,7 +7925,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
@@ -7898,7 +7934,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -7926,7 +7962,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
@@ -7935,7 +7971,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -7963,7 +7999,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
@@ -7972,7 +8008,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -8000,7 +8036,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_tok.edges measured / price 1.0"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_tok.edges measured / price 1.0"
    },
    "ops": [
     {
@@ -8009,7 +8045,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_tok.edges measured / price 1.0"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_tok.edges measured / price 1.0"
     }
    ]
   },
@@ -8022,7 +8058,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
@@ -8031,7 +8067,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -8334,7 +8370,7 @@
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
     "owner": "Claude:conservative-1011 [B hfd_hc]",
-    "src": "closure job hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    "src": "closure job hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
    },
    "ops": [
     {
@@ -8343,12 +8379,12 @@
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
      "owner": "Claude:conservative-1011 [B hfd_hc]",
-     "src": "closure job hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
+     "src": "closure job hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
     }
    ],
    "bench_ii": {
-    "job": "hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl",
-    "commit": "5c35b1a6e",
+    "job": "hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl",
+    "commit": "c95527ec0",
     "bench": "bench_hc_tile_xl_pos",
     "line": "TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100",
     "cycles": 600,
@@ -8358,7 +8394,7 @@
     "stalled": false,
     "owner": "Claude:conservative-1011 [B hfd_hc]",
     "target": null,
-    "t": "2026-10-11T14:47:27-07:00",
+    "t": "2026-10-11T21:22:19-07:00",
     "adopted": true
    }
   },
@@ -8620,46 +8656,46 @@
    ]
   },
   "hfd_sfu": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.933,
    "limiting": {
     "op": "SFU.GLU",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010",
-    "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.933,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
    },
    "ops": [
     {
      "op": "SFU.GLU",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010",
-     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.933,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
     }
    ]
   },
   "hfd_sfu_tile": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.933,
    "limiting": {
     "op": "SFU.GLU",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010",
-    "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.933,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
    },
    "ops": [
     {
      "op": "SFU.GLU",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010",
-     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.933,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
     }
    ]
   },
@@ -9619,7 +9655,7 @@
     "stalled": false,
     "owner": "Claude:redesign-hbm",
     "target": null,
-    "t": "2026-10-10T06:26:00-07:00",
+    "t": "2026-10-11T20:57:47-07:00",
     "adopted": true
    }
   },
@@ -9698,7 +9734,7 @@
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
     "owner": "Claude:el1011-ds-misc",
-    "src": "closure job el1011-pqc-aq12t-a-cc60cd537-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    "src": "closure job el1011-pqc-aq12t-d-9b9338026-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
    },
    "ops": [
     {
@@ -9707,12 +9743,12 @@
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
      "owner": "Claude:el1011-ds-misc",
-     "src": "closure job el1011-pqc-aq12t-a-cc60cd537-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
+     "src": "closure job el1011-pqc-aq12t-d-9b9338026-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
     }
    ],
    "bench_ii": {
-    "job": "el1011-pqc-aq12t-a-cc60cd537-tc-cl",
-    "commit": "cc60cd537",
+    "job": "el1011-pqc-aq12t-d-9b9338026-tc-cl",
+    "commit": "9b9338026",
     "bench": "bench_aq12t_lockstep_exact",
     "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
     "cycles": 40000,
@@ -9722,7 +9758,7 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-misc",
     "target": null,
-    "t": "2026-10-11T20:32:13-07:00",
+    "t": "2026-10-11T21:55:03-07:00",
     "adopted": true
    }
   },
@@ -9738,6 +9774,14 @@
     "src": "results/rtl/tput_map_1011/ds_embed/record.json @ 2269e5375: [\"production shape = one token's engram lookup at its home ROM stage (layers 1 / 14), 200 ns HBM read (technology.json upper bound), 4-rank TP lane with a local link; the all-gather (1,426 priced) is a separate node and not part of this rat"
    },
    "ops": [
+    {
+     "op": "class:embed",
+     "model": "ds_rom_mtp",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
+    },
     {
      "op": "class:embed",
      "model": "ds_rom",
@@ -9784,6 +9828,14 @@
    "ops": [
     {
      "op": "class:embed",
+     "model": "ds_rom_mtp",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
+    },
+    {
+     "op": "class:embed",
      "model": "ds_rom",
      "status": "QUALIFIED",
      "ratio": 1.017,
@@ -9804,6 +9856,14 @@
     "src": "results/rtl/tput_map_1011/ds_embed/record.json @ 2269e5375: [\"production shape = one token's engram lookup at its home ROM stage (layers 1 / 14), 200 ns HBM read (technology.json upper bound), 4-rank TP lane with a local link; the all-gather (1,426 priced) is a separate node and not part of this rat"
    },
    "ops": [
+    {
+     "op": "class:embed",
+     "model": "ds_rom_mtp",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
+    },
     {
      "op": "class:embed",
      "model": "ds_rom",
@@ -10090,7 +10150,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge markov.floor measured / price 1.0"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge markov.floor measured / price 1.0"
    },
    "ops": [
     {
@@ -10099,7 +10159,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge markov.floor measured / price 1.0"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge markov.floor measured / price 1.0"
     }
    ]
   },
@@ -10134,7 +10194,7 @@
     "status": "QUALIFIED",
     "ratio": 0.8036,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_seq.seed_release measured / price 0.8036"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge mtp_seq.seed_release measured / price 0.8036"
    },
    "ops": [
     {
@@ -10143,7 +10203,7 @@
      "status": "QUALIFIED",
      "ratio": 0.8036,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_seq.seed_release measured / price 0.8036"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge mtp_seq.seed_release measured / price 0.8036"
     }
    ]
   },
@@ -10417,7 +10477,7 @@
     "status": "QUALIFIED",
     "ratio": 0.5158,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.intervals measured / price 0.5158"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.intervals measured / price 0.5158"
    },
    "ops": [
     {
@@ -10426,7 +10486,7 @@
      "status": "QUALIFIED",
      "ratio": 0.5158,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.intervals measured / price 0.5158"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.intervals measured / price 0.5158"
     }
    ],
    "bench_ii": {
@@ -10456,7 +10516,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
@@ -10465,7 +10525,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -11108,6 +11168,14 @@
     "src": "results/rtl/tput_map_1011/ds_embed/record.json @ 2269e5375: [\"production shape = one token's engram lookup at its home ROM stage (layers 1 / 14), 200 ns HBM read (technology.json upper bound), 4-rank TP lane with a local link; the all-gather (1,426 priced) is a separate node and not part of this rat"
    },
    "ops": [
+    {
+     "op": "class:embed",
+     "model": "ds_rom_mtp",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "-",
+     "src": "results/arch/token_path_20261009/ds_rom_mtp.json"
+    },
     {
      "op": "class:embed",
      "model": "ds_rom",
@@ -11784,24 +11852,24 @@
    ]
   },
   "ot_hgi_sfu_record": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.933,
    "limiting": {
     "op": "SFU.GLU",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010",
-    "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.933,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
    },
    "ops": [
     {
      "op": "SFU.GLU",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010",
-     "src": "budget_audit table.json qwen_su_sfu (SU/SFU staging, same row)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.933,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
     }
    ]
   },
@@ -12068,7 +12136,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_commit measured / price 1.0"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge mtp_commit measured / price 1.0"
    },
    "ops": [
     {
@@ -12077,7 +12145,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge mtp_commit measured / price 1.0"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge mtp_commit measured / price 1.0"
     }
    ]
   },
@@ -12090,7 +12158,7 @@
     "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
    },
    "ops": [
     {
@@ -12099,7 +12167,7 @@
      "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
     }
    ]
   },
@@ -12112,7 +12180,7 @@
     "status": "QUALIFIED_BY_BOUND",
     "ratio": null,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
    },
    "ops": [
     {
@@ -12121,7 +12189,7 @@
      "status": "QUALIFIED_BY_BOUND",
      "ratio": null,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: exact in the loop (rollback reads checked); no token-path charge: Engram history read (read -> last token), off the token-path charges"
     }
    ]
   },
@@ -12134,7 +12202,7 @@
     "status": "UNQUALIFIED",
     "ratio": 1.1143,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.core_transaction measured / price 1.1143"
    },
    "ops": [
     {
@@ -12143,7 +12211,7 @@
      "status": "UNQUALIFIED",
      "ratio": 1.1143,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.core_transaction measured / price 1.1143"
     }
    ],
    "bench_ii": {
@@ -12261,7 +12329,7 @@
     "status": "UNQUALIFIED",
     "ratio": 1.1143,
     "owner": "el1011-ds-mtp",
-    "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
+    "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.core_transaction measured / price 1.1143"
    },
    "ops": [
     {
@@ -12270,7 +12338,7 @@
      "status": "UNQUALIFIED",
      "ratio": 1.1143,
      "owner": "el1011-ds-mtp",
-     "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
+     "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.core_transaction measured / price 1.1143"
     }
    ]
   },
@@ -12283,7 +12351,7 @@
     "status": "UNQUALIFIED",
     "ratio": 1.1143,
     "owner": "el1011-ds-mtp",
-    "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
+    "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.core_transaction measured / price 1.1143"
    },
    "ops": [
     {
@@ -12292,7 +12360,7 @@
      "status": "UNQUALIFIED",
      "ratio": 1.1143,
      "owner": "el1011-ds-mtp",
-     "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
+     "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.core_transaction measured / price 1.1143"
     }
    ]
   },
@@ -12305,7 +12373,7 @@
     "status": "UNQUALIFIED",
     "ratio": 1.1143,
     "owner": "el1011-ds-mtp",
-    "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
+    "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.core_transaction measured / price 1.1143"
    },
    "ops": [
     {
@@ -12314,7 +12382,7 @@
      "status": "UNQUALIFIED",
      "ratio": 1.1143,
      "owner": "el1011-ds-mtp",
-     "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge p2.core_transaction measured / price 1.1143"
+     "src": "tput-map-1011 TILE_OF ^ot_p2h_ -> ot_mtp_p2_prefix_path: results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ af4831818: charge p2.core_transaction measured / price 1.1143"
     }
    ]
   },
@@ -12384,8 +12452,8 @@
     }
    ],
    "bench_ii": {
-    "job": "qkd_fbuf8-a-0feeb971e-tc-hm10-cl",
-    "commit": "0feeb971e",
+    "job": "qkd_fbuf8-a-87a8d98ac-tc-hm10-ka",
+    "commit": "87a8d98ac",
     "bench": "bench_fbuf8_d8",
     "line": "PASS buf_tile D=8 cycles=200000 pops=70919 head_gap_cycles=13082",
     "cycles": 200000,
@@ -12395,7 +12463,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-kvd",
     "target": null,
-    "t": "2026-10-11T18:45:28-07:00",
+    "t": "2026-10-11T21:14:11-07:00",
     "adopted": true
    }
   },
@@ -12476,7 +12544,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-kvd",
     "target": null,
-    "t": "2026-10-11T16:07:28-07:00",
+    "t": "2026-10-11T21:37:54-07:00",
     "adopted": true
    }
   },
@@ -13479,7 +13547,7 @@
     "stalled": false,
     "owner": "Claude:sys-takeover",
     "target": null,
-    "t": "2026-10-10T17:46:54-07:00",
+    "t": "2026-10-11T21:18:44-07:00",
     "adopted": true
    }
   },
@@ -13516,7 +13584,7 @@
     "stalled": false,
     "owner": "Claude:sys-takeover",
     "target": null,
-    "t": "2026-10-10T01:09:24-07:00",
+    "t": "2026-10-11T21:18:49-07:00",
     "adopted": true
    }
   },
@@ -13553,7 +13621,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-coll",
     "target": null,
-    "t": "2026-10-11T15:28:44-07:00",
+    "t": "2026-10-11T21:30:31-07:00",
     "adopted": true
    }
   },
@@ -13590,7 +13658,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-coll",
     "target": null,
-    "t": "2026-10-11T15:29:05-07:00",
+    "t": "2026-10-11T21:33:25-07:00",
     "adopted": true
    }
   },
@@ -14771,7 +14839,7 @@
     "stalled": false,
     "owner": "Claude:qwen-blocks",
     "target": null,
-    "t": "2026-10-10T02:57:06-07:00",
+    "t": "2026-10-11T21:21:27-07:00",
     "adopted": true
    }
   },
@@ -15629,7 +15697,7 @@
     "stalled": false,
     "owner": "Claude:struct-close",
     "target": null,
-    "t": "2026-10-10T19:14:24-07:00",
+    "t": "2026-10-11T21:23:35-07:00",
     "adopted": true
    }
   },
@@ -16100,24 +16168,24 @@
    }
   },
   "qfd_tile_nk": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
-    "op": "unmapped",
-    "model": "rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "op": "tile of qfd_tile: class:me",
+    "model": "qwen_rom",
+    "status": "QUALIFIED",
     "ratio": null,
     "owner": "-",
-    "src": "no token-path class and no name rule"
+    "src": "tput-map-1011 TILE_OF ^qfd_tile_nk -> qfd_tile: results/arch/token_path_20261009/qwen_rom.json"
    },
    "ops": [
     {
-     "op": "unmapped",
-     "model": "rom",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "op": "tile of qfd_tile: class:me",
+     "model": "qwen_rom",
+     "status": "QUALIFIED",
      "ratio": null,
      "owner": "-",
-     "src": "no token-path class and no name rule"
+     "src": "tput-map-1011 TILE_OF ^qfd_tile_nk -> qfd_tile: results/arch/token_path_20261009/qwen_rom.json"
     }
    ]
   },

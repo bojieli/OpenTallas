@@ -30,6 +30,9 @@ const TABS = [
   ['density', 'Density', 'Cell density, pin density and routed-wire demand per bin.'],
   ['rtl', 'RTL', 'Structure from the elaborated RTL, the reference model the bench names, and the source at the closure\u2019s commit. Select a module to light its cells.'],
   ['facts', 'Facts', 'Key numbers, throughput qualification against the budget, and every sign-off and layout fact with its record.']];
+TABS.push(['how', 'How it works', 'What the element does and how, step by step: the curated stories that walk its datapath (shell.js).']);
+const SHELL = window.ElemShell || null;   // header, breadcrumb, tab availability (shell.js + /api/explorer/elem_shell)
+const PATH_EL = (() => { const m = location.pathname.match(/^\/explorer\/element\/([^/]+)$/); return m && m[1] !== 'index.html' ? decodeURIComponent(m[1]) : null; })();
 const LAYOUT_TABS = new Set(['layout', 'timing', 'arrival', 'tree', 'density']);
 const PAL = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#17becf', '#bcbd22', '#8c6bb1'];
 const OTHER = '#7c86a6', UNATTR = '#4a5678';
@@ -60,18 +63,22 @@ async function init(){
   let pages = {pages: [], elements: {}};
   try { pages = await getJSON('pages.json' + QS); } catch (e) {}
   S.pages = pages;
-  let pid = QP.get('p'), eid = QP.get('e');
+  let pid = QP.get('p'), eid = QP.get('e') || PATH_EL;
   let page = pages.pages.find(p => p.id === pid);
-  if (!page && eid) page = pages.pages.find(p => p.elements.length === 1 && p.elements[0] === eid) || {id: eid, elements: [eid], title: null, summary: null, blocks: []};
+  // one element: the shell resolves the data id (an export may sit under the closing job's block name) and fills the header
+  S.shell = !page && eid && SHELL ? await SHELL.load(eid) : null;
+  const did = S.shell && S.shell.data ? S.shell.data : eid;
+  if (!page && eid) page = pages.pages.find(p => p.elements.length === 1 && p.elements[0] === did) || {id: did, elements: [did], title: null, summary: null, blocks: []};
   if (!page) page = pages.pages[0];
   if (!page){ $('sum').textContent = 'No element pages are installed yet.'; return; }
   S.page = page;
-  document.title = (page.title || 'Element Layout').slice(0, 40);
-  $('title').textContent = page.title || page.elements.join(' vs ');
+  if (!S.shell) document.title = (page.title || 'Element Layout').slice(0, 40);
+  if (!S.shell) $('title').textContent = page.title || page.elements.join(' vs ');
   S.tab = hashTab() || 'geo';
   renderTabs();
   buildStage();
   const els = await Promise.all(page.elements.map(async (id, k) => {
+    if (S.shell && !S.shell.data) return {id, err: S.shell.missing || 'no routed data', k, pane: S.panes[k]};
     try {
       const d = await getJSON('data/' + encodeURIComponent(id) + '.json' + QS);
       if (!d.geom) return {id, d, k, pane: S.panes[k], nolayout: true, M: {status: (d.facts.find(f => f.k === 'status') || {}).v, recTT: factv(d, /setup WNS \(sign-off/), recFF: factv(d, /^FF hold WNS \(sign-off/), drc: factv(d, /^DRC$/)}};
@@ -81,12 +88,14 @@ async function init(){
     } catch (e) { return {id, err: String(e), k, pane: S.panes[k]}; }
   }));
   S.els = els;
-  if (!page.title) $('title').textContent = els.map(E => E.d ? E.d.label + (E.d.target ? ' · ' + E.d.target : '') : E.id).join(' vs ');
+  if (!page.title && !S.shell) $('title').textContent = els.map(E => E.d ? E.d.label + (E.d.target ? ' · ' + E.d.target : '') : E.id).join(' vs ');
   document.title = ($('title').textContent || 'Element').slice(0, 40);
   const sumtxt = page.summary || els.filter(E => E.d).map(E => [E.d.category, E.d.role && E.d.role !== E.d.category ? E.d.role : null, E.d.nosta && E.d.layout ? 'timing not re-run (sources released)' : null].filter(Boolean).join(' · ')).join(' | ');
   $('sum').textContent = sumtxt; $('sum').parentNode.hidden = !sumtxt;
   els.forEach(E => { const p = E.pane; p.busy.textContent = E.err ? 'Could not load ' + E.id + ': ' + E.err : E.nolayout ? 'Layout data released: the closure loop deleted this job\u2019s routed DB before the page existed. RTL and Facts remain.' : ''; p.busy.hidden = !(E.err || E.nolayout); });
   if (LAYOUT_TABS.has(S.tab) && els.every(E => E.nolayout || E.err)){ S.tab = 'facts'; renderTabs(); }
+  if (SHELL && !SHELL.tab(S.tab, S).ok){ S.tab = 'facts'; }
+  renderTabs();
   chooseLayout();
   S.depth = +lsGet('depth.' + page.id, 0) || null;
   regroup();
@@ -245,9 +254,21 @@ function resolveReg(E, name){
 
 /* ------------------------------------------------------------------ tabs */
 function renderTabs(){
-  $('tabs').innerHTML = TABS.map(([k, t]) => `<button type="button" role="tab" data-tab="${k}" aria-selected="${S.tab === k}">${t}</button>`).join('');
-  $('tabs').querySelectorAll('[data-tab]').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  const av = k => SHELL ? SHELL.tab(k, S) : {ok: true};
+  $('tabs').innerHTML = TABS.map(([k, t]) => { const a = av(k);
+    return `<button type="button" role="tab" data-tab="${k}" aria-selected="${S.tab === k}" tabindex="${S.tab === k ? 0 : -1}"${a.ok ? '' : ` aria-disabled="true" title="${esc(a.why)}"`}>${t}</button>`; }).join('');
+  $('tabs').querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { const a = av(b.dataset.tab);
+    if (a.ok) setTab(b.dataset.tab); else $('tabdesc').textContent = (TABS.find(t => t[0] === b.dataset.tab) || [])[1] + ' is unavailable: ' + a.why + '.'; });
+  // roving focus: arrow keys move along the tab bar, Home / End jump
+  $('tabs').onkeydown = e => { const bs = [...$('tabs').querySelectorAll('[data-tab]')], i = bs.indexOf(document.activeElement); if (i < 0) return;
+    const j = e.key === 'ArrowRight' ? (i + 1) % bs.length : e.key === 'ArrowLeft' ? (i - 1 + bs.length) % bs.length : e.key === 'Home' ? 0 : e.key === 'End' ? bs.length - 1 : -1;
+    if (j >= 0){ e.preventDefault(); bs[j].focus(); } };
   $('tabdesc').textContent = (TABS.find(t => t[0] === S.tab) || [])[2] || '';
+  const na = TABS.map(([k, t]) => [t, av(k)]).filter(([, a]) => !a.ok);
+  // one line per distinct reason, naming the tabs it greys out
+  const by = new Map(); na.forEach(([t, a]) => by.set(a.why, (by.get(a.why) || []).concat(t)));
+  $('tabna').innerHTML = [...by].map(([why, ts]) => `<b>${esc(ts.join(', '))}</b>: ${esc(why)}`).join('<br>');
+  $('tabna').hidden = !na.length;
 }
 function setTab(k){
   S.tab = k; renderTabs();
@@ -272,7 +293,7 @@ function renderGeo(){
     onFallback: () => setTab('layout')});
   if (window.LayoutViewer) go();
   else {
-    lvLoading = lvLoading || new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'layout.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    lvLoading = lvLoading || new Promise((res, rej) => { const s = document.createElement('script'); s.src = '/explorer/element/layout.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
     lvLoading.then(go).catch(e => { $('geo').innerHTML = '<div class="lv-busy">Layout viewer failed to load: ' + esc(String(e)) + '</div>'; });
   }
   return true;
@@ -280,6 +301,7 @@ function renderGeo(){
 function render(){
   document.body.className = 'tab-' + S.tab;
   if (renderGeo()) return;
+  if (SHELL && SHELL.render(S)) return;
   S.els.forEach(E => { if (!E.err && !E.nolayout && (!E.view || E.view.auto)) fit(E); });
   renderSide(); redrawAll();
 }
