@@ -138,6 +138,15 @@ def main():
         vin.update({cb + j: int(f32w(pre)[j]) for j in range(4)})
         gb = (f32w(w) >> 16).astype(np.uint32)
         hb = {(bb >> 2) + i // 2: int(gb[i]) | (int(gb[i + 1]) << 16 if i + 1 < D else 0) for i in range(0, D, 2)}
+        if os.environ.get('FUSED_HLL', '0') == '1' and D == 5120:
+            # el1011-hbm-fused GPK (compiler layout rule for the lane-local engine, d = HCD): the gain image is BF16
+            # packed LANE-LOCAL: data sector s (8 elements) -> packed sector (s mod 32) + 32 floor(s / 64), half
+            # (s / 32) mod 2 (words 0..3 | 4..7), element pair i // 2 in the word, low half = even element
+            hb = {}
+            for e in range(D):
+                s_, i_ = divmod(e, 8)
+                wd = (bb >> 2) + 8 * ((s_ % 32) + 32 * (s_ // 64)) + 4 * ((s_ // 32) % 2) + i_ // 2
+                hb[wd] = hb.get(wd, 0) | (int(gb[e]) << (16 * (i_ % 2)))
         dd = rec(0, [md(space=1, base=ab, n=4 * D), md(space=0, fmt=1, base=bb, n=D), md(space=1, base=cb, n=4), 0,
                      md(space=1, fmt=1, base=ob, n=D), 0, 0], [4 * D, D, 4, 0, D, 0, 0], imm=int(np.float32(eps).view(np.uint32)))
         add([dd], vin, {ob + i: int(v) for i, v in enumerate(f32w(y))}, hb)
