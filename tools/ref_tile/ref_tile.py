@@ -841,7 +841,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             "# ref_tile: exact abutment pins first (IO_CONSTRAINTS is otherwise sourced only at 3_2_place_iop, where it\n"
             "# re-applies the same placement), then the spec's POST_TAPCELL hook (boundary flops FIRM at their pins)\n"
             f"source /src/{s['io_tcl']}\n"
-            f"source /src/{s['orfs_vars']['POST_TAPCELL_TCL']}\n")
+            f"source /src/{s['orfs_vars']['POST_TAPCELL_TCL']}\n"
+            "# then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when\n"
+            "# a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)\n"
+            "foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
     job = gen_job(s, kd, commit, blocks)
     files["job.json"] = json.dumps(job, indent=1) + "\n"
     if write:
