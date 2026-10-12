@@ -36,7 +36,10 @@
 //   issues, before its sectors landed (the bench then overwrites the VM source): must FAIL.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_back #(
-    parameter integer NS = 4,
+    parameter integer NS = 4,             // stacks written: 4 = the pre-B2 die view (one engine, central VM); 1 = HBM B2: one
+                                          //   instance per cluster on its LOCAL VM slice port, writing its own stack STK only
+    parameter integer STK = 0,            // the first stack written (B2: the cluster's stack); a row on a stack outside
+                                          //   [STK, STK + NS) faults
     parameter integer NL = 8,
     parameter integer SBIT = 35,          // stack select = HBM byte address [SBIT+1:SBIT]
     parameter [35:0] STACK_BYTES = 36'd22500000000,
@@ -63,7 +66,7 @@ module ot_hgi_dma_back #(
     input  wire [NS*NL-1:0]         wd_cr,       // the svc popped a beat of the lane (one credit back)
     input  wire [NS*4-1:0]          wa           // per stack: sectors written this cycle (0..8, posted acknowledgements)
 );
-    localparam integer NB = NS * NL;            // 32 VM lanes = 4 bank groups of 8
+    localparam integer NB = 32;                 // VM read lanes (= the slice's banks) = 4 bank groups of 8
     localparam integer LW = $clog2(LQ);
     // ---------------------------------------------------------------- reset relay: a region a bank group + control
     wire [NS:0] rl;
@@ -75,7 +78,7 @@ module ot_hgi_dma_back #(
     always @(posedge clk or negedge rc)
         if (!rc) begin g_gnt <= 1'b0; vcp <= '0; rr_v <= '0; wcp <= '0; wap <= '0; end
         else begin
-            g_gnt <= vr2r[8256]; vcp <= vr2r[8255:8224]; wcp <= wd_cr; wap <= wa;
+            g_gnt <= vr2r[8256]; vcp <= vr2r[8255:8224]; wcp <= NB'(wd_cr); wap <= wa;
             for (integer b = 0; b < NB; b = b + 1) rr_v[b] <= vr2r[b*257 + 256];
         end
     always @(posedge clk) for (integer b = 0; b < NB; b = b + 1) rr_d[b] <= vr2r[b*257 +: 256];   // data: no reset
@@ -181,7 +184,7 @@ module ot_hgi_dma_back #(
             for (integer t = 3; t >= 0; t = t - 1) begin : cand
                 reg [1:0] g; integer b;
                 g = 2'(p_rr[o] + 2'(t)); b = g * 8 + l;
-                if (sk_n[b] != 2'd0 && sk[b][sk_h[b]][256 + SBIT - 5 +: 2] == 2'(s) && w_cr[o] != 6'd0) begin p_v[o] = 1'b1; p_g[o] = g; end
+                if (sk_n[b] != 2'd0 && sk[b][sk_h[b]][256 + SBIT - 5 +: 2] == 2'(STK + s) && w_cr[o] != 6'd0) begin p_v[o] = 1'b1; p_g[o] = g; end
             end
             if (p_v[o]) pop[p_g[o] * 8 + l] = 1'b1;
         end
@@ -250,7 +253,8 @@ module ot_hgi_dma_back #(
                     for (integer j2 = 0; j2 < 4; j2 = j2 + 1) if (j2 > j && 3'(j2) < g1_k && g1_vs[j][4:3] == g1_vs[j2][4:3]) par = 1'b0;
                     e = g1_a[j] + {12'd0, m_rowb} - 37'd1;
                     lo = {1'b0, {(36 - SBIT){1'b0}}, g1_a[j][SBIT-1:0]} + {12'd0, m_rowb};
-                    if (e[SBIT +: 2] != g1_a[j][SBIT +: 2] || lo > {1'b0, STACK_BYTES}) bad = 1'b1;
+                    if (e[SBIT +: 2] != g1_a[j][SBIT +: 2] || lo > {1'b0, STACK_BYTES} ||
+                        3'(2'(g1_a[j][SBIT +: 2] - 2'(STK))) >= 3'(NS)) bad = 1'b1;
                 end
                 if (bad) mv_fault <= 1'b1;
                 q_k[wq_t] <= g1_k; q_par[wq_t] <= par;
