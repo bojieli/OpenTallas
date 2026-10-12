@@ -558,6 +558,15 @@ ADOPTED = R25
 # variant: bits-scaled direction-registered stations, relay trees for multicast, block-avoiding routes, stations
 # anchored to the previous node's actual box, svc -> SM channels +108 um (die 849.82 -> 856.95 mm2), hfd_hc_eng slot
 # 4,600.8 -> 4,384.8 wide (E edge fixed) so the VM / hc_eng corridor is 322 um.  Not yet the default (see notes).
+R25GQ_V8 = dict(   # hbm-die-iter contract v8 (10-12): the 19 hfd_hc pins the closed tiled quarter's route places (r25gqw
+    # io_place / LEF: f_sfu / t_sfu 4-track at y 404 / 601, rst 801, ck<c>e M4 except c 2-3 on M6) are taken exactly; the
+    # die-only HC ports (VM lane / map / cmdproc) pack around them
+    anchor_ports={'hfd_hc': 'physical/hbm_accel_die_views/hcp/r25gqw/ports/hfd_hc/ports.json'}, relay_repair_rounds=20,
+    # windowed GRT 10-12 (hub window 11-19 x 9-17 mm, k=16, 5 iters, epyc1tb/epyc2): die-wide M4/M5 adjustment 1.0 left
+    # only pin access in the channels (2,118,679 window overflow); blocks keep M2-M5 1.0 over their outlines, channels keep
+    # 0.5 of M4/M5 for PDN stripes + relay pin access -> 1,335,381 (-37 %); lane-group splits (lgE -> E + E2, W+E) were
+    # +29 % and fail reach (3 lgE rdn segments 545-912 um): rejected
+    grt_m45=0.5)
 R25GQ_PR = dict(phys_free_min=0.45,  # rf2: a 100-um route cell < 45 % free (a <= 43-um abutment gap; every 84-um lk_ep channel keeps one cell >= 46 %) is a block for
                 # physical-relay / clock-tree routes: no station or buffer pair fits a stage there
                 pinned_faces='physical/hbm_accel_die_views/ports_r25gqn', hgi_idx_wh=(1270.08, 1719.36), spine_over_n=1836.0, phys_relays=True, relay_tree=True, phys_block_cost=400.0, svc_ch_dh=108.0, relay_repair_rounds=10,
@@ -4864,6 +4873,56 @@ _WIDE_RING = sorted(((ox, oy) for ox in range(-20, 21) for oy in range(-20, 21))
 _PAIR_RING = sorted(((ox, oy) for ox in range(-10, 11) for oy in range(-10, 11)), key=lambda o: (abs(o[0]) + abs(o[1]), o))
 
 
+def _anchor_ports(spec):
+    """contract v8 (hbm-die-iter 10-12): {master: {port: dict(face, layer, centre, pitch, bits)}} from a CLOSED element's
+    port record ({master: 'path/ports.json'}): the die master takes those ports exactly where the element's LEF has them
+    (face from the pin x/y, centre = pin-centre mean, pitch in tracks); the die's other ports on that face pack around."""
+    if not spec:
+        return {}
+    key = json.dumps(spec, sort_keys=True)
+    if key not in _PF_CACHE:
+        out = {}
+        for mname, path in spec.items():
+            d_ = json.loads((ROOT / path).read_text())
+            W_, H_ = d_['w_um'], d_['h_um']
+            o_ = out.setdefault(mname, {})
+            for p_, r_ in d_['ports'].items():
+                pins = r_['pins']
+                xs = [(q[2] + q[4]) / 2 for q in pins]
+                ys = [(q[3] + q[5]) / 2 for q in pins]
+                x0, y0 = sum(xs) / len(xs), sum(ys) / len(ys)
+                face = min((('W', x0), ('E', W_ - x0), ('S', y0), ('N', H_ - y0)), key=lambda t: t[1])[0]
+                al = ys if face in 'EW' else xs
+                lay = pins[0][1]
+                step = (al[-1] - al[0]) / (len(al) - 1) if len(al) > 1 else Q.TRK[lay][1]
+                # the LEF writer starts a port's first pin at centre - n * step / 2: that centre puts every pin on its
+                # quarter track (a single pin: its own centre)
+                o_[p_] = dict(face=face, layer=lay, centre=round(al[0] + len(al) * step / 2 if len(al) > 1 else al[0], 4),
+                              bits=r_['bits'],
+                              pitch=max(1, round(abs(step) / Q.TRK[lay][1])))
+        _PF_CACHE[key] = out
+    return _PF_CACHE[key]
+
+
+def _pack_anchored(mst, face, lst, anc, pw, k):
+    """place the anchored ports of one face exactly; return the rest with their wanted centres moved out of the anchored
+    intervals (each slides to the nearer free side, order kept by the generic packer that follows)."""
+    rest, busy = [], []
+    for want, pt in lst:
+        a_ = anc.get(pt)
+        if a_ and a_['face'] == face:
+            n_ = max(1, pw.get((mst.name, pt), 1))
+            mst.face(pt, n_, face, a_['layer'], a_['centre'], a_['pitch'])
+            half = n_ * Q.TRK[a_['layer']][1] * k * a_['pitch'] / 2
+            busy.append((a_['centre'] - half, a_['centre'] + half, n_, a_['layer']))
+        else:
+            rest.append((want, pt))
+    if busy and rest:
+        mst.anchor_busy = getattr(mst, 'anchor_busy', {})
+        mst.anchor_busy[face] = sorted(busy)
+    return rest
+
+
 def _pinned_faces(root):
     """hbmdie-1011/rf2: {(master, port): face} from the pinned die-view port records (ports_r25gqn/<master>/ports.json)"""
     if not root:
@@ -4985,12 +5044,14 @@ def masters(m, k=1):
             if mt:
                 along = 0.0 if mt.group(1)[0] == 'S' else it.h
         ff_ = m['variant'].get('face_force') or {}
-        mlg_ = re.fullmatch(r'([tf])_(lg[WE])_(rdn|wdn|rup|wup)', port)
+        if isinstance(ff_, dict) and any(isinstance(k_, str) for k_ in ff_):    # a JSON variant: 'master|port' keys
+            ff_ = {tuple(k_.split('|')) if isinstance(k_, str) else k_: v_ for k_, v_ in ff_.items()}
+        mlg_ = re.fullmatch(r'([tf])_(lg[WE]2?)_(rdn|wdn|rup|wup)', port)
         if mlg_:        # chain nets: down buses keep the old t_ / f_ face, up buses enter / leave on the opposite one
             port_ff = (mlg_.group(1) if mlg_.group(3).endswith('dn') else {'t': 'f', 'f': 't'}[mlg_.group(1)]) + '_' + mlg_.group(2)
         else:
             port_ff = port
-        mst_ = re.fullmatch(r'([tf])_(lg[WE])(c?)_(rdn|wdn|rup|wup)', port)
+        mst_ = re.fullmatch(r'([tf])_(lg[WE]2?)(c?)_(rdn|wdn|rup|wup)', port)
         if mst_ and mname.startswith('hfd_stn_lg') and (m.get('lane_station_face') or {}).get(it.name):
             # a lane-group client station: the full-width tap on the face toward its client, the chain on the opposite
             # (outer) face -- a mid-chain station's upstream and downstream share the outer face
@@ -5026,9 +5087,14 @@ def masters(m, k=1):
         if mname == 'hfd_sm' and port in ('x', 'c') and m['variant'].get('sm_xmid'):
             along = sum(sm_span[face]) / 2      # r12 option: x / c pins centred in their pin region (row-neutral)
         items[mname][face].append((along, port))
+    anc_ = _anchor_ports(m['variant'].get('anchor_ports'))
     for mname, fs in items.items():
         mst = M[mname]
         for face, lst in fs.items():
+            if mname in anc_:
+                lst = _pack_anchored(mst, face, lst, anc_[mname], pw, k)
+                if not lst:
+                    continue
             layer = 'M4' if face in 'EW' else 'M5'
             p = Q.TRK[layer][1] * k
             full = mst.h if face in 'EW' else mst.w
@@ -5067,15 +5133,42 @@ def masters(m, k=1):
                 g_even = (room - sum(need)) / (len(need) + 1)
                 gap = max(gap, g_even)
                 pos = a0 + g_even
-            for (want, pt), nd in zip(lst, need):
-                s0 = pos if spread else min(max(want - nd / 2, pos), a1 - nd)
-                starts.append(s0)
-                pos = s0 + nd + gap
-            end = a1
-            for i in range(len(starts) - 1, -1, -1):
-                if starts[i] + need[i] > end:
-                    starts[i] = end - need[i]
-                end = starts[i] - gap
+            busy_ = (getattr(mst, 'anchor_busy', None) or {}).get(face)
+            if busy_:       # v8 anchored face: each free port (largest first) takes the feasible slot nearest its want;
+                # a multi-bit anchor blocks every layer, a single-pin anchor (clock / reset) only its own layer, so a free
+                # port that finds no room on the face's layer steps over the single pins on the face's second layer
+                occ, st_, ly_ = [(b0, b1, None) for b0, b1, nb, _ in busy_ if nb > 1], {}, {}
+                pts = [(b0, b1, bl) for b0, b1, nb, bl in busy_ if nb == 1]
+                gap = 4 * p        # the plain pin gap (no spread on an anchored face)
+                l2 = 'M6' if face in 'EW' else 'M7'
+                for (want, pt), nd in sorted(zip(lst, need), key=lambda t: -t[1]):
+                    for lay_ in (layer, l2):
+                        blk = occ + [q for q in pts if q[2] in lay_.split('+')]
+                        blk = [q for q in blk if q[2] is None or q[2] in lay_.split('+')]
+                        cands = [min(max(want - nd / 2, a0), a1 - nd)] + [b1 + gap for _, b1, _ in blk] + \
+                            [b0 - gap - nd for b0, _, _ in blk]
+                        ok = [c for c in cands if a0 - 1e-6 <= c and c + nd <= a1 + 1e-6 and
+                              all(c >= b1 + gap - 1e-6 or c + nd <= b0 - gap + 1e-6 for b0, b1, _ in blk)]
+                        if ok:
+                            break
+                    else:
+                        raise ValueError(f'{mname} face {face}: anchored ports leave no room for {pt} ({nd:.1f} um)')
+                    s0 = min(ok, key=lambda c: abs(c + nd / 2 - want))
+                    st_[pt], ly_[pt] = s0, lay_
+                    occ.append((s0, s0 + nd, lay_ if lay_ != layer else None))
+                for (want, pt), nd, nn in zip(lst, need, n):
+                    mst.face(pt, nn, face, ly_[pt], st_[pt] + nd / 2, pitch)
+                continue
+            else:
+                for (want, pt), nd in zip(lst, need):
+                    s0 = pos if spread else min(max(want - nd / 2, pos), a1 - nd)
+                    starts.append(s0)
+                    pos = s0 + nd + gap
+                end = a1
+                for i in range(len(starts) - 1, -1, -1):
+                    if starts[i] + need[i] > end:
+                        starts[i] = end - need[i]
+                    end = starts[i] - gap
             for (want, pt), nd, s0, nn in zip(lst, need, starts, n):
                 mst.face(pt, nn, face, layer, s0 + nd / 2, pitch)
     for st in m['groups']:
@@ -5116,6 +5209,9 @@ def masters(m, k=1):
                     hc_m.order.remove(p_)
             for f_ in ('e', 'w'):
                 hc_m.face(f'ck{c_}{f_}', 1, f_.upper(), 'M6' if (f_ == 'e' and c_ in m6_) else 'M4', y_, 1)
+        for p_, a_ in (_anchor_ports(m['variant'].get('anchor_ports')).get('hfd_hc') or {}).items():
+            if re.fullmatch(r'ck\d+[ew]', p_):    # v8: the closed quarter's clock pins (layer / centre of its LEF)
+                hc_m.ports[p_] = ('face', 1, a_['face'], a_['layer'], a_['centre'], 1)
     if m['variant'].get('vm_cross_aligned') and 'hfd_vm_sw' in M:   # r23: abutting VM tiles' cross buses face to face
         vm_cross_align(M, k, two_layer=bool(m['variant'].get('vm_cross_2layer')))
     if m['variant'].get('vm_ck_centre'):      # r20: the VM tiles' ck as the centre M7 area pin
@@ -5800,7 +5896,13 @@ VIA_OBS = S.VIA_OBS
 COV = dict(field=0.0878, hub=0.0878, spine=0.0878, svc=0.1639, channel=0.0878)   # r2: 2 x the Qwen r2 field class (r1 at 0.0439 failed the top-row windows, 41.45 mV)
 
 
-def case_grt(m, work, k, tag, iters, cov, empty=False):
+def case_grt(m, work, k, tag, iters, cov, empty=False, win=None, m45=None):
+    """win (x0, y0, x1, y1) um: a WINDOWED experiment GRT (hbm-die-iter 10-12): the whole die is placed (every block
+    keeps its OBS), but only the die nets whose endpoint bounding box crosses the window are routed, so a hub
+    restructuring is compared on its window overflow in ~1/10 of a full run.  Never a run of record.
+    m45: channel capacity of M4 / M5 (adjustment; None = the M2-M5 1.0 die-wide block of record).  M2 / M3 stay 1.0
+    (relay / station cells and rails), every block keeps M2-M5 at 1.0 by a region adjustment over its outline, and the
+    channels between blocks keep m45 of M4 / M5 for the PDN stripes and relay pin access."""
     from chip_assembly import v41_die as VD
     work.mkdir(parents=True, exist_ok=True)
     npins = write_lefs(m, k, work / 'elements.lef')
@@ -5808,6 +5910,16 @@ def case_grt(m, work, k, tag, iters, cov, empty=False):
     mm = dict(m)
     if empty:
         mm['buses'] = [next(b_ for b_ in m['buses'] if b_[1] == 'clock_trunk')]
+    if win:
+        byn = {it.name: it for it in m['insts']}
+
+        def _hit(b_):
+            pts = [(byn[i_].x + byn[i_].w / 2, byn[i_].y + byn[i_].h / 2) for i_, _ in b_[3] if i_ != 'TOP']
+            if not pts:
+                return False
+            return (min(x for x, _ in pts) <= win[2] and max(x for x, _ in pts) >= win[0]
+                    and min(y for _, y in pts) <= win[3] and max(y for _, y in pts) >= win[1])
+        mm['buses'] = [b_ for b_ in mm['buses'] if _hit(b_)]
     write_netlist(mm, k, work / 'die.v')
     W, H = m['geo']['W'], m['geo']['H']
     tracks = [f'make_tracks {n} -x_offset {off * k:.3f} -x_pitch {p * k:.3f} -y_offset {off * k:.3f} -y_pitch {p * k:.3f}'
@@ -5817,7 +5929,16 @@ def case_grt(m, work, k, tag, iters, cov, empty=False):
     adj = []
     for ln in ('M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'):
         a = 1.0 if ln in ('M2', 'M3', 'M4', 'M5') else (VIA_OBS + 2 * cov['field'] if ln in ('M8', 'M9') else VIA_OBS)
+        if m45 is not None and ln in ('M4', 'M5'):
+            a = m45
         adj.append(f'set_global_routing_layer_adjustment {ln} {a:.4f}')
+    if m45 is not None:
+        for it in m['insts']:
+            if it.kind == 'waypoint':
+                continue
+            for ln in ('M4', 'M5'):
+                adj.append(f'set_global_routing_region_adjustment {{{it.x:.3f} {it.y:.3f} {it.x + it.w:.3f} '
+                           f'{it.y + it.h:.3f}}} -layer {ln} -adjustment 1.0')
     for r in m['regions']:
         c = cov.get(r['kind'])
         if c is None or r['kind'] == 'field':
@@ -5847,10 +5968,10 @@ mem grt
 report_wire_length -net * -global_route -file /work/wirelength.csv
 """ + gtail
     (work / 'run.tcl').write_text(tcl)
-    man = dict(case='b', tag=tag, bundle_k=k, congestion_iterations=iters, empty_baseline=empty,
+    man = dict(case='b', tag=tag, bundle_k=k, congestion_iterations=iters, empty_baseline=empty, window=win, m45=m45,
                instances=len(m['insts']), bundle_pins=npins,
-               bundle_nets=0 if empty else sum(max(1, math.ceil(b[2] / k)) for b in m['buses']),
-               wires=0 if empty else sum(b[2] for b in m['buses']), coverage=cov, variant=m['variant'])
+               bundle_nets=0 if empty else sum(max(1, math.ceil(b[2] / k)) for b in mm['buses']),
+               wires=0 if empty else sum(b[2] for b in mm['buses']), coverage=cov, variant=m['variant'])
     (work / 'manifest.json').write_text(json.dumps(_jsonable(man), indent=1))
     return man
 
@@ -5914,7 +6035,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
@@ -6539,6 +6660,8 @@ def main(argv=None):
     ap.add_argument('--iters', type=int, default=50)
     ap.add_argument('--empty', action='store_true')
     ap.add_argument('--window', default='w00_00')
+    ap.add_argument('--grt-win', default='', help='grt: x0,y0,x1,y1 um window experiment (nets crossing it only)')
+    ap.add_argument('--m45', type=float, default=None, help='grt: M4/M5 channel adjustment (blocks stay 1.0)')
     ap.add_argument('--cov', default='')
     ap.add_argument('--out', type=Path)
     ap.add_argument('--only', default='')
@@ -6624,7 +6747,8 @@ def main(argv=None):
     if a.mode == 'real':
         print(json.dumps(case_real(m, work)))
     elif a.mode == 'grt':
-        print(json.dumps(_jsonable(case_grt(m, work, a.k, a.tag, a.iters, cov, empty=a.empty))))
+        gw = tuple(float(v_) for v_ in a.grt_win.split(',')) if a.grt_win else None
+        print(json.dumps(_jsonable(case_grt(m, work, a.k, a.tag, a.iters, cov, empty=a.empty, win=gw, m45=a.m45 if a.m45 is not None else m['variant'].get('grt_m45')))))
     elif a.mode == 'ir':
         print(json.dumps(case_ir(m, work, a.window, cov)))
     return 0

@@ -4,7 +4,7 @@
 "w_um": 4600.8,
 "h_um": 1566.0,
 "obs_top": 7,
-"note": "hub placeholder sized from the block ledger",
+"note": "hub placeholder sized from the block ledger | el1011-hbm-fused 10-12: + ck (contract clock_entry N M7) / rst, hand-added until the die fp emits them for hb_hc_eng",
 "instances": 1,
 "orients": [
 "R0"
@@ -143702,6 +143702,52 @@
 ]
 ],
 "direction": "output"
+},
+"ck": {
+"bits": 1,
+"layer": "M7",
+"pins": [
+[
+"ck[0]",
+"M7",
+2300.4,
+1565.808,
+2300.432,
+1566.0
+]
+],
+"face": "N",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
+},
+"rst": {
+"bits": 1,
+"layer": "M5",
+"pins": [
+[
+"rst[0]",
+"M5",
+2288.4,
+1565.808,
+2288.424,
+1566.0
+]
+],
+"face": "N",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
 }
 },
 "generator": {
