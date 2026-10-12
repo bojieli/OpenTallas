@@ -20,7 +20,9 @@ proc ot_ref_pick {by master pat} {
   foreach i [dict get $by $master] {
     set n [ot_ref_strip [$i getName]]
     if {[lsearch -exact $used $n] >= 0} continue
-    if {$pat ne "" && ![string match [ot_ref_strip $pat] $n]} continue
+    set sp [ot_ref_strip $pat]
+    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)
+    if {$pat ne "" && $sp ne $n && ![string match $sp $n]} continue
     lappend used $n; return $i
   }
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
@@ -30,37 +32,37 @@ set i [ot_ref_pick $ot_ref_by ot_nhb_pbst {}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_nhb_pbst at 43.2 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pbst {}]
-$i setOrient R0; $i setLocation [expr {round(216.0 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pbst at 216.0 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pbst at 259.2 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pbst {}]
-$i setOrient R0; $i setLocation [expr {round(388.8 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pbst at 388.8 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pbst at 475.2 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pbst {}]
-$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pbst at 561.6 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(691.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pbst at 691.2 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pvlg {}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(216.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 43.2 216.0 R0"
+$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 43.2 302.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pvlg {}]
-$i setOrient R0; $i setLocation [expr {round(216.0 * $dbu)}] [expr {round(216.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 216.0 216.0 R0"
+$i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 259.2 302.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pvlg {}]
-$i setOrient R0; $i setLocation [expr {round(388.8 * $dbu)}] [expr {round(216.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 388.8 216.0 R0"
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 475.2 302.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_pvlg {}]
-$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(216.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 561.6 216.0 R0"
+$i setOrient R0; $i setLocation [expr {round(691.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_pvlg at 691.2 302.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(388.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_zh at 43.2 388.8 R0"
+$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_zh at 43.2 561.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {}]
-$i setOrient R0; $i setLocation [expr {round(216.0 * $dbu)}] [expr {round(388.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_zh at 216.0 388.8 R0"
+$i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_zh at 259.2 561.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {}]
-$i setOrient R0; $i setLocation [expr {round(388.8 * $dbu)}] [expr {round(388.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_zh at 388.8 388.8 R0"
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_zh at 475.2 561.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {}]
-$i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(388.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_nhb_zh at 561.6 388.8 R0"
+$i setOrient R0; $i setLocation [expr {round(691.2 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_nhb_zh at 691.2 561.6 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 12} { error "ref_tile place: expected 12 macros, netlist has $nb" }

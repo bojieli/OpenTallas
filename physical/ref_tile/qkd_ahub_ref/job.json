@@ -4,10 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
  "purpose": "q-kvd R8: KV attention hub cluster (hub_t) over child_lint-clean ref views (4 pbst + 4 pvlg + 4 zh, 151.2^2 each). Slot 647.976^2 cannot hold 12 children on the 43.2 um child lattice with >= 20 um channels (3 x 3 max); outline 736.56 x 604.8 (4 x 3 rows: pbst S row, pvlg, zh N row; +6.1% area) -- reported to the KV die lead. q-kvd RELAUNCH5: attention hub cluster ot_qwen_nearhbm_attn_hub_t (qkd_ahub slot 647.976^2) over ref_tile views 4 pbst + 4 pvlg + 4 zh; replaces hand qkd_ahub_t || route peak declared 112 GB (> AGIdock per-job limit 110 GB) so the route lands on an EPYC: the loop pins benches to the route host and d",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc4"
- ],
  "threads": 16,
  "peak_ram_gb": 112,
  "source": {
