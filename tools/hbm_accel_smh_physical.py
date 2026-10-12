@@ -1043,7 +1043,7 @@ def write_abstract(work: Path, name, macros, view_name, tt=False):
              "create_clock -name core_clk -period 833 [get_ports clk]", "set_propagated_clock [all_clocks]",
              f"write_timing_model -library_name {view_name}_{c} /work/views/{view_name}_{c}.lib"]
         if c == "ss":
-            t.append(f"write_abstract_lef -bloat_occupied_layers /work/views/{view_name}.lef")
+            t.append(f"write_abstract_lef /work/views/{view_name}.lef")
         t.append("exit")
         (work / f"abstract_{c}.tcl").write_text("\n".join(t) + "\n")
     (work / "abstract.tcl").write_text("source /work/abstract_ss.tcl\n")
