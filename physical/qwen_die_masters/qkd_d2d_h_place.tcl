@@ -18,7 +18,7 @@ foreach m [$b getInsts] {
   if {$mn eq "ot_qkvd_sbuf"} { if {[string match "*g_tx*" $n]} { lappend tx $n } else { lappend rx $n } } \
   elseif {$mn eq "ot_qkvd_fbuf8"} { lappend fb $n }
 }
-set sw 237.6; set sh 151.2; set fw 81.0; set fh 81.0; set ch 21.6
+set sw 237.6; set sh 151.2; set fw 97.2; set fh 97.2; set ch 21.6
 set rowsh [expr {$sh + $ch + $sh + $ch + $fh}]
 set y1 [expr {$::G * round((($cy0 + $cy1) / 2.0 - $rowsh / 2.0) / $::G)}]
 set y2 [expr {$y1 + $sh + $ch}]; set y3 [expr {$y2 + $sh + $ch}]
