@@ -30,18 +30,24 @@ PL=()
 export OT_ORFS_NUM_CORES=${NC:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 # FLOW-HOLD (2026-10-07): with OT_ROUTE_HOLD_CORNERS=mm the FF scene re-derives this die-context boundary at FF
 export OT_MM_FF_SDC=${OT_MM_FF_SDC:-physical/qwen_die_masters/io_ref_skew.sdc}
+# el1011-q-kvd 2026-10-11: PINKO=1 (cfg or env) -> hard-tile pin-access keepout through GRT/DRT (pre_grt_pinko.tcl / post_drt_pinko.tcl)
+[ "${PINKO:-0}" = 1 ] && PINKO_PRE=pre_grt_pinko.tcl && PINKO_POST=post_drt_pinko.tcl
+# Routing layers (main 10-11): an explicit RLAYERS wins; otherwise a --routing-layers in the kit's extra options is honoured;
+# only then the M2 M7 default. Before this, the default was appended after EXTRA and silently overrode a kit's M2 M6.
+RL=(--routing-layers ${RLAYERS:-M2 M7})
+if [ -z "${RLAYERS:-}" ]; then for _a in "${EXTRA[@]}"; do [ "$_a" = "--routing-layers" ] && RL=(); done; fi
 echo "$(date -Is) start $NAME cfg=$CFG src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
   --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
   "${PINS[@]}" ${PINS:+--pin-regions-exhaustive} "${EXTRA[@]}" \
-  --routing-layers ${RLAYERS:-M2 M7} --clock-port ${CLKPORT:-clk} --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
+  "${RL[@]}" --clock-port ${CLKPORT:-clk} --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner ${CORNER:-WC} --hold-corners ${CORNER:-WC},BC --io-delay-fraction 0.2 --stages ${STAGES:-synth,pnr} \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=${NC:-16} --orfs-var SDC_FILE=${QDMD:-$D}/${SDCF:-die_p770.sdc} --orfs-var QDM_SDC_DIR=${QDMD:-$D} \
   --orfs-var "PLACE_PINS_ARGS=-min_distance ${PIN_MIN_TRACKS:-1} -min_distance_in_tracks" "${PL[@]}" \
   --step-tcl PRE_CTS=physical/qwen_die_masters/pre_cts_skew.tcl --step-tcl POST_CTS=physical/qwen_die_masters/post_plain.tcl \
-  --step-tcl PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
-  --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
+  --step-tcl PRE_GLOBAL_ROUTE=physical/qwen_die_masters/${PINKO_PRE:-pre_ref_skew.tcl} --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
+  --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=physical/qwen_die_masters/${PINKO_POST:-post_plain.tcl} \
   --step-tcl PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl \
   --orfs-var "CTS_ARGS=${CTSA:--sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75}" \
   --orfs-var OT_IO_SKEW=90 --orfs-var OT_IO_HOLD_SKEW=50 --orfs-var "OT_REF_GLOB=$REFGLOB" \

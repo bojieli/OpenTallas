@@ -29,6 +29,10 @@ DB=6_final.odb; [ -f $RB/$DB ] || { echo "no $RB/$DB"; exit 2; }
 SPEF=$OB/6_final.spef; [ -f $SPEF ] || SPEF=$RB/6_final.spef
 PS=""; for p in "$@"; do PS="$PS /src/$p"; done
 SPS=""; for p in ${SETUP_POST_SDC:-}; do SPS="$SPS /src/$p"; done
+MACROS=${MACROS:-}
+if [ -n "$MACROS" ]; then  # MACRO-VIEW (2026-10-11): a bare SRAM master in verdict.macros crashed every ECO (ORD-0001)
+  MACROS=$(python3 "$CLD/macro_views.py" --root "$PWD" $MACROS) || { echo "MACROS unresolvable against the source snapshot: refusing to run without the macro LEF/lib"; exit 2; }
+fi
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 CS_ARGS=$(for p in "$@"; do echo -n " --post-sdc $p"; done; for m in ${MACROS:-}; do echo -n " --macro $m"; done)
 # CORNER-STA (drive-1010 2026-10-10): a pre option-B source snapshot has a corner_sta.py without setup_tt; the ECO then

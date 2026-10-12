@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.tput-class-bench.v1",
+ "class": "MTP.VERIFY",
+ "model": "DS MTP (HBM)",
+ "elements": [],
+ "elements_not_qualified": [
+  "hgi_mtp_native",
+  "ot_hgi_mtp_core18",
+  "ot_hgi_mtp_accept18",
+  "hfd_mtp_x_stop",
+  "ot_hgi_cp_mtp_pinreg"
+ ],
+ "status": "NO_PASSING_VEHICLE",
+ "price": {
+  "cycles": 63800,
+  "per": "L0 verify, 5 columns",
+  "src": "hgi-1010.log 20:22 h (hgi_sim DS MTP verify, interim)"
+ },
+ "measured": {
+  "cycles": null,
+  "interim_cycles": 145000,
+  "interim_breakdown_per_column": "swapin ~0.8k + embed ~0.6k + L0 body 18.8k (sim 11.9k, 1.59x) + swapout DMA.STORE 8.7k (sim 248, 35x, ~12 B/cyc)",
+  "interim_src": "hgi-1010.log 20:25 h: MTP=2 harness 138/744 launches, 0 mismatches, run later killed (run2h.log Terminated)"
+ },
+ "ratio": null,
+ "interim_ratio": 2.273,
+ "exact": false,
+ "mutant": "MUT=2 FAIL (dispatch 108) on the interim run",
+ "bench": "tb_hgi_e2e -GMTP=2 vehicle ds_mtp_spec (ot-epyc1tb:/srv/opentallas/claude/hgi-1010/h/hgi_spec.sh)",
+ "host": "ot-epyc1tb",
+ "source_commit": "claude/hgi-mtp-e2e-20261010 867a9381e (vehicle)",
+ "notes": "No production-shape MTP verify bench can be recorded today: every committed-era vehicle run fails exactness before the verify columns -- out3 ds_mtp_spec MTP=2 (04:20 10-11): REAL record 14 q_norm.ss mismatch, MTP abort status 0x60 at 3,522 cycles, 17/3,824 dispatched; out mtp1 (10-10 16:38): FUSED record 9 attn_norm 5,120 mismatches, control fault. The earlier MTP=2 run that produced the 145k/63.8k interim was Terminated before the accept check. Even the interim says the class is > 1.10 (2.27x: L0 body 1.59x + swapout DMA.STORE 35x). Owner: hgi-1010/h (vehicle) + hgi-1010/c (striped multi-outstanding DMA.STORE). ot_hgi_cp_mtp_pinreg is a registered pin collar (no per-token logic of its own) and rides on this class."
+}

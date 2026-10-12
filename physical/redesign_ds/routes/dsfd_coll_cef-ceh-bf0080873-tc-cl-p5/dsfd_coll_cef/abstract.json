@@ -1,0 +1,63 @@
+{
+  "name": "dsfd_coll_cef",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/routes/dsfd_coll_cef_ceh_bf0080873_tc_cl_p5/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/routes/dsfd_coll_cef_ceh_bf0080873_tc_cl_p5/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/routes/dsfd_coll_cef_ceh_bf0080873_tc_cl_p5/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/routes/dsfd_coll_cef_ceh_bf0080873_tc_cl_p5/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/routes/dsfd_coll_cef_ceh_bf0080873_tc_cl_p5/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/routes/dsfd_coll_cef_ceh_bf0080873_tc_cl_p5/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/routes/dsfd_coll_cef_ceh_bf0080873_tc_cl_p5/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsfd_coll_cef-ceh-bf0080873-tc-cl-p5/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "files": {
+    "dsfd_coll_cef.lef": "f4f75ab35e1672de4e6d31f694f5753ba570346ddc03bad903535d5b1986744c",
+    "dsfd_coll_cef_ff.lib": "82f24a783d36d2238288aeaf2332643474fbd010bc0f037f4f185433f738e3bf",
+    "dsfd_coll_cef_ss.lib": "361f6bf7751bc50b8ce03b23b76002a19a3dfb6f62242b0c5bf951ce752bb9cd"
+  },
+  "ok": true
+}

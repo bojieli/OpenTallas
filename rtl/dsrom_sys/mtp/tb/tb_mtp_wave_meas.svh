@@ -92,7 +92,7 @@
         real hop, itv, x;
         begin
             bf = (T_BUSY * 4 + 1) / 3;
-            ideal = 2 * S_L + 42 + 1;
+            ideal = 2 * S_L + 47 + 1;   // header + the TXW 46 outbound words a stage sends (the composed model's serialised hop)
             // wfc_kit.ar_pass: stage done (core op done at dsfd_stage_seq) -> next stage's core op command, minus the ideal hop
             nh = 0; sh = 0;
             for (j = 0; j < s4.n_job; j = j + 1) begin
@@ -103,7 +103,7 @@
                 sh = sh + (s2.js_t[j] - s1.jd_t[j]) + (s3.js_t[j] - s2.jd_t[j]) + (s4.js_t[j] - s3.jd_t[j]); nh = nh + 3;
             end
             hop = avg(sh, nh) - ideal;
-            $display("WAVE_EVENT hop_done_to_start_mean=%0.2f ideal=%0d (header + 41 words + 2 x %0d stations + stub 1) hops=%0d jobs=%0d",
+            $display("WAVE_EVENT hop_done_to_start_mean=%0.2f ideal=%0d (header + 46 words + 2 x %0d stations + stub 1) hops=%0d jobs=%0d",
                      avg(sh, nh), ideal, S_L, nh, s4.n_job);
             $display("WAVE_CHARGE id=wfc_kit.ar_pass price=160.53 measured=%0.2f n=%0d unit=cycles_per_stage_hop", hop, nh);
             // wfc_kit.intervals: same-pass consecutive positions at the last stage: start-to-start - busy - composed handoff 46

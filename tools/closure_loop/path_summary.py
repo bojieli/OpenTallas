@@ -10,7 +10,7 @@ Read-only on the ORFS dir (the Tcl lives in a private temp dir).
 
     path_summary.py --orfs-dir RUN/work/orfs [--base DIR] [--src SRCROOT] [--macro DIR] [--post-sdc F] --output S.json
 """
-import argparse, json, re, subprocess, tempfile
+import argparse, json, re, subprocess, sys, tempfile
 from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -94,6 +94,15 @@ def main():
     ap.add_argument("--image", default="openroad/orfs:latest")
     ap.add_argument("--output", type=Path, required=True)
     a = ap.parse_args()
+    if a.macro and a.src:   # MACRO-VIEW (2026-10-11): a bare SRAM master in verdict.macros died ORD-0001 here too
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import macro_views
+        try:
+            a.macro, rw = macro_views.resolve(a.macro, macro_views.tree_lefs(a.src))
+        except macro_views.MacroViewError as ex:
+            sys.exit(f"MACRO-VIEW ERROR: {ex}")
+        for e, r in rw:
+            print(f"MACRO-VIEW: {e} -> {r}", file=sys.stderr)
     base = a.base or next((a.orfs_dir / "results/asap7").glob("*/base"))
     rec = dict(schema="opentallas.closure_loop.path_summary.v1", base=str(base.resolve()))
     for corner in a.corners.split(","):
