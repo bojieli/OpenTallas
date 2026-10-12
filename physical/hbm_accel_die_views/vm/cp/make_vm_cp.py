@@ -189,9 +189,9 @@ LOGIC = {
         'cmd3': ('out', 10, 'N'), 'wd3': ('out', 512, 'N'), 'rv3': ('in', 1, 'N'), 'rd3': ('in', 512, 'N')},
         note='multicast root + cfg chain, registered outputs; sized by the gate std area'),
     'vm_cp_slice3': dict(h=216.0, w=259.2, macros=6, ports={'cmd': ('in', 10, 'N'), 'wd': ('in', 768, 'N'),
-        'rv': ('out', 1, 'N'), 'rd': ('out', 768, 'N'), 'rst': ('in', 1, 'W')}, note='6-macro slice (SW, NW, SE; NW mirrored MX)'),
-    'vm_cp_slice2': dict(h=216.0, w=172.8, macros=4, ports={'cmd': ('in', 10, 'N'), 'wd': ('in', 512, 'N'),
-        'rv': ('out', 1, 'N'), 'rd': ('out', 512, 'N'), 'rst': ('in', 1, 'W')}, note='4-macro slice (NE, mirrored MX)'),
+        'rv': ('out', 1, 'N'), 'rd': ('out', 768, 'N'), 'rst': ('in', 1, 'N')}, note='6-macro slice (SW, NW, SE; NW mirrored MX)'),
+    'vm_cp_slice2': dict(h=216.0, w=259.2, macros=4, ports={'cmd': ('in', 10, 'N'), 'wd': ('in', 512, 'N'),
+        'rv': ('out', 1, 'N'), 'rd': ('out', 512, 'N'), 'rst': ('in', 1, 'N')}, note='4-macro slice (NE, mirrored MX)'),
 }
 
 # ------------------------------------------------------------------------------------------------- instances
@@ -337,12 +337,22 @@ def spec(kn, pos_inst):
         pins.setdefault(f, []).append(p)
         _f, lo, hi = prange(kn, p, w, h)
         ranges[p] = [round(lo, 3), round(hi, 3)]
-    pins.setdefault('W', []).insert(0, 'ck')
-    ranges['ck'] = [round(h / 2 - 1, 3), round(h / 2 + 1, 3)]
+    ckf = 'N' if kn.startswith('vm_cp_slice') else 'W'     # slices: all pins on the face toward the root (macro rows clear)
+    pins.setdefault(ckf, []).insert(0, 'ck')
+    L = w if ckf == 'N' else h
+    ranges['ck'] = [round(L / 2 - 1, 3), round(L / 2 + 1, 3)]
     srcs = [f'physical/hbm_accel_die_views/vm/cp/rtl/{kn}.sv']
     s = {'name': kn, 'top': kn, 'kind': 'tile', 'sources': srcs, 'clock_port': 'ck', 'reset_ports': [],
          'outline': {'w': w, 'h': h}, 'pg_layer': 'M7', 'pins': pins, 'pin_ranges': ranges,
          'route': {'pd': 0.50, 'threads': 8, 'peak_ram_gb': 48, 'hold_margin_ns': 0.010, 'pin_v': 'M3 M5', 'pin_h': 'M4 M6'}}
+    s['job'] = {'owner': 'Claude:el1011-hbm-vm8cp', 'branch': 'claude/el1011-hbm-vm8cp', 'tag': 'cp1',
+                'purpose': f'[vm8cp] VM8 top-down re-plan tile {kn} (results/arch/hier_contract_1011/vm8_replan.md)',
+                'extra_paths': ['physical/hbm_accel_die_views/vm', 'physical/hbm_accel_die_views/common', 'rtl/common',
+                                'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2'],
+                'benches': [{'name': 'vm_cp_bench', 'cmd': 'bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/vmcp',
+                             'expect': 'pass', 'threads': 16, 'peak_ram_gb': 32, 'needs': ['verilator'],
+                             'min_count_regex': r'events=(\d+)/'}],
+                'views_to': f'physical/ref_tile/{kn}/views', 'record_to': f'results/rtl/ref_tile/{kn}'}
     if kn in KITS:
         s['sources'].insert(0, 'rtl/common/ot_fwd_link_stage.sv')
         if any(sg[0] == 'fclk' for segs in KITS[kn]['outs'].values() for sg in segs):

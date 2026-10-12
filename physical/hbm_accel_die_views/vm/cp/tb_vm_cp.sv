@@ -31,7 +31,7 @@
 `define VM_TRACE "trace_ref.hex"
 `define VM_ROOT u.u_mr.on
 `define VM_RT u.u_mr
-`include "vm_env_body.svh"
+`include "vm_env_body_cp.svh"
 `undef VM_ENV_NAME
 `undef VM_DUT
 `undef VM_CFG
@@ -44,7 +44,7 @@
 `define VM_TRACE "trace_dut.hex"
 `define VM_ROOT u.u_root.u_mr.on
 `define VM_RT u.u_root.u_mr
-`include "vm_env_body.svh"
+`include "vm_env_body_cp.svh"
 
 module tb_vm_tiles;
     reg clk = 0; always #0.5 clk = ~clk;

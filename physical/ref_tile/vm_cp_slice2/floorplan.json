@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  172.8,
+  259.2,
   216.0
  ],
  "core": [
   2.16,
   2.16,
-  170.64000000000001,
+  257.03999999999996,
   213.84
  ],
  "why": "spec outline",
@@ -28,13 +28,11 @@
  },
  "pins": {
   "N": [
+   "ck",
    "cmd",
    "wd",
    "rv",
-   "rd"
-  ],
-  "W": [
-   "ck",
+   "rd",
    "rst"
   ]
  },
@@ -46,8 +44,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 38.88,
-   "y": 23.76,
+   "x": 24.624,
+   "y": 56.16,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -59,8 +57,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 1,
-   "x": 38.88,
-   "y": 86.4,
+   "x": 139.536,
+   "y": 56.16,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -72,8 +70,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 2,
-   "x": 38.88,
-   "y": 149.04,
+   "x": 24.624,
+   "y": 118.8,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -85,28 +83,15 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 3,
-   "x": 38.88,
-   "y": 211.68,
+   "x": 139.536,
+   "y": 118.8,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "FAIL",
-   "macro_outside",
-   "ot_sram_1r1w_128x256_m1_r2c2#3 at (38.88,211.68) leaves the core",
-   "enlarge the outline"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_128x256_m1_r2c2#3 -38.9 um from the N core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_slice2.sv",
   "physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_slice.sv",

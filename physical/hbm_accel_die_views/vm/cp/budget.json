@@ -175,7 +175,7 @@
   "u_s3": {
    "x": 604.8,
    "y": 1231.2,
-   "w": 172.8,
+   "w": 259.2,
    "h": 216.0,
    "orient": "MX"
   }
@@ -504,34 +504,18 @@
   {
    "kit": "vm_cp_slice3",
    "face": "N",
-   "bits": 1547,
+   "bits": 1548,
    "len_um": 259.2,
    "peak_b_per_um_layer": 3.03,
    "layers": "M3 M5"
   },
   {
-   "kit": "vm_cp_slice3",
-   "face": "W",
-   "bits": 1,
-   "len_um": 216.0,
-   "peak_b_per_um_layer": 0.0,
-   "layers": "M4 M6"
-  },
-  {
    "kit": "vm_cp_slice2",
    "face": "N",
-   "bits": 1035,
-   "len_um": 172.8,
-   "peak_b_per_um_layer": 3.07,
+   "bits": 1036,
+   "len_um": 259.2,
+   "peak_b_per_um_layer": 2.03,
    "layers": "M3 M5"
-  },
-  {
-   "kit": "vm_cp_slice2",
-   "face": "W",
-   "bits": 1,
-   "len_um": 216.0,
-   "peak_b_per_um_layer": 0.0,
-   "layers": "M4 M6"
   }
  ],
  "hops": [
@@ -876,28 +860,28 @@
    "bits": 10,
    "frm": "u_root",
    "to": "u_s3",
-   "mid_um": 216.0
+   "mid_um": 259.2
   },
   {
    "net": "n_s3_rd",
    "bits": 512,
    "frm": "u_s3",
    "to": "u_root",
-   "mid_um": 216.0
+   "mid_um": 259.2
   },
   {
    "net": "n_s3_rv",
    "bits": 1,
    "frm": "u_s3",
    "to": "u_root",
-   "mid_um": 216.0
+   "mid_um": 259.2
   },
   {
    "net": "n_s3_wd",
    "bits": 512,
    "frm": "u_root",
    "to": "u_s3",
-   "mid_um": 216.0
+   "mid_um": 259.2
   }
  ],
  "worst_b_per_um_layer": 5.79,

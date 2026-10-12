@@ -58,5 +58,32 @@
   "hold_margin_ns": 0.01,
   "pin_v": "M3 M5",
   "pin_h": "M4 M6"
+ },
+ "job": {
+  "owner": "Claude:el1011-hbm-vm8cp",
+  "branch": "claude/el1011-hbm-vm8cp",
+  "tag": "cp1",
+  "purpose": "[vm8cp] VM8 top-down re-plan tile vm_cp_rwt (results/arch/hier_contract_1011/vm8_replan.md)",
+  "extra_paths": [
+   "physical/hbm_accel_die_views/vm",
+   "physical/hbm_accel_die_views/common",
+   "rtl/common",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "vm_cp_bench",
+    "cmd": "bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/vmcp",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "events=(\\d+)/"
+   }
+  ],
+  "views_to": "physical/ref_tile/vm_cp_rwt/views",
+  "record_to": "results/rtl/ref_tile/vm_cp_rwt"
  }
 }
