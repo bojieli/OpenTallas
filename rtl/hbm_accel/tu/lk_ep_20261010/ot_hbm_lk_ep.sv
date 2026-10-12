@@ -283,77 +283,62 @@ module ot_hbm_lk_ep #(
     (* keep *) reg [NR-1:0] rl;
     always @(posedge clk) rl <= {NR{rs[1]}};
     wire rtq = rl[NS], rto = rl[NS+1], rrx = rl[NS+2], rgb = rl[NS+3];
-    // session: one register per macro (+ one for the reverse-frame check); changes only under the coordinated reset
-    (* keep *) reg [NS*EW-1:0] ses_p;
+    // session: the reverse-frame check copy (each tile holds its macro's copy)
     reg  [EW-1:0] ses_c;
-    always @(posedge clk) begin ses_p <= {NS{session}}; ses_c <= session; end
+    always @(posedge clk) ses_c <= session;
 
-    // ---------------------------------------------------------------- retry pipelines
-    wire [NS-1:0]    p_in_v, p_in_r, p_tx_v, p_tx_r, p_rx_v, p_rx_r, p_out_v, p_out_r, p_fb_v, p_fault, p_fb_n;
-    wire [W-1:0]     p_in_dd [0:NS-1];
-    wire [W-1:0]     p_tx_d  [0:NS-1];
-    wire [SW-1:0]    p_tx_s  [0:NS-1];
-    wire [EW-1:0]    p_tx_e  [0:NS-1];
-    wire [TW-1:0]    p_rx_w  [0:NS-1];
-    wire [W-1:0]     p_out_d [0:NS-1];
-    wire [SW-1:0]    p_ack_s [0:NS-1];
-    wire [NS-1:0]    p_ack_n;
-    wire [EW-1:0]    p_ack_e [0:NS-1];
-    wire [SW-1:0]    p_ret   [0:NS-1];
-    wire [31:0]      p_rep   [0:NS-1];
-    wire [SW-1:0]    p_fb_s  [0:NS-1];
-    genvar g;
-    generate for (g = 0; g < NS; g = g + 1) begin : g_p
-`ifdef SYNTHESIS
-        ot_hbm_link_retry_pipeline u_rp (
-`else
-        ot_hbm_link_retry_pipeline #(.ENABLE(1), .W(W), .SW(SW), .EW(EW), .DEPTH(512), .TIMEOUT(TIMEOUT),
-            .MAX_RETRY(MAX_RETRY), .RSTR(1), .RX_SLOT_SAMPLE(1), .TX_SLOT_SAMPLE(1), .IN_PIN(1), .IN_WPIN(1),
-`ifndef OT_LKEP_MUT_NAKHOLD
-            .NAK_HOLD(NAKH_HW)) u_rp (
-`else
-            .NAK_HOLD(0)) u_rp (                     // mutant: the pre-fix pipeline (a lost replay waits for TIMEOUT)
-`endif
-`endif
-            .clk(clk), .rst_n(rl[g]), .session(ses_p[g*EW +: EW]),
-            .in_valid(p_in_v[g]), .in_ready(p_in_r[g]), .in_data(p_in_dd[g]),
-            .tx_valid(p_tx_v[g]), .tx_ready(p_tx_r[g]), .tx_data(p_tx_d[g]), .tx_seq(p_tx_s[g]), .tx_session(p_tx_e[g]),
-            .rx_valid(p_rx_v[g]), .rx_ready(p_rx_r[g]), .rx_ue(1'b0), .rx_data(p_rx_w[g][W-1:0]),
-            .rx_seq(p_rx_w[g][W +: SW]), .rx_session(p_rx_w[g][W+SW +: EW]),
-            .out_valid(p_out_v[g]), .out_ready(p_out_r[g]), .out_data(p_out_d[g]),
-            .ack_seq(p_ack_s[g]), .ack_nak(p_ack_n[g]), .ack_session(p_ack_e[g]),
-            .fb_valid(p_fb_v[g]), .fb_good(1'b1), .fb_nak(p_fb_n[g]), .fb_seq(p_fb_s[g]), .fb_session(ses_p[g*EW +: EW]),
-            .fault(p_fault[g]), .retained(p_ret[g]), .replay_count(p_rep[g]));
-    end endgenerate
-
-    // ---------------------------------------------------------------- TX queues (per sub), far credits, admission
-    // Flit k goes to sub k mod NS (esel), so the a-th oldest queued flit is the head of sub (wsel + a) mod NS: admitting
-    // in striping order from wsel (stopping at the first sub without a flit, a far credit or a pin-buffer credit) is the
-    // same order as one shared queue.  The write enables are registered one-hot vectors (one copy per 64-b slice), the
-    // read is a one-hot head (one copy per slice) AND-OR into the launch register l0 (free-running; l0_v = admitted).
+    // ---------------------------------------------------------------- sub tiles (el1011-hbm-coll rebuild, ot_lkep_sub.sv)
+    // Each sub's retry macro, TX queue bank, pin buffers, pin halves of its sink queues and every relay chain live in one
+    // hardened tile; the glue below talks to it only through registers on both sides (ot_lkep_sub header).
+    wire [NS-1:0]    icr_ret, th_vt, oh_vt, sf_t, sd_t;
+    wire [TW-1:0]    th_dt [0:NS-1];
+    wire [W-1:0]     oh_dt [0:NS-1];
+    wire [SW+EW:0]   ak    [0:NS-1];
+    wire [31:0]      rp_t  [0:NS-1];
+    wire [NS-1:0]    tcrq, ocrq;
     reg  [1:0]          esel;
     reg  [NS*QD-1:0]    tl;
     reg                 w_v;
     reg  [W-1:0]        w_d;
     (* keep *) reg [NS*NSL*QD-1:0] w_oh;
-    // el1011-hbm-lkep: per-sub bank copy stage.  dcae4c608 preroute -1,621 ps = w_d -> qs[g] was ONE edge of ~1,800 ps
-    // buffered wire (w_d broadcast to the three subs' queue banks, which sit toward their macros).  Each bank now takes a
-    // registered copy of the write data and of its own one-hot slice enables (keep): w_d -> w_dg[g] -> qs[g] (2 hops).
-    // qn counts a word one edge later (w_v2), so a word is admitted only once it is in its bank; +1 edge die credit loop.
-    (* keep *) reg [NS*W-1:0]       w_dg;
-    (* keep *) reg [NS*NSL*QD-1:0] w_ohg;
     reg                 w_v2;
-    (* keep *) reg [NS*NSL*QD-1:0] hd;
-    reg  [NS*QD*W-1:0]  qs;
-    reg  [NS*W-1:0]     l0_d;
     reg  [NS-1:0]       l0_v;
+    reg  [NS-1:0]       fbv;
+    reg                 fb_nak; reg [SW-1:0] fb_seq;
+    reg           p_v, c_v; reg [HB-1:0] p_h, c_h; reg [13:0] p_c;
+    wire [1:0]    c_sub = c_h[W +: 2];
+    genvar g;
+    generate for (g = 0; g < NS; g = g + 1) begin : g_t
+`ifdef OT_LKEP_HARD
+        ot_lkep_sub u_t (
+`else
+        ot_lkep_sub #(.W(W), .SW(SW), .EW(EW), .QD(QD), .RL(RL), .PBD(PBD), .TFD(TFD), .OFD(OFD), .SQ(SQ), .SL(SL),
+            .TIMEOUT(TIMEOUT), .MAX_RETRY(MAX_RETRY), .NAKH_HW(NAKH_HW)) u_t (
+`endif
+            .clk(clk), .rst_n(rst_n), .session(session),
+            .w_d(w_d), .w_oh(w_oh[g*NSL*QD +: NSL*QD]), .adm(l0_v[g]), .icr_ret(icr_ret[g]),
+            .tx_v(th_vt[g]), .tx_d(th_dt[g]), .tx_cr(tcrq[g]),
+            .ak(ak[g]), .fb_v(fbv[g]), .fb_d({fb_nak, fb_seq}),
+            .rx_v(c_v && (c_sub == g)), .rx_d({c_h[HB-1:W+2], c_h[W-1:0]}),
+            .o_v(oh_vt[g]), .o_d(oh_dt[g]), .o_cr(ocrq[g]),
+            .st_fault(sf_t[g]), .st_drop(sd_t[g]), .st_rep(rp_t[g]));
+    end endgenerate
+`ifdef OT_LKEP_HARD
+    // a hard tile is a fixed cell: its defaults must be the configuration this cluster asks for
+    initial if (W != 545 || SW != 12 || EW != 24 || QD != 16 || RL != 2 || PBD != 4 || TFD != 4 || OFD != 4 || SQ != 4 || SL != 64)
+        $fatal(1, "hfd_lk_ep: hard ot_lkep_sub view is W545 QD16 RL2 PBD/TFD/OFD/SQ 4 SL64");
+`endif
+
+    // ---------------------------------------------------------------- TX queue control (banks live in the tiles)
+    // Flit k goes to sub k mod NS (esel); admission in striping order from wsel (stopping at the first sub without a
+    // flit, a far credit or a pin-buffer credit) = one shared queue's order.  l0_v[g] (registered admission) tells tile g
+    // to advance its bank head; the bank read happens in the tile two edges later (ot_lkep_sub).
     reg  [QB:0]         qn;                             // written, not yet admitted
     reg  [8:0]          fc;                             // far-end credits held (FCR <= 511)
     reg  [1:0]          wsel;                           // sub of the next admitted flit
     reg                 q_ovf;
     reg  [QB+1:0]       crp;                            // die-side credits owed
     reg  [NS*CI-1:0]    icr;                            // pin-buffer credits by sub
-    wire [NS-1:0]       icr_ret;
     reg  [NS-1:0]       admv;                           // admitted this edge, by sub
     reg  [2:0]          nadm;
     reg  [7:0]          fc_add;                         // credits returned by the far end this edge (from the rev path)
@@ -368,42 +353,21 @@ module ot_hbm_lk_ep #(
         end
     end
     always @(posedge clk) w_d <= t_flit;
-    always @(posedge clk) w_dg <= {NS{w_d}};
-    genvar e, s;
-    generate for (g = 0; g < NS; g = g + 1) begin : g_q
-        for (s = 0; s < NSL; s = s + 1) begin : g_s
-            localparam integer LO = s * SL;
-            localparam integer HI = (LO + SL > W) ? W : LO + SL;
-            for (e = 0; e < QD; e = e + 1) begin : g_e
-                always @(posedge clk) if (w_ohg[(g*NSL+s)*QD+e]) qs[(g*QD+e)*W+LO +: HI-LO] <= w_dg[g*W+LO +: HI-LO];
-            end
-            reg [HI-LO-1:0] x;
-            integer j;
-            always @(*) begin
-                x = {(HI-LO){1'b0}};
-                for (j = 0; j < QD; j = j + 1) x = x | ({(HI-LO){hd[(g*NSL+s)*QD+j]}} & qs[(g*QD+j)*W+LO +: HI-LO]);
-            end
-            always @(posedge clk) l0_d[g*W+LO +: HI-LO] <= x;
-        end
-    end endgenerate
     always @(posedge clk or negedge rtq)
         if (!rtq) begin
-            esel <= 0; w_v <= 1'b0; w_oh <= 0; l0_v <= 0; w_v2 <= 1'b0; w_ohg <= 0;
+            esel <= 0; w_v <= 1'b0; w_oh <= 0; l0_v <= 0; w_v2 <= 1'b0;
             for (gg = 0; gg < NS; gg = gg + 1) begin
                 tl[gg*QD +: QD] <= {{(QD-1){1'b0}}, 1'b1};
                 icr[gg*CI +: CI] <= PBD + 1;
-                for (ss = 0; ss < NSL; ss = ss + 1) hd[(gg*NSL+ss)*QD +: QD] <= {{(QD-1){1'b0}}, 1'b1};
             end
             qn <= 0; fc <= FCR[8:0]; wsel <= 0; t_cr <= 1'b0; q_ovf <= 1'b0; crp <= 0;
         end else begin
             w_v <= t_v;
-            w_v2 <= w_v; w_ohg <= w_oh;
+            w_v2 <= w_v;
             for (gg = 0; gg < NS; gg = gg + 1) begin
                 for (ss = 0; ss < NSL; ss = ss + 1)
                     w_oh[(gg*NSL+ss)*QD +: QD] <= (t_v && esel == gg) ? tl[gg*QD +: QD] : {QD{1'b0}};
                 if (t_v && esel == gg) tl[gg*QD +: QD] <= {tl[gg*QD +: QD], tl[gg*QD+QD-1]};
-                if (admv[gg]) for (ss = 0; ss < NSL; ss = ss + 1)
-                    hd[(gg*NSL+ss)*QD +: QD] <= {hd[(gg*NSL+ss)*QD +: QD], hd[(gg*NSL+ss)*QD+QD-1]};
                 icr[gg*CI +: CI] <= icr[gg*CI +: CI] - (admv[gg] ? 1'b1 : 1'b0) + (icr_ret[gg] ? 1'b1 : 1'b0);
             end
             if (t_v) esel <= (esel == NS - 1) ? 2'd0 : esel + 1'b1;
@@ -419,24 +383,14 @@ module ot_hbm_lk_ep #(
 `endif
             fc <= fc + {1'b0, fc_add} - {6'b0, nadm};
         end
-    // l0 -> RL relay stages -> pin buffer at the macro; one credit back per word the macro took
-    generate for (g = 0; g < NS; g = g + 1) begin : g_ti
-        wire         r_v_, cr_p, cr_d, dr;
-        wire [W-1:0] r_d;
-        wire [NSL-1:0] r_vs;
-        ot_lkep_relay #(.W(W), .N(RL), .NV(NSL)) u_r (.clk(clk), .rst_n(rl[g]), .i_v(l0_v[g]), .i_d(l0_d[g*W +: W]), .o_v(r_v_), .o_vr(r_vs), .o_d(r_d));
-        ot_lkep_pinq #(.W(W), .D(PBD), .SL(SL)) u_b (.clk(clk), .rst_n(rl[g]), .i_v(r_v_), .i_vs(r_vs), .i_d(r_d),
-            .o_v(p_in_v[g]), .o_d(p_in_dd[g]), .o_rdy(p_in_r[g]), .cr(cr_p), .drop(dr));
-        ot_lkep_relay #(.W(1), .N(RL)) u_c (.clk(clk), .rst_n(rtq), .i_v(cr_p), .i_d(1'b0), .o_v(icr_ret[g]), .o_d(cr_d));
-    end endgenerate
 
-    // ---------------------------------------------------------------- TX out: macro tx -> per-sub FIFO -> grant
+    // ---------------------------------------------------------------- TX out: tile sink stage 1 -> consumer FIFO -> grant
     wire [NS-1:0]    th_v;
     wire [TW-1:0]    th_d [0:NS-1];
     reg  [NS-1:0]    gnt;
     generate for (g = 0; g < NS; g = g + 1) begin : g_to
-        ot_lkep_sinkq #(.W(TW), .D(TFD), .N(RL), .SL(SL)) u_q (.clk(clk), .rst_p(rl[g]), .rst_c(rto),
-            .m_v(p_tx_v[g]), .m_d({p_tx_e[g], p_tx_s[g], p_tx_d[g]}), .m_rdy(p_tx_r[g]), .h_v(th_v[g]), .h_d(th_d[g]), .pop(gnt[g]));
+        ot_lkep_sinkc #(.W(TW), .D(TFD), .N(RL), .SL(SL)) u_q (.clk(clk), .rst_c(rto), .i_v(th_vt[g]), .i_d(th_dt[g]),
+            .h_v(th_v[g]), .h_d(th_d[g]), .pop(gnt[g]), .crq(tcrq[g]));
     end endgenerate
 
     // ---------------------------------------------------------------- gearbox pacer (exact mirror of its slot FIFO)
@@ -480,13 +434,6 @@ module ot_hbm_lk_ep #(
         end
 
     // ---------------------------------------------------------------- reverse frame out (acks + credit count)
-    // acks captured at the macro pins (free-running) and carried RL stages; they are levels (the latest ack state)
-    wire [SW+EW:0] ak [0:NS-1];
-    generate for (g = 0; g < NS; g = g + 1) begin : g_ak
-        wire akv;
-        ot_lkep_relay #(.W(SW+EW+1), .N(RL+1)) u_a (.clk(clk), .rst_n(rl[g]), .i_v(1'b0), .i_d({p_ack_e[g], p_ack_s[g], p_ack_n[g]}),
-            .o_v(akv), .o_d(ak[g]));
-    end endgenerate
     reg  [1:0]    rsub;
     reg  [7:0]    ccnt;
     reg  [RFW-1:0] r_tx;
@@ -519,8 +466,6 @@ module ot_hbm_lk_ep #(
         .locked(locked), .fault(gbx_fault));
 
     // ---------------------------------------------------------------- reverse frame in -> feedback, credits
-    reg  [NS-1:0] fbv;
-    reg           fb_nak; reg [SW-1:0] fb_seq;
     reg  [7:0]    ccnt_far;
     wire [11:0]   r_crc_rx;
     ot_crc_par #(.W(47), .N(12), .POLY(12'h80F), .INIT(12'hFFF)) u_crc_rr (.d({ses_c, r_rx[22:0]}), .crc(r_crc_rx));
@@ -533,14 +478,8 @@ module ot_hbm_lk_ep #(
             fc_add <= r_ok ? r_rx[22:15] - ccnt_far : 8'd0;
             if (r_ok) ccnt_far <= r_rx[22:15];
         end
-    // feedback to each macro: RL + 1 stages, the last one at the macro pins
-    generate for (g = 0; g < NS; g = g + 1) begin : g_fb
-        ot_lkep_relay #(.W(SW+1), .N(RL+1)) u_f (.clk(clk), .rst_n(rl[g]), .i_v(fbv[g]), .i_d({fb_nak, fb_seq}),
-            .o_v(p_fb_v[g]), .o_d({p_fb_n[g], p_fb_s[g]}));
-    end endgenerate
 
-    // ---------------------------------------------------------------- forward frame in -> CRC (pipelined) -> per-sub FIFO
-    reg           p_v, c_v; reg [HB-1:0] p_h, c_h; reg [13:0] p_c;
+    // ---------------------------------------------------------------- forward frame in -> CRC (pipelined) -> tiles
     wire [13:0]   p_crc;                                // CRC of the frame now in p_h
     ot_crc_pipe #(.W(HB), .N(14), .POLY(14'h0805), .INIT(14'h3FFF), .NP(4)) u_crc_f (.clk(clk), .d(f_rx[HB-1:0]), .crc(p_crc));
     wire          p_ok = (p_crc == p_c);
@@ -555,29 +494,18 @@ module ot_hbm_lk_ep #(
             c_v <= p_v;
 `endif
         end
-    wire [1:0]    c_sub = c_h[W +: 2];
-    wire [NS-1:0] rdrop;
-    generate for (g = 0; g < NS; g = g + 1) begin : g_rx
-        wire          q_v, cr_u;
-        wire [TW-1:0] q_d;
-        wire [(TW+SL-1)/SL-1:0] q_vs;
-        ot_lkep_relay #(.W(TW), .N(RL), .NV((TW+SL-1)/SL)) u_r (.clk(clk), .rst_n(rl[g]), .i_v(c_v && (c_sub == g)), .o_vr(q_vs),
-            .i_d({c_h[HB-1:W+2], c_h[W-1:0]}), .o_v(q_v), .o_d(q_d));
-        ot_lkep_pinq #(.W(TW), .D(SQ), .SL(SL)) u_b (.clk(clk), .rst_n(rl[g]), .i_v(q_v), .i_vs(q_vs), .i_d(q_d),
-            .o_v(p_rx_v[g]), .o_d(p_rx_w[g]), .o_rdy(p_rx_r[g]), .cr(cr_u), .drop(rdrop[g]));
-    end endgenerate
     reg           drop;
     always @(posedge clk or negedge rrx)
         if (!rrx) drop <= 1'b0;
-        else drop <= (|rdrop) || (c_v && (c_sub >= NS)) || (p_v && !p_ok);
+        else drop <= (|sd_t) || (c_v && (c_sub >= NS)) || (p_v && !p_ok);
 
-    // ---------------------------------------------------------------- macro out -> per-sub FIFO -> strict round-robin merge
+    // ---------------------------------------------------------------- tile out stage 1 -> consumer FIFO -> strict round-robin merge
     wire [NS-1:0]    oh_v;
     wire [W-1:0]     oh_d [0:NS-1];
     reg  [NS-1:0]    opop;
     generate for (g = 0; g < NS; g = g + 1) begin : g_out
-        ot_lkep_sinkq #(.W(W), .D(OFD), .N(RL), .SL(SL)) u_q (.clk(clk), .rst_p(rl[g]), .rst_c(rrx),
-            .m_v(p_out_v[g]), .m_d(p_out_d[g]), .m_rdy(p_out_r[g]), .h_v(oh_v[g]), .h_d(oh_d[g]), .pop(opop[g]));
+        ot_lkep_sinkc #(.W(W), .D(OFD), .N(RL), .SL(SL)) u_q (.clk(clk), .rst_c(rrx), .i_v(oh_vt[g]), .i_d(oh_dt[g]),
+            .h_v(oh_v[g]), .h_d(oh_d[g]), .pop(opop[g]), .crq(ocrq[g]));
     end endgenerate
     reg  [1:0]    msel;
     reg  [W-1:0]  o_d;
@@ -601,18 +529,14 @@ module ot_hbm_lk_ep #(
             if (oh_v[msel]) msel <= (msel == NS - 1) ? 2'd0 : msel + 1'b1;
         end
 
-    // ---------------------------------------------------------------- status (macro status pins captured first)
-    reg  [NS-1:0] pf_q;
-    reg  [31:0]   rp_q [0:NS-1];
+    // ---------------------------------------------------------------- status (tile status registers)
     integer v;
     reg [31:0] rep_sum;
-    always @(*) begin rep_sum = 0; for (v = 0; v < NS; v = v + 1) rep_sum = rep_sum + rp_q[v]; end
-    always @(posedge clk) for (v = 0; v < NS; v = v + 1) rp_q[v] <= p_rep[v];
+    always @(*) begin rep_sum = 0; for (v = 0; v < NS; v = v + 1) rep_sum = rep_sum + rp_t[v]; end
     always @(posedge clk or negedge rto)
-        if (!rto) begin pf_q <= 0; fault <= 1'b0; st_replays <= 0; st_drops <= 0; end
+        if (!rto) begin fault <= 1'b0; st_replays <= 0; st_drops <= 0; end
         else begin
-            pf_q <= p_fault;
-            fault <= fault | (|pf_q) | gbx_fault | q_ovf;
+            fault <= fault | (|sf_t) | gbx_fault | q_ovf;
             st_replays <= rep_sum;
             if (drop) st_drops <= st_drops + 1'b1;
         end
