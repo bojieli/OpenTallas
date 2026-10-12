@@ -148,18 +148,18 @@ module hfd_vm_sw_e (
     input wire [3033:0] w2e,
     output wire [5400:0] e2w
 );
-wire [3219:0] d1_0;
-wire [666:0] d2_0;
+wire [2937:0] d1_0;
+wire [948:0] d2_0;
 wire [2221:0] e0_0;
-wire [5126:0] e0_1;
-wire [2456:0] e1_0;
-wire [3279:0] u0_0;
-wire [1232:0] u1_0;
-wire [775:0] u2_0;
-wire [2579:0] w0_0;
-wire [856:0] w0_1;
-wire [4007:0] w1_0;
-wire [3276:0] w1_1;
+wire [4387:0] e0_1;
+wire [2620:0] e1_0;
+wire [3481:0] u0_0;
+wire [1769:0] u1_0;
+wire [36:0] u2_0;
+wire [2842:0] w0_0;
+wire [1138:0] w0_1;
+wire [3969:0] w1_0;
+wire [2255:0] w1_1;
 hfd_vm_sw_e_t0 u_t0 (.ck(ckt0),
     .ckw0(ckw0),
     .ckw1(ckw1),
