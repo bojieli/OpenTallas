@@ -1,5 +1,5 @@
 {
- "name": "qfd_tile_nk_tp8-r1-COMMIT",
+ "name": "qfd_tile_nk_tp8-r1-cd66ca4e7",
  "block": "ot_qwen_rom_tile_nk",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8/par",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-qwen-tp8-par",
-  "commit": "COMMIT"
+  "commit": "cd66ca4e7"
  },
  "stages": {
   "bench": [
@@ -158,7 +158,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_nk_tp8/qfd_tile_nk_tp8-r1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tile_nk_tp8/qfd_tile_nk_tp8-r1-cd66ca4e7"
   }
  ],
  "cycles_added": 0,
