@@ -10,6 +10,12 @@
 // B2 (+define+NCL=4): NCL cluster engines of NSM/NCL SMs each (strap sm_base = c NSM/NCL), each with its own x loader
 // and record-pipelined pub on the VM; every record goes to all clusters (accepted when all are ready) and retires when
 // the last cluster retires it.  Real SMs 0/1 sit in cluster 0; x writes of clusters > 0 reach shadows only.
+// BDW8 (+define+WVM8, smmv-b 10-12): every cluster's x loader runs BW8 (block-dot x over the cluster's LOCAL VM slice
+// 8-lane group); each cluster has its OWN slice model (8 lanes, lane b <-> bank b = sector[2:0], one sector a lane an
+// edge, +XLUP request relay edges, +XLBK bank edges, +XLDN response / credit relay edges; data = the x image, which no
+// record writes: A < 200,000 words, O >= 200,000).  +define+XQ=n: engine loads in flight.  +define+MUT_B8: BW8 mutant.
+// Per-record trace (cluster 0): xi = x stage (load issued / XR hit), xd = x done, is = SM issue done, a0 = real SM 0
+// done (arrive), pd = publication done.
 module tb_hgi_smmv_tput;
 `ifdef MUT_ROW
     localparam integer MW = 1;
@@ -32,16 +38,38 @@ module tb_hgi_smmv_tput;
 `ifndef NCL
 `define NCL 1
 `endif
+`ifndef XQ
+`define XQ 1
+`endif
+`ifdef WVM8
+    localparam integer BW = 1;
+`else
+    localparam integer BW = 0;
+`endif
+`ifdef MUT_B8
+    localparam integer MB8 = 1;
+`else
+    localparam integer MB8 = 0;
+`endif
+    integer xlup, xldn, xlbk;
+    initial begin
+        if (!$value$plusargs("XLUP=%d", xlup)) xlup = 4;
+        if (!$value$plusargs("XLDN=%d", xldn)) xldn = 4;
+        if (!$value$plusargs("XLBK=%d", xlbk)) xlbk = 3;
+    end
     `include "tput_sizes.svh"
     localparam integer NSM = 32, NREAL = 2, CW = 106, NXC = 4, NPC = 4, NCL = `NCL, NSL = NSM / NCL;
+    reg [255:0] xmem [0:32767];
+    integer xi_c [0:NREC-1]; integer xd_c [0:NREC-1]; integer is_c [0:NREC-1]; integer a0_c [0:NREC-1]; integer pd_c [0:NREC-1];
     reg clk = 0;
     always #1 clk = ~clk;
     reg [937:0] recm [0:NREC-1]; reg [119:0] infm [0:NREC-1]; reg [2063:0] xwm [0:NXW-1];
     reg [287:0] vmim [0:NVMI-1]; reg [63:0] vmem [0:NVME-1]; reg [1119:0] linem [0:NLINE-1];
     reg [1087:0] lmem [0:LSPAN-1]; reg lhas [0:LSPAN-1];
-    reg [8*256-1:0] dir; integer i, lat, bwx10;
+    reg [8*256-1:0] dir; integer i, lat, bwx10, nvmi;
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
+        if (!$value$plusargs("NVMI=%d", nvmi)) nvmi = NVMI;      // the XR vectors of a layer = the same sizes, fewer x sectors
         if (!$value$plusargs("LAT=%d", lat)) lat = 104;
         if (!$value$plusargs("BWX10=%d", bwx10)) bwx10 = 31667;
         $readmemh({dir, "/tput_rec.mem"}, recm); $readmemh({dir, "/tput_info.mem"}, infm);
@@ -72,7 +100,7 @@ module tb_hgi_smmv_tput;
         wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
         wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q; wire [6:0] x_xb;
         wire l_en; wire [6:0] l_addr, l_grp; wire [2047:0] l_data;
-        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .MUT_SLOT(MS), .MUT_EARLY(ME)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
+        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
             .rec_v(rec_v && rec_rdy), .rec_rdy(c_rdy[cl]),
             .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
             .rec_n_b(cur[937:917]), .rec_done(c_done[cl]), .rec_fault(c_fault[cl]), .halted(c_halt[cl]), .x_v(x_v), .x_rdy(x_rdy),
@@ -81,11 +109,36 @@ module tb_hgi_smmv_tput;
             .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
             .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]));
-        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+        wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
+        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
             .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
             .x_fault(x_fault), .xw_en(l_en), .xw_addr(l_addr), .xw_grp(l_grp), .xw_data(l_data),
             .vmq(xq[cl*NXC*338 +: NXC*338]), .vmr(xr[cl*NXC*274 +: NXC*274]),
-            .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
+            .rg_req(rg_req), .rg_gnt(rg_gnt), .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr));
+        // the cluster's LOCAL slice 8-lane group (behavioural; time-stamped in-order queues a lane)
+        integer lq_s [0:7][0:255]; longint lq_t [0:7][0:255]; integer lh [0:8], lt [0:8];
+        longint cr_t [0:7][0:255]; integer ch [0:7], ct [0:7];
+        longint rs_t [0:7][0:255]; reg [255:0] rs_d [0:7][0:255]; integer rh2 [0:7], rt2 [0:7];
+        initial for (integer b = 0; b < 8; b = b + 1) begin lh[b] = 0; lt[b] = 0; ch[b] = 0; ct[b] = 0; rh2[b] = 0; rt2[b] = 0; end
+        always @(posedge clk) begin
+            rg_gnt <= rg_req;
+            for (integer b = 0; b < 8; b = b + 1) begin
+                wrq_cr[b] <= 1'b0; wrr[b*257 + 256] <= 1'b0;
+                if (rst_n && wrq[b*16 + 15]) begin
+                    if (wrq[b*16 +: 3] != 3'(b)) begin $display("ERR cluster %0d lane %0d got sector %0d (bank %0d)", cl, b, wrq[b*16 +: 15], wrq[b*16 +: 3]); errors = errors + 1; end
+                    lq_s[b][lt[b] % 256] = wrq[b*16 +: 15]; lq_t[b][lt[b] % 256] = cyc + xlup; lt[b] = lt[b] + 1;
+                    if (lt[b] - lh[b] > 64) begin $display("ERR cluster %0d lane %0d queue overrun", cl, b); errors = errors + 1; end
+                end
+                if (lh[b] != lt[b] && lq_t[b][lh[b] % 256] <= cyc) begin            // the bank takes one an edge
+                    cr_t[b][ct[b] % 256] = cyc + xldn; ct[b] = ct[b] + 1;
+                    rs_t[b][rt2[b] % 256] = cyc + xlbk + xldn; rs_d[b][rt2[b] % 256] = xmem[lq_s[b][lh[b] % 256]]; rt2[b] = rt2[b] + 1;
+                    lh[b] = lh[b] + 1;
+                end
+                if (ch[b] != ct[b] && cr_t[b][ch[b] % 256] <= cyc) begin wrq_cr[b] <= 1'b1; ch[b] = ch[b] + 1; end
+                if (rh2[b] != rt2[b] && rs_t[b][rh2[b] % 256] <= cyc) begin
+                    wrr[b*257 +: 257] <= {1'b1, rs_d[b][rh2[b] % 256]}; rh2[b] = rh2[b] + 1; end
+            end
+        end
         if (cl == 0) begin : g_xw
             assign xw_en = l_en; assign xw_addr = l_addr; assign xw_grp = l_grp; assign xw_data = l_data;
         end
@@ -177,6 +230,7 @@ module tb_hgi_smmv_tput;
             if (arr_real[q0] != arr_q[q0]) begin
                 for (s3 = NREAL; s3 < NSM; s3 = s3 + 1)
                     if (s3 % NREAL == q0 && rows_of(opl[q0][arrp[q0]], s3) > 0) sh_arr[s3] <= ~sh_arr[s3];
+                if (q0 == 0 && opl[0][arrp[0]] < NREC) a0_c[opl[0][arrp[0]]] = cyc;
                 arrp[q0] = arrp[q0] + 1;
             end
         end
@@ -190,6 +244,20 @@ module tb_hgi_smmv_tput;
             qd = tr[255:0];
         end
     endtask
+    // per-record trace of cluster 0
+    integer nxp = 0, nip = 0, npd = 0, xlq [0:NREC-1], xlh = 0, xlt = 0; reg [2:0] xp_q = 0, ip_q = 0;
+    initial for (integer z = 0; z < NREC; z = z + 1) begin xi_c[z] = -1; xd_c[z] = -1; is_c[z] = -1; a0_c[z] = -1; pd_c[z] = -1; end
+    always @(posedge clk) if (rst_n) begin
+        xp_q <= g_cl[0].u_a.xp; ip_q <= g_cl[0].u_a.ip;
+        if (g_cl[0].u_a.xp != xp_q && nxp < NREC) begin
+            xi_c[nxp] = cyc;
+            if (g_cl[0].x_v) begin xlq[xlt] = nxp; xlt = xlt + 1; end else xd_c[nxp] = cyc;   // load / XR hit
+            nxp = nxp + 1;
+        end
+        if (g_cl[0].x_done && xlh < xlt) begin xd_c[xlq[xlh]] = cyc; xlh = xlh + 1; end
+        if (g_cl[0].u_a.ip != ip_q && nip < NREC) begin is_c[nip] = cyc; nip = nip + 1; end
+        if (g_cl[0].pub_done && npd < NREC) begin pd_c[npd] = cyc; npd = npd + 1; end
+    end
     integer j, t, k, nf, r, prev_ret, busy_sum;
     integer disp [0:NREC-1]; integer retc [0:NREC-1];
     reg [255:0] qd; reg [31:0] lastsec;
@@ -205,8 +273,8 @@ module tb_hgi_smmv_tput;
         arr_q = 0; k = 0; for (j = 0; j < NCL; j = j + 1) kc[j] = 0;
         repeat (3) @(posedge clk);
         rst_n = 0; repeat (4) @(posedge clk); rst_n = 1; repeat (4) @(posedge clk);
-        for (j = 0; j < NVMI; j = j + 1) vm_sec(1'b1, vmim[j][287:256], vmim[j][255:0], qd);
-        $display("x loaded: %0d sectors at cycle %0d (LAT %0d BWX10 %0d W %0d NCL %0d)", NVMI, cyc, lat, bwx10, `WIN, NCL); $fflush;
+        for (j = 0; j < nvmi; j = j + 1) begin vm_sec(1'b1, vmim[j][287:256], vmim[j][255:0], qd); xmem[vmim[j][270:256]] = vmim[j][255:0]; end
+        $display("x loaded: %0d sectors at cycle %0d (LAT %0d BWX10 %0d W %0d NCL %0d BW8 %0d XQ %0d XL %0d/%0d/%0d)", nvmi, cyc, lat, bwx10, `WIN, NCL, BW, `XQ, xlup, xlbk, xldn); $fflush;
         k = 0; nf = 0;
         for (r = 0; r < NREC && nf == 0; r = r + 1) begin
             @(negedge clk); cur = recm[r]; rec_v = 1;
@@ -218,7 +286,8 @@ module tb_hgi_smmv_tput;
         if (k != NREC || nf != 0) begin $display("ERR retired %0d of %0d, faults %0d (x_fault %b pub_fault %b)", k, NREC, nf, c_xfault, c_pfault); errors = errors + 1; end
         prev_ret = 0; busy_sum = 0;
         for (r = 0; r < k; r = r + 1) begin
-            $display("TPUT %0d disp %0d ret %0d service %0d", r, disp[r], retc[r], retc[r] - (disp[r] > prev_ret ? disp[r] : prev_ret)); 
+            $display("TPUT %0d disp %0d ret %0d service %0d xi %0d xd %0d is %0d a0 %0d pd %0d", r, disp[r], retc[r],
+                     retc[r] - (disp[r] > prev_ret ? disp[r] : prev_ret), xi_c[r], xd_c[r], is_c[r], a0_c[r], pd_c[r]);
             busy_sum = busy_sum + retc[r] - (disp[r] > prev_ret ? disp[r] : prev_ret); prev_ret = retc[r];
         end
         $display("lines real SM0 %0d SM1 %0d", lines_req[0], lines_req[1]);

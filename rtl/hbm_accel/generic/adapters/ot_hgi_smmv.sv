@@ -31,6 +31,8 @@ module ot_hgi_smmv #(
     parameter integer NSM = 8,            // SMs served by this engine (B2 default 8 = one cluster; legacy 32 = whole die)
     parameter integer W = 4,              // record window (power of two, <= 4: 3-bit sequence numbers)
     parameter integer XD = 128,
+    parameter integer XQ = 1,             // smmv-b BDW8: x loads in flight (1 or 2; the pipelined BW8 loader takes the next
+                                          //   load while the previous one drains; x_done in order); 1 = one at a time
     parameter integer MUT_SLOT = 0,
     parameter integer MUT_EARLY = 0
 ) (
@@ -128,7 +130,7 @@ module ot_hgi_smmv #(
     function automatic [WI-1:0] ix(input [2:0] q); ix = q[WI-1:0]; endfunction
 
     // ================= x allocator / x stage =================
-    reg [7:0] used; reg [6:0] ap; reg [6:0] xbc; reg x_busy;
+    reg [7:0] used; reg [6:0] ap; reg [6:0] xbc; reg [1:0] xn; reg [2:0] xfq [0:1]; reg xfh, xft;
     wire [7:0] nf = {e_g[ix(xp)], 3'b000};
     wire       fits = ({1'b0, ap} + nf) <= 8'd128;
     wire [6:0] a_st = (MUT_SLOT != 0) ? 7'd0 : (fits ? ap : 7'd0);
@@ -191,7 +193,7 @@ module ot_hgi_smmv #(
             d0_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0; rdy_r <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
             // control only (pointers, valids, counters); datapath / field registers carry no reset (gate: rst fanout)
             tail <= 0; xp <= 0; ip <= 0; rh <= 0; ppc <= 0; pdc <= 0; e_xd <= 0; used <= 0; ap <= 0;
-            x_busy <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0;
+            xn <= 2'd0; xfh <= 1'b0; xft <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0;
             xo <= 0; xo_v <= 1'b0; st_pend <= 0; d_pend <= 0;
             rel <= 0; arr_prev <= 0; iss_cnt <= 0; done_cnt <= 0; sm_cg_en <= 1'b0; rh_wait <= 1'b0;
         end else begin : main
@@ -242,7 +244,7 @@ module ot_hgi_smmv #(
             // ---- x stage: allocate the slot, issue the load; one load in flight
             used_n = used;
             if (x_v && x_rdy) x_v <= 1'b0;
-            if (!x_busy && xp != tail && !halt_q && x_hit) begin
+            if (!x_v && xn == 2'd0 && xp != tail && !halt_q && x_hit) begin
                 // X REUSE hit: the x of this record is the latest load's slot; no load.  The slot stays pinned until this
                 // record retires: the latest holder's release moves to it, or (holder already retired) it is re-reserved
                 // (it sits right behind the ring pointer, nothing was allocated since).
@@ -250,14 +252,15 @@ module ot_hgi_smmv #(
                 if (MUT_SLOT != 0) e_rel[ix(xp)] <= 8'd0;
                 else if (xo_live && !(ret_go && rh == xo)) begin e_rel[ix(xp)] <= e_rel[ix(xo)]; e_rel[ix(xo)] <= 8'd0; end
                 else begin e_rel[ix(xp)] <= xo_nf; used_n = used_n + xo_nf; end
-            end else if (!x_busy && xp != tail && !halt_q && a_ok) begin
+            end else if (!x_v && xn < 2'(XQ) && xp != tail && !halt_q && a_ok) begin
                 xo <= xp; xo_v <= 1'b1; xo_nf <= nf; xk <= xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]);
-                x_busy <= 1'b1; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
+                xp <= xp + 3'd1; xfq[xft] <= xp; xft <= !xft; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
                 x_stride <= e_a[ix(xp)][119:88]; x_space <= e_a[ix(xp)][1:0]; x_fmt <= e_f[ix(xp)]; x_xb <= a_st;
                 e_xb[ix(xp)] <= a_st; e_rel[ix(xp)] <= (MUT_SLOT != 0) ? 8'd0 : a_ws + nf; xbc <= a_st;
                 if (MUT_SLOT == 0) begin used_n = used_n + a_ws + nf; ap <= a_st + nf[6:0]; end
             end
-            if (x_busy && !x_v && in_xd) begin x_busy <= 1'b0; e_xd[ix(xp)] <= 1'b1; xp <= xp + 3'd1; end
+            if (xn != 2'd0 && in_xd) begin e_xd[ix(xfq[xfh])] <= 1'b1; xfh <= !xfh; end
+            xn <= xn + ((!x_v && xn < 2'(XQ) && xp != tail && !halt_q && !(xn == 2'd0 && x_hit) && a_ok) ? 2'd1 : 2'd0) - ((xn != 2'd0 && in_xd) ? 2'd1 : 2'd0);
             // ---- issue stage: fields (stations) one edge, then the start / descriptor handshakes of every active SM
             if (!go && !fld_v && !fp_v && !fq_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
                 fq_v <= 1'b1;                                    // edge 1: select the issue entry's fields

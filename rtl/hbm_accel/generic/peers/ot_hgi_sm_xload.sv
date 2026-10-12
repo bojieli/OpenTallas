@@ -34,6 +34,16 @@
 //   (3) read command: central decision -> per-quarter copy -> per-macro pin flops (enable / address replicated per
 //       macro, kept), so no register drives the 32 macros' pins across the field.
 //   (4) beat assembly registered (xb), xw_* are pure pin flops.
+// BDW8 (smmv-b, 2026-10-12; physical spec el1011-hbm-smmv-b.log 10-12 07:25): BW8 = 1 routes block-dot x (fmt 1 / 2)
+//   over the cluster's LOCAL VM slice 8-lane group (B2 lanearb slot 4; lane b <-> local bank b) on the low 8 lanes of
+//   the rg_* / wrq* / wrr ports (ot_hgi_vm_wrd NL 8, GATHER).  Wave = 8 consecutive sectors = blocks (j, t), (j, t + 1)
+//   (t even) of group g, slot p -> two ot_hdc_actquant (one block an edge each) -> registered lane write into a
+//   ping-pong pair of TPAIR buffers (each = the two fragment addresses (g, t), (g, t + 1), as NBQ beat registers in
+//   the BD layout above) -> the buffer's 2 nb beats leave on the xw pins (shift chain, as BD) while the next tpair
+//   lands.  Order: per command g < Gn, tp < 4 (t = 2 tp), j < LA, p < P.  Same fragment layout and refusals as BD;
+//   COMMAND-PIPELINED: the next command is taken as soon as the wave cursor is free (x_done pulses in command order).
+//   Every stage registered: cursor -> 4-deep wave FIFO -> wrd -> R (rotate) -> 2 x actquant -> W (per buffer x
+//   parity write copy) -> fragment -> E (beat) -> xw pins.  BW8 = 0 (default): unchanged.
 // The x-store write SEQUENCE is unchanged (tb_hgi_xload_lock vs the flop x-load ot_hgi_sm_xload_old); latency +6
 // edges a beat (pipelined) and +3 edges a landing (once a group: emission waits for the write pipe to drain).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -51,7 +61,11 @@ module ot_hgi_sm_xload #(
                                           //   overlaps the landing of g + 1 (x word {g mod 16, p}).  Block-dot: packet path.
     parameter integer WLQ = 16,           // wide-lane credits a lane (the lane-group round trip)
     parameter integer WD = 8,             // waves outstanding (ot_hgi_vm_wrd response FIFO depth)
-    parameter integer MUT_WV = 0          // mutants: 1 the wave lands rotated one lane too far; 2 / 3 = ot_hgi_vm_wrd MUT 1 / 2
+    parameter integer MUT_WV = 0,         // mutants: 1 the wave lands rotated one lane too far; 2 / 3 = ot_hgi_vm_wrd MUT 1 / 2
+    parameter integer BW8 = 0,            // smmv-b BDW8: 1 = block-dot x over the local 8-lane slice group (needs BD, WVM 0)
+    parameter integer W8D = 16,           // BW8: waves outstanding (>= the local group round trip for 1 wave an edge)
+    parameter integer W8LQ = 16,          // BW8: credits a lane
+    parameter integer MUT_B8 = 0          // BW8 mutant: 1 = the gathered wave is rotated one lane too far
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -115,9 +129,11 @@ module ot_hgi_sm_xload #(
     generate if (WVM != 0) begin : g_wvm
         ot_hgi_vm_wrd #(.LQ(WLQ), .D(WD), .SW(15), .MUT(MUT_WV >= 2 ? MUT_WV - 1 : 0)) u_wrd (.clk(clk), .rst_n(rst_c),
             .start(w_go), .s0(w_s0), .ns(w_ns), .busy(w_busy), .done(w_done), .fault(w_fault), .req(rg_req), .gnt(rg_gnt),
-            .q(wrq), .cr(wrq_cr), .rsp(wrr), .d_v(wd_v), .d_sec(wd_sec), .d_data(wd_dat));
+            .q(wrq), .cr(wrq_cr), .rsp(wrr), .d_v(wd_v), .d_sec(wd_sec), .d_data(wd_dat),
+            .g_v(1'b0), .g_s0(15'd0), .g_m(32'd0), .g_rdy(), .g_fin(1'b0), .d_w(), .d_s0(), .d_m());
     end else begin : g_nowvm
-        assign rg_req = 1'b0; assign wrq = '0; assign w_busy = 1'b0; assign w_done = 1'b0; assign w_fault = 1'b0;
+        if (BW8 == 0) begin : g_noport assign rg_req = 1'b0; assign wrq = '0; end
+        assign w_busy = 1'b0; assign w_done = 1'b0; assign w_fault = 1'b0;
         assign wd_v = '0; assign wd_sec = '0; assign wd_dat = '0;
     end endgenerate
     // R: rotation (x lane l <- VM lane (l + s0) mod 32) + the wave's (g, h, p) and its K remainder clamped to [0, 256]
@@ -303,7 +319,11 @@ module ot_hgi_sm_xload #(
     end
     wire bd_done_rd = bd_rd && bq_iss_done && bq_got == bq_exp && !aact[0] && !aact[1] && !aq_v;
     wire be_last = bph == 2'd2 && b == nb - 7'd1;
-    wire start = cmd_v && !c_bad;
+    // BW8: block-dot commands go to the 8-lane pipeline (k_take); the command flop holds until taken; a packet / WVM
+    // command waits until the BW8 pipeline is empty (the xw pins and x_done order are shared)
+    wire k_cmd = (BW8 != 0) && c_bdf;
+    wire k_take, k_wflt, k_cidle, k_allidle, k_xdone, k_xflt, k_bev; wire [6:0] k_bea, k_beg; wire [2047:0] k_bed;
+    wire start = cmd_v && !c_bad && !k_cmd && ((BW8 == 0) || k_allidle);
     // ---- VM packet requests: valid (reset) + payload (data)
     reg [NXC-1:0] vq_v; reg [336:0] vq_d [0:NXC-1];
     genvar gc;
@@ -343,13 +363,13 @@ module ot_hgi_sm_xload #(
                           bflt <= 1'b0; wm <= 1'b0; w_go <= 1'b0; wl_pend <= 1'b0; wl_next <= 1'b0; r_v <= 1'b0;
                           cv_v <= 1'b0; for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
         else begin
-            x_done <= fin && !(bd && bflt);
-            if (fin && bd && bflt) x_fault <= 1'b1;
-            rv <= {rv[RD-2:0], em_ph}; xw_en <= rv[RD-1] || be_v;
+            x_done <= (fin && !(bd && bflt)) || (k_xdone && !k_xflt);
+            if ((fin && bd && bflt) || (k_xdone && k_xflt)) x_fault <= 1'b1;
+            rv <= {rv[RD-2:0], em_ph}; xw_en <= rv[RD-1] || be_v || k_bev;
             l1_v <= land; l2_v <= l1_v;
             for (integer wq = 0; wq < 4; wq = wq + 1) w1_v[wq] <= l2_v && l2_q == wq;
-            cmd_v <= (x_v && x_rdy) ? 1'b1 : 1'b0;
-            if (cmd_v && c_bad) x_fault <= 1'b1;
+            cmd_v <= (x_v && x_rdy) ? 1'b1 : (BW8 != 0 && cmd_v && !c_bad && !start && !k_take) ? 1'b1 : 1'b0;
+            if ((cmd_v && c_bad) || k_wflt) x_fault <= 1'b1;
             if (start) begin busy <= 1'b1; ph <= c_bdf ? 2'd3 : 2'd0; bd <= c_bdf; bph <= 2'd1; aact <= 2'b00; bflt <= 1'b0;
                              wm <= (WVM != 0) && !c_bdf; wl_pend <= (WVM != 0) && !c_bdf; wl_next <= 1'b0;
                              for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
@@ -490,6 +510,187 @@ module ot_hgi_sm_xload #(
         if (rv[RD-2]) xb <= rm_ok[RD-2] ? beats[rm_b[RD-2]] : 2048'd0;
         if (rv[RD-1]) begin xw_addr <= rm_addr[RD-1] + c_xb; xw_grp <= rm_b[RD-1]; xw_data <= xb; end
         if (be_v) begin xw_addr <= be_a + c_xb; xw_grp <= be_g; xw_data <= be_d; end
+        if (k_bev) begin xw_addr <= k_bea; xw_grp <= k_beg; xw_data <= k_bed; end
     end
+    // =================================================================================================================
+    // BDW8: block-dot x over the local 8-lane slice group (BW8 = 1)
+    // =================================================================================================================
+    generate if (BW8 != 0) begin : g_bw8
+        if (BD == 0 || WVM != 0) begin : g_chk
+            $error("ot_hgi_sm_xload: BW8 needs BD = 1 and WVM = 0 (the 8-lane group is the block-dot x path)");
+        end
+        localparam integer QD = 32;                    // wave tag FIFO (wave FIFO 4 + W8D in the wrd + delivery)
+        // ---- command / cursor (issue side)
+        reg cidle; reg [14:0] cb, cs; reg [3:0] cp, cla; reg [15:0] cnbk; reg [7:0] cgn, cg; reg [6:0] cxb, cnb;
+        reg [1:0] ctp; reg [3:0] cj, cpi; reg [7:0] cgj; reg [14:0] crow; reg ccl; reg cib;
+        // ---- buffers (2): state 0 free, 1 fill, 2 emit; meta
+        reg [1:0] bst [0:1]; reg [6:0] mxb [0:1]; reg [3:0] mg [0:1]; reg [1:0] mtp [0:1]; reg [6:0] mnb [0:1];
+        reg mlast [0:1]; reg miss [0:1]; reg [7:0] mexp [0:1], mgot [0:1]; reg mflt [0:1];
+        // ---- wave FIFO (cursor -> wrd) and tag FIFO (cursor -> delivery)
+        reg [14:0] rf_s [0:3]; reg [7:0] rf_m [0:3]; reg [1:0] rfh, rft; reg [2:0] rfn;
+        reg [8:0] tq [0:QD-1]; reg [4:0] tqh, tqt; reg [5:0] tqn;  // {buf, p 4, j 3, hi}
+        wire g_rdy; wire w8_busy, w8_done, w8_fault; wire [7:0] d8_v; wire d8_w; wire [14:0] d8_s0; wire [7:0] d8_m;
+        wire [8*15-1:0] d8_sec; wire [8*256-1:0] d8_dat;
+        reg wgo;
+        assign k_take = cmd_v && !c_bad && c_bdf && cidle;
+        assign k_wflt = w8_fault;
+        assign k_cidle = cidle;
+        // the cursor's wave: blocks b0 = (g LA + j) 8 + 2 tp and b0 + 1 of slot p
+        wire [15:0] b0 = {5'd0, cgj, 3'd0} + {13'd0, ctp, 1'b0};
+        wire wlo = b0 < cnbk, whi = (b0 + 16'd1) < cnbk;
+        wire cstep = ccl && (!wlo || (rfn < 3'd4 && tqn < 6'd31));          // push (or skip) the cursor's wave
+        wire cpush = ccl && wlo && rfn < 3'd4 && tqn < 6'd31;
+        wire clast = cj == cla - 4'd1 && cpi == cp - 4'd1;                   // the tpair's last wave
+        wire claim = !cidle && !ccl && bst[cib] == 2'd0;
+        wire rpop = (rfn != 3'd0) && g_rdy;
+        wire g_fin = cidle && rfn == 3'd0 && !(cmd_v && c_bdf);
+        ot_hgi_vm_wrd #(.LQ(W8LQ), .D(W8D), .SW(15), .NL(8), .GATHER(1)) u_w8 (.clk(clk), .rst_n(rst_c),
+            .start(wgo), .s0(15'd0), .ns(16'd0), .busy(w8_busy), .done(w8_done), .fault(w8_fault), .req(rg_req),
+            .gnt(rg_gnt), .q(wrq[8*16-1:0]), .cr(wrq_cr[7:0]), .rsp(wrr[8*257-1:0]), .d_v(d8_v), .d_sec(d8_sec),
+            .d_data(d8_dat), .g_v(rfn != 3'd0), .g_s0(rf_s[rfh]), .g_m(rf_m[rfh]), .g_rdy(g_rdy), .g_fin(g_fin),
+            .d_w(d8_w), .d_s0(d8_s0), .d_m(d8_m));
+        assign wrq[32*16-1:8*16] = '0;
+        // ---- R: rotate (chunk c <- lane (s0 + c) mod 8) + the wave's tag
+        reg rv8; reg [2047:0] rx; reg [8:0] rtg;
+        always @(posedge clk) begin
+            for (integer c = 0; c < 8; c = c + 1) rx[c*256 +: 256] <= d8_dat[((c + d8_s0[2:0] + MUT_B8) % 8)*256 +: 256];
+            rtg <= tq[tqh];
+        end
+        // ---- two quantisers (lo = block t, hi = block t + 1); tags ride a FIFO (in order, fixed latency)
+        wire [1:0] qvo, qf; wire [255:0] qq [0:1]; wire signed [9:0] qe [0:1];
+        ot_hdc_actquant u_aq0 (.clk(clk), .rst_n(rst_c), .v(rv8), .fp4(1'b0), .x(rx[1023:0]), .vo(qvo[0]), .q(qq[0]),
+                               .e(qe[0]), .y(), .fault(qf[0]));
+        ot_hdc_actquant u_aq1 (.clk(clk), .rst_n(rst_c), .v(rv8 && rtg[0]), .fp4(1'b0), .x(rx[2047:1024]), .vo(qvo[1]),
+                               .q(qq[1]), .e(qe[1]), .y(), .fault(qf[1]));
+        reg [7:0] at [0:15]; reg [3:0] ath, att;                             // {buf, p 4, j 3}
+        // ---- W: per (buffer, parity) registered write copy: one-hot lane {p, j} + the 266-b word
+        localparam integer NLN = PMAX * 8;
+        reg [3:0] wv8; reg [NLN-1:0] woh [0:3]; reg [265:0] wdd [0:3];
+        // ---- fragments: index buf * 2 + par, NBQ beat registers each (BD layout); shift copies per beat (kept)
+        wire [2047:0] f0 [0:3];                // beat 0 of each fragment (the emitted beat)
+        reg em; reg eb; reg ep; reg [6:0] ebt;
+        reg em_n, eb_n, ep_n; reg [6:0] ebt_n; reg fr_end, edn_n;
+        wire est = !em && bst[eb] == 2'd1 && miss[eb] && mgot[eb] == mexp[eb];
+        always @* begin
+            em_n = em; eb_n = eb; ep_n = ep; ebt_n = ebt; fr_end = 1'b0; edn_n = 1'b0;
+            if (em) begin
+                if (ebt == mnb[eb] - 7'd1) begin
+                    ebt_n = 7'd0;
+                    if (!ep) ep_n = 1'b1;
+                    else begin em_n = 1'b0; ep_n = 1'b0; eb_n = !eb; fr_end = 1'b1; edn_n = mlast[eb]; end
+                end else ebt_n = ebt + 7'd1;
+            end else if (est) begin em_n = 1'b1; ep_n = 1'b0; ebt_n = 7'd0; end
+        end
+        genvar fb, fl;
+        for (fb = 0; fb < 4; fb = fb + 1) begin : g_fb
+            wire [NBQ*2048-1:0] fd8, fm8;
+            for (fl = 0; fl < NLN; fl = fl + 1) begin : g_l
+                localparam integer LO = (fl / 8) * XC + 266 * (fl % 8);
+                assign fd8[LO +: 266] = wdd[fb];
+                assign fm8[LO +: 266] = {266{woh[fb][fl]}};
+                if (fl % 8 == 7) begin : g_gap
+                    localparam integer GE = ((fl / 8) == PMAX - 1) ? NBQ * 2048 : (fl / 8 + 1) * XC;
+                    assign fd8[GE - 1 : LO + 266] = '0;
+                    assign fm8[GE - 1 : LO + 266] = '0;
+                end
+            end
+            reg [NBQ*2048-1:0] fr;                // the fragment (beat k at [k 2,048 +: 2,048])
+            (* keep = 1 *) reg [NBQ-1:0] sh;     // shift enable, one register copy a beat
+            always @(posedge clk or negedge rst_c) if (!rst_c) sh <= '0;
+                                                else sh <= {NBQ{em_n && {eb_n, ep_n} == 2'(fb)}};
+            always @(posedge clk)
+                for (integer k = 0; k < NBQ; k = k + 1) begin
+                    if (sh[k]) fr[k*2048 +: 2048] <= (k == NBQ - 1) ? 2048'd0 : fr[((k == NBQ - 1) ? k : k + 1)*2048 +: 2048];
+                    else if (wv8[fb]) fr[k*2048 +: 2048] <= (fr[k*2048 +: 2048] & ~fm8[k*2048 +: 2048]) | (fd8[k*2048 +: 2048] & fm8[k*2048 +: 2048]);
+                end
+            assign f0[fb] = fr[2047:0];
+        end
+        // ---- E: the beat on its way to the xw pins (+ the command's done / fault one edge later, with xw_en)
+        reg bev; reg [6:0] bea, beg; reg [2047:0] bed; reg edn, eflt, cflt;
+        assign k_bev = bev; assign k_bea = bea; assign k_beg = beg; assign k_bed = bed;
+        assign k_xdone = edn; assign k_xflt = eflt;
+        assign k_allidle = cidle && bst[0] == 2'd0 && bst[1] == 2'd0 && !bev && !edn;
+        always @(posedge clk or negedge rst_c) begin
+            if (!rst_c) begin
+                cidle <= 1'b1; ccl <= 1'b0; cib <= 1'b0; bst[0] <= 2'd0; bst[1] <= 2'd0; rfh <= 2'd0; rft <= 2'd0; rfn <= 3'd0;
+                tqh <= 5'd0; tqt <= 5'd0; tqn <= 6'd0; wgo <= 1'b0; rv8 <= 1'b0; ath <= 4'd0; att <= 4'd0; wv8 <= 4'd0;
+                em <= 1'b0; eb <= 1'b0; ep <= 1'b0; bev <= 1'b0; edn <= 1'b0; eflt <= 1'b0; cflt <= 1'b0;
+                mflt[0] <= 1'b0; mflt[1] <= 1'b0; miss[0] <= 1'b0; miss[1] <= 1'b0;
+            end else begin : ctl
+                reg [2:0] rfn_; reg [5:0] tqn_;
+                rfn_ = rfn; tqn_ = tqn;
+                // command take
+                if (k_take) cidle <= 1'b0;
+                // claim a buffer for the cursor's tpair
+                if (claim) begin bst[cib] <= 2'd1; ccl <= 1'b1; miss[cib] <= 1'b0; mflt[cib] <= 1'b0; mgot[cib] <= 8'd0; end
+                // cursor step
+                if (cstep) begin
+                    if (cpush) begin rft <= rft + 2'd1; rfn_ = rfn_ + 3'd1; tqt <= tqt + 5'd1; tqn_ = tqn_ + 6'd1; end
+                    if (clast) begin
+                        ccl <= 1'b0; miss[cib] <= 1'b1; cib <= !cib;
+                        if (ctp == 2'd3 && cg == cgn - 8'd1) cidle <= 1'b1;
+                    end
+                end
+                // the burst: opens when a wave waits and the group is not ours yet
+                wgo <= (rfn != 3'd0) && !w8_busy && !wgo;
+                if (rpop) begin rfh <= rfh + 2'd1; rfn_ = rfn_ - 3'd1; end
+                // delivery -> R
+                rv8 <= d8_w;
+                if (d8_w) begin tqh <= tqh + 5'd1; tqn_ = tqn_ - 6'd1; end
+                if (rv8) att <= att + 4'd1;
+                if (qvo[0]) ath <= ath + 4'd1;
+                // W
+                for (integer z = 0; z < 4; z = z + 1) wv8[z] <= qvo[z % 2] && at[ath][7] == z[1];
+                for (integer z = 0; z < 2; z = z + 1) if (qvo[0] && at[ath][7] == z[0] && (qf[0] || (qvo[1] && qf[1]))) mflt[z] <= 1'b1;
+                for (integer z = 0; z < 2; z = z + 1)
+                    if (wv8[2 * z] || wv8[2 * z + 1]) mgot[z] <= mgot[z] + {7'd0, wv8[2 * z]} + {7'd0, wv8[2 * z + 1]};
+                // emission
+                em <= em_n; eb <= eb_n; ep <= ep_n; ebt <= ebt_n;
+                if (est) bst[eb] <= 2'd2;
+                if (fr_end) bst[eb] <= 2'd0;
+                bev <= em;
+                edn <= edn_n; eflt <= edn_n && (cflt || mflt[eb]);
+                if (fr_end) cflt <= edn_n ? 1'b0 : (cflt || mflt[eb]);
+                rfn <= rfn_; tqn <= tqn_;
+            end
+        end
+        always @(posedge clk) begin
+            if (k_take) begin
+                cb <= c_base[17:3]; cs <= c_stride[17:3]; cp <= c_p; cla <= (c_fmt == 2'd2) ? 4'd8 : 4'd4;
+                cnbk <= c_n[20:5]; cxb <= c_xb; cnb <= 7'(({12'd0, c_p} * 16'd3152 + 16'd2047) >> 11);
+                cgn <= (c_fmt == 2'd2) ? 8'(((c_n - 21'd1) >> 11) + 21'd1) : 8'(((c_n - 21'd1) >> 10) + 21'd1);
+                cg <= 8'd0; ctp <= 2'd0;
+            end
+            if (claim) begin
+                mxb[cib] <= cxb; mg[cib] <= cg[3:0]; mtp[cib] <= ctp; mnb[cib] <= cnb; mexp[cib] <= 8'd0;
+                mlast[cib] <= ctp == 2'd3 && cg == cgn - 8'd1;
+                cj <= 4'd0; cpi <= 4'd0; cgj <= (cla == 4'd8) ? {cg[4:0], 3'd0} : {cg[5:0], 2'd0}; crow <= cb;
+            end
+            if (cstep) begin
+                if (cpush) begin
+                    rf_s[rft] <= crow + 15'({cgj, 5'd0}) + {10'd0, ctp, 3'd0};
+                    rf_m[rft] <= {{4{whi}}, 4'hF};
+                    tq[tqt] <= {cib, cpi, cj[2:0], whi};
+                    mexp[cib] <= mexp[cib] + 8'd1 + {7'd0, whi};
+                end
+                if (clast) begin
+                    if (ctp == 2'd3) begin ctp <= 2'd0; cg <= cg + 8'd1; end else ctp <= ctp + 2'd1;
+                end else if (cpi == cp - 4'd1) begin cpi <= 4'd0; crow <= cb; cj <= cj + 4'd1; cgj <= cgj + 8'd1; end
+                else begin cpi <= cpi + 4'd1; crow <= crow + cs; end
+            end
+            if (rv8) at[att] <= rtg[8:1];
+            for (integer z = 0; z < 4; z = z + 1) begin
+                woh[z] <= {NLN{1'b0}};
+                if (qvo[z % 2] && at[ath][7] == z[1]) woh[z][{at[ath][6:3], 3'd0} + {4'd0, at[ath][2:0]}] <= 1'b1;
+                if (qvo[z % 2]) wdd[z] <= {qe[z % 2], qq[z % 2]};
+            end
+            if (em) begin
+                bea <= {mg[eb], mtp[eb], ep} + mxb[eb]; beg <= ebt; bed <= f0[{eb, ep}];
+            end
+        end
+    end else begin : g_nobw8
+        assign k_take = 1'b0; assign k_wflt = 1'b0; assign k_cidle = 1'b1; assign k_allidle = 1'b1; assign k_xdone = 1'b0; assign k_xflt = 1'b0;
+        assign k_bev = 1'b0; assign k_bea = '0; assign k_beg = '0; assign k_bed = '0;
+    end endgenerate
 endmodule
 `default_nettype wire
