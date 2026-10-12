@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_be_sl-r1-COMMIT",
+ "name": "dsfd_vm_be_sl-r1-df88d1e26",
  "block": "dsfd_vm_be_sl",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/be",
@@ -8,13 +8,13 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-vm-be",
-  "commit": "COMMIT"
+  "commit": "df88d1e26"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module dsfd_vm_be_sl rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_vm_be_sl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r1-df88d1e26"
   }
  ],
  "cycles_added": 0,
