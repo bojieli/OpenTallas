@@ -8,10 +8,15 @@
 // the band-local slot holding g (ot_qfd_band_lanes header) == the lane's y[g], bit-exact, 5 + 2 LNK edges later.
 // Faults: phase 1 finite words -> both sides stay 0; phase 2 a NaN in a split-12 op -> both sides raise.
 // MUT = 1 / 2: the band / upper negative mutants (wrong combine order) -> FAIL.
+// TP8 (qwen-tp8/par-tt, results/arch/qwen_tp8_1012): NBP = 3 -> 3 bands (GT 3,072), LG 12, splits 7..12; the reference
+// stays the GT 6,144 lane (a group g < 3072 >> s only reads bands 0..2's positions, so the same lane is the golden).
+// MUT = 3: the upper's band-index mutant (band words in reverse band order; MUT 2 is a no-op at NB 3) -> FAIL.
+// NBP = 6 (default) is the unchanged TP4 bench (same LG 13, same stimulus).
 module tb_qfd_band_lanes;
     parameter integer NL = 4, LNK = 0, MUT = 0, NOPS = 3000, SEED = 1;
     parameter integer RDMEM = 0, BANR = 0;   // el1011-q-seq: DUT delay lines in SRAM (2 = one-edge-short mutant) / valid-only adder resets
-    localparam integer NB = 6, LAT_L = 41, LAT_B = 46 + 2 * LNK;
+    parameter integer NBP = 6;               // bands: 6 (TP4, GT 6,144) or 3 (TP8, GT 3,072)
+    localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK;
     reg clk = 0, rst_n = 0;
     always #5 clk = ~clk;
     // ---- stimulus -----------------------------------------------------------------------------------------------
@@ -36,8 +41,8 @@ module tb_qfd_band_lanes;
     wire [3*NL*32-1:0] tt, tt_r;
     wire tu, tvv, tu_r, tv_r2, uf;
     generate for (b = 0; b < NB; b = b + 1) begin : g_band
-        ot_qfd_band_lanes #(.NL(NL), .LNK(LNK), .MUT(MUT == 1 ? 1 : 0), .RDMEM(RDMEM), .BANR(BANR)) u_b (
-            .clk(clk), .rst_n(rst_n), .b0(b == 0), .tw(din[b*8*NL*32 +: 8*NL*32]), .sel_e(sel), .tv_e(tv),
+        ot_qfd_band_lanes #(.NL(NL), .LNK(LNK), .MUT(MUT == 1 ? 1 : 0), .RDMEM(RDMEM), .BANR(BANR), .LG(LG)) u_b (
+            .clk(clk), .rst_n(rst_n), .b0(b == 0), .tw(din[b*8*NL*32 +: 8*NL*32]), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
             .tt_ty(b == 0 ? tt_r : {3*NL*32{1'b0}}), .tt_use(b == 0 ? tu_r : 1'b0), .tt_v(b == 0 ? tv_r2 : 1'b0),
             .pw(pw[b*NL*32 +: NL*32]), .pw_v(pv[b]), .ty(ty[b]), .fault(bf[b]));
     end endgenerate
@@ -45,8 +50,8 @@ module tb_qfd_band_lanes;
     ot_hdc_delay #(.W(2*NB), .D(LNK), .RESET(1)) u_l2 (.clk(clk), .rst_n(rst_n), .d({pv, bf}), .q({pv_r, bf_r}));
     ot_hdc_delay #(.W(3*NL*32), .D(LNK)) u_l3 (.clk(clk), .rst_n(rst_n), .d(tt), .q(tt_r));
     ot_hdc_delay #(.W(2), .D(LNK), .RESET(1)) u_l4 (.clk(clk), .rst_n(rst_n), .d({tu, tvv}), .q({tu_r, tv_r2}));
-    ot_qfd_band_upper #(.NL(NL), .NB(NB), .LNK(LNK), .MUT(MUT == 2 ? 2 : 0)) u_up (
-        .clk(clk), .rst_n(rst_n), .pw(pw_r), .pw_v(pv_r), .lf(bf_r), .sel_e(sel), .tv_e(tv),
+    ot_qfd_band_upper #(.NL(NL), .NB(NB), .LNK(LNK), .MUT((MUT == 2 || MUT == 3) ? MUT : 0), .LG(LG)) u_up (
+        .clk(clk), .rst_n(rst_n), .pw(pw_r), .pw_v(pv_r), .lf(bf_r), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
         .tt_ty(tt), .tt_use(tu), .tt_v(tvv), .fault(uf));
     // ---- op history: cycle n's op (valid, split) -----------------------------------------------------------------------
     localparam integer HN = 1 << 14;
@@ -79,7 +84,7 @@ module tb_qfd_band_lanes;
             yh[n % 128] = ry;
             if (n >= LAT_B && hv[(n - LAT_B) % HN]) begin
                 s = hs[(n - LAT_B) % HN];
-                for (g = 0; g < (6144 >> s); g = g + 1) begin
+                for (g = 0; g < ((NB * 1024) >> s); g = g + 1) begin
                     for (k = 0; k < NL; k = k + 1) begin
                         if (ty[band_of(s, g)][32*(slot_of(s, g)*NL + k) +: 32] !== yh[(n - LAT_B + LAT_L) % 128][32*(g*NL + k) +: 32]) begin
                             if (errors < 5) $display("MISMATCH op@%0d split %0d group %0d lane %0d: band %h lane %h", n - LAT_B, s, g, k,
@@ -99,7 +104,7 @@ module tb_qfd_band_lanes;
             end
             // ---- drive op n ---------------------------------------------------------------------------------------------
             cv = (n < NOPS / 2 || (n >= NOPS / 2 + 130 && n < NOPS)) && ((n % 97) < 60 ? 1'b1 : ($random(seed) & 1));
-            csplit = 7 + ({$random(seed)} % 7);
+            csplit = 7 + ({$random(seed)} % (LG - 6));
             if (phase == 2 && nan_at < 0 && cv) begin csplit = 12; nan_at = n; end
             hv[n % HN] = cv; hs[n % HN] = csplit;
             for (i = 0; i < 48 * NL; i = i + 1) din[32*i +: 32] = rfp(0);
@@ -115,10 +120,10 @@ module tb_qfd_band_lanes;
             n = n + 1;
         end
         if (!(rstick && dstick)) begin $display("FAIL qfd_band_lanes NaN phase: ref fault %0d dut fault %0d", rstick, dstick); $fatal(1); end
-        if (errors != 0) begin $display("FAIL qfd_band_lanes %0d mismatching words of %0d (ops %0d, NL %0d, LNK %0d, MUT %0d)",
-            errors, checks, ops, NL, LNK, MUT); $fatal(1); end
-        $display("PASS qfd_band_lanes ops=%0d groups=%0d words=%0d NL=%0d LNK=%0d latency=+%0d faults(finite 0/0, NaN 1/1)",
-            ops, groups, checks, NL, LNK, LAT_B - LAT_L);
+        if (errors != 0) begin $display("FAIL qfd_band_lanes %0d mismatching words of %0d (ops %0d, NL %0d, NB %0d, LNK %0d, MUT %0d)",
+            errors, checks, ops, NL, NB, LNK, MUT); $fatal(1); end
+        $display("PASS qfd_band_lanes ops=%0d groups=%0d words=%0d NL=%0d NB=%0d LG=%0d LNK=%0d latency=+%0d faults(finite 0/0, NaN 1/1)",
+            ops, groups, checks, NL, NB, LG, LNK, LAT_B - LAT_L);
         $finish;
     end
 endmodule
