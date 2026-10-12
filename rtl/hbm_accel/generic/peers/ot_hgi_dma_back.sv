@@ -38,7 +38,9 @@
 module ot_hgi_dma_back #(
     parameter integer NS = 4,             // stacks written: 4 = the pre-B2 die view (one engine, central VM); 1 = HBM B2: one
                                           //   instance per cluster on its LOCAL VM slice port, writing its own stack STK only
-    parameter integer STK = 0,            // the first stack written (B2: the cluster's stack); a row on a stack outside
+    parameter integer STK = 0,
+    parameter integer NB = 32,            // VM read lanes = the VM banks reached: 32 (pre-B2 central VM read group) or 8 (HBM B2:
+                                          //   the LOCAL slice lane group, lane b = local bank b = sector s[2:0]; one chunk a cycle)            // the first stack written (B2: the cluster's stack); a row on a stack outside
                                           //   [STK, STK + NS) faults
     parameter integer NL = 8,
     parameter integer SBIT = 35,          // stack select = HBM byte address [SBIT+1:SBIT]
@@ -59,14 +61,15 @@ module ot_hgi_dma_back #(
     output wire                     quiet,       // no move held, nothing in flight (registered state only)
     // VM DMA wide READ group (ot_hgi_vm_die dma_r_up / dma_r_dn): up {c_req, 32 x {v, sector 15}};
     // down {c_gnt, credits 32, 32 x {v, data 256}}
-    output wire [512:0]             vr2q,
-    input  wire [8256:0]            vr2r,
+    output wire [NB*16:0]           vr2q,
+    input  wire [NB*258:0]          vr2r,
     // svc WRITE stream: per stack x lane {v, sector address 32 (= HBM byte address [36:5]), data 256}
     output reg  [NS*NL*289-1:0]     wd,
     input  wire [NS*NL-1:0]         wd_cr,       // the svc popped a beat of the lane (one credit back)
     input  wire [NS*4-1:0]          wa           // per stack: sectors written this cycle (0..8, posted acknowledgements)
 );
-    localparam integer NB = 32;                 // VM read lanes (= the slice's banks) = 4 bank groups of 8
+    localparam integer NG = NB / 8;             // bank groups of 8 lanes (4 or 1)
+    localparam [1:0] GM = 2'(NG - 1);
     localparam integer LW = $clog2(LQ);
     // ---------------------------------------------------------------- reset relay: a region a bank group + control
     wire [NS:0] rl;
@@ -78,7 +81,7 @@ module ot_hgi_dma_back #(
     always @(posedge clk or negedge rc)
         if (!rc) begin g_gnt <= 1'b0; vcp <= '0; rr_v <= '0; wcp <= '0; wap <= '0; end
         else begin
-            g_gnt <= vr2r[8256]; vcp <= vr2r[8255:8224]; wcp <= NB'(wd_cr); wap <= wa;
+            g_gnt <= vr2r[NB*258]; vcp <= vr2r[NB*258-1 -: NB]; wcp <= NB'(wd_cr); wap <= wa;
             for (integer b = 0; b < NB; b = b + 1) rr_v[b] <= vr2r[b*257 + 256];
         end
     always @(posedge clk) for (integer b = 0; b < NB; b = b + 1) rr_d[b] <= vr2r[b*257 +: 256];   // data: no reset
@@ -120,10 +123,10 @@ module ot_hgi_dma_back #(
     reg  [7:0] c_lm;                             // lanes used within the group
     always @* begin c_lm = 8'd0; for (integer l = 0; l < 8; l = l + 1) if (4'(l) < c_len) c_lm[l] = 1'b1; end
     reg [3:0] grp_ok;                            // bank group g: every used lane takes a sector
-    always @* for (integer g = 0; g < 4; g = g + 1) grp_ok[g] = &(l_ok[g*8 +: 8] | ~c_lm);
+    always @* for (integer g = 0; g < 4; g = g + 1) grp_ok[g] = (g < NG) && &(l_ok[(g % NG)*8 +: 8] | ~c_lm);
     reg [1:0] r_g [0:3]; reg [3:0] r_in;         // row j: group of chunk i_c, row j present in the window
     always @* for (integer j = 0; j < 4; j = j + 1) begin
-        r_g[j] = 2'(q_vs[wq_h][j][4:3] + i_c[1:0]);
+        r_g[j] = 2'(q_vs[wq_h][j][4:3] + i_c[1:0]) & GM;
         r_in[j] = 3'(j) < h_k;
     end
     reg [3:0] r_sel;                             // rows issuing this cycle
@@ -149,11 +152,11 @@ module ot_hgi_dma_back #(
             for (integer l = 0; l < 8; l = l + 1) if (c_lm[l]) begin
                 i_lv[r_g[j]*8 + l] = 1'b1;
                 i_sec[r_g[j]*8 + l] = s0 + 15'(l);
-                i_sa[r_g[j]*8 + l] = a0[36:5] + 32'(l) + ((MUT == 1 && r_g[j] == 2'd1) ? 32'd1 : 32'd0);
+                i_sa[r_g[j]*8 + l] = a0[36:5] + 32'(l) + ((MUT == 1 && l == 1) ? 32'd1 : 32'd0);
             end
         end
     end
-    reg [512:0] s_vr2q; assign vr2q = s_vr2q;
+    reg [NB*16:0] s_vr2q; assign vr2q = s_vr2q;
     // ---------------------------------------------------------------- per lane: route FIFO, landing macro, skid
     reg [31:0] rt [0:NB-1][0:LQ-1];              // route: the sector address of each in-flight sector (issue order)
     reg [LW-1:0] rt_t [0:NB-1], d_t [0:NB-1], d_h [0:NB-1];
@@ -181,9 +184,9 @@ module ot_hgi_dma_back #(
             integer o;
             o = s * NL + l;
             p_v[o] = 1'b0; p_g[o] = 2'd0;
-            for (integer t = 3; t >= 0; t = t - 1) begin : cand
+            for (integer t = NG - 1; t >= 0; t = t - 1) begin : cand
                 reg [1:0] g; integer b;
-                g = 2'(p_rr[o] + 2'(t)); b = g * 8 + l;
+                g = 2'(p_rr[o] + 2'(t)) & GM; b = g * 8 + l;
                 if (sk_n[b] != 2'd0 && sk[b][sk_h[b]][256 + SBIT - 5 +: 2] == 2'(STK + s) && w_cr[o] != 6'd0) begin p_v[o] = 1'b1; p_g[o] = g; end
             end
             if (p_v[o]) pop[p_g[o] * 8 + l] = 1'b1;
@@ -250,7 +253,7 @@ module ot_hgi_dma_back #(
                 reg par, bad; reg [36:0] e; reg [36:0] lo;
                 par = 1'b1; bad = 1'b0;
                 for (integer j = 0; j < 4; j = j + 1) if (3'(j) < g1_k) begin
-                    for (integer j2 = 0; j2 < 4; j2 = j2 + 1) if (j2 > j && 3'(j2) < g1_k && g1_vs[j][4:3] == g1_vs[j2][4:3]) par = 1'b0;
+                    for (integer j2 = 0; j2 < 4; j2 = j2 + 1) if (j2 > j && 3'(j2) < g1_k && (g1_vs[j][4:3] & GM) == (g1_vs[j2][4:3] & GM)) par = 1'b0;
                     e = g1_a[j] + {12'd0, m_rowb} - 37'd1;
                     lo = {1'b0, {(36 - SBIT){1'b0}}, g1_a[j][SBIT-1:0]} + {12'd0, m_rowb};
                     if (e[SBIT +: 2] != g1_a[j][SBIT +: 2] || lo > {1'b0, STACK_BYTES} ||
@@ -263,7 +266,7 @@ module ot_hgi_dma_back #(
             end
             wq_n <= wq_n + {2'd0, g1_v} - {2'd0, w_end};
             // ---- I: issue
-            s_vr2q[512] <= busy || !(&all_home);
+            s_vr2q[NB*16] <= busy || !(&all_home);
             for (integer b = 0; b < NB; b = b + 1) s_vr2q[b*16 +: 16] <= {i_lv[b], i_sec[b]};
             if (go) begin
                 if (last_row) begin
@@ -297,7 +300,7 @@ module ot_hgi_dma_back #(
                     o = s * NL + l; b = p_g[o] * 8 + l;
                     wd[o*289 +: 289] <= p_v[o] ? {1'b1, sk[b][sk_h[b]]} : 289'd0;
                     w_cr[o] <= w_cr[o] - 6'(p_v[o]) + 6'(wcp[o]);
-                    if (p_v[o]) p_rr[o] <= p_g[o] + 2'd1;
+                    if (p_v[o]) p_rr[o] <= (p_g[o] + 2'd1) & GM;
                     c = c + 4'(p_v[o]);
                 end
                 ns_q[s] <= c;

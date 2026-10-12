@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  101.52,
-  101.52
+  110.16,
+  110.16
  ],
  "core": [
   2.16,
   2.16,
-  99.36,
-  99.36
+  108.0,
+  108.0
  ],
- "why": "util 0.52 of std 4731 + macros 0 um2",
- "std_area_um2": 4731,
+ "why": "util 0.52 of std 5600 + macros 0 um2",
+ "std_area_um2": 5600,
  "layer_contract": {
   "children": {},
   "pg_layer": "M6",
@@ -32,19 +32,25 @@
    "kind",
    "rv_u",
    "t_u",
-   "x",
-   "iq"
-  ],
-  "S": [
-   "vo",
-   "q",
-   "e",
-   "f",
-   "iqo"
+   "iq",
+   "odd",
+   "c_d"
   ],
   "W": [
    "sk",
-   "srs"
+   "srs",
+   "w_d"
+  ],
+  "E": [
+   "e_d"
+  ],
+  "S": [
+   "vo",
+   "e",
+   "f",
+   "iqo",
+   "wd",
+   "cq"
   ]
  },
  "clock_port": "sk",

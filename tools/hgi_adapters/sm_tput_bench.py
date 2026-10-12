@@ -100,10 +100,11 @@ def program_records(layers):
         c = cf(r, dyn, L)
         lay = getattr(r, 'layer', None)
         if r.unit == 'SM' and r.op == 'MATVEC' and str(lay) in layers:
-            b, o = r.desc['B'], r.desc['O']
+            b, o, a_ = r.desc['B'], r.desc['O'], r.desc['A']
             out.append(dict(tag=r.tag, layer=str(lay), fmt=b.fmt, M=b.m, K=b.n, P=r.desc['A'].m, cost=round(float(c[0]), 1),
                             cost_how=str(c[2]), src_stride=b.stride, indexed='I' in r.desc, o_bf16=(o.fmt == 'BF16'),
-                            o_space=o.space))
+                            o_space=o.space,
+                            akey=[str(lay)] + [str(getattr(a_, f, None)) for f in ('space', 'base', 'n', 'm', 'stride', 'fmt')]))
         return c
     BB.T.schedule(recs, DT.POS, "S2", cost_fn=g)
     return out, f"{BB.PROG.relative_to(C.ROOT)} (NativeCost S2 per record) layers {','.join(layers)}"
@@ -116,6 +117,7 @@ def main():
     ap.add_argument('--program', help='ds: comma-separated layers of the priced g25 program (e.g. 0,1,2,20,head)')
     ap.add_argument('--match', help='--program: keep only records whose tag matches this regex')
     ap.add_argument('--only', type=int, default=0, help='first N records only (smoke)')
+    ap.add_argument('--no-xr', action='store_true', help='smmv 3a: never reuse x (every record loads its own x: the before)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     out = Path(a.out)
@@ -132,12 +134,39 @@ def main():
     rng = np.random.default_rng(1010)
     recs, info, xws, vmi, vme, lines = [], [], [], {}, {}, {}
     line_cursor, abase, obase = 1000, 0, 200000
+    # smmv 3a X REUSE = the compiler's x-slot allocation (hard to program is fine: the hardware only obeys XR / xb).
+    # Records with the same A descriptor (same layer) share one x; the x store (XD 128 fragment addresses) is a ring of
+    # slots, one per (A, format) load: base = previous end (wrap to 0 when it does not fit); a load invalidates every slot
+    # it overlaps.  XR = 1 when (A, format) still sits in a valid slot: no x load, the SMs read that slot.
+    XD, xcur, xslot, xslot_n, xshared, nxr = 128, 0, {}, {}, {}, 0
     for i, r in enumerate(recs_in):
         pf = FMT[r['fmt']]
         K, M, P = r['K'], r['M'], r['P']
         Q = -(-M // NSM)
         lb = 160 if pf == 3 else 136
-        X = [rng.standard_normal(K).astype(np.float32) * np.float32(rng.choice([0.1, 1.0, 4.0])) for _ in range(8)]
+        ak = tuple(r['akey']) if r.get('akey') and not a.no_xr else ('rec', i)
+        if ak in xshared:
+            X, a_rec = xshared[ak]
+        else:
+            X = [rng.standard_normal(K).astype(np.float32) * np.float32(rng.choice([0.1, 1.0, 4.0])) for _ in range(8)]
+            a_rec = abase
+            xshared[ak] = (X, a_rec)
+            abase += P * (8 * (-(-K // 8))) + 64
+        nxe = 8 * (-(-K // (512 if pf in (0, 3) else 1024 if pf == 1 else 2048)))     # fragment addresses (op_g x 8)
+        assert nxe <= XD, (r['tag'], nxe)
+        sk = (ak, pf)
+        if sk in xslot:
+            xr, xb = 1, xslot[sk]
+            nxr += 1
+        else:
+            if xcur + nxe > XD:
+                xcur = 0
+            xr, xb = 0, xcur
+            for k_ in [k_ for k_, b_ in xslot.items() if b_ < xcur + nxe and xcur < b_ + xslot_n[k_]]:
+                del xslot[k_], xslot_n[k_]
+            xslot[sk] = xcur
+            xcur += nxe
+        xslot_n[sk] = nxe
         blocks = {}
         for s in range(NREAL):
             R = max(0, min(Q, M - s * Q))
@@ -153,7 +182,7 @@ def main():
         astride = 8 * (-(-K // 8))
         for p in range(P):
             for k in range(K):
-                vmi[abase + p * astride + k] = int(X[p][k].view(np.uint32))
+                vmi[a_rec + p * astride + k] = int(X[p][k].view(np.uint32))
         ostride = M
         for s in range(NSM):
             R = max(0, min(Q, M - s * Q))
@@ -161,10 +190,10 @@ def main():
             for p in range(P):
                 for rr in range(R):
                     vme[obase + p * ostride + s * Q + rr] = rb(int(np.float32(gb['gold'][p][rr]).view(np.uint32)), r.get('o_bf16'))
-        A = C.SV.mdesc(space=1, fmt=0, base=abase, n=K, m=P, stride=astride)
+        A = C.SV.mdesc(space=1, fmt=0, base=a_rec, n=K, m=P, stride=astride)
         B = C.SV.mdesc(space=0, fmt=BFMT[pf], base=line0 * lb, n=K, m=M, stride=lpr * lb)
         O = C.SV.mdesc(space=1, fmt=1 if r.get('o_bf16') else 0, base=obase, n=M, m=P, stride=ostride)
-        h = C.SV.header(1, 0, opnd=0b10011, param=pf | (P - 1) << 2)
+        h = C.SV.header(1, 0, opnd=0b10011, param=pf | (P - 1) << 2 | xr << 5 | xb << 6)
         recs.append(h | A << 128 | B << 384 | O << 640 | K << 896 | K << 917)
         xw0 = len(xws)
         if pf in (1, 2):                                   # the quantised fragments the tb writes (x-load proxy)
@@ -175,9 +204,8 @@ def main():
         R0 = min(Q, M)
         R1 = max(0, min(Q, M - Q))
         info.append((pf, Q, M, R0, R1, xw0, len(xws) - xw0))
-        r.update(Q=Q, LPR=lpr, LB=lb, line_image_stride=lpr * lb, rows_real=[R0, R1],
+        r.update(XR=xr, XB=xb, Q=Q, LPR=lpr, LB=lb, line_image_stride=lpr * lb, rows_real=[R0, R1],
                  x_load='real' if pf in (0, 3) else 'proxy: real BF16 x-load of the same A + tb-written quantised fragments')
-        abase += P * astride + 64
         obase += P * ostride + 64
         assert abase < 200000 and obase < 262000, (abase, obase)
     secs = {}
@@ -197,6 +225,7 @@ def main():
         f'localparam integer NLINE = {len(lines)};\nlocalparam integer LBASE = {min(lines)};\n'
         f'localparam integer LSPAN = {max(lines) - min(lines) + 1};\n')
     (out / 'meta.json').write_text(json.dumps(dict(vehicle=a.vehicle, source=src, records=recs_in), indent=1) + '\n')
+    print(f"{nxr} of {len(recs)} records reuse x (XR);", end=' ')
     print(f"{len(recs)} records, {len(lines)} weight lines, {len(secs)} x sectors, {len(vme)} result words, "
           f"{len(xws)} proxy x beats")
 

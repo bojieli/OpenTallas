@@ -570,6 +570,12 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--macro-place-halo {h} {h}")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
+    # spec "orfs_vars" {NAME: value}: extra ORFS variables the RTL needs (e.g. VERILOG_INCLUDE_DIRS=/src/rtl/common for a
+    # source with `include); flow-mechanics knobs stay owned by the kit
+    for k, v in s.get("orfs_vars", {}).items():
+        if not re.fullmatch(r"[A-Z][A-Z0-9_]*", k) or re.search(r"\s", str(v)):
+            raise SpecError(f"spec: orfs_vars {k}={v!r}: NAME=[A-Z0-9_]+, value without whitespace")
+        extra.append(f"--orfs-var {k}={v}")
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
@@ -577,6 +583,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
+    if s.get("inhold"):
+        # spec 'inhold': one dont_touch hold buffer between every data input port and its single capture flop, inserted
+        # before global placement (owner 10-10: a hold-only miss on input captures -> delay stage at the inputs, no ECO)
+        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -609,6 +619,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
+    if s.get("inhold"):
+        out.append("physical/dsrom_window_source/leaf_inhold.tcl")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
