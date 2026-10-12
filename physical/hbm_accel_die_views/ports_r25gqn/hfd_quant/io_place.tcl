@@ -1,7 +1,8 @@
 # hfd_quant: every die pin at the generator's position (tools/hbm_die_views.py ports, r25)
 place_pin -pin_name {ck[0]} -layer M5 -location {1370.2200 0.0960} -pin_size {0.0240 0.1920}
-place_pin -pin_name {f_fused_ne[0]} -layer M4 -location {1399.5600 29.4360} -pin_size {0.1920 0.0240}
-place_pin -pin_name {f_fused_ne[1]} -layer M4 -location {1399.5600 29.6280} -pin_size {0.1920 0.0240}
+place_pin -pin_name {f_fused_ne[0]} -layer M4 -location {1399.5600 29.8200} -pin_size {0.1920 0.0240}
+place_pin -pin_name {f_fused_ne[1]} -layer M4 -location {1399.5600 30.0120} -pin_size {0.1920 0.0240}
+place_pin -pin_name {f_fused_ne[2]} -layer M4 -location {1399.5600 30.2040} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_hgi_cmdproc[0]} -layer M5 -location {1244.6520 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_hgi_cmdproc[1]} -layer M7 -location {1244.6880 0.0960} -pin_size {0.0320 0.1920}
 place_pin -pin_name {f_hgi_cmdproc[2]} -layer M5 -location {1244.7480 0.0960} -pin_size {0.0240 0.1920}
@@ -9431,6 +9432,8 @@ place_pin -pin_name {t_fused_ne[145]} -layer M4 -location {1399.5600 28.4760} -p
 place_pin -pin_name {t_fused_ne[146]} -layer M4 -location {1399.5600 28.6680} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_fused_ne[147]} -layer M4 -location {1399.5600 28.8600} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_fused_ne[148]} -layer M4 -location {1399.5600 29.0520} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_fused_ne[149]} -layer M4 -location {1399.5600 29.2440} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_fused_ne[150]} -layer M4 -location {1399.5600 29.4360} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_hgi_cmdproc[0]} -layer M5 -location {1311.8520 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_hgi_cmdproc[1]} -layer M7 -location {1311.8880 0.0960} -pin_size {0.0320 0.1920}
 place_pin -pin_name {t_hgi_cmdproc[2]} -layer M5 -location {1311.9480 0.0960} -pin_size {0.0240 0.1920}

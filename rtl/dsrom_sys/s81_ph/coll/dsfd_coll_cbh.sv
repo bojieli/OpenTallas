@@ -19,7 +19,9 @@
 // FIFO with a registered head: the D-deep array sits behind a head register, so the consumer reads a flop, and the
 // array read mux lands in the head register (never in the consumer's logic).  Same push -> visible latency as
 // ot_s81ph_rfifo (1 cycle); capacity D + 1.
-module ot_s81ph_hfifo #(parameter integer W = 8, parameter integer D = 16) (
+// RREP (el1011-ds-coll 2026-10-11, opt-in, default 1 = byte-identical): the head-load read pointer is replicated RREP
+// times (kept ot_s81ph_keep_ff bits), copy c selects head columns [c*SW +: SW] (cel u_sk: one rp bit drove 8,755 loads).
+module ot_s81ph_hfifo #(parameter integer W = 8, parameter integer D = 16, parameter integer RREP = 1) (
     input  wire         clk, input wire rst_n,
     input  wire         push, input wire [W-1:0] wd,
     input  wire         pop,
@@ -36,9 +38,28 @@ module ot_s81ph_hfifo #(parameter integer W = 8, parameter integer D = 16) (
     wire h_ld_m = (!hv || take) && m_ne;
     wire h_ld_w = (!hv || take) && !m_ne && push;
     wire m_wr = push && !h_ld_w;
+    wire [W-1:0] m_rd;
+    wire [AW-1:0] rp_nx = h_ld_m ? rp + 1'b1 : rp;
+    generate if (RREP <= 1) begin : g_rp1
+        assign m_rd = m[rp];
+    end else begin : g_rpn
+        localparam integer SW = (W + RREP - 1) / RREP;
+        genvar c, b;
+        for (c = 0; c < RREP; c = c + 1) begin : g_c
+            localparam integer LO = c * SW, HI = ((c + 1) * SW > W) ? W : (c + 1) * SW;
+            if (LO < W) begin : g_on
+                wire [AW-1:0] rpc;
+                for (b = 0; b < AW; b = b + 1) begin : g_b
+                    ot_s81ph_keep_ff u_k (.clk(clk), .rst_n(rst_n), .d(rp_nx[b]), .q(rpc[b]));
+                end
+                wire [W-1:0] row = m[rpc];
+                assign m_rd[HI-1:LO] = row[HI-1:LO];
+            end
+        end
+    end endgenerate
     always @(posedge clk) begin
         if (m_wr) m[wp] <= wd;
-        if (h_ld_m) hd <= m[rp];
+        if (h_ld_m) hd <= m_rd;
         else if (h_ld_w) hd <= wd;
     end
     always @(posedge clk or negedge rst_n)
