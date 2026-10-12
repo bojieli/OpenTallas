@@ -298,13 +298,14 @@ def cut():
         if any(lvl[l] >= MIN_LVL for l in obsl):
             bodies.append(dict(inst=i.getName(), master=m.getName(), kept=i.getName() in keep, obs=obsl,
                                bbox_um=[b.xMin() / dbu, b.yMin() / dbu, b.xMax() / dbu, b.yMax() / dbu]))
+    # intruder body: the master's own OBS boxes (exact abstract, placed + clipped), not one full-bbox box per layer.
+    # A die-level obstruction has no same-instance exemption, so on a pin layer the OBS is pulled back from every face
+    # that carries in-window pins to just past the deepest pin (+0.1 um): DRT gives an instance's own pins that
+    # exemption, the region cut must too (2026-10-12: full-bbox OBS over 7.8k face pins = ioedge's flat 17.6k DRC).
+    intr_names = [i.getName() for i in intr]
     for i in intr:
         b = i.getBBox()
-        ox0, oy0, ox1, oy1 = max(b.xMin(), x0), max(b.yMin(), y0), min(b.xMax(), x1), min(b.yMax(), y1)
-        for ln in sorted({ob.getTechLayer().getName() for ob in i.getMaster().getObstructions()
-                          if ob.getTechLayer() is not None and ob.getTechLayer().getType() == 'ROUTING'}):
-            odb.dbObstruction_create(block, layers[ln], ox0, oy0, ox1, oy1)
-            nobs += 1
+        myp = []
         for it in i.getITerms():
             net = it.getNet()
             if net is None or net.getSigType() in ('POWER', 'GROUND') or net.isSpecial():
@@ -315,7 +316,30 @@ def cut():
                         continue
                     r = place(i, g)
                     if inside(r):
+                        myp.append((g.getTechLayer().getName(), r))
                         ipins.setdefault(net.getName(), []).append((g.getTechLayer().getName(), r, i.getName()))
+        pull = {}
+        mg = int(0.1 * dbu)
+        for ln, r in myp:
+            d = pull.setdefault(ln, [b.xMin(), b.yMin(), b.xMax(), b.yMax()])
+            dx0, dy0, dx1, dy1 = r.xMin() - b.xMin(), r.yMin() - b.yMin(), b.xMax() - r.xMax(), b.yMax() - r.yMax()
+            k = min((dx0, 0), (dy0, 1), (dx1, 2), (dy1, 3))[1]      # the face this pin sits on
+            if k == 0: d[0] = max(d[0], r.xMax() + mg)
+            if k == 1: d[1] = max(d[1], r.yMax() + mg)
+            if k == 2: d[2] = min(d[2], r.xMin() - mg)
+            if k == 3: d[3] = min(d[3], r.yMin() - mg)
+        for ob in i.getMaster().getObstructions():
+            L = ob.getTechLayer()
+            if L is None or L.getType() != 'ROUTING' or L.getName() not in layers:
+                continue
+            ln = L.getName()
+            r = place(i, ob)
+            lx0, ly0, lx1, ly1 = pull.get(ln, [b.xMin(), b.yMin(), b.xMax(), b.yMax()])
+            ox0, oy0 = max(r.xMin(), x0, lx0), max(r.yMin(), y0, ly0)
+            ox1, oy1 = min(r.xMax(), x1, lx1), min(r.yMax(), y1, ly1)
+            if ox1 > ox0 and oy1 > oy0:
+                odb.dbObstruction_create(block, layers[ln], ox0, oy0, ox1, oy1)
+                nobs += 1
     print(f'DRD window dbu=[{x0} {y0} {x1} {y1}] keep={len(keep)} intruders={len(intr)} drop={len(drop)} obs={nobs}'
           f' intruder_pin_nets={len(ipins)}', flush=True)
     grids = {}
@@ -655,7 +679,7 @@ def cut():
     (out_dir / 'internal_nets.txt').write_text('\n'.join(sorted(internal)) + '\n')
     out = {'win_um': reg['win'], 'region_um': [x0 / dbu, y0 / dbu, x1 / dbu, y1 / dbu], 'dbu': dbu,
            'area_mm2': (x1 - x0) * (y1 - y0) / dbu / dbu / 1e6, 'kept_instances': len(keep),
-           'intruders': [i.getName() for i in intr][:200], 'n_intruders': len(intr), 'obstructions': nobs,
+           'intruders': intr_names[:200], 'n_intruders': len(intr), 'obstructions': nobs,
            'pins_guides': stats, 'pdn_clip': psb, 'nets_removed': ndel, 'region_nets': len(nets_seen),
            'pin_access_above_only': pa, 'hard_bodies': bodies, 'kept_masters': {}}
     for i in block.getInsts():
@@ -716,14 +740,20 @@ foreach f [lsort [glob -nocomplain /work/libs/*_{c}.lib]] {{ read_liberty $f }}
 set lat {{}}
 set fh [open /work/clock_lat_{c}.tcl]
 while {{[gets $fh line] >= 0}} {{
-  if {{[regexp {{get_pins -quiet \\{{([^}}]+)\\}}.*set_clock_latency ([-0-9.]+)}} $line -> pn v]}} {{ lappend lat $pn $v }}
-  if {{[regexp {{^set_clock_latency ([-0-9.]+) \\[get_pins -quiet \\{{([^}}]+)\\}}}} $line -> v pn]}} {{ lappend lat $pn $v }}
+  if {{[regexp {{get_pins -quiet \\{{([^\\}}]+)\\}}.*set_clock_latency ([-0-9.]+)}} $line -> pn v]}} {{ lappend lat $pn $v }}
+  if {{[regexp {{^set_clock_latency ([-0-9.]+) \\[get_pins -quiet \\{{([^\\}}]+)\\}}}} $line -> v pn]}} {{ lappend lat $pn $v }}
 }}
 close $fh
 set sp {{}}; set hp {{}}
 foreach {{pn v}} $lat {{ set p [get_pins -quiet $pn]; if {{[llength $p]}} {{
   if {{[regexp {{/hclk$|pll_hbm}} $pn]}} {{ lappend hp $p }} else {{ lappend sp $p }} }} }}
-puts "OT_CLOCK_SINKS stream=[llength $sp] hclk=[llength $hp]"
+# sinks the die clock plan does not list (kept relay macros, whose clock comes from the die tree that is not in the
+# window): ideal stream clock, the same on the GRT and RCX side, so the RCX-GRT delta stays a wire-only delta
+set have {{}}; foreach p [concat $sp $hp] {{ dict set have [get_full_name $p] 1 }}
+set ip 0
+foreach p [get_pins -quiet -hierarchical {{*/ck */ck\\[0\\] */clk */CLK */clk_i}}] {{
+  if {{![dict exists $have [get_full_name $p]]}} {{ lappend sp $p; incr ip }} }}
+puts "OT_CLOCK_SINKS stream=[llength $sp] hclk=[llength $hp] ideal_unplanned=$ip"
 if {{[llength $sp]}} {{ create_clock -name stream -period 833.333 $sp }}
 if {{[llength $hp]}} {{ create_clock -name hclk -period 1024 $hp; set_clock_groups -asynchronous -group stream -group hclk }}
 foreach {{pn v}} $lat {{ set p [get_pins -quiet $pn]; if {{[llength $p]}} {{ set_clock_latency -source $v $p }} }}
@@ -885,8 +915,7 @@ def compare(a):
     out['drc_total'] = sum(drc.values())
     out['drc_classes'] = dict(sorted(drc.items(), key=lambda kv: -kv[1]))
     log = (d / 'drt.log').read_text(errors='replace') if (d / 'drt.log').exists() else ''
-    its = re.findall(r'Completing (\d+)\S* optimization iteration.*?\n.*?Number of violations = (\d+)', log, re.S)
-    out['drt_iterations'] = [[int(i), int(v)] for i, v in its][-6:]
+    out['drt_iterations'] = [int(v) for v in re.findall(r'Number of violations = (\d+)', log)]
     # GRT side from the clipped guides
     units = cutj.get('dbu', 1000)
     grt = {}
@@ -987,8 +1016,31 @@ def compare(a):
                                      'min': round(min(dr), 2) if dr else None,
                                      'max': round(max(dr), 2) if dr else None}}
     out['sta'] = sta
+    # wire-only parasitic error bar (works when the window has no clocked sinks, e.g. clockless relay abstracts):
+    # total net capacitance, die GRT SPEF of record vs RCX of the detailed route, internal nets
+    def spef_caps(p):
+        caps, nm = {}, {}
+        if not p.exists():
+            return caps
+        sc = 1.0
+        for ln in open(p, errors='replace'):
+            if ln.startswith('*C_UNIT'):
+                f = ln.split(); sc = float(f[1]) * {'PF': 1000.0, 'FF': 1.0}.get(f[2].upper(), 1.0)
+            elif ln.startswith('*') and ln[1:2].isdigit():
+                k, v = ln.split(None, 1); nm[k] = v.strip()
+            elif ln.startswith('*D_NET'):
+                f = ln.split(); caps[nm.get(f[1], f[1])] = float(f[2]) * sc
+        return caps
+    cg, cr = spef_caps(d / 'grt_internal.spef'), spef_caps(d / 'routed.spef')
+    rel = sorted((cr[n] - cg[n]) / cg[n] for n in cg if n in cr and cg[n] > 0.5)
+    out['net_cap'] = {'nets': len(rel), 'grt_total_ff': round(sum(cg[n] for n in cg if n in cr), 1),
+                      'rcx_total_ff': round(sum(cr[n] for n in cg if n in cr), 1),
+                      'rel_median': round(rel[len(rel) // 2], 4) if rel else None,
+                      'rel_p05': round(rel[len(rel) // 20], 4) if rel else None,
+                      'rel_p95': round(rel[(len(rel) * 19) // 20], 4) if rel else None,
+                      'note': 'internal nets with GRT cap > 0.5 fF; (RCX - GRT) / GRT'}
     (d / 'compare.json').write_text(json.dumps(out, indent=1))
-    print(json.dumps({k: out[k] for k in ('drc_total', 'wirelength', 'vias', 'layer_contract', 'sta')}, indent=1))
+    print(json.dumps({k: out[k] for k in ('drc_total', 'drt_iterations', 'wirelength', 'vias', 'layer_contract', 'sta', 'net_cap')}, indent=1))
 
 
 def main():

@@ -231,12 +231,13 @@ table.t tr.cl:hover{background:#121a30}
     <div class="hud" id="hud"></div>
     <div class="busy" id="busy">Loading die geometry&hellip;</div>
   </main>
-  <aside class="pane" id="right"><div id="card"><div class="empty">Click any instance on the die, a row in the hierarchy, or search for an element. Every element has a card: what it is, where it sits, its interfaces, and its full closure history.</div></div></aside>
+  <aside class="pane" id="right"><div id="flowtrk" class="fvf-box" aria-label="Flow progress"></div><div id="card"><div class="empty">Click any instance on the die, a row in the hierarchy, or search for an element. Every element has a card: what it is, where it sits, its interfaces, and its full closure history.</div></div></aside>
 </div>
 <div id="tip" hidden></div>
 <div id="story" hidden><div class="in"><button class="btn x" type="button" id="storyX">Close</button><div id="storyC"></div></div></div>
 <script src="/fv_stale.js"></script>
 <script src="/explorer_story.js"></script>
+<script src="/fv_flow.js"></script>
 <script src="/explorer.js"></script>
 </body>
 </html>

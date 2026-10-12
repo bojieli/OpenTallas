@@ -15,8 +15,8 @@ import textbook_lint as TL  # noqa: E402
 EX = HERE / "examples"
 
 
-def spec(name, **kw):
-    s = json.loads((EX / f"{name}.json").read_text())
+def spec(_ex, **kw):
+    s = json.loads((EX / f"{_ex}.json").read_text())
     s.update(kw)
     f = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False)
     json.dump(s, f)
@@ -38,6 +38,52 @@ class Gen(unittest.TestCase):
         place = RT.gen_place(s, blocks)
         self.assertNotIn("dbBlockage_create", place)       # no blockage over row-end endcaps (DPL-0033)
         self.assertIn("ot_ref_strip", place)
+
+    # 2026-10-12 layer contract (results/arch/hier_contract_1011/layer_usage_1012.md)
+    def test_new_tile_caps_at_m5(self):
+        s = RT.load_spec(spec("nhb_pbst_ref", name="m5cap_new_t"))
+        lc = RT.layer_contract(s, None)
+        self.assertEqual((lc["pg_layer"], lc["rlayers"], lc["strap_layer"], lc["layer_cap"]), ("M5", ("M2", "M5"), "M6", "M5"))
+        r = RT.gen(spec("nhb_pbst_ref", name="m5cap_new_t"), write=False)
+        self.assertEqual([f for f in r["findings"] if f[0] == "FAIL"], [])
+        blocks = RT.place_blocks(s, *r["outline"], RT.blocks_of(s))
+        env = RT.gen_env(s, "k", *r["outline"], lc, blocks)
+        self.assertIn("RLAYERS='M2 M5'", env)
+        self.assertIn("PIN_H='M4'", env)
+        self.assertIn("PIN_V='M5'", env)
+        pdn = RT.gen_pdn(s, lc)
+        self.assertIn("-pins {M5}", pdn)
+        self.assertNotIn("-layer {M6}", pdn)
+        self.assertNotIn("-layers {M5 M6}", pdn)
+
+    def test_m6_needs_a_grant(self):
+        with self.assertRaises(RT.SpecError):
+            RT.layer_contract(RT.load_spec(spec("nhb_pbst_ref", name="m5cap_x", pg_layer="M6")), None)
+        with self.assertRaises(RT.SpecError):
+            RT.layer_contract(RT.load_spec(spec("nhb_pbst_ref", name="m5cap_x", layer_cap="M6")), None)
+        with self.assertRaises(RT.SpecError):
+            RT.layer_contract(RT.load_spec(spec("nhb_pbst_ref", name="m5cap_x", layer_cap="M7", layer_cap_grant="x")), None)
+        lc = RT.layer_contract(RT.load_spec(spec("nhb_pbst_ref", name="m5cap_x", layer_cap="M6",
+                                                 layer_cap_grant="hgi lead: 512-pin edge relay")), None)
+        self.assertEqual((lc["pg_layer"], lc["rlayers"], lc["strap_layer"], lc["cap_basis"]), ("M6", ("M2", "M6"), "M7", "granted"))
+
+    def test_legacy_kit_keeps_its_contract(self):
+        lc = RT.layer_contract(RT.load_spec(spec("nhb_pbst_ref")), None)
+        self.assertEqual((lc["pg_layer"], lc["rlayers"], lc["strap_layer"]), ("M6", ("M2", "M6"), "M7"))
+        self.assertTrue(lc["cap_basis"].startswith("legacy"))
+
+    def test_pins_above_cap_refused(self):
+        s = RT.load_spec(spec("nhb_pbst_ref", name="m5cap_x", route={"pin_h": "M4 M6"}))
+        with self.assertRaises(RT.SpecError):
+            RT.pin_layers(s, RT.layer_contract(s, None))
+
+    def test_slot_layer_cap(self):
+        s = RT.load_spec(spec("nhb_pbst_ref", name="m5cap_x"))
+        self.assertEqual(RT.layer_contract(s, {"pg_layer": "M5", "layer_cap": "M5"})["pg_layer"], "M5")
+        with self.assertRaises(RT.SpecError):
+            RT.layer_contract(s, {"pg_layer": "M7"})                       # a slot not bumped to the M5 contract
+        lc = RT.layer_contract(s, {"pg_layer": "M6", "layer_cap": "M6", "layer_cap_grant": "lead: dense relay"})
+        self.assertEqual(lc["pg_layer"], "M6")
 
     def test_pin_plan_rejects_bit_names(self):
         with self.assertRaises(RT.SpecError):
