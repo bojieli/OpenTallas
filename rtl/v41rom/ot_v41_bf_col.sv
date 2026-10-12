@@ -70,6 +70,7 @@ module ot_v41_bf_col #(
     parameter integer FXST = 0,         // TCG only: pipelined FP8/FP4 lane input stages (+FXST cycles; see g_l3)
     parameter integer GRADUAL_RNE = 0,
     parameter INSTANCE = "",
+    parameter integer HDLY = 0,       // bf-hier-1011: HB4 hold-delay cells per input bit ahead of the boundary registers
     parameter integer MB = 0          // which column (simulation ROM image name only)
 ) (
     input  wire          clk,
@@ -131,19 +132,38 @@ module ot_v41_bf_col #(
     wire [4:0]   b_so_n [0:NSEG-1];
     if (1) begin : g_pin
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) r_rst (.clk(clk), .arst_n(rst_n_pin), .d(1'b1), .q(b_rst));
-        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze (.clk(clk), .arst_n(rst_n_pin), .d(ze_d), .q(b_ze));
-        reg r_issue, r_i1_v, r_i1_bk, r_i1_bf;
-        reg [13:0] r_a_ctr;
-        reg [TW-1:0] r_i1_t;
-        reg [255:0] r_i2x_q0, r_i2x_q1;
-        reg [9:0] r_i2x_e0, r_i2x_e1;
-        reg [16*NSEG-1:0] r_so_row;
-        reg [5*NSEG-1:0] r_so_idx, r_so_n;
-        always @(posedge clk) begin
-            r_issue <= issue; r_i1_v <= i1_v; r_i1_bk <= i1_bk; r_i1_bf <= i1_bf; r_a_ctr <= a_ctr; r_i1_t <= i1_t;
-            r_i2x_q0 <= i2x_q0; r_i2x_e0 <= i2x_e0; r_i2x_q1 <= i2x_q1; r_i2x_e1 <= i2x_e1;
-            r_so_row <= so_row; r_so_idx <= so_idx; r_so_n <= so_n;
-        end
+        // HDLY: a dont_touch hold-delay stage on every abutted input (ot_bf_hdly; identity in function)
+        wire d_ze, d_issue, d_i1_v, d_i1_bk, d_i1_bf; wire [13:0] d_a_ctr; wire [TW-1:0] d_i1_t;
+        wire [255:0] d_i2x_q0, d_i2x_q1; wire [9:0] d_i2x_e0, d_i2x_e1; wire [16*NSEG-1:0] d_so_row; wire [5*NSEG-1:0] d_so_idx, d_so_n;
+        ot_bf_hdly #(.W(1), .N(HDLY)) u_hdly_ze (.a(ze_d), .y(d_ze));
+        ot_bf_hdly #(.W(4), .N(HDLY)) u_hdly_ctl (.a({issue, i1_v, i1_bk, i1_bf}), .y({d_issue, d_i1_v, d_i1_bk, d_i1_bf}));
+        ot_bf_hdly #(.W(14), .N(HDLY)) u_hdly_actr (.a(a_ctr), .y(d_a_ctr));
+        ot_bf_hdly #(.W(TW), .N(HDLY)) u_hdly_t (.a(i1_t), .y(d_i1_t));
+        ot_bf_hdly #(.W(256), .N(HDLY)) u_hdly_q0 (.a(i2x_q0), .y(d_i2x_q0));
+        ot_bf_hdly #(.W(256), .N(HDLY)) u_hdly_q1 (.a(i2x_q1), .y(d_i2x_q1));
+        ot_bf_hdly #(.W(20), .N(HDLY)) u_hdly_e (.a({i2x_e0, i2x_e1}), .y({d_i2x_e0, d_i2x_e1}));
+        ot_bf_hdly #(.W(16*NSEG), .N(HDLY)) u_hdly_row (.a(so_row), .y(d_so_row));
+        ot_bf_hdly #(.W(10*NSEG), .N(HDLY)) u_hdly_so (.a({so_idx, so_n}), .y({d_so_idx, d_so_n}));
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze (.clk(clk), .arst_n(rst_n_pin), .d(d_ze), .q(b_ze));
+        // el1011-ds-bf 2026-10-11: input capture registers as named ot_v41_kreg cells (g_pin.r_*). As plain always-regs
+        // yosys named them after the outer nets (b_i2x_q0[..]$_DFF_P_), so they fell outside BOTH the CTS pin-clock
+        // group (pinclk_group.tcl, g_pin.r_*) and the sign-off input reference L (signoff_col.sdc mean over g_pin.r_*):
+        // clustered with internal registers, their FF hold (I2R) missed by their skew above L. Identical function.
+        wire r_issue, r_i1_v, r_i1_bk, r_i1_bf;
+        wire [13:0] r_a_ctr;
+        wire [TW-1:0] r_i1_t;
+        wire [255:0] r_i2x_q0, r_i2x_q1;
+        wire [9:0] r_i2x_e0, r_i2x_e1;
+        wire [16*NSEG-1:0] r_so_row;
+        wire [5*NSEG-1:0] r_so_idx, r_so_n;
+        ot_v41_kreg #(.W(4), .AR(0)) r_ctl (.clk(clk), .arst_n(1'b1), .d({d_issue, d_i1_v, d_i1_bk, d_i1_bf}), .q({r_issue, r_i1_v, r_i1_bk, r_i1_bf}));
+        ot_v41_kreg #(.W(14), .AR(0)) r_actr (.clk(clk), .arst_n(1'b1), .d(d_a_ctr), .q(r_a_ctr));
+        ot_v41_kreg #(.W(TW), .AR(0)) r_t (.clk(clk), .arst_n(1'b1), .d(d_i1_t), .q(r_i1_t));
+        ot_v41_kreg #(.W(256), .AR(0)) r_q0 (.clk(clk), .arst_n(1'b1), .d(d_i2x_q0), .q(r_i2x_q0));
+        ot_v41_kreg #(.W(256), .AR(0)) r_q1 (.clk(clk), .arst_n(1'b1), .d(d_i2x_q1), .q(r_i2x_q1));
+        ot_v41_kreg #(.W(20), .AR(0)) r_e (.clk(clk), .arst_n(1'b1), .d({d_i2x_e0, d_i2x_e1}), .q({r_i2x_e0, r_i2x_e1}));
+        ot_v41_kreg #(.W(16*NSEG), .AR(0)) r_row (.clk(clk), .arst_n(1'b1), .d(d_so_row), .q(r_so_row));
+        ot_v41_kreg #(.W(10*NSEG), .AR(0)) r_so (.clk(clk), .arst_n(1'b1), .d({d_so_idx, d_so_n}), .q({r_so_idx, r_so_n}));
         assign b_issue = r_issue; assign b_i1_v = r_i1_v; assign b_i1_bk = r_i1_bk; assign b_i1_bf = r_i1_bf;
         assign b_a_ctr = r_a_ctr; assign b_i1_t = r_i1_t;
         assign b_i2x_q0 = r_i2x_q0; assign b_i2x_e0 = r_i2x_e0; assign b_i2x_q1 = r_i2x_q1; assign b_i2x_e1 = r_i2x_e1;

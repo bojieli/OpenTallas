@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 4,
+ "version": 7,
  "owner": "s81die-1011",
- "updated": "2026-10-12T00:40-07:00",
+ "updated": "2026-10-12 02:45 PT",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -48,6 +48,21 @@
    "version": 4,
    "when": "2026-10-12 00:40 PT",
    "change": "die-fit replay of v3 widths on plan d221bdf05 (DEF + SVG overlay): sp_hc_s 1,814.376 wide 0 overlaps (nearest station 4.4 um); sp_su_s 1,890.0 grown E overlapped 5 die-top stations (xE trunk f_xEdn_10/11, f_xEup_10 at x 15,693.7; su_s sseq hub stations at x 15,681/15,752) -> v4 grows SU W instead: origin x 13,942.8 -> 13,780.8 (E edge 15,670.8, = v2b edge), 0 overlaps, 10.5 um to the W xW station column; SU tile slots are slab-relative (unchanged), SU die pins move -162.0 in x. sp_vm/*.u_bg dsfd_vm_bgq28 signal_max_layer M7 -> M6 (pins re-layered, positions unchanged). OPEN: FE v5 (594) makes sp_vm 2,730.216 tall: capture+gather shifted +120.96 collide with 1 hub station at (13,940.3, 13,126.3) -- VM height NOT adopted in v4."
+  },
+  {
+   "version": 5,
+   "when": "2026-10-12 00:55 PT",
+   "change": "s81-die-iter: VM FE v5 adopted, sp_vm h 2,609.256 -> 2,730.216, resolved by RE-STACKING the hub column in the full generator (not an overlay shift): dsrom_s81_fulldie --contract reads SU/HC/VM/centre outlines from this file, hub column 1,890 (SU width), centre hard elements centred at their contract outline; hub stations and relays are regenerated around the new stack. Slot origins of hub elements are re-derived from that plan (next version)."
+  },
+  {
+   "version": 6,
+   "when": "2026-10-12 02:20 PT",
+   "change": "s81-die-iter: rep/hrow outline 2,998.08 x 1,769.04 (el1011-ds-mtp fd01e9763: grows DOWN from the fixed N face, N-face ports unchanged); dsrom_s81_fulldie --contract now reads rep/hrow (the old key \"hrow\" never matched). Wide face-to-face hub groups centred on the span shared with the peer (--peer-span-centre): SU 1,890 (grown W) and VM 1,520 keep their wide rs_d/wq_d groups aligned across the 21.6 um abut gap."
+  },
+  {
+   "version": 7,
+   "when": "2026-10-12 02:45 PT",
+   "change": "s81-die-iter: hub slot origins re-derived from the re-stacked i3 plan (src 4c8acb002, recipe s81_layer1_v4.opts; legality 0 overlaps / 0 outside / 0 pin clashes over 58,338 instances; results/physical/die_iter_1012/s81/i3_plan): sp_collective (13942.8,14603.76)->(13942.8,14724.72); sp_capture (13942.8,12091.68)->(13942.8,12212.64); sp_gather (13942.8,12242.88)->(13942.8,12363.84); sp_wfc (13942.8,13841.28)->(13942.8,13962.24). VM FE v5 conflict resolved by the re-stack: SU|21.6|VM 9,460.8-12,191.0|21.6|capture|21.6|gather (abut gaps, pin flops both faces); hub stations regenerate clear of it."
   }
  ],
  "slots": [
@@ -3451,7 +3466,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 14603.76,
+    "y": 14724.72,
     "orient": "R0"
    },
    "io_budget": {
@@ -4339,7 +4354,7 @@
    "parent": "s81_layer1",
    "outline": {
     "w": 1520.184,
-    "h": 2609.256
+    "h": 2730.216
    },
    "origin": {
     "x": 14046.912,
@@ -4358,7 +4373,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
@@ -4617,7 +4632,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 12091.68,
+    "y": 12212.64,
     "orient": "R0"
    },
    "io_budget": {
@@ -4688,7 +4703,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 12242.88,
+    "y": 12363.84,
     "orient": "R0"
    },
    "io_budget": {
@@ -4885,7 +4900,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 13841.28,
+    "y": 13962.24,
     "orient": "R0"
    },
    "io_budget": {
@@ -5152,8 +5167,8 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 0,
-    "h": 0
+    "w": 2998.08,
+    "h": 1769.04
    },
    "origin": {
     "x": 0,
