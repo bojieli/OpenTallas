@@ -126,5 +126,9 @@
   "views_to": "physical/ref_tile/qfd_vm_bank_t/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_bank_t"
  },
- "std_area_um2": 527
+ "std_area_um2": 527,
+ "orfs_vars": {
+  "CTS_CLUSTER_SIZE": "12",
+  "CTS_CLUSTER_DIAMETER": "20"
+ }
 }
