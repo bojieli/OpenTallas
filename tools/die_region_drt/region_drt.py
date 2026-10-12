@@ -688,7 +688,7 @@ source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 set_routing_layers -signal M4-M9 -clock M4-M9
 step guides {{ read_guides /work/route.guide }}
 step wl_grt {{ report_wire_length -net * -global_route -file /work/wl_grt.csv }}
-step drt {{ detailed_route -output_drc /work/drt_drc.rpt -verbose 1 -droute_end_iter {iters} }}
+step drt {{ detailed_route -output_drc /work/drt_drc.rpt -verbose 1 -droute_end_iter {iters} -drc_report_iter_step 1 }}
 step write_odb {{ write_db /work/routed.odb }}
 step write_def {{ write_def /work/routed.def }}
 step wl_drt {{ report_wire_length -net * -detailed_route -file /work/wl_drt.csv }}
