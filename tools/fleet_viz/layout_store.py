@@ -484,9 +484,15 @@ def main():
     a = ap.parse_args()
     if a.cmd == 'export':
         el = a.element
-        if not el and a.job:   # the post-record hook knows the job only
-            st = json.loads((JOBS / (a.job + '.json')).read_text())
-            el = (st.get('spec') or {}).get('block') or a.job
+        if not el and a.job:   # the post-record hook knows the job only: the element whose page / registry row carries it
+            el = next((p.stem for p in ELEM_DATA.glob('*.json') if p.name != 'index.json' and not p.name.endswith('.rtl.json')
+                       and (element_json(p.stem) or {}).get('job') == a.job), None)
+            if not el:
+                try: el = next((r['element'] for r in closed_elements() if (r.get('best') or {}).get('job') == a.job), None)
+                except Exception: el = None
+            if not el:
+                st = json.loads((JOBS / (a.job + '.json')).read_text())
+                el = (st.get('spec') or {}).get('block') or a.job
         sys.exit(0 if export(el, a.job) else 1)
     if a.cmd == 'backfill': return backfill(a.limit, set(a.only.split(',')) if a.only else None, a.workers, a.redo)
     if a.cmd == 'gc': print(json.dumps(gc())); return
