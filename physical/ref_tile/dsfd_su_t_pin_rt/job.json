@@ -4,12 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:el1011-rr1012-su",
  "purpose": "rr1012: dsfd_su_t_pin (closed hand-kit s81su-tpin-9eff3d007-tc-pd55, RTL 9eff3d007; main's dsfd_su_t_pin RTL is unchanged since) re-routed through the reference tile flow because its view fails child_lint (f) 201/8698 face pins blocked above; contract slot s81.json sp_su_s/po0 (parent ds_rom_s81_layer1:dsfd_sp_su_c), pin faces from the closed LEF",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
