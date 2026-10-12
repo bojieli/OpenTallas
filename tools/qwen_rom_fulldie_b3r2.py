@@ -329,6 +329,25 @@ def _tp8b_f2(v, m):
         raise SystemExit(f'tp8b: {len(ov)} overlaps, e.g. {ov[:6]}')
 
 
+def _gate_track_lattice(lef, m):
+    """Fail the case generation (seconds, locally) instead of the remote case (minutes): every BLOCK master must
+    have a legal origin on the ASAP7 track lattice in R0/MX/MY/R180 (tools/check_macro_track_alignment.py, the
+    same residue rule as physical/common/ot_macro_track_snap.tcl).  Origins themselves are snapped to that lattice
+    by ot_mts in place.tcl; a master with no legal residue cannot be snapped anywhere."""
+    import importlib.util
+    f = Path(__file__).resolve().parent / 'check_macro_track_alignment.py'
+    spec = importlib.util.spec_from_file_location('ot_mta', f)
+    mta = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mta)
+    res = mta.run([str(lef)], mta.ASAP7_TRACKS_NM, mta.ASAP7_LAYERS)
+    bad = {r['macro']: {lay: s['no_legal_origin'] for lay, s in r.get('summary', {}).items() if s.get('no_legal_origin')}
+           for r in res['macros']}
+    bad = {k: v for k, v in bad.items() if v}
+    m['track_lattice'] = dict(blocks=len(res['macros']), no_legal_origin=bad)
+    if bad:
+        raise SystemExit(f'track lattice: {len(bad)} masters have no legal origin: {dict(list(bad.items())[:6])}')
+
+
 KV_DROP = ('d2d_kv', 'ucie_rom', 'ckb_kv', 'serdes_host')       # KV-die D2D / UCIe / clock bump / host SerDes: gone on one die
 ROM_DROP = ('ucie_kv', 'd2d_rom', 'ckb_rom', 'rs_bump')
 KV_CENTRE = ('pll', 'embgw', 'seq', 'ahub', 'host')              # N -> S in the KV-centre sub-column (the KV PLL is the die PLL)
@@ -544,7 +563,10 @@ def _tp8b_kv(v, m):
             mm = sq if kn == 'seq' else eg
             span = bits * 0.048 * 2 + 4.0
             if kp not in mm.ports:
-                mm.face(kp, bits, face, lay, c[mm.name] + span / 2, 2)
+                # a pin layer must run across its face: the N/S faces take the seq 'rf' layer (vertical, M5), the
+                # E/W faces a horizontal layer (M4).  An M5 pin on a W/E face sits at x = depth/2 (0.096), off the
+                # M5 x lattice the N/S pins fix -> 'ot_mts: qkd_embgw R0 x has no legal origin' (it2 case_r22k).
+                mm.face(kp, bits, face, lay if face in 'NS' else 'M4', c[mm.name] + span / 2, 2)
             c[mm.name] += span + 4.0
         su = o.get('qfd_sp_su64_sfu') or next((q for q in o.values() if 'eq' in q.ports and q.name.endswith('su64_sfu')), None)
         if su is not None and su.ports['eq'][0] == 'face':
@@ -4841,6 +4863,7 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
         PG.F = pg_f
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
+    _gate_track_lattice(work / 'elements.lef', m)
     meta = (write_pdn_r5 if rev == 'r5' else write_pdn_r4)(v, m, work / 'pdn.tcl', bump_um)['meta']
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
