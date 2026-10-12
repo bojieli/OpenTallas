@@ -259,6 +259,45 @@ def main():
     # column width among the columns the chain spans (r1: a per-unit hash put 2/3 of the N-S traffic through the core
     # column: 22-57 b/um on its 116 um row seam)
     xload, xpick, xalt = [0.0] * C, {}, collections.Counter()
+    # r9 (VM_ST_XBAL='<q>_<h>,...'): the r2 pick above is greedy in unit order and counts CHAINS, not seam BITS, so the
+    # chains that can only cross in the core column arrive after the flexible ones have already filled it (r7 sw_e:
+    # col 1 row seam 4,453 bits / 129.6 um = 12.1 b/um/layer on M3/M5/M7, col 2 1,443 / 91.56 um).  Here every chain
+    # is pre-assigned before placement: its weight is its widest depth level (= the seam bits it puts on the row
+    # seam), forced chains (one feasible column) load their column first, then flexible chains in descending weight
+    # take the column with the least bits per um after adding them.  Same feasibility rule, same cycles; only the
+    # crossing column of a flexible chain changes.
+    if f'{q}_{h}' in os.environ.get('VM_ST_XBAL', '').replace(' ', '').split(','):
+        kinfo, kw_ = {}, collections.defaultdict(collections.Counter)
+        for un in units:
+            if un in anchor or un not in db or un not in df:
+                continue
+            key = (ob[un], of_[un])
+            kw_[key][db[un]] += 1
+            if key not in kinfo:
+                (ca, ra), (cb, rb) = cr(kb[un]), cr(kf[un])
+                if ra == rb:
+                    kinfo[key] = None
+                else:
+                    hops = db[un] + df[un]
+                    kinfo[key] = ([c_ for c_ in range(C) if abs(ca - c_) + abs(c_ - cb) + abs(ra - rb) <= hops] or [ca], ca, cb)
+        wid = lambda c_: cols[c_][1] - cols[c_][0]
+        # row-seam bits that do NOT come from a chain pick (core-tile logic, one-sided units, anchor neighbours) per
+        # column, measured on a previous run of the same half (report seam_bits u/d minus row_cross_chains):
+        # VM_ST_XBAL_SEED='<q>_<h>:<c0>/<c1>/<c2>'.  The chain pass then balances the TOTAL row-seam bits per um.
+        for kv in os.environ.get('VM_ST_XBAL_SEED', '').replace(' ', '').split(','):
+            if kv.startswith(f'{q}_{h}:'):
+                for c_, v_ in enumerate(kv.split(':')[1].split('/')):
+                    xload[c_] += float(v_)
+        ks_ = sorted((k_ for k_, v_ in kinfo.items() if v_ is not None),
+                     key=lambda k_: (len(kinfo[k_][0]) > 1, -max(kw_[k_].values()), str(k_)))
+        for k_ in ks_:
+            cs, ca, cb = kinfo[k_]; w_ = max(kw_[k_].values())
+            xalt[len(cs) > 1] += 1
+            cx = min(cs, key=lambda c_: ((xload[c_] + w_) / wid(c_), abs(ca - c_) + abs(c_ - cb)))
+            xload[cx] += w_; xpick[k_] = cx
+        for k_, v_ in kinfo.items():
+            if v_ is None:
+                xpick[k_] = None
     def target(un):
         if un in db and un in df:
             key = (ob[un], of_[un])

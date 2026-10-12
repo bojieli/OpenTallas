@@ -7,7 +7,7 @@ set ot_ih_master [expr {[info exists ::env(OT_INHOLD_MASTER)] ? $::env(OT_INHOLD
 set ot_ih_blk [ord::get_db_block]
 set ot_ih_m [[ord::get_db] findMaster $ot_ih_master]
 if {$ot_ih_m eq "NULL"} { error "INHOLD: $ot_ih_master missing" }
-set ot_ih_n 0; set ot_ih_skip 0
+set ot_ih_n 0; set ot_ih_skip 0; set ot_ih_pnets {}
 foreach bt [$ot_ih_blk getBTerms] {
   if {[$bt getIoType] ne "INPUT"} continue
   set net [$bt getNet]; if {$net eq "NULL"} continue
@@ -23,9 +23,23 @@ foreach bt [$ot_ih_blk getBTerms] {
   [$cell findITerm A] connect $net
   [$cell findITerm Y] connect $n2
   $d connect $n2
+  # [vm8 r9] seed the hold cell AT its input pin (clamped into the core), not at the capture flop: GPL's timing-driven
+  # repair_design otherwise sees a long port -> hold-cell wire whose only load is dont_touch and aborts with RSZ-3006
+  # "Failed to insert buffer before loads" (hbm_vm8st8_nwwt4 cal: e2w__t[9], tile 500 um tall).  The port net (one
+  # load, the dont_touch hold cell) is dont_touch as well: a repeater on it would also change the hold delay this
+  # stage exists to add.  The flop side (hold cell -> D) stays fully repairable.
   lassign [$ff getLocation] x y
-  $cell setOrient [$ff getOrient]; $cell setLocation $x $y; $cell setPlacementStatus PLACED
+  foreach bp [$bt getBPins] { foreach bx [$bp getBoxes] {
+    set x [expr {([$bx xMin] + [$bx xMax]) / 2}]; set y [expr {([$bx yMin] + [$bx yMax]) / 2}]; break } ; break }
+  set ca [$ot_ih_blk getCoreArea]
+  set x [expr {max([$ca xMin], min($x, [$ca xMax] - [$ot_ih_m getWidth]))}]
+  set y [expr {max([$ca yMin], min($y, [$ca yMax] - [$ot_ih_m getHeight]))}]
+  $cell setOrient R0; $cell setLocation $x $y; $cell setPlacementStatus PLACED
+  lappend ot_ih_pnets $net
   incr ot_ih_n
 }
-if {$ot_ih_n > 0} { set_dont_touch [get_cells ot_inhold_*] }
+if {$ot_ih_n > 0} {
+  set_dont_touch [get_cells ot_inhold_*]
+  foreach pn $ot_ih_pnets { $pn setDoNotTouch 1 }
+}
 puts "INHOLD: $ot_ih_n input hold cells ($ot_ih_master, dont_touch), $ot_ih_skip inputs skipped (clock / reset / multi-sink / non-DFF)"
