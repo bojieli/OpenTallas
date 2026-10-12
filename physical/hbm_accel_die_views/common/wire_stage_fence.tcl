@@ -204,10 +204,38 @@ foreach r [$ws_blk getRows] {
   lappend rows [list [lindex $o 1] [lindex $o 0] [expr {[lindex $o 0] + [$r getSiteCount]*[$st getWidth]}] [$st getWidth] [$st getHeight] [$r getOrient]]
 }
 set rows [lsort -integer -index 0 $rows]
-set nrows [llength $rows]
 set rowy0 [lindex $rows 0 0]; set rowh [lindex $rows 0 4]; set sitew [lindex $rows 0 3]
+# el1011-hbm-sfu 2026-10-11: ONE entry per site-row y.  ORFS cuts rows around macros, so a y can carry several row
+# segments; the code below indexes rows by (y - rowy0) / rowh, which on the raw segment list pointed half-way up the
+# block (hfd_sfu_tile: N-face pin at y 332 -> list entry ~1,229 = the 8-um sliver right of the lane at y ~156; all
+# 1,743 bc_out lockups anchored there, routed TT -1,081 ps) and keyed occupancy to the wrong rows (overlaps,
+# DPL-0033).  Merge the segments of each y into its full x span and mark the gaps between them (and any y with no
+# segment) occupied.
+array set ws_yseg {}; set ws_X0 ""; set ws_X1 ""
+foreach r $rows {
+  lappend ws_yseg([lindex $r 0]) $r
+  if {$ws_X0 eq "" || [lindex $r 1] < $ws_X0} { set ws_X0 [lindex $r 1] }
+  if {$ws_X1 eq "" || [lindex $r 2] > $ws_X1} { set ws_X1 [lindex $r 2] }
+}
+set nrows [expr {([lindex $rows end 0] - $rowy0) / $rowh + 1}]
+set rows {}; array set ws_gap {}
+for {set k 0} {$k < $nrows} {incr k} {
+  set y [expr {$rowy0 + $k*$rowh}]
+  if {![info exists ws_yseg($y)]} {
+    lappend rows [list $y $ws_X0 $ws_X1 $sitew $rowh R0]; set ws_gap($k) [list [list $ws_X0 $ws_X1]]; continue
+  }
+  set segs [lsort -integer -index 1 $ws_yseg($y)]
+  lappend rows [list $y $ws_X0 $ws_X1 $sitew $rowh [lindex $segs 0 5]]
+  set c $ws_X0; set ws_gap($k) {}
+  foreach sg $segs {
+    if {[lindex $sg 1] > $c} { lappend ws_gap($k) [list $c [lindex $sg 1]] }
+    set c [expr {max($c, [lindex $sg 2])}]
+  }
+  if {$c < $ws_X1} { lappend ws_gap($k) [list $c $ws_X1] }
+}
 # occupancy: per row, list of {x0 x1} of fixed instances (tapcells, endcaps) and of what this hook places
 array set occ {}
+foreach k [array names ws_gap] { foreach iv $ws_gap($k) { lappend occ($k) $iv } }
 foreach i [$ws_blk getInsts] {
   if {![$i isFixed]} continue
   set bb [$i getBBox]

@@ -1,0 +1,17 @@
+{
+  "status": "POST_IO_ANCHORS_CONFIRMED_PHYSICAL_VERDICT_PENDING",
+  "source_commit": "36250138e343ca618729a467b1292366afa53687",
+  "job": "s81b-wsrc-pinroot-36250138e-hm10",
+  "stage": "3_3_place_gp",
+  "output_port_flops": 1212,
+  "input_port_flops": 8239,
+  "total": 9451,
+  "tag_capture_flops": 320,
+  "worst_predecessor_endpoint": "a_tag[146]$_DFF_P_",
+  "worst_predecessor_anchored": true,
+  "normalization": "OpenDB escaped brackets unescaped only for name comparison; raw list retained",
+  "raw_sha256": "30dbacc70309a161b41a710ec4e3b97b5a4b942d8343ecb0a5b1106959a75f44",
+  "placement_only_added_cycles": 0,
+  "physical_closed": false,
+  "adopted": false
+}

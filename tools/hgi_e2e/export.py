@@ -19,6 +19,7 @@ keeps rank 0's view:
   vmw.bin        per record: {u32 addr, u32 value} for every VM word the record writes (diff U output footprint)
   hbmw.bin       per record: {u64 addr, u64 len, bytes} for every HBM range the record changes
   coll_<k>.bin   per COLL record: every rank's A operand as FP32 words, rank-major (the collective model's peers)
+  collb_<k>.bin  per COLL.TOPK_MERGE record: every rank's B operand (the ids, U32), rank-major (hgi-1010/k)
 """
 from __future__ import annotations
 
@@ -73,6 +74,7 @@ class Capture:
         self.touch = []                      # HBM byte intervals read or written by rank 0
         self.ik_touch = []                   # IDX.INDEX operand-I spans (the --iks key image supplies their bytes)
         self.coll = {}
+        self.collb = {}
 
     def wrap(self, key, fn):
         def run(M, r, L):
@@ -101,14 +103,19 @@ class Capture:
                     elif d.space == "HBM" and r0.unit == "SM":
                         pass
                 coll_parts = None
+                coll_b = None
                 if r0.unit == "COLL":
                     coll_parts = []
+                    coll_b = [] if (r0.op == "TOPK_MERGE" and "B" in r0.desc) else None
                     for dd in dies_save:
                         rr = M.rec_of(dd, r)
                         M.dies, M.cur = [dd], rr
                         a = rr.desc["A"]
                         coll_parts.append(np.asarray(M.read(a, dd, L), dtype=np.float32).view(np.uint32).copy()
                                           if a.space == "VM" else np.zeros(0, np.uint32))
+                        if coll_b is not None:
+                            b0, nb, _, _, _ = M.eff(rr.desc["B"], dd, L)
+                            coll_b.append(dd.vm[b0:b0 + nb].astype(np.uint32).copy())
                 # footprint of the VM outputs
                 M.dies, M.cur = [die0], r0
                 fp = []
@@ -145,6 +152,8 @@ class Capture:
             k = len(self.recs)
             if coll_parts is not None:
                 self.coll[k] = coll_parts
+            if coll_b is not None:
+                self.collb[k] = coll_b
             self.recs.append(dict(k=k, unit=r0.unit, op=r0.op, tag=getattr(r0, "tag", ""), L=int(L),
                                   hdr=f"{r0.encode()[:16][::-1].hex()}", eff=eff, vm_off=off_vm // 8,
                                   vm_n=int(len(addrs)), hbm_off=off_h, hbm_n=nh))
@@ -181,6 +190,8 @@ def write_out(out, cap, M_dies, die0, image, words, dyn, meta, hbm_pre):
     (out / "vm_final.bin").write_bytes(die0.vm.astype("<u4").tobytes())
     for k, parts in cap.coll.items():
         (out / f"coll_{k}.bin").write_bytes(b"".join(p.astype("<u4").tobytes() for p in parts))
+    for k, parts in getattr(cap, "collb", {}).items():
+        (out / f"collb_{k}.bin").write_bytes(b"".join(p.astype("<u4").tobytes() for p in parts))
     meta.update(md_words=words, dyn=dyn, records=cap.recs, image_bytes=len(image),
                 image_sha256=hashlib.sha256(image).hexdigest(), image_base_bytes=IMAGE_PAGE * 4096)
     (out / "meta.json").write_text(json.dumps(meta, indent=1, default=int) + "\n")

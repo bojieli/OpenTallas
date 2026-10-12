@@ -17,6 +17,25 @@ D=/src/physical/qwen_die_masters
 OT_ENV_PD=${PD:-}; OT_ENV_NC=${NC:-}
 source physical/qwen_die_masters/cfg/$CFG.env
 [ -n "$OT_ENV_PD" ] && PD=$OT_ENV_PD; [ -n "$OT_ENV_NC" ] && NC=$OT_ENV_NC
+# el1011-ds-misc/lint (2026-10-11): hard-child abstract fixes for tools/hier_contract/child_lint.py, job-env opt-ins
+# (defaults = the flow as before).  OT_RM_PK=1 chains the face-pin keepout physical/hbm_accel_die_views/stations/bench/
+# stn_pin_keepout.tcl (the pin_access_pregrt.tcl recipe, bf0080873: the two layers adjacent to each face's pin layer are
+# obstructed over the face-pin column before GRT and removed again after DRT; OT_PK_FRAC / OT_PK_HALO / OT_PK_FACES pass
+# through) onto this flow's own PRE_GLOBAL_ROUTE / POST_DETAIL_ROUTE hooks (a second --step-tcl for the same hook would
+# replace them).  OT_RM_CORE_Y = core inset on the S/N faces (default 2.16): the M7 PG stripes span the core, so a thin
+# tile (38.88 um: 34.56 / 38.88 = 89%) misses lint (b)'s 90% full-length stripe rule at the 2.16 inset.  OT_RM_XARGS =
+# extra run_abi3_physical options appended last (last --orfs-var wins).
+CIY=${OT_RM_CORE_Y:-2.16}
+GRT_PRE=physical/qwen_die_masters/pre_ref_skew.tcl; DRT_POST=physical/qwen_die_masters/post_plain.tcl; PKV=()
+if [ "${OT_RM_PK:-0}" = 1 ]; then
+  GRT_PRE=physical/qwen_die_masters/pre_ref_skew_pk.tcl; DRT_POST=physical/qwen_die_masters/post_plain_pk.tcl
+  PKV=(--orfs-var OT_PK_FRAC=${OT_PK_FRAC:-0} --orfs-var OT_PK_HALO=${OT_PK_HALO:-0.072})
+  [ -n "${OT_PK_FACES:-}" ] && PKV+=(--orfs-var "OT_PK_FACES=$OT_PK_FACES")
+  # OT_PK_ABOVE_ONLY=1 (main 405ed7382): keep only the layer ABOVE each face pin clear (child_lint (f) side); the layer
+  # below stays open for the tile's own via access to dense pin faces.
+  [ "${OT_PK_ABOVE_ONLY:-0}" = 1 ] && PKV+=(--orfs-var OT_PK_ABOVE_ONLY=1)
+fi
+XA=(${OT_RM_XARGS:-})
 # drive-1143: a macro view lives only inside the ORFS image, so run_abi3_physical refuses host synth with
 # --macro-view / --memory-macro ("run --stages pnr"); any cfg naming one routes with STAGES=pnr.
 case " ${EXTRA[*]:-} " in *" --macro-view "*|*" --memory-macro "*) STAGES=pnr;; esac
@@ -30,24 +49,32 @@ PL=()
 export OT_ORFS_NUM_CORES=${NC:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 # FLOW-HOLD (2026-10-07): with OT_ROUTE_HOLD_CORNERS=mm the FF scene re-derives this die-context boundary at FF
 export OT_MM_FF_SDC=${OT_MM_FF_SDC:-physical/qwen_die_masters/io_ref_skew.sdc}
+# el1011-q-kvd 2026-10-11: PINKO=1 (cfg or env) -> hard-tile pin-access keepout through GRT/DRT (pre_grt_pinko.tcl / post_drt_pinko.tcl)
+[ "${PINKO:-0}" = 1 ] && PINKO_PRE=pre_grt_pinko.tcl && PINKO_POST=post_drt_pinko.tcl
+# merge (2026-10-11): PINKO and OT_RM_PK both claim the PRE_GLOBAL_ROUTE / POST_DETAIL_ROUTE hooks; PINKO, when set, wins.
+[ -n "${PINKO_PRE:-}" ] && GRT_PRE=physical/qwen_die_masters/$PINKO_PRE && DRT_POST=physical/qwen_die_masters/$PINKO_POST
+# Routing layers (main 10-11): an explicit RLAYERS wins; otherwise a --routing-layers in the kit's extra options is honoured;
+# only then the M2 M7 default. Before this, the default was appended after EXTRA and silently overrode a kit's M2 M6.
+RL=(--routing-layers ${RLAYERS:-M2 M7})
+if [ -z "${RLAYERS:-}" ]; then for _a in "${EXTRA[@]}"; do [ "$_a" = "--routing-layers" ] && RL=(); done; fi
 echo "$(date -Is) start $NAME cfg=$CFG src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
-  --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
+  --die-area 0 0 $FW $FH --core-area 2.16 $CIY $(python3 -c "print(round($FW-2.16,3), round($FH-$CIY,3))") \
   "${PINS[@]}" ${PINS:+--pin-regions-exhaustive} "${EXTRA[@]}" \
-  --routing-layers ${RLAYERS:-M2 M7} --clock-port ${CLKPORT:-clk} --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
+  "${RL[@]}" --clock-port ${CLKPORT:-clk} --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner ${CORNER:-WC} --hold-corners ${CORNER:-WC},BC --io-delay-fraction 0.2 --stages ${STAGES:-synth,pnr} \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=${NC:-16} --orfs-var SDC_FILE=${QDMD:-$D}/${SDCF:-die_p770.sdc} --orfs-var QDM_SDC_DIR=${QDMD:-$D} \
   --orfs-var "PLACE_PINS_ARGS=-min_distance ${PIN_MIN_TRACKS:-1} -min_distance_in_tracks" "${PL[@]}" \
   --step-tcl PRE_CTS=physical/qwen_die_masters/pre_cts_skew.tcl --step-tcl POST_CTS=physical/qwen_die_masters/post_plain.tcl \
-  --step-tcl PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
-  --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
+  --step-tcl PRE_GLOBAL_ROUTE=$GRT_PRE --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
+  --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=$DRT_POST \
   --step-tcl PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl \
   --orfs-var "CTS_ARGS=${CTSA:--sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75}" \
   --orfs-var OT_IO_SKEW=90 --orfs-var OT_IO_HOLD_SKEW=50 --orfs-var "OT_REF_GLOB=$REFGLOB" \
   --orfs-var "OT_IO_INTER=$INTER" --orfs-var OT_IO_SKEW_INTER=150 "${SO[@]}" \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag qdm_$NAME \
-  --keep-workdir $W/work --force --output $W/physical.json > $W/flow.log 2>&1
+  "${PKV[@]}" "${XA[@]}" --keep-workdir $W/work --force --output $W/physical.json > $W/flow.log 2>&1
 rc=$?
 echo "flow_rc=$rc" > $W/status
 [ -n "$STOP" ] && { echo "$(date -Is) stop-after $STOP rc=$rc" >> $W/STATUS; exit $rc; }
