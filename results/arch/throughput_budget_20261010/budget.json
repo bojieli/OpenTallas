@@ -5,7 +5,7 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-12T04:57:58Z",
+ "generated_utc": "2026-10-12T06:30:11Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -192,19 +192,16 @@
     "required_items_per_cycle_at_target": 1830.151,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.0093,
-    "measured_ratio": null,
-    "measured_grade": null,
-    "measured_src": null,
-    "measured_note": null,
-    "interim": {
-     "ratio": null,
-     "src": "hgi-1010.log 20:04: SM DS ratio rerun with tb_hgi_sm_tput on exp_2c9860e12 -> d (pending)"
-    },
-    "measured_cycles_per_record": null,
-    "status": "UNQUALIFIED_NO_BENCH",
-    "impact_cycles_per_token": 0.0,
-    "impact_tok_s": 0.0,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "measured_ratio": 32.903,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/sm/report.json",
+    "measured_note": "tb_hgi_sm_tput (32 SMs + xload BD + sm_pub + real VM) on the priced g25 DS records: 1,015/1,095 rec; >= 23.0x full token; wq_b / wo_a fail closed (sm_pub arrival overrun); MUT_ROW FAILS. Owner el1011-hbm-smmv",
+    "interim": null,
+    "measured_cycles_per_record": 3124.1,
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 3213100.8,
+    "impact_tok_s": -1804.2,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "elements": [
      "ot_hgi_sm_record",
      "ot_hgi_sm_xload",
@@ -231,7 +228,10 @@
       "price_cycles_per_token": 19200.0
      }
     },
-    "exposure_cycles_if_2x": 52597.9
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/sm/report.json",
+     "commit": "120f42711"
+    }
    },
    {
     "op": "COLL.GROUP_REDUCE_MCAST",
@@ -285,15 +285,15 @@
     "required_items_per_cycle_at_target": 32.824,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.0093,
-    "measured_ratio": 6.514,
+    "measured_ratio": 0.715,
     "measured_grade": "unit_bench",
-    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json",
     "measured_note": null,
     "interim": null,
-    "measured_cycles_per_record": 4229.7,
-    "status": "UNQUALIFIED",
-    "impact_cycles_per_token": 290013.7,
-    "impact_tok_s": -719.2,
+    "measured_cycles_per_record": 464.3,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": -12347.8,
+    "impact_tok_s": 47.4,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -305,8 +305,8 @@
      }
     },
     "measured_record": {
-     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
-     "commit": "57499aeea"
+     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json",
+     "commit": "1496a817f"
     }
    },
    {
@@ -441,16 +441,16 @@
     "required_items_per_cycle_at_target": 1.06,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00379,
-    "measured_ratio": null,
-    "measured_grade": null,
-    "measured_src": null,
-    "measured_note": null,
+    "measured_ratio": 1.057,
+    "measured_grade": "unit_bench",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/coll/tkm_tput_480f631d5.json",
+    "measured_note": "ot_hgi_coll_tkm r2 (32 hardened 64-position tiles) via ot_hgi_coll_ep TKM 1: syn_sel G8 k512 2,834 vs 2,680.6 per merge; candidate merge priced 0",
     "interim": null,
-    "measured_cycles_per_record": null,
-    "status": "UNQUALIFIED_NO_BENCH",
-    "impact_cycles_per_token": 0.0,
-    "impact_tok_s": 0.0,
-    "owner": "tput-gate-1010 (taken 10-10: production-shape bench)",
+    "measured_cycles_per_record": 2518.6,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": 1222.4,
+    "impact_tok_s": -4.6,
+    "owner": "el1011-hbm-idx (ot_hgi_coll_tkm r2 tile chain) / hbm-coll",
     "elements": [],
     "variants": {
      "null": {
@@ -458,7 +458,10 @@
       "price_cycles_per_token": 21445.0
      }
     },
-    "exposure_cycles_if_2x": 21435.1
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/coll/tkm_tput_480f631d5.json",
+     "commit": "e65a8625d"
+    }
    },
    {
     "op": "FUSED.HC_POST",
@@ -475,15 +478,15 @@
     "required_items_per_cycle_at_target": 95.717,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00307,
-    "measured_ratio": 20.085,
+    "measured_ratio": 1.096,
     "measured_grade": "unit_bench",
-    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json",
     "measured_note": null,
     "interim": null,
-    "measured_cycles_per_record": 4472.4,
-    "status": "UNQUALIFIED",
-    "impact_cycles_per_token": 339233.8,
-    "impact_tok_s": -795.5,
+    "measured_cycles_per_record": 244.0,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": 1667.4,
+    "impact_tok_s": -6.2,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -495,8 +498,8 @@
      }
     },
     "measured_record": {
-     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
-     "commit": "57499aeea"
+     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json",
+     "commit": "1496a817f"
     }
    },
    {
@@ -641,19 +644,16 @@
     "required_items_per_cycle_at_target": 944.041,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00133,
-    "measured_ratio": null,
-    "measured_grade": null,
-    "measured_src": null,
-    "measured_note": null,
-    "interim": {
-     "ratio": 1.36,
-     "src": "results/rtl/hgi_unit_tput_20261010/iks/README.md: key-stream issuer q0 460 vs 339 priced (one stack; not the whole record)"
-    },
-    "measured_cycles_per_record": null,
-    "status": "UNQUALIFIED_NO_BENCH",
-    "impact_cycles_per_token": 0.0,
-    "impact_tok_s": 0.0,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "measured_ratio": 8.603,
+    "measured_grade": "e2e",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json",
+    "measured_note": "native idxn die e2e (4959a3820, idx unit == main): L24-type exact 9,291 vs 1,080 (4 rec/token); L20 3.15x NOT exact; L2-type hangs (never retires); token >= 5.72x; IDX_MUT=2 FAILS. Owner el1011-hbm-idxs",
+    "interim": null,
+    "measured_cycles_per_record": 8079.9,
+    "status": "UNQUALIFIED",
+    "impact_cycles_per_token": 57125.6,
+    "impact_tok_s": -194.6,
+    "owner": "el1011-hbm-idxs",
     "elements": [
      "hfd_idx_score",
      "hfd_idx_t4_join",
@@ -672,7 +672,10 @@
       "price_cycles_per_token": 7513.6
      }
     },
-    "exposure_cycles_if_2x": 7522.1
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json",
+     "commit": "bd9e70389"
+    }
    },
    {
     "op": "DMA.KVWB_DS",
@@ -808,16 +811,16 @@
     "required_items_per_cycle_at_target": 0.011,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00014,
-    "measured_ratio": null,
-    "measured_grade": null,
-    "measured_src": null,
-    "measured_note": null,
+    "measured_ratio": 0.802,
+    "measured_grade": "e2e",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/argmax_merge/report.json",
+    "measured_note": "DS head G96 rank 0 native die e2e (1 record/token), byte-exact, AMX_MUT_MIN fails",
     "interim": null,
-    "measured_cycles_per_record": null,
-    "status": "UNQUALIFIED_NO_BENCH",
-    "impact_cycles_per_token": 0.0,
-    "impact_tok_s": 0.0,
-    "owner": "UNOWNED",
+    "measured_cycles_per_record": 613.9,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": -151.6,
+    "impact_tok_s": 0.6,
+    "owner": "hbm-coll",
     "elements": [],
     "variants": {
      "null": {
@@ -825,7 +828,10 @@
       "price_cycles_per_token": 765.4
      }
     },
-    "exposure_cycles_if_2x": 791.8
+    "measured_record": {
+     "path": "results/rtl/hgi_unit_tput_20261010/argmax_merge/report.json",
+     "commit": "c036f0daa"
+    }
    },
    {
     "op": "ARGMAX.LOCAL",
@@ -867,8 +873,7 @@
   "critical_weight_if_zero": {
    "SM.MATVEC|FP8": 20334.9,
    "SM.MATVEC|FP4": 224.0,
-   "IDX.INDEX|None": 4044.5,
-   "COLL.TOPK_MERGE|None": 21021.0
+   "IDX.INDEX|None": 4044.5
   },
   "program": "results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json",
   "run": "results/arch/hgi_sim_20261010/g25_proof/ds_full.json"
@@ -876,23 +881,23 @@
  "ds_bottleneck_ranking": [
   {
    "rank": 1,
-   "op": "FUSED.HC_POST",
-   "ratio": 20.085,
-   "impact_cycles_per_token": 339233.8,
-   "impact_tok_s": -795.5,
-   "budget_cycles_per_record": 222.7,
-   "budget_at_target": 214.0,
-   "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
+   "op": "SM.MATVEC",
+   "ratio": 32.903,
+   "impact_cycles_per_token": 3213100.8,
+   "impact_tok_s": -1804.2,
+   "budget_cycles_per_record": 94.9,
+   "budget_at_target": 91.2,
+   "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)"
   },
   {
    "rank": 2,
-   "op": "FUSED.HC_PRE_NORM",
-   "ratio": 6.514,
-   "impact_cycles_per_token": 290013.7,
-   "impact_tok_s": -719.2,
-   "budget_cycles_per_record": 649.3,
-   "budget_at_target": 623.9,
-   "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
+   "op": "IDX.INDEX",
+   "ratio": 8.603,
+   "impact_cycles_per_token": 57125.6,
+   "impact_tok_s": -194.6,
+   "budget_cycles_per_record": 939.2,
+   "budget_at_target": 902.5,
+   "owner": "el1011-hbm-idxs"
   },
   {
    "rank": 3,
@@ -927,23 +932,6 @@
  ],
  "ds_unbenched_by_exposure": [
   {
-   "op": "SM.MATVEC",
-   "exposure_cycles_if_2x": 52597.9,
-   "price_cycles_per_token": 103968.3,
-   "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-   "interim": {
-    "ratio": null,
-    "src": "hgi-1010.log 20:04: SM DS ratio rerun with tb_hgi_sm_tput on exp_2c9860e12 -> d (pending)"
-   }
-  },
-  {
-   "op": "COLL.TOPK_MERGE",
-   "exposure_cycles_if_2x": 21435.1,
-   "price_cycles_per_token": 21445.0,
-   "owner": "tput-gate-1010 (taken 10-10: production-shape bench)",
-   "interim": null
-  },
-  {
    "op": "ATT.QK",
    "exposure_cycles_if_2x": 13177.8,
    "price_cycles_per_token": 13181.8,
@@ -962,23 +950,6 @@
     "ratio": null,
     "src": "main a7613320f ATT PIPE=2: PV T512 2,968 cyc (vehicle, not production shape)"
    }
-  },
-  {
-   "op": "IDX.INDEX",
-   "exposure_cycles_if_2x": 7522.1,
-   "price_cycles_per_token": 7513.6,
-   "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-   "interim": {
-    "ratio": 1.36,
-    "src": "results/rtl/hgi_unit_tput_20261010/iks/README.md: key-stream issuer q0 460 vs 339 priced (one stack; not the whole record)"
-   }
-  },
-  {
-   "op": "COLL.ARGMAX_MERGE",
-   "exposure_cycles_if_2x": 791.8,
-   "price_cycles_per_token": 765.4,
-   "owner": "UNOWNED",
-   "interim": null
   }
  ],
  "build_gate": {
@@ -1071,7 +1042,7 @@
     "op": "FUSED.HC_PRE_NORM",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
+    "evidence": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json",
     "records_per_token": 81,
     "price_cycles_per_token": 52595.9,
     "critical_cycles_if_zero": null,
@@ -1118,25 +1089,20 @@
     "model": "DS",
     "op": "COLL.TOPK_MERGE",
     "variant": null,
-    "status": "NOT_BUILT",
-    "evidence": "rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv refuses op 2 ('merge stage not installed yet'); the IDX.MERGE engine (ot_hgi_idx_merge) is not reachable from the record path",
+    "status": "BUILT",
+    "evidence": "rtl/hbm_accel/generic/collective/tkm/run_tkm_bench.sh matrix (ot_hgi_coll_record op 2 -> ot_hgi_coll_ep TKM 1 -> ot_hgi_coll_tkm r2 480f631d5): HGI_TKM PASS, no-id mutant FAILS (results/rtl/hgi_unit_tput_20261010/coll/tkm_tput_480f631d5.json)",
     "records_per_token": 9,
     "price_cycles_per_token": 21445.0,
-    "critical_cycles_if_zero": 21021.0,
-    "rate_if_op_free_tok_s": 2203.7,
-    "inflates": [
-     "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
-     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
-     "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2121.8 tok/s"
-    ]
+    "critical_cycles_if_zero": null,
+    "rate_if_op_free_tok_s": null,
+    "inflates": []
    },
    {
     "model": "DS",
     "op": "FUSED.HC_POST",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
+    "evidence": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json",
     "records_per_token": 80,
     "price_cycles_per_token": 17813.8,
     "critical_cycles_if_zero": null,
@@ -1438,23 +1404,6 @@
    },
    {
     "model": "DS",
-    "op": "COLL.TOPK_MERGE",
-    "variant": null,
-    "status": "NOT_BUILT",
-    "evidence": "rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv refuses op 2 ('merge stage not installed yet'); the IDX.MERGE engine (ot_hgi_idx_merge) is not reachable from the record path",
-    "records_per_token": 9,
-    "price_cycles_per_token": 21445.0,
-    "critical_cycles_if_zero": 21021.0,
-    "rate_if_op_free_tok_s": 2203.7,
-    "inflates": [
-     "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
-     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
-     "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2121.8 tok/s"
-    ]
-   },
-   {
-    "model": "DS",
     "op": "IDX.INDEX",
     "variant": null,
     "status": "NO_NATIVE_EVIDENCE",
@@ -1478,7 +1427,7 @@
    "op": "SM.MATVEC",
    "claimed_ratio": 2.013,
    "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)",
-   "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+   "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
    "why": "not a committed bench record of this op at this shape"
   },
   {
@@ -1540,8 +1489,8 @@
  ],
  "bench_ii": {
   "dsfd_vm_clt": {
-   "job": "s81vm-clt6-dc9e98d04-tc-rd-pd40",
-   "commit": "dc9e98d04",
+   "job": "s81vm-clt8-964ae59f7-tc-rd-pd40",
+   "commit": "964ae59f7",
    "bench": "bench_exact_gold",
    "line": "RESULT cyc=64000 checked=44301 mismatches_or_fails=0 phases=139 arm=139 p2rd=671 done=8141 rows_ready=69 starts=459 p2_words=14578 ctrl_reads=3179 el=215712/215712 cap_ops=12842 max_occ=3 mirror_max=3",
    "cycles": 64000,
@@ -1551,7 +1500,7 @@
    "stalled": false,
    "owner": "Claude:el1011-ds-vm/fe",
    "target": null,
-   "t": "2026-10-11T16:20:22-07:00",
+   "t": "2026-10-11T22:41:56-07:00",
    "adopted": true
   },
   "qfd_io_emb_root": {
@@ -1644,6 +1593,36 @@
    "t": "2026-10-11T21:23:35-07:00",
    "adopted": true
   },
+  "ot_attn_tile_m6h1q": {
+   "job": "hbm_attn_quad_cg-pka-04424cd9f-tc-hm10-grta-cl",
+   "commit": "04424cd9f",
+   "bench": "bench_quad_cg_lockstep",
+   "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060 stale=0 guard_faults=0",
+   "cycles": 12000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:redesign-hbm",
+   "target": null,
+   "t": "2026-10-11T22:37:52-07:00",
+   "adopted": true
+  },
+  "ot_qkvd_sbuf": {
+   "job": "qkd_sbuf-a-87a8d98ac-tc-hm10-ka",
+   "commit": "87a8d98ac",
+   "bench": "bench_sbuf_d48",
+   "line": "PASS buf_tile D=48 cycles=200000 pops=72516 head_gap_cycles=12358",
+   "cycles": 200000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-kvd",
+   "target": null,
+   "t": "2026-10-11T22:52:19-07:00",
+   "adopted": true
+  },
   "dsfd_mtp_seq": {
    "job": "mtp-mtp_seq-b-511fa714d-tc",
    "commit": "511fa714d",
@@ -1657,6 +1636,21 @@
    "owner": "Claude:mtp-rom",
    "target": null,
    "t": "2026-10-09T18:18:18-07:00",
+   "adopted": true
+  },
+  "ot_hdc_v41x_sfu_chain": {
+   "job": "hbm_sfu_chain-b70b0112c-c97-tc-cl",
+   "commit": "b70b0112c",
+   "bench": "bench_c12_campaign_exact",
+   "line": "random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1614",
+   "cycles": 1614,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-hbm-sfu",
+   "target": null,
+   "t": "2026-10-11T23:05:08-07:00",
    "adopted": true
   },
   "hfd_su_tile_xl": {
@@ -1810,7 +1804,7 @@
    "adopted": true
   },
   "ot_dsrom_aq12t": {
-   "job": "el1011-pqc-aq12t-d-9b9338026-tc-cl",
+   "job": "el1011-pqc-aq12t-c-9b9338026-tc-cl",
    "commit": "9b9338026",
    "bench": "bench_aq12t_lockstep_exact",
    "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
@@ -1821,8 +1815,8 @@
    "stalled": false,
    "owner": "Claude:el1011-ds-misc",
    "target": null,
-   "t": "2026-10-11T21:55:03-07:00",
-   "adopted": true
+   "t": "2026-10-11T22:00:04-07:00",
+   "adopted": false
   },
   "ot_hbm_native_candidate_parse": {
    "job": "candparse_rb-937531860-tc-hm25-cl",
@@ -2050,7 +2044,7 @@
    "stalled": false,
    "owner": "Claude:s81die-1011/ctrl svch",
    "target": null,
-   "t": "2026-10-11T15:52:58-07:00",
+   "t": "2026-10-11T21:59:25-07:00",
    "adopted": true
   },
   "qfd_res_ctl": {
@@ -2142,7 +2136,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-seq",
    "target": null,
-   "t": "2026-10-11T17:20:19-07:00",
+   "t": "2026-10-11T23:22:42-07:00",
    "adopted": true
   },
   "qfd_tile": {
@@ -2157,7 +2151,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-tile",
    "target": null,
-   "t": "2026-10-11T16:29:06-07:00",
+   "t": "2026-10-11T22:31:22-07:00",
    "adopted": true
   },
   "dsfd_svc_join": {
@@ -2248,21 +2242,6 @@
    "owner": "Claude:mtp-wfc-1010",
    "target": null,
    "t": "2026-10-11T19:55:40-07:00",
-   "adopted": true
-  },
-  "ot_attn_tile_m6h1q": {
-   "job": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
-   "commit": "c891a57cf",
-   "bench": "bench_quad_cg_lockstep",
-   "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060",
-   "cycles": 12000,
-   "item": null,
-   "items": null,
-   "ii": null,
-   "stalled": false,
-   "owner": "Claude:redesign-hbm",
-   "target": null,
-   "t": "2026-10-11T20:57:47-07:00",
    "adopted": true
   },
   "qfd_seq_su_bi_feb": {
@@ -2475,21 +2454,6 @@
    "owner": "Claude:mtp-rom",
    "target": null,
    "t": "2026-10-11T08:48:53-07:00",
-   "adopted": true
-  },
-  "ot_qkvd_sbuf": {
-   "job": "qkd_sbuf-b-0feeb971e-tc-hm10-cl",
-   "commit": "0feeb971e",
-   "bench": "bench_sbuf_d48",
-   "line": "PASS buf_tile D=48 cycles=200000 pops=72516 head_gap_cycles=12358",
-   "cycles": 200000,
-   "item": null,
-   "items": null,
-   "ii": null,
-   "stalled": false,
-   "owner": "Claude:el1011-q-kvd",
-   "target": null,
-   "t": "2026-10-11T21:37:54-07:00",
    "adopted": true
   },
   "ot_dsrom_su_hcpost_lane_pr": {
@@ -2814,6 +2778,21 @@
     "hfd_sfu",
     "hfd_sfu_tile",
     "ot_hgi_sfu_record"
+   ]
+  },
+  {
+   "path": "results/rtl/tput_map_1011/qwen_su/record.json",
+   "commit": null,
+   "cls": "SU.VOP",
+   "model": "Qwen AR 8K (HBM)",
+   "ratio": 1.946,
+   "elements": [
+    "hfd_su_result_ingress",
+    "hfd_su_tile",
+    "hfd_su_tile_xl",
+    "ot_hgi_su_ctl",
+    "ot_hgi_su_ctlw",
+    "ot_hgi_su_record"
    ]
   },
   {
@@ -3725,7 +3704,7 @@
     "status": "UNQUALIFIED_NO_BENCH",
     "impact_cycles_per_token": 986819.0,
     "impact_tok_s": -413.6,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "elements": [
      "ot_hgi_sm_record",
      "ot_hgi_sm_xload",
@@ -4096,7 +4075,7 @@
     "status": "QUALIFIED_BY_BOUND",
     "impact_cycles_per_token": 0.0,
     "impact_tok_s": 0.0,
-    "owner": "UNOWNED",
+    "owner": "hbm-coll",
     "elements": [],
     "variants": {
      "null": {
@@ -7429,7 +7408,7 @@
     "stalled": false,
     "owner": "Claude:s81die-1011/ctrl svch",
     "target": null,
-    "t": "2026-10-11T15:52:58-07:00",
+    "t": "2026-10-11T21:59:25-07:00",
     "adopted": true
    }
   },
@@ -7805,8 +7784,8 @@
     }
    ],
    "bench_ii": {
-    "job": "s81vm-clt6-dc9e98d04-tc-rd-pd40",
-    "commit": "dc9e98d04",
+    "job": "s81vm-clt8-964ae59f7-tc-rd-pd40",
+    "commit": "964ae59f7",
     "bench": "bench_exact_gold",
     "line": "RESULT cyc=64000 checked=44301 mismatches_or_fails=0 phases=139 arm=139 p2rd=671 done=8141 rows_ready=69 starts=459 p2_words=14578 ctrl_reads=3179 el=215712/215712 cap_ops=12842 max_occ=3 mirror_max=3",
     "cycles": 64000,
@@ -7816,7 +7795,7 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-vm/fe",
     "target": null,
-    "t": "2026-10-11T16:20:22-07:00",
+    "t": "2026-10-11T22:41:56-07:00",
     "adopted": true
    }
   },
@@ -8399,68 +8378,68 @@
    }
   },
   "hfd_idx_score": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
   "hfd_idx_sel_native_qend": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
   "hfd_idx_t4_join": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ],
    "bench_ii": {
@@ -8480,112 +8459,112 @@
    }
   },
   "hfd_index_q_b0": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
   "hfd_index_q_b1": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
   "hfd_index_q_b2": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
   "hfd_index_q_b3": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
   "hfd_index_q_b5": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
@@ -8701,14 +8680,14 @@
   },
   "hfd_su_result_ingress": {
    "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
     "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
    },
    "ops": [
     {
@@ -8723,22 +8702,22 @@
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
     }
    ]
   },
   "hfd_su_tile": {
    "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
     "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
    },
    "ops": [
     {
@@ -8753,22 +8732,22 @@
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
     }
    ]
   },
   "hfd_su_tile_xl": {
    "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
     "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
    },
    "ops": [
     {
@@ -8783,9 +8762,9 @@
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
     }
    ],
    "bench_ii": {
@@ -9527,24 +9506,24 @@
    }
   },
   "hgi_idx_chunk": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
@@ -9644,10 +9623,10 @@
     }
    ],
    "bench_ii": {
-    "job": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
-    "commit": "c891a57cf",
+    "job": "hbm_attn_quad_cg-pka-04424cd9f-tc-hm10-grta-cl",
+    "commit": "04424cd9f",
     "bench": "bench_quad_cg_lockstep",
-    "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060",
+    "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060 stale=0 guard_faults=0",
     "cycles": 12000,
     "item": null,
     "items": null,
@@ -9655,7 +9634,7 @@
     "stalled": false,
     "owner": "Claude:redesign-hbm",
     "target": null,
-    "t": "2026-10-11T20:57:47-07:00",
+    "t": "2026-10-11T22:37:52-07:00",
     "adopted": true
    }
   },
@@ -9734,7 +9713,7 @@
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
     "owner": "Claude:el1011-ds-misc",
-    "src": "closure job el1011-pqc-aq12t-d-9b9338026-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    "src": "closure job el1011-pqc-aq12t-c-9b9338026-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
    },
    "ops": [
     {
@@ -9743,11 +9722,11 @@
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
      "owner": "Claude:el1011-ds-misc",
-     "src": "closure job el1011-pqc-aq12t-d-9b9338026-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
+     "src": "closure job el1011-pqc-aq12t-c-9b9338026-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
     }
    ],
    "bench_ii": {
-    "job": "el1011-pqc-aq12t-d-9b9338026-tc-cl",
+    "job": "el1011-pqc-aq12t-c-9b9338026-tc-cl",
     "commit": "9b9338026",
     "bench": "bench_aq12t_lockstep_exact",
     "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
@@ -9758,8 +9737,8 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-misc",
     "target": null,
-    "t": "2026-10-11T21:55:03-07:00",
-    "adopted": true
+    "t": "2026-10-11T22:00:04-07:00",
+    "adopted": false
    }
   },
   "ot_dsrom_engram_idwin": {
@@ -10777,234 +10756,234 @@
    ]
   },
   "ot_hbm_accel_smh_be_eg": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_be_wg": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_front_c": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_front_n": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_front_s": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_tile_eg": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_accel_smh_tile_wg": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hbm_index_global_order": {
-   "status": "UNQUALIFIED",
-   "ratio": 50.67,
+   "status": "QUALIFIED",
+   "ratio": 0.271,
    "limiting": {
     "op": "COLL.TOPK_MERGE",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 50.67,
+    "status": "QUALIFIED",
+    "ratio": 0.271,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: STATIC_SCAN walks the whole 131,072-id space (~131k cycles a record, independent of k); even the non-scan merge is 12.6 cyc a read (8,846 cyc = 3.3x the whole record). Needs a structurally different merge (e.g. per-rank heads compared"
+    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 50.7x -> 0.271x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Again"
    },
    "ops": [
     {
      "op": "COLL.TOPK_MERGE",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 50.67,
+     "status": "QUALIFIED",
+     "ratio": 0.271,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: STATIC_SCAN walks the whole 131,072-id space (~131k cycles a record, independent of k); even the non-scan merge is 12.6 cyc a read (8,846 cyc = 3.3x the whole record). Needs a structurally different merge (e.g. per-rank heads compared"
+     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 50.7x -> 0.271x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Again"
     }
    ],
    "bench_ii": {
@@ -11305,24 +11284,24 @@
    ]
   },
   "ot_hdc_v41x_idx_chunk_el": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 8.603,
    "limiting": {
     "op": "IDX.INDEX",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 8.603,
+    "owner": "el1011-hbm-idxs",
+    "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
    },
    "ops": [
     {
      "op": "IDX.INDEX",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 8.603,
+     "owner": "el1011-hbm-idxs",
+     "src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json"
     }
    ]
   },
@@ -11347,6 +11326,43 @@
      "src": "name rule ^ot_hdc_v41x_idx_ksub_el$: tput-map-1011: key-sub tile of the indexer chunk ot_hdc_v41x_idx_chunk_el (L2.attn.idx.score node, hbm class)"
     }
    ]
+  },
+  "ot_hdc_v41x_sfu_chain": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:el1011-hbm-sfu",
+    "src": "closure job hbm_sfu_chain-b70b0112c-c97-tc-cl: random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1614 (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:el1011-hbm-sfu",
+     "src": "closure job hbm_sfu_chain-b70b0112c-c97-tc-cl: random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1614 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "hbm_sfu_chain-b70b0112c-c97-tc-cl",
+    "commit": "b70b0112c",
+    "bench": "bench_c12_campaign_exact",
+    "line": "random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1614",
+    "cycles": 1614,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-hbm-sfu",
+    "target": null,
+    "t": "2026-10-11T23:05:08-07:00",
+    "adopted": true
+   }
   },
   "ot_hgi_argmax18_m": {
    "status": "QUALIFIED_BY_BOUND",
@@ -11668,32 +11684,32 @@
    ]
   },
   "ot_hgi_fused_record": {
-   "status": "UNQUALIFIED",
-   "ratio": 20.085,
+   "status": "QUALIFIED",
+   "ratio": 1.096,
    "limiting": {
     "op": "FUSED.HC_POST",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 20.085,
+    "status": "QUALIFIED",
+    "ratio": 1.096,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
-    "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
+    "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json"
    },
    "ops": [
     {
      "op": "FUSED.HC_PRE_NORM",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 6.514,
+     "status": "QUALIFIED",
+     "ratio": 0.715,
      "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
-     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json"
+     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json"
     },
     {
      "op": "FUSED.HC_POST",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 20.085,
+     "status": "QUALIFIED",
+     "ratio": 1.096,
      "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
-     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
+     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json"
     }
    ]
   },
@@ -11874,105 +11890,105 @@
    ]
   },
   "ot_hgi_sm_pub": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hgi_sm_record": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hgi_sm_xload": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 32.903,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-    "src": null
+    "status": "UNQUALIFIED",
+    "ratio": 32.903,
+    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+    "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
    "ops": [
     {
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
-     "src": null
+     "status": "UNQUALIFIED",
+     "ratio": 32.903,
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
+     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
     {
      "op": "SM.MATVEC",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "budget_audit table.json qwen_sm_xload_serial (2,762 measured vs 1,372 designed a record)"
     }
    ]
   },
   "ot_hgi_su_ctl": {
    "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
     "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
    },
    "ops": [
     {
@@ -11987,22 +12003,22 @@
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
     }
    ]
   },
   "ot_hgi_su_ctlw": {
    "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
     "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
    },
    "ops": [
     {
@@ -12017,22 +12033,22 @@
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
     }
    ]
   },
   "ot_hgi_su_record": {
    "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
     "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
    },
    "ops": [
     {
@@ -12047,9 +12063,9 @@
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
     }
    ]
   },
@@ -12533,8 +12549,8 @@
     }
    ],
    "bench_ii": {
-    "job": "qkd_sbuf-b-0feeb971e-tc-hm10-cl",
-    "commit": "0feeb971e",
+    "job": "qkd_sbuf-a-87a8d98ac-tc-hm10-ka",
+    "commit": "87a8d98ac",
     "bench": "bench_sbuf_d48",
     "line": "PASS buf_tile D=48 cycles=200000 pops=72516 head_gap_cycles=12358",
     "cycles": 200000,
@@ -12544,7 +12560,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-kvd",
     "target": null,
-    "t": "2026-10-11T21:37:54-07:00",
+    "t": "2026-10-11T22:52:19-07:00",
     "adopted": true
    }
   },
@@ -15557,7 +15573,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-seq",
     "target": null,
-    "t": "2026-10-11T17:20:19-07:00",
+    "t": "2026-10-11T23:22:42-07:00",
     "adopted": true
    }
   },
@@ -16104,7 +16120,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-tile",
     "target": null,
-    "t": "2026-10-11T16:29:06-07:00",
+    "t": "2026-10-11T22:31:22-07:00",
     "adopted": true
    }
   },

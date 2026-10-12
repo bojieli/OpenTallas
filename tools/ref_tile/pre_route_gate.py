@@ -215,6 +215,9 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if [round(x, 3) for x in fp["die"][2:]] != [round(x, 3) for x in fresh["outline"]]:
         g.add("FAIL", "kit", f"kit outline {fp['die'][2:]} != regenerated {fresh['outline']}", "re-run ref_tile.py gen")
     env = (kd / "kit.env").read_text()
+    if "PLACE_DENSITY_LB_ADDON=" not in env:
+        g.add("FAIL", "density", "kit leaves ORFS's PLACE_DENSITY_LB_ADDON in force: the placer target becomes lower-bound + "
+              "0.05, not the spec PD (qkd_nhb_pbst 0.50 -> 0.1075, GPL-0305)", "re-run ref_tile.py gen")
     if not re.search(r"^RLAYERS='M2 M[67]'$", env, re.M):
         g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M6/M7 (a script default would override the "
               "layer contract)", "re-run ref_tile.py gen")
@@ -298,6 +301,8 @@ if [ "{CTS}" = 1 ]; then
   docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
   grep -h "\[ERROR" $R/cts.log | head -3 | sed 's/^/GATE_CTSERR /'
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
+  grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
+  grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
   python3 tools/closure_loop/ck_insertion.py --base $B --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
@@ -402,6 +407,21 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         ck = re.search(r"^GATE_CK (.*)$", out, re.M)
         g.add("INFO" if ck else "WARN", "cts_calibration", (ck.group(1)[:900] if ck else
               f"CTS rc={kv.get('GATE_CTS_RC')} ck_insertion rc={kv.get('GATE_CK_RC')}"))
+        pd = float(spec["route"].get("pd", 0.55))
+        dens = [float(x) for x in re.findall(r"^GATE_GPLD .*?(?:-density|target density:)\s+([\d.]+)", out, re.M)]
+        if dens:
+            sev = "WARN" if abs(dens[0] - pd) > 0.05 else "INFO"
+            g.add(sev, "density", f"effective global-placement target density {dens[0]:.3f} vs spec PD {pd:.2f}",
+                  "clear PLACE_DENSITY_LB_ADDON (ref_tile does) or set route.pd to what the placer should target"
+                  if sev == "WARN" else "")
+        if spec["kind"] == "cluster" and spec.get("clock", "spine") == "spine" and kv.get("GATE_CTS_RC") == "0":
+            done = re.search(r"^GATE_SPINE_DONE .*OT_SPINE done port (\S+)", out, re.M)
+            if not done or done.group(1) != spec["clock_port"]:
+                g.add("FAIL", "clock_spine", f"no 'OT_SPINE done port {spec['clock_port']}' in the CTS log: the spine did not "
+                      "build, TritonCTS ran instead (OT_SPINE_PORT not reaching the container before 225badfab)",
+                      "check OT_SPINE_PORT in config.mk and the PRE_CTS hook order (spine sourced first)")
+            else:
+                g.add("INFO", "clock_spine", f"spine built on port {done.group(1)}")
         for line in re.findall(r"^GATE_SPINE (.*)$", out, re.M):
             g.add("INFO", "clock_spine", line[:300])
         for line in re.findall(r"^GATE_PC (.*)$", out, re.M):

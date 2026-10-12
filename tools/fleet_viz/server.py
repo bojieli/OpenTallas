@@ -9,6 +9,7 @@ Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
   /replay?from=&to=&speed=   the same page playing a recorded window (/api/replay serves the data)
   /api/elements     per-element (block) closure status table (elements.py; share-safe: summary counts only)
+  /api/layout/<element>/...  routed-geometry tiles for the element page's Layout tab (layout_service.py)
   /api/stream       server-sent events (latest history point only; /api/fleet
                     carries the full 60-minute history)
 Internal view is the default: real host aliases, job and block names, slacks
@@ -19,7 +20,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage, landing, elem_shell
+import recorder, elements, explorer, coverage, landing, elem_shell, layout_service
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
@@ -533,6 +534,8 @@ def elem_body(path, safe, gz):
     return b
 # /landing/...: the public landing page (landing/index.html + recordings), numbers from committed results at request time
 LANDING_DIR = HERE / 'landing'
+# /api/layout/...: the routed-geometry layout viewer (layout_service.py; packs cut on the fleet host holding each DB)
+LAYOUT = layout_service.Service(log=log)
 LANDING = landing.Landing(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), log=log)
 
 def with_sent(body):
@@ -613,6 +616,10 @@ class H(BaseHTTPRequestHandler):
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
+        if u.path.startswith('/layout_store/'):
+            return LAYOUT.static(self, u.path[len('/layout_store/'):], safe)
+        if u.path.startswith('/api/layout/'):
+            return LAYOUT.handle(self, u.path[len('/api/layout/'):], q, safe)
         if u.path.startswith('/api/explorer/'):
             return self.explorer(u.path[len('/api/explorer/'):], q, safe)
         if u.path == '/api/stream':
