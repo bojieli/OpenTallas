@@ -135,9 +135,12 @@ def record_traffic(r, waddr: np.ndarray, P: dict, smap: np.ndarray | None = None
         h = home[0]
         for s, c in zip(*np.unique(r_sl[(r_sl >= 0) & (r_sl != h)], return_counts=True)):
             pair[(int(s), h)] += int(c)              # remote read: slice s -> cluster h
-        for s, c in zip(*np.unique(w_sl[(w_sl >= 0) & (w_sl != h)], return_counts=True)):
-            pair[(h, int(s))] += int(c)              # remote write: cluster h -> slice s
+        if r["unit"] != "COLL":                      # a collective's result rides the COLL star (bcast below), not the ring
+            for s, c in zip(*np.unique(w_sl[(w_sl >= 0) & (w_sl != h)], return_counts=True)):
+                pair[(h, int(s))] += int(c)          # remote write: cluster h -> slice s
     mirror_w = int((w_sl < 0).sum())
+    if r.get("b2mode") in ("REPLX", "QSPLIT"):
+        mirror_w = 0                                 # every cluster writes / loads its own mirror copy: no broadcast
     bcast += mirror_w                                # a mirror-window write is broadcast to every slice
     if r["unit"] == "COLL" and len(home) == 1:
         bcast += int((w_sl >= 0).sum())              # the collective's result broadcast (tree) to every cluster
