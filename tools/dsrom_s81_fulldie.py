@@ -2035,6 +2035,47 @@ def _gen_pg_lef(mst):
     return '\n'.join(L)
 
 
+PG_TILE = 43.2         # current-sink tile of a generated block in the IR model: 4 M7 PG pitches (10.8 um), < 1 bump pitch
+PDN_THIN_OFF = 0.5     # local die-M8 strap offset inside a thin block (its M7 stripes span 0.3 .. h-0.3)
+
+
+def pdn_thin_pitch(h, p8):
+    """Local die-M8 per-net pitch for a block of height h whose M7 stripes the die M8 lattice (per-net pitch p8) cannot
+    cross twice per net (span h-0.6 < 2 p8 + 0.48), else None.  Four straps (VDD,VSS,VDD,VSS) must fit in
+    [0.5, h-0.5]: 0.5 + 1.5 p + 0.48 <= h - 0.5; capped at p8 (never sparser than the die grid)."""
+    if h - 0.6 >= 2 * p8 + 0.48:
+        return None
+    p = math.floor((h - 1.48) / 1.5 / 0.008) * 0.008
+    if p < 2 * (0.48 + 0.24):
+        raise SystemExit(f'pdn_thin_pitch: block height {h} too thin for two M8 straps per net')
+    return round(min(p, p8), 3)
+
+
+def pg_tile_split(ins, power, M, keep=()):
+    """Generated blocks (incl. window clips) larger than PG_TILE as PG_TILE sub-tiles: same M7 (or PG_M8 M8) lattice
+    phase (tile sides are multiples of 10.8 um), each tile carrying its area share of the block power, so PSM
+    injects the block current over its area as the block's cells draw it.  Real abstracts are left whole."""
+    out, pw = [], {}
+    for it in ins:
+        if it.master in REAL_FILES or it.master in keep or (it.w <= 1.5 * PG_TILE and it.h <= 1.5 * PG_TILE):
+            out.append(it); pw[it.name] = power[it.name]; continue
+        base = it.master.split('_clip_')[0]
+
+        def cuts(L):
+            n = max(1, round(L / PG_TILE))
+            e = [0.0] + [round(k * PG_TILE, 3) for k in range(1, n)] + [L]
+            return [(a, b - a) for a, b in zip(e, e[1:])]
+        for i, (dx, tw) in enumerate(cuts(it.w)):
+            for j, (dy, th) in enumerate(cuts(it.h)):
+                nm = f'{base}_clip_t{round(tw * 1000)}x{round(th * 1000)}'
+                if nm not in M:
+                    M[nm] = Q.Master(nm, round(tw, 3), round(th, 3), M[it.master].obs_top, 'PG current tile of ' + base)
+                t = Inst(f'{it.name}__t{i}_{j}', nm, it.x + dx, it.y + dy, round(tw, 3), round(th, 3), it.orient,
+                         it.kind, it.region, it.domain)
+                out.append(t); pw[t.name] = power[it.name] * tw * th / (it.w * it.h)
+    return out, pw
+
+
 def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     """IR window with the REAL element abstracts: pdngen builds the bump-aligned M8/M9 die grid, connects it to the
     q element's and every generated abstract's M7 PG stripes (M7-M8 vias) and to the cfg ROMs' M4 rails through an
@@ -2069,6 +2110,13 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
             c = Inst(it.name, nm, a, b, w_, h_, 'R0', it.kind, it.region, it.domain)
             clip_pw[it.name] = inst_power(it) * (w_ * h_) / (it.w * it.h)
             ins.append(c)
+    # PDN contract v2 (el1012-s81pdn): (1) every generated block's current is drawn where its cells are -- the block
+    # is modelled as PG_TILE-sized sub-tiles on the same M7 lattice, each carrying its area share (PSM injects a
+    # macro instance's whole current at ONE node: the 63.6/73.4 mV sp_vm / station "drop" of ir_m948 was that
+    # single-node injection, case_psmt measured 54.8 vs 2.4 mV); (2) blocks too thin for the die M8 lattice to
+    # cross them twice per net get a local die-M8 strap set (pdn_thin_pitch), joined M7-M8 and M8-M9.
+    power0 = {it.name: (clip_pw[it.name] if it.name in clip_pw else inst_power(it)) for it in ins}
+    ins, power0 = pg_tile_split(ins, power0, M, keep={real_lef(CFG_LEF)['name']})
     masters_used = sorted({it.master for it in ins})
     gen = [M[n_] for n_ in masters_used if n_ not in REAL_FILES]
     (work / 'gen_pg.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' +
@@ -2097,10 +2145,23 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     off = round((vp / 2) % pitch, 3)
     cfgm = real_lef(CFG_LEF)['name']
     m8m = [x for x in masters_used if x.split('_clip_')[0] in PG_M8_MASTERS]
-    other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m)
+    thin = defaultdict(list)
+    for x in masters_used:
+        if x != cfgm and x not in m8m and x not in REAL_FILES:
+            pl = pdn_thin_pitch(M[x].h, pitch)
+            if pl:
+                thin[pl].append(x)
+    thin_set = {x for v in thin.values() for x in v}
+    other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m and x not in thin_set)
     m8grid = ('define_pdn_grid -macro -name m8 -cells {' + ' '.join(m8m) + '} -halo {0 0 0 0} -voltage_domains CORE\n'
               'add_pdn_connect -grid m8 -layers {M8 M9}\n') if m8m else ''
-    power = {it.name: (clip_pw[it.name] if it.name in clip_pw else inst_power(it)) * (1.0 if peak else 0.25) for it in ins}
+    for k, (pl, xs) in enumerate(sorted(thin.items())):
+        m8grid += (f'define_pdn_grid -macro -name m7thin{k} -cells {{{" ".join(sorted(xs))}}} -halo {{0 0 0 0}} '
+                   f'-voltage_domains CORE\n'
+                   f'add_pdn_stripe -grid m7thin{k} -layer M8 -width 0.48 -pitch {pl:.3f} -spacing {pl / 2 - 0.48:.3f} '
+                   f'-offset {PDN_THIN_OFF:.3f}\n'
+                   f'add_pdn_connect -grid m7thin{k} -layers {{M7 M8}}\nadd_pdn_connect -grid m7thin{k} -layers {{M8 M9}}\n')
+    power = {n_: p_ * (1.0 if peak else 0.25) for n_, p_ in power0.items()}
     tcl = f"""
 set t0 [clock seconds]
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
@@ -2147,7 +2208,8 @@ exit
     meta = dict(case='c', method='real element abstracts + pdngen + PSM', window=window, window_um=[x0, y0, x1, y1],
                 size_um=[W, H], instances=len(ins), clipped=sorted(clip_pw), power_w=round(sum(power.values()), 4),
                 power_w_per_mm2=round(sum(power.values()) / (W * H / 1e6), 4), coverage=cov,
-                strap_pitch_um=pitch, strap_offset_um=off, masters=masters_used,
+                strap_pitch_um=pitch, strap_offset_um=off, masters=masters_used, pg_tile_um=PG_TILE,
+                thin_local_m8={f'{k:.3f}': v for k, v in sorted(thin.items())},
                 bumps=dict(array_pitch_um=BUMP_PITCH, vdd_pitch_um=round(vp, 2), size_um=BUMP_SIZE),
                 vdd_v=VDD_V, budget_mv=35.0)
     (work / 'manifest.json').write_text(json.dumps(meta, indent=1))
