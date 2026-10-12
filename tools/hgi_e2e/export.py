@@ -365,7 +365,7 @@ def export_ds(a):
     # --iks (hgi-1010/g3): the rank-0 index-key image of every IDX.INDEX frame in the IKS layout the issuer streams
     # (ot_hgi_idx_iks_issue): die-local key k (ascending owned id) -> stack q = (k div 8) div 342, slot s = k - 2,736 q, at
     # HBM byte (q << 35) | I.base + 68 s, the 544-b key word {4 UE8M0 scale bytes, 128 FP4 codes} little-endian (the
-    # scorer's line = 2 keys); a stack's image covers its B_q blocks x 544 B (pad keys zero)
+    # scorer's line = 2 keys); a stack's image covers its B_q blocks (rounded up to even) x 544 B (pad keys zero)
     if not st.get("ik"):
         cap.touch += cap.ik_touch                # no key image: keep the sim's own operand-I bytes
     for rd, ids, keys in st.get("ik", []):
@@ -378,6 +378,7 @@ def export_ds(a):
         nb = -(-n // 8)
         for q in range(4):
             bq = max(0, min(342, nb - 342 * q))
+            bq += bq & 1                          # the issuer's EVEN rule: whole scorer beats (2 blocks), pad keys zero
             if bq == 0:
                 continue
             img = bytearray(bq * 544)
