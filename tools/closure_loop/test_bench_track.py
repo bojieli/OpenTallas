@@ -158,14 +158,50 @@ class Transient(unittest.TestCase):
         j = job(status="READY", stage_tag=None, hosts_tried=["h"])
         stl = cl.stage_list(SPEC)
         j["stage_idx"] = next(i for i, x in enumerate(stl) if x["kind"] == "bench")
-        fleet = SimpleNamespace(choose=lambda spec, exclude: ("h2", None))
+        fleet = SimpleNamespace(choose=lambda spec, exclude: ("h2", None), launched=lambda *a, **kw: None)
         ex = subprocess.TimeoutExpired(["ssh", "h"], 300)
-        with patch.object(cl, "log"), patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+        with patch.object(cl, "log"), patch.object(cl, "experiment"), \
+                patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
             self.assertTrue(cl.handle_transient(j, fleet, ex))
             self.assertEqual(j["host"], "h")
             cl.handle_transient(j, fleet, ex)
             cl.handle_transient(j, fleet, ex)
         self.assertEqual((j["host"], j["status"]), ("h2", "SYNC"))
+
+    def test_ready_route_moves_after_three(self):
+        """2026-10-11: a never-launched route job on an overloaded host (ssh timeouts) moves and re-calibrates"""
+        import subprocess
+        spec = dict(SPEC, stages=dict(SPEC["stages"], calibrate=dict(cmd="cal", base="/b/x")))
+        stl = cl.stage_list(spec)
+        cal = next(i for i, x in enumerate(stl) if x["kind"] == "calibrate")
+        rt = next(i for i, x in enumerate(stl) if x["kind"] == "route")
+        self.assertGreater(rt, cal)
+        j = job(spec=spec, status="READY", stage_tag=None, stage_idx=rt, hosts_tried=["h"])
+        seen = []
+        fleet = SimpleNamespace(choose=lambda spec, exclude: (seen.append(exclude) or ("h2", None)),
+                                launched=lambda *a, **kw: None)
+        ex = subprocess.TimeoutExpired(["ssh", "h"], 300)
+        with patch.object(cl, "log"), patch.object(cl, "experiment"), \
+                patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+            for _ in range(3):
+                self.assertTrue(cl.handle_transient(j, fleet, ex))
+        self.assertEqual((j["host"], j["status"], j["stage_idx"], j["transient"]), ("h2", "SYNC", cal, 0))
+        self.assertEqual(seen, [["h"]])
+        self.assertNotIn("transient_next", j)
+        # stage_tag left over from the finished calibrate (never cleared) does not pin a READY route job
+        j2 = job(spec=spec, status="READY", stage_tag="calibrate.a1", stage_idx=rt, hosts_tried=["h"])
+        with patch.object(cl, "log"), patch.object(cl, "experiment"), \
+                patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+            for _ in range(3):
+                cl.handle_transient(j2, fleet, ex)
+        self.assertEqual((j2["host"], j2["stage_idx"]), ("h2", cal))
+        # a launched route (RUNNING) keeps backing off on its host
+        j3 = job(spec=spec, status="RUNNING", stage_tag="route.a1", stage_idx=rt, hosts_tried=["h"])
+        with patch.object(cl, "log"), patch.object(cl, "experiment"), \
+                patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+            for _ in range(3):
+                cl.handle_transient(j3, fleet, ex)
+        self.assertEqual(j3["host"], "h")
 
 
 if __name__ == "__main__":
