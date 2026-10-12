@@ -42,6 +42,8 @@ module dsfd_sp_su_h #(
     // and on the controller pulse nets c_cmd / c_done between the slab's N-face pins and the control tile (cck domain;
     // ~2.25 mm in the su_s composition: 5 stations for <= 500 um)
     parameter integer SRD = (S_RD >= 16) ? 2 : 1,
+    // SM stop (spec v3): relay stations on every link between its masters (a stop ~1.3 x 1.0 mm: 2 for <= 500 um)
+    parameter integer SRL = (S_RD >= 16) ? 2 : 1,
     parameter integer NRC = (S_RD >= 16) ? 5 : 1
 ) (
     input  wire                cck, crs,
@@ -303,6 +305,84 @@ module dsfd_sp_su_h #(
                 .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
                 .o_rdy(o_rdy), .o_rjid(o_rjid));
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+        end else if (TK == 4) begin : g_sm
+            // SM (el1011-s81su-sm, spec v3): tap/out smt + per head 16 lanes sml, sum smc, root smr, 8 divide smd;
+            // every intra-stop link through SRL equal-depth relays (lanes in lockstep)
+            localparam integer NPS = (S_RD < 5) ? S_RD : 5;
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+            wire s_v, p_v, c_v, cs_v, e_v, o_vv, den_v, f_any; wire [1023:0] d_d, e_d; wire [511:0] o_dd;
+            wire [6:0] c_nv; wire [2:0] c_lt; wire [31:0] c_scale; wire [63:0] c_sink; wire [4:0] cs_i; wire [63:0] cs_d;
+            wire [1:0] hden_v; wire [15:0] hf;
+            wire [3:0] CTI = TI;
+            ot_s81_su_smt #(.SM_H(SM_H), .SM_LPH(SM_LPH), .S_RD(S_RD), .WS(WS), .MUT(MUT)) u_smt (
+                .clk(sk), .rst_in(rst[t]), .cfg_ti(CTI), .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_jid_i(dji[t]),
+                .dn_v_i(dv[t]), .dn_p_i(dd[t][0 +: NPS * 512]), .dn_d_i(dd[t][1024 * TI +: 1024]),
+                .s_v(s_v), .p_v(p_v), .d_d(d_d), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale), .c_sink(c_sink),
+                .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d), .e_v_i(e_v), .e_d_i(e_d), .o_v_i(o_vv), .o_d_i(o_dd),
+                .den_v_i(hden_v[0]), .f_i(f_any),
+                .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
+                .o_rdy(o_rdy), .o_rjid(o_rjid));
+            assign f_any = |hf;
+            // relayed copies (SRL stations) of the tap's outputs: one copy per destination group
+            wire rs_v, rp_v, rc_v, rcs_v; wire [1023:0] rd_d; wire [6:0] rc_nv; wire [2:0] rc_lt; wire [31:0] rc_scale;
+            wire [63:0] rc_sink; wire [4:0] rcs_i; wire [63:0] rcs_d;
+            ot_hdc_delay #(.W(4), .D(SRL), .RESET(1)) u_tv (.clk(sk), .rst_n(rst[t]), .d({s_v, p_v, c_v, cs_v}),
+                .q({rs_v, rp_v, rc_v, rcs_v}));
+            ot_hdc_delay #(.W(1024 + 7 + 3 + 32 + 64 + 5 + 64), .D(SRL)) u_td (.clk(sk), .rst_n(rst[t]),
+                .d({d_d, c_nv, c_lt, c_scale, c_sink, cs_i, cs_d}), .q({rd_d, rc_nv, rc_lt, rc_scale, rc_sink, rcs_i, rcs_d}));
+            wire [1:0] he_v; wire [1:0] ho_v;
+            genvar h, ln, pp;
+            for (h = 0; h < 2; h = h + 1) begin : g_h
+                wire [15:0] l_mxv, l_ev, l_es, l_el; wire [511:0] l_mx, l_e;
+                wire mv, dv0; wire [31:0] nmb, den;
+                wire rmv, rdv; wire [31:0] rnmb, rden;
+                ot_hdc_delay #(.W(2), .D(SRL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[t]), .d({mv, dv0}), .q({rmv, rdv}));
+                ot_hdc_delay #(.W(64), .D(SRL)) u_rd (.clk(sk), .rst_n(rst[t]), .d({nmb, den}), .q({rnmb, rden}));
+                for (ln = 0; ln < 16; ln = ln + 1) begin : g_l
+                    wire sken = (ln == 0);
+                    ot_s81_su_sml #(.NVMAX(SM_NVMAX), .LM(LM), .LA(LA)) u_sml (
+                        .clk(sk), .rst_in(rst[t]), .sk_en(sken), .i_cv(rc_v), .i_nv(rc_nv), .i_scale(rc_scale),
+                        .i_sink(rc_sink[32 * h +: 32]), .i_sv(rs_v), .i_s(rd_d[512 * h + 32 * ln +: 32]),
+                        .i_mv(rmv), .i_nmb(rnmb), .o_mxv(l_mxv[ln]), .o_mx(l_mx[32 * ln +: 32]),
+                        .o_ev(l_ev[ln]), .o_es(l_es[ln]), .o_el(l_el[ln]), .o_e(l_e[32 * ln +: 32]));
+                end
+                // lane outputs relayed to the sum / root / tap
+                wire rl_mxv, rl_ev, rl_el, rl_skv; wire [511:0] rl_mx, rl_e; wire [31:0] rl_sk;
+                ot_hdc_delay #(.W(4), .D(SRL), .RESET(1)) u_lv (.clk(sk), .rst_n(rst[t]),
+                    .d({l_mxv[1], l_ev[1], l_el[1], l_ev[0] && l_es[0]}), .q({rl_mxv, rl_ev, rl_el, rl_skv}));
+                ot_hdc_delay #(.W(512 + 512 + 32), .D(SRL)) u_ld (.clk(sk), .rst_n(rst[t]), .d({l_mx, l_e, l_e[31:0]}),
+                    .q({rl_mx, rl_e, rl_sk}));
+                wire c_ov, c_ol; wire [31:0] c_os; wire rc_ov, rc_ol; wire [31:0] rc_os;
+                ot_s81_su_smc #(.LPH(16), .LA(LA)) u_smc (.clk(sk), .rst_in(rst[t]), .i_v(rl_ev), .i_l(rl_el), .i_e(rl_e),
+                    .o_v(c_ov), .o_l(c_ol), .o_s(c_os));
+                ot_hdc_delay #(.W(2), .D(SRL), .RESET(1)) u_cv (.clk(sk), .rst_n(rst[t]), .d({c_ov, c_ol}), .q({rc_ov, rc_ol}));
+                ot_hdc_delay #(.W(32), .D(SRL)) u_cd (.clk(sk), .rst_n(rst[t]), .d(c_os), .q(rc_os));
+                ot_s81_su_smr #(.LPH(16), .LA(LA)) u_smr (.clk(sk), .rst_in(rst[t]), .i_cv(rc_v), .i_lt(rc_lt),
+                    .i_mxv(rl_mxv), .i_mx(rl_mx), .i_skv(rl_skv), .i_sk(rl_sk), .i_vv(rc_ov), .i_vl(rc_ol), .i_vs(rc_os),
+                    .o_mv(mv), .o_nmb(nmb), .o_dv(dv0), .o_den(den));
+                assign hden_v[h] = rdv;
+                // divide engines (one RoPE pair each)
+                wire [7:0] d_ov, d_f; wire [255:0] d_o;
+                for (pp = 0; pp < 8; pp = pp + 1) begin : g_p
+                    wire [2:0] CP = pp;
+                    ot_s81_su_smd #(.LPH(16), .LM(LM), .LA(LA), .STALEDEN(MUT == 5)) u_smd (
+                        .clk(sk), .rst_in(rst[t]), .cfg_p(CP), .i_pv(rp_v), .i_pa(rd_d[512 * h + 64 * pp +: 64]),
+                        .i_dv(rdv), .i_den(rden), .i_csv(rcs_v), .i_csi(rcs_i), .i_csd(rcs_d),
+                        .o_ov(d_ov[pp]), .o_o(d_o[32 * pp +: 32]), .o_f(d_f[pp]));
+                end
+                assign hf[8 * h +: 8] = d_f;
+                // e / o rows to the tap
+                wire [255:0] rd_o; wire rd_ov;
+                ot_hdc_delay #(.W(1), .D(SRL), .RESET(1)) u_ov (.clk(sk), .rst_n(rst[t]), .d(d_ov[0]), .q(rd_ov));
+                ot_hdc_delay #(.W(256), .D(SRL)) u_od (.clk(sk), .rst_n(rst[t]), .d(d_o), .q(rd_o));
+                assign e_d[512 * h +: 512] = rl_e;
+                assign o_dd[256 * h +: 256] = rd_o;
+                assign he_v[h] = rl_ev;
+                assign ho_v[h] = rd_ov;
+            end
+            assign e_v = he_v[0];
+            assign o_vv = ho_v[0];
+            assign den_v = hden_v[0];
         end else begin : g_tl
             ot_s81_su_tile #(.TK(TK), .TI(TI), .NT(NT), .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H),
                              .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .LM(LM), .LA(LA), .MUT(MUT)) u_tile (
