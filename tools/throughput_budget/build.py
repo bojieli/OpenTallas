@@ -264,8 +264,16 @@ def bench_ii():
     """element -> the cycles-per-item line of its newest passing exact bench (closure-loop job state, CLOSED jobs first).
     The item kind is the largest-count item on the line; 'stalled' = the stimulus injects stalls (II not intrinsic)."""
     import glob as _g
+    import urllib.request
     jd = Path.home() / ".local/state/closure_loop/jobs"
     best = {}
+    # the element's ADOPTED record (registry best.job) outranks a newer-finishing sibling: a superseded variant whose
+    # hold ECO finished later (e.g. qfd_coll_xfifo_l8m vs the adopted l8n) must not be cited as the element's bench
+    try:
+        adopted = {(r.get("best") or {}).get("job") for r in
+                   json.load(urllib.request.urlopen("http://127.0.0.1:8765/api/elements", timeout=60))["rows"]} - {None}
+    except Exception:  # noqa: BLE001
+        adopted = set()
     for f in _g.glob(str(jd / "*.json")):
         try:
             j = json.loads(open(f).read())
@@ -288,7 +296,8 @@ def bench_ii():
                            bench=bn, line=ln.strip()[:200], cycles=cyc, item=it[0] if it else None, items=it[1] if it else None,
                            ii=round(cyc / it[1], 3) if it else None, stalled=bool(re.search(r"stall|STALL|jitter", ln)),
                            owner=str((j.get("spec") or {}).get("owner", "")), target=None, t=j.get("updated", 0))
-                if blk not in best or ent["t"] > best[blk]["t"]:
+                ent["adopted"] = j["name"] in adopted
+                if blk not in best or (ent["adopted"], ent["t"]) > (best[blk].get("adopted", False), best[blk]["t"]):
                     best[blk] = ent
                 break
     # ---- automated II harness records (tools/throughput_budget/auto_ii.py, owner 2026-10-11): the recording replay of the
