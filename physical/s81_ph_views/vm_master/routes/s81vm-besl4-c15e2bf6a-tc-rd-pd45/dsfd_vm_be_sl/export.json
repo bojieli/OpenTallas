@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_vm_be_sl",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81vm-besl4a-c15e2bf6a-tc-rd-pd45/routes/s81vm_besl4a_c15e2bf6a_tc_rd_pd45/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81vm-besl4a-c15e2bf6a-tc-rd-pd45/routes/s81vm_besl4a_c15e2bf6a_tc_rd_pd45/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81vm-besl4a-c15e2bf6a-tc-rd-pd45/routes/s81vm_besl4a_c15e2bf6a_tc_rd_pd45/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81vm-besl4a-c15e2bf6a-tc-rd-pd45/routes/s81vm_besl4a_c15e2bf6a_tc_rd_pd45/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81vm-besl4a-c15e2bf6a-tc-rd-pd45/routes/s81vm_besl4a_c15e2bf6a_tc_rd_pd45/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81vm-besl4a-c15e2bf6a-tc-rd-pd45/routes/s81vm_besl4a_c15e2bf6a_tc_rd_pd45/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81vm-besl4a-c15e2bf6a-tc-rd-pd45/routes/s81vm_besl4a_c15e2bf6a_tc_rd_pd45/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_vm_be_sl.lef": "cdab81772dca3007483e71c881374989cc6eb90d8c3ec69dd585cb3e429a3eb6",
+    "dsfd_vm_be_sl_ff.lib": "a0bc6b1fe82aac0794e2c1c68827bc2a190f5707498306484d8b06322ecca63d",
+    "dsfd_vm_be_sl_ss.lib": "b83f271be4e80b17253d8c39a58c20e046a09fb79f2202baeba814f4cb2c36d9"
+  },
+  "ok": true
+}

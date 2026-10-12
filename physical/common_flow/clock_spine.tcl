@@ -57,12 +57,11 @@ proc ot_sp_fits {cx cy nsite} {
 # needs detailed placement to displace a flop after the fact (hcoll-port-tile11 g11a: 44 DPL-0033 overlaps, PLACED flops
 # under FIRM clkbuf_sp_* -- the occupancy map used to hold only FIRM/LOCKED/FIXED cells).  Search: rows in order of
 # |dr|, and within a row outward site by site; cost = |dx| + |dy|, stop once a row's dy alone exceeds the best cost.
-proc ot_sp_legal {x y} {
+proc ot_sp_search {x y R D} {
   set sw $::ot_sp_sw; set rh $::ot_sp_rh; set w $::ot_sp_cw
   set ry [expr {$::ot_sp_ry0 + int(round(double($y - $::ot_sp_ry0) / $rh)) * $rh}]
   set sx [expr {$::ot_sp_rx0 + int(round(double($x - $::ot_sp_rx0) / $sw)) * $sw}]
   set nsite [expr {int(ceil(double($w) / $sw))}]
-  set R $::ot_sp_rsites; set D $::ot_sp_rrows
   set best ""; set bc 1e18
   for {set k 0} {$k <= 2 * $D} {incr k} {
     set dr [expr {($k + 1) / 2 * ($k % 2 ? 1 : -1)}]
@@ -79,13 +78,26 @@ proc ot_sp_legal {x y} {
       if {$best ne "" && [lindex $best 1] == $cy} break
     }
   }
+  return $best
+}
+# Crowded targets (bgq28 s81vm-bgq28-f9a57959c-ck pd45/l8: a 4,144-flop pin-flop row packed along the S face; the old
+# fallback stepped the target +x 10 um at a time along that same packed band to the E edge -> 'no legal site'): widen
+# the nearest-free-footprint search window (rows x4, sites x2 per step, up to 192x the rows) around the SAME target
+# before falling back to moving the target, so the cell lands on the closest free footprint in any direction.
+proc ot_sp_legal {x y} {
+  set best ""
+  for {set m 1} {$m <= 256} {set m [expr {$m * 4}]} {
+    set best [ot_sp_search $x $y [expr {$::ot_sp_rsites * min($m, 8)}] [expr {$::ot_sp_rrows * $m}]]
+    if {$best ne ""} break
+  }
   if {$best ne ""} {
     lassign $best cx cy
+    set nsite [expr {int(ceil(double($::ot_sp_cw) / $::ot_sp_sw))}]
     # spine cells keep a one-site gap to each other (pin access between adjacent x24 buffers)
-    for {set s -1} {$s <= $nsite} {incr s} { dict set ::ot_sp_used "$cy,[expr {$cx + $s * $sw}]" 1 }
+    for {set s -1} {$s <= $nsite} {incr s} { dict set ::ot_sp_used "$cy,[expr {$cx + $s * $::ot_sp_sw}]" 1 }
     return $best
   }
-  # crowded: move the target 10 um outward and retry
+  # still nothing: move the target 10 um and retry
   if {[incr ::ot_sp_retry] < 40} {
     lassign [ot_sp_free [expr {$x + 10 * $::ot_sp_dbu}] $y] fx fy
     set r [ot_sp_legal $fx $fy]; set ::ot_sp_retry 0; return $r

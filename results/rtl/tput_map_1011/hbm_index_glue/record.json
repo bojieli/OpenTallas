@@ -40,7 +40,7 @@
    },
    "ratio": 0.272,
    "ratio_vs_node_share": 1.737,
-   "status": "QUALIFIED",
+   "status": "QUALIFIED (exact + mutant FAIL + tput 0.272x + routed CLOSED)",
    "exact": true,
    "mutant": "RTL mutant out_tuple^2 FAIL on golden n12288 (single-outstanding throttled provider, throttled sink), tput n512/2048/4096 lat 0/3 and 4 sparse random cases; +MUT_RANK and +FUTURE_ID fault as required",
    "why": "50.7x -> 0.272x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Against the 419-cyc select node share it is 1.74x, which a single 1-read/cycle provider port cannot beat (704 reads > 419 cycles).",
@@ -71,7 +71,13 @@
     "note": "tput-map-1011/F6 measurement of the adopted closed variant STATIC_SCAN=1 FAST=2 (gorderscan_fast2_a)"
    },
    "interface_change": "new module ot_hbm_index_global_order_mt, same ports: several reads outstanding (one per rank, rank-interleaved order); responses always accepted while running (a mismatching response faults instead of back-pressuring); done is held behind the output pin FIFO by the wrapper (gen_regbound out_after)",
-   "route": "ref_tile kit physical/ref_tile/hbm_gorder_mt_ref (spec physical/struct_close/regbound/gorder_mt_ref.json); see el1011-hbm-tputx.log [tputx-gord] for the job",
+   "route": {
+    "job": "hbm_gorder_mt_ref-v1-23c517d1e",
+    "flow": "ref_tile physical/ref_tile/hbm_gorder_mt_ref",
+    "source_commit": "23c517d1e",
+    "verdict": "CLOSED TT +27.33 / FF +4.92 ps DRC 0 @833.333 ps; SS sensitivity -300.67 ps",
+    "record_commit": "a56508a64"
+   },
    "pre_route_gate": "ref_tile pre_route_gate --remote ot-epyc4: WARN (0 fail): clock_domain 19,628 flops on one root (> 15k), boundary in->reg 6 levels inside the generated pin FIFOs; reg->reg depth 543 ps; std area 15,157 um2"
   },
   {
