@@ -416,7 +416,9 @@ def gen_place(s: dict, blocks: list) -> str:
              "  foreach i [dict get $by $master] {",
              "    set n [ot_ref_strip [$i getName]]",
              "    if {[lsearch -exact $used $n] >= 0} continue",
-             "    if {$pat ne \"\" && ![string match [ot_ref_strip $pat] $n]} continue",
+             "    set sp [ot_ref_strip $pat]",
+             "    # an instance path with [k] indices and no * / ? is an exact name ([0] would be a glob class)",
+             "    if {$pat ne \"\" && ([string first * $sp] < 0 && [string first ? $sp] < 0 ? $sp ne $n : ![string match $sp $n])} continue",
              "    lappend used $n; return $i", "  }",
              "  error \"ref_tile place: no unplaced instance of $master matching '$pat'\"", "}",
              "set ot_ref_n 0"]
