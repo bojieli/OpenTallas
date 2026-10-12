@@ -562,6 +562,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
+    if s.get("inhold"):
+        # spec 'inhold': one dont_touch hold buffer between every data input port and its single capture flop, inserted
+        # before global placement (owner 10-10: a hold-only miss on input captures -> delay stage at the inputs, no ECO)
+        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -583,6 +587,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
+    if s.get("inhold"):
+        out.append("physical/dsrom_window_source/leaf_inhold.tcl")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
