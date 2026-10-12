@@ -1211,8 +1211,11 @@ def cmd_block(a):
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_smh_child.tcl"
         nbr = {"fc_bc": "fd_v fd_d* fq_ret fp_* fsv k1_sr* r3a*", "fc_is": "k0_* fs_v fs_d* fr_rl sv_i",
                "fc_xl": "fx_b* r0a*", "fc_t": "li* fi*", "fc_xr": "xi* li* fi*", "fc_b": "li* fi* xi*"}[a.piece]
+        # fc_bc holds front_c's ring macros: their read is the designed two-cycle path (bulk_copy_oq5 RING_MACRO = 1:
+        # a group is read at most every other edge and holds its output two cycles), so it carries front_c's ring
+        # multicycle (fcbc-r6: TT -80 / -92 = u_ring rd_out 516 ps + group select + wire -> oq*, timed as one cycle)
         sdc = sdc_block(a.lat, nbr_in=nbr, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew,
-                        io_ref=a.io_ref).replace("[get_ports rst_n]", "[get_ports rst_a]")
+                        io_ref=a.io_ref, ring=(a.piece == "fc_bc")).replace("[get_ports rst_n]", "[get_ports rst_a]")
     elif a.piece in ("tcc", "bdc"):
         # el1011-hbm-smh: a hardened column of one leaf (OT_SMH_HIER).  Inputs (the j-stage pin flops) on the W edge,
         # lane-major (i_w[k] beside i_x[k]), M4 every 4 tracks (5.2 b/um); results on the E edge; clk / rst_a north.
